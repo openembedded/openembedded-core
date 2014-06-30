@@ -1,6 +1,12 @@
-SUMMARY = "A complete, cross-platform solution to record, convert and stream audio and video"
+SUMMARY = "Open source audio and video processing tools and librairies"
+DESCRIPTION = "Libav is a friendly and community-driven effort to provide its users \
+               with a set of portable, functional and high-performance libraries for \
+               dealing with multimedia formats of all sorts. It originates from the \
+               FFmpeg codebase, but goes its own way these days, providing its users \
+               with reliable releases and a clear vision how to go forward."
 HOMEPAGE = "http://libav.org/"
 SECTION = "libs"
+
 LICENSE = "GPLv2+"
 LICENSE_FLAGS = "commercial"
 
@@ -9,7 +15,7 @@ PROVIDES = "ffmpeg"
 
 ARM_INSTRUCTION_SET = "arm"
 
-DEPENDS = "zlib libogg libvorbis libtheora yasm-native"
+DEPENDS = "zlib libogg yasm-native"
 
 INC_PR = "r8"
 
@@ -23,21 +29,29 @@ BUILD_OPTIMIZATION = "${FULL_OPTIMIZATION}"
 EXTRA_FFCONF_armv7a = "--cpu=cortex-a8"
 EXTRA_FFCONF ?= ""
 
-PACKAGECONFIG ??= "bzip2 x264 ${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'x11', '', d)}"
-PACKAGECONFIG[jack] = "--enable-indev=jack,--disable-indev=jack,jack"
+PACKAGECONFIG ??= "bzip2 x264 theora ${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'x11', '', d)}"
 PACKAGECONFIG[bzip2] = "--enable-bzlib,--disable-bzlib,bzip2"
-PACKAGECONFIG[schroedinger] = "--enable-libschroedinger,--disable-libschroedinger,schroedinger"
-PACKAGECONFIG[gsm] = "--enable-libgsm,--disable-libgsm,libgsm"
-PACKAGECONFIG[x264] = "--enable-libx264,--disable-libx264,x264"
-PACKAGECONFIG[vpx] = "--enable-libvpx,--disable-libvpx,libvpx"
-PACKAGECONFIG[mp3lame] = "--enable-libmp3lame,--disable-libmp3lame,lame"
 PACKAGECONFIG[faac] = "--enable-libfaac,--disable-libfaac,faac"
+PACKAGECONFIG[gsm] = "--enable-libgsm,--disable-libgsm,libgsm"
+PACKAGECONFIG[jack] = "--enable-indev=jack,--disable-indev=jack,jack"
+PACKAGECONFIG[libvorbis] = "--enable-libvorbis,--disable-libvorbis,libvorbis"
+PACKAGECONFIG[mp3lame] = "--enable-libmp3lame,--disable-libmp3lame,lame"
+PACKAGECONFIG[openssl] = "--enable-openssl,--disable-openssl,openssl"
+PACKAGECONFIG[schroedinger] = "--enable-libschroedinger,--disable-libschroedinger,schroedinger"
+PACKAGECONFIG[speex] = "--enable-libspeex,--disable-libspeex,speex"
+PACKAGECONFIG[theora] = "--enable-libtheora,--disable-libtheora,libtheora"
+PACKAGECONFIG[vpx] = "--enable-libvpx,--disable-libvpx,libvpx"
 PACKAGECONFIG[x11] = "--enable-x11grab,--disable-x11grab,virtual/libx11 libxfixes libxext xproto virtual/libsdl"
+PACKAGECONFIG[x264] = "--enable-libx264,--disable-libx264,x264"
+
+# Check codecs that require --enable-nonfree
+USE_NONFREE = "${@bb.utils.contains_any('PACKAGECONFIG', [ 'faac', 'openssl' ], 'yes', '', d)}"
 
 EXTRA_OECONF = " \
     --enable-shared \
     --enable-pthreads \
     --enable-gpl \
+    ${@bb.utils.contains('USE_NONFREE', 'yes', '--enable-nonfree', '', d)} \
     --enable-avfilter \
     \
     --cross-prefix=${TARGET_PREFIX} \
