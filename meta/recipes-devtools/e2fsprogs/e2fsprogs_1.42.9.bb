@@ -31,10 +31,6 @@ do_configure_prepend () {
 	cp ${WORKDIR}/acinclude.m4 ${S}/
 }
 
-do_compile_prepend () {
-       ( cd ${S}/util; ${BUILD_CC} subst.c -o ${B}/util/subst )
-}
-
 do_install () {
 	oe_runmake 'DESTDIR=${D}' install
 	oe_runmake 'DESTDIR=${D}' install-libs
