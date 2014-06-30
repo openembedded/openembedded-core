@@ -13,11 +13,13 @@ Index: Python-3.3.2/Lib/distutils/unixccompiler.py
 ===================================================================
 --- Python-3.3.2.orig/Lib/distutils/unixccompiler.py	2013-05-15 09:32:54.000000000 -0700
 +++ Python-3.3.2/Lib/distutils/unixccompiler.py	2013-08-01 00:58:18.629056286 -0700
-@@ -202,7 +202,7 @@
+@@ -202,7 +202,9 @@
      # ccompiler.py.
  
      def library_dir_option(self, dir):
 -        return "-L" + dir
++        if dir.startswith("."):
++            return "-L" + dir
 +        return "-L=" + dir
  
      def _is_gcc(self, compiler_name):
