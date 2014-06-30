@@ -157,7 +157,7 @@ for target_type in $YOCTOADT_TARGETS; do
 
   # get the environment setup script paths: original (the one before relocation)
   # and relocated
-  env_script_original=`$OPKG_CMD -f $OPKG_CONFIG_FILE -o $NATIVE_INSTALL_DIR files meta-environment-$machine|\
+  env_script_original=$NATIVE_INSTALL_DIR`$OPKG_CMD -f $OPKG_CONFIG_FILE -o $NATIVE_INSTALL_DIR files meta-environment-$machine|\
 							grep environment-setup`
   env_script_relocated=$INSTALL_FOLDER/${env_script_original##*/}
 
