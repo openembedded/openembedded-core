@@ -1119,6 +1119,18 @@ python package_fixsymlinks () {
         d.setVar('RDEPENDS_' + pkg, bb.utils.join_deps(rdepends, commasep=False))
 }
 
+
+python package_package_name_hook() {
+    """
+    A package_name_hook function can be used to rewrite the package names by
+    changing PKG.  For an example, see debian.bbclass.
+    """
+    pass
+}
+
+EXPORT_FUNCTIONS package_name_hook
+
+
 PKGDESTWORK = "${WORKDIR}/pkgdata"
 
 python emit_pkgdata() {
