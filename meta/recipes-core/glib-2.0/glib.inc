@@ -96,3 +96,5 @@ RDEPENDS_${PN}-ptest_append_libc-glibc = "\
             eglibc-charmap-invariant \
             eglibc-localedata-translit-cjk-variants \
            "
+
+INSANE_SKIP_${PN}-ptest += "libdir"
