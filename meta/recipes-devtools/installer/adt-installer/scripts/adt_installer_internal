@@ -157,7 +157,7 @@ for target_type in $YOCTOADT_TARGETS; do
 
   # get the environment setup script paths: original (the one before relocation)
   # and relocated
-  env_script_original=$NATIVE_INSTALL_DIR`$OPKG_CMD -f $OPKG_CONFIG_FILE -o $NATIVE_INSTALL_DIR files meta-environment-$machine|\
+  env_script_original=`$OPKG_CMD -f $OPKG_CONFIG_FILE -o $NATIVE_INSTALL_DIR files meta-environment-$machine|\
 							grep environment-setup`
   env_script_relocated=$INSTALL_FOLDER/${env_script_original##*/}
 
@@ -213,6 +213,8 @@ if [ -d $NATIVE_INSTALL_DIR/$DEFAULT_INSTALL_FOLDER ]; then
         # go to the next directory
         dir=$(dirname $dir)
     done
+    # Step 3: Rewrite the *.list files to contain the correct paths
+    $SUDO find $NATIVE_INSTALL_DIR/var/lib/opkg -type f -exec sed -i -e '#^$DEFAULT_INSTALL_FOLDER#$NATIVE_INSTALL_DIR#' {} \;
 fi
 
 # Link the ld.so.cache file into the hosts filesystem
