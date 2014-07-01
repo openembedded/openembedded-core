@@ -1,0 +1,32 @@
+From 651aaac47361c03d15681b6cfdba0056a348fbb7 Mon Sep 17 00:00:00 2001
+From: Dominic Hargreaves <dom@earth.li>
+Date: Sun, 27 Nov 2011 16:27:07 +0000
+Subject: Disable failing GNU/Hurd tests dist/threads/t/stack.t
+
+These tests fail on GNU/Hurd owing to libpthread using fixed-size stacks.
+This is a known limitation that should get fixed in the future.
+
+For now, disable the tests.
+
+Bug-Debian: http://bugs.debian.org/650175
+
+Patch-Name: debian/hurd_test_skip_stack.diff
+---
+ dist/threads/t/stack.t | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/dist/threads/t/stack.t b/dist/threads/t/stack.t
+index cfd6cf7..84cc527 100644
+--- a/dist/threads/t/stack.t
++++ b/dist/threads/t/stack.t
+@@ -7,6 +7,10 @@ BEGIN {
+         print("1..0 # SKIP Perl not compiled with 'useithreads'\n");
+         exit(0);
+     }
++    if ($^O eq 'gnu') {
++        print("1..0 # SKIP fails on GNU/Hurd (Debian #650175)\n");
++        exit(0);
++    }
+ }
+ 
+ use ExtUtils::testlib;

@@ -1,0 +1,38 @@
+From f2d2ddd656999f51148c66a3efce76bda8d2f9ca Mon Sep 17 00:00:00 2001
+From: Brendan O'Dea <bod@debian.org>
+Date: Fri, 18 Mar 2005 22:22:25 +1100
+Subject: Prune the list of libraries wanted to what we actually need.
+
+Bug-Debian: http://bugs.debian.org/128355
+
+We want to keep the dependencies on perl-base as small as possible,
+and some of the original list may be present on buildds (see Bug#128355).
+
+Patch-Name: debian/prune_libs.diff
+---
+ Configure | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
+
+diff --git a/Configure b/Configure
+index 293ef61..3f80a76 100755
+--- a/Configure
++++ b/Configure
+@@ -1387,8 +1387,7 @@ libswanted_uselargefiles=''
+ : set usesocks on the Configure command line to enable socks.
+ : List of libraries we want.
+ : If anyone needs extra -lxxx, put those in a hint file.
+-libswanted="socket bind inet nsl nm ndbm gdbm dbm db malloc dl ld sun"
+-libswanted="$libswanted m crypt sec util c cposix posix ucb bsd BSD"
++libswanted='gdbm gdbm_compat db dl m c crypt'
+ : We probably want to search /usr/shlib before most other libraries.
+ : This is only used by the lib/ExtUtils/MakeMaker.pm routine extliblist.
+ glibpth=`echo " $glibpth " | sed -e 's! /usr/shlib ! !'`
+@@ -22796,7 +22795,7 @@ sunos*X4*)
+     ;;
+ *) case "$usedl" in
+     $define|true|[yY]*)
+-	    set X `echo " $libs " | sed -e 's@ -lndbm @ @' -e 's@ -lgdbm @ @' -e 's@ -lgdbm_compat @ @' -e 's@ -ldbm @ @' -e 's@ -ldb @ @'`
++	    set X `echo " $libs " | sed -e 's@ -lgdbm @ @' -e 's@ -lgdbm_compat @ @' -e 's@ -ldb @ @'`
+ 	    shift
+ 	    perllibs="$*"
+ 	    ;;

@@ -1,0 +1,47 @@
+From 2ed4b0c66fe7c7282922798eb3271b8f101359d1 Mon Sep 17 00:00:00 2001
+From: Hongxu Jia <hongxu.jia@windriver.com>
+Date: Thu, 19 Jun 2014 19:34:56 +0800
+Subject: [PATCH] Makefile.SH: fix do_install failed
+
+Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
+---
+ Makefile.SH | 16 +---------------
+ 1 file changed, 1 insertion(+), 15 deletions(-)
+
+diff --git a/Makefile.SH b/Makefile.SH
+index f5d2d0f..e468c1b 100755
+--- a/Makefile.SH
++++ b/Makefile.SH
+@@ -1074,8 +1074,7 @@ EOT
+         $spitshell >>$Makefile <<EOT
+ 
+ install_$name install-$name: \$(INSTALL_DEPENDENCE) installperl all installman
+-	\$(RUN_PERL) installperl --destdir=\$(DESTDIR) $flags \$(INSTALLFLAGS) \$(STRIPFLAGS)
+-	\$(RUN_PERL) installman --destdir=\$(DESTDIR) $flags
++	./hostperl -Ifake_config_library -Ilib -MConfig installperl --destdir=\$(DESTDIR) $flags  \$(INSTALLFLAGS) \$(STRIPFLAGS)
+ EOT
+     fi
+ 
+@@ -1104,19 +1103,6 @@ else
+ 	$spitshell >>$Makefile <<'!NO!SUBS!'
+ install.perl:	$(INSTALL_DEPENDENCE) installperl
+ 	./hostperl -Ifake_config_library -Ilib -MConfig installperl --destdir=$(DESTDIR) $(INSTALLFLAGS) $(STRIPFLAGS)
+-
+-# XXX Experimental. Hardwired values, but useful for testing.
+-# Eventually Configure could ask for some of these values.
+-install.html: all installhtml
+-	-@test -f README.vms && cd vms && $(LNS) ../README.vms README_vms.pod && cd ..
+-	$(RUN_PERL) installhtml   \
+-      --podroot=. --podpath=. --recurse  \
+-      --htmldir=$(privlib)/html   \
+-      --htmlroot=$(privlib)/html  \
+-      --splithead=pod/perlipc     \
+-      --splititem=pod/perlfunc    \
+-      --ignore=Porting/Maintainers.pm,Porting/pumpkin.pod,Porting/repository.pod \
+-      --verbose
+ !NO!SUBS!
+ fi
+ 
+-- 
+1.8.1.2
+
