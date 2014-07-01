@@ -50,44 +50,6 @@ Index: elfutils-0.148/backends/Makefile.am
  	$(textrel_check)
  
  libebl_i386.so: $(cpu_i386)
-Index: elfutils-0.148/backends/Makefile.in
-===================================================================
---- elfutils-0.148.orig/backends/Makefile.in	2010-06-28 19:07:33.000000000 +0000
-+++ elfutils-0.148/backends/Makefile.in	2010-07-03 13:04:07.000000000 +0000
-@@ -165,6 +165,7 @@
- INSTALL_SCRIPT = @INSTALL_SCRIPT@
- INSTALL_STRIP_PROGRAM = @INSTALL_STRIP_PROGRAM@
- LDFLAGS = @LDFLAGS@
-+LD_AS_NEEDED = @LD_AS_NEEDED@
- LEX = @LEX@
- LEXLIB = @LEXLIB@
- LEX_OUTPUT_ROOT = @LEX_OUTPUT_ROOT@
-@@ -194,6 +195,7 @@
- STRIP = @STRIP@
- USE_NLS = @USE_NLS@
- VERSION = @VERSION@
-+WEXTRA = @WEXTRA@
- XGETTEXT = @XGETTEXT@
- XGETTEXT_015 = @XGETTEXT_015@
- XGETTEXT_EXTRA_OPTIONS = @XGETTEXT_EXTRA_OPTIONS@
-@@ -257,7 +259,7 @@
- 	-I$(top_srcdir)/libelf -I$(top_srcdir)/libdw
- AM_CFLAGS = -std=gnu99 -Wall -Wshadow $(if \
- 	$($(*F)_no_Werror),,-Werror) $(if \
--	$($(*F)_no_Wunused),,-Wunused -Wextra) $(if \
-+	$($(*F)_no_Wunused),,-Wunused $(WEXTRA)) $(if \
- 	$($(*F)_no_Wformat),-Wno-format,-Wformat=2) $($(*F)_CFLAGS) \
- 	$(am__append_1)
- @MUDFLAP_FALSE@libmudflap = 
-@@ -698,7 +700,7 @@
- 	$(LINK) -shared -o $(@:.map=.so) \
- 		-Wl,--whole-archive $< $(cpu_$*) -Wl,--no-whole-archive \
- 		-Wl,--version-script,$(@:.so=.map) \
--		-Wl,-z,defs -Wl,--as-needed $(libelf) $(libdw) $(libmudflap)
-+		-Wl,-z,defs $(LD_AS_NEEDED) $(libelf) $(libdw) $(libmudflap)
- 	$(textrel_check)
- 
- libebl_i386.so: $(cpu_i386)
 Index: elfutils-0.148/ChangeLog
 ===================================================================
 --- elfutils-0.148.orig/ChangeLog	2010-04-21 14:26:40.000000000 +0000
@@ -172,26 +134,6 @@ Index: elfutils-0.148/config/eu.am
  	    $(if $($(*F)_no_Wformat),-Wno-format,-Wformat=2) \
  	    $($(*F)_CFLAGS)
  
-Index: elfutils-0.148/config/Makefile.in
-===================================================================
---- elfutils-0.148.orig/config/Makefile.in	2010-06-28 19:07:34.000000000 +0000
-+++ elfutils-0.148/config/Makefile.in	2010-07-03 13:04:07.000000000 +0000
-@@ -76,6 +76,7 @@
- INSTALL_SCRIPT = @INSTALL_SCRIPT@
- INSTALL_STRIP_PROGRAM = @INSTALL_STRIP_PROGRAM@
- LDFLAGS = @LDFLAGS@
-+LD_AS_NEEDED = @LD_AS_NEEDED@
- LEX = @LEX@
- LEXLIB = @LEXLIB@
- LEX_OUTPUT_ROOT = @LEX_OUTPUT_ROOT@
-@@ -105,6 +106,7 @@
- STRIP = @STRIP@
- USE_NLS = @USE_NLS@
- VERSION = @VERSION@
-+WEXTRA = @WEXTRA@
- XGETTEXT = @XGETTEXT@
- XGETTEXT_015 = @XGETTEXT_015@
- XGETTEXT_EXTRA_OPTIONS = @XGETTEXT_EXTRA_OPTIONS@
 Index: elfutils-0.148/config.h.in
 ===================================================================
 --- elfutils-0.148.orig/config.h.in	2010-06-28 19:07:37.000000000 +0000
@@ -349,35 +291,6 @@ Index: elfutils-0.148/lib/eu-config.h
  
  #ifdef SHARED
  # define OLD_VERSION(name, version) \
-Index: elfutils-0.148/lib/Makefile.in
-===================================================================
---- elfutils-0.148.orig/lib/Makefile.in	2010-06-28 19:07:33.000000000 +0000
-+++ elfutils-0.148/lib/Makefile.in	2010-07-03 13:04:07.000000000 +0000
-@@ -99,6 +99,7 @@
- INSTALL_SCRIPT = @INSTALL_SCRIPT@
- INSTALL_STRIP_PROGRAM = @INSTALL_STRIP_PROGRAM@
- LDFLAGS = @LDFLAGS@
-+LD_AS_NEEDED = @LD_AS_NEEDED@
- LEX = @LEX@
- LEXLIB = @LEXLIB@
- LEX_OUTPUT_ROOT = @LEX_OUTPUT_ROOT@
-@@ -128,6 +129,7 @@
- STRIP = @STRIP@
- USE_NLS = @USE_NLS@
- VERSION = @VERSION@
-+WEXTRA = @WEXTRA@
- XGETTEXT = @XGETTEXT@
- XGETTEXT_015 = @XGETTEXT_015@
- XGETTEXT_EXTRA_OPTIONS = @XGETTEXT_EXTRA_OPTIONS@
-@@ -190,7 +192,7 @@
- 	-I$(srcdir)/../libelf
- AM_CFLAGS = -std=gnu99 -Wall -Wshadow $(if \
- 	$($(*F)_no_Werror),,-Werror) $(if \
--	$($(*F)_no_Wunused),,-Wunused -Wextra) $(if \
-+	$($(*F)_no_Wunused),,-Wunused $(WEXTRA)) $(if \
- 	$($(*F)_no_Wformat),-Wno-format,-Wformat=2) $($(*F)_CFLAGS) \
- 	$(am__append_1) -fpic
- @MUDFLAP_FALSE@libmudflap = 
 Index: elfutils-0.148/libasm/ChangeLog
 ===================================================================
 --- elfutils-0.148.orig/libasm/ChangeLog	2010-03-05 05:48:23.000000000 +0000
@@ -394,35 +307,6 @@ Index: elfutils-0.148/libasm/ChangeLog
  2005-02-15  Ulrich Drepper  <drepper@redhat.com>
  
  	* Makefile.am (AM_CFLAGS): Add -Wunused -Wextra -Wformat=2.
-Index: elfutils-0.148/libasm/Makefile.in
-===================================================================
---- elfutils-0.148.orig/libasm/Makefile.in	2010-06-28 19:07:33.000000000 +0000
-+++ elfutils-0.148/libasm/Makefile.in	2010-07-03 13:04:07.000000000 +0000
-@@ -147,6 +147,7 @@
- INSTALL_SCRIPT = @INSTALL_SCRIPT@
- INSTALL_STRIP_PROGRAM = @INSTALL_STRIP_PROGRAM@
- LDFLAGS = @LDFLAGS@
-+LD_AS_NEEDED = @LD_AS_NEEDED@
- LEX = @LEX@
- LEXLIB = @LEXLIB@
- LEX_OUTPUT_ROOT = @LEX_OUTPUT_ROOT@
-@@ -176,6 +177,7 @@
- STRIP = @STRIP@
- USE_NLS = @USE_NLS@
- VERSION = 1
-+WEXTRA = @WEXTRA@
- XGETTEXT = @XGETTEXT@
- XGETTEXT_015 = @XGETTEXT_015@
- XGETTEXT_EXTRA_OPTIONS = @XGETTEXT_EXTRA_OPTIONS@
-@@ -239,7 +241,7 @@
- 	-I$(top_srcdir)/libdw
- AM_CFLAGS = -std=gnu99 -Wall -Wshadow $(if \
- 	$($(*F)_no_Werror),,-Werror) $(if \
--	$($(*F)_no_Wunused),,-Wunused -Wextra) $(if \
-+	$($(*F)_no_Wunused),,-Wunused $(WEXTRA)) $(if \
- 	$($(*F)_no_Wformat),-Wno-format,-Wformat=2) $($(*F)_CFLAGS) \
- 	$(am__append_1)
- @MUDFLAP_FALSE@libmudflap = 
 Index: elfutils-0.148/libcpu/ChangeLog
 ===================================================================
 --- elfutils-0.148.orig/libcpu/ChangeLog	2010-03-05 05:48:23.000000000 +0000
@@ -461,35 +345,6 @@ Index: elfutils-0.148/libcpu/i386_disasm.c
  			}
  		    }
  		  else
-Index: elfutils-0.148/libcpu/Makefile.in
-===================================================================
---- elfutils-0.148.orig/libcpu/Makefile.in	2010-06-28 19:07:33.000000000 +0000
-+++ elfutils-0.148/libcpu/Makefile.in	2010-07-03 13:04:07.000000000 +0000
-@@ -116,6 +116,7 @@
- INSTALL_SCRIPT = @INSTALL_SCRIPT@
- INSTALL_STRIP_PROGRAM = @INSTALL_STRIP_PROGRAM@
- LDFLAGS = @LDFLAGS@
-+LD_AS_NEEDED = @LD_AS_NEEDED@
- LEX = @LEX@
- LEXLIB = @LEXLIB@
- LEX_OUTPUT_ROOT = lex.$(<F:lex.l=)
-@@ -145,6 +146,7 @@
- STRIP = @STRIP@
- USE_NLS = @USE_NLS@
- VERSION = @VERSION@
-+WEXTRA = @WEXTRA@
- XGETTEXT = @XGETTEXT@
- XGETTEXT_015 = @XGETTEXT_015@
- XGETTEXT_EXTRA_OPTIONS = @XGETTEXT_EXTRA_OPTIONS@
-@@ -208,7 +210,7 @@
- 	-I$(srcdir)/../libdw -I$(srcdir)/../libasm
- AM_CFLAGS = -std=gnu99 -Wall -Wshadow $(if \
- 	$($(*F)_no_Werror),,-Werror) $(if \
--	$($(*F)_no_Wunused),,-Wunused -Wextra) $(if \
-+	$($(*F)_no_Wunused),,-Wunused $(WEXTRA)) $(if \
- 	$($(*F)_no_Wformat),-Wno-format,-Wformat=2) $($(*F)_CFLAGS) \
- 	$(am__append_1) -fpic -fdollars-in-identifiers
- @MUDFLAP_FALSE@libmudflap = 
 Index: elfutils-0.148/libdw/ChangeLog
 ===================================================================
 --- elfutils-0.148.orig/libdw/ChangeLog	2010-06-28 19:05:56.000000000 +0000
@@ -530,35 +385,6 @@ Index: elfutils-0.148/libdw/libdw.h
  /* Return attribute code of given attribute.  */
  __libdw_extern_inline unsigned int
  dwarf_whatattr (Dwarf_Attribute *attr)
-Index: elfutils-0.148/libdw/Makefile.in
-===================================================================
---- elfutils-0.148.orig/libdw/Makefile.in	2010-06-28 19:07:33.000000000 +0000
-+++ elfutils-0.148/libdw/Makefile.in	2010-07-03 13:04:07.000000000 +0000
-@@ -191,6 +191,7 @@
- INSTALL_SCRIPT = @INSTALL_SCRIPT@
- INSTALL_STRIP_PROGRAM = @INSTALL_STRIP_PROGRAM@
- LDFLAGS = @LDFLAGS@
-+LD_AS_NEEDED = @LD_AS_NEEDED@
- LEX = @LEX@
- LEXLIB = @LEXLIB@
- LEX_OUTPUT_ROOT = @LEX_OUTPUT_ROOT@
-@@ -220,6 +221,7 @@
- STRIP = @STRIP@
- USE_NLS = @USE_NLS@
- VERSION = 1
-+WEXTRA = @WEXTRA@
- XGETTEXT = @XGETTEXT@
- XGETTEXT_015 = @XGETTEXT_015@
- XGETTEXT_EXTRA_OPTIONS = @XGETTEXT_EXTRA_OPTIONS@
-@@ -282,7 +284,7 @@
- 	-I$(srcdir)/../libelf
- AM_CFLAGS = -std=gnu99 -Wall -Wshadow $(if \
- 	$($(*F)_no_Werror),,-Werror) $(if \
--	$($(*F)_no_Wunused),,-Wunused -Wextra) $(if \
-+	$($(*F)_no_Wunused),,-Wunused $(WEXTRA)) $(if \
- 	$($(*F)_no_Wformat),-Wno-format,-Wformat=2) $($(*F)_CFLAGS) \
- 	$(am__append_1) $(am__append_2)
- @MUDFLAP_FALSE@libmudflap = 
 Index: elfutils-0.148/libdwfl/ChangeLog
 ===================================================================
 --- elfutils-0.148.orig/libdwfl/ChangeLog	2010-06-28 19:05:56.000000000 +0000
@@ -575,35 +401,6 @@ Index: elfutils-0.148/libdwfl/ChangeLog
  	* Makefile.am (noinst_HEADERS): Add loc2c.c.
  
  	* test2.c (main): Check sscanf result to quiet warning.
-Index: elfutils-0.148/libdwfl/Makefile.in
-===================================================================
---- elfutils-0.148.orig/libdwfl/Makefile.in	2010-06-28 19:07:33.000000000 +0000
-+++ elfutils-0.148/libdwfl/Makefile.in	2010-07-03 13:04:07.000000000 +0000
-@@ -181,6 +181,7 @@
- INSTALL_SCRIPT = @INSTALL_SCRIPT@
- INSTALL_STRIP_PROGRAM = @INSTALL_STRIP_PROGRAM@
- LDFLAGS = @LDFLAGS@
-+LD_AS_NEEDED = @LD_AS_NEEDED@
- LEX = @LEX@
- LEXLIB = @LEXLIB@
- LEX_OUTPUT_ROOT = @LEX_OUTPUT_ROOT@
-@@ -210,6 +211,7 @@
- STRIP = @STRIP@
- USE_NLS = @USE_NLS@
- VERSION = 1
-+WEXTRA = @WEXTRA@
- XGETTEXT = @XGETTEXT@
- XGETTEXT_015 = @XGETTEXT_015@
- XGETTEXT_EXTRA_OPTIONS = @XGETTEXT_EXTRA_OPTIONS@
-@@ -273,7 +275,7 @@
- 	-I$(srcdir)/../libdw
- AM_CFLAGS = -std=gnu99 -Wall -Wshadow $(if \
- 	$($(*F)_no_Werror),,-Werror) $(if \
--	$($(*F)_no_Wunused),,-Wunused -Wextra) $(if \
-+	$($(*F)_no_Wunused),,-Wunused $(WEXTRA)) $(if \
- 	$($(*F)_no_Wformat),-Wno-format,-Wformat=2) $($(*F)_CFLAGS) \
- 	$(am__append_1)
- @MUDFLAP_FALSE@libmudflap = 
 Index: elfutils-0.148/libebl/ChangeLog
 ===================================================================
 --- elfutils-0.148.orig/libebl/ChangeLog	2010-03-05 05:48:23.000000000 +0000
@@ -620,35 +417,6 @@ Index: elfutils-0.148/libebl/ChangeLog
  2005-05-21  Ulrich Drepper  <drepper@redhat.com>
  
  	* libebl_x86_64.map: Add x86_64_core_note.
-Index: elfutils-0.148/libebl/Makefile.in
-===================================================================
---- elfutils-0.148.orig/libebl/Makefile.in	2010-06-28 19:07:34.000000000 +0000
-+++ elfutils-0.148/libebl/Makefile.in	2010-07-03 13:04:07.000000000 +0000
-@@ -143,6 +143,7 @@
- INSTALL_SCRIPT = @INSTALL_SCRIPT@
- INSTALL_STRIP_PROGRAM = @INSTALL_STRIP_PROGRAM@
- LDFLAGS = @LDFLAGS@
-+LD_AS_NEEDED = @LD_AS_NEEDED@
- LEX = @LEX@
- LEXLIB = @LEXLIB@
- LEX_OUTPUT_ROOT = @LEX_OUTPUT_ROOT@
-@@ -172,6 +173,7 @@
- STRIP = @STRIP@
- USE_NLS = @USE_NLS@
- VERSION = 1
-+WEXTRA = @WEXTRA@
- XGETTEXT = @XGETTEXT@
- XGETTEXT_015 = @XGETTEXT_015@
- XGETTEXT_EXTRA_OPTIONS = @XGETTEXT_EXTRA_OPTIONS@
-@@ -235,7 +237,7 @@
- 	-I$(srcdir)/../libasm
- AM_CFLAGS = -std=gnu99 -Wall -Wshadow $(if \
- 	$($(*F)_no_Werror),,-Werror) $(if \
--	$($(*F)_no_Wunused),,-Wunused -Wextra) $(if \
-+	$($(*F)_no_Wunused),,-Wunused $(WEXTRA)) $(if \
- 	$($(*F)_no_Wformat),-Wno-format,-Wformat=2) $($(*F)_CFLAGS) \
- 	$(am__append_1) -fpic
- @MUDFLAP_FALSE@libmudflap = 
 Index: elfutils-0.148/libelf/ChangeLog
 ===================================================================
 --- elfutils-0.148.orig/libelf/ChangeLog	2010-06-14 21:17:20.000000000 +0000
@@ -687,75 +455,6 @@ Index: elfutils-0.148/libelf/common.h
  	      : (sizeof (Var) == 4					      \
  		 ? bswap_32 (Var)					      \
  		 : bswap_64 (Var))))
-Index: elfutils-0.148/libelf/Makefile.in
-===================================================================
---- elfutils-0.148.orig/libelf/Makefile.in	2010-06-28 19:07:34.000000000 +0000
-+++ elfutils-0.148/libelf/Makefile.in	2010-07-03 13:04:07.000000000 +0000
-@@ -189,6 +189,7 @@
- INSTALL_SCRIPT = @INSTALL_SCRIPT@
- INSTALL_STRIP_PROGRAM = @INSTALL_STRIP_PROGRAM@
- LDFLAGS = @LDFLAGS@
-+LD_AS_NEEDED = @LD_AS_NEEDED@
- LEX = @LEX@
- LEXLIB = @LEXLIB@
- LEX_OUTPUT_ROOT = @LEX_OUTPUT_ROOT@
-@@ -218,6 +219,7 @@
- STRIP = @STRIP@
- USE_NLS = @USE_NLS@
- VERSION = 1
-+WEXTRA = @WEXTRA@
- XGETTEXT = @XGETTEXT@
- XGETTEXT_015 = @XGETTEXT_015@
- XGETTEXT_EXTRA_OPTIONS = @XGETTEXT_EXTRA_OPTIONS@
-@@ -279,7 +281,7 @@
- INCLUDES = -I. -I$(srcdir) -I$(top_srcdir)/lib -I..
- AM_CFLAGS = -std=gnu99 -Wall -Wshadow $(if \
- 	$($(*F)_no_Werror),,-Werror) $(if \
--	$($(*F)_no_Wunused),,-Wunused -Wextra) $(if \
-+	$($(*F)_no_Wunused),,-Wunused $(WEXTRA)) $(if \
- 	$($(*F)_no_Wformat),-Wno-format,-Wformat=2) $($(*F)_CFLAGS) \
- 	$(am__append_1) $(am__append_2)
- @MUDFLAP_FALSE@libmudflap = 
-Index: elfutils-0.148/m4/Makefile.in
-===================================================================
---- elfutils-0.148.orig/m4/Makefile.in	2010-06-28 19:07:34.000000000 +0000
-+++ elfutils-0.148/m4/Makefile.in	2010-07-03 13:04:07.000000000 +0000
-@@ -75,6 +75,7 @@
- INSTALL_SCRIPT = @INSTALL_SCRIPT@
- INSTALL_STRIP_PROGRAM = @INSTALL_STRIP_PROGRAM@
- LDFLAGS = @LDFLAGS@
-+LD_AS_NEEDED = @LD_AS_NEEDED@
- LEX = @LEX@
- LEXLIB = @LEXLIB@
- LEX_OUTPUT_ROOT = @LEX_OUTPUT_ROOT@
-@@ -104,6 +105,7 @@
- STRIP = @STRIP@
- USE_NLS = @USE_NLS@
- VERSION = @VERSION@
-+WEXTRA = @WEXTRA@
- XGETTEXT = @XGETTEXT@
- XGETTEXT_015 = @XGETTEXT_015@
- XGETTEXT_EXTRA_OPTIONS = @XGETTEXT_EXTRA_OPTIONS@
-Index: elfutils-0.148/Makefile.in
-===================================================================
---- elfutils-0.148.orig/Makefile.in	2010-06-28 19:07:33.000000000 +0000
-+++ elfutils-0.148/Makefile.in	2010-07-03 13:04:07.000000000 +0000
-@@ -155,6 +155,7 @@
- INSTALL_SCRIPT = @INSTALL_SCRIPT@
- INSTALL_STRIP_PROGRAM = @INSTALL_STRIP_PROGRAM@
- LDFLAGS = @LDFLAGS@
-+LD_AS_NEEDED = @LD_AS_NEEDED@
- LEX = @LEX@
- LEXLIB = @LEXLIB@
- LEX_OUTPUT_ROOT = @LEX_OUTPUT_ROOT@
-@@ -184,6 +185,7 @@
- STRIP = @STRIP@
- USE_NLS = @USE_NLS@
- VERSION = @VERSION@
-+WEXTRA = @WEXTRA@
- XGETTEXT = @XGETTEXT@
- XGETTEXT_015 = @XGETTEXT_015@
- XGETTEXT_EXTRA_OPTIONS = @XGETTEXT_EXTRA_OPTIONS@
 Index: elfutils-0.148/src/addr2line.c
 ===================================================================
 --- elfutils-0.148.orig/src/addr2line.c	2010-05-28 14:38:30.000000000 +0000
@@ -908,45 +607,7 @@ Index: elfutils-0.148/src/Makefile.am
  readelf_LDADD = $(libdw) $(libebl) $(libelf) $(libeu) $(libmudflap) -ldl
  nm_LDADD = $(libdw) $(libebl) $(libelf) $(libeu) $(libmudflap) -ldl
  size_LDADD = $(libelf) $(libeu) $(libmudflap)
-Index: elfutils-0.148/src/Makefile.in
-===================================================================
---- elfutils-0.148.orig/src/Makefile.in	2010-06-28 19:07:34.000000000 +0000
-+++ elfutils-0.148/src/Makefile.in	2010-07-03 13:04:08.000000000 +0000
-@@ -228,6 +228,7 @@
- INSTALL_SCRIPT = @INSTALL_SCRIPT@
- INSTALL_STRIP_PROGRAM = @INSTALL_STRIP_PROGRAM@
- LDFLAGS = @LDFLAGS@
-+LD_AS_NEEDED = @LD_AS_NEEDED@
- LEX = @LEX@
- LEXLIB = @LEXLIB@
- LEX_OUTPUT_ROOT = @LEX_OUTPUT_ROOT@
-@@ -257,6 +258,7 @@
- STRIP = @STRIP@
- USE_NLS = @USE_NLS@
- VERSION = @VERSION@
-+WEXTRA = @WEXTRA@
- XGETTEXT = @XGETTEXT@
- XGETTEXT_015 = @XGETTEXT_015@
- XGETTEXT_EXTRA_OPTIONS = @XGETTEXT_EXTRA_OPTIONS@
-@@ -321,7 +323,7 @@
- 	-I$(srcdir)/../libasm
- AM_CFLAGS = -std=gnu99 -Wall -Wshadow $(if \
- 	$($(*F)_no_Werror),,-Werror) $(if \
--	$($(*F)_no_Wunused),,-Wunused -Wextra) $(if \
-+	$($(*F)_no_Wunused),,-Wunused $(WEXTRA)) $(if \
- 	$($(*F)_no_Wformat),-Wno-format,-Wformat=2) $($(*F)_CFLAGS) \
- 	$(am__append_1)
- @MUDFLAP_FALSE@libmudflap = 
-@@ -368,6 +370,9 @@
- addr2line_no_Wformat = yes
- # XXX While the file is not finished, don't warn about this
- ldgeneric_no_Wunused = yes
-+
-+# Buggy old compilers.
-+readelf_no_Werror = yes
- readelf_LDADD = $(libdw) $(libebl) $(libelf) $(libeu) $(libmudflap) -ldl
- nm_LDADD = $(libdw) $(libebl) $(libelf) $(libeu) $(libmudflap) -ldl
- size_LDADD = $(libelf) $(libeu) $(libmudflap)
+
 Index: elfutils-0.148/src/readelf.c
 ===================================================================
 --- elfutils-0.148.orig/src/readelf.c	2010-06-28 19:05:56.000000000 +0000
@@ -1093,32 +754,3 @@ Index: elfutils-0.148/tests/line2addr.c
  	{
  	default:
  	case 0:
-Index: elfutils-0.148/tests/Makefile.in
-===================================================================
---- elfutils-0.148.orig/tests/Makefile.in	2010-06-28 19:07:34.000000000 +0000
-+++ elfutils-0.148/tests/Makefile.in	2010-07-03 13:04:08.000000000 +0000
-@@ -372,6 +372,7 @@
- INSTALL_SCRIPT = @INSTALL_SCRIPT@
- INSTALL_STRIP_PROGRAM = @INSTALL_STRIP_PROGRAM@
- LDFLAGS = @LDFLAGS@
-+LD_AS_NEEDED = @LD_AS_NEEDED@
- LEX = @LEX@
- LEXLIB = @LEXLIB@
- LEX_OUTPUT_ROOT = @LEX_OUTPUT_ROOT@
-@@ -401,6 +402,7 @@
- STRIP = @STRIP@
- USE_NLS = @USE_NLS@
- VERSION = @VERSION@
-+WEXTRA = @WEXTRA@
- XGETTEXT = @XGETTEXT@
- XGETTEXT_015 = @XGETTEXT_015@
- XGETTEXT_EXTRA_OPTIONS = @XGETTEXT_EXTRA_OPTIONS@
-@@ -462,7 +464,7 @@
- INCLUDES = -I. -I$(srcdir) -I$(top_srcdir)/lib -I.. $(am__append_2)
- AM_CFLAGS = -std=gnu99 -Wall -Wshadow $(if \
- 	$($(*F)_no_Werror),,-Werror) $(if \
--	$($(*F)_no_Wunused),,-Wunused -Wextra) $(if \
-+	$($(*F)_no_Wunused),,-Wunused $(WEXTRA)) $(if \
- 	$($(*F)_no_Wformat),-Wno-format,-Wformat=2) $($(*F)_CFLAGS) \
- 	$(am__append_1)
- @MUDFLAP_FALSE@libmudflap = 
