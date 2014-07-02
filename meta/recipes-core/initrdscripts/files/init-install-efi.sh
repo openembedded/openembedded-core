@@ -14,46 +14,67 @@ boot_size=20
 # 5% for swap
 swap_ratio=5
 
-found="no"
+# Get a list of hard drives
+hdnamelist=""
+live_dev_name=${1%%/*}
 
-echo "Searching for a hard drive..."
-for device in 'hda' 'hdb' 'sda' 'sdb' 'mmcblk0' 'mmcblk1'
-do
-    if [ -e /sys/block/${device}/removable ]; then
-        if [ "$(cat /sys/block/${device}/removable)" = "0" ]; then
-            found="yes"
+echo "Searching for hard drives ..."
 
-            while true; do
-                # Try sleeping here to avoid getting kernel messages
-                # obscuring/confusing user
-                sleep 5
-                echo "Found drive at /dev/${device}. Do you want to install this image there ? [y/n]"
-                read answer
-                if [ "$answer" = "y" ] ; then
-                    break
-                fi
+for device in `ls /sys/block/`; do
+    case $device in
+	loop*)
+            # skip loop device
+	    ;;
+	ram*)
+            # skip ram device
+	    ;;
+	*)
+	    # skip the device LiveOS is on
+	    # Add valid hard drive name to the list
+	    if [ $device != $live_dev_name -a -e /dev/$device ]; then
+		hdnamelist="$hdnamelist $device"
+	    fi
+	    ;;
+    esac
+done
 
-                if [ "$answer" = "n" ] ; then
-                    found=no
-                    break
-                fi
-
-                echo "Please answer y or n"
-            done
-        fi
+TARGET_DEVICE_NAME=""
+for hdname in $hdnamelist; do
+    # Display found hard drives and their basic info
+    echo "-------------------------------"
+    echo /dev/$hdname
+    if [ -r /sys/block/$hdname/device/vendor ]; then
+	echo -n "VENDOR="
+	cat /sys/block/$hdname/device/vendor
     fi
-
-    if [ "$found" = "yes" ]; then
-        break;
+    echo -n "MODEL="
+    cat /sys/block/$hdname/device/model
+    cat /sys/block/$hdname/device/uevent
+    echo
+    # Get user choice
+    while true; do
+	echo -n "Do you want to install this image there? [y/n] "
+	read answer
+	if [ "$answer" = "y" -o "$answer" = "n" ]; then
+	    break
+	fi
+	echo "Please answer y or n"
+    done
+    if [ "$answer" = "y" ]; then
+	TARGET_DEVICE_NAME=$hdname
+	break
     fi
 
 done
 
-if [ "$found" = "no" ]; then
+if [ -n "$TARGET_DEVICE_NAME" ]; then
+    echo "Installing image on /dev/$TARGET_DEVICE_NAME ..."
+else
+    echo "No hard drive selected. Installation aborted."
     exit 1
 fi
 
-echo "Installing image on /dev/${device}"
+device=$TARGET_DEVICE_NAME
 
 #
 # The udev automounter can cause pain here, kill it
