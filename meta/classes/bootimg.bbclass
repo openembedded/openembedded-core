@@ -22,6 +22,7 @@
 # ${COMPRESSISO} - Transparent compress ISO, reduce size ~40% if set to 1
 # ${NOISO}  - skip building the ISO image if set to 1
 # ${NOHDD}  - skip building the HDD image if set to 1
+# ${HDDIMG_ID} - FAT image volume-id
 # ${ROOTFS} - indicates a filesystem image to include as the root filesystem (optional)
 
 do_bootimg[depends] += "dosfstools-native:do_populate_sysroot \
@@ -193,7 +194,14 @@ build_fat_img() {
 		FATSIZE="-F 32"
 	fi
 
-	mkdosfs ${FATSIZE} -n ${BOOTIMG_VOLUME_ID} -S 512 -C ${FATIMG} ${BLOCKS}
+	if [ -z "${HDDIMG_ID}" ]; then
+		mkdosfs ${FATSIZE} -n ${BOOTIMG_VOLUME_ID} -S 512 -C ${FATIMG} \
+			${BLOCKS}
+	else
+		mkdosfs ${FATSIZE} -n ${BOOTIMG_VOLUME_ID} -S 512 -C ${FATIMG} \
+		${BLOCKS} -i ${HDDIMG_ID}
+	fi
+
 	# Copy FATSOURCEDIR recursively into the image file directly
 	mcopy -i ${FATIMG} -s ${FATSOURCEDIR}/* ::/
 }
