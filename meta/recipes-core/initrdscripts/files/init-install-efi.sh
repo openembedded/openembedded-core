@@ -123,34 +123,32 @@ mkfs.ext3 $rootfs
 echo "Formatting swap partition...($swap)"
 mkswap $swap
 
-mkdir /ssd
-mkdir /rootmnt
-mkdir /bootmnt
+mkdir /tgt_root
+mkdir /src_root
+mkdir -p /boot
 
-mount $rootfs /ssd
-mount -o rw,loop,noatime,nodiratime /run/media/$1/$2 /rootmnt
-
+# Handling of the target root partition
+mount $rootfs /tgt_root
+mount -o rw,loop,noatime,nodiratime /run/media/$1/$2 /src_root
 echo "Copying rootfs files..."
-cp -a /rootmnt/* /ssd
-
-if [ -d /ssd/etc/ ] ; then
-    echo "$swap                swap             swap       defaults              0  0" >> /ssd/etc/fstab
-
+cp -a /src_root/* /tgt_root
+if [ -d /tgt_root/etc/ ] ; then
+    echo "$swap                swap             swap       defaults              0  0" >> /tgt_root/etc/fstab
+    echo "$bootfs              /boot            vfat       defaults              1  2" >> /tgt_root/etc/fstab
     # We dont want udev to mount our root device while we're booting...
-    if [ -d /ssd/etc/udev/ ] ; then
-        echo "/dev/${device}" >> /ssd/etc/udev/mount.blacklist
+    if [ -d /tgt_root/etc/udev/ ] ; then
+	echo "/dev/${device}" >> /tgt_root/etc/udev/mount.blacklist
     fi
 fi
 
-umount /ssd
-umount /rootmnt
+umount /src_root
 
+# Handling of the target boot partition
+mount $bootfs /boot
 echo "Preparing boot partition..."
-mount $bootfs /ssd
 
-EFIDIR="/ssd/EFI/BOOT"
+EFIDIR="/boot/EFI/BOOT"
 mkdir -p $EFIDIR
-cp /run/media/$1/vmlinuz /ssd
 # Copy the efi loader
 cp /run/media/$1/EFI/BOOT/*.efi $EFIDIR
 
@@ -171,11 +169,11 @@ if [ -f /run/media/$1/EFI/BOOT/grub.cfg ]; then
 fi
 
 if [ -d /run/media/$1/loader ]; then
-    GUMMIBOOT_CFGS="/ssd/loader/entries/*.conf"
+    GUMMIBOOT_CFGS="/tgt_root/loader/entries/*.conf"
     # copy config files for gummiboot
-    cp -dr /run/media/$1/loader /ssd
+    cp -dr /run/media/$1/loader /tgt_root
     # delete the install entry
-    rm -f /ssd/loader/entries/install.conf
+    rm -f /tgt_root/loader/entries/install.conf
     # delete the initrd lines
     sed -i "/initrd /d" $GUMMIBOOT_CFGS
     # delete any LABEL= strings
@@ -186,7 +184,12 @@ if [ -d /run/media/$1/loader ]; then
     sed -i "s@options *@options root=$rootfs rw $rootwait quiet @" $GUMMIBOOT_CFGS
 fi
 
-umount /ssd
+umount /tgt_root
+
+cp /run/media/$1/vmlinuz /boot
+
+umount /boot
+
 sync
 
 echo "Remove your installation media, and press ENTER"
