@@ -49,18 +49,11 @@ export CXXFLAGS_FOR_BUILD="${BUILD_CXXFLAGS}"
 export LD_FOR_BUILD = "${BUILD_LD}"
 export LDFLAGS_FOR_BUILD = "${BUILD_LDFLAGS}"
 
-def autotools_set_crosscompiling(d):
-    if not bb.data.inherits_class('native', d):
-        return " cross_compiling=yes"
-    return ""
-
 def append_libtool_sysroot(d):
     # Only supply libtool sysroot option for non-native packages
     if not bb.data.inherits_class('native', d):
         return '--with-libtool-sysroot=${STAGING_DIR_HOST}'
     return ""
-
-# EXTRA_OECONF_append = "${@autotools_set_crosscompiling(d)}"
 
 CONFIGUREOPTS = " --build=${BUILD_SYS} \
 		  --host=${HOST_SYS} \
