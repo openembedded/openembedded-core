@@ -49,7 +49,7 @@ fi
 
 # Convert SDK_ROOTFS_DIR to a full pathname
 if [[ ${SDK_ROOTFS_DIR:0:1} != "/" ]]; then
-	SDK_ROOTFS_DIR=$(pwd)/$SDK_ROOTFS_DIR
+	SDK_ROOTFS_DIR=$(readlink -f $(pwd)/$SDK_ROOTFS_DIR)
 fi
 
 TAR_OPTS=""
@@ -74,6 +74,7 @@ if [ ! -d "$SDK_ROOTFS_DIR" ]; then
 fi
 
 pseudo_state_dir="$SDK_ROOTFS_DIR/../$(basename "$SDK_ROOTFS_DIR").pseudo_state"
+pseudo_state_dir="$(readlink -f $pseudo_state_dir)"
 
 if [ -e "$pseudo_state_dir" ]; then
 	echo "Error: $pseudo_state_dir already exists!"
