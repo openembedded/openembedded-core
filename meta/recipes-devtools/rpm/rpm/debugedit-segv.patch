@@ -15,11 +15,11 @@ Upstream-Status: Pending
 
 Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
 
-Index: rpm-5.4.9/tools/debugedit.c
+Index: rpm-5.4.14/tools/debugedit.c
 ===================================================================
---- rpm-5.4.9.orig/tools/debugedit.c
-+++ rpm-5.4.9/tools/debugedit.c
-@@ -1432,21 +1432,24 @@ handle_build_id (DSO *dso, Elf_Data *bui
+--- rpm-5.4.14.orig/tools/debugedit.c
++++ rpm-5.4.14/tools/debugedit.c
+@@ -1445,21 +1445,24 @@ handle_build_id (DSO *dso, Elf_Data *bui
      auto inline void process (const void *data, size_t size)
      {
        memchunk chunk = { .data = (void *) data, .size = size };
@@ -34,16 +34,15 @@ Index: rpm-5.4.9/tools/debugedit.c
        GElf_Shdr shdr;
 -    } u;
 -    Elf_Data x = { .d_version = EV_CURRENT, .d_buf = &u };
--
++    } u1, u2;
++    Elf_Data src  = { .d_version = EV_CURRENT, .d_buf = &u1 };
++    Elf_Data dest = { .d_version = EV_CURRENT, .d_buf = &u2 };
+ 
 -    x.d_type = ELF_T_EHDR;
 -    x.d_size = sizeof u.ehdr;
 -    u.ehdr = dso->ehdr;
 -    u.ehdr.e_phoff = u.ehdr.e_shoff = 0;
 -    if (elf64_xlatetom (&x, &x, dso->ehdr.e_ident[EI_DATA]) == NULL)
-+    } u1, u2;
-+    Elf_Data src  = { .d_version = EV_CURRENT, .d_buf = &u1 };
-+    Elf_Data dest = { .d_version = EV_CURRENT, .d_buf = &u2 };
-+
 +    src.d_type = ELF_T_EHDR;
 +    src.d_size = sizeof u1.ehdr;
 +    dest.d_size = sizeof u2.ehdr;
@@ -53,7 +52,7 @@ Index: rpm-5.4.9/tools/debugedit.c
        {
        bad:
  	fprintf (stderr, "Failed to compute header checksum: %s\n",
-@@ -1454,29 +1457,31 @@ handle_build_id (DSO *dso, Elf_Data *bui
+@@ -1467,29 +1470,31 @@ handle_build_id (DSO *dso, Elf_Data *bui
  	exit (1);
        }
  

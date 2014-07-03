@@ -1,11 +1,11 @@
 
 Upstream-Status: Inappropriate [configuration]
 
-diff --git a/rpmdb/DB_CONFIG.in b/rpmdb/DB_CONFIG.in
-index 8b94c94..e0b4689 100644
---- a/rpmdb/DB_CONFIG.in
-+++ b/rpmdb/DB_CONFIG.in
-@@ -4,6 +4,7 @@
+Index: rpm-5.4.14/rpmdb/DB_CONFIG.in
+===================================================================
+--- rpm-5.4.14.orig/rpmdb/DB_CONFIG.in
++++ rpm-5.4.14/rpmdb/DB_CONFIG.in
+@@ -4,6 +4,7 @@ set_data_dir .
  set_create_dir .
  set_lg_dir ./log
  set_tmp_dir ./tmp

@@ -4,10 +4,11 @@ Upstream-Status: Pending
 
 Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
 
-diff -urN rpm-5.4.0.orig/lib/order.c rpm-5.4.0/lib/order.c
---- rpm-5.4.0.orig/lib/order.c	2010-12-13 17:36:39.000000000 -0600
-+++ rpm-5.4.0/lib/order.c	2011-08-10 11:11:43.194686332 -0500
-@@ -2170,7 +2170,7 @@
+Index: rpm-5.4.14/lib/order.c
+===================================================================
+--- rpm-5.4.14.orig/lib/order.c
++++ rpm-5.4.14/lib/order.c
+@@ -2175,7 +2175,7 @@ rescan:
  		const char * dp;
  		rpmlogLvl msglvl = (anaconda || (rpmtsDFlags(ts) & RPMDEPS_FLAG_DEPLOOPS))
  			? RPMLOG_WARNING : RPMLOG_ERR;

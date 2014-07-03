@@ -8,10 +8,11 @@ Upstream-Status: Inappropriate [disable feature]
 
 Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
 
-diff -ur rpm-5.4.9.orig/configure.ac rpm-5.4.9/configure.ac
---- rpm-5.4.9.orig/configure.ac	2012-05-17 16:37:20.594790192 -0500
-+++ rpm-5.4.9/configure.ac	2012-05-17 16:39:23.126933596 -0500
-@@ -1909,7 +1909,7 @@
+Index: rpm-5.4.14/configure.ac
+===================================================================
+--- rpm-5.4.14.orig/configure.ac
++++ rpm-5.4.14/configure.ac
+@@ -1951,7 +1951,7 @@ grep -v 'define HAVE_UNISTD_H' confdefs.
  esac
  RPM_CHECK_LIB(
      [OSSP uuid], [uuid],

@@ -13,9 +13,10 @@ Signed-off-by: Ming Liu <ming.liu@windriver.com>
  tagname.c |   16 ++++++++++++++++
  1 file changed, 16 insertions(+)
 
-diff -urpN a/rpmdb/tagname.c b/rpmdb/tagname.c
---- a/rpmdb/tagname.c
-+++ b/rpmdb/tagname.c
+Index: rpm-5.4.14/rpmdb/tagname.c
+===================================================================
+--- rpm-5.4.14.orig/rpmdb/tagname.c
++++ rpm-5.4.14/rpmdb/tagname.c
 @@ -3,6 +3,19 @@
   */
  

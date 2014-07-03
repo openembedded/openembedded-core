@@ -18,11 +18,11 @@ Upstream-Status: Inappropriate (workaround)
 
 Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
 
-Index: rpm-5.4.9/rpmdb/rpmdb.c
+Index: rpm-5.4.14/rpmdb/rpmdb.c
 ===================================================================
---- rpm-5.4.9.orig/rpmdb/rpmdb.c
-+++ rpm-5.4.9/rpmdb/rpmdb.c
-@@ -2212,8 +2212,12 @@ static int rpmmiGet(dbiIndex dbi, DBC * 
+--- rpm-5.4.14.orig/rpmdb/rpmdb.c
++++ rpm-5.4.14/rpmdb/rpmdb.c
+@@ -2212,8 +2212,12 @@ static int rpmmiGet(dbiIndex dbi, DBC *
  	vp->flags |= DB_DBT_USERMEM;
  	rc = dbiGet(dbi, dbcursor, kp, vp, flags);
  	if (rc == DB_BUFFER_SMALL) {
@@ -36,7 +36,7 @@ Index: rpm-5.4.9/rpmdb/rpmdb.c
  	    if (uh == NULL || uh == (void *)-1)
  		fprintf(stderr,
  		    "==> mmap(%p[%u], 0x%x, 0x%x, %d, 0x%x) error(%d): %s\n",
-@@ -2235,6 +2239,25 @@ static int rpmmiGet(dbiIndex dbi, DBC * 
+@@ -2235,6 +2239,25 @@ static int rpmmiGet(dbiIndex dbi, DBC *
  		if (munmap(uh, uhlen) != 0)
  		    fprintf(stderr, "==> munmap(%p[%u]) error(%d): %s\n",
                  	uh, (unsigned)uhlen, errno, strerror(errno));
@@ -62,11 +62,11 @@ Index: rpm-5.4.9/rpmdb/rpmdb.c
  	    }
  	}
      } else
-Index: rpm-5.4.9/rpmdb/db3.c
+Index: rpm-5.4.14/rpmdb/db3.c
 ===================================================================
---- rpm-5.4.9.orig/rpmdb/db3.c
-+++ rpm-5.4.9/rpmdb/db3.c
-@@ -1452,7 +1452,7 @@ assert(db != NULL);
+--- rpm-5.4.14.orig/rpmdb/db3.c
++++ rpm-5.4.14/rpmdb/db3.c
+@@ -1509,7 +1509,7 @@ assert(db != NULL);
  #endif
      }
  

@@ -18,11 +18,11 @@ Upstream-Status: Pending
 
 Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
 
-Index: rpm-5.4.0/lib/rpmrc.c
+Index: rpm-5.4.14/lib/rpmrc.c
 ===================================================================
---- rpm-5.4.0.orig/lib/rpmrc.c	2011-08-10 17:04:35.798814821 -0500
-+++ rpm-5.4.0/lib/rpmrc.c	2011-08-10 17:33:51.505871895 -0500
-@@ -916,8 +916,8 @@
+--- rpm-5.4.14.orig/lib/rpmrc.c
++++ rpm-5.4.14/lib/rpmrc.c
+@@ -925,8 +925,8 @@ static void getMachineInfo(int type, /*@
  
  static void rpmRebuildTargetVars(const char ** target, const char ** canontarget)
  {
@@ -33,7 +33,7 @@ Index: rpm-5.4.0/lib/rpmrc.c
      int x;
  
      /* Rebuild the compat table to recalculate the current target arch.  */
-@@ -927,23 +927,60 @@
+@@ -936,23 +936,60 @@ static void rpmRebuildTargetVars(const c
      rpmSetTables(RPM_MACHTABLE_BUILDARCH, RPM_MACHTABLE_BUILDOS);
  
      if (target && *target) {
@@ -104,7 +104,7 @@ Index: rpm-5.4.0/lib/rpmrc.c
  	}
      } else {
  	const char *a = NULL;
-@@ -988,8 +1025,16 @@
+@@ -995,8 +1032,16 @@ static void rpmRebuildTargetVars(const c
      addMacro(NULL, "_target", NULL, ct, RMIL_RPMRC);
      delMacro(NULL, "_target_cpu");
      addMacro(NULL, "_target_cpu", NULL, ca, RMIL_RPMRC);
@@ -121,7 +121,7 @@ Index: rpm-5.4.0/lib/rpmrc.c
  
      if (canontarget)
  	*canontarget = ct;
-@@ -997,8 +1041,12 @@
+@@ -1004,8 +1049,12 @@ static void rpmRebuildTargetVars(const c
  	ct = _free(ct);
      ca = _free(ca);
      /*@-usereleased@*/

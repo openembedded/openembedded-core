@@ -11,11 +11,11 @@ Upstream-Status: Pending
 
 Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
 
-diff --git a/lib/rpmfc.c b/lib/rpmfc.c
-index 0c3befd..9306999 100644
---- a/lib/rpmfc.c
-+++ b/lib/rpmfc.c
-@@ -1692,7 +1692,6 @@ rpmRC rpmfcGenerateDepends(void * specp, void * pkgp)
+Index: rpm-5.4.14/lib/rpmfc.c
+===================================================================
+--- rpm-5.4.14.orig/lib/rpmfc.c
++++ rpm-5.4.14/lib/rpmfc.c
+@@ -1734,7 +1734,6 @@ rpmRC rpmfcGenerateDepends(void * _spec,
  	/* ... then generate dependencies using %{__find_requires} et al. */
  	rc = rpmfcGenerateDependsHelper(spec, pkg, fi);
  	printDeps(pkg->header);
@@ -23,7 +23,7 @@ index 0c3befd..9306999 100644
      }
  
      /* Generate scriptlet Dependencies. */
-@@ -1720,8 +1719,8 @@ rpmRC rpmfcGenerateDepends(void * specp, void * pkgp)
+@@ -1762,8 +1761,8 @@ rpmRC rpmfcGenerateDepends(void * _spec,
      av[ac] = NULL;
  
      fc = rpmfcNew();

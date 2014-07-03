@@ -7,11 +7,11 @@ A logic error in the query for GHOST files prevented this from working.
 
 Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
 
-Index: rpm-5.4.9/lib/verify.c
+Index: rpm-5.4.14/lib/verify.c
 ===================================================================
---- rpm-5.4.9.orig/lib/verify.c
-+++ rpm-5.4.9/lib/verify.c
-@@ -587,7 +587,7 @@ uint32_t fc = rpmfiFC(fi);
+--- rpm-5.4.14.orig/lib/verify.c
++++ rpm-5.4.14/lib/verify.c
+@@ -589,7 +589,7 @@ uint32_t fc = rpmfiFC(fi);
  
  	/* If not verifying %ghost, skip ghost files. */
  	/* XXX the broken!!! logic disables %ghost queries always. */

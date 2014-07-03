@@ -8,10 +8,10 @@ Upstream-Status: Inapproriate (OpenEmbedded specific)
 
 Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
 
-Index: rpm-5.4.9/macros/macros.in
+Index: rpm-5.4.14/macros/macros.in
 ===================================================================
---- rpm-5.4.9.orig/macros/macros.in
-+++ rpm-5.4.9/macros/macros.in
+--- rpm-5.4.14.orig/macros/macros.in
++++ rpm-5.4.14/macros/macros.in
 @@ -27,11 +27,12 @@
  #==============================================================================
  # ---- filesystem macros.

@@ -4,10 +4,11 @@ Upstream-Status: Pending
 
 Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
 
-diff -ur rpm-5.4.9.orig/configure.ac rpm-5.4.9/configure.ac
---- rpm-5.4.9.orig/configure.ac	2012-05-16 12:16:36.589813548 -0500
-+++ rpm-5.4.9/configure.ac	2012-05-16 12:26:01.070813518 -0500
-@@ -120,6 +120,9 @@
+Index: rpm-5.4.14/configure.ac
+===================================================================
+--- rpm-5.4.14.orig/configure.ac
++++ rpm-5.4.14/configure.ac
+@@ -121,6 +121,9 @@ AC_PROG_YACC
  
  AC_PATH_PROG(AS, as, as)
  
@@ -17,10 +18,11 @@ diff -ur rpm-5.4.9.orig/configure.ac rpm-5.4.9/configure.ac
  dnl # GCC specifics
  AC_PROG_GCC_TRADITIONAL
  AC_ARG_ENABLE(build-pic,
-diff -ur rpm-5.4.9.orig/lua/Makefile.am rpm-5.4.9/lua/Makefile.am
---- rpm-5.4.9.orig/lua/Makefile.am	2012-04-07 19:15:25.000000000 -0500
-+++ rpm-5.4.9/lua/Makefile.am	2012-05-16 12:26:19.556856688 -0500
-@@ -40,7 +40,7 @@
+Index: rpm-5.4.14/lua/Makefile.am
+===================================================================
+--- rpm-5.4.14.orig/lua/Makefile.am
++++ rpm-5.4.14/lua/Makefile.am
+@@ -41,7 +41,7 @@ rpmluac_LDADD = liblua.la
  
  # --- bin2c doesn't need anything but a compiler
  bin2c$(EXEEXT):  bin2c.c

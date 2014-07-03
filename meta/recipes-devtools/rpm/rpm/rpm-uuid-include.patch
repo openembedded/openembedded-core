@@ -12,8 +12,10 @@ Upstream-Status: Pending
 Signed-off-by: Morgan Little <morgan.little@windriver.com>
 
 
---- a/lua/local/luuid.c.orig
-+++ b/lua/local/luuid.c
+Index: rpm-5.4.14/lua/local/luuid.c
+===================================================================
+--- rpm-5.4.14.orig/lua/local/luuid.c
++++ rpm-5.4.14/lua/local/luuid.c
 @@ -21,7 +21,7 @@
  
  #ifdef LUA_USE_UUID
@@ -23,9 +25,10 @@ Signed-off-by: Morgan Little <morgan.little@windriver.com>
  
  /*  Lua method: <uuid> = uuid.generate(<version>[, <uuid-namespace>, <data>])  */
  static int luuid_generate(lua_State *L)
-
---- a/rpmio/rpmuuid.c.orig
-+++ b/rpmio/rpmuuid.c
+Index: rpm-5.4.14/rpmio/rpmuuid.c
+===================================================================
+--- rpm-5.4.14.orig/rpmio/rpmuuid.c
++++ rpm-5.4.14/rpmio/rpmuuid.c
 @@ -16,7 +16,7 @@
  #include "rpmlog.h"
  #include "rpmuuid.h"
@@ -34,4 +37,4 @@ Signed-off-by: Morgan Little <morgan.little@windriver.com>
 +#include <ossp/uuid.h>
  #endif
  #include "debug.h"
-
+ 

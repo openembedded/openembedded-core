@@ -10,11 +10,11 @@ RP 2014/6/10
 
 Upstream-Status: Pending
 
-Index: rpm-5.4.9/lib/fsm.c
+Index: rpm-5.4.14/lib/fsm.c
 ===================================================================
---- rpm-5.4.9.orig/lib/fsm.c	2014-06-10 10:54:08.601049402 +0000
-+++ rpm-5.4.9/lib/fsm.c	2014-06-10 10:55:45.633046077 +0000
-@@ -495,6 +495,11 @@
+--- rpm-5.4.14.orig/lib/fsm.c
++++ rpm-5.4.14/lib/fsm.c
+@@ -495,6 +495,11 @@ static int saveHardLink(/*@special@*/ /*
      }
  
      if (fsm->goal == IOSM_PKGBUILD) --fsm->li->linksLeft;
@@ -26,7 +26,7 @@ Index: rpm-5.4.9/lib/fsm.c
      fsm->li->filex[fsm->li->linksLeft] = fsm->ix;
      /*@-observertrans -dependenttrans@*/
      fsm->li->nsuffix[fsm->li->linksLeft] = fsm->nsuffix;
-@@ -1876,8 +1881,13 @@
+@@ -1878,8 +1883,13 @@ if (!(fsmGetFi(fsm)->mapflags & IOSM_PAY
  	fsm->postpone = iosmFileActionSkipped(fsm->action);
  	if (fsm->goal == IOSM_PKGINSTALL || fsm->goal == IOSM_PKGBUILD) {
  	    /*@-evalorder@*/ /* FIX: saveHardLink can modify fsm */

@@ -2,14 +2,14 @@ Remove the sanity checking from the rpm autogen.sh.  This is required because
 we may have slightly different, but yet compatible versions.  If we do end
 up breaking things, we'll deal with it at that time.
 
-Upstream-Status: Pending
+Upstream-Status: Inappropriate [configuration]
 
 Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
 
-Index: rpm-5.4.8/syck/autogen.sh
+Index: rpm-5.4.14/syck/autogen.sh
 ===================================================================
---- rpm-5.4.8.orig/syck/autogen.sh
-+++ rpm-5.4.8/syck/autogen.sh
+--- rpm-5.4.14.orig/syck/autogen.sh
++++ rpm-5.4.14/syck/autogen.sh
 @@ -34,12 +34,6 @@ libtoolize () {
      eval $_libtoolize $_libtoolize_args
  }

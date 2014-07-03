@@ -1,9 +1,9 @@
 Upstream-Status: Pending
 
-diff --git a/rpmdb/rpmdb.h b/rpmdb/rpmdb.h
-index 0e1bdd7..8b522bb 100644
---- a/rpmdb/rpmdb.h
-+++ b/rpmdb/rpmdb.h
+Index: rpm-5.4.14/rpmdb/rpmdb.h
+===================================================================
+--- rpm-5.4.14.orig/rpmdb/rpmdb.h
++++ rpm-5.4.14/rpmdb/rpmdb.h
 @@ -9,6 +9,7 @@
  
  #include <assert.h>
@@ -12,10 +12,10 @@ index 0e1bdd7..8b522bb 100644
  
  #include <rpmtypes.h>
  #include <rpmtag.h>	/* XXX Header typedef */
-diff --git a/rpmdb/rpmtag.h b/rpmdb/rpmtag.h
-index 8af6480..2166b4c 100644
---- a/rpmdb/rpmtag.h
-+++ b/rpmdb/rpmtag.h
+Index: rpm-5.4.14/rpmdb/rpmtag.h
+===================================================================
+--- rpm-5.4.14.orig/rpmdb/rpmtag.h
++++ rpm-5.4.14/rpmdb/rpmtag.h
 @@ -7,6 +7,7 @@
  
  #include <rpmiotypes.h>

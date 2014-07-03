@@ -4,11 +4,11 @@ information about the platform (cpu/vendor/os). Fixes #3864.
 
 Upstream-Status: Inappropriate [embedded specific]
 
-diff --git a/lib/rpmrc.c b/lib/rpmrc.c
-index e676601..9140bbe 100644
---- a/lib/rpmrc.c
-+++ b/lib/rpmrc.c
-@@ -510,6 +510,7 @@ static rpmRC rpmPlatform(const char * platform)
+Index: rpm-5.4.14/lib/rpmrc.c
+===================================================================
+--- rpm-5.4.14.orig/lib/rpmrc.c
++++ rpm-5.4.14/lib/rpmrc.c
+@@ -510,6 +510,7 @@ static rpmRC rpmPlatform(const char * pl
  #endif
  	}
  
@@ -16,7 +16,7 @@ index e676601..9140bbe 100644
  #if defined(RPM_VENDOR_OPENPKG) /* explicit-platform */
  	/* do not use vendor and GNU attribution */
  	p = rpmExpand("%{_host_cpu}-%{_host_os}", NULL);
-@@ -520,7 +521,8 @@ static rpmRC rpmPlatform(const char * platform)
+@@ -520,7 +521,8 @@ static rpmRC rpmPlatform(const char * pl
  #endif
  	xx = mireAppend(RPMMIRE_STRCMP, 0, p, NULL, &mi_re, &mi_nre);
  	p = _free(p);

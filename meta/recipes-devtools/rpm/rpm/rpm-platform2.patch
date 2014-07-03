@@ -13,10 +13,10 @@ ensures reasonable defaults are always available.
 
 Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
 
-Index: rpm-5.4.9/lib/rpmrc.c
+Index: rpm-5.4.14/lib/rpmrc.c
 ===================================================================
---- rpm-5.4.9.orig/lib/rpmrc.c
-+++ rpm-5.4.9/lib/rpmrc.c
+--- rpm-5.4.14.orig/lib/rpmrc.c
++++ rpm-5.4.14/lib/rpmrc.c
 @@ -328,10 +328,15 @@ static void setDefaults(void)
  	/*@modifies rpmGlobalMacroContext, internalState @*/
  {
@@ -57,11 +57,11 @@ Index: rpm-5.4.9/lib/rpmrc.c
  	}
  
  #if defined(RPM_VENDOR_OPENPKG) /* explicit-platform */
-Index: rpm-5.4.9/macros/macros.in
+Index: rpm-5.4.14/macros/macros.in
 ===================================================================
---- rpm-5.4.9.orig/macros/macros.in
-+++ rpm-5.4.9/macros/macros.in
-@@ -875,9 +875,9 @@ $_arbitrary_tags_tests	Foo:Bar
+--- rpm-5.4.14.orig/macros/macros.in
++++ rpm-5.4.14/macros/macros.in
+@@ -900,9 +900,9 @@ $_arbitrary_tags_tests	Foo:Bar
  %_os			@RPMCANONOS@
  %_gnu			@RPMCANONGNU@
  
@@ -74,7 +74,7 @@ Index: rpm-5.4.9/macros/macros.in
  
  #==============================================================================
  # ---- configure macros.
-@@ -920,9 +920,10 @@ $_arbitrary_tags_tests	Foo:Bar
+@@ -945,9 +945,10 @@ $_arbitrary_tags_tests	Foo:Bar
  %_build_os		%{_host_os}
  %_host			@host@
  %_host_alias		@host_alias@%{nil}
@@ -88,10 +88,10 @@ Index: rpm-5.4.9/macros/macros.in
  %_target		%{_host}
  %_target_alias		%{_host_alias}
  %_target_cpu		%{_host_cpu}
-Index: rpm-5.4.9/python/rpmmodule.c
+Index: rpm-5.4.14/python/rpmmodule.c
 ===================================================================
---- rpm-5.4.9.orig/python/rpmmodule.c
-+++ rpm-5.4.9/python/rpmmodule.c
+--- rpm-5.4.14.orig/python/rpmmodule.c
++++ rpm-5.4.14/python/rpmmodule.c
 @@ -65,8 +65,8 @@ static PyObject * archScore(PyObject * s
      if (!PyArg_ParseTupleAndKeywords(args, kwds, "s", kwlist, &arch))
  	return NULL;

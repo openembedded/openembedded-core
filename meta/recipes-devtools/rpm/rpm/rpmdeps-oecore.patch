@@ -16,11 +16,11 @@ RP 2012/2/7
  2 files changed, 152 insertions(+), 1 deletions(-)
  create mode 100644 tools/rpmdeps-oecore.c
 
-Index: rpm-5.4.9/tools/Makefile.am
+Index: rpm-5.4.14/tools/Makefile.am
 ===================================================================
---- rpm-5.4.9.orig/tools/Makefile.am
-+++ rpm-5.4.9/tools/Makefile.am
-@@ -58,7 +58,7 @@ pkgbin_PROGRAMS =	\
+--- rpm-5.4.14.orig/tools/Makefile.am
++++ rpm-5.4.14/tools/Makefile.am
+@@ -62,7 +62,7 @@ pkgbin_PROGRAMS =	\
  	@WITH_AUGEAS_AUGTOOL@ chroot cp @WITH_CUDF_CUDFTOOL@ find mtree \
  	@WITH_SEMANAGE_SEMODULE@ wget \
  	rpmcache rpmdigest rpmrepo rpmspecdump \
@@ -29,7 +29,7 @@ Index: rpm-5.4.9/tools/Makefile.am
  if WITH_DB
  pkgbin_PROGRAMS +=	dbconvert
  endif
-@@ -168,6 +168,10 @@ rpmdeps_SOURCES =	rpmdeps.c
+@@ -172,6 +172,10 @@ rpmdeps_SOURCES =	rpmdeps.c
  rpmdeps_LDFLAGS =	@LDFLAGS_STATIC@ $(LDFLAGS)
  rpmdeps_LDADD =		$(RPM_LDADD_COMMON)
  
@@ -40,10 +40,10 @@ Index: rpm-5.4.9/tools/Makefile.am
  rpmdigest_SOURCES =	rpmdigest.c
  rpmdigest_LDFLAGS =	@LDFLAGS_STATIC@ $(LDFLAGS)
  rpmdigest_LDADD =	$(RPMIO_LDADD_COMMON)
-Index: rpm-5.4.9/tools/rpmdeps-oecore.c
+Index: rpm-5.4.14/tools/rpmdeps-oecore.c
 ===================================================================
 --- /dev/null
-+++ rpm-5.4.9/tools/rpmdeps-oecore.c
++++ rpm-5.4.14/tools/rpmdeps-oecore.c
 @@ -0,0 +1,147 @@
 +#include "system.h"
 +const char *__progname;

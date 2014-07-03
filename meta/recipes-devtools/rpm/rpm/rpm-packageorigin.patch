@@ -6,11 +6,11 @@ Upstream-Status: Inappropriate [not author]
 
 Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
 
-Index: rpm-5.4.8/rpmdb/hdrfmt.c
+Index: rpm-5.4.14/rpmdb/hdrfmt.c
 ===================================================================
---- rpm-5.4.8.orig/rpmdb/hdrfmt.c
-+++ rpm-5.4.8/rpmdb/hdrfmt.c
-@@ -2403,8 +2403,10 @@ static int pkgoriginTag(Header h, HE_t 
+--- rpm-5.4.14.orig/rpmdb/hdrfmt.c
++++ rpm-5.4.14/rpmdb/hdrfmt.c
+@@ -2409,8 +2409,10 @@ static int pkgoriginTag(Header h, HE_t h
      int rc = 1;
  
      he->tag = RPMTAG_PACKAGEORIGIN;

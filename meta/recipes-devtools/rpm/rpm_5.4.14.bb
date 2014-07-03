@@ -42,12 +42,11 @@ HOMEPAGE = "http://rpm5.org/"
 LICENSE = "LGPLv2.1"
 LIC_FILES_CHKSUM = "file://COPYING.LIB;md5=2d5025d4aa3495befef8f17206a5b0a1"
 
-DEPENDS = "libpcre attr acl popt ossp-uuid file bison-native"
-PR = "r63"
+DEPENDS = "libpcre attr acl popt ossp-uuid file byacc-native"
 
 # rpm2cpio is a shell script, which is part of the rpm src.rpm.  It is needed
 # in order to extract the distribution SRPM into a format we can extract...
-SRC_URI = "http://www.rpm5.org/files/rpm/rpm-5.4/rpm-5.4.9-0.20120508.src.rpm;extract=rpm-5.4.9.tar.gz \
+SRC_URI = "http://www.rpm5.org/files/rpm/rpm-5.4/rpm-5.4.14-0.20131024.src.rpm;extract=rpm-5.4.14.tar.gz \
 	   file://rpm-log-auto-rm.patch \
 	   file://rpm-db-reduce.patch \
 	   file://perfile_rpmdeps.sh \
@@ -56,7 +55,6 @@ SRC_URI = "http://www.rpm5.org/files/rpm/rpm-5.4/rpm-5.4.9-0.20120508.src.rpm;ex
 	   file://header-include-fix.patch \
 	   file://rpm-platform.patch \
 	   file://rpm-showrc.patch \
-	   file://rpm-solvedb.patch \
 	   file://rpm-tools-mtree-LDFLAGS.patch \
 	   file://rpm-fileclass.patch \
 	   file://rpm-canonarch.patch \
@@ -65,7 +63,6 @@ SRC_URI = "http://www.rpm5.org/files/rpm/rpm-5.4/rpm-5.4.9-0.20120508.src.rpm;ex
 	   file://pythondeps.sh \
 	   file://rpmdeps-oecore.patch \
 	   file://rpm-resolvedep.patch \
-	   file://rpm-respect-arch.patch \
 	   file://rpm-no-perl-urpm.patch \
 	   file://rpm-macros.patch \
 	   file://rpm-lua.patch \
@@ -78,7 +75,6 @@ SRC_URI = "http://www.rpm5.org/files/rpm/rpm-5.4/rpm-5.4.9-0.20120508.src.rpm;ex
 	   file://dbconvert.patch \
 	   file://rpm-uuid-include.patch \
 	   file://makefile-am-exec-hook.patch \
-	   file://rpm-stub-out-git_strerror.patch \
 	   file://rpm-db_buffer_small.patch \
 	   file://rpm-py-init.patch \
 	   file://python-rpm-rpmsense.patch \
@@ -93,6 +89,8 @@ SRC_URI = "http://www.rpm5.org/files/rpm/rpm-5.4/rpm-5.4.9-0.20120508.src.rpm;ex
 	   file://rpm-verify-files.patch \
 	   file://rpm-hardlink-segfault-fix.patch \
 	   file://rpm-payload-use-hashed-inode.patch \
+	   file://rpm-fix-logio-cp.patch \
+	   file://rpm-db5-or-db6.patch \
 	  "
 
 # Uncomment the following line to enable platform score debugging
@@ -100,8 +98,8 @@ SRC_URI = "http://www.rpm5.org/files/rpm/rpm-5.4/rpm-5.4.9-0.20120508.src.rpm;ex
 # to process certain package feeds.
 #SRC_URI += "file://rpm-debug-platform.patch"
 
-SRC_URI[md5sum] = "60d56ace884340c1b3fcac6a1d58e768"
-SRC_URI[sha256sum] = "bac7cc5bd9d0e8262fdc0099349924608da8f680f5cb243751f696552239dde8"
+SRC_URI[md5sum] = "25093d399a0b5d1342d24900a91b347d"
+SRC_URI[sha256sum] = "676e3ab41f72e3b504e04109cfb565a300742f56a7da084f202013b30eeae467"
 
 inherit autotools gettext
 
@@ -143,7 +141,7 @@ PACKAGECONFIG[db] = "${WITH_DB},--without-db,db,"
 
 PACKAGECONFIG[sqlite] = "--with-sqlite,--without-sqlite,sqlite3,"
 
-PACKAGECONFIG[beecrypt] = "--with-beecrypt,--without-beecrypt,beecrypt,"
+PACKAGECONFIG[beecrypt] = "--with-beecrypt=external,--without-beecrypt,beecrypt,"
 PACKAGECONFIG[openssl] = "--with-openssl,--without-openssl,openssl,"
 PACKAGECONFIG[nss] = "--with-nss,--without-nss,nss,"
 PACKAGECONFIG[gcrypt] = "--with-gcrypt,--without-gcrypt,gcrypt,"
@@ -201,7 +199,8 @@ EXTRA_OECONF += "--verbose \
 		--with-path-macros=${rpm_macros} \
 		--with-path-lib=${libdir}/rpm \
 		--with-bugreport=http://bugzilla.yoctoproject.org \
-		--program-prefix="
+		--program-prefix= \
+		YACC=byacc"
 
 CFLAGS_append = " -DRPM_VENDOR_WINDRIVER -DRPM_VENDOR_POKY -DRPM_VENDOR_OE"
 
@@ -390,6 +389,8 @@ do_configure() {
 	# NASTY hack to make sure configure files the right pkg-config file...
 	sed -e 's/pkg-config --exists uuid/pkg-config --exists ossp-uuid/g' \
 	    -e 's/pkg-config uuid/pkg-config ossp-uuid/g' -i ${S}/configure
+
+	( cd ${S}/syck ; set +e ; rm -- -l* ; make distclean ) || :
 
 	export varprefix=${localstatedir}
 	oe_runconf

@@ -7,10 +7,11 @@ Upstream-Status: Inappropriate [configuration]
 
 Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
 
-diff -ur rpm-5.4.8.orig/macros/macros.in rpm-5.4.8/macros/macros.in
---- rpm-5.4.8.orig/macros/macros.in	2012-03-21 19:04:06.000000000 -0500
-+++ rpm-5.4.8/macros/macros.in	2012-06-07 17:02:53.903046624 -0500
-@@ -985,7 +985,7 @@
+Index: rpm-5.4.14/macros/macros.in
+===================================================================
+--- rpm-5.4.14.orig/macros/macros.in
++++ rpm-5.4.14/macros/macros.in
+@@ -1022,7 +1022,7 @@ $_arbitrary_tags_tests	Foo:Bar
  
  #==============================================================================
  # ---- rpmbuild macros.
@@ -19,7 +20,7 @@ diff -ur rpm-5.4.8.orig/macros/macros.in rpm-5.4.8/macros/macros.in
  
  #------------------------------------------------------------------------
  # cmake(...) configuration
-@@ -997,15 +997,15 @@
+@@ -1038,15 +1038,15 @@ $_arbitrary_tags_tests	Foo:Bar
  
  #------------------------------------------------------------------------
  # perl(...) configuration
@@ -38,7 +39,7 @@ diff -ur rpm-5.4.8.orig/macros/macros.in rpm-5.4.8/macros/macros.in
  
  #------------------------------------------------------------------------
  # java(...) configuration.
-@@ -1013,11 +1013,11 @@
+@@ -1054,11 +1054,11 @@ $_arbitrary_tags_tests	Foo:Bar
  
  #------------------------------------------------------------------------
  # libtool(...) configuration.
@@ -52,12 +53,12 @@ diff -ur rpm-5.4.8.orig/macros/macros.in rpm-5.4.8/macros/macros.in
  
  #------------------------------------------------------------------------
  # mono(...) configuration.
-@@ -1029,7 +1029,7 @@
+@@ -1070,7 +1070,7 @@ $_arbitrary_tags_tests	Foo:Bar
  
  #------------------------------------------------------------------------
  # tcl(...) configuration.
 -#%%{load:%{_usrlibrpm}/macros.d/tcl}
 +%{load:%{_usrlibrpm}/macros.d/tcl}
  
- # \endverbatim
- #*/
+ #------------------------------------------------------------------------
+ # typelib(...) configuration.

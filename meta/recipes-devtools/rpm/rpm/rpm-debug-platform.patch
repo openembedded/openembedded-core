@@ -1,9 +1,9 @@
 Debug the platform score generation...
 
-Index: rpm-5.4.9/lib/rpmrc.c
+Index: rpm-5.4.14/lib/rpmrc.c
 ===================================================================
---- rpm-5.4.9.orig/lib/rpmrc.c
-+++ rpm-5.4.9/lib/rpmrc.c
+--- rpm-5.4.14.orig/lib/rpmrc.c
++++ rpm-5.4.14/lib/rpmrc.c
 @@ -465,6 +465,8 @@ static rpmRC rpmPlatform(const char * pl
  
      rc = (rpmRC) rpmiobSlurp(platform, &iob);
@@ -38,18 +38,18 @@ Index: rpm-5.4.9/lib/rpmrc.c
  	}
  
 +	fprintf(stderr, "D: rpmPlatform mireAppend STRCMP %s -- ", p);
+ #if !defined(RPM_VENDOR_OE) /* Skip the explicit-platform */
  #if defined(RPM_VENDOR_OPENPKG) /* explicit-platform */
  	/* do not use vendor and GNU attribution */
- 	p = rpmExpand("%{_host_cpu}-%{_host_os}", NULL);
-@@ -518,6 +527,7 @@ static rpmRC rpmPlatform(const char * pl
+@@ -519,6 +528,7 @@ static rpmRC rpmPlatform(const char * pl
  		(cvog && *cvog->gnu ? "-" : NULL),
  		(cvog ? cvog->gnu : NULL), NULL);
  #endif
 +	fprintf(stderr, "%s\n", p);
  	xx = mireAppend(RPMMIRE_STRCMP, 0, p, NULL, &mi_re, &mi_nre);
  	p = _free(p);
- 	
-@@ -686,9 +696,12 @@ int rpmPlatformScore(const char * platfo
+ #endif
+@@ -688,9 +698,12 @@ int rpmPlatformScore(const char * platfo
  
      if ((mire = (miRE) mi_re) != NULL)
      for (i = 0; i < mi_nre; i++) {

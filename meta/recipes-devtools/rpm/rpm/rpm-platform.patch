@@ -6,10 +6,11 @@ This ensures that RPM knows the compatible set of package types at all times.
 
 Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
 
-diff -ur rpm-5.4.0.orig/lib/depends.c rpm-5.4.0/lib/depends.c
---- rpm-5.4.0.orig/lib/depends.c	2011-02-15 20:40:13.002849708 -0600
-+++ rpm-5.4.0/lib/depends.c	2011-02-15 20:47:05.838981632 -0600
-@@ -248,7 +248,7 @@
+Index: rpm-5.4.14/lib/depends.c
+===================================================================
+--- rpm-5.4.14.orig/lib/depends.c
++++ rpm-5.4.14/lib/depends.c
+@@ -250,7 +250,7 @@ static int rpmtsAddUpgrades(rpmts ts, rp
  	    he->p.ptr = _free(he->p.ptr);
  	}
  
@@ -18,7 +19,7 @@ diff -ur rpm-5.4.0.orig/lib/depends.c rpm-5.4.0/lib/depends.c
  	/*
  	 * If we're capable of installing multiple colors
  	 * but at least one of the packages are white (0), we
-@@ -505,7 +505,7 @@
+@@ -507,7 +507,7 @@ assert(lastx >= 0 && lastx < ts->orderCo
      return 0;
  }
  
@@ -27,7 +28,7 @@ diff -ur rpm-5.4.0.orig/lib/depends.c rpm-5.4.0/lib/depends.c
  /* Is "compat" compatible w/ arch? */
  int _isCompatibleArch(const char * arch, const char * compat)
  {
-@@ -649,7 +649,7 @@
+@@ -663,7 +663,7 @@ assert(he->p.str != NULL);
  
  	    if (arch == NULL || (parch = rpmteA(p)) == NULL)
  		continue;
@@ -36,7 +37,7 @@ diff -ur rpm-5.4.0.orig/lib/depends.c rpm-5.4.0/lib/depends.c
  	    /* XXX hackery for alias matching. */
  	    if (!_isCompatibleArch(arch, parch))
  		continue;
-@@ -815,6 +815,12 @@
+@@ -829,6 +829,12 @@ int rpmtsAddEraseElement(rpmts ts, Heade
      return rc;
  }
  
@@ -49,7 +50,7 @@ diff -ur rpm-5.4.0.orig/lib/depends.c rpm-5.4.0/lib/depends.c
  /*@only@*/ /*@null@*/ /*@unchecked@*/
  static char *sysinfo_path = NULL;
  
-@@ -1296,7 +1302,7 @@
+@@ -1311,7 +1317,7 @@ retry:
  	sysinfo_path = rpmExpand("%{?_rpmds_sysinfo_path}", NULL);
  	if (!(sysinfo_path != NULL && *sysinfo_path == '/')) {
  	    sysinfo_path = _free(sysinfo_path);
@@ -58,10 +59,11 @@ diff -ur rpm-5.4.0.orig/lib/depends.c rpm-5.4.0/lib/depends.c
  	}
      }
  
-diff -ur rpm-5.4.0.orig/lib/rpmds.c rpm-5.4.0/lib/rpmds.c
---- rpm-5.4.0.orig/lib/rpmds.c	2011-02-15 20:40:13.004855352 -0600
-+++ rpm-5.4.0/lib/rpmds.c	2011-02-15 20:41:55.598846670 -0600
-@@ -1737,7 +1737,7 @@
+Index: rpm-5.4.14/lib/rpmds.c
+===================================================================
+--- rpm-5.4.14.orig/lib/rpmds.c
++++ rpm-5.4.14/lib/rpmds.c
+@@ -1759,7 +1759,7 @@ int rpmdsSysinfo(rpmPRCO PRCO, const cha
  /*@-observertrans @*/
  	    _sysinfo_path = _free(_sysinfo_path);
  /*@=observertrans @*/
@@ -70,9 +72,10 @@ diff -ur rpm-5.4.0.orig/lib/rpmds.c rpm-5.4.0/lib/rpmds.c
  	}
      }
  /*@=modobserver@*/
-diff -ur rpm-5.4.0.orig/lib/rpmrc.c rpm-5.4.0/lib/rpmrc.c
---- rpm-5.4.0.orig/lib/rpmrc.c	2011-02-15 20:40:13.006853913 -0600
-+++ rpm-5.4.0/lib/rpmrc.c	2011-02-15 20:44:39.708972391 -0600
+Index: rpm-5.4.14/lib/rpmrc.c
+===================================================================
+--- rpm-5.4.14.orig/lib/rpmrc.c
++++ rpm-5.4.14/lib/rpmrc.c
 @@ -38,7 +38,13 @@
  static const char * configTarget = NULL;
  
@@ -88,7 +91,7 @@ diff -ur rpm-5.4.0.orig/lib/rpmrc.c rpm-5.4.0/lib/rpmrc.c
  
  /*@only@*/ /*@relnull@*/ /*@unchecked@*/
  void * platpat = NULL;
-@@ -685,16 +691,17 @@
+@@ -694,16 +700,17 @@ static void defaultMachine(/*@out@*/ con
      int rc;
  
      while (!gotDefaults) {
@@ -113,7 +116,7 @@ diff -ur rpm-5.4.0.orig/lib/rpmrc.c rpm-5.4.0/lib/rpmrc.c
  	/* utsname fields on some platforms (like HP-UX) are very small
  	   (just about 8 characters). This is too small for OpenPKG, so cheat! */
  	rc = uname(&un_real);
-@@ -771,9 +778,7 @@
+@@ -780,9 +787,7 @@ static void defaultMachine(/*@out@*/ con
  	if (cp != NULL && cp != _platform)
  	    cp = _free(cp);
  #endif
@@ -123,7 +126,7 @@ diff -ur rpm-5.4.0.orig/lib/rpmrc.c rpm-5.4.0/lib/rpmrc.c
  
  	if (configTarget && !parseCVOG(configTarget, &cvog) && cvog != NULL) {
  	    gotDefaults = 1;
-@@ -1096,6 +1101,8 @@
+@@ -1101,6 +1106,8 @@ int rpmReadConfigFiles(/*@unused@*/ cons
  
  #ifdef PREMACROFILES
      if (rpmReadRC(PREMACROFILES)) return -1;

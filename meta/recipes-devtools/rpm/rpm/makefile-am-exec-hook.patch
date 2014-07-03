@@ -18,9 +18,11 @@ Upstream-Status: Pending
 
 Signed-off-by: Morgan Little <morgan.little@windriver.com>
 
---- a/lua/Makefile.am.orig
-+++ b/lua/Makefile.am
-@@ -320,7 +320,7 @@
+Index: rpm-5.4.14/lua/Makefile.am
+===================================================================
+--- rpm-5.4.14.orig/lua/Makefile.am
++++ rpm-5.4.14/lua/Makefile.am
+@@ -326,7 +326,7 @@ clean-local:
  # XXX Build & install as rpmlua/rpmluac with hardlinks to lua/luac post install.
  # XXX CVS has lua/luac sub-directories in the Attic that collide with the
  # XXX lua/luac executable names when using cvs update.

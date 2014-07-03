@@ -9,11 +9,11 @@ Upstream-Status: Pending
 
 Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
 
-Index: rpm-5.4.9/lib/depends.c
+Index: rpm-5.4.14/lib/depends.c
 ===================================================================
---- rpm-5.4.9.orig/lib/depends.c
-+++ rpm-5.4.9/lib/depends.c
-@@ -594,7 +594,7 @@ int rpmtsAddInstallElement(rpmts ts, Hea
+--- rpm-5.4.14.orig/lib/depends.c
++++ rpm-5.4.14/lib/depends.c
+@@ -595,7 +595,7 @@ int rpmtsAddInstallElement(rpmts ts, Hea
  	    platform = rpmExpand(arch, "-unknown-", os, NULL);
  
  	rc = rpmPlatformScore(platform, platpat, nplatpat);

@@ -20,10 +20,11 @@ Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
  tools/debugedit.c | 25 +++++++++++++++++++++++++
  1 file changed, 25 insertions(+)
 
-diff --git a/tools/debugedit.c b/tools/debugedit.c
---- a/tools/debugedit.c
-+++ b/tools/debugedit.c
-@@ -1512,6 +1512,28 @@ handle_build_id (DSO *dso, Elf_Data *build_id,
+Index: rpm-5.4.14/tools/debugedit.c
+===================================================================
+--- rpm-5.4.14.orig/tools/debugedit.c
++++ rpm-5.4.14/tools/debugedit.c
+@@ -1525,6 +1525,28 @@ handle_build_id (DSO *dso, Elf_Data *bui
    }
  }
  
@@ -52,7 +53,7 @@ diff --git a/tools/debugedit.c b/tools/debugedit.c
  int
  main (int argc, char *argv[])
  {
-@@ -1608,6 +1630,9 @@ main (int argc, char *argv[])
+@@ -1621,6 +1643,9 @@ main (int argc, char *argv[])
        exit (1);
      }
  
@@ -62,6 +63,3 @@ diff --git a/tools/debugedit.c b/tools/debugedit.c
    dso = fdopen_dso (fd, file);
    if (dso == NULL)
      exit (1);
--- 
-1.8.1.2
-
