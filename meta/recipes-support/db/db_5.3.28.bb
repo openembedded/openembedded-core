@@ -20,10 +20,10 @@ SRC_URI += "file://arm-thumb-mutex_db5.patch;patchdir=.. \
             file://fix-parallel-build.patch \
            "
 
-SRC_URI[md5sum] = "3fda0b004acdaa6fa350bfc41a3b95ca"
-SRC_URI[sha256sum] = "ddd92a930317df92021054c03992392db9ea5cddba43bef8920d392a82114fb8"
+SRC_URI[md5sum] = "b99454564d5b4479750567031d66fe24"
+SRC_URI[sha256sum] = "e0a992d740709892e81f9d93f06daf305cf73fb81b545afe72478043172c3628"
 
-LIC_FILES_CHKSUM = "file://../LICENSE;md5=32aefa5a8e7318be1f657432cbe2e768"
+LIC_FILES_CHKSUM = "file://../LICENSE;md5=ed1158e31437f4f87cdd4ab2b8613955"
 
 inherit autotools
 
