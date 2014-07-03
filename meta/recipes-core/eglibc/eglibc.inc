@@ -38,8 +38,13 @@ DEPENDS = "virtual/${TARGET_PREFIX}gcc-initial libgcc-initial linux-libc-headers
 #RDEPENDS_${PN} += "${@['','libgcc']['nptl' in '${GLIBC_ADDONS}']}"
 PROVIDES = "virtual/libc virtual/${TARGET_PREFIX}libc-for-gcc"
 PROVIDES += "virtual/libintl virtual/libiconv"
-inherit autotools texinfo
+inherit autotools texinfo distro_features_check
 require eglibc-options.inc
+
+# The main purpose of setting this variable is to prevent users from accidently
+# overriding DISTRO_FEATRUES, causing obscure build failures because of lack
+# of libc functions.
+REQUIRED_DISTRO_FEATURES = "${DISTRO_FEATURES_LIBC}"
 
 LEAD_SONAME = "libc.so"
 
