@@ -11,7 +11,9 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=e43fc16fccd8519fba405f0a0ff6e8a3"
 SRC_URI = "${GNU_MIRROR}/groff/groff-${PV}.tar.gz \
           file://groff-1.18.1.4-remove-mom.patch;striplevel=1 \
           file://man-local.patch \
-          file://mdoc-local.patch" 
+          file://mdoc-local.patch \
+          file://groff-1.18.1.4-fix-bindir.patch \
+" 
 
 inherit autotools texinfo
 
