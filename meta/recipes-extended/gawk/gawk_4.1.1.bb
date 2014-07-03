@@ -13,6 +13,8 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 
 DEPENDS += "readline"
 
+PACKAGECONFIG[mpfr] = "--with-mpfr,--without-mpfr, mpfr"
+
 SRC_URI = "${GNU_MIRROR}/gawk/gawk-${PV}.tar.gz \
            file://run-ptest \
            file://Use-DESTDIR-in-extension-Makefile.am-when-removing-..patch \
