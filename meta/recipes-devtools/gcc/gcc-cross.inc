@@ -21,7 +21,7 @@ EXTRA_OECONF += "--disable-libunwind-exceptions \
                  --with-system-zlib "
 
 EXTRA_OECONF_PATHS = " \
-                      --with-gxx-include-dir=${STAGING_DIR_TARGET}${target_includedir}/c++ \
+                      --with-gxx-include-dir=${STAGING_DIR_TARGET}${target_includedir}/c++/${BINV} \
                       --with-sysroot=${STAGING_DIR_TARGET} \
                       --with-build-sysroot=${STAGING_DIR_TARGET}"
 

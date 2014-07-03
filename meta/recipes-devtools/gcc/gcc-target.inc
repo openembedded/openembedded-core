@@ -5,7 +5,7 @@ EXTRA_OECONF_PATHS = " \
     --with-sysroot=/ \
     --with-build-sysroot=${STAGING_DIR_TARGET} \
     --with-native-system-header-dir=${STAGING_DIR_TARGET}${target_includedir} \
-    --with-gxx-include-dir=${includedir}/c++/"
+    --with-gxx-include-dir=${includedir}/c++/${BINV}"
 
 EXTRA_OECONF_FPU = "${@get_gcc_fpu_setting(bb, d)}"
 
