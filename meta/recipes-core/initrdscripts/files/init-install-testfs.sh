@@ -189,7 +189,7 @@ menuentry "Linux" {
 }
 _EOF
     # Add the test label
-    echo -ne "\nmenuentry 'test' {\nlinux /test-kernel root=$testfs rw $rootwait quiet\n}\n" >> $GRUBCFG
+    echo -ne "\nmenuentry 'test' --hotkey x {\nlinux /test-kernel root=$testfs rw $rootwait quiet\n}\n" >> $GRUBCFG
 
     chmod 0444 $GRUBCFG
 fi
