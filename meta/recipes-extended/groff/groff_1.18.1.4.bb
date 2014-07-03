@@ -26,6 +26,14 @@ do_configure (){
 }
 
 do_install_append() {
+	# Some distros have both /bin/perl and /usr/bin/perl, but we set perl location
+	# for target as /usr/bin/perl, so fix it to /usr/bin/perl.
+	for i in afmtodit mmroff; do
+		if [ -f ${D}${bindir}/$i ]; then
+			sed -i -e '1s,#!.*perl,#! ${PERLPATH},' ${D}${bindir}/$i
+		fi
+	done
+
 	mkdir -p ${D}${sysconfdir}/groff
 	cp -rf ${D}${datadir}/groff/site-tmac/* ${D}${sysconfdir}/groff/
 	cp -rf ${D}${datadir}/groff/site-tmac/* ${D}${datadir}/groff/${PV}/tmac/
