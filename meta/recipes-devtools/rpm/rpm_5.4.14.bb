@@ -86,7 +86,7 @@ SRC_URI = "http://www.rpm5.org/files/rpm/rpm-5.4/rpm-5.4.14-0.20131024.src.rpm;e
 	   file://rpm-platform-file-fix.patch \
 	   file://rpm-lsb-compatibility.patch \
 	   file://rpm-tag-generate-endian-conversion-fix.patch \
-	   file://rpm-verify-files.patch \
+	   file://verify-fix-broken-logic-for-ghost-avoidance-Mark-Hat.patch \
 	   file://rpm-hardlink-segfault-fix.patch \
 	   file://rpm-payload-use-hashed-inode.patch \
 	   file://rpm-fix-logio-cp.patch \
