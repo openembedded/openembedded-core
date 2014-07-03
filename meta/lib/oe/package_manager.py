@@ -248,6 +248,7 @@ class RpmPkgsList(PkgsList):
     '''
     def _pkg_translate_smart_to_oe(self, pkg, arch):
         new_pkg = pkg
+        new_arch = arch
         fixed_arch = arch.replace('_', '-')
         found = 0
         for mlib in self.ml_prefix_list:
