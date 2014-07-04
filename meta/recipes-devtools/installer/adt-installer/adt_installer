@@ -379,8 +379,8 @@ validate_config
 check_result
 
 #check adt_repo exist
-wget $YOCTOADT_REPO 2>&1 | tee -a "$YOCTOADT_INSTALL_LOG_FILE"
-if grep -q "ERROR 404: Not Found" $YOCTOADT_INSTALL_LOG_FILE; then
+wget --spider $YOCTOADT_REPO 2>&1 | tee -a "$YOCTOADT_INSTALL_LOG_FILE"
+if grep -q "404 Not Found" $YOCTOADT_INSTALL_LOG_FILE; then
   echo -e "[ADT_INST] Error: YOCTOADT_REPO does not exist: $YOCTOADT_REPO"
   echo -e "\n#############################################################################"
   echo -e "# Meet error(s) when installing Yocto ADT! Please check log file for details. "
