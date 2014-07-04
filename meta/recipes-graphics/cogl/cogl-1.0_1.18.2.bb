@@ -1,0 +1,6 @@
+require cogl-1.0.inc
+
+LIC_FILES_CHKSUM = "file://COPYING;md5=1b1a508d91d25ca607c83f92f3e31c84"
+
+SRC_URI[archive.md5sum] = "952155d526d35f297737266408e842b5"
+SRC_URI[archive.sha256sum] = "9278e519d5480eb0379efd48db024e8fdbf93f01dff48a7e756b85b508a863aa"
