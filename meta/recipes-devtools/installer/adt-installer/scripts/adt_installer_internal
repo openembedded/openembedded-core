@@ -169,7 +169,7 @@ for target_type in $YOCTOADT_TARGETS; do
   $SUDO sed -i -e "s%##SDKTARGETSYSROOT##%$target_sysroot%g" $env_script
 done
 
-if [ "$YOCTOADT_QEMU" == "Y" ] || [ "$YOCTOADT_QEMU" = "y" ]; then
+if [ "$YOCTOADT_QEMU" == "Y" ] || [ "$YOCTOADT_QEMU" == "y" ]; then
   echo_info "\nInstalling qemu native ..."
   $OPKG_INSTALL_NATIVE_CMD nativesdk-qemu &>> $YOCTOADT_INSTALL_LOG_FILE
   check_result
