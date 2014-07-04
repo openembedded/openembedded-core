@@ -131,8 +131,8 @@ fi
 
 echo_info "Updating opkg..."
 $OPKG_CMD -f $OPKG_CONFIG_FILE -o $NATIVE_INSTALL_DIR update &>> $YOCTOADT_INSTALL_LOG_FILE
-echo_info "opkg update process ended..."
 check_result
+echo_info "opkg update process ended..."
 
 #install below must sdk-host packages
 OPKG_INSTALL_CMD="$OPKG_CMD "
