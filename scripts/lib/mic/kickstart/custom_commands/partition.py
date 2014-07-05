@@ -130,6 +130,11 @@ class Wic_PartData(Mic_PartData):
                                              native_sysroot)
             return
 
+        plugins = pluginmgr.get_source_plugins()
+
+        if self.source not in plugins:
+            msger.error("The '%s' --source specified for %s doesn't exist.\n\tSee 'wic list source-plugins' for a list of available --sources.\n\tSee 'wic help source-plugins' for details on adding a new source plugin." % (self.source, self.mountpoint))
+
         self._source_methods = pluginmgr.get_source_plugin_methods(self.source, partition_methods)
         self._source_methods["do_configure_partition"](self, cr, cr_workdir,
                                                        oe_builddir,
