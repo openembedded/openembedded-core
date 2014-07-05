@@ -199,6 +199,7 @@ wic_list_usage = """
 
  usage: wic list images
         wic list <image> help
+        wic list source-plugins
         wic list properties
         wic list properties <wks file>
         wic list property <property>
@@ -214,11 +215,14 @@ wic_list_usage = """
  The second form lists the detailed help information for a specific
  'canned' image.
 
- The third form enumerates all the possible values that exist and can
+ The third form enumerates all the available --sources (source
+ plugins).
+
+ The fourth form enumerates all the possible values that exist and can
  be specified in an OE kickstart (wks) file.
 
- The fourth form enumerates all the possible options that exist for
- the set of properties specified in a given OE kickstart (ks) file.
+ The fifth form enumerates all the possible options that exist for the
+ set of properties specified in a given OE kickstart (ks) file.
 
  The final form enumerates all the possible values that exist and can
  be specified for any given OE kickstart (wks) property.
@@ -234,6 +238,7 @@ NAME
 SYNOPSIS
     wic list images
     wic list <image> help
+    wic list source-plugins
     wic list properties
     wic list properties <wks file>
     wic list property <property>
@@ -254,6 +259,15 @@ DESCRIPTION
 
     The second form lists the detailed help information for a specific
     'canned' image.
+
+    The third form enumerates all the available --sources (source
+    plugins).  The contents of a given partition are driven by code
+    defined in 'source plugins'.  Users specify a specific plugin via
+    the --source parameter of the partition .wks command.  Normally
+    this is the 'rootfs' plugin but can be any of the more specialized
+    sources listed by the 'list source-plugins' command.  Users can
+    also add their own source plugins - see 'wic help plugins' for
+    details.
 
     The third form enumerates all the possible values that exist and
     can be specified in a OE kickstart (wks) file.  The output of this
