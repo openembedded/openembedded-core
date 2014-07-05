@@ -174,6 +174,16 @@ def list_canned_image_help(scripts_path, fullpath):
             break
 
 
+def list_source_plugins():
+    """
+    List the available source plugins i.e. plugins available for --source.
+    """
+    plugins = pluginmgr.get_source_plugins()
+
+    for plugin in plugins:
+        print "  %s" % plugin
+
+
 def wic_create(args, wks_file, rootfs_dir, bootimg_dir, kernel_dir,
                native_sysroot, hdddir, staging_data_dir, scripts_path,
                image_output_dir, debug, properties_file, properties=None):
@@ -257,6 +267,9 @@ def wic_list(args, scripts_path, properties_file):
     if len(args) == 1:
         if args[0] == "images":
             list_canned_images(scripts_path)
+            return True
+        elif args[0] == "source-plugins":
+            list_source_plugins()
             return True
         elif args[0] == "properties":
             return True
