@@ -13,7 +13,9 @@ BBCLASSEXTEND = "native"
 EXTRA_OECONF += "--enable-Bsymbolic=auto"
 PR = "r1"
 
-inherit autotools-brokensep pkgconfig gnomebase gtk-doc
+BINCONFIG = "${bindir}/croco-0.6-config"
+
+inherit autotools-brokensep pkgconfig gnomebase gtk-doc binconfig-disabled
 
 GNOME_COMPRESS_TYPE = "xz"
 
