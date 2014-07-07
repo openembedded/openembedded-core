@@ -144,6 +144,7 @@ class Image(ImageDepGraph):
         overhead_factor = float(self.d.getVar('IMAGE_OVERHEAD_FACTOR', True))
         rootfs_req_size = int(self.d.getVar('IMAGE_ROOTFS_SIZE', True))
         rootfs_extra_space = eval(self.d.getVar('IMAGE_ROOTFS_EXTRA_SPACE', True))
+        rootfs_maxsize = self.d.getVar('IMAGE_ROOTFS_MAXSIZE', True)
 
         output = subprocess.check_output(['du', '-ks',
                                           self.d.getVar('IMAGE_ROOTFS', True)])
@@ -157,6 +158,13 @@ class Image(ImageDepGraph):
 
         base_size += rootfs_alignment - 1
         base_size -= base_size % rootfs_alignment
+
+        # Check the rootfs size against IMAGE_ROOTFS_MAXSIZE (if set)
+        if rootfs_maxsize:
+            rootfs_maxsize_int = int(rootfs_maxsize)
+            if base_size > rootfs_maxsize_int:
+                bb.fatal("The rootfs size %d(K) overrides the max size %d(K)" % \
+                    (base_size, rootfs_maxsize_int))
 
         return base_size
 
