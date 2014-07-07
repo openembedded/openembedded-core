@@ -46,9 +46,14 @@ for hdname in $hdnamelist; do
 	echo -n "VENDOR="
 	cat /sys/block/$hdname/device/vendor
     fi
-    echo -n "MODEL="
-    cat /sys/block/$hdname/device/model
-    cat /sys/block/$hdname/device/uevent
+    if [ -r /sys/block/$hdname/device/model ]; then
+        echo -n "MODEL="
+        cat /sys/block/$hdname/device/model
+    fi
+    if [ -r /sys/block/$hdname/device/uevent ]; then
+        echo -n "UEVENT="
+        cat /sys/block/$hdname/device/uevent
+    fi
     echo
     # Get user choice
     while true; do
