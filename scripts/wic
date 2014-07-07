@@ -226,6 +226,19 @@ def wic_list_subcommand(args, usage_str):
         sys.exit(1)
 
 
+def wic_help_topic_subcommand(args, usage_str):
+    """
+    Command-line handling for help-only 'subcommands'.  This is
+    essentially a dummy command that doesn nothing but allow users to
+    use the existing subcommand infrastructure to display help on a
+    particular topic not attached to any particular subcommand.
+    """
+    pass
+
+
+wic_help_topic_usage = """
+"""
+
 subcommands = {
     "create": [wic_create_subcommand,
                wic_create_usage,
