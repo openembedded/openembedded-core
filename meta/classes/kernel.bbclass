@@ -422,10 +422,13 @@ addtask do_strip before do_sizecheck after do_kernel_link_vmlinux
 # with a fixed length or there is a limit in transferring the kernel to memory
 do_sizecheck() {
 	if [ ! -z "${KERNEL_IMAGE_MAXSIZE}" ]; then
-		cd ${B}
-		size=`ls -lL ${KERNEL_OUTPUT} | awk '{ print $5}'`
+		invalid=`echo ${KERNEL_IMAGE_MAXSIZE} | sed 's/[0-9]//g'`
+		if [ -n "$invalid" ]; then
+			die "Invalid KERNEL_IMAGE_MAXSIZE: ${KERNEL_IMAGE_MAXSIZE}, should be an integerx (The unit is Kbytes)"
+		fi
+		size=`du -ks ${B}/${KERNEL_OUTPUT} | awk '{ print $1}'`
 		if [ $size -ge ${KERNEL_IMAGE_MAXSIZE} ]; then
-			die "This kernel (size=$size > ${KERNEL_IMAGE_MAXSIZE}) is too big for your device. Please reduce the size of the kernel by making more of it modular."
+			die "This kernel (size=$size(K) > ${KERNEL_IMAGE_MAXSIZE}(K)) is too big for your device. Please reduce the size of the kernel by making more of it modular."
 		fi
 	fi
 }
