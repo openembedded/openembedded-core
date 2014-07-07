@@ -1326,8 +1326,8 @@ python package_do_filedeps() {
         d.setVar("FILERPROVIDESFLIST_" + pkg, " ".join(provides_files[pkg]))
 }
 
-SHLIBSDIRS = "${PKGDATA_DIR}/${MLPREFIX}shlibs"
-SHLIBSWORKDIR = "${PKGDESTWORK}/${MLPREFIX}shlibs"
+SHLIBSDIRS = "${PKGDATA_DIR}/${MLPREFIX}shlibs2"
+SHLIBSWORKDIR = "${PKGDESTWORK}/${MLPREFIX}shlibs2"
 
 python package_do_shlibs() {
     import re, pipes
@@ -1373,16 +1373,11 @@ python package_do_shlibs() {
                     fd = open(os.path.join(dir, file))
                     lines = fd.readlines()
                     fd.close()
-                    ver_file = os.path.join(dir, dep_pkg + '.ver')
-                    lib_ver = None
-                    if os.path.exists(ver_file):
-                        fd = open(ver_file)
-                        lib_ver = fd.readline().rstrip()
-                        fd.close()
                     for l in lines:
-                        shlib_provider[l.rstrip()] = (dep_pkg, lib_ver)
+                        s = l.strip().split(":")
+                        shlib_provider[s[0]] = (dep_pkg, s[2])
 
-    def linux_so(file, needed, sonames, renames):
+    def linux_so(file, needed, sonames, renames, pkgver):
         needs_ldconfig = False
         ldir = os.path.dirname(file).replace(pkgdest + "/" + pkg, '')
         cmd = d.getVar('OBJDUMP', True) + " -p " + pipes.quote(file) + " 2>/dev/null"
@@ -1404,7 +1399,7 @@ python package_do_shlibs() {
             m = re.match("\s+SONAME\s+([^\s]*)", l)
             if m:
                 this_soname = m.group(1)
-                prov = (this_soname, ldir)
+                prov = (this_soname, ldir, pkgver)
                 if not prov in sonames:
                     # if library is private (only used by package) then do not build shlib for it
                     if not private_libs or this_soname not in private_libs:
@@ -1415,7 +1410,7 @@ python package_do_shlibs() {
                     renames.append((file, os.path.join(os.path.dirname(file), this_soname)))
         return needs_ldconfig
 
-    def darwin_so(file, needed, sonames, renames):
+    def darwin_so(file, needed, sonames, renames, pkgver):
         if not os.path.exists(file):
             return
         ldir = os.path.dirname(file).replace(pkgdest, '')
@@ -1440,7 +1435,7 @@ python package_do_shlibs() {
             combos = get_combinations(name)
             for combo in combos:
                 if not combo in sonames:
-                    prov = (combo, ldir)
+                    prov = (combo, ldir, pkgver)
                     sonames.append(prov)
         if file.endswith('.dylib') or file.endswith('.so'):
             lafile = file.replace(os.path.join(pkgdest, pkg), d.getVar('PKGD', True))
@@ -1510,9 +1505,9 @@ python package_do_shlibs() {
                 if cpath.islink(file):
                     continue
                 if targetos == "darwin" or targetos == "darwin8":
-                    darwin_so(file, needed, sonames, renames)
+                    darwin_so(file, needed, sonames, renames, pkgver)
                 elif os.access(file, os.X_OK) or lib_re.match(file):
-                    ldconfig = linux_so(file, needed, sonames, renames)
+                    ldconfig = linux_so(file, needed, sonames, renames, pkgver)
                     needs_ldconfig = needs_ldconfig or ldconfig
         for (old, new) in renames:
             bb.note("Renaming %s to %s" % (old, new))
@@ -1520,7 +1515,6 @@ python package_do_shlibs() {
             pkgfiles[pkg].remove(old)
 	    
         shlibs_file = os.path.join(shlibswork_dir, pkg + ".list")
-        shver_file = os.path.join(shlibswork_dir, pkg + ".ver")
         if len(sonames):
             fd = open(shlibs_file, 'w')
             for s in sonames:
@@ -1529,11 +1523,8 @@ python package_do_shlibs() {
                     if old_pkg != pkg:
                         bb.warn('%s-%s was registered as shlib provider for %s, changing it to %s-%s because it was built later' % (old_pkg, old_pkgver, s[0], pkg, pkgver))
                 bb.debug(1, 'registering %s-%s as shlib provider for %s' % (pkg, pkgver, s[0]))
-                fd.write(s[0] + '\n')
+                fd.write(s[0] + ':' + s[1] + ':' + s[2] + '\n')
                 shlib_provider[s[0]] = (pkg, pkgver)
-            fd.close()
-            fd = open(shver_file, 'w')
-            fd.write(pkgver + '\n')
             fd.close()
         if needs_ldconfig and use_ldconfig:
             bb.debug(1, 'adding ldconfig call to postinst for %s' % pkg)
