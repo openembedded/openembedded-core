@@ -1384,7 +1384,7 @@ python package_do_shlibs() {
 
     def linux_so(file, needed, sonames, renames):
         needs_ldconfig = False
-        ldir = os.path.dirname(file).replace(pkgdest, '')
+        ldir = os.path.dirname(file).replace(pkgdest + "/" + pkg, '')
         cmd = d.getVar('OBJDUMP', True) + " -p " + pipes.quote(file) + " 2>/dev/null"
         fd = os.popen(cmd)
         lines = fd.readlines()
@@ -1404,10 +1404,11 @@ python package_do_shlibs() {
             m = re.match("\s+SONAME\s+([^\s]*)", l)
             if m:
                 this_soname = m.group(1)
-                if not this_soname in sonames:
+                prov = (this_soname, ldir)
+                if not prov in sonames:
                     # if library is private (only used by package) then do not build shlib for it
                     if not private_libs or this_soname not in private_libs:
-                        sonames.append(this_soname)
+                        sonames.append(prov)
                 if libdir_re.match(os.path.dirname(file)):
                     needs_ldconfig = True
                 if snap_symlinks and (os.path.basename(file) != this_soname):
@@ -1417,6 +1418,7 @@ python package_do_shlibs() {
     def darwin_so(file, needed, sonames, renames):
         if not os.path.exists(file):
             return
+        ldir = os.path.dirname(file).replace(pkgdest, '')
 
         def get_combinations(base):
             #
@@ -1438,7 +1440,8 @@ python package_do_shlibs() {
             combos = get_combinations(name)
             for combo in combos:
                 if not combo in sonames:
-                    sonames.append(combo)
+                    prov = (combo, ldir)
+                    sonames.append(prov)
         if file.endswith('.dylib') or file.endswith('.so'):
             lafile = file.replace(os.path.join(pkgdest, pkg), d.getVar('PKGD', True))
             # Drop suffix
@@ -1521,13 +1524,13 @@ python package_do_shlibs() {
         if len(sonames):
             fd = open(shlibs_file, 'w')
             for s in sonames:
-                if s in shlib_provider:
-                    (old_pkg, old_pkgver) = shlib_provider[s]
+                if s[0] in shlib_provider:
+                    (old_pkg, old_pkgver) = shlib_provider[s[0]]
                     if old_pkg != pkg:
-                        bb.warn('%s-%s was registered as shlib provider for %s, changing it to %s-%s because it was built later' % (old_pkg, old_pkgver, s, pkg, pkgver))
-                bb.debug(1, 'registering %s-%s as shlib provider for %s' % (pkg, pkgver, s))
-                fd.write(s + '\n')
-                shlib_provider[s] = (pkg, pkgver)
+                        bb.warn('%s-%s was registered as shlib provider for %s, changing it to %s-%s because it was built later' % (old_pkg, old_pkgver, s[0], pkg, pkgver))
+                bb.debug(1, 'registering %s-%s as shlib provider for %s' % (pkg, pkgver, s[0]))
+                fd.write(s[0] + '\n')
+                shlib_provider[s[0]] = (pkg, pkgver)
             fd.close()
             fd = open(shver_file, 'w')
             fd.write(pkgver + '\n')
