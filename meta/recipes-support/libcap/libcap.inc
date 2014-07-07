@@ -5,10 +5,7 @@ HOMEPAGE = "http://sites.google.com/site/fullycapable/"
 LICENSE = "BSD | GPLv2"
 LIC_FILES_CHKSUM = "file://License;md5=3f84fd6f29d453a56514cb7e4ead25f1"
 
-DEPENDS = "attr perl-native-runtime"
-DEPENDS += "${@bb.utils.contains('DISTRO_FEATURES', 'pam', 'libpam', '', d)}"
-# attr and pam are disabled by EXTRA_OEMAKE_class-native
-DEPENDS_class-native = "perl-native-runtime"
+DEPENDS = "perl-native-runtime"
 
 SRC_URI = "${DEBIAN_MIRROR}/main/libc/libcap2/${BPN}2_${PV}.orig.tar.gz \
            file://fix-CAP_LAST_CAP.patch"
@@ -29,25 +26,30 @@ do_configure() {
 	sed -e '/shell gperf/cifeq (,yes)' -i libcap/Makefile
 }
 
-EXTRA_OEMAKE = " \
-  LIBATTR=yes \
-  PAM_CAP=${@bb.utils.contains('DISTRO_FEATURES', 'pam', 'yes', 'no', d)} \
-  INDENT= SYSTEM_HEADERS=${STAGING_INCDIR} RAISE_SETFCAP=no \
+PACKAGECONFIG ??= "attr ${@bb.utils.contains('DISTRO_FEATURES', 'pam', 'pam', '', d)}"
+PACKAGECONFIG_class-native ??= ""
+
+PACKAGECONFIG[attr] = "LIBATTR=yes,LIBATTR=no,attr"
+PACKAGECONFIG[pam] = "PAM_CAP=yes,PAM_CAP=no,libpam"
+
+EXTRA_OEMAKE += " \
+  INDENT=  \
   lib=${@os.path.basename('${libdir}')} \
-"
-EXTRA_OEMAKE_class-native = " \
-  LIBATTR=no \
-  PAM_CAP=no \
-  INDENT= \
-  lib=${@os.path.basename('${libdir}')} \
+  RAISE_SETFCAP=no \
 "
 
+EXTRA_OEMAKE_append_class-target = " SYSTEM_HEADERS=${STAGING_INCDIR}"
+
 do_compile() {
-	oe_runmake
+	oe_runmake ${EXTRA_OECONF}
 }
 
 do_install() {
-	oe_runmake install DESTDIR="${D}" prefix="${prefix}" SBINDIR="${D}${sbindir}"
+	oe_runmake install \
+		${EXTRA_OECONF} \
+		DESTDIR="${D}" \
+		prefix="${prefix}" \
+		SBINDIR="${D}${sbindir}"
 }
 
 do_install_append() {
