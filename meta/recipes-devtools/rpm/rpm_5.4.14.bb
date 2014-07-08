@@ -91,6 +91,7 @@ SRC_URI = "http://www.rpm5.org/files/rpm/rpm-5.4/rpm-5.4.14-0.20131024.src.rpm;e
 	   file://rpm-payload-use-hashed-inode.patch \
 	   file://rpm-fix-logio-cp.patch \
 	   file://rpm-db5-or-db6.patch \
+	   file://rpm-disable-Wno-override-init.patch \
 	  "
 
 # Uncomment the following line to enable platform score debugging
