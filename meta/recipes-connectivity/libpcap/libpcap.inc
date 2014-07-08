@@ -8,12 +8,12 @@ SECTION = "libs/network"
 LICENSE = "BSD"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=1d4b0366557951c84a94fabe3529f867 \
                     file://pcap.h;beginline=1;endline=34;md5=8d6cf7e17d5745010d633e30bc529ea9"
-DEPENDS = "flex-native bison-native libnl"
+DEPENDS = "flex-native bison-native"
 
 PACKAGECONFIG ??= "${@bb.utils.contains('DISTRO_FEATURES', 'bluetooth', 'bluetooth', '', d)}"
 PACKAGECONFIG[bluetooth] = "--enable-bluetooth,--disable-bluetooth,bluez4"
 PACKAGECONFIG[canusb] = "--enable-canusb,--enable-canusb=no,libusb"
-PACKAGECONFIG[libnl1] = "--with-libnl,--without-libnl,libnl1,libnl1"
+PACKAGECONFIG[libnl] = "--with-libnl,--without-libnl,libnl"
 
 INC_PR = "r5"
 
