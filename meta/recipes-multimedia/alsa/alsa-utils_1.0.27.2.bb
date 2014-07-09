@@ -9,6 +9,7 @@ DEPENDS = "alsa-lib ncurses libsamplerate0 udev"
 
 PACKAGECONFIG ??= "udev"
 PACKAGECONFIG[udev] = "--with-udev-rules-dir=`pkg-config --variable=udevdir udev`/rules.d,,udev"
+PACKAGECONFIG[xmlto] = "--enable-xmlto, --disable-xmlto, xmlto-native"
 
 SRC_URI = "ftp://ftp.alsa-project.org/pub/utils/alsa-utils-${PV}.tar.bz2 \
            file://0001-alsactl-don-t-let-systemd-unit-restore-the-volume-wh.patch \
@@ -21,7 +22,6 @@ SRC_URI[sha256sum] = "02bfac39092f3b68d743c23ad3d688d6c5aa8df69f2ccd692c5b8282ed
 # http://bugs.openembedded.org/show_bug.cgi?id=2348
 # please close bug and remove this comment when properly fixed
 #
-EXTRA_OECONF = "--disable-xmlto"
 EXTRA_OECONF_append_libc-uclibc = " --disable-nls"
 
 inherit autotools-brokensep gettext pkgconfig
