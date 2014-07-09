@@ -1134,11 +1134,11 @@ python emit_pkgdata() {
         val = d.getVar('%s_%s' % (var, pkg), True)
         if val:
             f.write('%s_%s: %s\n' % (var, pkg, encode(val)))
-            return
+            return val
         val = d.getVar('%s' % (var), True)
         if val:
             f.write('%s: %s\n' % (var, encode(val)))
-        return
+        return val
 
     def write_extra_pkgs(variants, pn, packages, pkgdatadir):
         for variant in variants:
@@ -1207,7 +1207,7 @@ python emit_pkgdata() {
         write_if_exists(sf, pkg, 'DESCRIPTION')
         write_if_exists(sf, pkg, 'SUMMARY')
         write_if_exists(sf, pkg, 'RDEPENDS')
-        write_if_exists(sf, pkg, 'RPROVIDES')
+        rprov = write_if_exists(sf, pkg, 'RPROVIDES')
         write_if_exists(sf, pkg, 'RRECOMMENDS')
         write_if_exists(sf, pkg, 'RSUGGESTS')
         write_if_exists(sf, pkg, 'RREPLACES')
@@ -1235,6 +1235,13 @@ python emit_pkgdata() {
         # Symlinks needed for reverse lookups (from the final package name)
         subdata_sym = pkgdatadir + "/runtime-reverse/%s" % pkgval
         oe.path.symlink("../runtime/%s" % pkg, subdata_sym, True)
+        
+        # Symlinks needed for rprovides lookup
+        if rprov:
+            for p in rprov.strip().split():
+                subdata_sym = pkgdatadir + "/runtime-rprovides/%s/%s" % (p, pkg)
+                bb.utils.mkdirhier(os.path.dirname(subdata_sym))
+                oe.path.symlink("../../runtime/%s" % pkg, subdata_sym, True)
 
         allow_empty = d.getVar('ALLOW_EMPTY_%s' % pkg, True)
         if not allow_empty:
@@ -1254,7 +1261,7 @@ python emit_pkgdata() {
 
     bb.utils.unlockfile(lf)
 }
-emit_pkgdata[dirs] = "${PKGDESTWORK}/runtime ${PKGDESTWORK}/runtime-reverse"
+emit_pkgdata[dirs] = "${PKGDESTWORK}/runtime ${PKGDESTWORK}/runtime-reverse ${PKGDESTWORK}/runtime-rprovides"
 
 ldconfig_postinst_fragment() {
 if [ x"$D" = "x" ]; then
