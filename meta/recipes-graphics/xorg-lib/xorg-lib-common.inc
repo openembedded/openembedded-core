@@ -13,9 +13,14 @@ S = "${WORKDIR}/${XORG_PN}-${PV}"
 
 inherit autotools distro_features_check pkgconfig
 
-EXTRA_OECONF = "--disable-specs --without-groff --without-ps2pdf --without-fop --without-xmlto"
+EXTRA_OECONF = "--disable-specs --without-groff --without-ps2pdf --without-fop"
+
+PACKAGECONFIG ??= ""
+PACKAGECONFIG[xmlto] = "--with-xmlto, --without-xmlto, xmlto-native"
 
 UNKNOWN_CONFIGURE_WHITELIST += "--enable-malloc0returnsnull --disable-malloc0returnsnull \
-                                --disable-specs --without-groff --without-ps2pdf --without-fop --without-xmlto"
+                                --disable-specs --without-groff --without-ps2pdf --without-fop \
+                                --without-xmlto --with-xmlto \
+"
 
 REQUIRED_DISTRO_FEATURES ?= "x11"
