@@ -8,9 +8,11 @@ import oeqa.utils.ftools as ftools
 from oeqa.selftest.base import oeSelfTest
 from oeqa.selftest.buildhistory import BuildhistoryBase
 from oeqa.utils.commands import Command, runCmd, bitbake, get_bb_var, get_test_layer
+from oeqa.utils.decorators import testcase
 
 class TestScripts(oeSelfTest):
 
+    @testcase(300)
     def test_cleanup_workdir(self):
         path = os.path.dirname(get_bb_var('WORKDIR', 'gzip'))
         old_version_recipe = os.path.join(get_bb_var('COREBASE'), 'meta/recipes-extended/gzip/gzip_1.3.12.bb')
@@ -41,6 +43,7 @@ class TestScripts(oeSelfTest):
 
 class BuildhistoryDiffTests(BuildhistoryBase):
 
+    @testcase(295)
     def test_buildhistory_diff(self):
         self.add_command_to_tearDown('cleanup-workdir')
         target = 'xcursor-transparent-theme'
@@ -49,12 +52,3 @@ class BuildhistoryDiffTests(BuildhistoryBase):
         result = runCmd("buildhistory-diff -p %s" % get_bb_var('BUILDHISTORY_DIR'))
         expected_output = 'PR changed from "r1" to "r0"'
         self.assertTrue(expected_output in result.output, msg="Did not find expected output: %s" % result.output)
-
-
-
-
-
-
-
-
-
