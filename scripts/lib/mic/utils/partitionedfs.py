@@ -272,7 +272,7 @@ class PartitionedMount(Mount):
             # parted always fails to reload part table with loop devices. This
             # prevents us from distinguishing real errors based on return
             # code.
-            msger.debug("WARNING: parted returned '%s' instead of 0" % rc)
+            msger.error("WARNING: parted returned '%s' instead of 0 (use --debug for details)" % rc)
 
     def __create_partition(self, device, parttype, fstype, start, size):
         """ Create a partition on an image described by the 'device' object. """
