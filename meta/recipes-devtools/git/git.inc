@@ -5,6 +5,7 @@ DEPENDS = "openssl curl zlib expat"
 
 PROVIDES_append_class-native = " git-replacement-native"
 
+SRC_URI = "${KERNELORG_MIRROR}/software/scm/git/git-${PV}.tar.gz"
 S = "${WORKDIR}/git-${PV}"
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=7c0d7ef03a7eb04ce795b0f60e68e7e1"
