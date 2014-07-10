@@ -186,6 +186,11 @@ class Wic_PartData(Mic_PartData):
                                              rootfs_dir, native_sysroot,
                                              pseudo)
 
+        elif self.fstype.startswith("vfat"):
+            return self.prepare_rootfs_vfat(cr_workdir, oe_builddir,
+                                            rootfs_dir, native_sysroot,
+                                            pseudo)
+
     def prepare_rootfs_ext(self, cr_workdir, oe_builddir, rootfs_dir,
                            native_sysroot, pseudo):
         """
@@ -270,6 +275,53 @@ class Wic_PartData(Mic_PartData):
         self.size = rootfs_size
         self.source_file = rootfs
 
+    def prepare_rootfs_vfat(self, cr_workdir, oe_builddir, rootfs_dir,
+                            native_sysroot, pseudo):
+        """
+        Prepare content for a vfat rootfs partition.
+        """
+        image_rootfs = rootfs_dir
+        rootfs = "%s/rootfs_%s.%s" % (cr_workdir, self.label, self.fstype)
+
+        du_cmd = "du -bks %s" % image_rootfs
+        rc, out = exec_cmd(du_cmd)
+        blocks = int(out.split()[0])
+
+        extra_blocks = self.get_extra_block_count(blocks)
+
+        if extra_blocks < BOOTDD_EXTRA_SPACE:
+            extra_blocks = BOOTDD_EXTRA_SPACE
+
+        blocks += extra_blocks
+
+        msger.debug("Added %d extra blocks to %s to get to %d total blocks" % \
+                    (extra_blocks, self.mountpoint, blocks))
+
+        # Ensure total sectors is an integral number of sectors per
+        # track or mcopy will complain. Sectors are 512 bytes, and we
+        # generate images with 32 sectors per track. This calculation is
+        # done in blocks, thus the mod by 16 instead of 32.
+        blocks += (16 - (blocks % 16))
+
+        dosfs_cmd = "mkdosfs -n boot -S 512 -C %s %d" % (rootfs, blocks)
+        exec_native_cmd(dosfs_cmd, native_sysroot)
+
+        mcopy_cmd = "mcopy -i %s -s %s/* ::/" % (rootfs, image_rootfs)
+        rc, out = exec_native_cmd(mcopy_cmd, native_sysroot)
+        if rc:
+            msger.error("ERROR: mcopy returned '%s' instead of 0 (which you probably don't want to ignore, use --debug for details)" % rc)
+
+        chmod_cmd = "chmod 644 %s" % rootfs
+        exec_cmd(chmod_cmd)
+
+        # get the rootfs size in the right units for kickstart (Mb)
+        du_cmd = "du -Lbms %s" % rootfs
+        rc, out = exec_cmd(du_cmd)
+        rootfs_size = out.split()[0]
+
+        self.set_size(rootfs_size)
+        self.set_source_file(rootfs)
+
     def prepare_empty_partition(self, cr_workdir, oe_builddir, native_sysroot):
         """
         Prepare an empty partition.
@@ -280,6 +332,9 @@ class Wic_PartData(Mic_PartData):
         elif self.fstype.startswith("btrfs"):
             return self.prepare_empty_partition_btrfs(cr_workdir, oe_builddir,
                                                       native_sysroot)
+        elif self.fstype.startswith("vfat"):
+            return self.prepare_empty_partition_vfat(cr_workdir, oe_builddir,
+                                                     native_sysroot)
 
     def prepare_empty_partition_ext(self, cr_workdir, oe_builddir,
                                     native_sysroot):
@@ -317,6 +372,25 @@ class Wic_PartData(Mic_PartData):
 
         mkfs_cmd = "mkfs.%s -F %s %s" % (self.fstype, extra_imagecmd, fs)
         rc, out = exec_native_cmd(mkfs_cmd, native_sysroot)
+
+        self.source_file = fs
+
+        return 0
+
+    def prepare_empty_partition_vfat(self, cr_workdir, oe_builddir,
+                                     native_sysroot):
+        """
+        Prepare an empty vfat partition.
+        """
+        fs = "%s/fs.%s" % (cr_workdir, self.fstype)
+
+        blocks = self.size * 1024
+
+        dosfs_cmd = "mkdosfs -n boot -S 512 -C %s %d" % (fs, blocks)
+        exec_native_cmd(dosfs_cmd, native_sysroot)
+
+        chmod_cmd = "chmod 644 %s" % fs
+        exec_cmd(chmod_cmd)
 
         self.source_file = fs
 
