@@ -917,7 +917,7 @@ python do_package_qa () {
     bb.note("DONE with PACKAGE QA")
 }
 
-addtask do_package_qa after do_package before do_build
+addtask do_package_qa after do_packagedata do_package before do_build
 
 SSTATETASKS += "do_package_qa"
 do_package_qa[sstate-inputdirs] = ""
