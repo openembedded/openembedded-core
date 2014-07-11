@@ -17,11 +17,10 @@ DEFAULT_PREFERENCE = "-1"
 DEFAULT_PREFERENCE_arm = "1"
 
 PV = "2.00+${SRCPV}"
-SRCREV = "4b8b9135f1676924a8458da528d264bbc7bbb301"
+SRCREV = "87de66d9d83446ecddb29cfbdf7369102c8e209e"
 SRC_URI = "git://git.savannah.gnu.org/grub.git \
            file://autogen.sh-exclude-pc.patch \
            file://grub-2.00-add-oe-kernel.patch \
-           file://asciih-fix-build-warning-error.patch \
           "
 
 S = "${WORKDIR}/git"
