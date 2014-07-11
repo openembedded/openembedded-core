@@ -240,18 +240,21 @@ wic_help_topic_usage = """
 """
 
 subcommands = {
-    "create":   [wic_create_subcommand,
-                 wic_create_usage,
-                 wic_create_help],
-    "list":     [wic_list_subcommand,
-                 wic_list_usage,
-                 wic_list_help],
-    "plugins":  [wic_help_topic_subcommand,
-                 wic_help_topic_usage,
-                 wic_plugins_help],
-    "overview":  [wic_help_topic_subcommand,
-                 wic_help_topic_usage,
-                 wic_overview_help],
+    "create":    [wic_create_subcommand,
+                  wic_create_usage,
+                  wic_create_help],
+    "list":      [wic_list_subcommand,
+                  wic_list_usage,
+                  wic_list_help],
+    "plugins":   [wic_help_topic_subcommand,
+                  wic_help_topic_usage,
+                  wic_plugins_help],
+    "overview":   [wic_help_topic_subcommand,
+                  wic_help_topic_usage,
+                  wic_overview_help],
+    "kickstart":  [wic_help_topic_subcommand,
+                  wic_help_topic_usage,
+                  wic_kickstart_help],
 }
 
 
