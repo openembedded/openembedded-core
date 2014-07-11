@@ -78,6 +78,7 @@ def get_args_parser():
     parser.add_argument('--required-packages', required=False, action="store", nargs='*', dest="required_packages", default=None, help='Required packages for the tests. They will be built before the testing begins.')
     parser.add_argument('--targetprofile', required=False, action="store", nargs=1, dest="targetprofile", default='AutoTargetProfile', help='The target profile to be used.')
     parser.add_argument('--repoprofile', required=False, action="store", nargs=1, dest="repoprofile", default='PublicAB', help='The repo profile to be used.')
+    parser.add_argument('--skip-download', required=False, action="store_true", dest="skip_download", default=False, help='Skip downloading the images completely. This needs the correct files to be present in the directory specified by the target profile.')
     return parser
 
 class BaseTargetProfile(object):
@@ -248,13 +249,14 @@ class PublicAB(BaseRepoProfile):
 
 class HwAuto():
 
-    def __init__(self, image_types, repolink, required_packages, targetprofile, repoprofile):
+    def __init__(self, image_types, repolink, required_packages, targetprofile, repoprofile, skip_download):
         log.info('Initializing..')
         self.image_types = image_types
         self.repolink = repolink
         self.required_packages = required_packages
         self.targetprofile = targetprofile
         self.repoprofile = repoprofile
+        self.skip_download = skip_download
         self.repo = self.get_repo_profile(self.repolink)
 
     # Get the repository profile; for now we only look inside this module.
@@ -304,15 +306,18 @@ class HwAuto():
         # For each image type, download the needed files and run the tests.
         noissuesfound = True
         for image_type in self.image_types:
-            target = self.get_target_profile(image_type)
-            files_dict = target.get_files_dict()
-            log.info("Downloading files for %s" % image_type)
-            for f in files_dict:
-                if self.repo.check_old_file(files_dict[f]):
-                    filepath = os.path.join(self.repo.localdir, files_dict[f])
-                    if os.path.exists(filepath):
-                        os.remove(filepath)
-                    self.repo.fetch(files_dict[f])
+            if self.skip_download:
+                log.info("Skipping downloading the images..")
+            else:
+                target = self.get_target_profile(image_type)
+                files_dict = target.get_files_dict()
+                log.info("Downloading files for %s" % image_type)
+                for f in files_dict:
+                    if self.repo.check_old_file(files_dict[f]):
+                        filepath = os.path.join(self.repo.localdir, files_dict[f])
+                        if os.path.exists(filepath):
+                            os.remove(filepath)
+                        self.repo.fetch(files_dict[f])
 
             result = self.runTestimageBuild(image_type)
             if result.status != 0:
@@ -331,7 +336,7 @@ def main():
     parser = get_args_parser()
     args = parser.parse_args()
 
-    hwauto = HwAuto(image_types=args.image_types, repolink=args.repo_link, required_packages=args.required_packages, targetprofile=args.targetprofile, repoprofile=args.repoprofile)
+    hwauto = HwAuto(image_types=args.image_types, repolink=args.repo_link, required_packages=args.required_packages, targetprofile=args.targetprofile, repoprofile=args.repoprofile, skip_download=args.skip_download)
 
     hwauto.run()
 
