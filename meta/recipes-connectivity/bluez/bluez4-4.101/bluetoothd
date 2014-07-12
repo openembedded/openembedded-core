@@ -1,0 +1,28 @@
+#!/bin/sh
+### BEGIN INIT INFO
+# Provides:             bluetoothd
+# Required-Start:       $dbus
+# Required-Stop:        
+# Default-Start:        2 3
+# Default-Stop:         1
+# Short-Description:    Bluez4 Bluetooth Daemon
+### END INIT INFO
+
+case "$1" in
+start)
+        exec start-stop-daemon -S -x /usr/sbin/bluetoothd
+        ;;
+stop)
+        exec start-stop-daemon -K -x /usr/sbin/bluetoothd
+        ;;
+restart|reload)
+        $0 stop
+        sleep 1
+        $0 start
+        ;;
+*)
+        echo "Usage: $0 start|stop|restart"
+        exit 1
+        ;;
+esac
+exit 0
