@@ -30,11 +30,3 @@ RDEPENDS_${PN}-utils = "\
     xset \
     xrandr \
     "
-
-# Allow replacing task-x11* in meta-oe
-RPROVIDES_${PN} = "task-x11"
-RREPLACES_${PN} = "task-x11"
-RCONFLICTS_${PN} = "task-x11"
-RPROVIDES_${PN}-utils = "task-x11-utils"
-RREPLACES_${PN}-utils = "task-x11-utils"
-RCONFLICTS_${PN}-utils = "task-x11-utils"

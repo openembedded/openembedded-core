@@ -17,8 +17,3 @@ RDEPENDS_${PN} = "\
     ${XSERVER} \
     ${XSERVERCODECS} \
     "
-
-# Allow replacing task-x11-server in meta-oe
-RPROVIDES_${PN} = "task-x11-server task-xserver"
-RREPLACES_${PN} = "task-x11-server task-xserver"
-RCONFLICTS_${PN} = "task-x11-server task-xserver"

@@ -124,13 +124,6 @@ python __anonymous () {
 
     if "nfc" in distro_features and not "nfc" in machine_features and ("usbhost" in machine_features):
         d.setVar("ADD_NFC", "packagegroup-base-nfc")
-
-    # For backwards compatibility after rename
-    packages = d.getVar("PACKAGES", True).split()
-    for pkg in packages:
-        d.appendVar("RPROVIDES_%s" % pkg, pkg.replace("packagegroup-", "task-"))
-        d.appendVar("RREPLACES_%s" % pkg, pkg.replace("packagegroup-", "task-"))
-        d.appendVar("RCONFLICTS_%s" % pkg, pkg.replace("packagegroup-", "task-"))
 }
 
 #

@@ -12,11 +12,6 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PACKAGES = "${PN} ${PN}-base ${PN}-apps ${PN}-games"
 
-# For backwards compatibility after rename
-RPROVIDES_${PN} = "task-core-x11-sato"
-RREPLACES_${PN} = "task-core-x11-sato"
-RCONFLICTS_${PN} = "task-core-x11-sato"
-
 RDEPENDS_${PN} = "\
     ${PN}-base \
     ${PN}-apps \

@@ -10,11 +10,6 @@ inherit packagegroup
 
 #PACKAGEFUNCS =+ 'generate_sdk_pkgs'
 
-# For backwards compatibility after rename
-RPROVIDES_packagegroup-core-sdk = "task-core-sdk"
-RREPLACES_packagegroup-core-sdk = "task-core-sdk"
-RCONFLICTS_packagegroup-core-sdk = "task-core-sdk"
-
 RDEPENDS_packagegroup-core-sdk = "\
     packagegroup-core-buildessential \
     coreutils \

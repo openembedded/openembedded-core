@@ -11,11 +11,6 @@ inherit packagegroup
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-# For backwards compatibility after rename
-RPROVIDES_${PN} = "task-core-tools-profile"
-RREPLACES_${PN} = "task-core-tools-profile"
-RCONFLICTS_${PN} = "task-core-tools-profile"
-
 PROFILE_TOOLS_X = "${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'sysprof', '', d)}"
 PROFILE_TOOLS_SYSTEMD = "${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'systemd-analyze', '', d)}"
 

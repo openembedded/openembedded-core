@@ -7,11 +7,6 @@ COMPATIBLE_HOST_mips64 = "mips64.*-linux-gnun32"
 
 inherit packagegroup
 
-# For backwards compatibility after rename
-RPROVIDES_${PN} = "task-qt4e-base"
-RREPLACES_${PN} = "task-qt4e-base"
-RCONFLICTS_${PN} = "task-qt4e-base"
-
 TOUCH = ' ${@bb.utils.contains("MACHINE_FEATURES", "touchscreen", "tslib tslib-calibrate tslib-tests", "",d)}'
 
 RDEPENDS_${PN} = " \
