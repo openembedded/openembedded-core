@@ -9,23 +9,28 @@ Infrastructure (DRI)."
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=8730ad58d11c7bbad9a7066d69f7808e"
 
+SRC_URI += "file://configure-dri.patch"
+
+SRC_URI[md5sum] = "88d1a884f9b7bd07bf0755cfa34052d4"
+SRC_URI[sha256sum] = "7c8ffc492d59f34cac64093deb70717b4d9223cf416ecc6fa016ab2e8bde9501"
+
 DEPENDS += "virtual/libx11 drm libpciaccess pixman"
 
-SRC_URI += "file://compat-api-Map-changes-of-DamageUnregister-API-in-1..patch \
-           "
+PACKAGECONFIG ??= "sna udev ${@bb.utils.contains('DISTRO_FEATURES', 'opengl', 'dri dri1 dri2', '', d)}"
 
-PACKAGECONFIG ??= "sna udev ${@bb.utils.contains('DISTRO_FEATURES', 'opengl', 'dri', '', d)}"
-
-PACKAGECONFIG[dri] = "--enable-dri,--disable-dri,xf86driproto dri2proto"
+PACKAGECONFIG[dri] = "--enable-dri,--disable-dri"
+PACKAGECONFIG[dri1] = "--enable-dri1,--disable-dri1,xf86driproto"
+PACKAGECONFIG[dri2] = "--enable-dri2,--disable-dri2,dri2proto"
+PACKAGECONFIG[dri3] = "--enable-dri3,--disable-dri3,dri3proto"
 PACKAGECONFIG[sna] = "--enable-sna,--disable-sna"
 PACKAGECONFIG[uxa] = "--enable-uxa,--disable-uxa"
 PACKAGECONFIG[udev] = "--enable-udev,--disable-udev,udev"
 PACKAGECONFIG[xvmc] = "--enable-xvmc,--disable-xvmc,libxvmc"
+PACKAGECONFIG[tools] = "--enable-tools,--disable-tools,libxinerama libxrandr libxdamage libxfixes libxcursor libxtst libxext libxrender"
 
 # --enable-kms-only option is required by ROOTLESS_X
 EXTRA_OECONF += '${@base_conditional( "ROOTLESS_X", "1", " --enable-kms-only", "", d )}'
 
 COMPATIBLE_HOST = '(i.86|x86_64).*-linux'
 
-SRC_URI[md5sum] = "a9a5c2c15766c06a024381efe0d724bb"
-SRC_URI[sha256sum] = "203d46064449da0e23a111418dfb189422ba96ea08707167c8dee463e2d745b1"
+FILES_${PN} += "${datadir}/polkit-1"
