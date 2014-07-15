@@ -18,6 +18,7 @@ PR = "r3"
 EXTRA_OECONF = "--disable-iberty"
 
 SRC_URI = "${GNU_MIRROR}/which/which-${PV}.tar.gz \
+           file://automake.patch \
            file://remove-declaration.patch"
 
 SRC_URI[md5sum] = "95be0501a466e515422cde4af46b2744"
