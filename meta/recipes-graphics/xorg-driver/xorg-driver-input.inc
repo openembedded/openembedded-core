@@ -2,9 +2,10 @@ include xorg-driver-common.inc
 
 DEPENDS += "inputproto kbproto "
 
-python populate_packages_prepend() {
-    add_abi_depends(d, "input")
+python add_xorg_abi_depends() {
+    _add_xorg_abi_depends(d, "input")
 }
+PACKAGEFUNCS =+ "add_xorg_abi_depends"
 
 FILES_${PN} += " ${libdir}/xorg/modules/input/*.so"
 FILES_${PN}-dbg += " ${libdir}/xorg/modules/input/.debug"

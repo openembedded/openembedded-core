@@ -25,8 +25,8 @@ do_install_append() {
 }
 
 # Function to add the relevant ABI dependency to drivers, which should be called
-# from a populate_packages append/prepend.
-def add_abi_depends(d, name):
+# from a PACKAGEFUNC.
+def _add_xorg_abi_depends(d, name):
     # Map of ABI names exposed in the dependencies to pkg-config variables
     abis = {
       "video": "abi_videodrv",
