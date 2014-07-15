@@ -1,7 +1,7 @@
 AC_PREREQ([2.57])
 
 AC_INIT(bzip2, 2.0.5, , libXrender)
-AM_INIT_AUTOMAKE()
+AM_INIT_AUTOMAKE(foreign)
 AM_MAINTAINER_MODE
 
 #AM_CONFIG_HEADER(config.h)
