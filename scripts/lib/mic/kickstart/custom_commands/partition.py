@@ -122,6 +122,8 @@ class Wic_PartData(Mic_PartData):
         partition command parameters.
         """
         if not self.source:
+            if not self.size:
+                msger.error("The %s partition has a size of zero.  Please specify a non-zero --size for that partition." % self.mountpoint)
             if self.fstype and self.fstype == "swap":
                 self.prepare_swap_partition(cr_workdir, oe_builddir,
                                             native_sysroot)
