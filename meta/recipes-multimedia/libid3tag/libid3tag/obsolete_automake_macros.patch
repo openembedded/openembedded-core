@@ -6,7 +6,8 @@ diff -Nurd libid3tag-0.15.1b/configure.ac libid3tag-0.15.1b/configure.ac
 +++ libid3tag-0.15.1b/configure.ac	2013-01-03 06:41:02.734835014 +0200
 @@ -28,7 +28,7 @@
 
- AM_INIT_AUTOMAKE
+-AM_INIT_AUTOMAKE
++AM_INIT_AUTOMAKE([foreign])
 
 -AM_CONFIG_HEADER([config.h])
 +AC_CONFIG_HEADERS([config.h])
