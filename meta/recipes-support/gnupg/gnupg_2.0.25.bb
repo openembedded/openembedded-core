@@ -13,8 +13,8 @@ inherit autotools gettext texinfo pkgconfig
 SRC_URI = "ftp://ftp.gnupg.org/gcrypt/${BPN}/${BPN}-${PV}.tar.bz2 \
            file://pkgconfig.patch"
 
-SRC_URI[md5sum] = "1c30b3aa1f99f17b4988e1ab616355d4"
-SRC_URI[sha256sum] = "cf196b8056eafb4236f000a3e12543e0022a1fec4d6edff1b91b48936c109841"
+SRC_URI[md5sum] = "048d8de797125f1d8e6cf3bdff9e2d12"
+SRC_URI[sha256sum] = "b3abe97df096cf53d6a422ac922f3c48e688bc892b7ccf669b92f0b7fc6c5823"
 
 EXTRA_OECONF = "--disable-ldap \
 		--disable-ccid-driver \
