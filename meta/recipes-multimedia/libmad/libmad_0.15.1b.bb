@@ -15,6 +15,7 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/mad/libmad-${PV}.tar.gz \
            file://add-pkgconfig.patch \
            file://fix_for_mips_with_gcc-4.5.0.patch \
            file://obsolete_automake_macros.patch \
+           file://automake-foreign.patch \
 "
 
 SRC_URI[md5sum] = "1be543bc30c56fb6bea1d7bf6a64e66c"
