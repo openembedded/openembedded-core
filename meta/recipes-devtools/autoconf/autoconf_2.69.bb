@@ -10,7 +10,6 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=751419260aa954499f7abaabaa882bbe \
 SRC_URI += "file://autoreconf-include.patch \
 	    file://check-automake-cross-warning.patch \
 	    file://autoreconf-exclude.patch \
-	    file://autoreconf-foreign.patch \
 	    file://autoreconf-gnuconfigize.patch \
             file://config_site.patch \
             file://remove-usr-local-lib-from-m4.patch \
