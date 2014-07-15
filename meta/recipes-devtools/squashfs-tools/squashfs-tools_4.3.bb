@@ -3,22 +3,18 @@
 SUMMARY = "Tools for manipulating SquashFS filesystems"
 SECTION = "base"
 LICENSE = "GPL-2 & PD"
-LIC_FILES_CHKSUM = "file://../COPYING;md5=0636e73ff0215e8d672dc4c32c317bb3 \
+LIC_FILES_CHKSUM = "file://../COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
                     file://../../7zC.txt;beginline=12;endline=16;md5=2056cd6d919ebc3807602143c7449a7c \
                    "
 DEPENDS = "attr zlib xz"
-PR = "r2"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/squashfs/squashfs${PV}.tar.gz;name=squashfs \
            http://downloads.sourceforge.net/sevenzip/lzma465.tar.bz2;name=lzma \
           "
-SRC_URI += "file://squashfs-4.2-fix-CVE-2012-4024.patch \
-            file://squashfs-add-a-commment-and-fix-some-other-comments.patch \
-            file://squashfs-fix-open-file-limit.patch \
-            file://squashfs-4.2-fix-CVE-2012-4025.patch \
-           " 
-SRC_URI[squashfs.md5sum] = "1b7a781fb4cf8938842279bd3e8ee852"
-SRC_URI[squashfs.sha256sum] = "d9e0195aa922dbb665ed322b9aaa96e04a476ee650f39bbeadb0d00b24022e96"
+
+SRC_URI[squashfs.md5sum] = "d92ab59aabf5173f2a59089531e30dbf"
+SRC_URI[squashfs.sha256sum] = "0d605512437b1eb800b4736791559295ee5f60177e102e4d4ccd0ee241a5f3f6"
+
 SRC_URI[lzma.md5sum] = "29d5ffd03a5a3e51aef6a74e9eafb759"
 SRC_URI[lzma.sha256sum] = "c935fd04dd8e0e8c688a3078f3675d699679a90be81c12686837e0880aa0fa1e"
 
