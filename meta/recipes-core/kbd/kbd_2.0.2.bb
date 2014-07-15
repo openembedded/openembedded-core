@@ -10,12 +10,12 @@ RREPLACES_${PN} = "console-tools"
 RPROVIDES_${PN} = "console-tools"
 RCONFLICTS_${PN} = "console-tools"
 
-SRC_URI = "${KERNELORG_MIRROR}/linux/utils/${BPN}/${BP}.tar.bz2 \
+SRC_URI = "${KERNELORG_MIRROR}/linux/utils/${BPN}/${BP}.tar.xz \
            file://uclibc-stdarg.patch \
           "
 
-SRC_URI[md5sum] = "f80b93a6abddb6cc2a3652daaf7562ba"
-SRC_URI[sha256sum] = "223d60bb6882323cca161aeb5965590768b2f590fd7cddbf27511ad0ba7a429e"
+SRC_URI[md5sum] = "87475eb78b1d6e6ab06686dd323ad4ba"
+SRC_URI[sha256sum] = "9dfddabf96012e329c4bebb96a21aeef7c3872f624e96e8156ba542b82aeb912"
 
 PACKAGECONFIG ?= "${@bb.utils.contains('DISTRO_FEATURES', 'pam', 'pam', '', d)}"
 PACKAGECONFIG[pam] = "--enable-vlock, --disable-vlock, libpam,"
