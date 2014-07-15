@@ -1,0 +1,27 @@
+From 74c26943f1228870022d116a1fda25be3a55a38e Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Cristian=20Rodr=C3=ADguez?= <crrodriguez@opensuse.org>
+Date: Wed, 18 Jun 2014 20:51:00 -0400
+Subject: [PATCH] Add missing O_CLOEXEC in kmod_module_get_size()
+
+Upstream-Status: Backport 
+Signed-off-by: Saul Wold <sgw@linux.intel.com>
+---
+ libkmod/libkmod-module.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/libkmod/libkmod-module.c b/libkmod/libkmod-module.c
+index e3cc5a7..b81b451 100644
+--- a/libkmod/libkmod-module.c
++++ b/libkmod/libkmod-module.c
+@@ -1783,7 +1783,7 @@ KMOD_EXPORT long kmod_module_get_size(const struct kmod_module *mod)
+ 	 * loaded.
+ 	 */
+ 	snprintf(line, sizeof(line), "/sys/module/%s", mod->name);
+-	dfd = open(line, O_RDONLY);
++	dfd = open(line, O_RDONLY|O_CLOEXEC);
+ 	if (dfd < 0)
+ 		return -errno;
+ 
+-- 
+1.8.3.1
+

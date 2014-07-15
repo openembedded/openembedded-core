@@ -16,9 +16,9 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=751419260aa954499f7abaabaa882bbe \
                    "
 inherit autotools gtk-doc ptest
 
-SRCREV = "49d8e0b59052999de577ab732b719cfbeb89504d"
+SRCREV = "ae58de0fcb4a6528dd365e23d383bbe2eaf2d566"
 # Lookout for PV bump too when SRCREV is changed
-PV = "17+git${SRCPV}"
+PV = "18+git${SRCPV}"
 
 SRC_URI = "git://git.kernel.org/pub/scm/utils/kernel/kmod/kmod.git \
            file://depmod-search.conf \
@@ -26,6 +26,7 @@ SRC_URI = "git://git.kernel.org/pub/scm/utils/kernel/kmod/kmod.git \
            file://ptest.patch \
            file://avoid_parallel_tests.patch \
            file://fix-O_CLOEXEC.patch \
+           file://0001-Add-missing-O_CLOEXEC-in-kmod_module_get_size.patch \
           "
 
 S = "${WORKDIR}/git"
