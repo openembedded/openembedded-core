@@ -20,6 +20,7 @@ FILES_${PN}-staticdev += "${libdir}/${BPN}/lib*.a"
 
 SRC_URI = "file://opstart.patch \
            file://acinclude.m4 \
+           file://automake-foreign.patch \
            file://oprofile-cross-compile-tests.patch \
            file://run-ptest \
            file://root-home-dir.patch"
