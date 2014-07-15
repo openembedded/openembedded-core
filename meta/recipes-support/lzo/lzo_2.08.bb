@@ -3,15 +3,14 @@ HOMEPAGE = "http://www.oberhumer.com/opensource/lzo/"
 SECTION = "libs"
 LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
-                    file://src/lzo_init.c;beginline=23;endline=40;md5=924a0f71f5394f6d404be3b458474769"
-PR = "r1"
+                    file://src/lzo_init.c;beginline=5;endline=25;md5=a6e25df9a83b24629e847846ccdd8054"
 
 SRC_URI = "http://www.oberhumer.com/opensource/lzo/download/lzo-${PV}.tar.gz \
            file://acinclude.m4 \
            "
 
-SRC_URI[md5sum] = "95380bd4081f85ef08c5209f4107e9f8"
-SRC_URI[sha256sum] = "ff79e6f836d62d3f86ef6ce893ed65d07e638ef4d3cb952963471b4234d43e73"
+SRC_URI[md5sum] = "fcec64c26a0f4f4901468f360029678f"
+SRC_URI[sha256sum] = "ac1b3e4dee46febe9fd28737eb7f5692d3232ef1a01da10444394c3d47536614"
 
 inherit autotools
 
