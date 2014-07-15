@@ -1,0 +1,20 @@
+Use foreign strictness to avoid automake errors.
+
+Upstream-Status: Submitted (https://github.com/linux-test-project/ltp/issues/16)
+Signed-off-by: Ross Burton <ross.burton@intel.com>
+
+diff --git a/configure.ac b/configure.ac
+index 9f397e7..fc57957 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -4 +4 @@
+-AM_INIT_AUTOMAKE
++AM_INIT_AUTOMAKE([foreign])
+--- a/utils/ffsb-6.0-rc2/configure.in
++++ b/utils/ffsb-6.0-rc2/configure.in
+@@ -2,2 +2,3 @@ dnl Process this file with autoconf to produce a configure script.
+-AC_INIT(main.c)
+-AM_INIT_AUTOMAKE(ffsb, 6.0-RC2)
++AC_INIT([ffsb], [6.0-RC2])
++AC_CONFIG_SRCDIR([main.c])
++AM_INIT_AUTOMAKE([foreign])

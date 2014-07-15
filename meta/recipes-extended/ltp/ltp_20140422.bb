@@ -25,6 +25,7 @@ SRCREV = "f4c3bfe1eab51eb72caeb0f3336d2790c9a8bd1b"
 SRC_URI = "git://github.com/linux-test-project/ltp.git \
     file://0001-Rename-runtests_noltp.sh-script-so-have-unique-name.patch \
     file://ltp-Do-not-link-against-libfl.patch \
+    file://automake-foreign.patch \
 "
 
 S = "${WORKDIR}/git"
