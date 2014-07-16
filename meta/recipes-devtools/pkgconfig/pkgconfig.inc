@@ -35,7 +35,7 @@ FILES_${PN} += "${datadir}/aclocal/pkg.m4"
 # When using the RPM generated automatic package dependencies, some packages
 # will end up requiring 'pkgconfig(pkg-config)'.  Allow this behavior by
 # specifying an appropriate provide.
-RPROVIDES_${PN} += "pkgconfig(pkg-config) (= ${PV})"
+RPROVIDES_${PN} += "pkgconfig(pkg-config)"
 
 # Install a pkg-config-native wrapper that will use the native sysroot instead
 # of the MACHINE sysroot, for using pkg-config when building native tools.
