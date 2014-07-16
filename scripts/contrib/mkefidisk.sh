@@ -208,14 +208,14 @@ unmount_device
 echo ""
 echo "Formatting $BOOTFS as vfat..."
 if [ ! "${DEVICE#/dev/loop}" = "${DEVICE}" ]; then
-	mkfs.vfat -I $BOOTFS -n "efi"
+	mkfs.vfat -I $BOOTFS -n "EFI"
 else
-	mkfs.vfat $BOOTFS -n "efi"
+	mkfs.vfat $BOOTFS -n "EFI"
 
 fi
 
 echo "Formatting $ROOTFS as ext3..."
-mkfs.ext3 $ROOTFS -L "root"
+mkfs.ext3 -F $ROOTFS -L "ROOT"
 
 echo "Formatting swap partition...($SWAP)"
 mkswap $SWAP
