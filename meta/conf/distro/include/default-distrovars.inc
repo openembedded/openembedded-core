@@ -23,9 +23,9 @@ IMAGE_FEATURES ?= ""
 
 # This is a list of packages that are used by the build system to build the distribution, they are not
 # directly part of the distribution. 
-HOSTTOOLS_WHITELIST_GPLv3 ?= ""
-WHITELIST_GPLv3 ?= "less"
-LGPLv2_WHITELIST_GPLv3 ?= "libassuan gnutls libtasn1 libidn libgcc libgcc-initial gcc-runtime" 
+HOSTTOOLS_WHITELIST_GPL-3.0 ?= ""
+WHITELIST_GPL-3.0 ?= "less"
+LGPLv2_WHITELIST_GPL-3.0 ?= "libassuan gnutls libtasn1 libidn libgcc libgcc-initial gcc-runtime"
 
 COMMERCIAL_AUDIO_PLUGINS ?= ""
 # COMMERCIAL_AUDIO_PLUGINS ?= "gst-plugins-ugly-mad gst-plugins-ugly-mpegaudioparse"
