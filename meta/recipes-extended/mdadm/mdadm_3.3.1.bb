@@ -8,13 +8,13 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
                     file://mdadm.h;beglinlne=4;endline=22;md5=462bc9936ac0d3da110191a3f9994161"
 
 
-SRC_URI = "${KERNELORG_MIRROR}/linux/utils/raid/mdadm/${BPN}-${PV}.tar.bz2 \
+SRC_URI = "${KERNELORG_MIRROR}/linux/utils/raid/mdadm/${BPN}-${PV}.tar.xz \
            file://mdadm-3.2.2_fix_for_x32.patch \
            file://gcc-4.9.patch \
 	  "
 
-SRC_URI[md5sum] = "8ac04259cdd74b4566c3b6dea9414b57"
-SRC_URI[sha256sum] = "9c07e518bdf3392ebac8874eb686258e10ea3ae0ff7a8acb6d014718a9c3ed45"
+SRC_URI[md5sum] = "4227d48de62dfb217c92fa0c54171bbe"
+SRC_URI[sha256sum] = "d8c74112cfd77bdc1dbc1291fe8d9243c76d91bfa276fcb95f2a75ca7717ab02"
 
 CFLAGS += "-fno-strict-aliasing"
 
