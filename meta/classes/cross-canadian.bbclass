@@ -119,8 +119,8 @@ TARGET_ARCH[vardepsexclude] = "TUNE_ARCH"
 
 # If MLPREFIX is set by multilib code, shlibs
 # points to the wrong place so force it
-SHLIBSDIRS = "${PKGDATA_DIR}/nativesdk-shlibs"
-SHLIBSWORKDIR = "${PKGDATA_DIR}/nativesdk-shlibs"
+SHLIBSDIRS = "${PKGDATA_DIR}/nativesdk-shlibs2"
+SHLIBSWORKDIR = "${PKGDATA_DIR}/nativesdk-shlibs2"
 
 cross_canadian_bindirlinks () {
 	for i in ${CANADIANEXTRAOS}
