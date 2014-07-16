@@ -18,13 +18,16 @@ else
 fi
 }
 
-python populate_packages_append() {
+python () {
     font_pkgs = d.getVar('FONT_PACKAGES', True).split()
     deps = d.getVar("FONT_EXTRA_RDEPENDS", True)
 
     for pkg in font_pkgs:
         if deps: d.appendVar('RDEPENDS_' + pkg, ' '+deps)
+}
 
+python add_fontcache_postinsts() {
+    for pkg in d.getVar('FONT_PACKAGES', True).split():
         bb.note("adding fonts postinst and postrm scripts to %s" % pkg)
         postinst = d.getVar('pkg_postinst_%s' % pkg, True) or d.getVar('pkg_postinst', True)
         if not postinst:
@@ -38,3 +41,5 @@ python populate_packages_append() {
         postrm += d.getVar('fontcache_common', True)
         d.setVar('pkg_postrm_%s' % pkg, postrm)
 }
+
+PACKAGEFUNCS += "add_fontcache_postinsts"
