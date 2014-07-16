@@ -30,7 +30,7 @@ index c51351f..8e58ac1 100644
 +$(se_seeld_OBJECTS) \
 +$(unit_test_ndef_parse_OBJECTS) \
 +$(unit_test_ndef_build_OBJECTS) \
-+$(unit_test_snep-read_OBJECTS) \
++$(unit_test_snep_read_OBJECTS) \
 +$(tools_snep_send_OBJECTS): $(local_headers)
  
  include/near/version.h: include/version.h
