@@ -11,24 +11,21 @@ inherit gettext
 
 SRC_URI = "${APACHE_MIRROR}/${BPN}/${BPN}-${PV}.tar.bz2 \
            file://libtool2.patch \
-           file://fix-install-depends.patch \
-           file://allow-updated-neon.patch \
-           file://neon.m4-fix-includes-and-cflags.patch \
-           file://subversion-CVE-2013-4505.patch \
-           file://subversion-CVE-2013-4131.patch \
-           file://subversion-CVE-2013-4277.patch \
+           file://disable_macos.patch \
 "
-SRC_URI[md5sum] = "4088a77e14232876c9b4ff1541e6e200"
-SRC_URI[sha256sum] = "c1df222bec83d014d17785e2ceba6bc80962f64b280967de0285836d8d77a8e7"
+SRC_URI[md5sum] = "bd495517a760ddd764ce449a891971db"
+SRC_URI[sha256sum] = "45d708a5c3ffbef4b2a1044c4716a053e680763743d1f7ba99d0369f6da49e33"
 
-LIC_FILES_CHKSUM = "file://LICENSE;md5=4a14fd2da3134e40a087eb4326a4ecd4"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=1c2f0119e478700b5428e26386cff923"
 
 PACKAGECONFIG[sasl] = "--with-sasl,--without-sasl,cyrus-sasl"
+PACKAGECONFIG[gnome-keyring] = "--with-gnome-keyring,--without-gnome-keyring,glib-2.0 gnome-keyring"
 
 EXTRA_OECONF = " \
                 --without-berkeley-db --without-apxs \
                 --without-swig --with-apr=${STAGING_BINDIR_CROSS} \
                 --with-apr-util=${STAGING_BINDIR_CROSS} \
+                --disable-keychain \
                 ac_cv_path_RUBY=none"
 
 inherit autotools
