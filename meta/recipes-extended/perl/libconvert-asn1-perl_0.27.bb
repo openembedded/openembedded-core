@@ -5,8 +5,8 @@ LIC_FILES_CHKSUM = "file://README.md;beginline=91;endline=97;md5=ceff7fd286eb6d8
 
 SRC_URI = "http://search.cpan.org/CPAN/authors/id/G/GB/GBARR/Convert-ASN1-${PV}.tar.gz"
 
-SRC_URI[md5sum] = "1c846c8c1125e6a075444abe65d99b63"
-SRC_URI[sha256sum] = "5db8b62fa0d036bd0cabc869ffe17941ad587d9a2af1ff030d554872adbc1ca1"
+SRC_URI[md5sum] = "68723e96be0b258a9e20480276e8a62c"
+SRC_URI[sha256sum] = "74a4a78ae0c5e973100ac0a8f203a110f76fb047b79dae4fc1fd7d6814d3d58a"
 
 S = "${WORKDIR}/Convert-ASN1-${PV}"
 
