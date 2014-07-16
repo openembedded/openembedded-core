@@ -264,11 +264,9 @@ umount $HDDIMG_ROOTFS_MNT
 
 echo "Preparing boot partition..."
 EFIDIR="$BOOTFS_MNT/EFI/BOOT"
-mkdir -p $EFIDIR
-
 cp $HDDIMG_MNT/vmlinuz $BOOTFS_MNT
 # Copy the efi loader and configs (booti*.efi and grub.cfg if it exists)
-cp $HDDIMG_MNT/EFI/BOOT/* $EFIDIR
+cp -r $HDDIMG_MNT/EFI $BOOTFS_MNT
 # Silently ignore a missing gummiboot loader dir (we might just be a GRUB image)
 cp -r $HDDIMG_MNT/loader $BOOTFS_MNT 2> /dev/null
 
