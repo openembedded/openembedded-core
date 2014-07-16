@@ -85,9 +85,6 @@ do_install_append() {
     install -m 0644 ${S}/libavfilter/*.h ${D}${includedir}/libavfilter/
 }
 
-FFMPEG_LIBS = "libavcodec libavdevice libavformat \
-               libavutil libpostproc libswscale libavfilter"
-
 PACKAGES += "${PN}-vhook-dbg ${PN}-vhook ffmpeg-x264-presets"
 
 RSUGGESTS_${PN} = "mplayer"
@@ -140,5 +137,3 @@ python populate_packages_prepend() {
         for pkg in pkgs:
             d.appendVar('INSANE_SKIP_%s' % pkg, ' textrel')
 }
-
-PACKAGES_DYNAMIC += "^lib(av(codec|device|filter|format|util)|postproc|swscale).*"

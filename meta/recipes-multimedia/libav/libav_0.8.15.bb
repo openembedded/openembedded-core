@@ -16,3 +16,5 @@ PROVIDES += "libpostproc"
 EXTRA_OECONF += " \
     --enable-postproc \
 "
+
+PACKAGES_DYNAMIC += "^lib(av(codec|device|filter|format|util)|postproc|swscale).*"
