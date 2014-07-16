@@ -265,31 +265,60 @@ umount $HDDIMG_ROOTFS_MNT
 echo "Preparing boot partition..."
 EFIDIR="$BOOTFS_MNT/EFI/BOOT"
 mkdir -p $EFIDIR
-GRUBCFG="$EFIDIR/grub.cfg"
 
 cp $HDDIMG_MNT/vmlinuz $BOOTFS_MNT
-# Copy the efi loader and config (booti*.efi and grub.cfg)
+# Copy the efi loader and configs (booti*.efi and grub.cfg if it exists)
 cp $HDDIMG_MNT/EFI/BOOT/* $EFIDIR
+# Silently ignore a missing gummiboot loader dir (we might just be a GRUB image)
+cp -r $HDDIMG_MNT/loader $BOOTFS_MNT 2> /dev/null
 
-# Update grub config for the installed image
-# Delete the install entry
-sed -i "/menuentry 'install'/,/^}/d" $GRUBCFG
-# Delete the initrd lines
-sed -i "/initrd /d" $GRUBCFG
-# Delete any LABEL= strings
-sed -i "s/ LABEL=[^ ]*/ /" $GRUBCFG
+# Update the boot loaders configurations for an installed image
 # Remove any existing root= kernel parameters and:
 # o Add a root= parameter with the target rootfs
 # o Specify ro so fsck can be run during boot
 # o Specify rootwait in case the target media is an asyncronous block device
 #   such as MMC or USB disks
 # o Specify "quiet" to minimize boot time when using slow serial consoles
-sed -i "s@ root=[^ ]*@ @" $GRUBCFG
-sed -i "s@vmlinuz @vmlinuz root=$TARGET_ROOTFS ro rootwait quiet @" $GRUBCFG
+
+# Look for a GRUB installation
+GRUB_CFG="$EFIDIR/grub.cfg"
+if [ -e "$GRUB_CFG" ]; then
+	echo "Configuring GRUB"
+	# Delete the install entry
+	sed -i "/menuentry 'install'/,/^}/d" $GRUB_CFG
+	# Delete the initrd lines
+	sed -i "/initrd /d" $GRUB_CFG
+	# Delete any LABEL= strings
+	sed -i "s/ LABEL=[^ ]*/ /" $GRUB_CFG
+
+	sed -i "s@ root=[^ ]*@ @" $GRUB_CFG
+	sed -i "s@vmlinuz @vmlinuz root=$TARGET_ROOTFS ro rootwait quiet @" $GRUB_CFG
+fi
+
+# Look for a gummiboot installation
+GUMMI_ENTRIES="$BOOTFS_MNT/loader/entries"
+GUMMI_CFG="$GUMMI_ENTRIES/boot.conf"
+if [ -d "$GUMMI_ENTRIES" ]; then
+	echo "Configuring Gummiboot"
+	# remove the install target if it exists
+	rm $GUMMI_ENTRIES/install.conf &> /dev/null
+
+	if [ ! -e "$GUMMI_CFG" ]; then
+		echo "ERROR: $GUMMI_CFG not found"
+	fi
+
+	sed -i "s@ root=[^ ]*@ @" $GUMMI_CFG
+	sed -i "s@options *LABEL=boot @options LABEL=Boot root=$TARGET_ROOTFS ro rootwait quiet @" $GUMMI_CFG
+fi
+
+# Ensure we have at least one EFI bootloader configured
+if [ ! -e $GRUB_CFG ] && [ ! -e $GUMMI_CFG ]; then
+	echo "ERROR: No EFI bootloader configuration found"
+fi
 
 umount $BOOTFS_MNT
 umount $HDDIMG_MNT
 rm -rf $TMPDIR
 sync
 
-echo "Installation complete."
+echo "Installation complete"
