@@ -1,0 +1,79 @@
+--- lirc-0.9.1.orig/Makefile.in
++++ lirc-0.9.1/Makefile.in
+@@ -185,7 +185,7 @@ am__define_uniq_tagged_files = \
+ ETAGS = etags
+ CTAGS = ctags
+ CSCOPE = cscope
+-DIST_SUBDIRS = drivers daemons tools doc systemd
++DIST_SUBDIRS = drivers daemons tools doc
+ DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
+ distdir = $(PACKAGE)-$(VERSION)
+ top_distdir = $(distdir)
+@@ -298,8 +298,6 @@ SED = @SED@
+ SET_MAKE = @SET_MAKE@
+ SHELL = @SHELL@
+ STRIP = @STRIP@
+-SYSTEMD_CFLAGS = @SYSTEMD_CFLAGS@
+-SYSTEMD_LIBS = @SYSTEMD_LIBS@
+ VERSION = @VERSION@
+ XMKMF = @XMKMF@
+ X_CFLAGS = @X_CFLAGS@
+@@ -387,8 +385,7 @@ ACLOCAL_AMFLAGS = -I m4
+ AUTOMAKE_OPTIONS = 1.5 check-news dist-bzip2
+ EXTRA_DIST = setup.sh setup-driver.sh setup-functions.sh setup.data \
+ 	data2setup.sh README TODO autogen.sh
+-@SYSTEMD_INSTALL_TRUE@SYSTEMD_DIR = systemd
+-SUBDIRS = drivers daemons tools doc $(SYSTEMD_DIR)
++SUBDIRS = drivers daemons tools doc
+ @INSTALL_ETC_TRUE@lirc_confdir = $(sysconfdir)/lirc
+ @INSTALL_ETC_TRUE@dist_lirc_conf_DATA = lircd.conf lirc_options.conf lircmd.conf
+ DISTCHECK_FLAGS = --with-driver=userspace --enable-sandboxed --sysconfdir=/tmp/etc
+
+--- lirc-0.9.1.orig/configure.ac
++++ lirc-0.9.1/configure.ac
+@@ -235,9 +235,6 @@ AH_TEMPLATE([HAVE_SCSI],
+ AH_TEMPLATE([HAVE_SOUNDCARD],
+         [defined if soundcard API is available])
+ 
+-AH_TEMPLATE([HAVE_SYSTEMD],
+-        [defined if systemd API is available])
+-
+ AH_TEMPLATE([HAVE_VSYSLOG],
+         [define if you have vsyslog( prio, fmt, va_arg )])
+ 
+@@ -420,12 +417,6 @@ AC_CHECK_HEADERS(linux/i2c-dev.h,[
+   ]
+ )
+ 
+-PKG_CHECK_MODULES([SYSTEMD],[libsystemd-daemon],[AC_DEFINE(HAVE_SYSTEMD)],[true])
+-CFLAGS="$CFLAGS $SYSTEMD_CFLAGS"
+-LIBS="$LIBS $SYSTEMD_LIBS"
+-
+-AC_CHECK_FILE([/usr/lib/systemd/system], [has_systemd_system=true],[true])
+-AM_CONDITIONAL([SYSTEMD_INSTALL],[test x"$has_systemd_system" = xtrue])
+ 
+ dnl here we see what driver the user wants.
+ 
+@@ -1818,7 +1809,6 @@ AC_CONFIG_FILES([
+   daemons/Makefile
+   tools/Makefile
+   doc/Makefile
+-  systemd/Makefile
+ ])
+ AC_OUTPUT
+ 
+--- lirc-0.9.1.orig/Makefile.am
++++ lirc-0.9.1/Makefile.am
+@@ -10,11 +10,8 @@ EXTRA_DIST =  setup.sh setup-driver.sh s
+ EXTRA_DIST += autogen.sh
+ 
+ ## daemons/ and tools/ should appear before doc/ for help2man to work.
+-if SYSTEMD_INSTALL
+-    SYSTEMD_DIR = systemd
+-endif
+ 
+-SUBDIRS = drivers daemons tools doc $(SYSTEMD_DIR)
++SUBDIRS = drivers daemons tools doc
+ 
+ if INSTALL_ETC
+ lirc_confdir        = $(sysconfdir)/lirc
