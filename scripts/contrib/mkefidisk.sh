@@ -28,6 +28,22 @@ BOOT_SIZE=20
 # 5% for swap
 SWAP_RATIO=5
 
+# Cleanup after die()
+cleanup() {
+	echo "Syncing and unmounting devices..."
+	# Unmount anything we mounted
+	unmount $ROOTFS_MNT || error "Failed to unmount $ROOTFS_MNT"
+	unmount $BOOTFS_MNT || error "Failed to unmount $BOOTFS_MNT"
+	unmount $HDDIMG_ROOTFS_MNT || error "Failed to unmount $HDDIMG_ROOTFS_MNT"
+	unmount $HDDIMG_MNT || error "Failed to unmount $HDDIMG_MNT"
+
+	# Remove the TMPDIR
+	echo "Removing temporary files..."
+	if [ -d "$TMPDIR" ]; then
+		rm -rf $TMPDIR || error "Failed to remove $TMPDIR"
+	fi
+}
+
 # Logging routines
 WARNINGS=0
 ERRORS=0
@@ -49,6 +65,11 @@ warn() {
 }
 success() {
 	echo "${GREEN}$1${CLEAR}"
+}
+die() {
+	error $1
+	cleanup
+	exit 1
 }
 
 usage() {
@@ -99,14 +120,20 @@ unmount_device() {
 	if [ $? -eq 0 ]; then
 		warn "$DEVICE listed in /proc/mounts, attempting to unmount..."
 		umount $DEVICE* 2>/dev/null
-		grep -q $DEVICE /proc/mounts
-		if [ $? -eq 0 ]; then
-			error "Failed to unmount $DEVICE"
-			exit 1
-		fi
+		return $?
 	fi
+	return 0
 }
 
+unmount() {
+	grep -q $1 /proc/mounts
+	if [ $? -eq 0 ]; then
+		echo "Unmounting $1..."
+		umount $1
+		return $?
+	fi
+	return 0
+}
 
 #
 # Parse and validate arguments
@@ -126,23 +153,24 @@ if [ $? -eq 0 ]; then
 fi
 
 if [ ! -w "$DEVICE" ]; then
-	error "Device $DEVICE does not exist or is not writable"
 	usage
-	exit 1
+	die "Device $DEVICE does not exist or is not writable"
 fi
 
 if [ ! -e "$HDDIMG" ]; then
-	error "HDDIMG $HDDIMG does not exist"
 	usage
-	exit 1
+	die "HDDIMG $HDDIMG does not exist"
 fi
 
+#
+# Ensure the hddimg is not mounted
+#
+unmount "$HDDIMG" || die "Failed to unmount $HDDIMG"
 
 #
 # Check if any $DEVICE partitions are mounted
 #
-unmount_device
-
+unmount_device || die "Failed to unmount $DEVICE"
 
 #
 # Confirm device with user
@@ -158,12 +186,26 @@ fi
 
 
 #
+# Prepare the temporary working space
+#
+TMPDIR=$(mktemp -d mkefidisk-XXX) || die "Failed to create temporary mounting directory."
+HDDIMG_MNT=$TMPDIR/hddimg
+HDDIMG_ROOTFS_MNT=$TMPDIR/hddimg_rootfs
+ROOTFS_MNT=$TMPDIR/rootfs
+BOOTFS_MNT=$TMPDIR/bootfs
+mkdir $HDDIMG_MNT || die "Failed to create $HDDIMG_MNT"
+mkdir $HDDIMG_ROOTFS_MNT || die "Failed to create $HDDIMG_ROOTFS_MNT"
+mkdir $ROOTFS_MNT || die "Failed to create $ROOTFS_MNT"
+mkdir $BOOTFS_MNT || die "Failed to create $BOOTFS_MNT"
+
+
+#
 # Partition $DEVICE
 #
 DEVICE_SIZE=$(parted $DEVICE unit mb print | grep ^Disk | cut -d" " -f 3 | sed -e "s/MB//")
 # If the device size is not reported there may not be a valid label
 if [ "$DEVICE_SIZE" = "" ] ; then
-	parted $DEVICE mklabel msdos
+	parted $DEVICE mklabel msdos || die "Failed to create MSDOS partition table"
 	DEVICE_SIZE=$(parted $DEVICE unit mb print | grep ^Disk | cut -d" " -f 3 | sed -e "s/MB//")
 fi
 SWAP_SIZE=$((DEVICE_SIZE*SWAP_RATIO/100))
@@ -195,25 +237,25 @@ echo "Swap partition size:   $SWAP_SIZE MB ($SWAP)"
 echo "*****************"
 
 echo "Deleting partition table on $DEVICE ..."
-dd if=/dev/zero of=$DEVICE bs=512 count=2
+dd if=/dev/zero of=$DEVICE bs=512 count=2 > /dev/null || die "Failed to zero beginning of $DEVICE"
 
 # Use MSDOS by default as GPT cannot be reliably distributed in disk image form
 # as it requires the backup table to be on the last block of the device, which
 # of course varies from device to device.
 echo "Creating new partition table (MSDOS) on $DEVICE ..."
-parted $DEVICE mklabel msdos
+parted $DEVICE mklabel msdos || die "Failed to create MSDOS partition table"
 
 echo "Creating boot partition on $BOOTFS"
-parted $DEVICE mkpart primary 0% $BOOT_SIZE
+parted $DEVICE mkpart primary 0% $BOOT_SIZE || die "Failed to create BOOT partition"
 
 echo "Enabling boot flag on $BOOTFS"
-parted $DEVICE set 1 boot on
+parted $DEVICE set 1 boot on || die "Failed to enable boot flag"
 
 echo "Creating ROOTFS partition on $ROOTFS"
-parted $DEVICE mkpart primary $ROOTFS_START $ROOTFS_END
+parted $DEVICE mkpart primary $ROOTFS_START $ROOTFS_END || die "Failed to create ROOTFS partition"
 
 echo "Creating swap partition on $SWAP"
-parted $DEVICE mkpart primary $SWAP_START 100%
+parted $DEVICE mkpart primary $SWAP_START 100% || die "Failed to create SWAP partition"
 
 parted $DEVICE print
 
@@ -221,7 +263,7 @@ parted $DEVICE print
 #
 # Check if any $DEVICE partitions are mounted after partitioning
 #
-unmount_device
+unmount_device || die "Failed to unmount $DEVICE partitions"
 
 
 #
@@ -230,16 +272,16 @@ unmount_device
 echo ""
 echo "Formatting $BOOTFS as vfat..."
 if [ ! "${DEVICE#/dev/loop}" = "${DEVICE}" ]; then
-	mkfs.vfat -I $BOOTFS -n "EFI" || error "Failed to format $BOOTFS"
+	mkfs.vfat -I $BOOTFS -n "EFI" || die "Failed to format $BOOTFS"
 else
-	mkfs.vfat $BOOTFS -n "EFI" || error "Failed to format $BOOTFS"
+	mkfs.vfat $BOOTFS -n "EFI" || die "Failed to format $BOOTFS"
 fi
 
 echo "Formatting $ROOTFS as ext3..."
-mkfs.ext3 -F $ROOTFS -L "ROOT" || error "Failed to format $ROOTFS"
+mkfs.ext3 -F $ROOTFS -L "ROOT" || die "Failed to format $ROOTFS"
 
 echo "Formatting swap partition...($SWAP)"
-mkswap $SWAP || error "Failed to prepare swap"
+mkswap $SWAP || die "Failed to prepare swap"
 
 
 #
@@ -247,24 +289,8 @@ mkswap $SWAP || error "Failed to prepare swap"
 #
 echo ""
 echo "Mounting images and device in preparation for installation..."
-TMPDIR=$(mktemp -d mkefidisk-XXX)
-if [ $? -ne 0 ]; then
-	error "Failed to create temporary mounting directory."
-	exit 1
-fi
-HDDIMG_MNT=$TMPDIR/hddimg
-HDDIMG_ROOTFS_MNT=$TMPDIR/hddimg_rootfs
-ROOTFS_MNT=$TMPDIR/rootfs
-BOOTFS_MNT=$TMPDIR/bootfs
-mkdir $HDDIMG_MNT
-mkdir $HDDIMG_ROOTFS_MNT
-mkdir $ROOTFS_MNT
-mkdir $BOOTFS_MNT
-
 mount -o loop $HDDIMG $HDDIMG_MNT || error "Failed to mount $HDDIMG"
-
 mount -o loop $HDDIMG_MNT/rootfs.img $HDDIMG_ROOTFS_MNT || error "Failed to mount rootfs.img"
-
 mount $ROOTFS $ROOTFS_MNT || error "Failed to mount $ROOTFS on $ROOTFS_MNT"
 mount $BOOTFS $BOOTFS_MNT || error "Failed to mount $BOOTFS on $BOOTFS_MNT"
 
@@ -277,9 +303,6 @@ echo "$TARGET_SWAP     swap             swap       defaults              0 0" >>
 if [ -d $ROOTFS_MNT/etc/udev/ ] ; then
 	echo "$TARGET_DEVICE" >> $ROOTFS_MNT/etc/udev/mount.blacklist
 fi
-
-umount $ROOTFS_MNT || error "Failed to unmount $ROOTFS_MNT"
-umount $HDDIMG_ROOTFS_MNT || error "Failed to unmount $HDDIMG_ROOTFS_MNT"
 
 echo "Preparing boot partition..."
 EFIDIR="$BOOTFS_MNT/EFI/BOOT"
@@ -330,13 +353,11 @@ fi
 
 # Ensure we have at least one EFI bootloader configured
 if [ ! -e $GRUB_CFG ] && [ ! -e $GUMMI_CFG ]; then
-	error "No EFI bootloader configuration found"
+	die "No EFI bootloader configuration found"
 fi
 
-umount $BOOTFS_MNT || error "Failed to unmount $BOOTFS_MNT"
-umount $HDDIMG_MNT || error "Failed to unmount $HDDIMG_MNT"
-rm -rf $TMPDIR || error "Failed to cleanup $TMPDIR"
-sync
+# Call cleanup to unmount devices and images and remove the TMPDIR
+cleanup
 
 if [ $WARNINGS -ne 0 ] && [ $ERRORS -eq 0 ]; then
 	echo "${YELLOW}Installation completed with warnings${CLEAR}"
