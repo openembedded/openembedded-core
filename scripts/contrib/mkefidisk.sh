@@ -28,6 +28,29 @@ BOOT_SIZE=20
 # 5% for swap
 SWAP_RATIO=5
 
+# Logging routines
+WARNINGS=0
+ERRORS=0
+CLEAR="$(tput sgr0)"
+INFO="$(tput bold)"
+RED="$(tput setaf 1)$(tput bold)"
+GREEN="$(tput setaf 2)$(tput bold)"
+YELLOW="$(tput setaf 3)$(tput bold)"
+info() {
+	echo "${INFO}$1${CLEAR}"
+}
+error() {
+	ERRORS=$((ERRORS+1))
+	echo "${RED}$1${CLEAR}"
+}
+warn() {
+	WARNINGS=$((WARNINGS+1))
+	echo "${YELLOW}$1${CLEAR}"
+}
+success() {
+	echo "${GREEN}$1${CLEAR}"
+}
+
 usage() {
 	echo "Usage: $(basename $0) DEVICE HDDIMG TARGET_DEVICE"
 	echo "       DEVICE: The device to write the image to, e.g. /dev/sdh"
@@ -37,7 +60,7 @@ usage() {
 
 image_details() {
 	IMG=$1
-	echo "Image details"
+	info "Image details"
 	echo "============="
 	echo "    image: $(stat --printf '%N\n' $IMG)"
 	echo "     size: $(stat -L --printf '%s bytes\n' $IMG)"
@@ -50,7 +73,7 @@ device_details() {
 	DEV=$1
 	BLOCK_SIZE=512
 
-	echo "Device details"
+	info "Device details"
 	echo "=============="
 	echo "  device: $DEVICE"
 	if [ -f "/sys/class/block/$DEV/device/vendor" ]; then
@@ -74,14 +97,13 @@ device_details() {
 unmount_device() {
 	grep -q $DEVICE /proc/mounts
 	if [ $? -eq 0 ]; then
-		echo -n "$DEVICE listed in /proc/mounts, attempting to unmount..."
+		warn "$DEVICE listed in /proc/mounts, attempting to unmount..."
 		umount $DEVICE* 2>/dev/null
 		grep -q $DEVICE /proc/mounts
 		if [ $? -eq 0 ]; then
-			echo "FAILED"
+			error "Failed to unmount $DEVICE"
 			exit 1
 		fi
-		echo "OK"
 	fi
 }
 
@@ -104,13 +126,13 @@ if [ $? -eq 0 ]; then
 fi
 
 if [ ! -w "$DEVICE" ]; then
-	echo "ERROR: Device $DEVICE does not exist or is not writable"
+	error "Device $DEVICE does not exist or is not writable"
 	usage
 	exit 1
 fi
 
 if [ ! -e "$HDDIMG" ]; then
-	echo "ERROR: HDDIMG $HDDIMG does not exist"
+	error "HDDIMG $HDDIMG does not exist"
 	usage
 	exit 1
 fi
@@ -127,7 +149,7 @@ unmount_device
 #
 image_details $HDDIMG
 device_details $(basename $DEVICE)
-echo -n "Prepare EFI image on $DEVICE [y/N]? "
+echo -n "${INFO}Prepare EFI image on $DEVICE [y/N]?${CLEAR} "
 read RESPONSE
 if [ "$RESPONSE" != "y" ]; then
 	echo "Image creation aborted"
@@ -208,17 +230,16 @@ unmount_device
 echo ""
 echo "Formatting $BOOTFS as vfat..."
 if [ ! "${DEVICE#/dev/loop}" = "${DEVICE}" ]; then
-	mkfs.vfat -I $BOOTFS -n "EFI"
+	mkfs.vfat -I $BOOTFS -n "EFI" || error "Failed to format $BOOTFS"
 else
-	mkfs.vfat $BOOTFS -n "EFI"
-
+	mkfs.vfat $BOOTFS -n "EFI" || error "Failed to format $BOOTFS"
 fi
 
 echo "Formatting $ROOTFS as ext3..."
-mkfs.ext3 -F $ROOTFS -L "ROOT"
+mkfs.ext3 -F $ROOTFS -L "ROOT" || error "Failed to format $ROOTFS"
 
 echo "Formatting swap partition...($SWAP)"
-mkswap $SWAP
+mkswap $SWAP || error "Failed to prepare swap"
 
 
 #
@@ -228,7 +249,7 @@ echo ""
 echo "Mounting images and device in preparation for installation..."
 TMPDIR=$(mktemp -d mkefidisk-XXX)
 if [ $? -ne 0 ]; then
-	echo "ERROR: Failed to create temporary mounting directory."
+	error "Failed to create temporary mounting directory."
 	exit 1
 fi
 HDDIMG_MNT=$TMPDIR/hddimg
@@ -240,17 +261,15 @@ mkdir $HDDIMG_ROOTFS_MNT
 mkdir $ROOTFS_MNT
 mkdir $BOOTFS_MNT
 
-mount -o loop $HDDIMG $HDDIMG_MNT
-if [ $? -ne 0 ]; then echo "ERROR: Failed to mount $HDDIMG"; fi
+mount -o loop $HDDIMG $HDDIMG_MNT || error "Failed to mount $HDDIMG"
 
-mount -o loop $HDDIMG_MNT/rootfs.img $HDDIMG_ROOTFS_MNT
-if [ $? -ne 0 ]; then echo "ERROR: Failed to mount rootfs.img"; fi
+mount -o loop $HDDIMG_MNT/rootfs.img $HDDIMG_ROOTFS_MNT || error "Failed to mount rootfs.img"
 
-mount $ROOTFS $ROOTFS_MNT
-mount $BOOTFS $BOOTFS_MNT
+mount $ROOTFS $ROOTFS_MNT || error "Failed to mount $ROOTFS on $ROOTFS_MNT"
+mount $BOOTFS $BOOTFS_MNT || error "Failed to mount $BOOTFS on $BOOTFS_MNT"
 
 echo "Copying ROOTFS files..."
-cp -a $HDDIMG_ROOTFS_MNT/* $ROOTFS_MNT
+cp -a $HDDIMG_ROOTFS_MNT/* $ROOTFS_MNT || error "Root FS copy failed"
 
 echo "$TARGET_SWAP     swap             swap       defaults              0 0" >> $ROOTFS_MNT/etc/fstab
 
@@ -259,14 +278,14 @@ if [ -d $ROOTFS_MNT/etc/udev/ ] ; then
 	echo "$TARGET_DEVICE" >> $ROOTFS_MNT/etc/udev/mount.blacklist
 fi
 
-umount $ROOTFS_MNT
-umount $HDDIMG_ROOTFS_MNT
+umount $ROOTFS_MNT || error "Failed to unmount $ROOTFS_MNT"
+umount $HDDIMG_ROOTFS_MNT || error "Failed to unmount $HDDIMG_ROOTFS_MNT"
 
 echo "Preparing boot partition..."
 EFIDIR="$BOOTFS_MNT/EFI/BOOT"
-cp $HDDIMG_MNT/vmlinuz $BOOTFS_MNT
+cp $HDDIMG_MNT/vmlinuz $BOOTFS_MNT || error "Failed to copy vmlinuz"
 # Copy the efi loader and configs (booti*.efi and grub.cfg if it exists)
-cp -r $HDDIMG_MNT/EFI $BOOTFS_MNT
+cp -r $HDDIMG_MNT/EFI $BOOTFS_MNT || error "Failed to copy EFI dir"
 # Silently ignore a missing gummiboot loader dir (we might just be a GRUB image)
 cp -r $HDDIMG_MNT/loader $BOOTFS_MNT 2> /dev/null
 
@@ -281,7 +300,7 @@ cp -r $HDDIMG_MNT/loader $BOOTFS_MNT 2> /dev/null
 # Look for a GRUB installation
 GRUB_CFG="$EFIDIR/grub.cfg"
 if [ -e "$GRUB_CFG" ]; then
-	echo "Configuring GRUB"
+	info "Configuring GRUB"
 	# Delete the install entry
 	sed -i "/menuentry 'install'/,/^}/d" $GRUB_CFG
 	# Delete the initrd lines
@@ -297,7 +316,7 @@ fi
 GUMMI_ENTRIES="$BOOTFS_MNT/loader/entries"
 GUMMI_CFG="$GUMMI_ENTRIES/boot.conf"
 if [ -d "$GUMMI_ENTRIES" ]; then
-	echo "Configuring Gummiboot"
+	info "Configuring Gummiboot"
 	# remove the install target if it exists
 	rm $GUMMI_ENTRIES/install.conf &> /dev/null
 
@@ -311,12 +330,21 @@ fi
 
 # Ensure we have at least one EFI bootloader configured
 if [ ! -e $GRUB_CFG ] && [ ! -e $GUMMI_CFG ]; then
-	echo "ERROR: No EFI bootloader configuration found"
+	error "No EFI bootloader configuration found"
 fi
 
-umount $BOOTFS_MNT
-umount $HDDIMG_MNT
-rm -rf $TMPDIR
+umount $BOOTFS_MNT || error "Failed to unmount $BOOTFS_MNT"
+umount $HDDIMG_MNT || error "Failed to unmount $HDDIMG_MNT"
+rm -rf $TMPDIR || error "Failed to cleanup $TMPDIR"
 sync
 
-echo "Installation complete"
+if [ $WARNINGS -ne 0 ] && [ $ERRORS -eq 0 ]; then
+	echo "${YELLOW}Installation completed with warnings${CLEAR}"
+	echo "${YELLOW}Warnings: $WARNINGS${CLEAR}"
+elif [ $ERRORS -ne 0 ]; then
+	echo "${RED}Installation encountered errors${CLEAR}"
+	echo "${RED}Errors: $ERRORS${CLEAR}"
+	echo "${YELLOW}Warnings: $WARNINGS${CLEAR}"
+else
+	success "Installation completed successfully"
+fi
