@@ -1,0 +1,34 @@
+powerpc64: fix 64-bit process detection on embedded
+
+* syscall.c (get_scno) [POWERPC64]: Fix 64-bit process detection
+on embedded powerpc.
+
+Upstream-Status: Backport
+
+Signed-off-by: James Yang <james.yang@freescale.com>
+Signed-off-by: Dmitry V. Levin <ldv@altlinux.org>
+
+diff --git a/syscall.c.orig b/syscall.c
+index 7efee0e..72d9453 100644
+--- a/syscall.c.orig
++++ b/syscall.c
+@@ -1207,11 +1207,14 @@ get_scno(struct tcb *tcp)
+ 	/* Check for 64/32 bit mode. */
+ 	if (upeek(tcp, sizeof(unsigned long)*PT_MSR, &val) < 0)
+ 		return -1;
+-	/* SF is bit 0 of MSR */
+-	if (val < 0)
+-		currpers = 0;
+-	else
+-		currpers = 1;
++
++	/*
++	 * Check for 64/32 bit mode.
++	 * Embedded implementations covered by Book E extension of PPC use
++	 * bit 0 (CM) of 32-bit Machine state register (MSR).
++	 * Other implementations use bit 0 (SF) of 64-bit MSR.
++	 */
++	currpers = (val & 0x8000000080000000) ? 0 : 1;
+ 	update_personality(tcp, currpers);
+ # endif
+ #elif defined(AVR32)

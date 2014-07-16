@@ -8,6 +8,7 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/strace/strace-${PV}.tar.xz \
            file://git-version-gen \
            file://strace-add-configure-options.patch \
            file://Makefile-ptest.patch \
+           file://strace-fix-64-bit-process-detection.patch \
            file://run-ptest \
           "
 
