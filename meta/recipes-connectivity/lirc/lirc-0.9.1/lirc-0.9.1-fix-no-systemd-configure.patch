@@ -1,5 +1,5 @@
---- lirc.orig/Makefile.am       2014-07-17 00:53:33.998921731 +0200
-+++ lirc/Makefile.am    2014-07-17 01:51:13.868799462 +0200
+--- lirc.orig/Makefile.am
++++ lirc/Makefile.am
 @@ -11,12 +11,7 @@ EXTRA_DIST += autogen.sh
 
  dist_noinst_DATA = drivers/lirc.h  # Temporary fix after removing drivers/
@@ -14,8 +14,8 @@
 
  if INSTALL_ETC
  lirc_confdir        = $(sysconfdir)/lirc
---- lirc.orig/configure.ac      2014-07-17 00:53:33.998921731 +0200
-+++ lirc/configure.ac   2014-07-17 01:52:00.499797814 +0200
+--- lirc.orig/configure.ac
++++ lirc/configure.ac
 @@ -224,9 +224,6 @@ AH_TEMPLATE([HAVE_SCSI],
  AH_TEMPLATE([HAVE_SOUNDCARD],
          [defined if soundcard API is available])
