@@ -2,17 +2,22 @@ _tkinter module needs tk module along with tcl. tk is not yet integrated
 in yocto so we skip the check for this module.
 Avoid a warning by not adding this module to missing variable.
 
+Also simply disable the tk module since its not in DEPENDS.
+
 Upstream-Status: Inappropriate [distribution]
 
 Signed-off-by: Andrei Gherzan <andrei@gherzan.ro>
 
-Index: Python-2.7.2/setup.py
+Index: Python-2.7.3/setup.py
 ===================================================================
---- Python-2.7.2.orig/setup.py	2012-04-05 23:18:38.500136647 +0300
-+++ Python-2.7.2/setup.py	2012-04-05 23:19:35.888134969 +0300
-@@ -1634,8 +1634,10 @@
+--- Python-2.7.3.orig/setup.py	2014-07-07 13:45:15.056233820 +0000
++++ Python-2.7.3/setup.py	2014-07-16 16:06:37.145656284 +0000
+@@ -1639,10 +1639,12 @@
+         self.extensions.extend(exts)
+ 
          # Call the method for detecting whether _tkinter can be compiled
-         self.detect_tkinter(inc_dirs, lib_dirs)
+-        self.detect_tkinter(inc_dirs, lib_dirs)
++        #self.detect_tkinter(inc_dirs, lib_dirs)
  
 -        if '_tkinter' not in [e.name for e in self.extensions]:
 -            missing.append('_tkinter')
