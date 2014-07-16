@@ -241,7 +241,11 @@ mkdir $ROOTFS_MNT
 mkdir $BOOTFS_MNT
 
 mount -o loop $HDDIMG $HDDIMG_MNT
+if [ $? -ne 0 ]; then echo "ERROR: Failed to mount $HDDIMG"; fi
+
 mount -o loop $HDDIMG_MNT/rootfs.img $HDDIMG_ROOTFS_MNT
+if [ $? -ne 0 ]; then echo "ERROR: Failed to mount rootfs.img"; fi
+
 mount $ROOTFS $ROOTFS_MNT
 mount $BOOTFS $BOOTFS_MNT
 
