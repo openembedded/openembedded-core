@@ -6,8 +6,8 @@ COMPATIBLE_HOST = '(x86_64|i.86).*-(linux|freebsd.*)'
 
 
 SRC_URI = "http://www.nasm.us/pub/nasm/releasebuilds/${PV}/nasm-${PV}.tar.bz2 "
-SRC_URI[md5sum] = "3bbc8ed83115b8caf7931f35ec3bc5e0"
-SRC_URI[sha256sum] = "ece26b5ef565f94d19a72756d05965e424d2e5ca55f88b949852da70dd62f0e0"
+SRC_URI[md5sum] = "f6b1db2858cad82bbb0c8c6f3e2b0fb2"
+SRC_URI[sha256sum] = "4a417bcf5cde5d203e228feea3f428a6ff4d700d558e4d79d50a30a695bdfae9"
 
 inherit autotools-brokensep
 
