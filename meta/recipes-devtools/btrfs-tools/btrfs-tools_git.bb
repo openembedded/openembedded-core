@@ -12,15 +12,12 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=fcb02dc552a041dee27e4b85c7396067"
 SECTION = "base"
 DEPENDS = "util-linux attr e2fsprogs lzo acl"
 
-SRCREV = "8cae1840afb3ea44dcc298f32983e577480dfee4"
+SRCREV = "24cf4d8c3ee924b474f68514e0167cc2e602a48d"
 SRC_URI = "git://git.kernel.org/pub/scm/linux/kernel/git/mason/btrfs-progs.git \
-           file://weak-defaults.patch \
-           file://allow-relative-path.patch \
-          "
-
+           file://nodocs.patch"
 S = "${WORKDIR}/git"
 
-PV = "3.12+git${SRCPV}"
+PV = "3.14.2+git${SRCPV}"
 
 
 do_install () {

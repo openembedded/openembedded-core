@@ -1,0 +1,22 @@
+Doc generation requires xmlto and ascidoc which we don't have right now.
+Disable doc generation until such times as we have the right dependencies.
+
+RP 2014/7/16
+
+Upstream-Status: Inappropriate
+
+Index: git/Makefile
+===================================================================
+--- git.orig/Makefile	2014-07-16 13:21:43.289386655 +0000
++++ git/Makefile	2014-07-16 13:42:46.453421079 +0000
+@@ -57,8 +57,8 @@
+ btrfs_fragment_libs = -lgd -lpng -ljpeg -lfreetype
+ 
+ SUBDIRS =
+-BUILDDIRS = $(patsubst %,build-%,$(SUBDIRS)) build-Documentation
+-INSTALLDIRS = $(patsubst %,install-%,$(SUBDIRS)) install-Documentation
++BUILDDIRS = $(patsubst %,build-%,$(SUBDIRS))
++INSTALLDIRS = $(patsubst %,install-%,$(SUBDIRS))
+ CLEANDIRS = $(patsubst %,clean-%,$(SUBDIRS))
+ 
+ .PHONY: $(SUBDIRS)
