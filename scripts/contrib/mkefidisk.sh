@@ -294,16 +294,6 @@ mount -o loop $HDDIMG_MNT/rootfs.img $HDDIMG_ROOTFS_MNT || error "Failed to moun
 mount $ROOTFS $ROOTFS_MNT || error "Failed to mount $ROOTFS on $ROOTFS_MNT"
 mount $BOOTFS $BOOTFS_MNT || error "Failed to mount $BOOTFS on $BOOTFS_MNT"
 
-echo "Copying ROOTFS files..."
-cp -a $HDDIMG_ROOTFS_MNT/* $ROOTFS_MNT || error "Root FS copy failed"
-
-echo "$TARGET_SWAP     swap             swap       defaults              0 0" >> $ROOTFS_MNT/etc/fstab
-
-# We dont want udev to mount our root device while we're booting...
-if [ -d $ROOTFS_MNT/etc/udev/ ] ; then
-	echo "$TARGET_DEVICE" >> $ROOTFS_MNT/etc/udev/mount.blacklist
-fi
-
 echo "Preparing boot partition..."
 EFIDIR="$BOOTFS_MNT/EFI/BOOT"
 cp $HDDIMG_MNT/vmlinuz $BOOTFS_MNT || error "Failed to copy vmlinuz"
@@ -355,6 +345,18 @@ fi
 if [ ! -e $GRUB_CFG ] && [ ! -e $GUMMI_CFG ]; then
 	die "No EFI bootloader configuration found"
 fi
+
+
+info "Copying ROOTFS files (this may take a while)"
+cp -a $HDDIMG_ROOTFS_MNT/* $ROOTFS_MNT || die "Root FS copy failed"
+
+echo "$TARGET_SWAP     swap             swap       defaults              0 0" >> $ROOTFS_MNT/etc/fstab
+
+# We dont want udev to mount our root device while we're booting...
+if [ -d $ROOTFS_MNT/etc/udev/ ] ; then
+	echo "$TARGET_DEVICE" >> $ROOTFS_MNT/etc/udev/mount.blacklist
+fi
+
 
 # Call cleanup to unmount devices and images and remove the TMPDIR
 cleanup
