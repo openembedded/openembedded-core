@@ -27,6 +27,7 @@ EXTRA_OECONF = "--with-pcap=linux"
 
 PACKAGECONFIG ??= ""
 PACKAGECONFIG[libnl1] = "--with-libnl,--without-libnl,libnl1,libnl1"
+PACKAGECONFIG[dbus] = "--enable-dbus,--disable-dbus,dbus"
 
 CPPFLAGS_prepend = "-I${S} "
 CFLAGS_prepend = "-I${S} "
