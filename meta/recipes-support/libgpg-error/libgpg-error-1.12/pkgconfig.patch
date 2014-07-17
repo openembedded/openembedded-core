@@ -52,7 +52,7 @@ Index: libgpg-error-1.12/src/gpg-error.pc.in
 +Name: gpg-error
 +Description: a library that defines common error values for all GnuPG components
 +Version: @VERSION@
-+Libs: -L{libdir} -lgpg-error
++Libs: -L${libdir} -lgpg-error
 +Cflags: -I${includedir}
 Index: libgpg-error-1.12/src/gpg-error.m4
 ===================================================================
