@@ -28,6 +28,7 @@ EXTRA_OECONF = "--disable-oggtest \
                 --with-ogg-includes=${STAGING_INCDIR} \
                 --disable-xmms-plugin \
                 --without-libiconv-prefix \
+                ac_cv_prog_NASM="" \
                 "
 
 EXTRA_OECONF += "${@bb.utils.contains("TUNE_FEATURES", "altivec", " --enable-altivec", " --disable-altivec", d)}"
