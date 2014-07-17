@@ -607,3 +607,71 @@
 +	return irtoy_send_double_buffered(rawSB, numToXmit);
 +}
 +
+--- lirc.orig/configure.ac      2014-07-17 01:52:00.499797814 +0200
++++ lirc/configure.ac   2014-07-17 02:05:06.854770025 +0200
+@@ -157,6 +157,7 @@ possible_drivers="(none) \
+         (uirt2) \
+         (uirt2_raw) \
+         (usb_uirt_raw) \
++        (usb_irtoy) \
+         (usbx) \
+         (udp)"
+
+@@ -299,7 +300,7 @@ AC_CHECK_LIB(caraca_client, caraca_init,
+ )
+ AC_CHECK_HEADER(usb.h,
+   AC_DEFINE(HAVE_LIBUSB)
+-  possible_drivers="${possible_drivers} (atilibusb) (awlibusb) (dfclibusb) (commandir) (srm7500libusb)"
++  possible_drivers="${possible_drivers} (atilibusb) (awlibusb) (dfclibusb) (commandir) (srm7500libusb) (usb_irtoy)"
+ )
+ AC_CHECK_HEADER(ftdi.h,
+   AC_DEFINE(HAVE_FTDI)
+@@ -428,7 +429,7 @@ AC_ARG_WITH(driver,
+                           srm7500libusb, tekram,
+                           tira, tira_raw,
+                           tuxbox, tvbox, udp, uirt2, uirt2_raw,
+-                          usb_uirt_raw, usbx],
++                          usb_uirt_raw, usb_irtoy, usbx],
+ driver=${withval},
+ driver="unset"
+ )
+@@ -640,6 +641,9 @@ if test "$driver" = "userspace" -o "$dri
+         uirt2_raw|usb_uirt_raw)
+                 hw_module="${hw_module} hw_uirt2_raw.o hw_uirt2_common.o serial.o receive.o transmit.o"
+                 ;;
++       usb_irtoy)
++               hw_module="${hw_module} hw_usbirtoy.o serial.o receive.o transmit.o"
++               ;;
+         usbx)
+                 hw_module="${hw_module} hw_usbx.o serial.o"
+                 ;;
+@@ -1285,6 +1289,11 @@ if test "$driver" = "usb_uirt_raw"; then
+   hw_module="hw_uirt2_raw.o hw_uirt2_common.o serial.o receive.o transmit.o"
+   HW_DEFAULT="hw_usb_uirt_raw"
+ fi
++if test "$driver" = "usb_irtoy"; then
++  lirc_driver="none"
++  hw_module="hw_usbirtoy.o serial.o receive.o transmit.o"
++  HW_DEFAULT="hw_usbirtoy"
++fi
+ if test "$driver" = "usbx"; then
+   lirc_driver="none"
+   hw_module="hw_usbx.o serial.o"
+--- lirc.orig/daemons/hw-types.c        2014-07-17 00:53:34.001921731 +0200
++++ lirc/daemons/hw-types.c     2014-07-17 02:08:17.697763281 +0200
+@@ -58,6 +58,7 @@ extern struct hardware hw_udp;
+ extern struct hardware hw_uirt2;
+ extern struct hardware hw_uirt2_raw;
+ extern struct hardware hw_usb_uirt_raw;
++extern struct hardware hw_usbirtoy;
+ extern struct hardware hw_usbx;
+
+ #ifndef HW_DEFAULT
+@@ -172,6 +173,7 @@ struct hardware *hw_list[] = {
+        &hw_uirt2,
+        &hw_uirt2_raw,
+        &hw_usb_uirt_raw,
++       &hw_usbirtoy,
+        &hw_usbx,
+ #else
+        &HW_DEFAULT,
