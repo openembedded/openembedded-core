@@ -1,50 +1,39 @@
 SUMMARY = "Tools to change and administer password and group data"
 HOMEPAGE = "http://pkg-shadow.alioth.debian.org"
 BUGTRACKER = "https://alioth.debian.org/tracker/?group_id=30580"
-SECTION = "base utils"
+SECTION = "base/utils"
 LICENSE = "BSD | Artistic-1.0"
-LIC_FILES_CHKSUM = "file://COPYING;md5=08c553a87d4e51bbed50b20e0adcaede \
+LIC_FILES_CHKSUM = "file://COPYING;md5=ed80ff1c2b40843cf5768e5229cf16e5 \
                     file://src/passwd.c;beginline=8;endline=30;md5=d83888ea14ae61951982d77125947661"
 
 DEPENDS = "shadow-native"
 DEPENDS_class-native = ""
 DEPENDS_class-nativesdk = ""
 
-SRC_URI = "http://pkg-shadow.alioth.debian.org/releases/${BPN}-${PV}.tar.bz2 \
-           file://shadow.automake-1.11.patch \
-           file://shadow_fix_for_automake-1.12.patch \
+SRC_URI = "http://pkg-shadow.alioth.debian.org/releases/${BPN}-${PV}.tar.xz \
            file://shadow-4.1.3-dots-in-usernames.patch \
-           file://shadow-4.1.4.2-env-reset-keep-locale.patch \
+           file://usermod-fix-compilation-failure-with-subids-disabled.patch \
+           file://fix-installation-failure-with-subids-disabled.patch \
            ${@bb.utils.contains('PACKAGECONFIG', 'pam', '${PAM_SRC_URI}', '', d)} \
            "
 
 SRC_URI_append_class-target = " \
            file://login_defs_pam.sed \
-           file://shadow-4.1.4.2-groupmod-pam-check.patch \
-           file://shadow-4.1.4.2-su_no_sanitize_env.patch \
            file://shadow-update-pam-conf.patch \
-           file://slackware_fix_for_glib-2.17_crypt.patch \
-           file://fix-etc-gshadow-reading.patch \
            "
 
 SRC_URI_append_class-native = " \
-           file://add_root_cmd_options.patch \
            file://disable-syslog.patch \
-           file://useradd.patch \
-           file://add_root_cmd_groupmems.patch \
            file://allow-for-setting-password-in-clear-text.patch \
+           file://commonio.c-fix-unexpected-open-failure-in-chroot-env.patch \
+           file://0001-useradd.c-create-parent-directories-when-necessary.patch \
            "
 SRC_URI_append_class-nativesdk = " \
-           file://add_root_cmd_options.patch \
            file://disable-syslog.patch \
-           file://useradd.patch \
-           file://add_root_cmd_groupmems.patch \
            "
 
-SRC_URI[md5sum] = "b8608d8294ac88974f27b20f991c0e79"
-SRC_URI[sha256sum] = "633f5bb4ea0c88c55f3642c97f9d25cbef74f82e0b4cf8d54e7ad6f9f9caa778"
-
-PR = "r14"
+SRC_URI[md5sum] = "2bfafe7d4962682d31b5eba65dba4fc8"
+SRC_URI[sha256sum] = "3b0893d1476766868cd88920f4f1231c4795652aa407569faff802bcda0f3d41"
 
 # Additional Policy files for PAM
 PAM_SRC_URI = "file://pam.d/chfn \
@@ -61,6 +50,7 @@ EXTRA_OECONF += "--without-audit \
                  --without-libcrack \
                  --without-selinux \
                  --with-group-name-max-length=24 \
+                 --enable-subordinate-ids=no \
                  ${NSCDOPT}"
 
 NSCDOPT = ""
@@ -166,11 +156,11 @@ ALTERNATIVE_LINK_NAME[su] = "${base_bindir}/su"
 
 pkg_postinst_${PN} () {
 	if [ "x$D" != "x" ]; then
-	  rootarg="--root=$D"
+	  rootarg="--root $D"
 	else
 	  rootarg=""
 	fi
 
-	pwconv $rootarg
-	grpconv $rootarg
+	pwconv $rootarg || exit 1
+	grpconv $rootarg || exit 1
 }
