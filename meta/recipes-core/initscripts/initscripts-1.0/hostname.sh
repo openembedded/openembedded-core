@@ -16,7 +16,7 @@ fi
 
 # Busybox hostname doesn't support -b so we need implement it on our own
 if [ -f /etc/hostname ];then
-	hostname -F /etc/hostname
+	hostname `cat /etc/hostname`
 elif [ -z "$HOSTNAME" -o "$HOSTNAME" = "(none)" -o ! -z "`echo $HOSTNAME | sed -n '/^[0-9]*\.[0-9].*/p'`" ] ; then
 	hostname localhost
 fi
