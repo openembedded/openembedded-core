@@ -1,7 +1,7 @@
 SUMMARY = "Subversion (svn) version control system client"
 SECTION = "console/network"
-DEPENDS = "apr-util neon sqlite3 file"
-RDEPENDS_${PN} = "neon"
+DEPENDS = "apr-util serf sqlite3 file"
+RDEPENDS_${PN} = "serf"
 LICENSE = "Apache-2"
 HOMEPAGE = "http://subversion.tigris.org"
 
