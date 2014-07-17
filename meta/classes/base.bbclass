@@ -540,6 +540,8 @@ python () {
                 check_license = False
 
         if check_license and bad_licenses:
+            bad_licenses = map(lambda l: canonical_license(d, l), bad_licenses)
+
             whitelist = []
             for lic in bad_licenses:
                 for w in ["HOSTTOOLS_WHITELIST_", "LGPLv2_WHITELIST_", "WHITELIST_"]:
