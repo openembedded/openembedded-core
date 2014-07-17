@@ -17,5 +17,5 @@ S = "${WORKDIR}/lirc-${PV}"
 EXTRA_OECONF = "--with-kerneldir=${STAGING_KERNEL_DIR} --with-driver=userspace"
 
 do_configure_prepend() {
-        rm -Rf ${WRKDIR}/systemd
+        rm -Rf ${S}/systemd
 }
