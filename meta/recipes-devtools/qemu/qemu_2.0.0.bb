@@ -4,7 +4,11 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=441c28d2cf86e15a37fa47e15a72fbac \
                     file://COPYING.LIB;endline=24;md5=c04def7ae38850e7d3ef548588159913"
 
 SRC_URI += "file://qemu-enlarge-env-entry-size.patch \
-            file://Qemu-Arm-versatilepb-Add-memory-size-checking.patch"
+            file://Qemu-Arm-versatilepb-Add-memory-size-checking.patch \
+            file://pcie_better_hotplug_support.patch \
+            "
+
+
 
 SRC_URI_prepend = "http://wiki.qemu-project.org/download/${BP}.tar.bz2"
 SRC_URI[md5sum] = "2790f44fd76da5de5024b4aafeb594c2"
