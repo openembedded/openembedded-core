@@ -1,0 +1,83 @@
+From 0007344741ef65259bc52dea72259173dfbf96c0 Mon Sep 17 00:00:00 2001
+From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Date: Sun, 13 Jul 2014 13:33:21 -0400
+Subject: [PATCH 2/2] Update compaction instrumentation to 3.16 kernel
+
+Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+---
+ instrumentation/events/lttng-module/compaction.h | 45 +++++++++++++++++++++++-
+ 1 file changed, 44 insertions(+), 1 deletion(-)
+
+diff --git a/instrumentation/events/lttng-module/compaction.h b/instrumentation/events/lttng-module/compaction.h
+index 1b237fa45ab0..22024e9ee582 100644
+--- a/instrumentation/events/lttng-module/compaction.h
++++ b/instrumentation/events/lttng-module/compaction.h
+@@ -6,6 +6,7 @@
+ 
+ #include <linux/types.h>
+ #include <linux/tracepoint.h>
++#include <linux/version.h>
+ #include <trace/events/gfpflags.h>
+ 
+ DECLARE_EVENT_CLASS(mm_compaction_isolate_template,
+@@ -45,6 +46,48 @@ DEFINE_EVENT(mm_compaction_isolate_template, mm_compaction_isolate_freepages,
+ 	TP_ARGS(nr_scanned, nr_taken)
+ )
+ 
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(3,16,0))
++TRACE_EVENT(mm_compaction_migratepages,
++
++	TP_PROTO(unsigned long nr_all,
++		int migrate_rc,
++		struct list_head *migratepages),
++
++	TP_ARGS(nr_all, migrate_rc, migratepages),
++
++	TP_STRUCT__entry(
++		__field(unsigned long, nr_migrated)
++		__field(unsigned long, nr_failed)
++	),
++
++	TP_fast_assign(
++		tp_assign(nr_migrated,
++			nr_all -
++			(migrate_rc >= 0 ? migrate_rc :
++				({
++					unsigned long nr_failed = 0;
++					struct list_head *page_lru;
++
++					list_for_each(page_lru, migratepages)
++						nr_failed++;
++					nr_failed;
++				})))
++		tp_assign(nr_failed,
++				({
++					unsigned long nr_failed = 0;
++					struct list_head *page_lru;
++
++					list_for_each(page_lru, migratepages)
++						nr_failed++;
++					nr_failed;
++				}))
++	),
++
++	TP_printk("nr_migrated=%lu nr_failed=%lu",
++		__entry->nr_migrated,
++		__entry->nr_failed)
++)
++#else /* #if (LINUX_VERSION_CODE >= KERNEL_VERSION(3,16,0)) */
+ TRACE_EVENT(mm_compaction_migratepages,
+ 
+ 	TP_PROTO(unsigned long nr_migrated,
+@@ -66,7 +109,7 @@ TRACE_EVENT(mm_compaction_migratepages,
+ 		__entry->nr_migrated,
+ 		__entry->nr_failed)
+ )
+-
++#endif /* #else #if (LINUX_VERSION_CODE >= KERNEL_VERSION(3,16,0)) */
+ 
+ #endif /* _TRACE_COMPACTION_H */
+ 
+-- 
+1.8.1.2
+

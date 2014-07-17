@@ -10,14 +10,15 @@ DEPENDS = "virtual/kernel"
 
 inherit module
 
-SRCREV = "a0383def517e3aebbbcebae61fe2bcfb50d31e71"
-PV = "2.4.1"
+SRCREV = "789fd1d06d07aeb9a403bdce1b3318560cfc6eca"
 
 # lttng currently blacklists arm with gcc-4.8
 COMPATIBLE_HOST = '(x86_64|i.86|powerpc|aarch64|mips).*-linux'
 
-SRC_URI = "git://git.lttng.org/lttng-modules.git;branch=stable-2.4 \
+SRC_URI = "git://git.lttng.org/lttng-modules.git;branch=stable-2.5 \
            file://lttng-modules-replace-KERNELDIR-with-KERNEL_SRC.patch \
+           file://Update-compaction-instrumentation-to-3.16-kernel.patch \
+           file://Update-vmscan-instrumentation-to-3.16-kernel.patch \
            "
 
 export INSTALL_MOD_DIR="kernel/lttng-modules"
