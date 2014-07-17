@@ -36,7 +36,12 @@ if [ -f "${SYSCTL_CONF}" ]
 then
 	if [ -x "/sbin/sysctl" ]
 	then
-		/sbin/sysctl -p "${SYSCTL_CONF}"
+		# busybox sysctl does not support -q
+		VERBOSE_REDIR="1>/dev/null"
+		if [ "${VERBOSE}" != "no" ]; then
+			VERBOSE_REDIR="1>&1"
+		fi
+		eval /sbin/sysctl -p "${SYSCTL_CONF}" $VERBOSE_REDIR
 	else
 		echo "To have ${SYSCTL_CONF} applied during boot, install package <procps>."
 	fi
