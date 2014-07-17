@@ -16,6 +16,7 @@ test -c /dev/urandom || exit 0
 RANDOM_SEED_FILE=/var/lib/urandom/random-seed
 
 . /etc/default/rcS
+[ -f /etc/default/urandom ] && . /etc/default/urandom
 
 case "$1" in
 	start|"")
