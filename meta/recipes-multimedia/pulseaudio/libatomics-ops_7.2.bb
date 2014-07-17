@@ -27,3 +27,5 @@ do_install_append() {
 	install -m 0755 -d ${D}${docdir}
 	mv ${D}${datadir}/libatomic_ops ${D}${docdir}/${BPN}
 }
+
+BBCLASSEXTEND = "native"
