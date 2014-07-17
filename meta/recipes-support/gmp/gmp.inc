@@ -18,6 +18,9 @@ acpaths = ""
 
 BBCLASSEXTEND = "native nativesdk"
 
+PACKAGECONFIG ??= ""
+PACKAGECONFIG[readline] = "--with-readline=yes,--with-readline=no,readline"
+
 EXTRA_OECONF += " --enable-cxx=detect"
 
 PACKAGES =+ "libgmpxx"
