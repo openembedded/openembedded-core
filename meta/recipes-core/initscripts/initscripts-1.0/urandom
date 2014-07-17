@@ -20,12 +20,11 @@ RANDOM_SEED_FILE=/var/lib/urandom/random-seed
 case "$1" in
 	start|"")
 		test "$VERBOSE" != no && echo "Initializing random number generator..."
-		# Load and then save 512 bytes,
-		# which is the size of the entropy pool
-		if test -f "$RANDOM_SEED_FILE"
-		then
-			cat "$RANDOM_SEED_FILE" >/dev/urandom
-		fi
+		# Load and then save 512 bytes, which is the size of the entropy
+		# pool. Also load the current date, in case the seed file is
+		# empty.
+		( date +%s.%N; [ -f "$RANDOM_SEED_FILE" ] && cat "$RANDOM_SEED_FILE" ) \
+			>/dev/urandom
 		rm -f "$RANDOM_SEED_FILE"
 		umask 077
 		dd if=/dev/urandom of=$RANDOM_SEED_FILE count=1 \
