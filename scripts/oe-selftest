@@ -29,6 +29,7 @@ import os
 import sys
 import unittest
 import logging
+import argparse
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'meta/lib')))
 
@@ -57,6 +58,16 @@ def logger_create():
     return log
 
 log = logger_create()
+
+def get_args_parser():
+    description = "Script that runs unit tests agains bitbake and other Yocto related tools. The goal is to validate tools functionality and metadata integrity. Refer to https://wiki.yoctoproject.org/wiki/Oe-selftest for more information."
+    parser = argparse.ArgumentParser(description=description)
+    group = parser.add_mutually_exclusive_group(required=True)
+    group.add_argument('--run-tests', required=False, action='store', nargs='*', dest="run_tests", default=None, help='Select what tests to run (modules, classes or test methods). Format should be: <module>.<class>.<test_method>')
+    group.add_argument('--run-all-tests', required=False, action="store_true", dest="run_all_tests", default=False, help='Run all (unhidden) tests')
+    group.add_argument('--list-modules', required=False, action="store_true", dest="list_modules", default=False, help='List all available test modules.')
+    return parser
+
 
 def preflight_check():
 
@@ -108,13 +119,13 @@ def remove_inc_files():
     except OSError as e:
         pass
 
-def get_tests():
+def get_tests(exclusive_modules=[], include_hidden=False):
     testslist = []
-    for x in sys.argv[1:]:
+    for x in exclusive_modules:
         testslist.append('oeqa.selftest.' + x)
     if not testslist:
         testpath = os.path.abspath(os.path.dirname(oeqa.selftest.__file__))
-        files = sorted([f for f in os.listdir(testpath) if f.endswith('.py') and not f.startswith('_') and f != 'base.py'])
+        files = sorted([f for f in os.listdir(testpath) if f.endswith('.py') and not (f.startswith('_') and not include_hidden) and not f.startswith('__') and f != 'base.py'])
         for f in files:
             module = 'oeqa.selftest.' + f[:-3]
             testslist.append(module)
@@ -122,32 +133,46 @@ def get_tests():
     return testslist
 
 def main():
-    if not preflight_check():
-        return 1
+    parser = get_args_parser()
+    args = parser.parse_args()
 
-    testslist = get_tests()
-    suite = unittest.TestSuite()
-    loader = unittest.TestLoader()
-    loader.sortTestMethodsUsing = None
-    runner = unittest.TextTestRunner(verbosity=2)
-    # we need to do this here, otherwise just loading the tests
-    # will take 2 minutes (bitbake -e calls)
-    oeSelfTest.testlayer_path = get_test_layer()
-    for test in testslist:
-        log.info("Loading tests from: %s" % test)
-        try:
-            suite.addTests(loader.loadTestsFromName(test))
-        except AttributeError as e:
-            log.error("Failed to import %s" % test)
-            log.error(e)
+    if args.list_modules:
+        log.info('Listing all available test modules:')
+        testslist = get_tests(include_hidden=True)
+        for test in testslist:
+            module = test.split('.')[-1]
+            info = ''
+            if module.startswith('_'):
+                info = ' (hidden)'
+            print module + info
+
+    if args.run_tests or args.run_all_tests:
+        if not preflight_check():
             return 1
-    add_include()
-    result = runner.run(suite)
-    log.info("Finished")
-    if result.wasSuccessful():
-        return 0
-    else:
-        return 1
+
+        testslist = get_tests(exclusive_modules=(args.run_tests or []), include_hidden=False)
+        suite = unittest.TestSuite()
+        loader = unittest.TestLoader()
+        loader.sortTestMethodsUsing = None
+        runner = unittest.TextTestRunner(verbosity=2)
+        # we need to do this here, otherwise just loading the tests
+        # will take 2 minutes (bitbake -e calls)
+        oeSelfTest.testlayer_path = get_test_layer()
+        for test in testslist:
+            log.info("Loading tests from: %s" % test)
+            try:
+                suite.addTests(loader.loadTestsFromName(test))
+            except AttributeError as e:
+                log.error("Failed to import %s" % test)
+                log.error(e)
+                return 1
+        add_include()
+        result = runner.run(suite)
+        log.info("Finished")
+        if result.wasSuccessful():
+            return 0
+        else:
+            return 1
 
 if __name__ == "__main__":
     try:
