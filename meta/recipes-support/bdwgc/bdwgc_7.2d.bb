@@ -35,4 +35,9 @@ S = "${WORKDIR}/gc-${REAL_PV}"
 ARM_INSTRUCTION_SET = "arm"
 
 inherit autotools pkgconfig
+
+# by default use external libatomic-ops
+PACKAGECONFIG ??= "libatomic-ops"
+PACKAGECONFIG[libatomic-ops] = "--with-libatomic-ops=yes,--with-libatomic-ops=no,libatomics-ops"
+
 BBCLASSEXTEND = "native nativesdk"
