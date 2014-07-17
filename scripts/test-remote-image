@@ -32,8 +32,15 @@ import logging
 import shutil
 from abc import ABCMeta, abstractmethod
 
+# Add path to scripts/lib in sys.path;
+scripts_path = os.path.abspath(os.path.dirname(os.path.abspath(sys.argv[0])))
+lib_path = scripts_path + '/lib'
+sys.path = sys.path + [lib_path]
+
+import scriptpath
+
 # Add meta/lib to sys.path
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'meta/lib')))
+scriptpath.add_oe_lib_path()
 
 import oeqa.utils.ftools as ftools
 from oeqa.utils.commands import runCmd, bitbake, get_bb_var
@@ -43,7 +50,10 @@ for path in get_bb_var('BBPATH').split(":"):
     sys.path.insert(0, os.path.abspath(os.path.join(path, 'lib')))
 
 # In order to import modules that contain target controllers, we need the bitbake libraries in sys.path .
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'bitbake/lib')))
+bitbakepath = scriptpath.add_bitbake_lib_path()
+if not bitbakepath:
+    sys.stderr.write("Unable to find bitbake by searching parent directory of this script or PATH\n")
+    sys.exit(1)
 
 # create a logger
 def logger_create():
