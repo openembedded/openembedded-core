@@ -28,4 +28,4 @@ do_install_append() {
 	mv ${D}${datadir}/libatomic_ops ${D}${docdir}/${BPN}
 }
 
-BBCLASSEXTEND = "native"
+BBCLASSEXTEND = "native nativesdk"
