@@ -25,6 +25,7 @@ FILESPATH = "${FILE_DIRNAME}/trace-cmd"
 
 do_install() {
 	oe_runmake CC="${CC}" AR="${AR}" prefix="${prefix}" DESTDIR="${D}" install_gui
+	rm ${D}${bindir}/trace-cmd
 	rm -rf ${D}${datadir}/trace-cmd
 	rmdir ${D}${datadir}
 }
