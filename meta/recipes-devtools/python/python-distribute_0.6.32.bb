@@ -39,6 +39,12 @@ do_install_append() {
     echo "./${SRCNAME}-${PV}-py${PYTHON_BASEVERSION}.egg" > ${D}${PYTHON_SITEPACKAGES_DIR}/setuptools.pth
 }
 
+do_install_append_class-nativesdk() {
+	sed -i -e '1s|^#!.*|#!/usr/bin/env python|' ${D}${PYTHON_SITEPACKAGES_DIR}/distribute-${PV}-py${PYTHON_BASEVERSION}.egg/setuptools/tests/test_resources.py
+	sed -i -e '1s|^#!.*|#!/usr/bin/env python|' ${D}${bindir}/easy_install
+	sed -i -e '1s|^#!.*|#!/usr/bin/env python|' ${D}${bindir}/easy_install-${PYTHON_BASEVERSION}
+}
+
 RDEPENDS_${PN} = "\
   python-distutils \
   python-compression \
@@ -46,4 +52,4 @@ RDEPENDS_${PN} = "\
 
 RPROVIDES_${PN} += "python-setuptools"
 
-BBCLASSEXTEND = "native"
+BBCLASSEXTEND = "native nativesdk"
