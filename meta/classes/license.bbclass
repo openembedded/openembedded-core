@@ -17,12 +17,12 @@ do_populate_lic[dirs] = "${LICSSTATEDIR}/${PN}"
 do_populate_lic[cleandirs] = "${LICSSTATEDIR}"
 
 python write_package_manifest() {
-	# Get list of installed packages
-	license_image_dir = d.expand('${LICENSE_DIRECTORY}/${IMAGE_NAME}')
-	bb.utils.mkdirhier(license_image_dir)
-	from oe.rootfs import image_list_installed_packages
-	open(os.path.join(license_image_dir, 'package.manifest'),
-         'w+').write(image_list_installed_packages(d))
+    # Get list of installed packages
+    license_image_dir = d.expand('${LICENSE_DIRECTORY}/${IMAGE_NAME}')
+    bb.utils.mkdirhier(license_image_dir)
+    from oe.rootfs import image_list_installed_packages
+    open(os.path.join(license_image_dir, 'package.manifest'),
+        'w+').write(image_list_installed_packages(d))
 }
 
 license_create_manifest() {
