@@ -17,4 +17,6 @@ EXTRA_OECONF = "--with-kerneldir=${STAGING_KERNEL_DIR} --with-driver=userspace"
 
 do_configure_prepend() {
         rm -Rf ${S}/systemd
+		sed 's/\/var\/run\/lirc/\/var\/run/' ${S}/lirc_options.conf > ${S}/lirc_options.conf.new
+		mv ${S}/lirc_options.conf.new ${S}/lirc_options.conf
 }
