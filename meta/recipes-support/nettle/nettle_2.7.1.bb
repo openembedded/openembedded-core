@@ -23,4 +23,4 @@ do_configure_prepend() {
 
 inherit autotools
 
-BBCLASSEXTEND = "native"
+BBCLASSEXTEND = "native nativesdk"

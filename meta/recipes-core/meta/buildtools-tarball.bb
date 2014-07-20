@@ -41,6 +41,7 @@ TOOLCHAIN_HOST_TASK ?= "\
     nativesdk-git \
     nativesdk-pigz \
     nativesdk-make \
+    nativesdk-wget \
     "
 
 TOOLCHAIN_OUTPUTNAME ?= "${SDK_NAME}-buildtools-nativesdk-standalone-${DISTRO_VERSION}"
