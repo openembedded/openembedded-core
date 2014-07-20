@@ -12,7 +12,8 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/omxil/libomxil-bellagio-${PV}.tar.gz \
            file://configure-fix.patch \
            file://parallel-make.patch \
            file://makefile-docdir-fix.patch \
-           file://dynamicloader-linking.patch"
+           file://dynamicloader-linking.patch \
+           file://disable-so-versioning.patch"
 
 SRC_URI[md5sum] = "a1de827fdb75c02c84e55f740ca27cb8"
 SRC_URI[sha256sum] = "593c0729c8ef8c1467b3bfefcf355ec19a46dd92e31bfc280e17d96b0934d74c"
@@ -23,13 +24,17 @@ inherit autotools
 
 EXTRA_OECONF += "--disable-doc --disable-Werror"
 
-FILES_${PN} += "${libdir}/bellagio/*${SOLIBS} \
-                ${libdir}/omxloaders/*${SOLIBS}"
+#
+# The .so files populated by libomxil are not intended to be versioned and symlinked.
+# Make sure they get packaged in the main package.
+#
+FILES_SOLIBSDEV = ""
+FILES_${PN} += "${libdir}/*.so \
+                ${libdir}/bellagio/*.so \
+                ${libdir}/omxloaders/*.so"
 FILES_${PN}-staticdev += "${libdir}/bellagio/*.a \
                           ${libdir}/omxloaders/*.a"
 FILES_${PN}-dev += "${libdir}/bellagio/*.la \
-                    ${libdir}/bellagio/*${SOLIBSDEV} \
-                    ${libdir}/omxloaders/*.la \
-                    ${libdir}/omxloaders/*${SOLIBSDEV}"
+                    ${libdir}/omxloaders/*.la"
 FILES_${PN}-dbg += "${libdir}/bellagio/.debug/ \
                     ${libdir}/omxloaders/.debug/"
