@@ -4,7 +4,6 @@ SECTION = "console/network"
 LICENSE = "GPLv3"
 LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 DEPENDS = "gnutls zlib libpcre"
-DEPENDS_class-nativesdk = "nativesdk-gnutls nativesdk-zlib nativesdk-libpcre"
 
 INC_PR = "r16"
 
