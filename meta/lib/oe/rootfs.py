@@ -327,6 +327,10 @@ class RpmRootfs(Rootfs):
 
         self.pm.rpm_setup_smart_target_config()
 
+    @staticmethod
+    def _depends_list():
+        return ['DEPLOY_DIR_RPM', 'INC_RPM_IMAGE_GEN', 'RPM_PREPROCESS_COMMANDS', 'RPM_POSTPROCESS_COMMANDS']
+
     def _get_delayed_postinsts(self):
         postinst_dir = self.d.expand("${IMAGE_ROOTFS}${sysconfdir}/rpm-postinsts")
         if os.path.isdir(postinst_dir):
@@ -417,6 +421,10 @@ class DpkgRootfs(Rootfs):
         self.pm.mark_packages("installed")
 
         self.pm.run_pre_post_installs()
+
+    @staticmethod
+    def _depends_list():
+        return ['DEPLOY_DIR_DEB', 'DEB_SDK_ARCH', 'APTCONF_TARGET', 'APT_ARGS', 'DPKG_ARCH', 'DEB_PREPROCESS_COMMANDS', 'DEB_POSTPROCESS_COMMAND']
 
     def _get_delayed_postinsts(self):
         pkg_list = []
@@ -680,6 +688,10 @@ class OpkgRootfs(Rootfs):
         if self.inc_opkg_image_gen == "1":
             self.pm.backup_packaging_data()
 
+    @staticmethod
+    def _depends_list():
+        return ['IPKGCONF_SDK', 'IPK_FEED_URIS', 'DEPLOY_DIR_IPK', 'IPKGCONF_TARGET', 'INC_IPK_IMAGE_GEN', 'OPKG_ARGS', 'OPKGLIBDIR', 'OPKG_PREPROCESS_COMMANDS', 'OPKG_POSTPROCESS_COMMANDS', 'OPKGLIBDIR']
+
     def _get_delayed_postinsts(self):
         pkg_list = []
         status_file = os.path.join(self.image_rootfs,
@@ -723,6 +735,15 @@ class OpkgRootfs(Rootfs):
     def _cleanup(self):
         pass
 
+def get_class_for_type(imgtype):
+    return {"rpm": RpmRootfs,
+            "ipk": OpkgRootfs,
+            "deb": DpkgRootfs}[imgtype]
+
+def variable_depends(d, manifest_dir=None):
+    img_type = d.getVar('IMAGE_PKGTYPE', True)
+    cls = get_class_for_type(img_type)
+    return cls._depends_list()
 
 def create_rootfs(d, manifest_dir=None):
     env_bkp = os.environ.copy()
