@@ -48,6 +48,8 @@ cleanup() {
 	fi
 }
 
+trap 'die "Signal Received, Aborting..."' HUP INT TERM
+
 # Logging routines
 WARNINGS=0
 ERRORS=0
@@ -71,7 +73,7 @@ success() {
 	echo "${GREEN}$1${CLEAR}"
 }
 die() {
-	error $1
+	error "$1"
 	cleanup
 	exit 1
 }
@@ -288,7 +290,7 @@ unmount_device || die "Failed to unmount $DEVICE partitions"
 #
 # Format $DEVICE partitions
 #
-info "Formating partitions"
+info "Formatting partitions"
 debug "Formatting $BOOTFS as vfat"
 if [ ! "${DEVICE#/dev/loop}" = "${DEVICE}" ]; then
 	mkfs.vfat -I $BOOTFS -n "EFI" >$OUT 2>&1 || die "Failed to format $BOOTFS"
