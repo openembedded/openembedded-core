@@ -355,6 +355,7 @@ if [ -d "$GUMMI_ENTRIES" ]; then
 		echo "ERROR: $GUMMI_CFG not found"
 	fi
 
+	sed -i "/initrd /d" $GUMMI_CFG
 	sed -i "s@ root=[^ ]*@ @" $GUMMI_CFG
 	sed -i "s@options *LABEL=boot @options LABEL=Boot root=$TARGET_ROOTFS ro rootwait quiet @" $GUMMI_CFG
 fi
