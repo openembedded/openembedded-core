@@ -2,6 +2,7 @@
 
 mount -t tmpfs tmpfs /dev  -o size=64k,mode=0755
 mkdir /dev/pts /dev/shm
+chmod 777 /dev/shm
 mount -t devpts devpts /dev/pts
 echo "/sbin/mdev" > /proc/sys/kernel/hotplug
 mdev -s
