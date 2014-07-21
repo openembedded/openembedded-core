@@ -257,22 +257,22 @@ echo ""
 info "Partitioning installation media ($DEVICE)"
 
 debug "Deleting partition table on $DEVICE"
-dd if=/dev/zero of=$DEVICE bs=512 count=2 >$OUT 2>1 || die "Failed to zero beginning of $DEVICE"
+dd if=/dev/zero of=$DEVICE bs=512 count=2 >$OUT 2>&1 || die "Failed to zero beginning of $DEVICE"
 
 debug "Creating new partition table (MSDOS) on $DEVICE"
-parted $DEVICE mklabel msdos >$OUT 2>1 || die "Failed to create MSDOS partition table"
+parted $DEVICE mklabel msdos >$OUT 2>&1 || die "Failed to create MSDOS partition table"
 
 debug "Creating boot partition on $BOOTFS"
-parted $DEVICE mkpart primary 0% $BOOT_SIZE >$OUT 2>1 || die "Failed to create BOOT partition"
+parted $DEVICE mkpart primary 0% $BOOT_SIZE >$OUT 2>&1 || die "Failed to create BOOT partition"
 
 debug "Enabling boot flag on $BOOTFS"
-parted $DEVICE set 1 boot on >$OUT 2>1 || die "Failed to enable boot flag"
+parted $DEVICE set 1 boot on >$OUT 2>&1 || die "Failed to enable boot flag"
 
 debug "Creating ROOTFS partition on $ROOTFS"
-parted $DEVICE mkpart primary $ROOTFS_START $ROOTFS_END >$OUT 2>1 || die "Failed to create ROOTFS partition"
+parted $DEVICE mkpart primary $ROOTFS_START $ROOTFS_END >$OUT 2>&1 || die "Failed to create ROOTFS partition"
 
 debug "Creating swap partition on $SWAP"
-parted $DEVICE mkpart primary $SWAP_START 100% >$OUT 2>1 || die "Failed to create SWAP partition"
+parted $DEVICE mkpart primary $SWAP_START 100% >$OUT 2>&1 || die "Failed to create SWAP partition"
 
 if [ $DEBUG -eq 1 ]; then
 	parted $DEVICE print
@@ -291,34 +291,34 @@ unmount_device || die "Failed to unmount $DEVICE partitions"
 info "Formating partitions"
 debug "Formatting $BOOTFS as vfat"
 if [ ! "${DEVICE#/dev/loop}" = "${DEVICE}" ]; then
-	mkfs.vfat -I $BOOTFS -n "EFI" >$OUT 2>1 || die "Failed to format $BOOTFS"
+	mkfs.vfat -I $BOOTFS -n "EFI" >$OUT 2>&1 || die "Failed to format $BOOTFS"
 else
-	mkfs.vfat $BOOTFS -n "EFI" >$OUT 2>1 || die "Failed to format $BOOTFS"
+	mkfs.vfat $BOOTFS -n "EFI" >$OUT 2>&1 || die "Failed to format $BOOTFS"
 fi
 
 debug "Formatting $ROOTFS as ext3"
-mkfs.ext3 -F $ROOTFS -L "ROOT" >$OUT 2>1 || die "Failed to format $ROOTFS"
+mkfs.ext3 -F $ROOTFS -L "ROOT" >$OUT 2>&1 || die "Failed to format $ROOTFS"
 
 debug "Formatting swap partition ($SWAP)"
-mkswap $SWAP >$OUT 2>1 || die "Failed to prepare swap"
+mkswap $SWAP >$OUT 2>&1 || die "Failed to prepare swap"
 
 
 #
 # Installing to $DEVICE
 #
 debug "Mounting images and device in preparation for installation"
-mount -o loop $HDDIMG $HDDIMG_MNT >$OUT 2>1 || error "Failed to mount $HDDIMG"
-mount -o loop $HDDIMG_MNT/rootfs.img $HDDIMG_ROOTFS_MNT >$OUT 2>1 || error "Failed to mount rootfs.img"
-mount $ROOTFS $ROOTFS_MNT >$OUT 2>1 || error "Failed to mount $ROOTFS on $ROOTFS_MNT"
-mount $BOOTFS $BOOTFS_MNT >$OUT 2>1 || error "Failed to mount $BOOTFS on $BOOTFS_MNT"
+mount -o loop $HDDIMG $HDDIMG_MNT >$OUT 2>&1 || error "Failed to mount $HDDIMG"
+mount -o loop $HDDIMG_MNT/rootfs.img $HDDIMG_ROOTFS_MNT >$OUT 2>&1 || error "Failed to mount rootfs.img"
+mount $ROOTFS $ROOTFS_MNT >$OUT 2>&1 || error "Failed to mount $ROOTFS on $ROOTFS_MNT"
+mount $BOOTFS $BOOTFS_MNT >$OUT 2>&1 || error "Failed to mount $BOOTFS on $BOOTFS_MNT"
 
 info "Preparing boot partition"
 EFIDIR="$BOOTFS_MNT/EFI/BOOT"
-cp $HDDIMG_MNT/vmlinuz $BOOTFS_MNT >$OUT 2>1 || error "Failed to copy vmlinuz"
+cp $HDDIMG_MNT/vmlinuz $BOOTFS_MNT >$OUT 2>&1 || error "Failed to copy vmlinuz"
 # Copy the efi loader and configs (booti*.efi and grub.cfg if it exists)
-cp -r $HDDIMG_MNT/EFI $BOOTFS_MNT >$OUT 2>1 || error "Failed to copy EFI dir"
+cp -r $HDDIMG_MNT/EFI $BOOTFS_MNT >$OUT 2>&1 || error "Failed to copy EFI dir"
 # Silently ignore a missing gummiboot loader dir (we might just be a GRUB image)
-cp -r $HDDIMG_MNT/loader $BOOTFS_MNT >$OUT 2>1
+cp -r $HDDIMG_MNT/loader $BOOTFS_MNT >$OUT 2>&1
 
 # Update the boot loaders configurations for an installed image
 # Remove any existing root= kernel parameters and:
@@ -349,7 +349,7 @@ GUMMI_CFG="$GUMMI_ENTRIES/boot.conf"
 if [ -d "$GUMMI_ENTRIES" ]; then
 	info "Configuring Gummiboot"
 	# remove the install target if it exists
-	rm $GUMMI_ENTRIES/install.conf >$OUT 2>1
+	rm $GUMMI_ENTRIES/install.conf >$OUT 2>&1
 
 	if [ ! -e "$GUMMI_CFG" ]; then
 		echo "ERROR: $GUMMI_CFG not found"
@@ -367,7 +367,7 @@ fi
 
 
 info "Copying ROOTFS files (this may take a while)"
-cp -a $HDDIMG_ROOTFS_MNT/* $ROOTFS_MNT >$OUT 2>1 || die "Root FS copy failed"
+cp -a $HDDIMG_ROOTFS_MNT/* $ROOTFS_MNT >$OUT 2>&1 || die "Root FS copy failed"
 
 echo "$TARGET_SWAP     swap             swap       defaults              0 0" >> $ROOTFS_MNT/etc/fstab
 
