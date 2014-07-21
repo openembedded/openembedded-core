@@ -132,12 +132,18 @@ python split_kernel_module_packages () {
         # appropriate modprobe commands to the postinst
         autoloadlist = (d.getVar("KERNEL_MODULE_AUTOLOAD", True) or "").split()
         autoload = d.getVar('module_autoload_%s' % basename, True)
-        if autoload:
-            bb.error("KERNEL_MODULE_AUTOLOAD has replaced module_autoload_%s, please replace it!" % basename)
+        if autoload and autoload == basename:
+            bb.warn("module_autoload_%s was replaced by KERNEL_MODULE_AUTOLOAD for cases where basename == module name, please drop it" % basename)
+        if autoload and basename not in autoloadlist:
+            bb.warn("module_autoload_%s is defined but '%s' isn't included in KERNEL_MODULE_AUTOLOAD, please add it there" % (basename, basename))
         if basename in autoloadlist:
             name = '%s/etc/modules-load.d/%s.conf' % (dvar, basename)
             f = open(name, 'w')
-            f.write('%s\n' % basename)
+            if autoload:
+                for m in autoload.split():
+                    f.write('%s\n' % m)
+            else:
+                f.write('%s\n' % basename)
             f.close()
             postinst = d.getVar('pkg_postinst_%s' % pkg, True)
             if not postinst:
