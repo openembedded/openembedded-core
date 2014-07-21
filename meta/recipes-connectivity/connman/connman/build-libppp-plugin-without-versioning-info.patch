@@ -1,0 +1,32 @@
+Upstream-Status: Submitted
+Signed-off-by: Jukka Rissanen <jukka.rissanen@linux.intel.com>
+
+From dd8044ed6ccb468558bab037257e27a409903d86 Mon Sep 17 00:00:00 2001
+From: Jukka Rissanen <jukka.rissanen@linux.intel.com>
+Date: Mon, 21 Jul 2014 15:01:45 +0300
+Subject: [PATCH] scripts: Build libppp-plugin as a plain .so file
+
+There is no need to have module versioning for libppp-plugin.so
+file so build the plugin same way as other vpn plugins.
+
+This issue was seen when building ConnMan for Yocto.
+---
+ Makefile.plugins | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Makefile.plugins b/Makefile.plugins
+index 294cae0..8139967 100644
+--- a/Makefile.plugins
++++ b/Makefile.plugins
+@@ -4,7 +4,7 @@ plugin_cflags = -fvisibility=hidden -I$(srcdir)/gdbus \
+ plugin_ldflags = -no-undefined -module -avoid-version
+ 
+ script_cflags = -fvisibility=hidden -I$(srcdir)/gdbus \
+-					@DBUS_CFLAGS@
++		@DBUS_CFLAGS@ $(plugin_ldflags) -shared
+ 
+ if LOOPBACK
+ builtin_modules += loopback
+-- 
+1.8.3.1
+
