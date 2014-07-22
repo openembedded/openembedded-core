@@ -6,6 +6,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=c54ce9345727175ff66d17b67ff51f58 \
                    "
 
 SRC_URI += "file://do-not-change-eos-event-to-gap-event-if.patch \
+            file://get-caps-from-src-pad-when-query-caps.patch \
 "
 
 SRC_URI[md5sum] = "278e0a1872ecb981e91830b2cb7f3e98"
