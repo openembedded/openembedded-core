@@ -20,10 +20,8 @@ PROVIDES = "xft"
 
 PE = "1"
 
-SRC_URI += "file://freetype.patch"
-
-SRC_URI[md5sum] = "78d64dece560c9e8699199f3faa521c0"
-SRC_URI[sha256sum] = "7fce32b92dcb7b2869bed567af2abc7bbad0d5d6fcf471b8a3e137964a31bbbd"
+SRC_URI[md5sum] = "331b3a2a3a1a78b5b44cfbd43f86fcfe"
+SRC_URI[sha256sum] = "f5a3c824761df351ca91827ac221090943ef28b248573486050de89f4bfcdc4c"
 
 XORG_PN = "libXft"
 
