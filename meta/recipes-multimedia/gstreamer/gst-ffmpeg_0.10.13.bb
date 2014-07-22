@@ -36,6 +36,23 @@ SRC_URI = "http://gstreamer.freedesktop.org/src/${BPN}/${BPN}-${PV}.tar.bz2 \
            file://0001-alac-fix-nb_samples-order-case.patch \
            file://0001-h264-correct-ref-count-check-and-limit-fix-out-of-ar.patch \
            file://0001-roqvideodec-check-dimensions-validity.patch \
+           file://0001-aacdec-check-channel-count.patch \
+           file://0001-pngdec-filter-dont-access-out-of-array-elements-at-t.patch \
+           file://0001-error_concealment-Check-that-the-picture-is-not-in-a.patch \
+           file://0001-vp3-fix-oob-read-for-negative-tokens-and-memleaks-on.patch \
+           file://0001-vp3-Copy-all-3-frames-for-thread-updates.patch \
+           file://0001-h264_sei-Fix-infinite-loop.patch \
+           file://0001-avcodec-parser-reset-indexes-on-realloc-failure.patch \
+           file://0001-avcodec-rpza-Perform-pointer-advance-and-checks-befo.patch \
+           file://gst-ffmpeg-CVE-2013-0855.patch \
+           file://0001-qdm2dec-fix-buffer-overflow.patch \
+           file://0001-huffyuvdec-check-width-more-completely-avoid-out-of-.patch \
+           file://0001-smackerdec-Check-that-the-last-indexes-are-within-th.patch \
+           file://0001-avcodec-dsputil-fix-signedness-in-sizeof-comparissio.patch \
+           file://0001-error-concealment-initialize-block-index.patch \
+           file://0001-qdm2-check-array-index-before-use-fix-out-of-array-a.patch \
+           file://0001-lavf-compute-probe-buffer-size-more-reliably.patch \
+           file://0001-ffserver-set-oformat.patch \
 "
 
 SRC_URI[md5sum] = "7f5beacaf1312db2db30a026b36888c4"
