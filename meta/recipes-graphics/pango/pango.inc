@@ -90,8 +90,8 @@ FILES_${PN} = "${sysconfdir}/pango/* ${bindir}/* ${libdir}/libpango*${SOLIBS}"
 FILES_${PN}-dbg += "${libdir}/pango/${LIBV}/modules/.debug"
 FILES_${PN}-dev += "${libdir}/pango/${LIBV}/modules/*.la"
 
-FILES_${PN}-ptest += "${libexecdir}/pango/installed-tests/* \
+FILES_${PN}-ptest += "${libexecdir}/installed-tests/* \
                       ${datadir}/installed-tests/pango"
-FILES_${PN}-dbg += "${libexecdir}/pango/installed-tests/.debug"
+FILES_${PN}-dbg += "${libexecdir}/installed-tests/.debug"
 
 RDEPENDS_${PN}-ptest += "gnome-desktop-testing liberation-fonts"
