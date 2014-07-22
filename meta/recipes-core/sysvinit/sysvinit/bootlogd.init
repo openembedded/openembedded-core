@@ -63,8 +63,8 @@ case "$ACTION" in
 		[ "${VERBOSE}" != "no" ] && echo -n "Stopping $DESC: "
 		start-stop-daemon --stop --quiet --exec $DAEMON
 
-		if [ "$STOPPER" ] && [ -f /var/log/boot ] && \
-		   [ -f /var/log/boot~ ]
+		if [ "$STOPPER" ] && [ "$(which savelog 2>/dev/null)" ] && \
+		   [ -f /var/log/boot ] && [ -f /var/log/boot~ ]
 		then
 			cd /var/log
 			chgrp adm boot
