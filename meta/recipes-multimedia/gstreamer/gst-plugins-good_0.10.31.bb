@@ -26,9 +26,10 @@ DEPENDS += "gst-plugins-base gconf cairo libpng zlib libid3tag flac \
 
 inherit gettext gconf
 
-SRC_URI += "file://0001-v4l2-fix-build-with-recent-kernels-the-v4l2_buffer-i.patch"
-SRC_URI += "file://0001-v4l2_calls-define-V4L2_CID_HCENTER-and-V4L2_CID_VCEN.patch"
-
+SRC_URI += "file://0001-v4l2-fix-build-with-recent-kernels-the-v4l2_buffer-i.patch \
+            file://0001-v4l2_calls-define-V4L2_CID_HCENTER-and-V4L2_CID_VCEN.patch \
+            file://0407-mulawdec-fix-integer-overrun.patch \
+"
 EXTRA_OECONF += "--disable-aalib --disable-esd --disable-shout2 --disable-libcaca --disable-hal \
                  --disable-examples --disable-taglib"
 
