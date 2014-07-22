@@ -1,0 +1,30 @@
+gst-ffmpeg: huffyuvdec: check width more completely, avoid out of array
+ accesses
+
+Found-by: Mateusz "j00ru" Jurczyk and Gynvael Coldwind
+
+Upstream-Status: Backport 
+
+Signed-off-by: Michael Niedermayer <michaelni@gmx.at>
+---
+ libavcodec/huffyuv.c |    5 ++++-
+ 1 files changed, 4 insertions(+), 1 deletions(-)
+
+diff --git a/libavcodec/huffyuv.c b/libavcodec/huffyuv.c
+index 6e88114..ca5bcd8 100644
+--- a/gst-libs/ext/libav/libavcodec/huffyuv.c
++++ b/gst-libs/ext/libav/libavcodec/huffyuv.c
+@@ -526,6 +526,10 @@ s->bgr32=1;
+         assert(0);
+     }
+ 
++    if (s->predictor == MEDIAN && avctx->pix_fmt == AV_PIX_FMT_YUV422P && avctx->width%4) {
++        av_log(avctx, AV_LOG_ERROR, "width must be a multiple of 4 this colorspace and predictor\n");
++        return AVERROR_INVALIDDATA;
++    }
+     alloc_temp(s);
+ 
+ //    av_log(NULL, AV_LOG_DEBUG, "pred:%d bpp:%d hbpp:%d il:%d\n", s->predictor, s->bitstream_bpp, avctx->bits_per_coded_sample, s->interlaced);
+-- 
+1.7.5.4
+
