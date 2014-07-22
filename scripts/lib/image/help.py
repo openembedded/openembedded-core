@@ -90,6 +90,7 @@ wic_usage = """
  Help topics:
     overview           wic overview - General overview of wic
     plugins            wic plugins - Overview and API
+    kickstart          wic kickstart - wic kickstart reference
 
  See 'wic help <COMMAND or HELP TOPIC>' for more information on a specific
  command or help topic.
