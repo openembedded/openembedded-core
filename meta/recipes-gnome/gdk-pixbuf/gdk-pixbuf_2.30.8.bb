@@ -20,8 +20,8 @@ SRC_URI = "${GNOME_MIRROR}/${BPN}/${MAJ_VER}/${BPN}-${PV}.tar.xz \
            file://fatal-loader.patch \
            "
 
-SRC_URI[md5sum] = "1195d26f14adfe99ff0878d37678a70a"
-SRC_URI[sha256sum] = "0aafc365eab1083a53f15e4828333b968219ffcb1a995ac6289c0147c9ffad06"
+SRC_URI[md5sum] = "4fed0d54432f1b69fc6e66e608bd5542"
+SRC_URI[sha256sum] = "4853830616113db4435837992c0aebd94cbb993c44dc55063cee7f72a7bef8be"
 
 inherit autotools pkgconfig gettext pixbufcache ptest
 
