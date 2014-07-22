@@ -12,7 +12,8 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
 SRC_URI = " \
     http://gstreamer.freedesktop.org/src/gst-libav/gst-libav-${PV}.tar.xz \
     file://0001-Disable-yasm-for-libav-when-disable-yasm.patch \
-    "
+    file://videodec-Don-t-use-non-growable-pool.patch \
+"
 SRC_URI[md5sum] = "6454f9f22b3aa37694781633e0d20a9c"
 SRC_URI[sha256sum] = "2a69480d63fc2db93249d9e2e229ab3541bbc2db881b0f64de13d0bfc7d1f037"
 LIBAV_EXTRA_CONFIGURE_COMMON_ARG = "--target-os=linux \
