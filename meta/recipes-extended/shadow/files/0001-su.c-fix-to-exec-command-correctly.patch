@@ -1,0 +1,25 @@
+Upstream-Status: Pending
+
+Subject: su.c: fix to exec command correctly
+
+Signed-off-by: Chen Qi <Qi.Chen@windriver.com>
+---
+ src/su.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/su.c b/src/su.c
+index 3704217..bc4f2ac 100644
+--- a/src/su.c
++++ b/src/su.c
+@@ -1156,7 +1156,7 @@ int main (int argc, char **argv)
+ 		 * Use the shell and create an argv
+ 		 * with the rest of the command line included.
+ 		 */
+-		argv[-1] = cp;
++		argv[-1] = shellstr;
+ 		execve_shell (shellstr, &argv[-1], environ);
+ 		err = errno;
+ 		(void) fprintf (stderr,
+-- 
+1.7.9.5
+
