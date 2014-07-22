@@ -46,7 +46,7 @@ esac
 
 case "$ACTION" in
 	start)
-		echo -n "Starting $DESC: "
+		[ "${VERBOSE}" != "no" ] && echo -n "Starting $DESC: "
 		if [ -d /proc/1/. ]
 		then
 			umask 027
@@ -55,10 +55,12 @@ case "$ACTION" in
 		else
 			$DAEMON -r -c
 		fi
-		echo "$NAME."
+		[ "${VERBOSE}" != "no" ] && echo "$NAME."
 		;;
 	stop)
-		echo -n "Stopping $DESC: "
+		# stop may get called during bootup, so let it honor
+		# rcS VERBOSE setting
+		[ "${VERBOSE}" != "no" ] && echo -n "Stopping $DESC: "
 		start-stop-daemon --stop --quiet --exec $DAEMON
 
 		if [ "$STOPPER" ] && [ -f /var/log/boot ] && \
@@ -71,7 +73,7 @@ case "$ACTION" in
 			mv boot~ boot.0
 		fi
 
-		echo "$NAME."
+		[ "${VERBOSE}" != "no" ] && echo "$NAME."
 		;;
 	 restart|force-reload)
 		echo -n "Restarting $DESC: "
