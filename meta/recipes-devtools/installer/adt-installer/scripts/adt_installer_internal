@@ -163,6 +163,7 @@ for target_type in $YOCTOADT_TARGETS; do
 
   # opkg will not install packagegroup-cross-canadian package if it was already
   # installed. So, the environment script is in one place or the other.
+  [ -e "$INSTALL_FOLDER/$env_script_original" ] && env_script=$INSTALL_FOLDER/$env_script_original
   [ -e "$env_script_original" ] && env_script=$env_script_original
   [ -e "$env_script_relocated" ] && env_script=$env_script_relocated
 
