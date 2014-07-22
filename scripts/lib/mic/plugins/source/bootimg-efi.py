@@ -112,7 +112,7 @@ class BootimgEFIPlugin(SourcePlugin):
         staging_kernel_dir = kernel_dir
         staging_data_dir = bootimg_dir
 
-        hdddir = "%s/hdd" % cr_workdir
+        hdddir = "%s/hdd/boot" % cr_workdir
 
         install_cmd = "install -m 0644 %s/bzImage %s/bzImage" % \
             (staging_kernel_dir, hdddir)
