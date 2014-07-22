@@ -9,6 +9,7 @@ SRC_URI += "file://bluetooth.conf \
             file://network-fix-network-Connect-method-parameters.patch \
             file://install-test-script.patch \
             file://use-legacy-pygobject-instead-ofgobject-introspection.patch \
+            file://bluetoothd \
 "
 
 SRC_URI[md5sum] = "fb42cb7038c380eb0e2fa208987c96ad"
@@ -22,6 +23,7 @@ do_install_append() {
 	install -m 0644 ${S}/input/input.conf ${D}/${sysconfdir}/bluetooth/
 	# at_console doesn't really work with the current state of OE, so punch some more holes so people can actually use BT
 	install -m 0644 ${WORKDIR}/bluetooth.conf ${D}/${sysconfdir}/dbus-1/system.d/
+	install -m 0755 ${WORKDIR}/bluetoothd ${D}/${sysconfigdir}/init.d/
 }
 
 RDEPENDS_${PN}-dev = "bluez-hcidump"

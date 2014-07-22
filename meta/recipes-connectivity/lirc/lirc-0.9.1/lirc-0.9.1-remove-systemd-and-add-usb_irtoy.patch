@@ -1,0 +1,929 @@
+diff -drupN lirc.orig/Makefile.am lirc/Makefile.am
+--- lirc.orig/Makefile.am
++++ lirc/Makefile.am
+@@ -9,12 +9,7 @@ AUTOMAKE_OPTIONS = 1.5 check-news dist-b
+ EXTRA_DIST =  setup.sh setup-driver.sh setup-functions.sh setup.data data2setup.sh README TODO
+ EXTRA_DIST += autogen.sh
+ 
+-## daemons/ and tools/ should appear before doc/ for help2man to work.
+-if SYSTEMD_INSTALL
+-    SYSTEMD_DIR = systemd
+-endif
+-
+-SUBDIRS = drivers daemons tools doc $(SYSTEMD_DIR)
++SUBDIRS = drivers daemons tools doc
+ 
+ if INSTALL_ETC
+ lirc_confdir        = $(sysconfdir)/lirc
+diff -drupN lirc.orig/Makefile.in lirc/Makefile.in
+--- lirc.orig/Makefile.in
++++ lirc/Makefile.in
+@@ -185,7 +185,7 @@ am__define_uniq_tagged_files = \
+ ETAGS = etags
+ CTAGS = ctags
+ CSCOPE = cscope
+-DIST_SUBDIRS = drivers daemons tools doc systemd
++DIST_SUBDIRS = drivers daemons tools doc
+ DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
+ distdir = $(PACKAGE)-$(VERSION)
+ top_distdir = $(distdir)
+@@ -298,8 +298,6 @@ SED = @SED@
+ SET_MAKE = @SET_MAKE@
+ SHELL = @SHELL@
+ STRIP = @STRIP@
+-SYSTEMD_CFLAGS = @SYSTEMD_CFLAGS@
+-SYSTEMD_LIBS = @SYSTEMD_LIBS@
+ VERSION = @VERSION@
+ XMKMF = @XMKMF@
+ X_CFLAGS = @X_CFLAGS@
+@@ -387,8 +385,7 @@ ACLOCAL_AMFLAGS = -I m4
+ AUTOMAKE_OPTIONS = 1.5 check-news dist-bzip2
+ EXTRA_DIST = setup.sh setup-driver.sh setup-functions.sh setup.data \
+ 	data2setup.sh README TODO autogen.sh
+-@SYSTEMD_INSTALL_TRUE@SYSTEMD_DIR = systemd
+-SUBDIRS = drivers daemons tools doc $(SYSTEMD_DIR)
++SUBDIRS = drivers daemons tools doc
+ @INSTALL_ETC_TRUE@lirc_confdir = $(sysconfdir)/lirc
+ @INSTALL_ETC_TRUE@dist_lirc_conf_DATA = lircd.conf lirc_options.conf lircmd.conf
+ DISTCHECK_FLAGS = --with-driver=userspace --enable-sandboxed --sysconfdir=/tmp/etc
+diff -drupN lirc.orig/configure lirc/configure
+--- lirc.orig/configure
++++ lirc/configure
+@@ -652,10 +652,6 @@ INSTALL_ETC_FALSE
+ INSTALL_ETC_TRUE
+ SANDBOXED_FALSE
+ SANDBOXED_TRUE
+-SYSTEMD_INSTALL_FALSE
+-SYSTEMD_INSTALL_TRUE
+-SYSTEMD_LIBS
+-SYSTEMD_CFLAGS
+ PKG_CONFIG_LIBDIR
+ PKG_CONFIG_PATH
+ PKG_CONFIG
+@@ -841,9 +837,7 @@ PYTHON
+ XMKMF
+ PKG_CONFIG
+ PKG_CONFIG_PATH
+-PKG_CONFIG_LIBDIR
+-SYSTEMD_CFLAGS
+-SYSTEMD_LIBS'
++PKG_CONFIG_LIBDIR'
+ 
+ 
+ # Initialize some variables set by options.
+@@ -1550,10 +1544,6 @@ Some influential environment variables:
+               directories to add to pkg-config's search path
+   PKG_CONFIG_LIBDIR
+               path overriding pkg-config's built-in search path
+-  SYSTEMD_CFLAGS
+-              C compiler flags for SYSTEMD, overriding pkg-config
+-  SYSTEMD_LIBS
+-              linker flags for SYSTEMD, overriding pkg-config
+ 
+ Use these variables to override the choices made by `configure' or to help
+ it to find libraries and programs with nonstandard names/locations.
+@@ -14265,112 +14255,6 @@ $as_echo "no" >&6; }
+ 	fi
+ fi
+ 
+-pkg_failed=no
+-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for SYSTEMD" >&5
+-$as_echo_n "checking for SYSTEMD... " >&6; }
+-
+-if test -n "$SYSTEMD_CFLAGS"; then
+-    pkg_cv_SYSTEMD_CFLAGS="$SYSTEMD_CFLAGS"
+- elif test -n "$PKG_CONFIG"; then
+-    if test -n "$PKG_CONFIG" && \
+-    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"libsystemd-daemon\""; } >&5
+-  ($PKG_CONFIG --exists --print-errors "libsystemd-daemon") 2>&5
+-  ac_status=$?
+-  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+-  test $ac_status = 0; }; then
+-  pkg_cv_SYSTEMD_CFLAGS=`$PKG_CONFIG --cflags "libsystemd-daemon" 2>/dev/null`
+-		      test "x$?" != "x0" && pkg_failed=yes
+-else
+-  pkg_failed=yes
+-fi
+- else
+-    pkg_failed=untried
+-fi
+-if test -n "$SYSTEMD_LIBS"; then
+-    pkg_cv_SYSTEMD_LIBS="$SYSTEMD_LIBS"
+- elif test -n "$PKG_CONFIG"; then
+-    if test -n "$PKG_CONFIG" && \
+-    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"libsystemd-daemon\""; } >&5
+-  ($PKG_CONFIG --exists --print-errors "libsystemd-daemon") 2>&5
+-  ac_status=$?
+-  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+-  test $ac_status = 0; }; then
+-  pkg_cv_SYSTEMD_LIBS=`$PKG_CONFIG --libs "libsystemd-daemon" 2>/dev/null`
+-		      test "x$?" != "x0" && pkg_failed=yes
+-else
+-  pkg_failed=yes
+-fi
+- else
+-    pkg_failed=untried
+-fi
+-
+-
+-
+-if test $pkg_failed = yes; then
+-   	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+-$as_echo "no" >&6; }
+-
+-if $PKG_CONFIG --atleast-pkgconfig-version 0.20; then
+-        _pkg_short_errors_supported=yes
+-else
+-        _pkg_short_errors_supported=no
+-fi
+-        if test $_pkg_short_errors_supported = yes; then
+-	        SYSTEMD_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors --cflags --libs "libsystemd-daemon" 2>&1`
+-        else
+-	        SYSTEMD_PKG_ERRORS=`$PKG_CONFIG --print-errors --cflags --libs "libsystemd-daemon" 2>&1`
+-        fi
+-	# Put the nasty error message in config.log where it belongs
+-	echo "$SYSTEMD_PKG_ERRORS" >&5
+-
+-	true
+-elif test $pkg_failed = untried; then
+-     	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+-$as_echo "no" >&6; }
+-	true
+-else
+-	SYSTEMD_CFLAGS=$pkg_cv_SYSTEMD_CFLAGS
+-	SYSTEMD_LIBS=$pkg_cv_SYSTEMD_LIBS
+-        { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+-$as_echo "yes" >&6; }
+-	$as_echo "#define HAVE_SYSTEMD 1" >>confdefs.h
+-
+-fi
+-CFLAGS="$CFLAGS $SYSTEMD_CFLAGS"
+-LIBS="$LIBS $SYSTEMD_LIBS"
+-
+-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for /usr/lib/systemd/system" >&5
+-$as_echo_n "checking for /usr/lib/systemd/system... " >&6; }
+-if ${ac_cv_file__usr_lib_systemd_system+:} false; then :
+-  $as_echo_n "(cached) " >&6
+-else
+-  test "$cross_compiling" = yes &&
+-  as_fn_error $? "cannot check for file existence when cross compiling" "$LINENO" 5
+-if test -r "/usr/lib/systemd/system"; then
+-  ac_cv_file__usr_lib_systemd_system=yes
+-else
+-  ac_cv_file__usr_lib_systemd_system=no
+-fi
+-fi
+-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_file__usr_lib_systemd_system" >&5
+-$as_echo "$ac_cv_file__usr_lib_systemd_system" >&6; }
+-if test "x$ac_cv_file__usr_lib_systemd_system" = xyes; then :
+-  has_systemd_system=true
+-else
+-  true
+-fi
+-
+- if test x"$has_systemd_system" = xtrue; then
+-  SYSTEMD_INSTALL_TRUE=
+-  SYSTEMD_INSTALL_FALSE='#'
+-else
+-  SYSTEMD_INSTALL_TRUE='#'
+-  SYSTEMD_INSTALL_FALSE=
+-fi
+-
+-
+-
+-
+ # Check whether --with-driver was given.
+ if test "${with_driver+set}" = set; then :
+   withval=$with_driver; driver=${withval}
+@@ -15810,7 +15694,7 @@ _ACEOF
+ 
+ 
+ 
+-ac_config_files="$ac_config_files Makefile drivers/Makefile drivers/lirc_atiusb/Makefile drivers/lirc_bt829/Makefile drivers/lirc_dev/Makefile drivers/lirc_gpio/Makefile drivers/lirc_i2c/Makefile drivers/lirc_igorplugusb/Makefile drivers/lirc_ttusbir/Makefile drivers/lirc_imon/Makefile drivers/lirc_parallel/Makefile drivers/lirc_sasem/Makefile drivers/lirc_serial/Makefile drivers/lirc_sir/Makefile drivers/lirc_wpc8769l/Makefile daemons/Makefile tools/Makefile doc/Makefile systemd/Makefile"
++ac_config_files="$ac_config_files Makefile drivers/Makefile drivers/lirc_atiusb/Makefile drivers/lirc_bt829/Makefile drivers/lirc_dev/Makefile drivers/lirc_gpio/Makefile drivers/lirc_i2c/Makefile drivers/lirc_igorplugusb/Makefile drivers/lirc_ttusbir/Makefile drivers/lirc_imon/Makefile drivers/lirc_parallel/Makefile drivers/lirc_sasem/Makefile drivers/lirc_serial/Makefile drivers/lirc_sir/Makefile drivers/lirc_wpc8769l/Makefile daemons/Makefile tools/Makefile doc/Makefile"
+ 
+ cat >confcache <<\_ACEOF
+ # This file is a shell script that caches the results of configure
+@@ -15953,10 +15837,6 @@ if test -z "${USE_FIFOS_TRUE}" && test -
+   as_fn_error $? "conditional \"USE_FIFOS\" was never defined.
+ Usually this means the macro was only invoked conditionally." "$LINENO" 5
+ fi
+-if test -z "${SYSTEMD_INSTALL_TRUE}" && test -z "${SYSTEMD_INSTALL_FALSE}"; then
+-  as_fn_error $? "conditional \"SYSTEMD_INSTALL\" was never defined.
+-Usually this means the macro was only invoked conditionally." "$LINENO" 5
+-fi
+ if test -z "${SANDBOXED_TRUE}" && test -z "${SANDBOXED_FALSE}"; then
+   as_fn_error $? "conditional \"SANDBOXED\" was never defined.
+ Usually this means the macro was only invoked conditionally." "$LINENO" 5
+@@ -16855,7 +16735,6 @@ do
+     "daemons/Makefile") CONFIG_FILES="$CONFIG_FILES daemons/Makefile" ;;
+     "tools/Makefile") CONFIG_FILES="$CONFIG_FILES tools/Makefile" ;;
+     "doc/Makefile") CONFIG_FILES="$CONFIG_FILES doc/Makefile" ;;
+-    "systemd/Makefile") CONFIG_FILES="$CONFIG_FILES systemd/Makefile" ;;
+ 
+   *) as_fn_error $? "invalid argument: \`$ac_config_target'" "$LINENO" 5;;
+   esac
+diff -drupN lirc.orig/configure.ac lirc/configure.ac
+--- lirc.orig/configure.ac
++++ lirc/configure.ac
+@@ -157,6 +157,7 @@ possible_drivers="(none) \
+         (uirt2) \
+         (uirt2_raw) \
+         (usb_uirt_raw) \
++	(usb_irtoy) \
+         (usbx) \
+         (udp)"
+ 
+@@ -235,9 +236,6 @@ AH_TEMPLATE([HAVE_SCSI],
+ AH_TEMPLATE([HAVE_SOUNDCARD],
+         [defined if soundcard API is available])
+ 
+-AH_TEMPLATE([HAVE_SYSTEMD],
+-        [defined if systemd API is available])
+-
+ AH_TEMPLATE([HAVE_VSYSLOG],
+         [define if you have vsyslog( prio, fmt, va_arg )])
+ 
+@@ -420,13 +418,6 @@ AC_CHECK_HEADERS(linux/i2c-dev.h,[
+   ]
+ )
+ 
+-PKG_CHECK_MODULES([SYSTEMD],[libsystemd-daemon],[AC_DEFINE(HAVE_SYSTEMD)],[true])
+-CFLAGS="$CFLAGS $SYSTEMD_CFLAGS"
+-LIBS="$LIBS $SYSTEMD_LIBS"
+-
+-AC_CHECK_FILE([/usr/lib/systemd/system], [has_systemd_system=true],[true])
+-AM_CONDITIONAL([SYSTEMD_INSTALL],[test x"$has_systemd_system" = xtrue])
+-
+ dnl here we see what driver the user wants.
+ 
+ AC_ARG_WITH(driver,
+@@ -458,7 +449,7 @@ AC_ARG_WITH(driver,
+                           srm7500libusb, tekram,
+                           tekram_bt829, tira, tira_raw, ttusbir,
+                           tuxbox, tvbox, udp, uirt2, uirt2_raw,
+-                          usb_uirt_raw, usbx, wpc8769l],
++                          usb_uirt_raw, usb_irtoy, usbx, wpc8769l],
+ driver=${withval},
+ driver="unset"
+ )
+@@ -692,6 +683,9 @@ if test "$driver" = "userspace" -o "$dri
+         uirt2_raw|usb_uirt_raw)
+                 hw_module="${hw_module} hw_uirt2_raw.o hw_uirt2_common.o serial.o receive.o transmit.o"
+                 ;;
++	usb_irtoy)
++		hw_module="${hw_module} hw_usbirtoy.o serial.o receive.o transmit.o"
++		;;
+         usbx)
+                 hw_module="${hw_module} hw_usbx.o serial.o"
+                 ;;
+@@ -1408,6 +1402,11 @@ if test "$driver" = "usb_uirt_raw"; then
+   hw_module="hw_uirt2_raw.o hw_uirt2_common.o serial.o receive.o transmit.o"
+   HW_DEFAULT="hw_usb_uirt_raw"
+ fi
++if test "$driver" = "usb_irtoy"; then
++  lirc_driver="none"
++  hw_module="hw_usbirtoy.o serial.o receive.o transmit.o"
++  HW_DEFAULT="hw_usbirtoy"
++fi
+ if test "$driver" = "usbx"; then
+   lirc_driver="none"
+   hw_module="hw_usbx.o serial.o"
+@@ -1818,7 +1817,6 @@ AC_CONFIG_FILES([
+   daemons/Makefile
+   tools/Makefile
+   doc/Makefile
+-  systemd/Makefile
+ ])
+ AC_OUTPUT
+ 
+diff -drupN lirc.orig/daemons/hw-types.c lirc/daemons/hw-types.c
+--- lirc.orig/daemons/hw-types.c
++++ lirc/daemons/hw-types.c
+@@ -58,6 +58,7 @@ extern struct hardware hw_udp;
+ extern struct hardware hw_uirt2;
+ extern struct hardware hw_uirt2_raw;
+ extern struct hardware hw_usb_uirt_raw;
++extern struct hardware hw_usbirtoy;
+ extern struct hardware hw_usbx;
+ 
+ #ifndef HW_DEFAULT
+@@ -172,6 +173,7 @@ struct hardware *hw_list[] = {
+ 	&hw_uirt2,
+ 	&hw_uirt2_raw,
+ 	&hw_usb_uirt_raw,
++	&hw_usbirtoy,
+ 	&hw_usbx,
+ #else
+ 	&HW_DEFAULT,
+diff -drupN lirc.orig/daemons/hw_usbirtoy.c lirc/daemons/hw_usbirtoy.c
+--- lirc.orig/daemons/hw_usbirtoy.c
++++ lirc/daemons/hw_usbirtoy.c
+@@ -0,0 +1,607 @@
++/****************************************************************************
++ ** hw_usbirtoy.c **********************************************************
++ ****************************************************************************
++ *
++ * Routines for USB Infrared Toy receiver/transmitter in sampling mode
++ * 
++ * Copyright (C) 2011 Peter Kooiman <pkooiman@gmail.com>
++ *
++ *  This program is free software; you can redistribute it and/or modify
++ *  it under the terms of the GNU General Public License as published by
++ *  the Free Software Foundation; either version 2 of the License, or
++ *  (at your option) any later version.
++ *
++ *  This program is distributed in the hope that it will be useful,
++ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *  GNU Library General Public License for more details.
++ *
++ *  You should have received a copy of the GNU General Public License
++ *  along with this program; if not, write to the Free Software
++ *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
++ */
++
++#ifdef HAVE_CONFIG_H
++	#include <config.h>
++#endif
++
++
++#include <stdio.h>
++#include <stdlib.h>
++#include <stdarg.h>
++#include <fcntl.h>
++#include <unistd.h>
++#include <limits.h>
++#include <signal.h>
++#include <sys/stat.h>
++#include <sys/types.h>
++#include <sys/ioctl.h>
++#include <errno.h>
++
++
++#include "hardware.h"
++#include "serial.h"
++#include "ir_remote.h"
++#include "lircd.h"
++#include "receive.h"
++#include "transmit.h"
++
++#define IRTOY_MINFWVERSION 20
++
++#define IRTOY_UNIT 21.3333
++#define IRTOY_LONGSPACE 1000000
++
++
++const unsigned char IRTOY_COMMAND_TXSTART[] = {0x24, 0x25, 0x26, 0x03};
++#define IRTOY_COMMAND_RESET 0
++#define IRTOY_COMMAND_SMODE_ENTER 's'
++#define IRTOY_COMMAND_VERSION 'v'
++
++#define IRTOY_REPLY_XMITCOUNT 't'
++#define IRTOY_REPLY_XMITSUCCESS 'C'
++#define IRTOY_REPLY_VERSION 'V'
++#define IRTOY_REPLY_SAMPLEMODEPROTO 'S'
++
++#define IRTOY_LEN_XMITRES 4
++#define IRTOY_LEN_VERSION 4
++#define IRTOY_LEN_SAMPLEMODEPROTO 3
++
++#define IRTOY_TIMEOUT_READYFORDATA 1000000
++#define IRTOY_TIMEOUT_FLUSH 20000
++#define IRTOY_TIMEOUT_SMODE_ENTER 500000
++#define IRTOY_TIMEOUT_VERSION 500000
++
++
++struct tag_irtoy_t {
++	int hwVersion;
++	int swVersion;
++	int protoVersion;
++	int fd;
++	int awaitingNewSig;
++	int pulse;
++};
++
++typedef struct tag_irtoy_t irtoy_t;
++
++static irtoy_t *dev;
++
++unsigned char rawSB[WBUF_SIZE * 2 + 2];
++
++/* exported functions  */
++static int irtoy_init(void);
++static int irtoy_deinit(void);
++static int irtoy_send(struct ir_remote *remote, struct ir_ncode *code);
++static char *irtoy_rec(struct ir_remote *remotes);
++static int irtoy_decode(struct ir_remote *remote, ir_code * prep, ir_code * codep, ir_code * postp,
++						int *repeat_flagp, lirc_t * min_remaining_gapp, lirc_t * max_remaining_gapp);
++static lirc_t irtoy_readdata(lirc_t timeout);
++
++
++struct hardware hw_usbirtoy = {
++#ifndef LIRC_IRTTY
++	"/dev/ttyACM0",
++#else
++	LIRC_IRTTY,		/* default device */
++#endif
++	-1,			/* fd */
++	LIRC_CAN_REC_MODE2 | LIRC_CAN_SEND_PULSE,	/* features */
++	LIRC_MODE_PULSE,	/* send_mode */
++	LIRC_MODE_MODE2,	/* rec_mode */
++	0,			/* code_length */
++	irtoy_init,		/* init_func */
++	irtoy_deinit,	/* deinit_func */
++	irtoy_send,		/* send_func */
++	irtoy_rec,		/* rec_func */
++	irtoy_decode,	/* decode_func */
++	NULL,			/* ioctl_func */
++	irtoy_readdata,	/* readdata */
++	"usb_irtoy"
++};
++
++
++static int irtoy_decode(struct ir_remote *remote, ir_code * prep, ir_code * codep, ir_code * postp,
++						int *repeat_flagp, lirc_t * min_remaining_gapp, lirc_t * max_remaining_gapp)
++{
++	int res;
++
++	LOGPRINTF(1, "irtoy_decode: enter");
++
++	res = receive_decode(remote, prep, codep, postp, repeat_flagp, min_remaining_gapp, max_remaining_gapp);
++
++	LOGPRINTF(1, "irtoy_decode: %d", res);
++
++	return res;
++}
++
++
++
++
++static ssize_t read_with_timeout(int fd, void *buf, size_t count, long to_usec)
++{
++	ssize_t rc;
++	size_t numread = 0;
++	struct timeval timeout;
++	fd_set fds;
++
++	timeout.tv_sec = 0;
++	timeout.tv_usec = to_usec;
++
++	rc = read(fd, (char *) buf, count);
++
++	if (rc > 0) {
++		numread += rc;
++	}
++
++	while ((rc == -1 && errno == EAGAIN) || (rc >= 0 && numread < count)) {
++		FD_ZERO(&fds);
++		FD_SET(fd, &fds);
++
++		rc = select(fd + 1, &fds, NULL, NULL, &timeout);
++
++		if (rc == 0) {
++			/* timeout */
++			break;
++		} else if (rc == -1) {
++			/* continue for EAGAIN case */
++			continue;
++		}
++
++		rc = read(fd, ((char *)buf) + numread, count - numread);
++
++		if (rc > 0) {
++			numread += rc;
++		}
++
++	}
++
++	return(numread == 0) ? -1 : numread;
++}
++
++
++static int irtoy_readflush(irtoy_t * dev, long timeout)
++{
++	int res;
++	char c;
++
++	while ((res = read_with_timeout(dev->fd, &c, 1, timeout)) == 1)
++		;
++
++	if (res != 0)
++		return -1;
++	else
++		return 0;
++}
++
++static lirc_t irtoy_read(irtoy_t * dev, lirc_t timeout)
++{
++
++	lirc_t data;
++	int res;
++	unsigned char dur[2];
++
++	if (!waitfordata(timeout))
++		return 0;
++
++	// lircd expects a space as start of the next transmission, not just at the end of the last one
++	// irrecord however likes to see a space at the end of the signal
++	// We remember if we saw the 0xFFFF timeout from the usbtoy and send a long space both after last signal and at start of next signal
++	// From usb irtoy: <signal...><lastpulse> [usbtoy timeout duration] 0xFFFF [however long it takes before next signal] <firstpulse><signal..>
++	// We return: <signal><lastpulse> [usbtoy timeout duration] LONGSPACE [however long it takes before next signal] LONGSPACE <firstpulse><signal>
++	if (dev->awaitingNewSig) {
++
++		LOGPRINTF(1, "new signal after large space");
++		dev->pulse = 1;
++		dev->awaitingNewSig = 0;
++		return IRTOY_LONGSPACE;
++	}
++
++	res = read_with_timeout(dev->fd, dur, 2, 0);
++
++	if (res != 2) {
++		logprintf(LOG_ERR, "irtoy_read: could not get 2 bytes");
++		return 0;
++	}
++
++
++
++	LOGPRINTF(3, "read_raw %02x%02x", dur[0], dur[1]);
++
++
++	if (dur[0] == 0xff && dur[1] == 0xff) {
++		dev->awaitingNewSig = 1;
++		return IRTOY_LONGSPACE;
++	}
++
++
++	data = (lirc_t) (IRTOY_UNIT * (double) (256 * dur[0] + dur[1]));
++
++	LOGPRINTF(3, "read_raw %d", data); 
++
++
++	if (dev->pulse) {
++		data = data | PULSE_BIT;
++	}
++
++	dev->pulse = ! (dev->pulse);
++
++
++	return data;
++}
++
++static lirc_t irtoy_readdata(lirc_t timeout)
++{
++	lirc_t data = irtoy_read(dev, timeout);
++
++	if (data) {
++		LOGPRINTF(1, "irtoy_readdata %d %d", !!(data & PULSE_BIT), data & PULSE_MASK);
++
++	}
++
++	return(data);
++}
++
++static int irtoy_getversion(irtoy_t *dev)
++{
++	int res;
++	unsigned char buf[16];
++	int vNum;
++
++	irtoy_readflush(dev, IRTOY_TIMEOUT_FLUSH);
++
++
++	buf[0] = IRTOY_COMMAND_VERSION;
++	res = write(dev->fd, buf, 1);
++
++	if (res != 1) {
++		logprintf(LOG_ERR, "irtoy_getversion: couldn't write command");
++		return 0;
++	}
++
++
++	res = read_with_timeout(dev->fd, buf, IRTOY_LEN_VERSION, IRTOY_TIMEOUT_VERSION);
++
++	if (res != IRTOY_LEN_VERSION) {
++		logprintf(LOG_ERR, "irtoy_getversion: couldn't read version");
++		logprintf(LOG_ERR, "please make sure you are using firmware v20 or higher");
++		return 0;
++	}
++
++	buf[IRTOY_LEN_VERSION] = 0;
++
++	LOGPRINTF(1, "irtoy_getversion: Got version %s", buf);
++
++	if (buf[0] != IRTOY_REPLY_VERSION) {
++		logprintf(LOG_ERR, "irtoy_getversion: invalid response %02X", buf[0]);
++		logprintf(LOG_ERR, "please make sure you are using firmware v20 or higher");
++		return 0;
++	}
++
++	vNum = atoi(buf + 1);
++	dev->hwVersion = vNum / 100;
++	dev->swVersion = vNum % 100;
++	return 1;
++}
++
++static int irtoy_reset(irtoy_t *dev)
++{
++	int res;
++	unsigned char buf[16];
++
++	buf[0] = IRTOY_COMMAND_RESET;
++	res = write(dev->fd, buf, 1);
++
++	if (res != 1) {
++		logprintf(LOG_ERR, "irtoy_reset: couldn't write command");
++		return 0;
++	}
++
++	irtoy_readflush(dev, IRTOY_TIMEOUT_FLUSH);
++
++	return 1;
++}
++
++static int irtoy_enter_samplemode(irtoy_t *dev)
++{
++
++	int res;
++	unsigned char buf[16];
++
++	buf[0] = IRTOY_COMMAND_SMODE_ENTER;
++	res = write(dev->fd, buf, 1);
++
++	if (res != 1) {
++		logprintf(LOG_ERR, "irtoy_enter_samplemode: couldn't write command");
++		return 0;
++	}
++
++
++	res = read_with_timeout(dev->fd, buf, IRTOY_LEN_SAMPLEMODEPROTO, IRTOY_TIMEOUT_SMODE_ENTER);
++
++	if (res != IRTOY_LEN_SAMPLEMODEPROTO) {
++		logprintf(LOG_ERR, "irtoy_enter_samplemode: couldn't read command result");
++		return 0;
++	}
++
++	buf[IRTOY_LEN_SAMPLEMODEPROTO] = 0;
++
++	if (buf[0] != IRTOY_REPLY_SAMPLEMODEPROTO) {
++		logprintf(LOG_ERR, "irtoy_enter_samplemode: invalid response %02X", buf[0]);
++		return 0;
++	}
++
++
++	LOGPRINTF(1, "irtoy_reset: Got protocol %s", buf);
++
++	dev->protoVersion = atoi(buf + 1);
++	return 1;
++}
++
++
++static irtoy_t *irtoy_hw_init(int fd)
++{
++
++
++	irtoy_t *dev = (irtoy_t *) malloc(sizeof(irtoy_t));
++
++	if (dev == NULL) {
++		logprintf(LOG_ERR, "irtoy_init: out of memory");
++		return NULL;
++	}
++
++	memset(dev, 0, sizeof(irtoy_t));
++
++	dev->awaitingNewSig = 1; 
++	dev->fd = fd;
++	dev->pulse = 1;
++
++	irtoy_readflush(dev, IRTOY_TIMEOUT_FLUSH);
++
++	if (!irtoy_reset(dev) || !irtoy_getversion(dev) || !irtoy_enter_samplemode(dev)) {
++		free(dev);
++		dev = NULL;
++		return NULL;
++	}
++
++	return dev;
++}
++
++
++
++
++static int irtoy_init(void)
++{
++
++
++
++	if (!tty_create_lock(hw.device)) {
++		logprintf(LOG_ERR, "usb_irtoy: could not create lock files");
++		return(0);
++	}
++
++	if ((hw.fd = open(hw.device, O_RDWR | O_NONBLOCK | O_NOCTTY)) < 0) {
++		logprintf(LOG_ERR, "usb_irtoy: could not open %s", hw.device);
++		tty_delete_lock();
++		return(0);
++	}
++
++	if (!tty_reset(hw.fd)) {
++		logprintf(LOG_ERR, "usb_irtoy: could not reset tty");
++		close(hw.fd);
++		tty_delete_lock();
++		return(0);
++	}
++
++
++	if (!tty_setbaud(hw.fd, 115200)) {
++		logprintf(LOG_ERR, "usb_irtoy: could not set baud rate");
++		close(hw.fd);
++		tty_delete_lock();
++		return(0);
++	}
++
++	if (!tty_setcsize(hw.fd, 8)) {
++		logprintf(LOG_ERR, "usb_irtoy: could not set csize");
++		close(hw.fd);
++		tty_delete_lock();
++		return(0);
++	}
++
++	if (!tty_setrtscts(hw.fd, 1)) {
++		logprintf(LOG_ERR, "usb_irtoy: could not enable hardware flow");
++		close(hw.fd);
++		tty_delete_lock();
++		return(0);
++	}
++
++	if ((dev = irtoy_hw_init(hw.fd)) == NULL) {
++		logprintf(LOG_ERR, "usb_irtoy: No USB Irtoy device found at %s", hw.device);
++		close(hw.fd);
++		tty_delete_lock();
++		return(0);
++	}
++
++	LOGPRINTF(1, "Version hw %d, sw %d, protocol %d\n", dev->hwVersion, dev->swVersion, dev->protoVersion);
++
++	if (dev->swVersion < IRTOY_MINFWVERSION) {
++		logprintf(LOG_ERR, "usb_irtoy: Need firmware V%02d or higher, this firmware: %02d", IRTOY_MINFWVERSION, dev->swVersion);
++		free(dev);
++		return 0;
++	}
++
++	init_rec_buffer();
++	init_send_buffer();
++
++
++
++	return(1);
++}
++
++static int irtoy_deinit(void)
++{
++
++	// IMPORTANT do not remove this reset. it is vital to return the irtoy to IRMAN mode.
++	// If we leave the irtoy in sample mode while no-one has the tty open, the linux cdc_acm driver will fail on the next open.
++	// This is apparently due to data being sent while the tty is not open and fairly well known (google for "tty_port_close_start: tty->count = 1 port count = 0")
++	// IRMAN mode will wait until a signal is actually read before sending the next one, while sample mode will keep streaming (and under fluorescent light it WILL stream..)
++	// triggering the problem
++	irtoy_reset(dev);
++
++	free(dev);
++	dev = NULL;
++
++
++	close(hw.fd);
++	hw.fd = -1;
++	tty_delete_lock();
++	return 1;
++}
++
++static char *irtoy_rec(struct ir_remote *remotes)
++{
++	LOGPRINTF(1, "irtoy_raw_rec");
++
++
++	if (!clear_rec_buffer())
++		return(NULL);
++
++	return decode_all(remotes);
++
++
++}
++
++static int irtoy_send_double_buffered(unsigned char * signals, int length)
++{
++	int numToXmit = length;
++	int numThisTime;
++	int res;
++	unsigned char irToyBufLen;
++	unsigned char *txPtr;
++	unsigned char reply[16];
++	int irtoyXmit;
++
++
++	res = write(dev->fd, IRTOY_COMMAND_TXSTART, sizeof(IRTOY_COMMAND_TXSTART));
++
++	if (res != sizeof(IRTOY_COMMAND_TXSTART)) {
++		logprintf(LOG_ERR, "irtoy_send: couldn't write command");
++		return 0;
++	}
++
++	res = read_with_timeout(dev->fd, &irToyBufLen, 1, IRTOY_TIMEOUT_READYFORDATA);
++
++	if (res != 1) {
++		logprintf(LOG_ERR, "irtoy_send: couldn't read command result");
++		return -1;
++	}
++
++	LOGPRINTF(1, "irtoy ready for %d bytes\n", irToyBufLen);
++
++	txPtr = signals;
++
++	while (numToXmit) {
++		numThisTime = (numToXmit < irToyBufLen) ? numToXmit : irToyBufLen;
++		res = write(dev->fd, txPtr, numThisTime);
++
++		if (res != numThisTime) {
++			logprintf(LOG_ERR, "irtoy_send: couldn't write command");
++			return 0;
++		}
++
++		txPtr += numThisTime;
++		numToXmit -= numThisTime;
++
++
++		res = read_with_timeout(dev->fd, &irToyBufLen, 1, IRTOY_TIMEOUT_READYFORDATA);
++
++		if (res != 1) {
++			logprintf(LOG_ERR, "irtoy_send: couldn't read command result");
++			return -1;
++		}
++
++		LOGPRINTF(1, "irtoy ready for %d bytes\n", irToyBufLen);
++
++
++	}
++
++
++	res = read_with_timeout(dev->fd, reply, IRTOY_LEN_XMITRES, IRTOY_TIMEOUT_READYFORDATA);
++
++	if (res != IRTOY_LEN_XMITRES) {
++		logprintf(LOG_ERR, "irtoy_send: couldn't read command result");
++		return -1;
++	}
++
++	LOGPRINTF(1, "%c %02X %02X %c\n", reply[0], reply[1], reply[2], reply[3]);
++
++	if (reply[0] != IRTOY_REPLY_XMITCOUNT) {
++		logprintf(LOG_ERR, "irtoy_send: invalid byte count indicator received: %02X", reply[0]);
++		return 0;
++	}
++
++	irtoyXmit = (reply[1] << 8) | reply[2];
++	if (length != irtoyXmit) {
++		logprintf(LOG_ERR, "irtoy_send: incorrect byte count received: %d expected: %d", irtoyXmit, length);
++		return 0;
++	}
++
++	if (reply[3] != IRTOY_REPLY_XMITSUCCESS) {
++		logprintf(LOG_ERR, "irtoy_send: received error status %02X", reply[3]);
++		return 0;
++	}
++
++	return 1;
++
++}
++
++static int irtoy_send(struct ir_remote *remote, struct ir_ncode *code)
++{
++	int length;
++	lirc_t *signals;
++	int res = 0;
++
++	int numToXmit;
++	int i;
++	lirc_t val;
++
++
++	if (!init_send(remote, code)) {
++		return 0;
++	}
++
++	length = send_buffer.wptr;
++	signals = send_buffer.data;
++
++	for (i = 0; i < length; i++) {
++		val = (lirc_t)(((double) signals[i]) / IRTOY_UNIT);
++		rawSB[2*i] = val >> 8;
++		rawSB[2*i + 1] = val & 0xFF;
++	}
++
++	rawSB[2 * length] = 0xFF;
++	rawSB[2 * length + 1] = 0xFF;
++
++	numToXmit = 2 * length + 2;
++	return irtoy_send_double_buffered(rawSB, numToXmit);
++}
++
++
