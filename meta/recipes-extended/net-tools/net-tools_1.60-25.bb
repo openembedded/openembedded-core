@@ -9,7 +9,9 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=8ca43cbc842c2336e835926c2166c28b \
 SRC_URI = "${DEBIAN_MIRROR}/main/n/net-tools/net-tools_1.60.orig.tar.gz;name=tarball \
            ${DEBIAN_MIRROR}/main/n/net-tools/${BPN}_${PV}.diff.gz;apply=no;name=patch \
            file://net-tools-config.h \
-           file://net-tools-config.make" 
+           file://net-tools-config.make \
+           file://ifconfig-interface-0-del-IP-will-remove-the-aliased-.patch \
+	   "
 
 S = "${WORKDIR}/net-tools-1.60"
 
