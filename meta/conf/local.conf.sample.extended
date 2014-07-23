@@ -2,6 +2,29 @@
 # certain recipes.
 #BBMASK = ""
 
+#
+# Parallelism Options
+#
+# These two options control how much parallelism BitBake should use. The first
+# option determines how many tasks bitbake should run in parallel:
+#
+#BB_NUMBER_THREADS ?= "4"
+#
+# Default to setting automatically based on cpu count
+#BB_NUMBER_THREADS ?= "${@oe.utils.cpu_count()}"
+#
+# The second option controls how many processes make should run in parallel when
+# running compile tasks:
+#
+#PARALLEL_MAKE ?= "-j 4"
+#
+# Default to setting automatically based on cpu count
+#PARALLEL_MAKE ?= "-j ${@oe.utils.cpu_count()}"
+#
+# For a quad-core machine, BB_NUMBER_THREADS = "4", PARALLEL_MAKE = "-j 4" would
+# be appropriate for example.
+
+
 # eglibc configurability is used to reduce minimal image's size.
 # the all supported eglibc options are listed in DISTRO_FEATURES_LIBC
 # and disabled by default. Uncomment and copy the DISTRO_FEATURES_LIBC
