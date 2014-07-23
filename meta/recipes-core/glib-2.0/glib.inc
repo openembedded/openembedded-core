@@ -25,14 +25,13 @@ PACKAGES =+ "${PN}-utils ${PN}-bash-completion ${PN}-codegen"
 LEAD_SONAME = "libglib-2.0.*"
 FILES_${PN}-utils = "${bindir}/* ${datadir}/glib-2.0/gettext"
 
-inherit autotools gettext gtk-doc pkgconfig ptest
+inherit autotools gettext gtk-doc pkgconfig ptest-gnome
 
 S = "${WORKDIR}/glib-${PV}"
 
 CORECONF = "--disable-dtrace --disable-fam --disable-libelf --disable-systemtap --disable-man"
 
-PTEST_CONF = "${@bb.utils.contains('PTEST_ENABLED', '1', '--enable-installed-tests', '--disable-installed-tests', d)}"
-EXTRA_OECONF = "--enable-included-printf=no ${CORECONF} ${PTEST_CONF}"
+EXTRA_OECONF = "--enable-included-printf=no ${CORECONF}"
 EXTRA_OECONF_class-native = "${CORECONF} --disable-selinux"
 EXTRA_OECONF_append_libc-uclibc = " --with-libiconv=gnu"
 
@@ -51,8 +50,6 @@ FILES_${PN}-dbg += "${datadir}/glib-2.0/gdb ${datadir}/gdb \
 FILES_${PN}-codegen = "${datadir}/glib-2.0/codegen/*.py"
 FILES_${PN}-bash-completion = "${sysconfdir}/bash_completion.d \
                                ${datadir}/bash-completion"
-FILES_${PN}-ptest += "${libexecdir}/installed-tests \
-                      ${datadir}/installed-tests/glib"
 
 ARM_INSTRUCTION_SET = "arm"
 USE_NLS = "yes"
