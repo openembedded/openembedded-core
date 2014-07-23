@@ -21,7 +21,7 @@ do_compile() {
 }
 
 do_install() {
-	${STAGING_BINDIR_NATIVE}/scons PREFIX=${D}${prefix} install
+	${STAGING_BINDIR_NATIVE}/scons PREFIX=${D}${prefix} LIBDIR=${D}${libdir} install
 }
 
 BBCLASSEXTEND = "native"
