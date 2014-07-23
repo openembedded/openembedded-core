@@ -14,7 +14,7 @@ xorg.conf for each input device that will use this driver. "
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=fefe33b1cf0cacba0e72e3b0fa0f0e16"
 
-DEPENDS += "mtdev"
+DEPENDS += "mtdev libevdev"
 
-SRC_URI[md5sum] = "be7f91905c41bb3c3a0eb54063c7e4bf"
-SRC_URI[sha256sum] = "750461749a83bdee7771592aa5c0db5e267b18d847078a4b8622f55b04797eb3"
+SRC_URI[md5sum] = "9076ae2646f7aeb30963056e0bbfccf0"
+SRC_URI[sha256sum] = "0c0c4aa393cb027a2304967944867a21a340bcad2e5efe630291b6906c3abc35"
