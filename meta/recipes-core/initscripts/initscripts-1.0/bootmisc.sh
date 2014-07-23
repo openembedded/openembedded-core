@@ -70,7 +70,11 @@ then
 	read TIMESTAMP < /etc/timestamp
 	if [ ${TIMESTAMP} -gt $SYSTEMDATE ]; then
 		# format the timestamp as date expects it (2m2d2H2M4Y.2S)
-		date -u ${TIMESTAMP:4:8}${TIMESTAMP:0:4}.${TIMESTAMP:(-2)}
+		TS_YR=${TIMESTAMP%??????????}
+		TS_SEC=${TIMESTAMP#????????????}
+		TS_FIRST12=${TIMESTAMP%??}
+		TS_MIDDLE8=${TS_FIRST12#????}
+		date -u ${TS_MIDDLE8}${TS_YR}.${TS_SEC}
 		test -x /etc/init.d/hwclock.sh && /etc/init.d/hwclock.sh stop
 	fi
 fi
