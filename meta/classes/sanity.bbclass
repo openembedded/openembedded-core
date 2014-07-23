@@ -514,6 +514,7 @@ def check_sanity_version_change(status, d):
         import xml.parsers.expat
     except ImportError:
         status.addresult('Your python is not a full install. Please install the module xml.parsers.expat (python-xml on openSUSE and SUSE Linux).\n')
+    import stat
 
     status.addresult(check_make_version(d))
     status.addresult(check_tar_version(d))
@@ -566,6 +567,11 @@ def check_sanity_version_change(status, d):
     # Check that TMPDIR isn't on a filesystem with limited filename length (eg. eCryptFS)
     tmpdir = d.getVar('TMPDIR', True)
     status.addresult(check_create_long_filename(tmpdir, "TMPDIR"))
+    tmpdirmode = os.stat(tmpdir).st_mode
+    if (tmpdirmode & stat.S_ISGID):
+        status.addresult("TMPDIR is setgid, please don't build in a setgid directory")
+    if (tmpdirmode & stat.S_ISUID):
+        status.addresult("TMPDIR is setuid, please don't build in a setuid directory")
 
     # Some third-party software apparently relies on chmod etc. being suid root (!!)
     import stat
