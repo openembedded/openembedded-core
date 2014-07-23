@@ -312,6 +312,8 @@ def explode_deps(s):
 def base_set_filespath(path, d):
     filespath = []
     extrapaths = (d.getVar("FILESEXTRAPATHS", True) or "")
+    # Remove default flag which was used for checking
+    extrapaths = extrapaths.replace("__default:", "")
     # Don't prepend empty strings to the path list
     if extrapaths != "":
         path = extrapaths.split(":") + path

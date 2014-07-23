@@ -1047,6 +1047,19 @@ python () {
     # Check various variables
     ###########################################################################
 
+    # Checking ${FILESEXTRAPATHS}
+    extrapaths = (d.getVar("FILESEXTRAPATHS", True) or "")
+    if '__default' not in extrapaths.split(":"):
+        msg = "FILESEXTRAPATHS-variable, must always use _prepend (or _append)\n"
+        msg += "type of assignment, and don't forget the colon.\n"
+        msg += "Please assign it with the format of:\n"
+        msg += "  FILESEXTRAPATHS_append := \":${THISDIR}/Your_Files_Path\" or\n"
+        msg += "  FILESEXTRAPATHS_prepend := \"${THISDIR}/Your_Files_Path:\"\n"
+        msg += "in your bbappend file\n\n"
+        msg += "Your incorrect assignment is:\n"
+        msg += "%s\n" % extrapaths
+        bb.fatal(msg)
+
     if d.getVar('do_stage', True) is not None:
         bb.fatal("Legacy staging found for %s as it has a do_stage function. This will need conversion to a do_install or often simply removal to work with OE-core" % d.getVar("FILE", True))
 
