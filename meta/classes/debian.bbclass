@@ -8,6 +8,9 @@
 #
 # Better expressed as ensure all RDEPENDS package before we package
 # This means we can't have circular RDEPENDS/RRECOMMENDS
+
+inherit package
+
 DEBIANRDEP = "do_packagedata"
 do_package_write_ipk[rdeptask] = "${DEBIANRDEP}"
 do_package_write_deb[rdeptask] = "${DEBIANRDEP}"
