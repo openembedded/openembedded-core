@@ -28,6 +28,11 @@ python () {
         d.setVar("SDK_ARCH", "none")
         d.setVar("SDK_CC_ARCH", "none")
 
+        # Avoid this being unnecessarily different due to nuances of
+        # the target machine that aren't important for "all" arch
+        # packages.
+        d.setVar("LDFLAGS", "")
+
         # No need to do shared library processing or debug symbol handling
         d.setVar("EXCLUDE_FROM_SHLIBS", "1")
         d.setVar("INHIBIT_PACKAGE_DEBUG_SPLIT", "1")
