@@ -100,6 +100,7 @@ PACKAGECONFIG[gtk+] = "--enable-gtk,--disable-gtk,gtk+ libvte,"
 PACKAGECONFIG[libcap-ng] = "--enable-cap-ng,--disable-cap-ng,libcap-ng,"
 PACKAGECONFIG[sdl] = "--enable-sdl,--disable-sdl,libsdl,"
 PACKAGECONFIG[ssh2] = "--enable-libssh2,--disable-libssh2,libssh2,"
+PACKAGECONFIG[libusb] = "--enable-libusb,--disable-libusb,libusb1"
 
 # Qemu target will not build in world build for ARM or Mips
 BROKEN_qemuarm = "1"
