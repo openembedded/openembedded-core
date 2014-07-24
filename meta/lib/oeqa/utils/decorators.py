@@ -6,9 +6,34 @@
 # Most useful is skipUnlessPassed which can be used for
 # creating dependecies between two test methods.
 
-from oeqa.oetest import *
 import logging
 import sys
+import unittest
+
+#get the "result" object from one of the upper frames provided that one of these upper frames is a unittest.case frame
+class getResults(object):
+    def __init__(self):
+        #dynamically determine the unittest.case frame and use it to get the name of the test method
+        upperf = sys._current_frames().values()[0]
+        while (upperf.f_globals['__name__'] != 'unittest.case'):
+            upperf = upperf.f_back
+        self.faillist = [ seq[0]._testMethodName for seq in upperf.f_locals['result'].failures ]
+        self.errorlist = [ seq[0]._testMethodName for seq in upperf.f_locals['result'].errors ]
+        #ignore the _ErrorHolder objects from the skipped tests list
+        self.skiplist = []
+        for seq in upperf.f_locals['result'].skipped:
+            try:
+                self.skiplist.append(seq[0]._testMethodName)
+            except: pass
+
+    def getFailList(self):
+        return self.faillist
+
+    def getErrorList(self):
+        return self.errorlist
+
+    def getSkipList(self):
+        return self.skiplist
 
 class skipIfFailure(object):
 
@@ -17,7 +42,8 @@ class skipIfFailure(object):
 
     def __call__(self,f):
         def wrapped_f(*args):
-            if self.testcase in (oeTest.testFailures or oeTest.testErrors):
+            res = getResults()
+            if self.testcase in (res.getFailList() or res.getErrorList()):
                 raise unittest.SkipTest("Testcase dependency not met: %s" % self.testcase)
             return f(*args)
         wrapped_f.__name__ = f.__name__
@@ -30,7 +56,8 @@ class skipIfSkipped(object):
 
     def __call__(self,f):
         def wrapped_f(*args):
-            if self.testcase in oeTest.testSkipped:
+            res = getResults()
+            if self.testcase in res.getSkipList():
                 raise unittest.SkipTest("Testcase dependency not met: %s" % self.testcase)
             return f(*args)
         wrapped_f.__name__ = f.__name__
@@ -43,9 +70,10 @@ class skipUnlessPassed(object):
 
     def __call__(self,f):
         def wrapped_f(*args):
-            if self.testcase in oeTest.testSkipped or \
-                    self.testcase in  oeTest.testFailures or \
-                    self.testcase in oeTest.testErrors:
+            res = getResults()
+            if self.testcase in res.getSkipList() or \
+                    self.testcase in res.getFailList() or \
+                    self.testcase in res.getErrorList():
                 raise unittest.SkipTest("Testcase dependency not met: %s" % self.testcase)
             return f(*args)
         wrapped_f.__name__ = f.__name__
