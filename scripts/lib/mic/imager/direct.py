@@ -113,7 +113,15 @@ class DirectImageCreator(BaseImageCreator):
                 device_name = "/dev/" + p.disk + str(num + 1)
             else:
                 device_name = "/dev/" + p.disk + str(num)
-            fstab_entry = device_name + "\t" + p.mountpoint + "\t" + p.fstype + "\tdefaults\t0\t0\n"
+
+            opts = "defaults"
+            if p.fsopts:
+                opts = p.fsopts
+
+            fstab_entry = device_name + "\t" + \
+                          p.mountpoint + "\t" + \
+                          p.fstype + "\t" + \
+                          opts + "\t0\t0\n"
             fstab_lines.append(fstab_entry)
 
     def _write_fstab(self, fstab, fstab_lines):
