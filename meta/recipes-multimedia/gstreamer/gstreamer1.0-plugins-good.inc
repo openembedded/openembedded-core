@@ -3,7 +3,7 @@ require gstreamer1.0-plugins.inc
 LICENSE = "GPLv2+ & LGPLv2.1+"
 
 # libid3tag
-DEPENDS += "gstreamer1.0-plugins-base zlib bzip2"
+DEPENDS += "gstreamer1.0-plugins-base zlib bzip2 libcap"
 
 inherit gettext
 
