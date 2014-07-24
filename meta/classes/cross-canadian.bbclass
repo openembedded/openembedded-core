@@ -84,11 +84,12 @@ EXTRANATIVEPATH += "chrpath-native"
 # Path mangling needed by the cross packaging
 # Note that we use := here to ensure that libdir and includedir are
 # target paths.
-target_libdir := "${libdir}"
-target_includedir := "${includedir}"
-target_base_libdir := "${base_libdir}"
+target_base_prefix := "${base_prefix}"
 target_prefix := "${prefix}"
 target_exec_prefix := "${exec_prefix}"
+target_base_libdir = "${target_base_prefix}/${baselib}"
+target_libdir = "${target_exec_prefix}/${baselib}"
+target_includedir := "${includedir}"
 
 # Change to place files in SDKPATH
 base_prefix = "${SDKPATHNATIVE}"
