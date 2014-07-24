@@ -74,6 +74,7 @@ SRC_URI += " \
         file://config.sh-64-be \
         file://perl-5.14.3-fix-CVE-2010-4777.patch \
         file://0001-Makefile.SH-fix-do_install-failed.patch \
+        file://make_ext.pl-fix-regenerate-makefile-failed-while-cc-.patch \
 "
 
 # Fix test case issues
