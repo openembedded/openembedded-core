@@ -25,6 +25,8 @@
 #
 
 import shutil
+import os
+import tempfile
 
 from pykickstart.commands.partition import *
 from mic.utils.oe.misc import *
@@ -192,6 +194,10 @@ class Wic_PartData(Mic_PartData):
             return self.prepare_rootfs_vfat(cr_workdir, oe_builddir,
                                             rootfs_dir, native_sysroot,
                                             pseudo)
+        elif self.fstype.startswith("squashfs"):
+            return self.prepare_rootfs_squashfs(cr_workdir, oe_builddir,
+                                                rootfs_dir, native_sysroot,
+                                                pseudo)
 
     def prepare_rootfs_ext(self, cr_workdir, oe_builddir, rootfs_dir,
                            native_sysroot, pseudo):
@@ -324,6 +330,28 @@ class Wic_PartData(Mic_PartData):
         self.set_size(rootfs_size)
         self.set_source_file(rootfs)
 
+    def prepare_rootfs_squashfs(self, cr_workdir, oe_builddir, rootfs_dir,
+                                native_sysroot, pseudo):
+        """
+        Prepare content for a squashfs rootfs partition.
+        """
+        image_rootfs = rootfs_dir
+        rootfs = "%s/rootfs_%s.%s" % (cr_workdir, self.label ,self.fstype)
+
+        squashfs_cmd = "mksquashfs %s %s -noappend" % \
+                       (image_rootfs, rootfs)
+        rc, out = exec_native_cmd(pseudo + squashfs_cmd, native_sysroot)
+
+        # get the rootfs size in the right units for kickstart (Mb)
+        du_cmd = "du -Lbms %s" % rootfs
+        rc, out = exec_cmd(du_cmd)
+        rootfs_size = out.split()[0]
+
+        self.size = rootfs_size
+        self.source_file = rootfs
+
+        return 0
+
     def prepare_empty_partition(self, cr_workdir, oe_builddir, native_sysroot):
         """
         Prepare an empty partition.
@@ -337,6 +365,9 @@ class Wic_PartData(Mic_PartData):
         elif self.fstype.startswith("vfat"):
             return self.prepare_empty_partition_vfat(cr_workdir, oe_builddir,
                                                      native_sysroot)
+        elif self.fstype.startswith("squashfs"):
+            return self.prepare_empty_partition_squashfs(cr_workdir, oe_builddir,
+                                                         native_sysroot)
 
     def prepare_empty_partition_ext(self, cr_workdir, oe_builddir,
                                     native_sysroot):
@@ -394,6 +425,36 @@ class Wic_PartData(Mic_PartData):
         chmod_cmd = "chmod 644 %s" % fs
         exec_cmd(chmod_cmd)
 
+        self.source_file = fs
+
+        return 0
+
+    def prepare_empty_partition_squashfs(self, cr_workdir, oe_builddir,
+                                         native_sysroot):
+        """
+        Prepare an empty squashfs partition.
+        """
+        msger.warning("Creating of an empty squashfs %s partition was attempted. " \
+                      "Proceeding as requested." % self.mountpoint)
+
+        fs = "%s/fs_%s.%s" % (cr_workdir, self.label, self.fstype)
+
+        # it is not possible to create a squashfs without source data,
+        # thus prepare an empty temp dir that is used as source
+        tmpdir = tempfile.mkdtemp()
+
+        squashfs_cmd = "mksquashfs %s %s -noappend" % \
+                       (tmpdir, fs)
+        rc, out = exec_native_cmd(squashfs_cmd, native_sysroot)
+
+        os.rmdir(tmpdir)
+
+        # get the rootfs size in the right units for kickstart (Mb)
+        du_cmd = "du -Lbms %s" % fs
+        rc, out = exec_cmd(du_cmd)
+        fs_size = out.split()[0]
+
+        self.size = fs_size
         self.source_file = fs
 
         return 0
