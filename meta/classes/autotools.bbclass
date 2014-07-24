@@ -195,7 +195,7 @@ autotools_do_configure() {
 		else
 			acpaths="${acpaths}"
 		fi
-		AUTOV=`automake --version |head -n 1 |sed "s/.* //;s/\.[0-9]\+$//"`
+		AUTOV=`automake --version | sed -e '1{s/.* //;s/\.[0-9]\+$//};q'`
 		automake --version
 		echo "AUTOV is $AUTOV"
 		if [ -d ${STAGING_DATADIR_NATIVE}/aclocal-$AUTOV ]; then
