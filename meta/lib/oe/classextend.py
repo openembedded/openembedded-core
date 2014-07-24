@@ -60,17 +60,22 @@ class ClassExtender(object):
             return self.extend_name(dep)
 
     def map_depends_variable(self, varname, suffix = ""):
+        # We need to preserve EXTENDPKGV so it can be expanded correctly later
         if suffix:
             varname = varname + "_" + suffix
+        orig = self.d.getVar("EXTENDPKGV", False)
+        self.d.setVar("EXTENDPKGV", "EXTENDPKGV")
         deps = self.d.getVar(varname, True)
         if not deps:
+            self.d.setVar("EXTENDPKGV", orig)
             return
         deps = bb.utils.explode_dep_versions2(deps)
         newdeps = {}
         for dep in deps:
             newdeps[self.map_depends(dep)] = deps[dep]
 
-        self.d.setVar(varname, bb.utils.join_deps(newdeps, False))
+        self.d.setVar(varname, bb.utils.join_deps(newdeps, False).replace("EXTENDPKGV", "${EXTENDPKGV}"))
+        self.d.setVar("EXTENDPKGV", orig)
 
     def map_packagevars(self):
         for pkg in (self.d.getVar("PACKAGES", True).split() + [""]):
