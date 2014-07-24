@@ -10,7 +10,7 @@ LIC_FILES_CHKSUM = "file://GPL;md5=4325afd396febcb659c36b49533135d4 \
 DEPENDS = "libatomics-ops liboil libsamplerate0 libsndfile1 libtool"
 # optional
 DEPENDS += "udev alsa-lib glib-2.0 dbus gconf"
-DEPENDS += "json-c gdbm speex libxml-parser-perl-native"
+DEPENDS += "json-c gdbm speex libxml-parser-perl-native libcap"
 
 inherit autotools pkgconfig useradd gettext perlnative
 
