@@ -137,6 +137,14 @@ ttymxc3
 ttymxc4
 ttymxc5
 
+# Freescale lpuart ports
+ttyLP0
+ttyLP1
+ttyLP2
+ttyLP3
+ttyLP4
+ttyLP5
+
 # Standard serial ports, with devfs
 tts/0
 tts/1
