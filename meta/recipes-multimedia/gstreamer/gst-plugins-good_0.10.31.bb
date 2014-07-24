@@ -22,7 +22,7 @@ PACKAGECONFIG[orc] = "--enable-orc,--disable-orc,orc"
 PACKAGECONFIG[x11] = "--enable-x,--disable-x,virtual/libx11 libxfixes libxdamage"
 
 DEPENDS += "gst-plugins-base gconf cairo libpng zlib libid3tag flac \
-            speex libsoup-2.4"
+            speex libsoup-2.4 libcap"
 
 inherit gettext gconf
 
