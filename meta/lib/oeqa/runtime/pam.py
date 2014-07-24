@@ -2,7 +2,7 @@
 # Note that the image under test must have "pam" in DISTRO_FEATURES
 
 import unittest
-from oeqa.oetest import oeRuntimeTest
+from oeqa.oetest import oeRuntimeTest, skipModule
 from oeqa.utils.decorators import *
 
 def setUpModule():
@@ -17,8 +17,8 @@ class PamBasicTest(oeRuntimeTest):
         (status, output) = self.target.run('login --help')
         self.assertEqual(status, 1, msg = "login command does not work as expected. Status and output:%s and %s" %(status, output))
         (status, output) = self.target.run('passwd --help')
-        self.assertEqual(status, 0, msg = "passwd command does not work as expected. Status and output:%s and %s" %(status, output))
+        self.assertEqual(status, 6, msg = "passwd command does not work as expected. Status and output:%s and %s" %(status, output))
         (status, output) = self.target.run('su --help')
-        self.assertEqual(status, 0, msg = "su command does not work as expected. Status and output:%s and %s" %(status, output))
+        self.assertEqual(status, 2, msg = "su command does not work as expected. Status and output:%s and %s" %(status, output))
         (status, output) = self.target.run('useradd --help')
-        self.assertEqual(status, 0, msg = "useradd command does not work as expected. Status and output:%s and %s" %(status, output))
+        self.assertEqual(status, 2, msg = "useradd command does not work as expected. Status and output:%s and %s" %(status, output))

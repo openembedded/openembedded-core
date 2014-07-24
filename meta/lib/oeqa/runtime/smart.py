@@ -1,6 +1,6 @@
 import unittest
 import re
-from oeqa.oetest import oeRuntimeTest
+from oeqa.oetest import oeRuntimeTest, skipModule
 from oeqa.utils.decorators import *
 from oeqa.utils.httpserver import HTTPService
 

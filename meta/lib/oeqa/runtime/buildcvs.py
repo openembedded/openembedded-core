@@ -1,4 +1,4 @@
-from oeqa.oetest import oeRuntimeTest
+from oeqa.oetest import oeRuntimeTest, skipModule
 from oeqa.utils.decorators import *
 from oeqa.utils.targetbuild import TargetBuildProject
 
