@@ -14,6 +14,7 @@ class KernelModuleTest(oeRuntimeTest):
         self.target.copy_to(os.path.join(oeRuntimeTest.tc.filesdir, "hellomod.c"), "/tmp/hellomod.c")
         self.target.copy_to(os.path.join(oeRuntimeTest.tc.filesdir, "hellomod_makefile"), "/tmp/Makefile")
 
+    @testcase('316')
     @skipUnlessPassed('test_ssh')
     @skipUnlessPassed('test_gcc_compile')
     def test_kernel_module(self):

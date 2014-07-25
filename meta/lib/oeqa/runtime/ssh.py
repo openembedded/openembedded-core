@@ -10,6 +10,7 @@ def setUpModule():
 
 class SshTest(oeRuntimeTest):
 
+    @testcase(224)
     @skipUnlessPassed('test_ping')
     def test_ssh(self):
         (status, output) = self.target.run('uname -a')

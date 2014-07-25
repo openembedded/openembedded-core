@@ -13,6 +13,7 @@ class SyslogTest(oeRuntimeTest):
         (status,output) = self.target.run('/sbin/syslogd --help')
         self.assertEqual(status, 0, msg="status and output: %s and %s" % (status,output))
 
+    @testcase(201)
     @skipUnlessPassed("test_syslog_help")
     def test_syslog_running(self):
         (status,output) = self.target.run(oeRuntimeTest.pscmd + ' | grep -i [s]yslogd')
@@ -33,6 +34,7 @@ class SyslogTestConfig(oeRuntimeTest):
         else:
             (status,output) = self.target.run('systemctl restart syslog.service')
 
+    @testcase(202)
     @skipUnlessPassed("test_syslog_restart")
     @skipUnlessPassed("test_syslog_logger")
     @unittest.skipIf("systemd" == oeRuntimeTest.tc.d.getVar("VIRTUAL-RUNTIME_init_manager"), "Not appropiate for systemd image")

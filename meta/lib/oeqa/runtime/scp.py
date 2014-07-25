@@ -1,6 +1,6 @@
 import os
 from oeqa.oetest import oeRuntimeTest, skipModule
-from oeqa.utils.decorators import skipUnlessPassed
+from oeqa.utils.decorators import skipUnlessPassed, testcase
 
 def setUpModule():
     if not (oeRuntimeTest.hasPackage("dropbear") or oeRuntimeTest.hasPackage("openssh-sshd")):
@@ -8,6 +8,7 @@ def setUpModule():
 
 class ScpTest(oeRuntimeTest):
 
+    @testcase(220)
     @skipUnlessPassed('test_ssh')
     def test_scp_file(self):
         test_log_dir = oeRuntimeTest.tc.d.getVar("TEST_LOG_DIR", True)

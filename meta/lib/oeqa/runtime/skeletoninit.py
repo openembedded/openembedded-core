@@ -20,6 +20,7 @@ class SkeletonBasicTest(oeRuntimeTest):
         (status, output) =  self.target.run('ls /usr/sbin/skeleton-test')
         self.assertEqual(status, 0, msg = "skeleton-test not found. Output:\n%s" % output)
 
+    @testcase(284)
     @skipUnlessPassed('test_skeleton_availability')
     @unittest.skipIf("systemd" == oeRuntimeTest.tc.d.getVar("VIRTUAL-RUNTIME_init_manager"), "Not appropiate for systemd image")
     def test_skeleton_script(self):

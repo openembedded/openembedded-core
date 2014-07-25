@@ -19,6 +19,7 @@ class LogrotateTest(oeRuntimeTest):
         (status, output) = self.target.run("sed -i 's#wtmp {#wtmp {\\n    olddir /home/root/logrotate_dir#' /etc/logrotate.conf")
         self.assertEqual(status, 0, msg = "Could not write to logrotate.conf file. Status and output: %s and %s)" % (status, output))
 
+    @testcase(289)
     @skipUnlessPassed("test_1_logrotate_setup")
     def test_2_logrotate(self):
         (status, output) = self.target.run('logrotate -f /etc/logrotate.conf')

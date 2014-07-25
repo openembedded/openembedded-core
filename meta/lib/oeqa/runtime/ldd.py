@@ -13,6 +13,7 @@ class LddTest(oeRuntimeTest):
         (status, output) = self.target.run('which ldd')
         self.assertEqual(status, 0, msg = "ldd does not exist in PATH: which ldd: %s" % output)
 
+    @testcase(239)
     @skipUnlessPassed('test_ldd_exists')
     def test_ldd_rtldlist_check(self):
         (status, output) = self.target.run('for i in $(which ldd | xargs cat | grep "^RTLDLIST"|cut -d\'=\' -f2|tr -d \'"\'); do test -f $i && echo $i && break; done')

@@ -18,6 +18,7 @@ class RpmBasicTest(oeRuntimeTest):
         (status, output) = self.target.run('rpm --help')
         self.assertEqual(status, 0, msg="status and output: %s and %s" % (status,output))
 
+    @testcase(191)
     @skipUnlessPassed('test_rpm_help')
     def test_rpm_query(self):
         (status, output) = self.target.run('rpm -q rpm')
@@ -34,11 +35,13 @@ class RpmInstallRemoveTest(oeRuntimeTest):
             testrpmfile = f
         oeRuntimeTest.tc.target.copy_to(os.path.join(rpmdir,testrpmfile), "/tmp/rpm-doc.rpm")
 
+    @testcase(192)
     @skipUnlessPassed('test_rpm_help')
     def test_rpm_install(self):
         (status, output) = self.target.run('rpm -ivh /tmp/rpm-doc.rpm')
         self.assertEqual(status, 0, msg="Failed to install rpm-doc package: %s" % output)
 
+    @testcase(194)
     @skipUnlessPassed('test_rpm_install')
     def test_rpm_remove(self):
         (status,output) = self.target.run('rpm -e rpm-doc')

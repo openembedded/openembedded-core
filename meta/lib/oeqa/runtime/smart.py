@@ -25,6 +25,7 @@ class SmartTest(oeRuntimeTest):
 
 class SmartBasicTest(SmartTest):
 
+    @testcase(716)
     @skipUnlessPassed('test_ssh')
     def test_smart_help(self):
         self.smart('--help')
@@ -32,15 +33,19 @@ class SmartBasicTest(SmartTest):
     def test_smart_version(self):
         self.smart('--version')
 
+    @testcase(721)
     def test_smart_info(self):
         self.smart('info python-smartpm')
 
+    @testcase(421)
     def test_smart_query(self):
         self.smart('query python-smartpm')
 
+    @testcase(720)
     def test_smart_search(self):
         self.smart('search python-smartpm')
 
+    @testcase(722)
     def test_smart_stats(self):
         self.smart('stats')
 
@@ -58,6 +63,7 @@ class SmartRepoTest(SmartTest):
     def test_smart_channel(self):
         self.smart('channel', 1)
 
+    @testcase(719)
     def test_smart_channel_add(self):
         image_pkgtype = self.tc.d.getVar('IMAGE_PKGTYPE', True)
         deploy_url = 'http://%s:%s/%s' %(self.target.server_ip, self.repo_server.port, image_pkgtype)
@@ -76,6 +82,7 @@ class SmartRepoTest(SmartTest):
     def test_smart_channel_show(self):
         self.smart('channel --show')
 
+    @testcase(717)
     def test_smart_channel_rpmsys(self):
         self.smart('channel --show rpmsys')
         self.smart('channel --disable rpmsys')
@@ -86,17 +93,20 @@ class SmartRepoTest(SmartTest):
         self.smart('remove -y psplash-default')
         self.smart('install -y psplash-default')
 
+    @testcase(728)
     @skipUnlessPassed('test_smart_install')
     def test_smart_install_dependency(self):
         self.smart('remove -y psplash')
         self.smart('install -y psplash-default')
 
+    @testcase(723)
     @skipUnlessPassed('test_smart_channel_add')
     def test_smart_install_from_disk(self):
         self.smart('remove -y psplash-default')
         self.smart('download psplash-default')
         self.smart('install -y ./psplash-default*')
 
+    @testcase(725)
     @skipUnlessPassed('test_smart_channel_add')
     def test_smart_install_from_http(self):
         output = self.smart('download --urls psplash-default')
@@ -105,6 +115,7 @@ class SmartRepoTest(SmartTest):
         self.smart('remove -y psplash-default')
         self.smart('install -y %s' % url.group(0))
 
+    @testcase(729)
     @skipUnlessPassed('test_smart_install')
     def test_smart_reinstall(self):
         self.smart('reinstall -y psplash-default')

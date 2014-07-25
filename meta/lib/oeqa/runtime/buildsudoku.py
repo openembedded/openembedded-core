@@ -14,6 +14,7 @@ class SudokuTest(oeRuntimeTest):
                         "http://downloads.sourceforge.net/project/sudoku-savant/sudoku-savant/sudoku-savant-1.3/sudoku-savant-1.3.tar.bz2")
         self.project.download_archive()
 
+    @testcase(207)
     @skipUnlessPassed("test_ssh")
     def test_sudoku(self):
         self.assertEqual(self.project.run_configure(), 0,

@@ -10,6 +10,7 @@
 import os, re, mmap
 import unittest
 import inspect
+from oeqa.utils.decorators import LogResults
 
 def loadTests(tc):
 
@@ -35,6 +36,7 @@ def runTests(tc):
 
     return result
 
+@LogResults
 class oeTest(unittest.TestCase):
 
     longMessage = True

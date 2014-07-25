@@ -11,6 +11,7 @@ class ScanelfTest(oeRuntimeTest):
     def setUp(self):
         self.scancmd = 'scanelf --quiet --recursive --mount --ldpath --path'
 
+    @testcase(966)
     @skipUnlessPassed('test_ssh')
     def test_scanelf_textrel(self):
         # print TEXTREL information
@@ -18,6 +19,7 @@ class ScanelfTest(oeRuntimeTest):
         (status, output) = self.target.run(self.scancmd)
         self.assertEqual(output.strip(), "", "\n".join([self.scancmd, output]))
 
+    @testcase(967)
     @skipUnlessPassed('test_ssh')
     def test_scanelf_rpath(self):
         # print RPATH information

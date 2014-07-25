@@ -18,6 +18,7 @@ class PerlTest(oeRuntimeTest):
         (status, output) = self.target.run('which perl')
         self.assertEqual(status, 0, msg="Perl binary not in PATH or not on target.")
 
+    @testcase(208)
     def test_perl_works(self):
         (status, output) = self.target.run('perl /tmp/test.pl')
         self.assertEqual(status, 0, msg="Exit status was not 0. Output: %s" % output)

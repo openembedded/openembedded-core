@@ -14,6 +14,7 @@ class BuildCvsTest(oeRuntimeTest):
                         "http://ftp.gnu.org/non-gnu/cvs/source/feature/1.12.13/cvs-1.12.13.tar.bz2")
         self.project.download_archive()
 
+    @testcase(205)
     @skipUnlessPassed("test_ssh")
     def test_cvs(self):
         self.assertEqual(self.project.run_configure(), 0,

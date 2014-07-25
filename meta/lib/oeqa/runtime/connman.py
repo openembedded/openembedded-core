@@ -21,7 +21,7 @@ class ConnmanTest(oeRuntimeTest):
         (status, output) = self.target.run('/usr/sbin/connmand --help')
         self.assertEqual(status, 0, msg="status and output: %s and %s" % (status,output))
 
-
+    @testcase(221)
     @skipUnlessPassed('test_connmand_help')
     def test_connmand_running(self):
         (status, output) = self.target.run(oeRuntimeTest.pscmd + ' | grep [c]onnmand')

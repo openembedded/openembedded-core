@@ -10,6 +10,7 @@ def setUpModule():
 
 class MultilibTest(oeRuntimeTest):
 
+    @testcase('279')
     @skipUnlessPassed('test_ssh')
     def test_file_connman(self):
         self.assertTrue(oeRuntimeTest.hasPackage('connman-gnome'), msg="This test assumes connman-gnome is installed")

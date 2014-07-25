@@ -14,6 +14,7 @@ class BuildIptablesTest(oeRuntimeTest):
                         "http://netfilter.org/projects/iptables/files/iptables-1.4.13.tar.bz2")
         self.project.download_archive()
 
+    @testcase(206)
     @skipUnlessPassed("test_ssh")
     def test_iptables(self):
         self.assertEqual(self.project.run_configure(), 0,

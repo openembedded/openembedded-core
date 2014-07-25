@@ -4,6 +4,7 @@ import re
 
 class DateTest(oeRuntimeTest):
 
+    @testcase(211)
     @skipUnlessPassed("test_ssh")
     def test_date(self):
         (status, output) = self.target.run('date +"%Y-%m-%d %T"')

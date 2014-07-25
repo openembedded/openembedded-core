@@ -10,6 +10,7 @@ def setUpModule():
 
 class X32libTest(oeRuntimeTest):
 
+    @testcase(281)
     @skipUnlessPassed("test_ssh")
     def test_x32_file(self):
         status1 = self.target.run("readelf -h /bin/ls | grep Class | grep ELF32")[0]

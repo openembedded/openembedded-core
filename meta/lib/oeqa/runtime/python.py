@@ -18,6 +18,7 @@ class PythonTest(oeRuntimeTest):
         (status, output) = self.target.run('which python')
         self.assertEqual(status, 0, msg="Python binary not in PATH or not on target.")
 
+    @testcase(965)
     def test_python_stdout(self):
         (status, output) = self.target.run('python /tmp/test.py')
         self.assertEqual(status, 0, msg="Exit status was not 0. Output: %s" % output)

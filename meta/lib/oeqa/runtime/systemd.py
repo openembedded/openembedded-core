@@ -28,6 +28,7 @@ class SystemdBasicTests(SystemdTest):
     def test_systemd_basic(self):
         self.systemctl('--version')
 
+    @testcase(551)
     @skipUnlessPassed('test_system_basic')
     def test_systemd_list(self):
         self.systemctl('list-unit-files')
@@ -51,6 +52,7 @@ class SystemdBasicTests(SystemdTest):
                 return (False, output)
             time.sleep(10)
 
+    @testcase(550)
     @skipUnlessPassed('test_systemd_basic')
     def test_systemd_failed(self):
         settled, output = self.settle()
@@ -69,6 +71,7 @@ class SystemdServiceTests(SystemdTest):
     def test_systemd_status(self):
         self.systemctl('status --full', 'avahi-daemon.service')
 
+    @testcase(695)
     @skipUnlessPassed('test_systemd_status')
     def test_systemd_stop_start(self):
         self.systemctl('stop', 'avahi-daemon.service')
@@ -76,6 +79,7 @@ class SystemdServiceTests(SystemdTest):
         self.systemctl('start','avahi-daemon.service')
         self.systemctl('is-active', 'avahi-daemon.service', verbose=True)
 
+    @testcase(696)
     @skipUnlessPassed('test_systemd_basic')
     def test_systemd_disable_enable(self):
         self.systemctl('disable', 'avahi-daemon.service')
