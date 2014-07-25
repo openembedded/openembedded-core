@@ -461,10 +461,10 @@ END
 	echo "IMAGESIZE = $imagesize" >> ${BUILDHISTORY_DIR_IMAGE}/image-info.txt
 
 	# Add some configuration information
-	echo "${MACHINE}: ${IMAGE_BASENAME} configured for ${DISTRO} ${DISTRO_VERSION}" > ${BUILDHISTORY_DIR_IMAGE}/build-id
+	echo "${MACHINE}: ${IMAGE_BASENAME} configured for ${DISTRO} ${DISTRO_VERSION}" > ${BUILDHISTORY_DIR_IMAGE}/build-id.txt
 
-	cat >> ${BUILDHISTORY_DIR_IMAGE}/build-id <<END
-${@buildhistory_get_layers(d)}
+	cat >> ${BUILDHISTORY_DIR_IMAGE}/build-id.txt <<END
+${@buildhistory_get_build_id(d)}
 END
 }
 
@@ -498,11 +498,21 @@ POPULATE_SDK_POST_HOST_COMMAND_append = " buildhistory_list_installed_sdk_host ;
 
 SDK_POSTPROCESS_COMMAND += "buildhistory_get_sdkinfo ; "
 
-def buildhistory_get_layers(d):
-    if d.getVar('BB_WORKERCONTEXT', True) != '1':
-        return ""
-    layertext = "Configured metadata layers:\n%s\n" % '\n'.join(get_layers_branch_rev(d))
-    return layertext
+def buildhistory_get_build_id(d):
+    localdata = bb.data.createCopy(d)
+    bb.data.update_data(localdata)
+    statuslines = []
+    for func in oe.data.typed_value('BUILDCFG_FUNCS', localdata):
+        g = globals()
+        if func not in g:
+            bb.warn("Build configuration function '%s' does not exist" % func)
+        else:
+            flines = g[func](localdata)
+            if flines:
+                statuslines.extend(flines)
+
+    statusheader = d.getVar('BUILDCFG_HEADER', True)
+    return('\n%s\n%s\n' % (statusheader, '\n'.join(statuslines)))
 
 def buildhistory_get_metadata_revs(d):
     # We want an easily machine-readable format here, so get_layers_branch_rev isn't quite what we want
