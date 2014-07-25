@@ -31,14 +31,13 @@ EXTRA_OECONF = "--disable-python"
 
 EXTRA_OECONF_append_libc-uclibc = " --with-versioned=no "
 
-PACKAGES =+ "alsa-server libasound alsa-conf-base alsa-conf alsa-doc alsa-dev"
+PACKAGES =+ "alsa-server libasound alsa-conf-base alsa-conf alsa-doc"
 FILES_${PN} += "${libdir}/${BPN}/smixer/*.so"
 FILES_${PN}-dbg += "${libdir}/${BPN}/smixer/.debug"
 FILES_${PN}-dev += "${libdir}/${BPN}/smixer/*.la"
 FILES_libasound = "${libdir}/libasound.so.*"
 FILES_alsa-server = "${bindir}/*"
 FILES_alsa-conf = "${datadir}/alsa/"
-FILES_alsa-dev += "${libdir}/pkgconfig/ ${includedir}/alsa ${datadir}/aclocal/*"
 FILES_alsa-conf-base = "\
 ${datadir}/alsa/alsa.conf \
 ${datadir}/alsa/cards/aliases.conf \
