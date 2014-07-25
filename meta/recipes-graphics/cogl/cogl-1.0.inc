@@ -8,7 +8,8 @@ DEPENDS = "glib-2.0 gdk-pixbuf"
 PACKAGES =+ "${PN}-examples \
              libcogl libcogl-dev \
              libcogl-gles2 libcogl-gles2-dev \
-             libcogl-pango libcogl-pango-dev"
+             libcogl-pango libcogl-pango-dev \
+             libcogl-path libcogl-path-dev"
 AUTOTOOLS_AUXDIR = "${S}/build"
 
 # Extra DEPENDS for PACKAGECONFIG
@@ -74,6 +75,12 @@ FILES_libcogl-pango-dev = "${includedir}/cogl/cogl-pango \
                            ${libdir}/libcogl-pango${SOLIBSDEV} \
                            ${libdir}/libcogl-pango.la \
                            ${libdir}/pkgconfig/cogl-pango-1.0.pc"
+
+FILES_libcogl-path = "${libdir}/libcogl-path${SOLIBS}"
+FILES_libcogl-path-dev = "${includedir}/cogl/cogl-path \
+                          ${libdir}/libcogl-path${SOLIBSDEV} \
+                          ${libdir}/libcogl-path.la \
+                          ${libdir}/pkgconfig/cogl-path-1.0.pc"
 
 # For backwards compatibility after Debian-renaming
 RPROVIDES_libcogl = "cogl-1.0"
