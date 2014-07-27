@@ -5,6 +5,7 @@ BBCLASSEXTEND = "native nativesdk"
 
 SRC_URI += "file://disable_tests.patch \
             file://nls-always-use-XCOMM-instead-of-for-comments-in-Comp.patch \
+            file://libX11-Add-missing-NULL-check.patch \
            "
 
 SRC_URI[md5sum] = "c35d6ad95b06635a524579e88622fdb5"
