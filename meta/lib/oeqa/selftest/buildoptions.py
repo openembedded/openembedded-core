@@ -74,15 +74,15 @@ class SanityOptionsTest(oeSelfTest):
         self.write_recipeinc('xcursor-transparent-theme', 'PACKAGES += \"${PN}-dbg\"')
         res = bitbake("xcursor-transparent-theme", ignore_status=True)
         self.delete_recipeinc('xcursor-transparent-theme')
-        self.assertTrue("ERROR: QA Issue: xcursor-transparent-theme-dbg is listed in PACKAGES multiple times, this leads to packaging errors." in res.output)
+        self.assertTrue("ERROR: QA Issue: xcursor-transparent-theme-dbg is listed in PACKAGES multiple times, this leads to packaging errors." in res.output, msg=res.output)
         self.assertEqual(res.status, 1)
         self.write_recipeinc('xcursor-transparent-theme', 'PACKAGES += \"${PN}-dbg\"')
         self.append_config('ERROR_QA_remove = "packages-list"')
         self.append_config('WARN_QA_append = " packages-list"')
-        res = bitbake("xcursor-transparent-theme")
         bitbake("xcursor-transparent-theme -ccleansstate")
+        res = bitbake("xcursor-transparent-theme")
         self.delete_recipeinc('xcursor-transparent-theme')
-        self.assertTrue("WARNING: QA Issue: xcursor-transparent-theme-dbg is listed in PACKAGES multiple times, this leads to packaging errors." in res.output)
+        self.assertTrue("WARNING: QA Issue: xcursor-transparent-theme-dbg is listed in PACKAGES multiple times, this leads to packaging errors." in res.output, msg=res.output)
 
     def test_sanity_userspace_dependency(self):
         self.append_config('WARN_QA_append = " unsafe-references-in-binaries unsafe-references-in-scripts"')
