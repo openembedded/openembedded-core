@@ -60,8 +60,6 @@ EXTRA_OECONF = " \
     --enable-avserver \
     --enable-avplay \
     --ld="${CCLD}" \
-    --enable-libtheora  \
-    --enable-libvorbis \
     --arch=${TARGET_ARCH} \
     --target-os="linux" \
     --enable-cross-compile \
