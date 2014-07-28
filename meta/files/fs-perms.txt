@@ -50,15 +50,15 @@ ${localstatedir}/log	link	volatile/log
 ${localstatedir}/lock	link	/run/lock
 ${localstatedir}/tmp	link	volatile/tmp
 
+/home				0755	root	root	false - - -
+/srv				0755	root	root	false - - -
+${prefix}/src			0755	root	root	false - - -
+${localstatedir}/local		0755	root	root	false - - -
+
 # Special permissions from base-files
 # Set 1777
 /tmp				01777	root	root	false - - -
 ${localstatedir}/volatile/tmp	01777	root	root	false - - -
-
-# Set 2775
-/home				02755	root	root	false - - -
-${prefix}/src			02755	root	root	false - - -
-${localstatedir}/local		02755	root	root	false - - -
 
 # Set 3755
 /srv				0755	root	root	false - - -

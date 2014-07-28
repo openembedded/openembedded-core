@@ -32,7 +32,7 @@ INHIBIT_DEFAULT_DEPS = "1"
 
 docdir_append = "/${P}"
 dirs1777 = "/tmp ${localstatedir}/volatile/tmp"
-dirs2775 = "/home ${prefix}/src ${localstatedir}/local"
+dirs2775 = ""
 dirs755 = "/bin /boot /dev ${sysconfdir} ${sysconfdir}/default \
            ${sysconfdir}/skel /lib /mnt /proc ${ROOT_HOME} /run /sbin \
            ${prefix} ${bindir} ${docdir} /usr/games ${includedir} \
@@ -43,6 +43,7 @@ dirs755 = "/bin /boot /dev ${sysconfdir} ${sysconfdir}/default \
            /sys ${localstatedir}/lib/misc ${localstatedir}/spool \
            ${localstatedir}/volatile \
            ${localstatedir}/volatile/log \
+           /home ${prefix}/src ${localstatedir}/local \
            /media"
 dirs3755 = "/srv  \
             ${prefix}/local ${prefix}/local/bin ${prefix}/local/games \
