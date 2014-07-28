@@ -72,7 +72,7 @@ do_install () {
 		install -m 1777 -d ${D}$d
 	done
 	for d in ${dirs2775}; do
-		install -m 2755 -d ${D}$d
+		install -m 2775 -d ${D}$d
 	done
 	for d in ${volatiles}; do
 		ln -sf volatile/$d ${D}${localstatedir}/$d
