@@ -284,7 +284,7 @@ done
 
 # find out all perl scripts in $native_sysroot and modify them replacing the
 # host perl with SDK perl.
-for perl_script in $($SUDO_EXEC grep "^#!.*perl" -rl $native_sysroot); do
+for perl_script in $($SUDO_EXEC find $native_sysroot -type f -exec grep "^#!.*perl" -l '{}' \;); do
 	$SUDO_EXEC sed -i -e "s:^#! */usr/bin/perl.*:#! /usr/bin/env perl:g" -e \
 		"s: /usr/bin/perl: /usr/bin/env perl:g" $perl_script
 done
