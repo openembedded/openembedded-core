@@ -1,7 +1,7 @@
 
 #NOISO = "1"
 
-SYSLINUX_ROOT = "root=/dev/hda2 "
+SYSLINUX_ROOT ?= "root=/dev/sda2"
 SYSLINUX_PROMPT ?= "0"
 SYSLINUX_TIMEOUT ?= "10"
 SYSLINUX_LABELS = "boot"
