@@ -721,6 +721,13 @@ DESCRIPTION
              btrfs
              swap
 
+         --fsoptions: Specifies a free-form string of options to be
+                      used when mounting the filesystem. This string
+                      will be copied into the /etc/fstab file of the
+                      installed system and should be enclosed in
+                      quotes.  If not specified, the default string is
+                      "defaults".
+
          --label label: Specifies the label to give to the filesystem
                         to be made on the partition. If the given
                         label is already in use by another filesystem,
