@@ -18,7 +18,7 @@
 # an hdd)
 
 # External variables (also used by syslinux.bbclass)
-# ${INITRD} - indicates a filesystem image to use as an initrd (optional)
+# ${INITRD} - indicates a list of filesystem images to concatenate and use as an initrd (optional)
 # ${COMPRESSISO} - Transparent compress ISO, reduce size ~40% if set to 1
 # ${NOISO}  - skip building the ISO image if set to 1
 # ${NOHDD}  - skip building the HDD image if set to 1
@@ -67,9 +67,17 @@ populate() {
 
 	# Install bzImage, initrd, and rootfs.img in DEST for all loaders to use.
 	install -m 0644 ${STAGING_KERNEL_DIR}/bzImage ${DEST}/vmlinuz
-
-	if [ -n "${INITRD}" ] && [ -s "${INITRD}" ]; then
-		install -m 0644 ${INITRD} ${DEST}/initrd
+	
+	# initrd is made of concatenation of multiple filesystem images
+	if [ -n "${INITRD}" ]; then
+		rm -f ${DEST}/initrd
+		for fs in ${INITRD}
+		do
+			if [ -s "${fs}" ]; then
+				cat ${fs} >> ${DEST}/initrd
+			fi
+		done
+		chmod 0644 ${DEST}/initrd
 	fi
 
 	if [ -n "${ROOTFS}" ] && [ -s "${ROOTFS}" ]; then
@@ -80,10 +88,19 @@ populate() {
 
 build_iso() {
 	# Only create an ISO if we have an INITRD and NOISO was not set
-	if [ -z "${INITRD}" ] || [ ! -s "${INITRD}" ] || [ "${NOISO}" = "1" ]; then
+	if [ -z "${INITRD}" ] || [ "${NOISO}" = "1" ]; then
 		bbnote "ISO image will not be created."
 		return
 	fi
+	# ${INITRD} is a list of multiple filesystem images
+	for fs in ${INITRD}
+	do
+		if [ ! -s "${fs}" ]; then
+			bbnote "ISO image will not be created. ${fs} is invalid."
+			return
+		fi
+	done
+
 
 	populate ${ISODIR}
 

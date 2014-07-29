@@ -5,7 +5,7 @@
 # Provide syslinux specific functions for building bootable images.
 
 # External variables
-# ${INITRD} - indicates a filesystem image to use as an initrd (optional)
+# ${INITRD} - indicates a list of filesystem images to concatenate and use as an initrd (optional)
 # ${ROOTFS} - indicates a filesystem image to include as the root filesystem (optional)
 # ${AUTO_SYSLINUXMENU} - set this to 1 to enable creating an automatic menu
 # ${LABELS} - a list of targets for the automatic config
