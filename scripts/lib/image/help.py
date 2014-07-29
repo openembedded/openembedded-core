@@ -443,8 +443,8 @@ DESCRIPTION
     artifacts, the result is an image or set of images that can be
     directly written onto media and used on a particular system.
 
-    The 'wic' command and the infrastructure it's based is by
-    definition incomplete - it's designed to allow the generation of
+    The 'wic' command and the infrastructure it's based on is by
+    definition incomplete - its purpose is to allow the generation of
     customized images, and as such was designed to be completely
     extensible via a plugin interface (see 'wic help plugins').
 
@@ -705,7 +705,7 @@ DESCRIPTION
                    wic command-line option (or the equivalent rootfs
                    derived from the '-e' command-line option).
                    Exactly what those contents and filesystem type end
-                   up being are depend on the given plugin
+                   up being are dependent on the given plugin
                    implementation.
 
          --ondisk or --ondrive: Forces the partition to be created on
