@@ -719,6 +719,7 @@ DESCRIPTION
              ext3
              ext4
              btrfs
+             squashfs
              swap
 
          --fsoptions: Specifies a free-form string of options to be
