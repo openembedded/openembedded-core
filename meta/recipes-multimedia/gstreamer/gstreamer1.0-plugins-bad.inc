@@ -11,16 +11,16 @@ inherit gettext
 
 PACKAGECONFIG ??= " \
     ${@bb.utils.contains('DISTRO_FEATURES', 'wayland', 'wayland', '', d)} \
-    ${@bb.utils.contains('DISTRO_FEATURES', 'opengl', 'eglgles', '', d)} \
+    ${@bb.utils.contains('DISTRO_FEATURES', 'opengl', 'gl', '', d)} \
     ${@bb.utils.contains('DISTRO_FEATURES', 'bluetooth', 'bluez', '', d)} \
     ${@bb.utils.contains('DISTRO_FEATURES', 'directfb', 'directfb', '', d)} \
-    orc curl uvch264 neon \
+    orc curl uvch264 neon sndfile \
     hls sbc dash bz2 smoothstreaming \
     "
 # dash = Dynamic Adaptive Streaming over HTTP
 PACKAGECONFIG[assrender]       = "--enable-assrender,--disable-assrender,libass"
 PACKAGECONFIG[curl]            = "--enable-curl,--disable-curl,curl"
-PACKAGECONFIG[eglgles]         = "--enable-eglgles,--disable-eglgles,virtual/egl virtual/libgles2"
+PACKAGECONFIG[gl]              = "--enable-gl,--disable-gl,virtual/egl virtual/libgles2"
 PACKAGECONFIG[faac]            = "--enable-faac,--disable-faac,faac"
 PACKAGECONFIG[faad]            = "--enable-faad,--disable-faad,faad2"
 PACKAGECONFIG[libmms]          = "--enable-libmms,--disable-libmms,libmms"
@@ -43,18 +43,25 @@ PACKAGECONFIG[schroedinger]    = "--enable-schro,--disable-schro,schroedinger"
 PACKAGECONFIG[smoothstreaming] = "--enable-smoothstreaming,--disable-smoothstreaming,libxml2"
 PACKAGECONFIG[bluez]           = "--enable-bluez,--disable-bluez,bluez4"
 PACKAGECONFIG[rsvg]            = "--enable-rsvg,--disable-rsvg,librsvg"
+PACKAGECONFIG[sndfile]         = "--enable-sndfile,--disable-sndfile,libsndfile1"
+PACKAGECONFIG[webp]            = "--enable-webp,--disable-webp,libwebp"
 
 # these plugins have not been ported to 1.0 (yet):
-#   directdraw vcd apexsink cdaudio dc1394 lv2 linsys musepack mythtv
-#   nas timidity teletextdec sdl sndfile xvid wininet acm gsettings
-#   sndio cdxaparse dccp faceoverlay hdvparse ivfparse jp2kdecimator
-#   linsys mve nuvdemux osx_video patchdetect quicktime real sdi stereo
-#   tta videomeasure videosignal vmnc
+#   directdraw vcd apexsink dc1394 lv2 linsys musepack mythtv
+#   nas timidity teletextdec sdl xvid wininet acm gsettings
+#   sndio qtwrapper cdxaparse dccp faceoverlay hdvparse tta
+#   mve nuvdemux osx_video patchdetect quicktime real sdi
+#   videomeasure gsettings
+
+# these plugins have no corresponding library in OE-core or meta-openembedded:
+#   openni2 winks direct3d directdraw directsound winscreencap osx_video
+#   apple_media android_media avc chromaprint daala dts gme gsm kate ladspa mimic
+#   mpeg2enc mplex ofa openjpeg opensles pvr resindvd rtmp soundtouch spandsp spc
+#   srtp vdpau voaacenc voamrwbenc wasapi zbar
 
 EXTRA_OECONF += " \
     --enable-dvb \
     --enable-shm \
-    --enable-mfc \
     --enable-fbdev \
     --enable-decklink \
     --disable-acm \
@@ -62,13 +69,11 @@ EXTRA_OECONF += " \
     --disable-apexsink \
     --disable-apple_media \
     --disable-avc \
-    --disable-cdaudio \
     --disable-chromaprint \
     --disable-daala \
     --disable-dc1394 \
     --disable-direct3d \
     --disable-directdraw \
-    --disable-directshow \
     --disable-directsound \
     --disable-dts \
     --disable-gme \
@@ -94,7 +99,6 @@ EXTRA_OECONF += " \
     --disable-rtmp \
     --disable-sdl \
     --disable-sdltest \
-    --disable-sndfile \
     --disable-sndio \
     --disable-soundtouch \
     --disable-spandsp \
@@ -107,7 +111,6 @@ EXTRA_OECONF += " \
     --disable-voaacenc \
     --disable-voamrwbenc \
     --disable-wasapi \
-    --disable-webp \
     --disable-wildmidi \
     --disable-wininet \
     --disable-winscreencap \
