@@ -24,7 +24,7 @@ index aa76f91..63fbb35 100644
 +    opts.check_args_of_option("edit", 0)
 +    opts.check_args_of_option("enable", -1)
 +    opts.check_args_of_option("disable", -1)
-+    opts.ensure_action("channel", ["add", "set", "remove", "remove-all",
++    opts.ensure_action("channel", ["add", "set", "remove", "remove_all",
 +                       "list", "show", "yaml", "enable", "disable"])
 +    opts.check_remaining_args()
 +
