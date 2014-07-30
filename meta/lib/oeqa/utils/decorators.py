@@ -6,6 +6,7 @@
 # Most useful is skipUnlessPassed which can be used for
 # creating dependecies between two test methods.
 
+import os
 import logging
 import sys
 import unittest
