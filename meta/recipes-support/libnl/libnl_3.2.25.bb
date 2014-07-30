@@ -12,10 +12,10 @@ DEPENDS = "flex-native bison-native"
 SRC_URI = "http://www.infradead.org/~tgr/${BPN}/files/${BP}.tar.gz \
            file://fix-pktloc_syntax_h-race.patch \
            file://fix-pc-file.patch \
-           file://fix-lib-cache_mngr.c-two-parentheses-bugs.patch \
           "
-SRC_URI[md5sum] = "6e0e7bad0674749d930dd9f285343d55"
-SRC_URI[sha256sum] = "fb8d6e5dc8af5b85bc6d00a71582a68a01e6a3f7d1664d4a646e289a99dd6816"
+
+SRC_URI[md5sum] = "03f74d0cd5037cadc8cdfa313bbd195c"
+SRC_URI[sha256sum] = "8beb7590674957b931de6b7f81c530b85dc7c1ad8fbda015398bc1e8d1ce8ec5"
 
 inherit autotools-brokensep pkgconfig
 
