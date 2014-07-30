@@ -46,3 +46,7 @@ ${datadir}/alsa/pcm/dmix.conf \
 ${datadir}/alsa/pcm/dsnoop.conf"
 
 RDEPENDS_libasound = "alsa-conf-base"
+# upgrade path
+RPROVIDES_${PN}-dev = "alsa-dev"
+RREPLACES_${PN}-dev = "alsa-dev"
+RCONFLICTS_${PN}-dev = "alsa-dev"
