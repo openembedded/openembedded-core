@@ -2,11 +2,11 @@ require gcc-common.inc
 
 # Third digit in PV should be incremented after a minor release
 
-PV = "4.9.0"
+PV = "4.9.1"
 
 # BINV should be incremented to a revision after a minor gcc release
 
-BINV = "4.9.0"
+BINV = "4.9.1"
 
 FILESEXTRAPATHS =. "${FILE_DIRNAME}/gcc-4.9:"
 
@@ -65,12 +65,11 @@ SRC_URI = "${GNU_MIRROR}/gcc/gcc-${PV}/gcc-${PV}.tar.bz2 \
 	   file://0049-Enable-SPE-AltiVec-generation-on-powepc-linux-target.patch \
 	   file://0050-Revert-Use-dbx_reg_number-for-spanning-registers.patch \
            file://0051-eabispe.patch \
-           file://0052-Fix-GCC-targeting-E500-SPE-errors-with-the-_Decimal64-type.patch \
            file://0053-gcc-fix-segfault-from-calling-free-on-non-malloc-d-a.patch \
            file://0054-gcc-Makefile.in-fix-parallel-building-failure.patch \
 	  "
-SRC_URI[md5sum] = "9709b49ae0e904cbb0a6a1b62853b556"
-SRC_URI[sha256sum] = "b9b047a97bade9c1c89970bc8e211ff57b7b8998a1730a80a653d329f8ed1257"
+SRC_URI[md5sum] = "fddf71348546af523353bd43d34919c1"
+SRC_URI[sha256sum] = "d334781a124ada6f38e63b545e2a3b8c2183049515a1abab6d513f109f1d717e"
 
 S = "${TMPDIR}/work-shared/gcc-${PV}-${PR}/gcc-${PV}"
 B = "${WORKDIR}/gcc-${PV}/build.${HOST_SYS}.${TARGET_SYS}"
