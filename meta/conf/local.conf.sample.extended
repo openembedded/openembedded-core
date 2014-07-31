@@ -145,6 +145,13 @@
 #MULTILIBS = "multilib:lib32"
 #DEFAULTTUNE_virtclass-multilib-lib32 = "x86"
 
+# Set RPM_PREFER_COLOR to configure preferred ABI when using rpm packaging
+# backend to generate a rootfs, choices are:
+# 1: ELF32 wins
+# 2: ELF64 wins
+# 3: ELF64 N32 wins (for mips64 or mips64el only)
+#RPM_PREFER_COLOR ?= "2"
+
 # The network based PR service host and port
 # Uncomment the following lines to enable PRservice.
 # Set PRSERV_HOST to 'localhost:0' to automatically
