@@ -821,6 +821,22 @@ class RpmPM(PackageManager):
         self._invoke_smart('config --set rpm-extra-macros._var=%s' %
                            self.d.getVar('localstatedir', True))
         cmd = 'config --set rpm-extra-macros._tmppath=/install/tmp'
+
+        prefer_color = self.d.getVar('RPM_PREFER_COLOR', True)
+        if prefer_color:
+            if prefer_color not in ['0', '1', '2', '3']:
+                bb.fatal("Invalid RPM_PREFER_COLOR: %s, it should be one of:\n"
+                        "\t1: ELF32 wins\n"
+                        "\t2: ELF64 wins\n"
+                        "\t3: ELF64 N32 wins (mips64 or mips64el only)" %
+                        prefer_color)
+            if prefer_color == "3" and self.d.getVar("TUNE_ARCH", True) not in \
+                                    ['mips64', 'mips64el']:
+                bb.fatal("RPM_PREFER_COLOR = \"3\" is for mips64 or mips64el "
+                         "only.")
+            self._invoke_smart('config --set rpm-extra-macros._prefer_color=%s'
+                        % prefer_color)
+
         self._invoke_smart(cmd)
 
         # Write common configuration for host and target usage
