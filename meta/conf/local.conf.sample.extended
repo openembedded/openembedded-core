@@ -282,7 +282,7 @@
 #useradd -p '' tester; \
 #groupadd developers; \
 #userdel nobody; \
-#groupdel -g video; \
+#groupdel video; \
 #groupmod -g 1020 developers; \
 #usermod -s /bin/sh tester; \
 #"
