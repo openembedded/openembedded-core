@@ -26,6 +26,9 @@ for device in `ls /sys/block/`; do
 	loop*)
             # skip loop device
 	    ;;
+	sr*)
+            # skip CDROM device
+	    ;;
 	ram*)
             # skip ram device
 	    ;;
