@@ -1,3 +1,3 @@
 DEFAULTTUNE ?= "mips64"
 
-require conf/machine/include/mips/arch-mips.inc
+require conf/machine/include/tune-mips32r2.inc
