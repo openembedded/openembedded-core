@@ -87,17 +87,54 @@ def raise_sanity_error(msg, d, network_error=False):
     
     %s""" % msg)
 
+# Check flags associated with a tuning.
+def check_toolchain_tune_args(data, tune, multilib, errs):
+    found_errors = False
+    if check_toolchain_args_present(data, tune, multilib, errs, 'CCARGS'):
+        found_errors = True
+    if check_toolchain_args_present(data, tune, multilib, errs, 'ASARGS'):
+        found_errors = True
+    if check_toolchain_args_present(data, tune, multilib, errs, 'LDARGS'):
+        found_errors = True
+
+    return found_errors
+
+def check_toolchain_args_present(data, tune, multilib, tune_errors, which):
+    args_set = (data.getVar("TUNE_%s" % which, True) or "").split()
+    args_wanted = (data.getVar("TUNEABI_REQUIRED_%s_tune-%s" % (which, tune), True) or "").split()
+    args_missing = []
+
+    # If no args are listed/required, we are done.
+    if not args_wanted:
+        return
+    for arg in args_wanted:
+        if arg not in args_set:
+            args_missing.append(arg)
+
+    found_errors = False
+    if args_missing:
+        found_errors = True
+        tune_errors.append("TUNEABI for %s requires '%s' in TUNE_%s (%s)." %
+                       (tune, ' '.join(args_missing), which, ' '.join(args_set)))
+    return found_errors
+
 # Check a single tune for validity.
 def check_toolchain_tune(data, tune, multilib):
     tune_errors = []
     if not tune:
         return "No tuning found for %s multilib." % multilib
+    localdata = bb.data.createCopy(data)
+    if multilib != "default":
+        # Apply the overrides so we can look at the details.
+        overrides = localdata.getVar("OVERRIDES", False) + ":virtclass-multilib-" + multilib
+        localdata.setVar("OVERRIDES", overrides)
+    bb.data.update_data(localdata)
     bb.debug(2, "Sanity-checking tuning '%s' (%s) features:" % (tune, multilib))
-    features = (data.getVar("TUNE_FEATURES_tune-%s" % tune, True) or "").split()
+    features = (localdata.getVar("TUNE_FEATURES_tune-%s" % tune, True) or "").split()
     if not features:
         return "Tuning '%s' has no defined features, and cannot be used." % tune
-    valid_tunes = data.getVarFlags('TUNEVALID') or {}
-    conflicts = data.getVarFlags('TUNECONFLICTS') or {}
+    valid_tunes = localdata.getVarFlags('TUNEVALID') or {}
+    conflicts = localdata.getVarFlags('TUNECONFLICTS') or {}
     # [doc] is the documentation for the variable, not a real feature
     if 'doc' in valid_tunes:
         del valid_tunes['doc']
@@ -113,15 +150,18 @@ def check_toolchain_tune(data, tune, multilib):
             bb.debug(2, "  %s: %s" % (feature, valid_tunes[feature]))
         else:
             tune_errors.append("Feature '%s' is not defined." % feature)
-    whitelist = data.getVar("TUNEABI_WHITELIST", True) or ''
-    override = data.getVar("TUNEABI_OVERRIDE", True) or ''
+    whitelist = localdata.getVar("TUNEABI_WHITELIST", True) or ''
+    override = localdata.getVar("TUNEABI_OVERRIDE", True) or ''
     if whitelist:
-        tuneabi = data.getVar("TUNEABI_tune-%s" % tune, True) or ''
+        tuneabi = localdata.getVar("TUNEABI_tune-%s" % tune, True) or ''
         if not tuneabi:
             tuneabi = tune
         if True not in [x in whitelist.split() for x in tuneabi.split()]:
             tune_errors.append("Tuning '%s' (%s) cannot be used with any supported tuning/ABI." %
                 (tune, tuneabi))
+        else:
+            if not check_toolchain_tune_args(localdata, tuneabi, multilib, tune_errors):
+                bb.debug(2, "Sanity check: Compiler args OK for %s." % tune)
     if tune_errors:
         return "Tuning '%s' has the following errors:\n" % tune + '\n'.join(tune_errors)
 
