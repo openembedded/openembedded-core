@@ -161,7 +161,7 @@ class Wic_PartData(Mic_PartData):
         """
         rootfs = oe_builddir
         du_cmd = "du -Lbms %s" % rootfs
-        rc, out = exec_cmd(du_cmd)
+        out = exec_cmd(du_cmd)
         rootfs_size = out.split()[0]
 
         self.size = rootfs_size
@@ -209,7 +209,7 @@ class Wic_PartData(Mic_PartData):
         rootfs = "%s/rootfs_%s.%s" % (cr_workdir, self.label ,self.fstype)
 
         du_cmd = "du -ks %s" % image_rootfs
-        rc, out = exec_cmd(du_cmd)
+        out = exec_cmd(du_cmd)
         actual_rootfs_size = int(out.split()[0])
 
         extra_blocks = self.get_extra_block_count(actual_rootfs_size)
@@ -224,18 +224,18 @@ class Wic_PartData(Mic_PartData):
 
         dd_cmd = "dd if=/dev/zero of=%s bs=1024 seek=%d count=0 bs=1k" % \
             (rootfs, rootfs_size)
-        rc, out = exec_cmd(dd_cmd)
+        exec_cmd(dd_cmd)
 
         extra_imagecmd = "-i 8192"
 
         mkfs_cmd = "mkfs.%s -F %s %s -d %s" % \
             (self.fstype, extra_imagecmd, rootfs, image_rootfs)
-        rc, out = exec_native_cmd(pseudo + mkfs_cmd, native_sysroot)
+        exec_native_cmd(pseudo + mkfs_cmd, native_sysroot)
 
 
         # get the rootfs size in the right units for kickstart (Mb)
         du_cmd = "du -Lbms %s" % rootfs
-        rc, out = exec_cmd(du_cmd)
+        out = exec_cmd(du_cmd)
         rootfs_size = out.split()[0]
 
         self.size = rootfs_size
@@ -254,7 +254,7 @@ class Wic_PartData(Mic_PartData):
         rootfs = "%s/rootfs_%s.%s" % (cr_workdir, self.label, self.fstype)
 
         du_cmd = "du -ks %s" % image_rootfs
-        rc, out = exec_cmd(du_cmd)
+        out = exec_cmd(du_cmd)
         actual_rootfs_size = int(out.split()[0])
 
         extra_blocks = self.get_extra_block_count(actual_rootfs_size)
@@ -269,15 +269,15 @@ class Wic_PartData(Mic_PartData):
 
         dd_cmd = "dd if=/dev/zero of=%s bs=1024 seek=%d count=0 bs=1k" % \
             (rootfs, rootfs_size)
-        rc, out = exec_cmd(dd_cmd)
+        exec_cmd(dd_cmd)
 
         mkfs_cmd = "mkfs.%s -b %d -r %s %s" % \
             (self.fstype, rootfs_size * 1024, image_rootfs, rootfs)
-        rc, out = exec_native_cmd(pseudo + mkfs_cmd, native_sysroot)
+        exec_native_cmd(pseudo + mkfs_cmd, native_sysroot)
 
         # get the rootfs size in the right units for kickstart (Mb)
         du_cmd = "du -Lbms %s" % rootfs
-        rc, out = exec_cmd(du_cmd)
+        out = exec_cmd(du_cmd)
         rootfs_size = out.split()[0]
 
         self.size = rootfs_size
@@ -292,7 +292,7 @@ class Wic_PartData(Mic_PartData):
         rootfs = "%s/rootfs_%s.%s" % (cr_workdir, self.label, self.fstype)
 
         du_cmd = "du -bks %s" % image_rootfs
-        rc, out = exec_cmd(du_cmd)
+        out = exec_cmd(du_cmd)
         blocks = int(out.split()[0])
 
         extra_blocks = self.get_extra_block_count(blocks)
@@ -324,7 +324,7 @@ class Wic_PartData(Mic_PartData):
 
         # get the rootfs size in the right units for kickstart (Mb)
         du_cmd = "du -Lbms %s" % rootfs
-        rc, out = exec_cmd(du_cmd)
+        out = exec_cmd(du_cmd)
         rootfs_size = out.split()[0]
 
         self.set_size(rootfs_size)
@@ -340,11 +340,11 @@ class Wic_PartData(Mic_PartData):
 
         squashfs_cmd = "mksquashfs %s %s -noappend" % \
                        (image_rootfs, rootfs)
-        rc, out = exec_native_cmd(pseudo + squashfs_cmd, native_sysroot)
+        exec_native_cmd(pseudo + squashfs_cmd, native_sysroot)
 
         # get the rootfs size in the right units for kickstart (Mb)
         du_cmd = "du -Lbms %s" % rootfs
-        rc, out = exec_cmd(du_cmd)
+        out = exec_cmd(du_cmd)
         rootfs_size = out.split()[0]
 
         self.size = rootfs_size
@@ -378,12 +378,12 @@ class Wic_PartData(Mic_PartData):
 
         dd_cmd = "dd if=/dev/zero of=%s bs=1M seek=%d count=0" % \
             (fs, self.size)
-        rc, out = exec_cmd(dd_cmd)
+        exec_cmd(dd_cmd)
 
         extra_imagecmd = "-i 8192"
 
         mkfs_cmd = "mkfs.%s -F %s %s" % (self.fstype, extra_imagecmd, fs)
-        rc, out = exec_native_cmd(mkfs_cmd, native_sysroot)
+        exec_native_cmd(mkfs_cmd, native_sysroot)
 
         self.source_file = fs
 
@@ -398,13 +398,13 @@ class Wic_PartData(Mic_PartData):
 
         dd_cmd = "dd if=/dev/zero of=%s bs=1M seek=%d count=0" % \
             (fs, self.size)
-        rc, out = exec_cmd(dd_cmd)
+        exec_cmd(dd_cmd)
 
         mkfs_cmd = "mkfs.%s -b %d %s" % (self.fstype, self.size * 1024, rootfs)
-        rc, out = exec_native_cmd(mkfs_cmd, native_sysroot)
+        exec_native_cmd(mkfs_cmd, native_sysroot)
 
         mkfs_cmd = "mkfs.%s -F %s %s" % (self.fstype, extra_imagecmd, fs)
-        rc, out = exec_native_cmd(mkfs_cmd, native_sysroot)
+        exec_native_cmd(mkfs_cmd, native_sysroot)
 
         self.source_file = fs
 
@@ -445,13 +445,13 @@ class Wic_PartData(Mic_PartData):
 
         squashfs_cmd = "mksquashfs %s %s -noappend" % \
                        (tmpdir, fs)
-        rc, out = exec_native_cmd(squashfs_cmd, native_sysroot)
+        exec_native_cmd(squashfs_cmd, native_sysroot)
 
         os.rmdir(tmpdir)
 
         # get the rootfs size in the right units for kickstart (Mb)
         du_cmd = "du -Lbms %s" % fs
-        rc, out = exec_cmd(du_cmd)
+        out = exec_cmd(du_cmd)
         fs_size = out.split()[0]
 
         self.size = fs_size
@@ -467,14 +467,14 @@ class Wic_PartData(Mic_PartData):
 
         dd_cmd = "dd if=/dev/zero of=%s bs=1M seek=%d count=0" % \
             (fs, self.size)
-        rc, out = exec_cmd(dd_cmd)
+        exec_cmd(dd_cmd)
 
         import uuid
         label_str = ""
         if self.label:
             label_str = "-L %s" % self.label
         mkswap_cmd = "mkswap %s -U %s %s" % (label_str, str(uuid.uuid1()), fs)
-        rc, out = exec_native_cmd(mkswap_cmd, native_sysroot)
+        exec_native_cmd(mkswap_cmd, native_sysroot)
 
         self.source_file = fs
 

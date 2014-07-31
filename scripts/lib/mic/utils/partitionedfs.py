@@ -744,7 +744,7 @@ class PartitionedMount(Mount):
 
         dd_cmd = "dd if=%s of=%s bs=%d seek=%d count=%d conv=notrunc" % \
             (source_file, self.image_file, self.sector_size, start, size)
-        rc, out = exec_cmd(dd_cmd)
+        exec_cmd(dd_cmd)
 
 
     def install(self, image_file):

@@ -306,7 +306,7 @@ class DiskImage(Disk):
         # create disk image
         dd_cmd = "dd if=/dev/zero of=%s bs=1024 seek=%d count=1" % \
             (self.image_file, blocks)
-        rc, out = exec_cmd(dd_cmd)
+        exec_cmd(dd_cmd)
 
         self.device = self.image_file
 

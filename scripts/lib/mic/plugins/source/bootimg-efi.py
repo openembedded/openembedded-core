@@ -53,7 +53,7 @@ class BootimgEFIPlugin(SourcePlugin):
         exec_cmd(rm_cmd)
 
         install_cmd = "install -d %s/EFI/BOOT" % hdddir
-        tmp = exec_cmd(install_cmd)
+        exec_cmd(install_cmd)
 
         splash = os.path.join(cr_workdir, "/EFI/boot/splash.jpg")
         if os.path.exists(splash):
@@ -116,7 +116,7 @@ class BootimgEFIPlugin(SourcePlugin):
 
         install_cmd = "install -m 0644 %s/bzImage %s/bzImage" % \
             (staging_kernel_dir, hdddir)
-        tmp = exec_cmd(install_cmd)
+        exec_cmd(install_cmd)
 
         shutil.copyfile("%s/hdd/boot/EFI/BOOT/grub.cfg" % cr_workdir,
                         "%s/grub.cfg" % cr_workdir)
@@ -128,7 +128,7 @@ class BootimgEFIPlugin(SourcePlugin):
                     "%s/hdd/boot/EFI/BOOT/grub.cfg" % cr_workdir)
 
         du_cmd = "du -bks %s" % hdddir
-        rc, out = exec_cmd(du_cmd)
+        out = exec_cmd(du_cmd)
         blocks = int(out.split()[0])
 
         extra_blocks = part.get_extra_block_count(blocks)
@@ -160,7 +160,7 @@ class BootimgEFIPlugin(SourcePlugin):
         exec_cmd(chmod_cmd)
 
         du_cmd = "du -Lbms %s" % bootimg
-        rc, out = exec_cmd(du_cmd)
+        out = exec_cmd(du_cmd)
         bootimg_size = out.split()[0]
 
         part.set_size(bootimg_size)

@@ -28,13 +28,13 @@
 from mic import msger
 from mic.utils import runner
 
-def exec_cmd(cmd_and_args, as_shell = False, catch = 3):
+def __exec_cmd(cmd_and_args, as_shell = False, catch = 3):
     """
     Execute command, catching stderr, stdout
 
     Need to execute as_shell if the command uses wildcards
     """
-    msger.debug("exec_cmd: %s" % cmd_and_args)
+    msger.debug("__exec_cmd: %s" % cmd_and_args)
     args = cmd_and_args.split()
     msger.debug(args)
 
@@ -43,24 +43,31 @@ def exec_cmd(cmd_and_args, as_shell = False, catch = 3):
     else:
         rc, out = runner.runtool(args, catch)
     out = out.strip()
-    msger.debug("exec_cmd: output for %s (rc = %d): %s" % \
-                    (cmd_and_args, rc, out))
-
-    if rc != 0:
-        # We don't throw exception when return code is not 0, because
-        # parted always fails to reload part table with loop devices. This
-        # prevents us from distinguishing real errors based on return
-        # code.
-        msger.warning("WARNING: %s returned '%s' instead of 0" % (cmd_and_args, rc))
+    msger.debug("__exec_cmd: output for %s (rc = %d): %s" % \
+                (cmd_and_args, rc, out))
 
     return (rc, out)
+
+
+def exec_cmd(cmd_and_args, as_shell = False, catch = 3):
+    """
+    Execute command, catching stderr, stdout
+
+    Exits if rc non-zero
+    """
+    rc, out = __exec_cmd(cmd_and_args, as_shell, catch)
+
+    if rc != 0:
+        msger.error("exec_cmd: %s returned '%s' instead of 0" % (cmd_and_args, rc))
+
+    return out
 
 
 def exec_cmd_quiet(cmd_and_args, as_shell = False):
     """
     Execute command, catching nothing in the output
 
-    Need to execute as_shell if the command uses wildcards
+    Exits if rc non-zero
     """
     return exec_cmd(cmd_and_args, as_shell, 0)
 
@@ -82,7 +89,7 @@ def exec_native_cmd(cmd_and_args, native_sysroot, catch = 3):
     args = cmd_and_args.split()
     msger.debug(args)
 
-    rc, out = exec_cmd(native_cmd_and_args, True, catch)
+    rc, out = __exec_cmd(native_cmd_and_args, True, catch)
 
     if rc == 127: # shell command-not-found
         msger.error("A native (host) program required to build the image "
@@ -135,7 +142,7 @@ def find_bitbake_env_lines(image_name):
         bitbake_env_cmd = "bitbake -e %s" % image_name
     else:
         bitbake_env_cmd = "bitbake -e"
-    rc, bitbake_env_lines = exec_cmd(bitbake_env_cmd)
+    rc, bitbake_env_lines = __exec_cmd(bitbake_env_cmd)
     if rc != 0:
         print "Couldn't get '%s' output." % bitbake_env_cmd
         return None

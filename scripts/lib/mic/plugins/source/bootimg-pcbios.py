@@ -78,7 +78,7 @@ class BootimgPcbiosPlugin(SourcePlugin):
         exec_cmd(rm_cmd)
 
         install_cmd = "install -d %s" % hdddir
-        tmp = exec_cmd(install_cmd)
+        exec_cmd(install_cmd)
 
         splash = os.path.join(cr_workdir, "/hdd/boot/splash.jpg")
         if os.path.exists(splash):
@@ -144,14 +144,14 @@ class BootimgPcbiosPlugin(SourcePlugin):
 
         install_cmd = "install -m 0644 %s/bzImage %s/vmlinuz" \
             % (staging_kernel_dir, hdddir)
-        tmp = exec_cmd(install_cmd)
+        exec_cmd(install_cmd)
 
         install_cmd = "install -m 444 %s/syslinux/ldlinux.sys %s/ldlinux.sys" \
             % (staging_data_dir, hdddir)
-        tmp = exec_cmd(install_cmd)
+        exec_cmd(install_cmd)
 
         du_cmd = "du -bks %s" % hdddir
-        rc, out = exec_cmd(du_cmd)
+        out = exec_cmd(du_cmd)
         blocks = int(out.split()[0])
 
         extra_blocks = part.get_extra_block_count(blocks)
@@ -186,7 +186,7 @@ class BootimgPcbiosPlugin(SourcePlugin):
         exec_cmd(chmod_cmd)
 
         du_cmd = "du -Lbms %s" % bootimg
-        rc, out = exec_cmd(du_cmd)
+        out = exec_cmd(du_cmd)
         bootimg_size = out.split()[0]
 
         part.set_size(bootimg_size)
