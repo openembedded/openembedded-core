@@ -26,6 +26,10 @@ if [ -d /etc/profile.d ]; then
   unset i
 fi
 
+if [ -x /usr/bin/resize ];then
+  /usr/bin/resize >/dev/null
+fi
+
 export PATH PS1 OPIEDIR QPEDIR QTDIR EDITOR TERM
 
 umask 022

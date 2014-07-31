@@ -102,6 +102,10 @@ do_install () {
 	install -m 0644 ${WORKDIR}/host.conf ${D}${sysconfdir}/host.conf
 	install -m 0644 ${WORKDIR}/motd ${D}${sysconfdir}/motd
 
+	if [ "/usr/bin" != "${bindir}" ]; then
+		sed -i "s,/usr/bin/resize,${bindir}/resize," ${D}${sysconfdir}/profile
+	fi
+
 	ln -sf /proc/mounts ${D}${sysconfdir}/mtab
 }
 
