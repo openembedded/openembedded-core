@@ -1,11 +1,11 @@
-From ab76f645e29b0a603ff95d88f976bc35ab6301ee Mon Sep 17 00:00:00 2001
+From 453353a221de9c64479f4372565d2cd8591b36cc Mon Sep 17 00:00:00 2001
 From: Frank Binns <frank.binns@imgtec.com>
 Date: Fri, 29 Jun 2012 11:26:04 +0100
-Subject: [PATCH 1/2] mesa-demos: Fix build when EGL_MESA_screen_surface
- extension isn't present
+Subject: [PATCH 5/9] Fix build when EGL_MESA_screen_surface extension isn't
+ present
 
-The EGL demos won't build against EGL implementations that don't support 
-the EGL_MESA_screen_surface extension. Fix this, in most cases, by 
+The EGL demos won't build against EGL implementations that don't support
+the EGL_MESA_screen_surface extension. Fix this, in most cases, by
 wrapping relevant bits of code in #ifdef EGL_MESA_screen_surface.
 
 Signed-off-by: Frank Binns <frank.binns@imgtec.com>
@@ -15,12 +15,19 @@ Applied and fixed up in Yocto by...
 Integrated-by: Tom Zanussi <tom.zanussi@linux.intel.com>
 
 Upstream-Status: Pending
+---
+ src/egl/eglut/eglut.c        |  9 +++++++--
+ src/egl/eglut/eglut_screen.c | 14 ++++++++++++++
+ src/egl/opengl/demo1.c       |  2 ++
+ src/egl/opengl/demo2.c       |  7 ++++++-
+ src/egl/opengl/demo3.c       |  7 ++++++-
+ 5 files changed, 35 insertions(+), 4 deletions(-)
 
-Index: mesa-demos-8.0.1/src/egl/eglut/eglut.c
-===================================================================
---- mesa-demos-8.0.1.orig/src/egl/eglut/eglut.c
-+++ mesa-demos-8.0.1/src/egl/eglut/eglut.c
-@@ -51,8 +51,9 @@ _eglutNow(void)
+diff --git a/src/egl/eglut/eglut.c b/src/egl/eglut/eglut.c
+index 2ee6f15..f6a2ad4 100644
+--- a/src/egl/eglut/eglut.c
++++ b/src/egl/eglut/eglut.c
+@@ -76,8 +76,9 @@ _eglutNow(void)
  static void
  _eglutDestroyWindow(struct eglut_window *win)
  {
@@ -32,7 +39,7 @@ Index: mesa-demos-8.0.1/src/egl/eglut/eglut.c
        eglDestroySurface(_eglut->dpy, win->surface);
  
     _eglutNativeFiniWindow(win);
-@@ -150,7 +151,9 @@ _eglutCreateWindow(const char *title, in
+@@ -175,7 +176,9 @@ _eglutCreateWindow(const char *title, int x, int y, int w, int h)
              win->config, win->native.u.pixmap, NULL);
        break;
     case EGL_PBUFFER_BIT:
@@ -42,7 +49,7 @@ Index: mesa-demos-8.0.1/src/egl/eglut/eglut.c
        win->surface = win->native.u.surface;
        break;
     default:
-@@ -264,8 +267,10 @@ eglutDestroyWindow(int win)
+@@ -289,8 +292,10 @@ eglutDestroyWindow(int win)
     if (window->index != win)
        return;
  
@@ -53,11 +60,11 @@ Index: mesa-demos-8.0.1/src/egl/eglut/eglut.c
        eglMakeCurrent(_eglut->dpy, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
  
     _eglutDestroyWindow(_eglut->current);
-Index: mesa-demos-8.0.1/src/egl/eglut/eglut_screen.c
-===================================================================
---- mesa-demos-8.0.1.orig/src/egl/eglut/eglut_screen.c
-+++ mesa-demos-8.0.1/src/egl/eglut/eglut_screen.c
-@@ -10,26 +10,33 @@
+diff --git a/src/egl/eglut/eglut_screen.c b/src/egl/eglut/eglut_screen.c
+index 021a8f1..094a4e2 100644
+--- a/src/egl/eglut/eglut_screen.c
++++ b/src/egl/eglut/eglut_screen.c
+@@ -35,26 +35,33 @@
  
  #define MAX_MODES 100
  
@@ -91,7 +98,7 @@ Index: mesa-demos-8.0.1/src/egl/eglut/eglut_screen.c
  static void
  init_kms(void)
  {
-@@ -69,19 +76,23 @@ init_kms(void)
+@@ -94,19 +101,23 @@ init_kms(void)
     kms_width = width;
     kms_height = height;
  }
@@ -115,7 +122,7 @@ Index: mesa-demos-8.0.1/src/egl/eglut/eglut_screen.c
     init_kms();
  
     i = 0;
-@@ -103,14 +114,17 @@ _eglutNativeInitWindow(struct eglut_wind
+@@ -128,14 +139,17 @@ _eglutNativeInitWindow(struct eglut_window *win, const char *title,
  
     win->native.width = kms_width;
     win->native.height = kms_height;
@@ -133,10 +140,10 @@ Index: mesa-demos-8.0.1/src/egl/eglut/eglut_screen.c
  }
  
  void
-Index: mesa-demos-8.0.1/src/egl/opengl/demo1.c
-===================================================================
---- mesa-demos-8.0.1.orig/src/egl/opengl/demo1.c
-+++ mesa-demos-8.0.1/src/egl/opengl/demo1.c
+diff --git a/src/egl/opengl/demo1.c b/src/egl/opengl/demo1.c
+index d892734..3a3564c 100644
+--- a/src/egl/opengl/demo1.c
++++ b/src/egl/opengl/demo1.c
 @@ -18,6 +18,7 @@
  static void
  TestScreens(EGLDisplay dpy)
@@ -153,10 +160,10 @@ Index: mesa-demos-8.0.1/src/egl/opengl/demo1.c
  }
  
  /**
-Index: mesa-demos-8.0.1/src/egl/opengl/demo2.c
-===================================================================
---- mesa-demos-8.0.1.orig/src/egl/opengl/demo2.c
-+++ mesa-demos-8.0.1/src/egl/opengl/demo2.c
+diff --git a/src/egl/opengl/demo2.c b/src/egl/opengl/demo2.c
+index 505b474..bfef59e 100644
+--- a/src/egl/opengl/demo2.c
++++ b/src/egl/opengl/demo2.c
 @@ -16,6 +16,7 @@
  
  /*#define FRONTBUFFER*/
@@ -204,10 +211,10 @@ Index: mesa-demos-8.0.1/src/egl/opengl/demo2.c
  
     return 0;
  }
-Index: mesa-demos-8.0.1/src/egl/opengl/demo3.c
-===================================================================
---- mesa-demos-8.0.1.orig/src/egl/opengl/demo3.c
-+++ mesa-demos-8.0.1/src/egl/opengl/demo3.c
+diff --git a/src/egl/opengl/demo3.c b/src/egl/opengl/demo3.c
+index f84ca23..31b5d8b 100644
+--- a/src/egl/opengl/demo3.c
++++ b/src/egl/opengl/demo3.c
 @@ -46,7 +46,7 @@ GLubyte OpenGL_bits[] = {
     0x3e, 0x00, 0x00, 0xf8, 0x0c, 0x00, 
  };
@@ -217,7 +224,7 @@ Index: mesa-demos-8.0.1/src/egl/opengl/demo3.c
  static void Init(void)
  {
  
-@@ -551,11 +551,13 @@ write_ppm(const char *filename, const GL
+@@ -551,11 +551,13 @@ write_ppm(const char *filename, const GLubyte *buffer, int width, int height)
        fclose(f);
     }
  }
@@ -255,3 +262,6 @@ Index: mesa-demos-8.0.1/src/egl/opengl/demo3.c
  
     return 0;
  }
+-- 
+2.0.0
+

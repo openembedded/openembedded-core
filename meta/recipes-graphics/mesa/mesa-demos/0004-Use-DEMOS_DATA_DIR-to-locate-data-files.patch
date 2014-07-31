@@ -1,24 +1,24 @@
-From bc7fa67d13e8032601df5cf04e15c53a7204dcd7 Mon Sep 17 00:00:00 2001
+From 5e10108d76a59abac21c7e540bcfd2ddaccca2cb Mon Sep 17 00:00:00 2001
 From: Drew Moseley <drew_moseley@mentor.com>
 Date: Fri, 9 May 2014 11:50:24 -0400
-Subject: [PATCH] mesa-demos: Use DEMOS_DATA_DIR to locate data files
+Subject: [PATCH 4/9] Use DEMOS_DATA_DIR to locate data files
 
 Upstream-Status: Submitted [https://bugs.freedesktop.org/show_bug.cgi?id=78496]
 Signed-off-by: Drew Moseley <drew_moseley@mentor.com>
 ---
- src/glsl/bezier.c           |    2 +-
- src/glsl/blinking-teapot.c  |    4 ++--
- src/glsl/brick.c            |    4 ++--
- src/glsl/bump.c             |    6 +++---
- src/glsl/convolutions.c     |    2 +-
- src/glsl/mandelbrot.c       |    4 ++--
- src/glsl/multitex.c         |    4 ++--
- src/glsl/simplex-noise.c    |    2 +-
- src/glsl/skinning.c         |    4 ++--
- src/glsl/texdemo1.c         |    8 ++++----
- src/glsl/toyball.c          |    4 ++--
- src/objviewer/objview.c     |   12 ++++++------
- src/perf/glslstateschange.c |    8 ++++----
+ src/glsl/bezier.c           |  2 +-
+ src/glsl/blinking-teapot.c  |  4 ++--
+ src/glsl/brick.c            |  4 ++--
+ src/glsl/bump.c             |  6 +++---
+ src/glsl/convolutions.c     |  2 +-
+ src/glsl/mandelbrot.c       |  4 ++--
+ src/glsl/multitex.c         |  4 ++--
+ src/glsl/simplex-noise.c    |  2 +-
+ src/glsl/skinning.c         |  4 ++--
+ src/glsl/texdemo1.c         |  8 ++++----
+ src/glsl/toyball.c          |  4 ++--
+ src/objviewer/objview.c     | 12 ++++++------
+ src/perf/glslstateschange.c |  8 ++++----
  13 files changed, 32 insertions(+), 32 deletions(-)
 
 diff --git a/src/glsl/bezier.c b/src/glsl/bezier.c
@@ -230,5 +230,5 @@ index 7422b78..dbf8332 100644
     { "tex1",  1, GL_SAMPLER_2D, { 0, 0, 0, 0 }, -1 },
     { "tex2",  1, GL_SAMPLER_2D, { 1, 0, 0, 0 }, -1 },
 -- 
-1.7.9.5
+2.0.0
 

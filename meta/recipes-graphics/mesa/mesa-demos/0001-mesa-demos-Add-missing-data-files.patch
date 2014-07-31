@@ -1,7 +1,7 @@
-From 87f9a62329d7c5f4d351fbb63a41f2a1935fb2f1 Mon Sep 17 00:00:00 2001
+From b695c3a3fa3f4cd48c13aa26542110de27075518 Mon Sep 17 00:00:00 2001
 From: Drew Moseley <drew_moseley@mentor.com>
 Date: Mon, 12 May 2014 15:22:32 -0400
-Subject: [PATCH] mesa-demos: Add missing data files.
+Subject: [PATCH 1/9] mesa-demos: Add missing data files.
 
 Add some data files that are present in the git repository:
    http://cgit.freedesktop.org/mesa/demos/tree/?id=mesa-demos-8.1.0
@@ -10,20 +10,21 @@ but not in the release tarball
 
 Upstream-Status: Backport
 Signed-off-by: Drew Moseley <drew_moseley@mentor.com>
+Signed-off-by: Martin Jansa <Martin.Jansa@gmail.com>
 ---
- src/fpglsl/depth-read.glsl      |    4 +
- src/fpglsl/infinite-loop.glsl   |    7 +
- src/glsl/CH11-bumpmaptex.frag   |   47 +++++++
- src/glsl/blinking-teapot.frag   |   31 +++++
- src/glsl/blinking-teapot.vert   |   16 +++
- src/glsl/convolution.frag       |   21 +++
- src/glsl/simplex-noise.glsl     |  279 +++++++++++++++++++++++++++++++++++++++
- src/glsl/skinning.vert          |   24 ++++
- src/perf/glslstateschange1.frag |   19 +++
- src/perf/glslstateschange1.vert |   14 ++
- src/perf/glslstateschange2.frag |   17 +++
- src/perf/glslstateschange2.vert |   14 ++
- src/vpglsl/infinite-loop.glsl   |    8 ++
+ src/fpglsl/depth-read.glsl      |   4 +
+ src/fpglsl/infinite-loop.glsl   |   7 +
+ src/glsl/CH11-bumpmaptex.frag   |  47 +++++++
+ src/glsl/blinking-teapot.frag   |  31 +++++
+ src/glsl/blinking-teapot.vert   |  16 +++
+ src/glsl/convolution.frag       |  21 +++
+ src/glsl/simplex-noise.glsl     | 279 ++++++++++++++++++++++++++++++++++++++++
+ src/glsl/skinning.vert          |  24 ++++
+ src/perf/glslstateschange1.frag |  19 +++
+ src/perf/glslstateschange1.vert |  14 ++
+ src/perf/glslstateschange2.frag |  17 +++
+ src/perf/glslstateschange2.vert |  14 ++
+ src/vpglsl/infinite-loop.glsl   |   8 ++
  13 files changed, 501 insertions(+)
  create mode 100644 src/fpglsl/depth-read.glsl
  create mode 100644 src/fpglsl/infinite-loop.glsl
@@ -619,5 +620,5 @@ index 0000000..bc7ae4b
 +   gl_FrontColor = sum;
 +}
 -- 
-1.7.9.5
+2.0.0
 
