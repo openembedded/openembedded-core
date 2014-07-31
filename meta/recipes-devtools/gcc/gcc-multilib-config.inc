@@ -152,7 +152,7 @@ python gcc_multilib_setup() {
     if mlprefix:
         mlindex = 0
         for ml in multilibs:
-            if mlprefix.startswith(ml):
+            if mlprefix == ml + '-':
                 break
             mlindex += 1
 
