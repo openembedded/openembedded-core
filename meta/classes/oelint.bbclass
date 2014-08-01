@@ -64,4 +64,22 @@ python do_lint() {
                     bb.warn("%s: %s doesn't have Signed-off-by" % (pkgname, item))
                 if findKey(path, "Upstream-Status"):
                     bb.warn("%s: %s doesn't have Upstream-Status" % (pkgname, item))
+
+
+    ##############################
+    # Check for ${PN} or ${P} usage in SRC_URI or S
+    # Should use ${BPN} or ${BP} instead to avoid breaking multilib
+    #
+    for s in srcuri:
+        if not s.startswith("file://"):
+            if not s.find("{PN}") == -1:
+                bb.warn("%s: should use BPN instead of PN in SRC_URI" % pkgname)
+            if not s.find("{P}") == -1:
+                bb.warn("%s: should use BP instead of P in SRC_URI" % pkgname)
+
+    srcpath = d.getVar("S")
+    if not srcpath.find("{PN}") == -1:
+        bb.warn("%s: should use BPN instead of PN in S" % pkgname)
+    if not srcpath.find("{P}") == -1:
+        bb.warn("%s: should use BP instead of P in S" % pkgname)
 }
