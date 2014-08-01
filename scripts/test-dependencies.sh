@@ -209,7 +209,7 @@ compare_deps() {
   # OUTPUT_MIN=${OUTPUT_BASE}/3_min \
   # openembedded-core/scripts/test-dependencies.sh --tmpdir=tmp-eglibc --targets=glib-2.0 --recipes=recipe_list --buildtype=c
   echo "===== Compare dependencies recorded in \"${OUTPUT_MAX}\" and \"${OUTPUT_MIN}\" ====="
-  [ -n "${OUTPUTC}" ] || OUTPUTC=${OUTPUT_BASE}
+  [ -n "${OUTPUTC}" ] || OUTPUTC=${OUTPUT_BASE}/comp
   mkdir -p ${OUTPUTC}
   OUTPUT_FILE=${OUTPUTC}/dependency-changes
   echo "Differences will be stored in ${OUTPUT_FILE}, dot is shown for every 100 of checked packages"
@@ -223,9 +223,11 @@ compare_deps() {
   find ${OUTPUT_MAX}/packages/ -name latest | sed "s#${OUTPUT_MAX}/##g" | while read pkg; do
     max_pkg=${OUTPUT_MAX}/${pkg}
     min_pkg=${OUTPUT_MIN}/${pkg}
-    recipe=`echo "${pkg}" | sed 's#/.*##g'`
+    # pkg=packages/armv5te-oe-linux-gnueabi/libungif/libungif/latest
+    recipe=`echo "${pkg}" | sed 's#packages/[^/]*/\([^/]*\)/\([^/]*\)/latest#\1#g'`
+    package=`echo "${pkg}" | sed 's#packages/[^/]*/\([^/]*\)/\([^/]*\)/latest#\2#g'`
     if [ ! -f "${min_pkg}" ] ; then
-      echo "ERROR: ${min_pkg} doesn't exist" | tee -a ${OUTPUT_FILE}
+      echo "ERROR: ${recipe}: ${package} package isn't created when building with minimal dependencies?" | tee -a ${OUTPUT_FILE}
       echo ${recipe} >> ${OUTPUTC}/failed-recipes.log
       continue
     fi
@@ -238,15 +240,15 @@ compare_deps() {
     fi
     if [ "${max_deps}" = "${min_deps}" ] ; then
       # it's annoying long, but at least it's showing some progress, warnings are grepped at the end
-      echo "NOTE: ${pkg} dependencies weren't changed" >> ${OUTPUT_FILE}
+      echo "NOTE: ${recipe}: ${package} rdepends weren't changed" >> ${OUTPUT_FILE}
     else
       missing_deps=
       for dep in ${max_deps}; do
         echo "${min_deps}" | grep -q " ${dep} " || missing_deps="${missing_deps} ${dep}"
+        echo # to get rid of dots on last line
+        echo "WARN: ${recipe}: ${package} rdepends on ${dep} but its not a build dependency?" | tee -a ${OUTPUT_FILE}
       done
       if [ -n "${missing_deps}" ] ; then
-        echo # to get rid of dots on last line
-        echo "WARN: ${pkg} lost dependency on ${missing_deps}" | tee -a ${OUTPUT_FILE}
         echo ${recipe} >> ${OUTPUTC}/failed-recipes.log
       fi
     fi
@@ -272,7 +274,7 @@ for TYPE in $buildtype; do
   esac
 done
 
-cat ${OUTPUT_BASE}/*/failed-recipes.log | sort -u > ${OUTPUT_BASE}/failed-recipes.log
+cat ${OUTPUT_BASE}/*/failed-recipes.log | sort -u >> ${OUTPUT_BASE}/failed-recipes.log
 
 if [ "${RESULT}" != "0" ] ; then
   echo "ERROR: ${RESULT} issues were found in these recipes: `cat ${OUTPUT_BASE}/failed-recipes.log | xargs`"
