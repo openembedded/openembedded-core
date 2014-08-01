@@ -12,7 +12,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 INHIBIT_DEFAULT_DEPS = "1"
 
 do_install() {
-	# Only install file if it has a contents
+	# Install file only if it has contents
         install -d ${D}${sysconfdir}/formfactor/
         install -m 0644 ${S}/config ${D}${sysconfdir}/formfactor/
 	if [ -s "${S}/machconfig" ]; then
