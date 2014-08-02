@@ -1434,7 +1434,7 @@ python package_do_shlibs() {
     def darwin_so(file, needed, sonames, renames, pkgver):
         if not os.path.exists(file):
             return
-        ldir = os.path.dirname(file).replace(pkgdest, '')
+        ldir = os.path.dirname(file).replace(pkgdest + "/" + pkg, '')
 
         def get_combinations(base):
             #
