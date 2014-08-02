@@ -1350,6 +1350,7 @@ SHLIBSWORKDIR = "${PKGDESTWORK}/${MLPREFIX}shlibs2"
 
 python package_do_shlibs() {
     import re, pipes
+    import subprocess as sub
 
     exclude_shlibs = d.getVar('EXCLUDE_FROM_SHLIBS', 0)
     if exclude_shlibs:
@@ -1459,38 +1460,27 @@ python package_do_shlibs() {
                     prov = (combo, ldir, pkgver)
                     sonames.append(prov)
         if file.endswith('.dylib') or file.endswith('.so'):
-            lafile = file.replace(os.path.join(pkgdest, pkg), d.getVar('PKGD', True))
-            # Drop suffix
-            lafile = lafile.rsplit(".",1)[0]
-            lapath = os.path.dirname(lafile)
-            lafile = os.path.basename(lafile)
-            # Find all combinations
-            combos = get_combinations(lafile)
-            for combo in combos:
-                if os.path.exists(lapath + '/' + combo + '.la'):
-                    break
-            lafile = lapath + '/' + combo + '.la'
+            rpath = []
+            p = sub.Popen([d.expand("${HOST_PREFIX}otool"), '-l', file],stdout=sub.PIPE,stderr=sub.PIPE)
+            err, out = p.communicate()
+            # If returned succesfully, process stderr for results
+            if p.returncode == 0:
+                for l in err.split("\n"):
+                    l = l.strip()
+                    if l.startswith('path '):
+                        rpath.append(l.split()[1])
 
-            #bb.note("Foo2: %s" % lafile)
-            #bb.note("Foo %s" % file)
-            if os.path.exists(lafile):
-                fd = open(lafile, 'r')
-                lines = fd.readlines()
-                fd.close()
-                for l in lines:
-                    m = re.match("\s*dependency_libs=\s*'(.*)'", l)
-                    if m:
-                        deps = m.group(1).split(" ")
-                        for dep in deps:
-                            #bb.note("Trying %s for %s" % (dep, pkg))
-                            name = None
-                            if dep.endswith(".la"):
-                                name = os.path.basename(dep).replace(".la", "")
-                            elif dep.startswith("-l"):
-                                name = dep.replace("-l", "lib")
-                            if name and name not in needed[pkg]:
-                                needed[pkg].append((name, lafile, []))
-                                #bb.note("Adding %s for %s" % (name, pkg))
+            p = sub.Popen([d.expand("${HOST_PREFIX}otool"), '-L', file],stdout=sub.PIPE,stderr=sub.PIPE)
+            err, out = p.communicate()
+            # If returned succesfully, process stderr for results
+            if p.returncode == 0:
+                for l in err.split("\n"):
+                    l = l.strip()
+                    if not l or l.endswith(":"):
+                        continue
+                    name = os.path.basename(l.split()[0]).rsplit(".", 1)[0]
+                    if name and name not in needed[pkg]:
+                         needed[pkg].append((name, file, []))
 
     if d.getVar('PACKAGE_SNAP_LIB_SYMLINKS', True) == "1":
         snap_symlinks = True
