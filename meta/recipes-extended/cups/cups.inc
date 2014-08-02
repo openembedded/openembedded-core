@@ -39,6 +39,7 @@ EXTRA_OECONF = " \
 do_configure() {
 	gnu-configize
 	libtoolize --force
+	autoconf --force
 	DSOFLAGS="${LDFLAGS}" SERVERBIN="${libdir}/cups" oe_runconf
 }
 
