@@ -169,10 +169,10 @@ do_install_append_class-target() {
     sed -i s:OEINCDIR:${includedir}/nss3:g ${D}${libdir}/pkgconfig/nss.pc
 
     # Create a blank certificate
-    mkdir -p ${D}/etc/pki/nssdb/
+    mkdir -p ${D}${sysconfdir}/pki/nssdb/
     touch ./empty_password
-    certutil -N -d ${D}/etc/pki/nssdb/ -f ./empty_password
-    chmod 644 ${D}/etc/pki/nssdb/*.db
+    certutil -N -d ${D}${sysconfdir}/pki/nssdb/ -f ./empty_password
+    chmod 644 ${D}${sysconfdir}/pki/nssdb/*.db
     rm ./empty_password
 }
 
