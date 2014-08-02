@@ -186,7 +186,7 @@ python autotools_copy_aclocals () {
         if c.endswith("-native"):
             manifest = d.expand("${SSTATE_MANIFESTS}/manifest-${BUILD_ARCH}-%s.populate_sysroot" % c)
         elif c.startswith("nativesdk-"):
-            manifest = d.expand("${SSTATE_MANIFESTS}/manifest-${SDK_ARCH}-%s.populate_sysroot" % c)
+            manifest = d.expand("${SSTATE_MANIFESTS}/manifest-${SDK_ARCH}_${SDK_OS}-%s.populate_sysroot" % c)
         elif "-cross-" in c or "-crosssdk-" in c:
             continue
         else:
