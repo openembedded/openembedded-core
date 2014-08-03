@@ -2,7 +2,9 @@ require cairo.inc
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=e73e999e0c72b5ac9012424fa157ad77"
 
-SRC_URI = "http://cairographics.org/releases/cairo-${PV}.tar.xz"
+SRC_URI = "http://cairographics.org/releases/cairo-${PV}.tar.xz \
+    file://0001-Remove-LTO-support.patch \
+"
 
 SRC_URI[md5sum] = "a1304edcdc99282f478b995ee5f8f854"
 SRC_URI[sha256sum] = "2505959eb3f1de3e1841023b61585bfd35684b9733c7b6a3643f4f4cbde6d846"
