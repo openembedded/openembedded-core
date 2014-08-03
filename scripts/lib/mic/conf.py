@@ -20,7 +20,7 @@ import ConfigParser
 
 from mic import msger
 from mic import kickstart
-from mic.utils import misc, runner, proxy, errors
+from mic.utils import misc, runner, errors
 
 
 def get_siteconf():
@@ -55,8 +55,6 @@ class ConfigMgr(object):
                     "pack_to": None,
                     "name_prefix": None,
                     "name_suffix": None,
-                    "proxy": None,
-                    "no_proxy": None,
                     "copy_kernel": False,
                     "install_pkgs": None,
                     "repourl": {},
@@ -104,16 +102,6 @@ class ConfigMgr(object):
         for sec, vals in self.DEFAULTS.iteritems():
             setattr(self, sec, vals)
 
-    def __set_siteconf(self, siteconf):
-        try:
-            self.__siteconf = siteconf
-            self._parse_siteconf(siteconf)
-        except ConfigParser.Error, error:
-            raise errors.ConfigError("%s" % error)
-    def __get_siteconf(self):
-        return self.__siteconf
-    _siteconf = property(__get_siteconf, __set_siteconf)
-
     def __set_ksconf(self, ksconf):
         if not os.path.isfile(ksconf):
             msger.error('Cannot find ks file: %s' % ksconf)
@@ -123,50 +111,6 @@ class ConfigMgr(object):
     def __get_ksconf(self):
         return self.__ksconf
     _ksconf = property(__get_ksconf, __set_ksconf)
-
-    def _parse_siteconf(self, siteconf):
-        if not siteconf:
-            return
-
-        if not os.path.exists(siteconf):
-            msger.warning("cannot read config file: %s" % siteconf)
-            return
-
-        parser = ConfigParser.SafeConfigParser()
-        parser.read(siteconf)
-
-        for section in parser.sections():
-            if section in self.DEFAULTS:
-                getattr(self, section).update(dict(parser.items(section)))
-
-        # append common section items to other sections
-        for section in self.DEFAULTS.keys():
-            if section != "common":
-                getattr(self, section).update(self.common)
-
-        # check and normalize the scheme of proxy url
-        if self.create['proxy']:
-            m = re.match('^(\w+)://.*', self.create['proxy'])
-            if m:
-                scheme = m.group(1)
-                if scheme not in ('http', 'https', 'ftp', 'socks'):
-                    msger.error("%s: proxy scheme is incorrect" % siteconf)
-            else:
-                msger.warning("%s: proxy url w/o scheme, use http as default"
-                              % siteconf)
-                self.create['proxy'] = "http://" + self.create['proxy']
-
-        proxy.set_proxies(self.create['proxy'], self.create['no_proxy'])
-
-        # bootstrap option handling
-        self.set_runtime(self.create['runtime'])
-        if isinstance(self.bootstrap['packages'], basestring):
-            packages = self.bootstrap['packages'].replace('\n', ' ')
-            if packages.find(',') != -1:
-                packages = packages.split(',')
-            else:
-                packages = packages.split()
-            self.bootstrap['packages'] = packages
 
     def _parse_kickstart(self, ksconf=None):
         if not ksconf:
