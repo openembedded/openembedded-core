@@ -30,7 +30,7 @@ import shutil
 import re
 import tempfile
 
-from mic import chroot, msger
+from mic import msger
 from mic.utils import misc, fs_related, errors, runner, cmdln
 from mic.conf import configmgr
 from mic.plugin import pluginmgr
