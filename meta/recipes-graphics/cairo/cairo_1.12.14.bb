@@ -5,7 +5,9 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=e73e999e0c72b5ac9012424fa157ad77"
 PR = "r0"
 
 SRC_URI = "http://cairographics.org/releases/cairo-${PV}.tar.xz \
-           file://png.patch"
+    file://0001-Remove-LTO-support.patch \
+    file://png.patch \
+"
 
 SRC_URI[md5sum] = "27b634113d0f52152d60ae8e2ec7daa7"
 SRC_URI[sha256sum] = "96d0d1e3f9b74d2ca3469ff187c5e5f25649b1ad35cf06f4f3a83847dff4ac13"

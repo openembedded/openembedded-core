@@ -1,0 +1,60 @@
+From bdf15c249130568093676ed3b6c91f6f5e06f089 Mon Sep 17 00:00:00 2001
+From: Uli Schlachter <psychon@znc.in>
+Date: Mon, 21 Jul 2014 17:10:16 +0200
+Subject: [PATCH] Remove LTO support
+
+This just never worked too well and caused too many issues. I don't think anyone
+will miss this.
+
+As mentioned in the below bug report, proper LTO support also requires using
+special versions of ranlib, nm and ar which support the LTO object files.
+Otherwise, calling the normal ranlib on an .a library breaks the list of
+exported symbols and thus completely breaks the static library.
+
+This (partly) reverts the following commits:
+
+c3645d97ebd24c6f7ad850785d585aebc706a11c configure.ac: Add a --disable-lto configure option
+d486ea30f1a58640a1178de74f705a73845b1cda configure: Conditionally include -flto
+0870c6fb5b39dcc04fa376123848adde2d06d2ce gcc-4.5 warnings and optimisation flags.
+
+(The last commit is the one which brought us -flto in the first place even
+though it doesn't talk about this. It's also the one which is only reverted
+partly.)
+
+Fixes: https://bugs.freedesktop.org/show_bug.cgi?id=77060
+CC: Chris Wilson <chris@chris-wilson.co.uk>
+Signed-off-by: Uli Schlachter <psychon@znc.in>
+Reviewed-by: Bryce Harrington <b.harrington@samsung.com>
+Signed-off-by: Martin Jansa <Martin.Jansa@gmail.com>
+
+Upstream-Status: Backport (will be in 1.14*)
+Signed-off-by: Martin Jansa <Martin.Jansa@gmail.com>
+---
+ build/configure.ac.warnings | 11 -----------
+ 1 file changed, 11 deletions(-)
+
+diff --git a/build/configure.ac.warnings b/build/configure.ac.warnings
+index f984eb2..2c4e34d 100644
+--- a/build/configure.ac.warnings
++++ b/build/configure.ac.warnings
+@@ -35,17 +35,6 @@ MAYBE_WARN="$MAYBE_WARN -erroff=E_ENUM_TYPE_MISMATCH_ARG \
+ 
+ dnl We also abuse the warning-flag facility to enable other compiler
+ dnl options.  Namely, the following:
+-
+-dnl -flto working really needs a test link, not just a compile
+-
+-safe_MAYBE_WARN="$MAYBE_WARN"
+-MAYBE_WARN="$MAYBE_WARN -flto"
+-AC_TRY_LINK([],[
+-	int main(int argc, char **argv) { return 0; }
+-],[],[
+-	MAYBE_WARN="$safe_MAYBE_WARN"
+-])
+-
+ MAYBE_WARN="$MAYBE_WARN -fno-strict-aliasing -fno-common"
+ 
+ dnl Also to turn various gcc/glibc-specific preprocessor checks
+-- 
+2.0.2
+
