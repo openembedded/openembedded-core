@@ -119,5 +119,10 @@ do_install () {
 
 	install -d ${D}${includedir}
 	install -m 0644 tcpd.h ${D}${includedir}/
+
+	install -d ${D}${sysconfdir}
+	touch ${D}${sysconfdir}/hosts.allow
+	touch ${D}${sysconfdir}/hosts.deny
 }
 
+FILES_${PN} += "${sysconfdir}/hosts.allow ${sysconfdir}/hosts.deny"
