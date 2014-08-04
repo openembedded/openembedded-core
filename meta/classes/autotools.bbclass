@@ -204,7 +204,7 @@ python autotools_copy_aclocals () {
         if not os.path.exists(t):
             os.symlink(c, t)
 }
-autotools_copy_aclocals[vardepsexclude] += "MACHINE SDK_ARCH BUILD_ARCH BB_TASKDEPDATA"
+autotools_copy_aclocals[vardepsexclude] += "MACHINE SDK_ARCH BUILD_ARCH SDK_OS BB_TASKDEPDATA"
 
 autotools_do_configure() {
 	# WARNING: gross hack follows:
