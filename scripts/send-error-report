@@ -20,7 +20,7 @@ def handle_connection(server, data):
         # we need to check that the server isn't a local one, as in no_proxy
         try:
             temp = httplib.HTTPConnection(server, strict=True, timeout=5)
-            temp.request("GET", "/")
+            temp.request("GET", "/Errors/")
             tempres = temp.getresponse()
             if tempres.status == 200:
                 proxyrequired = False
