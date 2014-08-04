@@ -24,13 +24,10 @@ from mic import msger
 from mic.utils import runner
 from mic.utils.errors import MountError
 from mic.utils.fs_related import *
-from mic.utils.gpt_parser import GptParser
 from mic.utils.oe.misc import *
 
 # Overhead of the MBR partitioning scheme (just one sector)
 MBR_OVERHEAD = 1
-# Overhead of the GPT partitioning scheme
-GPT_OVERHEAD = 34
 
 # Size of a sector in bytes
 SECTOR_SIZE = 512
@@ -148,21 +145,20 @@ class PartitionedMount(Mount):
                      'num': None, # Partition number
                      'boot': boot, # Bootable flag
                      'align': align, # Partition alignment
-                     'part_type' : part_type, # Partition type
-                     'partuuid': None } # Partition UUID (GPT-only)
+                     'part_type' : part_type } # Partition type
 
             self.__add_partition(part)
 
     def layout_partitions(self, ptable_format = "msdos"):
         """ Layout the partitions, meaning calculate the position of every
         partition on the disk. The 'ptable_format' parameter defines the
-        partition table format, and may be either "msdos" or "gpt". """
+        partition table format and may be "msdos". """
 
         msger.debug("Assigning %s partitions to disks" % ptable_format)
 
-        if ptable_format not in ('msdos', 'gpt'):
+        if ptable_format not in ('msdos'):
             raise MountError("Unknown partition table format '%s', supported " \
-                             "formats are: 'msdos' and 'gpt'" % ptable_format)
+                             "formats are: 'msdos'" % ptable_format)
 
         if self._partitions_layed_out:
             return
@@ -177,12 +173,12 @@ class PartitionedMount(Mount):
                 raise MountError("No disk %s for partition %s" \
                                  % (p['disk_name'], p['mountpoint']))
 
-            if p['part_type'] and ptable_format != 'gpt':
+            if p['part_type']:
                 # The --part-type can also be implemented for MBR partitions,
                 # in which case it would map to the 1-byte "partition type"
                 # filed at offset 3 of the partition entry.
-                raise MountError("setting custom partition type is only " \
-                                 "imlemented for GPT partitions")
+                raise MountError("setting custom partition type is not " \
+                                 "implemented for msdos partitions")
 
             # Get the disk where the partition is located
             d = self.disks[p['disk_name']]
@@ -192,8 +188,6 @@ class PartitionedMount(Mount):
             if d['numpart'] == 1:
                 if ptable_format == "msdos":
                     overhead = MBR_OVERHEAD
-                else:
-                    overhead = GPT_OVERHEAD
 
                 # Skip one sector required for the partitioning scheme overhead
                 d['offset'] += overhead
@@ -250,9 +244,6 @@ class PartitionedMount(Mount):
         # minumim disk sizes.
         for disk_name, d in self.disks.items():
             d['min_size'] = d['offset']
-            if d['ptable_format'] == 'gpt':
-                # Account for the backup partition table at the end of the disk
-                d['min_size'] += GPT_OVERHEAD
 
             d['min_size'] *= self.sector_size
 
@@ -339,10 +330,7 @@ class PartitionedMount(Mount):
                                     parted_fs_type, p['start'], p['size'])
 
             if p['boot']:
-                if d['ptable_format'] == 'gpt':
-                    flag_name = "legacy_boot"
-                else:
-                    flag_name = "boot"
+                flag_name = "boot"
                 msger.debug("Set '%s' flag for partition '%s' on disk '%s'" % \
                             (flag_name, p['num'], d['disk'].device))
                 self.__run_parted(["-s", d['disk'].device, "set",
@@ -358,36 +346,6 @@ class PartitionedMount(Mount):
                     self.__run_parted(["-s", d['disk'].device, "set",
                                        "%d" % p['num'], "lba", "off"])
 
-        # If the partition table format is "gpt", find out PARTUUIDs for all
-        # the partitions. And if users specified custom parition type UUIDs,
-        # set them.
-        for disk_name, disk in self.disks.items():
-            if disk['ptable_format'] != 'gpt':
-                continue
-
-            pnum = 0
-            gpt_parser = GptParser(d['disk'].device, SECTOR_SIZE)
-            # Iterate over all GPT partitions on this disk
-            for entry in gpt_parser.get_partitions():
-                pnum += 1
-                # Find the matching partition in the 'self.partitions' list
-                for n in d['partitions']:
-                    p = self.partitions[n]
-                    if p['num'] == pnum:
-                        # Found, fetch PARTUUID (partition's unique ID)
-                        p['partuuid'] = entry['part_uuid']
-                        msger.debug("PARTUUID for partition %d on disk '%s' " \
-                                    "(mount point '%s') is '%s'" % (pnum, \
-                                    disk_name, p['mountpoint'], p['partuuid']))
-                        if p['part_type']:
-                            entry['type_uuid'] = p['part_type']
-                            msger.debug("Change type of partition %d on disk " \
-                                        "'%s' (mount point '%s') to '%s'" % \
-                                        (pnum, disk_name, p['mountpoint'],
-                                         p['part_type']))
-                            gpt_parser.change_partition(entry)
-
-            del gpt_parser
 
     def __map_partitions(self):
         """Load it if dm_snapshot isn't loaded. """

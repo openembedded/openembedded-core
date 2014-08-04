@@ -78,9 +78,7 @@ class BootimgEFIPlugin(SourcePlugin):
         if cr._ptable_format == 'msdos':
             rootstr = rootdev
         else:
-            if not root_part_uuid:
-                raise MountError("Cannot find the root GPT partition UUID")
-            rootstr = "PARTUUID=%s" % root_part_uuid
+            raise MountError("Unsupported partition table format found")
 
         grubefi_conf += "linux %s root=%s rootwait %s\n" \
             % (kernel, rootstr, options)

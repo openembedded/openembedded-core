@@ -50,9 +50,7 @@ class BootimgPcbiosPlugin(SourcePlugin):
         disk image.  In this case, we install the MBR.
         """
         mbrfile = "%s/syslinux/" % bootimg_dir
-        if cr._ptable_format == 'gpt':
-            mbrfile += "gptmbr.bin"
-        else:
+        if cr._ptable_format == 'msdos':
             mbrfile += "mbr.bin"
 
         if not os.path.exists(mbrfile):
@@ -110,9 +108,7 @@ class BootimgPcbiosPlugin(SourcePlugin):
         if cr._ptable_format == 'msdos':
             rootstr = rootdev
         else:
-            if not root_part_uuid:
-                raise MountError("Cannot find the root GPT partition UUID")
-            rootstr = "PARTUUID=%s" % root_part_uuid
+            raise MountError("Unsupported partition table format found")
 
         syslinux_conf += "APPEND label=boot root=%s %s\n" % (rootstr, options)
 
