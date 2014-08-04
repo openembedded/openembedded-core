@@ -40,45 +40,10 @@ class _Plugin(object):
         def get_plugins(cls):
             return cls.plugins
 
+
 class ImagerPlugin(_Plugin):
     mic_plugin_type = "imager"
 
-    @classmethod
-    def check_image_exists(self, destdir, apacking=None,
-                                          images=(),
-                                          release=None):
-
-        # if it's a packing file, reset images
-        if apacking:
-            images = [apacking]
-
-        # release option will override images
-        if release is not None:
-            images = [os.path.basename(destdir.rstrip('/'))]
-            destdir = os.path.dirname(destdir.rstrip('/'))
-
-        for name in images:
-            if not name:
-                continue
-
-            image = os.path.join(destdir, name)
-            if not os.path.exists(image):
-                continue
-
-            if msger.ask("Target image/dir: %s already exists, "
-                         "clean up and continue?" % image):
-                if os.path.isdir(image):
-                    shutil.rmtree(image)
-                else:
-                    os.unlink(image)
-            else:
-                raise errors.Abort("Cancled")
-
-    def do_create(self):
-        pass
-
-    def do_chroot(self):
-        pass
 
 class SourcePlugin(_Plugin):
     mic_plugin_type = "source"
@@ -133,12 +98,6 @@ class SourcePlugin(_Plugin):
         """
         msger.debug("SourcePlugin: do_prepare_partition: part: %s" % part)
 
-class BackendPlugin(_Plugin):
-    mic_plugin_type="backend"
-
-    def addRepository(self):
-        pass
-
 def get_plugins(typen):
     ps = ImagerPlugin.get_plugins()
     if typen in ps:
@@ -146,4 +105,4 @@ def get_plugins(typen):
     else:
         return None
 
-__all__ = ['ImagerPlugin', 'BackendPlugin', 'SourcePlugin', 'get_plugins']
+__all__ = ['ImagerPlugin', 'SourcePlugin', 'get_plugins']

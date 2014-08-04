@@ -24,7 +24,7 @@ from mic.utils.oe.misc import *
 
 __ALL__ = ['PluginMgr', 'pluginmgr']
 
-PLUGIN_TYPES = ["imager", "source"] # TODO  "hook"
+PLUGIN_TYPES = ["imager", "source"]
 
 PLUGIN_DIR = "/lib/mic/plugins" # relative to scripts
 SCRIPTS_PLUGIN_DIR = "scripts" + PLUGIN_DIR

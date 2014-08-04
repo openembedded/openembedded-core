@@ -43,29 +43,8 @@ class Usage(CreatorError):
 class Abort(CreatorError):
     keyword = ''
 
-class ConfigError(CreatorError):
-    keyword = '<config>'
-
 class KsError(CreatorError):
     keyword = '<kickstart>'
 
-class RepoError(CreatorError):
-    keyword = '<repo>'
-
-class RpmError(CreatorError):
-    keyword = '<rpm>'
-
 class MountError(CreatorError):
     keyword = '<mount>'
-
-class SnapshotError(CreatorError):
-    keyword = '<snapshot>'
-
-class SquashfsError(CreatorError):
-    keyword = '<squashfs>'
-
-class BootstrapError(CreatorError):
-    keyword = '<bootstrap>'
-
-class RuntimeError(CreatorError):
-    keyword = '<runtime>'
