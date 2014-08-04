@@ -18,7 +18,8 @@ SRC_URI = "ftp://ftp.alsa-project.org/pub/lib/alsa-lib-${PV}.tar.bz2 \
            file://Check-if-wordexp-function-is-supported.patch \
            file://fix-tstamp-declaration.patch \
            file://Update-iatomic.h-functions-definitions-for-mips.patch \
-          "
+           file://0001-pcm-route-Use-get32-for-multi-source-route-calculati.patch \
+"
 SRC_URI[md5sum] = "69129a7c37697f81ac092335e9fa452b"
 SRC_URI[sha256sum] = "690ed393e7efd4fc7e3a2d2cda5449298ca0c895197e5914e350882012430d19"
 
