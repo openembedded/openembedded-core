@@ -1470,17 +1470,19 @@ python package_do_shlibs() {
                     if l.startswith('path '):
                         rpath.append(l.split()[1])
 
-            p = sub.Popen([d.expand("${HOST_PREFIX}otool"), '-L', file],stdout=sub.PIPE,stderr=sub.PIPE)
-            err, out = p.communicate()
-            # If returned succesfully, process stderr for results
-            if p.returncode == 0:
-                for l in err.split("\n"):
-                    l = l.strip()
-                    if not l or l.endswith(":"):
-                        continue
-                    name = os.path.basename(l.split()[0]).rsplit(".", 1)[0]
-                    if name and name not in needed[pkg]:
-                         needed[pkg].append((name, file, []))
+        p = sub.Popen([d.expand("${HOST_PREFIX}otool"), '-L', file],stdout=sub.PIPE,stderr=sub.PIPE)
+        err, out = p.communicate()
+        # If returned succesfully, process stderr for results
+        if p.returncode == 0:
+            for l in err.split("\n"):
+                l = l.strip()
+                if not l or l.endswith(":"):
+                    continue
+                if "is not an object file" in l:
+                    continue
+                name = os.path.basename(l.split()[0]).rsplit(".", 1)[0]
+                if name and name not in needed[pkg]:
+                     needed[pkg].append((name, file, []))
 
     if d.getVar('PACKAGE_SNAP_LIB_SYMLINKS', True) == "1":
         snap_symlinks = True
