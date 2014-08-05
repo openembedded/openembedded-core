@@ -54,8 +54,7 @@ class DirectImageCreator(BaseImageCreator):
 
     def __init__(self, oe_builddir, image_output_dir, rootfs_dir, bootimg_dir,
                  kernel_dir, native_sysroot, hdddir, staging_data_dir,
-                 creatoropts=None, compress_image=None,
-                 generate_bmap=None, fstab_entry="uuid"):
+                 creatoropts=None):
         """
         Initialize a DirectImageCreator instance.
 
@@ -64,19 +63,14 @@ class DirectImageCreator(BaseImageCreator):
         BaseImageCreator.__init__(self, creatoropts)
 
         self.__instimage = None
-        self.__imgdir = None
         self.__disks = {}
         self.__disk_format = "direct"
         self._disk_names = []
         self._ptable_format = self.ks.handler.bootloader.ptable
-        self.use_uuid = fstab_entry == "uuid"
-        self.compress_image = compress_image
-        self.bmap_needed = generate_bmap
 
         self.oe_builddir = oe_builddir
         if image_output_dir:
             self.tmpdir = image_output_dir
-            self.cachedir = "%s/cache" % image_output_dir
         self.rootfs_dir = rootfs_dir
         self.bootimg_dir = bootimg_dir
         self.kernel_dir = kernel_dir

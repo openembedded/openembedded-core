@@ -88,10 +88,7 @@ class DirectPlugin(ImagerPlugin):
                                             native_sysroot,
                                             hdddir,
                                             staging_data_dir,
-                                            creatoropts,
-                                            None,
-                                            None,
-                                            None)
+                                            creatoropts)
 
         try:
             creator.mount(None, creatoropts["cachedir"])
