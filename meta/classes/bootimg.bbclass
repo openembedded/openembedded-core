@@ -75,6 +75,8 @@ populate() {
 		do
 			if [ -s "${fs}" ]; then
 				cat ${fs} >> ${DEST}/initrd
+			else
+				bbfatal "${fs} is invalid. initrd image creation failed."
 			fi
 		done
 		chmod 0644 ${DEST}/initrd

@@ -76,8 +76,10 @@ boot_direct_populate() {
 		rm -f $dest/initrd
 		for fs in ${INITRD}
 		do
-			if [ -n "${fs}" ] && [ -s "${fs}" ]; then
+			if [ -s "${fs}" ]; then
 				cat ${fs} >> $dest/initrd
+			else
+				bbfatal "${fs} is invalid. initrd image creation failed."
 			fi
 		done
 		chmod 0644 $dest/initrd
