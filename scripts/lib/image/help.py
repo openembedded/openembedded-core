@@ -456,23 +456,11 @@ DESCRIPTION
     oe-core: directdisk.bbclass and mkefidisk.sh.  The difference
     between wic and those examples is that with wic the functionality
     of those scripts is implemented by a general-purpose partitioning
-    'language' based on Redhat kickstart syntax (with the underlying
-    code borrowed from Tizen mic, which in turn was borrowed from
-    Meego mic, in turn borrowed from Fedora livecd, etc.).
+    'language' based on Redhat kickstart syntax).
 
     The initial motivation and design considerations that lead to the
     current tool are described exhaustively in Yocto Bug #3847
     (https://bugzilla.yoctoproject.org/show_bug.cgi?id=3847).
-
-    Though the current wic tool only uses the kickstart syntax related
-    to partitioning and bootloaders and only for creating images,
-    because the code is based on the mic/pykickstart code, future
-    deployment efforts such as those partially described by Yocto Bug
-    #4106 (https://bugzilla.yoctoproject.org/show_bug.cgi?id=4106),
-    but also others including package selection (from e.g. binary
-    feeds) and deployment configuration of users/network/services,
-    etc, could be implemented under this framework, considering that
-    all of those are implemented in some form by the base system.
 
   Implementation and Examples
 
