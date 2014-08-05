@@ -54,14 +54,14 @@ class DirectImageCreator(BaseImageCreator):
 
     def __init__(self, oe_builddir, image_output_dir, rootfs_dir, bootimg_dir,
                  kernel_dir, native_sysroot, hdddir, staging_data_dir,
-                 creatoropts=None, pkgmgr=None, compress_image=None,
+                 creatoropts=None, compress_image=None,
                  generate_bmap=None, fstab_entry="uuid"):
         """
         Initialize a DirectImageCreator instance.
 
         This method takes the same arguments as ImageCreator.__init__()
         """
-        BaseImageCreator.__init__(self, creatoropts, pkgmgr)
+        BaseImageCreator.__init__(self, creatoropts)
 
         self.__instimage = None
         self.__imgdir = None
