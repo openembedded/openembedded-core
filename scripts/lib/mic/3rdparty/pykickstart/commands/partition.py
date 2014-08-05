@@ -115,26 +115,6 @@ class FC4_PartData(FC3_PartData):
 
         return retval
 
-class RHEL5_PartData(FC4_PartData):
-    removedKeywords = FC4_PartData.removedKeywords
-    removedAttrs = FC4_PartData.removedAttrs
-
-    def __init__(self, *args, **kwargs):
-        FC4_PartData.__init__(self, *args, **kwargs)
-        self.encrypted = kwargs.get("encrypted", False)
-        self.passphrase = kwargs.get("passphrase", "")
-
-    def _getArgsAsStr(self):
-        retval = FC4_PartData._getArgsAsStr(self)
-
-        if self.encrypted:
-            retval += " --encrypted"
-
-            if self.passphrase != "":
-                retval += " --passphrase=\"%s\"" % self.passphrase
-
-        return retval
-
 class F9_PartData(FC4_PartData):
     removedKeywords = FC4_PartData.removedKeywords + ["bytesPerInode"]
     removedAttrs = FC4_PartData.removedAttrs + ["bytesPerInode"]
@@ -279,25 +259,6 @@ class FC4_Partition(FC3_Partition):
                       type="int", nargs=1)
         op.add_option("--fsoptions", dest="fsopts")
         op.add_option("--label", dest="label")
-        return op
-
-class RHEL5_Partition(FC4_Partition):
-    removedKeywords = FC4_Partition.removedKeywords
-    removedAttrs = FC4_Partition.removedAttrs
-
-    def __init__(self, writePriority=130, *args, **kwargs):
-        FC4_Partition.__init__(self, writePriority, *args, **kwargs)
-
-        def part_cb (option, opt_str, value, parser):
-            if value.startswith("/dev/"):
-                parser.values.ensure_value(option.dest, value[5:])
-            else:
-                parser.values.ensure_value(option.dest, value)
-
-    def _getParser(self):
-        op = FC4_Partition._getParser(self)
-        op.add_option("--encrypted", action="store_true", default=False)
-        op.add_option("--passphrase")
         return op
 
 class F9_Partition(FC4_Partition):
