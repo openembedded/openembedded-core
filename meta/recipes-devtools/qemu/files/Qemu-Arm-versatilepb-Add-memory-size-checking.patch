@@ -32,7 +32,7 @@ index b48d84c..ad2cd5a 100644
 +                ((unsigned int)ram_size / (1 << 20)));
 +        exit(1);
 +    }
-     memory_region_init_ram(ram, NULL, "versatile.ram", args->ram_size);
+     memory_region_init_ram(ram, NULL, "versatile.ram", machine->ram_size);
      vmstate_register_ram_global(ram);
      /* ??? RAM should repeat to fill physical memory space.  */
 -- 
