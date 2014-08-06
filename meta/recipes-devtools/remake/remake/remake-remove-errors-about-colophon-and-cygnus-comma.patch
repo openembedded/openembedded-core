@@ -1,0 +1,39 @@
+From 1316f10a97a4a2f5d11a30ec367aa61101318742 Mon Sep 17 00:00:00 2001
+From: "Maxin B. John" <maxin.john@enea.com>
+Date: Wed, 6 Aug 2014 15:05:56 +0200
+Subject: [PATCH] remake: remove errors about @colophon and @cygnus commands
+ not defined
+
+texinfo5 needs replacing @ with @@ when it is part of the text
+
+Upstream-Status: Backport
+Signed-off-by: Maxin B. John <maxin.john@enea.com>
+---
+ doc/remake.texi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/doc/remake.texi b/doc/remake.texi
+index cd73437..fa5ba16 100644
+--- a/doc/remake.texi
++++ b/doc/remake.texi
+@@ -2752,7 +2752,7 @@ this list, we would like to add your names!
+ @printindex cp
+ 
+ @tex
+-% I think something like @colophon should be in texinfo.  In the
++% I think something like @@colophon should be in texinfo.  In the
+ % meantime:
+ \long\def\colophon{\hbox to0pt{}\vfill
+ \centerline{The body of this manual is set in}
+@@ -2764,7 +2764,7 @@ this list, we would like to add your names!
+ \centerline{{\sl\fontname\tensl\/}}
+ \centerline{are used for emphasis.}\vfill}
+ \page\colophon
+-% Blame: doc@cygnus.com, 1991.
++% Blame: doc@@cygnus.com, 1991.
+ @end tex
+ 
+ @bye
+-- 
+1.9.1
+

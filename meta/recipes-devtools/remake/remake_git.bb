@@ -5,7 +5,9 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504 \
                     file://glob/COPYING.LIB;md5=4a770b67e6be0f60da244beb2de0fce4"
 require remake.inc
 
-SRC_URI += "file://version-remake.texi.patch"
+SRC_URI += "file://version-remake.texi.patch \
+            file://remake-remove-errors-about-colophon-and-cygnus-comma.patch \
+           "
 SRCREV = "f05508e521987c8494c92d9c2871aec46307d51d"
 S = "${WORKDIR}/git"
 
