@@ -102,9 +102,9 @@ build_boot_dd() {
 
 	if [ "${IS_VMDK}" = "true" ]; then
 		if [ "x${AUTO_SYSLINUXMENU}" = "x1" ] ; then
-			install -m 0644 ${STAGING_DIR}/${MACHINE}/usr/share/syslinux/vesamenu.c32 ${HDDDIR}${SYSLINUXDIR}/vesamenu.c32
+			install -m 0644 ${STAGING_DIR}/${MACHINE}/usr/share/syslinux/vesamenu.c32 $HDDDIR/${SYSLINUXDIR}/
 			if [ "x${SYSLINUX_SPLASH}" != "x" ] ; then
-				install -m 0644 ${SYSLINUX_SPLASH} ${HDDDIR}${SYSLINUXDIR}/splash.lss
+				install -m 0644 ${SYSLINUX_SPLASH} $HDDDIR/${SYSLINUXDIR}/splash.lss
 			fi
 		fi
 	fi
