@@ -14,5 +14,4 @@ do_populate_ide_support () {
 }
 
 do_populate_ide_support[nostamp] = "1"
-do_populate_ide_support[recrdeptask] = "do_package_write"
 addtask populate_ide_support before do_build after do_install
