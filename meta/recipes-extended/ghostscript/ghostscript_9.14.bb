@@ -6,8 +6,6 @@ documents in an X11 environment. \
 Furthermore, it can render PostScript and PDF files as graphics to be printed \
 on non-PostScript printers. Supported printers include common \
 dot-matrix, inkjet and laser models. \
-\
-Package gsfonts contains a set of standard fonts for Ghostscript. \
 "
 HOMEPAGE = "http://www.ghostscript.com"
 SECTION = "console/utils"
