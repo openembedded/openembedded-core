@@ -30,6 +30,11 @@ EXTRA_OEMAKE = "\
 
 FILES_${PN}-dbg += "${libdir}/trace-cmd/plugins/.debug"
 
+do_compile_prepend() {
+    # Make sure the recompile is OK
+    rm -f ${B}/.*.d
+}
+
 do_install() {
         oe_runmake DESTDIR="${D}" install
 }
