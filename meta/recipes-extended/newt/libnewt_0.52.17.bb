@@ -46,4 +46,9 @@ do_configure_prepend() {
     sh autogen.sh
 }
 
+do_compile_prepend() {
+    # Make sure the recompile is OK
+    rm -f ${B}/.depend
+}
+
 FILES_whiptail = "${bindir}/whiptail"
