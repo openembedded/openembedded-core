@@ -15,3 +15,14 @@ inherit autotools-brokensep
 COMPATIBLE_HOST = '(x86_64.*|i.86.*|arm.*|powerpc.*|mips.*)-(linux|freebsd.*)'
 
 INSANE_SKIP_${PN} = "arch"
+
+do_compile_prepend() {
+    # Remove the '*.d' file to make sure the recompile is OK
+    for dep in `find ${B} -type f -name '*.d'`; do
+        dep_no_d="`echo $dep | sed 's#.d$##'`"
+        # Remove file.d when there is a file.o
+        if [ -f "$dep_no_d.o" ]; then
+            rm -f $dep
+        fi
+    done
+}
