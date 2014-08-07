@@ -45,6 +45,10 @@ do_configure() {
 }
 
 do_compile() {
+	# Make sure the recompile is OK.
+	# Though the ${B} should always exist, still check it before find and rm.
+	[ -d "${B}" ] && find ${B} -name '.*.d' -type f -exec rm -f {} \;
+
 	# Rebuild only the installer; keep precompiled bootloaders
 	# as per author's request (doc/distrib.txt)
 	oe_runmake CC="${CC} ${CFLAGS}" LDFLAGS="${LDFLAGS}" firmware="bios" installer
