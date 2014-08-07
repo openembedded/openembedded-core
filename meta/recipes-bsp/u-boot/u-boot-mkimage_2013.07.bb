@@ -17,6 +17,9 @@ S = "${WORKDIR}/git"
 EXTRA_OEMAKE = 'HOSTCC="${CC}" HOSTLD="${LD}" HOSTLDFLAGS="${LDFLAGS}" HOSTSTRIP=true'
 
 do_compile () {
+  # Make sure the recompile is OK
+  rm -f ${B}/tools/.depend
+
   oe_runmake tools
 }
 
