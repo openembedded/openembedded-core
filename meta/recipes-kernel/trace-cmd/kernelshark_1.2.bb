@@ -13,6 +13,11 @@ SRC_URI_append = "file://kernelshark-fix-syntax-error-of-shell.patch"
 
 EXTRA_OEMAKE = "'CC=${CC}' 'AR=${AR}' 'prefix=${prefix}' gui"
 
+do_compile_prepend() {
+    # Make sure the recompile is OK
+    rm -f ${B}/.*.d
+}
+
 do_install() {
 	oe_runmake CC="${CC}" AR="${AR}" prefix="${prefix}" DESTDIR="${D}" install_gui
 	rm ${D}${bindir}/trace-cmd
