@@ -24,11 +24,15 @@ INITSCRIPT_NAME = "alsa-state"
 INITSCRIPT_PARAMS = "start 39 S . stop 31 0 6 ."
 
 do_install() {
-    sed -i -e "s:#STATEDIR#:${localstatedir}/lib/alsa:g" ${WORKDIR}/alsa-state-init
-    install -d ${D}${sysconfdir}/init.d
-    install -m 0755 ${WORKDIR}/alsa-state-init ${D}${sysconfdir}/init.d/alsa-state
+    # Only install the init script when 'sysvinit' is in DISTRO_FEATURES.
+    if ${@bb.utils.contains('DISTRO_FEATURES','sysvinit','true','false',d)}; then
+	sed -i -e "s:#STATEDIR#:${localstatedir}/lib/alsa:g" ${WORKDIR}/alsa-state-init
+	install -d ${D}${sysconfdir}/init.d
+	install -m 0755 ${WORKDIR}/alsa-state-init ${D}${sysconfdir}/init.d/alsa-state
+    fi
 
     install -d ${D}/${localstatedir}/lib/alsa
+    install -d ${D}${sysconfdir}
     install -m 0644 ${WORKDIR}/asound.conf ${D}${sysconfdir}
     install -m 0644 ${WORKDIR}/*.state ${D}${localstatedir}/lib/alsa
 }
