@@ -19,11 +19,6 @@ import os
 import sys
 import time
 
-from mic import msger
-from mic.utils.errors import CreatorError
-from mic.utils.fs_related import find_binary_path, makedirs
-from mic.utils import runner
-
 def build_name(kscfg, release=None, prefix = None, suffix = None):
     """Construct and return an image name string.
 
@@ -60,46 +55,5 @@ def build_name(kscfg, release=None, prefix = None, suffix = None):
     suffix = "-%s" % suffix if suffix else ""
 
     ret = prefix + name + suffix
+
     return ret
-
-def normalize_ksfile(ksconf, release, arch):
-    '''
-    Return the name of a normalized ks file in which macro variables
-    @BUILD_ID@ and @ARCH@ are replace with real values.
-
-    The original ks file is returned if no special macro is used, otherwise
-    a temp file is created and returned, which will be deleted when program
-    exits normally.
-    '''
-
-    if not release:
-        release = "latest"
-    if not arch or re.match(r'i.86', arch):
-        arch = "ia32"
-
-    with open(ksconf) as f:
-        ksc = f.read()
-
-    if "@ARCH@" not in ksc and "@BUILD_ID@" not in ksc:
-        return ksconf
-
-    msger.info("Substitute macro variable @BUILD_ID@/@ARCH@ in ks: %s" % ksconf)
-    ksc = ksc.replace("@ARCH@", arch)
-    ksc = ksc.replace("@BUILD_ID@", release)
-
-    fd, ksconf = tempfile.mkstemp(prefix=os.path.basename(ksconf))
-    os.write(fd, ksc)
-    os.close(fd)
-
-    msger.debug('normalized ks file:%s' % ksconf)
-
-    def remove_temp_ks():
-        try:
-            os.unlink(ksconf)
-        except OSError, err:
-            msger.warning('Failed to remove temp ks file:%s:%s' % (ksconf, err))
-
-    import atexit
-    atexit.register(remove_temp_ks)
-
-    return ksconf

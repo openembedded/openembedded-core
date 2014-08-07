@@ -91,9 +91,9 @@ class DirectPlugin(ImagerPlugin):
                                             creatoropts)
 
         try:
-            creator.mount(None, creatoropts["cachedir"])
+            creator.mount()
             creator.install()
-            creator.configure(creatoropts["repomd"])
+            creator.configure()
             creator.print_outimage_info()
 
         except errors.CreatorError:

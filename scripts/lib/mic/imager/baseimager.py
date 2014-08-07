@@ -176,7 +176,7 @@ class BaseImageCreator(object):
 
         runner.show('umount -l %s' % self.workdir)
 
-    def mount(self, base_on = None, cachedir = None):
+    def mount(self):
         """Setup the target filesystem in preparation for an install.
 
         This function sets up the filesystem which the ImageCreator will
@@ -184,20 +184,11 @@ class BaseImageCreator(object):
         install root directory, bind mounts some system directories (e.g. /dev)
         and writes out /etc/fstab. Other subclasses may also e.g. create a
         sparse file, format it and loopback mount it to the install root.
-
-        base_on -- a previous install on which to base this install; defaults
-                   to None, causing a new image to be created
-
-        cachedir -- a directory in which to store the Yum cache; defaults to
-                    None, causing a new cache to be created; by setting this
-                    to another directory, the same cache can be reused across
-                    multiple installs.
-
         """
         self.__setup_tmpdir()
         self.__ensure_builddir()
 
-        self._mount_instroot(base_on)
+        self._mount_instroot()
 
     def unmount(self):
         """Unmounts the target filesystem.

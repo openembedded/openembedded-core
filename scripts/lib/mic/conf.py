@@ -31,45 +31,18 @@ def get_siteconf():
     return scripts_path + "/lib/image/config/wic.conf"
 
 class ConfigMgr(object):
-    prefer_backends = ["zypp", "yum"]
-
     DEFAULTS = {'common': {
                     "distro_name": "Default Distribution",
                     "plugin_dir": "/usr/lib/wic/plugins", # TODO use prefix also?
                 },
                 'create': {
                     "tmpdir": '/var/tmp/wic',
-                    "cachedir": '/var/tmp/wic/cache',
                     "outdir": './wic-output',
 
-                    "arch": None, # None means auto-detect
-                    "pkgmgr": "auto",
-                    "name": "output",
-                    "ksfile": None,
-                    "ks": None,
-                    "repomd": None,
-                    "local_pkgs_path": None,
                     "release": None,
                     "logfile": None,
-                    "record_pkgs": [],
-                    "pack_to": None,
                     "name_prefix": None,
                     "name_suffix": None,
-                    "copy_kernel": False,
-                    "install_pkgs": None,
-                    "repourl": {},
-                    "localrepos": [],  # save localrepos
-                    "runtime": "bootstrap",
-                },
-                'chroot': {
-                    "saveto": None,
-                },
-                'convert': {
-                    "shell": False,
-                },
-                'bootstrap': {
-                    "rootdir": '/var/tmp/wic-bootstrap',
-                    "packages": [],
                 },
                }
 
@@ -116,10 +89,6 @@ class ConfigMgr(object):
         if not ksconf:
             return
 
-        ksconf = misc.normalize_ksfile(ksconf,
-                                       self.create['release'],
-                                       self.create['arch'])
-
         ks = kickstart.read_kickstart(ksconf)
 
         self.create['ks'] = ks
@@ -129,13 +98,5 @@ class ConfigMgr(object):
                                               self.create['release'],
                                               self.create['name_prefix'],
                                               self.create['name_suffix'])
-
-    def set_runtime(self, runtime):
-        if runtime not in ("bootstrap", "native"):
-            msger.error("Invalid runtime mode: %s" % runtime)
-
-        if misc.get_distro()[0] in ("tizen", "Tizen"):
-            runtime = "native"
-        self.create['runtime'] = runtime
 
 configmgr = ConfigMgr()

@@ -217,7 +217,7 @@ class DirectImageCreator(BaseImageCreator):
     #
     # Actual implemention
     #
-    def _mount_instroot(self, base_on = None):
+    def _mount_instroot(self):
         """
         For 'wic', we already have our build artifacts and don't want
         to loop mount anything to install into, we just create
@@ -296,7 +296,7 @@ class DirectImageCreator(BaseImageCreator):
 
         self.__instimage.mount()
 
-    def install(self, repo_urls=None):
+    def install(self):
         """
         Install fs images into partitions
         """
@@ -306,7 +306,7 @@ class DirectImageCreator(BaseImageCreator):
                         % (disk_name, full_path, disk['min_size']))
             self.__instimage.install(full_path)
 
-    def configure(self, repodata = None):
+    def configure(self):
         """
         Configure the system image according to kickstart.
 
