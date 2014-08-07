@@ -18,6 +18,11 @@ SRC_URI[sha256sum] = "f6ba691f40e30e640efa2752c1f9499a3f9738257660994de70a45fe00
 
 EXTRA_OEMAKE = ""
 
+do_compile_prepend() {
+    # Make sure the recompile is OK
+    rm -f ${B}/.depend
+}
+
 do_install(){
     oe_runmake install DESTDIR=${D} PREFIX=${D} MANDIR=${mandir}
     mkdir -p ${D}${sysconfdir}/logrotate.d
