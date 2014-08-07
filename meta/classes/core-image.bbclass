@@ -7,8 +7,8 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=4d92cd373abda3937c2bc47fbc49d
 
 # IMAGE_FEATURES control content of the core reference images
 # 
-# By default we install packagegroup-core-boot and packagegroup-base packages - this gives us
-# working (console only) rootfs.
+# By default we install packagegroup-core-boot and packagegroup-base-extended packages;
+# this gives us working (console only) rootfs.
 #
 # Available IMAGE_FEATURES:
 #
