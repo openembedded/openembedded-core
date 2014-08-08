@@ -309,11 +309,11 @@ class PartitionedMount:
                 except:
                     pass
 
-    def __install_partition(self, num, source_file, start, size):
+    def __write_partition(self, num, source_file, start, size):
         """
         Install source_file contents into a partition.
         """
-        if not source_file: # nothing to install
+        if not source_file: # nothing to write
             return
 
         # Start is included in the size so need to substract one from the end.
@@ -325,7 +325,7 @@ class PartitionedMount:
         exec_cmd(dd_cmd)
 
 
-    def install(self, image_file):
+    def assemble(self, image_file):
         msger.debug("Installing partitions")
 
         self.image_file = image_file
@@ -337,12 +337,12 @@ class PartitionedMount:
                 # of the first _logical_ partition. This is why the extended
                 # partition should start one sector before the first logical
                 # partition.
-                self.__install_partition(p['num'], p['source_file'],
-                                         p['start'] - 1,
-                                         d['offset'] - p['start'])
+                self.__write_partition(p['num'], p['source_file'],
+                                       p['start'] - 1,
+                                       d['offset'] - p['start'])
 
-            self.__install_partition(p['num'], p['source_file'],
-                                     p['start'], p['size'])
+            self.__write_partition(p['num'], p['source_file'],
+                                   p['start'], p['size'])
 
     def create(self):
         for dev in self.disks.keys():

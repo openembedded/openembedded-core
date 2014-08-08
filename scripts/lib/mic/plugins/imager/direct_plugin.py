@@ -92,7 +92,7 @@ class DirectPlugin(ImagerPlugin):
 
         try:
             creator.create()
-            creator.install()
+            creator.assemble()
             creator.configure()
             creator.print_outimage_info()
 

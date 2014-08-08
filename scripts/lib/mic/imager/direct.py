@@ -62,7 +62,7 @@ class DirectImageCreator(BaseImageCreator):
         """
         BaseImageCreator.__init__(self, creatoropts)
 
-        self.__instimage = None
+        self.__image = None
         self.__disks = {}
         self.__disk_format = "direct"
         self._disk_names = []
@@ -226,7 +226,7 @@ class DirectImageCreator(BaseImageCreator):
         """
         parts = self._get_parts()
 
-        self.__instimage = PartitionedMount()
+        self.__image = PartitionedMount()
 
         for p in parts:
             # as a convenience, set source to the boot partition source
@@ -250,39 +250,39 @@ class DirectImageCreator(BaseImageCreator):
 
             self._restore_fstab(fstab)
 
-            self.__instimage.add_partition(int(p.size),
-                                           p.disk,
-                                           p.mountpoint,
-                                           p.source_file,
-                                           p.fstype,
-                                           p.label,
-                                           fsopts = p.fsopts,
-                                           boot = p.active,
-                                           align = p.align,
-                                           part_type = p.part_type)
+            self.__image.add_partition(int(p.size),
+                                       p.disk,
+                                       p.mountpoint,
+                                       p.source_file,
+                                       p.fstype,
+                                       p.label,
+                                       fsopts = p.fsopts,
+                                       boot = p.active,
+                                       align = p.align,
+                                       part_type = p.part_type)
 
-        self.__instimage.layout_partitions(self._ptable_format)
+        self.__image.layout_partitions(self._ptable_format)
 
         self.__imgdir = self.workdir
-        for disk_name, disk in self.__instimage.disks.items():
+        for disk_name, disk in self.__image.disks.items():
             full_path = self._full_path(self.__imgdir, disk_name, "direct")
             msger.debug("Adding disk %s as %s with size %s bytes" \
                         % (disk_name, full_path, disk['min_size']))
             disk_obj = fs_related.DiskImage(full_path, disk['min_size'])
             self.__disks[disk_name] = disk_obj
-            self.__instimage.add_disk(disk_name, disk_obj)
+            self.__image.add_disk(disk_name, disk_obj)
 
-        self.__instimage.create()
+        self.__image.create()
 
-    def install(self):
+    def assemble(self):
         """
-        Install fs images into partitions
+        Assemble partitions into disk image(s)
         """
-        for disk_name, disk in self.__instimage.disks.items():
+        for disk_name, disk in self.__image.disks.items():
             full_path = self._full_path(self.__imgdir, disk_name, "direct")
-            msger.debug("Installing disk %s as %s with size %s bytes" \
+            msger.debug("Assembling disk %s as %s with size %s bytes" \
                         % (disk_name, full_path, disk['min_size']))
-            self.__instimage.install(full_path)
+            self.__image.assemble(full_path)
 
     def configure(self):
         """
@@ -294,7 +294,7 @@ class DirectImageCreator(BaseImageCreator):
         source_plugin = self.get_default_source_plugin()
         if source_plugin:
             self._source_methods = pluginmgr.get_source_plugin_methods(source_plugin, disk_methods)
-            for disk_name, disk in self.__instimage.disks.items():
+            for disk_name, disk in self.__image.disks.items():
                 self._source_methods["do_install_disk"](disk, disk_name, self,
                                                         self.workdir,
                                                         self.oe_builddir,
@@ -310,7 +310,7 @@ class DirectImageCreator(BaseImageCreator):
 
         parts = self._get_parts()
 
-        for disk_name, disk in self.__instimage.disks.items():
+        for disk_name, disk in self.__image.disks.items():
             full_path = self._full_path(self.__imgdir, disk_name, "direct")
             msg += '  %s\n\n' % full_path
 
@@ -355,9 +355,9 @@ class DirectImageCreator(BaseImageCreator):
         return (rootdev, root_part_uuid)
 
     def _cleanup(self):
-        if not self.__instimage is None:
+        if not self.__image is None:
             try:
-                self.__instimage.cleanup()
+                self.__image.cleanup()
             except MountError, err:
                 msger.warning("%s" % err)
 
