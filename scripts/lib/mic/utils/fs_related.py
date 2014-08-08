@@ -60,11 +60,8 @@ def makedirs(dirname):
             raise
 
 class Disk:
-    """Generic base object for a disk
-
-    The 'create' method must make the disk visible as a block device - eg
-    by calling losetup. For RawDisk, this is obviously a no-op. The 'cleanup'
-    method must undo the 'create' operation.
+    """
+    Generic base object for a disk.
     """
     def __init__(self, size, device = None):
         self._device = device
