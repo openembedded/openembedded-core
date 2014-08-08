@@ -354,7 +354,7 @@ class DirectImageCreator(BaseImageCreator):
 
         return (rootdev, root_part_uuid)
 
-    def _unmount_instroot(self):
+    def _cleanup(self):
         if not self.__instimage is None:
             try:
                 self.__instimage.cleanup()

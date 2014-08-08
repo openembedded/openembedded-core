@@ -109,12 +109,11 @@ class BaseImageCreator(object):
         """
         pass
 
-    def _unmount_instroot(self):
-        """Undo anything performed in _mount_instroot().
+    def _cleanup(self):
+        """Undo anything performed in _create().
 
-        This is the hook where subclasses must undo anything which was done
-        in _mount_instroot(). For example, if a filesystem image was mounted
-        onto _instroot, it should be unmounted here.
+        This is the hook where subclasses must undo anything which was
+        done in _create().
 
         There is no default implementation.
 
@@ -161,23 +160,8 @@ class BaseImageCreator(object):
 
         self._create()
 
-    def unmount(self):
-        """Unmounts the target filesystem.
-
-        The ImageCreator class detaches the system from the install root, but
-        other subclasses may also detach the loopback mounted filesystem image
-        from the install root.
-
-        """
-        self._unmount_instroot()
-
-
     def cleanup(self):
-        """Unmounts the target filesystem and deletes temporary files.
-
-        This method calls unmount() and then deletes any temporary files and
-        directories that were created on the host system while building the
-        image.
+        """Undo anything performed in create().
 
         Note, make sure to call this method once finished with the creator
         instance in order to ensure no stale files are left on the host e.g.:
@@ -192,7 +176,7 @@ class BaseImageCreator(object):
         if not self.__builddir:
             return
 
-        self.unmount()
+        self._cleanup()
 
         shutil.rmtree(self.__builddir, ignore_errors = True)
         self.__builddir = None
