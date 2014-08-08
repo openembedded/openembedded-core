@@ -40,11 +40,8 @@ class Usage(CreatorError):
             self.msg = str(self.msg)
         return self.keyword + self.msg + ', please use "--help" for more info'
 
-class Abort(CreatorError):
-    keyword = ''
-
 class KsError(CreatorError):
     keyword = '<kickstart>'
 
-class MountError(CreatorError):
+class ImageError(CreatorError):
     keyword = '<mount>'

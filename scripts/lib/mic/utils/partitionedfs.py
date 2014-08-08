@@ -22,7 +22,7 @@ import os
 
 from mic import msger
 from mic.utils import runner
-from mic.utils.errors import MountError
+from mic.utils.errors import ImageError
 from mic.utils.fs_related import *
 from mic.utils.oe.misc import *
 
@@ -121,7 +121,7 @@ class Image:
         msger.debug("Assigning %s partitions to disks" % ptable_format)
 
         if ptable_format not in ('msdos'):
-            raise MountError("Unknown partition table format '%s', supported " \
+            raise ImageError("Unknown partition table format '%s', supported " \
                              "formats are: 'msdos'" % ptable_format)
 
         if self._partitions_layed_out:
@@ -134,14 +134,14 @@ class Image:
             p = self.partitions[n]
 
             if not self.disks.has_key(p['disk_name']):
-                raise MountError("No disk %s for partition %s" \
+                raise ImageError("No disk %s for partition %s" \
                                  % (p['disk_name'], p['mountpoint']))
 
             if p['part_type']:
                 # The --part-type can also be implemented for MBR partitions,
                 # in which case it would map to the 1-byte "partition type"
                 # filed at offset 3 of the partition entry.
-                raise MountError("setting custom partition type is not " \
+                raise ImageError("setting custom partition type is not " \
                                  "implemented for msdos partitions")
 
             # Get the disk where the partition is located

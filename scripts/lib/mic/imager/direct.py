@@ -32,7 +32,7 @@ import shutil
 from mic import kickstart, msger
 from mic.utils import fs_related, runner, misc
 from mic.utils.partitionedfs import Image
-from mic.utils.errors import CreatorError, MountError
+from mic.utils.errors import CreatorError, ImageError
 from mic.imager.baseimager import BaseImageCreator
 from mic.utils.oe.misc import *
 from mic.plugin import pluginmgr
@@ -358,6 +358,6 @@ class DirectImageCreator(BaseImageCreator):
         if not self.__image is None:
             try:
                 self.__image.cleanup()
-            except MountError, err:
+            except ImageError, err:
                 msger.warning("%s" % err)
 

@@ -77,7 +77,7 @@ class BootimgEFIPlugin(SourcePlugin):
         if cr._ptable_format == 'msdos':
             rootstr = rootdev
         else:
-            raise MountError("Unsupported partition table format found")
+            raise ImageError("Unsupported partition table format found")
 
         grubefi_conf += "linux %s root=%s rootwait %s\n" \
             % (kernel, rootstr, options)

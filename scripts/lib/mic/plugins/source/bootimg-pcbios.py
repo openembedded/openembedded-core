@@ -62,7 +62,7 @@ class BootimgPcbiosPlugin(SourcePlugin):
         rc = runner.show(['dd', 'if=%s' % mbrfile,
                           'of=%s' % full_path, 'conv=notrunc'])
         if rc != 0:
-            raise MountError("Unable to set MBR to %s" % full_path)
+            raise ImageError("Unable to set MBR to %s" % full_path)
 
     @classmethod
     def do_configure_partition(self, part, cr, cr_workdir, oe_builddir,
@@ -107,7 +107,7 @@ class BootimgPcbiosPlugin(SourcePlugin):
         if cr._ptable_format == 'msdos':
             rootstr = rootdev
         else:
-            raise MountError("Unsupported partition table format found")
+            raise ImageError("Unsupported partition table format found")
 
         syslinux_conf += "APPEND label=boot root=%s %s\n" % (rootstr, options)
 
