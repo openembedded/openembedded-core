@@ -93,7 +93,7 @@ class DirectPlugin(ImagerPlugin):
         try:
             creator.create()
             creator.assemble()
-            creator.configure()
+            creator.finalize()
             creator.print_outimage_info()
 
         except errors.CreatorError:

@@ -284,12 +284,13 @@ class DirectImageCreator(BaseImageCreator):
                         % (disk_name, full_path, disk['min_size']))
             self.__image.assemble(full_path)
 
-    def configure(self):
+    def finalize(self):
         """
-        Configure the system image according to kickstart.
+        Finalize the disk image.
 
-        For now, it just prepares the image to be bootable by e.g.
+        For example, prepare the image to be bootable by e.g.
         creating and installing a bootloader configuration.
+
         """
         source_plugin = self.get_default_source_plugin()
         if source_plugin:
