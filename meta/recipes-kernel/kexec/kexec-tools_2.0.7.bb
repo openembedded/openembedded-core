@@ -9,6 +9,9 @@ SRC_URI[sha256sum] = "dde5c38be39882c6c91f0129647349c4e1943b077d3020af1970b481ee
 
 PACKAGES =+ "kexec kdump vmcore-dmesg"
 
+ALLOW_EMPTY_${PN} = "1"
+RRECOMMENDS_${PN} = "kexec kdump vmcore-dmesg"
+
 FILES_kexec = "${sbindir}/kexec"
 FILES_kdump = "${sbindir}/kdump"
 FILES_vmcore-dmesg = "${sbindir}/vmcore-dmesg"
