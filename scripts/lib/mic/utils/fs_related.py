@@ -112,19 +112,3 @@ class DiskImage(Disk):
         exec_cmd(dd_cmd)
 
         self.device = self.image_file
-
-
-class Mount:
-    """A generic base class to deal with mounting things."""
-    def __init__(self, mountdir):
-        self.mountdir = mountdir
-
-    def cleanup(self):
-        self.unmount()
-
-    def mount(self, options = None):
-        pass
-
-    def unmount(self):
-        pass
-

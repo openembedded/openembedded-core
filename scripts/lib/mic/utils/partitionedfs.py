@@ -32,9 +32,8 @@ MBR_OVERHEAD = 1
 # Size of a sector in bytes
 SECTOR_SIZE = 512
 
-class PartitionedMount(Mount):
+class PartitionedMount:
     def __init__(self, mountdir):
-        Mount.__init__(self, mountdir)
         self.disks = {}
         self.partitions = []
         self.mountOrder = []
@@ -316,7 +315,6 @@ class PartitionedMount(Mount):
         self.unmountOrder.reverse()
 
     def cleanup(self):
-        Mount.cleanup(self)
         if self.disks:
             for dev in self.disks.keys():
                 d = self.disks[dev]
