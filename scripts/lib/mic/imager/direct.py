@@ -79,9 +79,10 @@ class DirectImageCreator(BaseImageCreator):
         self.staging_data_dir = staging_data_dir
 
     def __write_fstab(self, image_rootfs):
-        """overriden to generate fstab (temporarily) in rootfs. This
-        is called from mount_instroot, make sure it doesn't get called
-        from BaseImage.mount()"""
+        """overriden to generate fstab (temporarily) in rootfs. This is called
+        from _create, make sure it doesn't get called from
+        BaseImage.create()
+        """
         if image_rootfs is None:
             return None
 
@@ -217,29 +218,15 @@ class DirectImageCreator(BaseImageCreator):
     #
     # Actual implemention
     #
-    def _mount_instroot(self):
+    def _create(self):
         """
-        For 'wic', we already have our build artifacts and don't want
-        to loop mount anything to install into, we just create
+        For 'wic', we already have our build artifacts - we just create
         filesystems from the artifacts directly and combine them into
         a partitioned image.
-
-        We still want to reuse as much of the basic mic machinery
-        though; despite the fact that we don't actually do loop or any
-        other kind of mounting we still want to do many of the same
-        things to prepare images, so we basically just adapt to the
-        basic framework and reinterpret what 'mounting' means in our
-        context.
-
-        _instroot would normally be something like
-        /var/tmp/wic/build/imgcreate-s_9AKQ/install_root, for
-        installing packages, etc.  We don't currently need to do that,
-        so we simplify life by just using /var/tmp/wic/build as our
-        workdir.
         """
         parts = self._get_parts()
 
-        self.__instimage = PartitionedMount(self._instroot)
+        self.__instimage = PartitionedMount()
 
         for p in parts:
             # as a convenience, set source to the boot partition source
@@ -250,20 +237,11 @@ class DirectImageCreator(BaseImageCreator):
         for p in parts:
             # need to create the filesystems in order to get their
             # sizes before we can add them and do the layout.
-            # PartitionedMount.mount() actually calls __format_disks()
+            # PartitionedMount.create() actually calls __format_disks()
             # to create the disk images and carve out the partitions,
             # then self.install() calls PartitionedMount.install()
             # which calls __install_partitition() for each partition
-            # to dd the fs into the partitions.  It would be nice to
-            # be able to use e.g. ExtDiskMount etc to create the
-            # filesystems, since that's where existing e.g. mkfs code
-            # is, but those are only created after __format_disks()
-            # which needs the partition sizes so needs them created
-            # before its called.  Well, the existing setup is geared
-            # to installing packages into mounted filesystems - maybe
-            # when/if we need to actually do package selection we
-            # should modify things to use those objects, but for now
-            # we can avoid that.
+            # to dd the fs into the partitions.
 
             fstab = self.__write_fstab(self.rootfs_dir.get("ROOTFS_DIR"))
 
@@ -294,7 +272,7 @@ class DirectImageCreator(BaseImageCreator):
             self.__disks[disk_name] = disk_obj
             self.__instimage.add_disk(disk_name, disk_obj)
 
-        self.__instimage.mount()
+        self.__instimage.create()
 
     def install(self):
         """

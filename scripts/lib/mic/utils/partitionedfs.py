@@ -33,11 +33,9 @@ MBR_OVERHEAD = 1
 SECTOR_SIZE = 512
 
 class PartitionedMount:
-    def __init__(self, mountdir):
+    def __init__(self):
         self.disks = {}
         self.partitions = []
-        self.mountOrder = []
-        self.unmountOrder = []
         self.parted = find_binary_path("parted")
         # Size of a sector used in calculations
         self.sector_size = SECTOR_SIZE
@@ -102,7 +100,6 @@ class PartitionedMount:
                      'label': label, # Partition label
                      'disk_name': disk_name, # physical disk name holding partition
                      'device': None, # kpartx device node for partition
-                     'mount': None, # Mount object
                      'num': None, # Partition number
                      'boot': boot, # Bootable flag
                      'align': align, # Partition alignment
@@ -303,17 +300,6 @@ class PartitionedMount:
                     self.__run_parted(["-s", d['disk'].device, "set",
                                        "%d" % p['num'], "lba", "off"])
 
-    def __calculate_mountorder(self):
-        msger.debug("Calculating mount order")
-        for p in self.partitions:
-            if p['mountpoint']:
-                self.mountOrder.append(p['mountpoint'])
-                self.unmountOrder.append(p['mountpoint'])
-
-        self.mountOrder.sort()
-        self.unmountOrder.sort()
-        self.unmountOrder.reverse()
-
     def cleanup(self):
         if self.disks:
             for dev in self.disks.keys():
@@ -322,23 +308,6 @@ class PartitionedMount:
                     d['disk'].cleanup()
                 except:
                     pass
-
-    def unmount(self):
-        for mp in self.unmountOrder:
-            if mp == 'swap':
-                continue
-            p = None
-            for p1 in self.partitions:
-                if p1['mountpoint'] == mp:
-                    p = p1
-                    break
-
-            if p['mount'] != None:
-                try:
-                    p['mount'].cleanup()
-                except:
-                    pass
-                p['mount'] = None
 
     def __install_partition(self, num, source_file, start, size):
         """
@@ -375,13 +344,11 @@ class PartitionedMount:
             self.__install_partition(p['num'], p['source_file'],
                                      p['start'], p['size'])
 
-    def mount(self):
+    def create(self):
         for dev in self.disks.keys():
             d = self.disks[dev]
             d['disk'].create()
 
         self.__format_disks()
-
-        self.__calculate_mountorder()
 
         return

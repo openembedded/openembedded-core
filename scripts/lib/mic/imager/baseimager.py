@@ -97,41 +97,15 @@ class BaseImageCreator(object):
 
 
     #
-    # Properties
-    #
-    def __get_instroot(self):
-        if self.__builddir is None:
-            raise CreatorError("_instroot is not valid before calling mount()")
-        return self.__builddir + "/install_root"
-    _instroot = property(__get_instroot)
-    """The location of the install root directory.
-
-    This is the directory into which the system is installed. Subclasses may
-    mount a filesystem image here or copy files to/from here.
-
-    Note, this directory does not exist before ImageCreator.mount() is called.
-
-    Note also, this is a read-only attribute.
-
-    """
-
-
-    #
     # Hooks for subclasses
     #
-    def _mount_instroot(self, base_on = None):
-        """Mount or prepare the install root directory.
+    def _create(self):
+        """Create partitions for the disk image(s)
 
-        This is the hook where subclasses may prepare the install root by e.g.
-        mounting creating and loopback mounting a filesystem image to
-        _instroot.
+        This is the hook where subclasses may create the partitions
+        that will be assembled into disk image(s).
 
         There is no default implementation.
-
-        base_on -- this is the value passed to mount() and can be interpreted
-                   as the subclass wishes; it might e.g. be the location of
-                   a previously created ISO containing a system image.
-
         """
         pass
 
@@ -176,19 +150,16 @@ class BaseImageCreator(object):
 
         runner.show('umount -l %s' % self.workdir)
 
-    def mount(self):
-        """Setup the target filesystem in preparation for an install.
+    def create(self):
+        """Create partitions for the disk image(s)
 
-        This function sets up the filesystem which the ImageCreator will
-        install into and configure. The ImageCreator class merely creates an
-        install root directory, bind mounts some system directories (e.g. /dev)
-        and writes out /etc/fstab. Other subclasses may also e.g. create a
-        sparse file, format it and loopback mount it to the install root.
+        Create the partitions that will be assembled into disk
+        image(s).
         """
         self.__setup_tmpdir()
         self.__ensure_builddir()
 
-        self._mount_instroot()
+        self._create()
 
     def unmount(self):
         """Unmounts the target filesystem.

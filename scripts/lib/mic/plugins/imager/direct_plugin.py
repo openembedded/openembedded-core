@@ -91,7 +91,7 @@ class DirectPlugin(ImagerPlugin):
                                             creatoropts)
 
         try:
-            creator.mount()
+            creator.create()
             creator.install()
             creator.configure()
             creator.print_outimage_info()
