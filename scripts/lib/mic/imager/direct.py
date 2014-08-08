@@ -31,7 +31,7 @@ import shutil
 
 from mic import kickstart, msger
 from mic.utils import fs_related, runner, misc
-from mic.utils.partitionedfs import PartitionedMount
+from mic.utils.partitionedfs import Image
 from mic.utils.errors import CreatorError, MountError
 from mic.imager.baseimager import BaseImageCreator
 from mic.utils.oe.misc import *
@@ -226,7 +226,7 @@ class DirectImageCreator(BaseImageCreator):
         """
         parts = self._get_parts()
 
-        self.__image = PartitionedMount()
+        self.__image = Image()
 
         for p in parts:
             # as a convenience, set source to the boot partition source
@@ -237,12 +237,11 @@ class DirectImageCreator(BaseImageCreator):
         for p in parts:
             # need to create the filesystems in order to get their
             # sizes before we can add them and do the layout.
-            # PartitionedMount.create() actually calls __format_disks()
-            # to create the disk images and carve out the partitions,
-            # then self.install() calls PartitionedMount.install()
-            # which calls __install_partitition() for each partition
-            # to dd the fs into the partitions.
-
+            # Image.create() actually calls __format_disks() to create
+            # the disk images and carve out the partitions, then
+            # self.assemble() calls Image.assemble() which calls
+            # __write_partitition() for each partition to dd the fs
+            # into the partitions.
             fstab = self.__write_fstab(self.rootfs_dir.get("ROOTFS_DIR"))
 
             p.prepare(self, self.workdir, self.oe_builddir, self.rootfs_dir,

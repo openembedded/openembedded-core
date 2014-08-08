@@ -32,7 +32,13 @@ MBR_OVERHEAD = 1
 # Size of a sector in bytes
 SECTOR_SIZE = 512
 
-class PartitionedMount:
+class Image:
+    """
+    Generic base object for an image.
+
+    An Image is a container for a set of DiskImages and associated
+    partitions.
+    """
     def __init__(self):
         self.disks = {}
         self.partitions = []

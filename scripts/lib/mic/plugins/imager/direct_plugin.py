@@ -34,7 +34,6 @@ from mic import msger
 from mic.utils import misc, fs_related, errors, runner, cmdln
 from mic.conf import configmgr
 from mic.plugin import pluginmgr
-from mic.utils.partitionedfs import PartitionedMount
 
 import mic.imager.direct as direct
 from mic.pluginbase import ImagerPlugin
