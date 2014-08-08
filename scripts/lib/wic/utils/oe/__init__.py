@@ -1,5 +1,5 @@
 #
-# OpenEmbedded mic utils library
+# OpenEmbedded wic utils library
 #
 # Copyright (c) 2013, Intel Corporation.
 # All rights reserved.

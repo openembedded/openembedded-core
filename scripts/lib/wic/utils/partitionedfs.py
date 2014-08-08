@@ -20,11 +20,11 @@
 
 import os
 
-from mic import msger
-from mic.utils import runner
-from mic.utils.errors import ImageError
-from mic.utils.fs_related import *
-from mic.utils.oe.misc import *
+from wic import msger
+from wic.utils import runner
+from wic.utils.errors import ImageError
+from wic.utils.fs_related import *
+from wic.utils.oe.misc import *
 
 # Overhead of the MBR partitioning scheme (just one sector)
 MBR_OVERHEAD = 1

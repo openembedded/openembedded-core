@@ -18,15 +18,15 @@
 import os, sys, re
 import ConfigParser
 
-from mic import msger
-from mic import kickstart
-from mic.utils import misc, runner, errors
+from wic import msger
+from wic import kickstart
+from wic.utils import misc, runner, errors
 
 
 def get_siteconf():
-    mic_path = os.path.dirname(__file__)
-    eos = mic_path.find('scripts') + len('scripts')
-    scripts_path = mic_path[:eos]
+    wic_path = os.path.dirname(__file__)
+    eos = wic_path.find('scripts') + len('scripts')
+    scripts_path = wic_path[:eos]
 
     return scripts_path + "/lib/image/config/wic.conf"
 

@@ -18,8 +18,7 @@
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #
 # DESCRIPTION
-# This implements the 'direct' imager plugin class for 'wic', based
-# loosely on the raw imager plugin from 'mic'
+# This implements the 'direct' imager plugin class for 'wic'
 #
 # AUTHORS
 # Tom Zanussi <tom.zanussi (at] linux.intel.com>
@@ -30,13 +29,13 @@ import shutil
 import re
 import tempfile
 
-from mic import msger
-from mic.utils import misc, fs_related, errors, runner, cmdln
-from mic.conf import configmgr
-from mic.plugin import pluginmgr
+from wic import msger
+from wic.utils import misc, fs_related, errors, runner, cmdln
+from wic.conf import configmgr
+from wic.plugin import pluginmgr
 
-import mic.imager.direct as direct
-from mic.pluginbase import ImagerPlugin
+import wic.imager.direct as direct
+from wic.pluginbase import ImagerPlugin
 
 class DirectPlugin(ImagerPlugin):
     name = 'direct'

@@ -29,7 +29,7 @@ from pykickstart.errors import *
 from pykickstart.options import *
 from pykickstart.commands.bootloader import *
 
-from mic.kickstart.custom_commands.micboot import *
+from wic.kickstart.custom_commands.micboot import *
 
 class Wic_Bootloader(Mic_Bootloader):
     def __init__(self, writePriority=10, appendLine="", driveorder=None,

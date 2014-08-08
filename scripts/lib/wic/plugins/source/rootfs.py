@@ -30,14 +30,14 @@ import shutil
 import re
 import tempfile
 
-from mic import kickstart, msger
-from mic.utils import misc, fs_related, errors, runner, cmdln
-from mic.conf import configmgr
-from mic.plugin import pluginmgr
-import mic.imager.direct as direct
-from mic.pluginbase import SourcePlugin
-from mic.utils.oe.misc import *
-from mic.imager.direct import DirectImageCreator
+from wic import kickstart, msger
+from wic.utils import misc, fs_related, errors, runner, cmdln
+from wic.conf import configmgr
+from wic.plugin import pluginmgr
+import wic.imager.direct as direct
+from wic.pluginbase import SourcePlugin
+from wic.utils.oe.misc import *
+from wic.imager.direct import DirectImageCreator
 
 class RootfsPlugin(SourcePlugin):
     name = 'rootfs'

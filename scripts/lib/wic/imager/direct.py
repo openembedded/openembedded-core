@@ -18,8 +18,7 @@
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #
 # DESCRIPTION
-# This implements the 'direct' image creator class for 'wic', based
-# loosely on the raw image creator from 'mic'
+# This implements the 'direct' image creator class for 'wic'
 #
 # AUTHORS
 # Tom Zanussi <tom.zanussi (at] linux.intel.com>
@@ -29,13 +28,13 @@ import os
 import stat
 import shutil
 
-from mic import kickstart, msger
-from mic.utils import fs_related, runner, misc
-from mic.utils.partitionedfs import Image
-from mic.utils.errors import CreatorError, ImageError
-from mic.imager.baseimager import BaseImageCreator
-from mic.utils.oe.misc import *
-from mic.plugin import pluginmgr
+from wic import kickstart, msger
+from wic.utils import fs_related, runner, misc
+from wic.utils.partitionedfs import Image
+from wic.utils.errors import CreatorError, ImageError
+from wic.imager.baseimager import BaseImageCreator
+from wic.utils.oe.misc import *
+from wic.plugin import pluginmgr
 
 disk_methods = {
     "do_install_disk":None,

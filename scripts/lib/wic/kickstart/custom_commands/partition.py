@@ -29,9 +29,9 @@ import os
 import tempfile
 
 from pykickstart.commands.partition import *
-from mic.utils.oe.misc import *
-from mic.kickstart.custom_commands import *
-from mic.plugin import pluginmgr
+from wic.utils.oe.misc import *
+from wic.kickstart.custom_commands import *
+from wic.plugin import pluginmgr
 
 partition_methods = {
     "do_stage_partition":None,

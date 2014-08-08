@@ -18,7 +18,7 @@
 import os
 import subprocess
 
-from mic import msger
+from wic import msger
 
 def runtool(cmdln_or_args, catch=1):
     """ wrapper for most of the subprocess calls

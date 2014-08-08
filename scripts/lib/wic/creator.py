@@ -18,10 +18,10 @@
 import os, sys, re
 from optparse import SUPPRESS_HELP
 
-from mic import msger
-from mic.utils import cmdln, errors
-from mic.conf import configmgr
-from mic.plugin import pluginmgr
+from wic import msger
+from wic.utils import cmdln, errors
+from wic.conf import configmgr
+from wic.plugin import pluginmgr
 
 
 class Creator(cmdln.Cmdln):
@@ -34,7 +34,7 @@ class Creator(cmdln.Cmdln):
     ${option_list}
     """
 
-    name = 'mic create(cr)'
+    name = 'wic create(cr)'
 
     def __init__(self, *args, **kwargs):
         cmdln.Cmdln.__init__(self, *args, **kwargs)
@@ -64,7 +64,7 @@ class Creator(cmdln.Cmdln):
                              help='Path of logfile')
         optparser.add_option('-c', '--config', type='string', dest='config',
                              default=None,
-                             help='Specify config file for mic')
+                             help='Specify config file for wic')
         optparser.add_option('-o', '--outdir', type='string', action='store',
                              dest='outdir', default=None,
                              help='Output directory')

@@ -30,8 +30,8 @@ import pykickstart.version as ksversion
 from pykickstart.handlers.control import commandMap
 from pykickstart.handlers.control import dataMap
 
-from mic import msger
-from mic.utils import errors, misc, runner, fs_related as fs
+from wic import msger
+from wic.utils import errors, misc, runner, fs_related as fs
 from custom_commands import wicboot, partition
 
 def read_kickstart(path):

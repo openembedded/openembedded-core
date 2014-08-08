@@ -21,10 +21,10 @@ import os, sys
 import tempfile
 import shutil
 
-from mic import kickstart
-from mic import msger
-from mic.utils.errors import CreatorError
-from mic.utils import misc, runner, fs_related as fs
+from wic import kickstart
+from wic import msger
+from wic.utils.errors import CreatorError
+from wic.utils import misc, runner, fs_related as fs
 
 class BaseImageCreator(object):
     """Base class for image creation.
@@ -34,7 +34,7 @@ class BaseImageCreator(object):
 
     e.g.
 
-      import mic.imgcreate as imgcreate
+      import wic.imgcreate as imgcreate
       ks = imgcreate.read_kickstart("foo.ks")
       imgcreate.ImageCreator(ks, "foo").create()
     """

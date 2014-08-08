@@ -17,16 +17,16 @@
 
 import os, sys
 
-from mic import msger
-from mic import pluginbase
-from mic.utils import errors
-from mic.utils.oe.misc import *
+from wic import msger
+from wic import pluginbase
+from wic.utils import errors
+from wic.utils.oe.misc import *
 
 __ALL__ = ['PluginMgr', 'pluginmgr']
 
 PLUGIN_TYPES = ["imager", "source"]
 
-PLUGIN_DIR = "/lib/mic/plugins" # relative to scripts
+PLUGIN_DIR = "/lib/wic/plugins" # relative to scripts
 SCRIPTS_PLUGIN_DIR = "scripts" + PLUGIN_DIR
 
 class PluginMgr(object):
@@ -41,9 +41,9 @@ class PluginMgr(object):
         return cls._instance
 
     def __init__(self):
-        mic_path = os.path.dirname(__file__)
-        eos = mic_path.find('scripts') + len('scripts')
-        scripts_path = mic_path[:eos]
+        wic_path = os.path.dirname(__file__)
+        eos = wic_path.find('scripts') + len('scripts')
+        scripts_path = wic_path[:eos]
         self.scripts_path = scripts_path
         self.plugin_dir = scripts_path + PLUGIN_DIR
         self.layers_path = None

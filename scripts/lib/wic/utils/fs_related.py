@@ -26,10 +26,10 @@ import string
 import time
 import uuid
 
-from mic import msger
-from mic.utils import runner
-from mic.utils.errors import *
-from mic.utils.oe.misc import *
+from wic import msger
+from wic.utils import runner
+from wic.utils.errors import *
+from wic.utils.oe.misc import *
 
 def find_binary_path(binary):
     if os.environ.has_key("PATH"):

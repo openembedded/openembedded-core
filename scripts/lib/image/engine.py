@@ -37,12 +37,12 @@ import subprocess
 import shutil
 
 import os, sys, errno
-from mic import msger, creator
-from mic.utils import cmdln, misc, errors
-from mic.conf import configmgr
-from mic.plugin import pluginmgr
-from mic.__version__ import VERSION
-from mic.utils.oe.misc import *
+from wic import msger, creator
+from wic.utils import cmdln, misc, errors
+from wic.conf import configmgr
+from wic.plugin import pluginmgr
+from wic.__version__ import VERSION
+from wic.utils.oe.misc import *
 
 
 def verify_build_env():

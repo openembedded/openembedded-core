@@ -18,15 +18,15 @@
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #
 # DESCRIPTION
-# This module provides a place to collect various mic-related utils
+# This module provides a place to collect various wic-related utils
 # for the OpenEmbedded Image Tools.
 #
 # AUTHORS
 # Tom Zanussi <tom.zanussi (at] linux.intel.com>
 #
 
-from mic import msger
-from mic.utils import runner
+from wic import msger
+from wic.utils import runner
 
 def __exec_cmd(cmd_and_args, as_shell = False, catch = 3):
     """

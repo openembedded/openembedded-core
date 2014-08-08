@@ -17,8 +17,8 @@
 
 import os
 import shutil
-from mic import msger
-from mic.utils import errors
+from wic import msger
+from wic.utils import errors
 
 class _Plugin(object):
     class __metaclass__(type):
@@ -26,15 +26,15 @@ class _Plugin(object):
             if not hasattr(cls, 'plugins'):
                 cls.plugins = {}
 
-            elif 'mic_plugin_type' in attrs:
-                if attrs['mic_plugin_type'] not in cls.plugins:
-                    cls.plugins[attrs['mic_plugin_type']] = {}
+            elif 'wic_plugin_type' in attrs:
+                if attrs['wic_plugin_type'] not in cls.plugins:
+                    cls.plugins[attrs['wic_plugin_type']] = {}
 
-            elif hasattr(cls, 'mic_plugin_type') and 'name' in attrs:
-                cls.plugins[cls.mic_plugin_type][attrs['name']] = cls
+            elif hasattr(cls, 'wic_plugin_type') and 'name' in attrs:
+                cls.plugins[cls.wic_plugin_type][attrs['name']] = cls
 
         def show_plugins(cls):
-            for cls in cls.plugins[cls.mic_plugin_type]:
+            for cls in cls.plugins[cls.wic_plugin_type]:
                 print cls
 
         def get_plugins(cls):
@@ -42,11 +42,11 @@ class _Plugin(object):
 
 
 class ImagerPlugin(_Plugin):
-    mic_plugin_type = "imager"
+    wic_plugin_type = "imager"
 
 
 class SourcePlugin(_Plugin):
-    mic_plugin_type = "source"
+    wic_plugin_type = "source"
     """
     The methods that can be implemented by --source plugins.
 

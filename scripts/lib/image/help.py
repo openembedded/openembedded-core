@@ -144,7 +144,7 @@ DESCRIPTION
     the corresponding artifacts are typically found in a normal
     OpenEmbedded build.
 
-    Alternatively, users can use the -e option to have 'mic' determine
+    Alternatively, users can use the -e option to have 'wic' determine
     those locations for a given image.  If the -e option is used, the
     user needs to have set the appropriate MACHINE variable in
     local.conf, and have sourced the build environment.
@@ -349,12 +349,12 @@ DESCRIPTION
     implementation that populates a corresponding partition.
 
     A source plugin is created as a subclass of SourcePlugin (see
-    scripts/lib/mic/pluginbase.py) and the plugin file containing it
-    is added to scripts/lib/mic/plugins/source/ to make the plugin
+    scripts/lib/wic/pluginbase.py) and the plugin file containing it
+    is added to scripts/lib/wic/plugins/source/ to make the plugin
     implementation available to the wic implementation.
 
     Source plugins can also be implemented and added by external
-    layers - any plugins found in a scripts/lib/mic/plugins/source/
+    layers - any plugins found in a scripts/lib/wic/plugins/source/
     directory in an external layer will also be made available.
 
     When the wic implementation needs to invoke a partition-specific
