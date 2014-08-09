@@ -31,7 +31,7 @@ SRC_URI[sha256sum] = "aed0a4a6db4e310cbdfeb3613fa6f86fddc91ef624c1e3f8937a6304c6
 inherit autotools gettext pkgconfig texinfo
 BBCLASSEXTEND = "native"
 
-DEPENDS = "libunistring bdwgc gmp libtool libffi"
+DEPENDS = "libunistring bdwgc gmp libtool libffi ncurses readline"
 # add guile-native only to the target recipe's DEPENDS
 DEPENDS_append_class-target = " guile-native libatomics-ops"
 
