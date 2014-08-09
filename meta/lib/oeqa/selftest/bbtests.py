@@ -102,7 +102,7 @@ class BitbakeTests(oeSelfTest):
         bitbake('-ccleanall man')
         self.delete_recipeinc('man')
         self.assertEqual(result.status, 1, msg='Command succeded when it should have failed')
-        self.assertTrue('ERROR: Fetcher failure: Unable to find file file://invalid anywhere. The paths that were searched were:' in result.output)
+        self.assertTrue('Fetcher failure: Unable to find file file://invalid anywhere. The paths that were searched were:' in result.output)
         self.assertTrue('ERROR: Function failed: Fetcher failure for URL: \'file://invalid\'. Unable to fetch URL from any source.' in result.output)
 
     @testcase(171)
