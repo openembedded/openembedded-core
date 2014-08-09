@@ -32,8 +32,6 @@ do_install_append() {
 	install -m 0755 ${WORKDIR}/tslib.sh ${D}${sysconfdir}/profile.d/
 }
 
-SRC_URI_OVERRIDES_PACKAGE_ARCH = "0"
-
 # People should consider using udev's /dev/input/touchscreen0 symlink
 # instead of detect-stylus
 #RDEPENDS_tslib-conf_weird-machine = "detect-stylus"
