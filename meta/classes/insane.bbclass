@@ -794,7 +794,7 @@ def package_qa_check_rdepends(pkg, pkgdest, skip, taskdeps, packages, d):
                             break
                 if rdep_data and 'PN' in rdep_data and rdep_data['PN'] in taskdeps:
                     continue
-                error_msg = "%s rdepends on %s but its not a build dependency?" % (pkg, rdepend)
+                error_msg = "%s rdepends on %s, but it isn't a build dependency?" % (pkg, rdepend)
                 sane = package_qa_handle_error("build-deps", error_msg, d)
 
     return sane

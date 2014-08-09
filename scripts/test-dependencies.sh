@@ -244,9 +244,11 @@ compare_deps() {
     else
       missing_deps=
       for dep in ${max_deps}; do
-        echo "${min_deps}" | grep -q " ${dep} " || missing_deps="${missing_deps} ${dep}"
-        echo # to get rid of dots on last line
-        echo "WARN: ${recipe}: ${package} rdepends on ${dep} but its not a build dependency?" | tee -a ${OUTPUT_FILE}
+        if ! echo "${min_deps}" | grep -q " ${dep} " ; then
+          missing_deps="${missing_deps} ${dep}"
+          echo # to get rid of dots on last line
+          echo "WARN: ${recipe}: ${package} rdepends on ${dep}, but it isn't a build dependency?" | tee -a ${OUTPUT_FILE}
+        fi
       done
       if [ -n "${missing_deps}" ] ; then
         echo ${recipe} >> ${OUTPUTC}/failed-recipes.log
