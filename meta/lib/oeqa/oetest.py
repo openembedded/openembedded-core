@@ -10,25 +10,29 @@
 import os, re, mmap
 import unittest
 import inspect
+import subprocess
 from oeqa.utils.decorators import LogResults
 
-def loadTests(tc):
-
-    # set the context object passed from the test class
-    setattr(oeTest, "tc", tc)
-    # set ps command to use
-    setattr(oeRuntimeTest, "pscmd", "ps -ef" if oeTest.hasPackage("procps") else "ps")
-    # prepare test suite, loader and runner
-    suite = unittest.TestSuite()
+def loadTests(tc, type="runtime"):
+    if type == "runtime":
+        # set the context object passed from the test class
+        setattr(oeTest, "tc", tc)
+        # set ps command to use
+        setattr(oeRuntimeTest, "pscmd", "ps -ef" if oeTest.hasPackage("procps") else "ps")
+        # prepare test suite, loader and runner
+        suite = unittest.TestSuite()
+    elif type == "sdk":
+        # set the context object passed from the test class
+        setattr(oeSDKTest, "tc", tc)
     testloader = unittest.TestLoader()
     testloader.sortTestMethodsUsing = None
     suite = testloader.loadTestsFromNames(tc.testslist)
 
     return suite
 
-def runTests(tc):
+def runTests(tc, type="runtime"):
 
-    suite = loadTests(tc)
+    suite = loadTests(tc, type)
     print("Test modules  %s" % tc.testslist)
     print("Found %s tests" % suite.countTestCases())
     runner = unittest.TextTestRunner(verbosity=2)
@@ -58,11 +62,14 @@ class oeTest(unittest.TestCase):
             return False
 
 class oeRuntimeTest(oeTest):
-
     def __init__(self, methodName='runTest'):
         self.target = oeRuntimeTest.tc.target
         super(oeRuntimeTest, self).__init__(methodName)
 
+class oeSDKTest(unittest.TestCase):
+    def __init__(self, methodName='runTest'):
+        self.sdktestdir = oeSDKTest.tc.sdktestdir
+        super(oeSDKTest, self).__init__(methodName)
 
 def getmodule(pos=2):
     # stack returns a list of tuples containg frame information
