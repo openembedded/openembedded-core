@@ -34,13 +34,12 @@ SRC_URI += "file://configure-targets.patch \
             file://find.pl \
             file://openssl-fix-des.pod-error.patch \
             file://Makefiles-ptest.patch \
-            file://heartbeat-test-private-api.patch \
             file://ptest-deps.patch \
             file://run-ptest \
            "
 
-SRC_URI[md5sum] = "8d6d684a9430d5cc98a62a5d8fbda8cf"
-SRC_URI[sha256sum] = "9d1c8a9836aa63e2c6adb684186cbd4371c9e9dcc01d6e3bb447abf2d4d3d093"
+SRC_URI[md5sum] = "c8dc151a671b9b92ff3e4c118b174972"
+SRC_URI[sha256sum] = "3c179f46ca77069a6a0bac70212a9b3b838b2f66129cb52d568837fc79d8fcc7"
 
 PACKAGES =+ " \
 	${PN}-engines \
