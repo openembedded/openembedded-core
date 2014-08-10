@@ -27,6 +27,7 @@ PACKAGECONFIG ??= ""
 PACKAGECONFIG[jpeg2000] = "--enable-jpeg2000,--disable-jpeg2000,jasper"
 PACKAGECONFIG[drmkms] = "--enable-drmkms,--disable-drmkms,libdrm"
 PACKAGECONFIG[tiff] = "--enable-tiff,--disable-tiff,tiff"
+PACKAGECONFIG[webp] = "--enable-webp,--disable-webp,libwebp"
 
 EXTRA_OECONF = "\
   --with-gfxdrivers=none \
