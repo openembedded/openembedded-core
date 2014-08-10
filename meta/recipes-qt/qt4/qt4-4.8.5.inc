@@ -5,7 +5,7 @@ LIC_FILES_CHKSUM = "file://LICENSE.LGPL;md5=fbc093901857fcd118f065f900982c24 \
 
 FILESEXTRAPATHS =. "${FILE_DIRNAME}/qt4-${PV}:"
 
-SRC_URI = "http://download.qt-project.org/official_releases/qt/4.8/${PV}/qt-everywhere-opensource-src-${PV}.tar.gz \
+SRC_URI = "http://download.qt-project.org/archive/qt/4.8/${PV}/qt-everywhere-opensource-src-${PV}.tar.gz \
            file://0003-webkit2-set-OUTPUT_DIR-value-if-empty.patch \
            file://0004-configure-qmake-is-already-built-in-qt4-tools-native.patch \
            file://0008-qmake.pro-Allow-building-a-separate-qmake-for-the-ta.patch \
