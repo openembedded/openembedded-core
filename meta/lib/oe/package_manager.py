@@ -1666,7 +1666,7 @@ class DpkgPM(PackageManager):
                 priority += 5
 
             pkg_exclude = self.d.getVar('PACKAGE_EXCLUDE', True) or ""
-            for pkg in pkg_exclude:
+            for pkg in pkg_exclude.split():
                 prefs_file.write(
                     "Package: %s\n"
                     "Pin: release *\n"
