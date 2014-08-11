@@ -7,7 +7,9 @@ MOD_PV = "${@d.getVar('PV',1)[1:]}"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://LICENCE;md5=33bcd4bce8f3c197f2aefbdbd2d299bc"
 
-SRC_URI = "svn://svn.tartarus.org/sgt;module=puzzles;rev=${MOD_PV}"
+SRC_URI = "svn://svn.tartarus.org/sgt;module=puzzles;rev=${MOD_PV} \
+           file://fix-compiling-failure-with-option-g-O.patch \
+"
 
 S = "${WORKDIR}/${BPN}"
 
