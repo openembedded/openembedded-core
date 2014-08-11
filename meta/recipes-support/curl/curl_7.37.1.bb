@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://COPYING;beginline=7;md5=3a34942f4ae3fbf1a303160714e66
 
 DEPENDS = "zlib gnutls"
 DEPENDS_class-native = "zlib-native openssl-native"
-DEPENDS_class-nativesdk = "nativesdk-zlib"
+DEPENDS_class-nativesdk = "nativesdk-zlib nativesdk-openssl"
 
 SRC_URI = "http://curl.haxx.se/download/curl-${PV}.tar.bz2 \
            file://pkgconfig_fix.patch \
@@ -25,7 +25,7 @@ inherit autotools pkgconfig binconfig multilib_header
 
 PACKAGECONFIG ??= "gnutls ${@bb.utils.contains("DISTRO_FEATURES", "ipv6", "ipv6", "", d)}"
 PACKAGECONFIG_class-native = "ipv6 ssl"
-PACKAGECONFIG_class-nativesdk = "ipv6"
+PACKAGECONFIG_class-nativesdk = "ipv6 ssl"
 PACKAGECONFIG[ipv6] = "--enable-ipv6,--disable-ipv6,"
 PACKAGECONFIG[ssl] =  "--with-ssl, --without-ssl, ,"
 PACKAGECONFIG[gnutls] =  "--with-gnutls=${STAGING_LIBDIR}/../, --without-gnutls, gnutls,"
