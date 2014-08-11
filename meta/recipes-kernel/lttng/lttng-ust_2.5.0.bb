@@ -17,11 +17,11 @@ RPROVIDES_${PN} = "lttng2-ust"
 RREPLACES_${PN} = "lttng2-ust"
 RCONFLICTS_${PN} = "lttng2-ust"
 
-SRCREV = "5ba5bf7fba804d2de773ae1c71106a8ed856c56a"
-PV = "2.4.0"
+SRCREV = "ce59a997afdb7dc8af02b464430bb7e35549fa66"
+PV = "2.5.0"
 PE = "2"
 
-SRC_URI = "git://git.lttng.org/lttng-ust.git;branch=stable-2.4 \
+SRC_URI = "git://git.lttng.org/lttng-ust.git;branch=stable-2.5 \
            file://lttng-ust-doc-examples-disable.patch \
 	   "
 
