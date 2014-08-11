@@ -61,7 +61,7 @@ FILES_${PN}-dev += "${base_libdir}/security/*.la ${base_libdir}/*.la ${base_libd
 FILES_${PN}-runtime = "${sysconfdir}"
 FILES_${PN}-xtests = "${datadir}/Linux-PAM/xtests"
 
-PACKAGES_DYNAMIC += "^pam-plugin-.*"
+PACKAGES_DYNAMIC += "^${MLPREFIX}pam-plugin-.*"
 
 def get_multilib_bit(d):
     baselib = d.getVar('baselib', True) or ''
@@ -69,12 +69,12 @@ def get_multilib_bit(d):
 
 libpam_suffix = "suffix${@get_multilib_bit(d)}"
 
-RPROVIDES_${PN} += "libpam-${libpam_suffix}"
-RPROVIDES_${PN}-runtime += "libpam-runtime-${libpam_suffix}"
+RPROVIDES_${PN} += "${PN}-${libpam_suffix}"
+RPROVIDES_${PN}-runtime += "${PN}-runtime-${libpam_suffix}"
 
-RDEPENDS_${PN}-runtime = "libpam-${libpam_suffix} pam-plugin-deny-${libpam_suffix} pam-plugin-permit-${libpam_suffix} pam-plugin-warn-${libpam_suffix} pam-plugin-unix-${libpam_suffix}"
-RDEPENDS_${PN}-xtests = "libpam-${libpam_suffix} pam-plugin-access-${libpam_suffix} pam-plugin-debug-${libpam_suffix} pam-plugin-cracklib-${libpam_suffix} pam-plugin-pwhistory-${libpam_suffix} pam-plugin-succeed-if-${libpam_suffix} pam-plugin-time-${libpam_suffix} coreutils"
-RRECOMMENDS_${PN} = "libpam-runtime-${libpam_suffix}"
+RDEPENDS_${PN}-runtime = "${PN}-${libpam_suffix} pam-plugin-deny-${libpam_suffix} pam-plugin-permit-${libpam_suffix} pam-plugin-warn-${libpam_suffix} pam-plugin-unix-${libpam_suffix}"
+RDEPENDS_${PN}-xtests = "${PN}-${libpam_suffix} pam-plugin-access-${libpam_suffix} pam-plugin-debug-${libpam_suffix} pam-plugin-cracklib-${libpam_suffix} pam-plugin-pwhistory-${libpam_suffix} pam-plugin-succeed-if-${libpam_suffix} pam-plugin-time-${libpam_suffix} coreutils"
+#RRECOMMENDS_${PN} = "${PN}-runtime-${libpam_suffix}"
 
 python populate_packages_prepend () {
     def pam_plugin_append_file(pn, dir, file):
@@ -85,14 +85,15 @@ python populate_packages_prepend () {
         d.setVar('FILES_' + pn, nf)
 
     def pam_plugin_hook(file, pkg, pattern, format, basename):
+        pn = d.getVar('PN', True)
         libpam_suffix = d.getVar('libpam_suffix', True)
         mlprefix = d.getVar('MLPREFIX', True) or ''
 
         rdeps = d.getVar('RDEPENDS_' + pkg, True)
         if rdeps:
-            rdeps = rdeps + " " + mlprefix + "libpam-" + libpam_suffix
+            rdeps = rdeps + " " + mlprefix + pn + "-" + libpam_suffix
         else:
-            rdeps = mlprefix + "libpam-" + libpam_suffix
+            rdeps = mlprefix + pn + "-" + libpam_suffix
         d.setVar('RDEPENDS_' + pkg, rdeps)
 
         provides = d.getVar('RPROVIDES_' + pkg, True)
@@ -142,3 +143,5 @@ python do_pam_sanity () {
         bb.warn("Building libpam but 'pam' isn't in DISTRO_FEATURES, PAM won't work correctly")
 }
 addtask pam_sanity before do_configure
+
+BBCLASSEXTEND = "nativesdk native"
