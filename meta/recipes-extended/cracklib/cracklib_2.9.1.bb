@@ -18,8 +18,8 @@ SRC_URI[sha256sum] = "408905c2539a97dc8cbbb6d7cd2046cb5647a345b4bda399220d9471be
 
 inherit autotools-brokensep gettext
 
-BBCLASSEXTEND = "native"
-
 do_install_append_class-target() {
 	create-cracklib-dict -o ${D}${datadir}/cracklib/pw_dict ${D}${datadir}/cracklib/cracklib-small
 }
+
+BBCLASSEXTEND = "native nativesdk"
