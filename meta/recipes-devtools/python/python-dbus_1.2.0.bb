@@ -14,6 +14,10 @@ S = "${WORKDIR}/dbus-python-${PV}"
 
 inherit distutils-base autotools pkgconfig
 
+PACKAGECONFIG ?= ""
+PACKAGECONFIG[docs] = "--enable-html-docs,--disable-html-docs,python-docutils-native"
+PACKAGECONFIG[api-docs] = "--enable-api-docs,--disable-api-docs,python-docutils-native python-epydoc-native"
+
 export BUILD_SYS
 export HOST_SYS
 
