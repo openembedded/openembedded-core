@@ -33,6 +33,10 @@ SRC_URI = "http://www.busybox.net/downloads/busybox-${PV}.tar.bz2;name=tarball \
            file://recognize_connmand.patch \
 "
 
+SRC_URI_append_mips = " \
+    ${@base_conditional( "DEBUG_BUILD", "1", "file://fix-ice-on-mips-while-compiling-with-g-O.patch", "", d )} \
+"
+
 SRC_URI[tarball.md5sum] = "337d1a15ab1cb1d4ed423168b1eb7d7e"
 SRC_URI[tarball.sha256sum] = "ae0b029d0a9e4dd71a077a790840e496dd838998e4571b87b60fed7462b6678b"
 
