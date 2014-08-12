@@ -121,10 +121,12 @@ do_configure_prepend () {
     # detected by perf, since it triggers via: ifeq ($(ARCH),x86_64). In a 32 bit
     # build, with a 64 bit multilib, the arch won't match and the detection of a 
     # 64 bit build (and library) are not exected. To ensure that libraries are
-    # installed to the correct location, we can make the substitution in the 
-    # config/Makefile. For non multilib builds, this has no impact.
+    # installed to the correct location, we can use the weak assignment in the
+    # config/Makefile.
     if [ -e "${S}/tools/perf/config/Makefile" ]; then
-        sed -i 's,libdir = $(prefix)/$(lib),libdir = $(prefix)/${baselib},' ${S}/tools/perf/config/Makefile
+        # Match $(prefix)/$(lib) and $(prefix)/lib
+        sed -i 's,^libdir = \($(prefix)/.*lib\),libdir ?= \1,' \
+            ${S}/tools/perf/config/Makefile
     fi
     # We need to ensure the --sysroot option in CC is preserved
     if [ -e "${S}/tools/perf/Makefile.perf" ]; then
