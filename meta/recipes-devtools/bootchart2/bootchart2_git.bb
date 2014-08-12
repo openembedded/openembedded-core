@@ -123,6 +123,7 @@ do_install () {
     export PY_LIBDIR="${libdir}/${PYTHON_DIR}"
     export BINDIR="${bindir}"
     export DESTDIR="${D}"
+    export LIBDIR="${base_libdir}"
 
     oe_runmake install
     install -d ${D}${sysconfdir}/init.d
