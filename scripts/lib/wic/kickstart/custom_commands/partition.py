@@ -143,16 +143,16 @@ class Wic_PartData(Mic_PartData):
             msger.error("The '%s' --source specified for %s doesn't exist.\n\tSee 'wic list source-plugins' for a list of available --sources.\n\tSee 'wic help source-plugins' for details on adding a new source plugin." % (self.source, self.mountpoint))
 
         self._source_methods = pluginmgr.get_source_plugin_methods(self.source, partition_methods)
-        self._source_methods["do_configure_partition"](self, cr, cr_workdir,
+        self._source_methods["do_configure_partition"](self, None, cr, cr_workdir,
                                                        oe_builddir,
                                                        bootimg_dir,
                                                        kernel_dir,
                                                        native_sysroot)
-        self._source_methods["do_stage_partition"](self, cr, cr_workdir,
+        self._source_methods["do_stage_partition"](self, None, cr, cr_workdir,
                                                    oe_builddir,
                                                    bootimg_dir, kernel_dir,
                                                    native_sysroot)
-        self._source_methods["do_prepare_partition"](self, cr, cr_workdir,
+        self._source_methods["do_prepare_partition"](self, None, cr, cr_workdir,
                                                      oe_builddir,
                                                      bootimg_dir, kernel_dir, rootfs_dir,
                                                      native_sysroot)

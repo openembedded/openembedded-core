@@ -64,8 +64,9 @@ class SourcePlugin(_Plugin):
         msger.debug("SourcePlugin: do_install_disk: disk: %s" % disk_name)
 
     @classmethod
-    def do_stage_partition(self, part, cr, workdir, oe_builddir, bootimg_dir,
-                           kernel_dir, native_sysroot):
+    def do_stage_partition(self, part, source_params, cr, cr_workdir,
+                           oe_builddir, bootimg_dir, kernel_dir,
+                           native_sysroot):
         """
         Special content staging hook called before do_prepare_partition(),
         normally empty.
@@ -80,8 +81,9 @@ class SourcePlugin(_Plugin):
         msger.debug("SourcePlugin: do_stage_partition: part: %s" % part)
 
     @classmethod
-    def do_configure_partition(self, part, cr, cr_workdir, oe_builddir,
-                               bootimg_dir, kernel_dir, native_sysroot):
+    def do_configure_partition(self, part, source_params, cr, cr_workdir,
+                               oe_builddir, bootimg_dir, kernel_dir,
+                               native_sysroot):
         """
         Called before do_prepare_partition(), typically used to create
         custom configuration files for a partition, for example
@@ -90,8 +92,9 @@ class SourcePlugin(_Plugin):
         msger.debug("SourcePlugin: do_configure_partition: part: %s" % part)
 
     @classmethod
-    def do_prepare_partition(self, part, cr, cr_workdir, oe_builddir, bootimg_dir,
-                             kernel_dir, rootfs_dir, native_sysroot):
+    def do_prepare_partition(self, part, source_params, cr, cr_workdir,
+                             oe_builddir, bootimg_dir, kernel_dir, rootfs_dir,
+                             native_sysroot):
         """
         Called to do the actual content population for a partition i.e. it
         'prepares' the partition to be incorporated into the image.
