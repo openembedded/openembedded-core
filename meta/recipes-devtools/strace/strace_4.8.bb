@@ -10,6 +10,7 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/strace/strace-${PV}.tar.xz \
            file://Makefile-ptest.patch \
            file://strace-fix-64-bit-process-detection.patch \
            file://run-ptest \
+           file://0001-Work-around-conflict-between-sys-ptrace.h-and-linux-.patch \
           "
 
 SRC_URI[md5sum] = "c575ef43829586801f514fd91bfe7575"
