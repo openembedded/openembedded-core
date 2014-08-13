@@ -5,10 +5,6 @@ SECTION = "console/network"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://COPYING;beginline=7;md5=3a34942f4ae3fbf1a303160714e664ac"
 
-DEPENDS = "zlib gnutls"
-DEPENDS_class-native = "zlib-native openssl-native"
-DEPENDS_class-nativesdk = "nativesdk-zlib nativesdk-openssl"
-
 SRC_URI = "http://curl.haxx.se/download/curl-${PV}.tar.bz2 \
            file://pkgconfig_fix.patch \
 "
@@ -23,22 +19,23 @@ SRC_URI[sha256sum] = "c3ef3cd148f3778ddbefb344117d7829db60656efe1031f9e3065fc0fa
 
 inherit autotools pkgconfig binconfig multilib_header
 
-PACKAGECONFIG ??= "gnutls ${@bb.utils.contains("DISTRO_FEATURES", "ipv6", "ipv6", "", d)}"
-PACKAGECONFIG_class-native = "ipv6 ssl"
-PACKAGECONFIG_class-nativesdk = "ipv6 ssl"
-PACKAGECONFIG[ipv6] = "--enable-ipv6,--disable-ipv6,"
-PACKAGECONFIG[ssl] =  "--with-ssl, --without-ssl, ,"
-PACKAGECONFIG[gnutls] =  "--with-gnutls=${STAGING_LIBDIR}/../, --without-gnutls, gnutls,"
+PACKAGECONFIG ??= "${@bb.utils.contains("DISTRO_FEATURES", "ipv6", "ipv6", "", d)} gnutls zlib"
+PACKAGECONFIG_class-native = "ipv6 ssl zlib"
+PACKAGECONFIG_class-nativesdk = "ipv6 ssl zlib"
 
-EXTRA_OECONF = "--with-zlib=${STAGING_LIBDIR}/../ \
-                --without-libssh2 \
+PACKAGECONFIG[ipv6] = "--enable-ipv6,--disable-ipv6,"
+PACKAGECONFIG[ssl] = "--with-ssl,--without-ssl,openssl"
+PACKAGECONFIG[gnutls] = "--with-gnutls=${STAGING_LIBDIR}/../,--without-gnutls,gnutls"
+PACKAGECONFIG[zlib] = "--with-zlib=${STAGING_LIBDIR}/../,--without-zlib,zlib"
+
+EXTRA_OECONF = "--without-libssh2 \
                 --with-random=/dev/urandom \
                 --without-libidn \
                 --enable-crypto-auth \
                 --disable-ldap \
                 --disable-ldaps \
                 --with-ca-bundle=${sysconfdir}/ssl/certs/ca-certificates.crt \
-                "
+"
 
 do_configure_prepend() {
 	sed -i s:OPT_GNUTLS/bin:OPT_GNUTLS:g ${S}/configure.ac
