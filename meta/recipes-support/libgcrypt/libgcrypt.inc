@@ -23,8 +23,8 @@ inherit autotools-brokensep texinfo binconfig-disabled pkgconfig
 EXTRA_OECONF = "--disable-asm --with-capabilities"
 
 do_configure_prepend () {
-	# Else these could be used in prefernce to those in aclocal-copy
-	rm -f ${S}/m4/*.m4
+	# Else this could be used in preference to the one in aclocal-copy
+	rm -f ${S}/m4/gpg-error.m4
 }
 
 # libgcrypt.pc is added locally and thus installed here
