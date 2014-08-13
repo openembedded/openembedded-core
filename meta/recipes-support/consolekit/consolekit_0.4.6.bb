@@ -6,7 +6,7 @@ LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=59530bdf33659b29e73d4adb9f9f6552 \
                     file://src/main.c;endline=21;md5=0a994e09769780220163255d8f9071c3"
 
-DEPENDS = "glib-2.0 dbus dbus-glib virtual/libx11"
+DEPENDS = "glib-2.0 glib-2.0-native dbus dbus-glib virtual/libx11"
 RDEPENDS_${PN} += "base-files"
 
 inherit autotools pkgconfig
