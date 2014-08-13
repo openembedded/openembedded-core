@@ -12,7 +12,9 @@ RDEPENDS_${PN} += "base-files"
 inherit autotools pkgconfig
 
 SRC_URI = "http://www.freedesktop.org/software/ConsoleKit/dist/ConsoleKit-${PV}.tar.xz \
-           file://sepbuildfix.patch"
+           file://sepbuildfix.patch \
+           file://add-polkit-configure-argument.patch \
+"
 
 SRC_URI[md5sum] = "611792b4d616253a5bdec9175f8b7678"
 SRC_URI[sha256sum] = "b41d17e06f80059589fbeefe96ad07bcc564c49e65516da1caf975146475565c"
@@ -23,8 +25,7 @@ PACKAGECONFIG ??= "${@bb.utils.contains('DISTRO_FEATURES', 'pam', 'pam', '', d)}
                    ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'systemd', '', d)}"
 
 PACKAGECONFIG[pam] = "--enable-pam-module --with-pam-module-dir=${base_libdir}/security,--disable-pam-module,libpam"
-# No option to turn it on or off, so rely on the build dependency for now.
-PACKAGECONFIG[policykit] = ",,polkit"
+PACKAGECONFIG[policykit] = "--with-polkit,--without-polkit,polkit"
 PACKAGECONFIG[systemd] = "--with-systemdsystemunitdir=${systemd_unitdir}/system/,--with-systemdsystemunitdir="
 
 FILES_${PN} += "${localstatedir}/log/ConsoleKit ${exec_prefix}/lib/ConsoleKit \
