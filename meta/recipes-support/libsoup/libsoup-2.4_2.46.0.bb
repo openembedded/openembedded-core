@@ -23,7 +23,7 @@ SRC_URI[sha256sum] = "fa3d5574c1a2df521242e2ca624a2b3057121798cab9f8f40525aa186a
 
 S = "${WORKDIR}/libsoup-${PV}"
 
-inherit autotools pkgconfig
+inherit autotools gettext pkgconfig
 
 # glib-networking is needed for SSL, proxies, etc.
 RRECOMMENDS_${PN} = "glib-networking"
