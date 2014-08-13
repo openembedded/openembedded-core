@@ -38,3 +38,5 @@ FILES_liblzma-staticdev = "${libdir}/liblzma.a"
 FILES_liblzma-dbg = "${libdir}/.debug/liblzma*"
 
 BBCLASSEXTEND = "native nativesdk"
+
+export CONFIG_SHELL="/bin/sh"
