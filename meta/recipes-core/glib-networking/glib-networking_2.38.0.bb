@@ -24,7 +24,7 @@ PACKAGECONFIG[pkcs11] = "--with-pkcs11,--without-pkcs11,p11-kit"
 
 EXTRA_OECONF = "--without-gnome-proxy"
 
-inherit gnomebase
+inherit gnomebase gettext
 
 FILES_${PN} += "${libdir}/gio/modules/libgio*.so ${datadir}/dbus-1/services/"
 FILES_${PN}-dbg += "${libdir}/gio/modules/.debug/"
