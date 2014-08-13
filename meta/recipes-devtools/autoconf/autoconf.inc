@@ -23,6 +23,7 @@ RDEPENDS_${PN} = "m4 gnu-config \
 		  perl-module-getopt-long \
 		  perl-module-io-file \
 		  perl-module-posix \
+		  perl-module-data-dumper \
 		 "
 RDEPENDS_${PN}_class-native = "m4-native gnu-config-native"
 
