@@ -44,6 +44,7 @@ do_install_append() {
 	find ${D} -name "*.la"|xargs rm -f
 	rm -f ${D}/${bindir}/pygtk-codegen-2.0
 	rm -rf ${D}/${libdir}/pkgconfig
+	sed -i -e '1s|^#!.*python|#!/usr/bin/env python|' ${D}${bindir}/pygtk-demo
 }
 
 # dirty fix #2: fix build system paths leaking in
