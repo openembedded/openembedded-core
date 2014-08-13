@@ -25,7 +25,7 @@ PACKAGECONFIG_class-nativesdk = "ipv6 ssl zlib"
 
 PACKAGECONFIG[ipv6] = "--enable-ipv6,--disable-ipv6,"
 PACKAGECONFIG[ssl] = "--with-ssl,--without-ssl,openssl"
-PACKAGECONFIG[gnutls] = "--with-gnutls=${STAGING_LIBDIR}/../,--without-gnutls,gnutls"
+PACKAGECONFIG[gnutls] = "--with-gnutls,--without-gnutls,gnutls"
 PACKAGECONFIG[zlib] = "--with-zlib=${STAGING_LIBDIR}/../,--without-zlib,zlib"
 
 EXTRA_OECONF = "--without-libssh2 \
@@ -36,10 +36,6 @@ EXTRA_OECONF = "--without-libssh2 \
                 --disable-ldaps \
                 --with-ca-bundle=${sysconfdir}/ssl/certs/ca-certificates.crt \
 "
-
-do_configure_prepend() {
-	sed -i s:OPT_GNUTLS/bin:OPT_GNUTLS:g ${S}/configure.ac
-}
 
 do_install_append() {
 	oe_multilib_header curl/curlbuild.h
