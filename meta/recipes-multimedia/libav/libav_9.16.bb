@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://COPYING.GPLv2;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
 
 SRC_URI = "http://libav.org/releases/${BP}.tar.xz"
 
-SRC_URI[md5sum] = "23b9e34bffdaee366710fdf20157a570"
-SRC_URI[sha256sum] = "2ff05df6cd2259b3bb277eb16c234214f8e0530700d0c774d033eba23edde6ca"
+SRC_URI[md5sum] = "7b44b75cec24b8e7545e5029e76917e0"
+SRC_URI[sha256sum] = "ca846473b0b8ed8e3404c52e5e92df6d35cb5fa487eec498525de3ffda4367a0"
 
 DEFAULT_PREFERENCE = "-1"
