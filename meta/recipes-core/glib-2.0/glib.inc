@@ -31,7 +31,10 @@ S = "${WORKDIR}/glib-${PV}"
 
 CORECONF = "--disable-dtrace --disable-fam --disable-libelf --disable-systemtap --disable-man"
 
-EXTRA_OECONF = "--enable-included-printf=no ${CORECONF}"
+PRINTF = "--enable-included-printf=no"
+PRINTF_darwin = "--enable-included-printf=yes"
+PRINTF_mingw32 = "--enable-included-printf=yes"
+EXTRA_OECONF = "${PRINTF} ${CORECONF}"
 EXTRA_OECONF_class-native = "${CORECONF} --disable-selinux"
 EXTRA_OECONF_append_libc-uclibc = " --with-libiconv=gnu"
 
