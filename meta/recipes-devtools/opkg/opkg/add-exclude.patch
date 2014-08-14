@@ -1,4 +1,4 @@
-From 45a1e33a048f479b15b99d09df3dd1b62fef0253 Mon Sep 17 00:00:00 2001
+From 5d707bbfcafd88b8b5b5821972c8c958fc3b2039 Mon Sep 17 00:00:00 2001
 From: Paul Barker <paul@paulbarker.me.uk>
 Date: Fri, 28 Mar 2014 15:20:22 +0000
 Subject: [PATCH 2/2] opkg-0.2.x: add-exclude
@@ -12,10 +12,14 @@ no error will be generated.
 The lifespan of the exclude_list covers the execution of the process,
 so there is no need to free the data.
 
+v2: Use xmalloc instead of malloc and xrealloc instead of realloc. In opkg,
+these functions are guaranteed not to return NULL.
+
 Upstream-Status: Pending
 
 Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
 Signed-off-by: Jonathan Liu <net147@gmail.com>
+Signed-off-by: Paul Barker <paul@paulbarker.me.uk>
 ---
  libopkg/opkg_conf.c   |  1 +
  libopkg/opkg_conf.h   |  2 ++
@@ -76,7 +80,7 @@ index d2d279e..b572e18 100644
  		    if (satisfying_pkg != NULL) {
  			 satisfier_entry_pkg = satisfying_pkg;
 diff --git a/src/opkg-cl.c b/src/opkg-cl.c
-index 0315d41..0db2794 100644
+index 0315d41..67366b9 100644
 --- a/src/opkg-cl.c
 +++ b/src/opkg-cl.c
 @@ -45,6 +45,7 @@ enum {
@@ -103,11 +107,11 @@ index 0315d41..0db2794 100644
 +			tuple = xstrdup(optarg);
 +			if (!conf->exclude_list) {
 +				conf->exclude_count = 1;
-+				conf->exclude_list = malloc(sizeof(char *) * conf->exclude_count);
++				conf->exclude_list = xmalloc(sizeof(char *) * conf->exclude_count);
 +				conf->exclude_list[conf->exclude_count - 1] = tuple;
 +			} else {
 +				conf->exclude_count++;
-+				conf->exclude_list = realloc(conf->exclude_list, sizeof(char *) * conf->exclude_count);
++				conf->exclude_list = xrealloc(conf->exclude_list, sizeof(char *) * conf->exclude_count);
 +				conf->exclude_list[conf->exclude_count - 1] = tuple;
 +			}
 +			break;
@@ -123,5 +127,5 @@ index 0315d41..0db2794 100644
  	printf("\t                                than the higher version one if more\n");
  	printf("\t                                than one candidate is found.\n");
 -- 
-1.9.1
+2.0.4
 
