@@ -72,6 +72,7 @@ SRC_URI = "\
     file://0048-PR58854_fix_arm_apcs_epilogue.patch \
     file://0049-Enable-SPE-AltiVec-generation-on-powepc-linux-target.patch \
     file://0050-PR-target-58595.patch \
+    file://0052-PR-rtl-optimization-61801.patch \
 "
 SRC_URI[md5sum] = "a3d7d63b9cb6b6ea049469a0c4a43c9d"
 SRC_URI[sha256sum] = "09dc2276c73424bbbfda1dbddc62bbbf900c9f185acf7f3e1d773ce2d7e3cdc8"
