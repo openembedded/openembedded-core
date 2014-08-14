@@ -58,7 +58,7 @@ python do_diffconfig() {
         bb.fatal("No config files found. Did you do menuconfig ?\n%s" % e)
 
     if isdiff:
-        statement = 'diff --unchanged-line-format= --old-line-format= --new-line-format="%L"' + configorig + ' ' + config + '>' + fragment
+        statement = 'diff --unchanged-line-format= --old-line-format= --new-line-format="%L" ' + configorig + ' ' + config + '>' + fragment
         subprocess.call(statement, shell=True)
 
         shutil.copy(configorig, config)
