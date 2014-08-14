@@ -8,6 +8,8 @@ EXTRA_OECONF_PATHS = "\
     --with-gxx-include-dir=${includedir}/c++/${BINV} \
 "
 
+EXTRA_OECONF_append_linuxstdbase = " --enable-clocale=gnu"
+
 EXTRA_OECONF_FPU = "${@get_gcc_fpu_setting(bb, d)}"
 
 PACKAGES = "\
