@@ -47,12 +47,16 @@ do_configure_prepend_class-nativesdk() {
 	fi
 }
 
+KVMENABLE = "--enable-kvm"
+KVMENABLE_darwin = "--disable-kvm"
+KVMENABLE_mingw32 = "--disable-kvm"
+
 do_configure() {
     # Handle distros such as CentOS 5 32-bit that do not have kvm support
     KVMOPTS="--disable-kvm"
     if [ "${PN}" != "qemu-native" -a "${PN}" != "nativesdk-qemu" ] \
        || [ -f /usr/include/linux/kvm.h ] ; then
-       KVMOPTS="--enable-kvm"
+       KVMOPTS="${KVMENABLE}"
     fi
 
     ${S}/configure --prefix=${prefix} --sysconfdir=${sysconfdir} --libexecdir=${libexecdir} --localstatedir=${localstatedir} --disable-strip ${EXTRA_OECONF} $KVMOPTS
