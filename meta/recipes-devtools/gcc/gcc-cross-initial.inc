@@ -57,7 +57,9 @@ do_install () {
 	# found. These need to be relative paths so they work in different locations.
 	dest=${D}${libexecdir}/gcc/${TARGET_SYS}/${BINV}/
 	install -d $dest
-	for t in ar as ld nm objcopy objdump ranlib strip g77 gcc cpp gfortran; do
+	useld=${@bb.utils.contains('DISTRO_FEATURES', 'ld-is-gold', '.bfd', '', d)}
+	ln -sf ${BINRELPATH}/${TARGET_PREFIX}ld${useld} ${dest}ld
+	for t in ar as nm objcopy objdump ranlib strip g77 gcc cpp gfortran; do
 		ln -sf ${BINRELPATH}/${TARGET_PREFIX}$t $dest$t
 	done
 	# fixed limits.h infact includes the so called real limits.h
