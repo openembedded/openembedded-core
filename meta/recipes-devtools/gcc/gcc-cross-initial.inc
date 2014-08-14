@@ -25,7 +25,7 @@ EXTRA_OECONF = "\
     --with-build-sysroot=${GCCCROSS_BUILDSYSROOT} \
     ${EXTRA_OECONF_INITIAL} \
     ${@bb.utils.contains('DISTRO_FEATURES', 'ld-is-gold', '--with-ld=${STAGING_BINDIR_TOOLCHAIN}/${TARGET_PREFIX}ld.bfd', '', d)} \
-    ${EXTRA_OECONF_FPU} \
+    ${EXTRA_OECONF_GCC_FLOAT} \
 "
 
 EXTRA_OECONF += "--with-native-system-header-dir=${SYSTEMHEADERS}"

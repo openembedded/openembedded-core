@@ -19,7 +19,7 @@ EXTRA_OECONF_PATHS = "\
 # e.g. we switch between different machines with different tunes.
 EXTRA_OECONF_PATHS[vardepsexclude] = "TUNE_PKGARCH"
 TARGET_ARCH[vardepsexclude] = "TUNE_ARCH"
-get_gcc_fpu_setting[vardepvalue] = ""
+get_gcc_float_setting[vardepvalue] = ""
 
 #
 # gcc-cross looks and finds these in ${exec_prefix} but we're not so lucky

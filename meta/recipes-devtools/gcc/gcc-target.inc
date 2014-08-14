@@ -10,7 +10,7 @@ EXTRA_OECONF_PATHS = "\
 
 EXTRA_OECONF_append_linuxstdbase = " --enable-clocale=gnu"
 
-EXTRA_OECONF_FPU = "${@get_gcc_fpu_setting(bb, d)}"
+EXTRA_OECONF_GCC_FLOAT = "${@get_gcc_float_setting(bb, d)}"
 
 PACKAGES = "\
     ${PN} ${PN}-plugins ${PN}-symlinks \

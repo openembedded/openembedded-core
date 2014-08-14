@@ -44,7 +44,7 @@ EXTRA_OECONF = "\
     --without-local-prefix \
     ${OPTSPACE} \
     ${EXTRA_OECONF_BASE} \
-    ${EXTRA_OECONF_FPU} \
+    ${EXTRA_OECONF_GCC_FLOAT} \
     ${EXTRA_OECONF_PATHS} \
     ${@get_gcc_mips_plt_setting(bb, d)} \
     ${@get_gcc_multiarch_setting(bb, d)} \
@@ -63,7 +63,7 @@ EXTRA_OECONF_append_libc-uclibc = " --enable-__cxa_atexit"
 EXTRA_OECONF_append_mips64 = " --with-abi=64 --with-arch-64=mips64 --with-tune-64=mips64"
 EXTRA_OECONF_append_mips64el = " --with-abi=64 --with-arch-64=mips64 --with-tune-64=mips64"
 
-EXTRA_OECONF_FPU ??= ""
+EXTRA_OECONF_GCC_FLOAT ??= ""
 CPPFLAGS = ""
 
 # powerpc needs this to comply with the ABI
