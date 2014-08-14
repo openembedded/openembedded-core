@@ -1,4 +1,4 @@
-# possible arch values are arm mips mipsel mips64 mips64el ppc ppc64 ppc64abi32
+# possible arch values are arm aarch64 mips mipsel mips64 mips64el ppc ppc64 ppc64abi32
 # ppcemb armeb alpha sparc32plus i386 x86_64 cris m68k microblaze sparc sparc32
 # sparc32plus
 
