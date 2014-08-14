@@ -55,7 +55,9 @@ ARM_INSTRUCTION_SET = "arm"
 USE_NLS = "yes"
 
 do_install_append () {
-	sed ${D}${bindir}/gtester-report -i -e '1s|^#!.*|#!/usr/bin/env python|'
+	if [ -f ${D}${bindir}/gtester-report ]; then
+		sed ${D}${bindir}/gtester-report -i -e '1s|^#!.*|#!/usr/bin/env python|'
+	fi
 
 	# Remove some unpackaged files
 	rm -f ${D}${datadir}/glib-2.0/codegen/*.pyc
