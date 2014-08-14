@@ -161,7 +161,6 @@ SYSTEMLIBS1 = "${target_libdir}/"
 EXTRA_OECONF += "--enable-poison-system-directories"
 
 EXTRA_OECONF += "\
-    --disable-libunwind-exceptions \
     --with-mpfr=${STAGING_DIR_HOST}${layout_exec_prefix} \
     --with-mpc=${STAGING_DIR_HOST}${layout_exec_prefix} \
 "
