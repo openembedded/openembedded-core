@@ -9,10 +9,12 @@ GCCMULTILIB = "--enable-multilib"
 
 require gcc-configure-common.inc
 
-EXTRA_OECONF_PATHS = "--with-gxx-include-dir=${SDKPATH}/sysroots/${TUNE_PKGARCH}${TARGET_VENDOR}-${TARGET_OS}${target_includedir}/c++/${BINV} \
-                      --with-build-time-tools=${STAGING_DIR_NATIVE}${prefix_native}/${TARGET_SYS}/bin \
-                      --with-sysroot=${SDKPATH}/sysroots/${TUNE_PKGARCH}${TARGET_VENDOR}-${TARGET_OS} \
-                      --with-build-sysroot=${STAGING_DIR_TARGET}"
+EXTRA_OECONF_PATHS = "\
+    --with-gxx-include-dir=${SDKPATH}/sysroots/${TUNE_PKGARCH}${TARGET_VENDOR}-${TARGET_OS}${target_includedir}/c++/${BINV} \
+    --with-build-time-tools=${STAGING_DIR_NATIVE}${prefix_native}/${TARGET_SYS}/bin \
+    --with-sysroot=${SDKPATH}/sysroots/${TUNE_PKGARCH}${TARGET_VENDOR}-${TARGET_OS} \
+    --with-build-sysroot=${STAGING_DIR_TARGET} \
+"
 # We have to point gcc at a sysroot but we don't need to rebuild if this changes
 # e.g. we switch between different machines with different tunes.
 EXTRA_OECONF_PATHS[vardepsexclude] = "TUNE_PKGARCH"
@@ -82,14 +84,14 @@ FILES_${PN} = "\
     ${prefix}/${TARGET_SYS}/bin/* \
     ${prefix}/${TARGET_SYS}/lib/* \
     ${prefix}/${TARGET_SYS}/usr/include/* \
-    "
+"
 INSANE_SKIP_${PN} += "dev-so"
 
 FILES_${PN}-doc = "\
     ${infodir} \
     ${mandir} \
     ${gcclibdir}/${TARGET_SYS}/${BINV}/include/README \
-    "
+"
 
 EXEEXT = ""
 
@@ -156,11 +158,13 @@ SYSTEMHEADERS = "/usr/include"
 SYSTEMLIBS = "${target_base_libdir}/"
 SYSTEMLIBS1 = "${target_libdir}/"
 
-EXTRA_OECONF += " --enable-poison-system-directories"
+EXTRA_OECONF += "--enable-poison-system-directories"
 
-EXTRA_OECONF += "--disable-libunwind-exceptions \
-		--with-mpfr=${STAGING_DIR_HOST}${layout_exec_prefix} \
-		--with-mpc=${STAGING_DIR_HOST}${layout_exec_prefix}"
+EXTRA_OECONF += "\
+    --disable-libunwind-exceptions \
+    --with-mpfr=${STAGING_DIR_HOST}${layout_exec_prefix} \
+    --with-mpc=${STAGING_DIR_HOST}${layout_exec_prefix} \
+"
 
 # gcc 4.7 needs -isystem
 export ARCH_FLAGS_FOR_TARGET = "--sysroot=${STAGING_DIR_TARGET} -isystem=${target_includedir}"

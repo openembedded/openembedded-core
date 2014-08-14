@@ -29,24 +29,26 @@ EXTRA_OECONF_INTERMEDIATE ?= ""
 GCCMULTILIB ?= "--disable-multilib"
 GCCTHREADS ?= "posix"
 
-EXTRA_OECONF = "${@['--enable-clocale=generic', ''][d.getVar('USE_NLS', True) != 'no']} \
-                --with-gnu-ld \
-                --enable-shared \
-                --enable-languages=${LANGUAGES} \
-                --enable-threads=${GCCTHREADS} \
-                ${GCCMULTILIB} \
-                --enable-c99 \
-                --enable-long-long \
-                --enable-symvers=gnu \
-                --enable-libstdcxx-pch \
-                --program-prefix=${TARGET_PREFIX} \
-		--without-local-prefix \
-                ${OPTSPACE} \
-                ${EXTRA_OECONF_BASE} \
-                ${EXTRA_OECONF_FPU} \
-                ${EXTRA_OECONF_PATHS} \
-                ${@get_gcc_mips_plt_setting(bb, d)} \
-                ${@get_gcc_multiarch_setting(bb, d)}"
+EXTRA_OECONF = "\
+    ${@['--enable-clocale=generic', ''][d.getVar('USE_NLS', True) != 'no']} \
+    --with-gnu-ld \
+    --enable-shared \
+    --enable-languages=${LANGUAGES} \
+    --enable-threads=${GCCTHREADS} \
+    ${GCCMULTILIB} \
+    --enable-c99 \
+    --enable-long-long \
+    --enable-symvers=gnu \
+    --enable-libstdcxx-pch \
+    --program-prefix=${TARGET_PREFIX} \
+    --without-local-prefix \
+    ${OPTSPACE} \
+    ${EXTRA_OECONF_BASE} \
+    ${EXTRA_OECONF_FPU} \
+    ${EXTRA_OECONF_PATHS} \
+    ${@get_gcc_mips_plt_setting(bb, d)} \
+    ${@get_gcc_multiarch_setting(bb, d)} \
+"
 
 export ac_cv_path_SED = 'sed'
 export gcc_cv_collect2_libs = 'none required'
@@ -55,11 +57,11 @@ export gcc_cv_collect2_libs = 'none required'
 # hence being missed by the insane do_configure check).
 
 # Build uclibc compilers without cxa_atexit support
-EXTRA_OECONF_append_linux               = " --enable-__cxa_atexit"
-EXTRA_OECONF_append_libc-uclibc        = " --enable-__cxa_atexit"
+EXTRA_OECONF_append_linux = " --enable-__cxa_atexit"
+EXTRA_OECONF_append_libc-uclibc = " --enable-__cxa_atexit"
 
-EXTRA_OECONF_append_mips64    = " --with-abi=64 --with-arch-64=mips64 --with-tune-64=mips64"
-EXTRA_OECONF_append_mips64el    = " --with-abi=64 --with-arch-64=mips64 --with-tune-64=mips64"
+EXTRA_OECONF_append_mips64 = " --with-abi=64 --with-arch-64=mips64 --with-tune-64=mips64"
+EXTRA_OECONF_append_mips64el = " --with-abi=64 --with-arch-64=mips64 --with-tune-64=mips64"
 
 EXTRA_OECONF_FPU ??= ""
 CPPFLAGS = ""

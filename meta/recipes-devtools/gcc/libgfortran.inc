@@ -1,8 +1,9 @@
 require gcc-configure-common.inc
 
-EXTRA_OECONF_PATHS = " \
+EXTRA_OECONF_PATHS = "\
     --with-sysroot=${STAGING_DIR_TARGET} \
-    --with-build-sysroot=${STAGING_DIR_TARGET}"
+    --with-build-sysroot=${STAGING_DIR_TARGET} \
+"
 
 do_configure () {
 	mtarget=`echo ${TARGET_SYS} | sed -e s#-${SDKPKGSUFFIX}##`
@@ -45,20 +46,20 @@ DEPENDS = "gcc-runtime"
 BBCLASSEXTEND = "nativesdk"
 
 PACKAGES = "\
-  ${PN}-dbg \
-  libgfortran \
-  libgfortran-dev \
-  libgfortran-staticdev \
+    ${PN}-dbg \
+    libgfortran \
+    libgfortran-dev \
+    libgfortran-staticdev \
 "
 FILES_${PN} = "${libdir}/libgfortran.so.*"
-FILES_${PN}-dev = " \
-  ${libdir}/libgfortran*.so \
-  ${libdir}/libgfortran.spec \
-  ${libdir}/libgfortran.la \
-  ${libdir}/gcc/${TARGET_SYS}/${BINV}/libgfortranbegin.* \
-  ${libdir}/gcc/${TARGET_SYS}/${BINV}/libcaf_single*"
-FILES_${PN}-staticdev = " \
-  ${libdir}/libgfortran.a"
+FILES_${PN}-dev = "\
+    ${libdir}/libgfortran*.so \
+    ${libdir}/libgfortran.spec \
+    ${libdir}/libgfortran.la \
+    ${libdir}/gcc/${TARGET_SYS}/${BINV}/libgfortranbegin.* \
+    ${libdir}/gcc/${TARGET_SYS}/${BINV}/libcaf_single* \
+"
+FILES_${PN}-staticdev = "${libdir}/libgfortran.a"
 
 INSANE_SKIP_${MLPREFIX}libgfortran-dev = "staticdev"
 

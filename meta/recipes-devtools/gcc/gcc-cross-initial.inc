@@ -11,22 +11,24 @@ CROSS_TARGET_SYS_DIR_append = ".${PN}"
 
 # This is intended to be a -very- basic config
 # sysroot is needed in case we use libc-initial
-EXTRA_OECONF = "--with-newlib \
-		--without-headers \
-		--disable-shared \
-		--disable-threads \
-		--disable-multilib \
-		--disable-__cxa_atexit \
-		--enable-languages=c \
-                ${OPTSPACE} \
-		--program-prefix=${TARGET_PREFIX} \
-		--with-sysroot=${STAGING_DIR_TARGET} \
-		--with-build-sysroot=${GCCCROSS_BUILDSYSROOT} \
-		${EXTRA_OECONF_INITIAL} \
-		${@bb.utils.contains('DISTRO_FEATURES', 'ld-is-gold', '--with-ld=${STAGING_BINDIR_TOOLCHAIN}/${TARGET_PREFIX}ld.bfd', '', d)} \
-		${EXTRA_OECONF_FPU}"
+EXTRA_OECONF = "\
+    --with-newlib \
+    --without-headers \
+    --disable-shared \
+    --disable-threads \
+    --disable-multilib \
+    --disable-__cxa_atexit \
+    --enable-languages=c \
+    ${OPTSPACE} \
+    --program-prefix=${TARGET_PREFIX} \
+    --with-sysroot=${STAGING_DIR_TARGET} \
+    --with-build-sysroot=${GCCCROSS_BUILDSYSROOT} \
+    ${EXTRA_OECONF_INITIAL} \
+    ${@bb.utils.contains('DISTRO_FEATURES', 'ld-is-gold', '--with-ld=${STAGING_BINDIR_TOOLCHAIN}/${TARGET_PREFIX}ld.bfd', '', d)} \
+    ${EXTRA_OECONF_FPU} \
+"
 
-EXTRA_OECONF += " --with-native-system-header-dir=${SYSTEMHEADERS} "
+EXTRA_OECONF += "--with-native-system-header-dir=${SYSTEMHEADERS}"
 
 GCCCROSS_BUILDSYSROOT = "${B}/tmpsysroot"
 
