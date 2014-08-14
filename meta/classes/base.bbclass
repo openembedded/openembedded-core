@@ -133,113 +133,6 @@ def pkgarch_mapping(d):
         if d.getVar("TUNE_PKGARCH", True) == "armv7a-vfp-neon":
             d.setVar("TUNE_PKGARCH", "armv7a")
 
-def preferred_ml_updates(d):
-    # If any PREFERRED_PROVIDER or PREFERRED_VERSION are set,
-    # we need to mirror these variables in the multilib case;
-    multilibs = d.getVar('MULTILIBS', True) or ""
-    if not multilibs:
-        return
-
-    prefixes = []
-    for ext in multilibs.split():
-        eext = ext.split(':')
-        if len(eext) > 1 and eext[0] == 'multilib':
-            prefixes.append(eext[1])
-
-    versions = []
-    providers = []
-    for v in d.keys():
-        if v.startswith("PREFERRED_VERSION_"):
-            versions.append(v)
-        if v.startswith("PREFERRED_PROVIDER_"):
-            providers.append(v)
-
-    for v in versions:
-        val = d.getVar(v, False)
-        pkg = v.replace("PREFERRED_VERSION_", "")
-        if pkg.endswith("-native") or "-crosssdk-" in pkg or pkg.startswith(("nativesdk-", "virtual/nativesdk-")):
-            continue
-        if '-cross-' in pkg and '${' in pkg:
-            for p in prefixes:
-                localdata = bb.data.createCopy(d)
-                override = ":virtclass-multilib-" + p
-                localdata.setVar("OVERRIDES", localdata.getVar("OVERRIDES", False) + override)
-                bb.data.update_data(localdata)
-                newname = localdata.expand(v).replace("PREFERRED_VERSION_", "PREFERRED_VERSION_" + p + '-')
-                if newname != v:
-                    newval = localdata.expand(val)
-                    d.setVar(newname, newval)
-            # Avoid future variable key expansion
-            vexp = d.expand(v)
-            if v != vexp and d.getVar(v, False):
-                d.renameVar(v, vexp)
-            continue
-        for p in prefixes:
-            newname = "PREFERRED_VERSION_" + p + "-" + pkg
-            if not d.getVar(newname, False):
-                d.setVar(newname, val)
-
-    for prov in providers:
-        val = d.getVar(prov, False)
-        pkg = prov.replace("PREFERRED_PROVIDER_", "")
-        if pkg.endswith("-native") or "-crosssdk-" in pkg or pkg.startswith(("nativesdk-", "virtual/nativesdk-")):
-            continue
-        if 'cross-canadian' in pkg:
-            for p in prefixes:
-                localdata = bb.data.createCopy(d)
-                override = ":virtclass-multilib-" + p
-                localdata.setVar("OVERRIDES", localdata.getVar("OVERRIDES", False) + override)
-                bb.data.update_data(localdata)
-                newname = localdata.expand(prov)
-                if newname != prov:
-                    newval = localdata.expand(val)
-                    d.setVar(newname, newval)
-            # Avoid future variable key expansion
-            provexp = d.expand(prov)
-            if prov != provexp and d.getVar(prov, False):
-                d.renameVar(prov, provexp)
-            continue
-        virt = ""
-        if pkg.startswith("virtual/"):
-            pkg = pkg.replace("virtual/", "")
-            virt = "virtual/"
-        for p in prefixes:
-            if pkg != "kernel":
-                newval = p + "-" + val
-
-            # implement variable keys
-            localdata = bb.data.createCopy(d)
-            override = ":virtclass-multilib-" + p
-            localdata.setVar("OVERRIDES", localdata.getVar("OVERRIDES", False) + override)
-            bb.data.update_data(localdata)
-            newname = localdata.expand(prov)
-            if newname != prov and not d.getVar(newname, False):
-                d.setVar(newname, localdata.expand(newval))
-
-            # implement alternative multilib name
-            newname = localdata.expand("PREFERRED_PROVIDER_" + virt + p + "-" + pkg)
-            if not d.getVar(newname, False):
-                d.setVar(newname, newval)
-        # Avoid future variable key expansion
-        provexp = d.expand(prov)
-        if prov != provexp and d.getVar(prov, False):
-            d.renameVar(prov, provexp)
-
-
-    mp = (d.getVar("MULTI_PROVIDER_WHITELIST", True) or "").split()
-    extramp = []
-    for p in mp:
-        if p.endswith("-native") or "-crosssdk-" in p or p.startswith(("nativesdk-", "virtual/nativesdk-")) or 'cross-canadian' in p:
-            continue
-        virt = ""
-        if p.startswith("virtual/"):
-            p = p.replace("virtual/", "")
-            virt = "virtual/"
-        for pref in prefixes:
-            extramp.append(virt + pref + "-" + p)
-    d.setVar("MULTI_PROVIDER_WHITELIST", " ".join(mp + extramp))
-
-
 def get_layers_branch_rev(d):
     layers = (d.getVar("BBLAYERS", True) or "").split()
     layers_branch_rev = ["%-17s = \"%s:%s\"" % (os.path.basename(i), \
@@ -290,7 +183,6 @@ python base_eventhandler() {
         e.data.setVar("NATIVELSBSTRING", lsb_distro_identifier(e.data))
         e.data.setVar('BB_VERSION', bb.__version__)
         pkgarch_mapping(e.data)
-        preferred_ml_updates(e.data)
         oe.utils.features_backfill("DISTRO_FEATURES", e.data)
         oe.utils.features_backfill("MACHINE_FEATURES", e.data)
 
