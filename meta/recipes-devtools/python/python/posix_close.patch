@@ -1,0 +1,43 @@
+backport from http://bugs.python.org/issue20594
+
+- Issue #20594: Avoid name clash with the libc function posix_close.
+
+Upstream-Status: Backport
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+
+
+# HG changeset patch
+# User Benjamin Peterson <benjamin@python.org>
+# Date 1392131776 18000
+# Node ID 1d253360d5a6d8d987fb2480e26f4fcc2d730932
+# Parent  41e49f1c5bd8ff48a6c18804c958e82c659daab3
+avoid name clash with posix_close (closes #20594)
+
+diff --git a/Modules/posixmodule.c b/Modules/posixmodule.c
+--- a/Modules/posixmodule.c
++++ b/Modules/posixmodule.c
+@@ -6581,8 +6581,12 @@ PyDoc_STRVAR(posix_close__doc__,
+ "close(fd)\n\n\
+ Close a file descriptor (for low level IO).");
+ 
+-static PyObject *
+-posix_close(PyObject *self, PyObject *args)
++/*
++The underscore at end of function name avoids a name clash with the libc
++function posix_close.
++*/
++static PyObject *
++posix_close_(PyObject *self, PyObject *args)
+ {
+     int fd, res;
+     if (!PyArg_ParseTuple(args, "i:close", &fd))
+@@ -8960,7 +8964,7 @@ static PyMethodDef posix_methods[] = {
+     {"tcsetpgrp",       posix_tcsetpgrp, METH_VARARGS, posix_tcsetpgrp__doc__},
+ #endif /* HAVE_TCSETPGRP */
+     {"open",            posix_open, METH_VARARGS, posix_open__doc__},
+-    {"close",           posix_close, METH_VARARGS, posix_close__doc__},
++    {"close",           posix_close_, METH_VARARGS, posix_close__doc__},
+     {"closerange",      posix_closerange, METH_VARARGS, posix_closerange__doc__},
+     {"dup",             posix_dup, METH_VARARGS, posix_dup__doc__},
+     {"dup2",            posix_dup2, METH_VARARGS, posix_dup2__doc__},
+
