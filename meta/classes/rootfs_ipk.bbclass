@@ -10,11 +10,13 @@ ROOTFS_PKGMANAGE = "opkg opkg-collateral ${EXTRAOPKGCONFIG}"
 ROOTFS_PKGMANAGE_BOOTSTRAP  = "run-postinsts"
 
 do_rootfs[depends] += "opkg-native:do_populate_sysroot opkg-utils-native:do_populate_sysroot"
+do_populate_sdk[depends] += "opkg-native:do_populate_sysroot opkg-utils-native:do_populate_sysroot"
 do_rootfs[recrdeptask] += "do_package_write_ipk"
 do_rootfs[vardeps] += "PACKAGE_FEED_URIS"
 rootfs_ipk_do_rootfs[vardepsexclude] += "BUILDNAME"
 
 do_rootfs[lockfiles] += "${WORKDIR}/ipk.lock"
+do_populate_sdk[lockfiles] += "${WORKDIR}/ipk.lock"
 
 OPKG_PREPROCESS_COMMANDS = ""
 
@@ -35,7 +37,3 @@ python () {
         d.setVar('OPKG_PREPROCESS_COMMANDS', "")
         d.setVar('OPKG_POSTPROCESS_COMMANDS', '')
 }
-
-do_populate_sdk[depends] += "opkg-native:do_populate_sysroot opkg-utils-native:do_populate_sysroot"
-
-do_populate_sdk[lockfiles] += "${WORKDIR}/ipk.lock"

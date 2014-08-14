@@ -6,11 +6,13 @@ ROOTFS_PKGMANAGE = "dpkg apt"
 ROOTFS_PKGMANAGE_BOOTSTRAP  = "run-postinsts"
 
 do_rootfs[depends] += "dpkg-native:do_populate_sysroot apt-native:do_populate_sysroot"
+do_populate_sdk[depends] += "dpkg-native:do_populate_sysroot apt-native:do_populate_sysroot bzip2-native:do_populate_sysroot"
 do_rootfs[recrdeptask] += "do_package_write_deb"
 rootfs_deb_do_rootfs[vardepsexclude] += "BUILDNAME"
 do_rootfs[vardeps] += "PACKAGE_FEED_URIS"
 
 do_rootfs[lockfiles] += "${DEPLOY_DIR_DEB}/deb.lock"
+do_populate_sdk[lockfiles] += "${DEPLOY_DIR_DEB}/deb.lock"
 
 python rootfs_deb_bad_recommendations() {
     if d.getVar("BAD_RECOMMENDATIONS", True):
@@ -22,8 +24,6 @@ DEB_POSTPROCESS_COMMANDS = ""
 
 opkglibdir = "${localstatedir}/lib/opkg"
 
-do_populate_sdk[depends] += "dpkg-native:do_populate_sysroot apt-native:do_populate_sysroot bzip2-native:do_populate_sysroot"
-
 python () {
     # Map TARGET_ARCH to Debian's ideas about architectures
     darch = d.getVar('SDK_ARCH', True)
@@ -34,9 +34,6 @@ python () {
     elif darch == "arm":
          d.setVar('DEB_SDK_ARCH', 'armel')
 }
-
-
-do_populate_sdk[lockfiles] += "${DEPLOY_DIR_DEB}/deb.lock"
 
 # This will of course only work after rootfs_deb_do_rootfs or populate_sdk_deb has been called
 DPKG_QUERY_COMMAND = "${STAGING_BINDIR_NATIVE}/dpkg-query --admindir=$INSTALL_ROOTFS_DEB/var/lib/dpkg"
