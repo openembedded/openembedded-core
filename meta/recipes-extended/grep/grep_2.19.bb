@@ -36,3 +36,4 @@ ALTERNATIVE_LINK_NAME[grep] = "${base_bindir}/grep"
 ALTERNATIVE_LINK_NAME[egrep] = "${base_bindir}/egrep"
 ALTERNATIVE_LINK_NAME[fgrep] = "${base_bindir}/fgrep"
 
+export CONFIG_SHELL="/bin/sh"
