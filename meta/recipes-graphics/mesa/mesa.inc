@@ -143,7 +143,7 @@ python mesa_populate_packages() {
     for p in dri_pkgs:
         m = re.match('^(.*)_dri\.so$', p)
         if m:
-            pkg_name = " mesa-driver-%s" % legitimize_package_name(m.group(1))
+            pkg_name = " ${MLPREFIX}mesa-driver-%s" % legitimize_package_name(m.group(1))
             d.appendVar("RPROVIDES_%s" % lib_name, pkg_name)
             d.appendVar("RCONFLICTS_%s" % lib_name, pkg_name)
             d.appendVar("RREPLACES_%s" % lib_name, pkg_name)
