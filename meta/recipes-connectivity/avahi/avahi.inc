@@ -73,6 +73,9 @@ do_configure_prepend() {
 
 PACKAGES =+ "avahi-daemon libavahi-common libavahi-core libavahi-client avahi-dnsconfd libavahi-glib libavahi-ui avahi-autoipd avahi-utils"
 
+# As avahi doesn't put any files into PN, clear the files list to avoid problems
+# if extra libraries appear.
+FILES_avahi = ""
 FILES_avahi-autoipd = "${sbindir}/avahi-autoipd \
                        ${sysconfdir}/avahi/avahi-autoipd.action \
                        ${sysconfdir}/dhcp/*/avahi-autoipd \
@@ -122,7 +125,8 @@ do_install() {
 	# don't install /var/run when populating rootfs. Do it through volatile
 	# /var/run of current version is empty, so just remove it.
 	# if /var/run become non-empty in the future, need to install it via volatile
-	rm -rf ${D}/var/run
+	rm -rf ${D}${localstatedir}/run
+	rmdir --ignore-fail-on-non-empty ${D}${localstatedir}
 	rm -rf ${D}${datadir}/dbus-1/interfaces
 	rmdir --ignore-fail-on-non-empty ${D}${datadir}/dbus-1
 	rm -rf ${D}${libdir}/avahi
