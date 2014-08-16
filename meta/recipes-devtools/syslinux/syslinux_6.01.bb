@@ -15,6 +15,7 @@ SRC_URI = "${KERNELORG_MIRROR}/linux/utils/boot/syslinux/6.xx/syslinux-${PV}.tar
            file://0004-pxe-use-bios_fbm-and-real_base_mem-to-calculate-free.patch \
            file://syslinux-fix-parallel-building-issue.patch \
            file://isohybrid-fix-overflow-on-32-bit-system.patch \
+           file://syslinux-libupload-depend-lib.patch \
            "
 
 SRC_URI[md5sum] = "6945ee89e29119d459baed4937bbc534"
