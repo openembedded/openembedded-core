@@ -1,6 +1,7 @@
 inherit cross
 
 CLASSOVERRIDE = "class-crosssdk"
+MACHINEOVERRIDES = ""
 PACKAGE_ARCH = "${SDK_ARCH}"
 python () {
 	# set TUNE_PKGARCH to SDK_ARCH
