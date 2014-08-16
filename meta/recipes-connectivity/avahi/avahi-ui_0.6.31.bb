@@ -64,6 +64,5 @@ do_install_append () {
 	rm ${D}${mandir}/man1/a*
 	rm ${D}${mandir}/man5 -rf
 	rm ${D}${mandir}/man8 -rf
-	rmdir ${D}${localstatedir}
 }
 
