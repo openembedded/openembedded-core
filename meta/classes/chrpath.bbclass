@@ -54,7 +54,6 @@ def process_file_darwin(cmd, fpath, rootdir, baseprefix, tmpdir, d):
             continue
 
         newpath = "@loader_path/" + os.path.relpath(rpath, os.path.dirname(fpath.replace(rootdir, "/")))
-        bb.warn("%s %s %s %s" % (fpath, rpath, newpath, rootdir))
         p = sub.Popen([d.expand("${HOST_PREFIX}install_name_tool"), '-change', rpath, newpath, fpath],stdout=sub.PIPE,stderr=sub.PIPE)
         err, out = p.communicate()
 
