@@ -5,14 +5,18 @@
 def get_qemu_target_list(d):
     import bb
     archs = d.getVar('QEMU_TARGETS', True).split()
-    targets = ""
+    tos = d.getVar('HOST_OS', True)
+    softmmuonly = ""
     for arch in ['mips64', 'mips64el', 'ppcemb']:
         if arch in archs:
-            targets += arch + "-softmmu,"
+            softmmuonly += arch + "-softmmu,"
             archs.remove(arch)
+    linuxuseronly = ""
     for arch in ['armeb', 'alpha', 'ppc64abi32', 'sparc32plus']:
         if arch in archs:
-            targets += arch + "-linux-user,"
+            linuxuseronly += arch + "-linux-user,"
             archs.remove(arch)
-    return targets + ''.join([arch + "-linux-user" + "," + arch + "-softmmu" + "," for arch in archs]).rstrip(',')
+    if 'linux' not in tos:
+        return softmmuonly + ''.join([arch + "-softmmu" + "," for arch in archs]).rstrip(',')
+    return softmmuonly + linuxuseronly + ''.join([arch + "-linux-user" + "," + arch + "-softmmu" + "," for arch in archs]).rstrip(',')
 
