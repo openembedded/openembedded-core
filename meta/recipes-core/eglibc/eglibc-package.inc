@@ -66,7 +66,7 @@ DESCRIPTION_eglibc-extra-nss = "eglibc: nis, nisplus and hesiod search services.
 SUMMARY_ldd = "print shared library dependencies"
 DESCRIPTION_ldd = "${bindir}/ldd prints shared library dependencies for each program or shared library specified on the command line."
 SUMMARY_${PN}-utils = "Miscellaneous utilities provided by eglibc"
-DESCRIPTION_${PN}-utils = "Miscellaneous utilities including getconf, iconf, locale, gencat, rpcinfo, ..."
+DESCRIPTION_${PN}-utils = "Miscellaneous utilities including getconf, iconv, locale, gencat, rpcgen, ..."
 DESCRIPTION_libsotruss = "Library to support sotruss which traces calls through PLTs"
 DESCRIPTION_tzcode = "tzcode, timezone zoneinfo utils -- zic, zdump, tzselect"
 
