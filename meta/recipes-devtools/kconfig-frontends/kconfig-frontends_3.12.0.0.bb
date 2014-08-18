@@ -12,7 +12,7 @@ LICENSE = "GPL-2.0"
 LIC_FILES_CHKSUM = "file://COPYING;md5=9b8cf60ff39767ff04b671fca8302408"
 SECTION = "devel"
 DEPENDS += "ncurses flex bison gperf-native pkgconfig-native"
-RDEPENDS_${PN} += "python"
+RDEPENDS_${PN} += "python bash"
 SRC_URI = "http://ymorin.is-a-geek.org/download/${BPN}/${BP}.tar.xz"
 
 SRC_URI[md5sum] = "b939280dcc83f8feabd87a1d5f9b00c2"
