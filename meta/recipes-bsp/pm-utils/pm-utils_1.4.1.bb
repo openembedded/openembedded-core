@@ -15,7 +15,7 @@ SRC_URI[sha256sum] = "8ed899032866d88b2933a1d34cc75e8ae42dcde20e1cc21836baaae3d4
 
 inherit pkgconfig autotools
 
-RDEPENDS_${PN} = "grep"
+RDEPENDS_${PN} = "grep bash"
 
 do_configure_prepend () {
 	( cd ${S}; autoreconf -f -i -s )
