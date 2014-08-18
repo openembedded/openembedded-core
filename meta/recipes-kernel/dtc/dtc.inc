@@ -16,3 +16,5 @@ S = "${WORKDIR}/git"
 
 PACKAGES =+ "${PN}-misc"
 FILES_${PN}-misc = "${bindir}/convert-dtsv0 ${bindir}/ftdump ${bindir}/dtdiff"
+
+RDEPENDS_${PN}-misc += "bash"
