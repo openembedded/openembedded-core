@@ -15,11 +15,12 @@ SRC_URI[sha256sum] = "c52b56d929e8d20fc19cd3b7ec238f8d039730c56ee311cc352e843147
 
 inherit autotools
 
-# xmlto needs getopt/xmllint/xsltproc at runtime
+# xmlto needs getopt/xmllint/xsltproc/bash at runtime
 RDEPENDS_${PN} = "docbook-xml-dtd4 \
                   docbook-xsl-stylesheets \
                   util-linux \
                   libxml2 \
+                  bash \
 "
 RDEPENDS_${PN}_append_class-target = " \
                   libxslt-bin \
