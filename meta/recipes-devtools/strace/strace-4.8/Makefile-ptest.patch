@@ -1,11 +1,13 @@
 strace: Add ptest
 
+Upstream-Status: Inappropriate
+
 Signed-off-by: Gabriel Barbu <gabriel.barbu@enea.com>
-Upstream-Status: Pending
+Signed-off-by: Chong Lu <Chong.Lu@windriver.com>
 
 --- old/tests/Makefile.am	2013-07-23 13:44:24.660481381 +0200
 +++ new/tests/Makefile.am	2013-07-23 16:22:42.937654391 +0200
-@@ -9,3 +9,20 @@
+@@ -9,3 +9,21 @@
  EXTRA_DIST = init.sh $(TESTS)
  
  CLEANFILES = check.log
@@ -18,6 +20,7 @@ Upstream-Status: Pending
 +	install -d $(DESTDIR)/$(TESTDIR)
 +	cp $(BUILDDIR)/$(TESTDIR)/Makefile $(DESTDIR)/$(TESTDIR)
 +	sed -i -e 's/^Makefile:/_Makefile:/' $(DESTDIR)/$(TESTDIR)/Makefile
++	sed -i -e 's/bash/sh/' $(DESTDIR)/$(TESTDIR)/Makefile
 +	for file in $(check_PROGRAMS); do \
 +		install $(BUILDDIR)/$(TESTDIR)/$$file $(DESTDIR)/$(TESTDIR); \
 +	done
@@ -26,3 +29,13 @@ Upstream-Status: Pending
 +		sed -i -e 's/$${srcdir=.}/./g' $(DESTDIR)/$(TESTDIR)/$$file; \
 +	done
 +	sed -i -e 's/$$srcdir/./g' $(DESTDIR)/$(TESTDIR)/net
+--- a/configure.ac
++++ b/configure.ac
+@@ -6,7 +6,7 @@ AC_INIT([strace],
+ AC_CONFIG_SRCDIR([strace.c])
+ AC_CONFIG_AUX_DIR([.])
+ AC_CONFIG_HEADERS([config.h])
+-AM_INIT_AUTOMAKE([foreign dist-xz no-dist-gzip silent-rules])
++AM_INIT_AUTOMAKE([foreign dist-xz no-dist-gzip silent-rules serial-tests])
+ AM_MAINTAINER_MODE
+ AC_CANONICAL_HOST
