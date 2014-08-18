@@ -39,5 +39,3 @@ libtoolcross_sysroot_preprocess () {
 }
 
 SSTATE_SCAN_FILES += "libtoolize *-libtool"
-
-export CONFIG_SHELL="/bin/bash"
