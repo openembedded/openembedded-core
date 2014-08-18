@@ -22,6 +22,10 @@ SRC_URI[archive.sha256sum] = "48049b643294636df7de1a4b997414d699666f5dc44776945c
 
 EXTRA_OECONF = "--disable-introspection --disable-vala"
 
+# The older ld (2.22) on the host (Centos 6.5) doesn't have the
+# -Bsymbolic-functions option, we can disable it for native.
+EXTRA_OECONF_append_class-native = " --enable-Bsymbolic=auto"
+
 PACKAGECONFIG ??= "gdkpixbuf"
 # The gdk-pixbuf loader
 PACKAGECONFIG[gdkpixbuf] = "--enable-pixbuf-loader,--disable-pixbuf-loader,gdk-pixbuf-native"
