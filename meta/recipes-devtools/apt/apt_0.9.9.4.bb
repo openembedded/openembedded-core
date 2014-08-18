@@ -1,5 +1,5 @@
 DEPENDS = "curl db"
-RDEPENDS_${PN} = "dpkg"
+RDEPENDS_${PN} = "dpkg bash"
 LIC_FILES_CHKSUM = "file://COPYING.GPL;md5=0636e73ff0215e8d672dc4c32c317bb3"
 require apt.inc
 
