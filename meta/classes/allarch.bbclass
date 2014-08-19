@@ -37,5 +37,7 @@ python () {
         d.setVar("EXCLUDE_FROM_SHLIBS", "1")
         d.setVar("INHIBIT_PACKAGE_DEBUG_SPLIT", "1")
         d.setVar("INHIBIT_PACKAGE_STRIP", "1")
+    elif bb.data.inherits_class('packagegroup', d) and not bb.data.inherits_class('nativesdk', d):
+        bb.error("Please ensure recipe %s sets PACKAGE_ARCH before inherit packagegroup" % d.getVar("FILE", True))
 }
 
