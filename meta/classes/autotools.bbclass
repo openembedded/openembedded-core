@@ -148,7 +148,7 @@ python autotools_copy_aclocals () {
         if data[1] == "do_configure" and data[0] == pn:
             start = dep
             break
-    if not start:
+    if start is None:
         bb.fatal("Couldn't find ourself in BB_TASKDEPDATA?")
 
     # We need to find configure tasks which are either from <target> -> <target>
