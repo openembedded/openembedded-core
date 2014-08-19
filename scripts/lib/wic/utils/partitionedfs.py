@@ -164,16 +164,19 @@ class Image:
 
                 # Calc how much the alignment is off.
                 align_sectors = d['offset'] % (p['align'] * 1024 / self.sector_size)
-                # We need to move forward to the next alignment point
-                align_sectors = (p['align'] * 1024 / self.sector_size) - align_sectors
 
-                msger.debug("Realignment for %s%s with %s sectors, original"
-                            " offset %s, target alignment is %sK." %
-                            (p['disk_name'], d['numpart'], align_sectors,
-                             d['offset'], p['align']))
+                if align_sectors:
+                    # If partition is not aligned as required, we need
+                    # to move forward to the next alignment point
+                    align_sectors = (p['align'] * 1024 / self.sector_size) - align_sectors
 
-                # increase the offset so we actually start the partition on right alignment
-                d['offset'] += align_sectors
+                    msger.debug("Realignment for %s%s with %s sectors, original"
+                                " offset %s, target alignment is %sK." %
+                                (p['disk_name'], d['numpart'], align_sectors,
+                                 d['offset'], p['align']))
+
+                    # increase the offset so we actually start the partition on right alignment
+                    d['offset'] += align_sectors
 
             p['start'] = d['offset']
             d['offset'] += p['size']
