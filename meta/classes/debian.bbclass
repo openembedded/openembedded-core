@@ -52,6 +52,13 @@ python debian_package_name_hook () {
             return 0
         return (s[stat.ST_MODE] & stat.S_IEXEC)
 
+    def add_rprovides(pkg, d):
+        newpkg = d.getVar('PKG_' + pkg)
+        if newpkg and newpkg != pkg:
+            provs = (d.getVar('RPROVIDES_' + pkg, True) or "").split()
+            if pkg not in provs:
+                d.appendVar('RPROVIDES_' + pkg, " " + pkg)
+
     def auto_libname(packages, orig_pkg):
         sonames = []
         has_bins = 0
@@ -99,6 +106,7 @@ python debian_package_name_hook () {
                 (pkgname, devname) = soname_result
                 for pkg in packages.split():
                     if (d.getVar('PKG_' + pkg) or d.getVar('DEBIAN_NOAUTONAME_' + pkg)):
+                        add_rprovides(pkg, d)
                         continue
                     debian_pn = d.getVar('DEBIANNAME_' + pkg)
                     if debian_pn:
@@ -113,6 +121,9 @@ python debian_package_name_hook () {
                             newpkg = mlpre + newpkg
                     if newpkg != pkg:
                         d.setVar('PKG_' + pkg, newpkg)
+                        add_rprovides(pkg, d)
+        else:
+            add_rprovides(orig_pkg, d)
 
     # reversed sort is needed when some package is substring of another
     # ie in ncurses we get without reverse sort: 
