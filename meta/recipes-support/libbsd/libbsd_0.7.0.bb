@@ -9,12 +9,13 @@ DESCRIPTION = "This library provides useful functions commonly found on BSD syst
 
 HOMEPAGE = "http://libbsd.freedesktop.org/wiki/"
 LICENSE = "BSD-4-Clause & MIT"
-LIC_FILES_CHKSUM = "file://COPYING;md5=98a015f07e71239b058398054f506f07"
+LIC_FILES_CHKSUM = "file://COPYING;md5=f1530ea92aeaa1c5e2547cfd43905d8c"
 SECTION = "libs"
 DEPENDS = ""
 
 SRC_URI = "http://libbsd.freedesktop.org/releases/${BPN}-${PV}.tar.xz"
-SRC_URI[md5sum] = "f6c75f0a9818e323a589bcbd560a0eb4"
-SRC_URI[sha256sum] = "9e8f34ffa9c8579c87965a55a82d8ac37a1dc64858f717b7c49452ade277cc62"
+
+SRC_URI[md5sum] = "fcceb4e66fd448ca4ed42ba22a8babb0"
+SRC_URI[sha256sum] = "0f3b0e17e5c34c038126e0a04351b11e23c6101a7d0ce3beeab29bb6415c10bb"
 
 inherit autotools pkgconfig
