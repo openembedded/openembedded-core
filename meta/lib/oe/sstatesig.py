@@ -14,6 +14,9 @@ def sstate_rundepfilter(siggen, fn, recipename, task, dep, depname, dataCache):
     def isPackageGroup(fn):
         inherits = " ".join(dataCache.inherits[fn])
         return "/packagegroup.bbclass" in inherits
+    def isAllArch(fn):
+        inherits = " ".join(dataCache.inherits[fn])
+        return "/allarch.bbclass" in inherits
     def isImage(fn):
         return "/image.bbclass" in " ".join(dataCache.inherits[fn])
 
@@ -36,8 +39,8 @@ def sstate_rundepfilter(siggen, fn, recipename, task, dep, depname, dataCache):
 
     # Only target packages beyond here
 
-    # packagegroups are assumed to have well behaved names which don't change between architecures/tunes
-    if isPackageGroup(fn):
+    # allarch packagegroups are assumed to have well behaved names which don't change between architecures/tunes
+    if isPackageGroup(fn) and isAllArch(fn):
         return False  
 
     # Exclude well defined machine specific configurations which don't change ABI
