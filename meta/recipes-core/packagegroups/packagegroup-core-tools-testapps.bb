@@ -7,9 +7,9 @@ LICENSE = "MIT"
 
 PR = "r2"
 
-inherit packagegroup
-
 PACKAGE_ARCH = "${MACHINE_ARCH}"
+
+inherit packagegroup
 
 # kexec-tools doesn't work on Mips
 KEXECTOOLS ?= "kexec"

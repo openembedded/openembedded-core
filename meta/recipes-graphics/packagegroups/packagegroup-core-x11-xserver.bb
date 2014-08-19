@@ -6,9 +6,9 @@ SUMMARY = "X11 display server"
 LICENSE = "MIT"
 PR = "r40"
 
-inherit packagegroup
-
 PACKAGE_ARCH = "${MACHINE_ARCH}"
+
+inherit packagegroup
 
 XSERVER ?= "xserver-xorg xf86-video-fbdev xf86-input-evdev"
 XSERVERCODECS ?= ""

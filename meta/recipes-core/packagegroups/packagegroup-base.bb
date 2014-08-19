@@ -2,6 +2,11 @@ SUMMARY = "Merge machine and distro options to create a basic machine task/packa
 LICENSE = "MIT"
 PR = "r83"
 
+#
+# packages which content depend on MACHINE_FEATURES need to be MACHINE_ARCH
+#
+PACKAGE_ARCH = "${MACHINE_ARCH}"
+
 inherit packagegroup
 
 PROVIDES = "${PACKAGES}"
@@ -38,11 +43,6 @@ PACKAGES = ' \
             ${@bb.utils.contains("DISTRO_FEATURES", "zeroconf", "packagegroup-base-zeroconf", "", d)} \
             \
             '
-
-#
-# packages which content depend on MACHINE_FEATURES need to be MACHINE_ARCH
-#
-PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 # Override by distro if needed
 VIRTUAL-RUNTIME_keymaps ?= "keymaps"

@@ -7,9 +7,9 @@ LICENSE = "MIT"
 
 PR = "r3"
 
-inherit packagegroup
-
 PACKAGE_ARCH = "${MACHINE_ARCH}"
+
+inherit packagegroup
 
 PROFILE_TOOLS_X = "${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'sysprof', '', d)}"
 PROFILE_TOOLS_SYSTEMD = "${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'systemd-analyze', '', d)}"
