@@ -155,9 +155,6 @@ class Image:
 
                 # Skip one sector required for the partitioning scheme overhead
                 d['offset'] += overhead
-                # Steal few sectors from the first partition to offset for the
-                # partitioning overhead
-                p['size'] -= overhead
 
             if p['align']:
                 # If not first partition and we do have alignment set we need
