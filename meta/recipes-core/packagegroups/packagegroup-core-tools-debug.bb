@@ -7,9 +7,7 @@ LICENSE = "MIT"
 
 inherit packagegroup
 
-PR = "r2"
-
-PACKAGE_ARCH = "${MACHINE_ARCH}"
+PR = "r3"
 
 MTRACE = ""
 MTRACE_libc-glibc = "libc-mtrace"
