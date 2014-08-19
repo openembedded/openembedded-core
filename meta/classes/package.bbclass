@@ -2021,7 +2021,4 @@ def mapping_rename_hook(d):
     runtime_mapping_rename("RDEPENDS", pkg, d)
     runtime_mapping_rename("RRECOMMENDS", pkg, d)
     runtime_mapping_rename("RSUGGESTS", pkg, d)
-    runtime_mapping_rename("RPROVIDES", pkg, d)
-    runtime_mapping_rename("RREPLACES", pkg, d)
-    runtime_mapping_rename("RCONFLICTS", pkg, d)
 
