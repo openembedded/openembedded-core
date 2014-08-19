@@ -9,6 +9,7 @@ LICENSE = "openssl"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=f9a8f968107345e0b75aa8c2ecaa7ec8"
 
 DEPENDS = "perl-native-runtime"
+DEPENDS_append_class-target = " openssl-native"
 
 SRC_URI = "http://www.openssl.org/source/openssl-${PV}.tar.gz \
           "
@@ -135,6 +136,10 @@ do_configure () {
                 useprefix=/
         fi        
 	perl ./Configure ${EXTRA_OECONF} shared --prefix=$useprefix --openssldir=${libdir}/ssl --libdir=`basename ${libdir}` $target
+}
+
+do_compile_prepend_class-target () {
+    sed -i 's/\((OPENSSL=\)".*"/\1"openssl"/' Makefile
 }
 
 do_compile () {
