@@ -9,6 +9,8 @@
 # Better expressed as ensure all RDEPENDS package before we package
 # This means we can't have circular RDEPENDS/RRECOMMENDS
 
+AUTO_LIBNAME_PKGS = "${PACKAGES}"
+
 inherit package
 
 DEBIANRDEP = "do_packagedata"
