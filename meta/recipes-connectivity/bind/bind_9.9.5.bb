@@ -15,6 +15,7 @@ SRC_URI = "ftp://ftp.isc.org/isc/bind9/${PV}/${BPN}-${PV}.tar.gz \
            file://dont-test-on-host.patch \
            file://generate-rndc-key.sh \
            file://named.service \
+           file://bind9 \
            file://init.d-add-support-for-read-only-rootfs.patch \
 	   "
 
@@ -30,7 +31,11 @@ EXTRA_OECONF = " ${ENABLE_IPV6} --with-randomdev=/dev/random --disable-threads \
                  --with-openssl=${STAGING_LIBDIR}/.. --with-libxml2=${STAGING_LIBDIR}/.. \
                  --enable-exportlib --with-export-includedir=${includedir} --with-export-libdir=${libdir} \
                "
-inherit autotools-brokensep update-rc.d systemd
+inherit autotools-brokensep update-rc.d systemd useradd
+
+USERADD_PACKAGES = "${PN}"
+USERADD_PARAM_${PN} = "--system --home /var/cache/bind --no-create-home \
+                       --user-group bind"
 
 INITSCRIPT_NAME = "bind"
 INITSCRIPT_PARAMS = "defaults"
@@ -67,6 +72,9 @@ do_install_append() {
 	sed -i -e 's,@BASE_BINDIR@,${base_bindir},g' \
 	       -e 's,@SBINDIR@,${sbindir},g' \
 	       ${D}${systemd_unitdir}/system/named.service
+
+	install -d ${D}${sysconfdir}/default
+	install -m 0644 ${WORKDIR}/bind9 ${D}${sysconfdir}/default
 }
 
 CONFFILES_${PN} = " \
