@@ -12,6 +12,7 @@ SRC_URI += "file://procmodule.patch \
             file://procps-3.2.7-top-remcpu.patch \
             file://procps-3.2.8-ps-cgroup.patch \
             file://detect_bitness.patch \
+            file://0001-Fix-musl-build-failure.patch \
            "
 
 SRC_URI[md5sum] = "9532714b6846013ca9898984ba4cd7e0"
