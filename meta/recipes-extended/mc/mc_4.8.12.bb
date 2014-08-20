@@ -6,7 +6,9 @@ SECTION = "console/utils"
 DEPENDS = "ncurses glib-2.0"
 RDEPENDS_${PN} = "ncurses-terminfo"
 
-SRC_URI = "http://www.midnight-commander.org/downloads/${BPN}-${PV}.tar.bz2"
+SRC_URI = "http://www.midnight-commander.org/downloads/${BPN}-${PV}.tar.bz2 \
+           file://mc-CTRL.patch \
+           "
 
 SRC_URI[md5sum] = "a64c426364bfaee56b628f6c0738aade"
 SRC_URI[sha256sum] = "1054fcc27a488771cbe5b85d7c10135fa1cd1b7682a19930d44b51a023e39396"
