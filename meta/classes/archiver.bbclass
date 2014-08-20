@@ -136,7 +136,7 @@ python do_ar_original() {
     bb.note('Archiving the original source...')
     fetch = bb.fetch2.Fetch([], d)
     for url in fetch.urls:
-        local = fetch.localpath(url)
+        local = fetch.localpath(url).rstrip("/");
         if os.path.isfile(local):
             shutil.copy(local, ar_outdir)
         elif os.path.isdir(local):
