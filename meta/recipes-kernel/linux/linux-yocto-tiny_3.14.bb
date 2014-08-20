@@ -8,8 +8,8 @@ LINUX_VERSION ?= "3.14.13"
 
 KMETA = "meta"
 
-SRCREV_machine ?= "59ed057796efe35d264c2ebe4f79acdbe40026e5"
-SRCREV_meta ?= "3a897e59cb5de59e7fdaabdfa89db5da69966def"
+SRCREV_machine ?= "6cfe9c448741ab317d70a8ded3a953a0e66bb0a5"
+SRCREV_meta ?= "3eefa4379f073768df150184e9dad1ff3228a0ff"
 
 PV = "${LINUX_VERSION}+git${SRCPV}"
 
