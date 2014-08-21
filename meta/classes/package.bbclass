@@ -928,13 +928,7 @@ python split_and_strip_files () {
         for f in kernmods:
             sfiles.append((f, 16, strip))
 
-
-        import multiprocessing
-        nproc = multiprocessing.cpu_count()
-        pool = bb.utils.multiprocessingpool(nproc)
-        processed = list(pool.imap(oe.package.runstrip, sfiles))
-        pool.close()
-        pool.join()
+        oe.utils.multiprocess_exec(sfiles, oe.package.runstrip)
 
     #
     # End of strip
@@ -1311,12 +1305,7 @@ python package_do_filedeps() {
         for files in chunks(pkgfiles[pkg], 100):
             pkglist.append((pkg, files, rpmdeps, pkgdest))
 
-    import multiprocessing
-    nproc = multiprocessing.cpu_count()
-    pool =  bb.utils.multiprocessingpool(nproc)
-    processed = list(pool.imap(oe.package.filedeprunner, pkglist))
-    pool.close()
-    pool.join()
+    processed = oe.utils.multiprocess_exec( pkglist, oe.package.filedeprunner)
 
     provides_files = {}
     requires_files = {}
