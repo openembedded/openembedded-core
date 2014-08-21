@@ -7,6 +7,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504 \
 "
 SRC_URI_append = " file://use-includedir.patch \
                    file://append_user_provided_flags.patch \
+                   file://gmp-6.0.0-ppc64.patch \
 "
 
 SRC_URI[md5sum] = "b7ff2d88cae7f8085bd5006096eed470"
