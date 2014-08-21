@@ -2,7 +2,7 @@ require sudo.inc
 
 SRC_URI = "http://ftp.sudo.ws/sudo/dist/sudo-${PV}.tar.gz \
            ${@bb.utils.contains('DISTRO_FEATURES', 'pam', '${PAM_SRC_URI}', '', d)} \
-           file://volatiles.99_sudo"
+          "
 
 PAM_SRC_URI = "file://sudo.pam"
 
@@ -22,9 +22,6 @@ do_install_append () {
 	chmod 4111 ${D}${bindir}/sudo
 	chmod 0440 ${D}${sysconfdir}/sudoers
 
-	# Explicitly remove the ${localstatedir}/run directory as we can
-	# manage it by a configuration file under ${sysconfdir}/default/volatiles/
+	# Explicitly remove the ${localstatedir}/run directory to avoid QA error
 	rmdir -p --ignore-fail-on-non-empty ${D}${localstatedir}/run/sudo
-	install -d ${D}/${sysconfdir}/default/volatiles
-	install -m 644 ${WORKDIR}/volatiles.99_sudo ${D}/${sysconfdir}/default/volatiles/99_sudo
 }
