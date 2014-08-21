@@ -85,8 +85,7 @@ do_patch() {
 
 	createme ${createme_flags} ${ARCH} ${machine_branch}
 	if [ $? -ne 0 ]; then
-		echo "ERROR. Could not create ${machine_branch}"
-		exit 1
+		bbfatal "Could not create ${machine_branch}"
 	fi
 
 	sccs="${@" ".join(find_sccs(d))}"
@@ -119,16 +118,14 @@ do_patch() {
 	updateme ${updateme_flags} -DKDESC=${KMACHINE}:${LINUX_KERNEL_TYPE} \
                          ${includes} ${addon_features} ${ARCH} ${KMACHINE} ${sccs} ${patches}
 	if [ $? -ne 0 ]; then
-		echo "ERROR. Could not update ${machine_branch}"
-		exit 1
+		bbfatal "Could not update ${machine_branch}"
 	fi
 
 	# executes and modifies the source tree as required
 	patchme ${KMACHINE}
 	if [ $? -ne 0 ]; then
-		echo "ERROR. Could not apply patches for ${KMACHINE}."
-		echo "       Patch failures can be resolved in the devshell (bitbake -c devshell ${PN})"
-		exit 1
+		bberror "Could not apply patches for ${KMACHINE}."
+		bbfatal "Patch failures can be resolved in the devshell (bitbake -c devshell ${PN})"
 	fi
 
 	# check to see if the specified SRCREV is reachable from the final branch.
@@ -136,9 +133,8 @@ do_patch() {
 	if [ "${machine_srcrev}" != "AUTOINC" ]; then
 		git merge-base --is-ancestor ${machine_srcrev} HEAD
 	 	if [ $? -ne 0 ]; then
-			bbnote "ERROR: SRCREV ${machine_srcrev} was specified, but is not reachable"
-			bbnote "       Check the BSP description for incorrect branch selection, or other errors."
-			exit 1
+			bberror "SRCREV ${machine_srcrev} was specified, but is not reachable"
+			bbfatal "Check the BSP description for incorrect branch selection, or other errors."
 		fi
 	fi
 }
@@ -183,9 +179,8 @@ do_kernel_checkout() {
 
 	        cd ${S}
 		if [ ! -f "Makefile" ]; then
-			echo "[ERROR]: S is not set to the linux source directory. Check "
-			echo "         the recipe and set S to the proper extracted subdirectory"
-			exit 1
+			bberror "S is not set to the linux source directory. Check "
+			bbfatal "the recipe and set S to the proper extracted subdirectory"
 		fi
 		git init
 		git add .
@@ -207,10 +202,9 @@ do_kernel_checkout() {
 	if [ -n "${KMETA}" ]; then
 		git show-ref --quiet --verify -- "refs/heads/${KMETA}"
 		if [ $? -eq 1 ]; then
-			echo "ERROR. The branch '${KMETA}' is required and was not"
-			echo "found. Ensure that the SRC_URI points to a valid linux-yocto"
-			echo "kernel repository"
-			exit 1
+			bberror "The branch '${KMETA}' is required and was not found"
+			bberror "Ensure that the SRC_URI points to a valid linux-yocto"
+			bbfatal "kernel repository"
 		fi
 	fi
 	
@@ -231,7 +225,7 @@ addtask kernel_checkout before do_patch after do_unpack
 
 do_kernel_configme[dirs] += "${S} ${B}"
 do_kernel_configme() {
-	echo "[INFO] doing kernel configme"
+	bbnote "kernel configme"
 	export KMETA=${KMETA}
 
 	if [ -n "${KCONFIG_MODE}" ]; then
@@ -248,8 +242,7 @@ do_kernel_configme() {
 	PATH=${PATH}:${S}/scripts/util
 	configme ${configmeflags} --reconfig --output ${B} ${LINUX_KERNEL_TYPE} ${KMACHINE}
 	if [ $? -ne 0 ]; then
-		echo "ERROR. Could not configure ${KMACHINE}-${LINUX_KERNEL_TYPE}"
-		exit 1
+		bbfatal "Could not configure ${KMACHINE}-${LINUX_KERNEL_TYPE}"
 	fi
 	
 	echo "# Global settings from linux recipe" >> ${B}/.config
@@ -295,19 +288,18 @@ do_validate_branches() {
 	# if SRCREV is AUTOREV it shows up as AUTOINC there's nothing to
 	# check and we can exit early
 	if [ "${machine_srcrev}" = "AUTOINC" ]; then
-		bbnote "INFO: SRCREV validation is not required for AUTOREV or empty/invalid settings, returning"
+		bbnote "SRCREV validation is not required for AUTOREV"
 	elif [ "${machine_srcrev}" = "" ] && [ "${SRCREV}" != "AUTOINC" ]; then
 		# SRCREV_machine_<MACHINE> was not set. This means that a custom recipe
 		# that doesn't use the SRCREV_FORMAT "machine_meta" is being built. In
 		# this case, we need to reset to the give SRCREV before heading to patching
-		bbnote "INFO: custom recipe is being built, forcing SRCREV to ${SRCREV}"
+		bbnote "custom recipe is being built, forcing SRCREV to ${SRCREV}"
 		force_srcrev="${SRCREV}"
 	else
 		git cat-file -t ${machine_srcrev} > /dev/null
 		if [ if $? -ne 0 ]; then
-			echo "ERROR ${machine_srcrev} is not a valid commit ID."
-			echo "The kernel source tree may be out of sync"
-			exit 1
+			bberror "${machine_srcrev} is not a valid commit ID."
+			bbfatal "The kernel source tree may be out of sync"
 		fi
 		force_srcrev=${machine_srcrev}
 	fi
@@ -315,23 +307,21 @@ do_validate_branches() {
 	## KMETA branch validation.
 	target_meta_head="${SRCREV_meta}"
 	if [ "${target_meta_head}" = "AUTOINC" ] || [ "${target_meta_head}" = "" ]; then
-		bbnote "INFO: SRCREV validation skipped for AUTOREV or empty meta branch"
+		bbnote "SRCREV validation skipped for AUTOREV or empty meta branch"
 	else
 	 	meta_head=`git show-ref -s --heads ${KMETA}`
 
 		git cat-file -t ${target_meta_head} > /dev/null
 		if [ $? -ne 0 ]; then
-			echo "ERROR ${target_meta_head} is not a valid commit ID"
-			echo "The kernel source tree may be out of sync"
-			exit 1
+			bberror "${target_meta_head} is not a valid commit ID"
+			bbfatal "The kernel source tree may be out of sync"
 		fi
 		if [ "$meta_head" != "$target_meta_head" ]; then
-			echo "[INFO] Setting branch ${KMETA} to ${target_meta_head}"
+			bbnote "Setting branch ${KMETA} to ${target_meta_head}"
 			git branch -m ${KMETA} ${KMETA}-orig
 			git checkout -q -b ${KMETA} ${target_meta_head}
 			if [ $? -ne 0 ];then
-				echo "ERROR: could not checkout ${KMETA} branch from known hash ${target_meta_head}"
-				exit 1
+				bbfatal "Could not checkout ${KMETA} branch from known hash ${target_meta_head}"
 			fi
 		fi
 	fi
