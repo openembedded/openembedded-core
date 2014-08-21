@@ -151,3 +151,32 @@ def execute_pre_post_process(d, cmds):
         if cmd != '':
             bb.note("Executing %s ..." % cmd)
             bb.build.exec_func(cmd, d)
+
+def multiprocess_exec(commands, function):
+    import signal
+    import multiprocessing
+
+    if not commands:
+        return []
+
+    def init_worker():
+        signal.signal(signal.SIGINT, signal.SIG_IGN)
+
+    nproc = min(multiprocessing.cpu_count(), len(commands))
+    pool = bb.utils.multiprocessingpool(nproc, init_worker)
+    imap = pool.imap(function, commands)
+
+    try:
+        results = list(imap)
+        pool.close()
+        pool.join()
+        results = []
+        for result in results:
+            if result is not None:
+                results.append(result)
+        return results
+
+    except KeyboardInterrupt:
+        pool.terminate()
+        pool.join()
+        raise
