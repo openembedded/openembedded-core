@@ -35,6 +35,7 @@ do_install_append() {
         install -m 0755 ${S}/fixline1           ${D}${libdir}/expect${PV}/
         install -m 0755 ${S}/example/*          ${D}${libdir}/expect${PV}/
         rm ${D}${libdir}/expect${PV}/libexpect*.so
+        sed -e 's|$dir|${libdir}|' -i ${D}${libdir}/expect${PV}/pkgIndex.tcl
 }
 
 EXTRA_OECONF += "--includedir=${STAGING_INCDIR} \
