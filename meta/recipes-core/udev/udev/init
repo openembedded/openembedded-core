@@ -14,6 +14,8 @@ export TZ=/etc/localtime
 [ -d /sys/class ] || exit 1
 [ -r /proc/mounts ] || exit 1
 [ -x @UDEVD@ ] || exit 1
+SYSCONF_CACHED="/etc/udev/cache.data"
+SYSCONF_TMP="/dev/shm/udev.cache"
 [ -f /etc/default/udev-cache ] && . /etc/default/udev-cache
 [ -f /etc/udev/udev.conf ] && . /etc/udev/udev.conf
 [ -f /etc/default/rcS ] && . /etc/default/rcS
@@ -66,13 +68,13 @@ case "$1" in
             if [ -e $DEVCACHE ]; then
 		    readfiles $CMP_FILE_LIST
 		    NEWDATA="$READDATA"
-		    readfiles /etc/udev/cache.data
+		    readfiles "$SYSCONF_CACHED"
 		    OLDDATA="$READDATA"
 		    if [ "$OLDDATA" = "$NEWDATA" ]; then
                             tar xmf $DEVCACHE -C / -m
                             not_first_boot=1
                             [ "$VERBOSE" != "no" ] && echo "udev: using cache file $DEVCACHE"
-                            [ -e /dev/shm/udev.cache ] && rm -f /dev/shm/udev.cache
+                            [ -e $SYSCONF_TMP ] && rm -f "$SYSCONF_TMP"
                     else
 			    # Output detailed reason why the cached /dev is not used
 			    if [ "$VERBOSE" != "no" ]; then
@@ -81,14 +83,14 @@ case "$1" in
 				    echo "udev: olddata: $OLDDATA"
 				    echo "udev: newdata: $NEWDATA"
 			    fi
-			    echo "$NEWDATA" > /dev/shm/udev.cache
+			    echo "$NEWDATA" > "$SYSCONF_TMP"
                     fi
 	    else
 		    if [ "$ROOTFS_READ_ONLY" != "yes" ]; then
 			    # If rootfs is not read-only, it's possible that a new udev cache would be generated;
 			    # otherwise, we do not bother to read files.
 			    readfiles $CMP_FILE_LIST
-			    echo "$READDATA" > /dev/shm/udev.cache
+			    echo "$READDATA" > "$SYSCONF_TMP"
 		    fi
             fi
     fi
