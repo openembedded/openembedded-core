@@ -69,7 +69,7 @@ case "$1" in
 		    readfiles /etc/udev/cache.data
 		    OLDDATA="$READDATA"
 		    if [ "$OLDDATA" = "$NEWDATA" ]; then
-                            (cd /; tar xmf $DEVCACHE > /dev/null 2>&1)
+                            tar xmf $DEVCACHE -C / -m
                             not_first_boot=1
                             [ "$VERBOSE" != "no" ] && echo "udev: using cache file $DEVCACHE"
                             [ -e /dev/shm/udev.cache ] && rm -f /dev/shm/udev.cache
