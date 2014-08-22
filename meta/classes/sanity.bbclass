@@ -753,6 +753,39 @@ def check_sanity_everybuild(status, d):
     if oeroot.find(' ') != -1:
         status.addresult("Error, you have a space in your COREBASE directory path. Please move the installation to a directory which doesn't include a space since autotools doesn't support this.")
 
+    # Check the format of MIRRORS, PREMIRRORS and SSTATE_MIRRORS
+    mir_types = ['MIRRORS', 'PREMIRRORS', 'SSTATE_MIRRORS']
+    protocols = ['http://', 'ftp://', 'file://', 'https://', 'https?$://', \
+        'git://', 'gitsm://', 'hg://', 'osc://', 'p4://', 'svk://', 'svn://', \
+        'bzr://', 'cvs://']
+    for mir_type in mir_types:
+        mirros = (d.getVar(mir_type, True) or '').split('\\n')
+        for mir in mirros:
+            mir_list = mir.split()
+            # Should be two members.
+            if len(mir_list) not in [0, 2]:
+                bb.warn('Invalid %s: %s, should be 2 members, but found %s.' \
+                    % (mir_type, mir.strip(), len(mir_list)))
+            elif len(mir_list) == 2:
+                # Each member should start with protocols
+                valid_protocol_0 = False
+                valid_protocol_1 = False
+                file_absolute = True
+                for protocol in protocols:
+                    if not valid_protocol_0 and mir_list[0].startswith(protocol):
+                        valid_protocol_0 = True
+                    if not valid_protocol_1 and mir_list[1].startswith(protocol):
+                        valid_protocol_1 = True
+                        # The file:// must be an absolute path.
+                        if protocol == 'file://' and not mir_list[1].startswith('file:///'):
+                            file_absolute = False
+                    if valid_protocol_0 and valid_protocol_1:
+                        break
+                if not (valid_protocol_0 and valid_protocol_1):
+                    bb.warn('Invalid protocol in %s: %s' % (mir_type, mir.strip()))
+                if not file_absolute:
+                    bb.warn('Invalid file url in %s: %s, must be absolute path (file:///)' % (mir_type, mir.strip()))
+
     # Check that TMPDIR hasn't changed location since the last time we were run
     tmpdir = d.getVar('TMPDIR', True)
     checkfile = os.path.join(tmpdir, "saved_tmpdir")
