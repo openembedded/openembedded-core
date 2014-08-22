@@ -150,10 +150,9 @@ def check_toolchain_tune(data, tune, multilib):
             bb.debug(2, "  %s: %s" % (feature, valid_tunes[feature]))
         else:
             tune_errors.append("Feature '%s' is not defined." % feature)
-    whitelist = localdata.getVar("TUNEABI_WHITELIST", True) or ''
-    override = localdata.getVar("TUNEABI_OVERRIDE", True) or ''
+    whitelist = localdata.getVar("TUNEABI_WHITELIST", True)
     if whitelist:
-        tuneabi = localdata.getVar("TUNEABI_tune-%s" % tune, True) or ''
+        tuneabi = localdata.getVar("TUNEABI_tune-%s" % tune, True)
         if not tuneabi:
             tuneabi = tune
         if True not in [x in whitelist.split() for x in tuneabi.split()]:
@@ -265,7 +264,7 @@ def check_connectivity(d):
     # CONNECTIVITY_CHECK_URIS are set
     network_enabled = not d.getVar('BB_NO_NETWORK', True)
     check_enabled = len(test_uris)
-    # Take a copy of the data store and unset MIRRORS and PREMIRROS
+    # Take a copy of the data store and unset MIRRORS and PREMIRRORS
     data = bb.data.createCopy(d)
     data.delVar('PREMIRRORS')
     data.delVar('MIRRORS')
