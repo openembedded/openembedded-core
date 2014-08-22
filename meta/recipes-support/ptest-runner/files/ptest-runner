@@ -1,5 +1,5 @@
 #!/bin/sh
-
+ANYFAILED=no
 echo "START: $0"
 
 for libdir in /usr/lib*
@@ -15,9 +15,13 @@ do
         date "+%Y-%m-%dT%H:%M"
         echo "BEGIN: $x"
         cd "$x"
-        ./run-ptest
+        ./run-ptest || ANYFAILED=yes
         echo "END: $x"
         date "+%Y-%m-%dT%H:%M"
     done
 done
 echo "STOP: $0"
+if [ "$ANYFAILED" = "yes"  ]; then
+    exit 1
+fi
+exit 0
