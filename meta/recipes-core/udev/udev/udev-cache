@@ -16,6 +16,7 @@ export TZ=/etc/localtime
 [ -d /sys/class ] || exit 1
 
 [ -f /etc/default/rcS ] && . /etc/default/rcS
+DEVCACHE_TMP="/dev/shm/udev-cache-tmp.tar"
 [ -f /etc/default/udev-cache ] && . /etc/default/udev-cache
 
 if [ "$ROOTFS_READ_ONLY" = "yes" ]; then
@@ -25,7 +26,8 @@ fi
 
 if [ "$DEVCACHE" != "" -a -e /dev/shm/udev.cache ]; then
 	echo "Populating dev cache"
-	(cd /; tar cf "$DEVCACHE" dev)
+	(cd /; tar cf "${DEVCACHE_TMP}" dev)
+	mv -f "${DEVCACHE_TMP}" "$DEVCACHE"
 	mv /dev/shm/udev.cache /etc/udev/cache.data
 fi
 
