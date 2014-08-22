@@ -5,6 +5,8 @@ import os
 class HTTPServer(SimpleHTTPServer.BaseHTTPServer.HTTPServer):
 
     def server_start(self, root_dir):
+        import signal
+        signal.signal(signal.SIGTERM, signal.SIG_DFL)
         os.chdir(root_dir)
         self.serve_forever()
 
