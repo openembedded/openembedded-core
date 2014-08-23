@@ -1,0 +1,65 @@
+shell/ash.c: fix ice on mips while compiling with -g -O
+
+Build busybox on mips with -g -O, there is a ice failure:
+...
+shell/ash.c:8758:1: internal compiler error: in dwarf2out_var_location, at dwarf2out.c:21264
+...
+Please submit a full bug report,
+with preprocessed source if appropriate.
+See <http://gcc.gnu.org/bugs.html> for instructions.
+{standard input}: Assembler messages:
+{standard input}: Warning: missing .end at end of assembly
+{standard input}: Error: open CFI at the end of file; missing .cfi_endproc directive
+...
+
+The following line caused the ice failure on mips:
+...
+void evaltreenr(union node *, int) __attribute__ ((alias("evaltree"),__noreturn__));
+...
+So remove evaltreenr which was a alias of evaltree, and use evaltree
+to instead.
+
+Upstream-Status: Pending
+
+Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
+---
+ shell/ash.c | 9 ++-------
+ 1 file changed, 2 insertions(+), 7 deletions(-)
+
+diff --git a/shell/ash.c b/shell/ash.c
+index 71ef9a6..4462e40 100644
+--- a/shell/ash.c
++++ b/shell/ash.c
+@@ -8490,11 +8490,6 @@ evaltree(union node *n, int flags)
+ 	TRACE(("leaving evaltree (no interrupts)\n"));
+ }
+ 
+-#if !defined(__alpha__) || (defined(__GNUC__) && __GNUC__ >= 3)
+-static
+-#endif
+-void evaltreenr(union node *, int) __attribute__ ((alias("evaltree"),__noreturn__));
+-
+ static void
+ evalloop(union node *n, int flags)
+ {
+@@ -8621,7 +8616,7 @@ evalsubshell(union node *n, int flags)
+ 			flags &= ~EV_TESTED;
+  nofork:
+ 		redirect(n->nredir.redirect, 0);
+-		evaltreenr(n->nredir.n, flags);
++		evaltree(n->nredir.n, flags);
+ 		/* never returns */
+ 	}
+ 	status = 0;
+@@ -8740,7 +8735,7 @@ evalpipe(union node *n, int flags)
+ 				dup2(pip[1], 1);
+ 				close(pip[1]);
+ 			}
+-			evaltreenr(lp->n, flags);
++			evaltree(lp->n, flags);
+ 			/* never returns */
+ 		}
+ 		if (prevfd >= 0)
+-- 
+1.9.1
+
