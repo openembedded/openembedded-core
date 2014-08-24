@@ -499,6 +499,8 @@ POPULATE_SDK_POST_HOST_COMMAND_append = " buildhistory_list_installed_sdk_host ;
 SDK_POSTPROCESS_COMMAND += "buildhistory_get_sdkinfo ; "
 
 def buildhistory_get_build_id(d):
+    if d.getVar('BB_WORKERCONTEXT', True) != '1':
+        return ""
     localdata = bb.data.createCopy(d)
     bb.data.update_data(localdata)
     statuslines = []
