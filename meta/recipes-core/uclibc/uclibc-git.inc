@@ -23,5 +23,7 @@ SRC_URI = "git://uclibc.org/uClibc.git;branch=master \
 	file://0001-Revert-utent.c-wtent.c-move-functions-from-utxent.c.patch \
 	file://0001-Add-eventfd_read-and-eventfd_write.patch \
 	file://0002-wire-setns-syscall.patch \
+	file://0001-Define-IPTOS_CLASS_-macros-according-to-RFC-2474.patch \
+	file://0001-timex-Sync-with-glibc.patch \
 	"
 S = "${WORKDIR}/git"
