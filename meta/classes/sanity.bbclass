@@ -759,7 +759,7 @@ def check_sanity_everybuild(status, d):
         'git://', 'gitsm://', 'hg://', 'osc://', 'p4://', 'svk://', 'svn://', \
         'bzr://', 'cvs://']
     for mir_type in mir_types:
-        mirros = (d.getVar(mir_type, True) or '').split('\\n')
+        mirros = (d.getVar(mir_type, True) or '').replace('\\n', '\n').split('\n')
         for mir in mirros:
             mir_list = mir.split()
             # Should be two members.
