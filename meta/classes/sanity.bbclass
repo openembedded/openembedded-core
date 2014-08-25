@@ -754,8 +754,9 @@ def check_sanity_everybuild(status, d):
         status.addresult("Error, you have a space in your COREBASE directory path. Please move the installation to a directory which doesn't include a space since autotools doesn't support this.")
 
     # Check the format of MIRRORS, PREMIRRORS and SSTATE_MIRRORS
+    import re
     mir_types = ['MIRRORS', 'PREMIRRORS', 'SSTATE_MIRRORS']
-    protocols = ['http://', 'ftp://', 'file://', 'https://', 'https?$://', \
+    protocols = ['http://', 'ftp://', 'file://', 'https://', \
         'git://', 'gitsm://', 'hg://', 'osc://', 'p4://', 'svk://', 'svn://', \
         'bzr://', 'cvs://']
     for mir_type in mir_types:
@@ -767,12 +768,19 @@ def check_sanity_everybuild(status, d):
                 bb.warn('Invalid %s: %s, should be 2 members, but found %s.' \
                     % (mir_type, mir.strip(), len(mir_list)))
             elif len(mir_list) == 2:
+                decoded = bb.fetch2.decodeurl(mir_list[0])
+                try:
+                    pattern_scheme = re.compile(decoded[0])
+                except re.error as exc:
+                    bb.warn('Invalid scheme regex (%s) in %s: %s' % (decoded[0], mir_type, mir.strip()))
+                    continue
+
                 # Each member should start with protocols
                 valid_protocol_0 = False
                 valid_protocol_1 = False
                 file_absolute = True
                 for protocol in protocols:
-                    if not valid_protocol_0 and mir_list[0].startswith(protocol):
+                    if not valid_protocol_0 and pattern_scheme.match(protocol[:-3]):
                         valid_protocol_0 = True
                     if not valid_protocol_1 and mir_list[1].startswith(protocol):
                         valid_protocol_1 = True
