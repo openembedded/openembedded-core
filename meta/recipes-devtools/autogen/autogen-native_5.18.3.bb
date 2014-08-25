@@ -18,7 +18,7 @@ SRC_URI[sha256sum] = "73d05a689105eb9b8be54f32498c99ddbd360776fc61cf45be6a2a4eb4
 
 DEPENDS = "guile-native libtool-native libxml2-native"
 
-inherit autotools texinfo native
+inherit autotools texinfo native pkgconfig
 
 # autogen-native links against libguile which may have been relocated with sstate
 # these environment variables ensure there isn't a relocation issue
