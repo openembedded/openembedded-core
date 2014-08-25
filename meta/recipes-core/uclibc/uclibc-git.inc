@@ -1,4 +1,4 @@
-SRCREV="5eddde8f094ef52dca06695cc598e3b2556dcccb"
+SRCREV = "48a0006012679ff0eda6f256da958d73a924fb57"
 
 PV = "0.9.33+git${SRCPV}"
 
@@ -23,7 +23,5 @@ SRC_URI = "git://uclibc.org/uClibc.git;branch=master \
 	file://0001-Revert-utent.c-wtent.c-move-functions-from-utxent.c.patch \
 	file://0001-Add-eventfd_read-and-eventfd_write.patch \
 	file://0002-wire-setns-syscall.patch \
-	file://0003-fcntl.h-Define-F_SETPIPE_SZ-and-F_GETPIPE_SZ.patch \
-	file://0004-Add-clock_adjtime-syscall.patch \ 
 	"
 S = "${WORKDIR}/git"

@@ -93,10 +93,10 @@ python () {
     # if we use TARGET_CC_ARCH="-march=mips32" we end up 
     # with conflicting march options to gcc. Here we
     # ask for MIPS32 ISA to match the chosen arch
-
-    if "mips32" in d.getVar("TUNE_FEATURES",True):
+    tune = d.getVar("DEFAULTTUNE", True)
+    if tune in ['mips32', 'mips32r2']:
         d.setVar('configmangle_append',
-                 "/^### MIPS32_CHECK$/a\\\nCONFIG_MIPS_ISA_MIPS32=y\n\n")
+                 "/^### MIPS32_CHECK$/a\\\nCONFIG_MIPS_ISA_%s=y\n\n" % (tune.upper()))
     if "${OE_FEATURES}":
         d.setVar('configmangle_append',
                    "/^### DISTRO FEATURES$/a\\\n%s\n\n" %
