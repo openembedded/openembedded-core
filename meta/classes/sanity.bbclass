@@ -755,44 +755,41 @@ def check_sanity_everybuild(status, d):
 
     # Check the format of MIRRORS, PREMIRRORS and SSTATE_MIRRORS
     import re
-    mir_types = ['MIRRORS', 'PREMIRRORS', 'SSTATE_MIRRORS']
-    protocols = ['http://', 'ftp://', 'file://', 'https://', \
-        'git://', 'gitsm://', 'hg://', 'osc://', 'p4://', 'svk://', 'svn://', \
-        'bzr://', 'cvs://']
-    for mir_type in mir_types:
-        mirros = (d.getVar(mir_type, True) or '').replace('\\n', '\n').split('\n')
-        for mir in mirros:
-            mir_list = mir.split()
-            # Should be two members.
-            if len(mir_list) not in [0, 2]:
-                bb.warn('Invalid %s: %s, should be 2 members, but found %s.' \
-                    % (mir_type, mir.strip(), len(mir_list)))
-            elif len(mir_list) == 2:
-                decoded = bb.fetch2.decodeurl(mir_list[0])
-                try:
-                    pattern_scheme = re.compile(decoded[0])
-                except re.error as exc:
-                    bb.warn('Invalid scheme regex (%s) in %s: %s' % (decoded[0], mir_type, mir.strip()))
-                    continue
+    mirror_vars = ['MIRRORS', 'PREMIRRORS', 'SSTATE_MIRRORS']
+    protocols = ['http', 'ftp', 'file', 'https', \
+                 'git', 'gitsm', 'hg', 'osc', 'p4', 'svk', 'svn', \
+                 'bzr', 'cvs']
+    for mirror_var in mirror_vars:
+        mirrors = (d.getVar(mirror_var, True) or '').replace('\\n', '\n').split('\n')
+        for mirror_entry in mirrors:
+            mirror_entry = mirror_entry.strip()
+            if not mirror_entry:
+                # ignore blank lines
+                continue
 
-                # Each member should start with protocols
-                valid_protocol_0 = False
-                valid_protocol_1 = False
-                file_absolute = True
-                for protocol in protocols:
-                    if not valid_protocol_0 and pattern_scheme.match(protocol[:-3]):
-                        valid_protocol_0 = True
-                    if not valid_protocol_1 and mir_list[1].startswith(protocol):
-                        valid_protocol_1 = True
-                        # The file:// must be an absolute path.
-                        if protocol == 'file://' and not mir_list[1].startswith('file:///'):
-                            file_absolute = False
-                    if valid_protocol_0 and valid_protocol_1:
-                        break
-                if not (valid_protocol_0 and valid_protocol_1):
-                    bb.warn('Invalid protocol in %s: %s' % (mir_type, mir.strip()))
-                if not file_absolute:
-                    bb.warn('Invalid file url in %s: %s, must be absolute path (file:///)' % (mir_type, mir.strip()))
+            try:
+                pattern, mirror = mirror_entry.split()
+            except ValueError:
+                bb.warn('Invalid %s: %s, should be 2 members.' % (mirror_var, mirror_entry.strip()))
+                continue
+
+            decoded = bb.fetch2.decodeurl(pattern)
+            try:
+                pattern_scheme = re.compile(decoded[0])
+            except re.error as exc:
+                bb.warn('Invalid scheme regex (%s) in %s; %s' % (pattern, mirror_var, mirror_entry))
+                continue
+
+            if not any(pattern_scheme.match(protocol) for protocol in protocols):
+                bb.warn('Invalid protocol (%s) in %s: %s' % (decoded[0], mirror_var, mirror_entry))
+                continue
+
+            if not any(mirror.startswith(protocol + '://') for protocol in protocols):
+                bb.warn('Invalid protocol in %s: %s' % (mirror_var, mirror_entry))
+                continue
+
+            if mirror.startswith('file://') and not mirror.startswith('file:///'):
+                bb.warn('Invalid file url in %s: %s, must be absolute path (file:///)' % (mirror_var, mirror_entry))
 
     # Check that TMPDIR hasn't changed location since the last time we were run
     tmpdir = d.getVar('TMPDIR', True)
