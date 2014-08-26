@@ -22,6 +22,7 @@ SRC_URI = "\
     file://nss-CVE-2013-1740.patch \
     file://nss-3.15.1-fix-CVE-2013-1739.patch \
     file://nss-CVE-2013-5606.patch \
+    file://nss-CVE-2014-1544.patch \
 "
 SRC_URI_append_class-target = "\
     file://nss.pc.in \
