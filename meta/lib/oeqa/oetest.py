@@ -23,7 +23,7 @@ def loadTests(tc, type="runtime"):
         suite = unittest.TestSuite()
     elif type == "sdk":
         # set the context object passed from the test class
-        setattr(oeSDKTest, "tc", tc)
+        setattr(oeTest, "tc", tc)
     testloader = unittest.TestLoader()
     testloader.sortTestMethodsUsing = None
     suite = testloader.loadTestsFromNames(tc.testslist)
@@ -66,7 +66,7 @@ class oeRuntimeTest(oeTest):
         self.target = oeRuntimeTest.tc.target
         super(oeRuntimeTest, self).__init__(methodName)
 
-class oeSDKTest(unittest.TestCase):
+class oeSDKTest(oeTest):
     def __init__(self, methodName='runTest'):
         self.sdktestdir = oeSDKTest.tc.sdktestdir
         super(oeSDKTest, self).__init__(methodName)
