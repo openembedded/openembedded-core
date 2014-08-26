@@ -16,7 +16,21 @@ SRC_URI = "https://fedorahosted.org/releases/l/o/logrotate/logrotate-${PV}.tar.g
 SRC_URI[md5sum] = "99e08503ef24c3e2e3ff74cc5f3be213"
 SRC_URI[sha256sum] = "f6ba691f40e30e640efa2752c1f9499a3f9738257660994de70a45fe00d12b64"
 
-EXTRA_OEMAKE = ""
+# If RPM_OPT_FLAGS is unset, it adds -g itself rather than obeying our
+# optimization variables, so use it rather than EXTRA_CFLAGS.
+EXTRA_OEMAKE = "\
+    LFS= \
+    OS_NAME='${OS_NAME}' \
+    \
+    'CC=${CC}' \
+    'RPM_OPT_FLAGS=${CFLAGS}' \
+    'EXTRA_LDFLAGS=${LDFLAGS}' \
+"
+
+# OS_NAME in the makefile defaults to `uname -s`. The behavior for
+# freebsd/netbsd is questionable, so leave it as Linux, which only sets
+# INSTALL=install and BASEDIR=/usr.
+OS_NAME = "Linux"
 
 do_compile_prepend() {
     # Make sure the recompile is OK
@@ -24,7 +38,7 @@ do_compile_prepend() {
 }
 
 do_install(){
-    oe_runmake install DESTDIR=${D} PREFIX=${D} MANDIR=${mandir}
+    oe_runmake install DESTDIR=${D} PREFIX=${D} MANDIR=${mandir} BINDIR=${bindir}
     mkdir -p ${D}${sysconfdir}/logrotate.d
     mkdir -p ${D}${sysconfdir}/cron.daily
     mkdir -p ${D}${localstatedir}/lib
