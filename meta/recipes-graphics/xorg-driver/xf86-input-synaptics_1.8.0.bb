@@ -12,9 +12,9 @@ advanced features of the touchpad to become available."
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=55aacd3535a741824955c5eb8f061398"
 
-SRC_URI[md5sum] = "deaa740072c19fef8e2fb1d7787392b7"
-SRC_URI[sha256sum] = "56a2d2df7bd39e29f56102c62f153e023f3e9b2f5e255309d33fab8e81945af7"
+SRC_URI[md5sum] = "27a3f2b31606a13dd6b58d419978d64f"
+SRC_URI[sha256sum] = "9bf27632aaa6c5e62621ca9c2ca00f9b309c85b039ee33cd592b189fc872c37a"
 
-DEPENDS += "libxi mtdev libxtst"
+DEPENDS += "libxi mtdev libxtst libevdev"
 
 FILES_${PN} += "${datadir}/X11/xorg.conf.d"
