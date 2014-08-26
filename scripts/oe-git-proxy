@@ -121,7 +121,7 @@ if [ "$PROTO" = "socks" ]; then
 	if [ -z "$PORT" ]; then
 		PORT="1080"
 	fi
-	METHOD="SOCKS4:$PROXY:$1:$2,socksport=$PORT"
+	METHOD="SOCKS4A:$PROXY:$1:$2,socksport=$PORT"
 else
 	# Assume PROXY (http, https, etc)
 	if [ -z "$PORT" ]; then
