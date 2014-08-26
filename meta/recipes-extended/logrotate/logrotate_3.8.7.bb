@@ -16,6 +16,11 @@ SRC_URI = "https://fedorahosted.org/releases/l/o/logrotate/logrotate-${PV}.tar.g
 SRC_URI[md5sum] = "99e08503ef24c3e2e3ff74cc5f3be213"
 SRC_URI[sha256sum] = "f6ba691f40e30e640efa2752c1f9499a3f9738257660994de70a45fe00d12b64"
 
+PACKAGECONFIG ?= "\
+    ${@base_contains('DISTRO_FEATURES', 'acl', 'acl', '', d)} \
+    ${@base_contains('DISTRO_FEATURES', 'selinux', 'selinux', '', d)} \
+"
+
 # If RPM_OPT_FLAGS is unset, it adds -g itself rather than obeying our
 # optimization variables, so use it rather than EXTRA_CFLAGS.
 EXTRA_OEMAKE = "\
@@ -25,6 +30,9 @@ EXTRA_OEMAKE = "\
     'CC=${CC}' \
     'RPM_OPT_FLAGS=${CFLAGS}' \
     'EXTRA_LDFLAGS=${LDFLAGS}' \
+    \
+    ${@base_contains('PACKAGECONFIG', 'acl', 'WITH_ACL=yes', '', d)} \
+    ${@base_contains('PACKAGECONFIG', 'selinux', 'WITH_SELINUX=yes', '', d)} \
 "
 
 # OS_NAME in the makefile defaults to `uname -s`. The behavior for
