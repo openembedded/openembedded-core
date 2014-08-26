@@ -7,7 +7,7 @@ When building against musl libc, PATH_MAX is defined in <limits.h>.
 
 Signed-off-by: Paul Barker <paul@paulbarker.me.uk>
 
-Upstream-status: Pending
+Upstream-status: Accepted (Should be in next release after 22.21)
 ---
  src/pstree.c | 1 +
  1 file changed, 1 insertion(+)
