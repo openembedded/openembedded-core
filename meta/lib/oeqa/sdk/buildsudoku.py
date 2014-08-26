@@ -2,6 +2,10 @@ from oeqa.oetest import oeSDKTest, skipModule
 from oeqa.utils.decorators import *
 from oeqa.utils.targetbuild import SDKBuildProject
 
+def setUpModule():
+    if not oeSDKTest.hasPackage("gtk\+"):
+        skipModule("Image doesn't have gtk+ in manifest")
+
 class SudokuTest(oeSDKTest):
 
     @classmethod
