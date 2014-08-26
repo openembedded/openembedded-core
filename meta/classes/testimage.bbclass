@@ -281,6 +281,14 @@ def testsdk_main(d):
             self.filesdir = os.path.join(os.path.dirname(os.path.abspath(oeqa.runtime.__file__)),"files")
             self.sdktestdir = sdktestdir
             self.sdkenv = sdkenv
+            self.imagefeatures = d.getVar("IMAGE_FEATURES", True).split()
+            self.distrofeatures = d.getVar("DISTRO_FEATURES", True).split()
+            manifest = os.path.join(d.getVar("SDK_MANIFEST", True))
+            try:
+                with open(manifest) as f:
+                    self.pkgmanifest = f.read()
+            except IOError as e:
+                bb.fatal("No package manifest file found. Did you build the sdk image?\n%s" % e)
 
     # test context
     tc = TestContext()
