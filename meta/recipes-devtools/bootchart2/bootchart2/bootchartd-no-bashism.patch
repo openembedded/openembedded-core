@@ -1,0 +1,27 @@
+From ffb5bae5d588aaea6325623462a8070a04767196 Mon Sep 17 00:00:00 2001
+From: Robert Yang <liezhi.yang@windriver.com>
+Date: Thu, 14 Aug 2014 08:33:28 -0700
+Subject: [PATCH] bootchartd.in: no bashism
+
+No bashism in bootchartd.in, so use /bin/sh.
+
+Upstream-Status: Pending
+
+Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
+---
+ bootchartd.in |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/bootchartd.in b/bootchartd.in
+index a408bab..064f6a4 100755
+--- a/bootchartd.in
++++ b/bootchartd.in
+@@ -1,4 +1,4 @@
+-#!/bin/bash
++#!/bin/sh
+ #
+ # Bootchart logger script
+ # Ziga Mahkovec  <ziga.mahkovec@klika.si>
+-- 
+1.7.9.5
+
