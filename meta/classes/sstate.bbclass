@@ -32,8 +32,10 @@ BB_HASHFILENAME = "${SSTATE_EXTRAPATH} ${SSTATE_PKGSPEC} ${SSTATE_SWSPEC}"
 
 SSTATE_MANMACH ?= "${SSTATE_PKGARCH}"
 
-SSTATEPREINSTFUNCS ?= ""
-SSTATEPOSTINSTFUNCS ?= ""
+SSTATECREATEFUNCS = "sstate_hardcode_path"
+SSTATEPREINSTFUNCS = ""
+SSTATEPOSTUNPACKFUNCS = "sstate_hardcode_path_unpack"
+SSTATEPOSTINSTFUNCS = ""
 EXTRA_STAGING_FIXMES ?= ""
 
 # Specify dirs in which the shell function is executed and don't use ${B}
@@ -239,16 +241,32 @@ def sstate_installpkg(ss, d):
     d.setVar('SSTATE_INSTDIR', sstateinst)
     d.setVar('SSTATE_PKG', sstatepkg)
 
-    for preinst in (d.getVar('SSTATEPREINSTFUNCS', True) or '').split():
-        bb.build.exec_func(preinst, d)
+    for f in (d.getVar('SSTATEPREINSTFUNCS', True) or '').split() + ['sstate_unpack_package'] + (d.getVar('SSTATEPOSTUNPACKFUNCS', True) or '').split():
+        bb.build.exec_func(f, d)
 
-    bb.build.exec_func('sstate_unpack_package', d)
+    for state in ss['dirs']:
+        prepdir(state[1])
+        os.rename(sstateinst + state[0], state[1])
+    sstate_install(ss, d)
 
+    for plain in ss['plaindirs']:
+        workdir = d.getVar('WORKDIR', True)
+        src = sstateinst + "/" + plain.replace(workdir, '')
+        dest = plain
+        bb.utils.mkdirhier(src)
+        prepdir(dest)
+        os.rename(src, dest)
+
+    return True
+
+python sstate_hardcode_path_unpack () {
     # Fixup hardcoded paths
     #
     # Note: The logic below must match the reverse logic in
     # sstate_hardcode_path(d)
+    import subprocess
 
+    sstateinst = d.getVar('SSTATE_INSTDIR', True)
     fixmefn =  sstateinst + "fixmepath"
     if os.path.isfile(fixmefn):
         staging = d.getVar('STAGING_DIR', True)
@@ -276,21 +294,7 @@ def sstate_installpkg(ss, d):
         # Need to remove this or we'd copy it into the target directory and may 
         # conflict with another writer
         os.remove(fixmefn)
-
-    for state in ss['dirs']:
-        prepdir(state[1])
-        os.rename(sstateinst + state[0], state[1])
-    sstate_install(ss, d)
-
-    for plain in ss['plaindirs']:
-        workdir = d.getVar('WORKDIR', True)
-        src = sstateinst + "/" + plain.replace(workdir, '')
-        dest = plain
-        bb.utils.mkdirhier(src)
-        prepdir(dest)
-        os.rename(src, dest)
-
-    return True
+}
 
 def sstate_clean_cachefile(ss, d):
     import oe.path
@@ -395,7 +399,7 @@ python sstate_cleanall() {
         sstate_clean(shared_state, ld)
 }
 
-def sstate_hardcode_path(d):
+python sstate_hardcode_path () {
     import subprocess, platform
 
     # Need to remove hardcoded paths and fix these when we install the
@@ -449,6 +453,7 @@ def sstate_hardcode_path(d):
     else:
         bb.note("Replacing absolute paths in fixmepath file: '%s'" % (sstate_filelist_relative_cmd))
         subprocess.call(sstate_filelist_relative_cmd, shell=True)
+}
 
 def sstate_package(ss, d):
     import oe.path
@@ -506,9 +511,10 @@ def sstate_package(ss, d):
 
     d.setVar('SSTATE_BUILDDIR', sstatebuild)
     d.setVar('SSTATE_PKG', sstatepkg)
-    sstate_hardcode_path(d)
-    bb.build.exec_func('sstate_create_package', d)
-    
+
+    for f in (d.getVar('SSTATECREATEFUNCS', True) or '').split() + ['sstate_create_package']:
+        bb.build.exec_func(f, d)
+  
     bb.siggen.dump_this_task(sstatepkg + ".siginfo", d)
 
     return
