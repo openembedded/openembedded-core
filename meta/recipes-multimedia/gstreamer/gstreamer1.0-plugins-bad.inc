@@ -121,3 +121,5 @@ EXTRA_OECONF += " \
 
 ARM_INSTRUCTION_SET = "arm"
 
+FILES_gstreamer1.0-plugins-bad-opencv += "${datadir}/gst-plugins-bad/1.0/opencv*"
+
