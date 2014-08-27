@@ -65,7 +65,7 @@ do_install(){
     find ${D} -type f -print | xargs grep "\!.*\/usr\/bin\/expect" | awk -F":" '{print $1}' | xargs rm -f
 }
 
-RDEPENDS_${PN} = "perl e2fsprogs-mke2fs"
+RDEPENDS_${PN} = "perl e2fsprogs-mke2fs python-core libaio bash gawk"
 
 FILES_${PN}-dbg += "\
     /opt/ltp/runtest/.debug \
