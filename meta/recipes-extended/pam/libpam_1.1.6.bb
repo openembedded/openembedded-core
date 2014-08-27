@@ -72,8 +72,15 @@ libpam_suffix = "suffix${@get_multilib_bit(d)}"
 RPROVIDES_${PN} += "${PN}-${libpam_suffix}"
 RPROVIDES_${PN}-runtime += "${PN}-runtime-${libpam_suffix}"
 
-RDEPENDS_${PN}-runtime = "${PN}-${libpam_suffix} pam-plugin-deny-${libpam_suffix} pam-plugin-permit-${libpam_suffix} pam-plugin-warn-${libpam_suffix} pam-plugin-unix-${libpam_suffix}"
-RDEPENDS_${PN}-xtests = "${PN}-${libpam_suffix} pam-plugin-access-${libpam_suffix} pam-plugin-debug-${libpam_suffix} pam-plugin-cracklib-${libpam_suffix} pam-plugin-pwhistory-${libpam_suffix} pam-plugin-succeed-if-${libpam_suffix} pam-plugin-time-${libpam_suffix} coreutils"
+RDEPENDS_${PN}-runtime = "${PN}-${libpam_suffix} \
+    pam-plugin-deny-${libpam_suffix} pam-plugin-permit-${libpam_suffix} \
+    pam-plugin-warn-${libpam_suffix} pam-plugin-unix-${libpam_suffix} \
+    "
+RDEPENDS_${PN}-xtests = "${PN}-${libpam_suffix} \
+    pam-plugin-access-${libpam_suffix} pam-plugin-debug-${libpam_suffix} \
+    pam-plugin-cracklib-${libpam_suffix} pam-plugin-pwhistory-${libpam_suffix} \
+    pam-plugin-succeed-if-${libpam_suffix} pam-plugin-time-${libpam_suffix} \
+    coreutils bash"
 #RRECOMMENDS_${PN} = "${PN}-runtime-${libpam_suffix}"
 
 python populate_packages_prepend () {
