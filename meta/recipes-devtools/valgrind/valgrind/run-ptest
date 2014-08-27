@@ -1,4 +1,5 @@
-#!/bin/bash
+#!/bin/sh
+
 # run-ptest - 'ptest' test infrastructure shell script that
 #   wraps the valgrind regression script vg_regtest. 
 #   Must be run in the /usr/lib/valgrind/ptest directory. 

@@ -1,4 +1,5 @@
-#!/bin/bash
+#!/bin/sh
+
 saved_dir=$PWD
 for dir in */tests ; do
 	cd $dir
