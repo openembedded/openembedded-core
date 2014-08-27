@@ -11,7 +11,7 @@ output() {
 }
 
 for i in test_simple_sequence test_undetected_loop; \
-  do $i &>/dev/null ; output; \
+  do $i >/dev/null 2>&1; output; \
 done
 
 rm -rf ${tmpdir}
