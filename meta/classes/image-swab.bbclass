@@ -11,7 +11,7 @@ BB_DEFAULT_TASK = "generate_swabber_report"
 # Ideally these should be fixed but as a temporary measure disable parallel
 # builds for troublesome recipes
 PARALLEL_MAKE_pn-openssl = ""
-PARALLEL_MAKE_pn-eglibc = ""
+PARALLEL_MAKE_pn-glibc = ""
 PARALLEL_MAKE_pn-glib-2.0 = ""
 PARALLEL_MAKE_pn-libxml2 = ""
 PARALLEL_MAKE_pn-readline = ""
