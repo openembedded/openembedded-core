@@ -48,7 +48,7 @@ FILES_${PN}-dbg += "${libdir}/${PN}/*/.debug/*"
 # redirect functions like strlen.
 RRECOMMENDS_${PN} += "${TCLIBC}-dbg"
 
-RDEPENDS_${PN}-ptest += " sed perl eglibc-utils"
+RDEPENDS_${PN}-ptest += " sed perl glibc-utils"
 
 do_compile_ptest() {
     oe_runmake check

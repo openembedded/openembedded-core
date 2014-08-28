@@ -44,7 +44,7 @@ with details on the recipe that failed.
 """ % this_binary
 
 # Autotools setups query the version, so this is actually necessary. Some of
-# them (lookin' at you, eglibc) actually look for the substring "GNU texinfo,"
+# them (lookin' at you, glibc) actually look for the substring "GNU texinfo,"
 # so we put that substring in there without actually telling a lie.
 version_str = """ %s (fake texinfo, emulating GNU texinfo) 5.2
  

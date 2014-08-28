@@ -128,7 +128,7 @@ RDEPENDS_packagegroup-core-lsb-core = "\
     cups \
     diffutils \
     ed \
-    eglibc-utils \
+    glibc-utils \
     elfutils \
     file \
     findutils \
@@ -158,7 +158,7 @@ RDEPENDS_packagegroup-core-lsb-core = "\
     util-linux \
     xdg-utils \
     \
-    eglibc \
+    glibc \
     libgcc \
     libpam \
     libxml2 \
@@ -245,13 +245,13 @@ RDEPENDS_packagegroup-core-lsb-runtime-add = "\
     libxml-parser-perl \
     libxml-perl \
     libxml-sax-perl \
-    eglibc-localedatas \
-    eglibc-gconvs \
-    eglibc-charmaps \
-    eglibc-binaries \
-    eglibc-localedata-posix \
-    eglibc-extra-nss \
-    eglibc-pcprofile \
+    glibc-localedatas \
+    glibc-gconvs \
+    glibc-charmaps \
+    glibc-binaries \
+    glibc-localedata-posix \
+    glibc-extra-nss \
+    glibc-pcprofile \
     libclass-isa-perl \
     libenv-perl \
     libdumpvalue-perl \

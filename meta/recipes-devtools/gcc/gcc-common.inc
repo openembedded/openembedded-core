@@ -26,7 +26,7 @@ def get_gcc_mips_plt_setting(bb, d):
     return ""
 
 def get_long_double_setting(bb, d):
-    if d.getVar('TRANSLATED_TARGET_ARCH', True) in [ 'powerpc', 'powerpc64' ] and d.getVar('TCLIBC', True) in [ 'uclibc', 'eglibc' ]:
+    if d.getVar('TRANSLATED_TARGET_ARCH', True) in [ 'powerpc', 'powerpc64' ] and d.getVar('TCLIBC', True) in [ 'uclibc', 'glibc' ]:
         return "--with-long-double-128"
     return ""
 

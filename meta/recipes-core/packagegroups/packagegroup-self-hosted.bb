@@ -64,7 +64,7 @@ RRECOMMENDS_packagegroup-self-hosted-host-tools = "\
     kernel-module-iptable-filter \
 	"
 
-# eglibc-utils: for rpcgen
+# glibc-utils: for rpcgen
 RDEPENDS_packagegroup-self-hosted-sdk = "\
     autoconf \
     automake \
@@ -75,8 +75,8 @@ RDEPENDS_packagegroup-self-hosted-sdk = "\
     cpp \
     cpp-symlinks \
     distcc \
-    eglibc-utils \
-    eglibc-gconv-ibm850 \
+    glibc-utils \
+    glibc-gconv-ibm850 \
     file \
     findutils \
     g++ \

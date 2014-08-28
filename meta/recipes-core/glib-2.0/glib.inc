@@ -86,17 +86,17 @@ RDEPENDS_${PN}-ptest += "\
            "
 
 RDEPENDS_${PN}-ptest_append_libc-glibc = "\
-            eglibc-gconv-utf-16 \
-            eglibc-charmap-utf-8 \
-            eglibc-gconv-cp1255 \
-            eglibc-charmap-cp1255 \
-            eglibc-gconv-utf-32 \
-            eglibc-gconv-utf-7 \
-            eglibc-gconv-euc-jp \
-            eglibc-gconv-iso8859-1 \
-            eglibc-gconv-iso8859-15 \
-            eglibc-charmap-invariant \
-            eglibc-localedata-translit-cjk-variants \
+            glibc-gconv-utf-16 \
+            glibc-charmap-utf-8 \
+            glibc-gconv-cp1255 \
+            glibc-charmap-cp1255 \
+            glibc-gconv-utf-32 \
+            glibc-gconv-utf-7 \
+            glibc-gconv-euc-jp \
+            glibc-gconv-iso8859-1 \
+            glibc-gconv-iso8859-15 \
+            glibc-charmap-invariant \
+            glibc-localedata-translit-cjk-variants \
            "
 
 INSANE_SKIP_${PN}-ptest += "libdir"

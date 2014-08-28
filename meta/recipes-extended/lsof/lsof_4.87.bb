@@ -30,8 +30,8 @@ export LSOF_INCLUDE = "${STAGING_INCDIR}"
 do_configure () {
 	export LSOF_AR="${AR} cr"
 	export LSOF_RANLIB="${RANLIB}"
-        if [ "x${EGLIBCVERSION}" != "x" ];then
-                LINUX_CLIB=`echo ${EGLIBCVERSION} |sed -e 's,\.,,g'`
+        if [ "x${GLIBCVERSION}" != "x" ];then
+                LINUX_CLIB=`echo ${GLIBCVERSION} |sed -e 's,\.,,g'`
                 LINUX_CLIB="-DGLIBCV=${LINUX_CLIB}"
                 export LINUX_CLIB
         fi
