@@ -1,0 +1,17 @@
+import http://sourceware.org/ml/libc-ports/2007-12/msg00000.html
+
+Upstream-Status: Pending
+
+Index: git/bits/stdio-lock.h
+===================================================================
+--- git.orig/bits/stdio-lock.h	2014-08-29 10:33:57.960070587 -0700
++++ git/bits/stdio-lock.h	2014-08-29 10:33:57.952070587 -0700
+@@ -49,6 +49,8 @@
+   _IO_cleanup_region_start ((void (*) (void *)) _IO_funlockfile, (_fp));      \
+   _IO_flockfile (_fp)
+ 
++# define _IO_acquire_lock_clear_flags2(_fp) _IO_acquire_lock (_fp)
++
+ # define _IO_release_lock(_fp) \
+   _IO_funlockfile (_fp);						      \
+   _IO_cleanup_region_end (0)

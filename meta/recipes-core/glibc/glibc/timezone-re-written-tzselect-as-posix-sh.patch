@@ -1,0 +1,38 @@
+timezone: re-written tzselect as posix sh
+
+To avoid the bash dependency.
+
+Upstream-Status: Pending
+
+Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
+---
+ timezone/Makefile     | 2 +-
+ timezone/tzselect.ksh | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+Index: git/timezone/Makefile
+===================================================================
+--- git.orig/timezone/Makefile	2014-08-27 05:35:58.008070587 +0000
++++ git/timezone/Makefile	2014-08-27 05:36:37.908070587 +0000
+@@ -114,7 +114,7 @@
+ 
+ 
+ $(objpfx)tzselect: tzselect.ksh $(common-objpfx)config.make
+-	sed -e 's|/bin/bash|$(BASH)|' \
++	sed -e 's|/bin/bash|/bin/sh|' \
+ 	    -e 's|TZDIR=[^}]*|TZDIR=$(zonedir)|' \
+ 	    -e '/TZVERSION=/s|see_Makefile|"$(version)"|' \
+ 	    -e '/PKGVERSION=/s|=.*|="$(PKGVERSION)"|' \
+Index: git/timezone/tzselect.ksh
+===================================================================
+--- git.orig/timezone/tzselect.ksh	2014-08-27 05:35:58.008070587 +0000
++++ git/timezone/tzselect.ksh	2014-08-27 05:35:58.000070587 +0000
+@@ -35,7 +35,7 @@
+ 
+ # Specify default values for environment variables if they are unset.
+ : ${AWK=awk}
+-: ${TZDIR=`pwd`}
++: ${TZDIR=$(pwd)}
+ 
+ # Check for awk Posix compliance.
+ ($AWK -v x=y 'BEGIN { exit 123 }') </dev/null >/dev/null 2>&1

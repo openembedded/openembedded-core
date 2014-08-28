@@ -1,0 +1,45 @@
+From 07299d036672c86b278256e55ae0cbdae8f751fd Mon Sep 17 00:00:00 2001
+From: Khem Raj <raj.khem@gmail.com>
+Date: Fri, 29 Aug 2014 16:46:14 -0700
+Subject: [PATCH] Define __GI_fegetenv for e500 libm
+
+generic HAVE_RM_CTX implementation which is used for ppc/e500 as well
+has introduced calls to fegetenv which should be resolved internally
+with in libm
+
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+
+Upstream-Status: Submitted
+
+---
+ ChangeLog                                       | 5 +++++
+ sysdeps/powerpc/powerpc32/e500/nofpu/fegetenv.c | 1 +
+ 2 files changed, 6 insertions(+)
+
+diff --git a/ChangeLog b/ChangeLog
+index 6261ed4..629ea8e 100644
+--- a/ChangeLog
++++ b/ChangeLog
+@@ -1,3 +1,8 @@
++2014-08-29  Khem Raj  <raj.khem@gmail.com>
++
++	* sysdeps/powerpc/powerpc32/e500/nofpu/fegetenv.c (fegetenv): Add
++	libm_hidden_ver.
++
+ 2014-08-27  Allan McRae  <allan@archlinux.org>
+ 
+ 	* sysdeps/i386/fpu/libm-test-ulps: Update ULPs.
+diff --git a/sysdeps/powerpc/powerpc32/e500/nofpu/fegetenv.c b/sysdeps/powerpc/powerpc32/e500/nofpu/fegetenv.c
+index 2ae06b8..5faabe8 100644
+--- a/sysdeps/powerpc/powerpc32/e500/nofpu/fegetenv.c
++++ b/sysdeps/powerpc/powerpc32/e500/nofpu/fegetenv.c
+@@ -43,5 +43,6 @@ __fegetenv (fenv_t *envp)
+ strong_alias (__fegetenv, __old_fegetenv)
+ compat_symbol (libm, __old_fegetenv, fegetenv, GLIBC_2_1);
+ #endif
++libm_hidden_ver (__fegetenv, fegetenv)
+ 
+ versioned_symbol (libm, __fegetenv, fegetenv, GLIBC_2_2);
+-- 
+2.1.0
+

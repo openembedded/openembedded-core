@@ -1,0 +1,20 @@
+This is needed since initgroups belongs to NET group
+so when NET is disabled in eglibc build then it reports
+as undefined symbol
+
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+Upstream-Status: Pending
+
+Index: git/nss/getent.c
+===================================================================
+--- git.orig/nss/getent.c	2014-08-27 05:15:25.996070587 +0000
++++ git/nss/getent.c	2014-08-27 05:16:00.048070587 +0000
+@@ -879,7 +879,7 @@
+ D(group)
+ D(gshadow)
+ D(hosts)
+-D(initgroups)
++DN(initgroups)
+ D(netgroup)
+ D(networks)
+ D(passwd)

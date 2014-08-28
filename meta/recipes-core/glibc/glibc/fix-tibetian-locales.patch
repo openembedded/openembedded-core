@@ -1,0 +1,38 @@
+cross localedef fails to compile these locales because name_fmt field is empty
+It is not acceptable for cross localedef and it errors out
+
+LC_NAME: field `name_fmt' not defined
+
+We therefore give a dummy string to the format, the real fix needs some native
+tibetian person to define proper name_fmt
+
+Upstream-Status: Pending
+
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+
+Index: git/localedata/locales/bo_CN
+===================================================================
+--- git.orig/localedata/locales/bo_CN	2014-08-29 10:35:22.464070587 -0700
++++ git/localedata/locales/bo_CN	2014-08-29 10:35:22.456070587 -0700
+@@ -146,7 +146,7 @@
+ LC_NAME
+ % FIXME
+ 
+-name_fmt  ""
++name_fmt  "FIXME"
+ % name_gen	"FIXME"
+ % name_miss	"FIXME"
+ % name_mr	"FIXME"
+Index: git/localedata/locales/bo_IN
+===================================================================
+--- git.orig/localedata/locales/bo_IN	2014-08-29 10:35:22.464070587 -0700
++++ git/localedata/locales/bo_IN	2014-08-29 10:35:22.456070587 -0700
+@@ -71,7 +71,7 @@
+ 
+ LC_NAME
+ % FIXME
+-name_fmt	""
++name_fmt	"FIXME"
+ % name_gen	"FIXME"
+ % name_miss	"FIXME"
+ % name_mr	"FIXME"
