@@ -1930,9 +1930,9 @@ python do_package () {
     # Optimisations
     ###########################################################################
 
-    # Contunually rexpanding complex expressions is inefficient, particularly when
-    # we write to the datastore and invalidate the expansion cache. This code 
-    # pre-expands some frequently used variables
+    # Continually expanding complex expressions is inefficient, particularly
+    # when we write to the datastore and invalidate the expansion cache. This
+    # code pre-expands some frequently used variables
 
     def expandVar(x, d):
         d.setVar(x, d.getVar(x, True))
