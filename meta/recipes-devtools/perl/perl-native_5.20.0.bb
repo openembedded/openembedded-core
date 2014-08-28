@@ -105,6 +105,11 @@ do_install () {
 
 	create_wrapper ${D}${bindir}/perl PERL5LIB='$PERL5LIB:${STAGING_LIBDIR}/perl/${PV}:${STAGING_LIBDIR}/perl/'
 	create_wrapper ${D}${bindir}/perl${PV} PERL5LIB='$PERL5LIB:${STAGING_LIBDIR}/perl/${PV}:${STAGING_LIBDIR}/perl/'
+
+	# Use /usr/bin/env nativeperl for the perl script.
+	for f in `grep -Il '#! *${bindir}/perl' ${D}/${bindir}/*`; do
+		sed -i -e 's|${bindir}/perl|/usr/bin/env nativeperl|' $f
+	done
 }
 
 SYSROOT_PREPROCESS_FUNCS += "perl_sysroot_create_wrapper"
