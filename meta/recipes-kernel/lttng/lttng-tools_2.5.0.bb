@@ -40,8 +40,8 @@ do_configure_prepend () {
 }
 
 do_install_ptest () {
-	chmod +x ${D}/${libdir}/${PN}/ptest/tests/utils/utils.sh
-	for i in `find ${D}/${libdir}/${PN}/ptest -perm /u+x -type f`; do
+	chmod +x ${D}${PTEST_PATH}/tests/utils/utils.sh
+	for i in `find ${D}${PTEST_PATH} -perm /u+x -type f`; do
 		sed -e "s:\$TESTDIR.*/src/bin/lttng/\$LTTNG_BIN:\$LTTNG_BIN:g" \
 		  -e "s:\$TESTDIR/../src/bin/lttng-sessiond/\$SESSIOND_BIN:\$SESSIOND_BIN:g" \
 		  -e "s:\$DIR/../src/bin/lttng-sessiond/\$SESSIOND_BIN:\$SESSIOND_BIN:g" \
@@ -56,8 +56,9 @@ do_install_ptest () {
 
 	sed -e "s:src/bin/lttng-sessiond:$bindir:g" \
 	    -e "s:src/bin/lttng-consumerd:${libexecdir}/libexec/:g" \
-	-i ${D}/${libdir}/${PN}/ptest/tests/regression/run-report.py
-	sed -e "s:src/bin:bin:g" \
-	-i ${D}/${libdir}/${PN}/ptest/tests/utils/utils.sh
-
+	-i ${D}${PTEST_PATH}/tests/regression/run-report.py
+	sed -e "s:src/bin:bin:g" -e "s:lt-::g" \
+	-i ${D}${PTEST_PATH}/tests/utils/utils.sh
+	sed -e "s:ini_config:\.libs\/ini_config:" \
+	-i ${D}${PTEST_PATH}/tests/unit/ini_config/test_ini_config
 }
