@@ -81,7 +81,10 @@ RDEPENDS_${PN}-xtests = "${PN}-${libpam_suffix} \
     pam-plugin-cracklib-${libpam_suffix} pam-plugin-pwhistory-${libpam_suffix} \
     pam-plugin-succeed-if-${libpam_suffix} pam-plugin-time-${libpam_suffix} \
     coreutils bash"
-#RRECOMMENDS_${PN} = "${PN}-runtime-${libpam_suffix}"
+
+# FIXME: Native suffix breaks here, disable it for now
+RRECOMMENDS_${PN} = "${PN}-runtime-${libpam_suffix}"
+RRECOMMENDS_${PN}_class-native = ""
 
 python populate_packages_prepend () {
     def pam_plugin_append_file(pn, dir, file):
