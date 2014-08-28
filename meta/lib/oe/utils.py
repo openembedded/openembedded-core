@@ -167,11 +167,11 @@ def multiprocess_exec(commands, function):
     imap = pool.imap(function, commands)
 
     try:
-        results = list(imap)
+        res = list(imap)
         pool.close()
         pool.join()
         results = []
-        for result in results:
+        for result in res:
             if result is not None:
                 results.append(result)
         return results
