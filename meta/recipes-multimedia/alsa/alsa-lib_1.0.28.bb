@@ -14,16 +14,15 @@ BBCLASSEXTEND = "native nativesdk"
 #FIXME: remove the following
 ARM_INSTRUCTION_SET = "arm"
 
-SRC_URI = "ftp://ftp.alsa-project.org/pub/lib/alsa-lib-${PV}.tar.bz2 \
+SRC_URI = "ftp://ftp.alsa-project.org/pub/lib/${BP}.tar.bz2 \
            file://Check-if-wordexp-function-is-supported.patch \
            file://fix-tstamp-declaration.patch \
-           file://Update-iatomic.h-functions-definitions-for-mips.patch \
            file://0001-pcm-route-Use-get32-for-multi-source-route-calculati.patch \
            file://0001-pcm-rate-fix-hw_ptr-exceed-the-boundary.patch \
            file://0001-pcm-pcm_local.h-include-time.h-to-enable-CLOCK_MONOT.patch \
 "
-SRC_URI[md5sum] = "69129a7c37697f81ac092335e9fa452b"
-SRC_URI[sha256sum] = "690ed393e7efd4fc7e3a2d2cda5449298ca0c895197e5914e350882012430d19"
+SRC_URI[md5sum] = "c9e21b88a2b3e6e12ea7ba0f3b271fc3"
+SRC_URI[sha256sum] = "3c074b85dde1b30e78ef4995579765833e5b693fbbd8f834c335e080cb734a6d"
 
 inherit autotools pkgconfig
 
