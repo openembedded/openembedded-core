@@ -47,6 +47,6 @@ do_install() {
 RDEPENDS_${PN} = "${@base_conditional('ROOTLESS_X', '1', 'xuser-account', '', d)}"
 
 INITSCRIPT_NAME = "xserver-nodm"
-INITSCRIPT_PARAMS = "start 9 5 2 . stop 20 0 1 6 ."
+INITSCRIPT_PARAMS = "start 9 5 . stop 20 0 1 2 3 6 ."
 SYSTEMD_SERVICE_${PN} = "xserver-nodm.service"
 
