@@ -210,7 +210,7 @@ class PkgsList(object):
 
 
 class RpmPkgsList(PkgsList):
-    def __init__(self, d, rootfs_dir, arch_var=None, os_var=None):
+    def __init__(self, d, rootfs_dir, arch_var=None, os_var=None, rpm_version=5):
         super(RpmPkgsList, self).__init__(d, rootfs_dir)
 
         self.rpm_cmd = bb.utils.which(os.getenv('PATH'), "rpm")
@@ -218,6 +218,8 @@ class RpmPkgsList(PkgsList):
 
         self.ml_prefix_list, self.ml_os_list = \
             RpmIndexer(d, rootfs_dir).get_ml_prefix_and_os_list(arch_var, os_var)
+
+        self.rpm_version = rpm_version
 
     '''
     Translate the RPM/Smart format names to the OE multilib format names
@@ -267,11 +269,16 @@ class RpmPkgsList(PkgsList):
 
     def list(self, format=None):
         if format == "deps":
+            if self.rpm_version == 4:
+                bb.fatal("'deps' format dependency listings are not supported with rpm 4 since rpmresolve does not work")
             return self._list_pkg_deps()
 
         cmd = self.rpm_cmd + ' --root ' + self.rootfs_dir
         cmd += ' -D "_dbpath /var/lib/rpm" -qa'
-        cmd += " --qf '[%{NAME} %{ARCH} %{VERSION} %{PACKAGEORIGIN}\n]'"
+        if self.rpm_version == 4:
+            cmd += " --qf '[%{NAME} %{ARCH} %{VERSION}\n]'"
+        else:
+            cmd += " --qf '[%{NAME} %{ARCH} %{VERSION} %{PACKAGEORIGIN}\n]'"
 
         try:
             # bb.note(cmd)
@@ -288,7 +295,10 @@ class RpmPkgsList(PkgsList):
             pkg = line.split()[0]
             arch = line.split()[1]
             ver = line.split()[2]
-            pkgorigin = line.split()[3]
+            if self.rpm_version == 4:
+                pkgorigin = "unknown"
+            else:
+                pkgorigin = line.split()[3]
             new_pkg, new_arch = self._pkg_translate_smart_to_oe(pkg, arch)
 
             if format == "arch":
@@ -554,8 +564,17 @@ class RpmPM(PackageManager):
         if not os.path.exists(self.d.expand('${T}/saved')):
             bb.utils.mkdirhier(self.d.expand('${T}/saved'))
 
+        # Determine rpm version
+        cmd = "%s --version" % self.rpm_cmd
+        try:
+            output = subprocess.check_output(cmd, stderr=subprocess.STDOUT, shell=True)
+        except subprocess.CalledProcessError as e:
+            bb.fatal("Getting rpm version failed. Command '%s' "
+                     "returned %d:\n%s" % (cmd, e.returncode, e.output))
+        self.rpm_version = int(output.split()[-1].split('.')[0])
+
         self.indexer = RpmIndexer(self.d, self.deploy_dir)
-        self.pkgs_list = RpmPkgsList(self.d, self.target_rootfs, arch_var, os_var)
+        self.pkgs_list = RpmPkgsList(self.d, self.target_rootfs, arch_var, os_var, self.rpm_version)
 
         self.ml_prefix_list, self.ml_os_list = self.indexer.get_ml_prefix_and_os_list(arch_var, os_var)
 
@@ -745,43 +764,46 @@ class RpmPM(PackageManager):
         # After change the __db.* cache size, log file will not be
         # generated automatically, that will raise some warnings,
         # so touch a bare log for rpm write into it.
-        rpmlib_log = os.path.join(self.image_rpmlib, 'log', 'log.0000000001')
-        if not os.path.exists(rpmlib_log):
-            bb.utils.mkdirhier(os.path.join(self.image_rpmlib, 'log'))
-            open(rpmlib_log, 'w+').close()
+        if self.rpm_version == 5:
+            rpmlib_log = os.path.join(self.image_rpmlib, 'log', 'log.0000000001')
+            if not os.path.exists(rpmlib_log):
+                bb.utils.mkdirhier(os.path.join(self.image_rpmlib, 'log'))
+                open(rpmlib_log, 'w+').close()
 
-        DB_CONFIG_CONTENT = "# ================ Environment\n" \
-            "set_data_dir .\n" \
-            "set_create_dir .\n" \
-            "set_lg_dir ./log\n" \
-            "set_tmp_dir ./tmp\n" \
-            "set_flags db_log_autoremove on\n" \
-            "\n" \
-            "# -- thread_count must be >= 8\n" \
-            "set_thread_count 64\n" \
-            "\n" \
-            "# ================ Logging\n" \
-            "\n" \
-            "# ================ Memory Pool\n" \
-            "set_cachesize 0 1048576 0\n" \
-            "set_mp_mmapsize 268435456\n" \
-            "\n" \
-            "# ================ Locking\n" \
-            "set_lk_max_locks 16384\n" \
-            "set_lk_max_lockers 16384\n" \
-            "set_lk_max_objects 16384\n" \
-            "mutex_set_max 163840\n" \
-            "\n" \
-            "# ================ Replication\n"
+            DB_CONFIG_CONTENT = "# ================ Environment\n" \
+                "set_data_dir .\n" \
+                "set_create_dir .\n" \
+                "set_lg_dir ./log\n" \
+                "set_tmp_dir ./tmp\n" \
+                "set_flags db_log_autoremove on\n" \
+                "\n" \
+                "# -- thread_count must be >= 8\n" \
+                "set_thread_count 64\n" \
+                "\n" \
+                "# ================ Logging\n" \
+                "\n" \
+                "# ================ Memory Pool\n" \
+                "set_cachesize 0 1048576 0\n" \
+                "set_mp_mmapsize 268435456\n" \
+                "\n" \
+                "# ================ Locking\n" \
+                "set_lk_max_locks 16384\n" \
+                "set_lk_max_lockers 16384\n" \
+                "set_lk_max_objects 16384\n" \
+                "mutex_set_max 163840\n" \
+                "\n" \
+                "# ================ Replication\n"
 
-        db_config_dir = os.path.join(self.image_rpmlib, 'DB_CONFIG')
-        if not os.path.exists(db_config_dir):
-            open(db_config_dir, 'w+').write(DB_CONFIG_CONTENT)
+            db_config_dir = os.path.join(self.image_rpmlib, 'DB_CONFIG')
+            if not os.path.exists(db_config_dir):
+                open(db_config_dir, 'w+').write(DB_CONFIG_CONTENT)
 
         # Create database so that smart doesn't complain (lazy init)
-        cmd = "%s --root %s --dbpath /var/lib/rpm -qa > /dev/null" % (
-              self.rpm_cmd,
-              self.target_rootfs)
+        opt = "-qa"
+        if self.rpm_version == 4:
+            opt = "--initdb"
+        cmd = "%s --root %s --dbpath /var/lib/rpm %s > /dev/null" % (
+              self.rpm_cmd, self.target_rootfs, opt)
         try:
             subprocess.check_output(cmd, stderr=subprocess.STDOUT, shell=True)
         except subprocess.CalledProcessError as e:
@@ -818,6 +840,9 @@ class RpmPM(PackageManager):
         # Write common configuration for host and target usage
         self._invoke_smart('config --set rpm-nolinktos=1')
         self._invoke_smart('config --set rpm-noparentdirs=1')
+        check_signature = self.d.getVar('RPM_CHECK_SIGNATURES', True)
+        if check_signature and check_signature.strip() == "0":
+            self._invoke_smart('config --set rpm-check-signatures=false')
         for i in self.d.getVar('BAD_RECOMMENDATIONS', True).split():
             self._invoke_smart('flag --set ignore-recommends %s' % i)
 
@@ -856,6 +881,11 @@ class RpmPM(PackageManager):
         # If we ever run into needing more the 899 scripts, we'll have to.
         # change num to start with 1000.
         #
+        if self.rpm_version == 4:
+            scriptletcmd = "$2 $3 $4\n"
+        else:
+            scriptletcmd = "$2 $1/$3 $4\n"
+
         SCRIPTLET_FORMAT = "#!/bin/bash\n" \
             "\n" \
             "export PATH=%s\n" \
@@ -866,7 +896,7 @@ class RpmPM(PackageManager):
             "export INTERCEPT_DIR=%s\n" \
             "export NATIVE_ROOT=%s\n" \
             "\n" \
-            "$2 $1/$3 $4\n" \
+            + scriptletcmd + \
             "if [ $? -ne 0 ]; then\n" \
             "  if [ $4 -eq 1 ]; then\n" \
             "    mkdir -p $1/etc/rpm-postinsts\n" \
