@@ -10,7 +10,9 @@ Infrastructure (DRI)."
 LIC_FILES_CHKSUM = "file://COPYING;md5=8730ad58d11c7bbad9a7066d69f7808e"
 
 SRC_URI += "file://configure-dri.patch \
-            file://disable-x11-dri3.patch"
+            file://disable-x11-dri3.patch \
+            file://always_include_xorg_server.h.patch \
+           "
 
 SRC_URI[md5sum] = "88d1a884f9b7bd07bf0755cfa34052d4"
 SRC_URI[sha256sum] = "7c8ffc492d59f34cac64093deb70717b4d9223cf416ecc6fa016ab2e8bde9501"

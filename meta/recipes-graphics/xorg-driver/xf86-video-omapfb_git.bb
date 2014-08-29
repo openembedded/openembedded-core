@@ -20,6 +20,7 @@ SRC_URI = "git://git.pingu.fi/xf86-video-omapfb;protocol=http \
   file://0004-blacklist-tv-out.patch \
   file://0005-Attempt-to-fix-VRFB.patch \
   file://0006-omapfb-port-to-new-xserver-video-API.patch \
+  file://0007-always_include_xorg_server.h.patch \
 "
 
 S = "${WORKDIR}/git"
