@@ -7,7 +7,7 @@ BUGTRACKER = "http://sourceforge.net/tracker/?group_id=53067&atid=469577"
 SECTION = "libs/network"
 LICENSE = "BSD"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=1d4b0366557951c84a94fabe3529f867 \
-                    file://pcap.h;beginline=1;endline=34;md5=8d6cf7e17d5745010d633e30bc529ea9"
+                    file://pcap.h;beginline=1;endline=32;md5=39af3510e011f34b8872f120b1dc31d2"
 DEPENDS = "flex-native bison-native"
 
 PACKAGECONFIG ??= "${@bb.utils.contains('DISTRO_FEATURES', 'bluetooth', 'bluetooth', '', d)}"
@@ -17,7 +17,7 @@ PACKAGECONFIG[libnl] = "--with-libnl,--without-libnl,libnl"
 
 INC_PR = "r5"
 
-SRC_URI = "http://www.tcpdump.org/release/libpcap-${PV}.tar.gz"
+SRC_URI = "http://www.tcpdump.org/release/${BP}.tar.gz"
 
 BINCONFIG = "${bindir}/pcap-config"
 
