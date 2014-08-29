@@ -12,6 +12,8 @@ advanced features of the touchpad to become available."
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=55aacd3535a741824955c5eb8f061398"
 
+SRC_URI += "file://always_include_xorg_server.h.patch"
+
 SRC_URI[md5sum] = "27a3f2b31606a13dd6b58d419978d64f"
 SRC_URI[sha256sum] = "9bf27632aaa6c5e62621ca9c2ca00f9b309c85b039ee33cd592b189fc872c37a"
 

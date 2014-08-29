@@ -8,6 +8,8 @@ standard 'mouse' driver if a VMware virtual machine is not detected."
 
 PR = "${INC_PR}.0"
 
+SRC_URI += "file://always_include_config.h.patch"
+
 SRC_URI[md5sum] = "34f9f64ee6a1a51fc8266a9af24e1e07"
 SRC_URI[sha256sum] = "04cfb60366008d4db815c550d8fb8d0a4270c75fa7a20fa3bddc9ecbd355612c"
 

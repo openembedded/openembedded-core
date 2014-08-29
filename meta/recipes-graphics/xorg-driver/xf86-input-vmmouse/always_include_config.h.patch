@@ -1,0 +1,81 @@
+From 336f8633837abe4a1e5ba84b53ac8b9dac5d29a2 Mon Sep 17 00:00:00 2001
+From: Jeremy Huddleston Sequoia <jeremyhu@apple.com>
+Date: Thu, 28 Nov 2013 11:59:53 -0800
+Subject: Always include config.h first
+
+This fixes some build warnings about CSRG_BASED being redefined due to
+incorrect header include ordering.
+
+Signed-off-by: Jeremy Huddleston Sequoia <jeremyhu@apple.com>
+
+Upstream-Status: Backport
+
+Index: xf86-input-vmmouse-13.0.0/shared/vmmouse_client.c
+===================================================================
+--- xf86-input-vmmouse-13.0.0.orig/shared/vmmouse_client.c	2014-08-28 18:33:16.168070587 -0700
++++ xf86-input-vmmouse-13.0.0/shared/vmmouse_client.c	2014-08-28 18:33:16.152070587 -0700
+@@ -39,6 +39,10 @@
+ #endif
+ 
+ 
++#ifdef HAVE_CONFIG_H
++#include "config.h"
++#endif
++
+ #include "vmmouse_client.h"
+ #include "vmmouse_proto.h"
+ 
+Index: xf86-input-vmmouse-13.0.0/shared/vmmouse_proto.c
+===================================================================
+--- xf86-input-vmmouse-13.0.0.orig/shared/vmmouse_proto.c	2014-08-28 18:33:16.168070587 -0700
++++ xf86-input-vmmouse-13.0.0/shared/vmmouse_proto.c	2014-08-28 18:33:16.156070587 -0700
+@@ -33,6 +33,10 @@
+  */
+ 
+ 
++#ifdef HAVE_CONFIG_H
++#include "config.h"
++#endif
++
+ #include "vmmouse_proto.h"
+ 
+ 
+Index: xf86-input-vmmouse-13.0.0/shared/vmmouse_proto.h
+===================================================================
+--- xf86-input-vmmouse-13.0.0.orig/shared/vmmouse_proto.h	2014-08-28 18:33:16.168070587 -0700
++++ xf86-input-vmmouse-13.0.0/shared/vmmouse_proto.h	2014-08-28 18:33:16.156070587 -0700
+@@ -36,11 +36,6 @@
+ #ifndef _VMMOUSE_PROTO_H_
+ #define _VMMOUSE_PROTO_H_
+ 
+-
+-#ifdef HAVE_CONFIG_H
+-#include "config.h"
+-#endif
+-
+ #include <stdint.h>
+ 
+ #ifdef HAVE_XORG_SERVER_1_1_0
+Index: xf86-input-vmmouse-13.0.0/tools/vmmouse_detect.c
+===================================================================
+--- xf86-input-vmmouse-13.0.0.orig/tools/vmmouse_detect.c	2014-08-28 18:33:16.168070587 -0700
++++ xf86-input-vmmouse-13.0.0/tools/vmmouse_detect.c	2014-08-28 18:33:16.160070587 -0700
+@@ -26,14 +26,14 @@
+  */
+ 
+ 
+-#include <stdlib.h>
+-#include <signal.h>
+-#include "vmmouse_client.h"
+-
+ #ifdef HAVE_CONFIG_H
+ #include "config.h"
+ #endif
+ 
++#include <stdlib.h>
++#include <signal.h>
++#include "vmmouse_client.h"
++
+ void
+ segvCB(int sig)
+ {
