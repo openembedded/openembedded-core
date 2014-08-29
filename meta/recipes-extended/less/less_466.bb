@@ -26,8 +26,8 @@ DEPENDS = "ncurses"
 
 SRC_URI = "http://www.greenwoodsoftware.com/${BPN}/${BPN}-${PV}.tar.gz"
 
-SRC_URI[md5sum] = "935b38aa2e73c888c210dedf8fd94f49"
-SRC_URI[sha256sum] = "e536c7819ede54b3d487f0ffc4c14b3620bed83734d92a81e89f62346db0fcac"
+SRC_URI[md5sum] = "7bc444bdb751bcf80ed0c39c17b4fcf4"
+SRC_URI[sha256sum] = "8305f5a06764ff094ed3428f94f29059541e2483eae201991f90823da6557212"
 
 inherit autotools update-alternatives
 
