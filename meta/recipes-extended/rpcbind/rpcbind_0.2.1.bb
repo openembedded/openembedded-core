@@ -40,7 +40,7 @@ SYSTEMD_AUTO_ENABLE = "disable"
 inherit useradd
 
 USERADD_PACKAGES = "${PN}"
-USERADD_PARAM_${PN} = "--system --no-create-home \
+USERADD_PARAM_${PN} = "--system --no-create-home --home-dir / \
                        --shell /bin/false --user-group rpc"
 
 EXTRA_OECONF += " --enable-warmstarts --with-rpcuser=rpc"
