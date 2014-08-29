@@ -21,6 +21,7 @@ SRCREV = "87de66d9d83446ecddb29cfbdf7369102c8e209e"
 SRC_URI = "git://git.savannah.gnu.org/grub.git \
            file://autogen.sh-exclude-pc.patch \
            file://grub-2.00-add-oe-kernel.patch \
+           file://0001-Fix-build-with-glibc-2.20.patch \
           "
 
 S = "${WORKDIR}/git"
