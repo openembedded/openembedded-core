@@ -54,6 +54,7 @@ SRC_URI = "http://gstreamer.freedesktop.org/src/${BPN}/${BPN}-${PV}.tar.bz2 \
            file://0001-lavf-compute-probe-buffer-size-more-reliably.patch \
            file://0001-ffserver-set-oformat.patch \
            file://0001-h264-set-parameters-from-SPS-whenever-it-changes.patch \
+           file://0001-h264-skip-error-concealment-when-SPS-and-slices-are-.patch \
 "
 
 SRC_URI[md5sum] = "7f5beacaf1312db2db30a026b36888c4"
