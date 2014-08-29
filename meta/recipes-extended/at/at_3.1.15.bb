@@ -29,8 +29,8 @@ SRC_URI = "${DEBIAN_MIRROR}/main/a/at/at_${PV}.orig.tar.gz \
 PAM_SRC_URI = "file://pam.conf.patch \
                file://configure-add-enable-pam.patch"
 
-SRC_URI[md5sum] = "d41cfd79033b6e49a8838add59a42ac6"
-SRC_URI[sha256sum] = "cd092bf05d29c25b286f55a960ce8b8c3c5beb571d86ed8eb1dfb3b61291b3ae"
+SRC_URI[md5sum] = "f0f96db22e3a174b53ce4beeeb848839"
+SRC_URI[sha256sum] = "03a84f5293d5a95ef4231b7faf5578f141f0c76a2b304dd655bc7e90e97bf7fc"
 
 EXTRA_OECONF += "ac_cv_path_SENDMAIL=/bin/true \
                  --with-daemon_username=root \
