@@ -6,12 +6,53 @@ from oeqa.utils.decorators import *
 #in the future these lists could be moved outside of module
 errors = ["error", "cannot", "can\'t", "failed"]
 
-ignore_errors = { 'genericx86-64': ['mmci-pl18x', 'error changing net interface name', 'dma timeout'], \
-                'genericx86': ['mmci-pl18x', 'error changing net interface name', 'dma timeout', 'AE_ALREADY_EXISTS'], \
-                'emenlow': ['mmci-pl18x', 'error changing net interface name', 'dma timeout', 'AE_ALREADY_EXISTS', '\[drm:psb_do_init\] \*ERROR\* Debug is'], \
-                'crownbay': ['mmci-pl18x', 'error changing net interface name', 'dma timeout', 'AE_ALREADY_EXISTS', 'Could not enable PowerButton event', 'probe of LNXPWRBN:00 failed with error -22'], \
-                'qemuarm': ['mmci-pl18x', 'error changing net interface name', 'dma timeout', 'mmci-pl18x: probe of fpga:[0-f][0-f] failed with error -38', 'wrong ELF class', 'Fast TSC calibration', 'AE_NOT_FOUND', 'Open ACPI failed', 'Failed to load module "glx"', '\(EE\) error', 'perfctr msr \(MSR c1 is 0\)', 'MMCONFIG information'], \
-                'qemux86-64': ['mmci-pl18x', 'error changing net interface name', 'dma timeout', 'wrong ELF class', 'Fast TSC calibration', 'AE_NOT_FOUND', 'Open ACPI failed', 'Failed to load module "glx"', '\(EE\) error', 'perfctr msr \(MSR c1 is 0\)', 'MMCONFIG information'] }
+common_errors = [
+    '(WW) warning, (EE) error, (NI) not implemented, (??) unknown.',
+    'dma timeout',
+    ]
+
+x86_common = [
+    '[drm:psb_do_init] *ERROR* Debug is',
+    'wrong ELF class',
+    'Could not enable PowerButton event',
+    'probe of LNXPWRBN:00 failed with error -22',
+] + common_errors
+
+qemux86_common = [
+    'Fast TSC calibration', 
+    '_OSC failed (AE_NOT_FOUND); disabling ASPM',
+    'Open ACPI failed (/var/run/acpid.socket) (No such file or directory)',
+    'Failed to load module "vesa"',
+    'Failed to load module "modesetting"',
+    'Failed to load module "glx"',
+    'wrong ELF class',
+] + common_errors
+
+ignore_errors = { 
+    'default' : common_errors,
+    'qemux86' : [
+        'Failed to access perfctr msr (MSR c1 is 0)',
+        "fail to add MMCONFIG information, can't access extended PCI configuration space under this bridge.",
+        ] + qemux86_common,
+    'qemux86-64' : qemux86_common,
+    'qemumips' : [
+        'Failed to load module "glx"',
+        ] + common_errors,
+    'qemuppc' : [
+        'PCI 0000:00 Cannot reserve Legacy IO [io  0x0000-0x0fff]',
+        'mode "640x480" test failed',
+        'Failed to load module "glx"',
+        ] + common_errors,
+    'qemuarm' : [
+        'mmci-pl18x: probe of fpga:05 failed with error -22',
+        'mmci-pl18x: probe of fpga:0b failed with error -22',
+        'Failed to load module "glx"'
+        ] + common_errors,
+    'emenlow' : x86_common,
+    'crownbay' : x86_common,
+    'genericx86' : x86_common,
+    'genericx86-64' : x86_common,
+}
 
 log_locations = ["/var/log/","/var/log/dmesg", "/tmp/dmesg_output.log"]
 
@@ -73,9 +114,16 @@ class ParseLogsTest(oeRuntimeTest):
         try:
             errorlist = ignore_errors[self.getMachine()]
         except KeyError:
-            self.msg += "No ignore list found for this machine, using generic\n"
-            errorlist = ignore_errors['genericx86']
+            self.msg += "No ignore list found for this machine, using default\n"
+            errorlist = ignore_errors['default']
         for ignore_error in errorlist:
+            ignore_error = ignore_error.replace("(", "\(")
+            ignore_error = ignore_error.replace(")", "\)")
+            ignore_error = ignore_error.replace("'", ".")
+            ignore_error = ignore_error.replace("?", "\?")
+            ignore_error = ignore_error.replace("[", "\[")
+            ignore_error = ignore_error.replace("]", "\]")
+            ignore_error = ignore_error.replace("*", "\*")
             grepcmd += ignore_error+"|"
         grepcmd = grepcmd[:-1]
         grepcmd += "\'"
