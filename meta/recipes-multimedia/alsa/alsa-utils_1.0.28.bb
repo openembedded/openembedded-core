@@ -15,8 +15,8 @@ SRC_URI = "ftp://ftp.alsa-project.org/pub/utils/alsa-utils-${PV}.tar.bz2 \
            file://0001-alsactl-don-t-let-systemd-unit-restore-the-volume-wh.patch \
           "
 
-SRC_URI[md5sum] = "b65e9a04181bd7c9db7667a4566f8dc3"
-SRC_URI[sha256sum] = "02bfac39092f3b68d743c23ad3d688d6c5aa8df69f2ccd692c5b8282edb352ea"
+SRC_URI[md5sum] = "361552d5b1cacd0a1e7ba09e69990211"
+SRC_URI[sha256sum] = "f3ff4c89b0125a7797b1b13cd094cc92276e655458274967386e812d03642acc"
 
 # lazy hack. needs proper fixing in gettext.m4, see
 # http://bugs.openembedded.org/show_bug.cgi?id=2348
