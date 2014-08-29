@@ -53,6 +53,7 @@ SRC_URI = "http://gstreamer.freedesktop.org/src/${BPN}/${BPN}-${PV}.tar.bz2 \
            file://0001-qdm2-check-array-index-before-use-fix-out-of-array-a.patch \
            file://0001-lavf-compute-probe-buffer-size-more-reliably.patch \
            file://0001-ffserver-set-oformat.patch \
+           file://0001-h264-set-parameters-from-SPS-whenever-it-changes.patch \
 "
 
 SRC_URI[md5sum] = "7f5beacaf1312db2db30a026b36888c4"
