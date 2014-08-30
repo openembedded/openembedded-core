@@ -102,13 +102,12 @@ python populate_packages_prepend () {
     def pam_plugin_hook(file, pkg, pattern, format, basename):
         pn = d.getVar('PN', True)
         libpam_suffix = d.getVar('libpam_suffix', True)
-        mlprefix = d.getVar('MLPREFIX', True) or ''
 
         rdeps = d.getVar('RDEPENDS_' + pkg, True)
         if rdeps:
-            rdeps = rdeps + " " + mlprefix + pn + "-" + libpam_suffix
+            rdeps = rdeps + " " + pn + "-" + libpam_suffix
         else:
-            rdeps = mlprefix + pn + "-" + libpam_suffix
+            rdeps = pn + "-" + libpam_suffix
         d.setVar('RDEPENDS_' + pkg, rdeps)
 
         provides = d.getVar('RPROVIDES_' + pkg, True)
