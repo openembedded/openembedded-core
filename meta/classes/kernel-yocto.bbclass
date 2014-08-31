@@ -131,8 +131,7 @@ do_patch() {
 	# check to see if the specified SRCREV is reachable from the final branch.
 	# if it wasn't something wrong has happened, and we should error.
 	if [ "${machine_srcrev}" != "AUTOINC" ]; then
-		git merge-base --is-ancestor ${machine_srcrev} HEAD
-	 	if [ $? -ne 0 ]; then
+		if ! [ "$(git rev-parse --verify ${machine_srcrev})" = "$(git merge-base ${machine_srcrev} HEAD)" ]; then
 			bberror "SRCREV ${machine_srcrev} was specified, but is not reachable"
 			bbfatal "Check the BSP description for incorrect branch selection, or other errors."
 		fi
