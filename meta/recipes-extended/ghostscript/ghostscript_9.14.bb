@@ -23,6 +23,7 @@ SRC_URI = "${SRC_URI_BASE} \
            file://ghostscript-9.02-genarch.patch \
            file://objarch.h \
            file://ghostscript-9.02-parallel-make.patch \
+           file://cups-no-gcrypt.patch \
            "
 
 SRC_URI_class-native = "${SRC_URI_BASE} \
