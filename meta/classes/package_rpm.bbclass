@@ -293,6 +293,7 @@ python write_specfile () {
     spec_files_bottom = []
 
     perfiledeps = (d.getVar("MERGEPERFILEDEPS", True) or "0") == "0"
+    extra_pkgdata = (d.getVar("RPM_EXTRA_PKGDATA", True) or "0") == "1"
 
     for pkg in packages.split():
         localdata = bb.data.createCopy(d)
@@ -373,6 +374,8 @@ python write_specfile () {
             else:
                 bb.note("Creating RPM package for %s" % splitname)
                 spec_files_top.append('%files')
+                if extra_pkgdata:
+                    package_rpm_extra_pkgdata(splitname, spec_files_top, localdata)
                 spec_files_top.append('%defattr(-,-,-,-)')
                 if file_list:
                     bb.note("Creating RPM package for %s" % splitname)
@@ -479,6 +482,8 @@ python write_specfile () {
             bb.note("Not creating empty RPM package for %s" % splitname)
         else:
             spec_files_bottom.append('%%files -n %s' % splitname)
+            if extra_pkgdata:
+                package_rpm_extra_pkgdata(splitname, spec_files_bottom, localdata)
             spec_files_bottom.append('%defattr(-,-,-,-)')
             if file_list:
                 bb.note("Creating RPM package for %s" % splitname)
