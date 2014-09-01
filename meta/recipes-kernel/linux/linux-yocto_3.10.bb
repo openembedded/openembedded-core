@@ -1,6 +1,6 @@
-require recipes-kernel/linux/linux-yocto.inc
+KBRANCH ?= "standard/base"
 
-KBRANCH = "standard/base"
+require recipes-kernel/linux/linux-yocto.inc
 
 # board specific branches
 KBRANCH_qemuarm  ?= "standard/arm-versatile-926ejs"

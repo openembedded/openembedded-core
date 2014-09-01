@@ -1,8 +1,8 @@
-require recipes-kernel/linux/linux-yocto.inc
-
 KBRANCH ?= "standard/tiny/base"
 LINUX_KERNEL_TYPE = "tiny"
 KCONFIG_MODE = "--allnoconfig"
+
+require recipes-kernel/linux/linux-yocto.inc
 
 LINUX_VERSION ?= "3.14.17"
 
