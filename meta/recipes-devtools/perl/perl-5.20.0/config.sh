@@ -1104,3 +1104,10 @@ usekernprocpathname='undef'
 usensgetexecutablepath='undef'
 st_ino_sign='1'
 st_ino_size='4'
+
+# for Time-HiRes
+d_clock_nanosleep='define'
+d_clock_gettime='define'
+d_clock_getres='define'
+d_clock='define'
+d_nanosleep='define'
