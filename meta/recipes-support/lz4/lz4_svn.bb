@@ -3,10 +3,10 @@ DESCRIPTION = "LZ4 is a very fast lossless compression algorithm, providing comp
 
 LICENSE = "BSD"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=0b0d063f37a4477b54af2459477dcafd \
-                    file://Makefile;md5=ca9db31c873dc45240e2792a866ab0b5"
+                    file://Makefile;md5=68938168b5cee826476a13e1b8d1f480"
 
 # Upstream names releases after SVN revs
-SRCREV = "120"
+SRCREV = "122"
 PV = "r${SRCREV}"
 
 SRC_URI = "svn://lz4.googlecode.com/svn/;module=trunk;protocol=http"
