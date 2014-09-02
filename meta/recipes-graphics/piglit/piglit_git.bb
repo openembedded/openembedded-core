@@ -45,4 +45,7 @@ do_install() {
 
 FILES_${PN}-dbg += "${libdir}/piglit/*/.debug/"
 
-RDEPENDS_${PN} = "python waffle python-json python-subprocess python-multiprocessing python-textutils python-netserver python-shell mesa-demos"
+RDEPENDS_${PN} = "python waffle python-json python-subprocess \
+	python-multiprocessing python-textutils python-netserver python-shell \
+	mesa-demos bash \
+	"
