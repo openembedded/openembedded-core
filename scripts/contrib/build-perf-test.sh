@@ -335,7 +335,7 @@ test2 () {
 #
 #  Start with
 #   i) "rm -rf tmp/cache; time bitbake -p"
-#  ii) "rm -rf tmp/cache/default-eglibc/; time bitbake -p"
+#  ii) "rm -rf tmp/cache/default-glibc/; time bitbake -p"
 # iii) "time bitbake -p"
 
 
@@ -344,8 +344,8 @@ test3 () {
     log "   Removing tmp/cache && cache"
     rm -rf tmp/cache cache
     bbtime -p
-    log "   Removing tmp/cache/default-eglibc/"
-    rm -rf tmp/cache/default-eglibc/
+    log "   Removing tmp/cache/default-glibc/"
+    rm -rf tmp/cache/default-glibc/
     bbtime -p
     bbtime -p
 }
