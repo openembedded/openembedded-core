@@ -1747,7 +1747,6 @@ sub write_bbfile
 	    print BBFILE "\"\n";
 	}
 
-	print BBFILE 'PR = "r0"' . "\n";
 	if ($python == 1) {
 	    print BBFILE "PV = \"$pversion\"\n\n";
 	}
@@ -1865,7 +1864,7 @@ foreach (@tgzfiles) {
 #
 
 my @sourcetars = <$orgdir/$outputdir/*\.tar\.bz2 $orgdir/$outputdir/*\.tar\.gz $orgdir/$outputdir/*\.zip>;
-if ( length @sourcetars == 0) {
+if (scalar(@sourcetars) == 0) {
 	print "Can NOT find source tarball. Exiting...\n";
 	exit (1);
 }
