@@ -58,7 +58,9 @@ def update_useradd_static_config(d):
 
         newparams = []
         for param in re.split('''[ \t]*;[ \t]*(?=(?:[^'"]|'[^']*'|"[^"]*")*$)''', params):
-            param=param.strip()
+            param = param.strip()
+            if not param:
+                continue
             try:
                 uaargs = parser.parse_args(re.split('''[ \t]*(?=(?:[^'"]|'[^']*'|"[^"]*")*$)''', param))
             except:
@@ -194,7 +196,9 @@ def update_useradd_static_config(d):
 
         newparams = []
         for param in re.split('''[ \t]*;[ \t]*(?=(?:[^'"]|'[^']*'|"[^"]*")*$)''', params):
-            param=param.strip()
+            param = param.strip()
+            if not param:
+                continue
             try:
                 # If we're processing multiple lines, we could have left over values here...
                 gaargs = parser.parse_args(re.split('''[ \t]*(?=(?:[^'"]|'[^']*'|"[^"]*")*$)''', param))
