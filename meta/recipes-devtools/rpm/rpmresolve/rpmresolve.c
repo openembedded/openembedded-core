@@ -275,7 +275,13 @@ int printDepList(rpmts *ts, int tscount)
                 char *name = strdup((char *)he->p.ptr);
                 /* Get its requires */
                 he->tag = RPMTAG_REQUIRENAME;
-                rc = (headerGet(h, he, 0) != 1);
+                if (rc = (headerGet(h, he, 0) != 1)) {
+                    if (debugmode) {
+                        printf("DEBUG: %s requires null\n", name);
+                    }
+                    rc = 0;
+                    continue;
+                }
                 ARGV_t reqs = (ARGV_t)he->p.ptr;
                 /* Get its requireflags */
                 he->tag = RPMTAG_REQUIREFLAGS;
