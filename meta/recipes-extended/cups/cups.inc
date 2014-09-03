@@ -8,14 +8,19 @@ SRC_URI = "http://www.cups.org/software/${PV}/${BP}-source.tar.bz2 \
            file://0001-don-t-try-to-run-generated-binaries.patch \
            file://cups_serverbin.patch \
            file://cups-no-gcrypt.patch \
+           file://cups.socket \
+           file://cups.path \
+           file://cups.service \
 	  "
 
 LEAD_SONAME = "libcupsdriver.so"
 
-inherit autotools-brokensep binconfig useradd
+inherit autotools-brokensep binconfig useradd systemd
 
 USERADD_PACKAGES = "${PN}"
 GROUPADD_PARAM_${PN} = "--system lpadmin"
+
+SYSTEMD_SERVICE_${PN} = "cups.socket cups.path cups.service"
 
 PACKAGECONFIG ??= "${@bb.utils.contains('DISTRO_FEATURES', 'zeroconf', 'avahi', '', d)} \
                    ${@bb.utils.contains('DISTRO_FEATURES', 'pam', 'pam', '', d)}"
@@ -71,6 +76,19 @@ fakeroot do_install () {
 	# Remove /var/run from package as cupsd will populate it on startup
 	rm -fr ${D}/${localstatedir}/run
 	rmdir ${D}/${libdir}/${BPN}/driver
+
+	# Remove sysinit script and symlinks if sysvinit is not in DISTRO_FEATURES
+	if ${@bb.utils.contains('DISTRO_FEATURES','sysvinit','false','true',d)}; then
+	    rm -rf ${D}${sysconfdir}/init.d/
+	    rm -rf ${D}${sysconfdir}/rc*
+	fi
+
+	# Install systemd unit files
+	install -d ${D}${systemd_unitdir}/system
+	install -m 0644 ${WORKDIR}/cups.socket ${D}${systemd_unitdir}/system
+	install -m 0644 ${WORKDIR}/cups.path ${D}${systemd_unitdir}/system
+	install -m 0644 ${WORKDIR}/cups.service ${D}${systemd_unitdir}/system
+	sed -i -e 's,@SBINDIR@,${sbindir},g' ${D}${systemd_unitdir}/system/cups.service
 }
 
 python do_package_append() {
