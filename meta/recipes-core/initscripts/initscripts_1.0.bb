@@ -139,11 +139,15 @@ do_install () {
 MASKED_SCRIPTS = " \
   banner \
   bootmisc \
+  checkfs \
   checkroot \
   devpts \
+  dmesg \
   hostname \
   mountall \
   mountnfs \
+  populate-volatile \
+  read-only-rootfs-hook \
   rmnologin \
   sysfs \
   urandom"
