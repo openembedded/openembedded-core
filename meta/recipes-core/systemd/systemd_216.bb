@@ -130,6 +130,18 @@ do_install() {
 
         # Delete journal README, as log can be symlinked inside volatile.
         rm -f ${D}/${localstatedir}/log/README
+
+	# Create symlinks for systemd-update-utmp-runlevel.service
+	install -d ${D}${systemd_unitdir}/system/graphical.target.wants
+	install -d ${D}${systemd_unitdir}/system/multi-user.target.wants
+	install -d ${D}${systemd_unitdir}/system/poweroff.target.wants
+	install -d ${D}${systemd_unitdir}/system/reboot.target.wants
+	install -d ${D}${systemd_unitdir}/system/rescue.target.wants
+	ln -sf ../systemd-update-utmp-runlevel.service ${D}${systemd_unitdir}/system/graphical.target.wants/systemd-update-utmp-runlevel.service
+	ln -sf ../systemd-update-utmp-runlevel.service ${D}${systemd_unitdir}/system/multi-user.target.wants/systemd-update-utmp-runlevel.service
+	ln -sf ../systemd-update-utmp-runlevel.service ${D}${systemd_unitdir}/system/poweroff.target.wants/systemd-update-utmp-runlevel.service
+	ln -sf ../systemd-update-utmp-runlevel.service ${D}${systemd_unitdir}/system/reboot.target.wants/systemd-update-utmp-runlevel.service
+	ln -sf ../systemd-update-utmp-runlevel.service ${D}${systemd_unitdir}/system/rescue.target.wants/systemd-update-utmp-runlevel.service
 }
 
 do_install_ptest () {
