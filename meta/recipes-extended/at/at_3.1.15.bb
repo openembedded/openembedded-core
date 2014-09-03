@@ -20,7 +20,7 @@ SRC_URI = "${DEBIAN_MIRROR}/main/a/at/at_${PV}.orig.tar.gz \
     file://posixtm.c \
     file://posixtm.h \
     file://file_replacement_with_gplv2.patch \
-    file://S99at \
+    file://atd.init \
     file://atd.service \
     ${@bb.utils.contains('DISTRO_FEATURES', 'pam', '${PAM_SRC_URI}', '', d)}"
 
@@ -37,7 +37,10 @@ EXTRA_OECONF += "ac_cv_path_SENDMAIL=/bin/true \
                  --with-atspool=/var/spool/at/spool \
                  ac_cv_header_security_pam_appl_h=${@bb.utils.contains('DISTRO_FEATURES', 'pam', 'yes', 'no', d)} "
 
-inherit autotools-brokensep systemd
+inherit autotools-brokensep systemd update-rc.d
+
+INITSCRIPT_NAME = "atd"
+INITSCRIPT_PARAMS = "defaults"
 
 SYSTEMD_SERVICE_${PN} = "atd.service"
 
@@ -51,9 +54,7 @@ do_install () {
 	oe_runmake -e "IROOT=${D}" install
 
 	install -d ${D}${sysconfdir}/init.d
-	install -d ${D}${sysconfdir}/rcS.d
-	install -m 0755    ${WORKDIR}/S99at		${D}${sysconfdir}/init.d/atd
-	ln -sf ../init.d/atd ${D}${sysconfdir}/rcS.d/S99at
+	install -m 0755    ${WORKDIR}/atd.init		${D}${sysconfdir}/init.d/atd
 
 	# install systemd unit files
 	install -d ${D}${systemd_unitdir}/system
