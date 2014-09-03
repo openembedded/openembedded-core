@@ -18,6 +18,13 @@ SRC_URI = "\
   file://alsa-state-init \
 "
 
+# As the recipe doesn't inherit systemd.bbclass, we need to set this variable
+# manually to avoid unnecessary postinst/preinst generated.
+python __anonymous() {
+    if not bb.utils.contains('DISTRO_FEATURES', 'sysvinit', True, False, d):
+        d.setVar("INHIBIT_UPDATERCD_BBCLASS", "1")
+}
+
 inherit update-rc.d
 
 INITSCRIPT_NAME = "alsa-state"
@@ -54,9 +61,5 @@ pkg_postinst_${PN}() {
 		then
 			${sbindir}/alsactl -f ${localstatedir}/lib/alsa/asound.state restore
 		fi
-		# INITSCRIPT_PARAMS changed, so remove the old and
-		# install the new setting.
-		update-rc.d -f ${INITSCRIPT_NAME} remove
-		update-rc.d ${INITSCRIPT_NAME} ${INITSCRIPT_PARAMS}
 	fi
 }
