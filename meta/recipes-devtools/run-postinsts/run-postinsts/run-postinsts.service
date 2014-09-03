@@ -13,5 +13,4 @@ RemainAfterExit=No
 TimeoutSec=0
 
 [Install]
-WantedBy=basic.target
 WantedBy=sysinit.target
