@@ -9,6 +9,7 @@ Type=forking
 EnvironmentFile=-@SYSCONFDIR@/rpcbind.conf
 ExecStart=@SBINDIR@/rpcbind -w $RPCBIND_OPTS
 Restart=always
+SuccessExitStatus=2
 
 [Install]
 WantedBy=multi-user.target
