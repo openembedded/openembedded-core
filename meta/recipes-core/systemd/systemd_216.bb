@@ -32,6 +32,7 @@ SRC_URI = "git://anongit.freedesktop.org/systemd/systemd;branch=master;protocol=
            file://uclibc-get-physmem.patch \
            file://0001-add-support-for-executing-scripts-under-etc-rcS.d.patch \
            file://0001-missing.h-add-fake-__NR_memfd_create-for-MIPS.patch \
+           file://0001-Make-root-s-home-directory-configurable.patch \
            file://touchscreen.rules \
            file://00-create-volatile.conf \
            file://init \
@@ -74,6 +75,7 @@ rootlibexecdir = "${rootprefix}/lib"
 # The gtk+ tools should get built as a separate recipe e.g. systemd-tools
 EXTRA_OECONF = " --with-rootprefix=${rootprefix} \
                  --with-rootlibdir=${rootlibdir} \
+                 --with-roothomedir=${ROOT_HOME} \
                  ${@bb.utils.contains('DISTRO_FEATURES', 'pam', '--enable-pam', '--disable-pam', d)} \
                  --disable-manpages \
                  --disable-coredump \
@@ -99,7 +101,6 @@ do_configure_prepend() {
 	else
 		cp -r ${S}/units ${S}/units.pre_sed
 	fi
-	sed -i -e 's:=/root:=${ROOT_HOME}:g' ${S}/units/*.service*
 	sed -i '/ln --relative --help/d' ${S}/configure.ac
 	sed -i -e 's:\$(LN_S) --relative -f:lnr:g' ${S}/Makefile.am
 	sed -i -e 's:\$(LN_S) --relative:lnr:g' ${S}/Makefile.am
