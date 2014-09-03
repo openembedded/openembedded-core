@@ -17,9 +17,9 @@ SECTION = "base/shell"
 
 inherit gtk-doc useradd pkgconfig autotools perlnative update-rc.d update-alternatives qemu systemd ptest gettext
 
-SRCREV = "c9679c652b3c31f2510e8805d81630680ebc7e95"
+SRCREV = "5d0ae62c665262c4c55536457e84e278c252cc0b"
 
-PV = "213+git${SRCPV}"
+PV = "216+git${SRCPV}"
 
 SRC_URI = "git://anongit.freedesktop.org/systemd/systemd;branch=master;protocol=git \
            file://binfmt-install.patch \
@@ -28,15 +28,13 @@ SRC_URI = "git://anongit.freedesktop.org/systemd/systemd;branch=master;protocol=
            file://systemd-pam-fix-fallocate.patch \
            file://systemd-pam-fix-mkostemp.patch \
            file://optional_secure_getenv.patch \
-           file://0001-uClibc-doesn-t-implement-pwritev-preadv.patch \
            file://uclibc-sysinfo_h.patch \
            file://uclibc-get-physmem.patch \
-           file://0001-util-Including-missing.h-to-get-MAX_HANDLE_SZ.patch \
+           file://0001-missing.h-add-fake-__NR_memfd_create-for-MIPS.patch \
            file://touchscreen.rules \
            file://00-create-volatile.conf \
            file://init \
            file://run-ptest \
-           file://systemd-older-kernel.patch \
           "
 
 S = "${WORKDIR}/git"
@@ -126,6 +124,9 @@ do_install() {
 		sed -i s%@UDEVD@%${rootlibexecdir}/systemd/systemd-udevd% ${D}${sysconfdir}/init.d/systemd-udevd
 	fi
 
+	# Move libgudev back to ${rootlibdir} to keep backward compatibility
+	[ ${rootlibdir} != ${exec_prefix}/lib ] && mv -t ${D}${rootlibdir} ${D}${exec_prefix}/lib/libgudev*
+
         # Delete journal README, as log can be symlinked inside volatile.
         rm -f ${D}/${localstatedir}/log/README
 }
@@ -208,6 +209,7 @@ FILES_${PN} = " ${base_bindir}/* \
                 ${datadir}/dbus-1/system-services \
                 ${datadir}/polkit-1 \
                 ${datadir}/${BPN} \
+                ${datadir}/factory \
                 ${sysconfdir}/bash_completion.d/ \
                 ${sysconfdir}/dbus-1/ \
                 ${sysconfdir}/machine-id \
@@ -220,7 +222,7 @@ FILES_${PN} = " ${base_bindir}/* \
                 ${rootlibexecdir}/systemd/* \
                 ${systemd_unitdir}/* \
                 ${base_libdir}/security/*.so \
-                ${libdir}/libnss_myhostname.so.2 \
+                ${exec_prefix}/lib/libnss_* \
                 /cgroup \
                 ${bindir}/systemd* \
                 ${bindir}/busctl \
@@ -233,6 +235,7 @@ FILES_${PN} = " ${base_bindir}/* \
                 ${exec_prefix}/lib/systemd \
                 ${exec_prefix}/lib/modules-load.d \
                 ${exec_prefix}/lib/sysctl.d \
+                ${exec_prefix}/lib/sysusers.d \
                 ${localstatedir} \
                 /lib/udev/rules.d/70-uaccess.rules \
                 /lib/udev/rules.d/71-seat.rules \
