@@ -12,7 +12,10 @@ SRC_URI = "http://www.cups.org/software/${PV}/${BP}-source.tar.bz2 \
 
 LEAD_SONAME = "libcupsdriver.so"
 
-inherit autotools-brokensep binconfig
+inherit autotools-brokensep binconfig useradd
+
+USERADD_PACKAGES = "${PN}"
+GROUPADD_PARAM_${PN} = "--system lpadmin"
 
 PACKAGECONFIG ??= "${@bb.utils.contains('DISTRO_FEATURES', 'zeroconf', 'avahi', '', d)} \
                    ${@bb.utils.contains('DISTRO_FEATURES', 'pam', 'pam', '', d)}"
@@ -79,6 +82,7 @@ python do_package_append() {
 
 PACKAGES =+ "${PN}-lib ${PN}-libimage"
 
+RDEPENDS_${PN} += "${@bb.utils.contains('DISTRO_FEATURES', 'sysvinit', 'procps', '', d)}"
 FILES_${PN} += "${libdir}/cups/backend \
 		${libdir}/cups/cgi-bin \
 		${libdir}/cups/filter \
