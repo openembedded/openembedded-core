@@ -1,0 +1,11 @@
+[Unit]
+Description=DHCP Server Daemon
+After=network.target
+After=time-sync.target
+
+[Service]
+EnvironmentFile=@SYSCONFDIR@/default/dhcp-server
+ExecStart=-@SBINDIR@/dhcpd -q $INTERFACES
+
+[Install]
+WantedBy=multi-user.target
