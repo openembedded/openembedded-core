@@ -2,10 +2,7 @@ SUMMARY = "Keyboard maps"
 DESCRIPTION = "Keymaps and initscript to set the keymap on bootup."
 SECTION = "base"
 
-# Distro can override initscripts provider
-VIRTUAL-RUNTIME_initscripts ?= "initscripts"
-
-RDEPENDS_${PN} = "${VIRTUAL-RUNTIME_initscripts} kbd"
+RDEPENDS_${PN} = "kbd"
 
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=751419260aa954499f7abaabaa882bbe"
