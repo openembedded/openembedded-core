@@ -1,0 +1,22 @@
+systemtap: Fixed probe syscall.sendfile failure
+
+compat_sendfile syscall is unavailable in kernels starting version 3.8.
+Hence systemtap scripts like 'probe syscall.* { if (target()==pid()) log(name." ".argstr) }' fail.
+This problem is solved by marking __syscall.compat_sendfile as optional in tapset/linux/syscalls2.stp
+
+Upstream-Status: Pending
+
+Signed-off-by: Mikhail Durnev <mikhail_durnev@mentor.com>
+
+diff -Naur old/tapset/linux/syscalls2.stp new/tapset/linux/syscalls2.stp
+--- old/tapset/linux/syscalls2.stp	2014-04-21 01:28:41.000000000 -0500
++++ new/tapset/linux/syscalls2.stp	2014-04-21 01:38:14.961233914 -0500
+@@ -1953,7 +1953,7 @@
+ # COMPAT_SYSCALL_DEFINE4(sendfile64, int, out_fd, int, in_fd,
+ #		compat_loff_t __user *, offset, compat_size_t, count)
+ #
+-probe syscall.sendfile = __syscall.sendfile, __syscall.compat_sendfile
++probe syscall.sendfile = __syscall.sendfile, __syscall.compat_sendfile ?
+ {
+ 	name = "sendfile"
+ 	out_fd = __int32($out_fd)
