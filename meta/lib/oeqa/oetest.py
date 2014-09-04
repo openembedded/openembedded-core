@@ -66,6 +66,13 @@ class oeRuntimeTest(oeTest):
         self.target = oeRuntimeTest.tc.target
         super(oeRuntimeTest, self).__init__(methodName)
 
+    #TODO: use package_manager.py to install packages on any type of image
+    def install_packages(self, packagelist):
+        for package in packagelist:
+            (status, result) = self.target.run("smart install -y "+package)
+            if status != 0:
+                return status
+
 class oeSDKTest(oeTest):
     def __init__(self, methodName='runTest'):
         self.sdktestdir = oeSDKTest.tc.sdktestdir
