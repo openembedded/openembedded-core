@@ -624,6 +624,8 @@ sstate_unpack_package () {
 	mkdir -p ${SSTATE_INSTDIR}
 	cd ${SSTATE_INSTDIR}
 	tar -xmvzf ${SSTATE_PKG}
+	# Use "! -w ||" to return true for read only files
+	[ ! -w ${SSTATE_PKG} ] || touch --no-dereference ${SSTATE_PKG}
 }
 
 BB_HASHCHECK_FUNCTION = "sstate_checkhashes"
