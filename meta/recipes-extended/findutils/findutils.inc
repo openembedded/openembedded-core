@@ -7,7 +7,7 @@ BUGTRACKER = "http://savannah.gnu.org/bugs/?group=findutils"
 SECTION = "console/utils"
 
 
-SRC_URI = "${GNU_MIRROR}/findutils/findutils-${PV}.tar.gz"
+SRC_URI = "ftp://alpha.gnu.org/gnu/${BPN}/${BP}.tar.gz"
 
 inherit autotools gettext texinfo update-alternatives
 
