@@ -1,0 +1,70 @@
+Upstream-Status: Backport
+Signed-off-by: Bruce Ashfield <bruce.ashfield@windriver.com>
+
+From 4ba1f53c5aebb4433fedc25d65af010274985043 Mon Sep 17 00:00:00 2001
+From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Date: Thu, 21 Aug 2014 10:53:12 -0400
+Subject: [PATCH 2/3] Update statedump to 3.17 nsproxy locking
+
+This Linux upstream commit introduces locking strategy back and forth:
+
+commit 728dba3a39c66b3d8ac889ddbe38b5b1c264aec3
+Author: Eric W. Biederman <ebiederm@xmission.com>
+Date:   Mon Feb 3 19:13:49 2014 -0800
+
+    namespaces: Use task_lock and not rcu to protect nsproxy
+
+Use the task lock starting from kernel 3.17 rather than RCU to access
+the task nsproxy.
+
+Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+---
+ lttng-statedump-impl.c | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
+
+diff --git a/lttng-statedump-impl.c b/lttng-statedump-impl.c
+index dad51ddaa250..e4caa488e436 100644
+--- a/lttng-statedump-impl.c
++++ b/lttng-statedump-impl.c
+@@ -378,6 +378,9 @@ int lttng_list_interrupts(struct lttng_session *session)
+ }
+ #endif
+ 
++/*
++ * Called with task lock held.
++ */
+ static
+ void lttng_statedump_process_ns(struct lttng_session *session,
+ 		struct task_struct *p,
+@@ -389,8 +392,18 @@ void lttng_statedump_process_ns(struct lttng_session *session,
+ 	struct nsproxy *proxy;
+ 	struct pid_namespace *pid_ns;
+ 
++	/*
++	 * Back and forth on locking strategy within Linux upstream for nsproxy.
++	 * See Linux upstream commit 728dba3a39c66b3d8ac889ddbe38b5b1c264aec3
++	 * "namespaces: Use task_lock and not rcu to protect nsproxy"
++	 * for details.
++	 */
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(3,17,0))
+ 	rcu_read_lock();
+ 	proxy = task_nsproxy(p);
++#else /* #if (LINUX_VERSION_CODE < KERNEL_VERSION(3,17,0)) */
++	proxy = p->nsproxy;
++#endif /* #else #if (LINUX_VERSION_CODE < KERNEL_VERSION(3,17,0)) */
+ 	if (proxy) {
+ 		pid_ns = lttng_get_proxy_pid_ns(proxy);
+ 		do {
+@@ -402,7 +415,9 @@ void lttng_statedump_process_ns(struct lttng_session *session,
+ 		trace_lttng_statedump_process_state(session,
+ 			p, type, mode, submode, status, NULL);
+ 	}
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(3,17,0))
+ 	rcu_read_unlock();
++#endif /* #if (LINUX_VERSION_CODE < KERNEL_VERSION(3,17,0)) */
+ }
+ 
+ static
+-- 
+1.8.1.2
+

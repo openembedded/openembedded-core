@@ -1,0 +1,46 @@
+Upstream-Status: Backport
+Signed-off-by: Bruce Ashfield <bruce.ashfield@windriver.com>
+
+From 458c2022e992c057bd21d02e4c77bcc7d4d6cd6c Mon Sep 17 00:00:00 2001
+From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Date: Thu, 21 Aug 2014 11:15:50 -0400
+Subject: [PATCH 3/3] Update kvm instrumentation: compile on 3.17-rc1
+
+Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+---
+ instrumentation/events/lttng-module/arch/x86/kvm/trace.h | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
+
+diff --git a/instrumentation/events/lttng-module/arch/x86/kvm/trace.h b/instrumentation/events/lttng-module/arch/x86/kvm/trace.h
+index 2354884074eb..3c299c58a1cf 100644
+--- a/instrumentation/events/lttng-module/arch/x86/kvm/trace.h
++++ b/instrumentation/events/lttng-module/arch/x86/kvm/trace.h
+@@ -724,7 +724,7 @@ TRACE_EVENT(kvm_emulate_insn,
+ 		tp_memcpy(insn,
+ 		       vcpu->arch.emulate_ctxt.decode.fetch.data,
+ 		       15)
+-#else
++#elif (LINUX_VERSION_CODE < KERNEL_VERSION(3,17,0))
+ 		tp_assign(rip, vcpu->arch.emulate_ctxt.fetch.start)
+ 		tp_assign(csbase, kvm_x86_ops->get_segment_base(vcpu, VCPU_SREG_CS))
+ 		tp_assign(len, vcpu->arch.emulate_ctxt._eip
+@@ -732,6 +732,16 @@ TRACE_EVENT(kvm_emulate_insn,
+ 		tp_memcpy(insn,
+ 		       vcpu->arch.emulate_ctxt.fetch.data,
+ 		       15)
++#else
++		tp_assign(rip, vcpu->arch.emulate_ctxt._eip -
++			(vcpu->arch.emulate_ctxt.fetch.ptr -
++				vcpu->arch.emulate_ctxt.fetch.data))
++		tp_assign(csbase, kvm_x86_ops->get_segment_base(vcpu, VCPU_SREG_CS))
++		tp_assign(len, vcpu->arch.emulate_ctxt.fetch.ptr -
++			vcpu->arch.emulate_ctxt.fetch.data)
++		tp_memcpy(insn,
++		       vcpu->arch.emulate_ctxt.fetch.data,
++		       15)
+ #endif
+ 		tp_assign(flags, kei_decode_mode(vcpu->arch.emulate_ctxt.mode))
+ 		tp_assign(failed, failed)
+-- 
+1.8.1.2
+
