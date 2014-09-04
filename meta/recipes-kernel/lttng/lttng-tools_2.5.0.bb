@@ -15,6 +15,14 @@ RDEPENDS_${PN}-ptest += "make perl bash"
 SRCREV = "8b27cacb277c2cdab791139b08da8eb87ab14a88"
 PV = "v2.5.0"
 
+PYTHON_OPTION = "am_cv_python_pyexecdir='${libdir}/python${PYTHON_BASEVERSION}/site-packages' \
+                 am_cv_python_pythondir='${libdir}/python${PYTHON_BASEVERSION}/site-packages' \
+                 PYTHON_INCLUDE='-I${STAGING_INCDIR}/python${PYTHON_BASEVERSION}' \
+"
+PACKAGECONFIG ??= "lttng-ust"
+PACKAGECONFIG[python] = "--enable-python-bindings ${PYTHON_OPTION},,python swig-native"
+PACKAGECONFIG[lttng-ust] = ", --disable-lttng-ust, lttng-ust"
+
 SRC_URI = "git://git.lttng.org/lttng-tools.git;branch=stable-2.5 \
            file://runtest-2.4.0.patch \
            file://run-ptest \
@@ -26,12 +34,17 @@ inherit autotools-brokensep ptest pkgconfig
 
 export KERNELDIR="${STAGING_KERNEL_DIR}"
 
-FILES_${PN} += "${libdir}/lttng/libexec/* ${datadir}/xml/lttng"
-FILES_${PN}-dbg += "${libdir}/lttng/libexec/.debug"
+FILES_${PN} += "${libdir}/lttng/libexec/* ${datadir}/xml/lttng \
+                ${libdir}/python${PYTHON_BASEVERSION}/site-packages/*"
+FILES_${PN}-dbg += "${libdir}/lttng/libexec/.debug \
+                    ${libdir}/python2.7/site-packages/.debug"
+FILES_${PN}-staticdev += "${libdir}/python${PYTHON_BASEVERSION}/site-packages/*.a"
+FILES_${PN}-dev += "${libdir}/python${PYTHON_BASEVERSION}/site-packages/*.la"
 
 # Since files are installed into ${libdir}/lttng/libexec we match 
 # the libexec insane test so skip it.
-INSANE_SKIP_${PN} = "libexec"
+# Python module needs to keep _lttng.so
+INSANE_SKIP_${PN} = "libexec dev-so"
 INSANE_SKIP_${PN}-dbg = "libexec"
 
 do_configure_prepend () {
