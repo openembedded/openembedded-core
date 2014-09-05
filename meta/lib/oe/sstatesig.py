@@ -63,12 +63,14 @@ def sstate_rundepfilter(siggen, fn, recipename, task, dep, depname, dataCache):
 
 def sstate_lockedsigs(d):
     sigs = {}
-    lockedsigs = (d.getVar("SIGGEN_LOCKEDSIGS", True) or "").split()
-    for ls in lockedsigs:
-        pn, task, h = ls.split(":", 2)
-        if pn not in sigs:
-            sigs[pn] = {}
-        sigs[pn][task] = h
+    types = (d.getVar("SIGGEN_LOCKEDSIGS_TYPES", True) or "").split()
+    for t in types:
+        lockedsigs = (d.getVar("SIGGEN_LOCKEDSIGS_%s" % t, True) or "").split()
+        for ls in lockedsigs:
+            pn, task, h = ls.split(":", 2)
+            if pn not in sigs:
+                sigs[pn] = {}
+            sigs[pn][task] = h
     return sigs
 
 class SignatureGeneratorOEBasic(bb.siggen.SignatureGeneratorBasic):
@@ -88,16 +90,18 @@ class SignatureGeneratorOEBasicHash(bb.siggen.SignatureGeneratorBasicHash):
         self.lockedsigs = sstate_lockedsigs(data)
         self.lockedhashes = {}
         self.lockedpnmap = {}
+        self.lockedhashfn = {}
+        self.machine = data.getVar("MACHINE", True)
         pass
     def rundep_check(self, fn, recipename, task, dep, depname, dataCache = None):
         return sstate_rundepfilter(self, fn, recipename, task, dep, depname, dataCache)
 
     def get_taskdata(self):
         data = super(bb.siggen.SignatureGeneratorBasicHash, self).get_taskdata()
-        return (data, self.lockedpnmap)
+        return (data, self.lockedpnmap, self.lockedhashfn)
 
     def set_taskdata(self, data):
-        coredata, self.lockedpnmap = data
+        coredata, self.lockedpnmap, self.lockedhashfn = data
         super(bb.siggen.SignatureGeneratorBasicHash, self).set_taskdata(coredata)
 
     def dump_sigs(self, dataCache, options):
@@ -107,6 +111,7 @@ class SignatureGeneratorOEBasicHash(bb.siggen.SignatureGeneratorBasicHash):
     def get_taskhash(self, fn, task, deps, dataCache):
         recipename = dataCache.pkg_fn[fn]
         self.lockedpnmap[fn] = recipename
+        self.lockedhashfn[fn] = dataCache.hashfn[fn]
         if recipename in self.lockedsigs:
             if task in self.lockedsigs[recipename]:
                 k = fn + "." + task
@@ -127,17 +132,27 @@ class SignatureGeneratorOEBasicHash(bb.siggen.SignatureGeneratorBasicHash):
 
     def dump_lockedsigs(self):
         bb.plain("Writing locked sigs to " + os.getcwd() + "/locked-sigs.inc")
+        types = {}
+        for k in self.runtaskdeps:
+            fn = k.rsplit(".",1)[0]
+            t = self.lockedhashfn[fn].split(" ")[1].split(":")[5]
+            if t not in types:
+                types[t] = []
+            types[t].append(k)
+
         with open("locked-sigs.inc", "w") as f:
-            f.write('SIGGEN_LOCKEDSIGS = "\\\n')
-            #for fn in self.taskdeps:
-            for k in self.runtaskdeps:
-                    #k = fn + "." + task
+            for t in types:
+                f.write('SIGGEN_LOCKEDSIGS_%s = "\\\n' % t)
+                types[t].sort()
+                sortedk = sorted(types[t], key=lambda k: self.lockedpnmap[k.rsplit(".",1)[0]]) 
+                for k in sortedk:
                     fn = k.rsplit(".",1)[0]
                     task = k.rsplit(".",1)[1]
                     if k not in self.taskhash:
                         continue
                     f.write("    " + self.lockedpnmap[fn] + ":" + task + ":" + self.taskhash[k] + " \\\n")
-            f.write('    "\n')
+                f.write('    "\n')
+            f.write('SIGGEN_LOCKEDSIGS_TYPES_%s = "%s"' % (self.machine, " ".join(types.keys())))
 
     def checkhashes(self, missed, ret, sq_fn, sq_task, sq_hash, sq_hashfn, d):
         enforce = (d.getVar("SIGGEN_ENFORCE_LOCKEDSIGS", True) or "1") == "1"
