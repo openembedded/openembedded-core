@@ -41,19 +41,14 @@ RDEPENDS_packagegroup-self-hosted-host-tools = "\
     hdparm \
     iptables \
     lsb \
-    xdg-utils \
     mc \
     mc-fish \
     mc-helpers \
     mc-helpers-perl \
     mc-helpers-python \
-    leafpad \
-    ${MIDORI} \
-    pcmanfm \
     parted \
     pseudo \
     screen \
-    vte \
     "
 
 RRECOMMENDS_packagegroup-self-hosted-host-tools = "\
@@ -224,6 +219,11 @@ RDEPENDS_packagegroup-self-hosted-graphics = "\
     libx11-dev \
     python-pygtk \
     gtk-theme-clearlooks \
+    xdg-utils \
+    ${MIDORI} \
+    leafpad \
+    pcmanfm \
+    vte \
     "
 PTH = "pth"
 PTH_libc-uclibc = ""
