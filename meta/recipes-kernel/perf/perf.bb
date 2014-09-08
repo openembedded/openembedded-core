@@ -78,6 +78,7 @@ EXTRA_OEMAKE = '\
     ARCH=${ARCH} \
     CC="${CC}" \
     AR="${AR}" \
+    EXTRA_CFLAGS="-ldw" \
     perfexecdir=${libexecdir} \
     NO_GTK2=1 ${TUI_DEFINES} NO_DWARF=1 ${LIBUNWIND_DEFINES} ${SCRIPTING_DEFINES} \
 '
@@ -142,6 +143,10 @@ do_configure_prepend () {
     fi
     if [ -e "${S}/tools/perf/config/feature-checks/Makefile" ]; then
         sed -i 's,CC := $(CROSS_COMPILE)gcc -MD,CC += -MD,' ${S}/tools/perf/config/feature-checks/Makefile
+    fi
+    # 3.17-rc1+ has a include issue for powerpc. Temporarily sed in the appropriate include
+    if [ -e "${S}/tools/perf/arch/powerpc/util/skip-callchain-idx.c" ]; then
+        sed -i 's,#include "util/callchain.h",#include "util/callchain.h"\n#include "util/debug.h",' ${S}/tools/perf/arch/powerpc/util/skip-callchain-idx.c
     fi
 }
 
