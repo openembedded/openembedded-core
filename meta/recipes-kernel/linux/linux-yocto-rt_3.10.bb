@@ -5,7 +5,7 @@ require recipes-kernel/linux/linux-yocto.inc
 
 SRCREV_machine ?= "1dfc94848e05989ab6c5fde2080f35546d81e798"
 SRCREV_machine_qemuppc ?= "81334ed6f11da157e13c306c48f3d49a051d9d89"
-SRCREV_meta ?= "bacd863f7d1ce9135b8dde4394120f66707c7747"
+SRCREV_meta ?= "fab23a4d44de25ee77e497cbf8605eadc3aaf3d8"
 
 SRC_URI = "git://git.yoctoproject.org/linux-yocto-3.10.git;bareclone=1;branch=${KBRANCH},meta;name=machine,meta"
 
