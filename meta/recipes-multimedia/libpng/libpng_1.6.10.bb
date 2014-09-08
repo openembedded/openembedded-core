@@ -9,7 +9,6 @@ DEPENDS = "zlib"
 LIBV = "16"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/project/libpng/libpng${LIBV}/${PV}/libpng-${PV}.tar.xz \
-           file://0001-configure-lower-automake-requirement.patch \
           "
 
 SRC_URI[md5sum] = "5f414b20f683b1d96b163c89e3eff768"
