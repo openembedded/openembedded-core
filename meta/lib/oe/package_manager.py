@@ -210,7 +210,7 @@ class PkgsList(object):
 
 
 class RpmPkgsList(PkgsList):
-    def __init__(self, d, rootfs_dir, arch_var=None, os_var=None, rpm_version=5):
+    def __init__(self, d, rootfs_dir, arch_var=None, os_var=None):
         super(RpmPkgsList, self).__init__(d, rootfs_dir)
 
         self.rpm_cmd = bb.utils.which(os.getenv('PATH'), "rpm")
@@ -219,7 +219,14 @@ class RpmPkgsList(PkgsList):
         self.ml_prefix_list, self.ml_os_list = \
             RpmIndexer(d, rootfs_dir).get_ml_prefix_and_os_list(arch_var, os_var)
 
-        self.rpm_version = rpm_version
+        # Determine rpm version
+        cmd = "%s --version" % self.rpm_cmd
+        try:
+            output = subprocess.check_output(cmd, stderr=subprocess.STDOUT, shell=True)
+        except subprocess.CalledProcessError as e:
+            bb.fatal("Getting rpm version failed. Command '%s' "
+                     "returned %d:\n%s" % (cmd, e.returncode, e.output))
+        self.rpm_version = int(output.split()[-1].split('.')[0])
 
     '''
     Translate the RPM/Smart format names to the OE multilib format names
@@ -564,17 +571,9 @@ class RpmPM(PackageManager):
         if not os.path.exists(self.d.expand('${T}/saved')):
             bb.utils.mkdirhier(self.d.expand('${T}/saved'))
 
-        # Determine rpm version
-        cmd = "%s --version" % self.rpm_cmd
-        try:
-            output = subprocess.check_output(cmd, stderr=subprocess.STDOUT, shell=True)
-        except subprocess.CalledProcessError as e:
-            bb.fatal("Getting rpm version failed. Command '%s' "
-                     "returned %d:\n%s" % (cmd, e.returncode, e.output))
-        self.rpm_version = int(output.split()[-1].split('.')[0])
-
         self.indexer = RpmIndexer(self.d, self.deploy_dir)
-        self.pkgs_list = RpmPkgsList(self.d, self.target_rootfs, arch_var, os_var, self.rpm_version)
+        self.pkgs_list = RpmPkgsList(self.d, self.target_rootfs, arch_var, os_var)
+        self.rpm_version = self.pkgs_list.rpm_version
 
         self.ml_prefix_list, self.ml_os_list = self.indexer.get_ml_prefix_and_os_list(arch_var, os_var)
 
