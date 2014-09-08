@@ -29,9 +29,10 @@ EXTRA_OECONF_class-native = "--disable-gtk"
 
 SRC_URI += "\
             file://0001-ARM-qemu-related-workarounds-in-cpu-features-detecti.patch \
+            file://mips-export-revert.patch \
 "
 
-SRC_URI[md5sum] = "cdb566504fe9daf6728c7b03cc7ea228"
-SRC_URI[sha256sum] = "ae2bd664057e330d41b40336ed296d3512318ce7f2401cc42601f2613d371e4c"
+SRC_URI[md5sum] = "8a9e8f14743a39cf303803f369c1f344"
+SRC_URI[sha256sum] = "201fc0d7d6bc0017496f2bd27b3ca14224aea0df6b624c5ee2dc0307a4ff14a4"
 
 REQUIRED_DISTRO_FEATURES = ""
