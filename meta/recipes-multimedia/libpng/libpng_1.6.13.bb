@@ -2,17 +2,17 @@ SUMMARY = "PNG image format decoding library"
 HOMEPAGE = "http://www.libpng.org/"
 SECTION = "libs"
 LICENSE = "Libpng"
-LIC_FILES_CHKSUM = "file://LICENSE;md5=cb7a834ba2891bc30b8577e49963a435 \
-                    file://png.h;endline=15;md5=853b11c4a19ec66decd641efd756bc2c \
-                    file://png.h;beginline=209;endline=323;md5=cface34a7db6b71eaa828fe934951f81"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=46401ee4b225b9ec066cb96cf1025c0f \
+                    file://png.h;endline=15;md5=8167a17735fc618d1df109f8b0f839a6 \
+                    file://png.h;beginline=229;endline=343;md5=5cdf8564a14e2f00339e4437a83b4913"
 DEPENDS = "zlib"
 LIBV = "16"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/project/libpng/libpng${LIBV}/${PV}/libpng-${PV}.tar.xz \
           "
 
-SRC_URI[md5sum] = "5f414b20f683b1d96b163c89e3eff768"
-SRC_URI[sha256sum] = "4003f0fd0e36110a2b742fc5b9e1ab93ed7a7ab57ae8dc65f0e8101458775a56"
+SRC_URI[md5sum] = "9822c25466f060142359f80ed142c9e5"
+SRC_URI[sha256sum] = "d9c8ce54a5fc8052ed794ca65b553384a74c0608b09ae163cbbb07176018e625"
 
 BINCONFIG = "${bindir}/libpng-config ${bindir}/libpng16-config"
 
