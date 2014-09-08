@@ -58,4 +58,8 @@ do_install() {
 	# (these often end up too long for the #! parser in the kernel as the
 	# buffer is 128 bytes long).
 	ln -s python-native/python ${D}${bindir}/nativepython
+	
+	# We don't want modules in ~/.local being used in preference to those
+	# installed in the native sysroot, so disable user site support.
+	sed -i -e 's,^\(ENABLE_USER_SITE = \).*,\1False,' ${D}${libdir}/python${PYTHON_MAJMIN}/site.py
 }
