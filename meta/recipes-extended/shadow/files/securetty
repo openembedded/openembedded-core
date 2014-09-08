@@ -14,11 +14,26 @@ ttyAMA1
 ttyAMA2
 ttyAMA3
 
+# QCOM Socs
+ttyHSL0
+ttyHSL1
+ttyHSL2
+ttyHSL3
+ttyMSM0
+ttyMSM1
+ttyMSM2
+
 # Samsung ARM SoCs
 ttySAC0
 ttySAC1
 ttySAC2
 ttySAC3
+
+# STM SoCs
+ttyAS0
+ttyAS1
+ttyAS2
+ttyAS3
 
 # TI OMAP SoCs
 ttyO0
