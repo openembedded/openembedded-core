@@ -1,4 +1,4 @@
-PERF_FEATURES_ENABLE ?= "perf-scripting perf-tui"
+PERF_FEATURES_ENABLE ?= "perf-scripting perf-tui perf-libunwind"
 
 def perf_feature_enabled(feature, trueval, falseval, d):
     """

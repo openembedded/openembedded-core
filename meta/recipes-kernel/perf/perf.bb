@@ -20,6 +20,7 @@ BUILDPERF_libc-uclibc = "no"
 # to cover a wide range of kernel we add both dependencies
 TUI_DEPENDS = "${@perf_feature_enabled('perf-tui', 'libnewt slang', '',d)}"
 SCRIPTING_DEPENDS = "${@perf_feature_enabled('perf-scripting', 'perl python', '',d)}"
+LIBUNWIND_DEPENDS = "${@perf_feature_enabled('perf-libunwind', 'libunwind', '',d)}"
 
 DEPENDS = "virtual/kernel \
     virtual/${MLPREFIX}libc \
@@ -27,6 +28,7 @@ DEPENDS = "virtual/kernel \
     ${MLPREFIX}binutils \
     ${TUI_DEPENDS} \
     ${SCRIPTING_DEPENDS} \
+    ${LIBUNWIND_DEPENDS} \
     bison flex \
 "
 
@@ -62,6 +64,7 @@ B = "${WORKDIR}/${BPN}-${PV}"
 
 SCRIPTING_DEFINES = "${@perf_feature_enabled('perf-scripting', '', 'NO_LIBPERL=1 NO_LIBPYTHON=1',d)}"
 TUI_DEFINES = "${@perf_feature_enabled('perf-tui', '', 'NO_NEWT=1',d)}"
+LIBUNWIND_DEFINES = "${@perf_feature_enabled('perf-libunwind', '', 'NO_LIBUNWIND=1',d)}"
 
 # The LDFLAGS is required or some old kernels fails due missing
 # symbols and this is preferred than requiring patches to every old
@@ -76,7 +79,7 @@ EXTRA_OEMAKE = '\
     CC="${CC}" \
     AR="${AR}" \
     perfexecdir=${libexecdir} \
-    NO_GTK2=1 ${TUI_DEFINES} NO_DWARF=1 NO_LIBUNWIND=1 ${SCRIPTING_DEFINES} \
+    NO_GTK2=1 ${TUI_DEFINES} NO_DWARF=1 ${LIBUNWIND_DEFINES} ${SCRIPTING_DEFINES} \
 '
 
 EXTRA_OEMAKE += "\
