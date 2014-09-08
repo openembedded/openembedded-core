@@ -1,21 +1,22 @@
 Upstream-Status: Inappropriate [configuration]
 
-Index: gtk+-2.21.2/gtk/Makefile.am
-===================================================================
---- gtk+-2.21.2.orig/gtk/Makefile.am	2010-06-22 17:21:41.000000000 +0800
-+++ gtk+-2.21.2/gtk/Makefile.am	2010-06-22 17:28:12.000000000 +0800
-@@ -1376,11 +1376,11 @@
+diff -Nurd gtk+-2.24.24/gtk/Makefile.am gtk+-2.24.24/gtk/Makefile.am
+--- gtk+-2.24.24/gtk/Makefile.am	2014-06-23 18:08:14.000000000 +0300
++++ gtk+-2.24.24/gtk/Makefile.am	2014-09-03 23:45:12.669307700 +0300
+@@ -1391,12 +1391,12 @@
  	   ./gtk-update-icon-cache
  endif
  
 -gtkbuiltincache.h: @REBUILD@ stamp-icons
 -	$(MAKE) $(AM_MAKEFLAGS) gtk-update-icon-cache$(EXEEXT) $(GTK_UPDATE_ICON_CACHE_MANIFEST)
 -	$(gtk_update_icon_cache_program) --force --ignore-theme-index		\
+-	   --include-image-data							\
 -	   --source builtin_icons stock-icons > gtkbuiltincache.h.tmp &&        \
 -	mv gtkbuiltincache.h.tmp gtkbuiltincache.h
 +#gtkbuiltincache.h: @REBUILD@ stamp-icons
 +#	$(MAKE) $(AM_MAKEFLAGS) gtk-update-icon-cache$(EXEEXT) $(GTK_UPDATE_ICON_CACHE_MANIFEST)
 +#	$(gtk_update_icon_cache_program) --force --ignore-theme-index		\
++#	   --include-image-data							\
 +#	   --source builtin_icons stock-icons > gtkbuiltincache.h.tmp &&        \
 +#	mv gtkbuiltincache.h.tmp gtkbuiltincache.h
  
