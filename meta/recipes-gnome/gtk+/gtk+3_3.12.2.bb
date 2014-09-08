@@ -4,12 +4,11 @@ MAJ_VER = "${@oe.utils.trim_version("${PV}", 2)}"
 
 SRC_URI = "http://ftp.gnome.org/pub/gnome/sources/gtk+/${MAJ_VER}/gtk+-${PV}.tar.xz \
            file://hardcoded_libtool.patch \
-           file://fix-build-when-wayland-backend-enabled.patch \
            file://fix-flags-for-native.patch \
           "
 
-SRC_URI[md5sum] = "18a81944a8506231529a76bf2b68372b"
-SRC_URI[sha256sum] = "b7e9de15385031cff43897e7e59f6692eaabf500f36eef80e6b9d6486ad49427"
+SRC_URI[md5sum] = "0d6d8f9f79132b3b47475d047b369b1c"
+SRC_URI[sha256sum] = "61d74eea74231b1ea4b53084a9d6fc9917ab0e1d71b69d92cbf60a4b4fb385d0"
 
 S = "${WORKDIR}/gtk+-${PV}"
 
