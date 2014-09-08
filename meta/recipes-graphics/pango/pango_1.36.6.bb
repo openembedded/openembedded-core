@@ -8,5 +8,5 @@ SRC_URI += "file://run-ptest \
             file://multilib-fix-clean.patch \
 "
 
-SRC_URI[archive.md5sum] = "2500930093c3ed38acb40e4255bce2f1"
-SRC_URI[archive.sha256sum] = "be0e94b2e5c7459f0b6db21efab6253556c8f443837200b8736d697071276ac8"
+SRC_URI[archive.md5sum] = "1c27523c3f3a4efe4d9d303d0d240320"
+SRC_URI[archive.sha256sum] = "4c53c752823723875078b91340f32136aadb99e91c0f6483f024f978a02c8624"
