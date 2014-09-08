@@ -29,7 +29,7 @@ QA_SANE = "True"
 WARN_QA ?= "ldflags useless-rpaths rpaths staticdev libdir xorg-driver-abi \
             textrel already-stripped incompatible-license files-invalid \
             installed-vs-shipped compile-host-path install-host-path \
-            pn-overrides infodir build-deps \
+            pn-overrides infodir build-deps file-rdeps \
             "
 ERROR_QA ?= "dev-so debug-deps dev-deps debug-files arch pkgconfig la \
             perms dep-cmp pkgvarcheck perm-config perm-line perm-link \
@@ -796,6 +796,76 @@ def package_qa_check_rdepends(pkg, pkgdest, skip, taskdeps, packages, d):
                     continue
                 error_msg = "%s rdepends on %s, but it isn't a build dependency?" % (pkg, rdepend)
                 sane = package_qa_handle_error("build-deps", error_msg, d)
+
+        if "file-rdeps" not in skip:
+            ignored_file_rdeps = set(['/bin/sh', '/usr/bin/env', 'rtld(GNU_HASH)'])
+            if bb.data.inherits_class('nativesdk', d):
+                ignored_file_rdeps |= set(['/bin/bash', '/usr/bin/perl'])
+            # For Saving the FILERDEPENDS
+            filerdepends = set()
+            rdep_data = oe.packagedata.read_subpkgdata(pkg, d)
+            for key in rdep_data:
+                if key.startswith("FILERDEPENDS_"):
+                    for subkey in rdep_data[key].split():
+                        filerdepends.add(subkey)
+            filerdepends -= ignored_file_rdeps
+
+            if filerdepends:
+                next = rdepends
+                done = rdepends[:]
+                # Find all the rdepends on the dependency chain
+                while next:
+                    new = []
+                    for rdep in next:
+                        rdep_data = oe.packagedata.read_subpkgdata(rdep, d)
+                        sub_rdeps = rdep_data.get("RDEPENDS_" + rdep)
+                        if not sub_rdeps:
+                            continue
+                        for sub_rdep in sub_rdeps.split():
+                            if sub_rdep in done:
+                                continue
+                            if not sub_rdep.startswith('(') and \
+                                    oe.packagedata.has_subpkgdata(sub_rdep, d):
+                                # It's a new rdep
+                                done.append(sub_rdep)
+                                new.append(sub_rdep)
+                    next = new
+
+                # Add the rprovides of itself
+                if pkg not in done:
+                    done.insert(0, pkg)
+
+                # The python is not a package, but python-core provides it, so
+                # skip checking /usr/bin/python if python is in the rdeps, in
+                # case there is a RDEPENDS_pkg = "python" in the recipe.
+                for py in [ d.getVar('MLPREFIX', True) + "python", "python" ]:
+                    if py in done:
+                        filerdepends.discard("/usr/bin/python")
+                        done.remove(py)
+                for rdep in done:
+                    # For Saving the FILERPROVIDES, RPROVIDES and FILES_INFO
+                    rdep_rprovides = set()
+                    rdep_data = oe.packagedata.read_subpkgdata(rdep, d)
+                    for key in rdep_data:
+                        if key.startswith("FILERPROVIDES_") or key.startswith("RPROVIDES_"):
+                            for subkey in rdep_data[key].split():
+                                rdep_rprovides.add(subkey)
+                        # Add the files list to the rprovides
+                        if key == "FILES_INFO":
+                            # Use eval() to make it as a dict
+                            for subkey in eval(rdep_data[key]):
+                                rdep_rprovides.add(subkey)
+                    filerdepends -= rdep_rprovides
+                    if not filerdepends:
+                        # Break if all the file rdepends are met
+                        break
+                    else:
+                        # Clear it for the next loop
+                        rdep_rprovides.clear()
+            if filerdepends:
+                error_msg = "%s requires %s, but no providers in its RDEPENDS" % \
+                            (pkg, ', '.join(str(e) for e in filerdepends))
+                sane = package_qa_handle_error("file-rdeps", error_msg, d)
 
     return sane
 
