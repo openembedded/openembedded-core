@@ -33,6 +33,7 @@ BB_HASHFILENAME = "${SSTATE_EXTRAPATH} ${SSTATE_PKGSPEC} ${SSTATE_SWSPEC}"
 SSTATE_MANMACH ?= "${SSTATE_PKGARCH}"
 
 SSTATECREATEFUNCS = "sstate_hardcode_path"
+SSTATEPOSTCREATEFUNCS = ""
 SSTATEPREINSTFUNCS = ""
 SSTATEPOSTUNPACKFUNCS = "sstate_hardcode_path_unpack"
 SSTATEPOSTINSTFUNCS = ""
@@ -512,7 +513,8 @@ def sstate_package(ss, d):
     d.setVar('SSTATE_BUILDDIR', sstatebuild)
     d.setVar('SSTATE_PKG', sstatepkg)
 
-    for f in (d.getVar('SSTATECREATEFUNCS', True) or '').split() + ['sstate_create_package']:
+    for f in (d.getVar('SSTATECREATEFUNCS', True) or '').split() + ['sstate_create_package'] + \
+             (d.getVar('SSTATEPOSTCREATEFUNCS', True) or '').split():
         bb.build.exec_func(f, d)
   
     bb.siggen.dump_this_task(sstatepkg + ".siginfo", d)
