@@ -1,0 +1,30 @@
+gdb: include asm/ptrace.h in two aarch64 source files
+
+Both sys/ptrace.h and asm/ptrace.h need to be included.
+
+Upstream-Status: Pending
+
+Signed-off-by: joe.slater@windriver.com
+
+
+--- a/gdb/aarch64-linux-nat.c
++++ b/gdb/aarch64-linux-nat.c
+@@ -32,6 +32,8 @@
+ #include "elf/common.h"
+ 
+ #include <sys/ptrace.h>
++#include <asm/ptrace.h>
++
+ #include <sys/utsname.h>
+ 
+ #include "gregset.h"
+--- a/gdb/gdbserver/linux-aarch64-low.c
++++ b/gdb/gdbserver/linux-aarch64-low.c
+@@ -26,6 +26,7 @@
+ #include <signal.h>
+ #include <sys/user.h>
+ #include <sys/ptrace.h>
++#include <asm/ptrace.h>
+ #include <sys/uio.h>
+ 
+ #include "gdb_proc_service.h"
