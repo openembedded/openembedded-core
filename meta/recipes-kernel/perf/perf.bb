@@ -129,7 +129,8 @@ do_configure_prepend () {
     # config/Makefile.
     if [ -e "${S}/tools/perf/config/Makefile" ]; then
         # Match $(prefix)/$(lib) and $(prefix)/lib
-        sed -i 's,^libdir = \($(prefix)/.*lib\),libdir ?= \1,' \
+        sed -i -e 's,^libdir = \($(prefix)/.*lib\),libdir ?= \1,' \
+               -e 's,^perfexecdir = \(.*\),perfexecdir ?= \1,' \
             ${S}/tools/perf/config/Makefile
     fi
     # We need to ensure the --sysroot option in CC is preserved
@@ -163,6 +164,7 @@ RDEPENDS_${PN} += "elfutils"
 RDEPENDS_${PN}-archive =+ "bash"
 RDEPENDS_${PN}-python =+ "bash python"
 RDEPENDS_${PN}-perl =+ "bash perl perl-modules"
+RDEPENDS_${PN}-tests =+ "python"
 
 RSUGGESTS_SCRIPTING = "${@perf_feature_enabled('perf-scripting', '${PN}-perl ${PN}-python', '',d)}"
 RSUGGESTS_${PN} += "${PN}-archive ${PN}-tests ${RSUGGESTS_SCRIPTING}"
