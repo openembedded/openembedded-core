@@ -16,7 +16,7 @@ FILESEXTRAPATHS =. "${FILE_DIRNAME}/${PN}:${FILE_DIRNAME}/glibc:"
 
 PV = "2.20"
 
-SRC_URI = "git://sourceware.org/git/glibc.git;branch=master;name=glibc \
+SRC_URI = "git://sourceware.org/git/glibc.git;branch=release/${PV}/master;name=glibc \
            git://github.com/kraj/localedef;branch=master;name=localedef;destsuffix=git/localedef \
 	   file://fix_for_centos_5.8.patch \
            ${EGLIBCPATCHES} \
@@ -33,7 +33,7 @@ EGLIBCPATCHES = "\
            file://eglibc-use-option-groups.patch \
           "
 
-SRCREV_glibc = "529bf51595fffbe80023e7d895b671391991bb1b"
+SRCREV_glibc = "b8079dd0d360648e4e8de48656c5c38972621072"
 SRCREV_localedef = "c833367348d39dad7ba018990bfdaffaec8e9ed3"
 
 S = "${WORKDIR}/git"

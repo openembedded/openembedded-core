@@ -4,9 +4,9 @@ DEPENDS += "gperf-native kconfig-frontends-native"
 
 PV = "2.20"
 
-SRCREV = "529bf51595fffbe80023e7d895b671391991bb1b"
+SRCREV = "b8079dd0d360648e4e8de48656c5c38972621072"
 
-SRC_URI = "git://sourceware.org/git/glibc.git;branch=master \
+SRC_URI = "git://sourceware.org/git/glibc.git;branch=release/${PV}/master \
            file://IO-acquire-lock-fix.patch \
            file://mips-rld-map-check.patch \
            file://etc/ld.so.conf \
@@ -23,7 +23,6 @@ SRC_URI = "git://sourceware.org/git/glibc.git;branch=master \
            file://ppce6500-32b_slow_ieee754_sqrt.patch \
            file://grok_gold.patch \
            file://fix_am_rootsbindir.patch \
-           file://0001-Define-__GI_fegetenv-for-e500-libm.patch \
            ${EGLIBCPATCHES} \
           "
 EGLIBCPATCHES = "\
