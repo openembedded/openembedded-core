@@ -8,14 +8,13 @@ SECTION = "libs/network"
 SRC_URI = "ftp://ftp.mozilla.org/pub/mozilla.org/nspr/releases/v${PV}/src/nspr-${PV}.tar.gz \
            file://remove-rpath-from-tests.patch \
            file://fix-build-on-x86_64.patch \
-           file://trickly-fix-build-on-x86_64.patch \
-           file://nspr-CVE-2014-1545.patch \
+           file://remove-srcdir-from-configure-in.patch \
           "
 
 SRC_URI += "file://nspr.pc.in"
 
-SRC_URI[md5sum] = "bf298e874cf454a3c2f8fe7e671c5d2e"
-SRC_URI[sha256sum] = "f25779b1a665dab0090b9c977dc6c29a63320f442956ed78629b66b405cb01e5"
+SRC_URI[md5sum] = "6e06919e4b56efed501e05d8b45ec10e"
+SRC_URI[sha256sum] = "389af5cfa863ea9bc6de7b30c15f8a4f9bddd8002f8c6fdc8b33caef43893938"
 
 S = "${WORKDIR}/nspr-${PV}/nspr"
 
@@ -140,12 +139,6 @@ TESTS = "runtests.pl \
     zerolen"
 
 inherit autotools-brokensep
-
-do_configure() {
-	gnu-configize --force
-	mv config.sub config.guess build/autoconf
-	oe_runconf
-}
 
 do_compile_prepend() {
 	oe_runmake CROSS_COMPILE=1 CFLAGS="-DXP_UNIX" LDFLAGS="" CC=gcc -C config export
