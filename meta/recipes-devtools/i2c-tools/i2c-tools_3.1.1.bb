@@ -3,8 +3,6 @@ SECTION = "base"
 LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=751419260aa954499f7abaabaa882bbe"
 
-RDEPENDS_${PN} += "perl"
-
 SRC_URI = "http://dl.lm-sensors.org/i2c-tools/releases/${BP}.tar.bz2 \
            file://Module.mk \
 "
@@ -24,3 +22,13 @@ do_install_append() {
     install -m 0644 include/linux/i2c-dev.h ${D}${includedir}/linux/i2c-dev-user.h
     rm -f ${D}${includedir}/linux/i2c-dev.h
 }
+
+PACKAGES =+ "${PN}-misc"
+FILES_${PN}-misc = "${sbindir}/i2c-stub-from-dump \
+                        ${bindir}/ddcmon \
+                        ${bindir}/decode-edid \
+                        ${bindir}/decode-dimms \
+                        ${bindir}/decode-vaio \
+                       "
+RDEPENDS_${PN} += "${PN}-misc"
+RDEPENDS_${PN}-misc += "perl"
