@@ -44,7 +44,6 @@ This module also exports several functions:
                       have a version= comment in it.
 """
 import imputil, re, sys
-from urlgrabber import urlopen
 
 import gettext
 _ = lambda x: gettext.ldgettext("pykickstart", x)
@@ -131,34 +130,6 @@ def versionToString(version, skipDevel=False):
             return key
 
     raise KickstartVersionError(_("Unsupported version specified: %s") % version)
-
-def versionFromFile(f):
-    """Given a file or URL, look for a line starting with #version= and
-       return the version number.  If no version is found, return DEVEL.
-    """
-    v = DEVEL
-
-    fh = urlopen(f)
-
-    while True:
-        try:
-            l = fh.readline()
-        except StopIteration:
-            break
-
-        # At the end of the file?
-        if l == "":
-            break
-
-        if l.isspace() or l.strip() == "":
-            continue
-
-        if l[:9] == "#version=":
-            v = stringToVersion(l[9:].rstrip())
-            break
-
-    fh.close()
-    return v
 
 def returnClassForVersion(version=DEVEL):
     """Return the class of the syntax handler for version.  version can be

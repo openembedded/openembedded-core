@@ -38,8 +38,6 @@ import sys
 import tempfile
 from copy import copy
 from optparse import *
-from urlgrabber import urlread
-import urlgrabber.grabber as grabber
 
 import constants
 from errors import KickstartError, KickstartParseError, KickstartValueError, formatErrorMsg
@@ -55,87 +53,6 @@ STATE_COMMANDS = "commands"
 
 ver = version.DEVEL
 
-def _preprocessStateMachine (lineIter):
-    l = None
-    lineno = 0
-
-    # Now open an output kickstart file that we are going to write to one
-    # line at a time.
-    (outF, outName) = tempfile.mkstemp("-ks.cfg", "", "/tmp")
-
-    while True:
-        try:
-            l = lineIter.next()
-        except StopIteration:
-            break
-
-        # At the end of the file?
-        if l == "":
-            break
-
-        lineno += 1
-        url = None
-
-        ll = l.strip()
-        if not ll.startswith("%ksappend"):
-            os.write(outF, l)
-            continue
-
-        # Try to pull down the remote file.
-        try:
-            ksurl = ll.split(' ')[1]
-        except:
-            raise KickstartParseError, formatErrorMsg(lineno, msg=_("Illegal url for %%ksappend: %s") % ll)
-
-        try:
-            url = grabber.urlopen(ksurl)
-        except grabber.URLGrabError, e:
-            raise KickstartError, formatErrorMsg(lineno, msg=_("Unable to open %%ksappend file: %s") % e.strerror)
-        else:
-            # Sanity check result.  Sometimes FTP doesn't catch a file
-            # is missing.
-            try:
-                if url.size < 1:
-                    raise KickstartError, formatErrorMsg(lineno, msg=_("Unable to open %%ksappend file"))
-            except:
-                raise KickstartError, formatErrorMsg(lineno, msg=_("Unable to open %%ksappend file"))
-
-        # If that worked, write the remote file to the output kickstart
-        # file in one burst.  Then close everything up to get ready to
-        # read ahead in the input file.  This allows multiple %ksappend
-        # lines to exist.
-        if url is not None:
-            os.write(outF, url.read())
-            url.close()
-
-    # All done - close the temp file and return its location.
-    os.close(outF)
-    return outName
-
-def preprocessFromString (s):
-    """Preprocess the kickstart file, provided as the string str.  This
-        method is currently only useful for handling %ksappend lines,
-        which need to be fetched before the real kickstart parser can be
-        run.  Returns the location of the complete kickstart file.
-    """
-    i = iter(s.splitlines(True) + [""])
-    rc = _preprocessStateMachine (i.next)
-    return rc
-
-def preprocessKickstart (f):
-    """Preprocess the kickstart file, given by the filename file.  This
-        method is currently only useful for handling %ksappend lines,
-        which need to be fetched before the real kickstart parser can be
-        run.  Returns the location of the complete kickstart file.
-    """
-    try:
-        fh = urlopen(f)
-    except grabber.URLGrabError, e:
-        raise KickstartError, formatErrorMsg(0, msg=_("Unable to open input kickstart file: %s") % e.strerror)
-
-    rc = _preprocessStateMachine (iter(fh.readlines()))
-    fh.close()
-    return rc
 
 class PutBackIterator(Iterator):
     def __init__(self, iterable):
@@ -682,8 +599,8 @@ class KickstartParser:
         self.currentdir[self._includeDepth] = cd
 
         try:
-            s = urlread(f)
-        except grabber.URLGrabError, e:
+            s = file(f).read()
+        except IOError, e:
             raise KickstartError, formatErrorMsg(0, msg=_("Unable to open input kickstart file: %s") % e.strerror)
 
         self.readKickstartFromString(s, reset=False)
