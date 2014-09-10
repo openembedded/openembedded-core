@@ -51,6 +51,7 @@ PID = "${@os.getpid()}"
 EXCLUDE_FROM_WORLD = "1"
 
 SDK_PACKAGING_FUNC ?= "create_shar"
+SDK_POST_INSTALL_COMMAND ?= ""
 
 SDK_MANIFEST = "${SDK_DEPLOY}/${TOOLCHAIN_OUTPUTNAME}.manifest"
 python write_target_sdk_manifest () {
@@ -142,10 +143,16 @@ fakeroot create_shar() {
 	# copy in the template shar extractor script
 	cp ${COREBASE}/meta/files/toolchain-shar-template.sh ${SDK_DEPLOY}/${TOOLCHAIN_OUTPUTNAME}.sh
 
+	cat << "EOF" > ${T}/post_install_command
+${SDK_POST_INSTALL_COMMAND}
+EOF
+	sed -i -e '/@SDK_POST_INSTALL_COMMAND@/r ${T}/post_install_command' ${SDK_DEPLOY}/${TOOLCHAIN_OUTPUTNAME}.sh
+
 	# substitute variables
 	sed -i -e 's#@SDK_ARCH@#${SDK_ARCH}#g' \
 		-e 's#@SDKPATH@#${SDKPATH}#g' \
 		-e 's#@REAL_MULTIMACH_TARGET_SYS@#${REAL_MULTIMACH_TARGET_SYS}#g' \
+		-e '/@SDK_POST_INSTALL_COMMAND@/d' \
 		${SDK_DEPLOY}/${TOOLCHAIN_OUTPUTNAME}.sh
 
 	# add execution permission
