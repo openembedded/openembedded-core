@@ -146,6 +146,7 @@ class SignatureGeneratorOEBasicHash(bb.siggen.SignatureGeneratorBasicHash):
         for k in self.runtaskdeps:
             fn = k.rsplit(".",1)[0]
             t = self.lockedhashfn[fn].split(" ")[1].split(":")[5]
+            t = t.replace('_', '-')
             if t not in types:
                 types[t] = []
             types[t].append(k)
