@@ -18,6 +18,10 @@ SRC_URI = "http://download.qt-project.org/official_releases/qt/4.8/${PV}/qt-ever
            file://0002-qkbdtty_qws-fix-build-with-old-kernel-headers.patch \
            file://0003-webkit2-set-OUTPUT_DIR-value-if-empty.patch \
            file://0021-configure-make-qt4-native-work-with-long-building-pa.patch \
+           file://0029-aarch64_arm64_fix_arch_detection.patch \
+           file://0030-aarch64_arm64_qatomic_support.patch \
+           file://0031-aarch64_arm64_mkspecs.patch \
+           file://0032-aarch64_add_header.patch \
            file://g++.conf \
            file://linux.conf \
 	"

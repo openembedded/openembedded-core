@@ -1,0 +1,53 @@
+From 800abbba658203fc8e746e3fc780a297cd4110cf Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Lisandro=20Dami=C3=A1n=20Nicanor=20P=C3=A9rez=20Meyer?=
+ <perezmeyer@gmail.com>
+Date: Wed, 20 Aug 2014 17:52:49 -0300
+Subject: [PATCH] Fix AArch64/arm64 detection.
+
+The detection needs to go before arm, else the system will detect AArch64/arm64
+as arm.
+
+This patch comes from Wookey, he has agreed to put it under BSD or Expat
+to allow it's inclusion in here:
+<https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=735488#255>
+
+Change-Id: Ic2171c03fca8bb871347940fa3a2bc467776f797
+
+
+Upstream-Status: Pending
+
+Signed-off-by: Kai Kang <kai.kang@windriver.com>
+---
+ configure | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/configure b/configure
+index a9ba7c8..eb88b72 100755
+--- a/configure
++++ b/configure
+@@ -3241,17 +3241,17 @@ if [ -z "${CFG_HOST_ARCH}" ]; then
+     	fi
+     	CFG_HOST_ARCH=s390
+     	;;
+-    *:*:arm*)
++    *:*:aarch64*|*:*:arm64*)
+         if [ "$OPT_VERBOSE" = "yes" ]; then
+-            echo "    ARM (arm)"
++            echo "    AArch64 (aarch64)"
+         fi
+-        CFG_HOST_ARCH=arm
++        CFG_HOST_ARCH=aarch64
+         ;;
+-    *:*:aarch64*)
++    *:*:arm*)
+         if [ "$OPT_VERBOSE" = "yes" ]; then
+-            echo "    AArch64 (aarch64)"
++            echo "    ARM (arm)"
+         fi
+-        CFG_HOST_ARCH=aarch64
++        CFG_HOST_ARCH=arm
+         ;;
+     Linux:*:sparc*)
+         if [ "$OPT_VERBOSE" = "yes" ]; then
+-- 
+2.1.0

@@ -22,6 +22,10 @@ SRC_URI = "http://download.qt-project.org/official_releases/qt/4.8/${PV}/qt-ever
            file://0019-Fixes-for-gcc-4.7.0-particularly-on-qemux86.patch \
            file://0027-tools.pro-disable-qmeegographicssystemhelper.patch \
            file://0028-Don-t-crash-on-broken-GIF-images.patch \
+           file://0029-aarch64_arm64_fix_arch_detection.patch \
+           file://0030-aarch64_arm64_qatomic_support.patch \
+           file://0031-aarch64_arm64_mkspecs.patch \
+           file://0032-aarch64_add_header.patch \
            file://g++.conf \
            file://linux.conf \
            "
@@ -35,6 +39,9 @@ S = "${WORKDIR}/qt-everywhere-opensource-src-${PV}"
 # qt upstream defect:
 # https://bugreports.qt-project.org/browse/QTBUG-39224
 QT_CONFIG_FLAGS_append_mips64 = "${@bb.utils.contains("TUNE_FEATURES", "n32", " -no-webkit", "" ,d)}"
+
+# disable webkit for aarch64 temporarily that fails to compile
+QT_CONFIG_FLAGS_append_aarch64 = " -no-webkit"
 
 FILES_${QT_BASE_NAME}-tools_append     = " ${bindir}/qml ${bindir}/qmlplugindump"
 FILES_${QT_BASE_NAME}-tools-dbg_append = " ${bindir}/.debug/qml ${bindir}/.debug/qmlplugindump"

@@ -4,6 +4,7 @@ ARM_INSTRUCTION_SET = "arm"
 
 set_arch() {
    case ${TARGET_ARCH} in
+       aarch64)  QT_ARCH=aarch64 ;;
        arm*)     QT_ARCH=arm ;;
        i*86*)    QT_ARCH=i386 ;;
        mips*)    QT_ARCH=mips ;;
