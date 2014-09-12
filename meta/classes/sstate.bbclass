@@ -418,7 +418,7 @@ python sstate_hardcode_path () {
         sstate_grep_cmd = "grep -l -e '%s'" % (staging)
         sstate_sed_cmd = "sed -i -e 's:%s:FIXMESTAGINGDIR:g'" % (staging)
     elif bb.data.inherits_class('cross', d):
-        sstate_grep_cmd = "grep -l -e '(%s|%s)'" % (staging_target, staging)
+        sstate_grep_cmd = "grep -l -e '%s' -e '%s'" % (staging_target, staging)
         sstate_sed_cmd = "sed -i -e 's:%s:FIXMESTAGINGDIRTARGET:g; s:%s:FIXMESTAGINGDIR:g'" % (staging_target, staging)
     else:
         sstate_grep_cmd = "grep -l -e '%s'" % (staging_host)
