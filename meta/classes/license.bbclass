@@ -145,7 +145,14 @@ def copy_license_files(lic_files_paths, destdir):
     bb.utils.mkdirhier(destdir)
     for (basename, path) in lic_files_paths:
         try:
-            ret = shutil.copyfile(path, os.path.join(destdir, basename))
+            src = path
+            dst = os.path.join(destdir, basename)
+            if os.path.exists(dst):
+                os.remove(dst)
+            if (os.stat(src).st_dev == os.stat(destdir).st_dev):
+                os.link(src, dst)
+            else:
+                shutil.copyfile(src, dst)
         except Exception as e:
             bb.warn("Could not copy license file %s: %s" % (basename, e))
 
