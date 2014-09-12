@@ -1,0 +1,40 @@
+at-spi2-core: fix alignof m4 macro
+
+DBIND_CHECK_ALIGNOF does not work when cross-compiling, so we modify
+it to use AC_CHECK_ALIGNOF.
+
+Upstream-Status:  Pending
+
+Signed-off-by: joe.slater@windriver.com
+
+
+--- a/acinclude.m4
++++ b/acinclude.m4
+@@ -2,7 +2,26 @@
+ # type alignment test #
+ #######################
+ 
+-AC_DEFUN([DBIND_CHECK_ALIGNOF],
++AC_DEFUN([DBIND_CHECK_ALIGNOF],[
++AC_CHECK_ALIGNOF($1,[
++#include <stdio.h>
++#include <stdlib.h>
++#define DBUS_API_SUBJECT_TO_CHANGE
++#include <dbus/dbus.h>
++typedef struct {char s1;} dbind_struct;
++typedef void *dbind_pointer;
++])
++
++dnl Note that we substitute for names like @DBIND_ALIGNOF_DBIND_STRUCT@, but
++dnl we #define names like ALIGNOF_DBIND_STRUCT in config.h!
++dnl
++AC_SUBST(translit(dbind_alignof_$1, [a-z *], [A-Z_P]),[$ac_cv_alignof_$1])
++
++])
++
++dnl The following does not work for cross-compilation.
++dnl
++AC_DEFUN([xDBIND_CHECK_ALIGNOF],
+ 	[changequote(<<, >>)dnl
+ 	dnl The name to #define.
+ 	define(<<AC_TYPE_NAME>>,
