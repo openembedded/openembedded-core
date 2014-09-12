@@ -599,7 +599,8 @@ sstate_create_package () {
 	if [ "$(ls -A)" ]; then
 		set +e
 		tar -czf $TFILE *
-		if [ $? -ne 0 ] && [ $? -ne 1 ]; then
+		ret=$?
+		if [ $ret -ne 0 ] && [ $ret -ne 1 ]; then
 			exit 1
 		fi
 		set -e
