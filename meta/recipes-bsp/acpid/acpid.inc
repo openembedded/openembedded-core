@@ -14,8 +14,7 @@ inherit autotools update-rc.d systemd
 INITSCRIPT_NAME = "acpid"
 INITSCRIPT_PARAMS = "defaults"
 
-SYSTEMD_PACKAGES = "acpid"
-SYSTEMD_SERVICE_acpid = "acpid.service"
+SYSTEMD_SERVICE_${PN} = "acpid.service"
 
 do_install_append () {
 	install -d ${D}${sysconfdir}/init.d
