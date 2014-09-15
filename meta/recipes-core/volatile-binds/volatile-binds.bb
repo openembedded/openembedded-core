@@ -28,7 +28,7 @@ def volatile_systemd_services(d):
         services.append("%s.service" % what[1:].replace("/", "-"))
     return " ".join(services)
 
-SYSTEMD_SERVICE_volatile-binds = "${@volatile_systemd_services(d)}"
+SYSTEMD_SERVICE_${PN} = "${@volatile_systemd_services(d)}"
 
 FILES_${PN} += "${systemd_unitdir}/system/*.service"
 
