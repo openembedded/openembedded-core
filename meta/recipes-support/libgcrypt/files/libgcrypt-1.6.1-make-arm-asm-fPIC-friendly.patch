@@ -1,0 +1,169 @@
+Fix ARM assembly when building __PIC__
+
+* cipher/camellia-arm.S (GET_DATA_POINTER): New.
+(_gcry_camellia_arm_encrypt_block): Use GET_DATA_POINTER.
+(_gcry_camellia_arm_decrypt_block): Ditto.
+* cipher/cast5-arm.S (GET_DATA_POINTER): New.
+(_gcry_cast5_arm_encrypt_block, _gcry_cast5_arm_decrypt_block)
+(_gcry_cast5_arm_enc_blk2, _gcry_cast5_arm_dec_blk2): Use
+GET_DATA_POINTER.
+* cipher/rijndael-arm.S (GET_DATA_POINTER): New.
+(_gcry_aes_arm_encrypt_block, _gcry_aes_arm_decrypt_block): Use
+GET_DATA_POINTER.
+--
+
+Signed-off-by: Jussi Kivilinna <jussi.kivilinna@iki.fi>
+
+Upstream-Status: Backport
+
+Signed-off-by: Jackie Huang <jackie.huang@windriver.com>
+---
+ cipher/camellia-arm.S |   17 +++++++++++++++--
+ cipher/cast5-arm.S    |   21 +++++++++++++++++----
+ cipher/rijndael-arm.S |   17 +++++++++++++++--
+ 3 files changed, 47 insertions(+), 8 deletions(-)
+
+diff --git a/cipher/camellia-arm.S b/cipher/camellia-arm.S
+index c30d194..cdeaf8b 100644
+--- a/cipher/camellia-arm.S
++++ b/cipher/camellia-arm.S
+@@ -28,6 +28,19 @@
+ .syntax unified
+ .arm
+ 
++#ifdef __PIC__
++#  define GET_DATA_POINTER(reg, name, rtmp) \
++		ldr reg, 1f; \
++		ldr rtmp, 2f; \
++		b 3f; \
++	1:	.word _GLOBAL_OFFSET_TABLE_-(3f+8); \
++	2:	.word name(GOT); \
++	3:	add reg, pc, reg; \
++		ldr reg, [reg, rtmp];
++#else
++#  define GET_DATA_POINTER(reg, name, rtmp) ldr reg, =name
++#endif
++
+ /* struct camellia_ctx: */
+ #define key_table 0
+ 
+@@ -261,7 +274,7 @@ _gcry_camellia_arm_encrypt_block:
+ 	 */
+ 	push {%r1, %r4-%r11, %ip, %lr};
+ 
+-	ldr RTAB1, =.Lcamellia_sp1110;
++	GET_DATA_POINTER(RTAB1, .Lcamellia_sp1110, RTAB3);
+ 	mov RMASK, #0xff;
+ 	add RTAB3, RTAB1, #(2 * 4);
+ 	push {%r3};
+@@ -309,7 +322,7 @@ _gcry_camellia_arm_decrypt_block:
+ 	 */
+ 	push {%r1, %r4-%r11, %ip, %lr};
+ 
+-	ldr RTAB1, =.Lcamellia_sp1110;
++	GET_DATA_POINTER(RTAB1, .Lcamellia_sp1110, RTAB3);
+ 	mov RMASK, #0xff;
+ 	add RTAB3, RTAB1, #(2 * 4);
+ 	mov RMASK, RMASK, lsl#4 /* byte mask */
+diff --git a/cipher/cast5-arm.S b/cipher/cast5-arm.S
+index ce7fa93..db96db4 100644
+--- a/cipher/cast5-arm.S
++++ b/cipher/cast5-arm.S
+@@ -30,6 +30,19 @@
+ 
+ .extern _gcry_cast5_s1to4;
+ 
++#ifdef __PIC__
++#  define GET_DATA_POINTER(reg, name, rtmp) \
++		ldr reg, 1f; \
++		ldr rtmp, 2f; \
++		b 3f; \
++	1:	.word _GLOBAL_OFFSET_TABLE_-(3f+8); \
++	2:	.word name(GOT); \
++	3:	add reg, pc, reg; \
++		ldr reg, [reg, rtmp];
++#else
++#  define GET_DATA_POINTER(reg, name, rtmp) ldr reg, =name
++#endif
++
+ /* structure of crypto context */
+ #define Km 0
+ #define Kr (Km + (16 * 4))
+@@ -260,7 +273,7 @@ _gcry_cast5_arm_encrypt_block:
+ 	 */
+ 	push {%r1, %r4-%r11, %ip, %lr};
+ 
+-	ldr Rs1, =_gcry_cast5_s1to4;
++	GET_DATA_POINTER(Rs1, _gcry_cast5_s1to4, Rs2);
+ 	mov RMASK, #(0xff << 2);
+ 	add Rs2, Rs1, #(0x100*4);
+ 	add Rs3, Rs1, #(0x100*4*2);
+@@ -306,7 +319,7 @@ _gcry_cast5_arm_decrypt_block:
+ 	 */
+ 	push {%r1, %r4-%r11, %ip, %lr};
+ 
+-	ldr Rs1, =_gcry_cast5_s1to4;
++	GET_DATA_POINTER(Rs1, _gcry_cast5_s1to4, Rs2);
+ 	mov RMASK, #(0xff << 2);
+ 	add Rs2, Rs1, #(0x100 * 4);
+ 	add Rs3, Rs1, #(0x100 * 4 * 2);
+@@ -500,7 +513,7 @@ _gcry_cast5_arm_enc_blk2:
+ 	 */
+ 	push {%lr};
+ 
+-	ldr Rs1, =_gcry_cast5_s1to4;
++	GET_DATA_POINTER(Rs1, _gcry_cast5_s1to4, Rs2);
+ 	mov RMASK, #(0xff << 2);
+ 	add Rs2, Rs1, #(0x100 * 4);
+ 
+@@ -631,7 +644,7 @@ _gcry_cast5_arm_dec_blk2:
+ 	 *	[RR0, RL0], [RR1, RL1]: dst
+ 	 */
+ 
+-	ldr Rs1, =_gcry_cast5_s1to4;
++	GET_DATA_POINTER(Rs1, _gcry_cast5_s1to4, Rs2);
+ 	mov RMASK, #(0xff << 2);
+ 	add Rs2, Rs1, #(0x100 * 4);
+ 
+diff --git a/cipher/rijndael-arm.S b/cipher/rijndael-arm.S
+index 22c350c..421c3b4 100644
+--- a/cipher/rijndael-arm.S
++++ b/cipher/rijndael-arm.S
+@@ -28,6 +28,19 @@
+ .syntax unified
+ .arm
+ 
++#ifdef __PIC__
++#  define GET_DATA_POINTER(reg, name, rtmp) \
++		ldr reg, 1f; \
++		ldr rtmp, 2f; \
++		b 3f; \
++	1:	.word _GLOBAL_OFFSET_TABLE_-(3f+8); \
++	2:	.word name(GOT); \
++	3:	add reg, pc, reg; \
++		ldr reg, [reg, rtmp];
++#else
++#  define GET_DATA_POINTER(reg, name, rtmp) ldr reg, =name
++#endif
++
+ /* register macros */
+ #define CTX	%r0
+ #define RTAB	%lr
+@@ -249,7 +262,7 @@ _gcry_aes_arm_encrypt_block:
+ 2:
+ 	sub	%sp, #16;
+ 
+-	ldr	RTAB, =.LtableE0;
++	GET_DATA_POINTER(RTAB, .LtableE0, RMASK);
+
+ 	str	%r1, [%sp, #4];		/* dst */
+ 	mov	RMASK, #0xff;
+@@ -503,7 +516,7 @@ _gcry_aes_arm_decrypt_block:
+ 2:
+ 	sub	%sp, #16;
+ 
+-	ldr	RTAB, =.LtableD0;
++	GET_DATA_POINTER(RTAB, .LtableD0, RMASK);
+ 
+ 	mov	RMASK, #0xff;
+ 	str	%r1, [%sp, #4];		/* dst */
