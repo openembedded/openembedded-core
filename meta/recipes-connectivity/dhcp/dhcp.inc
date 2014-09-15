@@ -21,12 +21,12 @@ SRC_URI = "ftp://ftp.isc.org/isc/dhcp/${PV}/dhcp-${PV}.tar.gz \
 
 inherit autotools systemd
 
-SYSTEMD_PACKAGES = "dhcp-server dhcp-relay"
-SYSTEMD_SERVICE_dhcp-server = "dhcpd.service"
-SYSTEMD_AUTO_ENABLE_dhcp-server = "disable"
+SYSTEMD_PACKAGES = "${PN}-server ${PN}-relay"
+SYSTEMD_SERVICE_${PN}-server = "dhcpd.service"
+SYSTEMD_AUTO_ENABLE_${PN}-server = "disable"
 
-SYSTEMD_SERVICE_dhcp-relay = "dhcrelay.service"
-SYSTEMD_AUTO_ENABLE_dhcp-relay = "disable"
+SYSTEMD_SERVICE_${PN}-relay = "dhcrelay.service"
+SYSTEMD_AUTO_ENABLE_${PN}-relay = "disable"
 
 TARGET_CFLAGS += "-D_GNU_SOURCE"
 EXTRA_OECONF = "--with-srv-lease-file=${localstatedir}/lib/dhcp/dhcpd.leases \
