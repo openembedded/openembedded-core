@@ -16,11 +16,10 @@ do_configure_prepend () {
 	rm -f ${S}/configure ${S}/configure.sh
 	cp -f ${WORKDIR}/acinclude.m4 ${S}/
 
-	# by default, if crosscompiling, rsync                                                           
-	# disables a number of capabilities, hardlinking                                                 
-	# symlinks and special files (ie devices)
+	# By default, if crosscompiling, rsync disables a number of
+	# capabilities, hardlinking symlinks and special files (i.e. devices)
 	export rsync_cv_can_hardlink_special=yes
-	export rsync_cv_can_hardlink_symlink=yes 
+	export rsync_cv_can_hardlink_symlink=yes
 }
 
 do_configure_append () {
