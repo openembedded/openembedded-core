@@ -20,16 +20,16 @@ EXTRA_OEMAKE = 'HOSTCC="${CC}" HOSTSTRIP="true"'
 inherit uboot-config
 
 do_compile () {
-  oe_runmake ${UBOOT_MACHINE}
-  oe_runmake env
+	oe_runmake ${UBOOT_MACHINE}
+	oe_runmake env
 }
 
 do_install () {
-  install -d ${D}${base_sbindir}
-  install -d ${D}${sysconfdir}
-  install -m 755 ${S}/tools/env/fw_printenv ${D}${base_sbindir}/fw_printenv
-  install -m 755 ${S}/tools/env/fw_printenv ${D}${base_sbindir}/fw_setenv
-  install -m 0644 ${S}/tools/env/fw_env.config ${D}${sysconfdir}/fw_env.config
+	install -d ${D}${base_sbindir}
+	install -d ${D}${sysconfdir}
+	install -m 755 ${S}/tools/env/fw_printenv ${D}${base_sbindir}/fw_printenv
+	install -m 755 ${S}/tools/env/fw_printenv ${D}${base_sbindir}/fw_setenv
+	install -m 0644 ${S}/tools/env/fw_env.config ${D}${sysconfdir}/fw_env.config
 }
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
