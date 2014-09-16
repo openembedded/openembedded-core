@@ -93,16 +93,6 @@ _EOF
 	mv ${B}/gcc/defaults.h.new ${B}/gcc/defaults.h
 }
 
-python do_preconfigure () {
-    import subprocess
-    cmd = d.expand('PATH=${PATH} cd ${S} && gnu-configize')
-    subprocess.check_output(cmd, stderr=subprocess.STDOUT, shell=True)
-    # See 0044-gengtypes.patch, we need to regenerate this file
-    bb.utils.remove(d.expand("${S}/gcc/gengtype-lex.c"))
-}
-addtask do_preconfigure after do_patch before do_configure
-do_preconfigure[depends] += "gnu-config-native:do_populate_sysroot autoconf-native:do_populate_sysroot"
-
 do_configure () {
 	# Setup these vars for cross building only
 	# ... because foo_FOR_TARGET apparently gets misinterpreted inside the
