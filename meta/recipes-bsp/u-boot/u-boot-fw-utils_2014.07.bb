@@ -1,21 +1,21 @@
 SUMMARY = "U-Boot bootloader fw_printenv/setenv utilities"
 LICENSE = "GPLv2+"
-LIC_FILES_CHKSUM = "file://COPYING;md5=1707d6db1d42237583f50183a5651ecb"
+LIC_FILES_CHKSUM = "file://Licenses/README;md5=025bf9f768cbcb1a165dbe1a110babfb"
 SECTION = "bootloader"
 DEPENDS = "mtd-utils"
 
-# This revision corresponds to the tag "v2013.07"
+# This revision corresponds to the tag "v2014.07"
 # We use the revision in order to avoid having to fetch it from the
 # repo during parse
-SRCREV = "62c175fbb8a0f9a926c88294ea9f7e88eb898f6c"
+SRCREV = "524123a70761110c5cf3ccc5f52f6d4da071b959"
 
-PV = "v2013.07+git${SRCPV}"
+PV = "v2014.07+git${SRCPV}"
 
 SRC_URI = "git://git.denx.de/u-boot.git;branch=master;protocol=git"
 
 S = "${WORKDIR}/git"
 
-EXTRA_OEMAKE = 'HOSTCC="${CC}" HOSTSTRIP="true"'
+INSANE_SKIP_${PN} = "already-stripped"
 
 inherit uboot-config
 

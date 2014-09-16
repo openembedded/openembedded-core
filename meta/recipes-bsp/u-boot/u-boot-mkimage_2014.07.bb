@@ -1,14 +1,14 @@
 SUMMARY = "U-Boot bootloader image creation tool"
 LICENSE = "GPLv2+"
-LIC_FILES_CHKSUM = "file://COPYING;md5=1707d6db1d42237583f50183a5651ecb"
+LIC_FILES_CHKSUM = "file://Licenses/README;md5=025bf9f768cbcb1a165dbe1a110babfb"
 SECTION = "bootloader"
 
-# This revision corresponds to the tag "v2013.07"
+# This revision corresponds to the tag "v2014.07"
 # We use the revision in order to avoid having to fetch it from the
 # repo during parse
-SRCREV = "62c175fbb8a0f9a926c88294ea9f7e88eb898f6c"
+SRCREV = "524123a70761110c5cf3ccc5f52f6d4da071b959"
 
-PV = "v2013.07+git${SRCPV}"
+PV = "v2014.07+git${SRCPV}"
 
 SRC_URI = "git://git.denx.de/u-boot.git;branch=master;protocol=git"
 
@@ -20,7 +20,9 @@ do_compile () {
 	# Make sure the recompile is OK
 	rm -f ${B}/tools/.depend
 
-	oe_runmake tools
+	make HOSTCC="${BUILD_CC}" HOSTLD="${BUILD_LD}" HOSTLDFLAGS="${BUILD_LDFLAGS}" HOSTSTRIP=true dot-config=0 scripts_basic
+	sed 's/^tools-only: scripts_basic /tools-only: /' -i Makefile
+	oe_runmake tools-only
 }
 
 do_install () {
