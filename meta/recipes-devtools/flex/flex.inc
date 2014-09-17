@@ -5,6 +5,7 @@ HOMEPAGE = "http://sourceforge.net/projects/flex/"
 
 SECTION = "devel"
 LICENSE = "BSD"
+DEPENDS += "${@'bison-native flex-native' if '${PTEST_ENABLED}' == '1' else ''}"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/flex/flex-${PV}.tar.bz2 \
            file://run-ptest \
@@ -28,7 +29,6 @@ do_install_append_class-nativesdk() {
 }
 
 RDEPENDS_${PN} += "m4"
-DEPENDS_${PN}-ptest += "bison-native flex-native"
 
 do_compile_ptest() {
 	for i in `find ${S}/tests/ -type d |grep -Ev "concatenated-options|reject|table-opts" | awk -F/ '{print $NF}'`; \
