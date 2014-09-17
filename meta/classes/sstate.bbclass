@@ -39,6 +39,8 @@ SSTATEPOSTUNPACKFUNCS = "sstate_hardcode_path_unpack"
 SSTATEPOSTINSTFUNCS = ""
 EXTRA_STAGING_FIXMES ?= ""
 
+SIGGEN_LOCKEDSIGS_CHECK_LEVEL ?= 'error'
+
 # Specify dirs in which the shell function is executed and don't use ${B}
 # as default dirs to avoid possible race about ${B} with other task.
 sstate_create_package[dirs] = "${SSTATE_BUILDDIR}"
