@@ -1,0 +1,35 @@
+From f0ab1600fb56d680e6aba3d0d51dfb9ffa3d9403 Mon Sep 17 00:00:00 2001
+From: "Peter A. Bigot" <pab@pabigot.com>
+Date: Thu, 18 Sep 2014 08:36:54 -0500
+Subject: [PATCH] tmpfiles.d/etc.conf: disable resolv.conf symlink
+
+This link is valid only if ENABLE_RESOLVED is configured for systemd.
+If left unconditional, the symlink is created preventing connman from
+storing the configuration it received from DHCP or other sources.
+
+Upstream has a TODO to fix this, but has not done so as of this date.
+Provide a temporary workaround for OE until this is done properly
+upstream.
+
+Upstream-Status: Inappropriate [OE-specific]
+Signed-off-by: Peter A. Bigot <pab@pabigot.com>
+---
+ tmpfiles.d/etc.conf | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/tmpfiles.d/etc.conf b/tmpfiles.d/etc.conf
+index b23272c..5364dd8 100644
+--- a/tmpfiles.d/etc.conf
++++ b/tmpfiles.d/etc.conf
+@@ -10,6 +10,7 @@
+ L /etc/os-release - - - - ../usr/lib/os-release
+ L /etc/localtime - - - - ../usr/share/zoneinfo/UTC
+ L+ /etc/mtab - - - - ../proc/self/mounts
+-L /etc/resolv.conf - - - - ../run/systemd/resolve/resolv.conf
++# TODO: conditional on ENABLE_RESOLVED
++#L /etc/resolv.conf - - - - ../run/systemd/resolve/resolv.conf
+ C /etc/nsswitch.conf - - - -
+ C /etc/pam.d - - - -
+-- 
+1.8.5.5
+
