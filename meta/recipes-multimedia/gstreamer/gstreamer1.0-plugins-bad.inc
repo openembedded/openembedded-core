@@ -6,6 +6,9 @@ DEPENDS += "gstreamer1.0-plugins-base bzip2 libpng jpeg"
 
 S = "${WORKDIR}/gst-plugins-bad-${PV}"
 
+SRC_URI += "file://configure-allow-to-disable-libssh2.patch \
+           "
+
 inherit gettext
 
 # opengl packageconfig factored out to make it easy for distros
@@ -51,6 +54,7 @@ PACKAGECONFIG[rsvg]            = "--enable-rsvg,--disable-rsvg,librsvg"
 PACKAGECONFIG[sndfile]         = "--enable-sndfile,--disable-sndfile,libsndfile1"
 PACKAGECONFIG[webp]            = "--enable-webp,--disable-webp,libwebp"
 PACKAGECONFIG[rtmp]            = "--enable-rtmp,--disable-rtmp,rtmpdump"
+PACKAGECONFIG[libssh2]         = "--enable-libssh2,--disable-libssh2,libssh2"
 
 # these plugins have not been ported to 1.0 (yet):
 #   directdraw vcd apexsink dc1394 lv2 linsys musepack mythtv
