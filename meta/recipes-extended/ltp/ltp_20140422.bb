@@ -19,7 +19,7 @@ LIC_FILES_CHKSUM = "\
     file://utils/ffsb-6.0-rc2/COPYING;md5=c46082167a314d785d012a244748d803 \
 "
 
-DEPENDS = "attr libaio libcap acl openssl"
+DEPENDS = "attr libaio libcap acl openssl zip-native"
 SRCREV = "f4c3bfe1eab51eb72caeb0f3336d2790c9a8bd1b"
 
 SRC_URI = "git://github.com/linux-test-project/ltp.git \
