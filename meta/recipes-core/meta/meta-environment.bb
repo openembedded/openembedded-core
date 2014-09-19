@@ -18,19 +18,40 @@ SDKTARGETSYSROOT = "${SDKPATH}/sysroots/${TARGET_SYS}"
 inherit cross-canadian
 
 do_generate_content[nostamp] = "1"
-do_generate_content() {
+do_generate_content[cleandirs] = "${SDK_OUTPUT}"
+do_generate_content[dirs] = "${SDK_OUTPUT}/${SDKPATH}"
+python do_generate_content() {
+    # Handle multilibs in the SDK environment, siteconfig, etc files...
+    localdata = bb.data.createCopy(d)
 
-    rm -rf ${SDK_OUTPUT}
-    mkdir -p ${SDK_OUTPUT}/${SDKPATH}
+    # make sure we only use the WORKDIR value from 'd', or it can change
+    localdata.setVar('WORKDIR', d.getVar('WORKDIR', True))
 
-    toolchain_create_sdk_siteconfig ${SDK_OUTPUT}/${SDKPATH}/site-config-${REAL_MULTIMACH_TARGET_SYS}
+    # make sure we only use the SDKTARGETSYSROOT value from 'd'
+    localdata.setVar('SDKTARGETSYSROOT', d.getVar('SDKTARGETSYSROOT', True))
 
-    toolchain_create_sdk_env_script ${SDK_OUTPUT}/${SDKPATH}/environment-setup-${REAL_MULTIMACH_TARGET_SYS} ${REAL_MULTIMACH_TARGET_SYS} '##SDKTARGETSYSROOT##'  ${target_libdir} 
+    # Process DEFAULTTUNE
+    bb.build.exec_func("create_sdk_files", localdata)
 
-    # Add version information
-    toolchain_create_sdk_version ${SDK_OUTPUT}/${SDKPATH}/version-${REAL_MULTIMACH_TARGET_SYS}
+    variants = d.getVar("MULTILIB_VARIANTS", True) or ""
+    for item in variants.split():
+        # Load overrides from 'd' to avoid having to reset the value...
+        overrides = d.getVar("OVERRIDES", False) + ":virtclass-multilib-" + item
+        localdata.setVar("OVERRIDES", overrides)
+        bb.data.update_data(localdata)
+        bb.build.exec_func("create_sdk_files", localdata)
 }
 addtask generate_content before do_install after do_compile
+
+create_sdk_files() {
+	# Setup site file for external use
+	toolchain_create_sdk_siteconfig ${SDK_OUTPUT}/${SDKPATH}/site-config-${REAL_MULTIMACH_TARGET_SYS}
+
+	toolchain_create_sdk_env_script ${SDK_OUTPUT}/${SDKPATH}/environment-setup-${REAL_MULTIMACH_TARGET_SYS}
+
+	# Add version information
+	toolchain_create_sdk_version ${SDK_OUTPUT}/${SDKPATH}/version-${REAL_MULTIMACH_TARGET_SYS}
+}
 
 do_install[nostamp] = "1"
 do_install() {

@@ -88,25 +88,8 @@ fakeroot python do_populate_sdk() {
 
     populate_sdk(d)
 
-    # Handle multilibs in the SDK environment, siteconfig, etc files...
-    localdata = bb.data.createCopy(d)
-
-    # make sure we only use the WORKDIR value from 'd', or it can change
-    localdata.setVar('WORKDIR', d.getVar('WORKDIR', True))
-
-    # make sure we only use the SDKTARGETSYSROOT value from 'd'
-    localdata.setVar('SDKTARGETSYSROOT', d.getVar('SDKTARGETSYSROOT', True))
-
     # Process DEFAULTTUNE
-    bb.build.exec_func("create_sdk_files", localdata)
-
-    variants = d.getVar("MULTILIB_VARIANTS", True) or ""
-    for item in variants.split():
-        # Load overrides from 'd' to avoid having to reset the value...
-        overrides = d.getVar("OVERRIDES", False) + ":virtclass-multilib-" + item
-        localdata.setVar("OVERRIDES", overrides)
-        bb.data.update_data(localdata)
-        bb.build.exec_func("create_sdk_files", localdata)
+    bb.build.exec_func("create_sdk_files", d)
 
     bb.build.exec_func("tar_sdk", d)
 
@@ -114,14 +97,6 @@ fakeroot python do_populate_sdk() {
 }
 
 fakeroot create_sdk_files() {
-	# Setup site file for external use
-	toolchain_create_sdk_siteconfig ${SDK_OUTPUT}/${SDKPATH}/site-config-${REAL_MULTIMACH_TARGET_SYS}
-
-	toolchain_create_sdk_env_script ${SDK_OUTPUT}/${SDKPATH}/environment-setup-${REAL_MULTIMACH_TARGET_SYS}
-
-	# Add version information
-	toolchain_create_sdk_version ${SDK_OUTPUT}/${SDKPATH}/version-${REAL_MULTIMACH_TARGET_SYS}
-
 	cp ${COREBASE}/scripts/relocate_sdk.py ${SDK_OUTPUT}/${SDKPATH}/
 
 	# Replace the ##DEFAULT_INSTALL_DIR## with the correct pattern.
