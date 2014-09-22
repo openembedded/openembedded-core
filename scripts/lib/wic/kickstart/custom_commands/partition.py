@@ -308,8 +308,8 @@ class Wic_PartData(Mic_PartData):
 
         extra_blocks = self.get_extra_block_count(blocks)
 
-        if extra_blocks < BOOTDD_EXTRA_SPACE:
-            extra_blocks = BOOTDD_EXTRA_SPACE
+        if extra_blocks < IMAGE_EXTRA_SPACE:
+            extra_blocks = IMAGE_EXTRA_SPACE
 
         blocks += extra_blocks
 
