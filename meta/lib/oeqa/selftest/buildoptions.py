@@ -7,9 +7,11 @@ from oeqa.selftest.base import oeSelfTest
 from oeqa.selftest.buildhistory import BuildhistoryBase
 from oeqa.utils.commands import runCmd, bitbake, get_bb_var
 import oeqa.utils.ftools as ftools
+from oeqa.utils.decorators import testcase
 
 class ImageOptionsTests(oeSelfTest):
 
+    @testcase(761)
     def test_incremental_image_generation(self):
         bitbake("-c cleanall core-image-minimal")
         self.write_config('INC_RPM_IMAGE_GEN = "1"')
@@ -22,6 +24,7 @@ class ImageOptionsTests(oeSelfTest):
         res = runCmd("grep 'Removing openssh-sshd' %s" %(os.path.join(get_bb_var("WORKDIR", "core-image-minimal"), "temp/log.do_rootfs")),ignore_status=True)
         self.assertEqual(0, res.status, msg="openssh-sshd was not removed from image")
 
+    @testcase(925)
     def test_rm_old_image(self):
         bitbake("core-image-minimal")
         deploydir = get_bb_var("DEPLOY_DIR_IMAGE", target="core-image-minimal")
@@ -37,6 +40,7 @@ class ImageOptionsTests(oeSelfTest):
         remaining_not_expected = [path for path in track_original_files if os.path.basename(path) in deploydir_files]
         self.assertFalse(remaining_not_expected, msg="\nThe following image files ware not removed: %s" % ', '.join(map(str, remaining_not_expected)))
 
+    @testcase(286)
     def test_ccache_tool(self):
         bitbake("ccache-native")
         self.assertTrue(os.path.isfile(os.path.join(get_bb_var('STAGING_BINDIR_NATIVE', 'ccache-native'), "ccache")))
@@ -50,6 +54,7 @@ class ImageOptionsTests(oeSelfTest):
 
 class DiskMonTest(oeSelfTest):
 
+    @testcase(277)
     def test_stoptask_behavior(self):
         self.write_config('BB_DISKMON_DIRS = "STOPTASKS,${TMPDIR},100000G,100K"')
         res = bitbake("m4", ignore_status = True)
@@ -65,6 +70,7 @@ class DiskMonTest(oeSelfTest):
 
 class SanityOptionsTest(oeSelfTest):
 
+    @testcase(927)
     def test_options_warnqa_errorqa_switch(self):
         bitbake("xcursor-transparent-theme -ccleansstate")
 
@@ -84,6 +90,7 @@ class SanityOptionsTest(oeSelfTest):
         self.delete_recipeinc('xcursor-transparent-theme')
         self.assertTrue("WARNING: QA Issue: xcursor-transparent-theme-dbg is listed in PACKAGES multiple times, this leads to packaging errors." in res.output, msg=res.output)
 
+    @testcase(278)
     def test_sanity_userspace_dependency(self):
         self.append_config('WARN_QA_append = " unsafe-references-in-binaries unsafe-references-in-scripts"')
         bitbake("-ccleansstate gzip nfs-utils")
@@ -93,10 +100,12 @@ class SanityOptionsTest(oeSelfTest):
 
 class BuildhistoryTests(BuildhistoryBase):
 
+    @testcase(293)
     def test_buildhistory_basic(self):
         self.run_buildhistory_operation('xcursor-transparent-theme')
         self.assertTrue(os.path.isdir(get_bb_var('BUILDHISTORY_DIR')))
 
+    @testcase(294)
     def test_buildhistory_buildtime_pr_backwards(self):
         self.add_command_to_tearDown('cleanup-workdir')
         target = 'xcursor-transparent-theme'
