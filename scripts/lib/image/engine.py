@@ -67,7 +67,8 @@ def find_artifacts(image_name):
     """
     bitbake_env_lines = get_bitbake_env_lines()
 
-    rootfs_dir = kernel_dir = hdddir = staging_data_dir = native_sysroot = ""
+    rootfs_dir = kernel_dir = bootimg_dir = ""
+    hdddir = staging_data_dir = native_sysroot = ""
 
     for line in bitbake_env_lines.split('\n'):
         if (get_line_val(line, "IMAGE_ROOTFS")):
@@ -85,8 +86,12 @@ def find_artifacts(image_name):
         if (get_line_val(line, "STAGING_DIR_NATIVE")):
             native_sysroot = get_line_val(line, "STAGING_DIR_NATIVE")
             continue
+        if (get_line_val(line, "DEPLOY_DIR_IMAGE")):
+            bootimg_dir = get_line_val(line, "DEPLOY_DIR_IMAGE")
+            continue
 
-    return (rootfs_dir, kernel_dir, hdddir, staging_data_dir, native_sysroot)
+    return (rootfs_dir, kernel_dir, bootimg_dir, hdddir, staging_data_dir, \
+            native_sysroot)
 
 
 CANNED_IMAGE_DIR = "lib/image/canned-wks" # relative to scripts

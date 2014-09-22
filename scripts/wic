@@ -134,8 +134,8 @@ def wic_create_subcommand(args, usage_str):
     bootimg_dir = staging_data_dir = hdddir = ""
 
     if options.image_name:
-        (rootfs_dir, kernel_dir, hdddir, staging_data_dir, native_sysroot) = \
-            find_artifacts(options.image_name)
+        (rootfs_dir, kernel_dir, bootimg_dir, hdddir, \
+         staging_data_dir, native_sysroot) = find_artifacts(options.image_name)
 
     wks_file = args[0]
 
@@ -172,7 +172,8 @@ def wic_create_subcommand(args, usage_str):
         not_found = not_found_dir = ""
         if not os.path.isdir(rootfs_dir):
             (not_found, not_found_dir) = ("rootfs-dir", rootfs_dir)
-        elif not os.path.isdir(hdddir) and not os.path.isdir(staging_data_dir):
+        elif not os.path.isdir(bootimg_dir) and not os.path.isdir(hdddir) \
+             and not os.path.isdir(staging_data_dir):
             (not_found, not_found_dir) = ("bootimg-dir", bootimg_dir)
         elif not os.path.isdir(kernel_dir):
             (not_found, not_found_dir) = ("kernel-dir", kernel_dir)
