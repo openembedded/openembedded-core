@@ -184,7 +184,7 @@ class Wic_PartData(Mic_PartData):
         Prepare content for a rootfs partition i.e. create a partition
         and fill it from a /rootfs dir.
 
-        Currently handles ext2/3/4 and btrfs.
+        Currently handles ext2/3/4, btrfs and vfat.
         """
         pseudo = "export PSEUDO_PREFIX=%s/usr;" % native_sysroot
         pseudo += "export PSEUDO_LOCALSTATEDIR=%s/../pseudo;" % rootfs_dir
