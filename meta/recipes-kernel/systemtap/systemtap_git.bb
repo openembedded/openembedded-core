@@ -20,6 +20,9 @@ STAP_DOCS ?= "--disable-docs --disable-publican --disable-refdocs"
 
 EXTRA_OECONF += "${STAP_DOCS} "
 
+PACKAGECONFIG ??= ""
+PACKAGECONFIG[libvirt] = "--enable-libvirt,--disable-libvirt,libvirt"
+
 inherit autotools gettext pkgconfig
 
 BBCLASSEXTEND = "native nativesdk"
