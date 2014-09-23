@@ -18,13 +18,17 @@
 SPDXOUTPUTDIR = "${WORKDIR}/spdx_output_dir"
 SPDXSSTATEDIR = "${WORKDIR}/spdx_sstate_dir"
 
+# If ${S} isn't actually the top-level source directory, set SPDX_S to point at
+# the real top-level directory.
+SPDX_S ?= "${S}"
+
 python do_spdx () {
     import os, sys
     import json
 
     info = {} 
     info['workdir'] = (d.getVar('WORKDIR', True) or "")
-    info['sourcedir'] = (d.getVar('S', True) or "")
+    info['sourcedir'] = (d.getVar('SPDX_S', True) or "")
     info['pn'] = (d.getVar( 'PN', True ) or "")
     info['pv'] = (d.getVar( 'PV', True ) or "")
     info['src_uri'] = (d.getVar( 'SRC_URI', True ) or "")
