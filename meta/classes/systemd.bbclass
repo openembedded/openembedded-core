@@ -55,6 +55,8 @@ fi
 
 
 systemd_populate_packages[vardeps] += "systemd_prerm systemd_postinst"
+systemd_populate_packages[vardepsexclude] += "OVERRIDES"
+
 
 python systemd_populate_packages() {
     if not bb.utils.contains('DISTRO_FEATURES', 'systemd', True, False, d):
