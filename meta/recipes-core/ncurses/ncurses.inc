@@ -98,6 +98,8 @@ do_configure() {
         # not the case for /dev/null redirections)
         export cf_cv_working_poll=yes
 
+	# The --enable-pc-files requires PKG_CONFIG_LIBDIR existed
+	mkdir -p ${PKG_CONFIG_LIBDIR}
 	( cd ${S}; gnu-configize --force )
 	ncurses_configure "narrowc" || \
 		return 1
