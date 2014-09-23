@@ -42,6 +42,7 @@ PROVIDES += "${VIRTUAL_NAME}"
 # persuades bitbake to go to the right place
 S = "${WORKDIR}/db-${PV}/dist"
 B = "${WORKDIR}/db-${PV}/build_unix"
+SPDX_S = "${WORKDIR}/db-${PV}"
 
 # The executables go in a separate package - typically there
 # is no need to install these unless doing real database
