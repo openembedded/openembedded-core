@@ -23,6 +23,7 @@ EXTRA_OECONF = "--disable-ldap \
 		--with-bzip2=${STAGING_LIBDIR}/.. \
                 --with-readline=${STAGING_LIBDIR}/.. \
                "
+RRECOMMENDS_${PN} = "pinentry"
 
 do_configure_prepend () {
 	# Else these could be used in prefernce to those in aclocal-copy
