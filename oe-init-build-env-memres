@@ -60,14 +60,14 @@ if [ -e bitbake.lock ] && grep : bitbake.lock > /dev/null ; then
     res=$?
 fi
 
+if [ $res != 0 ] ; then
+    bitbake --server-only -t xmlrpc -B localhost:$port
+fi
+
 if [ $port = -1 ] ; then
     export BBSERVER=localhost:-1
     echo "Bitbake server started on demand as needed, use bitbake -m to shut it down"
 else
-    if [ $res != 0 ] ; then
-	bitbake --server-only -t xmlrpc -B localhost:$port
-    fi
-
     export BBSERVER=`cat bitbake.lock`
 
     if [ $res = 0 ] ; then
