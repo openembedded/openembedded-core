@@ -28,7 +28,7 @@ if [ -f /etc/syslog-startup.conf ]; then
 			if [ -n "$ROTATEGENS" ]; then
 				SYSLOG_ARGS="$SYSLOG_ARGS -b $ROTATEGENS"
 			fi
-			LOCAL=0
+			LOG_LOCAL=1
 		elif [ "$D" = "remote" ]; then
 			SYSLOG_ARGS="$SYSLOG_ARGS -R $REMOTE"
 			LOG_REMOTE=1
