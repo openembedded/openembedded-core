@@ -5,12 +5,12 @@ require recipes-kernel/linux/linux-yocto.inc
 LINUX_KERNEL_TYPE = "tiny"
 KCONFIG_MODE = "--allnoconfig"
 
-LINUX_VERSION ?= "3.10.54"
+LINUX_VERSION ?= "3.10.55"
 
 KMETA = "meta"
 
-SRCREV_machine ?= "e001d3cbec5320c03d2a316aa0e287012be19133"
-SRCREV_meta ?= "5ea3fd0817c2a3173e85102c61c51a5a6268cad6"
+SRCREV_machine ?= "8e055f3b669c65e83ba7128c248c632eedafad72"
+SRCREV_meta ?= "f79a00265eefbe2fffc2cdb03f67235497a9a87e"
 
 PV = "${LINUX_VERSION}+git${SRCPV}"
 
