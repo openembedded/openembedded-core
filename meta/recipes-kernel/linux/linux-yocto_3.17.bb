@@ -19,7 +19,7 @@ SRCREV_machine_qemumips64 ?= "6dabf96a2fe457e4cb8821721936e9fb72556494"
 SRCREV_machine ?= "724ab25b085554741753709941e768cae1a2121e"
 SRCREV_meta ?= "62a1fd63023ab6b18114dd093be86d0854474c41"
 
-SRC_URI = "git://git.yoctoproject.org/linux-yocto-dev.git;bareclone=1;branch=${KBRANCH},${KMETA};name=machine,meta"
+SRC_URI = "git://git.yoctoproject.org/linux-yocto-3.17.git;bareclone=1;branch=${KBRANCH},${KMETA};name=machine,meta"
 
 LINUX_VERSION ?= "3.17-rc5"
 
