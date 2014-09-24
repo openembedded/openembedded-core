@@ -91,6 +91,10 @@ class testcase(object):
 	wrapped_f.test_case = self.test_case
 	return wrapped_f
 
+class NoParsingFilter(logging.Filter):
+    def filter(self, record):
+	return record.levelno == 100
+
 def LogResults(original_class):
     orig_method = original_class.run
 
@@ -121,6 +125,8 @@ def LogResults(original_class):
                             format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                             datefmt='%H:%M:%S',
                             level=custom_log_level)
+	for handler in logging.root.handlers:
+		handler.addFilter(NoParsingFilter())
 	local_log = logging.getLogger(caller)
 
 	#check status of tests and record it
