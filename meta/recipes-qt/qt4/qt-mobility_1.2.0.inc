@@ -11,7 +11,7 @@ LIC_FILES_CHKSUM = "file://LICENSE.LGPL;md5=fbc093901857fcd118f065f900982c24 \
 		    file://LGPL_EXCEPTION.txt;md5=411080a56ff917a5a1aa08c98acae354"
 
 FILESEXTRAPATHS =. "${FILE_DIRNAME}/qt-mobility-${PV}:"
-SRC_URI = "http://get.qt.nokia.com/qt/add-ons/qt-mobility-opensource-src-${PV}.tar.gz \
+SRC_URI = "http://pkgs.fedoraproject.org/repo/pkgs/qt-mobility/qt-mobility-opensource-src-${PV}.tar.gz/ea5db5a8d3dd4709c2926dceda646bd8/qt-mobility-opensource-src-${PV}.tar.gz \
            file://qt-mobility-configure.patch \
            file://0001-gstvideoconnector-fixed-buffers-allocation.patch \
            file://0002-Remove-unnecessary-rpaths-from-qml_device-example.patch \
