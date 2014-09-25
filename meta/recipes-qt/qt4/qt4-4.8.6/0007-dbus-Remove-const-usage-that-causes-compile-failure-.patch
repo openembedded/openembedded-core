@@ -7,7 +7,7 @@ Subject: [PATCH 07/21] dbus: Remove "const" usage that causes compile failure
 Patch has apparently been rejected upstream, not because it is invalid
 but because the submitter did not submit a merge request for it, so the
 validity of the patch upstream is uncertain. For further details see:
-http://bugreports.qt.nokia.com/browse/QTBUG-17962
+https://bugreports.qt-project.org/browse/QTBUG-17962
 
 Upstream-Status: Denied [possible retry]
 

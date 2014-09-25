@@ -4,7 +4,7 @@ Date: Wed, 26 Sep 2012 20:39:21 +0200
 Subject: [PATCH 12/21] Add 2bpp support
 
 Submitted upstream but rejected as being "out of scope":
-http://bugreports.qt.nokia.com/browse/QTBUG-3468
+https://bugreports.qt-project.org/browse/QTBUG-3468
 
 Upstream-Status: Denied
 
