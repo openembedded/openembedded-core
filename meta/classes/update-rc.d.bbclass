@@ -71,6 +71,7 @@ PACKAGESPLITFUNCS_prepend = "populate_packages_updatercd "
 PACKAGESPLITFUNCS_remove_class-nativesdk = "populate_packages_updatercd "
 
 populate_packages_updatercd[vardeps] += "updatercd_prerm updatercd_postrm updatercd_preinst updatercd_postinst"
+populate_packages_updatercd[vardepsexclude] += "OVERRIDES"
 
 python populate_packages_updatercd () {
     def update_rcd_auto_depend(pkg):
