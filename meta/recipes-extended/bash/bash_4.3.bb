@@ -9,6 +9,7 @@ SRC_URI = "${GNU_MIRROR}/bash/${BPN}-${PV}.tar.gz;name=tarball \
            file://mkbuiltins_have_stringize.patch \
            file://build-tests.patch \
            file://test-output.patch \
+           file://cve-2014-6271.patch;striplevel=0 \
            file://run-ptest \
            "
 
