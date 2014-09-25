@@ -51,7 +51,7 @@ do_install_append_class-native() {
 PACKAGES += "info info-doc"
 
 FILES_info = "${bindir}/info ${bindir}/infokey ${bindir}/install-info"
-FILES_info-doc = "${infodir}/info.info ${infodir}/dir ${infodir}/info-*.info \
+FILES_info-doc = "${infodir}/info.info* ${infodir}/dir ${infodir}/info-*.info* \
                   ${mandir}/man1/info.1* ${mandir}/man5/info.5* \
                   ${mandir}/man1/infokey.1* ${mandir}/man1/install-info.1*"
 
