@@ -9,6 +9,19 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 
 PROVIDES_append_class-native = " texinfo-replacement-native"
 
+def compress_pkg(d):
+    if "compress_doc" in (d.getVar("INHERIT", True) or "").split():
+         compress = d.getVar("DOC_COMPRESS", True)
+         if compress == "gz":
+             return "gzip"
+         elif compress == "bz2":
+             return "bzip2"
+         elif compress == "xz":
+             return "xz"
+    return ""
+
+RDEPENDS_info += "${@compress_pkg(d)}"
+
 DEPENDS = "zlib ncurses texinfo-replacement-native"
 DEPENDS_class-native = "zlib-native ncurses-native"
 
