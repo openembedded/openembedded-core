@@ -30,24 +30,21 @@ do_install () {
 	oe_runmake install DESTDIR="${D}" bindir=${bindir} \
 		template_dir=${datadir}/git-core/templates \
 		GIT_PYTHON_DIR=${D}${datadir}/git-core/python
-
-	# ${libdir} is not applicable here, perl-native files are always
-	# installed to /usr/lib on both 32/64 bits targets.
-	rm -rf ${D}${exec_prefix}/lib/perl-native
-	rmdir ${D}${exec_prefix}/lib || true
 }
 
-PERLSEDFIXUP = " \
+perl_native_fixup () {
 	sed -i -e 's#${STAGING_BINDIR_NATIVE}/perl-native/#${bindir}/#' \
 	       -e 's#${libdir}/perl-native/#${libdir}/#' \
-	    ${@d.getVar("PERLTOOLS", True).replace(' /',d.getVar('D', True) + '/')} \
-"
+	    ${@d.getVar("PERLTOOLS", True).replace(' /',d.getVar('D', True) + '/')}
+	mv ${D}${libdir}/perl-native/perl ${D}${libdir}
+	rmdir ${D}${libdir}/perl-native || true
+}
 
 REL_GIT_EXEC_PATH = "${@os.path.relpath(libexecdir, bindir)}/git-core"
 REL_GIT_TEMPLATE_DIR = "${@os.path.relpath(datadir, bindir)}/git-core/templates"
 
 do_install_append_class-target () {
-	${PERLSEDFIXUP}
+	perl_native_fixup
 }
 
 do_install_append_class-native() {
@@ -60,7 +57,7 @@ do_install_append_class-nativesdk() {
 	create_wrapper ${D}${bindir}/git \
 		GIT_EXEC_PATH='`dirname $''realpath`'/${REL_GIT_EXEC_PATH} \
 		GIT_TEMPLATE_DIR='`dirname $''realpath`'/${REL_GIT_TEMPLATE_DIR}
-	${PERLSEDFIXUP}
+	perl_native_fixup
 }
 
 FILES_${PN} += "${datadir}/git-core ${libexecdir}/git-core/"
@@ -90,6 +87,7 @@ PERLTOOLS = " \
 PACKAGES =+ "${PN}-perltools"
 FILES_${PN}-perltools += " \
     ${PERLTOOLS} \
+    ${libdir}/perl \
     ${datadir}/perl \
 "
 RDEPENDS_${PN}-perltools = "${PN} perl perl-module-file-path findutils"
