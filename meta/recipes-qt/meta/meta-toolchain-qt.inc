@@ -26,7 +26,7 @@ toolchain_create_sdk_env_script_append() {
     echo 'export QMAKESPEC=${SDKTARGETSYSROOT}/${datadir}/${QT_DIR_NAME}/mkspecs/linux-g++' >> $script
     echo 'export QT_CONF_PATH=${SDKPATHNATIVE}/${sysconfdir}/qt.conf' >> $script
 
-    # make a symbolic link to mkspecs for compatibility with Nokia's SDK
-    # and QTCreator
+    # make a symbolic link to mkspecs for compatibility with Qt SDK
+    # and Qt Creator
     (cd ${SDK_OUTPUT}/${QT_TOOLS_PREFIX}/..; ln -s ${SDKTARGETSYSROOT}/usr/share/${QT_DIR_NAME}/mkspecs mkspecs;)
 }
