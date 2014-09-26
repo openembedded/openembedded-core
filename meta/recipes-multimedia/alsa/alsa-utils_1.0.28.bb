@@ -13,6 +13,7 @@ PACKAGECONFIG[xmlto] = "--enable-xmlto, --disable-xmlto, xmlto-native docbook-xm
 
 SRC_URI = "ftp://ftp.alsa-project.org/pub/utils/alsa-utils-${PV}.tar.bz2 \
            file://0001-alsactl-don-t-let-systemd-unit-restore-the-volume-wh.patch \
+           file://alsa-utils-aplay-interrupt-signal-handling.patch \
           "
 
 SRC_URI[md5sum] = "361552d5b1cacd0a1e7ba09e69990211"
