@@ -347,7 +347,21 @@ class RpmRootfs(Rootfs):
         # already saved in /etc/rpm-postinsts
         pass
 
-    def _log_check(self):
+    def _log_check_warn(self):
+        r = re.compile('(warn|Warn)')
+        log_path = self.d.expand("${T}/log.do_rootfs")
+        with open(log_path, 'r') as log:
+            for line in log.read().split('\n'):
+                if 'log_check' in line:
+                    continue
+
+                m = r.search(line)
+                if m:
+                    bb.warn('log_check: There is a warn message in the logfile')
+                    bb.warn('log_check: Matched keyword: [%s]' % m.group())
+                    bb.warn('log_check: %s\n' % line)
+
+    def _log_check_error(self):
         r = re.compile('(unpacking of archive failed|Cannot find package|exit 1|ERR|Fail)')
         log_path = self.d.expand("${T}/log.do_rootfs")
         with open(log_path, 'r') as log:
@@ -369,6 +383,10 @@ class RpmRootfs(Rootfs):
 
                 if found_error == 6:
                     bb.fatal(message)
+
+    def _log_check(self):
+        self._log_check_warn()
+        self._log_check_error()
 
     def _handle_intercept_failure(self, registered_pkgs):
         rpm_postinsts_dir = self.image_rootfs + self.d.expand('${sysconfdir}/rpm-postinsts/')
