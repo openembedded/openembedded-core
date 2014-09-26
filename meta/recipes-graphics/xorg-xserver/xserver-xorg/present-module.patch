@@ -1,0 +1,66 @@
+[ YOCTO #6583 ]
+
+Upstream-Status: Backport
+Signed-off-by: Ross Burton <ross.burton@intel.com>
+
+From 746be5a03ebbda4ab411ca3efb2ed95f99e9ea46 Mon Sep 17 00:00:00 2001
+From: Chris Wilson <chris@chris-wilson.co.uk>
+Date: Wed, 28 May 2014 08:13:59 +0100
+Subject: xfree86: Report DRI3 as a built-in module
+
+This is so that drivers can do a runtime check that DRI3 is available,
+similar to existing runtime checks performed by the drivers for DRI and
+DRI2.
+
+v2: Only add DRI3 to the list if the module was actually built into the
+server (Mark Kettenis).
+
+Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
+Cc: Mark Kettenis <mark.kettenis@xs4all.nl>
+Signed-off-by: Keith Packard <keithp@keithp.com>
+
+diff --git a/hw/xfree86/loader/loadmod.c b/hw/xfree86/loader/loadmod.c
+index 092bf57..f92ad8d 100644
+--- a/hw/xfree86/loader/loadmod.c
++++ b/hw/xfree86/loader/loadmod.c
+@@ -838,6 +838,9 @@ static const char *compiled_in_modules[] = {
+     "extmod",
+     "dri",
+     "dri2",
++#if DRI3
++    "dri3",
++#endif
+     NULL
+ };
+ 
+-- 
+cgit v0.10.2
+
+
+From 7ca458493aa2f0aa091c989ea0768611e0730bf5 Mon Sep 17 00:00:00 2001
+From: Chris Wilson <chris@chris-wilson.co.uk>
+Date: Wed, 28 May 2014 08:14:00 +0100
+Subject: xfree86: Report Present as a built-in module
+
+This is so that drivers can do a runtime check that Present is available,
+similar to existing runtime checks performed by the drivers for DRI.
+
+Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
+Signed-off-by: Keith Packard <keithp@keithp.com>
+
+diff --git a/hw/xfree86/loader/loadmod.c b/hw/xfree86/loader/loadmod.c
+index f92ad8d..e1f649a 100644
+--- a/hw/xfree86/loader/loadmod.c
++++ b/hw/xfree86/loader/loadmod.c
+@@ -841,6 +841,9 @@ static const char *compiled_in_modules[] = {
+ #if DRI3
+     "dri3",
+ #endif
++#if PRESENT
++    "present",
++#endif
+     NULL
+ };
+ 
+-- 
+cgit v0.10.2
