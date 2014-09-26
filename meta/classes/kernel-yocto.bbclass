@@ -296,7 +296,7 @@ do_validate_branches() {
 		force_srcrev="${SRCREV}"
 	else
 		git cat-file -t ${machine_srcrev} > /dev/null
-		if [ if $? -ne 0 ]; then
+		if [ $? -ne 0 ]; then
 			bberror "${machine_srcrev} is not a valid commit ID."
 			bbfatal "The kernel source tree may be out of sync"
 		fi
