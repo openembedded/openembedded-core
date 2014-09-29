@@ -27,6 +27,7 @@ SRC_URI = "git://github.com/linux-test-project/ltp.git \
     file://ltp-Do-not-link-against-libfl.patch \
     file://automake-foreign.patch \
     file://make-setregid02-work.patch \
+    file://add-knob-for-numa.patch \
 "
 
 S = "${WORKDIR}/git"
@@ -38,6 +39,7 @@ TARGET_CC_ARCH += "${LDFLAGS}"
 export prefix = "/opt/ltp"
 export exec_prefix = "/opt/ltp"
 
+PACKAGECONFIG[numa] = "--with-numa, --without-numa, numactl,"
 EXTRA_OECONF = " --with-power-management-testsuite --with-realtime-testsuite "
 
 # ltp doesn't regenerate ffsb-6.0-rc2 configure and hardcode configure call.
