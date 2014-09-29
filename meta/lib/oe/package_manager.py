@@ -167,6 +167,9 @@ class DpkgIndexer(Indexer):
                 if a not in pkg_archs:
                     arch_list.append(a)
 
+        all_mlb_pkg_arch_list = (self.d.getVar('ALL_MULTILIB_PACKAGE_ARCHS', True) or "").replace('-', '_').split()
+        arch_list.extend(arch for arch in all_mlb_pkg_arch_list if arch not in arch_list)
+
         apt_ftparchive = bb.utils.which(os.getenv('PATH'), "apt-ftparchive")
         gzip = bb.utils.which(os.getenv('PATH'), "gzip")
 
@@ -1474,6 +1477,10 @@ class DpkgPM(PackageManager):
 
         self.apt_args = d.getVar("APT_ARGS", True)
 
+        self.all_arch_list = self.d.getVar('PACKAGE_ARCHS', True).split()
+        all_mlb_pkg_arch_list = (self.d.getVar('ALL_MULTILIB_PACKAGE_ARCHS', True) or "").replace('-', '_').split()
+        self.all_arch_list.extend(arch for arch in all_mlb_pkg_arch_list if arch not in self.all_arch_list)
+
         self._create_configs(archs, base_archs)
 
         self.indexer = DpkgIndexer(self.d, self.deploy_dir)
@@ -1631,8 +1638,8 @@ class DpkgPM(PackageManager):
         sources_conf = os.path.join("%s/etc/apt/sources.list"
                                     % self.target_rootfs)
         arch_list = []
-        archs = self.d.getVar('PACKAGE_ARCHS', True)
-        for arch in archs.split():
+
+        for arch in self.all_arch_list:
             if not os.path.exists(os.path.join(self.deploy_dir, arch)):
                 continue
             arch_list.append(arch)
@@ -1655,7 +1662,7 @@ class DpkgPM(PackageManager):
         bb.utils.mkdirhier(self.apt_conf_dir + "/apt.conf.d/")
 
         arch_list = []
-        for arch in archs.split():
+        for arch in self.all_arch_list:
             if not os.path.exists(os.path.join(self.deploy_dir, arch)):
                 continue
             arch_list.append(arch)
@@ -1684,15 +1691,25 @@ class DpkgPM(PackageManager):
                 sources_file.write("deb file:%s/ ./\n" %
                                    os.path.join(self.deploy_dir, arch))
 
+        base_arch_list = base_archs.split()
+        multilib_variants = self.d.getVar("MULTILIB_VARIANTS", True);
+        for variant in multilib_variants.split():
+            if variant == "lib32":
+                base_arch_list.append("i386")
+            elif variant == "lib64":
+                base_arch_list.append("amd64")
+
         with open(self.apt_conf_file, "w+") as apt_conf:
             with open(self.d.expand("${STAGING_ETCDIR_NATIVE}/apt/apt.conf.sample")) as apt_conf_sample:
                 for line in apt_conf_sample.read().split("\n"):
-                    line = re.sub("Architecture \".*\";",
-                                  "Architecture \"%s\";" % base_archs, line)
-                    line = re.sub("#ROOTFS#", self.target_rootfs, line)
-                    line = re.sub("#APTCONF#", self.apt_conf_dir, line)
-
-                    apt_conf.write(line + "\n")
+                    match_arch = re.match("  Architecture \".*\";$", line)
+                    if match_arch:
+                        for base_arch in base_arch_list:
+                            apt_conf.write("  Architecture \"%s\";\n" % base_arch)
+                    else:
+                        line = re.sub("#ROOTFS#", self.target_rootfs, line)
+                        line = re.sub("#APTCONF#", self.apt_conf_dir, line)
+                        apt_conf.write(line + "\n")
 
         target_dpkg_dir = "%s/var/lib/dpkg" % self.target_rootfs
         bb.utils.mkdirhier(os.path.join(target_dpkg_dir, "info"))
