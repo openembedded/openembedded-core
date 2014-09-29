@@ -40,6 +40,7 @@ export prefix = "/opt/ltp"
 export exec_prefix = "/opt/ltp"
 
 PACKAGECONFIG[numa] = "--with-numa, --without-numa, numactl,"
+EXTRA_AUTORECONF += "-I ${S}/testcases/realtime/m4"
 EXTRA_OECONF = " --with-power-management-testsuite --with-realtime-testsuite "
 
 # ltp doesn't regenerate ffsb-6.0-rc2 configure and hardcode configure call.
