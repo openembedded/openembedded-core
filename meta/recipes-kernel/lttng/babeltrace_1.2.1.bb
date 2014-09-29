@@ -8,7 +8,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=76ba15dd76a248e1dd526bca0e2125fa"
 
 inherit autotools pkgconfig
 
-DEPENDS = "glib-2.0 util-linux popt"
+DEPENDS = "glib-2.0 util-linux popt bison-native flex-native"
 
 SRCREV = "66c2a20b4391fb5c7f870aeb0dde854f0ae1fc79"
 PV = "1.2.1+git${SRCPV}"
