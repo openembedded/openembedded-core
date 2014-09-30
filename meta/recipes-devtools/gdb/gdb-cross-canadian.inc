@@ -13,6 +13,8 @@ GDBPROPREFIX = "--program-prefix='${TARGET_PREFIX}'"
 
 EXTRA_OECONF_append = "--with-python=${WORKDIR}/python"
 
+SSTATE_DUPWHITELIST += "${STAGING_DATADIR}/gdb"
+
 do_configure_prepend() {
 cat > ${WORKDIR}/python << EOF
 #! /bin/sh
