@@ -8,7 +8,7 @@ SECTION = "devel/python"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=393a5ca445f6965873eca0259a17f833"
 
-DEPENDS = "python rpm gettext-native"
+DEPENDS = "python rpm gettext-native python-rpm"
 PR = "r9"
 SRCNAME = "smart"
 
@@ -32,7 +32,8 @@ SRC_URI = "\
           file://smart-config-ignore-all-recommends.patch \
           file://smart-attempt.patch \
           file://smart-filename-NAME_MAX.patch \
-          "
+          file://smart-rpm4-fixes.patch \
+         "
 
 SRC_URI[md5sum] = "573ef32ba177a6b3c4bf7ef04873fcb6"
 SRC_URI[sha256sum] = "b1d519ddb43d60f293b065c28870a5d9e8b591cd49e8c68caea48ace91085eba"

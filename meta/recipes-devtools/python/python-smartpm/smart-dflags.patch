@@ -7,34 +7,39 @@ Upstream-Status: Pending
 
 Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
 
-diff --git a/smart/backends/rpm/pm.py b/smart/backends/rpm/pm.py
-index 707a146..aec82e7 100644
---- a/smart/backends/rpm/pm.py
-+++ b/smart/backends/rpm/pm.py
-@@ -106,6 +106,23 @@ class RPMPackageManager(PackageManager):
+[sgw - Added try/catch for rpm4 since it does not have setDFlags() API]
+
+Signed-off-by: Saul Wold <sgw@linux.intel.com>
+
+
+Index: smart-1.4.1/smart/backends/rpm/pm.py
+===================================================================
+--- smart-1.4.1.orig/smart/backends/rpm/pm.py
++++ smart-1.4.1/smart/backends/rpm/pm.py
+@@ -106,6 +106,26 @@ class RPMPackageManager(PackageManager):
              flags |= rpm.RPMTRANS_FLAG_TEST
          ts.setFlags(flags)
  
-+        dflags = ts.setDFlags(0)
-+        if sysconf.get("rpm-noupgrade", False):
-+            dflags |= rpm.RPMDEPS_FLAG_NOUPGRADE
-+        if sysconf.get("rpm-norequires", False):
-+            dflags |= rpm.RPMDEPS_FLAG_NOREQUIRES
-+        if sysconf.get("rpm-noconflicts", False):
-+            dflags |= rpm.RPMDEPS_FLAG_NOCONFLICTS
-+        if sysconf.get("rpm-noobsoletes", False):
-+            dflags |= rpm.RPMDEPS_FLAG_NOOBSOLETES
-+        if sysconf.get("rpm-noparentdirs", False):
-+            dflags |= rpm.RPMDEPS_FLAG_NOPARENTDIRS
-+        if sysconf.get("rpm-nolinktos", False):
-+            dflags |= rpm.RPMDEPS_FLAG_NOLINKTOS
-+        if sysconf.get("rpm-nosuggest", False):
-+            dflags |= rpm.RPMDEPS_FLAG_NOSUGGEST
-+        ts.setDFlags(dflags)
++        try:
++            dflags = ts.setDFlags(0)
++            if sysconf.get("rpm-noupgrade", False):
++                dflags |= rpm.RPMDEPS_FLAG_NOUPGRADE
++            if sysconf.get("rpm-norequires", False):
++                dflags |= rpm.RPMDEPS_FLAG_NOREQUIRES
++            if sysconf.get("rpm-noconflicts", False):
++                dflags |= rpm.RPMDEPS_FLAG_NOCONFLICTS
++            if sysconf.get("rpm-noobsoletes", False):
++                dflags |= rpm.RPMDEPS_FLAG_NOOBSOLETES
++            if sysconf.get("rpm-noparentdirs", False):
++                dflags |= rpm.RPMDEPS_FLAG_NOPARENTDIRS
++            if sysconf.get("rpm-nolinktos", False):
++                dflags |= rpm.RPMDEPS_FLAG_NOLINKTOS
++            if sysconf.get("rpm-nosuggest", False):
++                dflags |= rpm.RPMDEPS_FLAG_NOSUGGEST
++            ts.setDFlags(dflags)
++        except AttributeError, ae:
++            pass
 +
          # Set rpm verbosity level.
          levelname = sysconf.get('rpm-log-level')
          level = {
--- 
-1.7.9.5
-
