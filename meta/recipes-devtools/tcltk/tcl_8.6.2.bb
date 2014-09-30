@@ -24,8 +24,8 @@ SRC_URI = "${BASE_SRC_URI} \
            file://alter-includedir.patch \
            file://run-ptest \
 "
-SRC_URI[md5sum] = "aae4b701ee527c6e4e1a6f9c7399882e"
-SRC_URI[sha256sum] = "16ee769248e64ba1cae6b4834fcc4e4edd7470d881410e8d58f7dd1434343514"
+SRC_URI[md5sum] = "8103eaf6d71acb716a64224492f09d5f"
+SRC_URI[sha256sum] = "86f7ae5f581dd0904d04415637ab3aef5a50986c1b6d04c340e2b1b0258da9c4"
 
 SRC_URI_class-native = "${BASE_SRC_URI}"
 
@@ -81,6 +81,7 @@ FILES_${PN}-dev += "${libdir}/tclConfig.sh ${libdir}/tclooConfig.sh"
 # isn't getting picked up by shlibs code
 RDEPENDS_${PN} += "tcl-lib"
 RDEPENDS_${PN}_class-native = ""
+RDEPENDS_${PN}-ptest += "libgcc"
 
 BBCLASSEXTEND = "native"
 
