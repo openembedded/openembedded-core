@@ -42,6 +42,7 @@ FILES_${PN}-dev = "${libdir}/libapt*.so ${includedir}"
 do_install () {
 	set -x
 	install -d ${D}${bindir}
+	install -m 0755 bin/apt-key ${D}${bindir}/
 	install -m 0755 bin/apt-cdrom ${D}${bindir}/
 	install -m 0755 bin/apt-get ${D}${bindir}/
 	install -m 0755 bin/apt-config ${D}${bindir}/
