@@ -342,6 +342,7 @@ FILES_python-rpm-dbg = "${libdir}/python*/site-packages/rpm/.debug/_*"
 FILES_python-rpm-dev = "${libdir}/python*/site-packages/rpm/*.la"
 FILES_python-rpm-staticdev = "${libdir}/python*/site-packages/rpm/*.a"
 FILES_python-rpm = "${libdir}/python*/site-packages/rpm"
+PROVIDES += "python-rpm"
 
 FILES_perl-module-rpm = "${libdir}/perl/*/* \
 		"
