@@ -29,6 +29,7 @@ python do_generate_content() {
 
     # make sure we only use the SDKTARGETSYSROOT value from 'd'
     localdata.setVar('SDKTARGETSYSROOT', d.getVar('SDKTARGETSYSROOT', True))
+    localdata.setVar('libdir', d.getVar('target_libdir', False))
 
     # Process DEFAULTTUNE
     bb.build.exec_func("create_sdk_files", localdata)
