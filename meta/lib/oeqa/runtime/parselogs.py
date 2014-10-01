@@ -9,6 +9,8 @@ errors = ["error", "cannot", "can\'t", "failed"]
 common_errors = [
     '(WW) warning, (EE) error, (NI) not implemented, (??) unknown.',
     'dma timeout',
+    'can\'t add hid device:',
+    'usbhid: probe of ',
     ]
 
 x86_common = [
