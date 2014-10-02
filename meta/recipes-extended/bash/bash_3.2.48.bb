@@ -11,6 +11,7 @@ SRC_URI = "${GNU_MIRROR}/bash/bash-${PV}.tar.gz;name=tarball \
            ${GNU_MIRROR}/bash/bash-3.2-patches/bash32-051;apply=yes;striplevel=0;name=patch003 \
            file://mkbuiltins_have_stringize.patch \
            file://cve-2014-6271.patch;striplevel=0 \
+           file://cve-2014-7169.patch \
           "
 
 SRC_URI[tarball.md5sum] = "338dcf975a93640bb3eaa843ca42e3f8"

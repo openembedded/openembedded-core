@@ -20,6 +20,7 @@ SRC_URI = "${GNU_MIRROR}/bash/${BPN}-${PV}.tar.gz;name=tarball \
            file://execute_cmd.patch;striplevel=0 \
            file://mkbuiltins_have_stringize.patch \
            file://cve-2014-6271.patch;striplevel=0 \
+           file://cve-2014-7169.patch \
            file://build-tests.patch \
            file://test-output.patch \
            file://run-ptest \
