@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=4d92cd373abda3937c2bc47fbc49d
 TOOLCHAIN_TARGET_TASK = ""
 
 TOOLCHAIN_HOST_TASK = "\
-    nativesdk-eglibc \
+    nativesdk-glibc \
     nativesdk-patchelf \
     "
 
