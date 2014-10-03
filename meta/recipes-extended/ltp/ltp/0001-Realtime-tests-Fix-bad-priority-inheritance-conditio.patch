@@ -1,0 +1,48 @@
+From b601a8d1b39075a5339195fc0a4038f71ec3b49e Mon Sep 17 00:00:00 2001
+From: "Gary S. Robertson" <gary.robertson@linaro.org>
+Date: Wed, 27 Aug 2014 16:23:56 -0500
+Subject: [LTP][PATCH] Realtime tests: Fix bad priority inheritance conditionals
+
+testcases/realtime/lib/librttest.c and
+testcases/realtime/stress/pi-tests/testpi-3.c
+both referenced a non-existent autoconf configuration setting variable.
+Replaced the invalid variable name with the variable actually created
+by autoconf.
+
+Upstream-Status: Submitted
+
+Signed-off-by: Gary S. Robertson <gary.robertson@linaro.org>
+---
+ testcases/realtime/lib/librttest.c            |    2 +-
+ testcases/realtime/stress/pi-tests/testpi-3.c |    2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/testcases/realtime/lib/librttest.c b/testcases/realtime/lib/librttest.c
+index c175148..3679058 100644
+--- a/testcases/realtime/lib/librttest.c
++++ b/testcases/realtime/lib/librttest.c
+@@ -586,7 +586,7 @@ void *busy_work_us(int us)
+ 
+ void init_pi_mutex(pthread_mutex_t * m)
+ {
+-#if HAVE_DECL_PTHREAD_PRIO_INHERIT
++#if HAS_PRIORITY_INHERIT
+ 	pthread_mutexattr_t attr;
+ 	int ret;
+ 	int protocol;
+diff --git a/testcases/realtime/stress/pi-tests/testpi-3.c b/testcases/realtime/stress/pi-tests/testpi-3.c
+index 30f38f6..e483945 100644
+--- a/testcases/realtime/stress/pi-tests/testpi-3.c
++++ b/testcases/realtime/stress/pi-tests/testpi-3.c
+@@ -365,7 +365,7 @@ int main(int argc, char *argv[])
+ 
+ 	printf("Start %s\n", argv[0]);
+ 
+-#if HAVE_DECL_PTHREAD_PRIO_INHERIT
++#if HAS_PRIORITY_INHERIT
+ 	if (!nopi) {
+ 		pthread_mutexattr_t mutexattr;
+ 		int protocol;
+-- 
+1.7.9.5
+
