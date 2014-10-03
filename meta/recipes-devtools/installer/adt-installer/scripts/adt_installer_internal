@@ -167,7 +167,7 @@ for target_type in $YOCTOADT_TARGETS; do
   [ -e "$env_script_original" ] && env_script=$env_script_original
   [ -e "$env_script_relocated" ] && env_script=$env_script_relocated
 
-  $SUDO sed -i -e "s%##SDKTARGETSYSROOT##%$target_sysroot%g" $env_script
+  $SUDO sed -i -e "s%SDKTARGETSYSROOT=.*%SDKTARGETSYSROOT=$target_sysroot%g" $env_script
 done
 
 if [ "$YOCTOADT_QEMU" == "Y" ] || [ "$YOCTOADT_QEMU" == "y" ]; then
