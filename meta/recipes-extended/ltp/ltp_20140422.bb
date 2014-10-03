@@ -29,6 +29,7 @@ SRC_URI = "git://github.com/linux-test-project/ltp.git \
     file://make-setregid02-work.patch \
     file://add-knob-for-numa.patch \
     file://0001-Realtime-tests-Fix-bad-priority-inheritance-conditio.patch \
+    file://0001-Realtime-tests-Fix-robust-mutex-conditionals.patch \
 "
 
 S = "${WORKDIR}/git"
