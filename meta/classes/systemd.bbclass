@@ -143,10 +143,7 @@ python systemd_populate_packages() {
         if has_exactly_one_service:
             has_exactly_one_service = len(get_package_var(d, 'SYSTEMD_SERVICE', systemd_packages).split()) == 1
 
-        keys = 'Also' # Conflicts??
-        if has_exactly_one_service:
-            # single service gets also the /dev/null dummies
-            keys = 'Also Conflicts'
+        keys = 'Also'
         # scan for all in SYSTEMD_SERVICE[]
         for pkg_systemd in systemd_packages.split():
             for service in get_package_var(d, 'SYSTEMD_SERVICE', pkg_systemd).split():
