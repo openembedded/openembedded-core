@@ -14,6 +14,7 @@ SRC_URI = "${GNU_MIRROR}/bash/bash-${PV}.tar.gz;name=tarball \
            ${GNU_MIRROR}/bash/bash-3.2-patches/bash32-054;apply=yes;striplevel=0;name=patch054 \
            ${GNU_MIRROR}/bash/bash-3.2-patches/bash32-055;apply=yes;striplevel=0;name=patch055 \
            ${GNU_MIRROR}/bash/bash-3.2-patches/bash32-056;apply=yes;striplevel=0;name=patch056 \
+           ${GNU_MIRROR}/bash/bash-3.2-patches/bash32-057;apply=yes;striplevel=0;name=patch057 \
            file://mkbuiltins_have_stringize.patch \
            file://build-tests.patch \
            file://test-output.patch \
@@ -38,3 +39,5 @@ SRC_URI[patch055.md5sum] = "05d201176d3499e2dfa4a73d09d42f05"
 SRC_URI[patch055.sha256sum] = "c0e816700837942ed548da74e5917f74b70cbbbb10c9f2caf73e8e06a0713d0a"
 SRC_URI[patch056.md5sum] = "222eaa3a2c26f54a15aa5e08817a534a"
 SRC_URI[patch056.sha256sum] = "063a8d8d74e4407bf07a32b965b8ef6d213a66abdb6af26cc3584a437a56bbb4"
+SRC_URI[patch057.md5sum] = "47d98e3e042892495c5efe54ec6e5913"
+SRC_URI[patch057.sha256sum] = "5fc689394d515990f5ea74e2df765fc6e5e42ca44b4591b2c6f9be4b0cadf0f0"

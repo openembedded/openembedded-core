@@ -34,6 +34,7 @@ SRC_URI = "${GNU_MIRROR}/bash/${BPN}-${PV}.tar.gz;name=tarball \
            ${GNU_MIRROR}/bash/bash-4.3-patches/bash43-027;apply=yes;striplevel=0;name=patch027 \
            ${GNU_MIRROR}/bash/bash-4.3-patches/bash43-028;apply=yes;striplevel=0;name=patch028 \
            ${GNU_MIRROR}/bash/bash-4.3-patches/bash43-029;apply=yes;striplevel=0;name=patch029 \
+           ${GNU_MIRROR}/bash/bash-4.3-patches/bash43-030;apply=yes;striplevel=0;name=patch030 \
            file://execute_cmd.patch;striplevel=0 \
            file://mkbuiltins_have_stringize.patch \
            file://build-tests.patch \
@@ -102,5 +103,7 @@ SRC_URI[patch028.md5sum] = "dd51fa67913b5dca45a702b672b3323f"
 SRC_URI[patch028.sha256sum] = "e8b0dbed4724fa7b9bd8ff77d12c7f03da0fbfc5f8251ef5cb8511eb082b469d"
 SRC_URI[patch029.md5sum] = "0729364c977ef4271e9f8dfafadacf67"
 SRC_URI[patch029.sha256sum] = "4cc4a397fe6bc63ecb97d030a4e44258ef2d4e076d0e90c77782968cc43d6292"
+SRC_URI[patch030.md5sum] = "efb709fdb1368945513de23ccbfae053"
+SRC_URI[patch030.sha256sum] = "85434f8a2f379d0c49a3ff6d9ffa12c8b157188dd739e556d638217d2a58385b"
 
 BBCLASSEXTEND = "nativesdk"
