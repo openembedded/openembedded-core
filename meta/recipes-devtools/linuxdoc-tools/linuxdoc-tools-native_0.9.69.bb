@@ -19,3 +19,7 @@ inherit autotools-brokensep native
 do_configure () {
 	oe_runconf
 }
+
+do_install() {
+	oe_runmake 'DESTDIR=${D}' 'TMPDIR=${T}' install
+}
