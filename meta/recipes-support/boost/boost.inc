@@ -106,16 +106,24 @@ BJAM_TOOLS   = "-sTOOLS=gcc \
 def get_boost_parallel_make(bb, d):
     pm = d.getVar('PARALLEL_MAKE', True)
     if pm:
-        # people are usually using "-jN" or "-j N", but let it work with something else appended to it
-        import re
-        pm_prefix = re.search("\D+", pm)
-        pm_val = re.search("\d+", pm)
-        if pm_prefix is None or pm_val is None:
-            bb.error("Unable to analyse format of PARALLEL_MAKE variable: %s" % pm)
-        pm_nval = min(64, int(pm_val.group(0)))
-        return pm_prefix.group(0) + str(pm_nval) + pm[pm_val.end():]
-    else:
-        return ""
+        # look for '-j' and throw other options (e.g. '-l') away
+        # because they might have different meaning in bjam
+        pm = pm.split()
+        while pm:
+            v = None
+            opt = pm.pop(0)
+            if opt == '-j':
+                v = pm.pop(0)
+            elif opt.startswith('-j'):
+                v = opt[2:].strip()
+            else:
+                v = None
+
+            if v:
+                v = min(64, int(v))
+                return '-j' + str(v)
+
+    return ""
 
 BOOST_PARALLEL_MAKE = "${@get_boost_parallel_make(bb, d)}"
 BJAM_OPTS    = '${BOOST_PARALLEL_MAKE} \
