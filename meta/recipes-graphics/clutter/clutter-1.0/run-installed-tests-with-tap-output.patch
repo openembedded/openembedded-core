@@ -1,0 +1,20 @@
+Configure output from installed-tests to be TAP compliant, such that gnome-desktop-testing-runner properly interprets the results.
+
+Upstream-status: Pending
+
+Signed-off-by: Tim Orling <TicoTimo@gmail.com>
+
+Index: clutter-1.20.0/build/autotools/glib-tap.mk
+===================================================================
+--- clutter-1.20.0.orig/build/autotools/glib-tap.mk
++++ clutter-1.20.0/build/autotools/glib-tap.mk
+@@ -128,7 +128,8 @@ installed_test_meta_DATA = $(installed_t
+ 	$(AM_V_GEN) (echo '[Test]' > $@.tmp; \
+ 	echo 'Type=session' >> $@.tmp; \
+ 	echo 'TestEnvironment=G_ENABLE_DIAGNOSTIC=0;CLUTTER_ENABLE_DIAGNOSTIC=0;' >> $@.tmp; \
+-	echo 'Exec=$(installed_testdir)/$<' >> $@.tmp; \
++	echo 'Exec=$(installed_testdir)/$< --tap' >> $@.tmp; \
++	echo 'Output=TAP' >> $@.tmp; \
+ 	mv $@.tmp $@)
+ 
+ CLEANFILES += $(installed_test_meta_DATA)
