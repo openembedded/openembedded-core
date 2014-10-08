@@ -65,7 +65,7 @@ am__test_logs1 = $(TESTS:=.log)
 am__test_logs2 = $(am__test_logs1:.log=.log)
 TEST_LOGS = $(am__test_logs2:.test.log=.log)
 MKDIR_P = /bin/mkdir -p
-PACKAGE_STRING = PCRE 8.34
+PACKAGE_STRING = PCRE 8.36
 SHELL = /bin/sh
 srcdir = .
 top_srcdir = .

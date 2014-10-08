@@ -14,8 +14,8 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/project/pcre/pcre/${PV}/pcre-${PV}.tar.bz2 \
            file://Makefile \
 "
 
-SRC_URI[md5sum] = "6aacb23986adccd9b3bc626c00979958"
-SRC_URI[sha256sum] = "a961c1c78befef263cc130756eeca7b674b4e73a81533293df44e4265236865b"
+SRC_URI[md5sum] = "b767bc9af0c20bc9c1fe403b0d41ad97"
+SRC_URI[sha256sum] = "ef833457de0c40e82f573e34528f43a751ff20257ad0e86d272ed5637eb845bb"
 
 S = "${WORKDIR}/pcre-${PV}"
 
