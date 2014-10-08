@@ -1,0 +1,38 @@
+From 41425d67d3589b1912416a17f740d6407c7834f2 Mon Sep 17 00:00:00 2001
+From: Hongxu Jia <hongxu.jia@windriver.com>
+Date: Wed, 8 Oct 2014 19:53:13 +0800
+Subject: [PATCH] libopkg/opkg_remove.c: avoid remove pkg repeatly with option
+ --force-removal-of-dependent-packages
+
+While remove pkg with '--force-removal-of-dependent-packages',
+pkg may be added to pkgs remove list multiple times, add status
+check to make sure pkg only be removed once.
+
+Upstream-Status: Backport
+Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
+
+---
+ libopkg/opkg_remove.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/libopkg/opkg_remove.c b/libopkg/opkg_remove.c
+index 34f9154..a225e41 100644
+--- a/libopkg/opkg_remove.c
++++ b/libopkg/opkg_remove.c
+@@ -250,6 +250,14 @@ opkg_remove_pkg(pkg_t *pkg, int from_upgrade)
+      if ((parent_pkg = pkg->parent) == NULL)
+	  return 0;
+
++     /* While remove pkg with '--force-removal-of-dependent-packages',
++        pkg may be added to remove list multiple times, add status
++        check to make sure pkg only be removed once. */
++     if (conf->force_removal_of_dependent_packages &&
++             pkg->state_flag & SF_FILELIST_CHANGED &&
++             pkg->state_status == SS_NOT_INSTALLED)
++         return 0;
++
+      /* only attempt to remove dependent installed packages if
+       * force_depends is not specified or the package is being
+       * replaced.
+--
+1.9.1
