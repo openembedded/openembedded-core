@@ -36,8 +36,11 @@ perl_native_fixup () {
 	sed -i -e 's#${STAGING_BINDIR_NATIVE}/perl-native/#${bindir}/#' \
 	       -e 's#${libdir}/perl-native/#${libdir}/#' \
 	    ${@d.getVar("PERLTOOLS", True).replace(' /',d.getVar('D', True) + '/')}
-	mv ${D}${libdir}/perl-native/perl ${D}${libdir}
-	rmdir ${D}${libdir}/perl-native || true
+
+	# ${libdir} is not applicable here, perl-native files are always
+	# installed to /usr/lib on both 32/64 bits targets.
+	mv ${D}${exec_prefix}/lib/perl-native/perl ${D}${libdir}
+	rmdir -p ${D}${exec_prefix}/lib/perl-native || true
 }
 
 REL_GIT_EXEC_PATH = "${@os.path.relpath(libexecdir, bindir)}/git-core"
