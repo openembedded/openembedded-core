@@ -1,15 +1,12 @@
 [Unit]
-Description=RPC Bind
-After=network.target
-Wants=rpcbind.target
-Before=rpcbind.target
+Description=RPC Bind Service
+Requires=rpcbind.socket
 
 [Service]
 Type=forking
 EnvironmentFile=-@SYSCONFDIR@/rpcbind.conf
 ExecStart=@SBINDIR@/rpcbind -w $RPCBIND_OPTS
-Restart=always
 SuccessExitStatus=2
 
 [Install]
-WantedBy=multi-user.target
+Also=rpcbind.socket

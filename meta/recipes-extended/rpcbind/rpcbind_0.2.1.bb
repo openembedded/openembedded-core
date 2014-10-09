@@ -15,6 +15,7 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/rpcbind/rpcbind-${PV}.tar.bz2 \
            file://init.d \
            ${UCLIBCPATCHES} \
            file://rpcbind.conf \
+           file://rpcbind.socket \
            file://rpcbind.service \
           "
 
@@ -34,8 +35,7 @@ PACKAGECONFIG[tcp-wrappers] = "--enable-libwrap,--disable-libwrap,tcp-wrappers"
 INITSCRIPT_NAME = "rpcbind"
 INITSCRIPT_PARAMS = "start 12 2 3 4 5 . stop 60 0 1 6 ."
 
-SYSTEMD_SERVICE_${PN} = "rpcbind.service"
-SYSTEMD_AUTO_ENABLE = "disable"
+SYSTEMD_SERVICE_${PN} = "rpcbind.service rpcbind.socket"
 
 inherit useradd
 
@@ -56,6 +56,7 @@ do_install_append () {
 
 	install -m 0755 ${WORKDIR}/rpcbind.conf ${D}${sysconfdir}
 	install -d ${D}${systemd_unitdir}/system
+	install -m 0644 ${WORKDIR}/rpcbind.socket ${D}${systemd_unitdir}/system
 	install -m 0644 ${WORKDIR}/rpcbind.service ${D}${systemd_unitdir}/system
 	sed -i -e 's,@SBINDIR@,${sbindir},g' \
 		-e 's,@SYSCONFDIR@,${sysconfdir},g' \
