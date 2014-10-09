@@ -72,6 +72,16 @@ toolchain_shared_env_script () {
 	echo 'export OECORE_SDK_VERSION="${SDK_VERSION}"' >> $script
 	echo 'export ARCH=${ARCH}' >> $script
 	echo 'export CROSS_COMPILE=${TARGET_PREFIX}' >> $script
+
+    cat >> $script <<EOF
+
+# Append environment subscripts
+if [ -d "\$OECORE_NATIVE_SYSROOT/environment-setup.d" ]; then
+    for envfile in \$OECORE_NATIVE_SYSROOT/environment-setup.d/*.sh; do
+	    source \$envfile
+    done
+fi
+EOF
 }
 
 #we get the cached site config in the runtime
