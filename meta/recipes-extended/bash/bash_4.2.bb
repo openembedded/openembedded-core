@@ -26,6 +26,7 @@ SRC_URI = "${GNU_MIRROR}/bash/${BPN}-${PV}.tar.gz;name=tarball \
            file://Fix-for-bash-exported-function-namespace-change.patch;striplevel=0 \
            file://cve-2014-7186_cve-2014-7187.patch;striplevel=0 \
            file://cve-2014-6277.patch \
+           file://cve-2014-6278.patch;striplevel=0 \
            file://run-ptest \
            "
 
