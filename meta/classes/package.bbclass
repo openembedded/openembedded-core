@@ -1572,8 +1572,11 @@ python package_do_shlibs() {
                 bb.debug(2, '%s: Dependency %s covered by PRIVATE_LIBS' % (pkg, n[0]))
                 continue
             if n[0] in shlib_provider.keys():
+                shlib_provider_path = list()
+                for k in shlib_provider[n[0]].keys():
+                    shlib_provider_path.append(k)
                 match = None
-                for p in n[2] + libsearchpath:
+                for p in n[2] + shlib_provider_path + libsearchpath:
                     if p in shlib_provider[n[0]]:
                         match = p
                         break
