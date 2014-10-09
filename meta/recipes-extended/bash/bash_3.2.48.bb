@@ -15,6 +15,7 @@ SRC_URI = "${GNU_MIRROR}/bash/bash-${PV}.tar.gz;name=tarball \
            file://Fix-for-bash-exported-function-namespace-change.patch \
            file://cve-2014-7186_cve-2014-7187.patch \
            file://cve-2014-6277.patch \
+           file://cve-2014-6278.patch \
           "
 
 SRC_URI[tarball.md5sum] = "338dcf975a93640bb3eaa843ca42e3f8"
