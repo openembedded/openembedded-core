@@ -45,7 +45,11 @@ RDEPENDS_python-avahi = "python-core python-dbus"
 do_install_append () {
 	rm ${D}${sysconfdir} -rf
 	rm ${D}${base_libdir} -rf
-	rm ${D}${base_libdir} -rf
+	rm ${D}${systemd_unitdir} -rf
+	# The ${systemd_unitdir} is /lib/systemd, so we need rmdir /lib,
+	# but not ${base_libdir} here. And the /lib may not exist
+	# whithout systemd.
+	[ ! -d ${D}/lib ] || rmdir ${D}/lib --ignore-fail-on-non-empty
 	rm ${D}${bindir}/avahi-b*
 	rm ${D}${bindir}/avahi-p*
 	rm ${D}${bindir}/avahi-r*
