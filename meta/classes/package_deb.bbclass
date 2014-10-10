@@ -239,13 +239,26 @@ python do_package_deb () {
             scriptvar = localdata.getVar('pkg_%s' % script, True)
             if not scriptvar:
                 continue
+            scriptvar = scriptvar.strip()
             try:
                 scriptfile = open(os.path.join(controldir, script), 'w')
             except OSError:
                 bb.utils.unlockfile(lf)
                 raise bb.build.FuncFailed("unable to open %s script file for writing." % script)
-            scriptfile.write("#!/bin/sh\n")
-            scriptfile.write(scriptvar)
+
+            if scriptvar.startswith("#!"):
+                pos = scriptvar.find("\n") + 1
+                scriptfile.write(scriptvar[:pos])
+            else:
+                pos = 0
+                scriptfile.write("#!/bin/sh\n")
+
+            # Prevent the prerm/postrm scripts from being run during an upgrade
+            if script in ('prerm', 'postrm'):
+                scriptfile.write('[ "$1" != "upgrade" ] || exit 0\n')
+
+            scriptfile.write(scriptvar[pos:])
+            scriptfile.write('\n')
             scriptfile.close()
             os.chmod(os.path.join(controldir, script), 0755)
 
