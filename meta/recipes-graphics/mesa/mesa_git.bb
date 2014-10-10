@@ -2,13 +2,12 @@ require ${BPN}.inc
 
 DEFAULT_PREFERENCE = "-1"
 
-LIC_FILES_CHKSUM = "file://docs/license.html;md5=f69a4626e9efc40fa0d3cc3b02c9eacf"
+LIC_FILES_CHKSUM = "file://docs/license.html;md5=6a23445982a7a972ac198e93cc1cb3de"
 
-PR = "${INC_PR}.0"
 SRCREV = "0028eb1083e6adc110a23a5f02c993cda217067a"
 PV = "10.1.3+git${SRCPV}"
 
-SRC_URI = "git://anongit.freedesktop.org/git/mesa/mesa \
+SRC_URI = "git://anongit.freedesktop.org/git/mesa/mesa;branch=10.1 \
            file://0002-pipe_loader_sw-include-xlib_sw_winsys.h-only-when-HA.patch \
            file://0006-fix-out-of-tree-egl.patch \
            "
