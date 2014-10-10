@@ -303,7 +303,7 @@ def sdk_list_installed_packages(d, target, format=None, rootfs_dir=None):
         os_var = ["SDK_OS", None][target is True]
         return RpmPkgsList(d, rootfs_dir, arch_var, os_var).list(format)
     elif img_type == "ipk":
-        conf_file_var = ["IPKGCONF_SDK", "IPKGCONF_Target"][target is True]
+        conf_file_var = ["IPKGCONF_SDK", "IPKGCONF_TARGET"][target is True]
         return OpkgPkgsList(d, rootfs_dir, d.getVar(conf_file_var, True)).list(format)
     elif img_type == "deb":
         return DpkgPkgsList(d, rootfs_dir).list(format)
