@@ -50,6 +50,8 @@ do_configure () {
         	sed -i "s/%ssl%/$ssl/" wpa_supplicant/.config
 	fi
 
+	# For rebuild
+	rm -f wpa_supplicant/*.d wpa_supplicant/dbus/*.d
 }
 
 export EXTRA_CFLAGS = "${CFLAGS}"
