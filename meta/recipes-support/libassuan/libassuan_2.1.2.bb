@@ -22,5 +22,5 @@ inherit autotools texinfo binconfig-disabled pkgconfig
 
 do_configure_prepend () {
 	# Else these could be used in prefernce to those in aclocal-copy
-	rm ${S}/m4/*.m4
+	rm -f ${S}/m4/*.m4
 }
