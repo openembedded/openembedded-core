@@ -1,0 +1,31 @@
+
+Upstream-Status: Backport
+
+Originally-submitted-by: Peter Urbanec <openembedded-devel@urbanec.net>
+Signed-off-by: Saul Wold <sgw@linux.intel.com>
+
+--- /dev/null
++++ b/meta/recipes-devtools/gcc/gcc-4.9/0056-top-level-reorder_gcc-bug-61144.patch
+@@ -0,0 +1,21 @@
++--- a/gcc/varpool.c    2014/10/05 02:50:01     215895
+++++ b/gcc/varpool.c    2014/10/05 04:52:19     215896
++@@ -329,8 +329,16 @@
++
++   /* Variables declared 'const' without an initializer
++      have zero as the initializer if they may not be
++-     overridden at link or run time.  */
++-  if (!DECL_INITIAL (real_decl)
+++     overridden at link or run time.
+++
+++     It is actually requirement for C++ compiler to optimize const variables
+++     consistently. As a GNU extension, do not enfore this rule for user defined
+++     weak variables, so we support interposition on:
+++     static const int dummy = 0;
+++     extern const int foo __attribute__((__weak__, __alias__("dummy")));
+++   */
+++  if ((!DECL_INITIAL (real_decl)
+++       || (DECL_WEAK (decl) && !DECL_COMDAT (decl)))
++       && (DECL_EXTERNAL (decl) || decl_replaceable_p (decl)))
++     return error_mark_node;
++ 
+
