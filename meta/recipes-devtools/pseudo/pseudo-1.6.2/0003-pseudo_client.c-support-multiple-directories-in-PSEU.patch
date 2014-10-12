@@ -1,0 +1,115 @@
+From 09f04dc36f21c179235109b3dcddce9dda9a8ba8 Mon Sep 17 00:00:00 2001
+From: "Peter A. Bigot" <pab@pabigot.com>
+Date: Sun, 12 Oct 2014 12:17:48 -0500
+Subject: [PATCH 3/3] pseudo_client.c: support multiple directories in
+ PSEUDO_PASSWD
+
+For OpenEmbedded it is highly unlikely that using the build host passwd
+file is the right approach.  Most packages can be built with a pseudo
+that was configured --without-passwd-fallback, since
+PSEUDO_PASSWD=${STAGING_DIR_TARGET} suffices.
+
+This fails when building images, because image.bbclass (correctly)
+overrides to PSEUDO_PASSWD=${IMAGE_ROOTFS}.  However, the rootfs
+/etc/passwd is not created until the post-install phase of base-passwd,
+which is long after a passwd file is required.  For example, the smart
+RPM interface wants to look up uid 0 right away.  The right solution
+here is to look first in ${IMAGE_ROOTFS}, then fallback to
+a location holding immutable files with the minimum user/group settings
+necessary to successfully get base-passwd onto the target.
+
+Rather than rework pseudo to change PSEUDO_PASSWD_FALLBACK to be a
+run-time rather than compile-time specification, rework the handling of
+PSEUDO_PASSWD so that it is a colon-separated list of directories that
+are processed in order.
+
+Upstream-Status: Pending
+Signed-off-by: Peter A. Bigot <pab@pabigot.com>
+---
+ pseudo_client.c | 50 +++++++++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 49 insertions(+), 1 deletion(-)
+
+diff --git a/pseudo_client.c b/pseudo_client.c
+index 7a4d7fa..b52b86a 100644
+--- a/pseudo_client.c
++++ b/pseudo_client.c
+@@ -75,6 +75,8 @@ int pseudo_umask = 022;
+
+ static char **fd_paths = NULL;
+ static int nfds = 0;
++static const char **passwd_paths = NULL;
++static int npasswd_paths = 0;
+ static int messages = 0;
+ static struct timeval message_time = { .tv_sec = 0 };
+ static int pseudo_inited = 0;
+@@ -93,7 +95,7 @@ gid_t pseudo_egid;
+ gid_t pseudo_sgid;
+ gid_t pseudo_fgid;
+
+-#define PSEUDO_ETC_FILE(filename, realname, flags) pseudo_etc_file(filename, realname, flags, (const char *[]) { pseudo_chroot, pseudo_passwd, PSEUDO_PASSWD_FALLBACK }, PSEUDO_PASSWD_FALLBACK ? 3 : 2)
++#define PSEUDO_ETC_FILE(filename, realname, flags) pseudo_etc_file(filename, realname, flags, passwd_paths, npasswd_paths)
+
+ /* helper function to make a directory, just like mkdir -p.
+  * Can't use system() because the child shell would end up trying
+@@ -117,6 +119,42 @@ mkdir_p(char *path) {
+	(void) mkdir(path, 0755);
+ }
+
++static int
++build_passwd_paths(const char **paths)
++{
++	int np = 0;
++
++	if (pseudo_chroot) {
++		if (paths) {
++			paths[np] = pseudo_chroot;
++		}
++		++np;
++	}
++	if (pseudo_passwd) {
++		const char *cp = pseudo_passwd;
++		const char *next = strchr(cp, ':');
++		while (next) {
++			if (paths) {
++				paths[np] = strndup(cp, next-cp);
++			}
++			++np;
++			cp = next+1;
++			next = strchr(cp, ':');
++		}
++		if (paths) {
++			paths[np] = strdup(cp);
++		}
++		++np;
++	}
++	if (PSEUDO_PASSWD_FALLBACK) {
++		if (paths) {
++			paths[np] = PSEUDO_PASSWD_FALLBACK;
++		}
++		++np;
++	}
++	return np;
++}
++
+ void
+ pseudo_init_client(void) {
+	char *env;
+@@ -329,6 +367,16 @@ pseudo_init_client(void) {
+		}
+		free(env);
+
++		npasswd_paths = build_passwd_paths(NULL);
++		if (npasswd_paths) {
++			passwd_paths = malloc(npasswd_paths * sizeof(*passwd_paths));
++			if (!passwd_paths) {
++				pseudo_diag("couldn't allocate space for passwd paths.\n");
++				exit(1);
++			}
++			build_passwd_paths(passwd_paths);
++		}
++
+		pseudo_inited = 1;
+	}
+	if (!pseudo_disabled)
+--
+1.8.5.5

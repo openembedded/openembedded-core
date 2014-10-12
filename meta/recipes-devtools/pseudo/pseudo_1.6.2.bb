@@ -3,6 +3,8 @@ require pseudo.inc
 SRC_URI = " \
     http://www.yoctoproject.org/downloads/${BPN}/${BPN}-${PV}.tar.bz2 \
     file://0001-pseudo_client.c-protect-pwd_lck-against-magic.patch \
+    file://0002-pseudo_util-modify-interface-to-pseudo_etc_file.patch \
+    file://0003-pseudo_client.c-support-multiple-directories-in-PSEU.patch \
 "
 
 SRC_URI[md5sum] = "4d7b4f9d1b4aafa680ce94a5a9a52f1f"

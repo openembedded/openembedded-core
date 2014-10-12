@@ -1,0 +1,69 @@
+From f05def2bbd5507084672bc9072ffe0e5101e9b47 Mon Sep 17 00:00:00 2001
+From: "Peter A. Bigot" <pab@pabigot.com>
+Date: Sun, 12 Oct 2014 11:35:57 -0500
+Subject: [PATCH 2/3] pseudo_util: modify interface to pseudo_etc_file
+
+* Make the search directory pointers const: there is no reason why this
+  function should be allowed to mutate the directories.
+
+* Change the search directory argument from an array of pointers to a
+  pointer-to-pointers to prepare for an upcoming enhancement.
+
+Upstream-Status: Pending
+Signed-off-by: Peter A. Bigot <pab@pabigot.com>
+---
+ pseudo.h        | 2 +-
+ pseudo_client.c | 2 +-
+ pseudo_util.c   | 4 ++--
+ 3 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/pseudo.h b/pseudo.h
+index 92020e4..05813c1 100644
+--- a/pseudo.h
++++ b/pseudo.h
+@@ -86,7 +86,7 @@ extern int pseudo_logfile(char *defname);
+ extern ssize_t pseudo_sys_path_max(void);
+ extern ssize_t pseudo_path_max(void);
+ #define PSEUDO_PWD_MAX 4096
+-extern int pseudo_etc_file(const char *filename, char *realname, int flags, char *path[], int dircount);
++extern int pseudo_etc_file(const char *filename, char *realname, int flags, const char **search_dirs, int dircount);
+ extern void pseudo_stat32_from64(struct stat *, const struct stat64 *);
+ extern void pseudo_stat64_from32(struct stat64 *, const struct stat *);
+
+diff --git a/pseudo_client.c b/pseudo_client.c
+index 442dd19..7a4d7fa 100644
+--- a/pseudo_client.c
++++ b/pseudo_client.c
+@@ -93,7 +93,7 @@ gid_t pseudo_egid;
+ gid_t pseudo_sgid;
+ gid_t pseudo_fgid;
+
+-#define PSEUDO_ETC_FILE(filename, realname, flags) pseudo_etc_file(filename, realname, flags, (char *[]) { pseudo_chroot, pseudo_passwd, PSEUDO_PASSWD_FALLBACK }, PSEUDO_PASSWD_FALLBACK ? 3 : 2)
++#define PSEUDO_ETC_FILE(filename, realname, flags) pseudo_etc_file(filename, realname, flags, (const char *[]) { pseudo_chroot, pseudo_passwd, PSEUDO_PASSWD_FALLBACK }, PSEUDO_PASSWD_FALLBACK ? 3 : 2)
+
+ /* helper function to make a directory, just like mkdir -p.
+  * Can't use system() because the child shell would end up trying
+diff --git a/pseudo_util.c b/pseudo_util.c
+index e4e1fc8..647d3ad 100644
+--- a/pseudo_util.c
++++ b/pseudo_util.c
+@@ -1264,7 +1264,7 @@ FILE *pseudo_host_etc_group_file = &pseudo_fake_group_file;
+ #endif
+
+ int
+-pseudo_etc_file(const char *file, char *realname, int flags, char *search_dirs[], int dircount) {
++pseudo_etc_file(const char *file, char *realname, int flags, const char **search_dirs, int dircount) {
+	char filename[pseudo_path_max()];
+	int rc = -1;
+
+@@ -1280,7 +1280,7 @@ pseudo_etc_file(const char *file, char *realname, int flags, char *search_dirs[]
+		return -1;
+	}
+	for (i = 0; i < dircount; ++i) {
+-		char *s = search_dirs[i];
++		const char *s = search_dirs[i];
+		if (!s)
+			continue;
+ #if PSEUDO_PORT_DARWIN
+--
+1.8.5.5
