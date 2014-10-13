@@ -838,6 +838,7 @@ class RpmPM(PackageManager):
                         % prefer_color)
 
         self._invoke_smart(cmd)
+        self._invoke_smart('config --set rpm-ignoresize=1')
 
         # Write common configuration for host and target usage
         self._invoke_smart('config --set rpm-nolinktos=1')
