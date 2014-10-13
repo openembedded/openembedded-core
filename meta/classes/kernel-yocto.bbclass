@@ -288,12 +288,14 @@ do_validate_branches() {
 	# check and we can exit early
 	if [ "${machine_srcrev}" = "AUTOINC" ]; then
 		bbnote "SRCREV validation is not required for AUTOREV"
-	elif [ "${machine_srcrev}" = "" ] && [ "${SRCREV}" != "AUTOINC" ]; then
-		# SRCREV_machine_<MACHINE> was not set. This means that a custom recipe
-		# that doesn't use the SRCREV_FORMAT "machine_meta" is being built. In
-		# this case, we need to reset to the give SRCREV before heading to patching
-		bbnote "custom recipe is being built, forcing SRCREV to ${SRCREV}"
-		force_srcrev="${SRCREV}"
+	elif [ "${machine_srcrev}" = "" ]; then
+		if [ "${SRCREV}" != "AUTOINC" ]; then
+		       # SRCREV_machine_<MACHINE> was not set. This means that a custom recipe
+		       # that doesn't use the SRCREV_FORMAT "machine_meta" is being built. In
+		       # this case, we need to reset to the give SRCREV before heading to patching
+		       bbnote "custom recipe is being built, forcing SRCREV to ${SRCREV}"
+		       force_srcrev="${SRCREV}"
+		fi
 	else
 		git cat-file -t ${machine_srcrev} > /dev/null
 		if [ $? -ne 0 ]; then
