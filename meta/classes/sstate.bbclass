@@ -47,6 +47,11 @@ SIGGEN_LOCKEDSIGS_CHECK_LEVEL ?= 'error'
 sstate_create_package[dirs] = "${SSTATE_BUILDDIR}"
 sstate_unpack_package[dirs] = "${SSTATE_INSTDIR}"
 
+# Do not run sstate_hardcode_path() in ${B}:
+# the ${B} maybe removed by cmake_do_configure() while
+# sstate_hardcode_path() running.
+sstate_hardcode_path[dirs] = "${SSTATE_BUILDDIR}"
+
 python () {
     if bb.data.inherits_class('native', d):
         d.setVar('SSTATE_PKGARCH', d.getVar('BUILD_ARCH'))
