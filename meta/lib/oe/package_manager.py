@@ -63,6 +63,9 @@ class RpmIndexer(Indexer):
                     localdata = bb.data.createCopy(self.d)
                     default_tune_key = "DEFAULTTUNE_virtclass-multilib-" + eext[1]
                     default_tune = localdata.getVar(default_tune_key, False)
+                    if default_tune is None:
+                        default_tune_key = "DEFAULTTUNE_ML_" + eext[1]
+                        default_tune = localdata.getVar(default_tune_key, False)
                     if default_tune:
                         localdata.setVar("DEFAULTTUNE", default_tune)
                         bb.data.update_data(localdata)
