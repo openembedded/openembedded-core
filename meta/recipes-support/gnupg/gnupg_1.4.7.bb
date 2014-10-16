@@ -99,3 +99,4 @@ FILES_${PN}-dbg += "${libexecdir}/${BPN}/.debug"
 
 PACKAGECONFIG ??= ""
 PACKAGECONFIG[curl] = "--with-libcurl=${STAGING_LIBDIR},--without-libcurl,curl"
+PACKAGECONFIG[libusb] = "--with-libusb=${STAGING_LIBDIR},--without-libusb,libusb-compat"
