@@ -145,17 +145,6 @@ python () {
 
     d.setVar('IMAGE_FEATURES', ' '.join(list(remain_features)))
 
-    # Ensure we have the vendor list for complementary package handling
-    ml_vendor_list = ""
-    multilibs = d.getVar('MULTILIBS', True) or ""
-    for ext in multilibs.split():
-        eext = ext.split(':')
-        if len(eext) > 1 and eext[0] == 'multilib':
-            localdata = bb.data.createCopy(d)
-            vendor = localdata.getVar("TARGET_VENDOR_virtclass-multilib-" + eext[1], False)
-            ml_vendor_list += " " + vendor
-    d.setVar('MULTILIB_VENDORS', ml_vendor_list)
-
     check_image_features(d)
     initramfs_image = d.getVar('INITRAMFS_IMAGE', True) or ""
     if initramfs_image != "":
