@@ -146,9 +146,9 @@ python do_ar_original() {
             fetch.unpack(tmpdir, (url,))
 
             os.chdir(tmpdir)
-            # We split on '+' to chuck any annoying AUTOINC+ in the revision.
+            # We eliminate any AUTOINC+ in the revision.
             try:
-                src_rev = bb.fetch2.get_srcrev(d).split('+')[-1][:10]
+                src_rev = bb.fetch2.get_srcrev(d).replace('AUTOINC+','')
             except:
                 src_rev = 'NOREV'
             tarname = os.path.join(ar_outdir, basename + '.' + src_rev + '.tar.gz')
