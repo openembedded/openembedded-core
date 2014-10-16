@@ -36,6 +36,10 @@ EGLIBCPATCHES = "\
 SRCREV_glibc = "b8079dd0d360648e4e8de48656c5c38972621072"
 SRCREV_localedef = "c833367348d39dad7ba018990bfdaffaec8e9ed3"
 
+# Makes for a rather long rev (22 characters), but...
+#
+SRCREV_FORMAT = "glibc__localedef"
+
 S = "${WORKDIR}/git"
 
 EXTRA_OECONF = "--with-glibc=${S}"
