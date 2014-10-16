@@ -31,7 +31,9 @@ RRECOMMENDS_${PN} = "\
 SRC_URI = "http://downloads.yoctoproject.org/mirror/sources/mtools-${PV}.tar.gz \
 	file://mtools-makeinfo.patch \
 	file://mtools.patch \
-	file://no-x11.patch"
+	file://no-x11.patch \
+	file://fix-broken-lz.patch \
+"
 
 SRC_URI[md5sum] = "3e68b857b4e1f3a6521d1dfefbd30a36"
 SRC_URI[sha256sum] = "af083a73425d664d4607ef6c6564fd9319a0e47ee7c105259a45356cb834690e"
