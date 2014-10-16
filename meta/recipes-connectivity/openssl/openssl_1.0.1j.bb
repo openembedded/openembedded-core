@@ -38,8 +38,8 @@ SRC_URI += "file://configure-targets.patch \
             file://run-ptest \
            "
 
-SRC_URI[md5sum] = "c8dc151a671b9b92ff3e4c118b174972"
-SRC_URI[sha256sum] = "3c179f46ca77069a6a0bac70212a9b3b838b2f66129cb52d568837fc79d8fcc7"
+SRC_URI[md5sum] = "f7175c9cd3c39bb1907ac8bba9df8ed3"
+SRC_URI[sha256sum] = "1b60ca8789ba6f03e8ef20da2293b8dc131c39d83814e775069f02d26354edf3"
 
 PACKAGES =+ " \
 	${PN}-engines \
