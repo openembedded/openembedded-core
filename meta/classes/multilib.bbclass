@@ -21,6 +21,9 @@ python multilib_virtclass_handler () {
     if bb.data.inherits_class('image', e.data):
         e.data.setVar("MLPREFIX", variant + "-")
         e.data.setVar("PN", variant + "-" + e.data.getVar("PN", False))
+        target_vendor = e.data.getVar("TARGET_VENDOR_" + "virtclass-multilib-" + variant, False)
+        if target_vendor:
+            e.data.setVar("TARGET_VENDOR", target_vendor)
         return
 
     if bb.data.inherits_class('cross-canadian', e.data):
