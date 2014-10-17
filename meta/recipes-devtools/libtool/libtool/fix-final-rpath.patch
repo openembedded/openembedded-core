@@ -6,12 +6,13 @@ This works around the issue until it gets sorted out upstream.
 
 Fix suggested by Richard Purdie <richard.purdie@intel.com>
 Signed-off-by: Scott Garman <scott.a.garman@intel.com>
+Signed-off-by: Randy Witt <randy.e.witt@linux.intel.com>
 
 Index: libtool-2.4.2/libltdl/config/ltmain.m4sh
 ===================================================================
 --- libtool-2.4.2.orig/libltdl/config/ltmain.m4sh
 +++ libtool-2.4.2/libltdl/config/ltmain.m4sh
-@@ -7268,9 +7268,11 @@ EOF
+@@ -7268,9 +7268,11 @@
  	  test "$opt_mode" != relink && rpath="$compile_rpath$rpath"
  	  for libdir in $rpath; do
  	    if test -n "$hardcode_libdir_flag_spec"; then
@@ -25,9 +26,20 @@ Index: libtool-2.4.2/libltdl/config/ltmain.m4sh
  		if test -z "$hardcode_libdirs"; then
  		  hardcode_libdirs="$libdir"
  		else
-@@ -7999,6 +8001,10 @@ EOF
+@@ -7999,6 +8001,10 @@
        hardcode_libdirs=
        for libdir in $compile_rpath $finalize_rpath; do
+ 	if test -n "$hardcode_libdir_flag_spec"; then
++	  func_replace_sysroot "$libdir"
++	  libdir=$func_replace_sysroot_result
++	  func_stripname '=' '' "$libdir"
++	  libdir=$func_stripname_result
+ 	  if test -n "$hardcode_libdir_separator"; then
+ 	    if test -z "$hardcode_libdirs"; then
+ 	      hardcode_libdirs="$libdir"
+@@ -8050,6 +8056,10 @@
+       hardcode_libdirs=
+       for libdir in $finalize_rpath; do
  	if test -n "$hardcode_libdir_flag_spec"; then
 +	  func_replace_sysroot "$libdir"
 +	  libdir=$func_replace_sysroot_result
