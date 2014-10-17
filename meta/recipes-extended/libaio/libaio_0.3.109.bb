@@ -15,6 +15,7 @@ SRC_URI = "${DEBIAN_MIRROR}/main/liba/libaio/libaio_${PV}.orig.tar.gz \
            file://libaio-generic.patch \
            file://libaio-aarch64.patch \
            file://libaio_fix_for_mips_syscalls.patch \
+           file://libaio_fix_for_mips64.patch \
 "
 
 SRC_URI[md5sum] = "435a5b16ca6198eaf01155263d855756"

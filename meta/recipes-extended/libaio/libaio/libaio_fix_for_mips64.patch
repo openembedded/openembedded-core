@@ -1,0 +1,42 @@
+From 62fd97fbc5c53835baa18f210fca593fc8b5c636 Mon Sep 17 00:00:00 2001
+From: Jianchuan Wang <jianchuan.wang@windriver.com>
+Date: Wed, 15 Oct 2014 07:04:02 +0800
+Subject: [PATCH] libaio: fix for mips64
+    
+Add mips64 support in the libaio.h
+ - add macro PADDED/PADDEDptr/PADDEDul in the mips64 for structure iocb 
+   to be matched userland with kernel
+
+Upstream-Status: Backport
+
+Signed-off-by: Jianchuan Wang <jianchuan.wang@windriver.com>
+---
+ src/libaio.h | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
+
+diff --git a/src/libaio.h b/src/libaio.h
+index ff99188..64ea8f3 100644
+--- a/src/libaio.h
++++ b/src/libaio.h
+@@ -95,6 +95,18 @@ typedef enum io_iocb_cmd {
+ #define PADDED(x, y)   unsigned y; x
+ #define PADDEDptr(x, y)        unsigned y; x
+ #define PADDEDul(x, y) unsigned y; unsigned long x
++#elif defined(__mips64)
++#  if defined (__MIPSEB__) /* big endian, 64 bits */
++#define PADDED(x, y)	unsigned y; x
++#define PADDEDptr(x,y)	x
++#define PADDEDul(x, y)	unsigned long x
++#  elif defined(__MIPSEL__) /* little endian, 64 bits */
++#define PADDED(x, y)	x, y
++#define PADDEDptr(x, y)	x
++#define PADDEDul(x, y)	unsigned long x
++#  else
++#    error "mips64: neither mipseb nor mipsel?"
++#  endif
+ #elif defined(__mips__)
+ #  if defined (__MIPSEB__) /* big endian, 32 bits */
+ #define PADDED(x, y)   unsigned y; x
+-- 
+1.8.2.1
+
