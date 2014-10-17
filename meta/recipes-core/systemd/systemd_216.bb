@@ -63,6 +63,7 @@ PACKAGECONFIG[microhttpd] = "--enable-microhttpd,--disable-microhttpd,libmicroht
 PACKAGECONFIG[elfutils] = "--enable-elfutils,--disable-elfutils,elfutils"
 PACKAGECONFIG[resolved] = "--enable-resolved,--disable-resolved"
 PACKAGECONFIG[networkd] = "--enable-networkd,--disable-networkd"
+PACKAGECONFIG[libidn] = "--enable-libidn,--disable-libidn,libidn"
 
 CACHED_CONFIGUREVARS = "ac_cv_path_KILL=${base_bindir}/kill"
 
