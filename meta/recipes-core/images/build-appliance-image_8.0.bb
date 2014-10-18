@@ -21,7 +21,7 @@ IMAGE_FSTYPES = "vmdk"
 
 inherit core-image
 
-SRCREV ?= "ef3755b739e36c60eb9d5d7a0e7fa271d85cf3a8"
+SRCREV ?= "f0a2a2f44587f02fa7f434e82f91a6de2231f6b6"
 SRC_URI = "git://git.yoctoproject.org/poky;branch=dizzy \
            file://Yocto_Build_Appliance.vmx \
            file://Yocto_Build_Appliance.vmxf \
