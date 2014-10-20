@@ -1,0 +1,30 @@
+Remove Makefile dependencies for test targets
+
+These are probably here because the executables aren't always built for
+other platforms (e.g. Windows); however we can safely assume they'll
+always be there. None of the other test targets have such dependencies
+and if we don't remove them, make tries to rebuild the executables and
+fails during run-ptest.
+
+Upstream-Status: Inappropriate [config]
+
+Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
+
+diff --git a/test/Makefile b/test/Makefile
+index e6fcfb4..5ae043b 100644
+--- a/test/Makefile
++++ b/test/Makefile
+@@ -322,11 +322,11 @@ test_cms:
+ 	@echo "CMS consistency test"
+ 	$(PERL) cms-test.pl
+ 
+-test_srp: $(SRPTEST)$(EXE_EXT)
++test_srp:
+ 	@echo "Test SRP"
+ 	../util/shlib_wrap.sh ./srptest
+ 
+-test_heartbeat: $(HEARTBEATTEST)$(EXE_EXT)
++test_heartbeat:
+ 	../util/shlib_wrap.sh ./$(HEARTBEATTEST)
+ 
+ lint:

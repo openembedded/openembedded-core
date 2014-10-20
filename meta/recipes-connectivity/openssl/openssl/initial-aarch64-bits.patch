@@ -4,6 +4,7 @@ Subject: Initial aarch64 bits.
 X-Git-Url: http://git.openssl.org/gitweb/?p=openssl.git;a=commitdiff_plain;h=039081b80977e2a5de84e1f88f8b4d025b559956
 
 Initial aarch64 bits.
+Upstream-Status: backport (will be included in 1.0.2)
 ---
  crypto/bn/bn_lcl.h       |    9 +++++++++
  crypto/md32_common.h     |   18 ++++++++++++++++++

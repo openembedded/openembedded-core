@@ -1,0 +1,75 @@
+Add 'buildtest' and 'runtest' targets to Makefile, to build and run tests
+cross-compiled.
+
+Signed-off-by: Anders Roxell <anders.roxell@enea.com>
+Signed-off-by: Maxin B. John <maxin.john@enea.com>
+Upstream-Status: Pending
+---
+diff -uNr a/Makefile b/Makefile
+--- a/Makefile.org	2012-05-10 17:06:02.000000000 +0200
++++ b/Makefile.org	2012-10-27 00:05:55.359424024 +0200
+@@ -411,8 +411,16 @@
+ test:   tests
+ 
+ tests: rehash
++	$(MAKE) buildtest
++	$(MAKE) runtest
++
++buildtest:
++	@(cd test && \
++	$(CLEARENV) && $(MAKE) -e $(BUILDENV) TOP=.. TESTS='$(TESTS)' OPENSSL_DEBUG_MEMORY=on OPENSSL_CONF=../apps/openssl.cnf exe apps);
++
++runtest:
+ 	@(cd test && echo "testing..." && \
+-	$(CLEARENV) && $(MAKE) -e $(BUILDENV) TOP=.. TESTS='$(TESTS)' OPENSSL_DEBUG_MEMORY=on OPENSSL_CONF=../apps/openssl.cnf tests );
++	$(CLEARENV) && $(MAKE) -e $(BUILDENV) TOP=.. TESTS='$(TESTS)' OPENSSL_DEBUG_MEMORY=on OPENSSL_CONF=../apps/openssl.cnf alltests );
+ 	OPENSSL_CONF=apps/openssl.cnf util/opensslwrap.sh version -a
+ 
+ report:
+diff --git a/test/Makefile b/test/Makefile
+index 3912f82..1696767 100644
+--- a/test/Makefile
++++ b/test/Makefile
+@@ -128,7 +128,7 @@ tests:	exe apps $(TESTS)
+ apps:
+ 	@(cd ..; $(MAKE) DIRS=apps all)
+ 
+-alltests: \
++all-tests= \
+ 	test_des test_idea test_sha test_md4 test_md5 test_hmac \
+ 	test_md2 test_mdc2 test_wp \
+ 	test_rmd test_rc2 test_rc4 test_rc5 test_bf test_cast test_aes \
+@@ -138,6 +138,11 @@ alltests: \
+ 	test_ss test_ca test_engine test_evp test_ssl test_tsa test_ige \
+ 	test_jpake test_cms
+ 
++alltests:
++	@(for i in $(all-tests); do \
++	( $(MAKE) $$i && echo "PASS: $$i" ) || echo "FAIL: $$i"; \
++	done)
++
+ test_evp:
+ 	../util/shlib_wrap.sh ./$(EVPTEST) evptests.txt
+ 
+@@ -203,7 +208,7 @@ test_x509:
+ 	echo test second x509v3 certificate
+ 	sh ./tx509 v3-cert2.pem 2>/dev/null
+ 
+-test_rsa: $(RSATEST)$(EXE_EXT)
++test_rsa:
+ 	@sh ./trsa 2>/dev/null
+ 	../util/shlib_wrap.sh ./$(RSATEST)
+ 
+@@ -298,11 +303,11 @@ test_tsa:
+ 	  sh ./testtsa; \
+ 	fi
+ 
+-test_ige: $(IGETEST)$(EXE_EXT)
++test_ige:
+ 	@echo "Test IGE mode"
+ 	../util/shlib_wrap.sh ./$(IGETEST)
+ 
+-test_jpake: $(JPAKETEST)$(EXE_EXT)
++test_jpake:
+ 	@echo "Test JPAKE"
+ 	../util/shlib_wrap.sh ./$(JPAKETEST)
