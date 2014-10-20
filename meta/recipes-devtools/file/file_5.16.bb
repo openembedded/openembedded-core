@@ -32,5 +32,9 @@ do_install_append_class-native() {
 		--magic-file ${datadir}/misc/magic.mgc
 }
 
+do_install_append_class-nativesdk() {
+	create_cmdline_wrapper ${D}/${bindir}/file \
+		--magic-file ${datadir}/misc/magic.mgc
+}
 
 BBCLASSEXTEND = "native nativesdk"
