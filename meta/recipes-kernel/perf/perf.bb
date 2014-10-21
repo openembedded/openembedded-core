@@ -22,7 +22,7 @@ TUI_DEPENDS = "${@perf_feature_enabled('perf-tui', 'libnewt slang', '',d)}"
 SCRIPTING_DEPENDS = "${@perf_feature_enabled('perf-scripting', 'perl python', '',d)}"
 LIBUNWIND_DEPENDS = "${@perf_feature_enabled('perf-libunwind', 'libunwind', '',d)}"
 
-DEPENDS = "virtual/kernel \
+DEPENDS = " \
     virtual/${MLPREFIX}libc \
     ${MLPREFIX}elfutils \
     ${MLPREFIX}binutils \
@@ -31,6 +31,8 @@ DEPENDS = "virtual/kernel \
     ${LIBUNWIND_DEPENDS} \
     bison flex \
 "
+
+do_configure[depends] += "virtual/kernel:do_patch"
 
 PROVIDES = "virtual/perf"
 
@@ -46,7 +48,7 @@ export HOST_SYS
 #kernel 3.1+ supports WERROR to disable warnings as errors
 export WERROR = "0"
 
-do_populate_lic[depends] += "virtual/kernel:do_populate_sysroot"
+do_populate_lic[depends] += "virtual/kernel:do_patch"
 
 # needed for building the tools/perf Perl binding
 inherit perlnative cpan-base
@@ -56,9 +58,7 @@ export PERL_INC = "${STAGING_LIBDIR}${PERL_OWN_DIR}/perl/${@get_perl_version(d)}
 export PERL_LIB = "${STAGING_LIBDIR}${PERL_OWN_DIR}/perl/${@get_perl_version(d)}"
 export PERL_ARCHLIB = "${STAGING_LIBDIR}${PERL_OWN_DIR}/perl/${@get_perl_version(d)}"
 
-S = "${STAGING_KERNEL_DIR}"
-# The source should be ready after the do_unpack
-do_unpack[depends] += "virtual/kernel:do_populate_sysroot"
+inherit kernelsrc
 
 B = "${WORKDIR}/${BPN}-${PV}"
 
@@ -157,7 +157,7 @@ do_configure_prepend () {
 }
 
 python do_package_prepend() {
-    bb.data.setVar('PKGV', get_kernelversion('${S}').split("-")[0], d)
+    d.setVar('PKGV', d.getVar("KERNEL_VERSION", True).split("-")[0])
 }
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"

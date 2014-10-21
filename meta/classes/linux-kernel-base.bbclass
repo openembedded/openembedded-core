@@ -1,5 +1,5 @@
 # parse kernel ABI version out of <linux/version.h>
-def get_kernelversion(p):
+def get_kernelversion_headers(p):
     import re
 
     fn = p + '/include/linux/utsrelease.h'
@@ -9,7 +9,6 @@ def get_kernelversion(p):
     if not os.path.isfile(fn):
         fn = p + '/include/linux/version.h'
 
-    import re
     try:
         f = open(fn, 'r')
     except IOError:
@@ -23,6 +22,16 @@ def get_kernelversion(p):
         if m:
             return m.group(1)
     return None
+
+
+def get_kernelversion_file(p):
+    fn = p + '/kernel-abiversion'
+
+    try:
+        with open(fn, 'r') as f:
+            return f.readlines()[0].strip()
+    except IOError:
+        return None
 
 def linux_module_packages(s, d):
 	suffix = ""
