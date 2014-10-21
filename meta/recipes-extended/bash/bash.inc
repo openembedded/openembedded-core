@@ -38,6 +38,10 @@ do_install_append () {
 		mv ${D}${bindir}/bash ${D}${base_bindir}
 	fi
 }
+do_install_append_class-target () {
+	# Clean host path in bashbug
+	sed -i -e "s,${STAGING_DIR_TARGET},,g" ${D}${bindir}/bashbug
+}
 
 do_install_ptest () {
 	make INSTALL_TEST_DIR=${D}${PTEST_PATH}/tests install-test
