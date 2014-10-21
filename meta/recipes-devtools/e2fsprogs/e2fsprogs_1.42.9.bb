@@ -54,6 +54,12 @@ do_install () {
 	mv ${D}${bindir}/chattr ${D}${base_bindir}/chattr.e2fsprogs
 }
 
+do_install_append_class-target() {
+	# Clean host path in compile_et, mk_cmds
+	sed -i -e "s,ET_DIR=\"${S}/lib/et\",ET_DIR=\"${datadir}/et\",g" ${D}${bindir}/compile_et
+	sed -i -e "s,SS_DIR=\"${S}/lib/ss\",SS_DIR=\"${datadir}/ss\",g" ${D}${bindir}/mk_cmds
+}
+
 RDEPENDS_e2fsprogs = "e2fsprogs-badblocks"
 RRECOMMENDS_e2fsprogs = "e2fsprogs-mke2fs e2fsprogs-e2fsck"
 
