@@ -19,6 +19,7 @@ SRC_URI = "http://subversion.tigris.org/downloads/${BPN}-${PV}.tar.bz2 \
            file://subversion-CVE-2013-1847-CVE-2013-1846.patch \
            file://subversion-CVE-2013-4277.patch \
            file://subversion-CVE-2014-3522.patch \
+           file://subversion-CVE-2014-3528.patch \
 "
 
 SRC_URI[md5sum] = "113fca1d9e4aa389d7dc2b210010fa69"
