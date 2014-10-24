@@ -99,7 +99,7 @@ case "$1" in
     kill_udevd > "/dev/null" 2>&1
 
     # trigger the sorted events
-    echo -e '\000\000\000\000' > /proc/sys/kernel/hotplug
+    [ -e /proc/sys/kernel/hotplug ] && echo -e '\000' >/proc/sys/kernel/hotplug
     @UDEVD@ -d
 
     udevadm control --env=STARTUP=1
