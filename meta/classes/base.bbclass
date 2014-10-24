@@ -216,11 +216,24 @@ python base_eventhandler() {
 
 }
 
+CONFIGURESTAMPFILE = "${WORKDIR}/configure.sstate"
+
 addtask configure after do_patch
 do_configure[dirs] = "${S} ${B}"
 do_configure[deptask] = "do_populate_sysroot"
 base_do_configure() {
-	:
+	if [ -n "${CONFIGURESTAMPFILE}" -a -e "${CONFIGURESTAMPFILE}" ]; then
+		if [ "`cat ${CONFIGURESTAMPFILE}`" != "${BB_TASKHASH}" ]; then
+			cd ${B}
+			if [ -e Makefile -o -e makefile -o -e GNUmakefile ]; then
+				${MAKE} clean
+			fi
+			find ${B} -name \*.la -delete
+		fi
+	fi
+	if [ -n "${CONFIGURESTAMPFILE}" ]; then
+		echo ${BB_TASKHASH} > ${CONFIGURESTAMPFILE}
+	fi
 }
 
 addtask compile after do_configure
