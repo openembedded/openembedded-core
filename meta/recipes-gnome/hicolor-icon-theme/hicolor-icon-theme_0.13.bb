@@ -18,6 +18,11 @@ SRC_URI[sha256sum] = "a38b038915480d1ddd4e3c421562560a14d42ace0449a5acc07c50f57f
 
 FILES_${PN} += "${datadir}/icons"
 
+# Disable default since make clean doesn't work
+autotools_preconfigure () {
+	:
+}
+
 do_install_append () {
 	install -m 0644 ${WORKDIR}/index.theme ${D}/${datadir}/icons/hicolor
 }
