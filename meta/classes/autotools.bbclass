@@ -109,7 +109,11 @@ autotools_preconfigure() {
 			else
 				# At least remove the .la files since automake won't automatically
 				# regenerate them even if CFLAGS/LDFLAGS are different
-				cd ${S}; find ${S} -name \*.la -delete
+				cd ${S}
+				if [ -e Makefile -o -e makefile -o -e GNUmakefile ]; then
+					${MAKE} clean
+				fi
+				find ${S} -name \*.la -delete
 			fi
 		fi
 	fi
