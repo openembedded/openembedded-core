@@ -109,7 +109,7 @@ class ImageDepGraph(object):
         # remove added nodes from deps_array
         for item in group:
             for node in self.graph:
-                if item in self.graph[node]:
+                if item in self.graph[node].split():
                     self.deps_array[node][0] -= 1
 
             self.deps_array.pop(item, None)
