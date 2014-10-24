@@ -12,6 +12,7 @@ SRC_URI = "file://ldconfig-native-2.12.1.tar.bz2 \
            file://flag_fix.patch \
            file://endianess-header.patch \
            file://ldconfig-default-to-all-multilib-dirs.patch \
+           file://endian-ness_handling_fix.patch \
 "
 
 PR = "r2"
