@@ -92,8 +92,9 @@ do_install_append () {
 	fi
 
 	if [ "${USE_LDCONFIG}" != "1" ]; then
-		# We won't ship this file (see FILES above) so let's not install it
+		# We won't ship these files (see FILES above) so let's not install them
 		rm -f ${D}${sysconfdir}/ld.so.conf
+		rm -f ${D}${base_sbindir}/ldconfig
 		# This directory will be empty now so remove it too.
 		# But check whether it exists first, since it won't for glibc-initial.
 		if [ -d ${D}${sysconfdir} ]; then
