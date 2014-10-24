@@ -5,7 +5,6 @@
 [ -z "$1" ] && echo "Error: should be called from udhcpc" && exit 1
 
 RESOLV_CONF="/etc/resolv.conf"
-[ -n "$broadcast" ] && BROADCAST="broadcast $broadcast"
 [ -n "$subnet" ] && NETMASK="netmask $subnet"
 
 # return 0 if root is mounted on a network filesystem
@@ -17,7 +16,10 @@ root_is_nfs() {
 have_bin_ip=0
 if [ -x /sbin/ip ]; then
   have_bin_ip=1
+  BROADCAST="broadcast +"
 fi
+
+[ -n "$broadcast" ] && BROADCAST="broadcast $broadcast"
 
 case "$1" in
 	deconfig)
