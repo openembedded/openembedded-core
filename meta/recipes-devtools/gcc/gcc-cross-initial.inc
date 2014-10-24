@@ -21,7 +21,7 @@ EXTRA_OECONF = "\
     --enable-languages=c \
     ${OPTSPACE} \
     --program-prefix=${TARGET_PREFIX} \
-    --with-sysroot=${STAGING_DIR_TARGET} \
+    --with-sysroot=/not/exist \
     --with-build-sysroot=${GCCCROSS_BUILDSYSROOT} \
     ${EXTRA_OECONF_INITIAL} \
     ${@bb.utils.contains('DISTRO_FEATURES', 'ld-is-gold', '--with-ld=${STAGING_BINDIR_TOOLCHAIN}/${TARGET_PREFIX}ld.bfd', '', d)} \
