@@ -17,6 +17,11 @@ SRC_URI = "git://git.sv.gnu.org/config.git \
 
 S = "${WORKDIR}/git"
 
+# Disable default since make clean doesn't work
+do_configure () {
+	:
+}
+
 do_compile() {
 	:
 }
