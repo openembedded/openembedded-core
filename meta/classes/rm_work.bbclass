@@ -97,3 +97,15 @@ do_rm_work_all () {
 }
 do_rm_work_all[recrdeptask] = "do_rm_work"
 addtask rm_work_all after do_rm_work
+
+do_populate_sdk[postfuncs] += "rm_work_populatesdk"
+rm_work_populatesdk () {
+    :
+}
+rm_work_populatesdk[cleandirs] = "${WORKDIR}/sdk"
+
+do_rootfs[postfuncs] += "rm_work_rootfs"
+rm_work_rootfs () {
+    :
+}
+rm_work_rootfs[cleandirs] = "${WORKDIR}/rootfs"
