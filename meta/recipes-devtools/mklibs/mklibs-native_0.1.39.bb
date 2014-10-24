@@ -9,6 +9,7 @@ DEPENDS = "python-native dpkg-native"
 SRC_URI = "http://ftp.de.debian.org/debian/pool/main/m/mklibs/${BPN}_${PV}.tar.xz \
 	file://ac_init_fix.patch\
 	file://fix_STT_GNU_IFUNC.patch\
+	file://sysrooted-ldso.patch \
 "
 
 SRC_URI[md5sum] = "38a579a531401eb76f4bab4ccfb774a2"
