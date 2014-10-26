@@ -6,7 +6,7 @@ After=network.target
 
 [Service]
 Type=forking
-EnvironmentFile=-/etc/sysconfig/named
+EnvironmentFile=-/etc/default/bind9
 PIDFile=/run/named/named.pid
 
 ExecStartPre=@SBINDIR@/generate-rndc-key.sh
