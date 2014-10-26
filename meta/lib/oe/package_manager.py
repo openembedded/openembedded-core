@@ -1381,6 +1381,10 @@ class OpkgPM(PackageManager):
                     else:
                         status.write(line + "\n")
 
+                # Append a blank line after each package entry to ensure that it
+                # is separated from the following entry
+                status.write("\n")
+
     '''
     The following function dummy installs pkgs and returns the log of output.
     '''
