@@ -16,6 +16,7 @@ SRC_URI = "http://pkg-shadow.alioth.debian.org/releases/${BPN}-${PV}.tar.xz \
            file://fix-installation-failure-with-subids-disabled.patch \
            file://0001-su.c-fix-to-exec-command-correctly.patch \
            file://0001-Do-not-read-login.defs-before-doing-chroot.patch \
+           file://check_size_of_uid_t_and_gid_t_using_AC_CHECK_SIZEOF.patch \
            ${@bb.utils.contains('PACKAGECONFIG', 'pam', '${PAM_SRC_URI}', '', d)} \
            "
 
@@ -52,7 +53,7 @@ EXTRA_OECONF += "--without-audit \
                  --without-libcrack \
                  --without-selinux \
                  --with-group-name-max-length=24 \
-                 --enable-subordinate-ids=no \
+                 --enable-subordinate-ids=yes \
                  ${NSCDOPT}"
 
 NSCDOPT = ""
