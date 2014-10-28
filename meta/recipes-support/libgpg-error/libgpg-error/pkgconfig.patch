@@ -5,11 +5,11 @@
 
 Upstream-Status: Pending
 
-Index: libgpg-error-1.12/configure.ac
+Index: libgpg-error-1.17/configure.ac
 ===================================================================
---- libgpg-error-1.12.orig/configure.ac	2014-05-13 21:14:26.846393236 +0000
-+++ libgpg-error-1.12/configure.ac	2014-05-13 21:14:26.926393236 +0000
-@@ -217,6 +217,7 @@
+--- libgpg-error-1.17.orig/configure.ac
++++ libgpg-error-1.17/configure.ac
+@@ -521,6 +521,7 @@ AC_CONFIG_FILES([src/Makefile tests/Make
  AC_CONFIG_FILES([lang/Makefile lang/cl/Makefile lang/cl/gpg-error.asd])
  AC_CONFIG_FILES([src/versioninfo.rc])
  AC_CONFIG_FILES([src/gpg-error-config], [chmod +x src/gpg-error-config])
@@ -17,11 +17,11 @@ Index: libgpg-error-1.12/configure.ac
  
  AC_OUTPUT
  
-Index: libgpg-error-1.12/src/Makefile.am
+Index: libgpg-error-1.17/src/Makefile.am
 ===================================================================
---- libgpg-error-1.12.orig/src/Makefile.am	2014-05-13 21:14:26.846393236 +0000
-+++ libgpg-error-1.12/src/Makefile.am	2014-05-13 21:14:26.934393236 +0000
-@@ -37,13 +37,15 @@
+--- libgpg-error-1.17.orig/src/Makefile.am
++++ libgpg-error-1.17/src/Makefile.am
+@@ -74,13 +74,15 @@ nodist_include_HEADERS = gpg-error.h
  bin_SCRIPTS = gpg-error-config
  m4datadir = $(datadir)/aclocal
  m4data_DATA = gpg-error.m4
@@ -31,17 +31,17 @@ Index: libgpg-error-1.12/src/Makefile.am
  EXTRA_DIST = mkstrtable.awk err-sources.h.in err-codes.h.in \
  	mkerrnos.awk errnos.in README \
  	mkerrcodes.awk mkerrcodes1.awk mkerrcodes2.awk mkerrcodes.c \
- 	mkheader.awk gpg-error.h.in mkw32errmap.c w32-add.h w32ce-add.h \
+ 	mkheader.c gpg-error.h.in mkw32errmap.c w32-add.h w32ce-add.h \
  	err-sources.h err-codes.h gpg-error-config.in gpg-error.m4 \
--	gpg-error.def.in versioninfo.rc.in
-+	gpg-error.def.in versioninfo.rc.in gpg-error.pc.in
+-	gpg-error.vers gpg-error.def.in versioninfo.rc.in \
++	gpg-error.vers gpg-error.def.in versioninfo.rc.in gpg-error.pc \
+ 	$(lock_obj_pub)
  
  BUILT_SOURCES = err-sources.h err-codes.h code-to-errno.h code-from-errno.h \
- 	err-sources-sym.h err-codes-sym.h errnos-sym.h gpg-error.h \
-Index: libgpg-error-1.12/src/gpg-error.pc.in
+Index: libgpg-error-1.17/src/gpg-error.pc.in
 ===================================================================
---- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ libgpg-error-1.12/src/gpg-error.pc.in	2014-05-13 21:48:20.266382916 +0000
+--- /dev/null
++++ libgpg-error-1.17/src/gpg-error.pc.in
 @@ -0,0 +1,11 @@
 +prefix=@prefix@
 +exec_prefix=@exec_prefix@
@@ -54,11 +54,11 @@ Index: libgpg-error-1.12/src/gpg-error.pc.in
 +Version: @VERSION@
 +Libs: -L${libdir} -lgpg-error
 +Cflags: -I${includedir}
-Index: libgpg-error-1.12/src/gpg-error.m4
+Index: libgpg-error-1.17/src/gpg-error.m4
 ===================================================================
---- libgpg-error-1.12.orig/src/gpg-error.m4	2014-05-13 21:45:02.038383922 +0000
-+++ libgpg-error-1.12/src/gpg-error.m4	2014-05-13 21:47:08.362383281 +0000
-@@ -15,58 +15,14 @@
+--- libgpg-error-1.17.orig/src/gpg-error.m4
++++ libgpg-error-1.17/src/gpg-error.m4
+@@ -26,73 +26,13 @@ dnl is added to the gpg_config_script_wa
  dnl
  AC_DEFUN([AM_PATH_GPG_ERROR],
  [ AC_REQUIRE([AC_CANONICAL_HOST])
@@ -70,7 +70,7 @@ Index: libgpg-error-1.12/src/gpg-error.m4
 -              AC_HELP_STRING([--with-libgpg-error-prefix=PFX],
 -                             [prefix where GPG Error is installed (optional)]),
 -              [gpg_error_config_prefix="$withval"])
- 
+-
 -  dnl Accept --with-gpg-error-prefix and make it work the same as
 -  dnl --with-libgpg-error-prefix above, for backwards compatibility,
 -  dnl but do not document this old, inconsistently-named option.
@@ -78,14 +78,27 @@ Index: libgpg-error-1.12/src/gpg-error.m4
 -              [gpg_error_config_prefix="$withval"])
 +  min_gpg_error_version=ifelse([$1], ,0.0,$1)
  
--  if test x$gpg_error_config_prefix != x ; then
--     if test x${GPG_ERROR_CONFIG+set} != xset ; then
--        GPG_ERROR_CONFIG=$gpg_error_config_prefix/bin/gpg-error-config
+-  if test x"${GPG_ERROR_CONFIG}" = x ; then
+-     if test x"${gpg_error_config_prefix}" != x ; then
+-        GPG_ERROR_CONFIG="${gpg_error_config_prefix}/bin/gpg-error-config"
+-     else
+-       case "${SYSROOT}" in
+-         /*)
+-           if test -x "${SYSROOT}/bin/gpg-error-config" ; then
+-             GPG_ERROR_CONFIG="${SYSROOT}/bin/gpg-error-config"
+-           fi
+-           ;;
+-         '')
+-           ;;
+-          *)
+-           AC_MSG_WARN([Ignoring \$SYSROOT as it is not an absolute path.])
+-           ;;
+-       esac
 -     fi
 -  fi
 +  PKG_CHECK_MODULES(GPG_ERROR, [gpg-error >= $min_gpg_error_version], [ok=yes], [ok=no])
  
--  AC_PATH_TOOL(GPG_ERROR_CONFIG, gpg-error-config, no)
+-  AC_PATH_PROG(GPG_ERROR_CONFIG, gpg-error-config, no)
 -  min_gpg_error_version=ifelse([$1], ,0.0,$1)
 -  AC_MSG_CHECKING(for GPG Error - version >= $min_gpg_error_version)
 -  ok=no
@@ -113,6 +126,8 @@ Index: libgpg-error-1.12/src/gpg-error.m4
    if test $ok = yes; then
 -    GPG_ERROR_CFLAGS=`$GPG_ERROR_CONFIG $gpg_error_config_args --cflags`
 -    GPG_ERROR_LIBS=`$GPG_ERROR_CONFIG $gpg_error_config_args --libs`
+-    GPG_ERROR_MT_CFLAGS=`$GPG_ERROR_CONFIG $gpg_error_config_args --mt --cflags 2>/dev/null`
+-    GPG_ERROR_MT_LIBS=`$GPG_ERROR_CONFIG $gpg_error_config_args --mt --libs 2>/dev/null`
 -    AC_MSG_RESULT([yes ($gpg_error_config_version)])
      ifelse([$2], , :, [$2])
 -    gpg_error_config_host=`$GPG_ERROR_CONFIG $gpg_error_config_args --host 2>/dev/null || echo none`
@@ -120,12 +135,14 @@ Index: libgpg-error-1.12/src/gpg-error.m4
      if test x"$gpg_error_config_host" != xnone ; then
        if test x"$gpg_error_config_host" != x"$host" ; then
    AC_MSG_WARN([[
-@@ -80,9 +36,6 @@
+@@ -107,11 +47,6 @@ AC_DEFUN([AM_PATH_GPG_ERROR],
        fi
      fi
    else
 -    GPG_ERROR_CFLAGS=""
 -    GPG_ERROR_LIBS=""
+-    GPG_ERROR_MT_CFLAGS=""
+-    GPG_ERROR_MT_LIBS=""
 -    AC_MSG_RESULT(no)
      ifelse([$3], , :, [$3])
    fi
