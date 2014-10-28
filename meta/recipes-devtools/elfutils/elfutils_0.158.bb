@@ -30,6 +30,7 @@ SRC_URI += "\
         file://dso-link-change.patch \
         file://m4-biarch.m4-tweak-AC_RUN_IFELSE-for-cross-compiling.patch \
         file://fixheadercheck.patch \
+        file://Fix_elf_cvt_gunhash.patch \
 "
 
 # Only apply when building uclibc based target recipe
