@@ -8,13 +8,13 @@ Upstream-Status: Pending
 
 Signed-off-by: Dave Lerner <dave.lerner@windriver.com>
 
-diff --git a/none/tests/arm/Makefile.am b/none/tests/arm/Makefile.am
-index 2a19f5b..ccdeb77 100644
---- a/none/tests/arm/Makefile.am
-+++ b/none/tests/arm/Makefile.am
-@@ -16,15 +16,16 @@ EXTRA_DIST = \
- 		vcvt_fixed_float_VFP.vgtest \
- 	vfp.stdout.exp vfp.stderr.exp vfp.vgtest
+Index: valgrind-3.10.0/none/tests/arm/Makefile.am
+===================================================================
+--- valgrind-3.10.0.orig/none/tests/arm/Makefile.am
++++ valgrind-3.10.0/none/tests/arm/Makefile.am
+@@ -17,15 +17,16 @@ EXTRA_DIST = \
+ 	vfp.stdout.exp vfp.stderr.exp vfp.vgtest \
+ 	vfpv4_fma.stdout.exp vfpv4_fma.stderr.exp vfpv4_fma.vgtest
  
 +# For yocto:
 +#  Only include tests that don't require Thumb.
@@ -31,8 +31,8 @@ index 2a19f5b..ccdeb77 100644
 -	v6intThumb \
  	v6media \
  	vcvt_fixed_float_VFP \
- 	vfp
-@@ -34,32 +35,3 @@ AM_CXXFLAGS  += @FLAG_M32@
+ 	vfp \
+@@ -36,34 +37,3 @@ AM_CXXFLAGS  += @FLAG_M32@
  AM_CCASFLAGS += @FLAG_M32@
  
  allexec_CFLAGS		= $(AM_CFLAGS) @FLAG_W_NO_NONNULL@
@@ -65,3 +65,5 @@ index 2a19f5b..ccdeb77 100644
 -intdiv_CFLAGS	  = $(AM_CFLAGS) -g -mcpu=cortex-a15 -mthumb
 -ldrt_CFLAGS	  = $(AM_CFLAGS) -g -mcpu=cortex-a8 -mthumb
 -ldrt_arm_CFLAGS	  = $(AM_CFLAGS) -g -mcpu=cortex-a8 -marm
+-
+-vfpv4_fma_CFLAGS  = $(AM_CFLAGS) -g -O0 -mcpu=cortex-a15 -mfpu=vfpv4 -marm

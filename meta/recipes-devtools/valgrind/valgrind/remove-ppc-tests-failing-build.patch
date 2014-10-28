@@ -36,10 +36,10 @@ Upstream-Status: Pending
 
 Signed-off-by: Dave Lerner <dave.lerner@windriver.com>
 
-diff --git a/memcheck/tests/ppc32/Makefile.am b/memcheck/tests/ppc32/Makefile.am
-index bd70eea..1436e8e 100644
---- a/memcheck/tests/ppc32/Makefile.am
-+++ b/memcheck/tests/ppc32/Makefile.am
+Index: valgrind-3.10.0/memcheck/tests/ppc32/Makefile.am
+===================================================================
+--- valgrind-3.10.0.orig/memcheck/tests/ppc32/Makefile.am
++++ valgrind-3.10.0/memcheck/tests/ppc32/Makefile.am
 @@ -7,8 +7,7 @@ EXTRA_DIST = $(noinst_SCRIPTS) \
  	power_ISA2_05.stderr.exp power_ISA2_05.stdout.exp power_ISA2_05.vgtest \
  	power_ISA2_05.stdout.exp_Without_FPPO
@@ -50,11 +50,11 @@ index bd70eea..1436e8e 100644
  
  power_ISA2_05_CFLAGS = $(AM_CFLAGS) $(WERROR) -Winline -Wall -Wshadow -g \
  		-I$(top_srcdir)/include @FLAG_M32@
-diff --git a/none/tests/ppc32/Makefile.am b/none/tests/ppc32/Makefile.am
-index 4f581b6..91ce7e7 100644
---- a/none/tests/ppc32/Makefile.am
-+++ b/none/tests/ppc32/Makefile.am
-@@ -50,16 +50,8 @@ check_PROGRAMS = \
+Index: valgrind-3.10.0/none/tests/ppc32/Makefile.am
+===================================================================
+--- valgrind-3.10.0.orig/none/tests/ppc32/Makefile.am
++++ valgrind-3.10.0/none/tests/ppc32/Makefile.am
+@@ -52,16 +52,8 @@ check_PROGRAMS = \
  	allexec \
  	bug129390-ppc32 \
  	bug139050-ppc32 \
@@ -67,9 +67,9 @@ index 4f581b6..91ce7e7 100644
 -	test_isa_2_07_part1 \
 -	test_isa_2_07_part2 \
 -	test_tm \
--	test_touch_tm
+-	test_touch_tm \
 +	ldstrev lsw mftocrf mcrfs test_fx test_gx \
-+	twi tw xlc_dbl_u32 power6_bcmp 
++	twi tw xlc_dbl_u32 power6_bcmp \
+ 	ldst_multiple \
+ 	data-cache-instructions
  
- AM_CFLAGS    += @FLAG_M32@
- AM_CXXFLAGS  += @FLAG_M32@
