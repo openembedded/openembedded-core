@@ -15,6 +15,7 @@ SRC_URI = "ftp://ftp.gnome.org/pub/gnome/sources/pygtk/2.24/${SRCNAME}-${PV}.tar
            file://fix-gtkunixprint.patch \
            file://prevent_to_get_display_during_import.patch \
            file://nodocs.patch \
+	   file://fix-pygtk-2.0.pc.patch \
            file://acinclude.m4 \
            file://update-dependences-of-defs.c.patch"
 
@@ -43,7 +44,6 @@ do_configure_prepend() {
 do_install_append() {
 	find ${D} -name "*.la"|xargs rm -f
 	rm -f ${D}/${bindir}/pygtk-codegen-2.0
-	rm -rf ${D}/${libdir}/pkgconfig
 	sed -i -e '1s|^#!.*python|#!/usr/bin/env python|' ${D}${bindir}/pygtk-demo
 }
 
