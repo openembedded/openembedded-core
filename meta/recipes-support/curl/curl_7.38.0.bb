@@ -7,17 +7,15 @@ LIC_FILES_CHKSUM = "file://COPYING;beginline=7;md5=3a34942f4ae3fbf1a303160714e66
 
 SRC_URI = "http://curl.haxx.se/download/curl-${PV}.tar.bz2 \
            file://pkgconfig_fix.patch \
-           file://CVE-2014-3613.patch \
-           file://CVE-2014-3620.patch \
-"
+          "
 
 # curl likes to set -g0 in CFLAGS, so we stop it
 # from mucking around with debug options
 #
 SRC_URI += " file://configure_ac.patch"
 
-SRC_URI[md5sum] = "95c627abcf6494f5abe55effe7cd6a57"
-SRC_URI[sha256sum] = "c3ef3cd148f3778ddbefb344117d7829db60656efe1031f9e3065fc0faa25136"
+SRC_URI[md5sum] = "af6b3c299bd891f43cb5f76c4091b7b4"
+SRC_URI[sha256sum] = "035bd41e99aa1a4e64713f4cea5ccdf366ca8199e9be1b53d5a043d5165f9eba"
 
 inherit autotools pkgconfig binconfig multilib_header
 
