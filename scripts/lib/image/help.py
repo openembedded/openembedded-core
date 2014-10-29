@@ -109,8 +109,9 @@ wic_create_usage = """
 
  usage: wic create <wks file or image name> [-o <DIRNAME> | --outdir <DIRNAME>]
             [-i <JSON PROPERTY FILE> | --infile <JSON PROPERTY_FILE>]
-            [-e | --image-name] [-r, --rootfs-dir] [-b, --bootimg-dir]
-            [-k, --kernel-dir] [-n, --native-sysroot] [-s, --skip-build-check]
+            [-e | --image-name] [-s, --skip-build-check] [-D, --debug]
+            [-r, --rootfs-dir] [-b, --bootimg-dir]
+            [-k, --kernel-dir] [-n, --native-sysroot]
 
  This command creates an OpenEmbedded image based on the 'OE kickstart
  commands' found in the <wks file>.
@@ -129,8 +130,9 @@ NAME
 SYNOPSIS
     wic create <wks file or image name> [-o <DIRNAME> | --outdir <DIRNAME>]
         [-i <JSON PROPERTY FILE> | --infile <JSON PROPERTY_FILE>]
-        [-e | --image-name] [-r, --rootfs-dir] [-b, --bootimg-dir]
-        [-k, --kernel-dir] [-n, --native-sysroot] [-s, --skip-build-check]
+        [-e | --image-name] [-s, --skip-build-check] [-D, --debug]
+        [-r, --rootfs-dir] [-b, --bootimg-dir]
+        [-k, --kernel-dir] [-n, --native-sysroot]
 
 DESCRIPTION
     This command creates an OpenEmbedded image based on the 'OE
@@ -171,6 +173,12 @@ DESCRIPTION
     correctly.  If the user has specified the build artifact locations
     explicitly, 'wic' assumes the user knows what he or she is doing
     and skips the build check.
+
+    The -D option is used to display debug information detailing
+    exactly what happens behind the scenes when a create request is
+    fulfilled (or not, as the case may be).  It enumerates and
+    displays the command sequence used, and should be included in any
+    bug report describing unexpected results.
 
     When 'wic -e' is used, the locations for the build artifacts
     values are determined by 'wic -e' from the output of the 'bitbake
@@ -519,8 +527,9 @@ DESCRIPTION
 
        usage: wic create <wks file or image name> [-o <DIRNAME> | ...]
             [-i <JSON PROPERTY FILE> | --infile <JSON PROPERTY_FILE>]
-            [-e | --image-name] [-r, --rootfs-dir] [-b, --bootimg-dir]
-            [-k, --kernel-dir] [-n, --native-sysroot] [-s, --skip-build-check]
+            [-e | --image-name] [-s, --skip-build-check] [-D, --debug]
+            [-r, --rootfs-dir] [-b, --bootimg-dir]
+            [-k, --kernel-dir] [-n, --native-sysroot]
 
        This command creates an OpenEmbedded image based on the 'OE
        kickstart commands' found in the <wks file>.
