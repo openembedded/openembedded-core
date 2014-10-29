@@ -144,7 +144,6 @@ class BootimgPcbiosPlugin(SourcePlugin):
             cr.set_bootimg_dir(bootimg_dir)
 
         staging_kernel_dir = kernel_dir
-        staging_data_dir = bootimg_dir
 
         hdddir = "%s/hdd/boot" % cr_workdir
 
@@ -153,7 +152,7 @@ class BootimgPcbiosPlugin(SourcePlugin):
         exec_cmd(install_cmd)
 
         install_cmd = "install -m 444 %s/syslinux/ldlinux.sys %s/ldlinux.sys" \
-            % (staging_data_dir, hdddir)
+            % (bootimg_dir, hdddir)
         exec_cmd(install_cmd)
 
         du_cmd = "du -bks %s" % hdddir

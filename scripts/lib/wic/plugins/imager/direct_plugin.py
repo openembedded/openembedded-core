@@ -58,21 +58,19 @@ class DirectPlugin(ImagerPlugin):
         """
         Create direct image, called from creator as 'direct' cmd
         """
-        if len(args) != 9:
+        if len(args) != 7:
             raise errors.Usage("Extra arguments given")
 
-        staging_data_dir = args[0]
-        hdddir = args[1]
-        native_sysroot = args[2]
-        kernel_dir = args[3]
-        bootimg_dir = args[4]
-        rootfs_dir = args[5]
+        native_sysroot = args[0]
+        kernel_dir = args[1]
+        bootimg_dir = args[2]
+        rootfs_dir = args[3]
 
         creatoropts = configmgr.create
-        ksconf = args[6]
+        ksconf = args[4]
 
-        image_output_dir = args[7]
-        oe_builddir = args[8]
+        image_output_dir = args[5]
+        oe_builddir = args[6]
 
         krootfs_dir = self.__rootfs_dir_to_dict(rootfs_dir)
 
@@ -84,8 +82,6 @@ class DirectPlugin(ImagerPlugin):
                                             bootimg_dir,
                                             kernel_dir,
                                             native_sysroot,
-                                            hdddir,
-                                            staging_data_dir,
                                             creatoropts)
 
         try:
