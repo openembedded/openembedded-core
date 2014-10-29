@@ -1,0 +1,24 @@
+# HG changeset patch
+# User Vinay Sajip <vinay_sajip@yahoo.co.uk>
+# Date 1334583503 -3600
+# Node ID af46a001d5eca99a7ff44ed18256c235c5c3f1d0
+# Parent  33bc53e0aa9ea42c6a6bb077d182e62c8c569aa1
+Issue #14452: remove BOM insertion code.
+
+Backport from https://hg.python.org/cpython/rev/af46a001d5ec.
+
+Upstream-Status: Backport
+Signed-off-by: Kai Kang <kai.kang@windriver.com>
+---
+diff --git a/Lib/logging/handlers.py b/Lib/logging/handlers.py
+--- a/Lib/logging/handlers.py
++++ b/Lib/logging/handlers.py
+@@ -821,8 +821,6 @@ class SysLogHandler(logging.Handler):
+         # Message is a string. Convert to bytes as required by RFC 5424
+         if type(msg) is unicode:
+             msg = msg.encode('utf-8')
+-            if codecs:
+-                msg = codecs.BOM_UTF8 + msg
+         msg = prio + msg
+         try:
+             if self.unixsocket:
