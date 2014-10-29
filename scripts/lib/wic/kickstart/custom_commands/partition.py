@@ -229,6 +229,7 @@ class Wic_PartData(Mic_PartData):
             extra_blocks = IMAGE_EXTRA_SPACE
 
         rootfs_size = actual_rootfs_size + extra_blocks
+        rootfs_size *= IMAGE_OVERHEAD_FACTOR
 
         msger.debug("Added %d extra blocks to %s to get to %d total blocks" % \
                     (extra_blocks, self.mountpoint, rootfs_size))
@@ -276,6 +277,7 @@ class Wic_PartData(Mic_PartData):
             extra_blocks = IMAGE_EXTRA_SPACE
 
         rootfs_size = actual_rootfs_size + extra_blocks
+        rootfs_size *= IMAGE_OVERHEAD_FACTOR
 
         msger.debug("Added %d extra blocks to %s to get to %d total blocks" % \
                     (extra_blocks, self.mountpoint, rootfs_size))
