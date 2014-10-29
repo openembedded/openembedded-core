@@ -1,4 +1,4 @@
-From 7ee23804a06f81476cc2b31a6db11b52d7af764e Mon Sep 17 00:00:00 2001
+From b105e7fe812da3ccaf7155c0fe14c8728b0d39a5 Mon Sep 17 00:00:00 2001
 From: Mark Hatle <mark.hatle@windriver.com>
 Date: Mon, 20 Jan 2014 14:30:52 +0000
 Subject: [PATCH] Add mechanism to attempt install without failing
@@ -13,11 +13,32 @@ Upstream-Status: Pending
 
 Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
 Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
+
+For complementary and 'attemptonly' package processing, we should
+make sure the warn rather than error reported.
+Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
 ---
+ smart.py                  |  5 +++-
  smart/commands/install.py |  5 ++++
  smart/transaction.py      | 65 +++++++++++++++++++++++++++++++++++------------
- 2 files changed, 54 insertions(+), 16 deletions(-)
+ 3 files changed, 58 insertions(+), 17 deletions(-)
 
+diff --git a/smart.py b/smart.py
+index c5c7a02..7e7fd34 100755
+--- a/smart.py
++++ b/smart.py
+@@ -179,7 +179,10 @@ def main(argv):
+         if opts and opts.log_level == "debug":
+             import traceback
+             traceback.print_exc()
+-        if iface.object:
++        if iface.object and sysconf.has("attempt-install", soft=True):
++            iface.warning(unicode(e))
++            exitcode = 0
++        elif iface.object:
+             iface.error(unicode(e))
+         else:
+             sys.stderr.write(_("error: %s\n") % e)
 diff --git a/smart/commands/install.py b/smart/commands/install.py
 index 590222c..6ef9682 100644
 --- a/smart/commands/install.py
@@ -163,5 +184,5 @@ index 5730a42..e3e61c6 100644
                      self._remove(pkg, changeset, locked, pending)
                  elif op is UPGRADE:
 -- 
-1.8.4.2
+1.9.1
 
