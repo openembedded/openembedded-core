@@ -348,7 +348,7 @@ class RpmRootfs(Rootfs):
         pass
 
     def _log_check_warn(self):
-        r = re.compile('(warn|Warn)')
+        r = re.compile('^(warn|Warn|NOTE: warn|NOTE: Warn)')
         log_path = self.d.expand("${T}/log.do_rootfs")
         with open(log_path, 'r') as log:
             for line in log.read().split('\n'):
