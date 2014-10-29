@@ -11,6 +11,7 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/beecrypt/beecrypt-${PV}.tar.gz \
            file://fix-for-gcc-4.7.patch \
            file://run-ptest \
            file://beecrypt-enable-ptest-support.patch \
+           file://add-option-dev-dsp.patch \
           "
 
 SRC_URI[md5sum] = "8441c014170823f2dff97e33df55af1e"
