@@ -17,6 +17,8 @@ SRC_URI = "${KERNELORG_MIRROR}/software/utils/pciutils/pciutils-${PV}.tar.bz2 \
 SRC_URI[md5sum] = "425b1acad6854cc2bbb06ac8e48e76fc"
 SRC_URI[sha256sum] = "12d52b19042e2fd058af12e7d877bbbce72213cb3a0b5ec7ff0703ac09e3dcde"
 
+inherit multilib_header
+
 PARALLEL_MAKE = ""
 
 PCI_CONF_FLAG = "ZLIB=yes DNS=yes SHARED=yes"
@@ -49,6 +51,8 @@ do_install () {
 
 	install -d ${D}${bindir}
 	ln -s ../sbin/lspci ${D}${bindir}/lspci
+
+	oe_multilib_header pci/config.h
 }
 
 PACKAGES =+ "${PN}-ids libpci libpci-dev libpci-dbg"
