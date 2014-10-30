@@ -1,4 +1,4 @@
-#!/usr/bin/python -tt
+#!/usr/bin/env python -tt
 #
 # Marko Saukko <marko.saukko@cybercom.com>
 #

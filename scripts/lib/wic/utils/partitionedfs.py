@@ -1,4 +1,4 @@
-#!/usr/bin/python -tt
+#!/usr/bin/env python -tt
 #
 # Copyright (c) 2009, 2010, 2011 Intel, Inc.
 # Copyright (c) 2007, 2008 Red Hat, Inc.
