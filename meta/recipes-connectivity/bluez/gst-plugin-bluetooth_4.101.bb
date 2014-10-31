@@ -25,6 +25,7 @@ do_install_append() {
   	rm -rf ${D}${libdir}/alsa-lib
   	rm -rf ${D}${datadir}
 	rm -rf ${D}${includedir}
+	rm -rf ${D}${nonarch_base_libdir}
 }
 
 FILES_${PN} = "${libdir}/gstreamer-0.10/lib*.so"
