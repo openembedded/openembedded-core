@@ -5,6 +5,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=a6eeeed43d498c22a835382533356462"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/docbook/docbook-xsl-${PV}.tar.bz2 \
            file://docbook-xsl.xml \
+           file://docbook-xsl-stylesheets-no-bashism-in-docbook-xsl-up.patch \
 "
 
 SRC_URI[md5sum] = "6dd0f89131cc35bf4f2ed105a1c17771"
@@ -63,5 +64,6 @@ docbook_xsl_stylesheets_sysroot_preprocess () {
     sed -i -e "s|file:///usr/share/xml|file://${datadir}/xml|g" ${SYSROOT_DESTDIR}${sysconfdir}/xml/docbook-xsl.xml
 }
 
+RDEPENDS_${PN} += "perl"
 FILES_${PN} = "${datadir}/xml/* ${sysconfdir}/xml/docbook-xsl.xml"
 FILES_${PN}-doc = "${datadir}/doc/*"
