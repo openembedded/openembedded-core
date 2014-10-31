@@ -771,31 +771,32 @@ def package_qa_check_rdepends(pkg, pkgdest, skip, taskdeps, packages, d):
         rdepends = bb.utils.explode_deps(localdata.getVar('RDEPENDS', True) or "")
 
         # Now do the sanity check!!!
-        for rdepend in rdepends:
-            if "-dbg" in rdepend and "debug-deps" not in skip:
-                error_msg = "%s rdepends on %s" % (pkg,rdepend)
-                sane = package_qa_handle_error("debug-deps", error_msg, d)
-            if (not "-dev" in pkg and not "-staticdev" in pkg) and rdepend.endswith("-dev") and "dev-deps" not in skip:
-                error_msg = "%s rdepends on %s" % (pkg, rdepend)
-                sane = package_qa_handle_error("dev-deps", error_msg, d)
-            if rdepend not in packages:
-                rdep_data = oe.packagedata.read_subpkgdata(rdepend, d)
-                if rdep_data and 'PN' in rdep_data and rdep_data['PN'] in taskdeps:
-                    continue
-                if not rdep_data or not 'PN' in rdep_data:
-                    pkgdata_dir = d.getVar("PKGDATA_DIR", True)
-                    try:
-                        possibles = os.listdir("%s/runtime-rprovides/%s/" % (pkgdata_dir, rdepend))
-                    except OSError:
-                        possibles = []
-                    for p in possibles:
-                        rdep_data = oe.packagedata.read_subpkgdata(p, d)
-                        if rdep_data and 'PN' in rdep_data and rdep_data['PN'] in taskdeps:
-                            break
-                if rdep_data and 'PN' in rdep_data and rdep_data['PN'] in taskdeps:
-                    continue
-                error_msg = "%s rdepends on %s, but it isn't a build dependency?" % (pkg, rdepend)
-                sane = package_qa_handle_error("build-deps", error_msg, d)
+        if "build-deps" not in skip:
+            for rdepend in rdepends:
+                if "-dbg" in rdepend and "debug-deps" not in skip:
+                    error_msg = "%s rdepends on %s" % (pkg,rdepend)
+                    sane = package_qa_handle_error("debug-deps", error_msg, d)
+                if (not "-dev" in pkg and not "-staticdev" in pkg) and rdepend.endswith("-dev") and "dev-deps" not in skip:
+                    error_msg = "%s rdepends on %s" % (pkg, rdepend)
+                    sane = package_qa_handle_error("dev-deps", error_msg, d)
+                if rdepend not in packages:
+                    rdep_data = oe.packagedata.read_subpkgdata(rdepend, d)
+                    if rdep_data and 'PN' in rdep_data and rdep_data['PN'] in taskdeps:
+                        continue
+                    if not rdep_data or not 'PN' in rdep_data:
+                        pkgdata_dir = d.getVar("PKGDATA_DIR", True)
+                        try:
+                            possibles = os.listdir("%s/runtime-rprovides/%s/" % (pkgdata_dir, rdepend))
+                        except OSError:
+                            possibles = []
+                        for p in possibles:
+                            rdep_data = oe.packagedata.read_subpkgdata(p, d)
+                            if rdep_data and 'PN' in rdep_data and rdep_data['PN'] in taskdeps:
+                                break
+                    if rdep_data and 'PN' in rdep_data and rdep_data['PN'] in taskdeps:
+                        continue
+                    error_msg = "%s rdepends on %s, but it isn't a build dependency?" % (pkg, rdepend)
+                    sane = package_qa_handle_error("build-deps", error_msg, d)
 
         if "file-rdeps" not in skip:
             ignored_file_rdeps = set(['/bin/sh', '/usr/bin/env', 'rtld(GNU_HASH)'])
