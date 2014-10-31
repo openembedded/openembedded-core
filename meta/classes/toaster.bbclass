@@ -187,8 +187,10 @@ python toaster_collect_task_stats() {
     def _read_stats(filename):
         cpu_usage = 0
         disk_io = 0
-        startio = ''
-        endio = ''
+        startio = '0'
+        endio = '0'
+        started = '0'
+        ended = '0'
         pn = ''
         taskname = ''
         statinfo = {}
@@ -198,20 +200,28 @@ python toaster_collect_task_stats() {
                 k,v = line.strip().split(": ", 1)
                 statinfo[k] = v
 
-        try:
-            cpu_usage = statinfo["CPU usage"]
-            endio = statinfo["EndTimeIO"]
-            startio = statinfo["StartTimeIO"]
-        except KeyError:
-            pass    # we may have incomplete data here
+        if "CPU usage" in statinfo:
+            cpu_usage = str(statinfo["CPU usage"]).strip('% \n\r')
 
-        if startio and endio:
-            disk_io = int(endio.strip('\n ')) - int(startio.strip('\n '))
+        if "EndTimeIO" in statinfo:
+            endio = str(statinfo["EndTimeIO"]).strip('% \n\r')
 
-        if cpu_usage:
-            cpu_usage = float(cpu_usage.strip('% \n'))
+        if "StartTimeIO" in statinfo:
+            startio = str(statinfo["StartTimeIO"]).strip('% \n\r')
 
-        return {'cpu_usage': cpu_usage, 'disk_io': disk_io}
+        if "Started" in statinfo:
+            started = str(statinfo["Started"]).strip('% \n\r')
+
+        if "Ended" in statinfo:
+            ended = str(statinfo["Ended"]).strip('% \n\r')
+
+        disk_io = int(endio) - int(startio)
+
+        elapsed_time = float(ended) - float(started)
+
+        cpu_usage = float(cpu_usage)
+
+        return {'cpu_usage': cpu_usage, 'disk_io': disk_io, 'elapsed_time': elapsed_time}
 
 
     if isinstance(e, (bb.build.TaskSucceeded, bb.build.TaskFailed)):
