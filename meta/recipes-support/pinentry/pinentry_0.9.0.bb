@@ -10,17 +10,13 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=cbbd794e2a0a289b9dfcc9f513d1996e"
 
 inherit autotools-brokensep
 
-SRC_URI = "ftp://ftp.gnupg.org/gcrypt/${BPN}/${BPN}-${PV}.tar.bz2 \
-	"
+SRC_URI = "ftp://ftp.gnupg.org/gcrypt/${BPN}/${BPN}-${PV}.tar.bz2"
 
-SRC_URI[md5sum] = "e2b6f94471ba1e978f6e5bf6b275189b"
-SRC_URI[sha256sum] = "359db3bf46cb743ba0b3aeef259f6107271ca888ba3e22c1cba525c9aca35612"
+SRC_URI[md5sum] = "40a05856cb3accf6679987b7899b0f5a"
+SRC_URI[sha256sum] = "90045a07ab8e1a8e1ecf5d19b51691f195525e579fa5d71d7e92c120b05490ab"
 
 EXTRA_OECONF = "--disable-rpath \
-		--disable-dependency-tracking \
-		--disable-glibtest \
-	        --disable-pinentry-gtk \
-	        --disable-pinentry-qt \
+		        --disable-dependency-tracking \
                "
 
 PACKAGECONFIG ??= "ncurses libcap"
