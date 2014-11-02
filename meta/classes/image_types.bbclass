@@ -130,7 +130,21 @@ IMAGE_DEPENDS_ubi = "mtd-utils-native"
 IMAGE_DEPENDS_ubifs = "mtd-utils-native"
 
 # This variable is available to request which values are suitable for IMAGE_FSTYPES
-IMAGE_TYPES = "jffs2 jffs2.sum cramfs ext2 ext2.gz ext2.bz2 ext3 ext3.gz ext2.lzma btrfs iso hddimg squashfs squashfs-xz squashfs-lzo ubi ubifs tar tar.gz tar.bz2 tar.xz tar.lz4 cpio cpio.gz cpio.xz cpio.lzma cpio.lz4 vmdk elf"
+IMAGE_TYPES = " \
+    jffs2 jffs2.sum \
+    cramfs \
+    ext2 ext2.gz ext2.bz2 ext2.lzma \
+    ext3 ext3.gz \
+    btrfs \
+    iso \
+    hddimg \
+    squashfs squashfs-xz squashfs-lzo \
+    ubi ubifs \
+    tar tar.gz tar.bz2 tar.xz tar.lz4 \
+    cpio cpio.gz cpio.xz cpio.lzma cpio.lz4 \
+    vmdk \
+    elf \
+"
 
 COMPRESSIONTYPES = "gz bz2 lzma xz lz4 sum"
 COMPRESS_CMD_lzma = "lzma -k -f -7 ${IMAGE_NAME}.rootfs.${type}"
