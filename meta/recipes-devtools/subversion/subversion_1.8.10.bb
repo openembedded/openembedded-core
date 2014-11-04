@@ -12,11 +12,9 @@ inherit gettext
 SRC_URI = "${APACHE_MIRROR}/${BPN}/${BPN}-${PV}.tar.bz2 \
            file://libtool2.patch \
            file://disable_macos.patch \
-           file://subversion-CVE-2014-3522.patch;striplevel=0 \
-           file://subversion-CVE-2014-3528.patch \
 "
-SRC_URI[md5sum] = "bd495517a760ddd764ce449a891971db"
-SRC_URI[sha256sum] = "45d708a5c3ffbef4b2a1044c4716a053e680763743d1f7ba99d0369f6da49e33"
+SRC_URI[md5sum] = "3068256761b40863df96128834d6b71b"
+SRC_URI[sha256sum] = "1cc900c8a7974337c3ed389dc6b5c59012ec48c7d4107ae31fd7c929ded47dcc"
 
 LIC_FILES_CHKSUM = "file://LICENSE;md5=1c2f0119e478700b5428e26386cff923"
 
