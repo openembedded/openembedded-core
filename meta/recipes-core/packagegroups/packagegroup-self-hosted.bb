@@ -120,6 +120,7 @@ RDEPENDS_packagegroup-self-hosted-extended = "\
     gettext \
     gettext-runtime \
     git \
+    git-perltools \
     grep \
     groff \
     gzip \
