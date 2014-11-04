@@ -18,15 +18,11 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504 \
                     file://COPYING.LIB;md5=6a6a8e020838b23406c81b19c1d46df6" 
 
 SRC_URI = "${GNU_MIRROR}/libunistring/libunistring-${PV}.tar.gz \
-           file://parallelmake.patch \
-           file://libunistring_fix_for_automake_1.12.patch \
            file://iconv-m4-remove-the-test-to-convert-euc-jp.patch \
 "
 
-SRC_URI[md5sum] = "db8eca3b64163abadf8c40e5cecc261f"
-SRC_URI[sha256sum] = "610d3ec724fbdaa654afe3cff20b9f4d504be3fd296fded2e0f7f764041006a3"
-
-PR = "r3"
+SRC_URI[md5sum] = "c24a6a3838d9ad4a41a62549312c4226"
+SRC_URI[sha256sum] = "f5246d63286a42902dc096d6d44541fbe4204b6c02d6d5d28b457c9882ddd8a6"
 
 inherit autotools texinfo
 BBCLASSEXTEND = "native nativesdk"
