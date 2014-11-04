@@ -13,8 +13,8 @@ SRC_URI = "${KERNELORG_MIRROR}/linux/utils/raid/mdadm/${BPN}-${PV}.tar.xz \
            file://gcc-4.9.patch \
 	  "
 
-SRC_URI[md5sum] = "4227d48de62dfb217c92fa0c54171bbe"
-SRC_URI[sha256sum] = "d8c74112cfd77bdc1dbc1291fe8d9243c76d91bfa276fcb95f2a75ca7717ab02"
+SRC_URI[md5sum] = "44698d351501cac6a89072dc877eb220"
+SRC_URI[sha256sum] = "0f3a7e1a76b13892b79f9fceaf99ecb23513260389a768ac644ffa3ae06e5b8c"
 
 CFLAGS += "-fno-strict-aliasing"
 
