@@ -4,8 +4,8 @@ EXTRA_OECONF = " --with-zlib=yes"
 
 SRC_URI += "file://kexec-tools-Refine-kdump-device_tree-sort.patch"
 
-SRC_URI[md5sum] = "2309ba43981cb6d39d07ac3a9aac30ab"
-SRC_URI[sha256sum] = "dde5c38be39882c6c91f0129647349c4e1943b077d3020af1970b481ee954eb0"
+SRC_URI[md5sum] = "45bd2bc676ae202579e4c185563126af"
+SRC_URI[sha256sum] = "95083c707577154a2241c5af0985f1eb3412d1ba208ef91813e9158b0a901179"
 
 PACKAGES =+ "kexec kdump vmcore-dmesg"
 
