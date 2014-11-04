@@ -1,0 +1,41 @@
+With security_flags.inc:
+
+| In file included from /media/build1/poky/build/tmp/sysroots/qemumips/usr/include/fcntl.h:302:0,
+|                  from opjitconv.c:25:
+| In function 'open',
+|     inlined from 'copy_dumpfile' at opjitconv.c:219:6:
+| /media/build1/poky/build/tmp/sysroots/qemumips/usr/include/bits/fcntl2.h:50:4: error: call to '__open_missing_mode' declared with attribute error: open with O_CREAT in second argument needs 3 arguments
+|     __open_missing_mode ();
+|     ^
+| Makefile:440: recipe for target 'opjitconv.o' failed
+
+Why does this only happen on mips? mips has:
+
+O_CREAT = 0x100 
+and
+S_IRUSR = 0400
+
+and these (in hex and otcal) are equivalent. Most other platforms 
+have O_CREAT = 0100.
+
+http://sourceforge.net/p/oprofile/oprofile/ci/4598ca73b0a367ca46d4a2843261e20e1896773b
+
+The file should not be created, only opened if its present, therefore use O_RDONLY instead.
+
+RP 2014/11/6
+
+Upstream-Status: Backport
+
+Index: oprofile-1.0.0/opjitconv/opjitconv.c
+===================================================================
+--- oprofile-1.0.0.orig/opjitconv/opjitconv.c	2014-09-12 14:39:47.000000000 +0000
++++ oprofile-1.0.0/opjitconv/opjitconv.c	2014-11-06 13:14:25.941639003 +0000
+@@ -216,7 +216,7 @@
+ 	int file_locked = 0;
+ 	unsigned int usecs_waited = 0;
+ 	int rc = OP_JIT_CONV_OK;
+-	int fd = open(dumpfile, S_IRUSR);
++	int fd = open(dumpfile, O_RDONLY);
+ 	if (fd < 0) {
+ 		perror("opjitconv failed to open JIT dumpfile");
+ 		return OP_JIT_CONV_FAIL;
