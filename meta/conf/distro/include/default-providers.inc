@@ -21,6 +21,7 @@ PREFERRED_PROVIDER_xf86-video-intel ?= "xf86-video-intel"
 VIRTUAL-RUNTIME_update-alternatives ?= "update-alternatives-opkg"
 VIRTUAL-RUNTIME_apm ?= "apm"
 VIRTUAL-RUNTIME_alsa-state ?= "alsa-state"
+VIRTUAL-RUNTIME_getopt ?= "util-linux-getopt"
 
 #
 # Default recipe providers
@@ -45,3 +46,4 @@ PREFERRED_PROVIDER_udev ?= "${@bb.utils.contains('DISTRO_FEATURES','systemd','sy
 PREFERRED_PROVIDER_bluez4 ?= "bluez4"
 # Alternative is ltp-ddt in meta-oe: meta-oe/recipes-devtools/ltp-ddt/ltp-ddt_0.0.4.bb
 PREFERRED_PROVIDER_ltp ?= "ltp"
+PREFERRED_PROVIDER_getopt ?= "util-linux-getopt"
