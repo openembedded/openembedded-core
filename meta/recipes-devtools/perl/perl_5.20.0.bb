@@ -117,6 +117,16 @@ do_configure() {
         # Make hostperl in build directory be the native perl
         ln -sf ${HOSTPERL} hostperl
 
+	if [ -n "${CONFIGURESTAMPFILE}" -a -e "${CONFIGURESTAMPFILE}" ]; then
+		if [ "`cat ${CONFIGURESTAMPFILE}`" != "${BB_TASKHASH}" -a -e Makefile ]; then
+			${MAKE} clean
+		fi
+		find ${S} -name *.so -delete
+	fi
+	if [ -n "${CONFIGURESTAMPFILE}" ]; then
+		echo ${BB_TASKHASH} > ${CONFIGURESTAMPFILE}
+	fi
+
         # Do our work in the cross subdir
         cd Cross
 
