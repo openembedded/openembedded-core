@@ -180,3 +180,7 @@ def multiprocess_exec(commands, function):
         pool.terminate()
         pool.join()
         raise
+
+def squashspaces(string):
+    import re
+    return re.sub("\s+", " ", string).strip()
