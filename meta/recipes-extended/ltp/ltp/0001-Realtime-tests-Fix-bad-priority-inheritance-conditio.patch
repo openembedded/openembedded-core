@@ -9,7 +9,7 @@ both referenced a non-existent autoconf configuration setting variable.
 Replaced the invalid variable name with the variable actually created
 by autoconf.
 
-Upstream-Status: Submitted
+Upstream-Status: Backported
 
 Signed-off-by: Gary S. Robertson <gary.robertson@linaro.org>
 ---
