@@ -34,6 +34,8 @@ S = "${WORKDIR}/git"
 
 inherit allarch update-alternatives
 
+CLEANBROKEN = "1"
+
 do_compile() {
 	:
 }
