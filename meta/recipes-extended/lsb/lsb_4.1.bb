@@ -5,7 +5,7 @@ LICENSE = "GPLv2+"
 PR = "r2"
 
 # lsb_release needs getopt
-RDEPENDS_${PN} += "util-linux"
+RDEPENDS_${PN} += "${VIRTUAL-RUNTIME_getopt}"
 
 LIC_FILES_CHKSUM = "file://README;md5=12da544b1a3a5a1795a21160b49471cf"
 
