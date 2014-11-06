@@ -8,3 +8,4 @@ ExecStart=-@SBINDIR@/sshd -i
 ExecReload=@BASE_BINDIR@/kill -HUP $MAINPID
 StandardInput=socket
 StandardError=syslog
+KillMode=process
