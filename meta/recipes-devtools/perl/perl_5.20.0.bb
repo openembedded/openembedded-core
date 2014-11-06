@@ -94,6 +94,11 @@ HOSTPERL = "${STAGING_BINDIR_NATIVE}/perl-native/perl${PV}"
 # Where to find .so files - use the -native versions not those from the target build
 export PERLHOSTLIB = "${STAGING_LIBDIR_NATIVE}/perl-native/perl/${PV}/"
 
+# Where to find perl @INC/#include files
+# - use the -native versions not those from the target build
+export PERL_LIB = "${STAGING_LIBDIR_NATIVE}/perl-native/perl/${PV}/"
+export PERL_ARCHLIB = "${STAGING_LIBDIR_NATIVE}/perl-native/perl/${PV}/"
+
 # LDFLAGS for shared libraries
 export LDDLFLAGS = "${LDFLAGS} -shared"
 
