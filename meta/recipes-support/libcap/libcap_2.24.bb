@@ -7,10 +7,10 @@ LIC_FILES_CHKSUM = "file://License;md5=3f84fd6f29d453a56514cb7e4ead25f1"
 
 DEPENDS = "perl-native-runtime"
 
-SRC_URI = "${DEBIAN_MIRROR}/main/libc/libcap2/${BPN}2_${PV}.orig.tar.gz \
-           file://fix-CAP_LAST_CAP.patch"
+SRC_URI = "${KERNELORG_MIRROR}/linux/libs/security/linux-privs/${BPN}2/${BPN}-${PV}.tar.xz"
 
-PR = "r1"
+SRC_URI[md5sum] = "d43ab9f680435a7fff35b4ace8d45b80"
+SRC_URI[sha256sum] = "cee4568f78dc851d726fc93f25f4ed91cc223b1fe8259daa4a77158d174e6c65"
 
 inherit lib_package
 
@@ -56,8 +56,10 @@ do_install_append() {
 	# Move the library to base_libdir
 	install -d ${D}${base_libdir}
 	if [ ! ${D}${libdir} -ef ${D}${base_libdir} ]; then
-		mv ${D}${libdir}/* ${D}${base_libdir}
-		rmdir ${D}${libdir}
+		mv ${D}${libdir}/libcap* ${D}${base_libdir}
+                if [ -d ${D}${libdir}/security ]; then
+			mv ${D}${libdir}/security ${D}${base_libdir}
+		fi
 	fi
 }
 
