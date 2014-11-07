@@ -12,13 +12,13 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=fcb02dc552a041dee27e4b85c7396067"
 SECTION = "base"
 DEPENDS = "util-linux attr e2fsprogs lzo acl"
 
-SRCREV = "24cf4d8c3ee924b474f68514e0167cc2e602a48d"
-SRC_URI = "git://git.kernel.org/pub/scm/linux/kernel/git/mason/btrfs-progs.git \
-           file://nodocs.patch"
+SRCREV = "44cdb62d3478c834f41c87ea79d261b9c8982dce"
+SRC_URI = "git://git.kernel.org/pub/scm/linux/kernel/git/kdave/btrfs-progs.git"
 S = "${WORKDIR}/git"
 
 PV = "3.14.2+git${SRCPV}"
 
+EXTRA_OEMAKE += "DISABLE_DOCUMENTATION=1"
 
 do_install () {
 	oe_runmake 'DESTDIR=${D}' install
