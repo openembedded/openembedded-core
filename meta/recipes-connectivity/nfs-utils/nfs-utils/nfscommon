@@ -28,33 +28,7 @@ test -n "$NFS_STATEDIR" || NFS_STATEDIR=/var/lib/nfs
 #----------------------------------------------------------------------
 # Startup and shutdown functions.
 #  Actual startup/shutdown is at the end of this file.
-#directories
-create_directories(){
-	echo -n 'creating NFS state directory: '
-	mkdir -p "$NFS_STATEDIR"
-	(	cd "$NFS_STATEDIR"
-		umask 077
-		mkdir -p rpc_pipefs
-		mkdir -p sm sm.bak statd
-		chown rpcuser:rpcuser sm sm.bak statd
-		test -w statd/state || {
-			rm -f statd/state
-			:>statd/state
-		}
-		umask 022
-		for file in xtab etab smtab rmtab
-		do
-			test -w "$file" || {
-				rm -f "$file"
-				:>"$file"
-			}
-		done
-	)
-	chown rpcuser:rpcuser "$NFS_STATEDIR"
-	echo done
-}
 
-#statd
 start_statd(){
 	echo -n "starting statd: "
 	start-stop-daemon --start --exec "$NFS_STATD" --pidfile "$STATD_PID"
@@ -74,7 +48,6 @@ stop_statd(){
 #FIXME: need to create the /var/lib/nfs/... directories
 case "$1" in
   start)
-	create_directories
 	start_statd;;
   stop)
 	stop_statd;;
