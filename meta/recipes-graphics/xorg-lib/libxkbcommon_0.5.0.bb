@@ -2,15 +2,15 @@ SUMMARY = "Generic XKB keymap library"
 DESCRIPTION = "libxkbcommon is a keymap compiler and support library which \
 processes a reduced subset of keymaps as defined by the XKB specification."
 HOMEPAGE = "http://www.xkbcommon.org"
-LIC_FILES_CHKSUM = "file://COPYING;md5=9c0b824e72a22f9d2c40b9c93b1f0ddc"
+LIC_FILES_CHKSUM = "file://COPYING;md5=09457b156e3155972abebcaaaa0cb434"
 LICENSE = "MIT & MIT-style"
 
 DEPENDS = "util-macros flex-native bison-native"
 
 SRC_URI = "http://xkbcommon.org/download/${BPN}-${PV}.tar.xz"
 
-SRC_URI[md5sum] = "26c57ff21438ed45de2a4ca609177db9"
-SRC_URI[sha256sum] = "9a52d5d0419e76c49c0ece86208c205ffacb1cf0ff8ffbaba98d3d4dd40c4e41"
+SRC_URI[md5sum] = "2e1faeafcc609c30af3a561a91e84158"
+SRC_URI[sha256sum] = "90bd7824742b9a6f52a6cf80e2cadd6f5349cf600a358d08260772615b89d19c"
 
 inherit autotools pkgconfig
 
