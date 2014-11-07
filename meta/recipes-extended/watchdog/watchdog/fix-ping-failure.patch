@@ -33,11 +33,11 @@ Signed-off-by: Roy.Li <rongqing.li@windriver.com>
  src/watchdog.c |    5 ++++-
  2 files changed, 5 insertions(+), 2 deletions(-)
 
-Index: watchdog-5.13/src/watchdog.c
+Index: watchdog-5.14/src/watchdog.c
 ===================================================================
---- watchdog-5.13.orig/src/watchdog.c	2013-02-01 03:15:44.000000000 -0800
-+++ watchdog-5.13/src/watchdog.c	2013-03-11 22:27:48.741657881 -0700
-@@ -28,6 +28,7 @@
+--- watchdog-5.14.orig/src/watchdog.c
++++ watchdog-5.14/src/watchdog.c
+@@ -24,6 +24,7 @@
  #include <sys/types.h>
  #include <sys/ioctl.h>
  #include <linux/oom.h>
@@ -45,21 +45,35 @@ Index: watchdog-5.13/src/watchdog.c
  #include <linux/watchdog.h>
  #include <string.h>
  
-@@ -567,6 +568,8 @@
-     pid_t child_pid;
-     int oom_adjusted = 0;
-     struct stat s;
-+    struct icmp_filter filt;
-+    filt.data = ~(1<<ICMP_ECHOREPLY);
+Index: watchdog-5.14/src/net.c
+===================================================================
+--- watchdog-5.14.orig/src/net.c
++++ watchdog-5.14/src/net.c
+@@ -11,7 +11,8 @@
+ #include <errno.h>
+ #include <sys/time.h>
+ #include <netinet/ip.h>
+-#include <netinet/ip_icmp.h>
++#include <linux/icmp.h>
++//#include <netinet/ip_icmp.h>
+ #include <fcntl.h>
+ #include <string.h>
+ #include <unistd.h>		/* for gethostname() etc */
+@@ -179,6 +180,9 @@ int open_netcheck(struct list *tlist)
+ {
+ 	struct list *act;
+ 	int hold = 0;
++	struct icmp_filter filt;
++	filt.data = ~(1<<ICMP_ECHOREPLY);
++
  
- #if USE_SYSLOG
-     char *opts = "d:i:n:Ffsvbql:p:t:c:r:m:a:";
-@@ -703,7 +706,7 @@
- 		perror(progname);
- 		exit(1);
- 	    }
--	    
-+	    setsockopt(net->sock_fp, SOL_RAW, ICMP_FILTER, (char*)&filt, sizeof(filt));
- 	    /* this is necessary for broadcast pings to work */
- 	    (void) setsockopt(net->sock_fp, SOL_SOCKET, SO_BROADCAST, (char *)&hold, sizeof(hold));
-     
+ 	if (tlist != NULL) {
+ 		for (act = tlist; act != NULL; act = act->next) {
+@@ -202,6 +206,7 @@ int open_netcheck(struct list *tlist)
+ 			    fatal_error(EX_SYSERR, "error opening socket (%s)", strerror(errno));
+ 			}
+ 
++			setsockopt(net->sock_fp, SOL_RAW, ICMP_FILTER, (char*)&filt, sizeof(filt));
+ 			/* this is necessary for broadcast pings to work */
+ 			(void)setsockopt(net->sock_fp, SOL_SOCKET, SO_BROADCAST, (char *)&hold, sizeof(hold));
+ 
