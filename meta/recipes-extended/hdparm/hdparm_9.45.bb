@@ -18,8 +18,8 @@ RDEPENDS_wiper = "bash gawk stat"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/hdparm/hdparm-${PV}.tar.gz "
 
-SRC_URI[md5sum] = "f73233be118d86c779a8463d8b6a3cdb"
-SRC_URI[sha256sum] = "2bbe92274971182192901ab220e94bd2e4896f924fa6b225d0cffd7d8c16b52a"
+SRC_URI[md5sum] = "1c75d0751a44928b6c4bc81fb16d7fe8"
+SRC_URI[sha256sum] = "23b01caa56a995cf0897877b6aff98ea622a5df255bc2894b1a7693387f38669"
 
 EXTRA_OEMAKE += 'STRIP="echo"'
 
