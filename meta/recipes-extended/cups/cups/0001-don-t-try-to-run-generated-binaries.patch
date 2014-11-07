@@ -10,13 +10,13 @@ Signed-off-by: Koen Kooi <koen@dominion.thruhere.net>
  ppdc/Makefile |   30 +++++++++++++++---------------
  1 files changed, 15 insertions(+), 15 deletions(-)
 
-diff --git a/ppdc/Makefile b/ppdc/Makefile
-index 0288d47..fc87f1b 100644
---- a/ppdc/Makefile
-+++ b/ppdc/Makefile
-@@ -243,8 +243,8 @@ genstrings:		genstrings.o libcupsppdc.a ../cups/libcups.a \
+Index: cups-2.0.0/ppdc/Makefile
+===================================================================
+--- cups-2.0.0.orig/ppdc/Makefile
++++ cups-2.0.0/ppdc/Makefile
+@@ -242,8 +242,8 @@ genstrings:		genstrings.o libcupsppdc.a
  	$(CXX) $(ARCHFLAGS) $(LDFLAGS) -o genstrings genstrings.o \
- 		libcupsppdc.a ../cups/libcups.a $(LIBGSSAPI) $(SSLLIBS) \
+ 		libcupsppdc.a ../cups/$(LIBCUPSSTATIC) $(LIBGSSAPI) $(SSLLIBS) \
  		$(DNSSDLIBS) $(COMMONLIBS) $(LIBZ)
 -	echo Generating localization strings...
 -	./genstrings >sample.c
@@ -25,9 +25,9 @@ index 0288d47..fc87f1b 100644
  
  
  #
-@@ -261,9 +261,9 @@ ppdc-static:		ppdc.o libcupsppdc.a  ../cups/libcups.a foo.drv foo-fr.po
+@@ -260,9 +260,9 @@ ppdc-static:		ppdc.o libcupsppdc.a ../cu
  	$(CXX) $(ARCHFLAGS) $(LDFLAGS) -o ppdc-static ppdc.o libcupsppdc.a \
- 		../cups/libcups.a $(LIBGSSAPI) $(SSLLIBS) $(DNSSDLIBS) \
+ 		../cups/$(LIBCUPSSTATIC) $(LIBGSSAPI) $(SSLLIBS) $(DNSSDLIBS) \
  		$(COMMONLIBS) $(LIBZ)
 -	echo Testing PPD compiler...
 -	./ppdc-static -l en,fr -I ../data foo.drv
@@ -38,24 +38,26 @@ index 0288d47..fc87f1b 100644
  
  
  #
-@@ -290,16 +290,16 @@ ppdi-static:		ppdc-static ppdi.o libcupsppdc.a  ../cups/libcups.a
- 		../cups/libcups.a $(LIBGSSAPI) $(SSLLIBS) $(DNSSDLIBS) \
+@@ -288,17 +288,17 @@ ppdi-static:		ppdc-static ppdi.o libcups
+ 	$(CXX) $(ARCHFLAGS) $(LDFLAGS) -o ppdi-static ppdi.o libcupsppdc.a \
+ 		../cups/$(LIBCUPSSTATIC) $(LIBGSSAPI) $(SSLLIBS) $(DNSSDLIBS) \
  		$(COMMONLIBS) $(LIBZ)
- 	echo Testing PPD importer...
+-	echo Testing PPD importer...
 -	$(RM) -r ppd ppd2 sample-import.drv
--	./ppdc-static -I ../data sample.drv
+-	./ppdc-static -l en -I ../data sample.drv
 -	./ppdi-static -I ../data -o sample-import.drv ppd/*
--	./ppdc-static -I ../data -d ppd2 sample-import.drv
+-	./ppdc-static -l en -I ../data -d ppd2 sample-import.drv
 -	if diff -r ppd ppd2 >/dev/null; then \
 -		echo PPD import OK; \
 -	else \
 -		echo PPD import FAILED; \
 -		exit 1; \
 -	fi
++#	echo Testing PPD importer...
 +#	$(RM) -r ppd ppd2 sample-import.drv
-+#	./ppdc-static -I ../data sample.drv
++#	./ppdc-static -l en -I ../data sample.drv
 +#	./ppdi-static -I ../data -o sample-import.drv ppd/*
-+#	./ppdc-static -I ../data -d ppd2 sample-import.drv
++#	./ppdc-static -l en -I ../data -d ppd2 sample-import.drv
 +#	if diff -r ppd ppd2 >/dev/null; then \
 +#		echo PPD import OK; \
 +#	else \
@@ -65,6 +67,3 @@ index 0288d47..fc87f1b 100644
  
  
  #
--- 
-1.6.6.1
-
