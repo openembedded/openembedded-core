@@ -11,8 +11,8 @@ SRC_URI = "http://lttng.org/files/urcu/userspace-rcu-${PV}.tar.bz2 \
            file://Revert-Blacklist-ARM-gcc-4.8.0-4.8.1-4.8.2.patch \
           "
 
-SRC_URI[md5sum] = "2ca6671b20a550aa0e8020a1a9a96fd4"
-SRC_URI[sha256sum] = "96c0a157e94a15b1506efe9aedd98145e6eb41a3fbcf5b0d118b7a783b22fe12"
+SRC_URI[md5sum] = "24ba9e03542b747d3378434eb0041acf"
+SRC_URI[sha256sum] = "a2562eaca107ec6eca2856632b6035c6aaf38df79020195ed8955a7b4773312a"
 
 S = "${WORKDIR}/userspace-rcu-${PV}"
 CFLAGS_append_libc-uclibc = " -D_GNU_SOURCE"
