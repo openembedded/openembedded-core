@@ -86,6 +86,8 @@ python do_preconfigure () {
     subprocess.check_output(cmd, stderr=subprocess.STDOUT, shell=True)
     # See 0044-gengtypes.patch, we need to regenerate this file
     bb.utils.remove(d.expand("${S}/gcc/gengtype-lex.c"))
+    cmd = d.expand("sed -i 's/BUILD_INFO=info/BUILD_INFO=/' ${S}/gcc/configure")
+    subprocess.check_output(cmd, stderr=subprocess.STDOUT, shell=True)
 }
 addtask do_preconfigure after do_patch before do_configure
 do_preconfigure[depends] += "gnu-config-native:do_populate_sysroot autoconf-native:do_populate_sysroot"
