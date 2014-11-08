@@ -136,11 +136,14 @@ def _is_info(file):
     return False
 
 def _is_man(file):
+    import re
+
     # It refers MANSECT-var in man(1.6g)'s man.config
-    flags = '.1:.1p:.8:.2:.3:.3p:.4:.5:.6:.7:.9:.0p:.tcl:.n:.l:.p:.o'.split(':')
-    for flag in flags:
-        if os.path.basename(file).endswith(flag):
-            return True
+    # ".1:.1p:.8:.2:.3:.3p:.4:.5:.6:.7:.9:.0p:.tcl:.n:.l:.p:.o"
+    # Not start with '.', and contain the above colon-seperate element
+    p = re.compile(r'[^\.]+\.([1-9lnop]|0p|tcl)')
+    if p.search(file):
+        return True
 
     return False
 
