@@ -29,7 +29,7 @@ DOC_DECOMPRESS_CMD[gz] ?= 'gunzip -v'
 DOC_DECOMPRESS_CMD[bz2] ?= "bunzip2 -v"
 DOC_DECOMPRESS_CMD[xz] ?= "unxz -v"
 
-PACKAGE_PREPROCESS_FUNCS += "package_do_compress_doc"
+PACKAGE_PREPROCESS_FUNCS += "package_do_compress_doc compress_doc_updatealternatives"
 python package_do_compress_doc() {
     compress_mode = d.getVar('DOC_COMPRESS', True)
     compress_list = (d.getVar('DOC_COMPRESS_LIST', True) or '').split()
@@ -213,4 +213,48 @@ def decompress_doc(topdir, compress_mode, decompress_cmds):
                     bb.note('decompress file %s' % file)
 
     _process_hardlink(hardlink_dict, compress_mode, decompress_cmds, decompress)
+
+python compress_doc_updatealternatives () {
+    if not bb.data.inherits_class('update-alternatives', d):
+        return
+
+    mandir = d.getVar("mandir", True)
+    infodir = d.getVar("infodir", True)
+    compress_mode = d.getVar('DOC_COMPRESS', True)
+    for pkg in (d.getVar('PACKAGES', True) or "").split():
+        old_names = (d.getVar('ALTERNATIVE_%s' % pkg, True) or "").split()
+        new_names = []
+        for old_name in old_names:
+            old_link     = d.getVarFlag('ALTERNATIVE_LINK_NAME', old_name, True)
+            old_target   = d.getVarFlag('ALTERNATIVE_TARGET_%s' % pkg, old_name, True) or \
+                d.getVarFlag('ALTERNATIVE_TARGET', old_name, True) or \
+                d.getVar('ALTERNATIVE_TARGET_%s' % pkg, True) or \
+                d.getVar('ALTERNATIVE_TARGET', True) or \
+                old_link
+            # Sometimes old_target is specified as relative to the link name.
+            old_target   = os.path.join(os.path.dirname(old_link), old_target)
+
+            # The updatealternatives used for compress doc
+            if mandir in old_target or infodir in old_target:
+                new_name = old_name + '.' + compress_mode
+                new_link = old_link + '.' + compress_mode
+                new_target = old_target + '.' + compress_mode
+                d.delVarFlag('ALTERNATIVE_LINK_NAME', old_name)
+                d.setVarFlag('ALTERNATIVE_LINK_NAME', new_name, new_link)
+                if d.getVarFlag('ALTERNATIVE_TARGET_%s' % pkg, old_name, True):
+                    d.delVarFlag('ALTERNATIVE_TARGET_%s' % pkg, old_name)
+                    d.setVarFlag('ALTERNATIVE_TARGET_%s' % pkg, new_name, new_target)
+                elif d.getVarFlag('ALTERNATIVE_TARGET', old_name, True):
+                    d.delVarFlag('ALTERNATIVE_TARGET', old_name)
+                    d.setVarFlag('ALTERNATIVE_TARGET', new_name, new_target)
+                elif d.getVar('ALTERNATIVE_TARGET_%s' % pkg, True):
+                    d.setVar('ALTERNATIVE_TARGET_%s' % pkg, new_target)
+                elif d.getVar('ALTERNATIVE_TARGET', old_name, True):
+                    d.setVar('ALTERNATIVE_TARGET', new_target)
+
+                new_names.append(new_name)
+
+        if new_names:
+            d.setVar('ALTERNATIVE_%s' % pkg, ' '.join(new_names))
+}
 
