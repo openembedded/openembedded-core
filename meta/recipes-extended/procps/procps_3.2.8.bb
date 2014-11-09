@@ -28,6 +28,10 @@ EXTRA_OEMAKE = 'CFLAGS="${CFLAGS} -I${STAGING_INCDIR}" \
 do_install_append () {
 	install -d ${D}${sysconfdir}
 	install -m 0644 ${WORKDIR}/sysctl.conf ${D}${sysconfdir}/sysctl.conf
+	if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
+		install -d ${D}${sysconfdir}/sysctl.d
+		ln -sf ../sysctl.conf ${D}${sysconfdir}/sysctl.d/99-sysctl.conf
+	fi
 }
 
 CONFFILES_${PN} = "${sysconfdir}/sysctl.conf"
