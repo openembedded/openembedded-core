@@ -3,6 +3,7 @@ Added npth pkgconfig file
 Upstream-Status: Incompatible [oe-core specific]
 
 Signed-off-by: Saul Wold <sgw@linux.intel.com>
+
 Index: npth-1.1/src/npth.pc.in
 ===================================================================
 --- /dev/null
@@ -16,7 +17,7 @@ Index: npth-1.1/src/npth.pc.in
 +Name: npth
 +Description: a new portable posix threading library
 +Version: @VERSION@
-+Libs: -L${libdir} -lnpth
++Libs: -L${libdir} -lnpth -lpthread
 +Cflags: -I${includedir}
 Index: npth-1.1/src/Makefile.am
 ===================================================================
