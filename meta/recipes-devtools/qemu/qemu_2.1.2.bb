@@ -13,14 +13,6 @@ SRC_URI[sha256sum] = "fd10f5e45cf5a736fa5a3e1c279ae9821534e700beb7d1aab88a07648a
 
 COMPATIBLE_HOST_class-target_mips64 = "null"
 
-do_sanitize_sources() {
-    # These .git files point to a nonexistent path "../.git/modules" and will confuse git
-    # if it tries to recurse into those directories.
-    rm -f ${S}/dtc/.git ${S}/pixman/.git
-}
-
-addtask sanitize_sources after do_unpack before do_patch
-
 do_install_append() {
     # Prevent QA warnings about installed ${localstatedir}/run
     if [ -d ${D}${localstatedir}/run ]; then rmdir ${D}${localstatedir}/run; fi
