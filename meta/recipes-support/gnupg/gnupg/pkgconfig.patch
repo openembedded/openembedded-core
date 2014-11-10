@@ -5,11 +5,11 @@ Upstream-Status: Rejected
 
 RP 2014/5/22
 
-Index: gnupg-2.0.22/m4/gnupg-pth.m4
+Index: gnupg-2.1.0/m4/gnupg-pth.m4
 ===================================================================
---- gnupg-2.0.22.orig/m4/gnupg-pth.m4	2013-10-04 12:32:53.000000000 +0000
-+++ gnupg-2.0.22/m4/gnupg-pth.m4	2014-05-13 21:33:21.000000000 +0000
-@@ -17,33 +17,9 @@
+--- gnupg-2.1.0.orig/m4/gnupg-pth.m4
++++ gnupg-2.1.0/m4/gnupg-pth.m4
+@@ -17,33 +17,9 @@ dnl implied warranty of MERCHANTABILITY
  # Taken and modified from the m4 macros which come with Pth.
  AC_DEFUN([GNUPG_PTH_VERSION_CHECK],
    [
@@ -44,7 +44,7 @@ Index: gnupg-2.0.22/m4/gnupg-pth.m4
      if test $have_pth = yes; then
         AC_MSG_RESULT(yes)
         AC_MSG_CHECKING([whether PTH installation is sane])
-@@ -51,9 +29,9 @@
+@@ -51,9 +27,9 @@ AC_DEFUN([GNUPG_PTH_VERSION_CHECK],
           _gnupg_pth_save_cflags=$CFLAGS
           _gnupg_pth_save_ldflags=$LDFLAGS
           _gnupg_pth_save_libs=$LIBS
@@ -57,30 +57,34 @@ Index: gnupg-2.0.22/m4/gnupg-pth.m4
           AC_LINK_IFELSE([AC_LANG_PROGRAM([#include <pth.h>
                                           ],
                                           [[ pth_init ();]])],
-@@ -81,23 +59,11 @@
+@@ -80,26 +56,13 @@ AC_DEFUN([GNUPG_PTH_VERSION_CHECK],
+ # PTH_CLFAGS and PTH_LIBS are AS_SUBST.
  #
  AC_DEFUN([GNUPG_PATH_PTH],
-+[
 -[ AC_ARG_WITH(pth-prefix,
 -             AC_HELP_STRING([--with-pth-prefix=PFX],
--                           [prefix where GNU Pth is installed]),
+-                           [prefix where GNU Pth is installed (optional)]),
 -     pth_config_prefix="$withval", pth_config_prefix="")
 -  if test x$pth_config_prefix != x ; then
 -     PTH_CONFIG="$pth_config_prefix/bin/pth-config"
 -  fi
 -  AC_PATH_PROG(PTH_CONFIG, pth-config, no)
++[
    tmp=ifelse([$1], ,1.3.7,$1)
 -  if test "$PTH_CONFIG" != "no"; then
 -    GNUPG_PTH_VERSION_CHECK($tmp)
--    if test $have_pth = yes; then
+-    if test $have_pth = yes; then      
 -       PTH_CFLAGS=`$PTH_CONFIG --cflags`
 -       PTH_LIBS=`$PTH_CONFIG --ldflags`
 -       PTH_LIBS="$PTH_LIBS `$PTH_CONFIG --libs --all`"
+-       AC_DEFINE(HAVE_PTH, 1,
 +  GNUPG_PTH_VERSION_CHECK($tmp)
 +  if test $have_pth = yes; then
-        AC_DEFINE(HAVE_PTH, 1,
++      AC_DEFINE(HAVE_PTH, 1,
                  [Defined if the GNU Pth is available])
 -    fi
    fi
    AC_SUBST(PTH_CFLAGS)
    AC_SUBST(PTH_LIBS)
+ ])
+-
