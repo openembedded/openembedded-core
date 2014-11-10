@@ -32,6 +32,15 @@ EXTRA_OECONF = "\
   --enable-library \
 "
 
+# bluez5 builds a large number of useful utilities but does not
+# install them.  Specify which ones we want put into ${PN}-noinst-tools.
+NOINST_TOOLS_READLINE ??= ""
+NOINST_TOOLS_EXPERIMENTAL ??= ""
+NOINST_TOOLS = " \
+    ${NOINST_TOOLS_READLINE} \
+    ${@bb.utils.contains('PACKAGECONFIG', 'experimental', '${NOINST_TOOLS_EXPERIMENTAL}', '', d)} \
+"
+
 do_install_append() {
 	install -d ${D}${sysconfdir}/bluetooth/
 	if [ -f ${S}/profiles/audio/audio.conf ]; then
@@ -45,10 +54,15 @@ do_install_append() {
 	fi
 	# at_console doesn't really work with the current state of OE, so punch some more holes so people can actually use BT
 	install -m 0644 ${WORKDIR}/bluetooth.conf ${D}/${sysconfdir}/dbus-1/system.d/
+
+	# Install desired tools that upstream leaves in build area
+        for f in ${NOINST_TOOLS} ; do
+	    install -m 755 ${B}/$f ${D}/${bindir}
+	done
 }
 
 ALLOW_EMPTY_libasound-module-bluez = "1"
-PACKAGES =+ "libasound-module-bluez ${PN}-testtools ${PN}-obex"
+PACKAGES =+ "libasound-module-bluez ${PN}-testtools ${PN}-obex ${PN}-noinst-tools"
 
 FILES_libasound-module-bluez = "${libdir}/alsa-lib/lib*.so ${datadir}/alsa"
 FILES_${PN} += "${libdir}/bluetooth/plugins ${libdir}/bluetooth/plugins/*.so ${base_libdir}/udev/ ${nonarch_base_libdir}/udev/ ${systemd_unitdir}/ ${datadir}/dbus-1"
@@ -64,6 +78,16 @@ FILES_${PN}-obex = "${libdir}/bluez5/bluetooth/obexd \
 SYSTEMD_SERVICE_${PN}-obex = "obex.service"
 
 FILES_${PN}-testtools = "${libdir}/bluez/test/*"
+
+def get_noinst_tools_paths (d, bb, tools):
+    s = list()
+    bindir = d.getVar("bindir", True)
+    for bdp in tools.split():
+        f = os.path.basename(bdp)
+        s.append("%s/%s" % (bindir, f))
+    return "\n".join(s)
+
+FILES_${PN}-noinst-tools = "${@get_noinst_tools_paths(d, bb, d.getVar('NOINST_TOOLS', True))}"
 
 FILES_${PN}-dbg += "\
   ${libdir}/${BPN}/bluetooth/.debug \
