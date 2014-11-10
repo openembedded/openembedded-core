@@ -7,10 +7,11 @@ LIC_FILES_CHKSUM = "\
     file://COPYING.LESSER;md5=6a6a8e020838b23406c81b19c1d46df6\
     "
 SRC_URI = "ftp://ftp.gnupg.org/gcrypt/npth/npth-${PV}.tar.bz2 \
+           file://pkgconfig.patch \
           "
 
-SRC_URI[md5sum] = "36869bf10378ea08c155cd5c3580a1dd"
-SRC_URI[sha256sum] = "9ad49de376310effab7fdad69581054b0fa9023d062032d06e73058146c8f76e"
+SRC_URI[md5sum] = "aaffc8ef3e955ab50a1905809f268a23"
+SRC_URI[sha256sum] = "896c561eb2ec8da35f11828fb04a3fbff12d41ff657c799056d7dc4a66e5df7f"
 
 BINCONFIG = "${bindir}/npth-config"
 
