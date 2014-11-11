@@ -18,13 +18,13 @@ siteconfig_do_siteconfig_gencache () {
 		>${WORKDIR}/site_config_${MACHINE}/configure.ac
 	cd ${WORKDIR}/site_config_${MACHINE}
 	autoconf
-	rm -f ${PN}_cache
-        CONFIG_SITE="" ${EXTRASITECONFIG} ./configure ${CONFIGUREOPTS} --cache-file ${PN}_cache
+	rm -f ${BPN}_cache
+	CONFIG_SITE="" ${EXTRASITECONFIG} ./configure ${CONFIGUREOPTS} --cache-file ${BPN}_cache
 	sed -n -e "/ac_cv_c_bigendian/p" -e "/ac_cv_sizeof_/p" \
 		-e "/ac_cv_type_/p" -e "/ac_cv_header_/p" -e "/ac_cv_func_/p" \
-		< ${PN}_cache > ${PN}_config
+		< ${BPN}_cache > ${BPN}_config
 	mkdir -p ${SYSROOT_DESTDIR}${datadir}/${TARGET_SYS}_config_site.d
-	cp ${PN}_config ${SYSROOT_DESTDIR}${datadir}/${TARGET_SYS}_config_site.d
+	cp ${BPN}_config ${SYSROOT_DESTDIR}${datadir}/${TARGET_SYS}_config_site.d
 
 }
 
