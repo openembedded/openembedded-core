@@ -7,16 +7,14 @@ HOMEPAGE = "https://fedorahosted.org/cronie/"
 BUGTRACKER = "mmaslano@redhat.com"
 
 # Internet Systems Consortium License
-LICENSE = "ISC & BSD"
-LIC_FILES_CHKSUM = "file://COPYING;md5=963ea0772a2adbdcd607a9b2ec320c11 \
+LICENSE = "ISC & BSD-3-Clause & BSD-2-Clause & GPLv2+"
+LIC_FILES_CHKSUM = "file://COPYING;md5=dd2a592170760e1386c769e1043b3722 \
                     file://src/cron.c;endline=20;md5=b425c334265026177128353a142633b4 \
                     file://src/popen.c;beginline=3;endline=31;md5=edd50742d8def712e9472dba353668a9"
 
 SECTION = "utils"
 
-
 SRC_URI = "https://fedorahosted.org/releases/c/r/cronie/cronie-${PV}.tar.gz \
-           file://fix-out-of-tree-build.patch \
            file://crond.init \
            file://crontab \
            file://crond.service \
@@ -25,17 +23,15 @@ SRC_URI = "https://fedorahosted.org/releases/c/r/cronie/cronie-${PV}.tar.gz \
 PAM_SRC_URI = "file://crond_pam_config.patch"
 PAM_DEPS = "libpam libpam-runtime pam-plugin-access pam-plugin-loginuid"
 
-SRC_URI[md5sum] = "2ba645cf54de17f138ef70312843862f"
-SRC_URI[sha256sum] = "fd08084cedddbb42499f80ddb7f2158195c3555c2ff40ee11d4ece2f9864d7be"
+SRC_URI[md5sum] = "199db91e514a4d75e3222d69874b132f"
+SRC_URI[sha256sum] = "0f5c9bf32f352599451c4ca0d6bc076d19e73ecfa5a90b34ecfe47c918c8bafd"
 
 inherit autotools update-rc.d useradd systemd
-
 
 PACKAGECONFIG ?= "${@bb.utils.contains('DISTRO_FEATURES', 'pam', 'pam', '', d)}"
 
 PACKAGECONFIG[audit] = "--with-audit,--without-audit,audit,"
 PACKAGECONFIG[pam] = "--with-pam,--without-pam,libpam,${PAM_DEPS}"
-
 
 INITSCRIPT_NAME = "crond"
 INITSCRIPT_PARAMS = "start 90 2 3 4 5 . stop 60 0 1 6 ."
@@ -82,4 +78,3 @@ do_install_append () {
 }
 
 FILES_${PN} += "${sysconfdir}/cron*"
-
