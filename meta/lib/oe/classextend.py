@@ -57,6 +57,13 @@ class ClassExtender(object):
         if dep.endswith(("-native", "-native-runtime")) or ('nativesdk-' in dep) or ('cross-canadian' in dep) or ('-crosssdk-' in dep):
             return dep
         else:
+            # Do not extend for that already have multilib prefix
+            var = self.d.getVar("MULTILIB_VARIANTS", True)
+            if var:
+                var = var.split()
+                for v in var:
+                    if dep.startswith(v):
+                        return dep
             return self.extend_name(dep)
 
     def map_depends_variable(self, varname, suffix = ""):
