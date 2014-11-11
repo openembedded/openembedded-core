@@ -91,7 +91,7 @@ EOF
 
 #we get the cached site config in the runtime
 TOOLCHAIN_CONFIGSITE_NOCACHE = "${@siteinfo_get_files(d, True)}"
-TOOLCHAIN_CONFIGSITE_SYSROOTCACHE = "${STAGING_DATADIR}/${TARGET_SYS}_config_site.d"
+TOOLCHAIN_CONFIGSITE_SYSROOTCACHE = "${STAGING_DIR}/${MLPREFIX}${MACHINE}/${target_datadir}/${TARGET_SYS}_config_site.d"
 TOOLCHAIN_NEED_CONFIGSITE_CACHE = "${TCLIBC} ncurses"
 
 #This function create a site config file
@@ -131,5 +131,7 @@ python __anonymous () {
     deps = ""
     for dep in (d.getVar('TOOLCHAIN_NEED_CONFIGSITE_CACHE', True) or "").split():
         deps += " %s:do_populate_sysroot" % dep
+        for variant in (d.getVar('MULTILIB_VARIANTS', True) or "").split():
+            deps += " %s-%s:do_populate_sysroot" % (variant, dep)
     d.appendVarFlag('do_configure', 'depends', deps)
 }

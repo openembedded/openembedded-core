@@ -42,6 +42,7 @@ python do_generate_content() {
         # Load overrides from 'd' to avoid having to reset the value...
         overrides = d.getVar("OVERRIDES", False) + ":virtclass-multilib-" + item
         localdata.setVar("OVERRIDES", overrides)
+        localdata.setVar("MLPREFIX", item + "-")
         bb.data.update_data(localdata)
         bb.build.exec_func("create_sdk_files", localdata)
 }
