@@ -31,8 +31,8 @@ SRC_URI_class-native = "${SRC_URI_BASE} \
                         file://base-genht.c-add-a-preprocessor-define-to-allow-fope.patch \
                         "
 
-SRC_URI[md5sum] = "586494befb443363338c1b6379f13973"
-SRC_URI[sha256sum] = "ab2ba5ce11c8db396c9acf774a497182d7686d04670976cc3e690ada7db9f0d4"
+SRC_URI[md5sum] = "5a78ab0990ff6ec3a103576bc8777c46"
+SRC_URI[sha256sum] = "27f11e4fe5b89857ae745687281d1e4daf9681edc858a3f7e8e77ef09609777a"
 
 EXTRA_OECONF = "--without-x --with-system-libtiff --without-jbig2dec \
                 --with-fontpath=${datadir}/fonts \
