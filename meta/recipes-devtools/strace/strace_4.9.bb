@@ -21,6 +21,7 @@ PACKAGECONFIG_class-target ?= "libaio ${@bb.utils.contains('DISTRO_FEATURES', 'a
 
 PACKAGECONFIG[libaio] = "--enable-aio,--disable-aio,libaio"
 PACKAGECONFIG[acl] = "--enable-acl,--disable-acl,acl"
+PACKAGECONFIG[libunwind] = "--with-libunwind, --without-libunwind, libunwind"
 
 export INCLUDES = "-I. -I./linux"
 
