@@ -21,7 +21,6 @@ USERADD_PARAM_${PN}-client = "--system  --home-dir /var/lib/nfs \
 
 SRC_URI = "${KERNELORG_MIRROR}/linux/utils/nfs-utils/${PV}/nfs-utils-${PV}.tar.xz \
            file://0001-configure-Allow-to-explicitly-disable-nfsidmap.patch \
-           file://nfs-utils-1.0.6-uclibc.patch \
            file://nfs-utils-1.2.3-sm-notify-res_init.patch \
            file://nfsserver \
            file://nfscommon \
@@ -30,13 +29,10 @@ SRC_URI = "${KERNELORG_MIRROR}/linux/utils/nfs-utils/${PV}/nfs-utils-${PV}.tar.x
            file://nfs-mountd.service \
            file://nfs-statd.service \
            file://nfs-utils-Do-not-pass-CFLAGS-to-gcc-while-building.patch \
-           file://0001-statd-fixed-the-with-statdpath-flag.patch \
-           file://fix-a-Gcc-undefined-behavior.patch \
-           file://fix-the-start-statd.patch \
 "
 
-SRC_URI[md5sum] = "6e93a7997ca3a1eac56bf219adab72a8"
-SRC_URI[sha256sum] = "ab8384d0e487ed6a18c5380d5df28015f7dd98680bf08f3247c97d9f7d99e56f"
+SRC_URI[md5sum] = "8de676b9ff34b8f9addc1d0800fabdf8"
+SRC_URI[sha256sum] = "ff79d70b7b58b2c8f9b798c58721127e82bb96022adc04a5c4cb251630e696b8"
 
 PARALLEL_MAKE = ""
 
