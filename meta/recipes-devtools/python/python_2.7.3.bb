@@ -39,6 +39,7 @@ SRC_URI += "\
   file://json-flaw-fix.patch \
   file://posix_close.patch \
   file://remove-BOM-insection-code.patch \
+  file://python-2.7.3-CVE-2014-7185.patch \
 "
 
 S = "${WORKDIR}/Python-${PV}"
