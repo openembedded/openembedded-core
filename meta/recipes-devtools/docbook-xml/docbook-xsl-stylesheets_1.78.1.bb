@@ -19,7 +19,7 @@ BBCLASSEXTEND = "native"
 SSTATEPOSTINSTFUNCS_append_class-native = " docbook_xsl_stylesheets_sstate_postinst"
 SYSROOT_PREPROCESS_FUNCS_append_class-native = " docbook_xsl_stylesheets_sysroot_preprocess"
 
-do_configre (){
+do_configure (){
 	:
 }
 
