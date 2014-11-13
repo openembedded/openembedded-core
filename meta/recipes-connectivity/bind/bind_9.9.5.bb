@@ -46,7 +46,7 @@ PARALLEL_MAKE = ""
 
 RDEPENDS_${PN} = "python-core"
 
-PACKAGES_prepend = " ${PN}-utils "
+PACKAGE_BEFORE_PN += "${PN}-utils"
 FILES_${PN}-utils = "${bindir}/host ${bindir}/dig"
 FILES_${PN}-dev += "${bindir}/isc-config.h"
 FILES_${PN} += "${sbindir}/generate-rndc-key.sh"
