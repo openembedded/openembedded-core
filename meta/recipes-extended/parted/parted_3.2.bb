@@ -9,16 +9,14 @@ PR = "r1"
 SRC_URI = "${GNU_MIRROR}/parted/parted-${PV}.tar.xz \
            file://no_check.patch \
            file://syscalls.patch \
-           file://fix-git-version-gen.patch \
            file://fix-doc-mandir.patch \
-           file://fix-dvh-overflows.patch \
-           file://fix-deprecated-readline.patch \
+           file://fix-compile-failure-while-dis.patch \
            file://run-ptest \
            file://Makefile \
 "
 
-SRC_URI[md5sum] = "5d89d64d94bcfefa9ce8f59f4b81bdcb"
-SRC_URI[sha256sum] = "5e9cc1f91eaf016e5033d85b9b893fd6d3ffaca532a48de1082df9b94225ca15"
+SRC_URI[md5sum] = "0247b6a7b314f8edeb618159fa95f9cb"
+SRC_URI[sha256sum] = "858b589c22297cacdf437f3baff6f04b333087521ab274f7ab677cb8c6bb78e4"
 
 EXTRA_OECONF = "--disable-device-mapper"
 
