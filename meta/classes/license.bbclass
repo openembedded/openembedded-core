@@ -150,12 +150,12 @@ def copy_license_files(lic_files_paths, destdir):
             dst = os.path.join(destdir, basename)
             if os.path.exists(dst):
                 os.remove(dst)
-            if (os.stat(src).st_dev == os.stat(destdir).st_dev):
+            if os.access(src, os.W_OK) and (os.stat(src).st_dev == os.stat(destdir).st_dev):
                 os.link(src, dst)
             else:
                 shutil.copyfile(src, dst)
         except Exception as e:
-            bb.warn("Could not copy license file %s: %s" % (basename, e))
+            bb.warn("Could not copy license file %s to %s: %s" % (src, dst, e))
 
 def find_license_files(d):
     """
