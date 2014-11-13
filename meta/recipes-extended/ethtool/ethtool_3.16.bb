@@ -12,8 +12,8 @@ SRC_URI = "${KERNELORG_MIRROR}/software/network/ethtool/ethtool-${PV}.tar.gz \
            file://ethtool-uint.patch \
            "
 
-SRC_URI[md5sum] = "7e94dd958bcd639aad2e5a752e108b24"
-SRC_URI[sha256sum] = "562e3cc675cf5b1ac655cd060f032943a2502d4d59e5f278f02aae92562ba261"
+SRC_URI[md5sum] = "3806bae34c153e2b9e2859e85c54788d"
+SRC_URI[sha256sum] = "a6f1433824af7b390ed4e66dfc7cee047d6d1f56dbb8ceef9fe905d63aef5275"
 
 inherit autotools ptest
 RDEPENDS_${PN}-ptest += "make"
