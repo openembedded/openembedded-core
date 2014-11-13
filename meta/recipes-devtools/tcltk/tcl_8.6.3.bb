@@ -24,8 +24,8 @@ SRC_URI = "${BASE_SRC_URI} \
            file://alter-includedir.patch \
            file://run-ptest \
 "
-SRC_URI[md5sum] = "8103eaf6d71acb716a64224492f09d5f"
-SRC_URI[sha256sum] = "86f7ae5f581dd0904d04415637ab3aef5a50986c1b6d04c340e2b1b0258da9c4"
+SRC_URI[md5sum] = "db382feca91754b7f93da16dc4cdad1f"
+SRC_URI[sha256sum] = "6ce0778de0d50daaa9c345d7c1fd1288fb658f674028812e7eeee992e3051005"
 
 SRC_URI_class-native = "${BASE_SRC_URI}"
 
