@@ -154,7 +154,12 @@ if [ $relocate = 1 ] ; then
 fi
 
 # replace @SDKPATH@ with the new prefix in all text files: configs/scripts/etc
-$SUDO_EXEC find $native_sysroot -type f -exec file '{}' \;|grep ":.*\(ASCII\|script\|source\).*text"|awk -F':' '{printf "\"%s\"\n", $1}'|$SUDO_EXEC xargs -n32 sed -i -e "s:$DEFAULT_INSTALL_DIR:$target_sdk_dir:g"
+for replace in "$target_sdk_dir -maxdepth 1" "$native_sysroot"; do
+	$SUDO_EXEC find $replace -type f -exec file '{}' \; | \
+		grep ":.*\(ASCII\|script\|source\).*text" | \
+		awk -F':' '{printf "\"%s\"\n", $1}' | \
+		$SUDO_EXEC xargs -n32 sed -i -e "s:$DEFAULT_INSTALL_DIR:$target_sdk_dir:g"
+done
 
 # change all symlinks pointing to @SDKPATH@
 for l in $($SUDO_EXEC find $native_sysroot -type l); do
