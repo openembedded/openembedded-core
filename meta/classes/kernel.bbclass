@@ -223,6 +223,29 @@ kernel_do_install() {
 	#
 
 	echo "${KERNEL_VERSION}" > $kerneldir/kernel-abiversion
+	
+	# Copy files required for module builds
+	cp System.map $kerneldir/System.map-${KERNEL_VERSION}
+	cp Module.symvers $kerneldir/
+	cp .config $kerneldir/
+	mkdir -p $kerneldir/include/config
+	cp include/config/kernel.release $kerneldir/include/config/kernel.release
+
+	# As of Linux kernel version 3.0.1, the clean target removes
+	# arch/powerpc/lib/crtsavres.o which is present in
+	# KBUILD_LDFLAGS_MODULE, making it required to build external modules.
+	if [ ${ARCH} = "powerpc" ]; then
+		mkdir -p $kerneldir/arch/powerpc/lib/
+		cp arch/powerpc/lib/crtsavres.o $kerneldir/arch/powerpc/lib/crtsavres.o
+	fi
+
+	mkdir -p $kerneldir/include/generated/
+	cp -fR include/generated/* $kerneldir/include/generated/
+
+	if [ -d arch/${ARCH}/include/generated ]; then
+		mkdir -p $kerneldir/arch/${ARCH}/include/generated/
+		cp -fR arch/${ARCH}/include/generated/* $kerneldir/arch/${ARCH}/include/generated/
+	fi
 }
 do_install[prefuncs] += "package_get_auto_pr"
 
