@@ -7,14 +7,20 @@ DEPENDS = "libtool bzip2 zlib virtual/libintl"
 
 SRC_URI = "https://fedorahosted.org/releases/e/l/elfutils/${PV}/elfutils-${PV}.tar.bz2"
 
-SRC_URI[md5sum] = "050a4909e452d01ab4747fd69d4036e0"
-SRC_URI[sha256sum] = "be27af5c21352f53e010342bf1c68e0b9e18232dbf3adec7e2f9b41f6bbe397d"
+SRC_URI[md5sum] = "7527f22dff8b1ac8c122cfc4d3d3bb1e"
+SRC_URI[sha256sum] = "741b556863c069ceab2d81eb54aeda8c34f46728859704eaf9baef8503e9a9d1"
 
-# Pick patches from debian
-# http://ftp.de.debian.org/debian/pool/main/e/elfutils/elfutils_0.158-2.debian.tar.xz
+SRC_URI += "\
+        file://mempcpy.patch \
+        file://dso-link-change.patch \
+        file://Fix_elf_cvt_gunhash.patch \
+        file://fixheadercheck.patch \
+"
+
+# pick the patch from debian
+# http://ftp.de.debian.org/debian/pool/main/e/elfutils/elfutils_0.159-4.debian.tar.xz
 SRC_URI += "\
         file://redhat-portability.diff \
-        file://redhat-robustify.diff \
         file://hppa_backend.diff \
         file://arm_backend.diff \
         file://mips_backend.diff \
@@ -22,15 +28,9 @@ SRC_URI += "\
         file://testsuite-ignore-elflint.diff \
         file://scanf-format.patch \
         file://mips_readelf_w.patch \
-        file://core_filename.patch \
-        file://CVE-2014-0172.patch \
-        file://unwind_non_linux.patch \
-        file://elf_additions.diff \
-        file://mempcpy.patch \
-        file://dso-link-change.patch \
-        file://m4-biarch.m4-tweak-AC_RUN_IFELSE-for-cross-compiling.patch \
-        file://fixheadercheck.patch \
-        file://Fix_elf_cvt_gunhash.patch \
+        file://arm_func_value.patch \
+        file://arm_unwind_ret_mask.patch \
+        file://non_linux.patch \
 "
 
 # Only apply when building uclibc based target recipe
