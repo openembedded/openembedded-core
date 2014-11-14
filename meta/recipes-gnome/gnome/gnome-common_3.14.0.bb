@@ -10,8 +10,8 @@ inherit gnomebase allarch
 
 GNOME_COMPRESS_TYPE = "xz"
 
-SRC_URI[archive.md5sum] = "da903a1c89b0a24e062227fa97d42fe7"
-SRC_URI[archive.sha256sum] = "18712bc2df6b2dd88a11b9f7f874096d1c0c6e7ebc9cfc0686ef963bd590e1d8"
+SRC_URI[archive.md5sum] = "ba58c61d0d81b7c3ff8452c620513a9d"
+SRC_URI[archive.sha256sum] = "4c00242f781bb441289f49dd80ed1d895d84de0c94bfc2c6818a104c9e39262c"
 
 EXTRA_AUTORECONF = ""
 DEPENDS = ""
