@@ -5,7 +5,7 @@ Subject: [PATCH 1/2] opkg-0.2.x: no-install-recommends
 
 Add the ability to not install ANY recommended packages.
 
-Upstream-Status: Pending
+Upstream-Status: Accepted for v0.3.0 release with modifications
 
 Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
 ---

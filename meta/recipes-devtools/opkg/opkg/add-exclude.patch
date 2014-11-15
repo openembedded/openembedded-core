@@ -15,7 +15,7 @@ so there is no need to free the data.
 v2: Use xmalloc instead of malloc and xrealloc instead of realloc. In opkg,
 these functions are guaranteed not to return NULL.
 
-Upstream-Status: Pending
+Upstream-Status: Accepted for v0.3.0 release with modifications
 
 Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
 Signed-off-by: Jonathan Liu <net147@gmail.com>
