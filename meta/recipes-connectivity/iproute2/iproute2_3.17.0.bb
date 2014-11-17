@@ -3,10 +3,9 @@ require iproute2.inc
 SRC_URI = "${KERNELORG_MIRROR}/linux/utils/net/${BPN}/${BP}.tar.xz \
            file://configure-cross.patch \
            file://0001-iproute2-de-bash-scripts.patch \
-           file://0001-ip-link-Remove-unnecessary-device-checking.patch \
           "
-SRC_URI[md5sum] = "6c823b40fdcfa7b8120743349a52ac18"
-SRC_URI[sha256sum] = "1f0a8a6c0e872166f75433f5cbf9766f3002b5c2f13501b3bb8c51846a127b79"
+SRC_URI[md5sum] = "b741a02c6dda5818d18011d572874493"
+SRC_URI[sha256sum] = "09e406636e7598e46d5d4f7b928bf5db57049d65dbeb9a496005957ee16f6000"
 
 # CFLAGS are computed in Makefile and reference CCOPTS
 #
