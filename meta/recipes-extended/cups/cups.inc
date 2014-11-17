@@ -33,7 +33,6 @@ EXTRA_OECONF = " \
                --enable-gnutls \
                --enable-dbus \
                --enable-browsing \
-               --disable-openssl \
                --disable-gssapi \
                --enable-debug \
                --disable-relro \
