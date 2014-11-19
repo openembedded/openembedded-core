@@ -63,7 +63,7 @@ do_install_append () {
 	mkdir -p ${D}${sysconfdir}/cron.weekly
 	mkdir -p ${D}${sysconfdir}/cron.monthly
 	touch ${D}${sysconfdir}/cron.deny
-	
+
 	# below setting is necessary to allow normal user using crontab
 
 	# setgid for crontab binary
@@ -78,3 +78,4 @@ do_install_append () {
 }
 
 FILES_${PN} += "${sysconfdir}/cron*"
+CONFFILES_${PN} += "${sysconfdir}/crontab"

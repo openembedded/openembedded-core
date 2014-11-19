@@ -7,4 +7,8 @@
 SHELL=/bin/sh
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 
-# m h dom mon dow user	command
+#  m  h  dom mon dow user	command
+#  1  *     * * *    root        cd / && run-parts /etc/cron.hourly
+# 30  7     * * *    root        cd / && run-parts /etc/cron.daily
+# 42  7     * * 7    root        cd / && run-parts /etc/cron.weekly
+# 55  7     1 * *    root        cd / && run-parts /etc/cron.monthly
