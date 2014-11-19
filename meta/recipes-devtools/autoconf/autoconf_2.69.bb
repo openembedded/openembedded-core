@@ -22,6 +22,6 @@ SRC_URI[sha256sum] = "954bd69b391edc12d6a4a51a2dd1476543da5c6bbf05a95b59dc0dd6fd
 
 SRC_URI_append_class-native = " file://fix_path_xtra.patch"
 
-EXTRA_OECONF += "ac_cv_path_M4=m4"
+EXTRA_OECONF += "ac_cv_path_M4=m4 ac_cv_prog_TEST_EMACS=no"
 
 BBCLASSEXTEND = "native nativesdk"
