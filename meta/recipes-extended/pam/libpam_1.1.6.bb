@@ -163,3 +163,9 @@ python do_pam_sanity () {
 addtask pam_sanity before do_configure
 
 BBCLASSEXTEND = "nativesdk native"
+
+CONFFILES_${PN}-runtime += "${sysconfdir}/pam.d/common-session"
+CONFFILES_${PN}-runtime += "${sysconfdir}/pam.d/common-auth"
+CONFFILES_${PN}-runtime += "${sysconfdir}/pam.d/common-password"
+CONFFILES_${PN}-runtime += "${sysconfdir}/pam.d/common-session-noninteractive"
+CONFFILES_${PN}-runtime += "${sysconfdir}/pam.d/common-account"
