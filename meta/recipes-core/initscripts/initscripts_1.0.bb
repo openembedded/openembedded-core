@@ -162,3 +162,5 @@ pkg_postinst_${PN} () {
 		done
 	fi
 }
+
+CONFFILES_${PN} += "${sysconfdir}/init.d/checkroot.sh"
