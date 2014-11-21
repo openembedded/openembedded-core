@@ -9,6 +9,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504 \
                     file://gzip.h;beginline=8;endline=20;md5=6e47caaa630e0c8bf9f1bc8d94a8ed0e"
 
 SRC_URI = "${GNU_MIRROR}/gzip/${BP}.tar.gz"
+SRC_URI_append_class-target = " file://wrong-path-fix.patch"
 
 inherit autotools texinfo
 
