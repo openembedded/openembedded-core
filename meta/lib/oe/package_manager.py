@@ -16,10 +16,13 @@ def create_index(arg):
 
     try:
         bb.note("Executing '%s' ..." % index_cmd)
-        subprocess.check_output(index_cmd, stderr=subprocess.STDOUT, shell=True)
+        result = subprocess.check_output(index_cmd, stderr=subprocess.STDOUT, shell=True)
     except subprocess.CalledProcessError as e:
         return("Index creation command '%s' failed with return code %d:\n%s" %
                (e.cmd, e.returncode, e.output))
+
+    if result:
+        bb.note(result)
 
     return None
 
@@ -120,7 +123,10 @@ class RpmIndexer(Indexer):
             bb.note("There are no packages in %s" % self.deploy_dir)
             return
 
-        oe.utils.multiprocess_exec(index_cmds, create_index)
+        result = oe.utils.multiprocess_exec(index_cmds, create_index)
+        if result:
+            bb.fatal('%s' % ('\n'.join(result)))
+
 
 class OpkgIndexer(Indexer):
     def write_index(self):
@@ -156,7 +162,10 @@ class OpkgIndexer(Indexer):
             bb.note("There are no packages in %s!" % self.deploy_dir)
             return
 
-        oe.utils.multiprocess_exec(index_cmds, create_index)
+        result = oe.utils.multiprocess_exec(index_cmds, create_index)
+        if result:
+            bb.fatal('%s' % ('\n'.join(result)))
+
 
 
 class DpkgIndexer(Indexer):
@@ -200,7 +209,10 @@ class DpkgIndexer(Indexer):
             bb.note("There are no packages in %s" % self.deploy_dir)
             return
 
-        oe.utils.multiprocess_exec(index_cmds, create_index)
+        result = oe.utils.multiprocess_exec(index_cmds, create_index)
+        if result:
+            bb.fatal('%s' % ('\n'.join(result)))
+
 
 
 class PkgsList(object):
