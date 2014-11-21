@@ -1554,6 +1554,8 @@ python package_do_shlibs() {
             if len(dep_pkg) == 2:
                 lib_ver = dep_pkg[1]
             dep_pkg = dep_pkg[0]
+            if l not in shlib_provider:
+                shlib_provider[l] = {}
             shlib_provider[l][libdir] = (dep_pkg, lib_ver)
 
     libsearchpath = [d.getVar('libdir', True), d.getVar('base_libdir', True)]
