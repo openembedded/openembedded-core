@@ -60,7 +60,7 @@ def base_get_metadata_svn_revision(path, d):
     try:
         with open("%s/.svn/entries" % path) as f:
             revision = f.readlines()[3].strip()
-    except IOError, IndexError:
+    except (IOError, IndexError):
         pass
     return revision
 
