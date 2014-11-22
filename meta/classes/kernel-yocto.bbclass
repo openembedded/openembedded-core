@@ -179,9 +179,11 @@ do_kernel_checkout() {
 			bberror "S is not set to the linux source directory. Check "
 			bbfatal "the recipe and set S to the proper extracted subdirectory"
 		fi
+		rm -f .gitignore
 		git init
 		git add .
 		git commit -q -m "baseline commit: creating repo for ${PN}-${PV}"
+		git clean -d -f
 	fi
 	# end debare
 
@@ -287,7 +289,7 @@ do_validate_branches() {
 	if [ "${machine_srcrev}" = "AUTOINC" ]; then
 		bbnote "SRCREV validation is not required for AUTOREV"
 	elif [ "${machine_srcrev}" = "" ]; then
-		if [ "${SRCREV}" != "AUTOINC" ]; then
+		if [ "${SRCREV}" != "AUTOINC" ] && [ "${SRCREV}" != "INVALID" ]; then
 		       # SRCREV_machine_<MACHINE> was not set. This means that a custom recipe
 		       # that doesn't use the SRCREV_FORMAT "machine_meta" is being built. In
 		       # this case, we need to reset to the give SRCREV before heading to patching
