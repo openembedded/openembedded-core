@@ -2434,24 +2434,7 @@ Index: git/localedata/Makefile
  
  ifeq ($(run-built-tests),yes)
  # We have to generate locales
-@@ -143,9 +161,13 @@
- $(addprefix $(objpfx),$(CTYPE_FILES)): %: \
-   gen-locale.sh $(common-objpfx)locale/localedef Makefile \
-   $(addprefix charmaps/,$(CHARMAPS)) $(addprefix locales/,$(LOCALE_SRCS))
--	@$(SHELL) gen-locale.sh $(common-objpfx) \
--		  '$(built-program-cmd-before-env)' '$(run-program-env)' \
--		  '$(built-program-cmd-after-env)' $@; \
-+	@$(SHELL) gen-locale.sh $(common-objpfx)	\
-+		 '$(if $(cross-localedef), 		\
-+		       $(cross-localedef),		\
-+		       $(built-program-cmd-before-env)  \
-+		       $(run-program-env)		\
-+		       $(built-program-cmd-after-env))' \
-+		       $@; \
- 	$(evaluate-test)
- 
- $(addsuffix .out,$(addprefix $(objpfx),$(tests))): %: \
-@@ -213,6 +235,11 @@
+@@ -213,6 +231,11 @@
  
  include SUPPORTED
  
@@ -4784,7 +4767,7 @@ Index: git/posix/fnmatch.c
  #  endif
  
 -#  if (HAVE_MBSTATE_T && HAVE_MBSRTOWCS) || _LIBC
-+#  if (HAVE_MBSTATE_T && HAVE_MBSRTOWCS) || (_LIBC && __OPTION_EGLIBC_LOCALE_CODE)
++#  if (HAVE_MBSTATE_T && HAVE_MBSRTOWCS && _LIBC && __OPTION_EGLIBC_LOCALE_CODE)
  /* In this case we are implementing the multibyte character handling.  */
  #   define HANDLE_MULTIBYTE	1
  #  endif
@@ -5066,8 +5049,8 @@ Index: git/posix/Makefile
  		 $(objpfx)bug-glob2-mem.out $(objpfx)tst-vfork3-mem.out \
  		 $(objpfx)tst-fnmatch-mem.out $(objpfx)bug-regex36-mem.out
 +ifeq (y,$(OPTION_POSIX_REGEXP_GLIBC))
-+tests-special += $(objpfx)bug-regex14-mem $(objpfx)tst-rxspencer-no-utf8-mem \
-+  		 $(objpfx)tst-pcre-mem $(objpfx)tst-boost-mem
++tests-special += $(objpfx)bug-regex14-mem.out $(objpfx)tst-rxspencer-no-utf8-mem.out \
++  		 $(objpfx)tst-pcre-mem.out $(objpfx)tst-boost-mem.out
 +endif
 +
  xtests-special += $(objpfx)bug-ga2-mem.out
@@ -16459,24 +16442,6 @@ Index: git/sysdeps/nptl/small-macros-fns.c
 +libc_hidden_def (__libc_lock_unlock_recursive_fn);
 +
 +#endif /*defined _LIBC && (!defined NOT_IN_libc || defined IS_IN_libpthread)*/
-Index: git/include/libc-symbols.h
-===================================================================
---- git.orig/include/libc-symbols.h	2014-08-29 20:00:47.144070587 -0700
-+++ git/include/libc-symbols.h	2014-08-29 20:01:15.248070587 -0700
-@@ -60,8 +60,11 @@
- /* Define these macros for the benefit of portable GNU code that wants to check
-    them.  Of course, STDC_HEADERS is never false when building libc!  */
- #define STDC_HEADERS	1
--#define HAVE_MBSTATE_T	1
--#define HAVE_MBSRTOWCS	1
-+
-+#if __OPTION_EGLIBC_LOCALE_CODE
-+# define HAVE_MBSTATE_T	1
-+# define HAVE_MBSRTOWCS	1
-+#endif
- #define HAVE_LIBINTL_H	1
- #define HAVE_WCTYPE_H	1
- #define HAVE_ISWCTYPE	1
 Index: git/crypt/crypt_common.c
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
