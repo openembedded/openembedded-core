@@ -11,9 +11,10 @@ DEPENDS = "gtk+ dbus-glib intltool-native"
 # 0.7 tag
 SRCREV = "cf3c325b23dae843c5499a113591cfbc98acb143"
 SRC_URI = "git://github.com/connectivity/connman-gnome.git \
-	   file://0001-Removed-icon-from-connman-gnome-about-applet.patch \
-       file://null_check_for_ipv4_config.patch \
-	   file://images/* \
+           file://0001-Removed-icon-from-connman-gnome-about-applet.patch \
+           file://null_check_for_ipv4_config.patch \
+           file://images/* \
+           file://connman-gnome-fix-dbus-interface-name.patch \
           "
 
 S = "${WORKDIR}/git"
