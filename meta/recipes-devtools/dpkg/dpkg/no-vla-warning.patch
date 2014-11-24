@@ -11,22 +11,22 @@ Upstream-Status: Pending
 
 Signed-off-by: Donn Seeley <donn.seeley@windriver.com>
 Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
+Signed-off-by: Aníbal Limón <anibal.limon@linux.intel.com>
 ---
  m4/dpkg-compiler.m4 |    1 -
  1 file changed, 1 deletion(-)
 
 diff --git a/m4/dpkg-compiler.m4 b/m4/dpkg-compiler.m4
-index f1c760b..500b5ad 100644
+index 53f67c6..6e66a43 100644
 --- a/m4/dpkg-compiler.m4
 +++ b/m4/dpkg-compiler.m4
-@@ -72,7 +72,6 @@ if test "x$enable_compiler_warnings" = "xyes"; then
-   DPKG_WARNING_ALL([-Wformat-security])
-   DPKG_WARNING_ALL([-Wpointer-arith])
-   DPKG_WARNING_ALL([-Wlogical-op])
--  DPKG_WARNING_ALL([-Wvla])
-   DPKG_WARNING_ALL([-Winit-self])
-   DPKG_WARNING_ALL([-Wwrite-strings])
-   DPKG_WARNING_ALL([-Wcast-align])
--- 
-1.7.10.4
-
+@@ -49,7 +49,6 @@ AC_DEFUN([DPKG_CHECK_COMPILER_WARNINGS], [
+   DPKG_CHECK_COMPILER_FLAG([-Wformat-security])
+   DPKG_CHECK_COMPILER_FLAG([-Wpointer-arith])
+   DPKG_CHECK_COMPILER_FLAG([-Wlogical-op])
+-  DPKG_CHECK_COMPILER_FLAG([-Wvla])
+   DPKG_CHECK_COMPILER_FLAG([-Winit-self])
+   DPKG_CHECK_COMPILER_FLAG([-Wwrite-strings])
+   DPKG_CHECK_COMPILER_FLAG([-Wcast-align])
+---
+1.17.21

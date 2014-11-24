@@ -12,10 +12,8 @@ SRC_URI += "file://noman.patch \
             file://dpkg-configure.service \
             file://glibc2.5-sync_file_range.patch \
             file://no-vla-warning.patch \
-            file://dpkg-1.17.4-CVE-2014-0471.patch \
-            file://dpkg-1.17.4-CVE-2014-0471-CVE-2014-3127.patch \
            "
 
-SRC_URI[md5sum] = "cc25086e1e3bd9512a95f14cfe9002e1"
-SRC_URI[sha256sum] = "01cdc81c33e77c3d7c40df17e19171794542be7cf12e411381ffcaa8f87b1854"
+SRC_URI[md5sum] = "765a96fd0180196613bbfa3c4aef0775"
+SRC_URI[sha256sum] = "3ed776627181cb9c1c9ba33f94a6319084be2e9ec9c23dd61ce784c4f602cf05"
 
