@@ -1,5 +1,7 @@
 BPN = "libgcc"
 
+require gcc-shared-source.inc
+
 INHIBIT_DEFAULT_DEPS = "1"
 
 do_configure () {
