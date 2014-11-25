@@ -1,0 +1,27 @@
+From 62379eedc739605f04d02e76eb50c4d2f129ae08 Mon Sep 17 00:00:00 2001
+From: "Frank Ch. Eigler" <fche@redhat.com>
+Date: Tue, 25 Nov 2014 13:45:14 +0800
+Subject: [PATCH] PR16632: Adapt to glibc deprecation of _BSD_SOURCE: add _DEFAULT_SOURCE
+
+Upstream-Status: Backport from commit c6278d012a483d97f5ee4756406d9c88735d2838
+
+Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
+---
+ staprun/staprun.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/staprun/staprun.c b/staprun/staprun.c
+index b85e2b0..1e1b5c3 100644
+--- a/staprun/staprun.c
++++ b/staprun/staprun.c
+@@ -21,6 +21,7 @@
+ 
+ #define _XOPEN_SOURCE
+ #define _BSD_SOURCE
++#define _DEFAULT_SOURCE
+ #include "staprun.h"
+ #include "../privilege.h"
+ #include "../runtime/k_syms.h"
+-- 
+1.9.1
+
