@@ -241,8 +241,10 @@ class Wic_PartData(Mic_PartData):
 
         mkfs_cmd = "mkfs.%s -F %s %s -d %s" % \
             (self.fstype, extra_imagecmd, rootfs, image_rootfs)
-        exec_native_cmd(pseudo + mkfs_cmd, native_sysroot)
-
+        (rc, out) = exec_native_cmd(pseudo + mkfs_cmd, native_sysroot)
+        if rc:
+            print "rootfs_dir: %s" % rootfs_dir
+            msger.error("ERROR: mkfs.%s returned '%s' instead of 0 (which you probably don't want to ignore, use --debug for details) when creating filesystem from rootfs directory: %s" % (self.fstype, rc, rootfs_dir))
 
         # get the rootfs size in the right units for kickstart (Mb)
         du_cmd = "du -Lbms %s" % rootfs
@@ -284,7 +286,9 @@ class Wic_PartData(Mic_PartData):
 
         mkfs_cmd = "mkfs.%s -b %d -r %s %s" % \
             (self.fstype, rootfs_size * 1024, image_rootfs, rootfs)
-        exec_native_cmd(pseudo + mkfs_cmd, native_sysroot)
+        (rc, out) = exec_native_cmd(pseudo + mkfs_cmd, native_sysroot)
+        if rc:
+            msger.error("ERROR: mkfs.%s returned '%s' instead of 0 (which you probably don't want to ignore, use --debug for details) when creating filesystem from rootfs directory: %s" % (self.fstype, rc, rootfs_dir))
 
         # get the rootfs size in the right units for kickstart (Mb)
         du_cmd = "du -Lbms %s" % rootfs
@@ -396,7 +400,9 @@ class Wic_PartData(Mic_PartData):
         extra_imagecmd = "-i 8192"
 
         mkfs_cmd = "mkfs.%s -F %s %s" % (self.fstype, extra_imagecmd, fs)
-        exec_native_cmd(mkfs_cmd, native_sysroot)
+        (rc, out) = exec_native_cmd(mkfs_cmd, native_sysroot)
+        if rc:
+            msger.error("ERROR: mkfs.%s returned '%s' instead of 0 (which you probably don't want to ignore, use --debug for details)" % (self.fstype, rc))
 
         self.source_file = fs
 
@@ -414,10 +420,14 @@ class Wic_PartData(Mic_PartData):
         exec_cmd(dd_cmd)
 
         mkfs_cmd = "mkfs.%s -b %d %s" % (self.fstype, self.size * 1024, rootfs)
-        exec_native_cmd(mkfs_cmd, native_sysroot)
+        (rc, out) = exec_native_cmd(mkfs_cmd, native_sysroot)
+        if rc:
+            msger.error("ERROR: mkfs.%s returned '%s' instead of 0 (which you probably don't want to ignore, use --debug for details)" % (self.fstype, rc))
 
         mkfs_cmd = "mkfs.%s -F %s %s" % (self.fstype, extra_imagecmd, fs)
-        exec_native_cmd(mkfs_cmd, native_sysroot)
+        (rc, out) = exec_native_cmd(mkfs_cmd, native_sysroot)
+        if rc:
+            msger.error("ERROR: mkfs.%s returned '%s' instead of 0 (which you probably don't want to ignore, use --debug for details)" % (self.fstype, rc))
 
         self.source_file = fs
 
