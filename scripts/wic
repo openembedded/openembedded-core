@@ -131,11 +131,11 @@ def wic_create_subcommand(args, usage_str):
         sys.exit(1)
     set_bitbake_env_lines(bitbake_env_lines)
 
-    bootimg_dir = staging_data_dir = hdddir = ""
+    bootimg_dir = ""
 
     if options.image_name:
-        (rootfs_dir, kernel_dir, hdddir, staging_data_dir, native_sysroot) = \
-            find_artifacts(options.image_name)
+        (rootfs_dir, kernel_dir, bootimg_dir, native_sysroot) \
+            = find_artifacts(options.image_name)
 
     wks_file = args[0]
 
@@ -172,8 +172,6 @@ def wic_create_subcommand(args, usage_str):
         not_found = not_found_dir = ""
         if not os.path.isdir(rootfs_dir):
             (not_found, not_found_dir) = ("rootfs-dir", rootfs_dir)
-        elif not os.path.isdir(hdddir) and not os.path.isdir(staging_data_dir):
-            (not_found, not_found_dir) = ("bootimg-dir", bootimg_dir)
         elif not os.path.isdir(kernel_dir):
             (not_found, not_found_dir) = ("kernel-dir", kernel_dir)
         elif not os.path.isdir(native_sysroot):
@@ -197,8 +195,8 @@ def wic_create_subcommand(args, usage_str):
     rootfs_dir = rootfs_dir_to_args(krootfs_dir)
 
     wic_create(args, wks_file, rootfs_dir, bootimg_dir, kernel_dir,
-               native_sysroot, hdddir, staging_data_dir, scripts_path,
-               image_output_dir, options.debug, options.properties_file)
+               native_sysroot, scripts_path, image_output_dir,
+               options.debug, options.properties_file)
 
 
 def wic_list_subcommand(args, usage_str):

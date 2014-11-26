@@ -189,7 +189,7 @@ DESCRIPTION
     -r:        IMAGE_ROOTFS
     -k:        STAGING_KERNEL_DIR
     -n:        STAGING_DIR_NATIVE
-    -b:        HDDDIR and STAGING_DATA_DIR (handlers decide which to use)
+    -b:        empty (plugin-specific handlers must determine this)
 
     If 'wic -e' is not used, the user needs to select the appropriate
     value for -b (as well as -r, -k, and -n).

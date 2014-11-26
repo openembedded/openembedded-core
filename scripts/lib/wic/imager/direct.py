@@ -52,8 +52,7 @@ class DirectImageCreator(BaseImageCreator):
     """
 
     def __init__(self, oe_builddir, image_output_dir, rootfs_dir, bootimg_dir,
-                 kernel_dir, native_sysroot, hdddir, staging_data_dir,
-                 creatoropts=None):
+                 kernel_dir, native_sysroot, creatoropts=None):
         """
         Initialize a DirectImageCreator instance.
 
@@ -74,8 +73,6 @@ class DirectImageCreator(BaseImageCreator):
         self.bootimg_dir = bootimg_dir
         self.kernel_dir = kernel_dir
         self.native_sysroot = native_sysroot
-        self.hdddir = hdddir
-        self.staging_data_dir = staging_data_dir
 
     def __write_fstab(self, image_rootfs):
         """overriden to generate fstab (temporarily) in rootfs. This is called
