@@ -2,7 +2,7 @@
     "config": {"MACHINE": "qemux86", "DISTRO": "poky"},
     "layersources": [
         {
-            "name": "Local OE-Core",
+            "name": "Local OpenEmbedded",
             "sourcetype": "local",
             "apiurl": "../../",
             "branches": ["HEAD", "master", "dizzy"],
@@ -22,7 +22,7 @@
             "branches": ["master", "dizzy"]
         },
         {
-            "name": "User Imported Layers",
+            "name": "Imported layers",
             "sourcetype": "imported",
             "apiurl": "",
             "branches": ["master", "dizzy", "HEAD"]
@@ -55,30 +55,30 @@
     "releases": [
         {
             "name": "master",
-            "description": "OE-Core master",
+            "description": "OpenEmbedded master",
             "bitbake": "master",
             "branch": "master",
             "defaultlayers": [ "openembedded-core" ],
-            "layersourcepriority": { "User Imported Layers": 99, "Local OE-Core" : 10, "OpenEmbedded" :  0 },
+            "layersourcepriority": { "Imported layers": 99, "Local OpenEmbedded" : 10, "OpenEmbedded" :  0 },
             "helptext": "Toaster will run your builds using the OpenEmbedded master branch, where active development takes place. This is not a stable branch, so your builds might not work as expected."
         },
         {
             "name": "dizzy",
-            "description": "OE-Core dizzy",
+            "description": "OpenEmbedded Dizzy",
             "bitbake": "dizzy",
             "branch": "dizzy",
             "defaultlayers": [ "openembedded-core" ],
-            "layersourcepriority": { "User Imported Layers": 99, "Local OE-Core" : 10, "OpenEmbedded" :  0 },
-            "helptext": "Toaster will run your builds with the latest OpenEmbedded release, the dizzy branch."
+            "layersourcepriority": { "Imported layers": 99, "Local OpenEmbedded" : 10, "OpenEmbedded" :  0 },
+            "helptext": "Toaster will run your builds with the OpenEmbedded Dizzy release"
         },
         {
             "name": "local",
-            "description": "Local Yocto Project",
+            "description": "Local OpenEmbedded",
             "bitbake": "HEAD",
             "branch": "HEAD",
             "defaultlayers": [ "openembedded-core" ],
-            "layersourcepriority": { "User Imported Layers": 99, "Local OE-Core" : 10, "OpenEmbedded" :  0 },
-            "helptext": "Toaster will run your builds with the version of the OpenEmbedded that you have cloned or downloaded to your computer."
+            "layersourcepriority": { "Imported layers": 99, "Local OpenEmbedded" : 10, "OpenEmbedded" :  0 },
+            "helptext": "Toaster will run your builds with the version of OpenEmbedded that you have cloned or downloaded to your computer."
         }
     ]
 }
