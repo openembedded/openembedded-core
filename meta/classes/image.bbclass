@@ -188,7 +188,6 @@ do_rootfs[cleandirs] += "${S}"
 do_rootfs[umask] = "022"
 
 # A hook function to support read-only-rootfs IMAGE_FEATURES
-# Currently, it only supports sysvinit system.
 read_only_rootfs_hook () {
 	# Tweak the mount option and fs_passno for rootfs in fstab
 	sed -i -e '/^[#[:space:]]*\/dev\/root/{s/defaults/ro/;s/\([[:space:]]*[[:digit:]]\)\([[:space:]]*\)[[:digit:]]$/\1\20/}' ${IMAGE_ROOTFS}/etc/fstab
