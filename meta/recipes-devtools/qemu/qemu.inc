@@ -16,6 +16,7 @@ SRC_URI = "\
     file://larger_default_ram_size.patch \
     file://disable-grabs.patch \
     file://exclude-some-arm-EABI-obsolete-syscalls.patch \
+    file://wacom.patch \
     "
 
 SRC_URI_append_class-native = "\
