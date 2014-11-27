@@ -193,12 +193,12 @@ read_only_rootfs_hook () {
 	sed -i -e '/^[#[:space:]]*\/dev\/root/{s/defaults/ro/;s/\([[:space:]]*[[:digit:]]\)\([[:space:]]*\)[[:digit:]]$/\1\20/}' ${IMAGE_ROOTFS}/etc/fstab
 
 	if ${@bb.utils.contains("DISTRO_FEATURES", "sysvinit", "true", "false", d)}; then
-	        # Change the value of ROOTFS_READ_ONLY in /etc/default/rcS to yes
+		# Change the value of ROOTFS_READ_ONLY in /etc/default/rcS to yes
 		if [ -e ${IMAGE_ROOTFS}/etc/default/rcS ]; then
 			sed -i 's/ROOTFS_READ_ONLY=no/ROOTFS_READ_ONLY=yes/' ${IMAGE_ROOTFS}/etc/default/rcS
 		fi
-	        # Run populate-volatile.sh at rootfs time to set up basic files
-	        # and directories to support read-only rootfs.
+		# Run populate-volatile.sh at rootfs time to set up basic files
+		# and directories to support read-only rootfs.
 		if [ -x ${IMAGE_ROOTFS}/etc/init.d/populate-volatile.sh ]; then
 			${IMAGE_ROOTFS}/etc/init.d/populate-volatile.sh
 		fi
