@@ -95,11 +95,16 @@ diff --git a/src/Makefile.am b/src/Makefile.am
 index 1647d64..754c47c 100644
 --- a/src/Makefile.am
 +++ b/src/Makefile.am
-@@ -23,14 +23,13 @@
+@@ -23,14 +23,18 @@
  #    Eric Anholt <eric@anholt.net>
  
++if HAVE_GLEW
++UTIL = util
++endif
++
  SUBDIRS = \
 -	util \
++	$(UTIL) \
  	data \
  	demos \
  	egl \
@@ -111,7 +116,7 @@ index 1647d64..754c47c 100644
  	objviewer \
  	osdemos \
  	perf \
-@@ -40,8 +39,13 @@ SUBDIRS = \
+@@ -40,8 +39,12 @@ SUBDIRS = \
  	slang \
  	tests \
  	tools \
@@ -125,7 +130,6 @@ index 1647d64..754c47c 100644
 +SUBDIRS += \
 +	vp \
 +	vpglsl \
-+	util \
 +	trivial
 +endif
 diff --git a/src/demos/Makefile.am b/src/demos/Makefile.am
