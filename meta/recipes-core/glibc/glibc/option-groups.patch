@@ -1358,8 +1358,8 @@ Index: git/scripts/option-groups.awk
 +    print "   It defines macros that indicate which EGLIBC option groups were"
 +    print "   configured in 'option-groups.config' when this C library was"
 +    print "   built.  For each option group named OPTION_foo, it #defines"
-+    print "   __OPTION_foo to be 1 if the group is enabled, or leaves that"
-+    print "   symbol undefined if the group is disabled.  */"
++    print "   __OPTION_foo to be 1 if the group is enabled, or #defines that"
++    print "   symbol to be 0 if the group is disabled.  */"
 +    print ""
 +    print "#ifndef __GNU_OPTION_GROUPS_H"
 +    print "#define __GNU_OPTION_GROUPS_H"
@@ -1379,7 +1379,7 @@ Index: git/scripts/option-groups.awk
 +            if (vars[var] == "y")
 +                print "#define __" var " 1"
 +            else if (vars[var] == "n")
-+                print "/* #undef __" var " */"
++                print "#define __" var " 0"
 +	    else if (vars[var] ~ /^[0-9]+/ ||
 +		     vars[var] ~ /^0x[0-9aAbBcCdDeEfF]+/ ||
 +		     vars[var] ~ /^\"/)
