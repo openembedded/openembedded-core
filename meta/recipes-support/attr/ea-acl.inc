@@ -7,7 +7,7 @@ inherit autotools-brokensep gettext
 
 # the package comes with a custom config.h.in, it cannot be
 # overwritten by autoheader
-export AUTOHEADER = "true"
+EXTRA_AUTORECONF += "--exclude=autoheader"
 EXTRA_OECONF = "INSTALL_USER=root INSTALL_GROUP=root"
 EXTRA_OECONF_append_class-native = " --enable-gettext=no"
 
