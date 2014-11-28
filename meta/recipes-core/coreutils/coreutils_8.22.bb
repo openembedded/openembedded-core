@@ -74,6 +74,11 @@ do_install_append() {
 	mv ${D}${bindir}/[ ${D}${bindir}/lbracket.${BPN}
 }
 
+do_install_append_class-native(){
+	# remove groups to fix conflict with shadow-native
+	rm -f ${D}${STAGING_BINDIR_NATIVE}/groups
+}
+
 inherit update-alternatives
 
 ALTERNATIVE_PRIORITY = "100"
