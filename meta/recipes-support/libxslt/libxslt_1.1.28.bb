@@ -35,6 +35,11 @@ RPROVIDES_${PN}-bin += "${PN}-utils"
 RCONFLICTS_${PN}-bin += "${PN}-utils"
 RREPLACES_${PN}-bin += "${PN}-utils"
 
+
+do_install_append_class-native () {
+    create_wrapper ${D}/${bindir}/xsltproc XML_CATALOG_FILES=${sysconfdir}/xml/catalog.xml
+}
+
 FILES_${PN} += "${libdir}/libxslt-plugins"
 FILES_${PN}-dev += "${libdir}/xsltConf.sh"
 
