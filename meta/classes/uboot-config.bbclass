@@ -38,9 +38,6 @@ python () {
     ubootconfig = ubootconfig[0]
 
     for f, v in ubootconfigflags.items():
-        if f == 'defaultval':
-            continue
-
         items = v.split(',')
         if items[0] and len(items) > 2:
             raise bb.parse.SkipPackage('Only config,images can be specified!')
