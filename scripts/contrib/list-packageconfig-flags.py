@@ -65,7 +65,6 @@ def get_recipesdata(bbhandler, preferred):
         data = bb.cache.Cache.loadDataFull(fn, bbhandler.cooker.collection.get_file_appends(fn), bbhandler.config_data)
         flags = data.getVarFlags("PACKAGECONFIG")
         flags.pop('doc', None)
-        flags.pop('defaultval', None)
         if flags:
             data_dict[fn] = data
 
@@ -78,7 +77,6 @@ def collect_pkgs(data_dict):
     for fn in data_dict:
         pkgconfigflags = data_dict[fn].getVarFlags("PACKAGECONFIG")
         pkgconfigflags.pop('doc', None)
-        pkgconfigflags.pop('defaultval', None)
         pkgname = data_dict[fn].getVar("P", True)
         pkg_dict[pkgname] = sorted(pkgconfigflags.keys())
 
@@ -135,7 +133,7 @@ def display_all(data_dict):
         print('PACKAGECONFIG %s' % packageconfig)
 
         for flag,flag_val in data_dict[fn].getVarFlags("PACKAGECONFIG").iteritems():
-            if flag in ["defaultval", "doc"]:
+            if flag == "doc":
                 continue
             print('PACKAGECONFIG[%s] %s' % (flag, flag_val))
         print ''
