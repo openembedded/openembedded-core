@@ -212,7 +212,7 @@ do_kernel_checkout() {
 	machine_branch="${@ get_machine_branch(d, "${KBRANCH}" )}"
 	git show-ref --quiet --verify -- "refs/heads/${machine_branch}"
 	if [ $? -eq 0 ]; then
-		machine_branch = "master"
+		machine_branch="master"
 	fi
 
 	# checkout and clobber any unimportant files
