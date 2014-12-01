@@ -347,8 +347,6 @@ python () {
         extrardeps = []
         extraconf = []
         for flag, flagval in sorted(pkgconfigflags.items()):
-            if flag == "defaultval":
-                continue
             items = flagval.split(",")
             num = len(items)
             if num > 4:
