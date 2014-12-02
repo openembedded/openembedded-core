@@ -80,6 +80,7 @@ EXTRA_OECONF += " \
     --disable-apple_media \
     --disable-avc \
     --disable-chromaprint \
+    --disable-cocoa \
     --disable-daala \
     --disable-dc1394 \
     --disable-direct3d \
