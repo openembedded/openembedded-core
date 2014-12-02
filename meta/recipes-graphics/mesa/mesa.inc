@@ -65,6 +65,7 @@ MESA_LLVM_RELEASE ?= "3.3"
 PACKAGECONFIG[gallium-llvm] = "--enable-gallium-llvm --with-llvm-shared-libs, --disable-gallium-llvm, llvm${MESA_LLVM_RELEASE} \
                                ${@'elfutils' if ${GALLIUMDRIVERS_LLVM33_ENABLED} else ''}"
 export WANT_LLVM_RELEASE = "${MESA_LLVM_RELEASE}"
+PACKAGECONFIG[xa]  = "--enable-xa, --disable-xa"
 
 # llvmpipe is slow if compiled with -fomit-frame-pointer (e.g. -O2)
 FULL_OPTIMIZATION_append = " -fno-omit-frame-pointer"
@@ -87,6 +88,7 @@ PACKAGES =+ "libegl-mesa libegl-mesa-dev \
              libegl-gallium libgbm-gallium \
              libopenvg libopenvg-dev \
              libxvmcsoftpipe libxvmcsoftpipe-dev \
+             libxatracker libxatracker-dev \
              mesa-megadriver \
             "
 
@@ -171,6 +173,7 @@ FILES_libegl-gallium = "${libdir}/egl/egl_gallium.so*"
 FILES_libgbm-gallium = "${libdir}/gbm/gbm_gallium_drm.so*"
 FILES_libopenvg = "${libdir}/libOpenVG.so.*"
 FILES_libxvmcsoftpipe = "${libdir}/libXvMCsoftpipe.so.*"
+FILES_libxatracker = "${libdir}/libxatracker.so.*"
 
 FILES_${PN}-dev = "${libdir}/pkgconfig/dri.pc"
 FILES_libegl-mesa-dev = "${libdir}/libEGL.* ${includedir}/EGL ${includedir}/KHR ${libdir}/pkgconfig/egl.pc"
@@ -185,5 +188,8 @@ FILES_libwayland-egl-dev = "${libdir}/pkgconfig/wayland-egl.pc ${libdir}/libwayl
 FILES_libopenvg-dev = "${libdir}/libOpenVG.so ${libdir}/libOpenVG.la* \
                        ${includedir}/VG ${libdir}/pkgconfig/vg.pc"
 FILES_libxvmcsoftpipe-dev = "${libdir}/libXvMCsoftpipe.so ${libdir}/libXvMCsoftpipe.la"
+FILES_libxatracker-dev = "${libdir}/libxatracker.so ${libdir}/libxatracker.la \
+                          ${includedir}/xa_tracker.h ${includedir}/xa_composite.h ${includedir}/xa_context.h \
+                          ${libdir}/pkgconfig/xatracker.pc"
 
 FILES_${PN}-dbg += "${libdir}/dri/.debug/* ${libdir}/egl/.debug/* ${libdir}/gbm/.debug/* ${libdir}/gallium-pipe/.debug"
