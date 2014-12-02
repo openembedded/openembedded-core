@@ -35,6 +35,9 @@ do_configure_prepend() {
 	done
 }
 
+PACKAGECONFIG ??= ""
+PACKAGECONFIG[tpm] = "--with-tpm, --without-tpm, trousers"
+
 PACKAGES =+ "${PN}-openssl ${PN}-xx"
 
 FILES_${PN}-dev += "${bindir}/gnutls-cli-debug"
