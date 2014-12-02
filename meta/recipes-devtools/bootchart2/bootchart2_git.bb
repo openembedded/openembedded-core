@@ -120,6 +120,12 @@ do_compile_append_class-native () {
     chmod +x ${S}/pybootchartgui
 }
 
+do_compile_prepend () {
+    export PY_LIBDIR="${libdir}/${PYTHON_DIR}"
+    export BINDIR="${bindir}"
+    export LIBDIR="${base_libdir}"
+}
+
 do_install () {
     install -d ${D}${sysconfdir} # needed for -native
     export PY_LIBDIR="${libdir}/${PYTHON_DIR}"
