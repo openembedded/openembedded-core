@@ -1273,9 +1273,9 @@ class OpkgPM(PackageManager):
 
                     with open(cfg_file_name, "w+") as cfg_file:
                         cfg_file.write("src/gz local-%s %s/%s" %
-                                       arch,
-                                       self.d.getVar('FEED_DEPLOYDIR_BASE_URI', True),
-                                       arch)
+                                       (arch,
+                                        self.d.getVar('FEED_DEPLOYDIR_BASE_URI', True),
+                                        arch))
 
     def _create_config(self):
         with open(self.config_file, "w+") as config_file:
