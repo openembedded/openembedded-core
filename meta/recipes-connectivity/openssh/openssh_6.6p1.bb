@@ -74,14 +74,11 @@ CACHED_CONFIGUREVARS += "ac_cv_path_PATH_PASSWD_PROG=${bindir}/passwd"
 EXTRA_OECONF_append_libc-uclibc=" --without-pam"
 
 do_configure_prepend () {
+	install -m 0644 ${WORKDIR}/sshd_config ${B}/
+	install -m 0644 ${WORKDIR}/ssh_config ${B}/
 	if [ ! -e acinclude.m4 -a -e aclocal.m4 ]; then
 		cp aclocal.m4 acinclude.m4
 	fi
-}
-
-do_compile_append () {
-	install -m 0644 ${WORKDIR}/sshd_config ${S}/
-	install -m 0644 ${WORKDIR}/ssh_config ${S}/
 }
 
 do_install_append () {
