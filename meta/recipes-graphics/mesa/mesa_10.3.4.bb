@@ -1,12 +1,9 @@
 require ${BPN}.inc
 
-SRC_URI = "ftp://ftp.freedesktop.org/pub/mesa/${PV}/MesaLib-${PV}.tar.bz2 \
-           file://0002-pipe_loader_sw-include-xlib_sw_winsys.h-only-when-HA.patch \
-           file://0006-fix-out-of-tree-egl.patch \
-           "
+SRC_URI = "ftp://ftp.freedesktop.org/pub/mesa/${PV}/MesaLib-${PV}.tar.bz2"
 
-SRC_URI[md5sum] = "ba6dbe2b9cab0b4de840c996b9b6a3ad"
-SRC_URI[sha256sum] = "b2615e236ef25d0fb94b8420bdd2e2a520b7dd5ca2d4b93306154f7fd4adecc3"
+SRC_URI[md5sum] = "fa0558a3d02c2bb8c208c030ccdc992e"
+SRC_URI[sha256sum] = "e6373913142338d10515daf619d659433bfd2989988198930c13b0945a15e98a"
 
 S = "${WORKDIR}/Mesa-${PV}"
 

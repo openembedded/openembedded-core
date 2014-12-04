@@ -4,13 +4,10 @@ DEFAULT_PREFERENCE = "-1"
 
 LIC_FILES_CHKSUM = "file://docs/license.html;md5=6a23445982a7a972ac198e93cc1cb3de"
 
-SRCREV = "0028eb1083e6adc110a23a5f02c993cda217067a"
-PV = "10.1.3+git${SRCPV}"
+SRCREV = "c7b9a2e38a3e471562b50dab8be65db8ac6819f8"
+PV = "10.3.4+git${SRCPV}"
 
-SRC_URI = "git://anongit.freedesktop.org/git/mesa/mesa;branch=10.1 \
-           file://0002-pipe_loader_sw-include-xlib_sw_winsys.h-only-when-HA.patch \
-           file://0006-fix-out-of-tree-egl.patch \
-           "
+SRC_URI = "git://anongit.freedesktop.org/git/mesa/mesa;branch=10.4"
 
 S = "${WORKDIR}/git"
 
