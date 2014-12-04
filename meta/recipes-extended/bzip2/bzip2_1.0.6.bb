@@ -8,10 +8,10 @@ LICENSE = "bzip2"
 LIC_FILES_CHKSUM = "file://LICENSE;beginline=8;endline=37;md5=40d9d1eb05736d1bfc86cfdd9106e6b2"
 PR = "r5"
 
-SRC_URI = "http://www.bzip.org/${PV}/${BPN}-${PV}.tar.gz \
-           file://configure.ac \
-           file://run-ptest \
-           file://Makefile.am"
+SRC_URI = "http://www.bzip.org/${PV}/${BP}.tar.gz \
+           file://configure.ac;subdir=${BP} \
+           file://Makefile.am;subdir=${BP} \
+           file://run-ptest"
 
 SRC_URI[md5sum] = "00b516f4704d4a7cb50a1d97e6e8e15b"
 SRC_URI[sha256sum] = "a2848f34fcd5d6cf47def00461fcb528a0484d8edef8208d6d2e2909dc61d9cd"
@@ -27,12 +27,6 @@ ALTERNATIVE_${PN} = "bunzip2 bzcat"
 
 #install binaries to bzip2-native under sysroot for replacement-native
 EXTRA_OECONF_append_class-native = " --bindir=${STAGING_BINDIR_NATIVE}/${PN}"
-do_extraunpack () {
-	cp ${WORKDIR}/configure.ac ${S}/
-	cp ${WORKDIR}/Makefile.am ${S}/
-}
-
-addtask extraunpack after do_unpack before do_patch
 
 do_install_ptest () {
 	cp -f ${B}/Makefile ${D}${PTEST_PATH}/Makefile
