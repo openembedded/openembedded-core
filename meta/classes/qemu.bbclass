@@ -29,20 +29,23 @@ def qemu_run_binary(data, rootfs_path, binary):
 
     libdir = rootfs_path + data.getVar("libdir", False)
     base_libdir = rootfs_path + data.getVar("base_libdir", False)
-    oldest_kernel = data.getVar("OLDEST_KERNEL", True)
+    qemu_options = data.getVar("QEMU_OPTIONS", True)
 
-    return "PSEUDO_UNLOAD=1 " + qemu_binary + " -r " + oldest_kernel + " -L " + rootfs_path\
+    return "PSEUDO_UNLOAD=1 " + qemu_binary + " " + qemu_options + " -L " + rootfs_path\
             + " -E LD_LIBRARY_PATH=" + libdir + ":" + base_libdir + " "\
             + rootfs_path + binary
 
-QEMU_OPTIONS = "-r ${OLDEST_KERNEL}"
-QEMU_OPTIONS_append_iwmmxt    = " -cpu pxa270-c5"
-QEMU_OPTIONS_append_armv6     = " -cpu arm1136"
-QEMU_OPTIONS_append_armv7a    = " -cpu cortex-a8"
-QEMU_OPTIONS_append_e500v2    = " -cpu e500v2"
-QEMU_OPTIONS_append_e500mc    = " -cpu e500mc"
-QEMU_OPTIONS_append_e5500     = " -cpu e5500"
-QEMU_OPTIONS_append_e5500-64b = " -cpu e5500"
-QEMU_OPTIONS_append_e6500     = " -cpu e6500"
-QEMU_OPTIONS_append_e6500-64b = " -cpu e6500"
-QEMU_OPTIONS_append_ppc7400   = " -cpu 7400"
+# QEMU_EXTRAOPTIONS is not meant to be directly used, the extensions are 
+# PACKAGE_ARCH, not overrides and hence have to do this dance. Simply being arch 
+# specific isn't good enough.
+QEMU_OPTIONS = "-r ${OLDEST_KERNEL} ${@d.getVar("QEMU_EXTRAOPTIONS_%s" % d.getVar('PACKAGE_ARCH', True), True) or ""}"
+QEMU_EXTRAOPTIONS_iwmmxt    = " -cpu pxa270-c5"
+QEMU_EXTRAOPTIONS_armv6     = " -cpu arm1136"
+QEMU_EXTRAOPTIONS_armv7a    = " -cpu cortex-a8"
+QEMU_EXTRAOPTIONS_e500v2    = " -cpu e500v2"
+QEMU_EXTRAOPTIONS_e500mc    = " -cpu e500mc"
+QEMU_EXTRAOPTIONS_e5500     = " -cpu e5500"
+QEMU_EXTRAOPTIONS_e5500-64b = " -cpu e5500"
+QEMU_EXTRAOPTIONS_e6500     = " -cpu e6500"
+QEMU_EXTRAOPTIONS_e6500-64b = " -cpu e6500"
+QEMU_EXTRAOPTIONS_ppc7400   = " -cpu 7400"

@@ -9,7 +9,7 @@ do_install () {
 
 	echo "#!/bin/sh" > ${D}${bindir_crossscripts}/qemuwrapper
 	qemu_binary=${@qemu_target_binary(d)}
-	qemu_options='${@d.getVar("QEMU_OPTIONS_%s" % d.getVar('PACKAGE_ARCH', True), True) or d.getVar('QEMU_OPTIONS', True) or ""}'
+	qemu_options='${QEMU_OPTIONS}'
 	echo "$qemu_binary $qemu_options \"\$@\"" >> ${D}${bindir_crossscripts}/qemuwrapper
 	fallback_qemu_bin=
 	case $qemu_binary in
