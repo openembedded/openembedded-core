@@ -1,4 +1,7 @@
-deltask do_fetch
+do_fetch() {
+	:
+}
+do_fetch[noexec] = "1"
 deltask do_unpack
 deltask do_patch
 
