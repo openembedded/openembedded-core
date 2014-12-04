@@ -226,7 +226,7 @@ base_do_configure() {
 	if [ -n "${CONFIGURESTAMPFILE}" -a -e "${CONFIGURESTAMPFILE}" ]; then
 		if [ "`cat ${CONFIGURESTAMPFILE}`" != "${BB_TASKHASH}" ]; then
 			cd ${B}
-			if [ "${CLEANBROKEN}" != "1" -a -e Makefile -o -e makefile -o -e GNUmakefile ]; then
+			if [ "${CLEANBROKEN}" != "1" -a \( -e Makefile -o -e makefile -o -e GNUmakefile \) ]; then
 				${MAKE} clean
 			fi
 			find ${B} -name \*.la -delete
