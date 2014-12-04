@@ -10,6 +10,8 @@ DEPENDS_class-native = "libxml2-native libxslt-native intltool-native glib-2.0-n
 
 inherit gnomebase gettext python-dir pythonnative autotools-brokensep
 
+CLEANBROKEN = "1"
+
 EXTRA_OECONF += "--disable-scrollkeeper"
 
 do_install_append() {
