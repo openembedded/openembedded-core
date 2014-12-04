@@ -23,6 +23,7 @@ EXTRA_OECONF += "--disable-cairo-tests \
                  --enable-omap-experimental-api \
                  --enable-freedreno-experimental-api \
                  --enable-install-test-programs \
+                 --disable-manpages \
                 "
 ALLOW_EMPTY_${PN}-drivers = "1"
 PACKAGES =+ "${PN}-tests ${PN}-drivers ${PN}-radeon ${PN}-nouveau ${PN}-omap \
