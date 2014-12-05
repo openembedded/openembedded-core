@@ -15,12 +15,16 @@ TOOLCHAIN_HOST_TASK ?= "\
     nativesdk-ncurses-terminfo-base \
     nativesdk-chrpath \
     nativesdk-tar \
+    nativesdk-buildtools-perl-dummy \
     nativesdk-git \
+    nativesdk-git-perltools \
     nativesdk-pigz \
     nativesdk-make \
     nativesdk-wget \
     nativesdk-ca-certificates \
     "
+
+SDK_PACKAGE_ARCHS =+ "buildtools-dummy-${SDKPKGSUFFIX}"
 
 TOOLCHAIN_OUTPUTNAME ?= "${SDK_NAME}-buildtools-nativesdk-standalone-${DISTRO_VERSION}"
 
