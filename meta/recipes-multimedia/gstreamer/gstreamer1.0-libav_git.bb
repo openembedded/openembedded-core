@@ -18,7 +18,8 @@ SRCREV = "127202d6f65584891dabf92be031f0d170b0e7f1"
 
 LIBAV_EXTRA_CONFIGURE_COMMON_ARG = "--target-os=linux \
   --cc='${CC}' --as='${CC}' --ld='${CC}' --nm='${NM}' --ar='${AR}' \
-  ${GSTREAMER_1_0_DEBUG}"
+  ${GSTREAMER_1_0_DEBUG} \
+  --cross-prefix='${HOST_PREFIX}'"
 
 do_configure() {
 	./autogen.sh --noconfigure

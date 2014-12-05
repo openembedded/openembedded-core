@@ -18,7 +18,8 @@ SRC_URI[sha256sum] = "fc125521187fa84f3210269a0eecc51f8a856802f1ca4bb251f118dab9
 LIBAV_EXTRA_CONFIGURE_COMMON_ARG = "--target-os=linux \
   --cc='${CC}' --as='${CC}' --ld='${CC}' --nm='${NM}' --ar='${AR}' \
   --ranlib='${RANLIB}' \
-  ${GSTREAMER_1_0_DEBUG}"
+  ${GSTREAMER_1_0_DEBUG} \
+  --cross-prefix='${HOST_PREFIX}'"
 
 S = "${WORKDIR}/gst-libav-${PV}"
 
