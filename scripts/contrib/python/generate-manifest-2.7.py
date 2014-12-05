@@ -279,7 +279,7 @@ if __name__ == "__main__":
     "lib-dynload/_socket.so lib-dynload/_io.so lib-dynload/_ssl.so lib-dynload/select.so lib-dynload/termios.so lib-dynload/cStringIO.so " +
     "pipes.* socket.* ssl.* tempfile.* StringIO.* io.* _pyio.*" )
 
-    m.addPackage( "${PN}-json", "Python JSON support", "${PN}-core ${PN}-math ${PN}-re",
+    m.addPackage( "${PN}-json", "Python JSON support", "${PN}-core ${PN}-math ${PN}-re ${PN}-codecs",
     "json lib-dynload/_json.so" ) # package
 
     m.addPackage( "${PN}-lang", "Python low-level language support", "${PN}-core",
