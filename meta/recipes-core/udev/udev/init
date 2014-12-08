@@ -20,17 +20,6 @@ SYSCONF_TMP="/dev/shm/udev.cache"
 [ -f /etc/udev/udev.conf ] && . /etc/udev/udev.conf
 [ -f /etc/default/rcS ] && . /etc/default/rcS
 
-readfiles () {
-   READDATA=""
-   for filename in $@; do
-	   if [ -r $filename ]; then
-		   while read line; do
-			   READDATA="$READDATA$line"
-		   done < $filename
-	   fi
-   done
-}
-
 kill_udevd () {
     pid=`pidof -x udevd`
     [ -n "$pid" ] && kill $pid
@@ -63,14 +52,12 @@ case "$1" in
 
     # Cache handling.
     # A list of files which are used as a criteria to judge whether the udev cache could be reused.
-    CMP_FILE_LIST="/proc/version /proc/cmdline /proc/devices /proc/atags"
+    CMP_FILE_LIST="/proc/version /proc/cmdline /proc/devices"
+    [ -f /proc/atags ] && CMP_FILE_LIST="$CMP_FILE_LIST /proc/atags"
     if [ "$DEVCACHE" != "" ]; then
             if [ -e $DEVCACHE ]; then
-		    readfiles $CMP_FILE_LIST
-		    NEWDATA="$READDATA"
-		    readfiles "$SYSCONF_CACHED"
-		    OLDDATA="$READDATA"
-		    if [ "$OLDDATA" = "$NEWDATA" ]; then
+		    cat -- "$CMP_FILE_LIST" > "$SYSCONF_TMP"
+		    if cmp $SYSCONF_CACHED $SYSCONF_TMP >/dev/null; then
                             tar xmf $DEVCACHE -C / -m
                             not_first_boot=1
                             [ "$VERBOSE" != "no" ] && echo "udev: using cache file $DEVCACHE"
@@ -80,17 +67,15 @@ case "$1" in
 			    if [ "$VERBOSE" != "no" ]; then
 				    echo "udev: udev cache not used"
 				    echo "udev: we use $CMP_FILE_LIST as criteria to judge whether the cache /dev could be resued"
-				    echo "udev: olddata: $OLDDATA"
-				    echo "udev: newdata: $NEWDATA"
+				    echo "udev: cached sysconf:  $SYSCONF_CACHED"
+				    echo "udev: current sysconf: $SYSCONF_TMP"
 			    fi
-			    echo "$NEWDATA" > "$SYSCONF_TMP"
                     fi
 	    else
 		    if [ "$ROOTFS_READ_ONLY" != "yes" ]; then
 			    # If rootfs is not read-only, it's possible that a new udev cache would be generated;
 			    # otherwise, we do not bother to read files.
-			    readfiles $CMP_FILE_LIST
-			    echo "$READDATA" > "$SYSCONF_TMP"
+			    cat -- "$CMP_FILE_LIST" > "$SYSCONF_TMP"
 		    fi
             fi
     fi
