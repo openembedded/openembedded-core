@@ -19,7 +19,21 @@ export TZ=/etc/localtime
 DEVCACHE_TMP="/dev/shm/udev-cache-tmp.tar"
 SYSCONF_CACHED="/etc/udev/cache.data"
 SYSCONF_TMP="/dev/shm/udev.cache"
+
+# A list of files which are used as a criteria to judge whether the udev cache could be reused.
+CMP_FILE_LIST="/proc/version /proc/cmdline /proc/devices /proc/atags"
 [ -f /etc/default/udev-cache ] && . /etc/default/udev-cache
+
+readfiles () {
+   READDATA=""
+   for filename in $@; do
+	   if [ -r $filename ]; then
+		   while read line; do
+			   READDATA="$READDATA$line"
+		   done < $filename
+	   fi
+   done
+}
 
 if [ "$ROOTFS_READ_ONLY" = "yes" ]; then
     [ "$VERBOSE" != "no" ] && echo "udev-cache: read-only rootfs, skip generating udev-cache"
@@ -28,11 +42,15 @@ fi
 
 if [ "$DEVCACHE" != "" -a -e "$SYSCONF_TMP" ]; then
 	echo "Populating dev cache"
+	udevadm control --stop-exec-queue
+	readfiles $CMP_FILE_LIST
+	echo "$READDATA" > "$SYSCONF_TMP"
 	find /dev -xdev \( -type b -o -type c -o -type l \) | cut -c 2- \
 		| xargs tar cf "${DEVCACHE_TMP}" -T-
 	gzip < "${DEVCACHE_TMP}" > "$DEVCACHE"
 	rm -f "${DEVCACHE_TMP}"
 	mv "$SYSCONF_TMP" "$SYSCONF_CACHED"
+	udevadm control --start-exec-queue
 fi
 
 exit 0
