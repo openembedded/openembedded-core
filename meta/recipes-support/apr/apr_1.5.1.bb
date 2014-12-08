@@ -32,6 +32,11 @@ CACHED_CONFIGUREVARS += "apr_cv_mutex_recursive=yes"
 CACHED_CONFIGUREVARS += "ac_cv_header_netinet_sctp_h=no ac_cv_header_netinet_sctp_uio_h=no"
 
 do_configure_prepend() {
+	# Avoid absolute paths for grep since it causes failures
+	# when using sstate between different hosts with different
+	# install paths for grep.
+	export GREP="grep"
+
 	cd ${S}
 	./buildconf
 }
