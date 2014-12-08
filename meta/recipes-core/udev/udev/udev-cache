@@ -24,6 +24,12 @@ DEVCACHE_REGEN="/dev/shm/udev-regen" # create to request cache regen
 # A list of files which are used as a criteria to judge whether the udev cache could be reused.
 CMP_FILE_LIST="/proc/version /proc/cmdline /proc/devices"
 [ -f /proc/atags ] && CMP_FILE_LIST="$CMP_FILE_LIST /proc/atags"
+
+# Command to compute system configuration.
+sysconf_cmd () {
+	cat -- $CMP_FILE_LIST
+}
+
 [ -f /etc/default/udev-cache ] && . /etc/default/udev-cache
 
 if [ "$ROOTFS_READ_ONLY" = "yes" ]; then
@@ -34,7 +40,7 @@ fi
 if [ "$DEVCACHE" != "" -a -e "$DEVCACHE_REGEN" ]; then
 	echo "Populating dev cache"
 	udevadm control --stop-exec-queue
-        cat -- $CMP_FILE_LIST > "$SYSCONF_TMP"
+        sysconf_cmd > "$SYSCONF_TMP"
 	find /dev -xdev \( -type b -o -type c -o -type l \) | cut -c 2- \
 		| xargs tar cf "${DEVCACHE_TMP}" -T-
 	gzip < "${DEVCACHE_TMP}" > "$DEVCACHE"

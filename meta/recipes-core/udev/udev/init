@@ -17,6 +17,16 @@ export TZ=/etc/localtime
 SYSCONF_CACHED="/etc/udev/cache.data"
 SYSCONF_TMP="/dev/shm/udev.cache"
 DEVCACHE_REGEN="/dev/shm/udev-regen" # create to request cache regen
+
+# A list of files which are used as a criteria to judge whether the udev cache could be reused.
+CMP_FILE_LIST="/proc/version /proc/cmdline /proc/devices"
+[ -f /proc/atags ] && CMP_FILE_LIST="$CMP_FILE_LIST /proc/atags"
+
+# Command to compute system configuration.
+sysconf_cmd () {
+	cat -- $CMP_FILE_LIST
+}
+
 [ -f /etc/default/udev-cache ] && . /etc/default/udev-cache
 [ -f /etc/udev/udev.conf ] && . /etc/udev/udev.conf
 [ -f /etc/default/rcS ] && . /etc/default/rcS
@@ -52,12 +62,9 @@ case "$1" in
     mkdir -m 1777 -p /var/volatile/tmp
 
     # Cache handling.
-    # A list of files which are used as a criteria to judge whether the udev cache could be reused.
-    CMP_FILE_LIST="/proc/version /proc/cmdline /proc/devices"
-    [ -f /proc/atags ] && CMP_FILE_LIST="$CMP_FILE_LIST /proc/atags"
     if [ "$DEVCACHE" != "" ]; then
             if [ -e $DEVCACHE ]; then
-		    cat -- "$CMP_FILE_LIST" > "$SYSCONF_TMP"
+		    sysconf_cmd > "$SYSCONF_TMP"
 		    if cmp $SYSCONF_CACHED $SYSCONF_TMP >/dev/null; then
                             tar xmf $DEVCACHE -C / -m
                             not_first_boot=1
