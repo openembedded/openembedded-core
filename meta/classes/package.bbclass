@@ -208,16 +208,18 @@ def do_split_packages(d, root, file_regex, output_pattern, description, postinst
                 else:
                     the_files.append(aux_files_pattern_verbatim % m.group(1))
             d.setVar('FILES_' + pkg, " ".join(the_files))
-            if extra_depends != '':
-                d.appendVar('RDEPENDS_' + pkg, ' ' + extra_depends)
-            d.setVar('DESCRIPTION_' + pkg, description % on)
-            d.setVar('SUMMARY_' + pkg, summary % on)
-            if postinst:
-                d.setVar('pkg_postinst_' + pkg, postinst)
-            if postrm:
-                d.setVar('pkg_postrm_' + pkg, postrm)
         else:
             d.setVar('FILES_' + pkg, oldfiles + " " + newfile)
+        if extra_depends != '':
+            d.appendVar('RDEPENDS_' + pkg, ' ' + extra_depends)
+        if not d.getVar('DESCRIPTION_' + pkg, True):
+            d.setVar('DESCRIPTION_' + pkg, description % on)
+        if not d.getVar('SUMMARY_' + pkg, True):
+            d.setVar('SUMMARY_' + pkg, summary % on)
+        if postinst:
+            d.setVar('pkg_postinst_' + pkg, postinst)
+        if postrm:
+            d.setVar('pkg_postrm_' + pkg, postrm)
         if callable(hook):
             hook(f, pkg, file_regex, output_pattern, m.group(1))
 
