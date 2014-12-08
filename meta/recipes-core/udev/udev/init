@@ -16,6 +16,7 @@ export TZ=/etc/localtime
 [ -x @UDEVD@ ] || exit 1
 SYSCONF_CACHED="/etc/udev/cache.data"
 SYSCONF_TMP="/dev/shm/udev.cache"
+DEVCACHE_REGEN="/dev/shm/udev-regen" # create to request cache regen
 [ -f /etc/default/udev-cache ] && . /etc/default/udev-cache
 [ -f /etc/udev/udev.conf ] && . /etc/udev/udev.conf
 [ -f /etc/default/rcS ] && . /etc/default/rcS
@@ -62,6 +63,7 @@ case "$1" in
                             not_first_boot=1
                             [ "$VERBOSE" != "no" ] && echo "udev: using cache file $DEVCACHE"
                             [ -e $SYSCONF_TMP ] && rm -f "$SYSCONF_TMP"
+                            [ -e "$DEVCACHE_REGEN" ] && rm -f "$DEVCACHE_REGEN"
                     else
 			    # Output detailed reason why the cached /dev is not used
 			    if [ "$VERBOSE" != "no" ]; then
@@ -70,12 +72,13 @@ case "$1" in
 				    echo "udev: cached sysconf:  $SYSCONF_CACHED"
 				    echo "udev: current sysconf: $SYSCONF_TMP"
 			    fi
+			    touch "$DEVCACHE_REGEN"
                     fi
 	    else
 		    if [ "$ROOTFS_READ_ONLY" != "yes" ]; then
 			    # If rootfs is not read-only, it's possible that a new udev cache would be generated;
 			    # otherwise, we do not bother to read files.
-			    cat -- "$CMP_FILE_LIST" > "$SYSCONF_TMP"
+			    touch "$DEVCACHE_REGEN"
 		    fi
             fi
     fi

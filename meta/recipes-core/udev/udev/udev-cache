@@ -19,6 +19,7 @@ export TZ=/etc/localtime
 DEVCACHE_TMP="/dev/shm/udev-cache-tmp.tar"
 SYSCONF_CACHED="/etc/udev/cache.data"
 SYSCONF_TMP="/dev/shm/udev.cache"
+DEVCACHE_REGEN="/dev/shm/udev-regen" # create to request cache regen
 
 # A list of files which are used as a criteria to judge whether the udev cache could be reused.
 CMP_FILE_LIST="/proc/version /proc/cmdline /proc/devices"
@@ -30,7 +31,7 @@ if [ "$ROOTFS_READ_ONLY" = "yes" ]; then
     exit 0
 fi
 
-if [ "$DEVCACHE" != "" -a -e "$SYSCONF_TMP" ]; then
+if [ "$DEVCACHE" != "" -a -e "$DEVCACHE_REGEN" ]; then
 	echo "Populating dev cache"
 	udevadm control --stop-exec-queue
         cat -- $CMP_FILE_LIST > "$SYSCONF_TMP"
@@ -40,6 +41,7 @@ if [ "$DEVCACHE" != "" -a -e "$SYSCONF_TMP" ]; then
 	rm -f "${DEVCACHE_TMP}"
 	mv "$SYSCONF_TMP" "$SYSCONF_CACHED"
 	udevadm control --start-exec-queue
+	rm -f "$DEVCACHE_REGEN"
 fi
 
 exit 0
