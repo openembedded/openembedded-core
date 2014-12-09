@@ -29,6 +29,11 @@ export STAGING_LIBDIR
 
 BBCLASSEXTEND = "native"
 
+# Ensure the docstrings are generated as make clean will remove them
+do_compile_prepend() {
+	${STAGING_BINDIR_NATIVE}/${PYTHON_PN}-native/${PYTHON_PN} setup.py docstrings
+}
+
 do_install_append() {
 	rm -rf ${D}${datadir}/share
 }
