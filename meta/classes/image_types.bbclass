@@ -70,7 +70,11 @@ IMAGE_CMD_cpio () {
 	(cd ${IMAGE_ROOTFS} && find . | cpio -o -H newc >${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.cpio)
 	if [ ! -e ${IMAGE_ROOTFS}/init ]; then
 		mkdir -p ${WORKDIR}/cpio_append
-		touch ${WORKDIR}/cpio_append/init
+		if [ -e ${IMAGE_ROOTFS}/sbin/init -o -L ${IMAGE_ROOTFS}/sbin/init ]; then
+			ln -sf /sbin/init ${WORKDIR}/cpio_append/init
+		else
+			touch ${WORKDIR}/cpio_append/init
+		fi
 		(cd  ${WORKDIR}/cpio_append && echo ./init | cpio -oA -H newc -F ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.cpio)
 	fi
 }
