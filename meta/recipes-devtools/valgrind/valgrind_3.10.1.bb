@@ -23,8 +23,8 @@ SRC_URI = "http://www.valgrind.org/downloads/valgrind-${PV}.tar.bz2 \
            file://run-ptest \
           "
 
-SRC_URI[md5sum] = "7c311a72a20388aceced1aa5573ce970"
-SRC_URI[sha256sum] = "03047f82dfc6985a4c7d9d2700e17bc05f5e1a0ca6ad902e5d6c81aeb720edc9"
+SRC_URI[md5sum] = "60ddae962bc79e7c95cfc4667245707f"
+SRC_URI[sha256sum] = "fa253dc26ddb661b6269df58144eff607ea3f76a9bcfe574b0c7726e1dfcb997"
 
 COMPATIBLE_HOST = '(i.86|x86_64|powerpc|powerpc64).*-linux'
 COMPATIBLE_HOST_armv7a = 'arm.*-linux'
@@ -48,7 +48,7 @@ FILES_${PN}-dbg += "${libdir}/${PN}/*/.debug/*"
 # redirect functions like strlen.
 RRECOMMENDS_${PN} += "${TCLIBC}-dbg"
 
-RDEPENDS_${PN}-ptest += " sed perl glibc-utils"
+RDEPENDS_${PN}-ptest += " sed perl glibc-utils perl-module-file-glob"
 
 do_compile_ptest() {
     oe_runmake check
