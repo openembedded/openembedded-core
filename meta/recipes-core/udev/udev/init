@@ -73,15 +73,13 @@ case "$1" in
                             [ -e "$DEVCACHE_REGEN" ] && rm -f "$DEVCACHE_REGEN"
                     else
 			    # Output detailed reason why the cached /dev is not used
-			    if [ "$VERBOSE" != "no" ]; then
-				    cat <<EOF
+			    cat <<EOF
 udev: Not using udev cache because of changes detected in the following files:
 udev:     $CMP_FILE_LIST
 udev: The udev cache will be regenerated. To identify the detected changes,
 udev: compare the cached sysconf at   $SYSCONF_CACHED
 udev: against the current sysconf at  $SYSCONF_TMP
 EOF
-			    fi
 			    touch "$DEVCACHE_REGEN"
                     fi
 	    else
