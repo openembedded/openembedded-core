@@ -1,0 +1,41 @@
+From af48c7b08de4b811d3d974e65e362b86ce8c4a34 Mon Sep 17 00:00:00 2001
+From: Bruce Ashfield <bruce.ashfield@windriver.com>
+Date: Wed, 10 Dec 2014 03:19:28 -0500
+Subject: [PATCH] compaction: fix mm_compaction_isolate_template build
+
+linux-stable integrated the 3.16 commit f8c9301fa5a2a [mm/compaction: do
+not count migratepages when unnecessary] with the 3.14.25 update.
+
+So we have to update the lttng-module linux version codes to use the
+new definition in builds greater than 3.14.24 or 3.16.
+
+Signed-off-by: Bruce Ashfield <bruce.ashfield@windriver.com>
+---
+ instrumentation/events/lttng-module/compaction.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/instrumentation/events/lttng-module/compaction.h b/instrumentation/events/lttng-module/compaction.h
+index 22024e9ee582..07afbe06f1a6 100644
+--- a/instrumentation/events/lttng-module/compaction.h
++++ b/instrumentation/events/lttng-module/compaction.h
+@@ -46,7 +46,7 @@ DEFINE_EVENT(mm_compaction_isolate_template, mm_compaction_isolate_freepages,
+ 	TP_ARGS(nr_scanned, nr_taken)
+ )
+ 
+-#if (LINUX_VERSION_CODE >= KERNEL_VERSION(3,16,0))
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(3,16,0) || LINUX_VERSION_CODE >= KERNEL_VERSION(3,14,25))
+ TRACE_EVENT(mm_compaction_migratepages,
+ 
+ 	TP_PROTO(unsigned long nr_all,
+@@ -87,7 +87,7 @@ TRACE_EVENT(mm_compaction_migratepages,
+ 		__entry->nr_migrated,
+ 		__entry->nr_failed)
+ )
+-#else /* #if (LINUX_VERSION_CODE >= KERNEL_VERSION(3,16,0)) */
++#else /* #if (LINUX_VERSION_CODE >= KERNEL_VERSION(3,16,0) || LINUX_VERSION_CODE >= KERNEL_VERSION(3,14,25)) */
+ TRACE_EVENT(mm_compaction_migratepages,
+ 
+ 	TP_PROTO(unsigned long nr_migrated,
+-- 
+2.1.0
+
