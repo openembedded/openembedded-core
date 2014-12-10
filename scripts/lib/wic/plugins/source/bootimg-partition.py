@@ -90,6 +90,8 @@ class BootimgPartitionPlugin(SourcePlugin):
         for src_entry in re.findall(r'[\w;\-\./]+', boot_files):
             if ';' in src_entry:
                 dst_entry = tuple(src_entry.split(';'))
+                if not dst_entry[0] or not dst_entry[1]:
+                    msger.error('Malformed boot file entry: %s' % (src_entry))
             else:
                 dst_entry = (src_entry, src_entry)
 
