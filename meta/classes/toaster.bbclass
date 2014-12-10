@@ -149,14 +149,26 @@ python toaster_image_dumpdata() {
     image_name = d.getVar('IMAGE_NAME', True);
 
     image_info_data = {}
+    artifact_info_data = {}
 
+    # collect all artifacts
     for dirpath, dirnames, filenames in os.walk(deploy_dir_image):
         for fn in filenames:
-            if fn.startswith(image_name):
-                image_output = os.path.join(dirpath, fn)
-                image_info_data[image_output] = os.stat(image_output).st_size
+            try:
+                if fn.startswith(image_name):
+                    image_output = os.path.join(dirpath, fn)
+                    image_info_data[image_output] = os.stat(image_output).st_size
+                else:
+                    import stat
+                    artifact_path = os.path.join(dirpath, fn)
+                    filestat = os.stat(artifact_path)
+                    if stat.S_ISREG(filestat.st_mode):
+                        artifact_info_data[artifact_path] = filestat.st_size
+            except OSError as e:
+                bb.event.fire(bb.event.MetadataEvent("OSErrorException", e), d)
 
     bb.event.fire(bb.event.MetadataEvent("ImageFileSize",image_info_data), d)
+    bb.event.fire(bb.event.MetadataEvent("ArtifactFileSize",artifact_info_data), d)
 }
 
 
