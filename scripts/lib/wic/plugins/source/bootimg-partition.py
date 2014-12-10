@@ -29,6 +29,7 @@ import re
 from wic import msger
 from wic.pluginbase import SourcePlugin
 from wic.utils.oe.misc import *
+from glob import glob
 
 class BootimgPartitionPlugin(SourcePlugin):
     name = 'bootimg-partition'
@@ -87,7 +88,7 @@ class BootimgPartitionPlugin(SourcePlugin):
 
         # list of tuples (src_name, dst_name)
         deploy_files = []
-        for src_entry in re.findall(r'[\w;\-\./]+', boot_files):
+        for src_entry in re.findall(r'[\w;\-\./\*]+', boot_files):
             if ';' in src_entry:
                 dst_entry = tuple(src_entry.split(';'))
                 if not dst_entry[0] or not dst_entry[1]:
@@ -100,14 +101,36 @@ class BootimgPartitionPlugin(SourcePlugin):
 
         for deploy_entry in deploy_files:
             src, dst = deploy_entry
-            src_path = os.path.join(bootimg_dir, src)
-            dst_path = os.path.join(hdddir, dst)
+            install_task = []
+            if '*' in src:
+                # by default install files under their basename
+                entry_name_fn = os.path.basename
+                if dst != src:
+                    # unless a target name was given, then treat name
+                    # as a directory and append a basename
+                    entry_name_fn = lambda name: \
+                                    os.path.join(dst,
+                                                 os.path.basename(name))
 
-            msger.debug('Install %s as %s' % (os.path.basename(src_path),
-                                              dst_path))
-            install_cmd = "install -m 0644 -D %s %s" \
-                          % (src_path, dst_path)
-            exec_cmd(install_cmd)
+                srcs = glob(os.path.join(bootimg_dir, src))
+
+                msger.debug('Globbed sources: %s' % (', '.join(srcs)))
+                for entry in srcs:
+                    entry_dst_name = entry_name_fn(entry)
+                    install_task.append((entry,
+                                         os.path.join(hdddir,
+                                                      entry_dst_name)))
+            else:
+                install_task = [(os.path.join(bootimg_dir, src),
+                                 os.path.join(hdddir, dst))]
+
+            for task in install_task:
+                src_path, dst_path = task
+                msger.debug('Install %s as %s' % (os.path.basename(src_path),
+                                                  dst_path))
+                install_cmd = "install -m 0644 -D %s %s" \
+                              % (src_path, dst_path)
+                exec_cmd(install_cmd)
 
         msger.debug('Prepare boot partition using rootfs in %s' % (hdddir))
         part.prepare_rootfs(cr_workdir, oe_builddir, hdddir,
