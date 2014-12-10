@@ -23,6 +23,7 @@ SRC_URI = "git://git.lttng.org/lttng-modules.git;branch=stable-2.5 \
            file://Update-statedump-to-3.17-nsproxy-locking.patch \
            file://Update-kvm-instrumentation-compile-on-3.17-rc1.patch \
            file://fix_build_with_v3.17_kernel.patch \
+           file://compaction-fix-mm_compaction_isolate_template-build.patch \
            "
 
 export INSTALL_MOD_DIR="kernel/lttng-modules"
