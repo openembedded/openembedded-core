@@ -24,15 +24,12 @@ Signed-off-by: Chong Lu <Chong.Lu@windriver.com>
  com32/Makefile |    1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/com32/Makefile b/com32/Makefile
-index 7ea1b01..9a1721b 100644
---- a/com32/Makefile
-+++ b/com32/Makefile
-@@ -20,3 +20,4 @@ modules: lib libutil gpllib
- rosh: lib libutil
+Index: syslinux-6.03/com32/Makefile
+===================================================================
+--- syslinux-6.03.orig/com32/Makefile
++++ syslinux-6.03/com32/Makefile
+@@ -21,3 +21,4 @@ rosh: lib libutil
  samples: libutil elflink/ldlinux
- sysdump: libupload gpllib
+ sysdump: lib libutil libupload gpllib
+ lua/src: cmenu modules
 +gpllib: lib
--- 
-1.7.9.5
-

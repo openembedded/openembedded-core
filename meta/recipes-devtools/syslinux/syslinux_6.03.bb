@@ -8,18 +8,14 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=0636e73ff0215e8d672dc4c32c317bb3 \
 # ldlinux.* stuff for now, so skip mtools-native
 DEPENDS = "nasm-native util-linux"
 
-SRC_URI = "${KERNELORG_MIRROR}/linux/utils/boot/syslinux/6.xx/syslinux-${PV}.tar.bz2 \
-           file://0001-movebits-Add-SMT_TERMINAL-a-last-resort-region-type.patch \
-           file://0002-memscan-build-a-linked-list-of-memory-scanners.patch \
-           file://0003-PXELINUX-Add-bios-memscan-function.patch \
-           file://0004-pxe-use-bios_fbm-and-real_base_mem-to-calculate-free.patch \
+SRC_URI = "${KERNELORG_MIRROR}/linux/utils/boot/syslinux/6.xx/syslinux-${PV}.tar.xz \
            file://syslinux-fix-parallel-building-issue.patch \
-           file://isohybrid-fix-overflow-on-32-bit-system.patch \
            file://syslinux-libupload-depend-lib.patch \
+           file://syslinux-remove-clean-script.patch \
            "
 
-SRC_URI[md5sum] = "6945ee89e29119d459baed4937bbc534"
-SRC_URI[sha256sum] = "83a04cf81e6a46b80ee5a321926eea095af3498b04317e3674b46c125c7a5b43"
+SRC_URI[md5sum] = "92a253df9211e9c20172796ecf388f13"
+SRC_URI[sha256sum] = "26d3986d2bea109d5dc0e4f8c4822a459276cf021125e8c9f23c3cca5d8c850e"
 
 COMPATIBLE_HOST = '(x86_64|i.86).*-(linux|freebsd.*)'
 # Don't let the sanity checker trip on the 32 bit real mode BIOS binaries
