@@ -6,6 +6,8 @@ SUMMARY = "Software development tools"
 LICENSE = "MIT"
 PR = "r9"
 
+PACKAGE_ARCH = "${MACHINE_ARCH}"
+
 inherit packagegroup
 
 #PACKAGEFUNCS =+ 'generate_sdk_pkgs'
@@ -26,9 +28,17 @@ RDEPENDS_packagegroup-core-sdk = "\
     file \
     tcl"
 
+SANITIZERS = "libasan-dev libubsan-dev"
+SANITIZERS_aarch64 = ""
+SANITIZERS_mips = ""
+SANITIZERS_mips64 = ""
+SANITIZERS_powerpc64 = ""
+SANITIZERS_sparc = ""
+
 RRECOMMENDS_packagegroup-core-sdk = "\
     libgomp \
-    libgomp-dev"
+    libgomp-dev \
+    ${SANITIZERS}"
 
 #python generate_sdk_pkgs () {
 #    poky_pkgs = read_pkgdata('packagegroup-core', d)['PACKAGES']
