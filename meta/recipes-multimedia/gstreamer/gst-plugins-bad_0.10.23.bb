@@ -37,6 +37,7 @@ PACKAGECONFIG[openal] = "--enable-openal,--disable-openal,openal-soft"
 PACKAGECONFIG[schro] = "--enable-schro,--disable-schro,schroedinger"
 PACKAGECONFIG[dc1394] = "--enable-dc1394,--disable-dc1394,libdc1394"
 PACKAGECONFIG[faac] = "--enable-faac,--disable-faac,faac"
+PACKAGECONFIG[rtmp] = "--enable-rtmp,--disable-rtmp,rtmpdump"
 
 ARM_INSTRUCTION_SET = "arm"
 
