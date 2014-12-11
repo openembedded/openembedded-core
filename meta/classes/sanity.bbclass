@@ -519,6 +519,16 @@ def sanity_handle_abichanges(status, d):
             status.addresult("Your configuration is using stamp files including the sstate hash but your build directory was built with stamp files that do not include this.\nTo continue, either rebuild or switch back to the OEBasic signature handler with BB_SIGNATURE_HANDLER = 'OEBasic'.\n")
         elif (abi != current_abi and current_abi == "9"):
             status.addresult("The layout of the TMPDIR STAMPS directory has changed. Please clean out TMPDIR and rebuild (sstate will be still be valid and reused)\n")
+        elif (abi != current_abi and current_abi == "10" and (abi == "8" or abi == "9")):
+            bb.note("Converting staging layout from version 8/9 to layout version 10")
+            cmd = d.expand("grep -r -l sysroot-providers/virtual_kernel ${SSTATE_MANIFESTS}")
+            ret, result = oe.utils.getstatusoutput(cmd)
+            result = result.split()
+            for f in result:
+                bb.note("Uninstalling manifest file %s" % f)
+                sstate_clean_manifest(f, d)
+            with open(abifile, "w") as f:
+                f.write(current_abi)
         elif (abi != current_abi):
             # Code to convert from one ABI to another could go here if possible.
             status.addresult("Error, TMPDIR has changed its layout version number (%s to %s) and you need to either rebuild, revert or adjust it at your own risk.\n" % (abi, current_abi))
