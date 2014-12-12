@@ -77,18 +77,31 @@ for service in $services; do
 		exit 0
 	fi
 
-	echo "Try to find location of $service..."
+	service_base_file=`echo $service | sed 's/\(@\).*\(\.[^.]\+\)/\1\2/'`
+	if [ -z `echo $service | sed '/@/p;d'` ]; then
+		echo "Try to find location of $service..."
+		service_template=false
+	else
+		echo "Try to find location of template $service_base_file of instance $service..."
+		service_template=true
+		if [ -z `echo $service | sed 's/^.\+@\(.*\)\.[^.]\+/\1/'` ]; then
+			instance_specified=false
+		else
+			instance_specified=true
+		fi
+	fi
+
 	# find service file
 	for p in $ROOT/etc/systemd/system \
 		 $ROOT/lib/systemd/system \
 		 $ROOT/usr/lib/systemd/system; do
-		if [ -e $p/$service ]; then
-			service_file=$p/$service
+		if [ -e $p/$service_base_file ]; then
+			service_file=$p/$service_base_file
 			service_file=${service_file##$ROOT}
 		fi
 	done
 	if [ -z "$service_file" ]; then
-		echo "'$service' couldn't be found; exiting with error"
+		echo "'$service_base_file' couldn't be found; exiting with error"
 		exit 1
 	fi
 	echo "Found $service in $service_file"
@@ -115,13 +128,29 @@ for service in $services; do
 	for r in $wanted_by; do
 		echo "WantedBy=$r found in $service"
 		if [ "$action" = "enable" ]; then
+			enable_service=$service
+			if [ "$service_template" = true -a "$instance_specified" = false ]; then
+				default_instance=$(sed '/^DefaultInstance[[:space:]]*=/s,[^=]*=,,p;d' "$ROOT/$service_file")
+				if [ -z $default_instance ]; then
+					echo "Template unit without instance or DefaultInstance directive, nothing to enable"
+					continue
+				else
+					echo "Found DefaultInstance $default_instance, enabling it"
+					enable_service=$(echo $service | sed "s/@/@$default_instance/")
+				fi
+			fi
 			mkdir -p $ROOT/etc/systemd/system/$r.wants
-			ln -s $service_file $ROOT/etc/systemd/system/$r.wants
-			echo "Enabled $service for $wanted_by."
+			ln -s $service_file $ROOT/etc/systemd/system/$r.wants/$enable_service
+			echo "Enabled $enable_service for $wanted_by."
 		else
-			rm -f $ROOT/etc/systemd/system/$r.wants/$service
+			if [ "$service_template" = true -a "$instance_specified" = false ]; then
+				disable_service="$ROOT/etc/systemd/system/$r.wants/`echo $service | sed 's/@/@*/'`"
+			else
+				disable_service="$ROOT/etc/systemd/system/$r.wants/$service"
+			fi
+			rm -f $disable_service
 			rmdir --ignore-fail-on-non-empty -p $ROOT/etc/systemd/system/$r.wants
-			echo "Disabled $service for $wanted_by."
+			echo "Disabled ${disable_service##$ROOT/etc/systemd/system/$r.wants/} for $wanted_by."
 		fi
 	done
 
