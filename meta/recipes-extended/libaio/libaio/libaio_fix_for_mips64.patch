@@ -14,29 +14,45 @@ Signed-off-by: Jianchuan Wang <jianchuan.wang@windriver.com>
  src/libaio.h | 12 ++++++++++++
  1 file changed, 12 insertions(+)
 
-diff --git a/src/libaio.h b/src/libaio.h
-index ff99188..64ea8f3 100644
---- a/src/libaio.h
-+++ b/src/libaio.h
-@@ -95,6 +95,18 @@ typedef enum io_iocb_cmd {
- #define PADDED(x, y)   unsigned y; x
- #define PADDEDptr(x, y)        unsigned y; x
- #define PADDEDul(x, y) unsigned y; unsigned long x
-+#elif defined(__mips64)
-+#  if defined (__MIPSEB__) /* big endian, 64 bits */
-+#define PADDED(x, y)	unsigned y; x
-+#define PADDEDptr(x,y)	x
-+#define PADDEDul(x, y)	unsigned long x
-+#  elif defined(__MIPSEL__) /* little endian, 64 bits */
-+#define PADDED(x, y)	x, y
-+#define PADDEDptr(x, y)	x
-+#define PADDEDul(x, y)	unsigned long x
-+#  else
-+#    error "mips64: neither mipseb nor mipsel?"
-+#  endif
- #elif defined(__mips__)
- #  if defined (__MIPSEB__) /* big endian, 32 bits */
- #define PADDED(x, y)   unsigned y; x
--- 
-1.8.2.1
-
+Index: libaio-0.3.110/src/libaio.h
+===================================================================
+--- libaio-0.3.110.orig/src/libaio.h
++++ libaio-0.3.110/src/libaio.h
+@@ -51,7 +51,7 @@ typedef enum io_iocb_cmd {
+ 
+ /* little endian, 32 bits */
+ #if defined(__i386__) || (defined(__arm__) && !defined(__ARMEB__)) || \
+-    defined(__sh__) || defined(__bfin__) || defined(__MIPSEL__) || \
++    defined(__sh__) || defined(__bfin__) || (defined(__mips__) && defined(__MIPSEL__)) || \
+     defined(__cris__)
+ #define PADDED(x, y)	x; unsigned y
+ #define PADDEDptr(x, y)	x; unsigned y
+@@ -59,7 +59,8 @@ typedef enum io_iocb_cmd {
+ 
+ /* little endian, 64 bits */
+ #elif defined(__ia64__) || defined(__x86_64__) || defined(__alpha__) || \
+-      (defined(__aarch64__) && defined(__AARCH64EL__))
++      (defined(__aarch64__) && defined(__AARCH64EL__)) || \
++      (defined(__mips64) && defined(__MIPSEL__))
+ #define PADDED(x, y)	x, y
+ #define PADDEDptr(x, y)	x
+ #define PADDEDul(x, y)	unsigned long x
+@@ -67,7 +68,8 @@ typedef enum io_iocb_cmd {
+ /* big endian, 64 bits */
+ #elif defined(__powerpc64__) || defined(__s390x__) || \
+       (defined(__sparc__) && defined(__arch64__)) || \
+-      (defined(__aarch64__) && defined(__AARCH64EB__))
++      (defined(__aarch64__) && defined(__AARCH64EB__)) || \
++      (defined(__mips64) && defined(__MIPSEL__))
+ #define PADDED(x, y)	unsigned y; x
+ #define PADDEDptr(x,y)	x
+ #define PADDEDul(x, y)	unsigned long x
+@@ -75,7 +77,7 @@ typedef enum io_iocb_cmd {
+ /* big endian, 32 bits */
+ #elif defined(__PPC__) || defined(__s390__) || \
+       (defined(__arm__) && defined(__ARMEB__)) || \
+-      defined(__sparc__) || defined(__MIPSEB__) || defined(__m68k__) || \
++      defined(__sparc__) || (defined(__mips__) && defined(__MIPSEB__)) || defined(__m68k__) || \
+       defined(__hppa__) || defined(__frv__) || defined(__avr32__)
+ #define PADDED(x, y)	unsigned y; x
+ #define PADDEDptr(x, y)	unsigned y; x
