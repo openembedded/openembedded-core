@@ -34,6 +34,7 @@ SRC_URI = "git://anongit.freedesktop.org/systemd/systemd;branch=master;protocol=
            file://0001-missing.h-add-fake-__NR_memfd_create-for-MIPS.patch \
            file://0001-Make-root-s-home-directory-configurable.patch \
            file://0001-systemd-user-avoid-using-system-auth.patch \
+           file://0001-journal-Fix-navigating-backwards-missing-entries.patch \
            file://touchscreen.rules \
            file://00-create-volatile.conf \
            file://init \
