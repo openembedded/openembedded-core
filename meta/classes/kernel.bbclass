@@ -391,7 +391,7 @@ python split_kernel_packages () {
 
 do_strip() {
 	if [ -n "${KERNEL_IMAGE_STRIP_EXTRA_SECTIONS}" ]; then
-		if [[ "${KERNEL_IMAGETYPE}" != "vmlinux" ]]; then
+		if [ "${KERNEL_IMAGETYPE}" != "vmlinux" ]; then
 			bbwarn "image type will not be stripped (not supported): ${KERNEL_IMAGETYPE}"
 			return
 		fi
