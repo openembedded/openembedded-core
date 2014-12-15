@@ -443,7 +443,7 @@ python () {
                 check_license = False
 
         if check_license and bad_licenses:
-            bad_licenses = map(lambda l: canonical_license(d, l), bad_licenses)
+            bad_licenses = expand_wildcard_licenses(d, bad_licenses)
 
             whitelist = []
             for lic in bad_licenses:

@@ -285,6 +285,31 @@ def canonical_license(d, license):
             lic += '+'
     return lic or license
 
+def expand_wildcard_licenses(d, wildcard_licenses):
+    """
+    Return actual spdx format license names if wildcard used. We expand
+    wildcards from SPDXLICENSEMAP flags and SRC_DISTRIBUTE_LICENSES values.
+    """
+    import fnmatch
+    licenses = []
+    spdxmapkeys = d.getVarFlags('SPDXLICENSEMAP').keys()
+    for wld_lic in wildcard_licenses:
+        spdxflags = fnmatch.filter(spdxmapkeys, wld_lic)
+        licenses += [d.getVarFlag('SPDXLICENSEMAP', flag) for flag in spdxflags]
+
+    spdx_lics = (d.getVar('SRC_DISTRIBUTE_LICENSES') or '').split()
+    for wld_lic in wildcard_licenses:
+        licenses += fnmatch.filter(spdx_lics, wld_lic)
+
+    licenses = list(set(licenses))
+    return licenses
+
+def incompatible_license_contains(license, truevalue, falsevalue, d):
+    license = canonical_license(d, license)
+    bad_licenses = (d.getVar('INCOMPATIBLE_LICENSE', True) or "").split()
+    bad_licenses = expand_wildcard_licenses(d, bad_licenses)
+    return truevalue if license in bad_licenses else falsevalue
+
 def incompatible_license(d, dont_want_licenses, package=None):
     """
     This function checks if a recipe has only incompatible licenses. It also
