@@ -53,7 +53,6 @@ LTTNGTOOLS_aarch64 = ""
 
 LTTNGMODULES = "lttng-modules"
 LTTNGMODULES_aarch64 = ""
-LTTNGMODULES_arm = ""
 
 BABELTRACE = "babeltrace"
 BABELTRACE_aarch64 = ""
