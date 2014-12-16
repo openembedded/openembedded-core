@@ -24,6 +24,7 @@ SRC_URI = "git://sourceware.org/git/glibc.git;branch=release/${PV}/master \
            file://grok_gold.patch \
            file://fix_am_rootsbindir.patch \
            ${EGLIBCPATCHES} \
+           ${CVEPATCHES} \
           "
 EGLIBCPATCHES = "\
            file://timezone-re-written-tzselect-as-posix-sh.patch \
@@ -40,6 +41,10 @@ EGLIBCPATCHES = "\
 #	    file://initgroups_keys.patch \
 #
 
+CVEPATCHES = "\
+        file://CVE-2014-7817-wordexp-fails-to-honour-WRDE_NOCMD.patch \
+        file://CVE-2012-3406-Stack-overflow-in-vfprintf-BZ-16617.patch \
+    "
 LIC_FILES_CHKSUM = "file://LICENSES;md5=e9a558e243b36d3209f380deb394b213 \
       file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
       file://posix/rxspencer/COPYRIGHT;md5=dc5485bb394a13b2332ec1c785f5d83a \
