@@ -9,6 +9,13 @@ PACKAGES = "\
     libgcov-dev \
 "
 
+# All libgcc source is marked with the exception.
+#
+LICENSE_${PN} = "GPL-3.0-with-GCC-exception"
+LICENSE_${PN}-dev = "GPL-3.0-with-GCC-exception"
+LICENSE_${PN}-dbg = "GPL-3.0-with-GCC-exception"
+
+
 FILES_${PN} = "${base_libdir}/libgcc*.so.*"
 FILES_${PN}-dev = "\
     ${base_libdir}/libgcc*.so \
