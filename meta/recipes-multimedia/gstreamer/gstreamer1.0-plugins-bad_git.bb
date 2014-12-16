@@ -19,8 +19,9 @@ EXTRA_OECONF += " \
     -disable-openjpeg \
     "
 
-do_configure() {
+do_configure_prepend() {
+	cd ${S}
 	./autogen.sh --noconfigure
-	oe_runconf
+	cd ${B}
 }
 
