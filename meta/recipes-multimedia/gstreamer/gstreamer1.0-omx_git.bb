@@ -13,8 +13,9 @@ S = "${WORKDIR}/git"
 
 SRCREV = "a2db76b048db278ef0aa798e106b7594264e06c0"
 
-do_configure() {
+do_configure_prepend() {
+	cd ${S}
 	./autogen.sh --noconfigure
-	oe_runconf
+	cd ${B}
 }
 

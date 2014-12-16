@@ -21,8 +21,9 @@ LIBAV_EXTRA_CONFIGURE_COMMON_ARG = "--target-os=linux \
   ${GSTREAMER_1_0_DEBUG} \
   --cross-prefix='${HOST_PREFIX}'"
 
-do_configure() {
+do_configure_prepend() {
+	cd ${S}
 	./autogen.sh --noconfigure
-	oe_runconf
+	cd ${B}
 }
 
