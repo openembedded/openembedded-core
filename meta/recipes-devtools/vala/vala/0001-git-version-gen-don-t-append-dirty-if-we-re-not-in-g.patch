@@ -7,6 +7,8 @@ Subject: [PATCH] git-version-gen: don't append -dirty if we're not in git
 * for example if we have some dirty directory and we unpack clean vala tarball in it, then it will append -dirty
 
 Signed-off-by: Martin Jansa <Martin.Jansa@gmail.com>
+
+Upstream-Status: Inappropriate [OE-Specific]
 ---
  build-aux/git-version-gen |   25 ++++++++++++++-----------
  1 files changed, 14 insertions(+), 11 deletions(-)
