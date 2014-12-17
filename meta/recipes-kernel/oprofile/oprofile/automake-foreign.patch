@@ -1,3 +1,8 @@
+oprofile doesn't want GNU-levels of automake strictness so tell it to be "foreign".
+
+Upstream-Status: Pending
+Signed-off-by: Ross Burton <ross.burton@intel.com>
+
 diff --git a/configure.ac b/configure.ac
 index 5740585..cf6c316 100644
 --- a/configure.ac
