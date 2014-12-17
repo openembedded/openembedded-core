@@ -1,3 +1,8 @@
+Update autoconf prologue to use "foreign" strictness.
+
+Upstream-Status: Pending
+Signed-off-by: Ross Burton <ross.burton@intel.com>
+
 diff --git a/configure.ac b/configure.ac
 index d974461..a20dfa8 100644
 --- a/configure.ac
