@@ -9,6 +9,7 @@ LIC_FILES_CHKSUM = "file://doc/COPYING;md5=94d55d512a9ba36caa9b7df079bae19f \
 PR = "r1"
 
 SRC_URI = "http://www.hpl.hp.com/research/linux/atomic_ops/download/libatomic_ops-${PV}.tar.gz \
+           file://0001-libatomic_ops-Aarch64-basic-port.patch \
           "
 
 SRC_URI[md5sum] = "890acdc83a7cd10e2e9536062d3741c8"
