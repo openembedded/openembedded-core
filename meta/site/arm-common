@@ -11,7 +11,6 @@ ac_cv_sctp=${ac_cv_sctp=no}
 # apache
 ac_cv_func_pthread_key_delete=${ac_cv_func_pthread_key_delete=yes}
 apr_cv_process_shared_works=${apr_cv_process_shared_works=no}
-ac_cv_sizeof_ssize_t=${ac_cv_sizeof_ssize_t=4}
 apr_cv_tcp_nodelay_with_cork=${apr_cv_tcp_nodelay_with_cork=yes}
 
 # bash
@@ -51,8 +50,6 @@ ac_cv_func_fnmatch_works=${ac_cv_func_fnmatch_works=yes}
 am_cv_func_working_getline=${am_cv_func_working_getline=yes}
 
 # glib
-glib_cv_sizeof_gmutex=${glib_cv_sizeof_gmutex=24}
-glib_cv_sizeof_system_thread=${glib_cv_sizeof_system_thread=4}
 glib_cv_stack_grows=${glib_cv_stack_grows=no}
 glib_cv_uscore=${glib_cv_uscore=no}
 glib_cv_use_pid_surrogate=${glib_cv_use_pid_surrogate=yes}
@@ -60,7 +57,6 @@ glib_cv_has__inline=${glib_cv_has__inline=yes}
 glib_cv_has__inline__=${glib_cv_has__inline__=yes}
 glib_cv_hasinline=${glib_cv_hasinline=yes}
 glib_cv_sane_realloc=${glib_cv_sane_realloc=yes}
-glib_cv_sizeof_gmutex=${glib_cv_sizeof_gmutex=24}
 glib_cv_uscore=${glib_cv_uscore=no}
 glib_cv_va_val_copy=${glib_cv_va_val_copy=yes}
 glib_cv_rtldglobal_broken=${glib_cv_rtldglobal_broken=no}
@@ -70,24 +66,13 @@ glib_cv_sys_pthread_cond_timedwait_posix=${glib_cv_sys_pthread_cond_timedwait_po
 
 # glib-2.0
 glib_cv_long_long_format=${glib_cv_long_long_format=ll}
-glib_cv_sizeof_gmutex=${glib_cv_sizeof_gmutex=24}
-glib_cv_sizeof_intmax_t=${glib_cv_sizeof_intmax_t=8}
-glib_cv_sizeof_ptrdiff_t=${glib_cv_sizeof_ptrdiff_t=4}
-glib_cv_sizeof_size_t=${glib_cv_sizeof_size_t=4}
-glib_cv_sizeof_system_thread=${glib_cv_sizeof_system_thread=4}
 glib_cv_sys_use_pid_niceness_surrogate=${glib_cv_sys_use_pid_niceness_surrogate=yes}
-ac_cv_alignof_guint32=4
-ac_cv_alignof_guint64=8
-ac_cv_alignof_unsigned_long=4
 
 #gstreamer
 as_cv_unaligned_access=${as_cv_unaligned_access=no}
 
 # httppc
 ac_cv_strerror_r_SUSv3=${ac_cv_strerror_r_SUSv3=no}
-
-# jikes
-ac_cv_sizeof_wchar_t=4
 
 # lftp
 ac_cv_need_trio=${ac_cv_need_trio=no}
@@ -118,20 +103,6 @@ mysql_cv_func_atomic_add=${mysql_cv_func_atomic_add=no}
 # nano
 ac_cv_regexec_segfault_emptystr=${ac_cv_regexec_segfault_emptystr=no}
 nano_cv_func_regexec_segv_emptystr=${nano_cv_func_regexec_segv_emptystr=no}
-
-# ORBit2
-ac_cv_alignof_CORBA_boolean=1
-ac_cv_alignof_CORBA_char=1
-ac_cv_alignof_CORBA_double=8
-ac_cv_alignof_CORBA_float=4
-ac_cv_alignof_CORBA_long=4
-ac_cv_alignof_CORBA_long_double=8
-ac_cv_alignof_CORBA_long_long=8
-ac_cv_alignof_CORBA_octet=1
-ac_cv_alignof_CORBA_pointer=4
-ac_cv_alignof_CORBA_short=2
-ac_cv_alignof_CORBA_struct=1
-ac_cv_alignof_CORBA_wchar=2
 
 # php
 ac_cv_pread=${ac_cv_pread=no}
@@ -186,12 +157,3 @@ jm_cv_func_working_readdir=yes
 # evolution-data-server
 ac_cv_libiconv_utf8=${ac_cv_libiconv_utf8=yes}
 
-# at-spi2-core
-ac_cv_alignof_char=1
-ac_cv_alignof_dbind_pointer=4
-ac_cv_alignof_dbind_struct=1
-ac_cv_alignof_dbus_bool_t=4
-ac_cv_alignof_dbus_int16_t=2
-ac_cv_alignof_dbus_int32_t=4
-ac_cv_alignof_dbus_int64_t=8
-ac_cv_alignof_double=8
