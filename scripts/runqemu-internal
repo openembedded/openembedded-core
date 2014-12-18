@@ -50,6 +50,9 @@ else
         "qemuarm")
             mem_size=128
             ;;
+        "qemuarm64")
+            mem_size=128
+            ;;
         "qemumicroblaze")
             mem_size=64
             ;;
@@ -260,8 +263,17 @@ else
             DROOT="/dev/hda"
             ROOTFS_OPTIONS="-hda $ROOTFS"
         fi
+        if [ "$MACHINE" = "qemuarm64" ]; then
+            QEMU_NETWORK_CMD="-netdev user,id=net0 -device virtio-net-device,netdev=net0"
+            DROOT="/dev/vda"
+            ROOTFS_OPTIONS="-drive id=disk0,file=$ROOTFS -device virtio-blk-device,drive=disk0"
+        fi
+
         KERNCMDLINE="mem=$QEMU_MEMORY"
         QEMU_UI_OPTIONS="-show-cursor -usb -usbdevice wacom-tablet"
+        if [ $MACHINE = 'qemuarm64' ]; then
+            QEMU_UI_OPTIONS="-nographic"
+        fi
 
         NFS_INSTANCE=`echo $TAP | sed 's/tap//'`
         export NFS_INSTANCE
@@ -274,6 +286,7 @@ fi
 
 case "$MACHINE" in
     "qemuarm") ;;
+    "qemuarm64") ;;
     "qemumicroblaze") ;;
     "qemumips") ;;
     "qemumipsel") ;;
@@ -361,6 +374,19 @@ if [ "$MACHINE" = "qemuarm" -o "$MACHINE" = "qemuarmv6" -o "$MACHINE" = "qemuarm
         QEMUOPTIONS="$QEMUOPTIONS -cpu cortex-a8"
     fi
 fi
+
+if [ "$MACHINE" = "qemuarm64" ]; then
+    QEMU=qemu-system-aarch64
+
+    export QEMU_AUDIO_DRV="none"
+    QEMU_UI_OPTIONS="$QEMU_UI_OPTIONS"
+    if [ "${FSTYPE:0:3}" = "ext" -o "$FSTYPE" = "btrfs" ]; then
+        KERNCMDLINE="root=/dev/vda rw console=ttyAMA0,38400 mem=$QEMU_MEMORY highres=off"
+        # qemu-system-aarch64 only support '-machine virt -cpu cortex-a57' for now
+        QEMUOPTIONS="$QEMU_NETWORK_CMD -machine virt -cpu cortex-a57 $ROOTFS_OPTIONS $QEMU_UI_OPTIONS"
+    fi
+fi
+
 
 if [ "$MACHINE" = "qemux86" ]; then
     QEMU=qemu-system-i386
