@@ -14,6 +14,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
 
 SRC_URI = "http://www.dest-unreach.org/socat/download/socat-${PV}.tar.bz2 \
            file://fix-cross-compiling-failed.patch \
+           file://socat-1.7.2.4-linux-3.17.patch \
 "
 
 SRC_URI[md5sum] = "69b8155dd442a6f24e28ef5407d868eb"

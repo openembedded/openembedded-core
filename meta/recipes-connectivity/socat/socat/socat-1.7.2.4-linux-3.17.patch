@@ -1,0 +1,29 @@
+socat: fix compile erorr against 3.17+ kernel headers
+
+With the linux 3.17 kernel socat's configure detects the wrong include for errqueue.h
+which results in a compilation error.
+
+By backporting the gentoo patch from:
+
+  http://sources.gentoo.org/cgi-bin/viewvc.cgi/gentoo-x86/net-misc/socat/files/socat-1.7.2.4-linux-3.17.patch
+
+Fixes the build issue
+
+Upstream-status: backport
+
+Signed-off-by: Bruce Ashfield <bruce.ashfield@windriver.com>
+
+--- a/configure.in
++++ b/configure.in
+@@ -80,7 +80,10 @@
+ AC_CHECK_HEADERS(termios.h linux/if_tun.h)
+ AC_CHECK_HEADERS(net/if_dl.h)
+ AC_CHECK_HEADERS(linux/types.h)
+-AC_CHECK_HEADER(linux/errqueue.h, AC_DEFINE(HAVE_LINUX_ERRQUEUE_H), [], [#include <linux/types.h>])
++AC_CHECK_HEADER(linux/errqueue.h, AC_DEFINE(HAVE_LINUX_ERRQUEUE_H), [], [AC_INCLUDES_DEFAULT
++	#if HAVE_LINUX_TYPES_H
++	#include <linux/types.h>
++	#endif])
+ AC_CHECK_HEADERS(sys/utsname.h sys/select.h sys/file.h)
+ AC_CHECK_HEADERS(util.h bsd/libutil.h libutil.h sys/stropts.h regex.h)
+ AC_CHECK_HEADERS(linux/fs.h linux/ext2_fs.h)
