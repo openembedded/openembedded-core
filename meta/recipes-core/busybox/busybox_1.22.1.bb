@@ -20,6 +20,7 @@ SRC_URI = "http://www.busybox.net/downloads/busybox-${PV}.tar.bz2;name=tarball \
            file://busybox-syslog.default \
            file://mdev \
            file://mdev.conf \
+           file://mdev-mount.sh \
            file://umount.busybox \
            file://defconfig \
            file://busybox-syslog.service.in \

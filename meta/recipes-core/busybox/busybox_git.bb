@@ -24,6 +24,7 @@ SRC_URI = "git://busybox.net/busybox.git \
            file://busybox-syslog.default \
            file://mdev \
            file://mdev.conf \
+           file://mdev-mount.sh \
            file://umount.busybox \
            file://defconfig \
            file://busybox-syslog.service.in \
