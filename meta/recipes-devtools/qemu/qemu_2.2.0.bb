@@ -8,8 +8,8 @@ SRC_URI += "file://configure-fix-Darwin-target-detection.patch \
             file://Qemu-Arm-versatilepb-Add-memory-size-checking.patch \
             "
 SRC_URI_prepend = "http://wiki.qemu-project.org/download/${BP}.tar.bz2"
-SRC_URI[md5sum] = "0ff197c4ed4b695620bc4734e77c888f"
-SRC_URI[sha256sum] = "fd10f5e45cf5a736fa5a3e1c279ae9821534e700beb7d1aab88a07648a394885"
+SRC_URI[md5sum] = "f7a5e2da22d057eb838a91da7aff43c8"
+SRC_URI[sha256sum] = "b68c9b6c7c694f5489b5a6bffe993cd976ffbb78e7d178eb3bc016caf460039c"
 
 COMPATIBLE_HOST_class-target_mips64 = "null"
 
