@@ -5,6 +5,8 @@ DEPENDS += "virtual/${TARGET_PREFIX}binutils virtual/${TARGET_PREFIX}gcc kmod-na
 
 S = "${STAGING_DIR_TARGET}/${KERNEL_SRC_PATH}"
 
+do_unpack[cleandirs] = "${S}"
+
 # we include gcc above, we dont need virtual/libc
 INHIBIT_DEFAULT_DEPS = "1"
 
