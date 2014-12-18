@@ -14,8 +14,9 @@ SRC_URI[sha256sum] = "034cde6d5bb433fe0d29251d5cde5d4c2948abf05fe29ef10966b65933
 inherit autotools gettext pkgconfig
 
 # we need to explicitly link with libintl in uClibc systems
-LDFLAGS += "${EXTRA_LDFLAGS}"
+EXTRA_LDFLAGS ?= ""
 EXTRA_LDFLAGS_libc-uclibc = "-lintl"
+LDFLAGS += "${EXTRA_LDFLAGS}"
 
 # we do not want libncursesw if we can
 do_configure_prepend() {
