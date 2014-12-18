@@ -1,0 +1,19 @@
+lttng-ust: add aarch64 recognition
+
+Treat the same as "arm".
+
+Upstream-Status: Pending
+
+Signed-off-by: joe.slater@windriver.com
+
+
+--- a/configure.ac
++++ b/configure.ac
+@@ -230,6 +230,7 @@ changequote([,])dnl
+ 	s390) NO_UNALIGNED_ACCESS=1 ;;
+ 	s390x) NO_UNALIGNED_ACCESS=1 ;;
+         arm*) NO_UNALIGNED_ACCESS=1 ;;
++        aarch64) NO_UNALIGNED_ACCESS=1 ;;
+ 	mips*) NO_UNALIGNED_ACCESS=1 ;;
+ 	tile*) NO_UNALIGNED_ACCESS=1 ;;
+ 	*) AC_MSG_ERROR([unable to detect alignment requirements (unsupported architecture ($host_cpu)?)]) ;;
