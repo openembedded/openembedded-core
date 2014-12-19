@@ -1,4 +1,4 @@
-SUMMARY = "Base configuration files for opkg"
+SUMMARY = "Architecture-dependent configuration for opkg"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
@@ -28,3 +28,6 @@ FILES_${PN} = "${sysconfdir}/opkg/ "
 
 CONFFILES_${PN} += "${sysconfdir}/opkg/arch.conf"
 
+RREPLACES_${PN} = "opkg-config-base"
+RCONFLICTS_${PN} = "opkg-config-base"
+RPROVIDES_${PN} = "opkg-config-base"
