@@ -219,7 +219,11 @@ class GitApplyTree(PatchTree):
             return _applypatchhelper(shellcmd, patch, force, reverse, run)
         except CmdError:
             shellcmd = ["git", "--git-dir=.", "apply", "-p%s" % patch['strippath']]
-            return _applypatchhelper(shellcmd, patch, force, reverse, run)
+            try:
+                output = _applypatchhelper(shellcmd, patch, force, reverse, run)
+            except CmdError:
+                output = PatchTree._applypatch(self, patch, force, reverse, run)
+            return output
 
 
 class QuiltTree(PatchSet):
