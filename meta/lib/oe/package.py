@@ -97,3 +97,29 @@ def filedeprunner(arg):
         raise e
 
     return (pkg, provides, requires)
+
+
+def read_shlib_providers(d):
+    import re
+
+    shlib_provider = {}
+    shlibs_dirs = d.getVar('SHLIBSDIRS', True).split()
+    list_re = re.compile('^(.*)\.list$')
+    # Go from least to most specific since the last one found wins
+    for dir in reversed(shlibs_dirs):
+        bb.debug(2, "Reading shlib providers in %s" % (dir))
+        if not os.path.exists(dir):
+            continue
+        for file in os.listdir(dir):
+            m = list_re.match(file)
+            if m:
+                dep_pkg = m.group(1)
+                fd = open(os.path.join(dir, file))
+                lines = fd.readlines()
+                fd.close()
+                for l in lines:
+                    s = l.strip().split(":")
+                    if s[0] not in shlib_provider:
+                        shlib_provider[s[0]] = {}
+                    shlib_provider[s[0]][s[1]] = (dep_pkg, s[2])
+    return shlib_provider
