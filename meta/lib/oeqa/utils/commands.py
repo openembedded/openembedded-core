@@ -138,9 +138,9 @@ def get_bb_var(var, target=None, postconfig=None):
     val = None
     bbenv = get_bb_env(target, postconfig=postconfig)
     for line in bbenv.splitlines():
-        if line.startswith(var + "="):
+        if line.startswith(var + "=") or line.startswith("export " + var + "="):
             val = line.split('=')[1]
-            val = val.replace('\"','')
+            val = val.strip('\"')
             break
     return val
 
