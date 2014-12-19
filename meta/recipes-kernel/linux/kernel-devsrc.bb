@@ -10,6 +10,9 @@ LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/GPL-2.0;md5=801f80980d171dd6425
 
 inherit linux-kernel-base
 
+# Whilst not a module, this ensures we don't get multilib extended (which would make no sense)
+inherit module-base
+
 # We need the kernel to be staged (unpacked, patched and configured) before
 # we can grab the source and make the kernel-devsrc package
 do_install[depends] += "virtual/kernel:do_populate_sysroot"
