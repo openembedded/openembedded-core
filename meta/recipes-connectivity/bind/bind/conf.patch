@@ -55,6 +55,22 @@ diff -urN bind-9.3.1.orig/conf/db.empty bind-9.3.1/conf/db.empty
 +			  86400 )	; Negative Cache TTL
 +;
 +@	IN	NS	localhost.
+diff -urN bind-9.3.1.orig/conf/db.255 bind-9.3.1/conf/db.255
+--- bind-9.3.1.orig/conf/db.255	1970-01-01 01:00:00.000000000 +0100
++++ bind-9.3.1/conf/db.255	2005-07-10 22:14:00.000000000 +0200
+@@ -0,0 +1,12 @@
++;
++; BIND reserve data file for broadcast zone
++;
++$TTL	604800
++@	IN	SOA	localhost. root.localhost. (
++			      1		; Serial
++			 604800		; Refresh
++			  86400		; Retry
++			2419200		; Expire
++			 604800 )	; Negative Cache TTL
++;
++@	IN	NS	localhost.
 diff -urN bind-9.3.1.orig/conf/db.local bind-9.3.1/conf/db.local
 --- bind-9.3.1.orig/conf/db.local	1970-01-01 01:00:00.000000000 +0100
 +++ bind-9.3.1/conf/db.local	2005-07-10 22:14:00.000000000 +0200
