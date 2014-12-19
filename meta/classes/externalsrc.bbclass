@@ -49,5 +49,8 @@ python () {
 
         for task in d.getVar("SRCTREECOVEREDTASKS", True).split():
             bb.build.deltask(task, d)
+
+        # Ensure compilation happens every time
+        d.setVarFlag('do_compile', 'nostamp', '1')
 }
 
