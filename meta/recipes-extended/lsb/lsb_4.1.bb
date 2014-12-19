@@ -121,3 +121,11 @@ FILES_${PN} += "/lib64 \
                 ${base_libdir}/lsb/* \
 		${libdir}/sendmail \
                "
+
+# The sysroot/${libdir}/sendmail conflicts with esmtp's, and it's a
+# symlink to ${sbindir}/sendmail which is meaningless for sysroot, so
+# remove it.
+SYSROOT_PREPROCESS_FUNCS += "remove_sysroot_sendmail"
+remove_sysroot_sendmail() {
+    rm -r "${SYSROOT_DESTDIR}${libdir}/sendmail"
+}
