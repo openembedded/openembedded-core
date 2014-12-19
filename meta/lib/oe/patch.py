@@ -287,7 +287,7 @@ class GitApplyTree(PatchTree):
             return runcmd(["sh", "-c", " ".join(shellcmd)], self.dir)
 
         try:
-            shellcmd = ["git", "--work-tree=.", "am", "-3", "-p%s" % patch['strippath']]
+            shellcmd = ["git", "--work-tree=.", "am", "-3", "--keep-cr", "-p%s" % patch['strippath']]
             return _applypatchhelper(shellcmd, patch, force, reverse, run)
         except CmdError:
             # Fall back to git apply
