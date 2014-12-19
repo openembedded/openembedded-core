@@ -3,9 +3,10 @@ inherit linux-kernel-base kernel-module-split
 PROVIDES += "virtual/kernel"
 DEPENDS += "virtual/${TARGET_PREFIX}binutils virtual/${TARGET_PREFIX}gcc kmod-native depmodwrapper-cross bc-native"
 
-S = "${STAGING_DIR_TARGET}/${KERNEL_SRC_PATH}"
-
-do_unpack[cleandirs] = "${S}"
+S = "${STAGING_KERNEL_DIR}"
+B = "${WORKDIR}/build"
+KBUILD_OUTPUT = "${B}"
+OE_TERMINAL_EXPORTS += "KBUILD_OUTPUT"
 
 # we include gcc above, we dont need virtual/libc
 INHIBIT_DEFAULT_DEPS = "1"
@@ -33,6 +34,22 @@ python __anonymous () {
     image_task = d.getVar('INITRAMFS_TASK', True)
     if image_task:
         d.appendVarFlag('do_configure', 'depends', ' ${INITRAMFS_TASK}')
+}
+
+# Old style kernels may set ${S} = ${WORKDIR}/git for example
+# We need to move these over to STAGING_KERNEL_DIR. We can't just
+# create the symlink in advance as the git fetcher can't cope with
+# the symlink.
+do_unpack[cleandirs] += " ${S} ${STAGING_KERNEL_DIR} ${B}"
+base_do_unpack_append () {
+    s = d.getVar("S", True)
+    kernsrc = d.getVar("STAGING_KERNEL_DIR", True)
+    if s != kernsrc:
+        bb.utils.mkdirhier(kernsrc)
+        bb.utils.remove(kernsrc, recurse=True)
+        import subprocess
+        subprocess.call(d.expand("mv ${S} ${STAGING_KERNEL_DIR}"), shell=True)
+        os.symlink(kernsrc, s)
 }
 
 inherit kernel-arch deploy
@@ -255,7 +272,7 @@ python sysroot_stage_all () {
     oe.path.copyhardlinktree(d.expand("${D}${KERNEL_SRC_PATH}"), d.expand("${SYSROOT_DESTDIR}${KERNEL_SRC_PATH}"))
 }
 
-KERNEL_CONFIG_COMMAND ?= "oe_runmake_call oldnoconfig || yes '' | oe_runmake oldconfig"
+KERNEL_CONFIG_COMMAND ?= "oe_runmake_call -C ${S} O=${B} oldnoconfig || yes '' | oe_runmake -C ${S} O=${B} oldconfig"
 
 kernel_do_configure() {
 	# fixes extra + in /lib/modules/2.6.37+
@@ -263,6 +280,10 @@ kernel_do_configure() {
 	# $ make kernelversion => 2.6.37
 	# $ make kernelrelease => 2.6.37+
 	touch ${B}/.scmversion ${S}/.scmversion
+
+	if [ "${S}" != "${B}" ] && [ -f "${S}/.config" ] && [ ! -f "${B}/.config" ]; then
+		mv "${S}/.config" "${B}/.config"
+	fi
 
 	# Copy defconfig to .config if .config does not exist. This allows
 	# recipes to manage the .config themselves in do_configure_prepend().
