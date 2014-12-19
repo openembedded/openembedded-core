@@ -4,17 +4,12 @@ LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
 PR = "r2"
 
-SRC_URI = "file://opkg.conf.comments \
-	   file://dest \
-	   file://src "
+SRC_URI = "file://opkg.conf"
 
 S = "${WORKDIR}"
 
 OPKGLIBDIR = "${localstatedir}/lib"
 do_compile () {
-	cat ${WORKDIR}/opkg.conf.comments >${WORKDIR}/opkg.conf
-	cat ${WORKDIR}/src	>>${WORKDIR}/opkg.conf
-	cat ${WORKDIR}/dest	>>${WORKDIR}/opkg.conf
 	echo "option lists_dir ${OPKGLIBDIR}/opkg" >>${WORKDIR}/opkg.conf
 }
 
