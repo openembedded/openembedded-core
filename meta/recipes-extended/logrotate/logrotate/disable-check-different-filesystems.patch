@@ -7,19 +7,20 @@ Upstream-Status: Submitted
 
 Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
 ---
- config.c |    8 --------
- 1 files changed, 0 insertions(+), 8 deletions(-)
+ config.c |    9 ---------
+ 1 file changed, 9 deletions(-)
 
 diff --git a/config.c b/config.c
-index a85d1df..24575b3 100644
+index e0eadb7..c23092f 100644
 --- a/config.c
 +++ b/config.c
-@@ -1453,14 +1453,6 @@ static int readConfigFile(const char *configFile, struct logInfo *defConfig)
+@@ -1515,15 +1515,6 @@ static int readConfigFile(const char *configFile, struct logInfo *defConfig)
  						dirName, strerror(errno));
  					goto error;
  					}
 -
--					if (sb.st_dev != sb2.st_dev) {
+-					if (sb.st_dev != sb2.st_dev
+-						&& !(newlog->flags & (LOG_FLAG_COPYTRUNCATE | LOG_FLAG_COPY))) {
 -					message(MESS_ERROR,
 -						"%s:%d olddir %s and log file %s "
 -						"are on different devices\n", configFile,
@@ -30,5 +31,4 @@ index a85d1df..24575b3 100644
  				}
  
 -- 
-1.7.4.1
-
+1.7.9.5

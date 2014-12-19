@@ -9,12 +9,12 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=18810669f13b87348459e611d31ab760"
 
 SRC_URI = "https://fedorahosted.org/releases/l/o/logrotate/logrotate-${PV}.tar.gz \
            file://act-as-mv-when-rotate.patch \
-           file://disable-check-different-filesystems.patch \
            file://update-the-manual.patch \
+           file://disable-check-different-filesystems.patch \
             "
 
-SRC_URI[md5sum] = "99e08503ef24c3e2e3ff74cc5f3be213"
-SRC_URI[sha256sum] = "f6ba691f40e30e640efa2752c1f9499a3f9738257660994de70a45fe00d12b64"
+SRC_URI[md5sum] = "49846e873dddea15964cd0355b9943ca"
+SRC_URI[sha256sum] = "46a1510ef4a1f4359edd5f361112cfd1523942e85ff28e6cbb0c81bad1829d0f"
 
 PACKAGECONFIG ?= "\
     ${@base_contains('DISTRO_FEATURES', 'acl', 'acl', '', d)} \
