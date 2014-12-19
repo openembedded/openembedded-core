@@ -15,6 +15,7 @@ SRC_URI = "http://downloads.yoctoproject.org/releases/${BPN}/${BPN}-${PV}.tar.gz
            file://libopkg-opkg_remove.c-avoid-remove-pkg-repeatly-with.patch \
            file://remove-ACLOCAL_AMFLAGS-I-shave-I-m4.patch \
            file://opkg-configure.service \
+           file://opkg.conf \
 "
 
 S = "${WORKDIR}/${BPN}-${PV}"
@@ -51,7 +52,14 @@ do_configure_prepend() {
 	sed -i -e s:-Werror::g ${S}/libopkg/Makefile.am
 }
 
+do_compile_append () {
+	echo "option lists_dir ${OPKGLIBDIR}/opkg" >>${WORKDIR}/opkg.conf
+}
+
 do_install_append () {
+	install -d ${D}${sysconfdir}/opkg
+	install -m 0644 ${WORKDIR}/opkg.conf ${D}${sysconfdir}/opkg/opkg.conf
+
 	# We need to create the lock directory
 	install -d ${D}${OPKGLIBDIR}/opkg
 
@@ -75,7 +83,9 @@ do_install_append () {
 RDEPENDS_${PN} = "${VIRTUAL-RUNTIME_update-alternatives} opkg-arch-config run-postinsts"
 RDEPENDS_${PN}_class-native = ""
 RDEPENDS_${PN}_class-nativesdk = ""
-RREPLACES_${PN} = "opkg-nogpg"
+RREPLACES_${PN} = "opkg-nogpg opkg-collateral"
+RCONFLICTS_${PN} = "opkg-collateral"
+RPROVIDES_${PN} = "opkg-collateral"
 
 PACKAGES =+ "libopkg-dev libopkg-staticdev libopkg"
 
@@ -85,3 +95,5 @@ FILES_libopkg = "${libdir}/*.so.* ${OPKGLIBDIR}/opkg/"
 FILES_${PN} += "${systemd_unitdir}/system/"
 
 BBCLASSEXTEND = "native nativesdk"
+
+CONFFILES_${PN} = "${sysconfdir}/opkg/opkg.conf"
