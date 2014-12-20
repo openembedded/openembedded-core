@@ -20,6 +20,7 @@
 # ${ROOTFS} - the rootfs image to incorporate
 
 do_bootdirectdisk[depends] += "dosfstools-native:do_populate_sysroot \
+                               virtual/kernel:do_deploy \
                                syslinux:do_populate_sysroot \
                                syslinux-native:do_populate_sysroot \
                                parted-native:do_populate_sysroot \
@@ -69,7 +70,7 @@ boot_direct_populate() {
 	install -d $dest
 
 	# Install bzImage, initrd, and rootfs.img in DEST for all loaders to use.
-	install -m 0644 ${STAGING_KERNEL_DIR}/bzImage $dest/vmlinuz
+	install -m 0644 ${DEPLOY_DIR_IMAGE}/bzImage $dest/vmlinuz
 
 	# initrd is made of concatenation of multiple filesystem images
 	if [ -n "${INITRD}" ]; then
