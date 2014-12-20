@@ -44,11 +44,14 @@ python errorreport_handler () {
             task = e.task
             taskdata={}
             log = e.data.getVar('BB_LOGFILE', True)
-            logFile = open(log, 'r')
             taskdata['package'] = e.data.expand("${PF}")
             taskdata['task'] = task
-            taskdata['log'] = logFile.read()
-            logFile.close()
+            if log:
+                logFile = open(log, 'r')
+                taskdata['log'] = logFile.read()
+                logFile.close()
+            else:
+                taskdata['log'] = "No Log"
             jsondata = json.loads(errorreport_getdata(e))
             jsondata['failures'].append(taskdata)
             errorreport_savedata(e, jsondata, "error-report.txt")
