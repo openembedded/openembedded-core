@@ -10,5 +10,5 @@ QT4PKG_mips64 = ""
 IMAGE_FEATURES += "dev-pkgs tools-sdk ${QT4PKG} \
 	tools-debug eclipse-debug tools-profile tools-testapps debug-tweaks ssh-server-openssh"
 
-IMAGE_INSTALL += "kernel-dev"
+IMAGE_INSTALL += "kernel-devsrc"
 
