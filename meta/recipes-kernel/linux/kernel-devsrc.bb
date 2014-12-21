@@ -16,6 +16,8 @@ inherit module-base
 # We need the kernel to be staged (unpacked, patched and configured) before
 # we can grab the source and make the kernel-devsrc package
 do_install[depends] += "virtual/kernel:do_populate_sysroot"
+# Need the source, not just the output of populate_sysroot
+do_install[depends] += "virtual/kernel:do_configure"
 
 # There's nothing to do here, except install the source where we can package it
 do_fetch[noexec] = "1"
