@@ -55,6 +55,8 @@ do_install() {
                 cp ${S}/arch/powerpc/lib/crtsavres.o $kerneldir/arch/powerpc/lib/crtsavres.o
         fi
 }
+# Ensure we don't race against "make scripts" during cpio
+do_install[lockfiles] = "${TMPDIR}/kernel-scripts.lock"
 
 PACKAGES = "kernel-devsrc"
 FILES_${PN} = "${KERNEL_SRC_PATH}"
