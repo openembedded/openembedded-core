@@ -46,6 +46,14 @@ do_install() {
         cd ${S}
         find . -type d -name '.git*' -prune -o -type f -print0 | cpio --null -pdlu $kerneldir
         oe_runmake -C $kerneldir CC="${KERNEL_CC}" LD="${KERNEL_LD}" clean _mrproper_scripts
+
+        # As of Linux kernel version 3.0.1, the clean target removes
+        # arch/powerpc/lib/crtsavres.o which is present in
+        # KBUILD_LDFLAGS_MODULE, making it required to build external modules.
+        if [ ${ARCH} = "powerpc" ]; then
+                mkdir -p $kerneldir/arch/powerpc/lib/
+                cp ${S}/arch/powerpc/lib/crtsavres.o $kerneldir/arch/powerpc/lib/crtsavres.o
+        fi
 }
 
 PACKAGES = "kernel-devsrc"
