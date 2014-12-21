@@ -1,0 +1,78 @@
+From 87bec8300a1122829b2ed565db7da5bacfa88919 Mon Sep 17 00:00:00 2001
+From: Paul Barker <paul@paulbarker.me.uk>
+Date: Sun, 12 Oct 2014 09:59:53 +0000
+Subject: [PATCH] opkg-key: Backport improvements
+
+The improvements to opkg-key made for v0.3.0 are backported. The rest of v0.3.0
+needs further testing and bugfixing prior to release, but the improvements to
+opkg-key have been tested and work well.
+
+    1) opkg-key: Add 'reset' option
+
+        This option removes the keyrings used to verify package signatures,
+        effectively resetting opkg to the initial state where it recognises no
+        keys.
+
+    2) opkg-key: Add 'populate' option
+
+        This option causes all keyrings in /usr/share/opkg/keyrings to be
+        imported. Thus distributions may install their keys into this directory
+        and use 'opkg-key populate' to ensure the correct keys are loaded.
+
+    3) opkg-key: Improve usage output
+
+Signed-off-by: Paul Barker <paul@paulbarker.me.uk>
+Upstream-status: Backport
+---
+ utils/opkg-key | 26 ++++++++++++++++++++++----
+ 1 file changed, 22 insertions(+), 4 deletions(-)
+
+diff --git a/utils/opkg-key b/utils/opkg-key
+index 266bb66..085f1e8 100755
+--- a/utils/opkg-key
++++ b/utils/opkg-key
+@@ -10,12 +10,17 @@ usage() {
+     echo
+     echo "Manage opkg's list of trusted keys"
+     echo
+-    echo "  opkg-key add <file>          - add the key contained in <file> ('-' for stdin)"
+-    echo "  opkg-key del <keyid>         - remove the key <keyid>"
+-    echo "  opkg-key list                - list keys"
++    echo "Commands and arguments:"
++    echo "  add <file>          - Add the key contained in <file> ('-' for stdin)"
++    echo "  del <keyid>         - Remove the key <keyid>"
++    echo "  list                - List keys"
++    echo "  fingerprint         - List keys with fingerprints"
++    echo "  reset               - Remove all keys, resetting the keyring"
++    echo "  populate            - Import keys from /usr/share/opkg/keyrings"
++    echo "  help                - Print this usage message and exit"
+     echo
+     echo "Options:"
+-    echo "  -o <root>  Use <root> as the offline root directory"
++    echo "  -o <root>           - Use <root> as the offline root directory"
+     echo
+ }
+ 
+@@ -64,6 +69,19 @@ case "$command" in
+         echo "Executing: $GPG $*"
+         $GPG $*
+         ;;
++    reset)
++        rm -f $ROOT/etc/opkg/trusted.gpg $ROOT/etc/opkg/trusted.gpg~
++        rm -f $ROOT/etc/opkg/secring.gpg $ROOT/etc/opkg/secring.gpg~
++        rm -f $ROOT/etc/opkg/trustdb.gpg $ROOT/etc/opkg/trustdb.gpg~
++        echo "OK"
++        ;;
++    populate)
++        for f in $ROOT/usr/share/opkg/keyrings/*.gpg; do
++            echo "Importing keys from '`basename $f`'..."
++            $GPG --quiet --batch --import "$f"
++        done
++        echo "OK"
++        ;;
+     help)
+         usage
+         ;;
+-- 
+1.9.1
+

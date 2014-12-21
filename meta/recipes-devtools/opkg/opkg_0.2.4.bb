@@ -16,6 +16,7 @@ SRC_URI = "http://downloads.yoctoproject.org/releases/${BPN}/${BPN}-${PV}.tar.gz
            file://remove-ACLOCAL_AMFLAGS-I-shave-I-m4.patch \
            file://opkg-configure.service \
            file://opkg.conf \
+           file://0001-opkg-key-Backport-improvements.patch \
 "
 
 S = "${WORKDIR}/${BPN}-${PV}"
