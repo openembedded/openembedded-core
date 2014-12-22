@@ -390,6 +390,7 @@ python () {
         bb.fatal('This recipe does not have the LICENSE field set (%s)' % pn)
 
     if bb.data.inherits_class('license', d):
+        check_license_format(d)
         unmatched_license_flag = check_license_flags(d)
         if unmatched_license_flag:
             bb.debug(1, "Skipping %s because it has a restricted license not"

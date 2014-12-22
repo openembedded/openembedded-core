@@ -409,6 +409,28 @@ def check_license_flags(d):
             return unmatched_flag
     return None
 
+def check_license_format(d):
+    """
+    This function checks if LICENSE is well defined,
+        Validate operators in LICENSES.
+        No spaces are allowed between LICENSES.
+    """
+    pn = d.getVar('PN', True)
+    licenses = d.getVar('LICENSE', True)
+    from oe.license import license_operator
+    from oe.license import license_pattern
+
+    elements = filter(lambda x: x.strip(), license_operator.split(licenses))
+    for pos, element in enumerate(elements):
+        if license_pattern.match(element):
+            if pos > 0 and license_pattern.match(elements[pos - 1]):
+                bb.warn("Recipe %s, LICENSE (%s) has invalid format, " \
+                        "LICENSES must have operator \"%s\" between them." %
+                        (pn, licenses, license_operator.pattern))
+        elif not license_operator.match(element):
+            bb.warn("Recipe %s, LICENSE (%s) has invalid operator (%s) not in" \
+                  " \"%s\"." % (pn, licenses, element, license_operator.pattern))
+
 SSTATETASKS += "do_populate_lic"
 do_populate_lic[sstate-inputdirs] = "${LICSSTATEDIR}"
 do_populate_lic[sstate-outputdirs] = "${LICENSE_DIRECTORY}/"
