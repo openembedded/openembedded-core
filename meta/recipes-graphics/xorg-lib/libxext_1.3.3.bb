@@ -22,5 +22,5 @@ XORG_PN = "libXext"
 
 BBCLASSEXTEND = "native nativesdk"
 
-SRC_URI[md5sum] = "4376101e51bb2c6c44d9ab14344e85ad"
-SRC_URI[sha256sum] = "f829075bc646cdc085fa25d98d5885d83b1759ceb355933127c257e8e50432e0"
+SRC_URI[md5sum] = "52df7c4c1f0badd9f82ab124fb32eb97"
+SRC_URI[sha256sum] = "b518d4d332231f313371fdefac59e3776f4f0823bcb23cf7c7305bfb57b16e35"
