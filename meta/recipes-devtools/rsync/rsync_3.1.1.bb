@@ -3,8 +3,8 @@ require rsync.inc
 
 SRC_URI += "file://acinclude.m4"
 
-SRC_URI[md5sum] = "3be148772a33224771a8d4d2a028b132"
-SRC_URI[sha256sum] = "81ca23f77fc9b957eb9845a6024f41af0ff0c619b7f38576887c63fa38e2394e"
+SRC_URI[md5sum] = "43bd6676f0b404326eee2d63be3cdcfe"
+SRC_URI[sha256sum] = "7de4364fcf5fe42f3bdb514417f1c40d10bbca896abe7e7f2c581c6ea08a2621"
 
 PACKAGECONFIG ??= "acl attr"
 PACKAGECONFIG[acl] = "--enable-acl-support,--disable-acl-support,acl,"
