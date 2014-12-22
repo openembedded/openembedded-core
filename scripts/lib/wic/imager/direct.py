@@ -100,10 +100,18 @@ class DirectImageCreator(BaseImageCreator):
         for num, p in enumerate(parts, 1):
             if not p.mountpoint or p.mountpoint == "/" or p.mountpoint == "/boot":
                 continue
-            if self._ptable_format == 'msdos' and num > 3:
-                device_name = "/dev/" + p.disk + str(num + 1)
-            else:
-                device_name = "/dev/" + p.disk + str(num)
+
+            part = ''
+            # mmc device partitions are named mmcblk0p1, mmcblk0p2..
+            if p.disk.startswith('mmcblk'):
+                part = 'p'
+
+            pnum = num
+            if self._ptable_format == 'msdos' and pnum > 3:
+                # account for logical partition numbering, ex. sda5..
+                pnum += 1
+
+            device_name = "/dev/" + p.disk + part + str(pnum)
 
             opts = "defaults"
             if p.fsopts:
