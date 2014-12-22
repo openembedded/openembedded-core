@@ -6,7 +6,7 @@ require make.inc
 
 EXTRA_OECONF += "--without-guile"
 
-SRC_URI[md5sum] = "571d470a7647b455e3af3f92d79f1c18"
-SRC_URI[sha256sum] = "e60686c7afede62cc8c86ad3012cf081ea4887daf9d223ce7115703b2bb2dbdb"
+SRC_URI[md5sum] = "57a7a224a822f94789a587ccbcedff69"
+SRC_URI[sha256sum] = "0bc7613389650ee6a24554b52572a272f7356164fd2c4132b0bcf13123e4fca5"
 
 BBCLASSEXTEND = "native nativesdk"
