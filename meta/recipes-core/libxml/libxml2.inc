@@ -21,7 +21,7 @@ SRC_URI = "ftp://xmlsoft.org/libxml2/libxml2-${PV}.tar.gz;name=libtar \
            file://libxml2-CVE-2014-0191-fix.patch \
            file://python-sitepackages-dir.patch \
            file://libxml-m4-use-pkgconfig.patch \
-           file://libxml2-CVE-2014-3660.patch \
+           file://configure.ac-fix-cross-compiling-warning.patch \
           "
 
 BINCONFIG = "${bindir}/xml2-config"
@@ -34,7 +34,7 @@ RDEPENDS_${PN}-ptest_append_libc-glibc += "glibc-gconv-ebcdic-us glibc-gconv-ibm
 
 # We don't DEPEND on binutils for ansidecl.h so ensure we don't use the header
 do_configure_prepend () {
-	sed -i -e '/.*ansidecl.h.*/d' ${S}/configure.in
+	sed -i -e '/.*ansidecl.h.*/d' ${S}/configure.ac
 }
 
 do_configure_prepend_class-nativesdk () {
@@ -66,7 +66,7 @@ PACKAGES += "${PN}-utils ${PN}-python"
 
 FILES_${PN}-dbg += "${PYTHON_SITEPACKAGES_DIR}/.debug"
 FILES_${PN}-staticdev += "${PYTHON_SITEPACKAGES_DIR}/*.a"
-FILES_${PN}-dev += "${libdir}/xml2Conf.sh"
+FILES_${PN}-dev += "${libdir}/xml2Conf.sh ${libdir}/cmake/*"
 FILES_${PN}-utils += "${bindir}/*"
 FILES_${PN}-python += "${PYTHON_SITEPACKAGES_DIR}"
 
