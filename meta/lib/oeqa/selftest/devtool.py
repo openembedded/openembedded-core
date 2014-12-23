@@ -66,6 +66,8 @@ class DevtoolTests(oeSelfTest):
         self.assertEqual(checkvars, {}, 'Some variables not found')
 
     def test_recipetool_create_git(self):
+        # Ensure we have the right data in shlibs/pkgdata
+        bitbake('libpng pango libx11 libxext')
         # Try adding a recipe
         tempdir = tempfile.mkdtemp(prefix='devtoolqa')
         self.track_for_cleanup(tempdir)
