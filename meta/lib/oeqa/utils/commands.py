@@ -110,11 +110,11 @@ def runCmd(command, ignore_status=False, timeout=None, assert_error=True, **opti
 def bitbake(command, ignore_status=False, timeout=None, postconfig=None, **options):
 
     if postconfig:
-	postconfig_file = os.path.join(os.environ.get('BUILDDIR'), 'oeqa-post.conf')
-	ftools.write_file(postconfig_file, postconfig)
-	extra_args = "-R %s" % postconfig_file
+        postconfig_file = os.path.join(os.environ.get('BUILDDIR'), 'oeqa-post.conf')
+        ftools.write_file(postconfig_file, postconfig)
+        extra_args = "-R %s" % postconfig_file
     else:
-	extra_args = ""
+        extra_args = ""
 
     if isinstance(command, basestring):
         cmd = "bitbake " + extra_args + " " + command
@@ -122,7 +122,7 @@ def bitbake(command, ignore_status=False, timeout=None, postconfig=None, **optio
         cmd = [ "bitbake" ] + [a for a in (command + extra_args.split(" ")) if a not in [""]]
 
     try:
-	return runCmd(cmd, ignore_status, timeout, **options)
+        return runCmd(cmd, ignore_status, timeout, **options)
     finally:
         if postconfig:
             os.remove(postconfig_file)
