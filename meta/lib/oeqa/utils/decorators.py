@@ -89,6 +89,7 @@ class testcase(object):
         def wrapped_f(*args):
             return func(*args)
         wrapped_f.test_case = self.test_case
+        wrapped_f.__name__ = func.__name__
         return wrapped_f
 
 class NoParsingFilter(logging.Filter):
