@@ -71,6 +71,7 @@ class BitbakeTests(oeSelfTest):
     @testcase(163)
     def test_force_task(self):
         bitbake('m4-native')
+        self.add_command_to_tearDown('bitbake -c clean m4-native')
         result = bitbake('-C compile m4-native')
         look_for_tasks = ['do_compile', 'do_install', 'do_populate_sysroot']
         for task in look_for_tasks:
