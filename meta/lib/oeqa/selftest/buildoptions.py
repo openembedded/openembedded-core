@@ -13,6 +13,9 @@ class ImageOptionsTests(oeSelfTest):
 
     @testcase(761)
     def test_incremental_image_generation(self):
+        image_pkgtype = get_bb_var("IMAGE_PKGTYPE")
+        if image_pkgtype != 'rpm':
+            self.skipTest('Not using RPM as main package format')
         bitbake("-c cleanall core-image-minimal")
         self.write_config('INC_RPM_IMAGE_GEN = "1"')
         self.append_config('IMAGE_FEATURES += "ssh-server-openssh"')
