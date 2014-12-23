@@ -12,8 +12,8 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=3610bb17683a0089ed64055416b2ae1b"
 SRC_URI = "ftp://sourceware.org/pub/libffi/${BP}.tar.gz \
            file://fix-libffi.la-location.patch"
 
-SRC_URI[md5sum] = "f5898b29bbfd70502831a212d9249d10"
-SRC_URI[sha256sum] = "97feeeadca5e21870fa4433bc953d1b3af3f698d5df8a428f68b73cd60aef6eb"
+SRC_URI[md5sum] = "83b89587607e3eb65c70d361f13bab43"
+SRC_URI[sha256sum] = "d06ebb8e1d9a22d19e38d63fdb83954253f39bedc5d46232a05645685722ca37"
 
 EXTRA_OECONF += "--disable-builddir"
 
