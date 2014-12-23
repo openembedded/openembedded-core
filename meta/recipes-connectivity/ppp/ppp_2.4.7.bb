@@ -31,8 +31,8 @@ SRC_URI = "http://ppp.samba.org/ftp/ppp/ppp-${PV}.tar.gz \
            file://ppp@.service \
 "
 
-SRC_URI[md5sum] = "3434d2cc9327167a0723aaaa8670083b"
-SRC_URI[sha256sum] = "1b33181a03962c8a092c055fb9980e9722728a8d98a4bb7ec7acda17c1b1b49d"
+SRC_URI[md5sum] = "78818f40e6d33a1d1de68a1551f6595a"
+SRC_URI[sha256sum] = "02e0a3dd3e4799e33103f70ec7df75348c8540966ee7c948e4ed8a42bbccfb30"
 
 inherit autotools-brokensep systemd
 
