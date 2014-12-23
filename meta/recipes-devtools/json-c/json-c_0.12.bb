@@ -6,8 +6,8 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=de54b60fbbc35123ba193fea8ee216f2"
 
 SRC_URI = "https://s3.amazonaws.com/json-c_releases/releases/${BP}.tar.gz"
 
-SRC_URI[md5sum] = "aa02367d2f7a830bf1e3376f77881e98"
-SRC_URI[sha256sum] = "28dfc65145dc0d4df1dfe7701ac173c4e5f9347176c8983edbfac9149494448c"
+SRC_URI[md5sum] = "3ca4bbb881dfc4017e8021b5e0a8c491"
+SRC_URI[sha256sum] = "000c01b2b3f82dcb4261751eb71f1b084404fb7d6a282f06074d3c17078b9f3f"
 
 RPROVIDES_${PN} = "libjson"
 
@@ -19,3 +19,5 @@ do_configure_prepend() {
     # Clean up autoconf cruft that should not be in the tarball
     rm -f ${S}/config.status
 }
+
+CFLAGS += "-Wno-error=unused-but-set-variable"
