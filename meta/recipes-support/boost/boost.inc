@@ -5,6 +5,8 @@ DEPENDS = "bjam-native zlib bzip2"
 ARM_INSTRUCTION_SET = "arm"
 
 BOOST_LIBS = "\
+	atomic \
+	chrono \
 	date_time \
 	filesystem \
 	graph \
