@@ -9,8 +9,8 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=eb723b61539feef013de476e68b5c50a"
 
 SRC_URI = "http://gentoo.osuosl.org/distfiles/pax-utils-${PV}.tar.xz"
 
-SRC_URI[md5sum] = "bc42279c5aff3682c12be40f72805cec"
-SRC_URI[sha256sum] = "844ff25b1a11bcef92ef34b22f576f226a772b67196818656f8874513438f5b9"
+SRC_URI[md5sum] = "34c41888cec67759c21333bef13e950c"
+SRC_URI[sha256sum] = "578801df0661b1b7b8fed0ce4a9859239f919fd37529907681e51091a1bcb4de"
 
 RDEPENDS_${PN} += "bash"
 
