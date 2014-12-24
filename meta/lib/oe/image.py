@@ -48,11 +48,13 @@ class ImageDepGraph(object):
         graph = dict()
 
         def add_node(node):
+            base_type = self._image_base_type(node)
             deps = (self.d.getVar('IMAGE_TYPEDEP_' + node, True) or "")
-            if deps != "":
+            base_deps = (self.d.getVar('IMAGE_TYPEDEP_' + base_type, True) or "")
+            if deps != "" or base_deps != "":
                 graph[node] = deps
 
-                for dep in deps.split():
+                for dep in deps.split() + base_deps.split():
                     if not dep in graph:
                         add_node(dep)
             else:
@@ -71,6 +73,18 @@ class ImageDepGraph(object):
 
         for item in remove_list:
             self.graph.pop(item, None)
+
+    def _image_base_type(self, type):
+        ctypes = self.d.getVar('COMPRESSIONTYPES', True).split()
+        if type in ["vmdk", "live", "iso", "hddimg"]:
+            type = "ext3"
+        basetype = type
+        for ctype in ctypes:
+            if type.endswith("." + ctype):
+                basetype = type[:-len("." + ctype)]
+                break
+
+        return basetype
 
     def _compute_dependencies(self):
         """
