@@ -12,8 +12,8 @@ SRC_URI = "http://lttng.org/files/urcu/userspace-rcu-${PV}.tar.bz2 \
            file://aarch64.patch \
           "
 
-SRC_URI[md5sum] = "24ba9e03542b747d3378434eb0041acf"
-SRC_URI[sha256sum] = "a2562eaca107ec6eca2856632b6035c6aaf38df79020195ed8955a7b4773312a"
+SRC_URI[md5sum] = "834d91d939dd55108a05763be9879856"
+SRC_URI[sha256sum] = "b1a5d3bce014ba7a702759bc60b692c1cd46ff0e8a5b53f0d0a95e22db74ab21"
 
 S = "${WORKDIR}/userspace-rcu-${PV}"
 CFLAGS_append_libc-uclibc = " -D_GNU_SOURCE"
