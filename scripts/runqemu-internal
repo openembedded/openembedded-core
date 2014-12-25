@@ -51,7 +51,7 @@ else
             mem_size=128
             ;;
         "qemuarm64")
-            mem_size=128
+            mem_size=512
             ;;
         "qemumicroblaze")
             mem_size=64
