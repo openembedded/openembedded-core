@@ -8,18 +8,15 @@ LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=751419260aa954499f7abaabaa882bbe"
 DEPENDS = "zlib kmod"
 
-SRC_URI = "${KERNELORG_MIRROR}/software/utils/pciutils/pciutils-${PV}.tar.bz2 \
+SRC_URI = "${KERNELORG_MIRROR}/software/utils/pciutils/pciutils-${PV}.tar.xz \
            file://configure.patch \
-           file://lib-build-fix.patch \
            file://guess-fix.patch \
            file://makefile.patch"
 
-SRC_URI[md5sum] = "425b1acad6854cc2bbb06ac8e48e76fc"
-SRC_URI[sha256sum] = "12d52b19042e2fd058af12e7d877bbbce72213cb3a0b5ec7ff0703ac09e3dcde"
+SRC_URI[md5sum] = "3c19adf32a8457983b71ff376ef7dafe"
+SRC_URI[sha256sum] = "413395d4bdc66fdedd6c993ed9083d1dd73812bf2a679d320f73de35c7801301"
 
 inherit multilib_header
-
-PARALLEL_MAKE = ""
 
 PCI_CONF_FLAG = "ZLIB=yes DNS=yes SHARED=yes"
 
@@ -29,11 +26,6 @@ do_configure () {
 	  cd lib && \
 	  ${PCI_CONF_FLAG} ./configure ${PV} ${datadir} ${TARGET_OS} ${TARGET_ARCH}
 	)
-}
-
-do_compile_prepend () {
-	# Avoid this error:  ln: failed to create symbolic link `libpci.so': File exists
-	rm -f ${S}/lib/libpci.so
 }
 
 export PREFIX = "${prefix}"
