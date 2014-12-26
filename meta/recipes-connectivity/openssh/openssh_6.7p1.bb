@@ -11,11 +11,9 @@ DEPENDS = "zlib openssl"
 DEPENDS += "${@bb.utils.contains('DISTRO_FEATURES', 'pam', 'libpam', '', d)}"
 
 SRC_URI = "ftp://ftp.openbsd.org/pub/OpenBSD/OpenSSH/portable/openssh-${PV}.tar.gz \
-           file://nostrip.patch \
            file://sshd_config \
            file://ssh_config \
            file://init \
-           file://openssh-CVE-2011-4327.patch \
            ${@bb.utils.contains('DISTRO_FEATURES', 'pam', '${PAM_SRC_URI}', '', d)} \
            file://sshd.socket \
            file://sshd@.service \
@@ -23,13 +21,12 @@ SRC_URI = "ftp://ftp.openbsd.org/pub/OpenBSD/OpenSSH/portable/openssh-${PV}.tar.
            file://volatiles.99_sshd \
            file://add-test-support-for-busybox.patch \
            file://run-ptest \
-           file://openssh-CVE-2014-2653.patch \
            file://auth2-none.c-avoid-authenticate-empty-passwords-to-m.patch"
 
 PAM_SRC_URI = "file://sshd"
 
-SRC_URI[md5sum] = "3e9800e6bca1fbac0eea4d41baa7f239"
-SRC_URI[sha256sum] = "48c1f0664b4534875038004cc4f3555b8329c2a81c1df48db5c517800de203bb"
+SRC_URI[md5sum] = "3246aa79317b1d23cae783a3bf8275d6"
+SRC_URI[sha256sum] = "b2f8394eae858dabbdef7dac10b99aec00c95462753e80342e530bbb6f725507"
 
 inherit useradd update-rc.d update-alternatives systemd
 
@@ -42,9 +39,6 @@ INITSCRIPT_PARAMS_${PN}-sshd = "defaults 9"
 SYSTEMD_PACKAGES = "${PN}-sshd"
 SYSTEMD_SERVICE_${PN}-sshd = "sshd.socket"
 
-PACKAGECONFIG ??= "tcp-wrappers"
-PACKAGECONFIG[tcp-wrappers] = "--with-tcp-wrappers,,tcp-wrappers"
-
 inherit autotools-brokensep ptest
 
 # LFS support:
@@ -56,7 +50,9 @@ EXTRA_OECONF = "'LOGIN_PROGRAM=${base_bindir}/login' \
                 --without-zlib-version-check \
                 --with-privsep-path=/var/run/sshd \
                 --sysconfdir=${sysconfdir}/ssh \
-                --with-xauth=/usr/bin/xauth"
+                --with-xauth=/usr/bin/xauth \
+                --disable-strip \
+                "
 
 # Since we do not depend on libbsd, we do not want configure to use it
 # just because it finds libutil.h.  But, specifying --disable-libutil
