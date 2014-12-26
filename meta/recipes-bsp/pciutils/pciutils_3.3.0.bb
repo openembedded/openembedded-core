@@ -18,13 +18,18 @@ SRC_URI[sha256sum] = "413395d4bdc66fdedd6c993ed9083d1dd73812bf2a679d320f73de35c7
 
 inherit multilib_header
 
+PACKAGECONFIG ??= ""
+PACKAGECONFIG[hwdb] = "HWDB=yes,HWDB=no,udev"
+
 PCI_CONF_FLAG = "ZLIB=yes DNS=yes SHARED=yes"
 
 # see configure.patch
 do_configure () {
 	(
 	  cd lib && \
-	  ${PCI_CONF_FLAG} ./configure ${PV} ${datadir} ${TARGET_OS} ${TARGET_ARCH}
+	  # EXTRA_OECONF for this recipe could only possibly contain 'HWDB=yes/no', so we put it
+	  # before ./configure
+	  ${PCI_CONF_FLAG} ${EXTRA_OECONF} ./configure ${PV} ${datadir} ${TARGET_OS} ${TARGET_ARCH}
 	)
 }
 
