@@ -9,7 +9,9 @@ QT4EDEPENDS = ""
 QT_BASE_LIB  ?= "libqt-embedded"
 
 # Set necessary variables in the profile
-SRC_URI += "file://qte.sh"
+SRC_URI += "file://qte.sh \
+            file://0033-configure-support-c-0x-standard-for-directfd.patch \
+"
 
 QT_EMBEDDED_FLAGS ?= " \
     -embedded $QT_ARCH \
