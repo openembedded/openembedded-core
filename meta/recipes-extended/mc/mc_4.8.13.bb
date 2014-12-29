@@ -10,8 +10,8 @@ SRC_URI = "http://www.midnight-commander.org/downloads/${BPN}-${PV}.tar.bz2 \
            file://mc-CTRL.patch \
            "
 
-SRC_URI[md5sum] = "a64c426364bfaee56b628f6c0738aade"
-SRC_URI[sha256sum] = "1054fcc27a488771cbe5b85d7c10135fa1cd1b7682a19930d44b51a023e39396"
+SRC_URI[md5sum] = "12a521a50da6a86852177591b9623d5e"
+SRC_URI[sha256sum] = "22e1b809edba957eb9a392138bf87fea3877f7ca0b7463b7cc2eb94afa6f3e49"
 
 inherit autotools gettext pkgconfig
 
