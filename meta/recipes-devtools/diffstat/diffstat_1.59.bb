@@ -16,8 +16,6 @@ SRC_URI[sha256sum] = "267d1441b8889cbefbb7ca7dfd4a17f6c8bc73bc114904c74ecad945a3
 
 S = "${WORKDIR}/diffstat-${PV}"
 
-EXTRA_OECONF += "--without-libsigsegv-prefix"
-
 inherit autotools gettext ptest
 
 do_configure () {

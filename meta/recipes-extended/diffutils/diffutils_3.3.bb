@@ -7,6 +7,8 @@ SRC_URI = "${GNU_MIRROR}/diffutils/diffutils-${PV}.tar.xz \
            file://run-ptest \
 "
 
+EXTRA_OECONF += "--without-libsigsegv-prefix"
+
 do_configure_prepend () {
 	# Need to remove gettext macros with weird mix of versions
 	for i in codeset.m4 gettext_gl.m4 intlmacosx.m4 inttypes-pri.m4 lib-ld_gl.m4 lib-prefix_gl.m4 po_gl.m4 ssize_t.m4 wchar_t.m4 wint_t.m4; do
