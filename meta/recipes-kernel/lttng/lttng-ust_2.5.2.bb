@@ -18,8 +18,7 @@ RPROVIDES_${PN} = "lttng2-ust"
 RREPLACES_${PN} = "lttng2-ust"
 RCONFLICTS_${PN} = "lttng2-ust"
 
-SRCREV = "ce59a997afdb7dc8af02b464430bb7e35549fa66"
-PV = "2.5.0"
+SRCREV = "85d1d2791f3cebfd741a821261bf2924928a90e7"
 PE = "2"
 
 SRC_URI = "git://git.lttng.org/lttng-ust.git;branch=stable-2.5 \
