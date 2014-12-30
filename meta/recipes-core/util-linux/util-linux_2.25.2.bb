@@ -1,4 +1,4 @@
-MAJOR_VERSION = "2.24"
+MAJOR_VERSION = "2.25"
 require util-linux.inc
 PR = "r1"
 
@@ -13,14 +13,12 @@ SRC_URI += "file://util-linux-ng-replace-siginterrupt.patch \
             file://util-linux-ng-2.16-mount_lock_path.patch \
             file://uclibc-__progname-conflict.patch \
             file://configure-sbindir.patch \
-            file://fix-configure.patch \
             file://fix-parallel-build.patch \
-            file://util-linux-ensure-the-existence-of-directory-for-PAT.patch \
             ${OLDHOST} \
 "
 
-SRC_URI[md5sum] = "3f191727a0d28f7204b755cf1b6ea0aa"
-SRC_URI[sha256sum] = "1243d6c07f1c5b38aa4c3814c81a71c24cba7dafe08942916bf216a90a460ff0"
+SRC_URI[md5sum] = "cab3d7be354000f629bc601238b629b3"
+SRC_URI[sha256sum] = "e0457f715b73f4a349e1acb08cb410bf0edc9a74a3f75c357070f31f70e33cd6"
 
 CACHED_CONFIGUREVARS += "scanf_cv_alloc_modifier=ms"
 
