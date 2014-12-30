@@ -11,7 +11,12 @@ require xorg-lib-common.inc
 LICENSE = "MIT-style"
 LIC_FILES_CHKSUM = "file://COPYING;md5=c0fb37f44e02bdbde80546024400728d"
 
-DEPENDS += "libice xproto xtrans e2fsprogs"
+DEPENDS += "libice xproto xtrans"
+
+# libSM can work without libuuid, we explicitly disable it to break the following circular dependency
+# when DISTRO_FEATURES contains 'systemd' and 'x11'.
+# systemd -> dbus -> libsm -> util-linux -> systemd
+EXTRA_OECONF += "--without-libuuid"
 
 PE = "1"
 
