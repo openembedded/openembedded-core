@@ -10,6 +10,7 @@ SRC_URI += "file://do-not-change-eos-event-to-gap-event-if.patch \
             file://taglist-not-send-to-down-stream-if-all-the-frame-cor.patch \
 "
 
-SRC_URI[md5sum] = "a825628225bd0a58c0df87cdd2a5db91"
-SRC_URI[sha256sum] = "aea9e25be6691bd3cc0785d005b2b5d70ce313a2c897901680a3f7e7cab5a499"
+SRC_URI[md5sum] = "357165af625c0ca353ab47c5d843920e"
+SRC_URI[sha256sum] = "77bd8199e7a312d3d71de9b7ddf761a3b78560a2c2a80829d0815ca39cbd551d"
+
 S = "${WORKDIR}/gst-plugins-base-${PV}"
