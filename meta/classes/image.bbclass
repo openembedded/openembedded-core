@@ -387,12 +387,6 @@ python write_image_manifest () {
         image_manifest.write(image_list_installed_packages(d, 'ver'))
 }
 
-# Make login manager(s) enable automatic login.
-# Useful for devices where we do not want to log in at all (e.g. phones)
-set_image_autologin () {
-        sed -i 's%^AUTOLOGIN=\"false"%AUTOLOGIN="true"%g' ${IMAGE_ROOTFS}/etc/sysconfig/gpelogin
-}
-
 # Can be use to create /etc/timestamp during image construction to give a reasonably 
 # sane default time setting
 rootfs_update_timestamp () {
