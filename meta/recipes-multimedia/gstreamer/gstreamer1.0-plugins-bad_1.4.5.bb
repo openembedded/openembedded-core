@@ -7,7 +7,8 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=73a5855a8119deb017f5f13cf327095d \
 
 SRC_URI += "file://0001-gl-do-not-check-for-GL-GLU-EGL-GLES2-libs-if-disable.patch"
 
-SRC_URI[md5sum] = "20cb190b18dc63017326321cdb7c91e5"
-SRC_URI[sha256sum] = "0268db2faaf0bb22e5b709a11633abbca4f3d289b1f513bb262d0bf3f53e19ae"
+SRC_URI[md5sum] = "e0bb39412cf4a48fe0397bcf3a7cd451"
+SRC_URI[sha256sum] = "152fad7250683d72f9deb36c5685428338365fe4a4c87ffe15e38783b14f983c"
+
 S = "${WORKDIR}/gst-plugins-bad-${PV}"
 
