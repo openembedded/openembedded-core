@@ -9,13 +9,12 @@ Infrastructure (DRI)."
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=8730ad58d11c7bbad9a7066d69f7808e"
 
-SRC_URI += "file://configure-dri.patch \
-            file://disable-x11-dri3.patch \
+SRC_URI += "file://disable-x11-dri3.patch \
             file://always_include_xorg_server.h.patch \
            "
 
-SRC_URI[md5sum] = "88d1a884f9b7bd07bf0755cfa34052d4"
-SRC_URI[sha256sum] = "7c8ffc492d59f34cac64093deb70717b4d9223cf416ecc6fa016ab2e8bde9501"
+SRC_URI[md5sum] = "fa196a66e52c0c624fe5d350af7a5e7b"
+SRC_URI[sha256sum] = "00b781eea055582820a123c47b62411bdf6aabf4f03dc0568faec55faf9667c9"
 
 DEPENDS += "virtual/libx11 drm libpciaccess pixman"
 
