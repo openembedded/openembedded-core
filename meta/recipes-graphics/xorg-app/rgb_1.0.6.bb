@@ -9,9 +9,8 @@ format."
 DEPENDS += " xproto util-macros"
 LIC_FILES_CHKSUM = "file://COPYING;md5=ef598adbe241bd0b0b9113831f6e249a"
 PE = "1"
-PR = "${INC_PR}.0"
 
-SRC_URI[md5sum] = "bcd820d967eaa51bd25b86c0ee682d4e"
-SRC_URI[sha256sum] = "8e936e648ffddce2e7184790efa15e4fa2bcb47f9da5469515d212c61bc8f857"
+SRC_URI[md5sum] = "eab5bbd7642e5c784429307ec210d198"
+SRC_URI[sha256sum] = "bbca7c6aa59939b9f6a0fb9fff15dfd62176420ffd4ae30c8d92a6a125fbe6b0"
 
 FILES_${PN} += "${datadir}/X11"
