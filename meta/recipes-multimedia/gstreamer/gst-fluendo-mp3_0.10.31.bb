@@ -6,9 +6,9 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=259a43dd1c9854b71fc396f74699f4d2"
 LICENSE_FLAGS = "commercial"
 
 GSTREAMER_DEBUG ?= "--disable-debug"
-EXTRA_OECONF += "${GSTREAMER_DEBUG}"
+EXTRA_OECONF += "${GSTREAMER_DEBUG} --with-gstreamer-api=0.10"
 
 acpaths = "-I ${S}/common/m4 -I ${S}/m4"
 
-SRC_URI[md5sum] = "5d95a9a216dd15bc5c00c9414061115c"
-SRC_URI[sha256sum] = "30c79d24d8926f75dd4ef0f572942ce155ad541734b36a95591b9c0524dcc0f3"
+SRC_URI[md5sum] = "adf0390f3416bb72f91c358528be0c38"
+SRC_URI[sha256sum] = "dae0d0559a4e159c0dd92b7e18de059a5783f8d038904c7de4ca6393f7d55c7d"

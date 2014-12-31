@@ -1,7 +1,7 @@
 SUMMARY = "Fluendo closed-format GStreamer plug-in"
 SECTION = "multimedia"
 HOMEPAGE = "http://www.fluendo.com/resources/source-plugins.php"
-DEPENDS = "gstreamer zlib"
+DEPENDS = "gstreamer gst-plugins-base zlib"
 
 inherit autotools pkgconfig
 
