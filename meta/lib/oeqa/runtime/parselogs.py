@@ -51,6 +51,7 @@ ignore_errors = {
         ] + common_errors,
     'qemuppc' : [
         'PCI 0000:00 Cannot reserve Legacy IO [io  0x0000-0x0fff]',
+        'host side 80-wire cable detection failed, limiting max speed',
         'mode "640x480" test failed',
         'Failed to load module "glx"',
         ] + common_errors,
