@@ -12,8 +12,8 @@ DEPENDS = "glib-2.0"
 
 GNOME_COMPRESS_TYPE = "xz"
 
-SRC_URI[archive.md5sum] = "d13485f5aa3b93227bbeb689ccfb596c"
-SRC_URI[archive.sha256sum] = "dbf558d2da989ab84a27e4e13daa51ceaa97eb959c2c2f80976c9322a8f4cdde"
+SRC_URI[archive.md5sum] = "e43efaf6852958207982e79141bf371e"
+SRC_URI[archive.sha256sum] = "887bd192da8f5edc53b490ec51bf3ffebd958a671f5963e4f3af32c22e35660a"
 
 inherit gnome gettext lib_package
 
