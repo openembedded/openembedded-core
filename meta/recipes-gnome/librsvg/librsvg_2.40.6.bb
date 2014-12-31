@@ -14,11 +14,10 @@ inherit autotools pkgconfig gnomebase gtk-doc pixbufcache
 
 GNOME_COMPRESS_TYPE = "xz"
 
-SRC_URI += "file://gtk-option.patch \
-            file://vapigen.m4"
+SRC_URI += "file://gtk-option.patch"
 
-SRC_URI[archive.md5sum] = "acdecdb9f08f3bf662a68bf7dafb8b82"
-SRC_URI[archive.sha256sum] = "48049b643294636df7de1a4b997414d699666f5dc44776945c218a257d2a291c"
+SRC_URI[archive.md5sum] = "259fd160b47ec11f3c27d7e18e507c99"
+SRC_URI[archive.sha256sum] = "8af349f241677b04b7a1ea6b9b33a6343e781bcccc8a09d00208a47342584f06"
 
 EXTRA_OECONF = "--disable-introspection --disable-vala"
 
@@ -31,15 +30,6 @@ PACKAGECONFIG ??= "gdkpixbuf"
 PACKAGECONFIG[gdkpixbuf] = "--enable-pixbuf-loader,--disable-pixbuf-loader,gdk-pixbuf-native"
 # GTK+ test application (rsvg-view)
 PACKAGECONFIG[gtk] = "--with-gtk3,--without-gtk3,gtk+3"
-
-# The tarball doesn't ship with macros, so drop a vapigen in there so we don't
-# need to build vala to configure.
-do_configure_prepend() {
-       if test ! -e ${S}/m4/vapigen.m4; then
-               mkdir --parents ${S}/m4
-               mv ${WORKDIR}/vapigen.m4 ${S}/m4/
-       fi
-}
 
 do_install_append() {
 	# Loadable modules don't need .a or .la on Linux
