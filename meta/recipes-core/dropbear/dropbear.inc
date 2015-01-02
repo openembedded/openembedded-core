@@ -5,7 +5,7 @@ SECTION = "console/network"
 # some files are from other projects and have others license terms:
 #   public domain, OpenSSH 3.5p1, OpenSSH3.6.1p2, PuTTY
 LICENSE = "MIT & BSD-3-Clause & BSD-2-Clause & PD"
-LIC_FILES_CHKSUM = "file://LICENSE;md5=4d290ce0ac102c828dfc9ce836784688"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=e3a1b9604afd1648b28b0c6f1709e9f4"
 
 DEPENDS = "zlib"
 RPROVIDES_${PN} = "ssh sshd" 
