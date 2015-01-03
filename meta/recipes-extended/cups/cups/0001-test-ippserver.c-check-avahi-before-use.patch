@@ -1,0 +1,34 @@
+From fba92768324e76fa60d9c5f709e045bd4f7aee89 Mon Sep 17 00:00:00 2001
+From: Robert Yang <liezhi.yang@windriver.com>
+Date: Sat, 3 Jan 2015 05:56:24 +0000
+Subject: [PATCH] test/ippserver.c: check avahi before use it
+
+Fixed the error when --disable-avahi:
+ippserver.c:425:8: error: unknown type name 'AvahiThreadedPoll'
+
+The avahi is optional, we need check whether it is enabled before use as
+other code does.
+
+Upstream-Status: Pending
+
+Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
+---
+ test/ippserver.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/test/ippserver.c b/test/ippserver.c
+index c785e5f..26c8a66 100644
+--- a/test/ippserver.c
++++ b/test/ippserver.c
+@@ -421,7 +421,7 @@ static int		valid_job_attributes(_ipp_client_t *client);
+ 
+ #  ifdef HAVE_DNSSD
+ static DNSServiceRef	DNSSDMaster = NULL;
+-#  else /* HAVE_AVAHI */
++#  elif defined(HAVE_AVAHI) /* HAVE_AVAHI */
+ static AvahiThreadedPoll *DNSSDMaster = NULL;
+ static AvahiClient	*DNSSDClient = NULL;
+ #  endif /* HAVE_DNSSD */
+-- 
+2.0.1
+
