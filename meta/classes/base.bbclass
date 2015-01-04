@@ -113,7 +113,6 @@ python base_do_fetch() {
 
 addtask unpack after do_fetch
 do_unpack[dirs] = "${WORKDIR}"
-do_unpack[cleandirs] = "${S}/patches"
 python base_do_unpack() {
     src_uri = (d.getVar('SRC_URI', True) or "").split()
     if len(src_uri) == 0:
@@ -121,11 +120,21 @@ python base_do_unpack() {
 
     rootdir = d.getVar('WORKDIR', True)
 
+    # Ensure that we cleanup ${S}/patches
+    # TODO: Investigate if we can remove
+    # the entire ${S} in this case.
+    s_dir = d.getVar('S', True)
+    p_dir = os.path.join(s_dir, 'patches')
+    bb.utils.remove(p_dir, True)
+
     try:
         fetcher = bb.fetch2.Fetch(src_uri, d)
         fetcher.unpack(rootdir)
     except bb.fetch2.BBFetchException as e:
         raise bb.build.FuncFailed(e)
+
+    if not os.path.exists(s_dir):
+        bb.warn("%s ('S') don't exist, you must set 'S' to a proper value" % s_dir)
 }
 
 def pkgarch_mapping(d):
@@ -220,7 +229,7 @@ CONFIGURESTAMPFILE = "${WORKDIR}/configure.sstate"
 CLEANBROKEN = "0"
 
 addtask configure after do_patch
-do_configure[dirs] = "${S} ${B}"
+do_configure[dirs] = "${B}"
 do_configure[deptask] = "do_populate_sysroot"
 base_do_configure() {
 	if [ -n "${CONFIGURESTAMPFILE}" -a -e "${CONFIGURESTAMPFILE}" ]; then
@@ -238,7 +247,7 @@ base_do_configure() {
 }
 
 addtask compile after do_configure
-do_compile[dirs] = "${S} ${B}"
+do_compile[dirs] = "${B}"
 base_do_compile() {
 	if [ -e Makefile -o -e makefile -o -e GNUmakefile ]; then
 		oe_runmake || die "make failed"
@@ -248,7 +257,7 @@ base_do_compile() {
 }
 
 addtask install after do_compile
-do_install[dirs] = "${D} ${S} ${B}"
+do_install[dirs] = "${D} ${B}"
 # Remove and re-create ${D} so that is it guaranteed to be empty
 do_install[cleandirs] = "${D}"
 
