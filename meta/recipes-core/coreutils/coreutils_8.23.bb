@@ -19,8 +19,8 @@ SRC_URI = "${GNU_MIRROR}/coreutils/${BP}.tar.xz \
            file://fix-selinux-flask.patch \
           "
 
-SRC_URI[md5sum] = "8fb0ae2267aa6e728958adc38f8163a2"
-SRC_URI[sha256sum] = "5b3e94998152c017e6c75d56b9b994188eb71bf46d4038a642cb9141f6ff1212"
+SRC_URI[md5sum] = "abed135279f87ad6762ce57ff6d89c41"
+SRC_URI[sha256sum] = "ec43ca5bcfc62242accb46b7f121f6b684ee21ecd7d075059bf650ff9e37b82d"
 
 EXTRA_OECONF_class-native = "--without-gmp"
 EXTRA_OECONF_class-target = "--enable-install-program=arch --libexecdir=${libdir}"

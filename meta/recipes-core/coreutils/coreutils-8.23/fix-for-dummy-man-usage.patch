@@ -9,23 +9,23 @@ would appear when compiling.
 
 Signed-off-by: Chen Qi <Qi.Chen@windriver.com>
 ---
- man/local.mk |    2 +-
+ man/local.mk | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/man/local.mk b/man/local.mk
-index 7cef5e3..dc0865f 100644
+index ba8fbf7..3833458 100644
 --- a/man/local.mk
 +++ b/man/local.mk
-@@ -189,8 +189,8 @@ man/yes.1:       src/yes
+@@ -101,8 +101,8 @@ man/dynamic-deps.mk: Makefile
  	  && $(run_help2man)						\
  		     --source='$(PACKAGE_STRING)'			\
  		     --include=$(srcdir)/man/$$name.x			\
--		     --output=$$t/$$name.1 $$t/$$name			\
+-		     --output=$$t/$$name.1 $$t/$$argv			\
  		     --info-page='coreutils \(aq'$$name' invocation\(aq' \
-+		     --output=$$t/$$name.1 $$t/$$name			\
++		     --output=$$t/$$name.1 $$t/$$argv			\
  	  && sed \
  	       -e 's|$*\.td/||g' \
  	       -e '/For complete documentation/d' \
 -- 
-1.7.9.5
+1.9.1
 
