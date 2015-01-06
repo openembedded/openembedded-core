@@ -1,6 +1,5 @@
 require libtool-${PV}.inc
 
-PR = "${INC_PR}.1"
 PACKAGES = ""
 SRC_URI += "file://prefix.patch"
 SRC_URI += "file://fixinstall.patch"
@@ -18,17 +17,18 @@ do_install () {
 	install -d ${D}${bindir_crossscripts}/
 	install -m 0755 ${HOST_SYS}-libtool ${D}${bindir_crossscripts}/${HOST_SYS}-libtool
 	install -d ${D}${bindir_crossscripts}/
-	install -m 0755 libtoolize ${D}${bindir_crossscripts}/
-	install -d ${D}${target_datadir}/libtool/config/
+	GREP='/bin/grep' SED='sed' ${S}/build-aux/inline-source libtoolize > ${D}${bindir_crossscripts}/libtoolize
+	chmod 0755 ${D}${bindir_crossscripts}/libtoolize
+	install -d ${D}${target_datadir}/libtool/build-aux/
 	install -d ${D}${target_datadir}/aclocal/
-	install -c ${S}/libltdl/config/compile ${D}${target_datadir}/libtool/config/
-	install -c ${S}/libltdl/config/config.guess ${D}${target_datadir}/libtool/config/
-	install -c ${S}/libltdl/config/config.sub ${D}${target_datadir}/libtool/config/
-	install -c ${S}/libltdl/config/depcomp ${D}${target_datadir}/libtool/config/
-	install -c ${S}/libltdl/config/install-sh ${D}${target_datadir}/libtool/config/
-	install -c ${S}/libltdl/config/missing ${D}${target_datadir}/libtool/config/
-	install -c -m 0644 ${S}/libltdl/config/ltmain.sh ${D}${target_datadir}/libtool/config/
-	install -c -m 0644 ${S}/libltdl/m4/*.m4 ${D}${target_datadir}/aclocal/
+	install -c ${S}/build-aux/compile ${D}${target_datadir}/libtool/build-aux/
+	install -c ${S}/build-aux/config.guess ${D}${target_datadir}/libtool/build-aux/
+	install -c ${S}/build-aux/config.sub ${D}${target_datadir}/libtool/build-aux/
+	install -c ${S}/build-aux/depcomp ${D}${target_datadir}/libtool/build-aux/
+	install -c ${S}/build-aux/install-sh ${D}${target_datadir}/libtool/build-aux/
+	install -c ${S}/build-aux/missing ${D}${target_datadir}/libtool/build-aux/
+	install -c -m 0644 ${S}/build-aux/ltmain.sh ${D}${target_datadir}/libtool/build-aux/
+	install -c -m 0644 ${S}/m4/*.m4 ${D}${target_datadir}/aclocal/
 }
 
 SYSROOT_PREPROCESS_FUNCS += "libtoolcross_sysroot_preprocess"

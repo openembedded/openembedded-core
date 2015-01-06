@@ -6,16 +6,16 @@ i.e. when lt_sysroot is not set, it will still behave the same and add
 -L/usr/lib to the relink command.
 
 -Khem Raj <raj.khem@gmail.com>
+Updated by: Robert Yang <liezhi.yang@windriver.com>
 
-Index: libtool-2.4.2/libltdl/config/ltmain.m4sh
-===================================================================
---- libtool-2.4.2.orig/libltdl/config/ltmain.m4sh
-+++ libtool-2.4.2/libltdl/config/ltmain.m4sh
-@@ -6138,7 +6138,7 @@ func_mode_link ()
+diff --git a/build-aux/ltmain.in b/build-aux/ltmain.in
+--- a/build-aux/ltmain.in
++++ b/build-aux/ltmain.in
+@@ -6421,7 +6421,7 @@ func_mode_link ()
  	      fi
  	    else
  	      # We cannot seem to hardcode it, guess we'll fake it.
--	      add_dir="-L$libdir"
+-	      add_dir=-L$libdir
 +	      add_dir="-L$lt_sysroot$libdir"
  	      # Try looking first in the location we're being installed to.
  	      if test -n "$inst_prefix_dir"; then

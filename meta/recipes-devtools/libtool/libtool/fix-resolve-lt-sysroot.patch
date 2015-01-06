@@ -10,17 +10,18 @@ I have also reported the problem to libtool here
 http://lists.gnu.org/archive/html/bug-libtool/2013-09/msg00005.html
 
 Signed-off-by: Hans Beckerus <hans.beckerus at gmail.com>
+Updated by: Robert Yang <liezhi.yang@windriver.com>
 ---
-diff -ur libtool-2.4.2.orig/libltdl/m4/libtool.m4 libtool-2.4.2/libltdl/m4/libtool.m4
---- libtool-2.4.2.orig/libltdl/m4/libtool.m4	2013-09-13 22:37:43.647282945 +0200
-+++ libtool-2.4.2/libltdl/m4/libtool.m4	2013-09-14 10:27:37.168178605 +0200
-@@ -1234,16 +1234,21 @@
+diff --git a/m4/libtool.m4 b/m4/libtool.m4
+--- a/m4/libtool.m4
++++ b/m4/libtool.m4
+@@ -1225,16 +1225,21 @@ dnl lt_sysroot will always be passed unquoted.  We quote it here
  dnl in case the user passed a directory name.
  lt_sysroot=
- case ${with_libtool_sysroot} in #(
+ case $with_libtool_sysroot in #(
 - yes)
 + no)
-    if test "$GCC" = yes; then
+    if test yes = "$GCC"; then
       lt_sysroot=`$CC --print-sysroot 2>/dev/null`
 +     # Treat "/" the same a an unset sysroot. It seems to be more
 +     # compatible across host platforms that way!?
@@ -37,5 +38,5 @@ diff -ur libtool-2.4.2.orig/libltdl/m4/libtool.m4 libtool-2.4.2/libltdl/m4/libto
 - no|'')
 -   ;; #(
   *)
-    AC_MSG_RESULT([${with_libtool_sysroot}])
+    AC_MSG_RESULT([$with_libtool_sysroot])
     AC_MSG_ERROR([The sysroot must be an absolute path.])

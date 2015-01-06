@@ -11,11 +11,12 @@ Merged a patch received from Gary Thomas <gary@mlbassoc.com>
 Date: 2010/07/12
 Nitin A Kamble <nitin.a.kamble@intel.com>
 
-Index: libtool-2.4.2/libltdl/config/ltmain.m4sh
-===================================================================
---- libtool-2.4.2.orig/libltdl/config/ltmain.m4sh
-+++ libtool-2.4.2/libltdl/config/ltmain.m4sh
-@@ -2167,8 +2167,15 @@ func_mode_install ()
+Updated by: Robert Yang <liezhi.yang@windriver.com>
+
+diff --git a/build-aux/ltmain.in b/build-aux/ltmain.in
+--- a/build-aux/ltmain.in
++++ b/build-aux/ltmain.in
+@@ -2356,8 +2356,15 @@ func_mode_install ()
  	func_append dir "$objdir"
  
  	if test -n "$relink_command"; then

@@ -2,7 +2,6 @@ require libtool-${PV}.inc
 
 DEPENDS = ""
 
-PR = "${INC_PR}.1"
 SRC_URI += "file://prefix.patch"
 
 inherit native

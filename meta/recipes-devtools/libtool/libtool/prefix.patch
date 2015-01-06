@@ -18,12 +18,67 @@ the simplest fix is just to remove $SHELL.
 Updated: Date: 2011/11/09
 RP
 
-Index: libtool-2.4.2/libltdl/m4/libtool.m4
-===================================================================
---- libtool-2.4.2.orig/libltdl/m4/libtool.m4
-+++ libtool-2.4.2/libltdl/m4/libtool.m4
-@@ -94,7 +94,8 @@ _LT_SET_OPTIONS([$0], [$1])
- LIBTOOL_DEPS="$ltmain"
+Updated by: Robert Yang <liezhi.yang@windriver.com>
+
+diff --git a/Makefile.am b/Makefile.am
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -31,7 +31,7 @@ SUBDIRS			= .
+ DIST_SUBDIRS		= $(SUBDIRS)
+ EXTRA_DIST		=
+ 
+-BUILT_SOURCES		= libtool libtoolize
++BUILT_SOURCES		= $(host_alias)-libtool libtoolize
+ 
+ CLEANFILES		=
+ MOSTLYCLEANFILES	=
+@@ -67,7 +67,7 @@ build_scripts	= $(srcdir)/$(aux_dir)/announce-gen \
+ 
+ EXTRA_DIST     += bootstrap bootstrap.conf $(build_scripts) cfg.mk maint.mk \
+ 		  GNUmakefile
+-CLEANFILES     += libtool libtoolize
++CLEANFILES     += $(host_alias)-libtool libtoolize
+ 
+ ## If a file is named several times below, and especially if it
+ ## is a distributed file created during Libtool bootstrap, we
+@@ -276,7 +276,7 @@ configure_edit = $(bootstrap_edit) \
+ 	-e 's|@srcdir\@|$(srcdir)|g'
+ 
+ # The libtool distributor and the standalone libtool script.
+-bin_SCRIPTS = libtool
++bin_SCRIPTS = $(host_alias)-libtool
+ 
+ libtoolize: $(libtoolize_in) $(config_status)
+ 	$(AM_V_at)rm -f '$@'
+@@ -287,7 +287,7 @@ libtoolize: $(libtoolize_in) $(config_status)
+ # We used to do this with a 'stamp-vcl' file, but non-gmake builds
+ # would rerun configure on every invocation, so now we manually
+ # check the version numbers from the build rule when necessary.
+-libtool: $(ltmain_sh) $(config_status) $(dotversion)
++$(host_alias)-libtool: $(ltmain_sh) $(config_status) $(dotversion)
+ 	@$(rebuild); \
+ 	if test -f '$@'; then \
+ 	  eval `'$(SED)' -n '/^package_revision=/p' '$@'`; \
+@@ -731,12 +731,12 @@ TESTS_ENVIRONMENT = MAKE="$(MAKE)" CC="$(CC)" CFLAGS="$(CFLAGS)" \
+ 
+ BUILDCHECK_ENVIRONMENT = _lt_pkgdatadir="$(abs_top_srcdir)" \
+ 	LIBTOOLIZE="$(abs_top_builddir)/libtoolize" \
+-	LIBTOOL="$(abs_top_builddir)/libtool" \
++	LIBTOOL="$(abs_top_builddir)/$(host_alias)-libtool" \
+ 	tst_aclocaldir="$(abs_top_srcdir)/m4"
+ 
+ INSTALLCHECK_ENVIRONMENT = \
+ 	LIBTOOLIZE="$(bindir)/`echo libtoolize |$(SED) '$(program_transform_name)'`" \
+-	LIBTOOL="$(bindir)/`echo libtool |$(SED) '$(program_transform_name)'`" \
++	LIBTOOL="$(bindir)/`echo $(host_alias)-libtool |$(SED) '$(program_transform_name)'`" \
+ 	LTDLINCL="-I$(includedir)" \
+ 	LIBLTDL="$(libdir)/libltdl.la" \
+ 	tst_aclocaldir="$(aclocaldir)"
+diff --git a/m4/libtool.m4 b/m4/libtool.m4
+--- a/m4/libtool.m4
++++ b/m4/libtool.m4
+@@ -86,7 +86,8 @@ _LT_SET_OPTIONS([$0], [$1])
+ LIBTOOL_DEPS=$ltmain
  
  # Always use our own libtool.
 -LIBTOOL='$(SHELL) $(top_builddir)/libtool'
@@ -32,7 +87,7 @@ Index: libtool-2.4.2/libltdl/m4/libtool.m4
  AC_SUBST(LIBTOOL)dnl
  
  _LT_SETUP
-@@ -206,7 +207,7 @@ aix3*)
+@@ -199,7 +200,7 @@ aix3*)
  esac
  
  # Global variables:
@@ -40,72 +95,4 @@ Index: libtool-2.4.2/libltdl/m4/libtool.m4
 +ofile=${host_alias}-libtool
  can_build_shared=yes
  
- # All known linkers require a `.a' archive for static linking (except MSVC,
-Index: libtool-2.4.2/Makefile.am
-===================================================================
---- libtool-2.4.2.orig/Makefile.am
-+++ libtool-2.4.2/Makefile.am
-@@ -31,7 +31,7 @@ AM_LDFLAGS		=
- DIST_SUBDIRS		= .
- EXTRA_DIST		=
- 
--BUILT_SOURCES		= libtool libtoolize
-+BUILT_SOURCES		= $(host_alias)-libtool libtoolize
- 
- CLEANFILES		=
- MOSTLYCLEANFILES	=
-@@ -72,7 +72,7 @@ EXTRA_DIST     += bootstrap $(srcdir)/li
- 		  ChangeLog.2002 ChangeLog.2003 ChangeLog.2004 \
- 		  ChangeLog.2005 ChangeLog.2006 ChangeLog.2007 \
- 		  ChangeLog.2008 ChangeLog.2009 ChangeLog.2010
--CLEANFILES     += libtool libtoolize libtoolize.tmp \
-+CLEANFILES     += $(host_alias)-libtool libtoolize libtoolize.tmp \
- 		  $(auxdir)/ltmain.tmp $(m4dir)/ltversion.tmp
- 
- ## These are the replacements that need to be made at bootstrap time,
-@@ -231,7 +231,7 @@ configure_edit = sed \
- 	-e 's,@SED\@,$(SED),g'
- 
- # The libtool distributor and the standalone libtool script.
--bin_SCRIPTS = libtoolize libtool
-+bin_SCRIPTS = libtoolize $(host_alias)-libtool
- 
- libtoolize: $(srcdir)/libtoolize.in $(top_builddir)/config.status
- 	rm -f libtoolize.tmp libtoolize
-@@ -244,8 +244,8 @@ libtoolize: $(srcdir)/libtoolize.in $(to
- # We used to do this with a 'stamp-vcl' file, but non-gmake builds
- # would rerun configure on every invocation, so now we manually
- # check the version numbers from the build rule when necessary.
--libtool: $(top_builddir)/config.status $(srcdir)/$(auxdir)/ltmain.sh ChangeLog
--	@target=libtool; $(rebuild); \
-+$(host_alias)-libtool: $(top_builddir)/config.status $(srcdir)/$(auxdir)/ltmain.sh ChangeLog
-+	@target=$(host_alias)-libtool; $(rebuild); \
- 	if test -f "$$target"; then \
- 	  set dummy `./$$target --version | sed 1q`; actualver="$$5"; \
- 	  test "$$actualver" = "$$correctver" && rebuild=false; \
-@@ -254,8 +254,8 @@ libtool: $(top_builddir)/config.status $
- 	  case $$prereq in *ChangeLog);; *) rebuild=:;; esac; \
- 	done; \
- 	if $$rebuild; then \
--	  echo $(SHELL) ./config.status $$target; \
--	  cd $(top_builddir) && $(SHELL) ./config.status $$target; \
-+	  echo $(SHELL) ./config.status libtool; \
-+	  cd $(top_builddir) && $(SHELL) ./config.status libtool; \
- 	fi
- 
- .PHONY: configure-subdirs
-@@ -535,12 +535,12 @@ TESTS_ENVIRONMENT = MAKE="$(MAKE)" CC="$
- 
- BUILDCHECK_ENVIRONMENT = _lt_pkgdatadir="$(abs_top_srcdir)" \
- 	LIBTOOLIZE="$(abs_top_builddir)/libtoolize" \
--	LIBTOOL="$(abs_top_builddir)/libtool" \
-+	LIBTOOL="$(abs_top_builddir)/$(host_alias)-libtool" \
- 	tst_aclocaldir="$(abs_top_srcdir)/libltdl/m4"
- 
- INSTALLCHECK_ENVIRONMENT = \
- 	LIBTOOLIZE="$(bindir)/`echo libtoolize | sed '$(program_transform_name)'`" \
--	LIBTOOL="$(bindir)/`echo libtool | sed '$(program_transform_name)'`" \
-+	LIBTOOL="$(bindir)/`echo $(host_alias)-libtool | sed '$(program_transform_name)'`" \
- 	LTDLINCL="-I$(includedir)" \
- 	LIBLTDL="$(libdir)/libltdl.la" \
- 	tst_aclocaldir="$(aclocaldir)"
+ # All known linkers require a '.a' archive for static linking (except MSVC,

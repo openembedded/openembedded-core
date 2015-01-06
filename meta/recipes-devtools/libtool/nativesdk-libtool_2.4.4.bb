@@ -1,7 +1,5 @@
 require libtool-${PV}.inc
 
-PR = "${INC_PR}.0"
-
 FILESEXTRAPATHS =. "${FILE_DIRNAME}/libtool:"
 
 SRC_URI += "file://prefix.patch"

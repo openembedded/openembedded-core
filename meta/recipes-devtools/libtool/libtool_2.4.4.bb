@@ -1,7 +1,5 @@
 require libtool-${PV}.inc
 
-PR = "${INC_PR}.0"
-
 RDEPENDS_${PN} += "bash"
 
 #
@@ -23,6 +21,6 @@ do_install_append () {
 libtool_sysroot_preprocess () {
 	rm -rf ${SYSROOT_DESTDIR}${bindir}/*
 	rm -rf ${SYSROOT_DESTDIR}${datadir}/aclocal/*
-	rm -rf ${SYSROOT_DESTDIR}${datadir}/libtool/config/*
+	rm -rf ${SYSROOT_DESTDIR}${datadir}/libtool/build-aux/*
 }
 

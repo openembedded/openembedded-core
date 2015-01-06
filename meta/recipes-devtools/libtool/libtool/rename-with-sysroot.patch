@@ -10,29 +10,31 @@ http://lists.gnu.org/archive/html/libtool/2010-10/msg00048.html
 
 -Khem Raj <raj.khem@gmail.com>
 
-Index: libtool-2.4.2/libltdl/m4/libtool.m4
-===================================================================
---- libtool-2.4.2.orig/libltdl/m4/libtool.m4
-+++ libtool-2.4.2/libltdl/m4/libtool.m4
-@@ -1224,27 +1224,27 @@ _LT_DECL([], [ECHO], [1], [An echo progr
+Updated by: Robert Yang <liezhi.yang@windriver.com>
+
+diff --git a/m4/libtool.m4 b/m4/libtool.m4
+--- a/m4/libtool.m4
++++ b/m4/libtool.m4
+@@ -1215,28 +1215,28 @@ _LT_DECL([], [ECHO], [1], [An echo program that protects backslashes])
  # ----------------
  AC_DEFUN([_LT_WITH_SYSROOT],
  [AC_MSG_CHECKING([for sysroot])
 -AC_ARG_WITH([sysroot],
--[  --with-sysroot[=DIR] Search for dependent libraries within DIR
+-[AS_HELP_STRING([--with-sysroot@<:@=DIR@:>@],
 +AC_ARG_WITH([libtool-sysroot],
-+[  --with-libtool-sysroot[=DIR] Search for dependent libraries within DIR
-                         (or the compiler's sysroot if not specified).],
++[AS_HELP_STRING([--with-libtool-sysroot@<:@=DIR@:>@],
+   [Search for dependent libraries within DIR (or the compiler's sysroot
+    if not specified).])],
 -[], [with_sysroot=no])
 +[], [with_libtool_sysroot=no])
  
  dnl lt_sysroot will always be passed unquoted.  We quote it here
  dnl in case the user passed a directory name.
  lt_sysroot=
--case ${with_sysroot} in #(
-+case ${with_libtool_sysroot} in #(
+-case $with_sysroot in #(
++case $with_libtool_sysroot in #(
   yes)
-    if test "$GCC" = yes; then
+    if test yes = "$GCC"; then
       lt_sysroot=`$CC --print-sysroot 2>/dev/null`
     fi
     ;; #(
@@ -43,15 +45,14 @@ Index: libtool-2.4.2/libltdl/m4/libtool.m4
   no|'')
     ;; #(
   *)
--   AC_MSG_RESULT([${with_sysroot}])
-+   AC_MSG_RESULT([${with_libtool_sysroot}])
+-   AC_MSG_RESULT([$with_sysroot])
++   AC_MSG_RESULT([$with_libtool_sysroot])
     AC_MSG_ERROR([The sysroot must be an absolute path.])
     ;;
  esac
-Index: libtool-2.4.2/tests/sysroot.at
-===================================================================
---- libtool-2.4.2.orig/tests/sysroot.at
-+++ libtool-2.4.2/tests/sysroot.at
+diff --git a/tests/sysroot.at b/tests/sysroot.at
+--- a/tests/sysroot.at
++++ b/tests/sysroot.at
 @@ -64,7 +64,7 @@ while read file; do
  done])
  
@@ -60,7 +61,7 @@ Index: libtool-2.4.2/tests/sysroot.at
 +configure_options="$configure_options --with-libtool-sysroot=$sysroot --prefix=$prefix"
  
  #???
- if test "$shlibpath_var" = PATH; then
+ if test PATH = "$shlibpath_var"; then
 @@ -114,7 +114,7 @@ AM_INIT_AUTOMAKE([foreign])
  AC_PROG_CC
  AC_CONFIG_SRCDIR([lib2.c])
@@ -79,11 +80,10 @@ Index: libtool-2.4.2/tests/sysroot.at
  AC_SUBST([sysroot])
  AC_OUTPUT(Makefile)
  ]])
-Index: libtool-2.4.2/tests/testsuite
-===================================================================
---- libtool-2.4.2.orig/tests/testsuite
-+++ libtool-2.4.2/tests/testsuite
-@@ -26676,7 +26676,7 @@ $at_traceon; }
+diff --git a/tests/testsuite b/tests/testsuite
+--- a/tests/testsuite
++++ b/tests/testsuite
+@@ -48945,7 +48945,7 @@ $at_traceon; }
  
  
  LDFLAGS="$LDFLAGS --sysroot=$sysroot -no-undefined"
@@ -91,8 +91,8 @@ Index: libtool-2.4.2/tests/testsuite
 +configure_options="$configure_options --with-libtool-sysroot=$sysroot --prefix=$prefix"
  
  #???
- if test "$shlibpath_var" = PATH; then
-@@ -26874,7 +26874,7 @@ AM_INIT_AUTOMAKE([foreign])
+ if test PATH = "$shlibpath_var"; then
+@@ -49154,7 +49154,7 @@ AM_INIT_AUTOMAKE([foreign])
  AC_PROG_CC
  AC_CONFIG_SRCDIR([lib2.c])
  LT_INIT
@@ -101,7 +101,7 @@ Index: libtool-2.4.2/tests/testsuite
  AC_SUBST([sysroot])
  AC_OUTPUT(Makefile)
  _ATEOF
-@@ -27051,7 +27051,7 @@ AM_INIT_AUTOMAKE([foreign])
+@@ -49342,7 +49342,7 @@ AM_INIT_AUTOMAKE([foreign])
  AC_PROG_CC
  AC_CONFIG_SRCDIR([prog.c])
  LT_INIT
@@ -110,7 +110,7 @@ Index: libtool-2.4.2/tests/testsuite
  AC_SUBST([sysroot])
  AC_OUTPUT(Makefile)
  _ATEOF
-@@ -27392,7 +27392,7 @@ $at_traceon; }
+@@ -49694,7 +49694,7 @@ $at_traceon; }
  
  
  LDFLAGS="$LDFLAGS --sysroot=$sysroot -no-undefined"
@@ -118,8 +118,8 @@ Index: libtool-2.4.2/tests/testsuite
 +configure_options="$configure_options --with-libtool-sysroot=$sysroot --prefix=$prefix"
  
  #???
- if test "$shlibpath_var" = PATH; then
-@@ -27590,7 +27590,7 @@ AM_INIT_AUTOMAKE([foreign])
+ if test PATH = "$shlibpath_var"; then
+@@ -49903,7 +49903,7 @@ AM_INIT_AUTOMAKE([foreign])
  AC_PROG_CC
  AC_CONFIG_SRCDIR([lib2.c])
  LT_INIT
@@ -128,7 +128,7 @@ Index: libtool-2.4.2/tests/testsuite
  AC_SUBST([sysroot])
  AC_OUTPUT(Makefile)
  _ATEOF
-@@ -27767,7 +27767,7 @@ AM_INIT_AUTOMAKE([foreign])
+@@ -50091,7 +50091,7 @@ AM_INIT_AUTOMAKE([foreign])
  AC_PROG_CC
  AC_CONFIG_SRCDIR([prog.c])
  LT_INIT
@@ -137,7 +137,7 @@ Index: libtool-2.4.2/tests/testsuite
  AC_SUBST([sysroot])
  AC_OUTPUT(Makefile)
  _ATEOF
-@@ -28108,7 +28108,7 @@ $at_traceon; }
+@@ -50443,7 +50443,7 @@ $at_traceon; }
  
  
  LDFLAGS="$LDFLAGS --sysroot=$sysroot -no-undefined"
@@ -145,8 +145,8 @@ Index: libtool-2.4.2/tests/testsuite
 +configure_options="$configure_options --with-libtool-sysroot=$sysroot --prefix=$prefix"
  
  #???
- if test "$shlibpath_var" = PATH; then
-@@ -28306,7 +28306,7 @@ AM_INIT_AUTOMAKE([foreign])
+ if test PATH = "$shlibpath_var"; then
+@@ -50652,7 +50652,7 @@ AM_INIT_AUTOMAKE([foreign])
  AC_PROG_CC
  AC_CONFIG_SRCDIR([lib2.c])
  LT_INIT
@@ -155,7 +155,7 @@ Index: libtool-2.4.2/tests/testsuite
  AC_SUBST([sysroot])
  AC_OUTPUT(Makefile)
  _ATEOF
-@@ -28483,7 +28483,7 @@ AM_INIT_AUTOMAKE([foreign])
+@@ -50840,7 +50840,7 @@ AM_INIT_AUTOMAKE([foreign])
  AC_PROG_CC
  AC_CONFIG_SRCDIR([prog.c])
  LT_INIT
