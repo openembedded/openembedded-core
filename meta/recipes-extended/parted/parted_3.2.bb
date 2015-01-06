@@ -40,4 +40,4 @@ do_install_ptest() {
 	sed -e 's| ../parted||' -i $t/tests/*.sh
 }
 
-RDEPENDS_${PN}-ptest = "bash coreutils perl util-linux-losetup"
+RDEPENDS_${PN}-ptest = "bash coreutils perl util-linux-losetup python"
