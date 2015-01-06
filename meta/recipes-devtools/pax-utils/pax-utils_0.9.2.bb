@@ -12,7 +12,7 @@ SRC_URI = "http://gentoo.osuosl.org/distfiles/pax-utils-${PV}.tar.xz"
 SRC_URI[md5sum] = "34c41888cec67759c21333bef13e950c"
 SRC_URI[sha256sum] = "578801df0661b1b7b8fed0ce4a9859239f919fd37529907681e51091a1bcb4de"
 
-RDEPENDS_${PN} += "bash"
+RDEPENDS_${PN} += "bash python"
 
 do_install() {
     oe_runmake PREFIX=${D}${prefix} DESTDIR=${D} install
