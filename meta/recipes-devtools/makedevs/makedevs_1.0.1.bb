@@ -5,11 +5,9 @@ SECTION = "base"
 SRC_URI = "file://makedevs.c \
            file://COPYING.patch"
 
-FILES_${PN}_append_class-nativesdk = " ${datadir}"
+S = "${WORKDIR}"
 
-do_configure() {
-	install -m 0644 ${WORKDIR}/makedevs.c ${S}/
-}
+FILES_${PN}_append_class-nativesdk = " ${datadir}"
 
 do_compile() {
 	${CC} ${CFLAGS} ${LDFLAGS} -o ${S}/makedevs ${S}/makedevs.c
