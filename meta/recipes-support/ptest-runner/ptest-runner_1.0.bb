@@ -11,6 +11,8 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=4d92cd373abda3937c2bc47fbc49d
 
 INHIBIT_DEFAULT_DEPS = "1"
 
+S = "${WORKDIR}"
+
 do_install () {
     mkdir -p ${D}${bindir}
     install -m 0755 ${WORKDIR}/ptest-runner ${D}${bindir}

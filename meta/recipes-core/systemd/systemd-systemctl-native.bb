@@ -9,6 +9,8 @@ inherit native
 
 SRC_URI = "file://systemctl"
 
+S = "${WORKDIR}"
+
 do_install() {
 	install -d ${D}${bindir}
 	install -m 0755 ${WORKDIR}/systemctl ${D}${bindir}

@@ -16,6 +16,8 @@ SRC_URI = "file://copyright \
            file://interfaces \
            file://nfsroot"
 
+S = "${WORKDIR}"
+
 do_install () {
 	install -d ${D}${sysconfdir}/init.d \
 			${D}${sysconfdir}/network/if-pre-up.d \

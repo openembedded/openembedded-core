@@ -35,6 +35,8 @@ SRC_URI = "file://functions \
            file://logrotate-dmesg.conf \
 "
 
+S = "${WORKDIR}"
+
 SRC_URI_append_arm = " file://alignment.sh"
 
 KERNEL_VERSION = ""

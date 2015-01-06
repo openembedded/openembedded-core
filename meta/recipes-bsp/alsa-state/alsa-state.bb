@@ -18,6 +18,8 @@ SRC_URI = "\
   file://alsa-state-init \
 "
 
+S = "${WORKDIR}"
+
 # As the recipe doesn't inherit systemd.bbclass, we need to set this variable
 # manually to avoid unnecessary postinst/preinst generated.
 python __anonymous() {

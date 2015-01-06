@@ -7,6 +7,8 @@ SRC_URI = "file://init-live.sh"
 
 PR = "r12"
 
+S = "${WORKDIR}"
+
 do_install() {
         install -m 0755 ${WORKDIR}/init-live.sh ${D}/init
 }

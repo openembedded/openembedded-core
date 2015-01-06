@@ -5,6 +5,8 @@ SRC_URI = "file://init-install.sh"
 
 PR = "r9"
 
+S = "${WORKDIR}"
+
 RDEPENDS_${PN} = "grub parted e2fsprogs-mke2fs"
 
 do_install() {

@@ -8,6 +8,8 @@ SRC_URI = "file://opkg.conf.comments \
 	   file://dest \
 	   file://src "
 
+S = "${WORKDIR}"
+
 OPKGLIBDIR = "${localstatedir}/lib"
 do_compile () {
 	cat ${WORKDIR}/opkg.conf.comments >${WORKDIR}/opkg.conf

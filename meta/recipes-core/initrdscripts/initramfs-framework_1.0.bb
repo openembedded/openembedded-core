@@ -14,6 +14,8 @@ SRC_URI = "file://init \
            file://e2fs \
            file://debug"
 
+S = "${WORKDIR}"
+
 do_install() {
     install -d ${D}/init.d
 

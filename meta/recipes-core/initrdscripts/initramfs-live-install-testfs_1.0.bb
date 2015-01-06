@@ -5,6 +5,8 @@ SRC_URI = "file://init-install-testfs.sh"
 
 RDEPENDS_${PN} = "grub parted e2fsprogs-mke2fs"
 
+S = "${WORKDIR}"
+
 do_install() {
         install -m 0755 ${WORKDIR}/init-install-testfs.sh ${D}/install.sh
 }

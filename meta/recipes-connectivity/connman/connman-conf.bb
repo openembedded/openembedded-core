@@ -9,6 +9,8 @@ SRC_URI_append_qemuall = "file://wired.config \
                          "
 PR = "r2"
 
+S = "${WORKDIR}"
+
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 FILES_${PN} = "${localstatedir}/* ${libdir}/*"

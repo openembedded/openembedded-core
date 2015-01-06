@@ -5,6 +5,8 @@ SRC_URI = "file://init-boot.sh"
 
 PR = "r2"
 
+S = "${WORKDIR}"
+
 do_install() {
         install -m 0755 ${WORKDIR}/init-boot.sh ${D}/init
 }

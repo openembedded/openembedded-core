@@ -7,6 +7,8 @@ PR = "r1"
 
 RDEPENDS_${PN} = "parted e2fsprogs-mke2fs dosfstools"
 
+S = "${WORKDIR}"
+
 do_install() {
         install -m 0755 ${WORKDIR}/init-install-efi.sh ${D}/install-efi.sh
 }

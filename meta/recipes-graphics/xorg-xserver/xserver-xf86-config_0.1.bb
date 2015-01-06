@@ -7,6 +7,8 @@ PR = "r33"
 
 SRC_URI = "file://xorg.conf"
 
+S = "${WORKDIR}"
+
 CONFFILES_${PN} = "${sysconfdir}/X11/xorg.conf"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"

@@ -13,6 +13,8 @@ SRC_URI = " \
        file://localextra.rules \
 "
 
+S = "${WORKDIR}"
+
 
 do_install() {
     install -d ${D}${sysconfdir}/udev/rules.d

@@ -9,6 +9,8 @@ PR = "r3"
 
 SRC_URI = "file://securetty"
 
+S = "${WORKDIR}"
+
 # Since SERIAL_CONSOLES is likely to be set from the machine configuration
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 

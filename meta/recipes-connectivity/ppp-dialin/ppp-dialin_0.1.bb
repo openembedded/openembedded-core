@@ -12,6 +12,8 @@ SRC_URI = "file://host-peer \
 
 inherit allarch useradd
 
+S = "${WORKDIR}"
+
 do_install() {
 	install -d ${D}${sysconfdir}/ppp/peers
 	install -m 0644 ${WORKDIR}/host-peer ${D}${sysconfdir}/ppp/peers/host
