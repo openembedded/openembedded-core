@@ -15,13 +15,15 @@ PR = "r2"
 
 inherit allarch
 
+S = "${WORKDIR}/misc"
+
 PACKAGES = "${PN}"
 FILES_${PN} = "${libdir}/X11/ ${datadir}/fonts/X11/"
 RDEPENDS_${PN} += "font-alias"
 
 do_install() {
 	install -d ${D}/${datadir}/fonts/X11/misc
-	install -m 0644 ${WORKDIR}/misc/* ${D}/${datadir}/fonts/X11/misc/
+	install -m 0644 ${S}/* ${D}/${datadir}/fonts/X11/misc/
 	install -d ${D}/${libdir}/X11
 	ln -sf ${datadir}/fonts/X11/ ${D}/${libdir}/X11/fonts -s
 }
