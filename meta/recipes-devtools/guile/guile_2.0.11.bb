@@ -20,6 +20,7 @@ SRC_URI = "${GNU_MIRROR}/guile/guile-${PV}.tar.xz \
            file://guile_2.0.6_fix_sed_error.patch \
            file://arm_endianness.patch \
            file://workaround-ice-ssa-corruption.patch \
+           file://libguile-Makefile.am-depends.patch \
            "
 
 #           file://debian/0001-Change-guile-to-guile-X.Y-for-info-pages.patch
