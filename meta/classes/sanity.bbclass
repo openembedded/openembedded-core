@@ -653,9 +653,9 @@ def check_sanity_version_change(status, d):
             status.addresult("You have a 32-bit libc, but no 32-bit headers.  You must install the 32-bit libc headers.\n")
 
     bbpaths = d.getVar('BBPATH', True).split(":")
-    if ("." in bbpaths or "" in bbpaths) and not status.reparse:
+    if ("." in bbpaths or "./" in bbpaths or "" in bbpaths) and not status.reparse:
         status.addresult("BBPATH references the current directory, either through "    \
-                "an empty entry, or a '.'.\n\t This is unsafe and means your "\
+                "an empty entry, a './' or a '.'.\n\t This is unsafe and means your "\
                 "layer configuration is adding empty elements to BBPATH.\n\t "\
                 "Please check your layer.conf files and other BBPATH "        \
                 "settings to remove the current working directory "           \
@@ -693,8 +693,8 @@ def check_sanity_everybuild(status, d):
     sanity_check_conffiles(status, d)
 
     paths = d.getVar('PATH', True).split(":")
-    if "." in paths or "" in paths:
-        status.addresult("PATH contains '.' or '' (empty element), which will break the build, please remove this.\nParsed PATH is " + str(paths) + "\n")
+    if "." in paths or "./" in paths or "" in paths:
+        status.addresult("PATH contains '.', './' or '' (empty element), which will break the build, please remove this.\nParsed PATH is " + str(paths) + "\n")
 
     # Check that the DISTRO is valid, if set
     # need to take into account DISTRO renaming DISTRO
