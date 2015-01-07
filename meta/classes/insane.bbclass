@@ -1112,7 +1112,7 @@ do_configure[postfuncs] += "do_qa_configure "
 python () {
     tests = d.getVar('ALL_QA', True).split()
     if "desktop" in tests:
-        d.appendVar("PACKAGE_DEPENDS", "desktop-file-utils-native")
+        d.appendVar("PACKAGE_DEPENDS", " desktop-file-utils-native")
 
     ###########################################################################
     # Check various variables
