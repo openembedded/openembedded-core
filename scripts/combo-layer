@@ -305,18 +305,17 @@ def check_rev_branch(component, repodir, rev, branch):
         return False
     return True
 
-def get_repos(conf, args):
+def get_repos(conf, repo_names):
     repos = []
-    if len(args) > 1:
-        for arg in args[1:]:
-            if arg.startswith('-'):
-                break
-            else:
-                repos.append(arg)
-        for repo in repos:
-            if not repo in conf.repos:
-                logger.error("Specified component '%s' not found in configuration" % repo)
-                sys.exit(0)
+    for name in repo_names:
+        if name.startswith('-'):
+            break
+        else:
+            repos.append(name)
+    for repo in repos:
+        if not repo in conf.repos:
+            logger.error("Specified component '%s' not found in configuration" % repo)
+            sys.exit(0)
 
     if not repos:
         repos = conf.repos
@@ -327,7 +326,7 @@ def action_pull(conf, args):
     """
         update the component repos only
     """
-    repos = get_repos(conf, args)
+    repos = get_repos(conf, args[1:])
 
     # make sure all repos are clean
     for name in repos:
@@ -348,7 +347,7 @@ def action_update(conf, args):
         generate the patch list
         apply the generated patches
     """
-    repos = get_repos(conf, args)
+    repos = get_repos(conf, args[1:])
 
     # make sure combo repo is clean
     check_repo_clean(os.getcwd())
