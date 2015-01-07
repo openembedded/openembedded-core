@@ -26,6 +26,7 @@ import logging
 import subprocess
 import ConfigParser
 import re
+from collections import OrderedDict
 
 __version__ = "0.2.1"
 
@@ -347,7 +348,13 @@ def action_update(conf, args):
         generate the patch list
         apply the generated patches
     """
-    repos = get_repos(conf, args[1:])
+    components = [arg.split(':')[0] for arg in args[1:]]
+    revisions = []
+    for arg in args[1:]:
+        revision= arg.split(':', 1)[1] if ':' in arg else None
+        revisions.append(revision)
+    # Map commitishes to repos
+    repos = OrderedDict(zip(get_repos(conf, components), revisions))
 
     # make sure combo repo is clean
     check_repo_clean(os.getcwd())
@@ -361,9 +368,9 @@ def action_update(conf, args):
     if conf.nopull:
         logger.info("Skipping pull (-n)")
     else:
-        action_pull(conf, args)
+        action_pull(conf, ['arg0'] + components)
 
-    for name in repos:
+    for name, revision in repos.iteritems():
         repo = conf.repos[name]
         ldir = repo['local_repo_dir']
         dest_dir = repo['dest_dir']
@@ -372,18 +379,21 @@ def action_update(conf, args):
 
         # Step 2: generate the patch list and store to patch dir
         logger.info("Generating patches from %s..." % name)
+        top_revision = revision or branch
+        if not check_rev_branch(name, ldir, top_revision, branch):
+            sys.exit(1)
         if dest_dir != ".":
             prefix = "--src-prefix=a/%s/ --dst-prefix=b/%s/" % (dest_dir, dest_dir)
         else:
             prefix = ""
         if repo['last_revision'] == "":
             logger.info("Warning: last_revision of component %s is not set, starting from the first commit" % name)
-            patch_cmd_range = "--root %s" % branch
-            rev_cmd_range = branch
+            patch_cmd_range = "--root %s" % top_revision
+            rev_cmd_range = top_revision
         else:
             if not check_rev_branch(name, ldir, repo['last_revision'], branch):
                 sys.exit(1)
-            patch_cmd_range = "%s..%s" % (repo['last_revision'], branch)
+            patch_cmd_range = "%s..%s" % (repo['last_revision'], top_revision)
             rev_cmd_range = patch_cmd_range
 
         file_filter = repo.get('file_filter',"")
