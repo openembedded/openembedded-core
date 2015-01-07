@@ -1,0 +1,43 @@
+This was reported in http://bugs.gnu.org/16872
+from the coreutils command: date -d 'TZ="""'
+
+The infinite loop for this case was present since the
+initial TZ="" parsing support in commit de95bdc2 29-10-2004.
+This was changed to a crash or heap corruption depending
+on the platform with commit 2e3e4195 18-01-2010.
+
+* lib/parse-datetime.y (parse_datetime): Break out of the
+TZ="" parsing loop once the second significant " is found.
+Also skip over any subsequent whitespace to be consistent
+with the non TZ= case.
+
+Fixes: CVE-2014-9471
+
+Upstream-Status: backport
+
+Signed-off-by: Maxin B. John <maxin.john@enea.com>
+Signed-off-by: Pádraig Brady <P@draigBrady.com>
+---
+diff -Naur coreutils-8.22-origin/lib/parse-datetime.y coreutils-8.22/lib/parse-datetime.y
+--- coreutils-8.22-origin/lib/parse-datetime.y	2013-12-04 15:53:33.000000000 +0100
++++ coreutils-8.22/lib/parse-datetime.y	2015-01-05 17:11:16.754358184 +0100
+@@ -1303,8 +1303,6 @@
+             char tz1buf[TZBUFSIZE];
+             bool large_tz = TZBUFSIZE < tzsize;
+             bool setenv_ok;
+-            /* Free tz0, in case this is the 2nd or subsequent time through. */
+-            free (tz0);
+             tz0 = get_tz (tz0buf);
+             z = tz1 = large_tz ? xmalloc (tzsize) : tz1buf;
+             for (s = tzbase; *s != '"'; s++)
+@@ -1317,6 +1315,10 @@
+               goto fail;
+             tz_was_altered = true;
+             p = s + 1;
++            while (c = *p, c_isspace (c))
++              p++;
++
++            break;
+           }
+     }
+ 
