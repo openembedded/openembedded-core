@@ -43,6 +43,9 @@ python __anonymous () {
 do_unpack[cleandirs] += " ${S} ${STAGING_KERNEL_DIR} ${B}"
 base_do_unpack_append () {
     s = d.getVar("S", True)
+    if s[-1] == '/':
+        # drop trailing slash, so that os.symlink(kernsrc, s) doesn't use s as directory name and fail
+        s=s[:-1]
     kernsrc = d.getVar("STAGING_KERNEL_DIR", True)
     if s != kernsrc:
         bb.utils.mkdirhier(kernsrc)
