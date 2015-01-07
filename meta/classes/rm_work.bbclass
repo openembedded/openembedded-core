@@ -110,3 +110,11 @@ rm_work_rootfs () {
 }
 rm_work_rootfs[cleandirs] = "${WORKDIR}/rootfs"
 
+python () {
+    # If the recipe name is in the RM_WORK_EXCLUDE, skip the recipe.
+    excludes = (d.getVar("RM_WORK_EXCLUDE", True) or "").split()
+    pn = d.getVar("PN", True)
+    if pn in excludes:
+        d.delVarFlag('rm_work_rootfs', 'cleandirs')
+        d.delVarFlag('rm_work_populatesdk', 'cleandirs')
+}
