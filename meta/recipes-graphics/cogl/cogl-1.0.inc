@@ -71,18 +71,18 @@ FILES_libcogl-gles2 = "${libdir}/libcogl-gles2${SOLIBS}"
 FILES_libcogl-gles2-dev = "${includedir}/cogl/cogl-gles2 \
                            ${libdir}/libcogl-gles2${SOLIBSDEV} \
                            ${libdir}/libcogl-gles2.la \
-                           ${libdir}/pkgconfig/cogl-gles2-experimental.pc"
+                           ${libdir}/pkgconfig/cogl-gles2-*.pc"
 FILES_libcogl-pango = "${libdir}/libcogl-pango${SOLIBS}"
 FILES_libcogl-pango-dev = "${includedir}/cogl/cogl-pango \
                            ${libdir}/libcogl-pango${SOLIBSDEV} \
                            ${libdir}/libcogl-pango.la \
-                           ${libdir}/pkgconfig/cogl-pango-1.0.pc"
+                           ${libdir}/pkgconfig/cogl-pango-*.pc"
 
 FILES_libcogl-path = "${libdir}/libcogl-path${SOLIBS}"
 FILES_libcogl-path-dev = "${includedir}/cogl/cogl-path \
                           ${libdir}/libcogl-path${SOLIBSDEV} \
                           ${libdir}/libcogl-path.la \
-                          ${libdir}/pkgconfig/cogl-path-1.0.pc"
+                          ${libdir}/pkgconfig/cogl-path-*.pc"
 
 # For backwards compatibility after Debian-renaming
 RPROVIDES_libcogl = "cogl-1.0"
