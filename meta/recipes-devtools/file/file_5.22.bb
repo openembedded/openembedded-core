@@ -15,8 +15,8 @@ SRC_URI = "ftp://ftp.astron.com/pub/file/file-${PV}.tar.gz \
            file://debian-742262.patch \
           "
 
-SRC_URI[md5sum] = "549fe96e09041eabece9de2bb28ef923"
-SRC_URI[sha256sum] = "1a48741d3923c4cc73267109b8a396c0ce3aebe004181f3efb1b0a228d230bb6"
+SRC_URI[md5sum] = "8fb13e5259fe447e02c4a37bc7225add"
+SRC_URI[sha256sum] = "c4e3a8e44cb888c5e4b476e738503e37fb9de3b25a38c143e214bfc12109fc0b"
 
 inherit autotools
 
