@@ -123,9 +123,10 @@ class ParseLogsTest(oeRuntimeTest):
                 (status, output) = self.target.run("test -d "+str(location))
                 if (status == 0):
                     (status, output) = self.target.run("find "+str(location)+"/*.log -maxdepth 1 -type f")
-                    output = output.splitlines()
-                    for logfile in output:
-                        logs.append(os.path.join(location,str(logfile)))
+                    if (status == 0):
+                        output = output.splitlines()
+                        for logfile in output:
+                            logs.append(os.path.join(location,str(logfile)))
         return logs
 
     #build the grep command to be used with filters and exclusions
