@@ -10,8 +10,9 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=8b8d26c37c1d5a04f9b0186edbebc183"
 DEPENDS = "python-gitdb"
 
 SRC_URI = "http://pypi.python.org/packages/source/G/GitPython/GitPython-${PV}.tar.gz"
-SRC_URI[md5sum] = "849082fe29adc653a3621465213cab96"
-SRC_URI[sha256sum] = "fd6786684a0d0dd7ebb961da754e3312fafe0c8e88f55ceb09858aa0af6094e0"
+
+SRC_URI[md5sum] = "c9fdde02c476c11168fd620659496aba"
+SRC_URI[sha256sum] = "08193acf4e22b57a471cde3748ebce7c17e0f15f1e5042db74ca2c5e9e3e4db5"
 
 S = "${WORKDIR}/GitPython-${PV}"
 
