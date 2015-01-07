@@ -1,5 +1,7 @@
 SUMMARY = "A general-purpose utility library"
 DESCRIPTION = "GLib is a general-purpose utility library, which provides many useful data types, macros, type conversions, string utilities, file utilities, a main loop abstraction, and so on."
+HOMEPAGE = "https://developer.gnome.org/glib/"
+
 # pcre is under BSD;
 # docs/reference/COPYING is with a 'public domai'-like license!
 LICENSE = "LGPLv2+ & BSD & PD"
