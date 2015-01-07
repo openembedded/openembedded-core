@@ -6,8 +6,9 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=59e5ecb13339a936eedf83282eaf4528"
 DEPENDS = "python-async python-smmap"
 
 SRC_URI = "https://pypi.python.org/packages/source/g/gitdb/gitdb-${PV}.tar.gz"
-SRC_URI[md5sum] = "25353bb8d3ea527ba443dd88cd4e8a1c"
-SRC_URI[sha256sum] = "de5d2dac0daec4a9cd7bb1ae1cd42d53510dcf597397c608c12a154b69ad3783"
+
+SRC_URI[md5sum] = "daeb85a5e97d2d100fd37cf522fd65d5"
+SRC_URI[sha256sum] = "0d784ec4a75e93c8f65d4aca219c17e388a052d461714ed0edfda657e542b716"
 
 S = "${WORKDIR}/gitdb-${PV}"
 
