@@ -1,0 +1,32 @@
+From d480d837ff57e855d1cf0b63054d6b1ad7aaf2ee Mon Sep 17 00:00:00 2001
+From: Robert Yang <liezhi.yang@windriver.com>
+Date: Tue, 6 Jan 2015 17:54:43 -0800
+Subject: [PATCH] Makefile.am: remove ACLOCAL_AMFLAGS = -I shave -I m4
+
+Fixed:
+libtoolize:   error: AC_CONFIG_MACRO_DIRS([m4]) conflicts with ACLOCAL_AMFLAGS=-I shave.
+
+They are already included by configure.ac:
+AC_CONFIG_MACRO_DIR([m4])
+AC_CONFIG_MACRO_DIR([shave])
+
+Upstream-Status: Pending
+
+Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
+---
+ Makefile.am |    2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/Makefile.am b/Makefile.am
+index 8baa62c..6679f77 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -1,5 +1,3 @@
+-ACLOCAL_AMFLAGS = -I shave -I m4
+-
+ SUBDIRS = libbb libopkg src tests utils man
+ 
+ 
+-- 
+1.7.9.5
+

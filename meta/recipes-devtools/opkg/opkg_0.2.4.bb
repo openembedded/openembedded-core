@@ -5,6 +5,7 @@ SRC_URI = "http://downloads.yoctoproject.org/releases/${BPN}/${BPN}-${PV}.tar.gz
            file://add-exclude.patch \
            file://opkg-configure.service \
            file://libopkg-opkg_remove.c-avoid-remove-pkg-repeatly-with.patch \
+           file://remove-ACLOCAL_AMFLAGS-I-shave-I-m4.patch \
 "
 
 S = "${WORKDIR}/${BPN}-${PV}"
