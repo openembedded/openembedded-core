@@ -18,6 +18,7 @@ SRC_URI = "ftp://ftp.isc.org/isc/bind9/${PV}/${BPN}-${PV}.tar.gz \
            file://bind9 \
            file://init.d-add-support-for-read-only-rootfs.patch \
            file://bind9_9_5-CVE-2014-8500.patch \
+           file://bind-add-crosscripts-search-path-for-xml2-config.patch \
 	   "
 
 SRC_URI[md5sum] = "e676c65cad5234617ee22f48e328c24e"
@@ -29,10 +30,14 @@ EXTRA_OECONF = " ${ENABLE_IPV6} --with-randomdev=/dev/random --disable-threads \
                  --disable-devpoll --disable-epoll --with-gost=no \
                  --with-gssapi=no --with-ecdsa=yes \
                  --sysconfdir=${sysconfdir}/bind \
-                 --with-openssl=${STAGING_LIBDIR}/.. --with-libxml2=${STAGING_LIBDIR}/.. \
+                 --with-openssl=${STAGING_LIBDIR}/.. \
                  --enable-exportlib --with-export-includedir=${includedir} --with-export-libdir=${libdir} \
                "
-inherit autotools-brokensep update-rc.d systemd useradd
+inherit autotools-brokensep update-rc.d systemd useradd pkgconfig
+
+PACKAGECONFIG ?= "libxml2"
+
+PACKAGECONFIG[libxml2] = "--with-libxml2=${STAGING_LIBDIR}/..,--with-libxml2=no,libxml2"
 
 USERADD_PACKAGES = "${PN}"
 USERADD_PARAM_${PN} = "--system --home /var/cache/bind --no-create-home \

@@ -1,0 +1,35 @@
+From 8fa549fe5390875d56f75e20d364394cd5ccf388 Mon Sep 17 00:00:00 2001
+From: Joe MacDonald <joe_macdonald@mentor.com>
+Date: Mon, 3 Nov 2014 21:52:02 -0500
+Subject: [PATCH] bind: add crosscripts search path for xml2-config
+
+The configure script was testing xml2-config from bin but in openembedded
+bin folder is not copied to sysroot so the test was failing. Added another 
+condition to test libxml-2.0.pc which is present in lib folder. Used pkg-config
+to get libs and cflags information.
+
+Upstream-Status: Inappropriate [ openembedded specific ]
+
+Signed-off-by: Joe MacDonald <joe_macdonald@mentor.com>
+Signed-off-by: Noor Ahsan <noor_ahsan@mentor.com>
+---
+ configure.in | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/configure.in b/configure.in
+index 3d04f4c..6032f67 100644
+--- a/configure.in
++++ b/configure.in
+@@ -1433,6 +1433,9 @@ case "$use_libxml2" in
+ 		if test -f "$use_libxml2/bin/xml2-config" ; then
+ 			libxml2_libs=`$use_libxml2/bin/xml2-config --libs`
+ 			libxml2_cflags=`$use_libxml2/bin/xml2-config --cflags`
++		elif test -f "$use_libxml2/lib/pkgconfig/libxml-2.0.pc" ; then
++			libxml2_libs=`pkg-config libxml-2.0 --libs`
++			libxml2_cflags=`pkg-config libxml-2.0 --cflags`
+ 		fi
+ 		;;
+ esac
+-- 
+1.9.1
+
