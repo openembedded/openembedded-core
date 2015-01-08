@@ -9,30 +9,24 @@ Index: binutils-2.24/bfd/config.bfd
 ===================================================================
 --- binutils-2.24.orig/bfd/config.bfd	2013-11-04 07:33:37.000000000 -0800
 +++ binutils-2.24/bfd/config.bfd	2013-12-15 11:54:57.113765374 -0800
-@@ -1052,14 +1052,14 @@
-     targ_defvec=bfd_elf32_bigmips_vec
-     targ_selvecs="bfd_elf32_littlemips_vec bfd_elf64_bigmips_vec bfd_elf64_littlemips_vec ecoff_big_vec ecoff_little_vec"
-     ;;
--  mips64*el-*-linux*)
--    targ_defvec=bfd_elf32_ntradlittlemips_vec
--    targ_selvecs="bfd_elf32_ntradbigmips_vec bfd_elf32_tradlittlemips_vec bfd_elf32_tradbigmips_vec bfd_elf64_tradlittlemips_vec bfd_elf64_tradbigmips_vec"
--    ;;
--  mips64*-*-linux*)
--    targ_defvec=bfd_elf32_ntradbigmips_vec
--    targ_selvecs="bfd_elf32_ntradlittlemips_vec bfd_elf32_tradbigmips_vec bfd_elf32_tradlittlemips_vec bfd_elf64_tradbigmips_vec bfd_elf64_tradlittlemips_vec"
--    ;;
-+   mips64*el-*-linux*)
-+    targ_defvec=bfd_elf64_tradlittlemips_vec
-+    targ_selvecs="bfd_elf32_ntradbigmips_vec bfd_elf32_ntradlittlemips_vec bfd_elf32_tradlittlemips_vec bfd_elf32_tradbigmips_vec bfd_elf64_tradbigmips_vec"
-+     ;;
-+   mips64*-*-linux*)
-+    targ_defvec=bfd_elf64_tradbigmips_vec
-+    targ_selvecs="bfd_elf32_ntradbigmips_vec bfd_elf32_ntradlittlemips_vec bfd_elf32_tradbigmips_vec bfd_elf32_tradlittlemips_vec bfd_elf64_tradlittlemips_vec"
-+     ;;
-   mips*el-*-linux*)
-     targ_defvec=bfd_elf32_tradlittlemips_vec
-     targ_selvecs="bfd_elf32_tradbigmips_vec ecoff_little_vec ecoff_big_vec bfd_elf32_ntradlittlemips_vec bfd_elf64_tradlittlemips_vec bfd_elf32_ntradbigmips_vec bfd_elf64_tradbigmips_vec"
 Index: binutils-2.24/ld/configure.tgt
+@@ -1062,12 +1062,12 @@ case "${targ}" in
+     targ_selvecs="mips_elf32_le_vec mips_elf64_be_vec mips_elf64_le_vec mips_ecoff_be_vec mips_ecoff_le_vec"
+     ;;
+   mips64*el-*-linux*)
+-    targ_defvec=mips_elf32_ntrad_le_vec
+-    targ_selvecs="mips_elf32_ntrad_be_vec mips_elf32_trad_le_vec mips_elf32_trad_be_vec mips_elf64_trad_le_vec mips_elf64_trad_be_vec"
++    targ_defvec=mips_elf64_trad_le_vec
++    targ_selvecs="mips_elf32_ntrad_be_vec mips_elf32_ntrad_le_vec mips_elf32_trad_le_vec mips_elf32_trad_be_vec mips_elf64_trad_be_vec"
+     ;;
+   mips64*-*-linux*)
+-    targ_defvec=mips_elf32_ntrad_be_vec
+-    targ_selvecs="mips_elf32_ntrad_le_vec mips_elf32_trad_be_vec mips_elf32_trad_le_vec mips_elf64_trad_be_vec mips_elf64_trad_le_vec"
++    targ_defvec=mips_elf64_trad_be_vec
++    targ_selvecs="mips_elf32_ntrad_be_vec mips_elf32_ntrad_be_vec mips_elf32_trad_be_vec mips_elf32_trad_le_vec mips_elf64_trad_le_vec"
+     ;;
+   mips*el-*-linux*)
+     targ_defvec=mips_elf32_trad_le_vec
 ===================================================================
 --- binutils-2.24.orig/ld/configure.tgt	2013-11-26 03:37:33.000000000 -0800
 +++ binutils-2.24/ld/configure.tgt	2013-12-15 11:50:52.273766155 -0800

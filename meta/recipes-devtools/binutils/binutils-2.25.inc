@@ -1,5 +1,4 @@
 LIC_FILES_CHKSUM="\
-    file://src-release;endline=17;md5=4830a9ef968f3b18dd5e9f2c00db2d35\
     file://COPYING;md5=59530bdf33659b29e73d4adb9f9f6552\
     file://COPYING.LIB;md5=9f604d8a4f8e74f4f5140845a21b6674\
     file://COPYING3;md5=d32239bcb673463ab874e80d47fae504\
@@ -25,22 +24,7 @@ SRC_URI = "\
      file://binutils-armv5e.patch \
      file://mips64-default-ld-emulation.patch \
      file://binutils-xlp-support.patch \
-     file://fix-pr15815.patch \
-     file://fix-pr2404.patch \
-     file://fix-pr16476.patch \
-     file://fix-pr16428.patch \
-     file://replace_macros_with_static_inline.patch \
-     file://0001-Fix-MMIX-build-breakage-from-bfd_set_section_vma-cha.patch \
-     file://binutils-uninitialised-warning.patch \
-     file://binutils_CVE-2014-8484.patch \
-     file://binutils_CVE-2014-8485.patch \
-     file://binutils_CVE-2014-8501.patch \
-     file://binutils_CVE-2014-8502_1.patch \
-     file://binutils_CVE-2014-8502.patch \
-     file://binutils_CVE-2014-8503.patch \
-     file://binutils_CVE-2014-8504.patch \
-     file://binutils_CVE-2014-8737.patch \
      "
+SRC_URI[md5sum] = "d9f3303f802a5b6b0bb73a335ab89d66"
+SRC_URI[sha256sum] = "22defc65cfa3ef2a3395faaea75d6331c6e62ea5dfacfed3e2ec17b08c882923"
 
-SRC_URI[md5sum] = "e0f71a7b2ddab0f8612336ac81d9636b"
-SRC_URI[sha256sum] = "e5e8c5be9664e7f7f96e0d09919110ab5ad597794f5b1809871177a0f0f14137"

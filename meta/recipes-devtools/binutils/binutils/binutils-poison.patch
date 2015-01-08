@@ -106,10 +106,10 @@ Index: binutils-2.24/ld/configure
  
  # Check whether --enable-got was given.
  if test "${enable_got+set}" = set; then :
-Index: binutils-2.24/ld/configure.in
+Index: binutils-2.24/ld/configure.ac
 ===================================================================
---- binutils-2.24.orig/ld/configure.in	2013-12-15 11:46:17.000000000 -0800
-+++ binutils-2.24/ld/configure.in	2013-12-15 11:46:59.810435651 -0800
+--- binutils-2.24.orig/ld/configure.ac	2013-12-15 11:46:17.000000000 -0800
++++ binutils-2.24/ld/configure.ac	2013-12-15 11:46:59.810435651 -0800
 @@ -87,6 +87,16 @@
  AC_SUBST(TARGET_SYSTEM_ROOT)
  AC_SUBST(TARGET_SYSTEM_ROOT_DEFINE)
@@ -214,10 +214,10 @@ Index: binutils-2.24/ld/lexsup.c
 ===================================================================
 --- binutils-2.24.orig/ld/lexsup.c	2013-12-15 11:46:17.000000000 -0800
 +++ binutils-2.24/ld/lexsup.c	2013-12-15 11:49:28.950434490 -0800
-@@ -507,6 +507,14 @@
-     OPTION_IGNORE_UNRESOLVED_SYMBOL},
-     '\0', N_("SYMBOL"),
-     N_("Unresolved SYMBOL will not cause an error or warning"), TWO_DASHES },
+@@ -513,6 +513,14 @@ static const struct ld_option ld_options[] =
+   { {"pop-state", no_argument, NULL, OPTION_POP_STATE},
+     '\0', NULL, N_("Pop state of flags governing input file handling"),
+     TWO_DASHES },
 +  { {"no-poison-system-directories", no_argument, NULL,
 +     OPTION_NO_POISON_SYSTEM_DIRECTORIES},
 +    '\0', NULL, N_("Do not warn for -L options using system directories"),
@@ -229,18 +229,18 @@ Index: binutils-2.24/ld/lexsup.c
  };
  
  #define OPTION_COUNT ARRAY_SIZE (ld_options)
-@@ -1442,6 +1450,14 @@
-               einfo (_("%P%X: --hash-size needs a numeric argument\n"));
-           }
-           break;
+@@ -1474,6 +1482,14 @@ parse_args (unsigned argc, char **argv)
+ 	      free (oldp);
+ 	    }
+ 	  break;
 +
-+   case OPTION_NO_POISON_SYSTEM_DIRECTORIES:
-+     command_line.poison_system_directories = FALSE;
-+     break;
++	case OPTION_NO_POISON_SYSTEM_DIRECTORIES:
++	  command_line.poison_system_directories = FALSE;
++	  break;
 +
-+   case OPTION_ERROR_POISON_SYSTEM_DIRECTORIES:
-+     command_line.error_poison_system_directories = TRUE;
-+     break;
++	case OPTION_ERROR_POISON_SYSTEM_DIRECTORIES:
++	  command_line.error_poison_system_directories = TRUE;
++	  break;
  	}
      }
  
@@ -248,10 +248,10 @@ Index: binutils-2.24/ld/ldlex.h
 ===================================================================
 --- binutils-2.24.orig/ld/ldlex.h	2013-12-15 11:46:17.000000000 -0800
 +++ binutils-2.24/ld/ldlex.h	2013-12-15 11:47:43.230435299 -0800
-@@ -138,6 +138,8 @@
-   OPTION_DEFAULT_SCRIPT,
-   OPTION_PRINT_OUTPUT_FORMAT,
+@@ -140,6 +140,8 @@ enum option_values
    OPTION_IGNORE_UNRESOLVED_SYMBOL,
+   OPTION_PUSH_STATE,
+   OPTION_POP_STATE,
 +  OPTION_NO_POISON_SYSTEM_DIRECTORIES,
 +  OPTION_ERROR_POISON_SYSTEM_DIRECTORIES,
  };
