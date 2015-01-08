@@ -45,6 +45,10 @@ ttyO1
 ttyO2
 ttyO3
 
+# Xilinx Zynq SoC
+ttyPS0
+ttyPS1
+
 # USB dongles
 ttyUSB0
 ttyUSB1
