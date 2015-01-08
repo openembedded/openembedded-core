@@ -109,7 +109,9 @@ class Configuration(object):
                         readsection(self.localparser, section, repo)
 
     def update(self, repo, option, value, initmode=False):
-        if self.localparser:
+        # If the main config has the option already, that is what we
+        # are expected to modify.
+        if self.localparser and not self.parser.has_option(repo, option):
             parser = self.localparser
             section = "%s|%s" % (repo, self.combobranch)
             conffile = self.localconffile
