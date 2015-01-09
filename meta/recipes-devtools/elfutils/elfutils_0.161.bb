@@ -7,8 +7,8 @@ DEPENDS = "libtool bzip2 zlib virtual/libintl"
 
 SRC_URI = "https://fedorahosted.org/releases/e/l/elfutils/${PV}/elfutils-${PV}.tar.bz2"
 
-SRC_URI[md5sum] = "7527f22dff8b1ac8c122cfc4d3d3bb1e"
-SRC_URI[sha256sum] = "741b556863c069ceab2d81eb54aeda8c34f46728859704eaf9baef8503e9a9d1"
+SRC_URI[md5sum] = "e1b9847c9a6a1ad340de8d47a863ec52"
+SRC_URI[sha256sum] = "570c91a1783fa5386aaa2dfdd08dda1de777c2b63bf3b9c1437d635ffdd7a070"
 
 SRC_URI += "\
         file://mempcpy.patch \
