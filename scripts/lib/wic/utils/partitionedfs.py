@@ -156,6 +156,13 @@ class Image:
                 # Skip one sector required for the partitioning scheme overhead
                 d['offset'] += overhead
 
+            elif d['numpart'] > 3:
+                # Reserve a sector for EBR for every logical partition
+                # before alignment is performed.
+                if ptable_format == "msdos":
+                    d['offset'] += 1
+
+
             if p['align']:
                 # If not first partition and we do have alignment set we need
                 # to align the partition.
@@ -185,14 +192,6 @@ class Image:
             p['num'] = d['numpart']
 
             if d['ptable_format'] == "msdos":
-                if d['numpart'] > 2:
-                    # Every logical partition requires an additional sector for
-                    # the EBR, so steal the last sector from the end of each
-                    # partition starting from the 3rd one for the EBR. This
-                    # will make sure the logical partitions are aligned
-                    # correctly.
-                    p['size'] -= 1
-
                 if d['numpart'] > 3:
                     p['type'] = 'logical'
                     p['num'] = d['numpart'] + 1
@@ -259,13 +258,20 @@ class Image:
         for p in self.partitions:
             d = self.disks[p['disk_name']]
             if d['ptable_format'] == "msdos" and p['num'] == 5:
-                # The last sector of the 3rd partition was reserved for the EBR
-                # of the first _logical_ partition. This is why the extended
-                # partition should start one sector before the first logical
-                # partition.
+                # Create an extended partition (note: extended
+                # partition is described in MBR and contains all
+                # logical partitions). The logical partitions save a
+                # sector for an EBR just before the start of a
+                # partition. The extended partition must start one
+                # sector before the start of the first logical
+                # partition. This way the first EBR is inside of the
+                # extended partition. Since the extended partitions
+                # starts a sector before the first logical partition,
+                # add a sector at the back, so that there is enough
+                # room for all logical partitions.
                 self.__create_partition(d['disk'].device, "extended",
                                         None, p['start'] - 1,
-                                        d['offset'] - p['start'])
+                                        d['offset'] - p['start'] + 1)
 
             if p['fstype'] == "swap":
                 parted_fs_type = "linux-swap"
@@ -338,14 +344,6 @@ class Image:
 
         for p in self.partitions:
             d = self.disks[p['disk_name']]
-            if d['ptable_format'] == "msdos" and p['num'] == 5:
-                # The last sector of the 3rd partition was reserved for the EBR
-                # of the first _logical_ partition. This is why the extended
-                # partition should start one sector before the first logical
-                # partition.
-                self.__write_partition(p['num'], p['source_file'],
-                                       p['start'] - 1,
-                                       d['offset'] - p['start'])
 
             self.__write_partition(p['num'], p['source_file'],
                                    p['start'], p['size'])
