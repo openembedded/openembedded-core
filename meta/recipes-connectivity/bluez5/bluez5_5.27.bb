@@ -1,6 +1,6 @@
 require bluez5.inc
-SRC_URI[md5sum] = "41bd0c915abde255622150ce6dcae67b"
-SRC_URI[sha256sum] = "5ca62f3f45e2638a0f7a81658d6c8813ee01487436ae8e53e9fe395e23d1fd30"
+SRC_URI[md5sum] = "a8fc508690e497e88c2c0b373cd653a8"
+SRC_URI[sha256sum] = "fbf33cebc76f8c81f28f0d67c71a8a1ec4b04b087460ec7353f7e0c207a1f981"
 
 # noinst programs in Makefile.tools that are conditional on READLINE
 # support
@@ -45,6 +45,7 @@ NOINST_TOOLS_EXPERIMENTAL ?= " \
     tools/hex2hcd \
     tools/ibeacon \
     tools/btgatt-client \
+    tools/btgatt-server \
     tools/gatt-service \
     profiles/iap/iapd \
 "
