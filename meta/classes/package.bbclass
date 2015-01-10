@@ -403,9 +403,10 @@ python package_get_auto_pr() {
     if not (host is None):
         d.setVar("PRSERV_HOST", host)
 
+    pkgv = d.getVar("PKGV", True)
+
     # PR Server not active, handle AUTOINC
     if not d.getVar('PRSERV_HOST', True):
-        pkgv = d.getVar("PKGV", True)
         if 'AUTOINC' in pkgv:
             d.setVar("PKGV", pkgv.replace("AUTOINC", "0"))
         return
@@ -428,11 +429,11 @@ python package_get_auto_pr() {
         if conn is None:
             conn = oe.prservice.prserv_make_conn(d)
         if conn is not None:
-            if "AUTOINC" in pv:
+            if "AUTOINC" in pkgv:
                 srcpv = bb.fetch2.get_srcrev(d)
                 base_ver = "AUTOINC-%s" % version[:version.find(srcpv)]
                 value = conn.getPR(base_ver, pkgarch, srcpv)
-                d.setVar("PKGV", pv.replace("AUTOINC", str(value)))
+                d.setVar("PKGV", pkgv.replace("AUTOINC", str(value)))
 
             auto_pr = conn.getPR(version, pkgarch, checksum)
     except Exception as e:
