@@ -192,8 +192,7 @@ RDEPENDS_${PN}-initramfs = "${PN}"
 
 FILES_libgudev = "${libdir}/libgudev*${SOLIBS}"
 
-# The test cases need perl and bash to run correctly.
-RDEPENDS_${PN}-ptest += "perl bash"
+RDEPENDS_${PN}-ptest += "perl python bash"
 FILES_${PN}-ptest += "${libdir}/udev/rules.d"
 
 FILES_${PN}-dbg += "${libdir}/systemd/ptest/.debug"
@@ -204,6 +203,7 @@ FILES_${PN}-vconsole-setup = "${rootlibexecdir}/systemd/systemd-vconsole-setup \
                               ${systemd_unitdir}/system/systemd-vconsole-setup.service \
                               ${systemd_unitdir}/system/sysinit.target.wants/systemd-vconsole-setup.service"
 
+RDEPENDS_${PN}-kernel-install += "bash"
 FILES_${PN}-kernel-install = "${bindir}/kernel-install \
                               ${sysconfdir}/kernel/ \
                               ${exec_prefix}/lib/kernel \
