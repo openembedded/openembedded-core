@@ -71,7 +71,7 @@ do_compile () {
 		   "-I."
 }
 
-fakeroot do_install () {
+do_install () {
 	oe_runmake "DSTROOT=${D}" install
 
 	# Remove /var/run from package as cupsd will populate it on startup
