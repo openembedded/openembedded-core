@@ -8,5 +8,5 @@ SRC_URI += "file://dhcp-3.0.3-dhclient-dbus.patch;striplevel=0 \
             file://replace-ifconfig-route.patch \
            "
 
-SRC_URI[md5sum] = "1020d77e1a4c1f01b76279caff9beb80"
-SRC_URI[sha256sum] = "a7b6517d5cf32c5e49d2323a63de00efe5391df7cb0045dfa0ec8f6ee46ebe8a"
+SRC_URI[md5sum] = "b3a42ece3c7f2cd2e74a3e12ca881d20"
+SRC_URI[sha256sum] = "266cbca8a7a6bb8f9ccc5765da0d2b04099329314a54a4fc1022d510ad3e9af0"
