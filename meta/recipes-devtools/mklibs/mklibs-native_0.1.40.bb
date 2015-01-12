@@ -12,11 +12,7 @@ SRC_URI = "http://ftp.de.debian.org/debian/pool/main/m/mklibs/${BPN}_${PV}.tar.x
 	file://sysrooted-ldso.patch \
 "
 
-SRC_URI[md5sum] = "38a579a531401eb76f4bab4ccfb774a2"
-SRC_URI[sha256sum] = "fa2881ab4fe72b0504878357f1fc6b17920459b56e8a60dfb083ca28fb64e733"
+SRC_URI[md5sum] = "e1dafe5f962caa9dc5f2651c0723812a"
+SRC_URI[sha256sum] = "1db24ae779d21ccfed49f22e49a2b7ee43ec0e9197bc206d81cd02f96e91e125"
 
 inherit autotools gettext native pythonnative
-
-do_configure_prepend() {
-	sed "s+MKLIBS_VERSION+${PV}+" ${S}/configure.ac
-}
