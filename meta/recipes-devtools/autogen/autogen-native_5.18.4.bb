@@ -13,8 +13,8 @@ SRC_URI = "${GNU_MIRROR}/autogen/rel${PV}/autogen-${PV}.tar.gz \
            file://increase-timeout-limit.patch \
            file://mk-tpl-config.sh-force-exit-value-to-be-0-in-subproc.patch"
 
-SRC_URI[md5sum] = "0fb6b003423e004d94e0119c2390078f"
-SRC_URI[sha256sum] = "73d05a689105eb9b8be54f32498c99ddbd360776fc61cf45be6a2a4eb4a40039"
+SRC_URI[md5sum] = "6f48029cc839303d28496e1609868938"
+SRC_URI[sha256sum] = "3cd9f81a8ae7c6865bb9bbbe16c4307a243a1373d0b315a83571cbba1fff725d"
 
 DEPENDS = "guile-native libtool-native libxml2-native"
 
