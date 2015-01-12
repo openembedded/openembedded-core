@@ -20,7 +20,7 @@ CPPFLAGS += "-DFACILITY=LOG_DAEMON -DENABLE_DNS -DHOSTS_ACCESS"
 CFLAGS += "-Wall -Wstrict-prototypes -fPIC"
 EXTRA_OEMAKE += "'NO_TCP_WRAPPER=${@bb.utils.contains('PACKAGECONFIG', 'tcp-wrappers', '', '1', d)}'"
 
-fakeroot do_install() {
+do_install() {
     install -d ${D}${mandir}/man8/ ${D}${base_sbindir} ${D}${sysconfdir}/init.d
     install -m 0755 ${WORKDIR}/portmap.init ${D}${sysconfdir}/init.d/portmap
     oe_runmake install DESTDIR=${D}
