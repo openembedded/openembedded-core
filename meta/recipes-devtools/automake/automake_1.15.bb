@@ -22,8 +22,8 @@ SRC_URI += " file://python-libdir.patch \
             file://py-compile-compile-only-optimized-byte-code.patch \
             file://buildtest.patch"
 
-SRC_URI[md5sum] = "d052a3e884631b9c7892f2efce542d75"
-SRC_URI[sha256sum] = "814c2333f350ce00034a1fe718e0e4239998ceea7b0aff67e9fd273ed6dfc23b"
+SRC_URI[md5sum] = "716946a105ca228ab545fc37a70df3a3"
+SRC_URI[sha256sum] = "7946e945a96e28152ba5a6beb0625ca715c6e32ac55f2e353ef54def0c8ed924"
 
 do_install_append () {
     install -d ${D}${datadir}
