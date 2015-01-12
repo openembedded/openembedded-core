@@ -60,7 +60,7 @@ do_configure () {
 }
 
 
-fakeroot do_install() {
+do_install() {
         oe_runmake install DESTDIR=${D}
 }
 
