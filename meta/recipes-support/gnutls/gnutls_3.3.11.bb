@@ -1,5 +1,7 @@
 require gnutls.inc
 
+PR = "r1"
+
 SRC_URI += "file://correct_rpl_gettimeofday_signature.patch \
            "
 SRC_URI[md5sum] = "b657e3010c10cae2244e7ce79ee3d446"
