@@ -1,6 +1,6 @@
 SUMMARY = "XML::Parser - A perl module for parsing XML documents"
 SECTION = "libs"
-LICENSE = "Artistic-1.0 | GPL-1.0"
+LICENSE = "Artistic-1.0 | GPL-1.0+"
 LIC_FILES_CHKSUM = "file://README;beginline=2;endline=6;md5=c8767d7516229f07b26e42d1cf8b51f1"
 
 DEPENDS += "expat expat-native"
