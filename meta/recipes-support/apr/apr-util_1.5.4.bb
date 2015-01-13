@@ -28,22 +28,25 @@ EXTRA_OECONF = "--with-apr=${STAGING_BINDIR_CROSS}/apr-1-config \
 		--with-expat=${STAGING_DIR_HOST}${prefix}"
 
 
-inherit autotools-brokensep lib_package binconfig
+inherit autotools lib_package binconfig
+
+PR = "r1"
 
 OE_BINCONFIG_EXTRA_MANGLE = " -e 's:location=source:location=installed:'"
 
 do_configure_append() {
 	if [ "${CLASSOVERRIDE}" = "class-target" ]; then
-		cp ${STAGING_DATADIR}/apr/apr_rules.mk ${S}/build/rules.mk
+		cp ${STAGING_DATADIR}/apr/apr_rules.mk ${B}/build/rules.mk
 	fi
 }
 do_configure_prepend_class-native() {
-	cp ${STAGING_DATADIR_NATIVE}/apr/apr_rules.mk ${S}/build/rules.mk
+	mkdir ${B}/build
+	cp ${STAGING_DATADIR_NATIVE}/apr/apr_rules.mk ${B}/build/rules.mk
 }
 do_configure_append_class-native() {
-	sed -i "s#LIBTOOL=\$(SHELL) \$(apr_builddir)#LIBTOOL=\$(SHELL) ${STAGING_BINDIR_NATIVE}#" ${S}/build/rules.mk
+	sed -i "s#LIBTOOL=\$(SHELL) \$(apr_builddir)#LIBTOOL=\$(SHELL) ${STAGING_BINDIR_NATIVE}#" ${B}/build/rules.mk
 	# sometimes there isn't SHELL
-	sed -i "s#LIBTOOL=\$(apr_builddir)#LIBTOOL=${STAGING_BINDIR_NATIVE}#" ${S}/build/rules.mk
+	sed -i "s#LIBTOOL=\$(apr_builddir)#LIBTOOL=${STAGING_BINDIR_NATIVE}#" ${B}/build/rules.mk
 }
 
 FILES_${PN}     += "${libdir}/apr-util-1/apr_dbm_gdbm-1.so"
@@ -54,7 +57,7 @@ FILES_${PN}-staticdev += "${libdir}/apr-util-1/apr_dbm_gdbm.a"
 inherit ptest
 
 do_compile_ptest() {
-	cd ${S}/test
+	cd ${B}/test
 	oe_runmake
 }
 
@@ -62,6 +65,6 @@ do_install_ptest() {
 	t=${D}${PTEST_PATH}/test
 	mkdir $t
 	for i in testall data; do \
-	  cp -r ${S}/test/$i $t; \
+	  cp -r ${B}/test/$i $t; \
 	done
 }
