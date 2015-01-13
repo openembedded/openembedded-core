@@ -11,11 +11,11 @@ SECTION = "x11/utils"
 DEPENDS = "glib-2.0 libxml2 zlib"
 BBCLASSEXTEND = "native"
 EXTRA_OECONF += "--enable-Bsymbolic=auto"
-PR = "r1"
+PR = "r2"
 
 BINCONFIG = "${bindir}/croco-0.6-config"
 
-inherit autotools-brokensep pkgconfig gnomebase gtk-doc binconfig-disabled
+inherit autotools pkgconfig gnomebase gtk-doc binconfig-disabled
 
 GNOME_COMPRESS_TYPE = "xz"
 
