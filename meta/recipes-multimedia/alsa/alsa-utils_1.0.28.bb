@@ -25,7 +25,9 @@ SRC_URI[sha256sum] = "f3ff4c89b0125a7797b1b13cd094cc92276e655458274967386e812d03
 #
 EXTRA_OECONF_append_libc-uclibc = " --disable-nls"
 
-inherit autotools-brokensep gettext pkgconfig
+PR = "r1"
+
+inherit autotools gettext pkgconfig
 
 # This are all packages that we need to make. Also, the now empty alsa-utils
 # ipk depends on them.

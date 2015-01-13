@@ -13,5 +13,5 @@ S = "${WORKDIR}/alsa-utils-${PV}"
 
 do_install() {
 	install -d ${D}${sbindir}
-	install -m 0755 ${S}/alsaconf/alsaconf ${D}${sbindir}/
+	install -m 0755 ${B}/alsaconf/alsaconf ${D}${sbindir}/
 }
