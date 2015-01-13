@@ -35,7 +35,7 @@ WARN_QA ?= "ldflags useless-rpaths rpaths staticdev libdir xorg-driver-abi \
 ERROR_QA ?= "dev-so debug-deps dev-deps debug-files arch pkgconfig la \
             perms dep-cmp pkgvarcheck perm-config perm-line perm-link \
             split-strip packages-list pkgv-undefined var-undefined \
-            version-going-backwards \
+            version-going-backwards expanded-d \
             "
 
 ALL_QA = "${WARN_QA} ${ERROR_QA}"
@@ -905,6 +905,33 @@ def package_qa_check_deps(pkg, pkgdest, skip, d):
     if not check_valid_deps('RCONFLICTS'):
         sane = False
 
+    return sane
+
+QAPATHTEST[expanded-d] = "package_qa_check_expanded_d"
+def package_qa_check_expanded_d(path,name,d,elf,messages):
+    """
+    Check for the expanded D (${D}) value in pkg_* and FILES
+    variables, warn the user to use it correctly.
+    """
+
+    sane = True
+    expanded_d = d.getVar('D',True)
+
+    # Get packages for current recipe and iterate
+    packages = d.getVar('PACKAGES', True).split(" ")
+    for pak in packages:
+    # Go through all variables and check if expanded D is found, warn the user accordingly
+        for var in 'FILES','pkg_preinst', 'pkg_postinst', 'pkg_prerm', 'pkg_postrm':
+            bbvar = d.getVar(var + "_" + pak)
+            if bbvar:
+                # Bitbake expands ${D} within bbvar during the previous step, so we check for its expanded value
+                if expanded_d in bbvar:
+                    if var == 'FILES':
+                        messages["expanded-d"] = "FILES in %s recipe should not contain the ${D} variable as it references the local build directory not the target filesystem, best solution is to remove the ${D} reference" % pak
+                        sane = False
+                    else:
+                        messages["expanded-d"] = "%s in %s recipe contains ${D}, it should be replaced by $D instead" % (var, pak)
+                        sane = False
     return sane
 
 # The PACKAGE FUNC to scan each package
