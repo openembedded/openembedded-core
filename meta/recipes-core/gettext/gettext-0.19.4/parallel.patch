@@ -21,16 +21,3 @@ Signed-off-by: Joe Slater <jslater@windriver.com>
  # Which classes to export from the shared library.
  MOOPPFLAGS += --dllexport=styled_ostream
  
---- a/gettext-tools/src/Makefile.am
-+++ b/gettext-tools/src/Makefile.am
-@@ -229,8 +229,8 @@ libgettextsrc_la_LDFLAGS += -Wl,--export
- endif
- 
- # No need to install libgettextsrc.a, except on AIX.
--install-exec-local: install-libLTLIBRARIES install-exec-clean
--install-exec-clean:
-+install-exec-local: install-exec-clean
-+install-exec-clean: install-libLTLIBRARIES
- 	case "@host_os@" in \
- 	  aix*) ;; \
- 	  *) $(RM) $(DESTDIR)$(libdir)/libgettextsrc.a ;; \
