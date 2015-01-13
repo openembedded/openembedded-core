@@ -5,7 +5,7 @@ multiple cores to the hilt when compressing data. pigz was written by Mark \
 Adler, and uses the zlib and pthread libraries."
 HOMEPAGE = "http://zlib.net/pigz/"
 SECTION = "console/utils"
-LICENSE = "Zlib"
+LICENSE = "Zlib & Apache-2.0"
 
 SRC_URI = "http://zlib.net/pigz/pigz-${PV}.tar.gz"
 
