@@ -3,6 +3,9 @@ SECTION = "console/utils"
 HOMEPAGE = "https://fedorahosted.org/logrotate/"
 LICENSE = "GPLv2"
 
+# TODO: logrotate 3.8.8 adds autotools/automake support, update recipe to use it.
+# TODO: Document coreutils dependency. Why not RDEPENDS? Why not busybox?
+
 DEPENDS="coreutils popt"
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=18810669f13b87348459e611d31ab760"
@@ -20,6 +23,9 @@ PACKAGECONFIG ?= "\
     ${@base_contains('DISTRO_FEATURES', 'acl', 'acl', '', d)} \
     ${@base_contains('DISTRO_FEATURES', 'selinux', 'selinux', '', d)} \
 "
+
+PACKAGECONFIG[acl] = ",,acl"
+PACKAGECONFIG[selinux] = ",,libselinux"
 
 # If RPM_OPT_FLAGS is unset, it adds -g itself rather than obeying our
 # optimization variables, so use it rather than EXTRA_CFLAGS.
