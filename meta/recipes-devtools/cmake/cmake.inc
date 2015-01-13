@@ -17,7 +17,9 @@ SRC_URI = "http://www.cmake.org/files/v${CMAKE_MAJOR_VERSION}/cmake-${PV}.tar.gz
            file://cmake-2.8.11.2-FindFreetype.patch \
            "
 
-inherit autotools-brokensep
+PR = "r1"
+
+inherit autotools
 
 # Ugly hack to work around undefined OE_QMAKE_PATH_EXTERNAL_HOST_BINS variable
 # and possibly missing qmake binary (qtbase-native can be removed from sysroot
@@ -45,5 +47,5 @@ do_configure_prepend() {
 CMAKE_EXTRACONF = ""
 
 do_configure () {
-	./configure --prefix=${prefix} -- ${CMAKE_EXTRACONF}
+	${S}/configure --prefix=${prefix} -- ${CMAKE_EXTRACONF}
 }
