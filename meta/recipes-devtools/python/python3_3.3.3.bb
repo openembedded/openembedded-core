@@ -76,7 +76,7 @@ do_configure_prepend() {
 
 do_compile() {
         # regenerate platform specific files, because they depend on system headers
-        cd Lib/plat-linux*
+        cd ${S}/Lib/plat-linux*
         include=${STAGING_INCDIR} ${STAGING_BINDIR_NATIVE}/python3-native/python3 \
                 ${S}/Tools/scripts/h2py.py -i '(u_long)' \
                 ${STAGING_INCDIR}/dlfcn.h \
@@ -108,7 +108,7 @@ do_compile() {
 	install -m 0644 Makefile Makefile.sysroot
 
 	export CROSS_COMPILE="${TARGET_PREFIX}"
-	export PYTHONBUILDDIR="${S}"
+	export PYTHONBUILDDIR="${B}"
 	oe_runmake HOSTPGEN=${STAGING_BINDIR_NATIVE}/python3-native/pgen \
 		HOSTPYTHON=${STAGING_BINDIR_NATIVE}/python3-native/python3 \
 		STAGING_LIBDIR=${STAGING_LIBDIR} \
@@ -136,7 +136,7 @@ do_install() {
 	install -m 0644 Makefile.orig Makefile
 
 	export CROSS_COMPILE="${TARGET_PREFIX}"
-	export PYTHONBUILDDIR="${S}"
+	export PYTHONBUILDDIR="${B}"
 	install -d ${D}${libdir}/pkgconfig
 	install -d ${D}${libdir}/python${PYTHON_MAJMIN}/config
 

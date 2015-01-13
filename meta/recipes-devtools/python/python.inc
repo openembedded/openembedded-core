@@ -3,7 +3,7 @@ HOMEPAGE = "http://www.python.org"
 LICENSE = "PSFv2"
 SECTION = "devel/python"
 # bump this on every change in contrib/python/generate-manifest-2.7.py
-INC_PR = "r0"
+INC_PR = "r1"
 
 LIC_FILES_CHKSUM = "file://LICENSE;md5=ed3abfd1059e2d3a36a8cff3986f9bb6"
 
@@ -14,7 +14,7 @@ SRC_URI[sha256sum] = "726457e11cb153adc3f428aaf1901fc561a374c30e5e7da6742c0742a3
 
 PYTHON_MAJMIN = "2.7"
 
-inherit autotools-brokensep
+inherit autotools
 
 PYTHONLSBOPTS = "--with-wctype-functions"
 PYTHONLSBOPTS_linuxstdbase = "ac_cv_sizeof_off_t=8"

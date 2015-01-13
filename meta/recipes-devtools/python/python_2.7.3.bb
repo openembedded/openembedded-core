@@ -61,7 +61,7 @@ do_configure_prepend() {
 
 do_compile() {
         # regenerate platform specific files, because they depend on system headers
-        cd Lib/plat-linux2
+        cd ${S}/Lib/plat-linux2
         include=${STAGING_INCDIR} ${STAGING_BINDIR_NATIVE}/python-native/python \
                 ${S}/Tools/scripts/h2py.py -i '(u_long)' \
                 ${STAGING_INCDIR}/dlfcn.h \
@@ -93,7 +93,7 @@ do_compile() {
 	install -m 0644 Makefile Makefile.sysroot
 
 	export CROSS_COMPILE="${TARGET_PREFIX}"
-	export PYTHONBUILDDIR="${S}"
+	export PYTHONBUILDDIR="${B}"
 
 	oe_runmake HOSTPGEN=${STAGING_BINDIR_NATIVE}/python-native/pgen \
 		HOSTPYTHON=${STAGING_BINDIR_NATIVE}/python-native/python \
@@ -110,7 +110,7 @@ do_install() {
 	install -m 0644 Makefile.orig Makefile
 
 	export CROSS_COMPILE="${TARGET_PREFIX}"
-	export PYTHONBUILDDIR="${S}"
+	export PYTHONBUILDDIR="${B}"
 
 	# After swizzling the makefile, we need to run the build again.
 	# install can race with the build so we have to run this first, then install
