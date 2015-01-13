@@ -25,7 +25,7 @@ SRC_URI = "file://filemode-fix.patch \
            file://run-ptest \
            file://root-home-dir.patch"
 
-inherit autotools-brokensep pkgconfig ptest
+inherit autotools pkgconfig ptest
 
 EXTRA_OECONF = "--with-kernel=${STAGING_KERNEL_DIR}  --without-x ac_cv_prog_XSLTPROC="
 do_configure () {
@@ -40,7 +40,6 @@ do_compile_ptest() {
 
 do_install_ptest() {
 	subdirs="libdb/tests libutil++/tests libregex/tests libutil/tests libop/tests libdb/tests "
-	cd ${S}
 	for tooltest in ${subdirs}
 	do
 		find ${tooltest} -perm /u=x -type f| cpio -pvdu ${D}${PTEST_PATH}
@@ -54,6 +53,6 @@ do_install_ptest() {
 	cp libregex/tests/mangled-name ${D}${PTEST_PATH}/libregex/tests
 
 	# needed by litutil++ file_manip_tests
-	cp libutil++/tests/file_manip_tests.cpp \
+	cp ${S}/libutil++/tests/file_manip_tests.cpp \
 		libutil++/tests/file_manip_tests.o ${D}${PTEST_PATH}/libutil++/tests
 }

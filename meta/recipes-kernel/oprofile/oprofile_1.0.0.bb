@@ -10,3 +10,4 @@ SRC_URI[sha256sum] = "847110b4ecdcf8c8353cd38f94c1b704aad4bfcd9453e38b88d112cfb7
 
 S = "${WORKDIR}/oprofile-${PV}"
 
+PR = "r1"
