@@ -21,8 +21,7 @@ S = "${WORKDIR}/nspr-${PV}/nspr"
 RDEPENDS_${PN}-dev += "perl"
 TARGET_CC_ARCH += "${LDFLAGS}"
 
-TESTS = "runtests.pl \
-    runtests.sh \
+TESTS = " \
     accept \
     acceptread \
     acceptreademu \
@@ -138,7 +137,9 @@ TESTS = "runtests.pl \
     xnotify \
     zerolen"
 
-inherit autotools-brokensep
+PR = "r1"
+
+inherit autotools
 
 do_compile_prepend() {
 	oe_runmake CROSS_COMPILE=1 CFLAGS="-DXP_UNIX" LDFLAGS="" CC=gcc -C config export
@@ -154,8 +155,11 @@ do_install_append() {
     sed -i s:OELIBDIR:${libdir}:g ${D}${libdir}/pkgconfig/nspr.pc
     sed -i s:OEINCDIR:${includedir}:g ${D}${libdir}/pkgconfig/nspr.pc
     sed -i s:OEEXECPREFIX:${exec_prefix}:g ${D}${libdir}/pkgconfig/nspr.pc
-    cd ${S}/pr/tests
+
     mkdir -p ${D}${libdir}/nspr/tests
+    install -m 0755 ${S}/pr/tests/runtests.pl ${D}${libdir}/nspr/tests
+    install -m 0755 ${S}/pr/tests/runtests.sh ${D}${libdir}/nspr/tests
+    cd ${B}/pr/tests
     install -m 0755 ${TESTS} ${D}${libdir}/nspr/tests
 
     # delete compile-et.pl and perr.properties from ${bindir} because these are
