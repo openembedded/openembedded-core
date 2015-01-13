@@ -16,6 +16,8 @@ S = "${WORKDIR}/libfm-${PV}"
 
 EXTRA_OECONF = "--with-extra-only --with-gtk=no"
 
-inherit autotools-brokensep pkgconfig gtk-doc
+PR = "r1"
+
+inherit autotools pkgconfig gtk-doc
 
 do_configure[dirs] =+ "${S}/m4"
