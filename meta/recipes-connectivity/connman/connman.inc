@@ -67,18 +67,18 @@ SYSTEMD_SERVICE_${PN} = "connman.service"
 SYSTEMD_SERVICE_${PN}-vpn = "connman-vpn.service"
 SYSTEMD_WIRED_SETUP = "ExecStartPre=-${libdir}/connman/wired-setup"
 
-inherit autotools-brokensep pkgconfig systemd update-rc.d
+inherit autotools pkgconfig systemd update-rc.d
 
 do_configure_append () {
-	sed -i "s#ExecStart=#${SYSTEMD_WIRED_SETUP}\nExecStart=#" ${S}/src/connman.service
+	sed -i "s#ExecStart=#${SYSTEMD_WIRED_SETUP}\nExecStart=#" ${B}/src/connman.service
 }
 
 # This allows *everyone* to access ConnMan over DBus, without any access
 # control.  Really the at_console flag should work, which would mean that
 # both this and the xuser patch can be dropped.
 do_compile_append() {
-	sed -i -e s:deny:allow:g src/connman-dbus.conf
-	sed -i -e s:deny:allow:g vpn/vpn-dbus.conf
+	sed -i -e s:deny:allow:g ${S}/src/connman-dbus.conf
+	sed -i -e s:deny:allow:g ${S}/vpn/vpn-dbus.conf
 }
 
 do_install_append() {
@@ -89,9 +89,9 @@ do_install_append() {
 	fi
 
 	install -d ${D}${bindir}
-	install -m 0755 ${S}/tools/*-test ${D}${bindir}
-	if [ -e ${S}/tools/wispr ]; then
-		install -m 0755 ${S}/tools/wispr ${D}${bindir}
+	install -m 0755 ${B}/tools/*-test ${D}${bindir}
+	if [ -e ${B}/tools/wispr ]; then
+		install -m 0755 ${B}/tools/wispr ${D}${bindir}
 	fi
 	install -m 0755 ${B}/client/connmanctl ${D}${bindir}
 
