@@ -5,8 +5,10 @@ DEPENDS = "glib-2.0 zlib pixman"
 RDEPENDS_${PN}_class-target += "bash python"
 
 require qemu-targets.inc
-inherit autotools-brokensep
+inherit autotools
 BBCLASSEXTEND = "native nativesdk"
+
+PR = "r1"
 
 # QEMU_TARGETS is overridable variable
 QEMU_TARGETS ?= "arm aarch64 i386 mips mipsel mips64 mips64el ppc sh4 x86_64"
@@ -37,13 +39,13 @@ do_configure_prepend_class-native() {
 	fi
 
 	# Undo the -lX11 added by linker-flags.patch, don't assume that host has libX11 installed
-	sed -i 's/-lX11//g' Makefile.target
+	sed -i 's/-lX11//g' ${S}/Makefile.target
 }
 
 do_configure_prepend_class-nativesdk() {
 	if [ "${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'x11', '', d)}" = "" ] ; then
 		# Undo the -lX11 added by linker-flags.patch
-		sed -i 's/-lX11//g' Makefile.target
+		sed -i 's/-lX11//g' ${S}/Makefile.target
 	fi
 }
 
