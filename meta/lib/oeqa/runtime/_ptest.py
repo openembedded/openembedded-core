@@ -104,12 +104,15 @@ class PtestRunnerTest(oeRuntimeTest):
     @skipUnlessPassed('test_ssh')
     def test_ptestrunner(self):
         self.add_smart_channel()
-        cond = oeRuntimeTest.hasPackage("ptest-runner") and oeRuntimeTest.hasFeature("ptest") and oeRuntimeTest.hasPackage("-ptest")
-        if not cond:
+        (runnerstatus, result) = self.target.run('which ptest-runner', 0)
+        cond = oeRuntimeTest.hasPackage("ptest-runner") and oeRuntimeTest.hasFeature("ptest") and oeRuntimeTest.hasPackage("-ptest") and (runnerstatus != 0)
+        if cond:
             self.install_packages(self.install_complementary("*-ptest"))
             self.install_packages(['ptest-runner'])
 
-        self.target.run('/usr/bin/ptest-runner > /tmp/ptest.log 2>&1', 0)
+        (runnerstatus, result) = self.target.run('/usr/bin/ptest-runner > /tmp/ptest.log 2>&1', 0)
+        #exit code is !=0 even if ptest-runner executes because some ptest tests fail.
+        self.assertTrue(runnerstatus != 127, msg="Cannot execute ptest-runner!")
         self.target.copy_from('/tmp/ptest.log', self.ptest_log)
         shutil.copyfile(self.ptest_log, "ptest.log")
 
