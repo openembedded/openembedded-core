@@ -99,8 +99,6 @@ class PtestRunnerTest(oeRuntimeTest):
         return complementary_pkgs.split()
 
     def setUp(self):
-        self.buildhist_dir = oeRuntimeTest.tc.d.getVar("BUILDHISTORY_DIR_IMAGE", True)
-        self.assertTrue(os.path.exists(self.buildhist_dir))
         self.ptest_log = os.path.join(oeRuntimeTest.tc.d.getVar("TEST_LOG_DIR",True), "ptest-%s.log" % oeRuntimeTest.tc.d.getVar('DATETIME', True))
 
     @skipUnlessPassed('test_ssh')
@@ -113,12 +111,12 @@ class PtestRunnerTest(oeRuntimeTest):
 
         self.target.run('/usr/bin/ptest-runner > /tmp/ptest.log 2>&1', 0)
         self.target.copy_from('/tmp/ptest.log', self.ptest_log)
-        shutil.copyfile(self.ptest_log, os.path.join(self.buildhist_dir, "ptest.log"))
+        shutil.copyfile(self.ptest_log, "ptest.log")
 
-        result = self.parse_ptest(os.path.join(self.buildhist_dir, "ptest.log"))
+        result = self.parse_ptest("ptest.log")
         log_results_to_location = "./results"
         if os.path.exists(log_results_to_location):
             shutil.rmtree(log_results_to_location)
         os.makedirs(log_results_to_location)
 
-        result.log_as_files(log_results_to_location, test_status = ['fail'])
+        result.log_as_files(log_results_to_location, test_status = ['pass','fail'])
