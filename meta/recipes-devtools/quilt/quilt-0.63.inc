@@ -19,6 +19,8 @@ EXTRA_OECONF_darwin += "--without-date \
                         --without-getopt \
                         "
 
+CLEANBROKEN = "1"
+
 PACKAGES += "guards guards-doc"
 FILES_${PN} = "${sysconfdir} ${datadir}/quilt \
                ${bindir}/quilt ${libdir}/quilt"
