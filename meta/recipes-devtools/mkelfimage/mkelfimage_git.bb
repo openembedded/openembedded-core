@@ -14,6 +14,8 @@ SRC_URI = "git://review.coreboot.org/p/coreboot;protocol=http \
            file://fix-makefile-to-find-libz.patch   \
           "
 
+CLEANBROKEN = "1"
+
 S = "${WORKDIR}/git/util/mkelfImage"
 
 CFLAGS += "-fno-stack-protector"
