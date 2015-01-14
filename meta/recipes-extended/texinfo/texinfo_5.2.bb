@@ -45,6 +45,12 @@ tex_texinfo = "texmf/tex/texinfo"
 
 inherit gettext autotools
 
+do_configure_prepend () {
+	# autotools_do_configure updates po/Makefile.in.in, we also need
+	# update po_document.
+	cp -f ${STAGING_DATADIR_NATIVE}/gettext/po/Makefile.in.in ${S}/po_document/
+}
+
 do_compile_prepend() {
 	if [ -d tools ];then
 		oe_runmake -C tools/gnulib/lib
