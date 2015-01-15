@@ -36,6 +36,8 @@ EXTRA_OECONF = "\
 		--without-selinux \
 		"
 
+EXTRA_OECONF_append_class-target = " TAR=tar"
+
 do_configure () {
     echo >> ${S}/m4/compiler.m4
     sed -i -e 's#PERL_LIBDIR=.*$#PERL_LIBDIR="${libdir}/perl"#' ${S}/configure
