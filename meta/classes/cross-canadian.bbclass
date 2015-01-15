@@ -16,6 +16,7 @@ STAGING_BINDIR_TOOLCHAIN = "${STAGING_DIR_NATIVE}${bindir_native}/${SDK_ARCH}${S
 #
 PACKAGE_ARCH = "${SDK_ARCH}-${SDKPKGSUFFIX}"
 CANADIANEXTRAOS = ""
+MODIFYTOS ??= "1"
 python () {
     archs = d.getVar('PACKAGE_ARCHS', True).split()
     sdkarchs = []
@@ -23,6 +24,9 @@ python () {
         sdkarchs.append(arch + '-${SDKPKGSUFFIX}')
     d.setVar('PACKAGE_ARCHS', " ".join(sdkarchs))
 
+    # Allow the following code segment to be disabled, e.g. meta-environment
+    if d.getVar("MODIFYTOS", True) != "1":
+        return
     # PowerPC can build "linux" and "linux-gnuspe"
     tarch = d.getVar("TARGET_ARCH", True)
     if tarch == "powerpc":
