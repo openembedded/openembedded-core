@@ -352,8 +352,7 @@ do_kernel_link_vmlinux() {
 	ln -sf ../../../vmlinux
 }
 
-OE_TERMINAL_EXPORTS += "GUILT_BASE KBUILD_OUTPUT"
-GUILT_BASE = "meta"
+OE_TERMINAL_EXPORTS += "KBUILD_OUTPUT"
 KBUILD_OUTPUT = "${B}"
 
 python () {
