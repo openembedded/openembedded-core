@@ -14,10 +14,11 @@ inherit linux-kernel-base
 inherit module-base
 
 # We need the kernel to be staged (unpacked, patched and configured) before
-# we can grab the source and make the kernel-devsrc package
+# we can grab the source and make the source package. We also need the bits from
+# ${B} not to change while we install, so virtual/kernel must finish do_compile.
 do_install[depends] += "virtual/kernel:do_shared_workdir"
 # Need the source, not just the output of populate_sysroot
-do_install[depends] += "virtual/kernel:do_configure"
+do_install[depends] += "virtual/kernel:do_compile"
 
 # There's nothing to do here, except install the source where we can package it
 do_fetch[noexec] = "1"
@@ -47,7 +48,7 @@ do_install() {
         # artifacts afterwards, and the extra i/o is not significant
         #
         cd ${B}
-        find . -type d -name '.git*' -prune -o -type f -print0 | cpio --null -pdlu $kerneldir
+        find . -type d -name '.git*' -prune -o -path '.debug' -prune -o -type f -print0 | cpio --null -pdlu $kerneldir
         cd ${S}
         find . -type d -name '.git*' -prune -o -type f -print0 | cpio --null -pdlu $kerneldir
 
