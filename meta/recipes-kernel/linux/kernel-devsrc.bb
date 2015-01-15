@@ -15,7 +15,7 @@ inherit module-base
 
 # We need the kernel to be staged (unpacked, patched and configured) before
 # we can grab the source and make the kernel-devsrc package
-do_install[depends] += "virtual/kernel:do_populate_sysroot"
+do_install[depends] += "virtual/kernel:do_shared_workdir"
 # Need the source, not just the output of populate_sysroot
 do_install[depends] += "virtual/kernel:do_configure"
 
@@ -30,7 +30,8 @@ do_populate_sysroot[noexec] = "1"
 # Define where the kernel headers are installed on the target as well as where
 # they are staged.
 KERNEL_SRC_PATH = "/usr/src/kernel"
-S = "${STAGING_DIR_TARGET}/${KERNEL_SRC_PATH}"
+S = "${STAGING_KERNEL_DIR}"
+B = "${STAGING_KERNEL_BUILDDIR}"
 
 KERNEL_VERSION = "${@get_kernelversion_headers('${S}')}"
 
@@ -45,8 +46,15 @@ do_install() {
         # We can keep this copy simple and take everything, since a we'll clean up any build
         # artifacts afterwards, and the extra i/o is not significant
         #
+        cd ${B}
+        find . -type d -name '.git*' -prune -o -type f -print0 | cpio --null -pdlu $kerneldir
         cd ${S}
         find . -type d -name '.git*' -prune -o -type f -print0 | cpio --null -pdlu $kerneldir
+
+        # Explicitly set KBUILD_OUTPUT to ensure that the image directory is cleaned and not
+        # The main build artifacts. We clean the directory to avoid QA errors on mismatched
+        # architecture (since scripts and helpers are native format).
+        KBUILD_OUTPUT="$kerneldir"
         oe_runmake -C $kerneldir CC="${KERNEL_CC}" LD="${KERNEL_LD}" clean _mrproper_scripts
 
         # As of Linux kernel version 3.0.1, the clean target removes
@@ -54,7 +62,7 @@ do_install() {
         # KBUILD_LDFLAGS_MODULE, making it required to build external modules.
         if [ ${ARCH} = "powerpc" ]; then
                 mkdir -p $kerneldir/arch/powerpc/lib/
-                cp ${S}/arch/powerpc/lib/crtsavres.o $kerneldir/arch/powerpc/lib/crtsavres.o
+                cp ${B}/arch/powerpc/lib/crtsavres.o $kerneldir/arch/powerpc/lib/crtsavres.o
         fi
 }
 # Ensure we don't race against "make scripts" during cpio

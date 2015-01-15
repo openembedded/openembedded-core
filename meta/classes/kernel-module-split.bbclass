@@ -70,7 +70,7 @@ python split_kernel_module_packages () {
         m = kerverrexp.match(kernelver)
         if m:
             kernelver_stripped = m.group(1)
-        staging_kernel_dir = d.getVar("STAGING_KERNEL_DIR", True)
+        staging_kernel_dir = d.getVar("STAGING_KERNEL_BUILDDIR", True)
         system_map_file = "%s/boot/System.map-%s" % (dvar, kernelver)
         if not os.path.exists(system_map_file):
             system_map_file = "%s/System.map-%s" % (staging_kernel_dir, kernelver)

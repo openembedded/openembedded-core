@@ -14,6 +14,7 @@ module_do_compile() {
 		   KERNEL_VERSION=${KERNEL_VERSION}    \
 		   CC="${KERNEL_CC}" LD="${KERNEL_LD}" \
 		   AR="${KERNEL_AR}" \
+	           O=${STAGING_KERNEL_BUILDDIR} \
 		   ${MAKE_TARGETS}
 }
 
@@ -21,6 +22,7 @@ module_do_install() {
 	unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS
 	oe_runmake DEPMOD=echo INSTALL_MOD_PATH="${D}" \
 	           CC="${KERNEL_CC}" LD="${KERNEL_LD}" \
+	           O=${STAGING_KERNEL_BUILDDIR} \
 	           modules_install
 }
 

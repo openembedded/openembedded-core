@@ -32,7 +32,7 @@ DEPENDS = " \
     bison flex \
 "
 
-do_configure[depends] += "virtual/kernel:do_install"
+do_configure[depends] += "virtual/kernel:do_shared_workdir"
 
 PROVIDES = "virtual/perf"
 

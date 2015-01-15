@@ -230,28 +230,33 @@ kernel_do_install() {
 	[ -e Module.symvers ] && install -m 0644 Module.symvers ${D}/boot/Module.symvers-${KERNEL_VERSION}
 	install -d ${D}${sysconfdir}/modules-load.d
 	install -d ${D}${sysconfdir}/modprobe.d
+}
+do_install[prefuncs] += "package_get_auto_pr"
 
-	#
-	# Support for external module building - create a minimal copy of the
-	# kernel source tree.
-	#
-	kerneldir=${D}${KERNEL_SRC_PATH}
+addtask shared_workdir after do_compile before do_install
+
+do_shared_workdir () {
+	cd ${B}
+
+	kerneldir=${STAGING_KERNEL_BUILDDIR}
 	install -d $kerneldir
-	mkdir -p ${D}/lib/modules/${KERNEL_VERSION}
-	ln -sf ${KERNEL_SRC_PATH} "${D}/lib/modules/${KERNEL_VERSION}/build"
 
 	#
 	# Store the kernel version in sysroots for module-base.bbclass
 	#
 
 	echo "${KERNEL_VERSION}" > $kerneldir/kernel-abiversion
-	
+
 	# Copy files required for module builds
 	cp System.map $kerneldir/System.map-${KERNEL_VERSION}
 	cp Module.symvers $kerneldir/
 	cp .config $kerneldir/
 	mkdir -p $kerneldir/include/config
 	cp include/config/kernel.release $kerneldir/include/config/kernel.release
+
+	# We can also copy over all the generated files and avoid special cases
+	# like version.h, but we've opted to keep this small until file creep starts
+	# to happen
 	if [ -e include/linux/version.h ]; then
 		mkdir -p $kerneldir/include/linux
 		cp include/linux/version.h $kerneldir/include/linux/version.h
@@ -273,10 +278,11 @@ kernel_do_install() {
 		cp -fR arch/${ARCH}/include/generated/* $kerneldir/arch/${ARCH}/include/generated/
 	fi
 }
-do_install[prefuncs] += "package_get_auto_pr"
 
-python sysroot_stage_all () {
-    oe.path.copyhardlinktree(d.expand("${D}${KERNEL_SRC_PATH}"), d.expand("${SYSROOT_DESTDIR}${KERNEL_SRC_PATH}"))
+# We have an empty sysroot_stage_all to keep the default routine from
+# package.bbclass from expanding the kernel source into the sysroot and
+# colliding with linux-firmware files
+sysroot_stage_all () {
 }
 
 KERNEL_CONFIG_COMMAND ?= "oe_runmake_call -C ${S} O=${B} oldnoconfig || yes '' | oe_runmake -C ${S} O=${B} oldconfig"
@@ -467,7 +473,7 @@ kernel_do_deploy() {
 do_deploy[dirs] = "${DEPLOYDIR} ${B}"
 do_deploy[prefuncs] += "package_get_auto_pr"
 
-addtask deploy before do_build after do_install
+addtask deploy after do_populate_sysroot
 
 EXPORT_FUNCTIONS do_deploy
 
