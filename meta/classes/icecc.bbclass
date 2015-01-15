@@ -91,6 +91,10 @@ def create_path(compilers, bb, d):
     return staging
 
 def use_icc(bb,d):
+    if d.getVar('ICECC_DISABLED') == "1":
+        # don't even try it, when explicitly disabled
+        return "no"
+
     # allarch recipes don't use compiler
     if icc_is_allarch(bb, d):
         return "no"
@@ -133,8 +137,7 @@ def use_icc(bb,d):
     return "yes"
 
 def icc_is_allarch(bb, d):
-    return \
-        bb.data.inherits_class("allarch", d);
+    return d.getVar("PACKAGE_ARCH") == "all"
 
 def icc_is_kernel(bb, d):
     return \
@@ -148,10 +151,6 @@ def icc_is_native(bb, d):
 # Don't pollute allarch signatures with TARGET_FPU
 icc_version[vardepsexclude] += "TARGET_FPU"
 def icc_version(bb, d):
-    if d.getVar('ICECC_DISABLED') == "1":
-        # don't even try it, when explicitly disabled
-        return ""
-
     if use_icc(bb, d) == "no":
         return ""
 
@@ -179,7 +178,7 @@ def icc_version(bb, d):
     return tar_file
 
 def icc_path(bb,d):
-    if d.getVar('ICECC_DISABLED') == "1":
+    if use_icc(bb, d) == "no":
         # don't create unnecessary directories when icecc is disabled
         return
 
@@ -246,7 +245,7 @@ def set_icecc_env():
     return
 
 set_icecc_env() {
-    if [ "${ICECC_DISABLED}" = "1" ]
+    if [ "${@use_icc(bb, d)}" = "no" ]
     then
         return
     fi
