@@ -17,7 +17,7 @@ SRC_URI[sha256sum] = "c45d47f2dc77484e3f74c0f66aef0d5d95de6c47ed71d9f926d86d546f
 
 inherit gettext autotools update-alternatives pkgconfig
 
-EXTRA_OECONF += "--without-gnome-keyring --without-libidn"
+EXTRA_OECONF += "--without-libsecret --without-libgsasl --without-libidn"
 
 ALTERNATIVE_${PN} = "sendmail"
 ALTERNATIVE_TARGET[sendmail] = "${bindir}/msmtp"
