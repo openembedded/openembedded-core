@@ -40,7 +40,8 @@ python __anonymous () {
 # We need to move these over to STAGING_KERNEL_DIR. We can't just
 # create the symlink in advance as the git fetcher can't cope with
 # the symlink.
-do_unpack[cleandirs] += " ${S} ${STAGING_KERNEL_DIR} ${B}"
+do_unpack[cleandirs] += " ${S} ${STAGING_KERNEL_DIR} ${B} ${STAGING_KERNEL_BUILDDIR}"
+do_clean[cleandirs] += " ${S} ${STAGING_KERNEL_DIR} ${B} ${STAGING_KERNEL_BUILDDIR}"
 base_do_unpack_append () {
     s = d.getVar("S", True)
     if s[-1] == '/':
