@@ -211,7 +211,7 @@ do_kernel_checkout() {
 	# Create a working tree copy of the kernel by checking out a branch
 	machine_branch="${@ get_machine_branch(d, "${KBRANCH}" )}"
 	git show-ref --quiet --verify -- "refs/heads/${machine_branch}"
-	if [ $? -eq 0 ]; then
+	if [ $? -ne 0 ]; then
 		machine_branch="master"
 	fi
 
