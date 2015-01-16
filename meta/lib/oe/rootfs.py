@@ -209,7 +209,7 @@ class Rootfs(object):
                                   'new', '-v'])
 
     def _generate_kernel_module_deps(self):
-        kernel_abi_ver_file = os.path.join(self.d.getVar('STAGING_KERNEL_DIR', True),
+        kernel_abi_ver_file = os.path.join(self.d.getVar('STAGING_KERNEL_BUILDDIR', True),
                                            'kernel-abiversion')
         if os.path.exists(kernel_abi_ver_file):
             kernel_ver = open(kernel_abi_ver_file).read().strip(' \n')
