@@ -1,0 +1,37 @@
+python: Building without SSLv3 support
+
+Building without SSLv3 support when openssl is built
+without any support for SSLv3
+
+Upstream-Status: Backport
+
+Reference:
+https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=76A8611#22
+
+Signed-off-by: Sona Sarmadi <sona.sarmadi@enea.com>
+---
+diff -ruN a/Modules/_ssl.c b/Modules/_ssl.c
+--- a/Modules/_ssl.c	2014-11-26 07:43:58.755679939 +0100
++++ b/Modules/_ssl.c	2014-11-26 07:49:10.454182400 +0100
+@@ -302,8 +302,10 @@
+     PySSL_BEGIN_ALLOW_THREADS
+     if (proto_version == PY_SSL_VERSION_TLS1)
+         self->ctx = SSL_CTX_new(TLSv1_method()); /* Set up context */
++#ifndef OPENSSL_NO_SSL3
+     else if (proto_version == PY_SSL_VERSION_SSL3)
+         self->ctx = SSL_CTX_new(SSLv3_method()); /* Set up context */
++#endif
+ #ifndef OPENSSL_NO_SSL2
+     else if (proto_version == PY_SSL_VERSION_SSL2)
+         self->ctx = SSL_CTX_new(SSLv2_method()); /* Set up context */
+@@ -1777,8 +1779,10 @@
+     PyModule_AddIntConstant(m, "PROTOCOL_SSLv2",
+                             PY_SSL_VERSION_SSL2);
+ #endif
++#ifndef OPENSSL_NO_SSL3
+     PyModule_AddIntConstant(m, "PROTOCOL_SSLv3",
+                             PY_SSL_VERSION_SSL3);
++#endif
+     PyModule_AddIntConstant(m, "PROTOCOL_SSLv23",
+                             PY_SSL_VERSION_SSL23);
+     PyModule_AddIntConstant(m, "PROTOCOL_TLSv1",
