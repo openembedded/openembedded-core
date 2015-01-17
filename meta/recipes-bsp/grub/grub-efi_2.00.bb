@@ -2,7 +2,7 @@ require grub2.inc
 
 DEPENDS_class-target = "grub-efi-native"
 RDEPENDS_${PN}_class-target = "diffutils freetype"
-PR = "r2"
+PR = "r3"
 
 SRC_URI += " \
            file://cfg \
