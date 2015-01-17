@@ -76,9 +76,6 @@ PACKAGES = "\
     libssp \
     libssp-dev \
     libssp-staticdev \
-    libgfortran \
-    libgfortran-dev \
-    libgfortran-staticdev \
     libmudflap \
     libmudflap-dev \
     libmudflap-staticdev \
@@ -130,18 +127,6 @@ FILES_libssp-dev = "\
     ${libdir}/gcc/${TARGET_SYS}/${BINV}/include/ssp \
 "
 FILES_libssp-staticdev = "${libdir}/libssp*.a"
-
-FILES_libgfortran = "${libdir}/libgfortran.so.*"
-FILES_libgfortran-dev = "\
-    ${libdir}/libgfortran*.so \
-    ${libdir}/libgfortran.spec \
-    ${libdir}/libgfortran.la \
-    ${libdir}/gcc/${TARGET_SYS}/${BINV}/libgfortranbegin.* \
-    ${libdir}/gcc/${TARGET_SYS}/${BINV}/libcaf_single* \
-"
-FILES_libgfortran-staticdev = "${libdir}/libgfortran.a"
-
-INSANE_SKIP_${MLPREFIX}libgfortran-dev = "staticdev"
 
 FILES_libquadmath = "${libdir}/libquadmath*.so.*"
 FILES_libquadmath-dev = "\
