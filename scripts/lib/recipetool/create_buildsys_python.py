@@ -41,6 +41,13 @@ def tinfoil_init(instance):
 
 
 class PythonRecipeHandler(RecipeHandler):
+    base_pkgdeps = ['python-core']
+    excluded_pkgdeps = ['python-dbg']
+    # os.path is provided by python-core
+    assume_provided = ['builtins', 'os.path']
+    # Assumes that the host python builtin_module_names is sane for target too
+    assume_provided = assume_provided + list(sys.builtin_module_names)
+
     bbvar_map = {
         'Name': 'PN',
         'Version': 'PV',
@@ -273,6 +280,8 @@ class PythonRecipeHandler(RecipeHandler):
                 mdinfo.append('{} = "{}"'.format(k, v))
             lines_before[src_uri_line-1:src_uri_line-1] = mdinfo
 
+        mapped_deps, unmapped_deps = self.scan_setup_python_deps(srctree, setup_info, setup_non_literals)
+
         extras_req = set()
         if 'Extras-require' in info:
             extras_req = info['Extras-require']
@@ -284,6 +293,8 @@ class PythonRecipeHandler(RecipeHandler):
                 lines_after.append('# Uncomment this line to enable all the optional features.')
                 lines_after.append('#PACKAGECONFIG ?= "{}"'.format(' '.join(k.lower() for k in extras_req.iterkeys())))
                 for feature, feature_reqs in extras_req.iteritems():
+                    unmapped_deps.difference_update(feature_reqs)
+
                     feature_req_deps = ('python-' + r.replace('.', '-').lower() for r in sorted(feature_reqs))
                     lines_after.append('PACKAGECONFIG[{}] = ",,,{}"'.format(feature.lower(), ' '.join(feature_req_deps)))
 
@@ -293,10 +304,33 @@ class PythonRecipeHandler(RecipeHandler):
                 lines_after.append('')
             inst_reqs = info['Install-requires']
             if inst_reqs:
+                unmapped_deps.difference_update(inst_reqs)
+
                 inst_req_deps = ('python-' + r.replace('.', '-').lower() for r in sorted(inst_reqs))
                 lines_after.append('# WARNING: the following rdepends are from setuptools install_requires. These')
                 lines_after.append('# upstream names may not correspond exactly to bitbake package names.')
                 lines_after.append('RDEPENDS_${{PN}} += "{}"'.format(' '.join(inst_req_deps)))
+
+        if mapped_deps:
+            name = info.get('Name')
+            if name and name[0] in mapped_deps:
+                # Attempt to avoid self-reference
+                mapped_deps.remove(name[0])
+            mapped_deps -= set(self.excluded_pkgdeps)
+            if inst_reqs or extras_req:
+                lines_after.append('')
+            lines_after.append('# WARNING: the following rdepends are determined through basic analysis of the')
+            lines_after.append('# python sources, and might not be 100% accurate.')
+            lines_after.append('RDEPENDS_${{PN}} += "{}"'.format(' '.join(sorted(mapped_deps))))
+
+        unmapped_deps -= set(extensions)
+        unmapped_deps -= set(self.assume_provided)
+        if unmapped_deps:
+            if mapped_deps:
+                lines_after.append('')
+            lines_after.append('# WARNING: We were unable to map the following python package/module')
+            lines_after.append('# dependencies to the bitbake packages which include them:')
+            lines_after.extend('#    {}'.format(d) for d in sorted(unmapped_deps))
 
         handled.append('buildsystem')
 
@@ -424,6 +458,132 @@ class PythonRecipeHandler(RecipeHandler):
 
                 if value != new_list:
                     info[variable] = new_list
+
+    def scan_setup_python_deps(self, srctree, setup_info, setup_non_literals):
+        if 'Package-dir' in setup_info:
+            package_dir = setup_info['Package-dir']
+        else:
+            package_dir = {}
+
+        class PackageDir(distutils.command.build_py.build_py):
+            def __init__(self, package_dir):
+                self.package_dir = package_dir
+
+        pd = PackageDir(package_dir)
+        to_scan = []
+        if not any(v in setup_non_literals for v in ['Py-modules', 'Scripts', 'Packages']):
+            if 'Py-modules' in setup_info:
+                for module in setup_info['Py-modules']:
+                    try:
+                        package, module = module.rsplit('.', 1)
+                    except ValueError:
+                        package, module = '.', module
+                    module_path = os.path.join(pd.get_package_dir(package), module + '.py')
+                    to_scan.append(module_path)
+
+            if 'Packages' in setup_info:
+                for package in setup_info['Packages']:
+                    to_scan.append(pd.get_package_dir(package))
+
+            if 'Scripts' in setup_info:
+                to_scan.extend(setup_info['Scripts'])
+        else:
+            logger.info("Scanning the entire source tree, as one or more of the following setup keywords are non-literal: py_modules, scripts, packages.")
+
+        if not to_scan:
+            to_scan = ['.']
+
+        logger.info("Scanning paths for packages & dependencies: %s", ', '.join(to_scan))
+
+        provided_packages = self.parse_pkgdata_for_python_packages()
+        scanned_deps = self.scan_python_dependencies([os.path.join(srctree, p) for p in to_scan])
+        mapped_deps, unmapped_deps = set(self.base_pkgdeps), set()
+        for dep in scanned_deps:
+            mapped = provided_packages.get(dep)
+            if mapped:
+                mapped_deps.add(mapped)
+            else:
+                unmapped_deps.add(dep)
+        return mapped_deps, unmapped_deps
+
+    def scan_python_dependencies(self, paths):
+        deps = set()
+        try:
+            dep_output = self.run_command(['pythondeps', '-d'] + paths)
+        except (OSError, subprocess.CalledProcessError):
+            pass
+        else:
+            for line in dep_output.splitlines():
+                line = line.rstrip()
+                dep, filename = line.split('\t', 1)
+                if filename.endswith('/setup.py'):
+                    continue
+                deps.add(dep)
+
+        try:
+            provides_output = self.run_command(['pythondeps', '-p'] + paths)
+        except (OSError, subprocess.CalledProcessError):
+            pass
+        else:
+            provides_lines = (l.rstrip() for l in provides_output.splitlines())
+            provides = set(l for l in provides_lines if l and l != 'setup')
+            deps -= provides
+
+        return deps
+
+    def parse_pkgdata_for_python_packages(self):
+        suffixes = [t[0] for t in imp.get_suffixes()]
+        pkgdata_dir = tinfoil.config_data.getVar('PKGDATA_DIR', True)
+
+        ldata = tinfoil.config_data.createCopy()
+        bb.parse.handle('classes/python-dir.bbclass', ldata, True)
+        python_sitedir = ldata.getVar('PYTHON_SITEPACKAGES_DIR', True)
+
+        dynload_dir = os.path.join(os.path.dirname(python_sitedir), 'lib-dynload')
+        python_dirs = [python_sitedir + os.sep,
+                       os.path.join(os.path.dirname(python_sitedir), 'dist-packages') + os.sep,
+                       os.path.dirname(python_sitedir) + os.sep]
+        packages = {}
+        for pkgdatafile in glob.glob('{}/runtime/*'.format(pkgdata_dir)):
+            files_info = None
+            with open(pkgdatafile, 'r') as f:
+                for line in f.readlines():
+                    field, value = line.split(': ', 1)
+                    if field == 'FILES_INFO':
+                        files_info = ast.literal_eval(value)
+                        break
+                else:
+                    continue
+
+            for fn in files_info.iterkeys():
+                for suffix in suffixes:
+                    if fn.endswith(suffix):
+                        break
+                else:
+                    continue
+
+                if fn.startswith(dynload_dir + os.sep):
+                    base = os.path.basename(fn)
+                    provided = base.split('.', 1)[0]
+                    packages[provided] = os.path.basename(pkgdatafile)
+                    continue
+
+                for python_dir in python_dirs:
+                    if fn.startswith(python_dir):
+                        relpath = fn[len(python_dir):]
+                        relstart, _, relremaining = relpath.partition(os.sep)
+                        if relstart.endswith('.egg'):
+                            relpath = relremaining
+                        base, _ = os.path.splitext(relpath)
+
+                        if '/.debug/' in base:
+                            continue
+                        if os.path.basename(base) == '__init__':
+                            base = os.path.dirname(base)
+                        base = base.replace(os.sep + os.sep, os.sep)
+                        provided = base.replace(os.sep, '.')
+                        packages[provided] = os.path.basename(pkgdatafile)
+        return packages
 
     @classmethod
     def run_command(cls, cmd, **popenargs):
