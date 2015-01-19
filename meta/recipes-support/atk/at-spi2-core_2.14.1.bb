@@ -13,6 +13,6 @@ DEPENDS = "dbus glib-2.0 virtual/libx11 libxi libxtst intltool-native"
 
 inherit autotools gtk-doc pkgconfig
 
-EXTRA_OECONF = "--disable-introspection --disable-xevie"
+EXTRA_OECONF = "--disable-introspection --disable-xevie --with-dbus-daemondir=${bindir}"
 
 FILES_${PN} += "${datadir}/dbus-1/services/*.service"
