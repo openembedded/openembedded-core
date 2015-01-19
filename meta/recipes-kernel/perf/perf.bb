@@ -115,6 +115,10 @@ do_install() {
 }
 
 do_configure_prepend () {
+    # Fix for rebuilding
+    rm -rf ${B}/
+    mkdir ${B}/
+
     #kernels before 3.1 do not support WERROR env variable
     sed -i 's,-Werror ,,' ${S}/tools/perf/Makefile
     if [ -e "${S}/tools/perf/config/Makefile" ]; then
