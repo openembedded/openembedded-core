@@ -1,5 +1,7 @@
 require grub2.inc
 
+DEPENDS += "autogen-native"
+
 DEFAULT_PREFERENCE = "-1"
 DEFAULT_PREFERENCE_arm = "1"
 

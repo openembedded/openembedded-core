@@ -26,7 +26,7 @@ SRC_URI = "ftp://ftp.gnu.org/gnu/grub/grub-${PV}.tar.gz \
            file://grub-efi-fix-with-glibc-2.20.patch \
             "
 
-DEPENDS = "autogen-native flex-native bison-native xz"
+DEPENDS = "flex-native bison-native xz"
 
 SRC_URI[md5sum] = "e927540b6eda8b024fb0391eeaa4091c"
 SRC_URI[sha256sum] = "65b39a0558f8c802209c574f4d02ca263a804e8a564bc6caf1cd0fd3b3cc11e3"
