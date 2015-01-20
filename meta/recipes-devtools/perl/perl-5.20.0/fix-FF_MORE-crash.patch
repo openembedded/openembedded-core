@@ -1,0 +1,21 @@
+Upstream-Status: Backport
+Reference: https://rt.perl.org/Public/Bug/Display.html?id=123591
+  From 62db6ea5fed19611596cbc5fc0b8a4df2c604e58 Mon Sep 17 00:00:00 2001
+  From: Tony Cook <tony@develop-help.com>
+  Date: Mon, 19 Jan 2015 16:03:18 +1100
+  Subject: [PATCH 1/1] [perl #123538] always set chophere and itembytes at the same time
+
+  Previously this would crash in FF_MORE because chophere was still NULL.
+
+Signed-off-by: Gary Thomas <gary@mlbassoc.com>
+Index: perl-5.20.0/pp_ctl.c
+===================================================================
+--- perl-5.20.0.orig/pp_ctl.c
++++ perl-5.20.0/pp_ctl.c
+@@ -590,6 +590,7 @@ PP(pp_formline)
+                         break;
+                 }
+                 itembytes = s - item;
++                chophere = s;
+ 		break;
+ 	    }
