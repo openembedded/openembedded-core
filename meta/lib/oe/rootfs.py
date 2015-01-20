@@ -209,16 +209,17 @@ class Rootfs(object):
                                   'new', '-v'])
 
     def _generate_kernel_module_deps(self):
-        kernel_abi_ver_file = os.path.join(self.d.getVar('STAGING_KERNEL_BUILDDIR', True),
+        kernel_abi_ver_file = oe.path.join(self.d.getVar('STAGING_DIR_TARGET', True), self.d.getVar('datadir', True), "kernel-depmod",
                                            'kernel-abiversion')
-        if os.path.exists(kernel_abi_ver_file):
-            kernel_ver = open(kernel_abi_ver_file).read().strip(' \n')
-            modules_dir = os.path.join(self.image_rootfs, 'lib', 'modules', kernel_ver)
+        if not os.path.exists(kernel_abi_ver_file):
+            bb.fatal("No kernel-abiversion file found (%s), cannot run depmod, aborting" % kernel_abi_ver_file)
 
-            bb.utils.mkdirhier(modules_dir)
+        kernel_ver = open(kernel_abi_ver_file).read().strip(' \n')
+        modules_dir = os.path.join(self.image_rootfs, 'lib', 'modules', kernel_ver)
 
-            self._exec_shell_cmd(['depmodwrapper', '-a', '-b', self.image_rootfs,
-                                  kernel_ver])
+        bb.utils.mkdirhier(modules_dir)
+
+        self._exec_shell_cmd(['depmodwrapper', '-a', '-b', self.image_rootfs, kernel_ver])
 
     """
     Create devfs:

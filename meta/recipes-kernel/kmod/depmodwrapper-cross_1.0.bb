@@ -19,21 +19,21 @@ if [ "\$1" != "-a" -o "\$2" != "-b" ]; then
     echo "Usage: depmodwrapper -a -b rootfs KERNEL_VERSION" >&2
     exit 1
 fi
-if [ ! -r ${STAGING_KERNEL_BUILDDIR}/kernel-abiversion ]; then
-    echo "Unable to read: ${STAGING_KERNEL_BUILDDIR}/kernel-abiversion" >&2
+if [ ! -r ${STAGING_DIR_TARGET}${datadir}/kernel-depmod/kernel-abiversion ]; then
+    echo "Unable to read: ${STAGING_DIR_TARGET}${datadir}/kernel-depmod/kernel-abiversion" >&2
 else
-    kernelabi=\$(cat ${STAGING_KERNEL_BUILDDIR}/kernel-abiversion)
+    kernelabi=\$(cat ${STAGING_DIR_TARGET}${datadir}/kernel-depmod/kernel-abiversion)
     if [ "\$kernelabi" != "\$4" ]; then
         echo "Error: Kernel version \$4 does not match kernel-abiversion (\$kernelabi)" >&2
         exit 1
     fi
 fi
 
-if [ ! -r ${STAGING_KERNEL_BUILDDIR}/System.map-\$4 ]; then
-    echo "Unable to read: ${STAGING_KERNEL_BUILDDIR}/System.map-\$4" >&2
+if [ ! -r ${STAGING_DIR_TARHET}${datadir}/kernel-depmod/System.map-\$4 ]; then
+    echo "Unable to read: ${STAGING_DIR_TARGET}${datadir}/kernel-depmod/System.map-\$4" >&2
     exec env depmod "\$1" "\$2" "\$3" "\$4"
 else
-    exec env depmod "\$1" "\$2" "\$3" -F "${STAGING_KERNEL_BUILDDIR}/System.map-\$4" "\$4"
+    exec env depmod "\$1" "\$2" "\$3" -F "${STAGING_DIR_TARGET}${datadir}/kernel-depmod/System.map-\$4" "\$4"
 fi
 EOF
 	chmod +x ${D}${bindir_crossscripts}/depmodwrapper

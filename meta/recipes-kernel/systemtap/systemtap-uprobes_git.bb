@@ -21,7 +21,7 @@ EXTRA_OEMAKE = ""
 # support.  Note that staprun expects it in the systemtap/runtime directory,
 # not in /lib/modules.
 do_compile() {
-	if grep -q "CONFIG_UTRACE=y" ${STAGING_KERNEL_DIR}/.config
+	if grep -q "CONFIG_UTRACE=y" ${STAGING_KERNEL_BUILDDIR}/.config
 	then
 		unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS CC LD CPP
 		oe_runmake CC="${KERNEL_CC}" LD="${KERNEL_LD}" \
