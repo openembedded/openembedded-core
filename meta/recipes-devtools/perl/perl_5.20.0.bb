@@ -63,6 +63,7 @@ SRC_URI += " \
 	file://fix_bad_rpath.patch \
 	file://perl-archlib-exp.patch \
 	file://dynaloaderhack.patch \
+	file://fix-FF_MORE-crash.patch \
 	\
         \
         file://config.sh \
