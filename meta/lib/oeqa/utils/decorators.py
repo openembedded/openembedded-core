@@ -18,14 +18,21 @@ class getResults(object):
         upperf = sys._current_frames().values()[0]
         while (upperf.f_globals['__name__'] != 'unittest.case'):
             upperf = upperf.f_back
-        self.faillist = [ seq[0]._testMethodName for seq in upperf.f_locals['result'].failures ]
-        self.errorlist = [ seq[0]._testMethodName for seq in upperf.f_locals['result'].errors ]
-        #ignore the _ErrorHolder objects from the skipped tests list
-        self.skiplist = []
-        for seq in upperf.f_locals['result'].skipped:
-            try:
-                self.skiplist.append(seq[0]._testMethodName)
-            except: pass
+
+        def handleList(items):
+            ret = []
+            # items is a list of tuples, (test, failure) or (_ErrorHandler(), Exception())
+            for i in items:
+                s = i[0].id()
+                #Handle the _ErrorHolder objects from skipModule failures
+                if "setUpModule (" in s:
+                    ret.append(s.replace("setUpModule (", "").replace(")",""))
+                else:
+                    ret.append(s)
+            return ret
+        self.faillist = handleList(upperf.f_locals['result'].failures)
+        self.errorlist = handleList(upperf.f_locals['result'].errors)
+        self.skiplist = handleList(upperf.f_locals['result'].skipped)
 
     def getFailList(self):
         return self.faillist
