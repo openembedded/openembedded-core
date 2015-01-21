@@ -22,7 +22,7 @@ SRC_URI[sha256sum] = "a02e6f98974dfceab79884df902ca3df30b0e9bad6d76aee0fb5dce17f
 
 S = "${WORKDIR}/procps-ng-${PV}"
 
-EXTRA_OECONF = "--enable-skill"
+EXTRA_OECONF = "--enable-skill --disable-modern-top"
 
 CPPFLAGS += "-I${S}"
 
