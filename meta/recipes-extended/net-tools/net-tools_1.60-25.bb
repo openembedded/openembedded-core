@@ -34,6 +34,7 @@ nettools_do_patch() {
 	cd ${S}
 	quilt pop -a || true
 	if [ -d ${S}/.pc-nettools ]; then
+		rm -rf ${S}/.pc
 		mv ${S}/.pc-nettools ${S}/.pc
 		QUILT_PATCHES=${S}/debian/patches quilt pop -a
 		rm -rf ${S}/.pc ${S}/debian
