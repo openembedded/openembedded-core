@@ -75,11 +75,11 @@ python populate_packages_prepend() {
     preinst = """#!/bin/sh
 mkdir -p $D${sysconfdir}
 if [ ! -e $D${sysconfdir}/passwd ]; then
-\tcat << EOF > $D${sysconfdir}/passwd
+\tcat << 'EOF' > $D${sysconfdir}/passwd
 """ + passwd + """EOF
 fi
 if [ ! -e $D${sysconfdir}/group ]; then
-\tcat << EOF > $D${sysconfdir}/group
+\tcat << 'EOF' > $D${sysconfdir}/group
 """ + group + """EOF
 fi
 """
