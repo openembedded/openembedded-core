@@ -4,6 +4,7 @@ SRC_URI += " \
             file://pkg-config-native.in \
             file://fix-glib-configure-libtool-usage.patch \
             file://obsolete_automake_macros.patch \
+            file://0001-Strip-system-library-directories-reliably.patch \
            "
 
 SRC_URI[md5sum] = "aa3c86e67551adc3ac865160e34a2a0d"

@@ -1,0 +1,30 @@
+Upstream-Status: Backport (will be in 0.29)
+Signed-off-by: Ross Burton <ross.burton@intel.com>
+
+From ce1a2416ce0f0bd9a8a8a5caaf7dad20cda4d47d Mon Sep 17 00:00:00 2001
+From: Andrew Oakley <aoakley@espial.com>
+Date: Tue, 29 Apr 2014 13:14:35 +0100
+Subject: [PATCH] Strip system library directories reliably
+
+This loop was changed from a while loop to a for loop in commit
+9bf6277b, but the iterator is now advanced twice each time round the
+loop.
+---
+ pkg.c |    1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/pkg.c b/pkg.c
+index 3697fec..c847c95 100644
+--- a/pkg.c
++++ b/pkg.c
+@@ -917,7 +917,6 @@ verify_package (Package *pkg)
+             }
+           system_dir_iter = system_dir_iter->next;
+         }
+-      iter = iter->next;
+     }
+   g_list_free (system_directories);
+ 
+-- 
+1.7.10.4
+
