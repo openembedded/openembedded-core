@@ -8,7 +8,7 @@ DEPENDS = "libtool bzip2 zlib virtual/libintl"
 
 PR = "r11"
 
-SRC_URI = "https://fedorahosted.org/releases/e/l/elfutils/elfutils-${PV}.tar.bz2"
+SRC_URI = "https://fedorahosted.org/releases/e/l/${PN}/${BP}.tar.bz2"
 
 SRC_URI[md5sum] = "a0bed1130135f17ad27533b0034dba8d"
 SRC_URI[sha256sum] = "8aebfa4a745db21cf5429c9541fe482729b62efc7e53e9110151b4169fe887da"
@@ -25,14 +25,15 @@ SRC_URI += "\
         file://m68k_backend.diff \
         file://testsuite-ignore-elflint.diff \
         file://elf_additions.diff \
-	file://elfutils-fsize.patch \
-	file://remove-unused.patch \
-	file://mempcpy.patch \
-	file://fix_for_gcc-4.7.patch \
-	file://dso-link-change.patch \
-	file://nm-Fix-size-passed-to-snprintf-for-invalid-sh_name-case.patch \
-	file://elfutils-ar-c-fix-num-passed-to-memset.patch \
-	file://Fix_elf_cvt_gunhash.patch \
+        file://elfutils-fsize.patch \
+        file://remove-unused.patch \
+        file://mempcpy.patch \
+        file://fix_for_gcc-4.7.patch \
+        file://dso-link-change.patch \
+        file://nm-Fix-size-passed-to-snprintf-for-invalid-sh_name-case.patch \
+        file://elfutils-ar-c-fix-num-passed-to-memset.patch \
+        file://Fix_elf_cvt_gunhash.patch \
+        file://elf_begin.c-CVE-2014-9447-fix.patch \
 "
 # Only apply when building uclibc based target recipe
 SRC_URI_append_libc-uclibc = " file://uclibc-support.patch"
@@ -52,9 +53,9 @@ EXTRA_OECONF_append_class-native = " --without-bzlib"
 EXTRA_OECONF_append_libc-uclibc = " --enable-uclibc"
 
 do_configure_prepend() {
-	sed -i '/^i386_dis.h:/,+4 {/.*/d}' ${S}/libcpu/Makefile.am
+    sed -i '/^i386_dis.h:/,+4 {/.*/d}' ${S}/libcpu/Makefile.am
 
-	cp ${WORKDIR}/*dis.h ${S}/libcpu
+    cp ${WORKDIR}/*dis.h ${S}/libcpu
 }
 
 # we can not build complete elfutils when using uclibc
