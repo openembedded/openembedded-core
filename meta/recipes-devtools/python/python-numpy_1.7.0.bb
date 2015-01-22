@@ -50,6 +50,10 @@ CONFIGFILESURI_mips64 = " \
     file://config.h \
     file://_numpyconfig.h \
 "
+CONFIGFILESURI_mips64n32 = " \
+    file://config.h \
+    file://_numpyconfig.h \
+"
 
 S = "${WORKDIR}/numpy-${PV}"
 

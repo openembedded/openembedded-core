@@ -29,6 +29,7 @@ RDEPENDS_packagegroup-self-hosted = "\
 # midori depends on webkit-gtk which could not build for mips64
 MIDORI = "midori"
 MIDORI_mips64 = ""
+MIDORI_mips64n32 = ""
 
 RDEPENDS_packagegroup-self-hosted-host-tools = "\
     connman \

@@ -39,7 +39,7 @@ S = "${WORKDIR}/qt-everywhere-opensource-src-${PV}"
 # disable webkit for mips64 n32 temporarily that fails to compile,
 # qt upstream defect:
 # https://bugreports.qt-project.org/browse/QTBUG-39224
-QT_CONFIG_FLAGS_append_mips64 = "${@bb.utils.contains("TUNE_FEATURES", "n32", " -no-webkit", "" ,d)}"
+QT_CONFIG_FLAGS_append_mips64n32 = " -no-webkit"
 
 # disable webkit for aarch64 temporarily that fails to compile
 QT_CONFIG_FLAGS_append_aarch64 = " -no-webkit"
