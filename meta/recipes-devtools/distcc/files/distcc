@@ -51,6 +51,9 @@ should_start() {
 		echo "$DAEMON not starting"
 		exit 0
 	fi
+	# we need permission to write to the pid file
+	touch /var/run/$NAME.pid
+	chown distcc /var/run/$NAME.pid
 }
 
 case "$1" in
@@ -75,6 +78,7 @@ case "$1" in
 	    echo "$0: stop failed with error code $code" >&2
 	    exit $code
 	}
+	rm -f /var/run/$NAME.pid >/dev/null 2>&1
 	echo "."
 	;;
   restart|force-reload)
@@ -92,6 +96,7 @@ case "$1" in
 		--exec $DAEMON -- $DAEMON_ARGS $ALLOW ||
 	{
 	    code=$?
+	    rm -f /var/run/$NAME.pid >/dev/null 2>&1
 	    echo "$0: restart failed with error code $code" >&2
 	    exit $code
 	}
