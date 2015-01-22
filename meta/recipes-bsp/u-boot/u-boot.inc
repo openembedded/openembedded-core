@@ -62,15 +62,56 @@ do_compile () {
 		echo ${UBOOT_LOCALVERSION} > ${B}/.scmversion
 		echo ${UBOOT_LOCALVERSION} > ${S}/.scmversion
 	fi
+    
+    if [ "x${UBOOT_CONFIG}" != "x" ]
+    then
+        for config in ${UBOOT_MACHINE}; do
+            for type in in ${UBOOT_CONFIG}; do
+                if [ "${type}"x = "in"x ]
+                then
+                    continue
+                fi
+                if [ -d "${S}/${config}/u-boot-${type}.${UBOOT_SUFFIX}"]
+                then
+                    break
+                else
+                    oe_runmake O=${config} ${config}
+                    oe_runmake O=${config} ${UBOOT_MAKE_TARGET}
+                    cp  ${S}/${config}/${UBOOT_BINARY}  ${S}/${config}/u-boot-${type}.${UBOOT_SUFFIX}
+                fi
+            done
+        done
+    else
+        oe_runmake ${UBOOT_MACHINE}
+        oe_runmake ${UBOOT_MAKE_TARGET}
+    fi
 
-	oe_runmake ${UBOOT_MACHINE}
-	oe_runmake ${UBOOT_MAKE_TARGET}
 }
 
 do_install () {
-    install -d ${D}/boot
-    install ${S}/${UBOOT_BINARY} ${D}/boot/${UBOOT_IMAGE}
-    ln -sf ${UBOOT_IMAGE} ${D}/boot/${UBOOT_BINARY}
+    if [ "x${UBOOT_CONFIG}" != "x" ]
+    then
+        for config in ${UBOOT_MACHINE}; do
+            for type in in ${UBOOT_CONFIG}; do
+                if [ "${type}"x = "in"x ]
+                then
+                    continue
+                fi
+                if [ -d "${D}/boot/u-boot-${type}.${UBOOT_SUFFIX}"]
+                then
+                    break
+                else
+                    install -d ${D}/boot
+                    install ${S}/${config}/u-boot-${type}.${UBOOT_SUFFIX} ${D}/boot/u-boot-${type}.${UBOOT_SUFFIX}
+                    ln -sf u-boot-${type}.${UBOOT_SUFFIX} ${D}/boot/${UBOOT_BINARY}
+                fi
+            done
+        done
+    else
+        install -d ${D}/boot
+        install ${S}/${UBOOT_BINARY} ${D}/boot/${UBOOT_IMAGE}
+        ln -sf ${UBOOT_IMAGE} ${D}/boot/${UBOOT_BINARY}
+    fi
 
     if [ -e ${WORKDIR}/fw_env.config ] ; then
         install -d ${D}${sysconfdir}
@@ -79,8 +120,28 @@ do_install () {
 
     if [ "x${SPL_BINARY}" != "x" ]
     then
-        install ${S}/${SPL_BINARY} ${D}/boot/${SPL_IMAGE}
-        ln -sf ${SPL_IMAGE} ${D}/boot/${SPL_BINARY}
+        if [ "x${UBOOT_CONFIG}" != "x" ]   
+        then
+            for config in ${UBOOT_MACHINE}; do
+                for type in in ${UBOOT_CONFIG}; do
+                     if [ "${type}"x = "in"x ]
+                     then
+                         continue
+                     fi
+                     if [ -d "${D}/boot/${SPL_IMAGE}-${type}"]
+                     then
+                         break
+                     else
+                         install ${S}/${config}/${SPL_BINARY} ${D}/boot/${SPL_IMAGE}-${type}
+                         ln -sf ${SPL_IMAGE}-${type} ${D}/boot/${SPL_BINARY}-${type}
+                         ln -sf ${SPL_IMAGE}-${type} ${D}/boot/${SPL_BINARY}
+                     fi
+                done
+            done
+        else
+            install ${S}/${SPL_BINARY} ${D}/boot/${SPL_IMAGE}
+            ln -sf ${SPL_IMAGE} ${D}/boot/${SPL_BINARY}
+        fi
     fi
 
     if [ "x${UBOOT_ENV}" != "x" ]
@@ -93,21 +154,68 @@ do_install () {
 FILES_${PN} = "/boot ${sysconfdir}"
 
 do_deploy () {
-    install -d ${DEPLOYDIR}
-    install ${S}/${UBOOT_BINARY} ${DEPLOYDIR}/${UBOOT_IMAGE}
-
-    cd ${DEPLOYDIR}
-    rm -f ${UBOOT_BINARY} ${UBOOT_SYMLINK}
-    ln -sf ${UBOOT_IMAGE} ${UBOOT_SYMLINK}
-    ln -sf ${UBOOT_IMAGE} ${UBOOT_BINARY}
-
-    if [ "x${SPL_BINARY}" != "x" ]
+    if [ "x${UBOOT_CONFIG}" != "x" ]
     then
-        install ${S}/${SPL_BINARY} ${DEPLOYDIR}/${SPL_IMAGE}
-        rm -f ${DEPLOYDIR}/${SPL_BINARY} ${DEPLOYDIR}/${SPL_SYMLINK}
-        ln -sf ${SPL_IMAGE} ${DEPLOYDIR}/${SPL_BINARY}
-        ln -sf ${SPL_IMAGE} ${DEPLOYDIR}/${SPL_SYMLINK}
-    fi
+        for config in ${UBOOT_MACHINE}; do
+            for type in in ${UBOOT_CONFIG}; do
+                if [ "${type}"x = "in"x ]  
+                then
+                    continue
+                fi
+                if [ -d "${DEPLOYDIR}/u-boot-${type}.${UBOOT_SUFFIX}"]
+                then 
+                    break
+                else
+                    install -d ${DEPLOYDIR}
+                    install ${S}/${config}/u-boot-${type}.${UBOOT_SUFFIX} ${DEPLOYDIR}/u-boot-${type}.${UBOOT_SUFFIX}
+                    cd ${DEPLOYDIR}
+                    ln -sf u-boot-${type}.${UBOOT_SUFFIX} ${UBOOT_SYMLINK}
+                    ln -sf u-boot-${type}.${UBOOT_SUFFIX} ${UBOOT_BINARY}
+                fi 
+            done 
+        done
+    else
+        install -d ${DEPLOYDIR}
+        install ${S}/${UBOOT_BINARY} ${DEPLOYDIR}/${UBOOT_IMAGE}
+        cd ${DEPLOYDIR}
+        rm -f ${UBOOT_BINARY} ${UBOOT_SYMLINK}
+        ln -sf ${UBOOT_IMAGE} ${UBOOT_SYMLINK}
+        ln -sf ${UBOOT_IMAGE} ${UBOOT_BINARY}
+   fi
+    
+
+
+     if [ "x${SPL_BINARY}" != "x" ]
+     then
+         if [ "x${UBOOT_CONFIG}" != "x" ]   
+         then
+             for config in ${UBOOT_MACHINE}; do
+                 for type in in ${UBOOT_CONFIG}; do
+                      if [ "${type}"x = "in"x ]
+                      then
+                          continue
+                      fi
+                      if [ -d "${DEPLOYDIR}/${SPL_IMAGE}-${type}"]
+                      then
+                          break
+                      else
+                          install ${S}/${config}/${SPL_BINARY} ${DEPLOYDIR}/${SPL_IMAGE}-${type}
+                          rm -f ${DEPLOYDIR}/${SPL_BINARY} ${DEPLOYDIR}/${SPL_SYMLINK}-${type}
+                          ln -sf ${SPL_IMAGE}-${type} ${DEPLOYDIR}/${SPL_BINARY}-${type}
+                          ln -sf ${SPL_IMAGE}-${type} ${DEPLOYDIR}/${SPL_BINARY}
+                          ln -sf ${SPL_IMAGE}-${type} ${DEPLOYDIR}/${SPL_SYMLINK}-${type}
+                          ln -sf ${SPL_IMAGE}-${type} ${DEPLOYDIR}/${SPL_SYMLINK}
+                      fi
+                 done
+             done
+         else
+             install ${S}/${SPL_BINARY} ${DEPLOYDIR}/${SPL_IMAGE}
+             rm -f ${DEPLOYDIR}/${SPL_BINARY} ${DEPLOYDIR}/${SPL_SYMLINK}
+             ln -sf ${SPL_IMAGE} ${DEPLOYDIR}/${SPL_BINARY}
+             ln -sf ${SPL_IMAGE} ${DEPLOYDIR}/${SPL_SYMLINK}
+         fi
+     fi
+
 
     if [ "x${UBOOT_ENV}" != "x" ]
     then
