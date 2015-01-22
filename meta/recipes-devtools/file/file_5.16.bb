@@ -12,6 +12,7 @@ DEPENDS = "zlib file-native"
 DEPENDS_class-native = "zlib-native"
 
 SRC_URI = "ftp://ftp.astron.com/pub/file/file-${PV}.tar.gz \
+           file://file-CVE-2014-9620-and-CVE-2014-9621.patch \
            file://dump \
            file://filesystems"
 
