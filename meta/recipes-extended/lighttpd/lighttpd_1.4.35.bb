@@ -29,6 +29,9 @@ SRC_URI = "http://download.lighttpd.net/lighttpd/releases-1.4.x/lighttpd-${PV}.t
 SRC_URI[md5sum] = "f7a88130ee9984b421ad8aa80629750a"
 SRC_URI[sha256sum] = "4a71c1f6d8af41ed894b507720c4c17184dc320590013881d5170ca7f15c5bf7"
 
+PACKAGECONFIG ??= "openssl"
+PACKAGECONFIG[openssl] = "--with-openssl, --without-openssl, openssl"
+
 EXTRA_OECONF = " \
              --without-bzip2 \
              --without-ldap \
@@ -37,7 +40,6 @@ EXTRA_OECONF = " \
              --with-pcre \
              --without-webdav-props \
              --without-webdav-locks \
-             --without-openssl \
              --disable-static \
 "
 
