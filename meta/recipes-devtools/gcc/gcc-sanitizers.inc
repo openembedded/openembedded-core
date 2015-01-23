@@ -1,5 +1,11 @@
 require gcc-configure-common.inc
 
+LICENSE = "NCSA | MIT"
+
+LIC_FILES_CHKSUM = "\
+    file://libsanitizer/LICENSE.TXT;md5=0249c37748936faf5b1efd5789587909 \
+"
+
 EXTRA_OECONF_PATHS = "\
     --with-sysroot=/not/exist \
     --with-build-sysroot=${STAGING_DIR_TARGET} \
