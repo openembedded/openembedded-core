@@ -29,4 +29,5 @@ do_configure_prepend() {
 
 do_install_append() {
 	rm -rf ${D}${libdir}/Libidn.dll
+	rm -rf ${D}${datadir}/emacs
 }
