@@ -16,3 +16,13 @@ do_install_append () {
 		echo "exit 1" >> ${D}$x
 	done
 }
+
+SYSROOT_PREPROCESS_FUNCS += "binconfig_disabled_sysroot_preprocess"
+
+binconfig_disabled_sysroot_preprocess () {
+	for x in ${BINCONFIG}; do
+		configname=`basename $x`
+		install -d ${SYSROOT_DESTDIR}${bindir_crossscripts}
+		install ${D}$x ${SYSROOT_DESTDIR}${bindir_crossscripts}
+	done
+}
