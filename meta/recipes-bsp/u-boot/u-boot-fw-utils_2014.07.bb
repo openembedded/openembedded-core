@@ -32,4 +32,16 @@ do_install () {
 	install -m 0644 ${S}/tools/env/fw_env.config ${D}${sysconfdir}/fw_env.config
 }
 
+do_install_class-cross () {
+    install -d ${D}${bindir_cross}
+    install -m 755 ${S}/tools/env/fw_printenv ${D}${bindir_cross}/fw_printenv
+    install -m 755 ${S}/tools/env/fw_printenv ${D}${bindir_cross}/fw_setenv
+}
+
+SYSROOT_PREPROCESS_FUNCS_class-cross = "uboot_fw_utils_cross"
+uboot_fw_utils_cross() {
+    sysroot_stage_dir ${D}${bindir_cross} ${SYSROOT_DESTDIR}${bindir_cross}
+}
+
 PACKAGE_ARCH = "${MACHINE_ARCH}"
+BBCLASSEXTEND = "cross"
