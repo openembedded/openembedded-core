@@ -27,11 +27,12 @@ SRC_URI = "${KERNELORG_MIRROR}/linux/utils/kernel/hotplug/udev-${PV}.tar.gz \
            file://udev-cache \
            file://udev-cache.default \
            file://add-install-ptest.patch \
+           file://fix_rule-syntax-regex-ptest.patch \
            file://run-ptest \
            file://init"
 
 inherit autotools pkgconfig update-rc.d ptest
-RDEPENDS_${PN}-ptest += "make perl"
+RDEPENDS_${PN}-ptest += "make perl python"
 
 libexecdir = "${base_libdir}"
 EXTRA_OECONF = "--disable-introspection \
