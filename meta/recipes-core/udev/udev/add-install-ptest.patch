@@ -34,7 +34,7 @@ Upstream-Status: Pending
 +	(cd $(top_srcdir) && install $(TESTS) $(DESTDIR)/test)
 +	(cd $(top_srcdir) && install test/rule-syntax-check.py $(DESTDIR)/test)
 +	(cd $(top_srcdir) && install $(RULES) $(DESTDIR)/rules)
-+	tar -C $(DESTDIR)/test/ -xJf $(top_srcdir)/test/sys.tar.xz
++	cp $(top_srcdir)/test/sys.tar.xz $(DESTDIR)/test/
 --- a/test/udev-test.pl	2012-03-18 16:43:36.000000000 +0100
 +++ b/test/udev-test.pl	2013-02-18 10:31:29.706357321 +0100
 @@ -1459,11 +1459,13 @@
