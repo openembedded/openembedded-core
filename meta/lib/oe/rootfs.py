@@ -118,7 +118,7 @@ class Rootfs(object):
         if self.d.getVar('USE_DEVFS', True) != "1":
             self._create_devfs()
 
-        self._uninstall_uneeded()
+        self._uninstall_unneeded()
 
         self._insert_feed_uris()
 
@@ -128,7 +128,7 @@ class Rootfs(object):
 
         self._cleanup()
 
-    def _uninstall_uneeded(self):
+    def _uninstall_unneeded(self):
         # Remove unneeded init script symlinks
         delayed_postinsts = self._get_delayed_postinsts()
         if delayed_postinsts is None:
