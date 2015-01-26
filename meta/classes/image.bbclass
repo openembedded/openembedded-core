@@ -52,7 +52,10 @@ def check_image_features(d):
     features = set(oe.data.typed_value('IMAGE_FEATURES', d))
     for feature in features:
         if feature not in valid_features:
-            bb.fatal("'%s' in IMAGE_FEATURES is not a valid image feature. Valid features: %s" % (feature, ' '.join(valid_features)))
+            if bb.utils.contains('EXTRA_IMAGE_FEATURES', feature, True, False, d):
+                raise bb.parse.SkipRecipe("'%s' in IMAGE_FEATURES (added via EXTRA_IMAGE_FEATURES) is not a valid image feature. Valid features: %s" % (feature, ' '.join(valid_features)))
+            else:
+                raise bb.parse.SkipRecipe("'%s' in IMAGE_FEATURES is not a valid image feature. Valid features: %s" % (feature, ' '.join(valid_features)))
 
 IMAGE_INSTALL ?= ""
 IMAGE_INSTALL[type] = "list"
