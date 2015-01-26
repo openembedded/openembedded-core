@@ -20,15 +20,13 @@ LIC_FILES_CHKSUM = "\
 "
 
 DEPENDS = "attr libaio libcap acl openssl zip-native"
-SRCREV = "2c341ad9177f36d9b953e84dee8cf88498286fe5"
+SRCREV = "b6ab85d764339b025526bdaf0b5026a67b3a677a"
 
 SRC_URI = "git://github.com/linux-test-project/ltp.git \
     file://0001-Rename-runtests_noltp.sh-script-so-have-unique-name.patch \
     file://ltp-Do-not-link-against-libfl.patch \
     file://make-setregid02-work.patch \
     file://add-knob-for-numa.patch \
-    file://0001-Realtime-tests-Fix-bad-priority-inheritance-conditio.patch \
-    file://0001-Realtime-tests-Fix-robust-mutex-conditionals.patch \
     file://add-knob-for-tirpc.patch \
 "
 
@@ -47,12 +45,6 @@ EXTRA_OECONF = " --with-power-management-testsuite --with-realtime-testsuite "
 # ltp network/rpc test cases ftbfs when libtirpc is found
 EXTRA_OECONF += " --without-tirpc "
 
-# ltp doesn't regenerate ffsb-6.0-rc2 configure and hardcode configure call.
-# we explicitly force regeneration of that directory and pass configure options.
-do_configure_append() {
-    (cd utils/ffsb-6.0-rc2; autoreconf -fvi; ./configure ${CONFIGUREOPTS})
-}
-
 # The makefiles make excessive use of make -C and several include testcases.mk
 # which triggers a build of the syscall header. To reproduce, build ltp,
 # then delete the header, then "make -j XX" and watch regen.sh run multiple
@@ -67,13 +59,9 @@ do_install(){
 
     # Copy POSIX test suite into ${D}/opt/ltp/testcases by manual
     cp -r testcases/open_posix_testsuite ${D}/opt/ltp/testcases
-
-    # We need to remove all scripts which depend on /usr/bin/expect, since expect is not supported in oe-core
-    # We will add expect for enhancement in future
-    find ${D} -type f -print | xargs grep "\!.*\/usr\/bin\/expect" | awk -F":" '{print $1}' | xargs rm -f
 }
 
-RDEPENDS_${PN} = "perl e2fsprogs-mke2fs python-core libaio bash gawk"
+RDEPENDS_${PN} = "perl e2fsprogs-mke2fs python-core libaio bash gawk expect"
 
 FILES_${PN}-dbg += "\
     /opt/ltp/runtest/.debug \
