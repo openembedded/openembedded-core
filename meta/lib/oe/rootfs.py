@@ -137,34 +137,39 @@ class Rootfs(object):
                                       self.d.getVar('IMAGE_ROOTFS', True),
                                       "run-postinsts", "remove"])
 
-        # Remove unneeded package-management related components
-        if bb.utils.contains("IMAGE_FEATURES", "package-management",
-                         True, False, self.d):
-            return
+        runtime_pkgmanage = bb.utils.contains("IMAGE_FEATURES", "package-management",
+                         True, False, self.d)
+        if not runtime_pkgmanage:
+            # Remove components that we don't need if we're not going to install
+            # additional packages at runtime
+            if delayed_postinsts is None:
+                installed_pkgs_dir = self.d.expand('${WORKDIR}/installed_pkgs.txt')
+                pkgs_to_remove = list()
+                with open(installed_pkgs_dir, "r+") as installed_pkgs:
+                    pkgs_installed = installed_pkgs.read().split('\n')
+                    for pkg_installed in pkgs_installed[:]:
+                        pkg = pkg_installed.split()[0]
+                        if pkg in ["update-rc.d",
+                                "base-passwd",
+                                self.d.getVar("ROOTFS_BOOTSTRAP_INSTALL", True)
+                                ]:
+                            pkgs_to_remove.append(pkg)
+                            pkgs_installed.remove(pkg_installed)
 
-        if delayed_postinsts is None:
-            installed_pkgs_dir = self.d.expand('${WORKDIR}/installed_pkgs.txt')
-            pkgs_to_remove = list()
-            with open(installed_pkgs_dir, "r+") as installed_pkgs:
-                pkgs_installed = installed_pkgs.read().split('\n')
-                for pkg_installed in pkgs_installed[:]:
-                    pkg = pkg_installed.split()[0]
-                    if pkg in ["update-rc.d",
-                               "base-passwd",
-                               self.d.getVar("ROOTFS_BOOTSTRAP_INSTALL", True)
-                               ]:
-                        pkgs_to_remove.append(pkg)
-                        pkgs_installed.remove(pkg_installed)
+                if len(pkgs_to_remove) > 0:
+                    self.pm.remove(pkgs_to_remove, False)
+                    # Update installed_pkgs.txt
+                    open(installed_pkgs_dir, "w+").write('\n'.join(pkgs_installed))
 
-            if len(pkgs_to_remove) > 0:
-                self.pm.remove(pkgs_to_remove, False)
-                # Update installed_pkgs.txt
-                open(installed_pkgs_dir, "w+").write('\n'.join(pkgs_installed))
+            else:
+                self._save_postinsts()
 
-        else:
-            self._save_postinsts()
+        post_uninstall_cmds = self.d.getVar("ROOTFS_POSTUNINSTALL_COMMAND", True)
+        execute_pre_post_process(self.d, post_uninstall_cmds)
 
-        self.pm.remove_packaging_data()
+        if not runtime_pkgmanage:
+            # Remove the package manager data files
+            self.pm.remove_packaging_data()
 
     def _run_intercepts(self):
         intercepts_dir = os.path.join(self.d.getVar('WORKDIR', True),
