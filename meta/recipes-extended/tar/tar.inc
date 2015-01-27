@@ -26,8 +26,6 @@ do_install_extra () {
 
 PACKAGES =+ "${PN}-rmt"
 
-PACKAGECONFIG[acl] = "--with-posix-acls, --without-posix-acls, acl,"
-
 FILES_${PN}-rmt = "${base_sbindir}/rmt*"
 
 inherit update-alternatives
