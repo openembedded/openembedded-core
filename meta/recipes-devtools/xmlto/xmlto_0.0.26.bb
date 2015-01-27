@@ -35,3 +35,4 @@ do_install_append() {
     create_wrapper ${D}/${bindir}/xmlto XML_CATALOG_FILES=${sysconfdir}/xml/catalog.xml
 }
 
+do_populate_sysroot[rdeptask] = "do_populate_sysroot"
