@@ -296,7 +296,11 @@ class Image(ImageDepGraph):
                 bb.data.update_data(localdata)
                 localdata.setVar('type', type)
 
-                cmds.append("\t" + localdata.getVar("IMAGE_CMD", True))
+                image_cmd = localdata.getVar("IMAGE_CMD", True)
+                if image_cmd:
+                    cmds.append("\t" + image_cmd)
+                else:
+                    bb.fatal("No IMAGE_CMD defined for IMAGE_FSTYPES entry '%s' - possibly invalid type name or missing support class" % type)
                 cmds.append(localdata.expand("\tcd ${DEPLOY_DIR_IMAGE}"))
 
                 if type in cimages:
