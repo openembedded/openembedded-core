@@ -52,7 +52,7 @@ class XTerminal(Terminal):
             raise UnsupportedTerminal(self.name)
 
 class Gnome(XTerminal):
-    command = 'gnome-terminal -t "{title}" -x {command}'
+    command = 'gnome-terminal -t "{title}" --disable-factory -x {command}'
     priority = 2
 
 class Mate(XTerminal):
