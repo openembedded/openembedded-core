@@ -53,12 +53,15 @@ class SmartRepoTest(SmartTest):
 
     @classmethod
     def setUpClass(self):
+        self.repolist = []
         self.repo_server = HTTPService(oeRuntimeTest.tc.d.getVar('DEPLOY_DIR', True), oeRuntimeTest.tc.target.server_ip)
         self.repo_server.start()
 
     @classmethod
     def tearDownClass(self):
         self.repo_server.stop()
+        for i in self.repolist:
+            oeRuntimeTest.tc.target.run('smart channel -y --remove '+str(i))
 
     def test_smart_channel(self):
         self.smart('channel', 1)
@@ -71,6 +74,7 @@ class SmartRepoTest(SmartTest):
         for arch in os.listdir('%s/%s' % (self.repo_server.root_dir, image_pkgtype)):
             if arch in pkgarchs:
                 self.smart('channel -y --add {a} type=rpm-md baseurl={u}/{a}'.format(a=arch, u=deploy_url))
+                self.repolist.append(arch)
         self.smart('update')
 
     def test_smart_channel_help(self):
@@ -119,3 +123,47 @@ class SmartRepoTest(SmartTest):
     @skipUnlessPassed('test_smart_install')
     def test_smart_reinstall(self):
         self.smart('reinstall -y psplash-default')
+
+    @testcase(727)
+    @skipUnlessPassed('test_smart_channel_add')
+    def test_smart_remote_repo(self):
+        self.smart('update')
+        self.smart('install -y psplash')
+        self.smart('remove -y psplash')
+
+    @testcase(726)
+    def test_smart_local_dir(self):
+        self.target.run('mkdir /tmp/myrpmdir')
+        self.smart('channel --add myrpmdir type=rpm-dir path=/tmp/myrpmdir -y')
+        self.target.run('cd /tmp/myrpmdir')
+        self.smart('download psplash')
+        output = self.smart('channel --list')
+        for i in output.split("\n"):
+            if ("rpmsys" != str(i)) and ("myrpmdir" != str(i)):
+                self.smart('channel --disable '+str(i))
+        self.target.run('cd /home/root')
+        self.smart('install psplash')
+        for i in output.split("\n"):
+            if ("rpmsys" != str(i)) and ("myrpmdir" != str(i)):
+                self.smart('channel --enable '+str(i))
+        self.smart('channel --remove myrpmdir -y')
+        self.target.run("rm -rf /tmp/myrpmdir")
+
+    @testcase(718)
+    def test_smart_add_rpmdir(self):
+        self.target.run('mkdir /tmp/myrpmdir')
+        self.smart('channel --add myrpmdir type=rpm-dir path=/tmp/myrpmdir -y')
+        self.smart('channel --disable myrpmdir -y')
+        output = self.smart('channel --show myrpmdir')
+        self.assertTrue("disabled = yes" in output, msg="Failed to disable rpm dir")
+        self.smart('channel --enable  myrpmdir -y')
+        output = self.smart('channel --show myrpmdir')
+        self.assertFalse("disabled = yes" in output, msg="Failed to enable rpm dir")
+        self.smart('channel --remove myrpmdir -y')
+        self.target.run("rm -rf /tmp/myrpmdir")
+
+    @testcase(731)
+    @skipUnlessPassed('test_smart_channel_add')
+    def test_smart_remove_package(self):
+        self.smart('install -y psplash')
+        self.smart('remove -y psplash')
