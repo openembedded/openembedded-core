@@ -4,6 +4,7 @@ require xserver-xorg.inc
 SRC_URI += "file://fix_open_max_preprocessor_error.patch \
             file://xorg-CVE-2013-6424.patch \
             file://xshmfence-option.patch \
+            file://Fix-subwindow-in-Xi-emulated-events.patch \
            "
 
 SRC_URI[md5sum] = "89620960b13515db8d0a8dbb92a1378a"

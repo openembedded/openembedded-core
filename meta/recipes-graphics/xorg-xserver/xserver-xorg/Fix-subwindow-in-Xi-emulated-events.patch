@@ -1,0 +1,41 @@
+From db424318d0bb29cbcdf3a07fcc2e023586f1219f Mon Sep 17 00:00:00 2001
+From: Olivier Fourdan <fourdan@xfce.org>
+Date: Fri, 2 Jan 2015 18:50:17 +0100
+Subject: [PATCH] Fix subwindow in Xi emulated events
+
+Bug: 70790
+Upstream status: Submitted 
+                 https://bugs.freedesktop.org/show_bug.cgi?id=70790
+
+Signed-off-by: Olivier Fourdan <fourdan@xfce.org>
+---
+ Xi/exevents.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/Xi/exevents.c b/Xi/exevents.c
+index b0bc47e..0857bce 100644
+--- a/Xi/exevents.c
++++ b/Xi/exevents.c
+@@ -1403,7 +1403,7 @@ DeliverTouchEmulatedEvent(DeviceIntPtr dev, TouchPointInfoPtr ti,
+ 
+             if (grab->ownerEvents) {
+                 WindowPtr focus = NullWindow;
+-                WindowPtr sprite_win = dev->spriteInfo->sprite->win;
++                WindowPtr sprite_win = DeepestSpriteWin(dev->spriteInfo->sprite);
+ 
+                 deliveries = DeliverDeviceEvents(sprite_win, ptrev, grab, focus, dev);
+             }
+@@ -1429,8 +1429,9 @@ DeliverTouchEmulatedEvent(DeviceIntPtr dev, TouchPointInfoPtr ti,
+     }
+     else {
+         GrabPtr devgrab = dev->deviceGrab.grab;
++        WindowPtr sprite_win = DeepestSpriteWin(dev->spriteInfo->sprite);
+ 
+-        DeliverDeviceEvents(win, ptrev, grab, win, dev);
++        DeliverDeviceEvents(sprite_win, ptrev, grab, win, dev);
+         /* FIXME: bad hack
+          * Implicit passive grab activated in response to this event. Store
+          * the event.
+-- 
+2.1.0
+
