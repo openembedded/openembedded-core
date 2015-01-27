@@ -2,13 +2,13 @@ SUMMARY = "GNU Troff software"
 DESCRIPTION = "The groff (GNU troff) software is a typesetting package which reads plain text mixed with \
 formatting commands and produces formatted output."
 SECTION = "console/utils"
-HOMEPAGE = "ftp://ftp.gnu.org/gnu/groff/"
+HOMEPAGE = "http://www.gnu.org/software/groff/"
 LICENSE = "GPLv2"
 PR = "r1"
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=e43fc16fccd8519fba405f0a0ff6e8a3"
 
-SRC_URI = "${GNU_MIRROR}/groff/groff-${PV}.tar.gz \
+SRC_URI = "${GNU_MIRROR}/${BPN}/old/${BP}.tar.gz \
           file://groff-1.18.1.4-remove-mom.patch;striplevel=1 \
           file://man-local.patch \
           file://mdoc-local.patch \
