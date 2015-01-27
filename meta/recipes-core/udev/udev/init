@@ -29,7 +29,7 @@ META_FILE_LIST="lib/udev/rules.d/* etc/udev/rules.d/*"
 # Command to compute system configuration.
 sysconf_cmd () {
 	cat -- $CMP_FILE_LIST
-	stat -L -c '%s %Y %n' -- $META_FILE_LIST | awk -F/ '{print $1 " " $NF;}'
+	stat -c '%s %Y %n' -- $META_FILE_LIST | awk -F/ '{print $1 " " $NF;}'
 }
 
 [ -f /etc/default/udev-cache ] && . /etc/default/udev-cache
