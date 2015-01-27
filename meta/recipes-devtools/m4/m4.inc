@@ -5,7 +5,6 @@ GNU M4 also has built-in functions for including files, running shell commands, 
 
 inherit autotools texinfo
 
-EXTRA_OECONF += "--without-libsigsegv-prefix"
 EXTRA_OEMAKE += "'infodir=${infodir}'"
 LDFLAGS_prepend_libc-uclibc = " -lrt "
 SRC_URI = "${GNU_MIRROR}/m4/m4-${PV}.tar.gz"
