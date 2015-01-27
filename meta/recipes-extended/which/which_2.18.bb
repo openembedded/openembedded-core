@@ -11,7 +11,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=751419260aa954499f7abaabaa882bbe"
 
 PR = "r2"
 
-SRC_URI = "http://www.xs4all.nl/~carlo17/which/which-${PV}.tar.gz \
+SRC_URI = "http://pkgs.fedoraproject.org/repo/pkgs/which/which-2.18.tar.gz/42d51938e48b91f6e19fabf216f5c3e9/which-${PV}.tar.gz \
            file://fix_name_conflict_group_member.patch \
            file://automake-foreign.patch \
 "
