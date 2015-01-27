@@ -22,7 +22,7 @@ SRC_URI[sha256sum] = "38c8a2bb9223d1fb1b10bdd607cf44830afc92fd451ac4cd07619bf92b
 
 inherit autotools gettext texinfo
 
-EXTRA_OECONF = "--disable-perl-regexp --disable-ncurses"
+EXTRA_OECONF = "--disable-perl-regexp"
 
 CFLAGS += "-D PROTOTYPES"
 do_configure_prepend () {
