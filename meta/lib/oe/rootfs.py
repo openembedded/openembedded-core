@@ -124,7 +124,8 @@ class Rootfs(object):
 
         self._run_ldconfig()
 
-        self._generate_kernel_module_deps()
+        if self.d.getVar('USE_DEPMOD', True) != "0":
+            self._generate_kernel_module_deps()
 
         self._cleanup()
 
