@@ -25,7 +25,7 @@ EXTRA_OECONF_class-native = ""
 EXTRA_OECONF_class-nativesdk = "--with-cross-build=${STAGING_ICU_DIR_NATIVE}"
 
 # ICU puts custom m4 autoconf functions in aclocal.m4.
-# However, this file is deleted in our build system. 
+# However, this file is deleted in our build system.
 # To make it work, we copy aclocal.m4 to acinclude.m4.
 # This is a bug of ICU. See bug reference:
 # http://bugs.icu-project.org/trac/ticket/9790
