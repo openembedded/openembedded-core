@@ -22,7 +22,9 @@ SRC_URI = "${DEBIAN_MIRROR}/main/a/at/at_${PV}.orig.tar.gz \
     file://file_replacement_with_gplv2.patch \
     file://atd.init \
     file://atd.service \
-    ${@bb.utils.contains('DISTRO_FEATURES', 'pam', '${PAM_SRC_URI}', '', d)}"
+    ${@bb.utils.contains('DISTRO_FEATURES', 'pam', '${PAM_SRC_URI}', '', d)} \
+    file://makefile-fix-parallel.patch \
+    "
 
 PAM_SRC_URI = "file://pam.conf.patch \
                file://configure-add-enable-pam.patch"
@@ -44,7 +46,6 @@ INITSCRIPT_PARAMS = "defaults"
 
 SYSTEMD_SERVICE_${PN} = "atd.service"
 
-PARALLEL_MAKE = ""
 
 do_compile_prepend () {
 	cp -f ${WORKDIR}/posixtm.[ch] ${S}
