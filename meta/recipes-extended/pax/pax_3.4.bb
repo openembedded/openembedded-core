@@ -1,6 +1,6 @@
 SUMMARY = "Portable Archive eXchange"
 DESCRIPTION = "pax (Portable Archive eXchange) is the POSIX standard archive tool"
-HOMEPAGE = "http://www.openbsd.org/cgi-bin/cvsweb/src/bin/pax/"
+HOMEPAGE = "http://cvsweb.openbsd.org/cgi-bin/cvsweb/src/bin/pax/"
 BUGTRACKER = "http://www.openbsd.org/query-pr.html"
 
 LICENSE = "BSD"
@@ -12,7 +12,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=4b0b674dfdc56daa3832d4069b820ea0 \
 SECTION = "base"
 PR = "r2"
 
-SRC_URI = "ftp://ftp.suse.com/pub/people/kukuk/pax/pax-${PV}.tar.bz2 \
+SRC_URI = "http://pkgs.fedoraproject.org/repo/pkgs/${BPN}/${BP}.tar.bz2/fbd9023b590b45ac3ade95870702a0d6/${BP}.tar.bz2 \
 	file://fix_for_compile_with_gcc-4.6.0.patch \
 	file://pax-3.4_fix_for_x32.patch"
 
