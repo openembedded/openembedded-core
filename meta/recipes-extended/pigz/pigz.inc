@@ -7,23 +7,23 @@ HOMEPAGE = "http://zlib.net/pigz/"
 SECTION = "console/utils"
 LICENSE = "Zlib & Apache-2.0"
 
-SRC_URI = "http://zlib.net/pigz/pigz-${PV}.tar.gz"
+SRC_URI = "http://zlib.net/${BPN}/${BP}.tar.gz"
 
 PROVIDES_class-native += "gzip-native"
 
 DEPENDS = "zlib"
 
-do_install () {
-	if [ "${CLASSOVERRIDE}" = "class-target" ] ; then
-		# Install files into /bin (FHS), which is typical place for gzip
-	        install -d ${D}${base_bindir}	        
-		install ${B}/pigz ${D}${base_bindir}/gzip
-	        install ${B}/unpigz ${D}${base_bindir}/gunzip
-	else
-	        install -d ${D}${bindir}
-	        install ${B}/pigz ${D}${bindir}/gzip
-	        install ${B}/unpigz ${D}${bindir}/gunzip
-	fi
+do_install_class-target() {
+	# Install files into /bin (FHS), which is typical place for gzip
+	install -d ${D}${base_bindir}
+	install ${B}/pigz ${D}${base_bindir}/gzip
+	install ${B}/unpigz ${D}${base_bindir}/gunzip
+}
+
+do_install() {
+	install -d ${D}${bindir}
+	install ${B}/pigz ${D}${bindir}/gzip
+	install ${B}/unpigz ${D}${bindir}/gunzip
 }
 
 ALTERNATIVE_${PN} = "gzip gunzip"
