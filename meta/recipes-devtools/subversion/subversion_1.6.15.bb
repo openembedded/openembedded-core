@@ -30,7 +30,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=2a69fef414e2cb907b4544298569300b"
 PACKAGECONFIG[sasl] = "--with-sasl,--without-sasl,cyrus-sasl"
 
 EXTRA_OECONF = " \
-                --without-berkeley-db --without-apxs --without-apache \
+                --without-berkeley-db --without-apxs \
                 --without-swig --with-apr=${STAGING_BINDIR_CROSS} \
                 --with-apr-util=${STAGING_BINDIR_CROSS} \
                 ac_cv_path_RUBY=none"
