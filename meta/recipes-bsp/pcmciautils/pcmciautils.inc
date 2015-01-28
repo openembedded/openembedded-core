@@ -1,5 +1,5 @@
 SUMMARY = "Linux kernel userland utilities for the PCMCIA subsystem"
-HOMEPAGE = "http://kernel.org/pub/linux/utils/kernel/pcmcia/pcmcia.html"
+HOMEPAGE = "https://www.kernel.org/pub/linux/utils/kernel/pcmcia/"
 SECTION = "kernel/userland"
 
 LICENSE = "GPLv2"
@@ -8,7 +8,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f"
 DEPENDS = "udev sysfsutils flex-native"
 RDEPENDS_${PN} = "udev module-init-tools"
 
-SRC_URI = "${KERNELORG_MIRROR}/linux/utils/kernel/pcmcia/pcmciautils-${PV}.tar.bz2"
+SRC_URI = "http://mirror.linux.org.au/linux/utils/kernel/pcmcia/${BP}.tar.bz2"
 
 S = "${WORKDIR}/pcmciautils-${PV}"
 
