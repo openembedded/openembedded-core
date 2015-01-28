@@ -212,6 +212,8 @@ def create_recipe(args):
             # This would be the default, so we don't need to set S in the recipe
             srcsubdir = ''
     if srcsubdir:
+        if pv and pv not in 'git svn hg'.split():
+            srcsubdir = srcsubdir.replace(pv, '${PV}')
         lines_before.append('S = "${WORKDIR}/%s"' % srcsubdir)
         lines_before.append('')
 
