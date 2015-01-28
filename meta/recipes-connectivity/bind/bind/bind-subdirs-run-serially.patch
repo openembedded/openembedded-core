@@ -1,0 +1,35 @@
+From b24468b6fe1f136bfd854773bc0e117aca0012d5 Mon Sep 17 00:00:00 2001
+From: Robert Yang <liezhi.yang@windriver.com>
+Date: Wed, 28 Jan 2015 01:23:09 -0800
+Subject: [PATCH] lib/export/isc/Makefile.in: let SUBDIRS run serially
+
+Fix parallel issue::
+make[2]: *** No rule to make target `nls/msgcat.o', needed by `libisc.a'.  Stop.
+make[2]: *** Waiting for unfinished jobs....
+make[3]: Leaving directory `bind-9.9.5/lib/export/isc/unix'
+
+Upstream-Status: Pending
+
+Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
+---
+ lib/export/isc/Makefile.in |    4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/lib/export/isc/Makefile.in b/lib/export/isc/Makefile.in
+index a92f66f..27dabcb 100644
+--- a/lib/export/isc/Makefile.in
++++ b/lib/export/isc/Makefile.in
+@@ -103,6 +103,10 @@ SRCS =		@ISC_EXTRA_SRCS@ \
+ 
+ LIBS =		@LIBS@
+ 
++# Note: the order of SUBDIRS is important.
++# Attempt to disable parallel processing.
++.NOTPARALLEL:
++.NO_PARALLEL:
+ SUBDIRS =	include unix nls @ISC_THREAD_DIR@
+ TARGETS =	timestamp
+ 
+-- 
+1.7.9.5
+
