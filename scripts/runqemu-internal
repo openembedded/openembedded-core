@@ -138,7 +138,11 @@ else
                 return 1
             fi
 
-            touch $lockfile.lock
+            touch $lockfile.lock 2>/dev/null
+            if [ $? -ne 0 ]; then
+                echo "Acquiring lockfile for $lockfile.lock failed"
+                return 1
+            fi
             exec 8>$lockfile.lock
             flock -n -x 8
             if [ $? -ne 0 ]; then
