@@ -231,15 +231,19 @@ kernel_do_install() {
 	[ -e Module.symvers ] && install -m 0644 Module.symvers ${D}/boot/Module.symvers-${KERNEL_VERSION}
 	install -d ${D}${sysconfdir}/modules-load.d
 	install -d ${D}${sysconfdir}/modprobe.d
-
-	# Stash data for depmod
-	install -d ${D}${datadir}/kernel-depmod/
-	echo "${KERNEL_VERSION}" > ${D}${datadir}/kernel-depmod/kernel-abiversion
-	cp System.map ${D}${datadir}/kernel-depmod/System.map-${KERNEL_VERSION}
 }
 do_install[prefuncs] += "package_get_auto_pr"
 
 addtask shared_workdir after do_compile before do_install
+
+emit_depmod_pkgdata() {
+	# Stash data for depmod
+	install -d ${PKGDESTWORK}/kernel-depmod/
+	echo "${KERNEL_VERSION}" > ${PKGDESTWORK}/kernel-depmod/kernel-abiversion
+	cp System.map ${PKGDESTWORK}/kernel-depmod/System.map-${KERNEL_VERSION}
+}
+
+PACKAGEFUNCS += "emit_depmod_pkgdata"
 
 do_shared_workdir () {
 	cd ${B}
@@ -285,20 +289,12 @@ do_shared_workdir () {
 	fi
 }
 
-# Only stage the files we need for depmod, not the modules/firmware
+# We don't need to stage anything, not the modules/firmware since those would clash with linux-firmware
 sysroot_stage_all () {
-	sysroot_stage_dir ${D}${datadir}/kernel-depmod ${SYSROOT_DESTDIR}${datadir}/kernel-depmod
+	:
 }
 
 KERNEL_CONFIG_COMMAND ?= "oe_runmake_call -C ${S} O=${B} oldnoconfig || yes '' | oe_runmake -C ${S} O=${B} oldconfig"
-
-PACKAGE_PREPROCESS_FUNCS += "kernel_package_preprocess"
-
-kernel_package_preprocess () {
-    rm -rf ${PKGD}${datadir}/kernel-depmod
-    rmdir ${PKGD}${datadir}
-    rmdir ${PKGD}${exec_prefix}
-}
 
 kernel_do_configure() {
 	# fixes extra + in /lib/modules/2.6.37+
