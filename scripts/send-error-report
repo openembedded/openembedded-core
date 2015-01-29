@@ -62,6 +62,7 @@ def sendData(json_file, server):
                     g.write(email + "\n")
             else:
                 print("Invalid inputs, try again.")
+                sys.exit(1)
                 return
 
         with open(json_file) as f:
@@ -74,6 +75,7 @@ def sendData(json_file, server):
             data = json.dumps(jsondata, indent=4, sort_keys=True)
         except:
             print("Invalid json data")
+            sys.exit(1)
             return
 
         try:
@@ -87,12 +89,14 @@ def sendData(json_file, server):
                 print("There was a problem submiting your data, response written in %s.response.html" % json_file)
                 with open("%s.response.html" % json_file, "w") as f:
                     f.write(res)
+                sys.exit(1)
             conn.close()
         except Exception as e:
                 print("Server connection failed: %s" % e)
-
+                sys.exit(1)
     else:
         print("No data file found.")
+        sys.exit(1)
 
 
 if __name__ == '__main__':
