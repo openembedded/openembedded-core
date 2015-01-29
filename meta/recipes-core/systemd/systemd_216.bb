@@ -35,11 +35,13 @@ SRC_URI = "git://anongit.freedesktop.org/systemd/systemd;branch=master;protocol=
            file://0001-Make-root-s-home-directory-configurable.patch \
            file://0001-systemd-user-avoid-using-system-auth.patch \
            file://0001-journal-Fix-navigating-backwards-missing-entries.patch \
+           file://0001-tmpfiles-make-resolv.conf-entry-conditional-on-resol.patch \
+           file://0001-build-sys-do-not-install-tmpfiles-and-sysusers-files.patch \
+           file://0001-build-sys-configure-the-list-of-system-users-files-a.patch \
            file://touchscreen.rules \
            file://00-create-volatile.conf \
            file://init \
            file://run-ptest \
-           ${@bb.utils.contains('PACKAGECONFIG', 'resolved', '', 'file://0001-tmpfiles.d-etc.conf-disable-resolv.conf-symlink.patch', d)} \
           "
 
 S = "${WORKDIR}/git"
@@ -151,6 +153,12 @@ do_install() {
 
 	# Enable journal to forward message to syslog daemon
 	sed -i -e 's/.*ForwardToSyslog.*/ForwardToSyslog=yes/' ${D}${sysconfdir}/systemd/journald.conf
+	# its needed in 216 upstream has fixed it with 919699ec301ea507edce4a619141ed22e789ac0d
+	# don't order journal flushing afte remote-fs.target
+	sed -i -e 's/ remote-fs.target$//' ${D}${systemd_unitdir}/system/systemd-journal-flush.service
+	# this file is needed to exist if networkd is disabled but timesyncd is still in use since timesyncd checks it
+	# for existence else it fails
+	${@bb.utils.contains('PACKAGECONFIG', 'networkd', '', 'sed -i -e "\$ad /run/systemd/netif/links 0755 root root -" ${D}${libdir}/tmpfiles.d/systemd.conf', d)}
 }
 
 do_install_ptest () {
@@ -182,7 +190,7 @@ SYSTEMD_PACKAGES = "${PN}-binfmt"
 SYSTEMD_SERVICE_${PN}-binfmt = "systemd-binfmt.service"
 
 USERADD_PACKAGES = "${PN}"
-USERADD_PARAM_${PN} += "--system systemd-journal-gateway"
+USERADD_PARAM_${PN} += "--system systemd-journal-gateway; --system systemd-timesync"
 GROUPADD_PARAM_${PN} = "-r lock; -r systemd-journal"
 
 FILES_${PN}-analyze = "${bindir}/systemd-analyze"
