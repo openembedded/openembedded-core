@@ -31,4 +31,3 @@ ALTERNATIVE_${PN} = "sed"
 ALTERNATIVE_LINK_NAME[sed] = "${base_bindir}/sed"
 ALTERNATIVE_PRIORITY = "100"
 
-BBCLASSEXTEND = "native"
