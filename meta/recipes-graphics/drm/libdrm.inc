@@ -21,7 +21,6 @@ inherit autotools pkgconfig
 
 EXTRA_OECONF += "--disable-cairo-tests \
                  --enable-omap-experimental-api \
-                 --enable-freedreno-experimental-api \
                  --enable-install-test-programs \
                  --disable-manpages \
                 "

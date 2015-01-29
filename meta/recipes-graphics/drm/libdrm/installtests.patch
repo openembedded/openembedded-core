@@ -18,6 +18,6 @@ index bf1987f..d909e19 100644
  	drmstat
  
 +check_PROGRAMS =
- SUBDIRS = modeprint
+ SUBDIRS = modeprint proptest
  
  if HAVE_LIBKMS
