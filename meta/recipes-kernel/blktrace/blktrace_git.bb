@@ -10,7 +10,9 @@ PR = "r6"
 PV = "1.0.5+git${SRCPV}"
 
 SRC_URI = "git://git.kernel.dk/blktrace.git \
-           file://ldflags.patch"
+           file://ldflags.patch \
+           file://makefile-fix-parallel.patch \
+           "
 
 S = "${WORKDIR}/git"
 
@@ -19,7 +21,6 @@ EXTRA_OEMAKE = "\
     'CFLAGS=${CFLAGS}' \
     'LDFLAGS=${LDFLAGS}' \
 "
-PARALLEL_MAKE = ""
 
 do_install() {
 	oe_runmake ARCH="${ARCH}" prefix=${prefix} \
