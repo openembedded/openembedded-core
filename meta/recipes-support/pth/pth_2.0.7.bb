@@ -13,12 +13,12 @@ python __anonymous () {
 }
 
 SRC_URI = "${GNU_MIRROR}/pth/pth-${PV}.tar.gz \
-          file://pth-add-pkgconfig-support.patch"
+          file://pth-add-pkgconfig-support.patch \
+          file://pth-fix-parallel.patch \
+          "
 
 SRC_URI[md5sum] = "9cb4a25331a4c4db866a31cbe507c793"
 SRC_URI[sha256sum] = "72353660c5a2caafd601b20e12e75d865fd88f6cf1a088b306a3963f0bc77232"
-
-PARALLEL_MAKE=""
 
 BINCONFIG = "${bindir}/pth-config"
 
