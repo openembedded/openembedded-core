@@ -155,6 +155,9 @@ do_compile_ptest () {
 }
 
 do_install () {
+	# Create ${D}/${prefix} to fix parallel issues
+	mkdir -p ${D}/${prefix}/
+
 	oe_runmake INSTALL_PREFIX="${D}" MANDIR="${mandir}" install
 
 	oe_libinstall -so libcrypto ${D}${libdir}
