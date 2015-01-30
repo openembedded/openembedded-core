@@ -11,14 +11,12 @@ do_configure[depends] += "virtual/kernel:do_shared_workdir"
 
 inherit module
 
-SRCREV = "16d7431c3a78605ea598dbd3f081a2b1a8463f23"
+SRCREV = "9e8bcbf975844986f021e99e2a30ceedc41b46a8"
 
 COMPATIBLE_HOST = '(x86_64|i.86|powerpc|aarch64|mips|arm).*-linux'
 
-SRC_URI = "git://git.lttng.org/lttng-modules.git;branch=stable-2.5 \
+SRC_URI = "git://git.lttng.org/lttng-modules.git;branch=stable-2.6 \
            file://lttng-modules-replace-KERNELDIR-with-KERNEL_SRC.patch \
-           file://Fix-noargs-probes-should-calculate-alignment-and-eve.patch \
-           file://Update-kvm-instrumentation-compile-on-3.17-rc1.patch \
            "
 
 export INSTALL_MOD_DIR="kernel/lttng-modules"

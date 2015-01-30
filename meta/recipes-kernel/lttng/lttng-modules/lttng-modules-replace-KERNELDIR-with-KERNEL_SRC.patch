@@ -8,11 +8,11 @@ it as-is.
 
 Signed-off-by: Zumeng Chen <zumeng.chen@windriver.com>
 
-diff --git a/Makefile b/Makefile
-index a9d1cb1..c1b65b9 100644
---- a/Makefile
-+++ b/Makefile
-@@ -43,19 +43,19 @@ obj-m += lib/
+Index: git/Makefile
+===================================================================
+--- git.orig/Makefile
++++ git/Makefile
+@@ -62,19 +62,19 @@ obj-m += lib/
  endif # CONFIG_TRACEPOINTS
  
  else # KERNELRELEASE
@@ -37,26 +37,11 @@ index a9d1cb1..c1b65b9 100644
 -	$(MAKE) -C $(KERNELDIR) M=$(PWD) $@
 +	$(MAKE) -C $(KERNEL_SRC) M=$(PWD) $@
  endif # KERNELRELEASE
-diff --git a/README b/README
-index 8c5dd46..6bd3334 100644
---- a/README
-+++ b/README
-@@ -27,8 +27,8 @@ access to your full kernel source tree), and use:
- If you need to specify the target directory to the kernel you want to build
- against, use:
- 
--% KERNELDIR=path_to_kernel_dir make
--# KERNELDIR=path_to_kernel_dir make modules_install
-+% KERNEL_SRC=path_to_kernel_dir make
-+# KERNEL_SRC=path_to_kernel_dir make modules_install
- # depmod -a kernel_version
- 
- Use lttng-tools to control the tracer. LTTng tools should automatically load
-diff --git a/probes/Makefile b/probes/Makefile
-index 225803c..3449866 100644
---- a/probes/Makefile
-+++ b/probes/Makefile
-@@ -212,18 +212,18 @@ endif
+Index: git/probes/Makefile
+===================================================================
+--- git.orig/probes/Makefile
++++ git/probes/Makefile
+@@ -231,18 +231,18 @@ endif
  endif
  
  else
