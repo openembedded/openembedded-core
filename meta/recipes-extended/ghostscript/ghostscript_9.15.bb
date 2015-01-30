@@ -24,6 +24,7 @@ SRC_URI = "${SRC_URI_BASE} \
            file://objarch.h \
            file://ghostscript-9.02-parallel-make.patch \
            file://cups-no-gcrypt.patch \
+           file://ghostscript-9.15-parallel-make.patch \
            "
 
 SRC_URI_class-native = "${SRC_URI_BASE} \
@@ -101,8 +102,3 @@ do_install_class-native () {
 }
 
 BBCLASSEXTEND = "native"
-
-# Ghostscript install tool 'instcopy' tries to remove already created
-# directories during install and parallel make causes problems.
-PARALLEL_MAKEINST=""
-
