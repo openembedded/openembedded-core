@@ -11,16 +11,11 @@ DEPENDS = "bison-native flex-native"
 
 PR = "r1"
 
-BASE_SRC_URI = "${GNU_MIRROR}/bison/bison-${PV}.tar.gz \
+SRC_URI = "${GNU_MIRROR}/bison/bison-${PV}.tar.gz \
          file://bison-2.3_m4.patch"
-
-SRC_URI = "${BASE_SRC_URI}"
 
 SRC_URI[md5sum] = "22327efdd5080e2b1acb6e560a04b43a"
 SRC_URI[sha256sum] = "52f78aa4761a74ceb7fdf770f3554dd84308c3b93c4255e3a5c17558ecda293e"
-
-DEPENDS_class-native = "gettext-native"
-SRC_URI_class-native = "${BASE_SRC_URI}"
 
 inherit autotools gettext texinfo
 acpaths = "-I ${S}/m4"
@@ -29,11 +24,3 @@ do_configure_prepend () {
 	rm -f ${S}/m4/*gl.m4
 	cp ${STAGING_DATADIR_NATIVE}/gettext/po/Makefile.in.in ${S}/runtime-po/
 }
-
-do_install_append_class-native() {
-	create_wrapper ${D}/${bindir}/bison \
-		M4=${STAGING_BINDIR_NATIVE}/m4 \
-		BISON_PKGDATADIR=${STAGING_DATADIR_NATIVE}/bison
-}
-#bison-native encodes the staging M4 path
-BBCLASSEXTEND = "native"
