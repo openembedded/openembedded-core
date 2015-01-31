@@ -9,11 +9,10 @@ LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=751419260aa954499f7abaabaa882bbe \
                     file://src/ls.c;beginline=4;endline=16;md5=15ed60f67b1db5fedd5dbc37cf8a9543"
 PR = "r5"
-DEPENDS_class-native = "gettext-native"
 
 inherit autotools gettext texinfo
 
-SRC_URI_BASE = "${GNU_MIRROR}/coreutils/${BP}.tar.bz2 \
+SRC_URI = "${GNU_MIRROR}/coreutils/${BP}.tar.bz2 \
            file://gnulib_m4.patch \
            file://futimens.patch \
            file://coreutils-ls-x.patch \
@@ -25,10 +24,8 @@ SRC_URI_BASE = "${GNU_MIRROR}/coreutils/${BP}.tar.bz2 \
            file://coreutils_fix_for_automake-1.12.patch \
            file://coreutils-build-with-acl.patch \
            file://coreutils-fix-texinfo.patch \
+           file://fix_for_manpage_building.patch \
            "
-
-SRC_URI = "${SRC_URI_BASE} file://fix_for_manpage_building.patch"
-SRC_URI_class-native = "${SRC_URI_BASE}"
 
 SRC_URI[md5sum] = "c9607d8495f16e98906e7ed2d9751a06"
 SRC_URI[sha256sum] = "89c2895ad157de50e53298b22d91db116ee4e1dd3fdf4019260254e2e31497b0"
@@ -36,8 +33,7 @@ SRC_URI[sha256sum] = "89c2895ad157de50e53298b22d91db116ee4e1dd3fdf4019260254e2e3
 
 # acl is not a default feature
 #
-PACKAGECONFIG_class-target ??= "${@bb.utils.contains('DISTRO_FEATURES', 'acl', 'acl', '', d)}"
-PACKAGECONFIG_class-native ??= ""
+PACKAGECONFIG ??= "${@bb.utils.contains('DISTRO_FEATURES', 'acl', 'acl', '', d)}"
 
 # with, without, depends, rdepends
 #
@@ -102,5 +98,3 @@ python __anonymous() {
 	for prog in d.getVar('sbindir_progs', True).split():
 		d.setVarFlag('ALTERNATIVE_LINK_NAME', prog, '%s/%s' % (d.getVar('sbindir', True), prog))
 }
-
-BBCLASSEXTEND = "native"
