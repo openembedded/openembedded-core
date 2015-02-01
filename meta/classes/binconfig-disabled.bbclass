@@ -12,7 +12,7 @@ do_install_append () {
 		echo "#!/bin/sh" > ${D}$x
 		# Make the disabled script emit invalid parameters for those configure
 		# scripts which call it without checking the return code.
-		echo "echo '--should-not-have-used-$x'" > ${D}$x
+		echo "echo '--should-not-have-used-$x'" >> ${D}$x
 		echo "exit 1" >> ${D}$x
 	done
 }
