@@ -15,7 +15,7 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/project/glew/glew/${PV}/glew-${PV}.tgz \
            file://fix-glew.pc-install.patch \
           "
 
-SRC_URI[md5sum] = "f6d72c7426a5f66580ad09e50816450a"
-SRC_URI[sha256sum] = "69bbce306ac281c4fa806a7a7d02c0596281a2d8f9d70690e98126f23ba513d6"
+SRC_URI[md5sum] = "01246c7ecd135d99be031aa63f86dca1"
+SRC_URI[sha256sum] = "af58103f4824b443e7fa4ed3af593b8edac6f3a7be3b30911edbc7344f48e4bf"
 
 inherit autotools lib_package pkgconfig
