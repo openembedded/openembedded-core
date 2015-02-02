@@ -4,13 +4,15 @@ update-ca-certificates: find SYSROOT relative to its own location
 
 This makes the script relocatable.
 
---- ca-certificates-20130119.orig/sbin/update-ca-certificates
-+++ ca-certificates-20130119/sbin/update-ca-certificates
-@@ -37,11 +37,44 @@ do
+Index: git/sbin/update-ca-certificates
+===================================================================
+--- git.orig/sbin/update-ca-certificates
++++ git/sbin/update-ca-certificates
+@@ -37,6 +37,39 @@ do
    shift
  done
-
--CERTSCONF=$SYSROOT/etc/ca-certificates.conf
+ 
++ 
 +if [ -z "$SYSROOT" ]; then
 +  local_which () {
 +    if [ $# -lt 1 ]; then
@@ -43,13 +45,6 @@ This makes the script relocatable.
 +    SYSROOT=
 +  fi
 +fi
-+
+ CERTSCONF=$SYSROOT/etc/ca-certificates.conf
  CERTSDIR=$SYSROOT/usr/share/ca-certificates
-+CERTSCONF=$SYSROOT/etc/ca-certificates.conf
-+ETCCERTSDIR=$SYSROOT/etc/ssl/certs
  LOCALCERTSDIR=$SYSROOT/usr/local/share/ca-certificates
- CERTBUNDLE=ca-certificates.crt
--ETCCERTSDIR=$SYSROOT/etc/ssl/certs
-
- cleanup() {
-   rm -f "$TEMPBUNDLE"

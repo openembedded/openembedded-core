@@ -5,22 +5,20 @@ This derived from Debian's CA Certificates."
 HOMEPAGE = "http://packages.debian.org/sid/ca-certificates"
 SECTION = "misc"
 LICENSE = "GPL-2.0+ & MPL-2.0"
-LIC_FILES_CHKSUM = "file://debian/copyright;md5=0ee6c253e6406c76bfe261deaf5a60b5"
+LIC_FILES_CHKSUM = "file://debian/copyright;md5=48d2baf97986999e776b43c8dd9e0c5a"
 
 # This is needed to ensure we can run the postinst at image creation time
 DEPENDS = "ca-certificates-native"
 DEPENDS_class-native = ""
 
 # tag: debian/20140325 + 2
-SRCREV = "1ce8e63dcfea6b9258da356dc023895e6f694144"
+SRCREV = "2b8a047c78aadbecd90bf8e49ccf68898a211610"
 
 SRC_URI = "git://anonscm.debian.org/collab-maint/ca-certificates.git \
            file://0001-update-ca-certificates-remove-c-rehash.patch \
            file://0002-update-ca-certificates-use-SYSROOT.patch \
            file://default-sysroot.patch \
            file://sbindir.patch"
-
-SRC_URI += "file://0001-Update-mozilla-certdata.txt-to-version-1.98.patch"
 
 S = "${WORKDIR}/git"
 
