@@ -19,8 +19,8 @@ SRC_URI = "${GNU_MIRROR}/libtool/libtool-${PV}.tar.gz \
            file://fix-resolve-lt-sysroot.patch \
           "
 
-SRC_URI[md5sum] = "353ed373fd3c6d7e47a1f4a8728d966b"
-SRC_URI[sha256sum] = "159d4e20c201f929e3562536d3ae6b5e605403fa4bb4e72ef197a4e162c3fedf"
+SRC_URI[md5sum] = "7d30ed9fa6bb11270ebb31639a37bd54"
+SRC_URI[sha256sum] = "509cb49c7de14ce7eaf88993cf09fd4071882699dfd874c2e95b31ab107d6987"
 
 do_compile_prepend () {
 	# Sometimes this file doesn't get rebuilt, force the issue
