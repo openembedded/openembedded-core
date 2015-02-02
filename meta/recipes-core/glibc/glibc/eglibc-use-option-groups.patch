@@ -2819,26 +2819,6 @@ Index: git/misc/Makefile
  
  CFLAGS-select.c = -fexceptions -fasynchronous-unwind-tables
  CFLAGS-tsearch.c = $(uses-callbacks)
-Index: git/misc/sys/xattr.h
-===================================================================
---- git.orig/misc/sys/xattr.h	2014-08-29 20:00:52.644070587 -0700
-+++ git/misc/sys/xattr.h	2014-08-29 20:01:15.216070587 -0700
-@@ -26,7 +26,6 @@
- 
- /* The following constants should be used for the fifth parameter of
-    `*setxattr'.  */
--#ifndef __USE_KERNEL_XATTR_DEFS
- enum
- {
-   XATTR_CREATE = 1,	/* set value, fail if attr already exists.  */
-@@ -34,7 +33,6 @@
-   XATTR_REPLACE = 2	/* set value, fail if attr does not exist.  */
- #define XATTR_REPLACE	XATTR_REPLACE
- };
--#endif
- 
- /* Set the attribute NAME of the file pointed to by PATH to VALUE (which
-    is SIZE bytes long).  Return 0 on success, -1 for errors.  */
 Index: git/misc/tst-efgcvt.c
 ===================================================================
 --- git.orig/misc/tst-efgcvt.c	2014-08-29 20:00:52.652070587 -0700
