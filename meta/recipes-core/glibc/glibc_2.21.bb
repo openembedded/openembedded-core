@@ -2,11 +2,12 @@ require glibc.inc
 
 DEPENDS += "gperf-native kconfig-frontends-native"
 
-PV = "2.20"
+SRCREV = "edac0a60c7514b8c9b59488cffdac6b22267e757"
 
-SRCREV = "b8079dd0d360648e4e8de48656c5c38972621072"
+#BRANCH = "release/${PV}/master"
+BRANCH = "master"
 
-SRC_URI = "git://sourceware.org/git/glibc.git;branch=release/${PV}/master \
+SRC_URI = "git://sourceware.org/git/glibc.git;branch=${BRANCH} \
            file://IO-acquire-lock-fix.patch \
            file://mips-rld-map-check.patch \
            file://etc/ld.so.conf \
@@ -16,15 +17,15 @@ SRC_URI = "git://sourceware.org/git/glibc.git;branch=release/${PV}/master \
            file://ppc-sqrt_finite.patch \
            file://ppc_slow_ieee754_sqrt.patch \
            file://add_resource_h_to_wait_h.patch \
-           file://fsl-ppc-no-fsqrt.patch \
            file://0001-R_ARM_TLS_DTPOFF32.patch \
            file://0001-eglibc-run-libm-err-tab.pl-with-specific-dirs-in-S.patch \
            file://fix-tibetian-locales.patch \
            file://ppce6500-32b_slow_ieee754_sqrt.patch \
            file://grok_gold.patch \
            file://fix_am_rootsbindir.patch \
+           file://0001-Add-unused-attribute.patch \
+           file://0001-When-disabling-SSE-also-make-sure-that-fpmath-is-not.patch \
            ${EGLIBCPATCHES} \
-           ${CVEPATCHES} \
           "
 EGLIBCPATCHES = "\
            file://timezone-re-written-tzselect-as-posix-sh.patch \
@@ -41,11 +42,6 @@ EGLIBCPATCHES = "\
 #	    file://initgroups_keys.patch \
 #
 
-CVEPATCHES = "\
-        file://CVE-2014-7817-wordexp-fails-to-honour-WRDE_NOCMD.patch \
-        file://CVE-2012-3406-Stack-overflow-in-vfprintf-BZ-16617.patch \
-        file://CVE-2014-9402_endless-loop-in-getaddr_r.patch \
-    "
 LIC_FILES_CHKSUM = "file://LICENSES;md5=e9a558e243b36d3209f380deb394b213 \
       file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
       file://posix/rxspencer/COPYRIGHT;md5=dc5485bb394a13b2332ec1c785f5d83a \

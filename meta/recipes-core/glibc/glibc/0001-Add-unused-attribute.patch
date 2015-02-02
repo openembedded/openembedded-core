@@ -1,0 +1,36 @@
+2015-02-18  Khem Raj  <raj.khem@gmail.com>>
+
+        * iconv/gconv_charset.h (strip):
+        Add unused attribute.
+
+From 9c4a91cb331ff1e8cde2314dadee74559d8cb0dd Mon Sep 17 00:00:00 2001
+From: Khem Raj <raj.khem@gmail.com>
+Date: Wed, 18 Feb 2015 19:45:31 +0000
+Subject: [PATCH] Add unused attribute
+
+Helps in avoiding gcc warning when header is is included in
+a source file which does not use both functions
+
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+
+Upstream-Status: Pending
+---
+ iconv/gconv_charset.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/iconv/gconv_charset.h b/iconv/gconv_charset.h
+index 80290bc..7890a8e 100644
+--- a/iconv/gconv_charset.h
++++ b/iconv/gconv_charset.h
+@@ -21,7 +21,7 @@
+ #include <locale.h>
+ 
+ 
+-static void
++static void __attribute__ ((unused))
+ strip (char *wp, const char *s)
+ {
+   int slash_count = 0;
+-- 
+2.1.4
+

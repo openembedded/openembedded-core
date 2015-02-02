@@ -14,9 +14,10 @@ inherit autotools
 
 FILESEXTRAPATHS =. "${FILE_DIRNAME}/${PN}:${FILE_DIRNAME}/glibc:"
 
-PV = "2.20"
+#BRANCH = "release/${PV}/master"
+BRANCH = "master"
 
-SRC_URI = "git://sourceware.org/git/glibc.git;branch=release/${PV}/master;name=glibc \
+SRC_URI = "git://sourceware.org/git/glibc.git;branch=${BRANCH};name=glibc \
            git://github.com/kraj/localedef;branch=master;name=localedef;destsuffix=git/localedef \
 	   file://fix_for_centos_5.8.patch \
            ${EGLIBCPATCHES} \
@@ -33,17 +34,17 @@ EGLIBCPATCHES = "\
            file://eglibc-use-option-groups.patch \
           "
 
-SRCREV_glibc = "b8079dd0d360648e4e8de48656c5c38972621072"
+SRCREV_glibc = "edac0a60c7514b8c9b59488cffdac6b22267e757"
 SRCREV_localedef = "c833367348d39dad7ba018990bfdaffaec8e9ed3"
 
 # Makes for a rather long rev (22 characters), but...
 #
-SRCREV_FORMAT = "glibc__localedef"
+SRCREV_FORMAT = "glibc_localedef"
 
 S = "${WORKDIR}/git"
 
 EXTRA_OECONF = "--with-glibc=${S}"
-CFLAGS += "-DNOT_IN_libc=1"
+CFLAGS += "-fgnu89-inline -std=gnu99 -DIS_IN\(x\)='0'"
 
 do_configure () {
 	${S}/localedef/configure ${EXTRA_OECONF}
@@ -51,6 +52,6 @@ do_configure () {
 
 
 do_install() {
-	install -d ${D}${bindir} 
+	install -d ${D}${bindir}
 	install -m 0755 ${B}/localedef ${D}${bindir}/cross-localedef
 }

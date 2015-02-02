@@ -20,7 +20,7 @@ def get_optimization(d):
 SELECTED_OPTIMIZATION := "${@get_optimization(d)}"
 
 # siteconfig.bbclass runs configure which needs a working compiler
-# For the compiler to work we need a working libc yet libc isn't 
+# For the compiler to work we need a working libc yet libc isn't
 # in the sysroots directory at this point. This means the libc.so
 # linker script won't work as the --sysroot setting isn't correct.
 # Here we create a hacked up libc linker script and pass in the right
@@ -71,7 +71,7 @@ EXTRA_OEMAKE += "${EGLIBCPARALLELISM}"
 PARALLEL_MAKE = ""
 
 # glibc make-syscalls.sh has a number of issues with /bin/dash and
-# it's output which make calls via the SHELL also has issues, so 
+# it's output which make calls via the SHELL also has issues, so
 # ensure make uses /bin/bash
 EXTRA_OEMAKE += "SHELL=/bin/bash"
 
