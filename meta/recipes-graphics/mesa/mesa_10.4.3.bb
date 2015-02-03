@@ -2,8 +2,8 @@ require ${BPN}.inc
 
 SRC_URI = "ftp://ftp.freedesktop.org/pub/mesa/${PV}/MesaLib-${PV}.tar.bz2"
 
-SRC_URI[md5sum] = "fa0558a3d02c2bb8c208c030ccdc992e"
-SRC_URI[sha256sum] = "e6373913142338d10515daf619d659433bfd2989988198930c13b0945a15e98a"
+SRC_URI[md5sum] = "be86c4ee226f8ca28b7d4c728c350b01"
+SRC_URI[sha256sum] = "ef6ecc9c2f36c9f78d1662382a69ae961f38f03af3a0c3268e53f351aa1978ad"
 
 S = "${WORKDIR}/Mesa-${PV}"
 
