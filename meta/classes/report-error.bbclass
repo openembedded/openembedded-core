@@ -47,9 +47,13 @@ python errorreport_handler () {
             taskdata['package'] = e.data.expand("${PF}")
             taskdata['task'] = task
             if log:
-                logFile = open(log, 'r')
-                taskdata['log'] = logFile.read()
-                logFile.close()
+                try:
+                    logFile = open(log, 'r')
+                    taskdata['log'] = logFile.read().decode('utf-8')
+                    logFile.close()
+                except:
+                    taskdata['log'] = "Unable to read log file"
+
             else:
                 taskdata['log'] = "No Log"
             jsondata = json.loads(errorreport_getdata(e))
