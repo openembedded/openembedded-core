@@ -3,7 +3,7 @@ HOMEPAGE = "http://apr.apache.org/"
 SECTION = "libs"
 DEPENDS = "apr expat gdbm"
 
-BBCLASSEXTEND = "native"
+BBCLASSEXTEND = "native nativesdk"
 
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=519e0a18e03f7c023070568c14b077bb \
@@ -47,6 +47,17 @@ do_configure_append_class-native() {
 	sed -i "s#LIBTOOL=\$(SHELL) \$(apr_builddir)#LIBTOOL=\$(SHELL) ${STAGING_BINDIR_NATIVE}#" ${B}/build/rules.mk
 	# sometimes there isn't SHELL
 	sed -i "s#LIBTOOL=\$(apr_builddir)#LIBTOOL=${STAGING_BINDIR_NATIVE}#" ${B}/build/rules.mk
+}
+
+do_configure_prepend_class-nativesdk() {
+	cp ${STAGING_DATADIR}/apr/apr_rules.mk ${S}/build/rules.mk
+}
+
+do_configure_append_class-nativesdk() {
+	sed -i "s#\(apr_builddir\)=.*#\1=${STAGING_DATADIR}/build-1#" ${S}/build/rules.mk
+	sed -i "s#\(apr_builders\)=.*#\1=${STAGING_DATADIR}/build-1#" ${S}/build/rules.mk
+	sed -i "s#\(top_builddir\)=.*#\1=${STAGING_DATADIR}/build-1#" ${S}/build/rules.mk
+	sed -i "s#\(LIBTOOL=\$(apr_builddir)\).*#\1/libtool#" ${S}/build/rules.mk
 }
 
 FILES_${PN}     += "${libdir}/apr-util-1/apr_dbm_gdbm-1.so"
