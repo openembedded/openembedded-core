@@ -178,7 +178,13 @@ git format-patch -M40 --subject-prefix="$PREFIX" -n -o $ODIR --thread=shallow --
 # Customize the cover letter
 CL="$ODIR/0000-cover-letter.patch"
 PM="$ODIR/pull-msg"
-git request-pull $RELATIVE_TO $REMOTE_URL $COMMIT_ID >> "$PM"
+GIT_VERSION=$(`git --version` | tr -d '[:alpha:][:space:].')
+NEWER_GIT_VERSION=210
+if [ $GIT_VERSION -lt $NEWER_GIT_VERSION ]; then
+	git request-pull $RELATIVE_TO $REMOTE_URL $COMMIT_ID >> "$PM"
+else
+	git request-pull $RELATIVE_TO $REMOTE_URL :$BRANCH >> "$PM"
+fi
 if [ $? -ne 0 ]; then
 	echo "ERROR: git request-pull reported an error"
 	exit 1
