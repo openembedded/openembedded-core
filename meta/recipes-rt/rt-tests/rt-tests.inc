@@ -7,6 +7,7 @@ SRC_URI = "git://git.kernel.org/pub/scm/linux/kernel/git/clrkwllms/rt-tests.git 
            file://0002-rt-tests-Break-out-install_hwlatdetect.patch \
            file://added-missing-dependencies.patch \
            file://hackbench-fix-error-check.patch \
+           file://Makefile-fix-gzip-command.patch \
 "
 
 S = "${WORKDIR}/git"
