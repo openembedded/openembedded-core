@@ -14,7 +14,9 @@ EXTRA_OECONF_PATHS = "\
 do_configure () {
     mtarget=`echo ${TARGET_SYS} | sed -e s#-${SDKPKGSUFFIX}##`
     target=`echo ${TARGET_SYS} | sed -e s#-${SDKPKGSUFFIX}##`
-    hardlinkdir ${STAGING_INCDIR_NATIVE}/gcc-build-internal-$mtarget ${B}
+    if [ -d ${STAGING_INCDIR_NATIVE}/gcc-build-internal-$mtarget ]; then
+        hardlinkdir ${STAGING_INCDIR_NATIVE}/gcc-build-internal-$mtarget ${B}
+    fi
 
     echo "Configuring libsanitizer"
     rm -rf ${B}/$target/libsanitizer/
