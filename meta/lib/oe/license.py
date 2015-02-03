@@ -25,7 +25,8 @@ class InvalidLicense(LicenseError):
     def __str__(self):
         return "invalid characters in license '%s'" % self.license
 
-license_operator = re.compile('([&|() ])')
+license_operator_chars = '&|() '
+license_operator = re.compile('([' + license_operator_chars + '])')
 license_pattern = re.compile('[a-zA-Z0-9.+_\-]+$')
 
 class LicenseVisitor(ast.NodeVisitor):
