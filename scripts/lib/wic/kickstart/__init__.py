@@ -74,7 +74,7 @@ def get_image_size(ks, default = None):
         if p.mountpoint == "/" and p.size:
             __size = p.size
     if __size > 0:
-        return int(__size) * 1024L * 1024L
+        return int(__size) * 1024L
     else:
         return default
 

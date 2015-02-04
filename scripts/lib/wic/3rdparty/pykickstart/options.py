@@ -143,6 +143,24 @@ def _check_string(option, opt, value):
     else:
         return value
 
+def _check_size(option, opt, value):
+    # Former default was MB
+    if (value.isdigit()):
+        return int(value) * 1024L
+
+    mapping = {"opt": opt, "value": value}
+    if (not value[:-1].isdigit()):
+        raise OptionValueError(_("Option %(opt)s: invalid size value: %(value)r") % mapping)
+
+    size = int(value[:-1])
+    if (value.endswith("k") or value.endswith("K")):
+        return size
+    if (value.endswith("M")):
+        return size * 1024L
+    if (value.endswith("G")):
+        return size * 1024L * 1024L
+    raise OptionValueError(_("Option %(opt)s: invalid size value: %(value)r") % mapping)
+
 # Creates a new Option class that supports several new attributes:
 # - required:  any option with this attribute must be supplied or an exception
 #              is thrown
@@ -169,10 +187,11 @@ class KSOption (Option):
     ACTIONS = Option.ACTIONS + ("map", "map_extend",)
     STORE_ACTIONS = Option.STORE_ACTIONS + ("map", "map_extend",)
 
-    TYPES = Option.TYPES + ("ksboolean", "string")
+    TYPES = Option.TYPES + ("ksboolean", "string", "size")
     TYPE_CHECKER = copy(Option.TYPE_CHECKER)
     TYPE_CHECKER["ksboolean"] = _check_ksboolean
     TYPE_CHECKER["string"] = _check_string
+    TYPE_CHECKER["size"] = _check_size
 
     def _check_required(self):
         if self.required and not self.takes_value():

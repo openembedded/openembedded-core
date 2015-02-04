@@ -78,7 +78,7 @@ class FC3_PartData(BaseData):
         if self.recommended:
             retval += " --recommended"
         if self.size and self.size != 0:
-            retval += " --size=%s" % self.size
+            retval += " --size=%sk" % self.size
         if hasattr(self, "start") and self.start != 0:
             retval += " --start=%s" % self.start
 
@@ -216,7 +216,7 @@ class FC3_Partition(KickstartCommand):
                       callback=part_cb, nargs=1, type="string")
         op.add_option("--recommended", dest="recommended", action="store_true",
                       default=False)
-        op.add_option("--size", dest="size", action="store", type="int",
+        op.add_option("--size", dest="size", action="store", type="size",
                       nargs=1)
         op.add_option("--start", dest="start", action="store", type="int",
                       nargs=1)

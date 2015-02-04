@@ -673,10 +673,10 @@ DESCRIPTION
 
        The following are supported 'part' options:
 
-         --size: The minimum partition size in MBytes. Specify an
-                 integer value such as 500. Do not append the number
-                 with "MB". You do not need this option if you use
-                 --source.
+         --size: The minimum partition size. Specify an integer value
+                 such as 500. Multipliers k, M ang G can be used. If
+                 not specified, the size is in MB.
+                 You do not need this option if you use --source.
 
          --source: This option is a wic-specific option that names the
                    source of the data that will populate the

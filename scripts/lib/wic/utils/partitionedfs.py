@@ -92,8 +92,8 @@ class Image:
 
         ks_pnum = len(self.partitions)
 
-        # Converting MB to sectors for parted
-        size = size * 1024 * 1024 / self.sector_size
+        # Converting kB to sectors for parted
+        size = size * 1024 / self.sector_size
 
         # We still need partition for "/" or non-subvolume
         if mountpoint == "/" or not fsopts:

@@ -99,7 +99,7 @@ class Wic_PartData(Mic_PartData):
 
     def get_extra_block_count(self, current_blocks):
         """
-        The --size param is reflected in self.size (in MB), and we already
+        The --size param is reflected in self.size (in kB), and we already
         have current_blocks (1k) blocks, calculate and return the
         number of (1k) blocks we need to add to get to --size, 0 if
         we're already there or beyond.
@@ -110,7 +110,7 @@ class Wic_PartData(Mic_PartData):
         if not self.size:
             return 0
 
-        requested_blocks = self.size * 1024
+        requested_blocks = self.size
 
         msger.debug("Requested blocks %d, current_blocks %d" % \
                     (requested_blocks, current_blocks))
@@ -171,7 +171,7 @@ class Wic_PartData(Mic_PartData):
         Handle an already-created partition e.g. xxx.ext3
         """
         rootfs = oe_builddir
-        du_cmd = "du -Lbms %s" % rootfs
+        du_cmd = "du -Lbks %s" % rootfs
         out = exec_cmd(du_cmd)
         rootfs_size = out.split()[0]
 
@@ -247,8 +247,8 @@ class Wic_PartData(Mic_PartData):
             print "rootfs_dir: %s" % rootfs_dir
             msger.error("ERROR: mkfs.%s returned '%s' instead of 0 (which you probably don't want to ignore, use --debug for details) when creating filesystem from rootfs directory: %s" % (self.fstype, rc, rootfs_dir))
 
-        # get the rootfs size in the right units for kickstart (Mb)
-        du_cmd = "du -Lbms %s" % rootfs
+        # get the rootfs size in the right units for kickstart (kB)
+        du_cmd = "du -Lbks %s" % rootfs
         out = exec_cmd(du_cmd)
         rootfs_size = out.split()[0]
 
@@ -292,8 +292,8 @@ class Wic_PartData(Mic_PartData):
         if rc:
             msger.error("ERROR: mkfs.%s returned '%s' instead of 0 (which you probably don't want to ignore, use --debug for details) when creating filesystem from rootfs directory: %s" % (self.fstype, rc, rootfs_dir))
 
-        # get the rootfs size in the right units for kickstart (Mb)
-        du_cmd = "du -Lbms %s" % rootfs
+        # get the rootfs size in the right units for kickstart (kB)
+        du_cmd = "du -Lbks %s" % rootfs
         out = exec_cmd(du_cmd)
         rootfs_size = out.split()[0]
 
@@ -341,8 +341,8 @@ class Wic_PartData(Mic_PartData):
         chmod_cmd = "chmod 644 %s" % rootfs
         exec_cmd(chmod_cmd)
 
-        # get the rootfs size in the right units for kickstart (Mb)
-        du_cmd = "du -Lbms %s" % rootfs
+        # get the rootfs size in the right units for kickstart (kB)
+        du_cmd = "du -Lbks %s" % rootfs
         out = exec_cmd(du_cmd)
         rootfs_size = out.split()[0]
 
@@ -361,8 +361,8 @@ class Wic_PartData(Mic_PartData):
                        (image_rootfs, rootfs)
         exec_native_cmd(pseudo + squashfs_cmd, native_sysroot)
 
-        # get the rootfs size in the right units for kickstart (Mb)
-        du_cmd = "du -Lbms %s" % rootfs
+        # get the rootfs size in the right units for kickstart (kB)
+        du_cmd = "du -Lbks %s" % rootfs
         out = exec_cmd(du_cmd)
         rootfs_size = out.split()[0]
 
@@ -395,7 +395,7 @@ class Wic_PartData(Mic_PartData):
         """
         fs = "%s/fs_%s.%s" % (cr_workdir, self.label, self.fstype)
 
-        dd_cmd = "dd if=/dev/zero of=%s bs=1M seek=%d count=0" % \
+        dd_cmd = "dd if=/dev/zero of=%s bs=1k seek=%d count=0" % \
             (fs, self.size)
         exec_cmd(dd_cmd)
 
@@ -417,11 +417,11 @@ class Wic_PartData(Mic_PartData):
         """
         fs = "%s/fs_%s.%s" % (cr_workdir, self.label, self.fstype)
 
-        dd_cmd = "dd if=/dev/zero of=%s bs=1M seek=%d count=0" % \
+        dd_cmd = "dd if=/dev/zero of=%s bs=1k seek=%d count=0" % \
             (fs, self.size)
         exec_cmd(dd_cmd)
 
-        mkfs_cmd = "mkfs.%s -b %d %s" % (self.fstype, self.size * 1024, rootfs)
+        mkfs_cmd = "mkfs.%s -b %d %s" % (self.fstype, self.size, rootfs)
         (rc, out) = exec_native_cmd(mkfs_cmd, native_sysroot)
         if rc:
             msger.error("ERROR: mkfs.%s returned '%s' instead of 0 (which you probably don't want to ignore, use --debug for details)" % (self.fstype, rc))
@@ -442,7 +442,7 @@ class Wic_PartData(Mic_PartData):
         """
         fs = "%s/fs_%s.%s" % (cr_workdir, self.label, self.fstype)
 
-        blocks = self.size * 1024
+        blocks = self.size
 
         dosfs_cmd = "mkdosfs -n boot -S 512 -C %s %d" % (fs, blocks)
         exec_native_cmd(dosfs_cmd, native_sysroot)
@@ -474,8 +474,8 @@ class Wic_PartData(Mic_PartData):
 
         os.rmdir(tmpdir)
 
-        # get the rootfs size in the right units for kickstart (Mb)
-        du_cmd = "du -Lbms %s" % fs
+        # get the rootfs size in the right units for kickstart (kB)
+        du_cmd = "du -Lbks %s" % fs
         out = exec_cmd(du_cmd)
         fs_size = out.split()[0]
 
@@ -490,7 +490,7 @@ class Wic_PartData(Mic_PartData):
         """
         fs = "%s/fs.%s" % (cr_workdir, self.fstype)
 
-        dd_cmd = "dd if=/dev/zero of=%s bs=1M seek=%d count=0" % \
+        dd_cmd = "dd if=/dev/zero of=%s bs=1k seek=%d count=0" % \
             (fs, self.size)
         exec_cmd(dd_cmd)
 
