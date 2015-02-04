@@ -116,6 +116,24 @@ class TmuxRunning(Terminal):
         if not os.getenv('TMUX'):
             raise UnsupportedTerminal('tmux is not running')
 
+        if not check_tmux_pane_size('tmux'):
+            raise UnsupportedTerminal('tmux pane too small')
+
+        Terminal.__init__(self, sh_cmd, title, env, d)
+
+class TmuxNewWindow(Terminal):
+    """Open a new window in the current running tmux session"""
+    name = 'tmux-new-window'
+    command = 'tmux new-window -n "{title}" "{command}"'
+    priority = 2.70
+
+    def __init__(self, sh_cmd, title=None, env=None, d=None):
+        if not bb.utils.which(os.getenv('PATH'), 'tmux'):
+            raise UnsupportedTerminal('tmux is not installed')
+
+        if not os.getenv('TMUX'):
+            raise UnsupportedTerminal('tmux is not running')
+
         Terminal.__init__(self, sh_cmd, title, env, d)
 
 class Tmux(Terminal):
@@ -183,6 +201,23 @@ def spawn(name, sh_cmd, title=None, env=None, d=None):
     output = pipe.communicate()[0]
     if pipe.returncode != 0:
         raise ExecutionError(sh_cmd, pipe.returncode, output)
+
+def check_tmux_pane_size(tmux):
+    import subprocess as sub
+    try:
+        p = sub.Popen('%s list-panes -F "#{?pane_active,#{pane_height},}"' % tmux,
+                shell=True,stdout=sub.PIPE,stderr=sub.PIPE)
+        out, err = p.communicate()
+        size = int(out.strip())
+    except OSError as exc:
+        import errno
+        if exc.errno == errno.ENOENT:
+            return None
+        else:
+            raise
+    if size/2 >= 19:
+        return True
+    return False
 
 def check_konsole_version(konsole):
     import subprocess as sub
