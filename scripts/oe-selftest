@@ -102,6 +102,8 @@ def add_include():
 
 def remove_include():
     builddir = os.environ.get("BUILDDIR")
+    if builddir is None:
+        return
     if "#include added by oe-selftest.py" \
         in ftools.read_file(os.path.join(builddir, "conf/local.conf")):
             log.info("Removing the include from local.conf")
@@ -116,7 +118,7 @@ def remove_inc_files():
             for f in files:
                 if f == 'test_recipe.inc':
                     os.remove(os.path.join(root, f))
-    except OSError as e:
+    except (AttributeError, OSError,) as e:    # AttributeError may happen if BUILDDIR is not set
         pass
 
 def get_tests(exclusive_modules=[], include_hidden=False):
