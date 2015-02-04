@@ -66,7 +66,7 @@ class BootimgPartitionPlugin(SourcePlugin):
         - copies all files listed in IMAGE_BOOT_FILES variable
         """
         hdddir = "%s/boot" % cr_workdir
-        rm_cmd = "rm -rf %s" % cr_workdir
+        rm_cmd = "rm -rf %s/boot" % cr_workdir
         exec_cmd(rm_cmd)
 
         install_cmd = "install -d %s" % hdddir
