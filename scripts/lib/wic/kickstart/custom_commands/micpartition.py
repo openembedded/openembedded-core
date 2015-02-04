@@ -32,7 +32,7 @@ class Mic_PartData(FC4_PartData):
         retval = FC4_PartData._getArgsAsStr(self)
 
         if self.align:
-            retval += " --align"
+            retval += " --align=%d" % self.align
         if self.extopts:
             retval += " --extoptions=%s" % self.extopts
         if self.part_type:
