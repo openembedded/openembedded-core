@@ -66,6 +66,7 @@ def get_args_parser():
     group.add_argument('--run-tests', required=False, action='store', nargs='*', dest="run_tests", default=None, help='Select what tests to run (modules, classes or test methods). Format should be: <module>.<class>.<test_method>')
     group.add_argument('--run-all-tests', required=False, action="store_true", dest="run_all_tests", default=False, help='Run all (unhidden) tests')
     group.add_argument('--list-modules', required=False, action="store_true", dest="list_modules", default=False, help='List all available test modules.')
+    group.add_argument('--list-classes', required=False, action="store_true", dest="list_allclasses", default=False, help='List all available test classes.')
     return parser
 
 
@@ -138,6 +139,9 @@ def main():
     parser = get_args_parser()
     args = parser.parse_args()
 
+    if args.list_allclasses:
+        args.list_modules = True
+
     if args.list_modules:
         log.info('Listing all available test modules:')
         testslist = get_tests(include_hidden=True)
@@ -147,6 +151,22 @@ def main():
             if module.startswith('_'):
                 info = ' (hidden)'
             print module + info
+            if args.list_allclasses:
+                try:
+                    import importlib
+                    modlib = importlib.import_module(test)
+                    for v in vars(modlib):
+                        t = vars(modlib)[v]
+                        if isinstance(t, type(oeSelfTest)) and issubclass(t, oeSelfTest) and t!=oeSelfTest:
+                            print " --", v
+                            for method in dir(t):
+                                if method.startswith("test_"):
+                                    print " --  --", method
+
+                except (AttributeError, ImportError) as e:
+                    print e
+                    pass
+
 
     if args.run_tests or args.run_all_tests:
         if not preflight_check():
