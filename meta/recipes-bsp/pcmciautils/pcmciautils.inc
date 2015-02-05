@@ -23,7 +23,6 @@ LD = "${CC}"
 CFLAGS =+ "-I${S}/src"
 CFLAGS =+ "-DPCMCIAUTILS_VERSION=\\"${PV}\\""
 
-PARALLEL_MAKE = ""
 EXTRA_OEMAKE = "-e 'STRIP=echo' 'LIB_OBJS=-lc -lsysfs' 'LEX=flex'"
 
 do_install () {

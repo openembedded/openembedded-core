@@ -1,0 +1,35 @@
+From 1b8ad348f8c712c8e0c16c49cc1c8e577e4d6d3e Mon Sep 17 00:00:00 2001
+From: Robert Yang <liezhi.yang@windriver.com>
+Date: Thu, 5 Feb 2015 01:16:30 -0800
+Subject: [PATCH] Makefile: fix for parallel build
+
+Fixed:
+|   src/lex_config.c:34:25: fatal error: yacc_config.h: No such file or directory
+|
+|    #include "yacc_config.h"
+|                            ^
+|   compilation terminated.
+
+Upstream-Status: Pending
+
+Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
+---
+ Makefile |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Makefile b/Makefile
+index d45fdc3..de2a5f9 100644
+--- a/Makefile
++++ b/Makefile
+@@ -246,7 +246,7 @@ $(PCMCIA_SOCKET_STARTUP): $(LIBC) src/startup.o src/yacc_config.o src/lex_config
+ 	$(QUIET) $(LD) $(LDFLAGS) -o $@ $(CRT0) src/startup.o src/yacc_config.o src/lex_config.o $(LIB_OBJS) $(ARCH_LIB_OBJS)
+ 	$(QUIET) $(STRIPCMD) $@
+ 
+-yacc_config.o lex_config.o: %.o: %.c
++yacc_config.o lex_config.o: %.o: %.c: %.h
+ 	$(CC) -c -MD -O -pipe $(CPPFLAGS) $<
+ 
+ debugtools: ccdv $(CBDUMP) $(CISDUMP)
+-- 
+1.7.9.5
+
