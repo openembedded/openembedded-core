@@ -22,8 +22,10 @@ EXTRA_OECONF = "--disable-acl \
 do_install () {
 	autotools_do_install
 	install -d ${D}${base_bindir}
-	mv ${D}${bindir}/sed ${D}${base_bindir}/sed
-	rmdir ${D}${bindir}/
+	if [ ! ${D}${bindir} -ef ${D}${base_bindir} ]; then
+	    mv ${D}${bindir}/sed ${D}${base_bindir}/sed
+	    rmdir ${D}${bindir}/
+	fi
 }
 
 ALTERNATIVE_${PN} = "sed"
