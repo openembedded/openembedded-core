@@ -86,7 +86,7 @@ class PtestRunnerTest(oeRuntimeTest):
             installed_pkgs.write(self.pkgs_list.list("arch"))
 
         cmd = [bb.utils.which(os.getenv('PATH'), "oe-pkgdata-util"),
-               "glob", oeRuntimeTest.tc.d.getVar('PKGDATA_DIR', True), installed_pkgs_file,
+               "-p", oeRuntimeTest.tc.d.getVar('PKGDATA_DIR', True), "glob", installed_pkgs_file,
                globs]
         try:
             bb.note("Installing complementary packages ...")
