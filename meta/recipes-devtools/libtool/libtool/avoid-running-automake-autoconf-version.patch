@@ -1,0 +1,54 @@
+From 7d3b0331d91a9f80bc4bcddea929a93b07b8ef91 Mon Sep 17 00:00:00 2001
+From: Robert Yang <liezhi.yang@windriver.com>
+Date: Wed, 4 Feb 2015 17:14:46 -0800
+Subject: [PATCH] avoid running automake/autoconf --version
+
+The libtool would be very slow if run "automake/autoconf --version", for
+example, when compile xz (make -j1):
+
+before patched: 19s
+after patched:  11s
+
+Use plain text to instead of running them.
+
+Upstream-Status: Pending [Report to libtool community]
+
+Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
+---
+ build-aux/ltmain.in |    4 ++--
+ libtoolize.in       |    4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/build-aux/ltmain.in b/build-aux/ltmain.in
+index 0441e48..49cd39a 100644
+--- a/build-aux/ltmain.in
++++ b/build-aux/ltmain.in
+@@ -152,8 +152,8 @@ include the following information:
+        compiler flags: $LTCFLAGS
+        linker:         $LD (gnu? $with_gnu_ld)
+        version:        $progname (GNU @PACKAGE@) @VERSION@
+-       automake:       `($AUTOMAKE --version) 2>/dev/null |$SED 1q`
+-       autoconf:       `($AUTOCONF --version) 2>/dev/null |$SED 1q`
++       automake:       run $AUTOMAKE --version
++       autoconf:       run $AUTOCONF --version
+ 
+ Report bugs to <@PACKAGE_BUGREPORT@>.
+ GNU @PACKAGE@ home page: <@PACKAGE_URL@>.
+diff --git a/libtoolize.in b/libtoolize.in
+index 684d799..e57c89b 100644
+--- a/libtoolize.in
++++ b/libtoolize.in
+@@ -115,8 +115,8 @@ include the following information:
+ 
+        host-triplet:   @host_triplet@
+        version:        $progname (GNU @PACKAGE@) @VERSION@
+-       automake:       `($AUTOMAKE --version) 2>/dev/null |$SED 1q`
+-       autoconf:       `($AUTOCONF --version) 2>/dev/null |$SED 1q`
++       automake:       run $AUTOMAKE --version
++       autoconf:       run $AUTOCONF --version
+ 
+ Report bugs to <@PACKAGE_BUGREPORT@>.
+ GNU @PACKAGE@ home page: <@PACKAGE_URL@>.
+-- 
+1.7.9.5
+

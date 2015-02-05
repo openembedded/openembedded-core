@@ -18,6 +18,7 @@ SRC_URI = "${GNU_MIRROR}/libtool/libtool-${PV}.tar.gz \
            file://dont-depend-on-help2man.patch \
            file://fix-resolve-lt-sysroot.patch \
            file://nohardcodepaths.patch \
+           file://avoid-running-automake-autoconf-version.patch \
           "
 
 SRC_URI[md5sum] = "7d30ed9fa6bb11270ebb31639a37bd54"
