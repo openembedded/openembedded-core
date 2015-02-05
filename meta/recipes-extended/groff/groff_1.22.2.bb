@@ -63,4 +63,6 @@ do_install_append_class-native() {
 FILES_${PN} += "${libdir}/${BPN}/site-tmac \
                 ${libdir}/${BPN}/groffer/"
 
+RDEPENDS_${PN} = " sed"
+
 BBCLASSEXTEND = "native"
