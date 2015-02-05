@@ -499,6 +499,7 @@ def build(args, config, basepath, workspace):
 
 def register_commands(subparsers, context):
     parser_add = subparsers.add_parser('add', help='Add a new recipe',
+                                       description='Adds a new recipe',
                                        formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser_add.add_argument('recipename', help='Name for new recipe to add')
     parser_add.add_argument('srctree', help='Path to external source tree')
@@ -506,15 +507,17 @@ def register_commands(subparsers, context):
     parser_add.set_defaults(func=add)
 
     parser_add = subparsers.add_parser('modify', help='Modify the source for an existing recipe',
+                                       description='Enables modifying the source for an existing recipe',
                                        formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser_add.add_argument('recipename', help='Name for recipe to edit')
     parser_add.add_argument('srctree', help='Path to external source tree')
     parser_add.add_argument('--wildcard', '-w', action="store_true", help='Use wildcard for unversioned bbappend')
     parser_add.add_argument('--extract', '-x', action="store_true", help='Extract source as well')
-    parser_add.add_argument('--branch', '-b', default="devtool", help='Name for development branch to checkout')
+    parser_add.add_argument('--branch', '-b', default="devtool", help='Name for development branch to checkout (only when using -x)')
     parser_add.set_defaults(func=modify)
 
     parser_add = subparsers.add_parser('extract', help='Extract the source for an existing recipe',
+                                       description='Extracts the source for an existing recipe',
                                        formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser_add.add_argument('recipename', help='Name for recipe to extract the source for')
     parser_add.add_argument('srctree', help='Path to where to extract the source tree')
@@ -523,22 +526,26 @@ def register_commands(subparsers, context):
     parser_add.set_defaults(func=extract)
 
     parser_add = subparsers.add_parser('update-recipe', help='Apply changes from external source tree to recipe',
+                                       description='Applies changes from external source tree to a recipe (updating/adding/removing patches as necessary)',
                                        formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser_add.add_argument('recipename', help='Name of recipe to update')
     parser_add.add_argument('--initial-rev', help='Starting revision for patches')
     parser_add.add_argument('--no-remove', '-n', action="store_true", help='Don\'t remove patches, only add or update')
     parser_add.set_defaults(func=update_recipe)
 
-    parser_status = subparsers.add_parser('status', help='Show status',
+    parser_status = subparsers.add_parser('status', help='Show workspace status',
+                                          description='Lists recipes currently in your workspace and the paths to their respective external source trees',
                                           formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser_status.set_defaults(func=status)
 
-    parser_build = subparsers.add_parser('build', help='Build recipe',
+    parser_build = subparsers.add_parser('build', help='Build a recipe',
+                                         description='Builds the specified recipe using bitbake (up to do_install)',
                                          formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser_build.add_argument('recipename', help='Recipe to build')
     parser_build.set_defaults(func=build)
 
     parser_reset = subparsers.add_parser('reset', help='Remove a recipe from your workspace',
+                                         description='Removes the specified recipe from your workspace (resetting its state)',
                                          formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser_reset.add_argument('recipename', help='Recipe to reset')
     parser_reset.set_defaults(func=reset)
