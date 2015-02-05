@@ -11,6 +11,10 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=12f884d2ae1ff87c09e5b7ccc2c4ca7e \
 
 inherit autotools pkgconfig systemd update-rc.d
 
+PACKAGECONFIG ??= "${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'systemd', '', d)}"
+
+PACKAGECONFIG[systemd] = "--enable-systemd --with-systemdsystemunitdir=${systemd_unitdir}/system/ --with-systemduserunitdir=${systemd_unitdir}/user/,--disable-systemd"
+
 EXTRA_OECONF += "--enable-tools"
 
 do_install() {
@@ -24,12 +28,6 @@ do_install_append() {
 		sed "s:@installpath@:${libexecdir}:" ${WORKDIR}/neard.in \
 		  > ${D}${sysconfdir}/init.d/neard
 		chmod 0755 ${D}${sysconfdir}/init.d/neard
-	fi
-
-	if ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'true', 'false', d)}; then
-		install -d ${D}${systemd_unitdir}/system
-		sed "s:@installpath@:${libexecdir}:" ${WORKDIR}/neard.service.in \
-		  > ${D}${systemd_unitdir}/system/neard.service
 	fi
 
 	# Install the tests for neard-tests
