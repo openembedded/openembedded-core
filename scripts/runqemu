@@ -153,6 +153,9 @@ while true; do
 	"biosdir="*)
             CUSTOMBIOSDIR="${arg##biosdir=}"
 	    ;;
+        "biosfilename="*)
+            SCRIPT_QEMU_OPT="$SCRIPT_QEMU_OPT -bios ${arg##biosfilename=}"
+            ;;
         "qemuparams="*)
             SCRIPT_QEMU_EXTRA_OPT="${arg##qemuparams=}"
 
