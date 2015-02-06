@@ -253,6 +253,91 @@ def lookup_recipe(args):
         items.extend(mappings.get(pkg, []))
     print('\n'.join(items))
 
+def get_recipe_pkgs(pkgdata_dir, recipe, unpackaged):
+    recipedatafile = os.path.join(pkgdata_dir, recipe)
+    if not os.path.exists(recipedatafile):
+        logger.error("Unable to find packaged recipe with name %s" % recipe)
+        sys.exit(1)
+    packages = []
+    with open(recipedatafile, 'r') as f:
+        for line in f:
+            fields = line.rstrip().split(': ')
+            if fields[0] == 'PACKAGES':
+                packages = fields[1].split()
+                break
+
+    if not unpackaged:
+        pkglist = []
+        for pkg in packages:
+            if os.path.exists(os.path.join(pkgdata_dir, 'runtime', '%s.packaged' % pkg)):
+                pkglist.append(pkg)
+        return pkglist
+    else:
+        return packages
+
+def list_pkgs(args):
+    found = False
+
+    def matchpkg(pkg):
+        if args.pkgspec:
+            matched = False
+            for pkgspec in args.pkgspec:
+                if fnmatch.fnmatchcase(pkg, pkgspec):
+                    matched = True
+                    break
+            if not matched:
+                return False
+        if not args.unpackaged:
+            if args.runtime:
+                revlink = os.path.join(args.pkgdata_dir, "runtime-reverse", pkg)
+                if os.path.exists(revlink):
+                    # We're unlikely to get here if the package was not packaged, but just in case
+                    # we add the symlinks for unpackaged files in the future
+                    mappedpkg = os.path.basename(os.readlink(revlink))
+                    if not os.path.exists(os.path.join(args.pkgdata_dir, 'runtime', '%s.packaged' % mappedpkg)):
+                        return False
+                else:
+                    return False
+            else:
+                if not os.path.exists(os.path.join(args.pkgdata_dir, 'runtime', '%s.packaged' % pkg)):
+                    return False
+        return True
+
+    if args.recipe:
+        packages = get_recipe_pkgs(args.pkgdata_dir, args.recipe, args.unpackaged)
+
+        if args.runtime:
+            pkglist = []
+            runtime_pkgs = lookup_pkglist(packages, args.pkgdata_dir, False)
+            for rtpkgs in runtime_pkgs.values():
+                pkglist.extend(rtpkgs)
+        else:
+            pkglist = packages
+
+        for pkg in pkglist:
+            if matchpkg(pkg):
+                found = True
+                print("%s" % pkg)
+    else:
+        if args.runtime:
+            searchdir = 'runtime-reverse'
+        else:
+            searchdir = 'runtime'
+
+        for root, dirs, files in os.walk(os.path.join(args.pkgdata_dir, searchdir)):
+            for fn in files:
+                if fn.endswith('.packaged'):
+                    continue
+                if matchpkg(fn):
+                    found = True
+                    print("%s" % fn)
+    if not found:
+        if args.pkgspec:
+            logger.error("Unable to find any package matching %s" % args.pkgspec)
+        else:
+            logger.error("No packages found")
+        sys.exit(1)
+
 def find_path(args):
     import json
 
@@ -287,6 +372,15 @@ def main():
     parser_lookup_pkg.add_argument('pkg', nargs='+', help='Package name to look up')
     parser_lookup_pkg.add_argument('-r', '--reverse', help='Switch to looking up recipe-space package names from runtime package names', action='store_true')
     parser_lookup_pkg.set_defaults(func=lookup_pkg)
+
+    parser_list_pkgs = subparsers.add_parser('list-pkgs',
+                                          help='List packages',
+                                          description='Lists packages that have been built')
+    parser_list_pkgs.add_argument('pkgspec', nargs='*', help='Package name to search for (wildcards * ? allowed, use quotes to avoid shell expansion)')
+    parser_list_pkgs.add_argument('-r', '--runtime', help='Show runtime package names instead of recipe-space package names', action='store_true')
+    parser_list_pkgs.add_argument('-p', '--recipe', help='Limit to packages produced by the specified recipe')
+    parser_list_pkgs.add_argument('-u', '--unpackaged', help='Include unpackaged (i.e. empty) packages', action='store_true')
+    parser_list_pkgs.set_defaults(func=list_pkgs)
 
     parser_lookup_recipe = subparsers.add_parser('lookup-recipe',
                                           help='Find recipe producing one or more packages',
