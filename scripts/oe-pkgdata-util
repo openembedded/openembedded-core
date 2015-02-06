@@ -239,6 +239,7 @@ def lookup_recipe(args):
 def find_path(args):
     import json
 
+    found = False
     for root, dirs, files in os.walk(os.path.join(args.pkgdata_dir, 'runtime')):
         for fn in files:
             with open(os.path.join(root,fn)) as f:
@@ -248,8 +249,12 @@ def find_path(args):
                         dictval = json.loads(val)
                         for fullpth in dictval.keys():
                             if fnmatch.fnmatchcase(fullpth, args.targetpath):
+                                found = True
                                 print("%s: %s" % (fn, fullpth))
                         break
+    if not found:
+        logger.error("Unable to find any package producing path %s" % args.targetpath)
+        sys.exit(1)
 
 
 def main():
