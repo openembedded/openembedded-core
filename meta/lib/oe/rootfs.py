@@ -359,7 +359,7 @@ class RpmRootfs(Rootfs):
         log_path = self.d.expand("${T}/log.do_rootfs")
         with open(log_path, 'r') as log:
             for line in log.read().split('\n'):
-                if 'log_check' in line:
+                if 'log_check' or 'NOTE:' in line:
                     continue
 
                 m = r.search(line)
