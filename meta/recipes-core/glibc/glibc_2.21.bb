@@ -2,10 +2,9 @@ require glibc.inc
 
 DEPENDS += "gperf-native kconfig-frontends-native"
 
-SRCREV = "edac0a60c7514b8c9b59488cffdac6b22267e757"
+SRCREV = "4e42b5b8f89f0e288e68be7ad70f9525aebc2cff"
 
-#BRANCH = "release/${PV}/master"
-BRANCH = "master"
+BRANCH = "release/${PV}/master"
 
 SRC_URI = "git://sourceware.org/git/glibc.git;branch=${BRANCH} \
            file://IO-acquire-lock-fix.patch \
