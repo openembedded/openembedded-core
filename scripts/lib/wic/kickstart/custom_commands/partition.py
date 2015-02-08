@@ -49,6 +49,7 @@ class Wic_PartData(Mic_PartData):
         self.source = kwargs.get("source", None)
         self.sourceparams = kwargs.get("sourceparams", None)
         self.rootfs = kwargs.get("rootfs-dir", None)
+        self.no_table = kwargs.get("no-table", False)
         self.source_file = ""
         self.size = 0
 
@@ -61,6 +62,8 @@ class Wic_PartData(Mic_PartData):
                 retval += " --sourceparams=%s" % self.sourceparams
             if self.rootfs:
                 retval += " --rootfs-dir=%s" % self.rootfs
+        if self.no_table:
+            retval += " --no-table"
 
         return retval
 
@@ -521,4 +524,7 @@ class Wic_Partition(Mic_Partition):
         # use specified rootfs path to fill the partition
         op.add_option("--rootfs-dir", type="string", action="store",
                       dest="rootfs", default=None)
+        # wether to add the partition in the partition table
+        op.add_option("--no-table", dest="no_table", action="store_true",
+                      default=False)
         return op

@@ -737,6 +737,12 @@ DESCRIPTION
                               to start a partition on an x KBytes
                               boundary.
 
+         --no-table: This option is specific to wic. Space will be
+                     reserved for the partition and it will be
+                     populated but it will not be added to the
+                     partition table. It may be useful for
+                     bootloaders.
+
     * bootloader
 
       This command allows the user to specify various bootloader

@@ -61,6 +61,7 @@ class Image:
         self.disks[disk_name] = \
                 { 'disk': None,     # Disk object
                   'numpart': 0,     # Number of allocate partitions
+                  'realpart': 0,    # Number of partitions in the partition table
                   'partitions': [], # Indexes to self.partitions
                   'offset': 0,      # Offset of next partition (in sectors)
                   # Minimum required disk size to fit all partitions (in bytes)
@@ -85,7 +86,7 @@ class Image:
         self.__add_disk(part['disk_name'])
 
     def add_partition(self, size, disk_name, mountpoint, source_file = None, fstype = None,
-                      label=None, fsopts = None, boot = False, align = None,
+                      label=None, fsopts = None, boot = False, align = None, no_table=False,
                       part_type = None):
         """ Add the next partition. Prtitions have to be added in the
         first-to-last order. """
@@ -109,6 +110,7 @@ class Image:
                      'num': None, # Partition number
                      'boot': boot, # Bootable flag
                      'align': align, # Partition alignment
+                     'no_table' : no_table, # Partition does not appear in partition table
                      'part_type' : part_type } # Partition type
 
             self.__add_partition(part)
@@ -147,6 +149,8 @@ class Image:
             # Get the disk where the partition is located
             d = self.disks[p['disk_name']]
             d['numpart'] += 1
+            if not p['no_table']:
+                d['realpart'] += 1
             d['ptable_format'] = ptable_format
 
             if d['numpart'] == 1:
@@ -156,7 +160,7 @@ class Image:
                 # Skip one sector required for the partitioning scheme overhead
                 d['offset'] += overhead
 
-            elif d['numpart'] > 3:
+            if d['realpart'] > 3:
                 # Reserve a sector for EBR for every logical partition
                 # before alignment is performed.
                 if ptable_format == "msdos":
@@ -189,12 +193,15 @@ class Image:
             d['offset'] += p['size']
 
             p['type'] = 'primary'
-            p['num'] = d['numpart']
+            if not p['no_table']:
+                p['num'] = d['realpart']
+            else:
+                p['num'] = 0
 
             if d['ptable_format'] == "msdos":
-                if d['numpart'] > 3:
+                if d['realpart'] > 3:
                     p['type'] = 'logical'
-                    p['num'] = d['numpart'] + 1
+                    p['num'] = d['realpart'] + 1
 
             d['partitions'].append(n)
             msger.debug("Assigned %s to %s%d, sectors range %d-%d size %d "
@@ -256,6 +263,9 @@ class Image:
         msger.debug("Creating partitions")
 
         for p in self.partitions:
+            if p['num'] == 0:
+                continue
+
             d = self.disks[p['disk_name']]
             if d['ptable_format'] == "msdos" and p['num'] == 5:
                 # Create an extended partition (note: extended
