@@ -51,6 +51,7 @@ class Wic_PartData(Mic_PartData):
         self.rootfs = kwargs.get("rootfs-dir", None)
         self.no_table = kwargs.get("no-table", False)
         self.extra_space = kwargs.get("extra-space", "10M")
+        self.overhead_factor = kwargs.get("overhead-factor", 1.3)
         self.source_file = ""
         self.size = 0
 
@@ -66,6 +67,7 @@ class Wic_PartData(Mic_PartData):
         if self.no_table:
             retval += " --no-table"
         retval += " --extra-space=%d" % self.extra_space
+        retval += " --overhead-factor=%f" % self.overhead_factor
 
         return retval
 
@@ -233,7 +235,7 @@ class Wic_PartData(Mic_PartData):
             extra_blocks = self.extra_space
 
         rootfs_size = actual_rootfs_size + extra_blocks
-        rootfs_size *= IMAGE_OVERHEAD_FACTOR
+        rootfs_size *= self.overhead_factor
 
         msger.debug("Added %d extra blocks to %s to get to %d total blocks" % \
                     (extra_blocks, self.mountpoint, rootfs_size))
@@ -280,7 +282,7 @@ class Wic_PartData(Mic_PartData):
             extra_blocks = self.extra_space
 
         rootfs_size = actual_rootfs_size + extra_blocks
-        rootfs_size *= IMAGE_OVERHEAD_FACTOR
+        rootfs_size *= self.overhead_factor
 
         msger.debug("Added %d extra blocks to %s to get to %d total blocks" % \
                     (extra_blocks, self.mountpoint, rootfs_size))
@@ -512,6 +514,11 @@ class Wic_Partition(Mic_Partition):
     removedAttrs = Mic_Partition.removedAttrs
 
     def _getParser(self):
+        def overhead_cb (option, opt_str, value, parser):
+            if (value < 1):
+                raise OptionValueError("Option %s: invalid value: %r" % (option, value))
+            setattr(parser.values, option.dest, value)
+
         op = Mic_Partition._getParser(self)
         # use specified source file to fill the partition
         # and calculate partition size
@@ -529,4 +536,7 @@ class Wic_Partition(Mic_Partition):
         # extra space beyond the partition size
         op.add_option("--extra-space", dest="extra_space", action="store",
                       type="size", nargs=1, default="10M")
+        op.add_option("--overhead-factor", dest="overhead_factor",
+                      action="callback", callback=overhead_cb, type="float",
+                      nargs=1, default=1.3)
         return op

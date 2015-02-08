@@ -749,6 +749,12 @@ DESCRIPTION
                         beyond the size specified by --size.
                         By default, 10MB.
 
+         --overhead-factor: This option is specific to wic. The
+                            size of the partition is multiplied by
+                            this factor. It has to be greater than or
+                            equal to 1.
+                            The default value is 1.3.
+
     * bootloader
 
       This command allows the user to specify various bootloader
