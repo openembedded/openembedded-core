@@ -50,6 +50,7 @@ class Wic_PartData(Mic_PartData):
         self.sourceparams = kwargs.get("sourceparams", None)
         self.rootfs = kwargs.get("rootfs-dir", None)
         self.no_table = kwargs.get("no-table", False)
+        self.extra_space = kwargs.get("extra-space", "10M")
         self.source_file = ""
         self.size = 0
 
@@ -64,6 +65,7 @@ class Wic_PartData(Mic_PartData):
                 retval += " --rootfs-dir=%s" % self.rootfs
         if self.no_table:
             retval += " --no-table"
+        retval += " --extra-space=%d" % self.extra_space
 
         return retval
 
@@ -227,9 +229,8 @@ class Wic_PartData(Mic_PartData):
         actual_rootfs_size = int(out.split()[0])
 
         extra_blocks = self.get_extra_block_count(actual_rootfs_size)
-
-        if extra_blocks < IMAGE_EXTRA_SPACE:
-            extra_blocks = IMAGE_EXTRA_SPACE
+        if extra_blocks < self.extra_space:
+            extra_blocks = self.extra_space
 
         rootfs_size = actual_rootfs_size + extra_blocks
         rootfs_size *= IMAGE_OVERHEAD_FACTOR
@@ -275,9 +276,8 @@ class Wic_PartData(Mic_PartData):
         actual_rootfs_size = int(out.split()[0])
 
         extra_blocks = self.get_extra_block_count(actual_rootfs_size)
-
-        if extra_blocks < IMAGE_EXTRA_SPACE:
-            extra_blocks = IMAGE_EXTRA_SPACE
+        if extra_blocks < self.extra_space:
+            extra_blocks = self.extra_space
 
         rootfs_size = actual_rootfs_size + extra_blocks
         rootfs_size *= IMAGE_OVERHEAD_FACTOR
@@ -316,9 +316,8 @@ class Wic_PartData(Mic_PartData):
         blocks = int(out.split()[0])
 
         extra_blocks = self.get_extra_block_count(blocks)
-
-        if extra_blocks < IMAGE_EXTRA_SPACE:
-            extra_blocks = IMAGE_EXTRA_SPACE
+        if extra_blocks < self.extra_space:
+            extra_blocks = self.extra_space
 
         blocks += extra_blocks
 
@@ -527,4 +526,7 @@ class Wic_Partition(Mic_Partition):
         # wether to add the partition in the partition table
         op.add_option("--no-table", dest="no_table", action="store_true",
                       default=False)
+        # extra space beyond the partition size
+        op.add_option("--extra-space", dest="extra_space", action="store",
+                      type="size", nargs=1, default="10M")
         return op

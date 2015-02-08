@@ -743,6 +743,12 @@ DESCRIPTION
                      partition table. It may be useful for
                      bootloaders.
 
+         --extra-space: This option is specific to wic. It adds extra
+                        space after the space filled by the content
+                        of the partition. The final size can go
+                        beyond the size specified by --size.
+                        By default, 10MB.
+
     * bootloader
 
       This command allows the user to specify various bootloader
