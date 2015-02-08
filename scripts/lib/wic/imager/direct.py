@@ -136,7 +136,7 @@ class DirectImageCreator(BaseImageCreator):
             fstab_lines.append(fstab_entry)
 
     def _write_fstab(self, fstab, fstab_lines):
-        fstab = open(fstab, "w")
+        fstab = open(fstab + ".new", "w")
         for line in fstab_lines:
             fstab.write(line)
         fstab.close()
@@ -258,12 +258,9 @@ class DirectImageCreator(BaseImageCreator):
             # self.assemble() calls Image.assemble() which calls
             # __write_partitition() for each partition to dd the fs
             # into the partitions.
-            fstab = self.__write_fstab(self.rootfs_dir.get("ROOTFS_DIR"))
-
             p.prepare(self, self.workdir, self.oe_builddir, self.rootfs_dir,
                       self.bootimg_dir, self.kernel_dir, self.native_sysroot)
 
-            self._restore_fstab(fstab)
 
             self.__image.add_partition(int(p.size),
                                        p.disk,
@@ -276,6 +273,9 @@ class DirectImageCreator(BaseImageCreator):
                                        align = p.align,
                                        no_table = p.no_table,
                                        part_type = p.part_type)
+
+        fstab = self.__write_fstab(self.rootfs_dir.get("ROOTFS_DIR"))
+        self._restore_fstab(fstab)
 
         self.__image.layout_partitions(self._ptable_format)
 
