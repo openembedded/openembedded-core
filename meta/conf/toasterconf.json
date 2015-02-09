@@ -1,5 +1,12 @@
 {
-    "config": {"MACHINE": "qemux86", "DISTRO": "poky"},
+    "config": {
+        "MACHINE"      : "qemux86",
+        "DISTRO"       : "poky",
+        "IMAGE_FSTYPES": "ext3 jffs2 tar.bz2",
+        "IMAGE_INSTALL_append": "",
+        "PACKAGE_CLASSES": "package_rpm",
+        "SDKMACHINE"   : "x86_64"
+    },
     "layersources": [
         {
             "name": "Local OpenEmbedded",
