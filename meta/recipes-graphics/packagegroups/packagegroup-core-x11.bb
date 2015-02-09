@@ -5,7 +5,9 @@
 LICENSE = "MIT"
 PR = "r40"
 
-inherit packagegroup
+inherit packagegroup distro_features_check
+# rdepends on x11-common
+REQUIRED_DISTRO_FEATURES = "x11"
 
 PACKAGES = "${PN} ${PN}-utils"
 
