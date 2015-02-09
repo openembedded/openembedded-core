@@ -246,8 +246,12 @@ class Wic_PartData(Mic_PartData):
 
         extra_imagecmd = "-i 8192"
 
-        mkfs_cmd = "mkfs.%s -F %s %s -d %s" % \
-            (self.fstype, extra_imagecmd, rootfs, image_rootfs)
+        label_str = ""
+        if (self.label):
+            label_str = "-L %s" % self.label
+
+        mkfs_cmd = "mkfs.%s -F %s %s %s -d %s" % \
+            (self.fstype, extra_imagecmd, rootfs, label_str, image_rootfs)
         (rc, out) = exec_native_cmd(pseudo + mkfs_cmd, native_sysroot)
         if rc:
             print "rootfs_dir: %s" % rootfs_dir
@@ -291,8 +295,12 @@ class Wic_PartData(Mic_PartData):
             (rootfs, rootfs_size)
         exec_cmd(dd_cmd)
 
-        mkfs_cmd = "mkfs.%s -b %d -r %s %s" % \
-            (self.fstype, rootfs_size * 1024, image_rootfs, rootfs)
+        label_str = ""
+        if (self.label):
+            label_str = "-L %s" % self.label
+
+        mkfs_cmd = "mkfs.%s -b %d -r %s %s %s" % \
+            (self.fstype, rootfs_size * 1024, image_rootfs, label_str, rootfs)
         (rc, out) = exec_native_cmd(pseudo + mkfs_cmd, native_sysroot)
         if rc:
             msger.error("ERROR: mkfs.%s returned '%s' instead of 0 (which you probably don't want to ignore, use --debug for details) when creating filesystem from rootfs directory: %s" % (self.fstype, rc, rootfs_dir))
@@ -334,7 +342,11 @@ class Wic_PartData(Mic_PartData):
         if blocks % 16 != 0:
             blocks += (16 - (blocks % 16))
 
-        dosfs_cmd = "mkdosfs -n boot -S 512 -C %s %d" % (rootfs, blocks)
+        label_str = "-n boot"
+        if (self.label):
+            label_str = "-n %s" % self.label
+
+        dosfs_cmd = "mkdosfs %s -S 512 -C %s %d" % (label_str, rootfs, blocks)
         exec_native_cmd(dosfs_cmd, native_sysroot)
 
         mcopy_cmd = "mcopy -i %s -s %s/* ::/" % (rootfs, image_rootfs)
@@ -405,7 +417,12 @@ class Wic_PartData(Mic_PartData):
 
         extra_imagecmd = "-i 8192"
 
-        mkfs_cmd = "mkfs.%s -F %s %s" % (self.fstype, extra_imagecmd, fs)
+        label_str = ""
+        if (self.label):
+            label_str = "-L %s" % self.label
+
+        mkfs_cmd = "mkfs.%s -F %s %s %s" % \
+            (self.fstype, extra_imagecmd, label_str, fs)
         (rc, out) = exec_native_cmd(mkfs_cmd, native_sysroot)
         if rc:
             msger.error("ERROR: mkfs.%s returned '%s' instead of 0 (which you probably don't want to ignore, use --debug for details)" % (self.fstype, rc))
@@ -425,7 +442,12 @@ class Wic_PartData(Mic_PartData):
             (fs, self.size)
         exec_cmd(dd_cmd)
 
-        mkfs_cmd = "mkfs.%s -b %d %s" % (self.fstype, self.size * 1024, fs)
+        label_str = ""
+        if (self.label):
+            label_str = "-L %s" % self.label
+
+        mkfs_cmd = "mkfs.%s -b %d %s %s" % \
+            (self.fstype, self.size * 1024, label_str, fs)
         (rc, out) = exec_native_cmd(mkfs_cmd, native_sysroot)
         if rc:
             msger.error("ERROR: mkfs.%s returned '%s' instead of 0 (which you probably don't want to ignore, use --debug for details)" % (self.fstype, rc))
@@ -443,7 +465,11 @@ class Wic_PartData(Mic_PartData):
 
         blocks = self.size
 
-        dosfs_cmd = "mkdosfs -n boot -S 512 -C %s %d" % (fs, blocks)
+        label_str = "-n boot"
+        if (self.label):
+            label_str = "-n %s" % self.label
+
+        dosfs_cmd = "mkdosfs %s -S 512 -C %s %d" % (label_str, fs, blocks)
         exec_native_cmd(dosfs_cmd, native_sysroot)
 
         chmod_cmd = "chmod 644 %s" % fs
