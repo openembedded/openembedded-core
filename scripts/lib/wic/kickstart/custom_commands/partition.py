@@ -425,12 +425,7 @@ class Wic_PartData(Mic_PartData):
             (fs, self.size)
         exec_cmd(dd_cmd)
 
-        mkfs_cmd = "mkfs.%s -b %d %s" % (self.fstype, self.size, rootfs)
-        (rc, out) = exec_native_cmd(mkfs_cmd, native_sysroot)
-        if rc:
-            msger.error("ERROR: mkfs.%s returned '%s' instead of 0 (which you probably don't want to ignore, use --debug for details)" % (self.fstype, rc))
-
-        mkfs_cmd = "mkfs.%s -F %s %s" % (self.fstype, extra_imagecmd, fs)
+        mkfs_cmd = "mkfs.%s -b %d %s" % (self.fstype, self.size * 1024, fs)
         (rc, out) = exec_native_cmd(mkfs_cmd, native_sysroot)
         if rc:
             msger.error("ERROR: mkfs.%s returned '%s' instead of 0 (which you probably don't want to ignore, use --debug for details)" % (self.fstype, rc))
