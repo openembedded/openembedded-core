@@ -29,6 +29,9 @@ from wic.utils.oe.misc import *
 # Overhead of the MBR partitioning scheme (just one sector)
 MBR_OVERHEAD = 1
 
+# Overhead of the GPT partitioning scheme
+GPT_OVERHEAD = 34
+
 # Size of a sector in bytes
 SECTOR_SIZE = 512
 
@@ -122,7 +125,7 @@ class Image:
 
         msger.debug("Assigning %s partitions to disks" % ptable_format)
 
-        if ptable_format not in ('msdos'):
+        if ptable_format not in ('msdos', 'gpt'):
             raise ImageError("Unknown partition table format '%s', supported " \
                              "formats are: 'msdos'" % ptable_format)
 
@@ -156,6 +159,8 @@ class Image:
             if d['numpart'] == 1:
                 if ptable_format == "msdos":
                     overhead = MBR_OVERHEAD
+                elif ptable_format == "gpt":
+                    overhead = GPT_OVERHEAD
 
                 # Skip one sector required for the partitioning scheme overhead
                 d['offset'] += overhead
@@ -214,6 +219,8 @@ class Image:
         # minumim disk sizes.
         for disk_name, d in self.disks.items():
             d['min_size'] = d['offset']
+            if d['ptable_format'] == "gpt":
+                d['min_size'] += GPT_OVERHEAD
 
             d['min_size'] *= self.sector_size
 
