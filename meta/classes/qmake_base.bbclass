@@ -38,9 +38,9 @@ do_generate_qt_config_file() {
 [Paths]
 Prefix =
 Binaries = ${STAGING_BINDIR_NATIVE}
-Headers = ${STAGING_INCDIR}/qt4
-Plugins = ${STAGING_LIBDIR}/qt4/plugins/
-Mkspecs = ${STAGING_DATADIR}/qt4/mkspecs/
+Headers = ${STAGING_INCDIR}/${QT_DIR_NAME}
+Plugins = ${STAGING_LIBDIR}/${QT_DIR_NAME}/plugins/
+Mkspecs = ${STAGING_DATADIR}/${QT_DIR_NAME}/mkspecs/
 EOF
 }
 
