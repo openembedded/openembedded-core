@@ -158,6 +158,7 @@ for replace in "$target_sdk_dir -maxdepth 1" "$native_sysroot"; do
 	$SUDO_EXEC find $replace -type f -exec file '{}' \; | \
 		grep ":.*\(ASCII\|script\|source\).*text" | \
 		awk -F':' '{printf "\"%s\"\n", $1}' | \
+		grep -v "$target_sdk_dir/environment-setup-*" | \
 		$SUDO_EXEC xargs -n32 sed -i -e "s:$DEFAULT_INSTALL_DIR:$target_sdk_dir:g"
 done
 
