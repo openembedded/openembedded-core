@@ -86,7 +86,10 @@ do_install_append() {
 }
 # END of qemu-mips workaround
 
-PACKAGECONFIG ??= "fdt sdl alsa"
+PACKAGECONFIG ??= " \
+	fdt sdl alsa \
+	${@bb.utils.contains('DISTRO_FEATURES', 'xen', 'xen', '', d)} \
+	"
 PACKAGECONFIG_class-native ??= "fdt alsa"
 PACKAGECONFIG_class-nativesdk ??= "fdt sdl"
 NATIVEDEPS = ""
@@ -95,7 +98,7 @@ PACKAGECONFIG[sdl] = "--enable-sdl,--disable-sdl,libsdl ${NATIVEDEPS},"
 PACKAGECONFIG[virtfs] = "--enable-virtfs --enable-attr,--disable-virtfs,libcap attr,"
 PACKAGECONFIG[aio] = "--enable-linux-aio,--disable-linux-aio,libaio,"
 PACKAGECONFIG[xfs] = "--enable-xfsctl,--disable-xfsctl,xfsprogs,"
-PACKAGECONFIG[xen] = "--enable-xen, --disable-xen,,"
+PACKAGECONFIG[xen] = "--enable-xen,--disable-xen,xen,xen-libxenstore xen-libxenctrl xen-libxenguest"
 PACKAGECONFIG[quorum] = "--enable-quorum, --disable-quorum, gnutls,"
 PACKAGECONFIG[vnc-tls] = "--enable-vnc --enable-vnc-tls,--disable-vnc-tls, gnutls,"
 PACKAGECONFIG[vnc-ws] = "--enable-vnc --enable-vnc-ws,--disable-vnc-ws, gnutls,"
