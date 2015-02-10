@@ -7,8 +7,8 @@ SRC_URI += "file://fix_open_max_preprocessor_error.patch \
             file://Fix-subwindow-in-Xi-emulated-events.patch \
            "
 
-SRC_URI[md5sum] = "89620960b13515db8d0a8dbb92a1378a"
-SRC_URI[sha256sum] = "446e0c3ebd556aced78ec0000ba9ae73f1e5317117d497f827afba48b787ce64"
+SRC_URI[md5sum] = "afd93977235584a9caa7528a737c1b52"
+SRC_URI[sha256sum] = "5e0f443238af1078b48f6eea98a382861b59187da221c2cf714d31c1d560b0fb"
 
 # These extensions are now integrated into the server, so declare the migration
 # path for in-place upgrades.
