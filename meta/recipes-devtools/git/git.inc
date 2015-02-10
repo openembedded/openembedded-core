@@ -5,7 +5,9 @@ DEPENDS = "openssl curl zlib expat"
 
 PROVIDES_append_class-native = " git-replacement-native"
 
-SRC_URI = "${KERNELORG_MIRROR}/software/scm/git/git-${PV}.tar.gz"
+SRC_URI = "${KERNELORG_MIRROR}/software/scm/git/git-${PV}.tar.gz;name=tarball \
+           ${KERNELORG_MIRROR}/software/scm/git/git-manpages-${PV}.tar.gz;name=manpages"
+
 S = "${WORKDIR}/git-${PV}"
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=7c0d7ef03a7eb04ce795b0f60e68e7e1"
@@ -30,6 +32,12 @@ do_install () {
 	oe_runmake install DESTDIR="${D}" bindir=${bindir} \
 		template_dir=${datadir}/git-core/templates \
 		GIT_PYTHON_DIR=${D}${datadir}/git-core/python
+	install -d ${D}/${mandir}/man1
+	install -d ${D}/${mandir}/man5
+	install -d ${D}/${mandir}/man7
+	install -t ${D}/${mandir}/man1 ${WORKDIR}/man1/*
+	install -t ${D}/${mandir}/man5 ${WORKDIR}/man5/*
+	install -t ${D}/${mandir}/man7 ${WORKDIR}/man7/*
 }
 
 perl_native_fixup () {
