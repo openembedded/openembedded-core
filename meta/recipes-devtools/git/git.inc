@@ -38,6 +38,8 @@ do_install () {
 	install -t ${D}/${mandir}/man1 ${WORKDIR}/man1/*
 	install -t ${D}/${mandir}/man5 ${WORKDIR}/man5/*
 	install -t ${D}/${mandir}/man7 ${WORKDIR}/man7/*
+	install -d ${D}/${datadir}/bash-completion/completions/
+	install -m 644 ${S}/contrib/completion/git-completion.bash ${D}/${datadir}/bash-completion/completions/git
 }
 
 perl_native_fixup () {
@@ -93,6 +95,10 @@ PERLTOOLS = " \
     ${datadir}/git-core/templates/hooks/prepare-commit-msg.sample \
     ${datadir}/git-core/templates/hooks/pre-rebase.sample \
 "
+
+# Basic tab completion support
+PACKAGES =+ "${PN}-bash-completion"
+FILES_${PN}-bash-completion = "${datadir}/bash-completion/completions/*"
 
 # Git tools requiring perl
 PACKAGES =+ "${PN}-perltools"
