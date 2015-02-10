@@ -2,10 +2,8 @@ require ${BPN}.inc
 
 DEFAULT_PREFERENCE = "-1"
 
-LIC_FILES_CHKSUM = "file://docs/license.html;md5=6a23445982a7a972ac198e93cc1cb3de"
-
-SRCREV = "f70e4d4afd16e66506ce3b055edb3b71b1464890"
-PV = "10.4.3+git${SRCPV}"
+SRCREV = "62eb27ac8bbd979796f50e253f6c786d7d791242"
+PV = "10.4.4+git${SRCPV}"
 
 SRC_URI = "git://anongit.freedesktop.org/git/mesa/mesa;branch=10.4"
 
