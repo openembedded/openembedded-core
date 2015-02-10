@@ -114,7 +114,6 @@ EXTRA_OECONF += "--with-fop=no \
                  --with-xkb-output=/var/lib/xkb \
                  --with-sha1=libcrypto \
                  ac_cv_file__usr_share_sgml_X11_defs_ent=no \
-                 --disable-systemd-logind \
 "
 
 PACKAGECONFIG ??= "udev ${@bb.utils.contains('DISTRO_FEATURES', 'opengl', 'dri dri2 glx', '', d)}"
@@ -128,6 +127,7 @@ PACKAGECONFIG[glx] = "--enable-glx --enable-glx-tls,--disable-glx,glproto virtua
 PACKAGECONFIG[unwind] = "--enable-libunwind,--disable-libunwind,libunwind"
 PACKAGECONFIG[xshmfence] = "--enable-xshmfence,--disable-xshmfence,libxshmfence"
 PACKAGECONFIG[xmlto] = "--with-xmlto, --without-xmlto, xmlto-native docbook-xml-dtd4-native docbook-xsl-stylesheets-native"
+PACKAGECONFIG[systemd-logind] = "--enable-systemd-logind=yes,--enable-systemd-logind=no,dbus,"
 
 do_install_append () {
 	# Its assumed base-files creates this for us
