@@ -5,9 +5,8 @@ SRC_URI  = "${KERNELORG_MIRROR}/linux/network/${BPN}/${BP}.tar.xz \
             file://add_xuser_dbus_permission.patch \
             file://connman \
             "
-SRC_URI[md5sum] = "ba05b110b7c81e5fa14e8b402ef37a9e"
-SRC_URI[sha256sum] = "7184e4b6d954449ee00a30e188924b3e37a20ad2fd9a0b76a2bdd82c863dcf8a"
+SRC_URI[md5sum] = "6e07c93877f80bb73c9d4dbfc697f3fc"
+SRC_URI[sha256sum] = "b1d5e7dd2652725906e220a8b0206477e97080e835272971e3b2fd10943c5c94"
 
 RRECOMMENDS_${PN} = "connman-conf"
 
-PR = "r1"
