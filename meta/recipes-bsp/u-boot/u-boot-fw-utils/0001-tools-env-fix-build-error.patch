@@ -1,0 +1,36 @@
+From ee2d75513452aa6d5306fd380104adc8a2f6d8f2 Mon Sep 17 00:00:00 2001
+From: Masahiro Yamada <yamada.m@jp.panasonic.com>
+Date: Wed, 3 Dec 2014 10:22:50 +0900
+Subject: [PATCH] tools: env: fix build error
+
+Since CONFIG_SYS_ARCH, CONFIG_SYS_CPU, ... were moved to Kconfig,
+tools/env/fw_printenv fails to build if CONFIG_ENV_VARS_UBOOT_CONFIG
+is defined.
+(I do not think this is the right way to fix the problem, but
+for now I do not have enough time to take a close look.)
+
+Upstream-Status: Submitted [http://patchwork.ozlabs.org/patch/417192/]
+
+Signed-off-by: Masahiro Yamada <yamada.m@jp.panasonic.com>
+Reported-by: Denys Dmytriyenko <denys@ti.com>
+---
+ tools/env/fw_env.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/tools/env/fw_env.c b/tools/env/fw_env.c
+index 1173eea..698fe51 100644
+--- a/tools/env/fw_env.c
++++ b/tools/env/fw_env.c
+@@ -8,6 +8,9 @@
+  * SPDX-License-Identifier:	GPL-2.0+
+  */
+ 
++/* FIXME: Do not include this */
++#include <linux/kconfig.h>
++
+ #include <errno.h>
+ #include <env_flags.h>
+ #include <fcntl.h>
+-- 
+2.2.0
+
