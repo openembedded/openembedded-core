@@ -1,19 +1,16 @@
 require python.inc
 DEPENDS = "python-native bzip2 db gdbm openssl readline sqlite3 zlib"
-PR = "${INC_PR}.3"
+PR = "${INC_PR}"
 
 DISTRO_SRC_URI ?= "file://sitecustomize.py"
 DISTRO_SRC_URI_linuxstdbase = ""
 SRC_URI += "\
   file://01-use-proper-tools-for-cross-build.patch \
   file://03-fix-tkinter-detection.patch \
-  file://05-enable-ctypes-cross-build.patch \
-  file://06-ctypes-libffi-fix-configure.patch \
   file://06-avoid_usr_lib_termcap_path_in_linking.patch \
   ${DISTRO_SRC_URI} \
   file://multilib.patch \
   file://cgi_py.patch \
-  file://remove_sqlite_rpath.patch \
   file://setup_py_skip_cross_import_check.patch \
   file://add-md5module-support.patch \
   file://host_include_contamination.patch \
@@ -23,24 +20,11 @@ SRC_URI += "\
   file://search_db_h_in_inc_dirs_and_avoid_warning.patch \
   file://avoid_warning_about_tkinter.patch \
   file://avoid_warning_for_sunos_specific_module.patch \
-  file://python-2.7.3-berkeley-db-5.3.patch \
   file://python-2.7.3-remove-bsdb-rpath.patch \
-  file://builddir.patch \
-  file://python-2.7.3-CVE-2012-2135.patch \
-  file://gcc-4.8-fix-configure-Wformat.patch \
   file://fix-makefile-for-ptest.patch \
   file://run-ptest \
-  file://CVE-2013-4073_py27.patch \
-  file://pypirc-secure.patch \
   file://parallel-makeinst-create-bindir.patch \
-  file://python-2.7.3-CVE-2013-1752-smtplib-fix.patch \
-  file://python-fix-build-error-with-Readline-6.3.patch \
-  file://python-2.7.3-CVE-2014-1912.patch \
-  file://json-flaw-fix.patch \
-  file://posix_close.patch \
-  file://remove-BOM-insection-code.patch \
-  file://python-2.7.3-CVE-2014-7185.patch \
-  file://python2.7.3-nossl3.patch \
+  file://use_sysroot_ncurses_instead_of_host.patch \
 "
 
 S = "${WORKDIR}/Python-${PV}"
@@ -53,7 +37,7 @@ TARGET_CC_ARCH_append_armv6 = " -D__SOFTFP__"
 TARGET_CC_ARCH_append_armv7a = " -D__SOFTFP__"
 
 # The following is a hack until we drop ac_cv_sizeof_off_t from site files
-EXTRA_OECONF += "${@bb.utils.contains('DISTRO_FEATURES', 'largefile', 'ac_cv_sizeof_off_t=8', '', d)}"
+EXTRA_OECONF += "${@bb.utils.contains('DISTRO_FEATURES', 'largefile', 'ac_cv_sizeof_off_t=8', '', d)} ac_cv_file__dev_ptmx=no ac_cv_file__dev_ptc=no"
 
 do_configure_prepend() {
 	rm -f ${S}/Makefile.orig

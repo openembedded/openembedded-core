@@ -12,16 +12,17 @@ so we add a check here.
 Signed-off-by: Khem Raj <raj.khem@gmail.com>
 Upstream-Status: Pending
 
-Index: Python-2.7.2/setup.py
-===================================================================
---- Python-2.7.2.orig/setup.py	2012-02-03 12:10:42.307057756 -0800
-+++ Python-2.7.2/setup.py	2012-02-03 12:11:12.363059210 -0800
-@@ -360,6 +360,8 @@
-         # https://wiki.ubuntu.com/MultiarchSpec
+
+diff --git a/setup.py b/setup.py
+index ba2d242..bf859be 100644
+--- a/setup.py
++++ b/setup.py
+@@ -393,6 +393,8 @@ class PyBuildExt(build_ext):
+ 
          if not find_executable('dpkg-architecture'):
              return
-+	if os.environ.get('CROSS_COMPILE') is not None:
-+	    return
-         tmpfile = os.path.join(self.build_temp, 'multiarch')
-         if not os.path.exists(self.build_temp):
-             os.makedirs(self.build_temp)
++        if os.environ.get('CROSS_COMPILE') is not None:
++            return
+         opt = ''
+         if cross_compiling:
+             opt = '-t' + sysconfig.get_config_var('HOST_GNU_TYPE')

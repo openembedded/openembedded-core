@@ -1,25 +1,28 @@
 Upstream-Status: Inappropriate [embedded specific]
 
-2011/09/29
-rebased for python-2.7.2
+2014/12/15
+Rebased for python-2.7.9
 Signed-Off-By: Nitin A Kamble <nitin.a.kamble@intel.com>
+Signed-Off-By: Alejandro Hernandez <alejandro.hernandez@linux.intel.com>
 
-Index: Python-2.7.2/setup.py
+Index: Python-2.7.9/setup.py
 ===================================================================
---- Python-2.7.2.orig/setup.py
-+++ Python-2.7.2/setup.py
-@@ -369,8 +369,8 @@ class PyBuildExt(build_ext):
+--- Python-2.7.9.orig/setup.py
++++ Python-2.7.9/setup.py
+@@ -439,9 +439,9 @@ class PyBuildExt(build_ext):
  
      def detect_modules(self):
          # Ensure that /usr/local is always used
--        add_dir_to_list(self.compiler.library_dirs, '/usr/local/lib')
--        add_dir_to_list(self.compiler.include_dirs, '/usr/local/include')
-+        #add_dir_to_list(self.compiler.library_dirs, '/usr/local/lib')
-+        #add_dir_to_list(self.compiler.include_dirs, '/usr/local/include')
+-        if not cross_compiling:
+-            add_dir_to_list(self.compiler.library_dirs, '/usr/local/lib')
+-            add_dir_to_list(self.compiler.include_dirs, '/usr/local/include')
++        # if not cross_compiling:
++            # add_dir_to_list(self.compiler.library_dirs, '/usr/local/lib')
++            # add_dir_to_list(self.compiler.include_dirs, '/usr/local/include')
+         if cross_compiling:
+             self.add_gcc_paths()
          self.add_multiarch_paths()
- 
-         # Add paths specified in the environment variables LDFLAGS and
-@@ -407,15 +407,15 @@ class PyBuildExt(build_ext):
+@@ -480,15 +480,15 @@ class PyBuildExt(build_ext):
                      for directory in reversed(options.dirs):
                          add_dir_to_list(dir_list, directory)
  
@@ -39,29 +42,13 @@ Index: Python-2.7.2/setup.py
                              sysconfig.get_config_var("INCLUDEDIR"))
  
          try:
-@@ -426,11 +426,8 @@ class PyBuildExt(build_ext):
-         # lib_dirs and inc_dirs are used to search for files;
-         # if a file is found in one of those directories, it can
-         # be assumed that no additional -I,-L directives are needed.
--        lib_dirs = self.compiler.library_dirs + [
--            '/lib64', '/usr/lib64',
--            '/lib', '/usr/lib',
--            ]
--        inc_dirs = self.compiler.include_dirs + ['/usr/include']
-+        lib_dirs = self.compiler.library_dirs
-+        inc_dirs = self.compiler.include_dirs
-         exts = []
-         missing = []
- 
-@@ -676,9 +673,8 @@ class PyBuildExt(build_ext):
+@@ -761,8 +761,7 @@ class PyBuildExt(build_ext):
                  pass # Issue 7384: Already linked against curses or tinfo.
              elif curses_library:
                  readline_libs.append(curses_library)
 -            elif self.compiler.find_library_file(lib_dirs +
 -                                                     ['/usr/lib/termcap'],
--                                                     'termcap'):
 +            elif self.compiler.find_library_file(lib_dirs,
-+                                                     'termcap'):
+                                                      'termcap'):
                  readline_libs.append('termcap')
              exts.append( Extension('readline', ['readline.c'],
-                                    library_dirs=['/usr/lib/termcap'],

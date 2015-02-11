@@ -1,14 +1,18 @@
 Upstream-Status: Inappropriate [embedded specific]
 
-# We need to supply STAGING_INCDIR here, otherwise the Tk headers
-# will not be found.
-# Signed-Off: Michael 'Mickey' Lauer <mickey@vanille.de>
+We need to supply STAGING_INCDIR here, otherwise the Tk headers
+will not be found.
 
-Index: Python-2.6.1/setup.py
-===================================================================
---- Python-2.6.1.orig/setup.py
-+++ Python-2.6.1/setup.py
-@@ -1543,7 +1543,7 @@ class PyBuildExt(build_ext):
+Signed-off-by: Michael 'Mickey' Lauer <mickey@vanille.de>
+Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
+
+Rebased for python-2.7.9
+
+diff --git a/setup.py b/setup.py
+index 8fe1fb8..67eda74 100644
+--- a/setup.py
++++ b/setup.py
+@@ -1892,7 +1892,7 @@ class PyBuildExt(build_ext):
                  dotversion = dotversion[:-1] + '.' + dotversion[-1]
              tcl_include_sub = []
              tk_include_sub = []
@@ -17,12 +21,12 @@ Index: Python-2.6.1/setup.py
                  tcl_include_sub += [dir + os.sep + "tcl" + dotversion]
                  tk_include_sub += [dir + os.sep + "tk" + dotversion]
              tk_include_sub += tcl_include_sub
-@@ -1562,22 +1562,6 @@ class PyBuildExt(build_ext):
+@@ -1911,22 +1911,6 @@ class PyBuildExt(build_ext):
              if dir not in include_dirs:
                  include_dirs.append(dir)
  
 -        # Check for various platform-specific directories
--        if platform == 'sunos5':
+-        if host_platform == 'sunos5':
 -            include_dirs.append('/usr/openwin/include')
 -            added_lib_dirs.append('/usr/openwin/lib')
 -        elif os.path.exists('/usr/X11R6/include'):
@@ -38,5 +42,5 @@ Index: Python-2.6.1/setup.py
 -            added_lib_dirs.append('/usr/X11/lib')
 -
          # If Cygwin, then verify that X is installed before proceeding
-         if platform == 'cygwin':
+         if host_platform == 'cygwin':
              x11_inc = find_file('X11/Xlib.h', [], include_dirs)

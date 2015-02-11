@@ -5,12 +5,12 @@ SECTION = "devel/python"
 # bump this on every change in contrib/python/generate-manifest-2.7.py
 INC_PR = "r1"
 
-LIC_FILES_CHKSUM = "file://LICENSE;md5=ed3abfd1059e2d3a36a8cff3986f9bb6"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=dff3d00f049545862992d2d097831a13"
 
-SRC_URI = "http://www.python.org/ftp/python/${PV}/Python-${PV}.tar.bz2"
- 
-SRC_URI[md5sum] = "c57477edd6d18bd9eeca2f21add73919"
-SRC_URI[sha256sum] = "726457e11cb153adc3f428aaf1901fc561a374c30e5e7da6742c0742a338663c"
+SRC_URI = "http://www.python.org/ftp/python/${PV}/Python-${PV}.tar.xz"
+
+SRC_URI[md5sum] = "38d530f7efc373d64a8fb1637e3baaa7"
+SRC_URI[sha256sum] = "90d27e14ea7e03570026850e2e50ba71ad20b7eb31035aada1cf3def8f8d4916"
 
 PYTHON_MAJMIN = "2.7"
 
