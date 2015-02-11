@@ -162,7 +162,7 @@ def read_value(args):
         with open(pkgdata_file, 'r') as f:
             for line in f:
                 if line.startswith(valuename + ":"):
-                    val = line.split(': ')[1].rstrip()
+                    val = line.split(': ', 1)[1].rstrip()
         return val
 
     logger.debug("read-value('%s', '%s' '%s'" % (args.pkgdata_dir, args.valuename, packages))
