@@ -1,0 +1,71 @@
+From 408cfb9c5fa8a666917167ffb806cb19deded429 Mon Sep 17 00:00:00 2001
+From: "Gary V. Vaughan" <gary@gnu.org>
+Date: Fri, 6 Feb 2015 12:58:34 +0000
+Subject: [PATCH] libtool: don't execute automake and autoconf on every
+ invocation.
+
+Regression from 2.4.2 was causing noticable slow-down in builds
+that call libtool many times.
+* build-aux/ltmain.in (func_help): Override func_help() from
+gl/build-aux/options-parser to only run automake --version and
+autoconf --version when libtool --help is executed on the command
+line.
+* NO-THANKS: Add Robert Yang.
+Reported by Robert Yang
+
+Signed-off-by: Gary V. Vaughan <gary@gnu.org>
+
+Updated: Change NO-THANKS to THANKS to apply the patch since upstream
+renamed it.
+
+Upstream-Stauts: Backport
+
+Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
+
+---
+ THANKS           |    1 +
+ build-aux/ltmain.in |    9 ++++++++-
+ 2 files changed, 9 insertions(+), 1 deletion(-)
+
+diff --git a/THANKS b/THANKS
+index 0ab162d..aa7aa8c 100644
+--- a/THANKS
++++ b/THANKS
+@@ -258,6 +258,7 @@ Robert Garron                       Robert.Garron@Access3000.net
+ Robert Millan                       rmh@aybabtu.com
+ Robert Ögren                        lists@roboros.com
+ Roberto Bagnara                     bagnara@cs.unipr.it
++Robert Yang                         liezhi.yang@windriver.com
+ Roger Cornelius                     rac@tenzing.org
+ Roland Mainz                        roland.mainz@nrubsig.org
+ Roumen Petrov                       bugtrack@roumenpetrov.info
+diff --git a/build-aux/ltmain.in b/build-aux/ltmain.in
+index 46a0bb5..d5cf07a 100644
+--- a/build-aux/ltmain.in
++++ b/build-aux/ltmain.in
+@@ -127,7 +127,12 @@ usage_message="Options:
+ "
+ 
+ # Additional text appended to 'usage_message' in response to '--help'.
+-long_help_message=$long_help_message"
++func_help ()
++{
++    $debug_cmd
++
++    func_usage_message
++    $ECHO "$long_help_message
+ 
+ MODE must be one of the following:
+ 
+@@ -158,6 +163,8 @@ include the following information:
+ Report bugs to <@PACKAGE_BUGREPORT@>.
+ GNU @PACKAGE@ home page: <@PACKAGE_URL@>.
+ General help using GNU software: <http://www.gnu.org/gethelp/>."
++    exit 0
++}
+ 
+ 
+ # func_lo2o OBJECT-NAME
+-- 
+1.7.9.5
+
