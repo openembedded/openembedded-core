@@ -51,6 +51,7 @@ PACKAGES += "${PN}-apps ${PN}-meta ${PN}-glib"
 FILES_${PN}-apps = "${bindir}"
 
 RDEPENDS_${PN}-apps += "perl"
+RRECOMMENDS_${PN} += "${PN}-meta"
 
 FILES_${PN} = "${datadir}/gstreamer-${LIBV}"
 FILES_${PN}-dbg += "${libdir}/gstreamer-${LIBV}/.debug"
