@@ -55,3 +55,4 @@ EXTRA_OECONF += " \
     ${GSTREAMER_1_0_ORC} \
 "
 
+FILES_${PN}-equalizer += "${datadir}/gstreamer-1.0/presets/*.prs"
