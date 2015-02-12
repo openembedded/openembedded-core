@@ -1,5 +1,8 @@
 SUMMARY = "International Component for Unicode libraries"
-DESCRIPTION = "The International Component for Unicode (ICU) is a mature, portable set of C/C++ and Java libraries for Unicode support, software internationalization (I18N) and globalization (G11N), giving applications the same results on all platforms."
+DESCRIPTION = "The International Component for Unicode (ICU) is a mature, \
+portable set of C/C++ and Java libraries for Unicode support, software \
+internationalization (I18N) and globalization (G11N), giving applications the \
+same results on all platforms."
 HOMEPAGE = "http://site.icu-project.org/"
 
 LICENSE = "ICU"
@@ -23,23 +26,13 @@ EXTRA_OECONF = "--with-cross-build=${STAGING_ICU_DIR_NATIVE}"
 EXTRA_OECONF_class-native = ""
 EXTRA_OECONF_class-nativesdk = "--with-cross-build=${STAGING_ICU_DIR_NATIVE}"
 
-# ICU puts custom m4 autoconf functions in aclocal.m4.
-# However, this file is deleted in our build system.
-# To make it work, we copy aclocal.m4 to acinclude.m4.
-# This is a bug of ICU. See bug reference:
-# http://bugs.icu-project.org/trac/ticket/9790
-do_configure_prepend() {
-    [ -f ${S}/acinclude.m4 ] || cp ${S}/aclocal.m4 ${S}/acinclude.m4
-}
-
 do_install_append_class-native() {
 	mkdir -p ${D}/${STAGING_ICU_DIR_NATIVE}/config
 	cp -r ${B}/config/icucross.mk ${D}/${STAGING_ICU_DIR_NATIVE}/config
-        cp -r ${B}/config/icucross.inc ${D}/${STAGING_ICU_DIR_NATIVE}/config
+	cp -r ${B}/config/icucross.inc ${D}/${STAGING_ICU_DIR_NATIVE}/config
 	cp -r ${B}/lib ${D}/${STAGING_ICU_DIR_NATIVE}
 	cp -r ${B}/bin ${D}/${STAGING_ICU_DIR_NATIVE}
 	cp -r ${B}/tools ${D}/${STAGING_ICU_DIR_NATIVE}
-
 }
 
 PACKAGES =+ "libicudata libicuuc libicui18n libicule libiculx libicutu libicuio"
@@ -55,4 +48,3 @@ FILES_libicutu = "${libdir}/libicutu.so.*"
 FILES_libicuio = "${libdir}/libicuio.so.*"
 
 BBCLASSEXTEND = "native nativesdk"
-
