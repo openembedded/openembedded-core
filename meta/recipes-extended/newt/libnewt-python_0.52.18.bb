@@ -12,7 +12,7 @@ EXTRA_OEMAKE += "PYTHONVERS=${PYTHON_DIR}"
 
 do_compile () {
 	VERSION="$(sed -n 's/^VERSION = //p' Makefile)"
-	oe_runmake "LIBNEWTSH=${STAGING_LIBDIR}/libnewt.so.$VERSION" _snack.so
+	oe_runmake _snack.so
 }
 
 do_install () {
