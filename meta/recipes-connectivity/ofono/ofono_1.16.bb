@@ -5,8 +5,7 @@ SRC_URI  = "\
   file://ofono \
   file://Revert-test-Convert-to-Python-3.patch \
 "
-
-SRC_URI[md5sum] = "4d03de85239d8100dc7721bf0dad2bd2"
-SRC_URI[sha256sum] = "978807a05e8904eb4e57d6533ed71e75676a55fa3819a39fe2c878f45dbf7af6"
+SRC_URI[md5sum] = "c31b5b55a1d68354bff771d3edf02829"
+SRC_URI[sha256sum] = "403b98dadece8bc804c0bd16b96d3db5a3bb0f84af64b3d67924da2d1a754b07"
 
 CFLAGS_append_libc-uclibc = " -D_GNU_SOURCE"
