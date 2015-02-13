@@ -10,7 +10,6 @@ S = "${WORKDIR}/icu/source"
 SPDX_S = "${WORKDIR}/icu"
 STAGING_ICU_DIR_NATIVE = "${STAGING_DATADIR_NATIVE}/${BPN}/${PV}"
 
-PARALLEL_MAKE = ""
 CPPFLAGS_append_libc-uclibc = " -DU_TIMEZONE=0"
 
 BINCONFIG = "${bindir}/icu-config"

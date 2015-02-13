@@ -42,8 +42,6 @@ EXTRA_OECONF = "--disable-oss --disable-esd --disable-arts \
 PACKAGECONFIG ??= "${@bb.utils.contains('DISTRO_FEATURES', 'alsa', 'alsa', '', d)}"
 PACKAGECONFIG[alsa] = "--enable-alsa --disable-alsatest,--disable-alsa,alsa-lib,"
 
-PARALLEL_MAKE = ""
-
 EXTRA_AUTORECONF += "--include=acinclude --exclude=autoheader"
 
 do_configure_prepend() {

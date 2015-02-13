@@ -98,7 +98,6 @@ EXTRA_OEMAKE += "\
     'infodir=${@os.path.relpath(infodir, prefix)}' \
 "
 
-PARALLEL_MAKE = ""
 
 do_compile() {
 	# Linux kernel build system is expected to do the right thing

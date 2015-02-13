@@ -28,8 +28,6 @@ BINCONFIG = "${bindir}/pcre-config"
 
 inherit autotools binconfig-disabled ptest
 
-PARALLEL_MAKE = ""
-
 EXTRA_OECONF = "\
     --enable-newline-is-lf \
     --enable-rebuild-chartables \

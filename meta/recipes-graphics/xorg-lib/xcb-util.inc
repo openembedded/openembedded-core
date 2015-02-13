@@ -16,8 +16,6 @@ SECTION = "x11/libs"
 DEPENDS = "libxcb"
 DEPENDS += "gperf-native"
 
-PARALLEL_MAKE = ""
-
 SRC_URI = "http://xcb.freedesktop.org/dist/${BPN}-${PV}.tar.bz2"
 
 inherit autotools pkgconfig

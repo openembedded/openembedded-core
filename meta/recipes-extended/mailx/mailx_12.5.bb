@@ -29,4 +29,3 @@ inherit autotools-brokensep
 CFLAGS_append = " -D_BSD_SOURCE -DDEBIAN -I${S}/EXT"
 EXTRA_OEMAKE = "SENDMAIL=${sbindir}/sendmail"
 
-PARALLEL_MAKE = ""

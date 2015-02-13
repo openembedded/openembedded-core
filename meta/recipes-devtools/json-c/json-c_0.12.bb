@@ -11,8 +11,6 @@ SRC_URI[sha256sum] = "000c01b2b3f82dcb4261751eb71f1b084404fb7d6a282f06074d3c1707
 
 RPROVIDES_${PN} = "libjson"
 
-PARALLEL_MAKE = ""
-
 inherit autotools
 
 do_configure_prepend() {

@@ -17,9 +17,6 @@ SRC_URI[sha256sum] = "e4e38bdc7ef70645ce33740ddcca051248d56b53283c0dc6d404e17706
 
 EXTRA_OECONF = "${@bb.utils.contains('DISTRO_FEATURES', 'pam', '--enable-pam-module-dir=${base_libdir}/security --enable-pam=yes', '--enable-pam=no', d)}"
 
-# http://www.mail-archive.com/openembedded-devel@lists.openembedded.org/msg21444.html
-PARALLEL_MAKE = ""
-
 PACKAGES =+ "cgroups-pam-plugin"
 FILES_cgroups-pam-plugin = "${base_libdir}/security/pam_cgroup.so*"
 FILES_${PN}-dbg += "${base_libdir}/security/.debug"

@@ -14,8 +14,6 @@ SRC_URI = "http://downloads.us.xiph.org/releases/speex/speex-${PV}.tar.gz"
 SRC_URI[md5sum] = "c4438b22c08e5811ff10e2b06ee9b9ae"
 SRC_URI[sha256sum] = "342f30dc57bd4a6dad41398365baaa690429660b10d866b7d508e8f1179cb7a6"
 
-PARALLEL_MAKE = ""
-
 inherit autotools pkgconfig lib_package
 
 EXTRA_OECONF = " --enable-fixed-point --with-ogg-libraries=${STAGING_LIBDIR} \

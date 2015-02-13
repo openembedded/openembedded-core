@@ -53,8 +53,6 @@ EXTRA_OECONF = "--disable-static --enable-cdrom --enable-threads --enable-timers
 PACKAGECONFIG ??= "${@bb.utils.contains('DISTRO_FEATURES', 'alsa', 'alsa', '', d)}"
 PACKAGECONFIG[alsa] = "--enable-alsa --disable-alsatest,--disable-alsa,alsa-lib,"
 
-PARALLEL_MAKE = ""
-
 EXTRA_AUTORECONF += "--include=acinclude --exclude=autoheader"
 
 do_configure_prepend() {

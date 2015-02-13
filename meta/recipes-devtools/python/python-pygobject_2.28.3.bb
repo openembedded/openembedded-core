@@ -18,8 +18,6 @@ S = "${WORKDIR}/pygobject-${PV}"
 
 EXTRA_OECONF += "--disable-introspection"
 
-PARALLEL_MAKEINST = ""
-
 inherit autotools distutils-base pkgconfig
 
 # necessary to let the call for python-config succeed

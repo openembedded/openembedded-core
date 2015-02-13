@@ -11,8 +11,6 @@ RDEPENDS_${PN}_class-native = "xz-native"
 
 S = "${WORKDIR}/${BPN}-${PV}"
 
-PARALLEL_MAKE = ""
-
 inherit autotools gettext perlnative pkgconfig systemd
 
 python () {
