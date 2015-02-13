@@ -11,8 +11,8 @@ BBCLASSEXTEND = "native"
 
 SRC_URI = "http://www.webdav.org/${BPN}/${BPN}-${PV}.tar.gz \
            file://pkgconfig.patch"
-SRC_URI[md5sum] = "fb60b3a124eeec441937a812c456fd94"
-SRC_URI[sha256sum] = "2962cfcb5d30f3272e3d2fa0e473434419770a3801afe3d46e5d1650787990c2"
+SRC_URI[md5sum] = "231adebe5c2f78fded3e3df6e958878e"
+SRC_URI[sha256sum] = "00c626c0dc18d094ab374dbd9a354915bfe4776433289386ed489c2ec0845cdd"
 
 BINCONFIG = "${bindir}/neon-config"
 
