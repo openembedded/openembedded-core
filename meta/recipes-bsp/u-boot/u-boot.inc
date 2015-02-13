@@ -71,7 +71,7 @@ do_compile () {
                 then
                     continue
                 fi
-                if [ -d "${S}/${config}/u-boot-${type}.${UBOOT_SUFFIX}"]
+                if [ -d "${S}/${config}/u-boot-${type}.${UBOOT_SUFFIX}" ]
                 then
                     break
                 else
@@ -97,7 +97,7 @@ do_install () {
                 then
                     continue
                 fi
-                if [ -d "${D}/boot/u-boot-${type}.${UBOOT_SUFFIX}"]
+                if [ -d "${D}/boot/u-boot-${type}.${UBOOT_SUFFIX}" ]
                 then
                     break
                 else
@@ -128,7 +128,7 @@ do_install () {
                      then
                          continue
                      fi
-                     if [ -d "${D}/boot/${SPL_IMAGE}-${type}"]
+                     if [ -d "${D}/boot/${SPL_IMAGE}-${type}" ]
                      then
                          break
                      else
@@ -162,7 +162,7 @@ do_deploy () {
                 then
                     continue
                 fi
-                if [ -d "${DEPLOYDIR}/u-boot-${type}.${UBOOT_SUFFIX}"]
+                if [ -d "${DEPLOYDIR}/u-boot-${type}.${UBOOT_SUFFIX}" ]
                 then 
                     break
                 else
@@ -195,7 +195,7 @@ do_deploy () {
                       then
                           continue
                       fi
-                      if [ -d "${DEPLOYDIR}/${SPL_IMAGE}-${type}"]
+                      if [ -d "${DEPLOYDIR}/${SPL_IMAGE}-${type}" ]
                       then
                           break
                       else
