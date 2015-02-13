@@ -12,7 +12,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=01d7fc4496aacf37d90df90b90b0cac1 \
 DEPENDS = "liburcu popt lttng-ust libxml2"
 RDEPENDS_${PN}-ptest += "make perl bash"
 
-SRCREV = "75d966798cf8cbe8ca12773c2bf2822983bd78a3"
+SRCREV = "d522c1f14285e2e8b10b7c0cd011847696ffe779"
 
 PYTHON_OPTION = "am_cv_python_pyexecdir='${libdir}/python${PYTHON_BASEVERSION}/site-packages' \
                  am_cv_python_pythondir='${libdir}/python${PYTHON_BASEVERSION}/site-packages' \
@@ -22,7 +22,7 @@ PACKAGECONFIG ??= "lttng-ust"
 PACKAGECONFIG[python] = "--enable-python-bindings ${PYTHON_OPTION},,python swig-native"
 PACKAGECONFIG[lttng-ust] = ", --disable-lttng-ust, lttng-ust"
 
-SRC_URI = "git://git.lttng.org/lttng-tools.git;branch=stable-2.5 \
+SRC_URI = "git://git.lttng.org/lttng-tools.git;branch=stable-2.6 \
            file://runtest-2.4.0.patch \
            file://run-ptest \
 	  "
