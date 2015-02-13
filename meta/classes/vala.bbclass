@@ -1,6 +1,3 @@
-# Vala has problems with multiple concurrent invocations
-PARALLEL_MAKE = ""
-
 # Everyone needs vala-native and targets need vala, too,
 # because that is where target builds look for .vapi files.
 #
