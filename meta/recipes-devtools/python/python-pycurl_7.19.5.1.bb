@@ -15,8 +15,8 @@ SRC_URI = "\
   file://no-static-link.patch \
 "
 
-SRC_URI[archive.md5sum] = "47b4eac84118e2606658122104e62072"
-SRC_URI[archive.sha256sum] = "69a0aa7c9dddbfe4cebf4d1f674c490faccf739fc930d85d8990ce2fd0551a43"
+SRC_URI[archive.md5sum] = "f44cd54256d7a643ab7b16e3f409b26b"
+SRC_URI[archive.sha256sum] = "6e9770f80459757f73bd71af82fbb29cd398b38388cdf1beab31ea91a331bc6c"
 S = "${WORKDIR}/${SRCNAME}-${PV}"
 
 inherit distutils
