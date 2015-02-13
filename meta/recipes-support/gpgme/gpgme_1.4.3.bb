@@ -10,7 +10,6 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f \
                     file://src/engine.h;endline=22;md5=4b6d8ba313d9b564cc4d4cfb1640af9d"
 
 SRC_URI = "ftp://ftp.gnupg.org/gcrypt/gpgme/gpgme-${PV}.tar.bz2 \
-           file://disable_gpgconf_check.patch \
            file://gpgme.pc"
 
 SRC_URI[md5sum] = "334e524cffa8af4e2f43ae8afe585672"
@@ -18,9 +17,8 @@ SRC_URI[sha256sum] = "2d1cc12411753752d9c5b9037e6fd3fd363517af720154768cc7b46b60
 
 DEPENDS = "libgpg-error libassuan"
 
-EXTRA_OECONF = "--with-gpg=${bindir}/gpg --without-gpgsm"
-
 BINCONFIG = "${bindir}/gpgme-config"
+EXTRA_OECONF = "--with-gpg=${bindir}/gpg --without-gpgsm --with-gpgconf=no --with-g13=no"
 
 inherit autotools texinfo binconfig-disabled pkgconfig
 
