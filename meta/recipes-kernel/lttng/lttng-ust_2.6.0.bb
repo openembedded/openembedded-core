@@ -18,10 +18,10 @@ RPROVIDES_${PN} = "lttng2-ust"
 RREPLACES_${PN} = "lttng2-ust"
 RCONFLICTS_${PN} = "lttng2-ust"
 
-SRCREV = "85d1d2791f3cebfd741a821261bf2924928a90e7"
+SRCREV = "5748584c5ae8ca5c4da26f41b6c61bb816e6d50b"
 PE = "2"
 
-SRC_URI = "git://git.lttng.org/lttng-ust.git;branch=stable-2.5 \
+SRC_URI = "git://git.lttng.org/lttng-ust.git;branch=stable-2.6 \
            file://lttng-ust-doc-examples-disable.patch \
            file://add-aarch64.patch \
 	   "
