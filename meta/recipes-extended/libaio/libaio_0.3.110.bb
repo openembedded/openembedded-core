@@ -6,11 +6,11 @@ LICENSE = "LGPLv2.1+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=d8045f3b8f929c1cb29a1e3fd737b499"
 
 SRC_URI = "${DEBIAN_MIRROR}/main/liba/libaio/libaio_${PV}.orig.tar.gz \
+           file://generic-arch-dectection-for-padding-defines.patch \
            file://00_arches.patch \
            file://destdir.patch \
            file://libaio_fix_for_x32.patch \
            file://libaio_fix_for_mips_syscalls.patch \
-           file://libaio_fix_for_mips64.patch \
 "
 
 SRC_URI[md5sum] = "2a35602e43778383e2f4907a4ca39ab8"
