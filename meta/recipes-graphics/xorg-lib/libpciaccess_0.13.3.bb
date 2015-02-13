@@ -8,7 +8,7 @@ require xorg-lib-common.inc
 LICENSE = "MIT & MIT-style"
 LIC_FILES_CHKSUM = "file://COPYING;md5=277aada5222b9a22fbf3471ff3687068"
 
-SRC_URI[md5sum] = "b7c0d3afce14eedca57312a3141ec13a"
-SRC_URI[sha256sum] = "abab8c2b050afb89bc29280e9c6b50ec5867174960d88bfb81a01036ec20de19"
+SRC_URI[md5sum] = "1f65be5ffc55641c1846c2f41d180d00"
+SRC_URI[sha256sum] = "6cd76ccae4e06eee47d3ead84a118740e9406e2a9b7adc9b08e92c69ce89c2e3"
 
 REQUIRED_DISTRO_FEATURES = ""
