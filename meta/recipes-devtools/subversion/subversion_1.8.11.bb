@@ -13,8 +13,8 @@ SRC_URI = "${APACHE_MIRROR}/${BPN}/${BPN}-${PV}.tar.bz2 \
            file://libtool2.patch \
            file://disable_macos.patch \
 "
-SRC_URI[md5sum] = "3068256761b40863df96128834d6b71b"
-SRC_URI[sha256sum] = "1cc900c8a7974337c3ed389dc6b5c59012ec48c7d4107ae31fd7c929ded47dcc"
+SRC_URI[md5sum] = "766a89bbbb388f8eb76166672d3b9e49"
+SRC_URI[sha256sum] = "10b056420e1f194c12840368f6bf58842e6200f9cb8cc5ebbf9be2e89e56e4d9"
 
 LIC_FILES_CHKSUM = "file://LICENSE;md5=1c2f0119e478700b5428e26386cff923"
 
