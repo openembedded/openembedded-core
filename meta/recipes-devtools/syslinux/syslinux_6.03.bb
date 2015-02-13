@@ -6,12 +6,21 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=0636e73ff0215e8d672dc4c32c317bb3 \
 
 # If you really want to run syslinux, you need mtools.  We just want the
 # ldlinux.* stuff for now, so skip mtools-native
-DEPENDS = "nasm-native util-linux"
+DEPENDS = "nasm-native util-linux e2fsprogs"
 
 SRC_URI = "${KERNELORG_MIRROR}/linux/utils/boot/syslinux/6.xx/syslinux-${PV}.tar.xz \
            file://syslinux-fix-parallel-building-issue.patch \
            file://syslinux-libupload-depend-lib.patch \
            file://syslinux-remove-clean-script.patch \
+           file://0001-linux-syslinux-support-ext2-3-4-device.patch \
+           file://0002-linux-syslinux-implement-open_ext2_fs.patch \
+           file://0003-linux-syslinux-implement-install_to_ext2.patch \
+           file://0004-linux-syslinux-add-ext_file_read-and-ext_file_write.patch \
+           file://0005-linux-syslinux-implement-handle_adv_on_ext.patch \
+           file://0006-linux-syslinux-implement-write_to_ext-and-add-syslin.patch \
+           file://0007-linux-syslinux-implement-ext_construct_sectmap_fs.patch \
+           file://0008-libinstaller-syslinuxext-implement-syslinux_patch_bo.patch \
+           file://0009-linux-syslinux-implement-install_bootblock.patch \
            "
 
 SRC_URI[md5sum] = "92a253df9211e9c20172796ecf388f13"
