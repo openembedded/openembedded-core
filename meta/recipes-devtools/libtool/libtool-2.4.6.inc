@@ -19,11 +19,10 @@ SRC_URI = "${GNU_MIRROR}/libtool/libtool-${PV}.tar.gz \
            file://fix-resolve-lt-sysroot.patch \
            file://nohardcodepaths.patch \
            file://unwind-opt-parsing.patch \
-           file://libtool-don-t-execute-automake-and-autoconf-on-every.patch \
           "
 
-SRC_URI[md5sum] = "7d30ed9fa6bb11270ebb31639a37bd54"
-SRC_URI[sha256sum] = "509cb49c7de14ce7eaf88993cf09fd4071882699dfd874c2e95b31ab107d6987"
+SRC_URI[md5sum] = "addf44b646ddb4e3919805aa88fa7c5e"
+SRC_URI[sha256sum] = "e3bd4d5d3d025a36c21dd6af7ea818a2afcd4dfc1ea5a17b39d7854bcd0c06e3"
 
 do_compile_prepend () {
 	# Sometimes this file doesn't get rebuilt, force the issue
