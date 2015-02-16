@@ -34,6 +34,7 @@ do_install () {
 	install -m 4555 ping ${D}${base_bindir}/ping
 	install -m 4555 ping6 ${D}${base_bindir}/ping6
 	install -m 4555 traceroute6 ${D}${base_bindir}/
+	install -m 4555 clockdiff ${D}${base_bindir}/
 	# Other programgs
 	for i in arping tracepath tracepath6; do
 	  install -m 0755 $i ${D}${base_bindir}/
@@ -54,10 +55,10 @@ ALTERNATIVE_LINK_NAME[ping] = "${base_bindir}/ping"
 ALTERNATIVE_${PN}-ping6 = "ping6"
 ALTERNATIVE_LINK_NAME[ping6] = "${base_bindir}/ping6"
 
-PACKAGES += "${PN}-ping ${PN}-ping6 ${PN}-arping ${PN}-tracepath ${PN}-tracepath6 ${PN}-traceroute6"
+PACKAGES += "${PN}-ping ${PN}-ping6 ${PN}-arping ${PN}-tracepath ${PN}-tracepath6 ${PN}-traceroute6 ${PN}-clockdiff"
 
 ALLOW_EMPTY_${PN} = "1"
-RDEPENDS_${PN} += "${PN}-ping ${PN}-ping6 ${PN}-arping ${PN}-tracepath ${PN}-tracepath6 ${PN}-traceroute6"
+RDEPENDS_${PN} += "${PN}-ping ${PN}-ping6 ${PN}-arping ${PN}-tracepath ${PN}-tracepath6 ${PN}-traceroute6 ${PN}-clockdiff"
 
 FILES_${PN}	= ""
 FILES_${PN}-ping = "${base_bindir}/ping.${BPN}"
@@ -66,4 +67,5 @@ FILES_${PN}-arping = "${base_bindir}/arping"
 FILES_${PN}-tracepath = "${base_bindir}/tracepath"
 FILES_${PN}-tracepath6 = "${base_bindir}/tracepath6"
 FILES_${PN}-traceroute6	= "${base_bindir}/traceroute6"
+FILES_${PN}-clockdiff = "${base_bindir}/clockdiff"
 FILES_${PN}-doc	= "${mandir}/man8"
