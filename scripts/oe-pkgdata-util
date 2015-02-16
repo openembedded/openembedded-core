@@ -55,7 +55,10 @@ def glob(args):
         logger.error('Unable to find package list file %s' % args.pkglistfile)
         sys.exit(1)
 
-    skipregex = re.compile("-locale-|^locale-base-|-dev$|-doc$|-dbg$|-staticdev$|^kernel-module-")
+    skipval = "-locale-|^locale-base-|-dev$|-doc$|-dbg$|-staticdev$|^kernel-module-"
+    if args.exclude:
+        skipval += "|" + args.exclude
+    skipregex = re.compile(skipval)
 
     mappedpkgs = set()
     with open(args.pkglistfile, 'r') as f:
@@ -466,6 +469,7 @@ def main():
                                           description='Expands one or more glob expressions over the packages listed in pkglistfile')
     parser_glob.add_argument('pkglistfile', help='File listing packages (one package name per line)')
     parser_glob.add_argument('glob', nargs="+", help='Glob expression for package names, e.g. *-dev')
+    parser_glob.add_argument('-x', '--exclude', help='Exclude packages matching specified regex from the glob operation')
     parser_glob.set_defaults(func=glob)
 
 

@@ -207,6 +207,11 @@ class OePkgdataUtilTests(oeSelfTest):
         # The following should not error (because when we use this during rootfs construction, sometimes the complementary package won't exist)
         result = runCmd('oe-pkgdata-util glob %s "*-nonexistent"' % pkglistfile)
         self.assertEqual(result.output, '')
+        # Test exclude option
+        result = runCmd('oe-pkgdata-util glob %s "*-dev *-dbg" -x "^libz"' % pkglistfile)
+        resultlist = result.output.split()
+        self.assertNotIn('libz-dev', resultlist)
+        self.assertNotIn('libz-dbg', resultlist)
 
     def test_specify_pkgdatadir(self):
         result = runCmd('oe-pkgdata-util -p %s lookup-pkg glibc' % get_bb_var('PKGDATA_DIR'))
