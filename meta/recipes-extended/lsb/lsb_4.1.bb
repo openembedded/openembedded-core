@@ -72,19 +72,18 @@ do_install(){
 
 do_install_append(){
        install -d ${D}${sysconfdir}/core-lsb
-       install -d ${D}/${baselib}/lsb
        for i in lsb_killproc lsb_log_message lsb_pidofproc lsb_start_daemon
        do
            install -m 0755 ${WORKDIR}/${i} ${D}${sysconfdir}/core-lsb
        done
-       install -m 0755 ${WORKDIR}/init-functions ${D}/${baselib}/lsb
+
+       install -d ${D}/lib/lsb
+       install -m 0755 ${WORKDIR}/init-functions ${D}/lib/lsb
 
        # creat links for LSB test
        install -d ${D}/usr/lib/lsb
        ln -sf ${sbindir}/chkconfig ${D}/usr/lib/lsb/install_initd
        ln -sf ${sbindir}/chkconfig ${D}/usr/lib/lsb/remove_initd
-       install -d ${D}/${libdir}
-       ln -sf ${sbindir}/sendmail ${D}/${libdir}/sendmail
 
        if [ "${TARGET_ARCH}" = "x86_64" ];then
 	       cd ${D}
@@ -119,13 +118,4 @@ do_install_append(){
 FILES_${PN} += "/lib64 \
 		/usr/lib/lsb \
                 ${base_libdir}/lsb/* \
-		${libdir}/sendmail \
                "
-
-# The sysroot/${libdir}/sendmail conflicts with esmtp's, and it's a
-# symlink to ${sbindir}/sendmail which is meaningless for sysroot, so
-# remove it.
-SYSROOT_PREPROCESS_FUNCS += "remove_sysroot_sendmail"
-remove_sysroot_sendmail() {
-    rm -r "${SYSROOT_DESTDIR}${libdir}/sendmail"
-}
