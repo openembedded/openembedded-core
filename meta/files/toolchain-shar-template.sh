@@ -3,6 +3,20 @@
 INST_ARCH=$(uname -m | sed -e "s/i[3-6]86/ix86/" -e "s/x86[-_]64/x86_64/")
 SDK_ARCH=$(echo @SDK_ARCH@ | sed -e "s/i[3-6]86/ix86/" -e "s/x86[-_]64/x86_64/")
 
+verlte () {
+	[  "$1" = "`printf "$1\n$2" | sort -V | head -n1`" ]
+}
+
+verlt() {
+	[ "$1" = "$2" ] && return 1 || verlte $1 $2
+}
+
+verlt `uname -r` @OLDEST_KERNEL@
+if [ $? = 0 ]; then
+	echo "Error: The SDK needs a kernel > @OLDEST_KERNEL@"
+	exit 1
+fi
+
 if [ "$INST_ARCH" != "$SDK_ARCH" ]; then
 	# Allow for installation of ix86 SDK on x86_64 host
 	if [ "$INST_ARCH" != x86_64 -o "$SDK_ARCH" != ix86 ]; then
