@@ -259,11 +259,11 @@ create_cmdline_wrapper () {
 	echo "Generating wrapper script for $cmd"
 
 	mv $cmd $cmd.real
-	cmdname=`basename $cmd`.real
+	cmdname=`basename $cmd`
 	cat <<END >$cmd
 #!/bin/bash
 realpath=\`readlink -fn \$0\`
-exec -a $cmd \`dirname \$realpath\`/$cmdname $@ "\$@"
+exec -a \`dirname \$realpath\`/$cmdname \`dirname \$realpath\`/$cmdname.real $@ "\$@"
 END
 	chmod +x $cmd
 }
