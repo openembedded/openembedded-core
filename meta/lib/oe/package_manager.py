@@ -1631,10 +1631,10 @@ class DpkgPM(PackageManager):
     def remove(self, pkgs, with_dependencies=True):
         if with_dependencies:
             os.environ['APT_CONFIG'] = self.apt_conf_file
-            cmd = "%s remove %s" % (self.apt_get_cmd, ' '.join(pkgs))
+            cmd = "%s purge %s" % (self.apt_get_cmd, ' '.join(pkgs))
         else:
             cmd = "%s --admindir=%s/var/lib/dpkg --instdir=%s" \
-                  " -r --force-depends %s" % \
+                  " -P --force-depends %s" % \
                   (bb.utils.which(os.getenv('PATH'), "dpkg"),
                    self.target_rootfs, self.target_rootfs, ' '.join(pkgs))
 
