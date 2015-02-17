@@ -1,9 +1,11 @@
 HOMEPAGE = "http://qt-project.org/"
 DEPENDS = "gstreamer util-linux"
 
+inherit bluetooth
+
 PACKAGECONFIG ??= "${@bb.utils.contains('DISTRO_FEATURES', 'pulseaudio', 'pulseaudio', '', d)} \
-                   ${@bb.utils.contains('DISTRO_FEATURES', 'bluetooth', 'bluetooth', '', d)}"
-PACKAGECONFIG[bluetooth] = ",,bluez4"
+                   ${@bb.utils.contains('DISTRO_FEATURES', 'bluetooth', '${BLUEZ}', '', d)}"
+PACKAGECONFIG[bluez4] = ",,bluez4"
 PACKAGECONFIG[pulseaudio] = ",,pulseaudio"
 
 LICENSE = "LGPLv2.1"
@@ -65,7 +67,7 @@ maemo5-contacts_enabled = no
 maemo5-calendar_enabled = no
 maemo6-landmarks_enabled = no
 bme_enabled = no
-bluez_enabled = ${@bb.utils.contains('PACKAGECONFIG', 'bluetooth', 'yes', 'no', d)}
+bluez_enabled = ${@bb.utils.contains('PACKAGECONFIG', 'bluez4', 'yes', 'no', d)}
 proj_enabled = no
 gstreamer-photography_enabled = no
 gstreamer-appsrc_enabled = yes
