@@ -50,7 +50,7 @@ license_create_manifest() {
 		pkged_pv="$(sed -n 's/^PV: //p' ${filename})"
 		pkged_name="$(basename $(readlink ${filename}))"
 		pkged_lic="$(sed -n "/^LICENSE_${pkged_name}: /{ s/^LICENSE_${pkged_name}: //; p }" ${filename})"
-		if [ -z ${pkged_lic} ]; then
+		if [ -z "${pkged_lic}" ]; then
 			# fallback checking value of LICENSE
 			pkged_lic="$(sed -n "/^LICENSE: /{ s/^LICENSE: //; p }" ${filename})"
 		fi
