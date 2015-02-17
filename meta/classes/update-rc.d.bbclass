@@ -48,9 +48,9 @@ fi
 updatercd_postrm() {
 if type update-rc.d >/dev/null 2>/dev/null; then
 	if [ -n "$D" ]; then
-		OPT="-r $D"
+		OPT="-f -r $D"
 	else
-		OPT=""
+		OPT="-f"
 	fi
 	update-rc.d $OPT ${INITSCRIPT_NAME} remove
 fi
