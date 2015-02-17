@@ -13,9 +13,8 @@ DEPENDS_class-native = ""
 inherit autotools gettext texinfo
 
 SRC_URI = "${GNU_MIRROR}/coreutils/${BP}.tar.xz \
+           file://man-decouple-manpages-from-build.patch \
            file://remove-usr-local-lib-from-m4.patch \
-           file://dummy_help2man.patch \
-           file://fix-for-dummy-man-usage.patch \
            file://fix-selinux-flask.patch \
           "
 
