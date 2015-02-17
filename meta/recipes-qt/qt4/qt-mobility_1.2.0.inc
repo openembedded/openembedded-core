@@ -22,6 +22,7 @@ SRC_URI = "http://pkgs.fedoraproject.org/repo/pkgs/qt-mobility/qt-mobility-opens
            file://qt-mobility-no-xvideo.patch \
            file://fix_metaobjectbuilder_build_err.patch \
            file://0001-fix-embedded-usage-doesn-t-work-outside-of-Qt.patch \
+           file://fix-compile-error-no-bluez.patch \
 	   "
 
 SRC_URI[md5sum]="ea5db5a8d3dd4709c2926dceda646bd8"
