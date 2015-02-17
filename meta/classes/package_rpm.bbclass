@@ -324,7 +324,7 @@ python write_specfile () {
 
         bb.data.update_data(localdata)
 
-        conffiles = (localdata.getVar('CONFFILES', True) or "").split()
+        conffiles = get_conffiles(pkg, d)
         dirfiles = localdata.getVar('DIRFILES', True)
         if dirfiles is not None:
             dirfiles = dirfiles.split()

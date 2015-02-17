@@ -262,7 +262,7 @@ python do_package_deb () {
             scriptfile.close()
             os.chmod(os.path.join(controldir, script), 0755)
 
-        conffiles_str = localdata.getVar("CONFFILES", True)
+        conffiles_str = ' '.join(get_conffiles(pkg, d))
         if conffiles_str:
             try:
                 conffiles = open(os.path.join(controldir, 'conffiles'), 'w')
