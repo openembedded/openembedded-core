@@ -23,6 +23,12 @@ KBRANCH ?= "master"
 KMACHINE ?= "${MACHINE}"
 SRCREV_FORMAT ?= "meta_machine" 
 
+# LEVELS:
+#   0: no reporting
+#   1: report options that are specified, but not in the final config
+#   2: report options that are not hardware related, but set by a BSP
+KCONF_AUDIT_LEVEL ?= "1"
+
 LINUX_VERSION_EXTENSION ?= "-yocto-${LINUX_KERNEL_TYPE}"
 
 do_patch[depends] = "kern-tools-native:do_populate_sysroot"

@@ -253,8 +253,6 @@ addtask kernel_configme after do_patch
 python do_kernel_configcheck() {
     import re, string, sys
 
-    bb.plain("NOTE: validating kernel config, see log.do_kernel_configcheck for details")
-
     # if KMETA isn't set globally by a recipe using this routine, we need to
     # set the default to 'meta'. Otherwise, kconf_check is not passed a valid
     # meta-series for processing
@@ -266,11 +264,23 @@ python do_kernel_configcheck() {
     cmd = d.expand("cd ${S}; kconf_check -config- %s/meta-series ${S} ${B}" % kmeta)
     ret, result = oe.utils.getstatusoutput("%s%s" % (pathprefix, cmd))
 
-    config_check_visibility = d.getVar( "KCONF_AUDIT_LEVEL", True ) or 1
-    if config_check_visibility == 1:
-        bb.debug( 1, "%s" % result )
-    else:
-        bb.note( "%s" % result )
+    config_check_visibility = int(d.getVar( "KCONF_AUDIT_LEVEL", True ) or 0)
+
+    # if config check visibility is non-zero, report dropped configuration values
+    mismatch_file = "${S}/" + kmeta + "/" + "mismatch.cfg"
+    if os.path.exists(mismatch_file):
+        if config_check_visibility:
+            with open (mismatch_file, "r") as myfile:
+                results = myfile.read()
+                bb.warn( "[kernel config]: specified values did not make it into the kernel's final configuration:\n\n%s" % results)
+
+    # if config check visibility is level 2 or higher, report non-hardware options
+    nonhw_file = "${S}/" + kmeta + "/" + "nonhw_report.cfg"
+    if os.path.exists(nonhw_file):
+        if config_check_visibility > 1:
+            with open (nonhw_file, "r") as myfile:
+                results = myfile.read()
+                bb.warn( "[kernel config]: BSP specified non-hw configuration:\n\n%s" % results)
 }
 
 # Ensure that the branches (BSP and meta) are on the locations specified by
