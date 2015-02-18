@@ -20,6 +20,7 @@ SRC_URI = "ftp://ftp.isc.org/isc/bind9/${PV}/${BPN}-${PV}.tar.gz \
            file://bind9_9_5-CVE-2014-8500.patch \
            file://bind-add-crosscripts-search-path-for-xml2-config.patch \
            file://bind-subdirs-run-serially.patch \
+           file://bind-confgen-build-unix.o-once.patch \
 	   "
 
 SRC_URI[md5sum] = "e676c65cad5234617ee22f48e328c24e"
