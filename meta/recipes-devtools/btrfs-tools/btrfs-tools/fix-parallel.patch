@@ -1,0 +1,32 @@
+From 373eb51328b5e10529763cad441210e6b0efb24e Mon Sep 17 00:00:00 2001
+From: Robert Yang <liezhi.yang@windriver.com>
+Date: Wed, 11 Feb 2015 22:08:41 -0800
+Subject: [PATCH] Makefile: fix for parallel build
+
+Fixed:
+mkfs.c:300:46: error: 'BTRFS_BUILD_VERSION' undeclared (first use in this function)
+  fprintf(stderr, "mkfs.btrfs, part of %s\n", BTRFS_BUILD_VERSION);
+
+Upstream-Status: Pending
+
+Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
+---
+ Makefile |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Makefile b/Makefile
+index 9c69ada..30c6f06 100644
+--- a/Makefile
++++ b/Makefile
+@@ -118,7 +118,7 @@ else
+ 	AM_CFLAGS += -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=2
+ endif
+ 
+-%.o.d: %.c
++%.o.d: %.c version.h
+ 	$(Q)$(CC) -MM -MG -MF $@ -MT $(@:.o.d=.o) -MT $(@:.o.d=.static.o) -MT $@ $(AM_CFLAGS) $(CFLAGS) $<
+ 
+ .c.o:
+-- 
+1.7.9.5
+
