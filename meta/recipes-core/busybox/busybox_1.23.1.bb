@@ -1,7 +1,5 @@
 require busybox.inc
 
-PR = "r32"
-
 SRC_URI = "http://www.busybox.net/downloads/busybox-${PV}.tar.bz2;name=tarball \
            file://get_header_tar.patch \
            file://busybox-appletlib-dependency.patch \
@@ -30,14 +28,13 @@ SRC_URI = "http://www.busybox.net/downloads/busybox-${PV}.tar.bz2;name=tarball \
            file://inetd.conf \
            file://inetd \
            file://login-utilities.cfg \
-           file://0001-build-system-Specify-nostldlib-when-linking-to-.o-fi.patch \
            file://recognize_connmand.patch \
            file://busybox-cross-menuconfig.patch \
            file://CVE-2014-9645_busybox_reject_module_names_with_slashes.patch \
 "
 
-SRC_URI[tarball.md5sum] = "337d1a15ab1cb1d4ed423168b1eb7d7e"
-SRC_URI[tarball.sha256sum] = "ae0b029d0a9e4dd71a077a790840e496dd838998e4571b87b60fed7462b6678b"
+SRC_URI[tarball.md5sum] = "5c94d6301a964cd91619bd4d74605245"
+SRC_URI[tarball.sha256sum] = "300f1db0a7ca4ecee8f8d8027aba250b903372e8339b7d9123d37c1e900473bf"
 
 EXTRA_OEMAKE += "V=1 ARCH=${TARGET_ARCH} CROSS_COMPILE=${TARGET_PREFIX} SKIP_STRIP=y"
 

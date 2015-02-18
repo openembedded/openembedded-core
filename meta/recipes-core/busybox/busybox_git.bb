@@ -1,8 +1,8 @@
 require busybox.inc
 
-SRCREV = "d9e0c438e10e2155513e5d26498af472c5137d65"
+SRCREV = "1ecfe811fe2f70380170ef7d820e8150054e88ca"
 # Lookout for PV bump too when SRCREV is changed
-PV = "1.22.1+git${SRCPV}"
+PV = "1.23.1+git${SRCPV}"
 
 S = "${WORKDIR}/git"
 
