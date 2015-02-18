@@ -28,7 +28,7 @@ import re
 import optparse
 from collections import defaultdict
 
-def glob(args, usage, debug=False):
+def glob(args, usage, debug=False, exclude=""):
     if len(args) < 3:
         usage()
         sys.exit(1)
@@ -45,7 +45,10 @@ def glob(args, usage, debug=False):
         print('ERROR: Unable to find package list file %s' % pkglist_file)
         sys.exit(1)
 
-    skipregex = re.compile("-locale-|^locale-base-|-dev$|-doc$|-dbg$|-staticdev$|^kernel-module-")
+    skipval = "-locale-|^locale-base-|-dev$|-doc$|-dbg$|-staticdev$|^kernel-module-"
+    if exclude:
+        skipval += "|" + exclude
+    skipregex = re.compile(skipval)
 
     mappedpkgs = set()
     with open(pkglist_file, 'r') as f:
@@ -305,6 +308,9 @@ Available commands:
     parser.add_option("-d", "--debug",
             help = "Enable debug output",
             action="store_true", dest="debug", default=False)
+    parser.add_option("-x", "--exclude",
+            help = "Exclude packages matching specified regex from the glob operation",
+            action="store", type="string", dest="exclude", default="")
 
     options, args = parser.parse_args(sys.argv)
     args = args[1:]
@@ -314,7 +320,7 @@ Available commands:
         sys.exit(1)
 
     if args[0] == "glob":
-        glob(args[1:], parser.print_help, options.debug)
+        glob(args[1:], parser.print_help, options.debug, options.exclude)
     elif args[0] == "lookup-pkg":
         lookup_pkg(args[1:], parser.print_help, options.debug)
     elif args[0] == "lookup-recipe":
