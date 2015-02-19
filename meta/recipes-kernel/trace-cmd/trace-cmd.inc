@@ -1,14 +1,12 @@
-SRCREV = "7055ffd37beeb44714e86a4abc703f7e175a0db5"
-PR = "r3"
-PV = "1.2+git${SRCPV}"
+SRCREV = "0813335d2e49291e7ab6a4365cec2baa05813eda"
+PV = "2.5.3+git${SRCPV}"
 
-inherit pkgconfig pythonnative
+inherit pkgconfig
 
 FILESEXTRAPATHS =. "${FILE_DIRNAME}/trace-cmd:"
 
-SRC_URI = "git://git.kernel.org/pub/scm/linux/kernel/git/rostedt/trace-cmd.git \
-           file://addldflags.patch \
-           file://make-docs-optional.patch \
+SRC_URI = "git://git.kernel.org/pub/scm/linux/kernel/git/rostedt/trace-cmd.git;protocol=git;branch=trace-cmd-stable-v2.5 \
            file://blktrace-api-compatibility.patch \
 "
+
 S = "${WORKDIR}/git"
