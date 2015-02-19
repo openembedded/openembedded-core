@@ -77,6 +77,8 @@ def add(args, config, basepath, workspace):
     with open(appendfile, 'w') as f:
         f.write('inherit externalsrc\n')
         f.write('EXTERNALSRC = "%s"\n' % srctree)
+        if args.same_dir:
+            f.write('EXTERNALSRC_BUILD = "%s"\n' % srctree)
         if initial_rev:
             f.write('\n# initial_rev: %s\n' % initial_rev)
 
@@ -323,8 +325,11 @@ def modify(args, config, basepath, workspace):
         f.write('inherit externalsrc\n')
         f.write('# NOTE: We use pn- overrides here to avoid affecting multiple variants in the case where the recipe uses BBCLASSEXTEND\n')
         f.write('EXTERNALSRC_pn-%s = "%s"\n' % (args.recipename, srctree))
-        if bb.data.inherits_class('autotools-brokensep', rd):
-            logger.info('using source tree as build directory since original recipe inherits autotools-brokensep')
+        if args.same_dir or bb.data.inherits_class('autotools-brokensep', rd):
+            if args.same_dir:
+                logger.info('using source tree as build directory since --same-dir specified')
+            else:
+                logger.info('using source tree as build directory since original recipe inherits autotools-brokensep')
             f.write('EXTERNALSRC_BUILD_pn-%s = "%s"\n' % (args.recipename, srctree))
         if initial_rev:
             f.write('\n# initial_rev: %s\n' % initial_rev)
@@ -503,6 +508,7 @@ def register_commands(subparsers, context):
                                        formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser_add.add_argument('recipename', help='Name for new recipe to add')
     parser_add.add_argument('srctree', help='Path to external source tree')
+    parser_add.add_argument('--same-dir', '-s', help='Build in same directory as source', action="store_true")
     parser_add.add_argument('--version', '-V', help='Version to use within recipe (PV)')
     parser_add.set_defaults(func=add)
 
@@ -513,6 +519,7 @@ def register_commands(subparsers, context):
     parser_add.add_argument('srctree', help='Path to external source tree')
     parser_add.add_argument('--wildcard', '-w', action="store_true", help='Use wildcard for unversioned bbappend')
     parser_add.add_argument('--extract', '-x', action="store_true", help='Extract source as well')
+    parser_add.add_argument('--same-dir', '-s', help='Build in same directory as source', action="store_true")
     parser_add.add_argument('--branch', '-b', default="devtool", help='Name for development branch to checkout (only when using -x)')
     parser_add.set_defaults(func=modify)
 
