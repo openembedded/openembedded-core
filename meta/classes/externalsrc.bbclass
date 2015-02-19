@@ -68,7 +68,13 @@ python () {
         for task in d.getVar("SRCTREECOVEREDTASKS", True).split():
             bb.build.deltask(task, d)
 
+        d.prependVarFlag('do_compile', 'prefuncs', "externalsrc_compile_prefunc ")
+
         # Ensure compilation happens every time
         d.setVarFlag('do_compile', 'nostamp', '1')
 }
 
+python externalsrc_compile_prefunc() {
+    # Make it obvious that this is happening, since forgetting about it could lead to much confusion
+    bb.warn('Compiling %s from external source %s' % (d.getVar('PN', True), d.getVar('EXTERNALSRC', True)))
+}
