@@ -202,6 +202,13 @@ def _extract_source(srctree, keep_temp, devbranch, d):
             # Handle if S is set to a subdirectory of the source
             srcsubdir = os.path.join(workdir, os.path.relpath(srcsubdir, workdir).split(os.sep)[0])
 
+        if os.path.exists(os.path.join(srcsubdir, '.git')):
+            alternatesfile = os.path.join(srcsubdir, '.git', 'objects', 'info', 'alternates')
+            if os.path.exists(alternatesfile):
+                # This will have been cloned with -s, so we need to convert it to a full clone
+                bb.process.run('git repack -a', cwd=srcsubdir)
+                os.remove(alternatesfile)
+
         patchdir = os.path.join(srcsubdir, 'patches')
         haspatches = False
         if os.path.exists(patchdir):
