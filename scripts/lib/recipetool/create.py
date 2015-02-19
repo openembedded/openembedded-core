@@ -110,8 +110,8 @@ def create_recipe(args):
     if '://' in args.source:
         # Fetch a URL
         srcuri = args.source
-        if args.externalsrc:
-            srctree = args.externalsrc
+        if args.extract_to:
+            srctree = args.extract_to
         else:
             tempsrc = tempfile.mkdtemp(prefix='recipetool-')
             srctree = tempsrc
@@ -126,8 +126,8 @@ def create_recipe(args):
             srctree = os.path.join(srctree, srcsubdir)
     else:
         # Assume we're pointing to an existing source tree
-        if args.externalsrc:
-            logger.error('externalsrc cannot be specified if source is a directory')
+        if args.extract_to:
+            logger.error('--extract-to cannot be specified if source is a directory')
             sys.exit(1)
         if not os.path.isdir(args.source):
             logger.error('Invalid source directory %s' % args.source)
