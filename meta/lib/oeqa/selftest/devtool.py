@@ -233,6 +233,8 @@ class DevtoolTests(oeSelfTest):
         self.assertTrue(not os.path.exists(workspacedir), 'This test cannot be run with a workspace directory under the build directory')
         testrecipe = 'minicom'
         recipefile = get_bb_var('FILE', testrecipe)
+        src_uri = get_bb_var('SRC_URI', testrecipe)
+        self.assertNotIn('git://', src_uri, 'This test expects the %s recipe to NOT be a git recipe' % testrecipe)
         result = runCmd('git status . --porcelain', cwd=os.path.dirname(recipefile))
         self.assertEqual(result.output.strip(), "", '%s recipe is not clean' % testrecipe)
         # First, modify a recipe
@@ -266,10 +268,76 @@ class DevtoolTests(oeSelfTest):
                 self.assertEqual(line[:3], '?? ', 'Unexpected status in line: %s' % line)
             elif line.endswith('0002-Add-a-new-file.patch'):
                 self.assertEqual(line[:3], '?? ', 'Unexpected status in line: %s' % line)
-            elif re.search('minicom_[^_]*.bb$', line):
+            elif re.search('%s_[^_]*.bb$' % testrecipe, line):
                 self.assertEqual(line[:3], ' M ', 'Unexpected status in line: %s' % line)
             else:
                 raise AssertionError('Unexpected modified file in status: %s' % line)
+
+    def test_devtool_update_recipe_git(self):
+        # Check preconditions
+        workspacedir = os.path.join(self.builddir, 'workspace')
+        self.assertTrue(not os.path.exists(workspacedir), 'This test cannot be run with a workspace directory under the build directory')
+        testrecipe = 'mtd-utils'
+        recipefile = get_bb_var('FILE', testrecipe)
+        src_uri = get_bb_var('SRC_URI', testrecipe)
+        self.assertIn('git://', src_uri, 'This test expects the %s recipe to be a git recipe' % testrecipe)
+        result = runCmd('git status . --porcelain', cwd=os.path.dirname(recipefile))
+        self.assertEqual(result.output.strip(), "", '%s recipe is not clean' % testrecipe)
+        # First, modify a recipe
+        tempdir = tempfile.mkdtemp(prefix='devtoolqa')
+        self.track_for_cleanup(tempdir)
+        self.track_for_cleanup(workspacedir)
+        self.add_command_to_tearDown('bitbake-layers remove-layer */workspace')
+        # (don't bother with cleaning the recipe on teardown, we won't be building it)
+        result = runCmd('devtool modify %s -x %s' % (testrecipe, tempdir))
+        # Check git repo
+        self.assertTrue(os.path.isdir(os.path.join(tempdir, '.git')), 'git repository for external source tree not found')
+        result = runCmd('git status --porcelain', cwd=tempdir)
+        self.assertEqual(result.output.strip(), "", 'Created git repo is not clean')
+        result = runCmd('git symbolic-ref HEAD', cwd=tempdir)
+        self.assertEqual(result.output.strip(), "refs/heads/devtool", 'Wrong branch in git repo')
+        # Add a couple of commits
+        # FIXME: this only tests adding, need to also test update and remove
+        result = runCmd('echo "# Additional line" >> Makefile', cwd=tempdir)
+        result = runCmd('git commit -a -m "Change the Makefile"', cwd=tempdir)
+        result = runCmd('echo "A new file" > devtool-new-file', cwd=tempdir)
+        result = runCmd('git add devtool-new-file', cwd=tempdir)
+        result = runCmd('git commit -m "Add a new file"', cwd=tempdir)
+        self.add_command_to_tearDown('cd %s; git checkout %s %s' % (os.path.dirname(recipefile), testrecipe, os.path.basename(recipefile)))
+        result = runCmd('devtool update-recipe %s' % testrecipe)
+        result = runCmd('git status . --porcelain', cwd=os.path.dirname(recipefile))
+        self.assertNotEqual(result.output.strip(), "", '%s recipe should be modified' % testrecipe)
+        status = result.output.splitlines()
+        self.assertEqual(len(status), 3, 'Less/more files modified than expected. Entire status:\n%s' % result.output)
+        for line in status:
+            if line.endswith('add-exclusion-to-mkfs-jffs2-git-2.patch'):
+                self.assertEqual(line[:3], ' D ', 'Unexpected status in line: %s' % line)
+            elif line.endswith('fix-armv7-neon-alignment.patch'):
+                self.assertEqual(line[:3], ' D ', 'Unexpected status in line: %s' % line)
+            elif re.search('%s_[^_]*.bb$' % testrecipe, line):
+                self.assertEqual(line[:3], ' M ', 'Unexpected status in line: %s' % line)
+            else:
+                raise AssertionError('Unexpected modified file in status: %s' % line)
+        result = runCmd('git diff %s' % os.path.basename(recipefile), cwd=os.path.dirname(recipefile))
+        addlines = ['SRCREV = ".*"', 'SRC_URI = "git://git.infradead.org/mtd-utils.git"']
+        removelines = ['SRCREV = ".*"', 'SRC_URI = "git://git.infradead.org/mtd-utils.git \\\\', 'file://add-exclusion-to-mkfs-jffs2-git-2.patch \\\\', 'file://fix-armv7-neon-alignment.patch \\\\', '"']
+        for line in result.output.splitlines():
+            if line.startswith('+++') or line.startswith('---'):
+                continue
+            elif line.startswith('+'):
+                matched = False
+                for item in addlines:
+                    if re.match(item, line[1:].strip()):
+                        matched = True
+                        break
+                self.assertTrue(matched, 'Unexpected diff add line: %s' % line)
+            elif line.startswith('-'):
+                matched = False
+                for item in removelines:
+                    if re.match(item, line[1:].strip()):
+                        matched = True
+                        break
+                self.assertTrue(matched, 'Unexpected diff remove line: %s' % line)
 
     def test_devtool_extract(self):
         # Check preconditions
