@@ -313,12 +313,14 @@ def modify(args, config, basepath, workspace):
             (stdout, _) = bb.process.run('git rev-parse HEAD', cwd=args.srctree)
             initial_rev = stdout.rstrip()
 
-    # Handle if S is set to a subdirectory of the source
+    # Check that recipe isn't using a shared workdir
     s = rd.getVar('S', True)
     workdir = rd.getVar('WORKDIR', True)
-    if s != workdir and os.path.dirname(s) != workdir:
-        srcsubdir = os.sep.join(os.path.relpath(s, workdir).split(os.sep)[1:])
-        srctree = os.path.join(srctree, srcsubdir)
+    if s.startswith(workdir):
+        # Handle if S is set to a subdirectory of the source
+        if s != workdir and os.path.dirname(s) != workdir:
+            srcsubdir = os.sep.join(os.path.relpath(s, workdir).split(os.sep)[1:])
+            srctree = os.path.join(srctree, srcsubdir)
 
     appendpath = os.path.join(config.workspace_path, 'appends')
     if not os.path.exists(appendpath):
