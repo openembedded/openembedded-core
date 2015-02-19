@@ -475,6 +475,11 @@ def reset(args, config, basepath, workspace):
     if not args.recipename in workspace:
         logger.error("no recipe named %s in your workspace" % args.recipename)
         return -1
+
+    if not args.no_clean:
+        logger.info('Cleaning sysroot for recipe %s...' % args.recipename)
+        exec_build_env_command(config.init_path, basepath, 'bitbake -c clean %s' % args.recipename)
+
     _check_preserve(config, args.recipename)
 
     preservepath = os.path.join(config.workspace_path, 'attic', args.recipename)
@@ -555,5 +560,6 @@ def register_commands(subparsers, context):
                                          description='Removes the specified recipe from your workspace (resetting its state)',
                                          formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser_reset.add_argument('recipename', help='Recipe to reset')
+    parser_reset.add_argument('--no-clean', '-n', action="store_true", help='Don\'t clean the sysroot to remove recipe output')
     parser_reset.set_defaults(func=reset)
 

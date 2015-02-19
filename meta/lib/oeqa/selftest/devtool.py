@@ -179,9 +179,13 @@ class DevtoolTests(oeSelfTest):
                 if line.startswith('.TH'):
                     self.assertEqual(line.rstrip(), '.TH MDADM 8 "" v9.999-custom', 'man file not modified')
         # Test devtool reset
+        stampprefix = get_bb_var('STAMP', 'mdadm')
         result = runCmd('devtool reset mdadm')
         result = runCmd('devtool status')
         self.assertNotIn('mdadm', result.output)
+        self.assertTrue(stampprefix, 'Unable to get STAMP value for recipe mdadm')
+        matches = glob.glob(stampprefix + '*')
+        self.assertFalse(matches, 'Stamp files exist for recipe mdadm that should have been cleaned')
 
     def test_devtool_update_recipe(self):
         # Check preconditions
