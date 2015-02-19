@@ -141,6 +141,10 @@ def _extract_source(srctree, keep_temp, devbranch, d):
         logger.error("The %s recipe uses a shared workdir which this tool does not currently support" % pn)
         return None
 
+    if bb.data.inherits_class('image', d):
+        logger.error("The %s recipe is an image, and therefore is not supported by this tool" % pn)
+        return None
+
     if bb.data.inherits_class('externalsrc', d) and d.getVar('EXTERNALSRC', True):
         logger.error("externalsrc is currently enabled for the %s recipe. This prevents the normal do_patch task from working. You will need to disable this first." % pn)
         return None
@@ -289,6 +293,10 @@ def modify(args, config, basepath, workspace):
         # Error already logged
         return -1
     rd = oe.recipeutils.parse_recipe(recipefile, tinfoil.config_data)
+
+    if bb.data.inherits_class('image', rd):
+        logger.error("The %s recipe is an image, and therefore is not supported by this tool" % args.recipename)
+        return None
 
     initial_rev = None
     commits = []
