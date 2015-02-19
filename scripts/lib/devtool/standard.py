@@ -137,10 +137,6 @@ def _extract_source(srctree, keep_temp, devbranch, d):
         logger.error("The perf recipe does not actually check out source and thus cannot be supported by this tool")
         return None
 
-    if 'work-shared' in d.getVar('S', True):
-        logger.error("The %s recipe uses a shared workdir which this tool does not currently support" % pn)
-        return None
-
     if bb.data.inherits_class('image', d):
         logger.error("The %s recipe is an image, and therefore is not supported by this tool" % pn)
         return None
@@ -169,6 +165,16 @@ def _extract_source(srctree, keep_temp, devbranch, d):
         workdir = os.path.join(tempdir, 'workdir')
         crd.setVar('WORKDIR', workdir)
         crd.setVar('T', os.path.join(tempdir, 'temp'))
+        if not crd.getVar('S', True).startswith(workdir):
+            # Usually a shared workdir recipe (kernel, gcc)
+            # Try to set a reasonable default
+            if bb.data.inherits_class('kernel', d):
+                crd.setVar('S', '${WORKDIR}/source')
+            else:
+                crd.setVar('S', '${WORKDIR}/${BP}')
+        if bb.data.inherits_class('kernel', d):
+            # We don't want to move the source to STAGING_KERNEL_DIR here
+            crd.setVar('STAGING_KERNEL_DIR', '${S}')
 
         # FIXME: This is very awkward. Unfortunately it's not currently easy to properly
         # execute tasks outside of bitbake itself, until then this has to suffice if we
@@ -204,7 +210,10 @@ def _extract_source(srctree, keep_temp, devbranch, d):
             else:
                 os.rmdir(patchdir)
 
-        if not bb.data.inherits_class('kernel-yocto', d):
+        if bb.data.inherits_class('kernel-yocto', d):
+            (stdout, _) = bb.process.run('git --git-dir="%s" rev-parse HEAD' % crd.expand('${WORKDIR}/git'), cwd=srcsubdir)
+            initial_rev = stdout.rstrip()
+        else:
             if not os.listdir(srcsubdir):
                 logger.error("no source unpacked to S, perhaps the %s recipe doesn't use any source?" % pn)
                 return None
