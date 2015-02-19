@@ -136,6 +136,46 @@ class DevtoolTests(oeSelfTest):
             bindir = bindir[1:]
         self.assertTrue(os.path.isfile(os.path.join(installdir, bindir, 'pv')), 'pv binary not found in D')
 
+    def test_devtool_add_library(self):
+        # Check preconditions
+        workspacedir = os.path.join(self.builddir, 'workspace')
+        self.assertTrue(not os.path.exists(workspacedir), 'This test cannot be run with a workspace directory under the build directory')
+        # We don't have the ability to pick up this dependency automatically yet...
+        bitbake('libusb1')
+        # Fetch source
+        tempdir = tempfile.mkdtemp(prefix='devtoolqa')
+        self.track_for_cleanup(tempdir)
+        url = 'http://www.intra2net.com/en/developer/libftdi/download/libftdi1-1.1.tar.bz2'
+        result = runCmd('wget %s' % url, cwd=tempdir)
+        result = runCmd('tar xfv libftdi1-1.1.tar.bz2', cwd=tempdir)
+        srcdir = os.path.join(tempdir, 'libftdi1-1.1')
+        self.assertTrue(os.path.isfile(os.path.join(srcdir, 'CMakeLists.txt')), 'Unable to find CMakeLists.txt in source directory')
+        # Test devtool add
+        self.track_for_cleanup(workspacedir)
+        self.add_command_to_tearDown('bitbake-layers remove-layer */workspace')
+        result = runCmd('devtool add libftdi %s' % srcdir)
+        self.assertTrue(os.path.exists(os.path.join(workspacedir, 'conf', 'layer.conf')), 'Workspace directory not created')
+        # Test devtool status
+        result = runCmd('devtool status')
+        self.assertIn('libftdi', result.output)
+        self.assertIn(srcdir, result.output)
+        # Clean up anything in the workdir/sysroot/sstate cache (have to do this *after* devtool add since the recipe only exists then)
+        bitbake('libftdi -c cleansstate')
+        # Test devtool build
+        result = runCmd('devtool build libftdi')
+        staging_libdir = get_bb_var('STAGING_LIBDIR', 'libftdi')
+        self.assertTrue(staging_libdir, 'Could not query STAGING_LIBDIR variable')
+        self.assertTrue(os.path.isfile(os.path.join(staging_libdir, 'libftdi1.so.2.1.0')), 'libftdi binary not found in STAGING_LIBDIR')
+        # Test devtool reset
+        stampprefix = get_bb_var('STAMP', 'libftdi')
+        result = runCmd('devtool reset libftdi')
+        result = runCmd('devtool status')
+        self.assertNotIn('libftdi', result.output)
+        self.assertTrue(stampprefix, 'Unable to get STAMP value for recipe libftdi')
+        matches = glob.glob(stampprefix + '*')
+        self.assertFalse(matches, 'Stamp files exist for recipe libftdi that should have been cleaned')
+        self.assertFalse(os.path.isfile(os.path.join(staging_libdir, 'libftdi1.so.2.1.0')), 'libftdi binary still found in STAGING_LIBDIR after cleaning')
+
     def test_devtool_modify(self):
         # Check preconditions
         workspacedir = os.path.join(self.builddir, 'workspace')

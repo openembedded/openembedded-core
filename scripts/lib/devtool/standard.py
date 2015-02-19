@@ -502,7 +502,8 @@ def build(args, config, basepath, workspace):
     if not args.recipename in workspace:
         logger.error("no recipe named %s in your workspace" % args.recipename)
         return -1
-    exec_build_env_command(config.init_path, basepath, 'bitbake -c install %s' % args.recipename, watch=True)
+    build_task = config.get('Build', 'build_task', 'populate_sysroot')
+    exec_build_env_command(config.init_path, basepath, 'bitbake -c %s %s' % (build_task, args.recipename), watch=True)
 
     return 0
 
@@ -551,7 +552,7 @@ def register_commands(subparsers, context):
     parser_status.set_defaults(func=status)
 
     parser_build = subparsers.add_parser('build', help='Build a recipe',
-                                         description='Builds the specified recipe using bitbake (up to do_install)',
+                                         description='Builds the specified recipe using bitbake',
                                          formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser_build.add_argument('recipename', help='Recipe to build')
     parser_build.set_defaults(func=build)
