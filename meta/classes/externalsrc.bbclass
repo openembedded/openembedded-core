@@ -37,6 +37,10 @@ python () {
             d.setVar('B', '${WORKDIR}/${BPN}-${PV}/')
         d.setVar('SRC_URI', '')
 
+        if '{SRCPV}' in d.getVar('PV', False):
+            # Dummy value because the default function can't be called with blank SRC_URI
+            d.setVar('SRCPV', '999')
+
         tasks = filter(lambda k: d.getVarFlag(k, "task"), d.keys())
 
         for task in tasks:
