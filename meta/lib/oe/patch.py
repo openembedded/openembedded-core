@@ -313,9 +313,12 @@ class GitApplyTree(PatchTree):
             return runcmd(["sh", "-c", " ".join(shellcmd)], self.dir)
 
         # Add hooks which add a pointer to the original patch file name in the commit message
-        commithook = os.path.join(self.dir, '.git', 'hooks', 'commit-msg')
+        reporoot = (runcmd("git rev-parse --show-toplevel".split(), self.dir) or '').strip()
+        if not reporoot:
+            raise Exception("Cannot get repository root for directory %s" % self.dir)
+        commithook = os.path.join(reporoot, '.git', 'hooks', 'commit-msg')
         commithook_backup = commithook + '.devtool-orig'
-        applyhook = os.path.join(self.dir, '.git', 'hooks', 'applypatch-msg')
+        applyhook = os.path.join(reporoot, '.git', 'hooks', 'applypatch-msg')
         applyhook_backup = applyhook + '.devtool-orig'
         if os.path.exists(commithook):
             shutil.move(commithook, commithook_backup)
