@@ -9,9 +9,13 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=751419260aa954499f7abaabaa882bbe \
 DEPENDS = "gtk+ libxml2"
 RDEPENDS_${PN} = "trace-cmd"
 
-SRC_URI_append = "file://kernelshark-fix-syntax-error-of-shell.patch"
-
-EXTRA_OEMAKE = "'CC=${CC}' 'AR=${AR}' 'prefix=${prefix}' gui"
+EXTRA_OEMAKE = "\
+    'prefix=${prefix}' \
+    'bindir_relative=${@oe.path.relative(prefix, bindir)}' \
+    'libdir=${@oe.path.relative(prefix, libdir)}' \
+    NO_PYTHON=1 \
+    gui \
+"
 
 do_compile_prepend() {
     # Make sure the recompile is OK
@@ -19,8 +23,8 @@ do_compile_prepend() {
 }
 
 do_install() {
-	oe_runmake CC="${CC}" AR="${AR}" prefix="${prefix}" DESTDIR="${D}" install_gui
-	rm ${D}${bindir}/trace-cmd
-	rm -rf ${D}${datadir}/trace-cmd
-	rmdir ${D}${datadir}
+    oe_runmake DESTDIR="${D}" install_gui
+    rm ${D}${bindir}/trace-cmd
+    rm -rf ${D}${libdir}/trace-cmd
+    rmdir ${D}${libdir}
 }
