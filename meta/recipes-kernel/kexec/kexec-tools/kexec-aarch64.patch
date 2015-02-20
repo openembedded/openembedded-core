@@ -15,36 +15,44 @@ Upstream-Status: Pending
 Signed-off-by: Kai Kang <kai.kang@windriver.com>
 ---
 
-Index: kexec-tools-2.0.4/configure.ac
-===================================================================
---- kexec-tools-2.0.4.orig/configure.ac
-+++ kexec-tools-2.0.4/configure.ac
-@@ -30,6 +30,9 @@ case $target_cpu in
- 	powerpc64 )
+---
+ configure.ac                            |    3 
+ kexec/Makefile                          |    1 
+ kexec/arch/arm64/Makefile               |   13 +
+ kexec/arch/arm64/crashdump-arm64.c      |  305 ++++++++++++++++++++++++++++++++
+ kexec/arch/arm64/include/arch/options.h |   26 ++
+ kexec/arch/arm64/kexec-arm64.c          |  177 ++++++++++++++++++
+ kexec/arch/arm64/kexec-arm64.h          |   20 ++
+ kexec/arch/arm64/kexec-elf-arm64.c      |  114 +++++++++++
+ kexec/kexec-syscall.h                   |    9 
+ kexec/kexec.c                           |    2 
+ purgatory/arch/arm64/Makefile           |    7 
+ 11 files changed, 675 insertions(+), 2 deletions(-)
+
+--- a/configure.ac
++++ b/configure.ac
+@@ -35,6 +35,9 @@ case $target_cpu in
  		ARCH="ppc64"
+ 		SUBARCH="LE"
  		;;
-+	aarch64 )
++	aarch64* )
 +		ARCH="arm64"
 +		;;
  	arm* )
  		ARCH="arm"
  		;;
-Index: kexec-tools-2.0.4/kexec/Makefile
-===================================================================
---- kexec-tools-2.0.4.orig/kexec/Makefile
-+++ kexec-tools-2.0.4/kexec/Makefile
-@@ -70,6 +70,7 @@ KEXEC_SRCS			+= $($(ARCH)_FS2DT)
+--- a/kexec/Makefile
++++ b/kexec/Makefile
+@@ -71,6 +71,7 @@ KEXEC_SRCS			+= $($(ARCH)_FS2DT)
  
  include $(srcdir)/kexec/arch/alpha/Makefile
  include $(srcdir)/kexec/arch/arm/Makefile
 +include $(srcdir)/kexec/arch/arm64/Makefile
  include $(srcdir)/kexec/arch/i386/Makefile
  include $(srcdir)/kexec/arch/ia64/Makefile
- include $(srcdir)/kexec/arch/mips/Makefile
-Index: kexec-tools-2.0.4/kexec/arch/arm64/Makefile
-===================================================================
+ include $(srcdir)/kexec/arch/m68k/Makefile
 --- /dev/null
-+++ kexec-tools-2.0.4/kexec/arch/arm64/Makefile
++++ b/kexec/arch/arm64/Makefile
 @@ -0,0 +1,13 @@
 +
 +arm64_KEXEC_SRCS += \
@@ -59,10 +67,8 @@ Index: kexec-tools-2.0.4/kexec/arch/arm64/Makefile
 +dist += $(arm64_KEXEC_SRCS) \
 +	kexec/arch/arm64/Makefile \
 +	kexec/arch/arm64/kexec-arm64.h
-Index: kexec-tools-2.0.4/kexec/arch/arm64/crashdump-arm64.c
-===================================================================
 --- /dev/null
-+++ kexec-tools-2.0.4/kexec/arch/arm64/crashdump-arm64.c
++++ b/kexec/arch/arm64/crashdump-arm64.c
 @@ -0,0 +1,305 @@
 +/*
 + * This program is free software; you can redistribute it and/or modify
@@ -369,10 +375,8 @@ Index: kexec-tools-2.0.4/kexec/arch/arm64/crashdump-arm64.c
 +
 +#endif
 +
-Index: kexec-tools-2.0.4/kexec/arch/arm64/include/arch/options.h
-===================================================================
 --- /dev/null
-+++ kexec-tools-2.0.4/kexec/arch/arm64/include/arch/options.h
++++ b/kexec/arch/arm64/include/arch/options.h
 @@ -0,0 +1,26 @@
 +#ifndef KEXEC_ARCH_ARM64_OPTIONS_H
 +#define KEXEC_ARCH_ARM64_OPTIONS_H
@@ -400,10 +404,8 @@ Index: kexec-tools-2.0.4/kexec/arch/arm64/include/arch/options.h
 +#define KEXEC_ALL_OPT_STR KEXEC_ARCH_OPT_STR
 +
 +#endif /* KEXEC_ARCH_ARM64_OPTIONS_H */
-Index: kexec-tools-2.0.4/kexec/arch/arm64/kexec-arm64.c
-===================================================================
 --- /dev/null
-+++ kexec-tools-2.0.4/kexec/arch/arm64/kexec-arm64.c
++++ b/kexec/arch/arm64/kexec-arm64.c
 @@ -0,0 +1,177 @@
 +/*
 + * ARM64 kexec support.
@@ -582,10 +584,8 @@ Index: kexec-tools-2.0.4/kexec/arch/arm64/kexec-arm64.c
 +	(void)value;
 +	fprintf(stderr, "%s:%d: do\n", __func__, __LINE__);
 +}
-Index: kexec-tools-2.0.4/kexec/arch/arm64/kexec-arm64.h
-===================================================================
 --- /dev/null
-+++ kexec-tools-2.0.4/kexec/arch/arm64/kexec-arm64.h
++++ b/kexec/arch/arm64/kexec-arm64.h
 @@ -0,0 +1,20 @@
 +/*
 + * ARM64 kexec support.
@@ -608,10 +608,8 @@ Index: kexec-tools-2.0.4/kexec/arch/arm64/kexec-arm64.h
 +
 +#endif
 \ No newline at end of file
-Index: kexec-tools-2.0.4/kexec/arch/arm64/kexec-elf-arm64.c
-===================================================================
 --- /dev/null
-+++ kexec-tools-2.0.4/kexec/arch/arm64/kexec-elf-arm64.c
++++ b/kexec/arch/arm64/kexec-elf-arm64.c
 @@ -0,0 +1,114 @@
 +/*
 + * ARM64 kexec support.
@@ -727,10 +725,8 @@ Index: kexec-tools-2.0.4/kexec/arch/arm64/kexec-elf-arm64.c
 +	fprintf(stderr, "%s:%d: ->\n", __func__, __LINE__);
 +	fprintf(stderr, "%s:%d: <-\n", __func__, __LINE__);
 +}
-Index: kexec-tools-2.0.4/kexec/kexec-syscall.h
-===================================================================
---- kexec-tools-2.0.4.orig/kexec/kexec-syscall.h
-+++ kexec-tools-2.0.4/kexec/kexec-syscall.h
+--- a/kexec/kexec-syscall.h
++++ b/kexec/kexec-syscall.h
 @@ -39,8 +39,8 @@
  #ifdef __s390__
  #define __NR_kexec_load		277
@@ -742,7 +738,7 @@ Index: kexec-tools-2.0.4/kexec/kexec-syscall.h
  #endif
  #if defined(__mips__)
  #define __NR_kexec_load                4311
-@@ -72,6 +72,8 @@ static inline long kexec_load(void *entr
+@@ -108,6 +108,8 @@ static inline long kexec_file_load(int k
  #define KEXEC_ARCH_PPC64   (21 << 16)
  #define KEXEC_ARCH_IA_64   (50 << 16)
  #define KEXEC_ARCH_ARM     (40 << 16)
@@ -751,21 +747,19 @@ Index: kexec-tools-2.0.4/kexec/kexec-syscall.h
  #define KEXEC_ARCH_S390    (22 << 16)
  #define KEXEC_ARCH_SH      (42 << 16)
  #define KEXEC_ARCH_MIPS_LE (10 << 16)
-@@ -114,5 +116,8 @@ static inline long kexec_load(void *entr
- #if defined(__mips__)
- #define KEXEC_ARCH_NATIVE	KEXEC_ARCH_MIPS
+@@ -153,5 +155,8 @@ static inline long kexec_file_load(int k
+ #ifdef __m68k__
+ #define KEXEC_ARCH_NATIVE	KEXEC_ARCH_68K
  #endif
 +#if defined(__arm64__)
 +#define KEXEC_ARCH_NATIVE	KEXEC_ARCH_ARM64
 +#endif
  
  #endif /* KEXEC_SYSCALL_H */
-Index: kexec-tools-2.0.4/kexec/kexec.c
-===================================================================
---- kexec-tools-2.0.4.orig/kexec/kexec.c
-+++ kexec-tools-2.0.4/kexec/kexec.c
-@@ -659,6 +659,8 @@ static int my_load(const char *type, int
- 	info.backup_start = 0;
+--- a/kexec/kexec.c
++++ b/kexec/kexec.c
+@@ -664,6 +664,8 @@ static int my_load(const char *type, int
+ 	memset(&info, 0, sizeof(info));
  	info.kexec_flags = kexec_flags;
  
 +	fprintf(stderr, "%s:%d: do\n", __func__, __LINE__);
@@ -773,10 +767,8 @@ Index: kexec-tools-2.0.4/kexec/kexec.c
  	result = 0;
  	if (argc - fileind <= 0) {
  		fprintf(stderr, "No kernel specified\n");
-Index: kexec-tools-2.0.4/purgatory/arch/arm64/Makefile
-===================================================================
 --- /dev/null
-+++ kexec-tools-2.0.4/purgatory/arch/arm64/Makefile
++++ b/purgatory/arch/arm64/Makefile
 @@ -0,0 +1,7 @@
 +#
 +# Purgatory arm64
@@ -785,17 +777,3 @@ Index: kexec-tools-2.0.4/purgatory/arch/arm64/Makefile
 +arm64_PURGATORY_SRCS =
 +
 +dist += purgatory/arch/arm64/Makefile $(arm64_PURGATORY_SRCS)
-Index: kexec-tools-2.0.4/configure
-===================================================================
---- kexec-tools-2.0.4.orig/configure
-+++ kexec-tools-2.0.4/configure
-@@ -2256,6 +2256,9 @@ case $target_cpu in
- 	powerpc64 )
- 		ARCH="ppc64"
- 		;;
-+	aarch64 )
-+		ARCH="arm64"
-+		;;
- 	arm* )
- 		ARCH="arm"
- 		;;
