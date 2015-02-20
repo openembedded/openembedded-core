@@ -1,9 +1,12 @@
-Act as the "mv" command when rotate log
+From 68f29ab490cf987aa34b5f4caf1784b58a021308 Mon Sep 17 00:00:00 2001
+From: Robert Yang <liezhi.yang@windriver.com>
+Date: Tue, 17 Feb 2015 21:08:07 -0800
+Subject: [PATCH] Act as the "mv" command when rotate log
 
 Act as the "mv" command when rotate log, first rename, if failed, then
 read and write.
 
-Upstream-Status: Submitted
+Upstream-Status: Pending
 
 Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
 ---
@@ -11,10 +14,10 @@ Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
  1 file changed, 56 insertions(+), 9 deletions(-)
 
 diff --git a/logrotate.c b/logrotate.c
-index 174a26b..b18b629 100644
+index 05e74c9..616418f 100644
 --- a/logrotate.c
 +++ b/logrotate.c
-@@ -906,6 +906,53 @@ int findNeedRotating(struct logInfo *log, int logNum, int force)
+@@ -1000,6 +1000,53 @@ int findNeedRotating(struct logInfo *log, int logNum, int force)
      return 0;
  }
  
@@ -68,7 +71,7 @@ index 174a26b..b18b629 100644
  int prerotateSingleLog(struct logInfo *log, int logNum, struct logState *state,
  		       struct logNames *rotNames)
  {
-@@ -1268,15 +1315,15 @@ int prerotateSingleLog(struct logInfo *log, int logNum, struct logState *state,
+@@ -1364,15 +1411,15 @@ int prerotateSingleLog(struct logInfo *log, int logNum, struct logState *state,
  		}
  
  	    message(MESS_DEBUG,
@@ -87,22 +90,21 @@ index 174a26b..b18b629 100644
  			    oldName, newName, strerror(errno));
  		    hasErrors = 1;
  		}
-@@ -1408,11 +1455,11 @@ int rotateSingleLog(struct logInfo *log, int logNum, struct logState *state,
+@@ -1511,10 +1558,10 @@ int rotateSingleLog(struct logInfo *log, int logNum, struct logState *state,
+ 				return 1;
  			}
- 		}
- #endif /* WITH_ACL */
--		message(MESS_DEBUG, "renaming %s to %s\n", log->files[logNum],
-+        message(MESS_DEBUG, "moving %s to %s\n", log->files[logNum],
- 		    rotNames->finalName);
- 	    if (!debug && !hasErrors &&
--		rename(log->files[logNum], rotNames->finalName)) {
--		message(MESS_ERROR, "failed to rename %s to %s: %s\n",
-+        mvFile(log->files[logNum], rotNames->finalName, log, prev_acl)) {
-+        message(MESS_ERROR, "failed to move %s to %s: %s\n",
- 			log->files[logNum], rotNames->finalName,
- 			strerror(errno));
- 			hasErrors = 1;
-@@ -1775,7 +1822,7 @@ int rotateLogSet(struct logInfo *log, int force)
+ 
+-			message(MESS_DEBUG, "renaming %s to %s\n", log->files[logNum],
++			message(MESS_DEBUG, "moving %s to %s\n", log->files[logNum],
+ 				tmpFilename);
+-			if (!debug && !hasErrors && rename(log->files[logNum], tmpFilename)) {
+-			message(MESS_ERROR, "failed to rename %s to %s: %s\n",
++			if (!debug && !hasErrors && mvFile(log->files[logNum], rotNames->finalName, log, prev_acl)) {
++			message(MESS_ERROR, "failed to move %s to %s: %s\n",
+ 				log->files[logNum], tmpFilename,
+ 				strerror(errno));
+ 				if (errno == ENOENT) {
+@@ -1912,7 +1959,7 @@ int rotateLogSet(struct logInfo *log, int force)
      return hasErrors;
  }
  
@@ -111,7 +113,7 @@ index 174a26b..b18b629 100644
  {
  	struct logState *p;
  	FILE *f;
-@@ -1939,7 +1986,7 @@ static int writeState(char *stateFilename)
+@@ -2076,7 +2123,7 @@ static int writeState(char *stateFilename)
  		fclose(f);
  
  	if (error == 0) {
@@ -120,7 +122,7 @@ index 174a26b..b18b629 100644
  			unlink(tmpFilename);
  			error = 1;
  			message(MESS_ERROR, "error renaming temp state file %s\n",
-@@ -2223,7 +2270,7 @@ int main(int argc, const char **argv)
+@@ -2362,7 +2409,7 @@ int main(int argc, const char **argv)
  		rc |= rotateLogSet(log, force);
  
  	if (!debug)
@@ -130,5 +132,5 @@ index 174a26b..b18b629 100644
  	return (rc != 0);
  }
 -- 
-1.7.10.4
+1.7.9.5
 
