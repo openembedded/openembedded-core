@@ -5,17 +5,18 @@ DEPENDS = "openssl-native bzip2-replacement-native zlib-native readline-native s
 PR = "${INC_PR}.1"
 
 SRC_URI += "\
-           file://05-enable-ctypes-cross-build.patch \
-           file://10-distutils-fix-swig-parameter.patch \
-           file://11-distutils-never-modify-shebang-line.patch \
-           file://12-distutils-prefix-is-inside-staging-area.patch \
-           file://debug.patch \
-           file://unixccompiler.patch \
-           file://nohostlibs.patch \
-           file://multilib.patch \
-           file://add-md5module-support.patch \
-           file://builddir.patch \
-           file://parallel-makeinst-create-bindir.patch \
+            file://05-enable-ctypes-cross-build.patch \
+            file://10-distutils-fix-swig-parameter.patch \
+            file://11-distutils-never-modify-shebang-line.patch \
+            file://12-distutils-prefix-is-inside-staging-area.patch \
+            file://debug.patch \
+            file://unixccompiler.patch \
+            file://nohostlibs.patch \
+            file://multilib.patch \
+            file://add-md5module-support.patch \
+            file://builddir.patch \
+            file://parallel-makeinst-create-bindir.patch \
+            file://revert_use_of_sysconfigdata.patch \
            "
 S = "${WORKDIR}/Python-${PV}"
 
@@ -36,7 +37,7 @@ EXTRA_OEMAKE = '\
 '
 
 do_configure_prepend() {
-	autoreconf --verbose --install --force --exclude=autopoint Modules/_ctypes/libffi || bbnote "_ctypes failed to autoreconf"
+	autoreconf --verbose --install --force --exclude=autopoint ../Python-${PV}/Modules/_ctypes/libffi
 }
 
 do_install() {
