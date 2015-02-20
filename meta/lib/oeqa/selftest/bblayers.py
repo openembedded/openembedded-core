@@ -18,17 +18,17 @@ class BitbakeLayers(oeSelfTest):
 
     @testcase(83)
     def test_bitbakelayers_showlayers(self):
-        result = runCmd('bitbake-layers show_layers')
+        result = runCmd('bitbake-layers show-layers')
         self.assertTrue('meta-selftest' in result.output)
 
     @testcase(93)
     def test_bitbakelayers_showappends(self):
-        result = runCmd('bitbake-layers show_appends')
+        result = runCmd('bitbake-layers show-appends')
         self.assertTrue('xcursor-transparent-theme_0.1.1.bbappend' in result.output, msg='xcursor-transparent-theme_0.1.1.bbappend file was not recognised')
 
     @testcase(90)
     def test_bitbakelayers_showoverlayed(self):
-        result = runCmd('bitbake-layers show_overlayed')
+        result = runCmd('bitbake-layers show-overlayed')
         self.assertTrue('aspell' in result.output, msg='xcursor-transparent-theme_0.1.1.bbappend file was not recognised')
 
     @testcase(95)
