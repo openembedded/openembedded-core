@@ -1,4 +1,5 @@
 SUMMARY = "Distributed version control system"
+HOMEPAGE = "http://git-scm.com"
 SECTION = "console/utils"
 LICENSE = "GPLv2"
 DEPENDS = "openssl curl zlib expat"
