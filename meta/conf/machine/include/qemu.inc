@@ -15,7 +15,7 @@ MACHINE_FEATURES = "alsa bluetooth usbgadget screen"
 
 MACHINEOVERRIDES =. "qemuall:"
 
-IMAGE_FSTYPES += "tar.bz2 ext3"
+IMAGE_FSTYPES += "tar.bz2 ext4"
 
 # Don't include kernels in standard images
 RDEPENDS_kernel-base = ""

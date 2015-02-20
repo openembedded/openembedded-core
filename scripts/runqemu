@@ -39,7 +39,7 @@ usage() {
     echo ""
     echo "Examples:"
     echo "  $MYNAME qemuarm"
-    echo "  $MYNAME qemux86-64 core-image-sato ext3"
+    echo "  $MYNAME qemux86-64 core-image-sato ext4"
     echo "  $MYNAME path/to/bzImage-qemux86.bin path/to/nfsrootdir/ serial"
     echo "  $MYNAME qemux86 ramfs"
     echo "  $MYNAME qemux86 iso"
@@ -296,31 +296,31 @@ machine2=`echo $MACHINE | tr 'a-z' 'A-Z' | sed 's/-/_/'`
 
 # Defaults used when these vars need to be inferred
 QEMUX86_DEFAULT_KERNEL=bzImage-qemux86.bin
-QEMUX86_DEFAULT_FSTYPE=ext3
+QEMUX86_DEFAULT_FSTYPE=ext4
 
 QEMUX86_64_DEFAULT_KERNEL=bzImage-qemux86-64.bin
-QEMUX86_64_DEFAULT_FSTYPE=ext3
+QEMUX86_64_DEFAULT_FSTYPE=ext4
 
 QEMUARM_DEFAULT_KERNEL=zImage-qemuarm.bin
-QEMUARM_DEFAULT_FSTYPE=ext3
+QEMUARM_DEFAULT_FSTYPE=ext4
 
 QEMUARM64_DEFAULT_KERNEL=Image-qemuarm64.bin
-QEMUARM64_DEFAULT_FSTYPE=ext3
+QEMUARM64_DEFAULT_FSTYPE=ext4
 
 QEMUMIPS_DEFAULT_KERNEL=vmlinux-qemumips.bin
-QEMUMIPS_DEFAULT_FSTYPE=ext3
+QEMUMIPS_DEFAULT_FSTYPE=ext4
 
 QEMUMIPSEL_DEFAULT_KERNEL=vmlinux-qemumipsel.bin
-QEMUMIPSEL_DEFAULT_FSTYPE=ext3
+QEMUMIPSEL_DEFAULT_FSTYPE=ext4
 
 QEMUMIPS64_DEFAULT_KERNEL=vmlinux-qemumips64.bin
-QEMUMIPS64_DEFAULT_FSTYPE=ext3
+QEMUMIPS64_DEFAULT_FSTYPE=ext4
 
 QEMUSH4_DEFAULT_KERNEL=vmlinux-qemumips.bin
-QEMUSH4_DEFAULT_FSTYPE=ext3
+QEMUSH4_DEFAULT_FSTYPE=ext4
 
 QEMUPPC_DEFAULT_KERNEL=vmlinux-qemuppc.bin
-QEMUPPC_DEFAULT_FSTYPE=ext3
+QEMUPPC_DEFAULT_FSTYPE=ext4
 
 QEMUMICROBLAZE_DEFAULT_KERNEL=linux.bin.ub
 QEMUMICROBLAZE_DEFAULT_FSTYPE=cpio
