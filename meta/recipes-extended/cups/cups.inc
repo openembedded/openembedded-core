@@ -10,7 +10,6 @@ SRC_URI = "http://www.cups.org/software/${PV}/${BP}-source.tar.bz2 \
            file://cups.socket \
            file://cups.path \
            file://cups.service \
-           file://0001-test-ippserver.c-check-avahi-before-use.patch \
 	  "
 
 LEAD_SONAME = "libcupsdriver.so"
