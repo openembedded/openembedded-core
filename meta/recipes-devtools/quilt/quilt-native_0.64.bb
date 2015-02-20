@@ -1,2 +1,2 @@
-require quilt-${PV}.inc
+require quilt.inc
 require quilt-native.inc

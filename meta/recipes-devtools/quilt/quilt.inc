@@ -10,8 +10,8 @@ SRC_URI = "${SAVANNAH_GNU_MIRROR}/quilt/quilt-${PV}.tar.gz \
         file://Makefile \
 "
 
-SRC_URI[md5sum] = "c0ef4beb58a6fa72563b955e70624b6e"
-SRC_URI[sha256sum] = "2846788221aa8844c54f10239c7cbc5e88031859162bcc285449446c3cfffe52"
+SRC_URI[md5sum] = "fc0310db5868a0873d602d4332a76d43"
+SRC_URI[sha256sum] = "c4bfd3282214a288e8d3e921ae4d52e73e24c4fead72b5446752adee99a7affd"
 
 inherit autotools-brokensep ptest
 
