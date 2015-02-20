@@ -73,8 +73,8 @@ def find_artifacts(image_name):
         if (get_line_val(line, "IMAGE_ROOTFS")):
             rootfs_dir = get_line_val(line, "IMAGE_ROOTFS")
             continue
-        if (get_line_val(line, "STAGING_KERNEL_DIR")):
-            kernel_dir = get_line_val(line, "STAGING_KERNEL_DIR")
+        if (get_line_val(line, "DEPLOY_DIR_IMAGE")):
+            kernel_dir = get_line_val(line, "DEPLOY_DIR_IMAGE")
             continue
         if (get_line_val(line, "STAGING_DIR_NATIVE")):
             native_sysroot = get_line_val(line, "STAGING_DIR_NATIVE")
@@ -200,7 +200,7 @@ def wic_create(args, wks_file, rootfs_dir, bootimg_dir, kernel_dir,
     values from the output of 'bitbake -e':
 
     rootfs_dir:        IMAGE_ROOTFS
-    kernel_dir:        STAGING_KERNEL_DIR
+    kernel_dir:        DEPLOY_DIR_IMAGE
     native_sysroot:    STAGING_DIR_NATIVE
 
     In the above case, bootimg_dir remains unset and the
