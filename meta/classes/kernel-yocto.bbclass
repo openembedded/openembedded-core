@@ -281,6 +281,15 @@ python do_kernel_configcheck() {
             with open (nonhw_file, "r") as myfile:
                 results = myfile.read()
                 bb.warn( "[kernel config]: BSP specified non-hw configuration:\n\n%s" % results)
+
+    bsp_desc = "${S}/" + kmeta + "/" + "top_tgt"
+    if os.path.exists(bsp_desc):
+        with open (bsp_desc, "r") as myfile:
+                bsp_tgt = myfile.read()
+                m = re.match("^(.*)scratch.obj(.*)$", bsp_tgt)
+                if not m is None:
+                    bb.warn( "[kernel]: An auto generated BSP description was used, this normally indicates a misconfiguration.\n" +
+                             "Check that your machine (%s) has an associated kernel description." % "${MACHINE}" )
 }
 
 # Ensure that the branches (BSP and meta) are on the locations specified by
