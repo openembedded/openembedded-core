@@ -62,17 +62,13 @@ TARGET_CPPFLAGS = "-I${STAGING_DIR_TARGET}${includedir}"
 GLIBC_BROKEN_LOCALES = " _ER _ET so_ET yn_ER sid_ET tr_TR mn_MN gez_ET gez_ER bn_BD te_IN es_CR.ISO-8859-1"
 
 #
-# For now, we will skip building of a gcc package if it is a uclibc one
-# and our build is not a uclibc one, and we skip a glibc one if our build
-# is a uclibc build.
+# We will skip parsing glibc when system C library selection is not glibc
+# this helps in easing out parsing for non-glibc system libraries
 #
-# See the note in gcc/gcc_3.4.0.oe
-#
-
 python __anonymous () {
     import re
-    uc_os = (re.match('.*uclibc$', d.getVar('TARGET_OS', True)) != None)
-    if uc_os:
+    notglibc = (re.match('.*uclibc$', d.getVar('TARGET_OS', True)) != None) and (re.match('.*musl$', d.getVar('TARGET_OS', True)) != None)
+    if notglibc:
         raise bb.parse.SkipPackage("incompatible with target %s" %
                                    d.getVar('TARGET_OS', True))
 }
