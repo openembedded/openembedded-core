@@ -7,8 +7,8 @@ DEPENDS = "python-async python-smmap"
 
 SRC_URI = "https://pypi.python.org/packages/source/g/gitdb/gitdb-${PV}.tar.gz"
 
-SRC_URI[md5sum] = "daeb85a5e97d2d100fd37cf522fd65d5"
-SRC_URI[sha256sum] = "0d784ec4a75e93c8f65d4aca219c17e388a052d461714ed0edfda657e542b716"
+SRC_URI[md5sum] = "44e4366b8bdfd306b075c3a52c96ae1a"
+SRC_URI[sha256sum] = "a3ebbc27be035a2e874ed904df516e35f4a29a778a764385de09de9e0f139658"
 
 S = "${WORKDIR}/gitdb-${PV}"
 
