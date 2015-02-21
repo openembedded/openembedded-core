@@ -46,7 +46,7 @@ case "$1" in
 		if [ -n "$router" ] ; then
 			if ! root_is_nfs ; then
                                 if [ $have_bin_ip -eq 1 ]; then
-                                        while ip route del default 2>/dev/null ; do
+                                        while ip route del default dev $interface 2>/dev/null ; do
                                                 :
                                         done
                                 else
