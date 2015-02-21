@@ -26,7 +26,6 @@ SRC_URI = "${GNU_MIRROR}/texinfo/${BP}.tar.gz \
 SRC_URI[md5sum] = "4e9a1a591ed236003d0d4b008bf07eef"
 SRC_URI[sha256sum] = "1f3cdeebe65fdf510f55d765ab1031b54416aa5bc2635b6a54ef9bcb2367c917"
 
-S = "${WORKDIR}/${BP}"
 tex_texinfo = "texmf/tex/texinfo"
 
 inherit gettext autotools

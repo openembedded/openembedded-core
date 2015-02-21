@@ -18,8 +18,6 @@ SRC_URI = "http://ymorin.is-a-geek.org/download/${BPN}/${BP}.tar.xz"
 SRC_URI[md5sum] = "b939280dcc83f8feabd87a1d5f9b00c2"
 SRC_URI[sha256sum] = "ea2615a62c74bea6ce3b38402f00c7513858f307f6ba7aa9fdbf0bbc12bcf407"
 
-S = "${WORKDIR}/${BPN}-${PV}"
-
 inherit autotools
 do_configure_prepend () {
 	mkdir -p scripts/.autostuff/m4

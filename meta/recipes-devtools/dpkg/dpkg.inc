@@ -9,8 +9,6 @@ DEPENDS_class-native = "bzip2-replacement-native zlib-native virtual/update-alte
 RDEPENDS_${PN} = "${VIRTUAL-RUNTIME_update-alternatives} xz run-postinsts perl"
 RDEPENDS_${PN}_class-native = "xz-native"
 
-S = "${WORKDIR}/${BPN}-${PV}"
-
 inherit autotools gettext perlnative pkgconfig systemd
 
 python () {

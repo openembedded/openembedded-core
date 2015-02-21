@@ -16,8 +16,6 @@ SRC_URI = "${GNU_MIRROR}/readline/${BPN}-${PV}.tar.gz;name=archive \
            file://config-dirent-symbols.patch \
            file://norpath.patch"
 
-S = "${WORKDIR}/${BPN}-${PV}"
-
 inherit autotools texinfo
 
 EXTRA_AUTORECONF += "--exclude=autoheader"

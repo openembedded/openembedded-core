@@ -12,8 +12,6 @@ INC_PR = "r8"
 
 SRC_URI = "${XORG_MIRROR}/individual/app/${BPN}-${PV}.tar.bz2"
 
-S = "${WORKDIR}/${BPN}-${PV}"
-
 inherit autotools pkgconfig distro_features_check
 
 FILES_${PN} += " ${libdir}/X11/${BPN} ${datadir}/X11/app-defaults/"

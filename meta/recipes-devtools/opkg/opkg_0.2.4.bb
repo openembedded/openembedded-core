@@ -19,8 +19,6 @@ SRC_URI = "http://downloads.yoctoproject.org/releases/${BPN}/${BPN}-${PV}.tar.gz
            file://0001-opkg-key-Backport-improvements.patch \
 "
 
-S = "${WORKDIR}/${BPN}-${PV}"
-
 SRC_URI[md5sum] = "40ed2aee15abc8d550539449630091bd"
 SRC_URI[sha256sum] = "0f40c7e457d81edf9aedc07c778f4697111ab163a38ef95999faece015453086"
 

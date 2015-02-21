@@ -63,8 +63,6 @@ SRC_URI[patch13.sha256sum] = "0cc649516a5bdfa61c5e56937407570288b6972d75aa1bd060
 SRC_URI[patch14.md5sum]    = "a1be30e1c6f1099bb5fcef00a2631fb8"
 SRC_URI[patch14.sha256sum] = "6f1a68320d01522ca1ea5a737124ecc8739f3dcbfea2dee21e3ccf839a21a817"
 
-S = "${WORKDIR}/${BPN}-${PV}"
-
 inherit autotools
 
 EXTRA_AUTORECONF += "--exclude=autoheader"

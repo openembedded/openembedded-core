@@ -12,8 +12,6 @@ SRC_URI = "http://taglib.github.io/releases/${BP}.tar.gz"
 SRC_URI[md5sum] = "0d35df96822bbd564c5504cb3c2e4d86"
 SRC_URI[sha256sum] = "72d371cd1419a87ae200447a53bff2be219283071e80fd12337928cc967dc71a"
 
-S = "${WORKDIR}/${BP}"
-
 BINCONFIG = "${bindir}/taglib-config"
 
 inherit cmake pkgconfig binconfig-disabled

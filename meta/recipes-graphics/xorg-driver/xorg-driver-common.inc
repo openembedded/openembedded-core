@@ -11,8 +11,6 @@ DEPENDS = "virtual/xserver xproto randrproto util-macros"
 
 SRC_URI = "${XORG_MIRROR}/individual/driver/${BPN}-${PV}.tar.bz2"
 
-S = "${WORKDIR}/${BPN}-${PV}"
-
 FILES_${PN} += " ${libdir}/xorg/modules/drivers/*.so"
 FILES_${PN}-dbg += " ${libdir}/xorg/modules/drivers/.debug"
 
