@@ -546,6 +546,10 @@ if [ "$MACHINE" = "qemush4" ]; then
     fi
 fi
 
+if [ "${FSTYPE:0:3}" = "ext" ]; then
+    KERNCMDLINE="$KERNCMDLINE rootfstype=$FSTYPE"
+fi
+
 if [ "$MACHINE" = "akita" ]; then
     QEMU=qemu-system-arm
     if [ "$FSTYPE" = "jffs2" ]; then
