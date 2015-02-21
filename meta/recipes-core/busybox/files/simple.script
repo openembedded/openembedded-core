@@ -56,7 +56,7 @@ case "$1" in
                                 fi
 			fi
 
-			metric=0
+			metric=10
 			for i in $router ; do
                                 if [ $have_bin_ip -eq 1 ]; then
                                         ip route add default via $i metric $metric
