@@ -55,6 +55,14 @@ class Gnome(XTerminal):
     command = 'gnome-terminal -t "{title}" --disable-factory -x {command}'
     priority = 2
 
+    def __init__(self, sh_cmd, title=None, env=None, d=None):
+        # Check version
+        (major, minor) = check_terminal_version("gnome-terminal")
+        if major >= 3 and minor >= 10:
+            logger.warn(1, 'Gnome-Terminal >3.10 does not support --disable-factory')
+            self.command = 'gnome-terminal -t "{title}" -x {command}'
+        XTerminal.__init__(self, sh_cmd, title, env, d)
+
 class Mate(XTerminal):
     command = 'mate-terminal -t "{title}" -x {command}'
     priority = 2
@@ -73,11 +81,10 @@ class Konsole(XTerminal):
 
     def __init__(self, sh_cmd, title=None, env=None, d=None):
         # Check version
-        vernum = check_konsole_version("konsole")
-        if vernum:
-            if vernum.split('.')[0] == "2":
-                logger.debug(1, 'Konsole from KDE 4.x will not work as devshell, skipping')
-                raise UnsupportedTerminal(self.name)
+        (major, minor) = check_terminal_version("konsole")
+        if major == 2:
+            logger.debug(1, 'Konsole from KDE 4.x will not work as devshell, skipping')
+            raise UnsupportedTerminal(self.name)
         XTerminal.__init__(self, sh_cmd, title, env, d)
 
 class XTerm(XTerminal):
@@ -219,10 +226,10 @@ def check_tmux_pane_size(tmux):
         return True
     return False
 
-def check_konsole_version(konsole):
+def check_terminal_version(terminalName):
     import subprocess as sub
     try:
-        p = sub.Popen(['sh', '-c', '%s --version' % konsole],stdout=sub.PIPE,stderr=sub.PIPE)
+        p = sub.Popen(['sh', '-c', '%s --version' % terminalName],stdout=sub.PIPE,stderr=sub.PIPE)
         out, err = p.communicate()
         ver_info = out.rstrip().split('\n')
     except OSError as exc:
@@ -232,10 +239,17 @@ def check_konsole_version(konsole):
         else:
             raise
     vernum = None
+    major = int(0)
+    minor = int(0)
     for ver in ver_info:
         if ver.startswith('Konsole'):
             vernum = ver.split(' ')[-1]
-    return vernum
+	if ver.startswith('GNOME Terminal'):
+            vernum = ver.split(' ')[-1]
+    if vernum:
+	major = int(vernum.split('.')[0])
+	minor = int(vernum.split('.')[1])
+    return major, minor
 
 def distro_name():
     try:
