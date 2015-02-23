@@ -52,6 +52,7 @@ EXCLUDE_FROM_WORLD = "1"
 
 SDK_PACKAGING_FUNC ?= "create_shar"
 SDK_POST_INSTALL_COMMAND ?= ""
+SDK_RELOCATE_AFTER_INSTALL ?= "1"
 
 SDK_MANIFEST = "${SDK_DEPLOY}/${TOOLCHAIN_OUTPUTNAME}.manifest"
 python write_target_sdk_manifest () {
@@ -116,9 +117,14 @@ fakeroot tar_sdk() {
 
 fakeroot create_shar() {
 	# copy in the template shar extractor script
-	cp ${COREBASE}/meta/files/toolchain-shar-template.sh ${SDK_DEPLOY}/${TOOLCHAIN_OUTPUTNAME}.sh
+	cp ${COREBASE}/meta/files/toolchain-shar-extract.sh ${SDK_DEPLOY}/${TOOLCHAIN_OUTPUTNAME}.sh
 
-	cat << "EOF" > ${T}/post_install_command
+	rm -f ${T}/post_install_command
+
+	if [ ${SDK_RELOCATE_AFTER_INSTALL} -eq 1 ] ; then
+		cp ${COREBASE}/meta/files/toolchain-shar-relocate.sh ${T}/post_install_command
+	fi
+	cat << "EOF" >> ${T}/post_install_command
 ${SDK_POST_INSTALL_COMMAND}
 EOF
 	sed -i -e '/@SDK_POST_INSTALL_COMMAND@/r ${T}/post_install_command' ${SDK_DEPLOY}/${TOOLCHAIN_OUTPUTNAME}.sh
