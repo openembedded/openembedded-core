@@ -137,13 +137,16 @@ class SignatureGeneratorOEBasicHash(bb.siggen.SignatureGeneratorBasicHash):
             return
         super(bb.siggen.SignatureGeneratorBasicHash, self).dump_sigtask(fn, task, stampbase, runtime)
 
-    def dump_lockedsigs(self, sigfile=None):
+    def dump_lockedsigs(self, sigfile=None, taskfilter=None):
         if not sigfile:
             sigfile = os.getcwd() + "/locked-sigs.inc"
 
         bb.plain("Writing locked sigs to %s" % sigfile)
         types = {}
         for k in self.runtaskdeps:
+            if taskfilter:
+                if not k in taskfilter:
+                    continue
             fn = k.rsplit(".",1)[0]
             t = self.lockedhashfn[fn].split(" ")[1].split(":")[5]
             t = 't-' + t.replace('_', '-')
