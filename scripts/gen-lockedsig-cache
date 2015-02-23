@@ -35,6 +35,12 @@ for s in sigs:
 
 for f in files:
     dst = f.replace(sys.argv[2], sys.argv[3])
-    mkdir(os.path.dirname(dst))
-    os.link(f, dst)
+    destdir = os.path.dirname(dst)
+    mkdir(destdir)
 
+    if os.path.exists(dst):
+        os.remove(dst)
+    if (os.stat(f).st_dev == os.stat(destdir).st_dev):
+        os.link(f, dst)
+    else:
+        shutil.copyfile(f, dst)
