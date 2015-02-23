@@ -1,6 +1,6 @@
 inherit rootfs_${IMAGE_PKGTYPE}
 
-inherit populate_sdk_base
+inherit populate_sdk_ext
 
 TOOLCHAIN_TARGET_TASK += "${PACKAGE_INSTALL}"
 TOOLCHAIN_TARGET_TASK_ATTEMPTONLY += "${PACKAGE_INSTALL_ATTEMPTONLY}"
