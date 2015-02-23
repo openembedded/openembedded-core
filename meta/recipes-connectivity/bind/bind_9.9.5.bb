@@ -50,6 +50,7 @@ INITSCRIPT_PARAMS = "defaults"
 
 SYSTEMD_SERVICE_${PN} = "named.service"
 
+PARALLEL_MAKE = ""
 
 RDEPENDS_${PN} = "python-core"
 
