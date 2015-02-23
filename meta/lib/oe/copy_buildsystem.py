@@ -68,3 +68,35 @@ class BuildSystem(object):
                     _smart_copy(layer, layerdestpath)
 
         return layers_copied
+
+def generate_locked_sigs(sigfile, d):
+    bb.utils.mkdirhier(os.path.dirname(sigfile))
+    depd = d.getVar('BB_TASKDEPDATA', True)
+    tasks = ['%s.%s' % (v[2], v[1]) for v in depd.itervalues()]
+    bb.parse.siggen.dump_lockedsigs(sigfile, tasks)
+
+def prune_lockedsigs(allowed_tasks, excluded_targets, lockedsigs, pruned_output):
+    with open(lockedsigs, 'r') as infile:
+        bb.utils.mkdirhier(os.path.dirname(pruned_output))
+        with open(pruned_output, 'w') as f:
+            invalue = False
+            for line in infile:
+                if invalue:
+                    if line.endswith('\\\n'):
+                        splitval = line.strip().split(':')
+                        if splitval[1] in allowed_tasks and not splitval[0] in excluded_targets:
+                            f.write(line)
+                    else:
+                        f.write(line)
+                        invalue = False
+                elif line.startswith('SIGGEN_LOCKEDSIGS'):
+                    invalue = True
+                    f.write(line)
+
+def create_locked_sstate_cache(lockedsigs, input_sstate_cache, output_sstate_cache, d, fixedlsbstring=""):
+    bb.note('Generating sstate-cache...')
+
+    bb.process.run("gen-lockedsig-cache %s %s %s" % (lockedsigs, input_sstate_cache, output_sstate_cache))
+    if fixedlsbstring:
+        os.rename(output_sstate_cache + '/' + d.getVar('NATIVELSBSTRING', True),
+        output_sstate_cache + '/' + fixedlsbstring)
