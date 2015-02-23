@@ -16,8 +16,8 @@ SRC_URI = "https://fedorahosted.org/releases/l/o/logrotate/logrotate-${PV}.tar.g
            file://disable-check-different-filesystems.patch \
             "
 
-SRC_URI[md5sum] = "2660f30742da79870d15d042b07829f6"
-SRC_URI[sha256sum] = "700ed7ce9072a1cca324779a74797dfaefdae37ac50a817134b947c4ded1dfa7"
+SRC_URI[md5sum] = "49846e873dddea15964cd0355b9943ca"
+SRC_URI[sha256sum] = "46a1510ef4a1f4359edd5f361112cfd1523942e85ff28e6cbb0c81bad1829d0f"
 
 PACKAGECONFIG ?= "\
     ${@base_contains('DISTRO_FEATURES', 'acl', 'acl', '', d)} \
