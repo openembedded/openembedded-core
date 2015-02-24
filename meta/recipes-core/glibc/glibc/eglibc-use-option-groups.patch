@@ -2294,11 +2294,37 @@ Index: git/locale/programs/locfile.h
  /* Change the output to be big-endian if BIG_ENDIAN is true and
     little-endian otherwise.  */
  static inline void
-@@ -276,4 +278,49 @@ extern void identification_output (struc
+@@ -89,7 +91,8 @@ maybe_swap_uint32 (uint32_t value)
+ }
+ 
+ /* Likewise, but munge an array of N uint32_ts starting at ARRAY.  */
+-static inline void
++static void
++__attribute__ ((unused))
+ maybe_swap_uint32_array (uint32_t *array, size_t n)
+ {
+   if (swap_endianness_p)
+@@ -99,7 +102,8 @@ maybe_swap_uint32_array (uint32_t *array
+ 
+ /* Like maybe_swap_uint32_array, but the array of N elements is at
+    the end of OBSTACK's current object.  */
+-static inline void
++static void
++__attribute__ ((unused))
+ maybe_swap_uint32_obstack (struct obstack *obstack, size_t n)
+ {
+   maybe_swap_uint32_array ((uint32_t *) obstack_next_free (obstack) - n, n);
+@@ -276,4 +280,55 @@ extern void identification_output (struc
  				   const struct charmap_t *charmap,
  				   const char *output_path);
  
-+static inline size_t
++static size_t wcslen_uint32 (const uint32_t *str) __attribute__ ((unused));
++static uint32_t * wmemcpy_uint32 (uint32_t *s1, const uint32_t *s2, size_t n) __attribute__ ((unused));
++static uint32_t * wcschr_uint32 (const uint32_t *s, uint32_t ch) __attribute__ ((unused));
++static int wcscmp_uint32 (const uint32_t *s1, const uint32_t *s2) __attribute__ ((unused));
++static int wmemcmp_uint32 (const uint32_t *s1, const uint32_t *s2, size_t n) __attribute__ ((unused));
++
++static size_t
 +wcslen_uint32 (const uint32_t *str)
 +{
 +  size_t len = 0;
@@ -2307,7 +2333,7 @@ Index: git/locale/programs/locfile.h
 +  return len;
 +}
 +
-+static inline int
++static  int
 +wmemcmp_uint32 (const uint32_t *s1, const uint32_t *s2, size_t n)
 +{
 +  while (n-- != 0)
@@ -2319,7 +2345,7 @@ Index: git/locale/programs/locfile.h
 +  return 0;
 +}
 +
-+static inline int
++static int
 +wcscmp_uint32 (const uint32_t *s1, const uint32_t *s2)
 +{
 +  while (*s1 != 0 && *s1 == *s2)
@@ -2327,13 +2353,13 @@ Index: git/locale/programs/locfile.h
 +  return *s1 - *s2;
 +}
 +
-+static inline uint32_t *
++static uint32_t *
 +wmemcpy_uint32 (uint32_t *s1, const uint32_t *s2, size_t n)
 +{
 +  return memcpy (s1, s2, n * sizeof (uint32_t));
 +}
 +
-+static inline uint32_t *
++static uint32_t *
 +wcschr_uint32 (const uint32_t *s, uint32_t ch)
 +{
 +  do
@@ -5627,7 +5653,7 @@ Index: git/posix/regexec.c
        /* match with character_class?  */
        for (i = 0; i < cset->nchar_classes; ++i)
  	{
-@@ -3863,8 +3843,16 @@ check_node_accept_bytes (const re_dfa_t
+@@ -3863,14 +3843,22 @@ check_node_accept_bytes (const re_dfa_t
  	      goto check_node_accept_bytes_match;
  	    }
  	}
@@ -5645,6 +5671,13 @@ Index: git/posix/regexec.c
        nrules = _NL_CURRENT_WORD (LC_COLLATE, _NL_COLLATE_NRULES);
        if (nrules != 0)
  	{
+ 	  unsigned int in_collseq = 0;
+ 	  const int32_t *table, *indirect;
+-	  const unsigned char *weights, *extra;
++	  const unsigned char *weights, *extra = NULL;
+ 	  const char *collseqwc;
+ 
+ 	  /* match with collating_symbol?  */
 @@ -3955,8 +3943,12 @@ check_node_accept_bytes (const re_dfa_t
  	    }
  	}
