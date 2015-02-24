@@ -1,5 +1,14 @@
-SUMMARY = "System and service manager for Linux, replacing SysVinit"
+SUMMARY = "A System and service manager"
 HOMEPAGE = "http://www.freedesktop.org/wiki/Software/systemd"
+
+DESCRIPTION = "systemd is a system and service manager for Linux, compatible with \
+SysV and LSB init scripts. systemd provides aggressive parallelization \
+capabilities, uses socket and D-Bus activation for starting services, \
+offers on-demand starting of daemons, keeps track of processes using \
+Linux cgroups, supports snapshotting and restoring of the system \
+state, maintains mount and automount points and implements an \
+elaborate transactional dependency-based service control logic. It can \
+work as a drop-in replacement for sysvinit."
 
 LICENSE = "GPLv2 & LGPLv2.1 & MIT"
 LIC_FILES_CHKSUM = "file://LICENSE.GPL2;md5=751419260aa954499f7abaabaa882bbe \
@@ -10,16 +19,16 @@ PROVIDES = "udev"
 
 PE = "1"
 
-DEPENDS = "kmod docbook-sgml-dtd-4.1-native intltool-native gperf-native acl readline dbus libcap libcgroup glib-2.0 qemu-native"
+DEPENDS = "kmod docbook-sgml-dtd-4.1-native intltool-native gperf-native acl readline dbus libcap libcgroup glib-2.0 qemu-native util-linux"
 DEPENDS += "${@bb.utils.contains('DISTRO_FEATURES', 'pam', 'libpam', '', d)}"
 
 SECTION = "base/shell"
 
 inherit gtk-doc useradd pkgconfig autotools perlnative update-rc.d update-alternatives qemu systemd ptest gettext
 
-SRCREV = "5d0ae62c665262c4c55536457e84e278c252cc0b"
+SRCREV = "820aced6f6067a6b7c57b7d36e44f64378870cbf"
 
-PV = "216+git${SRCPV}"
+PV = "218+git${SRCPV}"
 
 SRC_URI = "git://anongit.freedesktop.org/systemd/systemd;branch=master;protocol=git \
            file://binfmt-install.patch \
@@ -28,16 +37,10 @@ SRC_URI = "git://anongit.freedesktop.org/systemd/systemd;branch=master;protocol=
            file://systemd-pam-fix-fallocate.patch \
            file://systemd-pam-fix-mkostemp.patch \
            file://optional_secure_getenv.patch \
-           file://uclibc-sysinfo_h.patch \
            file://uclibc-get-physmem.patch \
            file://0001-add-support-for-executing-scripts-under-etc-rcS.d.patch \
-           file://0001-missing.h-add-fake-__NR_memfd_create-for-MIPS.patch \
            file://0001-Make-root-s-home-directory-configurable.patch \
            file://0001-systemd-user-avoid-using-system-auth.patch \
-           file://0001-journal-Fix-navigating-backwards-missing-entries.patch \
-           file://0001-tmpfiles-make-resolv.conf-entry-conditional-on-resol.patch \
-           file://0001-build-sys-do-not-install-tmpfiles-and-sysusers-files.patch \
-           file://0001-build-sys-configure-the-list-of-system-users-files-a.patch \
            file://touchscreen.rules \
            file://00-create-volatile.conf \
            file://init \
@@ -90,8 +93,6 @@ EXTRA_OECONF = " --with-rootprefix=${rootprefix} \
                  --enable-split-usr \
                  --without-python \
                  --with-sysvrcnd-path=${sysconfdir} \
-                 --with-firmware-path=/lib/firmware \
-                 ac_cv_path_KILL=${base_bindir}/kill \
                "
 # uclibc does not have NSS
 EXTRA_OECONF_append_libc-uclibc = " --disable-myhostname "
@@ -309,14 +310,7 @@ FILES_udev += "${base_sbindir}/udevd \
                ${rootlibexecdir}/udev/scsi_id \
                ${rootlibexecdir}/udev/v4l_id \
                ${rootlibexecdir}/udev/keymaps \
-               ${rootlibexecdir}/udev/rules.d/4*.rules \
-               ${rootlibexecdir}/udev/rules.d/5*.rules \
-               ${rootlibexecdir}/udev/rules.d/6*.rules \
-               ${rootlibexecdir}/udev/rules.d/70-power-switch.rules \
-               ${rootlibexecdir}/udev/rules.d/75*.rules \
-               ${rootlibexecdir}/udev/rules.d/78*.rules \
-               ${rootlibexecdir}/udev/rules.d/8*.rules \
-               ${rootlibexecdir}/udev/rules.d/95*.rules \
+               ${rootlibexecdir}/udev/rules.d/*.rules \
                ${sysconfdir}/udev \
                ${sysconfdir}/init.d/systemd-udevd \
                ${systemd_unitdir}/system/*udev* \
