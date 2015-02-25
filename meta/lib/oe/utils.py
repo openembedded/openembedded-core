@@ -42,7 +42,15 @@ def version_less_or_equal(variable, checkvalue, truevalue, falsevalue, d):
         return falsevalue
 
 def both_contain(variable1, variable2, checkvalue, d):
-    if d.getVar(variable1,1).find(checkvalue) != -1 and d.getVar(variable2,1).find(checkvalue) != -1:
+    val1 = d.getVar(variable1, True)
+    val2 = d.getVar(variable2, True)
+    val1 = set(val1.split())
+    val2 = set(val2.split())
+    if isinstance(checkvalue, basestring):
+        checkvalue = set(checkvalue.split())
+    else:
+        checkvalue = set(checkvalue)
+    if checkvalue.issubset(val1) and checkvalue.issubset(val2):
         return checkvalue
     else:
         return ""
