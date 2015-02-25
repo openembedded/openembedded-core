@@ -197,6 +197,16 @@ python write_specfile () {
             if path.endswith("DEBIAN") or path.endswith("CONTROL"):
                 continue
 
+            # Treat all symlinks to directories as normal files.
+            # os.walk() lists them as directories.
+            def move_to_files(dir):
+                if os.path.islink(os.path.join(rootpath, dir)):
+                    files.append(dir)
+                    return True
+                else:
+                    return False
+            dirs[:] = [dir for dir in dirs if not move_to_files(dir)]
+
             # Directory handling can happen in two ways, either DIRFILES is not set at all
             # in which case we fall back to the older behaviour of packages owning all their
             # directories
