@@ -5,7 +5,7 @@ BUGTRACKER = "https://bugs.g10code.com/gnupg/index"
 LICENSE = "GPLv2+ & LGPLv2.1+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=59530bdf33659b29e73d4adb9f9f6552 \
                     file://COPYING.LIB;md5=2d5025d4aa3495befef8f17206a5b0a1 \
-                    file://src/gpg-error.h.in;endline=23;md5=5dfe776dc8b62af093ddc859de6f494c \
+                    file://src/gpg-error.h.in;endline=23;md5=8b204918f0ca707136394d8bb20c7ebc \
                     file://src/init.c;endline=20;md5=8f5a9b59634f4aebcd0ec9d3ebd53bfe"
 
 
@@ -13,9 +13,8 @@ SECTION = "libs"
 
 SRC_URI = "ftp://ftp.gnupg.org/gcrypt/libgpg-error/libgpg-error-${PV}.tar.bz2 \
            file://pkgconfig.patch"
-
-SRC_URI[md5sum] = "b4f8d8b9ff14aed41f279aa844563539"
-SRC_URI[sha256sum] = "3ff4e5a71116eb862cd14185fcd282850927b8608e3b4186834fd940fbef57b5"
+SRC_URI[md5sum] = "12312802d2065774b787cbfc22cc04e9"
+SRC_URI[sha256sum] = "9ff1d6e61d4cef7c1d0607ceef6d40dc33f3da7a3094170c3718c00153d80810"
 
 BINCONFIG = "${bindir}/gpg-error-config"
 
