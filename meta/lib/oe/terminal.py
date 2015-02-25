@@ -77,15 +77,15 @@ class Terminology(XTerminal):
     priority = 2
 
 class Konsole(XTerminal):
-    command = 'konsole -T "{title}" -e {command}'
+    command = 'konsole --nofork -p tabtitle="{title}" -e {command}'
     priority = 2
 
     def __init__(self, sh_cmd, title=None, env=None, d=None):
         # Check version
         vernum = check_terminal_version("konsole")
-        if vernum and LooseVersion(vernum) >= '2.0.0':
-            logger.debug(1, 'Konsole from KDE 4.x will not work as devshell, skipping')
-            raise UnsupportedTerminal(self.name)
+        if vernum and LooseVersion(vernum) < '2.0.0':
+            # Konsole from KDE 3.x
+            self.command = 'konsole -T "{title}" -e {command}'
         XTerminal.__init__(self, sh_cmd, title, env, d)
 
 class XTerm(XTerminal):
