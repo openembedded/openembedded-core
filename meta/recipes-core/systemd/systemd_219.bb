@@ -19,28 +19,28 @@ PROVIDES = "udev"
 
 PE = "1"
 
-DEPENDS = "kmod docbook-sgml-dtd-4.1-native intltool-native gperf-native acl readline dbus libcap libcgroup glib-2.0 qemu-native util-linux"
+DEPENDS = "kmod docbook-sgml-dtd-4.1-native intltool-native gperf-native acl readline dbus libcap libcgroup glib-2.0 qemu-native"
 DEPENDS += "${@bb.utils.contains('DISTRO_FEATURES', 'pam', 'libpam', '', d)}"
 
 SECTION = "base/shell"
 
 inherit gtk-doc useradd pkgconfig autotools perlnative update-rc.d update-alternatives qemu systemd ptest gettext
 
-SRCREV = "820aced6f6067a6b7c57b7d36e44f64378870cbf"
+SRCREV = "a88abde72169ddc2df77df3fa5bed30725022253"
 
-PV = "218+git${SRCPV}"
+PV = "219+git${SRCPV}"
 
 SRC_URI = "git://anongit.freedesktop.org/systemd/systemd;branch=master;protocol=git \
-           file://binfmt-install.patch \
-           file://systemd-pam-configure-check-uclibc.patch \
-           file://systemd-pam-fix-execvpe.patch \
-           file://systemd-pam-fix-fallocate.patch \
-           file://systemd-pam-fix-mkostemp.patch \
-           file://optional_secure_getenv.patch \
-           file://uclibc-get-physmem.patch \
-           file://0001-add-support-for-executing-scripts-under-etc-rcS.d.patch \
-           file://0001-Make-root-s-home-directory-configurable.patch \
-           file://0001-systemd-user-avoid-using-system-auth.patch \
+           file://0002-shared-missing.h-fall-back-to-insecure-getenv.patch \
+           file://0003-binfmt-Don-t-install-dependency-links-at-install-tim.patch \
+           file://0004-configure-Check-for-additional-features-that-uclibc-.patch \
+           file://0005-nspawn-Use-execvpe-only-when-libc-supports-it.patch \
+           file://0006-journal-Use-posix-fallocate-only-if-available.patch \
+           file://0007-util-Use-mkostemp-only-if-libc-supports-it.patch \
+           file://0008-util-bypass-unimplemented-_SC_PHYS_PAGES-system-conf.patch \
+           file://0009-sysv-generator-add-support-for-executing-scripts-und.patch \
+           file://0010-Make-root-s-home-directory-configurable.patch \
+           file://0011-systemd-user-avoid-using-system-auth.patch \
            file://touchscreen.rules \
            file://00-create-volatile.conf \
            file://init \
@@ -50,8 +50,8 @@ SRC_URI = "git://anongit.freedesktop.org/systemd/systemd;branch=master;protocol=
 S = "${WORKDIR}/git"
 
 SRC_URI_append_libc-uclibc = "\
-                             file://systemd-pam-fix-getty-unit.patch \
-                            "
+            file://0001-units-Prefer-getty-to-agetty-in-console-setup-system.patch \
+           "
 LDFLAGS_append_libc-uclibc = " -lrt"
 
 GTKDOC_DOCDIR = "${S}/docs/"
@@ -127,6 +127,9 @@ do_install() {
 	# 20:12 < mezcalero> koen: you have three options: a) run systemd-machine-id-setup at install time, b) have / read-only and an empty file there (for stateless) and c) boot with / writable
 	touch ${D}${sysconfdir}/machine-id
 
+
+	install -d ${D}${sysconfdir}/udev/rules.d/
+	install -d ${D}${sysconfdir}/tmpfiles.d
 	install -m 0644 ${WORKDIR}/*.rules ${D}${sysconfdir}/udev/rules.d/
 
 	install -m 0644 ${WORKDIR}/00-create-volatile.conf ${D}${sysconfdir}/tmpfiles.d/
@@ -159,7 +162,9 @@ do_install() {
 	sed -i -e 's/ remote-fs.target$//' ${D}${systemd_unitdir}/system/systemd-journal-flush.service
 	# this file is needed to exist if networkd is disabled but timesyncd is still in use since timesyncd checks it
 	# for existence else it fails
-	${@bb.utils.contains('PACKAGECONFIG', 'networkd', '', 'sed -i -e "\$ad /run/systemd/netif/links 0755 root root -" ${D}${libdir}/tmpfiles.d/systemd.conf', d)}
+	if [ -s ${D}${libdir}/tmpfiles.d/systemd.conf ]; then
+		${@bb.utils.contains('PACKAGECONFIG', 'networkd', '', 'sed -i -e "\$ad /run/systemd/netif/links 0755 root root -" ${D}${libdir}/tmpfiles.d/systemd.conf', d)}
+	fi
 }
 
 do_install_ptest () {

@@ -1,18 +1,24 @@
-bypass unimplemented _SC_PHYS_PAGES system configuration API in uclibc
+From b45ea3bfd6635744c8a6b74d0ac701b44bb1d294 Mon Sep 17 00:00:00 2001
+From: Khem Raj <raj.khem@gmail.com>
+Date: Fri, 20 Feb 2015 05:19:37 +0000
+Subject: [PATCH 08/11] util: bypass unimplemented _SC_PHYS_PAGES system
+ configuration API on uclibc
 
 Upstream-Status: Inappropriate [uclibc-specific]
 
 Signed-off-by: Khem Raj <raj.khem@gmail.com>
+---
+ src/shared/util.c | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-Index: git/src/shared/util.c
-===================================================================
---- git.orig/src/shared/util.c	2014-03-15 18:09:34.796358146 -0700
-+++ git/src/shared/util.c	2014-03-15 20:16:33.836501084 -0700
-@@ -6332,11 +6332,24 @@
- 
+diff --git a/src/shared/util.c b/src/shared/util.c
+index 72f4665..cbbe3b1 100644
+--- a/src/shared/util.c
++++ b/src/shared/util.c
+@@ -6793,10 +6793,25 @@ uint64_t physical_memory(void) {
          /* We return this as uint64_t in case we are running as 32bit
           * process on a 64bit kernel with huge amounts of memory */
--
+ 
 +#ifdef __UCLIBC__
 +        char line[128];
 +        FILE *f = fopen("/proc/meminfo", "r");
@@ -29,9 +35,12 @@ Index: git/src/shared/util.c
 +#else
          mem = sysconf(_SC_PHYS_PAGES);
          assert(mem > 0);
--
+ 
          return (uint64_t) mem * (uint64_t) page_size();
 +#endif
  }
  
- char* mount_test_option(const char *haystack, const char *needle) {
+ void hexdump(FILE *f, const void *p, size_t s) {
+-- 
+2.1.4
+
