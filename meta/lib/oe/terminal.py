@@ -2,6 +2,7 @@ import logging
 import oe.classutils
 import shlex
 from bb.process import Popen, ExecutionError
+from distutils.version import LooseVersion
 
 logger = logging.getLogger('BitBake.OE.Terminal')
 
@@ -57,9 +58,9 @@ class Gnome(XTerminal):
 
     def __init__(self, sh_cmd, title=None, env=None, d=None):
         # Check version
-        (major, minor) = check_terminal_version("gnome-terminal")
-        if major >= 3 and minor >= 10:
-            logger.warn(1, 'Gnome-Terminal >3.10 does not support --disable-factory')
+        vernum = check_terminal_version("gnome-terminal")
+        if vernum and LooseVersion(vernum) >= '3.10':
+            logger.debug(1, 'Gnome-Terminal 3.10 or later does not support --disable-factory')
             self.command = 'gnome-terminal -t "{title}" -x {command}'
         XTerminal.__init__(self, sh_cmd, title, env, d)
 
@@ -81,8 +82,8 @@ class Konsole(XTerminal):
 
     def __init__(self, sh_cmd, title=None, env=None, d=None):
         # Check version
-        (major, minor) = check_terminal_version("konsole")
-        if major == 2:
+        vernum = check_terminal_version("konsole")
+        if vernum and LooseVersion(vernum) >= '2.0.0':
             logger.debug(1, 'Konsole from KDE 4.x will not work as devshell, skipping')
             raise UnsupportedTerminal(self.name)
         XTerminal.__init__(self, sh_cmd, title, env, d)
@@ -239,17 +240,12 @@ def check_terminal_version(terminalName):
         else:
             raise
     vernum = None
-    major = int(0)
-    minor = int(0)
     for ver in ver_info:
         if ver.startswith('Konsole'):
             vernum = ver.split(' ')[-1]
-	if ver.startswith('GNOME Terminal'):
+        if ver.startswith('GNOME Terminal'):
             vernum = ver.split(' ')[-1]
-    if vernum:
-	major = int(vernum.split('.')[0])
-	minor = int(vernum.split('.')[1])
-    return major, minor
+    return vernum
 
 def distro_name():
     try:
