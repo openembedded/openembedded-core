@@ -50,3 +50,10 @@ Index: man-1.6f/src/makewhatis.sh
         here=`pwd`
         cd $mandir
         for i in $sections
+@@ -447,7 +447,6 @@
+
+        chmod 644 ${mandir1}/whatis
+        rm $TMPFILE
+-     fi
+    done
+ done
