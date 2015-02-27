@@ -19,7 +19,7 @@ SRC_URI[sha256sum] = "9ff1d6e61d4cef7c1d0607ceef6d40dc33f3da7a3094170c3718c00153
 BINCONFIG = "${bindir}/gpg-error-config"
 
 inherit autotools binconfig-disabled pkgconfig gettext
-
+CPPFLAGS += "-P"
 do_compile_prepend() {
 	TARGET_FILE=linux-gnu
 	if [ ${TARGET_OS} != "linux" ]; then
