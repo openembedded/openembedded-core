@@ -28,4 +28,7 @@ do_install_append() {
 FILES_${PN}-bin += "${datadir}/applications/*.desktop"
 
 RDEPENDS_${PN}-bin = "gstreamer1.0-plugins-base-playback"
-RRECOMMENDS_${PN}-bin = "gstreamer1.0-plugins-base-meta gstreamer1.0-plugins-good-meta gstreamer1.0-plugins-bad-meta gstreamer1.0-plugins-ugly-meta"
+RRECOMMENDS_${PN}-bin = "gstreamer1.0-plugins-base-meta \
+                         gstreamer1.0-plugins-good-meta \
+                         gstreamer1.0-plugins-bad-meta \
+                         ${@bb.utils.contains("LICENSE_FLAGS_WHITELIST", "commercial", "gstreamer1.0-plugins-ugly-meta", "", d)}"
