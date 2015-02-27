@@ -49,7 +49,7 @@ WEB ?= ""
 SUMMARY_${PN}-apps = "Sato desktop - applications"
 RDEPENDS_${PN}-apps = "\
     leafpad \
-    gtk-play \
+    gst-player-bin \
     x11vnc \
     matchbox-terminal \
     sato-screenshot \
