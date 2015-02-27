@@ -67,7 +67,7 @@ GLIBC_BROKEN_LOCALES = " _ER _ET so_ET yn_ER sid_ET tr_TR mn_MN gez_ET gez_ER bn
 #
 python __anonymous () {
     import re
-    notglibc = (re.match('.*uclibc$', d.getVar('TARGET_OS', True)) != None) and (re.match('.*musl$', d.getVar('TARGET_OS', True)) != None)
+    notglibc = (re.match('.*uclibc$', d.getVar('TARGET_OS', True)) != None) or (re.match('.*musl$', d.getVar('TARGET_OS', True)) != None)
     if notglibc:
         raise bb.parse.SkipPackage("incompatible with target %s" %
                                    d.getVar('TARGET_OS', True))
