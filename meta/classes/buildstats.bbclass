@@ -52,8 +52,8 @@ def set_device(e):
     # If we end up hitting one of these fs, we'll just skip diskstats collection.
     ############################################################################
     device=os.stat(tmpdir)
-    majordev=os.major(device.st_dev)
-    minordev=os.minor(device.st_dev)
+    majordev=os.major(long(device.st_dev))
+    minordev=os.minor(long(device.st_dev))
     ############################################################################
     # Bug 1700: 
     # Because tmpfs/encryptfs/ramfs etc inserts no entry in /proc/diskstats
