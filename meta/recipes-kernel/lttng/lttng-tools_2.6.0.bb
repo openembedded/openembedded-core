@@ -30,7 +30,10 @@ SRC_URI = "git://git.lttng.org/lttng-tools.git;branch=stable-2.6 \
 
 S = "${WORKDIR}/git"
 
-inherit autotools-brokensep ptest pkgconfig
+inherit autotools-brokensep ptest pkgconfig useradd
+
+USERADD_PACKAGES = "${PN}"
+GROUPADD_PARAM_${PN} = "tracing"
 
 export KERNELDIR="${STAGING_KERNEL_DIR}"
 
