@@ -21,7 +21,7 @@ usage() {
     MYNAME=`basename $0`
     echo ""
     echo "Usage: you can run this script with any valid combination"
-    echo "of the following options (in any order):"
+    echo "of the following environment variables (in any order):"
     echo "  QEMUARCH - the qemu machine architecture to use"
     echo "  KERNEL - the kernel image file to use"
     echo "  ROOTFS - the rootfs image file or nfsroot directory to use"
