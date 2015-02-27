@@ -2,11 +2,11 @@ require recipes-devtools/python/python.inc
 
 DEPENDS = "python3-native libffi bzip2 db gdbm openssl readline sqlite3 zlib virtual/libintl xz"
 PR = "${INC_PR}.0"
-PYTHON_MAJMIN = "3.3"
+PYTHON_MAJMIN = "3.4"
 PYTHON_BINABI= "${PYTHON_MAJMIN}m"
 DISTRO_SRC_URI ?= "file://sitecustomize.py"
 DISTRO_SRC_URI_linuxstdbase = ""
-SRC_URI = "http://www.python.org/ftp/python/${PV}/Python-${PV}.tar.bz2 \
+SRC_URI = "http://www.python.org/ftp/python/${PV}/Python-${PV}.tar.xz \
 file://12-distutils-prefix-is-inside-staging-area.patch \
 file://python-config.patch \
 file://000-cross-compile.patch \
@@ -18,18 +18,14 @@ file://110-enable-zlib.patch \
 file://130-readline-setup.patch \
 file://150-fix-setupterm.patch \
 file://0001-h2py-Fix-issue-13032-where-it-fails-with-UnicodeDeco.patch \
-file://fix-ast.h-dependency.patch \
 file://makerace.patch \
 ${DISTRO_SRC_URI} \
-file://python3-fix-build-error-with-Readline-6.3.patch \
 "
 
 SRC_URI += "\
             file://03-fix-tkinter-detection.patch \
             file://04-default-is-optimized.patch \
             file://avoid_warning_about_tkinter.patch \
-            file://06-ctypes-libffi-fix-configure.patch \
-            file://remove_sqlite_rpath.patch \
             file://cgi_py.patch \
             file://host_include_contamination.patch \
             file://python-3.3-multilib.patch \
@@ -42,10 +38,10 @@ SRC_URI += "\
             file://sysconfig.py-add-_PYTHON_PROJECT_SRC.patch \
             file://setup.py-check-cross_compiling-when-get-FLAGS.patch \
            "
-SRC_URI[md5sum] = "f3ebe34d4d8695bf889279b54673e10c"
-SRC_URI[sha256sum] = "e526e9b612f623888364d30cc9f3dfc34dcef39065c713bdbcddf47df84d8dcb"
+SRC_URI[md5sum] = "36fc7327c02c6f12fa24fc9ba78039e3"
+SRC_URI[sha256sum] = "1c6d9682d145c056537e477bbfa060ce727f9edd38df1827e0f970dcf04b2def"
 
-LIC_FILES_CHKSUM = "file://LICENSE;md5=4eaea08eaaf6875189b0c49f26fa2005"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=64fc2b30b67d0a8423c250e0386ed72f"
 
 S = "${WORKDIR}/Python-${PV}"
 
@@ -75,9 +71,9 @@ export _PYTHON_PROJECT_SRC = "${S}"
 # No ctypes option for python 3
 PYTHONLSBOPTS = ""
 
-do_configure_prepend() {
+do_configure_append() {
 	rm -f ${S}/Makefile.orig
-	autoreconf -Wcross --verbose --install --force --exclude=autopoint Modules/_ctypes/libffi || bbnote "_ctypes failed to autoreconf"
+	autoreconf -Wcross --verbose --install --force --exclude=autopoint ../Python-${PV}/Modules/_ctypes/libffi
 }
 
 do_compile() {
@@ -170,7 +166,7 @@ do_install() {
 		install -m 0644 ${WORKDIR}/sitecustomize.py ${D}/${libdir}/python${PYTHON_MAJMIN}
 	fi
 
-	oe_multilib_header python${PYTHON_MAJMIN}/pyconfig.h
+	oe_multilib_header python${PYTHON_BINABI}/pyconfig.h
 }
 
 do_install_append_class-nativesdk () {
@@ -212,6 +208,7 @@ FILES_${PN}-dbg += "${libdir}/python${PYTHON_MAJMIN}/lib-dynload/.debug"
 
 # catch all the rest (unsorted)
 PACKAGES += "${PN}-misc"
+RDEPENDS_${PN}-misc += "${PN}-core"
 FILES_${PN}-misc = "${libdir}/python${PYTHON_MAJMIN}"
 
 # catch manpage

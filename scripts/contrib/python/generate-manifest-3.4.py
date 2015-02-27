@@ -17,7 +17,7 @@ import os
 import sys
 import time
 
-VERSION = "3.3.3"
+VERSION = "3.4.2"
 
 __author__ = "Michael 'Mickey' Lauer <mlauer@vanille-media.de>"
 __version__ = "20140131"
@@ -177,6 +177,8 @@ if __name__ == "__main__":
     "_weakrefset.* sysconfig.* _sysconfigdata.* config/Makefile " +
     "${includedir}/python${PYTHON_MAJMIN}/pyconfig*.h " +
     "${libdir}/python${PYTHON_MAJMIN}/collections " +
+    "${libdir}/python${PYTHON_MAJMIN}/_collections_abc.* " +
+    "${libdir}/python${PYTHON_MAJMIN}/_sitebuiltins.* " +
     "${libdir}/python${PYTHON_MAJMIN}/sitecustomize.py ")
 
     m.addPackage( "${PN}-dev", "Python development package", "${PN}-core",
@@ -280,7 +282,7 @@ if __name__ == "__main__":
     m.addPackage( "${PN}-lang", "Python low-level language support", "${PN}-core",
     "lib-dynload/_bisect.*.so lib-dynload/_collections.*.so lib-dynload/_heapq.*.so lib-dynload/_weakref.*.so lib-dynload/_functools.*.so " +
     "lib-dynload/array.*.so lib-dynload/itertools.*.so lib-dynload/operator.*.so lib-dynload/parser.*.so " +
-    "atexit.* bisect.* code.* codeop.* collections.* dis.* functools.* heapq.* inspect.* keyword.* opcode.* symbol.* repr.* token.* " +
+    "atexit.* bisect.* code.* codeop.* collections.* _collections_abc.* dis.* functools.* heapq.* inspect.* keyword.* opcode.* symbol.* repr.* token.* " +
     "tokenize.* traceback.* weakref.*" )
 
     m.addPackage( "${PN}-logging", "Python logging support", "${PN}-core ${PN}-io ${PN}-lang ${PN}-pickle ${PN}-stringold",
@@ -330,7 +332,7 @@ if __name__ == "__main__":
     "lib-dynload/readline.*.so rlcompleter.*" )
 
     m.addPackage( "${PN}-reprlib", "Python alternate repr() implementation", "${PN}-core",
-    "${libdir}/python3.3/reprlib.py" )
+    "reprlib.py" )
 
     m.addPackage( "${PN}-resource", "Python resource control interface", "${PN}-core",
     "lib-dynload/resource.*.so" )
