@@ -30,7 +30,7 @@ X11GLTOOLS = "\
 
 X11TOOLS = "\
     fstests \
-    owl-video \
+    gst-player-bin \
     x11perf \
     xrestop \
     xwininfo \
