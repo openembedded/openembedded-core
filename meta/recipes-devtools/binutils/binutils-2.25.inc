@@ -24,6 +24,7 @@ SRC_URI = "\
      file://binutils-armv5e.patch \
      file://mips64-default-ld-emulation.patch \
      file://binutils-xlp-support.patch \
+     file://0001-Fix-an-internal-error-in-do_print_to_mapfile-seen-wi.patch \
      "
 SRC_URI[md5sum] = "d9f3303f802a5b6b0bb73a335ab89d66"
 SRC_URI[sha256sum] = "22defc65cfa3ef2a3395faaea75d6331c6e62ea5dfacfed3e2ec17b08c882923"
