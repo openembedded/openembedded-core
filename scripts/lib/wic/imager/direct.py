@@ -136,7 +136,7 @@ class DirectImageCreator(BaseImageCreator):
             fstab_lines.append(fstab_entry)
 
     def _write_fstab(self, fstab, fstab_lines):
-        fstab = open(fstab + ".new", "w")
+        fstab = open(fstab, "w")
         for line in fstab_lines:
             fstab.write(line)
         fstab.close()
@@ -250,6 +250,8 @@ class DirectImageCreator(BaseImageCreator):
             if not self.ks.handler.bootloader.source and p.mountpoint == "/boot":
                 self.ks.handler.bootloader.source = p.source
 
+        fstab = self.__write_fstab(self.rootfs_dir.get("ROOTFS_DIR"))
+
         for p in parts:
             # need to create the filesystems in order to get their
             # sizes before we can add them and do the layout.
@@ -274,7 +276,6 @@ class DirectImageCreator(BaseImageCreator):
                                        no_table = p.no_table,
                                        part_type = p.part_type)
 
-        fstab = self.__write_fstab(self.rootfs_dir.get("ROOTFS_DIR"))
         self._restore_fstab(fstab)
 
         self.__image.layout_partitions(self._ptable_format)
