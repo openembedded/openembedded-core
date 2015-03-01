@@ -64,14 +64,21 @@ class RawCopyPlugin(SourcePlugin):
             return
 
         src = os.path.join(bootimg_dir, source_params['file'])
+        dst = src
+
+        if ('skip' in source_params):
+            dst = os.path.join(cr_workdir, source_params['file'])
+            dd_cmd = "dd if=%s of=%s ibs=%s skip=1 conv=notrunc" % \
+                    (src, dst, source_params['skip'])
+            exec_cmd(dd_cmd)
 
         # get the size in the right units for kickstart (kB)
-        du_cmd = "du -Lbks %s" % src
+        du_cmd = "du -Lbks %s" % dst
         out = exec_cmd(du_cmd)
         filesize = out.split()[0]
 
         if filesize > part.size:
             part.size = filesize
 
-        part.source_file = src
+        part.source_file = dst
 
