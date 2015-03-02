@@ -127,6 +127,7 @@ EXTRA_OECONF += " \
     --disable-xvid \
     --disable-zbar \
     ${GSTREAMER_1_0_ORC} \
+    ${@bb.utils.contains("TUNE_FEATURES", "mx32", "--disable-yadif", "", d)} \
     "
 
 ARM_INSTRUCTION_SET = "arm"
