@@ -4,22 +4,20 @@ Upstream-Status: Pending
  gdb/gdbserver/Makefile.in |    4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
+Index: gdb/gdbserver/Makefile.in
+===================================================================
 --- gdb/gdbserver/Makefile.in.orig
 +++ gdb/gdbserver/Makefile.in
-@@ -118,14 +118,14 @@ WARN_CFLAGS_NO_FORMAT = `echo " $(WARN_C
- # CFLAGS is specifically reserved for setting from the command line
- # when running make.  I.E.  "make CFLAGS=-Wmissing-prototypes".
- CFLAGS = @CFLAGS@
+@@ -131,10 +131,10 @@ CFLAGS = @CFLAGS@
+ CPPFLAGS = @CPPFLAGS@
  
  # INTERNAL_CFLAGS is the aggregate of all other *CFLAGS macros.
 -INTERNAL_CFLAGS_BASE =  ${CFLAGS} ${GLOBAL_CFLAGS} \
-+INTERNAL_CFLAGS_BASE =  ${GLOBAL_CFLAGS} \
- 	${PROFILE_CFLAGS} ${INCLUDE_CFLAGS}
++INTERNAL_CFLAGS_BASE = ${GLOBAL_CFLAGS} \
+ 	${PROFILE_CFLAGS} ${INCLUDE_CFLAGS} ${CPPFLAGS}
  INTERNAL_WARN_CFLAGS =  ${INTERNAL_CFLAGS_BASE} $(WARN_CFLAGS)
 -INTERNAL_CFLAGS =  ${INTERNAL_WARN_CFLAGS} $(WERROR_CFLAGS) -DGDBSERVER
 +INTERNAL_CFLAGS =  ${INTERNAL_WARN_CFLAGS} $(WERROR_CFLAGS) ${CFLAGS} -DGDBSERVER
  
  # LDFLAGS is specifically reserved for setting from the command line
  # when running make.
- LDFLAGS = @LDFLAGS@
- INTERNAL_LDFLAGS = $(LDFLAGS) @RDYNAMIC@

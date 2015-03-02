@@ -20,34 +20,34 @@ Last-Update: <2011-11-17>
 Upstream-Status: Pending
 Signed-off-by: Khem Raj <raj.khem@gmail.com>
 
-Index: gdb-7.5/gdb/configure.host
+Index: gdb-7.9/gdb/configure.host
 ===================================================================
---- gdb-7.5.orig/gdb/configure.host	2012-05-30 12:41:34.000000000 -0700
-+++ gdb-7.5/gdb/configure.host	2012-09-19 14:40:42.974609772 -0700
-@@ -140,6 +140,7 @@
+--- gdb-7.9.orig/gdb/configure.host
++++ gdb-7.9/gdb/configure.host
+@@ -150,6 +150,7 @@ powerpc*-*-linux*)	gdb_host=linux ;;
  
- s390*-*-*)		gdb_host=s390 ;;
+ s390*-*-linux*)		gdb_host=linux ;;
  
 +sh*-*-linux*)		gdb_host=linux ;;
  sh*-*-netbsdelf* | sh*-*-knetbsd*-gnu)
  			gdb_host=nbsd ;;
  sh*-*-openbsd*)		gdb_host=nbsd ;;
-Index: gdb-7.5/gdb/Makefile.in
+Index: gdb-7.9/gdb/Makefile.in
 ===================================================================
---- gdb-7.5.orig/gdb/Makefile.in	2012-07-02 08:29:33.000000000 -0700
-+++ gdb-7.5/gdb/Makefile.in	2012-09-19 14:40:42.974609772 -0700
-@@ -1493,6 +1493,7 @@
+--- gdb-7.9.orig/gdb/Makefile.in
++++ gdb-7.9/gdb/Makefile.in
+@@ -1707,6 +1707,7 @@ ALLDEPFILES = \
  	score-tdep.c \
  	ser-go32.c ser-pipe.c ser-tcp.c ser-mingw.c \
  	sh-tdep.c sh64-tdep.c shnbsd-tdep.c shnbsd-nat.c \
 +	sh-linux-tdep.c sh-linux-nat.c \
  	sol2-tdep.c \
- 	solib-irix.c solib-svr4.c solib-sunos.c \
+ 	solib-svr4.c \
  	sparc-linux-nat.c sparc-linux-tdep.c \
-Index: gdb-7.5/gdb/sh-linux-tdep.c
+Index: gdb-7.9/gdb/sh-linux-tdep.c
 ===================================================================
---- gdb-7.5.orig/gdb/sh-linux-tdep.c	2012-05-07 06:17:29.000000000 -0700
-+++ gdb-7.5/gdb/sh-linux-tdep.c	2012-09-19 14:46:50.610623784 -0700
+--- gdb-7.9.orig/gdb/sh-linux-tdep.c
++++ gdb-7.9/gdb/sh-linux-tdep.c
 @@ -18,14 +18,37 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
  
@@ -86,7 +86,7 @@ Index: gdb-7.5/gdb/sh-linux-tdep.c
  #include "glibc-tdep.h"
  #include "sh-tdep.h"
  #include "linux-tdep.h"
-@@ -180,9 +203,505 @@
+@@ -180,9 +203,505 @@ static struct tramp_frame sh_linux_rt_si
    sh_linux_rt_sigreturn_init
  };
  
@@ -592,10 +592,10 @@ Index: gdb-7.5/gdb/sh-linux-tdep.c
    linux_init_abi (info, gdbarch);
  
    /* GNU/Linux uses SVR4-style shared libraries.  */
-Index: gdb-7.5/gdb/sh-tdep.h
+Index: gdb-7.9/gdb/sh-tdep.h
 ===================================================================
---- gdb-7.5.orig/gdb/sh-tdep.h	2012-03-01 15:55:40.000000000 -0800
-+++ gdb-7.5/gdb/sh-tdep.h	2012-09-19 14:48:32.406627602 -0700
+--- gdb-7.9.orig/gdb/sh-tdep.h
++++ gdb-7.9/gdb/sh-tdep.h
 @@ -21,6 +21,12 @@
  
  /* Contributed by Steve Chamberlain sac@cygnus.com.  */
@@ -609,7 +609,7 @@ Index: gdb-7.5/gdb/sh-tdep.h
  /* Registers for all SH variants.  Used also by sh3-rom.c.  */
  enum
    {
-@@ -29,6 +35,7 @@
+@@ -29,6 +35,7 @@ enum
      ARG0_REGNUM = 4,
      ARGLAST_REGNUM = 7,
      FP_REGNUM = 14,
@@ -617,7 +617,7 @@ Index: gdb-7.5/gdb/sh-tdep.h
      PC_REGNUM = 16,
      PR_REGNUM = 17,
      GBR_REGNUM = 18,
-@@ -81,6 +88,24 @@
+@@ -81,6 +88,24 @@ enum
      FV0_REGNUM = 76,
      FV_LAST_REGNUM = 79
    };
@@ -642,7 +642,7 @@ Index: gdb-7.5/gdb/sh-tdep.h
  
  /* This structure describes a register in a core-file.  */
  struct sh_corefile_regmap
-@@ -89,8 +114,32 @@
+@@ -89,8 +114,32 @@ struct sh_corefile_regmap
    unsigned int offset;
  };
  
@@ -675,10 +675,10 @@ Index: gdb-7.5/gdb/sh-tdep.h
    /* Non-NULL when debugging from a core file.  Provides the offset
       where each general-purpose register is stored inside the associated
       core file section.  */
-Index: gdb-7.5/gdb/sh-linux-nat.c
+Index: gdb-7.9/gdb/sh-linux-nat.c
 ===================================================================
---- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ gdb-7.5/gdb/sh-linux-nat.c	2012-09-19 14:40:42.978609771 -0700
+--- /dev/null
++++ gdb-7.9/gdb/sh-linux-nat.c
 @@ -0,0 +1,269 @@
 +/* Low level SH interface to ptrace, for GDB when running native.
 +   Copyright (C) 2002, 2004 Free Software Foundation, Inc.
@@ -949,10 +949,10 @@ Index: gdb-7.5/gdb/sh-linux-nat.c
 +  /* Register the target.  */
 +  linux_nat_add_target (t);
 +}
-Index: gdb-7.5/gdb/sh-tdep.c
+Index: gdb-7.9/gdb/sh-tdep.c
 ===================================================================
---- gdb-7.5.orig/gdb/sh-tdep.c	2012-06-08 07:24:57.000000000 -0700
-+++ gdb-7.5/gdb/sh-tdep.c	2012-09-19 14:45:09.770619943 -0700
+--- gdb-7.9.orig/gdb/sh-tdep.c
++++ gdb-7.9/gdb/sh-tdep.c
 @@ -21,6 +21,9 @@
     sac@cygnus.com.  */
  
@@ -963,7 +963,7 @@ Index: gdb-7.5/gdb/sh-tdep.c
  #include "frame.h"
  #include "frame-base.h"
  #include "frame-unwind.h"
-@@ -37,6 +40,7 @@
+@@ -35,6 +38,7 @@
  #include "arch-utils.h"
  #include "floatformat.h"
  #include "regcache.h"
@@ -971,7 +971,7 @@ Index: gdb-7.5/gdb/sh-tdep.c
  #include "doublest.h"
  #include "osabi.h"
  #include "reggroups.h"
-@@ -69,23 +73,6 @@
+@@ -67,23 +71,6 @@ static const char *const sh_cc_enum[] =
  
  static const char *sh_active_calling_convention = sh_cc_gcc;
  
@@ -995,7 +995,7 @@ Index: gdb-7.5/gdb/sh-tdep.c
  static int
  sh_is_renesas_calling_convention (struct type *func_type)
  {
-@@ -1045,7 +1032,7 @@
+@@ -1043,7 +1030,7 @@ sh_treat_as_flt_p (struct type *type)
      return 0;
    /* Otherwise if the type of that member is float, the whole type is
       treated as float.  */
@@ -1004,7 +1004,7 @@ Index: gdb-7.5/gdb/sh-tdep.c
      return 1;
    /* Otherwise it's not treated as float.  */
    return 0;
-@@ -1095,7 +1082,7 @@
+@@ -1093,7 +1080,7 @@ sh_push_dummy_call_fpu (struct gdbarch *
       in four registers available.  Loop thru args from first to last.  */
    for (argnum = 0; argnum < nargs; argnum++)
      {
@@ -1013,7 +1013,7 @@ Index: gdb-7.5/gdb/sh-tdep.c
        len = TYPE_LENGTH (type);
        val = sh_justify_value_in_reg (gdbarch, args[argnum], len);
  
-@@ -1809,7 +1796,7 @@
+@@ -1821,7 +1808,7 @@ sh_dwarf2_frame_init_reg (struct gdbarch
      reg->how = DWARF2_FRAME_REG_UNDEFINED;
  }
  
@@ -1022,7 +1022,7 @@ Index: gdb-7.5/gdb/sh-tdep.c
  sh_alloc_frame_cache (void)
  {
    struct sh_frame_cache *cache;
-@@ -1836,7 +1823,7 @@
+@@ -1848,7 +1835,7 @@ sh_alloc_frame_cache (void)
    return cache;
  }
  
@@ -1031,7 +1031,7 @@ Index: gdb-7.5/gdb/sh-tdep.c
  sh_frame_cache (struct frame_info *this_frame, void **this_cache)
  {
    struct gdbarch *gdbarch = get_frame_arch (this_frame);
-@@ -1903,9 +1890,9 @@
+@@ -1915,9 +1902,9 @@ sh_frame_cache (struct frame_info *this_
    return cache;
  }
  
@@ -1044,7 +1044,7 @@ Index: gdb-7.5/gdb/sh-tdep.c
  {
    struct gdbarch *gdbarch = get_frame_arch (this_frame);
    struct sh_frame_cache *cache = sh_frame_cache (this_frame, this_cache);
-@@ -1919,7 +1906,7 @@
+@@ -1931,7 +1918,7 @@ sh_frame_prev_register (struct frame_inf
       the current frame.  Frob regnum so that we pull the value from
       the correct place.  */
    if (regnum == gdbarch_pc_regnum (gdbarch))
@@ -1053,7 +1053,7 @@ Index: gdb-7.5/gdb/sh-tdep.c
  
    if (regnum < SH_NUM_REGS && cache->saved_regs[regnum] != -1)
      return frame_unwind_got_memory (this_frame, regnum,
-@@ -2225,8 +2212,8 @@
+@@ -2237,8 +2224,8 @@ sh_return_in_first_hidden_param_p (struc
  static struct gdbarch *
  sh_gdbarch_init (struct gdbarch_info info, struct gdbarch_list *arches)
  {
@@ -1063,8 +1063,8 @@ Index: gdb-7.5/gdb/sh-tdep.c
  
    /* SH5 is handled entirely in sh64-tdep.c.  */
    if (info.bfd_arch_info->mach == bfd_mach_sh5)
-@@ -2242,6 +2229,18 @@
-   tdep = XZALLOC (struct gdbarch_tdep);
+@@ -2254,6 +2241,18 @@ sh_gdbarch_init (struct gdbarch_info inf
+   tdep = XCNEW (struct gdbarch_tdep);
    gdbarch = gdbarch_alloc (&info, tdep);
  
 +  /* General-purpose registers.  */
@@ -1082,7 +1082,7 @@ Index: gdb-7.5/gdb/sh-tdep.c
    set_gdbarch_short_bit (gdbarch, 2 * TARGET_CHAR_BIT);
    set_gdbarch_int_bit (gdbarch, 4 * TARGET_CHAR_BIT);
    set_gdbarch_long_bit (gdbarch, 4 * TARGET_CHAR_BIT);
-@@ -2389,10 +2388,11 @@
+@@ -2404,10 +2403,11 @@ sh_gdbarch_init (struct gdbarch_info inf
        break;
      }
  
@@ -1095,10 +1095,10 @@ Index: gdb-7.5/gdb/sh-tdep.c
    frame_unwind_append_unwinder (gdbarch, &sh_stub_unwind);
    frame_unwind_append_unwinder (gdbarch, &sh_frame_unwind);
  
-Index: gdb-7.5/gdb/testsuite/gdb.asm/sh-linux.inc
+Index: gdb-7.9/gdb/testsuite/gdb.asm/sh-linux.inc
 ===================================================================
---- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ gdb-7.5/gdb/testsuite/gdb.asm/sh-linux.inc	2012-09-19 14:40:42.978609771 -0700
+--- /dev/null
++++ gdb-7.9/gdb/testsuite/gdb.asm/sh-linux.inc
 @@ -0,0 +1,78 @@
 +# You'll find a bunch of nop opcodes in the below macros.  They are
 +# there to keep the code correctly aligned.  Be careful to maintain
@@ -1178,10 +1178,10 @@ Index: gdb-7.5/gdb/testsuite/gdb.asm/sh-linux.inc
 +\name:
 +	.long	\value
 +	.endm
-Index: gdb-7.5/gdb/testsuite/gdb.asm/sh.inc
+Index: gdb-7.9/gdb/testsuite/gdb.asm/sh.inc
 ===================================================================
---- gdb-7.5.orig/gdb/testsuite/gdb.asm/sh.inc	2012-04-16 01:02:09.000000000 -0700
-+++ gdb-7.5/gdb/testsuite/gdb.asm/sh.inc	2012-09-19 14:40:42.978609771 -0700
+--- gdb-7.9.orig/gdb/testsuite/gdb.asm/sh.inc
++++ gdb-7.9/gdb/testsuite/gdb.asm/sh.inc
 @@ -40,9 +40,8 @@
  	mov.l   .Lconst\@,r1
  	bra	.Lafterconst\@
@@ -1193,11 +1193,11 @@ Index: gdb-7.5/gdb/testsuite/gdb.asm/sh.inc
  	.long	\subr
  	.align	1
  .Lafterconst\@:
-Index: gdb-7.5/gdb/testsuite/gdb.asm/asm-source.exp
+Index: gdb-7.9/gdb/testsuite/gdb.asm/asm-source.exp
 ===================================================================
---- gdb-7.5.orig/gdb/testsuite/gdb.asm/asm-source.exp	2012-06-25 13:11:43.000000000 -0700
-+++ gdb-7.5/gdb/testsuite/gdb.asm/asm-source.exp	2012-09-19 14:40:42.978609771 -0700
-@@ -108,6 +108,11 @@
+--- gdb-7.9.orig/gdb/testsuite/gdb.asm/asm-source.exp
++++ gdb-7.9/gdb/testsuite/gdb.asm/asm-source.exp
+@@ -113,6 +113,11 @@ switch -glob -- [istarget] {
              append link-flags " -m elf32ppc"
          }
      }
@@ -1209,25 +1209,24 @@ Index: gdb-7.5/gdb/testsuite/gdb.asm/asm-source.exp
      "sh*-*-*" {
          set asm-arch sh
  	set debug-flags "-gdwarf-2"
-Index: gdb-7.5/gdb/testsuite/gdb.base/sigall.c
+Index: gdb-7.9/gdb/testsuite/gdb.base/sigall.c
 ===================================================================
---- gdb-7.5.orig/gdb/testsuite/gdb.base/sigall.c	2012-02-28 02:24:15.000000000 -0800
-+++ gdb-7.5/gdb/testsuite/gdb.base/sigall.c	2012-09-19 14:42:02.202612808 -0700
-@@ -5,6 +5,10 @@
- /* Signal handlers, we set breakpoints in them to make sure that the
-    signals really get delivered.  */
+--- gdb-7.9.orig/gdb/testsuite/gdb.base/sigall.c
++++ gdb-7.9/gdb/testsuite/gdb.base/sigall.c
+@@ -1,6 +1,9 @@
+ #include <signal.h>
+ #include <unistd.h>
  
 +#ifdef __sh__
 +#define signal(a,b)    /* Signals not supported on this target - make them go away */
 +#endif
-+
- #ifdef PROTOTYPES
- void
- handle_ABRT (int sig)
-Index: gdb-7.5/gdb/testsuite/gdb.base/signals.c
+ 
+ /* Signal handlers, we set breakpoints in them to make sure that the
+    signals really get delivered.  */
+Index: gdb-7.9/gdb/testsuite/gdb.base/signals.c
 ===================================================================
---- gdb-7.5.orig/gdb/testsuite/gdb.base/signals.c	2012-02-28 02:24:15.000000000 -0800
-+++ gdb-7.5/gdb/testsuite/gdb.base/signals.c	2012-09-19 14:43:22.034615831 -0700
+--- gdb-7.9.orig/gdb/testsuite/gdb.base/signals.c
++++ gdb-7.9/gdb/testsuite/gdb.base/signals.c
 @@ -3,6 +3,10 @@
  #include <signal.h>
  #include <unistd.h>
@@ -1239,10 +1238,10 @@ Index: gdb-7.5/gdb/testsuite/gdb.base/signals.c
  
  static int count = 0;
  
-Index: gdb-7.5/gdb/testsuite/gdb.base/annota1.c
+Index: gdb-7.9/gdb/testsuite/gdb.base/annota1.c
 ===================================================================
---- gdb-7.5.orig/gdb/testsuite/gdb.base/annota1.c	2012-02-28 14:40:48.000000000 -0800
-+++ gdb-7.5/gdb/testsuite/gdb.base/annota1.c	2012-09-19 14:42:42.074614308 -0700
+--- gdb-7.9.orig/gdb/testsuite/gdb.base/annota1.c
++++ gdb-7.9/gdb/testsuite/gdb.base/annota1.c
 @@ -1,6 +1,9 @@
  #include <stdio.h>
  #include <signal.h>
@@ -1251,12 +1250,12 @@ Index: gdb-7.5/gdb/testsuite/gdb.base/annota1.c
 +#define signal(a,b)    /* Signals not supported on this target - make them go away */
 +#endif
  
- #ifdef PROTOTYPES
  void
-Index: gdb-7.5/gdb/testsuite/gdb.base/annota3.c
+ handle_USR1 (int sig)
+Index: gdb-7.9/gdb/testsuite/gdb.base/annota3.c
 ===================================================================
---- gdb-7.5.orig/gdb/testsuite/gdb.base/annota3.c	2012-02-28 14:40:48.000000000 -0800
-+++ gdb-7.5/gdb/testsuite/gdb.base/annota3.c	2012-09-19 14:43:54.410617081 -0700
+--- gdb-7.9.orig/gdb/testsuite/gdb.base/annota3.c
++++ gdb-7.9/gdb/testsuite/gdb.base/annota3.c
 @@ -1,6 +1,10 @@
  #include <stdio.h>
  #include <signal.h>
@@ -1266,12 +1265,12 @@ Index: gdb-7.5/gdb/testsuite/gdb.base/annota3.c
 +#endif
 +
  
- #ifdef PROTOTYPES
  void
-Index: gdb-7.5/gdb/config/sh/xm-linux.h
+ handle_USR1 (int sig)
+Index: gdb-7.9/gdb/config/sh/xm-linux.h
 ===================================================================
---- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ gdb-7.5/gdb/config/sh/xm-linux.h	2012-09-19 14:40:42.994609807 -0700
+--- /dev/null
++++ gdb-7.9/gdb/config/sh/xm-linux.h
 @@ -0,0 +1,32 @@
 +/* Native support for GNU/Linux, for GDB, the GNU debugger.
 +   Copyright (C) 2000 Free Software Foundation, Inc.
@@ -1305,10 +1304,10 @@ Index: gdb-7.5/gdb/config/sh/xm-linux.h
 +#include <unistd.h>
 +
 +#endif	/* #ifndef XM_LINUX_H */
-Index: gdb-7.5/gdb/config/sh/nm-linux.h
+Index: gdb-7.9/gdb/config/sh/nm-linux.h
 ===================================================================
---- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ gdb-7.5/gdb/config/sh/nm-linux.h	2012-09-19 14:40:42.994609807 -0700
+--- /dev/null
++++ gdb-7.9/gdb/config/sh/nm-linux.h
 @@ -0,0 +1,54 @@
 +/* Native-dependent definitions for SuperH running Linux, for GDB.
 +   Copyright 2004 Free Software Foundation, Inc.
@@ -1364,10 +1363,10 @@ Index: gdb-7.5/gdb/config/sh/nm-linux.h
 +#define CANNOT_STORE_REGISTER(regno) cannot_store_register (regno)
 +
 +#endif /* NM_LINUX_H */
-Index: gdb-7.5/gdb/config/sh/linux.mh
+Index: gdb-7.9/gdb/config/sh/linux.mh
 ===================================================================
---- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ gdb-7.5/gdb/config/sh/linux.mh	2012-09-19 14:40:42.994609807 -0700
+--- /dev/null
++++ gdb-7.9/gdb/config/sh/linux.mh
 @@ -0,0 +1,8 @@
 +# Host: Renesas Super-H running GNU/Linux
 +NAT_FILE= config/sh/nm-linux.h
