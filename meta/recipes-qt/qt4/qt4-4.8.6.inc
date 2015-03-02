@@ -22,6 +22,7 @@ SRC_URI = "http://download.qt-project.org/official_releases/qt/4.8/${PV}/qt-ever
            file://0019-Fixes-for-gcc-4.7.0-particularly-on-qemux86.patch \
            file://0027-tools.pro-disable-qmeegographicssystemhelper.patch \
            file://0028-Don-t-crash-on-broken-GIF-images.patch \
+           file://0034-Fix-a-division-by-zero-when-processing-malformed-BMP.patch \
            file://g++.conf \
            file://linux.conf \
            "
