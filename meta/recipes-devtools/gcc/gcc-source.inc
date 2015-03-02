@@ -19,6 +19,7 @@ STAMPCLEAN = "${STAMPS_DIR}/work-shared/gcc-[0-9]*-*"
 
 INHIBIT_DEFAULT_DEPS = "1"
 DEPENDS = ""
+PACKAGES = ""
 
 python do_preconfigure () {
     import subprocess
