@@ -94,9 +94,26 @@ def extra_path_elements(d):
 
 PATH_prepend = "${@extra_path_elements(d)}"
 
+def get_lic_checksum_file_list(d):
+    filelist = []
+    lic_files = d.getVar("LIC_FILES_CHKSUM", True) or ''
+
+    urls = lic_files.split()
+    for url in urls:
+        # We only care about items that are absolute paths since
+        # any others should be covered by SRC_URI.
+        try:
+            path = bb.fetch.decodeurl(url)[2]
+            if path[0] == '/':
+                filelist.append(path + ":" + str(os.path.exists(path)))
+        except bb.fetch.MalformedUrl:
+            raise bb.build.FuncFailed(d.getVar('PN', True) + ": LIC_FILES_CHKSUM contains an invalid URL: " + url)
+    return " ".join(filelist)
+
 addtask fetch
 do_fetch[dirs] = "${DL_DIR}"
 do_fetch[file-checksums] = "${@bb.fetch.get_checksum_file_list(d)}"
+do_fetch[file-checksums] += " ${@get_lic_checksum_file_list(d)}"
 do_fetch[vardeps] += "SRCREV"
 python base_do_fetch() {
 
