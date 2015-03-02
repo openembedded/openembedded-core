@@ -14,6 +14,7 @@ LINUX_VERSION ?= "3.14.29"
 PV = "${LINUX_VERSION}+git${SRCPV}"
 
 KMETA = "meta"
+KCONF_BSP_AUDIT_LEVEL = "2"
 
 LINUX_KERNEL_TYPE = "preempt-rt"
 

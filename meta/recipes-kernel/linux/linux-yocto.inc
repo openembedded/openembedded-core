@@ -28,6 +28,7 @@ SRCREV_FORMAT ?= "meta_machine"
 #   1: report options that are specified, but not in the final config
 #   2: report options that are not hardware related, but set by a BSP
 KCONF_AUDIT_LEVEL ?= "1"
+KCONF_BSP_AUDIT_LEVEL ?= "0"
 
 LINUX_VERSION_EXTENSION ?= "-yocto-${LINUX_KERNEL_TYPE}"
 

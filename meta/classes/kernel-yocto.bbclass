@@ -265,6 +265,7 @@ python do_kernel_configcheck() {
     ret, result = oe.utils.getstatusoutput("%s%s" % (pathprefix, cmd))
 
     config_check_visibility = int(d.getVar( "KCONF_AUDIT_LEVEL", True ) or 0)
+    bsp_check_visibility = int(d.getVar( "KCONF_BSP_AUDIT_LEVEL", True ) or 0)
 
     # if config check visibility is non-zero, report dropped configuration values
     mismatch_file = "${S}/" + kmeta + "/" + "mismatch.cfg"
@@ -283,13 +284,13 @@ python do_kernel_configcheck() {
                 bb.warn( "[kernel config]: BSP specified non-hw configuration:\n\n%s" % results)
 
     bsp_desc = "${S}/" + kmeta + "/" + "top_tgt"
-    if os.path.exists(bsp_desc):
+    if os.path.exists(bsp_desc) and bsp_check_visibility > 1:
         with open (bsp_desc, "r") as myfile:
-                bsp_tgt = myfile.read()
-                m = re.match("^(.*)scratch.obj(.*)$", bsp_tgt)
-                if not m is None:
-                    bb.warn( "[kernel]: An auto generated BSP description was used, this normally indicates a misconfiguration.\n" +
-                             "Check that your machine (%s) has an associated kernel description." % "${MACHINE}" )
+            bsp_tgt = myfile.read()
+            m = re.match("^(.*)scratch.obj(.*)$", bsp_tgt)
+            if not m is None:
+                bb.warn( "[kernel]: An auto generated BSP description was used, this normally indicates a misconfiguration.\n" +
+                         "Check that your machine (%s) has an associated kernel description." % "${MACHINE}" )
 }
 
 # Ensure that the branches (BSP and meta) are on the locations specified by

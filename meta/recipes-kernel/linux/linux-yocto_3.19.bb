@@ -28,6 +28,7 @@ LINUX_VERSION ?= "3.19"
 PV = "${LINUX_VERSION}+git${SRCPV}"
 
 KMETA = "meta"
+KCONF_BSP_AUDIT_LEVEL = "2"
 
 COMPATIBLE_MACHINE = "qemuarm|qemuarm64|qemux86|qemuppc|qemumips|qemumips64|qemux86-64"
 
