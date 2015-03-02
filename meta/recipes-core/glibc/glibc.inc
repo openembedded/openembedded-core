@@ -15,7 +15,7 @@ def get_optimization(d):
     if bb.utils.contains("SELECTED_OPTIMIZATION", "-O0", "x", "", d) == "x":
         bb.note("glibc can't be built with -O0, -O2 will be used instead.")
         return selected_optimization.replace("-O0", "-O2")
-    elif bb.utils.contains("SELECTED_OPTIMIZATION", "-O0", "x", "", d) == "x":
+    elif bb.utils.contains("SELECTED_OPTIMIZATION", "-Os", "x", "", d) == "x":
         bb.note("glibc can't be built with -Os, -Os -Wno-error will be used instead.")
         return selected_optimization.replace("-Os", "-Os -Wno-error")
     return selected_optimization
