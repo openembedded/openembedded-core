@@ -1,4 +1,8 @@
-Upstream-Status: Inappropriate [distribution: codesourcery]
+From e02e119b278c3f404e97669e7180cac944134c91 Mon Sep 17 00:00:00 2001
+From: Khem Raj <raj.khem@gmail.com>
+Date: Mon, 2 Mar 2015 01:41:04 +0000
+Subject: [PATCH 09/13] Upstream-Status: Inappropriate [distribution:
+ codesourcery]
 
 Patch originally created by Mark Hatle, forward-ported to
 binutils 2.21 by Scott Garman.
@@ -51,11 +55,23 @@ Code Merged from Sourcery G++ binutils 2.19 - 4.4-277
 
 Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
 Signed-off-by: Scott Garman <scott.a.garman@intel.com>
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+---
+ ld/config.in    |  3 +++
+ ld/configure    | 14 ++++++++++++++
+ ld/configure.ac | 10 ++++++++++
+ ld/ld.h         |  8 ++++++++
+ ld/ld.texinfo   | 12 ++++++++++++
+ ld/ldfile.c     | 17 +++++++++++++++++
+ ld/ldlex.h      |  2 ++
+ ld/ldmain.c     |  2 ++
+ ld/lexsup.c     | 16 ++++++++++++++++
+ 9 files changed, 84 insertions(+)
 
-Index: binutils-2.24/ld/config.in
-===================================================================
---- binutils-2.24.orig/ld/config.in	2013-12-15 11:46:17.000000000 -0800
-+++ binutils-2.24/ld/config.in	2013-12-15 11:46:59.810435651 -0800
+diff --git a/ld/config.in b/ld/config.in
+index 2ab4844..766d23c 100644
+--- a/ld/config.in
++++ b/ld/config.in
 @@ -11,6 +11,9 @@
     language is requested. */
  #undef ENABLE_NLS
@@ -66,11 +82,11 @@ Index: binutils-2.24/ld/config.in
  /* Additional extension a shared object might have. */
  #undef EXTRA_SHLIB_EXTENSION
  
-Index: binutils-2.24/ld/configure
-===================================================================
---- binutils-2.24.orig/ld/configure	2013-12-15 11:46:17.000000000 -0800
-+++ binutils-2.24/ld/configure	2013-12-15 11:46:59.810435651 -0800
-@@ -777,6 +777,7 @@
+diff --git a/ld/configure b/ld/configure
+index 2fbaebf..5726a08 100755
+--- a/ld/configure
++++ b/ld/configure
+@@ -787,6 +787,7 @@ with_lib_path
  enable_targets
  enable_64_bit_bfd
  with_sysroot
@@ -78,8 +94,8 @@ Index: binutils-2.24/ld/configure
  enable_gold
  enable_got
  enable_werror
-@@ -1433,6 +1434,8 @@
- 			  (and sometimes confusing) to the casual installer
+@@ -1443,6 +1444,8 @@ Optional Features:
+   --disable-largefile     omit support for large files
    --enable-targets        alternative target configurations
    --enable-64-bit-bfd     64-bit support (on hosts with narrower word sizes)
 +  --enable-poison-system-directories
@@ -87,7 +103,7 @@ Index: binutils-2.24/ld/configure
    --enable-gold[=ARG]     build gold [ARG={default,yes,no}]
    --enable-got=<type>     GOT handling scheme (target, single, negative,
                            multigot)
-@@ -4345,7 +4348,18 @@
+@@ -16323,7 +16326,18 @@ else
  fi
  
  
@@ -106,11 +122,11 @@ Index: binutils-2.24/ld/configure
  
  # Check whether --enable-got was given.
  if test "${enable_got+set}" = set; then :
-Index: binutils-2.24/ld/configure.ac
-===================================================================
---- binutils-2.24.orig/ld/configure.ac	2013-12-15 11:46:17.000000000 -0800
-+++ binutils-2.24/ld/configure.ac	2013-12-15 11:46:59.810435651 -0800
-@@ -87,6 +87,16 @@
+diff --git a/ld/configure.ac b/ld/configure.ac
+index 1bddfc9..e9edb7f 100644
+--- a/ld/configure.ac
++++ b/ld/configure.ac
+@@ -94,6 +94,16 @@ AC_SUBST(use_sysroot)
  AC_SUBST(TARGET_SYSTEM_ROOT)
  AC_SUBST(TARGET_SYSTEM_ROOT_DEFINE)
  
@@ -127,11 +143,53 @@ Index: binutils-2.24/ld/configure.ac
  dnl Use --enable-gold to decide if this linker should be the default.
  dnl "install_as_default" is set to false if gold is the default linker.
  dnl "installed_linker" is the installed BFD linker name.
-Index: binutils-2.24/ld/ldfile.c
-===================================================================
---- binutils-2.24.orig/ld/ldfile.c	2013-12-15 11:46:17.000000000 -0800
-+++ binutils-2.24/ld/ldfile.c	2013-12-15 11:46:59.813768989 -0800
-@@ -116,6 +116,23 @@
+diff --git a/ld/ld.h b/ld/ld.h
+index f773ce7..adba0f6 100644
+--- a/ld/ld.h
++++ b/ld/ld.h
+@@ -161,6 +161,14 @@ typedef struct {
+   /* If TRUE we'll just print the default output on stdout.  */
+   bfd_boolean print_output_format;
+ 
++  /* If TRUE (the default) warn for uses of system directories when
++     cross linking.  */
++  bfd_boolean poison_system_directories;
++
++  /* If TRUE (default FALSE) give an error for uses of system
++     directories when cross linking instead of a warning.  */
++  bfd_boolean error_poison_system_directories;
++
+   /* Big or little endian as set on command line.  */
+   enum endian_enum endian;
+ 
+diff --git a/ld/ld.texinfo b/ld/ld.texinfo
+index 502582c..dae168a 100644
+--- a/ld/ld.texinfo
++++ b/ld/ld.texinfo
+@@ -2212,6 +2212,18 @@ string identifying the original linked file does not change.
+ 
+ Passing @code{none} for @var{style} disables the setting from any
+ @code{--build-id} options earlier on the command line.
++
++@kindex --no-poison-system-directories
++@item --no-poison-system-directories
++Do not warn for @option{-L} options using system directories such as
++@file{/usr/lib} when cross linking.  This option is intended for use
++in chroot environments when such directories contain the correct
++libraries for the target system rather than the host.
++
++@kindex --error-poison-system-directories
++@item --error-poison-system-directories
++Give an error instead of a warning for @option{-L} options using
++system directories when cross linking.
+ @end table
+ 
+ @c man end
+diff --git a/ld/ldfile.c b/ld/ldfile.c
+index 782ed7f..19a9ab4 100644
+--- a/ld/ldfile.c
++++ b/ld/ldfile.c
+@@ -114,6 +114,23 @@ ldfile_add_library_path (const char *name, bfd_boolean cmdline)
      new_dirs->name = concat (ld_sysroot, name + 1, (const char *) NULL);
    else
      new_dirs->name = xstrdup (name);
@@ -155,30 +213,24 @@ Index: binutils-2.24/ld/ldfile.c
  }
  
  /* Try to open a BFD for a lang_input_statement.  */
-Index: binutils-2.24/ld/ld.h
-===================================================================
---- binutils-2.24.orig/ld/ld.h	2013-12-15 11:46:17.000000000 -0800
-+++ binutils-2.24/ld/ld.h	2013-12-15 11:46:59.813768989 -0800
-@@ -180,6 +180,14 @@
-   /* If TRUE we'll just print the default output on stdout.  */
-   bfd_boolean print_output_format;
+diff --git a/ld/ldlex.h b/ld/ldlex.h
+index e3e9b24..29487a3 100644
+--- a/ld/ldlex.h
++++ b/ld/ldlex.h
+@@ -140,6 +140,8 @@ enum option_values
+   OPTION_IGNORE_UNRESOLVED_SYMBOL,
+   OPTION_PUSH_STATE,
+   OPTION_POP_STATE,
++  OPTION_NO_POISON_SYSTEM_DIRECTORIES,
++  OPTION_ERROR_POISON_SYSTEM_DIRECTORIES,
+ };
  
-+  /* If TRUE (the default) warn for uses of system directories when
-+     cross linking.  */
-+  bfd_boolean poison_system_directories;
-+
-+  /* If TRUE (default FALSE) give an error for uses of system
-+     directories when cross linking instead of a warning.  */
-+  bfd_boolean error_poison_system_directories;
-+
-   /* Big or little endian as set on command line.  */
-   enum endian_enum endian;
- 
-Index: binutils-2.24/ld/ldmain.c
-===================================================================
---- binutils-2.24.orig/ld/ldmain.c	2013-12-15 11:46:17.000000000 -0800
-+++ binutils-2.24/ld/ldmain.c	2013-12-15 11:48:12.087101740 -0800
-@@ -266,6 +266,8 @@
+ /* The initial parser states.  */
+diff --git a/ld/ldmain.c b/ld/ldmain.c
+index 818d108..54c49f2 100644
+--- a/ld/ldmain.c
++++ b/ld/ldmain.c
+@@ -266,6 +266,8 @@ main (int argc, char **argv)
    command_line.warn_mismatch = TRUE;
    command_line.warn_search_mismatch = TRUE;
    command_line.check_section_addresses = -1;
@@ -187,33 +239,10 @@ Index: binutils-2.24/ld/ldmain.c
  
    /* We initialize DEMANGLING based on the environment variable
       COLLECT_NO_DEMANGLE.  The gcc collect2 program will demangle the
-Index: binutils-2.24/ld/ld.texinfo
-===================================================================
---- binutils-2.24.orig/ld/ld.texinfo	2013-12-15 11:46:17.000000000 -0800
-+++ binutils-2.24/ld/ld.texinfo	2013-12-15 11:46:59.813768989 -0800
-@@ -2175,6 +2175,18 @@
- 
- Passing @code{none} for @var{style} disables the setting from any
- @code{--build-id} options earlier on the command line.
-+
-+@kindex --no-poison-system-directories
-+@item --no-poison-system-directories
-+Do not warn for @option{-L} options using system directories such as
-+@file{/usr/lib} when cross linking.  This option is intended for use
-+in chroot environments when such directories contain the correct
-+libraries for the target system rather than the host.
-+
-+@kindex --error-poison-system-directories
-+@item --error-poison-system-directories
-+Give an error instead of a warning for @option{-L} options using
-+system directories when cross linking.
- @end table
- 
- @c man end
-Index: binutils-2.24/ld/lexsup.c
-===================================================================
---- binutils-2.24.orig/ld/lexsup.c	2013-12-15 11:46:17.000000000 -0800
-+++ binutils-2.24/ld/lexsup.c	2013-12-15 11:49:28.950434490 -0800
+diff --git a/ld/lexsup.c b/ld/lexsup.c
+index 4812c97..21b49df 100644
+--- a/ld/lexsup.c
++++ b/ld/lexsup.c
 @@ -513,6 +513,14 @@ static const struct ld_option ld_options[] =
    { {"pop-state", no_argument, NULL, OPTION_POP_STATE},
      '\0', NULL, N_("Pop state of flags governing input file handling"),
@@ -244,16 +273,6 @@ Index: binutils-2.24/ld/lexsup.c
  	}
      }
  
-Index: binutils-2.24/ld/ldlex.h
-===================================================================
---- binutils-2.24.orig/ld/ldlex.h	2013-12-15 11:46:17.000000000 -0800
-+++ binutils-2.24/ld/ldlex.h	2013-12-15 11:47:43.230435299 -0800
-@@ -140,6 +140,8 @@ enum option_values
-   OPTION_IGNORE_UNRESOLVED_SYMBOL,
-   OPTION_PUSH_STATE,
-   OPTION_POP_STATE,
-+  OPTION_NO_POISON_SYSTEM_DIRECTORIES,
-+  OPTION_ERROR_POISON_SYSTEM_DIRECTORIES,
- };
- 
- /* The initial parser states.  */
+-- 
+2.1.4
+

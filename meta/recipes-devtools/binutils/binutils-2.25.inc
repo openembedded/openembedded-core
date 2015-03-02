@@ -10,22 +10,30 @@ LIC_FILES_CHKSUM="\
     file://bfd/COPYING;md5=d32239bcb673463ab874e80d47fae504\
     "
 
-SRC_URI = "\
-     ${GNU_MIRROR}/binutils/binutils-${PV}.tar.bz2 \
-     file://binutils-uclibc-100-uclibc-conf.patch \
-     file://binutils-uclibc-300-001_ld_makefile_patch.patch \
-     file://binutils-uclibc-300-006_better_file_error.patch \
-     file://binutils-uclibc-300-012_check_ldrunpath_length.patch \
-     file://binutils-uclibc-gas-needs-libm.patch \
-     file://libtool-2.4-update.patch \
-     file://libiberty_path_fix.patch \
-     file://binutils-poison.patch \
-     file://libtool-rpath-fix.patch \
-     file://binutils-armv5e.patch \
-     file://mips64-default-ld-emulation.patch \
-     file://binutils-xlp-support.patch \
-     file://0001-Fix-an-internal-error-in-do_print_to_mapfile-seen-wi.patch \
-     "
-SRC_URI[md5sum] = "d9f3303f802a5b6b0bb73a335ab89d66"
-SRC_URI[sha256sum] = "22defc65cfa3ef2a3395faaea75d6331c6e62ea5dfacfed3e2ec17b08c882923"
+def binutils_branch_version(d):
+    pvsplit = d.getVar('PV', True).split('.')
+    return pvsplit[0] + "_" + pvsplit[1]
 
+BINUPV = "${@binutils_branch_version(d)}"
+
+SRCREV = "f2df1e49400f9e2d8d63a5d0fec9bf8c5c2b3342"
+SRC_URI = "\
+     git://sourceware.org/git/binutils-gdb.git;branch=binutils-${BINUPV}-branch;protocol=git \
+     file://0002-configure-widen-the-regexp-for-SH-architectures.patch \
+     file://0003-Point-scripts-location-to-libdir.patch \
+     file://0004-Only-generate-an-RPATH-entry-if-LD_RUN_PATH-is-not-e.patch \
+     file://0005-Explicitly-link-with-libm-on-uclibc.patch \
+     file://0006-Use-libtool-2.4.patch \
+     file://0007-Add-the-armv5e-architecture-to-binutils.patch \
+     file://0008-don-t-let-the-distro-compiler-point-to-the-wrong-ins.patch \
+     file://0009-Upstream-Status-Inappropriate-distribution-codesourc.patch \
+     file://0010-Fix-rpath-in-libtool-when-sysroot-is-enabled.patch \
+     file://0011-Change-default-emulation-for-mips64-linux.patch \
+     file://0012-Add-XLP-instructions-support.patch \
+     file://0013-Fix-an-internal-error-in-do_print_to_mapfile-seen-wi.patch \
+     "
+S  = "${WORKDIR}/git"
+
+do_configure_prepend () {
+        rm -rf ${S}/gdb ${S}/libdecnumber ${S}/readline ${S}/sim
+}

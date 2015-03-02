@@ -1,17 +1,27 @@
+From f71ecf251f84b4bbc9b7a832d5cd4a8bae95d83b Mon Sep 17 00:00:00 2001
+From: Khem Raj <raj.khem@gmail.com>
+Date: Mon, 2 Mar 2015 01:58:54 +0000
+Subject: [PATCH 01/13] Generate relocatable SDKs
+
+This patch will modify the ELF linker scripts so that the crosssdk
+linker will generate binaries with a 4096 bytes PT_INTERP section. When the binaries
+will be relocated, at SDK install time, the interpreter path can be easily
+changed by the relocating script.
+
 Upstream-Status: Inappropriate [SDK specific]
 
-This patch will modify the ELF linker scripts so that the crosssdk linker will
-generate binaries with a 4096 bytes PT_INTERP section. When the binaries will
-be relocated, at SDK install time, the interpreter path can be easily changed
-by the relocating script.
-
 Signed-off-by: Laurentiu Palcu <laurentiu.palcu@intel.com>
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+---
+ ld/genscripts.sh      | 3 +++
+ ld/scripttempl/elf.sc | 4 ++--
+ 2 files changed, 5 insertions(+), 2 deletions(-)
 
-Index: binutils_git/ld/genscripts.sh
-===================================================================
---- binutils_git.orig/ld/genscripts.sh	2012-11-21 11:58:23.325441925 +0200
-+++ binutils_git/ld/genscripts.sh	2012-11-21 12:03:42.106815400 +0200
-@@ -290,6 +290,7 @@
+diff --git a/ld/genscripts.sh b/ld/genscripts.sh
+index 499607a..075dd04 100755
+--- a/ld/genscripts.sh
++++ b/ld/genscripts.sh
+@@ -277,6 +277,7 @@ DATA_ALIGNMENT_u="${DATA_ALIGNMENT_u-${DATA_ALIGNMENT_r}}"
  LD_FLAG=r
  DATA_ALIGNMENT=${DATA_ALIGNMENT_r}
  DEFAULT_DATA_ALIGNMENT="ALIGN(${SEGMENT_SIZE})"
@@ -19,7 +29,7 @@ Index: binutils_git/ld/genscripts.sh
  ( echo "/* Script for ld -r: link without relocation */"
    . ${CUSTOMIZER_SCRIPT}
    . ${srcdir}/scripttempl/${SCRIPT_NAME}.sc
-@@ -298,10 +299,12 @@
+@@ -285,10 +286,12 @@ DEFAULT_DATA_ALIGNMENT="ALIGN(${SEGMENT_SIZE})"
  LD_FLAG=u
  DATA_ALIGNMENT=${DATA_ALIGNMENT_u}
  CONSTRUCTING=" "
@@ -32,11 +42,11 @@ Index: binutils_git/ld/genscripts.sh
  
  LD_FLAG=
  DATA_ALIGNMENT=${DATA_ALIGNMENT_}
-Index: binutils_git/ld/scripttempl/elf.sc
-===================================================================
---- binutils_git.orig/ld/scripttempl/elf.sc	2012-11-21 12:02:26.800377384 +0200
-+++ binutils_git/ld/scripttempl/elf.sc	2012-11-21 12:04:16.166109621 +0200
-@@ -124,8 +124,8 @@
+diff --git a/ld/scripttempl/elf.sc b/ld/scripttempl/elf.sc
+index 4368fd9..9f01e8c 100644
+--- a/ld/scripttempl/elf.sc
++++ b/ld/scripttempl/elf.sc
+@@ -131,8 +131,8 @@ if test -n "${COMMONPAGESIZE}"; then
    DATA_SEGMENT_END=". = DATA_SEGMENT_END (.);"
    DATA_SEGMENT_RELRO_END=". = DATA_SEGMENT_RELRO_END (${SEPARATE_GOTPLT-0}, .);"
  fi
@@ -47,3 +57,6 @@ Index: binutils_git/ld/scripttempl/elf.sc
  fi
  if test -z "$PLT"; then
    IPLT=".iplt         ${RELOCATING-0} : { *(.iplt) }"
+-- 
+2.1.4
+
