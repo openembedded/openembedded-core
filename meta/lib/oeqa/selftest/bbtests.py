@@ -177,3 +177,14 @@ class BitbakeTests(oeSelfTest):
 	manver = re.search("NOTE: recipe xcursor-transparent-theme-(.*?): task do_unpack: Started", result.output)
 	continuepos = result.output.find('NOTE: recipe xcursor-transparent-theme-%s: task do_unpack: Started' % manver.group(1))
 	self.assertLess(errorpos,continuepos)
+
+    @testcase(1119)
+    def test_non_gplv3(self):
+        data = 'INCOMPATIBLE_LICENSE = "GPLv3"'
+        conf = os.path.join(self.builddir, 'conf/local.conf')
+        ftools.append_file(conf ,data)
+        result = bitbake('readline', ignore_status=True)
+        self.assertEqual(result.status, 0)
+        self.assertFalse(os.path.isfile(os.path.join(self.builddir, 'tmp/deploy/licenses/readline/generic_GPLv3')))
+        self.assertTrue(os.path.isfile(os.path.join(self.builddir, 'tmp/deploy/licenses/readline/generic_GPLv2')))
+        ftools.remove_from_file(conf ,data)
