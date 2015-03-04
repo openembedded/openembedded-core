@@ -3,26 +3,11 @@ Upstream-Status: Pending
 
 Signed-off-by: Saul Wold <sgw@linux.intel.com>
 
-Index: wget-1.12/po/Makefile.in.in
-===================================================================
---- wget-1.12.orig/po/Makefile.in.in	2009-09-04 09:31:54.000000000 -0700
-+++ wget-1.12/po/Makefile.in.in	2011-10-19 20:32:53.714812160 -0700
-@@ -8,8 +8,8 @@
- # Please note that the actual code of GNU gettext is covered by the GNU
- # General Public License and is *not* in the public domain.
- #
--# Origin: gettext-0.17
--GETTEXT_MACRO_VERSION = 0.17
-+# Origin: gettext-0.18
-+GETTEXT_MACRO_VERSION = 0.18
- 
- PACKAGE = @PACKAGE@
- VERSION = @VERSION@
 Index: wget-1.12/configure.ac
 ===================================================================
 --- wget-1.12.orig/configure.ac	2009-09-22 09:39:49.000000000 -0700
 +++ wget-1.12/configure.ac	2011-10-19 20:32:53.714812160 -0700
-@@ -110,7 +110,7 @@
+@@ -177,7 +177,7 @@
  dnl Gettext
  dnl
  AM_GNU_GETTEXT([external],[need-ngettext])
