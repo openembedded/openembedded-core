@@ -40,6 +40,8 @@ SRC_URI = "git://anongit.freedesktop.org/systemd/systemd;branch=master;protocol=
            file://0009-sysv-generator-add-support-for-executing-scripts-und.patch \
            file://0010-Make-root-s-home-directory-configurable.patch \
            file://0011-systemd-user-avoid-using-system-auth.patch \
+           file://0001-tmpfiles-avoid-creating-duplicate-acl-entries.patch \
+           file://0002-tmpfiles-quietly-ignore-ACLs-on-unsupported-filesyst.patch \
            file://tmpfiles-pam.patch \
            file://touchscreen.rules \
            file://00-create-volatile.conf \

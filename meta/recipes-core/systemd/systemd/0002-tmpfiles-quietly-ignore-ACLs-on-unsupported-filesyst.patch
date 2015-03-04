@@ -1,0 +1,86 @@
+Upstream-Status: Backport
+Signed-off-by: Dan McGregor <dan.mcgregor@usask.ca>
+
+From 31d05181e3a34c5c0ff6314d8eca1c3b4bb29423 Mon Sep 17 00:00:00 2001
+From: Hans-Peter Deifel <hpd@hpdeifel.de>
+Date: Tue, 3 Mar 2015 00:35:08 +0100
+Subject: [PATCH 2/2] tmpfiles: quietly ignore ACLs on unsupported filesystems
+
+A warning is printed if ACLs cannot be retrieved for any reason other
+than -ENOSYS. For -ENOSYS, debug log is printed.
+
+(cherry picked from commit d873e8778c92014c02a9122852758b436fa95c0e)
+---
+ src/tmpfiles/tmpfiles.c | 36 ++++++++++++++++++++----------------
+ 1 file changed, 20 insertions(+), 16 deletions(-)
+
+diff --git a/src/tmpfiles/tmpfiles.c b/src/tmpfiles/tmpfiles.c
+index 88ba7e4..187997e 100644
+--- a/src/tmpfiles/tmpfiles.c
++++ b/src/tmpfiles/tmpfiles.c
+@@ -704,6 +704,9 @@ static int path_set_acl(const char *path, acl_type_t type, acl_t acl, bool modif
+         int r;
+         _cleanup_(acl_free_charpp) char *t = NULL;
+ 
++        /* Returns 0 for success, positive error if already warned,
++         * negative error otherwise. */
++
+         if (modify) {
+                 r = acls_for_file(path, type, acl, &dup);
+                 if (r < 0)
+@@ -731,35 +734,36 @@ static int path_set_acl(const char *path, acl_type_t type, acl_t acl, bool modif
+ 
+         r = acl_set_file(path, type, dup);
+         if (r < 0)
+-                return log_error_errno(-errno,
+-                                       "Setting %s ACL \"%s\" on %s failed: %m",
+-                                       type == ACL_TYPE_ACCESS ? "access" : "default",
+-                                       strna(t), path);
++                return -log_error_errno(errno,
++                                        "Setting %s ACL \"%s\" on %s failed: %m",
++                                        type == ACL_TYPE_ACCESS ? "access" : "default",
++                                        strna(t), path);
++
+         return 0;
+ }
+ #endif
+ 
+ static int path_set_acls(Item *item, const char *path) {
++        int r = 0;
+ #ifdef HAVE_ACL
+-        int r;
+-
+         assert(item);
+         assert(path);
+ 
+-        if (item->acl_access) {
++        if (item->acl_access)
+                 r = path_set_acl(path, ACL_TYPE_ACCESS, item->acl_access, item->force);
+-                if (r < 0)
+-                        return r;
+-        }
+ 
+-        if (item->acl_default) {
++        if (r == 0 && item->acl_default)
+                 r = path_set_acl(path, ACL_TYPE_DEFAULT, item->acl_default, item->force);
+-                if (r < 0)
+-                        return r;
+-        }
+-#endif
+ 
+-        return 0;
++        if (r > 0)
++                return -r; /* already warned */
++        else if (r == -ENOTSUP) {
++                log_debug_errno(r, "ACLs not supported by file system at %s", path);
++                return 0;
++        } else if (r < 0)
++                log_error_errno(r, "ACL operation on \"%s\" failed: %m", path);
++#endif
++        return r;
+ }
+ 
+ static int write_one_file(Item *i, const char *path) {
+-- 
+2.3.1
+
