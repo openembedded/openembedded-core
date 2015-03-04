@@ -1,6 +1,6 @@
 # Development tool - standard commands plugin
 #
-# Copyright (C) 2014 Intel Corporation
+# Copyright (C) 2014-2015 Intel Corporation
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License version 2 as
@@ -602,33 +602,33 @@ def register_commands(subparsers, context):
     parser_add.add_argument('--version', '-V', help='Version to use within recipe (PV)')
     parser_add.set_defaults(func=add)
 
-    parser_add = subparsers.add_parser('modify', help='Modify the source for an existing recipe',
+    parser_modify = subparsers.add_parser('modify', help='Modify the source for an existing recipe',
                                        description='Enables modifying the source for an existing recipe',
                                        formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-    parser_add.add_argument('recipename', help='Name for recipe to edit')
-    parser_add.add_argument('srctree', help='Path to external source tree')
-    parser_add.add_argument('--wildcard', '-w', action="store_true", help='Use wildcard for unversioned bbappend')
-    parser_add.add_argument('--extract', '-x', action="store_true", help='Extract source as well')
-    parser_add.add_argument('--same-dir', '-s', help='Build in same directory as source', action="store_true")
-    parser_add.add_argument('--branch', '-b', default="devtool", help='Name for development branch to checkout (only when using -x)')
-    parser_add.set_defaults(func=modify)
+    parser_modify.add_argument('recipename', help='Name for recipe to edit')
+    parser_modify.add_argument('srctree', help='Path to external source tree')
+    parser_modify.add_argument('--wildcard', '-w', action="store_true", help='Use wildcard for unversioned bbappend')
+    parser_modify.add_argument('--extract', '-x', action="store_true", help='Extract source as well')
+    parser_modify.add_argument('--same-dir', '-s', help='Build in same directory as source', action="store_true")
+    parser_modify.add_argument('--branch', '-b', default="devtool", help='Name for development branch to checkout (only when using -x)')
+    parser_modify.set_defaults(func=modify)
 
-    parser_add = subparsers.add_parser('extract', help='Extract the source for an existing recipe',
+    parser_extract = subparsers.add_parser('extract', help='Extract the source for an existing recipe',
                                        description='Extracts the source for an existing recipe',
                                        formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-    parser_add.add_argument('recipename', help='Name for recipe to extract the source for')
-    parser_add.add_argument('srctree', help='Path to where to extract the source tree')
-    parser_add.add_argument('--branch', '-b', default="devtool", help='Name for development branch to checkout')
-    parser_add.add_argument('--keep-temp', action="store_true", help='Keep temporary directory (for debugging)')
-    parser_add.set_defaults(func=extract)
+    parser_extract.add_argument('recipename', help='Name for recipe to extract the source for')
+    parser_extract.add_argument('srctree', help='Path to where to extract the source tree')
+    parser_extract.add_argument('--branch', '-b', default="devtool", help='Name for development branch to checkout')
+    parser_extract.add_argument('--keep-temp', action="store_true", help='Keep temporary directory (for debugging)')
+    parser_extract.set_defaults(func=extract)
 
-    parser_add = subparsers.add_parser('update-recipe', help='Apply changes from external source tree to recipe',
+    parser_update_recipe = subparsers.add_parser('update-recipe', help='Apply changes from external source tree to recipe',
                                        description='Applies changes from external source tree to a recipe (updating/adding/removing patches as necessary, or by updating SRCREV)')
-    parser_add.add_argument('recipename', help='Name of recipe to update')
-    parser_add.add_argument('--mode', '-m', choices=['patch', 'srcrev', 'auto'], default='auto', help='Update mode (where %(metavar)s is %(choices)s; default is %(default)s)', metavar='MODE')
-    parser_add.add_argument('--initial-rev', help='Starting revision for patches')
-    parser_add.add_argument('--no-remove', '-n', action="store_true", help='Don\'t remove patches, only add or update')
-    parser_add.set_defaults(func=update_recipe)
+    parser_update_recipe.add_argument('recipename', help='Name of recipe to update')
+    parser_update_recipe.add_argument('--mode', '-m', choices=['patch', 'srcrev', 'auto'], default='auto', help='Update mode (where %(metavar)s is %(choices)s; default is %(default)s)', metavar='MODE')
+    parser_update_recipe.add_argument('--initial-rev', help='Starting revision for patches')
+    parser_update_recipe.add_argument('--no-remove', '-n', action="store_true", help='Don\'t remove patches, only add or update')
+    parser_update_recipe.set_defaults(func=update_recipe)
 
     parser_status = subparsers.add_parser('status', help='Show workspace status',
                                           description='Lists recipes currently in your workspace and the paths to their respective external source trees',
