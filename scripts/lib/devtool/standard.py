@@ -556,28 +556,42 @@ def status(args, config, basepath, workspace):
 
 def reset(args, config, basepath, workspace):
     import bb.utils
-    if not args.recipename in workspace:
-        logger.error("no recipe named %s in your workspace" % args.recipename)
+    if args.recipename:
+        if args.all:
+            logger.error("Recipe cannot be specified if -a/--all is used")
+            return -1
+        elif not args.recipename in workspace:
+            logger.error("no recipe named %s in your workspace" % args.recipename)
+            return -1
+    elif not args.all:
+        logger.error("Recipe must be specified, or specify -a/--all to reset all recipes")
         return -1
 
-    if not args.no_clean:
-        logger.info('Cleaning sysroot for recipe %s...' % args.recipename)
-        exec_build_env_command(config.init_path, basepath, 'bitbake -c clean %s' % args.recipename)
+    if args.all:
+        recipes = workspace
+    else:
+        recipes = [args.recipename]
 
-    _check_preserve(config, args.recipename)
+    for pn in recipes:
+        if not args.no_clean:
+            logger.info('Cleaning sysroot for recipe %s...' % pn)
+            exec_build_env_command(config.init_path, basepath, 'bitbake -c clean %s' % pn)
 
-    preservepath = os.path.join(config.workspace_path, 'attic', args.recipename)
-    def preservedir(origdir):
-        if os.path.exists(origdir):
-            for fn in os.listdir(origdir):
-                logger.warn('Preserving %s in %s' % (fn, preservepath))
-                bb.utils.mkdirhier(preservepath)
-                shutil.move(os.path.join(origdir, fn), os.path.join(preservepath, fn))
-            os.rmdir(origdir)
+        _check_preserve(config, pn)
 
-    preservedir(os.path.join(config.workspace_path, 'recipes', args.recipename))
-    # We don't automatically create this dir next to appends, but the user can
-    preservedir(os.path.join(config.workspace_path, 'appends', args.recipename))
+        preservepath = os.path.join(config.workspace_path, 'attic', pn)
+        def preservedir(origdir):
+            if os.path.exists(origdir):
+                for fn in os.listdir(origdir):
+                    logger.warn('Preserving %s in %s' % (fn, preservepath))
+                    bb.utils.mkdirhier(preservepath)
+                    shutil.move(os.path.join(origdir, fn), os.path.join(preservepath, fn))
+                os.rmdir(origdir)
+
+        preservedir(os.path.join(config.workspace_path, 'recipes', pn))
+        # We don't automatically create this dir next to appends, but the user can
+        preservedir(os.path.join(config.workspace_path, 'appends', pn))
+
     return 0
 
 
@@ -644,7 +658,7 @@ def register_commands(subparsers, context):
     parser_reset = subparsers.add_parser('reset', help='Remove a recipe from your workspace',
                                          description='Removes the specified recipe from your workspace (resetting its state)',
                                          formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-    parser_reset.add_argument('recipename', help='Recipe to reset')
+    parser_reset.add_argument('recipename', nargs='?', help='Recipe to reset')
+    parser_reset.add_argument('--all', '-a', action="store_true", help='Reset all recipes (clear workspace)')
     parser_reset.add_argument('--no-clean', '-n', action="store_true", help='Don\'t clean the sysroot to remove recipe output')
     parser_reset.set_defaults(func=reset)
-

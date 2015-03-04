@@ -384,3 +384,32 @@ class DevtoolTests(oeSelfTest):
         result = runCmd('devtool extract remake %s' % tempdir)
         self.assertTrue(os.path.exists(os.path.join(tempdir, 'Makefile.am')), 'Extracted source could not be found')
         self.assertTrue(os.path.isdir(os.path.join(tempdir, '.git')), 'git repository for external source tree not found')
+
+    def test_devtool_reset_all(self):
+        # Check preconditions
+        workspacedir = os.path.join(self.builddir, 'workspace')
+        self.assertTrue(not os.path.exists(workspacedir), 'This test cannot be run with a workspace directory under the build directory')
+        tempdir = tempfile.mkdtemp(prefix='devtoolqa')
+        self.track_for_cleanup(tempdir)
+        self.track_for_cleanup(workspacedir)
+        self.add_command_to_tearDown('bitbake-layers remove-layer */workspace')
+        testrecipe1 = 'mdadm'
+        testrecipe2 = 'cronie'
+        result = runCmd('devtool modify -x %s %s' % (testrecipe1, os.path.join(tempdir, testrecipe1)))
+        result = runCmd('devtool modify -x %s %s' % (testrecipe2, os.path.join(tempdir, testrecipe2)))
+        result = runCmd('devtool build %s' % testrecipe1)
+        result = runCmd('devtool build %s' % testrecipe2)
+        stampprefix1 = get_bb_var('STAMP', testrecipe1)
+        self.assertTrue(stampprefix1, 'Unable to get STAMP value for recipe %s' % testrecipe1)
+        stampprefix2 = get_bb_var('STAMP', testrecipe2)
+        self.assertTrue(stampprefix2, 'Unable to get STAMP value for recipe %s' % testrecipe2)
+        result = runCmd('devtool reset -a')
+        self.assertIn(testrecipe1, result.output)
+        self.assertIn(testrecipe2, result.output)
+        result = runCmd('devtool status')
+        self.assertNotIn(testrecipe1, result.output)
+        self.assertNotIn(testrecipe2, result.output)
+        matches1 = glob.glob(stampprefix1 + '*')
+        self.assertFalse(matches1, 'Stamp files exist for recipe %s that should have been cleaned' % testrecipe1)
+        matches2 = glob.glob(stampprefix2 + '*')
+        self.assertFalse(matches2, 'Stamp files exist for recipe %s that should have been cleaned' % testrecipe2)
