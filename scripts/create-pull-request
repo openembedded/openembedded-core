@@ -178,7 +178,7 @@ git format-patch -M40 --subject-prefix="$PREFIX" -n -o $ODIR --thread=shallow --
 # Customize the cover letter
 CL="$ODIR/0000-cover-letter.patch"
 PM="$ODIR/pull-msg"
-GIT_VERSION=$(`git --version` | tr -d '[:alpha:][:space:].')
+GIT_VERSION=$(`git --version` | tr -d '[:alpha:][:space:].' | sed 's/\(...\).*/\1/')
 NEWER_GIT_VERSION=210
 if [ $GIT_VERSION -lt $NEWER_GIT_VERSION ]; then
 	git request-pull $RELATIVE_TO $REMOTE_URL $COMMIT_ID >> "$PM"
