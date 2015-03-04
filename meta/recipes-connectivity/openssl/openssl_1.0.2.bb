@@ -16,21 +16,22 @@ SRC_URI += "file://configure-targets.patch \
             file://oe-ldflags.patch \
             file://engines-install-in-libdir-ssl.patch \
             file://openssl-fix-link.patch \
-            file://debian/version-script.patch \
-            file://debian/pic.patch \
-            file://debian/c_rehash-compat.patch \
+            file://debian1.0.2/block_diginotar.patch \
+            file://debian1.0.2/block_digicert_malaysia.patch \
+            file://debian1.0.2/padlock_conf.patch \
             file://debian/ca.patch \
-            file://debian/make-targets.patch \
-            file://debian/no-rpath.patch \
+            file://debian/c_rehash-compat.patch \
+            file://debian/debian-targets.patch \
             file://debian/man-dir.patch \
             file://debian/man-section.patch \
+            file://debian/no-rpath.patch \
             file://debian/no-symbolic.patch \
-            file://debian/debian-targets.patch \
+            file://debian/pic.patch \
+            file://debian/version-script.patch \
             file://openssl_fix_for_x32.patch \
             file://fix-cipher-des-ede3-cfb1.patch \
             file://openssl-avoid-NULL-pointer-dereference-in-EVP_DigestInit_ex.patch \
             file://openssl-avoid-NULL-pointer-dereference-in-dh_pub_encode.patch \
-            file://initial-aarch64-bits.patch \
             file://find.pl \
             file://openssl-fix-des.pod-error.patch \
             file://Makefiles-ptest.patch \
@@ -38,8 +39,8 @@ SRC_URI += "file://configure-targets.patch \
             file://run-ptest \
            "
 
-SRC_URI[md5sum] = "d4f002bd22a56881340105028842ae1f"
-SRC_URI[sha256sum] = "8f9faeaebad088e772f4ef5e38252d472be4d878c6b3a2718c10a4fcebe7a41c"
+SRC_URI[md5sum] = "38373013fc85c790aabf8837969c5eba"
+SRC_URI[sha256sum] = "8c48baf3babe0d505d16cfc0cf272589c66d3624264098213db0fb00034728e9"
 
 PACKAGES =+ " \
 	${PN}-engines \

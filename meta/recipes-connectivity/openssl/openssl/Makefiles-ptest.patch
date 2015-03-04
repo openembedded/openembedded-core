@@ -5,10 +5,11 @@ Signed-off-by: Anders Roxell <anders.roxell@enea.com>
 Signed-off-by: Maxin B. John <maxin.john@enea.com>
 Upstream-Status: Pending
 ---
-diff -uNr a/Makefile b/Makefile
---- a/Makefile.org	2012-05-10 17:06:02.000000000 +0200
-+++ b/Makefile.org	2012-10-27 00:05:55.359424024 +0200
-@@ -411,8 +411,16 @@
+Index: openssl-1.0.2/Makefile.org
+===================================================================
+--- openssl-1.0.2.orig/Makefile.org
++++ openssl-1.0.2/Makefile.org
+@@ -451,8 +451,16 @@ rehash.time: certs apps
  test:   tests
  
  tests: rehash
@@ -26,11 +27,11 @@ diff -uNr a/Makefile b/Makefile
  	OPENSSL_CONF=apps/openssl.cnf util/opensslwrap.sh version -a
  
  report:
-diff --git a/test/Makefile b/test/Makefile
-index 3912f82..1696767 100644
---- a/test/Makefile
-+++ b/test/Makefile
-@@ -128,7 +128,7 @@ tests:	exe apps $(TESTS)
+Index: openssl-1.0.2/test/Makefile
+===================================================================
+--- openssl-1.0.2.orig/test/Makefile
++++ openssl-1.0.2/test/Makefile
+@@ -137,7 +137,7 @@ tests:	exe apps $(TESTS)
  apps:
  	@(cd ..; $(MAKE) DIRS=apps all)
  
@@ -39,28 +40,28 @@ index 3912f82..1696767 100644
  	test_des test_idea test_sha test_md4 test_md5 test_hmac \
  	test_md2 test_mdc2 test_wp \
  	test_rmd test_rc2 test_rc4 test_rc5 test_bf test_cast test_aes \
-@@ -138,6 +138,11 @@ alltests: \
- 	test_ss test_ca test_engine test_evp test_ssl test_tsa test_ige \
- 	test_jpake test_cms
+@@ -148,6 +148,11 @@ alltests: \
+ 	test_jpake test_srp test_cms test_ocsp test_v3name test_heartbeat \
+ 	test_constant_time
  
 +alltests:
 +	@(for i in $(all-tests); do \
 +	( $(MAKE) $$i && echo "PASS: $$i" ) || echo "FAIL: $$i"; \
 +	done)
 +
- test_evp:
+ test_evp: $(EVPTEST)$(EXE_EXT) evptests.txt
  	../util/shlib_wrap.sh ./$(EVPTEST) evptests.txt
  
-@@ -203,7 +208,7 @@ test_x509:
+@@ -213,7 +218,7 @@ test_x509: ../apps/openssl$(EXE_EXT) tx5
  	echo test second x509v3 certificate
  	sh ./tx509 v3-cert2.pem 2>/dev/null
  
--test_rsa: $(RSATEST)$(EXE_EXT)
-+test_rsa:
+-test_rsa: $(RSATEST)$(EXE_EXT) ../apps/openssl$(EXE_EXT) trsa testrsa.pem
++test_rsa: ../apps/openssl$(EXE_EXT) trsa testrsa.pem
  	@sh ./trsa 2>/dev/null
  	../util/shlib_wrap.sh ./$(RSATEST)
  
-@@ -298,11 +303,11 @@ test_tsa:
+@@ -313,11 +318,11 @@ test_tsa: ../apps/openssl$(EXE_EXT) test
  	  sh ./testtsa; \
  	fi
  
@@ -73,3 +74,4 @@ index 3912f82..1696767 100644
 +test_jpake:
  	@echo "Test JPAKE"
  	../util/shlib_wrap.sh ./$(JPAKETEST)
+ 

@@ -10,11 +10,11 @@ Upstream-Status: Inappropriate [config]
 
 Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
 
-diff --git a/test/Makefile b/test/Makefile
-index e6fcfb4..5ae043b 100644
---- a/test/Makefile
-+++ b/test/Makefile
-@@ -322,11 +322,11 @@ test_cms:
+Index: openssl-1.0.2/test/Makefile
+===================================================================
+--- openssl-1.0.2.orig/test/Makefile
++++ openssl-1.0.2/test/Makefile
+@@ -330,7 +330,7 @@ test_cms: ../apps/openssl$(EXE_EXT) cms-
  	@echo "CMS consistency test"
  	$(PERL) cms-test.pl
  
@@ -23,8 +23,12 @@ index e6fcfb4..5ae043b 100644
  	@echo "Test SRP"
  	../util/shlib_wrap.sh ./srptest
  
+@@ -342,7 +342,7 @@ test_v3name: $(V3NAMETEST)$(EXE_EXT)
+ 	@echo "Test X509v3_check_*"
+ 	../util/shlib_wrap.sh ./$(V3NAMETEST)
+ 
 -test_heartbeat: $(HEARTBEATTEST)$(EXE_EXT)
 +test_heartbeat:
  	../util/shlib_wrap.sh ./$(HEARTBEATTEST)
  
- lint:
+ test_constant_time: $(CONSTTIMETEST)$(EXE_EXT)
