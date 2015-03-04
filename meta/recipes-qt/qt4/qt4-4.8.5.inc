@@ -26,6 +26,7 @@ SRC_URI = "http://download.qt-project.org/archive/qt/4.8/${PV}/qt-everywhere-ope
            file://0024-Ensure-lastPixel.y-is-also-initalized-to-1-when-nece.patch \
            file://0025-Fix-misaligned-selection-region-with-text-when-cente.patch \
            file://0027-tools.pro-disable-qmeegographicssystemhelper.patch \
+           file://0028-Fix-a-division-by-zero-when-processing-malformed-BMP.patch \
            file://g++.conf \
            file://linux.conf \
            "
