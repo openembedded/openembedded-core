@@ -326,8 +326,19 @@ def modify(args, config, basepath, workspace):
         commits = stdout.split()
     else:
         if os.path.exists(os.path.join(args.srctree, '.git')):
-            (stdout, _) = bb.process.run('git rev-parse HEAD', cwd=args.srctree)
-            initial_rev = stdout.rstrip()
+            # Check if it's a tree previously extracted by us
+            try:
+                (stdout, _) = bb.process.run('git branch --contains devtool-base', cwd=args.srctree)
+            except bb.process.ExecutionError:
+                stdout = ''
+            for line in stdout.splitlines():
+                if line.startswith('*'):
+                    (stdout, _) = bb.process.run('git rev-parse devtool-base', cwd=args.srctree)
+                    initial_rev = stdout.rstrip()
+            if not initial_rev:
+                # Otherwise, just grab the head revision
+                (stdout, _) = bb.process.run('git rev-parse HEAD', cwd=args.srctree)
+                initial_rev = stdout.rstrip()
 
     # Check that recipe isn't using a shared workdir
     s = rd.getVar('S', True)
