@@ -58,7 +58,7 @@ IMAGE_CMD_ext2 = "oe_mkext234fs ext2 ${EXTRA_IMAGECMD}"
 IMAGE_CMD_ext3 = "oe_mkext234fs ext3 ${EXTRA_IMAGECMD}"
 IMAGE_CMD_ext4 = "oe_mkext234fs ext4 ${EXTRA_IMAGECMD}"
 
-MIN_BTRFS_SIZE ?= "16777216"
+MIN_BTRFS_SIZE ?= "16384"
 IMAGE_CMD_btrfs () {
 	if [ ${ROOTFS_SIZE} -gt ${MIN_BTRFS_SIZE} ]; then
 		dd if=/dev/zero of=${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.btrfs count=${ROOTFS_SIZE} bs=1024
