@@ -11,7 +11,7 @@ RDEPENDS_${PN} += "nativesdk-python-core nativesdk-python-lang nativesdk-python-
 
 GDBPROPREFIX = "--program-prefix='${TARGET_PREFIX}'"
 
-EXTRA_OECONF_append = "--with-python=${WORKDIR}/python"
+EXTRA_OECONF_append = " --with-python=${WORKDIR}/python"
 
 SSTATE_DUPWHITELIST += "${STAGING_DATADIR}/gdb"
 
