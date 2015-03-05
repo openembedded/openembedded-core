@@ -227,6 +227,30 @@ class DevtoolTests(oeSelfTest):
         matches = glob.glob(stampprefix + '*')
         self.assertFalse(matches, 'Stamp files exist for recipe mdadm that should have been cleaned')
 
+    def test_devtool_modify_invalid(self):
+        # Check preconditions
+        workspacedir = os.path.join(self.builddir, 'workspace')
+        self.assertTrue(not os.path.exists(workspacedir), 'This test cannot be run with a workspace directory under the build directory')
+        # Try modifying some recipes
+        tempdir = tempfile.mkdtemp(prefix='devtoolqa')
+        self.track_for_cleanup(tempdir)
+        self.track_for_cleanup(workspacedir)
+        self.add_command_to_tearDown('bitbake-layers remove-layer */workspace')
+
+        testrecipes = 'perf gcc-source kernel-devsrc package-index core-image-minimal meta-toolchain packagegroup-core-sdk meta-ide-support'.split()
+        for testrecipe in testrecipes:
+            # Check it's a valid recipe
+            bitbake('%s -e' % testrecipe)
+            # devtool extract should fail
+            result = runCmd('devtool extract %s %s' % (testrecipe, os.path.join(tempdir, testrecipe)), ignore_status=True)
+            self.assertNotEqual(result.status, 0, 'devtool extract on %s should have failed' % testrecipe)
+            self.assertNotIn('Fetching ', result.output, 'devtool extract on %s should have errored out before trying to fetch' % testrecipe)
+            self.assertIn('ERROR: ', result.output, 'devtool extract on %s should have given an ERROR' % testrecipe)
+            # devtool modify should fail
+            result = runCmd('devtool modify %s -x %s' % (testrecipe, os.path.join(tempdir, testrecipe)), ignore_status=True)
+            self.assertNotEqual(result.status, 0, 'devtool modify on %s should have failed' % testrecipe)
+            self.assertIn('ERROR: ', result.output, 'devtool modify on %s should have given an ERROR' % testrecipe)
+
     def test_devtool_modify_git(self):
         # Check preconditions
         workspacedir = os.path.join(self.builddir, 'workspace')

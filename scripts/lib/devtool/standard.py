@@ -87,6 +87,38 @@ def add(args, config, basepath, workspace):
     return 0
 
 
+def _check_compatible_recipe(pn, d):
+    if pn == 'perf':
+        logger.error("The perf recipe does not actually check out source and thus cannot be supported by this tool")
+        return False
+
+    if pn in ['gcc-source', 'kernel-devsrc', 'package-index']:
+        logger.error("The %s recipe is not supported by this tool" % pn)
+        return False
+
+    if bb.data.inherits_class('image', d):
+        logger.error("The %s recipe is an image, and therefore is not supported by this tool" % pn)
+        return False
+
+    if bb.data.inherits_class('populate_sdk', d):
+        logger.error("The %s recipe is an SDK, and therefore is not supported by this tool" % pn)
+        return False
+
+    if bb.data.inherits_class('packagegroup', d):
+        logger.error("The %s recipe is a packagegroup, and therefore is not supported by this tool" % pn)
+        return False
+
+    if bb.data.inherits_class('meta', d):
+        logger.error("The %s recipe is a meta-recipe, and therefore is not supported by this tool" % pn)
+        return False
+
+    if bb.data.inherits_class('externalsrc', d) and d.getVar('EXTERNALSRC', True):
+        logger.error("externalsrc is currently enabled for the %s recipe. This prevents the normal do_patch task from working. You will need to disable this first." % pn)
+        return False
+
+    return True
+
+
 def _get_recipe_file(cooker, pn):
     import oe.recipeutils
     recipefile = oe.recipeutils.pn_to_recipe(cooker, pn)
@@ -133,16 +165,7 @@ def _extract_source(srctree, keep_temp, devbranch, d):
 
     pn = d.getVar('PN', True)
 
-    if pn == 'perf':
-        logger.error("The perf recipe does not actually check out source and thus cannot be supported by this tool")
-        return None
-
-    if bb.data.inherits_class('image', d):
-        logger.error("The %s recipe is an image, and therefore is not supported by this tool" % pn)
-        return None
-
-    if bb.data.inherits_class('externalsrc', d) and d.getVar('EXTERNALSRC', True):
-        logger.error("externalsrc is currently enabled for the %s recipe. This prevents the normal do_patch task from working. You will need to disable this first." % pn)
+    if not _check_compatible_recipe(pn, d):
         return None
 
     if os.path.exists(srctree):
@@ -310,9 +333,8 @@ def modify(args, config, basepath, workspace):
         return -1
     rd = oe.recipeutils.parse_recipe(recipefile, tinfoil.config_data)
 
-    if bb.data.inherits_class('image', rd):
-        logger.error("The %s recipe is an image, and therefore is not supported by this tool" % args.recipename)
-        return None
+    if not _check_compatible_recipe(args.recipename, rd):
+        return -1
 
     initial_rev = None
     commits = []
