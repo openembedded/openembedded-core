@@ -44,6 +44,7 @@ EXTRA_OECONF = "--enable-tests \
                 ${EXTRA_OECONF_X}"
 
 do_install() {
+    :
 }
 
 do_install_ptest() {
