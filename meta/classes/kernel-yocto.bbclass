@@ -55,7 +55,7 @@ def get_machine_branch(d, default):
 	    
     return default
 
-do_patch() {
+do_kernel_metadata() {
 	cd ${S}
 	export KMETA=${KMETA}
 
@@ -81,7 +81,7 @@ do_patch() {
 		createme_flags="--disable-meta-gen --meta ${KMETA}"
 	fi
 
-	createme ${createme_flags} ${ARCH} ${machine_branch}
+	createme -v -v ${createme_flags} ${ARCH} ${machine_branch}
 	if [ $? -ne 0 ]; then
 		bbfatal "Could not create ${machine_branch}"
 	fi
@@ -118,6 +118,10 @@ do_patch() {
 	if [ $? -ne 0 ]; then
 		bbfatal "Could not update ${machine_branch}"
 	fi
+}
+
+do_patch() {
+	cd ${S}
 
 	# executes and modifies the source tree as required
 	patchme ${KMACHINE}
@@ -221,6 +225,7 @@ do_kernel_checkout() {
 do_kernel_checkout[dirs] = "${S}"
 
 addtask kernel_checkout before do_patch after do_unpack
+addtask kernel_metadata after do_validate_branches before do_patch
 
 do_kernel_configme[dirs] += "${S} ${B}"
 do_kernel_configme() {
