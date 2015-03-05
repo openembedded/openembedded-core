@@ -58,7 +58,7 @@ LDFLAGS_append_libc-uclibc = " -lrt"
 
 GTKDOC_DOCDIR = "${S}/docs/"
 
-PACKAGECONFIG ??= "xz \
+PACKAGECONFIG ??= "xz ldconfig \
                    ${@bb.utils.contains('DISTRO_FEATURES', 'pam', 'pam', '', d)} \
                    ${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'xkbcommon', '', d)}"
 
@@ -83,6 +83,7 @@ PACKAGECONFIG[pam] = "--enable-pam,--disable-pam,libpam"
 PACKAGECONFIG[xkbcommon] = "--enable-xkbcommon,--disable-xkbcommon,libxkbcommon"
 # Update NAT firewall rules
 PACKAGECONFIG[iptc] = "--enable-libiptc,--disable-libiptc,iptables"
+PACKAGECONFIG[ldconfig] = "--enable-ldconfig,--disable-ldconfig,,"
 
 CACHED_CONFIGUREVARS = "ac_cv_path_KILL=${base_bindir}/kill"
 
