@@ -24,6 +24,7 @@ SRC_URI = "git://sourceware.org/git/glibc.git;branch=${BRANCH} \
            file://fix_am_rootsbindir.patch \
            file://0001-Add-unused-attribute.patch \
            file://0001-When-disabling-SSE-also-make-sure-that-fpmath-is-not.patch \
+           file://0001-yes-within-the-path-sets-wrong-config-variables.patch \
            ${EGLIBCPATCHES} \
           "
 EGLIBCPATCHES = "\
