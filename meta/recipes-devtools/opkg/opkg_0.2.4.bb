@@ -47,13 +47,10 @@ do_configure_prepend() {
 	sed -i -e s:-Werror::g ${S}/libopkg/Makefile.am
 }
 
-do_compile_append () {
-	echo "option lists_dir ${OPKGLIBDIR}/opkg" >>${WORKDIR}/opkg.conf
-}
-
 do_install_append () {
 	install -d ${D}${sysconfdir}/opkg
 	install -m 0644 ${WORKDIR}/opkg.conf ${D}${sysconfdir}/opkg/opkg.conf
+	echo "option lists_dir ${OPKGLIBDIR}/opkg" >>${D}${sysconfdir}/opkg/opkg.conf
 
 	# We need to create the lock directory
 	install -d ${D}${OPKGLIBDIR}/opkg
