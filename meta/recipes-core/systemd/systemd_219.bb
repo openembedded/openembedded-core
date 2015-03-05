@@ -42,6 +42,7 @@ SRC_URI = "git://anongit.freedesktop.org/systemd/systemd;branch=master;protocol=
            file://0011-systemd-user-avoid-using-system-auth.patch \
            file://0001-tmpfiles-avoid-creating-duplicate-acl-entries.patch \
            file://0002-tmpfiles-quietly-ignore-ACLs-on-unsupported-filesyst.patch \
+           file://0012-systemd-tmpfiles.c-Honor-ordering-within-files-as-th.patch \
            file://tmpfiles-pam.patch \
            file://touchscreen.rules \
            file://00-create-volatile.conf \
