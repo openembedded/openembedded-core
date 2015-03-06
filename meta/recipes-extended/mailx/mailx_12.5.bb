@@ -12,8 +12,8 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=4202a0a62910cf94f7af8a3436a2a2dd"
 
 DEPENDS = "openssl"
 
-SRC_URI = "${DEBIAN_MIRROR}/main/h/heirloom-mailx/heirloom-mailx_${PV}.orig.tar.gz;name=archive \
-           ${DEBIAN_MIRROR}/main/h/heirloom-mailx/heirloom-mailx_${PV}-1.diff.gz;name=patch \
+SRC_URI = "https://launchpad.net/ubuntu/+archive/primary/+files/heirloom-mailx_12.5.orig.tar.gz;name=archive \
+           https://launchpad.net/ubuntu/+archive/primary/+files/heirloom-mailx_12.5-1.diff.gz;name=patch \
            file://explicitly.disable.krb5.support.patch \
           "
 
