@@ -8,7 +8,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=45c5316ff684bcfe2f9f86d8b1279559"
 
 PR = "r1"
 
-SRC_URI = "http://github.com/downloads/libevent/libevent/${BPN}-${PV}-stable.tar.gz \
+SRC_URI = "${SOURCEFORGE_MIRROR}/levent/${BP}-stable.tar.gz \
            file://obsolete_automake_macros.patch \
            file://disable_tests.patch \
 "
