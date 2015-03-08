@@ -44,7 +44,9 @@ def deploy(args, config, basepath, workspace):
     deploy_file = os.path.join(deploy_dir, args.recipename + '.list')
 
     if os.path.exists(deploy_file):
-        undeploy(args)
+        if undeploy(args, config, basepath, workspace):
+            # Error already shown
+            return -1
 
     stdout, stderr = exec_build_env_command(config.init_path, basepath, 'bitbake -e %s' % args.recipename, shell=True)
     recipe_outdir = re.search(r'^D="(.*)"', stdout, re.MULTILINE).group(1)
