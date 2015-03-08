@@ -43,13 +43,17 @@ def deploy(args, config, basepath, workspace):
     deploy_dir = os.path.join(basepath, 'target_deploy', args.target)
     deploy_file = os.path.join(deploy_dir, args.recipename + '.list')
 
+    stdout, stderr = exec_build_env_command(config.init_path, basepath, 'bitbake -e %s' % args.recipename, shell=True)
+    recipe_outdir = re.search(r'^D="(.*)"', stdout, re.MULTILINE).group(1)
+    if not os.path.exists(recipe_outdir) or not os.listdir(recipe_outdir):
+        logger.error('No files to deploy - have you built the %s recipe? If so, the install step has not installed any files.' % args.recipename)
+        return -1
+
     if os.path.exists(deploy_file):
         if undeploy(args, config, basepath, workspace):
             # Error already shown
             return -1
 
-    stdout, stderr = exec_build_env_command(config.init_path, basepath, 'bitbake -e %s' % args.recipename, shell=True)
-    recipe_outdir = re.search(r'^D="(.*)"', stdout, re.MULTILINE).group(1)
     extraoptions = ''
     if args.no_host_check:
         extraoptions += '-o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
