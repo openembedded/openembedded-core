@@ -57,8 +57,11 @@ def deploy(args, config, basepath, workspace):
     extraoptions = ''
     if args.no_host_check:
         extraoptions += '-o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
-    ret = subprocess.call('scp -qr %s %s/* %s:%s' % (extraoptions, recipe_outdir, args.target, destdir), shell=True)
+    if not args.show_status:
+        extraoptions += ' -q'
+    ret = subprocess.call('scp -r %s %s/* %s:%s' % (extraoptions, recipe_outdir, args.target, destdir), shell=True)
     if ret != 0:
+        logger.error('Deploy failed - rerun with -s to get a complete error message')
         return ret
 
     logger.info('Successfully deployed %s' % recipe_outdir)
@@ -87,16 +90,20 @@ def undeploy(args, config, basepath, workspace):
     extraoptions = ''
     if args.no_host_check:
         extraoptions += '-o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
+    if not args.show_status:
+        extraoptions += ' -q'
 
-    ret = subprocess.call("scp -q %s %s %s:/tmp" % (extraoptions, deploy_file, args.target), shell=True)
+    ret = subprocess.call("scp %s %s %s:/tmp" % (extraoptions, deploy_file, args.target), shell=True)
     if ret != 0:
-        logger.error('Failed to copy %s to %s' % (deploy, args.target))
+        logger.error('Failed to copy file list to %s - rerun with -s to get a complete error message' % args.target)
         return -1
 
     ret = subprocess.call("ssh %s %s 'xargs -n1 rm -f </tmp/%s'" % (extraoptions, args.target, os.path.basename(deploy_file)), shell=True)
     if ret == 0:
         logger.info('Successfully undeployed %s' % args.recipename)
         os.remove(deploy_file)
+    else:
+        logger.error('Undeploy failed - rerun with -s to get a complete error message')
 
     return ret
 
@@ -106,10 +113,12 @@ def register_commands(subparsers, context):
     parser_deploy.add_argument('recipename', help='Recipe to deploy')
     parser_deploy.add_argument('target', help='Live target machine running an ssh server: user@hostname[:destdir]')
     parser_deploy.add_argument('-c', '--no-host-check', help='Disable ssh host key checking', action='store_true')
+    parser_deploy.add_argument('-s', '--show-status', help='Show progress/status output', action='store_true')
     parser_deploy.set_defaults(func=deploy)
 
     parser_undeploy = subparsers.add_parser('undeploy-target', help='Undeploy recipe output files in live target machine')
     parser_undeploy.add_argument('recipename', help='Recipe to undeploy')
     parser_undeploy.add_argument('target', help='Live target machine running an ssh server: user@hostname')
     parser_undeploy.add_argument('-c', '--no-host-check', help='Disable ssh host key checking', action='store_true')
+    parser_undeploy.add_argument('-s', '--show-status', help='Show progress/status output', action='store_true')
     parser_undeploy.set_defaults(func=undeploy)
