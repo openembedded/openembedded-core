@@ -1,6 +1,6 @@
 # Development tool - deploy/undeploy command plugin
 #
-# Copyright (C) 2014 Intel Corporation
+# Copyright (C) 2014-2015 Intel Corporation
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License version 2 as
@@ -50,7 +50,10 @@ def deploy(args, config, basepath, workspace):
 
     stdout, stderr = exec_build_env_command(config.init_path, basepath, 'bitbake -e %s' % args.recipename, shell=True)
     recipe_outdir = re.search(r'^D="(.*)"', stdout, re.MULTILINE).group(1)
-    ret = subprocess.call('scp -qr %s/* %s:%s' % (recipe_outdir, args.target, destdir), shell=True)
+    extraoptions = ''
+    if args.no_host_check:
+        extraoptions += '-o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
+    ret = subprocess.call('scp -qr %s %s/* %s:%s' % (extraoptions, recipe_outdir, args.target, destdir), shell=True)
     if ret != 0:
         return ret
 
@@ -77,12 +80,16 @@ def undeploy(args, config, basepath, workspace):
          logger.error('%s has not been deployed' % args.recipename)
          return -1
 
-    ret = subprocess.call("scp -q %s %s:/tmp" % (deploy_file, args.target), shell=True)
+    extraoptions = ''
+    if args.no_host_check:
+        extraoptions += '-o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
+
+    ret = subprocess.call("scp -q %s %s %s:/tmp" % (extraoptions, deploy_file, args.target), shell=True)
     if ret != 0:
         logger.error('Failed to copy %s to %s' % (deploy, args.target))
         return -1
 
-    ret = subprocess.call("ssh %s 'xargs -n1 rm -f </tmp/%s'" % (args.target, os.path.basename(deploy_file)), shell=True)
+    ret = subprocess.call("ssh %s %s 'xargs -n1 rm -f </tmp/%s'" % (extraoptions, args.target, os.path.basename(deploy_file)), shell=True)
     if ret == 0:
         logger.info('Successfully undeployed %s' % args.recipename)
         os.remove(deploy_file)
@@ -94,9 +101,11 @@ def register_commands(subparsers, context):
     parser_deploy = subparsers.add_parser('deploy-target', help='Deploy recipe output files to live target machine')
     parser_deploy.add_argument('recipename', help='Recipe to deploy')
     parser_deploy.add_argument('target', help='Live target machine running an ssh server: user@hostname[:destdir]')
+    parser_deploy.add_argument('-c', '--no-host-check', help='Disable ssh host key checking', action='store_true')
     parser_deploy.set_defaults(func=deploy)
 
     parser_undeploy = subparsers.add_parser('undeploy-target', help='Undeploy recipe output files in live target machine')
     parser_undeploy.add_argument('recipename', help='Recipe to undeploy')
     parser_undeploy.add_argument('target', help='Live target machine running an ssh server: user@hostname')
+    parser_undeploy.add_argument('-c', '--no-host-check', help='Disable ssh host key checking', action='store_true')
     parser_undeploy.set_defaults(func=undeploy)
