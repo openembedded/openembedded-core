@@ -310,7 +310,9 @@ def guess_license(srctree):
         for fn in files:
             for spec in licspecs:
                 if fnmatch.fnmatch(fn, spec):
-                    licfiles.append(os.path.join(root, fn))
+                    fullpath = os.path.join(root, fn)
+                    if not fullpath in licfiles:
+                        licfiles.append(fullpath)
     for licfile in licfiles:
         md5value = bb.utils.md5_file(licfile)
         license = md5sums.get(md5value, 'Unknown')
