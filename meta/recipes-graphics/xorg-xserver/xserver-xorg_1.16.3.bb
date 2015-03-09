@@ -5,6 +5,7 @@ SRC_URI += "file://fix_open_max_preprocessor_error.patch \
             file://xorg-CVE-2013-6424.patch \
             file://xshmfence-option.patch \
             file://Fix-subwindow-in-Xi-emulated-events.patch \
+            file://xtrans.patch \
            "
 
 SRC_URI[md5sum] = "afd93977235584a9caa7528a737c1b52"

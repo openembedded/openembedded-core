@@ -1,0 +1,38 @@
+Upstream-Status: Submitted
+Signed-off-by: Ross Burton <ross.burton@intel.com>
+
+Since _XSERVTransClose frees the connection pointer passed to it,
+remove that pointer from the array, so we don't try to double free it
+if we come back into CloseWellKnownConnections again.
+
+Should fix https://bugzilla.yoctoproject.org/show_bug.cgi?id=6665 in which
+the shutdown section of the main() loop called CloseWellKnownConnections()
+and then moved on to ddxGiveUp(), which failed to release the VT and thus
+called AbortServer(), which called CloseWellKnownConnections() again.
+
+Signed-off-by: Alan Coopersmith <alan.coopersmith@oracle.com>
+Reviewed-by: Adam Jackson <ajax@redhat.com>
+---
+ os/connection.c |    9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
+
+diff --git a/os/connection.c b/os/connection.c
+index ddfe50a..7ff44e1 100644
+--- a/os/connection.c
++++ b/os/connection.c
+@@ -513,8 +513,13 @@ CloseWellKnownConnections(void)
+ {
+     int i;
+
+-    for (i = 0; i < ListenTransCount; i++)
+-        _XSERVTransClose(ListenTransConns[i]);
++    for (i = 0; i < ListenTransCount; i++) {
++        if (ListenTransConns[i] != NULL) {
++            _XSERVTransClose(ListenTransConns[i]);
++            ListenTransConns[i] = NULL;
++        }
++    }
++    ListenTransCount = 0;
+ }
+
+ static void
