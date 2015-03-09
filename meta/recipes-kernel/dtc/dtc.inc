@@ -6,7 +6,7 @@ DEPENDS = "flex-native bison-native"
 
 inherit autotools
 
-SRC_URI = "git://www.jdl.com/software/dtc.git;protocol=git \
+SRC_URI = "git://git.kernel.org/pub/scm/utils/dtc/dtc.git;protocol=git \
            file://make_install.patch \
 	  "
 
