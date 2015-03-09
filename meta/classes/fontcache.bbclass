@@ -42,4 +42,4 @@ python add_fontcache_postinsts() {
         d.setVar('pkg_postrm_%s' % pkg, postrm)
 }
 
-PACKAGEFUNCS += "add_fontcache_postinsts"
+PACKAGEFUNCS =+ "add_fontcache_postinsts"
