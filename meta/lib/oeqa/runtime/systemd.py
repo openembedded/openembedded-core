@@ -86,3 +86,9 @@ class SystemdServiceTests(SystemdTest):
         self.systemctl('is-enabled', 'avahi-daemon.service', expected=1)
         self.systemctl('enable', 'avahi-daemon.service')
         self.systemctl('is-enabled', 'avahi-daemon.service')
+
+class SystemdJournalTests(SystemdTest):
+    @skipUnlessPassed('test_ssh')
+    def test_systemd_journal(self):
+        (status, output) = self.target.run('journalctl')
+        self.assertEqual(status, 0, output)
