@@ -27,6 +27,9 @@ PACKAGECONFIG ?= "\
 PACKAGECONFIG[acl] = ",,acl"
 PACKAGECONFIG[selinux] = ",,libselinux"
 
+CONFFILES_${PN} += "${localstatedir}/lib/logrotate.status \
+		    ${sysconfdir}/logrotate.conf"
+
 # If RPM_OPT_FLAGS is unset, it adds -g itself rather than obeying our
 # optimization variables, so use it rather than EXTRA_CFLAGS.
 EXTRA_OEMAKE = "\
