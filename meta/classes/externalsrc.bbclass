@@ -35,7 +35,13 @@ python () {
             d.setVar('B', externalsrcbuild)
         else:
             d.setVar('B', '${WORKDIR}/${BPN}-${PV}/')
-        d.setVar('SRC_URI', '')
+
+        srcuri = (d.getVar('SRC_URI', True) or '').split()
+        local_srcuri = []
+        for uri in srcuri:
+            if uri.startswith('file://'):
+                local_srcuri.append(uri)
+        d.setVar('SRC_URI', ' '.join(local_srcuri))
 
         if '{SRCPV}' in d.getVar('PV', False):
             # Dummy value because the default function can't be called with blank SRC_URI
@@ -65,7 +71,13 @@ python () {
                 if setvalue:
                     d.setVarFlag(task, 'cleandirs', ' '.join(cleandirs))
 
+        fetch_tasks = ['do_fetch', 'do_unpack']
+        # If we deltask do_patch, there's no dependency to ensure do_unpack gets run, so add one
+        d.appendVarFlag('do_configure', 'deps', ['do_unpack'])
+
         for task in d.getVar("SRCTREECOVEREDTASKS", True).split():
+            if local_srcuri and task in fetch_tasks:
+                continue
             bb.build.deltask(task, d)
 
         d.prependVarFlag('do_compile', 'prefuncs', "externalsrc_compile_prefunc ")
