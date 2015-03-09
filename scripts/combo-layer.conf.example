@@ -1,7 +1,17 @@
 # combo-layer example configuration file
 
+# Default values for all sections.
+[DEFAULT]
+
+# Add 'Signed-off-by' to all commits that get imported automatically.
+signoff = True
+
 # component name
 [bitbake]
+
+# Override signedoff default above (not very useful, but possible).
+signoff = False
+
 # mandatory options
 # git upstream uri
 src_uri = git://git.openembedded.org/bitbake
