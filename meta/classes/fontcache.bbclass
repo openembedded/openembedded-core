@@ -12,7 +12,7 @@ FONT_EXTRA_RDEPENDS ?= "fontconfig-utils"
 fontcache_common() {
 if [ "x$D" != "x" ] ; then
 	$INTERCEPT_DIR/postinst_intercept update_font_cache ${PKG} mlprefix=${MLPREFIX} bindir=${bindir} \
-		libdir=${libdir} base_libdir=${base_libdir}
+		libdir=${libdir} base_libdir=${base_libdir} localstatedir=${localstatedir}
 else
 	fc-cache
 fi
