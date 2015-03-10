@@ -49,6 +49,13 @@ def deploy(args, config, basepath, workspace):
         logger.error('No files to deploy - have you built the %s recipe? If so, the install step has not installed any files.' % args.recipename)
         return -1
 
+    if args.dry_run:
+        print('Files to be deployed for %s on target %s:' % (args.recipename, args.target))
+        for root, dirs, files in os.walk(recipe_outdir):
+            for fn in files:
+                print('  %s' % os.path.join(destdir, os.path.relpath(root, recipe_outdir), fn))
+        return 0
+
     if os.path.exists(deploy_file):
         if undeploy(args, config, basepath, workspace):
             # Error already shown
@@ -87,6 +94,13 @@ def undeploy(args, config, basepath, workspace):
          logger.error('%s has not been deployed' % args.recipename)
          return -1
 
+    if args.dry_run:
+        print('Previously deployed files to be un-deployed for %s on target %s:' % (args.recipename, args.target))
+        with open(deploy_file, 'r') as f:
+            for line in f:
+                print('  %s' % line.rstrip())
+        return 0
+
     extraoptions = ''
     if args.no_host_check:
         extraoptions += '-o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
@@ -114,6 +128,7 @@ def register_commands(subparsers, context):
     parser_deploy.add_argument('target', help='Live target machine running an ssh server: user@hostname[:destdir]')
     parser_deploy.add_argument('-c', '--no-host-check', help='Disable ssh host key checking', action='store_true')
     parser_deploy.add_argument('-s', '--show-status', help='Show progress/status output', action='store_true')
+    parser_deploy.add_argument('-n', '--dry-run', help='List files to be deployed only', action='store_true')
     parser_deploy.set_defaults(func=deploy)
 
     parser_undeploy = subparsers.add_parser('undeploy-target', help='Undeploy recipe output files in live target machine')
@@ -121,4 +136,5 @@ def register_commands(subparsers, context):
     parser_undeploy.add_argument('target', help='Live target machine running an ssh server: user@hostname')
     parser_undeploy.add_argument('-c', '--no-host-check', help='Disable ssh host key checking', action='store_true')
     parser_undeploy.add_argument('-s', '--show-status', help='Show progress/status output', action='store_true')
+    parser_undeploy.add_argument('-n', '--dry-run', help='List files to be undeployed only', action='store_true')
     parser_undeploy.set_defaults(func=undeploy)
