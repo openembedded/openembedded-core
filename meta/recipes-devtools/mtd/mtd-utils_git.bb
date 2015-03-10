@@ -30,3 +30,7 @@ FILES_mtd-utils-ubifs = "${sbindir}/mkfs.ubifs ${sbindir}/ubi*"
 FILES_mtd-utils-misc = "${sbindir}/nftl* ${sbindir}/ftl* ${sbindir}/rfd* ${sbindir}/doc* ${sbindir}/serve_image ${sbindir}/recv_image"
 
 BBCLASSEXTEND = "native"
+
+# git/.compr.c.dep:46: warning: NUL character seen; rest of line ignored
+# git/.compr.c.dep:47: *** missing separator.  Stop.
+PARALLEL_MAKE = ""
