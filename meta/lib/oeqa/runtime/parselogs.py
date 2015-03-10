@@ -22,7 +22,8 @@ common_errors = [
     "Failed to load module modesetting",
     "Failed to load module \"glx\"",
     "Failed to load module glx",
-    "[drm] Cannot find any crtc or sizes - going 1024x768"
+    "[drm] Cannot find any crtc or sizes - going 1024x768",
+    "hd.: possibly failed opcode"
     ]
 
 x86_common = [
