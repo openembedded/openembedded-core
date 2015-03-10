@@ -42,6 +42,20 @@ last_revision =
 #   file_filter = src/*.c : only include the src *.c file
 #   file_filter = src/main.c src/Makefile.am : only include these two files
 
+# file_exclude: filter out these file(s)
+# file_exclude = [path] [path] ...
+#
+# Each entry must match a file name. In contrast do file_filter, matching
+# a directory has no effect. To achieve that, use append a * wildcard
+# at the end.
+#
+# Wildcards are applied to the complete path and also match slashes.
+#
+# example:
+#   file_exclude = src/foobar/*  : exclude everything under src/foobar
+#   file_exclude = src/main.c : filter out main.c after including it with file_filter = src/*.c
+#   file_exclude = *~ : exclude backup files
+
 # hook: if provided, the tool will call the hook to process the generated
 #     patch from upstream, and then apply the modified patch to the combo
 #     repo.
