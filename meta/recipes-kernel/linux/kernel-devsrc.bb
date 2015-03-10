@@ -65,6 +65,8 @@ do_install() {
                 mkdir -p $kerneldir/arch/powerpc/lib/
                 cp ${B}/arch/powerpc/lib/crtsavres.o $kerneldir/arch/powerpc/lib/crtsavres.o
         fi
+
+        chown -R root:root ${D}
 }
 # Ensure we don't race against "make scripts" during cpio
 do_install[lockfiles] = "${TMPDIR}/kernel-scripts.lock"
