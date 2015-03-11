@@ -12,6 +12,7 @@ SRC_URI = "git://git.gnome.org/sysprof \
           "
 
 SRC_URI_append_arm  = " file://rmb-arm.patch"
+SRC_URI_append_armeb  = " file://rmb-arm.patch"
 SRC_URI_append_mips = " file://rmb-mips.patch"
 SRC_URI_append_mips64 = " file://rmb-mips.patch"
 SRC_URI_append_mips64n32 = " file://rmb-mips.patch"
