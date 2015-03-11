@@ -29,3 +29,8 @@ inherit autotools-brokensep
 CFLAGS_append = " -D_BSD_SOURCE -DDEBIAN -I${S}/EXT"
 EXTRA_OEMAKE = "SENDMAIL=${sbindir}/sendmail"
 
+# The makeconfig can't run parallelly, otherwise the checking results
+# might be incorrect and lead to errors:
+# fio.c:56:17: fatal error: ssl.h: No such file or directory
+# #include <ssl.h>
+PARALLEL_MAKE = ""
