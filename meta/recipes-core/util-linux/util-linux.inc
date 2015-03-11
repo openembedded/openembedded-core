@@ -27,14 +27,15 @@ SRC_URI = "${KERNELORG_MIRROR}/linux/utils/util-linux/v${MAJOR_VERSION}/util-lin
 
 PACKAGES =+ "util-linux-agetty util-linux-fdisk util-linux-cfdisk util-linux-sfdisk \
              util-linux-swaponoff util-linux-losetup util-linux-umount \
-             util-linux-mount util-linux-readprofile util-linux-libblkid \
-             util-linux-libmount util-linux-libuuid util-linux-uuidd \
+             util-linux-mount util-linux-readprofile util-linux-uuidd \
              util-linux-uuidgen util-linux-lscpu util-linux-fsck util-linux-blkid \
              util-linux-mkfs util-linux-mcookie util-linux-reset \
              util-linux-mkfs.cramfs util-linux-fsck.cramfs util-linux-fstrim \
              util-linux-partx ${PN}-bash-completion util-linux-hwclock \
              util-linux-findfs util-linux-getopt"
 PACKAGES += "${@bb.utils.contains('PACKAGECONFIG', 'pylibmount', 'util-linux-pylibmount', '', d)}"
+
+PACKAGES_DYNAMIC = "^util-linux-lib.*"
 
 SHARED_EXTRA_OECONF = "--disable-use-tty-group \
                        --disable-makeinstall-chown \
@@ -85,11 +86,8 @@ FILES_util-linux-hwclock = "${base_sbindir}/hwclock.${BPN}"
 FILES_util-linux-findfs = "${sbindir}/findfs"
 FILES_util-linux-getopt = "${base_bindir}/getopt.${BPN}"
 
-FILES_util-linux-libblkid = "${base_libdir}/libblkid.so.*"
-FILES_util-linux-libmount = "${base_libdir}/libmount.so.*"
 FILES_util-linux-pylibmount = "${libdir}/${PYTHON_DIR}/dist-packages/libmount/pylibmount.so \
                                ${libdir}/${PYTHON_DIR}/dist-packages/libmount/__init__.*"
-FILES_util-linux-libuuid = "${base_libdir}/libuuid.so.*"
 FILES_util-linux-lscpu = "${bindir}/lscpu"
 
 FILES_util-linux-fsck = "${base_sbindir}/fsck*"
@@ -242,4 +240,11 @@ python do_package_prepend () {
         alt_name = "su"
         d.setVarFlag('ALTERNATIVE_LINK_NAME', alt_name, '%s/%s' % (d.getVar('base_bindir', True), alt_name))
         d.appendVar('ALTERNATIVE_%s' % (d.getVar('PN', True)), ' ' + alt_name)
+}
+
+python populate_packages_prepend() {
+    do_split_packages(d, '${base_libdir}', '^lib(.*)\.so\..*$',
+                      output_pattern='util-linux-lib%s',
+                      description='util-linux lib%s',
+                      extra_depends='', prepend=True, allow_links=True)
 }
