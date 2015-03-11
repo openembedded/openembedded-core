@@ -17,7 +17,9 @@ python do_devshell () {
 
 addtask devshell after do_patch
 
-do_devshell[dirs] = "${S}"
+# The directory that the terminal starts in
+DEVSHELL_STARTDIR ?= "${S}"
+do_devshell[dirs] = "${DEVSHELL_STARTDIR}"
 do_devshell[nostamp] = "1"
 
 # devshell and fakeroot/pseudo need careful handling since only the final
