@@ -66,6 +66,7 @@ if [ -n "$TEMPLATECONF" ]; then
     OECORENOTESCONF="$TEMPLATECONF/conf-notes.txt"
 fi
 
+unset SHOWYPDOC
 if [ -z "$OECORELOCALCONF" ]; then
     OECORELOCALCONF="$OEROOT/meta/conf/local.conf.sample"
 fi
@@ -77,15 +78,9 @@ different MACHINE (target hardware) or enable parallel build options to take
 advantage of multiple cores for example. See the file for more information as 
 common configuration options are commented.
 
-The Yocto Project has extensive documentation about OE including a reference manual
-which can be found at:
-    http://yoctoproject.org/documentation
-
-For more information about OpenEmbedded see their website:
-    http://www.openembedded.org/
-
 EOM
     cp -f $OECORELOCALCONF $BUILDDIR/conf/local.conf
+    SHOWYPDOC=yes
 fi
 
 if [ -z "$OECORELAYERCONF" ]; then
@@ -97,14 +92,6 @@ You had no conf/bblayers.conf file. The configuration file has been created for
 you with some default values. To add additional metadata layers into your
 configuration please add entries to this file.
 
-The Yocto Project has extensive documentation about OE including a reference manual
-which can be found at:
-    http://yoctoproject.org/documentation
-
-For more information about OpenEmbedded see their website:
-    http://www.openembedded.org/
-
-
 EOM
 
     # Put the abosolute path to the layers in bblayers.conf so we can run
@@ -114,11 +101,26 @@ EOM
     sed -e "s|##OEROOT##|$OEROOT|g" \
         -e "s|##COREBASE##|$OEROOT|g" \
         $OECORELAYERCONF > $BUILDDIR/conf/bblayers.conf
+    SHOWYPDOC=yes
 fi
 
 # Prevent disturbing a new GIT clone in same console
 unset OECORELOCALCONF
 unset OECORELAYERCONF
+
+# Ending the first-time run message. Show the YP Documentation banner.
+if [ ! -z "$SHOWYPDOC" ]; then
+    cat <<EOM
+The Yocto Project has extensive documentation about OE including a reference
+manual which can be found at:
+    http://yoctoproject.org/documentation
+
+For more information about OpenEmbedded see their website:
+    http://www.openembedded.org/
+
+EOM
+#    unset SHOWYPDOC
+fi
 
 cat <<EOM
 
