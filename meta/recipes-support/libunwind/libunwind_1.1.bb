@@ -2,6 +2,7 @@ require libunwind.inc
 
 SRC_URI += "\
     file://Fix-test-case-link-failure-on-PowerPC-systems-with-Altivec.patch \
+    file://Link-libunwind-to-libgcc_s-rather-than-libgcc.patch \
 "
 
 SRC_URI[md5sum] = "fb4ea2f6fbbe45bf032cd36e586883ce"
