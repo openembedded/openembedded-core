@@ -63,11 +63,24 @@ last_revision =
 # example:
 #     hook = combo-layer-hook-default.sh
 
+# since_revision:
+#   since_revision = release-1-2
+#   since_revision = 12345 abcdf
+#
+# If provided, truncate imported history during "combo-layer --history
+# init" at the specified revision(s).  More than one can be specified
+# to cut off multiple component branches.
+#
+# The specified commits themselves do not get imported. Instead, an
+# artificial commit with "unknown" author is created with a content
+# that matches the original commit.
+
 [oe-core]
 src_uri = git://git.openembedded.org/openembedded-core
 local_repo_dir = /home/kyu3/src/test/oecore
 dest_dir = .
 last_revision =
+since_revision = some-tag-or-commit-on-master-branch
 
 # It is also possible to embed python code in the config values. Similar
 # to bitbake it considers every value starting with @ to be a python

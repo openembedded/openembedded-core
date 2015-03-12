@@ -284,6 +284,46 @@ def action_init(conf, args):
                 runcmd("git branch -D %s" % refname, ldir)
                 # Make that the head revision.
                 runcmd("git checkout -b %s %s" % (name, initialrev))
+                # Optional: cut the history by replacing the given
+                # start point(s) with commits providing the same
+                # content (aka tree), but with commit information that
+                # makes it clear that this is an artifically created
+                # commit and nothing the original authors had anything
+                # to do with.
+                since_rev = repo.get('since_revision', '')
+                if since_rev:
+                    committer = runcmd('git var GIT_AUTHOR_IDENT').strip()
+                    # Same time stamp, no name.
+                    author = re.sub('.* (\d+ [+-]\d+)', r'unknown <unknown> \1', committer)
+                    logger.info('author %s' % author)
+                    for rev in since_rev.split():
+                        # Resolve in component repo...
+                        rev = runcmd('git log --oneline --no-abbrev-commit -n1 %s' % rev, ldir).split()[0]
+                        # ... and then get the tree in current
+                        # one. The commit should be in both repos with
+                        # the same tree, but better check here.
+                        tree = runcmd('git show -s --pretty=format:%%T %s' % rev).strip()
+                        with tempfile.NamedTemporaryFile() as editor:
+                            editor.write('''cat >$1 <<EOF
+tree %s
+author %s
+committer %s
+
+%s: squashed import of component
+
+This commit copies the entire set of files as found in
+%s %s
+
+For more information about previous commits, see the
+upstream repository.
+
+Commit created by combo-layer.
+EOF
+''' % (tree, author, committer, name, name, since_rev))
+                            editor.flush()
+                            os.environ['GIT_EDITOR'] = 'sh %s' % editor.name
+                            runcmd('git replace --edit %s' % rev)
+
                 # Optional: rewrite history to change commit messages or to move files.
                 if 'hook' in repo or dest_dir and dest_dir != ".":
                     filter_branch = ['git', 'filter-branch', '--force']
