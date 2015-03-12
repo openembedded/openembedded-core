@@ -130,6 +130,7 @@ class Configuration(object):
         parser.set(section, option, value)
         with open(conffile, "w") as f:
             parser.write(f)
+        self.repos[repo][option] = value
 
     def sanity_check(self, initmode=False):
         required_options=["src_uri", "local_repo_dir", "dest_dir", "last_revision"]
