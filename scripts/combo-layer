@@ -354,14 +354,14 @@ file_exclude = %s''' % (name, file_filter or '<empty>', repo.get('file_exclude',
             # Create Octopus merge commit according to http://stackoverflow.com/questions/10874149/git-octopus-merge-with-unrelated-repositoies
             runcmd('git checkout master')
             merge = ['git', 'merge', '--no-commit']
-            with open('.git/info/grafts', 'w') as grafts:
-                grafts.write('%s\n' % startrev)
-                for name in conf.repos:
-                    repo = conf.repos[name]
-                    # Use branch created earlier.
-                    merge.append(name)
-                    for start in runcmd('git log --pretty=format:%%H --max-parents=0 %s' % name).split('\n'):
-                        grafts.write('%s %s\n' % (start, startrev))
+            for name in conf.repos:
+                repo = conf.repos[name]
+                # Use branch created earlier.
+                merge.append(name)
+                # Root all commits which have no parent in the common
+                # ancestor in the new repository.
+                for start in runcmd('git log --pretty=format:%%H --max-parents=0 %s' % name).split('\n'):
+                    runcmd('git replace --graft %s %s' % (start, startrev))
             try:
                 runcmd(merge)
             except Exception, error:
