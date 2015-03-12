@@ -29,7 +29,7 @@ SRCREV = "a88abde72169ddc2df77df3fa5bed30725022253"
 
 PV = "219+git${SRCPV}"
 
-SRC_URI = "git://anongit.freedesktop.org/systemd/systemd;branch=master;protocol=git \
+SRC_URI = "git://anongit.freedesktop.org/systemd/systemd;branch=master \
            file://0002-shared-missing.h-fall-back-to-insecure-getenv.patch \
            file://0003-binfmt-Don-t-install-dependency-links-at-install-tim.patch \
            file://0004-configure-Check-for-additional-features-that-uclibc-.patch \
