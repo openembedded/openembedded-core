@@ -35,4 +35,11 @@ do_install() {
 	rmdir ${D}${prefix}/man/
 }
 
+inherit update-alternatives
+
+ALTERNATIVE_PRIORITY = "100"
+
+ALTERNATIVE_${PN} = "unzip"
+ALTERNATIVE_LINK_NAME[unzip] = "${bindir}/unzip"
+
 BBCLASSEXTEND = "native"
