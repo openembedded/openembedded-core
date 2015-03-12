@@ -5,7 +5,7 @@ inherit pkgconfig
 
 FILESEXTRAPATHS =. "${FILE_DIRNAME}/trace-cmd:"
 
-SRC_URI = "git://git.kernel.org/pub/scm/linux/kernel/git/rostedt/trace-cmd.git;protocol=git;branch=trace-cmd-stable-v2.5 \
+SRC_URI = "git://git.kernel.org/pub/scm/linux/kernel/git/rostedt/trace-cmd.git;branch=trace-cmd-stable-v2.5 \
            file://blktrace-api-compatibility.patch \
 "
 
