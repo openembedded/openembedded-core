@@ -149,7 +149,7 @@ for service in $services; do
 				disable_service="$ROOT/etc/systemd/system/$r.wants/$service"
 			fi
 			rm -f $disable_service
-			rmdir --ignore-fail-on-non-empty -p $ROOT/etc/systemd/system/$r.wants
+			[ -d $ROOT/etc/systemd/system/$r.wants ] && rmdir --ignore-fail-on-non-empty -p $ROOT/etc/systemd/system/$r.wants
 			echo "Disabled ${disable_service##$ROOT/etc/systemd/system/$r.wants/} for $wanted_by."
 		fi
 	done
