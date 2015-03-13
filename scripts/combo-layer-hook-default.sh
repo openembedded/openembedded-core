@@ -10,4 +10,11 @@ rev=$2
 reponame=$3
 
 sed -i -e "0,/^Subject:/s#^Subject: \[PATCH\] \($reponame: \)*\(.*\)#Subject: \[PATCH\] $reponame: \2#" $patchfile
-sed -i -e "0,/^Signed-off-by:/s#\(^Signed-off-by:.*\)#\($reponame rev: $rev\)\n\n\1#" $patchfile
+if grep -q '^Signed-off-by:' $patchfile; then
+    # Insert before Signed-off-by.
+    sed -i -e "0,/^Signed-off-by:/s#\(^Signed-off-by:.*\)#\(From $reponame rev: $rev\)\n\n\1#" $patchfile
+else
+    # Insert before final --- separator, with extra blank lines removed.
+    perl -e "\$_ = join('', <>); s/^(.*\S[ \t]*)(\n|\n\s*\n)---\n/\$1\n\nFrom $reponame rev: $rev\n---\n/s; print;" $patchfile >$patchfile.tmp
+    mv $patchfile.tmp $patchfile
+fi
