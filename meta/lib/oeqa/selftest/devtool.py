@@ -437,3 +437,59 @@ class DevtoolTests(oeSelfTest):
         self.assertFalse(matches1, 'Stamp files exist for recipe %s that should have been cleaned' % testrecipe1)
         matches2 = glob.glob(stampprefix2 + '*')
         self.assertFalse(matches2, 'Stamp files exist for recipe %s that should have been cleaned' % testrecipe2)
+
+    def test_devtool_deploy_target(self):
+        # NOTE: Whilst this test would seemingly be better placed as a runtime test,
+        # unfortunately the runtime tests run under bitbake and you can't run
+        # devtool within bitbake (since devtool needs to run bitbake itself).
+        # Additionally we are testing build-time functionality as well, so
+        # really this has to be done as an oe-selftest test.
+        #
+        # Check preconditions
+        machine = get_bb_var('MACHINE')
+        if not machine.startswith('qemu'):
+            self.skipTest('This test only works with qemu machines')
+        if not os.path.exists('/etc/runqemu-nosudo'):
+            self.skipTest('You must set up tap devices with scripts/runqemu-gen-tapdevs before running this test')
+        workspacedir = os.path.join(self.builddir, 'workspace')
+        self.assertTrue(not os.path.exists(workspacedir), 'This test cannot be run with a workspace directory under the build directory')
+        import pexpect
+        # Definitions
+        testrecipe = 'mdadm'
+        testfile = '/sbin/mdadm'
+        testimage = 'oe-selftest-image'
+        testhost = '192.168.7.2'
+        testcommand = '/sbin/mdadm --help'
+        # Build an image to run
+        bitbake("%s qemu-native qemu-helper-native" % testimage)
+        deploy_dir_image = get_bb_var('DEPLOY_DIR_IMAGE')
+        self.add_command_to_tearDown('bitbake -c clean %s' % testimage)
+        self.add_command_to_tearDown('rm -f %s/%s*' % (deploy_dir_image, testimage))
+        # Clean recipe so the first deploy will fail
+        bitbake("%s -c clean" % testrecipe)
+        # Try devtool modify
+        tempdir = tempfile.mkdtemp(prefix='devtoolqa')
+        self.track_for_cleanup(tempdir)
+        self.track_for_cleanup(workspacedir)
+        self.add_command_to_tearDown('bitbake-layers remove-layer */workspace')
+        self.add_command_to_tearDown('bitbake -c clean %s' % testrecipe)
+        result = runCmd('devtool modify %s -x %s' % (testrecipe, tempdir))
+        # Test that deploy-target at this point fails (properly)
+        result = runCmd('devtool deploy-target -n %s root@%s' % (testrecipe, testhost), ignore_status=True)
+        self.assertNotEqual(result.output, 0, 'devtool deploy-target should have failed, output: %s' % result.output)
+        self.assertNotIn(result.output, 'Traceback', 'devtool deploy-target should have failed with a proper error not a traceback, output: %s' % result.output)
+        result = runCmd('devtool build %s' % testrecipe)
+        # First try a dry-run of deploy-target
+        result = runCmd('devtool deploy-target -n %s root@%s' % (testrecipe, testhost))
+        self.assertIn('  %s' % testfile, result.output)
+        # Boot the image
+        console = pexpect.spawn('runqemu %s %s qemuparams="-snapshot" nographic' % (machine, testimage))
+        console.expect("login:", timeout=120)
+        # Now really test deploy-target
+        result = runCmd('devtool deploy-target -c %s root@%s' % (testrecipe, testhost))
+        result = runCmd('ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@%s %s' % (testhost, testcommand))
+        # Test undeploy-target
+        result = runCmd('devtool undeploy-target -c %s root@%s' % (testrecipe, testhost))
+        result = runCmd('ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@%s %s' % (testhost, testcommand), ignore_status=True)
+        self.assertNotEqual(result, 0, 'undeploy-target did not remove command as it should have')
+        console.close()
