@@ -137,11 +137,18 @@ def get_bb_env(target=None, postconfig=None):
 def get_bb_var(var, target=None, postconfig=None):
     val = None
     bbenv = get_bb_env(target, postconfig=postconfig)
+    lastline = None
     for line in bbenv.splitlines():
         if line.startswith(var + "=") or line.startswith("export " + var + "="):
             val = line.split('=')[1]
             val = val.strip('\"')
             break
+        elif line.startswith("unset " + var):
+            # Handle [unexport] variables
+            if lastline.startswith('#   "'):
+                val = lastline.split('\"')[1]
+                break
+        lastline = line
     return val
 
 def get_test_layer():
