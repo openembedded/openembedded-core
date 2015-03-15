@@ -1,0 +1,26 @@
+When try to print time_t values as a long int it causes an error because time_t
+data type in x32 ABI is long long int.
+
+Upstream-Status: Pending
+
+Signed-off-by: Aníbal Limón <anibal.limon@linux.intel.com>
+
+diff --git a/monitor.c b/monitor.c
+index f81e707..19ea041 100644
+--- a/monitor.c
++++ b/monitor.c
+@@ -260,8 +260,13 @@ static int read_and_act(struct active_array *a)
+ 	}
+ 
+ 	gettimeofday(&tv, NULL);
++#if defined(__x86_64__) && defined(__ILP32__)
++	dprintf("%s(%d): %lld.%06lld state:%s prev:%s action:%s prev: %s start:%llu\n",
++#else
+ 	dprintf("%s(%d): %ld.%06ld state:%s prev:%s action:%s prev: %s start:%llu\n",
+-		__func__, a->info.container_member,
++#endif
++		__func__,
++		a->info.container_member,
+ 		tv.tv_sec, tv.tv_usec,
+ 		array_states[a->curr_state],
+ 		array_states[a->prev_state],
