@@ -67,7 +67,7 @@ class DevtoolTests(oeSelfTest):
 
     def test_recipetool_create_git(self):
         # Ensure we have the right data in shlibs/pkgdata
-        bitbake('libpng pango libx11 libxext')
+        bitbake('libpng pango libx11 libxext jpeg')
         # Try adding a recipe
         tempdir = tempfile.mkdtemp(prefix='devtoolqa')
         self.track_for_cleanup(tempdir)
@@ -83,7 +83,7 @@ class DevtoolTests(oeSelfTest):
         checkvars['S'] = '${WORKDIR}/git'
         checkvars['PV'] = '1.0+git${SRCPV}'
         checkvars['SRC_URI'] = srcuri
-        checkvars['DEPENDS'] = 'libpng pango libx11 libxext'
+        checkvars['DEPENDS'] = 'libpng pango libx11 libxext jpeg'
         inherits = []
         with open(recipefile, 'r') as f:
             for line in f:
