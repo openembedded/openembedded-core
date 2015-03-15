@@ -1,0 +1,30 @@
+Fix printf's for time_t value add castings because ISOC90
+don't support long long int that is used in x32 ABI for 
+time_t.
+
+Upstream-Status: Backport
+
+Signed-off-by: Aníbal Limón <anibal.limon@linux.intel.com>
+
+--- a/magnets.c	2015-03-15 11:57:39.106674811 +0000
++++ b/magnets.c	2015-03-15 11:57:58.638674795 +0000
+@@ -2562,7 +2562,7 @@
+         goto done;
+     }
+     s = new_game(NULL, p, desc);
+-    printf("%s:%s (seed %ld)\n", id, desc, seed);
++    printf("%s:%s (seed %ld)\n", id, desc, (long) seed);
+     if (aux) {
+         /* We just generated this ourself. */
+         if (verbose || print) {
+--- a/signpost.c	2015-03-15 11:58:52.866674751 +0000
++++ b/signpost.c	2015-03-15 11:59:08.190674738 +0000
+@@ -2393,7 +2393,7 @@
+         }
+     }
+ 
+-    sprintf(newseed, "%lu", time(NULL));
++    sprintf(newseed, "%lu", (unsigned long) time(NULL));
+     seedstr = dupstr(newseed);
+ 
+     if (id || !stdin_desc) {

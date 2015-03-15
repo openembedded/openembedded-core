@@ -9,6 +9,7 @@ LIC_FILES_CHKSUM = "file://LICENCE;md5=33bcd4bce8f3c197f2aefbdbd2d299bc"
 
 SRC_URI = "svn://svn.tartarus.org/sgt;module=puzzles;rev=${MOD_PV} \
            file://fix-compiling-failure-with-option-g-O.patch \
+           file://puzzles_x32_abi_time.patch \
 "
 
 S = "${WORKDIR}/${BPN}"
