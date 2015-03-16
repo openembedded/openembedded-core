@@ -26,7 +26,4 @@ PACKAGECONFIG[gbm] = "-Dwaffle_has_wayland=1,,virtual/libgl udev"
 # I say virtual/libgl, actually wants egl.pc
 PACKAGECONFIG[x11-egl] = "-Dwaffle_has_x11_egl=1,,virtual/libgl libxcb"
 
-# Take the flags added by PACKAGECONFIG and pass them to cmake.
-EXTRA_OECMAKE = "${EXTRA_OECONF}"
-
 FILES_${PN}-dev += "${datadir}/cmake/Modules/FindWaffle.cmake"
