@@ -409,7 +409,10 @@ class RpmRootfs(Rootfs):
         # __db.00* (Berkeley DB files that hold locks, rpm specific environment
         # settings, etc.), that should not get into the final rootfs
         self.pm.unlock_rpm_db()
-        bb.utils.remove(self.image_rootfs + "/install", True)
+        if os.path.isdir(self.pm.install_dir_path + "/tmp") and not os.listdir(self.pm.install_dir_path + "/tmp"):
+           bb.utils.remove(self.pm.install_dir_path + "/tmp", True)
+        if os.path.isdir(self.pm.install_dir_path) and not os.listdir(self.pm.install_dir_path):
+           bb.utils.remove(self.pm.install_dir_path, True)
 
 
 class DpkgRootfs(Rootfs):

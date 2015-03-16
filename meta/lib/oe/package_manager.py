@@ -578,7 +578,8 @@ class RpmPM(PackageManager):
         self.fullpkglist = list()
         self.deploy_dir = self.d.getVar('DEPLOY_DIR_RPM', True)
         self.etcrpm_dir = os.path.join(self.target_rootfs, "etc/rpm")
-        self.install_dir = os.path.join(self.target_rootfs, "install")
+        self.install_dir_name = "oe_install"
+        self.install_dir_path = os.path.join(self.target_rootfs, self.install_dir_name)
         self.rpm_cmd = bb.utils.which(os.getenv('PATH'), "rpm")
         self.smart_cmd = bb.utils.which(os.getenv('PATH'), "smart")
         self.smart_opt = "--quiet --data-dir=" + os.path.join(target_rootfs,
@@ -749,9 +750,9 @@ class RpmPM(PackageManager):
         bb.utils.mkdirhier(self.etcrpm_dir)
 
         # Setup temporary directory -- install...
-        if os.path.exists(self.install_dir):
-            bb.utils.remove(self.install_dir, True)
-        bb.utils.mkdirhier(os.path.join(self.install_dir, 'tmp'))
+        if os.path.exists(self.install_dir_path):
+            bb.utils.remove(self.install_dir_path, True)
+        bb.utils.mkdirhier(os.path.join(self.install_dir_path, 'tmp'))
 
         channel_priority = 5
         platform_dir = os.path.join(self.etcrpm_dir, "platform")
@@ -838,7 +839,7 @@ class RpmPM(PackageManager):
         self._invoke_smart('config --set rpm-dbpath=/var/lib/rpm')
         self._invoke_smart('config --set rpm-extra-macros._var=%s' %
                            self.d.getVar('localstatedir', True))
-        cmd = 'config --set rpm-extra-macros._tmppath=/install/tmp'
+        cmd = "config --set rpm-extra-macros._tmppath=/%s/tmp" % (self.install_dir_name)
 
         prefer_color = self.d.getVar('RPM_PREFER_ELF_ARCH', True)
         if prefer_color:
@@ -992,7 +993,7 @@ class RpmPM(PackageManager):
             cmd += "--dbpath=/var/lib/rpm "
             cmd += "--define='_cross_scriptlet_wrapper %s' " % \
                    self.scriptlet_wrapper
-            cmd += "--define='_tmppath /install/tmp' %s" % ' '.join(pkgs)
+            cmd += "--define='_tmppath /%s/tmp' %s" % (self.install_dir_name, ' '.join(pkgs))
         else:
             # for pkg in pkgs:
             #   bb.note('Debug: What required: %s' % pkg)
@@ -1027,7 +1028,7 @@ class RpmPM(PackageManager):
         bb.utils.remove(os.path.join(self.target_rootfs, 'var/lib/opkg'), True)
 
         # remove temp directory
-        bb.utils.remove(self.d.expand('${IMAGE_ROOTFS}/install'), True)
+        bb.utils.remove(self.install_dir_path, True)
 
     def backup_packaging_data(self):
         # Save the rpmlib for increment rpm image generation
