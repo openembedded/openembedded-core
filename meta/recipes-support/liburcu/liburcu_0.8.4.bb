@@ -8,6 +8,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=0f060c30a27922ce9c0d557a639b4fa3 \
                     file://urcu/uatomic/x86.h;beginline=4;endline=21;md5=220552f72c55b102f2ee35929734ef42"
 
 SRC_URI = "http://lttng.org/files/urcu/userspace-rcu-${PV}.tar.bz2 \
+           file://Revert-Blacklist-ARM-gcc-4.8.0-4.8.1-4.8.2.patch \
           "
 
 SRC_URI[md5sum] = "2ca6671b20a550aa0e8020a1a9a96fd4"
