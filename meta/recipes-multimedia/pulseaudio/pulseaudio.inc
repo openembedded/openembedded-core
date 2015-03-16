@@ -113,6 +113,7 @@ CONFFILES_libpulse = "${sysconfdir}/pulse/client.conf"
 CONFFILES_pulseaudio-server = "\ 
   ${sysconfdir}/pulse/default.pa \
   ${sysconfdir}/pulse/daemon.conf \
+  ${sysconfdir}/pulse/system.pa \
   "
 
 pkg_postinst_${PN}-server() {
