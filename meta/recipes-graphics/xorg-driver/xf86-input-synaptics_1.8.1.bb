@@ -1,7 +1,5 @@
 require xorg-driver-input.inc
 
-#SRC_URI += "file://configurefix.patch"
-
 SUMMARY = "X.Org X server -- synaptics touchpad input driver"
 
 DESCRIPTION = "synaptics is an Xorg input driver for the touchpads from \
@@ -11,8 +9,6 @@ handled by the normal evdev or mouse drivers, this driver allows more \
 advanced features of the touchpad to become available."
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=55aacd3535a741824955c5eb8f061398"
-
-SRC_URI += "file://always_include_xorg_server.h.patch"
 
 SRC_URI[md5sum] = "ed70d0cba94262a4008dcef654ab34a9"
 SRC_URI[sha256sum] = "d74fdaf29e9888a2cb494e16d0a9ddb24265c5c765b05392b69c50e84ffbf09a"
