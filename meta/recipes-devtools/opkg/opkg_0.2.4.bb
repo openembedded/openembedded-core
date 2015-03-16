@@ -12,7 +12,6 @@ PE = "1"
 SRC_URI = "http://downloads.yoctoproject.org/releases/${BPN}/${BPN}-${PV}.tar.gz \
            file://no-install-recommends.patch \
            file://add-exclude.patch \
-           file://libopkg-opkg_remove.c-avoid-remove-pkg-repeatly-with.patch \
            file://remove-ACLOCAL_AMFLAGS-I-shave-I-m4.patch \
            file://opkg-configure.service \
            file://opkg.conf \
