@@ -9,7 +9,7 @@ scripts/oe-git-proxy-socks
 sources/
 meta-*/
 !meta-skeleton
-!meta-hob
+!meta-selftest
 hob-image-*.bb
 *.swp
 *.orig
