@@ -21,6 +21,7 @@ SRC_URI = "http://www.valgrind.org/downloads/valgrind-${PV}.tar.bz2 \
            file://remove-arm-variant-specific.patch \
            file://remove-ppc-tests-failing-build.patch \
            file://valgrind-remove-rpath.patch \
+           file://enable.building.on.4.x.kernel.patch \
            file://add-ptest.patch \
            file://run-ptest \
           "
