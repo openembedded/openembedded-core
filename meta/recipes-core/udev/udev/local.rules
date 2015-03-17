@@ -13,9 +13,6 @@
 # %% the '%' char itself
 #
 
-# Try and modprobe for drivers for new hardware
-ACTION=="add", DEVPATH=="/devices/*", ENV{MODALIAS}=="?*", RUN+="/sbin/modprobe $env{MODALIAS}"
-
 # Create a symlink to any touchscreen input device
 # Trigger based on input type, that the evbit (-e) has EV_SYN and EV_ABS,
 # has an EV_ABS value (-a) which is used for touchscreen type devices.
