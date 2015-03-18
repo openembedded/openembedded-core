@@ -65,9 +65,9 @@ RDEPENDS_${PN} = "perl e2fsprogs-mke2fs python-core libaio bash gawk expect"
 
 FILES_${PN}-dbg += "\
     /opt/ltp/runtest/.debug \
-    /opt/ltp/testcases/bin/.debug \
-    /opt/ltp/testcases/bin/*/bin/.debug \
-    /opt/ltp/testcases/bin/*/test/.debug \
+    /opt/ltp/testcases/*/.debug \
+    /opt/ltp/testcases/*/*/.debug \
+    /opt/ltp/testcases/*/*/*/.debug \
     /opt/ltp/scenario_groups/.debug \
     /opt/ltp/testscripts/.debug \
     /opt/ltp/testscripts/open_posix_testsuite/.debug \
@@ -79,3 +79,6 @@ FILES_${PN} += "/opt/ltp/* /opt/ltp/runtest/* /opt/ltp/scenario_groups/* /opt/lt
 
 # Avoid generated binaries stripping. Otherwise some of the ltp tests such as ldd01 & nm01 fails
 INHIBIT_PACKAGE_STRIP = "1"
+# However, test_arch_stripped is already stripped, so...
+INSANE_SKIP_${PN} += "already-stripped"
+
