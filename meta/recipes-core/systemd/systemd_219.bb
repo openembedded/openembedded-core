@@ -88,7 +88,11 @@ PACKAGECONFIG[xkbcommon] = "--enable-xkbcommon,--disable-xkbcommon,libxkbcommon"
 PACKAGECONFIG[iptc] = "--enable-libiptc,--disable-libiptc,iptables"
 PACKAGECONFIG[ldconfig] = "--enable-ldconfig,--disable-ldconfig,,"
 
-CACHED_CONFIGUREVARS = "ac_cv_path_KILL=${base_bindir}/kill"
+CACHED_CONFIGUREVARS += "ac_cv_path_KILL=${base_bindir}/kill"
+CACHED_CONFIGUREVARS += "ac_cv_path_KMOD=${base_bindir}/kmod"
+CACHED_CONFIGUREVARS += "ac_cv_path_QUOTACHECK=${sbindir}/quotacheck"
+CACHED_CONFIGUREVARS += "ac_cv_path_QUOTAON=${sbindir}/quotaon"
+CACHED_CONFIGUREVARS += "ac_cv_path_SULOGIN=${base_sbindir}/sulogin"
 
 # Helper variables to clarify locations.  This mirrors the logic in systemd's
 # build system.
