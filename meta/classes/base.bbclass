@@ -151,7 +151,7 @@ python base_do_unpack() {
         raise bb.build.FuncFailed(e)
 
     if not os.path.exists(s_dir):
-        bb.warn("%s ('S') don't exist, you must set 'S' to a proper value" % s_dir)
+        bb.warn("%s ('S') doesn't exist, please set 'S' to a proper value" % s_dir)
 }
 
 def pkgarch_mapping(d):
