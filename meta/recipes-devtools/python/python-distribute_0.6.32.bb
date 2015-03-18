@@ -50,6 +50,14 @@ RDEPENDS_${PN} = "\
   python-compression \
 "
 
+RDEPENDS_${PN}_class-target = "\
+  python-distutils \
+  python-compression \
+  python-netclient \
+  python-email \
+  python-shell \
+"
+
 RPROVIDES_${PN} += "python-setuptools"
 
 BBCLASSEXTEND = "native nativesdk"
