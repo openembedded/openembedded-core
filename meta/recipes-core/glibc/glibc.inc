@@ -88,7 +88,7 @@ do_configure_prepend() {
 }
 
 do_configure_append() {
-	oe_runmake config
+	yes '' | oe_runmake config
 
 	# Remove quotation marks from OPTION_EGLIBC_NSSWITCH_FIXED_*. This will
 	# avoid install error.
