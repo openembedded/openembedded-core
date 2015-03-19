@@ -54,6 +54,12 @@ python do_lint() {
         f.close()
         return ret
 
+    def checkPN(pkgname, varname, str):
+        if str.find("{PN}") != -1:
+            bb.warn("%s: should use BPN instead of PN in %s" % (pkgname, varname))
+        if str.find("{P}") != -1:
+            bb.warn("%s: should use BP instead of P in %s" % (pkgname, varname))
+
     length = len("file://")
     for item in srcuri:
         if item.startswith("file://"):
@@ -72,14 +78,7 @@ python do_lint() {
     #
     for s in srcuri:
         if not s.startswith("file://"):
-            if not s.find("{PN}") == -1:
-                bb.warn("%s: should use BPN instead of PN in SRC_URI" % pkgname)
-            if not s.find("{P}") == -1:
-                bb.warn("%s: should use BP instead of P in SRC_URI" % pkgname)
+            checkPN(pkgname, 'SRC_URI', s)
 
-    srcpath = d.getVar("S")
-    if not srcpath.find("{PN}") == -1:
-        bb.warn("%s: should use BPN instead of PN in S" % pkgname)
-    if not srcpath.find("{P}") == -1:
-        bb.warn("%s: should use BP instead of P in S" % pkgname)
+    checkPN(pkgname, 'S', d.getVar('S'))
 }
