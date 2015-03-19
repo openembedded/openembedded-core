@@ -819,6 +819,10 @@ def check_sanity_everybuild(status, d):
         with open(checkfile, "w") as f:
             f.write(tmpdir)
 
+    # Check vmdk and live can't be built together.
+    if 'vmdk' in d.getVar('IMAGE_FSTYPES', True) and 'live' in d.getVar('IMAGE_FSTYPES', True):
+        status.addresult("Error, IMAGE_FSTYPES vmdk and live can't be built together\n")
+
 def check_sanity(sanity_data):
     import subprocess
 
