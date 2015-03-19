@@ -48,6 +48,7 @@ case "$1" in
   stop)
         echo "Stopping XServer"
         killproc xinit
+        chvt 1
   ;;
 
   restart)
