@@ -116,6 +116,7 @@ do_install_append(){
        fi
 }
 FILES_${PN} += "/lib64 \
-		/usr/lib/lsb \
+                /usr/lib/lsb \
                 ${base_libdir}/lsb/* \
+                /lib/lsb/* \
                "
