@@ -44,6 +44,8 @@ SRC_URI = "git://anongit.freedesktop.org/systemd/systemd;branch=master \
            file://0002-tmpfiles-quietly-ignore-ACLs-on-unsupported-filesyst.patch \
            file://0012-systemd-tmpfiles.c-Honor-ordering-within-files-as-th.patch \
            file://0013-journal-fix-Inappropriate-ioctl-for-device-on-ext4.patch \
+           file://0014-Revert-rules-remove-firmware-loading-rules.patch \
+           file://0015-Revert-udev-remove-userspace-firmware-loading-suppor.patch \
            file://tmpfiles-pam.patch \
            file://touchscreen.rules \
            file://00-create-volatile.conf \
@@ -110,6 +112,7 @@ EXTRA_OECONF = " --with-rootprefix=${rootprefix} \
                  --enable-split-usr \
                  --without-python \
                  --with-sysvrcnd-path=${sysconfdir} \
+                 --with-firmware-path=${rootlibdir}/firmware \
                "
 # uclibc does not have NSS
 EXTRA_OECONF_append_libc-uclibc = " --disable-myhostname "
