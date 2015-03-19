@@ -408,6 +408,11 @@ if [ "$MACHINE" = "qemux86" ]; then
         KERNCMDLINE="vga=0 uvesafb.mode_option=640x480-32 root=$DROOT rw mem=$QEMU_MEMORY $KERNEL_NETWORK_CMD"
         QEMUOPTIONS="$QEMU_NETWORK_CMD -cpu $CPU_SUBTYPE $ROOTFS_OPTIONS $QEMU_UI_OPTIONS"
     fi
+    if [ "${FSTYPE:0:4}" = "cpio" ]; then
+        KERNCMDLINE="vga=0 uvesafb.mode_option=640x480-32 root=/dev/ram0 rw mem=$QEMU_MEMORY $KERNEL_NETWORK_CMD"
+        QEMUOPTIONS="$QEMU_NETWORK_CMD -cpu $CPU_SUBTYPE -initrd $ROOTFS $QEMU_UI_OPTIONS"
+    fi
+
     if [ "$FSTYPE" = "nfs" ]; then
         if [ "$NFS_SERVER" = "192.168.7.1" -a ! -d "$NFS_DIR" ]; then
             echo "Error: NFS mount point $ROOTFS doesn't exist."
