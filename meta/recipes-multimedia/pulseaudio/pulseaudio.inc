@@ -59,10 +59,6 @@ OE_LT_RPATH_ALLOW[export]="1"
 do_install_append() {
 	install -d ${D}${sysconfdir}/default/volatiles
 	install -m 0644 ${WORKDIR}/volatiles.04_pulse  ${D}${sysconfdir}/default/volatiles/volatiles.04_pulse
-	
-	if [ "x${TARGET_PFPU}" = "xsoft" ] ; then 
-	     sed -i -e s:\;\ resample-method\ =\ sinc-fastest:resample-method\ =\ trivial: ${D}${sysconfdir}/pulse/daemon.conf
-	fi
 }
 
 USERADD_PACKAGES = "pulseaudio-server"
