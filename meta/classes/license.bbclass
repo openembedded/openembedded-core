@@ -50,6 +50,7 @@ license_create_manifest() {
 		pkged_pv="$(sed -n 's/^PV: //p' ${filename})"
 		pkged_name="$(basename $(readlink ${filename}))"
 		pkged_lic="$(sed -n "/^LICENSE_${pkged_name}: /{ s/^LICENSE_${pkged_name}: //; p }" ${filename})"
+		pkged_size="$(sed -n "/^PKGSIZE_${pkged_name}: /{ s/^PKGSIZE_${pkged_name}: //; p }" ${filename})"
 		if [ -z "${pkged_lic}" ]; then
 			# fallback checking value of LICENSE
 			pkged_lic="$(sed -n "/^LICENSE: /{ s/^LICENSE: //; p }" ${filename})"
@@ -60,6 +61,13 @@ license_create_manifest() {
 		echo "RECIPE NAME:" ${pkged_pn} >> ${LICENSE_MANIFEST}
 		echo "LICENSE:" ${pkged_lic} >> ${LICENSE_MANIFEST}
 		echo "" >> ${LICENSE_MANIFEST}
+
+		# If the package doesn't contain any file, that is, its size is 0, the license
+		# isn't relevant as far as the final image is concerned. So doing license check
+		# doesn't make much sense, skip it.
+		if [ "$pkged_size" = "0" ]; then
+			continue
+		fi
 
 		lics="$(echo ${pkged_lic} | sed "s/[|&()*]/ /g" | sed "s/  */ /g" )"
 		for lic in ${lics}; do
