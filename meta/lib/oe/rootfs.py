@@ -128,6 +128,7 @@ class Rootfs(object):
             self._generate_kernel_module_deps()
 
         self._cleanup()
+        self._log_check()
 
     def _uninstall_unneeded(self):
         # Remove unneeded init script symlinks
@@ -327,8 +328,6 @@ class RpmRootfs(Rootfs):
 
         self.pm.install_complementary()
 
-        self._log_check()
-
         if self.inc_rpm_image_gen == "1":
             self.pm.backup_packaging_data()
 
@@ -355,7 +354,7 @@ class RpmRootfs(Rootfs):
         pass
 
     def _log_check_warn(self):
-        r = re.compile('^(warn|Warn|NOTE: warn|NOTE: Warn)')
+        r = re.compile('^(warn|Warn|NOTE: warn|NOTE: Warn|WARNING:)')
         log_path = self.d.expand("${T}/log.do_rootfs")
         with open(log_path, 'r') as log:
             for line in log.read().split('\n'):
