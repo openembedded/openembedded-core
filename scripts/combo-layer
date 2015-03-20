@@ -571,12 +571,12 @@ def action_update(conf, args):
         apply the generated patches
     """
     components = [arg.split(':')[0] for arg in args[1:]]
-    revisions = []
+    revisions = {}
     for arg in args[1:]:
-        revision= arg.split(':', 1)[1] if ':' in arg else None
-        revisions.append(revision)
-    # Map commitishes to repos
-    repos = OrderedDict(zip(get_repos(conf, components), revisions))
+        if ':' in arg:
+            a = arg.split(':', 1)
+            revisions[a[0]] = a[1]
+    repos = get_repos(conf, components)
 
     # make sure combo repo is clean
     check_repo_clean(os.getcwd())
@@ -592,7 +592,8 @@ def action_update(conf, args):
     else:
         action_pull(conf, ['arg0'] + components)
 
-    for name, revision in repos.iteritems():
+    for name in repos:
+        revision = revisions.get(name, None)
         repo = conf.repos[name]
         ldir = repo['local_repo_dir']
         dest_dir = repo['dest_dir']
