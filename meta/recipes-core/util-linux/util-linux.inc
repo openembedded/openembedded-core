@@ -163,6 +163,12 @@ do_install () {
 	rm -f ${D}${bindir}/chkdupexe
 }
 
+# reset and nologin causes a conflict with ncurses-native and shadow-native
+do_install_append_class-native () {
+	rm -f ${D}${base_bindir}/reset
+	rm -f ${D}${base_sbindir}/nologin
+}
+
 ALTERNATIVE_PRIORITY = "100"
 
 ALTERNATIVE_${PN}  = "dmesg kill more mkswap blockdev pivot_root switch_root"
