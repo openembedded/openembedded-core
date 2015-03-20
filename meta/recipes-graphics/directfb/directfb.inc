@@ -9,7 +9,7 @@ LICENSE = "LGPLv2.1"
 LIC_FILES_CHKSUM = "file://COPYING;md5=dcf3c825659e82539645da41a7908589"
 
 HOMEPAGE = "http://directfb.org"
-DEPENDS = "jpeg libpng freetype zlib tslib"
+DEPENDS = "jpeg libpng freetype zlib tslib sysfsutils"
 
 SRC_URI = "http://www.directfb.org/downloads/Core/DirectFB-1.7/DirectFB-${PV}.tar.gz \
            file://configurefix.patch \
@@ -31,12 +31,13 @@ PACKAGECONFIG[webp] = "--enable-webp,--disable-webp,libwebp"
 
 EXTRA_OECONF = "\
   --with-gfxdrivers=none \
-  --enable-libmpeg3=no \
   --enable-freetype=yes \
-  --enable-sdl=no \
-  --enable-vnc=no \
-  --disable-x11 \
+  --enable-zlib \
+  --disable-imlib2 \
   --disable-mesa \
+  --disable-sdl \
+  --disable-vnc \
+  --disable-x11 \
 "
 
 #Once -fno-omit-frame-pointer option of gcc is added into TARGET_CLFAGS as default

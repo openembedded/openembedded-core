@@ -2,19 +2,6 @@ require directfb.inc
 
 RV = "1.7-6"
 
-DEPENDS += "sysfsutils"
-
-EXTRA_OECONF = "\
-  --enable-freetype=yes \
-  --enable-zlib \
-  --with-gfxdrivers=none \
-  --disable-sdl \
-  --disable-vnc \
-  --disable-x11 \
-  --disable-imlib2 \
-  --disable-mesa \
-"
-
 LEAD_SONAME = "libdirectfb-1.7.so.0"
 
 SRC_URI[md5sum] = "8a7bb06b3f58599b230b4cf314004512"
