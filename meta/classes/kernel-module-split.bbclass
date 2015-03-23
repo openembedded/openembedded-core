@@ -176,6 +176,9 @@ python split_kernel_module_packages () {
                 rdepends[dep] = []
         d.setVar('RDEPENDS_' + pkg, bb.utils.join_deps(rdepends, commasep=False))
 
+        # Avoid automatic -dev recommendations for modules ending with -dev.
+        d.setVarFlag('RRECOMMENDS_' + pkg, 'nodeprrecs', 1)
+
     module_deps = parse_depmod()
     module_regex = '^(.*)\.k?o$'
     module_pattern = 'kernel-module-%s'
