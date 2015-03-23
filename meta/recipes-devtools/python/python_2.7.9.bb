@@ -25,6 +25,7 @@ SRC_URI += "\
   file://run-ptest \
   file://parallel-makeinst-create-bindir.patch \
   file://use_sysroot_ncurses_instead_of_host.patch \
+  file://avoid_parallel_make_races_on_pgen.patch \
 "
 
 S = "${WORKDIR}/Python-${PV}"
