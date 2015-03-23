@@ -22,7 +22,7 @@ PROVIDES = "ffmpeg"
 
 ARM_INSTRUCTION_SET = "arm"
 
-DEPENDS = "zlib libogg yasm-native"
+DEPENDS = "alsa-lib zlib libogg yasm-native"
 
 INC_PR = "r8"
 
