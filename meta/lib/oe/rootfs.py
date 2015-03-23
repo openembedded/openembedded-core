@@ -190,6 +190,8 @@ class Rootfs(object):
                         pkg = pkg_installed.split()[0]
                         if pkg in ["update-rc.d",
                                 "base-passwd",
+                                "shadow",
+                                "update-alternatives",
                                 self.d.getVar("ROOTFS_BOOTSTRAP_INSTALL", True)
                                 ]:
                             pkgs_to_remove.append(pkg)
