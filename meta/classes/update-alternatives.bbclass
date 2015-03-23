@@ -229,16 +229,16 @@ python populate_packages_updatealternatives () {
                 #bb.note('adding runtime requirement for update-alternatives for %s' % pkg)
                 d.appendVar('RDEPENDS_%s' % pkg, ' ' + d.getVar('MLPREFIX') + provider)
 
-            bb.note('adding update-alternatives calls to postinst/postrm for %s' % pkg)
+            bb.note('adding update-alternatives calls to postinst/prerm for %s' % pkg)
             bb.note('%s' % alt_setup_links)
             postinst = d.getVar('pkg_postinst_%s' % pkg, True) or '#!/bin/sh\n'
             postinst += alt_setup_links
             d.setVar('pkg_postinst_%s' % pkg, postinst)
 
             bb.note('%s' % alt_remove_links)
-            postrm = d.getVar('pkg_postrm_%s' % pkg, True) or '#!/bin/sh\n'
-            postrm += alt_remove_links
-            d.setVar('pkg_postrm_%s' % pkg, postrm)
+            prerm = d.getVar('pkg_prerm_%s' % pkg, True) or '#!/bin/sh\n'
+            prerm += alt_remove_links
+            d.setVar('pkg_prerm_%s' % pkg, prerm)
 }
 
 python package_do_filedeps_append () {
