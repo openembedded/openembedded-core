@@ -46,7 +46,6 @@ do_install_append () {
 		rm ${D}${bindir}/update-alternatives
 		sed -i -e 's|^#!.*${bindir}/perl-native.*/perl|#!/usr/bin/env nativeperl|' ${D}${bindir}/dpkg-*
 	else
-		mv ${D}${bindir}/update-alternatives ${D}${sbindir}
 		sed -i -e 's|^#!.*${bindir}/perl-native.*/perl|#!/usr/bin/env perl|' ${D}${bindir}/dpkg-*
 	fi
 
@@ -67,7 +66,7 @@ PROV_class-native = ""
 PROVIDES += "${PROV}"
 
 PACKAGES =+ "update-alternatives-dpkg"
-FILES_update-alternatives-dpkg = "${sbindir}/update-alternatives ${localstatedir}/lib/dpkg/alternatives ${sysconfdir}/alternatives"
+FILES_update-alternatives-dpkg = "${bindir}/update-alternatives ${localstatedir}/lib/dpkg/alternatives ${sysconfdir}/alternatives"
 RPROVIDES_update-alternatives-dpkg += "update-alternatives"
 
 PACKAGES += "${PN}-perl"
