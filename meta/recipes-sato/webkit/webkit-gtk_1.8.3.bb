@@ -50,6 +50,8 @@ EXTRA_OECONF = "\
                 ${@bb.utils.contains('DISTRO_FEATURES', 'opengl', '--enable-webgl', '--disable-webgl', d)} \
                 UNICODE_CFLAGS=-D_REENTRANT \
                "
+EXTRA_OECONF_append_armv5 = " --disable-jit"
+EXTRA_OECONF_append_armv6 = " --disable-jit"
 
 #default unicode backend icu breaks in cross-compile when target and host are different endian type
 EXTRA_OECONF_append_powerpc = " --with-unicode-backend=glib"
