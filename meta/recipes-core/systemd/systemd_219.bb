@@ -51,7 +51,6 @@ SRC_URI = "git://anongit.freedesktop.org/systemd/systemd;branch=master \
            file://00-create-volatile.conf \
            file://init \
            file://run-ptest \
-           file://journald-volatile.conf \
           "
 
 S = "${WORKDIR}/git"
@@ -153,7 +152,6 @@ do_install() {
 	install -m 0644 ${WORKDIR}/*.rules ${D}${sysconfdir}/udev/rules.d/
 
 	install -m 0644 ${WORKDIR}/00-create-volatile.conf ${D}${sysconfdir}/tmpfiles.d/
-	install -D -m 0644 ${WORKDIR}/journald-volatile.conf ${D}${systemd_unitdir}/system/systemd-journald.service.d/journald-volatile.conf
 
 	if ${@bb.utils.contains('DISTRO_FEATURES','sysvinit','true','false',d)}; then
 		install -d ${D}${sysconfdir}/init.d
