@@ -4,11 +4,9 @@
 #   kernel classes to apply a subset of yocto kernel management to git
 #   managed kernel repositories.
 #
-#   To use linux-yocto-custom in your layer, create a
-#   linux-yocto-custom.bbappend file containing at least the following
-#   lines:
+#   To use linux-yocto-custom in your layer, copy this recipe (optionally
+#   rename it as well) and modify it appropriately for your machine. i.e.:
 #
-#     FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 #     COMPATIBLE_MACHINE_yourmachine = "yourmachine"
 #
 #   You must also provide a Linux kernel configuration. The most direct
