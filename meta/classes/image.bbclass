@@ -396,6 +396,7 @@ python write_image_manifest () {
     from oe.rootfs import image_list_installed_packages
     with open(d.getVar('IMAGE_MANIFEST', True), 'w+') as image_manifest:
         image_manifest.write(image_list_installed_packages(d, 'ver'))
+        image_manifest.write("\n")
 }
 
 # Can be use to create /etc/timestamp during image construction to give a reasonably 
