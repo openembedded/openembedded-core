@@ -169,7 +169,35 @@ class OpkgIndexer(Indexer):
 
 
 class DpkgIndexer(Indexer):
+    def _create_configs(self):
+        bb.utils.mkdirhier(self.apt_conf_dir)
+        bb.utils.mkdirhier(os.path.join(self.apt_conf_dir, "lists", "partial"))
+        bb.utils.mkdirhier(os.path.join(self.apt_conf_dir, "apt.conf.d"))
+        bb.utils.mkdirhier(os.path.join(self.apt_conf_dir, "preferences.d"))
+
+        with open(os.path.join(self.apt_conf_dir, "preferences"),
+                "w") as prefs_file:
+            pass
+        with open(os.path.join(self.apt_conf_dir, "sources.list"),
+                "w+") as sources_file:
+            pass
+
+        with open(self.apt_conf_file, "w") as apt_conf:
+            with open(os.path.join(self.d.expand("${STAGING_ETCDIR_NATIVE}"),
+                "apt", "apt.conf.sample")) as apt_conf_sample:
+                for line in apt_conf_sample.read().split("\n"):
+                    line = re.sub("#ROOTFS#", "/dev/null", line)
+                    line = re.sub("#APTCONF#", self.apt_conf_dir, line)
+                    apt_conf.write(line + "\n")
+
     def write_index(self):
+        self.apt_conf_dir = os.path.join(self.d.expand("${APTCONF_TARGET}"),
+                "apt-ftparchive")
+        self.apt_conf_file = os.path.join(self.apt_conf_dir, "apt.conf")
+        self._create_configs()
+
+        os.environ['APT_CONFIG'] = self.apt_conf_file
+
         pkg_archs = self.d.getVar('PACKAGE_ARCHS', True)
         if pkg_archs is not None:
             arch_list = pkg_archs.split()
