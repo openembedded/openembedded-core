@@ -56,6 +56,7 @@ def get_machine_branch(d, default):
     return default
 
 do_kernel_metadata() {
+	set +e
 	cd ${S}
 	export KMETA=${KMETA}
 
@@ -75,6 +76,41 @@ do_kernel_metadata() {
 		machine_srcrev="${SRCREV}"
 	fi
 
+	# In a similar manner to the kernel itself:
+	#
+	#   defconfig: $(obj)/conf
+	#   ifeq ($(KBUILD_DEFCONFIG),)
+	#	$< --defconfig $(Kconfig)
+	#   else
+	#	@echo "*** Default configuration is based on '$(KBUILD_DEFCONFIG)'"
+	#	$(Q)$< --defconfig=arch/$(SRCARCH)/configs/$(KBUILD_DEFCONFIG) $(Kconfig)
+	#   endif
+	#
+	# If a defconfig is specified via the KBUILD_DEFCONFIG variable, we copy it
+	# from the source tree, into a common location and normalized "defconfig" name,
+	# where the rest of the process will include and incoroporate it into the build
+	#
+	# If the fetcher has already placed a defconfig in WORKDIR (from the SRC_URI),
+	# we don't overwrite it, but instead warn the user that SRC_URI defconfigs take
+	# precendence.
+	#
+	if [ -n "${KBUILD_DEFCONFIG}" ]; then
+		if [ -f "${S}/arch/${ARCH}/configs/${KBUILD_DEFCONFIG}" ]; then
+			if [ -f "${WORKDIR}/defconfig" ]; then
+				# If the two defconfigs are the same, leave the existing one in place
+				cmp "${WORKDIR}/defconfig" "${S}/arch/${ARCH}/configs/${KBUILD_DEFCONFIG}"
+				if [ $? -ne 0 ]; then
+					bbnote "defconfig detected in WORKDIR. ${KBUILD_DEFCONFIG} skipped"
+				else
+					cp -f ${S}/arch/${ARCH}/configs/${KBUILD_DEFCONFIG} ${WORKDIR}/defconfig
+					sccs="${WORKDIR}/defconfig"
+				fi
+			fi
+		else
+			bbfatal "A KBUILD_DECONFIG '${KBUILD_DEFCONFIG}' was specified, but not present in the source tree"
+		fi
+	fi
+
 	# if we have a defined/set meta branch we should not be generating
 	# any meta data. The passed branch has what we need.
 	if [ -n "${KMETA}" ]; then
@@ -86,11 +122,10 @@ do_kernel_metadata() {
 		bbfatal "Could not create ${machine_branch}"
 	fi
 
-	sccs="${@" ".join(find_sccs(d))}"
+	sccs="$sccs ${@" ".join(find_sccs(d))}"
 	patches="${@" ".join(find_patches(d))}"
 	feat_dirs="${@" ".join(find_kernel_feature_dirs(d))}"
 
-	set +e
 	# add any explicitly referenced features onto the end of the feature
 	# list that is passed to the kernel build scripts.
 	if [ -n "${KERNEL_FEATURES}" ]; then
