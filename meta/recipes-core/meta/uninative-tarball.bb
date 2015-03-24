@@ -11,7 +11,6 @@ TOOLCHAIN_HOST_TASK = "\
     "
 
 INHIBIT_DEFAULT_DEPS = "1"
-DEPENDS += "patchelf-native"
 
 TOOLCHAIN_OUTPUTNAME ?= "${BUILD_ARCH}-nativesdk-libc"
 
@@ -24,6 +23,8 @@ inherit populate_sdk
 
 deltask install
 deltask package
+
+SDK_DEPENDS += "patchelf-native"
 
 SDK_PACKAGING_FUNC = ""
 
