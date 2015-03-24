@@ -181,6 +181,8 @@ POSTINST_LOGFILE ?= "${localstatedir}/log/postinstall.log"
 SYSTEMD_DEFAULT_TARGET ?= '${@bb.utils.contains("IMAGE_FEATURES", "x11-base", "graphical.target", "multi-user.target", d)}'
 ROOTFS_POSTPROCESS_COMMAND += '${@bb.utils.contains("DISTRO_FEATURES", "systemd", "set_systemd_default_target; ", "", d)}'
 
+ROOTFS_POSTPROCESS_COMMAND += 'empty_var_volatile;'
+
 # some default locales
 IMAGE_LINGUAS ?= "de-de fr-fr en-gb"
 
@@ -374,6 +376,22 @@ postinst_enable_logging () {
 set_systemd_default_target () {
 	if [ -d ${IMAGE_ROOTFS}${sysconfdir}/systemd/system -a -e ${IMAGE_ROOTFS}${systemd_unitdir}/system/${SYSTEMD_DEFAULT_TARGET} ]; then
 		ln -sf ${systemd_unitdir}/system/${SYSTEMD_DEFAULT_TARGET} ${IMAGE_ROOTFS}${sysconfdir}/systemd/system/default.target
+	fi
+}
+
+# If /var/volatile is not empty, we have seen problems where programs such as the
+# journal make assumptions based on the contents of /var/volatile. The journal
+# would then write to /var/volatile before it was mounted, thus hiding the
+# items previously written.
+#
+# This change is to attempt to fix those types of issues in a way that doesn't
+# affect users that may not be using /var/volatile.
+empty_var_volatile () {
+	if [ -e ${IMAGE_ROOTFS}/etc/fstab ]; then
+		match=`awk '$1 !~ "#" && $2 ~ /\/var\/volatile/{print $2}' ${IMAGE_ROOTFS}/etc/fstab 2> /dev/null`
+		if [ -n "$match" ]; then
+			find ${IMAGE_ROOTFS}/var/volatile -mindepth 1 -delete
+		fi
 	fi
 }
 
