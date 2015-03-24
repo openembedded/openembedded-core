@@ -9,6 +9,7 @@ SRC_URI = "git://github.com/sdroege/gst-player.git \
            file://filechooser.patch \
            file://gtk2.patch \
            file://Fix-pause-play.patch \
+           file://Add-error-signal-emission-for-missing-plugins.patch \
            file://gst-player.desktop"
 
 SRCREV = "5386c5b984d40ef5434673ed62204e69aaf52645"
