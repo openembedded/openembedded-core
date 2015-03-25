@@ -162,7 +162,7 @@ python toaster_image_dumpdata() {
                     import stat
                     artifact_path = os.path.join(dirpath, fn)
                     filestat = os.stat(artifact_path)
-                    if stat.S_ISREG(filestat.st_mode):
+                    if not os.path.islink(artifact_path):
                         artifact_info_data[artifact_path] = filestat.st_size
             except OSError as e:
                 bb.event.fire(bb.event.MetadataEvent("OSErrorException", e), d)
