@@ -7,15 +7,18 @@ Upstream-Status: Submitted
 http://www.mail-archive.com/openssl-dev@openssl.org/msg32860.html
 
 Signed-off-by: Xufeng Zhang <xufeng.zhang@windriver.com>
+
+ported the patch to the 1.0.0m version
+Signed-off-by: Brendan Le Foll <brendan.le.foll@intel.com> 2015/03/24
 ---
 --- a/crypto/evp/digest.c
 +++ b/crypto/evp/digest.c
-@@ -199,7 +199,7 @@
- 		return 0;
- 		}
+@@ -199,7 +199,7 @@ int EVP_DigestInit_ex(EVP_MD_CTX *ctx, const EVP_MD *type, ENGINE *impl)
+         type = ctx->digest;
+     }
  #endif
--	if (ctx->digest != type)
-+	if (type && (ctx->digest != type))
- 		{
- 		if (ctx->digest && ctx->digest->ctx_size)
- 			OPENSSL_free(ctx->md_data);
+-    if (ctx->digest != type) {
++    if (type && (ctx->digest != type)) {
+         if (ctx->digest && ctx->digest->ctx_size)
+             OPENSSL_free(ctx->md_data);
+         ctx->digest = type;
