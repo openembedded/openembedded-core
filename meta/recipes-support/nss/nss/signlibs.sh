@@ -9,7 +9,7 @@
 # calculated on the host where they really need to be done on the
 # target
 
-CHK_FILES=`find /lib* /usr/lib* -name "*.chk"`
+CHK_FILES=`ls /lib*/*.chk /usr/lib*/*.chk 2>/dev/null`
 SIGN_BINARY=`which shlibsign`
 for I in $CHK_FILES
 do
