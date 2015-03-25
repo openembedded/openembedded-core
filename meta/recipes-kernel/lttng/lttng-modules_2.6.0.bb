@@ -11,7 +11,7 @@ do_configure[depends] += "virtual/kernel:do_shared_workdir"
 
 inherit module
 
-SRCREV = "9e8bcbf975844986f021e99e2a30ceedc41b46a8"
+SRCREV = "1b2a5429de815c95643df2eadf91253909708728"
 
 COMPATIBLE_HOST = '(x86_64|i.86|powerpc|aarch64|mips|arm).*-linux'
 
