@@ -12,6 +12,19 @@ SRC_URI = "${GNOME_MIRROR}/pygobject/${MAJ_VER}/pygobject-${PV}.tar.bz2 \
            file://obsolete_automake_macros.patch \
 "
 
+# libtool-native doesn't have fixinstall.patch applied which means
+# that libs get relinked at installation time. This triggers a 
+# relinking along the lines of:
+# gcc -L/tmp/foo/media/build1/poky/build/tmp/sysroots/x86_64-linux/usr/lib -lpyglib-2.0-python -o .libs/_glib.so
+# where /tmp/foo is DESTDIR and pyglib-2.0-python may be installed/reinstalled
+# at the same time as the gcc command runs.
+# If this happens between the handoff between gcc and ld, you can see:
+# /bin/ld: cannot find -lpyglib-2.0-python
+# Adding a dependency rule like  install-pyglibLTLIBRARIES: install-libLTLIBRARIES
+# would be ideal but automake can't cope with that without manually 
+# defining the whole function. Give up and disable parallel make in native builds.
+PARALLEL_MAKEINST_class-native = ""
+
 SRC_URI[md5sum] = "aa64900b274c4661a5c32e52922977f9"
 SRC_URI[sha256sum] = "7da88c169a56efccc516cebd9237da3fe518a343095a664607b368fe21df95b6"
 S = "${WORKDIR}/pygobject-${PV}"
