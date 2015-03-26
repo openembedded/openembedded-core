@@ -86,7 +86,7 @@ oe_runconf () {
 		${CACHED_CONFIGUREVARS} $cfgscript ${CONFIGUREOPTS} ${EXTRA_OECONF} "$@"
 		if [ "$?" != "0" ]; then
 			echo "Configure failed. The contents of all config.log files follows to aid debugging"
-			find ${S} -name config.log -print -exec cat {} \;
+			find ${S} -ignore_readdir_race -name config.log -print -exec cat {} \;
 			bbfatal "oe_runconf failed"
 		fi
 		set -e
