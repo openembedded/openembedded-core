@@ -11,26 +11,34 @@ Upstream-Status: Pending
  gcc/config/arm/linux-elf.h |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-Index: gcc-4.9-20140316/gcc/config/arm/coff.h
+Index: gcc-4.9.2/gcc/config/arm/coff.h
 ===================================================================
---- gcc-4.9-20140316.orig/gcc/config/arm/coff.h
-+++ gcc-4.9-20140316/gcc/config/arm/coff.h
-@@ -33,7 +33,7 @@
+--- gcc-4.9.2.orig/gcc/config/arm/coff.h
++++ gcc-4.9.2/gcc/config/arm/coff.h
+@@ -32,8 +32,11 @@
+ #define TARGET_DEFAULT (MASK_APCS_FRAME)
  
  #ifndef MULTILIB_DEFAULTS
++#ifndef TARGET_ENDIAN_OPTION
++#define TARGET_ENDIAN_OPTION "mlittle-endian"
++#endif
  #define MULTILIB_DEFAULTS \
 -  { "marm", "mlittle-endian", "mfloat-abi=soft", "mno-thumb-interwork" }
 +  { "marm", TARGET_ENDIAN_OPTION, "mfloat-abi=soft", "mno-thumb-interwork" }
  #endif
  
  /* This is COFF, but prefer stabs.  */
-Index: gcc-4.9-20140316/gcc/config/arm/elf.h
+Index: gcc-4.9.2/gcc/config/arm/elf.h
 ===================================================================
---- gcc-4.9-20140316.orig/gcc/config/arm/elf.h
-+++ gcc-4.9-20140316/gcc/config/arm/elf.h
-@@ -112,7 +112,7 @@
+--- gcc-4.9.2.orig/gcc/config/arm/elf.h
++++ gcc-4.9.2/gcc/config/arm/elf.h
+@@ -116,8 +116,11 @@
+ #endif
  
  #ifndef MULTILIB_DEFAULTS
++#ifndef TARGET_ENDIAN_OPTION
++#define TARGET_ENDIAN_OPTION "mlittle-endian"
++#endif
  #define MULTILIB_DEFAULTS \
 -  { "marm", "mlittle-endian", "mfloat-abi=soft", "mno-thumb-interwork", "fno-leading-underscore" }
 +  { "marm", TARGET_ENDIAN_OPTION, "mfloat-abi=soft", "mno-thumb-interwork", "fno-leading-underscore" }
