@@ -65,9 +65,26 @@ then
 fi
 	echo "# we test using cross compiler from real sysroot therefore override the" > ${B}/configparms
 	echo "# definitions that come from ${B}/config.make" >> ${B}/configparms
-
 	fgrep tcbootstrap ${B}/config.make > ${B}/configparms
 	sed -i -e "s/\-tcbootstrap//g" ${B}/configparms
+
+# g++ uses flag -nostdinc, so the locations of system include headers must be explicitly specified
+# If the locations are not already specified in config.make, then we provide the following locations:
+#    <sysroot>/usr/include/c++/<g++ version>
+#    <sysroot>/usr/include/c++/<g++ version>/<machine>
+
+cxxincludes=\`cat ${B}/config.make | gawk '\$1 == "c++-sysincludes"' | gawk -F"=" '{print \$2}' | sed "s/[ \t]\?//g"\`
+
+if [ -z "\$cxxincludes" ]; then
+  sysroot=\`cat ${B}/configparms | sed -n "/CXX/p" | sed -e "s/^.*--sysroot=//"\`
+  cxx=\`cat ${B}/configparms | gawk '\$1 ~ /^CXX/' | gawk -F"=" '{print \$2}' | gawk '{print \$1}'\`
+  cxxmachine=\`\$cxx -dumpmachine\`
+  cxxversion=\`\$cxx -dumpversion\`
+  # pass the new value of c++-sysincludes via configparms
+  echo "# c++-sysincludes added:" >> ${B}/configparms
+  echo "c++-sysincludes = -isystem \$sysroot/usr/include/c++/\$cxxversion -isystem \$sysroot/usr/include/c++/\$cxxversion/\$cxxmachine" >> ${B}/configparms
+fi
+
 wrapper="${S}/scripts/cross-test-ssh.sh \$target"
 localedef="${STAGING_BINDIR_NATIVE}/cross-localedef --little-endian --uint32-align=4"
 make tests-clean
