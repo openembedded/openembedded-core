@@ -6,7 +6,8 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=f27defe1e96c2e1ecd4e0c9be8967949"
 PR = "r5"
 
 SRC_URI += "file://remove-gets.patch \
-	    file://fix-memory-overrun.patch \
+        file://fix-memory-overrun.patch \
+        file://cpio-CVE-2015-1197.patch \
            "
 
 SRC_URI[md5sum] = "1112bb6c45863468b5496ba128792f6c"
