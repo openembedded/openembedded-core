@@ -665,6 +665,10 @@ def action_update(conf, args):
                     # Empty, ignore it. Must also remove from revlist.
                     with open(patch, 'r') as f:
                         fromline = f.readline()
+                    if not fromline:
+                        # Patch must have been empty to start with. No need
+                        # to remove it.
+                        continue
                     m = re.match(r'''^From ([0-9a-fA-F]+) .*\n''', fromline)
                     rev = m.group(1)
                     logger.debug('skipping empty patch %s = %s' % (patch, rev))
