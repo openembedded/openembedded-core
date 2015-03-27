@@ -32,8 +32,6 @@ KCONF_BSP_AUDIT_LEVEL ?= "0"
 
 LINUX_VERSION_EXTENSION ?= "-yocto-${LINUX_KERNEL_TYPE}"
 
-addtask kernel_configme before do_configure after do_patch
-
 # Pick up shared functions
 inherit kernel
 inherit kernel-yocto

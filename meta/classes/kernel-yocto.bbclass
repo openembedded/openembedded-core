@@ -289,7 +289,7 @@ do_kernel_configme() {
 	echo "CONFIG_LOCALVERSION="\"${LINUX_VERSION_EXTENSION}\" >> ${B}/.config
 }
 
-addtask kernel_configme after do_patch
+addtask kernel_configme before do_configure after do_patch
 
 python do_kernel_configcheck() {
     import re, string, sys
