@@ -144,6 +144,10 @@ class Configuration(object):
                 if option not in self.repos[name]:
                     msg = "%s\nOption %s is not defined for component %s" %(msg, option, name)
                     missing_options.append(option)
+            # Sanitize dest_dir so that we do not have to deal with edge cases
+            # (empty string, double slashes) in the rest of the code.
+            dest_dir = os.path.normpath(self.repos[name]["dest_dir"])
+            self.repos[name]["dest_dir"] = "." if not dest_dir else dest_dir
         if msg != "":
             logger.error("configuration file %s has the following error: %s" % (self.conffile,msg))
             if self.localconffile and 'last_revision' in missing_options:
@@ -231,7 +235,7 @@ def action_init(conf, args):
                     pass
                 initialrev = rev
             dest_dir = repo['dest_dir']
-            if dest_dir and dest_dir != ".":
+            if dest_dir != ".":
                 extract_dir = os.path.join(os.getcwd(), dest_dir)
                 if not os.path.exists(extract_dir):
                     os.makedirs(extract_dir)
@@ -325,7 +329,7 @@ EOF
                             runcmd('git replace --edit %s' % rev)
 
                 # Optional: rewrite history to change commit messages or to move files.
-                if 'hook' in repo or dest_dir and dest_dir != ".":
+                if 'hook' in repo or dest_dir != ".":
                     filter_branch = ['git', 'filter-branch', '--force']
                     with tempfile.NamedTemporaryFile() as hookwrapper:
                         if 'hook' in repo:
@@ -353,7 +357,7 @@ tail -c +18 $tmpname | head -c -4
 ''' % (hook, name))
                             hookwrapper.flush()
                             filter_branch.extend(['--msg-filter', 'bash %s' % hookwrapper.name])
-                        if dest_dir and dest_dir != ".":
+                        if dest_dir != ".":
                             parent = os.path.dirname(dest_dir)
                             if not parent:
                                 parent = '.'
@@ -371,7 +375,7 @@ tail -c +18 $tmpname | head -c -4
                     if not os.path.exists(extract_dir):
                         os.makedirs(extract_dir)
                     copy_selected_files('HEAD', extract_dir, file_filter, exclude_patterns, '.',
-                                        subdir=dest_dir if dest_dir and dest_dir != '.' else '')
+                                        subdir=dest_dir if dest_dir != '.' else '')
                     runcmd('git add --all --force .')
                     if runcmd('git status --porcelain'):
                         # Something to commit.
