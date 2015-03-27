@@ -249,13 +249,16 @@ def action_init(conf, args):
                 # files already moved, we need to prepend the
                 # subdirectory to all filters, otherwise they would
                 # not match.
-                if subdir:
+                if subdir == '.':
+                    subdir = ''
+                elif subdir:
+                    subdir = os.path.normpath(subdir)
                     file_filter = ' '.join([subdir + '/' + x for x in file_filter.split()])
                     exclude_patterns = [subdir + '/' + x for x in exclude_patterns]
                 # To handle both cases, we cd into the target
                 # directory and optionally tell tar to strip the path
                 # prefix when the files were already moved.
-                subdir_components = len(os.path.normpath(subdir).split(os.path.sep)) if subdir else 0
+                subdir_components = len(subdir.split(os.path.sep)) if subdir else 0
                 strip=('--strip-components=%d' % subdir_components) if subdir else ''
                 # TODO: file_filter wild cards do not work (and haven't worked before either), because
                 # a) GNU tar requires a --wildcards parameter before turning on wild card matching.
@@ -375,7 +378,7 @@ tail -c +18 $tmpname | head -c -4
                     if not os.path.exists(extract_dir):
                         os.makedirs(extract_dir)
                     copy_selected_files('HEAD', extract_dir, file_filter, exclude_patterns, '.',
-                                        subdir=dest_dir if dest_dir != '.' else '')
+                                        subdir=dest_dir)
                     runcmd('git add --all --force .')
                     if runcmd('git status --porcelain'):
                         # Something to commit.
@@ -648,7 +651,7 @@ def action_update(conf, args):
             filter = ['filterdiff', '-p1']
             for path in exclude.split():
                 filter.append('-x')
-                filter.append('%s/%s' % (dest_dir, path) if dest_dir else path)
+                filter.append('%s/%s' % (dest_dir, path) if dest_dir != '.' else path)
             for patch in patchlist[:]:
                 filtered = patch + '.tmp'
                 with open(filtered, 'w') as f:
