@@ -1,0 +1,54 @@
+When running do_package_write_deb, we have trees of hardlinked files
+such as the dbg source files in ${PN}-dbg. If something makes another
+copy of one of those files (or deletes one), the number of links a file
+has changes and tar can notice this, e.g.:
+
+| DEBUG: Executing python function do_package_deb
+| dpkg-deb: building package `sed-ptest' in `/media/build1/poky/build/tmp/work/i586-poky-linux/sed/4.2.2-r0/deploy-debs/i586/sed-ptest_4.2.2-r0.3_i386.deb'.
+| tar: ./usr/lib/sed/ptest/testsuite/tst-regex2: file changed as we read it
+| dpkg-deb: error: subprocess tar -cf returned error exit status 1
+
+Tar returns an error of 1 when files 'change' and other errors codes
+in other error cases. We tweak dpkg-deb here so that it ignores an exit
+code of 1 from tar. The files don't really change (and we have locking in
+place to avoid that kind of issue).
+
+Upsteam-Status: Inappropriate
+RP 2015/3/27
+
+Index: dpkg-1.17.21/dpkg-deb/build.c
+===================================================================
+--- dpkg-1.17.21.orig/dpkg-deb/build.c
++++ dpkg-1.17.21/dpkg-deb/build.c
+@@ -398,7 +398,7 @@ do_build(const char *const *argv)
+   bool subdir;
+   char *tfbuf;
+   int arfd;
+-  int p1[2], p2[2], gzfd;
++  int p1[2], p2[2], gzfd, rc;
+   pid_t c1, c2;
+ 
+   /* Decode our arguments. */
+@@ -493,7 +493,9 @@ do_build(const char *const *argv)
+   }
+   close(p1[0]);
+   subproc_reap(c2, "gzip -9c", 0);
+-  subproc_reap(c1, "tar -cf", 0);
++  rc = subproc_reap(c1, "tar -cf", SUBPROC_RETERROR);
++  if (rc && rc != 1)
++    ohshite(_("subprocess %s returned error exit status %d"), "tar -cf", rc);
+ 
+   if (lseek(gzfd, 0, SEEK_SET))
+     ohshite(_("failed to rewind temporary file (%s)"), _("control member"));
+@@ -581,7 +583,10 @@ do_build(const char *const *argv)
+   /* All done, clean up wait for tar and gzip to finish their job. */
+   close(p1[1]);
+   subproc_reap(c2, _("<compress> from tar -cf"), 0);
+-  subproc_reap(c1, "tar -cf", 0);
++  rc = subproc_reap(c1, "tar -cf", SUBPROC_RETERROR);
++  if (rc && rc != 1)
++    ohshite(_("subprocess %s returned error exit status %d"), "tar -cf", rc);
++
+   /* Okay, we have data.tar as well now, add it to the ar wrapper. */
+   if (deb_format.major == 2) {
+     char datamember[16 + 1];
