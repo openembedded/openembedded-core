@@ -567,7 +567,7 @@ def pstaging_fetch(sstatefetch, sstatepkg, d):
     bb.utils.mkdirhier(dldir)
 
     localdata.delVar('MIRRORS')
-    localdata.delVar('FILESPATH')
+    localdata.setVar('FILESPATH', dldir)
     localdata.setVar('DL_DIR', dldir)
     localdata.setVar('PREMIRRORS', mirrors)
 
@@ -698,6 +698,8 @@ def sstate_checkhashes(sq_fn, sq_task, sq_hash, sq_hashfn, d):
         bb.data.update_data(localdata)
 
         dldir = localdata.expand("${SSTATE_DIR}")
+        localdata.delVar('MIRRORS')
+        localdata.setVar('FILESPATH', dldir)
         localdata.setVar('DL_DIR', dldir)
         localdata.setVar('PREMIRRORS', mirrors)
 
