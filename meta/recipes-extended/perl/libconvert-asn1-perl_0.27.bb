@@ -12,6 +12,6 @@ S = "${WORKDIR}/Convert-ASN1-${PV}"
 
 inherit cpan
 
-EXTRA_PERLFLAGS = "-I ${STAGING_LIBDIR_NATIVE}/perl-native/perl/${@get_perl_version(d)}"
+EXTRA_PERLFLAGS = "-I ${PERLHOSTLIB}"
 
 BBCLASSEXTEND = "native"

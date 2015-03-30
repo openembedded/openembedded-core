@@ -17,7 +17,7 @@ SRC_URI[sha256sum] = "5cff13d0802792da1eb45895ce1be461903d98ec97c9c953bc8406af72
 
 S = "${WORKDIR}/XML-Simple-${PV}"
 
-EXTRA_PERLFLAGS = "-I ${STAGING_LIBDIR_NATIVE}/perl-native/perl/${@get_perl_version(d)}"
+EXTRA_PERLFLAGS = "-I ${PERLHOSTLIB}"
 
 inherit cpan
 
