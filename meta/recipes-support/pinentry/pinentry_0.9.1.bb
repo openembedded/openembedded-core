@@ -8,14 +8,12 @@ HOMEPAGE = "http://www.gnupg.org/related_software/pinentry/index.en.html"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=cbbd794e2a0a289b9dfcc9f513d1996e"
 
-PR = "r1"
-
 inherit autotools
 
 SRC_URI = "ftp://ftp.gnupg.org/gcrypt/${BPN}/${BPN}-${PV}.tar.bz2"
 
-SRC_URI[md5sum] = "40a05856cb3accf6679987b7899b0f5a"
-SRC_URI[sha256sum] = "90045a07ab8e1a8e1ecf5d19b51691f195525e579fa5d71d7e92c120b05490ab"
+SRC_URI[md5sum] = "d224d031130aedb44b05164cb04ed88b"
+SRC_URI[sha256sum] = "9cd08e856b395df3adc7124170b53f77c6d5c8bf88e899e818648ec70d3e9695"
 
 EXTRA_OECONF = "--disable-rpath \
 		        --disable-dependency-tracking \
