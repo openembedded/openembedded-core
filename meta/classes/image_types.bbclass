@@ -146,6 +146,7 @@ IMAGE_TYPES = " \
     cramfs \
     ext2 ext2.gz ext2.bz2 ext2.lzma \
     ext3 ext3.gz \
+    ext4 ext4.gz \
     btrfs \
     iso \
     hddimg \
@@ -171,7 +172,7 @@ COMPRESS_DEPENDS_xz = "xz-native"
 COMPRESS_DEPENDS_lz4 = "lz4-native"
 COMPRESS_DEPENDS_sum = "mtd-utils-native"
 
-RUNNABLE_IMAGE_TYPES ?= "ext2 ext3"
+RUNNABLE_IMAGE_TYPES ?= "ext2 ext3 ext4"
 RUNNABLE_MACHINE_PATTERNS ?= "qemu"
 
 DEPLOYABLE_IMAGE_TYPES ?= "hddimg iso" 
