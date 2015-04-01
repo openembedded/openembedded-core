@@ -29,7 +29,7 @@ perform_groupadd () {
 			fi
 			count=`expr $count + 1`
 			if test $count = $retries; then
-				bbfatal "Tried running groupadd command $retries times without scucess, giving up"
+				bbfatal "Tried running groupadd command $retries times without success, giving up"
 			fi
                         sleep $count
 		done
@@ -57,7 +57,7 @@ perform_useradd () {
 		       fi
 		       count=`expr $count + 1`
 		       if test $count = $retries; then
-				bbfatal "Tried running useradd command $retries times without scucess, giving up"
+				bbfatal "Tried running useradd command $retries times without success, giving up"
 		       fi
 		       sleep $count
 	       done
@@ -99,7 +99,7 @@ perform_groupmems () {
 					rm -f $rootdir${sysconfdir}/gshadow
 					rm -f $rootdir${sysconfdir}/gshadow-
 				fi
-				bbfatal "Tried running groupmems command $retries times without scucess, giving up"
+				bbfatal "Tried running groupmems command $retries times without success, giving up"
 			fi
 			sleep $count
 		done
@@ -131,7 +131,7 @@ perform_groupdel () {
 			fi
 			count=`expr $count + 1`
 			if test $count = $retries; then
-				bbfatal "Tried running groupdel command $retries times without scucess, giving up"
+				bbfatal "Tried running groupdel command $retries times without success, giving up"
 			fi
 			sleep $count
 		done
@@ -159,7 +159,7 @@ perform_userdel () {
 		       fi
 		       count=`expr $count + 1`
 		       if test $count = $retries; then
-				bbfatal "Tried running userdel command $retries times without scucess, giving up"
+				bbfatal "Tried running userdel command $retries times without success, giving up"
 		       fi
 		       sleep $count
 	       done
@@ -189,7 +189,7 @@ perform_groupmod () {
 			fi
 			count=`expr $count + 1`
 			if test $count = $retries; then
-				bbfatal "Tried running groupmod command $retries times without scucess, giving up"
+				bbfatal "Tried running groupmod command $retries times without success, giving up"
 			fi
 			sleep $count
 		done
@@ -219,7 +219,7 @@ perform_usermod () {
 		       fi
 		       count=`expr $count + 1`
 		       if test $count = $retries; then
-				bbfatal "Tried running usermod command $retries times without scucess, giving up"
+				bbfatal "Tried running usermod command $retries times without success, giving up"
 		       fi
 		       sleep $count
 	       done
