@@ -1,0 +1,36 @@
+From 6207fb45553ee98f2f326883b7c21b76c8267343 Mon Sep 17 00:00:00 2001
+From: Robert Yang <liezhi.yang@windriver.com>
+Date: Tue, 31 Mar 2015 02:31:25 -0700
+Subject: [PATCH] elf/Makefile: fix a typo
+
+Fixed a typo:
+name-target-directory -> make-target-directory
+
+There is no name-target-directory, it should be make-target-directory,
+this fixed the error:
+/bin/bash: /path/to/elf/runtime-linker.T: No such file or directory
+Makefile:361: recipe for target '/path/to/elf/runtime-linker.st' failed
+
+Upstream-Status: Pending
+
+Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
+---
+ elf/Makefile |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/elf/Makefile b/elf/Makefile
+index e5b142c..62fe245 100644
+--- a/elf/Makefile
++++ b/elf/Makefile
+@@ -358,7 +358,7 @@ $(objpfx)interp.os: $(elf-objpfx)runtime-linker.h
+ 
+ $(elf-objpfx)runtime-linker.h: $(elf-objpfx)runtime-linker.st; @:
+ $(elf-objpfx)runtime-linker.st: $(common-objpfx)config.make
+-	$(name-target-directory)
++	$(make-target-directory)
+ 	echo '#define RUNTIME_LINKER "$(rtlddir)/$(rtld-installed-name)"' \
+ 		> ${@:st=T}
+ 	$(move-if-change) ${@:st=T} ${@:st=h}
+-- 
+1.7.9.5
+
