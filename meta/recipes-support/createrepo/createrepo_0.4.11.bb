@@ -14,6 +14,7 @@ SRC_URI= "http://createrepo.baseurl.org/download/${BP}.tar.gz \
           file://python-scripts-should-use-interpreter-from-env.patch \
 	  file://createrepo-rpm549.patch \
 	  file://recommends.patch \
+	  file://createrepo-dbpath.patch \
 	  file://rpm-createsolvedb.py \
          "
 
