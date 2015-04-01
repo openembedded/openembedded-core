@@ -6,7 +6,7 @@ BUGTRACKER = "https://bugzilla.gnome.org/"
 SECTION = "libs"
 
 DEPENDS = "glib-2.0 cairo pango atk jpeg libpng gdk-pixbuf \
-           docbook-utils-native gdk-pixbuf-native"
+           docbook-utils-native gdk-pixbuf-native libepoxy"
 
 LICENSE = "LGPLv2 & LGPLv2+ & LGPLv2.1+"
 
@@ -22,10 +22,7 @@ do_configure_prepend() {
     ln -s ${TARGET_PREFIX}libtool libtool
 }
 
-# Forcibly disable the GTK+ 2 dependency as we don't want to natively build the
-# entire GTK+ stack, or need GTK+ 2 for gtk-update-icon-cache.
 EXTRA_OECONF += " \
-                 --disable-gtk2-dependency \
                  --disable-glibtest \
                  --disable-xinerama \
                  --enable-modules \
@@ -37,7 +34,7 @@ PACKAGECONFIG ??= "${@bb.utils.contains("DISTRO_FEATURES", "x11", "x11", "", d)}
                    ${@bb.utils.contains("DISTRO_FEATURES", "wayland", "wayland", "", d)}"
 
 PACKAGECONFIG[x11] = "--enable-x11-backend,--disable-x11-backend,at-spi2-atk fontconfig libx11 libxext libxcursor libxi libxdamage libxrandr libxrender libxcomposite libxfixes"
-PACKAGECONFIG[wayland] = "--enable-wayland-backend,--disable-wayland-backend,wayland libxkbcommon"
+PACKAGECONFIG[wayland] = "--enable-wayland-backend,--disable-wayland-backend,wayland libxkbcommon virtual/mesa"
 
 do_install_append() {
 	mv ${D}${bindir}/gtk-update-icon-cache ${D}${bindir}/gtk-update-icon-cache-3.0
@@ -48,12 +45,14 @@ LIBV = "3.0.0"
 
 FILES_${PN}-demo = "${bindir}/gtk3-demo \
                     ${bindir}/gtk3-demo-application \
+                    ${bindir}/gtk3-icon-browser \
                     ${bindir}/gtk3-widget-factory \
                     ${datadir}/gtk-3.0/demo \
                     ${datadir}/applications/gtk3-demo.desktop \
+                    ${datadir}/applications/gtk3-icon-browser.desktop \
                     ${datadir}/applications/gtk3-widget-factory.desktop \
-                    ${datadir}/icons/hicolor/*/apps/gtk3-demo.png \
-                    ${datadir}/icons/hicolor/*/apps/gtk3-widget-factory.png"
+                    ${datadir}/icons/hicolor/*/apps/gtk3-demo*.png \
+                    ${datadir}/icons/hicolor/*/apps/gtk3-widget-factory*.png"
 
 # The demo uses PNG files and mime type sniffing, so ensure that these
 # dependencies are present.
@@ -76,7 +75,8 @@ FILES_${PN}-dev += " \
                     ${libdir}/gtk-3.0/3.0.0/printbackends/*.la \
                     ${libdir}/gtk-3.0/${LIBV}/engines/*.la \
                     ${libdir}/gtk-3.0/modules/*.la \
-                    ${bindir}/gtk-builder-convert"
+                    ${bindir}/gtk-builder-convert \
+                    ${bindir}/gtk-encode-symbolic-svg"
 
 FILES_${PN}-dbg += " \
                     ${libdir}/gtk-3.0/${LIBV}/loaders/.debug \
@@ -85,6 +85,7 @@ FILES_${PN}-dbg += " \
                     ${libdir}/gtk-3.0/${LIBV}/printbackends/.debug \
                     ${libdir}/gtk-3.0/modules/.debug"
 
+RRECOMMENDS_${PN} = "adwaita-icon-theme-symbolic"
 
 PACKAGES_DYNAMIC += "^gtk3-immodule-.* ^gtk3-printbackend-.*"
 
