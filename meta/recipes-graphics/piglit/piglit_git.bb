@@ -21,6 +21,9 @@ REQUIRED_DISTRO_FEATURES = "x11"
 # contents out of $S and $B.
 B="${S}"
 
+PACKAGECONFIG ??= ""
+PACKAGECONFIG[freeglut] = "-DPIGLIT_USE_GLUT=1,-DPIGLIT_USE_GLUT=0,freeglut,"
+
 # CMake sets the rpath at build time with the source tree, and will reset it at
 # install time. As we don't install this doesn't happen, so force the rpath to
 # what we need.
