@@ -74,8 +74,12 @@ do_compile() {
         export USE_64=1
     fi
 
-    make -C ./nss CCC="${CXX}" \
-        OS_TEST=${OS_TEST} \
+    # We can modify CC in the environment, but if we set it via an
+    # argument to make, nsinstall, a host program, will also build with it!
+    #
+    export CC="${CC} -g"
+    make -C ./nss CCC="${CXX} -g" \
+        OS_TEST=${OS_TEST}
 }
 
 
@@ -204,9 +208,6 @@ FILES_${PN}-dev = "\
     ${libdir}/pkgconfig/* \
     ${includedir}/* \
     "
-FILES_${PN}-dbg = "\
-    ${bindir}/.debug/* \
-    ${libdir}/.debug/* \
-    "
+# FILES_${PN}-dbg is populated automatically
 
 BBCLASSEXTEND = "native nativesdk"
