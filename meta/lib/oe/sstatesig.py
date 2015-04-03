@@ -206,9 +206,6 @@ def find_siginfo(pn, taskname, taskhashlist, d):
         if key.startswith('virtual:native:'):
             pn = pn + '-native'
 
-    if taskname in ['do_fetch', 'do_unpack', 'do_patch', 'do_populate_lic']:
-        pn.replace("-native", "")
-
     filedates = {}
 
     # First search in stamps dir
@@ -249,7 +246,10 @@ def find_siginfo(pn, taskname, taskhashlist, d):
             localdata.setVar('PV', '*')
             localdata.setVar('PR', '*')
             localdata.setVar('BB_TASKHASH', hashval)
-            if pn.endswith('-native') or "-cross-" in pn or "-crosssdk-" in pn:
+            swspec = localdata.getVar('SSTATE_SWSPEC', True)
+            if taskname in ['do_fetch', 'do_unpack', 'do_patch', 'do_populate_lic', 'do_preconfigure'] and swspec:
+                localdata.setVar('SSTATE_PKGSPEC', '${SSTATE_SWSPEC}')
+            elif pn.endswith('-native') or "-cross-" in pn or "-crosssdk-" in pn:
                 localdata.setVar('SSTATE_EXTRAPATH', "${NATIVELSBSTRING}/")
             sstatename = taskname[3:]
             filespec = '%s_%s.*.siginfo' % (localdata.getVar('SSTATE_PKG', True), sstatename)
