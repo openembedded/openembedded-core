@@ -15,7 +15,7 @@ SRC_URI = "git://uclibc.org/uClibc.git;branch=master \
 	file://argp-headers.patch \
 	file://remove_attribute_optimize_Os.patch \
 	file://compile-arm-fork-with-O2.patch \
-	file://orign_path.patch \
+	file://0001-ldso-limited-support-for-ORIGIN-in-rpath.patch \
 	file://0001-atexit_old-Do-not-add-it-to-shared-libc.patch \
 	file://0001-nptl-arm-Move-aeabi_read_tp-to-uclibc_nonshared.a.patch \
 	file://0001-nptl-atfork-Hide-pthread_atfork-in-shared-versions.patch \
