@@ -32,10 +32,13 @@ SRC_URI[sha256sum] = "fa253dc26ddb661b6269df58144eff607ea3f76a9bcfe574b0c7726e1d
 COMPATIBLE_HOST = '(i.86|x86_64|mips|powerpc|powerpc64).*-linux'
 COMPATIBLE_HOST_armv7a = 'arm.*-linux'
 
+PR = "r1"
+
 inherit autotools ptest
 
 EXTRA_OECONF = "--enable-tls --without-mpicc"
 EXTRA_OECONF_armv7a = "--enable-tls -host=armv7-none-linux-gnueabi --without-mpicc"
+EXTRA_OECONF += "${@['--enable-only32bit','--enable-only64bit'][d.getVar('SITEINFO_BITS', True) != '32']}"
 EXTRA_OEMAKE = "-w"
 
 do_install_append () {
