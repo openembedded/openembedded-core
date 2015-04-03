@@ -51,7 +51,7 @@ def both_contain(variable1, variable2, checkvalue, d):
     else:
         checkvalue = set(checkvalue)
     if checkvalue.issubset(val1) and checkvalue.issubset(val2):
-        return checkvalue
+        return " ".join(checkvalue)
     else:
         return ""
 
