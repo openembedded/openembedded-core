@@ -144,6 +144,7 @@ def find_bitbake_env_lines(image_name):
     rc, bitbake_env_lines = __exec_cmd(bitbake_env_cmd)
     if rc != 0:
         print "Couldn't get '%s' output." % bitbake_env_cmd
+        print "Bitbake failed with error:\n%s\n" % bitbake_env_lines
         return None
 
     return bitbake_env_lines
