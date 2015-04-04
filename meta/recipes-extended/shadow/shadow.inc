@@ -149,15 +149,30 @@ do_install_append() {
 	ln -sf newgrp.${BPN} ${D}${bindir}/sg
 }
 
+PACKAGES =+ "${PN}-base"
+FILES_${PN}-base = "\
+    ${base_bindir}/login.shadow \
+    ${base_bindir}/su.shadow \
+    ${bindir}/sg \
+    ${bindir}/newgrp.shadow \
+    ${bindir}/groups.shadow \
+    ${sysconfdir}/pam.d/login \
+    ${sysconfdir}/pam.d/su \
+    ${sysconfdir}/login.defs \
+"
+RDEPENDS_${PN} += "${PN}-base"
+
 inherit update-alternatives
 
 ALTERNATIVE_PRIORITY = "200"
 
-ALTERNATIVE_${PN} = "passwd chfn newgrp chsh groups chpasswd login vipw vigr su"
+ALTERNATIVE_${PN} = "passwd chfn chsh chpasswd vipw vigr"
 ALTERNATIVE_LINK_NAME[chpasswd] = "${sbindir}/chpasswd"
-ALTERNATIVE_LINK_NAME[login] = "${base_bindir}/login"
 ALTERNATIVE_LINK_NAME[vipw] = "${base_sbindir}/vipw"
 ALTERNATIVE_LINK_NAME[vigr] = "${base_sbindir}/vigr"
+
+ALTERNATIVE_${PN}-base = "newgrp groups login su"
+ALTERNATIVE_LINK_NAME[login] = "${base_bindir}/login"
 ALTERNATIVE_LINK_NAME[su] = "${base_bindir}/su"
 
 ALTERNATIVE_${PN}-doc = "passwd.5 getspnam.3"
