@@ -18,7 +18,8 @@ SRC_URI[sha256sum] = "22a530a8a5ba1cb9c080cba033206b17dacd21437762155c6d30ee6469
 
 S = "${WORKDIR}/${BPN}-${PV}-stable"
 
-EXTRA_OECONF = "--disable-openssl"
+PACKAGECONFIG ??= ""
+PACKAGECONFIG[openssl] = "--enable-openssl,--disable-openssl,openssl"
 
 inherit autotools
 
