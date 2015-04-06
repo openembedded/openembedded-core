@@ -10,7 +10,9 @@ LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=3610bb17683a0089ed64055416b2ae1b"
 
 SRC_URI = "ftp://sourceware.org/pub/libffi/${BP}.tar.gz \
-           file://fix-libffi.la-location.patch"
+           file://fix-libffi.la-location.patch \
+	   file://0001-mips-Use-compiler-internal-define-for-linux.patch \
+	   "
 
 SRC_URI[md5sum] = "83b89587607e3eb65c70d361f13bab43"
 SRC_URI[sha256sum] = "d06ebb8e1d9a22d19e38d63fdb83954253f39bedc5d46232a05645685722ca37"
