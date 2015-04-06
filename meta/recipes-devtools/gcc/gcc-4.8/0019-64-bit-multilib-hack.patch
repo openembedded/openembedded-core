@@ -31,10 +31,10 @@ Upstream-Status: Pending
  gcc/config/rs6000/t-linux64 |    5 ++---
  3 files changed, 7 insertions(+), 14 deletions(-)
 
-diff --git a/gcc/config/i386/t-linux64 b/gcc/config/i386/t-linux64
-index bcea0c6..eb004d7 100644
---- a/gcc/config/i386/t-linux64
-+++ b/gcc/config/i386/t-linux64
+Index: gcc-4.8.4/gcc/config/i386/t-linux64
+===================================================================
+--- gcc-4.8.4.orig/gcc/config/i386/t-linux64
++++ gcc-4.8.4/gcc/config/i386/t-linux64
 @@ -32,7 +32,5 @@
  #
  comma=,
@@ -45,10 +45,10 @@ index bcea0c6..eb004d7 100644
 -MULTILIB_OSDIRNAMES+= mx32=../libx32$(call if_multiarch,:x86_64-linux-gnux32)
 +MULTILIB_DIRNAMES = . .
 +MULTILIB_OSDIRNAMES = ../$(shell basename $(base_libdir)) ../$(shell basename $(base_libdir))
-diff --git a/gcc/config/mips/t-linux64 b/gcc/config/mips/t-linux64
-index bdbbd4f..16a6366 100644
---- a/gcc/config/mips/t-linux64
-+++ b/gcc/config/mips/t-linux64
+Index: gcc-4.8.4/gcc/config/mips/t-linux64
+===================================================================
+--- gcc-4.8.4.orig/gcc/config/mips/t-linux64
++++ gcc-4.8.4/gcc/config/mips/t-linux64
 @@ -17,10 +17,6 @@
  # <http://www.gnu.org/licenses/>.
  
@@ -63,20 +63,17 @@ index bdbbd4f..16a6366 100644
 +MULTILIB_DIRNAMES = . . .
 +MULTILIB_OSDIRNAMES = ../$(shell basename $(base_libdir)) ../$(shell basename $(base_libdir)) ../$(shell basename $(base_libdir))
 +
-diff --git a/gcc/config/rs6000/t-linux64 b/gcc/config/rs6000/t-linux64
-index 9175de2..3971019 100644
---- a/gcc/config/rs6000/t-linux64
-+++ b/gcc/config/rs6000/t-linux64
+Index: gcc-4.8.4/gcc/config/rs6000/t-linux64
+===================================================================
+--- gcc-4.8.4.orig/gcc/config/rs6000/t-linux64
++++ gcc-4.8.4/gcc/config/rs6000/t-linux64
 @@ -26,7 +26,6 @@
  # MULTILIB_OSDIRNAMES according to what is found on the target.
  
- MULTILIB_OPTIONS        = m64/m32
--MULTILIB_DIRNAMES       = 64 32
-+MULTILIB_DIRNAMES       = . .
- MULTILIB_EXTRA_OPTS     = fPIC
--MULTILIB_OSDIRNAMES	= ../lib64$(call if_multiarch,:powerpc64-linux-gnu)
--MULTILIB_OSDIRNAMES    += $(if $(wildcard $(shell echo $(SYSTEM_HEADER_DIR))/../../usr/lib32),../lib32,../lib)$(call if_multiarch,:powerpc-linux-gnu)
-+MULTILIB_OSDIRNAMES    = ../$(shell basename $(base_libdir)) ../$(shell basename $(base_libdir))
--- 
-1.7.10.4
-
+ MULTILIB_OPTIONS    := m64/m32
+-MULTILIB_DIRNAMES   := 64 32
++MULTILIB_DIRNAMES   := . .
+ MULTILIB_EXTRA_OPTS := 
+-MULTILIB_OSDIRNAMES := m64=../lib64$(call if_multiarch,:powerpc64-linux-gnu)
+-MULTILIB_OSDIRNAMES += m32=$(if $(wildcard $(shell echo $(SYSTEM_HEADER_DIR))/../../usr/lib32),../lib32,../lib)$(call if_multiarch,:powerpc-linux-gnu)
++MULTILIB_OSDIRNAMES := ../$(shell basename $(base_libdir)) ../$(shell basename $(base_libdir))

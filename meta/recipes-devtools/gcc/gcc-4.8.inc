@@ -2,11 +2,11 @@ require gcc-common.inc
 
 # Third digit in PV should be incremented after a minor release
 
-PV = "4.8.2"
+PV = "4.8.4"
 
 # BINV should be incremented to a revision after a minor gcc release
 
-BINV = "4.8.2"
+BINV = "4.8.4"
 
 FILESEXTRAPATHS =. "${FILE_DIRNAME}/gcc-4.8:"
 
@@ -60,23 +60,18 @@ SRC_URI = "\
     file://0034-Use-the-multilib-config-files-from-B-instead-of-usin.patch \
     file://0035-wcast-qual-PR-55383.patch \
     file://0038-gcc-4.8-build-args.patch \
-    file://0039-gcc-4.8-PR57717.patch \
     file://0040-fix-g++-sysroot.patch \
     file://0041-libtool-avoid-libdir.patch \
     file://0042-pr57748.patch \
     file://0043-cpp.patch \
     file://0044-gengtypes.patch \
-    file://0045-gcc-4.8-PR57717-PowerPC-E500v2.patch \
     file://0046-libatomic-deptracking.patch \
     file://0047-repomembug.patch \
-    file://0048-PR58854_fix_arm_apcs_epilogue.patch \
     file://0049-Enable-SPE-AltiVec-generation-on-powepc-linux-target.patch \
-    file://0050-PR-target-58595.patch \
-    file://0052-PR-rtl-optimization-61801.patch \
     file://target-gcc-includedir.patch \
 "
-SRC_URI[md5sum] = "a3d7d63b9cb6b6ea049469a0c4a43c9d"
-SRC_URI[sha256sum] = "09dc2276c73424bbbfda1dbddc62bbbf900c9f185acf7f3e1d773ce2d7e3cdc8"
+SRC_URI[md5sum] = "5a84a30839b2aca22a2d723de2a626ec"
+SRC_URI[sha256sum] = "4a80aa23798b8e9b5793494b8c976b39b8d9aa2e53cd5ed5534aff662a7f8695"
 
 S = "${TMPDIR}/work-shared/gcc-${PV}-${PR}/gcc-${PV}"
 B = "${WORKDIR}/gcc-${PV}/build.${HOST_SYS}.${TARGET_SYS}"

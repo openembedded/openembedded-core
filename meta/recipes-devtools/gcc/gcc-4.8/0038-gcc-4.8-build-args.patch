@@ -15,27 +15,50 @@ Upstream-Status: Pending
 
 Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
 
-Index: gcc-4.8.0/gcc/configure
+Index: gcc-4.8.4/gcc/configure
 ===================================================================
---- gcc-4.8.0.orig/gcc/configure
-+++ gcc-4.8.0/gcc/configure
-@@ -11720,6 +10581,7 @@ STMP_FIXINC=stmp-fixinc
- if test x$build != x$host || test "x$coverage_flags" != x
- then
-     BUILD_CFLAGS='$(INTERNAL_CFLAGS) $(T_CFLAGS) $(CFLAGS_FOR_BUILD)'
-+    BUILD_CXXFLAGS='$(INTERNAL_CFLAGS) $(T_CFLAGS) $(CFLAGS_FOR_BUILD)'
-     BUILD_LDFLAGS='$(LDFLAGS_FOR_BUILD)'
+--- gcc-4.8.4.orig/gcc/configure
++++ gcc-4.8.4/gcc/configure
+@@ -17864,7 +17864,7 @@ else
+   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
+   lt_status=$lt_dlunknown
+   cat > conftest.$ac_ext <<_LT_EOF
+-#line 17853 "configure"
++#line 17867 "configure"
+ #include "confdefs.h"
+ 
+ #if HAVE_DLFCN_H
+@@ -17970,7 +17970,7 @@ else
+   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
+   lt_status=$lt_dlunknown
+   cat > conftest.$ac_ext <<_LT_EOF
+-#line 17959 "configure"
++#line 17973 "configure"
+ #include "confdefs.h"
+ 
+ #if HAVE_DLFCN_H
+@@ -26918,18 +26918,15 @@ $as_echo "#define TARGET_LIBC_PROVIDES_S
  fi
  
-Index: gcc-4.8.0/gcc/configure.ac
-===================================================================
---- gcc-4.8.0.orig/gcc/configure.ac
-+++ gcc-4.8.0/gcc/configure.ac
-@@ -1901,6 +1901,7 @@ STMP_FIXINC=stmp-fixinc		AC_SUBST(STMP_F
- if test x$build != x$host || test "x$coverage_flags" != x
- then
-     BUILD_CFLAGS='$(INTERNAL_CFLAGS) $(T_CFLAGS) $(CFLAGS_FOR_BUILD)'
-+    BUILD_CXXFLAGS='$(INTERNAL_CFLAGS) $(T_CFLAGS) $(CFLAGS_FOR_BUILD)'
-     BUILD_LDFLAGS='$(LDFLAGS_FOR_BUILD)'
- fi
+ # Test for <sys/sdt.h> on the target.
+-
+-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking sys/sdt.h in the target C library" >&5
+-$as_echo_n "checking sys/sdt.h in the target C library... " >&6; }
+-have_sys_sdt_h=no
++#GCC_TARGET_TEMPLATE([HAVE_SYS_SDT_H])
++#AC_MSG_CHECKING(sys/sdt.h in the target C library)
++#have_sys_sdt_h=no
+ #if test -f $target_header_dir/sys/sdt.h; then
+ #  have_sys_sdt_h=yes
+-#
+-#$as_echo "#define HAVE_SYS_SDT_H 1" >>confdefs.h
+-#
++#  AC_DEFINE(HAVE_SYS_SDT_H, 1,
++#            [Define if your target C library provides sys/sdt.h])
+ #fi
+-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $have_sys_sdt_h" >&5
+-$as_echo "$have_sys_sdt_h" >&6; }
++#AC_MSG_RESULT($have_sys_sdt_h)
  
+ # Check if TFmode long double should be used by default or not.
+ # Some glibc targets used DFmode long double, but with glibc 2.4

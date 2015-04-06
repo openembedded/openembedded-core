@@ -17,11 +17,11 @@ Upstream-Status: Inappropriate [distribution: codesourcery]
  gcc/incpath.c       |   19 +++++++++++++++++++
  8 files changed, 69 insertions(+), 3 deletions(-)
 
-diff --git a/gcc/Makefile.in b/gcc/Makefile.in
-index 54ea04f..90a2bba 100644
---- a/gcc/Makefile.in
-+++ b/gcc/Makefile.in
-@@ -2018,7 +2018,7 @@ attribs.o : attribs.c $(CONFIG_H) $(SYSTEM_H) coretypes.h $(TM_H) $(TREE_H) \
+Index: gcc-4.8.4/gcc/Makefile.in
+===================================================================
+--- gcc-4.8.4.orig/gcc/Makefile.in
++++ gcc-4.8.4/gcc/Makefile.in
+@@ -2019,7 +2019,7 @@ attribs.o : attribs.c $(CONFIG_H) $(SYST
  
  incpath.o: incpath.c incpath.h $(CONFIG_H) $(SYSTEM_H) $(CPPLIB_H) \
  		intl.h prefix.h coretypes.h $(TM_H) cppdefault.h $(TARGET_H) \
@@ -30,10 +30,10 @@ index 54ea04f..90a2bba 100644
  
  CFLAGS-prefix.o += -DPREFIX=\"$(prefix)\" -DBASEVER=$(BASEVER_s)
  prefix.o: prefix.c $(CONFIG_H) $(SYSTEM_H) coretypes.h prefix.h \
-diff --git a/gcc/common.opt b/gcc/common.opt
-index bdbd3b6..ab86b00 100644
---- a/gcc/common.opt
-+++ b/gcc/common.opt
+Index: gcc-4.8.4/gcc/common.opt
+===================================================================
+--- gcc-4.8.4.orig/gcc/common.opt
++++ gcc-4.8.4/gcc/common.opt
 @@ -595,6 +595,10 @@ Wpedantic
  Common Var(pedantic) Warning
  Issue warnings needed for strict compliance to the standard
@@ -45,10 +45,10 @@ index bdbd3b6..ab86b00 100644
  Wshadow
  Common Var(warn_shadow) Warning
  Warn when one local variable shadows another
-diff --git a/gcc/config.in b/gcc/config.in
-index d80fb9f..0524af7 100644
---- a/gcc/config.in
-+++ b/gcc/config.in
+Index: gcc-4.8.4/gcc/config.in
+===================================================================
+--- gcc-4.8.4.orig/gcc/config.in
++++ gcc-4.8.4/gcc/config.in
 @@ -138,6 +138,12 @@
  #endif
  
@@ -62,11 +62,11 @@ index d80fb9f..0524af7 100644
  /* Define if you want all operations on RTL (the basic data structure of the
     optimizer and back end) to be checked for dynamic type safety at runtime.
     This is quite expensive. */
-diff --git a/gcc/configure b/gcc/configure
-index 135bbf5..b65d21d 100755
---- a/gcc/configure
-+++ b/gcc/configure
-@@ -917,6 +917,7 @@ with_gc
+Index: gcc-4.8.4/gcc/configure
+===================================================================
+--- gcc-4.8.4.orig/gcc/configure
++++ gcc-4.8.4/gcc/configure
+@@ -918,6 +918,7 @@ with_gc
  with_system_zlib
  enable_maintainer_mode
  enable_version_specific_runtime_libs
@@ -74,7 +74,7 @@ index 135bbf5..b65d21d 100755
  enable_plugin
  enable_libquadmath_support
  with_linker_hash_style
-@@ -1630,6 +1631,8 @@ Optional Features:
+@@ -1639,6 +1640,8 @@ Optional Features:
    --enable-version-specific-runtime-libs
                            specify that runtime libraries should be installed
                            in a compiler-specific directory
@@ -83,25 +83,25 @@ index 135bbf5..b65d21d 100755
    --enable-plugin         enable plugin support
    --disable-libquadmath-support
                            disable libquadmath support for Fortran
-@@ -17828,7 +17831,7 @@ else
+@@ -17847,7 +17850,7 @@ else
    lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
    lt_status=$lt_dlunknown
    cat > conftest.$ac_ext <<_LT_EOF
--#line 17831 "configure"
-+#line 17834 "configure"
+-#line 17850 "configure"
++#line 17853 "configure"
  #include "confdefs.h"
  
  #if HAVE_DLFCN_H
-@@ -17934,7 +17937,7 @@ else
+@@ -17953,7 +17956,7 @@ else
    lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
    lt_status=$lt_dlunknown
    cat > conftest.$ac_ext <<_LT_EOF
--#line 17937 "configure"
-+#line 17940 "configure"
+-#line 17956 "configure"
++#line 17959 "configure"
  #include "confdefs.h"
  
  #if HAVE_DLFCN_H
-@@ -27103,6 +27106,19 @@ if test "${enable_version_specific_runtime_libs+set}" = set; then :
+@@ -27219,6 +27222,19 @@ if test "${enable_version_specific_runti
  fi
  
  
@@ -121,11 +121,11 @@ index 135bbf5..b65d21d 100755
  # Substitute configuration variables
  
  
-diff --git a/gcc/configure.ac b/gcc/configure.ac
-index 6363a21..e226b85 100644
---- a/gcc/configure.ac
-+++ b/gcc/configure.ac
-@@ -5063,6 +5063,16 @@ AC_ARG_ENABLE(version-specific-runtime-libs,
+Index: gcc-4.8.4/gcc/configure.ac
+===================================================================
+--- gcc-4.8.4.orig/gcc/configure.ac
++++ gcc-4.8.4/gcc/configure.ac
+@@ -5120,6 +5120,16 @@ AC_ARG_ENABLE(version-specific-runtime-l
                  [specify that runtime libraries should be
                   installed in a compiler-specific directory])])
  
@@ -142,10 +142,10 @@ index 6363a21..e226b85 100644
  # Substitute configuration variables
  AC_SUBST(subdirs)
  AC_SUBST(srcdir)
-diff --git a/gcc/doc/invoke.texi b/gcc/doc/invoke.texi
-index 9273d7d..a022622 100644
---- a/gcc/doc/invoke.texi
-+++ b/gcc/doc/invoke.texi
+Index: gcc-4.8.4/gcc/doc/invoke.texi
+===================================================================
+--- gcc-4.8.4.orig/gcc/doc/invoke.texi
++++ gcc-4.8.4/gcc/doc/invoke.texi
 @@ -258,6 +258,7 @@ Objective-C and Objective-C++ Dialects}.
  -Woverlength-strings  -Wpacked  -Wpacked-bitfield-compat  -Wpadded @gol
  -Wparentheses  -Wpedantic-ms-format -Wno-pedantic-ms-format @gol
@@ -154,7 +154,7 @@ index 9273d7d..a022622 100644
  -Wredundant-decls  -Wno-return-local-addr @gol
  -Wreturn-type  -Wsequence-point  -Wshadow @gol
  -Wsign-compare  -Wsign-conversion  -Wsizeof-pointer-memaccess @gol
-@@ -4007,6 +4008,14 @@ headers---for that, @option{-Wunknown-pragmas} must also be used.
+@@ -4022,6 +4023,14 @@ headers---for that, @option{-Wunknown-pr
   for most targets, it is made up of code and thus requires the stack
   to be made executable in order for the program to work properly.
  
@@ -169,11 +169,11 @@ index 9273d7d..a022622 100644
  @item -Wfloat-equal
  @opindex Wfloat-equal
  @opindex Wno-float-equal
-diff --git a/gcc/gcc.c b/gcc/gcc.c
-index 86077f8..efdb625 100644
---- a/gcc/gcc.c
-+++ b/gcc/gcc.c
-@@ -740,6 +740,8 @@ proper position among the other output files.  */
+Index: gcc-4.8.4/gcc/gcc.c
+===================================================================
+--- gcc-4.8.4.orig/gcc/gcc.c
++++ gcc-4.8.4/gcc/gcc.c
+@@ -741,6 +741,8 @@ proper position among the other output f
     "%{fuse-ld=*:-fuse-ld=%*}\
      %X %{o*} %{e*} %{N} %{n} %{r}\
      %{s} %{t} %{u*} %{z} %{Z} %{!nostdlib:%{!nostartfiles:%S}}\
@@ -182,10 +182,10 @@ index 86077f8..efdb625 100644
      %{static:} %{L*} %(mfwrap) %(link_libgcc) " SANITIZER_EARLY_SPEC " %o\
      %{fopenmp|ftree-parallelize-loops=*:%:include(libgomp.spec)%(link_gomp)}\
      %{fgnu-tm:%:include(libitm.spec)%(link_itm)}\
-diff --git a/gcc/incpath.c b/gcc/incpath.c
-index 018da98..cd41c78 100644
---- a/gcc/incpath.c
-+++ b/gcc/incpath.c
+Index: gcc-4.8.4/gcc/incpath.c
+===================================================================
+--- gcc-4.8.4.orig/gcc/incpath.c
++++ gcc-4.8.4/gcc/incpath.c
 @@ -28,6 +28,7 @@
  #include "intl.h"
  #include "incpath.h"
@@ -194,7 +194,7 @@ index 018da98..cd41c78 100644
  
  /* Microsoft Windows does not natively support inodes.
     VMS has non-numeric inodes.  */
-@@ -382,6 +383,24 @@ merge_include_chains (const char *sysroot, cpp_reader *pfile, int verbose)
+@@ -382,6 +383,24 @@ merge_include_chains (const char *sysroo
  	}
        fprintf (stderr, _("End of search list.\n"));
      }
@@ -219,6 +219,3 @@ index 018da98..cd41c78 100644
  }
  
  /* Use given -I paths for #include "..." but not #include <...>, and
--- 
-1.7.10.4
-
