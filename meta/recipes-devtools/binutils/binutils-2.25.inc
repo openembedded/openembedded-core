@@ -31,6 +31,7 @@ SRC_URI = "\
      file://0011-Change-default-emulation-for-mips64-linux.patch \
      file://0012-Add-XLP-instructions-support.patch \
      file://0013-Fix-an-internal-error-in-do_print_to_mapfile-seen-wi.patch \
+     file://0001-gold-arm-Skip-pic-check-for-R_ARM_REL32.patch \
      "
 S  = "${WORKDIR}/git"
 
