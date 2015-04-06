@@ -30,6 +30,7 @@ EXTRA_OECONF_class-native = "--disable-gtk"
 SRC_URI += "\
             file://0001-ARM-qemu-related-workarounds-in-cpu-features-detecti.patch \
             file://mips-export-revert.patch \
+	    file://asm_include.patch \
 "
 
 SRC_URI[md5sum] = "8a9e8f14743a39cf303803f369c1f344"
