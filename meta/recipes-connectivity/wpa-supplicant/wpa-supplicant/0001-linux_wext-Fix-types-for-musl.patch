@@ -1,0 +1,38 @@
+From 159db445dc4cb0af5f6ad85f3a146ad137db5057 Mon Sep 17 00:00:00 2001
+From: Khem Raj <raj.khem@gmail.com>
+Date: Fri, 3 Apr 2015 20:38:21 -0700
+Subject: [PATCH] linux_wext: Fix types for musl
+
+| ../src/drivers/linux_wext.h:24:9: error: unknown type name '__uint32_t'
+|  typedef __uint32_t __u32;
+
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+Upstream-Status: Pending
+---
+ src/drivers/linux_wext.h | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/src/drivers/linux_wext.h b/src/drivers/linux_wext.h
+index 55cf955..e66df91 100644
+--- a/src/drivers/linux_wext.h
++++ b/src/drivers/linux_wext.h
+@@ -21,11 +21,11 @@
+ 
+ #include <sys/types.h>
+ #include <net/if.h>
+-typedef __uint32_t __u32;
+-typedef __int32_t __s32;
+-typedef __uint16_t __u16;
+-typedef __int16_t __s16;
+-typedef __uint8_t __u8;
++typedef u_int32_t __u32;
++typedef int32_t __s32;
++typedef u_int16_t __u16;
++typedef int16_t __s16;
++typedef u_int8_t __u8;
+ #ifndef __user
+ #define __user
+ #endif /* __user */
+-- 
+2.1.4
+
