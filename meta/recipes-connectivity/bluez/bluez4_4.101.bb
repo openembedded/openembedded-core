@@ -9,6 +9,7 @@ SRC_URI += "file://bluetooth.conf \
             file://network-fix-network-Connect-method-parameters.patch \
             file://install-test-script.patch \
             file://use-legacy-pygobject-instead-ofgobject-introspection.patch \
+            file://fix_encrypt_collision.patch \
 "
 
 SRC_URI[md5sum] = "fb42cb7038c380eb0e2fa208987c96ad"
