@@ -25,24 +25,6 @@ from wic.utils import runner
 from wic.utils.errors import *
 from wic.utils.oe.misc import *
 
-def find_binary_path(binary):
-    if os.environ.has_key("PATH"):
-        paths = os.environ["PATH"].split(":")
-    else:
-        paths = []
-        if os.environ.has_key("HOME"):
-            paths += [os.environ["HOME"] + "/bin"]
-        paths += ["/usr/local/sbin", "/usr/local/bin", "/usr/sbin", "/usr/bin", "/sbin", "/bin"]
-
-    for path in paths:
-        bin_path = "%s/%s" % (path, binary)
-        if os.path.exists(bin_path):
-            return bin_path
-
-    print "External command '%s' not found, exiting." % binary
-    print "  (Please install '%s' on your host system)" % binary
-    sys.exit(1)
-
 def makedirs(dirname):
     """A version of os.makedirs() that doesn't throw an
     exception if the leaf directory already exists.

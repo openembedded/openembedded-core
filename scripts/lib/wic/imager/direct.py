@@ -241,7 +241,7 @@ class DirectImageCreator(BaseImageCreator):
         """
         parts = self._get_parts()
 
-        self.__image = Image()
+        self.__image = Image(self.native_sysroot)
 
         for p in parts:
             # as a convenience, set source to the boot partition source

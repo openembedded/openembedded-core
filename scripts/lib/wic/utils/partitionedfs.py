@@ -40,13 +40,13 @@ class Image:
     An Image is a container for a set of DiskImages and associated
     partitions.
     """
-    def __init__(self):
+    def __init__(self, native_sysroot=None):
         self.disks = {}
         self.partitions = []
-        self.parted = find_binary_path("parted")
         # Size of a sector used in calculations
         self.sector_size = SECTOR_SIZE
         self._partitions_layed_out = False
+        self.native_sysroot = native_sysroot
 
     def __add_disk(self, disk_name):
         """ Add a disk 'disk_name' to the internal list of disks. Note,
@@ -225,11 +225,12 @@ class Image:
     def __run_parted(self, args):
         """ Run parted with arguments specified in the 'args' list. """
 
-        args.insert(0, self.parted)
+        args.insert(0, "parted")
+        args = ' '.join(args)
         msger.debug(args)
 
-        rc, out = runner.runtool(args, catch = 3)
-        out = out.strip()
+        rc, out = exec_native_cmd(args, self.native_sysroot)
+
         if out:
             msger.debug('"parted" output: %s' % out)
 
