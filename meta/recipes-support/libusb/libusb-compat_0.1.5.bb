@@ -18,7 +18,9 @@ BBCLASSEXTEND = "native nativesdk"
 
 PE = "1"
 
-SRC_URI = "${SOURCEFORGE_MIRROR}/libusb/libusb-compat-${PV}.tar.bz2"
+SRC_URI = "${SOURCEFORGE_MIRROR}/libusb/libusb-compat-${PV}.tar.bz2 \
+           file://0001-usb.h-Include-sys-types.h.patch \
+          "
 
 SRC_URI[md5sum] = "2780b6a758a1e2c2943bdbf7faf740e4"
 SRC_URI[sha256sum] = "404ef4b6b324be79ac1bfb3d839eac860fbc929e6acb1ef88793a6ea328bc55a"
