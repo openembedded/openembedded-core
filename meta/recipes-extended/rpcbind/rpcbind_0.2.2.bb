@@ -12,16 +12,22 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=b46486e4c4a416602693a711bb5bfa39 \
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/rpcbind/rpcbind-${PV}.tar.bz2 \
            file://init.d \
+	   file://0001-Avoid-use-of-glibc-sys-cdefs.h-header.patch \
+	   file://0002-uclibc-rpcsvc-defines.patch \
+	   file://remove-sys-queue.patch \
            ${UCLIBCPATCHES} \
+           ${MUSLPATCHES} \
            file://rpcbind.conf \
            file://rpcbind.socket \
            file://rpcbind.service \
           "
+MUSLPATCHES_libc-musl = "file://musl-sunrpc.patch"
 
 UCLIBCPATCHES_libc-uclibc = "file://0001-uclibc-nss.patch \
                              file://0002-uclibc-rpcsvc-defines.patch \
                             "
 UCLIBCPATCHES ?= ""
+MUSLPATCHES ?= ""
 
 SRC_URI[md5sum] = "8acf839bfef2364a05fbd6be5f8edf9a"
 SRC_URI[sha256sum] = "13dbc8c796dbe0ce8df873007bea0490c8460b56202d918c9eb6fa0358a08f29"
