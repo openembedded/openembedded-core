@@ -40,10 +40,14 @@ import logging
 # External modules
 scripts_path = os.path.abspath(os.path.dirname(os.path.abspath(sys.argv[0])))
 lib_path = scripts_path + '/lib'
-sys.path = sys.path + [lib_path]
+bitbake_path = os.path.join(scripts_path, '../bitbake/lib')
+sys.path = sys.path + [lib_path, bitbake_path]
 
 from image.help import *
 from image.engine import *
+
+from bb import cookerdata
+from bb.main import bitbake_main, BitBakeConfigParameters
 
 def rootfs_dir_to_args(krootfs_dir):
     """
@@ -94,6 +98,7 @@ def wic_create_subcommand(args, usage_str):
                       action = "store", help = "path to the native sysroot containing the tools to use to build the image")
     parser.add_option("-p", "--skip-build-check", dest = "build_check",
                       action = "store_false", default = True, help = "skip the build check")
+    parser.add_option("-f", "--build-rootfs", action="store_true", help = "build rootfs")
     parser.add_option("-D", "--debug", dest = "debug", action = "store_true",
                       default = False, help = "output debug information")
 
@@ -123,8 +128,6 @@ def wic_create_subcommand(args, usage_str):
         else:
             print "Done.\n"
 
-    print "Creating image(s)...\n"
-
     bitbake_env_lines = find_bitbake_env_lines(options.image_name)
     if not bitbake_env_lines:
         print "Couldn't get bitbake environment, exiting."
@@ -134,8 +137,23 @@ def wic_create_subcommand(args, usage_str):
     bootimg_dir = ""
 
     if options.image_name:
+        if options.build_rootfs:
+            argv = ["bitbake", options.image_name]
+            if options.debug:
+                argv.append("--debug")
+
+            print "Building rootfs...\n"
+            if bitbake_main(BitBakeConfigParameters(argv),
+                            cookerdata.CookerConfiguration()):
+                sys.exit(1)
+
         (rootfs_dir, kernel_dir, bootimg_dir, native_sysroot) \
             = find_artifacts(options.image_name)
+
+    else:
+        if options.build_rootfs:
+            print "Image name is not specified, exiting. (Use -e/--image-name to specify it)\n"
+            sys.exit(1)
 
     wks_file = args[0]
 
@@ -194,6 +212,7 @@ def wic_create_subcommand(args, usage_str):
 
     rootfs_dir = rootfs_dir_to_args(krootfs_dir)
 
+    print "Creating image(s)...\n"
     wic_create(args, wks_file, rootfs_dir, bootimg_dir, kernel_dir,
                native_sysroot, scripts_path, image_output_dir,
                options.debug, options.properties_file)

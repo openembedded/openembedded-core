@@ -111,7 +111,7 @@ wic_create_usage = """
             [-i <JSON PROPERTY FILE> | --infile <JSON PROPERTY_FILE>]
             [-e | --image-name] [-s, --skip-build-check] [-D, --debug]
             [-r, --rootfs-dir] [-b, --bootimg-dir]
-            [-k, --kernel-dir] [-n, --native-sysroot]
+            [-k, --kernel-dir] [-n, --native-sysroot] [-f, --build-rootfs]
 
  This command creates an OpenEmbedded image based on the 'OE kickstart
  commands' found in the <wks file>.
@@ -132,7 +132,7 @@ SYNOPSIS
         [-i <JSON PROPERTY FILE> | --infile <JSON PROPERTY_FILE>]
         [-e | --image-name] [-s, --skip-build-check] [-D, --debug]
         [-r, --rootfs-dir] [-b, --bootimg-dir]
-        [-k, --kernel-dir] [-n, --native-sysroot]
+        [-k, --kernel-dir] [-n, --native-sysroot] [-f, --build-rootfs]
 
 DESCRIPTION
     This command creates an OpenEmbedded image based on the 'OE
@@ -166,6 +166,8 @@ DESCRIPTION
 
     The -n option is used to specify the path to the native sysroot
     containing the tools to use to build the image.
+
+    The -f option is used to build rootfs by running "bitbake <image>"
 
     The -s option is used to skip the build check.  The build check is
     a simple sanity check used to determine whether the user has
@@ -528,8 +530,8 @@ DESCRIPTION
        usage: wic create <wks file or image name> [-o <DIRNAME> | ...]
             [-i <JSON PROPERTY FILE> | --infile <JSON PROPERTY_FILE>]
             [-e | --image-name] [-s, --skip-build-check] [-D, --debug]
-            [-r, --rootfs-dir] [-b, --bootimg-dir]
-            [-k, --kernel-dir] [-n, --native-sysroot]
+            [-r, --rootfs-dir] [-b, --bootimg-dir] [-k, --kernel-dir]
+            [-n, --native-sysroot] [-f, --build-rootfs]
 
        This command creates an OpenEmbedded image based on the 'OE
        kickstart commands' found in the <wks file>.
