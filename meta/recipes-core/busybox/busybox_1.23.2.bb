@@ -33,8 +33,8 @@ SRC_URI = "http://www.busybox.net/downloads/busybox-${PV}.tar.bz2;name=tarball \
            file://CVE-2014-9645_busybox_reject_module_names_with_slashes.patch \
 "
 
-SRC_URI[tarball.md5sum] = "5c94d6301a964cd91619bd4d74605245"
-SRC_URI[tarball.sha256sum] = "300f1db0a7ca4ecee8f8d8027aba250b903372e8339b7d9123d37c1e900473bf"
+SRC_URI[tarball.md5sum] = "7925683d7dd105aabe9b6b618d48cc73"
+SRC_URI[tarball.sha256sum] = "05a6f9e21aad8c098e388ae77de7b2361941afa7157ef74216703395b14e319a"
 
 EXTRA_OEMAKE += "V=1 ARCH=${TARGET_ARCH} CROSS_COMPILE=${TARGET_PREFIX} SKIP_STRIP=y"
 
