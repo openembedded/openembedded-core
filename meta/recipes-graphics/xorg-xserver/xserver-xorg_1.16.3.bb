@@ -6,6 +6,8 @@ SRC_URI += "file://fix_open_max_preprocessor_error.patch \
             file://xshmfence-option.patch \
             file://Fix-subwindow-in-Xi-emulated-events.patch \
             file://xtrans.patch \
+            file://0001-xkb-Don-t-swap-XkbSetGeometry-data-in-the-input-buff.patch \
+            file://0001-xkb-Check-strings-length-against-request-size.patch \
            "
 
 SRC_URI[md5sum] = "afd93977235584a9caa7528a737c1b52"
