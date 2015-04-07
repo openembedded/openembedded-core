@@ -76,7 +76,7 @@ class RawCopyPlugin(SourcePlugin):
         out = exec_cmd(du_cmd)
         filesize = out.split()[0]
 
-        if filesize > part.size:
+        if int(filesize) > int(part.size):
             part.size = filesize
 
         part.source_file = dst
