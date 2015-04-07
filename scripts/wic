@@ -65,8 +65,8 @@ def callback_rootfs_dir(option, opt, value, parser):
     if '=' in value:
         (key, rootfs_dir) = value.split('=')
     else:
-       key = 'ROOTFS_DIR'
-       rootfs_dir = value
+        key = 'ROOTFS_DIR'
+        rootfs_dir = value
 
     parser.values.rootfs_dir[key] = rootfs_dir
 
@@ -189,8 +189,8 @@ def wic_create_subcommand(args, usage_str):
 
     krootfs_dir = options.rootfs_dir
     if krootfs_dir is None:
-         krootfs_dir = {}
-         krootfs_dir['ROOTFS_DIR'] = rootfs_dir
+        krootfs_dir = {}
+        krootfs_dir['ROOTFS_DIR'] = rootfs_dir
 
     rootfs_dir = rootfs_dir_to_args(krootfs_dir)
 
