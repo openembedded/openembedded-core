@@ -23,6 +23,9 @@ LIBATOMICS_armv5 = "-latomic_ops"
 LIBATOMICS_armv4 = "-latomic_ops"
 LIBATOMICS ?= ""
 
+LDFLAGS_append_x86 = " -fuse-ld=gold"
+LDFLAGS_append_x86-64 = " -fuse-ld=gold"
+
 DEPENDS += "${DEPLIBATOMICS}"
 DEPLIBATOMICS_armv5 = "libatomics-ops"
 DEPLIBATOMICS_armv4 = "libatomics-ops"
