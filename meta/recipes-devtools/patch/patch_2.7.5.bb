@@ -1,10 +1,8 @@
 require patch.inc
 LICENSE = "GPLv3"
 
-SRC_URI += "file://patch-CVE-2015-1196.patch"
-
-SRC_URI[md5sum] = "95dd8d7e41dcbcecdd5cd88ef915378d"
-SRC_URI[sha256sum] = "c05f28668c3474bc63adcd48abae921d15e71c254fbebdbaeda40456d64039d5"
+SRC_URI[md5sum] = "ed4d5674ef4543b4eb463db168886dc7"
+SRC_URI[sha256sum] = "7436f5a19f93c3ca83153ce9c5cbe4847e97c5d956e57a220121e741f6e7968f"
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 
