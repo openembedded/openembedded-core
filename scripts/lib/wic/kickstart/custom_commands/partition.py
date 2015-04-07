@@ -24,7 +24,6 @@
 # Tom Zanussi <tom.zanussi (at] linux.intel.com>
 #
 
-import shutil
 import os
 import tempfile
 

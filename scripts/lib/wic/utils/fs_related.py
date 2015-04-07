@@ -18,13 +18,7 @@
 
 from __future__ import with_statement
 import os
-import sys
 import errno
-import stat
-import random
-import string
-import time
-import uuid
 
 from wic import msger
 from wic.utils import runner

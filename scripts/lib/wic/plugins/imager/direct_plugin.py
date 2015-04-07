@@ -24,11 +24,6 @@
 # Tom Zanussi <tom.zanussi (at] linux.intel.com>
 #
 
-import os
-import shutil
-import re
-import tempfile
-
 from wic import msger
 from wic.utils import misc, fs_related, errors, runner, cmdln
 from wic.conf import configmgr

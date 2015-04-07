@@ -15,7 +15,7 @@
 # with this program; if not, write to the Free Software Foundation, Inc., 59
 # Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
-import os, sys, re
+import os, sys
 from optparse import SUPPRESS_HELP
 
 from wic import msger

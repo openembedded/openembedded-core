@@ -25,9 +25,6 @@
 #
 
 import os
-import shutil
-import re
-import tempfile
 
 from wic import kickstart, msger
 from wic.utils import misc, fs_related, errors, runner, cmdln

@@ -16,7 +16,6 @@
 #
 
 import os
-import re
 
 from wic import msger
 from wic.pluginbase import SourcePlugin

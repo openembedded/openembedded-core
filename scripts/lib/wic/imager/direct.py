@@ -25,7 +25,6 @@
 #
 
 import os
-import stat
 import shutil
 
 from wic import kickstart, msger
