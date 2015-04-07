@@ -11,8 +11,8 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/strace/strace-${PV}.tar.xz \
            file://run-ptest \
           "
 
-SRC_URI[md5sum] = "885eafadb10f6c60464a266d3929a2a4"
-SRC_URI[sha256sum] = "095bfea5c540b91d297ccac73b21b92fd54a24599fd70395db87ff9eb7fd6f65"
+SRC_URI[md5sum] = "107a5be455493861189e9b57a3a51912"
+SRC_URI[sha256sum] = "e6180d866ef9e76586b96e2ece2bfeeb3aa23f5cc88153f76e9caedd65e40ee2"
 
 inherit autotools ptest
 RDEPENDS_${PN}-ptest += "make coreutils grep gawk"
@@ -22,8 +22,6 @@ PACKAGECONFIG_class-target ?= "libaio ${@bb.utils.contains('DISTRO_FEATURES', 'a
 PACKAGECONFIG[libaio] = "--enable-aio,--disable-aio,libaio"
 PACKAGECONFIG[acl] = "--enable-acl,--disable-acl,acl"
 PACKAGECONFIG[libunwind] = "--with-libunwind, --without-libunwind, libunwind"
-
-export INCLUDES = "-I. -I./linux"
 
 TESTDIR = "tests"
 
@@ -37,7 +35,7 @@ do_install_append() {
 }
 
 do_compile_ptest() {
-	oe_runmake -C ${TESTDIR} buildtest-TESTS
+	oe_runmake -C ${TESTDIR} buildtest-TESTS OS=linux ARCH="${TARGET_ARCH}"
 }
 
 do_install_ptest() {

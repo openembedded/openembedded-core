@@ -10,7 +10,7 @@ Signed-off-by: Chong Lu <Chong.Lu@windriver.com>
  2 files changed, 19 insertions(+), 1 deletion(-)
 
 diff --git a/configure.ac b/configure.ac
-index 054f85b..9aec566 100644
+index e73958c..5f0dfee 100644
 --- a/configure.ac
 +++ b/configure.ac
 @@ -6,7 +6,7 @@ AC_INIT([strace],
@@ -23,11 +23,11 @@ index 054f85b..9aec566 100644
  AC_CANONICAL_HOST
  
 diff --git a/tests/Makefile.am b/tests/Makefile.am
-index 922452a..b17837f 100644
+index ff5e136..984bdb6 100644
 --- a/tests/Makefile.am
 +++ b/tests/Makefile.am
-@@ -37,3 +37,21 @@ TEST_LOG_COMPILER = $(srcdir)/run.sh
- EXTRA_DIST = init.sh run.sh sigaction.awk $(TESTS)
+@@ -101,3 +101,21 @@ EXTRA_DIST = init.sh run.sh \
+ 	     $(TESTS)
  
  CLEANFILES = $(TESTS:=.tmp)
 +

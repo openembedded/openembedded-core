@@ -5,24 +5,16 @@ Upstream-Status: Pending
 Signed-off-by: Kai Kang <kai.kang@windriver.com>
 Signed-off-by: Chong Lu <Chong.Lu@windriver.com>
 ---
- configure.ac | 27 ++++++++++++++++++++++++++-
- 1 file changed, 26 insertions(+), 1 deletion(-)
+ configure.ac |   26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
 
 diff --git a/configure.ac b/configure.ac
-index 054f85b..8ed49f1 100644
+index e73958c..9099370 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -238,7 +238,6 @@ AC_CHECK_HEADERS(m4_normalize([
- 	poll.h
- 	scsi/sg.h
- 	stropts.h
--	sys/acl.h
- 	sys/asynch.h
- 	sys/conf.h
- 	sys/epoll.h
-@@ -250,6 +249,18 @@ AC_CHECK_HEADERS(m4_normalize([
- 	sys/uio.h
+@@ -270,6 +270,18 @@ AC_CHECK_HEADERS(m4_normalize([
  	sys/vfs.h
+ 	sys/xattr.h
  ]))
 +
 +AC_ARG_ENABLE([acl],
@@ -39,9 +31,9 @@ index 054f85b..8ed49f1 100644
  AC_CHECK_HEADERS([linux/icmp.h linux/in6.h linux/netlink.h linux/if_packet.h],
                   [], [], [#include <stddef.h>
  #include <sys/socket.h>
-@@ -649,6 +660,20 @@ if test "x$st_cv_have___builtin_popcount" = xyes; then
- 		  [Define to 1 if the system provides __builtin_popcount function])
+@@ -745,6 +757,20 @@ if test "x$ac_cv_lib_dl_dladdr" = xyes; then
  fi
+ AC_SUBST(dl_LIBS)
  
 +AC_ARG_ENABLE([aio],
 +	[AS_HELP_STRING([--enable-aio], [turn on libaio support])],
@@ -60,6 +52,6 @@ index 054f85b..8ed49f1 100644
  AC_PATH_PROG([PERL], [perl])
  
  dnl stack trace with libunwind
--- 
+--
 1.9.1
 
