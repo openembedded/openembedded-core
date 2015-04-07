@@ -92,9 +92,9 @@ def exec_native_cmd(cmd_and_args, native_sysroot, catch = 3):
     rc, out = __exec_cmd(native_cmd_and_args, True, catch)
 
     if rc == 127: # shell command-not-found
-        msger.error("A native (host) program required to build the image "
+        msger.error("A native program %s required to build the image "
                     "was not found (see details above). Please make sure "
-                    "it's installed and try again.")
+                    "it's installed and try again." % args[0])
 
     return (rc, out)
 
