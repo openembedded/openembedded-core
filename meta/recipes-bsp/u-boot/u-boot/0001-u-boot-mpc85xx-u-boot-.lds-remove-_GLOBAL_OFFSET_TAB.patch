@@ -1,0 +1,190 @@
+From 9ba002f1b1afc7af84a352f4ecab32a30d7ba353 Mon Sep 17 00:00:00 2001
+From: Zhenhua Luo <zhenhua.luo@freescale.com>
+Date: Mon, 9 Feb 2015 18:33:56 +0800
+Subject: [PATCH] powerpc/cpu/*/u-boot*.lds: remove _GLOBAL_OFFSET_TABLE_
+ definition
+
+In binutils-2.25, the _GLOBAL_OFFSET_TABLE_ symbols defined by PROVIDE in
+u-boot.lds overrides the linker built-in symbols
+(https://sourceware.org/git/gitweb.cgi?p=binutils-gdb.git;a=commitdiff;h=b893397a4b1316610f49819344817715e4305de9),
+so the linker is treating _GLOBAL_OFFSET_TABLE_ as a definition into the .reloc section.
+
+To align with the change of binutils-2.25, the _GLOBAL_OFFSET_TABLE_ symbol
+should not be defined in sections, and the symbols in linker generated .got
+section should be used(https://sourceware.org/ml/binutils/2008-09/msg00122.html).
+
+Fixed the following build errors with binutils-2.25:
+| powerpc-poky-linux-gnuspe-ld.bfd: _GLOBAL_OFFSET_TABLE_ not defined in linker created .got
+
+Signed-off-by: Zhenhua Luo <zhenhua.luo@freescale.com>
+
+Upstream-Status: Pending
+
+Index: git/arch/powerpc/cpu/mpc85xx/u-boot-nand.lds
+===================================================================
+--- git.orig/arch/powerpc/cpu/mpc85xx/u-boot-nand.lds
++++ git/arch/powerpc/cpu/mpc85xx/u-boot-nand.lds
+@@ -44,7 +44,6 @@ SECTIONS
+     _GOT2_TABLE_ = .;
+     KEEP(*(.got2))
+     KEEP(*(.got))
+-    PROVIDE(_GLOBAL_OFFSET_TABLE_ = . + 4);
+     _FIXUP_TABLE_ = .;
+     KEEP(*(.fixup))
+   }
+Index: git/arch/powerpc/cpu/mpc85xx/u-boot-nand_spl.lds
+===================================================================
+--- git.orig/arch/powerpc/cpu/mpc85xx/u-boot-nand_spl.lds
++++ git/arch/powerpc/cpu/mpc85xx/u-boot-nand_spl.lds
+@@ -22,7 +22,6 @@ SECTIONS
+ 		_GOT2_TABLE_ = .;
+ 		KEEP(*(.got2))
+ 		KEEP(*(.got))
+-		PROVIDE(_GLOBAL_OFFSET_TABLE_ = . + 4);
+ 		_FIXUP_TABLE_ = .;
+ 		KEEP(*(.fixup))
+ 	}
+Index: git/arch/powerpc/cpu/mpc85xx/u-boot-spl.lds
+===================================================================
+--- git.orig/arch/powerpc/cpu/mpc85xx/u-boot-spl.lds
++++ git/arch/powerpc/cpu/mpc85xx/u-boot-spl.lds
+@@ -29,7 +29,6 @@ SECTIONS
+ 		_GOT2_TABLE_ = .;
+ 		KEEP(*(.got2))
+ 		KEEP(*(.got))
+-		PROVIDE(_GLOBAL_OFFSET_TABLE_ = . + 4);
+ 		_FIXUP_TABLE_ = .;
+ 		KEEP(*(.fixup))
+ 	}
+Index: git/arch/powerpc/cpu/mpc85xx/u-boot.lds
+===================================================================
+--- git.orig/arch/powerpc/cpu/mpc85xx/u-boot.lds
++++ git/arch/powerpc/cpu/mpc85xx/u-boot.lds
+@@ -50,7 +50,6 @@ SECTIONS
+     _GOT2_TABLE_ = .;
+     KEEP(*(.got2))
+     KEEP(*(.got))
+-    PROVIDE(_GLOBAL_OFFSET_TABLE_ = . + 4);
+     _FIXUP_TABLE_ = .;
+     KEEP(*(.fixup))
+   }
+Index: git/arch/powerpc/cpu/mpc8260/u-boot.lds
+===================================================================
+--- git.orig/arch/powerpc/cpu/mpc8260/u-boot.lds
++++ git/arch/powerpc/cpu/mpc8260/u-boot.lds
+@@ -27,7 +27,6 @@ SECTIONS
+     _GOT2_TABLE_ = .;
+     KEEP(*(.got2))
+     KEEP(*(.got))
+-    PROVIDE(_GLOBAL_OFFSET_TABLE_ = . + 4);
+     _FIXUP_TABLE_ = .;
+     KEEP(*(.fixup))
+   }
+Index: git/arch/powerpc/cpu/74xx_7xx/u-boot.lds
+===================================================================
+--- git.orig/arch/powerpc/cpu/74xx_7xx/u-boot.lds
++++ git/arch/powerpc/cpu/74xx_7xx/u-boot.lds
+@@ -30,7 +30,6 @@ SECTIONS
+     _GOT2_TABLE_ = .;
+     KEEP(*(.got2))
+     KEEP(*(.got))
+-    PROVIDE(_GLOBAL_OFFSET_TABLE_ = . + 4);
+     _FIXUP_TABLE_ = .;
+     KEEP(*(.fixup))
+   }
+Index: git/arch/powerpc/cpu/mpc512x/u-boot.lds
+===================================================================
+--- git.orig/arch/powerpc/cpu/mpc512x/u-boot.lds
++++ git/arch/powerpc/cpu/mpc512x/u-boot.lds
+@@ -24,7 +24,6 @@ SECTIONS
+     _GOT2_TABLE_ = .;
+     KEEP(*(.got2))
+     KEEP(*(.got))
+-    PROVIDE(_GLOBAL_OFFSET_TABLE_ = . + 4);
+     _FIXUP_TABLE_ = .;
+     KEEP(*(.fixup))
+     *(.fixup)
+Index: git/arch/powerpc/cpu/mpc5xx/u-boot.lds
+===================================================================
+--- git.orig/arch/powerpc/cpu/mpc5xx/u-boot.lds
++++ git/arch/powerpc/cpu/mpc5xx/u-boot.lds
+@@ -33,7 +33,6 @@ SECTIONS
+     _GOT2_TABLE_ = .;
+     KEEP(*(.got2))
+     KEEP(*(.got))
+-    PROVIDE(_GLOBAL_OFFSET_TABLE_ = . + 4);
+     _FIXUP_TABLE_ = .;
+     KEEP(*(.fixup))
+   }
+Index: git/arch/powerpc/cpu/mpc5xxx/u-boot.lds
+===================================================================
+--- git.orig/arch/powerpc/cpu/mpc5xxx/u-boot.lds
++++ git/arch/powerpc/cpu/mpc5xxx/u-boot.lds
+@@ -28,7 +28,6 @@ SECTIONS
+     _GOT2_TABLE_ = .;
+     KEEP(*(.got2))
+     KEEP(*(.got))
+-    PROVIDE(_GLOBAL_OFFSET_TABLE_ = . + 4);
+     _FIXUP_TABLE_ = .;
+     KEEP(*(.fixup))
+   }
+Index: git/arch/powerpc/cpu/mpc83xx/u-boot-spl.lds
+===================================================================
+--- git.orig/arch/powerpc/cpu/mpc83xx/u-boot-spl.lds
++++ git/arch/powerpc/cpu/mpc83xx/u-boot-spl.lds
+@@ -24,7 +24,6 @@ SECTIONS
+ 		_GOT2_TABLE_ = .;
+ 		KEEP(*(.got2))
+ 		KEEP(*(.got))
+-		PROVIDE(_GLOBAL_OFFSET_TABLE_ = . + 4);
+ 	}
+ 	__got2_entries = ((_GLOBAL_OFFSET_TABLE_ - _GOT2_TABLE_) >> 2) - 1;
+ 
+Index: git/arch/powerpc/cpu/mpc83xx/u-boot.lds
+===================================================================
+--- git.orig/arch/powerpc/cpu/mpc83xx/u-boot.lds
++++ git/arch/powerpc/cpu/mpc83xx/u-boot.lds
+@@ -26,7 +26,6 @@ SECTIONS
+     _GOT2_TABLE_ = .;
+     KEEP(*(.got2))
+     KEEP(*(.got))
+-    PROVIDE(_GLOBAL_OFFSET_TABLE_ = . + 4);
+     _FIXUP_TABLE_ = .;
+     KEEP(*(.fixup))
+   }
+Index: git/arch/powerpc/cpu/mpc86xx/u-boot.lds
+===================================================================
+--- git.orig/arch/powerpc/cpu/mpc86xx/u-boot.lds
++++ git/arch/powerpc/cpu/mpc86xx/u-boot.lds
+@@ -32,7 +32,6 @@ SECTIONS
+     _GOT2_TABLE_ = .;
+     KEEP(*(.got2))
+     KEEP(*(.got))
+-    PROVIDE(_GLOBAL_OFFSET_TABLE_ = . + 4);
+     _FIXUP_TABLE_ = .;
+     KEEP(*(.fixup))
+   }
+Index: git/arch/powerpc/cpu/mpc8xx/u-boot.lds
+===================================================================
+--- git.orig/arch/powerpc/cpu/mpc8xx/u-boot.lds
++++ git/arch/powerpc/cpu/mpc8xx/u-boot.lds
+@@ -34,7 +34,6 @@ SECTIONS
+     _GOT2_TABLE_ = .;
+     KEEP(*(.got2))
+     KEEP(*(.got))
+-    PROVIDE(_GLOBAL_OFFSET_TABLE_ = . + 4);
+     _FIXUP_TABLE_ = .;
+     KEEP(*(.fixup))
+   }
+Index: git/arch/powerpc/cpu/ppc4xx/u-boot.lds
+===================================================================
+--- git.orig/arch/powerpc/cpu/ppc4xx/u-boot.lds
++++ git/arch/powerpc/cpu/ppc4xx/u-boot.lds
+@@ -46,7 +46,6 @@ SECTIONS
+     _GOT2_TABLE_ = .;
+     KEEP(*(.got2))
+     KEEP(*(.got))
+-    PROVIDE(_GLOBAL_OFFSET_TABLE_ = . + 4);
+     _FIXUP_TABLE_ = .;
+     KEEP(*(.fixup))
+   }
