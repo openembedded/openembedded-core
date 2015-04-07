@@ -9,16 +9,14 @@ DEPENDS = "openssl readline"
 
 LICENSE = "GPL-2.0+-with-OpenSSL-exception"
 LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
-                    file://README;beginline=257;endline=287;md5=79246f11a1db0b6ccec54d1fb711c01e"
+                    file://README;beginline=257;endline=287;md5=338c05eadd013872abb1d6e198e10a3f"
 
 
 SRC_URI = "http://www.dest-unreach.org/socat/download/socat-${PV}.tar.bz2 \
-           file://fix-cross-compiling-failed.patch \
-           file://socat-1.7.2.4-linux-3.17.patch \
 "
 
-SRC_URI[md5sum] = "69b8155dd442a6f24e28ef5407d868eb"
-SRC_URI[sha256sum] = "4b7739901c6fad1e460f3e5b1868fb4c2a1427febbba7a510cd2e42fd4941e09"
+SRC_URI[md5sum] = "b607edb65bc6c57f4a43f06247504274"
+SRC_URI[sha256sum] = "0767e850c0329b9fdf711c6cd468565cbbb28786ba1a8a1cbd5531d4016b3e04"
 
 inherit autotools
 
