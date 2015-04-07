@@ -7,8 +7,8 @@ LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://README;md5=8f2a3d43057d458e5066714980567a60"
 SRC_URI = "${KERNELORG_MIRROR}/linux/docs/${BPN}/Archive/${BP}.tar.gz"
 
-SRC_URI[md5sum] = "d00cf09677caefc3e827737afc565583"
-SRC_URI[sha256sum] = "eff558c13b61a46136994514b3ec00a74dcf00414d3bde4f0edca80a36d36359"
+SRC_URI[md5sum] = "ce4bffb9982d197bf35b59d0a12453ca"
+SRC_URI[sha256sum] = "9c22781f485d00e6b258dcaaf1efd220fee9f8d4ce59cd881b062be06be5efe8"
 
 RDEPENDS_${PN} = "man"
 
