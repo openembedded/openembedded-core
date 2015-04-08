@@ -12,7 +12,8 @@ DEPENDS = "zlib file-native"
 DEPENDS_class-native = "zlib-native"
 
 SRC_URI = "ftp://ftp.astron.com/pub/file/file-${PV}.tar.gz \
-           file://debian-742262.patch \
+	   file://debian-742262.patch \
+	   file://0001-Add-P-prompt-into-Usage-info.patch \
           "
 
 SRC_URI[md5sum] = "8fb13e5259fe447e02c4a37bc7225add"
