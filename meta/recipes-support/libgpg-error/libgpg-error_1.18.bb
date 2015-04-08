@@ -30,7 +30,7 @@ do_compile_prepend() {
 	  aarch64)    TUPLE=aarch64-unknown-linux-gnu ;;
 	  arm)	      TUPLE=arm-unknown-linux-gnueabi ;;
 	  armeb)      TUPLE=arm-unknown-linux-gnueabi ;;
-	  i586)       TUPLE=i486-pc-linux-gnu ;;
+	  i586|i686)  TUPLE=i486-pc-linux-gnu ;;
 	  mipsel)     TUPLE=mipsel-unknown-linux-gnu ;;
 	  mips64el)   TUPLE=mipsel-unknown-linux-gnu ;;
 	  mips64)     TUPLE=mips-unknown-linux-gnu ;;
