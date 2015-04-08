@@ -11,8 +11,8 @@ SRC_URI = "http://ftp.gnome.org/pub/gnome/sources/gtk+/2.24/gtk+-${PV}.tar.xz \
            file://doc-fixes.patch \
 	  "
 
-SRC_URI[md5sum] = "612350704dd3aacb95355a4981930c6f"
-SRC_URI[sha256sum] = "38af1020cb8ff3d10dda2c8807f11e92af9d2fa4045de61c62eedb7fbc7ea5b3"
+SRC_URI[md5sum] = "b1e890e15602c5bcb40d85b13fe046fd"
+SRC_URI[sha256sum] = "20cb10cae43999732a9af2e9aac4d1adebf2a9c2e1ba147050976abca5cd24f4"
 
 EXTRA_OECONF = "--enable-xkb --disable-glibtest --disable-cups --disable-xinerama"
 
