@@ -46,12 +46,12 @@ EXTRA_OECONF = "--disable-introspection \
 LEAD_SONAME = "libpango-1.0*"
 LIBV = "1.8.0"
 
-postinst_prologue() {
+pango_postinst() {
 if ! [ -e $D${sysconfdir}/pango ] ; then
 	mkdir -p $D${sysconfdir}/pango
 fi
 
-if [ "x$D" != "x" ]; then
+if [ -n "$D" ]; then
 	${@qemu_run_binary(d, '$D','${bindir}/${MLPREFIX}pango-querymodules')} \
 		$D${libdir}/pango/${LIBV}/modules/*.so \
 		> $D${sysconfdir}/pango/${MLPREFIX}pango.modules 2>/dev/null
@@ -61,6 +61,8 @@ if [ "x$D" != "x" ]; then
 	sed -i -e "s:$D::" $D${sysconfdir}/pango/${MLPREFIX}pango.modules
 
 	exit 0
+else
+	${bindir}/${MLPREFIX}pango-querymodules > /etc/pango/${MLPREFIX}pango.modules
 fi
 }
 
@@ -79,11 +81,11 @@ do_install_append () {
 
 
 python populate_packages_prepend () {
-    prologue = d.getVar("postinst_prologue", True)
+    pango_postinst = d.getVar("pango_postinst", True)
 
     modules_root = d.expand('${libdir}/pango/${LIBV}/modules')
 
-    do_split_packages(d, modules_root, '^pango-(.*)\.so$', 'pango-module-%s', 'Pango module %s', prologue + '${bindir}/${MLPREFIX}pango-querymodules > /etc/pango/${MLPREFIX}pango.modules')
+    do_split_packages(d, modules_root, '^pango-(.*)\.so$', 'pango-module-%s', 'Pango module %s', pango_postinst)
 }
 
 FILES_${PN} = "${sysconfdir}/pango/* ${bindir}/* ${libdir}/libpango*${SOLIBS}"
