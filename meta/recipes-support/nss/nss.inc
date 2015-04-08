@@ -72,6 +72,8 @@ do_compile() {
 
     if [ "${SITEINFO_BITS}" = "64" ]; then
         export USE_64=1
+    elif [ "${TARGET_ARCH}" = "x86_64" -a "${SITEINFO_BITS}" = "32" ]; then
+        export USE_X32=1
     fi
 
     # We can modify CC in the environment, but if we set it via an
@@ -115,6 +117,8 @@ do_install() {
     fi
     if [ "${SITEINFO_BITS}" = "64" ]; then
         export USE_64=1
+    elif [ "${TARGET_ARCH}" = "x86_64" -a "${SITEINFO_BITS}" = "32" ]; then
+        export USE_X32=1
     fi
 
     make -C ./nss \
