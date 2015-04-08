@@ -60,8 +60,8 @@ pkg_postinst_${PN} () {
 		tz=$(sed -e 's:#.*::' -e 's:[[:space:]]*::g' -e '/^$/d' "${src}")
 	fi
 	
-	if [ -z ${tz} ] ; then
-		return 0
+	if [ -z "${tz}" ] ; then
+		exit 0
 	fi
 	
 	if [ ! -e "$D${datadir}/zoneinfo/${tz}" ] ; then
