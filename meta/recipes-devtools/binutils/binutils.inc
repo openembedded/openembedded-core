@@ -41,7 +41,7 @@ USE_ALTERNATIVES_FOR = " \
 	gprof \
 	ld \
 	ld.bfd \
-	${@bb.utils.contains('DISTRO_FEATURES', 'ld-is-gold', 'ld.gold dwp', '', d)} \
+	ld.gold dwp \
 	nm \
 	objcopy \
 	objdump \
