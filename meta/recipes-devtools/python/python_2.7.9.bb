@@ -1,5 +1,5 @@
 require python.inc
-DEPENDS = "python-native bzip2 db gdbm openssl readline sqlite3 zlib"
+DEPENDS = "python-native libffi bzip2 db gdbm openssl readline sqlite3 zlib"
 PR = "${INC_PR}"
 
 DISTRO_SRC_URI ?= "file://sitecustomize.py"
@@ -31,6 +31,8 @@ SRC_URI += "\
 S = "${WORKDIR}/Python-${PV}"
 
 inherit autotools multilib_header python-dir pythonnative
+
+CONFIGUREOPTS += " --with-system-ffi "
 
 # The 3 lines below are copied from the libffi recipe, ctypes ships its own copy of the libffi sources
 #Somehow gcc doesn't set __SOFTFP__ when passing -mfloatabi=softp :(
