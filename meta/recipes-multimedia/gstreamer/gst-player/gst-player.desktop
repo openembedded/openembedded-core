@@ -1,6 +1,6 @@
 [Desktop Entry]
 Name=Media Player
-Comment=Basic media plaer
+Comment=Basic media player
 Icon=audio-player
 TryExec=gtk-play
 Exec=gtk-play
