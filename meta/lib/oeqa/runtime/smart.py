@@ -30,6 +30,7 @@ class SmartBasicTest(SmartTest):
     def test_smart_help(self):
         self.smart('--help')
 
+    @testcase(968)
     def test_smart_version(self):
         self.smart('--version')
 
@@ -77,12 +78,15 @@ class SmartRepoTest(SmartTest):
                 self.repolist.append(arch)
         self.smart('update')
 
+    @testcase(969)
     def test_smart_channel_help(self):
         self.smart('channel --help')
 
+    @testcase(970)
     def test_smart_channel_list(self):
         self.smart('channel --list')
 
+    @testcase(971)
     def test_smart_channel_show(self):
         self.smart('channel --show')
 
