@@ -57,7 +57,7 @@ class Disk:
     """
     Generic base object for a disk.
     """
-    def __init__(self, size, device = None):
+    def __init__(self, size, device=None):
         self._device = device
         self._size = size
 

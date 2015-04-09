@@ -18,7 +18,7 @@
 import os
 import time
 
-def build_name(kscfg, release=None, prefix = None, suffix = None):
+def build_name(kscfg, release=None, prefix=None, suffix=None):
     """Construct and return an image name string.
 
     This is a utility function to help create sensible name and fslabel

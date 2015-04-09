@@ -60,7 +60,7 @@ CATCHERR_BUFFILE_FD = -1
 CATCHERR_BUFFILE_PATH = None
 CATCHERR_SAVED_2 = -1
 
-def _general_print(head, color, msg = None, stream = None, level = 'normal'):
+def _general_print(head, color, msg=None, stream=None, level='normal'):
     global LOG_CONTENT
     if not stream:
         stream = sys.stdout
@@ -130,7 +130,7 @@ def _color_print(head, color, msg, stream, level):
 
     stream.flush()
 
-def _color_perror(head, color, msg, level = 'normal'):
+def _color_perror(head, color, msg, level='normal'):
     if CATCHERR_BUFFILE_FD > 0:
         _general_print(head, color, msg, sys.stdout, level)
     else:
@@ -190,7 +190,7 @@ def info(msg):
 
 def verbose(msg):
     head, msg = _split_msg('Verbose', msg)
-    _general_print(head, INFO_COLOR, msg, level = 'verbose')
+    _general_print(head, INFO_COLOR, msg, level='verbose')
 
 def warning(msg):
     head, msg = _split_msg('Warning', msg)
@@ -198,7 +198,7 @@ def warning(msg):
 
 def debug(msg):
     head, msg = _split_msg('Debug', msg)
-    _color_perror(head, ERR_COLOR, msg, level = 'debug')
+    _color_perror(head, ERR_COLOR, msg, level='debug')
 
 def error(msg):
     head, msg = _split_msg('Error', msg)
@@ -299,7 +299,7 @@ def disable_logstderr():
     global CATCHERR_BUFFILE_PATH
     global CATCHERR_SAVED_2
 
-    raw(msg = None) # flush message buffer and print it.
+    raw(msg=None) # flush message buffer and print it.
     os.dup2(CATCHERR_SAVED_2, 2)
     os.close(CATCHERR_SAVED_2)
     os.close(CATCHERR_BUFFILE_FD)

@@ -86,9 +86,9 @@ class Image:
         self.partitions.append(part)
         self.__add_disk(part['disk_name'])
 
-    def add_partition(self, size, disk_name, mountpoint, source_file = None, fstype = None,
-                      label=None, fsopts = None, boot = False, align = None, no_table=False,
-                      part_type = None):
+    def add_partition(self, size, disk_name, mountpoint, source_file=None, fstype=None,
+                      label=None, fsopts=None, boot=False, align=None, no_table=False,
+                      part_type=None):
         """ Add the next partition. Prtitions have to be added in the
         first-to-last order. """
 
@@ -116,7 +116,7 @@ class Image:
 
             self.__add_partition(part)
 
-    def layout_partitions(self, ptable_format = "msdos"):
+    def layout_partitions(self, ptable_format="msdos"):
         """ Layout the partitions, meaning calculate the position of every
         partition on the disk. The 'ptable_format' parameter defines the
         partition table format and may be "msdos". """

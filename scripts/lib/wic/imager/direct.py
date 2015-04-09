@@ -269,11 +269,11 @@ class DirectImageCreator(BaseImageCreator):
                                        p.source_file,
                                        p.fstype,
                                        p.label,
-                                       fsopts = p.fsopts,
-                                       boot = p.active,
-                                       align = p.align,
-                                       no_table = p.no_table,
-                                       part_type = p.part_type)
+                                       fsopts=p.fsopts,
+                                       boot=p.active,
+                                       align=p.align,
+                                       no_table=p.no_table,
+                                       part_type=p.part_type)
 
         self._restore_fstab(fstab)
 

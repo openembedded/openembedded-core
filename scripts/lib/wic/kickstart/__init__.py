@@ -68,7 +68,7 @@ def read_kickstart(path):
 
     return ks
 
-def get_image_size(ks, default = None):
+def get_image_size(ks, default=None):
     __size = 0
     for p in ks.handler.partition.partitions:
         if p.mountpoint == "/" and p.size:
@@ -78,40 +78,40 @@ def get_image_size(ks, default = None):
     else:
         return default
 
-def get_image_fstype(ks, default = None):
+def get_image_fstype(ks, default=None):
     for p in ks.handler.partition.partitions:
         if p.mountpoint == "/" and p.fstype:
             return p.fstype
     return default
 
-def get_image_fsopts(ks, default = None):
+def get_image_fsopts(ks, default=None):
     for p in ks.handler.partition.partitions:
         if p.mountpoint == "/" and p.fsopts:
             return p.fsopts
     return default
 
-def get_timeout(ks, default = None):
+def get_timeout(ks, default=None):
     if not hasattr(ks.handler.bootloader, "timeout"):
         return default
     if ks.handler.bootloader.timeout is None:
         return default
     return int(ks.handler.bootloader.timeout)
 
-def get_kernel_args(ks, default = "ro rd.live.image"):
+def get_kernel_args(ks, default="ro rd.live.image"):
     if not hasattr(ks.handler.bootloader, "appendLine"):
         return default
     if ks.handler.bootloader.appendLine is None:
         return default
     return "%s %s" %(default, ks.handler.bootloader.appendLine)
 
-def get_menu_args(ks, default = ""):
+def get_menu_args(ks, default=""):
     if not hasattr(ks.handler.bootloader, "menus"):
         return default
     if ks.handler.bootloader.menus in (None, ""):
         return default
     return "%s" % ks.handler.bootloader.menus
 
-def get_default_kernel(ks, default = None):
+def get_default_kernel(ks, default=None):
     if not hasattr(ks.handler.bootloader, "default"):
         return default
     if not ks.handler.bootloader.default:

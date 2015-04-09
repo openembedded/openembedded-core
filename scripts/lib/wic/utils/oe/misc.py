@@ -28,7 +28,7 @@
 from wic import msger
 from wic.utils import runner
 
-def __exec_cmd(cmd_and_args, as_shell = False, catch = 3):
+def __exec_cmd(cmd_and_args, as_shell=False, catch=3):
     """
     Execute command, catching stderr, stdout
 
@@ -49,7 +49,7 @@ def __exec_cmd(cmd_and_args, as_shell = False, catch = 3):
     return (rc, out)
 
 
-def exec_cmd(cmd_and_args, as_shell = False, catch = 3):
+def exec_cmd(cmd_and_args, as_shell=False, catch=3):
     """
     Execute command, catching stderr, stdout
 
@@ -63,7 +63,7 @@ def exec_cmd(cmd_and_args, as_shell = False, catch = 3):
     return out
 
 
-def exec_cmd_quiet(cmd_and_args, as_shell = False):
+def exec_cmd_quiet(cmd_and_args, as_shell=False):
     """
     Execute command, catching nothing in the output
 
@@ -72,7 +72,7 @@ def exec_cmd_quiet(cmd_and_args, as_shell = False):
     return exec_cmd(cmd_and_args, as_shell, 0)
 
 
-def exec_native_cmd(cmd_and_args, native_sysroot, catch = 3):
+def exec_native_cmd(cmd_and_args, native_sysroot, catch=3):
     """
     Execute native command, catching stderr, stdout
 
