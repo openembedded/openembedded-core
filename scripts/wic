@@ -279,13 +279,13 @@ def start_logging(loglevel):
     logging.basicConfig(filname='wic.log', filemode='w', level=loglevel)
 
 
-def main():
+def main(argv):
     parser = optparse.OptionParser(version="wic version %s" % __version__,
                                    usage=wic_usage)
 
     parser.disable_interspersed_args()
 
-    (options, args) = parser.parse_args()
+    (options, args) = parser.parse_args(argv)
 
     if len(args):
         if args[0] == "help":
@@ -298,7 +298,7 @@ def main():
 
 if __name__ == "__main__":
     try:
-        ret = main()
+        ret = main(sys.argv[1:])
     except Exception:
         ret = 1
         import traceback
