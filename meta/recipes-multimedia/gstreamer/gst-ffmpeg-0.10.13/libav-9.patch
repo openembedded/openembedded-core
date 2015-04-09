@@ -111,7 +111,7 @@ diff -uNr gst-ffmpeg-0.10.13.orig/ext/ffmpeg/gstffmpegcodecmap.c gst-ffmpeg-0.10
  #include <gst/gst.h>
  #ifdef HAVE_FFMPEG_UNINSTALLED
  #include <avcodec.h>
-+#include <channel_layout.h>>
++#include <channel_layout.h>
  #else
  #include <libavcodec/avcodec.h>
 +#include <libavutil/channel_layout.h>
