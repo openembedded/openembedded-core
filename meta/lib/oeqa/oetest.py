@@ -11,6 +11,7 @@ import os, re, mmap
 import unittest
 import inspect
 import subprocess
+import bb
 from oeqa.utils.decorators import LogResults
 
 def loadTests(tc, type="runtime"):
@@ -33,8 +34,8 @@ def loadTests(tc, type="runtime"):
 def runTests(tc, type="runtime"):
 
     suite = loadTests(tc, type)
-    print("Test modules  %s" % tc.testslist)
-    print("Found %s tests" % suite.countTestCases())
+    bb.note("Test modules  %s" % tc.testslist)
+    bb.note("Found %s tests" % suite.countTestCases())
     runner = unittest.TextTestRunner(verbosity=2)
     result = runner.run(suite)
 
