@@ -6,7 +6,7 @@ import shutil
 
 import oeqa.utils.ftools as ftools
 from oeqa.selftest.base import oeSelfTest
-from oeqa.utils.commands import runCmd
+from oeqa.utils.commands import runCmd, get_bb_var
 from oeqa.utils.decorators import testcase
 
 class BitbakeLayers(oeSelfTest):
@@ -44,15 +44,16 @@ class BitbakeLayers(oeSelfTest):
         self.assertTrue(find_in_contents)
 
     def test_bitbakelayers_add_remove(self):
+        test_layer = os.path.join(get_bb_var('COREBASE'), 'meta-skeleton')
         result = runCmd('bitbake-layers show-layers')
         self.assertNotIn('meta-skeleton', result.output, 'This test cannot run with meta-skeleton in bblayers.conf')
-        result = runCmd('bitbake-layers add-layer ../meta-skeleton')
+        result = runCmd('bitbake-layers add-layer %s' % test_layer)
         result = runCmd('bitbake-layers show-layers')
         self.assertIn('meta-skeleton', result.output)
-        result = runCmd('bitbake-layers remove-layer ../meta-skeleton')
+        result = runCmd('bitbake-layers remove-layer %s' % test_layer)
         result = runCmd('bitbake-layers show-layers')
         self.assertNotIn('meta-skeleton', result.output)
-        result = runCmd('bitbake-layers add-layer ../meta-skeleton')
+        result = runCmd('bitbake-layers add-layer %s' % test_layer)
         result = runCmd('bitbake-layers show-layers')
         self.assertIn('meta-skeleton', result.output)
         result = runCmd('bitbake-layers remove-layer */meta-skeleton')
