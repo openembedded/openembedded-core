@@ -155,7 +155,7 @@ FILES_${PN}-netserver="${libdir}/python3.4/cgi.* ${libdir}/python3.4/*HTTPServer
 
 SUMMARY_${PN}-numbers="Python number APIs"
 RDEPENDS_${PN}-numbers="${PN}-core ${PN}-lang ${PN}-re"
-FILES_${PN}-numbers="${libdir}/python3.4/decimal.* ${libdir}/python3.4/numbers.* "
+FILES_${PN}-numbers="${libdir}/python3.4/decimal.* ${libdir}/python3.4/fractions.* ${libdir}/python3.4/numbers.* "
 
 SUMMARY_${PN}-pickle="Python serialisation/persistence support"
 RDEPENDS_${PN}-pickle="${PN}-core ${PN}-codecs ${PN}-io ${PN}-re"
