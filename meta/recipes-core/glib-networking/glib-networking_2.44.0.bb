@@ -11,8 +11,8 @@ DEPENDS = "glib-2.0 intltool-native"
 
 GNOME_COMPRESS_TYPE = "xz"
 
-SRC_URI[archive.md5sum] = "a22907deed3d956860d83aa3233e86ff"
-SRC_URI[archive.sha256sum] = "a43eacbf721b475cf6ba0cd2eab02a332014f71a4c41d0b44bd7bbf8ed1f840d"
+SRC_URI[archive.md5sum] = "6989b20cf3b26dd5ae272e04a9acb0b3"
+SRC_URI[archive.sha256sum] = "8f8a340d3ba99bfdef38b653da929652ea6640e27969d29f7ac51fbbe11a4346"
 
 PACKAGECONFIG ??= "ca-certificates gnutls"
 
