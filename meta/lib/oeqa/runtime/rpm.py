@@ -13,6 +13,7 @@ def setUpModule():
 
 class RpmBasicTest(oeRuntimeTest):
 
+    @testcase(960)
     @skipUnlessPassed('test_ssh')
     def test_rpm_help(self):
         (status, output) = self.target.run('rpm --help')
