@@ -16,7 +16,11 @@
 # The test names are the module names in meta/lib/oeqa/runtime.
 # Each name in TEST_SUITES represents a required test for the image. (no skipping allowed)
 # Appending "auto" means that it will try to run all tests that are suitable for the image (each test decides that on it's own).
-# Note that order in TEST_SUITES is important (it's the order tests run) and it influences tests dependencies.
+# Note that order in TEST_SUITES is relevant: tests are run in an order such that
+# tests mentioned in @skipUnlessPassed run before the tests that depend on them,
+# but without such dependencies, tests run in the order in which they are listed
+# in TEST_SUITES.
+#
 # A layer can add its own tests in lib/oeqa/runtime, provided it extends BBPATH as normal in its layer.conf.
 
 # TEST_LOG_DIR contains a command ssh log and may contain infromation about what command is running, output and return codes and for qemu a boot log till login.

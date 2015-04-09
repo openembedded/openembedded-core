@@ -85,6 +85,7 @@ class skipUnlessPassed(object):
                 raise unittest.SkipTest("Testcase dependency not met: %s" % self.testcase)
             return f(*args)
         wrapped_f.__name__ = f.__name__
+        wrapped_f._depends_on = self.testcase
         return wrapped_f
 
 class testcase(object):
