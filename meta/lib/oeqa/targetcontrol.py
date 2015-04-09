@@ -12,6 +12,7 @@ import traceback
 import sys
 from oeqa.utils.sshcontrol import SSHControl
 from oeqa.utils.qemurunner import QemuRunner
+from oeqa.utils.qemutinyrunner import QemuTinyRunner
 from oeqa.controllers.testtargetloader import TestTargetLoader
 from abc import ABCMeta, abstractmethod
 
@@ -110,7 +111,7 @@ class BaseTarget(object):
 
 class QemuTarget(BaseTarget):
 
-    supported_image_fstypes = ['ext3', 'ext4']
+    supported_image_fstypes = ['ext3', 'ext4', 'cpio.gz']
 
     def __init__(self, d):
 
@@ -120,14 +121,25 @@ class QemuTarget(BaseTarget):
         self.qemulog = os.path.join(self.testdir, "qemu_boot_log.%s" % self.datetime)
         self.origrootfs = os.path.join(d.getVar("DEPLOY_DIR_IMAGE", True),  d.getVar("IMAGE_LINK_NAME", True) + '.' + self.image_fstype)
         self.rootfs = os.path.join(self.testdir, d.getVar("IMAGE_LINK_NAME", True) + '-testimage.' + self.image_fstype)
+        self.kernel = os.path.join(d.getVar("DEPLOY_DIR_IMAGE", True), d.getVar("KERNEL_IMAGETYPE") + '-' + d.getVar('MACHINE') + '.bin')
 
-        self.runner = QemuRunner(machine=d.getVar("MACHINE", True),
-                        rootfs=self.rootfs,
-                        tmpdir = d.getVar("TMPDIR", True),
-                        deploy_dir_image = d.getVar("DEPLOY_DIR_IMAGE", True),
-                        display = d.getVar("BB_ORIGENV", False).getVar("DISPLAY", True),
-                        logfile = self.qemulog,
-                        boottime = int(d.getVar("TEST_QEMUBOOT_TIMEOUT", True)))
+        if d.getVar("DISTRO", True) == "poky-tiny":
+            self.runner = QemuTinyRunner(machine=d.getVar("MACHINE", True),
+                            rootfs=self.rootfs,
+                            tmpdir = d.getVar("TMPDIR", True),
+                            deploy_dir_image = d.getVar("DEPLOY_DIR_IMAGE", True),
+                            display = d.getVar("BB_ORIGENV", False).getVar("DISPLAY", True),
+                            logfile = self.qemulog,
+                            kernel = self.kernel,
+                            boottime = int(d.getVar("TEST_QEMUBOOT_TIMEOUT", True)))
+        else:
+            self.runner = QemuRunner(machine=d.getVar("MACHINE", True),
+                            rootfs=self.rootfs,
+                            tmpdir = d.getVar("TMPDIR", True),
+                            deploy_dir_image = d.getVar("DEPLOY_DIR_IMAGE", True),
+                            display = d.getVar("BB_ORIGENV", False).getVar("DISPLAY", True),
+                            logfile = self.qemulog,
+                            boottime = int(d.getVar("TEST_QEMUBOOT_TIMEOUT", True)))
 
     def deploy(self):
         try:
@@ -166,6 +178,9 @@ class QemuTarget(BaseTarget):
             self.connection = SSHControl(ip=self.ip, logfile=self.sshlog)
         else:
             raise bb.build.FuncFailed("%s - FAILED to re-start qemu - check the task log and the boot log" % self.pn)
+
+    def run_serial(self, command):
+        return self.runner.run_serial(command)
 
 
 class SimpleRemoteTarget(BaseTarget):
