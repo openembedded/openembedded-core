@@ -4,8 +4,8 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=e73e999e0c72b5ac9012424fa157ad77"
 
 SRC_URI = "http://cairographics.org/releases/cairo-${PV}.tar.xz"
 
-SRC_URI[md5sum] = "8e4ff32b82c3b39387eb6f5c59ef848e"
-SRC_URI[sha256sum] = "dc59f0b7ac945ce4e138a03c227a29260915a8b05a4226c1f6f1be586ba7f5b6"
+SRC_URI[md5sum] = "e1cdfaf1c6c995c4d4c54e07215b0118"
+SRC_URI[sha256sum] = "c919d999ddb1bbbecd4bbe65299ca2abd2079c7e13d224577895afa7005ecceb"
 
 PACKAGES =+ "cairo-gobject cairo-script-interpreter cairo-perf-utils"
 
