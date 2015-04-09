@@ -38,7 +38,7 @@ import optparse
 import logging
 
 # External modules
-scripts_path = os.path.abspath(os.path.dirname(os.path.abspath(sys.argv[0])))
+scripts_path = os.path.abspath(os.path.dirname(__file__))
 lib_path = scripts_path + '/lib'
 bitbake_path = os.path.join(scripts_path, '../bitbake/lib')
 sys.path = sys.path + [lib_path, bitbake_path]
