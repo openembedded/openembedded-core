@@ -82,7 +82,8 @@ PACKAGECONFIG[attr] = "--with-attr,--without-attr,attr"
 PACKAGECONFIG[acl] = "--with-acl,--without-acl,acl"
 
 RDEPENDS_${PN} = "shadow-securetty \
-                  base-passwd"
+                  base-passwd \
+                  util-linux-sulogin"
 RDEPENDS_${PN}_class-native = ""
 RDEPENDS_${PN}_class-nativesdk = ""
 
