@@ -185,6 +185,7 @@ class ParseLogsTest(oeRuntimeTest):
         (status, dmesg) = self.target.run("dmesg")
         (status, dmesg2) = self.target.run("echo \""+str(dmesg)+"\" > /tmp/dmesg_output.log")
 
+    @testcase(1059)
     @skipUnlessPassed('test_ssh')
     def test_parselogs(self):
         self.write_dmesg()
