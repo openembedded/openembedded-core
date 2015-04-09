@@ -8,6 +8,7 @@ def setUpModule():
 
 class LddTest(oeRuntimeTest):
 
+    @testcase(962)
     @skipUnlessPassed('test_ssh')
     def test_ldd_exists(self):
         (status, output) = self.target.run('which ldd')
