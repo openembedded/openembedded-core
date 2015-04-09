@@ -35,7 +35,7 @@ SRC_URI += "\
 "
 
 # Only apply when building uclibc based target recipe
-SRC_URI_append_libc-uclibc = " file://uclibc-support.patch"
+SRC_URI_append_libc-uclibc = " file://uclibc-support-for-elfutils-0.161.patch"
 
 # The buildsystem wants to generate 2 .h files from source using a binary it just built,
 # which can not pass the cross compiling, so let's work around it by adding 2 .h files
