@@ -3,9 +3,11 @@ import unittest
 import sys
 import time
 from oeqa.oetest import oeRuntimeTest
+from oeqa.utils.decorators import *
 
 class PingTest(oeRuntimeTest):
 
+    @testcase(964)
     def test_ping(self):
         output = ''
         count = 0
