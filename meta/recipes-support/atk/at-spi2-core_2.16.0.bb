@@ -8,8 +8,8 @@ SRC_URI = "${GNOME_MIRROR}/${BPN}/${MAJ_VER}/${BPN}-${PV}.tar.xz \
            file://0001-nls.m4-Take-it-from-gettext-0.15.patch \
           "
 
-SRC_URI[md5sum] = "a37993cc50d90465c9aeed95e2ac439a"
-SRC_URI[sha256sum] = "eef9660b14fdf0fb1f30d1be7c72d591fa7cbb87b00ca3a444425712f46ce657"
+SRC_URI[md5sum] = "be6eeea370f913b7639b609913b2cf02"
+SRC_URI[sha256sum] = "1c0b77fb8ce81abbf1d80c0afee9858b3f9229f673b7881995fe0fc16b1a74d0"
 
 DEPENDS = "dbus glib-2.0 virtual/libx11 libxi libxtst intltool-native"
 
@@ -19,4 +19,5 @@ REQUIRED_DISTRO_FEATURES = "x11"
 
 EXTRA_OECONF = "--disable-introspection --disable-xevie --with-dbus-daemondir=${bindir}"
 
-FILES_${PN} += "${datadir}/dbus-1/services/*.service"
+FILES_${PN} += "${datadir}/dbus-1/services/*.service \
+                ${datadir}/dbus-1/accessibility-services/*.service"
