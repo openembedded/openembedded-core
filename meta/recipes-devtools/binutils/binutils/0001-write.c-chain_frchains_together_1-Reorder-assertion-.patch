@@ -1,0 +1,30 @@
+From c50d883cb61ff9917464cb695a0fd83fdb0f9c20 Mon Sep 17 00:00:00 2001
+From: Alan Modra <amodra@bigpond.net.au>
+Date: Mon, 21 Jan 2013 13:48:31 +0000
+Subject: [PATCH] write.c (chain_frchains_together_1): Reorder assertion to
+ avoid uninit warning.
+
+Upstream-Status: Backport from 2.23.2
+Signed-off-by: Martin Jansa <Martin.Jansa@gmail.com>
+---
+ gas/write.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/gas/write.c b/gas/write.c
+index a467147..56ebb6c 100644
+--- a/gas/write.c
++++ b/gas/write.c
+@@ -406,8 +406,8 @@ chain_frchains_together_1 (segT section, struct frchain *frchp)
+ 	  prev_fix = frchp->fix_tail;
+ 	}
+     }
+-  gas_assert (prev_frag->fr_type != 0);
+-  gas_assert (prev_frag != &dummy);
++  gas_assert (prev_frag != &dummy
++	      && prev_frag->fr_type != 0);
+   prev_frag->fr_next = 0;
+   return prev_frag;
+ }
+-- 
+2.3.5
+

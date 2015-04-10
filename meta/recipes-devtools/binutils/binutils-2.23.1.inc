@@ -31,6 +31,7 @@ SRC_URI = "\
      file://binutils-fix-over-array-bounds-issue.patch \
      file://replace_macros_with_static_inline.patch \
      file://0001-Fix-MMIX-build-breakage-from-bfd_set_section_vma-cha.patch \
+     file://0001-write.c-chain_frchains_together_1-Reorder-assertion-.patch \
      "
 
 BACKPORT = "\
