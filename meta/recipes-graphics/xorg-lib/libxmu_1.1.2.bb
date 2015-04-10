@@ -22,10 +22,9 @@ XORG_PN = "libXmu"
 
 LEAD_SONAME = "libXmu"
 
-PACKAGES =+ "libxmuu libxmuu-dev"
+PACKAGES =+ "libxmuu"
 
 FILES_libxmuu = "${libdir}/libXmuu.so.*"
-FILES_libxmuu-dev = "${libdir}/libXmuu.so"
 
 BBCLASSEXTEND = "native"
 
