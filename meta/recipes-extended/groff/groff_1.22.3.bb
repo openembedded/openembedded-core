@@ -4,7 +4,6 @@ formatting commands and produces formatted output."
 SECTION = "base"
 HOMEPAGE = "http://www.gnu.org/software/groff/"
 LICENSE = "GPLv3"
-PR = "r1"
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 
@@ -12,11 +11,13 @@ SRC_URI = "${GNU_MIRROR}/groff/groff-${PV}.tar.gz \
 	file://groff-1.22.2-correct-man.local-install-path.patch \
 "
 
-SRC_URI[md5sum] = "9f4cd592a5efc7e36481d8d8d8af6d16"
-SRC_URI[sha256sum] = "380864dac4772e0c0d7b1282d25d0c5fd7f63baf45c87c4657afed22a13d2076"
+SRC_URI[md5sum] = "cc825fa64bc7306a885f2fb2268d3ec5"
+SRC_URI[sha256sum] = "3a48a9d6c97750bfbd535feeb5be0111db6406ddb7bb79fc680809cda6d828a5"
 
 DEPENDS = "groff-native"
 DEPENDS_class-native = ""
+
+RDEPENDS_${PN} = "perl"
 
 inherit autotools texinfo
 
@@ -47,7 +48,7 @@ do_configure_append() {
 do_install_append() {
 	# Some distros have both /bin/perl and /usr/bin/perl, but we set perl location
 	# for target as /usr/bin/perl, so fix it to /usr/bin/perl.
-	for i in afmtodit mmroff gropdf pdfmom; do
+	for i in afmtodit mmroff gropdf pdfmom grog; do
 		if [ -f ${D}${bindir}/$i ]; then
 			sed -i -e '1s,#!.*perl,#! ${USRBINPATH}/env perl,' ${D}${bindir}/$i
 		fi
