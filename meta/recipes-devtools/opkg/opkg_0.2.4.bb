@@ -78,10 +78,8 @@ RREPLACES_${PN} = "opkg-nogpg opkg-collateral"
 RCONFLICTS_${PN} = "opkg-collateral"
 RPROVIDES_${PN} = "opkg-collateral"
 
-PACKAGES =+ "libopkg-dev libopkg-staticdev libopkg"
+PACKAGES =+ "libopkg"
 
-FILES_libopkg-dev = "${libdir}/*.la ${libdir}/*.so ${includedir}/libopkg"
-FILES_libopkg-staticdev = "${libdir}/*.a"
 FILES_libopkg = "${libdir}/*.so.* ${OPKGLIBDIR}/opkg/"
 FILES_${PN} += "${systemd_unitdir}/system/"
 
