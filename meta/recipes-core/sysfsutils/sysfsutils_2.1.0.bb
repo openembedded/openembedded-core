@@ -21,7 +21,7 @@ S = "${WORKDIR}/sysfsutils-${PV}"
 
 inherit autotools
 
-PACKAGES =+ "libsysfs libsysfs-dev libsysfs-staticdev"
+PACKAGES =+ "libsysfs"
 FILES_libsysfs = "${libdir}/lib*${SOLIBS}"
 FILES_libsysfs-dev = "${libdir}/lib*${SOLIBSDEV} ${includedir}"
 FILES_libsysfs-staticdev = "${libdir}/lib*.a"
