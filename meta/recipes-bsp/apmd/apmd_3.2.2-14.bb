@@ -74,9 +74,7 @@ do_install() {
 		-e 's,@SBINDIR@,${sbindir},g' ${D}${systemd_unitdir}/system/apmd.service
 }
 
-PACKAGES =+ "libapm libapm-dev libapm-staticdev apm"
+PACKAGES =+ "libapm apm"
 
 FILES_libapm = "${libdir}/libapm${SOLIBS}"
-FILES_libapm-dev = "${libdir}/libapm${SOLIBSDEV} ${includedir} ${libdir}/libapm.la"
-FILES_libapm-staticdev = "${libdir}/libapm.a"
 FILES_apm = "${bindir}/apm*"
