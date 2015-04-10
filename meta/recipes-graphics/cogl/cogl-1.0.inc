@@ -6,10 +6,8 @@ inherit clutter
 
 DEPENDS = "glib-2.0 gdk-pixbuf"
 PACKAGES =+ "${PN}-examples \
-             libcogl libcogl-dev \
-             libcogl-gles2 libcogl-gles2-dev \
-             libcogl-pango libcogl-pango-dev \
-             libcogl-path libcogl-path-dev"
+             libcogl libcogl-gles2 libcogl-pango libcogl-path \
+            "
 AUTOTOOLS_AUXDIR = "${S}/build"
 
 # Extra DEPENDS for PACKAGECONFIG
@@ -61,28 +59,10 @@ PACKAGECONFIG ??= "cogl-pango gles2 \
 
 FILES_${PN}-examples = "${bindir}/* ${datadir}/cogl/examples-data/*"
 FILES_libcogl = "${libdir}/libcogl${SOLIBS}"
-FILES_libcogl-dev = "${includedir}/cogl/cogl \
-                     ${libdir}/libcogl${SOLIBSDEV} \
-                     ${libdir}/libcogl.la \
-                     ${libdir}/pkgconfig/cogl-1.0.pc \
-                     ${libdir}/pkgconfig/cogl-2.0-experimental.pc \
-                     ${libdir}/pkgconfig/cogl-gl-1.0.pc"
 FILES_libcogl-gles2 = "${libdir}/libcogl-gles2${SOLIBS}"
-FILES_libcogl-gles2-dev = "${includedir}/cogl/cogl-gles2 \
-                           ${libdir}/libcogl-gles2${SOLIBSDEV} \
-                           ${libdir}/libcogl-gles2.la \
-                           ${libdir}/pkgconfig/cogl-gles2-*.pc"
 FILES_libcogl-pango = "${libdir}/libcogl-pango${SOLIBS}"
-FILES_libcogl-pango-dev = "${includedir}/cogl/cogl-pango \
-                           ${libdir}/libcogl-pango${SOLIBSDEV} \
-                           ${libdir}/libcogl-pango.la \
-                           ${libdir}/pkgconfig/cogl-pango-*.pc"
 
 FILES_libcogl-path = "${libdir}/libcogl-path${SOLIBS}"
-FILES_libcogl-path-dev = "${includedir}/cogl/cogl-path \
-                          ${libdir}/libcogl-path${SOLIBSDEV} \
-                          ${libdir}/libcogl-path.la \
-                          ${libdir}/pkgconfig/cogl-path-*.pc"
 
 # For backwards compatibility after Debian-renaming
 RPROVIDES_libcogl = "cogl-1.0"
