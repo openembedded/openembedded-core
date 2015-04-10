@@ -43,12 +43,8 @@ PACKAGECONFIG[check-ycbcr-subsampling] = "--enable-check-ycbcr-subsampling,--dis
 # in chunks when using TIFFReadScanline. Experimental 4.0+ feature
 PACKAGECONFIG[chunky-strip-read] = "--enable-chunky-strip-read,--disable-chunky-strip-read,,"
 
-PACKAGES =+ "tiffxx tiffxx-dbg tiffxx-dev tiffxx-staticdev tiff-utils tiff-utils-dbg"
+PACKAGES =+ "tiffxx tiff-utils"
 FILES_tiffxx = "${libdir}/libtiffxx.so.*"
-FILES_tiffxx-dev = "${libdir}/libtiffxx.so ${libdir}/libtiffxx.la"
-FILES_tiffxx-staticdev = "${libdir}/libtiffxx.a"
-FILES_tiffxx-dbg += "${libdir}/.debug/libtiffxx.so*"
 FILES_tiff-utils = "${bindir}/*"
-FILES_tiff-utils-dbg += "${bindir}/.debug/"
 
 BBCLASSEXTEND = "native"
