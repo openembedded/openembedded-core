@@ -52,12 +52,9 @@ do_install () {
 	oe_multilib_header pci/config.h
 }
 
-PACKAGES =+ "${PN}-ids libpci libpci-dev libpci-dbg"
+PACKAGES =+ "${PN}-ids libpci"
 FILES_${PN}-ids = "${datadir}/pci.ids*"
 FILES_libpci = "${libdir}/libpci.so.*"
-FILES_libpci-dbg = "${libdir}/.debug"
-FILES_libpci-dev = "${libdir}/libpci.a ${libdir}/libpci.la ${libdir}/libpci.so \
-                    ${includedir}/pci ${libdir}/pkgconfig"
 SUMMARY_${PN}-ids = "PCI utilities - device ID database"
 DESCRIPTION_${PN}-ids = "Package providing the PCI device ID database for pciutils."
 RDEPENDS_${PN} += "${PN}-ids"
