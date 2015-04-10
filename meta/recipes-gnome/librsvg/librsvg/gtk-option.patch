@@ -1,27 +1,29 @@
-Upstream-Status: Submitted [https://bugzilla.gnome.org/show_bug.cgi?id=712693]
-Signed-off-by: Ross Burton <ross.burton@intel.com>
-
-From 18917f7fd3160afe06019f4b6234aeb78a3fdb4e Mon Sep 17 00:00:00 2001
-From: Ross Burton <ross.burton@intel.com>
-Date: Tue, 19 Nov 2013 16:00:29 +0000
+From 85d4af4451283f388e1e101ee4710bb19854154d Mon Sep 17 00:00:00 2001
+From: Jussi Kukkonen <jussi.kukkonen@intel.com>
+Date: Fri, 10 Apr 2015 16:49:43 +0300
 Subject: [PATCH] configure: add option to enable/disable use of GTK+
 
 Distro packagers like predictability and automatically detected optional
 dependencies are not predicable.  Add a --with-gtk3 option (default to "auto")
 for forcibly controlling whether GTK+ will be used or not.
 
+Upstream-Status: Submitted [https://bugzilla.gnome.org/show_bug.cgi?id=712693]
+
 Signed-off-by: Ross Burton <ross.burton@intel.com>
 
-https://bugzilla.gnome.org/show_bug.cgi?id=712693
+
+Forward-ported to 2.40.9
+
+Signed-off-by: Jussi Kukkonen <jussi.kukkonen@intel.com>
 ---
- configure.in |   17 +++++++++++------
+ configure.ac | 17 +++++++++++------
  1 file changed, 11 insertions(+), 6 deletions(-)
 
-diff --git a/configure.in b/configure.in
-index f7a89dc..1498f72 100644
---- a/configure.in
-+++ b/configure.in
-@@ -119,17 +119,22 @@ AC_CHECK_FUNCS(strtok_r)
+diff --git a/configure.ac b/configure.ac
+index e86c052..16b0e34 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -128,17 +128,22 @@ AC_CHECK_FUNCS(strtok_r)
  # GTK
  # ===========================================================================
  
@@ -49,7 +51,7 @@ index f7a89dc..1498f72 100644
  
  dnl ===========================================================================
  dnl GDK-Pixbuf SVG loader
-@@ -305,6 +310,6 @@ librsvg-$VERSION
+@@ -289,6 +294,6 @@ librsvg-$VERSION
  	Build introspectable bindings:  ${found_introspection}
  	Build Vala bindings:            ${enable_vala}
  	Build GdkPixbuf loader:         ${enable_pixbuf_loader}
@@ -58,5 +60,5 @@ index f7a89dc..1498f72 100644
  	Build miscellaenous tools:      ${build_misc_tools}
  "
 -- 
-1.7.10.4
+2.1.4
 

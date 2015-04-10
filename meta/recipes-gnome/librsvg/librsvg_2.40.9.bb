@@ -16,8 +16,8 @@ GNOME_COMPRESS_TYPE = "xz"
 
 SRC_URI += "file://gtk-option.patch"
 
-SRC_URI[archive.md5sum] = "259fd160b47ec11f3c27d7e18e507c99"
-SRC_URI[archive.sha256sum] = "8af349f241677b04b7a1ea6b9b33a6343e781bcccc8a09d00208a47342584f06"
+SRC_URI[archive.md5sum] = "31df15e3beaa8fbbf538ca3c52b400d2"
+SRC_URI[archive.sha256sum] = "13964c5d35357552b47d365c34215eee0a63bf0e6059b689f048648c6bf5f43a"
 
 EXTRA_OECONF = "--disable-introspection --disable-vala"
 
