@@ -36,17 +36,10 @@ EXTRA_AUTORECONF = "--exclude=libtoolize"
 
 DEPENDS = "libtool-native"
 
-PACKAGES =+ "libltdl libltdl-dev libltdl-dbg libltdl-staticdev"
+PACKAGES =+ "libltdl"
 FILES_${PN} += "${datadir}/aclocal"
-FILES_${PN}-dev = "${includedir} ${FILES_SOLIBSDEV} ${libdir}/*.la \
-                ${libdir}/*.o ${libdir}/pkgconfig ${datadir}/pkgconfig \
-                ${base_libdir}/*.o ${libdir}/${BPN}/*.la ${base_libdir}/*.la"
 
 #FILES_${PN}-dev := "${@oe_filter_out('${datadir}/aclocal', '${FILES_libtool-dev}', d)}"
 FILES_libltdl = "${libdir}/libltdl${SOLIBS}"
-FILES_libltdl-dev = "${libdir}/libltdl${SOLIBSDEV} ${includedir}"
-FILES_libltdl-dev =+ "${libdir}/libltdl.la"
-FILES_libltdl-staticdev = "${libdir}/libltdl.a"
-FILES_libltdl-dbg = "${libdir}/.debug/"
 
 export CONFIG_SHELL="/bin/bash"
