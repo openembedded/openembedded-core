@@ -43,7 +43,11 @@ EXTRA_OECONF = "--disable-strip"
 # Package Makefile computes CFLAGS, referencing COPTS.
 # Typically hard-coded to '-O2 -g' in the Makefile's.
 #
-EXTRA_OEMAKE += ' COPTS="${CFLAGS}"'
+EXTRA_OEMAKE += ' COPTS="${CFLAGS} -I${S}/include"'
+
+do_configure () {
+	oe_runconf
+}
 
 do_install_append () {
 	make install-etcppp ETCDIR=${D}/${sysconfdir}/ppp
