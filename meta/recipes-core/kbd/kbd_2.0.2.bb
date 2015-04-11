@@ -12,6 +12,7 @@ RCONFLICTS_${PN} = "console-tools"
 
 SRC_URI = "${KERNELORG_MIRROR}/linux/utils/${BPN}/${BP}.tar.xz \
            file://uclibc-stdarg.patch \
+	   file://0003-Only-inluclude-kernel-headers-with-glibc.patch \
           "
 
 SRC_URI[md5sum] = "87475eb78b1d6e6ab06686dd323ad4ba"
