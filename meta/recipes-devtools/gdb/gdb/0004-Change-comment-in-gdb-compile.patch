@@ -1,0 +1,48 @@
+Upstream-Status: Backport
+
+From 09de64b93c2402e068daf0bce1c4a1dda833b646 Mon Sep 17 00:00:00 2001
+From: Jan Kratochvil <jan.kratochvil@redhat.com>
+Date: Thu, 26 Feb 2015 11:52:28 +0100
+Subject: [PATCH] Change // comment in gdb/compile/
+
+gdb/ChangeLog
+2015-02-26  Jan Kratochvil  <jan.kratochvil@redhat.com>
+
+	PR build/18033
+	* compile/compile-c-support.c (c_compute_program): Change // comment.
+	* compile/compile-object-load.c (setup_sections): Change // comment.
+---
+ gdb/ChangeLog                     | 6 ++++++
+ gdb/compile/compile-c-support.c   | 2 +-
+ gdb/compile/compile-object-load.c | 2 +-
+ 3 files changed, 8 insertions(+), 2 deletions(-)
+
+diff --git a/gdb/compile/compile-c-support.c b/gdb/compile/compile-c-support.c
+index 8f1f45d..1711cda 100644
+--- a/gdb/compile/compile-c-support.c
++++ b/gdb/compile/compile-c-support.c
+@@ -351,7 +351,7 @@ c_compute_program (struct compile_instance *inst,
+ 			" __gdb_intptr;\n",
+ 			buf);
+ 
+-      // Iterate all log2 sizes in bytes supported by c_get_mode_for_size.
++      /* Iterate all log2 sizes in bytes supported by c_get_mode_for_size.  */
+       for (i = 0; i < 4; ++i)
+ 	{
+ 	  const char *mode = c_get_mode_for_size (1 << i);
+diff --git a/gdb/compile/compile-object-load.c b/gdb/compile/compile-object-load.c
+index 5903f18..e187970 100644
+--- a/gdb/compile/compile-object-load.c
++++ b/gdb/compile/compile-object-load.c
+@@ -67,7 +67,7 @@ setup_sections (bfd *abfd, asection *sect, void *data_voidp)
+       if ((bfd_get_section_flags (abfd, sect) & SEC_ALLOC) == 0)
+ 	return;
+ 
+-      // Make the memory always readable.
++      /* Make the memory always readable.  */
+       prot = GDB_MMAP_PROT_READ;
+       if ((bfd_get_section_flags (abfd, sect) & SEC_READONLY) == 0)
+ 	prot |= GDB_MMAP_PROT_WRITE;
+-- 
+2.1.4
+
