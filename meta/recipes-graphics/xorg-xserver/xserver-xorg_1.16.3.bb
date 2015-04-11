@@ -8,6 +8,7 @@ SRC_URI += "file://fix_open_max_preprocessor_error.patch \
             file://xtrans.patch \
             file://0001-xkb-Don-t-swap-XkbSetGeometry-data-in-the-input-buff.patch \
             file://0001-xkb-Check-strings-length-against-request-size.patch \
+            file://0001-use-__GLIBC__-guard-for-glibc-specific-code.patch \
            "
 
 SRC_URI[md5sum] = "afd93977235584a9caa7528a737c1b52"
