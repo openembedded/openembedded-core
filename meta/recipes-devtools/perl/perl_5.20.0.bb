@@ -165,6 +165,29 @@ do_configure() {
                        -e "s,-fstack-protector,-fno-stack-protector,g" \
                     config.sh-${TARGET_ARCH}-${TARGET_OS}
         fi
+        # Fixups for musl
+        if [ "${TARGET_OS}" = "linux-musl" -o "${TARGET_OS}" = "linux-musleabi" ]; then
+                sed -i -e "s,\(d_libm_lib_version=\)'define',\1'undef',g" \
+                       -e "s,\(d_stdio_ptr_lval=\)'define',\1'undef',g" \
+                       -e "s,\(d_stdio_ptr_lval_sets_cnt=\)'define',\1'undef',g" \
+                       -e "s,\(d_stdiobase=\)'define',\1'undef',g" \
+                       -e "s,\(d_stdstdio=\)'define',\1'undef',g" \
+                       -e "s,\(d_getnetbyname_r=\)'define',\1'undef',g" \
+                       -e "s,\(getprotobyname_r=\)'define',\1'undef',g" \
+                       -e "s,\(getpwent_r=\)'define',\1'undef',g" \
+                       -e "s,\(getservent_r=\)'define',\1'undef',g" \
+                       -e "s,\(gethostent_r=\)'define',\1'undef',g" \
+                       -e "s,\(getnetent_r=\)'define',\1'undef',g" \
+                       -e "s,\(getnetbyaddr_r=\)'define',\1'undef',g" \
+                       -e "s,\(getprotoent_r=\)'define',\1'undef',g" \
+                       -e "s,\(getprotobynumber_r=\)'define',\1'undef',g" \
+                       -e "s,\(getgrent_r=\)'define',\1'undef',g" \
+                       -e "s,\(i_fcntl=\)'undef',\1'define',g" \
+                       -e "s,\(h_fcntl=\)'false',\1'true',g" \
+                       -e "s,-fstack-protector,-fno-stack-protector,g" \
+                       -e "s,-lnsl,,g" \
+                    config.sh-${TARGET_ARCH}-${TARGET_OS}
+        fi
 
 	${@bb.utils.contains('DISTRO_FEATURES', 'largefile', '', 'do_nolargefile', d)}
 
