@@ -59,6 +59,7 @@ def package_qa_get_machine_dict():
             "elf" : {
                         "i586" :      (3,      0,    0,          True,          32),
                         "x86_64":     (62,     0,    0,          True,          64),
+                        "epiphany":   (4643,   0,    0,          True,          32),
                       },
             "linux" : { 
                         "aarch64" :   (183,    0,    0,          True,          64),
