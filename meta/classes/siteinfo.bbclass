@@ -24,6 +24,7 @@ def siteinfo_data(d):
         "armeb": "endian-big bit-32 arm-common arm-32",
         "avr32": "endian-big bit-32 avr32-common",
         "bfin": "endian-little bit-32 bfin-common",
+        "epiphany": "endian-little bit-32",
         "i386": "endian-little bit-32 ix86-common",
         "i486": "endian-little bit-32 ix86-common",
         "i586": "endian-little bit-32 ix86-common",
