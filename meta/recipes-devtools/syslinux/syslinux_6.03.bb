@@ -66,14 +66,17 @@ do_install() {
 	install -d ${D}${datadir}/syslinux/
 	install -m 644 ${S}/bios/core/ldlinux.sys ${D}${datadir}/syslinux/
 	install -m 644 ${S}/bios/core/ldlinux.bss ${D}${datadir}/syslinux/
+	install -m 644 ${S}/bios/linux/syslinux-nomtools ${D}${bindir}/
 }
 
-PACKAGES += "${PN}-extlinux ${PN}-mbr ${PN}-chain ${PN}-pxelinux ${PN}-isolinux ${PN}-misc"
+PACKAGES += "${PN}-nomtools ${PN}-extlinux ${PN}-mbr ${PN}-chain ${PN}-pxelinux ${PN}-isolinux ${PN}-misc"
 
 RDEPENDS_${PN} += "mtools"
+RDEPENDS_${PN}-nomtools += "libext2fs"
 RDEPENDS_${PN}-misc += "perl"
 
 FILES_${PN} = "${bindir}/syslinux"
+FILES_${PN}-nomtools = "${bindir}/syslinux-nomtools"
 FILES_${PN}-extlinux = "${sbindir}/extlinux"
 FILES_${PN}-mbr = "${datadir}/${BPN}/mbr.bin"
 FILES_${PN}-chain = "${datadir}/${BPN}/chain.c32"
