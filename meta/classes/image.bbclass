@@ -335,7 +335,8 @@ MULTILIB_TEMP_ROOTFS = "${WORKDIR}/multilib"
 zap_empty_root_password () {
 	if [ -e ${IMAGE_ROOTFS}/etc/shadow ]; then
 		sed -i 's%^root::%root:*:%' ${IMAGE_ROOTFS}/etc/shadow
-	elif [ -e ${IMAGE_ROOTFS}/etc/passwd ]; then
+        fi
+	if [ -e ${IMAGE_ROOTFS}/etc/passwd ]; then
 		sed -i 's%^root::%root:*:%' ${IMAGE_ROOTFS}/etc/passwd
 	fi
 } 
