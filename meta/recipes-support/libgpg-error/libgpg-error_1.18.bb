@@ -27,18 +27,14 @@ do_compile_prepend() {
 	fi
 
 	case ${TARGET_ARCH} in
-	  aarch64)    TUPLE=aarch64-unknown-linux-gnu ;;
+	  aarch64_be) TUPLE=aarch64-unknown-linux-gnu ;;
 	  arm)	      TUPLE=arm-unknown-linux-gnueabi ;;
 	  armeb)      TUPLE=arm-unknown-linux-gnueabi ;;
 	  i586|i686)  TUPLE=i486-pc-linux-gnu ;;
-	  mipsel)     TUPLE=mipsel-unknown-linux-gnu ;;
 	  mips64el)   TUPLE=mipsel-unknown-linux-gnu ;;
 	  mips64)     TUPLE=mips-unknown-linux-gnu ;;
-	  mips)       TUPLE=mips-unknown-linux-gnu ;;
-	  powerpc64)  TUPLE=powerpc64-unknown-linux-gnu ;;
-	  powerpc)    TUPLE=powerpc-unknown-linux-gnu ;;
-	  sh4)	      TUPLE=sh4-unknown-linux-gnu ;;
 	  x86_64)     TUPLE=x86_64-pc-linux-gnu ;;
+	  *)          TUPLE=${TARGET_ARCH}-unknown-linux-gnu ;; 
 	esac
 
 	cp ${S}/src/syscfg/lock-obj-pub.$TUPLE.h \
