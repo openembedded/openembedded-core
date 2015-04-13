@@ -66,7 +66,7 @@ do_install() {
 	install -d ${D}${datadir}/syslinux/
 	install -m 644 ${S}/bios/core/ldlinux.sys ${D}${datadir}/syslinux/
 	install -m 644 ${S}/bios/core/ldlinux.bss ${D}${datadir}/syslinux/
-	install -m 644 ${S}/bios/linux/syslinux-nomtools ${D}${bindir}/
+	install -m 755 ${S}/bios/linux/syslinux-nomtools ${D}${bindir}/
 }
 
 PACKAGES += "${PN}-nomtools ${PN}-extlinux ${PN}-mbr ${PN}-chain ${PN}-pxelinux ${PN}-isolinux ${PN}-misc"
