@@ -7,15 +7,23 @@ serial-tests is now required
 Signed-off-by: Tudor Florea <tudor.florea@enea.com>
 Upstream-Status: Inappropriate (disable feature incompatible with ptest) 
 
-diff -ruN a/configure.ac b/configure.ac
---- a/configure.ac	2013-09-02 15:05:18.662366800 +0200
-+++ b/configure.ac	2013-11-28 09:26:49.557066764 +0200
-@@ -8,7 +8,7 @@
- AC_CONFIG_SRCDIR([libkmod/libkmod.c])
- AC_CONFIG_AUX_DIR([build-aux])
- AM_INIT_AUTOMAKE([check-news foreign 1.11 silent-rules
--	tar-pax no-dist-gzip dist-xz subdir-objects color-tests parallel-tests])
-+	tar-pax no-dist-gzip dist-xz subdir-objects color-tests serial-tests])
- AC_PROG_CC_STDC
- AC_USE_SYSTEM_EXTENSIONS
+---
+ configure.ac | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/configure.ac b/configure.ac
+index eb0f9d1..a539968 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -14,7 +14,7 @@ AC_USE_SYSTEM_EXTENSIONS
  AC_SYS_LARGEFILE
+ AC_PREFIX_DEFAULT([/usr])
+ AM_MAINTAINER_MODE([enable])
+-AM_INIT_AUTOMAKE([check-news foreign 1.11 silent-rules tar-pax no-dist-gzip dist-xz subdir-objects color-tests parallel-tests])
++AM_INIT_AUTOMAKE([check-news foreign 1.11 silent-rules tar-pax no-dist-gzip dist-xz subdir-objects color-tests serial-tests])
+ AM_SILENT_RULES([yes])
+ LT_INIT([disable-static pic-only])
+ 
+-- 
+1.9.1
+
