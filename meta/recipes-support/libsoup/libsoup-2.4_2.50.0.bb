@@ -17,9 +17,8 @@ PACKAGECONFIG[gnome] = "--with-gnome,--without-gnome"
 SHRT_VER = "${@bb.data.getVar('PV',d,1).split('.')[0]}.${@bb.data.getVar('PV',d,1).split('.')[1]}"
 SRC_URI = "${GNOME_MIRROR}/libsoup/${SHRT_VER}/libsoup-${PV}.tar.xz"
 
-
-SRC_URI[md5sum] = "86765c0093efaf3006fa2960d170d097"
-SRC_URI[sha256sum] = "fa3d5574c1a2df521242e2ca624a2b3057121798cab9f8f40525aa186a7b15a3"
+SRC_URI[md5sum] = "9a84d66e1b7ccd3bd340574b11eccc15"
+SRC_URI[sha256sum] = "1e01365ac4af3817187ea847f9d3588c27eee01fc519a5a7cb212bb78b0f667b"
 
 S = "${WORKDIR}/libsoup-${PV}"
 
