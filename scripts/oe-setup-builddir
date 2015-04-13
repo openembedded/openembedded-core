@@ -23,7 +23,7 @@ if [ -z "$BUILDDIR" ]; then
     exit 1
 fi
 
-mkdir -p $BUILDDIR/conf
+mkdir -p "$BUILDDIR/conf"
 
 if [ ! -d "$BUILDDIR" ]; then
     echo >&2 "Error: The builddir ($BUILDDIR) does not exist!"
@@ -38,13 +38,13 @@ fi
 cd "$BUILDDIR"
 
 if [ -f "$BUILDDIR/conf/templateconf.cfg" ]; then
-    TEMPLATECONF=$(cat $BUILDDIR/conf/templateconf.cfg)
+    TEMPLATECONF=$(cat "$BUILDDIR/conf/templateconf.cfg")
 fi
 
 . $OEROOT/.templateconf
 
 if [ ! -f "$BUILDDIR/conf/templateconf.cfg" ]; then
-    echo "$TEMPLATECONF" >$BUILDDIR/conf/templateconf.cfg
+    echo "$TEMPLATECONF" >"$BUILDDIR/conf/templateconf.cfg"
 fi
 
 # 
@@ -79,7 +79,7 @@ advantage of multiple cores for example. See the file for more information as
 common configuration options are commented.
 
 EOM
-    cp -f $OECORELOCALCONF $BUILDDIR/conf/local.conf
+    cp -f $OECORELOCALCONF "$BUILDDIR/conf/local.conf"
     SHOWYPDOC=yes
 fi
 
@@ -100,7 +100,7 @@ EOM
     # to replace it for compatibility.
     sed -e "s|##OEROOT##|$OEROOT|g" \
         -e "s|##COREBASE##|$OEROOT|g" \
-        $OECORELAYERCONF > $BUILDDIR/conf/bblayers.conf
+        $OECORELAYERCONF > "$BUILDDIR/conf/bblayers.conf"
     SHOWYPDOC=yes
 fi
 

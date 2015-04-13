@@ -46,7 +46,7 @@ OEROOT=`readlink -f "$OEROOT"`
 export OEROOT
 . $OEROOT/scripts/oe-buildenv-internal && \
      $OEROOT/scripts/oe-setup-builddir && \
-     [ -n "$BUILDDIR" ] && cd $BUILDDIR
+     [ -n "$BUILDDIR" ] && cd "$BUILDDIR"
 unset OEROOT
 unset BBPATH
 unset THIS_SCRIPT
