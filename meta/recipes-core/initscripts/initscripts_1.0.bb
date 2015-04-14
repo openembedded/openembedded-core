@@ -161,4 +161,9 @@ pkg_postinst_${PN} () {
 			systemctl $OPTS mask $SERVICE.service
 		done
 	fi
+
+    # Delete any old volatile cache script, as directories may have moved
+    if [ -z "$D" ]; then
+        rm -f "/etc/volatile.cache"
+    fi
 }
