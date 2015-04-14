@@ -14,9 +14,6 @@ LICENSE_${PN}-doc = "GPLv2+"
 LICENSE_${PN}-dbg = "GPLv2+"
 LICENSE_${PN}-locale = "GPLv2+"
 LICENSE_liblzma = "PD"
-LICENSE_liblzma-dev = "PD"
-LICENSE_liblzma-staticdev = "PD"
-LICENSE_liblzma-dbg = "PD"
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=c475b6c7dca236740ace4bba553e8e1c \
                     file://COPYING.GPLv2;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
@@ -30,12 +27,9 @@ SRC_URI[sha256sum] = "b918b6648076e74f8d7ae19db5ee663df800049e187259faf5eb997a7b
 
 inherit autotools gettext
 
-PACKAGES =+ "liblzma liblzma-dev liblzma-staticdev liblzma-dbg"
+PACKAGES =+ "liblzma"
 
 FILES_liblzma = "${libdir}/liblzma*${SOLIBS}"
-FILES_liblzma-dev = "${includedir}/lzma* ${libdir}/liblzma*${SOLIBSDEV} ${libdir}/liblzma.la ${libdir}/pkgconfig/liblzma.pc"
-FILES_liblzma-staticdev = "${libdir}/liblzma.a"
-FILES_liblzma-dbg = "${libdir}/.debug/liblzma*"
 
 BBCLASSEXTEND = "native nativesdk"
 
