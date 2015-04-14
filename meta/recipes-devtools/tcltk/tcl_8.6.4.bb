@@ -4,12 +4,12 @@ SECTION = "devel/tcltk"
 
 # http://www.tcl.tk/software/tcltk/license.html
 LICENSE = "tcl & BSD-3-Clause"
-LIC_FILES_CHKSUM = "file://../license.terms;md5=3c6f62c07835353e36f0db550ccfb65a \
-    file://../compat/license.terms;md5=3c6f62c07835353e36f0db550ccfb65a \
-    file://../library/license.terms;md5=3c6f62c07835353e36f0db550ccfb65a \
-    file://../macosx/license.terms;md5=3c6f62c07835353e36f0db550ccfb65a \
-    file://../tests/license.terms;md5=3c6f62c07835353e36f0db550ccfb65a \
-    file://../win/license.terms;md5=3c6f62c07835353e36f0db550ccfb65a \
+LIC_FILES_CHKSUM = "file://../license.terms;md5=058f6229798281bbcac4239c788cfa38 \
+    file://../compat/license.terms;md5=058f6229798281bbcac4239c788cfa38 \
+    file://../library/license.terms;md5=058f6229798281bbcac4239c788cfa38 \
+    file://../macosx/license.terms;md5=058f6229798281bbcac4239c788cfa38 \
+    file://../tests/license.terms;md5=058f6229798281bbcac4239c788cfa38 \
+    file://../win/license.terms;md5=058f6229798281bbcac4239c788cfa38 \
 "
 
 DEPENDS = "tcl-native zlib"
@@ -24,8 +24,8 @@ SRC_URI = "${BASE_SRC_URI} \
            file://alter-includedir.patch \
            file://run-ptest \
 "
-SRC_URI[md5sum] = "db382feca91754b7f93da16dc4cdad1f"
-SRC_URI[sha256sum] = "6ce0778de0d50daaa9c345d7c1fd1288fb658f674028812e7eeee992e3051005"
+SRC_URI[md5sum] = "d7cbb91f1ded1919370a30edd1534304"
+SRC_URI[sha256sum] = "9e6ed94c981c1d0c5f5fefb8112d06c6bf4d050a7327e95e71d417c416519c8d"
 
 SRC_URI_class-native = "${BASE_SRC_URI}"
 
