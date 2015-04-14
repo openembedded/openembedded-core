@@ -26,6 +26,7 @@ SRC_URI = "\
   file://obsolete_automake_macros.patch \
   file://0001-Enable-mips64-build.patch \
   file://aarch64.patch \
+  file://webkit-gtk-ANGLE-doesn-t-build-with-bison-3.patch \
  "
 
 SRC_URI[md5sum] = "dcbf9d5e2e6391f857c29a57528b32a6"

@@ -1,0 +1,26 @@
+webkit-gtk: ANGLE doesn't build with bison 3
+
+Use %lex-param to set YYLEX_PARAM.
+
+Upstream-Status: Pending
+
+Signed-off-by: Chong Lu <Chong.Lu@windriver.com>
+---
+ Source/ThirdParty/ANGLE/src/compiler/glslang.y | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Source/ThirdParty/ANGLE/src/compiler/glslang.y b/Source/ThirdParty/ANGLE/src/compiler/glslang.y
+index ec1a85c..15723cc 100644
+--- a/Source/ThirdParty/ANGLE/src/compiler/glslang.y
++++ b/Source/ThirdParty/ANGLE/src/compiler/glslang.y
+@@ -32,6 +32,7 @@ WHICH GENERATES THE GLSL ES PARSER (glslang_tab.cpp AND glslang_tab.h).
+ %expect 1 /* One shift reduce conflict because of if | else */
+ %pure-parser
+ %parse-param {TParseContext* context}
++%lex-param {YYLEX_PARAM}
+ 
+ %union {
+     struct {
+-- 
+1.9.1
+
