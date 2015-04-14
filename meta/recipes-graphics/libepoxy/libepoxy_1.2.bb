@@ -13,4 +13,4 @@ S = "${WORKDIR}/git"
 
 inherit autotools pkgconfig
 
-DEPENDS = "util-macros"
+DEPENDS = "util-macros virtual/egl virtual/libx11"
