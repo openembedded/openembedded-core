@@ -52,6 +52,36 @@ Index: openssl-1.0.1e/crypto/bn/bn.h
  /*
   * assuming long is 64bit - this is the DEC Alpha unsigned long long is only
   * 64 bits :-(, don't define BN_LLONG for the DEC Alpha
+Index: openssl-1.0.1e/crypto/bn/asm/x86_64-gcc.c
+===================================================================
+--- openssl-1.0.1m/crypto/bn/asm/x86_64-gcc.c	2015-03-19 13:37:10.000000000 +0000
++++ openssl-1.0.1m-modif/crypto/bn/asm/x86_64-gcc.c	2015-04-14 17:09:11.876533194 +0100
+@@ -211,9 +211,9 @@
+
+     asm volatile ("       subq    %2,%2           \n"
+                   ".p2align 4                     \n"
+-                  "1:     movq    (%4,%2,8),%0    \n"
+-                  "       adcq    (%5,%2,8),%0    \n"
+-                  "       movq    %0,(%3,%2,8)    \n"
++                  "1:     movq    (%q4,%2,8),%0   \n"
++                  "       adcq    (%q5,%2,8),%0   \n"
++                  "       movq    %0,(%q3,%2,8)   \n"
+                   "       leaq    1(%2),%2        \n"
+                   "       loop    1b              \n"
+                   "       sbbq    %0,%0           \n":"=&a" (ret), "+c"(n),
+@@ -235,9 +235,9 @@
+
+     asm volatile ("       subq    %2,%2           \n"
+                   ".p2align 4                     \n"
+-                  "1:     movq    (%4,%2,8),%0    \n"
+-                  "       sbbq    (%5,%2,8),%0    \n"
+-                  "       movq    %0,(%3,%2,8)    \n"
++                  "1:     movq    (%q4,%2,8),%0   \n"
++                  "       sbbq    (%q5,%2,8),%0   \n"
++                  "       movq    %0,(%q3,%2,8)   \n"
+                   "       leaq    1(%2),%2        \n"
+                   "       loop    1b              \n"
+                   "       sbbq    %0,%0           \n":"=&a" (ret), "+c"(n)
 Index: openssl-1.0.1e/crypto/bn/bn_exp.c
 ===================================================================
 --- openssl-1.0.1e.orig/crypto/bn/bn_exp.c
