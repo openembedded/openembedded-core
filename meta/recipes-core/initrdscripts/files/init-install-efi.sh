@@ -199,11 +199,11 @@ if [ -f /run/media/$1/EFI/BOOT/grub.cfg ]; then
 fi
 
 if [ -d /run/media/$1/loader ]; then
-    GUMMIBOOT_CFGS="/tgt_root/loader/entries/*.conf"
+    GUMMIBOOT_CFGS="/boot/loader/entries/*.conf"
     # copy config files for gummiboot
-    cp -dr /run/media/$1/loader /tgt_root
+    cp -dr /run/media/$1/loader /boot
     # delete the install entry
-    rm -f /tgt_root/loader/entries/install.conf
+    rm -f /boot/loader/entries/install.conf
     # delete the initrd lines
     sed -i "/initrd /d" $GUMMIBOOT_CFGS
     # delete any LABEL= strings
