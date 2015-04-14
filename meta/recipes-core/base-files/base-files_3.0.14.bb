@@ -69,6 +69,29 @@ hostname = "${MACHINE}"
 
 BASEFILESISSUEINSTALL ?= "do_install_basefilesissue"
 
+# In previous versions of base-files, /run was a softlink to /var/run and the
+# directory was located in /var/volatlie/run.  Also, /var/lock was a softlink
+# to /var/volatile/lock which is where the real directory was located.  Now,
+# /run and /run/lock are the real directories.  If we are upgrading, we may
+# need to remove the symbolic links first before we create the directories.
+# Otherwise the directory creation will fail and we will have circular symbolic
+# links.
+# 
+pkg_preinst_${PN} () {
+    #!/bin/sh -e
+    if [ x"$D" = "x" ]; then
+        if [ -h "/var/lock" ]; then
+            # Remove the symbolic link
+            rm -f /var/lock
+        fi
+
+        if [ -h "/run" ]; then
+            # Remove the symbolic link
+            rm -f /run
+        fi
+    fi     
+}
+
 do_install () {
 	for d in ${dirs755}; do
 		install -m 0755 -d ${D}$d
@@ -82,6 +105,7 @@ do_install () {
 	for d in ${volatiles}; do
 		ln -sf volatile/$d ${D}${localstatedir}/$d
 	done
+
 	ln -snf ../run ${D}${localstatedir}/run
 	ln -snf ../run/lock ${D}${localstatedir}/lock
 
