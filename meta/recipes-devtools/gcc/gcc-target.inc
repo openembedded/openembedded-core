@@ -19,7 +19,6 @@ PACKAGES = "\
     g77 g77-symlinks \
     gfortran gfortran-symlinks \
     gcov gcov-symlinks \
-    ${PN}-plugin-dev \
     ${PN}-doc \
     ${PN}-dev \
     ${PN}-dbg \
@@ -47,8 +46,6 @@ FILES_${PN}-dbg += "\
 FILES_${PN}-dev = "\
     ${gcclibdir}/${TARGET_SYS}/${BINV}/lib*${SOLIBSDEV} \
     ${libexecdir}/gcc/${TARGET_SYS}/${BINV}/lib*${SOLIBSDEV} \
-"
-FILES_${PN}-plugin-dev = "\
     ${gcclibdir}/${TARGET_SYS}/${BINV}/plugin/include/ \
     ${libexecdir}/gcc/${TARGET_SYS}/${BINV}/plugin/gengtype \
     ${gcclibdir}/${TARGET_SYS}/${BINV}/plugin/gtype.state \
