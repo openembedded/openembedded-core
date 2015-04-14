@@ -9,28 +9,26 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 SECTION = "devel"
 DEPENDS = "bison-native flex-native"
 
-BASE_SRC_URI = "${GNU_MIRROR}/bison/bison-${PV}.tar.xz \
-	        file://m4.patch \
-                file://dont-depend-on-help2man.patch \
-	       "
+SRC_URI = "${GNU_MIRROR}/bison/bison-${PV}.tar.xz \
+           file://m4.patch \
+           file://0001-Unset-need_charset_alias-when-building-for-musl.patch \
+"
 
 # No point in hardcoding path to m4, just use PATH
 EXTRA_OECONF += "M4=m4"
 
-SRC_URI = "${BASE_SRC_URI} \
-           file://fix_cross_manpage_building.patch \
-	   file://0001-Unset-need_charset_alias-when-building-for-musl.patch \
-          "
-
-SRC_URI[md5sum] = "7be02eb973eccf388f1ae750fc09eed0"
-SRC_URI[sha256sum] = "b409adcbf245baadb68d2f66accf6fdca5e282cafec1b865f4b5e963ba8ea7fb"
+SRC_URI[md5sum] = "c342201de104cc9ce0a21e0ad10d4021"
+SRC_URI[sha256sum] = "a72428c7917bdf9fa93cb8181c971b6e22834125848cf1d03ce10b1bb0716fe1"
 
 LDFLAGS_prepend_libc-uclibc = " -lrt "
 DEPENDS_class-native = "gettext-minimal-native"
-SRC_URI_class-native = "${BASE_SRC_URI}"
 
 inherit autotools gettext texinfo
 acpaths = "-I ${S}/m4"
+
+do_compile_prepend() {
+	for i in mfcalc calc++ rpcalc; do mkdir -p ${B}/examples/$i; done
+}
 
 do_install_append_class-native() {
 	create_wrapper ${D}/${bindir}/bison \
