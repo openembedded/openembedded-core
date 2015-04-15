@@ -27,6 +27,7 @@
 import os
 import shutil
 
+from wic.utils.errors import ImageError
 from wic import kickstart, msger
 from wic.utils import misc, fs_related, errors, runner, cmdln
 from wic.conf import configmgr
@@ -72,8 +73,6 @@ class BootimgEFIPlugin(SourcePlugin):
         grubefi_conf += "linux %s root=%s rootwait %s\n" \
             % (kernel, rootstr, options)
         grubefi_conf += "}\n"
-        if splashline:
-            syslinux_conf += "%s\n" % splashline
 
         msger.debug("Writing grubefi config %s/hdd/boot/EFI/BOOT/grub.cfg" \
                         % cr_workdir)

@@ -26,6 +26,7 @@
 
 import os
 
+from wic.utils.errors import ImageError
 from wic import kickstart, msger
 from wic.utils import misc, fs_related, errors, runner, cmdln
 from wic.conf import configmgr
