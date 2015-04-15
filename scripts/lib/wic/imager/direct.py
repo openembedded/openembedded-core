@@ -32,7 +32,6 @@ from wic.utils import fs_related, runner, misc
 from wic.utils.partitionedfs import Image
 from wic.utils.errors import CreatorError, ImageError
 from wic.imager.baseimager import BaseImageCreator
-from wic.utils.oe.misc import *
 from wic.plugin import pluginmgr
 
 disk_methods = {

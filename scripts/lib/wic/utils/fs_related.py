@@ -20,10 +20,7 @@ from __future__ import with_statement
 import os
 import errno
 
-from wic import msger
-from wic.utils import runner
-from wic.utils.errors import *
-from wic.utils.oe.misc import *
+from wic.utils.oe.misc import exec_cmd
 
 def makedirs(dirname):
     """A version of os.makedirs() that doesn't throw an

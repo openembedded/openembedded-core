@@ -19,7 +19,7 @@ import os
 
 from wic import msger
 from wic.pluginbase import SourcePlugin
-from wic.utils.oe.misc import *
+from wic.utils.oe.misc import exec_cmd, get_bitbake_var
 
 class RawCopyPlugin(SourcePlugin):
     name = 'rawcopy'

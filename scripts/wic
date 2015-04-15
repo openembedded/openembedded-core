@@ -52,8 +52,9 @@ if bitbake_exe:
 else:
     bitbake_main = None
 
-from image.help import *
-from image.engine import *
+from wic.utils.oe.misc import find_bitbake_env_lines, set_bitbake_env_lines
+from image import engine
+from image import help as hlp
 
 def rootfs_dir_to_args(krootfs_dir):
     """
@@ -132,7 +133,7 @@ def wic_create_subcommand(args, usage_str):
 
     if options.build_check and not options.properties_file:
         print "Checking basic build environment..."
-        if not verify_build_env():
+        if not engine.verify_build_env():
             print "Couldn't verify build environment, exiting\n"
             sys.exit(1)
         else:
@@ -158,7 +159,7 @@ def wic_create_subcommand(args, usage_str):
                 sys.exit(1)
 
         (rootfs_dir, kernel_dir, bootimg_dir, native_sysroot) \
-            = find_artifacts(options.image_name)
+            = engine.find_artifacts(options.image_name)
 
     else:
         if options.build_rootfs:
@@ -168,7 +169,7 @@ def wic_create_subcommand(args, usage_str):
     wks_file = args[0]
 
     if not wks_file.endswith(".wks"):
-        wks_file = find_canned_image(scripts_path, wks_file)
+        wks_file = engine.find_canned_image(scripts_path, wks_file)
         if not wks_file:
             print "No image named %s found, exiting.  (Use 'wic list images' to list available images, or specify a fully-qualified OE kickstart (.wks) filename)\n" % wks_file
             sys.exit(1)
@@ -223,9 +224,9 @@ def wic_create_subcommand(args, usage_str):
     rootfs_dir = rootfs_dir_to_args(krootfs_dir)
 
     print "Creating image(s)...\n"
-    wic_create(args, wks_file, rootfs_dir, bootimg_dir, kernel_dir,
-               native_sysroot, scripts_path, image_output_dir,
-               options.debug, options.properties_file)
+    engine.wic_create(args, wks_file, rootfs_dir, bootimg_dir, kernel_dir,
+                      native_sysroot, scripts_path, image_output_dir,
+                      options.debug, options.properties_file)
 
 
 def wic_list_subcommand(args, usage_str):
@@ -247,7 +248,7 @@ def wic_list_subcommand(args, usage_str):
         sys.exit(1)
     set_bitbake_env_lines(bitbake_env_lines)
 
-    if not wic_list(args, scripts_path, options.properties_file):
+    if not engine.wic_list(args, scripts_path, options.properties_file):
         logging.error("Bad list arguments, exiting\n")
         parser.print_help()
         sys.exit(1)
@@ -268,20 +269,20 @@ wic_help_topic_usage = """
 
 subcommands = {
     "create":    [wic_create_subcommand,
-                  wic_create_usage,
-                  wic_create_help],
+                  hlp.wic_create_usage,
+                  hlp.wic_create_help],
     "list":      [wic_list_subcommand,
-                  wic_list_usage,
-                  wic_list_help],
+                  hlp.wic_list_usage,
+                  hlp.wic_list_help],
     "plugins":   [wic_help_topic_subcommand,
                   wic_help_topic_usage,
-                  wic_plugins_help],
-    "overview":   [wic_help_topic_subcommand,
+                  hlp.wic_plugins_help],
+    "overview":  [wic_help_topic_subcommand,
                   wic_help_topic_usage,
-                  wic_overview_help],
-    "kickstart":  [wic_help_topic_subcommand,
+                  hlp.wic_overview_help],
+    "kickstart": [wic_help_topic_subcommand,
                   wic_help_topic_usage,
-                  wic_kickstart_help],
+                  hlp.wic_kickstart_help],
 }
 
 
@@ -291,7 +292,7 @@ def start_logging(loglevel):
 
 def main(argv):
     parser = optparse.OptionParser(version="wic version %s" % __version__,
-                                   usage=wic_usage)
+                                   usage=hlp.wic_usage)
 
     parser.disable_interspersed_args()
 
@@ -303,7 +304,7 @@ def main(argv):
                 parser.print_help()
                 sys.exit(1)
 
-    invoke_subcommand(args, parser, wic_help_usage, subcommands)
+    hlp.invoke_subcommand(args, parser, hlp.wic_help_usage, subcommands)
 
 
 if __name__ == "__main__":

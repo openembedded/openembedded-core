@@ -42,7 +42,7 @@ from wic.utils import cmdln, misc, errors
 from wic.conf import configmgr
 from wic.plugin import pluginmgr
 from wic.__version__ import VERSION
-from wic.utils.oe.misc import *
+from wic.utils.oe import misc
 
 
 def verify_build_env():
@@ -65,19 +65,19 @@ def find_artifacts(image_name):
     Gather the build artifacts for the current image (the image_name
     e.g. core-image-minimal) for the current MACHINE set in local.conf
     """
-    bitbake_env_lines = get_bitbake_env_lines()
+    bitbake_env_lines = misc.get_bitbake_env_lines()
 
     rootfs_dir = kernel_dir = bootimg_dir = native_sysroot = ""
 
     for line in bitbake_env_lines.split('\n'):
-        if (get_line_val(line, "IMAGE_ROOTFS")):
-            rootfs_dir = get_line_val(line, "IMAGE_ROOTFS")
+        if (misc.get_line_val(line, "IMAGE_ROOTFS")):
+            rootfs_dir = misc.get_line_val(line, "IMAGE_ROOTFS")
             continue
-        if (get_line_val(line, "DEPLOY_DIR_IMAGE")):
-            kernel_dir = get_line_val(line, "DEPLOY_DIR_IMAGE")
+        if (misc.get_line_val(line, "DEPLOY_DIR_IMAGE")):
+            kernel_dir = misc.get_line_val(line, "DEPLOY_DIR_IMAGE")
             continue
-        if (get_line_val(line, "STAGING_DIR_NATIVE")):
-            native_sysroot = get_line_val(line, "STAGING_DIR_NATIVE")
+        if (misc.get_line_val(line, "STAGING_DIR_NATIVE")):
+            native_sysroot = misc.get_line_val(line, "STAGING_DIR_NATIVE")
             continue
 
     return (rootfs_dir, kernel_dir, bootimg_dir, native_sysroot)
@@ -87,7 +87,7 @@ CANNED_IMAGE_DIR = "lib/image/canned-wks" # relative to scripts
 SCRIPTS_CANNED_IMAGE_DIR = "scripts/" + CANNED_IMAGE_DIR
 
 def build_canned_image_list(dl):
-    layers_path = get_bitbake_var("BBLAYERS")
+    layers_path = misc.get_bitbake_var("BBLAYERS")
     canned_wks_layer_dirs = []
 
     if layers_path is not None:

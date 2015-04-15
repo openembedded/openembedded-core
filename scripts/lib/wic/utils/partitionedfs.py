@@ -19,10 +19,8 @@
 # Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 from wic import msger
-from wic.utils import runner
 from wic.utils.errors import ImageError
-from wic.utils.fs_related import *
-from wic.utils.oe.misc import *
+from wic.utils.oe.misc import exec_cmd, exec_native_cmd
 
 # Overhead of the MBR partitioning scheme (just one sector)
 MBR_OVERHEAD = 1

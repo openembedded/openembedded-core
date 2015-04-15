@@ -27,14 +27,9 @@
 
 import os
 
-from wic import kickstart, msger
-from wic.utils import misc, fs_related, errors, runner, cmdln
-from wic.conf import configmgr
-from wic.plugin import pluginmgr
-import wic.imager.direct as direct
+from wic import msger
 from wic.pluginbase import SourcePlugin
-from wic.utils.oe.misc import *
-from wic.imager.direct import DirectImageCreator
+from wic.utils.oe.misc import find_bitbake_env_lines, find_artifact
 
 class RootfsPlugin(SourcePlugin):
     name = 'rootfs'

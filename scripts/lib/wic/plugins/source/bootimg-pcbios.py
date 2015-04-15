@@ -28,13 +28,10 @@ import os
 
 from wic.utils.errors import ImageError
 from wic import kickstart, msger
-from wic.utils import misc, fs_related, errors, runner, cmdln
-from wic.conf import configmgr
-from wic.plugin import pluginmgr
-import wic.imager.direct as direct
+from wic.utils import runner
 from wic.pluginbase import SourcePlugin
-from wic.utils.oe.misc import *
-from wic.imager.direct import DirectImageCreator
+from wic.utils.oe.misc import exec_cmd, exec_native_cmd, \
+                              get_bitbake_var, BOOTDD_EXTRA_SPACE
 
 class BootimgPcbiosPlugin(SourcePlugin):
     name = 'bootimg-pcbios'
