@@ -4,6 +4,11 @@ HOMEPAGE = "http://prdownloads.sourceforge.net/lsb"
 LICENSE = "GPLv2+"
 PR = "r2"
 
+LSB_CORE = "lsb-core-${TARGET_ARCH}"
+LSB_CORE_x86 = "lsb-core-ia32"
+LSB_CORE_x86-64 = "lsb-core-amd64"
+RPROVIDES_${PN} += "${LSB_CORE}"
+
 # lsb_release needs getopt
 RDEPENDS_${PN} += "${VIRTUAL-RUNTIME_getopt}"
 
