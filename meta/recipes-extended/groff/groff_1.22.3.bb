@@ -16,9 +16,7 @@ SRC_URI[sha256sum] = "3a48a9d6c97750bfbd535feeb5be0111db6406ddb7bb79fc680809cda6
 
 DEPENDS = "groff-native"
 DEPENDS_class-native = ""
-RDEPENDS_${PN} += "sed"
-
-RDEPENDS_${PN} = "perl"
+RDEPENDS_${PN} += "perl sed"
 
 inherit autotools texinfo
 
