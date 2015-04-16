@@ -19,6 +19,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504 \
 
 SRC_URI = "${GNU_MIRROR}/libunistring/libunistring-${PV}.tar.gz \
            file://iconv-m4-remove-the-test-to-convert-euc-jp.patch \
+           file://0001-Unset-need_charset_alias-when-building-for-musl.patch \
 "
 
 SRC_URI[md5sum] = "c24a6a3838d9ad4a41a62549312c4226"

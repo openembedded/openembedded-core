@@ -19,6 +19,7 @@ EXTRA_OECONF += "M4=m4"
 
 SRC_URI = "${BASE_SRC_URI} \
            file://fix_cross_manpage_building.patch \
+	   file://0001-Unset-need_charset_alias-when-building-for-musl.patch \
           "
 
 SRC_URI[md5sum] = "7be02eb973eccf388f1ae750fc09eed0"

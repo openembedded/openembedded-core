@@ -6,6 +6,8 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=f27defe1e96c2e1ecd4e0c9be8967949"
  
 DEPENDS = "bison-native"
 
+SRC_URI += "file://0001-Unset-need_charset_alias-when-building-for-musl.patch"
+
 SRC_URI[md5sum] = "a8a8176282fd28e8d1234c84d847fa66"
 SRC_URI[sha256sum] = "0de3cf625a5c9f154eee3171e072515ffdde405244dd00502af617ac57b73ae2"
 

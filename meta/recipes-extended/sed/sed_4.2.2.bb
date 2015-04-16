@@ -7,6 +7,7 @@ SECTION = "console/utils"
 
 SRC_URI = "${GNU_MIRROR}/sed/sed-${PV}.tar.gz \
            file://sed-add-ptest.patch \
+	   file://0001-Unset-need_charset_alias-when-building-for-musl.patch \
            file://run-ptest \
 "
 

@@ -34,6 +34,7 @@ SRC_URI = "${GNU_MIRROR}/texinfo/${BP}.tar.gz \
            file://disable-native-tools.patch \
            file://link-zip.patch \
            file://dont-depend-on-help2man.patch \
+           file://0001-Unset-need_charset_alias-when-building-for-musl.patch \
            ${TARGET_PATCH} \
           "
 
@@ -58,7 +59,7 @@ do_compile_prepend() {
 
 do_install_append() {
 	mkdir -p ${D}${datadir}/${tex_texinfo}
-	install -p -m644 ${S}/doc/texinfo.tex ${S}/doc/txi-??.tex ${D}${datadir}/${tex_texinfo} 	
+	install -p -m644 ${S}/doc/texinfo.tex ${S}/doc/txi-??.tex ${D}${datadir}/${tex_texinfo}
 	sed -i -e '1s,#!.*perl,#! ${USRBINPATH}/env perl,' ${D}${bindir}/texi2any ${D}${bindir}/pod2texi
 }
 
