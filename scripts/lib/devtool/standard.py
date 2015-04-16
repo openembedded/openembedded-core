@@ -482,7 +482,7 @@ def update_recipe(args, config, basepath, workspace):
                 if remove_patches(srcuri, removepatches):
                     patchfields['SRC_URI'] = ' '.join(srcuri)
 
-        oe.recipeutils.patch_recipe(rd, recipefile, patchfields)
+        oe.recipeutils.patch_recipe(tinfoil.config_data, recipefile, patchfields)
 
         if not 'git://' in orig_src_uri:
             logger.info('You will need to update SRC_URI within the recipe to point to a git repository where you have pushed your changes')
@@ -564,7 +564,8 @@ def update_recipe(args, config, basepath, workspace):
                     updaterecipe = True
             if updaterecipe:
                 logger.info('Updating recipe %s' % os.path.basename(recipefile))
-                oe.recipeutils.patch_recipe(rd, recipefile, {'SRC_URI': ' '.join(srcuri)})
+                oe.recipeutils.patch_recipe(tinfoil.config_data,
+                        recipefile, {'SRC_URI': ' '.join(srcuri)})
             elif not updatepatches:
                 # Neither patches nor recipe were updated
                 logger.info('No patches need updating')
