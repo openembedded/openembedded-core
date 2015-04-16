@@ -13,6 +13,7 @@ SRCREV = "9f107132a6a073cce37434ca9cda6917dd8d866b"
 SRC_URI = "git://git.infradead.org/mtd-utils.git \
            file://add-exclusion-to-mkfs-jffs2-git-2.patch \
            file://fix-armv7-neon-alignment.patch \
+           file://0001-hashtable-Remove-duplicate-hashtable_iterator_value-.patch \
 "
 
 S = "${WORKDIR}/git/"
