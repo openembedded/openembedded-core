@@ -19,6 +19,7 @@ RRECOMMENDS_${PN} = "avahi-daemon"
 
 SRC_URI = "http://distcc.googlecode.com/files/${BPN}-${PV}.tar.bz2 \
            file://separatebuilddir.patch \
+           file://0001-zeroconf-Include-fcntl.h.patch \
            file://default \
            file://distccmon-gnome.desktop \
            file://distcc \
