@@ -17,7 +17,9 @@ SRC_URI = "http://pkgs.fedoraproject.org/repo/pkgs/${BPN}/${BP}.src.tar.gz/407d4
            file://dosfstools-msdos_fs-types.patch \
            file://include-linux-types.patch \
            file://nofat32_autoselect.patch \
-           file://fix_populated_dosfs_creation.patch "
+           file://fix_populated_dosfs_creation.patch \
+	   file://0001-Include-fcntl.h-for-getting-loff_t-definition.patch \
+	   "
 
 SRC_URI[md5sum] = "407d405ade410f7597d364ab5dc8c9f6"
 SRC_URI[sha256sum] = "0eac6d12388b3d9ed78684529c1b0d9346fa2abbe406c4d4a3eb5a023c98a484"
@@ -26,6 +28,7 @@ SRC_URI[sha256sum] = "0eac6d12388b3d9ed78684529c1b0d9346fa2abbe406c4d4a3eb5a023c
 # add this in here to for sure allow for big files.
 #
 CFLAGS_append = " -D_FILE_OFFSET_BITS=64"
+CFLAGS_append_libc-musl = " -D_GNU_SOURCE"
 
 do_install () {
 	oe_runmake "PREFIX=${D}" "SBINDIR=${D}${base_sbindir}" \
