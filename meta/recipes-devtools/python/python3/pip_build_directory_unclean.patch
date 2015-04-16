@@ -1,0 +1,28 @@
+Index: Python-3.4.2/Lib/ensurepip/__init__.py
+===================================================================
+--- Python-3.4.2.orig/Lib/ensurepip/__init__.py
++++ Python-3.4.2/Lib/ensurepip/__init__.py
+@@ -3,6 +3,7 @@ import os.path
+ import pkgutil
+ import sys
+ import tempfile
++import pwd
+ 
+ 
+ __all__ = ["version", "bootstrap"]
+@@ -36,6 +37,15 @@ def _run_pip(args, additional_paths=None
+     if additional_paths is not None:
+         sys.path = additional_paths + sys.path
+ 
++    # Explicitly make sure pip build directory was left clean
++    user = pwd.getpwuid(os.getuid())[0]
++    if os.path.exists("/tmp/pip_build_" + user + "/pip-delete-this-directory.txt"):
++        os.remove("/tmp/pip_build_" + user + "/pip-delete-this-directory.txt")
++        try:
++            os.rmdir("/tmp/pip_build_" + user + "/")
++        except OSError:
++            print("Error: Pip build directory (%s) was left unclean, make sure it is clean before continuing\n" % ("/tmp/pip_build_" + user + "/"))
++
+     # Install the bundled software
+     import pip
+     pip.main(args)

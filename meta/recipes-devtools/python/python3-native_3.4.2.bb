@@ -26,6 +26,7 @@ file://makerace.patch \
 ${DISTRO_SRC_URI} \
 file://sysconfig.py-add-_PYTHON_PROJECT_SRC.patch \
 file://setup.py-check-cross_compiling-when-get-FLAGS.patch \
+file://pip_build_directory_unclean.patch \
 "
 SRC_URI[md5sum] = "36fc7327c02c6f12fa24fc9ba78039e3"
 SRC_URI[sha256sum] = "1c6d9682d145c056537e477bbfa060ce727f9edd38df1827e0f970dcf04b2def"
