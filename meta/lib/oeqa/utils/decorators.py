@@ -10,12 +10,14 @@ import os
 import logging
 import sys
 import unittest
+import threading
 
 #get the "result" object from one of the upper frames provided that one of these upper frames is a unittest.case frame
 class getResults(object):
     def __init__(self):
         #dynamically determine the unittest.case frame and use it to get the name of the test method
-        upperf = sys._current_frames().values()[0]
+        ident = threading.current_thread().ident
+        upperf = sys._current_frames()[ident]
         while (upperf.f_globals['__name__'] != 'unittest.case'):
             upperf = upperf.f_back
 
