@@ -12,6 +12,7 @@ SRC_URI = "${KERNELORG_MIRROR}/linux/utils/raid/mdadm/${BPN}-${PV}.tar.xz \
            file://mdadm-3.2.2_fix_for_x32.patch \
            file://gcc-4.9.patch \
            file://mdadm-3.3.2_x32_abi_time_t.patch \
+           file://run-ptest \
 	  "
 
 SRC_URI[md5sum] = "44698d351501cac6a89072dc877eb220"
@@ -45,3 +46,31 @@ do_install() {
 }
 
 FILES_${PN} += "${base_libdir}/udev/rules.d/*.rules"
+
+inherit ptest
+
+do_compile_ptest() {
+	oe_runmake test
+}
+
+do_install_ptest() {
+	cp -a ${S}/tests ${D}${PTEST_PATH}/tests
+	cp ${S}/test ${D}${PTEST_PATH}
+	sed -e 's!sleep 0.*!sleep 1!g; s!/var/tmp!/!g' -i ${D}${PTEST_PATH}/test
+	ln -s /sbin/mdadm ${D}${PTEST_PATH}/mdadm
+	for prg in test_stripe swap_super raid6check
+	do
+		install -D -m 755 $prg ${D}${PTEST_PATH}/
+	done
+}
+RDEPENDS_${PN}-ptest += "bash"
+RRECOMMENDS_${PN}-ptest += " \
+    coreutils \
+    util-linux \
+    kernel-module-loop \
+    kernel-module-linear \
+    kernel-module-raid0 \
+    kernel-module-raid1 \
+    kernel-module-raid10 \
+    kernel-module-raid456 \
+"
