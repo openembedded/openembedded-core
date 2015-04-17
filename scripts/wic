@@ -36,18 +36,24 @@ import os
 import sys
 import optparse
 import logging
+from distutils import spawn
 
 # External modules
 scripts_path = os.path.abspath(os.path.dirname(__file__))
 lib_path = scripts_path + '/lib'
-bitbake_path = os.path.join(scripts_path, '../bitbake/lib')
-sys.path = sys.path + [lib_path, bitbake_path]
+sys.path.append(lib_path)
+
+bitbake_exe = spawn.find_executable('bitbake')
+if bitbake_exe:
+    bitbake_path = os.path.join(os.path.dirname(bitbake_exe), '../lib')
+    sys.path.append(bitbake_path)
+    from bb import cookerdata
+    from bb.main import bitbake_main, BitBakeConfigParameters
+else:
+    bitbake_main = None
 
 from image.help import *
 from image.engine import *
-
-from bb import cookerdata
-from bb.main import bitbake_main, BitBakeConfigParameters
 
 def rootfs_dir_to_args(krootfs_dir):
     """
@@ -107,6 +113,10 @@ def wic_create_subcommand(args, usage_str):
     if len(args) != 1:
         logging.error("Wrong number of arguments, exiting\n")
         parser.print_help()
+        sys.exit(1)
+
+    if options.build_rootfs and not bitbake_main:
+        logging.error("Can't build roofs as bitbake is not in the $PATH")
         sys.exit(1)
 
     if not options.image_name and not (options.rootfs_dir and
