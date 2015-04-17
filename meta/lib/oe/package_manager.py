@@ -446,6 +446,8 @@ class DpkgPkgsList(PkgsList):
         if format == "file":
             tmp_output = ""
             for line in tuple(output.split('\n')):
+                if not line.strip():
+                    continue
                 pkg, pkg_file, pkg_arch = line.split()
                 full_path = os.path.join(self.rootfs_dir, pkg_arch, pkg_file)
                 if os.path.exists(full_path):
