@@ -29,12 +29,10 @@ to replay rendering."
 DESCRIPTION_cairo-perf-utils = "The Cairo library performance utilities"
 
 FILES_${PN} = "${libdir}/libcairo.so.*"
-FILES_${PN}-dev += "${libdir}/cairo/*.la ${libdir}/cairo/*.so"
-#FILES_${PN}-dbg += "${libdir}/cairo/.debug"
-#FILES_${PN}-staticdev += "${libdir}/cairo/*.a"
-FILES_cairo-gobject = "${libdir}/libcairo-gobject.so.*"
-FILES_cairo-script-interpreter = "${libdir}/libcairo-script-interpreter.so.*"
-FILES_cairo-perf-utils = "${bindir}/cairo-trace ${libdir}/cairo/libcairo-trace.so.*"
+FILES_${PN}-dev += "${libdir}/cairo/*.so"
+FILES_${PN}-gobject = "${libdir}/libcairo-gobject.so.*"
+FILES_${PN}-script-interpreter = "${libdir}/libcairo-script-interpreter.so.*"
+FILES_${PN}-perf-utils = "${bindir}/cairo-trace ${libdir}/cairo/*.la ${libdir}/cairo/libcairo-trace.so.*"
 
 do_install_append () {
 	rm -rf ${D}${bindir}/cairo-sphinx
