@@ -26,4 +26,8 @@ EXTRA_OECONF += " --enable-cxx=detect"
 PACKAGES =+ "libgmpxx"
 FILES_libgmpxx = "${libdir}/libgmpxx${SOLIBS}"
 
+do_install_append_class-target() {
+	sed -i "s|--sysroot=${STAGING_DIR_HOST}||g" ${D}${includedir}/gmp.h
+}
+
 SSTATE_SCAN_FILES += "gmp.h"
