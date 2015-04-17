@@ -1132,12 +1132,13 @@ python populate_packages () {
                 unshipped.append(path)
 
     if unshipped != []:
-        msg = pn + ": Files/directories were installed but not shipped"
+        msg = pn + ": Files/directories were installed but not shipped in any package:"
         if "installed-vs-shipped" in (d.getVar('INSANE_SKIP_' + pn, True) or "").split():
             bb.note("Package %s skipping QA tests: installed-vs-shipped" % pn)
         else:
             for f in unshipped:
                 msg = msg + "\n  " + f
+            msg = msg + "\nPlease set FILES such that these items are packaged. Alternatively if they are unneeded, avoid installing them or delete them within do_install."
             package_qa_handle_error("installed-vs-shipped", msg, d)
 }
 populate_packages[dirs] = "${D}"
