@@ -151,7 +151,7 @@ python base_do_unpack() {
         raise bb.build.FuncFailed(e)
 
     if not os.path.exists(s_dir):
-        bb.warn("%s ('S') doesn't exist, please set 'S' to a proper value" % s_dir)
+        bb.warn('%s: the directory %s (%s) pointed to by the S variable doesn\'t exist - please set S within the recipe to point to where the source has been unpacked to' % (d.getVar('PN', True), d.getVar('S', False), s_dir))
 }
 
 def pkgarch_mapping(d):
