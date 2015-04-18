@@ -87,3 +87,20 @@ ALTERNATIVE_${PN} = "chattr"
 ALTERNATIVE_PRIORITY = "100"
 ALTERNATIVE_LINK_NAME[chattr] = "${base_bindir}/chattr"
 ALTERNATIVE_TARGET[chattr] = "${base_bindir}/chattr.e2fsprogs"
+
+inherit ptest
+SRC_URI += "file://run-ptest"
+SRC_URI += "file://ptest.patch"
+
+RDEPENDS_${PN}-ptest += "${PN} ${PN}-tune2fs coreutils procps"
+#RDEPENDS_${PN}-ptest += "expect"
+
+do_compile_ptest() {
+	oe_runmake -C ${B}/tests
+}
+
+do_install_ptest() {
+	cp -a ${B}/tests ${D}${PTEST_PATH}/test
+	cp -a ${S}/tests/* ${D}${PTEST_PATH}/test
+	sed -e 's!../e2fsck/e2fsck!e2fsck!g' -i ${D}${PTEST_PATH}/test/*/expect*
+}
