@@ -10,6 +10,8 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/strace/strace-${PV}.tar.xz \
            file://strace-add-configure-options.patch \
            file://Makefile-ptest.patch \
            file://run-ptest \
+           file://Include-sys-stat.h-for-S_I-macros.patch \
+           file://Include-linux-ioctl.h-for-_IOC_-macros.patch \
           "
 
 SRC_URI[md5sum] = "107a5be455493861189e9b57a3a51912"
