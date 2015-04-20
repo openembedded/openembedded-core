@@ -110,6 +110,9 @@ python copy_buildsystem () {
         f.write('POKYQEMUDEPS_forcevariable = ""\n\n')
         f.write('EXTRA_IMAGEDEPENDS_remove = "qemu-native qemu-helper-native"\n\n')
 
+        # Bypass the default connectivity check if any
+        f.write('CONNECTIVITY_CHECK_URIS = ""\n\n')
+
         # Another hack, but we want the native part of sstate to be kept the same
         # regardless of the host distro
         fixedlsbstring = 'SDK-Fixed'
