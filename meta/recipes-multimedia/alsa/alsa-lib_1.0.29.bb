@@ -16,13 +16,9 @@ ARM_INSTRUCTION_SET = "arm"
 
 SRC_URI = "ftp://ftp.alsa-project.org/pub/lib/${BP}.tar.bz2 \
            file://Check-if-wordexp-function-is-supported.patch \
-           file://fix-tstamp-declaration.patch \
-           file://0001-pcm-route-Use-get32-for-multi-source-route-calculati.patch \
-           file://0001-pcm-rate-fix-hw_ptr-exceed-the-boundary.patch \
-           file://0001-pcm-pcm_local.h-include-time.h-to-enable-CLOCK_MONOT.patch \
 "
-SRC_URI[md5sum] = "c9e21b88a2b3e6e12ea7ba0f3b271fc3"
-SRC_URI[sha256sum] = "3c074b85dde1b30e78ef4995579765833e5b693fbbd8f834c335e080cb734a6d"
+SRC_URI[md5sum] = "de67e0eca72474d6b1121037dafe1024"
+SRC_URI[sha256sum] = "73043c35eb9636be0f4af6a240235c213f12a25feb1f04aeeac8cb7e30fcbdd0"
 
 inherit autotools pkgconfig
 
