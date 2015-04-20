@@ -91,6 +91,11 @@ python copy_buildsystem () {
     # Create bblayers.conf
     bb.utils.mkdirhier(baseoutpath + '/conf')
     with open(baseoutpath + '/conf/bblayers.conf', 'w') as f:
+        f.write('# WARNING: this configuration has been automatically generated and in\n')
+        f.write('# most cases should not be edited. If you need more flexibility than\n')
+        f.write('# this configuration provides, it is strongly suggested that you set\n')
+        f.write('# up a proper instance of the full build system and use that instead.\n\n')
+
         f.write('LCONF_VERSION = "%s"\n\n' % d.getVar('LCONF_VERSION'))
         f.write('BBPATH = "$' + '{TOPDIR}"\n')
         f.write('SDKBASEMETAPATH = "$' + '{TOPDIR}"\n')
@@ -102,6 +107,11 @@ python copy_buildsystem () {
 
     # Create local.conf
     with open(baseoutpath + '/conf/local.conf', 'w') as f:
+        f.write('# WARNING: this configuration has been automatically generated and in\n')
+        f.write('# most cases should not be edited. If you need more flexibility than\n')
+        f.write('# this configuration provides, it is strongly suggested that you set\n')
+        f.write('# up a proper instance of the full build system and use that instead.\n\n')
+
         f.write('INHERIT += "%s"\n\n' % 'uninative')
         f.write('CONF_VERSION = "%s"\n\n' % d.getVar('CONF_VERSION'))
 
