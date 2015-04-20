@@ -9,7 +9,6 @@ DEPENDS += "cryptodev-linux"
 
 SRC_URI += " \
 file://0001-Disable-installing-header-file-provided-by-another-p.patch \
-file://0002-In-the-3.13-rc1-Linux-kernel-the-INIT_COMPLETION-mac.patch \
 file://0001-ioctl.c-Fix-build-on-3.19.patch \
 "
 

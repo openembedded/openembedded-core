@@ -15,12 +15,12 @@ Upstream-Status: Pending
  2 files changed, 14 insertions(+), 0 deletions(-)
 
 diff --git a/Makefile b/Makefile
-index 2be8825..4cbb865 100644
+index 31c4b3f..2ecf2a9 100644
 --- a/Makefile
 +++ b/Makefile
-@@ -17,6 +17,9 @@ install:
- 	@echo "Installing cryptodev.h in /usr/include/crypto ..."
- 	@install -D crypto/cryptodev.h /usr/include/crypto/cryptodev.h
+@@ -34,6 +34,9 @@ modules_install:
+ 	@echo "Installing cryptodev.h in $(PREFIX)/usr/include/crypto ..."
+ 	@install -D crypto/cryptodev.h $(PREFIX)/usr/include/crypto/cryptodev.h
  
 +install_tests:
 +	make -C tests install DESTDIR=$(PREFIX)
@@ -28,18 +28,18 @@ index 2be8825..4cbb865 100644
  clean:
  	make -C $(KERNEL_DIR) SUBDIRS=`pwd` clean
  	rm -f $(hostprogs) *~
-@@ -25,6 +28,9 @@ clean:
+@@ -42,6 +45,9 @@ clean:
  check:
- 	KERNEL_DIR=$(KERNEL_DIR) make -C tests check
+ 	CFLAGS=$(CRYPTODEV_CFLAGS) KERNEL_DIR=$(KERNEL_DIR) make -C tests check
  
 +testprogs:
 +	KERNEL_DIR=$(KERNEL_DIR) make -C tests testprogs
 +
- FILEBASE = cryptodev-linux-$(VERSION)
- TMPDIR ?= /tmp
- OUTPUT = $(FILEBASE).tar.gz
+ CPOPTS =
+ ifneq (${SHOW_TYPES},)
+ CPOPTS += --show-types
 diff --git a/tests/Makefile b/tests/Makefile
-index 87ca3c7..0488cf6 100644
+index c9f04e8..cd202af 100644
 --- a/tests/Makefile
 +++ b/tests/Makefile
 @@ -19,6 +19,12 @@ example-async-hmac-objs := async_hmac.o
@@ -64,6 +64,3 @@ index 87ca3c7..0488cf6 100644
  clean:
  	rm -f *.o *~ $(hostprogs)
  
--- 
-1.7.5.4
-

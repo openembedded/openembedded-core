@@ -2,9 +2,7 @@ require cryptodev_${PV}.inc
 
 SUMMARY = "A /dev/crypto device driver header file"
 
-do_compile() {
-	:
-}
+do_compile[noexec] = "1"
 
 # Just install cryptodev.h which is the only header file needed to be exported
 do_install() {
