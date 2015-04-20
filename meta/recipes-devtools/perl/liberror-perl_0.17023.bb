@@ -12,8 +12,9 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=8f3499d09ee74a050c0319391ff9d100"
 DEPENDS += "perl"
 
 SRC_URI = "http://cpan.metacpan.org/authors/id/S/SH/SHLOMIF/Error-${PV}.tar.gz"
-SRC_URI[md5sum] = "f4d825f4be915ae90bf2e0d66734956b"
-SRC_URI[sha256sum] = "cab74f04fb3af7088cefc2f6f96800ee52d34b82928bbb35ca51a0e5b5f9f7ef"
+
+SRC_URI[md5sum] = "98524ffbd268013e00697a5826a83d37"
+SRC_URI[sha256sum] = "af48e19077d8837c6377d8a9ba2ce473c100caf5eeb7b53606c3f78a0e8b5d37"
 
 S = "${WORKDIR}/Error-${PV}"
 
