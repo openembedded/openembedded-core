@@ -30,6 +30,11 @@ def exec_build_env_command(init_path, builddir, cmd, watch=False, **options):
     if not 'cwd' in options:
         options["cwd"] = builddir
     if init_path:
+        # As the OE init script makes use of BASH_SOURCE to determine OEROOT,
+        # and can't determine it when running under dash, we need to set
+        # the executable to bash to correctly set things up
+        if not 'executable' in options:
+            options['executable'] = 'bash'
         logger.debug('Executing command: "%s" using init path %s' % (cmd, init_path))
         init_prefix = '. %s %s > /dev/null && ' % (init_path, builddir)
     else:
