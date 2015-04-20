@@ -78,6 +78,7 @@ do_compile () {
             done
             unset  j
         done
+        unset  i
     else
         oe_runmake ${UBOOT_MACHINE}
         oe_runmake ${UBOOT_MAKE_TARGET}
@@ -101,6 +102,7 @@ do_install () {
             done
             unset  j
         done
+        unset  i
     else
         install -d ${D}/boot
         install ${S}/${UBOOT_BINARY} ${D}/boot/${UBOOT_IMAGE}
@@ -129,6 +131,7 @@ do_install () {
                 done
                 unset  j
             done
+            unset  i
         else
             install ${S}/${SPL_BINARY} ${D}/boot/${SPL_IMAGE}
             ln -sf ${SPL_IMAGE} ${D}/boot/${SPL_BINARY}
@@ -162,6 +165,7 @@ do_deploy () {
             done 
             unset  j
         done
+        unset  i
     else
         install -d ${DEPLOYDIR}
         install ${S}/${UBOOT_BINARY} ${DEPLOYDIR}/${UBOOT_IMAGE}
@@ -193,6 +197,7 @@ do_deploy () {
                  done
                  unset  j
              done
+             unset  i
          else
              install ${S}/${SPL_BINARY} ${DEPLOYDIR}/${SPL_IMAGE}
              rm -f ${DEPLOYDIR}/${SPL_BINARY} ${DEPLOYDIR}/${SPL_SYMLINK}
