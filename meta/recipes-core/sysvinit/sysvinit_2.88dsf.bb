@@ -29,7 +29,7 @@ B = "${S}/src"
 inherit update-alternatives
 DEPENDS_append = " update-rc.d-native base-passwd"
 
-ALTERNATIVE_${PN} = "init mountpoint halt reboot runlevel shutdown poweroff last mesg utmpdump wall"
+ALTERNATIVE_${PN} = "init mountpoint halt reboot runlevel shutdown poweroff last lastb mesg utmpdump wall"
 
 ALTERNATIVE_PRIORITY = "200"
 
