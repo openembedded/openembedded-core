@@ -64,6 +64,9 @@ while getopts ":yd:DRS" OPT; do
 	esac
 done
 
+echo "@SDK_TITLE@ installer version @SDK_VERSION@"
+echo "==========================================================="
+
 if [ $verbose = 1 ] ; then
 	set -x
 fi
