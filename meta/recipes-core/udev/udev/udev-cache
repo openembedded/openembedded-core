@@ -51,9 +51,15 @@ fi
 [ "${VERBOSE}" == "no" ] || echo "found."
 echo "Populating dev cache"
 
+err_cleanup () {
+        echo "udev-cache: update failed!"
+        udevadm control --start-exec-queue
+	rm -f -- "$SYSCONF_TMP" "$DEVCACHE_TMP" "$DEVCACHE" "$SYSCONF_CACHED"
+}
+
 (
 	set -e
-	trap 'echo "udev-cache: update failed!"' EXIT
+	trap 'err_cleanup' EXIT
 	udevadm control --stop-exec-queue
 	sysconf_cmd > "$SYSCONF_TMP"
 	find /dev -xdev \( -type b -o -type c -o -type l \) | cut -c 2- \
