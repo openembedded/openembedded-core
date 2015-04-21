@@ -173,7 +173,11 @@ fi
 
 if [ ! -w "$DEVICE" ]; then
 	usage
-	die "Device $DEVICE does not exist or is not writable"
+	if [ ! -e "${DEVICE}" ] ; then
+		die "Device $DEVICE cannot be found"
+	else
+		die "Device $DEVICE is not writable (need to run under sudo?)"
+	fi
 fi
 
 if [ ! -e "$HDDIMG" ]; then
