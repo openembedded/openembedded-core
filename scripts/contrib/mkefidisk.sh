@@ -136,6 +136,9 @@ unmount_device() {
 }
 
 unmount() {
+	if [ "$1" = "" ] ; then
+		return 0
+	fi
 	grep -q $1 /proc/mounts
 	if [ $? -eq 0 ]; then
 		debug "Unmounting $1"
