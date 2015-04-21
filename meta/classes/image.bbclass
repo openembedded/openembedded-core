@@ -76,10 +76,17 @@ LDCONFIGDEPEND ?= "ldconfig-native:do_populate_sysroot"
 LDCONFIGDEPEND_libc-uclibc = ""
 LDCONFIGDEPEND_libc-musl = ""
 
+# This is needed to have depmod data in PKGDATA_DIR,
+# but if you're building small initramfs image
+# e.g. to include it in your kernel, you probably
+# don't want this dependency, which is causing dependency loop
+KERNELDEPMODDEPEND ?= "virtual/kernel:do_packagedata"
+
 do_rootfs[depends] += " \
     makedevs-native:do_populate_sysroot virtual/fakeroot-native:do_populate_sysroot ${LDCONFIGDEPEND} \
     virtual/update-alternatives-native:do_populate_sysroot update-rc.d-native:do_populate_sysroot \
-    virtual/kernel:do_packagedata"
+    ${KERNELDEPMODDEPEND} \
+"
 do_rootfs[recrdeptask] += "do_packagedata"
 
 def command_variables(d):
