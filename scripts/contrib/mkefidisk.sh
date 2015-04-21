@@ -218,11 +218,11 @@ mkdir $BOOTFS_MNT || die "Failed to create $BOOTFS_MNT"
 #
 # Partition $DEVICE
 #
-DEVICE_SIZE=$(parted $DEVICE unit mb print | grep ^Disk | cut -d" " -f 3 | sed -e "s/MB//")
+DEVICE_SIZE=$(parted -s $DEVICE unit mb print | grep ^Disk | cut -d" " -f 3 | sed -e "s/MB//")
 # If the device size is not reported there may not be a valid label
 if [ "$DEVICE_SIZE" = "" ] ; then
-	parted $DEVICE mklabel msdos || die "Failed to create MSDOS partition table"
-	DEVICE_SIZE=$(parted $DEVICE unit mb print | grep ^Disk | cut -d" " -f 3 | sed -e "s/MB//")
+	parted -s $DEVICE mklabel msdos || die "Failed to create MSDOS partition table"
+	DEVICE_SIZE=$(parted -s $DEVICE unit mb print | grep ^Disk | cut -d" " -f 3 | sed -e "s/MB//")
 fi
 SWAP_SIZE=$((DEVICE_SIZE*SWAP_RATIO/100))
 ROOTFS_SIZE=$((DEVICE_SIZE-BOOT_SIZE-SWAP_SIZE))
@@ -262,22 +262,22 @@ debug "Deleting partition table on $DEVICE"
 dd if=/dev/zero of=$DEVICE bs=512 count=2 >$OUT 2>&1 || die "Failed to zero beginning of $DEVICE"
 
 debug "Creating new partition table (MSDOS) on $DEVICE"
-parted $DEVICE mklabel msdos >$OUT 2>&1 || die "Failed to create MSDOS partition table"
+parted -s $DEVICE mklabel msdos >$OUT 2>&1 || die "Failed to create MSDOS partition table"
 
 debug "Creating boot partition on $BOOTFS"
-parted $DEVICE mkpart primary 0% $BOOT_SIZE >$OUT 2>&1 || die "Failed to create BOOT partition"
+parted -s $DEVICE mkpart primary 0% $BOOT_SIZE >$OUT 2>&1 || die "Failed to create BOOT partition"
 
 debug "Enabling boot flag on $BOOTFS"
-parted $DEVICE set 1 boot on >$OUT 2>&1 || die "Failed to enable boot flag"
+parted -s $DEVICE set 1 boot on >$OUT 2>&1 || die "Failed to enable boot flag"
 
 debug "Creating ROOTFS partition on $ROOTFS"
-parted $DEVICE mkpart primary $ROOTFS_START $ROOTFS_END >$OUT 2>&1 || die "Failed to create ROOTFS partition"
+parted -s $DEVICE mkpart primary $ROOTFS_START $ROOTFS_END >$OUT 2>&1 || die "Failed to create ROOTFS partition"
 
 debug "Creating swap partition on $SWAP"
-parted $DEVICE mkpart primary $SWAP_START 100% >$OUT 2>&1 || die "Failed to create SWAP partition"
+parted -s $DEVICE mkpart primary $SWAP_START 100% >$OUT 2>&1 || die "Failed to create SWAP partition"
 
 if [ $DEBUG -eq 1 ]; then
-	parted $DEVICE print
+	parted -s $DEVICE print
 fi
 
 
