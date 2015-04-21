@@ -1,0 +1,39 @@
+From b30ffb8097749fdb55704aa7d8307ca1a58255d6 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Stefan=20M=C3=BCller-Klieser?= <s.mueller-klieser@phytec.de>
+Date: Tue, 7 Apr 2015 16:15:11 +0200
+Subject: [PATCH] gcc/var-tracking.c: backport from gcc trunk r212178
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+resolves a bug seen on cortexa8 building qt5 libraries.
+
+2014-06-30  Joseph Myers  <joseph@codesourcery.com>
+
+    * var-tracking.c (add_stores): Return instead of asserting if old
+    and new values for conditional store are the same.
+
+git-svn-id: svn+ssh://gcc.gnu.org/svn/gcc/trunk@212178 138bc75d-0d04-0410-961f-82ee72b054a4
+
+Signed-off-by: Stefan Müller-Klieser <s.mueller-klieser@phytec.de>
+---
+ gcc/var-tracking.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/gcc/var-tracking.c b/gcc/var-tracking.c
+index 65d8285..7c38910 100644
+--- a/gcc/var-tracking.c
++++ b/gcc/var-tracking.c
+@@ -5997,7 +5997,8 @@ add_stores (rtx loc, const_rtx expr, void *cuip)
+     {
+       cselib_val *oval = cselib_lookup (oloc, GET_MODE (oloc), 0, VOIDmode);
+ 
+-      gcc_assert (oval != v);
++      if (oval == v)
++        return;
+       gcc_assert (REG_P (oloc) || MEM_P (oloc));
+ 
+       if (oval && !cselib_preserved_value_p (oval))
+-- 
+1.9.1
+
