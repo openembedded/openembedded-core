@@ -15,6 +15,7 @@ SRC_URI += "\
         file://dso-link-change.patch \
         file://Fix_elf_cvt_gunhash.patch \
         file://fixheadercheck.patch \
+        file://0001-elf_getarsym-Silence-Werror-maybe-uninitialized-fals.patch \
 "
 
 # pick the patch from debian
