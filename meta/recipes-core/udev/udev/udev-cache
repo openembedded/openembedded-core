@@ -57,7 +57,7 @@ echo "Populating dev cache"
 	udevadm control --stop-exec-queue
 	sysconf_cmd > "$SYSCONF_TMP"
 	find /dev -xdev \( -type b -o -type c -o -type l \) | cut -c 2- \
-		| xargs tar cf "${DEVCACHE_TMP}" -T-
+		| xargs tar cf "${DEVCACHE_TMP}"
 	gzip < "${DEVCACHE_TMP}" > "$DEVCACHE"
 	rm -f "${DEVCACHE_TMP}"
 	mv "$SYSCONF_TMP" "$SYSCONF_CACHED"
