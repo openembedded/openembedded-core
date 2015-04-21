@@ -9,6 +9,11 @@ inherit autotools gettext texinfo update-alternatives ptest
 EXTRA_AUTORECONF += "--exclude=autoheader"
 EXTRA_OECONF = "--enable-job-control"
 
+# If NON_INTERACTIVE_LOGIN_SHELLS is defined, all login shells read the
+# startup files, even if they are not interactive.
+# This is what other major distros do. And this is what we wanted. See bug#5359 and bug#7137.
+CFLAGS += "-DNON_INTERACTIVE_LOGIN_SHELLS"
+
 ALTERNATIVE_${PN} = "sh"
 ALTERNATIVE_LINK_NAME[sh] = "${base_bindir}/sh"
 ALTERNATIVE_TARGET[sh] = "${base_bindir}/bash"
