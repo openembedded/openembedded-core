@@ -558,8 +558,13 @@ def modify(args, config, basepath, workspace):
     if not os.path.exists(appendpath):
         os.makedirs(appendpath)
     with open(appendfile, 'w') as f:
-        f.write('FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"\n\n')
-        f.write('inherit externalsrc\n')
+        f.write('FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"\n')
+        # Local files can be modified/tracked in separate subdir under srctree
+        # Mostly useful for packages with S != WORKDIR
+        f.write('FILESPATH_prepend := "%s:"\n' %
+                os.path.join(srctree, 'local-files'))
+
+        f.write('\ninherit externalsrc\n')
         f.write('# NOTE: We use pn- overrides here to avoid affecting multiple variants in the case where the recipe uses BBCLASSEXTEND\n')
         f.write('EXTERNALSRC_pn-%s = "%s"\n' % (args.recipename, srctree))
 
