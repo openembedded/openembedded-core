@@ -117,7 +117,8 @@ def use_icc(bb,d):
     # system_package_blacklist = [ "uclibc", "glibc", "gcc", "bind", "u-boot", "dhcp-forwarder", "enchant", "connman", "orbit2" ]
     # when adding new entry, please document why (how it failed) so that we can re-evaluate it later
     # e.g. when there is new version
-    system_package_blacklist = []
+    # building libgcc-initial with icecc fails with CPP sanity check error if host sysroot contains cross gcc built for another target tune/variant
+    system_package_blacklist = ["libgcc-initial"]
     user_package_blacklist = (d.getVar('ICECC_USER_PACKAGE_BL') or "").split()
     user_package_whitelist = (d.getVar('ICECC_USER_PACKAGE_WL') or "").split()
     package_blacklist = system_package_blacklist + user_package_blacklist
