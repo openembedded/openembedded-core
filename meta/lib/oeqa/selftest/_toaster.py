@@ -435,7 +435,7 @@ class Toaster_DB_Tests(ToasterSetup):
             if k <= 5:
                 files = zonefilelist[k]
                 os.system("export TZ="+str(files)+"; python manage.py runserver > /dev/null 2>&1 &")
-                    time.sleep(3)
+                time.sleep(3)
                 pid = subprocess.check_output("ps aux | grep '[/u]sr/bin/python manage.py runserver' | awk '{print $2}'", shell = True)
                 if pid:
                     os.system("kill -9 "+str(pid))
