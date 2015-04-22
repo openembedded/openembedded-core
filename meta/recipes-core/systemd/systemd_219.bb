@@ -25,11 +25,11 @@ SECTION = "base/shell"
 
 inherit gtk-doc useradd pkgconfig autotools perlnative update-rc.d update-alternatives qemu systemd ptest gettext
 
-SRCREV = "a88abde72169ddc2df77df3fa5bed30725022253"
+SRCREV = "85a6fabdd3e43cfab0fc6359e9f2a9e368d4a3ed"
 
-PV = "219+git${SRCPV}"
+PV = "219-stable+git${SRCPV}"
 
-SRC_URI = "git://anongit.freedesktop.org/systemd/systemd;branch=master \
+SRC_URI = "git://anongit.freedesktop.org/systemd/systemd-stable;branch=v219-stable;protocol=git \
            file://0002-shared-missing.h-fall-back-to-insecure-getenv.patch \
            file://0003-binfmt-Don-t-install-dependency-links-at-install-tim.patch \
            file://0004-configure-Check-for-additional-features-that-uclibc-.patch \
@@ -38,12 +38,8 @@ SRC_URI = "git://anongit.freedesktop.org/systemd/systemd;branch=master \
            file://0007-util-Use-mkostemp-only-if-libc-supports-it.patch \
            file://0008-util-bypass-unimplemented-_SC_PHYS_PAGES-system-conf.patch \
            file://0009-sysv-generator-add-support-for-executing-scripts-und.patch \
-           file://0010-Make-root-s-home-directory-configurable.patch \
            file://0011-systemd-user-avoid-using-system-auth.patch \
-           file://0001-tmpfiles-avoid-creating-duplicate-acl-entries.patch \
-           file://0002-tmpfiles-quietly-ignore-ACLs-on-unsupported-filesyst.patch \
            file://0012-systemd-tmpfiles.c-Honor-ordering-within-files-as-th.patch \
-           file://0013-journal-fix-Inappropriate-ioctl-for-device-on-ext4.patch \
            file://0014-Revert-rules-remove-firmware-loading-rules.patch \
            file://0015-Revert-udev-remove-userspace-firmware-loading-suppor.patch \
            file://tmpfiles-pam.patch \
