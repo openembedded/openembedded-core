@@ -181,6 +181,36 @@ def _move_file(src, dst):
         bb.utils.mkdirhier(dst_d)
     shutil.move(src, dst)
 
+def _git_ls_tree(repodir, treeish='HEAD', recursive=False):
+    """List contents of a git treeish"""
+    import bb
+    cmd = ['git', 'ls-tree', '-z', treeish]
+    if recursive:
+        cmd.append('-r')
+    out, _ = bb.process.run(cmd, cwd=repodir)
+    ret = {}
+    for line in out.split('\0'):
+        if line:
+            split = line.split(None, 4)
+            ret[split[3]] = split[0:3]
+    return ret
+
+def _git_exclude_path(srctree, path):
+    """Return pathspec (list of paths) that excludes certain path"""
+    # NOTE: "Filtering out" files/paths in this way is not entirely reliable -
+    # we don't catch files that are deleted, for example. A more reliable way
+    # to implement this would be to use "negative pathspecs" which were
+    # introduced in Git v1.9.0. Revisit this when/if the required Git version
+    # becomes greater than that.
+    path = os.path.normpath(path)
+    recurse = True if len(path.split(os.path.sep)) > 1 else False
+    git_files = _git_ls_tree(srctree, 'HEAD', recurse).keys()
+    if path in git_files:
+        git_files.remove(path)
+        return git_files
+    else:
+        return ['.']
+
 def _ls_tree(directory):
     """Recursive listing of files in a directory"""
     ret = []
@@ -326,10 +356,25 @@ def _extract_source(srctree, keep_temp, devbranch, d):
             logger.info('Doing kernel checkout...')
             task_executor.exec_func('do_kernel_checkout', False)
         srcsubdir = crd.getVar('S', True)
+
+        # Move local source files into separate subdir
+        recipe_patches = [os.path.basename(patch) for patch in
+                          oe.recipeutils.get_recipe_patches(crd)]
+        local_files = oe.recipeutils.get_recipe_local_files(crd)
+        local_files = [fname for fname in local_files if
+                       os.path.exists(os.path.join(workdir, fname))]
+        if local_files:
+            for fname in local_files:
+                _move_file(os.path.join(workdir, fname),
+                           os.path.join(tempdir, 'oe-local-files', fname))
+            with open(os.path.join(tempdir, 'oe-local-files', '.gitignore'),
+                      'w') as f:
+                f.write('# Ignore local files, by default. Remove this file '
+                        'if you want to commit the directory to Git\n*\n')
+
         if srcsubdir == workdir:
-            # Find non-patch sources that were "unpacked" to srctree directory
-            recipe_patches = [os.path.basename(patch) for patch in
-                              oe.recipeutils.get_recipe_patches(crd)]
+            # Find non-patch non-local sources that were "unpacked" to srctree
+            # directory
             src_files = [fname for fname in _ls_tree(workdir) if
                          os.path.basename(fname) not in recipe_patches]
             # Force separate S so that patch files can be left out from srctree
@@ -352,12 +397,12 @@ def _extract_source(srctree, keep_temp, devbranch, d):
                 haspatches = True
             else:
                 os.rmdir(patchdir)
-
+        # Make sure that srcsubdir exists
+        bb.utils.mkdirhier(srcsubdir)
         if not os.path.exists(srcsubdir) or not os.listdir(srcsubdir):
-            raise DevtoolError("no source unpacked to S, either the %s "
-                               "recipe doesn't use any source or the "
-                               "correct source directory could not be "
-                               "determined" % pn)
+            logger.warning("no source unpacked to S, either the %s recipe "
+                           "doesn't use any source or the correct source "
+                           "directory could not be determined" % pn)
 
         setup_git_repo(srcsubdir, crd.getVar('PV', True), devbranch)
 
@@ -375,6 +420,12 @@ def _extract_source(srctree, keep_temp, devbranch, d):
             shutil.rmtree(patchdir)
             if haspatches:
                 bb.process.run('git checkout patches', cwd=srcsubdir)
+
+        # Move oe-local-files directory to srctree
+        if os.path.exists(os.path.join(tempdir, 'oe-local-files')):
+            logger.info('Adding local source files to srctree...')
+            shutil.move(os.path.join(tempdir, 'oe-local-files'), srcsubdir)
+
 
         shutil.move(srcsubdir, srctree)
     finally:
@@ -560,39 +611,40 @@ def _get_patchset_revs(args, srctree, recipe_path):
 
     return initial_rev, update_rev
 
-def _remove_patch_entries(srcuri, patchlist):
-    """Remove patch entries from SRC_URI"""
-    remaining = patchlist[:]
+def _remove_file_entries(srcuri, filelist):
+    """Remove file:// entries from SRC_URI"""
+    remaining = filelist[:]
     entries = []
-    for patch in patchlist:
-        patchfile = os.path.basename(patch)
+    for fname in filelist:
+        basename = os.path.basename(fname)
         for i in xrange(len(srcuri)):
-            if srcuri[i].startswith('file://') and os.path.basename(srcuri[i].split(';')[0]) == patchfile:
+            if (srcuri[i].startswith('file://') and
+                    os.path.basename(srcuri[i].split(';')[0]) == basename):
                 entries.append(srcuri[i])
-                remaining.remove(patch)
+                remaining.remove(fname)
                 srcuri.pop(i)
                 break
     return entries, remaining
 
-def _remove_patch_files(args, patches, destpath):
+def _remove_source_files(args, files, destpath):
     """Unlink existing patch files"""
-    for patchfile in patches:
+    for path in files:
         if args.append:
             if not destpath:
                 raise Exception('destpath should be set here')
-            patchfile = os.path.join(destpath, os.path.basename(patchfile))
+            path = os.path.join(destpath, os.path.basename(path))
 
-        if os.path.exists(patchfile):
-            logger.info('Removing patch %s' % patchfile)
+        if os.path.exists(path):
+            logger.info('Removing file %s' % path)
             # FIXME "git rm" here would be nice if the file in question is
             #       tracked
             # FIXME there's a chance that this file is referred to by
             #       another recipe, in which case deleting wouldn't be the
             #       right thing to do
-            os.remove(patchfile)
+            os.remove(path)
             # Remove directory if empty
             try:
-                os.rmdir(os.path.dirname(patchfile))
+                os.rmdir(os.path.dirname(path))
             except OSError as ose:
                 if ose.errno != errno.ENOTEMPTY:
                     raise
@@ -616,8 +668,9 @@ def _export_patches(srctree, rd, start_rev, destdir):
     existing_patches = dict((os.path.basename(path), path) for path in
                             oe.recipeutils.get_recipe_patches(rd))
 
-    # Generate patches from Git
-    GitApplyTree.extractPatches(srctree, start_rev, destdir)
+    # Generate patches from Git, exclude local files directory
+    patch_pathspec = _git_exclude_path(srctree, 'oe-local-files')
+    GitApplyTree.extractPatches(srctree, start_rev, destdir, patch_pathspec)
 
     new_patches = sorted(os.listdir(destdir))
     for new_patch in new_patches:
@@ -642,6 +695,52 @@ def _export_patches(srctree, rd, start_rev, destdir):
     return (updated, added, existing_patches)
 
 
+def _export_local_files(srctree, rd, destdir):
+    """Copy local files from srctree to given location.
+       Returns three-tuple of dicts:
+         1. updated - files that already exist in SRCURI
+         2. added - new files files that don't exist in SRCURI
+         3  removed - files that exist in SRCURI but not in exported files
+      In each dict the key is the 'basepath' of the URI and value is the
+      absolute path to the existing file in recipe space (if any).
+    """
+    import oe.recipeutils
+
+    # Find out local files (SRC_URI files that exist in the "recipe space").
+    # Local files that reside in srctree are not included in patch generation.
+    # Instead they are directly copied over the original source files (in
+    # recipe space).
+    existing_files = oe.recipeutils.get_recipe_local_files(rd)
+    new_set = None
+    updated = OrderedDict()
+    added = OrderedDict()
+    removed = OrderedDict()
+    git_files = _git_ls_tree(srctree)
+    if 'oe-local-files' in git_files:
+        # If tracked by Git, take the files from srctree HEAD. First get
+        # the tree object of the directory
+        tmp_index = os.path.join(srctree, '.git', 'index.tmp.devtool')
+        tree = git_files['oe-local-files'][2]
+        bb.process.run(['git', 'checkout', tree, '--', '.'], cwd=srctree,
+                        env=dict(os.environ, GIT_WORK_TREE=destdir,
+                                 GIT_INDEX_FILE=tmp_index))
+        new_set = _git_ls_tree(srctree, tree, True).keys()
+    elif os.path.isdir(os.path.join(srctree, 'oe-local-files')):
+        # If not tracked by Git, just copy from working copy
+        new_set = _ls_tree(os.path.join(srctree, 'oe-local-files'))
+        bb.process.run(['cp', '-ax',
+                        os.path.join(srctree, 'oe-local-files', '.'), destdir])
+    if new_set is not None:
+        for fname in new_set:
+            if fname in existing_files:
+                updated[fname] = existing_files.pop(fname)
+            elif fname != '.gitignore':
+                added[fname] = None
+
+        removed = existing_files
+    return (updated, added, removed)
+
+
 def _update_recipe_srcrev(args, srctree, rd, config_data):
     """Implement the 'srcrev' mode of update-recipe"""
     import bb
@@ -661,43 +760,63 @@ def _update_recipe_srcrev(args, srctree, rd, config_data):
         raise DevtoolError('Invalid hash returned by git: %s' % stdout)
 
     destpath = None
-    removepatches = []
+    remove_files = []
     patchfields = {}
     patchfields['SRCREV'] = srcrev
     orig_src_uri = rd.getVar('SRC_URI', False) or ''
-    if not args.no_remove:
-        # Find list of existing patches in recipe file
-        existing_patches = oe.recipeutils.get_recipe_patches(rd)
-
-        old_srcrev = (rd.getVar('SRCREV', False) or '')
-        tempdir = tempfile.mkdtemp(prefix='devtool')
-        try:
+    srcuri = orig_src_uri.split()
+    tempdir = tempfile.mkdtemp(prefix='devtool')
+    update_srcuri = False
+    try:
+        local_files_dir = tempfile.mkdtemp(dir=tempdir)
+        upd_f, new_f, del_f = _export_local_files(srctree, rd, local_files_dir)
+        if not args.no_remove:
+            # Find list of existing patches in recipe file
+            patches_dir = tempfile.mkdtemp(dir=tempdir)
+            old_srcrev = (rd.getVar('SRCREV', False) or '')
             upd_p, new_p, del_p = _export_patches(srctree, rd, old_srcrev,
-                                                  tempdir)
-            # Remove "overlapping" patches
-            removepatches = upd_p.values()
-        finally:
-            shutil.rmtree(tempdir)
+                                                  patches_dir)
 
-        if removepatches:
-            srcuri = orig_src_uri.split()
-            removedentries, _ = _remove_patch_entries(srcuri, removepatches)
-            if removedentries:
+            # Remove deleted local files and "overlapping" patches
+            remove_files = del_f.values() + upd_p.values()
+            if remove_files:
+                removedentries = _remove_file_entries(srcuri, remove_files)[0]
+                update_srcuri = True
+
+        if args.append:
+            files = dict((os.path.join(local_files_dir, key), val) for
+                          key, val in upd_f.items() + new_f.items())
+            removevalues = {}
+            if update_srcuri:
+                removevalues  = {'SRC_URI': removedentries}
+                patchfields['SRC_URI'] = '\\\n    '.join(srcuri)
+            _, destpath = oe.recipeutils.bbappend_recipe(
+                    rd, args.append, files, wildcardver=args.wildcard_version,
+                    extralines=patchfields, removevalues=removevalues)
+        else:
+            files_dir = os.path.join(os.path.dirname(recipefile),
+                                     rd.getVar('BPN', True))
+            for basepath, path in upd_f.iteritems():
+                logger.info('Updating file %s' % basepath)
+                _move_file(os.path.join(local_files_dir, basepath), path)
+                update_srcuri= True
+            for basepath, path in new_f.iteritems():
+                logger.info('Adding new file %s' % basepath)
+                _move_file(os.path.join(local_files_dir, basepath),
+                           os.path.join(files_dir, basepath))
+                srcuri.append('file://%s' % basepath)
+                update_srcuri = True
+            if update_srcuri:
                 patchfields['SRC_URI'] = ' '.join(srcuri)
-
-    if args.append:
-        _, destpath = oe.recipeutils.bbappend_recipe(
-                rd, args.append, None, wildcardver=args.wildcard_version,
-                extralines=patchfields)
-    else:
-        oe.recipeutils.patch_recipe(rd, recipefile, patchfields)
-
+            oe.recipeutils.patch_recipe(rd, recipefile, patchfields)
+    finally:
+        shutil.rmtree(tempdir)
     if not 'git://' in orig_src_uri:
         logger.info('You will need to update SRC_URI within the recipe to '
                     'point to a git repository where you have pushed your '
                     'changes')
 
-    _remove_patch_files(args, removepatches, destpath)
+    _remove_source_files(args, remove_files, destpath)
 
 def _update_recipe_patch(args, config, srctree, rd, config_data):
     """Implement the 'patch' mode of update-recipe"""
@@ -716,83 +835,86 @@ def _update_recipe_patch(args, config, srctree, rd, config_data):
         raise DevtoolError('Unable to find initial revision - please specify '
                            'it with --initial-rev')
 
-    # Find list of existing patches in recipe file
-    existing_patches = oe.recipeutils.get_recipe_patches(rd)
-
-    removepatches = []
-    seqpatch_re = re.compile('^([0-9]{4}-)?(.+)')
-    if not args.no_remove:
-        # Get all patches from source tree and check if any should be removed
-        tempdir = tempfile.mkdtemp(prefix='devtool')
-        try:
-            # Get all patches from source tree and check if any should be removed
-            upd_p, new_p, del_p = _export_patches(srctree, rd, initial_rev,
-                                                  tempdir)
-            # Remove deleted patches
-            removepatches = del_p.values()
-        finally:
-            shutil.rmtree(tempdir)
-
-    # Get updated patches from source tree
     tempdir = tempfile.mkdtemp(prefix='devtool')
     try:
-        upd_p, new_p, del_p = _export_patches(srctree, rd, update_rev,
-                                              tempdir)
+        local_files_dir = tempfile.mkdtemp(dir=tempdir)
+        upd_f, new_f, del_f = _export_local_files(srctree, rd, local_files_dir)
 
-        # Match up and replace existing patches with corresponding new patches
-        updatepatches = False
+        remove_files = []
+        if not args.no_remove:
+            # Get all patches from source tree and check if any should be removed
+            all_patches_dir = tempfile.mkdtemp(dir=tempdir)
+            upd_p, new_p, del_p = _export_patches(srctree, rd, initial_rev,
+                                                  all_patches_dir)
+            # Remove deleted local files and  patches
+            remove_files = del_f.values() + del_p.values()
+
+        # Get updated patches from source tree
+        patches_dir = tempfile.mkdtemp(dir=tempdir)
+        upd_p, new_p, del_p = _export_patches(srctree, rd, update_rev,
+                                              patches_dir)
+        updatefiles = False
         updaterecipe = False
         destpath = None
+        srcuri = (rd.getVar('SRC_URI', False) or '').split()
         if args.append:
-            patchfiles = dict((os.path.join(tempdir, key), val) for
-                              key, val in upd_p.items() + new_p.items())
-
-            if patchfiles or removepatches:
+            files = dict((os.path.join(local_files_dir, key), val) for
+                         key, val in upd_f.items() + new_f.items())
+            files.update(dict((os.path.join(patches_dir, key), val) for
+                              key, val in upd_p.items() + new_p.items()))
+            if files or remove_files:
                 removevalues = None
-                if removepatches:
-                    srcuri = (rd.getVar('SRC_URI', False) or '').split()
-                    removedentries, remaining = _remove_patch_entries(
-                                                    srcuri, removepatches)
+                if remove_files:
+                    removedentries, remaining = _remove_file_entries(
+                                                    srcuri, remove_files)
                     if removedentries or remaining:
                         remaining = ['file://' + os.path.basename(item) for
                                      item in remaining]
                         removevalues = {'SRC_URI': removedentries + remaining}
                 _, destpath = oe.recipeutils.bbappend_recipe(
-                                rd, args.append, patchfiles,
+                                rd, args.append, files,
                                 removevalues=removevalues)
             else:
-                logger.info('No patches needed updating')
+                logger.info('No patches or local source files needed updating')
         else:
+            # Update existing files
+            for basepath, path in upd_f.iteritems():
+                logger.info('Updating file %s' % basepath)
+                _move_file(os.path.join(local_files_dir, basepath), path)
+                updatefiles = True
             for basepath, path in upd_p.iteritems():
                 logger.info('Updating patch %s' % basepath)
-                shutil.move(os.path.join(tempdir, basepath), path)
-                updatepatches = True
-            srcuri = (rd.getVar('SRC_URI', False) or '').split()
-            patchdir = os.path.join(os.path.dirname(recipefile),
-                                    rd.getVar('BPN', True))
-            bb.utils.mkdirhier(patchdir)
-            for basepath, path in new_p.iteritems():
-                logger.info('Adding new patch %s' % basepath)
-                bb.utils.mkdirhier(patchdir)
-                shutil.move(os.path.join(tempdir, basepath),
-                            os.path.join(patchdir, basepath))
+                _move_file(os.path.join(patches_dir, basepath), path)
+                updatefiles = True
+            # Add any new files
+            files_dir = os.path.join(os.path.dirname(recipefile),
+                                     rd.getVar('BPN', True))
+            for basepath, path in new_f.iteritems():
+                logger.info('Adding new file %s' % basepath)
+                _move_file(os.path.join(local_files_dir, basepath),
+                           os.path.join(files_dir, basepath))
                 srcuri.append('file://%s' % basepath)
                 updaterecipe = True
-            if removepatches:
-                removedentries, _ = _remove_patch_entries(srcuri, removepatches)
-                if removedentries:
-                    updaterecipe = True
+            for basepath, path in new_p.iteritems():
+                logger.info('Adding new patch %s' % basepath)
+                _move_file(os.path.join(patches_dir, basepath),
+                           os.path.join(files_dir, basepath))
+                srcuri.append('file://%s' % basepath)
+                updaterecipe = True
+            # Update recipe, if needed
+            if _remove_file_entries(srcuri, remove_files)[0]:
+                updaterecipe = True
             if updaterecipe:
                 logger.info('Updating recipe %s' % os.path.basename(recipefile))
                 oe.recipeutils.patch_recipe(rd, recipefile,
                                             {'SRC_URI': ' '.join(srcuri)})
-            elif not updatepatches:
+            elif not updatefiles:
                 # Neither patches nor recipe were updated
-                logger.info('No patches need updating')
+                logger.info('No patches or files need updating')
     finally:
         shutil.rmtree(tempdir)
 
-    _remove_patch_files(args, removepatches, destpath)
+    _remove_source_files(args, remove_files, destpath)
 
 def _guess_recipe_update_mode(srctree, rdata):
     """Guess the recipe update mode to use"""

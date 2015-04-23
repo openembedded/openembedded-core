@@ -723,6 +723,77 @@ class DevtoolTests(DevtoolBase):
             self.assertEqual(expectedlines, f.readlines())
         # Deleting isn't expected to work under these circumstances
 
+    @testcase(1173)
+    def test_devtool_update_recipe_local_files(self):
+        """Check that local source files are copied over instead of patched"""
+        testrecipe = 'makedevs'
+        recipefile = get_bb_var('FILE', testrecipe)
+        # Setup srctree for modifying the recipe
+        tempdir = tempfile.mkdtemp(prefix='devtoolqa')
+        self.track_for_cleanup(tempdir)
+        self.track_for_cleanup(self.workspacedir)
+        self.add_command_to_tearDown('bitbake-layers remove-layer */workspace')
+        # (don't bother with cleaning the recipe on teardown, we won't be
+        # building it)
+        result = runCmd('devtool modify %s -x %s' % (testrecipe, tempdir))
+        # Check git repo
+        self._check_src_repo(tempdir)
+        # Edit / commit local source
+        runCmd('echo "/* Foobar */" >> oe-local-files/makedevs.c', cwd=tempdir)
+        runCmd('echo "Foo" > oe-local-files/new-local', cwd=tempdir)
+        runCmd('echo "Bar" > new-file', cwd=tempdir)
+        runCmd('git add new-file', cwd=tempdir)
+        runCmd('git commit -m "Add new file"', cwd=tempdir)
+        self.add_command_to_tearDown('cd %s; git clean -fd .; git checkout .' %
+                                     os.path.dirname(recipefile))
+        runCmd('devtool update-recipe %s' % testrecipe)
+        expected_status = [(' M', '.*/%s$' % os.path.basename(recipefile)),
+                           (' M', '.*/makedevs/makedevs.c$'),
+                           ('??', '.*/makedevs/new-local$'),
+                           ('??', '.*/makedevs/0001-Add-new-file.patch$')]
+        self._check_repo_status(os.path.dirname(recipefile), expected_status)
+
+    @testcase(1174)
+    def test_devtool_update_recipe_local_files_2(self):
+        """Check local source files support when oe-local-files is in Git"""
+        testrecipe = 'lzo'
+        recipefile = get_bb_var('FILE', testrecipe)
+        # Setup srctree for modifying the recipe
+        tempdir = tempfile.mkdtemp(prefix='devtoolqa')
+        self.track_for_cleanup(tempdir)
+        self.track_for_cleanup(self.workspacedir)
+        self.add_command_to_tearDown('bitbake-layers remove-layer */workspace')
+        result = runCmd('devtool modify %s -x %s' % (testrecipe, tempdir))
+        # Check git repo
+        self._check_src_repo(tempdir)
+        # Add oe-local-files to Git
+        runCmd('rm oe-local-files/.gitignore', cwd=tempdir)
+        runCmd('git add oe-local-files', cwd=tempdir)
+        runCmd('git commit -m "Add local sources"', cwd=tempdir)
+        # Edit / commit local sources
+        runCmd('echo "# Foobar" >> oe-local-files/acinclude.m4', cwd=tempdir)
+        runCmd('git commit -am "Edit existing file"', cwd=tempdir)
+        runCmd('git rm oe-local-files/run-ptest', cwd=tempdir)
+        runCmd('git commit -m"Remove file"', cwd=tempdir)
+        runCmd('echo "Foo" > oe-local-files/new-local', cwd=tempdir)
+        runCmd('git add oe-local-files/new-local', cwd=tempdir)
+        runCmd('git commit -m "Add new local file"', cwd=tempdir)
+        runCmd('echo "Gar" > new-file', cwd=tempdir)
+        runCmd('git add new-file', cwd=tempdir)
+        runCmd('git commit -m "Add new file"', cwd=tempdir)
+        self.add_command_to_tearDown('cd %s; git clean -fd .; git checkout .' %
+                                     os.path.dirname(recipefile))
+        # Checkout unmodified file to working copy -> devtool should still pick
+        # the modified version from HEAD
+        runCmd('git checkout HEAD^ -- oe-local-files/acinclude.m4', cwd=tempdir)
+        runCmd('devtool update-recipe %s' % testrecipe)
+        expected_status = [(' M', '.*/%s$' % os.path.basename(recipefile)),
+                           (' M', '.*/acinclude.m4$'),
+                           (' D', '.*/run-ptest$'),
+                           ('??', '.*/new-local$'),
+                           ('??', '.*/0001-Add-new-file.patch$')]
+        self._check_repo_status(os.path.dirname(recipefile), expected_status)
+
     @testcase(1163)
     def test_devtool_extract(self):
         tempdir = tempfile.mkdtemp(prefix='devtoolqa')
