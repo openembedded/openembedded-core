@@ -18,7 +18,7 @@ inherit module-base
 # ${B} not to change while we install, so virtual/kernel must finish do_compile.
 do_install[depends] += "virtual/kernel:do_shared_workdir"
 # Need the source, not just the output of populate_sysroot
-do_install[depends] += "virtual/kernel:do_compile"
+do_install[depends] += "virtual/kernel:do_install"
 
 # There's nothing to do here, except install the source where we can package it
 do_fetch[noexec] = "1"
