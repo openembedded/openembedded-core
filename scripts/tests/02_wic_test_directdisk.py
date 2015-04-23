@@ -48,10 +48,12 @@ class TestWicDirectdisk(unittest.TestCase):
                                 "directdisk-*.direct")))
 
     def testbuild_image_name(self):
+        """Test wic create directdisk --image-name core-image-minimal"""
         self._build(["create", "directdisk",
                      "--image-name", "core-image-minimal"])
 
     def testbuild_artifacts(self):
+        """Test wic create directdisk providing all artifacts."""
         self._build(["create", "directdisk",
                      "-b", "tmp/sysroots/qemux86/usr/share",
                      "-k", "tmp/deploy/images/qemux86",

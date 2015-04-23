@@ -28,13 +28,17 @@ class TestWicHelp(unittest.TestCase):
     """Test help output of wic (sub)commands"""
 
     def setUp(self):
+        """This code is executed before each test method."""
         self.main = imp.load_source("wic", "wic").main
 
     def testhelp(self):
+        """Test wic --help"""
         self.assertRaises(SystemExit, self.main, ['--help'])
 
     def testcreatehelp(self):
+        """Test wic create --help"""
         self.assertRaises(SystemExit, self.main, ['create', '--help'])
 
     def testlisthelp(self):
+        """Test wic list --help"""
         self.assertRaises(SystemExit, self.main, ['list', '--help'])
