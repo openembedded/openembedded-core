@@ -222,7 +222,9 @@ def find_license_files(d):
             pass
         spdx_generic = None
         license_source = None
-        # If the generic does not exist we need to check to see if there is an SPDX mapping to it
+        # If the generic does not exist we need to check to see if there is an SPDX mapping to it,
+        # unless NO_GENERIC_LICENSE is set.
+
         for lic_dir in license_source_dirs:
             if not os.path.isfile(os.path.join(lic_dir, license_type)):
                 if d.getVarFlag('SPDXLICENSEMAP', license_type) != None:
@@ -241,6 +243,19 @@ def find_license_files(d):
             # audit up. This should be fixed in emit_pkgdata (or, we actually got and fix all the recipes)
 
             lic_files_paths.append(("generic_" + license_type, os.path.join(license_source, spdx_generic)))
+
+            # The user may attempt to use NO_GENERIC_LICENSE for a generic license which doesn't make sense
+            # and should not be allowed, warn the user in this case.
+            if d.getVarFlag('NO_GENERIC_LICENSE', license_type):
+                bb.warn("%s: %s is a generic license, please don't use NO_GENERIC_LICENSE for it." % (pn, license_type))
+
+        elif d.getVarFlag('NO_GENERIC_LICENSE', license_type):
+            # if NO_GENERIC_LICENSE is set, we copy the license files from the fetched source
+            # of the package rather than the license_source_dirs.
+            for (basename, path) in lic_files_paths:
+                if d.getVarFlag('NO_GENERIC_LICENSE', license_type) == basename:
+                    lic_files_paths.append(("generic_" + license_type, path))
+                    break
         else:
             # And here is where we warn people that their licenses are lousy
             bb.warn("%s: No generic license file exists for: %s in any provider" % (pn, license_type))
