@@ -336,6 +336,22 @@ def copy_recipe_files(d, tgt_dir, whole_dir=False, download=True):
     return remotes
 
 
+def get_recipe_local_files(d, patches=False):
+    """Get a list of local files in SRC_URI within a recipe."""
+    uris = (d.getVar('SRC_URI', True) or "").split()
+    fetch = bb.fetch2.Fetch(uris, d)
+    ret = {}
+    for uri in uris:
+        if fetch.ud[uri].type == 'file':
+            if (not patches and
+                    bb.utils.exec_flat_python_func('patch_path', uri, fetch, '')):
+                continue
+            # Skip files that are referenced by absolute path
+            if not os.path.isabs(fetch.ud[uri].basepath):
+                ret[fetch.ud[uri].basepath] = fetch.localpath(uri)
+    return ret
+
+
 def get_recipe_patches(d):
     """Get a list of the patches included in SRC_URI within a recipe."""
     patchfiles = []
