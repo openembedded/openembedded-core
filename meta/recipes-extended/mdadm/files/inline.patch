@@ -1,0 +1,39 @@
+with gnu11 turning on a default with gcc-5 we have to abide by new inline semantics
+using 'inline' and using is in same translation unit means an external definition has to exist
+same like "external inline" in gnu89, we simply make the functions static inline since they
+are just meant to be used in this file
+
+Upstream-Status: Pending
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+
+Index: mdadm-3.3.2/bitmap.c
+===================================================================
+--- mdadm-3.3.2.orig/bitmap.c
++++ mdadm-3.3.2/bitmap.c
+@@ -20,7 +20,7 @@
+ 
+ #include "mdadm.h"
+ 
+-inline void sb_le_to_cpu(bitmap_super_t *sb)
++static inline void sb_le_to_cpu(bitmap_super_t *sb)
+ {
+ 	sb->magic = __le32_to_cpu(sb->magic);
+ 	sb->version = __le32_to_cpu(sb->version);
+@@ -34,7 +34,7 @@ inline void sb_le_to_cpu(bitmap_super_t
+ 	sb->write_behind = __le32_to_cpu(sb->write_behind);
+ }
+ 
+-inline void sb_cpu_to_le(bitmap_super_t *sb)
++static inline void sb_cpu_to_le(bitmap_super_t *sb)
+ {
+ 	sb_le_to_cpu(sb); /* these are really the same thing */
+ }
+@@ -74,7 +74,7 @@ typedef struct bitmap_info_s {
+ } bitmap_info_t;
+ 
+ /* count the dirty bits in the first num_bits of byte */
+-inline int count_dirty_bits_byte(char byte, int num_bits)
++static inline int count_dirty_bits_byte(char byte, int num_bits)
+ {
+ 	int num = 0;
+ 
