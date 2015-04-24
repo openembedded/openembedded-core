@@ -12,10 +12,10 @@ Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
  Makefile.am | 4 +++-
  1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/Makefile.am b/Makefile.am
-index d224418..dcd95b0 100644
---- a/Makefile.am
-+++ b/Makefile.am
+Index: git/Makefile.am
+===================================================================
+--- git.orig/Makefile.am
++++ git/Makefile.am
 @@ -19,6 +19,8 @@
  ACLOCAL_AMFLAGS = -I m4 ${ACLOCAL_FLAGS}
  AM_MAKEFLAGS = --no-print-directory
@@ -25,15 +25,21 @@ index d224418..dcd95b0 100644
  gummibootlibdir = $(prefix)/lib/gummiboot
  
  AM_CPPFLAGS = -include config.h
-@@ -143,7 +145,7 @@ $(efi_solib): $(efi_objects)
- .DELETE_ON_ERROR: $(efi_solib)
+@@ -148,7 +150,7 @@ $(gummiboot_solib): $(gummiboot_objects)
+ .DELETE_ON_ERROR: $(gummboot_solib)
  
- $(efi_loadername): $(efi_solib)
+ $(gummiboot): $(gummiboot_solib)
 -	$(AM_V_GEN) objcopy -j .text -j .sdata -j .data -j .dynamic \
 +	$(AM_V_GEN) $(OBJCOPY) -j .text -j .sdata -j .data -j .dynamic \
- 	  -j .dynsym -j .rel -j .rela -j .reloc -j .eh_frame \
+ 	  -j .dynsym -j .rel -j .rela -j .reloc \
  	  --target=efi-app-$(ARCH) $< $@
  
--- 
-1.8.3.4
-
+@@ -183,7 +185,7 @@ $(stub_solib): $(stub_objects)
+ .DELETE_ON_ERROR: $(gummboot_solib)
+ 
+ $(stub): $(stub_solib)
+-	$(AM_V_GEN) objcopy -j .text -j .sdata -j .data -j .dynamic \
++	$(AM_V_GEN) $(OBJCOPY) -j .text -j .sdata -j .data -j .dynamic \
+ 	  -j .dynsym -j .rel -j .rela -j .reloc \
+ 	  --target=efi-app-$(ARCH) $< $@
+ 

@@ -9,8 +9,8 @@ DEPENDS = "gnu-efi util-linux"
 inherit autotools pkgconfig
 inherit deploy
 
-PV = "43+git${SRCPV}"
-SRCREV = "4062c51075ba054d4949c714fe06123f9ad3097d"
+PV = "48+git${SRCPV}"
+SRCREV = "2bcd919c681c952eb867ef1bdb458f1bc49c2d55"
 SRC_URI = "git://anongit.freedesktop.org/gummiboot \
            file://fix-objcopy.patch \
           "
