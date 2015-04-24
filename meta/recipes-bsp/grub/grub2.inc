@@ -24,6 +24,7 @@ SRC_URI = "ftp://ftp.gnu.org/gnu/grub/grub-${PV}.tar.gz \
            file://grub-no-unused-result.patch \
            file://grub-efi-allow-a-compilation-without-mcmodel-large.patch \
            file://grub-efi-fix-with-glibc-2.20.patch \
+           file://0001-parse_dhcp_vendor-Add-missing-const-qualifiers.patch \
             "
 
 DEPENDS = "flex-native bison-native xz"
