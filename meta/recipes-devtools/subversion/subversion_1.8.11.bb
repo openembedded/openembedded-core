@@ -7,7 +7,7 @@ HOMEPAGE = "http://subversion.tigris.org"
 
 BBCLASSEXTEND = "native"
 
-inherit gettext
+inherit gettext pythonnative
 
 SRC_URI = "${APACHE_MIRROR}/${BPN}/${BPN}-${PV}.tar.bz2 \
            file://libtool2.patch \
@@ -31,6 +31,7 @@ EXTRA_OECONF = " \
 inherit autotools
 
 export LDFLAGS += " -L${STAGING_LIBDIR} "
+CPPFLAGS += "-P"
 
 acpaths = "-I build/ -I build/ac-macros/"
 
