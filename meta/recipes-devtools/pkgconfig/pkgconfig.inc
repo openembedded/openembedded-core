@@ -12,9 +12,11 @@ DEPENDS = "glib-2.0"
 DEPENDS_class-native = ""
 DEPENDS_class-nativesdk = ""
 
-SRC_URI = "http://pkgconfig.freedesktop.org/releases/pkg-config-${PV}.tar.gz"
+SRCREV = "40342dd0ead05d457a2a4e692cf865f50033a709"
+PV = "0.28+git${SRCPV}"
+SRC_URI = "git://anongit.freedesktop.org/pkg-config"
 
-S = "${WORKDIR}/pkg-config-${PV}/"
+S = "${WORKDIR}/git"
 
 inherit autotools
 
