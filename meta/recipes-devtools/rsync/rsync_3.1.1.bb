@@ -1,7 +1,9 @@
 require rsync.inc
 
 
-SRC_URI += "file://acinclude.m4"
+SRC_URI += "file://acinclude.m4 \
+            file://0001-Complain-if-an-inc-recursive-path-is-not-right-for-i.patch \
+"
 
 SRC_URI[md5sum] = "43bd6676f0b404326eee2d63be3cdcfe"
 SRC_URI[sha256sum] = "7de4364fcf5fe42f3bdb514417f1c40d10bbca896abe7e7f2c581c6ea08a2621"
