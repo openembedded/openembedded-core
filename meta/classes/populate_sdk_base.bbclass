@@ -96,7 +96,9 @@ fakeroot python do_populate_sdk() {
 
     bb.build.exec_func("tar_sdk", d)
 
-    bb.build.exec_func(d.getVar("SDK_PACKAGING_FUNC", True), d)
+    sdk_packaging_func = d.getVar("SDK_PACKAGING_FUNC", True) or ""
+    if sdk_packaging_func.strip():
+        bb.build.exec_func(d.getVar("SDK_PACKAGING_FUNC", True), d)
 }
 
 fakeroot create_sdk_files() {
