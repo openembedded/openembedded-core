@@ -23,6 +23,7 @@ inherit populate_sdk
 
 deltask install
 deltask package
+deltask packagedata
 
 SDK_DEPENDS += "patchelf-native"
 
