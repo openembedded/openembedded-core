@@ -9,6 +9,15 @@ LICENSE = "MIT"
 
 inherit packagegroup
 
+#
+# We will skip parsing this packagegeoup for non-glibc systems
+#
+python __anonymous () {
+    if d.getVar('TCLIBC', True) != "glibc":
+        raise bb.parse.SkipPackage("incompatible with %s C library" %
+                                   d.getVar('TCLIBC', True))
+}
+
 PACKAGES = "\
     packagegroup-core-lsb \
     packagegroup-core-sys-extended \
