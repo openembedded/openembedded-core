@@ -25,6 +25,7 @@ PACKAGECONFIG[kmod] = "--enable-kmod, --disable-kmod, kmod"
 
 SRC_URI = "git://git.lttng.org/lttng-tools.git;branch=stable-2.6 \
            file://runtest-2.4.0.patch \
+           file://extern-decls.patch \
            file://run-ptest \
 	  "
 
