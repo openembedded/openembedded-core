@@ -12,7 +12,9 @@ SRCREV = "92fa7f53f1f3f03296f8ffb14bdf1baefab83368"
 
 PV = "v2015.01+git${SRCPV}"
 
-SRC_URI = "git://git.denx.de/u-boot.git;branch=master"
+SRC_URI = "git://git.denx.de/u-boot.git;branch=master \
+           file://gcc5.patch \
+	   "
 
 S = "${WORKDIR}/git"
 
