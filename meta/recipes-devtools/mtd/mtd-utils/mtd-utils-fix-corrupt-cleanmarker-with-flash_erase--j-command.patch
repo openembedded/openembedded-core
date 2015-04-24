@@ -36,6 +36,10 @@ JFFS2: Erase block at 0x00028000 is not formatted. It will be erased
 Signed-off-by: Liu Shuo <b35362@freescale.com>
 Signed-off-by: Li Yang <leoli@freescale.com>
 
+Updated for the new version
+
+Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
+
 ---
 v2 : get length of availble freeoob bytes from oobinfo information,
       not use the ioctl ECCGETLAYOUT which is being deprecated.
@@ -44,18 +48,18 @@ v2 : get length of availble freeoob bytes from oobinfo information,
  1 files changed, 39 insertions(+), 7 deletions(-)
 
 diff --git a/flash_erase.c b/flash_erase.c
-index fe2eaca..3e94495 100644
+index 933373a..4b9d84b 100644
 --- a/flash_erase.c
 +++ b/flash_erase.c
-@@ -98,6 +98,7 @@ int main(int argc, char *argv[])
- 	int isNAND;
+@@ -99,6 +99,7 @@ int main(int argc, char *argv[])
+ 	bool isNAND;
  	int error = 0;
- 	uint64_t offset = 0;
+ 	off_t offset = 0;
 +	void *oob_data = NULL;
  
  	/*
  	 * Process user arguments
-@@ -197,15 +198,43 @@ int main(int argc, char *argv[])
+@@ -201,15 +202,43 @@ int main(int argc, char *argv[])
  			if (ioctl(fd, MEMGETOOBSEL, &oobinfo) != 0)
  				return sys_errmsg("%s: unable to get NAND oobinfo", mtd_device);
  
@@ -104,7 +108,7 @@ index fe2eaca..3e94495 100644
  			} else {
  				/* Legacy mode */
  				switch (mtd.oob_size) {
-@@ -223,7 +252,6 @@ int main(int argc, char *argv[])
+@@ -227,7 +256,6 @@ int main(int argc, char *argv[])
  						break;
  				}
  			}
@@ -112,13 +116,13 @@ index fe2eaca..3e94495 100644
  		}
  		cleanmarker.hdr_crc = cpu_to_je32(mtd_crc32(0, &cleanmarker, sizeof(cleanmarker) - 4));
  	}
-@@ -272,7 +300,8 @@ int main(int argc, char *argv[])
+@@ -276,7 +304,8 @@ int main(int argc, char *argv[])
  
  		/* write cleanmarker */
  		if (isNAND) {
--			if (mtd_write_oob(mtd_desc, &mtd, fd, offset + clmpos, clmlen, &cleanmarker) != 0) {
+-			if (mtd_write_oob(mtd_desc, &mtd, fd, (uint64_t)offset + clmpos, clmlen, &cleanmarker) != 0) {
 +			void *data = oob_data ? oob_data + clmpos : &cleanmarker;
-+			if (mtd_write_oob(mtd_desc, &mtd, fd, offset + clmpos, clmlen, data) != 0) {
++			if (mtd_write_oob(mtd_desc, &mtd, fd, (uint64_t)offset + clmpos, clmlen, data) != 0) {
  				sys_errmsg("%s: MTD writeoob failure", mtd_device);
  				continue;
  			}
