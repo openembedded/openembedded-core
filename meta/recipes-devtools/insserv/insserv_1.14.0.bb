@@ -11,6 +11,7 @@ PR = "r1"
 SRC_URI = "ftp://ftp.suse.com/pub/projects/init/${BPN}-${PV}.tar.bz2 \
            file://makefile.patch \
            file://disable_runtests.patch \
+           file://161_bts777914_fix_undeclared_identifier.patch \
            file://insserv.conf \
            file://run-ptest \
 "
