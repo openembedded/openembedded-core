@@ -9,6 +9,7 @@ SRC_URI = "http://ftp.gnome.org/pub/gnome/sources/gtk+/2.24/gtk+-${PV}.tar.xz \
            file://hardcoded_libtool.patch \
            file://toggle-font.diff;striplevel=0 \
            file://doc-fixes.patch \
+           file://strict-prototypes.patch \
 	  "
 
 SRC_URI[md5sum] = "b1e890e15602c5bcb40d85b13fe046fd"
