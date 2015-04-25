@@ -97,18 +97,48 @@ IMAGE_TYPEDEP_elf = "cpio.gz"
 
 UBI_VOLNAME ?= "${MACHINE}-rootfs"
 
-IMAGE_CMD_ubi () {
-	echo \[ubifs\] > ubinize.cfg 
-	echo mode=ubi >> ubinize.cfg
-	echo image=${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.ubifs >> ubinize.cfg 
-	echo vol_id=0 >> ubinize.cfg 
-	echo vol_type=dynamic >> ubinize.cfg 
-	echo vol_name=${UBI_VOLNAME} >> ubinize.cfg 
-	echo vol_flags=autoresize >> ubinize.cfg
-	mkfs.ubifs -r ${IMAGE_ROOTFS} -o ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.ubifs ${MKUBIFS_ARGS}
-	ubinize -o ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.ubi ${UBINIZE_ARGS} ubinize.cfg
+multiubi_mkfs() {
+	local mkubifs_args="$1"
+	local ubinize_args="$2"
+	local vname="_$3"
+
+	echo \[ubifs\] > ubinize${vname}.cfg
+	echo mode=ubi >> ubinize${vname}.cfg
+	echo image=${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}${vname}.rootfs.ubifs >> ubinize${vname}.cfg
+	echo vol_id=0 >> ubinize${vname}.cfg
+	echo vol_type=dynamic >> ubinize${vname}.cfg
+	echo vol_name=${UBI_VOLNAME} >> ubinize${vname}.cfg
+	echo vol_flags=autoresize >> ubinize${vname}.cfg
+	mkfs.ubifs -r ${IMAGE_ROOTFS} -o ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}${vname}.rootfs.ubifs ${mkubifs_args}
+	ubinize -o ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}${vname}.rootfs.ubi ${ubinize_args} ubinize${vname}.cfg
+
+	# Cleanup cfg file
+	mv ubinize${vname}.cfg ${DEPLOY_DIR_IMAGE}/
+
+	# Create own symlink
+	cd ${DEPLOY_DIR_IMAGE}
+	if [ -e ${IMAGE_NAME}${vname}.rootfs.ubifs ]; then
+		ln -sf ${IMAGE_NAME}${vname}.rootfs.ubifs \
+		${IMAGE_LINK_NAME}${vname}.ubifs
+	fi
+	if [ -e ${IMAGE_NAME}${vname}.rootfs.ubi ]; then
+		ln -sf ${IMAGE_NAME}${vname}.rootfs.ubi \
+		${IMAGE_LINK_NAME}${vname}.ubi
+	fi
+	cd -
 }
-IMAGE_TYPEDEP_ubi = "ubifs"
+
+IMAGE_CMD_multiubi () {
+	# Split MKUBIFS_ARGS_<name> and UBINIZE_ARGS_<name>
+	for name in ${MULTIUBI_BUILD}; do
+		eval local mkubifs_args=\"\$MKUBIFS_ARGS_${name}\"
+		eval local ubinize_args=\"\$UBINIZE_ARGS_${name}\"
+
+		multiubi_mkfs "${mkubifs_args}" "${ubinize_args}" "${name}"
+	done
+}
+
+IMAGE_CMD_ubi = "multiubi_mkfs "${MKUBIFS_ARGS}" "${UBINIZE_ARGS}" "${UBI_VOLNAME}""
 
 IMAGE_CMD_ubifs = "mkfs.ubifs -r ${IMAGE_ROOTFS} -o ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.ubifs ${MKUBIFS_ARGS}"
 
@@ -139,6 +169,7 @@ IMAGE_DEPENDS_squashfs-lzo = "squashfs-tools-native"
 IMAGE_DEPENDS_elf = "virtual/kernel mkelfimage-native"
 IMAGE_DEPENDS_ubi = "mtd-utils-native"
 IMAGE_DEPENDS_ubifs = "mtd-utils-native"
+IMAGE_DEPENDS_multiubi = "mtd-utils-native"
 
 # This variable is available to request which values are suitable for IMAGE_FSTYPES
 IMAGE_TYPES = " \
@@ -151,7 +182,7 @@ IMAGE_TYPES = " \
     iso \
     hddimg \
     squashfs squashfs-xz squashfs-lzo \
-    ubi ubifs \
+    ubi ubifs multiubi \
     tar tar.gz tar.bz2 tar.xz tar.lz4 \
     cpio cpio.gz cpio.xz cpio.lzma cpio.lz4 \
     vmdk \
