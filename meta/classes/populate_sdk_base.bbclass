@@ -56,17 +56,28 @@ SDK_RELOCATE_AFTER_INSTALL ?= "1"
 
 SDK_TITLE ?= "${@d.getVar('DISTRO_NAME', True) or d.getVar('DISTRO', True)} SDK"
 
-SDK_MANIFEST = "${SDK_DEPLOY}/${TOOLCHAIN_OUTPUTNAME}.manifest"
+SDK_TARGET_MANIFEST = "${SDK_DEPLOY}/${TOOLCHAIN_OUTPUTNAME}.target.manifest"
+SDK_HOST_MANIFEST = "${SDK_DEPLOY}/${TOOLCHAIN_OUTPUTNAME}.host.manifest"
 python write_target_sdk_manifest () {
     from oe.sdk import sdk_list_installed_packages
-    sdkmanifestdir = os.path.dirname(d.getVar("SDK_MANIFEST", True))
+    sdkmanifestdir = os.path.dirname(d.getVar("SDK_TARGET_MANIFEST", True))
     if not os.path.exists(sdkmanifestdir):
         bb.utils.mkdirhier(sdkmanifestdir)
-    with open(d.getVar('SDK_MANIFEST', True), 'w') as output:
+    with open(d.getVar('SDK_TARGET_MANIFEST', True), 'w') as output:
         output.write(sdk_list_installed_packages(d, True, 'ver'))
 }
 
+python write_host_sdk_manifest () {
+    from oe.sdk import sdk_list_installed_packages
+    sdkmanifestdir = os.path.dirname(d.getVar("SDK_HOST_MANIFEST", True))
+    if not os.path.exists(sdkmanifestdir):
+        bb.utils.mkdirhier(sdkmanifestdir)
+    with open(d.getVar('SDK_HOST_MANIFEST', True), 'w') as output:
+        output.write(sdk_list_installed_packages(d, False, 'ver'))
+}
+
 POPULATE_SDK_POST_TARGET_COMMAND_append = " write_target_sdk_manifest ; "
+POPULATE_SDK_POST_HOST_COMMAND_append = " write_host_sdk_manifest; "
 
 fakeroot python do_populate_sdk() {
     from oe.sdk import populate_sdk
