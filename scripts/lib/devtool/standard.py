@@ -308,7 +308,14 @@ def _check_preserve(config, recipename):
                 splitline = line.rstrip().split('|')
                 if splitline[0] == recipename:
                     removefile = os.path.join(config.workspace_path, splitline[1])
-                    md5 = bb.utils.md5_file(removefile)
+                    try:
+                        md5 = bb.utils.md5_file(removefile)
+                    except IOError as err:
+                        if err.errno == 2:
+                            # File no longer exists, skip it
+                            continue
+                        else:
+                            raise
                     if splitline[2] != md5:
                         bb.utils.mkdirhier(preservepath)
                         preservefile = os.path.basename(removefile)
