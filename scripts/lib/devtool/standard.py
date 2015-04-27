@@ -470,13 +470,19 @@ def update_recipe(args, config, basepath, workspace):
         return updated
 
     srctree = workspace[args.recipename]
-    if mode == 'srcrev':
-        (stdout, _) = bb.process.run('git rev-parse HEAD', cwd=srctree)
-        srcrev = stdout.strip()
-        if len(srcrev) != 40:
-            logger.error('Invalid hash returned by git: %s' % stdout)
-            return 1
 
+    # Get HEAD revision
+    try:
+        (stdout, _) = bb.process.run('git rev-parse HEAD', cwd=srctree)
+    except bb.process.ExecutionError as err:
+        print('Failed to get HEAD revision in %s: %s' % (srctree, err))
+        return 1
+    srcrev = stdout.strip()
+    if len(srcrev) != 40:
+        logger.error('Invalid hash returned by git: %s' % stdout)
+        return 1
+
+    if mode == 'srcrev':
         logger.info('Updating SRCREV in recipe %s' % os.path.basename(recipefile))
         patchfields = {}
         patchfields['SRCREV'] = srcrev
