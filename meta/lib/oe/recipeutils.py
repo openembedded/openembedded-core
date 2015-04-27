@@ -44,10 +44,10 @@ def get_unavailable_reasons(cooker, pn):
     return taskdata.get_reasons(pn)
 
 
-def parse_recipe(fn, d):
+def parse_recipe(fn, appends, d):
     """Parse an individual recipe"""
     import bb.cache
-    envdata = bb.cache.Cache.loadDataFull(fn, [], d)
+    envdata = bb.cache.Cache.loadDataFull(fn, appends, d)
     return envdata
 
 
@@ -55,7 +55,7 @@ def get_var_files(fn, varlist, d):
     """Find the file in which each of a list of variables is set.
     Note: requires variable history to be enabled when parsing.
     """
-    envdata = parse_recipe(fn, d)
+    envdata = parse_recipe(fn, [], d)
     varfiles = {}
     for v in varlist:
         history = envdata.varhistory.variable(v)
