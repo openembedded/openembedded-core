@@ -386,7 +386,10 @@ def modify(args, config, basepath, workspace):
         f.write('EXTERNALSRC_pn-%s = "%s"\n' % (args.recipename, srctree))
 
         b_is_s = True
-        if args.same_dir:
+        if args.no_same_dir:
+            logger.info('using separate build directory since --no-same-dir specified')
+            b_is_s = False
+        elif args.same_dir:
             logger.info('using source tree as build directory since --same-dir specified')
         elif bb.data.inherits_class('autotools-brokensep', rd):
             logger.info('using source tree as build directory since original recipe inherits autotools-brokensep')
@@ -664,7 +667,9 @@ def register_commands(subparsers, context):
     parser_modify.add_argument('srctree', help='Path to external source tree')
     parser_modify.add_argument('--wildcard', '-w', action="store_true", help='Use wildcard for unversioned bbappend')
     parser_modify.add_argument('--extract', '-x', action="store_true", help='Extract source as well')
-    parser_modify.add_argument('--same-dir', '-s', help='Build in same directory as source', action="store_true")
+    group = parser_modify.add_mutually_exclusive_group()
+    group.add_argument('--same-dir', '-s', help='Build in same directory as source', action="store_true")
+    group.add_argument('--no-same-dir', help='Force build in a separate build directory', action="store_true")
     parser_modify.add_argument('--branch', '-b', default="devtool", help='Name for development branch to checkout (only when using -x)')
     parser_modify.set_defaults(func=modify)
 
