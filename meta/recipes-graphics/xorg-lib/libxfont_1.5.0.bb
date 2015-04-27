@@ -19,6 +19,7 @@ XORG_PN = "libXfont"
 BBCLASSEXTEND = "native"
 
 SRC_URI += "file://0001-bdfReadProperties-property-count-needs-range-check-C.patch \
+            file://0001-bdfReadCharacters-bailout-if-a-char-s-bitmap-cannot-.patch \
            "
 
 SRC_URI[md5sum] = "664629bfa7cdf8b984155019fd395dcb"
