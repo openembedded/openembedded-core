@@ -101,7 +101,7 @@ def read_workspace():
             _create_workspace(config.workspace_path, config, basepath)
 
     logger.debug('Reading workspace in %s' % config.workspace_path)
-    externalsrc_re = re.compile(r'^EXTERNALSRC(_pn-[a-zA-Z0-9-]*)? =.*$')
+    externalsrc_re = re.compile(r'^EXTERNALSRC(_pn-[^ =]+)? =.*$')
     for fn in glob.glob(os.path.join(config.workspace_path, 'appends', '*.bbappend')):
         pn = os.path.splitext(os.path.basename(fn))[0].split('_')[0]
         with open(fn, 'r') as f:
