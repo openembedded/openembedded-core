@@ -130,18 +130,29 @@ def _get_recipe_file(cooker, pn):
             logger.error("Unable to find any recipe file matching %s" % pn)
     return recipefile
 
+def _parse_recipe(config, tinfoil, pn, appends):
+    """Parse recipe of a package"""
+    import oe.recipeutils
+    recipefile = _get_recipe_file(tinfoil.cooker, pn)
+    if not recipefile:
+        # Error already logged
+        return None
+    if appends:
+        append_files = tinfoil.cooker.collection.get_file_appends(recipefile)
+        # Filter out appends from the workspace
+        append_files = [path for path in append_files if
+                        not path.startswith(config.workspace_path)]
+    return oe.recipeutils.parse_recipe(recipefile, append_files,
+                                       tinfoil.config_data)
 
 def extract(args, config, basepath, workspace):
     import bb
-    import oe.recipeutils
 
     tinfoil = setup_tinfoil()
 
-    recipefile = _get_recipe_file(tinfoil.cooker, args.recipename)
-    if not recipefile:
-        # Error already logged
+    rd = _parse_recipe(config, tinfoil, args.recipename, True)
+    if not rd:
         return -1
-    rd = oe.recipeutils.parse_recipe(recipefile, tinfoil.config_data)
 
     srctree = os.path.abspath(args.srctree)
     initial_rev = _extract_source(srctree, args.keep_temp, args.branch, rd)
@@ -327,11 +338,10 @@ def modify(args, config, basepath, workspace):
 
     tinfoil = setup_tinfoil()
 
-    recipefile = _get_recipe_file(tinfoil.cooker, args.recipename)
-    if not recipefile:
-        # Error already logged
+    rd = _parse_recipe(config, tinfoil, args.recipename, True)
+    if not rd:
         return -1
-    rd = oe.recipeutils.parse_recipe(recipefile, tinfoil.config_data)
+    recipefile = rd.getVar('FILE', True)
 
     if not _check_compatible_recipe(args.recipename, rd):
         return -1
@@ -428,11 +438,10 @@ def update_recipe(args, config, basepath, workspace):
     from oe.patch import GitApplyTree
     import oe.recipeutils
 
-    recipefile = _get_recipe_file(tinfoil.cooker, args.recipename)
-    if not recipefile:
-        # Error already logged
+    rd = _parse_recipe(config, tinfoil, args.recipename, True)
+    if not rd:
         return -1
-    rd = oe.recipeutils.parse_recipe(recipefile, tinfoil.config_data)
+    recipefile = rd.getVar('FILE', True)
 
     orig_src_uri = rd.getVar('SRC_URI', False) or ''
     if args.mode == 'auto':
