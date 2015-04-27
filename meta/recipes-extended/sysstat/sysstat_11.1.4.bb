@@ -1,0 +1,6 @@
+require sysstat.inc
+
+LIC_FILES_CHKSUM = "file://COPYING;md5=8ca43cbc842c2336e835926c2166c28b"
+
+SRC_URI[md5sum] = "3795dd5443efd6bc5d682d597423aa9f"
+SRC_URI[sha256sum] = "b5d160bacc57a2e89873dee2ea3382b8811f0036520bf2e5789443797c4be46f"
