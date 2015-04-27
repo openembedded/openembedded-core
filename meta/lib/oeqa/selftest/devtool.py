@@ -150,10 +150,10 @@ class DevtoolTests(oeSelfTest):
         result = runCmd('tar xfv libftdi1-1.1.tar.bz2', cwd=tempdir)
         srcdir = os.path.join(tempdir, 'libftdi1-1.1')
         self.assertTrue(os.path.isfile(os.path.join(srcdir, 'CMakeLists.txt')), 'Unable to find CMakeLists.txt in source directory')
-        # Test devtool add
+        # Test devtool add (and use -V so we test that too)
         self.track_for_cleanup(workspacedir)
         self.add_command_to_tearDown('bitbake-layers remove-layer */workspace')
-        result = runCmd('devtool add libftdi %s' % srcdir)
+        result = runCmd('devtool add libftdi %s -V 1.1' % srcdir)
         self.assertTrue(os.path.exists(os.path.join(workspacedir, 'conf', 'layer.conf')), 'Workspace directory not created')
         # Test devtool status
         result = runCmd('devtool status')
