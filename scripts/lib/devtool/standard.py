@@ -434,12 +434,6 @@ def update_recipe(args, config, basepath, workspace):
         logger.error("no recipe named %s in your workspace" % args.recipename)
         return -1
 
-    # Get initial revision from bbappend
-    appends = glob.glob(os.path.join(config.workspace_path, 'appends', '%s_*.bbappend' % args.recipename))
-    if not appends:
-        logger.error('unable to find workspace bbappend for recipe %s' % args.recipename)
-        return -1
-
     tinfoil = setup_tinfoil()
     import bb
     from oe.patch import GitApplyTree
@@ -449,6 +443,12 @@ def update_recipe(args, config, basepath, workspace):
     if not rd:
         return -1
     recipefile = rd.getVar('FILE', True)
+
+    # Get initial revision from bbappend
+    append = os.path.join(config.workspace_path, 'appends', '%s.bbappend' % os.path.splitext(os.path.basename(recipefile))[0])
+    if not os.path.exists(append):
+        logger.error('unable to find workspace bbappend for recipe %s' % args.recipename)
+        return -1
 
     orig_src_uri = rd.getVar('SRC_URI', False) or ''
     if args.mode == 'auto':
@@ -520,7 +520,7 @@ def update_recipe(args, config, basepath, workspace):
             initial_rev = args.initial_rev
         else:
             initial_rev = None
-            with open(appends[0], 'r') as f:
+            with open(append, 'r') as f:
                 for line in f:
                     if line.startswith('# initial_rev:'):
                         initial_rev = line.split(':')[-1].strip()
