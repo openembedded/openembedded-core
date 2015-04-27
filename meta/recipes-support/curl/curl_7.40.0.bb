@@ -7,6 +7,10 @@ LIC_FILES_CHKSUM = "file://COPYING;beginline=7;md5=3a34942f4ae3fbf1a303160714e66
 
 SRC_URI = "http://curl.haxx.se/download/curl-${PV}.tar.bz2 \
            file://pkgconfig_fix.patch \
+           file://CVE-2015-3143.patch \
+           file://CVE-2015-3144.patch \
+           file://CVE-2015-3145.patch \
+           file://CVE-2015-3148.patch \
           "
 
 # curl likes to set -g0 in CFLAGS, so we stop it
