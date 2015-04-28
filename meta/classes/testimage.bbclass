@@ -68,6 +68,8 @@ do_testsdk[lockfiles] += "${TESTIMAGELOCK}"
 
 def get_tests_list(d, type="runtime"):
     testsuites = d.getVar("TEST_SUITES", True).split()
+    if type == "sdk":
+        testsuites = (d.getVar("TEST_SUITES_SDK", True) or "auto").split()
     bbpath = d.getVar("BBPATH", True).split(':')
 
     # This relies on lib/ under each directory in BBPATH being added to sys.path
@@ -261,7 +263,7 @@ def testsdk_main(d):
     # they won't be skipped even if they aren't suitable.
     # testslist is what we'll actually pass to the unittest loader
     testslist = get_tests_list(d, "sdk")
-    testsrequired = [t for t in d.getVar("TEST_SUITES", True).split() if t != "auto"]
+    testsrequired = [t for t in (d.getVar("TEST_SUITES_SDK", True) or "auto").split() if t != "auto"]
 
     sdktestdir = d.expand("${WORKDIR}/testimage-sdk/")
     bb.utils.remove(sdktestdir, True)
