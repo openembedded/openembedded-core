@@ -26,10 +26,11 @@ diff --git a/Makefile.am b/Makefile.am
 index 0fb3f9f..4623963 100644
 --- a/Makefile.am
 +++ b/Makefile.am
-@@ -199,6 +199,7 @@ AM_CPPFLAGS = \
+@@ -199,7 +199,8 @@ AM_CPPFLAGS = \
  	-DKEXEC=\"$(KEXEC)\" \
  	-DLIBDIR=\"$(libdir)\" \
  	-DROOTLIBDIR=\"$(rootlibdir)\" \
+ 	-DROOTLIBEXECDIR=\"$(rootlibexecdir)\" \
 +	-DROOTHOMEDIR=\"$(roothomedir)\" \
  	-DTEST_DIR=\"$(abs_top_srcdir)/test\" \
  	-I $(top_srcdir)/src \
