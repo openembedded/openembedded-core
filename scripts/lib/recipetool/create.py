@@ -58,13 +58,13 @@ class RecipeHandler():
 
 
 
-def fetch_source(uri, destdir):
+def fetch_source(uri, destdir, srcrev):
     import bb.data
     bb.utils.mkdirhier(destdir)
     localdata = bb.data.createCopy(tinfoil.config_data)
     bb.data.update_data(localdata)
     localdata.setVar('BB_STRICT_CHECKSUM', '')
-    localdata.setVar('SRCREV', '${AUTOREV}')
+    localdata.setVar('SRCREV', srcrev)
     ret = (None, None)
     olddir = os.getcwd()
     try:
@@ -88,6 +88,9 @@ def fetch_source(uri, destdir):
 
 def supports_srcrev(uri):
     localdata = bb.data.createCopy(tinfoil.config_data)
+    # This is a bit sad, but if you don't have this set there can be some
+    # odd interactions with the urldata cache which lead to errors
+    localdata.setVar('SRCREV', '${AUTOREV}')
     bb.data.update_data(localdata)
     fetcher = bb.fetch2.Fetch([uri], localdata)
     urldata = fetcher.ud
@@ -108,13 +111,19 @@ def create_recipe(args):
     checksums = (None, None)
     tempsrc = ''
     srcsubdir = ''
+    srcrev = '${AUTOREV}'
     if '://' in args.source:
         # Fetch a URL
         srcuri = args.source
+        rev_re = re.compile(';rev=([^;]+)')
+        res = rev_re.search(srcuri)
+        if res:
+            srcrev = res.group(1)
+            srcuri = rev_re.sub('', srcuri)
         tempsrc = tempfile.mkdtemp(prefix='recipetool-')
         srctree = tempsrc
         logger.info('Fetching %s...' % srcuri)
-        checksums = fetch_source(args.source, srctree)
+        checksums = fetch_source(args.source, srctree, srcrev)
         dirlist = os.listdir(srctree)
         if 'git.indirectionsymlink' in dirlist:
             dirlist.remove('git.indirectionsymlink')
@@ -210,7 +219,7 @@ def create_recipe(args):
         lines_before.append('')
         lines_before.append('# Modify these as desired')
         lines_before.append('PV = "%s+git${SRCPV}"' % (realpv or '1.0'))
-        lines_before.append('SRCREV = "${AUTOREV}"')
+        lines_before.append('SRCREV = "%s"' % srcrev)
     lines_before.append('')
 
     if srcsubdir and pv:
