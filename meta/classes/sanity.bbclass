@@ -278,12 +278,12 @@ def check_connectivity(d):
         try:
             fetcher = bb.fetch2.Fetch(test_uris, data)
             fetcher.checkstatus()
-        except Exception:
+        except Exception as err:
             # Allow the message to be configured so that users can be
             # pointed to a support mechanism.
             msg = data.getVar('CONNECTIVITY_CHECK_MSG', True) or ""
             if len(msg) == 0:
-                msg = "Failed to fetch test data from the network. Please ensure your network is configured correctly.\n"
+                msg = "%s. Please ensure your network is configured correctly.\n" % err
             retval = msg
 
     return retval
