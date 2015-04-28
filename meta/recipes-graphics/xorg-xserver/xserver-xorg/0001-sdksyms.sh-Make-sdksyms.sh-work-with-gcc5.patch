@@ -1,50 +1,48 @@
-Upstream-Status: Pending
+Upstream-Status: Backport
+Signed-off-by: Ross Burton <ross.burton@intel.com>
 
-From 612eb45a2e7a0b35cc3790870e6d0cc42eb50c74 Mon Sep 17 00:00:00 2001
-From: Hans de Goede <hdegoede@redhat.com>
-Date: Wed, 11 Feb 2015 16:26:40 +0100
-Subject: [PATCH] sdksyms.sh: Make sdksyms.sh work with gcc5.
+From 21b896939c5bb242f3aacc37baf12379e43254b6 Mon Sep 17 00:00:00 2001
+From: Egbert Eich <eich@freedesktop.org>
+Date: Tue, 3 Mar 2015 16:27:05 +0100
+Subject: symbols: Fix sdksyms.sh to cope with gcc5
 
-gcc5's cpp inserts patterns like this:
+Gcc5 adds additional lines stating line numbers before and
+after __attribute__() which need to be skipped.
 
-extern
-      __attribute__((visibility("default")))
-                int WaitForSomething(int *
-    );
+Signed-off-by: Egbert Eich <eich@freedesktop.org>
+Tested-by: Daniel Stone <daniels@collabora.com>
+Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
 
-This patch make sdksyms.sh work with this. Note my awk skills are weak, so
-there likely is a better way to deal with this.
-
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
- hw/xfree86/sdksyms.sh | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
-
-Index: xorg-server-1.16.3/hw/xfree86/sdksyms.sh
-===================================================================
---- xorg-server-1.16.3.orig/hw/xfree86/sdksyms.sh
-+++ xorg-server-1.16.3/hw/xfree86/sdksyms.sh
-@@ -353,6 +353,23 @@ BEGIN {
+diff --git a/hw/xfree86/sdksyms.sh b/hw/xfree86/sdksyms.sh
+index 2305073..05ac410 100755
+--- a/hw/xfree86/sdksyms.sh
++++ b/hw/xfree86/sdksyms.sh
+@@ -350,13 +350,25 @@ BEGIN {
      if (sdk) {
  	n = 3;
  
-+	# detect the following gcc5 cpp pattern and skip it:
-+	# extern
-+	# # 320 "../../include/os.h" 3 4
-+	#     __attribute__((visibility("default")))
-+	# # 320 "../../include/os.h"
-+	# Note in this case the "extern " or "extern void " always has
-+	# a trailing space
-+	if ($0 ~ "^extern.* $") {
-+	    getline;
-+	    getline;
-+	    getline;
-+	    getline;
-+	    n = 1;
-+	    while ($n == " ")
-+		n++;
-+	}
++        # skip line numbers GCC 5 adds before __attribute__
++        while ($n == "" || $0 ~ /^# [0-9]+ "/) {
++           getline;
++           n = 1;
++        }
 +
  	# skip attribute, if any
  	while ($n ~ /^(__attribute__|__global)/ ||
  	    # skip modifiers, if any
+ 	    $n ~ /^\*?(unsigned|const|volatile|struct|_X_EXPORT)$/ ||
+ 	    # skip pointer
+-	    $n ~ /^[a-zA-Z0-9_]*\*$/)
++	    $n ~ /^[a-zA-Z0-9_]*\*$/) {
+ 	    n++;
++            # skip line numbers GCC 5 adds after __attribute__
++            while ($n == "" || $0 ~ /^# [0-9]+ "/) {
++               getline;
++               n = 1;
++            }
++        }
+ 
+ 	# type specifier may not be set, as in
+ 	#   extern _X_EXPORT unsigned name(...)
+-- 
+cgit v0.10.2
