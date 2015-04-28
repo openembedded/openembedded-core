@@ -1,0 +1,23 @@
+
+This patch allows tar to continue correctly when it does not detect
+a compressed format. This allows tar to then untar a non-compressed 
+tar file.
+
+See this thread for details: http://lists.busybox.net/pipermail/busybox/2014-January/080389.html
+
+Upstream-Status: Inappropriate [Upstream has different fix with additional functionality]
+Signed-off-by: Saul Wold <sgw@linux.intel.com>
+
+Index: busybox-1.22.1/archival/libarchive/open_transformer.c
+===================================================================
+--- busybox-1.22.1.orig/archival/libarchive/open_transformer.c
++++ busybox-1.22.1/archival/libarchive/open_transformer.c
+@@ -200,7 +200,7 @@ int FAST_FUNC open_zipped(const char *fn
+ 	 || (ENABLE_FEATURE_SEAMLESS_BZ2)
+ 	 || (ENABLE_FEATURE_SEAMLESS_XZ)
+ 	) {
+-		setup_unzip_on_fd(fd, /*fail_if_not_detected:*/ 1);
++		setup_unzip_on_fd(fd, /*fail_if_not_detected:*/ 0);
+ 	}
+ 
+ 	return fd;
