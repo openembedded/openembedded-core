@@ -114,7 +114,7 @@ autotools_preconfigure() {
 					echo "Running \"${MAKE} clean\" in ${S}"
 					${MAKE} clean
 				fi
-				find ${S} -name \*.la -delete
+				find ${S} -ignore_readdir_race -name \*.la -delete
 			fi
 		fi
 	fi
@@ -225,7 +225,7 @@ autotools_do_configure() {
 	# for a package whose autotools are old, on an x86_64 machine, which the old
 	# config.sub does not support.  Work around this by installing them manually
 	# regardless.
-	( for ac in `find ${S} -name configure.in -o -name configure.ac`; do
+	( for ac in `find ${S} -ignore_readdir_race -name configure.in -o -name configure.ac`; do
 		rm -f `dirname $ac`/configure
 		done )
 	if [ -e ${S}/configure.in -o -e ${S}/configure.ac ]; then
@@ -234,7 +234,7 @@ autotools_do_configure() {
 		ACLOCAL="aclocal --system-acdir=${ACLOCALDIR}/"
 		if [ x"${acpaths}" = xdefault ]; then
 			acpaths=
-			for i in `find ${S} -maxdepth 2 -name \*.m4|grep -v 'aclocal.m4'| \
+			for i in `find ${S} -ignore_readdir_race -maxdepth 2 -name \*.m4|grep -v 'aclocal.m4'| \
 				grep -v 'acinclude.m4' | grep -v 'aclocal-copy' | sed -e 's,\(.*/\).*$,\1,'|sort -u`; do
 				acpaths="$acpaths -I $i"
 			done
@@ -275,7 +275,7 @@ autotools_do_configure() {
 					fi
 				fi
 				for i in gettext.m4 iconv.m4 lib-ld.m4 lib-link.m4 lib-prefix.m4 nls.m4 po.m4 progtest.m4; do
-					for j in `find ${S} -name $i | grep -v aclocal-copy`; do
+					for j in `find ${S} -ignore_readdir_race -name $i | grep -v aclocal-copy`; do
 						rm $j
 					done
 				done
