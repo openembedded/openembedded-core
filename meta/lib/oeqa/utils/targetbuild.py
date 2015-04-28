@@ -26,6 +26,11 @@ class BuildProject():
     # Download self.archive to self.localarchive
     def _download_archive(self):
 
+        dl_dir = self.d.getVar("DL_DIR", True)
+        if dl_dir and os.path.exists(os.path.join(dl_dir, self.archive)):
+            bb.utils.copyfile(os.path.join(dl_dir, self.archive), self.localarchive)
+            return
+
         exportvars = ['HTTP_PROXY', 'http_proxy',
                       'HTTPS_PROXY', 'https_proxy',
                       'FTP_PROXY', 'ftp_proxy',
