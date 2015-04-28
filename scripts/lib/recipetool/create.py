@@ -187,9 +187,17 @@ def create_recipe(args):
         pn = recipefn
         pv = None
 
+    if args.version:
+        pv = args.version
+
+    if pv and pv not in 'git svn hg'.split():
+        realpv = pv
+    else:
+        realpv = None
+
     if srcuri:
-        if pv and pv not in 'git svn hg'.split():
-            srcuri = srcuri.replace(pv, '${PV}')
+        if realpv:
+            srcuri = srcuri.replace(realpv, '${PV}')
     else:
         lines_before.append('# No information for SRC_URI yet (only an external source tree was specified)')
     lines_before.append('SRC_URI = "%s"' % srcuri)
@@ -201,7 +209,7 @@ def create_recipe(args):
     if srcuri and supports_srcrev(srcuri):
         lines_before.append('')
         lines_before.append('# Modify these as desired')
-        lines_before.append('PV = "1.0+git${SRCPV}"')
+        lines_before.append('PV = "%s+git${SRCPV}"' % (realpv or '1.0'))
         lines_before.append('SRCREV = "${AUTOREV}"')
     lines_before.append('')
 
@@ -418,5 +426,6 @@ def register_command(subparsers):
     parser_create.add_argument('-o', '--outfile', help='Specify filename for recipe to create', required=True)
     parser_create.add_argument('-m', '--machine', help='Make recipe machine-specific as opposed to architecture-specific', action='store_true')
     parser_create.add_argument('-x', '--extract-to', metavar='EXTRACTPATH', help='Assuming source is a URL, fetch it and extract it to the directory specified as %(metavar)s')
+    parser_create.add_argument('-V', '--version', help='Version to use within recipe (PV)')
     parser_create.set_defaults(func=create_recipe)
 

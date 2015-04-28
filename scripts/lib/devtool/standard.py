@@ -65,11 +65,21 @@ def add(args, config, basepath, workspace):
 
     recipedir = os.path.join(config.workspace_path, 'recipes', args.recipename)
     bb.utils.mkdirhier(recipedir)
+    rfv = None
     if args.version:
         if '_' in args.version or ' ' in args.version:
             logger.error('Invalid version string "%s"' % args.version)
             return -1
-        bp = "%s_%s" % (args.recipename, args.version)
+        rfv = args.version
+    if args.fetch:
+        if args.fetch.startswith('git://'):
+            rfv = 'git'
+        elif args.fetch.startswith('svn://'):
+            rfv = 'svn'
+        elif args.fetch.startswith('hg://'):
+            rfv = 'hg'
+    if rfv:
+        bp = "%s_%s" % (args.recipename, rfv)
     else:
         bp = args.recipename
     recipefile = os.path.join(recipedir, "%s.bb" % bp)
@@ -83,6 +93,8 @@ def add(args, config, basepath, workspace):
         extracmdopts = '-x %s' % srctree
     else:
         source = srctree
+    if args.version:
+        extracmdopts += ' -V %s' % args.version
     stdout, stderr = exec_build_env_command(config.init_path, basepath, 'recipetool --color=%s create -o %s "%s" %s' % (color, recipefile, source, extracmdopts))
     logger.info('Recipe %s has been automatically created; further editing may be required to make it fully functional' % recipefile)
 
