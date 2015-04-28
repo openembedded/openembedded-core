@@ -35,6 +35,24 @@ class DevtoolTests(oeSelfTest):
         self.assertNotIn(tempdir, result.output)
         self.assertIn(workspacedir, result.output)
 
+    def _test_recipe_contents(self, recipefile, checkvars, checkinherits):
+        with open(recipefile, 'r') as f:
+            for line in f:
+                if '=' in line:
+                    splitline = line.split('=', 1)
+                    var = splitline[0].rstrip()
+                    value = splitline[1].strip().strip('"')
+                    if var in checkvars:
+                        needvalue = checkvars.pop(var)
+                        self.assertEqual(value, needvalue, 'values for %s do not match' % var)
+                if line.startswith('inherit '):
+                    inherits = line.split()[1:]
+
+        self.assertEqual(checkvars, {}, 'Some variables not found: %s' % checkvars)
+
+        for inherit in checkinherits:
+            self.assertIn(inherit, inherits, 'Missing inherit of %s' % inherit)
+
     def test_recipetool_create(self):
         # Try adding a recipe
         tempdir = tempfile.mkdtemp(prefix='devtoolqa')
@@ -51,19 +69,7 @@ class DevtoolTests(oeSelfTest):
         checkvars['SRC_URI'] = 'https://fedorahosted.org/releases/l/o/logrotate/logrotate-${PV}.tar.gz'
         checkvars['SRC_URI[md5sum]'] = '99e08503ef24c3e2e3ff74cc5f3be213'
         checkvars['SRC_URI[sha256sum]'] = 'f6ba691f40e30e640efa2752c1f9499a3f9738257660994de70a45fe00d12b64'
-        with open(recipefile, 'r') as f:
-            for line in f:
-                if '=' in line:
-                    splitline = line.split('=', 1)
-                    var = splitline[0].rstrip()
-                    value = splitline[1].strip().strip('"')
-                    if var in checkvars:
-                        needvalue = checkvars.pop(var)
-                        self.assertEqual(value, needvalue)
-                if line.startswith('inherit '):
-                    inherits = line.split()[1:]
-
-        self.assertEqual(checkvars, {}, 'Some variables not found')
+        self._test_recipe_contents(recipefile, checkvars, [])
 
     def test_recipetool_create_git(self):
         # Ensure we have the right data in shlibs/pkgdata
@@ -84,23 +90,8 @@ class DevtoolTests(oeSelfTest):
         checkvars['PV'] = '1.0+git${SRCPV}'
         checkvars['SRC_URI'] = srcuri
         checkvars['DEPENDS'] = 'libpng pango libx11 libxext jpeg'
-        inherits = []
-        with open(recipefile, 'r') as f:
-            for line in f:
-                if '=' in line:
-                    splitline = line.split('=', 1)
-                    var = splitline[0].rstrip()
-                    value = splitline[1].strip().strip('"')
-                    if var in checkvars:
-                        needvalue = checkvars.pop(var)
-                        self.assertEqual(value, needvalue)
-                if line.startswith('inherit '):
-                    inherits = line.split()[1:]
-
-        self.assertEqual(checkvars, {}, 'Some variables not found')
-
-        self.assertIn('autotools', inherits, 'Missing inherit of autotools')
-        self.assertIn('pkgconfig', inherits, 'Missing inherit of pkgconfig')
+        inherits = ['autotools', 'pkgconfig']
+        self._test_recipe_contents(recipefile, checkvars, inherits)
 
     def test_devtool_add(self):
         # Check preconditions
@@ -175,6 +166,103 @@ class DevtoolTests(oeSelfTest):
         matches = glob.glob(stampprefix + '*')
         self.assertFalse(matches, 'Stamp files exist for recipe libftdi that should have been cleaned')
         self.assertFalse(os.path.isfile(os.path.join(staging_libdir, 'libftdi1.so.2.1.0')), 'libftdi binary still found in STAGING_LIBDIR after cleaning')
+
+    def test_devtool_add_fetch(self):
+        # Check preconditions
+        workspacedir = os.path.join(self.builddir, 'workspace')
+        self.assertTrue(not os.path.exists(workspacedir), 'This test cannot be run with a workspace directory under the build directory')
+        # Fetch source
+        tempdir = tempfile.mkdtemp(prefix='devtoolqa')
+        self.track_for_cleanup(tempdir)
+        testver = '0.23'
+        url = 'https://pypi.python.org/packages/source/J/MarkupSafe/MarkupSafe-%s.tar.gz' % testver
+        testrecipe = 'python-markupsafe'
+        srcdir = os.path.join(tempdir, testrecipe)
+        # Test devtool add
+        self.track_for_cleanup(workspacedir)
+        self.add_command_to_tearDown('bitbake -c cleansstate %s' % testrecipe)
+        self.add_command_to_tearDown('bitbake-layers remove-layer */workspace')
+        result = runCmd('devtool add %s %s -f %s' % (testrecipe, srcdir, url))
+        self.assertTrue(os.path.exists(os.path.join(workspacedir, 'conf', 'layer.conf')), 'Workspace directory not created')
+        self.assertTrue(os.path.isfile(os.path.join(srcdir, 'setup.py')), 'Unable to find setup.py in source directory')
+        # Test devtool status
+        result = runCmd('devtool status')
+        self.assertIn(testrecipe, result.output)
+        self.assertIn(srcdir, result.output)
+        # Check recipe
+        recipefile = get_bb_var('FILE', testrecipe)
+        self.assertIn('%s.bb' % testrecipe, recipefile, 'Recipe file incorrectly named')
+        checkvars = {}
+        checkvars['S'] = '${WORKDIR}/MarkupSafe-%s' % testver
+        checkvars['SRC_URI'] = url
+        self._test_recipe_contents(recipefile, checkvars, [])
+        # Try with version specified
+        result = runCmd('devtool reset -n %s' % testrecipe)
+        shutil.rmtree(srcdir)
+        result = runCmd('devtool add %s %s -f %s -V %s' % (testrecipe, srcdir, url, testver))
+        self.assertTrue(os.path.isfile(os.path.join(srcdir, 'setup.py')), 'Unable to find setup.py in source directory')
+        # Test devtool status
+        result = runCmd('devtool status')
+        self.assertIn(testrecipe, result.output)
+        self.assertIn(srcdir, result.output)
+        # Check recipe
+        recipefile = get_bb_var('FILE', testrecipe)
+        self.assertIn('%s_%s.bb' % (testrecipe, testver), recipefile, 'Recipe file incorrectly named')
+        checkvars = {}
+        checkvars['S'] = '${WORKDIR}/MarkupSafe-${PV}'
+        checkvars['SRC_URI'] = url.replace(testver, '${PV}')
+        self._test_recipe_contents(recipefile, checkvars, [])
+
+    def test_devtool_add_fetch_git(self):
+        # Check preconditions
+        workspacedir = os.path.join(self.builddir, 'workspace')
+        self.assertTrue(not os.path.exists(workspacedir), 'This test cannot be run with a workspace directory under the build directory')
+        # Fetch source
+        tempdir = tempfile.mkdtemp(prefix='devtoolqa')
+        self.track_for_cleanup(tempdir)
+        url = 'git://git.yoctoproject.org/libmatchbox'
+        checkrev = '462f0652055d89c648ddd54fd7b03f175c2c6973'
+        testrecipe = 'libmatchbox2'
+        srcdir = os.path.join(tempdir, testrecipe)
+        # Test devtool add
+        self.track_for_cleanup(workspacedir)
+        self.add_command_to_tearDown('bitbake -c cleansstate %s' % testrecipe)
+        self.add_command_to_tearDown('bitbake-layers remove-layer */workspace')
+        result = runCmd('devtool add %s %s -f %s' % (testrecipe, srcdir, url))
+        self.assertTrue(os.path.exists(os.path.join(workspacedir, 'conf', 'layer.conf')), 'Workspace directory not created')
+        self.assertTrue(os.path.isfile(os.path.join(srcdir, 'configure.ac')), 'Unable to find configure.ac in source directory')
+        # Test devtool status
+        result = runCmd('devtool status')
+        self.assertIn(testrecipe, result.output)
+        self.assertIn(srcdir, result.output)
+        # Check recipe
+        recipefile = get_bb_var('FILE', testrecipe)
+        self.assertIn('_git.bb', recipefile, 'Recipe file incorrectly named')
+        checkvars = {}
+        checkvars['S'] = '${WORKDIR}/git'
+        checkvars['PV'] = '1.0+git${SRCPV}'
+        checkvars['SRC_URI'] = url
+        checkvars['SRCREV'] = '${AUTOREV}'
+        self._test_recipe_contents(recipefile, checkvars, [])
+        # Try with revision and version specified
+        result = runCmd('devtool reset -n %s' % testrecipe)
+        shutil.rmtree(srcdir)
+        url_rev = '%s;rev=%s' % (url, checkrev)
+        result = runCmd('devtool add %s %s -f "%s" -V 1.5' % (testrecipe, srcdir, url_rev))
+        self.assertTrue(os.path.isfile(os.path.join(srcdir, 'configure.ac')), 'Unable to find configure.ac in source directory')
+        # Test devtool status
+        result = runCmd('devtool status')
+        self.assertIn(testrecipe, result.output)
+        self.assertIn(srcdir, result.output)
+        # Check recipe
+        recipefile = get_bb_var('FILE', testrecipe)
+        self.assertIn('_git.bb', recipefile, 'Recipe file incorrectly named')
+        checkvars = {}
+        checkvars['S'] = '${WORKDIR}/git'
+        checkvars['PV'] = '1.5+git${SRCPV}'
+        checkvars['SRC_URI'] = url
+        checkvars['SRCREV'] = checkrev
+        self._test_recipe_contents(recipefile, checkvars, [])
 
     def test_devtool_modify(self):
         # Check preconditions
