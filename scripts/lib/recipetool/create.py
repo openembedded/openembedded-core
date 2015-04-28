@@ -22,6 +22,7 @@ import glob
 import fnmatch
 import re
 import logging
+import scriptutils
 
 logger = logging.getLogger('recipetool')
 
@@ -238,6 +239,7 @@ def create_recipe(args):
     outlines.extend(lines_after)
 
     if args.extract_to:
+        scriptutils.git_convert_standalone_clone(srctree)
         shutil.move(srctree, args.extract_to)
         logger.info('Source extracted to %s' % args.extract_to)
 

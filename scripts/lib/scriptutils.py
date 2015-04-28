@@ -58,3 +58,14 @@ def load_plugins(logger, plugins, pluginpath):
             if hasattr(plugin, 'plugin_init'):
                 plugin.plugin_init(plugins)
                 plugins.append(plugin)
+
+def git_convert_standalone_clone(repodir):
+    """If specified directory is a git repository, ensure it's a standalone clone"""
+    import bb.process
+    if os.path.exists(os.path.join(repodir, '.git')):
+        alternatesfile = os.path.join(repodir, '.git', 'objects', 'info', 'alternates')
+        if os.path.exists(alternatesfile):
+            # This will have been cloned with -s, so we need to convert it so none
+            # of the contents is shared
+            bb.process.run('git repack -a', cwd=repodir)
+            os.remove(alternatesfile)

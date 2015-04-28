@@ -23,6 +23,7 @@ import glob
 import tempfile
 import logging
 import argparse
+import scriptutils
 from devtool import exec_build_env_command, setup_tinfoil
 
 logger = logging.getLogger('devtool')
@@ -236,12 +237,7 @@ def _extract_source(srctree, keep_temp, devbranch, d):
             # Handle if S is set to a subdirectory of the source
             srcsubdir = os.path.join(workdir, os.path.relpath(srcsubdir, workdir).split(os.sep)[0])
 
-        if os.path.exists(os.path.join(srcsubdir, '.git')):
-            alternatesfile = os.path.join(srcsubdir, '.git', 'objects', 'info', 'alternates')
-            if os.path.exists(alternatesfile):
-                # This will have been cloned with -s, so we need to convert it to a full clone
-                bb.process.run('git repack -a', cwd=srcsubdir)
-                os.remove(alternatesfile)
+        scriptutils.git_convert_standalone_clone(srcsubdir)
 
         patchdir = os.path.join(srcsubdir, 'patches')
         haspatches = False
