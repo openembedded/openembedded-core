@@ -46,6 +46,19 @@ def add(args, config, basepath, workspace):
         return -1
 
     srctree = os.path.abspath(args.srctree)
+    if os.path.exists(srctree):
+        if args.fetch:
+            if not os.path.isdir(srctree):
+                logger.error("Cannot fetch into source tree path %s as it exists and is not a directory" % srctree)
+                return 1
+            elif os.listdir(srctree):
+                logger.error("Cannot fetch into source tree path %s as it already exists and is non-empty" % srctree)
+                return 1
+    else:
+        if not args.fetch:
+            logger.error("Specified source tree %s could not be found" % srctree)
+            return 1
+
     appendpath = os.path.join(config.workspace_path, 'appends')
     if not os.path.exists(appendpath):
         os.makedirs(appendpath)
@@ -64,7 +77,13 @@ def add(args, config, basepath, workspace):
         color = 'always'
     else:
         color = args.color
-    stdout, stderr = exec_build_env_command(config.init_path, basepath, 'recipetool --color=%s create -o %s %s' % (color, recipefile, srctree))
+    extracmdopts = ''
+    if args.fetch:
+        source = args.fetch
+        extracmdopts = '-x %s' % srctree
+    else:
+        source = srctree
+    stdout, stderr = exec_build_env_command(config.init_path, basepath, 'recipetool --color=%s create -o %s "%s" %s' % (color, recipefile, source, extracmdopts))
     logger.info('Recipe %s has been automatically created; further editing may be required to make it fully functional' % recipefile)
 
     _add_md5(config, args.recipename, recipefile)
@@ -670,11 +689,11 @@ def build(args, config, basepath, workspace):
 
 def register_commands(subparsers, context):
     parser_add = subparsers.add_parser('add', help='Add a new recipe',
-                                       description='Adds a new recipe',
-                                       formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+                                       description='Adds a new recipe')
     parser_add.add_argument('recipename', help='Name for new recipe to add')
     parser_add.add_argument('srctree', help='Path to external source tree')
     parser_add.add_argument('--same-dir', '-s', help='Build in same directory as source', action="store_true")
+    parser_add.add_argument('--fetch', '-f', help='Fetch the specified URI and extract it to create the source tree', metavar='URI')
     parser_add.add_argument('--version', '-V', help='Version to use within recipe (PV)')
     parser_add.set_defaults(func=add)
 
