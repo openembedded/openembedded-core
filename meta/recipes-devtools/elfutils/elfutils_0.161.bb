@@ -16,6 +16,7 @@ SRC_URI += "\
         file://Fix_elf_cvt_gunhash.patch \
         file://fixheadercheck.patch \
         file://0001-elf_getarsym-Silence-Werror-maybe-uninitialized-fals.patch \
+        file://0001-libelf-Fix-dir-traversal-vuln-in-ar-extraction.patch \
 "
 
 # pick the patch from debian
