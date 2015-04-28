@@ -45,3 +45,5 @@ FILES_${PN}-dbg += "\
   ${libdir}/*/.debug \
   */udev/.debug \
   "
+
+SYSTEMD_SERVICE_${PN} = "bluetooth.service"
