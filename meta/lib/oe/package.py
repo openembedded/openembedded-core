@@ -34,13 +34,13 @@ def runstrip(arg):
     stripcmd = "'%s' %s '%s' -o '%s.tmp' && chown --reference='%s' '%s.tmp' && mv '%s.tmp' '%s'" % (strip, extraflags, file, file, file, file, file, file)
     bb.debug(1, "runstrip: %s" % stripcmd)
 
-    ret = subprocess.call(stripcmd, shell=True)
+    try:
+        output = subprocess.check_output(stripcmd, stderr=subprocess.STDOUT, shell=True)
+    except subprocess.CalledProcessError as e:
+        bb.error("runstrip: '%s' strip command failed with %s (%s)" % (stripcmd, e.returncode, e.output))
 
     if newmode:
         os.chmod(file, origmode)
-
-    if ret:
-        bb.error("runstrip: '%s' strip command failed" % stripcmd)
 
     return
 
