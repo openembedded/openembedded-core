@@ -287,12 +287,18 @@ def testsdk_main(d):
             self.sdkenv = sdkenv
             self.imagefeatures = d.getVar("IMAGE_FEATURES", True).split()
             self.distrofeatures = d.getVar("DISTRO_FEATURES", True).split()
-            manifest = os.path.join(d.getVar("SDK_MANIFEST", True))
+            manifest = d.getVar("SDK_TARGET_MANIFEST", True)
             try:
                 with open(manifest) as f:
                     self.pkgmanifest = f.read()
             except IOError as e:
                 bb.fatal("No package manifest file found. Did you build the sdk image?\n%s" % e)
+            hostmanifest = d.getVar("SDK_HOST_MANIFEST", True)
+            try:
+                with open(hostmanifest) as f:
+                    self.hostpkgmanifest = f.read()
+            except IOError as e:
+                bb.fatal("No host package manifest file found. Did you build the sdk image?\n%s" % e)
 
     # test context
     tc = TestContext()
