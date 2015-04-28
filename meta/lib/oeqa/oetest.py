@@ -129,6 +129,16 @@ class oeSDKTest(oeTest):
         self.sdktestdir = oeSDKTest.tc.sdktestdir
         super(oeSDKTest, self).__init__(methodName)
 
+    @classmethod
+    def hasHostPackage(self, pkg):
+
+        if re.search(pkg, oeTest.tc.hostpkgmanifest):
+            return True
+        return False
+
+    def _run(self, cmd):
+        return subprocess.check_output(cmd, shell=True)
+
 def getmodule(pos=2):
     # stack returns a list of tuples containg frame information
     # First element of the list the is current frame, caller is 1
