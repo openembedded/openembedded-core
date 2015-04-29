@@ -11,6 +11,7 @@ deltask do_package_qa
 deltask do_packagedata
 deltask do_rm_work
 
+PN = "gcc-source-${PV}"
 WORKDIR = "${TMPDIR}/work-shared/gcc-${PV}-${PR}"
 SSTATE_SWSPEC = "sstate:gcc::${PV}:${PR}::${SSTATE_VERSION}:"
 
