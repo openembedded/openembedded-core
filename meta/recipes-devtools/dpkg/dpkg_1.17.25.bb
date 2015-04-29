@@ -15,6 +15,6 @@ SRC_URI += "file://noman.patch \
             file://add_armeb_triplet_entry.patch \
            "
 
-SRC_URI[md5sum] = "765a96fd0180196613bbfa3c4aef0775"
-SRC_URI[sha256sum] = "3ed776627181cb9c1c9ba33f94a6319084be2e9ec9c23dd61ce784c4f602cf05"
+SRC_URI[md5sum] = "e48fcfdb2162e77d72c2a83432d537ca"
+SRC_URI[sha256sum] = "07019d38ae98fb107c79dbb3690cfadff877f153b8c4970e3a30d2e59aa66baa"
 
