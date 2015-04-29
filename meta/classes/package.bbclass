@@ -1041,14 +1041,11 @@ python populate_packages () {
     bb.utils.mkdirhier(outdir)
     os.chdir(dvar)
 
-    # Sanity check PACKAGES for duplicates and for LICENSE_EXCLUSION
+    # Sanity check PACKAGES for duplicates
     # Sanity should be moved to sanity.bbclass once we have the infrastucture
     package_list = []
 
     for pkg in packages.split():
-        if d.getVar('LICENSE_EXCLUSION-' + pkg, True):
-            msg = "%s has an incompatible license. Excluding from packaging." % pkg
-            package_qa_handle_error("incompatible-license", msg, d)
         if pkg in package_list:
             msg = "%s is listed in PACKAGES multiple times, this leads to packaging errors." % pkg
             package_qa_handle_error("packages-list", msg, d)
@@ -1081,9 +1078,6 @@ python populate_packages () {
             if file in seen:
                 continue
             seen.append(file)
-
-            if d.getVar('LICENSE_EXCLUSION-' + pkg, True):
-                continue
 
             def mkdir(src, dest, p):
                 src = os.path.join(src, p)
@@ -1124,6 +1118,16 @@ python populate_packages () {
 
     os.umask(oldumask)
     os.chdir(workdir)
+
+    # Handle LICENSE_EXCLUSION
+    package_list = []
+    for pkg in packages.split():
+        if d.getVar('LICENSE_EXCLUSION-' + pkg, True):
+            msg = "%s has an incompatible license. Excluding from packaging." % pkg
+            package_qa_handle_error("incompatible-license", msg, d)
+        else:
+            package_list.append(pkg)
+    d.setVar('PACKAGES', ' '.join(package_list))
 
     unshipped = []
     for root, dirs, files in cpath.walk(dvar):
