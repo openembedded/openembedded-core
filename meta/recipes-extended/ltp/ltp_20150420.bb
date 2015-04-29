@@ -4,7 +4,7 @@ HOMEPAGE = "http://ltp.sourceforge.net"
 SECTION = "console/utils"
 LICENSE = "GPLv2 & GPLv2+ & LGPLv2+ & LGPLv2.1+ & BSD-2-Clause"
 LIC_FILES_CHKSUM = "\
-    file://COPYING;md5=0636e73ff0215e8d672dc4c32c317bb3 \
+    file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
     file://testcases/kernel/controllers/freezer/COPYING;md5=0636e73ff0215e8d672dc4c32c317bb3 \
     file://testcases/kernel/controllers/freezer/run_freezer.sh;beginline=5;endline=17;md5=86a61d2c042d59836ffb353a21456498 \
     file://testcases/kernel/hotplug/memory_hotplug/COPYING;md5=e04a2e542b2b8629bf9cd2ba29b0fe41 \
@@ -20,7 +20,7 @@ LIC_FILES_CHKSUM = "\
 "
 
 DEPENDS = "attr libaio libcap acl openssl zip-native"
-SRCREV = "b6ab85d764339b025526bdaf0b5026a67b3a677a"
+SRCREV = "77d0b7fd0148ce657c5a25060667e978c07662a0"
 
 SRC_URI = "git://github.com/linux-test-project/ltp.git \
     file://0001-Rename-runtests_noltp.sh-script-so-have-unique-name.patch \
