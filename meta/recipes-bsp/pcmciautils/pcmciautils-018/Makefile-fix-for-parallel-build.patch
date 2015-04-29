@@ -18,11 +18,11 @@ Upstream-Status: Pending
 
 Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
 ---
- Makefile |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ Makefile |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
 diff --git a/Makefile b/Makefile
-index d45fdc3..d4ffd7e 100644
+index d45fdc3..963453a 100644
 --- a/Makefile
 +++ b/Makefile
 @@ -246,7 +246,9 @@ $(PCMCIA_SOCKET_STARTUP): $(LIBC) src/startup.o src/yacc_config.o src/lex_config
@@ -30,9 +30,9 @@ index d45fdc3..d4ffd7e 100644
  	$(QUIET) $(STRIPCMD) $@
  
 -yacc_config.o lex_config.o: %.o: %.c
-+lex_config.o: yacc_config.h
-+
-+yacc_config.o lex_config.o: %.o: %.c: %.h
++lex_config.o: lex_config.c yacc_config.h
++	$(CC) -c -MD -O -pipe $(CPPFLAGS) $<
++yacc_config.o: yacc_config.c
  	$(CC) -c -MD -O -pipe $(CPPFLAGS) $<
  
  debugtools: ccdv $(CBDUMP) $(CISDUMP)
