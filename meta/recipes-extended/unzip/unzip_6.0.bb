@@ -8,7 +8,10 @@ PR = "r5"
 
 SRC_URI = "ftp://ftp.info-zip.org/pub/infozip/src/unzip60.tgz \
 	file://avoid-strip.patch \
-	file://define-ldflags.patch"
+	file://define-ldflags.patch \
+	file://06-unzip60-alt-iconv-utf8_CVE-2015-1315.patch \
+	file://unzip-6.0_overflow3.diff \
+"
 
 SRC_URI[md5sum] = "62b490407489521db863b523a7f86375"
 SRC_URI[sha256sum] = "036d96991646d0449ed0aa952e4fbe21b476ce994abc276e49d30e686708bd37"
