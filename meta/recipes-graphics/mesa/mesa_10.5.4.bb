@@ -1,14 +1,9 @@
 require ${BPN}.inc
 
-SRC_URI = "ftp://ftp.freedesktop.org/pub/mesa/${PV}/MesaLib-${PV}.tar.bz2 \
-           file://0001-PTHREAD_MUTEX_RECURSIVE_NP-is-specific-to-glibc.patch \
-	   file://0002-mesa-simplify-detection-of-fpclassify.patch \
-          "
+SRC_URI = "ftp://ftp.freedesktop.org/pub/mesa/${PV}/mesa-${PV}.tar.xz"
 
-SRC_URI[md5sum] = "62faf98ac79c5587f8e917e187419e6c"
-SRC_URI[sha256sum] = "f18a967e9c4d80e054b2fdff8c130ce6e6d1f8eecfc42c9f354f8628d8b4df1c"
-
-S = "${WORKDIR}/Mesa-${PV}"
+SRC_URI[md5sum] = "26644437b6447fb3dbae50714a019797"
+SRC_URI[sha256sum] = "b51e723f3a20d842c88a92d809435b229fc4744ca0dbec0317d9d4a3ac4c6803"
 
 #because we cannot rely on the fact that all apps will use pkgconfig,
 #make eglplatform.h independent of MESA_EGL_NO_X11_HEADER

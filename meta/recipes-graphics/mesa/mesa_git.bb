@@ -2,12 +2,16 @@ require ${BPN}.inc
 
 DEFAULT_PREFERENCE = "-1"
 
-SRCREV = "62eb27ac8bbd979796f50e253f6c786d7d791242"
-PV = "10.4.4+git${SRCPV}"
+SRCREV = "ea0d1f575c214c09ba3df12644a960e86e031766"
+PV = "10.5.4+git${SRCPV}"
 
-SRC_URI = "git://anongit.freedesktop.org/git/mesa/mesa;branch=10.4"
+SRC_URI = "git://anongit.freedesktop.org/git/mesa/mesa;branch=10.5"
 
 S = "${WORKDIR}/git"
+
+DEPENDS += "python-mako-native"
+
+inherit pythonnative
 
 #because we cannot rely on the fact that all apps will use pkgconfig,
 #make eglplatform.h independent of MESA_EGL_NO_X11_HEADER
