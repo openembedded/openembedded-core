@@ -9,12 +9,11 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504 \
                     file://README;endline=8;md5=c3803a3e8ca5ab5eb1e5912faa405351"
 
 SRC_URI = "${GNU_MIRROR}/libtasn1/libtasn1-${PV}.tar.gz \
-           file://libtasn1_fix_for_automake_1.12.patch \
            file://dont-depend-on-help2man.patch \
            "
 
-SRC_URI[md5sum] = "d3d2d9bce3b6668b9827a9df52635be1"
-SRC_URI[sha256sum] = "41d044f7644bdd1c4f8a5c15ac1885ca1fcbf32f5f6dd4760a19278b979857fe"
+SRC_URI[md5sum] = "81d272697545e82d39f6bd14854b68f0"
+SRC_URI[sha256sum] = "89b3b5dce119273431544ecb305081f3530911001bb12e5d76588907edb71bda"
 
 inherit autotools texinfo binconfig lib_package
 
