@@ -155,6 +155,8 @@ def get_test_layer():
     layers = get_bb_var("BBLAYERS").split()
     testlayer = None
     for l in layers:
+        if '~' in l:
+            l = os.path.expanduser(l)
         if "/meta-selftest" in l and os.path.isdir(l):
             testlayer = l
             break
