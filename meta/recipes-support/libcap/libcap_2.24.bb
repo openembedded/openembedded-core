@@ -32,7 +32,7 @@ PACKAGECONFIG_class-native ??= ""
 PACKAGECONFIG[attr] = "LIBATTR=yes,LIBATTR=no,attr"
 PACKAGECONFIG[pam] = "PAM_CAP=yes,PAM_CAP=no,libpam"
 
-EXTRA_OEMAKE += " \
+EXTRA_OEMAKE = " \
   INDENT=  \
   lib=${@os.path.basename('${libdir}')} \
   RAISE_SETFCAP=no \
