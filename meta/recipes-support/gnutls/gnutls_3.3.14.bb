@@ -3,5 +3,5 @@ require gnutls.inc
 SRC_URI += "file://correct_rpl_gettimeofday_signature.patch \
             file://configure.ac-fix-sed-command.patch \
            "
-SRC_URI[md5sum] = "a37b20b4352a5f542367ded904729c90"
-SRC_URI[sha256sum] = "67ab3e92c5d48f3323b897d7c1aa0bb2af6f3a84f5bd9931cda163a7ff32299b"
+SRC_URI[md5sum] = "7f4465f8c564cf9cb8f5cb38b909f7ca"
+SRC_URI[sha256sum] = "0dfa0030faad8909c1e904105198232d6bc0123cae8cf4933b2bac85ee7cec52"
