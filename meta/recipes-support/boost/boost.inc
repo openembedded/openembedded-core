@@ -181,4 +181,4 @@ do_install() {
 
 }
 
-BBCLASSEXTEND = "native"
+BBCLASSEXTEND = "native nativesdk"

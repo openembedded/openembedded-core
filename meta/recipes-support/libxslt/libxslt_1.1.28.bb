@@ -43,4 +43,4 @@ do_install_append_class-native () {
 FILES_${PN} += "${libdir}/libxslt-plugins"
 FILES_${PN}-dev += "${libdir}/xsltConf.sh"
 
-BBCLASSEXTEND = "native"
+BBCLASSEXTEND = "native nativesdk"
