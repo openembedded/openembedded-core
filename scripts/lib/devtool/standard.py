@@ -177,6 +177,16 @@ def _parse_recipe(config, tinfoil, pn, appends):
     return oe.recipeutils.parse_recipe(recipefile, append_files,
                                        tinfoil.config_data)
 
+
+def _ls_tree(directory):
+    """Recursive listing of files in a directory"""
+    ret = []
+    for root, dirs, files in os.walk(directory):
+        ret.extend([os.path.relpath(os.path.join(root, fname), directory) for
+                    fname in files])
+    return ret
+
+
 def extract(args, config, basepath, workspace):
     import bb
 
@@ -196,6 +206,7 @@ def extract(args, config, basepath, workspace):
 
 def _extract_source(srctree, keep_temp, devbranch, d):
     import bb.event
+    import oe.recipeutils
 
     def eventfilter(name, handler, event, d):
         if name == 'base_eventhandler':
@@ -264,7 +275,21 @@ def _extract_source(srctree, keep_temp, devbranch, d):
         logger.info('Unpacking...')
         exec_task_func('do_unpack', False)
         srcsubdir = crd.getVar('S', True)
-        if srcsubdir != workdir and os.path.dirname(srcsubdir) != workdir:
+        if srcsubdir == workdir:
+            # Find non-patch sources that were "unpacked" to srctree directory
+            recipe_patches = [os.path.basename(patch) for patch in
+                              oe.recipeutils.get_recipe_patches(crd)]
+            src_files = [fname for fname in _ls_tree(workdir) if
+                         os.path.basename(fname) not in recipe_patches]
+            # Force separate S so that patch files can be left out from srctree
+            srcsubdir = tempfile.mkdtemp(dir=workdir)
+            crd.setVar('S', srcsubdir)
+            # Move source files to S
+            for path in src_files:
+                tgt_dir = os.path.join(srcsubdir, os.path.dirname(path))
+                bb.utils.mkdirhier(tgt_dir)
+                shutil.move(os.path.join(workdir, path), tgt_dir)
+        elif os.path.dirname(srcsubdir) != workdir:
             # Handle if S is set to a subdirectory of the source
             srcsubdir = os.path.join(workdir, os.path.relpath(srcsubdir, workdir).split(os.sep)[0])
 
