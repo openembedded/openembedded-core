@@ -14,8 +14,8 @@ LIC_FILES_CHKSUM = "file://docs/LICENSE.TXT;md5=c017ff17fc6f0794adf93db5559ccd56
 SECTION = "libs"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/freetype/freetype-${PV}.tar.bz2"
-SRC_URI[md5sum] = "438585445a2f1f71c77590155fd96616"
-SRC_URI[sha256sum] = "3b4e2c666b33b32ad29ff0fe5c6538e757d3c73368e5dfa88bd59b4bc95cbabb"
+SRC_URI[md5sum] = "2a7a314927011d5030903179cf183be0"
+SRC_URI[sha256sum] = "387bcc4b780b12484aa2ec9f7db1a55d8286eb5639f45fbc0fbba7a4e5a1afb9"
 
 BINCONFIG = "${bindir}/freetype-config"
 
