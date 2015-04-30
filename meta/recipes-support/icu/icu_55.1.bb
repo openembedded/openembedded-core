@@ -1,6 +1,6 @@
 require icu.inc
 
-LIC_FILES_CHKSUM = "file://../license.html;md5=9890f5ff4ed056a0c2fa84848b9b6066"
+LIC_FILES_CHKSUM = "file://../license.html;md5=64eff4aadff4d104d6d437c4fde0e6d7"
 
 def icu_download_version(d):
     pvsplit = d.getVar('PV', True).split('.')
@@ -16,6 +16,6 @@ SRC_URI = "${BASE_SRC_URI} \
 SRC_URI_append_class-target = "\
            file://0001-Disable-LDFLAGSICUDT-for-Linux.patch \
           "
-SRC_URI[md5sum] = "e844caed8f2ca24c088505b0d6271bc0"
-SRC_URI[sha256sum] = "d42bc9a8ca6a91c55eb0925c279f49e5b508d51ef26ac9850d9be55de5bb8ab3"
+SRC_URI[md5sum] = "e2d523df79d6cb7855c2fbe284f4db29"
+SRC_URI[sha256sum] = "e16b22cbefdd354bec114541f7849a12f8fc2015320ca5282ee4fd787571457b"
 
