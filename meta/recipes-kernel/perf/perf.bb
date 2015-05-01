@@ -150,6 +150,9 @@ do_configure_prepend () {
     if [ -e "${S}/tools/perf/config/feature-checks/Makefile" ]; then
         sed -i 's,CC := $(CROSS_COMPILE)gcc -MD,CC += -MD,' ${S}/tools/perf/config/feature-checks/Makefile
     fi
+    if [ -e "${S}/tools/build/Makefile.feature" ]; then
+        sed -i 's,CFLAGS=,CC="\$(CC)" CFLAGS=,' ${S}/tools/build/Makefile.feature
+    fi
 
     # 3.17-rc1+ has a include issue for arm/powerpc. Temporarily sed in the appropriate include
     if [ -e "${S}/tools/perf/arch/$ARCH/util/skip-callchain-idx.c" ]; then
