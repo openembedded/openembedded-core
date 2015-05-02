@@ -18,6 +18,11 @@ python multilib_virtclass_handler () {
         if val:
             e.data.setVar(name + "_MULTILIB_ORIGINAL", val)
 
+    overrides = e.data.getVar("OVERRIDES", False)
+    pn = e.data.getVar("PN", False)
+    overrides = overrides.replace("pn-${PN}", "pn-${PN}:pn-" + pn)
+    e.data.setVar("OVERRIDES", overrides)
+
     if bb.data.inherits_class('image', e.data):
         e.data.setVar("MLPREFIX", variant + "-")
         e.data.setVar("PN", variant + "-" + e.data.getVar("PN", False))
