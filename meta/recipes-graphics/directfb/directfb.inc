@@ -13,7 +13,8 @@ DEPENDS = "jpeg libpng freetype zlib tslib sysfsutils"
 
 SRC_URI = "http://www.directfb.org/downloads/Core/DirectFB-1.7/DirectFB-${PV}.tar.gz \
            file://configurefix.patch \
-           file://fusion.patch"
+           file://fusion.patch \
+           file://bashism.patch"
 
 S = "${WORKDIR}/DirectFB-${PV}"
 
