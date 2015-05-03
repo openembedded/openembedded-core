@@ -42,7 +42,7 @@ EXTRA_OECONF = "\
 
 #Once -fno-omit-frame-pointer option of gcc is added into TARGET_CLFAGS as default
 #this will cause directfb build failure on x86 arch, so filter out it.
-TARGET_CFLAGS_x86 := "${@oe_filter_out('-fno-omit-frame-pointer', '${TARGET_CFLAGS}', d)}"
+TARGET_CFLAGS_remove_x86 = "-fno-omit-frame-pointer"
 
 #PACKAGES_DYNAMIC += "^directfb-inputdrivers-.*"
 #
