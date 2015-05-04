@@ -24,7 +24,7 @@ index 3d04f4c..6032f67 100644
  		if test -f "$use_libxml2/bin/xml2-config" ; then
  			libxml2_libs=`$use_libxml2/bin/xml2-config --libs`
  			libxml2_cflags=`$use_libxml2/bin/xml2-config --cflags`
-+		elif test -f "$use_libxml2/lib/pkgconfig/libxml-2.0.pc" ; then
++		elif test -f "$use_libxml2/$base_libdir/pkgconfig/libxml-2.0.pc" ; then
 +			libxml2_libs=`pkg-config libxml-2.0 --libs`
 +			libxml2_cflags=`pkg-config libxml-2.0 --cflags`
  		fi

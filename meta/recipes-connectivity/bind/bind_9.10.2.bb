@@ -3,13 +3,12 @@ HOMEPAGE = "http://www.isc.org/sw/bind/"
 SECTION = "console/network"
 
 LICENSE = "ISC & BSD"
-LIC_FILES_CHKSUM = "file://COPYRIGHT;md5=a3df5f651469919a0e6cb42f84fb6ff1"
+LIC_FILES_CHKSUM = "file://COPYRIGHT;md5=0a95f52a0ab6c5f52dedc9a45e7abb3f"
 
 DEPENDS = "openssl libcap"
 
 SRC_URI = "ftp://ftp.isc.org/isc/bind9/${PV}/${BPN}-${PV}.tar.gz \
            file://conf.patch \
-           file://cross-build-fix.patch \
            file://make-etc-initd-bind-stop-work.patch \
            file://mips1-not-support-opcode.diff \
            file://dont-test-on-host.patch \
@@ -17,14 +16,12 @@ SRC_URI = "ftp://ftp.isc.org/isc/bind9/${PV}/${BPN}-${PV}.tar.gz \
            file://named.service \
            file://bind9 \
            file://init.d-add-support-for-read-only-rootfs.patch \
-           file://bind9_9_5-CVE-2014-8500.patch \
            file://bind-add-crosscripts-search-path-for-xml2-config.patch \
-           file://bind-subdirs-run-serially.patch \
            file://bind-confgen-build-unix.o-once.patch \
 	   "
 
-SRC_URI[md5sum] = "e676c65cad5234617ee22f48e328c24e"
-SRC_URI[sha256sum] = "d4b64c1dde442145a316679acff2df4008aa117ae52dfa3a6bc69efecc7840d1"
+SRC_URI[md5sum] = "dca7a9967947bffa98547fca6130fc04"
+SRC_URI[sha256sum] = "6f9bb7908aa45c1edfa391e356fc0afc1ded175386cdefb6cf9e1289f7457a98"
 
 # --enable-exportlib is necessary for building dhcp
 ENABLE_IPV6 = "--enable-ipv6=${@bb.utils.contains('DISTRO_FEATURES', 'ipv6', 'yes', 'no', d)}"
@@ -33,7 +30,6 @@ EXTRA_OECONF = " ${ENABLE_IPV6} --with-randomdev=/dev/random --disable-threads \
                  --with-gssapi=no --with-ecdsa=yes \
                  --sysconfdir=${sysconfdir}/bind \
                  --with-openssl=${STAGING_LIBDIR}/.. \
-                 --enable-exportlib --with-export-includedir=${includedir} --with-export-libdir=${libdir} \
                "
 inherit autotools-brokensep update-rc.d systemd useradd pkgconfig
 
