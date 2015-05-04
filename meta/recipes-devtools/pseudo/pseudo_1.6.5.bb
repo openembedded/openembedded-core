@@ -6,8 +6,8 @@ SRC_URI = " \
     file://fallback-group \
 "
 
-SRC_URI[md5sum] = "2fb800c90d643bfce55e1ce5ca67f3b3"
-SRC_URI[sha256sum] = "25a7528f9191f74cceccc08a90c00086f2b3a9f6b900ea419a4f092de9a06775"
+SRC_URI[md5sum] = "a5545ff365e243193c81981df98e870b"
+SRC_URI[sha256sum] = "f5a0af976c958915503f516dd02097ab6a64c98a3c0cb4ceb0ce8b1ef8e38b3c"
 
 PSEUDO_EXTRA_OPTS ?= "--enable-force-async --without-passwd-fallback"
 
