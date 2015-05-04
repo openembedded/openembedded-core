@@ -1,0 +1,46 @@
+When automake's dependency tracking is enabled a mirror of the source tree is
+created in the build directory as it writes the dependency information.
+
+However, if dependency tracking is disabled on an out-of-tree build this mirror
+isn't created and it's possible that the .service files can't be written as the
+directories they go into haven't been created yet (racing against the compiles,
+which do create directories).
+
+Upstream-Status: Pending
+Signed-off-by: Ross Burton <ross.burton@intel.com>
+
+---
+ Makefile.am | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/Makefile.am b/Makefile.am
+index 507736d..bc3c695 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -410,9 +410,11 @@ MAINTAINERCLEANFILES = Makefile.in \
+
+
+ src/builtin.h: src/genbuiltin $(builtin_sources)
++	$(AM_V_AT)$(MKDIR_P) $(dir $@)
+ 	$(AM_V_GEN)$(srcdir)/src/genbuiltin $(builtin_modules) > $@
+
+ vpn/builtin.h: src/genbuiltin $(builtin_vpn_sources)
++	$(AM_V_AT)$(MKDIR_P) $(dir $@)
+ 	$(AM_V_GEN)$(srcdir)/src/genbuiltin $(builtin_vpn_modules) > $@
+
+ src/connman.conf: src/connman-dbus.conf src/connman-polkit.conf
+@@ -449,9 +451,11 @@ do_subst = $(AM_V_GEN)$(SED) \
+ 		-e 's,[@]sysconfdir[@],$(sysconfdir),g'
+
+ %.service: %.service.in Makefile
++	$(AM_V_AT)$(MKDIR_P) $(dir $@)
+ 	$(do_subst) < $< > $@
+
+ scripts/connman: scripts/connman.in Makefile
++	$(AM_V_at)$(MKDIR_P) scripts
+ 	$(do_subst) < $< > $@
+
+ include/connman/version.h: include/version.h
+--
+2.1.4
+
