@@ -42,7 +42,7 @@ inherit native
 
 RPROVIDES += "python3-distutils-native python3-compression-native python3-textutils-native python3-core-native"
 
-EXTRA_OECONF_append = " --bindir=${bindir}/${PN}"
+EXTRA_OECONF_append = " --bindir=${bindir}/${PN} --without-ensurepip"
 
 EXTRA_OEMAKE = '\
   BUILD_SYS="" \
