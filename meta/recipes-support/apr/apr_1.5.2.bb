@@ -17,8 +17,8 @@ SRC_URI = "${APACHE_MIRROR}/apr/${BPN}-${PV}.tar.bz2 \
            file://upgrade-and-fix-1.5.1.patch \
 "
 
-SRC_URI[md5sum] = "5486180ec5a23efb5cae6d4292b300ab"
-SRC_URI[sha256sum] = "e94abe431d4da48425fcccdb27b469bd0f8151488f82e5630a56f26590e198ac"
+SRC_URI[md5sum] = "4e9769f3349fe11fc0a5e1b224c236aa"
+SRC_URI[sha256sum] = "7d03ed29c22a7152be45b8e50431063736df9e1daa1ddf93f6a547ba7a28f67a"
 
 inherit autotools-brokensep lib_package binconfig multilib_header ptest
 

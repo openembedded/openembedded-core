@@ -16,7 +16,7 @@ Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
  1 file changed, 2 insertions(+), 8 deletions(-)
 
 diff --git a/Makefile.in b/Makefile.in
-index 6f99733..5fe028f 100644
+index a2a5194..5fe028f 100644
 --- a/Makefile.in
 +++ b/Makefile.in
 @@ -46,7 +46,6 @@ LT_VERSION = @LT_VERSION@
@@ -31,11 +31,11 @@ index 6f99733..5fe028f 100644
  etags:
  	etags `find . -name '*.[ch]'`
  
--make_tools_dir:
--	$(APR_MKDIR) tools
--
 -OBJECTS_gen_test_char = tools/gen_test_char.lo $(LOCAL_LIBS)
--tools/gen_test_char.lo: make_tools_dir
+-tools/gen_test_char.lo: tools/gen_test_char.c
+-	$(APR_MKDIR) tools
+-	$(LT_COMPILE)
+-
 -tools/gen_test_char@EXEEXT@: $(OBJECTS_gen_test_char)
 -	$(LINK_PROG) $(OBJECTS_gen_test_char) $(ALL_LIBS)
 +tools/gen_test_char@EXEEXT@: tools/gen_test_char.c
@@ -43,6 +43,3 @@ index 6f99733..5fe028f 100644
  
  include/private/apr_escape_test_char.h: tools/gen_test_char@EXEEXT@
  	$(APR_MKDIR) include/private
--- 
-1.8.1.2
-
