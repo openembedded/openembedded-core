@@ -52,7 +52,6 @@ svn://.*/.*     http://downloads.yoctoproject.org/mirror/sources/ \n \
 git://.*/.*     http://downloads.yoctoproject.org/mirror/sources/ \n \
 hg://.*/.*      http://downloads.yoctoproject.org/mirror/sources/ \n \
 bzr://.*/.*     http://downloads.yoctoproject.org/mirror/sources/ \n \
-svk://.*/.*     http://downloads.yoctoproject.org/mirror/sources/ \n \
 p4://.*/.*      http://downloads.yoctoproject.org/mirror/sources/ \n \
 osc://.*/.*     http://downloads.yoctoproject.org/mirror/sources/ \n \
 https?$://.*/.* http://downloads.yoctoproject.org/mirror/sources/ \n \
@@ -62,7 +61,6 @@ svn://.*/.*     http://sources.openembedded.org/ \n \
 git://.*/.*     http://sources.openembedded.org/ \n \
 hg://.*/.*      http://sources.openembedded.org/ \n \
 bzr://.*/.*     http://sources.openembedded.org/ \n \
-svk://.*/.*     http://sources.openembedded.org/ \n \
 p4://.*/.*      http://sources.openembedded.org/ \n \
 osc://.*/.*     http://sources.openembedded.org/ \n \
 https?$://.*/.* http://sources.openembedded.org/ \n \

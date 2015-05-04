@@ -772,7 +772,7 @@ def check_sanity_everybuild(status, d):
     import re
     mirror_vars = ['MIRRORS', 'PREMIRRORS', 'SSTATE_MIRRORS']
     protocols = ['http', 'ftp', 'file', 'https', \
-                 'git', 'gitsm', 'hg', 'osc', 'p4', 'svk', 'svn', \
+                 'git', 'gitsm', 'hg', 'osc', 'p4', 'svn', \
                  'bzr', 'cvs']
     for mirror_var in mirror_vars:
         mirrors = (d.getVar(mirror_var, True) or '').replace('\\n', '\n').split('\n')
