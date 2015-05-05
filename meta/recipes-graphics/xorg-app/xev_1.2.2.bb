@@ -14,5 +14,5 @@ DEPENDS += "libxrandr xproto"
 
 SRC_URI += "file://diet-x11.patch"
 
-SRC_URI[md5sum] = "5b0a0b6f589441d546da21739fa75634"
-SRC_URI[sha256sum] = "11f17fab097f17d9efc51ea9d0e3140bea3904eb3c486afa7c8c3eedab496243"
+SRC_URI[md5sum] = "249bdde90f01c0d861af52dc8fec379e"
+SRC_URI[sha256sum] = "d94ae62a6c1af56c2961d71f5782076ac4116f0fa4e401420ac7e0db33dc314f"
