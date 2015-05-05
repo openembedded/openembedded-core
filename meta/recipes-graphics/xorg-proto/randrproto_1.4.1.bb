@@ -15,5 +15,5 @@ PE = "1"
 
 BBCLASSEXTEND = "native nativesdk"
 
-SRC_URI[md5sum] = "ce4d0b05675968e4c83e003cc809660d"
-SRC_URI[sha256sum] = "85c42e8c66a55318ddaf2ce5727beacb25cb1f8555229f778cd1da86478209cf"
+SRC_URI[md5sum] = "51ff4d45dbe8e1098740d384971805ee"
+SRC_URI[sha256sum] = "543dcb2ebb0622d8a506dcef6470c6dd066f3e3f866552a5060b91ab6129e1dc"
