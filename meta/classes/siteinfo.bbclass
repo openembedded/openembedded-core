@@ -31,6 +31,7 @@ def siteinfo_data(d):
         "i686": "endian-little bit-32 ix86-common",
         "ia64": "endian-little bit-64",
         "microblaze": "endian-big bit-32 microblaze-common",
+        "microblazeeb": "endian-big bit-32 microblaze-common",
         "microblazeel": "endian-little bit-32 microblaze-common",
         "mips": "endian-big bit-32 mips-common",
         "mips64": "endian-big bit-64 mips-common",
