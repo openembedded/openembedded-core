@@ -1,10 +1,10 @@
-
-SRC_URI = "http://serf.googlecode.com/svn/src_releases/serf-${PV}.tar.bz2 \
+SUMMARY = "High-Performance Asynchronous HTTP Client Library"
+SRC_URI = "${DEBIAN_MIRROR}/main/s/${BPN}/${BPN}_${PV}.orig.tar.gz \
            file://norpath.patch \
            file://env.patch"
 
-SRC_URI[md5sum] = "2e4efe57ff28cb3202a112e90f0c2889"
-SRC_URI[sha256sum] = "e0500be065dbbce490449837bb2ab624e46d64fc0b090474d9acaa87c82b2590"
+SRC_URI[md5sum] = "713beaf05d7f3329de121e218e2fcb93"
+SRC_URI[sha256sum] = "77134cd5010664ca023585bce50978bd4005906ed280ff889f591f86df7c59e4"
 
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=86d3f3a95c324c9479bd8986968f4327"
