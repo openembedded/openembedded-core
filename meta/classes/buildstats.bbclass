@@ -181,20 +181,14 @@ python run_buildstats () {
         # at first pass make the buildstats heriarchy and then
         # set the buildname
         ########################################################################
-        try:
-            bb.utils.mkdirhier(e.data.getVar('BUILDSTATS_BASE', True))
-        except:
-            pass
+        bb.utils.mkdirhier(e.data.getVar('BUILDSTATS_BASE', True))
         set_bn(e)
         bn = get_bn(e)
         set_device(e)
         device = get_device(e)
 
         bsdir = os.path.join(e.data.getVar('BUILDSTATS_BASE', True), bn)
-        try:
-            bb.utils.mkdirhier(bsdir)
-        except:
-            pass
+        bb.utils.mkdirhier(bsdir)
         if device != "NoLogicalDevice":
             set_diskdata("__diskdata_build", device, e.data)
         set_timedata("__timedata_build", e.data)
@@ -242,10 +236,7 @@ python run_buildstats () {
         if device != "NoLogicalDevice":
             set_diskdata("__diskdata_task", device, e.data)
         set_timedata("__timedata_task", e.data, e.time)
-        try:
-            bb.utils.mkdirhier(taskdir)
-        except:
-            pass
+        bb.utils.mkdirhier(taskdir)
         # write into the task event file the name and start time
         file = open(os.path.join(taskdir, e.task), "a")
         file.write("Event: %s \n" % bb.event.getName(e))
