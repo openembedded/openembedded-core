@@ -21,6 +21,7 @@ SRC_URI += "file://acinclude.m4 \
             file://misc-mke2fs.c-return-error-when-failed-to-populate-fs.patch \
             file://cache_inode.patch \
             file://CVE-2015-0247.patch \
+            file://0001-libext2fs-fix-potential-buffer-overflow-in-closefs.patch \
 "
 
 SRC_URI[md5sum] = "3f8e41e63b432ba114b33f58674563f7"
