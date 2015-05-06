@@ -67,6 +67,7 @@ SRC_URI = "\
            file://0033-gcc-4.8-won-t-build-with-disable-dependency-tracking.patch \
            file://0034-Don-t-search-host-directory-during-relink-if-inst_pr.patch \
            file://0035-Dont-link-the-plugins-with-libgomp-explicitly.patch \
+           file://0036-Use-SYSTEMLIBS_DIR-replacement-instead-of-hardcoding.patch \
           "
 
 #S = "${TMPDIR}/work-shared/gcc-${PV}-${PR}/gcc-${SNAP}"
