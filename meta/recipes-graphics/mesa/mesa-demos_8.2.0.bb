@@ -25,8 +25,8 @@ SRC_URI[sha256sum] = "e4bfecb5816ddd4b7b37c1bc876b63f1f7f06fda5879221a9774d0952f
 
 inherit autotools pkgconfig
 
-PACKAGECONFIG ?= "drm osmesa freetype2 gbm egl gles1 gles2 glu \
-                  ${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'x11 glew', '', d)}"
+PACKAGECONFIG ?= "drm osmesa freetype2 gbm egl gles1 gles2 \
+                  ${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'x11 glew glu', '', d)}"
 
 # The Wayland code doesn't work with Wayland 1.0, so disable it for now
 #${@bb.utils.contains('DISTRO_FEATURES', 'wayland', 'wayland', '', d)}"
