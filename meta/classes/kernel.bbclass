@@ -234,7 +234,7 @@ kernel_do_install() {
 }
 do_install[prefuncs] += "package_get_auto_pr"
 
-addtask shared_workdir after do_compile before do_install
+addtask shared_workdir after do_compile before do_compile_kernelmodules
 
 emit_depmod_pkgdata() {
 	# Stash data for depmod
