@@ -10,7 +10,7 @@ INC_PR = "r15"
 
 BINCONFIG = "${bindir}/ncurses-config"
 
-inherit autotools binconfig-disabled multilib_header
+inherit autotools binconfig-disabled multilib_header pkgconfig
 
 # Upstream has useful patches at times at ftp://invisible-island.net/ncurses/
 SRC_URI = "ftp://invisible-island.net/${BPN}/current/${BP}-${REVISION}.tgz"
