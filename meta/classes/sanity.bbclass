@@ -536,6 +536,12 @@ def sanity_handle_abichanges(status, d):
                 sstate_clean_manifest(f, d)
             with open(abifile, "w") as f:
                 f.write(current_abi)
+        elif abi == "10" and current_abi == "11":
+            bb.note("Converting staging layout from version 10 to layout version 11")
+            # Files in xf86-video-modesetting moved to xserver-xorg and bitbake can't currently handle that:
+            subprocess.call(d.expand("rm ${TMPDIR}/sysroots/*/usr/lib/xorg/modules/drivers/modesetting_drv.so ${TMPDIR}/sysroots/*/pkgdata/runtime/xf86-video-modesetting* ${TMPDIR}/sysroots/*/pkgdata/runtime-reverse/xf86-video-modesetting* ${TMPDIR}/sysroots/*/pkgdata/shlibs2/xf86-video-modesetting*"), shell=True)
+            with open(abifile, "w") as f:
+                f.write(current_abi)
         elif (abi != current_abi):
             # Code to convert from one ABI to another could go here if possible.
             status.addresult("Error, TMPDIR has changed its layout version number (%s to %s) and you need to either rebuild, revert or adjust it at your own risk.\n" % (abi, current_abi))

@@ -2,7 +2,7 @@ SUMMARY = "The X.Org X server"
 HOMEPAGE = "http://www.x.org"
 SECTION = "x11/base"
 LICENSE = "MIT-X"
-LIC_FILES_CHKSUM = "file://COPYING;md5=15b5bf9327341c81089137aec4830bfd"
+LIC_FILES_CHKSUM = "file://COPYING;md5=5df87950af51ac2c5822094553ea1880"
 
 # xf86-*-* packages depend on an X server built with the xfree86 DDX
 # so we have a virtual to represent that:
@@ -63,7 +63,11 @@ PACKAGES =+ "${PN}-security-policy \
              ${PN}-module-exa \
              ${PN}-module-xaa \
              ${PN}-module-libxf1bpp \
-             ${PN}-module-libxf4bpp"
+             ${PN}-module-libxf4bpp \
+             xf86-video-modesetting"
+
+SUMMARY_xf86-video-modesetting = "X.Org X server -- modesetting display driver"
+INSANE_SKIP_xf86-video-modesetting = "xorg-driver-abi"
 
 RRECOMMENDS_${PN} += "${PN}-security-policy xkeyboard-config rgb xserver-xf86-config xkbcomp"
 RDEPENDS_${PN}-xvfb += "xkeyboard-config"
@@ -99,6 +103,7 @@ FILES_${PN}-module-exa = "${libdir}/xorg/modules/libexa.so"
 FILES_${PN}-module-xaa = "${libdir}/xorg/modules/libxaa.so"
 FILES_${PN}-module-libxf1bpp = "${libdir}/xorg/modules/libxf1bpp.so"
 FILES_${PN}-module-libxf4bpp = "${libdir}/xorg/modules/libxf4bpp.so"
+FILES_xf86-video-modesetting = "${libdir}/xorg/modules/drivers/modesetting_drv.so"
 
 EXTRA_OECONF += "--with-fop=no \
                  --with-pic \
