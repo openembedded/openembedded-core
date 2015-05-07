@@ -33,8 +33,8 @@ EXTRA_OECONF = " ${ENABLE_IPV6} --with-randomdev=/dev/random --disable-threads \
                "
 inherit autotools-brokensep update-rc.d systemd useradd pkgconfig
 
-PACKAGECONFIG ?= "libxml2"
-PACKAGECONFIG[libxml2] = "--with-libxml2,--without-libxml2,libxml2"
+PACKAGECONFIG ?= ""
+PACKAGECONFIG[httpstats] = "--with-libxml2,--without-libxml2,libxml2"
 
 USERADD_PACKAGES = "${PN}"
 USERADD_PARAM_${PN} = "--system --home /var/cache/bind --no-create-home \
