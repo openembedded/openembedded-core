@@ -7,7 +7,7 @@ the driver is still useful."
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=6ddc7ca860dc5fd014e7f160ea699295"
 
-SRC_URI[md5sum] = "91fd6b677d62027cd3001debb587a6a6"
-SRC_URI[sha256sum] = "3361e1a65d9b84c464752fd612bdf6087622c6dd204121715366a170e5c3ccd7"
+SRC_URI[md5sum] = "7d7dfd4cdc42aa8b6e923510fa00ad2b"
+SRC_URI[sha256sum] = "edc87b20a55259126b5239b5c1ef913419eab7ded0ed12ae9ae989460d7351ab"
 
 DEPENDS += "libpciaccess"
