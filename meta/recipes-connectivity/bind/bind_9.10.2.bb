@@ -16,9 +16,9 @@ SRC_URI = "ftp://ftp.isc.org/isc/bind9/${PV}/${BPN}-${PV}.tar.gz \
            file://named.service \
            file://bind9 \
            file://init.d-add-support-for-read-only-rootfs.patch \
-           file://bind-add-crosscripts-search-path-for-xml2-config.patch \
            file://bind-confgen-build-unix.o-once.patch \
-	   "
+           file://0001-build-use-pkg-config-to-find-libxml2.patch \
+           "
 
 SRC_URI[md5sum] = "dca7a9967947bffa98547fca6130fc04"
 SRC_URI[sha256sum] = "6f9bb7908aa45c1edfa391e356fc0afc1ded175386cdefb6cf9e1289f7457a98"
@@ -34,8 +34,7 @@ EXTRA_OECONF = " ${ENABLE_IPV6} --with-randomdev=/dev/random --disable-threads \
 inherit autotools-brokensep update-rc.d systemd useradd pkgconfig
 
 PACKAGECONFIG ?= "libxml2"
-
-PACKAGECONFIG[libxml2] = "--with-libxml2=${STAGING_LIBDIR}/..,--with-libxml2=no,libxml2"
+PACKAGECONFIG[libxml2] = "--with-libxml2,--without-libxml2,libxml2"
 
 USERADD_PACKAGES = "${PN}"
 USERADD_PARAM_${PN} = "--system --home /var/cache/bind --no-create-home \
