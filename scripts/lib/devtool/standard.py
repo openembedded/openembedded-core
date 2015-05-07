@@ -124,7 +124,7 @@ def _check_compatible_recipe(pn, d):
         logger.error("The perf recipe does not actually check out source and thus cannot be supported by this tool")
         return False
 
-    if pn in ['gcc-source', 'kernel-devsrc', 'package-index']:
+    if pn in ['kernel-devsrc', 'package-index'] or pn.startswith('gcc-source'):
         logger.error("The %s recipe is not supported by this tool" % pn)
         return False
 
