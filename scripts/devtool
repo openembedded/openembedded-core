@@ -2,7 +2,7 @@
 
 # OpenEmbedded Development tool
 #
-# Copyright (C) 2014 Intel Corporation
+# Copyright (C) 2014-2015 Intel Corporation
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License version 2 as
@@ -99,6 +99,8 @@ def read_workspace():
         else:
             logger.info('Creating workspace layer in %s' % config.workspace_path)
             _create_workspace(config.workspace_path, config, basepath)
+    if not context.fixed_setup:
+        _enable_workspace_layer(config.workspace_path, config, basepath)
 
     logger.debug('Reading workspace in %s' % config.workspace_path)
     externalsrc_re = re.compile(r'^EXTERNALSRC(_pn-[^ =]+)? =.*$')
@@ -116,9 +118,11 @@ def create_workspace(args, config, basepath, workspace):
         workspacedir = os.path.abspath(args.layerpath)
     else:
         workspacedir = os.path.abspath(os.path.join(basepath, 'workspace'))
-    _create_workspace(workspacedir, config, basepath, args.create_only)
+    _create_workspace(workspacedir, config, basepath)
+    if not args.create_only:
+        _enable_workspace_layer(workspacedir, config, basepath)
 
-def _create_workspace(workspacedir, config, basepath, create_only=False):
+def _create_workspace(workspacedir, config, basepath):
     import bb
 
     confdir = os.path.join(workspacedir, 'conf')
@@ -146,17 +150,21 @@ def _create_workspace(workspacedir, config, basepath, create_only=False):
             f.write('\nIf you no longer need to use devtool you can remove the path to this\n')
             f.write('workspace layer from your conf/bblayers.conf file (and then delete the\n')
             f.write('layer, if you wish).\n')
-    if not create_only:
-        # Add the workspace layer to bblayers.conf
-        bblayers_conf = os.path.join(basepath, 'conf', 'bblayers.conf')
-        if not os.path.exists(bblayers_conf):
-            logger.error('Unable to find bblayers.conf')
-            return -1
-        bb.utils.edit_bblayers_conf(bblayers_conf, workspacedir, config.workspace_path)
-        if config.workspace_path != workspacedir:
-            # Update our config to point to the new location
-            config.workspace_path = workspacedir
-            config.write()
+
+def _enable_workspace_layer(workspacedir, config, basepath):
+    """Ensure the workspace layer is in bblayers.conf"""
+    import bb
+    bblayers_conf = os.path.join(basepath, 'conf', 'bblayers.conf')
+    if not os.path.exists(bblayers_conf):
+        logger.error('Unable to find bblayers.conf')
+        return -1
+    _, added = bb.utils.edit_bblayers_conf(bblayers_conf, workspacedir, config.workspace_path)
+    if added:
+        logger.info('Enabling workspace layer in bblayers.conf')
+    if config.workspace_path != workspacedir:
+        # Update our config to point to the new location
+        config.workspace_path = workspacedir
+        config.write()
 
 
 def main():
