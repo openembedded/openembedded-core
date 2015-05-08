@@ -10,9 +10,10 @@ DEPENDS = "glib-2.0 libxml2 bison-native flex-native"
 inherit autotools pkgconfig gettext
 
 PACKAGECONFIG[debug] = "--enable-debug,--disable-debug"
+PACKAGECONFIG[check] = "--enable-check,--disable-check"
 
 EXTRA_OECONF = "--disable-docbook --disable-gtk-doc \
-                --disable-dependency-tracking --disable-check \
+                --disable-dependency-tracking \
                 --disable-examples --disable-tests \
                 --disable-valgrind \
                 "
