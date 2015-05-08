@@ -731,6 +731,10 @@ def apply_patchlist(conf, repos):
                     if line:
                         patchlist.append(line)
 
+        ldir = conf.repos[name]['local_repo_dir']
+        branch = conf.repos[name].get('branch', "master")
+        branchrev = runcmd("git rev-parse %s" % branch, ldir).strip()
+
         if patchlist:
             logger.info("Applying patches from %s..." % name)
             linecount = len(patchlist)
@@ -758,11 +762,28 @@ def apply_patchlist(conf, repos):
                             sys.exit(0)
                 prevrev = lastrev
                 i += 1
+            # Once all patches are applied, we should update
+            # last_revision to the branch head instead of the last
+            # applied patch. The two are not necessarily the same when
+            # the last commit is a merge commit or when the patches at
+            # the branch head were intentionally excluded.
+            #
+            # If we do not do that for a merge commit, the next
+            # combo-layer run will only exclude patches reachable from
+            # one of the merged branches and try to re-apply patches
+            # from other branches even though they were already
+            # copied.
+            #
+            # If patches were intentionally excluded, the next run will
+            # present them again instead of skipping over them. This
+            # may or may not be intended, so the code here is conservative
+            # and only addresses the "head is merge commit" case.
+            if lastrev != branchrev and \
+               len(runcmd("git show --pretty=format:%%P --no-patch %s" % branch, ldir).split()) > 1:
+                lastrev = branchrev
         else:
             logger.info("No patches to apply from %s" % name)
-            ldir = conf.repos[name]['local_repo_dir']
-            branch = conf.repos[name].get('branch', "master")
-            lastrev = runcmd("git rev-parse %s" % branch, ldir).strip()
+            lastrev = branchrev
 
         if lastrev != repo['last_revision']:
             conf.update(name, "last_revision", lastrev)
