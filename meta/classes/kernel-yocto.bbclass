@@ -97,14 +97,15 @@ do_kernel_metadata() {
 	if [ -n "${KBUILD_DEFCONFIG}" ]; then
 		if [ -f "${S}/arch/${ARCH}/configs/${KBUILD_DEFCONFIG}" ]; then
 			if [ -f "${WORKDIR}/defconfig" ]; then
-				# If the two defconfigs are the same, leave the existing one in place
+				# If the two defconfig's are different, warn that we didn't overwrite the
+				# one already placed in WORKDIR by the fetcher.
 				cmp "${WORKDIR}/defconfig" "${S}/arch/${ARCH}/configs/${KBUILD_DEFCONFIG}"
 				if [ $? -ne 0 ]; then
-					bbnote "defconfig detected in WORKDIR. ${KBUILD_DEFCONFIG} skipped"
-				else
-					cp -f ${S}/arch/${ARCH}/configs/${KBUILD_DEFCONFIG} ${WORKDIR}/defconfig
-					sccs="${WORKDIR}/defconfig"
+					bbwarn "defconfig detected in WORKDIR. ${KBUILD_DEFCONFIG} skipped"
 				fi
+			else
+				cp -f ${S}/arch/${ARCH}/configs/${KBUILD_DEFCONFIG} ${WORKDIR}/defconfig
+				sccs="${WORKDIR}/defconfig"
 			fi
 		else
 			bbfatal "A KBUILD_DECONFIG '${KBUILD_DEFCONFIG}' was specified, but not present in the source tree"
