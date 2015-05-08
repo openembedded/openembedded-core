@@ -44,8 +44,8 @@ license_operator = re.compile('([' + license_operator_chars + '])')
 license_pattern = re.compile('[a-zA-Z0-9.+_\-]+$')
 
 class LicenseVisitor(ast.NodeVisitor):
-    """Syntax tree visitor which can accept OpenEmbedded license strings"""
-    def visit_string(self, licensestr):
+    """Get elements based on OpenEmbedded license strings"""
+    def get_elements(self, licensestr):
         new_elements = []
         elements = filter(lambda x: x.strip(), license_operator.split(licensestr))
         for pos, element in enumerate(elements):
@@ -57,7 +57,16 @@ class LicenseVisitor(ast.NodeVisitor):
                 raise InvalidLicense(element)
             new_elements.append(element)
 
-        self.visit(ast.parse(' '.join(new_elements)))
+        return new_elements
+
+    """Syntax tree visitor which can accept elements previously generated with
+    OpenEmbedded license string"""
+    def visit_elements(self, elements):
+        self.visit(ast.parse(' '.join(elements)))
+
+    """Syntax tree visitor which can accept OpenEmbedded license strings"""
+    def visit_string(self, licensestr):
+        self.visit_elements(self.get_elements(licensestr))
 
 class FlattenVisitor(LicenseVisitor):
     """Flatten a license tree (parsed from a string) by selecting one of each
