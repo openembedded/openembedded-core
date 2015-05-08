@@ -29,6 +29,10 @@ python license_create_manifest() {
     import re
     import oe.packagedata
 
+    bad_licenses = (d.getVar("INCOMPATIBLE_LICENSE", True) or "").split()
+    bad_licenses = map(lambda l: canonical_license(d, l), bad_licenses)
+    bad_licenses = expand_wildcard_licenses(d, bad_licenses)
+
     build_images_from_feeds = d.getVar('BUILD_IMAGES_FROM_FEEDS', True)
     if build_images_from_feeds == "1":
         return 0
@@ -52,6 +56,18 @@ python license_create_manifest() {
                         d.getVar('IMAGE_NAME', True), 'license.manifest')
     with open(license_manifest, "w") as license_file:
         for pkg in sorted(pkg_dic):
+            if bad_licenses:
+                try:
+                    (pkg_dic[pkg]["LICENSE"], pkg_dic[pkg]["LICENSES"]) = \
+                        oe.license.manifest_licenses(pkg_dic[pkg]["LICENSE"],
+                        bad_licenses, canonical_license, d)
+                except oe.license.LicenseError as exc:
+                    bb.fatal('%s: %s' % (d.getVar('P', True), exc))
+            else:
+                pkg_dic[pkg]["LICENSES"] = re.sub('[|&()*]', '', pkg_dic[pkg]["LICENSE"])
+                pkg_dic[pkg]["LICENSES"] = re.sub('  *', ' ', pkg_dic[pkg]["LICENSES"])
+                pkg_dic[pkg]["LICENSES"] = pkg_dic[pkg]["LICENSES"].split()
+
             license_file.write("PACKAGE NAME: %s\n" % pkg)
             license_file.write("PACKAGE VERSION: %s\n" % pkg_dic[pkg]["PV"])
             license_file.write("RECIPE NAME: %s\n" % pkg_dic[pkg]["PN"])
@@ -63,9 +79,7 @@ python license_create_manifest() {
             if pkg_dic[pkg]["PKGSIZE_%s" % pkg] == "0":
                 continue
 
-            licenses = re.sub('[|&()*]', '', pkg_dic[pkg]["LICENSE"])
-            licenses = re.sub('  *', ' ', licenses)
-            for lic in licenses.split():
+            for lic in pkg_dic[pkg]["LICENSES"]:
                 lic_file = os.path.join(d.getVar('LICENSE_DIRECTORY', True),
                                         pkg_dic[pkg]["PN"], "generic_%s" % 
                                         re.sub('\+', '', lic))
@@ -101,11 +115,20 @@ python license_create_manifest() {
                     pkg_rootfs_license = os.path.join(pkg_rootfs_license_dir, lic)
 
                     if re.match("^generic_.*$", lic):
+                        generic_lic = re.search("^generic_(.*)$", lic).group(1)
+                        if oe.license.license_ok(canonical_license(d,
+                            generic_lic), bad_licenses) == False:
+                            continue
+
                         if not os.path.exists(rootfs_license):
                             os.link(pkg_license, rootfs_license)
 
                         os.symlink(os.path.join('..', lic), pkg_rootfs_license)
                     else:
+                        if oe.license.license_ok(canonical_license(d,
+                            lic), bad_licenses) == False:
+                            continue
+
                         os.link(pkg_license, pkg_rootfs_license)
 }
 
