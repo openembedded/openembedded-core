@@ -28,6 +28,7 @@ python write_package_manifest() {
 python license_create_manifest() {
     import re
     import oe.packagedata
+    from oe.rootfs import image_list_installed_packages
 
     bad_licenses = (d.getVar("INCOMPATIBLE_LICENSE", True) or "").split()
     bad_licenses = map(lambda l: canonical_license(d, l), bad_licenses)
@@ -38,19 +39,15 @@ python license_create_manifest() {
         return 0
 
     pkg_dic = {}
-    package_manifest = os.path.join(d.getVar('LICENSE_DIRECTORY', True),
-                        d.getVar('IMAGE_NAME', True), 'package.manifest')
-    with open(package_manifest, "r") as package_file:
-        pkg_list = package_file.read().split()
-        for pkg in pkg_list:
-            pkg_info = os.path.join(d.getVar('PKGDATA_DIR', True),
-                                    'runtime-reverse', pkg)
-            pkg_name = os.path.basename(os.readlink(pkg_info))
+    for pkg in image_list_installed_packages(d).split("\n"):
+        pkg_info = os.path.join(d.getVar('PKGDATA_DIR', True),
+                                'runtime-reverse', pkg)
+        pkg_name = os.path.basename(os.readlink(pkg_info))
 
-            pkg_dic[pkg_name] = oe.packagedata.read_pkgdatafile(pkg_info)
-            if not "LICENSE" in pkg_dic[pkg_name].keys():
-                pkg_lic_name = "LICENSE_" + pkg_name
-                pkg_dic[pkg_name]["LICENSE"] = pkg_dic[pkg_name][pkg_lic_name]
+        pkg_dic[pkg_name] = oe.packagedata.read_pkgdatafile(pkg_info)
+        if not "LICENSE" in pkg_dic[pkg_name].keys():
+            pkg_lic_name = "LICENSE_" + pkg_name
+            pkg_dic[pkg_name]["LICENSE"] = pkg_dic[pkg_name][pkg_lic_name]
 
     license_manifest = os.path.join(d.getVar('LICENSE_DIRECTORY', True),
                         d.getVar('IMAGE_NAME', True), 'license.manifest')
