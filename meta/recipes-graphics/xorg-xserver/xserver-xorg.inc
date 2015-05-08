@@ -101,7 +101,6 @@ FILES_${PN}-module-libxf4bpp = "${libdir}/xorg/modules/libxf4bpp.so"
 EXTRA_OECONF += "--with-fop=no \
                  --with-pic \
                  --disable-static \
-                 --disable-xinerama \
                  --disable-record \
                  --disable-dmx \
                  --disable-xnest \
@@ -128,6 +127,7 @@ PACKAGECONFIG[unwind] = "--enable-libunwind,--disable-libunwind,libunwind"
 PACKAGECONFIG[xshmfence] = "--enable-xshmfence,--disable-xshmfence,libxshmfence"
 PACKAGECONFIG[xmlto] = "--with-xmlto, --without-xmlto, xmlto-native docbook-xml-dtd4-native docbook-xsl-stylesheets-native"
 PACKAGECONFIG[systemd-logind] = "--enable-systemd-logind=yes,--enable-systemd-logind=no,dbus,"
+PACKAGECONFIG[xinerama] = "--enable-xinerama,--disable-xinerama,xineramaproto"
 
 do_install_append () {
 	# Its assumed base-files creates this for us
