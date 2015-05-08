@@ -231,6 +231,7 @@ class Wic_PartData(Mic_PartData):
         image_rootfs = rootfs_dir
         rootfs = "%s/rootfs_%s.%s" % (cr_workdir, self.label ,self.fstype)
 
+        os.remove(rootfs)
         du_cmd = "du -ks %s" % image_rootfs
         out = exec_cmd(du_cmd)
         actual_rootfs_size = int(out.split()[0])
@@ -282,6 +283,7 @@ class Wic_PartData(Mic_PartData):
         image_rootfs = rootfs_dir
         rootfs = "%s/rootfs_%s.%s" % (cr_workdir, self.label, self.fstype)
 
+        os.remove(rootfs)
         du_cmd = "du -ks %s" % image_rootfs
         out = exec_cmd(du_cmd)
         actual_rootfs_size = int(out.split()[0])
@@ -326,6 +328,7 @@ class Wic_PartData(Mic_PartData):
         image_rootfs = rootfs_dir
         rootfs = "%s/rootfs_%s.%s" % (cr_workdir, self.label, self.fstype)
 
+        os.remove(rootfs)
         du_cmd = "du -bks %s" % image_rootfs
         out = exec_cmd(du_cmd)
         blocks = int(out.split()[0])
@@ -378,6 +381,7 @@ class Wic_PartData(Mic_PartData):
         image_rootfs = rootfs_dir
         rootfs = "%s/rootfs_%s.%s" % (cr_workdir, self.label ,self.fstype)
 
+        os.remove(rootfs)
         squashfs_cmd = "mksquashfs %s %s -noappend" % \
                        (image_rootfs, rootfs)
         exec_native_cmd(pseudo + squashfs_cmd, native_sysroot)
@@ -416,6 +420,7 @@ class Wic_PartData(Mic_PartData):
         """
         fs = "%s/fs_%s.%s" % (cr_workdir, self.label, self.fstype)
 
+        os.remove(fs)
         dd_cmd = "dd if=/dev/zero of=%s bs=1k seek=%d count=0" % \
             (fs, self.size)
         exec_cmd(dd_cmd)
@@ -443,6 +448,7 @@ class Wic_PartData(Mic_PartData):
         """
         fs = "%s/fs_%s.%s" % (cr_workdir, self.label, self.fstype)
 
+        os.remove(fs)
         dd_cmd = "dd if=/dev/zero of=%s bs=1k seek=%d count=0" % \
             (fs, self.size)
         exec_cmd(dd_cmd)
@@ -467,6 +473,7 @@ class Wic_PartData(Mic_PartData):
         Prepare an empty vfat partition.
         """
         fs = "%s/fs_%s.%s" % (cr_workdir, self.label, self.fstype)
+        os.remove(fs)
 
         blocks = self.size
 
@@ -493,6 +500,7 @@ class Wic_PartData(Mic_PartData):
                       "Proceeding as requested." % self.mountpoint)
 
         fs = "%s/fs_%s.%s" % (cr_workdir, self.label, self.fstype)
+        os.remove(fs)
 
         # it is not possible to create a squashfs without source data,
         # thus prepare an empty temp dir that is used as source
