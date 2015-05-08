@@ -8,6 +8,10 @@
 # Default-Stop:      0 1 6
 ### END INIT INFO
 
+if test -e /etc/default/weston ; then
+        . /etc/default/weston
+fi
+
 killproc() {
         pid=`/bin/pidof $1`
         [ "$pid" != "" ] && kill $pid
@@ -34,7 +38,7 @@ case "$1" in
                 chmod 0700 $XDG_RUNTIME_DIR
         fi
 
-        openvt -s weston
+        openvt -s weston -- $OPTARGS
   ;;
 
   stop)
