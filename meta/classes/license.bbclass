@@ -341,36 +341,23 @@ def incompatible_license(d, dont_want_licenses, package=None):
     take into consideration 'or' operand.  dont_want_licenses should be passed
     as canonical (SPDX) names.
     """
-    import re
     import oe.license
-    from fnmatch import fnmatchcase as fnmatch
     license = d.getVar("LICENSE_%s" % package, True) if package else None
     if not license:
         license = d.getVar('LICENSE', True)
 
-    def license_ok(license):
-        for dwl in dont_want_licenses:
-            # If you want to exclude license named generically 'X', we
-            # surely want to exclude 'X+' as well.  In consequence, we
-            # will exclude a trailing '+' character from LICENSE in
-            # case INCOMPATIBLE_LICENSE is not a 'X+' license.
-            lic = license
-            if not re.search('\+$', dwl):
-                lic = re.sub('\+', '', license)
-            if fnmatch(lic, dwl):
-                return False
-        return True
-
     # Handles an "or" or two license sets provided by
     # flattened_licenses(), pick one that works if possible.
     def choose_lic_set(a, b):
-        return a if all(license_ok(lic) for lic in a) else b
+        return a if all(oe.license.license_ok(lic, dont_want_licenses) \
+		 for lic in a) else b
 
     try:
         licenses = oe.license.flattened_licenses(license, choose_lic_set)
     except oe.license.LicenseError as exc:
         bb.fatal('%s: %s' % (d.getVar('P', True), exc))
-    return any(not license_ok(canonical_license(d, l)) for l in licenses)
+    return any(not oe.license.license_ok(canonical_license(d, l), \
+		dont_want_licenses) for l in licenses)
 
 def check_license_flags(d):
     """
