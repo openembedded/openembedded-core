@@ -9,6 +9,12 @@ SRC_URI = "http://curl.haxx.se/download/curl-${PV}.tar.bz2 \
            file://pkgconfig_fix.patch \
            file://CVE-2014-3613.patch \
            file://CVE-2014-3620.patch \
+           file://CVE-2015-3143.patch \
+           file://CVE-2015-3144.patch \
+           file://CVE-2015-3145.patch \
+           file://CVE-2014-3707.patch \
+           file://CVE-2014-8150.patch \
+           file://CVE-2015-3153.patch \
 "
 
 # curl likes to set -g0 in CFLAGS, so we stop it
