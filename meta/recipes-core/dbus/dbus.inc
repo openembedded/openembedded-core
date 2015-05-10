@@ -143,12 +143,12 @@ do_install_class-native() {
 	autotools_do_install
 
 	# for dbus-glib-native introspection generation
-	install -d ${STAGING_DATADIR_NATIVE}/dbus/
+	install -d ${D}${STAGING_DATADIR_NATIVE}/dbus/
 	# N.B. is below install actually required?
-	install -m 0644 bus/session.conf ${STAGING_DATADIR_NATIVE}/dbus/session.conf
+	install -m 0644 bus/session.conf ${D}${STAGING_DATADIR_NATIVE}/dbus/session.conf
 
 	# dbus-glib-native and dbus-glib need this xml file
-	./bus/dbus-daemon --introspect > ${STAGING_DATADIR_NATIVE}/dbus/dbus-bus-introspect.xml
+	./bus/dbus-daemon --introspect > ${D}${STAGING_DATADIR_NATIVE}/dbus/dbus-bus-introspect.xml
 	
 	# dbus-launch has no X support so lets not install it in case the host
 	# has a more featured and useful version
