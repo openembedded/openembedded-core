@@ -42,7 +42,7 @@ def deploy(args, config, basepath, workspace):
     deploy_dir = os.path.join(basepath, 'target_deploy', args.target)
     deploy_file = os.path.join(deploy_dir, args.recipename + '.list')
 
-    stdout, stderr = exec_build_env_command(config.init_path, basepath, 'bitbake -e %s' % args.recipename, shell=True)
+    stdout, _ = exec_build_env_command(config.init_path, basepath, 'bitbake -e %s' % args.recipename, shell=True)
     recipe_outdir = re.search(r'^D="(.*)"', stdout, re.MULTILINE).group(1)
     if not os.path.exists(recipe_outdir) or not os.listdir(recipe_outdir):
         logger.error('No files to deploy - have you built the %s recipe? If so, the install step has not installed any files.' % args.recipename)
@@ -50,7 +50,7 @@ def deploy(args, config, basepath, workspace):
 
     if args.dry_run:
         print('Files to be deployed for %s on target %s:' % (args.recipename, args.target))
-        for root, dirs, files in os.walk(recipe_outdir):
+        for root, _, files in os.walk(recipe_outdir):
             for fn in files:
                 print('  %s' % os.path.join(destdir, os.path.relpath(root, recipe_outdir), fn))
         return 0
