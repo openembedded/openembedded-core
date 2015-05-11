@@ -10,7 +10,10 @@ SRC_URI[sha256sum] = "78efc45ec36383bf785f8636e64a8d866defeb020e00a08f92978f1fc3
 
 DEPENDS = "dbus glib-2.0 atk at-spi2-core"
 
-inherit autotools pkgconfig
+inherit autotools pkgconfig distro_features_check
+
+# The at-spi2-core requires x11 in DISTRO_FEATURES
+REQUIRED_DISTRO_FEATURES = "x11"
 
 PACKAGES =+ "${PN}-gnome ${PN}-gtk2"
 
