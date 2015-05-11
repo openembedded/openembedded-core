@@ -75,7 +75,6 @@ def setup_tinfoil():
         sys.exit(1)
 
     import bb.tinfoil
-    import logging
     tinfoil = bb.tinfoil.Tinfoil()
     tinfoil.prepare(False)
     tinfoil.logger.setLevel(logging.WARNING)

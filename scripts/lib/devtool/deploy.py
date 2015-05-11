@@ -28,7 +28,6 @@ def plugin_init(pluginlist):
 
 def deploy(args, config, basepath, workspace):
     import re
-    from devtool import exec_build_env_command
 
     if not args.recipename in workspace:
         logger.error("no recipe named %s in your workspace" % args.recipename)

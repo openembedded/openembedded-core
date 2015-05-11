@@ -19,7 +19,6 @@ import os
 import sys
 import re
 import shutil
-import glob
 import tempfile
 import logging
 import argparse
