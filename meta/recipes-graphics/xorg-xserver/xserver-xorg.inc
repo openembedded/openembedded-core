@@ -47,6 +47,7 @@ PACKAGES =+ "${PN}-security-policy \
              ${PN}-xvfb \
              ${PN}-utils \
              ${PN}-xephyr \
+             ${PN}-xwayland \
              ${PN}-multimedia-modules \
              ${PN}-extension-dri \
              ${PN}-extension-dri2 \
@@ -81,6 +82,7 @@ FILES_${PN}-fbdev = "${bindir}/Xfbdev"
 FILES_${PN}-xvfb = "${bindir}/Xvfb"
 FILES_${PN}-utils = "${bindir}/scanpci ${bindir}/pcitweak ${bindir}/ioport ${bindir}/in[bwl] ${bindir}/out[bwl] ${bindir}/mmap[rw] ${bindir}/gtf ${bindir}/getconfig ${bindir}/getconfig.pl"
 FILES_${PN}-xephyr = "${bindir}/Xephyr"
+FILES_${PN}-xwayland = "${bindir}/Xwayland"
 FILES_${PN}-multimedia-modules = "${libdir}/xorg/modules/multimedia/*drv*"
 FILES_${PN}-extension-dri = "${libdir}/xorg/modules/extensions/libdri.so"
 FILES_${PN}-extension-dri2 = "${libdir}/xorg/modules/extensions/libdri2.so"
@@ -115,7 +117,9 @@ EXTRA_OECONF += "--with-fop=no \
                  ac_cv_file__usr_share_sgml_X11_defs_ent=no \
 "
 
-PACKAGECONFIG ??= "udev ${@bb.utils.contains('DISTRO_FEATURES', 'opengl', 'dri dri2 glx', '', d)}"
+PACKAGECONFIG ??= "udev ${@bb.utils.contains('DISTRO_FEATURES', 'opengl', 'dri dri2 glx', '', d)} \
+                   ${@bb.utils.contains("DISTRO_FEATURES", "wayland", "xwayland", "", d)} \
+"
 
 PACKAGECONFIG[udev] = "--enable-config-udev,--disable-config-udev,udev"
 PACKAGECONFIG[dri] = "--enable-dri,--disable-dri,glproto virtual/mesa xf86driproto"
@@ -128,6 +132,7 @@ PACKAGECONFIG[xshmfence] = "--enable-xshmfence,--disable-xshmfence,libxshmfence"
 PACKAGECONFIG[xmlto] = "--with-xmlto, --without-xmlto, xmlto-native docbook-xml-dtd4-native docbook-xsl-stylesheets-native"
 PACKAGECONFIG[systemd-logind] = "--enable-systemd-logind=yes,--enable-systemd-logind=no,dbus,"
 PACKAGECONFIG[xinerama] = "--enable-xinerama,--disable-xinerama,xineramaproto"
+PACKAGECONFIG[xwayland] = "--enable-xwayland,--disable-xwayland,wayland libepoxy"
 
 do_install_append () {
 	# Its assumed base-files creates this for us
