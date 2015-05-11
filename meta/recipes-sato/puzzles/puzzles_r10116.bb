@@ -4,6 +4,9 @@ HOMEPAGE = "http://www.chiark.greenend.org.uk/~sgtatham/puzzles/"
 DEPENDS = "gtk+ libxt"
 MOD_PV = "${@d.getVar('PV',1)[1:]}"
 
+# The libxt requires x11 in DISTRO_FEATURES
+REQUIRED_DISTRO_FEATURES = "x11"
+
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://LICENCE;md5=33bcd4bce8f3c197f2aefbdbd2d299bc"
 
@@ -14,7 +17,7 @@ SRC_URI = "svn://svn.tartarus.org/sgt;module=puzzles;rev=${MOD_PV} \
 
 S = "${WORKDIR}/${BPN}"
 
-inherit autotools-brokensep
+inherit autotools-brokensep distro_features_check
 
 do_configure_prepend () {
     ./mkfiles.pl

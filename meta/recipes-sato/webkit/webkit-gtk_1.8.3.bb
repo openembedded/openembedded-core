@@ -17,6 +17,9 @@ DEPENDS = "zlib enchant libsoup-2.4 curl libxml2 cairo libxslt libxt libidn gnut
            gtk+ gstreamer gst-plugins-base flex-native gperf-native perl-native-runtime sqlite3 ${ICU_LIB}"
 DEPENDS += " ${@bb.utils.contains('DISTRO_FEATURES', 'opengl', 'virtual/libgl', '', d)}"
 
+# The libxt requires x11 in DISTRO_FEATURES
+REQUIRED_DISTRO_FEATURES = "x11"
+
 SRC_URI = "\
   http://www.webkitgtk.org/releases/webkit-${PV}.tar.xz \
   file://nodolt.patch \
@@ -35,7 +38,7 @@ SRC_URI[sha256sum] = "ada02d636af61aed38f142d3cded662d141ce71264f624c4eb873621a7
 # webkit-gtk can NOT be built on MIPS64 with n32 ABI
 COMPATIBLE_HOST_mips64n32 = "null"
 
-inherit autotools lib_package gtk-doc pkgconfig
+inherit autotools lib_package gtk-doc pkgconfig distro_features_check
 
 S = "${WORKDIR}/webkit-${PV}/"
 

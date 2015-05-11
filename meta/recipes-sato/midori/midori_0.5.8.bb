@@ -12,7 +12,10 @@ SRC_URI[sha256sum] = "af19135fd4c4b04345df4d3592e7939c20f9b40eaca24550e6cb619751
 # MIPS64 with n32 ABI. So remove it from mips64 n32 temporarily.
 COMPATIBLE_HOST_mips64n32 = "null"
 
-inherit gtk-icon-cache pkgconfig vala pythonnative cmake
+inherit gtk-icon-cache pkgconfig vala pythonnative cmake distro_features_check
+
+# The webkit-gtk and libxscrnsaver requires x11 in DISTRO_FEATURES
+REQUIRED_DISTRO_FEATURES = "x11"
 
 EXTRA_OECMAKE = " \
     -DCMAKE_INSTALL_PREFIX=${prefix} \

@@ -16,7 +16,7 @@ SRC_URI = "git://git.yoctoproject.org/screenshot"
 
 S = "${WORKDIR}/git"
 
-inherit autotools pkgconfig
+inherit autotools pkgconfig distro_features_check
 
 FILES_${PN} += "${libdir}/matchbox-panel/*.so"
 FILES_${PN}-dbg += "${libdir}/matchbox-panel/.debug"
@@ -24,3 +24,6 @@ FILES_${PN}-dbg += "${libdir}/matchbox-panel/.debug"
 do_install_append () {
 	rm ${D}${libdir}/matchbox-panel/*.la
 }
+
+# The matchbox-panel-2 requires x11 in DISTRO_FEATURES
+REQUIRED_DISTRO_FEATURES = "x11"

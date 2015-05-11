@@ -20,7 +20,10 @@ SRC_URI = "git://git.yoctoproject.org/${BPN};branch=matchbox-keyboard-0-1 \
 
 S = "${WORKDIR}/git"
 
-inherit autotools pkgconfig gettext gtk-immodules-cache
+inherit autotools pkgconfig gettext gtk-immodules-cache distro_features_check
+
+# The libxft, libfakekey and matchbox-panel-2 requires x11 in DISTRO_FEATURES
+REQUIRED_DISTRO_FEATURES = "x11"
 
 EXTRA_OECONF = "--disable-cairo --enable-gtk-im --enable-applet"
 

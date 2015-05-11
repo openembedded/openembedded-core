@@ -11,6 +11,9 @@ DEPENDS = "gnome-common gtk+ startup-notification dbus dbus-glib"
 DEPENDS += " ${@bb.utils.contains("MACHINE_FEATURES", "acpi", "libacpi", "",d)}"
 DEPENDS += " ${@bb.utils.contains("MACHINE_FEATURES", "apm", "apmd", "",d)}"
 
+# The startup-notification requires x11 in DISTRO_FEATURES
+REQUIRED_DISTRO_FEATURES = "x11"
+
 SRCREV = "26a3a67b41c50e0ae163d8fe86ccf7a0f0a671ae"
 PV = "2.0+git${SRCPV}"
 
@@ -33,4 +36,4 @@ FILES_${PN} += "${libdir}/matchbox-panel/*.so \
 FILES_${PN}-dbg += "${libdir}/matchbox-panel/.debug"
 FILES_${PN}-dev += "${libdir}/matchbox-panel/*.la"
 
-inherit autotools pkgconfig
+inherit autotools pkgconfig distro_features_check
