@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU General Public License along
 # with this program; if not, write to the Free Software Foundation, Inc.,
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
-
+"""Devtool plugins module"""
 
 import os
 import sys
@@ -26,6 +26,7 @@ import logging
 logger = logging.getLogger('devtool')
 
 def exec_build_env_command(init_path, builddir, cmd, watch=False, **options):
+    """Run a program in bitbake build context"""
     import bb
     if not 'cwd' in options:
         options["cwd"] = builddir
@@ -49,6 +50,7 @@ def exec_build_env_command(init_path, builddir, cmd, watch=False, **options):
         return bb.process.run('%s%s' % (init_prefix, cmd), **options)
 
 def exec_watch(cmd, **options):
+    """Run program with stdout shown on sys.stdout"""
     if isinstance(cmd, basestring) and not "shell" in options:
         options["shell"] = True
 
@@ -68,6 +70,7 @@ def exec_watch(cmd, **options):
     return buf
 
 def setup_tinfoil():
+    """Initialize tinfoil api from bitbake"""
     import scriptpath
     bitbakepath = scriptpath.add_bitbake_lib_path()
     if not bitbakepath:

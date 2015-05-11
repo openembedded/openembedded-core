@@ -14,6 +14,7 @@
 # You should have received a copy of the GNU General Public License along
 # with this program; if not, write to the Free Software Foundation, Inc.,
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+"""Devtool plugin containing the deploy subcommands"""
 
 import os
 import subprocess
@@ -23,10 +24,12 @@ from devtool import exec_build_env_command
 logger = logging.getLogger('devtool')
 
 def plugin_init(pluginlist):
+    """Plugin initialization"""
     pass
 
 
 def deploy(args, config, basepath, workspace):
+    """Entry point for the devtool 'deploy' subcommand"""
     import re
 
     if not args.recipename in workspace:
@@ -87,7 +90,7 @@ def deploy(args, config, basepath, workspace):
     return 0
 
 def undeploy(args, config, basepath, workspace):
-
+    """Entry point for the devtool 'undeploy' subcommand"""
     deploy_file = os.path.join(basepath, 'target_deploy', args.target, args.recipename + '.list')
     if not os.path.exists(deploy_file):
          logger.error('%s has not been deployed' % args.recipename)
@@ -122,6 +125,7 @@ def undeploy(args, config, basepath, workspace):
 
 
 def register_commands(subparsers, context):
+    """Register devtool subcommands from the deploy plugin"""
     parser_deploy = subparsers.add_parser('deploy-target', help='Deploy recipe output files to live target machine')
     parser_deploy.add_argument('recipename', help='Recipe to deploy')
     parser_deploy.add_argument('target', help='Live target machine running an ssh server: user@hostname[:destdir]')
