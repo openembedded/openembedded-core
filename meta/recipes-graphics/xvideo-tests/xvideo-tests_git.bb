@@ -11,4 +11,7 @@ SRC_URI = "git://git.yoctoproject.org/test-xvideo"
 
 S = "${WORKDIR}/git"
 
-inherit autotools
+inherit autotools distro_features_check
+
+# The libxv requires x11 in DISTRO_FEATURES
+REQUIRED_DISTRO_FEATURES = "x11"

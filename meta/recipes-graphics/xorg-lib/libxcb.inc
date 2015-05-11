@@ -20,7 +20,10 @@ PACKAGES_DYNAMIC = "^libxcb-.*"
 
 FILES_${PN} = "${libdir}/libxcb.so.*"
 
-inherit autotools pkgconfig pythonnative
+inherit autotools pkgconfig pythonnative distro_features_check
+
+# The libxau and others requires x11 in DISTRO_FEATURES
+REQUIRED_DISTRO_FEATURES = "x11"
 
 python populate_packages_prepend () {
     do_split_packages(d, '${libdir}', '^libxcb-(.*)\.so\..*$', 'libxcb-%s', 'XCB library module for %s', allow_links=True)

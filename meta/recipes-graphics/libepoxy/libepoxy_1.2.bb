@@ -11,6 +11,9 @@ SRCREV="7422de5b4be7b19d789136b3bb5f932de42db27c"
 
 S = "${WORKDIR}/git"
 
-inherit autotools pkgconfig
+inherit autotools pkgconfig distro_features_check
+
+# The virtual/libx11 requires x11 in DISTRO_FEATURES
+REQUIRED_DISTRO_FEATURES = "x11"
 
 DEPENDS = "util-macros virtual/egl virtual/libx11"

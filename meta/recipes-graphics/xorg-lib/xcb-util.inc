@@ -18,4 +18,6 @@ DEPENDS += "gperf-native"
 
 SRC_URI = "http://xcb.freedesktop.org/dist/${BPN}-${PV}.tar.bz2"
 
-inherit autotools pkgconfig
+inherit autotools pkgconfig distro_features_check
+
+REQUIRED_DISTRO_FEATURES = "x11"

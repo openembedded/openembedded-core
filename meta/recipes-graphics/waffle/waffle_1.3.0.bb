@@ -7,11 +7,14 @@ SRC_URI = "http://people.freedesktop.org/~chadversary/waffle/files/release/${BPN
 SRC_URI[md5sum] = "5020ecc249096c881e1f59ee961f3d41"
 SRC_URI[sha256sum] = "340ee04172dba878249469018cd7ec9d1ecd41af26b612c741b8b52e713bca8e"
 
-inherit cmake
+inherit cmake distro_features_check
 
 # This should be overridden per-machine to reflect the capabilities of the GL
 # stack.
 PACKAGECONFIG ??= "glx"
+
+# libx11 requires x11 in DISTRO_FEATURES.
+REQUIRED_DISTRO_FEATURES = "${@bb.utils.contains('PACKAGECONFIG', 'glx', 'x11', '', d)}"
 
 # I say virtual/libgl, actually wants gl.pc
 PACKAGECONFIG[glx] = "-Dwaffle_has_glx=1,,virtual/libgl libx11"
