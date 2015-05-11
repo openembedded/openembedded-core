@@ -93,8 +93,8 @@ def undeploy(args, config, basepath, workspace):
     """Entry point for the devtool 'undeploy' subcommand"""
     deploy_file = os.path.join(basepath, 'target_deploy', args.target, args.recipename + '.list')
     if not os.path.exists(deploy_file):
-         logger.error('%s has not been deployed' % args.recipename)
-         return -1
+        logger.error('%s has not been deployed' % args.recipename)
+        return -1
 
     if args.dry_run:
         print('Previously deployed files to be un-deployed for %s on target %s:' % (args.recipename, args.target))
