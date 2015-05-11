@@ -11,8 +11,8 @@
 #
 #   You must also provide a Linux kernel configuration. The most direct
 #   method is to copy your .config to files/defconfig in your layer,
-#   in the same directory as the bbappend and add file://defconfig to
-#   your SRC_URI.
+#   in the same directory as the copy (and rename) of this recipe and
+#   add file://defconfig to your SRC_URI.
 #
 #   To use the yocto kernel tooling to generate a BSP configuration
 #   using modular configuration fragments, see the yocto-bsp and
@@ -52,14 +52,14 @@
 inherit kernel
 require recipes-kernel/linux/linux-yocto.inc
 
-# Override SRC_URI in a bbappend file to point at a different source
+# Override SRC_URI in a copy of this recipe to point at a different source
 # tree if you do not want to build from Linus' tree.
 SRC_URI = "git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git;protocol=git;nocheckout=1;name=machine"
 
 LINUX_VERSION ?= "3.4"
 LINUX_VERSION_EXTENSION ?= "-custom"
 
-# Override SRCREV to point to a different commit in a bbappend file to
+# Modify SRCREV to a different commit hash in a copy of this recipe to
 # build a different release of the Linux kernel.
 # tag: v3.4 76e10d158efb6d4516018846f60c2ab5501900bc
 SRCREV_machine="76e10d158efb6d4516018846f60c2ab5501900bc"
@@ -67,6 +67,6 @@ SRCREV_machine="76e10d158efb6d4516018846f60c2ab5501900bc"
 PR = "r1"
 PV = "${LINUX_VERSION}+git${SRCPV}"
 
-# Override COMPATIBLE_MACHINE to include your machine in a bbappend
+# Override COMPATIBLE_MACHINE to include your machine in a copy of this recipe
 # file. Leaving it empty here ensures an early explicit build failure.
 COMPATIBLE_MACHINE = "(^$)"
