@@ -7,7 +7,11 @@ PR = "r1"
 
 DEPENDS = "dbus gtk+ dbus-glib"
 
-inherit gnomebase
+inherit gnomebase distro_features_check
+
+# Requires gdk/gdkx.h which is provided by gtk when x11 in DISTRO_FEATURES
+REQUIRED_DISTRO_FEATURES = "x11"
+
 SRC_URI[archive.md5sum] = "732c9d2cd5eb6a9069264a319d330516"
 SRC_URI[archive.sha256sum] = "73b16a79bb2fed62dcf146b11c4405776cb96a09dce66379ca541da7dbd64210"
 

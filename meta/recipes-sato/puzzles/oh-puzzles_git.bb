@@ -9,7 +9,12 @@ LIC_FILES_CHKSUM = "file://LICENCE;md5=f56ec6772dd1c7c367067bbea8ea1675 \
 
 SECTION = "x11"
 DEPENDS = "gtk+ gconf intltool-native librsvg"
-DEPENDS_append_poky = " libowl"
+
+# libowl requires x11 in DISTRO_FEATURES
+DEPENDS_append_poky = " ${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'libowl', '', d)}"
+
+# Requires gdk/gdkx.h which is provided by gtk when x11 in DISTRO_FEATURES
+REQUIRED_DISTRO_FEATURES = "x11"
 
 SRCREV = "92f1a20e4b72eed7a35b00984d9793b51dc2fb3b"
 PV = "0.2+git${SRCPV}"
@@ -20,7 +25,7 @@ SRC_URI_append_poky = " file://oh-puzzles-owl-menu.patch;striplevel=0 "
 
 S = "${WORKDIR}/git"
 
-inherit autotools pkgconfig
+inherit autotools pkgconfig distro_features_check
 
 bindir = "/usr/games"
 

@@ -17,5 +17,7 @@ S = "${WORKDIR}/git"
 SRC_URI = "git://git.yoctoproject.org/${BPN} \
         file://no-handed.patch;striplevel=0"
 
-inherit autotools pkgconfig
+inherit autotools pkgconfig distro_features_check
 
+# The settings-daemon requires x11 in DISTRO_FEATURES
+REQUIRED_DISTRO_FEATURES = "x11"

@@ -17,4 +17,7 @@ SRC_URI = "git://git.yoctoproject.org/${BPN}"
 
 S = "${WORKDIR}/git"
 
-inherit autotools pkgconfig
+inherit autotools pkgconfig distro_features_check
+
+# Requires gdk/gdkx.h which is provided by gtk when x11 in DISTRO_FEATURES
+REQUIRED_DISTRO_FEATURES = "x11"
