@@ -18,6 +18,8 @@ SRC_URI[sha256sum] = "76e59711c6d0f39cbddce83ce1ed8da00bad112fee021f94fa990d8685
 
 inherit autotools-brokensep pkgconfig
 
+CLEANBROKEN = "1"
+
 EXTRA_OEMAKE += "GITCOMPILE_ARGS='--host=${HOST_SYS} --build=${BUILD_SYS} --target=${TARGET_SYS} --with-libtool-sysroot=${STAGING_DIR_HOST} --prefix=${prefix}'"
 
 PACKAGECONFIG ??= "${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'gtk+', '', d)}"
