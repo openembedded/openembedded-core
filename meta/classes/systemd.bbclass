@@ -139,9 +139,6 @@ python systemd_populate_packages() {
         searchpaths.append(oe.path.join(d.getVar("nonarch_base_libdir", True), "systemd", "system"))
         searchpaths.append(oe.path.join(d.getVar("exec_prefix", True), d.getVar("nonarch_base_libdir", True), "systemd", "system"))
         systemd_packages = d.getVar('SYSTEMD_PACKAGES', True)
-        has_exactly_one_service = len(systemd_packages.split()) == 1
-        if has_exactly_one_service:
-            has_exactly_one_service = len(get_package_var(d, 'SYSTEMD_SERVICE', systemd_packages).split()) == 1
 
         keys = 'Also'
         # scan for all in SYSTEMD_SERVICE[]
