@@ -30,6 +30,8 @@ SRC_URI = "${GNU_MIRROR}/coreutils/${BP}.tar.bz2 \
 SRC_URI[md5sum] = "c9607d8495f16e98906e7ed2d9751a06"
 SRC_URI[sha256sum] = "89c2895ad157de50e53298b22d91db116ee4e1dd3fdf4019260254e2e31497b0"
 
+EXTRA_OECONF += "ac_cv_func_getgroups_works=yes \
+                 ac_cv_func_strcoll_works=yes"
 
 # acl is not a default feature
 #
