@@ -163,7 +163,7 @@ do_patch() {
 	patchme ${KMACHINE}
 	if [ $? -ne 0 ]; then
 		bberror "Could not apply patches for ${KMACHINE}."
-		bbfatal "Patch failures can be resolved in the devshell (bitbake -c devshell ${PN})"
+		bbfatal "Patch failures can be resolved in the linux source directory ${S})"
 	fi
 
 	# check to see if the specified SRCREV is reachable from the final branch.
