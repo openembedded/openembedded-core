@@ -31,7 +31,9 @@ EXTRA_OECONF = " ${ENABLE_IPV6} --with-randomdev=/dev/random --disable-threads \
                  --sysconfdir=${sysconfdir}/bind \
                  --with-openssl=${STAGING_LIBDIR}/.. \
                "
-inherit autotools-brokensep update-rc.d systemd useradd pkgconfig
+inherit autotools update-rc.d systemd useradd pkgconfig
+
+PR = "r1"
 
 PACKAGECONFIG ?= ""
 PACKAGECONFIG[httpstats] = "--with-libxml2,--without-libxml2,libxml2"
@@ -58,7 +60,7 @@ do_install_prepend() {
 	# clean host path in isc-config.sh before the hardlink created
 	# by "make install":
 	#   bind9-config -> isc-config.sh
-	sed -i -e "s,${STAGING_LIBDIR},${libdir}," ${S}/isc-config.sh
+	sed -i -e "s,${STAGING_LIBDIR},${libdir}," ${B}/isc-config.sh
 }
 
 do_install_append() {
