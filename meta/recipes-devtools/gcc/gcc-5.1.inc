@@ -69,6 +69,7 @@ SRC_URI = "\
            file://0035-Dont-link-the-plugins-with-libgomp-explicitly.patch \
            file://0036-Use-SYSTEMLIBS_DIR-replacement-instead-of-hardcoding.patch \
            file://0037-pr65779.patch \
+           file://0038-fix-g++-sysroot.patch \
           "
 
 #S = "${TMPDIR}/work-shared/gcc-${PV}-${PR}/gcc-${SNAP}"
