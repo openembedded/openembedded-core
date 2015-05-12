@@ -151,12 +151,13 @@ python native_virtclass_handler () {
         map_dependencies("RREPLACES", e.data, pkg)
 
     provides = e.data.getVar("PROVIDES", True)
+    nprovides = []
     for prov in provides.split():
         if prov.find(pn) != -1:
             continue
         if not prov.endswith("-native"):
-            provides = provides.replace(prov, prov + "-native")
-    e.data.setVar("PROVIDES", provides)
+            nprovides.append(prov.replace(prov, prov + "-native"))
+    e.data.setVar("PROVIDES", ' '.join(nprovides))
 
     e.data.setVar("OVERRIDES", e.data.getVar("OVERRIDES", False) + ":virtclass-native")
 }
