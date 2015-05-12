@@ -17,6 +17,7 @@ SRC_URI += "\
         file://fixheadercheck.patch \
         file://0001-elf_getarsym-Silence-Werror-maybe-uninitialized-fals.patch \
         file://0001-libelf-Fix-dir-traversal-vuln-in-ar-extraction.patch \
+        file://0001-remove-the-unneed-checking.patch \
 "
 
 # pick the patch from debian
