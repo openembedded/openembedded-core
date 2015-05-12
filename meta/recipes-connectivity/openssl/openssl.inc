@@ -203,7 +203,7 @@ do_install_ptest () {
 	install util/shlib_wrap.sh     ${D}${PTEST_PATH}/util
 }
 
-do_install_append_virtclass-native() {
+do_install_append_class-native() {
 	create_wrapper ${D}${bindir}/openssl \
 	    OPENSSL_CONF=${libdir}/ssl/openssl.cnf \
 	    SSL_CERT_DIR=${libdir}/ssl/certs \

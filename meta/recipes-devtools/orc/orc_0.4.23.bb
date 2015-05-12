@@ -20,6 +20,6 @@ python populate_packages_prepend () {
     do_split_packages(d, libdir, '^lib(.*)\.so\.*', 'lib%s', 'ORC %s library', extra_depends='', allow_links=True)
 }
 
-do_compile_prepend_virtclass-native () {
+do_compile_prepend_class-native () {
     sed -i -e 's#/tmp#.#g' ${S}/orc/orccodemem.c
 }
