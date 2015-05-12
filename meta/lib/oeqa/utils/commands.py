@@ -16,6 +16,7 @@ import threading
 import logging
 from oeqa.utils import CommandError
 from oeqa.utils import ftools
+import re
 
 class Command(object):
     def __init__(self, command, bg=False, timeout=None, data=None, **options):
@@ -139,11 +140,11 @@ def get_bb_var(var, target=None, postconfig=None):
     bbenv = get_bb_env(target, postconfig=postconfig)
     lastline = None
     for line in bbenv.splitlines():
-        if line.startswith(var + "=") or line.startswith("export " + var + "="):
+        if re.search("^(export )?%s=" % var, line):
             val = line.split('=')[1]
             val = val.strip('\"')
             break
-        elif line.startswith("unset " + var):
+        elif re.match("unset %s$" % var, line):
             # Handle [unexport] variables
             if lastline.startswith('#   "'):
                 val = lastline.split('\"')[1]
