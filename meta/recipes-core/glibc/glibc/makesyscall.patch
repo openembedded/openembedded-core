@@ -1,0 +1,51 @@
+On x32 builds, sysd-syscalls appears malformed since the make-target-directory
+appears on the wrong line. This causes races during the build process where you can
+see failures like:
+
+Assembler messages:
+Fatal error: can't create [...]glibc/2.21-r0/build-x86_64-poky-linux-gnux32/time/gettimeofday.os: No such file or directory
+Assembler messages:
+Fatal error: can't create [...]glibc/2.21-r0/build-x86_64-poky-linux-gnux32/time/time.os: No such file or directory
+
+The isue is that the carridge return is being escaped when it should 
+not be. The change to sysd-syscalls with this change:
+
+before:
+
+"""
+$(foreach p,$(sysd-rules-targets),$(objpfx)$(patsubst %,$p,time).os): \
+                $(..)sysdeps/unix/make-syscalls.sh      $(make-target-directory)
+        (echo '#include <dl-vdso.h>'; 
+"""
+
+after:
+
+"""
+$(foreach p,$(sysd-rules-targets),$(objpfx)$(patsubst %,$p,time).os): \
+                $(..)sysdeps/unix/make-syscalls.sh
+        $(make-target-directory)
+        (echo '#include <dl-vdso.h>'; 
+"""
+
+which ensures the target directory is correctly created. Only x32 uses the vdso 
+code which contains the bug which is why the error only really appears on x32.
+
+Upstream Bug: https://sourceware.org/bugzilla/show_bug.cgi?id=18409
+Upstream Fix: https://sourceware.org/git/gitweb.cgi?p=glibc.git;h=d9efd775ba51916b58b899d8b1c8501105a830de
+
+Upstream-Status: Backport
+RP 2015/5/13
+
+Index: git/sysdeps/unix/make-syscalls.sh
+===================================================================
+--- git.orig/sysdeps/unix/make-syscalls.sh
++++ git/sysdeps/unix/make-syscalls.sh
+@@ -278,7 +278,7 @@ while read file srcfile caller syscall a
+     vdso_symver=`echo "$vdso_symver" | sed 's/\./_/g'`
+     echo "\
+ \$(foreach p,\$(sysd-rules-targets),\$(objpfx)\$(patsubst %,\$p,$file).os): \\
+-		\$(..)sysdeps/unix/make-syscalls.sh\
++		\$(..)sysdeps/unix/make-syscalls.sh
+ 	\$(make-target-directory)
+ 	(echo '#include <dl-vdso.h>'; \\
+ 	 echo 'extern void *${strong}_ifunc (void) __asm (\"${strong}\");'; \\

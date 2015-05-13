@@ -26,6 +26,7 @@ SRC_URI = "git://sourceware.org/git/glibc.git;branch=${BRANCH} \
            file://0001-When-disabling-SSE-also-make-sure-that-fpmath-is-not.patch \
            file://0001-yes-within-the-path-sets-wrong-config-variables.patch \
            file://elf-Makefile-fix-a-typo.patch \
+           file://makesyscall.patch \
            ${EGLIBCPATCHES} \
           "
 EGLIBCPATCHES = "\
