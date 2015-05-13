@@ -13,3 +13,17 @@ which can be found at:
     http://yoctoproject.org/documentation
 
 
+Contributing
+------------
+
+Please refer to
+http://www.openembedded.org/wiki/How_to_submit_a_patch_to_OpenEmbedded
+for guidelines on how to submit patches.
+
+Mailing list:
+
+    http://lists.openembedded.org/mailman/listinfo/openembedded-core
+
+Source code:
+
+    http://git.openembedded.org/openembedded-core/
