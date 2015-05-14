@@ -6,6 +6,14 @@ python __anonymous () {
         depends = d.getVar("DEPENDS", True)
         depends = "%s u-boot-mkimage-native" % depends
         d.setVar("DEPENDS", depends)
+
+	# Override KERNEL_IMAGETYPE_FOR_MAKE variable, which is internal
+	# to kernel.bbclass . We override the variable here, since we need
+	# to build uImage using the kernel build system if and only if
+	# KEEPUIMAGE == yes. Otherwise, we pack compressed vmlinux into
+	# the uImage .
+	if d.getVar("KEEPUIMAGE", True) != 'yes':
+            d.setVar("KERNEL_IMAGETYPE_FOR_MAKE", "zImage")
 }
 
 do_uboot_mkimage() {
