@@ -44,11 +44,34 @@ def get_unavailable_reasons(cooker, pn):
     return taskdata.get_reasons(pn)
 
 
-def parse_recipe(fn, appends, d):
-    """Parse an individual recipe"""
+def parse_recipe(fn, appendfiles, d):
+    """
+    Parse an individual recipe file, optionally with a list of
+    bbappend files.
+    """
     import bb.cache
-    envdata = bb.cache.Cache.loadDataFull(fn, appends, d)
+    envdata = bb.cache.Cache.loadDataFull(fn, appendfiles, d)
     return envdata
+
+
+def parse_recipe_simple(cooker, pn, d, appends=True):
+    """
+    Parse a recipe and optionally all bbappends that apply to it
+    in the current configuration.
+    """
+    import bb.providers
+
+    recipefile = pn_to_recipe(cooker, pn)
+    if not recipefile:
+        skipreasons = get_unavailable_reasons(cooker, pn)
+        # We may as well re-use bb.providers.NoProvider here
+        if skipreasons:
+            raise bb.providers.NoProvider(skipreasons)
+        else:
+            raise bb.providers.NoProvider('Unable to find any recipe file matching %s' % pn)
+    if appends:
+        appendfiles = cooker.collection.get_file_appends(recipefile)
+    return parse_recipe(recipefile, appendfiles, d)
 
 
 def get_var_files(fn, varlist, d):
