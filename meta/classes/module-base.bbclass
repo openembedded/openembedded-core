@@ -1,5 +1,8 @@
 inherit kernel-arch
 
+# This is instead of DEPENDS = "virtual/kernel"
+do_configure[depends] += "virtual/kernel:do_shared_workdir"
+
 export OS = "${TARGET_OS}"
 export CROSS_COMPILE = "${TARGET_PREFIX}"
 
@@ -14,8 +17,6 @@ KERNEL_OBJECT_SUFFIX = ".ko"
 
 # kernel modules are generally machine specific
 PACKAGE_ARCH = "${MACHINE_ARCH}"
-
-do_configure[depends] += "virtual/kernel:do_shared_workdir"
 
 # Function to ensure the kernel scripts are created. Expected to
 # be called before do_compile. See module.bbclass for an exmaple.

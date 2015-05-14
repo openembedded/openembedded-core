@@ -6,9 +6,6 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=1412caf5a1aa90d6a48588a4794c0eac \
                     file://gpl-2.0.txt;md5=751419260aa954499f7abaabaa882bbe \
                     file://lgpl-2.1.txt;md5=243b725d71bb5df4a1e5920b344b86ad"
 
-DEPENDS = "virtual/kernel"
-do_configure[depends] += "virtual/kernel:do_shared_workdir"
-
 inherit module
 
 SRCREV = "1b2a5429de815c95643df2eadf91253909708728"

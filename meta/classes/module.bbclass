@@ -1,10 +1,8 @@
-DEPENDS += "virtual/kernel"
-
 inherit module-base kernel-module-split
 
 addtask make_scripts after do_patch before do_compile
 do_make_scripts[lockfiles] = "${TMPDIR}/kernel-scripts.lock"
-do_make_scripts[deptask] = "do_populate_sysroot"
+do_make_scripts[depends] += "virtual/kernel:do_shared_workdir"
 
 EXTRA_OEMAKE += "KERNEL_SRC=${STAGING_KERNEL_DIR}"
 
