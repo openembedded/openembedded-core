@@ -97,8 +97,12 @@ def add(args, config, basepath, workspace):
         source = srctree
     if args.version:
         extracmdopts += ' -V %s' % args.version
-    stdout, _ = exec_build_env_command(config.init_path, basepath, 'recipetool --color=%s create -o %s "%s" %s' % (color, recipefile, source, extracmdopts))
-    logger.info('Recipe %s has been automatically created; further editing may be required to make it fully functional' % recipefile)
+    try:
+        stdout, _ = exec_build_env_command(config.init_path, basepath, 'recipetool --color=%s create -o %s "%s" %s' % (color, recipefile, source, extracmdopts))
+        logger.info('Recipe %s has been automatically created; further editing may be required to make it fully functional' % recipefile)
+    except bb.process.ExecutionError as e:
+        logger.error('Command \'%s\' failed:\n%s' % (e.command, e.stdout))
+        return 1
 
     _add_md5(config, args.recipename, recipefile)
 
@@ -688,7 +692,7 @@ def status(args, config, basepath, workspace):
 
 def reset(args, config, basepath, workspace):
     """Entry point for the devtool 'reset' subcommand"""
-    import bb.utils
+    import bb
     if args.recipename:
         if args.all:
             logger.error("Recipe cannot be specified if -a/--all is used")
@@ -708,7 +712,11 @@ def reset(args, config, basepath, workspace):
     for pn in recipes:
         if not args.no_clean:
             logger.info('Cleaning sysroot for recipe %s...' % pn)
-            exec_build_env_command(config.init_path, basepath, 'bitbake -c clean %s' % pn)
+            try:
+                exec_build_env_command(config.init_path, basepath, 'bitbake -c clean %s' % pn)
+            except bb.process.ExecutionError as e:
+                logger.error('Command \'%s\' failed, output:\n%s\nIf you wish, you may specify -n/--no-clean to skip running this command when resetting' % (e.command, e.stdout))
+                return 1
 
         _check_preserve(config, pn)
 
@@ -735,7 +743,11 @@ def build(args, config, basepath, workspace):
         logger.error("no recipe named %s in your workspace" % args.recipename)
         return -1
     build_task = config.get('Build', 'build_task', 'populate_sysroot')
-    exec_build_env_command(config.init_path, basepath, 'bitbake -c %s %s' % (build_task, args.recipename), watch=True)
+    try:
+        exec_build_env_command(config.init_path, basepath, 'bitbake -c %s %s' % (build_task, args.recipename), watch=True)
+    except bb.process.ExecutionError as e:
+        # We've already seen the output since watch=True, so just ensure we return something to the user
+        return e.exitcode
 
     return 0
 

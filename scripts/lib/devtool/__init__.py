@@ -44,13 +44,14 @@ def exec_build_env_command(init_path, builddir, cmd, watch=False, **options):
     if watch:
         if sys.stdout.isatty():
             # Fool bitbake into thinking it's outputting to a terminal (because it is, indirectly)
-            cmd = 'script -q -c "%s" /dev/null' % cmd
+            cmd = 'script -e -q -c "%s" /dev/null' % cmd
         return exec_watch('%s%s' % (init_prefix, cmd), **options)
     else:
         return bb.process.run('%s%s' % (init_prefix, cmd), **options)
 
 def exec_watch(cmd, **options):
     """Run program with stdout shown on sys.stdout"""
+    import bb
     if isinstance(cmd, basestring) and not "shell" in options:
         options["shell"] = True
 
@@ -67,7 +68,11 @@ def exec_watch(cmd, **options):
             buf += out
         elif out == '' and process.poll() != None:
             break
-    return buf
+
+    if process.returncode != 0:
+        raise bb.process.ExecutionError(cmd, process.returncode, buf, None)
+
+    return buf, None
 
 def setup_tinfoil():
     """Initialize tinfoil api from bitbake"""
