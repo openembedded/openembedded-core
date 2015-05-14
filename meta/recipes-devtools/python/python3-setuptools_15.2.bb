@@ -1,27 +1,20 @@
 SUMMARY = "Download, build, install, upgrade, and uninstall Python packages"
-HOMEPAGE = "http://packages.python.org/distribute"
+HOMEPAGE = "http://packages.python.org/setuptools"
 SECTION = "devel/python"
 LICENSE = "PSF"
-LIC_FILES_CHKSUM = "file://setup.py;beginline=234;endline=234;md5=26f6b02022b737126d3c88838782dddb"
+LIC_FILES_CHKSUM = "file://setup.py;beginline=78;endline=78;md5=8a314270dd7a8dbca741775415f1716e"
 
-SRCNAME = "distribute"
-PR = "ml5"
+SRCNAME = "setuptools"
 DEPENDS += "python3"
 DEPENDS_class-native += "python3-native"
 
 SRC_URI = " \
-  http://pypi.python.org/packages/source/d/${SRCNAME}/${SRCNAME}-${PV}.tar.gz \
+  http://pypi.python.org/packages/source/s/${SRCNAME}/${SRCNAME}-${PV}.tar.gz \
 "
-SRC_URI[md5sum] = "acb7a2da81e3612bfb1608abe4f0e568"
-SRC_URI[sha256sum] = "8970cd1e148b5d1fea9430584aea66c45ea22d80e0933393ec49ebc388f718df"
+SRC_URI[md5sum] = "a9028a9794fc7ae02320d32e2d7e12ee"
+SRC_URI[sha256sum] = "381e78471fb0eff89c4b1a219e8739f48dd87c76ad2d3a790010ca3a62ee29a4"
 
 S = "${WORKDIR}/${SRCNAME}-${PV}"
-
-#  http://python-distribute.org/distribute_setup.py 
-
-# force the selection of python3
-#PYTHON_BASEVERSION = "3.3"
-#PYTHON_MAJMIN = "3.3"
 
 inherit distutils3
 
@@ -37,15 +30,26 @@ do_install_append() {
     rm ${D}${PYTHON_SITEPACKAGES_DIR}/setuptools.pth
     mv ${D}${bindir}/easy_install ${D}${bindir}/easy3_install
     echo "./${SRCNAME}-${PV}-py${PYTHON_BASEVERSION}.egg" > ${D}${PYTHON_SITEPACKAGES_DIR}/setuptools.pth
-    sed -i -e '1s|^#!.*python|#!/usr/bin/env python3|' \
-        ${D}${PYTHON_SITEPACKAGES_DIR}/distribute-${PV}-py${PYTHON_BASEVERSION}.egg/setuptools/tests/test_resources.py
 }
 
 RDEPENDS_${PN} = "\
   python3-distutils \
   python3-compression \
 "
-
-RPROVIDES_${PN} += "python3-setuptools"
-
+RDEPENDS_${PN}_class-target = "\
+  python3-ctypes \
+  python3-distutils \
+  python3-email \
+  python3-importlib \
+  python3-numbers \
+  python3-compression \
+  python3-shell \
+  python3-subprocess \
+  python3-textutils \
+  python3-pkgutil \
+  python3-threading \
+  python3-misc \
+  python3-unittest \
+  python3-xml \
+"
 BBCLASSEXTEND = "native"
