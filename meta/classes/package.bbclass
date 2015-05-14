@@ -875,8 +875,8 @@ python split_and_strip_files () {
     #
     elffiles = {}
     symlinks = {}
-    hardlinks = {}
     kernmods = []
+    inodes = {}
     libdir = os.path.abspath(dvar + os.sep + d.getVar("libdir", True))
     baselibdir = os.path.abspath(dvar + os.sep + d.getVar("base_libdir", True))
     if (d.getVar('INHIBIT_PACKAGE_STRIP', True) != '1'):
@@ -914,6 +914,7 @@ python split_and_strip_files () {
                             #bb.note("Sym: %s (%d)" % (ltarget, isELF(ltarget)))
                             symlinks[file] = target
                         continue
+
                     # It's a file (or hardlink), not a link
                     # ...but is it ELF, and is it already stripped?
                     elf_file = isELF(file)
@@ -925,28 +926,30 @@ python split_and_strip_files () {
                                 msg = "File '%s' from %s was already stripped, this will prevent future debugging!" % (file[len(dvar):], pn)
                                 package_qa_handle_error("already-stripped", msg, d)
                             continue
-                        # Check if it's a hard link to something else
-                        if s.st_nlink > 1:
-                            file_reference = "%d_%d" % (s.st_dev, s.st_ino)
-                            # Hard link to something else
-                            hardlinks[file] = file_reference
-                            continue
-                        elffiles[file] = elf_file
+
+                        # At this point we have an unstripped elf file. We need to:
+                        #  a) Make sure any file we strip is not hardlinked to anything else outside this tree
+                        #  b) Only strip any hardlinked file once (no races)
+                        #  c) Track any hardlinks between files so that we can reconstruct matching debug file hardlinks
+
+                        # Use a reference of device ID and inode number to indentify files
+                        file_reference = "%d_%d" % (s.st_dev, s.st_ino)
+                        if file_reference in inodes:
+                            os.unlink(file)
+                            os.link(inodes[file_reference][0], file)
+                            inodes[file_reference].append(file)
+                        else:
+                            inodes[file_reference] = [file]
+                            # break hardlink
+                            bb.utils.copyfile(file, file)
+                            elffiles[file] = elf_file
+                        # Modified the file so clear the cache
+                        cpath.updatecache(file)
 
     #
     # First lets process debug splitting
     #
     if (d.getVar('INHIBIT_PACKAGE_DEBUG_SPLIT', True) != '1'):
-        hardlinkmap = {}
-        # For hardlinks, process only one of the files
-        for file in hardlinks:
-            file_reference = hardlinks[file]
-            if file_reference not in hardlinkmap:
-                # If this is a new file, add it as a reference, and
-                # update it's type, so we can fall through and split
-                elffiles[file] = isELF(file)
-                hardlinkmap[file_reference] = file
-
         for file in elffiles:
             src = file[len(dvar):]
             dest = debuglibdir + os.path.dirname(src) + debugdir + "/" + os.path.basename(src) + debugappend
@@ -959,13 +962,14 @@ python split_and_strip_files () {
             splitdebuginfo(file, fpath, debugsrcdir, sourcefile, d)
 
         # Hardlink our debug symbols to the other hardlink copies
-        for file in hardlinks:
-            if file not in elffiles:
+        for ref in inodes:
+            if len(inodes[ref]) == 1:
+                continue
+            for file in inodes[ref][1:]:
                 src = file[len(dvar):]
                 dest = debuglibdir + os.path.dirname(src) + debugdir + "/" + os.path.basename(src) + debugappend
                 fpath = dvar + dest
-                file_reference = hardlinks[file]
-                target = hardlinkmap[file_reference][len(dvar):]
+                target = inodes[ref][0][len(dvar):]
                 ftarget = dvar + debuglibdir + os.path.dirname(target) + debugdir + "/" + os.path.basename(target) + debugappend
                 bb.utils.mkdirhier(os.path.dirname(fpath))
                 #bb.note("Link %s -> %s" % (fpath, ftarget))
