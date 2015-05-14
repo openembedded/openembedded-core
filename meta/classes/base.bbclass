@@ -255,7 +255,7 @@ base_do_configure() {
 			if [ "${CLEANBROKEN}" != "1" -a \( -e Makefile -o -e makefile -o -e GNUmakefile \) ]; then
 				oe_runmake clean
 			fi
-			find ${B} -name \*.la -delete
+			find ${B} -ignore_readdir_race -name \*.la -delete
 		fi
 	fi
 	if [ -n "${CONFIGURESTAMPFILE}" ]; then
