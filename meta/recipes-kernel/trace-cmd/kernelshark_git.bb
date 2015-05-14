@@ -16,8 +16,7 @@ EXTRA_OEMAKE = "\
     NO_PYTHON=1 \
     gui \
 "
-
-do_compile_prepend() {
+do_configure_prepend() {
     # Make sure the recompile is OK
     rm -f ${B}/.*.d
 }
