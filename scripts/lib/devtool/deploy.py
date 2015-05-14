@@ -19,7 +19,7 @@
 import os
 import subprocess
 import logging
-from devtool import exec_build_env_command
+from devtool import exec_build_env_command, setup_tinfoil
 
 logger = logging.getLogger('devtool')
 
@@ -31,6 +31,7 @@ def plugin_init(pluginlist):
 def deploy(args, config, basepath, workspace):
     """Entry point for the devtool 'deploy' subcommand"""
     import re
+    import oe.recipeutils
 
     if not args.recipename in workspace:
         logger.error("no recipe named %s in your workspace" % args.recipename)
@@ -45,8 +46,13 @@ def deploy(args, config, basepath, workspace):
     deploy_dir = os.path.join(basepath, 'target_deploy', args.target)
     deploy_file = os.path.join(deploy_dir, args.recipename + '.list')
 
-    stdout, _ = exec_build_env_command(config.init_path, basepath, 'bitbake -e %s' % args.recipename, shell=True)
-    recipe_outdir = re.search(r'^D="(.*)"', stdout, re.MULTILINE).group(1)
+    tinfoil = setup_tinfoil()
+    try:
+        rd = oe.recipeutils.parse_recipe_simple(tinfoil.cooker, args.recipename, tinfoil.config_data)
+    except Exception as e:
+        logger.error('Exception parsing recipe %s: %s' % (args.recipename, e))
+        return 2
+    recipe_outdir = rd.getVar('D', True)
     if not os.path.exists(recipe_outdir) or not os.listdir(recipe_outdir):
         logger.error('No files to deploy - have you built the %s recipe? If so, the install step has not installed any files.' % args.recipename)
         return -1
