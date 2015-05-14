@@ -49,7 +49,7 @@ do_rm_work () {
     cd `dirname ${STAMP}`
     for i in `basename ${STAMP}`*
     do
-        for j in ${SSTATETASKS}
+        for j in ${SSTATETASKS} do_shared_workdir
         do
             case $i in
             *do_setscene*)
