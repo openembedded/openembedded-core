@@ -40,6 +40,9 @@ EGLIBCPATCHES = "\
 #           file://eglibc-install-pic-archives.patch \
 #	    file://initgroups_keys.patch \
 #
+CVEPATCHES = "\
+        file://CVE-2015-1781-resolv-nss_dns-dns-host.c-buffer-overf.patch \
+"
 
 CVEPATCHES = "\
         file://CVE-2014-7817-wordexp-fails-to-honour-WRDE_NOCMD.patch \
