@@ -28,6 +28,7 @@ SRC_URI = "git://sourceware.org/git/glibc.git;branch=${BRANCH} \
            file://elf-Makefile-fix-a-typo.patch \
            file://makesyscall.patch \
            ${EGLIBCPATCHES} \
+           ${CVEPATCHES} \
           "
 EGLIBCPATCHES = "\
            file://timezone-re-written-tzselect-as-posix-sh.patch \
@@ -43,6 +44,9 @@ EGLIBCPATCHES = "\
 #           file://eglibc-install-pic-archives.patch \
 #	    file://initgroups_keys.patch \
 #
+CVEPATCHES = "\
+        file://CVE-2015-1781-resolv-nss_dns-dns-host.c-buffer-overf.patch \
+"
 
 LIC_FILES_CHKSUM = "file://LICENSES;md5=e9a558e243b36d3209f380deb394b213 \
       file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
