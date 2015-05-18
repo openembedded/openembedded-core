@@ -29,16 +29,5 @@ BBCLASSEXTEND = "native"
 
 EXTRA_OECONF += "--disable-xkb"
 
-do_compile() {
-	(
-		unset CC LD CXX CCLD CFLAGS
-		oe_runmake -C util 'XT_CFLAGS=' 'CC=${BUILD_CC}' 'LD=${BUILD_LD}' 'CXX=${BUILD_CXX}' 'CCLD=${BUILD_CCLD}' 'CFLAGS=-D_GNU_SOURCE -I${STAGING_INCDIR_NATIVE} ${BUILD_CFLAGS}' 'LDFLAGS=${BUILD_LDFLAGS}' 'CXXFLAGS=${BUILD_CXXFLAGS}' 'CPPFLAGS=${BUILD_CPPFLAGS}' makestrs
-	)
-	if [ "$?" != "0" ]; then
-		exit 1
-	fi
-	oe_runmake
-}
-
-SRC_URI[md5sum] = "03149823ae57bb02d0cec90d5b97d56c"
-SRC_URI[sha256sum] = "843a97a988f5654872682a4120486d987d853a71651515472f55519ffae2dd57"
+SRC_URI[md5sum] = "8f5b5576fbabba29a05f3ca2226f74d3"
+SRC_URI[sha256sum] = "46eeb6be780211fdd98c5109286618f6707712235fdd19df4ce1e6954f349f1a"
