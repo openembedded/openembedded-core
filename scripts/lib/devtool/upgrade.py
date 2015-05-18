@@ -62,26 +62,6 @@ def _get_checksums(rf):
                     checksums[cs] = m.group(1)
     return checksums
 
-def _replace_checksums(rf, md5, sha256):
-    if not md5 and not sha256:
-        return
-    checksums = {'md5sum':md5, 'sha256sum':sha256}
-    with open(rf + ".tmp", "w+") as tmprf:
-        with open(rf) as f:
-            for line in f:
-                m = None
-                for cs in checksums.keys():
-                    m = re.match("^SRC_URI\[%s\].*=.*\"(.*)\"" % cs, line)
-                    if m:
-                        if checksums[cs]:
-                            oldcheck = m.group(1)
-                            newcheck = checksums[cs]
-                            line = line.replace(oldcheck, newcheck)
-                        break
-                tmprf.write(line)
-    os.rename(rf + ".tmp", rf)
-
-
 def _remove_patch_dirs(recipefolder):
     for root, dirs, files in os.walk(recipefolder):
         for d in dirs:
@@ -297,15 +277,13 @@ def _create_new_recipe(newpv, md5, sha256, srcrev, srcbranch, workspace, tinfoil
         if changed:
             newvalues['SRC_URI'] = ' '.join(new_src_uri)
 
+    if md5 and sha256:
+        newvalues['SRC_URI[md5sum]'] = md5
+        newvalues['SRC_URI[sha256sum]'] = sha256
+
     if newvalues:
         rd = oe.recipeutils.parse_recipe(fullpath, None, tinfoil.config_data)
         oe.recipeutils.patch_recipe(rd, fullpath, newvalues)
-
-    if md5 and sha256:
-        # Unfortunately, oe.recipeutils.patch_recipe cannot update flags.
-        # once the latter feature is implemented, we should call patch_recipe
-        # instead of the following function
-        _replace_checksums(fullpath, md5, sha256)
 
     return fullpath
 
