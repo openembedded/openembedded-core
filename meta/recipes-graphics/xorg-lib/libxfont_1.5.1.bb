@@ -18,10 +18,5 @@ XORG_PN = "libXfont"
 
 BBCLASSEXTEND = "native"
 
-SRC_URI += "file://0001-bdfReadProperties-property-count-needs-range-check-C.patch \
-            file://0001-bdfReadCharacters-bailout-if-a-char-s-bitmap-cannot-.patch \
-            file://0001-bdfReadCharacters-ensure-metrics-fit-into-xCharInfo-.patch \
-           "
-
-SRC_URI[md5sum] = "664629bfa7cdf8b984155019fd395dcb"
-SRC_URI[sha256sum] = "3a3c52c4adf9352b2160f07ff0596af17ab14f91d6509564e606678a1261c25f"
+SRC_URI[md5sum] = "96f76ba94b4c909230bac1e2dcd551c4"
+SRC_URI[sha256sum] = "b70898527c73f9758f551bbab612af611b8a0962202829568d94f3edf4d86098"
