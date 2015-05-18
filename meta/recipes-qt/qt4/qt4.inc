@@ -1,6 +1,6 @@
 inherit qmake_base
 
-DEPENDS += "qt4-tools-native freetype jpeg libpng zlib dbus openssl glib-2.0 gstreamer gst-plugins-base sqlite3 tiff icu"
+DEPENDS += "qt4-tools-native freetype jpeg libpng zlib dbus openssl glib-2.0 sqlite3 tiff icu"
 DEPENDS += "${@bb.utils.contains('DISTRO_FEATURES', 'pulseaudio', 'pulseaudio', '', d)}"
 
 require qt4_arch.inc
@@ -16,7 +16,7 @@ QT_GLFLAGS ?= ""
 QT_QT3SUPPORT ?= "-qt3support"
 QT_XML ?= "-xmlpatterns"
 QT_WEBKIT ?= "-webkit"
-QT_PHONON ?= "-phonon"
+QT_PHONON ?= "-no-phonon"
 QT_DBUS ?= "-qdbus"
 QT_MULTIMEDIA ?= "${@bb.utils.contains('DISTRO_FEATURES', 'pulseaudio', '-pulseaudio', '-no-pulseaudio', d)}"
  
