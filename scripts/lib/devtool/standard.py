@@ -245,6 +245,11 @@ def _extract_source(srctree, keep_temp, devbranch, d):
     bb.utils.mkdirhier(srctree)
     os.rmdir(srctree)
 
+    # We don't want notes to be printed, they are too verbose
+    origlevel = bb.logger.getEffectiveLevel()
+    if logger.getEffectiveLevel() > logging.DEBUG:
+        bb.logger.setLevel(logging.WARNING)
+
     initial_rev = None
     tempdir = tempfile.mkdtemp(prefix='devtool')
     try:
@@ -349,6 +354,8 @@ def _extract_source(srctree, keep_temp, devbranch, d):
         shutil.move(srcsubdir, srctree)
         logger.info('Source tree extracted to %s' % srctree)
     finally:
+        bb.logger.setLevel(origlevel)
+
         if keep_temp:
             logger.info('Preserving temporary directory %s' % tempdir)
         else:

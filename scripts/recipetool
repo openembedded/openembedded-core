@@ -40,7 +40,7 @@ def tinfoil_init():
     for plugin in plugins:
         if hasattr(plugin, 'tinfoil_init'):
             plugin.tinfoil_init(tinfoil)
-    tinfoil.logger.setLevel(logging.WARNING)
+    tinfoil.logger.setLevel(logger.getEffectiveLevel())
 
 def main():
 

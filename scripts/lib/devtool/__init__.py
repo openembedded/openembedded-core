@@ -85,6 +85,6 @@ def setup_tinfoil():
     import bb.tinfoil
     tinfoil = bb.tinfoil.Tinfoil()
     tinfoil.prepare(False)
-    tinfoil.logger.setLevel(logging.WARNING)
+    tinfoil.logger.setLevel(logger.getEffectiveLevel())
     return tinfoil
 
