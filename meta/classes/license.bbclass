@@ -80,6 +80,10 @@ python license_create_manifest() {
                 lic_file = os.path.join(d.getVar('LICENSE_DIRECTORY', True),
                                         pkg_dic[pkg]["PN"], "generic_%s" % 
                                         re.sub('\+', '', lic))
+                # add explicity avoid of CLOSED license because isn't generic
+                if lic == "CLOSED":
+                   continue
+
                 if not os.path.exists(lic_file):
                    bb.warn("The license listed %s was not in the "\ 
                             "licenses collected for recipe %s" 
@@ -278,8 +282,10 @@ def find_license_files(d):
                     lic_files_paths.append(("generic_" + license_type, path))
                     break
         else:
-            # And here is where we warn people that their licenses are lousy
-            bb.warn("%s: No generic license file exists for: %s in any provider" % (pn, license_type))
+            # Add explicity avoid of CLOSED license because this isn't generic
+            if license_type != 'CLOSED':
+                # And here is where we warn people that their licenses are lousy
+                bb.warn("%s: No generic license file exists for: %s in any provider" % (pn, license_type))
             pass
 
     if not generic_directory:
