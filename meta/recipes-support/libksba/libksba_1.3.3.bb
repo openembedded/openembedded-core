@@ -16,8 +16,8 @@ inherit autotools binconfig-disabled pkgconfig texinfo
 SRC_URI = "ftp://ftp.gnupg.org/gcrypt/${BPN}/${BPN}-${PV}.tar.bz2 \
            file://ksba-add-pkgconfig-support.patch"
 
-SRC_URI[md5sum] = "c3c9a66e22d87fe3ae59865250b8a09c"
-SRC_URI[sha256sum] = "eb95537955dfc2845690a4cc3836074fa6d0a2c2ca2cbf1759364d3bd9868406"
+SRC_URI[md5sum] = "a5dd3c57fca254935f5cf8db26e39065"
+SRC_URI[sha256sum] = "0c7f5ffe34d0414f6951d9880a46fcc2985c487f7c36369b9f11ad41131c7786"
 
 do_configure_prepend () {
 	# Else these could be used in preference to those in aclocal-copy
