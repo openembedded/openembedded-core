@@ -11,7 +11,28 @@ from oeqa.selftest.base import oeSelfTest
 from oeqa.utils.commands import runCmd, bitbake, get_bb_var
 from oeqa.utils.decorators import testcase
 
-class DevtoolTests(oeSelfTest):
+class DevtoolBase(oeSelfTest):
+
+    def _test_recipe_contents(self, recipefile, checkvars, checkinherits):
+        with open(recipefile, 'r') as f:
+            for line in f:
+                if '=' in line:
+                    splitline = line.split('=', 1)
+                    var = splitline[0].rstrip()
+                    value = splitline[1].strip().strip('"')
+                    if var in checkvars:
+                        needvalue = checkvars.pop(var)
+                        self.assertEqual(value, needvalue, 'values for %s do not match' % var)
+                if line.startswith('inherit '):
+                    inherits = line.split()[1:]
+
+        self.assertEqual(checkvars, {}, 'Some variables not found: %s' % checkvars)
+
+        for inherit in checkinherits:
+            self.assertIn(inherit, inherits, 'Missing inherit of %s' % inherit)
+
+
+class DevtoolTests(DevtoolBase):
 
     def test_create_workspace(self):
         # Check preconditions
@@ -34,64 +55,6 @@ class DevtoolTests(oeSelfTest):
         result = runCmd('bitbake-layers show-layers')
         self.assertNotIn(tempdir, result.output)
         self.assertIn(workspacedir, result.output)
-
-    def _test_recipe_contents(self, recipefile, checkvars, checkinherits):
-        with open(recipefile, 'r') as f:
-            for line in f:
-                if '=' in line:
-                    splitline = line.split('=', 1)
-                    var = splitline[0].rstrip()
-                    value = splitline[1].strip().strip('"')
-                    if var in checkvars:
-                        needvalue = checkvars.pop(var)
-                        self.assertEqual(value, needvalue, 'values for %s do not match' % var)
-                if line.startswith('inherit '):
-                    inherits = line.split()[1:]
-
-        self.assertEqual(checkvars, {}, 'Some variables not found: %s' % checkvars)
-
-        for inherit in checkinherits:
-            self.assertIn(inherit, inherits, 'Missing inherit of %s' % inherit)
-
-    def test_recipetool_create(self):
-        # Try adding a recipe
-        tempdir = tempfile.mkdtemp(prefix='devtoolqa')
-        self.track_for_cleanup(tempdir)
-        tempsrc = os.path.join(tempdir, 'srctree')
-        os.makedirs(tempsrc)
-        recipefile = os.path.join(tempdir, 'logrotate_3.8.7.bb')
-        srcuri = 'https://fedorahosted.org/releases/l/o/logrotate/logrotate-3.8.7.tar.gz'
-        result = runCmd('recipetool create -o %s %s -x %s' % (recipefile, srcuri, tempsrc))
-        self.assertTrue(os.path.isfile(recipefile))
-        checkvars = {}
-        checkvars['LICENSE'] = 'GPLv2'
-        checkvars['LIC_FILES_CHKSUM'] = 'file://COPYING;md5=18810669f13b87348459e611d31ab760'
-        checkvars['SRC_URI'] = 'https://fedorahosted.org/releases/l/o/logrotate/logrotate-${PV}.tar.gz'
-        checkvars['SRC_URI[md5sum]'] = '99e08503ef24c3e2e3ff74cc5f3be213'
-        checkvars['SRC_URI[sha256sum]'] = 'f6ba691f40e30e640efa2752c1f9499a3f9738257660994de70a45fe00d12b64'
-        self._test_recipe_contents(recipefile, checkvars, [])
-
-    def test_recipetool_create_git(self):
-        # Ensure we have the right data in shlibs/pkgdata
-        bitbake('libpng pango libx11 libxext jpeg')
-        # Try adding a recipe
-        tempdir = tempfile.mkdtemp(prefix='devtoolqa')
-        self.track_for_cleanup(tempdir)
-        tempsrc = os.path.join(tempdir, 'srctree')
-        os.makedirs(tempsrc)
-        recipefile = os.path.join(tempdir, 'libmatchbox.bb')
-        srcuri = 'git://git.yoctoproject.org/libmatchbox'
-        result = runCmd('recipetool create -o %s %s -x %s' % (recipefile, srcuri, tempsrc))
-        self.assertTrue(os.path.isfile(recipefile), 'recipetool did not create recipe file; output:\n%s' % result.output)
-        checkvars = {}
-        checkvars['LICENSE'] = 'LGPLv2.1'
-        checkvars['LIC_FILES_CHKSUM'] = 'file://COPYING;md5=7fbc338309ac38fefcd64b04bb903e34'
-        checkvars['S'] = '${WORKDIR}/git'
-        checkvars['PV'] = '1.0+git${SRCPV}'
-        checkvars['SRC_URI'] = srcuri
-        checkvars['DEPENDS'] = 'libpng pango libx11 libxext jpeg'
-        inherits = ['autotools', 'pkgconfig']
-        self._test_recipe_contents(recipefile, checkvars, inherits)
 
     def test_devtool_add(self):
         # Check preconditions
