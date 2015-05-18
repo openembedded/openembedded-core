@@ -24,6 +24,7 @@ import tempfile
 import logging
 import argparse
 import scriptutils
+import errno
 from devtool import exec_build_env_command, setup_tinfoil
 
 logger = logging.getLogger('devtool')
@@ -510,6 +511,14 @@ def update_recipe(args, config, basepath, workspace):
         logger.error("no recipe named %s in your workspace" % args.recipename)
         return -1
 
+    if args.append:
+        if not os.path.exists(args.append):
+            logger.error('bbappend destination layer directory "%s" does not exist' % args.append)
+            return 2
+        if not os.path.exists(os.path.join(args.append, 'conf', 'layer.conf')):
+            logger.error('conf/layer.conf not found in bbappend destination layer "%s"' % args.append)
+            return 2
+
     tinfoil = setup_tinfoil()
     import bb
     from oe.patch import GitApplyTree
@@ -535,22 +544,19 @@ def update_recipe(args, config, basepath, workspace):
     else:
         mode = args.mode
 
-    def remove_patches(srcuri, patchlist):
-        """Remove patches"""
-        updated = False
+    def remove_patch_entries(srcuri, patchlist):
+        """Remove patch entries from SRC_URI"""
+        remaining = patchlist[:]
+        entries = []
         for patch in patchlist:
             patchfile = os.path.basename(patch)
             for i in xrange(len(srcuri)):
-                if srcuri[i].startswith('file://') and os.path.basename(srcuri[i]).split(';')[0] == patchfile:
-                    logger.info('Removing patch %s' % patchfile)
+                if srcuri[i].startswith('file://') and os.path.basename(srcuri[i].split(';')[0]) == patchfile:
+                    entries.append(srcuri[i])
+                    remaining.remove(patch)
                     srcuri.pop(i)
-                    # FIXME "git rm" here would be nice if the file in question is tracked
-                    # FIXME there's a chance that this file is referred to by another recipe, in which case deleting wouldn't be the right thing to do
-                    if patch.startswith(os.path.dirname(recipefile)):
-                        os.remove(patch)
-                    updated = True
                     break
-        return updated
+        return entries, remaining
 
     srctree = workspace[args.recipename]
 
@@ -565,8 +571,11 @@ def update_recipe(args, config, basepath, workspace):
         logger.error('Invalid hash returned by git: %s' % stdout)
         return 1
 
+    removepatches = []
+    destpath = None
     if mode == 'srcrev':
         logger.info('Updating SRCREV in recipe %s' % os.path.basename(recipefile))
+        removevalues = None
         patchfields = {}
         patchfields['SRCREV'] = srcrev
         if not args.no_remove:
@@ -575,7 +584,6 @@ def update_recipe(args, config, basepath, workspace):
 
             old_srcrev = (rd.getVar('SRCREV', False) or '')
             tempdir = tempfile.mkdtemp(prefix='devtool')
-            removepatches = []
             try:
                 GitApplyTree.extractPatches(srctree, old_srcrev, tempdir)
                 newpatches = os.listdir(tempdir)
@@ -587,10 +595,14 @@ def update_recipe(args, config, basepath, workspace):
                 shutil.rmtree(tempdir)
             if removepatches:
                 srcuri = (rd.getVar('SRC_URI', False) or '').split()
-                if remove_patches(srcuri, removepatches):
+                removedentries, _ = remove_patch_entries(srcuri, removepatches)
+                if removedentries:
                     patchfields['SRC_URI'] = ' '.join(srcuri)
 
-        oe.recipeutils.patch_recipe(tinfoil.config_data, recipefile, patchfields)
+        if args.append:
+            (appendfile, destpath) = oe.recipeutils.bbappend_recipe(rd, args.append, None, wildcardver=args.wildcard_version, extralines=patchfields)
+        else:
+            oe.recipeutils.patch_recipe(tinfoil.config_data, recipefile, patchfields)
 
         if not 'git://' in orig_src_uri:
             logger.info('You will need to update SRC_URI within the recipe to point to a git repository where you have pushed your changes')
@@ -628,6 +640,7 @@ def update_recipe(args, config, basepath, workspace):
         existing_patches = oe.recipeutils.get_recipe_patches(rd)
 
         removepatches = []
+        seqpatch_re = re.compile('^[0-9]{4}-')
         if not args.no_remove:
             # Get all patches from source tree and check if any should be removed
             tempdir = tempfile.mkdtemp(prefix='devtool')
@@ -635,8 +648,18 @@ def update_recipe(args, config, basepath, workspace):
                 GitApplyTree.extractPatches(srctree, initial_rev, tempdir)
                 newpatches = os.listdir(tempdir)
                 for patch in existing_patches:
+                    # If it's a git sequence named patch, the numbers might not match up
+                    # since we are starting from a different revision
+                    # This does assume that people are using unique shortlog values, but
+                    # they ought to be anyway...
                     patchfile = os.path.basename(patch)
-                    if patchfile not in newpatches:
+                    if seqpatch_re.search(patchfile):
+                        for newpatch in newpatches:
+                            if seqpatch_re.search(newpatch) and patchfile[5:] == newpatch[5:]:
+                                break
+                        else:
+                            removepatches.append(patch)
+                    elif patchfile not in newpatches:
                         removepatches.append(patch)
             finally:
                 shutil.rmtree(tempdir)
@@ -650,33 +673,56 @@ def update_recipe(args, config, basepath, workspace):
             updatepatches = False
             updaterecipe = False
             newpatches = os.listdir(tempdir)
-            for patch in existing_patches:
-                patchfile = os.path.basename(patch)
-                if patchfile in newpatches:
-                    logger.info('Updating patch %s' % patchfile)
-                    shutil.move(os.path.join(tempdir, patchfile), patch)
-                    newpatches.remove(patchfile)
-                    updatepatches = True
-            srcuri = (rd.getVar('SRC_URI', False) or '').split()
-            if newpatches:
-                # Add any patches left over
-                patchdir = os.path.join(os.path.dirname(recipefile), rd.getVar('BPN', True))
-                bb.utils.mkdirhier(patchdir)
+            if args.append:
+                patchfiles = {}
+                for patch in existing_patches:
+                    patchfile = os.path.basename(patch)
+                    if patchfile in newpatches:
+                        patchfiles[os.path.join(tempdir, patchfile)] = patchfile
+                        newpatches.remove(patchfile)
                 for patchfile in newpatches:
-                    logger.info('Adding new patch %s' % patchfile)
-                    shutil.move(os.path.join(tempdir, patchfile), os.path.join(patchdir, patchfile))
-                    srcuri.append('file://%s' % patchfile)
-                    updaterecipe = True
-            if removepatches:
-                if remove_patches(srcuri, removepatches):
-                    updaterecipe = True
-            if updaterecipe:
-                logger.info('Updating recipe %s' % os.path.basename(recipefile))
-                oe.recipeutils.patch_recipe(tinfoil.config_data,
-                        recipefile, {'SRC_URI': ' '.join(srcuri)})
-            elif not updatepatches:
-                # Neither patches nor recipe were updated
-                logger.info('No patches need updating')
+                    patchfiles[os.path.join(tempdir, patchfile)] = None
+
+                if patchfiles or removepatches:
+                    removevalues = None
+                    if removepatches:
+                        srcuri = (rd.getVar('SRC_URI', False) or '').split()
+                        removedentries, remaining = remove_patch_entries(srcuri, removepatches)
+                        if removedentries or remaining:
+                            removevalues = {'SRC_URI': removedentries + ['file://' + os.path.basename(item) for item in remaining]}
+                    (appendfile, destpath) = oe.recipeutils.bbappend_recipe(rd, args.append, patchfiles, removevalues=removevalues)
+                else:
+                    logger.info('No patches needed updating')
+            else:
+                for patch in existing_patches:
+                    patchfile = os.path.basename(patch)
+                    if patchfile in newpatches:
+                        logger.info('Updating patch %s' % patchfile)
+                        shutil.move(os.path.join(tempdir, patchfile), patch)
+                        newpatches.remove(patchfile)
+                        updatepatches = True
+                srcuri = (rd.getVar('SRC_URI', False) or '').split()
+                if newpatches:
+                    # Add any patches left over
+                    patchdir = os.path.join(os.path.dirname(recipefile), rd.getVar('BPN', True))
+                    bb.utils.mkdirhier(patchdir)
+                    for patchfile in newpatches:
+                        logger.info('Adding new patch %s' % patchfile)
+                        shutil.move(os.path.join(tempdir, patchfile), os.path.join(patchdir, patchfile))
+                        srcuri.append('file://%s' % patchfile)
+                        updaterecipe = True
+                if removepatches:
+                    removedentries, _ = remove_patch_entries(srcuri, removepatches)
+                    if removedentries:
+                        updaterecipe = True
+                if updaterecipe:
+                    logger.info('Updating recipe %s' % os.path.basename(recipefile))
+                    oe.recipeutils.patch_recipe(tinfoil.config_data,
+                            recipefile, {'SRC_URI': ' '.join(srcuri)})
+                elif not updatepatches:
+                    # Neither patches nor recipe were updated
+                    logger.info('No patches need updating')
+
         finally:
             shutil.rmtree(tempdir)
 
@@ -684,6 +730,24 @@ def update_recipe(args, config, basepath, workspace):
         logger.error('update_recipe: invalid mode %s' % mode)
         return 1
 
+    if removepatches:
+        for patchfile in removepatches:
+            if args.append:
+                if not destpath:
+                    raise Exception('destpath should be set here')
+                patchfile = os.path.join(destpath, os.path.basename(patchfile))
+
+            if os.path.exists(patchfile):
+                logger.info('Removing patch %s' % patchfile)
+                # FIXME "git rm" here would be nice if the file in question is tracked
+                # FIXME there's a chance that this file is referred to by another recipe, in which case deleting wouldn't be the right thing to do
+                os.remove(patchfile)
+                # Remove directory if empty
+                try:
+                    os.rmdir(os.path.dirname(patchfile))
+                except OSError as ose:
+                    if ose.errno != errno.ENOTEMPTY:
+                        raise
     return 0
 
 
@@ -797,6 +861,8 @@ def register_commands(subparsers, context):
     parser_update_recipe.add_argument('recipename', help='Name of recipe to update')
     parser_update_recipe.add_argument('--mode', '-m', choices=['patch', 'srcrev', 'auto'], default='auto', help='Update mode (where %(metavar)s is %(choices)s; default is %(default)s)', metavar='MODE')
     parser_update_recipe.add_argument('--initial-rev', help='Starting revision for patches')
+    parser_update_recipe.add_argument('--append', '-a', help='Write changes to a bbappend in the specified layer instead of the recipe', metavar='LAYERDIR')
+    parser_update_recipe.add_argument('--wildcard-version', '-w', help='In conjunction with -a/--append, use a wildcard to make the bbappend apply to any recipe version', action='store_true')
     parser_update_recipe.add_argument('--no-remove', '-n', action="store_true", help='Don\'t remove patches, only add or update')
     parser_update_recipe.set_defaults(func=update_recipe)
 
