@@ -13,5 +13,5 @@ DEPENDS += "virtual/libx11"
 
 BBCLASSEXTEND = "native nativesdk"
 
-SRC_URI[md5sum] = "2dd10448c1166e71a176206a8dfabe6d"
-SRC_URI[sha256sum] = "dbc2db2925ca9f216fd1e9c63d0974db9f4d49aaf5877ffb606d2d8d7e58cebe"
+SRC_URI[md5sum] = "66662e76899112c0f99e22f2fc775a7e"
+SRC_URI[sha256sum] = "d21b2d1fd78c1efbe1f2c16dae1cb23f8fd231dcf891465b8debe636a9054b0c"
