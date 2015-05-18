@@ -9,10 +9,12 @@ systems."
 HOMEPAGE = "http://freedesktop.org/wiki/Software/XKeyboardConfig"
 BUGTRACKER = "https://bugs.freedesktop.org/enter_bug.cgi?product=xkeyboard-config"
 
-LICENSE = "MIT & MIT-style & GPLv3"
+LICENSE = "MIT & MIT-style"
 LIC_FILES_CHKSUM = "file://COPYING;md5=0e7f21ca7db975c63467d2e7624a12f9"
 
-SRC_URI="${XORG_MIRROR}/individual/data/xkeyboard-config/${BPN}-${PV}.tar.bz2"
+SRC_URI = "${XORG_MIRROR}/individual/data/xkeyboard-config/${BPN}-${PV}.tar.bz2 \
+           file://0001-Remove-GPLv3-content.patch \
+           "
 SRC_URI[md5sum] = "a415775ca8ecf4dfafc9488b8cbd7114"
 SRC_URI[sha256sum] = "7b5be9f2b9a30102512b15308aec55f7f54289df24ac21de82ebb4bf145f9fce"
 
