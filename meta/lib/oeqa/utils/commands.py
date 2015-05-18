@@ -162,3 +162,14 @@ def get_test_layer():
             testlayer = l
             break
     return testlayer
+
+def create_temp_layer(templayerdir, templayername, priority=999, recipepathspec='recipes-*/*'):
+    os.makedirs(os.path.join(templayerdir, 'conf'))
+    with open(os.path.join(templayerdir, 'conf', 'layer.conf'), 'w') as f:
+        f.write('BBPATH .= ":${LAYERDIR}"\n')
+        f.write('BBFILES += "${LAYERDIR}/%s/*.bb \\' % recipepathspec)
+        f.write('            ${LAYERDIR}/%s/*.bbappend"\n' % recipepathspec)
+        f.write('BBFILE_COLLECTIONS += "%s"\n' % templayername)
+        f.write('BBFILE_PATTERN_%s = "^${LAYERDIR}/"\n' % templayername)
+        f.write('BBFILE_PRIORITY_%s = "%d"\n' % (templayername, priority))
+        f.write('BBFILE_PATTERN_IGNORE_EMPTY_%s = "1"\n' % templayername)

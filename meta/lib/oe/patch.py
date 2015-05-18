@@ -92,6 +92,69 @@ class PatchSet(object):
     def Refresh(self, remote = None, all = None):
         raise NotImplementedError()
 
+    @staticmethod
+    def getPatchedFiles(patchfile, striplevel, srcdir=None):
+        """
+        Read a patch file and determine which files it will modify.
+        Params:
+            patchfile: the patch file to read
+            striplevel: the strip level at which the patch is going to be applied
+            srcdir: optional path to join onto the patched file paths
+        Returns:
+            A list of tuples of file path and change mode ('A' for add,
+            'D' for delete or 'M' for modify)
+        """
+
+        def patchedpath(patchline):
+            filepth = patchline.split()[1]
+            if filepth.endswith('/dev/null'):
+                return '/dev/null'
+            filesplit = filepth.split(os.sep)
+            if striplevel > len(filesplit):
+                bb.error('Patch %s has invalid strip level %d' % (patchfile, striplevel))
+                return None
+            return os.sep.join(filesplit[striplevel:])
+
+        copiedmode = False
+        filelist = []
+        with open(patchfile) as f:
+            for line in f:
+                if line.startswith('--- '):
+                    patchpth = patchedpath(line)
+                    if not patchpth:
+                        break
+                    if copiedmode:
+                        addedfile = patchpth
+                    else:
+                        removedfile = patchpth
+                elif line.startswith('+++ '):
+                    addedfile = patchedpath(line)
+                    if not addedfile:
+                        break
+                elif line.startswith('*** '):
+                    copiedmode = True
+                    removedfile = patchedpath(line)
+                    if not removedfile:
+                        break
+                else:
+                    removedfile = None
+                    addedfile = None
+
+                if addedfile and removedfile:
+                    if removedfile == '/dev/null':
+                        mode = 'A'
+                    elif addedfile == '/dev/null':
+                        mode = 'D'
+                    else:
+                        mode = 'M'
+                    if srcdir:
+                        fullpath = os.path.abspath(os.path.join(srcdir, addedfile))
+                    else:
+                        fullpath = addedfile
+                    filelist.append((fullpath, mode))
+
+        return filelist
+
 
 class PatchTree(PatchSet):
     def __init__(self, dir, d):

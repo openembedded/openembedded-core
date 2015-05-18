@@ -2,7 +2,7 @@
 #
 # Some code borrowed from the OE layer index
 #
-# Copyright (C) 2013-2014 Intel Corporation
+# Copyright (C) 2013-2015 Intel Corporation
 #
 
 import sys
@@ -14,6 +14,7 @@ import difflib
 import utils
 import shutil
 import re
+import fnmatch
 from collections import OrderedDict, defaultdict
 
 
@@ -289,6 +290,27 @@ def get_recipe_patches(d):
     return patchfiles
 
 
+def get_recipe_patched_files(d):
+    """
+    Get the list of patches for a recipe along with the files each patch modifies.
+    Params:
+        d: the datastore for the recipe
+    Returns:
+        a dict mapping patch file path to a list of tuples of changed files and
+        change mode ('A' for add, 'D' for delete or 'M' for modify)
+    """
+    import oe.patch
+    # Execute src_patches() defined in patch.bbclass - this works since that class
+    # is inherited globally
+    patches = bb.utils.exec_flat_python_func('src_patches', d)
+    patchedfiles = {}
+    for patch in patches:
+        _, _, patchfile, _, _, parm = bb.fetch.decodeurl(patch)
+        striplevel = int(parm['striplevel'])
+        patchedfiles[patchfile] = oe.patch.PatchSet.getPatchedFiles(patchfile, striplevel, os.path.join(d.getVar('S', True), parm.get('patchdir', '')))
+    return patchedfiles
+
+
 def validate_pn(pn):
     """Perform validation on a recipe name (PN) for a new recipe."""
     reserved_names = ['forcevariable', 'append', 'prepend', 'remove']
@@ -299,4 +321,308 @@ def validate_pn(pn):
     elif pn.startswith('pn-'):
         return 'Recipe name "%s" is invalid: names starting with "pn-" are reserved' % pn
     return ''
+
+
+def get_bbappend_path(d, destlayerdir, wildcardver=False):
+    """Determine how a bbappend for a recipe should be named and located within another layer"""
+
+    import bb.cookerdata
+
+    destlayerdir = os.path.abspath(destlayerdir)
+    recipefile = d.getVar('FILE', True)
+    recipefn = os.path.splitext(os.path.basename(recipefile))[0]
+    if wildcardver and '_' in recipefn:
+        recipefn = recipefn.split('_', 1)[0] + '_%'
+    appendfn = recipefn + '.bbappend'
+
+    # Parse the specified layer's layer.conf file directly, in case the layer isn't in bblayers.conf
+    confdata = d.createCopy()
+    confdata.setVar('BBFILES', '')
+    confdata.setVar('LAYERDIR', destlayerdir)
+    destlayerconf = os.path.join(destlayerdir, "conf", "layer.conf")
+    confdata = bb.cookerdata.parse_config_file(destlayerconf, confdata)
+
+    origlayerdir = find_layerdir(recipefile)
+    if not origlayerdir:
+        return (None, False)
+    # Now join this to the path where the bbappend is going and check if it is covered by BBFILES
+    appendpath = os.path.join(destlayerdir, os.path.relpath(os.path.dirname(recipefile), origlayerdir), appendfn)
+    closepath = ''
+    pathok = True
+    for bbfilespec in confdata.getVar('BBFILES', True).split():
+        if fnmatch.fnmatchcase(appendpath, bbfilespec):
+            # Our append path works, we're done
+            break
+        elif bbfilespec.startswith(destlayerdir) and fnmatch.fnmatchcase('test.bbappend', os.path.basename(bbfilespec)):
+            # Try to find the longest matching path
+            if len(bbfilespec) > len(closepath):
+                closepath = bbfilespec
+    else:
+        # Unfortunately the bbappend layer and the original recipe's layer don't have the same structure
+        if closepath:
+            # bbappend layer's layer.conf at least has a spec that picks up .bbappend files
+            # Now we just need to substitute out any wildcards
+            appendsubdir = os.path.relpath(os.path.dirname(closepath), destlayerdir)
+            if 'recipes-*' in appendsubdir:
+                # Try to copy this part from the original recipe path
+                res = re.search('/recipes-[^/]+/', recipefile)
+                if res:
+                    appendsubdir = appendsubdir.replace('/recipes-*/', res.group(0))
+            # This is crude, but we have to do something
+            appendsubdir = appendsubdir.replace('*', recipefn.split('_')[0])
+            appendsubdir = appendsubdir.replace('?', 'a')
+            appendpath = os.path.join(destlayerdir, appendsubdir, appendfn)
+        else:
+            pathok = False
+    return (appendpath, pathok)
+
+
+def bbappend_recipe(rd, destlayerdir, srcfiles, install=None, wildcardver=False, machine=None, extralines=None, removevalues=None):
+    """
+    Writes a bbappend file for a recipe
+    Parameters:
+        rd: data dictionary for the recipe
+        destlayerdir: base directory of the layer to place the bbappend in
+            (subdirectory path from there will be determined automatically)
+        srcfiles: dict of source files to add to SRC_URI, where the value
+            is the full path to the file to be added, and the value is the
+            original filename as it would appear in SRC_URI or None if it
+            isn't already present. You may pass None for this parameter if
+            you simply want to specify your own content via the extralines
+            parameter.
+        install: dict mapping entries in srcfiles to a tuple of two elements:
+            install path (*without* ${D} prefix) and permission value (as a
+            string, e.g. '0644').
+        wildcardver: True to use a % wildcard in the bbappend filename, or
+            False to make the bbappend specific to the recipe version.
+        machine:
+            If specified, make the changes in the bbappend specific to this
+            machine. This will also cause PACKAGE_ARCH = "${MACHINE_ARCH}"
+            to be added to the bbappend.
+        extralines:
+            Extra lines to add to the bbappend. This may be a dict of name
+            value pairs, or simply a list of the lines.
+        removevalues:
+            Variable values to remove - a dict of names/values.
+    """
+
+    if not removevalues:
+        removevalues = {}
+
+    # Determine how the bbappend should be named
+    appendpath, pathok = get_bbappend_path(rd, destlayerdir, wildcardver)
+    if not appendpath:
+        bb.error('Unable to determine layer directory containing %s' % recipefile)
+        return (None, None)
+    if not pathok:
+        bb.warn('Unable to determine correct subdirectory path for bbappend file - check that what %s adds to BBFILES also matches .bbappend files. Using %s for now, but until you fix this the bbappend will not be applied.' % (os.path.join(destlayerdir, 'conf', 'layer.conf'), os.path.dirname(appendpath)))
+
+    appenddir = os.path.dirname(appendpath)
+    bb.utils.mkdirhier(appenddir)
+
+    # FIXME check if the bbappend doesn't get overridden by a higher priority layer?
+
+    layerdirs = [os.path.abspath(layerdir) for layerdir in rd.getVar('BBLAYERS', True).split()]
+    if not os.path.abspath(destlayerdir) in layerdirs:
+        bb.warn('Specified layer is not currently enabled in bblayers.conf, you will need to add it before this bbappend will be active')
+
+    bbappendlines = []
+    if extralines:
+        if isinstance(extralines, dict):
+            for name, value in extralines.iteritems():
+                bbappendlines.append((name, '=', value))
+        else:
+            # Do our best to split it
+            for line in extralines:
+                if line[-1] == '\n':
+                    line = line[:-1]
+                splitline = line.split(maxsplit=2)
+                if len(splitline) == 3:
+                    bbappendlines.append(tuple(splitline))
+                else:
+                    raise Exception('Invalid extralines value passed')
+
+    def popline(varname):
+        for i in xrange(0, len(bbappendlines)):
+            if bbappendlines[i][0] == varname:
+                line = bbappendlines.pop(i)
+                return line
+        return None
+
+    def appendline(varname, op, value):
+        for i in xrange(0, len(bbappendlines)):
+            item = bbappendlines[i]
+            if item[0] == varname:
+                bbappendlines[i] = (item[0], item[1], item[2] + ' ' + value)
+                break
+        else:
+            bbappendlines.append((varname, op, value))
+
+    destsubdir = rd.getVar('PN', True)
+    if srcfiles:
+        bbappendlines.append(('FILESEXTRAPATHS_prepend', ':=', '${THISDIR}/${PN}:'))
+
+    appendoverride = ''
+    if machine:
+        bbappendlines.append(('PACKAGE_ARCH', '=', '${MACHINE_ARCH}'))
+        appendoverride = '_%s' % machine
+    copyfiles = {}
+    if srcfiles:
+        instfunclines = []
+        for newfile, origsrcfile in srcfiles.iteritems():
+            srcfile = origsrcfile
+            srcurientry = None
+            if not srcfile:
+                srcfile = os.path.basename(newfile)
+                srcurientry = 'file://%s' % srcfile
+                # Double-check it's not there already
+                # FIXME do we care if the entry is added by another bbappend that might go away?
+                if not srcurientry in rd.getVar('SRC_URI', True).split():
+                    if machine:
+                        appendline('SRC_URI_append%s' % appendoverride, '=', ' ' + srcurientry)
+                    else:
+                        appendline('SRC_URI', '+=', srcurientry)
+            copyfiles[newfile] = srcfile
+            if install:
+                institem = install.pop(newfile, None)
+                if institem:
+                    (destpath, perms) = institem
+                    instdestpath = replace_dir_vars(destpath, rd)
+                    instdirline = 'install -d ${D}%s' % os.path.dirname(instdestpath)
+                    if not instdirline in instfunclines:
+                        instfunclines.append(instdirline)
+                    instfunclines.append('install -m %s ${WORKDIR}/%s ${D}%s' % (perms, os.path.basename(srcfile), instdestpath))
+        if instfunclines:
+            bbappendlines.append(('do_install_append%s()' % appendoverride, '', instfunclines))
+
+    bb.note('Writing append file %s' % appendpath)
+
+    if os.path.exists(appendpath):
+        # Work around lack of nonlocal in python 2
+        extvars = {'destsubdir': destsubdir}
+
+        def appendfile_varfunc(varname, origvalue, op, newlines):
+            if varname == 'FILESEXTRAPATHS_prepend':
+                if origvalue.startswith('${THISDIR}/'):
+                    popline('FILESEXTRAPATHS_prepend')
+                    extvars['destsubdir'] = rd.expand(origvalue.split('${THISDIR}/', 1)[1].rstrip(':'))
+            elif varname == 'PACKAGE_ARCH':
+                if machine:
+                    popline('PACKAGE_ARCH')
+                    return (machine, None, 4, False)
+            elif varname.startswith('do_install_append'):
+                func = popline(varname)
+                if func:
+                    instfunclines = [line.strip() for line in origvalue.strip('\n').splitlines()]
+                    for line in func[2]:
+                        if not line in instfunclines:
+                            instfunclines.append(line)
+                    return (instfunclines, None, 4, False)
+            else:
+                splitval = origvalue.split()
+                changed = False
+                removevar = varname
+                if varname in ['SRC_URI', 'SRC_URI_append%s' % appendoverride]:
+                    removevar = 'SRC_URI'
+                    line = popline(varname)
+                    if line:
+                        if line[2] not in splitval:
+                            splitval.append(line[2])
+                            changed = True
+                else:
+                    line = popline(varname)
+                    if line:
+                        splitval = [line[2]]
+                        changed = True
+
+                if removevar in removevalues:
+                    remove = removevalues[removevar]
+                    if isinstance(remove, basestring):
+                        if remove in splitval:
+                            splitval.remove(remove)
+                            changed = True
+                    else:
+                        for removeitem in remove:
+                            if removeitem in splitval:
+                                splitval.remove(removeitem)
+                                changed = True
+
+                if changed:
+                    newvalue = splitval
+                    if len(newvalue) == 1:
+                        # Ensure it's written out as one line
+                        if '_append' in varname:
+                            newvalue = ' ' + newvalue[0]
+                        else:
+                            newvalue = newvalue[0]
+                    if not newvalue and (op in ['+=', '.='] or '_append' in varname):
+                        # There's no point appending nothing
+                        newvalue = None
+                    if varname.endswith('()'):
+                        indent = 4
+                    else:
+                        indent = -1
+                    return (newvalue, None, indent, True)
+            return (origvalue, None, 4, False)
+
+        varnames = [item[0] for item in bbappendlines]
+        if removevalues:
+            varnames.extend(removevalues.keys())
+
+        with open(appendpath, 'r') as f:
+            (updated, newlines) = bb.utils.edit_metadata(f, varnames, appendfile_varfunc)
+
+        destsubdir = extvars['destsubdir']
+    else:
+        updated = False
+        newlines = []
+
+    if bbappendlines:
+        for line in bbappendlines:
+            if line[0].endswith('()'):
+                newlines.append('%s {\n    %s\n}\n' % (line[0], '\n    '.join(line[2])))
+            else:
+                newlines.append('%s %s "%s"\n\n' % line)
+        updated = True
+
+    if updated:
+        with open(appendpath, 'w') as f:
+            f.writelines(newlines)
+
+    if copyfiles:
+        if machine:
+            destsubdir = os.path.join(destsubdir, machine)
+        for newfile, srcfile in copyfiles.iteritems():
+            filedest = os.path.join(appenddir, destsubdir, os.path.basename(srcfile))
+            if os.path.abspath(newfile) != os.path.abspath(filedest):
+                bb.note('Copying %s to %s' % (newfile, filedest))
+                bb.utils.mkdirhier(os.path.dirname(filedest))
+                shutil.copyfile(newfile, filedest)
+
+    return (appendpath, os.path.join(appenddir, destsubdir))
+
+
+def find_layerdir(fn):
+    """ Figure out relative path to base of layer for a file (e.g. a recipe)"""
+    pth = os.path.dirname(fn)
+    layerdir = ''
+    while pth:
+        if os.path.exists(os.path.join(pth, 'conf', 'layer.conf')):
+            layerdir = pth
+            break
+        pth = os.path.dirname(pth)
+    return layerdir
+
+
+def replace_dir_vars(path, d):
+    """Replace common directory paths with appropriate variable references (e.g. /etc becomes ${sysconfdir})"""
+    dirvars = {}
+    for var in d:
+        if var.endswith('dir') and var.lower() == var:
+            value = d.getVar(var, True)
+            if value.startswith('/') and not '\n' in value:
+                dirvars[value] = var
+    for dirpath in sorted(dirvars.keys(), reverse=True):
+        path = path.replace(dirpath, '${%s}' % dirvars[dirpath])
+    return path
 

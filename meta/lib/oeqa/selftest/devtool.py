@@ -8,7 +8,7 @@ import glob
 
 import oeqa.utils.ftools as ftools
 from oeqa.selftest.base import oeSelfTest
-from oeqa.utils.commands import runCmd, bitbake, get_bb_var
+from oeqa.utils.commands import runCmd, bitbake, get_bb_var, create_temp_layer
 from oeqa.utils.decorators import testcase
 
 class DevtoolBase(oeSelfTest):
@@ -30,6 +30,35 @@ class DevtoolBase(oeSelfTest):
 
         for inherit in checkinherits:
             self.assertIn(inherit, inherits, 'Missing inherit of %s' % inherit)
+
+    def _check_bbappend(self, testrecipe, recipefile, appenddir):
+        result = runCmd('bitbake-layers show-appends', cwd=self.builddir)
+        resultlines = result.output.splitlines()
+        inrecipe = False
+        bbappends = []
+        bbappendfile = None
+        for line in resultlines:
+            if inrecipe:
+                if line.startswith(' '):
+                    bbappends.append(line.strip())
+                else:
+                    break
+            elif line == '%s:' % os.path.basename(recipefile):
+                inrecipe = True
+        self.assertLessEqual(len(bbappends), 2, '%s recipe is being bbappended by another layer - bbappends found:\n  %s' % (testrecipe, '\n  '.join(bbappends)))
+        for bbappend in bbappends:
+            if bbappend.startswith(appenddir):
+                bbappendfile = bbappend
+                break
+        else:
+            self.assertTrue(False, 'bbappend for recipe %s does not seem to be created in test layer' % testrecipe)
+        return bbappendfile
+
+    def _create_temp_layer(self, templayerdir, addlayer, templayername, priority=999, recipepathspec='recipes-*/*'):
+        create_temp_layer(templayerdir, templayername, priority, recipepathspec)
+        if addlayer:
+            self.add_command_to_tearDown('bitbake-layers remove-layer %s || true' % templayerdir)
+            result = runCmd('bitbake-layers add-layer %s' % templayerdir, cwd=self.builddir)
 
 
 class DevtoolTests(DevtoolBase):

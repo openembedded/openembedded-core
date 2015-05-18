@@ -31,11 +31,11 @@ logger = scriptutils.logger_create('recipetool')
 
 plugins = []
 
-def tinfoil_init():
+def tinfoil_init(parserecipes):
     import bb.tinfoil
     import logging
     tinfoil = bb.tinfoil.Tinfoil()
-    tinfoil.prepare(True)
+    tinfoil.prepare(not parserecipes)
 
     for plugin in plugins:
         if hasattr(plugin, 'tinfoil_init'):
@@ -82,7 +82,7 @@ def main():
 
     scriptutils.logger_setup_color(logger, args.color)
 
-    tinfoil_init()
+    tinfoil_init(getattr(args, 'parserecipes', False))
 
     ret = args.func(args)
 
