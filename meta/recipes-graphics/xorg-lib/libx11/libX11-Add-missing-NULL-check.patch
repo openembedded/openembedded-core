@@ -29,7 +29,7 @@ diff -ru libX11-1.6.2-orig/src/xlibi18n/ICWrap.c libX11-1.6.2/src/xlibi18n/ICWra
 -    ret = (*im->methods->set_values) (im, args);
 +    if (im && im->methods)
 +	ret = (*im->methods->set_values) (im, args);
-     if (args) Xfree(args);
+     Xfree(args);
      return ret;
  }
 @@ -196,7 +197,7 @@
@@ -48,7 +48,7 @@ diff -ru libX11-1.6.2-orig/src/xlibi18n/ICWrap.c libX11-1.6.2/src/xlibi18n/ICWra
 -    ret = (*im->methods->get_values) (im, args);
 +    if (im && im->methods)
 +	ret = (*im->methods->get_values) (im, args);
-     if (args) Xfree(args);
+     Xfree(args);
      return ret;
  }
 @@ -228,7 +230,7 @@
@@ -67,6 +67,6 @@ diff -ru libX11-1.6.2-orig/src/xlibi18n/ICWrap.c libX11-1.6.2/src/xlibi18n/ICWra
 -    ic = (XIC) (*im->methods->create_ic) (im, args);
 +    if (im && im->methods)
 +	ic = (XIC) (*im->methods->create_ic) (im, args);
-     if (args) Xfree(args);
+     Xfree(args);
      if (ic) {
  	ic->core.next = im->core.ic_chain;
