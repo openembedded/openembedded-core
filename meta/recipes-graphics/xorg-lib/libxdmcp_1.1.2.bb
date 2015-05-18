@@ -22,5 +22,5 @@ XORG_PN = "libXdmcp"
 
 BBCLASSEXTEND = "native nativesdk"
 
-SRC_URI[md5sum] = "b94af6cef211cf3ee256f7e81f70fcd9"
-SRC_URI[sha256sum] = "9ace6d4230f9dce4ed090692f82f613253ada8f887b23b3d8ff3dd4e3a7c118e"
+SRC_URI[md5sum] = "18aa5c1279b01f9d18e3299969665b2e"
+SRC_URI[sha256sum] = "81fe09867918fff258296e1e1e159f0dc639cb30d201c53519f25ab73af4e4e2"
