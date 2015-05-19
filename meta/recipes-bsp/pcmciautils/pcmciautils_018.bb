@@ -1,7 +1,7 @@
 require pcmciautils.inc
 
 SRC_URI += "file://makefile_fix.patch \
-            file://Makefile-fix-for-parallel-build.patch \
+            file://0001-fix-a-parallel-building-issue.patch \
 "
 
 SRC_URI[md5sum] = "5d85669b3440baa4532363da6caaf1b4"
