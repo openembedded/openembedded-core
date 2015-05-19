@@ -11,10 +11,12 @@ LIC_FILES_CHKSUM = "file://hdsploader/COPYING;md5=94d55d512a9ba36caa9b7df079bae1
 SRC_URI = "ftp://ftp.alsa-project.org/pub/tools/${BP}.tar.bz2 \
            file://autotools.patch \
            ${@bb.utils.contains('DISTRO_FEATURES', 'x11', '', \
-                                'file://makefile_no_gtk.patch', d)}"
+                                'file://makefile_no_gtk.patch', d)} \
+           file://gitcompile_hdajacksensetest \
+          "
 
-SRC_URI[md5sum] = "e6c929175d8ee729c06d49b51439bad6"
-SRC_URI[sha256sum] = "76e59711c6d0f39cbddce83ce1ed8da00bad112fee021f94fa990d8685cc3761"
+SRC_URI[md5sum] = "f339a3cd24f748c9d007bdff0e98775b"
+SRC_URI[sha256sum] = "94abf0ab5a73f0710c70d4fb3dc1003af5bae2d2ed721d59d245b41ad0f2fbd1"
 
 inherit autotools-brokensep pkgconfig
 
@@ -32,6 +34,8 @@ do_compile_prepend () {
     #Automake dir is not correctly detected in cross compilation case
     export AUTOMAKE_DIR="$(automake --print-libdir)"
     export ACLOCAL_FLAGS="--system-acdir=${ACLOCALDIR}/"
+
+    cp ${WORKDIR}/gitcompile_hdajacksensetest ${S}/hdajacksensetest/gitcompile
 }
 
 FILES_${PN} += "${datadir}/ld10k1"
