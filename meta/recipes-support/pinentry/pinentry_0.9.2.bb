@@ -12,8 +12,8 @@ inherit autotools
 
 SRC_URI = "ftp://ftp.gnupg.org/gcrypt/${BPN}/${BPN}-${PV}.tar.bz2"
 
-SRC_URI[md5sum] = "d224d031130aedb44b05164cb04ed88b"
-SRC_URI[sha256sum] = "9cd08e856b395df3adc7124170b53f77c6d5c8bf88e899e818648ec70d3e9695"
+SRC_URI[md5sum] = "f51d454f921111b5156a2291cbf70278"
+SRC_URI[sha256sum] = "fd8bc1592ceb22bb492b07cb29b1b140bb882c859e6503b974254c0a4b4134d1"
 
 EXTRA_OECONF = "--disable-rpath \
 		        --disable-dependency-tracking \
@@ -24,4 +24,8 @@ PACKAGECONFIG ??= "ncurses libcap"
 PACKAGECONFIG[ncurses] = "--enable-ncurses  --with-ncurses-include-dir=${STAGING_INCDIR}, --disable-ncurses, ncurses"
 PACKAGECONFIG[libcap] = "--with-libcap, --without-libcap, libcap"
 PACKAGECONFIG[qt4] = "--enable-pinentry-qt4, --disable-pinentry-qt4, qt4-x11"
+PACKAGECONFIG[qt4_clipboard] = "--enable-pinentry-qt4-clipboard --enable-pinentry-qt4, --disable-pinentry-qt4-clipboard, qt4-x11"
 PACKAGECONFIG[gtk2] = "--enable-pinentry-gtk2, --disable-pinentry-gtk2, gtk+ glib-2.0"
+
+#To use libsecret, add meta-gnome
+PACKAGECONFIG[secret] = "--enable-libsecret, --disable-libsecret, libsecret"
