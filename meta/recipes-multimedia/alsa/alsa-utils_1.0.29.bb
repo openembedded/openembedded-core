@@ -16,16 +16,14 @@ SRC_URI = "ftp://ftp.alsa-project.org/pub/utils/alsa-utils-${PV}.tar.bz2 \
            file://alsa-utils-aplay-interrupt-signal-handling.patch \
           "
 
-SRC_URI[md5sum] = "361552d5b1cacd0a1e7ba09e69990211"
-SRC_URI[sha256sum] = "f3ff4c89b0125a7797b1b13cd094cc92276e655458274967386e812d03642acc"
+SRC_URI[md5sum] = "6b289bf874c4c9a63f4b3973093dd404"
+SRC_URI[sha256sum] = "5160058f3e14483ced5de919dd473f93932059454530a9b7ef97dcabd6833e9b"
 
 # lazy hack. needs proper fixing in gettext.m4, see
 # http://bugs.openembedded.org/show_bug.cgi?id=2348
 # please close bug and remove this comment when properly fixed
 #
 EXTRA_OECONF_append_libc-uclibc = " --disable-nls"
-
-PR = "r1"
 
 inherit autotools gettext pkgconfig
 
@@ -86,8 +84,9 @@ do_install() {
 	autotools_do_install
 
 	# We don't ship this here because it requires a dependency on bash.
-	# See alsa-utils-alsaconf_${PV}.bb
+	# See alsa-utils-scripts_${PV}.bb
 	rm ${D}${sbindir}/alsaconf
+	rm ${D}${sbindir}/alsa-info.sh
 
 	if ${@bb.utils.contains('PACKAGECONFIG', 'udev', 'false', 'true', d)}; then
 	   # This is where alsa-utils will install its rules if we don't tell it anything else.
