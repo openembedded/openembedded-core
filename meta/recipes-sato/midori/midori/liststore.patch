@@ -1,0 +1,29 @@
+GLib 2.44 has a GListStore type which is GLib.ListStore in Vala, resulting in an ambigous type and compile failure.
+
+Fix by using the full type name.
+
+Upstream-Status: Backport
+Signed-off-by: Ross Burton <ross.burton@intel.com>
+
+diff --git a/extensions/history-list.vala b/extensions/history-list.vala
+index 3a864b1..f309c0c 100644
+--- a/extensions/history-list.vala
++++ b/extensions/history-list.vala
+@@ -319,7 +319,7 @@ namespace HistoryList {
+         }
+ 
+         private void create_widgets () {
+-            ListStore model;
++            Gtk.ListStore model;
+             TreeIter iter;
+             TreeIter? active_iter = null;
+ 
+@@ -331,7 +331,7 @@ namespace HistoryList {
+ 
+             var tab_closing_behavior = this.hl_manager.get_integer ("TabClosingBehavior");
+ 
+-            model = new ListStore (2, typeof (string), typeof (int));
++            model = new Gtk.ListStore (2, typeof (string), typeof (int));
+ 
+             model.append (out iter);
+             model.set (iter, TabClosingBehaviorModel.TEXT, _("Do nothing"),
