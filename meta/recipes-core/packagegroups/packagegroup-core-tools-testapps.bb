@@ -46,8 +46,6 @@ RDEPENDS_${PN} = "\
     ${KEXECTOOLS} \
     alsa-utils-amixer \
     alsa-utils-aplay \
-    gst-meta-video \
-    gst-meta-audio \
     ltp \
     connman-tools \
     connman-tests \
