@@ -8,10 +8,12 @@ def sqlite_download_version(d):
 
 PE = "3"
 SQLITE_PV = "${@sqlite_download_version(d)}"
-SRC_URI = "http://www.sqlite.org/2014/sqlite-autoconf-${SQLITE_PV}.tar.gz"
+SRC_URI = "http://www.sqlite.org/2015/sqlite-autoconf-${SQLITE_PV}.tar.gz \
+           file://0001-using-the-dynamic-library.patch \
+"
 
-SRC_URI[md5sum] = "33bb8db0038317ce1b0480ca1185c7ba"
-SRC_URI[sha256sum] = "86370f139405fdfe03334fd618171a74e50f589f17ccbe5933361ed1f58359ec"
+SRC_URI[md5sum] = "04d0311ef70818e8d914c1dc383eddff"
+SRC_URI[sha256sum] = "c4b8f9eefbdf0b9bef2044bdc3510c8a3f3b0ddb0489661fb433034187f5a428"
 
 S = "${WORKDIR}/sqlite-autoconf-${SQLITE_PV}"
 
