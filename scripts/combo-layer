@@ -145,8 +145,10 @@ class Configuration(object):
                     msg = "%s\nOption %s is not defined for component %s" %(msg, option, name)
                     missing_options.append(option)
             # Sanitize dest_dir so that we do not have to deal with edge cases
-            # (empty string, double slashes) in the rest of the code.
-            dest_dir = os.path.normpath(self.repos[name]["dest_dir"])
+            # (unset, empty string, double slashes) in the rest of the code.
+            # It not being set will still be flagged as error because it is
+            # listed as required option above; that could be changed now.
+            dest_dir = os.path.normpath(self.repos[name].get("dest_dir", "."))
             self.repos[name]["dest_dir"] = "." if not dest_dir else dest_dir
         if msg != "":
             logger.error("configuration file %s has the following error: %s" % (self.conffile,msg))
