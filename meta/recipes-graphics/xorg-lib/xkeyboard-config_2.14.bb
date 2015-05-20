@@ -15,8 +15,8 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=0e7f21ca7db975c63467d2e7624a12f9"
 SRC_URI = "${XORG_MIRROR}/individual/data/xkeyboard-config/${BPN}-${PV}.tar.bz2 \
            file://0001-Remove-GPLv3-content.patch \
            "
-SRC_URI[md5sum] = "a415775ca8ecf4dfafc9488b8cbd7114"
-SRC_URI[sha256sum] = "7b5be9f2b9a30102512b15308aec55f7f54289df24ac21de82ebb4bf145f9fce"
+SRC_URI[md5sum] = "2869c03d85b606f929aab054ef6e1b60"
+SRC_URI[sha256sum] = "dc91458a214c56a35727f9e523fc647615de64137057ca6ee4d4d4474a4bb2ae"
 
 SECTION = "x11/libs"
 DEPENDS = "intltool-native virtual/gettext util-macros libxslt-native"
