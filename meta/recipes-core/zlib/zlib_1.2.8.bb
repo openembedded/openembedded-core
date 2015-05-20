@@ -6,7 +6,6 @@ SECTION = "libs"
 LICENSE = "Zlib"
 LIC_FILES_CHKSUM = "file://zlib.h;beginline=4;endline=23;md5=fde612df1e5933c428b73844a0c494fd"
 
-
 SRC_URI = "http://www.zlib.net/${BPN}-${PV}.tar.xz \
            file://remove.ldconfig.call.patch \
            file://Makefile-runtests.patch \
@@ -45,16 +44,15 @@ do_install_ptest() {
 	install ${B}/minigzipsh ${D}${PTEST_PATH}
 }
 
-# We move zlib shared libraries for target builds to avoid
-# qa warnings.
-#
+# Move zlib shared libraries for target builds to $base_libdir so the library
+# can be used in early boot before $prefix is mounted.
 do_install_append_class-target() {
 	if [ ${base_libdir} != ${libdir} ]
 	then
 		mkdir -p ${D}/${base_libdir}
 		mv ${D}/${libdir}/libz.so.* ${D}/${base_libdir}
-		tmp=`readlink ${D}/${libdir}/libz.so`
-		ln -sf ../../${base_libdir}/$tmp ${D}/${libdir}/libz.so
+		libname=`readlink ${D}/${libdir}/libz.so`
+		ln -sf ${@oe.path.relative("${libdir}", "${base_libdir}")}/$libname ${D}${libdir}/libz.so
 	fi
 }
 
