@@ -1,8 +1,5 @@
 # Summarize sstate usage at the end of the build
 python buildstats_summary () {
-    if not isinstance(e, bb.event.BuildCompleted):
-        return
-
     import collections
     import os.path
 
@@ -37,3 +34,4 @@ python buildstats_summary () {
             bb.note("  {0}: {1}% sstate reuse ({2} setscene, {3} scratch)".format(t, 100*len(sstate)/(len(sstate)+len(no_sstate)), len(sstate), len(no_sstate)))
 }
 addhandler buildstats_summary
+buildstats_summary[eventmask] = "bb.event.BuildCompleted"
