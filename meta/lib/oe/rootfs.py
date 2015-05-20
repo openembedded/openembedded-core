@@ -295,7 +295,9 @@ class Rootfs(object):
 class RpmRootfs(Rootfs):
     def __init__(self, d, manifest_dir):
         super(RpmRootfs, self).__init__(d)
-        self.log_check_regex = '(unpacking of archive failed|Cannot find package|exit 1|ERR|Fail)'
+        self.log_check_regex = '(unpacking of archive failed|Cannot find package'\
+                               '|exit 1|ERROR: |Error: |Error |ERROR '\
+                               '|Failed |Failed: |Failed$|Failed\(\d+\):)'
         self.manifest = RpmManifest(d, manifest_dir)
 
         self.pm = RpmPM(d,
