@@ -29,6 +29,8 @@ FILES_${PN}-schemas = "${datadir}/gtk-engines/*.xml"
 
 CFLAGS_prepend = "-DHAVE_ANIMATION "
 
+RDEPENDS_${PN}-dev = ""
+
 inherit gnomebase
 
 python populate_packages_prepend() {
