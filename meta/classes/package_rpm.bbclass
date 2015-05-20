@@ -196,6 +196,7 @@ python write_specfile () {
             path = rootpath.replace(walkpath, "")
             if path.endswith("DEBIAN") or path.endswith("CONTROL"):
                 continue
+            path = path.replace("%", "%%%%%%%%")
 
             # Treat all symlinks to directories as normal files.
             # os.walk() lists them as directories.
@@ -214,6 +215,7 @@ python write_specfile () {
                 for dir in dirs:
                     if dir == "CONTROL" or dir == "DEBIAN":
                         continue
+                    dir = dir.replace("%", "%%%%%%%%")
                     # All packages own the directories their files are in...
                     target.append('%dir "' + path + '/' + dir + '"')
             else:
@@ -227,6 +229,7 @@ python write_specfile () {
             for file in files:
                 if file == "CONTROL" or file == "DEBIAN":
                     continue
+                file = file.replace("%", "%%%%%%%%")
                 if conffiles.count(path + '/' + file):
                     target.append('%config "' + path + '/' + file + '"')
                 else:
