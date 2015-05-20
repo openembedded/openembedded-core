@@ -815,6 +815,9 @@ def setscene_depvalid(task, taskdependees, notneeded, d):
             # Target populate_sysroot need their dependencies
             return False
 
+        if taskdependees[task][1] == 'do_shared_workdir':
+            continue
+
         # This is due to the [depends] in useradd.bbclass complicating matters
         # The logic *is* reversed here due to the way hard setscene dependencies are injected
         if taskdependees[task][1] == 'do_package' and taskdependees[dep][0].endswith(('shadow-native', 'shadow-sysroot', 'base-passwd', 'pseudo-native')) and taskdependees[dep][1] == 'do_populate_sysroot':
