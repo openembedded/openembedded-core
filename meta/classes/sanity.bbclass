@@ -491,6 +491,8 @@ def sanity_handle_abichanges(status, d):
     #
     # Check the 'ABI' of TMPDIR
     #
+    import subprocess
+
     current_abi = d.getVar('OELAYOUT_ABI', True)
     abifile = d.getVar('SANITY_ABIFILE', True)
     if os.path.exists(abifile):
@@ -824,8 +826,6 @@ def check_sanity_everybuild(status, d):
         status.addresult("Error, IMAGE_FSTYPES vmdk and live can't be built together\n")
 
 def check_sanity(sanity_data):
-    import subprocess
-
     class SanityStatus(object):
         def __init__(self):
             self.messages = ""
