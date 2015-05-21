@@ -657,26 +657,23 @@ def update_recipe(args, config, basepath, workspace):
         existing_patches = oe.recipeutils.get_recipe_patches(rd)
 
         removepatches = []
-        seqpatch_re = re.compile('^[0-9]{4}-')
+        seqpatch_re = re.compile('^([0-9]{4}-)?(.+)')
         if not args.no_remove:
             # Get all patches from source tree and check if any should be removed
             tempdir = tempfile.mkdtemp(prefix='devtool')
             try:
                 GitApplyTree.extractPatches(srctree, initial_rev, tempdir)
-                newpatches = os.listdir(tempdir)
+                # Strip numbering from patch names. If it's a git sequence
+                # named patch, the numbers might not match up since we are
+                # starting from a different revision This does assume that
+                # people are using unique shortlog values, but they ought to be
+                # anyway...
+                newpatches = [seqpatch_re.match(fname).group(2) for fname in
+                              os.listdir(tempdir)]
                 for patch in existing_patches:
-                    # If it's a git sequence named patch, the numbers might not match up
-                    # since we are starting from a different revision
-                    # This does assume that people are using unique shortlog values, but
-                    # they ought to be anyway...
-                    patchfile = os.path.basename(patch)
-                    if seqpatch_re.search(patchfile):
-                        for newpatch in newpatches:
-                            if seqpatch_re.search(newpatch) and patchfile[5:] == newpatch[5:]:
-                                break
-                            else:
-                                removepatches.append(patch)
-                    elif patchfile not in newpatches:
+                    basename = seqpatch_re.match(
+                                    os.path.basename(patch)).group(2)
+                    if basename not in newpatches:
                         removepatches.append(patch)
             finally:
                 shutil.rmtree(tempdir)
