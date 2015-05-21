@@ -29,12 +29,18 @@ from glob import glob
 from shutil import rmtree
 
 from oeqa.selftest.base import oeSelfTest
-from oeqa.utils.commands import runCmd
+from oeqa.utils.commands import runCmd, bitbake
 
 class Wic(oeSelfTest):
     """Wic test class."""
 
     resultdir = "/var/tmp/wic/build/"
+
+    @classmethod
+    def setUpClass(cls):
+        """Build wic runtime dependencies and images used in the tests."""
+        bitbake('syslinux syslinux-native parted-native '
+                'dosfstools-native mtools-native core-image-minimal')
 
     def setUp(self):
         """This code is executed before each test method."""
