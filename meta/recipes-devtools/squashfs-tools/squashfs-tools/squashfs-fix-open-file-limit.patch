@@ -1,3 +1,8 @@
+From b8047131516fb39adce68f4734ff5fc178be275b Mon Sep 17 00:00:00 2001
+From: "yanjun.zhu" <yanjun.zhu@windriver.com>
+Date: Wed, 20 May 2015 18:17:45 +0200
+Subject: [PATCH 2/4] Fix open file limit
+
 Upstream-Status: Backport
 
 unsquashfs: fix open file limit
@@ -30,11 +35,16 @@ track the amount of open files.
 
 Signed-off-by: Phillip Lougher <phillip@squashfs.org.uk>
 
-Signed-off-by: yanjun.zhu <yanjun.zhu@windriver.com> 
+Signed-off-by: yanjun.zhu <yanjun.zhu@windriver.com>
+Signed-off-by: Martin Jansa <martin.jansa@lge.com>
+---
+ squashfs-tools/unsquashfs.c | 134 +++++++++++++++++++++++++++++++++++++++++---
+ 1 file changed, 126 insertions(+), 8 deletions(-)
 
-diff -urpN a/unsquashfs.c b/unsquashfs.c
---- a/unsquashfs.c	2012-11-30 15:31:29.000000000 +0800
-+++ b/unsquashfs.c	2012-11-30 15:32:03.000000000 +0800
+diff --git a/unsquashfs.c b/unsquashfs.c
+index 4f26e18..d532486 100644
+--- a/unsquashfs.c
++++ b/unsquashfs.c
 @@ -31,6 +31,8 @@
  
  #include <sys/sysinfo.h>
@@ -91,7 +101,7 @@ diff -urpN a/unsquashfs.c b/unsquashfs.c
  int write_file(struct inode *inode, char *pathname)
  {
  	unsigned int file_fd, i;
-@@ -794,8 +836,8 @@ int write_file(struct inode *inode, char
+@@ -794,8 +836,8 @@ int write_file(struct inode *inode, char *pathname)
  
  	TRACE("write_file: regular file, blocks %d\n", inode->blocks);
  
@@ -102,7 +112,7 @@ diff -urpN a/unsquashfs.c b/unsquashfs.c
  	if(file_fd == -1) {
  		ERROR("write_file: failed to create file %s, because %s\n",
  			pathname, strerror(errno));
-@@ -1712,7 +1754,7 @@ void *writer(void *arg)
+@@ -1707,7 +1749,7 @@ void *writer(void *arg)
  			}
  		}
  
@@ -111,7 +121,7 @@ diff -urpN a/unsquashfs.c b/unsquashfs.c
  		if(failed == FALSE)
  			set_attributes(file->pathname, file->mode, file->uid,
  				file->gid, file->time, file->xattr, force);
-@@ -1803,9 +1845,9 @@ void *progress_thread(void *arg)
+@@ -1798,9 +1840,9 @@ void *progress_thread(void *arg)
  
  void initialise_threads(int fragment_buffer_size, int data_buffer_size)
  {
@@ -123,7 +133,7 @@ diff -urpN a/unsquashfs.c b/unsquashfs.c
  
  	sigemptyset(&sigmask);
  	sigaddset(&sigmask, SIGINT);
-@@ -1841,10 +1883,86 @@ void initialise_threads(int fragment_buf
+@@ -1836,10 +1878,86 @@ void initialise_threads(int fragment_buffer_size, int data_buffer_size)
  		EXIT_UNSQUASH("Out of memory allocating thread descriptors\n");
  	deflator_thread = &thread[3];
  
@@ -213,3 +223,6 @@ diff -urpN a/unsquashfs.c b/unsquashfs.c
  	fragment_cache = cache_init(block_size, fragment_buffer_size);
  	data_cache = cache_init(block_size, data_buffer_size);
  	pthread_create(&thread[0], NULL, reader, NULL);
+-- 
+2.1.4
+

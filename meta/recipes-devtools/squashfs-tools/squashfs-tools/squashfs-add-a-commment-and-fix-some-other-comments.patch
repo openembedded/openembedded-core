@@ -1,13 +1,23 @@
+From 376dcb8ce2c9a6dab59e0a62a86549a490dee014 Mon Sep 17 00:00:00 2001
+From: "yanjun.zhu" <yanjun.zhu@windriver.com>
+Date: Wed, 20 May 2015 18:16:53 +0200
+Subject: [PATCH 1/4] Add a comment and fix some other comments
+
 Upstream-Status: Backport
 
 unsquashfs: add a commment and fix some other comments
 
-Signed-off-by: yanjun.zhu <yanjun.zhu@windriver.com> 
+Signed-off-by: yanjun.zhu <yanjun.zhu@windriver.com>
+Signed-off-by: Martin Jansa <martin.jansa@lge.com>
+---
+ squashfs-tools/unsquashfs.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff -urpN a/unsquashfs.c b/unsquashfs.c
---- a/unsquashfs.c	2012-11-30 15:27:14.000000000 +0800
-+++ b/unsquashfs.c	2012-11-30 15:27:56.000000000 +0800
-@@ -814,7 +814,7 @@ int write_file(struct inode *inode, char
+diff --git a/unsquashfs.c b/unsquashfs.c
+index 529dfac..4f26e18 100644
+--- a/unsquashfs.c
++++ b/unsquashfs.c
+@@ -814,7 +814,7 @@ int write_file(struct inode *inode, char *pathname)
  
  	/*
  	 * the writer thread is queued a squashfs_file structure describing the
@@ -16,7 +26,7 @@ diff -urpN a/unsquashfs.c b/unsquashfs.c
   	 * queued separately (references to blocks in the cache).
   	 */
  	file->fd = file_fd;
-@@ -838,7 +838,7 @@ int write_file(struct inode *inode, char
+@@ -838,7 +838,7 @@ int write_file(struct inode *inode, char *pathname)
  		block->offset = 0;
  		block->size = i == file_end ? inode->data & (block_size - 1) :
  			block_size;
@@ -25,7 +35,7 @@ diff -urpN a/unsquashfs.c b/unsquashfs.c
  			block->buffer = NULL;
  		else {
  			block->buffer = cache_get(data_cache, start,
-@@ -2161,6 +2161,10 @@ options:
+@@ -2156,6 +2156,10 @@ options:
  	block_size = sBlk.s.block_size;
  	block_log = sBlk.s.block_log;
  
@@ -36,3 +46,6 @@ diff -urpN a/unsquashfs.c b/unsquashfs.c
  	fragment_buffer_size <<= 20 - block_log;
  	data_buffer_size <<= 20 - block_log;
  	initialise_threads(fragment_buffer_size, data_buffer_size);
+-- 
+2.1.4
+
