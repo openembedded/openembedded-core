@@ -24,3 +24,6 @@ BBCLASSEXTEND = "native nativesdk"
 
 SRC_URI[md5sum] = "18aa5c1279b01f9d18e3299969665b2e"
 SRC_URI[sha256sum] = "81fe09867918fff258296e1e1e159f0dc639cb30d201c53519f25ab73af4e4e2"
+
+PACKAGECONFIG ??= ""
+PACKAGECONFIG[arc4] = "ac_cv_lib_bsd_arc4random_buf=yes,ac_cv_lib_bsd_arc4random_buf=no,libbsd"
