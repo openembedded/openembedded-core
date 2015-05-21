@@ -657,8 +657,8 @@ def update_recipe(args, config, basepath, workspace):
                         for newpatch in newpatches:
                             if seqpatch_re.search(newpatch) and patchfile[5:] == newpatch[5:]:
                                 break
-                        else:
-                            removepatches.append(patch)
+                            else:
+                                removepatches.append(patch)
                     elif patchfile not in newpatches:
                         removepatches.append(patch)
             finally:
