@@ -403,6 +403,9 @@ class RpmRootfs(Rootfs):
             for line in log.read().split('\n'):
                 if 'log_check' in line:
                     continue
+                # sh -x may emit code which isn't actually executed
+                if line.startswith('+'):
+		    continue
 
                 m = r.search(line)
                 if m:
