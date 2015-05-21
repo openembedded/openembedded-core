@@ -514,6 +514,36 @@ def modify(args, config, basepath, workspace):
 
     return 0
 
+def _get_patchset_revs(args, srctree, recipe_path):
+    """Get initial and update rev of a recipe. These are the start point of the
+    whole patchset and start point for the patches to be re-generated/updated.
+    """
+    import bb
+
+    if args.initial_rev:
+        return args.initial_rev, args.initial_rev
+
+    # Parse initial rev from recipe
+    commits = []
+    initial_rev = None
+    with open(recipe_path, 'r') as f:
+        for line in f:
+            if line.startswith('# initial_rev:'):
+                initial_rev = line.split(':')[-1].strip()
+            elif line.startswith('# commit:'):
+                commits.append(line.split(':')[-1].strip())
+
+    update_rev = initial_rev
+    if initial_rev:
+        # Find first actually changed revision
+        stdout, _ = bb.process.run('git rev-list --reverse %s..HEAD' %
+                                   initial_rev, cwd=srctree)
+        newcommits = stdout.split()
+        for i in xrange(min(len(commits), len(newcommits))):
+            if newcommits[i] == commits[i]:
+                update_rev = commits[i]
+
+    return initial_rev, update_rev
 
 def update_recipe(args, config, basepath, workspace):
     """Entry point for the devtool 'update-recipe' subcommand"""
@@ -618,33 +648,10 @@ def update_recipe(args, config, basepath, workspace):
             logger.info('You will need to update SRC_URI within the recipe to point to a git repository where you have pushed your changes')
 
     elif mode == 'patch':
-        commits = []
-        update_rev = None
-        if args.initial_rev:
-            initial_rev = args.initial_rev
-        else:
-            initial_rev = None
-            with open(append, 'r') as f:
-                for line in f:
-                    if line.startswith('# initial_rev:'):
-                        initial_rev = line.split(':')[-1].strip()
-                    elif line.startswith('# commit:'):
-                        commits.append(line.split(':')[-1].strip())
-
-            if initial_rev:
-                # Find first actually changed revision
-                (stdout, _) = bb.process.run('git rev-list --reverse %s..HEAD' % initial_rev, cwd=srctree)
-                newcommits = stdout.split()
-                for i in xrange(min(len(commits), len(newcommits))):
-                    if newcommits[i] == commits[i]:
-                        update_rev = commits[i]
-
+        initial_rev, update_rev = _get_patchset_revs(args, srctree, append)
         if not initial_rev:
             logger.error('Unable to find initial revision - please specify it with --initial-rev')
             return -1
-
-        if not update_rev:
-            update_rev = initial_rev
 
         # Find list of existing patches in recipe file
         existing_patches = oe.recipeutils.get_recipe_patches(rd)
