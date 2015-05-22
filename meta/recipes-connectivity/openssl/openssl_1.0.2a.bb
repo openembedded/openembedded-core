@@ -18,7 +18,6 @@ SRC_URI += "file://configure-targets.patch \
             file://openssl-fix-link.patch \
             file://debian1.0.2/block_diginotar.patch \
             file://debian1.0.2/block_digicert_malaysia.patch \
-            file://debian1.0.2/padlock_conf.patch \
             file://debian/ca.patch \
             file://debian/c_rehash-compat.patch \
             file://debian/debian-targets.patch \
