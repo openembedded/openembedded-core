@@ -8,6 +8,7 @@ SRC_URI = "file://aclocal.tgz \
            file://Makefile.in.in \
            file://remove-potcdate.sin \
            file://COPYING \
+           file://0001-PATCH-Disable-the-test-to-convert-euc-jp.patch \
 "
 
 INHIBIT_DEFAULT_DEPS = "1"
