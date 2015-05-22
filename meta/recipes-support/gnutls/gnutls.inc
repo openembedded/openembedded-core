@@ -23,7 +23,6 @@ EXTRA_OECONF="--disable-rpath \
               --with-included-libtasn1 \
               --enable-local-libopts \
               --with-libpthread-prefix=${STAGING_DIR_HOST}${prefix} \
-              --with-libz-prefix=${STAGING_DIR_HOST}${prefix} \
               --disable-guile \
               --disable-crywrap \
               --without-p11-kit \
