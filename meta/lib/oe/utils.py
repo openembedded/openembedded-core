@@ -55,6 +55,21 @@ def both_contain(variable1, variable2, checkvalue, d):
     else:
         return ""
 
+def set_intersect(variable1, variable2, d):
+    """
+    Expand both variables, interpret them as lists of strings, and return the
+    intersection as a flattened string.
+
+    For example:
+    s1 = "a b c"
+    s2 = "b c d"
+    s3 = set_intersect(s1, s2)
+    => s3 = "b c"
+    """
+    val1 = set(d.getVar(variable1, True).split())
+    val2 = set(d.getVar(variable2, True).split())
+    return " ".join(val1 & val2)
+
 def prune_suffix(var, suffixes, d):
     # See if var ends with any of the suffixes listed and
     # remove it if found
