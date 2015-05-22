@@ -39,6 +39,8 @@ RDEPENDS_${PN}-base = "\
     libsdl \
     ${NETWORK_MANAGER} \
     udev-extraconf \
+    pulseaudio-server \
+    pulseaudio-client-conf-sato \
     "
 
 # pcmanfm doesn't work on mips
