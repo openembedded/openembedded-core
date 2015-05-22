@@ -149,6 +149,11 @@ RDEPENDS_pulseaudio-server = " \
     pulseaudio-module-role-cork \
     pulseaudio-module-switch-on-port-available"
 
+# If the server is installed, it's usually desirable to make ALSA applications
+# use PulseAudio. alsa-plugins-pulseaudio-conf will install the configuration
+# that makes the PulseAudio plugin the default ALSA device.
+RDEPENDS_pulseaudio-server += "alsa-plugins-pulseaudio-conf"
+
 RDEPENDS_pulseaudio-module-console-kit =+ "consolekit"
 RDEPENDS_pulseaudio-misc += "pulseaudio-module-cli-protocol-unix"
 
