@@ -10,8 +10,8 @@ SRC_URI = "ftp://ftp.gnupg.org/gcrypt/npth/npth-${PV}.tar.bz2 \
            file://pkgconfig.patch \
           "
 
-SRC_URI[md5sum] = "aaffc8ef3e955ab50a1905809f268a23"
-SRC_URI[sha256sum] = "896c561eb2ec8da35f11828fb04a3fbff12d41ff657c799056d7dc4a66e5df7f"
+SRC_URI[md5sum] = "226bac7374b9466c6ec26b1c34dab844"
+SRC_URI[sha256sum] = "6ddbdddb2cf49a4723f9d1ad6563c480d6760dcb63cb7726b8fc3bc2e1b6c08a"
 
 BINCONFIG = "${bindir}/npth-config"
 
