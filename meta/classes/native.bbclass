@@ -154,9 +154,11 @@ python native_virtclass_handler () {
     nprovides = []
     for prov in provides.split():
         if prov.find(pn) != -1:
-            continue
-        if not prov.endswith("-native"):
+            nprovides.append(prov)
+        elif not prov.endswith("-native"):
             nprovides.append(prov.replace(prov, prov + "-native"))
+        else:
+            nprovides.append(prov)
     e.data.setVar("PROVIDES", ' '.join(nprovides))
 
     e.data.setVar("OVERRIDES", e.data.getVar("OVERRIDES", False) + ":virtclass-native")
