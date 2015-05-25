@@ -21,7 +21,7 @@ def autotools_dep_prepend(d):
 
 EXTRA_OEMAKE = ""
 
-DEPENDS_prepend = "${@autotools_dep_prepend(d)}"
+DEPENDS_prepend = "${@autotools_dep_prepend(d)} "
 
 inherit siteinfo
 
