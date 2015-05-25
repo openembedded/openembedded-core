@@ -15,6 +15,7 @@ SRC_URI = "${GNU_MIRROR}/grep/grep-${PV}.tar.bz2 \
            file://Makevars \
            file://grep-CVE-2012-5667.patch \
            file://fix-for-texinfo-5.1.patch \
+           file://grep-egrep-fgrep-Fix-LSB-NG-cases.patch \
           "
 
 SRC_URI[md5sum] = "52202fe462770fa6be1bb667bd6cf30c"
@@ -22,7 +23,8 @@ SRC_URI[sha256sum] = "38c8a2bb9223d1fb1b10bdd607cf44830afc92fd451ac4cd07619bf92b
 
 inherit autotools gettext texinfo
 
-EXTRA_OECONF = "--disable-perl-regexp"
+EXTRA_OECONF = "--disable-perl-regexp \
+                --without-included-regex"
 
 CFLAGS += "-D PROTOTYPES"
 do_configure_prepend () {
