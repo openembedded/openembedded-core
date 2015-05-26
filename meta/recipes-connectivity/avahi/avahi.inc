@@ -75,7 +75,7 @@ PACKAGES =+ "avahi-daemon libavahi-common libavahi-core libavahi-client avahi-dn
 
 # As avahi doesn't put any files into PN, clear the files list to avoid problems
 # if extra libraries appear.
-FILES_avahi = ""
+FILES_${PN} = ""
 FILES_avahi-autoipd = "${sbindir}/avahi-autoipd \
                        ${sysconfdir}/avahi/avahi-autoipd.action \
                        ${sysconfdir}/dhcp/*/avahi-autoipd \
