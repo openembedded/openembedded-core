@@ -24,8 +24,6 @@ ARM_INSTRUCTION_SET = "arm"
 
 DEPENDS = "alsa-lib zlib libogg yasm-native"
 
-INC_PR = "r8"
-
 inherit autotools pkgconfig
 
 B = "${S}/build.${HOST_SYS}.${TARGET_SYS}"
