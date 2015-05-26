@@ -11,7 +11,9 @@ BOOST_LIBS = "\
 	filesystem \
 	graph \
 	iostreams \
+	log \
 	program_options \
+	random \
 	regex \
 	serialization \
 	signals \
