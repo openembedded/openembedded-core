@@ -349,12 +349,12 @@ def appendfile(args):
 
 def register_command(subparsers):
     parser_appendfile = subparsers.add_parser('appendfile',
-                                                    help='Create a bbappend to replace a file',
-                                                    description='')
-    parser_appendfile.add_argument('destlayer', help='Destination layer to write the bbappend to')
-    parser_appendfile.add_argument('targetpath', help='Path within the image to the file to be replaced')
-    parser_appendfile.add_argument('newfile', help='Custom file to replace it with')
-    parser_appendfile.add_argument('-r', '--recipe', help='Override recipe to apply to (default is to find which recipe already packages it)')
+                                                help='Create/update a bbappend to replace a file',
+                                                description='Creates a bbappend (or updates an existing one) to replace the specified file that appears in the target system, determining the recipe that packages the file and the required path and name for the bbappend automatically. Note that the ability to determine the recipe packaging a particular file depends upon the recipe\'s do_packagedata task having already run prior to running this command (which it will have when the recipe has been built successfully, which in turn will have happened if one or more of the recipe\'s packages is included in an image that has been built successfully).')
+    parser_appendfile.add_argument('destlayer', help='Base directory of the destination layer to write the bbappend to')
+    parser_appendfile.add_argument('targetpath', help='Path to the file to be replaced (as it would appear within the target image, e.g. /etc/motd)')
+    parser_appendfile.add_argument('newfile', help='Custom file to replace the target file with')
+    parser_appendfile.add_argument('-r', '--recipe', help='Override recipe to apply to (default is to find which recipe already packages the file)')
     parser_appendfile.add_argument('-m', '--machine', help='Make bbappend changes specific to a machine only', metavar='MACHINE')
     parser_appendfile.add_argument('-w', '--wildcard-version', help='Use wildcard to make the bbappend apply to any recipe version', action='store_true')
     parser_appendfile.set_defaults(func=appendfile, parserecipes=True)
