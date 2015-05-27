@@ -1,9 +1,9 @@
 Upstream-Status: Pending
 
-Index: apt-0.9.7.7/configure.in
+Index: apt-0.9.7.7/configure.ac
 ===================================================================
---- apt-0.9.7.7.orig/configure.in
-+++ apt-0.9.7.7/configure.in
+--- apt-0.9.7.7.orig/configure.ac
++++ apt-0.9.7.7/configure.ac
 @@ -112,7 +112,7 @@ dnl This is often the dpkg architecture
  dnl First check against the full canonical canoncial-system-type in $target
  dnl and if that fails, just look for the cpu

@@ -2,8 +2,7 @@ SUMMARY = "Advanced front-end for dpkg"
 LICENSE = "GPLv2.0+"
 SECTION = "base"
 
-SRC_URI = "http://snapshot.debian.org/archive/debian/20130726T154545Z/pool/main/a/${BPN}/${BPN}_${PV}.tar.gz \
-           file://no-ko-translation.patch \
+SRC_URI = "http://snapshot.debian.org/archive/debian/20150428T221633Z/pool/main/a/${BPN}/${BPN}_${PV}.tar.xz \
            file://use-host.patch \
            file://makerace.patch \
            file://no-nls-dpkg.patch \
@@ -11,7 +10,7 @@ SRC_URI = "http://snapshot.debian.org/archive/debian/20130726T154545Z/pool/main/
            file://truncate-filename.patch \
            file://nodoc.patch \
            file://disable-configure-in-makefile.patch \
-           file://apt-0.9.9.4-CVE-2014-0478.patch \
+           file://disable-test.patch \
            "
 
 inherit autotools gettext

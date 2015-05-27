@@ -1,9 +1,9 @@
 Upstream-Status: Backport
 
-Index: apt-0.7.3/configure.in
+Index: apt-0.7.3/configure.ac
 ===================================================================
---- apt-0.7.3.orig/configure.in	2007-07-01 10:38:45.000000000 +0000
-+++ apt-0.7.3/configure.in	2007-08-21 13:39:26.000000000 +0000
+--- apt-0.7.3.orig/configure.ac	2007-07-01 10:38:45.000000000 +0000
++++ apt-0.7.3/configure.ac	2007-08-21 13:39:26.000000000 +0000
 @@ -67,8 +67,20 @@
        [AC_DEFINE(HAVE_BDB)
         BDBLIB="-ldb"

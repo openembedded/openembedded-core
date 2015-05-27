@@ -1,11 +1,15 @@
 require apt.inc
 inherit native
 
-DEPENDS += "dpkg-native gettext-native db-native curl-native"
+DEPENDS += "dpkg-native gettext-native db-native curl-native xz-native"
 PACKAGES = ""
 USE_NLS = "yes"
 
-SRC_URI += "file://db_linking_hack.patch"
+SRC_URI += "file://db_linking_hack.patch \
+            file://0001-Revert-always-run-dpkg-configure-a-at-the-end-of-our.patch \
+            file://0001-remove-Wsuggest-attribute-from-CFLAGS.patch \
+            file://0001-fix-the-gcc-version-check.patch \
+"
 
 python do_install () {
     bb.build.exec_func('do_install_base', d)
@@ -40,6 +44,8 @@ do_install_base () {
 	install -m 0755 bin/apt-sortpkgs ${D}${bindir}/
 	install -m 0755 bin/apt-extracttemplates ${D}${bindir}/
 	install -m 0755 bin/apt-ftparchive ${D}${bindir}/
+
+	oe_libinstall -so -C bin libapt-private ${D}${libdir}/
 
 	eval `cat environment.mak | grep ^GLIBC_VER | sed -e's, = ,=,'`
 	eval `cat environment.mak | grep ^LIBSTDCPP_VER | sed -e's, = ,=,'`
