@@ -57,10 +57,9 @@ def add(args, config, basepath, workspace):
             elif os.listdir(srctree):
                 logger.error("Cannot fetch into source tree path %s as it already exists and is non-empty" % srctree)
                 return 1
-    else:
-        if not args.fetch:
-            logger.error("Specified source tree %s could not be found" % srctree)
-            return 1
+    elif not args.fetch:
+        logger.error("Specified source tree %s could not be found" % srctree)
+        return 1
 
     appendpath = os.path.join(config.workspace_path, 'appends')
     if not os.path.exists(appendpath):
@@ -424,10 +423,9 @@ def modify(args, config, basepath, workspace):
         logger.error("recipe %s is already in your workspace" % args.recipename)
         return -1
 
-    if not args.extract:
-        if not os.path.isdir(args.srctree):
-            logger.error("directory %s does not exist or not a directory (specify -x to extract source from recipe)" % args.srctree)
-            return -1
+    if not args.extract and not os.path.isdir(args.srctree):
+        logger.error("directory %s does not exist or not a directory (specify -x to extract source from recipe)" % args.srctree)
+        return -1
 
     tinfoil = setup_tinfoil()
 
