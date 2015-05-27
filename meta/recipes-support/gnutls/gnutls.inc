@@ -1,7 +1,7 @@
 SUMMARY = "GNU Transport Layer Security Library"
 HOMEPAGE = "http://www.gnu.org/software/gnutls/"
 BUGTRACKER = "https://savannah.gnu.org/support/?group=gnutls"
-DEPENDS = "zlib nettle"
+DEPENDS = "nettle"
 
 LICENSE = "GPLv3+ & LGPLv2.1+"
 LICENSE_${PN} = "LGPLv2.1+"
@@ -34,8 +34,9 @@ do_configure_prepend() {
 	done
 }
 
-PACKAGECONFIG ??= ""
+PACKAGECONFIG ??= "zlib"
 PACKAGECONFIG[tpm] = "--with-tpm, --without-tpm, trousers"
+PACKAGECONFIG[zlib] = "--with-zlib, --without-zlib, zlib"
 
 PACKAGES =+ "${PN}-openssl ${PN}-xx"
 
