@@ -8,8 +8,6 @@ UPDATERCD_class-cross = ""
 UPDATERCD_class-native = ""
 UPDATERCD_class-nativesdk = ""
 
-RRECOMMENDS_${UPDATERCPN}_append = " ${UPDATERCD}"
-
 INITSCRIPT_PARAMS ?= "defaults"
 
 INIT_D_DIR = "${sysconfdir}/init.d"
@@ -119,6 +117,8 @@ python populate_packages_updatercd () {
                 postrm = '#!/bin/sh\n'
         postrm += localdata.getVar('updatercd_postrm', True)
         d.setVar('pkg_postrm_%s' % pkg, postrm)
+
+        d.appendVar('RRECOMMENDS_' + pkg, " ${UPDATERCD}")
 
     # Check that this class isn't being inhibited (generally, by
     # systemd.bbclass) before doing any work.
