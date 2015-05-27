@@ -16,32 +16,14 @@
 # with this program; if not, write to the Free Software Foundation, Inc., 59
 # Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
-class CreatorError(Exception):
-    """An exception base class for all imgcreate errors."""
-    keyword = '<creator>'
+class WicError(Exception):
+    pass
 
-    def __init__(self, msg):
-        self.msg = msg
+class CreatorError(WicError):
+    pass
 
-    def __str__(self):
-        if isinstance(self.msg, unicode):
-            self.msg = self.msg.encode('utf-8', 'ignore')
-        else:
-            self.msg = str(self.msg)
-        return self.keyword + self.msg
+class Usage(WicError):
+    pass
 
-class Usage(CreatorError):
-    keyword = '<usage>'
-
-    def __str__(self):
-        if isinstance(self.msg, unicode):
-            self.msg = self.msg.encode('utf-8', 'ignore')
-        else:
-            self.msg = str(self.msg)
-        return self.keyword + self.msg + ', please use "--help" for more info'
-
-class KsError(CreatorError):
-    keyword = '<kickstart>'
-
-class ImageError(CreatorError):
-    keyword = '<mount>'
+class ImageError(WicError):
+    pass

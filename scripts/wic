@@ -53,6 +53,7 @@ else:
     bitbake_main = None
 
 from wic.utils.oe.misc import find_bitbake_env_lines, set_bitbake_env_lines
+from wic.utils.errors import WicError
 from image import engine
 from image import help as hlp
 
@@ -309,10 +310,8 @@ def main(argv):
 
 if __name__ == "__main__":
     try:
-        ret = main(sys.argv[1:])
-    except Exception:
-        ret = 1
-        import traceback
-        traceback.print_exc()
-    sys.exit(ret)
+        sys.exit(main(sys.argv[1:]))
+    except WicError as err:
+        print >> sys.stderr, "ERROR:", err
+        sys.exit(1)
 
