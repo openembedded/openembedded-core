@@ -25,6 +25,12 @@ import logging
 
 logger = logging.getLogger('devtool')
 
+
+class DevtoolError(Exception):
+    """Exception for handling devtool errors"""
+    pass
+
+
 def exec_build_env_command(init_path, builddir, cmd, watch=False, **options):
     """Run a program in bitbake build context"""
     import bb

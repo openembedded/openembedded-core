@@ -19,7 +19,7 @@
 import os
 import subprocess
 import logging
-from devtool import exec_build_env_command, setup_tinfoil
+from devtool import exec_build_env_command, setup_tinfoil, DevtoolError
 
 logger = logging.getLogger('devtool')
 
@@ -34,8 +34,8 @@ def deploy(args, config, basepath, workspace):
     import oe.recipeutils
 
     if not args.recipename in workspace:
-        logger.error("no recipe named %s in your workspace" % args.recipename)
-        return -1
+        raise DevtoolError("no recipe named %s in your workspace" %
+                           args.recipename)
     try:
         host, destdir = args.target.split(':')
     except ValueError:
@@ -50,12 +50,13 @@ def deploy(args, config, basepath, workspace):
     try:
         rd = oe.recipeutils.parse_recipe_simple(tinfoil.cooker, args.recipename, tinfoil.config_data)
     except Exception as e:
-        logger.error('Exception parsing recipe %s: %s' % (args.recipename, e))
-        return 2
+        raise DevtoolError('Exception parsing recipe %s: %s' %
+                           (args.recipename, e))
     recipe_outdir = rd.getVar('D', True)
     if not os.path.exists(recipe_outdir) or not os.listdir(recipe_outdir):
-        logger.error('No files to deploy - have you built the %s recipe? If so, the install step has not installed any files.' % args.recipename)
-        return -1
+        raise DevtoolError('No files to deploy - have you built the %s '
+                           'recipe? If so, the install step has not installed '
+                           'any files.' % args.recipename)
 
     if args.dry_run:
         print('Files to be deployed for %s on target %s:' % (args.recipename, args.target))
@@ -67,7 +68,7 @@ def deploy(args, config, basepath, workspace):
     if os.path.exists(deploy_file):
         if undeploy(args, config, basepath, workspace):
             # Error already shown
-            return -1
+            return 1
 
     extraoptions = ''
     if args.no_host_check:
@@ -76,8 +77,8 @@ def deploy(args, config, basepath, workspace):
         extraoptions += ' -q'
     ret = subprocess.call('scp -r %s %s/* %s:%s' % (extraoptions, recipe_outdir, args.target, destdir), shell=True)
     if ret != 0:
-        logger.error('Deploy failed - rerun with -s to get a complete error message')
-        return ret
+        raise DevtoolError('Deploy failed - rerun with -s to get a complete '
+                           'error message')
 
     logger.info('Successfully deployed %s' % recipe_outdir)
 
@@ -99,8 +100,7 @@ def undeploy(args, config, basepath, workspace):
     """Entry point for the devtool 'undeploy' subcommand"""
     deploy_file = os.path.join(basepath, 'target_deploy', args.target, args.recipename + '.list')
     if not os.path.exists(deploy_file):
-        logger.error('%s has not been deployed' % args.recipename)
-        return -1
+        raise DevtoolError('%s has not been deployed' % args.recipename)
 
     if args.dry_run:
         print('Previously deployed files to be un-deployed for %s on target %s:' % (args.recipename, args.target))
@@ -117,15 +117,16 @@ def undeploy(args, config, basepath, workspace):
 
     ret = subprocess.call("scp %s %s %s:/tmp" % (extraoptions, deploy_file, args.target), shell=True)
     if ret != 0:
-        logger.error('Failed to copy file list to %s - rerun with -s to get a complete error message' % args.target)
-        return -1
+        raise DevtoolError('Failed to copy file list to %s - rerun with -s to '
+                           'get a complete error message' % args.target)
 
     ret = subprocess.call("ssh %s %s 'xargs -n1 rm -f </tmp/%s'" % (extraoptions, args.target, os.path.basename(deploy_file)), shell=True)
     if ret == 0:
         logger.info('Successfully undeployed %s' % args.recipename)
         os.remove(deploy_file)
     else:
-        logger.error('Undeploy failed - rerun with -s to get a complete error message')
+        raise DevtoolError('Undeploy failed - rerun with -s to get a complete '
+                           'error message')
 
     return ret
 

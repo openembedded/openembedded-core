@@ -35,6 +35,7 @@ context = None
 scripts_path = os.path.dirname(os.path.realpath(__file__))
 lib_path = scripts_path + '/lib'
 sys.path = sys.path + [lib_path]
+from devtool import DevtoolError
 import scriptutils
 logger = scriptutils.logger_create('devtool')
 
@@ -250,7 +251,12 @@ def main():
     if args.subparser_name != 'create-workspace':
         read_workspace()
 
-    ret = args.func(args, config, basepath, workspace)
+    try:
+        ret = args.func(args, config, basepath, workspace)
+    except DevtoolError as err:
+        if str(err):
+            logger.error(str(err))
+        ret = 1
 
     return ret
 
