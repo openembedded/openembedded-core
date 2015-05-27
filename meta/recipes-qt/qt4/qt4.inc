@@ -25,6 +25,7 @@ QT_CONFIG_FLAGS += "-release -no-cups -reduce-relocations \
                     -system-libjpeg -system-libpng -system-libtiff -system-zlib \
                     -no-pch -stl -glib -icu \
                     -no-rpath -silent \
+		    -D USE_QTMULTIMEDIA=1 \
                     ${QT_DBUS} \
                     ${QT_QT3SUPPORT} \
                     ${QT_WEBKIT} \
