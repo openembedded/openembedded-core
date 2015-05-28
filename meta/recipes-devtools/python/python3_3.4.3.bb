@@ -67,6 +67,7 @@ EXTRA_OECONF += "CROSSPYTHONPATH=${STAGING_LIBDIR_NATIVE}/python${PYTHON_MAJMIN}
 export CROSS_COMPILE = "${TARGET_PREFIX}"
 export _PYTHON_PROJECT_BASE = "${B}"
 export _PYTHON_PROJECT_SRC = "${S}"
+export CCSHARED = "-fPIC"
 
 # No ctypes option for python 3
 PYTHONLSBOPTS = ""
