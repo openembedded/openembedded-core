@@ -11,8 +11,8 @@ DEPENDS = "python-gitdb"
 
 SRC_URI = "http://pypi.python.org/packages/source/G/GitPython/GitPython-${PV}.tar.gz"
 
-SRC_URI[md5sum] = "c3833aad16d5660436e284d597ec1bec"
-SRC_URI[sha256sum] = "c1b3e6fdd209040b6b1cb32ecbff989eeb2fb31b4e7078c3342d71ae8ef7352b"
+SRC_URI[md5sum] = "4659644b42c41e5e5170c0cd83ed6422"
+SRC_URI[sha256sum] = "9c88c17bbcae2a445ff64024ef13526224f70e35e38c33416be5ceb56ca7f760"
 
 S = "${WORKDIR}/GitPython-${PV}"
 
