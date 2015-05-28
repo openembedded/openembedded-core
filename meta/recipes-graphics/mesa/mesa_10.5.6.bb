@@ -2,8 +2,8 @@ require ${BPN}.inc
 
 SRC_URI = "ftp://ftp.freedesktop.org/pub/mesa/${PV}/mesa-${PV}.tar.xz"
 
-SRC_URI[md5sum] = "26644437b6447fb3dbae50714a019797"
-SRC_URI[sha256sum] = "b51e723f3a20d842c88a92d809435b229fc4744ca0dbec0317d9d4a3ac4c6803"
+SRC_URI[md5sum] = "7a845c50fc8aaae4c9373e795c1f491d"
+SRC_URI[sha256sum] = "66017853bde5f7a6647db3eede30512a091a3491daa1708e0ad8027c328ba595"
 
 #because we cannot rely on the fact that all apps will use pkgconfig,
 #make eglplatform.h independent of MESA_EGL_NO_X11_HEADER
