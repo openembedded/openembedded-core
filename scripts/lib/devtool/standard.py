@@ -464,13 +464,12 @@ def modify(args, config, basepath, workspace):
                 initial_rev = stdout.rstrip()
 
     # Check that recipe isn't using a shared workdir
-    s = rd.getVar('S', True)
-    workdir = rd.getVar('WORKDIR', True)
-    if s.startswith(workdir):
+    s = os.path.abspath(rd.getVar('S', True))
+    workdir = os.path.abspath(rd.getVar('WORKDIR', True))
+    if s.startswith(workdir) and s != workdir and os.path.dirname(s) != workdir:
         # Handle if S is set to a subdirectory of the source
-        if s != workdir and os.path.dirname(s) != workdir:
-            srcsubdir = os.sep.join(os.path.relpath(s, workdir).split(os.sep)[1:])
-            srctree = os.path.join(srctree, srcsubdir)
+        srcsubdir = os.path.relpath(s, workdir).split(os.sep, 1)[1]
+        srctree = os.path.join(srctree, srcsubdir)
 
     appendpath = os.path.join(config.workspace_path, 'appends')
     if not os.path.exists(appendpath):
