@@ -50,7 +50,9 @@ do_install_append() {
 	rm ${D}${libdir}/alsa-lib/*.la
 
 	# We use the example as is, so just drop the .example suffix.
-	mv ${D}${datadir}/alsa/alsa.conf.d/99-pulseaudio-default.conf.example ${D}${datadir}/alsa/alsa.conf.d/99-pulseaudio-default.conf
+	if [ "${@bb.utils.contains('PACKAGECONFIG', 'pulseaudio', 'yes', 'no', d)}" = "yes" ]; then
+		mv ${D}${datadir}/alsa/alsa.conf.d/99-pulseaudio-default.conf.example ${D}${datadir}/alsa/alsa.conf.d/99-pulseaudio-default.conf
+	fi
 }
 
 python populate_packages_prepend() {
