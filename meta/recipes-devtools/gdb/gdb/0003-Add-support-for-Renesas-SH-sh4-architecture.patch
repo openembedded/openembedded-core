@@ -1,4 +1,4 @@
-From 4e5507488068b3ea2ebf9c84c6c192c7bfd3be82 Mon Sep 17 00:00:00 2001
+From 407cb13cfb70697f45dfb761304e005e1ecbd0e9 Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Mon, 2 Mar 2015 02:31:12 +0000
 Subject: [PATCH 3/3] Add support for Renesas SH (sh4) architecture.

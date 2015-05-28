@@ -1,4 +1,4 @@
-From 0dcb0a8b139b44ae84e8fd8ff8130cbbb52e444d Mon Sep 17 00:00:00 2001
+From 262ccc4fdb2a3df0f16c61a807046964ae7729c9 Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Mon, 2 Mar 2015 02:29:23 +0000
 Subject: [PATCH 2/3] Change order of CFLAGS
