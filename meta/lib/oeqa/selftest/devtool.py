@@ -92,6 +92,17 @@ class DevtoolTests(DevtoolBase):
                         'This test cannot be run with a workspace directory '
                         'under the build directory')
 
+    def _check_src_repo(self, repo_dir):
+        """Check srctree git repository"""
+        self.assertTrue(os.path.isdir(os.path.join(repo_dir, '.git')),
+                        'git repository for external source tree not found')
+        result = runCmd('git status --porcelain', cwd=repo_dir)
+        self.assertEqual(result.output.strip(), "",
+                         'Created git repo is not clean')
+        result = runCmd('git symbolic-ref HEAD', cwd=repo_dir)
+        self.assertEqual(result.output.strip(), "refs/heads/devtool",
+                         'Wrong branch in git repo')
+
     @testcase(1158)
     def test_create_workspace(self):
         # Check preconditions
@@ -288,7 +299,6 @@ class DevtoolTests(DevtoolBase):
         self.add_command_to_tearDown('bitbake -c clean mdadm')
         result = runCmd('devtool modify mdadm -x %s' % tempdir)
         self.assertTrue(os.path.exists(os.path.join(tempdir, 'Makefile')), 'Extracted source could not be found')
-        self.assertTrue(os.path.isdir(os.path.join(tempdir, '.git')), 'git repository for external source tree not found')
         self.assertTrue(os.path.exists(os.path.join(self.workspacedir, 'conf', 'layer.conf')), 'Workspace directory not created')
         matches = glob.glob(os.path.join(self.workspacedir, 'appends', 'mdadm_*.bbappend'))
         self.assertTrue(matches, 'bbappend not created %s' % result.output)
@@ -297,10 +307,7 @@ class DevtoolTests(DevtoolBase):
         self.assertIn('mdadm', result.output)
         self.assertIn(tempdir, result.output)
         # Check git repo
-        result = runCmd('git status --porcelain', cwd=tempdir)
-        self.assertEqual(result.output.strip(), "", 'Created git repo is not clean')
-        result = runCmd('git symbolic-ref HEAD', cwd=tempdir)
-        self.assertEqual(result.output.strip(), "refs/heads/devtool", 'Wrong branch in git repo')
+        self._check_src_repo(tempdir)
         # Try building
         bitbake('mdadm')
         # Try making (minor) modifications to the source
@@ -400,7 +407,6 @@ class DevtoolTests(DevtoolBase):
         self.add_command_to_tearDown('bitbake -c clean %s' % testrecipe)
         result = runCmd('devtool modify %s -x %s' % (testrecipe, tempdir))
         self.assertTrue(os.path.exists(os.path.join(tempdir, 'Makefile')), 'Extracted source could not be found')
-        self.assertTrue(os.path.isdir(os.path.join(tempdir, '.git')), 'git repository for external source tree not found')
         self.assertTrue(os.path.exists(os.path.join(self.workspacedir, 'conf', 'layer.conf')), 'Workspace directory not created. devtool output: %s' % result.output)
         matches = glob.glob(os.path.join(self.workspacedir, 'appends', 'mkelfimage_*.bbappend'))
         self.assertTrue(matches, 'bbappend not created')
@@ -409,10 +415,7 @@ class DevtoolTests(DevtoolBase):
         self.assertIn(testrecipe, result.output)
         self.assertIn(tempdir, result.output)
         # Check git repo
-        result = runCmd('git status --porcelain', cwd=tempdir)
-        self.assertEqual(result.output.strip(), "", 'Created git repo is not clean')
-        result = runCmd('git symbolic-ref HEAD', cwd=tempdir)
-        self.assertEqual(result.output.strip(), "refs/heads/devtool", 'Wrong branch in git repo')
+        self._check_src_repo(tempdir)
         # Try building
         bitbake(testrecipe)
 
@@ -464,11 +467,7 @@ class DevtoolTests(DevtoolBase):
         # (don't bother with cleaning the recipe on teardown, we won't be building it)
         result = runCmd('devtool modify %s -x %s' % (testrecipe, tempdir))
         # Check git repo
-        self.assertTrue(os.path.isdir(os.path.join(tempdir, '.git')), 'git repository for external source tree not found')
-        result = runCmd('git status --porcelain', cwd=tempdir)
-        self.assertEqual(result.output.strip(), "", 'Created git repo is not clean')
-        result = runCmd('git symbolic-ref HEAD', cwd=tempdir)
-        self.assertEqual(result.output.strip(), "refs/heads/devtool", 'Wrong branch in git repo')
+        self._check_src_repo(tempdir)
         # Add a couple of commits
         # FIXME: this only tests adding, need to also test update and remove
         result = runCmd('echo "Additional line" >> README', cwd=tempdir)
@@ -514,11 +513,7 @@ class DevtoolTests(DevtoolBase):
         # (don't bother with cleaning the recipe on teardown, we won't be building it)
         result = runCmd('devtool modify %s -x %s' % (testrecipe, tempdir))
         # Check git repo
-        self.assertTrue(os.path.isdir(os.path.join(tempdir, '.git')), 'git repository for external source tree not found')
-        result = runCmd('git status --porcelain', cwd=tempdir)
-        self.assertEqual(result.output.strip(), "", 'Created git repo is not clean')
-        result = runCmd('git symbolic-ref HEAD', cwd=tempdir)
-        self.assertEqual(result.output.strip(), "refs/heads/devtool", 'Wrong branch in git repo')
+        self._check_src_repo(tempdir)
         # Add a couple of commits
         # FIXME: this only tests adding, need to also test update and remove
         result = runCmd('echo "# Additional line" >> Makefile', cwd=tempdir)
@@ -604,11 +599,7 @@ class DevtoolTests(DevtoolBase):
         # (don't bother with cleaning the recipe on teardown, we won't be building it)
         result = runCmd('devtool modify %s -x %s' % (testrecipe, tempsrcdir))
         # Check git repo
-        self.assertTrue(os.path.isdir(os.path.join(tempsrcdir, '.git')), 'git repository for external source tree not found')
-        result = runCmd('git status --porcelain', cwd=tempsrcdir)
-        self.assertEqual(result.output.strip(), "", 'Created git repo is not clean')
-        result = runCmd('git symbolic-ref HEAD', cwd=tempsrcdir)
-        self.assertEqual(result.output.strip(), "refs/heads/devtool", 'Wrong branch in git repo')
+        self._check_src_repo(tempsrcdir)
         # Add a commit
         result = runCmd("sed 's!\\(#define VERSION\\W*\"[^\"]*\\)\"!\\1-custom\"!' -i ReadMe.c", cwd=tempsrcdir)
         result = runCmd('git commit -a -m "Add our custom version"', cwd=tempsrcdir)
@@ -682,11 +673,7 @@ class DevtoolTests(DevtoolBase):
         # (don't bother with cleaning the recipe on teardown, we won't be building it)
         result = runCmd('devtool modify %s -x %s' % (testrecipe, tempsrcdir))
         # Check git repo
-        self.assertTrue(os.path.isdir(os.path.join(tempsrcdir, '.git')), 'git repository for external source tree not found')
-        result = runCmd('git status --porcelain', cwd=tempsrcdir)
-        self.assertEqual(result.output.strip(), "", 'Created git repo is not clean')
-        result = runCmd('git symbolic-ref HEAD', cwd=tempsrcdir)
-        self.assertEqual(result.output.strip(), "refs/heads/devtool", 'Wrong branch in git repo')
+        self._check_src_repo(tempsrcdir)
         # Add a commit
         result = runCmd('echo "# Additional line" >> Makefile', cwd=tempsrcdir)
         result = runCmd('git commit -a -m "Change the Makefile"', cwd=tempsrcdir)
@@ -763,7 +750,7 @@ class DevtoolTests(DevtoolBase):
         self.add_command_to_tearDown('bitbake-layers remove-layer */workspace')
         result = runCmd('devtool extract remake %s' % tempdir)
         self.assertTrue(os.path.exists(os.path.join(tempdir, 'Makefile.am')), 'Extracted source could not be found')
-        self.assertTrue(os.path.isdir(os.path.join(tempdir, '.git')), 'git repository for external source tree not found')
+        self._check_src_repo(tempdir)
 
     @testcase(1168)
     def test_devtool_reset_all(self):
