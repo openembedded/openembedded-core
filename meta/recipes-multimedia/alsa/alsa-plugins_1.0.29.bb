@@ -17,7 +17,9 @@ LIC_FILES_CHKSUM = "\
         file://rate/rate_samplerate.c;endline=19;md5=f3d3ce0b189846a486517d97a854b276 \
 "
 
-SRC_URI = "ftp://ftp.alsa-project.org/pub/plugins/${BP}.tar.bz2"
+SRC_URI = "ftp://ftp.alsa-project.org/pub/plugins/${BP}.tar.bz2 \
+           file://0001-arcam-av-Include-sys-select.h-for-fd_set-definition.patch \
+"
 SRC_URI[md5sum] = "a66797b4471e3cbe96575207bfbe252c"
 SRC_URI[sha256sum] = "325d85cac285f632b83e0191ae3f348bad03c1f007b937042f164abb81ea6532"
 
