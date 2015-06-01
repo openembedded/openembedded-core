@@ -23,7 +23,6 @@ RDEPENDS_packagegroup-core-sdk = "\
     findutils \
     quilt \
     less \
-    distcc \
     ldd \
     file \
     tcl"
