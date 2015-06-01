@@ -19,15 +19,12 @@ PROFILE_TOOLS_SYSTEMD = "${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'sys
 RRECOMMENDS_${PN} = "\
     perf \
     trace-cmd \
-    kernel-module-oprofile \
     blktrace \
     ${PROFILE_TOOLS_X} \
     ${PROFILE_TOOLS_SYSTEMD} \
     "
 
 PROFILETOOLS = "\
-    oprofile \
-    oprofileui-server \
     powertop \
     latencytop \
     "
