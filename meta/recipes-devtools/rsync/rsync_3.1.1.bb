@@ -3,6 +3,7 @@ require rsync.inc
 
 SRC_URI += "file://acinclude.m4 \
             file://0001-Complain-if-an-inc-recursive-path-is-not-right-for-i.patch \
+            file://rsync.git-eac858085.patch \
 "
 
 SRC_URI[md5sum] = "43bd6676f0b404326eee2d63be3cdcfe"
