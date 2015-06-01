@@ -17,12 +17,10 @@ PACKAGECONFIG[mpfr] = "--with-mpfr,--without-mpfr, mpfr"
 
 SRC_URI = "${GNU_MIRROR}/gawk/gawk-${PV}.tar.gz \
            file://run-ptest \
-           file://Use-DESTDIR-in-extension-Makefile.am-when-removing-..patch \
-           file://extension-Add-DESTDIR-prefix-to-remaining-pkgextensi.patch \
 "
 
-SRC_URI[md5sum] = "45f5b09aa87b4744c4c53bf274e96ed0"
-SRC_URI[sha256sum] = "556464bd2e4bc5a0fad4526b59623e4be40b4c2f4c663dfaaf246af6e2ec1d62"
+SRC_URI[md5sum] = "55d37f4069502677f25d1340df8eec97"
+SRC_URI[sha256sum] = "524effa5b9ecd4ed940f2581c5d3c1df4e4bd7e6f768aa033c1916f47dfc6e29"
 
 inherit autotools gettext texinfo update-alternatives
 
