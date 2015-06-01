@@ -11,20 +11,20 @@ Upstream-Status: Pending
 
 Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
 ---
- Makefile |    2 +-
+ Makefile.in |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Makefile b/Makefile
-index 9c69ada..30c6f06 100644
---- a/Makefile
-+++ b/Makefile
-@@ -118,7 +118,7 @@ else
- 	AM_CFLAGS += -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=2
+diff --git a/Makefile.in b/Makefile.in
+index 860a390..8a6fbd7 100644
+--- a/Makefile.in
++++ b/Makefile.in
+@@ -142,7 +142,7 @@ else
+ 	check_echo = true
  endif
  
 -%.o.d: %.c
 +%.o.d: %.c version.h
- 	$(Q)$(CC) -MM -MG -MF $@ -MT $(@:.o.d=.o) -MT $(@:.o.d=.static.o) -MT $@ $(AM_CFLAGS) $(CFLAGS) $<
+ 	$(Q)$(CC) -MM -MG -MF $@ -MT $(@:.o.d=.o) -MT $(@:.o.d=.static.o) -MT $@ $(CFLAGS) $<
  
  .c.o:
 -- 
