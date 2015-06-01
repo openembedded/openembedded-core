@@ -626,23 +626,17 @@ def replace_dir_vars(path, d):
         path = path.replace(dirpath, '${%s}' % dirvars[dirpath])
     return path
 
-def get_recipe_pv_without_srcpv(rd, uri_type):
+def get_recipe_pv_without_srcpv(pv, uri_type):
     """
     Get PV without SRCPV common in SCM's for now only
     support git.
 
     Returns tuple with pv, prefix and suffix.
     """
-    pv = ''
     pfx = ''
     sfx = ''
 
     if uri_type == 'git':
-        rd_tmp = rd.createCopy()
-
-        rd_tmp.setVar('SRCPV', '')
-        pv = rd_tmp.getVar('PV', True)
-
         git_regex = re.compile("(?P<pfx>(v|))(?P<ver>((\d+[\.\-_]*)+))(?P<sfx>(\+|)(git|)(r|)(AUTOINC|)(\+|))(?P<rev>.*)")
         m = git_regex.match(pv)
 
@@ -650,8 +644,6 @@ def get_recipe_pv_without_srcpv(rd, uri_type):
             pv = m.group('ver')
             pfx = m.group('pfx')
             sfx = m.group('sfx')
-    else:
-        pv = rd.getVar('PV', True)
 
     return (pv, pfx, sfx)
 
@@ -704,7 +696,7 @@ def get_recipe_upstream_version(rd):
         pupver = ud.method.latest_versionstring(ud, rd)
 
         if uri_type == 'git':
-            (pv, pfx, sfx) = get_recipe_pv_without_srcpv(rd, uri_type)
+            (pv, pfx, sfx) = get_recipe_pv_without_srcpv(pv, uri_type)
 
             latest_revision = ud.method.latest_revision(ud, rd, ud.names[0])
 
