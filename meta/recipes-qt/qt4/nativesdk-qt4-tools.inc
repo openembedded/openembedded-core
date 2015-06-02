@@ -4,8 +4,6 @@ SECTION = "libs"
 HOMEPAGE = "http://qt-project.org/"
 LICENSE = "LGPLv2.1 | GPLv3"
 
-INC_PR = "r13"
-
 FILESEXTRAPATHS =. "${FILE_DIRNAME}/qt4-${PV}:"
 
 inherit nativesdk qmake2

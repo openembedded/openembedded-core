@@ -22,19 +22,14 @@ SRC_URI = "http://download.qt-project.org/official_releases/qt/4.8/${PV}/qt-ever
            file://0019-Fixes-for-gcc-4.7.0-particularly-on-qemux86.patch \
            file://0027-tools.pro-disable-qmeegographicssystemhelper.patch \
            file://0028-Don-t-crash-on-broken-GIF-images.patch \
-           file://0029-aarch64_arm64_fix_arch_detection.patch \
-           file://0030-aarch64_arm64_qatomic_support.patch \
-           file://0031-aarch64_arm64_mkspecs.patch \
-           file://0032-aarch64_add_header.patch \
-           file://0034-Fix-a-division-by-zero-when-processing-malformed-BMP.patch \
            file://Fix-QWSLock-invalid-argument-logs.patch \
            file://add_check_for_aarch64_32.patch \
            file://g++.conf \
            file://linux.conf \
            "
 
-SRC_URI[md5sum] = "2edbe4d6c2eff33ef91732602f3518eb"
-SRC_URI[sha256sum] = "8b14dd91b52862e09b8e6a963507b74bc2580787d171feda197badfa7034032c"
+SRC_URI[md5sum] = "d990ee66bf7ab0c785589776f35ba6ad"
+SRC_URI[sha256sum] = "e2882295097e47fe089f8ac741a95fef47e0a73a3f3cdf21b56990638f626ea0"
 
 S = "${WORKDIR}/qt-everywhere-opensource-src-${PV}"
 

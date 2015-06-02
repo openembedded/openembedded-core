@@ -3,7 +3,6 @@ DESCRIPTION = "Qt is a versatile cross-platform application framework -- this is
 SECTION = "libs"
 HOMEPAGE = "http://qt-project.org/"
 DEPENDS += "directfb tslib"
-INC_PR = "r52"
 
 QT4EDEPENDS = ""
 QT_BASE_LIB  ?= "libqt-embedded"

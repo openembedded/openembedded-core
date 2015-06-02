@@ -9,8 +9,6 @@ LIC_FILES_CHKSUM = "file://LICENSE.LGPL;md5=fbc093901857fcd118f065f900982c24 \
                     file://LICENSE.GPL3;md5=6e1694ee338db410417517884918d4d2 \
                     file://LGPL_EXCEPTION.txt;md5=0145c4d1b6f96a661c2c139dfb268fb6"
 
-INC_PR = "r20"
-
 inherit native
 
 SRC_URI = "http://download.qt-project.org/official_releases/qt/4.8/${PV}/qt-everywhere-opensource-src-${PV}.tar.gz \
@@ -18,10 +16,6 @@ SRC_URI = "http://download.qt-project.org/official_releases/qt/4.8/${PV}/qt-ever
            file://0002-qkbdtty_qws-fix-build-with-old-kernel-headers.patch \
            file://0003-webkit2-set-OUTPUT_DIR-value-if-empty.patch \
            file://0021-configure-make-qt4-native-work-with-long-building-pa.patch \
-           file://0029-aarch64_arm64_fix_arch_detection.patch \
-           file://0030-aarch64_arm64_qatomic_support.patch \
-           file://0031-aarch64_arm64_mkspecs.patch \
-           file://0032-aarch64_add_header.patch \
            file://g++.conf \
            file://linux.conf \
 	"
