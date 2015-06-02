@@ -57,6 +57,12 @@ class Gnome(XTerminal):
     priority = 2
 
     def __init__(self, sh_cmd, title=None, env=None, d=None):
+        # Recent versions of gnome-terminal does not support non-UTF8 charset:
+        # https://bugzilla.gnome.org/show_bug.cgi?id=732127; as a workaround,
+        # clearing the LC_ALL environment variable so it uses the locale.
+        # Once fixed on the gnome-terminal project, this should be removed.
+        if os.getenv('LC_ALL'): os.putenv('LC_ALL','')
+
         # Check version
         vernum = check_terminal_version("gnome-terminal")
         if vernum and LooseVersion(vernum) >= '3.10':
