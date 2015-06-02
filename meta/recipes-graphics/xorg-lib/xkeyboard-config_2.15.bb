@@ -12,11 +12,9 @@ BUGTRACKER = "https://bugs.freedesktop.org/enter_bug.cgi?product=xkeyboard-confi
 LICENSE = "MIT & MIT-style"
 LIC_FILES_CHKSUM = "file://COPYING;md5=0e7f21ca7db975c63467d2e7624a12f9"
 
-SRC_URI = "${XORG_MIRROR}/individual/data/xkeyboard-config/${BPN}-${PV}.tar.bz2 \
-           file://0001-Remove-GPLv3-content.patch \
-           "
-SRC_URI[md5sum] = "2869c03d85b606f929aab054ef6e1b60"
-SRC_URI[sha256sum] = "dc91458a214c56a35727f9e523fc647615de64137057ca6ee4d4d4474a4bb2ae"
+SRC_URI = "${XORG_MIRROR}/individual/data/xkeyboard-config/${BPN}-${PV}.tar.bz2"
+SRC_URI[md5sum] = "4af1deeb7c5f4cad62e65957d98d6758"
+SRC_URI[sha256sum] = "0e443cf7ca2f0b40846472c029647a05933fc705d611e1478c4db8a48a6f38bf"
 
 SECTION = "x11/libs"
 DEPENDS = "intltool-native virtual/gettext util-macros libxslt-native"
