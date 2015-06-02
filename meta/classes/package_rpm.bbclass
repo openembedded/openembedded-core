@@ -330,7 +330,7 @@ python write_specfile () {
             pkgname = pkg
         localdata.setVar('PKG', pkgname)
 
-        localdata.setVar('OVERRIDES', pkg)
+        localdata.setVar('OVERRIDES', d.getVar("OVERRIDES", False) + ":" + pkg)
 
         bb.data.update_data(localdata)
 
