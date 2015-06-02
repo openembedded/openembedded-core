@@ -73,3 +73,9 @@ class Wic(oeSelfTest):
                                    "-r tmp/work/qemux86-poky-linux/"
                                    "core-image-minimal/1.0-r0/rootfs").status)
         self.assertEqual(1, len(glob(self.resultdir + "directdisk-*.direct")))
+
+    def test06_gpt_image(self):
+        """Test creation of core-image-minimal with gpt table"""
+        self.assertEqual(0, runCmd("wic create directdisk-gpt "
+                                   "--image-name core-image-minimal").status)
+        self.assertEqual(1, len(glob(self.resultdir + "directdisk-*.direct")))
