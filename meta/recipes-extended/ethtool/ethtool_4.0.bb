@@ -9,11 +9,10 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
 SRC_URI = "${KERNELORG_MIRROR}/software/network/ethtool/ethtool-${PV}.tar.gz \
            file://run-ptest \
            file://avoid_parallel_tests.patch \
-           file://ethtool-uint.patch \
            "
 
-SRC_URI[md5sum] = "3806bae34c153e2b9e2859e85c54788d"
-SRC_URI[sha256sum] = "a6f1433824af7b390ed4e66dfc7cee047d6d1f56dbb8ceef9fe905d63aef5275"
+SRC_URI[md5sum] = "0a1c78787c7dcf077016ed86372a472f"
+SRC_URI[sha256sum] = "e200516727cc9583e8b63fd6e72f667f9ed41bb4f0577ff4803b60c64cfd1dbc"
 
 inherit autotools ptest
 RDEPENDS_${PN}-ptest += "make"
