@@ -62,7 +62,7 @@ class DirectImageCreator(BaseImageCreator):
         self.__disks = {}
         self.__disk_format = "direct"
         self._disk_names = []
-        self._ptable_format = self.ks.handler.bootloader.ptable
+        self.ptable_format = self.ks.handler.bootloader.ptable
 
         self.oe_builddir = oe_builddir
         if image_output_dir:
@@ -83,7 +83,7 @@ class DirectImageCreator(BaseImageCreator):
             if n == num:
                 if  p.no_table:
                     return 0
-                if self._ptable_format == 'msdos' and realnum > 3:
+                if self.ptable_format == 'msdos' and realnum > 3:
                     # account for logical partition numbering, ex. sda5..
                     return realnum + 1
                 return realnum
@@ -276,7 +276,7 @@ class DirectImageCreator(BaseImageCreator):
 
         self._restore_fstab(fstab)
 
-        self.__image.layout_partitions(self._ptable_format)
+        self.__image.layout_partitions(self.ptable_format)
 
         self.__imgdir = self.workdir
         for disk_name, disk in self.__image.disks.items():

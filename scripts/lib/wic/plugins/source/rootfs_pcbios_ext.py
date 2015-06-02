@@ -101,7 +101,7 @@ class RootfsPlugin(SourcePlugin):
         syslinux_conf += "LABEL linux\n"
         syslinux_conf += "  KERNEL /boot/bzImage\n"
 
-        if image_creator._ptable_format in ('msdos', 'gpt'):
+        if image_creator.ptable_format in ('msdos', 'gpt'):
             rootstr = rootdev
         else:
             raise ImageError("Unsupported partition table format found")
@@ -170,13 +170,13 @@ class RootfsPlugin(SourcePlugin):
         disk image. In this case, we install the MBR.
         """
         mbrfile = os.path.join(native_sysroot, "usr/share/syslinux/")
-        if image_creator._ptable_format == 'msdos':
+        if image_creator.ptable_format == 'msdos':
             mbrfile += "mbr.bin"
-        elif image_creator._ptable_format == 'gpt':
+        elif image_creator.ptable_format == 'gpt':
             mbrfile += "gptmbr.bin"
         else:
             msger.error("Unsupported partition table: %s" % \
-                        image_creator._ptable_format)
+                        image_creator.ptable_format)
 
         if not os.path.exists(mbrfile):
             msger.error("Couldn't find %s. Has syslinux-native been baked?" % mbrfile)

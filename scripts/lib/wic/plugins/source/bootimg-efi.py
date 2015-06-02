@@ -61,7 +61,7 @@ class BootimgEFIPlugin(SourcePlugin):
 
         kernel = "/bzImage"
 
-        if cr._ptable_format in ('msdos', 'gpt'):
+        if cr.ptable_format in ('msdos', 'gpt'):
             rootstr = rootdev
         else:
             raise ImageError("Unsupported partition table format found")
@@ -106,7 +106,7 @@ class BootimgEFIPlugin(SourcePlugin):
 
         kernel = "/bzImage"
 
-        if cr._ptable_format in ('msdos', 'gpt'):
+        if cr.ptable_format in ('msdos', 'gpt'):
             rootstr = rootdev
         else:
             raise ImageError("Unsupported partition table format found")
