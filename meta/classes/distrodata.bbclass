@@ -266,11 +266,15 @@ python do_checkpkg() {
         import re
         import tempfile
         import subprocess
+        import oe.recipeutils
+        from bb.utils import vercmp_string
+        from bb.fetch2 import FetchError, NoMethodError, decodeurl
 
         """first check whether a uri is provided"""
         src_uri = d.getVar('SRC_URI', True)
         if not src_uri:
                 return
+        uri_type, _, _, _, _, _ = decodeurl(src_uri)
 
         """initialize log files."""
         logpath = d.getVar('LOG_DIR', True)
@@ -310,10 +314,7 @@ python do_checkpkg() {
 
         pdesc = localdata.getVar('DESCRIPTION', True)
         pgrp = localdata.getVar('SECTION', True)
-        if localdata.getVar('PRSPV', True):
-                pversion = localdata.getVar('PRSPV', True)
-        else:
-                pversion = localdata.getVar('PV', True)
+        pversion = localdata.getVar('PV', True)
         plicense = localdata.getVar('LICENSE', True)
         psection = localdata.getVar('SECTION', True)
         phome = localdata.getVar('HOMEPAGE', True)
@@ -325,61 +326,50 @@ python do_checkpkg() {
         maintainer = localdata.getVar('RECIPE_MAINTAINER', True)
 
         """ Get upstream version version """
-        pupver = None
-        pstatus = "ErrUnknown"
-        found = 0
+        pupver = ""
+        pstatus = ""
 
-        for uri in src_uri.split():
-            m = re.compile('(?P<type>[^:]*)').match(uri)
-            if not m:
-                raise MalformedUrl(uri)
-            elif m.group('type') in ('http', 'https', 'ftp', 'cvs', 'svn', 'git'):
-                found = 1
-                psrcuri = uri
-                pproto = m.group('type')
-                break
-        if not found:
-                pproto = "file"
+        try:
+            uv = oe.recipeutils.get_recipe_upstream_version(localdata)
 
-        if pproto in ['http', 'https', 'ftp', 'git']:
-            try:
-                ud = bb.fetch2.FetchData(psrcuri, d)
-                pupver = ud.method.latest_versionstring(ud, d)
-                if pproto == 'git':
-                    if pupver == "":
-                        pupver = pversion.rsplit("+")[0]
-                    if re.search(pversion, "gitrAUTOINC"):
-                        pupver += "+gitrAUTOINC+"
-                    else:
-                        pupver += "+gitAUTOINC+"
-                    latest_revision = ud.method.latest_revision(ud, d, ud.names[0])
-                    pupver += latest_revision[:10]
-            except Exception as inst:
-                bb.warn("%s: unexpected error: %s" % (pname, repr(inst)))
+            pupver = uv['version']
+        except Exception as e:
+            if e is FetchError:
                 pstatus = "ErrAccess"
-        elif pproto == "file":
-            """Local files are always updated"""
-            pupver = pversion
-        else:
-            pstatus = "ErrUnsupportedProto"
-            bb.note("do_checkpkg, protocol %s isn't implemented" % pproto)
+            elif e is NoMethodError:
+                pstatus = "ErrUnsupportedProto"
+            else:
+                pstatus = "ErrUnknown"
 
+        """Set upstream version status"""
         if not pupver:
             pupver = "N/A"
-        elif pupver == pversion:
-            pstatus = "MATCH"
         else:
-            pstatus = "UPDATE"
+            pv, _, _ = oe.recipeutils.get_recipe_pv_without_srcpv(pversion, uri_type)
+            upv, _, _ = oe.recipeutils.get_recipe_pv_without_srcpv(pupver, uri_type)
+
+            cmp = vercmp_string(pv, upv)
+            if cmp == -1:
+                pstatus = "UPDATE"
+            elif cmp == 0:
+                pstatus = "MATCH"
 
         """Read from manual distro tracking fields as alternative"""
         pmver = d.getVar("RECIPE_UPSTREAM_VERSION", True)
         if not pmver:
             pmver = "N/A"
             pmstatus = "ErrNoRecipeData"
-        elif pmver == pupver:
-            pmstatus = "MATCH"
         else:
-            pmstatus = "UPDATE"
+            mpv, _, _ = oe.recipeutils.get_recipe_pv_without_srcpv(pmver, uri_type)
+            upv, _, _ = oe.recipeutils.get_recipe_pv_without_srcpv(pupver, uri_type)
+
+            cmp = vercmp_string(mpv, upv)
+            if cmp == -1:
+                pmstatus = "UPDATE"
+            elif cmp == 0:
+                pmstatus = "MATCH"
+            else:
+                pmstatus = ""
 
         pdepends = "".join(pdepends.split("\t"))
         pdesc = "".join(pdesc.split("\t"))
