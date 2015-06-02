@@ -57,6 +57,7 @@ RDEPENDS_packagegroup-core-sys-extended = "\
     dhcp-client \
     gamin \
     hdparm \
+    lighttpd \
     libaio \
     lrzsz \
     lzo \

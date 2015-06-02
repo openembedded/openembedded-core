@@ -150,7 +150,6 @@ RDEPENDS_packagegroup-core-full-cmdline-sys-services = "\
     less \
     libcap \
     libevent \
-    lighttpd \
     logrotate \
     nfs-utils \
     pciutils \
