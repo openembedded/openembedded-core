@@ -13,8 +13,8 @@ DEPENDS += "perl"
 
 SRC_URI = "http://cpan.metacpan.org/authors/id/S/SH/SHLOMIF/Error-${PV}.tar.gz"
 
-SRC_URI[md5sum] = "98524ffbd268013e00697a5826a83d37"
-SRC_URI[sha256sum] = "af48e19077d8837c6377d8a9ba2ce473c100caf5eeb7b53606c3f78a0e8b5d37"
+SRC_URI[md5sum] = "7e3676a7fb14f65f568f12d4b40a2a72"
+SRC_URI[sha256sum] = "074db7c783a67b0667eca64a4f6a0c3de94998afc92c01d6453163eb04b9150d"
 
 S = "${WORKDIR}/Error-${PV}"
 
