@@ -312,7 +312,7 @@ class Image:
                                     parted_fs_type, p['start'], p['size'])
 
             if p['boot']:
-                flag_name = "boot"
+                flag_name = "legacy_boot" if d['ptable_format'] == 'gpt' else "boot"
                 msger.debug("Set '%s' flag for partition '%s' on disk '%s'" % \
                             (flag_name, p['num'], d['disk'].device))
                 self.__run_parted(["-s", d['disk'].device, "set",
