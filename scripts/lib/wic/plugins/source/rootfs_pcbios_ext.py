@@ -101,7 +101,7 @@ class RootfsPlugin(SourcePlugin):
         syslinux_conf += "LABEL linux\n"
         syslinux_conf += "  KERNEL /boot/bzImage\n"
 
-        if image_creator._ptable_format == 'msdos':
+        if image_creator._ptable_format in ('msdos', 'gpt'):
             rootstr = rootdev
         else:
             raise ImageError("Unsupported partition table format found")
