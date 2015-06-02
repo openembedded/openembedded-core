@@ -138,7 +138,7 @@ class Image:
                 raise ImageError("No disk %s for partition %s" \
                                  % (p['disk_name'], p['mountpoint']))
 
-            if p['part_type']:
+            if ptable_format == 'msdos' and p['part_type']:
                 # The --part-type can also be implemented for MBR partitions,
                 # in which case it would map to the 1-byte "partition type"
                 # filed at offset 3 of the partition entry.
