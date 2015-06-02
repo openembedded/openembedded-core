@@ -46,6 +46,10 @@ class BootimgPcbiosPlugin(SourcePlugin):
         mbrfile = "%s/syslinux/" % bootimg_dir
         if cr._ptable_format == 'msdos':
             mbrfile += "mbr.bin"
+        elif cr._ptable_format == 'gpt':
+            mbrfile += "gptmbr.bin"
+        else:
+            msger.error("Unsupported partition table: %s" % cr._ptable_format)
 
         if not os.path.exists(mbrfile):
             msger.error("Couldn't find %s.  If using the -e option, do you have the right MACHINE set in local.conf?  If not, is the bootimg_dir path correct?" % mbrfile)

@@ -169,7 +169,15 @@ class RootfsPlugin(SourcePlugin):
         Called after all partitions have been prepared and assembled into a
         disk image. In this case, we install the MBR.
         """
-        mbrfile = os.path.join(native_sysroot, "usr/share/syslinux/mbr.bin")
+        mbrfile = os.path.join(native_sysroot, "usr/share/syslinux/")
+        if image_creator._ptable_format == 'msdos':
+            mbrfile += "mbr.bin"
+        elif image_creator._ptable_format == 'gpt':
+            mbrfile += "gptmbr.bin"
+        else:
+            msger.error("Unsupported partition table: %s" % \
+                        image_creator._ptable_format)
+
         if not os.path.exists(mbrfile):
             msger.error("Couldn't find %s. Has syslinux-native been baked?" % mbrfile)
 
