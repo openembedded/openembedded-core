@@ -27,6 +27,7 @@ SRC_URI = "git://sourceware.org/git/glibc.git;branch=${BRANCH} \
            file://0001-yes-within-the-path-sets-wrong-config-variables.patch \
            file://elf-Makefile-fix-a-typo.patch \
            file://makesyscall.patch \
+           file://Fix-__memcpy_chk-on-non-SSE2-CPUs.patch \
            ${EGLIBCPATCHES} \
            ${CVEPATCHES} \
           "
