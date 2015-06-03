@@ -89,5 +89,5 @@ python do_bundle_files() {
     bb.build.exec_func('create_bundle_files', d)
 }
 
-addtask bundle_files after do_vmdkimg before do_build
+addtask bundle_files after do_vmimg before do_build
 do_bundle_files[nostamp] = "1"
