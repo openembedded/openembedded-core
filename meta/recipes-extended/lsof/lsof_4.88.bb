@@ -29,9 +29,6 @@ python do_unpack () {
     d.setVar('SRC_URI', src_uri)
 }
 
-export LSOF_OS = "${TARGET_OS}"
-LSOF_OS_libc-uclibc = "linux"
-LSOF_OS_libc-glibc = "linux"
 export LSOF_INCLUDE = "${STAGING_INCDIR}"
 
 do_configure () {
@@ -42,7 +39,7 @@ do_configure () {
                 LINUX_CLIB="-DGLIBCV=${LINUX_CLIB}"
                 export LINUX_CLIB
         fi
-	yes | ./Configure ${LSOF_OS}
+	yes | ./Configure linux
 }
 
 export I = "${STAGING_INCDIR}"
