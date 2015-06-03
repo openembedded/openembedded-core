@@ -40,7 +40,7 @@ PACKAGECONFIG[pulseaudio] = "--enable-pulseaudio,--disable-pulseaudio,pulseaudio
 PACKAGECONFIG[samplerate] = "--enable-samplerate,--disable-samplerate,libsamplerate0"
 PACKAGECONFIG[speex] = "--with-speex=lib,--with-speex=no,speex"
 
-PACKAGES += "alsa-plugins-pulseaudio-conf"
+PACKAGES += "${@bb.utils.contains('PACKAGECONFIG', 'pulseaudio', 'alsa-plugins-pulseaudio-conf', '', d)}"
 
 PACKAGES_DYNAMIC = "^libasound-module-.*"
 
