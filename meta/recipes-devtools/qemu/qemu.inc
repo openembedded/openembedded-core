@@ -90,7 +90,7 @@ PACKAGECONFIG ??= " \
 	fdt sdl alsa \
 	${@bb.utils.contains('DISTRO_FEATURES', 'xen', 'xen', '', d)} \
 	"
-PACKAGECONFIG_class-native ??= "fdt alsa"
+PACKAGECONFIG_class-native ??= "fdt alsa uuid"
 PACKAGECONFIG_class-nativesdk ??= "fdt sdl"
 NATIVEDEPS = ""
 NATIVEDEPS_class-native = "${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'libxext-native', '',d)}"
