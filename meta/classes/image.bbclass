@@ -130,10 +130,10 @@ def build_live(d):
     return "image-live"
 
 IMAGE_TYPE_live = "${@build_live(d)}"
-
 inherit ${IMAGE_TYPE_live}
-IMAGE_TYPE_vmdk = '${@bb.utils.contains("IMAGE_FSTYPES", "vmdk", "image-vmdk", "", d)}'
-inherit ${IMAGE_TYPE_vmdk}
+
+IMAGE_TYPE_vm = '${@bb.utils.contains_any("IMAGE_FSTYPES", ["vmdk", "vdi"], "image-vm", "", d)}'
+inherit ${IMAGE_TYPE_vm}
 
 python () {
     deps = " " + imagetypes_getdepends(d)
