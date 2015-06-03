@@ -502,6 +502,10 @@ def check_patch(patchfile):
         os.rename(patchfile + '.tmp', patchfile)
 
 def drop_to_shell(workdir=None):
+    if not sys.stdin.isatty():
+        print "Not a TTY so can't drop to shell for resolution, exiting."
+        return False
+
     shell = os.environ.get('SHELL', 'bash')
     print('Dropping to shell "%s"\n' \
           'When you are finished, run the following to continue:\n' \
@@ -547,7 +551,7 @@ def get_repos(conf, repo_names):
     for repo in repos:
         if not repo in conf.repos:
             logger.error("Specified component '%s' not found in configuration" % repo)
-            sys.exit(0)
+            sys.exit(1)
 
     if not repos:
         repos = conf.repos
@@ -695,7 +699,7 @@ def action_update(conf, args):
         print('You may now edit the patch and patch list in %s\n' \
               'For example, you can remove unwanted patch entries from patchlist-*, so that they will be not applied later' % patch_dir);
         if not drop_to_shell(patch_dir):
-            sys.exit(0)
+            sys.exit(1)
 
     # Step 6: apply the generated and revised patch
     apply_patchlist(conf, repos)
@@ -761,7 +765,7 @@ def apply_patchlist(conf, repos):
                         if not drop_to_shell():
                             if prevrev != repo['last_revision']:
                                 conf.update(name, "last_revision", prevrev)
-                            sys.exit(0)
+                            sys.exit(1)
                 prevrev = lastrev
                 i += 1
             # Once all patches are applied, we should update
