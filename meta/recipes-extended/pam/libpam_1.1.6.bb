@@ -4,7 +4,7 @@ HOMEPAGE = "https://fedorahosted.org/linux-pam/"
 BUGTRACKER = "https://fedorahosted.org/linux-pam/newticket"
 SECTION = "base"
 # PAM is dual licensed under GPL and BSD.
-# /etc/pam.d comes from Debian libpam-runtime in 2009-11 (at that time 
+# /etc/pam.d comes from Debian libpam-runtime in 2009-11 (at that time
 # libpam-runtime-1.0.1 is GPLv2+), by openembedded
 LICENSE = "GPLv2+ | BSD"
 LIC_FILES_CHKSUM = "file://COPYING;md5=7eb5c1bf854e8881005d673599ee74d3"
@@ -27,11 +27,13 @@ SRC_URI = "http://linux-pam.org/library/Linux-PAM-${PV}.tar.bz2 \
            file://pam-unix-nullok-secure.patch \
            file://pam_timestamp-fix-potential-directory-traversal-issu.patch \
            file://libpam-xtests-remove-bash-dependency.patch \
+           file://crypt_configure.patch \
           "
 SRC_URI[md5sum] = "7b73e58b7ce79ffa321d408de06db2c4"
 SRC_URI[sha256sum] = "bab887d6280f47fc3963df3b95735a27a16f0f663636163ddf3acab5f1149fc2"
 
 SRC_URI_append_libc-uclibc = " file://pam-no-innetgr.patch"
+SRC_URI_append_libc-musl = " file://pam-no-innetgr.patch"
 
 DEPENDS = "bison flex flex-native cracklib"
 
@@ -145,7 +147,7 @@ do_install() {
 	install -d ${D}${sysconfdir}/default/volatiles
 	install -m 0644 ${WORKDIR}/99_pam ${D}${sysconfdir}/default/volatiles
 
-	install -d ${D}${sysconfdir}/pam.d/     
+	install -d ${D}${sysconfdir}/pam.d/
 	install -m 0644 ${WORKDIR}/pam.d/* ${D}${sysconfdir}/pam.d/
 
 	# The lsb requires unix_chkpwd has setuid permission
