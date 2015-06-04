@@ -18,10 +18,10 @@ if [ ! -d /home/builder/.local/share/applications ]; then
     #register folders to open with PCManFM filemanager
     xdg-mime default pcmanfm.desktop inode/directory
 
-    #register html links and files with Midori
-    xdg-mime default midori.desktop x-scheme-handler/http
-    xdg-mime default midori.desktop x-scheme-handler/https
-    xdg-mime default midori.desktop text/html
+    #register html links and files with epiphany
+    xdg-mime default epiphany.desktop x-scheme-handler/http
+    xdg-mime default epiphany.desktop x-scheme-handler/https
+    xdg-mime default epiphany.desktop text/html
 
     #register text files with leafpad text editor
     xdg-mime default leafpad.desktop text/plain

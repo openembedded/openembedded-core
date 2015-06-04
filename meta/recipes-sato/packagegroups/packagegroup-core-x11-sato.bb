@@ -47,7 +47,7 @@ FILEMANAGER ?= "pcmanfm"
 FILEMANAGER_mips ?= ""
 
 WEB ?= ""
-#WEB = "midori"
+#WEB = "epiphany"
 
 SUMMARY_${PN}-apps = "Sato desktop - applications"
 RDEPENDS_${PN}-apps = "\
