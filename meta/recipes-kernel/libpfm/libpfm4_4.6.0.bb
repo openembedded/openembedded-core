@@ -10,13 +10,12 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=0de488f3bd4424e308e2e399cb99c788"
 
 SECTION = "devel"
 
-PR = "r1"
 COMPATIBLE_HOST = "powerpc64"
 
-SRC_URI = "http://downloads.sourceforge.net/project/perfmon2/libpfm4/libpfm-4.3.0.tar.gz"
+SRC_URI = "http://downloads.sourceforge.net/project/perfmon2/${BPN}/libpfm-${PV}.tar.gz"
 
-SRC_URI[md5sum] = "0ab272dbdbb759b852ba8bd06db030ef"
-SRC_URI[sha256sum] = "a23eb9affbff279e13563a39317c0ad71c4de28908d4243c8bc109138430cc3b"
+SRC_URI[md5sum] = "5077b9022440e4951d96f2d0e73bd487"
+SRC_URI[sha256sum] = "5ab1e5b0472550f9037a8800834f6bc3b927690070f69fac0b67284b4b05fd5f"
 
 EXTRA_OEMAKE = "DESTDIR=\"${D}\" PREFIX=\"${prefix}\" LIBDIR=\"${libdir}\" LDCONFIG=\"true\""
 EXTRA_OEMAKE_append_powerpc = " ARCH=\"powerpc\""
