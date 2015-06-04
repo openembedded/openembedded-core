@@ -26,7 +26,7 @@ CONFIGFILESURI_mipsel = " \
     file://config.h \
     file://numpyconfig.h \
 "
-CONFIGFILESURI_i586 = " \
+CONFIGFILESURI_x86 = " \
     file://config.h \
     file://numpyconfig.h \
 "
