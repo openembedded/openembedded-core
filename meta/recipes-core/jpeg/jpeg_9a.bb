@@ -3,39 +3,17 @@ DESCRIPTION = "libjpeg contains a library for handling the JPEG (JFIF) image for
 HOMEPAGE = "http://www.ijg.org/"
 
 LICENSE ="BSD-3-Clause"
-LIC_FILES_CHKSUM = "file://README;md5=4f46756b064c225fae088903300e5c98"
+LIC_FILES_CHKSUM = "file://README;md5=ea93a8a2fed10106b63bc21679edacb9"
 
 SECTION = "libs"
 
-DEPENDS = "libtool-cross"
-DEPENDS_class-native = "libtool-native"
-
-PR = "r1"
-
 SRC_URI = "http://www.ijg.org/files/jpegsrc.v${PV}.tar.gz \
-	   file://debian-libjpeg7_7-1.diff \
-           file://fix_for_automake_1.12.1.patch"
+	  "
 
-SRC_URI[md5sum] = "52654eb3b2e60c35731ea8fc87f1bd29"
-SRC_URI[sha256sum] = "00029b1473f0f0ea72fbca3230e8cb25797fbb27e58ae2e46bb8bf5a806fe0b3"
+SRC_URI[md5sum] = "3353992aecaee1805ef4109aadd433e7"
+SRC_URI[sha256sum] = "3a753ea48d917945dd54a2d97de388aa06ca2eb1066cbfdc6652036349fe05a7"
 
-inherit autotools 
-
-EXTRA_OECONF="--enable-static --enable-shared"
-EXTRA_OEMAKE='"LIBTOOL=${STAGING_BINDIR_CROSS}/${HOST_SYS}-libtool"'
-
-CFLAGS_append = " -D_REENTRANT"
-
-do_configure_prepend () {
-	rm -f ${S}/ltconfig
-	rm -f ${S}/ltmain.sh
-}
-
-do_install() {
-	install -d ${D}${bindir} ${D}${includedir} \
-		   ${D}${mandir}/man1 ${D}${libdir}
-	oe_runmake 'DESTDIR=${D}' install
-}
+inherit autotools
 
 PACKAGES =+ 		"jpeg-tools "
 DESCRIPTION_jpeg-tools = "The jpeg-tools package includes the client programs for access libjpeg functionality.  These tools allow for the compression, decompression, transformation and display of JPEG files."
