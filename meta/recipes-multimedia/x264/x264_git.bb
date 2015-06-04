@@ -51,5 +51,5 @@ do_install() {
 }
 
 # PIC can't be enabled for 32-bit x86
-INSANE_SKIP_${PN}_append_i586 = " textrel"
+INSANE_SKIP_${PN}_append_x86 = " textrel"
 
