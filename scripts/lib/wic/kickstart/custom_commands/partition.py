@@ -71,7 +71,7 @@ class Wic_PartData(Mic_PartData):
             retval += " --no-table"
         if self.use_uuid:
             retval += " --use-uuid"
-        retval += " --extra-space=%d" % self.extra_space
+        retval += " --extra-space=%s" % self.extra_space
         retval += " --overhead-factor=%f" % self.overhead_factor
 
         return retval
