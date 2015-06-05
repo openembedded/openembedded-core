@@ -220,15 +220,6 @@ class Image:
 
             d['min_size'] *= self.sector_size
 
-    def __run_parted(self, args):
-        """ Run parted with arguments specified in the 'args' list. """
-
-        args.insert(0, "parted")
-        args = ' '.join(args)
-        msger.debug(args)
-
-        exec_native_cmd(args, self.native_sysroot)
-
     def __create_partition(self, device, parttype, fstype, start, size):
         """ Create a partition on an image described by the 'device' object. """
 
@@ -237,12 +228,12 @@ class Image:
         msger.debug("Added '%s' partition, sectors %d-%d, size %d sectors" %
                     (parttype, start, end, size))
 
-        args = ["-s", device, "unit", "s", "mkpart", parttype]
+        cmd = "parted -s %s unit s mkpart %s" % (device, parttype)
         if fstype:
-            args.extend([fstype])
-        args.extend(["%d" % start, "%d" % end])
+            cmd += " %s" % fstype
+        cmd += " %d %d" % (start, end)
 
-        return self.__run_parted(args)
+        return exec_native_cmd(cmd, self.native_sysroot)
 
     def __format_disks(self):
         self.layout_partitions()
@@ -251,8 +242,9 @@ class Image:
             d = self.disks[dev]
             msger.debug("Initializing partition table for %s" % \
                         (d['disk'].device))
-            self.__run_parted(["-s", d['disk'].device, "mklabel",
-                               d['ptable_format']])
+            exec_native_cmd("parted -s %s mklabel %s" % \
+                            (d['disk'].device, d['ptable_format']),
+                            self.native_sysroot)
 
         msger.debug("Creating partitions")
 
@@ -305,8 +297,9 @@ class Image:
                 flag_name = "legacy_boot" if d['ptable_format'] == 'gpt' else "boot"
                 msger.debug("Set '%s' flag for partition '%s' on disk '%s'" % \
                             (flag_name, p['num'], d['disk'].device))
-                self.__run_parted(["-s", d['disk'].device, "set",
-                                   "%d" % p['num'], flag_name, "on"])
+                exec_native_cmd("parted -s %s set %d %s on" % \
+                                (d['disk'].device, p['num'], flag_name),
+                                self.native_sysroot)
 
             # Parted defaults to enabling the lba flag for fat16 partitions,
             # which causes compatibility issues with some firmware (and really
@@ -315,8 +308,9 @@ class Image:
                 if d['ptable_format'] == 'msdos':
                     msger.debug("Disable 'lba' flag for partition '%s' on disk '%s'" % \
                                 (p['num'], d['disk'].device))
-                    self.__run_parted(["-s", d['disk'].device, "set",
-                                       "%d" % p['num'], "lba", "off"])
+                    exec_native_cmd("parted -s %s set %d lba off" % \
+                                    (d['disk'].device, p['num']),
+                                    self.native_sysroot)
 
     def cleanup(self):
         if self.disks:
