@@ -227,17 +227,7 @@ class Image:
         args = ' '.join(args)
         msger.debug(args)
 
-        rc, out = exec_native_cmd(args, self.native_sysroot)
-
-        if out:
-            msger.debug('"parted" output: %s' % out)
-
-        if rc != 0:
-            # We don't throw exception when return code is not 0, because
-            # parted always fails to reload part table with loop devices. This
-            # prevents us from distinguishing real errors based on return
-            # code.
-            msger.error("WARNING: parted returned '%s' instead of 0 (use --debug for details)" % rc)
+        exec_native_cmd(args, self.native_sysroot)
 
     def __create_partition(self, device, parttype, fstype, start, size):
         """ Create a partition on an image described by the 'device' object. """

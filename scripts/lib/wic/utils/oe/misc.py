@@ -86,6 +86,12 @@ def exec_native_cmd(cmd_and_args, native_sysroot, catch=3):
         msger.error("A native program %s required to build the image "
                     "was not found (see details above). Please make sure "
                     "it's installed and try again." % args[0])
+    if out:
+        msger.debug('"%s" output: %s' % (args[0], out))
+
+    if rc != 0:
+        msger.error("exec_cmd: '%s' returned '%s' instead of 0" % \
+                    (cmd_and_args, rc))
 
     return (rc, out)
 
