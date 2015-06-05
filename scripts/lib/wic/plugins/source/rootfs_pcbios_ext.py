@@ -82,7 +82,6 @@ class RootfsPlugin(SourcePlugin):
 
         Called before do_prepare_partition()
         """
-        rootdev = image_creator._get_boot_config()[0]
         options = image_creator.ks.handler.bootloader.appendLine
 
         syslinux_conf = ""
@@ -102,7 +101,7 @@ class RootfsPlugin(SourcePlugin):
         syslinux_conf += "  KERNEL /boot/bzImage\n"
 
         if image_creator.ptable_format in ('msdos', 'gpt'):
-            rootstr = rootdev
+            rootstr = image_creator.rootdev
         else:
             raise ImageError("Unsupported partition table format found")
 

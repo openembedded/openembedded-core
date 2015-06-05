@@ -346,27 +346,23 @@ class DirectImageCreator(BaseImageCreator):
 
         msger.info(msg)
 
-    def _get_boot_config(self):
+    @property
+    def rootdev(self):
         """
-        Return the rootdev/root_part_uuid (if specified by
-        --part-type)
+        Get root device name to use as a 'root' parameter
+        in kernel command line.
 
         Assume partition order same as in wks
         """
-        rootdev = None
-        root_part_uuid = None
         parts = self._get_parts()
-        for num, p in enumerate(parts, 1):
-            if p.mountpoint == "/":
-                part = ''
-                if p.disk.startswith('mmcblk'):
-                    part = 'p'
-
-                pnum = self.__get_part_num(num, parts)
-                rootdev = "/dev/%s%s%-d" % (p.disk, part, pnum)
-                root_part_uuid = p.part_type
-
-        return (rootdev, root_part_uuid)
+        for num, part in enumerate(parts, 1):
+            if part.mountpoint == "/":
+                if part.uuid:
+                    return "PARTUUID=%s" % part.uuid
+                else:
+                    suffix = 'p' if part.disk.startswith('mmcblk') else ''
+                    pnum = self.__get_part_num(num, parts)
+                    return "/dev/%s%s%-d" % (part.disk, suffix, pnum)
 
     def _cleanup(self):
         if not self.__image is None:

@@ -83,7 +83,6 @@ class BootimgPcbiosPlugin(SourcePlugin):
         else:
             splashline = ""
 
-        (rootdev, root_part_uuid) = cr._get_boot_config()
         options = cr.ks.handler.bootloader.appendLine
 
         syslinux_conf = ""
@@ -105,7 +104,7 @@ class BootimgPcbiosPlugin(SourcePlugin):
         syslinux_conf += "KERNEL " + kernel + "\n"
 
         if cr.ptable_format in ('msdos', 'gpt'):
-            rootstr = rootdev
+            rootstr = cr.rootdev
         else:
             raise ImageError("Unsupported partition table format found")
 
