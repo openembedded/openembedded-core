@@ -26,6 +26,7 @@
 
 import os
 import tempfile
+import uuid
 
 from pykickstart.commands.partition import *
 from wic.utils.oe.misc import *
@@ -51,6 +52,8 @@ class Wic_PartData(Mic_PartData):
         self.no_table = kwargs.get("no-table", False)
         self.extra_space = kwargs.get("extra-space", "10M")
         self.overhead_factor = kwargs.get("overhead-factor", 1.3)
+        self._use_uuid = False
+        self.uuid = None
         self.use_uuid = kwargs.get("use-uuid", False)
         self.source_file = ""
         self.size = 0
@@ -72,6 +75,16 @@ class Wic_PartData(Mic_PartData):
         retval += " --overhead-factor=%f" % self.overhead_factor
 
         return retval
+
+    @property
+    def use_uuid(self):
+        return self._use_uuid
+
+    @use_uuid.setter
+    def use_uuid(self, value):
+        self._use_uuid = value
+        if value and not self.uuid:
+            self.uuid = str(uuid.uuid4())
 
     def get_rootfs(self):
         """
