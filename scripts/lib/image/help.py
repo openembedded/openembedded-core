@@ -757,6 +757,15 @@ DESCRIPTION
                             equal to 1.
                             The default value is 1.3.
 
+         --part-type: This option is specific to wic. It specifies partition
+                      type GUID for GPT partitions.
+                      List of partition type GUIDS can be found here:
+                      http://en.wikipedia.org/wiki/GUID_Partition_Table#Partition_type_GUIDs
+
+         --use-uuid: This option is specific to wic. It makes wic to generate
+                     random globally unique identifier (GUID) for the partition
+                     and use it in bootloader configuration to specify root partition.
+
     * bootloader
 
       This command allows the user to specify various bootloader
