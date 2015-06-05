@@ -51,6 +51,7 @@ class Wic_PartData(Mic_PartData):
         self.no_table = kwargs.get("no-table", False)
         self.extra_space = kwargs.get("extra-space", "10M")
         self.overhead_factor = kwargs.get("overhead-factor", 1.3)
+        self.use_uuid = kwargs.get("use-uuid", False)
         self.source_file = ""
         self.size = 0
 
@@ -65,6 +66,8 @@ class Wic_PartData(Mic_PartData):
                 retval += " --rootfs-dir=%s" % self.rootfs
         if self.no_table:
             retval += " --no-table"
+        if self.use_uuid:
+            retval += " --use-uuid"
         retval += " --extra-space=%d" % self.extra_space
         retval += " --overhead-factor=%f" % self.overhead_factor
 
@@ -561,4 +564,7 @@ class Wic_Partition(Mic_Partition):
         op.add_option("--overhead-factor", dest="overhead_factor",
                       action="callback", callback=overhead_cb, type="float",
                       nargs=1, default=1.3)
+        op.add_option("--use-uuid", dest="use_uuid", action="store_true",
+                      default=False)
+
         return op
