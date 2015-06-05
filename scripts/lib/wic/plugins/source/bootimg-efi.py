@@ -60,13 +60,8 @@ class BootimgEFIPlugin(SourcePlugin):
 
         kernel = "/bzImage"
 
-        if cr.ptable_format in ('msdos', 'gpt'):
-            rootstr = cr.rootdev
-        else:
-            raise ImageError("Unsupported partition table format found")
-
         grubefi_conf += "linux %s root=%s rootwait %s\n" \
-            % (kernel, rootstr, options)
+            % (kernel, cr.rootdev, options)
         grubefi_conf += "}\n"
 
         msger.debug("Writing grubefi config %s/hdd/boot/EFI/BOOT/grub.cfg" \
@@ -104,16 +99,10 @@ class BootimgEFIPlugin(SourcePlugin):
 
         kernel = "/bzImage"
 
-        if cr.ptable_format in ('msdos', 'gpt'):
-            rootstr = cr.rootdev
-        else:
-            raise ImageError("Unsupported partition table format found")
-
         boot_conf = ""
         boot_conf += "title boot\n"
         boot_conf += "linux %s\n" % kernel
-        boot_conf += "options LABEL=Boot root=%s %s\n" \
-            % (rootstr, options)
+        boot_conf += "options LABEL=Boot root=%s %s\n" % (cr.rootdev, options)
 
         msger.debug("Writing gummiboot config %s/hdd/boot/loader/entries/boot.conf" \
                         % cr_workdir)

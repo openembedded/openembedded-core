@@ -44,6 +44,7 @@ class Mic_Bootloader(F8_Bootloader):
     def _getParser(self):
         op = F8_Bootloader._getParser(self)
         op.add_option("--menus", dest="menus")
-        op.add_option("--ptable", dest="ptable", type="string")
+        op.add_option("--ptable", dest="ptable", choices=("msdos", "gpt"),
+                      default="msdos")
         return op
 

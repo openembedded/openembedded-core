@@ -103,12 +103,8 @@ class BootimgPcbiosPlugin(SourcePlugin):
         kernel = "/vmlinuz"
         syslinux_conf += "KERNEL " + kernel + "\n"
 
-        if cr.ptable_format in ('msdos', 'gpt'):
-            rootstr = cr.rootdev
-        else:
-            raise ImageError("Unsupported partition table format found")
-
-        syslinux_conf += "APPEND label=boot root=%s %s\n" % (rootstr, options)
+        syslinux_conf += "APPEND label=boot root=%s %s\n" % \
+                             (cr.rootdev, options)
 
         msger.debug("Writing syslinux config %s/hdd/boot/syslinux.cfg" \
                     % cr_workdir)

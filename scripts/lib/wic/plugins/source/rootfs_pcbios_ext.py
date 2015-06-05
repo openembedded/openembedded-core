@@ -100,12 +100,8 @@ class RootfsPlugin(SourcePlugin):
         syslinux_conf += "LABEL linux\n"
         syslinux_conf += "  KERNEL /boot/bzImage\n"
 
-        if image_creator.ptable_format in ('msdos', 'gpt'):
-            rootstr = image_creator.rootdev
-        else:
-            raise ImageError("Unsupported partition table format found")
-
-        syslinux_conf += "  APPEND label=boot root=%s %s\n" % (rootstr, options)
+        syslinux_conf += "  APPEND label=boot root=%s %s\n" % \
+                             (image_creator.rootdev, options)
 
         syslinux_cfg = os.path.join(image_creator.rootfs_dir['ROOTFS_DIR'], "boot", "syslinux.cfg")
         msger.debug("Writing syslinux config %s" % syslinux_cfg)

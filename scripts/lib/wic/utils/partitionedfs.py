@@ -122,10 +122,6 @@ class Image(object):
 
         msger.debug("Assigning %s partitions to disks" % ptable_format)
 
-        if ptable_format not in ('msdos', 'gpt'):
-            raise ImageError("Unknown partition table format '%s', supported " \
-                             "formats are: 'msdos'" % ptable_format)
-
         if self._partitions_layed_out:
             return
 
