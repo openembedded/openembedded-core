@@ -86,7 +86,7 @@ class Image(object):
 
     def add_partition(self, size, disk_name, mountpoint, source_file=None, fstype=None,
                       label=None, fsopts=None, boot=False, align=None, no_table=False,
-                      part_type=None):
+                      part_type=None, uuid=None):
         """ Add the next partition. Prtitions have to be added in the
         first-to-last order. """
 
@@ -110,7 +110,8 @@ class Image(object):
                     'boot': boot, # Bootable flag
                     'align': align, # Partition alignment
                     'no_table' : no_table, # Partition does not appear in partition table
-                    'part_type' : part_type} # Partition type
+                    'part_type' : part_type, # Partition type
+                    'uuid': uuid} # Partition UUID
 
             self.__add_partition(part)
 

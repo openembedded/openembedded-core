@@ -272,7 +272,8 @@ class DirectImageCreator(BaseImageCreator):
                                        boot=p.active,
                                        align=p.align,
                                        no_table=p.no_table,
-                                       part_type=p.part_type)
+                                       part_type=p.part_type,
+                                       uuid=p.uuid)
 
         self._restore_fstab(fstab)
 
