@@ -294,6 +294,21 @@ class Image(object):
             self.__create_partition(d['disk'].device, p['type'],
                                     parted_fs_type, p['start'], p['size'])
 
+            if p['part_type']:
+                msger.debug("partition %d: set type UID to %s" % \
+                            (p['num'], p['part_type']))
+                exec_native_cmd("sgdisk --typecode=%d:%s %s" % \
+                                         (p['num'], p['part_type'],
+                                          d['disk'].device), self.native_sysroot)
+
+            if p['uuid']:
+                msger.debug("partition %d: set UUID to %s" % \
+                            (p['num'], p['uuid']))
+                exec_native_cmd("sgdisk --partition-guid=%d:%s %s" % \
+                                         (p['num'], p['uuid'],
+                                          d['disk'].device),
+                                        self.native_sysroot)
+
             if p['boot']:
                 flag_name = "legacy_boot" if d['ptable_format'] == 'gpt' else "boot"
                 msger.debug("Set '%s' flag for partition '%s' on disk '%s'" % \
