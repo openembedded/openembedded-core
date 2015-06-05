@@ -39,7 +39,7 @@ class Wic(oeSelfTest):
     @classmethod
     def setUpClass(cls):
         """Build wic runtime dependencies and images used in the tests."""
-        bitbake('syslinux syslinux-native parted-native '
+        bitbake('syslinux syslinux-native parted-native gptfdisk-native '
                 'dosfstools-native mtools-native core-image-minimal')
 
     def setUp(self):
@@ -75,7 +75,7 @@ class Wic(oeSelfTest):
         self.assertEqual(1, len(glob(self.resultdir + "directdisk-*.direct")))
 
     def test06_gpt_image(self):
-        """Test creation of core-image-minimal with gpt table"""
+        """Test creation of core-image-minimal with gpt table and UUID boot"""
         self.assertEqual(0, runCmd("wic create directdisk-gpt "
                                    "--image-name core-image-minimal").status)
         self.assertEqual(1, len(glob(self.resultdir + "directdisk-*.direct")))
