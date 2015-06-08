@@ -8,12 +8,12 @@ SECTION = "multimedia"
 
 DEPENDS = "taglib libmad libvorbis libogg alsa-lib libsndfile1 libsamplerate0 curl"
 
-SRC_URI = "http://qmmp.ylsoftware.com/files/${BPN}-${PV}.tar.bz2 \
+SRC_URI = "http://qmmp.ylsoftware.com/files/${BP}.tar.bz2 \
            file://no-host-paths.patch \
           "
 
-SRC_URI[md5sum] = "9376b5d535ed540e97bdff79b42607ae"
-SRC_URI[sha256sum] = "dda66bf60121a8a2cb7175b16b3b948099f8c119ee9a11c671555e8c38caa387"
+SRC_URI[md5sum] = "c9347ad18913058e8a37b1e88b9c6ce2"
+SRC_URI[sha256sum] = "7fe9347ad6c66e8013b73f2c5cf628037c58151e0cfcb926a8f27b93ad2d7c0d"
 
 inherit cmake qt4x11
 
