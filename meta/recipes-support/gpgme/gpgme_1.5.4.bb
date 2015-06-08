@@ -6,22 +6,20 @@ BUGTRACKER = "https://bugs.g10code.com/gnupg/index"
 LICENSE = "GPLv2+ & LGPLv2.1+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f \
                     file://COPYING.LESSER;md5=bbb461211a33b134d42ed5ee802b37ff \
-                    file://src/gpgme.h.in;endline=23;md5=dccb4bb624011e36513c61ef0422d054 \
+                    file://src/gpgme.h.in;endline=23;md5=71ba2ae8d6ca034ed10bd099a8cf473c \
                     file://src/engine.h;endline=22;md5=4b6d8ba313d9b564cc4d4cfb1640af9d"
 
-SRC_URI = "ftp://ftp.gnupg.org/gcrypt/gpgme/gpgme-${PV}.tar.bz2 \
+SRC_URI = "ftp://ftp.gnupg.org/gcrypt/gpgme/${BP}.tar.bz2 \
            file://gpgme.pc \
            file://pkgconfig.patch \
-           file://gpgme-fix-CVE-2014-3564.patch \
           "
 
-SRC_URI[md5sum] = "334e524cffa8af4e2f43ae8afe585672"
-SRC_URI[sha256sum] = "2d1cc12411753752d9c5b9037e6fd3fd363517af720154768cc7b46b60120496"
+SRC_URI[md5sum] = "feafa03ea064e1d1dc11bc2b88404623"
+SRC_URI[sha256sum] = "bb38c0ec8815c9e94e6047b484984808a8dad9d6bec8df33dc5339fd55ffea6c"
 
 DEPENDS = "libgpg-error libassuan"
 
 BINCONFIG = "${bindir}/gpgme-config"
-EXTRA_OECONF = "--with-gpg=${bindir}/gpg --without-gpgsm --with-gpgconf=no --with-g13=no"
 
 inherit autotools texinfo binconfig-disabled pkgconfig
 
