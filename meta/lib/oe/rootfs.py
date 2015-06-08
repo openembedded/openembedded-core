@@ -44,15 +44,14 @@ class Rootfs(object):
         r = re.compile('^(warn|Warn|NOTE: warn|NOTE: Warn|WARNING:)')
         log_path = self.d.expand("${T}/log.do_rootfs")
         with open(log_path, 'r') as log:
-            for line in log.read().split('\n'):
+            for line in log:
                 if 'log_check' in line or 'NOTE:' in line:
                     continue
 
                 m = r.search(line)
                 if m:
-                    bb.warn('log_check: There is a warn message in the logfile')
-                    bb.warn('log_check: Matched keyword: [%s]' % m.group())
-                    bb.warn('log_check: %s\n' % line)
+                    bb.warn('[log_check] %s: found a warning message in the logfile (keyword \'%s\'):\n[log_check] %s'
+				    % (self.d.getVar('PN', True), m.group(), line))
 
     def _log_check_error(self):
         r = re.compile(self.log_check_regex)
@@ -60,15 +59,15 @@ class Rootfs(object):
         with open(log_path, 'r') as log:
             found_error = 0
             message = "\n"
-            for line in log.read().split('\n'):
+            for line in log:
                 if 'log_check' in line:
                     continue
 
                 m = r.search(line)
                 if m:
                     found_error = 1
-                    bb.warn('log_check: There were error messages in the logfile')
-                    bb.warn('log_check: Matched keyword: [%s]\n\n' % m.group())
+                    bb.warn('[log_check] %s: found an error message in the logfile (keyword \'%s\'):\n[log_check] %s'
+				    % (self.d.getVar('PN', True), m.group(), line))
 
                 if found_error >= 1 and found_error <= 5:
                     message += line + '\n'
