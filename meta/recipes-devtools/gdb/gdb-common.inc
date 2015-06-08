@@ -14,6 +14,7 @@ LTTNGUST_mips64el = ""
 LTTNGUST_mips64n32 = ""
 LTTNGUST_mips64eln32 = ""
 LTTNGUST_sh4 = ""
+LTTNGUST_libc-musl = ""
 
 INC_PR = "r0"
 
