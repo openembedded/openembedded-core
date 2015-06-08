@@ -4,10 +4,9 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=393a5ca445f6965873eca0259a17f833"
 
 DEPENDS = "libaio"
 
-SRCREV = "d6918c8832793b4205ed3bfede78c2f915c23385"
+SRCREV = "43fc870ce04e963def45dfc0d1ed4ea21ef10d4b"
 
-PR = "r6"
-PV = "1.0.5+git${SRCPV}"
+PV = "1.1.0+git${SRCPV}"
 
 SRC_URI = "git://git.kernel.dk/blktrace.git \
            file://ldflags.patch"
