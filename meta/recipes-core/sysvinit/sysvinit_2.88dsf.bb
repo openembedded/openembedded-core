@@ -100,3 +100,8 @@ do_install () {
 	chown root.shutdown ${D}${base_sbindir}/halt ${D}${base_sbindir}/shutdown
 	chmod o-x,u+s ${D}${base_sbindir}/halt ${D}${base_sbindir}/shutdown
 }
+
+python () {
+    if not bb.utils.contains('DISTRO_FEATURES', 'sysvinit', True, False, d):
+        raise bb.parse.SkipPackage("'sysvinit' not in DISTRO_FEATURES")
+}
