@@ -260,7 +260,7 @@ def package_qa_check_dev(path, name, d, elf, messages):
     """
 
     if not name.endswith("-dev") and not name.endswith("-dbg") and not name.endswith("-ptest") and not name.startswith("nativesdk-") and path.endswith(".so") and os.path.islink(path):
-        messages["dev-so"] = "non -dev/-dbg/-nativesdk package contains symlink .so: %s path '%s'" % \
+        messages["dev-so"] = "non -dev/-dbg/nativesdk- package contains symlink .so: %s path '%s'" % \
                  (name, package_qa_clean_path(path,d))
 
 QAPATHTEST[staticdev] = "package_qa_check_staticdev"
