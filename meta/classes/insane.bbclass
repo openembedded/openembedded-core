@@ -457,6 +457,11 @@ def package_qa_check_arch(path,name,d, elf, messages):
     provides = d.getVar('PROVIDES', True)
     bpn = d.getVar('BPN', True)
 
+    if target_arch == "allarch":
+        pn = d.getVar('PN', True)
+        messages["arch"] = pn + ": Recipe inherits the allarch class, but has packaged architecture-specific binaries"
+        return
+
     # FIXME: Cross package confuse this check, so just skip them
     for s in ['cross', 'nativesdk', 'cross-canadian']:
         if bb.data.inherits_class(s, d):
