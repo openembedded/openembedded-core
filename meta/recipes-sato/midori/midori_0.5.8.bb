@@ -26,6 +26,6 @@ EXTRA_OECMAKE = " \
 
 TARGET_CC_ARCH += "${LDFLAGS}"
 
-RRECOMMENDS_${PN} += "glib-networking ca-certificates gnome-icon-theme"
+RRECOMMENDS_${PN} += "glib-networking ca-certificates adwaita-icon-theme"
 
 FILES_${PN} += "${datadir}/appdata"
