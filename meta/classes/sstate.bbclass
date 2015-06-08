@@ -33,6 +33,16 @@ SSTATE_SCAN_CMD ?= 'find ${SSTATE_BUILDDIR} \( -name "${@"\" -o -name \"".join(d
 
 BB_HASHFILENAME = "${SSTATE_EXTRAPATH} ${SSTATE_PKGSPEC} ${SSTATE_SWSPEC}"
 
+SSTATE_ARCHS = " \
+    ${BUILD_ARCH} \
+    ${BUILD_ARCH}_${SDK_ARCH}_${SDK_OS} \
+    ${BUILD_ARCH}_${TARGET_ARCH} \
+    ${SDK_ARCH}_${SDK_OS} \
+    ${SDK_ARCH}_${PACKAGE_ARCH} \
+    allarch \
+    ${PACKAGE_ARCH} \
+    ${MACHINE}"
+
 SSTATE_MANMACH ?= "${SSTATE_PKGARCH}"
 
 SSTATECREATEFUNCS = "sstate_hardcode_path"
@@ -232,6 +242,20 @@ def sstate_install(ss, d):
     for di in reversed(dirs):
         f.write(di + "\n")
     f.close()
+
+    # Append to the list of manifests for this PACKAGE_ARCH
+
+    i = d2.expand("${SSTATE_MANIFESTS}/index-${SSTATE_MANMACH}")
+    l = bb.utils.lockfile(i + ".lock")
+    filedata = d.getVar("STAMP", True) + " " + d2.getVar("SSTATE_MANFILEPREFIX", True) + " " + d.getVar("WORKDIR", True) + "\n"
+    manifests = []
+    if os.path.exists(i):
+        with open(i, "r") as f:
+            manifests = f.readlines()
+    if filedata not in manifests:
+        with open(i, "a+") as f:
+            f.write(filedata)
+    bb.utils.unlockfile(l)
 
     # Run the actual file install
     for state in ss['dirs']:
@@ -858,3 +882,44 @@ python sstate_eventhandler() {
         bb.siggen.dump_this_task(sstatepkg + '_' + taskname + ".tgz" ".siginfo", d)
 }
 
+SSTATE_PRUNE_OBSOLETEWORKDIR = "1"
+
+# Event handler which removes manifests and stamps file for
+# recipes which are no longer reachable in a build where they
+# once were.
+# Also optionally removes the workdir of those tasks/recipes
+#
+addhandler sstate_eventhandler2
+sstate_eventhandler2[eventmask] = "bb.event.ReachableStamps"
+python sstate_eventhandler2() {
+    import glob
+    d = e.data
+    stamps = e.stamps.values()
+    removeworkdir = (d.getVar("SSTATE_PRUNE_OBSOLETEWORKDIR") == "1")
+    seen = []
+    for a in d.getVar("SSTATE_ARCHS", True).split():
+        toremove = []
+        i = d.expand("${SSTATE_MANIFESTS}/index-" + a)
+        if not os.path.exists(i):
+            continue
+        with open(i, "r") as f:
+            lines = f.readlines()
+            for l in lines:
+                (stamp, manifest, workdir) = l.split()
+                if stamp not in stamps:
+                    toremove.append(l)
+                    if stamp not in seen:
+                        bb.note("Stamp %s is not reachable, removing related manifests" % stamp)
+                        seen.append(stamp)
+        for r in toremove:
+            (stamp, manifest, workdir) = r.split()
+            for m in glob.glob(manifest + ".*"):
+                sstate_clean_manifest(m, d)
+            bb.utils.remove(stamp + "*")
+            if removeworkdir:
+                bb.utils.remove(workdir, recurse = True)
+            lines.remove(r)
+        with open(i, "w") as f:
+            for l in lines:
+                f.write(l)
+}
