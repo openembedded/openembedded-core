@@ -262,10 +262,12 @@ def appendfile(args):
 
     stdout = ''
     try:
-        (stdout, _) = bb.process.run('LANG=C file -E -b %s' % args.newfile, shell=True)
+        (stdout, _) = bb.process.run('LANG=C file -b %s' % args.newfile, shell=True)
+        if 'cannot open' in stdout:
+            raise bb.process.ExecutionError(stdout)
     except bb.process.ExecutionError as err:
         logger.debug('file command returned error: %s' % err)
-        pass
+        stdout = ''
     if stdout:
         logger.debug('file command output: %s' % stdout.rstrip())
         if ('executable' in stdout and not 'shell script' in stdout) or 'shared object' in stdout:
