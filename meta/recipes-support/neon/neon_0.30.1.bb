@@ -20,3 +20,7 @@ inherit autotools binconfig-disabled lib_package pkgconfig
 
 EXTRA_OECONF = "--with-ssl=gnutls --with-libxml2 --with-expat --enable-shared"
 EXTRA_OECONF += "--without-gssapi"
+
+do_compile_append() {
+	oe_runmake -C test
+}
