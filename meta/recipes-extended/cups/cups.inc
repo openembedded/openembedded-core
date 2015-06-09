@@ -43,13 +43,7 @@ EXTRA_OECONF = " \
                --without-java \
                "
 
-
-do_configure() {
-	gnu-configize
-	libtoolize --force
-	autoconf --force
-	DSOFLAGS="${LDFLAGS}" SERVERBIN="${libdir}/cups" oe_runconf
-}
+EXTRA_AUTORECONF += "--exclude=autoheader"
 
 do_compile () {
 	sed -i s:STRIP:NOSTRIP: Makedefs
@@ -63,11 +57,7 @@ do_compile () {
 	echo "install-headers:" >> man/Makefile
 	echo "install-libs:" >> man/Makefile
 
-	oe_runmake "SSLLIBS=-lgnutls -L${STAGING_LIBDIR}" \
-		   "LIBPNG=-lpng -lm -L${STAGING_LIBDIR}" \
-		   "LIBJPEG=-ljpeg -L${STAGING_LIBDIR}" \
-		   "LIBZ=-lz -L${STAGING_LIBDIR}" \
-		   "-I."
+	oe_runmake
 }
 
 do_install () {
