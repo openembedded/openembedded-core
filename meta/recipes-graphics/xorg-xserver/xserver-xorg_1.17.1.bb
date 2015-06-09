@@ -6,6 +6,7 @@ SRC_URI += "file://fix_open_max_preprocessor_error.patch \
             file://xtrans.patch \
             file://0001-use-__GLIBC__-guard-for-glibc-specific-code.patch \
 	    file://0001-sdksyms.sh-Make-sdksyms.sh-work-with-gcc5.patch \
+	    file://0001-int10-Fix-error-check-for-pci_device_map_legacy.patch \
            "
 
 SRC_URI[md5sum] = "5986510d59e394a50126a8e2833e79d3"
