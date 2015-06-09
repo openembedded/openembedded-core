@@ -12,6 +12,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
 SRC_URI = " \
     http://gstreamer.freedesktop.org/src/gst-libav/gst-libav-${PV}.tar.xz \
     file://0001-Disable-yasm-for-libav-when-disable-yasm.patch \
+    file://workaround-to-build-gst-libav-for-i586-with-gcc.patch \
 "
 SRC_URI[md5sum] = "f4922a46adbcbe7bd01331ff5dc7979d"
 SRC_URI[sha256sum] = "605c62624604f3bb5c870844cc1f2711779cc533b004c2aa1d8c0d58557afbbc"
