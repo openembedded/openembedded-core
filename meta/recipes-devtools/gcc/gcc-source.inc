@@ -16,7 +16,7 @@ WORKDIR = "${TMPDIR}/work-shared/gcc-${PV}-${PR}"
 SSTATE_SWSPEC = "sstate:gcc::${PV}:${PR}::${SSTATE_VERSION}:"
 
 STAMP = "${STAMPS_DIR}/work-shared/gcc-${PV}-${PR}"
-STAMPCLEAN = "${STAMPS_DIR}/work-shared/gcc-[0-9]*-*"
+STAMPCLEAN = "${STAMPS_DIR}/work-shared/gcc-${PV}-*"
 
 INHIBIT_DEFAULT_DEPS = "1"
 DEPENDS = ""
