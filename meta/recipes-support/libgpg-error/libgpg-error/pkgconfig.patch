@@ -9,9 +9,9 @@ Index: libgpg-error-1.17/configure.ac
 ===================================================================
 --- libgpg-error-1.17.orig/configure.ac
 +++ libgpg-error-1.17/configure.ac
-@@ -521,6 +521,7 @@ AC_CONFIG_FILES([src/Makefile tests/Make
+@@ -529,6 +529,7 @@ AC_CONFIG_FILES([src/Makefile tests/Make
  AC_CONFIG_FILES([lang/Makefile lang/cl/Makefile lang/cl/gpg-error.asd])
- AC_CONFIG_FILES([src/versioninfo.rc])
+ AC_CONFIG_FILES([src/versioninfo.rc src/gpg-error.w32-manifest])
  AC_CONFIG_FILES([src/gpg-error-config], [chmod +x src/gpg-error-config])
 +AC_CONFIG_FILES([src/gpg-error.pc])
  
@@ -21,7 +21,7 @@ Index: libgpg-error-1.17/src/Makefile.am
 ===================================================================
 --- libgpg-error-1.17.orig/src/Makefile.am
 +++ libgpg-error-1.17/src/Makefile.am
-@@ -74,13 +74,15 @@ nodist_include_HEADERS = gpg-error.h
+@@ -75,6 +75,8 @@ nodist_include_HEADERS = gpg-error.h
  bin_SCRIPTS = gpg-error-config
  m4datadir = $(datadir)/aclocal
  m4data_DATA = gpg-error.m4
@@ -30,30 +30,15 @@ Index: libgpg-error-1.17/src/Makefile.am
  
  EXTRA_DIST = mkstrtable.awk err-sources.h.in err-codes.h.in \
  	mkerrnos.awk errnos.in README \
- 	mkerrcodes.awk mkerrcodes1.awk mkerrcodes2.awk mkerrcodes.c \
+@@ -82,7 +84,7 @@ EXTRA_DIST = mkstrtable.awk err-sources.
  	mkheader.c gpg-error.h.in mkw32errmap.c w32-add.h w32ce-add.h \
  	err-sources.h err-codes.h gpg-error-config.in gpg-error.m4 \
--	gpg-error.vers gpg-error.def.in versioninfo.rc.in \
-+	gpg-error.vers gpg-error.def.in versioninfo.rc.in gpg-error.pc \
+ 	gpg-error.vers gpg-error.def.in \
+-        versioninfo.rc.in gpg-error.w32-manifest.in \
++        versioninfo.rc.in gpg-error.w32-manifest.in gpg-error.pc \
  	$(lock_obj_pub)
  
  BUILT_SOURCES = err-sources.h err-codes.h code-to-errno.h code-from-errno.h \
-Index: libgpg-error-1.17/src/gpg-error.pc.in
-===================================================================
---- /dev/null
-+++ libgpg-error-1.17/src/gpg-error.pc.in
-@@ -0,0 +1,11 @@
-+prefix=@prefix@
-+exec_prefix=@exec_prefix@
-+libdir=@libdir@
-+includedir=@includedir@
-+host=@GPG_ERROR_CONFIG_HOST@
-+
-+Name: gpg-error
-+Description: a library that defines common error values for all GnuPG components
-+Version: @VERSION@
-+Libs: -L${libdir} -lgpg-error
-+Cflags: -I${includedir}
 Index: libgpg-error-1.17/src/gpg-error.m4
 ===================================================================
 --- libgpg-error-1.17.orig/src/gpg-error.m4
@@ -147,3 +132,19 @@ Index: libgpg-error-1.17/src/gpg-error.m4
      ifelse([$3], , :, [$3])
    fi
    AC_SUBST(GPG_ERROR_CFLAGS)
+Index: libgpg-error-1.17/src/gpg-error.pc.in
+===================================================================
+--- /dev/null
++++ libgpg-error-1.17/src/gpg-error.pc.in
+@@ -0,0 +1,11 @@
++prefix=@prefix@
++exec_prefix=@exec_prefix@
++libdir=@libdir@
++includedir=@includedir@
++host=@GPG_ERROR_CONFIG_HOST@
++
++Name: gpg-error
++Description: a library that defines common error values for all GnuPG components
++Version: @VERSION@
++Libs: -L${libdir} -lgpg-error
++Cflags: -I${includedir}

@@ -13,8 +13,8 @@ SECTION = "libs"
 
 SRC_URI = "ftp://ftp.gnupg.org/gcrypt/libgpg-error/libgpg-error-${PV}.tar.bz2 \
            file://pkgconfig.patch"
-SRC_URI[md5sum] = "12312802d2065774b787cbfc22cc04e9"
-SRC_URI[sha256sum] = "9ff1d6e61d4cef7c1d0607ceef6d40dc33f3da7a3094170c3718c00153d80810"
+SRC_URI[md5sum] = "c04c16245b92829281f43b5bef7d16da"
+SRC_URI[sha256sum] = "53120e1333d5c5d28d87ff2854e9e98719c8e214152f17ad5291704d25c4978b"
 
 BINCONFIG = "${bindir}/gpg-error-config"
 
@@ -30,7 +30,7 @@ do_compile_prepend() {
 	  aarch64_be) TUPLE=aarch64-unknown-linux-gnu ;;
 	  arm)	      TUPLE=arm-unknown-linux-gnueabi ;;
 	  armeb)      TUPLE=arm-unknown-linux-gnueabi ;;
-	  i586|i686)  TUPLE=i486-pc-linux-gnu ;;
+	  i586|i686)  TUPLE=i686-pc-linux-gnu ;;
 	  mips64el)   TUPLE=mipsel-unknown-linux-gnu ;;
 	  mips64)     TUPLE=mips-unknown-linux-gnu ;;
 	  x86_64)     TUPLE=x86_64-pc-linux-gnu ;;
