@@ -52,14 +52,12 @@ do_ar_original[dirs] = "${ARCHIVER_OUTDIR} ${ARCHIVER_WORKDIR}"
 python () {
     pn = d.getVar('PN', True)
 
-    if d.getVar('COPYLEFT_LICENSE_INCLUDE', True) or \
-            d.getVar('COPYLEFT_LICENSE_EXCLUDE', True):
-        included, reason = copyleft_should_include(d)
-        if not included:
-            bb.debug(1, 'archiver: %s is excluded: %s' % (pn, reason))
-            return
-        else:
-            bb.debug(1, 'archiver: %s is included: %s' % (pn, reason))
+    included, reason = copyleft_should_include(d)
+    if not included:
+        bb.debug(1, 'archiver: %s is excluded: %s' % (pn, reason))
+        return
+    else:
+        bb.debug(1, 'archiver: %s is included: %s' % (pn, reason))
 
     ar_src = d.getVarFlag('ARCHIVER_MODE', 'src', True)
     ar_dumpdata = d.getVarFlag('ARCHIVER_MODE', 'dumpdata', True)

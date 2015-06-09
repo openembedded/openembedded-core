@@ -25,6 +25,14 @@ COPYLEFT_AVAILABLE_RECIPE_TYPES = 'target native nativesdk cross crosssdk cross-
 COPYLEFT_AVAILABLE_RECIPE_TYPES[type] = 'list'
 COPYLEFT_AVAILABLE_RECIPE_TYPES[doc] = 'Space separated list of available recipe types'
 
+COPYLEFT_PN_INCLUDE ?= ''
+COPYLEFT_PN_INCLUDE[type] = 'list'
+COPYLEFT_PN_INCLUDE[doc] = 'Space separated list of recipe names to include'
+
+COPYLEFT_PN_EXCLUDE ?= ''
+COPYLEFT_PN_EXCLUDE[type] = 'list'
+COPYLEFT_PN_EXCLUDE[doc] = 'Space separated list of recipe names to exclude'
+
 def copyleft_recipe_type(d):
     for recipe_type in oe.data.typed_value('COPYLEFT_AVAILABLE_RECIPE_TYPES', d):
         if oe.utils.inherits(d, recipe_type):
@@ -39,9 +47,11 @@ def copyleft_should_include(d):
     import oe.license
     from fnmatch import fnmatchcase as fnmatch
 
+    included, motive = False, 'recipe did not match anything'
+
     recipe_type = d.getVar('COPYLEFT_RECIPE_TYPE', True)
     if recipe_type not in oe.data.typed_value('COPYLEFT_RECIPE_TYPES', d):
-        return False, 'recipe type "%s" is excluded' % recipe_type
+        include, motive = False, 'recipe type "%s" is excluded' % recipe_type
 
     include = oe.data.typed_value('COPYLEFT_LICENSE_INCLUDE', d)
     exclude = oe.data.typed_value('COPYLEFT_LICENSE_EXCLUDE', d)
@@ -53,10 +63,17 @@ def copyleft_should_include(d):
     else:
         if is_included:
             if reason:
-                return True, 'recipe has included licenses: %s' % ', '.join(reason)
+                included, motive = True, 'recipe has included licenses: %s' % ', '.join(reason)
             else:
-                return False, 'recipe does not include a copyleft license'
+                included, motive = False, 'recipe does not include a copyleft license'
         else:
-            return False, 'recipe has excluded licenses: %s' % ', '.join(reason)
+            included, motive = False, 'recipe has excluded licenses: %s' % ', '.join(reason)
 
+    if any(fnmatch(d.getVar('PN', True), name) \
+            for name in oe.data.typed_value('COPYLEFT_PN_INCLUDE', d)):
+        included, motive =  True, 'recipe included by name'
+    if any(fnmatch(d.getVar('PN', True), name) \
+            for name in oe.data.typed_value('COPYLEFT_PN_EXCLUDE', d)):
+        included, motive = False, 'recipe excluded by name'
 
+    return included, motive
