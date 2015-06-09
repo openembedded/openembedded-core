@@ -18,6 +18,7 @@ SRC_URI = "ftp://ftp.isc.org/isc/bind9/${PV}/${BPN}-${PV}.tar.gz \
            file://init.d-add-support-for-read-only-rootfs.patch \
            file://bind-confgen-build-unix.o-once.patch \
            file://0001-build-use-pkg-config-to-find-libxml2.patch \
+           file://bind-ensure-searching-for-json-headers-searches-sysr.patch \
            "
 
 SRC_URI[md5sum] = "dca7a9967947bffa98547fca6130fc04"
