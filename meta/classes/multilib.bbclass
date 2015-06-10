@@ -132,8 +132,9 @@ python do_package_qa_multilib() {
                 (not i.startswith("rtld")) and (not i.startswith('kernel-vmlinux')):
                 candidates.append(i)
         if len(candidates) > 0:
-            bb.warn("Multilib QA Issue: %s package %s - suspicious values '%s' in %s" 
-                   % (d.getVar('PN', True), pkg, ' '.join(candidates), var))
+            msg = "%s package %s - suspicious values '%s' in %s" \
+                   % (d.getVar('PN', True), pkg, ' '.join(candidates), var)
+            package_qa_handle_error("multilib", msg, d)
 
     ml = d.getVar('MLPREFIX', True)
     if not ml:
