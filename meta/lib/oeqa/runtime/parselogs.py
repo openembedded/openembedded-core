@@ -22,12 +22,18 @@ common_errors = [
     "Failed to load module \"modesetting\"",
     "Failed to load module modesetting",
     "Failed to load module \"glx\"",
+    "Failed to load module \"fbdev\"",
+    "Failed to load module fbdev",
     "Failed to load module glx",
     "[drm] Cannot find any crtc or sizes - going 1024x768",
     "_OSC failed (AE_NOT_FOUND); disabling ASPM",
     "Open ACPI failed (/var/run/acpid.socket) (No such file or directory)",
     "NX (Execute Disable) protection cannot be enabled: non-PAE kernel!",
-    "hd.: possibly failed opcode"
+    "hd.: possibly failed opcode",
+    'NETLINK INITIALIZATION FAILED',
+    'kernel: Cannot find map file',
+    'omap_hwmod: debugss: _wait_target_disable failed',
+    'VGA arbiter: cannot open kernel arbiter, no multi-card support',
     ]
 
 x86_common = [
@@ -64,7 +70,24 @@ ignore_errors = {
         'mmci-pl18x: probe of fpga:0b failed with error -22',
         'Failed to load module "glx"'
         ] + common_errors,
-    'emenlow' : x86_common,
+    'emenlow' : [
+        '[Firmware Bug]: ACPI: No _BQC method, cannot determine initial brightness',
+        '(EE) Failed to load module "psb"',
+        '(EE) Failed to load module psb',
+        '(EE) Failed to load module "psbdrv"',
+        '(EE) Failed to load module psbdrv',
+        '(EE) open /dev/fb0: No such file or directory',
+        '(EE) AIGLX: reverting to software rendering',
+        ] + x86_common,
+    'core2_32' : [
+        '[Firmware Bug]: ACPI: No _BQC method, cannot determine initial brightness',
+        '(EE) Failed to load module "psb"',
+        '(EE) Failed to load module psb',
+        '(EE) Failed to load module "psbdrv"',
+        '(EE) Failed to load module psbdrv',
+        '(EE) open /dev/fb0: No such file or directory',
+        '(EE) AIGLX: reverting to software rendering',
+        ] + x86_common,
     'crownbay' : x86_common,
     'genericx86' : x86_common,
     'genericx86-64' : x86_common,
@@ -73,13 +96,11 @@ ignore_errors = {
         ] + common_errors,
     'minnow' : [
         'netlink init failed',
-        'NETLINK INITIALIZATION FAILED',
         ] + common_errors,
     'jasperforest' : [
         'Activated service \'org.bluez\' failed:',
         'Unable to find NFC netlink family',
         'netlink init failed',
-        'NETLINK INITIALIZATION FAILED',
         ] + common_errors,
 }
 
