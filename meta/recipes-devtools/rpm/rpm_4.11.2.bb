@@ -35,6 +35,7 @@ SRC_URI += "http://rpm.org/releases/rpm-4.11.x/${BP}.tar.bz2 \
             file://rpm-scriptetexechelp.patch \
             file://pythondeps.sh \
             file://rpm-CVE-2014-8118.patch \
+            file://rpm-CVE-2013-6435.patch \
            "
 
 SRC_URI[md5sum] = "876ac9948a88367054f8ddb5c0e87173"
