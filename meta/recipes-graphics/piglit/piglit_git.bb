@@ -4,8 +4,8 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=b2beded7103a3d8a442a2a0391d607b0"
 
 SRC_URI = "git://anongit.freedesktop.org/piglit"
 
-# From 2012/12/30.
-SRCREV = "bbeff5d21b06d37338ad28e42d88f499bef13268"
+# From 2014/12/04
+SRCREV = "126c7d049b8f32e541625d5a35fbc5f5e4e7fbf8"
 # (when PV goes above 1.0 remove the trailing r)
 PV = "1.0+gitr${SRCPV}"
 
@@ -17,40 +17,15 @@ inherit cmake pythonnative distro_features_check
 # depends on virtual/libx11
 REQUIRED_DISTRO_FEATURES = "x11"
 
-# As piglit doesn't install, enforce in-tree builds so that we can easily copy
-# contents out of $S and $B.
-B="${S}"
-
 PACKAGECONFIG ??= ""
 PACKAGECONFIG[freeglut] = "-DPIGLIT_USE_GLUT=1,-DPIGLIT_USE_GLUT=0,freeglut,"
 
-# CMake sets the rpath at build time with the source tree, and will reset it at
-# install time. As we don't install this doesn't happen, so force the rpath to
-# what we need.
-EXTRA_OECMAKE = "-DCMAKE_BUILD_WITH_INSTALL_RPATH=1 -DCMAKE_INSTALL_RPATH=${libdir}/piglit/lib"
-
-do_install() {
-	install -d ${D}${bindir}
-	install -m 0755 piglit-*.py ${D}${bindir}
-
-	install -d ${D}${libdir}/piglit/
-
-	install -d ${D}${libdir}/piglit/bin
-	install -m 755 ${S}/bin/* ${D}${libdir}/piglit/bin
-
-	cp -Pr lib/ ${D}${libdir}/piglit/
-	cp -Pr framework/ ${D}${libdir}/piglit/
-	cp -Pr generated_tests/ ${D}${libdir}/piglit/
-	cp -Pr tests/ ${D}${libdir}/piglit/
-	cp -Pr templates/ ${D}${libdir}/piglit/
-
-	sed -i -e 's|sys.path.append(.*)|sys.path.append("${libdir}/piglit")|' ${D}${bindir}/piglit-*.py
-	sed -i -e 's|^templatedir = .*$|templatedir = "${libdir}/piglit/templates"|' ${D}${bindir}/piglit-summary-html.py
-}
-
 FILES_${PN}-dbg += "${libdir}/piglit/*/.debug/"
 
-RDEPENDS_${PN} = "python waffle python-json python-subprocess \
+RDEPENDS_${PN} = "waffle python python-mako python-json python-subprocess \
+	python-argparse python-importlib python-unixadmin \
 	python-multiprocessing python-textutils python-netserver python-shell \
 	mesa-demos bash \
 	"
+
+INSANE_SKIP_${PN} += "dev-so"
