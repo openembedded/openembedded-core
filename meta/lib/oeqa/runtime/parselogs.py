@@ -1,5 +1,6 @@
 import os
 import unittest
+import subprocess
 from oeqa.oetest import oeRuntimeTest
 from oeqa.utils.decorators import *
 
@@ -132,6 +133,20 @@ class ParseLogsTest(oeRuntimeTest):
                             logs.append(os.path.join(location,str(logfile)))
         return logs
 
+    #copy the log files to be parsed locally
+    def transfer_logs(self, log_list):
+        target_logs = 'target_logs'
+        if not os.path.exists(target_logs):
+            os.makedirs(target_logs)
+        for f in log_list:
+            self.target.copy_from(f, target_logs)
+
+    #get the local list of logs
+    def get_local_log_list(self, log_locations):
+        self.transfer_logs(self.getLogList(log_locations))
+        logs = [ os.path.join('target_logs',f) for f in os.listdir('target_logs') if os.path.isfile(os.path.join('target_logs',f)) ]
+        return logs
+
     #build the grep command to be used with filters and exclusions
     def build_grepcmd(self, errors, ignore_errors, log):
         grepcmd = "grep "
@@ -163,21 +178,22 @@ class ParseLogsTest(oeRuntimeTest):
         results = {}
         rez = []
         for log in logs:
+            result = None
             thegrep = self.build_grepcmd(errors, ignore_errors, log)
             try:
-                (status, result) = self.target.run(thegrep)
+                result = subprocess.check_output(thegrep, shell=True)
             except:
                 pass
-            if result:
-                results[log] = {}
+            if (result is not None):
+                results[log.replace('target_logs/','')] = {}
                 rez = result.splitlines()
                 for xrez in rez:
                     command = "grep \"\\"+str(xrez)+"\" -B "+str(lines_before)+" -A "+str(lines_after)+" "+str(log)
                     try:
-                        (status, yrez) = self.target.run(command)
+                        yrez = subprocess.check_output(command, shell=True)
                     except:
                         pass
-                    results[log][xrez]=yrez
+                    results[log.replace('target_logs/','')][xrez]=yrez
         return results
 
     #get the output of dmesg and write it in a file. This file is added to log_locations.
@@ -189,7 +205,7 @@ class ParseLogsTest(oeRuntimeTest):
     @skipUnlessPassed('test_ssh')
     def test_parselogs(self):
         self.write_dmesg()
-        log_list = self.getLogList(self.log_locations)
+        log_list = self.get_local_log_list(self.log_locations)
         result = self.parse_logs(self.errors, self.ignore_errors, log_list)
         print self.getHardwareInfo()
         errcount = 0
