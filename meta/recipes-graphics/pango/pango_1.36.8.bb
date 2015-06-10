@@ -2,8 +2,6 @@ require pango.inc
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=3bf50002aefd002f49e7bb854063f7e7"
 
-GNOME_COMPRESS_TYPE="xz"
-
 SRC_URI += "file://run-ptest \
             file://multilib-fix-clean.patch \
 "

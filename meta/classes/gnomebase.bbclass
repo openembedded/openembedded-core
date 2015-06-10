@@ -1,7 +1,7 @@
 def gnome_verdir(v):
     return oe.utils.trim_version(v, 2)
 
-GNOME_COMPRESS_TYPE ?= "bz2"
+GNOME_COMPRESS_TYPE ?= "xz"
 SECTION ?= "x11/gnome"
 GNOMEBN ?= "${BPN}"
 SRC_URI = "${GNOME_MIRROR}/${GNOMEBN}/${@gnome_verdir("${PV}")}/${GNOMEBN}-${PV}.tar.${GNOME_COMPRESS_TYPE};name=archive"

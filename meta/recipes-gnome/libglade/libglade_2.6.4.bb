@@ -12,6 +12,7 @@ PR = "r5"
 DEPENDS = "zlib gdk-pixbuf gtk+"
 
 inherit autotools pkgconfig gnomebase gtk-doc
+GNOME_COMPRESS_TYPE="bz2"
 
 SRC_URI += "file://glade-cruft.patch file://no-xml2.patch file://python_environment.patch"
 

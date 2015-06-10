@@ -32,6 +32,7 @@ CFLAGS_prepend = "-DHAVE_ANIMATION "
 RDEPENDS_${PN}-dev = ""
 
 inherit gnomebase
+GNOME_COMPRESS_TYPE="bz2"
 
 python populate_packages_prepend() {
     engines_root = os.path.join(d.getVar('libdir', True), "gtk-2.0/2.10.0/engines")
