@@ -27,6 +27,7 @@ ENABLE_WIDEC ?= "true"
 # for target objects.  But it must be set manually for native and sdk
 # builds.
 BUILD_CPPFLAGS += "-D_GNU_SOURCE"
+BUILD_CPPFLAGS_append_virtclass-native = " -P"
 
 # natives don't generally look in base_libdir
 base_libdir_class-native = "${libdir}"
