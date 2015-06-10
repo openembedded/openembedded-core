@@ -118,7 +118,7 @@ python populate_packages_updatercd () {
         postrm += localdata.getVar('updatercd_postrm', True)
         d.setVar('pkg_postrm_%s' % pkg, postrm)
 
-        d.appendVar('RRECOMMENDS_' + pkg, " ${UPDATERCD}")
+        d.appendVar('RRECOMMENDS_' + pkg, " ${MLPREFIX}${UPDATERCD}")
 
     # Check that this class isn't being inhibited (generally, by
     # systemd.bbclass) before doing any work.
