@@ -341,6 +341,11 @@ python () {
     if pkgconfigflags:
         pkgconfig = (d.getVar('PACKAGECONFIG', True) or "").split()
         pn = d.getVar("PN", True)
+
+        for pconfig in pkgconfig:
+            if pconfig not in pkgconfigflags:
+                bb.warn("%s: invalid PACKAGECONFIG: %s" % (pn, pconfig))
+
         mlprefix = d.getVar("MLPREFIX", True)
 
         def expandFilter(appends, extension, prefix):
