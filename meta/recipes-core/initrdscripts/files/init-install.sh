@@ -106,10 +106,21 @@ fi
 
 disk_size=$(parted /dev/${device} unit mb print | grep Disk | cut -d" " -f 3 | sed -e "s/MB//")
 
-swap_size=$((disk_size*swap_ratio/100))
-rootfs_size=$((disk_size-boot_size-swap_size))
+grub_version=$(grub-install -v|sed 's/.* \([0-9]\).*/\1/')
 
-rootfs_start=$((boot_size))
+if [ $grub_version -eq 0 ] ; then
+    bios_boot_size=0
+else
+    # For GRUB 2 we need separate parition to store stage2 grub image
+    # 2Mb value is chosen to align partition for best performance.
+    bios_boot_size=2
+fi
+
+swap_size=$((disk_size*swap_ratio/100))
+rootfs_size=$((disk_size-bios_boot_size-boot_size-swap_size))
+
+boot_start=$((bios_boot_size))
+rootfs_start=$((bios_boot_size+boot_size))
 rootfs_end=$((rootfs_start+rootfs_size))
 swap_start=$((rootfs_end))
 
@@ -122,11 +133,21 @@ if [ ! "${device#mmcblk}" = "${device}" ]; then
 	part_prefix="p"
 	rootwait="rootwait"
 fi
-bootfs=/dev/${device}${part_prefix}1
-rootfs=/dev/${device}${part_prefix}2
-swap=/dev/${device}${part_prefix}3
+
+if [ $grub_version -eq 0 ] ; then
+    bios_boot=''
+    bootfs=/dev/${device}${part_prefix}1
+    rootfs=/dev/${device}${part_prefix}2
+    swap=/dev/${device}${part_prefix}3
+else
+    bios_boot=/dev/${device}${part_prefix}1
+    bootfs=/dev/${device}${part_prefix}2
+    rootfs=/dev/${device}${part_prefix}3
+    swap=/dev/${device}${part_prefix}4
+fi
 
 echo "*****************"
+[ $grub_version -ne 0 ] && echo "BIOS boot partition size: $bios_boot_size MB ($bios_boot)"
 echo "Boot partition size:   $boot_size MB ($bootfs)"
 echo "Rootfs partition size: $rootfs_size MB ($rootfs)"
 echo "Swap partition size:   $swap_size MB ($swap)"
@@ -135,10 +156,18 @@ echo "Deleting partition table on /dev/${device} ..."
 dd if=/dev/zero of=/dev/${device} bs=512 count=2
 
 echo "Creating new partition table on /dev/${device} ..."
-parted /dev/${device} mklabel msdos
-
-echo "Creating boot partition on $bootfs"
-parted /dev/${device} mkpart primary 0% $boot_size
+if [ $grub_version -eq 0 ] ; then
+    parted /dev/${device} mktable msdos
+    echo "Creating boot partition on $bootfs"
+    parted /dev/${device} mkpart primary 0% $boot_size
+else
+    parted /dev/${device} mktable gpt
+    echo "Creating BIOS boot partition on $bios_boot"
+    parted /dev/${device} mkpart primary 0% $bios_boot_size
+    parted /dev/${device} set 1 bios_grub on
+    echo "Creating boot partition on $bootfs"
+    parted /dev/${device} mkpart primary $boot_start $boot_size
+fi
 
 echo "Creating rootfs partition on $rootfs"
 parted /dev/${device} mkpart primary $rootfs_start $rootfs_end
@@ -186,7 +215,7 @@ if [ -f /etc/grub.d/00_header ] ; then
     mkdir -p $(dirname $GRUBCFG)
     cat >$GRUBCFG <<_EOF
 menuentry "Linux" {
-    set root=(hd0,1)
+    set root=(hd0,2)
     linux /vmlinuz root=$rootfs $rootwait rw $5 $3 $4 quiet
 }
 _EOF
@@ -195,8 +224,7 @@ fi
 grub-install /dev/${device}
 echo "(hd0) /dev/${device}" > /boot/grub/device.map
 
-# If grub.cfg doesn't exist, assume GRUB 0.97 and create a menu.lst
-if [ ! -f /boot/grub/grub.cfg ] ; then
+if [ $grub_version -eq 0 ] ; then
     echo "Preparing custom grub menu..."
     echo "default 0" > /boot/grub/menu.lst
     echo "timeout 30" >> /boot/grub/menu.lst
