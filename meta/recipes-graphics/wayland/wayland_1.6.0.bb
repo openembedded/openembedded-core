@@ -36,5 +36,6 @@ do_install_append_class-native() {
 }
 
 sysroot_stage_all_append_class-target () {
+	rm ${SYSROOT_DESTDIR}/${datadir}/aclocal/wayland-scanner.m4
 	cp ${STAGING_DATADIR_NATIVE}/aclocal/wayland-scanner.m4 ${SYSROOT_DESTDIR}/${datadir}/aclocal/
 }
