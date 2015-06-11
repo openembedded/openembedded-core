@@ -22,6 +22,8 @@ EXTRA_OECONF = "--with-pcap=linux"
 
 PACKAGECONFIG ??= "${@bb.utils.contains('DISTRO_FEATURES', 'bluetooth', '${BLUEZ}', '', d)}"
 PACKAGECONFIG[bluez4] = "--enable-bluetooth,--disable-bluetooth,bluez4"
+# Add a dummy PACKAGECONFIG for bluez5 since it is not supported by libpcap.
+PACKAGECONFIG[bluez5] = ",,"
 PACKAGECONFIG[canusb] = "--enable-canusb,--enable-canusb=no,libusb"
 PACKAGECONFIG[dbus] = "--enable-dbus,--disable-dbus,dbus"
 PACKAGECONFIG[libnl] = "--with-libnl,--without-libnl,libnl"
