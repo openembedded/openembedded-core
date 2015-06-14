@@ -159,21 +159,21 @@ echo "Creating new partition table on /dev/${device} ..."
 if [ $grub_version -eq 0 ] ; then
     parted /dev/${device} mktable msdos
     echo "Creating boot partition on $bootfs"
-    parted /dev/${device} mkpart primary 0% $boot_size
+    parted /dev/${device} mkpart primary ext3 0% $boot_size
 else
     parted /dev/${device} mktable gpt
     echo "Creating BIOS boot partition on $bios_boot"
     parted /dev/${device} mkpart primary 0% $bios_boot_size
     parted /dev/${device} set 1 bios_grub on
     echo "Creating boot partition on $bootfs"
-    parted /dev/${device} mkpart primary $boot_start $boot_size
+    parted /dev/${device} mkpart primary ext3 $boot_start $boot_size
 fi
 
 echo "Creating rootfs partition on $rootfs"
-parted /dev/${device} mkpart primary $rootfs_start $rootfs_end
+parted /dev/${device} mkpart primary ext3 $rootfs_start $rootfs_end
 
 echo "Creating swap partition on $swap"
-parted /dev/${device} mkpart primary $swap_start 100%
+parted /dev/${device} mkpart primary linux-swap $swap_start 100%
 
 parted /dev/${device} print
 
