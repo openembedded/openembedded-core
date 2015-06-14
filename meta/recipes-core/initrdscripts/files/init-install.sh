@@ -196,8 +196,17 @@ mount -o rw,loop,noatime,nodiratime /run/media/$1/$2 /src_root
 echo "Copying rootfs files..."
 cp -a /src_root/* /tgt_root
 if [ -d /tgt_root/etc/ ] ; then
-    echo "$swap                swap             swap       defaults              0  0" >> /tgt_root/etc/fstab
-    echo "$bootfs              /boot            ext3       defaults              1  2" >> /tgt_root/etc/fstab
+    if [ $grub_version -ne 0 ] ; then
+        boot_uuid=$(blkid -o value -s UUID ${device}2)
+        swap_part_uuid=$(blkid -o value -s PARTUUID ${device}4)
+        bootdev="UUID=$boot_uuid"
+        swapdev=/dev/disk/by-partuuid/$swap_part_uuid
+    else
+        bootdev=${device}2
+        swapdev=${device}4
+    fi
+    echo "$swapdev                swap             swap       defaults              0  0" >> /tgt_root/etc/fstab
+    echo "$bootdev              /boot            ext3       defaults              1  2" >> /tgt_root/etc/fstab
     # We dont want udev to mount our root device while we're booting...
     if [ -d /tgt_root/etc/udev/ ] ; then
 	echo "/dev/${device}" >> /tgt_root/etc/udev/mount.blacklist
@@ -209,22 +218,24 @@ umount /src_root
 # Handling of the target boot partition
 mount $bootfs /boot
 echo "Preparing boot partition..."
-if [ -f /etc/grub.d/00_header ] ; then
+if [ -f /etc/grub.d/00_header -a $grub_version -ne 0 ] ; then
     echo "Preparing custom grub2 menu..."
+    root_part_uuid=$(blkid -o value -s PARTUUID /dev/${device}3)
+    boot_uuid=$(blkid -o value -s UUID /dev/${device}2)
     GRUBCFG="/boot/grub/grub.cfg"
     mkdir -p $(dirname $GRUBCFG)
     cat >$GRUBCFG <<_EOF
 menuentry "Linux" {
-    set root=(hd0,2)
-    linux /vmlinuz root=$rootfs $rootwait rw $5 $3 $4 quiet
+    search --no-floppy --fs-uuid $boot_uuid --set root
+    linux /vmlinuz root=PARTUUID=$root_part_uuid $rootwait rw $5 $3 $4 quiet
 }
 _EOF
     chmod 0444 $GRUBCFG
 fi
 grub-install /dev/${device}
-echo "(hd0) /dev/${device}" > /boot/grub/device.map
 
 if [ $grub_version -eq 0 ] ; then
+    echo "(hd0) /dev/${device}" > /boot/grub/device.map
     echo "Preparing custom grub menu..."
     echo "default 0" > /boot/grub/menu.lst
     echo "timeout 30" >> /boot/grub/menu.lst
