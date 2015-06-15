@@ -12,13 +12,11 @@ SRCREV = "62080b2248fd8ec4111ffc379d0bc5eaf0a5c16d"
 
 COMPATIBLE_HOST = '(x86_64|i.86|powerpc|aarch64|mips|arm).*-linux'
 
-SRC_URI = "git://git.lttng.org/lttng-modules.git;branch=stable-2.6 \
-           file://lttng-modules-replace-KERNELDIR-with-KERNEL_SRC.patch \
-           "
+SRC_URI = "git://git.lttng.org/lttng-modules.git;branch=stable-2.6"
 
 export INSTALL_MOD_DIR="kernel/lttng-modules"
-export KERNEL_SRC="${STAGING_KERNEL_DIR}"
 
+EXTRA_OEMAKE += "KERNELDIR='${STAGING_KERNEL_DIR}'"
 
 S = "${WORKDIR}/git"
 
