@@ -82,7 +82,7 @@ else
     exit 1
 fi
 
-device=$TARGET_DEVICE_NAME
+device=/dev/$TARGET_DEVICE_NAME
 
 #
 # The udev automounter can cause pain here, kill it
@@ -93,7 +93,7 @@ rm -f /etc/udev/scripts/mount*
 #
 # Unmount anything the automounter had mounted
 #
-umount /dev/${device}* 2> /dev/null || /bin/true
+umount ${device}* 2> /dev/null || /bin/true
 
 if [ ! -b /dev/loop0 ] ; then
     mknod /dev/loop0 b 7 0
@@ -104,7 +104,7 @@ if [ ! -L /etc/mtab ]; then
     cat /proc/mounts > /etc/mtab
 fi
 
-disk_size=$(parted /dev/${device} unit mb print | grep Disk | cut -d" " -f 3 | sed -e "s/MB//")
+disk_size=$(parted ${device} unit mb print | grep Disk | cut -d" " -f 3 | sed -e "s/MB//")
 
 grub_version=$(grub-install -v|sed 's/.* \([0-9]\).*/\1/')
 
@@ -136,14 +136,14 @@ fi
 
 if [ $grub_version -eq 0 ] ; then
     bios_boot=''
-    bootfs=/dev/${device}${part_prefix}1
-    rootfs=/dev/${device}${part_prefix}2
-    swap=/dev/${device}${part_prefix}3
+    bootfs=${device}${part_prefix}1
+    rootfs=${device}${part_prefix}2
+    swap=${device}${part_prefix}3
 else
-    bios_boot=/dev/${device}${part_prefix}1
-    bootfs=/dev/${device}${part_prefix}2
-    rootfs=/dev/${device}${part_prefix}3
-    swap=/dev/${device}${part_prefix}4
+    bios_boot=${device}${part_prefix}1
+    bootfs=${device}${part_prefix}2
+    rootfs=${device}${part_prefix}3
+    swap=${device}${part_prefix}4
 fi
 
 echo "*****************"
@@ -152,32 +152,32 @@ echo "Boot partition size:   $boot_size MB ($bootfs)"
 echo "Rootfs partition size: $rootfs_size MB ($rootfs)"
 echo "Swap partition size:   $swap_size MB ($swap)"
 echo "*****************"
-echo "Deleting partition table on /dev/${device} ..."
-dd if=/dev/zero of=/dev/${device} bs=512 count=2
+echo "Deleting partition table on ${device} ..."
+dd if=/dev/zero of=${device} bs=512 count=2
 
-echo "Creating new partition table on /dev/${device} ..."
+echo "Creating new partition table on ${device} ..."
 if [ $grub_version -eq 0 ] ; then
-    parted /dev/${device} mktable msdos
+    parted ${device} mktable msdos
     echo "Creating boot partition on $bootfs"
-    parted /dev/${device} mkpart primary ext3 0% $boot_size
+    parted ${device} mkpart primary ext3 0% $boot_size
 else
-    parted /dev/${device} mktable gpt
+    parted ${device} mktable gpt
     echo "Creating BIOS boot partition on $bios_boot"
-    parted /dev/${device} mkpart bios_boot 0% $bios_boot_size
-    parted /dev/${device} set 1 bios_grub on
+    parted ${device} mkpart bios_boot 0% $bios_boot_size
+    parted ${device} set 1 bios_grub on
     echo "Creating boot partition on $bootfs"
-    parted /dev/${device} mkpart boot ext3 $boot_start $boot_size
+    parted ${device} mkpart boot ext3 $boot_start $boot_size
 fi
 
 echo "Creating rootfs partition on $rootfs"
 [ $grub_version -eq 0 ] && pname='primary' || pname='root'
-parted /dev/${device} mkpart $pname ext3 $rootfs_start $rootfs_end
+parted ${device} mkpart $pname ext3 $rootfs_start $rootfs_end
 
 echo "Creating swap partition on $swap"
 [ $grub_version -eq 0 ] && pname='primary' || pname='swap'
-parted /dev/${device} mkpart $pname linux-swap $swap_start 100%
+parted ${device} mkpart $pname linux-swap $swap_start 100%
 
-parted /dev/${device} print
+parted ${device} print
 
 echo "Formatting $bootfs to ext3..."
 mkfs.ext3 $bootfs
@@ -211,7 +211,7 @@ if [ -d /tgt_root/etc/ ] ; then
     echo "$bootdev              /boot            ext3       defaults              1  2" >> /tgt_root/etc/fstab
     # We dont want udev to mount our root device while we're booting...
     if [ -d /tgt_root/etc/udev/ ] ; then
-        echo "/dev/${device}" >> /tgt_root/etc/udev/mount.blacklist
+        echo "${device}" >> /tgt_root/etc/udev/mount.blacklist
     fi
 fi
 umount /tgt_root
@@ -222,8 +222,8 @@ mount $bootfs /boot
 echo "Preparing boot partition..."
 if [ -f /etc/grub.d/00_header -a $grub_version -ne 0 ] ; then
     echo "Preparing custom grub2 menu..."
-    root_part_uuid=$(blkid -o value -s PARTUUID /dev/${device}3)
-    boot_uuid=$(blkid -o value -s UUID /dev/${device}2)
+    root_part_uuid=$(blkid -o value -s PARTUUID ${device}3)
+    boot_uuid=$(blkid -o value -s UUID ${device}2)
     GRUBCFG="/boot/grub/grub.cfg"
     mkdir -p $(dirname $GRUBCFG)
     cat >$GRUBCFG <<_EOF
@@ -234,10 +234,10 @@ menuentry "Linux" {
 _EOF
     chmod 0444 $GRUBCFG
 fi
-grub-install /dev/${device}
+grub-install ${device}
 
 if [ $grub_version -eq 0 ] ; then
-    echo "(hd0) /dev/${device}" > /boot/grub/device.map
+    echo "(hd0) ${device}" > /boot/grub/device.map
     echo "Preparing custom grub menu..."
     echo "default 0" > /boot/grub/menu.lst
     echo "timeout 30" >> /boot/grub/menu.lst

@@ -83,7 +83,7 @@ else
     exit 1
 fi
 
-device=$TARGET_DEVICE_NAME
+device=/dev/$TARGET_DEVICE_NAME
 
 #
 # The udev automounter can cause pain here, kill it
@@ -94,12 +94,12 @@ rm -f /etc/udev/scripts/mount*
 #
 # Unmount anything the automounter had mounted
 #
-umount /dev/${device}* 2> /dev/null || /bin/true
+umount ${device}* 2> /dev/null || /bin/true
 
 mkdir -p /tmp
 cat /proc/mounts > /etc/mtab
 
-disk_size=$(parted /dev/${device} unit mb print | grep Disk | cut -d" " -f 3 | sed -e "s/MB//")
+disk_size=$(parted ${device} unit mb print | grep Disk | cut -d" " -f 3 | sed -e "s/MB//")
 
 swap_size=$((disk_size*swap_ratio/100))
 rootfs_size=$((disk_size-boot_size-swap_size))
@@ -117,32 +117,32 @@ if [ ! "${device#mmcblk}" = "${device}" ]; then
     part_prefix="p"
     rootwait="rootwait"
 fi
-bootfs=/dev/${device}${part_prefix}1
-rootfs=/dev/${device}${part_prefix}2
-swap=/dev/${device}${part_prefix}3
+bootfs=${device}${part_prefix}1
+rootfs=${device}${part_prefix}2
+swap=${device}${part_prefix}3
 
 echo "*****************"
 echo "Boot partition size:   $boot_size MB ($bootfs)"
 echo "Rootfs partition size: $rootfs_size MB ($rootfs)"
 echo "Swap partition size:   $swap_size MB ($swap)"
 echo "*****************"
-echo "Deleting partition table on /dev/${device} ..."
-dd if=/dev/zero of=/dev/${device} bs=512 count=2
+echo "Deleting partition table on ${device} ..."
+dd if=/dev/zero of=${device} bs=512 count=2
 
-echo "Creating new partition table on /dev/${device} ..."
-parted /dev/${device} mklabel gpt
+echo "Creating new partition table on ${device} ..."
+parted ${device} mklabel gpt
 
 echo "Creating boot partition on $bootfs"
-parted /dev/${device} mkpart boot fat32 0% $boot_size
-parted /dev/${device} set 1 boot on
+parted ${device} mkpart boot fat32 0% $boot_size
+parted ${device} set 1 boot on
 
 echo "Creating rootfs partition on $rootfs"
-parted /dev/${device} mkpart root ext3 $rootfs_start $rootfs_end
+parted ${device} mkpart root ext3 $rootfs_start $rootfs_end
 
 echo "Creating swap partition on $swap"
-parted /dev/${device} mkpart swap linux-swap $swap_start 100%
+parted ${device} mkpart swap linux-swap $swap_start 100%
 
-parted /dev/${device} print
+parted ${device} print
 
 echo "Formatting $bootfs to vfat..."
 mkfs.vfat $bootfs
@@ -163,13 +163,13 @@ mount -o rw,loop,noatime,nodiratime /run/media/$1/$2 /src_root
 echo "Copying rootfs files..."
 cp -a /src_root/* /tgt_root
 if [ -d /tgt_root/etc/ ] ; then
-    boot_uuid=$(blkid -o value -s UUID /dev/${device}1)
-    swap_part_uuid=$(blkid -o value -s PARTUUID /dev/${device}3)
+    boot_uuid=$(blkid -o value -s UUID ${device}1)
+    swap_part_uuid=$(blkid -o value -s PARTUUID ${device}3)
     echo "/dev/disk/by-partuuid/$swap_part_uuid                swap             swap       defaults              0  0" >> /tgt_root/etc/fstab
     echo "UUID=$boot_uuid              /boot            vfat       defaults              1  2" >> /tgt_root/etc/fstab
     # We dont want udev to mount our root device while we're booting...
     if [ -d /tgt_root/etc/udev/ ] ; then
-        echo "/dev/${device}" >> /tgt_root/etc/udev/mount.blacklist
+        echo "${device}" >> /tgt_root/etc/udev/mount.blacklist
     fi
 fi
 
@@ -185,7 +185,7 @@ mkdir -p $EFIDIR
 cp /run/media/$1/EFI/BOOT/*.efi $EFIDIR
 
 if [ -f /run/media/$1/EFI/BOOT/grub.cfg ]; then
-    root_part_uuid=$(blkid -o value -s PARTUUID /dev/${device}2)
+    root_part_uuid=$(blkid -o value -s PARTUUID ${device}2)
     GRUBCFG="$EFIDIR/grub.cfg"
     cp /run/media/$1/EFI/BOOT/grub.cfg $GRUBCFG
     # Update grub config for the installed image
