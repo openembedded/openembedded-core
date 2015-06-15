@@ -980,12 +980,12 @@ python do_package_qa () {
 
     # Scan the packages...
     pkgdest = d.getVar('PKGDEST', True)
-    packages = d.getVar('PACKAGES', True)
+    packages = set((d.getVar('PACKAGES', True) or '').split())
 
     cpath = oe.cachedpath.CachedPath()
     global pkgfiles
     pkgfiles = {}
-    for pkg in (packages or "").split():
+    for pkg in packages:
         pkgfiles[pkg] = []
         for walkroot, dirs, files in cpath.walk(pkgdest + "/" + pkg):
             for file in files:
@@ -1009,7 +1009,7 @@ python do_package_qa () {
     walk_sane = True
     rdepends_sane = True
     deps_sane = True
-    for package in packages.split():
+    for package in packages:
         skip = (d.getVar('INSANE_SKIP_' + package, True) or "").split()
         if skip:
             bb.note("Package %s skipping QA tests: %s" % (package, str(skip)))
