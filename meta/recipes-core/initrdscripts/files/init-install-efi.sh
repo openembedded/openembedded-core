@@ -24,22 +24,22 @@ echo "Searching for hard drives ..."
 
 for device in `ls /sys/block/`; do
     case $device in
-	loop*)
+        loop*)
             # skip loop device
-	    ;;
-	sr*)
+            ;;
+        sr*)
             # skip CDROM device
-	    ;;
-	ram*)
+            ;;
+        ram*)
             # skip ram device
-	    ;;
-	*)
-	    # skip the device LiveOS is on
-	    # Add valid hard drive name to the list
-	    if [ $device != $live_dev_name -a -e /dev/$device ]; then
-		hdnamelist="$hdnamelist $device"
-	    fi
-	    ;;
+            ;;
+        *)
+            # skip the device LiveOS is on
+            # Add valid hard drive name to the list
+            if [ $device != $live_dev_name -a -e /dev/$device ]; then
+                hdnamelist="$hdnamelist $device"
+            fi
+            ;;
     esac
 done
 
@@ -49,8 +49,8 @@ for hdname in $hdnamelist; do
     echo "-------------------------------"
     echo /dev/$hdname
     if [ -r /sys/block/$hdname/device/vendor ]; then
-	echo -n "VENDOR="
-	cat /sys/block/$hdname/device/vendor
+        echo -n "VENDOR="
+        cat /sys/block/$hdname/device/vendor
     fi
     if [ -r /sys/block/$hdname/device/model ]; then
         echo -n "MODEL="
@@ -63,18 +63,17 @@ for hdname in $hdnamelist; do
     echo
     # Get user choice
     while true; do
-	echo -n "Do you want to install this image there? [y/n] "
-	read answer
-	if [ "$answer" = "y" -o "$answer" = "n" ]; then
-	    break
-	fi
-	echo "Please answer y or n"
+        echo -n "Do you want to install this image there? [y/n] "
+        read answer
+        if [ "$answer" = "y" -o "$answer" = "n" ]; then
+            break
+        fi
+        echo "Please answer y or n"
     done
     if [ "$answer" = "y" ]; then
-	TARGET_DEVICE_NAME=$hdname
-	break
+        TARGET_DEVICE_NAME=$hdname
+        break
     fi
-
 done
 
 if [ -n "$TARGET_DEVICE_NAME" ]; then
@@ -170,7 +169,7 @@ if [ -d /tgt_root/etc/ ] ; then
     echo "UUID=$boot_uuid              /boot            vfat       defaults              1  2" >> /tgt_root/etc/fstab
     # We dont want udev to mount our root device while we're booting...
     if [ -d /tgt_root/etc/udev/ ] ; then
-	echo "/dev/${device}" >> /tgt_root/etc/udev/mount.blacklist
+        echo "/dev/${device}" >> /tgt_root/etc/udev/mount.blacklist
     fi
 fi
 
