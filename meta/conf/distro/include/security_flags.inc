@@ -21,7 +21,6 @@ SECURITY_CFLAGS_powerpc = "-fstack-protector-all ${lcl_maybe_fortify}"
 SECURITY_CFLAGS_pn-dbus_powerpc = ""
 SECURITY_CFLAGS_pn-dbus-ptest_powerpc = ""
 SECURITY_CFLAGS_pn-libmatchbox_powerpc = ""
-SECURITY_CFLAGS_pn-webkit-gtk_powerpc = ""
 
 # arm specific security flag issues
 SECURITY_CFLAGS_pn-lttng-tools_arm = "${SECURITY_NO_PIE_CFLAGS}"
@@ -86,7 +85,6 @@ SECURITY_CFLAGS_pn-python3 = "${SECURITY_NO_PIE_CFLAGS}"
 SECURITY_CFLAGS_pn-tcl = "${SECURITY_NO_PIE_CFLAGS}"
 SECURITY_CFLAGS_pn-tiff = "${SECURITY_NO_PIE_CFLAGS}"
 SECURITY_CFLAGS_pn-valgrind = "${SECURITY_NO_PIE_CFLAGS}"
-SECURITY_CFLAGS_pn-webkit-gtk = "${SECURITY_NO_PIE_CFLAGS}"
 SECURITY_CFLAGS_pn-zlib = "${SECURITY_NO_PIE_CFLAGS}"
 
 # These 2 have text relco errors with the pie options enabled
