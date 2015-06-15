@@ -62,7 +62,8 @@ bbdebug() {
 	
 	# Strip off the debug level and ensure it is an integer
 	DBGLVL=$1; shift
-	if ! [[ "$DBGLVL" =~ ^[0-9]+ ]]; then
+	NONDIGITS=$(echo "$DBGLVL" | tr -d [:digit:])
+	if [ "$NONDIGITS" ]; then
 		bbfatal "$USAGE"
 	fi
 
