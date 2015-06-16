@@ -60,6 +60,27 @@ class DevtoolBase(oeSelfTest):
             self.add_command_to_tearDown('bitbake-layers remove-layer %s || true' % templayerdir)
             result = runCmd('bitbake-layers add-layer %s' % templayerdir, cwd=self.builddir)
 
+    def _process_ls_output(self, output):
+        """
+        Convert ls -l output to a format we can reasonably compare from one context
+        to another (e.g. from host to target)
+        """
+        filelist = []
+        for line in output.splitlines():
+            splitline = line.split()
+            # Remove trailing . on perms
+            splitline[0] = splitline[0].rstrip('.')
+            # Remove leading . on paths
+            splitline[-1] = splitline[-1].lstrip('.')
+            # Drop fields we don't want to compare
+            del splitline[7]
+            del splitline[6]
+            del splitline[5]
+            del splitline[4]
+            del splitline[1]
+            filelist.append(' '.join(splitline))
+        return filelist
+
 
 class DevtoolTests(DevtoolBase):
 
@@ -796,9 +817,32 @@ class DevtoolTests(DevtoolBase):
         console.expect("login:", timeout=120)
         # Now really test deploy-target
         result = runCmd('devtool deploy-target -c %s root@%s' % (testrecipe, testhost))
-        result = runCmd('ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@%s %s' % (testhost, testcommand))
+        # Run a test command to see if it was installed properly
+        sshargs = '-o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
+        result = runCmd('ssh %s root@%s %s' % (sshargs, testhost, testcommand))
+        # Check if it deployed all of the files with the right ownership/perms
+        # First look on the host - need to do this under pseudo to get the correct ownership/perms
+        installdir = get_bb_var('D', testrecipe)
+        fakerootenv = get_bb_var('FAKEROOTENV', testrecipe)
+        fakerootcmd = get_bb_var('FAKEROOTCMD', testrecipe)
+        result = runCmd('%s %s find . -type f -exec ls -l {} \;' % (fakerootenv, fakerootcmd), cwd=installdir)
+        filelist1 = self._process_ls_output(result.output)
+
+        # Now look on the target
+        tempdir2 = tempfile.mkdtemp(prefix='devtoolqa')
+        self.track_for_cleanup(tempdir2)
+        tmpfilelist = os.path.join(tempdir2, 'files.txt')
+        with open(tmpfilelist, 'w') as f:
+            for line in filelist1:
+                splitline = line.split()
+                f.write(splitline[-1] + '\n')
+        result = runCmd('cat %s | ssh -q %s root@%s \'xargs ls -l\'' % (tmpfilelist, sshargs, testhost))
+        filelist2 = self._process_ls_output(result.output)
+        filelist1.sort(key=lambda item: item.split()[-1])
+        filelist2.sort(key=lambda item: item.split()[-1])
+        self.assertEqual(filelist1, filelist2)
         # Test undeploy-target
         result = runCmd('devtool undeploy-target -c %s root@%s' % (testrecipe, testhost))
-        result = runCmd('ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@%s %s' % (testhost, testcommand), ignore_status=True)
+        result = runCmd('ssh %s root@%s %s' % (sshargs, testhost, testcommand), ignore_status=True)
         self.assertNotEqual(result, 0, 'undeploy-target did not remove command as it should have')
         console.close()

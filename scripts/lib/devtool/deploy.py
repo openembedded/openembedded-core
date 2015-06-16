@@ -19,7 +19,7 @@
 import os
 import subprocess
 import logging
-from devtool import exec_build_env_command, setup_tinfoil, DevtoolError
+from devtool import exec_fakeroot, setup_tinfoil, DevtoolError
 
 logger = logging.getLogger('devtool')
 
@@ -73,9 +73,13 @@ def deploy(args, config, basepath, workspace):
     extraoptions = ''
     if args.no_host_check:
         extraoptions += '-o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
-    if not args.show_status:
+    if args.show_status:
+        tarextractopts = 'xv'
+    else:
+        tarextractopts = 'x'
         extraoptions += ' -q'
-    ret = subprocess.call('scp -r %s %s/* %s:%s' % (extraoptions, recipe_outdir, args.target, destdir), shell=True)
+    # We cannot use scp here, because it doesn't preserve symlinks
+    ret = exec_fakeroot(rd, 'tar cf - . | ssh %s %s \'tar %s -C %s -f -\'' % (extraoptions, args.target, tarextractopts, destdir), cwd=recipe_outdir, shell=True)
     if ret != 0:
         raise DevtoolError('Deploy failed - rerun with -s to get a complete '
                            'error message')
