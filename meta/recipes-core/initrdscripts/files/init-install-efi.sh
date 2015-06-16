@@ -127,7 +127,7 @@ echo "Rootfs partition size: $rootfs_size MB ($rootfs)"
 echo "Swap partition size:   $swap_size MB ($swap)"
 echo "*****************"
 echo "Deleting partition table on ${device} ..."
-dd if=/dev/zero of=${device} bs=512 count=2
+dd if=/dev/zero of=${device} bs=512 count=35
 
 echo "Creating new partition table on ${device} ..."
 parted ${device} mklabel gpt
