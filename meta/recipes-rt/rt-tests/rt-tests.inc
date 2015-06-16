@@ -1,6 +1,6 @@
-# Version v0.91
-PV = "0.91"
-SRCREV = "3fed00ff8d2c0cdbc5ba078cbd60ce3cfcee615f"
+# Version v0.92
+PV = "0.92"
+SRCREV = "5f9f1e3fe327440a9d405f4af8feb16ff7a909eb"
 
 SRC_URI = "git://git.kernel.org/pub/scm/linux/kernel/git/clrkwllms/rt-tests.git \
            file://0001-rt-tests-Allow-for-user-specified-PYLIB.patch \

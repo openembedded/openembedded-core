@@ -1,50 +1,42 @@
-From 82d28701486ba5a699544a168448bf93b1ccd7b1 Mon Sep 17 00:00:00 2001
-From: Jackie Huang <jackie.huang@windriver.com>
-Date: Thu, 6 Dec 2012 11:26:14 +0800
+From 3f948f22d9106a2b957d1d430b16a7c51ccfc067 Mon Sep 17 00:00:00 2001
+From: "Maxin B. John" <maxin.john@enea.com>
+Date: Tue, 16 Jun 2015 22:53:23 +0200
 Subject: [PATCH] Added missing dependencies
 
 Upstream-Status: Submitted [linux-rt-users]
 
 The following targets missed dependency on librttest.a:
-pi_stress
 rt-migrate-test
 hackbench
 
 Signed-off-by: Jackie Huang <jackie.huang@windriver.com>
+Signed-off-by: Maxin B. John <maxin.john@enea.com>
 ---
- Makefile |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ Makefile | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/Makefile b/Makefile
-index fd3cdb3..60707a7 100644
+index a48e759..7a3f192 100644
 --- a/Makefile
 +++ b/Makefile
-@@ -68,14 +68,14 @@ cyclictest: cyclictest.o librttest.a
- signaltest: signaltest.o librttest.a
- 	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^ $(LIBS)
- 
--pi_stress: pi_stress.o
-+pi_stress: pi_stress.o librttest.a
- 	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^ $(LIBS)
- 
- hwlatdetect:  src/hwlatdetect/hwlatdetect.py
+@@ -85,7 +85,7 @@ hwlatdetect:  src/hwlatdetect/hwlatdetect.py
  	chmod +x src/hwlatdetect/hwlatdetect.py
  	ln -s src/hwlatdetect/hwlatdetect.py hwlatdetect
  
 -rt-migrate-test: rt-migrate-test.o
 +rt-migrate-test: rt-migrate-test.o librttest.a
- 	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^ $(LIBS)
+ 	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $< $(LIBS)
  
  ptsematest: ptsematest.o librttest.a
-@@ -96,7 +96,7 @@ sendme: sendme.o librttest.a
+@@ -106,7 +106,7 @@ sendme: sendme.o librttest.a
  pip_stress: pip_stress.o librttest.a
- 	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^ $(LIBS)
+ 	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $< $(LIBS) $(RTTESTLIB)
  
 -hackbench: hackbench.o
 +hackbench: hackbench.o librttest.a
- 	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^ $(LIBS)
+ 	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $< $(LIBS)
  
- librttest.a: rt-utils.o error.o rt-get_cpu.o
+ librttest.a: rt-utils.o error.o rt-get_cpu.o rt-sched.o
 -- 
-1.7.9.5
+1.9.1
 
