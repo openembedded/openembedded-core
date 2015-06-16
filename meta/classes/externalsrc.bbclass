@@ -55,7 +55,7 @@ python () {
                 bb.build.deltask(task, d)
             else:
                 # Since configure will likely touch ${S}, ensure only we lock so one task has access at a time
-                d.appendVarFlag(task, "lockfiles", "${S}/singletask.lock")
+                d.appendVarFlag(task, "lockfiles", " ${S}/singletask.lock")
 
             # We do not want our source to be wiped out, ever (kernel.bbclass does this for do_clean)
             cleandirs = d.getVarFlag(task, 'cleandirs', False)
