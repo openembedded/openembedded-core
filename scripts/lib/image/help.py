@@ -81,11 +81,13 @@ def invoke_subcommand(args, parser, main_command_usage, subcommands):
     if not args:
         logging.error("No subcommand specified, exiting")
         parser.print_help()
+        return 1
     elif args[0] == "help":
         wic_help(args, main_command_usage, subcommands)
     elif args[0] not in subcommands:
         logging.error("Unsupported subcommand %s, exiting\n" % (args[0]))
         parser.print_help()
+        return 1
     else:
         usage = subcommands.get(args[0], subcommand_error)[1]
         subcommands.get(args[0], subcommand_error)[0](args[1:], usage)

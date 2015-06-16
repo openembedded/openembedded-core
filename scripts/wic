@@ -305,7 +305,7 @@ def main(argv):
                 parser.print_help()
                 sys.exit(1)
 
-    hlp.invoke_subcommand(args, parser, hlp.wic_help_usage, subcommands)
+    return hlp.invoke_subcommand(args, parser, hlp.wic_help_usage, subcommands)
 
 
 if __name__ == "__main__":

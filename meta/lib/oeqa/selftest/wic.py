@@ -52,7 +52,7 @@ class Wic(oeSelfTest):
 
     def test02_createhelp(self):
         """Test wic create --help"""
-        self.assertEqual(0, runCmd('wic creat --help').status)
+        self.assertEqual(0, runCmd('wic create --help').status)
 
     def test03_listhelp(self):
         """Test wic list --help"""
@@ -82,3 +82,12 @@ class Wic(oeSelfTest):
         self.assertEqual(0, runCmd("wic create directdisk-gpt "
                                    "--image-name core-image-minimal").status)
         self.assertEqual(1, len(glob(self.resultdir + "directdisk-*.direct")))
+
+    def test07_unsupported_subcommand(self):
+        """Test unsupported subcommand"""
+        self.assertEqual(1, runCmd('wic unsupported',
+                         ignore_status=True).status)
+
+    def test08_no_command(self):
+        """Test wic without command"""
+        self.assertEqual(1, runCmd('wic', ignore_status=True).status)
