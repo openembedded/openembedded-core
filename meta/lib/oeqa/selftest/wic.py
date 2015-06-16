@@ -29,7 +29,7 @@ from glob import glob
 from shutil import rmtree
 
 from oeqa.selftest.base import oeSelfTest
-from oeqa.utils.commands import runCmd, bitbake
+from oeqa.utils.commands import runCmd, bitbake, get_bb_var
 
 class Wic(oeSelfTest):
     """Wic test class."""
@@ -66,12 +66,15 @@ class Wic(oeSelfTest):
 
     def test05_build_artifacts(self):
         """Test wic create directdisk providing all artifacts."""
-        self.assertEqual(0, runCmd("wic create directdisk "
-                                   "-b tmp/sysroots/qemux86/usr/share "
-                                   "-k tmp/deploy/images/qemux86 "
-                                   "-n tmp/sysroots/x86_64-linux "
-                                   "-r tmp/work/qemux86-poky-linux/"
-                                   "core-image-minimal/1.0-r0/rootfs").status)
+        vars = dict((var.lower(), get_bb_var(var, 'core-image-minimal')) \
+                        for var in ('STAGING_DATADIR', 'DEPLOY_DIR_IMAGE',
+                                    'STAGING_DIR_NATIVE', 'IMAGE_ROOTFS'))
+        status = runCmd("wic create directdisk "
+                        "-b %(staging_datadir)s "
+                        "-k %(deploy_dir_image)s "
+                        "-n %(staging_dir_native)s "
+                        "-r %(image_rootfs)s" % vars).status
+        self.assertEqual(0, status)
         self.assertEqual(1, len(glob(self.resultdir + "directdisk-*.direct")))
 
     def test06_gpt_image(self):
