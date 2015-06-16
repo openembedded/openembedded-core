@@ -91,3 +91,15 @@ class Wic(oeSelfTest):
     def test08_no_command(self):
         """Test wic without command"""
         self.assertEqual(1, runCmd('wic', ignore_status=True).status)
+
+    def test09_help_kickstart(self):
+        """Test wic help overview"""
+        self.assertEqual(0, runCmd('wic help overview').status)
+
+    def test10_help_plugins(self):
+        """Test wic help plugins"""
+        self.assertEqual(0, runCmd('wic help plugins').status)
+
+    def test11_help_kickstart(self):
+        """Test wic help kickstart"""
+        self.assertEqual(0, runCmd('wic help kickstart').status)
