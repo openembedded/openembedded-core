@@ -13,7 +13,9 @@ DEPENDS = "glib-2.0 util-linux popt bison-native flex-native"
 SRCREV = "90395824efc007de88787a6b8e400a07c980be1c"
 PV = "1.2.4+git${SRCPV}"
 
-SRC_URI = "git://git.efficios.com/babeltrace.git;branch=stable-1.2"
+SRC_URI = "git://git.efficios.com/babeltrace.git;branch=stable-1.2 \
+           file://0001-Fix-invalid-pointer-free-with-trace-collection.patch \
+"
 
 S = "${WORKDIR}/git"
 
