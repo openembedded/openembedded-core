@@ -275,9 +275,6 @@ else
 
         KERNCMDLINE="mem=$QEMU_MEMORY"
         QEMU_UI_OPTIONS="-show-cursor -usb -usbdevice wacom-tablet"
-        if [ $MACHINE = 'qemuarm64' ]; then
-            QEMU_UI_OPTIONS="-nographic"
-        fi
 
         NFS_INSTANCE=`echo $TAP | sed 's/tap//'`
         export NFS_INSTANCE
@@ -383,7 +380,11 @@ if [ "$MACHINE" = "qemuarm64" ]; then
     QEMU=qemu-system-aarch64
 
     export QEMU_AUDIO_DRV="none"
-    QEMU_UI_OPTIONS="$QEMU_UI_OPTIONS"
+    if [ "x$SERIALSTDIO" = "x" ] ; then
+        QEMU_UI_OPTIONS="-nographic"
+    else
+        QEMU_UI_OPTIONS=""
+    fi
     if [ "${FSTYPE:0:3}" = "ext" -o "$FSTYPE" = "btrfs" ]; then
         KERNCMDLINE="root=/dev/vda rw console=ttyAMA0,38400 mem=$QEMU_MEMORY highres=off $KERNEL_NETWORK_CMD"
         # qemu-system-aarch64 only support '-machine virt -cpu cortex-a57' for now
