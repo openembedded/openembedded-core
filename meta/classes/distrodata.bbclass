@@ -1,3 +1,4 @@
+include conf/distro/include/package_regex.inc
 addhandler distro_eventhandler
 distro_eventhandler[eventmask] = "bb.event.BuildStarted"
 python distro_eventhandler() {
