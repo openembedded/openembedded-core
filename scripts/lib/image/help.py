@@ -707,6 +707,10 @@ DESCRIPTION
                    up being are dependent on the given plugin
                    implementation.
 
+                   If --source option is not used, the wic command
+                   will create empty partition. --size parameter has
+                   to be used to specify size of empty partition.
+
          --ondisk or --ondrive: Forces the partition to be created on
                                 a particular disk.
 
