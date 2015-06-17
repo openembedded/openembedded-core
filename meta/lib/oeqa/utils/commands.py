@@ -141,7 +141,7 @@ def get_bb_var(var, target=None, postconfig=None):
     lastline = None
     for line in bbenv.splitlines():
         if re.search("^(export )?%s=" % var, line):
-            val = line.split('=')[1]
+            val = line.split('=', 1)[1]
             val = val.strip('\"')
             break
         elif re.match("unset %s$" % var, line):
