@@ -178,9 +178,8 @@ def list_source_plugins():
         print "  %s" % plugin
 
 
-def wic_create(args, wks_file, rootfs_dir, bootimg_dir, kernel_dir,
-               native_sysroot, scripts_path, image_output_dir, debug,
-               properties_file, properties=None):
+def wic_create(wks_file, rootfs_dir, bootimg_dir, kernel_dir,
+               native_sysroot, scripts_path, image_output_dir, debug):
     """Create image
 
     wks_file - user-defined OE kickstart file
@@ -190,8 +189,6 @@ def wic_create(args, wks_file, rootfs_dir, bootimg_dir, kernel_dir,
     native_sysroot - absolute path to the build's native sysroots dir
     scripts_path - absolute path to /scripts dir
     image_output_dir - dirname to create for image
-    properties_file - use values from this file if nonempty i.e no prompting
-    properties - use values from this string if nonempty i.e no prompting
 
     Normally, the values for the build artifacts values are determined
     by 'wic -e' from the output of the 'bitbake -e' command given an

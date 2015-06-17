@@ -149,7 +149,6 @@ NAME
 
 SYNOPSIS
     wic create <wks file or image name> [-o <DIRNAME> | --outdir <DIRNAME>]
-        [-i <JSON PROPERTY FILE> | --infile <JSON PROPERTY_FILE>]
         [-e | --image-name] [-s, --skip-build-check] [-D, --debug]
         [-r, --rootfs-dir] [-b, --bootimg-dir]
         [-k, --kernel-dir] [-n, --native-sysroot] [-f, --build-rootfs]
@@ -218,12 +217,6 @@ DESCRIPTION
 
     The -o option can be used to place the image in a directory with a
     different name and location.
-
-    As an alternative to the wks file, the image-specific properties
-    that define the values that will be used to generate a particular
-    image can be specified on the command-line using the -i option and
-    supplying a JSON object consisting of the set of name:value pairs
-    needed by image creation.
 
     The set of properties available for a given image type can be
     listed using the 'wic list' command.

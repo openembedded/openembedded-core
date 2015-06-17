@@ -91,8 +91,6 @@ def wic_create_subcommand(args, usage_str):
 
     parser.add_option("-o", "--outdir", dest="outdir",
                       action="store", help="name of directory to create image in")
-    parser.add_option("-i", "--infile", dest="properties_file",
-                      action="store", help="name of file containing the values for image properties as a JSON file")
     parser.add_option("-e", "--image-name", dest="image_name",
                       action="store", help="name of the image to use the artifacts from e.g. core-image-sato")
     parser.add_option("-r", "--rootfs-dir", dest="rootfs_dir",
@@ -132,7 +130,7 @@ def wic_create_subcommand(args, usage_str):
     if not options.image_name:
         options.build_check = False
 
-    if options.build_check and not options.properties_file:
+    if options.build_check:
         print "Checking basic build environment..."
         if not engine.verify_build_env():
             print "Couldn't verify build environment, exiting\n"
@@ -225,9 +223,9 @@ def wic_create_subcommand(args, usage_str):
     rootfs_dir = rootfs_dir_to_args(krootfs_dir)
 
     print "Creating image(s)...\n"
-    engine.wic_create(args, wks_file, rootfs_dir, bootimg_dir, kernel_dir,
+    engine.wic_create(wks_file, rootfs_dir, bootimg_dir, kernel_dir,
                       native_sysroot, scripts_path, image_output_dir,
-                      options.debug, options.properties_file)
+                      options.debug)
 
 
 def wic_list_subcommand(args, usage_str):
