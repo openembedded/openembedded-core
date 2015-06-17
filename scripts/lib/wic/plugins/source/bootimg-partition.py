@@ -32,6 +32,11 @@ from wic.utils.oe.misc import exec_cmd, get_bitbake_var
 from glob import glob
 
 class BootimgPartitionPlugin(SourcePlugin):
+    """
+    Create an image of boot partition, copying over files
+    listed in IMAGE_BOOT_FILES bitbake variable.
+    """
+
     name = 'bootimg-partition'
 
     @classmethod

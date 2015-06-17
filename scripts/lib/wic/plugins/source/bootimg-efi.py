@@ -34,6 +34,11 @@ from wic.utils.oe.misc import exec_cmd, exec_native_cmd, get_bitbake_var, \
                               BOOTDD_EXTRA_SPACE
 
 class BootimgEFIPlugin(SourcePlugin):
+    """
+    Create EFI boot partition.
+    This plugin supports GRUB 2 and gummiboot bootloaders.
+    """
+
     name = 'bootimg-efi'
 
     @classmethod

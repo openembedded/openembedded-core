@@ -22,6 +22,10 @@ from wic.pluginbase import SourcePlugin
 from wic.utils.oe.misc import exec_cmd, get_bitbake_var
 
 class RawCopyPlugin(SourcePlugin):
+    """
+    Populate partition content from raw image file.
+    """
+
     name = 'rawcopy'
 
     @classmethod

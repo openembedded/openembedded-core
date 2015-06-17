@@ -34,6 +34,10 @@ from wic.utils.oe.misc import exec_cmd, exec_native_cmd, \
                               get_bitbake_var, BOOTDD_EXTRA_SPACE
 
 class BootimgPcbiosPlugin(SourcePlugin):
+    """
+    Create MBR boot partition and install syslinux on it.
+    """
+
     name = 'bootimg-pcbios'
 
     @classmethod

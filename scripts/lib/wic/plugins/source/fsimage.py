@@ -22,6 +22,10 @@ from wic.pluginbase import SourcePlugin
 from wic.utils.oe.misc import get_bitbake_var
 
 class FSImagePlugin(SourcePlugin):
+    """
+    Add an already existing filesystem image to the partition layout.
+    """
+
     name = 'fsimage'
 
     @classmethod

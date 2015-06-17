@@ -33,6 +33,15 @@ import wic.imager.direct as direct
 from wic.pluginbase import ImagerPlugin
 
 class DirectPlugin(ImagerPlugin):
+    """
+    Install a system into a file containing a partitioned disk image.
+
+    An image file is formatted with a partition table, each partition
+    created from a rootfs or other OpenEmbedded build artifact and dd'ed
+    into the virtual disk. The disk image can subsequently be dd'ed onto
+    media and used on actual hardware.
+    """
+
     name = 'direct'
 
     @classmethod

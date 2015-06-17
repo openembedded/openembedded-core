@@ -32,6 +32,10 @@ from wic.pluginbase import SourcePlugin
 from wic.utils.oe.misc import find_bitbake_env_lines, find_artifact
 
 class RootfsPlugin(SourcePlugin):
+    """
+    Populate partition content from a rootfs directory.
+    """
+
     name = 'rootfs'
 
     @staticmethod
