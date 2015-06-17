@@ -28,6 +28,7 @@
 import subprocess
 import logging
 
+from wic.plugin import pluginmgr, PLUGIN_TYPES
 
 def subcommand_error(args):
     logging.info("invalid subcommand %s" % args[0])
@@ -53,6 +54,23 @@ def wic_help(args, usage_str, subcommands):
     """
     if len(args) == 1 or not display_help(args[1], subcommands):
         print(usage_str)
+
+
+def get_wic_plugins_help():
+    """
+    Combine wic_plugins_help with the help for every known
+    source plugin.
+    """
+    result = wic_plugins_help
+    for plugin_type in PLUGIN_TYPES:
+        result += '\n\n%s PLUGINS\n\n' % plugin_type.upper()
+        for name, plugin in pluginmgr.get_plugins(plugin_type).iteritems():
+            result += "\n %s plugin:\n" % name
+            if plugin.__doc__:
+                result += plugin.__doc__
+            else:
+                result += "\n    %s is missing docstring\n" % plugin
+    return result
 
 
 def invoke_subcommand(args, parser, main_command_usage, subcommands):
