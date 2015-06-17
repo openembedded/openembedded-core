@@ -36,7 +36,7 @@ class DirectPlugin(ImagerPlugin):
     name = 'direct'
 
     @classmethod
-    def __rootfs_dir_to_dict(self, rootfs_dirs):
+    def __rootfs_dir_to_dict(cls, rootfs_dirs):
         """
         Gets a string that contain 'connection=dir' splitted by
         space and return a dict
@@ -49,7 +49,7 @@ class DirectPlugin(ImagerPlugin):
         return krootfs_dir
 
     @classmethod
-    def do_create(self, subcmd, opts, *args):
+    def do_create(cls, subcmd, opts, *args):
         """
         Create direct image, called from creator as 'direct' cmd
         """
@@ -67,7 +67,7 @@ class DirectPlugin(ImagerPlugin):
         image_output_dir = args[5]
         oe_builddir = args[6]
 
-        krootfs_dir = self.__rootfs_dir_to_dict(rootfs_dir)
+        krootfs_dir = cls.__rootfs_dir_to_dict(rootfs_dir)
 
         configmgr._ksconf = ksconf
 

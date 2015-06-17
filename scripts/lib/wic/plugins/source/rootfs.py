@@ -54,7 +54,7 @@ class RootfsPlugin(SourcePlugin):
         return image_rootfs_dir
 
     @classmethod
-    def do_prepare_partition(self, part, source_params, cr, cr_workdir,
+    def do_prepare_partition(cls, part, source_params, cr, cr_workdir,
                              oe_builddir, bootimg_dir, kernel_dir,
                              krootfs_dir, native_sysroot):
         """
@@ -77,7 +77,7 @@ class RootfsPlugin(SourcePlugin):
                 msg += " or it is not a valid path, exiting"
                 msger.error(msg % part.rootfs)
 
-        real_rootfs_dir = self.__get_rootfs_dir(rootfs_dir)
+        real_rootfs_dir = cls.__get_rootfs_dir(rootfs_dir)
 
         part.set_rootfs(real_rootfs_dir)
         part.prepare_rootfs(cr_workdir, oe_builddir, real_rootfs_dir, native_sysroot)
