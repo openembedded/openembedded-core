@@ -268,7 +268,7 @@ class Wic_PartData(Mic_PartData):
         extra_imagecmd = "-i 8192"
 
         label_str = ""
-        if (self.label):
+        if self.label:
             label_str = "-L %s" % self.label
 
         mkfs_cmd = "mkfs.%s -F %s %s %s -d %s" % \
@@ -315,7 +315,7 @@ class Wic_PartData(Mic_PartData):
         exec_cmd(dd_cmd)
 
         label_str = ""
-        if (self.label):
+        if self.label:
             label_str = "-L %s" % self.label
 
         mkfs_cmd = "mkfs.%s -b %d -r %s %s %s" % \
@@ -361,7 +361,7 @@ class Wic_PartData(Mic_PartData):
             blocks += (16 - (blocks % 16))
 
         label_str = "-n boot"
-        if (self.label):
+        if self.label:
             label_str = "-n %s" % self.label
 
         dosfs_cmd = "mkdosfs %s -S 512 -C %s %d" % (label_str, rootfs, blocks)
@@ -436,7 +436,7 @@ class Wic_PartData(Mic_PartData):
         extra_imagecmd = "-i 8192"
 
         label_str = ""
-        if (self.label):
+        if self.label:
             label_str = "-L %s" % self.label
 
         mkfs_cmd = "mkfs.%s -F %s %s %s" % \
@@ -460,7 +460,7 @@ class Wic_PartData(Mic_PartData):
         exec_cmd(dd_cmd)
 
         label_str = ""
-        if (self.label):
+        if self.label:
             label_str = "-L %s" % self.label
 
         mkfs_cmd = "mkfs.%s -b %d %s %s" % \
@@ -482,7 +482,7 @@ class Wic_PartData(Mic_PartData):
         blocks = self.size
 
         label_str = "-n boot"
-        if (self.label):
+        if self.label:
             label_str = "-n %s" % self.label
 
         dosfs_cmd = "mkdosfs %s -S 512 -C %s %d" % (label_str, fs, blocks)
@@ -553,7 +553,7 @@ class Wic_Partition(Mic_Partition):
 
     def _getParser(self):
         def overhead_cb (option, opt_str, value, parser):
-            if (value < 1):
+            if value < 1:
                 raise OptionValueError("Option %s: invalid value: %r" % (option, value))
             setattr(parser.values, option.dest, value)
 

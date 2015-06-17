@@ -62,14 +62,14 @@ class RawCopyPlugin(SourcePlugin):
 
         msger.debug('Bootimg dir: %s' % bootimg_dir)
 
-        if ('file' not in source_params):
+        if 'file' not in source_params:
             msger.error("No file specified\n")
             return
 
         src = os.path.join(bootimg_dir, source_params['file'])
         dst = src
 
-        if ('skip' in source_params):
+        if 'skip' in source_params:
             dst = os.path.join(cr_workdir, source_params['file'])
             dd_cmd = "dd if=%s of=%s ibs=%s skip=1 conv=notrunc" % \
                     (src, dst, source_params['skip'])

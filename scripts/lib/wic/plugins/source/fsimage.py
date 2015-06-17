@@ -62,7 +62,7 @@ class FSImagePlugin(SourcePlugin):
 
         msger.debug('Bootimg dir: %s' % bootimg_dir)
 
-        if ('file' not in source_params):
+        if 'file' not in source_params:
             msger.error("No file specified\n")
             return
 

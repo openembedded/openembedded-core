@@ -70,13 +70,13 @@ def find_artifacts(image_name):
     rootfs_dir = kernel_dir = bootimg_dir = native_sysroot = ""
 
     for line in bitbake_env_lines.split('\n'):
-        if (misc.get_line_val(line, "IMAGE_ROOTFS")):
+        if misc.get_line_val(line, "IMAGE_ROOTFS"):
             rootfs_dir = misc.get_line_val(line, "IMAGE_ROOTFS")
             continue
-        if (misc.get_line_val(line, "DEPLOY_DIR_IMAGE")):
+        if misc.get_line_val(line, "DEPLOY_DIR_IMAGE"):
             kernel_dir = misc.get_line_val(line, "DEPLOY_DIR_IMAGE")
             continue
-        if (misc.get_line_val(line, "STAGING_DIR_NATIVE")):
+        if misc.get_line_val(line, "STAGING_DIR_NATIVE"):
             native_sysroot = misc.get_line_val(line, "STAGING_DIR_NATIVE")
             continue
 

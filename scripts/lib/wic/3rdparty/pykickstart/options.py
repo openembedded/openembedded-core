@@ -145,19 +145,19 @@ def _check_string(option, opt, value):
 
 def _check_size(option, opt, value):
     # Former default was MB
-    if (value.isdigit()):
+    if value.isdigit():
         return int(value) * 1024L
 
     mapping = {"opt": opt, "value": value}
-    if (not value[:-1].isdigit()):
+    if not value[:-1].isdigit():
         raise OptionValueError(_("Option %(opt)s: invalid size value: %(value)r") % mapping)
 
     size = int(value[:-1])
-    if (value.endswith("k") or value.endswith("K")):
+    if value.endswith("k") or value.endswith("K"):
         return size
-    if (value.endswith("M")):
+    if value.endswith("M"):
         return size * 1024L
-    if (value.endswith("G")):
+    if value.endswith("G"):
         return size * 1024L * 1024L
     raise OptionValueError(_("Option %(opt)s: invalid size value: %(value)r") % mapping)
 

@@ -38,7 +38,7 @@ def __exec_cmd(cmd_and_args, as_shell=False, catch=3):
     args = cmd_and_args.split()
     msger.debug(args)
 
-    if (as_shell):
+    if as_shell:
         rc, out = runner.runtool(cmd_and_args, catch)
     else:
         rc, out = runner.runtool(args, catch)
@@ -142,7 +142,7 @@ def find_artifact(bitbake_env_lines, variable):
     retval = ""
 
     for line in bitbake_env_lines.split('\n'):
-        if (get_line_val(line, variable)):
+        if get_line_val(line, variable):
             retval = get_line_val(line, variable)
             break
 
@@ -160,7 +160,7 @@ def get_line_val(line, key):
 
 def get_bitbake_var(key):
     for line in __bitbake_env_lines.split('\n'):
-        if (get_line_val(line, key)):
+        if get_line_val(line, key):
             val = get_line_val(line, key)
             return val
     return None

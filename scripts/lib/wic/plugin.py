@@ -103,7 +103,7 @@ class PluginMgr(object):
                                 % (os.path.basename(pdir), mod, err)
                             msger.warning(msg)
 
-            del(sys.path[0])
+            del sys.path[0]
 
     def get_plugins(self, ptype):
         """ the return value is dict of name:class pairs """
