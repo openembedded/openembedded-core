@@ -60,3 +60,28 @@ class BitbakeLayers(oeSelfTest):
         result = runCmd('bitbake-layers remove-layer */meta-skeleton')
         result = runCmd('bitbake-layers show-layers')
         self.assertNotIn('meta-skeleton', result.output, msg = "meta-skeleton should have been removed at this step.  bitbake-layers show-layers output: %s" % result.output)
+
+    def test_bitbakelayers_showrecipes(self):
+        result = runCmd('bitbake-layers show-recipes')
+        self.assertIn('aspell:', result.output)
+        self.assertIn('mtd-utils:', result.output)
+        self.assertIn('linux-yocto:', result.output)
+        self.assertIn('core-image-minimal:', result.output)
+        result = runCmd('bitbake-layers show-recipes mtd-utils')
+        self.assertIn('mtd-utils:', result.output)
+        self.assertNotIn('aspell:', result.output)
+        result = runCmd('bitbake-layers show-recipes -i kernel')
+        self.assertIn('linux-yocto:', result.output)
+        self.assertNotIn('mtd-utils:', result.output)
+        result = runCmd('bitbake-layers show-recipes -i image')
+        self.assertIn('core-image-minimal', result.output)
+        self.assertNotIn('linux-yocto:', result.output)
+        self.assertNotIn('mtd-utils:', result.output)
+        result = runCmd('bitbake-layers show-recipes -i cmake,pkgconfig')
+        self.assertIn('libproxy:', result.output)
+        self.assertNotIn('mtd-utils:', result.output) # doesn't inherit either
+        self.assertNotIn('wget:', result.output) # doesn't inherit cmake
+        self.assertNotIn('waffle:', result.output) # doesn't inherit pkgconfig
+        result = runCmd('bitbake-layers show-recipes -i nonexistentclass', ignore_status=True)
+        self.assertNotEqual(result.status, 0, 'bitbake-layers show-recipes -i nonexistentclass should have failed')
+        self.assertIn('ERROR:', result.output)
