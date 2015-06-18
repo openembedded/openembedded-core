@@ -39,7 +39,7 @@ efi_populate() {
 	fi
 	install -m 0644 ${DEPLOY_DIR_IMAGE}/${GRUB_IMAGE} ${DEST}${EFIDIR}
 
-	install -m 0644 ${GRUBCFG} ${DEST}${EFIDIR}
+	install -m 0644 ${GRUBCFG} ${DEST}${EFIDIR}/grub.cfg
 }
 
 efi_iso_populate() {
