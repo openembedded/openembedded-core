@@ -21,6 +21,12 @@ REQUIRED_DISTRO_FEATURES = "x11"
 PACKAGECONFIG ??= ""
 PACKAGECONFIG[freeglut] = "-DPIGLIT_USE_GLUT=1,-DPIGLIT_USE_GLUT=0,freeglut,"
 
+do_configure_prepend() {
+   if [ "${@bb.utils.contains('PACKAGECONFIG', 'freeglut', 'yes', 'no', d)}" = "no" ]; then
+        sed -i -e "/^#.*include <GL\/freeglut_ext.h>$/d" ${S}/src/piglit/glut_wrap.h
+   fi
+}
+
 FILES_${PN}-dbg += "${libdir}/piglit/*/.debug/"
 
 RDEPENDS_${PN} = "waffle python python-mako python-json python-subprocess \
