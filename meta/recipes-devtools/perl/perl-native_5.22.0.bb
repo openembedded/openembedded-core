@@ -1,12 +1,6 @@
-SUMMARY = "Perl scripting language"
-HOMEPAGE = "http://www.perl.org/"
-SECTION = "libs"
-LICENSE = "Artistic-1.0 | GPL-1.0+"
+require perl.inc
 
-LIC_FILES_CHKSUM = "file://Copying;md5=5b122a36d0f6dc55279a0ebc69f3c60b \
-                    file://Artistic;md5=2e6fd2475335af892494fe1f7327baf3"
-
-SRC_URI = "http://www.cpan.org/src/5.0/${BP}.tar.xz \
+SRC_URI += "\
            file://Configure-multilib.patch \
            file://perl-configpm-switch.patch \
            file://native-nopacklist.patch \
@@ -18,8 +12,6 @@ SRC_URI = "http://www.cpan.org/src/5.0/${BP}.tar.xz \
 
 SRC_URI[md5sum] = "ff0f09b17de426eff323426cb140ee79"
 SRC_URI[sha256sum] = "be83ead0c5c26cbbe626fa4bac1a4beabe23a9eebc15d35ba49ccde11878e196"
-
-S = "${WORKDIR}/perl-${PV}"
 
 inherit native
 

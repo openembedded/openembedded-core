@@ -1,15 +1,8 @@
-SUMMARY = "Perl scripting language"
-HOMEPAGE = "http://www.perl.org/"
-SECTION = "devel"
-LICENSE = "Artistic-1.0 | GPL-1.0+"
-LIC_FILES_CHKSUM = "file://Copying;md5=5b122a36d0f6dc55279a0ebc69f3c60b \
-		    file://Artistic;md5=2e6fd2475335af892494fe1f7327baf3"
+require perl.inc
+
 # We need gnugrep (for -I)
 DEPENDS = "virtual/db grep-native"
 DEPENDS += "gdbm zlib"
-
-SRC_URI = "http://www.cpan.org/src/5.0/${BP}.tar.xz \
-"
 
 # Pick up patches from debian
 # http://ftp.de.debian.org/debian/pool/main/p/perl/perl_5.22.0-1.debian.tar.xz
@@ -54,11 +47,9 @@ SRC_URI += " \
         file://native-perlinc.patch \
         file://perl-enable-gdbm.patch \
         file://cross-generate_uudmap.patch \
-	file://fix_bad_rpath.patch \
-	file://perl-archlib-exp.patch \
-	file://dynaloaderhack.patch \
-	\
-        \
+        file://fix_bad_rpath.patch \
+        file://perl-archlib-exp.patch \
+        file://dynaloaderhack.patch \
         file://config.sh \
         file://config.sh-32 \
         file://config.sh-32-le \
