@@ -6,7 +6,7 @@ python do_lint() {
     ##############################
     # Test that DESCRIPTION exists
     #
-    description = d.getVar("DESCRIPTION")
+    description = d.getVar("DESCRIPTION", False)
     if description[1:10] == '{SUMMARY}':
         bb.warn("%s: DESCRIPTION is not set" % pkgname)
 
@@ -14,7 +14,7 @@ python do_lint() {
     ##############################
     # Test that HOMEPAGE exists
     #
-    homepage = d.getVar("HOMEPAGE")
+    homepage = d.getVar("HOMEPAGE", False)
     if homepage == '':
         bb.warn("%s: HOMEPAGE is not set" % pkgname)
     elif not homepage.startswith("http://") and not homepage.startswith("https://"):
@@ -24,7 +24,7 @@ python do_lint() {
     ##############################
     # Test for valid SECTION
     #
-    section = d.getVar("SECTION")
+    section = d.getVar("SECTION", False)
     if section == '':
         bb.warn("%s: SECTION is not set" % pkgname)
     elif not section.islower():
@@ -34,7 +34,7 @@ python do_lint() {
     ##############################
     # Check that all patches have Signed-off-by and Upstream-Status
     #
-    srcuri = d.getVar("SRC_URI").split()
+    srcuri = d.getVar("SRC_URI", False).split()
     fpaths = (d.getVar('FILESPATH', True) or '').split(':')
 
     def findPatch(patchname):
@@ -80,5 +80,5 @@ python do_lint() {
         if not s.startswith("file://"):
             checkPN(pkgname, 'SRC_URI', s)
 
-    checkPN(pkgname, 'S', d.getVar('S'))
+    checkPN(pkgname, 'S', d.getVar('S', False))
 }

@@ -75,9 +75,9 @@ python populate_packages_append () {
 
 python __anonymous() {
     if not bb.data.inherits_class('native', d) and not bb.data.inherits_class('cross', d):
-        gtkimmodules_check = d.getVar('GTKIMMODULES_PACKAGES')
+        gtkimmodules_check = d.getVar('GTKIMMODULES_PACKAGES', False)
         if not gtkimmodules_check:
-            bb_filename = d.getVar('FILE')
+            bb_filename = d.getVar('FILE', False)
             raise bb.build.FuncFailed("ERROR: %s inherits gtk-immodules-cache but doesn't set GTKIMMODULES_PACKAGES" % bb_filename)
 }
 

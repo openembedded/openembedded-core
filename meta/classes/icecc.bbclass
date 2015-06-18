@@ -36,14 +36,14 @@ def icecc_dep_prepend(d):
     # INHIBIT_DEFAULT_DEPS doesn't apply to the patch command.  Whether or  not
     # we need that built is the responsibility of the patch function / class, not
     # the application.
-    if not d.getVar('INHIBIT_DEFAULT_DEPS'):
+    if not d.getVar('INHIBIT_DEFAULT_DEPS', False):
         return "icecc-create-env-native"
     return ""
 
 DEPENDS_prepend += "${@icecc_dep_prepend(d)} "
 
 def get_cross_kernel_cc(bb,d):
-    kernel_cc = d.getVar('KERNEL_CC')
+    kernel_cc = d.getVar('KERNEL_CC', False)
 
     # evaluate the expression by the shell if necessary
     if '`' in kernel_cc or '$(' in kernel_cc:
@@ -56,7 +56,7 @@ def get_cross_kernel_cc(bb,d):
     return kernel_cc
 
 def get_icecc(d):
-    return d.getVar('ICECC_PATH') or bb.utils.which(os.getenv("PATH"), "icecc")
+    return d.getVar('ICECC_PATH', False) or bb.utils.which(os.getenv("PATH"), "icecc")
 
 def create_path(compilers, bb, d):
     """
@@ -91,7 +91,7 @@ def create_path(compilers, bb, d):
     return staging
 
 def use_icc(bb,d):
-    if d.getVar('ICECC_DISABLED') == "1":
+    if d.getVar('ICECC_DISABLED', False) == "1":
         # don't even try it, when explicitly disabled
         return "no"
 
@@ -102,7 +102,7 @@ def use_icc(bb,d):
     pn = d.getVar('PN', True)
 
     system_class_blacklist = []
-    user_class_blacklist = (d.getVar('ICECC_USER_CLASS_BL') or "none").split()
+    user_class_blacklist = (d.getVar('ICECC_USER_CLASS_BL', False) or "none").split()
     package_class_blacklist = system_class_blacklist + user_class_blacklist
 
     for black in package_class_blacklist:
@@ -119,8 +119,8 @@ def use_icc(bb,d):
     # e.g. when there is new version
     # building libgcc-initial with icecc fails with CPP sanity check error if host sysroot contains cross gcc built for another target tune/variant
     system_package_blacklist = ["libgcc-initial"]
-    user_package_blacklist = (d.getVar('ICECC_USER_PACKAGE_BL') or "").split()
-    user_package_whitelist = (d.getVar('ICECC_USER_PACKAGE_WL') or "").split()
+    user_package_blacklist = (d.getVar('ICECC_USER_PACKAGE_BL', False) or "").split()
+    user_package_whitelist = (d.getVar('ICECC_USER_PACKAGE_WL', False) or "").split()
     package_blacklist = system_package_blacklist + user_package_blacklist
 
     if pn in package_blacklist:
@@ -131,14 +131,14 @@ def use_icc(bb,d):
         bb.debug(1, "%s: found in whitelist, enable icecc" % pn)
         return "yes"
 
-    if d.getVar('PARALLEL_MAKE') == "":
+    if d.getVar('PARALLEL_MAKE', False) == "":
         bb.debug(1, "%s: has empty PARALLEL_MAKE, disable icecc" % pn)
         return "no"
 
     return "yes"
 
 def icc_is_allarch(bb, d):
-    return d.getVar("PACKAGE_ARCH") == "all"
+    return d.getVar("PACKAGE_ARCH", False) == "all"
 
 def icc_is_kernel(bb, d):
     return \
@@ -155,8 +155,8 @@ def icc_version(bb, d):
     if use_icc(bb, d) == "no":
         return ""
 
-    parallel = d.getVar('ICECC_PARALLEL_MAKE') or ""
-    if not d.getVar('PARALLEL_MAKE') == "" and parallel:
+    parallel = d.getVar('ICECC_PARALLEL_MAKE', False) or ""
+    if not d.getVar('PARALLEL_MAKE', False) == "" and parallel:
         d.setVar("PARALLEL_MAKE", parallel)
 
     if icc_is_native(bb, d):
@@ -167,7 +167,7 @@ def icc_version(bb, d):
         prefix = d.expand('${HOST_PREFIX}' )
         distro = d.expand('${DISTRO}')
         target_sys = d.expand('${TARGET_SYS}')
-        float = d.getVar('TARGET_FPU') or "hard"
+        float = d.getVar('TARGET_FPU', False) or "hard"
         archive_name = prefix + distro + "-"        + target_sys + "-" + float
         if icc_is_kernel(bb, d):
             archive_name += "-kernel"

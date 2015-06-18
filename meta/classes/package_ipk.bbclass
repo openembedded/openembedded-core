@@ -64,7 +64,7 @@ python do_package_ipk () {
         basedir = os.path.join(os.path.dirname(root))
         arch = localdata.getVar('PACKAGE_ARCH', True)
 
-        if localdata.getVar('IPK_HIERARCHICAL_FEED') == "1":
+        if localdata.getVar('IPK_HIERARCHICAL_FEED', False) == "1":
             # Spread packages across subdirectories so each isn't too crowded
             if pkgname.startswith('lib'):
                 pkg_prefix = 'lib' + pkgname[3]
@@ -94,7 +94,7 @@ python do_package_ipk () {
         cleanupcontrol(root)
         from glob import glob
         g = glob('*')
-        if not g and localdata.getVar('ALLOW_EMPTY') != "1":
+        if not g and localdata.getVar('ALLOW_EMPTY', False) != "1":
             bb.note("Not creating empty archive for %s-%s-%s" % (pkg, localdata.getVar('PKGV', True), localdata.getVar('PKGR', True)))
             bb.utils.unlockfile(lf)
             continue
@@ -134,7 +134,7 @@ python do_package_ipk () {
         try:
             for (c, fs) in fields:
                 for f in fs:
-                    if localdata.getVar(f) is None:
+                    if localdata.getVar(f, False) is None:
                         raise KeyError(f)
                 # Special behavior for description...
                 if 'DESCRIPTION' in fs:

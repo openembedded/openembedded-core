@@ -209,7 +209,7 @@ def check_toolchain(data):
 def check_conf_exists(fn, data):
     bbpath = []
     fn = data.expand(fn)
-    vbbpath = data.getVar("BBPATH")
+    vbbpath = data.getVar("BBPATH", False)
     if vbbpath:
         bbpath += vbbpath.split(":")
     for p in bbpath:

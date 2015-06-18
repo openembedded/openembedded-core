@@ -160,7 +160,7 @@ def add_package_and_files(d):
     packages = d.getVar('PACKAGES', True)
     files = d.getVar('LICENSE_FILES_DIRECTORY', True)
     pn = d.getVar('PN', True)
-    pn_lic = "%s%s" % (pn, d.getVar('LICENSE_PACKAGE_SUFFIX'))
+    pn_lic = "%s%s" % (pn, d.getVar('LICENSE_PACKAGE_SUFFIX', False))
     if pn_lic in packages:
         bb.warn("%s package already existed in %s." % (pn_lic, pn))
     else:
@@ -348,7 +348,7 @@ def expand_wildcard_licenses(d, wildcard_licenses):
         spdxflags = fnmatch.filter(spdxmapkeys, wld_lic)
         licenses += [d.getVarFlag('SPDXLICENSEMAP', flag) for flag in spdxflags]
 
-    spdx_lics = (d.getVar('SRC_DISTRIBUTE_LICENSES') or '').split()
+    spdx_lics = (d.getVar('SRC_DISTRIBUTE_LICENSES', False) or '').split()
     for wld_lic in wildcard_licenses:
         licenses += fnmatch.filter(spdx_lics, wld_lic)
 

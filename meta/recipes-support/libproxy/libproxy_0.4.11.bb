@@ -31,6 +31,6 @@ do_configure_prepend() {
 
 python() {
     if incompatible_license_contains("GPLv3", "x", "", d) == "x" or bb.utils.contains("DISTRO_FEATURES", "x11", "x", "", d) == "":
-        d.setVar("EXTRA_OECMAKE", d.getVar("EXTRA_OECMAKE").replace("-DWITH_GNOME=yes", "-DWITH_GNOME=no"))
-        d.setVar("DEPENDS", " ".join(i for i in d.getVar("DEPENDS").split() if i != "gconf"))
+        d.setVar("EXTRA_OECMAKE", d.getVar("EXTRA_OECMAKE", False).replace("-DWITH_GNOME=yes", "-DWITH_GNOME=no"))
+        d.setVar("DEPENDS", " ".join(i for i in d.getVar("DEPENDS", False).split() if i != "gconf"))
 }

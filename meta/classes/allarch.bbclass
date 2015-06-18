@@ -11,7 +11,7 @@ PACKAGE_ARCH = "all"
 python () {
     # Allow this class to be included but overridden - only set
     # the values if we're still "all" package arch.
-    if d.getVar("PACKAGE_ARCH") == "all":
+    if d.getVar("PACKAGE_ARCH", True) == "all":
         # No need for virtual/libc or a cross compiler
         d.setVar("INHIBIT_DEFAULT_DEPS","1")
 

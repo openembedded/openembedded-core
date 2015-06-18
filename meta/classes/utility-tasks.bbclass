@@ -28,7 +28,7 @@ python do_clean() {
     bb.note("Removing " + dir)
     oe.path.remove(dir)
 
-    dir = "%s.*" % bb.data.expand(d.getVar('STAMP'), d)
+    dir = "%s.*" % bb.data.expand(d.getVar('STAMP', False), d)
     bb.note("Removing " + dir)
     oe.path.remove(dir)
 

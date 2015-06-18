@@ -52,7 +52,7 @@ class MasterImageHardwareTarget(oeqa.targetcontrol.BaseTarget):
         # test rootfs + kernel
         self.image_fstype = self.get_image_fstype(d)
         self.rootfs = os.path.join(d.getVar("DEPLOY_DIR_IMAGE", True), d.getVar("IMAGE_LINK_NAME", True) + '.' + self.image_fstype)
-        self.kernel = os.path.join(d.getVar("DEPLOY_DIR_IMAGE", True), d.getVar("KERNEL_IMAGETYPE") + '-' + d.getVar('MACHINE') + '.bin')
+        self.kernel = os.path.join(d.getVar("DEPLOY_DIR_IMAGE", True), d.getVar("KERNEL_IMAGETYPE", False) + '-' + d.getVar('MACHINE', False) + '.bin')
         if not os.path.isfile(self.rootfs):
             # we could've checked that IMAGE_FSTYPES contains tar.gz but the config for running testimage might not be
             # the same as the config with which the image was build, ie
@@ -73,10 +73,10 @@ class MasterImageHardwareTarget(oeqa.targetcontrol.BaseTarget):
         # e.g: TEST_POWERCONTROL_CMD = "/home/user/myscripts/powercontrol.py ${MACHINE} what-ever-other-args-the-script-wants"
         # the command should take as the last argument "off" and "on" and "cycle" (off, on)
         self.powercontrol_cmd = d.getVar("TEST_POWERCONTROL_CMD", True) or None
-        self.powercontrol_args = d.getVar("TEST_POWERCONTROL_EXTRA_ARGS") or ""
+        self.powercontrol_args = d.getVar("TEST_POWERCONTROL_EXTRA_ARGS", False) or ""
 
         self.serialcontrol_cmd = d.getVar("TEST_SERIALCONTROL_CMD", True) or None
-        self.serialcontrol_args = d.getVar("TEST_SERIALCONTROL_EXTRA_ARGS") or ""
+        self.serialcontrol_args = d.getVar("TEST_SERIALCONTROL_EXTRA_ARGS", False) or ""
 
         self.origenv = os.environ
         if self.powercontrol_cmd or self.serialcontrol_cmd:

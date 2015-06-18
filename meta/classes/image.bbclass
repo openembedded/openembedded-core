@@ -100,7 +100,7 @@ def command_variables(d):
 python () {
     variables = command_variables(d)
     for var in variables:
-        if d.getVar(var):
+        if d.getVar(var, False):
             d.setVarFlag(var, 'func', '1')
 }
 

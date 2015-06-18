@@ -66,7 +66,7 @@ sstate_hardcode_path[dirs] = "${SSTATE_BUILDDIR}"
 
 python () {
     if bb.data.inherits_class('native', d):
-        d.setVar('SSTATE_PKGARCH', d.getVar('BUILD_ARCH'))
+        d.setVar('SSTATE_PKGARCH', d.getVar('BUILD_ARCH', False))
     elif bb.data.inherits_class('crosssdk', d):
         d.setVar('SSTATE_PKGARCH', d.expand("${BUILD_ARCH}_${SDK_ARCH}_${SDK_OS}"))
     elif bb.data.inherits_class('cross', d):
@@ -895,7 +895,7 @@ python sstate_eventhandler2() {
     import glob
     d = e.data
     stamps = e.stamps.values()
-    removeworkdir = (d.getVar("SSTATE_PRUNE_OBSOLETEWORKDIR") == "1")
+    removeworkdir = (d.getVar("SSTATE_PRUNE_OBSOLETEWORKDIR", False) == "1")
     seen = []
     for a in d.getVar("SSTATE_ARCHS", True).split():
         toremove = []

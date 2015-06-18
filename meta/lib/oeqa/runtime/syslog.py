@@ -29,7 +29,7 @@ class SyslogTestConfig(oeRuntimeTest):
 
     @skipUnlessPassed("test_syslog_running")
     def test_syslog_restart(self):
-        if "systemd" != oeRuntimeTest.tc.d.getVar("VIRTUAL-RUNTIME_init_manager"):
+        if "systemd" != oeRuntimeTest.tc.d.getVar("VIRTUAL-RUNTIME_init_manager", False):
             (status,output) = self.target.run('/etc/init.d/syslog restart')
         else:
             (status,output) = self.target.run('systemctl restart syslog.service')
@@ -37,7 +37,7 @@ class SyslogTestConfig(oeRuntimeTest):
     @testcase(202)
     @skipUnlessPassed("test_syslog_restart")
     @skipUnlessPassed("test_syslog_logger")
-    @unittest.skipIf("systemd" == oeRuntimeTest.tc.d.getVar("VIRTUAL-RUNTIME_init_manager"), "Not appropiate for systemd image")
+    @unittest.skipIf("systemd" == oeRuntimeTest.tc.d.getVar("VIRTUAL-RUNTIME_init_manager", False), "Not appropiate for systemd image")
     def test_syslog_startup_config(self):
         self.target.run('echo "LOGFILE=/var/log/test" >> /etc/syslog-startup.conf')
         (status,output) = self.target.run('/etc/init.d/syslog restart')

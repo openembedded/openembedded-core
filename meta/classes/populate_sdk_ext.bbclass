@@ -98,7 +98,7 @@ python copy_buildsystem () {
         f.write('# this configuration provides, it is strongly suggested that you set\n')
         f.write('# up a proper instance of the full build system and use that instead.\n\n')
 
-        f.write('LCONF_VERSION = "%s"\n\n' % d.getVar('LCONF_VERSION'))
+        f.write('LCONF_VERSION = "%s"\n\n' % d.getVar('LCONF_VERSION', False))
         f.write('BBPATH = "$' + '{TOPDIR}"\n')
         f.write('SDKBASEMETAPATH = "$' + '{TOPDIR}"\n')
         f.write('BBLAYERS := " \\\n')
@@ -115,7 +115,7 @@ python copy_buildsystem () {
         f.write('# up a proper instance of the full build system and use that instead.\n\n')
 
         f.write('INHERIT += "%s"\n\n' % 'uninative')
-        f.write('CONF_VERSION = "%s"\n\n' % d.getVar('CONF_VERSION'))
+        f.write('CONF_VERSION = "%s"\n\n' % d.getVar('CONF_VERSION', False))
 
         # This is a bit of a hack, but we really don't want these dependencies
         # (we're including them in the SDK as nativesdk- versions instead)

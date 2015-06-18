@@ -150,11 +150,11 @@ def update_useradd_after_parse(d):
     useradd_packages = d.getVar('USERADD_PACKAGES', True)
 
     if not useradd_packages:
-        raise bb.build.FuncFailed("%s inherits useradd but doesn't set USERADD_PACKAGES" % d.getVar('FILE'))
+        raise bb.build.FuncFailed("%s inherits useradd but doesn't set USERADD_PACKAGES" % d.getVar('FILE', False))
 
     for pkg in useradd_packages.split():
         if not d.getVar('USERADD_PARAM_%s' % pkg, True) and not d.getVar('GROUPADD_PARAM_%s' % pkg, True) and not d.getVar('GROUPMEMS_PARAM_%s' % pkg, True):
-            bb.fatal("%s inherits useradd but doesn't set USERADD_PARAM, GROUPADD_PARAM or GROUPMEMS_PARAM for package %s" % (d.getVar('FILE'), pkg))
+            bb.fatal("%s inherits useradd but doesn't set USERADD_PARAM, GROUPADD_PARAM or GROUPMEMS_PARAM for package %s" % (d.getVar('FILE', False), pkg))
 
 python __anonymous() {
     if not bb.data.inherits_class('nativesdk', d) \
@@ -202,10 +202,10 @@ fakeroot python populate_packages_prepend () {
 
         # RDEPENDS setup
         rdepends = d.getVar("RDEPENDS_%s" % pkg, True) or ""
-        rdepends += ' ' + d.getVar('MLPREFIX') + 'base-passwd'
-        rdepends += ' ' + d.getVar('MLPREFIX') + 'shadow'
+        rdepends += ' ' + d.getVar('MLPREFIX', False) + 'base-passwd'
+        rdepends += ' ' + d.getVar('MLPREFIX', False) + 'shadow'
         # base-files is where the default /etc/skel is packaged
-        rdepends += ' ' + d.getVar('MLPREFIX') + 'base-files'
+        rdepends += ' ' + d.getVar('MLPREFIX', False) + 'base-files'
         d.setVar("RDEPENDS_%s" % pkg, rdepends)
 
     # Add the user/group preinstall scripts and RDEPENDS requirements

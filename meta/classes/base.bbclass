@@ -71,7 +71,7 @@ def base_dep_prepend(d):
     # INHIBIT_DEFAULT_DEPS doesn't apply to the patch command.  Whether or  not
     # we need that built is the responsibility of the patch function / class, not
     # the application.
-    if not d.getVar('INHIBIT_DEFAULT_DEPS'):
+    if not d.getVar('INHIBIT_DEFAULT_DEPS', False):
         if (d.getVar('HOST_SYS', True) != d.getVar('BUILD_SYS', True)):
             deps += " virtual/${TARGET_PREFIX}gcc virtual/${TARGET_PREFIX}compilerlibs virtual/libc "
     return deps

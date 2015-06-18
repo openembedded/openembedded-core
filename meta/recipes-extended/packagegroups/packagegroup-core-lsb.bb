@@ -204,8 +204,8 @@ RDEPENDS_packagegroup-core-lsb-python = "\
 "
 
 def get_libqt3(d):
-    if 'linuxstdbase' in d.getVar('DISTROOVERRIDES') or "":
-        if 'qt3' in d.getVar('BBFILE_COLLECTIONS') or "":
+    if 'linuxstdbase' in d.getVar('DISTROOVERRIDES', False) or "":
+        if 'qt3' in d.getVar('BBFILE_COLLECTIONS', False) or "":
             return 'libqt-mt3'
 
         bb.warn('The meta-qt3 layer should be added, this layer provides Qt 3.x' \

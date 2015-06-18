@@ -13,7 +13,7 @@ def setUpModule():
 class SkeletonBasicTest(oeRuntimeTest):
 
     @skipUnlessPassed('test_ssh')
-    @unittest.skipIf("systemd" == oeRuntimeTest.tc.d.getVar("VIRTUAL-RUNTIME_init_manager"), "Not appropiate for systemd image")
+    @unittest.skipIf("systemd" == oeRuntimeTest.tc.d.getVar("VIRTUAL-RUNTIME_init_manager", False), "Not appropiate for systemd image")
     def test_skeleton_availability(self):
         (status, output) = self.target.run('ls /etc/init.d/skeleton')
         self.assertEqual(status, 0, msg = "skeleton init script not found. Output:\n%s " % output)
@@ -22,7 +22,7 @@ class SkeletonBasicTest(oeRuntimeTest):
 
     @testcase(284)
     @skipUnlessPassed('test_skeleton_availability')
-    @unittest.skipIf("systemd" == oeRuntimeTest.tc.d.getVar("VIRTUAL-RUNTIME_init_manager"), "Not appropiate for systemd image")
+    @unittest.skipIf("systemd" == oeRuntimeTest.tc.d.getVar("VIRTUAL-RUNTIME_init_manager", False), "Not appropiate for systemd image")
     def test_skeleton_script(self):
         output1 = self.target.run("/etc/init.d/skeleton start")[1]
         (status, output2) = self.target.run(oeRuntimeTest.pscmd + ' | grep [s]keleton-test')

@@ -33,7 +33,7 @@ python do_package_tar () {
         localdata = bb.data.createCopy(d)
         root = "%s/%s" % (pkgdest, pkg)
 
-        overrides = localdata.getVar('OVERRIDES')
+        overrides = localdata.getVar('OVERRIDES', False)
         localdata.setVar('OVERRIDES', '%s:%s' % (overrides, pkg))
         bb.data.update_data(localdata)
 

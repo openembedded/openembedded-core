@@ -395,7 +395,7 @@ python write_specfile () {
 
             file_list = []
             walk_files(root, file_list, conffiles, dirfiles)
-            if not file_list and localdata.getVar('ALLOW_EMPTY') != "1":
+            if not file_list and localdata.getVar('ALLOW_EMPTY', False) != "1":
                 bb.note("Not creating empty RPM package for %s" % splitname)
             else:
                 bb.note("Creating RPM package for %s" % splitname)
@@ -504,7 +504,7 @@ python write_specfile () {
         # Now process files
         file_list = []
         walk_files(root, file_list, conffiles, dirfiles)
-        if not file_list and localdata.getVar('ALLOW_EMPTY') != "1":
+        if not file_list and localdata.getVar('ALLOW_EMPTY', False) != "1":
             bb.note("Not creating empty RPM package for %s" % splitname)
         else:
             spec_files_bottom.append('%%files -n %s' % splitname)

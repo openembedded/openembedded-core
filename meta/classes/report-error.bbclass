@@ -29,11 +29,11 @@ python errorreport_handler () {
 
         if isinstance(e, bb.event.BuildStarted):
             data = {}
-            machine = e.data.getVar("MACHINE")
+            machine = e.data.getVar("MACHINE", False)
             data['machine'] = machine
             data['build_sys'] = e.data.getVar("BUILD_SYS", True)
-            data['nativelsb'] = e.data.getVar("NATIVELSBSTRING")
-            data['distro'] = e.data.getVar("DISTRO")
+            data['nativelsb'] = e.data.getVar("NATIVELSBSTRING", False)
+            data['distro'] = e.data.getVar("DISTRO", False)
             data['target_sys'] = e.data.getVar("TARGET_SYS", True)
             data['failures'] = []
             data['component'] = e.getPkgs()[0]
@@ -64,7 +64,7 @@ python errorreport_handler () {
             jsondata = json.loads(errorreport_getdata(e))
             failures = jsondata['failures']
             if(len(failures) > 0):
-                filename = "error_report_" + e.data.getVar("BUILDNAME")+".txt"
+                filename = "error_report_" + e.data.getVar("BUILDNAME", False)+".txt"
                 datafile = errorreport_savedata(e, jsondata, filename)
                 bb.note("The errors for this build are stored in %s\nYou can send the errors to a reports server by running:\n  send-error-report %s [-s server]" % (datafile, datafile))
                 bb.note("The contents of these logs will be posted in public if you use the above command with the default server. Please ensure you remove any identifying or proprietary information when prompted before sending.")

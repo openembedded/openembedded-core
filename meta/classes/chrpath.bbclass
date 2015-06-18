@@ -64,7 +64,7 @@ def process_dir (rootdir, directory, d):
 
     rootdir = os.path.normpath(rootdir)
     cmd = d.expand('${CHRPATH_BIN}')
-    tmpdir = os.path.normpath(d.getVar('TMPDIR'))
+    tmpdir = os.path.normpath(d.getVar('TMPDIR', False))
     baseprefix = os.path.normpath(d.expand('${base_prefix}'))
     hostos = d.getVar("HOST_OS", True)
 

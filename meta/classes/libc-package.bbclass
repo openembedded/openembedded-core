@@ -204,7 +204,7 @@ python package_do_split_gconvs () {
 
     do_split_packages(d, locales_dir, file_regex='(.*)', output_pattern=bpn+'-localedata-%s', \
         description='locale definition for %s', hook=calc_locale_deps, extra_depends='')
-    d.setVar('PACKAGES', d.getVar('PACKAGES') + ' ' + d.getVar('MLPREFIX') + bpn + '-gconv')
+    d.setVar('PACKAGES', d.getVar('PACKAGES', False) + ' ' + d.getVar('MLPREFIX', False) + bpn + '-gconv')
 
     use_bin = d.getVar("GLIBC_INTERNAL_USE_BINARY_LOCALE", True)
 
@@ -310,7 +310,7 @@ python package_do_split_gconvs () {
         bb.note("generating locale %s (%s)" % (locale, encoding))
 
     def output_locale(name, locale, encoding):
-        pkgname = d.getVar('MLPREFIX') + 'locale-base-' + legitimize_package_name(name)
+        pkgname = d.getVar('MLPREFIX', False) + 'locale-base-' + legitimize_package_name(name)
         d.setVar('ALLOW_EMPTY_%s' % pkgname, '1')
         d.setVar('PACKAGES', '%s %s' % (pkgname, d.getVar('PACKAGES', True)))
         rprovides = ' %svirtual-locale-%s' % (mlprefix, legitimize_package_name(name))

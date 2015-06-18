@@ -425,7 +425,7 @@ def get_package_mapping (pkg, basepkg, d):
 def get_package_additional_metadata (pkg_type, d):
     base_key = "PACKAGE_ADD_METADATA"
     for key in ("%s_%s" % (base_key, pkg_type.upper()), base_key):
-        if d.getVar(key) is None:
+        if d.getVar(key, False) is None:
             continue
         d.setVarFlag(key, "type", "list")
         if d.getVarFlag(key, "separator") is None:
@@ -1154,7 +1154,7 @@ populate_packages[dirs] = "${D}"
 python package_fixsymlinks () {
     import errno
     pkgdest = d.getVar('PKGDEST', True)
-    packages = d.getVar("PACKAGES").split()
+    packages = d.getVar("PACKAGES", False).split()
 
     dangling_links = {}
     pkg_files = {}
