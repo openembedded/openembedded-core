@@ -58,6 +58,7 @@ SRC_URI += " \
         file://config.sh-64-le \
         file://config.sh-64-be \
         file://make_ext.pl-fix-regenerate-makefile-failed-while-cc-.patch \
+        file://t-run-switches.t-perl5-perl.patch \
 "
 
 # Fix test case issues
