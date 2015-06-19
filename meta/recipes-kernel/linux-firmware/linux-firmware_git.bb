@@ -12,7 +12,7 @@ LIC_FILES_CHKSUM = "file://LICENSE.radeon;md5=07b0c31777bd686d8e1609c6940b5e74\
                     file://LICENCE.xc5000;md5=1e170c13175323c32c7f4d0998d53f66 \
                     file://LICENCE.ralink-firmware.txt;md5=ab2c269277c45476fb449673911a2dfd \
                     file://LICENCE.qla2xxx;md5=f5ce8529ec5c17cb7f911d2721d90e91 \
-                    file://LICENCE.iwlwifi_firmware;md5=8b938534f77ffd453690eb34ed84ae8b \
+                    file://LICENCE.iwlwifi_firmware;md5=5106226b2863d00d8ed553221ddf8cd2 \
                     file://LICENCE.i2400m;md5=14b901969e23c41881327c0d9e4b7d36 \
                     file://LICENCE.atheros_firmware;md5=30a14c7823beedac9fa39c64fdd01a13 \
                     file://LICENCE.agere;md5=af0133de6b4a9b2522defd5f188afd31 \
@@ -24,7 +24,7 @@ LIC_FILES_CHKSUM = "file://LICENSE.radeon;md5=07b0c31777bd686d8e1609c6940b5e74\
                     file://LICENCE.Marvell;md5=9ddea1734a4baf3c78d845151f42a37a \
                    "
 
-SRCREV = "dec41bce44e0dff6a2c3358a958fadf22bf58858"
+SRCREV = "ec89525b2ab65f1d5ae4f67e27f0d525ddedd2ef"
 PE = "1"
 PV = "0.0+git${SRCPV}"
 
@@ -62,7 +62,7 @@ do_install() {
 
 PACKAGES =+ "${PN}-ralink \
              ${PN}-radeon \
-             ${PN}-marvell-license ${PN}-sd8686 ${PN}-sd8787 ${PN}-sd8797 \
+             ${PN}-marvell-license ${PN}-sd8686 ${PN}-sd8787 ${PN}-sd8797 ${PN}-pcie8897 ${PN}-usb8897 \
              ${PN}-wl12xx ${PN}-wl18xx ${PN}-vt6656 \
              ${PN}-rtl-license ${PN}-rtl8192cu ${PN}-rtl8192ce ${PN}-rtl8192su \
              ${PN}-broadcom-license ${PN}-bcm4329 ${PN}-bcm4330 ${PN}-bcm4334 \
@@ -132,6 +132,19 @@ FILES_${PN}-sd8797 = " \
   /lib/firmware/mrvl/sd8797_uapsta.bin \
 "
 RDEPENDS_${PN}-sd8797 += "${PN}-marvell-license"
+
+LICENSE_${PN}-pcie8897 = "Firmware-Marvell"
+FILES_${PN}-pcie8897 = " \
+  /lib/firmware/mrvl/pcie8897_uapsta.bin \
+"
+RDEPENDS_${PN}-pcie8897 += "${PN}-marvell-license"
+
+LICENSE_${PN}-usb8897 = "Firmware-Marvell"
+FILES_${PN}-usb8897 = " \
+  /lib/firmware/mrvl/usb8897_uapsta.bin \
+"
+RDEPENDS_${PN}-usb8897 += "${PN}-marvell-license"
+
 
 FILES_${PN}-rtl-license = " \
   /lib/firmware/LICENCE.rtlwifi_firmware.txt \
