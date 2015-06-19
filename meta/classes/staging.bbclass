@@ -57,6 +57,101 @@ sysroot_stage_all() {
 	sysroot_stage_dirs ${D} ${SYSROOT_DESTDIR}
 }
 
+python sysroot_strip () {
+    import stat, errno
+
+    dvar = d.getVar('SYSROOT_DESTDIR', True)
+    pn = d.getVar('PN', True)
+
+    os.chdir(dvar)
+
+    # Return type (bits):
+    # 0 - not elf
+    # 1 - ELF
+    # 2 - stripped
+    # 4 - executable
+    # 8 - shared library
+    # 16 - kernel module
+    def isELF(path):
+        type = 0
+        ret, result = oe.utils.getstatusoutput("file \"%s\"" % path.replace("\"", "\\\""))
+
+        if ret:
+            bb.error("split_and_strip_files: 'file %s' failed" % path)
+            return type
+
+        # Not stripped
+        if "ELF" in result:
+            type |= 1
+            if "not stripped" not in result:
+                type |= 2
+            if "executable" in result:
+                type |= 4
+            if "shared" in result:
+                type |= 8
+        return type
+
+
+    elffiles = {}
+    inodes = {}
+    libdir = os.path.abspath(dvar + os.sep + d.getVar("libdir", True))
+    baselibdir = os.path.abspath(dvar + os.sep + d.getVar("base_libdir", True))
+    if (d.getVar('INHIBIT_SYSROOT_STRIP', True) != '1'):
+        #
+        # First lets figure out all of the files we may have to process
+        #
+        for root, dirs, files in os.walk(dvar):
+            for f in files:
+                file = os.path.join(root, f)
+
+                try:
+                    ltarget = oe.path.realpath(file, dvar, False)
+                    s = os.lstat(ltarget)
+                except OSError as e:
+                    (err, strerror) = e.args
+                    if err != errno.ENOENT:
+                        raise
+                    # Skip broken symlinks
+                    continue
+                if not s:
+                    continue
+                # Check its an excutable
+                if (s[stat.ST_MODE] & stat.S_IXUSR) or (s[stat.ST_MODE] & stat.S_IXGRP) or (s[stat.ST_MODE] & stat.S_IXOTH) \
+                        or ((file.startswith(libdir) or file.startswith(baselibdir)) and ".so" in f):
+                    # If it's a symlink, and points to an ELF file, we capture the readlink target
+                    if os.path.islink(file):
+                        continue
+
+                    # It's a file (or hardlink), not a link
+                    # ...but is it ELF, and is it already stripped?
+                    elf_file = isELF(file)
+                    if elf_file & 1:
+                        if elf_file & 2:
+                            bb.warn("File '%s' from %s was already stripped, this will prevent future debugging!" % (file[len(dvar):], pn))
+                            continue
+
+                        if s.st_ino in inodes:
+                            os.unlink(file)
+                            os.link(inodes[s.st_ino], file)
+                        else:
+                            inodes[s.st_ino] = file
+                            # break hardlink
+                            bb.utils.copyfile(file, file)
+                            elffiles[file] = elf_file
+
+        #
+        # Now strip them (in parallel)
+        #
+        strip = d.getVar("STRIP", True)
+        sfiles = []
+        for file in elffiles:
+            elf_file = int(elffiles[file])
+            #bb.note("Strip %s" % file)
+            sfiles.append((file, elf_file, strip))
+
+        oe.utils.multiprocess_exec(sfiles, oe.package.runstrip)
+}
+
 do_populate_sysroot[dirs] = "${SYSROOT_DESTDIR}"
 do_populate_sysroot[umask] = "022"
 
@@ -91,6 +186,7 @@ def sysroot_checkhashes(covered, tasknames, fnids, fns, d, invalidtasks = None):
 
 python do_populate_sysroot () {
     bb.build.exec_func("sysroot_stage_all", d)
+    bb.build.exec_func("sysroot_strip", d)
     for f in (d.getVar('SYSROOT_PREPROCESS_FUNCS', True) or '').split():
         bb.build.exec_func(f, d)
     pn = d.getVar("PN", True)
