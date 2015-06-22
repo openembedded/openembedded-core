@@ -152,6 +152,7 @@ SYNOPSIS
         [-e | --image-name] [-s, --skip-build-check] [-D, --debug]
         [-r, --rootfs-dir] [-b, --bootimg-dir]
         [-k, --kernel-dir] [-n, --native-sysroot] [-f, --build-rootfs]
+        [-c, --compress-with]
 
 DESCRIPTION
     This command creates an OpenEmbedded image based on the 'OE
@@ -217,6 +218,9 @@ DESCRIPTION
 
     The -o option can be used to place the image in a directory with a
     different name and location.
+
+    The -c option is used to specify compressor utility to compress
+    an image. gzip, bzip2 and xz compressors are supported.
 
     The set of properties available for a given image type can be
     listed using the 'wic list' command.
