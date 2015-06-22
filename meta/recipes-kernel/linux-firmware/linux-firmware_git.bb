@@ -18,6 +18,7 @@ LICENSE = "\
     & Firmware-ibt_firmware \
     & Firmware-it913x \
     & Firmware-iwlwifi_firmware \
+    & Firmware-IntcSST2 \
     & Firmware-Marvell \
     & Firmware-mwl8335 \
     & Firmware-myri10ge_firmware \
@@ -38,6 +39,7 @@ LICENSE = "\
     & Firmware-xc4000 \
     & Firmware-xc5000 \
     & Firmware-xc5000c \
+    & Firmware-siano \
 "
 
 LIC_FILES_CHKSUM = "\
@@ -55,6 +57,7 @@ LIC_FILES_CHKSUM = "\
     file://LICENCE.ibt_firmware;md5=fdbee1ddfe0fb7ab0b2fcd6b454a366b \
     file://LICENCE.it913x;md5=1fbf727bfb6a949810c4dbfa7e6ce4f8 \
     file://LICENCE.iwlwifi_firmware;md5=5106226b2863d00d8ed553221ddf8cd2 \
+    file://LICENCE.IntcSST2;md5=9e7d8bea77612d7cc7d9e9b54b623062 \
     file://LICENCE.Marvell;md5=9ddea1734a4baf3c78d845151f42a37a \
     file://LICENCE.mwl8335;md5=9a6271ee0e644404b2ff3c61fd070983 \
     file://LICENCE.myri10ge_firmware;md5=42e32fb89f6b959ca222e25ac8df8fed \
@@ -74,9 +77,10 @@ LIC_FILES_CHKSUM = "\
     file://LICENCE.xc4000;md5=0ff51d2dc49fce04814c9155081092f0 \
     file://LICENCE.xc5000;md5=1e170c13175323c32c7f4d0998d53f66 \
     file://LICENCE.xc5000c;md5=12b02efa3049db65d524aeb418dd87ca \
-    file://LICENSE.amd-ucode;md5=81bff4eaa247896f54dd273ce0982611 \
+    file://LICENSE.amd-ucode;md5=3a0de451253cc1edbf30a3c621effee3 \
     file://LICENSE.dib0700;md5=f7411825c8a555a1a3e5eab9ca773431 \
     file://LICENSE.radeon;md5=07b0c31777bd686d8e1609c6940b5e74 \
+    file://LICENCE.siano;md5=602c79ae3f98f1e73d880fd9f940a418 \
 "
 
 # These are not common licenses, set NO_GENERIC_LICENSE for them
@@ -95,6 +99,7 @@ NO_GENERIC_LICENSE[Firmware-i2400m] = "LICENCE.i2400m"
 NO_GENERIC_LICENSE[Firmware-ibt_firmware] = "LICENCE.ibt_firmware"
 NO_GENERIC_LICENSE[Firmware-it913x] = "LICENCE.it913x"
 NO_GENERIC_LICENSE[Firmware-iwlwifi_firmware] = "LICENCE.iwlwifi_firmware"
+NO_GENERIC_LICENSE[Firmware-IntcSST2] = "LICENCE.IntcSST2"
 NO_GENERIC_LICENSE[Firmware-Marvell] = "LICENCE.Marvell"
 NO_GENERIC_LICENSE[Firmware-mwl8335] = "LICENCE.mwl8335"
 NO_GENERIC_LICENSE[Firmware-myri10ge_firmware] = "LICENCE.myri10ge_firmware"
@@ -117,8 +122,9 @@ NO_GENERIC_LICENSE[Firmware-xc5000c] = "LICENCE.xc5000c"
 NO_GENERIC_LICENSE[Firmware-amd-ucode] = "LICENSE.amd-ucode"
 NO_GENERIC_LICENSE[Firmware-dib0700] = "LICENSE.dib0700"
 NO_GENERIC_LICENSE[Firmware-radeon] = "LICENSE.radeon"
+NO_GENERIC_LICENSE[Firmware-siano] = "LICENCE.siano"
 
-SRCREV = "0e5f63771d0df6d7859f7c4100a74d737c62ac88"
+SRCREV = "3161bfa479d5e9ed4f46b57df9bcecbbc4f8eb3c"
 PE = "1"
 PV = "0.0+git${SRCPV}"
 
