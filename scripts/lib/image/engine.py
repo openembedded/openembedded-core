@@ -216,23 +216,13 @@ def wic_create(wks_file, rootfs_dir, bootimg_dir, kernel_dir,
         print "BUILDDIR not found, exiting. (Did you forget to source oe-init-build-env?)"
         sys.exit(1)
 
-    direct_args = list()
-    direct_args.insert(0, compressor or "")
-    direct_args.insert(0, oe_builddir)
-    direct_args.insert(0, image_output_dir)
-    direct_args.insert(0, wks_file)
-    direct_args.insert(0, rootfs_dir)
-    direct_args.insert(0, bootimg_dir)
-    direct_args.insert(0, kernel_dir)
-    direct_args.insert(0, native_sysroot)
-    direct_args.insert(0, "direct")
-
     if debug:
         msger.set_loglevel('debug')
 
     cr = creator.Creator()
 
-    cr.main(direct_args)
+    cr.main(["direct", native_sysroot, kernel_dir, bootimg_dir, rootfs_dir,
+             wks_file, image_output_dir, oe_builddir, compressor or ""])
 
     print "\nThe image(s) were created using OE kickstart file:\n  %s" % wks_file
 
