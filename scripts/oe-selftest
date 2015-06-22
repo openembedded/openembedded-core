@@ -176,7 +176,7 @@ def main():
         suite = unittest.TestSuite()
         loader = unittest.TestLoader()
         loader.sortTestMethodsUsing = None
-        runner = unittest.TextTestRunner(verbosity=2)
+        runner = unittest.TextTestRunner(verbosity=2, resultclass=StampedResult)
         # we need to do this here, otherwise just loading the tests
         # will take 2 minutes (bitbake -e calls)
         oeSelfTest.testlayer_path = get_test_layer()
@@ -195,6 +195,17 @@ def main():
             return 0
         else:
             return 1
+
+class StampedResult(unittest.TextTestResult):
+    """
+    Custom TestResult that prints the time when a test starts.  As oe-selftest
+    can take a long time (ie a few hours) to run, timestamps help us understand
+    what tests are taking a long time to execute.
+    """
+    def startTest(self, test):
+        import time
+        self.stream.write(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()) + " - ")
+        super(StampedResult, self).startTest(test)
 
 if __name__ == "__main__":
     try:
