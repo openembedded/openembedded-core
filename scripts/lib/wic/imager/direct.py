@@ -33,6 +33,7 @@ from wic.utils.partitionedfs import Image
 from wic.utils.errors import CreatorError, ImageError
 from wic.imager.baseimager import BaseImageCreator
 from wic.plugin import pluginmgr
+from wic.utils.oe.misc import exec_cmd
 
 disk_methods = {
     "do_install_disk":None,
@@ -71,6 +72,7 @@ class DirectImageCreator(BaseImageCreator):
         self.bootimg_dir = bootimg_dir
         self.kernel_dir = kernel_dir
         self.native_sysroot = native_sysroot
+        self.compressor = compressor
 
     def __get_part_num(self, num, parts):
         """calculate the real partition number, accounting for partitions not
@@ -318,6 +320,13 @@ class DirectImageCreator(BaseImageCreator):
                                                         self.bootimg_dir,
                                                         self.kernel_dir,
                                                         self.native_sysroot)
+        # Compress the image
+        if self.compressor:
+            for disk_name, disk in self.__image.disks.items():
+                full_path = self._full_path(self.__imgdir, disk_name, "direct")
+                msger.debug("Compressing disk %s with %s" % \
+                            (disk_name, self.compressor))
+                exec_cmd("%s %s" % (self.compressor, full_path))
 
     def print_outimage_info(self):
         """
@@ -328,7 +337,11 @@ class DirectImageCreator(BaseImageCreator):
         parts = self._get_parts()
 
         for disk_name, disk in self.__image.disks.items():
-            full_path = self._full_path(self.__imgdir, disk_name, "direct")
+            extension = "direct" + {"gzip": ".gz",
+                                    "bzip2": ".bz2",
+                                    "xz": ".xz",
+                                    "": ""}.get(self.compressor)
+            full_path = self._full_path(self.__imgdir, disk_name, extension)
             msg += '  %s\n\n' % full_path
 
         msg += 'The following build artifacts were used to create the image(s):\n'
