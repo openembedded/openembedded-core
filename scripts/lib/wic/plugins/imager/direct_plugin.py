@@ -62,7 +62,7 @@ class DirectPlugin(ImagerPlugin):
         """
         Create direct image, called from creator as 'direct' cmd
         """
-        if len(args) != 7:
+        if len(args) != 8:
             raise errors.Usage("Extra arguments given")
 
         native_sysroot = args[0]
@@ -75,6 +75,7 @@ class DirectPlugin(ImagerPlugin):
 
         image_output_dir = args[5]
         oe_builddir = args[6]
+        compressor = args[7]
 
         krootfs_dir = cls.__rootfs_dir_to_dict(rootfs_dir)
 
@@ -86,6 +87,7 @@ class DirectPlugin(ImagerPlugin):
                                             bootimg_dir,
                                             kernel_dir,
                                             native_sysroot,
+                                            compressor,
                                             creatoropts)
 
         try:

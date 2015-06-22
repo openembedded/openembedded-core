@@ -217,6 +217,7 @@ def wic_create(wks_file, rootfs_dir, bootimg_dir, kernel_dir,
         sys.exit(1)
 
     direct_args = list()
+    direct_args.insert(0, compressor or "")
     direct_args.insert(0, oe_builddir)
     direct_args.insert(0, image_output_dir)
     direct_args.insert(0, wks_file)

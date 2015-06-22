@@ -50,7 +50,7 @@ class DirectImageCreator(BaseImageCreator):
     """
 
     def __init__(self, oe_builddir, image_output_dir, rootfs_dir, bootimg_dir,
-                 kernel_dir, native_sysroot, creatoropts=None):
+                 kernel_dir, native_sysroot, compressor, creatoropts=None):
         """
         Initialize a DirectImageCreator instance.
 
