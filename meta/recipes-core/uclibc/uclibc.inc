@@ -94,7 +94,9 @@ python () {
     # with conflicting march options to gcc. Here we
     # ask for MIPS32 ISA to match the chosen arch
     tune = d.getVar("DEFAULTTUNE", True)
-    if tune in ['mips32', 'mips32r2']:
+    if tune.startswith('mips32'):
+        import re
+        tune = re.sub('(el)*(-nf)*', '', tune)
         d.setVar('configmangle_append',
                  "/^### MIPS32_CHECK$/a\\\nCONFIG_MIPS_ISA_%s=y\n\n" % (tune.upper()))
     if "${OE_FEATURES}":
