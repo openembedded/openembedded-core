@@ -38,3 +38,8 @@ do_compile_prepend () {
 do_install_prepend (){
 	mkdir -p ${D}/${localstatedir}/lib
 }
+
+# Sudo insists on putting libraries into libexecdir
+INSANE_SKIP_${PN} += "libdir"
+INSANE_SKIP_${PN}-dev += "libdir"
+INSANE_SKIP_${PN}-dbg += "libdir"

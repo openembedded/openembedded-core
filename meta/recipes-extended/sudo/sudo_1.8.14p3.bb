@@ -33,4 +33,5 @@ do_install_append () {
 }
 
 FILES_${PN} += "${libdir}/tmpfiles.d"
-FILES_${PN}-dev += "${libdir}/${BPN}/lib*${SOLIBSDEV} ${libdir}/${BPN}/*.la"
+FILES_${PN}-dev += "${libexecdir}/${BPN}/lib*${SOLIBSDEV} ${libexecdir}/${BPN}/*.la \
+                    ${libexecdir}/lib*${SOLIBSDEV} ${libexecdir}/*.la"
