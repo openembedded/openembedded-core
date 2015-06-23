@@ -8,6 +8,9 @@
 #
 DEFAULTTUNE ?= "core2-32"
 
+# Set x86 target arch to i686, so that glibc enables SSE optimised memcpy, etc.
+X86ARCH32 ?= "i686"
+
 # Include the previous tune to pull in PACKAGE_EXTRA_ARCHS
 require conf/machine/include/tune-i586.inc
 
