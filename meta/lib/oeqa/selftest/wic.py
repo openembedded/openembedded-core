@@ -103,3 +103,33 @@ class Wic(oeSelfTest):
     def test11_help_kickstart(self):
         """Test wic help kickstart"""
         self.assertEqual(0, runCmd('wic help kickstart').status)
+
+    def test12_compress_gzip(self):
+        """Test compressing an image with gzip"""
+        self.assertEqual(0, runCmd("wic create directdisk "
+                                   "--image-name core-image-minimal "
+                                   "-c gzip").status)
+        self.assertEqual(1, len(glob(self.resultdir + \
+                                         "directdisk-*.direct.gz")))
+
+    def test13_compress_gzip(self):
+        """Test compressing an image with bzip2"""
+        self.assertEqual(0, runCmd("wic create directdisk "
+                                   "--image-name core-image-minimal "
+                                   "-c bzip2").status)
+        self.assertEqual(1, len(glob(self.resultdir + \
+                                         "directdisk-*.direct.bz2")))
+
+    def test14_compress_gzip(self):
+        """Test compressing an image with xz"""
+        self.assertEqual(0, runCmd("wic create directdisk "
+                                   "--image-name core-image-minimal "
+                                   "-c xz").status)
+        self.assertEqual(1, len(glob(self.resultdir + \
+                                         "directdisk-*.direct.xz")))
+
+    def test15_wrong_compressor(self):
+        """Test how wic breaks if wrong compressor is provided"""
+        self.assertEqual(2, runCmd("wic create directdisk "
+                                   "--image-name core-image-minimal "
+                                   "-c wrong", ignore_status=True).status)
