@@ -11,11 +11,19 @@ Upstream-Status: Inappropriate [embedded specific]
 
 Signed-off-by: Otavio Salvador <otavio@ossystems.com.br>
 
-Index: cmake-2.8.11/Modules/FindQt4.cmake
-===================================================================
---- cmake-2.8.11.orig/Modules/FindQt4.cmake
-+++ cmake-2.8.11/Modules/FindQt4.cmake
-@@ -569,7 +569,7 @@ endfunction()
+The patch was slightly adapted in order to match cmake 3.2.2:
+Instead of find_program, _find_qt4_program is now used.
+
+Signed-off-by: Moritz Blume <moritz.blume@bmw-carit.de>
+---
+ Modules/FindQt4.cmake | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/Modules/FindQt4.cmake b/Modules/FindQt4.cmake
+index 11091b5..6704769 100644
+--- a/Modules/FindQt4.cmake
++++ b/Modules/FindQt4.cmake
+@@ -522,7 +522,7 @@ endfunction()
  
  set(QT4_INSTALLED_VERSION_TOO_OLD FALSE)
  
@@ -23,36 +31,24 @@ Index: cmake-2.8.11/Modules/FindQt4.cmake
 +set(_QT4_QMAKE_NAMES qmake qmake2 qmake4 qmake-qt4 qmake-mac)
  _qt4_find_qmake("${_QT4_QMAKE_NAMES}" QT_QMAKE_EXECUTABLE QTVERSION)
  
- if (QT_QMAKE_EXECUTABLE AND QTVERSION)
-@@ -1157,19 +1157,19 @@ if (QT_QMAKE_EXECUTABLE AND QTVERSION)
-     )
+ if (QT_QMAKE_EXECUTABLE AND
+@@ -1148,12 +1148,12 @@ if (QT_QMAKE_EXECUTABLE AND
+   _find_qt4_program(QT_MOC_EXECUTABLE Qt4::moc moc-qt4 moc4 moc)
+   _find_qt4_program(QT_UIC_EXECUTABLE Qt4::uic uic-qt4 uic4 uic)
+   _find_qt4_program(QT_UIC3_EXECUTABLE Qt4::uic3 uic3)
+-  _find_qt4_program(QT_RCC_EXECUTABLE Qt4::rcc rcc)
+-  _find_qt4_program(QT_DBUSCPP2XML_EXECUTABLE Qt4::qdbuscpp2xml qdbuscpp2xml)
+-  _find_qt4_program(QT_DBUSXML2CPP_EXECUTABLE Qt4::qdbusxml2cpp qdbusxml2cpp)
++  _find_qt4_program(QT_RCC_EXECUTABLE Qt4::rcc rcc4 rcc)
++  _find_qt4_program(QT_DBUSCPP2XML_EXECUTABLE Qt4::qdbuscpp2xml qdbuscpp2xml4 qdbuscpp2xml)
++  _find_qt4_program(QT_DBUSXML2CPP_EXECUTABLE Qt4::qdbusxml2cpp qdbusxml2cpp4 qdbusxml2cpp)
+   _find_qt4_program(QT_LUPDATE_EXECUTABLE Qt4::lupdate lupdate-qt4 lupdate4 lupdate)
+   _find_qt4_program(QT_LRELEASE_EXECUTABLE Qt4::lrelease lrelease-qt4 lrelease4 lrelease)
+-  _find_qt4_program(QT_QCOLLECTIONGENERATOR_EXECUTABLE Qt4::qcollectiongenerator qcollectiongenerator-qt4 qcollectiongenerator)
++  _find_qt4_program(QT_QCOLLECTIONGENERATOR_EXECUTABLE Qt4::qcollectiongenerator qcollectiongenerator-qt4 qcollectiongenerator qcollectiongenerator4)
+   _find_qt4_program(QT_DESIGNER_EXECUTABLE Qt4::designer designer-qt4 designer4 designer)
+   _find_qt4_program(QT_LINGUIST_EXECUTABLE Qt4::linguist linguist-qt4 linguist4 linguist)
  
-   find_program(QT_RCC_EXECUTABLE
--    NAMES rcc
-+    NAMES rcc4 rcc
-     PATHS ${QT_BINARY_DIR}
-     NO_DEFAULT_PATH NO_CMAKE_FIND_ROOT_PATH
-     )
- 
-   find_program(QT_DBUSCPP2XML_EXECUTABLE
--    NAMES qdbuscpp2xml
-+    NAMES qdbuscpp2xml4 qdbuscpp2xml
-     PATHS ${QT_BINARY_DIR}
-     NO_DEFAULT_PATH NO_CMAKE_FIND_ROOT_PATH
-     )
- 
-   find_program(QT_DBUSXML2CPP_EXECUTABLE
--    NAMES qdbusxml2cpp
-+    NAMES qdbusxml2cp4 qdbusxml2cpp
-     PATHS ${QT_BINARY_DIR}
-     NO_DEFAULT_PATH NO_CMAKE_FIND_ROOT_PATH
-     )
-@@ -1187,7 +1187,7 @@ if (QT_QMAKE_EXECUTABLE AND QTVERSION)
-     )
- 
-   find_program(QT_QCOLLECTIONGENERATOR_EXECUTABLE
--    NAMES qcollectiongenerator-qt4 qcollectiongenerator
-+    NAMES qcollectiongenerator-qt4 qcollectiongenerator qcollectiongenerator4
-     PATHS ${QT_BINARY_DIR}
-     NO_DEFAULT_PATH NO_CMAKE_FIND_ROOT_PATH
-     )
+-- 
+1.9.1
+

@@ -2,16 +2,14 @@ require cmake.inc
 
 inherit cmake
 
-DEPENDS += "curl expat zlib libarchive"
-
-SRC_URI += "file://dont-run-cross-binaries.patch"
+DEPENDS += "curl expat zlib libarchive xz ncurses bzip2"
 
 SRC_URI_append_class-nativesdk = " \
     file://OEToolchainConfig.cmake \
     file://environment.d-cmake.sh"
 
-SRC_URI[md5sum] = "17c6513483d23590cbce6957ec6d1e66"
-SRC_URI[sha256sum] = "8c6574e9afabcb9fc66f463bb1f2f051958d86c85c37fccf067eb1a44a120e5e"
+SRC_URI[md5sum] = "2da57308071ea98b10253a87d2419281"
+SRC_URI[sha256sum] = "ade94e6e36038774565f2aed8866415443444fb7a362eb0ea5096e40d5407c78"
 
 # Strip ${prefix} from ${docdir}, set result into docdir_stripped
 python () {
@@ -30,7 +28,13 @@ python () {
 
 EXTRA_OECMAKE=" \
     -DCMAKE_DOC_DIR=${docdir_stripped}/cmake-${CMAKE_MAJOR_VERSION} \
-    -DCMAKE_USE_SYSTEM_LIBRARIES=1 \
+    -DCMAKE_USE_SYSTEM_LIBRARY_BZIP2=1 \
+    -DCMAKE_USE_SYSTEM_LIBRARY_CURL=1 \
+    -DCMAKE_USE_SYSTEM_LIBRARY_EXPAT=1 \
+    -DCMAKE_USE_SYSTEM_LIBRARY_FORM=1 \
+    -DCMAKE_USE_SYSTEM_LIBRARY_LIBARCHIVE=1 \
+    -DCMAKE_USE_SYSTEM_LIBRARY_LIBLZMA=1 \
+    -DCMAKE_USE_SYSTEM_LIBRARY_ZLIB=1 \
     -DKWSYS_CHAR_IS_SIGNED=1 \
     -DBUILD_CursesDialog=0 \
     ${@bb.utils.contains('DISTRO_FEATURES', 'largefile', '-DKWSYS_LFS_WORKS=1', '-DKWSYS_LFS_DISABLE=1', d)} \

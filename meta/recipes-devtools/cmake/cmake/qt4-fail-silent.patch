@@ -13,10 +13,21 @@ Upstream-Status: Pending
 
 Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
 
---- cmake-2.8.11/Modules/FindQt4.cmake	2013-07-04 10:20:42.092848274 +0100
-+++ cmake-2.8.11/Modules/FindQt4.cmake	2013-07-04 10:52:15.693380555 +0100
-@@ -1025,21 +1025,22 @@
-     set(_configs)
+The patch was slightly adapted in order to match cmake 3.2.2:
+Another set_property was introduced which had to be included
+within the if(QT_QTCORE_FOUND) statement.
+
+Signed-off-by: Moritz Blume <moritz.blume@bmw-carit.de>
+---
+ Modules/FindQt4.cmake | 39 ++++++++++++++++++++-------------------
+ 1 file changed, 20 insertions(+), 19 deletions(-)
+
+diff --git a/Modules/FindQt4.cmake b/Modules/FindQt4.cmake
+index 6704769..9048e35 100644
+--- a/Modules/FindQt4.cmake
++++ b/Modules/FindQt4.cmake
+@@ -1000,25 +1000,26 @@ if (QT_QMAKE_EXECUTABLE AND
+     endif()
    endmacro()
  
 -
@@ -27,6 +38,10 @@ Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
 -    INTERFACE_INCLUDE_DIRECTORIES
 -      "${QT_MKSPECS_DIR}/default"
 -      ${QT_INCLUDE_DIR}
+-  )
+-  set_property(TARGET Qt4::QtCore APPEND PROPERTY
+-    INTERFACE_COMPILE_DEFINITIONS
+-      $<$<NOT:$<CONFIG:Debug>>:QT_NO_DEBUG>
 -  )
 -  set_property(TARGET Qt4::QtCore PROPERTY
 -    INTERFACE_QT_MAJOR_VERSION 4
@@ -43,6 +58,10 @@ Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
 +        "${QT_MKSPECS_DIR}/default"
 +        ${QT_INCLUDE_DIR}
 +    )
++    set_property(TARGET Qt4::QtCore APPEND PROPERTY
++      INTERFACE_COMPILE_DEFINITIONS
++        $<$<NOT:$<CONFIG:Debug>>:QT_NO_DEBUG>
++    )
 +    set_property(TARGET Qt4::QtCore PROPERTY
 +      INTERFACE_QT_MAJOR_VERSION 4
 +    )
@@ -53,3 +72,6 @@ Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
  
    foreach(QT_MODULE ${QT_MODULES})
      _QT4_ADJUST_LIB_VARS(${QT_MODULE})
+-- 
+1.9.1
+
