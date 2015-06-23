@@ -739,7 +739,7 @@ def sstate_checkhashes(sq_fn, sq_task, sq_hash, sq_hashfn, d, siginfo=False):
         if localdata.getVar('BB_NO_NETWORK', True) == "1" and localdata.getVar('SSTATE_MIRROR_ALLOW_NETWORK', True) == "1":
             localdata.delVar('BB_NO_NETWORK')
 
-        def checkstatus(arg):
+        def checkstatus(thread_worker, arg):
             (task, sstatefile) = arg
 
             localdata2 = bb.data.createCopy(localdata)

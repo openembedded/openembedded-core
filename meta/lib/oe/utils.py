@@ -218,22 +218,30 @@ from threading import Thread
 
 class ThreadedWorker(Thread):
     """Thread executing tasks from a given tasks queue"""
-    def __init__(self, tasks):
+    def __init__(self, tasks, worker_init, worker_end):
         Thread.__init__(self)
         self.tasks = tasks
         self.daemon = True
 
+        self.worker_init = worker_init
+        self.worker_end = worker_end
+
     def run(self):
         from Queue import Empty
+
+        if self.worker_init is not None:
+            self.worker_init(self)
 
         while True:
             try:
                 func, args, kargs = self.tasks.get(block=False)
             except Empty:
+                if self.worker_end is not None:
+                    self.worker_end(self)
                 break
 
             try:
-                func(*args, **kargs)
+                func(self, *args, **kargs)
             except Exception, e:
                 print e
             finally:
@@ -241,12 +249,13 @@ class ThreadedWorker(Thread):
 
 class ThreadedPool:
     """Pool of threads consuming tasks from a queue"""
-    def __init__(self, num_workers, num_tasks):
+    def __init__(self, num_workers, num_tasks, worker_init=None,
+            worker_end=None):
         self.tasks = Queue(num_tasks)
         self.workers = []
 
         for _ in range(num_workers):
-            worker = ThreadedWorker(self.tasks)
+            worker = ThreadedWorker(self.tasks, worker_init, worker_end)
             self.workers.append(worker)
 
     def start(self):
