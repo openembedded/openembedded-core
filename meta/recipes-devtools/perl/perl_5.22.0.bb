@@ -60,6 +60,7 @@ SRC_URI += " \
         file://make_ext.pl-fix-regenerate-makefile-failed-while-cc-.patch \
         file://t-run-switches.t-perl5-perl.patch \
         file://ext-ODBM_File-hints-linux.pl-link-libgdbm_compat.patch \
+        file://ext-ODBM_File-t-odbm.t-fix-the-path-of-dbmt_common.p.patch \
 "
 
 # Fix test case issues
