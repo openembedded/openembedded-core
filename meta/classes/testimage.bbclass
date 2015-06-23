@@ -83,6 +83,9 @@ def get_tests_list(d, type="runtime"):
     testslist = []
     for testname in testsuites:
         if testname != "auto":
+            if testname.startswith("oeqa."):
+                testslist.append(testname)
+                continue
             found = False
             for p in bbpath:
                 if os.path.exists(os.path.join(p, 'lib', 'oeqa', type, testname + '.py')):
