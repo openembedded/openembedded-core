@@ -245,21 +245,6 @@ def check_do_install(rd, targetpath):
 def appendfile(args):
     import oe.recipeutils
 
-    if not args.targetpath.startswith('/'):
-        logger.error('Target path should start with /')
-        return 2
-
-    if os.path.isdir(args.newfile):
-        logger.error('Specified new file "%s" is a directory' % args.newfile)
-        return 2
-
-    if not os.path.exists(args.destlayer):
-        logger.error('Destination layer directory "%s" does not exist' % args.destlayer)
-        return 2
-    if not os.path.exists(os.path.join(args.destlayer, 'conf', 'layer.conf')):
-        logger.error('conf/layer.conf not found in destination layer "%s"' % args.destlayer)
-        return 2
-
     stdout = ''
     try:
         (stdout, _) = bb.process.run('LANG=C file -b %s' % args.newfile, shell=True)
@@ -349,13 +334,33 @@ def appendfile(args):
         return 3
 
 
+def layer(layerpath):
+    if not os.path.exists(os.path.join(layerpath, 'conf', 'layer.conf')):
+        raise argparse.ArgumentTypeError('{0!r} must be a path to a valid layer'.format(layerpath))
+    return layerpath
+
+
+def existing_file(filepath):
+    if not os.path.exists(filepath):
+        raise argparse.ArgumentTypeError('{0!r} must be an existing path'.format(filepath))
+    elif os.path.isdir(filepath):
+        raise argparse.ArgumentTypeError('{0!r} must be a file, not a directory'.format(filepath))
+    return filepath
+
+
+def target_path(targetpath):
+    if not os.path.isabs(targetpath):
+        raise argparse.ArgumentTypeError('{0!r} must be an absolute path, not relative'.format(targetpath))
+    return targetpath
+
+
 def register_command(subparsers):
     parser_appendfile = subparsers.add_parser('appendfile',
-                                                help='Create/update a bbappend to replace a file',
-                                                description='Creates a bbappend (or updates an existing one) to replace the specified file that appears in the target system, determining the recipe that packages the file and the required path and name for the bbappend automatically. Note that the ability to determine the recipe packaging a particular file depends upon the recipe\'s do_packagedata task having already run prior to running this command (which it will have when the recipe has been built successfully, which in turn will have happened if one or more of the recipe\'s packages is included in an image that has been built successfully).')
-    parser_appendfile.add_argument('destlayer', help='Base directory of the destination layer to write the bbappend to')
-    parser_appendfile.add_argument('targetpath', help='Path to the file to be replaced (as it would appear within the target image, e.g. /etc/motd)')
-    parser_appendfile.add_argument('newfile', help='Custom file to replace the target file with')
+                                              help='Create/update a bbappend to replace a file',
+                                              description='Creates a bbappend (or updates an existing one) to replace the specified file that appears in the target system, determining the recipe that packages the file and the required path and name for the bbappend automatically. Note that the ability to determine the recipe packaging a particular file depends upon the recipe\'s do_packagedata task having already run prior to running this command (which it will have when the recipe has been built successfully, which in turn will have happened if one or more of the recipe\'s packages is included in an image that has been built successfully).')
+    parser_appendfile.add_argument('destlayer', help='Base directory of the destination layer to write the bbappend to', type=layer)
+    parser_appendfile.add_argument('targetpath', help='Path to the file to be replaced (as it would appear within the target image, e.g. /etc/motd)', type=target_path)
+    parser_appendfile.add_argument('newfile', help='Custom file to replace the target file with', type=existing_file)
     parser_appendfile.add_argument('-r', '--recipe', help='Override recipe to apply to (default is to find which recipe already packages the file)')
     parser_appendfile.add_argument('-m', '--machine', help='Make bbappend changes specific to a machine only', metavar='MACHINE')
     parser_appendfile.add_argument('-w', '--wildcard-version', help='Use wildcard to make the bbappend apply to any recipe version', action='store_true')
