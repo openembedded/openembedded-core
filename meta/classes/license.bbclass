@@ -76,8 +76,12 @@ license_create_manifest() {
 				continue
 			fi
 
+			# remove + chars in any position this cover cases like
+			# GPL-2.0+-with-OpenSSL-exception -> GPL-2.0-with-OpenSSL-exception
+			lic="$(echo ${lic} | sed "s/\+//g")"
+
 			# to reference a license file trim trailing + symbol
-			if ! [ -e "${LICENSE_DIRECTORY}/${pkged_pn}/generic_${lic%+}" ]; then
+			if ! [ -e "${LICENSE_DIRECTORY}/${pkged_pn}/generic_${lic}" ]; then
 				bbwarn "The license listed ${lic} was not in the licenses collected for ${pkged_pn}"
 			fi
 		done
