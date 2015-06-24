@@ -14,8 +14,8 @@ SRC_URI = "ftp://ftp.gnupg.org/gcrypt/${BPN}/${BPN}-${PV}.tar.bz2 \
            file://dirmngr-uses-libgpg-error.patch \
           "
 
-SRC_URI[md5sum] = "c36f1a4c261ecc81fa5df551356c33f1"
-SRC_URI[sha256sum] = "64127eedd868510f2bccccb22c507a4878ffa07495db16a0f976c67f56426cb0"
+SRC_URI[md5sum] = "ff16648f14ec164c7afce1066019364b"
+SRC_URI[sha256sum] = "b5105a7160c39ba6e3aa53789b09f1bfac6e3422d15cc9f3a2f71f82320aa84c"
 
 EXTRA_OECONF = "--disable-ldap \
 		--disable-ccid-driver \
