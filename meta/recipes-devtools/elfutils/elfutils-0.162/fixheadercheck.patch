@@ -7,18 +7,17 @@ RP 2014/6/11
 
 Upstream-Status: Pending
 
-Index: elfutils-0.158/libelf/elf32_updatenull.c
-===================================================================
---- elfutils-0.158.orig/libelf/elf32_updatenull.c	2012-12-14 22:40:48.000000000 +0000
-+++ elfutils-0.158/libelf/elf32_updatenull.c	2014-06-11 16:35:43.417386291 +0000
-@@ -327,8 +327,8 @@
+diff --git a/libelf/elf32_updatenull.c b/libelf/elf32_updatenull.c
+--- a/libelf/elf32_updatenull.c
++++ b/libelf/elf32_updatenull.c
+@@ -339,8 +339,8 @@ __elfw2(LIBELFBITS,updatenull_wrlock) (Elf *elf, int *change_bop, size_t shnum)
  		     we test for the alignment of the section being large
  		     enough for the largest alignment required by a data
  		     block.  */
 -		  if (unlikely (! powerof2 (shdr->sh_addralign))
--		      || unlikely (shdr->sh_addralign < sh_align))
+-		      || unlikely ((shdr->sh_addralign ?: 1) < sh_align))
 +		  if (shdr->sh_size && (unlikely (! powerof2 (shdr->sh_addralign))
-+		      || unlikely (shdr->sh_addralign < sh_align)))
++		      || unlikely ((shdr->sh_addralign ?: 1) < sh_align)))
  		    {
  		      __libelf_seterrno (ELF_E_INVALID_ALIGN);
  		      return -1;

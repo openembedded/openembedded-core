@@ -12,18 +12,17 @@ can be used from dwfl_module_getsym and elflint.
 Rebase arm_func_value.patch from 0.159 to 0.160
 Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
 ---
- backends/arm_init.c          |  1 +
- backends/arm_symbol.c        |  8 ++++++++
- libdwfl/dwfl_module_getsym.c |  2 +-
- libebl/Makefile.am           |  3 ++-
- libebl/ebl-hooks.h           |  3 +++
- libebl/eblsymfuncval.c       | 43 +++++++++++++++++++++++++++++++++++++++++++
- libebl/libebl.h              | 11 +++++++++++
+ backends/arm_init.c          |    1 +
+ backends/arm_symbol.c        |    8 ++++++++
+ libdwfl/dwfl_module_getsym.c |    2 +-
+ libebl/Makefile.am           |    3 ++-
+ libebl/ebl-hooks.h           |    3 +++
+ libebl/eblsymfuncval.c       |   43 ++++++++++++++++++++++++++++++++++++++++++
+ libebl/libebl.h              |   11 +++++++++++
  7 files changed, 69 insertions(+), 2 deletions(-)
- create mode 100644 libebl/eblsymfuncval.c
 
 diff --git a/backends/arm_init.c b/backends/arm_init.c
-index 8b57d3f..2266829 100644
+index 7171186..9f03630 100644
 --- a/backends/arm_init.c
 +++ b/backends/arm_init.c
 @@ -78,6 +78,7 @@ arm_init (elf, machine, eh, ehlen)
@@ -31,18 +30,17 @@ index 8b57d3f..2266829 100644
    HOOK (eh, abi_cfi);
    HOOK (eh, check_reloc_target_type);
 +  HOOK (eh, sym_func_value);
+   HOOK (eh, symbol_type_name);
  
    /* We only unwind the core integer registers.  */
-   eh->frame_nregs = 16;
 diff --git a/backends/arm_symbol.c b/backends/arm_symbol.c
-index cd467ff..49fca55 100644
+index da4a50a..ccea03b 100644
 --- a/backends/arm_symbol.c
 +++ b/backends/arm_symbol.c
-@@ -129,3 +129,11 @@ arm_check_reloc_target_type (Ebl *ebl __attribute__ ((unused)), Elf64_Word sh_ty
- {
+@@ -130,6 +130,14 @@ arm_check_reloc_target_type (Ebl *ebl __attribute__ ((unused)), Elf64_Word sh_ty
    return sh_type == SHT_ARM_EXIDX;
  }
-+
+ 
 +/* ARM EABI says that the low bit indicates whether the function
 +   symbol value is a THUMB function or not.  Mask it off.  */
 +GElf_Addr
@@ -50,6 +48,10 @@ index cd467ff..49fca55 100644
 +{
 +  return val & ~(GElf_Addr)1;
 +}
++
+ const char *
+ arm_symbol_type_name (int type,
+ 		      char *buf __attribute__ ((unused)),
 diff --git a/libdwfl/dwfl_module_getsym.c b/libdwfl/dwfl_module_getsym.c
 index 42d2b67..fb192d7 100644
 --- a/libdwfl/dwfl_module_getsym.c
@@ -78,7 +80,7 @@ index ec4477b..889c21b 100644
  libebl_a_SOURCES = $(gen_SOURCES)
  
 diff --git a/libebl/ebl-hooks.h b/libebl/ebl-hooks.h
-index e1186f8..160a821 100644
+index 2e31446..9df945d 100644
 --- a/libebl/ebl-hooks.h
 +++ b/libebl/ebl-hooks.h
 @@ -191,5 +191,8 @@ bool EBLHOOK(unwind) (Ebl *ebl, Dwarf_Addr pc, ebl_tid_registers_t *setfunc,
@@ -140,10 +142,10 @@ index 0000000..c0b322f
 +  return ebl->sym_func_value (ebl, val);
 +}
 diff --git a/libebl/libebl.h b/libebl/libebl.h
-index bb993bf..40cf635 100644
+index 7dbf460..96c076b 100644
 --- a/libebl/libebl.h
 +++ b/libebl/libebl.h
-@@ -459,6 +459,17 @@ extern bool ebl_unwind (Ebl *ebl, Dwarf_Addr pc, ebl_tid_registers_t *setfunc,
+@@ -472,6 +472,17 @@ extern bool ebl_unwind (Ebl *ebl, Dwarf_Addr pc, ebl_tid_registers_t *setfunc,
  extern bool ebl_resolve_sym_value (Ebl *ebl, GElf_Addr *addr)
     __nonnull_attribute__ (2);
  
@@ -161,6 +163,3 @@ index bb993bf..40cf635 100644
  #ifdef __cplusplus
  }
  #endif
--- 
-1.9.1
-

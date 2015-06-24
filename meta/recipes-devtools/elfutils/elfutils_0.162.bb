@@ -5,10 +5,10 @@ LICENSE = "(GPLv3 & Elfutils-Exception)"
 LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 DEPENDS = "libtool bzip2 zlib virtual/libintl"
 
-SRC_URI = "https://fedorahosted.org/releases/e/l/elfutils/${PV}/elfutils-${PV}.tar.bz2"
+SRC_URI = "https://fedorahosted.org/releases/e/l/elfutils/${PV}/${BP}.tar.bz2"
 
-SRC_URI[md5sum] = "e1b9847c9a6a1ad340de8d47a863ec52"
-SRC_URI[sha256sum] = "570c91a1783fa5386aaa2dfdd08dda1de777c2b63bf3b9c1437d635ffdd7a070"
+SRC_URI[md5sum] = "9334cbcc0df7669b7bf07cf7fc3ad52c"
+SRC_URI[sha256sum] = "526106bc6be898b3b3281a66b83d64993aa0ef1b55b0416766868ad53d0a1951"
 
 SRC_URI += "\
         file://mempcpy.patch \
@@ -16,7 +16,6 @@ SRC_URI += "\
         file://Fix_elf_cvt_gunhash.patch \
         file://fixheadercheck.patch \
         file://0001-elf_getarsym-Silence-Werror-maybe-uninitialized-fals.patch \
-        file://0001-libelf-Fix-dir-traversal-vuln-in-ar-extraction.patch \
         file://0001-remove-the-unneed-checking.patch \
 "
 
