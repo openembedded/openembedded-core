@@ -5,14 +5,10 @@ Subject: [PATCH] also create old hash for compatibility
 
 Upstream-Status: Backport [debian]
 
----
- tools/c_rehash.in |    8 +++++++-
- 1 files changed, 7 insertions(+), 1 deletions(-)
-
-Index: openssl-1.0.2~beta3/tools/c_rehash.in
-===================================================================
---- openssl-1.0.2~beta3.orig/tools/c_rehash.in
-+++ openssl-1.0.2~beta3/tools/c_rehash.in
+diff --git a/tools/c_rehash.in b/tools/c_rehash.in
+index b086ff9..b777d79 100644
+--- a/tools/c_rehash.in
++++ b/tools/c_rehash.in
 @@ -8,8 +8,6 @@ my $prefix;
  
  my $openssl = $ENV{OPENSSL} || "openssl";
@@ -23,14 +19,14 @@ Index: openssl-1.0.2~beta3/tools/c_rehash.in
  my $symlink_exists=eval {symlink("",""); 1};
  my $removelinks = 1;
 @@ -18,10 +16,7 @@ my $removelinks = 1;
- while ( $ARGV[0] =~ '-.*' ) {
+ while ( $ARGV[0] =~ /^-/ ) {
      my $flag = shift @ARGV;
      last if ( $flag eq '--');
--    if ( $flag =~ /-old/) {
+-    if ( $flag eq '-old') {
 -	    $x509hash = "-subject_hash_old";
 -	    $crlhash = "-hash_old";
--    } elsif ( $flag =~ /-h/) {
-+    if ( $flag =~ /-h/) {
+-    } elsif ( $flag eq '-h') {
++    if ( $flag eq '-h') {
  	    help();
      } elsif ( $flag eq '-n' ) {
  	    $removelinks = 0;
@@ -52,7 +48,7 @@ Index: openssl-1.0.2~beta3/tools/c_rehash.in
  		$fname =~ s/'/'\\''/g;
  		my ($hash, $fprint) = `"$openssl" x509 $x509hash -fingerprint -noout -in "$fname"`;
  		chomp $hash;
-@@ -177,10 +175,20 @@ sub link_hash_cert {
+@@ -176,11 +174,21 @@ sub link_hash_cert {
  		$hashlist{$hash} = $fprint;
  }
  
