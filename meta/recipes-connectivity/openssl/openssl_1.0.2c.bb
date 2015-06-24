@@ -36,12 +36,11 @@ SRC_URI += "file://configure-targets.patch \
             file://ptest-deps.patch \
             file://run-ptest \
             file://crypto_use_bigint_in_x86-64_perl.patch \
-            file://0001-bn-bn_lcl.h-fix-MIPS-specific-gcc-version-check.patch \
             file://openssl-1.0.2a-x32-asm.patch \
            "
 
-SRC_URI[md5sum] = "a06c547dac9044161a477211049f60ef"
-SRC_URI[sha256sum] = "15b6393c20030aab02c8e2fe0243cb1d1d18062f6c095d67bca91871dc7f324a"
+SRC_URI[md5sum] = "8c8d81a9ae7005276e486702edbcd4b6"
+SRC_URI[sha256sum] = "0038ba37f35a6367c58f17a7a7f687953ef8ce4f9684bbdec63e62515ed36a83"
 
 PACKAGES =+ " \
 	${PN}-engines \
