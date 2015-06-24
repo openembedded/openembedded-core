@@ -436,7 +436,7 @@ def bbappend_recipe(rd, destlayerdir, srcfiles, install=None, wildcardver=False,
             for line in extralines:
                 if line[-1] == '\n':
                     line = line[:-1]
-                splitline = line.split(maxsplit=2)
+                splitline = line.split(None, 2)
                 if len(splitline) == 3:
                     bbappendlines.append(tuple(splitline))
                 else:
