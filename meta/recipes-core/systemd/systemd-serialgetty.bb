@@ -8,6 +8,8 @@ SERIAL_CONSOLE ?= "115200 ttyS0"
 
 SRC_URI = "file://serial-getty@.service"
 
+S = "${WORKDIR}"
+
 do_install() {
 	if [ ! -z "${SERIAL_CONSOLES}" ] ; then
 		default_baudrate=`echo "${SERIAL_CONSOLES}" | sed 's/\;.*//'`
