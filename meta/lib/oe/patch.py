@@ -334,17 +334,17 @@ class GitApplyTree(PatchTree):
         try:
             patchfilevar = 'PATCHFILE="%s"' % os.path.basename(patch['file'])
             try:
-                shellcmd = [patchfilevar, "git", "--work-tree=.", "am", "-3", "--keep-cr", "-p%s" % patch['strippath']]
+                shellcmd = [patchfilevar, "git", "--work-tree=%s" % reporoot, "am", "-3", "--keep-cr", "-p%s" % patch['strippath']]
                 return _applypatchhelper(shellcmd, patch, force, reverse, run)
             except CmdError:
                 # Need to abort the git am, or we'll still be within it at the end
                 try:
-                    shellcmd = ["git", "--work-tree=.", "am", "--abort"]
+                    shellcmd = ["git", "--work-tree=%s" % reporoot, "am", "--abort"]
                     runcmd(["sh", "-c", " ".join(shellcmd)], self.dir)
                 except CmdError:
                     pass
                 # Fall back to git apply
-                shellcmd = ["git", "--git-dir=.", "apply", "-p%s" % patch['strippath']]
+                shellcmd = ["git", "--git-dir=%s" % reporoot, "apply", "-p%s" % patch['strippath']]
                 try:
                     output = _applypatchhelper(shellcmd, patch, force, reverse, run)
                 except CmdError:
