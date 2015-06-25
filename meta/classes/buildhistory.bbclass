@@ -242,6 +242,9 @@ python buildhistory_emit_pkghistory() {
         pkginfo.size = int(pkgdata['PKGSIZE'])
 
         write_pkghistory(pkginfo, d)
+
+    # Create files-in-<package-name>.txt files containing a list of files of each recipe's package
+    bb.build.exec_func("buildhistory_list_pkg_files", d)
 }
 
 
@@ -435,6 +438,16 @@ buildhistory_list_files() {
 	( cd $1 && find . -printf "%M %-10u %-10g %10s %p -> %l\n" | sort -k5 | sed 's/ * -> $//' > $2 )
 }
 
+buildhistory_list_pkg_files() {
+        file_prefix="files-in-"
+
+        # Create individual files-in-package for each recipe's package
+        for pkgdir in $(find ${PKGDEST}/* -maxdepth 0 -type d); do
+                pkgname=$(basename ${pkgdir})
+                outfile="${BUILDHISTORY_DIR_PACKAGE}/${pkgname}/${file_prefix}${pkgname}.txt"
+                buildhistory_list_files ${pkgdir} ${outfile}
+        done
+}
 
 buildhistory_get_imageinfo() {
 	if [ "${@bb.utils.contains('BUILDHISTORY_FEATURES', 'image', '1', '0', d)}" = "0" ] ; then
