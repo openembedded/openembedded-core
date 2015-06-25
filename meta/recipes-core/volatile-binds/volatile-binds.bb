@@ -1,13 +1,15 @@
 SUMMARY = "Volatile bind mount setup and configuration for read-only-rootfs"
 DESCRIPTION = "${SUMMARY}"
 LICENSE = "MIT"
-LIC_FILES_CHKSUM = "file://../COPYING.MIT;md5=5750f3aa4ea2b00c2bf21b2b2a7b714d"
+LIC_FILES_CHKSUM = "file://COPYING.MIT;md5=5750f3aa4ea2b00c2bf21b2b2a7b714d"
 
 SRC_URI = "\
     file://mount-copybind \
     file://COPYING.MIT \
     file://volatile-binds.service.in \
 "
+
+S = "${WORKDIR}"
 
 inherit allarch systemd distro_features_check
 
