@@ -237,13 +237,14 @@ def _extract_source(srctree, keep_temp, devbranch, d):
         logger.info('Unpacking...')
         exec_task_func('do_unpack', False)
         srcsubdir = crd.getVar('S', True)
+        patchsubdir = srcsubdir
         if srcsubdir != workdir and os.path.dirname(srcsubdir) != workdir:
             # Handle if S is set to a subdirectory of the source
             srcsubdir = os.path.join(workdir, os.path.relpath(srcsubdir, workdir).split(os.sep)[0])
 
         scriptutils.git_convert_standalone_clone(srcsubdir)
 
-        patchdir = os.path.join(srcsubdir, 'patches')
+        patchdir = os.path.join(patchsubdir, 'patches')
         haspatches = False
         if os.path.exists(patchdir):
             if os.listdir(patchdir):
