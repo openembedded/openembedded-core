@@ -17,5 +17,5 @@ COMPATIBLE_HOST = '(i.86|x86_64).*-linux'
 
 RRECOMMENDS_${PN} += "xserver-xorg-module-libint10"
 
-SRC_URI[md5sum] = "3690a5356ed121b1a7dfb59a6dcf4bf9"
-SRC_URI[sha256sum] = "ce8b75e5a40e9dae76f2ac9e2880f7f73a848653ca2eed5880f52dc2c0d3aef8"
+SRC_URI[md5sum] = "a893c37c589f7a31cea929a5d896a0e2"
+SRC_URI[sha256sum] = "7bddf4d879dd6f67088ecb203a31e12334aab980174bd0909930a21f32e251c1"
