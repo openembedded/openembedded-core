@@ -27,7 +27,10 @@ for pm in $backend_list; do
 			;;
 
 		"ipk")
-			pm_installed=true
+			if [ -s "/var/lib/opkg/status" ]; then
+				pm_installed=true
+				break
+			fi
 			;;
 	esac
 done
