@@ -17,16 +17,15 @@ PACKAGECONFIG[popt] = "--without-included-popt,--with-included-popt,popt"
 
 RRECOMMENDS_${PN} = "avahi-daemon"
 
-SRC_URI = "http://distcc.googlecode.com/files/${BPN}-${PV}.tar.bz2 \
+SRC_URI = "git://github.com/distcc/distcc.git \
            file://separatebuilddir.patch \
            file://0001-zeroconf-Include-fcntl.h.patch \
            file://default \
            file://distccmon-gnome.desktop \
            file://distcc \
            file://distcc.service"
-
-SRC_URI[md5sum] = "a1a9d3853df7133669fffec2a9aab9f3"
-SRC_URI[sha256sum] = "f55dbafd76bed3ce57e1bbcdab1329227808890d90f4c724fcd2d53f934ddd89"
+SRCREV = "9a172d3d20042754a30c0cd9a5d63fd1a8120c31"
+S = "${WORKDIR}/git"
 
 inherit autotools pkgconfig update-rc.d useradd systemd
 
