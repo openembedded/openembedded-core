@@ -38,7 +38,7 @@ ADT_DIR = "${WORKDIR}/adt-installer/"
 S = "${WORKDIR}/opkg-${PV}"
 
 PV = "0.2.0"
-SRC_URI = "https://opkg.googlecode.com/files/opkg-${PV}.tar.gz \
+SRC_URI = "http://downloads.yoctoproject.org/releases/opkg/opkg-${PV}.tar.gz \
            file://wget_cache.patch \
            file://adt_installer \
            file://scripts/adt_installer_internal \
