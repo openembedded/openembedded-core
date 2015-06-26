@@ -5,16 +5,10 @@ HOMEPAGE = "http://www.remotesensing.org/libtiff/"
 
 SRC_URI = "ftp://ftp.remotesensing.org/pub/libtiff/tiff-${PV}.tar.gz \
            file://libtool2.patch \
-           file://libtiff-CVE-2013-1960.patch \
-           file://libtiff-CVE-2013-1961.patch \
-           file://libtiff-CVE-2013-4232.patch \
-           file://libtiff-CVE-2013-4243.patch \
-           file://libtiff-CVE-2013-4244.patch \
-           file://libtiff-CVE-2013-4231.patch \
-           file://tiff-CVE-2012-4564.patch "
+          "
 
-SRC_URI[md5sum] = "051c1068e6a0627f461948c365290410"
-SRC_URI[sha256sum] = "ea1aebe282319537fb2d4d7805f478dd4e0e05c33d0928baba76a7c963684872"
+SRC_URI[md5sum] = "9aee7107408a128c0c7b24286c0db900"
+SRC_URI[sha256sum] = "8cb1d90c96f61cdfc0bcf036acc251c9dbe6320334da941c7a83cfe1576ef890"
 
 inherit autotools
 
