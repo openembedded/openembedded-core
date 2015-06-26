@@ -133,3 +133,13 @@ class Wic(oeSelfTest):
         self.assertEqual(2, runCmd("wic create directdisk "
                                    "--image-name core-image-minimal "
                                    "-c wrong", ignore_status=True).status)
+
+    def test16_rootfs_indirect_recipes(self):
+        """Test usage of rootfs plugin with rootfs recipes"""
+        wks = "directdisk-multi-rootfs"
+        self.assertEqual(0, runCmd("wic create %s "
+                                   "--image-name core-image-minimal "
+                                   "--rootfs rootfs1=core-image-minimal "
+                                   "--rootfs rootfs2=core-image-minimal" \
+                                   % wks).status)
+        self.assertEqual(1, len(glob(self.resultdir + "%s*.direct" % wks)))
