@@ -34,6 +34,7 @@ inherit autotools
 
 export LDFLAGS += " -L${STAGING_LIBDIR} "
 CPPFLAGS += "-P"
+BUILD_CPPFLAGS += "-P"
 
 acpaths = "-I build/ -I build/ac-macros/"
 
