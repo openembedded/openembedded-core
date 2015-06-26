@@ -18,7 +18,6 @@ def errorreport_getdata(e):
 def errorreport_savedata(e, newdata, file):
     import json
     logpath = e.data.getVar('ERR_REPORT_DIR', True)
-    bb.utils.mkdirhier(logpath)
     datafile = os.path.join(logpath, file)
     with open(datafile, "w") as f:
         json.dump(newdata, f, indent=4, sort_keys=True)
@@ -27,7 +26,11 @@ def errorreport_savedata(e, newdata, file):
 python errorreport_handler () {
         import json
 
+        logpath = e.data.getVar('ERR_REPORT_DIR', True)
+        datafile = os.path.join(logpath, "error-report.txt")
+
         if isinstance(e, bb.event.BuildStarted):
+            bb.utils.mkdirhier(logpath)
             data = {}
             machine = e.data.getVar("MACHINE")
             data['machine'] = machine
@@ -38,7 +41,9 @@ python errorreport_handler () {
             data['failures'] = []
             data['component'] = e.getPkgs()[0]
             data['branch_commit'] = base_detect_branch(e.data) + ": " + base_detect_revision(e.data)
+            lock = bb.utils.lockfile(datafile + '.lock')
             errorreport_savedata(e, data, "error-report.txt")
+            bb.utils.unlockfile(lock)
 
         elif isinstance(e, bb.build.TaskFailed):
             task = e.task
@@ -56,12 +61,16 @@ python errorreport_handler () {
 
             else:
                 taskdata['log'] = "No Log"
+            lock = bb.utils.lockfile(datafile + '.lock')
             jsondata = json.loads(errorreport_getdata(e))
             jsondata['failures'].append(taskdata)
             errorreport_savedata(e, jsondata, "error-report.txt")
+            bb.utils.unlockfile(lock)
 
         elif isinstance(e, bb.event.BuildCompleted):
+            lock = bb.utils.lockfile(datafile + '.lock')
             jsondata = json.loads(errorreport_getdata(e))
+            bb.utils.unlockfile(lock)
             failures = jsondata['failures']
             if(len(failures) > 0):
                 filename = "error_report_" + e.data.getVar("BUILDNAME")+".txt"
