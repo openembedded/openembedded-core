@@ -835,6 +835,10 @@ def check_sanity_everybuild(status, d):
     if 'vdi' in d.getVar('IMAGE_FSTYPES', True) and 'live' in d.getVar('IMAGE_FSTYPES', True):
         status.addresult("Error, IMAGE_FSTYPES vdi and live can't be built together\n")
 
+    # Check /bin/sh links to dash or bash
+    real_sh = os.path.realpath('/bin/sh')
+    if not real_sh.endswith('/dash') and not real_sh.endswith('/bash'):
+        status.addresult("Error, /bin/sh links to %s, must be dash or bash\n" % real_sh)
 
 def check_sanity(sanity_data):
     class SanityStatus(object):
