@@ -13,6 +13,10 @@ SRC_URI = "git://git.kernel.org/pub/scm/linux/kernel/git/cjb/mmc-utils.git;branc
 
 S = "${WORKDIR}/git"
 
+do_configure_prepend() {
+    sed -i "s:-Werror::g" ${S}/Makefile
+}
+
 do_install() {
     install -d ${D}${bindir}
     install -m 0755 mmc ${D}${bindir}
