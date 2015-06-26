@@ -304,16 +304,30 @@ class Rootfs(object):
             self._exec_shell_cmd(['ldconfig', '-r', self.image_rootfs, '-c',
                                   'new', '-v'])
 
+    def _check_for_kernel_modules(self, modules_dir):
+        for root, dirs, files in os.walk(modules_dir, topdown=True):
+            for name in files:
+                found_ko = name.endswith(".ko")
+                if found_ko:
+                    return found_ko
+        return False
+
     def _generate_kernel_module_deps(self):
+        modules_dir = os.path.join(self.image_rootfs, 'lib', 'modules')
+        # if we don't have any modules don't bother to do the depmod
+        if not self._check_for_kernel_modules(modules_dir):
+            bb.note("No Kernel Modules found, not running depmod")
+            return
+
         kernel_abi_ver_file = oe.path.join(self.d.getVar('PKGDATA_DIR', True), "kernel-depmod",
                                            'kernel-abiversion')
         if not os.path.exists(kernel_abi_ver_file):
             bb.fatal("No kernel-abiversion file found (%s), cannot run depmod, aborting" % kernel_abi_ver_file)
 
         kernel_ver = open(kernel_abi_ver_file).read().strip(' \n')
-        modules_dir = os.path.join(self.image_rootfs, 'lib', 'modules', kernel_ver)
+        versioned_modules_dir = os.path.join(self.image_rootfs, modules_dir, kernel_ver)
 
-        bb.utils.mkdirhier(modules_dir)
+        bb.utils.mkdirhier(versioned_modules_dir)
 
         self._exec_shell_cmd(['depmodwrapper', '-a', '-b', self.image_rootfs, kernel_ver])
 
