@@ -36,5 +36,5 @@ PACKAGECONFIG[rpc] = "--enable-rpc=yes,--enable-rpc=no,libtirpc"
 PACKAGECONFIG[bsd] = "--enable-bsd_behaviour=yes,--enable-bsd_behaviour=no,"
 
 do_install() {
-	oe_runmake prefix=${D}${prefix} install
+	oe_runmake ROOTDIR=${D} install
 }
