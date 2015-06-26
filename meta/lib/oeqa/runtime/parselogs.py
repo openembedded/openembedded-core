@@ -198,6 +198,7 @@ class ParseLogsTest(oeRuntimeTest):
     def parse_logs(self, errors, ignore_errors, logs, lines_before = 10, lines_after = 10):
         results = {}
         rez = []
+        grep_output = ''
         for log in logs:
             result = None
             thegrep = self.build_grepcmd(errors, ignore_errors, log)
@@ -211,10 +212,10 @@ class ParseLogsTest(oeRuntimeTest):
                 for xrez in rez:
                     command = "grep \"\\"+str(xrez)+"\" -B "+str(lines_before)+" -A "+str(lines_after)+" "+str(log)
                     try:
-                        yrez = subprocess.check_output(command, shell=True)
+                        grep_output = subprocess.check_output(command, shell=True)
                     except:
                         pass
-                    results[log.replace('target_logs/','')][xrez]=yrez
+                    results[log.replace('target_logs/','')][xrez]=grep_output
         return results
 
     #get the output of dmesg and write it in a file. This file is added to log_locations.
