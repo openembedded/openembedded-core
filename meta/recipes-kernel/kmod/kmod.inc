@@ -16,9 +16,9 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=a6f89e2100d9b6cdffcea4f398e37343 \
                    "
 inherit autotools gtk-doc
 
-SRCREV = "d9c71758595cad72c8278179eabf17017615f704"
+SRCREV = "0d833715eaa65636dda2705b89359a1e0154dc58"
 # Lookout for PV bump too when SRCREV is changed
-PV = "20+git${SRCPV}"
+PV = "21+git${SRCPV}"
 
 SRC_URI = "git://git.kernel.org/pub/scm/utils/kernel/kmod/kmod.git \
            file://depmod-search.conf \
@@ -36,4 +36,8 @@ PACKAGECONFIG[logging] = " --enable-logging,--disable-logging"
 
 do_configure_prepend () {
         gtkdocize --docdir ${S}/libkmod/docs || touch ${S}/libkmod/docs/gtk-doc.make
+}
+
+do_configure_append () {
+	sed -i 's#}libtool#}${TARGET_SYS}-libtool#' ${B}/doltlibtool
 }
