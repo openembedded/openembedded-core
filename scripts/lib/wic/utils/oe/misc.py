@@ -25,6 +25,8 @@
 # Tom Zanussi <tom.zanussi (at] linux.intel.com>
 #
 
+from collections import defaultdict
+
 from wic import msger
 from wic.utils import runner
 
@@ -108,62 +110,38 @@ def add_wks_var(key, val):
 
 BOOTDD_EXTRA_SPACE = 16384
 
-__bitbake_env_lines = ""
+_BITBAKE_VARS = defaultdict(dict)
 
-def set_bitbake_env_lines(bitbake_env_lines):
-    global __bitbake_env_lines
-    __bitbake_env_lines = bitbake_env_lines
-
-def get_bitbake_env_lines():
-    return __bitbake_env_lines
-
-def find_bitbake_env_lines(image_name):
+def get_bitbake_var(var, image=None):
     """
-    If image_name is empty, plugins might still be able to use the
-    environment, so set it regardless.
+    Get bitbake variable value lazy way, i.e. run
+    'bitbake -e' only when variable is requested.
     """
-    if image_name:
-        bitbake_env_cmd = "bitbake -e %s" % image_name
-    else:
-        bitbake_env_cmd = "bitbake -e"
-    rc, bitbake_env_lines = __exec_cmd(bitbake_env_cmd)
-    if rc != 0:
-        print "Couldn't get '%s' output." % bitbake_env_cmd
-        print "Bitbake failed with error:\n%s\n" % bitbake_env_lines
-        return None
+    if image not in _BITBAKE_VARS:
+        # Get bitbake -e output
+        cmd = "bitbake -e"
+        if image:
+            cmd += " %s" % image
+        rc, lines = __exec_cmd(cmd)
+        if rc:
+            print "Couldn't get '%s' output." % cmd
+            print "Bitbake failed with error:\n%s\n" % lines
+            return
 
-    return bitbake_env_lines
+        # Parse bitbake -e output
+        for line in lines.split('\n'):
+            if "=" not in line:
+                continue
+            try:
+                key, val = line.split("=")
+            except ValueError:
+                continue
+            key = key.strip()
+            val = val.strip()
+            if key.replace('_', '').isalnum():
+                _BITBAKE_VARS[image][key] = val.strip('"')
 
-def find_artifact(bitbake_env_lines, variable):
-    """
-    Gather the build artifact for the current image (the image_name
-    e.g. core-image-minimal) for the current MACHINE set in local.conf
-    """
-    retval = ""
-
-    for line in bitbake_env_lines.split('\n'):
-        if get_line_val(line, variable):
-            retval = get_line_val(line, variable)
-            break
-
-    return retval
-
-def get_line_val(line, key):
-    """
-    Extract the value from the VAR="val" string
-    """
-    if line.startswith(key + "="):
-        stripped_line = line.split('=')[1]
-        stripped_line = stripped_line.replace('\"', '')
-        return stripped_line
-    return None
-
-def get_bitbake_var(key):
-    for line in __bitbake_env_lines.split('\n'):
-        if get_line_val(line, key):
-            val = get_line_val(line, key)
-            return val
-    return None
+    return _BITBAKE_VARS[image].get(var)
 
 def parse_sourceparams(sourceparams):
     """

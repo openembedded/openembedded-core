@@ -60,29 +60,6 @@ def verify_build_env():
     return True
 
 
-def find_artifacts(image_name):
-    """
-    Gather the build artifacts for the current image (the image_name
-    e.g. core-image-minimal) for the current MACHINE set in local.conf
-    """
-    bitbake_env_lines = misc.get_bitbake_env_lines()
-
-    rootfs_dir = kernel_dir = bootimg_dir = native_sysroot = ""
-
-    for line in bitbake_env_lines.split('\n'):
-        if misc.get_line_val(line, "IMAGE_ROOTFS"):
-            rootfs_dir = misc.get_line_val(line, "IMAGE_ROOTFS")
-            continue
-        if misc.get_line_val(line, "DEPLOY_DIR_IMAGE"):
-            kernel_dir = misc.get_line_val(line, "DEPLOY_DIR_IMAGE")
-            continue
-        if misc.get_line_val(line, "STAGING_DIR_NATIVE"):
-            native_sysroot = misc.get_line_val(line, "STAGING_DIR_NATIVE")
-            continue
-
-    return (rootfs_dir, kernel_dir, bootimg_dir, native_sysroot)
-
-
 CANNED_IMAGE_DIR = "lib/image/canned-wks" # relative to scripts
 SCRIPTS_CANNED_IMAGE_DIR = "scripts/" + CANNED_IMAGE_DIR
 

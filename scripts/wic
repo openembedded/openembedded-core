@@ -52,7 +52,7 @@ if bitbake_exe:
 else:
     bitbake_main = None
 
-from wic.utils.oe.misc import find_bitbake_env_lines, set_bitbake_env_lines
+from wic.utils.oe.misc import get_bitbake_var
 from wic.utils.errors import WicError
 from image import engine
 from image import help as hlp
@@ -141,12 +141,6 @@ def wic_create_subcommand(args, usage_str):
         else:
             print "Done.\n"
 
-    bitbake_env_lines = find_bitbake_env_lines(options.image_name)
-    if not bitbake_env_lines:
-        print "Couldn't get bitbake environment, exiting."
-        sys.exit(1)
-    set_bitbake_env_lines(bitbake_env_lines)
-
     bootimg_dir = ""
 
     if options.image_name:
@@ -160,9 +154,10 @@ def wic_create_subcommand(args, usage_str):
                             cookerdata.CookerConfiguration()):
                 sys.exit(1)
 
-        (rootfs_dir, kernel_dir, bootimg_dir, native_sysroot) \
-            = engine.find_artifacts(options.image_name)
-
+        rootfs_dir = get_bitbake_var("IMAGE_ROOTFS", options.image_name)
+        kernel_dir = get_bitbake_var("DEPLOY_DIR_IMAGE", options.image_name)
+        native_sysroot = get_bitbake_var("STAGING_DIR_NATIVE",
+                                         options.image_name)
     else:
         if options.build_rootfs:
             print "Image name is not specified, exiting. (Use -e/--image-name to specify it)\n"
@@ -243,12 +238,6 @@ def wic_list_subcommand(args, usage_str):
                       help="dump the possible values for image properties to a JSON file")
 
     (options, args) = parser.parse_args(args)
-
-    bitbake_env_lines = find_bitbake_env_lines(None)
-    if not bitbake_env_lines:
-        print "Couldn't get bitbake environment, exiting."
-        sys.exit(1)
-    set_bitbake_env_lines(bitbake_env_lines)
 
     if not engine.wic_list(args, scripts_path, options.properties_file):
         logging.error("Bad list arguments, exiting\n")
