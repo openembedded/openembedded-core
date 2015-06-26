@@ -143,3 +143,20 @@ class Wic(oeSelfTest):
                                    "--rootfs rootfs2=core-image-minimal" \
                                    % wks).status)
         self.assertEqual(1, len(glob(self.resultdir + "%s*.direct" % wks)))
+
+    def test17_rootfs_artifacts(self):
+        """Test usage of rootfs plugin with rootfs paths"""
+        vars = dict((var.lower(), get_bb_var(var, 'core-image-minimal')) \
+                        for var in ('STAGING_DATADIR', 'DEPLOY_DIR_IMAGE',
+                                    'STAGING_DIR_NATIVE', 'IMAGE_ROOTFS'))
+        vars['wks'] = "directdisk-multi-rootfs"
+        status = runCmd("wic create %(wks)s "
+                        "-b %(staging_datadir)s "
+                        "-k %(deploy_dir_image)s "
+                        "-n %(staging_dir_native)s "
+                        "--rootfs-dir rootfs1=%(image_rootfs)s "
+                        "--rootfs-dir rootfs2=%(image_rootfs)s" \
+                        % vars).status
+        self.assertEqual(0, status)
+        self.assertEqual(1, len(glob(self.resultdir + \
+                                     "%(wks)s-*.direct" % vars)))
