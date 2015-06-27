@@ -234,8 +234,16 @@ class Wic_PartData(Mic_PartData):
         for prefix in ("ext", "btrfs", "vfat", "squashfs"):
             if self.fstype.startswith(prefix):
                 method = getattr(self, "prepare_rootfs_" + prefix)
-                return method(rootfs, oe_builddir, rootfs_dir,
-                              native_sysroot, pseudo)
+                method(rootfs, oe_builddir, rootfs_dir, native_sysroot, pseudo)
+
+                self.source_file = rootfs
+
+                # get the rootfs size in the right units for kickstart (kB)
+                du_cmd = "du -Lbks %s" % rootfs
+                out = exec_cmd(du_cmd)
+                self.size = out.split()[0]
+
+                break
 
     def prepare_rootfs_ext(self, rootfs, oe_builddir, rootfs_dir,
                            native_sysroot, pseudo):
@@ -270,16 +278,6 @@ class Wic_PartData(Mic_PartData):
             (self.fstype, extra_imagecmd, rootfs, label_str, rootfs_dir)
         exec_native_cmd(pseudo + mkfs_cmd, native_sysroot)
 
-        # get the rootfs size in the right units for kickstart (kB)
-        du_cmd = "du -Lbks %s" % rootfs
-        out = exec_cmd(du_cmd)
-        rootfs_size = out.split()[0]
-
-        self.size = rootfs_size
-        self.source_file = rootfs
-
-        return 0
-
     def prepare_rootfs_btrfs(self, rootfs, oe_builddir, rootfs_dir,
                              native_sysroot, pseudo):
         """
@@ -312,14 +310,6 @@ class Wic_PartData(Mic_PartData):
         mkfs_cmd = "mkfs.%s -b %d -r %s %s %s" % \
             (self.fstype, rootfs_size * 1024, rootfs_dir, label_str, rootfs)
         exec_native_cmd(pseudo + mkfs_cmd, native_sysroot)
-
-        # get the rootfs size in the right units for kickstart (kB)
-        du_cmd = "du -Lbks %s" % rootfs
-        out = exec_cmd(du_cmd)
-        rootfs_size = out.split()[0]
-
-        self.size = rootfs_size
-        self.source_file = rootfs
 
     def prepare_rootfs_vfat(self, rootfs, oe_builddir, rootfs_dir,
                             native_sysroot, pseudo):
@@ -360,14 +350,6 @@ class Wic_PartData(Mic_PartData):
         chmod_cmd = "chmod 644 %s" % rootfs
         exec_cmd(chmod_cmd)
 
-        # get the rootfs size in the right units for kickstart (kB)
-        du_cmd = "du -Lbks %s" % rootfs
-        out = exec_cmd(du_cmd)
-        rootfs_size = out.split()[0]
-
-        self.set_size(rootfs_size)
-        self.set_source_file(rootfs)
-
     def prepare_rootfs_squashfs(self, rootfs, oe_builddir, rootfs_dir,
                                 native_sysroot, pseudo):
         """
@@ -376,16 +358,6 @@ class Wic_PartData(Mic_PartData):
         squashfs_cmd = "mksquashfs %s %s -noappend" % \
                        (rootfs_dir, rootfs)
         exec_native_cmd(pseudo + squashfs_cmd, native_sysroot)
-
-        # get the rootfs size in the right units for kickstart (kB)
-        du_cmd = "du -Lbks %s" % rootfs
-        out = exec_cmd(du_cmd)
-        rootfs_size = out.split()[0]
-
-        self.size = rootfs_size
-        self.source_file = rootfs
-
-        return 0
 
     def prepare_empty_partition_ext(self, rootfs, oe_builddir,
                                     native_sysroot):
