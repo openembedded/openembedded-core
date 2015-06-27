@@ -246,10 +246,7 @@ class Wic_PartData(Mic_PartData):
         """
         Prepare content for an ext2/3/4 rootfs partition.
         """
-
-        image_rootfs = rootfs_dir
-
-        du_cmd = "du -ks %s" % image_rootfs
+        du_cmd = "du -ks %s" % rootfs_dir
         out = exec_cmd(du_cmd)
         actual_rootfs_size = int(out.split()[0])
 
@@ -274,7 +271,7 @@ class Wic_PartData(Mic_PartData):
             label_str = "-L %s" % self.label
 
         mkfs_cmd = "mkfs.%s -F %s %s %s -d %s" % \
-            (self.fstype, extra_imagecmd, rootfs, label_str, image_rootfs)
+            (self.fstype, extra_imagecmd, rootfs, label_str, rootfs_dir)
         exec_native_cmd(pseudo + mkfs_cmd, native_sysroot)
 
         # get the rootfs size in the right units for kickstart (kB)
@@ -294,9 +291,7 @@ class Wic_PartData(Mic_PartData):
 
         Currently handles ext2/3/4 and btrfs.
         """
-        image_rootfs = rootfs_dir
-
-        du_cmd = "du -ks %s" % image_rootfs
+        du_cmd = "du -ks %s" % rootfs_dir
         out = exec_cmd(du_cmd)
         actual_rootfs_size = int(out.split()[0])
 
@@ -319,7 +314,7 @@ class Wic_PartData(Mic_PartData):
             label_str = "-L %s" % self.label
 
         mkfs_cmd = "mkfs.%s -b %d -r %s %s %s" % \
-            (self.fstype, rootfs_size * 1024, image_rootfs, label_str, rootfs)
+            (self.fstype, rootfs_size * 1024, rootfs_dir, label_str, rootfs)
         exec_native_cmd(pseudo + mkfs_cmd, native_sysroot)
 
         # get the rootfs size in the right units for kickstart (kB)
@@ -335,9 +330,7 @@ class Wic_PartData(Mic_PartData):
         """
         Prepare content for a vfat rootfs partition.
         """
-        image_rootfs = rootfs_dir
-
-        du_cmd = "du -bks %s" % image_rootfs
+        du_cmd = "du -bks %s" % rootfs_dir
         out = exec_cmd(du_cmd)
         blocks = int(out.split()[0])
 
@@ -365,7 +358,7 @@ class Wic_PartData(Mic_PartData):
         dosfs_cmd = "mkdosfs %s -S 512 -C %s %d" % (label_str, rootfs, blocks)
         exec_native_cmd(dosfs_cmd, native_sysroot)
 
-        mcopy_cmd = "mcopy -i %s -s %s/* ::/" % (rootfs, image_rootfs)
+        mcopy_cmd = "mcopy -i %s -s %s/* ::/" % (rootfs, rootfs_dir)
         exec_native_cmd(mcopy_cmd, native_sysroot)
 
         chmod_cmd = "chmod 644 %s" % rootfs
@@ -384,10 +377,8 @@ class Wic_PartData(Mic_PartData):
         """
         Prepare content for a squashfs rootfs partition.
         """
-        image_rootfs = rootfs_dir
-
         squashfs_cmd = "mksquashfs %s %s -noappend" % \
-                       (image_rootfs, rootfs)
+                       (rootfs_dir, rootfs)
         exec_native_cmd(pseudo + squashfs_cmd, native_sysroot)
 
         # get the rootfs size in the right units for kickstart (kB)
