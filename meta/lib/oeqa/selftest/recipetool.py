@@ -112,7 +112,7 @@ class RecipetoolTests(DevtoolBase):
     def test_recipetool_appendfile_binary(self):
         # Try appending a binary file
         # /bin/ls can be a symlink to /usr/bin/ls
-        ls = os.readlink("/bin/ls")
+        ls = os.path.realpath("/bin/ls")
         result = runCmd('recipetool appendfile %s /bin/ls %s -r coreutils' % (templayerdir, ls))
         self.assertIn('WARNING: ', result.output)
         self.assertIn('is a binary', result.output)
