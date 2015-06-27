@@ -122,7 +122,12 @@ def get_bitbake_var(var, image=None):
         cmd = "bitbake -e"
         if image:
             cmd += " %s" % image
+
+        log_level = msger.get_loglevel()
+        msger.set_loglevel('normal')
         rc, lines = __exec_cmd(cmd)
+        msger.set_loglevel(log_level)
+
         if rc:
             print "Couldn't get '%s' output." % cmd
             print "Bitbake failed with error:\n%s\n" % lines
