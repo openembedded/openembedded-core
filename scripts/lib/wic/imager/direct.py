@@ -90,74 +90,50 @@ class DirectImageCreator(BaseImageCreator):
                     return realnum + 1
                 return realnum
 
-    def __write_fstab(self, image_rootfs):
+    def _write_fstab(self, image_rootfs):
         """overriden to generate fstab (temporarily) in rootfs. This is called
         from _create, make sure it doesn't get called from
         BaseImage.create()
         """
-        if image_rootfs is None:
-            return None
+        if not image_rootfs:
+            return
 
-        fstab = image_rootfs + "/etc/fstab"
-        if not os.path.isfile(fstab):
-            return None
+        fstab_path = image_rootfs + "/etc/fstab"
+        if not os.path.isfile(fstab_path):
+            return
 
-        parts = self._get_parts()
+        with open(fstab_path) as fstab:
+            fstab_lines = fstab.readlines()
 
-        self._save_fstab(fstab)
-        fstab_lines = self._get_fstab(fstab, parts)
-        self._update_fstab(fstab_lines, parts)
-        self._write_fstab(fstab, fstab_lines)
+        if self._update_fstab(fstab_lines, self._get_parts()):
+            shutil.copyfile(fstab_path, fstab_path + ".orig")
 
-        return fstab
+            with open(fstab_path, "w") as fstab:
+                fstab.writelines(fstab_lines)
+
+            return fstab_path
 
     def _update_fstab(self, fstab_lines, parts):
         """Assume partition order same as in wks"""
-        for num, p in enumerate(parts, 1):
+        updated = False
+        for num, part in enumerate(parts, 1):
             pnum = self.__get_part_num(num, parts)
-            if not p.mountpoint or p.mountpoint == "/" or p.mountpoint == "/boot" or pnum == 0:
+            if not pnum or not part.mountpoint \
+               or part.mountpoint in ("/", "/boot"):
                 continue
 
-            part = ''
             # mmc device partitions are named mmcblk0p1, mmcblk0p2..
-            if p.disk.startswith('mmcblk'):
-                part = 'p'
+            prefix = 'p' if  part.disk.startswith('mmcblk') else ''
+            device_name = "/dev/%s%s%d" % (part.disk, prefix, pnum)
 
-            device_name = "/dev/" + p.disk + part + str(pnum)
+            opts = part.fsopts if part.fsopts else "defaults"
+            line = "\t".join([device_name, part.mountpoint, part.fstype,
+                              opts, "0", "0"]) + "\n"
 
-            opts = "defaults"
-            if p.fsopts:
-                opts = p.fsopts
+            fstab_lines.append(line)
+            updated = True
 
-            fstab_entry = device_name + "\t" + \
-                          p.mountpoint + "\t" + \
-                          p.fstype + "\t" + \
-                          opts + "\t0\t0\n"
-            fstab_lines.append(fstab_entry)
-
-    def _write_fstab(self, fstab, fstab_lines):
-        fstab = open(fstab, "w")
-        for line in fstab_lines:
-            fstab.write(line)
-        fstab.close()
-
-    def _save_fstab(self, fstab):
-        """Save the current fstab in rootfs"""
-        shutil.copyfile(fstab, fstab + ".orig")
-
-    def _restore_fstab(self, fstab):
-        """Restore the saved fstab in rootfs"""
-        if fstab is None:
-            return
-        shutil.move(fstab + ".orig", fstab)
-
-    def _get_fstab(self, fstab, parts):
-        """Return the desired contents of /etc/fstab."""
-        f = open(fstab, "r")
-        fstab_contents = f.readlines()
-        f.close()
-
-        return fstab_contents
+        return updated
 
     def set_bootimg_dir(self, bootimg_dir):
         """
@@ -250,7 +226,7 @@ class DirectImageCreator(BaseImageCreator):
             if not self.ks.handler.bootloader.source and p.mountpoint == "/boot":
                 self.ks.handler.bootloader.source = p.source
 
-        fstab = self.__write_fstab(self.rootfs_dir.get("ROOTFS_DIR"))
+        fstab_path = self._write_fstab(self.rootfs_dir.get("ROOTFS_DIR"))
 
         for p in parts:
             # need to create the filesystems in order to get their
@@ -277,7 +253,8 @@ class DirectImageCreator(BaseImageCreator):
                                        part_type=p.part_type,
                                        uuid=p.uuid)
 
-        self._restore_fstab(fstab)
+        if fstab_path:
+            shutil.move(fstab_path + ".orig", fstab_path)
 
         self.__image.layout_partitions(self.ptable_format)
 
