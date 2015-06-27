@@ -160,11 +160,15 @@ class Wic_PartData(Mic_PartData):
                 self.prepare_swap_partition(cr_workdir, oe_builddir,
                                             native_sysroot)
             elif self.fstype:
+                rootfs = "%s/fs_%s.%s" % (cr_workdir, self.label, self.fstype)
+                if os.path.isfile(rootfs):
+                    os.remove(rootfs)
                 for prefix in ("ext", "btrfs", "vfat", "squashfs"):
                     if self.fstype.startswith(prefix):
                         method = getattr(self,
                                          "prepare_empty_partition_" + prefix)
-                        method(cr_workdir, oe_builddir, native_sysroot)
+                        method(rootfs, oe_builddir, native_sysroot)
+                        self.source_file = rootfs
                         break
             return
 
@@ -383,16 +387,13 @@ class Wic_PartData(Mic_PartData):
 
         return 0
 
-    def prepare_empty_partition_ext(self, cr_workdir, oe_builddir,
+    def prepare_empty_partition_ext(self, rootfs, oe_builddir,
                                     native_sysroot):
         """
         Prepare an empty ext2/3/4 partition.
         """
-        fs = "%s/fs_%s.%s" % (cr_workdir, self.label, self.fstype)
-
-        os.path.isfile(fs) and os.remove(fs)
         dd_cmd = "dd if=/dev/zero of=%s bs=1k seek=%d count=0" % \
-            (fs, self.size)
+            (rootfs, self.size)
         exec_cmd(dd_cmd)
 
         extra_imagecmd = "-i 8192"
@@ -402,23 +403,16 @@ class Wic_PartData(Mic_PartData):
             label_str = "-L %s" % self.label
 
         mkfs_cmd = "mkfs.%s -F %s %s %s" % \
-            (self.fstype, extra_imagecmd, label_str, fs)
+            (self.fstype, extra_imagecmd, label_str, rootfs)
         exec_native_cmd(mkfs_cmd, native_sysroot)
 
-        self.source_file = fs
-
-        return 0
-
-    def prepare_empty_partition_btrfs(self, cr_workdir, oe_builddir,
+    def prepare_empty_partition_btrfs(self, rootfs, oe_builddir,
                                       native_sysroot):
         """
         Prepare an empty btrfs partition.
         """
-        fs = "%s/fs_%s.%s" % (cr_workdir, self.label, self.fstype)
-
-        os.path.isfile(fs) and os.remove(fs)
         dd_cmd = "dd if=/dev/zero of=%s bs=1k seek=%d count=0" % \
-            (fs, self.size)
+            (rootfs, self.size)
         exec_cmd(dd_cmd)
 
         label_str = ""
@@ -426,21 +420,14 @@ class Wic_PartData(Mic_PartData):
             label_str = "-L %s" % self.label
 
         mkfs_cmd = "mkfs.%s -b %d %s %s" % \
-            (self.fstype, self.size * 1024, label_str, fs)
+            (self.fstype, self.size * 1024, label_str, rootfs)
         exec_native_cmd(mkfs_cmd, native_sysroot)
 
-        self.source_file = fs
-
-        return 0
-
-    def prepare_empty_partition_vfat(self, cr_workdir, oe_builddir,
+    def prepare_empty_partition_vfat(self, rootfs, oe_builddir,
                                      native_sysroot):
         """
         Prepare an empty vfat partition.
         """
-        fs = "%s/fs_%s.%s" % (cr_workdir, self.label, self.fstype)
-        os.path.isfile(fs) and os.remove(fs)
-
         blocks = self.size
 
         label_str = "-n boot"
@@ -452,10 +439,6 @@ class Wic_PartData(Mic_PartData):
 
         chmod_cmd = "chmod 644 %s" % fs
         exec_cmd(chmod_cmd)
-
-        self.source_file = fs
-
-        return 0
 
     def prepare_empty_partition_squashfs(self, cr_workdir, oe_builddir,
                                          native_sysroot):
@@ -484,9 +467,6 @@ class Wic_PartData(Mic_PartData):
         fs_size = out.split()[0]
 
         self.size = fs_size
-        self.source_file = fs
-
-        return 0
 
     def prepare_swap_partition(self, cr_workdir, oe_builddir, native_sysroot):
         """
@@ -504,10 +484,6 @@ class Wic_PartData(Mic_PartData):
             label_str = "-L %s" % self.label
         mkswap_cmd = "mkswap %s -U %s %s" % (label_str, str(uuid.uuid1()), fs)
         exec_native_cmd(mkswap_cmd, native_sysroot)
-
-        self.source_file = fs
-
-        return 0
 
 class Wic_Partition(Mic_Partition):
     removedKeywords = Mic_Partition.removedKeywords
