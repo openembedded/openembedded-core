@@ -63,6 +63,10 @@ ignore_errors = {
         'mmci-pl18x: probe of fpga:0b failed with error -22',
         'Failed to load module "glx"'
         ] + common_errors,
+    'qemuarm64' : [
+        'Fatal server error:',
+        '(EE) Server terminated with error (1). Closing log file.',
+        ] + common_errors,
     'emenlow' : x86_common,
     'crownbay' : x86_common,
     'genericx86' : x86_common,
