@@ -160,7 +160,8 @@ class Wic_PartData(Mic_PartData):
                 self.prepare_swap_partition(cr_workdir, oe_builddir,
                                             native_sysroot)
             elif self.fstype:
-                rootfs = "%s/fs_%s.%s" % (cr_workdir, self.label, self.fstype)
+                rootfs = "%s/fs_%s.%s.%s" % (cr_workdir, self.label,
+                                             self.lineno, self.fstype)
                 if os.path.isfile(rootfs):
                     os.remove(rootfs)
                 for prefix in ("ext", "btrfs", "vfat", "squashfs"):
@@ -227,7 +228,8 @@ class Wic_PartData(Mic_PartData):
         pseudo += "export PSEUDO_NOSYMLINKEXP=%s;" % p_nosymlinkexp
         pseudo += "%s/usr/bin/pseudo " % native_sysroot
 
-        rootfs = "%s/rootfs_%s.%s" % (cr_workdir, self.label, self.fstype)
+        rootfs = "%s/rootfs_%s.%s.%s" % (cr_workdir, self.label,
+                                         self.lineno, self.fstype)
         if os.path.isfile(rootfs):
             os.remove(rootfs)
 
