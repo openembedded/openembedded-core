@@ -160,8 +160,12 @@ class Wic_PartData(Mic_PartData):
                 self.prepare_swap_partition(cr_workdir, oe_builddir,
                                             native_sysroot)
             elif self.fstype:
-                self.prepare_empty_partition(cr_workdir, oe_builddir,
-                                             native_sysroot)
+                for prefix in ("ext", "btrfs", "vfat", "squashfs"):
+                    if self.fstype.startswith(prefix):
+                        method = getattr(self,
+                                         "prepare_empty_partition_" + prefix)
+                        method(cr_workdir, oe_builddir, native_sysroot)
+                        break
             return
 
         plugins = pluginmgr.get_source_plugins()
@@ -223,23 +227,11 @@ class Wic_PartData(Mic_PartData):
         if os.path.isfile(rootfs):
             os.remove(rootfs)
 
-        if self.fstype.startswith("ext"):
-            return self.prepare_rootfs_ext(rootfs, oe_builddir,
-                                           rootfs_dir, native_sysroot,
-                                           pseudo)
-        elif self.fstype.startswith("btrfs"):
-            return self.prepare_rootfs_btrfs(rootfs, oe_builddir,
-                                             rootfs_dir, native_sysroot,
-                                             pseudo)
-
-        elif self.fstype.startswith("vfat"):
-            return self.prepare_rootfs_vfat(rootfs, oe_builddir,
-                                            rootfs_dir, native_sysroot,
-                                            pseudo)
-        elif self.fstype.startswith("squashfs"):
-            return self.prepare_rootfs_squashfs(rootfs, oe_builddir,
-                                                rootfs_dir, native_sysroot,
-                                                pseudo)
+        for prefix in ("ext", "btrfs", "vfat", "squashfs"):
+            if self.fstype.startswith(prefix):
+                method = getattr(self, "prepare_rootfs_" + prefix)
+                return method(rootfs, oe_builddir, rootfs_dir,
+                              native_sysroot, pseudo)
 
     def prepare_rootfs_ext(self, rootfs, oe_builddir, rootfs_dir,
                            native_sysroot, pseudo):
@@ -390,23 +382,6 @@ class Wic_PartData(Mic_PartData):
         self.source_file = rootfs
 
         return 0
-
-    def prepare_empty_partition(self, cr_workdir, oe_builddir, native_sysroot):
-        """
-        Prepare an empty partition.
-        """
-        if self.fstype.startswith("ext"):
-            return self.prepare_empty_partition_ext(cr_workdir, oe_builddir,
-                                                    native_sysroot)
-        elif self.fstype.startswith("btrfs"):
-            return self.prepare_empty_partition_btrfs(cr_workdir, oe_builddir,
-                                                      native_sysroot)
-        elif self.fstype.startswith("vfat"):
-            return self.prepare_empty_partition_vfat(cr_workdir, oe_builddir,
-                                                     native_sysroot)
-        elif self.fstype.startswith("squashfs"):
-            return self.prepare_empty_partition_squashfs(cr_workdir, oe_builddir,
-                                                         native_sysroot)
 
     def prepare_empty_partition_ext(self, cr_workdir, oe_builddir,
                                     native_sysroot):
