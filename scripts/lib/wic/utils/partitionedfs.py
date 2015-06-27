@@ -18,6 +18,7 @@
 # with this program; if not, write to the Free Software Foundation, Inc., 59
 # Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
+import os
 from wic import msger
 from wic.utils.errors import ImageError
 from wic.utils.oe.misc import exec_cmd, exec_native_cmd
@@ -356,6 +357,7 @@ class Image(object):
         for p in self.partitions:
             self.__write_partition(p['num'], p['source_file'],
                                    p['start'], p['size'], image_file)
+            os.rename(p['source_file'], image_file + '.p%d' % p['num'])
 
     def create(self):
         for dev in self.disks.keys():
