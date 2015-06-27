@@ -787,6 +787,11 @@ DESCRIPTION
                      random globally unique identifier (GUID) for the partition
                      and use it in bootloader configuration to specify root partition.
 
+         --uuid: This option is specific to wic. It specifies partition UUID.
+                 It's useful if preconfigured partition UUID is added to kernel command line
+                 in bootloader configuration before running wic. In this case .wks file can
+                 be generated or modified to set preconfigured parition UUID using this option.
+
     * bootloader
 
       This command allows the user to specify various bootloader
