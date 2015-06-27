@@ -74,8 +74,6 @@ class PluginMgr(object):
         path = os.path.abspath(os.path.expanduser(path))
 
         if not os.path.isdir(path):
-            msger.debug("Plugin dir is not a directory or does not exist: %s"\
-                          % path)
             return
 
         if path not in self.plugin_dirs:
