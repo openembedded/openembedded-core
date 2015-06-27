@@ -219,34 +219,36 @@ class Wic_PartData(Mic_PartData):
         pseudo += "export PSEUDO_NOSYMLINKEXP=%s;" % p_nosymlinkexp
         pseudo += "%s/usr/bin/pseudo " % native_sysroot
 
+        rootfs = "%s/rootfs_%s.%s" % (cr_workdir, self.label, self.fstype)
+        if os.path.isfile(rootfs):
+            os.remove(rootfs)
+
         if self.fstype.startswith("ext"):
-            return self.prepare_rootfs_ext(cr_workdir, oe_builddir,
+            return self.prepare_rootfs_ext(rootfs, oe_builddir,
                                            rootfs_dir, native_sysroot,
                                            pseudo)
         elif self.fstype.startswith("btrfs"):
-            return self.prepare_rootfs_btrfs(cr_workdir, oe_builddir,
+            return self.prepare_rootfs_btrfs(rootfs, oe_builddir,
                                              rootfs_dir, native_sysroot,
                                              pseudo)
 
         elif self.fstype.startswith("vfat"):
-            return self.prepare_rootfs_vfat(cr_workdir, oe_builddir,
+            return self.prepare_rootfs_vfat(rootfs, oe_builddir,
                                             rootfs_dir, native_sysroot,
                                             pseudo)
         elif self.fstype.startswith("squashfs"):
-            return self.prepare_rootfs_squashfs(cr_workdir, oe_builddir,
+            return self.prepare_rootfs_squashfs(rootfs, oe_builddir,
                                                 rootfs_dir, native_sysroot,
                                                 pseudo)
 
-    def prepare_rootfs_ext(self, cr_workdir, oe_builddir, rootfs_dir,
+    def prepare_rootfs_ext(self, rootfs, oe_builddir, rootfs_dir,
                            native_sysroot, pseudo):
         """
         Prepare content for an ext2/3/4 rootfs partition.
         """
 
         image_rootfs = rootfs_dir
-        rootfs = "%s/rootfs_%s.%s" % (cr_workdir, self.label ,self.fstype)
 
-        os.path.isfile(rootfs) and os.remove(rootfs)
         du_cmd = "du -ks %s" % image_rootfs
         out = exec_cmd(du_cmd)
         actual_rootfs_size = int(out.split()[0])
@@ -285,7 +287,7 @@ class Wic_PartData(Mic_PartData):
 
         return 0
 
-    def prepare_rootfs_btrfs(self, cr_workdir, oe_builddir, rootfs_dir,
+    def prepare_rootfs_btrfs(self, rootfs, oe_builddir, rootfs_dir,
                              native_sysroot, pseudo):
         """
         Prepare content for a btrfs rootfs partition.
@@ -293,9 +295,7 @@ class Wic_PartData(Mic_PartData):
         Currently handles ext2/3/4 and btrfs.
         """
         image_rootfs = rootfs_dir
-        rootfs = "%s/rootfs_%s.%s" % (cr_workdir, self.label, self.fstype)
 
-        os.path.isfile(rootfs) and os.remove(rootfs)
         du_cmd = "du -ks %s" % image_rootfs
         out = exec_cmd(du_cmd)
         actual_rootfs_size = int(out.split()[0])
@@ -330,15 +330,13 @@ class Wic_PartData(Mic_PartData):
         self.size = rootfs_size
         self.source_file = rootfs
 
-    def prepare_rootfs_vfat(self, cr_workdir, oe_builddir, rootfs_dir,
+    def prepare_rootfs_vfat(self, rootfs, oe_builddir, rootfs_dir,
                             native_sysroot, pseudo):
         """
         Prepare content for a vfat rootfs partition.
         """
         image_rootfs = rootfs_dir
-        rootfs = "%s/rootfs_%s.%s" % (cr_workdir, self.label, self.fstype)
 
-        os.path.isfile(rootfs) and os.remove(rootfs)
         du_cmd = "du -bks %s" % image_rootfs
         out = exec_cmd(du_cmd)
         blocks = int(out.split()[0])
@@ -381,15 +379,13 @@ class Wic_PartData(Mic_PartData):
         self.set_size(rootfs_size)
         self.set_source_file(rootfs)
 
-    def prepare_rootfs_squashfs(self, cr_workdir, oe_builddir, rootfs_dir,
+    def prepare_rootfs_squashfs(self, rootfs, oe_builddir, rootfs_dir,
                                 native_sysroot, pseudo):
         """
         Prepare content for a squashfs rootfs partition.
         """
         image_rootfs = rootfs_dir
-        rootfs = "%s/rootfs_%s.%s" % (cr_workdir, self.label ,self.fstype)
 
-        os.path.isfile(rootfs) and os.remove(rootfs)
         squashfs_cmd = "mksquashfs %s %s -noappend" % \
                        (image_rootfs, rootfs)
         exec_native_cmd(pseudo + squashfs_cmd, native_sysroot)
