@@ -122,13 +122,18 @@ def wic_create_subcommand(args, usage_str):
         logging.error("Can't build roofs as bitbake is not in the $PATH")
         sys.exit(1)
 
-    if not options.image_name and not (options.rootfs_dir and
-                                       options.bootimg_dir and
-                                       options.kernel_dir and
-                                       options.native_sysroot):
-        print "Build artifacts not completely specified, exiting."
-        print "  (Use 'wic -e' or 'wic -r -b -k -n' to specify artifacts)"
-        sys.exit(1)
+    if not options.image_name:
+        missed = []
+        for val, opt in [(options.rootfs_dir, 'rootfs-dir'),
+                         (options.bootimg_dir, 'bootimg-dir'),
+                         (options.kernel_dir, 'kernel-dir'),
+                         (options.native_sysroot, 'native-sysroot')]:
+            if not val:
+                missed.append(opt)
+        if missed:
+            print "The following build artifacts are not specified:"
+            print "  " + ", ".join(missed)
+            sys.exit(1)
 
     if not options.image_name:
         options.build_check = False
