@@ -121,9 +121,9 @@ class BitbakeTests(oeSelfTest):
     @testcase(1028)
     def test_environment(self):
         self.append_config("TEST_ENV=\"localconf\"")
+        self.addCleanup(self.remove_config, "TEST_ENV=\"localconf\"")
         result = runCmd('bitbake -e | grep TEST_ENV=')
         self.assertTrue('localconf' in result.output)
-        self.remove_config("TEST_ENV=\"localconf\"")
 
     @testcase(1029)
     def test_dry_run(self):
@@ -149,9 +149,9 @@ class BitbakeTests(oeSelfTest):
         result = runCmd('bitbake -r conf/prefile.conf -e | grep TEST_PREFILE=')
         self.assertTrue('prefile' in result.output)
         self.append_config("TEST_PREFILE=\"localconf\"")
+        self.addCleanup(self.remove_config, "TEST_PREFILE=\"localconf\"")
         result = runCmd('bitbake -r conf/prefile.conf -e | grep TEST_PREFILE=')
         self.assertTrue('localconf' in result.output)
-        self.remove_config("TEST_PREFILE=\"localconf\"")
 
     @testcase(1033)
     def test_postfile(self):
@@ -159,9 +159,9 @@ class BitbakeTests(oeSelfTest):
         self.track_for_cleanup(postconf)
         ftools.write_file(postconf , "TEST_POSTFILE=\"postfile\"")
         self.append_config("TEST_POSTFILE=\"localconf\"")
+        self.addCleanup(self.remove_config, "TEST_POSTFILE=\"localconf\"")
         result = runCmd('bitbake -R conf/postfile.conf -e | grep TEST_POSTFILE=')
         self.assertTrue('postfile' in result.output)
-        self.remove_config("TEST_POSTFILE=\"localconf\"")
 
     @testcase(1034)
     def test_checkuri(self):
@@ -183,8 +183,8 @@ class BitbakeTests(oeSelfTest):
         data = 'INCOMPATIBLE_LICENSE = "GPLv3"'
         conf = os.path.join(self.builddir, 'conf/local.conf')
         ftools.append_file(conf ,data)
+        self.addCleanup(ftools.remove_from_file, conf ,data)
         result = bitbake('readline', ignore_status=True)
         self.assertEqual(result.status, 0)
         self.assertFalse(os.path.isfile(os.path.join(self.builddir, 'tmp/deploy/licenses/readline/generic_GPLv3')))
         self.assertTrue(os.path.isfile(os.path.join(self.builddir, 'tmp/deploy/licenses/readline/generic_GPLv2')))
-        ftools.remove_from_file(conf ,data)
