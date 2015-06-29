@@ -82,9 +82,11 @@ def main():
 
     scriptutils.logger_setup_color(logger, args.color)
 
-    tinfoil_init(getattr(args, 'parserecipes', False))
-
-    ret = args.func(args)
+    try:
+        tinfoil_init(getattr(args, 'parserecipes', False))
+        ret = args.func(args)
+    except bb.BBHandledException:
+        ret = 1
 
     return ret
 
