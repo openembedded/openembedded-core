@@ -100,6 +100,11 @@ def add_include():
             ftools.append_file(os.path.join(builddir, "conf/local.conf"), \
                     "\n#include added by oe-selftest.py\ninclude selftest.inc")
 
+    if "#include added by oe-selftest.py" \
+        not in ftools.read_file(os.path.join(builddir, "conf/bblayers.conf")):
+            log.info("Adding: \"include bblayers.inc\" in bblayers.conf")
+            ftools.append_file(os.path.join(builddir, "conf/bblayers.conf"), \
+                    "\n#include added by oe-selftest.py\ninclude bblayers.inc")
 
 def remove_include():
     builddir = os.environ.get("BUILDDIR")
@@ -111,6 +116,11 @@ def remove_include():
             ftools.remove_from_file(os.path.join(builddir, "conf/local.conf"), \
                     "#include added by oe-selftest.py\ninclude selftest.inc")
 
+    if "#include added by oe-selftest.py" \
+        in ftools.read_file(os.path.join(builddir, "conf/bblayers.conf")):
+            log.info("Removing the include from bblayers.conf")
+            ftools.remove_from_file(os.path.join(builddir, "conf/bblayers.conf"), \
+                    "#include added by oe-selftest.py\ninclude bblayers.inc")
 
 def remove_inc_files():
     try:
@@ -120,6 +130,11 @@ def remove_inc_files():
                 if f == 'test_recipe.inc':
                     os.remove(os.path.join(root, f))
     except (AttributeError, OSError,) as e:    # AttributeError may happen if BUILDDIR is not set
+        pass
+
+    try:
+        os.remove(os.path.join(os.environ.get("BUILDDIR"), "conf/bblayers.inc"))
+    except:
         pass
 
 def get_tests(exclusive_modules=[], include_hidden=False):
@@ -166,7 +181,6 @@ def main():
                 except (AttributeError, ImportError) as e:
                     print e
                     pass
-
 
     if args.run_tests or args.run_all_tests:
         if not preflight_check():
