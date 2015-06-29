@@ -18,6 +18,7 @@ class OePkgdataUtilTests(oeSelfTest):
         logger.info('Running bitbake to generate pkgdata')
         bitbake('glibc busybox zlib bash')
 
+    @testcase(1203)
     def test_lookup_pkg(self):
         # Forward tests
         result = runCmd('oe-pkgdata-util lookup-pkg "glibc busybox"')
@@ -36,6 +37,7 @@ class OePkgdataUtilTests(oeSelfTest):
         self.assertEqual(result.status, 1)
         self.assertEqual(result.output, 'ERROR: The following packages could not be found: nonexistentpkg')
 
+    @testcase(1205)
     def test_read_value(self):
         result = runCmd('oe-pkgdata-util read-value PN libz1')
         self.assertEqual(result.output, 'zlib')
@@ -43,6 +45,7 @@ class OePkgdataUtilTests(oeSelfTest):
         pkgsize = int(result.output.strip())
         self.assertGreater(pkgsize, 1)
 
+    @testcase(1198)
     def test_find_path(self):
         result = runCmd('oe-pkgdata-util find-path /lib/libc.so.6')
         self.assertEqual(result.output, 'glibc: /lib/libc.so.6')
@@ -52,6 +55,7 @@ class OePkgdataUtilTests(oeSelfTest):
         self.assertEqual(result.status, 1)
         self.assertEqual(result.output, 'ERROR: Unable to find any package producing path /not/exist')
 
+    @testcase(1204)
     def test_lookup_recipe(self):
         result = runCmd('oe-pkgdata-util lookup-recipe "libc6-staticdev busybox"')
         self.assertEqual(result.output, 'glibc\nbusybox')
@@ -61,6 +65,7 @@ class OePkgdataUtilTests(oeSelfTest):
         self.assertEqual(result.status, 1)
         self.assertEqual(result.output, 'ERROR: The following packages could not be found: nonexistentpkg')
 
+    @testcase(1202)
     def test_list_pkgs(self):
         # No arguments
         result = runCmd('oe-pkgdata-util list-pkgs')
@@ -105,6 +110,7 @@ class OePkgdataUtilTests(oeSelfTest):
         pkglist = sorted(result.output.split())
         self.assertEqual(pkglist, ['libz-dbg', 'libz-dev', 'libz-doc'])
 
+    @testcase(1201)
     def test_list_pkg_files(self):
         def splitoutput(output):
             files = {}
@@ -193,6 +199,7 @@ class OePkgdataUtilTests(oeSelfTest):
         self.assertIn(os.path.join(mandir, 'man3/zlib.3'), files['libz-doc'])
         self.assertIn(os.path.join(libdir, 'libz.a'), files['libz-staticdev'])
 
+    @testcase(1200)
     def test_glob(self):
         tempdir = tempfile.mkdtemp(prefix='pkgdataqa')
         self.track_for_cleanup(tempdir)
@@ -213,6 +220,7 @@ class OePkgdataUtilTests(oeSelfTest):
         self.assertNotIn('libz-dev', resultlist)
         self.assertNotIn('libz-dbg', resultlist)
 
+    @testcase(1206)
     def test_specify_pkgdatadir(self):
         result = runCmd('oe-pkgdata-util -p %s lookup-pkg glibc' % get_bb_var('PKGDATA_DIR'))
         self.assertEqual(result.output, 'libc6')

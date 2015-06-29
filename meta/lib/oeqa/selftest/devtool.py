@@ -84,6 +84,7 @@ class DevtoolBase(oeSelfTest):
 
 class DevtoolTests(DevtoolBase):
 
+    @testcase(1158)
     def test_create_workspace(self):
         # Check preconditions
         workspacedir = os.path.join(self.builddir, 'workspace')
@@ -106,6 +107,7 @@ class DevtoolTests(DevtoolBase):
         self.assertNotIn(tempdir, result.output)
         self.assertIn(workspacedir, result.output)
 
+    @testcase(1159)
     def test_devtool_add(self):
         # Check preconditions
         workspacedir = os.path.join(self.builddir, 'workspace')
@@ -140,6 +142,7 @@ class DevtoolTests(DevtoolBase):
             bindir = bindir[1:]
         self.assertTrue(os.path.isfile(os.path.join(installdir, bindir, 'pv')), 'pv binary not found in D')
 
+    @testcase(1162)
     def test_devtool_add_library(self):
         # Check preconditions
         workspacedir = os.path.join(self.builddir, 'workspace')
@@ -180,6 +183,7 @@ class DevtoolTests(DevtoolBase):
         self.assertFalse(matches, 'Stamp files exist for recipe libftdi that should have been cleaned')
         self.assertFalse(os.path.isfile(os.path.join(staging_libdir, 'libftdi1.so.2.1.0')), 'libftdi binary still found in STAGING_LIBDIR after cleaning')
 
+    @testcase(1160)
     def test_devtool_add_fetch(self):
         # Check preconditions
         workspacedir = os.path.join(self.builddir, 'workspace')
@@ -226,6 +230,7 @@ class DevtoolTests(DevtoolBase):
         checkvars['SRC_URI'] = url.replace(testver, '${PV}')
         self._test_recipe_contents(recipefile, checkvars, [])
 
+    @testcase(1161)
     def test_devtool_add_fetch_git(self):
         # Check preconditions
         workspacedir = os.path.join(self.builddir, 'workspace')
@@ -277,6 +282,7 @@ class DevtoolTests(DevtoolBase):
         checkvars['SRCREV'] = checkrev
         self._test_recipe_contents(recipefile, checkvars, [])
 
+    @testcase(1164)
     def test_devtool_modify(self):
         # Check preconditions
         workspacedir = os.path.join(self.builddir, 'workspace')
@@ -328,6 +334,7 @@ class DevtoolTests(DevtoolBase):
         matches = glob.glob(stampprefix + '*')
         self.assertFalse(matches, 'Stamp files exist for recipe mdadm that should have been cleaned')
 
+    @testcase(1166)
     def test_devtool_modify_invalid(self):
         # Check preconditions
         workspacedir = os.path.join(self.builddir, 'workspace')
@@ -360,6 +367,7 @@ class DevtoolTests(DevtoolBase):
             self.assertNotEqual(result.status, 0, 'devtool modify on %s should have failed' % testrecipe)
             self.assertIn('ERROR: ', result.output, 'devtool modify on %s should have given an ERROR' % testrecipe)
 
+    @testcase(1165)
     def test_devtool_modify_git(self):
         # Check preconditions
         workspacedir = os.path.join(self.builddir, 'workspace')
@@ -393,6 +401,7 @@ class DevtoolTests(DevtoolBase):
         # Try building
         bitbake(testrecipe)
 
+    @testcase(1167)
     def test_devtool_modify_localfiles(self):
         # Check preconditions
         workspacedir = os.path.join(self.builddir, 'workspace')
@@ -425,6 +434,7 @@ class DevtoolTests(DevtoolBase):
         # Try building
         bitbake(testrecipe)
 
+    @testcase(1169)
     def test_devtool_update_recipe(self):
         # Check preconditions
         workspacedir = os.path.join(self.builddir, 'workspace')
@@ -471,6 +481,7 @@ class DevtoolTests(DevtoolBase):
             else:
                 raise AssertionError('Unexpected modified file in status: %s' % line)
 
+    @testcase(1172)
     def test_devtool_update_recipe_git(self):
         # Check preconditions
         workspacedir = os.path.join(self.builddir, 'workspace')
@@ -545,6 +556,7 @@ class DevtoolTests(DevtoolBase):
                         break
                 self.assertTrue(matched, 'Unexpected diff remove line: %s' % line)
 
+    @testcase(1170)
     def test_devtool_update_recipe_append(self):
         # Check preconditions
         workspacedir = os.path.join(self.builddir, 'workspace')
@@ -620,6 +632,7 @@ class DevtoolTests(DevtoolBase):
             self.assertEqual(expectedlines, f.readlines())
         # Deleting isn't expected to work under these circumstances
 
+    @testcase(1171)
     def test_devtool_update_recipe_append_git(self):
         # Check preconditions
         workspacedir = os.path.join(self.builddir, 'workspace')
@@ -716,6 +729,7 @@ class DevtoolTests(DevtoolBase):
             self.assertEqual(expectedlines, f.readlines())
         # Deleting isn't expected to work under these circumstances
 
+    @testcase(1163)
     def test_devtool_extract(self):
         # Check preconditions
         workspacedir = os.path.join(self.builddir, 'workspace')
@@ -729,6 +743,7 @@ class DevtoolTests(DevtoolBase):
         self.assertTrue(os.path.exists(os.path.join(tempdir, 'Makefile.am')), 'Extracted source could not be found')
         self.assertTrue(os.path.isdir(os.path.join(tempdir, '.git')), 'git repository for external source tree not found')
 
+    @testcase(1168)
     def test_devtool_reset_all(self):
         # Check preconditions
         workspacedir = os.path.join(self.builddir, 'workspace')

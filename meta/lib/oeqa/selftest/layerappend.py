@@ -51,6 +51,7 @@ SRC_URI_append += "file://appendtest.txt"
     def tearDownLocal(self):
         ftools.remove_from_file(self.builddir + "/conf/bblayers.conf", self.layerappend.replace("COREBASE", self.builddir + "/.."))
 
+    @testcase(1196)
     def test_layer_appends(self):
         corebase = get_bb_var("COREBASE")
         stagingdir = get_bb_var("STAGING_DIR_TARGET")
