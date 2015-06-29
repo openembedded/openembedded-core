@@ -334,30 +334,24 @@ class Image(object):
                 except:
                     pass
 
-    def __write_partition(self, num, source_file, start, size, image_file):
-        """
-        Install source_file contents into a partition.
-        """
-        if not source_file: # nothing to write
-            return
-
-        # Start is included in the size so need to substract one from the end.
-        end = start + size - 1
-        msger.debug("Installed %s in partition %d, sectors %d-%d, "
-                    "size %d sectors" % (source_file, num, start, end, size))
-
-        dd_cmd = "dd if=%s of=%s bs=%d seek=%d count=%d conv=notrunc" % \
-            (source_file, image_file, self.sector_size, start, size)
-        exec_cmd(dd_cmd)
-
-
     def assemble(self, image_file):
         msger.debug("Installing partitions")
 
-        for p in self.partitions:
-            self.__write_partition(p['num'], p['source_file'],
-                                   p['start'], p['size'], image_file)
-            os.rename(p['source_file'], image_file + '.p%d' % p['num'])
+        for part in self.partitions:
+            source = part['source_file']
+            if source:
+                # install source_file contents into a partition
+                cmd = "dd if=%s of=%s bs=%d seek=%d count=%d conv=notrunc" % \
+                      (source, image_file, self.sector_size,
+                       part['start'], part['size'])
+                exec_cmd(cmd)
+
+                msger.debug("Installed %s in partition %d, sectors %d-%d, "
+                            "size %d sectors" % \
+                            (source, part['num'], part['start'],
+                             part['start'] + part['size'] - 1, part['size']))
+
+                os.rename(source, image_file + '.p%d' % part['num'])
 
     def create(self):
         for dev in self.disks.keys():
