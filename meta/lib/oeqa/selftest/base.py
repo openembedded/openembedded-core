@@ -27,6 +27,8 @@ class oeSelfTest(unittest.TestCase):
         self.builddir = os.environ.get("BUILDDIR")
         self.localconf_path = os.path.join(self.builddir, "conf/local.conf")
         self.testinc_path = os.path.join(self.builddir, "conf/selftest.inc")
+        self.local_bblayers_path = os.path.join(self.builddir, "conf/bblayers.conf")
+        self.testinc_bblayers_path = os.path.join(self.builddir, "conf/bblayers.inc")
         self.testlayer_path = oeSelfTest.testlayer_path
         self._extra_tear_down_commands = []
         self._track_for_cleanup = []
@@ -45,6 +47,11 @@ class oeSelfTest(unittest.TestCase):
             for f in files:
                 if f == 'test_recipe.inc':
                     os.remove(os.path.join(root, f))
+        try:
+            os.remove(self.testinc_bblayers_path)
+        except OSError as e:
+            if e.errno != errno.ENOENT:
+                raise
         # tests might need their own setup
         # but if they overwrite this one they have to call
         # super each time, so let's give them an alternative
@@ -129,3 +136,18 @@ class oeSelfTest(unittest.TestCase):
         except OSError as e:
             if e.errno != errno.ENOENT:
                 raise
+
+    # write to <builddir>/conf/bblayers.inc
+    def write_bblayers_config(self, data):
+        self.log.debug("Writing to: %s\n%s\n" % (self.testinc_bblayers_path, data))
+        ftools.write_file(self.testinc_bblayers_path, data)
+
+    # append to <builddir>/conf/bblayers.inc
+    def append_bblayers_config(self, data):
+        self.log.debug("Appending to: %s\n%s\n" % (self.testinc_bblayers_path, data))
+        ftools.append_file(self.testinc_bblayers_path, data)
+
+    # remove data from <builddir>/conf/bblayers.inc
+    def remove_bblayers_config(self, data):
+        self.log.debug("Removing from: %s\n\%s\n" % (self.testinc_bblayers_path, data))
+        ftools.remove_from_file(self.testinc_bblayers_path, data)
