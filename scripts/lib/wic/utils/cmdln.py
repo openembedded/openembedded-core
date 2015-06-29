@@ -43,7 +43,6 @@ import sys
 import re
 import cmd
 import optparse
-from pprint import pprint
 import sys
 
 

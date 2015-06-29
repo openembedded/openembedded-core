@@ -16,7 +16,6 @@
 # Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 from wic import msger
-from wic.utils import errors
 
 class _Plugin(object):
     class __metaclass__(type):

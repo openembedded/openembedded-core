@@ -30,18 +30,10 @@
 
 import os
 import sys
-from abc import ABCMeta, abstractmethod
-import shlex
-import json
-import subprocess
-import shutil
 
-import os, sys, errno
 from wic import msger, creator
-from wic.utils import cmdln, misc, errors
-from wic.conf import configmgr
+from wic.utils import misc
 from wic.plugin import pluginmgr
-from wic.__version__ import VERSION
 from wic.utils.oe import misc
 
 

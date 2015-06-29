@@ -19,7 +19,7 @@ import os
 
 from wic import msger
 from wic import kickstart
-from wic.utils import misc, runner, errors
+from wic.utils import misc
 
 
 def get_siteconf():

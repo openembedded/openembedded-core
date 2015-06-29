@@ -21,10 +21,9 @@ import os
 import tempfile
 import shutil
 
-from wic import kickstart
 from wic import msger
 from wic.utils.errors import CreatorError
-from wic.utils import misc, runner, fs_related as fs
+from wic.utils import runner
 
 class BaseImageCreator(object):
     """Base class for image creation.

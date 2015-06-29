@@ -24,10 +24,8 @@
 # Tom Zanussi <tom.zanussi (at] linux.intel.com>
 #
 
-from wic import msger
-from wic.utils import misc, fs_related, errors, runner, cmdln
+from wic.utils import errors
 from wic.conf import configmgr
-from wic.plugin import pluginmgr
 
 import wic.imager.direct as direct
 from wic.pluginbase import ImagerPlugin

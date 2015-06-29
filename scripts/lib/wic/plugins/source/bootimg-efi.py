@@ -27,7 +27,6 @@
 import os
 import shutil
 
-from wic.utils.errors import ImageError
 from wic import kickstart, msger
 from wic.pluginbase import SourcePlugin
 from wic.utils.oe.misc import exec_cmd, exec_native_cmd, get_bitbake_var, \
