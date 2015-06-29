@@ -47,6 +47,8 @@ do_configure () {
 		-Ui_db \
 		-Ui_ndbm \
 		-Ui_gdbm \
+		-Ui_gdbm_ndbm \
+		-Ui_gdbmndbm \
 		-Di_shadow \
 		-Di_syslog \
 		-Duseperlio \
