@@ -89,7 +89,7 @@ def show(cmdln_or_args):
     else:
         cmd = cmdln_or_args
 
-    msg =  'running command: "%s"' % cmd
+    msg = 'running command: "%s"' % cmd
     if out: out = out.strip()
     if out:
         msg += ', with output::'

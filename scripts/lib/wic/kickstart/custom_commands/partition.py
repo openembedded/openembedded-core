@@ -157,7 +157,9 @@ class Wic_PartData(Mic_PartData):
 
         if not self.source:
             if not self.size:
-                msger.error("The %s partition has a size of zero.  Please specify a non-zero --size for that partition." % self.mountpoint)
+                msger.error("The %s partition has a size of zero.  Please "
+                            "specify a non-zero --size for that partition." % \
+                            self.mountpoint)
             if self.fstype and self.fstype == "swap":
                 self.prepare_swap_partition(cr_workdir, oe_builddir,
                                             native_sysroot)
@@ -178,9 +180,14 @@ class Wic_PartData(Mic_PartData):
         plugins = pluginmgr.get_source_plugins()
 
         if self.source not in plugins:
-            msger.error("The '%s' --source specified for %s doesn't exist.\n\tSee 'wic list source-plugins' for a list of available --sources.\n\tSee 'wic help source-plugins' for details on adding a new source plugin." % (self.source, self.mountpoint))
+            msger.error("The '%s' --source specified for %s doesn't exist.\n\t"
+                        "See 'wic list source-plugins' for a list of available"
+                        " --sources.\n\tSee 'wic help source-plugins' for "
+                        "details on adding a new source plugin." % \
+                        (self.source, self.mountpoint))
 
-        self._source_methods = pluginmgr.get_source_plugin_methods(self.source, partition_methods)
+        self._source_methods = pluginmgr.get_source_plugin_methods(\
+                                   self.source, partition_methods)
         self._source_methods["do_configure_partition"](self, self.sourceparams_dict,
                                                        cr, cr_workdir,
                                                        oe_builddir,
@@ -466,9 +473,10 @@ class Wic_Partition(Mic_Partition):
     removedAttrs = Mic_Partition.removedAttrs
 
     def _getParser(self):
-        def overhead_cb (option, opt_str, value, parser):
+        def overhead_cb(option, opt_str, value, parser):
             if value < 1:
-                raise OptionValueError("Option %s: invalid value: %r" % (option, value))
+                raise OptionValueError("Option %s: invalid value: %r" % \
+                                       (option, value))
             setattr(parser.values, option.dest, value)
 
         op = Mic_Partition._getParser(self)

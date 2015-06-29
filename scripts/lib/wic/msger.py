@@ -16,7 +16,8 @@
 # with this program; if not, write to the Free Software Foundation, Inc., 59
 # Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
-import os,sys
+import os
+import sys
 import re
 import time
 
@@ -37,8 +38,8 @@ __ALL__ = ['set_mode',
 # COLORs in ANSI
 INFO_COLOR = 32 # green
 WARN_COLOR = 33 # yellow
-ERR_COLOR  = 31 # red
-ASK_COLOR  = 34 # blue
+ERR_COLOR = 31 # red
+ASK_COLOR = 34 # blue
 NO_COLOR = 0
 
 PREFIX_RE = re.compile('^<(.*?)>\s*(.*)', re.S)
@@ -47,12 +48,12 @@ INTERACTIVE = True
 
 LOG_LEVEL = 1
 LOG_LEVELS = {
-                'quiet': 0,
-                'normal': 1,
-                'verbose': 2,
-                'debug': 3,
-                'never': 4,
-             }
+    'quiet': 0,
+    'normal': 1,
+    'verbose': 2,
+    'debug': 3,
+    'never': 4,
+}
 
 LOG_FILE_FP = None
 LOG_CONTENT = ''
@@ -75,7 +76,7 @@ def _general_print(head, color, msg=None, stream=None, level='normal'):
 
     errormsg = ''
     if CATCHERR_BUFFILE_FD > 0:
-        size = os.lseek(CATCHERR_BUFFILE_FD , 0, os.SEEK_END)
+        size = os.lseek(CATCHERR_BUFFILE_FD, 0, os.SEEK_END)
         os.lseek(CATCHERR_BUFFILE_FD, 0, os.SEEK_SET)
         errormsg = os.read(CATCHERR_BUFFILE_FD, size)
         os.ftruncate(CATCHERR_BUFFILE_FD, 0)
@@ -158,7 +159,7 @@ def _split_msg(head, msg):
     return head, msg
 
 def get_loglevel():
-    return (k for k,v in LOG_LEVELS.items() if v==LOG_LEVEL).next()
+    return (k for k, v in LOG_LEVELS.items() if v == LOG_LEVEL).next()
 
 def set_loglevel(level):
     global LOG_LEVEL

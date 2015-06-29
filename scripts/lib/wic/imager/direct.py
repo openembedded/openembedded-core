@@ -179,8 +179,8 @@ class DirectImageCreator(BaseImageCreator):
 
             if parts[i].mountpoint and not parts[i].fstype:
                 raise CreatorError("Failed to create disks, no --fstype "
-                                    "specified for partition with mountpoint "
-                                    "'%s' in the ks file")
+                                   "specified for partition with mountpoint "
+                                   "'%s' in the ks file")
 
             self._disk_names.append(disk_name)
 

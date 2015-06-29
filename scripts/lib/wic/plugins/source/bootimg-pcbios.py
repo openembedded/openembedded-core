@@ -56,7 +56,9 @@ class BootimgPcbiosPlugin(SourcePlugin):
             msger.error("Unsupported partition table: %s" % cr.ptable_format)
 
         if not os.path.exists(mbrfile):
-            msger.error("Couldn't find %s.  If using the -e option, do you have the right MACHINE set in local.conf?  If not, is the bootimg_dir path correct?" % mbrfile)
+            msger.error("Couldn't find %s.  If using the -e option, do you "
+                        "have the right MACHINE set in local.conf?  If not, "
+                        "is the bootimg_dir path correct?" % mbrfile)
 
         full_path = cr._full_path(workdir, disk_name, "direct")
         msger.debug("Installing MBR on disk %s as %s with size %s bytes" \

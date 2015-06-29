@@ -302,9 +302,8 @@ class Image(object):
                 msger.debug("partition %d: set UUID to %s" % \
                             (p['num'], p['uuid']))
                 exec_native_cmd("sgdisk --partition-guid=%d:%s %s" % \
-                                         (p['num'], p['uuid'],
-                                          d['disk'].device),
-                                        self.native_sysroot)
+                                (p['num'], p['uuid'], d['disk'].device),
+                                self.native_sysroot)
 
             if p['boot']:
                 flag_name = "legacy_boot" if d['ptable_format'] == 'gpt' else "boot"

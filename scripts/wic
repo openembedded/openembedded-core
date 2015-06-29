@@ -90,18 +90,24 @@ def wic_create_subcommand(args, usage_str):
     parser = optparse.OptionParser(usage=usage_str)
 
     parser.add_option("-o", "--outdir", dest="outdir",
-                      action="store", help="name of directory to create image in")
+                      help="name of directory to create image in")
     parser.add_option("-e", "--image-name", dest="image_name",
-                      action="store", help="name of the image to use the artifacts from e.g. core-image-sato")
-    parser.add_option("-r", "--rootfs-dir", dest="rootfs_dir",
-                      action="callback", callback=callback_rootfs_dir, type="string",
-                      help="path to the /rootfs dir to use as the .wks rootfs source")
+                      help="name of the image to use the artifacts from "
+                           "e.g. core-image-sato")
+    parser.add_option("-r", "--rootfs-dir", dest="rootfs_dir", type="string",
+                      action="callback", callback=callback_rootfs_dir,
+                      help="path to the /rootfs dir to use as the "
+                           ".wks rootfs source")
     parser.add_option("-b", "--bootimg-dir", dest="bootimg_dir",
-                      action="store", help="path to the dir containing the boot artifacts (e.g. /EFI or /syslinux dirs) to use as the .wks bootimg source")
+                      help="path to the dir containing the boot artifacts "
+                           "(e.g. /EFI or /syslinux dirs) to use as the "
+                           ".wks bootimg source")
     parser.add_option("-k", "--kernel-dir", dest="kernel_dir",
-                      action="store", help="path to the dir containing the kernel to use in the .wks bootimg")
+                      help="path to the dir containing the kernel to use "
+                           "in the .wks bootimg")
     parser.add_option("-n", "--native-sysroot", dest="native_sysroot",
-                      action="store", help="path to the native sysroot containing the tools to use to build the image")
+                      help="path to the native sysroot containing the tools "
+                           "to use to build the image")
     parser.add_option("-p", "--skip-build-check", dest="build_check",
                       action="store_false", default=True, help="skip the build check")
     parser.add_option("-f", "--build-rootfs", action="store_true", help="build rootfs")
@@ -173,7 +179,9 @@ def wic_create_subcommand(args, usage_str):
     if not wks_file.endswith(".wks"):
         wks_file = engine.find_canned_image(scripts_path, wks_file)
         if not wks_file:
-            print "No image named %s found, exiting.  (Use 'wic list images' to list available images, or specify a fully-qualified OE kickstart (.wks) filename)\n" % args[0]
+            print "No image named %s found, exiting.  (Use 'wic list images' "\
+                  "to list available images, or specify a fully-qualified OE "\
+                  "kickstart (.wks) filename)\n" % args[0]
             sys.exit(1)
 
     image_output_dir = ""

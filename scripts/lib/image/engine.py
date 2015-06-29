@@ -236,7 +236,10 @@ def wic_list(args, scripts_path, properties_file):
             wks_file = args[0]
             fullpath = find_canned_image(scripts_path, wks_file)
             if not fullpath:
-                print "No image named %s found, exiting.  (Use 'wic list images' to list available images, or specify a fully-qualified OE kickstart (.wks) filename)\n" % wks_file
+                print "No image named %s found, exiting. "\
+                      "(Use 'wic list images' to list available images, or "\
+                      "specify a fully-qualified OE kickstart (.wks) "\
+                      "filename)\n" % wks_file
                 sys.exit(1)
             list_canned_image_help(scripts_path, fullpath)
             return True
