@@ -17,3 +17,13 @@ SRC_URI[sha256sum] = "cc340338a2e28b40058ab9eb5354a21d53f88a1582ea21ba0bb185c37a
 inherit autotools texinfo
 
 BBCLASSEXTEND = "native nativesdk"
+
+do_install_append () {
+    install -d ${D}${includedir}/gdbm
+    install -m 0644 ${S}/dbm.h ${D}${includedir}/
+    install -m 0644 ${S}/ndbm.h ${D}${includedir}/
+    # Create a symlink to ndbm.h and gdbm.h in include/gdbm to let other packages to find
+    # these headers
+    ln -sf ../ndbm.h ${D}/${includedir}/gdbm/ndbm.h
+    ln -sf ../gdbm.h ${D}/${includedir}/gdbm/gdbm.h
+}
