@@ -40,7 +40,7 @@ do_install(){
 	mkdir -p ${D}${sysconfdir}/lsb-release.d
 	printf "LSB_VERSION=\"core-4.1-noarch:" > ${D}${sysconfdir}/lsb-release
 
-	if [ "${TARGET_ARCH}" = "i586" ];then
+	if [ "${TARGET_ARCH}" = "i586" ] || [ "${TARGET_ARCH}" = "i686" ];then
 		printf "core-4.1-ia32" >>  ${D}${sysconfdir}/lsb-release
 	else
 		printf "core-4.1-${TARGET_ARCH}" >>  ${D}${sysconfdir}/lsb-release
@@ -53,7 +53,7 @@ do_install(){
 	fi
 	echo "DISTRIB_DESCRIPTION=\"${DISTRO_NAME} ${DISTRO_VERSION}\"" >> ${D}${sysconfdir}/lsb-release
 
-	if [ "${TARGET_ARCH}" = "i586" ];then
+	if [ "${TARGET_ARCH}" = "i586" ] || [ "${TARGET_ARCH}" = "i686" ];then
 		mkdir -p ${D}${sysconfdir}/lsb-release.d
 		touch ${D}${sysconfdir}/lsb-release.d/graphics-${PV}-noarch
 		touch ${D}${sysconfdir}/lsb-release.d/desktop-${PV}-noarch
@@ -99,7 +99,7 @@ do_install_append(){
                ln -sf ld-linux-x86-64.so.2 ld-lsb-x86-64.so.2
                ln -sf ld-linux-x86-64.so.2 ld-lsb-x86-64.so.3
        fi
-       if [ "${TARGET_ARCH}" = "i586" ];then
+       if [ "${TARGET_ARCH}" = "i586" ] || [ "${TARGET_ARCH}" = "i686" ];then
 	       cd ${D}/${baselib}
                ln -sf ld-linux.so.2 ld-lsb.so.2
                ln -sf ld-linux.so.2 ld-lsb.so.3
