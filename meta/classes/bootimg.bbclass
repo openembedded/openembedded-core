@@ -249,6 +249,19 @@ build_hddimg() {
 			efi_hddimg_populate ${HDDDIR}
 		fi
 
+		# Check the size of ${HDDDIR}/rootfs.img, error out if it
+		# exceeds 4GB, it is the single file's max size of FAT fs.
+		if [ -f ${HDDDIR}/rootfs.img ]; then
+			rootfs_img_size=`stat -c '%s' ${HDDDIR}/rootfs.img`
+			max_size=`expr 4 \* 1024 \* 1024 \* 1024`
+			if [ $rootfs_img_size -gt $max_size ]; then
+				bberror "${HDDDIR}/rootfs.img execeeds 4GB,"
+				bberror "this doesn't work on FAT filesystem, you can try either of:"
+				bberror "1) Reduce the size of rootfs.img"
+				bbfatal "2) Use iso, vmdk or vdi to instead of hddimg\n"
+			fi
+		fi
+
 		build_fat_img ${HDDDIR} ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.hddimg
 
 		if [ "${PCBIOS}" = "1" ]; then
