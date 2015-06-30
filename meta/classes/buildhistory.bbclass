@@ -444,7 +444,13 @@ buildhistory_list_pkg_files() {
         # Create individual files-in-package for each recipe's package
         for pkgdir in $(find ${PKGDEST}/* -maxdepth 0 -type d); do
                 pkgname=$(basename ${pkgdir})
-                outfile="${BUILDHISTORY_DIR_PACKAGE}/${pkgname}/${file_prefix}${pkgname}.txt"
+                outfolder="${BUILDHISTORY_DIR_PACKAGE}/${pkgname}"
+                outfile="${outfolder}/${file_prefix}${pkgname}.txt"
+                # Make sure the output folder, exist so we can create the files-in-$pkgname.txt file
+                if [ ! -d ${outfolder} ] ; then
+                        bbdebug 2 "Folder ${outfolder} does not exist, file ${outfile} not created"
+                        continue
+                fi
                 buildhistory_list_files ${pkgdir} ${outfile}
         done
 }
