@@ -16,12 +16,12 @@ SRC_URI = "https://fedorahosted.org/releases/l/o/logrotate/logrotate-${PV}.tar.g
            file://disable-check-different-filesystems.patch \
             "
 
-SRC_URI[md5sum] = "49846e873dddea15964cd0355b9943ca"
-SRC_URI[sha256sum] = "46a1510ef4a1f4359edd5f361112cfd1523942e85ff28e6cbb0c81bad1829d0f"
+SRC_URI[md5sum] = "4492b145b6d542e4a2f41e77fa199ab0"
+SRC_URI[sha256sum] = "022769e3288c80981559a8421703c88e8438b447235e36dd3c8e97cd94c52545"
 
 PACKAGECONFIG ?= "\
-    ${@base_contains('DISTRO_FEATURES', 'acl', 'acl', '', d)} \
-    ${@base_contains('DISTRO_FEATURES', 'selinux', 'selinux', '', d)} \
+    ${@bb.utils.contains('DISTRO_FEATURES', 'acl', 'acl', '', d)} \
+    ${@bb.utils.contains('DISTRO_FEATURES', 'selinux', 'selinux', '', d)} \
 "
 
 PACKAGECONFIG[acl] = ",,acl"
@@ -35,13 +35,11 @@ CONFFILES_${PN} += "${localstatedir}/lib/logrotate.status \
 EXTRA_OEMAKE = "\
     LFS= \
     OS_NAME='${OS_NAME}' \
-    \
     'CC=${CC}' \
     'RPM_OPT_FLAGS=${CFLAGS}' \
     'EXTRA_LDFLAGS=${LDFLAGS}' \
-    \
-    ${@base_contains('PACKAGECONFIG', 'acl', 'WITH_ACL=yes', '', d)} \
-    ${@base_contains('PACKAGECONFIG', 'selinux', 'WITH_SELINUX=yes', '', d)} \
+    ${@bb.utils.contains('PACKAGECONFIG', 'acl', 'WITH_ACL=yes', '', d)} \
+    ${@bb.utils.contains('PACKAGECONFIG', 'selinux', 'WITH_SELINUX=yes', '', d)} \
 "
 
 # OS_NAME in the makefile defaults to `uname -s`. The behavior for
