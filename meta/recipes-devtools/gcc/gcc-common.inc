@@ -34,6 +34,7 @@ def get_gcc_multiarch_setting(bb, d):
     target_arch = d.getVar('TRANSLATED_TARGET_ARCH', True)
     multiarch_options = {
         "i586":    "--enable-targets=all",
+        "i686":    "--enable-targets=all",
         "powerpc": "--enable-targets=powerpc64",
         "mips":    "--enable-targets=all",
         "sparc":   "--enable-targets=all",

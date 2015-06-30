@@ -120,6 +120,7 @@ python gcc_multilib_setup() {
     gcc_target_config_files = {
         'x86_64'    : ['gcc/config/i386/t-linux64'],
         'i586'      : ['gcc/config/i386/t-linux64'],
+        'i686'      : ['gcc/config/i386/t-linux64'],
         'mips'      : ['gcc/config/mips/t-linux64'],
         'powerpc'   : ['gcc/config/rs6000/t-linux64'],
         'powerpc64' : ['gcc/config/rs6000/t-linux64'],
@@ -128,6 +129,7 @@ python gcc_multilib_setup() {
     gcc_header_config_files = {
         'x86_64'    : ['gcc/config/i386/linux64.h'],
         'i586'      : ['gcc/config/i386/linux64.h'],
+        'i686'      : ['gcc/config/i386/linux64.h'],
         'mips'      : ['gcc/config/mips/linux64.h'],
         'powerpc'   : ['gcc/config/rs6000/linux64.h'],
         'powerpc64' : ['gcc/config/rs6000/linux64.h'],
