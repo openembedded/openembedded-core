@@ -100,7 +100,3 @@ TUNE_FEATURES_tune-mips64el-nf = "n64"
 BASE_LIB_tune-mips64el-nf = "lib64"
 MIPSPKGSFX_VARIANT_tune-mips64el-nf = "${TUNE_ARCH}"
 PACKAGE_EXTRA_ARCHS_tune-mips64el-nf = "mips64el-nf"
-
-# On mips we need to redefine this to include the ABIEXTENSION
-# we can avoid the python bit as there are no _ or - to translate
-TRANSLATED_TARGET_ARCH = "${TARGET_ARCH}${ABIEXTENSION}"
