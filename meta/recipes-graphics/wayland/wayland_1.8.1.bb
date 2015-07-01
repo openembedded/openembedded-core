@@ -22,8 +22,7 @@ EXTRA_OECONF_class-native = "--disable-documentation"
 
 inherit autotools pkgconfig
 
-# We need wayland-native for the wayland-scanner utility
-BBCLASSEXTEND = "native"
+BBCLASSEXTEND = "native nativesdk"
 
 DEPENDS = "expat libffi wayland-native"
 
