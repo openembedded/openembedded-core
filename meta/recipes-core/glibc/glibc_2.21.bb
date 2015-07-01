@@ -95,16 +95,6 @@ do_patch_append() {
     bb.build.exec_func('do_fix_readlib_c', d)
 }
 
-# for mips glibc now builds syscall tables for all abi's
-# so we make sure that we choose right march option which is
-# compatible with o32,n32 and n64 abi's
-# e.g. -march=mips32 is not compatible with n32 and n64 therefore
-# we filter it out in such case -march=from-abi which will be
-# mips1 when using o32 and mips3 when using n32/n64
-
-TUNE_CCARGS_mips := "${@oe_filter_out('-march=mips32', '${TUNE_CCARGS}', d)}"
-TUNE_CCARGS_mipsel := "${@oe_filter_out('-march=mips32', '${TUNE_CCARGS}', d)}"
-
 do_fix_readlib_c () {
 	sed -i -e 's#OECORE_KNOWN_INTERPRETER_NAMES#${EGLIBC_KNOWN_INTERPRETER_NAMES}#' ${S}/elf/readlib.c
 }
