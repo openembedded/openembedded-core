@@ -158,6 +158,7 @@ do_configure() {
                        -e "s,\(d_stdiobase=\)'define',\1'undef',g" \
                        -e "s,\(d_stdstdio=\)'define',\1'undef',g" \
                        -e "s,\(d_getnetbyname_r=\)'define',\1'undef',g" \
+                       -e "s,\(d_finitel=\)'define',\1'undef',g" \
                        -e "s,\(getprotobyname_r=\)'define',\1'undef',g" \
                        -e "s,\(getpwent_r=\)'define',\1'undef',g" \
                        -e "s,\(getservent_r=\)'define',\1'undef',g" \
