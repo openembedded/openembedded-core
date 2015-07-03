@@ -13,6 +13,7 @@ SRC_URI = "file://ldconfig-native-2.12.1.tar.bz2 \
            file://endianess-header.patch \
            file://ldconfig-default-to-all-multilib-dirs.patch \
            file://endian-ness_handling_fix.patch \
+           file://add-64-bit-flag-for-ELF64-entries.patch \
 "
 
 PR = "r2"
