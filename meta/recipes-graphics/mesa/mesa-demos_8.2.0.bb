@@ -48,6 +48,10 @@ PACKAGECONFIG[glew] = "--enable-glew,--disable-glew,glew"
 PACKAGECONFIG[glu] = "--enable-glu,--disable-glu,virtual/libgl"
 
 do_install_append() {
-    # it can be completely empty when all PACKAGECONFIG options are disabled
-    rmdir --ignore-fail-on-non-empty ${D}${bindir}
+	# it can be completely empty when all PACKAGECONFIG options are disabled
+	rmdir --ignore-fail-on-non-empty ${D}${bindir}
+
+	if [ -f ${D}${bindir}/clear ]; then
+        	mv ${D}${bindir}/clear ${D}${bindir}/clear.mesa-demos
+	fi
 }
