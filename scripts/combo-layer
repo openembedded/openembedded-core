@@ -29,6 +29,7 @@ import tempfile
 import ConfigParser
 import re
 from collections import OrderedDict
+from string import Template
 
 __version__ = "0.2.1"
 
@@ -77,15 +78,27 @@ class Configuration(object):
                         value = getattr(parser, 'get' + types[name])(section, name)
                     self.repos[repo][name] = value
 
+        def readglobalsection(parser, section):
+            for (name, value) in parser.items(section):
+                if name == "commit_msg":
+                    self.commit_msg_template = value
+
         logger.debug("Loading config file %s" % self.conffile)
         self.parser = ConfigParser.ConfigParser()
         with open(self.conffile) as f:
             self.parser.readfp(f)
 
+        # initialize default values
+        self.commit_msg_template = "Automatic commit to update last_revision"
+
         self.repos = {}
         for repo in self.parser.sections():
-            self.repos[repo] = {}
-            readsection(self.parser, repo, repo)
+            if repo == "combo-layer-settings":
+                # special handling for global settings
+                readglobalsection(self.parser, repo)
+            else:
+                self.repos[repo] = {}
+                readsection(self.parser, repo, repo)
 
         # Load local configuration, if available
         self.localconffile = None
@@ -715,7 +728,21 @@ def action_update(conf, args):
     if output:
         logger.info("Committing updated configuration file")
         if output.lstrip().startswith("M"):
-            runcmd('git commit -m "Automatic commit to update last_revision" %s' % relpath)
+
+            # create the "components" string
+            component_str = "all components"
+            if len(components) > 0:
+                # otherwise tell which components were actually changed
+                component_str = ", ".join(components)
+
+            # expand the template with known values
+            template = Template(conf.commit_msg_template)
+            raw_msg = template.substitute(components = component_str)
+
+            # sanitize the string before using it in command line
+            msg = raw_msg.replace('"', '\\"')
+
+            runcmd('git commit -m "%s" %s' % (msg, relpath))
 
 def apply_patchlist(conf, repos):
     """
