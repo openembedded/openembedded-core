@@ -93,7 +93,7 @@ inherit update-alternatives
 
 ALTERNATIVE_PRIORITY = "100"
 ALTERNATIVE_${PN} = "lbracket ${bindir_progs} ${base_bindir_progs} ${sbindir_progs} base64 mktemp df"
-ALTERNATIVE_${PN}-doc = "base64.1 mktemp.1 df.1 lbracket.1"
+ALTERNATIVE_${PN}-doc = "base64.1 mktemp.1 df.1 lbracket.1 groups.1 kill.1 uptime.1 stat.1"
 
 ALTERNATIVE_LINK_NAME[base64] = "${base_bindir}/base64"
 ALTERNATIVE_TARGET[base64] = "${bindir}/base64.${BPN}"
@@ -110,6 +110,11 @@ ALTERNATIVE_LINK_NAME[df.1] = "${mandir}/man1/df.1"
 ALTERNATIVE_LINK_NAME[lbracket] = "${bindir}/["
 ALTERNATIVE_TARGET[lbracket] = "${bindir}/lbracket.${BPN}"
 ALTERNATIVE_LINK_NAME[lbracket.1] = "${mandir}/man1/lbracket.1"
+
+ALTERNATIVE_LINK_NAME[groups.1] = "${mandir}/man1/groups.1"
+ALTERNATIVE_LINK_NAME[uptime.1] = "${mandir}/man1/uptime.1"
+ALTERNATIVE_LINK_NAME[kill.1] = "${mandir}/man1/kill.1"
+ALTERNATIVE_LINK_NAME[stat.1] = "${mandir}/man1/stat.1"
 
 python __anonymous() {
 	for prog in d.getVar('base_bindir_progs', True).split():

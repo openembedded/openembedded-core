@@ -24,5 +24,8 @@ ALTERNATIVE_PRIORITY[stat] = "200"
 ALTERNATIVE_LINK_NAME[stat] = "${base_bindir}/stat"
 ALTERNATIVE_TARGET[stat] = "${base_bindir}/stat.stat"
 
+ALTERNATIVE_${PN}-doc = "stat.1"
+ALTERNATIVE_LINK_NAME[stat.1] = "${mandir}/man1/stat.1"
+
 BBCLASSEXTEND = "native"
 
