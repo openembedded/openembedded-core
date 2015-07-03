@@ -1140,6 +1140,15 @@ Missing inherit gettext?""" % (gt, config))
         except subprocess.CalledProcessError:
             pass
 }
+
+python do_qa_unpack() {
+    bb.note("Checking has ${S} been created")
+
+    s_dir = d.getVar('S', True)
+    if not os.path.exists(s_dir):
+        bb.warn('%s: the directory %s (%s) pointed to by the S variable doesn\'t exist - please set S within the recipe to point to where the source has been unpacked to' % (d.getVar('PN', True), d.getVar('S', False), s_dir))
+}
+
 # The Staging Func, to check all staging
 #addtask qa_staging after do_populate_sysroot before do_build
 do_populate_sysroot[postfuncs] += "do_qa_staging "
@@ -1148,6 +1157,9 @@ do_populate_sysroot[postfuncs] += "do_qa_staging "
 # have it in DEPENDS and for correct LIC_FILES_CHKSUM
 #addtask qa_configure after do_configure before do_compile
 do_configure[postfuncs] += "do_qa_configure "
+
+# Check does S exist.
+do_unpack[postfuncs] += "do_qa_unpack"
 
 python () {
     tests = d.getVar('ALL_QA', True).split()
