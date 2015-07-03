@@ -8,6 +8,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=ebf4e8b49780ab187d51bd26aaa022c6"
 S="${WORKDIR}/initscripts-${PV}"
 SRC_URI = "http://pkgs.fedoraproject.org/repo/pkgs/initscripts/initscripts-9.63.tar.bz2/1ae0f15e54a904ac30185548d43daa1c/initscripts-9.63.tar.bz2 \
            file://functions.patch \
+           file://0001-functions-avoid-exit-1-which-causes-init-scripts-to-.patch \
           " 
 
 SRC_URI[md5sum] = "1ae0f15e54a904ac30185548d43daa1c"
