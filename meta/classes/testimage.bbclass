@@ -72,15 +72,37 @@ do_testsdk[nostamp] = "1"
 do_testsdk[depends] += "${TESTIMAGEDEPENDS}"
 do_testsdk[lockfiles] += "${TESTIMAGELOCK}"
 
+# get testcase list from specified file
+# if path is a relative path, then relative to build/conf/
+def read_testlist(d, fpath):
+    if not os.path.isabs(fpath):
+        builddir = d.getVar("TOPDIR", True)
+        fpath = os.path.join(builddir, "conf", fpath)
+    if not os.path.exists(fpath):
+        bb.fatal("No such manifest file: ", fpath)
+    tcs = []
+    for line in open(fpath).readlines():
+        line = line.strip()
+        if line and not line.startswith("#"):
+            tcs.append(line)
+    return " ".join(tcs)
+
 def get_tests_list(d, type="runtime"):
-    testsuites = d.getVar("TEST_SUITES", True).split()
+    testsuites = []
+    testslist = []
+    manifests = d.getVar("TEST_SUITES_MANIFEST", True)
+    if manifests is not None:
+        manifests = manifests.split()
+        for manifest in manifests:
+            testsuites.extend(read_testlist(d, manifest).split())
+    else:
+        testsuites = d.getVar("TEST_SUITES", True).split()
     if type == "sdk":
         testsuites = (d.getVar("TEST_SUITES_SDK", True) or "auto").split()
     bbpath = d.getVar("BBPATH", True).split(':')
 
     # This relies on lib/ under each directory in BBPATH being added to sys.path
     # (as done by default in base.bbclass)
-    testslist = []
     for testname in testsuites:
         if testname != "auto":
             if testname.startswith("oeqa."):
