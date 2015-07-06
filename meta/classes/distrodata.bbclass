@@ -10,7 +10,7 @@ python distro_eventhandler() {
     with open(logfile, "a") as f:
         writer = csv.writer(f)
         writer.writerow(['Package', 'Description', 'Owner', 'License', 
-            'VerMatch', 'Version', 'Upsteam', 'Reason', 'Recipe Status',
+            'VerMatch', 'Version', 'Upstream', 'Reason', 'Recipe Status',
             'Distro 1', 'Distro 2', 'Distro 3'])
         f.close()
     bb.utils.unlockfile(lf)
