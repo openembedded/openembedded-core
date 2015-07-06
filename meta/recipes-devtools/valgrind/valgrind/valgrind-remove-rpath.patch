@@ -1,5 +1,5 @@
 
-Upstream-Status: Inapporpiate [embedded config]
+Upstream-Status: Inappropriate [embedded config]
 Signed-off-by: Saul Wold <sgw@linux.intel.com>
 
 Index: valgrind-3.10.0/none/tests/Makefile.am
