@@ -13,7 +13,7 @@ in other error cases. We tweak dpkg-deb here so that it ignores an exit
 code of 1 from tar. The files don't really change (and we have locking in
 place to avoid that kind of issue).
 
-Upsteam-Status: Inappropriate
+Upstream-Status: Inappropriate
 RP 2015/3/27
 
 Index: dpkg-1.17.21/dpkg-deb/build.c
