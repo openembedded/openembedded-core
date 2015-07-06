@@ -2,7 +2,7 @@ The older versions of perf still require sys/resource.h to be
 present in this header, the newer version of perf in 3.2 and
 beyond directly include sys/resource.h
 
-Upstream-Status: Inapproriate [older kernel/perf specific]
+Upstream-Status: Inappropriate [older kernel/perf specific]
 
 Signed-off-by: Saul Wold <sgw@linux.intel.com>
 
