@@ -107,16 +107,6 @@ EXTRA_OECONF_INITIAL = "\
     --enable-decimal-float=no \
 "
 
-EXTRA_OECONF_INTERMEDIATE = "\
-    --disable-libmudflap \
-    --disable-libgomp \
-    --disable-libquadmath \
-    --with-system-zlib \
-    --disable-lto \
-    --disable-plugin \
-    --disable-libssp \
-"
-
 EXTRA_OECONF_append_libc-uclibc = " --disable-decimal-float "
 
 EXTRA_OECONF_PATHS = "\ 
