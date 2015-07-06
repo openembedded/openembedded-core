@@ -3,7 +3,7 @@ We need to have a shutdown group to allow the shutdown icon
 to work correctly. Any users that want to use shutdown like
 the xuser should be added to this group.
 
-Upstream-Status: Inapporpriate [Embedded]
+Upstream-Status: Inappropriate [Embedded]
 
 Signed-off-by: Saul Wold <sgw@linux.intel.com>
 Index: base-passwd-3.5.26/group.master
