@@ -1,4 +1,4 @@
-Upstream-Status: Inappropŕiate
+Upstream-Status: Inappropriate
 
 Signed-off-by: Marko Lindqvist <cazfi74@gmail.com>
 diff -Nurd texinfo-5.1/doc/Makefile.am texinfo-5.1/doc/Makefile.am
