@@ -1,6 +1,6 @@
 Don't search /usr and so on for libraries by default to avoid host contamination.
 
-Upstream-Status: Inapproprite (As the code stands, this is a hack)
+Upstream-Status: Inappropriate (As the code stands, this is a hack)
 Signed-off-by: Ross Burton <ross.burton@intel.com>
 
 diff --git a/numpy/distutils/system_info.py b/numpy/distutils/system_info.py
