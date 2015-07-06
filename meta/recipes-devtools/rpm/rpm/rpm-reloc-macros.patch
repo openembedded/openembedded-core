@@ -4,7 +4,7 @@ When the dynamic, runtime relocation is enables we need to make sure that the
 RPM macro file does not override the dynamic settings.  Fix this by forcing the
 dynamic version to be used in all cases.
 
-Upstream-Status: Inapproriate (OpenEmbedded specific)
+Upstream-Status: Inappropriate (OpenEmbedded specific)
 
 Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
 
