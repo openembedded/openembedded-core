@@ -14,6 +14,8 @@ DEPENDS_class-native = "zlib-native"
 SRC_URI = "ftp://ftp.astron.com/pub/file/${BP}.tar.gz \
 	   file://debian-742262.patch \
 	   file://0001-Add-P-prompt-into-Usage-info.patch \
+	   file://0001-Fix-bug-with-long-options-and-explicitly-number-them.patch \
+	   file://0002-fix-bug-with-5.23-long-options.patch \
           "
 
 SRC_URI[md5sum] = "61db35209ce71a6d576392ce6e1d2f80"
