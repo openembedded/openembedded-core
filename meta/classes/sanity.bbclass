@@ -707,15 +707,16 @@ def check_sanity_everybuild(status, d):
     # Check if /tmp is writable
     from string import ascii_letters
     from random import choice
-    filename = "bb_writetest.%s" % os.getpid()
-    testfile = os.path.join("/tmp", filename)
+    from tempfile import mkstemp
+    tmpfd, tmppath = mkstemp()
     try:
-        f = open(testfile, "w")
+        f = os.fdopen(tmpfd, "wt")
         f.write("".join(choice(ascii_letters) for x in range(1024)))
         f.close()
-        os.remove(testfile)
-    except:
-        status.addresult("Failed to write into /tmp. Please verify your filesystem.")
+    except Exception as err:
+        status.addresult("Failed to write into /tmp; %s. Please verify your filesystem." % err)
+    finally:
+        os.remove(tmppath)
 
     # Check that the DISTRO is valid, if set
     # need to take into account DISTRO renaming DISTRO
