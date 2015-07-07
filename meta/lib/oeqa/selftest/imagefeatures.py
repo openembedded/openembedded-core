@@ -207,6 +207,41 @@ class ImageFeatures(oeSelfTest):
         system('pkill qemu')
         proc_qemu.close()
 
+    @testcase(1116)
+    def test_clutter_image_can_be_built(self):
+        """
+        Summary:     Check if clutter image can be built
+        Expected:    1. core-image-clutter can be built
+        Product:     oe-core
+        Author:      Ionut Chisanovici <ionutx.chisanovici@intel.com>
+        AutomatedBy: Daniel Istrate <daniel.alexandrux.istrate@intel.com>
+        """
+
+        # Build a core-image-clutter
+        ret = bitbake('core-image-clutter')
+        self.assertEqual(0, ret.status, 'Failed to build core-image-clutter')
+
+    @testcase(1117)
+    def test_wayland_support_in_image(self):
+        """
+        Summary:     Check Wayland support in image
+        Expected:    1. Wayland image can be build
+                     2. Wayland feature can be installed
+        Product:     oe-core
+        Author:      Ionut Chisanovici <ionutx.chisanovici@intel.com>
+        AutomatedBy: Daniel Istrate <daniel.alexandrux.istrate@intel.com>
+        """
+
+        features = 'DISTRO_FEATURES_append = " wayland"\n'
+        features += 'CORE_IMAGE_EXTRA_INSTALL += "wayland weston"'
+
+        # Append 'features' to local.conf
+        self.append_config(features)
+
+        # Build a core-image-weston
+        ret = bitbake('core-image-weston')
+        self.assertEqual(0, ret.status, 'Failed to build a core-image-weston')
+
 
 class Gummiboot(oeSelfTest):
 
@@ -240,8 +275,10 @@ class Gummiboot(oeSelfTest):
         features += 'MACHINE = "nuc"'
         self.append_config(features)
 
-        # Run "bitbake core-image-minimal" to build a nuc efi/gummiboot image
-        ret = bitbake('core-image-minimal')
+        # Run "bitbake syslinux syslinux-native parted-native dosfstools-native mtools-native core-image-minimal "
+        # to build a nuc/efi gummiboot image
+
+        ret = bitbake('syslinux syslinux-native parted-native dosfstools-native mtools-native core-image-minimal')
         self.assertEqual(0, ret.status, 'Failed to build a core-image-minimal')
 
     @testcase(1101)
