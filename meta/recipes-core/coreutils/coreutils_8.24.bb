@@ -20,10 +20,10 @@ SRC_URI = "${GNU_MIRROR}/coreutils/${BP}.tar.xz;name=tarball \
            file://0001-Unset-need_charset_alias-when-building-for-musl.patch \
           "
 
-SRC_URI[tarball.md5sum] = "abed135279f87ad6762ce57ff6d89c41"
-SRC_URI[tarball.sha256sum] = "ec43ca5bcfc62242accb46b7f121f6b684ee21ecd7d075059bf650ff9e37b82d"
-SRC_URI[manpages.md5sum] = "ce49bc8360e16afe67581d136606efc7"
-SRC_URI[manpages.sha256sum] = "d1b16e74b3dba4f313aeebae2c69da205f7d2e6e1c2aa8d39026c860d314ecca"
+SRC_URI[tarball.md5sum] = "40efdbce865d2458d8da0a9dcee7c16c"
+SRC_URI[tarball.sha256sum] = "a2d75286a4b9ef3a13039c2da3868a61be4ee9f17d8ae380a35a97e506972170"
+SRC_URI[manpages.md5sum] = "728a91a5c1095a33cffb9959bb891963"
+SRC_URI[manpages.sha256sum] = "cf0333b5f134a331e0b46e2ddf90666f8bdc3281c1ca2c7ccbb75b437589ce37"
 
 EXTRA_OECONF_class-native = "--without-gmp"
 EXTRA_OECONF_class-target = "--enable-install-program=arch --libexecdir=${libdir}"
