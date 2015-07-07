@@ -18,7 +18,14 @@ swap_ratio=5
 hdnamelist=""
 live_dev_name=`cat /proc/mounts | grep ${1%/} | awk '{print $1}'`
 live_dev_name=${live_dev_name#\/dev/}
-live_dev_name=${live_dev_name%%[0-9]*}
+# Only strip the digit identifier if the device is not an mmc
+case $live_dev_name in
+    mmcblk*)
+    ;;
+    *)
+        live_dev_name=${live_dev_name%%[0-9]*}
+    ;;
+esac
 
 echo "Searching for hard drives ..."
 
@@ -36,9 +43,14 @@ for device in `ls /sys/block/`; do
         *)
             # skip the device LiveOS is on
             # Add valid hard drive name to the list
-            if [ $device != $live_dev_name -a -e /dev/$device ]; then
-                hdnamelist="$hdnamelist $device"
-            fi
+            case $device in
+                $live_dev_name*)
+                # skip the device we are running from
+                ;;
+                *)
+                    hdnamelist="$hdnamelist $device"
+                ;;
+            esac
             ;;
     esac
 done
