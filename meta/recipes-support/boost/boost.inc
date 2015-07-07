@@ -154,6 +154,7 @@ do_boostconfig() {
 	sed -i '/^using python/d' project-config.jam
 }
 
+do_boostconfig[dirs] = "${S}"
 addtask do_boostconfig after do_patch before do_configure
 
 do_compile() {
