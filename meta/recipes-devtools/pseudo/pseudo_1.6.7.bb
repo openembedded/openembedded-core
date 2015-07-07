@@ -1,7 +1,7 @@
 require pseudo.inc
 
 SRC_URI = " \
-    http://www.yoctoproject.org/downloads/${BPN}/${BPN}-${PV}.tar.bz2 \
+    http://downloads.yoctoproject.org/releases/pseudo/${BPN}-${PV}.tar.bz2 \
     file://fallback-passwd \
     file://fallback-group \
 "
