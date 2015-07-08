@@ -6,8 +6,8 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=751419260aa954499f7abaabaa882bbe"
 SRC_URI = "http://dl.lm-sensors.org/i2c-tools/releases/${BP}.tar.bz2 \
            file://Module.mk \
 "
-SRC_URI[md5sum] = "0fdbff53ebd0b8d9249256d6c56480b1"
-SRC_URI[sha256sum] = "14d4d7d60d1c12e43f2befe239c682a5c44c27682f153d4b58c1e392d2db1700"
+SRC_URI[md5sum] = "7104a1043d11a5e2c7b131614eb1b962"
+SRC_URI[sha256sum] = "db5e69f2e2a6e3aa2ecdfe6a5f490b149c504468770f58921c8c5b8a7860a441"
 
 inherit autotools-brokensep
 
