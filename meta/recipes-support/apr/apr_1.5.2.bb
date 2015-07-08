@@ -15,6 +15,7 @@ SRC_URI = "${APACHE_MIRROR}/apr/${BPN}-${PV}.tar.bz2 \
            file://configfix.patch \
            file://run-ptest \
            file://upgrade-and-fix-1.5.1.patch \
+           file://Fix-packet-discards-HTTP-redirect.patch \
 "
 
 SRC_URI[md5sum] = "4e9769f3349fe11fc0a5e1b224c236aa"
