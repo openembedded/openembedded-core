@@ -168,6 +168,16 @@ do_patch() {
 
 	# check to see if the specified SRCREV is reachable from the final branch.
 	# if it wasn't something wrong has happened, and we should error.
+	machine_srcrev="${SRCREV_machine}"
+	if [ -z "${machine_srcrev}" ]; then
+		# fallback to SRCREV if a non machine_meta tree is being built
+		machine_srcrev="${SRCREV}"
+		# if SRCREV cannot be reached something is wrong.
+		if [ -z "${machine_srcrev}" ]; then
+			bbfatal "Neither SRCREV_machine or SRCREV was specified!"
+		fi
+	fi
+
 	if [ "${machine_srcrev}" != "AUTOINC" ]; then
 		if ! [ "$(git rev-parse --verify ${machine_srcrev}~0)" = "$(git merge-base ${machine_srcrev} HEAD)" ]; then
 			bberror "SRCREV ${machine_srcrev} was specified, but is not reachable"
