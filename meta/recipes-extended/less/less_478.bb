@@ -21,15 +21,14 @@ SECTION = "console/utils"
 
 LICENSE = "GPLv3+ | BSD-2-Clause"
 LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504 \
-                    file://LICENSE;md5=866cc220f330b04ae4661fc3cdfedea7"
+                    file://LICENSE;md5=48c26a307f91af700e1f00585f215aaf"
 DEPENDS = "ncurses"
 
 SRC_URI = "http://www.greenwoodsoftware.com/${BPN}/${BPN}-${PV}.tar.gz \
-	   file://0001-Fix-possible-buffer-overrun-with-invalid-UTF-8.patch \
 	  "
 
-SRC_URI[md5sum] = "9a40d29a2d84b41f9f36d7dd90b4f950"
-SRC_URI[sha256sum] = "37f613fa9a526378788d790a92217d59b523574cf7159f6538da8564b3fb27f8"
+SRC_URI[md5sum] = "934fcc9f137b9ef66a943c224f413d39"
+SRC_URI[sha256sum] = "495c7df52199a0c7e6bfbbe7697b2b54f4bf197c8b10b43957762d74483574ce"
 
 inherit autotools update-alternatives
 
