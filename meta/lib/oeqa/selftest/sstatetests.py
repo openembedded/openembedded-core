@@ -202,3 +202,38 @@ class SStateTests(SStateBase):
         global_config.append('MACHINE = "qemux86"')
         target_config.append('')
         self.run_test_sstate_cache_management_script('m4', global_config,  target_config, ignore_patterns=['populate_lic'])
+
+    def test_sstate_32_64_same_hash(self):
+        """
+        The sstate checksums for both native and target should not vary whether
+        they're built on a 32 or 64 bit system. Rather than requiring two different 
+        build machines and running a builds, override the variables calling uname()
+        manually and check using bitbake -S.
+        """
+
+        topdir = get_bb_var('TOPDIR')
+        targetvendor = get_bb_var('TARGET_VENDOR')
+        self.write_config("""
+TMPDIR = \"${TOPDIR}/tmp-sstatesamehash\"
+BUILD_ARCH = \"x86_64\"
+BUILD_OS = \"linux\"
+""")
+        self.track_for_cleanup(topdir + "/tmp-sstatesamehash")
+        bitbake("core-image-sato -S printdiff", ignore_status=True)
+        self.write_config("""
+TMPDIR = \"${TOPDIR}/tmp-sstatesamehash2\"
+BUILD_ARCH = \"i686\"
+BUILD_OS = \"linux\"
+""")
+        self.track_for_cleanup(topdir + "/tmp-sstatesamehash2")
+        bitbake("core-image-sato -S printdiff", ignore_status=True)
+
+        def get_files(d):
+            f = []
+            for root, dirs, files in os.walk(d):
+                f.extend(os.path.join(root, name) for name in files)
+            return f
+        files1 = get_files(topdir + "/tmp-sstatesamehash/stamps/")
+        files2 = get_files(topdir + "/tmp-sstatesamehash2/stamps/")
+        files2 = [x.replace("tmp-sstatesamehash2", "tmp-sstatesamehash").replace("i686-linux", "x86_64-linux").replace("i686" + targetvendor + "-linux", "x86_64" + targetvendor + "-linux", ) for x in files2]
+        self.assertItemsEqual(files1, files2)
