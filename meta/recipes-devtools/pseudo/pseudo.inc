@@ -36,6 +36,7 @@ do_compile () {
 	fi
 	oe_runmake ${MAKEOPTS}
 }
+do_compile[vardepsexclude] = "SITEINFO_BITS"
 
 maybe_make32() {
 	# We probably don't need to build 32-bit binaries.
@@ -64,6 +65,7 @@ maybe_make32() {
 		bbnote "If you need to run 32-bit executables, ensure that NO32LIBS is set to 0."
 	fi
 }
+maybe_make32[vardepsexclude] = "SITEINFO_BITS"
 
 warn_32bit_missing() {
 	bbwarn "Can't find stubs-32.h, but usually need it to build 32-bit libpseudo."
