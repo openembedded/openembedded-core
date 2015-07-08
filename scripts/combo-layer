@@ -586,9 +586,14 @@ def action_pull(conf, args):
         ldir = repo['local_repo_dir']
         branch = repo.get('branch', "master")
         runcmd("git checkout %s" % branch, ldir)
-        logger.info("git pull for component repo %s in %s ..." % (name, ldir))
-        output=runcmd("git pull --ff-only", ldir)
-        logger.info(output)
+        logger.info("update component repo %s in %s ..." % (name, ldir))
+        if not args.hard_reset:
+            output=runcmd("git pull --ff-only", ldir)
+            logger.info(output)
+        else:
+            output=runcmd("git fetch", ldir)
+            logger.info(output)
+            runcmd("git reset --hard FETCH_HEAD", ldir)
 
 def action_update(conf, args):
     """
@@ -894,6 +899,10 @@ Action:
 
     parser.add_option("-n", "--no-pull", help = "skip pulling component repos during update",
                action = "store_true", dest = "nopull", default = False)
+
+    parser.add_option("--hard-reset",
+               help = "instead of pull do fetch and hard-reset in component repos",
+               action = "store_true", default = False)
 
     parser.add_option("-H", "--history", help = "import full history of components during init",
                       action = "store_true", default = False)
