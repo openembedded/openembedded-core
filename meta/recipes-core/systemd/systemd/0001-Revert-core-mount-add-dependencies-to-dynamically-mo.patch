@@ -1,0 +1,36 @@
+From eb7a760052667c5a35637901de9359c377263804 Mon Sep 17 00:00:00 2001
+From: Colin Walters <walters@verbum.org>
+Date: Tue, 24 Feb 2015 10:12:28 -0500
+Subject: [PATCH] Revert "core/mount: add dependencies to dynamically mounted
+ mounts too"
+
+This reverts commit 06e97888883e2cc12eb6514e80c7f0014295f59b.
+
+This patch was imported from Fedora (http://pkgs.fedoraproject.org/cgit/systemd.git/commit/?h=f22&id=9bbe0e92dc59d5a42258c729b105a7d9901eb35e).
+
+It fixes an issue where mount points not listed in fstab are immediately
+unmounted after a call to mount.
+
+Upstream-Status: Inappropriate [fixed upstream]
+
+Signed-off-by: Joshua Lock <joshua.lock@collabora.co.uk>
+---
+ src/core/mount.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/core/mount.c b/src/core/mount.c
+index 40037e7..cddb5e2 100644
+--- a/src/core/mount.c
++++ b/src/core/mount.c
+@@ -295,7 +295,7 @@ static int mount_add_device_links(Mount *m) {
+ 
+         assert(m);
+ 
+-        p = get_mount_parameters(m);
++        p = get_mount_parameters_fragment(m);
+         if (!p)
+                 return 0;
+ 
+-- 
+1.8.3.1
+
