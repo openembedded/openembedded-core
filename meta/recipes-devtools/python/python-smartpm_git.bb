@@ -9,37 +9,24 @@ LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=393a5ca445f6965873eca0259a17f833"
 
 DEPENDS = "python rpm gettext-native python-rpm"
-PR = "r9"
 SRCNAME = "smart"
 
 SRC_URI = "\
-          http://launchpad.net/smart/trunk/${PV}/+download/${SRCNAME}-${PV}.tar.bz2 \
+          git://github.com/smartpm/smart.git \
           file://smartpm-rpm5-nodig.patch \
-          file://smart-rpm-root.patch \
           file://smart-recommends.patch \
-          file://smart-rpm-extra-macros.patch \
-          file://smart-dflags.patch \
-          file://smart-rpm-md-parse.patch \
-          file://smart-tmpdir.patch \
-          file://smart-metadata-match.patch \
           file://smart-improve-error-reporting.patch \
-          file://smart-multilib-fixes.patch \
-          file://smart-yaml-error.patch \
           file://smart-channelsdir.patch \
-          file://smart-conflict-provider.patch \
-          file://smart-flag-ignore-recommends.patch \
-          file://smart-flag-exclude-packages.patch \
-          file://smart-config-ignore-all-recommends.patch \
           file://smart-attempt.patch \
-          file://smart-filename-NAME_MAX.patch \
           file://smart-rpm4-fixes.patch \
           file://smart-add-for-rpm-ignoresize-check.patch \
           file://smart-already-installed-message.patch \
          "
 
-SRC_URI[md5sum] = "573ef32ba177a6b3c4bf7ef04873fcb6"
-SRC_URI[sha256sum] = "b1d519ddb43d60f293b065c28870a5d9e8b591cd49e8c68caea48ace91085eba"
-S = "${WORKDIR}/${SRCNAME}-${PV}"
+SRCREV = "407a7eca766431257dcd1da15175cc36a1bb22d0"
+PV = "1.5+git${SRCPV}"
+
+S = "${WORKDIR}/git"
 
 # Options - rpm, qt4, gtk
 PACKAGECONFIG ??= "rpm"

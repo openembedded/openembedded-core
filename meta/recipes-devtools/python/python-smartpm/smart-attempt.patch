@@ -18,38 +18,68 @@ Upstream-Status: Pending
 Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
 Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
 ---
- smart.py                  |  5 +++-
- smart/commands/install.py |  5 ++++
- smart/transaction.py      | 65 +++++++++++++++++++++++++++++++++++------------
- 3 files changed, 58 insertions(+), 17 deletions(-)
+ backends/rpm/pm.py |   35 ++++++++++++++++++++++++++++++++++-
+ transaction.py     |   50 +++++++++++++++++++++++++++++++++++++-------------
+ 2 files changed, 71 insertions(+), 14 deletions(-)
 
-Index: smart-1.4.1/smart/commands/install.py
-===================================================================
---- smart-1.4.1.orig/smart/commands/install.py
-+++ smart-1.4.1/smart/commands/install.py
-@@ -50,6 +50,8 @@ def option_parser():
-     parser = OptionParser(usage=USAGE,
-                           description=DESCRIPTION,
-                           examples=EXAMPLES)
-+    parser.add_option("--attempt", action="store_true",
-+                      help=_("attempt to install packages, ignore failures"))
-     parser.add_option("--stepped", action="store_true",
-                       help=_("split operation in steps"))
-     parser.add_option("--urls", action="store_true",
-@@ -80,6 +82,9 @@ def main(ctrl, opts):
-     if not opts.args:
-         raise Error, _("no package(s) given")
- 
-+    if opts.attempt:
-+	sysconf.set("attempt-install", True, soft=True)
+diff --git a/smart/backends/rpm/pm.py b/smart/backends/rpm/pm.py
+index 9bbd952..ba6405a 100644
+--- a/smart/backends/rpm/pm.py
++++ b/smart/backends/rpm/pm.py
+@@ -241,15 +241,48 @@ class RPMPackageManager(PackageManager):
+         cb = RPMCallback(prog, upgradednames)
+         cb.grabOutput(True)
+         probs = None
++        retry = 0
+         try:
+             probs = ts.run(cb, None)
+         finally:
+             del getTS.ts
+             cb.grabOutput(False)
++            if probs and sysconf.has("attempt-install", soft=True):
++                def remove_conflict(pkgNEVR):
++                    for key in changeset.keys():
++                        if pkgNEVR == str(key):
++                            del changeset[key]
++                            del pkgpaths[key]
++                            iface.warning("Removing %s due to file %s conflicting with %s" % (pkgNEVR, fname, altNEVR))
++                            break
 +
-     if opts.explain:
-         sysconf.set("explain-changesets", True, soft=True)
++                retry = 1
++                for prob in probs:
++                    if prob[1][0] == rpm.RPMPROB_NEW_FILE_CONFLICT:
++                        msg = prob[0].split()
++                        fname = msg[1]
++                        pkgNEVR = msg[7]
++                        altNEVR = msg[9]
++                        pkgNEVR = pkgNEVR.rsplit('.', 1)[0] + '@' + pkgNEVR.rsplit('.', 1)[1]
++                        altNEVR = altNEVR.rsplit('.', 1)[0] + '@' + altNEVR.rsplit('.', 1)[1]
++                        remove_conflict(pkgNEVR)
++                    elif prob[1][0] == rpm.RPMPROB_FILE_CONFLICT:
++                        msg = prob[0].split()
++                        fname = msg[1]
++                        pkgNEVR = msg[5]
++                        altNEVR = msg[11]
++                        pkgNEVR = pkgNEVR.rsplit('.', 1)[0] + '@' + pkgNEVR.rsplit('.', 1)[1]
++                        altNEVR = altNEVR.rsplit('.', 1)[0] + '@' + altNEVR.rsplit('.', 1)[1]
++                        remove_conflict(pkgNEVR)
++                    else:
++                        retry = 0
++
+             prog.setDone()
+-            if probs:
++            if probs and (not retry):
+                 raise Error, "\n".join([x[0] for x in probs])
+             prog.stop()
++            if retry and len(changeset):
++                self.commit(changeset, pkgpaths)
  
-Index: smart-1.4.1/smart/transaction.py
-===================================================================
---- smart-1.4.1.orig/smart/transaction.py
-+++ smart-1.4.1/smart/transaction.py
+ class RPMCallback:
+     def __init__(self, prog, upgradednames):
+diff --git a/smart/transaction.py b/smart/transaction.py
+index 4b90cb7..3e043e9 100644
+--- a/smart/transaction.py
++++ b/smart/transaction.py
 @@ -555,6 +555,8 @@ class Transaction(object):
          changeset.set(pkg, INSTALL)
          isinst = changeset.installed
@@ -145,79 +175,3 @@ Index: smart-1.4.1/smart/transaction.py
                      changeset.set(pkg, INSTALL)
                      locked[pkg] = (LOCKED_INSTALL, None)
                  elif op is REMOVE:
-@@ -1216,9 +1240,18 @@ class Transaction(object):
-                     else:
-                         op = REMOVE
-                 if op is INSTALL or op is REINSTALL:
--                    self._install(pkg, changeset, locked, pending)
--                    if pkg in changeset:
--                        changeset.setRequested(pkg, True)
-+                    try:
-+                        self._install(pkg, changeset, locked, pending)
-+                        if pkg in changeset:
-+                            changeset.setRequested(pkg, True)
-+                    except Failed, e:
-+                        if attempt:
-+                            iface.warning(_("Can't install %s: %s") % (pkg, e))
-+                            if pkg in changeset:
-+                                del changeset[pkg]
-+                            continue
-+                        else:
-+                            raise Failed, e
-                 elif op is REMOVE:
-                     self._remove(pkg, changeset, locked, pending)
-                 elif op is UPGRADE:
-Index: smart-1.4.1/smart/backends/rpm/pm.py
-===================================================================
---- smart-1.4.1.orig/smart/backends/rpm/pm.py
-+++ smart-1.4.1/smart/backends/rpm/pm.py
-@@ -243,15 +253,48 @@ class RPMPackageManager(PackageManager):
-         cb = RPMCallback(prog, upgradednames)
-         cb.grabOutput(True)
-         probs = None
-+        retry = 0
-         try:
-             probs = ts.run(cb, None)
-         finally:
-             del getTS.ts
-             cb.grabOutput(False)
-+            if probs and sysconf.has("attempt-install", soft=True):
-+                def remove_conflict(pkgNEVR):
-+                    for key in changeset.keys():
-+                        if pkgNEVR == str(key):
-+                            del changeset[key]
-+                            del pkgpaths[key]
-+                            iface.warning("Removing %s due to file %s conflicting with %s" % (pkgNEVR, fname, altNEVR))
-+                            break
-+
-+                retry = 1
-+                for prob in probs:
-+                    if prob[1][0] == rpm.RPMPROB_NEW_FILE_CONFLICT:
-+                        msg = prob[0].split()
-+                        fname = msg[1]
-+                        pkgNEVR = msg[7]
-+                        altNEVR = msg[9]
-+                        pkgNEVR = pkgNEVR.rsplit('.', 1)[0] + '@' + pkgNEVR.rsplit('.', 1)[1]
-+                        altNEVR = altNEVR.rsplit('.', 1)[0] + '@' + altNEVR.rsplit('.', 1)[1]
-+                        remove_conflict(pkgNEVR)
-+                    elif prob[1][0] == rpm.RPMPROB_FILE_CONFLICT:
-+                        msg = prob[0].split()
-+                        fname = msg[1]
-+                        pkgNEVR = msg[5]
-+                        altNEVR = msg[11]
-+                        pkgNEVR = pkgNEVR.rsplit('.', 1)[0] + '@' + pkgNEVR.rsplit('.', 1)[1]
-+                        altNEVR = altNEVR.rsplit('.', 1)[0] + '@' + altNEVR.rsplit('.', 1)[1]
-+                        remove_conflict(pkgNEVR)
-+                    else:
-+                        retry = 0
-+
-             prog.setDone()
--            if probs:
-+            if probs and (not retry):
-                 raise Error, "\n".join([x[0] for x in probs])
-             prog.stop()
-+            if retry and len(changeset):
-+                self.commit(changeset, pkgpaths)
- 
- class RPMCallback:
-     def __init__(self, prog, upgradednames):
