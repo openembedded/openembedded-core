@@ -1,0 +1,5 @@
+#!/bin/bash
+
+[ -z "$SUSHELL" ] && SUSHELL=/bin/bash
+
+exec $SUSHELL

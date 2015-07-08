@@ -33,6 +33,7 @@ SRC_URI = "file://functions \
            file://GPLv2.patch \
            file://dmesg.sh \
            file://logrotate-dmesg.conf \
+           ${@bb.utils.contains('DISTRO_FEATURES','selinux','file://sushell','',d)} \
 "
 
 S = "${WORKDIR}"
@@ -46,7 +47,9 @@ DEPENDS_append = " update-rc.d-native"
 DEPENDS_append = " ${@bb.utils.contains('DISTRO_FEATURES','systemd','systemd-systemctl-native','',d)}"
 
 PACKAGES =+ "${PN}-functions"
-RDEPENDS_${PN} = "${PN}-functions"
+RDEPENDS_${PN} = "${PN}-functions \
+                  ${@bb.utils.contains('DISTRO_FEATURES','selinux','bash','',d)} \
+		 "
 FILES_${PN}-functions = "${sysconfdir}/init.d/functions*"
 
 ALTERNATIVE_PRIORITY_${PN}-functions = "90"
@@ -103,6 +106,11 @@ do_install () {
 
 	if [ "${TARGET_ARCH}" = "arm" ]; then
 		install -m 0755 ${WORKDIR}/alignment.sh	${D}${sysconfdir}/init.d
+	fi
+
+	if ${@bb.utils.contains('DISTRO_FEATURES','selinux','true','false',d)}; then
+		install -d ${D}/${base_sbindir}
+		install -m 0755 ${WORKDIR}/sushell ${D}/${base_sbindir}
 	fi
 #
 # Install device dependent scripts
