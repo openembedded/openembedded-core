@@ -3,7 +3,7 @@ LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f"
 
 SRC_URI += "file://intltool-nowarn.patch \
-           file://uclibc.patch \
+            file://perl-522-deprecations.patch \
            ${NATIVEPATCHES} \
            "
 
@@ -15,5 +15,5 @@ NATIVEPATCHES = "file://noperlcheck.patch \
                  file://remove-xml-check.patch"
 NATIVEPATCHES_class-native = "file://use-nativeperl.patch" 
 
-SRC_URI[md5sum] = "23fbd879118253cb99aeac067da5f591"
-SRC_URI[sha256sum] = "67f25c5c6fb71d095793a7f895b245e65e829e8bde68c6c8b4c912144ff34406"
+SRC_URI[md5sum] = "12e517cac2b57a0121cda351570f1e63"
+SRC_URI[sha256sum] = "67c74d94196b153b774ab9f89b2fa6c6ba79352407037c8c14d5aeb334e959cd"
