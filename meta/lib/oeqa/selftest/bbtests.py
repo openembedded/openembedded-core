@@ -97,8 +97,9 @@ class BitbakeTests(oeSelfTest):
     def test_invalid_recipe_src_uri(self):
         data = 'SRC_URI = "file://invalid"'
         self.write_recipeinc('man', data)
-        self.write_config("DL_DIR = \"${TOPDIR}/download-selftest\"")
-        self.write_config("SSTATE_DIR = \"${TOPDIR}/download-selftest\"")
+        self.write_config("""DL_DIR = \"${TOPDIR}/download-selftest\"
+SSTATE_DIR = \"${TOPDIR}/download-selftest\"
+""")
         bitbake('-ccleanall man')
         result = bitbake('-c fetch man', ignore_status=True)
         bitbake('-ccleanall man')
@@ -109,8 +110,9 @@ class BitbakeTests(oeSelfTest):
 
     @testcase(171)
     def test_rename_downloaded_file(self):
-        self.write_config("DL_DIR = \"${TOPDIR}/download-selftest\"")
-        self.write_config("SSTATE_DIR = \"${TOPDIR}/download-selftest\"")
+        self.write_config("""DL_DIR = \"${TOPDIR}/download-selftest\"
+SSTATE_DIR = \"${TOPDIR}/download-selftest\"
+""")
         data = 'SRC_URI_append = ";downloadfilename=test-aspell.tar.gz"'
         self.write_recipeinc('aspell', data)
         bitbake('-ccleanall aspell')
@@ -173,8 +175,9 @@ class BitbakeTests(oeSelfTest):
 
     @testcase(1035)
     def test_continue(self):
-	self.write_config("DL_DIR = \"${TOPDIR}/download-selftest\"")
-	self.write_config("SSTATE_DIR = \"${TOPDIR}/download-selftest\"")
+	self.write_config("""DL_DIR = \"${TOPDIR}/download-selftest\"
+SSTATE_DIR = \"${TOPDIR}/download-selftest\"
+""")
 	self.write_recipeinc('man',"\ndo_fail_task () {\nexit 1 \n}\n\naddtask do_fail_task before do_fetch\n" )
 	runCmd('bitbake -c cleanall man xcursor-transparent-theme')
 	result = runCmd('bitbake man xcursor-transparent-theme -k', ignore_status=True)
