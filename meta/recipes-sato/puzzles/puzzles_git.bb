@@ -2,7 +2,6 @@ SUMMARY = "Simon Tatham's Portable Puzzle Collection"
 HOMEPAGE = "http://www.chiark.greenend.org.uk/~sgtatham/puzzles/"
 
 DEPENDS = "gtk+ libxt"
-MOD_PV = "${@d.getVar('PV',1)[1:]}"
 
 # The libxt requires x11 in DISTRO_FEATURES
 REQUIRED_DISTRO_FEATURES = "x11"
@@ -10,12 +9,14 @@ REQUIRED_DISTRO_FEATURES = "x11"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://LICENCE;md5=33bcd4bce8f3c197f2aefbdbd2d299bc"
 
-SRC_URI = "svn://svn.tartarus.org/sgt;module=puzzles;rev=${MOD_PV} \
+SRC_URI = "git://git.tartarus.org/simon/puzzles.git \
            file://fix-compiling-failure-with-option-g-O.patch \
-           file://puzzles_x32_abi_time.patch \
 "
+SRCREV = "c296301a06ce49b87c954c9d15452521dfeddf1a"
+PE = "1"
+PV = "0.0+git${SRCPV}"
 
-S = "${WORKDIR}/${BPN}"
+S = "${WORKDIR}/git"
 
 inherit autotools-brokensep distro_features_check
 
