@@ -15,7 +15,6 @@ SRC_URI += "file://configure-targets.patch \
             file://shared-libs.patch \
             file://oe-ldflags.patch \
             file://engines-install-in-libdir-ssl.patch \
-            file://openssl-fix-link.patch \
             file://debian1.0.2/block_diginotar.patch \
             file://debian1.0.2/block_digicert_malaysia.patch \
             file://debian/ca.patch \
@@ -39,8 +38,8 @@ SRC_URI += "file://configure-targets.patch \
             file://openssl-1.0.2a-x32-asm.patch \
            "
 
-SRC_URI[md5sum] = "8c8d81a9ae7005276e486702edbcd4b6"
-SRC_URI[sha256sum] = "0038ba37f35a6367c58f17a7a7f687953ef8ce4f9684bbdec63e62515ed36a83"
+SRC_URI[md5sum] = "38dd619b2e77cbac69b99f52a053d25a"
+SRC_URI[sha256sum] = "671c36487785628a703374c652ad2cebea45fa920ae5681515df25d9f2c9a8c8"
 
 PACKAGES =+ " \
 	${PN}-engines \
