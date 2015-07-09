@@ -15,5 +15,6 @@ SRC_URI += "file://xproto_fix_for_x32.patch"
 EXTRA_OECONF_append = " --enable-specs=no"
 BBCLASSEXTEND = "native nativesdk"
 
-SRC_URI[md5sum] = "6c3345111a8044f730984988aacfa567"
-SRC_URI[sha256sum] = "246f23a6b235c8008183deeb1dcd76d529a099f93600b648b399811b10ea110c"
+SRC_URI[md5sum] = "3ce2f230c5d8fa929f326ad1f0fa40a8"
+SRC_URI[sha256sum] = "29e85568d1f68ceef8a2c081dad9bc0e5500a53cfffde24b564dc43d46ddf6ca"
+
