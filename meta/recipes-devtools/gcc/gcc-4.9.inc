@@ -2,11 +2,11 @@ require gcc-common.inc
 
 # Third digit in PV should be incremented after a minor release
 
-PV = "4.9.2"
+PV = "4.9.3"
 
 # BINV should be incremented to a revision after a minor gcc release
 
-BINV = "4.9.2"
+BINV = "4.9.3"
 
 FILESEXTRAPATHS =. "${FILE_DIRNAME}/gcc-4.9:"
 
@@ -77,11 +77,10 @@ SRC_URI = "\
     file://0059-gcc-PR-rtl-optimization-63348.patch \
     file://0060-Only-allow-e500-double-in-SPE_SIMD_REGNO_P-registers.patch \
     file://0061-target-gcc-includedir.patch \
-    file://0062-gcc-var-tracking.c-backport-from-gcc-trunk-r212178.patch \
-    file://0063-Use-SYSTEMLIBS_DIR-replacement-instead-of-hardcoding.patch \
+    file://0062-Use-SYSTEMLIBS_DIR-replacement-instead-of-hardcoding.patch \
 "
-SRC_URI[md5sum] = "4df8ee253b7f3863ad0b86359cd39c43"
-SRC_URI[sha256sum] = "2020c98295856aa13fda0f2f3a4794490757fc24bcca918d52cc8b4917b972dd"
+SRC_URI[md5sum] = "6f831b4d251872736e8e9cc09746f327"
+SRC_URI[sha256sum] = "2332b2a5a321b57508b9031354a8503af6fdfb868b8c1748d33028d100a8b67e"
 
 S = "${TMPDIR}/work-shared/gcc-${PV}-${PR}/gcc-${PV}"
 B = "${WORKDIR}/gcc-${PV}/build.${HOST_SYS}.${TARGET_SYS}"
