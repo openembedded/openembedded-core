@@ -19,6 +19,7 @@ LIC_FILES_CHKSUM = "\
 
 SRC_URI = "ftp://ftp.alsa-project.org/pub/plugins/${BP}.tar.bz2 \
            file://0001-arcam-av-Include-sys-select.h-for-fd_set-definition.patch \
+           file://0001-include-speexdsp_types.h-not-speex_types.h.patch \
 "
 SRC_URI[md5sum] = "a66797b4471e3cbe96575207bfbe252c"
 SRC_URI[sha256sum] = "325d85cac285f632b83e0191ae3f348bad03c1f007b937042f164abb81ea6532"
@@ -29,7 +30,7 @@ inherit autotools pkgconfig
 
 PACKAGECONFIG ??= "\
         samplerate \
-        speex \
+        speexdsp \
         ${@bb.utils.contains('DISTRO_FEATURES', 'pulseaudio', 'pulseaudio', '', d)} \
 "
 PACKAGECONFIG[avcodec] = "--enable-avcodec,--disable-avcodec,libav"
@@ -38,7 +39,7 @@ PACKAGECONFIG[maemo-plugin] = "--enable-maemo-plugin,--disable-maemo-plugin"
 PACKAGECONFIG[maemo-resource-manager] = "--enable-maemo-resource-manager,--disable-maemo-resource-manager,dbus"
 PACKAGECONFIG[pulseaudio] = "--enable-pulseaudio,--disable-pulseaudio,pulseaudio"
 PACKAGECONFIG[samplerate] = "--enable-samplerate,--disable-samplerate,libsamplerate0"
-PACKAGECONFIG[speex] = "--with-speex=lib,--with-speex=no,speex"
+PACKAGECONFIG[speexdsp] = "--with-speex=lib,--with-speex=no,speexdsp"
 
 PACKAGES += "${@bb.utils.contains('PACKAGECONFIG', 'pulseaudio', 'alsa-plugins-pulseaudio-conf', '', d)}"
 
