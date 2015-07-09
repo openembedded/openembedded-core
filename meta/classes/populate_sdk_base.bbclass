@@ -1,4 +1,4 @@
-inherit meta toolchain-scripts
+inherit meta
 
 # Wildcards specifying complementary packages to install for every package that has been explicitly
 # installed into the rootfs
