@@ -39,7 +39,7 @@ DEPENDS = "libtool-native"
 PACKAGES =+ "libltdl"
 FILES_${PN} += "${datadir}/aclocal"
 
-#FILES_${PN}-dev := "${@oe_filter_out('${datadir}/aclocal', '${FILES_libtool-dev}', d)}"
+FILES_${PN}-dev_remove = "${datadir}/aclocal"
 FILES_libltdl = "${libdir}/libltdl${SOLIBS}"
 
 export CONFIG_SHELL="/bin/bash"
