@@ -374,3 +374,10 @@ addtask do_ar_configured after do_unpack_and_patch
 addtask do_dumpdata
 addtask do_ar_recipe
 addtask do_deploy_archives before do_build
+
+addtask do_deploy_all_archives after do_deploy_archives
+do_deploy_all_archives[recrdeptask] = "do_deploy_archives"
+do_deploy_all_archives[recideptask] = "do_${BB_DEFAULT_TASK}"
+do_deploy_all_archives() {
+        :
+}
