@@ -10,7 +10,7 @@ PV = "5.1.0"
 
 BINV = "5.1.0"
 
-FILESEXTRAPATHS =. "${FILE_DIRNAME}/gcc-5.1:"
+FILESEXTRAPATHS =. "${FILE_DIRNAME}/gcc-5.1:${FILE_DIRNAME}/gcc-5.1/backport:"
 
 DEPENDS =+ "mpfr gmp libmpc zlib"
 NATIVEDEPS = "mpfr-native gmp-native libmpc-native zlib-native"
@@ -32,6 +32,7 @@ SRC_URI[sha256sum] = "b7dafdf89cbb0e20333dbf5b5349319ae06e3d1a30bf3515b5488f7e89
 
 SRC_URI = "\
            ${BASEURI} \
+           ${BACKPORTS} \
            file://0001-gcc-4.3.1-ARCH_FLAGS_FOR_TARGET.patch \
            file://0002-uclibc-conf.patch \
            file://0003-gcc-uclibc-locale-ctype_touplow_t.patch \
@@ -72,6 +73,11 @@ SRC_URI = "\
            file://0038-fix-g++-sysroot.patch \
           "
 
+BACKPORTS = "\
+           file://0001-PR65801.patch \
+           file://0002-PR65858.patch \
+           file://0003-PR66007.patch \
+          "
 #S = "${TMPDIR}/work-shared/gcc-${PV}-${PR}/gcc-${SNAP}"
 S = "${TMPDIR}/work-shared/gcc-${PV}-${PR}/gcc-${PV}"
 B = "${WORKDIR}/gcc-${PV}/build.${HOST_SYS}.${TARGET_SYS}"
