@@ -12,8 +12,8 @@ DEPENDS = "libpthread-stubs udev libpciaccess"
 
 SRC_URI = "http://dri.freedesktop.org/libdrm/${BP}.tar.bz2 \
            file://installtests.patch "
-SRC_URI[md5sum] = "d32a1d37c2546ee11fc5924abeedb23e"
-SRC_URI[sha256sum] = "68d26e1fd85582f4243d66864f9b43ca4ee93662825de32b5506fc8e181ea41b"
+SRC_URI[md5sum] = "c9291bae0e5ca65d1483821d3698d3ab"
+SRC_URI[sha256sum] = "906c294bdbe1c94c3ca084305d61a6e5a8367f3b4986e6cc13b1e9b3f75931dc"
 
 inherit autotools pkgconfig
 
@@ -21,6 +21,7 @@ EXTRA_OECONF += "--disable-cairo-tests \
                  --enable-omap-experimental-api \
                  --enable-install-test-programs \
                  --disable-manpages \
+                 --disable-valgrind \
                 "
 
 ALLOW_EMPTY_${PN}-drivers = "1"
