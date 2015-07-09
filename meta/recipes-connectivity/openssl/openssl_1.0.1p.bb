@@ -15,7 +15,6 @@ SRC_URI += "file://configure-targets.patch \
             file://shared-libs.patch \
             file://oe-ldflags.patch \
             file://engines-install-in-libdir-ssl.patch \
-            file://openssl-fix-link.patch \
             file://debian/version-script.patch \
             file://debian/pic.patch \
             file://debian/c_rehash-compat.patch \
@@ -37,8 +36,8 @@ SRC_URI += "file://configure-targets.patch \
             file://run-ptest \
            "
 
-SRC_URI[md5sum] = "d143d1555d842a069cb7cc34ba745a06"
-SRC_URI[sha256sum] = "095f0b7b09116c0c5526422088058dc7e6e000aa14d22acca6a4e2babcdfef74"
+SRC_URI[md5sum] = "7563e92327199e0067ccd0f79f436976"
+SRC_URI[sha256sum] = "bd5ee6803165c0fb60bbecbacacf244f1f90d2aa0d71353af610c29121e9b2f1"
 
 PACKAGES =+ " \
 	${PN}-engines \
