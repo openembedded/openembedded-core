@@ -23,11 +23,6 @@ CFLAGS += "-fno-strict-aliasing"
 
 inherit autotools-brokensep
 
-# We don't DEPEND on binutils for ansidecl.h so ensure we don't use the header
-do_configure_prepend () {
-	sed -i -e '/.*ansidecl.h.*/d' ${S}/sha1.h
-}
-
 EXTRA_OEMAKE = "CHECK_RUN_DIR=0"
 # PPC64 and MIPS64 uses long long for u64 in the kernel, but powerpc's asm/types.h
 # prevents 64-bit userland from seeing this definition, instead defaulting
