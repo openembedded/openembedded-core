@@ -52,3 +52,5 @@ do_compile_prepend() {
 }
 
 FILES_whiptail = "${bindir}/whiptail"
+
+BBCLASSEXTEND = "native"
