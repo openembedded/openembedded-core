@@ -24,6 +24,7 @@ PE = "2"
 SRC_URI = "git://git.lttng.org/lttng-ust.git;branch=stable-2.6 \
            file://lttng-ust-doc-examples-disable.patch \
            file://add-aarch64.patch \
+           file://lttng-ust-Fix-live-timer-calculation-error.patch \
 	   "
 
 S = "${WORKDIR}/git"
