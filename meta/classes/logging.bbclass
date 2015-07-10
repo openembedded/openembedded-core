@@ -2,48 +2,41 @@
 # They are intended to map one to one in intention and output format with the
 # python recipe logging functions of a similar naming convention: bb.plain(),
 # bb.note(), etc.
-#
-# For the time being, all of these print only to the task logs. Future
-# enhancements may integrate these calls with the bitbake logging
-# infrastructure, allowing for printing to the console as appropriate. The
-# interface and intention statements reflect that future goal. Once it is
-# in place, no changes will be necessary to recipes using these logging
-# mechanisms.
+
+LOGFIFO = "${T}/fifo.${@os.getpid()}"
 
 # Print the output exactly as it is passed in. Typically used for output of
 # tasks that should be seen on the console. Use sparingly.
 # Output: logs console
-# NOTE: console output is not currently implemented.
 bbplain() {
-	echo "$*"
+	printf "%b\0" "bbplain $*" > ${LOGFIFO}
 }
 
 # Notify the user of a noteworthy condition. 
-# Output: logs console
-# NOTE: console output is not currently implemented.
+# Output: logs
 bbnote() {
-	echo "NOTE: $*"
+	printf "%b\0" "bbnote $*" > ${LOGFIFO}
 }
 
 # Print a warning to the log. Warnings are non-fatal, and do not
 # indicate a build failure.
-# Output: logs
+# Output: logs console
 bbwarn() {
-	echo "WARNING: $*"
+	printf "%b\0" "bbwarn $*" > ${LOGFIFO}
 }
 
 # Print an error to the log. Errors are non-fatal in that the build can
 # continue, but they do indicate a build failure.
-# Output: logs
+# Output: logs console
 bberror() {
-	echo "ERROR: $*"
+	printf "%b\0" "bberror $*" > ${LOGFIFO}
 }
 
 # Print a fatal error to the log. Fatal errors indicate build failure
 # and halt the build, exiting with an error code.
-# Output: logs
+# Output: logs console
 bbfatal() {
-	echo "ERROR: $*"
+	printf "%b\0" "bbfatal $*" > ${LOGFIFO}
 	exit 1
 }
 
@@ -53,7 +46,6 @@ bbfatal() {
 # Output: logs console
 # Usage: bbdebug 1 "first level debug message"
 #        bbdebug 2 "second level debug message"
-# NOTE: console output is not currently implemented.
 bbdebug() {
 	USAGE='Usage: bbdebug [123] "message"'
 	if [ $# -lt 2 ]; then
@@ -68,6 +60,6 @@ bbdebug() {
 	fi
 
 	# All debug output is printed to the logs
-	echo "DEBUG: $*"
+	printf "%b\0" "bbdebug $DBGLVL $*" > ${LOGFIFO}
 }
 
