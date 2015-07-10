@@ -42,21 +42,11 @@ SRC_URI_append_libc-uclibc = " file://uclibc-support-for-elfutils-0.161.patch"
 # which can not pass the cross compiling, so let's work around it by adding 2 .h files
 # along with the do_configure_prepend()
 
-SRC_URI += "\
-        file://i386_dis.h \
-        file://x86_64_dis.h \
-"
 inherit autotools gettext
 
 EXTRA_OECONF = "--program-prefix=eu- --without-lzma"
 EXTRA_OECONF_append_class-native = " --without-bzlib"
 EXTRA_OECONF_append_libc-uclibc = " --enable-uclibc"
-
-do_configure_prepend() {
-	sed -i '/^i386_dis.h:/,+4 {/.*/d}' ${S}/libcpu/Makefile.am
-
-	cp ${WORKDIR}/*dis.h ${S}/libcpu
-}
 
 do_install_append() {
 	if [ "${TARGET_ARCH}" != "x86_64" ] && [ -z `echo "${TARGET_ARCH}"|grep 'i.86'` ];then
