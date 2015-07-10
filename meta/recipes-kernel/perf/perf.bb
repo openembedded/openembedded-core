@@ -120,12 +120,6 @@ do_configure_prepend () {
     rm -rf ${B}/
     mkdir ${B}/
 
-    #kernels before 3.1 do not support WERROR env variable
-    sed -i 's,-Werror ,,' ${S}/tools/perf/Makefile
-    if [ -e "${S}/tools/perf/config/Makefile" ]; then
-        sed -i 's,-Werror ,,' ${S}/tools/perf/config/Makefile
-    fi
-
     # If building a multlib based perf, the incorrect library path will be
     # detected by perf, since it triggers via: ifeq ($(ARCH),x86_64). In a 32 bit
     # build, with a 64 bit multilib, the arch won't match and the detection of a 
