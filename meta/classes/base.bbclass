@@ -210,7 +210,8 @@ addhandler base_eventhandler
 base_eventhandler[eventmask] = "bb.event.ConfigParsed bb.event.BuildStarted bb.event.RecipePreFinalise"
 python base_eventhandler() {
     if isinstance(e, bb.event.ConfigParsed):
-        e.data.setVar("NATIVELSBSTRING", lsb_distro_identifier(e.data))
+        if not e.data.getVar("NATIVELSBSTRING", False):
+            e.data.setVar("NATIVELSBSTRING", lsb_distro_identifier(e.data))
         e.data.setVar('BB_VERSION', bb.__version__)
         pkgarch_mapping(e.data)
         oe.utils.features_backfill("DISTRO_FEATURES", e.data)

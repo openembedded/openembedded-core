@@ -237,3 +237,37 @@ BUILD_OS = \"linux\"
         files2 = get_files(topdir + "/tmp-sstatesamehash2/stamps/")
         files2 = [x.replace("tmp-sstatesamehash2", "tmp-sstatesamehash").replace("i686-linux", "x86_64-linux").replace("i686" + targetvendor + "-linux", "x86_64" + targetvendor + "-linux", ) for x in files2]
         self.assertItemsEqual(files1, files2)
+
+
+    def test_sstate_nativelsbstring_same_hash(self):
+        """
+        The sstate checksums should be independent of whichever NATIVELSBSTRING is
+        detected. Rather than requiring two different build machines and running 
+        builds, override the variables manually and check using bitbake -S.
+        """
+
+        topdir = get_bb_var('TOPDIR')
+        targetvendor = get_bb_var('TARGET_VENDOR')
+        self.write_config("""
+TMPDIR = \"${TOPDIR}/tmp-sstatesamehash\"
+NATIVELSBSTRING = \"DistroA\"
+""")
+        self.track_for_cleanup(topdir + "/tmp-sstatesamehash")
+        bitbake("core-image-sato -S printdiff", ignore_status=True)
+        self.write_config("""
+TMPDIR = \"${TOPDIR}/tmp-sstatesamehash2\"
+NATIVELSBSTRING = \"DistroB\"
+""")
+        self.track_for_cleanup(topdir + "/tmp-sstatesamehash2")
+        bitbake("core-image-sato -S printdiff", ignore_status=True)
+
+        def get_files(d):
+            f = []
+            for root, dirs, files in os.walk(d):
+                f.extend(os.path.join(root, name) for name in files)
+            return f
+        files1 = get_files(topdir + "/tmp-sstatesamehash/stamps/")
+        files2 = get_files(topdir + "/tmp-sstatesamehash2/stamps/")
+        files2 = [x.replace("tmp-sstatesamehash2", "tmp-sstatesamehash") for x in files2]
+        self.assertItemsEqual(files1, files2)
+
