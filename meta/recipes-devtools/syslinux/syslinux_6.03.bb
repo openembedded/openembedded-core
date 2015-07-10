@@ -8,7 +8,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=0636e73ff0215e8d672dc4c32c317bb3 \
 # ldlinux.* stuff for now, so skip mtools-native
 DEPENDS = "nasm-native util-linux e2fsprogs"
 
-SRC_URI = "${KERNELORG_MIRROR}/linux/utils/boot/syslinux/6.xx/syslinux-${PV}.tar.xz \
+SRC_URI = "${KERNELORG_MIRROR}/linux/utils/boot/syslinux/syslinux-${PV}.tar.xz \
            file://syslinux-fix-parallel-building-issue.patch \
            file://syslinux-libupload-depend-lib.patch \
            file://syslinux-remove-clean-script.patch \
