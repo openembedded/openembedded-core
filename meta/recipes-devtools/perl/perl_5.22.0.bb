@@ -61,6 +61,7 @@ SRC_URI += " \
         file://t-run-switches.t-perl5-perl.patch \
         file://ext-ODBM_File-hints-linux.pl-link-libgdbm_compat.patch \
         file://ext-ODBM_File-t-odbm.t-fix-the-path-of-dbmt_common.p.patch \
+        file://perl-PathTools-don-t-filter-out-blib-from-INC.patch \
 "
 
 # Fix test case issues

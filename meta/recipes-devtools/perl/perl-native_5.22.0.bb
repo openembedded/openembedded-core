@@ -8,6 +8,7 @@ SRC_URI += "\
            file://MM_Unix.pm.patch \
            file://debian/errno_ver.diff \
            file://dynaloaderhack.patch \
+           file://perl-PathTools-don-t-filter-out-blib-from-INC.patch \
           "
 
 SRC_URI[md5sum] = "ff0f09b17de426eff323426cb140ee79"
