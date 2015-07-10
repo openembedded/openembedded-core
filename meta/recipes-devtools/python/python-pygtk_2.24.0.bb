@@ -37,31 +37,10 @@ do_configure_prepend() {
 		-e s:'`$PKG_CONFIG --variable codegendir pygobject-2.0`':\"${STAGING_DATADIR}/pygobject/2.0/codegen\":g \
 		-e s:'`$PKG_CONFIG --variable=fixxref pygobject-2.0`':\"${STAGING_DATADIR}/pygobject/xsl/fixxref.py\":g \
 		${S}/configure.ac
-	sed -i 's:tests docs:tests:' ${S}/Makefile.am
 }
 
 # dirty fix #2: fix build system paths leaking in
 do_install_append() {
-        for i in `find ${D} -name "*.py"` ; do \
-            sed -i -e s:${D}::g $i
-        done
-
-        for i in `find ${D} -name "*.la"` ; do \
-            sed -i -e s:${STAGING_LIBDIR}:${libdir}:g $i
-        done
-        
-        if test -e ${D}${bindir} ; then
-            for i in ${D}${bindir}/* ; do \
-                sed -i -e s:${STAGING_BINDIR_NATIVE}:${bindir}:g $i
-            done
-        fi
-
-        if test -e ${D}${sbindir} ; then
-            for i in ${D}${sbindir}/* ; do \
-                sed -i -e s:${STAGING_BINDIR_NATIVE}:${bindir}:g $i
-            done
-        fi
-
 	sed -i -e '1s|^#!.*python|#!/usr/bin/env python|' ${D}${bindir}/pygtk-demo
 }
 
