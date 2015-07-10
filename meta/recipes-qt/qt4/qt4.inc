@@ -350,9 +350,6 @@ do_install() {
 			-e 's#-ljscore##g' \
 			${D}${libdir}/*.la ${D}${libdir}/*.prl ${D}${libdir}/pkgconfig/*.pc
 
-	sed -i -e s#" -Wl,-rpath-link,${S}/lib"##g \
-			${D}${datadir}/${QT_DIR_NAME}/mkspecs/common/linux.conf
-
 	# fix pkgconfig files
 	sed -i -e s#"moc_location=.*$"#"moc_location=${bindir}/moc4"# \
 			-e s#"uic_location=.*$"#"uic_location=${bindir}/uic4"# \

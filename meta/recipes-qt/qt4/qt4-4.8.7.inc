@@ -52,13 +52,9 @@ FILES_${QT_BASE_NAME}-tests-dbg        = "${prefix}/tests/qt4/*/.debug"
 FILES_${QT_BASE_NAME}-tests            = "${prefix}/tests/qt4/*"
 
 do_configure_prepend() {
-    for pro in $(find ${S} -name "*.pro") ; do
-        sed -i \
-            -e 's:$$QT_BUILD_TREE/bin/lrelease:${OE_QMAKE_LRELEASE}:g' \
-            -e 's:qtPrepareTool(LRELEASE, lrelease):LRELEASE = ${OE_QMAKE_LRELEASE}:g' $pro
-    done
+    sed -i 's:qtPrepareTool(LRELEASE, lrelease):LRELEASE = ${OE_QMAKE_LRELEASE}:g' \
+        ${S}/translations/translations.pro
 
-    sed -i s:SEDME:${S}: ${WORKDIR}/linux.conf
     sed -i \
     -e /QMAKE_MOC\ /d \
     -e /QMAKE_UIC\ /d \
