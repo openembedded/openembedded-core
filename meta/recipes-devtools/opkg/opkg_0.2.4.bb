@@ -41,11 +41,6 @@ EXTRA_OECONF = "\
   --with-opkglibdir=${OPKGLIBDIR} \
 "
 
-# Werror gives all kinds bounds issuses with gcc 4.3.3
-do_configure_prepend() {
-	sed -i -e s:-Werror::g ${S}/libopkg/Makefile.am
-}
-
 do_install_append () {
 	install -d ${D}${sysconfdir}/opkg
 	install -m 0644 ${WORKDIR}/opkg.conf ${D}${sysconfdir}/opkg/opkg.conf
