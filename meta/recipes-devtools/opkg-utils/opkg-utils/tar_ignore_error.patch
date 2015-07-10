@@ -12,7 +12,7 @@ We detect if the error code produced by tar is 1 and in this case ignore it.
 This a similar behavior to the one on dpkg:
 http://git.yoctoproject.org/cgit/cgit.cgi/poky/commit/?id=40731942515ec8d80c727ad561174986d4f05818
 
-Upsteam-Status: Inappropriate
+Upstream-Status: Inappropriate
 
 Signed-off-by: Alejandro Hernandez <alejandro.hernandez@linux.intel.com>
 
