@@ -620,7 +620,7 @@ def replace_dir_vars(path, d):
     for var in d:
         if var.endswith('dir') and var.lower() == var:
             value = d.getVar(var, True)
-            if value.startswith('/') and not '\n' in value:
+            if value.startswith('/') and not '\n' in value and value not in dirvars:
                 dirvars[value] = var
     for dirpath in sorted(dirvars.keys(), reverse=True):
         path = path.replace(dirpath, '${%s}' % dirvars[dirpath])
