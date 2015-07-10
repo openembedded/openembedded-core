@@ -46,9 +46,6 @@ EXTRA_OECONF = " \
 EXTRA_AUTORECONF += "--exclude=autoheader"
 
 do_compile () {
-	sed -i s:STRIP:NOSTRIP: Makedefs
-	sed -i s:serial:: backend/Makefile
-
 	echo "all:"    >  man/Makefile
 	echo "libs:" >> man/Makefile
 	echo "install:" >> man/Makefile
