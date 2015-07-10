@@ -280,6 +280,9 @@ def appendfile(args):
                 alternative_pns.append(pn[1:])
             elif pn.startswith('!'):
                 postinst_pns.append(pn[1:])
+            elif selectpn:
+                # hit here with multilibs
+                continue
             else:
                 selectpn = pn
 
