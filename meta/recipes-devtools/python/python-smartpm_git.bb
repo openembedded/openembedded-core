@@ -97,6 +97,7 @@ add_native_wrapper() {
 }
 
 do_install_append_class-native() {
+        sed -i -e 's|^#!.*/usr/bin/env python|#! /usr/bin/env nativepython|' ${D}${bindir}/smart
         add_native_wrapper
 }
 
