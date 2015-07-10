@@ -1,6 +1,6 @@
 require shared-mime-info.inc
 
-SRC_URI =+ "file://parallelmake.patch \
+SRC_URI += "file://parallelmake.patch \
 	    file://install-data-hook.patch"
 
 SRC_URI[md5sum] = "16c02f7b658fff2a9c207406d388ea31"
