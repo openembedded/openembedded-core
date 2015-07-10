@@ -146,6 +146,11 @@ def get_bitbake_var(var, image=None):
             if key.replace('_', '').isalnum():
                 _BITBAKE_VARS[image][key] = val.strip('"')
 
+        # Make first image a default set of variables
+        images = [key for key in _BITBAKE_VARS if key]
+        if len(images) == 1:
+            _BITBAKE_VARS[None] = _BITBAKE_VARS[image]
+
     return _BITBAKE_VARS[image].get(var)
 
 def parse_sourceparams(sourceparams):
