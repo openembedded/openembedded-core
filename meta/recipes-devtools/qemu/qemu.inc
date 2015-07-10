@@ -37,16 +37,6 @@ do_configure_prepend_class-native() {
 	if [ ! -z "$BHOST_PKGCONFIG_PATH" ]; then
 		export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:$BHOST_PKGCONFIG_PATH
 	fi
-
-	# Undo the -lX11 added by linker-flags.patch, don't assume that host has libX11 installed
-	sed -i 's/-lX11//g' ${S}/Makefile.target
-}
-
-do_configure_prepend_class-nativesdk() {
-	if [ "${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'x11', '', d)}" = "" ] ; then
-		# Undo the -lX11 added by linker-flags.patch
-		sed -i 's/-lX11//g' ${S}/Makefile.target
-	fi
 }
 
 KVMENABLE = "--enable-kvm"
