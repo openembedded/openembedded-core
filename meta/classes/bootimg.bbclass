@@ -142,11 +142,14 @@ build_iso() {
 	# when it exceeds 3.8GB, the specification is 4G - 1 bytes, we need
 	# leave a few space for other files.
 	mkisofs_iso_level=""
-	rootfs_img_size=`stat -c '%s' ${ISODIR}/rootfs.img`
-	# 4080218931 = 3.8 * 1024 * 1024 * 1024
-	if [ $rootfs_img_size -gt 4080218931 ]; then
-		bbnote "${ISODIR}/rootfs.img execeeds 3.8GB, using '-iso-level 3' for mkisofs"
-		mkisofs_iso_level="-iso-level 3"
+
+        if [ -n "${ROOTFS}" ] && [ -s "${ROOTFS}" ]; then
+		rootfs_img_size=`stat -c '%s' ${ISODIR}/rootfs.img`
+		# 4080218931 = 3.8 * 1024 * 1024 * 1024
+		if [ $rootfs_img_size -gt 4080218931 ]; then
+			bbnote "${ISODIR}/rootfs.img execeeds 3.8GB, using '-iso-level 3' for mkisofs"
+			mkisofs_iso_level="-iso-level 3"
+		fi
 	fi
 
 	if [ "${PCBIOS}" = "1" ] && [ "${EFI}" != "1" ] ; then
