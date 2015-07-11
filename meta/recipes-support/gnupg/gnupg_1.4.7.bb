@@ -81,6 +81,9 @@ EXTRA_OECONF = "--disable-ldap \
                 ac_cv_sys_symbol_underscore=no \
 		"
 
+# Force gcc's traditional handling of inline to avoid issues with gcc 5
+CFLAGS += "-fgnu89-inline"
+
 do_install () {
 	autotools_do_install
 	install -d ${D}${docdir}/${BPN}
