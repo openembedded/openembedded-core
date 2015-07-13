@@ -7,11 +7,10 @@ DEPENDS = "ncurses glib-2.0"
 RDEPENDS_${PN} = "ncurses-terminfo"
 
 SRC_URI = "http://www.midnight-commander.org/downloads/${BPN}-${PV}.tar.bz2 \
-           file://mc-CTRL.patch \
            "
 
-SRC_URI[md5sum] = "12a521a50da6a86852177591b9623d5e"
-SRC_URI[sha256sum] = "22e1b809edba957eb9a392138bf87fea3877f7ca0b7463b7cc2eb94afa6f3e49"
+SRC_URI[md5sum] = "fe1cb75643c2bd4df64bbcf2dab76905"
+SRC_URI[sha256sum] = "61fd0fd2280c3d09d7e0aec8ab001fc89dad8e4fd9941f386414667b55152ec5"
 
 inherit autotools gettext pkgconfig
 
