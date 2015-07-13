@@ -7,7 +7,10 @@ OpenEmbedded has a configurable home directory for root. Allow
 systemd to be built using its idea of what root's home directory
 should be.
 
-Upstream-Status: Pending
+Upstream-Status: Denied
+Upstream wants to have a unified hierarchy where everyone is
+using the same root folder.
+https://github.com/systemd/systemd/issues/541
 
 Signed-off-by: Dan McGregor <dan.mcgregor@usask.ca>
 Signed-off-by: Khem Raj <raj.khem@gmail.com>
