@@ -166,3 +166,5 @@ do_install_class-nativesdk() {
 	rm -rf ${D}${localstatedir}/run
 }
 BBCLASSEXTEND = "native nativesdk"
+
+INSANE_SKIP_${PN}-ptest += "build-deps"
