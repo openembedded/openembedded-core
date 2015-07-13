@@ -87,7 +87,7 @@ oe_runconf () {
 		if [ "$?" != "0" ]; then
 			echo "Configure failed. The contents of all config.log files follows to aid debugging"
 			find ${S} -ignore_readdir_race -name config.log -print -exec cat {} \;
-			bbfatal "oe_runconf failed"
+			die "oe_runconf failed"
 		fi
 		set -e
 	else
@@ -287,7 +287,7 @@ autotools_do_configure() {
 			intltoolize --copy --force --automake
 		fi
 		bbnote Executing ACLOCAL=\"$ACLOCAL\" autoreconf --verbose --install --force ${EXTRA_AUTORECONF} $acpaths
-		ACLOCAL="$ACLOCAL" autoreconf -Wcross --verbose --install --force ${EXTRA_AUTORECONF} $acpaths || bbfatal "autoreconf execution failed."
+		ACLOCAL="$ACLOCAL" autoreconf -Wcross --verbose --install --force ${EXTRA_AUTORECONF} $acpaths || die "autoreconf execution failed."
 		cd $olddir
 	fi
 	if [ -e ${S}/configure ]; then

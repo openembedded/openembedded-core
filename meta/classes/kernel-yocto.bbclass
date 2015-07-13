@@ -120,7 +120,7 @@ do_kernel_metadata() {
 
 	createme -v -v ${createme_flags} ${ARCH} ${machine_branch}
 	if [ $? -ne 0 ]; then
-		bbfatal "Could not create ${machine_branch}"
+		bbfatal_log "Could not create ${machine_branch}"
 	fi
 
 	sccs="$sccs ${@" ".join(find_sccs(d))}"
@@ -152,7 +152,7 @@ do_kernel_metadata() {
 	updateme ${updateme_flags} -DKDESC=${KMACHINE}:${LINUX_KERNEL_TYPE} \
                          ${includes} ${addon_features} ${ARCH} ${KMACHINE} ${sccs} ${patches}
 	if [ $? -ne 0 ]; then
-		bbfatal "Could not update ${machine_branch}"
+		bbfatal_log "Could not update ${machine_branch}"
 	fi
 }
 
@@ -163,7 +163,7 @@ do_patch() {
 	patchme ${KMACHINE}
 	if [ $? -ne 0 ]; then
 		bberror "Could not apply patches for ${KMACHINE}."
-		bbfatal "Patch failures can be resolved in the linux source directory ${S})"
+		bbfatal_log "Patch failures can be resolved in the linux source directory ${S})"
 	fi
 
 	# check to see if the specified SRCREV is reachable from the final branch.
@@ -253,7 +253,7 @@ do_kernel_checkout() {
 		if [ $? -eq 1 ]; then
 			bberror "The branch '${KMETA}' is required and was not found"
 			bberror "Ensure that the SRC_URI points to a valid linux-yocto"
-			bbfatal "kernel repository"
+			bbfatal_log "kernel repository"
 		fi
 	fi
 	
@@ -293,7 +293,7 @@ do_kernel_configme() {
 	PATH=${PATH}:${S}/scripts/util
 	configme ${configmeflags} --reconfig --output ${B} ${LINUX_KERNEL_TYPE} ${KMACHINE}
 	if [ $? -ne 0 ]; then
-		bbfatal "Could not configure ${KMACHINE}-${LINUX_KERNEL_TYPE}"
+		bbfatal_log "Could not configure ${KMACHINE}-${LINUX_KERNEL_TYPE}"
 	fi
 	
 	echo "# Global settings from linux recipe" >> ${B}/.config
@@ -372,7 +372,7 @@ do_validate_branches() {
 		git cat-file -t ${machine_srcrev} > /dev/null
 		if [ $? -ne 0 ]; then
 			bberror "${machine_srcrev} is not a valid commit ID."
-			bbfatal "The kernel source tree may be out of sync"
+			bbfatal_log "The kernel source tree may be out of sync"
 		fi
 		force_srcrev=${machine_srcrev}
 	fi
@@ -387,14 +387,14 @@ do_validate_branches() {
 		git cat-file -t ${target_meta_head} > /dev/null
 		if [ $? -ne 0 ]; then
 			bberror "${target_meta_head} is not a valid commit ID"
-			bbfatal "The kernel source tree may be out of sync"
+			bbfatal_log "The kernel source tree may be out of sync"
 		fi
 		if [ "$meta_head" != "$target_meta_head" ]; then
 			bbnote "Setting branch ${KMETA} to ${target_meta_head}"
 			git branch -m ${KMETA} ${KMETA}-orig
 			git checkout -q -b ${KMETA} ${target_meta_head}
 			if [ $? -ne 0 ];then
-				bbfatal "Could not checkout ${KMETA} branch from known hash ${target_meta_head}"
+				bbfatal_log "Could not checkout ${KMETA} branch from known hash ${target_meta_head}"
 			fi
 		fi
 	fi

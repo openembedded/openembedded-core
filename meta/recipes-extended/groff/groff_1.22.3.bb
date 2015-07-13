@@ -41,7 +41,7 @@ do_configure_append() {
     # generate gnulib configure script
     olddir=`pwd`
     cd ${S}/src/libs/gnulib/
-    ACLOCAL="$ACLOCAL" autoreconf -Wcross --verbose --install --force ${EXTRA_AUTORECONF} $acpaths || bbfatal "autoreconf execution failed."
+    ACLOCAL="$ACLOCAL" autoreconf -Wcross --verbose --install --force ${EXTRA_AUTORECONF} $acpaths || die "autoreconf execution failed."
     cd ${olddir}
 }
 
