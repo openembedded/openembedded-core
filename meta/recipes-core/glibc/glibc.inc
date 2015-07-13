@@ -52,7 +52,6 @@ REQUIRED_DISTRO_FEATURES = "${DISTRO_FEATURES_LIBC}"
 LEAD_SONAME = "libc.so"
 
 CACHED_CONFIGUREVARS += " \
-  ac_cv_path_KSH=${base_bindir}/bash \
   ac_cv_path_BASH_SHELL=${base_bindir}/bash \
   libc_cv_slibdir=${base_libdir} \
   libc_cv_rootsbindir=${base_sbindir} \
