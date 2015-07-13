@@ -135,7 +135,8 @@ do_compile () {
 		cd ${S}/sunrpc/rpcsvc
 		for r in ${rpcsvc}; do
 			h=`echo $r|sed -e's,\.x$,.h,'`
-			rpcgen -h $r -o $h || bbwarn "unable to generate header for $r"
+			rm -f $h
+			rpcgen -h $r -o $h || bbwarn "${PN}: unable to generate header for $r"
 		done
 	)
 	echo "Adjust ldd script"
