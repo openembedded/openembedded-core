@@ -155,6 +155,13 @@ def main():
     parser = get_args_parser()
     args = parser.parse_args()
 
+    # Add <layer>/lib to sys.path, so layers can add selftests
+    log.info("Running bitbake -e to get BBPATH")
+    bbpath = get_bb_var('BBPATH').split(':')
+    layer_libdirs = [p for p in (os.path.join(l, 'lib') for l in bbpath) if os.path.exists(p)]
+    sys.path.extend(layer_libdirs)
+    reload(oeqa.selftest)
+
     if args.list_allclasses:
         args.list_modules = True
 
