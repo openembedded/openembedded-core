@@ -142,11 +142,12 @@ def get_tests(exclusive_modules=[], include_hidden=False):
     for x in exclusive_modules:
         testslist.append('oeqa.selftest.' + x)
     if not testslist:
-        testpath = os.path.abspath(os.path.dirname(oeqa.selftest.__file__))
-        files = sorted([f for f in os.listdir(testpath) if f.endswith('.py') and not (f.startswith('_') and not include_hidden) and not f.startswith('__') and f != 'base.py'])
-        for f in files:
-            module = 'oeqa.selftest.' + f[:-3]
-            testslist.append(module)
+        for testpath in oeqa.selftest.__path__:
+            files = sorted([f for f in os.listdir(testpath) if f.endswith('.py') and not (f.startswith('_') and not include_hidden) and not f.startswith('__') and f != 'base.py'])
+            for f in files:
+                module = 'oeqa.selftest.' + f[:-3]
+                if module not in testslist:
+                    testslist.append(module)
 
     return testslist
 
