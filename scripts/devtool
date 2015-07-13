@@ -35,7 +35,7 @@ context = None
 scripts_path = os.path.dirname(os.path.realpath(__file__))
 lib_path = scripts_path + '/lib'
 sys.path = sys.path + [lib_path]
-from devtool import DevtoolError
+from devtool import DevtoolError, setup_tinfoil
 import scriptutils
 logger = scriptutils.logger_create('devtool')
 
@@ -186,37 +186,28 @@ def main():
         pth = os.path.dirname(pth)
 
     parser = argparse.ArgumentParser(description="OpenEmbedded development tool",
+                                     add_help=False,
                                      epilog="Use %(prog)s <subcommand> --help to get help on a specific command")
     parser.add_argument('--basepath', help='Base directory of SDK / build directory')
     parser.add_argument('-d', '--debug', help='Enable debug output', action='store_true')
     parser.add_argument('-q', '--quiet', help='Print only errors', action='store_true')
     parser.add_argument('--color', choices=['auto', 'always', 'never'], default='auto', help='Colorize output (where %(metavar)s is %(choices)s)', metavar='COLOR')
 
-    subparsers = parser.add_subparsers(dest="subparser_name", title='subcommands', metavar='<subcommand>')
+    global_args, unparsed_args = parser.parse_known_args()
 
-    if not context.fixed_setup:
-        parser_create_workspace = subparsers.add_parser('create-workspace',
-                                                        help='Set up a workspace',
-                                                        description='Sets up a new workspace. NOTE: other devtool subcommands will create a workspace automatically as needed, so you only need to use %(prog)s if you want to specify where the workspace should be located.')
-        parser_create_workspace.add_argument('layerpath', nargs='?', help='Path in which the workspace layer should be created')
-        parser_create_workspace.add_argument('--create-only', action="store_true", help='Only create the workspace layer, do not alter configuration')
-        parser_create_workspace.set_defaults(func=create_workspace)
+    # Help is added here rather than via add_help=True, as we don't want it to
+    # be handled by parse_known_args()
+    parser.add_argument('-h', '--help', action='help', default=argparse.SUPPRESS,
+                        help='show this help message and exit')
 
-    scriptutils.load_plugins(logger, plugins, os.path.join(scripts_path, 'lib', 'devtool'))
-    for plugin in plugins:
-        if hasattr(plugin, 'register_commands'):
-            plugin.register_commands(subparsers, context)
-
-    args = parser.parse_args()
-
-    if args.debug:
+    if global_args.debug:
         logger.setLevel(logging.DEBUG)
-    elif args.quiet:
+    elif global_args.quiet:
         logger.setLevel(logging.ERROR)
 
-    if args.basepath:
+    if global_args.basepath:
         # Override
-        basepath = args.basepath
+        basepath = global_args.basepath
     elif not context.fixed_setup:
         basepath = os.environ.get('BUILDDIR')
         if not basepath:
@@ -246,7 +237,31 @@ def main():
         logger.debug('Using standard bitbake path %s' % bitbakepath)
         scriptpath.add_oe_lib_path()
 
-    scriptutils.logger_setup_color(logger, args.color)
+    scriptutils.logger_setup_color(logger, global_args.color)
+
+    tinfoil = setup_tinfoil(config_only=True)
+    for path in ([scripts_path] +
+                 tinfoil.config_data.getVar('BBPATH', True).split(':')):
+        pluginpath = os.path.join(path, 'lib', 'devtool')
+        scriptutils.load_plugins(logger, plugins, pluginpath)
+    tinfoil.cooker.shutdown(force=True)
+    tinfoil.cooker.unlockBitbake()
+
+    subparsers = parser.add_subparsers(dest="subparser_name", title='subcommands', metavar='<subcommand>')
+
+    if not context.fixed_setup:
+        parser_create_workspace = subparsers.add_parser('create-workspace',
+                                                        help='Set up a workspace',
+                                                        description='Sets up a new workspace. NOTE: other devtool subcommands will create a workspace automatically as needed, so you only need to use %(prog)s if you want to specify where the workspace should be located.')
+        parser_create_workspace.add_argument('layerpath', nargs='?', help='Path in which the workspace layer should be created')
+        parser_create_workspace.add_argument('--create-only', action="store_true", help='Only create the workspace layer, do not alter configuration')
+        parser_create_workspace.set_defaults(func=create_workspace)
+
+    for plugin in plugins:
+        if hasattr(plugin, 'register_commands'):
+            plugin.register_commands(subparsers, context)
+
+    args = parser.parse_args(unparsed_args, namespace=global_args)
 
     if args.subparser_name != 'create-workspace':
         read_workspace()
