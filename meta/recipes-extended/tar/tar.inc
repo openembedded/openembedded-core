@@ -21,12 +21,14 @@ EXTRAINSTALL_class-nativesdk = ""
 
 do_install () {
     autotools_do_install
+    ln -s tar ${D}${bindir}/gtar
     ${EXTRAINSTALL}
 }
 
 do_install_extra () {
     install -d ${D}${base_bindir}
     mv ${D}${bindir}/tar ${D}${base_bindir}/tar
+    mv ${D}${bindir}/gtar ${D}${base_bindir}/gtar
     rmdir ${D}${bindir}/
 }
 
