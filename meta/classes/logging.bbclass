@@ -40,6 +40,14 @@ bbfatal() {
 	exit 1
 }
 
+# Like bbfatal, except prevents the suppression of the error log by
+# bitbake's UI.
+# Output: logs console
+bbfatal_log() {
+	printf "%b\0" "bbfatal_log $*" > ${LOGFIFO}
+	exit 1
+}
+
 # Print debug messages. These are appropriate for progress checkpoint
 # messages to the logs. Depending on the debug log level, they may also
 # go to the console.

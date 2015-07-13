@@ -47,7 +47,7 @@ def lsb_distro_identifier(d):
     return oe.lsb.distro_identifier(adjust_func)
 
 die() {
-	bbfatal "$*"
+	bbfatal_log "$*"
 }
 
 oe_runmake_call() {
