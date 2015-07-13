@@ -1,0 +1,45 @@
+They managed to 'break' tar. Again. Sorry, they fixed a regression
+which broke dpkg-deb.
+
+The addition of:
+http://git.savannah.gnu.org/cgit/tar.git/commit/?id=163e96a0e619a900eab6de827c7c5749ecc9d3f2
+("Bugfix: entries read from the -T file did not get proper matching_flag.")
+means that the no-recursion option gets lost. This leads to many files getting included
+multiple times, along with files which shouldn't be there.
+
+The commit message is horrendous. The patch actually makes the option positional 
+(as documnted since 2003) and therefore doesn't affect the input from the -T option.
+
+Moving the --no-reursion option to earlier in the command avoids the bug.
+
+The bug was not present in tar 1.28 however it has been backported in at least 
+Fedora 22 and heading into Fedora 21.
+
+Redhat reports of issue:
+https://bugzilla.redhat.com/show_bug.cgi?id=1230762 [tar]
+https://bugzilla.redhat.com/show_bug.cgi?id=1241508 [dpkg]
+
+Discussion of bug in upstream tar:
+http://www.mail-archive.com/bug-tar@gnu.org/msg04799.html
+
+Yocto bug:
+https://bugzilla.yoctoproject.org/show_bug.cgi?id=7988
+
+Upstream-Status: Submitted [have mailed dpkg maintainer about this]
+
+RP
+2015/7/13
+
+Index: dpkg-1.17.25/dpkg-deb/build.c
+===================================================================
+--- dpkg-1.17.25.orig/dpkg-deb/build.c
++++ dpkg-1.17.25/dpkg-deb/build.c
+@@ -560,7 +560,7 @@ do_build(const char *const *argv)
+     if (chdir(dir))
+       ohshite(_("failed to chdir to `%.255s'"), dir);
+     execlp(TAR, "tar", "-cf", "-", "--format=gnu", "--null", "--no-unquote",
+-                       "-T", "-", "--no-recursion", NULL);
++                       "--no-recursion", "-T", "-", NULL);
+     ohshite(_("unable to execute %s (%s)"), "tar -cf", TAR);
+   }
+   close(p1[0]);
