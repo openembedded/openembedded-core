@@ -13,6 +13,7 @@ SRC_URI += "file://noman.patch \
             file://glibc2.5-sync_file_range.patch \
             file://no-vla-warning.patch \
             file://add_armeb_triplet_entry.patch \
+            file://tarfix.patch \
            "
 
 SRC_URI[md5sum] = "e48fcfdb2162e77d72c2a83432d537ca"
