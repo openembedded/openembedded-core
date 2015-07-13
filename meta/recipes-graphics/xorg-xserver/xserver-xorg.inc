@@ -119,7 +119,6 @@ EXTRA_OECONF += "--with-fop=no \
                  --localstatedir=/var \
                  --with-xkb-output=/var/lib/xkb \
                  --with-sha1=libcrypto \
-                 ac_cv_file__usr_share_sgml_X11_defs_ent=no \
 "
 
 PACKAGECONFIG ??= "dri2 udev ${@bb.utils.contains('DISTRO_FEATURES', 'opengl', 'dri glx', '', d)} \
