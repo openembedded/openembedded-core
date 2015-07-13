@@ -19,9 +19,7 @@ SRC_URI[sha256sum] = "44f99a8e76f3e8e4fec0bb5ad4762f8e44366168554ce66cb85afbe2ed
 
 CLEANBROKEN = "1"
 
-do_compile() {
-	:
-}
+do_compile[noexec] = "1"
 
 do_install () {
 	install -d ${D}${datadir}/gnu-config \
