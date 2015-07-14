@@ -11,15 +11,13 @@ LIC_FILES_CHKSUM = "file://COPYING;beginline=2;md5=6a7382872edb68d33e1a9398b6e03
 DEPENDS = "zlib file-native"
 DEPENDS_class-native = "zlib-native"
 
-SRC_URI = "ftp://ftp.astron.com/pub/file/${BP}.tar.gz \
-	   file://debian-742262.patch \
-	   file://0001-Add-P-prompt-into-Usage-info.patch \
-	   file://0001-Fix-bug-with-long-options-and-explicitly-number-them.patch \
-	   file://0002-fix-bug-with-5.23-long-options.patch \
-          "
+SRC_URI = "git://github.com/file/file.git \
+        file://debian-742262.patch \
+        file://0001-Add-P-prompt-into-Usage-info.patch \
+        "
 
-SRC_URI[md5sum] = "61db35209ce71a6d576392ce6e1d2f80"
-SRC_URI[sha256sum] = "2c8ab3ff143e2cdfb5ecee381752f80a79e0b4cfe9ca4cc6e1c3e5ec15e6157c"
+SRCREV = "3c0874be4d3232d672b20f513451a39cfd7c585a"
+S = "${WORKDIR}/git"
 
 inherit autotools
 
