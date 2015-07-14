@@ -12,7 +12,7 @@ do_install() {
 }
 
 do_unpack_extra() {
-	sed -i -e '/^prefix/s:/usr/local:${exec_prefix}:' Makefile
+	sed -i -e '/^prefix/s:/usr/local:${exec_prefix}:' ${S}/Makefile
 }
 addtask unpack_extra after do_unpack before do_patch
 
