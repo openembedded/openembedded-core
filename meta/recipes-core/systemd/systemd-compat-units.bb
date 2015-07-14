@@ -7,6 +7,8 @@ PR = "r29"
 
 DEPENDS = "systemd-systemctl-native"
 
+S = "${WORKDIR}"
+
 inherit allarch
 
 ALLOW_EMPTY_${PN} = "1"
