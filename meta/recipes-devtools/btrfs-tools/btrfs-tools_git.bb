@@ -12,7 +12,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=fcb02dc552a041dee27e4b85c7396067"
 SECTION = "base"
 DEPENDS = "util-linux attr e2fsprogs lzo acl"
 
-SRCREV = "c061b303c08af7a58373908d0d77ef0f1161fd36"
+SRCREV = "20be329fdb569fefdf88ba0e4ca1a41488fcbc19"
 SRC_URI = "git://git.kernel.org/pub/scm/linux/kernel/git/kdave/btrfs-progs.git \
            file://fix-parallel.patch \
 "
@@ -27,6 +27,6 @@ do_configure_prepend() {
 
 S = "${WORKDIR}/git"
 
-PV = "4.0.1+git${SRCPV}"
+PV = "4.1.1+git${SRCPV}"
 
 BBCLASSEXTEND = "native"
