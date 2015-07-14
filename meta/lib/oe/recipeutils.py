@@ -617,7 +617,8 @@ def find_layerdir(fn):
 def replace_dir_vars(path, d):
     """Replace common directory paths with appropriate variable references (e.g. /etc becomes ${sysconfdir})"""
     dirvars = {}
-    for var in d:
+    # Sort by length so we get the variables we're interested in first
+    for var in sorted(d.keys(), key=len):
         if var.endswith('dir') and var.lower() == var:
             value = d.getVar(var, True)
             if value.startswith('/') and not '\n' in value and value not in dirvars:
