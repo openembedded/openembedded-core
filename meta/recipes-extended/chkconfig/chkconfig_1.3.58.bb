@@ -36,10 +36,10 @@ EXTRA_OEMAKE = "\
 do_unpack[postfuncs] += "obey_variables"
 do_unpack[vardeps] += "obey_variables"
 obey_variables () {
-	sed -i -e 's,/etc,${sysconfdir},; s,/lib/systemd,${base_libdir}/systemd,' leveldb.h
+	sed -i -e 's,/etc,${sysconfdir},; s,/lib/systemd,${base_libdir}/systemd,' ${S}/leveldb.h
 	sed -i -e 's,/etc/alternatives,${sysconfdir}/alternatives,' \
 	       -e 's,/var/lib/alternatives,${localstatedir}/lib/alternatives,' \
-	       -e 's,/usr/share/locale,${datadir}/locale,' alternatives.c
+	       -e 's,/usr/share/locale,${datadir}/locale,' ${S}/alternatives.c
 }
 
 do_install() {
