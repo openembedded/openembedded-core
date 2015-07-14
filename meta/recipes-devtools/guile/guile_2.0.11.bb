@@ -81,16 +81,16 @@ guile_cross_config() {
 	        # Create guile-config returning target values instead of native values
 	        install -d ${SYSROOT_DESTDIR}${STAGING_BINDIR_CROSS}
         	echo '#!'`which ${BUILD_SYS}-guile`$' \\\n--no-auto-compile -e main -s\n!#\n(define %guile-build-info '\'\( \
-			> guile-config.cross
+			> ${B}/guile-config.cross
 	        sed -n -e 's:^[ \t]*{[ \t]*":  (:' \
 			-e 's:",[ \t]*": . ":' \
 			-e 's:" *}, *\\:"):' \
 			-e 's:^.*cachedir.*$::' \
 			-e '/^  (/p' \
-			< libguile/libpath.h >> guile-config.cross
-	        echo '))' >> guile-config.cross
-	        cat meta/guile-config >> guile-config.cross
-	        install guile-config.cross ${STAGING_BINDIR_CROSS}/guile-config
+			< ${B}/libguile/libpath.h >> ${B}/guile-config.cross
+	        echo '))' >> ${B}/guile-config.cross
+	        cat ${B}/meta/guile-config >> ${B}/guile-config.cross
+	        install ${B}/guile-config.cross ${STAGING_BINDIR_CROSS}/guile-config
 	fi
 }
 
