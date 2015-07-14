@@ -401,6 +401,13 @@ setup_sysroot() {
 
         OECORE_NATIVE_SYSROOT=$OE_TMPDIR/sysroots/$BUILD_SYS
     fi 
+
+    # Some recipes store the BIOS under $OE_TMPDIR/sysroots/$MACHINE,
+    # now defined as OECORE_MACHINE_SYSROOT. The latter is used when searching
+    # BIOS, VGA BIOS and keymaps.
+    if [ -z "$OECORE_MACHINE_SYSROOT" ]; then
+        OECORE_MACHINE_SYSROOT=$OE_TMPDIR/sysroots/$MACHINE
+    fi
 }
 
 # Locate a rootfs image to boot which matches our expected
@@ -494,7 +501,7 @@ fi
 echo "FSTYPE: [$FSTYPE]"
 
 setup_sysroot
-# OECORE_NATIVE_SYSROOT is now set for all cases
+# OECORE_NATIVE_SYSROOT and OECORE_MACHINE_SYSROOT are now set for all cases
 
 INTERNAL_SCRIPT="$0-internal"
 if [ ! -f "$INTERNAL_SCRIPT" -o ! -r "$INTERNAL_SCRIPT" ]; then
@@ -506,10 +513,14 @@ if [ ! -z "$CUSTOMBIOSDIR" ]; then
     if [ -d "$OECORE_NATIVE_SYSROOT/$CUSTOMBIOSDIR" ]; then
         echo "Assuming biosdir is $OECORE_NATIVE_SYSROOT/$CUSTOMBIOSDIR"
         SCRIPT_QEMU_OPT="$SCRIPT_QEMU_OPT -L $OECORE_NATIVE_SYSROOT/$CUSTOMBIOSDIR"
+    elif [ -d "$OECORE_MACHINE_SYSROOT/$CUSTOMBIOSDIR" ]; then
+        echo "Assuming biosdir is $OECORE_MACHINE_SYSROOT/$CUSTOMBIOSDIR"
+        SCRIPT_QEMU_OPT="$SCRIPT_QEMU_OPT -L $OECORE_MACHINE_SYSROOT/$CUSTOMBIOSDIR"
     else
         if [ ! -d "$CUSTOMBIOSDIR" ]; then
             echo "Custom BIOS directory not found. Tried: $CUSTOMBIOSDIR"
             echo "and $OECORE_NATIVE_SYSROOT/$CUSTOMBIOSDIR"
+            echo "and $OECORE_MACHINE_SYSROOT/$CUSTOMBIOSDIR"
             exit 1;
         fi
         echo "Assuming biosdir is $CUSTOMBIOSDIR"
