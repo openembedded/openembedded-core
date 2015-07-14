@@ -4,6 +4,8 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 PR = "r1"
 
+S = "${WORKDIR}"
+
 do_compile() {
 	mkdir -p ${S}/${sysconfdir}/opkg/
 
