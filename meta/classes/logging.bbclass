@@ -9,34 +9,54 @@ LOGFIFO = "${T}/fifo.${@os.getpid()}"
 # tasks that should be seen on the console. Use sparingly.
 # Output: logs console
 bbplain() {
-	printf "%b\0" "bbplain $*" > ${LOGFIFO}
+	if [ -p ${LOGFIFO} ] ; then
+		printf "%b\0" "bbplain $*" > ${LOGFIFO}
+	else
+		echo "$*"
+	fi
 }
 
 # Notify the user of a noteworthy condition. 
 # Output: logs
 bbnote() {
-	printf "%b\0" "bbnote $*" > ${LOGFIFO}
+	if [ -p ${LOGFIFO} ] ; then
+		printf "%b\0" "bbnote $*" > ${LOGFIFO}
+	else
+		echo "NOTE: $*"
+	fi
 }
 
 # Print a warning to the log. Warnings are non-fatal, and do not
 # indicate a build failure.
 # Output: logs console
 bbwarn() {
-	printf "%b\0" "bbwarn $*" > ${LOGFIFO}
+	if [ -p ${LOGFIFO} ] ; then
+		printf "%b\0" "bbwarn $*" > ${LOGFIFO}
+	else
+		echo "WARNING: $*"
+	fi
 }
 
 # Print an error to the log. Errors are non-fatal in that the build can
 # continue, but they do indicate a build failure.
 # Output: logs console
 bberror() {
-	printf "%b\0" "bberror $*" > ${LOGFIFO}
+	if [ -p ${LOGFIFO} ] ; then
+		printf "%b\0" "bberror $*" > ${LOGFIFO}
+	else
+		echo "ERROR: $*"
+	fi
 }
 
 # Print a fatal error to the log. Fatal errors indicate build failure
 # and halt the build, exiting with an error code.
 # Output: logs console
 bbfatal() {
-	printf "%b\0" "bbfatal $*" > ${LOGFIFO}
+	if [ -p ${LOGFIFO} ] ; then
+		printf "%b\0" "bbfatal $*" > ${LOGFIFO}
+	else
+		echo "ERROR: $*"
+	fi
 	exit 1
 }
 
@@ -44,7 +64,11 @@ bbfatal() {
 # bitbake's UI.
 # Output: logs console
 bbfatal_log() {
-	printf "%b\0" "bbfatal_log $*" > ${LOGFIFO}
+	if [ -p ${LOGFIFO} ] ; then
+		printf "%b\0" "bbfatal_log $*" > ${LOGFIFO}
+	else
+		echo "ERROR: $*"
+	fi
 	exit 1
 }
 
@@ -68,6 +92,10 @@ bbdebug() {
 	fi
 
 	# All debug output is printed to the logs
-	printf "%b\0" "bbdebug $DBGLVL $*" > ${LOGFIFO}
+	if [ -p ${LOGFIFO} ] ; then
+		printf "%b\0" "bbdebug $DBGLVL $*" > ${LOGFIFO}
+	else
+		echo "DEBUG: $*"
+	fi
 }
 
