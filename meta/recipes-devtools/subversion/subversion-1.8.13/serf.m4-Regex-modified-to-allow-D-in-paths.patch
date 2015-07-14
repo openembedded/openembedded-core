@@ -3,7 +3,11 @@ From: Jose Lamego <jose.a.lamego@linux.intel.com>
 Date: Thu, 2 Jul 2015 11:37:43 +0000
 Subject: [PATCH] serf.m4: Regex modified to allow '-D' in paths
 
-Upstream-Status: Pending
+Upstream-Status: Accepted
+
+The patch is merged by subversion upstream with replacing '[[:space:]]' with ' '.
+
+http://svn.apache.org/viewvc/subversion/trunk/build/ac-macros/serf.m4?r1=1594156&r2=1689824  
 
 Signed-off-by: Jose Lamego <jose.a.lamego@linux.intel.com>
 ---
