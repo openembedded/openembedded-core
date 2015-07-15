@@ -646,10 +646,9 @@ python sstate_task_postfunc () {
 
 #
 # Shell function to generate a sstate package from a directory
-# set as SSTATE_BUILDDIR
+# set as SSTATE_BUILDDIR. Will be run from within SSTATE_BUILDDIR.
 #
 sstate_create_package () {
-	cd ${SSTATE_BUILDDIR}
 	TFILE=`mktemp ${SSTATE_PKG}.XXXXXXXX`
 	# Need to handle empty directories
 	if [ "$(ls -A)" ]; then
@@ -672,10 +671,9 @@ sstate_create_package () {
 
 #
 # Shell function to decompress and prepare a package for installation
+# Will be run from within SSTATE_INSTDIR.
 #
 sstate_unpack_package () {
-	mkdir -p ${SSTATE_INSTDIR}
-	cd ${SSTATE_INSTDIR}
 	tar -xmvzf ${SSTATE_PKG}
 	# Use "! -w ||" to return true for read only files
 	[ ! -w ${SSTATE_PKG} ] || touch --no-dereference ${SSTATE_PKG}
