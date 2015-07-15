@@ -708,14 +708,21 @@ def get_recipe_upstream_version(rd):
         if uri_type == 'git':
             (pv, pfx, sfx) = get_recipe_pv_without_srcpv(pv, uri_type)
 
-            latest_revision = ud.method.latest_revision(ud, rd, ud.names[0])
+            revision = ud.method.latest_revision(ud, rd, ud.names[0])
 
             # if contains revision but not pupver use current pv
-            if pupver == '' and latest_revision:
+            if pupver == '' and revision:
                 pupver = pv
 
             if pupver != '':
-                pupver = pfx + pupver + sfx + latest_revision[:10]
+                tmp = pupver
+                pupver = ''
+
+                if pfx:
+                    pupver = pfx
+                pupver = pupver + tmp
+                if sfx:
+                    pupver = pupver + sfx + revision[:10]
 
         if pupver != '':
             ru['version'] = pupver
