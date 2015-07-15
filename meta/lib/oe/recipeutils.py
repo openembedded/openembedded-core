@@ -704,28 +704,30 @@ def get_recipe_upstream_version(rd):
     else:
         ud = bb.fetch2.FetchData(src_uri, rd)
         pupver = ud.method.latest_versionstring(ud, rd)
+        (upversion, revision) = pupver
 
+        # format git version version+gitAUTOINC+HASH
         if uri_type == 'git':
             (pv, pfx, sfx) = get_recipe_pv_without_srcpv(pv, uri_type)
 
-            revision = ud.method.latest_revision(ud, rd, ud.names[0])
+            # if contains revision but not upversion use current pv
+            if upversion == '' and revision:
+                upversion = pv
 
-            # if contains revision but not pupver use current pv
-            if pupver == '' and revision:
-                pupver = pv
-
-            if pupver != '':
-                tmp = pupver
-                pupver = ''
+            if upversion:
+                tmp = upversion
+                upversion = ''
 
                 if pfx:
-                    pupver = pfx
-                pupver = pupver + tmp
-                if sfx:
-                    pupver = pupver + sfx + revision[:10]
+                    upversion = pfx + tmp
+                else:
+                    upversion = tmp
 
-        if pupver != '':
-            ru['version'] = pupver
+                if sfx:
+                    upversion = upversion + sfx + revision[:10]
+
+        if upversion:
+            ru['version'] = upversion
             ru['type'] = 'A'
 
         ru['datetime'] = datetime.now()
