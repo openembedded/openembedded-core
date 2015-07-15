@@ -645,6 +645,12 @@ def get_recipe_pv_without_srcpv(pv, uri_type):
             pv = m.group('ver')
             pfx = m.group('pfx')
             sfx = m.group('sfx')
+    else:
+        regex = re.compile("(?P<pfx>(v|r|))(?P<ver>((\d+[\.\-_]*)+))")
+        m = regex.match(pv)
+        if m:
+            pv = m.group('ver')
+            pfx = m.group('pfx')
 
     return (pv, pfx, sfx)
 
