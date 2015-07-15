@@ -227,6 +227,12 @@ build_fat_img() {
 		FATSIZE="-F 32"
 	fi
 
+	# mkdosfs will fail if ${FATIMG} exists. Since we are creating an
+	# new image, it is safe to delete any previous image.
+	if [ -e ${FATIMG} ]; then
+		rm ${FATIMG}
+	fi
+
 	if [ -z "${HDDIMG_ID}" ]; then
 		mkdosfs ${FATSIZE} -n ${BOOTIMG_VOLUME_ID} -S 512 -C ${FATIMG} \
 			${BLOCKS}
