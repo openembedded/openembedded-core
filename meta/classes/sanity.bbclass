@@ -704,20 +704,6 @@ def check_sanity_everybuild(status, d):
     if "." in paths or "./" in paths or "" in paths:
         status.addresult("PATH contains '.', './' or '' (empty element), which will break the build, please remove this.\nParsed PATH is " + str(paths) + "\n")
 
-    # Check if /tmp is writable
-    from string import ascii_letters
-    from random import choice
-    from tempfile import mkstemp
-    tmpfd, tmppath = mkstemp()
-    try:
-        f = os.fdopen(tmpfd, "wt")
-        f.write("".join(choice(ascii_letters) for x in range(1024)))
-        f.close()
-    except Exception as err:
-        status.addresult("Failed to write into /tmp; %s. Please verify your filesystem." % err)
-    finally:
-        os.remove(tmppath)
-
     # Check that the DISTRO is valid, if set
     # need to take into account DISTRO renaming DISTRO
     distro = d.getVar('DISTRO', True)
