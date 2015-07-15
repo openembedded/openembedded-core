@@ -349,7 +349,7 @@ def appendsrc(args, files, rd):
     for uri in src_uri:
         simple_uri = bb.fetch.URI(uri)
         simple_uri.params = {}
-        simplified[simple_uri] = uri
+        simplified[str(simple_uri)] = uri
 
     copyfiles = {}
     extralines = []
@@ -365,9 +365,10 @@ def appendsrc(args, files, rd):
 
         simple = bb.fetch.URI(source_uri)
         simple.params = {}
-        if simple in simplified:
-            existing = simplified[simple]
-            if uri != existing:
+        simple_str = str(simple)
+        if simple_str in simplified:
+            existing = simplified[simple_str]
+            if source_uri != existing:
                 logger.warn('{0!r} is already in SRC_URI, with different parameters: {1!r}, not adding'.format(source_uri, existing))
             else:
                 logger.warn('{0!r} is already in SRC_URI, not adding'.format(source_uri))
