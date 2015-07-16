@@ -1,37 +1,29 @@
-import unittest
 import os
 import logging
-import re
 import tempfile
+import urlparse
 
-import oeqa.utils.ftools as ftools
-from oeqa.selftest.base import oeSelfTest
 from oeqa.utils.commands import runCmd, bitbake, get_bb_var, create_temp_layer
 from oeqa.utils.decorators import testcase
-from oeqa.selftest.devtool import DevtoolBase
+from oeqa.selftest import devtool
 
 
 templayerdir = ''
+
 
 def setUpModule():
     global templayerdir
     templayerdir = tempfile.mkdtemp(prefix='recipetoolqa')
     create_temp_layer(templayerdir, 'selftestrecipetool')
-    result = runCmd('bitbake-layers add-layer %s' % templayerdir)
-    # Ensure we have the right data in shlibs/pkgdata
-    logger = logging.getLogger("selftest")
-    logger.info('Running bitbake to generate pkgdata')
-    bitbake('base-files coreutils busybox selftest-recipetool-appendfile')
+    runCmd('bitbake-layers add-layer %s' % templayerdir)
+
 
 def tearDownModule():
     runCmd('bitbake-layers remove-layer %s' % templayerdir, ignore_status=True)
     runCmd('rm -rf %s' % templayerdir)
-    # Shouldn't leave any traces of this artificial recipe behind
-    bitbake('-c cleansstate selftest-recipetool-appendfile')
 
 
-class RecipetoolTests(DevtoolBase):
-
+class RecipetoolBase(devtool.DevtoolBase):
     def setUpLocal(self):
         self.tempdir = tempfile.mkdtemp(prefix='recipetoolqa')
         self.track_for_cleanup(self.tempdir)
@@ -42,26 +34,50 @@ class RecipetoolTests(DevtoolBase):
     def tearDownLocal(self):
         runCmd('rm -rf %s/recipes-*' % templayerdir)
 
-    def _try_recipetool_appendfile(self, testrecipe, destfile, newfile, options, expectedlines, expectedfiles):
-        result = runCmd('recipetool appendfile %s %s %s %s' % (templayerdir, destfile, newfile, options))
+    def _try_recipetool_appendcmd(self, cmd, testrecipe, expectedfiles, expectedlines=None):
+        result = runCmd(cmd)
         self.assertNotIn('Traceback', result.output)
+
         # Check the bbappend was created and applies properly
         recipefile = get_bb_var('FILE', testrecipe)
         bbappendfile = self._check_bbappend(testrecipe, recipefile, templayerdir)
+
         # Check the bbappend contents
-        with open(bbappendfile, 'r') as f:
-            self.assertEqual(expectedlines, f.readlines(), "Expected lines are not present in %s" % bbappendfile)
+        if expectedlines is not None:
+            with open(bbappendfile, 'r') as f:
+                self.assertEqual(expectedlines, f.readlines(), "Expected lines are not present in %s" % bbappendfile)
+
         # Check file was copied
         filesdir = os.path.join(os.path.dirname(bbappendfile), testrecipe)
         for expectedfile in expectedfiles:
             self.assertTrue(os.path.isfile(os.path.join(filesdir, expectedfile)), 'Expected file %s to be copied next to bbappend, but it wasn\'t' % expectedfile)
+
         # Check no other files created
         createdfiles = []
         for root, _, files in os.walk(filesdir):
             for f in files:
                 createdfiles.append(os.path.relpath(os.path.join(root, f), filesdir))
         self.assertTrue(sorted(createdfiles), sorted(expectedfiles))
+
         return bbappendfile, result.output
+
+
+class RecipetoolTests(RecipetoolBase):
+    @classmethod
+    def setUpClass(cls):
+        # Ensure we have the right data in shlibs/pkgdata
+        logger = logging.getLogger("selftest")
+        logger.info('Running bitbake to generate pkgdata')
+        bitbake('-c packagedata base-files coreutils busybox selftest-recipetool-appendfile')
+
+    @classmethod
+    def tearDownClass(cls):
+        # Shouldn't leave any traces of this artificial recipe behind
+        bitbake('-c cleansstate selftest-recipetool-appendfile')
+
+    def _try_recipetool_appendfile(self, testrecipe, destfile, newfile, options, expectedlines, expectedfiles):
+        cmd = 'recipetool appendfile %s %s %s %s' % (templayerdir, destfile, newfile, options)
+        return self._try_recipetool_appendcmd(cmd, testrecipe, expectedfiles, expectedlines)
 
     def _try_recipetool_appendfile_fail(self, destfile, newfile, checkerror):
         cmd = 'recipetool appendfile %s %s %s' % (templayerdir, destfile, newfile)
