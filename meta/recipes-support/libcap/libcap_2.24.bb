@@ -36,6 +36,7 @@ EXTRA_OEMAKE = " \
   INDENT=  \
   lib=${@os.path.basename('${libdir}')} \
   RAISE_SETFCAP=no \
+  DYNAMIC=yes \
 "
 
 EXTRA_OEMAKE_append_class-target = " SYSTEM_HEADERS=${STAGING_INCDIR}"
