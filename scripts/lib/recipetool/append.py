@@ -356,6 +356,10 @@ def appendsrc(args, files, rd):
     for newfile, srcfile in files.iteritems():
         src_destdir = os.path.dirname(srcfile)
         if not args.use_workdir:
+            if rd.getVar('S', True) == rd.getVar('STAGING_KERNEL_DIR', True):
+                srcdir = os.path.join(workdir, 'git')
+                if not bb.data.inherits_class('kernel-yocto', rd):
+                    logger.warn('S == STAGING_KERNEL_DIR and non-kernel-yocto, unable to determine path to srcdir, defaulting to ${WORKDIR}/git')
             src_destdir = os.path.join(os.path.relpath(srcdir, workdir), src_destdir)
         src_destdir = os.path.normpath(src_destdir)
 
