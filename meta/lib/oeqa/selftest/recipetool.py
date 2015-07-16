@@ -50,7 +50,7 @@ class RecipetoolTests(DevtoolBase):
         bbappendfile = self._check_bbappend(testrecipe, recipefile, templayerdir)
         # Check the bbappend contents
         with open(bbappendfile, 'r') as f:
-            self.assertEqual(expectedlines, f.readlines())
+            self.assertEqual(expectedlines, f.readlines(), "Expected lines are not present in %s" % bbappendfile)
         # Check file was copied
         filesdir = os.path.join(os.path.dirname(bbappendfile), testrecipe)
         for expectedfile in expectedfiles:
@@ -109,7 +109,7 @@ class RecipetoolTests(DevtoolBase):
         # But file should have
         copiedfile = os.path.join(os.path.dirname(bbappendfile), 'coreutils', testfile2name)
         result = runCmd('diff -q %s %s' % (testfile2, copiedfile), ignore_status=True)
-        self.assertNotEqual(result.status, 0, 'New file should have been copied but was not')
+        self.assertNotEqual(result.status, 0, 'New file should have been copied but was not %s' % result.output)
 
     @testcase(1178)
     def test_recipetool_appendfile_binary(self):
