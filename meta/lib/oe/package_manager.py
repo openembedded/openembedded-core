@@ -616,7 +616,7 @@ class RpmPM(PackageManager):
         self.install_dir_path = os.path.join(self.target_rootfs, self.install_dir_name)
         self.rpm_cmd = bb.utils.which(os.getenv('PATH'), "rpm")
         self.smart_cmd = bb.utils.which(os.getenv('PATH'), "smart")
-        self.smart_opt = "--quiet --data-dir=" + os.path.join(target_rootfs,
+        self.smart_opt = "--log-level=warning --data-dir=" + os.path.join(target_rootfs,
                                                       'var/lib/smart')
         self.scriptlet_wrapper = self.d.expand('${WORKDIR}/scriptlet_wrapper')
         self.solution_manifest = self.d.expand('${T}/saved/%s_solution' %
