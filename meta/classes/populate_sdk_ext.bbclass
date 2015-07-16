@@ -173,6 +173,17 @@ install_tools() {
 	install ${SDK_DEPLOY}/${BUILD_ARCH}-nativesdk-libc.tar.bz2 ${SDK_OUTPUT}/${SDKPATH}
 }
 
+# Since bitbake won't run as root it doesn't make sense to try and install
+# the extensible sdk as root.
+sdk_ext_preinst() {
+	if [ "`id -u`" = "0" ]; then
+		echo "ERROR: The extensible sdk cannot be installed as root."
+		exit 1
+	fi
+	SDK_EXTENSIBLE="1"
+}
+SDK_PRE_INSTALL_COMMAND_task-populate-sdk-ext = "${sdk_ext_preinst}"
+
 # FIXME this preparation should be done as part of the SDK construction
 sdk_ext_postinst() {
 	printf "\nExtracting buildtools...\n"

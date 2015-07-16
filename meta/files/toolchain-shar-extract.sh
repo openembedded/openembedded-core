@@ -71,6 +71,8 @@ if [ $verbose = 1 ] ; then
 	set -x
 fi
 
+@SDK_PRE_INSTALL_COMMAND@
+
 if [ "$target_sdk_dir" = "" ]; then
 	read -e -p "Enter target directory for SDK (default: $DEFAULT_INSTALL_DIR): " target_sdk_dir
 	[ "$target_sdk_dir" = "" ] && target_sdk_dir=$DEFAULT_INSTALL_DIR
@@ -116,6 +118,11 @@ mkdir -p $target_sdk_dir >/dev/null 2>&1
 
 # if don't have the right to access dir, gain by sudo 
 if [ ! -x $target_sdk_dir -o ! -w $target_sdk_dir -o ! -r $target_sdk_dir ]; then 
+	if [ "$SDK_EXTENSIBLE" = "1" ]; then
+		echo "Unable to access \"$target_sdk_dir\"."
+		exit 1
+	fi
+
 	SUDO_EXEC=$(which "sudo")
 	if [ -z $SUDO_EXEC ]; then
 		echo "No command 'sudo' found, please install sudo first. Abort!"
