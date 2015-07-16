@@ -17,7 +17,7 @@ class BitbakePrTests(oeSelfTest):
         package_data_file = os.path.join(pkgdata_dir, 'runtime', package_name)
         package_data = ftools.read_file(package_data_file)
         find_pr = re.search("PKGR: r[0-9]+\.([0-9]+)", package_data)
-        self.assertTrue(find_pr)
+        self.assertTrue(find_pr, "No PKG revision found in %s" % package_data_file)
         return int(find_pr.group(1))
 
     def get_task_stamp(self, package_name, recipe_task):
@@ -60,8 +60,8 @@ class BitbakePrTests(oeSelfTest):
         stamp_2 = self.get_task_stamp(package_name, track_task)
 
         bitbake("-ccleansstate %s" % package_name)
-        self.assertTrue(pr_2 - pr_1 == 1)
-        self.assertTrue(stamp_1 != stamp_2)
+        self.assertTrue(pr_2 - pr_1 == 1, "Step between same pkg. revision is greater than 1")
+        self.assertTrue(stamp_1 != stamp_2, "Different pkg rev. but same stamp: %s" % stamp_1)
 
     def run_test_pr_export_import(self, package_name, replace_current_db=True):
         self.config_pr_tests(package_name)
@@ -86,7 +86,7 @@ class BitbakePrTests(oeSelfTest):
         pr_2 = self.get_pr_version(package_name)
 
         bitbake("-ccleansstate %s" % package_name)
-        self.assertTrue(pr_2 - pr_1 == 1)
+        self.assertTrue(pr_2 - pr_1 == 1, "Step between same pkg. revision is greater than 1")
 
     @testcase(930)
     def test_import_export_replace_db(self):
