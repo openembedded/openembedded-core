@@ -17,10 +17,6 @@ PACKAGECONFIG[systemd] = "--enable-systemd --with-systemdsystemunitdir=${systemd
 
 EXTRA_OECONF += "--enable-tools"
 
-do_install() {
-	oe_runmake DESTDIR=${D} libexecdir=${libexecdir} install
-}
-
 # This would copy neard start-stop shell and test scripts
 do_install_append() {
 	if ${@bb.utils.contains('DISTRO_FEATURES', 'sysvinit', 'true', 'false', d)}; then
