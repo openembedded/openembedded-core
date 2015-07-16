@@ -18,6 +18,7 @@ SRC_URI = "\
           file://smart-improve-error-reporting.patch \
           file://smart-channelsdir.patch \
           file://smart-attempt.patch \
+          file://smart-attempt-fix.patch \
           file://smart-rpm4-fixes.patch \
           file://smart-add-for-rpm-ignoresize-check.patch \
           file://smart-already-installed-message.patch \
