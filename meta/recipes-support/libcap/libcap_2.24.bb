@@ -41,6 +41,9 @@ EXTRA_OEMAKE = " \
 
 EXTRA_OEMAKE_append_class-target = " SYSTEM_HEADERS=${STAGING_INCDIR}"
 
+# these are present in the libcap defaults, so include in our CFLAGS too
+CFLAGS += "-D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64"
+
 do_compile() {
 	oe_runmake ${EXTRA_OECONF}
 }
