@@ -55,7 +55,6 @@ RDEPENDS_packagegroup-core-lsb = "\
 RDEPENDS_packagegroup-core-sys-extended = "\
     curl \
     dhcp-client \
-    gamin \
     hdparm \
     lighttpd \
     libaio \
