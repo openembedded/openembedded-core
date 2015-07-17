@@ -125,10 +125,6 @@ if [ -z "$BRANCH" ]; then
 	echo "NOTE: Assuming remote branch '$BRANCH', use -b to override."
 fi
 
-if [ "$COMMIT_ID" == "HEAD" ]; then
-	COMMIT_ID="$BRANCH"
-fi
-
 if [ -z "$REMOTE_URL" ]; then
 	echo "ERROR: Missing parameter -u, no git remote!"
 	usage
