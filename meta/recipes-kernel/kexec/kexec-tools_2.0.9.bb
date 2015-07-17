@@ -6,6 +6,7 @@ SRC_URI += "file://kexec-tools-Refine-kdump-device_tree-sort.patch \
             file://kexec-aarch64.patch \
             file://kexec-x32.patch \
             file://0001-purgatory-Disabling-GCC-s-stack-protection.patch \
+            file://0002-powerpc-change-the-memory-size-limit.patch \
          "
 
 SRC_URI[md5sum] = "4ecb7ab7ad9eb6ce413899bdb07a8426"
