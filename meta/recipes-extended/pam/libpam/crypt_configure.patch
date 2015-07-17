@@ -16,8 +16,8 @@ Signed-off-by: Khem Raj <raj.khem@gmail.com>
 
 Index: Linux-PAM-1.1.6/configure.in
 ===================================================================
---- Linux-PAM-1.1.6.org/configure.in
-+++ Linux-PAM-1.1.6/configure.in
+--- Linux-PAM-1.1.6.org/configure.ac
++++ Linux-PAM-1.1.6/configure.ac
 @@ -400,7 +400,9 @@ AS_IF([test "x$ac_cv_header_xcrypt_h" =
    [crypt_libs="crypt"])
  

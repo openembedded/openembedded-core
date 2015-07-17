@@ -18,19 +18,15 @@ SRC_URI = "http://linux-pam.org/library/Linux-PAM-${PV}.tar.bz2 \
            file://pam.d/common-session-noninteractive \
            file://pam.d/other \
            file://libpam-xtests.patch \
-           file://destdirfix.patch \
            file://fixsepbuild.patch \
-           file://reflect-the-enforce_for_root-semantics-change-in-pam.patch \
-           file://add-checks-for-crypt-returning-NULL.patch \
-           file://libpam-fix-for-CVE-2010-4708.patch \
            file://pam-security-abstract-securetty-handling.patch \
            file://pam-unix-nullok-secure.patch \
-           file://pam_timestamp-fix-potential-directory-traversal-issu.patch \
            file://libpam-xtests-remove-bash-dependency.patch \
            file://crypt_configure.patch \
           "
-SRC_URI[md5sum] = "7b73e58b7ce79ffa321d408de06db2c4"
-SRC_URI[sha256sum] = "bab887d6280f47fc3963df3b95735a27a16f0f663636163ddf3acab5f1149fc2"
+
+SRC_URI[md5sum] = "9dc53067556d2dd567808fd509519dd6"
+SRC_URI[sha256sum] = "342b1211c0d3b203a7df2540a5b03a428a087bd8a48c17e49ae268f992b334d9"
 
 SRC_URI_append_libc-uclibc = " file://pam-no-innetgr.patch"
 SRC_URI_append_libc-musl = " file://pam-no-innetgr.patch"
