@@ -8,6 +8,7 @@ def setUpModule():
 
 class SyslogTest(oeRuntimeTest):
 
+    @testcase(1148)
     @skipUnlessPassed("test_ssh")
     def test_syslog_help(self):
         (status,output) = self.target.run('/sbin/syslogd --help')
@@ -22,11 +23,13 @@ class SyslogTest(oeRuntimeTest):
 
 class SyslogTestConfig(oeRuntimeTest):
 
+    @testcase(1149)
     @skipUnlessPassed("test_syslog_running")
     def test_syslog_logger(self):
         (status,output) = self.target.run('logger foobar && test -e /var/log/messages && grep foobar /var/log/messages || logread | grep foobar')
         self.assertEqual(status, 0, msg="Test log string not found in /var/log/messages. Output: %s " % output)
 
+    @testcase(1150)
     @skipUnlessPassed("test_syslog_running")
     def test_syslog_restart(self):
         if "systemd" != oeRuntimeTest.tc.d.getVar("VIRTUAL-RUNTIME_init_manager", False):

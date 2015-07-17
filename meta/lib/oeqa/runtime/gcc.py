@@ -30,6 +30,7 @@ class GccCompileTest(oeRuntimeTest):
         (status, output) = self.target.run('/tmp/test')
         self.assertEqual(status, 0, msg="running compiled file failed, output %s" % output)
 
+    @testcase(1142)
     def test_gpp2_compile(self):
         (status, output) = self.target.run('g++ /tmp/test.cpp -o /tmp/test -lm')
         self.assertEqual(status, 0, msg="g++ compile failed, output: %s" % output)

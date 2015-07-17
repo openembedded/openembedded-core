@@ -14,6 +14,7 @@ class PerlTest(oeRuntimeTest):
     def setUpClass(self):
         oeRuntimeTest.tc.target.copy_to(os.path.join(oeRuntimeTest.tc.filesdir, "test.pl"), "/tmp/test.pl")
 
+    @testcase(1141)
     def test_perl_exists(self):
         (status, output) = self.target.run('which perl')
         self.assertEqual(status, 0, msg="Perl binary not in PATH or not on target.")

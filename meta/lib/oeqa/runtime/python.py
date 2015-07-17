@@ -14,6 +14,7 @@ class PythonTest(oeRuntimeTest):
     def setUpClass(self):
         oeRuntimeTest.tc.target.copy_to(os.path.join(oeRuntimeTest.tc.filesdir, "test.py"), "/tmp/test.py")
 
+    @testcase(1145)
     def test_python_exists(self):
         (status, output) = self.target.run('which python')
         self.assertEqual(status, 0, msg="Python binary not in PATH or not on target.")
@@ -24,10 +25,10 @@ class PythonTest(oeRuntimeTest):
         self.assertEqual(status, 0, msg="Exit status was not 0. Output: %s" % output)
         self.assertEqual(output, "the value of a is 0.01", msg="Incorrect output: %s" % output)
 
+    @testcase(1146)
     def test_python_testfile(self):
         (status, output) = self.target.run('ls /tmp/testfile.python')
         self.assertEqual(status, 0, msg="Python test file generate failed.")
-        
 
     @classmethod
     def tearDownClass(self):
