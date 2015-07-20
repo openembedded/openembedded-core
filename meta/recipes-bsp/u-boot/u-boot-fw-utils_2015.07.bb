@@ -1,18 +1,17 @@
 SUMMARY = "U-Boot bootloader fw_printenv/setenv utilities"
 LICENSE = "GPLv2+"
-LIC_FILES_CHKSUM = "file://Licenses/README;md5=c7383a594871c03da76b3707929d2919"
+LIC_FILES_CHKSUM = "file://Licenses/README;md5=0507cd7da8e7ad6d6701926ec9b84c95"
 SECTION = "bootloader"
 DEPENDS = "mtd-utils"
 
-# This revision corresponds to the tag "v2015.01"
+# This revision corresponds to the tag "v2015.07"
 # We use the revision in order to avoid having to fetch it from the
 # repo during parse
-SRCREV = "92fa7f53f1f3f03296f8ffb14bdf1baefab83368"
+SRCREV = "33711bdd4a4dce942fb5ae85a68899a8357bdd94"
 
-PV = "v2015.01+git${SRCPV}"
+PV = "v2015.07+git${SRCPV}"
 
-SRC_URI = "git://git.denx.de/u-boot.git;branch=master \
-           file://0001-tools-env-fix-build-error.patch"
+SRC_URI = "git://git.denx.de/u-boot.git;branch=master"
 
 S = "${WORKDIR}/git"
 
