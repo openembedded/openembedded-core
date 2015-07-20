@@ -3,9 +3,9 @@ From: Drew Moseley <drew_moseley@mentor.com>
 Date: Sun, 27 Jul 2014 13:10:07 -0400
 Subject: [PATCH] libX11: Add missing NULL check on im and im->methods
 
-Upstream-Status: Submitted [https://bugs.freedesktop.org/show_bug.cgi?id=81822]
-
+Upstream-Status: Backport (c827edcd1c4a7f920aa25208083b5b58d60d2b44)
 Signed-off-by: Drew Moseley <drew_moseley@mentor.com>
+
 ---
  src/xlibi18n/ICWrap.c | 5 +++--
  1 file changed, 3 insertions(+), 2 deletions(-)
