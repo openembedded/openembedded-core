@@ -12,8 +12,8 @@ SRC_URI = "http://www.sqlite.org/2015/sqlite-autoconf-${SQLITE_PV}.tar.gz \
            file://0001-using-the-dynamic-library.patch \
 "
 
-SRC_URI[md5sum] = "04d0311ef70818e8d914c1dc383eddff"
-SRC_URI[sha256sum] = "c4b8f9eefbdf0b9bef2044bdc3510c8a3f3b0ddb0489661fb433034187f5a428"
+SRC_URI[md5sum] = "a18bfc015cd49a1e7a961b7b77bc3b37"
+SRC_URI[sha256sum] = "8382e55a4e7d853c93038562ca3dd00307937fccf1c6b65ddd813e503a56d626"
 
 S = "${WORKDIR}/sqlite-autoconf-${SQLITE_PV}"
 
