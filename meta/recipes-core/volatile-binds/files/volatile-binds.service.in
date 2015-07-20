@@ -13,7 +13,7 @@ RemainAfterExit=Yes
 StandardOutput=syslog
 TimeoutSec=0
 ExecStart=/sbin/mount-copybind @what@ @where@
-ExecStop=/sbin/umount @where@
+ExecStop=/bin/umount @where@
 
 [Install]
 WantedBy=local-fs.target
