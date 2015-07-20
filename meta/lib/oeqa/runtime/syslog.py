@@ -8,18 +8,11 @@ def setUpModule():
 
 class SyslogTest(oeRuntimeTest):
 
-    @testcase(1148)
-    @skipUnlessPassed("test_ssh")
-    def test_syslog_help(self):
-        (status,output) = self.target.run('/sbin/syslogd --help')
-        self.assertEqual(status, 0, msg="status and output: %s and %s" % (status,output))
-
     @testcase(201)
     @skipUnlessPassed("test_syslog_help")
     def test_syslog_running(self):
         (status,output) = self.target.run(oeRuntimeTest.pscmd + ' | grep -i [s]yslogd')
         self.assertEqual(status, 0, msg="no syslogd process, ps output: %s" % self.target.run(oeRuntimeTest.pscmd)[1])
-
 
 class SyslogTestConfig(oeRuntimeTest):
 
@@ -41,6 +34,7 @@ class SyslogTestConfig(oeRuntimeTest):
     @skipUnlessPassed("test_syslog_restart")
     @skipUnlessPassed("test_syslog_logger")
     @unittest.skipIf("systemd" == oeRuntimeTest.tc.d.getVar("VIRTUAL-RUNTIME_init_manager", False), "Not appropiate for systemd image")
+    @unittest.skipIf(oeRuntimeTest.hasPackage("sysklogd") or not oeRuntimeTest.hasPackage("busybox"), "Non-busybox syslog")
     def test_syslog_startup_config(self):
         self.target.run('echo "LOGFILE=/var/log/test" >> /etc/syslog-startup.conf')
         (status,output) = self.target.run('/etc/init.d/syslog restart')
