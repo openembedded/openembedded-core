@@ -35,6 +35,8 @@ python __anonymous () {
     major = d.getVar("PV",True).split('.')[0]
     if major == "3":
         d.setVar("HEADER_FETCH_VER", "3.0")
+    elif major == "4":
+        d.setVar("HEADER_FETCH_VER", "4.x")
     else:
         d.setVar("HEADER_FETCH_VER", "2.6")
 }
