@@ -66,7 +66,7 @@ index 9445424..bc4c8d1 100644
 -DEMO_CFLAGS="$DEMO_CFLAGS $GLU_CFLAGS"
 -DEMO_LIBS="$DEMO_LIBS $GLU_LIBS"
 +if test "x$enable_glu" = xyes; then
-+    PKG_CHECK_MODULES(GLU, [glu], [],
++    PKG_CHECK_MODULES(GLU, [glu], [glu_enabled=yes],
 +                     [AC_CHECK_HEADER([GL/glu.h],
 +                                      [],
 +                                      AC_MSG_ERROR([GLU not found]))
