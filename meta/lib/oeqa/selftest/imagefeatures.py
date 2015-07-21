@@ -2,12 +2,19 @@ from oeqa.selftest.base import oeSelfTest
 from oeqa.utils.commands import runCmd, bitbake, get_bb_var
 from oeqa.utils.decorators import testcase
 import pexpect
-from os.path import expanduser, isfile
-from os import system
+from os.path import isfile
+from os import system, killpg
 import glob
+import signal
 
 
 class ImageFeatures(oeSelfTest):
+
+    test_user = 'tester'
+    root_user = 'root'
+    prompt = r'qemux86:\S+[$#]\s+'
+    ssh_cmd = "ssh {} -l {} -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no"
+    get_ip_patt = r'\s+ip=(?P<qemu_ip>(\d+.){3}\d+)::'
 
     @testcase(1107)
     def test_non_root_user_can_connect_via_ssh_without_password(self):
@@ -20,69 +27,45 @@ class ImageFeatures(oeSelfTest):
         AutomatedBy: Daniel Istrate <daniel.alexandrux.istrate@intel.com>
         """
 
-        test_user = 'tester'
-        root_user = 'root'
-        prompt = r'qemux86:\S+[$#]\s+'
-        tap_inf_ip = '192.168.7.2'
-
         features = 'EXTRA_IMAGE_FEATURES += "ssh-server-openssh empty-root-password"\n'
         features += 'INHERIT += "extrausers"\n'
-        features += 'EXTRA_USERS_PARAMS = "useradd -p \'\' {}; usermod -s /bin/sh {};"'.format(test_user, test_user)
+        features += 'EXTRA_USERS_PARAMS = "useradd -p \'\' {}; usermod -s /bin/sh {};"'.format(self.test_user, self.test_user)
 
         # Append 'features' to local.conf
         self.append_config(features)
 
         # Build a core-image-minimal
-        ret = bitbake('core-image-minimal')
-        self.assertEqual(0, ret.status, 'Failed to build a core-image-minimal')
-
-        rm_ssh_keys_cmd = 'ssh-keygen -f "{}/.ssh/known_hosts" -R {}'.format(expanduser('~'), tap_inf_ip)
-        # Delete the ssh keys for 192.168.7.2 (qemu)
-        ret = runCmd(rm_ssh_keys_cmd)
-        self.assertEqual(0, ret.status, 'Failed to delete ssh keys for qemu host.')
+        bitbake('core-image-minimal')
 
         # Boot qemu image
         proc_qemu = pexpect.spawn('runqemu qemux86 nographic')
         try:
+            proc_qemu.expect(self.get_ip_patt, timeout=100)
+            qemu_ip = proc_qemu.match.group('qemu_ip')
             proc_qemu.expect('qemux86 login:', timeout=100)
         except:
-            system('pkill qemu')
-            proc_qemu.close()
+            killpg(proc_qemu.pid, signal.SIGTERM)
             self.fail('Failed to start qemu.')
 
         # Attempt to ssh with each user into qemu with empty password
-        for user in [root_user, test_user]:
-            proc_ssh = pexpect.spawn('ssh {} -l {}'.format(tap_inf_ip, user))
-            index = proc_ssh.expect(['Are you sure you want to continue connecting', prompt, pexpect.TIMEOUT, pexpect.EOF])
+        for user in [self.root_user, self.test_user]:
+            proc_ssh = pexpect.spawn(self.ssh_cmd.format(qemu_ip, user))
+            index = proc_ssh.expect([self.prompt, pexpect.TIMEOUT, pexpect.EOF])
             if index == 0:
-                proc_ssh.sendline('yes')
-                try:
-                    proc_ssh.expect(prompt)
-                except:
-                    system('pkill qemu')
-                    proc_qemu.close()
-                    proc_ssh.terminate()
-                    self.fail('Failed to ssh with {} user into qemu.'.format(user))
-            elif index == 1:
                 # user successfully logged in with empty password
                 pass
-            elif index == 2:
-                system('pkill qemu')
-                proc_qemu.close()
+            elif index == 1:
+                killpg(proc_qemu.pid, signal.SIGTERM)
                 proc_ssh.terminate()
                 self.fail('Failed to ssh with {} user into qemu (timeout).'.format(user))
             else:
-                system('pkill qemu')
-                proc_qemu.close()
+                killpg(proc_qemu.pid, signal.SIGTERM)
                 proc_ssh.terminate()
                 self.fail('Failed to ssh with {} user into qemu (eof).'.format(user))
+            proc_ssh.terminate()
 
         # Cleanup
-        system('pkill qemu')
-        proc_qemu.close()
-        proc_ssh.terminate()
-        ret = runCmd(rm_ssh_keys_cmd)
-        self.assertEqual(0, ret.status, 'Failed to delete ssh keys for qemu host (at cleanup).')
+        killpg(proc_qemu.pid, signal.SIGTERM)
 
     @testcase(1115)
     def test_all_users_can_connect_via_ssh_without_password(self):
@@ -93,69 +76,46 @@ class ImageFeatures(oeSelfTest):
         Author:      Ionut Chisanovici <ionutx.chisanovici@intel.com>
         AutomatedBy: Daniel Istrate <daniel.alexandrux.istrate@intel.com>
         """
-        test_user = 'tester'
-        root_user = 'root'
-        prompt = r'qemux86:\S+[$#]\s+'
-        tap_inf_ip = '192.168.7.2'
 
         features = 'EXTRA_IMAGE_FEATURES += "ssh-server-openssh allow-empty-password"\n'
         features += 'INHERIT += "extrausers"\n'
-        features += 'EXTRA_USERS_PARAMS = "useradd -p \'\' {}; usermod -s /bin/sh {};"'.format(test_user, test_user)
+        features += 'EXTRA_USERS_PARAMS = "useradd -p \'\' {}; usermod -s /bin/sh {};"'.format(self.test_user, self.test_user)
 
         # Append 'features' to local.conf
         self.append_config(features)
 
         # Build a core-image-minimal
-        ret = bitbake('core-image-minimal')
-        self.assertEqual(0, ret.status, 'Failed to build a core-image-minimal')
-
-        rm_ssh_keys_cmd = 'ssh-keygen -f "{}/.ssh/known_hosts" -R {}'.format(expanduser('~'), tap_inf_ip)
-        # Delete the ssh keys for 192.168.7.2 (qemu)
-        ret = runCmd(rm_ssh_keys_cmd)
-        self.assertEqual(0, ret.status, 'Failed to delete ssh keys for qemu host.')
+        bitbake('core-image-minimal')
 
         # Boot qemu image
         proc_qemu = pexpect.spawn('runqemu qemux86 nographic')
         try:
+            proc_qemu.expect(self.get_ip_patt, timeout=100)
+            qemu_ip = proc_qemu.match.group('qemu_ip')
             proc_qemu.expect('qemux86 login:', timeout=100)
         except:
-            system('pkill qemu')
-            proc_qemu.close()
+            killpg(proc_qemu.pid, signal.SIGTERM)
             self.fail('Failed to start qemu.')
 
         # Attempt to ssh with each user into qemu with empty password
-        for user in [root_user, test_user]:
-            proc_ssh = pexpect.spawn('ssh {} -l {}'.format(tap_inf_ip, user))
-            index = proc_ssh.expect(['Are you sure you want to continue connecting', prompt, pexpect.TIMEOUT, pexpect.EOF])
+        for user in [self.root_user, self.test_user]:
+            proc_ssh = pexpect.spawn(self.ssh_cmd.format(qemu_ip, user))
+            index = proc_ssh.expect([self.prompt, pexpect.TIMEOUT, pexpect.EOF])
             if index == 0:
-                proc_ssh.sendline('yes')
-                try:
-                    proc_ssh.expect(prompt)
-                except:
-                    system('pkill qemu')
-                    proc_qemu.close()
-                    proc_ssh.terminate()
-                    self.fail('Failed to ssh with {} user into qemu.'.format(user))
-            elif index == 1:
                 # user successfully logged in with empty password
                 pass
-            elif index == 2:
-                system('pkill qemu')
-                proc_qemu.close()
+            elif index == 1:
+                killpg(proc_qemu.pid, signal.SIGTERM)
                 proc_ssh.terminate()
                 self.fail('Failed to ssh with {} user into qemu (timeout).'.format(user))
             else:
-                system('pkill qemu')
-                proc_qemu.close()
+                killpg(proc_qemu.pid, signal.SIGTERM)
                 proc_ssh.terminate()
                 self.fail('Failed to ssh with {} user into qemu (eof).'.format(user))
+            proc_ssh.terminate()
 
         # Cleanup
-        system('pkill qemu')
-        proc_qemu.close()
-        proc_ssh.terminate()
-        ret = runCmd(rm_ssh_keys_cmd)
-        self.assertEqual(0, ret.status, 'Failed to delete ssh keys for qemu host (at cleanup).')
+        killpg(proc_qemu.pid, signal.SIGTERM)
 
     @testcase(1114)
     def test_rpm_version_4_support_on_image(self):
@@ -167,8 +127,6 @@ class ImageFeatures(oeSelfTest):
         AutomatedBy: Daniel Istrate <daniel.alexandrux.istrate@intel.com>
         """
 
-        root_user = 'root'
-        prompt = '{}@qemux86:~# '.format(root_user)
         rpm_version = '4.11.2'
         features = 'IMAGE_INSTALL_append = " rpm"\n'
         features += 'PREFERRED_VERSION_rpm = "{}"\n'.format(rpm_version)
@@ -179,33 +137,28 @@ class ImageFeatures(oeSelfTest):
         self.append_config(features)
 
         # Build a core-image-minimal
-        ret = bitbake('core-image-minimal')
-        self.assertEqual(0, ret.status, 'Failed to build a core-image-minimal')
+        bitbake('core-image-minimal')
 
         # Boot qemu image & get rpm version
         proc_qemu = pexpect.spawn('runqemu qemux86 nographic')
         try:
             proc_qemu.expect('qemux86 login:', timeout=100)
-            proc_qemu.sendline(root_user)
-            proc_qemu.expect(prompt)
+            proc_qemu.sendline(self.root_user)
+            proc_qemu.expect(self.prompt)
             proc_qemu.sendline('rpm --version')
-            proc_qemu.expect(prompt)
+            proc_qemu.expect(self.prompt)
         except:
-            system('pkill qemu')
-            proc_qemu.close()
+            killpg(proc_qemu.pid, signal.SIGTERM)
             self.fail('Failed to boot qemu.')
 
         found_rpm_version = proc_qemu.before
 
         # Make sure the retrieved rpm version is the expected one
-        if rpm_version not in found_rpm_version:
-            system('pkill qemu')
-            proc_qemu.close()
-            self.fail('RPM version is not {}, found instead {}.'.format(rpm_version, found_rpm_version))
+        self.assertIn(rpm_version, found_rpm_version,
+                      'RPM version is not {}, found instead {}.'.format(rpm_version, found_rpm_version))
 
         # Cleanup (close qemu)
-        system('pkill qemu')
-        proc_qemu.close()
+        killpg(proc_qemu.pid, signal.SIGTERM)
 
     @testcase(1116)
     def test_clutter_image_can_be_built(self):
@@ -218,8 +171,7 @@ class ImageFeatures(oeSelfTest):
         """
 
         # Build a core-image-clutter
-        ret = bitbake('core-image-clutter')
-        self.assertEqual(0, ret.status, 'Failed to build core-image-clutter')
+        bitbake('core-image-clutter')
 
     @testcase(1117)
     def test_wayland_support_in_image(self):
@@ -239,8 +191,7 @@ class ImageFeatures(oeSelfTest):
         self.append_config(features)
 
         # Build a core-image-weston
-        ret = bitbake('core-image-weston')
-        self.assertEqual(0, ret.status, 'Failed to build a core-image-weston')
+        bitbake('core-image-weston')
 
 
 class Gummiboot(oeSelfTest):
@@ -263,8 +214,7 @@ class Gummiboot(oeSelfTest):
         self.add_command_to_tearDown('rm -rf ' + self.meta_intel_dir)
 
         # Clone meta-intel
-        ret = runCmd('git clone ' + meta_intel_repo + ' ' + self.meta_intel_dir)
-        self.assertEqual(0, ret.status, 'Failed to clone meta-intel.')
+        runCmd('git clone ' + meta_intel_repo + ' ' + self.meta_intel_dir)
 
         # Add meta-intel and meta-nuc layers in conf/bblayers.conf
         features = 'BBLAYERS += "' + self.meta_intel_dir + ' ' + meta_nuc_dir + '"'
@@ -278,8 +228,7 @@ class Gummiboot(oeSelfTest):
         # Run "bitbake syslinux syslinux-native parted-native dosfstools-native mtools-native core-image-minimal "
         # to build a nuc/efi gummiboot image
 
-        ret = bitbake('syslinux syslinux-native parted-native dosfstools-native mtools-native core-image-minimal')
-        self.assertEqual(0, ret.status, 'Failed to build a core-image-minimal')
+        bitbake('syslinux syslinux-native parted-native dosfstools-native mtools-native core-image-minimal')
 
     @testcase(1101)
     def test_efi_gummiboot_images_can_be_build(self):
@@ -310,8 +259,7 @@ class Gummiboot(oeSelfTest):
 
         # Create efi/gummiboot installation images
         wic_create_cmd = 'wic create mkgummidisk -e core-image-minimal'
-        ret = runCmd(wic_create_cmd)
-        self.assertEqual(0, ret.status, 'Failed to create efi/gummiboot installation images.')
+        runCmd(wic_create_cmd)
 
         # Verify that a .direct file was created
         direct_file = '/var/tmp/wic/build/*.direct'
