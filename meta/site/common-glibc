@@ -18,6 +18,7 @@ ac_cv_func_getaddrinfo=${ac_cv_func_getaddrinfo=yes}
 # bash
 bash_cv_under_sys_siglist=${bash_cv_under_sys_siglist=yes}
 bash_cv_sys_siglist=${bash_cv_sys_siglist=yes}
+bash_cv_getcwd_malloc=${bash_cv_getcwd_malloc=yes}
 
 # clamav
 clamav_av_func_working_snprintf_long=${clamav_av_func_working_snprintf_long=yes}
