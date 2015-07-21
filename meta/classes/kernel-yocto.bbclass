@@ -33,6 +33,7 @@ def find_kernel_feature_dirs(d):
     for url in fetch.urls:
         urldata = fetch.ud[url]
         parm = urldata.parm
+        type=""
         if "type" in parm:
             type = parm["type"]
         if "destsuffix" in parm:
@@ -112,17 +113,6 @@ do_kernel_metadata() {
 		fi
 	fi
 
-	# if we have a defined/set meta branch we should not be generating
-	# any meta data. The passed branch has what we need.
-	if [ -n "${KMETA}" ]; then
-		createme_flags="--disable-meta-gen --meta ${KMETA}"
-	fi
-
-	createme -v -v ${createme_flags} ${ARCH} ${machine_branch}
-	if [ $? -ne 0 ]; then
-		bbfatal_log "Could not create ${machine_branch}"
-	fi
-
 	sccs="$sccs ${@" ".join(find_sccs(d))}"
 	patches="${@" ".join(find_patches(d))}"
 	feat_dirs="${@" ".join(find_kernel_feature_dirs(d))}"
@@ -189,34 +179,18 @@ do_patch() {
 do_kernel_checkout() {
 	set +e
 
-	# A linux yocto SRC_URI should use the bareclone option. That
-	# ensures that all the branches are available in the WORKDIR version
-	# of the repository.
 	source_dir=`echo ${S} | sed 's%/$%%'`
 	source_workdir="${WORKDIR}/git"
-	if [ -d "${WORKDIR}/git/" ] && [ -d "${WORKDIR}/git/.git" ]; then
-		# case2: the repository is a non-bare clone
-
+	if [ -d "${WORKDIR}/git/" ]; then
+		# case: git repository (bare or non-bare)
 		# if S is WORKDIR/git, then we shouldn't be moving or deleting the tree.
 		if [ "${source_dir}" != "${source_workdir}" ]; then
 			rm -rf ${S}
 			mv ${WORKDIR}/git ${S}
 		fi
 		cd ${S}
-	elif [ -d "${WORKDIR}/git/" ] && [ ! -d "${WORKDIR}/git/.git" ]; then
-		# case2: the repository is a bare clone
-
-		# if S is WORKDIR/git, then we shouldn't be moving or deleting the tree.
-		if [ "${source_dir}" != "${source_workdir}" ]; then
-			rm -rf ${S}
-			mkdir -p ${S}/.git
-			mv ${WORKDIR}/git/* ${S}/.git
-			rm -rf ${WORKDIR}/git/
-		fi
-		cd ${S}	
-		git config core.bare false
 	else
-		# case 3: we have no git repository at all. 
+		# case: we have no git repository at all. 
 		# To support low bandwidth options for building the kernel, we'll just 
 		# convert the tree to a git repo and let the rest of the process work unchanged
 		
@@ -235,7 +209,6 @@ do_kernel_checkout() {
 		git commit -q -m "baseline commit: creating repo for ${PN}-${PV}"
 		git clean -d -f
 	fi
-	# end debare
 
 	# convert any remote branches to local tracking ones
 	for i in `git branch -a --no-color | grep remotes | grep -v HEAD`; do
@@ -246,24 +219,8 @@ do_kernel_checkout() {
 		fi
 	done
 
-       	# If KMETA is defined, the branch must exist, but a machine branch
-	# can be missing since it may be created later by the tools.
-	if [ -n "${KMETA}" ]; then
-		git show-ref --quiet --verify -- "refs/heads/${KMETA}"
-		if [ $? -eq 1 ]; then
-			bberror "The branch '${KMETA}' is required and was not found"
-			bberror "Ensure that the SRC_URI points to a valid linux-yocto"
-			bbfatal_log "kernel repository"
-		fi
-	fi
-	
-
 	# Create a working tree copy of the kernel by checking out a branch
 	machine_branch="${@ get_machine_branch(d, "${KBRANCH}" )}"
-	git show-ref --quiet --verify -- "refs/heads/${machine_branch}"
-	if [ $? -ne 0 ]; then
-		machine_branch="master"
-	fi
 
 	# checkout and clobber any unimportant files
 	git checkout -f ${machine_branch}
@@ -313,7 +270,7 @@ python do_kernel_configcheck() {
         kmeta = "." + kmeta
 
     pathprefix = "export PATH=%s:%s; " % (d.getVar('PATH', True), "${S}/scripts/util/")
-    cmd = d.expand("cd ${S}; kconf_check -config- %s/meta-series ${S} ${B}" % kmeta)
+    cmd = d.expand("cd ${S}; kconf_check -config %s/meta-series ${S} ${B}" % kmeta)
     ret, result = oe.utils.getstatusoutput("%s%s" % (pathprefix, cmd))
 
     config_check_visibility = int(d.getVar( "KCONF_AUDIT_LEVEL", True ) or 0)
@@ -351,7 +308,6 @@ python do_kernel_configcheck() {
 do_validate_branches() {
 	set +e
 	cd ${S}
-	export KMETA=${KMETA}
 
 	machine_branch="${@ get_machine_branch(d, "${KBRANCH}" )}"
 	machine_srcrev="${SRCREV_machine}"
@@ -375,28 +331,6 @@ do_validate_branches() {
 			bbfatal_log "The kernel source tree may be out of sync"
 		fi
 		force_srcrev=${machine_srcrev}
-	fi
-
-	## KMETA branch validation.
-	target_meta_head="${SRCREV_meta}"
-	if [ "${target_meta_head}" = "AUTOINC" ] || [ "${target_meta_head}" = "" ]; then
-		bbnote "SRCREV validation skipped for AUTOREV or empty meta branch"
-	else
-	 	meta_head=`git show-ref -s --heads ${KMETA}`
-
-		git cat-file -t ${target_meta_head} > /dev/null
-		if [ $? -ne 0 ]; then
-			bberror "${target_meta_head} is not a valid commit ID"
-			bbfatal_log "The kernel source tree may be out of sync"
-		fi
-		if [ "$meta_head" != "$target_meta_head" ]; then
-			bbnote "Setting branch ${KMETA} to ${target_meta_head}"
-			git branch -m ${KMETA} ${KMETA}-orig
-			git checkout -q -b ${KMETA} ${target_meta_head}
-			if [ $? -ne 0 ];then
-				bbfatal_log "Could not checkout ${KMETA} branch from known hash ${target_meta_head}"
-			fi
-		fi
 	fi
 
 	git checkout -q -f ${machine_branch}

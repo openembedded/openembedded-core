@@ -5,15 +5,16 @@ require recipes-kernel/linux/linux-yocto.inc
 
 SRCREV_machine ?= "863ba0912f559ba9d64ab94bf04f0226fdf0cb49"
 SRCREV_machine_qemuppc ?= "9d464d6696a0fc755c65a2cf75ad7a4656ac6e1e"
-SRCREV_meta ?= "94fa1d7e980c97fcd59b37daedcd863bd6daaee4"
+SRCREV_meta ?= "b55cfc0308bf7158843db4b8f69f866487a0919e"
 
-SRC_URI = "git://git.yoctoproject.org/linux-yocto-3.14.git;bareclone=1;branch=${KBRANCH},meta;name=machine,meta"
+SRC_URI = "git://git.yoctoproject.org/linux-yocto-3.14.git;branch=${KBRANCH};name=machine \
+           git://git.yoctoproject.org/yocto-kernel-cache;type=kmeta;name=meta;branch=yocto-3.14;destsuffix=${KMETA}"
 
 LINUX_VERSION ?= "3.14.36"
 
 PV = "${LINUX_VERSION}+git${SRCPV}"
 
-KMETA = "meta"
+KMETA = "kernel-meta"
 KCONF_BSP_AUDIT_LEVEL = "2"
 
 LINUX_KERNEL_TYPE = "preempt-rt"
