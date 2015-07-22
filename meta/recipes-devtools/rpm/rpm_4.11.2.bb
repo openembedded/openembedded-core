@@ -122,7 +122,7 @@ FILES_${PN} +=  "${libdir}/rpm \
                  ${libdir}/rpm-plugins/exec.so \
                 "
 RDEPENDS_${PN} = "base-files run-postinsts"
-RDEPENDS_${PN}_class-native = "base-files run-postinsts"
+RDEPENDS_${PN}_class-native = ""
 
 FILES_${PN}-dbg += "${libdir}/rpm/.debug/* \
                     ${libdir}/rpm-plugins/.debug/* \
