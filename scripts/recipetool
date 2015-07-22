@@ -46,11 +46,24 @@ def main():
         sys.exit(1)
 
     parser = argparse.ArgumentParser(description="OpenEmbedded recipe tool",
+                                     add_help=False,
                                      epilog="Use %(prog)s <subcommand> --help to get help on a specific command")
     parser.add_argument('-d', '--debug', help='Enable debug output', action='store_true')
     parser.add_argument('-q', '--quiet', help='Print only errors', action='store_true')
     parser.add_argument('--color', choices=['auto', 'always', 'never'], default='auto', help='Colorize output (where %(metavar)s is %(choices)s)', metavar='COLOR')
+
+    global_args, unparsed_args = parser.parse_known_args()
+
+    # Help is added here rather than via add_help=True, as we don't want it to
+    # be handled by parse_known_args()
+    parser.add_argument('-h', '--help', action='help', default=argparse.SUPPRESS,
+                        help='show this help message and exit')
     subparsers = parser.add_subparsers(title='subcommands', metavar='<subcommand>')
+
+    if global_args.debug:
+        logger.setLevel(logging.DEBUG)
+    elif global_args.quiet:
+        logger.setLevel(logging.ERROR)
 
     import scriptpath
     bitbakepath = scriptpath.add_bitbake_lib_path()
@@ -58,6 +71,8 @@ def main():
         logger.error("Unable to find bitbake by searching parent directory of this script or PATH")
         sys.exit(1)
     logger.debug('Found bitbake path: %s' % bitbakepath)
+
+    scriptutils.logger_setup_color(logger, global_args.color)
 
     tinfoil = tinfoil_init(False)
     for path in ([scripts_path] +
@@ -77,14 +92,7 @@ def main():
         logger.error("No commands registered - missing plugins?")
         sys.exit(1)
 
-    args = parser.parse_args()
-
-    if args.debug:
-        logger.setLevel(logging.DEBUG)
-    elif args.quiet:
-        logger.setLevel(logging.ERROR)
-
-    scriptutils.logger_setup_color(logger, args.color)
+    args = parser.parse_args(unparsed_args, namespace=global_args)
 
     try:
         if getattr(args, 'parserecipes', False):
