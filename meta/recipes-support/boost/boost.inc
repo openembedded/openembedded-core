@@ -24,8 +24,8 @@ BOOST_LIBS = "\
 
 # optional boost-python library
 PACKAGECONFIG ??= ""
-PACKAGECONFIG[python] = ",,python"
-BOOST_LIBS += "${@bb.utils.contains('PACKAGECONFIG', 'python', 'python', '', d)}"
+PACKAGECONFIG[python] = ",,python python3"
+BOOST_LIBS += "${@bb.utils.contains('PACKAGECONFIG', 'python', 'python python3', '', d)}"
 inherit python-dir
 PYTHON_ROOT = "${STAGING_DIR_HOST}/${prefix}"
 
@@ -35,9 +35,16 @@ python __anonymous () {
     packages = []
     extras = []
     for lib in d.getVar('BOOST_LIBS', True).split( ):
-            pkg = "boost-%s" % lib.replace("_", "-")
+        # BJAM does not know '--with-python3' (only --with-python)
+        if lib != "python3":
             extras.append("--with-%s" % lib)
-            packages.append(pkg)
+        pkg = "boost-%s" % lib.replace("_", "-")
+        packages.append(pkg)
+        if lib == "python":
+            # special: python*.so matches python3.so !!
+            if not d.getVar("FILES_%s" % pkg, True):
+                    d.setVar("FILES_%s" % pkg, "${libdir}/libboost_%s.so.*" % lib)
+        else:
             if not d.getVar("FILES_%s" % pkg, True):
                     d.setVar("FILES_%s" % pkg, "${libdir}/libboost_%s*.so.*" % lib)
     d.setVar("BOOST_PACKAGES", " ".join(packages))
@@ -101,7 +108,6 @@ BJAM_TOOLS   = "--ignore-site-config \
 		'-sGCC_INCLUDE_DIRECTORY=${STAGING_INCDIR}' \
 		'-sGCC_STDLIB_DIRECTORY=${STAGING_LIBDIR}' \
 		'-sBUILD=release <optimization>space <threading>multi <inlining>on <debug-symbols>off' \
-		'-sPYTHON_VERSION=${PYTHON_BASEVERSION}' \
 		'-sPYTHON_ROOT=${PYTHON_ROOT}' \
 		'--layout=system' \
 		"
@@ -149,6 +155,7 @@ do_boostconfig() {
 	sed -i "/^using python : ${PYTHON_BASEVERSION}"/d ${S}/tools/build/example/user-config.jam
 	echo 'using gcc : 4.3.1 : ${CXX} : <cflags>"${CFLAGS}" <cxxflags>"${CXXFLAGS}" <linkflags>"${LDFLAGS}" ;' >> ${S}/tools/build/example/user-config.jam
 	echo "using python : ${PYTHON_BASEVERSION} : : ${STAGING_INCDIR}/python${PYTHON_BASEVERSION} ;" >> ${S}/tools/build/example/user-config.jam
+	echo "using python : 3.4 : : ${STAGING_INCDIR}/python3.4m ;" >> ${S}/tools/build/example/user-config.jam
 
 	CC="${BUILD_CC}" CFLAGS="${BUILD_CFLAGS}" ./bootstrap.sh --with-bjam=bjam --with-toolset=gcc --with-python-root=${PYTHON_ROOT}
 	sed -i '/^using python/d' project-config.jam
