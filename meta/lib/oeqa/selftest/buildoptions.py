@@ -2,6 +2,8 @@ import unittest
 import os
 import logging
 import re
+import glob as g
+import pexpect as p
 
 from oeqa.selftest.base import oeSelfTest
 from oeqa.selftest.buildhistory import BuildhistoryBase
@@ -130,3 +132,18 @@ class BuildImagesTest(oeSelfTest):
         self.write_config("DISTRO_FEATURES_remove = \"x11\"\nDISTRO_FEATURES_append = \" directfb\"\nMACHINE ??= \"qemuarm\"")
         res = bitbake("core-image-directfb", ignore_status=True)
         self.assertEqual(res.status, 0, "\ncoreimagedirectfb failed to build. Please check logs for further details.\nbitbake output %s" % res.output)
+
+class ArchiverTest(oeSelfTest):
+    @testcase(926)
+    def test_arch_work_dir_and_export_source(self):
+        """
+        Test for archiving the work directory and exporting the source files.
+        """
+        self.add_command_to_tearDown('cleanupworkdir')
+        self.write_config("INHERIT = \"archiver\"\nARCHIVER_MODE[src] = \"original\"\nARCHIVER_MODE[srpm] = \"1\"")
+        res = bitbake("xcursor-transparent-theme", ignore_status=True)
+        self.assertEqual(res.status, 0, "\nCouldn't build xcursortransparenttheme.\nbitbake output %s" % res.output)
+        pkgs_path = g.glob(str(self.builddir) + "/tmp/deploy/sources/allarch*/xcurs*")
+        src_file_glob = str(pkgs_path[0]) + "/xcursor*.src.rpm"
+        tar_file_glob = str(pkgs_path[0]) + "/xcursor*.tar.gz"
+        self.assertTrue((g.glob(src_file_glob) and g.glob(tar_file_glob)), "Couldn't find .src.rpm and .tar.gz files under tmp/deploy/sources/allarch*/xcursor*")
