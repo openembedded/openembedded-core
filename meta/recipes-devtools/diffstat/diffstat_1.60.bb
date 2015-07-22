@@ -11,8 +11,8 @@ SRC_URI = "ftp://invisible-island.net/diffstat/diffstat-${PV}.tgz \
            file://run-ptest \
 "
 
-SRC_URI[md5sum] = "1dc7bc48ce846a0686a1af0d091ff8fb"
-SRC_URI[sha256sum] = "267d1441b8889cbefbb7ca7dfd4a17f6c8bc73bc114904c74ecad945a3dbf270"
+SRC_URI[md5sum] = "ba889da4c06b547aa2d78fa96800ae6f"
+SRC_URI[sha256sum] = "2032e418b43bae70d548e32da901ebc4ac12972381de1314bebde0b126fb0123"
 
 S = "${WORKDIR}/diffstat-${PV}"
 
