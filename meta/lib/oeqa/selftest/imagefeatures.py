@@ -43,9 +43,12 @@ class ImageFeatures(oeSelfTest):
             proc_qemu.expect(self.get_ip_patt, timeout=100)
             qemu_ip = proc_qemu.match.group('qemu_ip')
             proc_qemu.expect('qemux86 login:', timeout=100)
-        except:
-            killpg(proc_qemu.pid, signal.SIGTERM)
-            self.fail('Failed to start qemu.')
+        except Exception as e:
+            try:
+                killpg(proc_qemu.pid, signal.SIGTERM)
+            except:
+                pass
+            self.fail('Failed to start qemu: %s' % e)
 
         # Attempt to ssh with each user into qemu with empty password
         for user in [self.root_user, self.test_user]:
@@ -93,9 +96,12 @@ class ImageFeatures(oeSelfTest):
             proc_qemu.expect(self.get_ip_patt, timeout=100)
             qemu_ip = proc_qemu.match.group('qemu_ip')
             proc_qemu.expect('qemux86 login:', timeout=100)
-        except:
-            killpg(proc_qemu.pid, signal.SIGTERM)
-            self.fail('Failed to start qemu.')
+        except Exception as e:
+            try:
+                killpg(proc_qemu.pid, signal.SIGTERM)
+            except:
+                pass
+            self.fail('Failed to start qemu: %s' % e)
 
         # Attempt to ssh with each user into qemu with empty password
         for user in [self.root_user, self.test_user]:
@@ -147,9 +153,12 @@ class ImageFeatures(oeSelfTest):
             proc_qemu.expect(self.prompt)
             proc_qemu.sendline('rpm --version')
             proc_qemu.expect(self.prompt)
-        except:
-            killpg(proc_qemu.pid, signal.SIGTERM)
-            self.fail('Failed to boot qemu.')
+        except Exception as e:
+            try:
+                killpg(proc_qemu.pid, signal.SIGTERM)
+            except:
+                pass
+            self.fail('Failed to start qemu: %s' % e)
 
         found_rpm_version = proc_qemu.before
 
