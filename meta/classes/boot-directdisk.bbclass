@@ -70,7 +70,9 @@ boot_direct_populate() {
 	install -d $dest
 
 	# Install bzImage, initrd, and rootfs.img in DEST for all loaders to use.
-	install -m 0644 ${DEPLOY_DIR_IMAGE}/bzImage $dest/vmlinuz
+	if [ -e ${DEPLOY_DIR_IMAGE}/bzImage ]; then
+		install -m 0644 ${DEPLOY_DIR_IMAGE}/bzImage $dest/vmlinuz
+	fi
 
 	# initrd is made of concatenation of multiple filesystem images
 	if [ -n "${INITRD}" ]; then
