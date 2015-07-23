@@ -124,8 +124,7 @@ class ParseLogsTest(oeRuntimeTest):
         self.msg = ""
 
     def getMachine(self):
-        (status, output) = self.target.run("uname -n")
-        return output
+        return oeRuntimeTest.tc.d.getVar("MACHINE", True)
 
     #get some information on the CPU of the machine to display at the beginning of the output. This info might be useful in some cases.
     def getHardwareInfo(self):
