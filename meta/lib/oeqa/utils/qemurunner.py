@@ -137,7 +137,7 @@ class QemuRunner:
                         if data:
                             self.log(data)
                             self.bootlog += data
-                            if re.search("qemu.* login:", self.bootlog):
+                            if re.search(".* login:", self.bootlog):
                                 stopread = True
                                 reachedlogin = True
                                 logging.info("Reached login banner")
