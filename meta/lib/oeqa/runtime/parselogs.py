@@ -46,13 +46,14 @@ x86_common = [
 qemux86_common = [
     'Fast TSC calibration', 
     'wrong ELF class',
+    "fail to add MMCONFIG information, can't access extended PCI configuration space under this bridge.",
+    "can't claim BAR ",
 ] + common_errors
 
 ignore_errors = { 
     'default' : common_errors,
     'qemux86' : [
-        'Failed to access perfctr msr (MSR c1 is 0)',
-        "fail to add MMCONFIG information, can't access extended PCI configuration space under this bridge.",
+        'Failed to access perfctr msr (MSR',
         ] + qemux86_common,
     'qemux86-64' : qemux86_common,
     'qemumips' : [
