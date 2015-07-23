@@ -14,7 +14,8 @@ inherit boot-directdisk
 
 IMAGE_TYPEDEP_vmdk = "ext3"
 IMAGE_TYPEDEP_vdi = "ext3"
-IMAGE_TYPES_MASKED += "vmdk vdi"
+IMAGE_TYPEDEP_qcow2 = "ext3"
+IMAGE_TYPES_MASKED += "vmdk vdi qcow2"
 
 create_vmdk_image () {
     qemu-img convert -O vmdk ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.hdddirect ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.vmdk
@@ -26,11 +27,18 @@ create_vdi_image () {
     ln -sf ${IMAGE_NAME}.vdi ${DEPLOY_DIR_IMAGE}/${IMAGE_LINK_NAME}.vdi
 }
 
+create_qcow2_image () {
+    qemu-img convert -O qcow2 ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.hdddirect ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.qcow2
+    ln -sf ${IMAGE_NAME}.qcow2 ${DEPLOY_DIR_IMAGE}/${IMAGE_LINK_NAME}.qcow2
+}
+
 python do_vmimg() {
     if 'vmdk' in d.getVar('IMAGE_FSTYPES', True):
         bb.build.exec_func('create_vmdk_image', d)
     if 'vdi' in d.getVar('IMAGE_FSTYPES', True):
-        bb.build.exec_func('create_vdi_image', d)        
+        bb.build.exec_func('create_vdi_image', d)
+    if 'qcow2' in d.getVar('IMAGE_FSTYPES', True):
+        bb.build.exec_func('create_qcow2_image', d)
 }
 
 addtask vmimg after do_bootdirectdisk before do_build
