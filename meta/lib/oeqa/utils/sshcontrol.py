@@ -10,6 +10,7 @@ import subprocess
 import time
 import os
 import select
+import copy
 
 
 class SSHProcess(object):
@@ -30,6 +31,12 @@ class SSHProcess(object):
         self.process = None
         self.starttime = None
         self.logfile = None
+
+        # Unset DISPLAY which means we won't trigger SSH_ASKPASS
+        env = copy.copy(os.environ)
+        if "DISPLAY" in env:
+            del env['DISPLAY']
+        self.options['env'] = env
 
     def log(self, msg):
         if self.logfile:
