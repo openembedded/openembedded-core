@@ -8,26 +8,16 @@ import os
 import subprocess
 import urllib2
 
-def search_bitbakepath():
-    bitbakepath = ""
 
-    # Search path to bitbake lib dir in order to load bb modules
-    if os.path.exists(os.path.join(os.path.dirname(sys.argv[0]), '../../bitbake/lib/bb')):
-        bitbakepath = os.path.join(os.path.dirname(sys.argv[0]), '../../bitbake/lib')
-        bitbakepath = os.path.abspath(bitbakepath)
-    else:
-        # Look for bitbake/bin dir in PATH
-        for pth in os.environ['PATH'].split(':'):
-            if os.path.exists(os.path.join(pth, '../lib/bb')):
-                bitbakepath = os.path.abspath(os.path.join(pth, '../lib'))
-                break
-        if not bitbakepath:
-            sys.stderr.write("Unable to find bitbake by searching parent directory of this script or PATH\n")
-            sys.exit(1)
-    return bitbakepath
+# Allow importing scripts/lib modules
+scripts_path = os.path.abspath(os.path.dirname(os.path.realpath(__file__)) + '/..')
+lib_path = scripts_path + '/lib'
+sys.path = sys.path + [lib_path]
+import scriptpath
 
-# For importing the following modules
-sys.path.insert(0, search_bitbakepath())
+# Allow importing bitbake modules
+bitbakepath = scriptpath.add_bitbake_lib_path()
+
 import bb.tinfoil
 
 def wgetHomepage(pn, homepage):
