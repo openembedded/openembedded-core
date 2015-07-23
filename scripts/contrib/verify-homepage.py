@@ -35,7 +35,7 @@ def verifyHomepage(bbhandler):
     for pn in pnlist:
         fn = pkg_pn[pn].pop()
         data = bb.cache.Cache.loadDataFull(fn, bbhandler.cooker.collection.get_file_appends(fn), bbhandler.config_data)
-        homepage = data.getVar("HOMEPAGE")
+        homepage = data.getVar("HOMEPAGE", True)
         if homepage:
             try:
                 urllib2.urlopen(homepage, timeout=5)
