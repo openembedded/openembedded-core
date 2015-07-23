@@ -5,11 +5,10 @@ BUGTRACKER = "https://bugs.eclipse.org/bugs/"
 LICENSE = "EPL-1.0 | EDL-1.0"
 LIC_FILES_CHKSUM = "file://edl-v10.html;md5=522a390a83dc186513f0500543ad3679"
 
-SRCREV = "4ef94ecb927a8912c3d79ce137182247786cff8f"
-PV = "0.4.0+git${SRCPV}"
-PR = "r2"
+SRCREV = "b9a735e9c7cf82f80d412b7ab15d08b89d5a4ccc"
+PV = "1.3.0+git${SRCPV}"
 
-SRC_URI = "git://git.eclipse.org/gitroot/tcf/org.eclipse.tcf.agent.git \
+SRC_URI = "git://git.eclipse.org/gitroot/tcf/org.eclipse.tcf.agent.git;branch=1.3_mars_bugfix \
            file://fix_ranlib.patch \
            file://tcf-agent.init \
            file://tcf-agent.service \
@@ -18,7 +17,7 @@ SRC_URI = "git://git.eclipse.org/gitroot/tcf/org.eclipse.tcf.agent.git \
 DEPENDS = "util-linux openssl"
 RDEPENDS_${PN} = "bash"
 
-S = "${WORKDIR}/git"
+S = "${WORKDIR}/git/agent"
 
 inherit update-rc.d systemd
 
@@ -38,10 +37,6 @@ CFLAGS += "-DSERVICE_RunControl=0 -DSERVICE_Breakpoints=0 \
     -DSERVICE_Memory=0 -DSERVICE_Registers=0 -DSERVICE_MemoryMap=0 \
     -DSERVICE_StackTrace=0 -DSERVICE_Symbols=0 -DSERVICE_LineNumbers=0 \
     -DSERVICE_Expressions=0"
-
-do_compile() {
-	oe_runmake
-}
 
 do_install() {
 	oe_runmake install INSTALLROOT=${D}
