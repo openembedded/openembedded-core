@@ -36,15 +36,21 @@ def verifyHomepage(bbhandler):
     pkg_pn = bbhandler.cooker.recipecache.pkg_pn
     pnlist = sorted(pkg_pn)
     count = 0
+    checked = []
     for pn in pnlist:
-        fn = pkg_pn[pn].pop()
-        data = bb.cache.Cache.loadDataFull(fn, bbhandler.cooker.collection.get_file_appends(fn), bbhandler.config_data)
-        homepage = data.getVar("HOMEPAGE", True)
-        if homepage:
-            try:
-                urllib2.urlopen(homepage, timeout=5)
-            except Exception:
-                count = count + wgetHomepage(pn, homepage)
+        for fn in pkg_pn[pn]:
+            # There's no point checking multiple BBCLASSEXTENDed variants of the same recipe
+            realfn, _ = bb.cache.Cache.virtualfn2realfn(fn)
+            if realfn in checked:
+                continue
+            data = bb.cache.Cache.loadDataFull(realfn, bbhandler.cooker.collection.get_file_appends(realfn), bbhandler.config_data)
+            homepage = data.getVar("HOMEPAGE", True)
+            if homepage:
+                try:
+                    urllib2.urlopen(homepage, timeout=5)
+                except Exception:
+                    count = count + wgetHomepage(os.path.basename(realfn), homepage)
+            checked.append(realfn)
     return count
 
 if __name__=='__main__':
