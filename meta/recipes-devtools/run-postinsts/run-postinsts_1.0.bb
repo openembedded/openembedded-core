@@ -39,6 +39,7 @@ do_install() {
 	sed -i -e 's:#SYSCONFDIR#:${sysconfdir}:g' \
                -e 's:#SBINDIR#:${sbindir}:g' \
                -e 's:#BASE_BINDIR#:${base_bindir}:g' \
+               -e 's:#LOCALSTATEDIR#:${localstatedir}:g' \
                ${D}${sbindir}/run-postinsts \
                ${D}${systemd_unitdir}/system/run-postinsts.service
 }
