@@ -38,6 +38,7 @@ PACKAGECONFIG[sha256] = "--enable-sha256,--disable-sha256"
 PACKAGECONFIG[pathfinder] = "--enable-pathfinder,--disable-pathfinder,pathfinder"
 
 EXTRA_OECONF = "\
+  --with-opkgetcdir=${sysconfdir} \
   --with-opkglibdir=${OPKGLIBDIR} \
 "
 
