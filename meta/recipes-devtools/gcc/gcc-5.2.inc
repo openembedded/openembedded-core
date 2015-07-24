@@ -2,15 +2,15 @@ require gcc-common.inc
 
 # Third digit in PV should be incremented after a minor release
 
-PV = "5.1.0"
+PV = "5.2.0"
 
 #SNAP = "5-20150405"
 
 # BINV should be incremented to a revision after a minor gcc release
 
-BINV = "5.1.0"
+BINV = "5.2.0"
 
-FILESEXTRAPATHS =. "${FILE_DIRNAME}/gcc-5.1:${FILE_DIRNAME}/gcc-5.1/backport:"
+FILESEXTRAPATHS =. "${FILE_DIRNAME}/gcc-5.2:${FILE_DIRNAME}/gcc-5.2/backport:"
 
 DEPENDS =+ "mpfr gmp libmpc zlib"
 NATIVEDEPS = "mpfr-native gmp-native libmpc-native zlib-native"
@@ -26,9 +26,8 @@ LIC_FILES_CHKSUM = "\
 "
 #BASEURI = "http://www.netgull.com/gcc/snapshots/${SNAP}/gcc-${SNAP}.tar.bz2"
 BASEURI = "${GNU_MIRROR}/gcc/gcc-${PV}/gcc-${PV}.tar.bz2"
-
-SRC_URI[md5sum] = "d5525b1127d07d215960e6051c5da35e"
-SRC_URI[sha256sum] = "b7dafdf89cbb0e20333dbf5b5349319ae06e3d1a30bf3515b5488f7e89dca5ad"
+SRC_URI[md5sum] = "a51bcfeb3da7dd4c623e27207ed43467"
+SRC_URI[sha256sum] = "5f835b04b5f7dd4f4d2dc96190ec1621b8d89f2dc6f638f9f8bc1b1014ba8cad"
 
 SRC_URI = "\
            ${BASEURI} \
@@ -73,11 +72,7 @@ SRC_URI = "\
            file://0038-fix-g++-sysroot.patch \
           "
 
-BACKPORTS = "\
-           file://0001-PR65801.patch \
-           file://0002-PR65858.patch \
-           file://0003-PR66007.patch \
-          "
+BACKPORTS = ""
 #S = "${TMPDIR}/work-shared/gcc-${PV}-${PR}/gcc-${SNAP}"
 S = "${TMPDIR}/work-shared/gcc-${PV}-${PR}/gcc-${PV}"
 B = "${WORKDIR}/gcc-${PV}/build.${HOST_SYS}.${TARGET_SYS}"
