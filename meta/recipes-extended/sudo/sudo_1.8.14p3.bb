@@ -2,17 +2,21 @@ require sudo.inc
 
 SRC_URI = "http://ftp.sudo.ws/sudo/dist/sudo-${PV}.tar.gz \
            ${@bb.utils.contains('DISTRO_FEATURES', 'pam', '${PAM_SRC_URI}', '', d)} \
-          "
+           file://0001-Use-correct-path-to-init.d-and-tmpfiles.d-files.patch \
+           "
 
 PAM_SRC_URI = "file://sudo.pam"
 
-SRC_URI[md5sum] = "f61577ec330ad1bd504c0e2eec6ea2d8"
-SRC_URI[sha256sum] = "e374e5edf2c11c00d6916a9f51cb0ad15e51c7b028370fa15169b07e61e05a25"
+SRC_URI[md5sum] = "93dbd1e47c136179ff1b01494c1c0e75"
+SRC_URI[sha256sum] = "a8a697cbb113859058944850d098464618254804cf97961dee926429f00a1237"
 
 DEPENDS += " ${@bb.utils.contains('DISTRO_FEATURES', 'pam', 'libpam', '', d)}"
 RDEPENDS_${PN} += " ${@bb.utils.contains('DISTRO_FEATURES', 'pam', 'pam-plugin-limits pam-plugin-keyinit', '', d)}"
 
-EXTRA_OECONF += " ${@bb.utils.contains('DISTRO_FEATURES', 'pam', '--with-pam', '--without-pam', d)}"
+EXTRA_OECONF += " \
+             ${@bb.utils.contains('DISTRO_FEATURES', 'pam', '--with-pam', '--without-pam', d)} \
+             ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', '--enable-tmpfiles.d=${libdir}/tmpfiles.d', '--disable-tmpfiles.d', d)} \
+             "
 
 do_install_append () {
 	if [ "${@bb.utils.contains('DISTRO_FEATURES', 'pam', 'pam', '', d)}" = "pam" ]; then
@@ -26,4 +30,5 @@ do_install_append () {
 	rmdir -p --ignore-fail-on-non-empty ${D}${localstatedir}/run/sudo
 }
 
+FILES_${PN} += "${libdir}/tmpfiles.d"
 FILES_${PN}-dev += "${libdir}/${BPN}/lib*${SOLIBSDEV} ${libdir}/${BPN}/*.la"
