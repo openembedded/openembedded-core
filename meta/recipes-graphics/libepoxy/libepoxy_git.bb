@@ -10,6 +10,7 @@ SRC_URI = " \
     git://github.com/anholt/libepoxy.git \
     file://0001-select-platforms-based-on-configuration-results.patch \
     file://0002-add-an-option-to-disable-glx-support.patch \
+    file://no-need-for-python3.patch \
 "
 SRCREV="20062c25e7612cab023cdef44d3277ba1bd0b2de"
 PV = "1.2+git${SRCPV}"
