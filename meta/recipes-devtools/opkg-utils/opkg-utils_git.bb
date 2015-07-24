@@ -28,6 +28,10 @@ do_install() {
 	oe_runmake PREFIX=${prefix} DESTDIR=${D} install
 }
 
+do_install_append_class-target() {
+	sed -i ${D}${bindir}/update-alternatives -e 's,/usr/bin,${bindir},g; s,/usr/lib,${libdir},g'
+}
+
 PACKAGES =+ "update-alternatives-opkg"
 FILES_update-alternatives-opkg = "${bindir}/update-alternatives"
 RPROVIDES_update-alternatives-opkg = "update-alternatives update-alternatives-cworth"
