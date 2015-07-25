@@ -1,6 +1,6 @@
 UPDATERCPN ?= "${PN}"
 
-DEPENDS_append = " update-rc.d-native"
+DEPENDS_append = " update-rc.d-native update-rc.d"
 VIRTUAL-RUNTIME_initscripts ?= "initscripts"
 DEPENDS_append_class-target = " ${VIRTUAL-RUNTIME_initscripts}"
 UPDATERCD = "update-rc.d"
