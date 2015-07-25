@@ -16,7 +16,7 @@ SRC_URI[sha256sum] = "fea0a94d4b605894f3e2d5572e3f96e4413bcad3a085aae7367c2cf079
 
 inherit autotools texinfo update-alternatives gettext ptest
 RDEPENDS_${PN}-ptest += "make ${PN}"
-RRECOMMENDS_${PN}-ptest += "locale-base-ru-ru"
+RRECOMMENDS_${PN}-ptest_append_libc-glibc = " locale-base-ru-ru"
 
 EXTRA_OECONF = "--disable-acl \
                 ${@bb.utils.contains('PTEST_ENABLED', '1', '--enable-regex-tests', '', d)}"
