@@ -15,7 +15,7 @@ STAGING_BINDIR_TOOLCHAIN = "${STAGING_DIR_NATIVE}${bindir_native}/${SDK_ARCH}${S
 # Update BASE_PACKAGE_ARCH and PACKAGE_ARCHS
 #
 PACKAGE_ARCH = "${SDK_ARCH}-${SDKPKGSUFFIX}"
-CANADIANEXTRAOS = ""
+CANADIANEXTRAOS = "linux-uclibc linux-musl"
 MODIFYTOS ??= "1"
 python () {
     archs = d.getVar('PACKAGE_ARCHS', True).split()
@@ -27,25 +27,44 @@ python () {
     # Allow the following code segment to be disabled, e.g. meta-environment
     if d.getVar("MODIFYTOS", True) != "1":
         return
-    # PowerPC can build "linux" and "linux-gnuspe"
-    tarch = d.getVar("TARGET_ARCH", True)
-    if tarch == "powerpc":
-        tos = d.getVar("TARGET_OS", True)
-        if (tos != "linux" and tos != "linux-gnuspe"
-            and tos != "linux-uclibc" and tos != "linux-uclibcspe"
-            and tos != "linux-musl" and tos != "linux-muslspe"):
-            bb.fatal("Building cross-candian powerpc for an unknown TARGET_SYS (%s), please update cross-canadian.bbclass" % d.getVar("TARGET_SYS", True))
-        # This is a bit ugly. We need to zero LIBC/ABI extension which will change TARGET_OS
-        # however we need the old value in some variables. We expand those here first.
-        d.setVar("DEPENDS", d.getVar("DEPENDS", True))
-        d.setVar("STAGING_BINDIR_TOOLCHAIN", d.getVar("STAGING_BINDIR_TOOLCHAIN", True))
-        for prefix in ["AR", "AS", "DLLTOOL", "CC", "CXX", "GCC", "LD", "LIPO", "NM", "OBJDUMP", "RANLIB", "STRIP", "WINDRES"]:
-            n = prefix + "_FOR_TARGET"
-            d.setVar(n, d.getVar(n, True))
 
+    tos = d.getVar("TARGET_OS", True)
+    whitelist = []
+    for variant in ["", "spe", "x32", "eabi"]:
+        for libc in ["", "uclibc", "musl"]:
+            entry = "linux"
+            if variant and libc:
+                entry = entry + "-" + libc + variant
+            elif variant:
+                entry = entry + "-gnu" + variant
+            elif libc:
+                entry = entry + "-" + libc
+            whitelist.append(entry)
+    if tos not in whitelist:
+        bb.fatal("Building cross-candian for an unknown TARGET_SYS (%s), please update cross-canadian.bbclass" % d.getVar("TARGET_SYS", True))
+
+    for n in ["PROVIDES", "DEPENDS"]:
+        d.setVar(n, d.getVar(n, True))
+    d.setVar("STAGING_BINDIR_TOOLCHAIN", d.getVar("STAGING_BINDIR_TOOLCHAIN", True))
+    for prefix in ["AR", "AS", "DLLTOOL", "CC", "CXX", "GCC", "LD", "LIPO", "NM", "OBJDUMP", "RANLIB", "STRIP", "WINDRES"]:
+        n = prefix + "_FOR_TARGET"
+        d.setVar(n, d.getVar(n, True))
+    # This is a bit ugly. We need to zero LIBC/ABI extension which will change TARGET_OS
+    # however we need the old value in some variables. We expand those here first.
+    tarch = d.getVar("TARGET_ARCH", True)
+    if tarch == "x86_64":
         d.setVar("LIBCEXTENSION", "")
         d.setVar("ABIEXTENSION", "")
-        d.setVar("CANADIANEXTRAOS", "linux-gnuspe")
+        d.appendVar("CANADIANEXTRAOS", " linux-gnux32 linux-uclibcx32 linux-muslx32")
+    elif tarch == "powerpc":
+        # PowerPC can build "linux" and "linux-gnuspe"
+        d.setVar("LIBCEXTENSION", "")
+        d.setVar("ABIEXTENSION", "")
+        d.appendVar("CANADIANEXTRAOS", " linux-gnuspe linux-uclibcspe linux-muslspe")
+    if tarch == "arm":
+        d.setVar("TARGET_OS", "linux-gnueabi")
+    else:
+        d.setVar("TARGET_OS", "linux")
 }
 MULTIMACH_TARGET_SYS = "${PACKAGE_ARCH}${HOST_VENDOR}-${HOST_OS}"
 
