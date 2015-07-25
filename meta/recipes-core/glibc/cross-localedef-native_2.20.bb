@@ -39,7 +39,7 @@ SRCREV_localedef = "c833367348d39dad7ba018990bfdaffaec8e9ed3"
 S = "${WORKDIR}/git"
 
 EXTRA_OECONF = "--with-glibc=${S}"
-CFLAGS += "-DNOT_IN_libc=1"
+CFLAGS += "-fgnu89-inline -std=gnu99 -DNOT_IN_libc=1"
 
 do_configure () {
 	${S}/localedef/configure ${EXTRA_OECONF}
