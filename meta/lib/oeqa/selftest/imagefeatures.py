@@ -68,7 +68,10 @@ class ImageFeatures(oeSelfTest):
             proc_ssh.terminate()
 
         # Cleanup
-        killpg(proc_qemu.pid, signal.SIGTERM)
+        try:
+            killpg(proc_qemu.pid, signal.SIGTERM)
+        except:
+            pass
 
     @testcase(1115)
     def test_all_users_can_connect_via_ssh_without_password(self):
@@ -121,7 +124,10 @@ class ImageFeatures(oeSelfTest):
             proc_ssh.terminate()
 
         # Cleanup
-        killpg(proc_qemu.pid, signal.SIGTERM)
+        try:
+            killpg(proc_qemu.pid, signal.SIGTERM)
+        except:
+            pass
 
     @testcase(1114)
     def test_rpm_version_4_support_on_image(self):
@@ -167,7 +173,10 @@ class ImageFeatures(oeSelfTest):
                       'RPM version is not {}, found instead {}.'.format(rpm_version, found_rpm_version))
 
         # Cleanup (close qemu)
-        killpg(proc_qemu.pid, signal.SIGTERM)
+        try:
+            killpg(proc_qemu.pid, signal.SIGTERM)
+        except:
+            pass
 
     @testcase(1116)
     def test_clutter_image_can_be_built(self):
