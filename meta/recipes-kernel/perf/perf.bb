@@ -132,12 +132,27 @@ do_configure_prepend () {
     # 64 bit build (and library) are not exected. To ensure that libraries are
     # installed to the correct location, we can use the weak assignment in the
     # config/Makefile.
+    #
+    # Also need to relocate .config-detected to $(OUTPUT)/config-detected
+    # as two builds (e.g. perf and lib32-perf from mutlilib can conflict
+    # with each other if its in the shared source directory
+    #
     if [ -e "${S}/tools/perf/config/Makefile" ]; then
         # Match $(prefix)/$(lib) and $(prefix)/lib
         sed -i -e 's,^libdir = \($(prefix)/.*lib\),libdir ?= \1,' \
                -e 's,^perfexecdir = \(.*\),perfexecdir ?= \1,' \
+               -e 's,\.config-detected,$(OUTPUT)/config-detected,g' \
             ${S}/tools/perf/config/Makefile
     fi
+    if [ -e "${S}/tools/perf/Makefile.perf" ]; then
+        sed -i -e 's,\.config-detected,$(OUTPUT)/config-detected,g' \
+            ${S}/tools/perf/Makefile.perf
+    fi
+    if [ -e "${S}/tools/build/Makefile.build" ]; then
+        sed -i -e 's,\.config-detected,$(OUTPUT)/config-detected,g' \
+            ${S}/tools/build/Makefile.build
+    fi
+
     # We need to ensure the --sysroot option in CC is preserved
     if [ -e "${S}/tools/perf/Makefile.perf" ]; then
         sed -i 's,CC = $(CROSS_COMPILE)gcc,#CC,' ${S}/tools/perf/Makefile.perf
