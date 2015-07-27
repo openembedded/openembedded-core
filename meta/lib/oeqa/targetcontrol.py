@@ -10,6 +10,7 @@ import subprocess
 import bb
 import traceback
 import sys
+import logging
 from oeqa.utils.sshcontrol import SSHControl
 from oeqa.utils.qemurunner import QemuRunner
 from oeqa.utils.qemutinyrunner import QemuTinyRunner
@@ -122,6 +123,16 @@ class QemuTarget(BaseTarget):
         self.origrootfs = os.path.join(d.getVar("DEPLOY_DIR_IMAGE", True),  d.getVar("IMAGE_LINK_NAME", True) + '.' + self.image_fstype)
         self.rootfs = os.path.join(self.testdir, d.getVar("IMAGE_LINK_NAME", True) + '-testimage.' + self.image_fstype)
         self.kernel = os.path.join(d.getVar("DEPLOY_DIR_IMAGE", True), d.getVar("KERNEL_IMAGETYPE", False) + '-' + d.getVar('MACHINE', False) + '.bin')
+
+        # Log QemuRunner log output to a file
+        import oe.path
+        bb.utils.mkdirhier(self.testdir)
+        self.qemurunnerlog = os.path.join(self.testdir, 'qemurunner_log.%s' % self.datetime)
+        logger = logging.getLogger('BitBake.QemuRunner')
+        loggerhandler = logging.FileHandler(self.qemurunnerlog)
+        loggerhandler.setFormatter(logging.Formatter("%(levelname)s: %(message)s"))
+        logger.addHandler(loggerhandler)
+        oe.path.symlink(os.path.basename(self.qemurunnerlog), os.path.join(self.testdir, 'qemurunner_log'), force=True)
 
         if d.getVar("DISTRO", True) == "poky-tiny":
             self.runner = QemuTinyRunner(machine=d.getVar("MACHINE", True),
