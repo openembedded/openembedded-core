@@ -25,7 +25,7 @@ class ImageFeatures(oeSelfTest):
         AutomatedBy: Daniel Istrate <daniel.alexandrux.istrate@intel.com>
         """
 
-        features = 'EXTRA_IMAGE_FEATURES += "ssh-server-openssh empty-root-password"\n'
+        features = 'EXTRA_IMAGE_FEATURES = "ssh-server-openssh empty-root-password allow-empty-password"\n'
         features += 'INHERIT += "extrausers"\n'
         features += 'EXTRA_USERS_PARAMS = "useradd -p \'\' {}; usermod -s /bin/sh {};"'.format(self.test_user, self.test_user)
 
@@ -46,12 +46,14 @@ class ImageFeatures(oeSelfTest):
     def test_all_users_can_connect_via_ssh_without_password(self):
         """
         Summary:     Check if all users can connect via ssh without password
-        Expected:    1. Connection to the image via ssh using root or tester user without providing a password should be allowed.
+        Expected: 1. Connection to the image via ssh using root user without providing a password should NOT be allowed.
+                  2. Connection to the image via ssh using tester user without providing a password should be allowed.
         Product:     oe-core
         Author:      Ionut Chisanovici <ionutx.chisanovici@intel.com>
         AutomatedBy: Daniel Istrate <daniel.alexandrux.istrate@intel.com>
         """
-        features = 'EXTRA_IMAGE_FEATURES += "ssh-server-openssh allow-empty-password"\n'
+
+        features = 'EXTRA_IMAGE_FEATURES = "ssh-server-openssh allow-empty-password"\n'
         features += 'INHERIT += "extrausers"\n'
         features += 'EXTRA_USERS_PARAMS = "useradd -p \'\' {}; usermod -s /bin/sh {};"'.format(self.test_user, self.test_user)
 
@@ -66,7 +68,10 @@ class ImageFeatures(oeSelfTest):
             for user in [self.root_user, self.test_user]:
                 ssh = SSHControl(ip=qemu.ip, logfile=qemu.sshlog, user=user)
                 status, output = ssh.run("true")
-                self.assertEqual(status, 0, 'ssh to user tester failed with %s' % output)
+                if user == 'root':
+                    self.assertNotEqual(status, 0, 'ssh to user root was allowed when it should not have been')
+                else:
+                    self.assertEqual(status, 0, 'ssh to user tester failed with %s' % output)
 
 
     @testcase(1114)
