@@ -190,7 +190,7 @@ class QemuRunner:
                 logger.info("Sending SIGKILL to runqemu")
                 os.killpg(self.runqemu.pid, signal.SIGKILL)
             self.runqemu = None
-        if self.server_socket:
+        if hasattr(self, 'server_socket') and self.server_socket:
             self.server_socket.close()
             self.server_socket = None
         self.qemupid = None
