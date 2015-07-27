@@ -14,8 +14,8 @@ SECTION = "base"
 SRC_URI = "https://fedorahosted.org/releases/l/i/libuser/libuser-${PV}.tar.xz \
            "
 
-SRC_URI[md5sum] = "d977dc59161272c1491edd9ca7ba22f2"
-SRC_URI[sha256sum] = "0a114a52446e12781e2ffdf26f59df0d14e7809c7db5e551d3cf61c4e398751d"
+SRC_URI[md5sum] = "63e5e5c551e99dc5302b40b80bd6d4f2"
+SRC_URI[sha256sum] = "a58ff4fabb01a25043b142185a33eeea961109dd60d4b40b6a9df4fa3cace20b"
 
 DEPENDS = "popt libpam glib-2.0 xz-native docbook-utils-native linuxdoc-tools-native python"
 
