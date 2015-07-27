@@ -218,9 +218,6 @@ python checkpkg_eventhandler() {
                     header = row
                     continue
 
-                if '-native' in pn or 'nativesdk-' in pn:
-                    continue
-
                 if not pn in package_dict.keys():
                     package_dict[pn] = row
             f.close()
