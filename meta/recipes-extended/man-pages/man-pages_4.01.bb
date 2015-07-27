@@ -7,18 +7,13 @@ LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://README;md5=8f2a3d43057d458e5066714980567a60"
 SRC_URI = "${KERNELORG_MIRROR}/linux/docs/${BPN}/Archive/${BP}.tar.gz"
 
-SRC_URI[md5sum] = "c9bd70494ae18b19eb6be9c3845536ec"
-SRC_URI[sha256sum] = "6eea4583b8688c7d305b48d5908fa22700f57792617e4b1f3cd3766ddb520553"
+SRC_URI[md5sum] = "575f4e8920166b1433c329bb621819d1"
+SRC_URI[sha256sum] = "ba89f3453982fae6c699a877368d51ee27883b4de709e753eee3783b447a8381"
 
 RDEPENDS_${PN} = "man"
 
-do_configure () {
-	:
-}
-
-do_compile() {
-	:
-}
+do_configure[noexec] = "1"
+do_compile[noexec] = "1"
 
 do_install() {
         oe_runmake install DESTDIR=${D}
