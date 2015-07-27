@@ -350,23 +350,6 @@ python do_checkpkg() {
             elif cmp == 0:
                 pstatus = "MATCH"
 
-        """Read from manual distro tracking fields as alternative"""
-        pmver = d.getVar("RECIPE_UPSTREAM_VERSION", True)
-        if not pmver:
-            pmver = "N/A"
-            pmstatus = "ErrNoRecipeData"
-        else:
-            mpv, _, _ = oe.recipeutils.get_recipe_pv_without_srcpv(pmver, uri_type)
-            upv, _, _ = oe.recipeutils.get_recipe_pv_without_srcpv(pupver, uri_type)
-
-            cmp = vercmp_string(mpv, upv)
-            if cmp == -1:
-                pmstatus = "UPDATE"
-            elif cmp == 0:
-                pmstatus = "MATCH"
-            else:
-                pmstatus = ""
-
         psrcuri = psrcuri.split()[0]
         pdepends = "".join(pdepends.split("\t"))
         pdesc = "".join(pdesc.split("\t"))
@@ -375,7 +358,7 @@ python do_checkpkg() {
         with open(logfile, "a") as f:
             writer = csv.writer(f, delimiter='\t')
             writer.writerow([pname, pversion, pupver, plicense, psection, phome, 
-                prelease, pdepends, pbugtracker, ppe, pdesc, pstatus, pmver, 
+                prelease, pdepends, pbugtracker, ppe, pdesc, pstatus, pupver,
                 psrcuri, maintainer, no_upgr_reason])
             f.close()
         bb.utils.unlockfile(lf)
