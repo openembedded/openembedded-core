@@ -12,6 +12,7 @@ import signal
 import re
 import socket
 import select
+import errno
 
 import logging
 logger = logging.getLogger("BitBake.QemuRunner")
@@ -104,6 +105,14 @@ class QemuRunner:
         logger.info("waiting at most %s seconds for qemu pid" % self.runqemutime)
         endtime = time.time() + self.runqemutime
         while not self.is_alive() and time.time() < endtime:
+            if self.runqemu.poll():
+                if self.runqemu.returncode:
+                    # No point waiting any longer
+                    logger.info('runqemu exited with code %d' % self.runqemu.returncode)
+                    output = self.runqemu.stdout
+                    self.stop()
+                    logger.info("Output from runqemu:\n%s" % output.read())
+                    return False
             time.sleep(1)
 
         if self.is_alive():
@@ -169,7 +178,11 @@ class QemuRunner:
 
         if self.runqemu:
             logger.info("Sending SIGTERM to runqemu")
-            os.killpg(self.runqemu.pid, signal.SIGTERM)
+            try:
+                os.killpg(self.runqemu.pid, signal.SIGTERM)
+            except OSError as e:
+                if e.errno != errno.ESRCH:
+                    raise
             endtime = time.time() + self.runqemutime
             while self.runqemu.poll() is None and time.time() < endtime:
                 time.sleep(1)
