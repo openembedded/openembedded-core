@@ -1,20 +1,18 @@
 from oeqa.selftest.base import oeSelfTest
-from oeqa.utils.commands import runCmd, bitbake, get_bb_var
+from oeqa.utils.commands import runCmd, bitbake, get_bb_var, runqemu
 from oeqa.utils.decorators import testcase
-import pexpect
+from oeqa.utils.sshcontrol import SSHControl
 from os.path import isfile
-from os import system, killpg
+from os import system
 import glob
-import signal
-
+import os
+import sys
+import logging
 
 class ImageFeatures(oeSelfTest):
 
     test_user = 'tester'
     root_user = 'root'
-    prompt = r'qemux86:\S+[$#]\s+'
-    ssh_cmd = "ssh {} -l {} -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no"
-    get_ip_patt = r'\s+ip=(?P<qemu_ip>(\d+.){3}\d+)::'
 
     @testcase(1107)
     def test_non_root_user_can_connect_via_ssh_without_password(self):
@@ -37,41 +35,12 @@ class ImageFeatures(oeSelfTest):
         # Build a core-image-minimal
         bitbake('core-image-minimal')
 
-        # Boot qemu image
-        proc_qemu = pexpect.spawn('runqemu qemux86 nographic')
-        try:
-            proc_qemu.expect(self.get_ip_patt, timeout=100)
-            qemu_ip = proc_qemu.match.group('qemu_ip')
-            proc_qemu.expect('qemux86 login:', timeout=100)
-        except Exception as e:
-            try:
-                killpg(proc_qemu.pid, signal.SIGTERM)
-            except:
-                pass
-            self.fail('Failed to start qemu: %s' % e)
-
-        # Attempt to ssh with each user into qemu with empty password
-        for user in [self.root_user, self.test_user]:
-            proc_ssh = pexpect.spawn(self.ssh_cmd.format(qemu_ip, user))
-            index = proc_ssh.expect([self.prompt, pexpect.TIMEOUT, pexpect.EOF])
-            if index == 0:
-                # user successfully logged in with empty password
-                pass
-            elif index == 1:
-                killpg(proc_qemu.pid, signal.SIGTERM)
-                proc_ssh.terminate()
-                self.fail('Failed to ssh with {} user into qemu (timeout).'.format(user))
-            else:
-                killpg(proc_qemu.pid, signal.SIGTERM)
-                proc_ssh.terminate()
-                self.fail('Failed to ssh with {} user into qemu (eof).'.format(user))
-            proc_ssh.terminate()
-
-        # Cleanup
-        try:
-            killpg(proc_qemu.pid, signal.SIGTERM)
-        except:
-            pass
+        with runqemu("core-image-minimal", self) as qemu:
+            # Attempt to ssh with each user into qemu with empty password
+            for user in [self.root_user, self.test_user]:
+                ssh = SSHControl(ip=qemu.ip, logfile=qemu.sshlog, user=user)
+                status, output = ssh.run("true")
+                self.assertEqual(status, 0, 'ssh to user %s failed with %s' % (user, output))
 
     @testcase(1115)
     def test_all_users_can_connect_via_ssh_without_password(self):
@@ -82,7 +51,6 @@ class ImageFeatures(oeSelfTest):
         Author:      Ionut Chisanovici <ionutx.chisanovici@intel.com>
         AutomatedBy: Daniel Istrate <daniel.alexandrux.istrate@intel.com>
         """
-
         features = 'EXTRA_IMAGE_FEATURES += "ssh-server-openssh allow-empty-password"\n'
         features += 'INHERIT += "extrausers"\n'
         features += 'EXTRA_USERS_PARAMS = "useradd -p \'\' {}; usermod -s /bin/sh {};"'.format(self.test_user, self.test_user)
@@ -93,41 +61,13 @@ class ImageFeatures(oeSelfTest):
         # Build a core-image-minimal
         bitbake('core-image-minimal')
 
-        # Boot qemu image
-        proc_qemu = pexpect.spawn('runqemu qemux86 nographic')
-        try:
-            proc_qemu.expect(self.get_ip_patt, timeout=100)
-            qemu_ip = proc_qemu.match.group('qemu_ip')
-            proc_qemu.expect('qemux86 login:', timeout=100)
-        except Exception as e:
-            try:
-                killpg(proc_qemu.pid, signal.SIGTERM)
-            except:
-                pass
-            self.fail('Failed to start qemu: %s' % e)
+        with runqemu("core-image-minimal", self) as qemu:
+            # Attempt to ssh with each user into qemu with empty password
+            for user in [self.root_user, self.test_user]:
+                ssh = SSHControl(ip=qemu.ip, logfile=qemu.sshlog, user=user)
+                status, output = ssh.run("true")
+                self.assertEqual(status, 0, 'ssh to user tester failed with %s' % output)
 
-        # Attempt to ssh with each user into qemu with empty password
-        for user in [self.root_user, self.test_user]:
-            proc_ssh = pexpect.spawn(self.ssh_cmd.format(qemu_ip, user))
-            index = proc_ssh.expect([self.prompt, pexpect.TIMEOUT, pexpect.EOF])
-            if index == 0:
-                # user successfully logged in with empty password
-                pass
-            elif index == 1:
-                killpg(proc_qemu.pid, signal.SIGTERM)
-                proc_ssh.terminate()
-                self.fail('Failed to ssh with {} user into qemu (timeout).'.format(user))
-            else:
-                killpg(proc_qemu.pid, signal.SIGTERM)
-                proc_ssh.terminate()
-                self.fail('Failed to ssh with {} user into qemu (eof).'.format(user))
-            proc_ssh.terminate()
-
-        # Cleanup
-        try:
-            killpg(proc_qemu.pid, signal.SIGTERM)
-        except:
-            pass
 
     @testcase(1114)
     def test_rpm_version_4_support_on_image(self):
