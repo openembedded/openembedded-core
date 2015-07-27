@@ -175,6 +175,9 @@ class QemuTarget(BaseTarget):
             self.connection = SSHControl(ip=self.ip, logfile=self.sshlog)
         else:
             self.stop()
+            if os.path.exists(self.qemulog):
+                with open(self.qemulog, 'r') as f:
+                    bb.error("Qemu log output from %s:\n%s" % (self.qemulog, f.read()))
             raise bb.build.FuncFailed("%s - FAILED to start qemu - check the task log and the boot log" % self.pn)
 
     def stop(self):
