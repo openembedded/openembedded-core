@@ -1,5 +1,5 @@
 SUMMARY = "SDK tools for Qt version 4.x"
-DEPENDS = "nativesdk-zlib nativesdk-dbus nativesdk-libx11 qt4-native"
+DEPENDS = "nativesdk-zlib nativesdk-dbus qt4-native ${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'virtual/nativesdk-libx11', '', d)}"
 SECTION = "libs"
 HOMEPAGE = "http://qt-project.org/"
 LICENSE = "LGPLv2.1 | GPLv3"
