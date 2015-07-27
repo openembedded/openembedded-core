@@ -14,8 +14,7 @@ import socket
 import select
 
 import logging
-logger = logging.getLogger("QemuRunner")
-logger.setLevel(logging.DEBUG - 2)
+logger = logging.getLogger("BitBake.QemuRunner")
 
 class QemuRunner:
 
@@ -51,11 +50,11 @@ class QemuRunner:
             self.server_socket.bind(("127.0.0.1",0))
             self.server_socket.listen(2)
             self.serverport = self.server_socket.getsockname()[1]
-            logging.info("Created listening socket for qemu serial console on: 127.0.0.1:%s" % self.serverport)
+            logger.info("Created listening socket for qemu serial console on: 127.0.0.1:%s" % self.serverport)
             return True
         except socket.error, msg:
             self.server_socket.close()
-            logging.error("Failed to create listening socket: %s" % msg[1])
+            logger.error("Failed to create listening socket: %s" % msg[1])
             return False
 
 
@@ -68,18 +67,18 @@ class QemuRunner:
         if self.display:
             os.environ["DISPLAY"] = self.display
         else:
-            logging.error("To start qemu I need a X desktop, please set DISPLAY correctly (e.g. DISPLAY=:1)")
+            logger.error("To start qemu I need a X desktop, please set DISPLAY correctly (e.g. DISPLAY=:1)")
             return False
         if not os.path.exists(self.rootfs):
-            logging.error("Invalid rootfs %s" % self.rootfs)
+            logger.error("Invalid rootfs %s" % self.rootfs)
             return False
         if not os.path.exists(self.tmpdir):
-            logging.error("Invalid TMPDIR path %s" % self.tmpdir)
+            logger.error("Invalid TMPDIR path %s" % self.tmpdir)
             return False
         else:
             os.environ["OE_TMPDIR"] = self.tmpdir
         if not os.path.exists(self.deploy_dir_image):
-            logging.error("Invalid DEPLOY_DIR_IMAGE path %s" % self.deploy_dir_image)
+            logger.error("Invalid DEPLOY_DIR_IMAGE path %s" % self.deploy_dir_image)
             return False
         else:
             os.environ["DEPLOY_DIR_IMAGE"] = self.deploy_dir_image
@@ -97,28 +96,28 @@ class QemuRunner:
         launch_cmd = 'runqemu %s %s %s' % (self.machine, self.rootfs, self.qemuparams)
         self.runqemu = subprocess.Popen(launch_cmd,shell=True,stdout=subprocess.PIPE,stderr=subprocess.STDOUT,preexec_fn=os.setpgrp)
 
-        logging.info("runqemu started, pid is %s" % self.runqemu.pid)
-        logging.info("waiting at most %s seconds for qemu pid" % self.runqemutime)
+        logger.info("runqemu started, pid is %s" % self.runqemu.pid)
+        logger.info("waiting at most %s seconds for qemu pid" % self.runqemutime)
         endtime = time.time() + self.runqemutime
         while not self.is_alive() and time.time() < endtime:
             time.sleep(1)
 
         if self.is_alive():
-            logging.info("qemu started - qemu procces pid is %s" % self.qemupid)
+            logger.info("qemu started - qemu procces pid is %s" % self.qemupid)
             cmdline = ''
             with open('/proc/%s/cmdline' % self.qemupid) as p:
                 cmdline = p.read()
             ips = re.findall("((?:[0-9]{1,3}\.){3}[0-9]{1,3})", cmdline.split("ip=")[1])
             if not ips or len(ips) != 3:
-                logging.info("Couldn't get ip from qemu process arguments! Here is the qemu command line used: %s" % cmdline)
+                logger.info("Couldn't get ip from qemu process arguments! Here is the qemu command line used: %s" % cmdline)
                 self.stop()
                 return False
             else:
                 self.ip = ips[0]
                 self.server_ip = ips[1]
-            logging.info("Target IP: %s" % self.ip)
-            logging.info("Server IP: %s" % self.server_ip)
-            logging.info("Waiting at most %d seconds for login banner" % self.boottime)
+            logger.info("Target IP: %s" % self.ip)
+            logger.info("Server IP: %s" % self.server_ip)
+            logger.info("Waiting at most %d seconds for login banner" % self.boottime)
             endtime = time.time() + self.boottime
             socklist = [self.server_socket]
             reachedlogin = False
@@ -131,7 +130,7 @@ class QemuRunner:
                         self.qemusock.setblocking(0)
                         socklist.append(self.qemusock)
                         socklist.remove(self.server_socket)
-                        logging.info("Connection from %s:%s" % addr)
+                        logger.info("Connection from %s:%s" % addr)
                     else:
                         data = sock.recv(1024)
                         if data:
@@ -140,24 +139,24 @@ class QemuRunner:
                             if re.search("qemu.* login:", self.bootlog):
                                 stopread = True
                                 reachedlogin = True
-                                logging.info("Reached login banner")
+                                logger.info("Reached login banner")
                         else:
                             socklist.remove(sock)
                             sock.close()
                             stopread = True
 
             if not reachedlogin:
-                logging.info("Target didn't reached login boot in %d seconds" % self.boottime)
+                logger.info("Target didn't reached login boot in %d seconds" % self.boottime)
                 lines = "\n".join(self.bootlog.splitlines()[-5:])
-                logging.info("Last 5 lines of text:\n%s" % lines)
-                logging.info("Check full boot log: %s" % self.logfile)
+                logger.info("Last 5 lines of text:\n%s" % lines)
+                logger.info("Check full boot log: %s" % self.logfile)
                 self.stop()
                 return False
         else:
-            logging.info("Qemu pid didn't appeared in %s seconds" % self.runqemutime)
+            logger.info("Qemu pid didn't appeared in %s seconds" % self.runqemutime)
             output = self.runqemu.stdout
             self.stop()
-            logging.info("Output from runqemu:\n%s" % output.read())
+            logger.info("Output from runqemu:\n%s" % output.read())
             return False
 
         return self.is_alive()
@@ -165,13 +164,13 @@ class QemuRunner:
     def stop(self):
 
         if self.runqemu:
-            logging.info("Sending SIGTERM to runqemu")
+            logger.info("Sending SIGTERM to runqemu")
             os.killpg(self.runqemu.pid, signal.SIGTERM)
             endtime = time.time() + self.runqemutime
             while self.runqemu.poll() is None and time.time() < endtime:
                 time.sleep(1)
             if self.runqemu.poll() is None:
-                logging.info("Sending SIGKILL to runqemu")
+                logger.info("Sending SIGKILL to runqemu")
                 os.killpg(self.runqemu.pid, signal.SIGKILL)
             self.runqemu = None
         if self.server_socket:
@@ -181,7 +180,7 @@ class QemuRunner:
         self.ip = None
 
     def restart(self, qemuparams = None):
-        logging.info("Restarting qemu process")
+        logger.info("Restarting qemu process")
         if self.runqemu.poll() is None:
             self.stop()
         if self.start(qemuparams):
