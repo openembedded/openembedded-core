@@ -8,7 +8,7 @@ import glob
 
 import oeqa.utils.ftools as ftools
 from oeqa.selftest.base import oeSelfTest
-from oeqa.utils.commands import runCmd, bitbake, get_bb_var, create_temp_layer
+from oeqa.utils.commands import runCmd, bitbake, get_bb_var, create_temp_layer, runqemu
 from oeqa.utils.decorators import testcase
 
 class DevtoolBase(oeSelfTest):
@@ -799,12 +799,10 @@ class DevtoolTests(DevtoolBase):
             self.skipTest('No tap devices found - you must set up tap devices with scripts/runqemu-gen-tapdevs before running this test')
         workspacedir = os.path.join(self.builddir, 'workspace')
         self.assertTrue(not os.path.exists(workspacedir), 'This test cannot be run with a workspace directory under the build directory')
-        import pexpect
         # Definitions
         testrecipe = 'mdadm'
         testfile = '/sbin/mdadm'
         testimage = 'oe-selftest-image'
-        testhost = '192.168.7.2'
         testcommand = '/sbin/mdadm --help'
         # Build an image to run
         bitbake("%s qemu-native qemu-helper-native" % testimage)
@@ -821,44 +819,42 @@ class DevtoolTests(DevtoolBase):
         self.add_command_to_tearDown('bitbake -c clean %s' % testrecipe)
         result = runCmd('devtool modify %s -x %s' % (testrecipe, tempdir))
         # Test that deploy-target at this point fails (properly)
-        result = runCmd('devtool deploy-target -n %s root@%s' % (testrecipe, testhost), ignore_status=True)
+        result = runCmd('devtool deploy-target -n %s root@localhost' % testrecipe, ignore_status=True)
         self.assertNotEqual(result.output, 0, 'devtool deploy-target should have failed, output: %s' % result.output)
         self.assertNotIn(result.output, 'Traceback', 'devtool deploy-target should have failed with a proper error not a traceback, output: %s' % result.output)
         result = runCmd('devtool build %s' % testrecipe)
         # First try a dry-run of deploy-target
-        result = runCmd('devtool deploy-target -n %s root@%s' % (testrecipe, testhost))
+        result = runCmd('devtool deploy-target -n %s root@localhost' % testrecipe)
         self.assertIn('  %s' % testfile, result.output)
         # Boot the image
-        console = pexpect.spawn('runqemu %s %s qemuparams="-snapshot" nographic' % (machine, testimage))
-        console.expect("login:", timeout=120)
-        # Now really test deploy-target
-        result = runCmd('devtool deploy-target -c %s root@%s' % (testrecipe, testhost))
-        # Run a test command to see if it was installed properly
-        sshargs = '-o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
-        result = runCmd('ssh %s root@%s %s' % (sshargs, testhost, testcommand))
-        # Check if it deployed all of the files with the right ownership/perms
-        # First look on the host - need to do this under pseudo to get the correct ownership/perms
-        installdir = get_bb_var('D', testrecipe)
-        fakerootenv = get_bb_var('FAKEROOTENV', testrecipe)
-        fakerootcmd = get_bb_var('FAKEROOTCMD', testrecipe)
-        result = runCmd('%s %s find . -type f -exec ls -l {} \;' % (fakerootenv, fakerootcmd), cwd=installdir)
-        filelist1 = self._process_ls_output(result.output)
+        with runqemu(testimage, self) as qemu:
+            # Now really test deploy-target
+            result = runCmd('devtool deploy-target -c %s root@%s' % (testrecipe, qemu.ip))
+            # Run a test command to see if it was installed properly
+            sshargs = '-o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
+            result = runCmd('ssh %s root@%s %s' % (sshargs, qemu.ip, testcommand))
+            # Check if it deployed all of the files with the right ownership/perms
+            # First look on the host - need to do this under pseudo to get the correct ownership/perms
+            installdir = get_bb_var('D', testrecipe)
+            fakerootenv = get_bb_var('FAKEROOTENV', testrecipe)
+            fakerootcmd = get_bb_var('FAKEROOTCMD', testrecipe)
+            result = runCmd('%s %s find . -type f -exec ls -l {} \;' % (fakerootenv, fakerootcmd), cwd=installdir)
+            filelist1 = self._process_ls_output(result.output)
 
-        # Now look on the target
-        tempdir2 = tempfile.mkdtemp(prefix='devtoolqa')
-        self.track_for_cleanup(tempdir2)
-        tmpfilelist = os.path.join(tempdir2, 'files.txt')
-        with open(tmpfilelist, 'w') as f:
-            for line in filelist1:
-                splitline = line.split()
-                f.write(splitline[-1] + '\n')
-        result = runCmd('cat %s | ssh -q %s root@%s \'xargs ls -l\'' % (tmpfilelist, sshargs, testhost))
-        filelist2 = self._process_ls_output(result.output)
-        filelist1.sort(key=lambda item: item.split()[-1])
-        filelist2.sort(key=lambda item: item.split()[-1])
-        self.assertEqual(filelist1, filelist2)
-        # Test undeploy-target
-        result = runCmd('devtool undeploy-target -c %s root@%s' % (testrecipe, testhost))
-        result = runCmd('ssh %s root@%s %s' % (sshargs, testhost, testcommand), ignore_status=True)
-        self.assertNotEqual(result, 0, 'undeploy-target did not remove command as it should have')
-        console.close()
+            # Now look on the target
+            tempdir2 = tempfile.mkdtemp(prefix='devtoolqa')
+            self.track_for_cleanup(tempdir2)
+            tmpfilelist = os.path.join(tempdir2, 'files.txt')
+            with open(tmpfilelist, 'w') as f:
+                for line in filelist1:
+                    splitline = line.split()
+                    f.write(splitline[-1] + '\n')
+            result = runCmd('cat %s | ssh -q %s root@%s \'xargs ls -l\'' % (tmpfilelist, sshargs, qemu.ip))
+            filelist2 = self._process_ls_output(result.output)
+            filelist1.sort(key=lambda item: item.split()[-1])
+            filelist2.sort(key=lambda item: item.split()[-1])
+            self.assertEqual(filelist1, filelist2)
+            # Test undeploy-target
+            result = runCmd('devtool undeploy-target -c %s root@%s' % (testrecipe, qemu.ip))
+            result = runCmd('ssh %s root@%s %s' % (sshargs, qemu.ip, testcommand), ignore_status=True)
+            self.assertNotEqual(result, 0, 'undeploy-target did not remove command as it should have')
