@@ -160,8 +160,8 @@ class QemuRunner:
 
             if not reachedlogin:
                 logger.info("Target didn't reached login boot in %d seconds" % self.boottime)
-                lines = "\n".join(self.bootlog.splitlines()[-5:])
-                logger.info("Last 5 lines of text:\n%s" % lines)
+                lines = "\n".join(self.bootlog.splitlines()[-25:])
+                logger.info("Last 25 lines of text:\n%s" % lines)
                 logger.info("Check full boot log: %s" % self.logfile)
                 self.stop()
                 return False
