@@ -143,6 +143,7 @@ class QemuTarget(BaseTarget):
 
     def deploy(self):
         try:
+            bb.utils.mkdirhier(self.testdir)
             shutil.copyfile(self.origrootfs, self.rootfs)
         except Exception as e:
             bb.fatal("Error copying rootfs: %s" % e)
