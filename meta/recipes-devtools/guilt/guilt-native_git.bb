@@ -8,7 +8,7 @@ inherit native
 SRC_URI = "git://repo.or.cz/guilt.git \
            file://guilt-bash.patch \
            "
-
+PV = "0.35+git${SRCPV}"
 SRCREV = "c2a5bae511c6d5354aa4e1cb59069c31df2b8eeb"
 
 S = "${WORKDIR}/git"
