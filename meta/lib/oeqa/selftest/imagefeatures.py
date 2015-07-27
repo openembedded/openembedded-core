@@ -2,9 +2,6 @@ from oeqa.selftest.base import oeSelfTest
 from oeqa.utils.commands import runCmd, bitbake, get_bb_var, runqemu
 from oeqa.utils.decorators import testcase
 from oeqa.utils.sshcontrol import SSHControl
-from os.path import isfile
-from os import system
-import glob
 import os
 import sys
 import logging
@@ -169,75 +166,3 @@ class ImageFeatures(oeSelfTest):
         # Build a core-image-weston
         bitbake('core-image-weston')
 
-
-class Gummiboot(oeSelfTest):
-
-    meta_intel_dir = ''
-
-    def setUpLocal(self):
-        """
-        Common setup for test cases: 1101, 1103
-        """
-
-        self.meta_intel_dir = get_bb_var('COREBASE') + '/meta-intel'
-        meta_nuc_dir = self.meta_intel_dir + '/meta-nuc'
-        meta_intel_repo = 'http://git.yoctoproject.org/git/meta-intel'
-
-        # Delete meta_intel_dir
-        system('rm -rf ' + self.meta_intel_dir)
-
-        # Delete meta-intel dir even if the setUp fails
-        self.add_command_to_tearDown('rm -rf ' + self.meta_intel_dir)
-
-        # Clone meta-intel
-        runCmd('git clone ' + meta_intel_repo + ' ' + self.meta_intel_dir)
-
-        # Add meta-intel and meta-nuc layers in conf/bblayers.conf
-        features = 'BBLAYERS += "' + self.meta_intel_dir + ' ' + meta_nuc_dir + '"'
-        self.append_bblayers_config(features)
-
-        # Set EFI_PROVIDER = "gummiboot" and MACHINE = "nuc" in conf/local.conf
-        features = 'EFI_PROVIDER = "gummiboot"\n'
-        features += 'MACHINE = "nuc"'
-        self.append_config(features)
-
-        # Run "bitbake syslinux syslinux-native parted-native dosfstools-native mtools-native core-image-minimal "
-        # to build a nuc/efi gummiboot image
-
-        bitbake('syslinux syslinux-native parted-native dosfstools-native mtools-native core-image-minimal')
-
-    @testcase(1101)
-    def test_efi_gummiboot_images_can_be_build(self):
-        """
-        Summary:     Check if efi/gummiboot images can be buit
-        Expected:    1. File gummibootx64.efi should be available in build/tmp/deploy/images/nuc
-                     2. Efi/gummiboot images can be built
-        Product:     oe-core
-        Author:      Ionut Chisanovici <ionutx.chisanovici@intel.com>
-        AutomatedBy: Daniel Istrate <daniel.alexandrux.istrate@intel.com>
-        """
-
-        look_for_file = 'gummibootx64.efi'
-        file_location = get_bb_var('COREBASE') + '/build/tmp/deploy/images/nuc/'
-
-        found = isfile(file_location + look_for_file)
-        self.assertTrue(found, 'File {} not found under {}.'.format(look_for_file, file_location))
-
-    @testcase(1103)
-    def test_wic_command_can_create_efi_gummiboot_installation_images(self):
-        """
-        Summary:     Check that wic command can create efi/gummiboot installation images
-        Expected:    A .direct file in folder /var/tmp/wic/ must be created.
-        Product:     oe-core
-        Author:      Ionut Chisanovici <ionutx.chisanovici@intel.com>
-        AutomatedBy: Daniel Istrate <daniel.alexandrux.istrate@intel.com>
-        """
-
-        # Create efi/gummiboot installation images
-        wic_create_cmd = 'wic create mkgummidisk -e core-image-minimal'
-        runCmd(wic_create_cmd)
-
-        # Verify that a .direct file was created
-        direct_file = '/var/tmp/wic/build/*.direct'
-        ret = glob.glob(direct_file)
-        self.assertEqual(1, len(ret), 'Failed to find the .direct file')
