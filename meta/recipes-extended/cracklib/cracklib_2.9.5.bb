@@ -15,8 +15,8 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/cracklib/cracklib-${PV}.tar.gz \
            file://0001-packlib.c-support-dictionary-byte-order-dependent.patch \
            file://0002-craklib-fix-testnum-and-teststr-failed.patch"
 
-SRC_URI[md5sum] = "b31f7e3618cda7a2ac38588067275013"
-SRC_URI[sha256sum] = "f2a866b4b9808344228ea6d68b69e3ba9a8a99210e23dfd718d4b95c60be8958"
+SRC_URI[md5sum] = "376790a95c1fb645e59e6e9803c78582"
+SRC_URI[sha256sum] = "59ab0138bc8cf90cccb8509b6969a024d5e58d2d02bcbdccbb9ba9b88be3fa33"
 
 inherit autotools gettext pythonnative python-dir
 
