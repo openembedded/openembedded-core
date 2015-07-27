@@ -94,7 +94,11 @@ class QemuRunner:
             self.qemuparams = self.qemuparams[:-1] + " " + qemuparams + " " + '\"'
 
         launch_cmd = 'runqemu %s %s %s' % (self.machine, self.rootfs, self.qemuparams)
-        self.runqemu = subprocess.Popen(launch_cmd,shell=True,stdout=subprocess.PIPE,stderr=subprocess.STDOUT,preexec_fn=os.setpgrp)
+        # FIXME: We pass in stdin=subprocess.PIPE here to work around stty
+        # blocking at the end of the runqemu script when using this within
+        # oe-selftest (this makes stty error out immediately). There ought
+        # to be a proper fix but this will suffice for now.
+        self.runqemu = subprocess.Popen(launch_cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, stdin=subprocess.PIPE, preexec_fn=os.setpgrp)
 
         logger.info("runqemu started, pid is %s" % self.runqemu.pid)
         logger.info("waiting at most %s seconds for qemu pid" % self.runqemutime)
