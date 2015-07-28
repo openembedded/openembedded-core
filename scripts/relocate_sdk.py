@@ -161,7 +161,18 @@ def change_dl_sysdirs():
                 # write it back
                 f.seek(sh_offset)
                 f.write(new_ldsocache_path)
-
+            elif name == b(".gccrelocprefix"):
+                offset = 0
+                while (offset + 4096) <= sh_size:
+                    path = f.read(4096)
+                    new_path = old_prefix.sub(new_prefix, path)
+                    # pad with zeros
+                    new_path += b("\0") * (4096 - len(new_path))
+                    #print "Changing %s to %s at %s" % (str(path), str(new_path), str(offset))
+                    # write it back
+                    f.seek(sh_offset + offset)
+                    f.write(new_path)
+                    offset = offset + 4096
     if sysdirs != "" and sysdirslen != "":
         paths = sysdirs.split(b("\0"))
         sysdirs = b("")

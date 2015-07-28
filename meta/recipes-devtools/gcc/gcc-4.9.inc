@@ -78,6 +78,7 @@ SRC_URI = "\
     file://0060-Only-allow-e500-double-in-SPE_SIMD_REGNO_P-registers.patch \
     file://0061-target-gcc-includedir.patch \
     file://0062-Use-SYSTEMLIBS_DIR-replacement-instead-of-hardcoding.patch \
+    file://0063-nativesdk-gcc-support.patch \
 "
 SRC_URI[md5sum] = "6f831b4d251872736e8e9cc09746f327"
 SRC_URI[sha256sum] = "2332b2a5a321b57508b9031354a8503af6fdfb868b8c1748d33028d100a8b67e"

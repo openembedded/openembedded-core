@@ -11,3 +11,5 @@ do_configure_prepend() {
 	# broken libtool here
 	sed -i -e 's/hardcode_into_libs=yes/hardcode_into_libs=no/' ${S}/libcc1/configure
 }
+
+BBCLASSEXTEND = "nativesdk"

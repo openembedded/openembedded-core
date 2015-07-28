@@ -39,13 +39,14 @@ python gcc_multilib_setup() {
             bb.utils.mkdirhier('%s/%s' % (build_conf_dir, parent_dir))
             bb.utils.copyfile(fn, '%s/%s' % (build_conf_dir, rel_path))
 
+    pn = d.getVar('PN', True)
     multilibs = (d.getVar('MULTILIB_VARIANTS', True) or '').split()
-    if not multilibs:
+    if not multilibs and pn != "nativesdk-gcc":
         return
 
     mlprefix = d.getVar('MLPREFIX', True)
-    pn = d.getVar('PN', True)
-    if ('%sgcc' % mlprefix) != pn and (not pn.startswith('gcc-cross-canadian')):
+
+    if ('%sgcc' % mlprefix) != pn and (not pn.startswith('gcc-cross-canadian')) and pn != "nativesdk-gcc":
         return
 
 
@@ -74,7 +75,7 @@ python gcc_multilib_setup() {
     def write_headers(root, files, libdir32, libdir64, libdirx32, libdirn32):
         def wrap_libdir(libdir):
             if libdir.find('SYSTEMLIBS_DIR') != -1:
-                return libdir
+                return '"%r"'
             else:
                 return '"/%s/"' % libdir
 
@@ -135,16 +136,22 @@ python gcc_multilib_setup() {
         'powerpc64' : ['gcc/config/rs6000/linux64.h'],
     }
 
-    target_arch = (d.getVar('TARGET_ARCH_MULTILIB_ORIGINAL', True) if mlprefix
-                    else d.getVar('TARGET_ARCH', True))
-    if target_arch not in gcc_target_config_files:
-        bb.warn('gcc multilib setup is not supported for TARGET_ARCH=' + target_arch)
-        return
-
     libdir32 = 'SYSTEMLIBS_DIR'
     libdir64 = 'SYSTEMLIBS_DIR'
     libdirx32 = 'SYSTEMLIBS_DIR'
     libdirn32 = 'SYSTEMLIBS_DIR'
+
+
+    target_arch = (d.getVar('TARGET_ARCH_MULTILIB_ORIGINAL', True) if mlprefix
+                    else d.getVar('TARGET_ARCH', True))
+    if pn == "nativesdk-gcc":
+        header_config_files = gcc_header_config_files[d.getVar("SDK_ARCH", True)]
+        write_headers(builddir, header_config_files, libdir32, libdir64, libdirx32, libdirn32)
+        return
+
+    if target_arch not in gcc_target_config_files:
+        bb.warn('gcc multilib setup is not supported for TARGET_ARCH=' + target_arch)
+        return
 
     target_config_files = gcc_target_config_files[target_arch]
     header_config_files = gcc_header_config_files[target_arch]
