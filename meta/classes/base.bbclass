@@ -204,8 +204,10 @@ def buildcfg_neededvars(d):
         bb.fatal('The following variable(s) were not set: %s\nPlease set them directly, or choose a MACHINE or DISTRO that sets them.' % ', '.join(pesteruser))
 
 addhandler base_eventhandler
-base_eventhandler[eventmask] = "bb.event.ConfigParsed bb.event.BuildStarted bb.event.RecipePreFinalise"
+base_eventhandler[eventmask] = "bb.event.ConfigParsed bb.event.BuildStarted bb.event.RecipePreFinalise bb.runqueue.sceneQueueComplete"
 python base_eventhandler() {
+    import bb.runqueue
+
     if isinstance(e, bb.event.ConfigParsed):
         if not e.data.getVar("NATIVELSBSTRING", False):
             e.data.setVar("NATIVELSBSTRING", lsb_distro_identifier(e.data))
@@ -241,6 +243,17 @@ python base_eventhandler() {
             e.data.delVar("PREFERRED_PROVIDER_virtual/${TARGET_PREFIX}g++")
             e.data.delVar("PREFERRED_PROVIDER_virtual/${TARGET_PREFIX}compilerlibs")
 
+    if isinstance(e, bb.runqueue.sceneQueueComplete):
+        completions = e.data.expand("${STAGING_DIR}/sstatecompletions")
+        if os.path.exists(completions):
+            cmds = set()
+            with open(completions, "r") as f:
+                cmds = set(f)
+            e.data.setVar("completion_function", "\n".join(cmds))
+            e.data.setVarFlag("completion_function", "func", "1")
+            bb.debug(1, "Executing SceneQueue Completion commands: %s" % "\n".join(cmds))
+            bb.build.exec_func("completion_function", e.data)
+            os.remove(completions)
 }
 
 CONFIGURESTAMPFILE = "${WORKDIR}/configure.sstate"

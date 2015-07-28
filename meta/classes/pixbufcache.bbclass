@@ -45,6 +45,10 @@ python populate_packages_append() {
         d.setVar('pkg_postrm_%s' % pkg, postrm)
 }
 
+gdkpixbuf_complete() {
+	GDK_PIXBUF_FATAL_LOADER=1 ${STAGING_BINDIR_NATIVE}/gdk-pixbuf-query-loaders --update-cache || exit 1
+}
+
 #
 # Add an sstate postinst hook to update the cache for native packages.
 # An error exit during populate_sysroot_setscene allows bitbake to
@@ -52,26 +56,12 @@ python populate_packages_append() {
 #
 SSTATEPOSTINSTFUNCS_append_class-native = " pixbufcache_sstate_postinst"
 
+# See base.bbclass for the other half of this
 pixbufcache_sstate_postinst() {
-	if [ "${BB_CURRENTTASK}" = "populate_sysroot" -o "${BB_CURRENTTASK}" = "populate_sysroot_setscene" ]
-	then
-		GDK_PIXBUF_FATAL_LOADER=1 gdk-pixbuf-query-loaders --update-cache || exit 1
+	if [ "${BB_CURRENTTASK}" = "populate_sysroot" ]; then
+		${gdkpixbuf_complete}
+	elif [ "${BB_CURRENTTASK}" = "populate_sysroot_setscene" ]; then
+		echo "${gdkpixbuf_complete}" >> ${STAGING_DIR}/sstatecompletions
 	fi
 }
 
-# Add all of the dependencies of gdk-pixbuf as dependencies of
-# do_populate_sysroot_setscene so that pixbufcache_sstate_postinst can work
-# (otherwise gdk-pixbuf-query-loaders may not exist or link). Only add
-# gdk-pixbuf-native if we're not building gdk-pixbuf itself.
-#
-# Packages that use this class should extend this variable with their runtime
-# dependencies.
-PIXBUFCACHE_SYSROOT_DEPS = ""
-PIXBUFCACHE_SYSROOT_DEPS_class-native = "\
-    ${@['gdk-pixbuf-native:do_populate_sysroot_setscene', '']['${BPN}' == 'gdk-pixbuf']} \
-    glib-2.0-native:do_populate_sysroot_setscene libffi-native:do_populate_sysroot_setscene \
-    libpng-native:do_populate_sysroot_setscene zlib-native:do_populate_sysroot_setscene \
-    harfbuzz-native:do_populate_sysroot_setscene \
-    "
-do_populate_sysroot_setscene[depends] += "${PIXBUFCACHE_SYSROOT_DEPS}"
-do_populate_sysroot[depends] += "${@d.getVar('PIXBUFCACHE_SYSROOT_DEPS', True).replace('_setscene','')}"
