@@ -21,7 +21,7 @@ USERADD_PACKAGES = "${PN}"
 USERADD_PARAM_${PN} = "--system --create-home \
                        --groups video,tty,audio \
                        --password ${BUILDER_PASSWORD} \
-                       --user-group ${PN}"
+                       --user-group builder"
 
 do_install () {
 	install -d -m 755 ${D}${sysconfdir}/mini_x/session.d
