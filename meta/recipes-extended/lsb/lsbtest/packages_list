@@ -3,15 +3,15 @@ LSB_ARCH="lsbarch"
 
 BASE_PACKAGES_LIST="lsb-setup-4.1.0-1.noarch.rpm"
 
-RUNTIME_BASE_PACKAGES_LIST="lsb-dist-checker-4.1.0.12-1.targetarch.rpm \
-	lsb-tet3-lite-3.7-23.lsb4.targetarch.rpm \
-	lsb-tet3-lite-devel-3.7-23.lsb4.targetarch.rpm \
-	lsb-xvfb-1.2.0-21.targetarch.rpm \
+RUNTIME_BASE_PACKAGES_LIST="lsb-dist-checker-5.0.0.1-1.targetarch.rpm \
+	lsb-tet3-lite-3.7-27.lsb5.targetarch.rpm \
+	lsb-tet3-lite-devel-3.7-27.lsb5.targetarch.rpm \
+	lsb-xvfb-1.2.0-22.targetarch.rpm \
 	"
 
 RUNTIME_PACKAGES_LIST="lsb-cmdchk-4.1.4-5.targetarch.rpm \
 	lsb-libchk-4.1.4-5.targetarch.rpm \
-	lsb-qm-2.2-8.lsb4.targetarch.rpm \
+	lsb-qm-2.2-12.lsb4.targetarch.rpm \
 	lsb-task-dist-testkit-4.1.9-1.noarch.rpm \
 	lsb-test-core-4.1.15-1.targetarch.rpm \
 	lsb-test-cpp-t2c-4.1.0-1.targetarch.rpm \
