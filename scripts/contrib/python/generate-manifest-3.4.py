@@ -194,7 +194,7 @@ if __name__ == "__main__":
     "${datadir}/pkgconfig " )
 
     m.addPackage( "${PN}-2to3", "Python automated Python 2 to 3 code translator", "${PN}-core",
-    "${bindir}/2to3 lib2to3" ) # package
+    "lib2to3" ) # package
 
     m.addPackage( "${PN}-idle", "Python Integrated Development Environment", "${PN}-core ${PN}-tkinter",
     "${bindir}/idle idlelib" ) # package

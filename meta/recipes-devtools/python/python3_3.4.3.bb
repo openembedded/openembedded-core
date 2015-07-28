@@ -162,6 +162,9 @@ do_install() {
 		ARCH=${TARGET_ARCH} \
 		DESTDIR=${D} LIBDIR=${libdir} install
 
+	# avoid conflict with 2to3 from Python 2
+	rm -f ${D}/${bindir}/2to3
+
 	install -m 0644 Makefile.sysroot ${D}/${libdir}/python${PYTHON_MAJMIN}/config/Makefile
 
 	if [ -e ${WORKDIR}/sitecustomize.py ]; then
