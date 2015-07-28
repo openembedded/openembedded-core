@@ -10,7 +10,7 @@ SECTION = "libs"
 DEPENDS = "libid3tag"
 PR = "r3"
 
-SRC_URI = "${SOURCEFORGE_MIRROR}/mad/libmad-${PV}.tar.gz \
+SRC_URI = "ftp://ftp.mars.org/pub/mpeg/libmad-${PV}.tar.gz \
            file://no-force-mem.patch \
            file://add-pkgconfig.patch \
            file://fix_for_mips_with_gcc-4.5.0.patch \
