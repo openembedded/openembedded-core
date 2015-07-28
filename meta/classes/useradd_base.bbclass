@@ -34,7 +34,7 @@ perform_groupadd () {
                         sleep $count
 		done
 	else
-		bbwarn "${PN}: group $groupname already exists, not re-creating it"
+		bbnote "${PN}: group $groupname already exists, not re-creating it"
 	fi
 }
 
@@ -62,7 +62,7 @@ perform_useradd () {
 		       sleep $count
 	       done
 	else
-		bbwarn "${PN}: user $username already exists, not re-creating it"
+		bbnote "${PN}: user $username already exists, not re-creating it"
 	fi
 }
 
