@@ -14,7 +14,7 @@ perform_groupadd () {
 	local rootdir="$1"
 	local opts="$2"
 	local retries="$3"
-	bbnote "Performing groupadd with [$opts] and $retries times of retry"
+	bbnote "${PN}: Performing groupadd with [$opts] and $retries times of retry"
 	local groupname=`echo "$opts" | awk '{ print $NF }'`
 	local group_exists="`grep "^$groupname:" $rootdir/etc/group || true`"
 	if test "x$group_exists" = "x"; then
@@ -23,18 +23,18 @@ perform_groupadd () {
 			eval $PSEUDO groupadd $opts || true
 			group_exists="`grep "^$groupname:" $rootdir/etc/group || true`"
 			if test "x$group_exists" = "x"; then
-				bbwarn "groupadd command did not succeed. Retrying..."
+				bbwarn "${PN}: groupadd command did not succeed. Retrying..."
 			else
 				break
 			fi
 			count=`expr $count + 1`
 			if test $count = $retries; then
-				bbfatal "Tried running groupadd command $retries times without success, giving up"
+				bbfatal "${PN}: Tried running groupadd command $retries times without success, giving up"
 			fi
                         sleep $count
 		done
 	else
-		bbwarn "group $groupname already exists, not re-creating it"
+		bbwarn "${PN}: group $groupname already exists, not re-creating it"
 	fi
 }
 
@@ -42,7 +42,7 @@ perform_useradd () {
 	local rootdir="$1"
 	local opts="$2"
 	local retries="$3"
-	bbnote "Performing useradd with [$opts] and $retries times of retry"
+	bbnote "${PN}: Performing useradd with [$opts] and $retries times of retry"
 	local username=`echo "$opts" | awk '{ print $NF }'`
 	local user_exists="`grep "^$username:" $rootdir/etc/passwd || true`"
 	if test "x$user_exists" = "x"; then
@@ -51,18 +51,18 @@ perform_useradd () {
 		       eval $PSEUDO useradd $opts || true
 		       user_exists="`grep "^$username:" $rootdir/etc/passwd || true`"
 		       if test "x$user_exists" = "x"; then
-			       bbwarn "useradd command did not succeed. Retrying..."
+			       bbwarn "${PN}: useradd command did not succeed. Retrying..."
 		       else
 			       break
 		       fi
 		       count=`expr $count + 1`
 		       if test $count = $retries; then
-				bbfatal "Tried running useradd command $retries times without success, giving up"
+				bbfatal "${PN}: Tried running useradd command $retries times without success, giving up"
 		       fi
 		       sleep $count
 	       done
 	else
-		bbwarn "user $username already exists, not re-creating it"
+		bbwarn "${PN}: user $username already exists, not re-creating it"
 	fi
 }
 
@@ -70,10 +70,10 @@ perform_groupmems () {
 	local rootdir="$1"
 	local opts="$2"
 	local retries="$3"
-	bbnote "Performing groupmems with [$opts] and $retries times of retry"
+	bbnote "${PN}: Performing groupmems with [$opts] and $retries times of retry"
 	local groupname=`echo "$opts" | awk '{ for (i = 1; i < NF; i++) if ($i == "-g" || $i == "--group") print $(i+1) }'`
 	local username=`echo "$opts" | awk '{ for (i = 1; i < NF; i++) if ($i == "-a" || $i == "--add") print $(i+1) }'`
-	bbnote "Running groupmems command with group $groupname and user $username"
+	bbnote "${PN}: Running groupmems command with group $groupname and user $username"
 	# groupmems fails if /etc/gshadow does not exist
 	local gshadow=""
 	if [ -f $rootdir${sysconfdir}/gshadow ]; then
@@ -89,7 +89,7 @@ perform_groupmems () {
 			eval $PSEUDO groupmems $opts || true
 			mem_exists="`grep "^$groupname:[^:]*:[^:]*:\([^,]*,\)*$username\(,[^,]*\)*" $rootdir/etc/group || true`"
 			if test "x$mem_exists" = "x"; then
-				bbwarn "groupmems command did not succeed. Retrying..."
+				bbwarn "${PN}: groupmems command did not succeed. Retrying..."
 			else
 				break
 			fi
@@ -99,12 +99,12 @@ perform_groupmems () {
 					rm -f $rootdir${sysconfdir}/gshadow
 					rm -f $rootdir${sysconfdir}/gshadow-
 				fi
-				bbfatal "Tried running groupmems command $retries times without success, giving up"
+				bbfatal "${PN}: Tried running groupmems command $retries times without success, giving up"
 			fi
 			sleep $count
 		done
 	else
-		bbwarn "group $groupname already contains $username, not re-adding it"
+		bbwarn "${PN}: group $groupname already contains $username, not re-adding it"
 	fi
 	if test "x$gshadow" = "xno"; then
 		rm -f $rootdir${sysconfdir}/gshadow
@@ -116,7 +116,7 @@ perform_groupdel () {
 	local rootdir="$1"
 	local opts="$2"
 	local retries="$3"
-	bbnote "Performing groupdel with [$opts] and $retries times of retry"
+	bbnote "${PN}: Performing groupdel with [$opts] and $retries times of retry"
 	local groupname=`echo "$opts" | awk '{ print $NF }'`
 	local group_exists="`grep "^$groupname:" $rootdir/etc/group || true`"
 	if test "x$group_exists" != "x"; then
@@ -125,18 +125,18 @@ perform_groupdel () {
 			eval $PSEUDO groupdel $opts || true
 			group_exists="`grep "^$groupname:" $rootdir/etc/group || true`"
 			if test "x$group_exists" != "x"; then
-				bbwarn "groupdel command did not succeed. Retrying..."
+				bbwarn "${PN}: groupdel command did not succeed. Retrying..."
 			else
 				break
 			fi
 			count=`expr $count + 1`
 			if test $count = $retries; then
-				bbfatal "Tried running groupdel command $retries times without success, giving up"
+				bbfatal "${PN}: Tried running groupdel command $retries times without success, giving up"
 			fi
 			sleep $count
 		done
 	else
-		bbwarn "group $groupname doesn't exist, not removing it"
+		bbwarn "${PN}: group $groupname doesn't exist, not removing it"
 	fi
 }
 
@@ -144,7 +144,7 @@ perform_userdel () {
 	local rootdir="$1"
 	local opts="$2"
 	local retries="$3"
-	bbnote "Performing userdel with [$opts] and $retries times of retry"
+	bbnote "${PN}: Performing userdel with [$opts] and $retries times of retry"
 	local username=`echo "$opts" | awk '{ print $NF }'`
 	local user_exists="`grep "^$username:" $rootdir/etc/passwd || true`"
 	if test "x$user_exists" != "x"; then
@@ -153,18 +153,18 @@ perform_userdel () {
 		       eval $PSEUDO userdel $opts || true
 		       user_exists="`grep "^$username:" $rootdir/etc/passwd || true`"
 		       if test "x$user_exists" != "x"; then
-			       bbwarn "userdel command did not succeed. Retrying..."
+			       bbwarn "${PN}: userdel command did not succeed. Retrying..."
 		       else
 			       break
 		       fi
 		       count=`expr $count + 1`
 		       if test $count = $retries; then
-				bbfatal "Tried running userdel command $retries times without success, giving up"
+				bbfatal "${PN}: Tried running userdel command $retries times without success, giving up"
 		       fi
 		       sleep $count
 	       done
 	else
-		bbwarn "user $username doesn't exist, not removing it"
+		bbwarn "${PN}: user $username doesn't exist, not removing it"
 	fi
 }
 
@@ -175,7 +175,7 @@ perform_groupmod () {
 	local rootdir="$1"
 	local opts="$2"
 	local retries="$3"
-	bbnote "Performing groupmod with [$opts] and $retries times of retry"
+	bbnote "${PN}: Performing groupmod with [$opts] and $retries times of retry"
 	local groupname=`echo "$opts" | awk '{ print $NF }'`
 	local group_exists="`grep "^$groupname:" $rootdir/etc/group || true`"
 	if test "x$group_exists" != "x"; then
@@ -183,18 +183,18 @@ perform_groupmod () {
 		while true; do
 			eval $PSEUDO groupmod $opts
 			if test $? != 0; then
-				bbwarn "groupmod command did not succeed. Retrying..."
+				bbwarn "${PN}: groupmod command did not succeed. Retrying..."
 			else
 				break
 			fi
 			count=`expr $count + 1`
 			if test $count = $retries; then
-				bbfatal "Tried running groupmod command $retries times without success, giving up"
+				bbfatal "${PN}: Tried running groupmod command $retries times without success, giving up"
 			fi
 			sleep $count
 		done
 	else
-		bbwarn "group $groupname doesn't exist, unable to modify it"
+		bbwarn "${PN}: group $groupname doesn't exist, unable to modify it"
 	fi
 	set -e
 }
@@ -205,7 +205,7 @@ perform_usermod () {
 	local rootdir="$1"
 	local opts="$2"
 	local retries="$3"
-	bbnote "Performing usermod with [$opts] and $retries times of retry"
+	bbnote "${PN}: Performing usermod with [$opts] and $retries times of retry"
 	local username=`echo "$opts" | awk '{ print $NF }'`
 	local user_exists="`grep "^$username:" $rootdir/etc/passwd || true`"
 	if test "x$user_exists" != "x"; then
@@ -213,18 +213,18 @@ perform_usermod () {
 	       while true; do
 		       eval $PSEUDO usermod $opts
 		       if test $? != 0; then
-			       bbwarn "usermod command did not succeed. Retrying..."
+			       bbwarn "${PN}: usermod command did not succeed. Retrying..."
 		       else
 			       break
 		       fi
 		       count=`expr $count + 1`
 		       if test $count = $retries; then
-				bbfatal "Tried running usermod command $retries times without success, giving up"
+				bbfatal "${PN}: Tried running usermod command $retries times without success, giving up"
 		       fi
 		       sleep $count
 	       done
 	else
-		bbwarn "user $username doesn't exist, unable to modify it"
+		bbwarn "${PN}: user $username doesn't exist, unable to modify it"
 	fi
 	set -e
 }
