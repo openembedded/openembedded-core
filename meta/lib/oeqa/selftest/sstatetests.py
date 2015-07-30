@@ -239,6 +239,7 @@ BUILD_OS = \"linux\"
         self.assertItemsEqual(files1, files2)
 
 
+    @testcase(1271)
     def test_sstate_nativelsbstring_same_hash(self):
         """
         The sstate checksums should be independent of whichever NATIVELSBSTRING is
