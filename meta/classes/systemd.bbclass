@@ -136,8 +136,7 @@ python systemd_populate_packages() {
     # Check service-files and call systemd_add_files_and_parse for each entry
     def systemd_check_services():
         searchpaths = [oe.path.join(d.getVar("sysconfdir", True), "systemd", "system"),]
-        searchpaths.append(oe.path.join(d.getVar("nonarch_base_libdir", True), "systemd", "system"))
-        searchpaths.append(oe.path.join(d.getVar("exec_prefix", True), d.getVar("nonarch_base_libdir", True), "systemd", "system"))
+        searchpaths.append(d.getVar("systemd_system_unitdir", True))
         systemd_packages = d.getVar('SYSTEMD_PACKAGES', True)
 
         keys = 'Also'
@@ -185,10 +184,10 @@ python rm_sysvinit_initddir (){
     if bb.utils.contains('DISTRO_FEATURES', 'systemd', True, False, d) and \
         not bb.utils.contains('DISTRO_FEATURES', 'sysvinit', True, False, d) and \
         os.path.exists(sysv_initddir):
-        systemd_unitdir = oe.path.join(d.getVar("D", True), d.getVar('systemd_unitdir', True), "system")
+        systemd_system_unitdir = oe.path.join(d.getVar("D", True), d.getVar('systemd_system_unitdir', True))
 
-        # If systemd_unitdir contains anything, delete sysv_initddir
-        if (os.path.exists(systemd_unitdir) and os.listdir(systemd_unitdir)):
+        # If systemd_system_unitdir contains anything, delete sysv_initddir
+        if (os.path.exists(systemd_system_unitdir) and os.listdir(systemd_system_unitdir)):
             shutil.rmtree(sysv_initddir)
 }
 do_install[postfuncs] += "rm_sysvinit_initddir "
