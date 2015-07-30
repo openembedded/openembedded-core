@@ -34,7 +34,7 @@ RFC=0
 usage() {
 CMD=$(basename $0)
 cat <<EOM
-Usage: $CMD [-h] [-o output_dir] [-m msg_body_file] [-s subject] [-r relative_to] [-i commit_id] -u remote [-b branch]
+Usage: $CMD [-h] [-o output_dir] [-m msg_body_file] [-s subject] [-r relative_to] [-i commit_id] [-d relative_dir] -u remote [-b branch]
   -b branch           Branch name in the specified remote (default: current branch)
   -c                  Create an RFC (Request for Comment) patch series
   -h                  Display this help message
@@ -45,23 +45,28 @@ Usage: $CMD [-h] [-o output_dir] [-m msg_body_file] [-s subject] [-r relative_to
   -r relative_to      Starting commit (default: master)
   -s subject          The subject to be inserted into the summary email
   -u remote           The git remote where the branch is located
+  -d relative_dir     Generate patches relative to directory
 
  Examples:
    $CMD -u contrib -b nitin/basic
    $CMD -u contrib -r distro/master -i nitin/distro -b nitin/distro
    $CMD -u contrib -r master -i misc -b nitin/misc -o pull-misc
    $CMD -u contrib -p "RFC PATCH" -b nitin/experimental
+   $CMD -u contrib -i misc -b nitin/misc -d ./bitbake
 EOM
 }
 
 # Parse and validate arguments
-while getopts "b:chi:m:o:p:r:s:u:" OPT; do
+while getopts "b:cd:hi:m:o:p:r:s:u:" OPT; do
 	case $OPT in
 	b)
 		BRANCH="$OPTARG"
 		;;
 	c)
 		RFC=1
+		;;
+	d)
+		RELDIR="$OPTARG"
 		;;
 	h)
 		usage
@@ -170,10 +175,13 @@ if [ -e $ODIR ]; then
 fi
 mkdir $ODIR
 
+if [ -n "$RELDIR" ]; then
+	ODIR=$(realpath $ODIR)
+	extraopts="--relative=$RELDIR"
+fi
 
 # Generate the patches and cover letter
-git format-patch -M40 --subject-prefix="$PREFIX" -n -o $ODIR --thread=shallow --cover-letter $RELATIVE_TO..$COMMIT_ID > /dev/null
-
+git format-patch $extraopts -M40 --subject-prefix="$PREFIX" -n -o $ODIR --thread=shallow --cover-letter $RELATIVE_TO..$COMMIT_ID > /dev/null
 
 # Customize the cover letter
 CL="$ODIR/0000-cover-letter.patch"
