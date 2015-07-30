@@ -10,18 +10,23 @@ SECTION = "libs"
 
 LICENSE = "MPL-2.0 | (MPL-2.0 & GPL-2.0+) | (MPL-2.0 & LGPL-2.1+)"
 
-LIC_FILES_CHKSUM = "file://nss/lib/freebl/mpi/doc/LICENSE;md5=491f158d09d948466afce85d6f1fe18f \
-                    file://nss/lib/freebl/mpi/doc/LICENSE-MPL;md5=6bf96825e3d7ce4de25621ae886cc859"
+LIC_FILES_CHKSUM = "file://nss/COPYING;md5=3b1e88e1b9c0b5a4b2881d46cce06a18 \
+                    file://nss/lib/freebl/mpi/doc/LICENSE;md5=491f158d09d948466afce85d6f1fe18f \
+                    file://nss/lib/freebl/mpi/doc/LICENSE-MPL;md5=5d425c8f3157dbf212db2ec53d9e5132"
+
 SRC_URI = "\
+    http://ftp.mozilla.org/pub/mozilla.org/security/nss/releases/NSS_3_19_1_RTM/src/${BP}.tar.gz \
     file://nss-fix-support-cross-compiling.patch \
     file://nss-no-rpath-for-cross-compiling.patch \
     file://nss-fix-incorrect-shebang-of-perl.patch \
     file://nss-fix-nsinstall-build.patch \
-"
-SRC_URI_append = "\
     file://nss.pc.in \
     file://signlibs.sh \
 "
+
+SRC_URI[md5sum] = "68a9c01c987b9bd92066b4e0041f3e58"
+SRC_URI[sha256sum] = "b7be709551ec13206d8e3e8c065b894fa981c11573115e9478fa051029c52fff"
+
 inherit siteinfo
 
 DEPENDS = "sqlite3 nspr zlib nss-native"
@@ -215,3 +220,4 @@ FILES_${PN}-dev = "\
 # FILES_${PN}-dbg is populated automatically
 
 BBCLASSEXTEND = "native nativesdk"
+
