@@ -28,6 +28,8 @@ python blacklist_multilib_eventhandler() {
             prefixes.append(eext[1])
 
     blacklists = e.data.getVarFlags('PNBLACKLIST') or {}
+    # Remove PNBLACKLIST[doc]
+    blacklists.pop('doc', None)
     for pkg, reason in blacklists.items():
         if pkg.endswith(("-native", "-crosssdk")) or pkg.startswith(("nativesdk-", "virtual/nativesdk-")) or 'cross-canadian' in pkg:
             continue
