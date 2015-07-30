@@ -587,7 +587,7 @@ def action_pull(conf, args):
         branch = repo.get('branch', "master")
         runcmd("git checkout %s" % branch, ldir)
         logger.info("update component repo %s in %s ..." % (name, ldir))
-        if not args.hard_reset:
+        if not conf.hard_reset:
             output=runcmd("git pull --ff-only", ldir)
             logger.info(output)
         else:
@@ -902,7 +902,7 @@ Action:
 
     parser.add_option("--hard-reset",
                help = "instead of pull do fetch and hard-reset in component repos",
-               action = "store_true", default = False)
+               action = "store_true", dest = "hard_reset", default = False)
 
     parser.add_option("-H", "--history", help = "import full history of components during init",
                       action = "store_true", default = False)
