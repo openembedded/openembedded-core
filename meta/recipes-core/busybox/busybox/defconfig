@@ -545,7 +545,7 @@ CONFIG_DEFAULT_DEPMOD_FILE="modules.dep"
 # Linux System Utilities
 #
 # CONFIG_BLOCKDEV is not set
-CONFIG_FATATTR=y
+# CONFIG_FATATTR is not set
 CONFIG_FSTRIM=y
 # CONFIG_MDEV is not set
 # CONFIG_FEATURE_MDEV_CONF is not set
