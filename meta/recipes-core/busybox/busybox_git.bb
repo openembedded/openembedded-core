@@ -39,6 +39,8 @@ SRC_URI = "git://busybox.net/busybox.git \
            file://0001-ifconfig-fix-double-free-fatal-error-in-INET_sprint.patch \
            file://0001-chown-fix-help-text.patch \
            file://mount-via-label.cfg \
+           file://sha1sum.cfg \
+           file://sha256sum.cfg \
 "
 
 EXTRA_OEMAKE += "V=1 ARCH=${TARGET_ARCH} CROSS_COMPILE=${TARGET_PREFIX} SKIP_STRIP=y"
