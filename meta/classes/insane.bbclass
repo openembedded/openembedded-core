@@ -31,6 +31,7 @@ WARN_QA ?= "ldflags useless-rpaths rpaths staticdev libdir xorg-driver-abi \
             installed-vs-shipped compile-host-path install-host-path \
             pn-overrides infodir build-deps file-rdeps \
             unknown-configure-option symlink-to-sysroot multilib \
+            invalid-pkgconfig \
             "
 ERROR_QA ?= "dev-so debug-deps dev-deps debug-files arch pkgconfig la \
             perms dep-cmp pkgvarcheck perm-config perm-line perm-link \
@@ -1139,6 +1140,16 @@ Missing inherit gettext?""" % (gt, config))
                 package_qa_handle_error("unknown-configure-option", error_msg, d)
         except subprocess.CalledProcessError:
             pass
+
+    # Check invalid PACKAGECONFIG
+    pkgconfig = (d.getVar("PACKAGECONFIG", True) or "").split()
+    if pkgconfig:
+        pkgconfigflags = d.getVarFlags("PACKAGECONFIG") or {}
+        for pconfig in pkgconfig:
+            if pconfig not in pkgconfigflags:
+                pn = d.getVar('PN', True)
+                error_msg = "%s: invalid PACKAGECONFIG: %s" % (pn, pconfig)
+                package_qa_handle_error("invalid-pkgconfig", error_msg, d)
 }
 
 python do_qa_unpack() {
