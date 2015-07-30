@@ -29,7 +29,7 @@ DEPENDS = " \
     ${TUI_DEPENDS} \
     ${SCRIPTING_DEPENDS} \
     ${LIBUNWIND_DEPENDS} \
-    bison flex \
+    bison flex xz \
 "
 
 do_configure[depends] += "virtual/kernel:do_shared_workdir"
