@@ -314,7 +314,8 @@ def incompatible_license(d, dont_want_licenses, package=None):
     # Handles an "or" or two license sets provided by
     # flattened_licenses(), pick one that works if possible.
     def choose_lic_set(a, b):
-        return a if all(license_ok(lic) for lic in a) else b
+        return a if all(license_ok(canonical_license(d, lic)) for lic in a) \
+                else b
 
     try:
         licenses = oe.license.flattened_licenses(license, choose_lic_set)
