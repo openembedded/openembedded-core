@@ -244,8 +244,7 @@ def main():
                  tinfoil.config_data.getVar('BBPATH', True).split(':')):
         pluginpath = os.path.join(path, 'lib', 'devtool')
         scriptutils.load_plugins(logger, plugins, pluginpath)
-    tinfoil.cooker.shutdown(force=True)
-    tinfoil.cooker.unlockBitbake()
+    tinfoil.shutdown()
 
     subparsers = parser.add_subparsers(dest="subparser_name", title='subcommands', metavar='<subcommand>')
 
