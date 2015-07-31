@@ -360,6 +360,7 @@ def all_multilib_tune_values(d, var, unique = True, need_split = True, delim = '
         localdata = bb.data.createCopy(d)
         overrides = localdata.getVar("OVERRIDES", False) + ":virtclass-multilib-" + item
         localdata.setVar("OVERRIDES", overrides)
+        localdata.setVar("MLPREFIX", item + "-")
         bb.data.update_data(localdata)
         value = localdata.getVar(var, True) or ""
         if value != "":
