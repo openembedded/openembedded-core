@@ -7,3 +7,5 @@ DEPENDS += "dtc-native"
 SRCREV = "92fa7f53f1f3f03296f8ffb14bdf1baefab83368"
 
 PV = "v2015.01+git${SRCPV}"
+
+EXTRA_OEMAKE_append = " KCFLAGS=-fgnu89-inline"
