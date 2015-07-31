@@ -24,7 +24,7 @@ FILES_${PN}-dev = "\
     ${libdir}/${TARGET_SYS}/${BINV}/x32 \
     ${libdir}/${TARGET_SYS}/${BINV}/n32 \
     ${libdir}/${TARGET_SYS}/${BINV}/libgcc* \
-    ${@base_conditional('TARGET_SYS_NO_EXTENSION', '${TARGET_SYS}', '', '${libdir}/${TARGET_SYS_NO_EXTENSION}', d)} \
+    ${@base_conditional('BASETARGET_SYS', '${TARGET_SYS}', '', '${libdir}/${BASETARGET_SYS}', d)} \
     ${libdir}/${TARGET_SYS}/${BINV}/libgcov.a \
 "
 
