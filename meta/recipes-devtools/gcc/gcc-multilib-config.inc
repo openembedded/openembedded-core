@@ -202,7 +202,8 @@ python gcc_multilib_setup() {
         whitelist = (d.getVar("MULTILIB_OPTION_WHITELIST", True) or "").split()
         for i in tune_parameters['ccargs'].split():
             if i in whitelist:
-                opts.append(i)
+                # Need to strip '-' from option
+                opts.append(i[1:])
         options.append(" ".join(opts))
 
         if tune_baselib == 'lib':
