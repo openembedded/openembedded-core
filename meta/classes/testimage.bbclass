@@ -296,19 +296,9 @@ def testsdk_main(d):
     testslist = get_tests_list(d, "sdk")
     testsrequired = [t for t in (d.getVar("TEST_SUITES_SDK", True) or "auto").split() if t != "auto"]
 
-    sdktestdir = d.expand("${WORKDIR}/testimage-sdk/")
-    bb.utils.remove(sdktestdir, True)
-    bb.utils.mkdirhier(sdktestdir)
-
     tcname = d.expand("${SDK_DEPLOY}/${TOOLCHAIN_OUTPUTNAME}.sh")
     if not os.path.exists(tcname):
-        bb.fatal("The toolchain is not built. Build it before running the tests: 'bitbake meta-toolchain' .")
-    subprocess.call("cd %s; %s <<EOF\n./tc\nY\nEOF" % (sdktestdir, tcname), shell=True)
-
-    targets = glob.glob(d.expand(sdktestdir + "/tc/sysroots/*${TARGET_VENDOR}-linux*"))
-    if len(targets) > 1:
-        bb.fatal("Error, multiple targets within the SDK found and we don't know which to test? %s" % str(targets))
-    sdkenv = sdktestdir + "/tc/environment-setup-" + os.path.basename(targets[0])
+        bb.fatal("The toolchain is not built. Build it before running the tests: 'bitbake <image> -c populate_sdk' .")
 
     class TestContext(object):
         def __init__(self):
@@ -333,33 +323,42 @@ def testsdk_main(d):
             except IOError as e:
                 bb.fatal("No host package manifest file found. Did you build the sdk image?\n%s" % e)
 
-    # test context
-    tc = TestContext()
-
-    # this is a dummy load of tests
-    # we are doing that to find compile errors in the tests themselves
-    # before booting the image
-    try:
-        loadTests(tc, "sdk")
-    except Exception as e:
-        import traceback
-        bb.fatal("Loading tests failed:\n%s" % traceback.format_exc())
+    sdktestdir = d.expand("${WORKDIR}/testimage-sdk/")
+    bb.utils.remove(sdktestdir, True)
+    bb.utils.mkdirhier(sdktestdir)
+    subprocess.call("cd %s; %s <<EOF\n./tc\nY\nEOF" % (sdktestdir, tcname), shell=True)
 
     try:
-        starttime = time.time()
-        result = runTests(tc, "sdk")
-        stoptime = time.time()
-        if result.wasSuccessful():
-            bb.plain("%s - Ran %d test%s in %.3fs" % (pn, result.testsRun, result.testsRun != 1 and "s" or "", stoptime - starttime))
-            msg = "%s - OK - All required tests passed" % pn
-            skipped = len(result.skipped)
-            if skipped:
-                msg += " (skipped=%d)" % skipped
-            bb.plain(msg)
-        else:
-            raise bb.build.FuncFailed("%s - FAILED - check the task log and the commands log" % pn )
+        targets = glob.glob(d.expand(sdktestdir + "/tc/environment-setup-*"))
+        bb.warn(str(targets))
+        for sdkenv in targets:
+            bb.plain("Testing %s" % sdkenv)
+            # test context
+            tc = TestContext()
+
+            # this is a dummy load of tests
+            # we are doing that to find compile errors in the tests themselves
+            # before booting the image
+            try:
+                loadTests(tc, "sdk")
+            except Exception as e:
+                import traceback
+                bb.fatal("Loading tests failed:\n%s" % traceback.format_exc())
+
+    
+            starttime = time.time()
+            result = runTests(tc, "sdk")
+            stoptime = time.time()
+            if result.wasSuccessful():
+                bb.plain("%s SDK(%s):%s - Ran %d test%s in %.3fs" % (pn, os.path.basename(tcname), os.path.basename(sdkenv),result.testsRun, result.testsRun != 1 and "s" or "", stoptime - starttime))
+                msg = "%s - OK - All required tests passed" % pn
+                skipped = len(result.skipped)
+                if skipped:
+                    msg += " (skipped=%d)" % skipped
+                bb.plain(msg)
+            else:
+                raise bb.build.FuncFailed("%s - FAILED - check the task log and the commands log" % pn )
     finally:
-        pass
         bb.utils.remove(sdktestdir, True)
 
 testsdk_main[vardepsexclude] =+ "BB_ORIGENV"
