@@ -188,7 +188,7 @@ def runqemu(pn, test):
         tinfoil.logger.setLevel(logging.WARNING)
         import oeqa.targetcontrol
         tinfoil.config_data.setVar("TEST_LOG_DIR", "${WORKDIR}/testimage")
-        tinfoil.config_data.setVar("TEST_QEMUBOOT_TIMEOUT", "90")
+        tinfoil.config_data.setVar("TEST_QEMUBOOT_TIMEOUT", "1000")
         import oe.recipeutils
         recipefile = oe.recipeutils.pn_to_recipe(tinfoil.cooker, pn)
         recipedata = oe.recipeutils.parse_recipe(recipefile, [], tinfoil.config_data)
