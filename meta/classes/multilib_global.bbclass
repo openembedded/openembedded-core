@@ -30,7 +30,10 @@ def preferred_ml_updates(d):
                 override = ":virtclass-multilib-" + p
                 localdata.setVar("OVERRIDES", localdata.getVar("OVERRIDES", False) + override)
                 bb.data.update_data(localdata)
-                newname = localdata.expand(v).replace("PREFERRED_VERSION_", "PREFERRED_VERSION_" + p + '-')
+                if "-canadian-" in pkg:
+                    newname = localdata.expand(v)
+                else:
+                    newname = localdata.expand(v).replace("PREFERRED_VERSION_", "PREFERRED_VERSION_" + p + '-')
                 if newname != v:
                     newval = localdata.expand(val)
                     d.setVar(newname, newval)
