@@ -9,10 +9,14 @@ inherit cross-canadian packagegroup
 
 PACKAGEGROUP_DISABLE_COMPLEMENTARY = "1"
 
+# Use indirection to stop these being expanded prematurely
+BINUTILS = "binutils-cross-canadian-${TRANSLATED_TARGET_ARCH}"
+GCC = "gcc-cross-canadian-${TRANSLATED_TARGET_ARCH}"
+GDB = "gdb-cross-canadian-${TRANSLATED_TARGET_ARCH}"
+
 RDEPENDS_${PN} = "\
-    binutils-cross-canadian-${@' binutils-cross-canadian-'.join(all_multilib_tune_values(d,'TRANSLATED_TARGET_ARCH').split())} \
-    gdb-cross-canadian-${@' gdb-cross-canadian-'.join(all_multilib_tune_values(d, 'TRANSLATED_TARGET_ARCH').split())} \
-    gcc-cross-canadian-${@' gcc-cross-canadian-'.join(all_multilib_tune_values(d, 'TRANSLATED_TARGET_ARCH').split())} \
+    ${@all_multilib_tune_values(d, 'BINUTILS')} \
+    ${@all_multilib_tune_values(d, 'GCC')} \
+    ${@all_multilib_tune_values(d, 'GDB')} \
     meta-environment-${MACHINE} \
     "
-
