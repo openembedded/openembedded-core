@@ -29,6 +29,7 @@ python gcc_multilib_setup() {
     bb.utils.remove(build_conf_dir, True)
     ml_globs = ('%s/*/t-linux64' % src_conf_dir,
                 '%s/*/linux64.h' % src_conf_dir,
+                '%s/*/linux.h' % src_conf_dir,
                 '%s/linux.h' % src_conf_dir)
 
     # copy the target multilib config files to ${B}
@@ -80,7 +81,10 @@ python gcc_multilib_setup() {
                 return '"/%s/"' % libdir
 
         for ml_conf_file in files:
-            with open(root + '/' + ml_conf_file, 'r') as f:
+            fn = root + '/' + ml_conf_file
+            if not os.path.exists(fn):
+                continue
+            with open(fn, 'r') as f:
                 filelines = f.readlines()
 
                 # replace lines like
@@ -132,8 +136,8 @@ python gcc_multilib_setup() {
         'x86_64'    : ['gcc/config/i386/linux64.h'],
         'i586'      : ['gcc/config/i386/linux64.h'],
         'i686'      : ['gcc/config/i386/linux64.h'],
-        'mips'      : ['gcc/config/mips/linux64.h'],
-        'mips64'    : ['gcc/config/mips/linux64.h'],
+        'mips'      : ['gcc/config/mips/linux.h', 'gcc/config/mips/linux64.h'],
+        'mips64'    : ['gcc/config/mips/linux.h', 'gcc/config/mips/linux64.h'],
         'powerpc'   : ['gcc/config/rs6000/linux64.h'],
         'powerpc64' : ['gcc/config/rs6000/linux64.h'],
     }
