@@ -16,6 +16,7 @@ STAGING_BINDIR_TOOLCHAIN = "${STAGING_DIR_NATIVE}${bindir_native}/${SDK_ARCH}${S
 #
 PACKAGE_ARCH = "${SDK_ARCH}-${SDKPKGSUFFIX}"
 CANADIANEXTRAOS = "linux-uclibc linux-musl"
+CANADIANEXTRAVENDOR = ""
 MODIFYTOS ??= "1"
 python () {
     archs = d.getVar('PACKAGE_ARCHS', True).split()
@@ -65,6 +66,17 @@ python () {
         d.setVar("TARGET_OS", "linux-gnueabi")
     else:
         d.setVar("TARGET_OS", "linux")
+
+    # Also need to handle multilib target vendors
+    vendors = d.getVar("CANADIANEXTRAVENDOR", True)
+    if not vendors:
+        vendors = all_multilib_tune_values(d, 'TARGET_VENDOR')
+    origvendor = d.getVar("TARGET_VENDOR_MULTILIB_ORIGINAL", True)
+    if origvendor:
+        d.setVar("TARGET_VENDOR", origvendor)
+        if origvendor not in vendors.split():
+            vendors = origvendor + " " + vendors
+    d.setVar("CANADIANEXTRAVENDOR", vendors)
 }
 MULTIMACH_TARGET_SYS = "${PACKAGE_ARCH}${HOST_VENDOR}-${HOST_OS}"
 
@@ -148,14 +160,21 @@ SHLIBSDIRS = "${PKGDATA_DIR}/nativesdk-shlibs2"
 SHLIBSWORKDIR = "${PKGDATA_DIR}/nativesdk-shlibs2"
 
 cross_canadian_bindirlinks () {
-	for i in ${CANADIANEXTRAOS}
+	for i in linux ${CANADIANEXTRAOS}
 	do
-		d=${D}${bindir}/../${TARGET_ARCH}${TARGET_VENDOR}-$i
-		install -d $d
-		for j in `ls ${D}${bindir}`
+		for v in ${CANADIANEXTRAVENDOR}
 		do
-			p=${TARGET_ARCH}${TARGET_VENDOR}-$i-`echo $j | sed -e s,${TARGET_PREFIX},,`
-			ln -s ../${TARGET_SYS}/$j $d/$p
+			d=${D}${bindir}/../${TARGET_ARCH}$v-$i
+			if [ -d $d ];
+			then
+			    continue
+			fi
+			install -d $d
+			for j in `ls ${D}${bindir}`
+			do
+				p=${TARGET_ARCH}$v-$i-`echo $j | sed -e s,${TARGET_PREFIX},,`
+				ln -s ../${TARGET_SYS}/$j $d/$p
+			done
 		done
        done
 }
