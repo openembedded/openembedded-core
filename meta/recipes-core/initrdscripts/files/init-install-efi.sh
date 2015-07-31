@@ -55,6 +55,11 @@ for device in `ls /sys/block/`; do
     esac
 done
 
+if [ -z "${hdnamelist}" ]; then
+    echo "You need another device (besides the live device /dev/${live_dev_name}) to install the image. Installation aborted."
+    exit 1
+fi
+
 TARGET_DEVICE_NAME=""
 for hdname in $hdnamelist; do
     # Display found hard drives and their basic info
