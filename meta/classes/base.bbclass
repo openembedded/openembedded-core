@@ -478,12 +478,30 @@ python () {
             bad_licenses = expand_wildcard_licenses(d, bad_licenses)
 
             whitelist = []
+            incompatwl = []
+            htincompatwl = []
             for lic in bad_licenses:
+                spdx_license = return_spdx(d, lic)
                 for w in ["HOSTTOOLS_WHITELIST_", "LGPLv2_WHITELIST_", "WHITELIST_"]:
                     whitelist.extend((d.getVar(w + lic, True) or "").split())
-                spdx_license = return_spdx(d, lic)
-                if spdx_license:
-                    whitelist.extend((d.getVar('HOSTTOOLS_WHITELIST_%s' % spdx_license, True) or "").split())
+                    if spdx_license:
+                        whitelist.extend((d.getVar(w + spdx_license, True) or "").split())
+                    '''
+                    We need to track what we are whitelisting and why. If pn is 
+                    incompatible and is not HOSTTOOLS_WHITELIST_ we need to be 
+                    able to note that the image that is created may infact 
+                    contain incompatible licenses despite INCOMPATIBLE_LICENSE 
+                    being set.
+                    '''
+                    if "HOSTTOOLS" in w:
+                        htincompatwl.extend((d.getVar(w + lic, True) or "").split())
+                        if spdx_license:
+                            htincompatwl.extend((d.getVar(w + spdx_license, True) or "").split())
+                    else:
+                        incompatwl.extend((d.getVar(w + lic, True) or "").split())
+                        if spdx_license:
+                            incompatwl.extend((d.getVar(w + spdx_license, True) or "").split())
+
             if not pn in whitelist:
                 recipe_license = d.getVar('LICENSE', True)
                 pkgs = d.getVar('PACKAGES', True).split()
@@ -504,6 +522,11 @@ python () {
                 elif all_skipped or incompatible_license(d, bad_licenses):
                     bb.debug(1, "SKIPPING recipe %s because it's %s" % (pn, recipe_license))
                     raise bb.parse.SkipPackage("incompatible with license %s" % recipe_license)
+            elif pn in whitelist:
+                if pn in incompatwl:
+                    bb.note("INCLUDING " + pn + " as buildable despite INCOMPATIBLE_LICENSE because it has been whitelisted")
+                elif pn in htincompatwl:
+                    bb.note("INCLUDING " + pn + " as buildable despite INCOMPATIBLE_LICENSE because it has been whitelisted for HOSTTOOLS")
 
     srcuri = d.getVar('SRC_URI', True)
     # Svn packages should DEPEND on subversion-native
