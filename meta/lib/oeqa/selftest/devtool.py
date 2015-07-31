@@ -170,7 +170,6 @@ class DevtoolTests(DevtoolBase):
         bitbake('libftdi -c cleansstate')
         # Test devtool build
         result = runCmd('devtool build libftdi')
-        self.add_command_to_tearDown('bitbake -c cleansstate libftdi')
         staging_libdir = get_bb_var('STAGING_LIBDIR', 'libftdi')
         self.assertTrue(staging_libdir, 'Could not query STAGING_LIBDIR variable')
         self.assertTrue(os.path.isfile(os.path.join(staging_libdir, 'libftdi1.so.2.1.0')), "libftdi binary not found in STAGING_LIBDIR. Output of devtool build libftdi %s" % result.output)
