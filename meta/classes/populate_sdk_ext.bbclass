@@ -88,7 +88,8 @@ python copy_buildsystem () {
         config.write(f)
 
     # Create a layer for new recipes / appends
-    bb.process.run("devtool --basepath %s create-workspace --create-only %s" % (baseoutpath, os.path.join(baseoutpath, 'workspace')))
+    bbpath = d.getVar('BBPATH', True)
+    bb.process.run(['devtool', '--bbpath', bbpath, '--basepath', baseoutpath, 'create-workspace', '--create-only', os.path.join(baseoutpath, 'workspace')])
 
     # Create bblayers.conf
     bb.utils.mkdirhier(baseoutpath + '/conf')
