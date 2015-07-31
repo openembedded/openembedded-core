@@ -31,7 +31,7 @@ python () {
 
     tos = d.getVar("TARGET_OS", True)
     whitelist = []
-    for variant in ["", "spe", "x32", "eabi"]:
+    for variant in ["", "spe", "x32", "eabi", "n32"]:
         for libc in ["", "uclibc", "musl"]:
             entry = "linux"
             if variant and libc:
@@ -62,6 +62,8 @@ python () {
         d.setVar("LIBCEXTENSION", "")
         d.setVar("ABIEXTENSION", "")
         d.appendVar("CANADIANEXTRAOS", " linux-gnuspe linux-uclibcspe linux-muslspe")
+    elif tarch == "mips64":
+        d.appendVar("CANADIANEXTRAOS", " linux-gnun32 linux-uclibcn32 linux-musln32")
     if tarch == "arm":
         d.setVar("TARGET_OS", "linux-gnueabi")
     else:
