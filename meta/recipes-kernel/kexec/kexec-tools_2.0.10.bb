@@ -5,12 +5,11 @@ EXTRA_OECONF = " --with-zlib=yes"
 SRC_URI += "file://kexec-tools-Refine-kdump-device_tree-sort.patch \
             file://kexec-aarch64.patch \
             file://kexec-x32.patch \
-            file://0001-purgatory-Disabling-GCC-s-stack-protection.patch \
             file://0002-powerpc-change-the-memory-size-limit.patch \
          "
 
-SRC_URI[md5sum] = "4ecb7ab7ad9eb6ce413899bdb07a8426"
-SRC_URI[sha256sum] = "c2c6d204fe0911ebd304c40100163237feca4c5a854a2cca382ee36916a573d8"
+SRC_URI[md5sum] = "6cb4d22bcec71b6e070aa8e9d990a5e6"
+SRC_URI[sha256sum] = "c31bb83deef9547a28e8cfc1f0916e70f8e6b92a6bd2ef7077e12e3338239af3"
 
 PACKAGES =+ "kexec kdump vmcore-dmesg"
 

@@ -21,11 +21,11 @@ Signed-off-by: Mariano Lopez <mariano.lopez@linux.intel.com>
  purgatory/arch/x86_64/Makefile           | 4 +++-
  4 files changed, 20 insertions(+), 1 deletion(-)
 
-diff --git a/configure.ac b/configure.ac
-index c410e90..1ecadd5 100644
---- a/configure.ac
-+++ b/configure.ac
-@@ -52,6 +52,15 @@ case $target_cpu in
+Index: kexec-tools-2.0.10/configure.ac
+===================================================================
+--- kexec-tools-2.0.10.orig/configure.ac
++++ kexec-tools-2.0.10/configure.ac
+@@ -56,6 +56,15 @@ case $target_cpu in
  		;;
  	ia64|x86_64|alpha|m68k )
  		ARCH="$target_cpu"
@@ -41,11 +41,11 @@ index c410e90..1ecadd5 100644
  		;;
  	* )
  		AC_MSG_ERROR([unsupported architecture $target_cpu])
-diff --git a/kexec/arch/x86_64/kexec-elf-rel-x86_64.c b/kexec/arch/x86_64/kexec-elf-rel-x86_64.c
-index c795037..06db7f0 100644
---- a/kexec/arch/x86_64/kexec-elf-rel-x86_64.c
-+++ b/kexec/arch/x86_64/kexec-elf-rel-x86_64.c
-@@ -8,7 +8,11 @@ int machine_verify_elf_rel(struct mem_ehdr *ehdr)
+Index: kexec-tools-2.0.10/kexec/arch/x86_64/kexec-elf-rel-x86_64.c
+===================================================================
+--- kexec-tools-2.0.10.orig/kexec/arch/x86_64/kexec-elf-rel-x86_64.c
++++ kexec-tools-2.0.10/kexec/arch/x86_64/kexec-elf-rel-x86_64.c
+@@ -8,7 +8,11 @@ int machine_verify_elf_rel(struct mem_eh
  	if (ehdr->ei_data != ELFDATA2LSB) {
  		return 0;
  	}
@@ -57,10 +57,10 @@ index c795037..06db7f0 100644
  		return 0;
  	}
  	if (ehdr->e_machine != EM_X86_64) {
-diff --git a/kexec/kexec-syscall.h b/kexec/kexec-syscall.h
-index ce2e20b..cab5535 100644
---- a/kexec/kexec-syscall.h
-+++ b/kexec/kexec-syscall.h
+Index: kexec-tools-2.0.10/kexec/kexec-syscall.h
+===================================================================
+--- kexec-tools-2.0.10.orig/kexec/kexec-syscall.h
++++ kexec-tools-2.0.10/kexec/kexec-syscall.h
 @@ -31,8 +31,12 @@
  #define __NR_kexec_load		268
  #endif
@@ -74,11 +74,11 @@ index ce2e20b..cab5535 100644
  #ifdef __s390x__
  #define __NR_kexec_load		277
  #endif
-diff --git a/purgatory/arch/x86_64/Makefile b/purgatory/arch/x86_64/Makefile
-index 7300937..4af11e4 100644
---- a/purgatory/arch/x86_64/Makefile
-+++ b/purgatory/arch/x86_64/Makefile
-@@ -23,4 +23,6 @@ x86_64_PURGATORY_SRCS += purgatory/arch/i386/console-x86.c
+Index: kexec-tools-2.0.10/purgatory/arch/x86_64/Makefile
+===================================================================
+--- kexec-tools-2.0.10.orig/purgatory/arch/x86_64/Makefile
++++ kexec-tools-2.0.10/purgatory/arch/x86_64/Makefile
+@@ -23,4 +23,6 @@ x86_64_PURGATORY_SRCS += purgatory/arch/
  x86_64_PURGATORY_SRCS += purgatory/arch/i386/vga.c
  x86_64_PURGATORY_SRCS += purgatory/arch/i386/pic.c
  
@@ -86,28 +86,3 @@ index 7300937..4af11e4 100644
 +ifeq ($(SUBARCH),64)
 +        x86_64_PURGATORY_EXTRA_CFLAGS = -mcmodel=large
 +endif
--- 
-1.8.4.5
-
-diff --git a/configure.ac b/configure.ac
-index 1ecadd5..e0b5f78 100644
---- a/configure.ac
-+++ b/configure.ac
-@@ -8,6 +8,7 @@ AC_INIT(kexec-tools, 2.0.10.git)
- AC_CONFIG_AUX_DIR(./config)
- AC_CONFIG_HEADERS([include/config.h])
- AC_LANG(C)
-+AC_PROG_CC
- 
- AC_DEFINE_UNQUOTED(PACKAGE_DATE, "`date '+%d %B %Y'`",
- 		[Define to the release date of this package])
-@@ -106,9 +107,6 @@ AC_ARG_WITH([booke],
- 
- dnl ---Programs
- dnl To specify a different compiler, just 'export CC=/path/to/compiler'
--
--AC_PROG_CC
--
- if test "${build}" != "${host}" ; then
- 	AC_CHECK_PROGS(BUILD_CC, [${build_alias}-gcc ${build}-gcc gcc])
- else

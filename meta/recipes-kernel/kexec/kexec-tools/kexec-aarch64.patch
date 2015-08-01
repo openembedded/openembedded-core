@@ -29,9 +29,11 @@ Signed-off-by: Kai Kang <kai.kang@windriver.com>
  purgatory/arch/arm64/Makefile           |    7 
  11 files changed, 675 insertions(+), 2 deletions(-)
 
---- a/configure.ac
-+++ b/configure.ac
-@@ -35,6 +35,9 @@ case $target_cpu in
+Index: kexec-tools-2.0.10/configure.ac
+===================================================================
+--- kexec-tools-2.0.10.orig/configure.ac
++++ kexec-tools-2.0.10/configure.ac
+@@ -36,6 +36,9 @@ case $target_cpu in
  		ARCH="ppc64"
  		SUBARCH="LE"
  		;;
@@ -41,8 +43,10 @@ Signed-off-by: Kai Kang <kai.kang@windriver.com>
  	arm* )
  		ARCH="arm"
  		;;
---- a/kexec/Makefile
-+++ b/kexec/Makefile
+Index: kexec-tools-2.0.10/kexec/Makefile
+===================================================================
+--- kexec-tools-2.0.10.orig/kexec/Makefile
++++ kexec-tools-2.0.10/kexec/Makefile
 @@ -71,6 +71,7 @@ KEXEC_SRCS			+= $($(ARCH)_FS2DT)
  
  include $(srcdir)/kexec/arch/alpha/Makefile
@@ -51,8 +55,10 @@ Signed-off-by: Kai Kang <kai.kang@windriver.com>
  include $(srcdir)/kexec/arch/i386/Makefile
  include $(srcdir)/kexec/arch/ia64/Makefile
  include $(srcdir)/kexec/arch/m68k/Makefile
+Index: kexec-tools-2.0.10/kexec/arch/arm64/Makefile
+===================================================================
 --- /dev/null
-+++ b/kexec/arch/arm64/Makefile
++++ kexec-tools-2.0.10/kexec/arch/arm64/Makefile
 @@ -0,0 +1,13 @@
 +
 +arm64_KEXEC_SRCS += \
@@ -67,8 +73,10 @@ Signed-off-by: Kai Kang <kai.kang@windriver.com>
 +dist += $(arm64_KEXEC_SRCS) \
 +	kexec/arch/arm64/Makefile \
 +	kexec/arch/arm64/kexec-arm64.h
+Index: kexec-tools-2.0.10/kexec/arch/arm64/crashdump-arm64.c
+===================================================================
 --- /dev/null
-+++ b/kexec/arch/arm64/crashdump-arm64.c
++++ kexec-tools-2.0.10/kexec/arch/arm64/crashdump-arm64.c
 @@ -0,0 +1,305 @@
 +/*
 + * This program is free software; you can redistribute it and/or modify
@@ -375,8 +383,10 @@ Signed-off-by: Kai Kang <kai.kang@windriver.com>
 +
 +#endif
 +
+Index: kexec-tools-2.0.10/kexec/arch/arm64/include/arch/options.h
+===================================================================
 --- /dev/null
-+++ b/kexec/arch/arm64/include/arch/options.h
++++ kexec-tools-2.0.10/kexec/arch/arm64/include/arch/options.h
 @@ -0,0 +1,26 @@
 +#ifndef KEXEC_ARCH_ARM64_OPTIONS_H
 +#define KEXEC_ARCH_ARM64_OPTIONS_H
@@ -404,8 +414,10 @@ Signed-off-by: Kai Kang <kai.kang@windriver.com>
 +#define KEXEC_ALL_OPT_STR KEXEC_ARCH_OPT_STR
 +
 +#endif /* KEXEC_ARCH_ARM64_OPTIONS_H */
+Index: kexec-tools-2.0.10/kexec/arch/arm64/kexec-arm64.c
+===================================================================
 --- /dev/null
-+++ b/kexec/arch/arm64/kexec-arm64.c
++++ kexec-tools-2.0.10/kexec/arch/arm64/kexec-arm64.c
 @@ -0,0 +1,177 @@
 +/*
 + * ARM64 kexec support.
@@ -584,8 +596,10 @@ Signed-off-by: Kai Kang <kai.kang@windriver.com>
 +	(void)value;
 +	fprintf(stderr, "%s:%d: do\n", __func__, __LINE__);
 +}
+Index: kexec-tools-2.0.10/kexec/arch/arm64/kexec-arm64.h
+===================================================================
 --- /dev/null
-+++ b/kexec/arch/arm64/kexec-arm64.h
++++ kexec-tools-2.0.10/kexec/arch/arm64/kexec-arm64.h
 @@ -0,0 +1,20 @@
 +/*
 + * ARM64 kexec support.
@@ -608,8 +622,10 @@ Signed-off-by: Kai Kang <kai.kang@windriver.com>
 +
 +#endif
 \ No newline at end of file
+Index: kexec-tools-2.0.10/kexec/arch/arm64/kexec-elf-arm64.c
+===================================================================
 --- /dev/null
-+++ b/kexec/arch/arm64/kexec-elf-arm64.c
++++ kexec-tools-2.0.10/kexec/arch/arm64/kexec-elf-arm64.c
 @@ -0,0 +1,114 @@
 +/*
 + * ARM64 kexec support.
@@ -725,8 +741,10 @@ Signed-off-by: Kai Kang <kai.kang@windriver.com>
 +	fprintf(stderr, "%s:%d: ->\n", __func__, __LINE__);
 +	fprintf(stderr, "%s:%d: <-\n", __func__, __LINE__);
 +}
---- a/kexec/kexec-syscall.h
-+++ b/kexec/kexec-syscall.h
+Index: kexec-tools-2.0.10/kexec/kexec-syscall.h
+===================================================================
+--- kexec-tools-2.0.10.orig/kexec/kexec-syscall.h
++++ kexec-tools-2.0.10/kexec/kexec-syscall.h
 @@ -39,8 +39,8 @@
  #ifdef __s390__
  #define __NR_kexec_load		277
@@ -756,8 +774,10 @@ Signed-off-by: Kai Kang <kai.kang@windriver.com>
 +#endif
  
  #endif /* KEXEC_SYSCALL_H */
---- a/kexec/kexec.c
-+++ b/kexec/kexec.c
+Index: kexec-tools-2.0.10/kexec/kexec.c
+===================================================================
+--- kexec-tools-2.0.10.orig/kexec/kexec.c
++++ kexec-tools-2.0.10/kexec/kexec.c
 @@ -664,6 +664,8 @@ static int my_load(const char *type, int
  	memset(&info, 0, sizeof(info));
  	info.kexec_flags = kexec_flags;
@@ -767,8 +787,10 @@ Signed-off-by: Kai Kang <kai.kang@windriver.com>
  	result = 0;
  	if (argc - fileind <= 0) {
  		fprintf(stderr, "No kernel specified\n");
+Index: kexec-tools-2.0.10/purgatory/arch/arm64/Makefile
+===================================================================
 --- /dev/null
-+++ b/purgatory/arch/arm64/Makefile
++++ kexec-tools-2.0.10/purgatory/arch/arm64/Makefile
 @@ -0,0 +1,7 @@
 +#
 +# Purgatory arm64

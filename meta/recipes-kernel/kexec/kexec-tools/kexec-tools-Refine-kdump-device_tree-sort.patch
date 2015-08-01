@@ -15,11 +15,11 @@ Signed-off-by: Chong Lu <Chong.Lu@windriver.com>
  kexec/fs2dt.c          |   13 ++++++++++---
  2 files changed, 20 insertions(+), 6 deletions(-)
 
-diff --git a/kexec/arch/ppc/fs2dt.c b/kexec/arch/ppc/fs2dt.c
-index 4121c7d..cc04b04 100644
---- a/kexec/arch/ppc/fs2dt.c
-+++ b/kexec/arch/ppc/fs2dt.c
-@@ -296,6 +296,9 @@ static int comparefunc(const void *dentry1, const void *dentry2)
+Index: kexec-tools-2.0.10/kexec/arch/ppc/fs2dt.c
+===================================================================
+--- kexec-tools-2.0.10.orig/kexec/arch/ppc/fs2dt.c
++++ kexec-tools-2.0.10/kexec/arch/ppc/fs2dt.c
+@@ -296,6 +296,9 @@ static int comparefunc(const void *dentr
  {
  	char *str1 = (*(struct dirent **)dentry1)->d_name;
  	char *str2 = (*(struct dirent **)dentry2)->d_name;
@@ -29,7 +29,7 @@ index 4121c7d..cc04b04 100644
  
  	/*
  	 * strcmp scans from left to right and fails to idetify for some
-@@ -303,9 +306,13 @@ static int comparefunc(const void *dentry1, const void *dentry2)
+@@ -303,9 +306,13 @@ static int comparefunc(const void *dentr
  	 * Therefore, we get the wrong sorted order like memory@10000000 and
  	 * memory@f000000.
  	 */

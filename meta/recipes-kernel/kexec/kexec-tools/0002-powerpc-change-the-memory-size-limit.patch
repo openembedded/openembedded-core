@@ -20,10 +20,10 @@ Signed-off-by: Quanyang Wang <quanyang.wang@windriver.com>
  kexec/arch/ppc/kexec-ppc.h | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kexec/arch/ppc/kexec-ppc.h b/kexec/arch/ppc/kexec-ppc.h
-index 904cf48..a097ecd 100644
---- a/kexec/arch/ppc/kexec-ppc.h
-+++ b/kexec/arch/ppc/kexec-ppc.h
+Index: kexec-tools-2.0.10/kexec/arch/ppc/kexec-ppc.h
+===================================================================
+--- kexec-tools-2.0.10.orig/kexec/arch/ppc/kexec-ppc.h
++++ kexec-tools-2.0.10/kexec/arch/ppc/kexec-ppc.h
 @@ -42,7 +42,7 @@ void dol_ppc_usage(void);
   * During inital setup the kernel does not map the whole memory but a part of
   * it. On Book-E that is 64MiB, 601 24MiB or 256MiB (if possible).
@@ -33,6 +33,3 @@ index 904cf48..a097ecd 100644
  
  /* boot block version 17 as defined by the linux kernel */
  struct bootblock {
--- 
-1.9.1
-
