@@ -9,8 +9,8 @@ SRC_URI = "http://www.mpfr.org/mpfr-${PV}/mpfr-${PV}.tar.xz \
            file://long-long-thumb.patch \
            "
 
-SRC_URI[md5sum] = "e3d203d188b8fe60bb6578dd3152e05c"
-SRC_URI[sha256sum] = "399d0f47ef6608cc01d29ed1b99c7faff36d9994c45f36f41ba250147100453b"
+SRC_URI[md5sum] = "6969398cd2fbc56a6af570b5273c56a9"
+SRC_URI[sha256sum] = "6835a08bd992c8257641791e9a6a2b35b02336c8de26d0a8577953747e514a16"
 
 S = "${WORKDIR}/mpfr-${PV}"
 
