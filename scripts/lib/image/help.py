@@ -616,18 +616,33 @@ DESCRIPTION
     and also uses the -o option to have wic create the output
     somewhere other than the default /var/tmp/wic:
 
-      $ wic create ~/test.wks -o /home/trz/testwic --rootfs-dir
-      /home/trz/yocto/build/tmp/work/crownbay/core-image-minimal/1.0-r0/rootfs
-      --bootimg-dir /home/trz/yocto/build/tmp/sysroots/crownbay/usr/share
-      --kernel-dir /home/trz/yocto/build/tmp/sysroots/crownbay/usr/src/kernel
-      --native-sysroot /home/trz/yocto/build/tmp/sysroots/x86_64-linux
+      $ wic create ./test.wks -o ./out --rootfs-dir
+      tmp/work/qemux86_64-poky-linux/core-image-minimal/1.0-r0/rootfs
+      --bootimg-dir tmp/sysroots/qemux86-64/usr/share
+      --kernel-dir tmp/deploy/images/qemux86-64
+      --native-sysroot tmp/sysroots/x86_64-linux
 
-      Creating image(s)...
+     Creating image(s)...
 
-      Info: The new image(s) can be found here:
-        /home/trz/testwic/build/test-201309260032-sda.direct
+     Info: The new image(s) can be found here:
+           out/build/test-201507211313-sda.direct
 
-      ...
+     The following build artifacts were used to create the image(s):
+       ROOTFS_DIR:                   tmp/work/qemux86_64-poky-linux/core-image-minimal/1.0-r0/rootfs
+       BOOTIMG_DIR:                  tmp/sysroots/qemux86-64/usr/share
+       KERNEL_DIR:                   tmp/deploy/images/qemux86-64
+       NATIVE_SYSROOT:               tmp/sysroots/x86_64-linux
+
+     The image(s) were created using OE kickstart file:
+     ./test.wks
+
+     Here is a content of test.wks:
+
+     part /boot --source bootimg-pcbios --ondisk sda --label boot --active --align 1024
+     part / --source rootfs --ondisk sda --fstype=ext3 --label platform --align 1024
+
+     bootloader  --timeout=0  --append="rootwait rootfstype=ext3 video=vesafb vga=0x318 console=tty0"
+
 
     Finally, here's an example of the actual partition language
     commands used to generate the mkefidisk image i.e. these are the
