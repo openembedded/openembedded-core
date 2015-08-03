@@ -30,6 +30,21 @@ from collections import defaultdict
 from wic import msger
 from wic.utils import runner
 
+# executable -> recipe pairs for exec_native_cmd
+NATIVE_RECIPES = {"mcopy": "mtools",
+                  "mkdosfs": "dosfstools",
+                  "mkfs.btrfs": "btrfs-tools",
+                  "mkfs.ext2": "e2fsprogs",
+                  "mkfs.ext3": "e2fsprogs",
+                  "mkfs.ext4": "e2fsprogs",
+                  "mkfs.vfat": "dosfstools",
+                  "mksquashfs": "squashfs-tools",
+                  "mkswqp": "util-linux",
+                  "parted": "parted",
+                  "sgdisk": "gptfdisk",
+                  "syslinux": "syslinux"
+                 }
+
 def __exec_cmd(cmd_and_args, as_shell=False, catch=3):
     """
     Execute command, catching stderr, stdout
@@ -85,9 +100,17 @@ def exec_native_cmd(cmd_and_args, native_sysroot, catch=3):
     rc, out = __exec_cmd(native_cmd_and_args, True, catch)
 
     if rc == 127: # shell command-not-found
-        msger.error("A native program %s required to build the image "
-                    "was not found (see details above). Please make sure "
-                    "it's installed and try again." % args[0])
+        prog = args[0]
+        msg = "A native program %s required to build the image "\
+              "was not found (see details above).\n\n" % prog
+        recipe = NATIVE_RECIPES.get(prog)
+        if recipe:
+            msg += "Please bake it with 'bitbake %s-native' "\
+                   "and try again.\n" % recipe
+        else:
+            msg += "Wic failed to find a recipe to build native %s. Please "\
+                   "file a bug against wic.\n" % prog
+        msger.error(msg)
     if out:
         msger.debug('"%s" output: %s' % (args[0], out))
 
