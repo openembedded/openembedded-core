@@ -16,7 +16,7 @@ def binutils_branch_version(d):
 
 BINUPV = "${@binutils_branch_version(d)}"
 
-SRCREV = "bff55dd20499331280c96697a25b48dd4d7b69e8"
+SRCREV = "2bd25930221dea4bf33c13a89c111514491440e2"
 SRC_URI = "\
      git://sourceware.org/git/binutils-gdb.git;branch=binutils-${BINUPV}-branch;protocol=git \
      file://0002-configure-widen-the-regexp-for-SH-architectures.patch \
