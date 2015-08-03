@@ -101,19 +101,17 @@ wic_usage = """
 
  Create a customized OpenEmbedded image
 
- usage: wic [--version] [--help] COMMAND [ARGS]
+ usage: wic [--version] | [--help] | [COMMAND [ARGS]]
 
  Current 'wic' commands are:
+    help              Show help for command or one of the topics (see below)
     create            Create a new OpenEmbedded image
     list              List available values for options and image properties
 
  Help topics:
-    overview           wic overview - General overview of wic
-    plugins            wic plugins - Overview and API
-    kickstart          wic kickstart - wic kickstart reference
-
- See 'wic help <COMMAND or HELP TOPIC>' for more information on a specific
- command or help topic.
+    overview          wic overview - General overview of wic
+    plugins           wic plugins - Overview and API
+    kickstart         wic kickstart - wic kickstart reference
 """
 
 wic_help_usage = """
