@@ -5,11 +5,9 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=59530bdf33659b29e73d4adb9f9f6552"
 
 DEPENDS = "util-linux popt ncurses"
 
-PV = "0.8.10+git${SRCPV}"
-SRCREV = "a920398fa393f9d6301b32b191bc01e086ab8bc8"
-SRC_URI = "git://git.code.sf.net/p/gptfdisk/code"
-
-S = "${WORKDIR}/git"
+SRC_URI = "${SOURCEFORGE_MIRROR}/${BPN}/${PV}/${BP}.tar.gz"
+SRC_URI[md5sum] = "2061f917af084215898d4fea04d8388f"
+SRC_URI[sha256sum] = "5b66956743a799fc0471cdb032665c1391e82f9c5b3f1d7d726d29fe2ba01d6c"
 
 do_install() {
     install -d ${D}${sbindir}
