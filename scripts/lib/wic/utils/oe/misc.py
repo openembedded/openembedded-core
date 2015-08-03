@@ -120,17 +120,6 @@ def exec_native_cmd(cmd_and_args, native_sysroot, catch=3):
 
     return (rc, out)
 
-# kickstart doesn't support variable substution in commands, so this
-# is our current simplistic scheme for supporting that
-
-wks_vars = dict()
-
-def get_wks_var(key):
-    return wks_vars[key]
-
-def add_wks_var(key, val):
-    wks_vars[key] = val
-
 BOOTDD_EXTRA_SPACE = 16384
 
 _BITBAKE_VARS = defaultdict(dict)
