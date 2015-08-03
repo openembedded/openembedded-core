@@ -27,7 +27,7 @@ do_install () {
 	install -d -m 755 ${D}${sysconfdir}/mini_x/session.d
 	install -p -m 755 builder_hob_start.sh ${D}${sysconfdir}/mini_x/session.d/
 
-	chown  ${PN}.${PN} ${D}${sysconfdir}/mini_x/session.d/builder_hob_start.sh
+	chown  builder.builder ${D}${sysconfdir}/mini_x/session.d/builder_hob_start.sh
         install -p -m 755 please_wait_dialog.py ${D}${sysconfdir}/mini_x
 }
 
