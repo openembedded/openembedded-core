@@ -1,0 +1,22 @@
+The current approach used by the Makefile ends up installing 
+weston.desktop twice and can give build failures when using 
+parallel make flags. Change to just have one DATA reference.
+
+RP
+2015/8/3
+Upstream-Status: Pending
+
+Index: weston-1.8.0/Makefile.am
+===================================================================
+--- weston-1.8.0.orig/Makefile.am
++++ weston-1.8.0/Makefile.am
+@@ -179,8 +179,7 @@ pkgconfigdir = $(libdir)/pkgconfig
+ pkgconfig_DATA = src/weston.pc
+ 
+ wayland_sessiondir = $(datadir)/wayland-sessions
+-wayland_session_DATA = src/weston.desktop
+-dist_wayland_session_DATA = $(wayland_session_DATA)
++dist_wayland_session_DATA = src/weston.desktop
+ 
+ westonincludedir = $(includedir)/weston
+ westoninclude_HEADERS =				\
