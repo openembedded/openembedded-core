@@ -24,6 +24,7 @@
 # AUTHORS
 # Tom Zanussi <tom.zanussi (at] linux.intel.com>
 #
+"""Miscellaneous functions."""
 
 from collections import defaultdict
 
@@ -56,14 +57,14 @@ def __exec_cmd(cmd_and_args, as_shell=False, catch=3):
     msger.debug(args)
 
     if as_shell:
-        rc, out = runner.runtool(cmd_and_args, catch)
+        ret, out = runner.runtool(cmd_and_args, catch)
     else:
-        rc, out = runner.runtool(args, catch)
+        ret, out = runner.runtool(args, catch)
     out = out.strip()
     msger.debug("__exec_cmd: output for %s (rc = %d): %s" % \
-                (cmd_and_args, rc, out))
+                (cmd_and_args, ret, out))
 
-    return (rc, out)
+    return (ret, out)
 
 
 def exec_cmd(cmd_and_args, as_shell=False, catch=3):
@@ -72,10 +73,11 @@ def exec_cmd(cmd_and_args, as_shell=False, catch=3):
 
     Exits if rc non-zero
     """
-    rc, out = __exec_cmd(cmd_and_args, as_shell, catch)
+    ret, out = __exec_cmd(cmd_and_args, as_shell, catch)
 
-    if rc != 0:
-        msger.error("exec_cmd: %s returned '%s' instead of 0" % (cmd_and_args, rc))
+    if ret != 0:
+        msger.error("exec_cmd: %s returned '%s' instead of 0" % \
+                    (cmd_and_args, ret))
 
     return out
 
@@ -97,9 +99,9 @@ def exec_native_cmd(cmd_and_args, native_sysroot, catch=3):
     args = cmd_and_args.split()
     msger.debug(args)
 
-    rc, out = __exec_cmd(native_cmd_and_args, True, catch)
+    ret, out = __exec_cmd(native_cmd_and_args, True, catch)
 
-    if rc == 127: # shell command-not-found
+    if ret == 127: # shell command-not-found
         prog = args[0]
         msg = "A native program %s required to build the image "\
               "was not found (see details above).\n\n" % prog
@@ -114,11 +116,11 @@ def exec_native_cmd(cmd_and_args, native_sysroot, catch=3):
     if out:
         msger.debug('"%s" output: %s' % (args[0], out))
 
-    if rc != 0:
+    if ret != 0:
         msger.error("exec_cmd: '%s' returned '%s' instead of 0" % \
-                    (cmd_and_args, rc))
+                    (cmd_and_args, ret))
 
-    return (rc, out)
+    return ret, out
 
 BOOTDD_EXTRA_SPACE = 16384
 
@@ -137,10 +139,10 @@ def get_bitbake_var(var, image=None):
 
         log_level = msger.get_loglevel()
         msger.set_loglevel('normal')
-        rc, lines = __exec_cmd(cmd)
+        ret, lines = __exec_cmd(cmd)
         msger.set_loglevel(log_level)
 
-        if rc:
+        if ret:
             print "Couldn't get '%s' output." % cmd
             print "Bitbake failed with error:\n%s\n" % lines
             return
@@ -176,14 +178,14 @@ def parse_sourceparams(sourceparams):
 
     params = sourceparams.split(',')
     if params:
-        for p in params:
-            if not p:
+        for par in params:
+            if not par:
                 continue
-            if not '=' in p:
-                key = p
+            if not '=' in par:
+                key = par
                 val = None
             else:
-                key, val = p.split('=')
+                key, val = par.split('=')
             params_dict[key] = val
 
     return params_dict
