@@ -586,13 +586,25 @@ def action_pull(conf, args):
         ldir = repo['local_repo_dir']
         branch = repo.get('branch', "master")
         logger.info("update branch %s of component repo %s in %s ..." % (branch, name, ldir))
-        runcmd("git checkout %s" % branch, ldir)
         if not conf.hard_reset:
-            output=runcmd("git pull --ff-only", ldir)
-            logger.info(output)
+            # Try to pull only the configured branch. Beware that this may fail
+            # when the branch is currently unknown (for example, after reconfiguring
+            # combo-layer). In that case we need to fetch everything and try the check out
+            # and pull again.
+            try:
+                runcmd("git checkout %s" % branch, ldir, printerr=False)
+            except subprocess.CalledProcessError:
+                output=runcmd("git fetch", ldir)
+                logger.info(output)
+                runcmd("git checkout %s" % branch, ldir)
+                runcmd("git pull --ff-only", ldir)
+            else:
+                output=runcmd("git pull --ff-only", ldir)
+                logger.info(output)
         else:
             output=runcmd("git fetch", ldir)
             logger.info(output)
+            runcmd("git checkout %s" % branch, ldir)
             runcmd("git reset --hard FETCH_HEAD", ldir)
 
 def action_update(conf, args):
