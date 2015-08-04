@@ -3,9 +3,10 @@ HOMEPAGE = "http://qemu.org"
 LICENSE = "GPLv2 & LGPLv2.1"
 DEPENDS = "glib-2.0 zlib pixman"
 RDEPENDS_${PN}_class-target += "bash python"
+RDEPENDS_${PN}-ptest = "bash make"
 
 require qemu-targets.inc
-inherit autotools
+inherit autotools ptest
 BBCLASSEXTEND = "native nativesdk"
 
 PR = "r1"
@@ -18,6 +19,8 @@ SRC_URI = "\
     file://disable-grabs.patch \
     file://exclude-some-arm-EABI-obsolete-syscalls.patch \
     file://wacom.patch \
+    file://add-ptest-in-makefile.patch \
+    file://run-ptest \
     "
 
 SRC_URI_append_class-native = "\
@@ -52,6 +55,17 @@ do_configure() {
 
     ${S}/configure --prefix=${prefix} --sysconfdir=${sysconfdir} --libexecdir=${libexecdir} --localstatedir=${localstatedir} --disable-strip ${EXTRA_OECONF} $KVMOPTS
     test ! -e ${S}/target-i386/beginend_funcs.sh || chmod a+x ${S}/target-i386/beginend_funcs.sh
+}
+
+do_compile_ptest() {
+	make buildtest-TESTS
+}
+
+do_install_ptest() {
+	cp -rL ${B}/tests ${D}${PTEST_PATH}
+	find ${D}${PTEST_PATH}/tests -type f -name "*.[Sshcod]" | xargs -i rm -rf {}
+
+	cp ${S}/tests/Makefile ${D}${PTEST_PATH}/tests
 }
 
 do_install () {
