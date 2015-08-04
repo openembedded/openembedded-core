@@ -6,12 +6,8 @@ protocol that is provided by VMware virtual machines to give absolute \
 pointer positioning. The vmmouse driver is capable of falling back to the \
 standard 'mouse' driver if a VMware virtual machine is not detected."
 
-PR = "${INC_PR}.0"
-
-SRC_URI += "file://always_include_config.h.patch"
-
-SRC_URI[md5sum] = "34f9f64ee6a1a51fc8266a9af24e1e07"
-SRC_URI[sha256sum] = "04cfb60366008d4db815c550d8fb8d0a4270c75fa7a20fa3bddc9ecbd355612c"
+SRC_URI[md5sum] = "85e2e464b7219c495ad3a16465c226ed"
+SRC_URI[sha256sum] = "0af558957ac1be1b2863712c2475de8f4d7f14921fd01ded2e2fde4921b19319"
 
 RDEPENDS_${PN} += "xf86-input-mouse"
 
@@ -25,4 +21,6 @@ do_install_append () {
 	rm -rf ${D}${libdir}/hal/
 }
 
-FILES_${PN} += "${base_libdir}/udev/ ${datadir}/X11/xorg.conf.d"
+EXTRA_OECONF = "--with-udev-rules-dir=${nonarch_base_libdir}/udev/rules.d"
+
+FILES_${PN} += "${nonarch_base_libdir}/udev/rules.d/ ${datadir}/X11/xorg.conf.d"
