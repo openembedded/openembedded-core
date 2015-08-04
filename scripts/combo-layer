@@ -585,8 +585,8 @@ def action_pull(conf, args):
         repo = conf.repos[name]
         ldir = repo['local_repo_dir']
         branch = repo.get('branch', "master")
+        logger.info("update branch %s of component repo %s in %s ..." % (branch, name, ldir))
         runcmd("git checkout %s" % branch, ldir)
-        logger.info("update component repo %s in %s ..." % (name, ldir))
         if not conf.hard_reset:
             output=runcmd("git pull --ff-only", ldir)
             logger.info(output)
