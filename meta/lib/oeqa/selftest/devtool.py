@@ -51,7 +51,7 @@ class DevtoolBase(oeSelfTest):
                 bbappendfile = bbappend
                 break
         else:
-            self.assertTrue(False, 'bbappend for recipe %s does not seem to be created in test layer' % testrecipe)
+            self.fail('bbappend for recipe %s does not seem to be created in test layer' % testrecipe)
         return bbappendfile
 
     def _create_temp_layer(self, templayerdir, addlayer, templayername, priority=999, recipepathspec='recipes-*/*'):

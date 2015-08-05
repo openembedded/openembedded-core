@@ -282,7 +282,7 @@ class RecipetoolTests(RecipetoolBase):
                 self.assertIn('add-file.patch', line, 'Unexpected warning found in output:\n%s' % line)
                 break
         else:
-            self.assertTrue(False, 'Patch warning not found in output:\n%s' % output)
+            self.fail('Patch warning not found in output:\n%s' % output)
 
     @testcase(1188)
     def test_recipetool_appendfile_script(self):
@@ -351,7 +351,7 @@ class RecipetoolTests(RecipetoolBase):
                         bbappendfile = f
                         break
             if not bbappendfile:
-                self.assertTrue(False, 'No bbappend file created')
+                self.fail('No bbappend file created')
             runCmd('rm -rf %s/recipes-*' % self.templayerdir)
             return bbappendfile
 
