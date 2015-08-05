@@ -11,13 +11,13 @@ AUTHOR = "Thomas Hood"
 HOMEPAGE = "http://packages.debian.org/resolvconf"
 RDEPENDS_${PN} = "bash"
 
-SRC_URI = "http://snapshot.debian.org/archive/debian/20141013T184415Z/pool/main/r/${BPN}/${BPN}_1.76.tar.xz \
+SRC_URI = "http://snapshot.debian.org/archive/debian/20150511T214718Z/pool/main/r/${BPN}/${BPN}_${PV}.tar.xz \
            file://fix-path-for-busybox.patch \
            file://99_resolvconf \
           "
 
-SRC_URI[md5sum] = "d78ce30ea068999cd3e0523300b27255"
-SRC_URI[sha256sum] = "c9f40f7405b37399ddbf29ca4205b4911ee35cb9ffd9be7671faa2385b1fa573"
+SRC_URI[md5sum] = "7362d766e47bfc253500f42b30330d9f"
+SRC_URI[sha256sum] = "5a6e21e8ba6822a5f93075c8c8fe7977e34780ba551af51930d0b31fdd99ab56"
 
 inherit allarch
 
