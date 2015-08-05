@@ -8,11 +8,10 @@ Index: git/sbin/update-ca-certificates
 ===================================================================
 --- git.orig/sbin/update-ca-certificates
 +++ git/sbin/update-ca-certificates
-@@ -37,6 +37,39 @@ do
+@@ -66,6 +66,39 @@ do
    shift
  done
  
-+ 
 +if [ -z "$SYSROOT" ]; then
 +  local_which () {
 +    if [ $# -lt 1 ]; then
@@ -45,6 +44,7 @@ Index: git/sbin/update-ca-certificates
 +    SYSROOT=
 +  fi
 +fi
- CERTSCONF=$SYSROOT/etc/ca-certificates.conf
- CERTSDIR=$SYSROOT/usr/share/ca-certificates
- LOCALCERTSDIR=$SYSROOT/usr/local/share/ca-certificates
++
+ if [ ! -s "$CERTSCONF" ]
+ then
+   fresh=1

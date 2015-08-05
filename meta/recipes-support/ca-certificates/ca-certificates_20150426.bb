@@ -11,8 +11,8 @@ LIC_FILES_CHKSUM = "file://debian/copyright;md5=48d2baf97986999e776b43c8dd9e0c5a
 DEPENDS = "ca-certificates-native"
 DEPENDS_class-native = ""
 
-# tag: debian/20140325 + 2
-SRCREV = "2b8a047c78aadbecd90bf8e49ccf68898a211610"
+# tag: debian/20150426 + 2
+SRCREV = "d4790d2832aaac9152f450e06661511067592227"
 
 SRC_URI = "git://anonscm.debian.org/collab-maint/ca-certificates.git \
            file://0001-update-ca-certificates-remove-c-rehash.patch \
