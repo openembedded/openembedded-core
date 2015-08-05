@@ -32,7 +32,7 @@ REGEX_URI_pn-sqlite3="http://www.sqlite.org/"
 REGEX_pn-sqlite3="releaselog/${COMMON_REGEX}.html"
 
 REGEX_URI_pn-dhcp = "ftp://ftp.isc.org/isc/dhcp/"
-REGEX_pn-dhcp="(?P<pver>\d+\.\d+\.(\d+?))"
+REGEX_pn-dhcp="(?P<pver>\d+\.\d+\.(\d+?))/"
 
 REGEX_pn-foomatic-filters = "foomatic-filters-(?P<pver>((\d|\d\d)\.*)+)\.tar\.gz"
 REGEX_pn-xdg-utils = "xdg-utils-(?P<pver>((\d+[\.\-_]*)+)((rc|alpha|beta)\d+)?)\.(tar\.gz|tgz)"
@@ -41,6 +41,8 @@ REGEX_pn-libtheora = "libtheora-(?P<pver>\d+(\.\d)+)\.(tar\.gz|tgz)"
 
 REGEX_pn-iputils="iputils-(?P<pver>s\d+).tar"
 REGEX_pn-nettle = "nettle-(?P<pver>\d+(\.\d+)+)\.tar"
+
+REGEX_pn-cairo = "cairo-(?P<pver>\d+(\.\d+)+)\.tar"
 
 # Exclude NC versions which lack AES encryption
 REGEX_pn-db = "db-(?P<pver>\d+\.\d+(\.\d+)?).tar"
@@ -224,6 +226,7 @@ REGEX_pn-clutter-1.0 = "${GNOME_STABLE}"
 REGEX_pn-clutter-gtk-1.0 = "${GNOME_STABLE}"
 REGEX_pn-clutter-gst-3.0 = "${GNOME_STABLE}"
 REGEX_pn-cogl-1.0 = "${GNOME_STABLE}"
+REGEX_pn-adwaita-icon-theme = "${GNOME_STABLE}"
 
 # not GNOME related but uses same even-minor-release-is-stable logic
 REGEX_pn-dbus = "${GNOME_STABLE}"
