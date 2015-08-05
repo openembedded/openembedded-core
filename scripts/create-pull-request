@@ -177,11 +177,14 @@ mkdir $ODIR
 
 if [ -n "$RELDIR" ]; then
 	ODIR=$(realpath $ODIR)
-	extraopts="--relative=$RELDIR"
+	pushd $RELDIR > /dev/null
+	extraopts="--relative"
 fi
 
 # Generate the patches and cover letter
 git format-patch $extraopts -M40 --subject-prefix="$PREFIX" -n -o $ODIR --thread=shallow --cover-letter $RELATIVE_TO..$COMMIT_ID > /dev/null
+
+[ -n "$RELDIR" ] && popd > /dev/null
 
 # Customize the cover letter
 CL="$ODIR/0000-cover-letter.patch"
