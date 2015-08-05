@@ -2,15 +2,11 @@ SUMMARY = "The canonical example of init scripts"
 SECTION = "base"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://${WORKDIR}/COPYRIGHT;md5=349c872e0066155e1818b786938876a4"
-RDEPENDS_${PN} = "initscripts"
-PR = "r0"
 
 SRC_URI = "file://skeleton \
 	   file://skeleton_test.c \
 	   file://COPYRIGHT \
 	   "
-
-CONFFILES_${PN} += "${sysconfdir}/init.d/skeleton"
 
 do_compile () {
 	${CC} ${WORKDIR}/skeleton_test.c -o ${WORKDIR}/skeleton-test
@@ -30,3 +26,6 @@ do_install () {
 	install -m 0755 ${WORKDIR}/skeleton-test ${D}${sbindir}/
 }
 
+RDEPENDS_${PN} = "initscripts"
+
+CONFFILES_${PN} += "${sysconfdir}/init.d/skeleton"
