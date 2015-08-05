@@ -159,20 +159,20 @@ def main():
 
     options, args = parser.parse_args(sys.argv)
 
-    bbhandler = bb.tinfoil.Tinfoil()
-    bbhandler.prepare()
-    print("Gathering recipe data...")
-    data_dict = get_recipesdata(bbhandler, options.preferred)
+    with bb.tinfoil.Tinfoil() as bbhandler:
+        bbhandler.prepare()
+        print("Gathering recipe data...")
+        data_dict = get_recipesdata(bbhandler, options.preferred)
 
-    if options.listtype == 'flags':
-        pkg_dict = collect_pkgs(data_dict)
-        flag_dict = collect_flags(pkg_dict)
-        display_flags(flag_dict)
-    elif options.listtype == 'recipes':
-        pkg_dict = collect_pkgs(data_dict)
-        display_pkgs(pkg_dict)
-    elif options.listtype == 'all':
-        display_all(data_dict)
+        if options.listtype == 'flags':
+            pkg_dict = collect_pkgs(data_dict)
+            flag_dict = collect_flags(pkg_dict)
+            display_flags(flag_dict)
+        elif options.listtype == 'recipes':
+            pkg_dict = collect_pkgs(data_dict)
+            display_pkgs(pkg_dict)
+        elif options.listtype == 'all':
+            display_all(data_dict)
 
 if __name__ == "__main__":
     main()

@@ -54,9 +54,9 @@ def verifyHomepage(bbhandler):
     return count
 
 if __name__=='__main__':
-    bbhandler = bb.tinfoil.Tinfoil()
-    bbhandler.prepare()
-    logger.info("Start verifying HOMEPAGE:")
-    failcount = verifyHomepage(bbhandler)
-    logger.info("Finished verifying HOMEPAGE.")
-    logger.info("Summary: %s failed" % failcount)
+    with bb.tinfoil.Tinfoil() as bbhandler:
+        bbhandler.prepare()
+        logger.info("Start verifying HOMEPAGE:")
+        failcount = verifyHomepage(bbhandler)
+        logger.info("Finished verifying HOMEPAGE.")
+        logger.info("Summary: %s failed" % failcount)

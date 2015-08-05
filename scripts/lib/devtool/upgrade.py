@@ -336,48 +336,51 @@ def upgrade(args, config, basepath, workspace):
         raise DevtoolError("If you specify --srcbranch/-B then you must use --srcrev/-S to specify the revision" % args.recipename)
 
     tinfoil = setup_tinfoil(basepath=basepath, tracking=True)
-    rd = parse_recipe(config, tinfoil, args.recipename, True)
-    if not rd:
-        return 1
-
-    pn = rd.getVar('PN', True)
-    if pn != args.recipename:
-        logger.info('Mapping %s to %s' % (args.recipename, pn))
-    if pn in workspace:
-        raise DevtoolError("recipe %s is already in your workspace" % pn)
-
-    if args.srctree:
-        srctree = os.path.abspath(args.srctree)
-    else:
-        srctree = standard.get_default_srctree(config, pn)
-
-    standard._check_compatible_recipe(pn, rd)
-    old_srcrev = rd.getVar('SRCREV', True)
-    if old_srcrev == 'INVALID':
-        old_srcrev = None
-    if old_srcrev and not args.srcrev:
-        raise DevtoolError("Recipe specifies a SRCREV value; you must specify a new one when upgrading")
-    if rd.getVar('PV', True) == args.version and old_srcrev == args.srcrev:
-        raise DevtoolError("Current and upgrade versions are the same version")
-
-    rf = None
     try:
-        rev1 = standard._extract_source(srctree, False, 'devtool-orig', False, rd)
-        rev2, md5, sha256 = _extract_new_source(args.version, srctree, args.no_patch,
-                                                args.srcrev, args.branch, args.keep_temp,
-                                                tinfoil, rd)
-        rf, copied = _create_new_recipe(args.version, md5, sha256, args.srcrev, args.srcbranch, config.workspace_path, tinfoil, rd)
-    except bb.process.CmdError as e:
-        _upgrade_error(e, rf, srctree)
-    except DevtoolError as e:
-        _upgrade_error(e, rf, srctree)
-    standard._add_md5(config, pn, os.path.dirname(rf))
+        rd = parse_recipe(config, tinfoil, args.recipename, True)
+        if not rd:
+            return 1
 
-    af = _write_append(rf, srctree, args.same_dir, args.no_same_dir, rev2,
-                       copied, config.workspace_path, rd)
-    standard._add_md5(config, pn, af)
-    logger.info('Upgraded source extracted to %s' % srctree)
-    logger.info('New recipe is %s' % rf)
+        pn = rd.getVar('PN', True)
+        if pn != args.recipename:
+            logger.info('Mapping %s to %s' % (args.recipename, pn))
+        if pn in workspace:
+            raise DevtoolError("recipe %s is already in your workspace" % pn)
+
+        if args.srctree:
+            srctree = os.path.abspath(args.srctree)
+        else:
+            srctree = standard.get_default_srctree(config, pn)
+
+        standard._check_compatible_recipe(pn, rd)
+        old_srcrev = rd.getVar('SRCREV', True)
+        if old_srcrev == 'INVALID':
+            old_srcrev = None
+        if old_srcrev and not args.srcrev:
+            raise DevtoolError("Recipe specifies a SRCREV value; you must specify a new one when upgrading")
+        if rd.getVar('PV', True) == args.version and old_srcrev == args.srcrev:
+            raise DevtoolError("Current and upgrade versions are the same version")
+
+        rf = None
+        try:
+            rev1 = standard._extract_source(srctree, False, 'devtool-orig', False, rd)
+            rev2, md5, sha256 = _extract_new_source(args.version, srctree, args.no_patch,
+                                                    args.srcrev, args.branch, args.keep_temp,
+                                                    tinfoil, rd)
+            rf, copied = _create_new_recipe(args.version, md5, sha256, args.srcrev, args.srcbranch, config.workspace_path, tinfoil, rd)
+        except bb.process.CmdError as e:
+            _upgrade_error(e, rf, srctree)
+        except DevtoolError as e:
+            _upgrade_error(e, rf, srctree)
+        standard._add_md5(config, pn, os.path.dirname(rf))
+
+        af = _write_append(rf, srctree, args.same_dir, args.no_same_dir, rev2,
+                        copied, config.workspace_path, rd)
+        standard._add_md5(config, pn, af)
+        logger.info('Upgraded source extracted to %s' % srctree)
+        logger.info('New recipe is %s' % rf)
+    finally:
+        tinfoil.shutdown()
     return 0
 
 def register_commands(subparsers, context):

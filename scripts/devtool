@@ -289,16 +289,14 @@ def main():
 
     if global_args.bbpath is None:
         tinfoil = setup_tinfoil(config_only=True, basepath=basepath)
-        global_args.bbpath = tinfoil.config_data.getVar('BBPATH', True)
-    else:
-        tinfoil = None
+        try:
+            global_args.bbpath = tinfoil.config_data.getVar('BBPATH', True)
+        finally:
+            tinfoil.shutdown()
 
     for path in [scripts_path] + global_args.bbpath.split(':'):
         pluginpath = os.path.join(path, 'lib', 'devtool')
         scriptutils.load_plugins(logger, plugins, pluginpath)
-
-    if tinfoil:
-        tinfoil.shutdown()
 
     subparsers = parser.add_subparsers(dest="subparser_name", title='subcommands', metavar='<subcommand>')
     subparsers.required = True

@@ -86,70 +86,76 @@ def build_image_task(config, basepath, workspace, image, add_packages=None, task
                 raise
 
     tinfoil = setup_tinfoil(basepath=basepath)
-    rd = parse_recipe(config, tinfoil, image, True)
-    if not rd:
-        # Error already shown
-        return (1, None)
-    if not bb.data.inherits_class('image', rd):
-        raise TargetNotImageError()
-
-    # Get the actual filename used and strip the .bb and full path
-    target_basename = rd.getVar('FILE', True)
-    target_basename = os.path.splitext(os.path.basename(target_basename))[0]
-    config.set('SDK', 'target_basename', target_basename)
-    config.write()
-
-    appendfile = os.path.join(config.workspace_path, 'appends',
-                              '%s.bbappend' % target_basename)
-
-    outputdir = None
     try:
-        if workspace or add_packages:
-            if add_packages:
-                packages = add_packages
-            else:
-                packages = _get_packages(tinfoil, workspace, config)
-        else:
-            packages = None
-        if not task:
-            if not packages and not add_packages and workspace:
-                logger.warning('No recipes in workspace, building image %s unmodified', image)
-            elif not packages:
-                logger.warning('No packages to add, building image %s unmodified', image)
+        rd = parse_recipe(config, tinfoil, image, True)
+        if not rd:
+            # Error already shown
+            return (1, None)
+        if not bb.data.inherits_class('image', rd):
+            raise TargetNotImageError()
 
-        if packages or extra_append:
-            bb.utils.mkdirhier(os.path.dirname(appendfile))
-            with open(appendfile, 'w') as afile:
-                if packages:
-                    # include packages from workspace recipes into the image
-                    afile.write('IMAGE_INSTALL_append = " %s"\n' % ' '.join(packages))
-                    if not task:
-                        logger.info('Building image %s with the following '
-                                    'additional packages: %s', image, ' '.join(packages))
-                if extra_append:
-                    for line in extra_append:
-                        afile.write('%s\n' % line)
+        # Get the actual filename used and strip the .bb and full path
+        target_basename = rd.getVar('FILE', True)
+        target_basename = os.path.splitext(os.path.basename(target_basename))[0]
+        config.set('SDK', 'target_basename', target_basename)
+        config.write()
 
-        if task in ['populate_sdk', 'populate_sdk_ext']:
-            outputdir = rd.getVar('SDK_DEPLOY', True)
-        else:
-            outputdir = rd.getVar('DEPLOY_DIR_IMAGE', True)
+        appendfile = os.path.join(config.workspace_path, 'appends',
+                                '%s.bbappend' % target_basename)
 
-        tinfoil.shutdown()
-
-        options = ''
-        if task:
-            options += '-c %s' % task
-
-        # run bitbake to build image (or specified task)
+        outputdir = None
         try:
-            exec_build_env_command(config.init_path, basepath,
-                                   'bitbake %s %s' % (options, image), watch=True)
-        except ExecutionError as err:
-            return (err.exitcode, None)
+            if workspace or add_packages:
+                if add_packages:
+                    packages = add_packages
+                else:
+                    packages = _get_packages(tinfoil, workspace, config)
+            else:
+                packages = None
+            if not task:
+                if not packages and not add_packages and workspace:
+                    logger.warning('No recipes in workspace, building image %s unmodified', image)
+                elif not packages:
+                    logger.warning('No packages to add, building image %s unmodified', image)
+
+            if packages or extra_append:
+                bb.utils.mkdirhier(os.path.dirname(appendfile))
+                with open(appendfile, 'w') as afile:
+                    if packages:
+                        # include packages from workspace recipes into the image
+                        afile.write('IMAGE_INSTALL_append = " %s"\n' % ' '.join(packages))
+                        if not task:
+                            logger.info('Building image %s with the following '
+                                        'additional packages: %s', image, ' '.join(packages))
+                    if extra_append:
+                        for line in extra_append:
+                            afile.write('%s\n' % line)
+
+            if task in ['populate_sdk', 'populate_sdk_ext']:
+                outputdir = rd.getVar('SDK_DEPLOY', True)
+            else:
+                outputdir = rd.getVar('DEPLOY_DIR_IMAGE', True)
+
+            tmp_tinfoil = tinfoil
+            tinfoil = None
+            tmp_tinfoil.shutdown()
+
+            options = ''
+            if task:
+                options += '-c %s' % task
+
+            # run bitbake to build image (or specified task)
+            try:
+                exec_build_env_command(config.init_path, basepath,
+                                    'bitbake %s %s' % (options, image), watch=True)
+            except ExecutionError as err:
+                return (err.exitcode, None)
+        finally:
+            if os.path.isfile(appendfile):
+                os.unlink(appendfile)
     finally:
-        if os.path.isfile(appendfile):
-            os.unlink(appendfile)
+        if tinfoil:
+            tinfoil.shutdown()
     return (0, outputdir)
 
 
