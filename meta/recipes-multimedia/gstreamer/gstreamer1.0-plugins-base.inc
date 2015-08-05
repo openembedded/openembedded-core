@@ -12,7 +12,7 @@ PACKAGES_DYNAMIC =+ "^libgst.*"
 PACKAGECONFIG ??= " \
     ${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'x11', '', d)} \
     ${@bb.utils.contains('DISTRO_FEATURES', 'alsa', 'alsa', '', d)} \
-    orc ivorbis ogg theora vorbis \
+    orc ivorbis ogg theora vorbis pango \
     "
 
 X11DEPENDS = "virtual/libx11 libsm libxrender"
