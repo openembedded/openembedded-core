@@ -160,3 +160,11 @@ class Wic(oeSelfTest):
         self.assertEqual(0, status)
         self.assertEqual(1, len(glob(self.resultdir + \
                                      "%(wks)s-*.direct" % vars)))
+
+    def test18_iso_image(self):
+        """Test creation of hybrid iso imagewith legacy and EFI boot"""
+        self.assertEqual(0, runCmd("wic create mkhybridiso "
+                                   "--image-name core-image-minimal").status)
+        self.assertEqual(1, len(glob(self.resultdir + "HYBRID_ISO_IMG-*.direct")))
+        self.assertEqual(1, len(glob(self.resultdir + "HYBRID_ISO_IMG-*.iso")))
+
