@@ -30,7 +30,6 @@ TARGET_PATCH_class-native = ""
 
 SRC_URI = "${GNU_MIRROR}/texinfo/${BP}.tar.gz \
            file://texinfo-4.12-zlib.patch \
-           file://texinfo-4.13a-powerpc.patch \
            file://disable-native-tools.patch \
            file://link-zip.patch \
            file://dont-depend-on-help2man.patch \
@@ -38,8 +37,8 @@ SRC_URI = "${GNU_MIRROR}/texinfo/${BP}.tar.gz \
            ${TARGET_PATCH} \
           "
 
-SRC_URI[md5sum] = "1b8f98b80a8e6c50422125e07522e8db"
-SRC_URI[sha256sum] = "6b8ca30e9b6f093b54fe04439e5545e564c63698a806a48065c0bba16994cf74"
+SRC_URI[md5sum] = "e1a2ef5dce5018b53f0f6eed45b247a7"
+SRC_URI[sha256sum] = "83d3183290f34e7f958d209d0b20022c6fe9e921eb6fe94c27d988827d4878d2"
 
 tex_texinfo = "texmf/tex/texinfo"
 
