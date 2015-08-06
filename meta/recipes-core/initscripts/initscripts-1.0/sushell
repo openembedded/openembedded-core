@@ -1,5 +1,5 @@
-#!/bin/bash
+#!/bin/sh
 
-[ -z "$SUSHELL" ] && SUSHELL=/bin/bash
+[ -z "$SUSHELL" ] && SUSHELL=/bin/sh
 
 exec $SUSHELL
