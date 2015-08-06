@@ -107,14 +107,17 @@ class QemuRunner:
             cmdline = ''
             with open('/proc/%s/cmdline' % self.qemupid) as p:
                 cmdline = p.read()
-            ips = re.findall("((?:[0-9]{1,3}\.){3}[0-9]{1,3})", cmdline.split("ip=")[1])
-            if not ips or len(ips) != 3:
+            try:
+                ips = re.findall("((?:[0-9]{1,3}\.){3}[0-9]{1,3})", cmdline.split("ip=")[1])
+                if not ips or len(ips) != 3:
+                    raise ValueError
+                else:
+                    self.ip = ips[0]
+                    self.server_ip = ips[1]
+            except IndexError, ValueError:
                 logger.info("Couldn't get ip from qemu process arguments! Here is the qemu command line used: %s" % cmdline)
                 self.stop()
                 return False
-            else:
-                self.ip = ips[0]
-                self.server_ip = ips[1]
             logger.info("Target IP: %s" % self.ip)
             logger.info("Server IP: %s" % self.server_ip)
             logger.info("Waiting at most %d seconds for login banner" % self.boottime)
