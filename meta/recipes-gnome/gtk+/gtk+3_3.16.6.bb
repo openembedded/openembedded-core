@@ -5,11 +5,10 @@ MAJ_VER = "${@oe.utils.trim_version("${PV}", 2)}"
 SRC_URI = "http://ftp.gnome.org/pub/gnome/sources/gtk+/${MAJ_VER}/gtk+-${PV}.tar.xz \
            file://hardcoded_libtool.patch \
            file://Dont-force-csd.patch \
-           file://wayland-pango.patch \
           "
 
-SRC_URI[md5sum] = "c7497aaf6730524a127597b768a73bd7"
-SRC_URI[sha256sum] = "1ee5dbd7a4cb81a91eaa1b7ae64ba5a3eab6a3c0a764155583ab96524590fc8e"
+SRC_URI[md5sum] = "fc59e5c8b5a4585b60623dd708df400b"
+SRC_URI[sha256sum] = "4d12726d0856a968b41802ae5c5971d7e9bac532717e309d3f81b9989da5ffbe"
 
 S = "${WORKDIR}/gtk+-${PV}"
 
