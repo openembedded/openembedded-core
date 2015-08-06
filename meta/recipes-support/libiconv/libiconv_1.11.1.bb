@@ -5,9 +5,11 @@ HOMEPAGE = "http://www.gnu.org/software/libiconv"
 SECTION = "libs"
 NOTES = "Needs to be stripped down to: ascii iso8859-1 eucjp iso-2022jp gb utf8"
 PROVIDES = "virtual/libiconv"
-LICENSE = "LGPL"
+
+LICENSE = "LGPLv2.0"
 LIC_FILES_CHKSUM = "file://COPYING.LIB;md5=9f604d8a4f8e74f4f5140845a21b6674 \
                     file://libcharset/COPYING.LIB;md5=9f604d8a4f8e74f4f5140845a21b6674"
+
 SRC_URI = "${GNU_MIRROR}/${BPN}/${BPN}-${PV}.tar.gz \
            file://autoconf.patch \
 	   file://shared_preloadable_libiconv_linux.patch \
