@@ -1,0 +1,48 @@
+From 2c8a7766681b704e710f51c0817534e3f9a952d1 Mon Sep 17 00:00:00 2001
+From: Bernhard Reutner-Fischer <rep.dot.nop@gmail.com>
+Date: Thu, 26 Mar 2015 00:02:58 +0100
+Subject: [PATCH] ldso: mark _dl_exit as noreturn
+
+Otherwise gcc might not understand that oom() ended control-flow and
+might emit an (untaken) reference to abort() in _dl_update_slotinfo()
+on e.g. SH4 which breaks linking ld-uClibc.so.
+Arguably -ffreestanding should prevent GCC from emitting this
+'.global abort' but alas, it does not, which is another bug..
+
+Also mark the function cold to further lower the incoming frequency and
+branch probability.
+
+Upstream-Status: Backport
+
+  http://git.uclibc.org/uClibc/commit/?id=2c8a7766681b704e710f51c0817534e3f9a952d1
+
+Signed-off-by: Bernhard Reutner-Fischer <rep.dot.nop@gmail.com>
+Signed-off-by: Andre McCurdy <armccurdy@gmail.com>
+---
+ ldso/include/dl-syscall.h | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
+
+diff --git a/ldso/include/dl-syscall.h b/ldso/include/dl-syscall.h
+index 675b93a..e556f7b 100644
+--- a/ldso/include/dl-syscall.h
++++ b/ldso/include/dl-syscall.h
+@@ -52,7 +52,15 @@ extern int _dl_errno;
+    dynamic linking at all, so we cannot return any error codes.
+    We just punt if there is an error. */
+ #define __NR__dl_exit __NR_exit
+-static __always_inline _syscall1(void, _dl_exit, int, status)
++static __always_inline attribute_noreturn __cold void _dl_exit(int status)
++{
++	INLINE_SYSCALL(_dl_exit, 1, status);
++#if defined __GNUC__
++	__builtin_unreachable(); /* shut up warning: 'noreturn' function does return*/
++#else
++	while (1);
++#endif
++}
+ 
+ #define __NR__dl_close __NR_close
+ static __always_inline _syscall1(int, _dl_close, int, fd)
+-- 
+1.9.1
+

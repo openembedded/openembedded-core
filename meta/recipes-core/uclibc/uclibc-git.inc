@@ -25,5 +25,6 @@ SRC_URI = "git://uclibc.org/uClibc.git;branch=master \
 	file://0002-wire-setns-syscall.patch \
 	file://0001-Define-IPTOS_CLASS_-macros-according-to-RFC-2474.patch \
 	file://0001-timex-Sync-with-glibc.patch \
+	file://ldso-mark-_dl_exit-as-noreturn.patch \
 	"
 S = "${WORKDIR}/git"
