@@ -45,38 +45,6 @@ class Toaster_DB_Tests(ToasterSetup):
         total_builds = Build.objects.values('id').count()
         self.assertEqual(distinct_path, total_builds, msg = 'Build coocker log path is not unique')
 
-    # Check if the number of errors matches the number of orm_logmessage.level entries with value 2 - tc_id=820
-    @testcase(820)
-    def test_Build_Errors_No(self):
-        builds = Build.objects.values('id', 'errors_no')
-        cnt_err = []
-        for build in builds:
-            log_mess_err_no = LogMessage.objects.filter(build = build['id'], level = 2).count()
-            if (build['errors_no'] != log_mess_err_no):
-                cnt_err.append(build['id'])
-        self.assertEqual(len(cnt_err), 0, msg = 'Errors for build id: %s' % cnt_err)
-
-    # Check if the number of warnings matches the number of orm_logmessage.level entries with value 1 - tc=821
-    @testcase(821)
-    def test_Build_Warnings_No(self):
-        builds = Build.objects.values('id', 'warnings_no')
-        cnt_err = []
-        for build in builds:
-            log_mess_warn_no = LogMessage.objects.filter(build = build['id'], level = 1).count()
-            if (build['warnings_no'] != log_mess_warn_no):
-                cnt_err.append(build['id'])
-        self.assertEqual(len(cnt_err), 0, msg = 'Errors for build id: %s' % cnt_err)
-
-    # Check if the build succeeded then the errors_no is 0 - tc_id=822
-    @testcase(822)
-    def test_Build_Suceeded_Errors_No(self):
-        builds = Build.objects.filter(outcome = 0).values('id', 'errors_no')
-        cnt_err = []
-        for build in builds:
-            if (build['errors_no'] != 0):
-                cnt_err.append(build['id'])
-        self.assertEqual(len(cnt_err), 0, msg = 'Errors for build id: %s' % cnt_err)
-
     # Check if task order is unique for one build - tc=824
     @testcase(824)
     def test_Task_Unique_Order(self):
@@ -237,88 +205,6 @@ class Toaster_DB_Tests(ToasterSetup):
                 cnt_err.append(dep['id'])
         self.assertEqual(len(cnt_err), 0, msg = 'Errors for package dependency id: %s' % cnt_err)
 
-    # Check if recipe name does not start with a number (0-9) - tc=838
-    @testcase(838)
-    def test_Recipe_Name(self):
-        recipes = Recipe.objects.values('id', 'name')
-        cnt_err = []
-        for recipe in recipes:
-            if (recipe['name'][0].isdigit() is True):
-                cnt_err.append(recipe['id'])
-        self.assertEqual(len(cnt_err), 0, msg = 'Errors for recipe id: %s' % cnt_err)
-
-    # Check if recipe section matches the content of the SECTION variable (if set) in file_path - tc=839
-    @testcase(839)
-    def test_Recipe_DB_Section_Match_Recipe_File_Section(self):
-        recipes = Recipe.objects.values('id', 'section', 'file_path')
-        cnt_err = []
-        for recipe in recipes:
-            file_path = self.fix_file_path(recipe['file_path'])
-            file_exists = os.path.isfile(file_path)
-            if (not file_path or (file_exists is False)):
-                cnt_err.append(recipe['id'])
-            else:
-                file_section = self.recipe_parse(file_path, "SECTION = ")
-                db_section = recipe['section']
-                if file_section:
-                    if (db_section != file_section):
-                        cnt_err.append(recipe['id'])
-        self.assertEqual(len(cnt_err), 0, msg = 'Errors for recipe id: %s' % cnt_err)
-
-    # Check if recipe license matches the content of the LICENSE variable (if set) in file_path - tc=840
-    @testcase(840)
-    def test_Recipe_DB_License_Match_Recipe_File_License(self):
-        recipes = Recipe.objects.values('id', 'license', 'file_path')
-        cnt_err = []
-        for recipe in recipes:
-            file_path = self.fix_file_path(recipe['file_path'])
-            file_exists = os.path.isfile(file_path)
-            if (not file_path or (file_exists is False)):
-                cnt_err.append(recipe['id'])
-            else:
-                file_license = self.recipe_parse(file_path, "LICENSE = ")
-                db_license = recipe['license']
-                if file_license:
-                    if (db_license != file_license):
-                        cnt_err.append(recipe['id'])
-        self.assertEqual(len(cnt_err), 0, msg = 'Errors for recipe id: %s' % cnt_err)
-
-    # Check if recipe homepage matches the content of the HOMEPAGE variable (if set) in file_path - tc=841
-    @testcase(841)
-    def test_Recipe_DB_Homepage_Match_Recipe_File_Homepage(self):
-        recipes = Recipe.objects.values('id', 'homepage', 'file_path')
-        cnt_err = []
-        for recipe in recipes:
-            file_path = self.fix_file_path(recipe['file_path'])
-            file_exists = os.path.isfile(file_path)
-            if (not file_path or (file_exists is False)):
-                cnt_err.append(recipe['id'])
-            else:
-                file_homepage = self.recipe_parse(file_path, "HOMEPAGE = ")
-                db_homepage = recipe['homepage']
-                if file_homepage:
-                    if (db_homepage != file_homepage):
-                        cnt_err.append(recipe['id'])
-        self.assertEqual(len(cnt_err), 0, msg = 'Errors for recipe id: %s' % cnt_err)
-
-    # Check if recipe bugtracker matches the content of the BUGTRACKER variable (if set) in file_path - tc=842
-    @testcase(842)
-    def test_Recipe_DB_Bugtracker_Match_Recipe_File_Bugtracker(self):
-        recipes = Recipe.objects.values('id', 'bugtracker', 'file_path')
-        cnt_err = []
-        for recipe in recipes:
-            file_path = self.fix_file_path(recipe['file_path'])
-            file_exists = os.path.isfile(file_path)
-            if (not file_path or (file_exists is False)):
-                cnt_err.append(recipe['id'])
-            else:
-                file_bugtracker = self.recipe_parse(file_path, "BUGTRACKER = ")
-                db_bugtracker = recipe['bugtracker']
-                if file_bugtracker:
-                    if (db_bugtracker != file_bugtracker):
-                        cnt_err.append(recipe['id'])
-        self.assertEqual(len(cnt_err), 0, msg = 'Errors for recipe id: %s' % cnt_err)
-
     # Recipe key verification, recipe name does not depends on a recipe having the same name - tc=883
     @testcase(883)
     def test_Recipe_Dependency(self):
@@ -406,17 +292,6 @@ class Toaster_DB_Tests(ToasterSetup):
         for layer in layers:
             resp = urllib.urlopen(layer['layer_index_url'])
             if (resp.getcode() != 200):
-                cnt_err.append(layer['id'])
-        self.assertEqual(len(cnt_err), 0, msg = 'Errors for layer id: %s' % cnt_err)
-
-    # Check if the output of bitbake-layers show_layers matches the info from database - tc=895
-    @testcase(895)
-    def test_Layers_Show_Layers(self):
-        layers = Layer.objects.values('id', 'name', 'local_path')
-        cmd = commands.getoutput('bitbake-layers show_layers')
-        cnt_err = []
-        for layer in layers:
-            if (layer['name'] or layer['local_path']) not in cmd:
                 cnt_err.append(layer['id'])
         self.assertEqual(len(cnt_err), 0, msg = 'Errors for layer id: %s' % cnt_err)
 
