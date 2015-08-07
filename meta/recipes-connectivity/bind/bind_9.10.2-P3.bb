@@ -21,8 +21,8 @@ SRC_URI = "ftp://ftp.isc.org/isc/bind9/${PV}/${BPN}-${PV}.tar.gz \
            file://bind-ensure-searching-for-json-headers-searches-sysr.patch \
            "
 
-SRC_URI[md5sum] = "55d8f094bc10baae0e23e5e9100ba320"
-SRC_URI[sha256sum] = "b1e6f0af88634aaf48fb9d06bbf82968264f49b8e2685f061dd3fd4c1ab76c5f"
+SRC_URI[md5sum] = "a810d5d65fbdcf28dcda80d646913c3a"
+SRC_URI[sha256sum] = "78079a66dda455ffecfe93ef72d1ffc947f17b1c453d55ec06b860b49a5e1d4a"
 
 # --enable-exportlib is necessary for building dhcp
 ENABLE_IPV6 = "--enable-ipv6=${@bb.utils.contains('DISTRO_FEATURES', 'ipv6', 'yes', 'no', d)}"
