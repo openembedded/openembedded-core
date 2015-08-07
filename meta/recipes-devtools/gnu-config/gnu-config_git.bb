@@ -1,27 +1,24 @@
 SUMMARY = "gnu-configize"
 DESCRIPTION = "Tool that installs the GNU config.guess / config.sub into a directory tree"
 SECTION = "devel"
-LICENSE = "GPLv2"
-LIC_FILES_CHKSUM = "file://config.guess;endline=39;md5=0e6ca0501b27177f3bc640f7225e3ead"
+LICENSE = "GPL-3.0-with-autoconf-exception"
+LIC_FILES_CHKSUM = "file://config.guess;beginline=7;endline=27;md5=9bac8b1743c2240ae07cce6e546ac2f2"
 
 DEPENDS_class-native = "perl-native-runtime"
 
 INHIBIT_DEFAULT_DEPS = "1"
 
-SRCREV = "a47f842264fc19837f8a00eb1d2d254a4c527334"
-PV = "1.0+git${SRCPV}"
+SRCREV = "b576fa87c140b824466ef1638e945e87dc5c0343"
+PV = "20150728+git${SRCPV}"
 
 SRC_URI = "git://git.sv.gnu.org/config.git \
-	   file://config-guess-uclibc.patch \
            file://gnu-configize.in"
 
 S = "${WORKDIR}/git"
 
 CLEANBROKEN = "1"
 
-do_compile() {
-	:
-}
+do_compile[noexec] = "1"
 
 do_install () {
 	install -d ${D}${datadir}/gnu-config \
@@ -40,4 +37,4 @@ do_install () {
 PACKAGES = "${PN}"
 FILES_${PN} = "${bindir} ${datadir}/gnu-config"
 
-BBCLASSEXTEND = "native"
+BBCLASSEXTEND = "native nativesdk"
