@@ -10,5 +10,4 @@ RDEPENDS_${PN} = "\
     libstdc++ \
     libstdc++-dev \
     ${LIBC_DEPENDENCIES} \
-    qemuwrapper-cross \
     "
