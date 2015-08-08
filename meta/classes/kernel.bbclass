@@ -300,8 +300,10 @@ do_shared_workdir () {
 		cp arch/powerpc/lib/crtsavres.o $kerneldir/arch/powerpc/lib/crtsavres.o
 	fi
 
-	mkdir -p $kerneldir/include/generated/
-	cp -fR include/generated/* $kerneldir/include/generated/
+	if [ -d include/generated ]; then
+		mkdir -p $kerneldir/include/generated/
+		cp -fR include/generated/* $kerneldir/include/generated/
+	fi
 
 	if [ -d arch/${ARCH}/include/generated ]; then
 		mkdir -p $kerneldir/arch/${ARCH}/include/generated/
