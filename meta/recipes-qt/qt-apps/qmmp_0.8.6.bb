@@ -12,9 +12,8 @@ SRC_URI = "http://qmmp.ylsoftware.com/files/${BP}.tar.bz2 \
            file://no-host-paths.patch \
           "
 
-SRC_URI[md5sum] = "c9347ad18913058e8a37b1e88b9c6ce2"
-SRC_URI[sha256sum] = "7fe9347ad6c66e8013b73f2c5cf628037c58151e0cfcb926a8f27b93ad2d7c0d"
-
+SRC_URI[md5sum] = "67e96e89c61b7432e5a12f555db702b1"
+SRC_URI[sha256sum] = "0daea3f0a0df7b34089513c2c57413c82816ab8892bddabf49c18a7956255449"
 inherit cmake qt4x11
 
 QMMP_PLUGIN_OPTIONS ??= "\
@@ -74,4 +73,4 @@ FILES_${PN}-dbg += "\
                 ${libdir}/qmmp/*/.debug/* \
                "
 
-RDEPENDS_${PN} += "taglib alsa-lib libmad curl"
+RDEPENDS_${PN} += "taglib alsa-lib libmad curl libicui18n"
