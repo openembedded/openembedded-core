@@ -179,7 +179,7 @@ else
                exit 1
         fi
 
-        POSSIBLE=`$IFCONFIG link | grep 'tap' | awk '{print $2}' | sed s/://`
+        POSSIBLE=`$IFCONFIG link | grep 'tap' | awk '{print $2}' | sed -e 's/://' -e 's/@.*//'`
         TAP=""
         LOCKFILE=""
         USE_PRECONF_TAP="no"
