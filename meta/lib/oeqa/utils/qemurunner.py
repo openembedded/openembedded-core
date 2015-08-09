@@ -94,12 +94,19 @@ class QemuRunner:
         if qemuparams:
             self.qemuparams = self.qemuparams[:-1] + " " + qemuparams + " " + '\"'
 
+        def getOutput(o):
+            import fcntl
+            fl = fcntl.fcntl(o, fcntl.F_GETFL)
+            fcntl.fcntl(o, fcntl.F_SETFL, fl | os.O_NONBLOCK)
+            return os.read(o.fileno(), 1000000)
+
         launch_cmd = 'runqemu %s %s %s' % (self.machine, self.rootfs, self.qemuparams)
         # FIXME: We pass in stdin=subprocess.PIPE here to work around stty
         # blocking at the end of the runqemu script when using this within
         # oe-selftest (this makes stty error out immediately). There ought
         # to be a proper fix but this will suffice for now.
         self.runqemu = subprocess.Popen(launch_cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, stdin=subprocess.PIPE, preexec_fn=os.setpgrp)
+        output = self.runqemu.stdout
 
         logger.info("runqemu started, pid is %s" % self.runqemu.pid)
         logger.info("waiting at most %s seconds for qemu pid" % self.runqemutime)
@@ -109,9 +116,8 @@ class QemuRunner:
                 if self.runqemu.returncode:
                     # No point waiting any longer
                     logger.info('runqemu exited with code %d' % self.runqemu.returncode)
-                    output = self.runqemu.stdout
                     self.stop()
-                    logger.info("Output from runqemu:\n%s" % output.read())
+                    logger.info("Output from runqemu:\n%s" % getOutput(output))
                     return False
             time.sleep(1)
 
@@ -128,7 +134,7 @@ class QemuRunner:
                     self.ip = ips[0]
                     self.server_ip = ips[1]
             except IndexError, ValueError:
-                logger.info("Couldn't get ip from qemu process arguments! Here is the qemu command line used: %s" % cmdline)
+                logger.info("Couldn't get ip from qemu process arguments! Here is the qemu command line used:\n%s\nand output from runqemu:\n%s" % (cmdline, getOutput(output)))
                 self.stop()
                 return False
             logger.info("Target IP: %s" % self.ip)
@@ -170,9 +176,8 @@ class QemuRunner:
                 return False
         else:
             logger.info("Qemu pid didn't appeared in %s seconds" % self.runqemutime)
-            output = self.runqemu.stdout
             self.stop()
-            logger.info("Output from runqemu:\n%s" % output.read())
+            logger.info("Output from runqemu:\n%s" % getOutput(output))
             return False
 
         return self.is_alive()
