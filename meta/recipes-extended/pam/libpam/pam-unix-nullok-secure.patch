@@ -214,7 +214,7 @@ index 3729ce0..43cdbea 100644
  /* UNIX__PRELIM */         {NULL,              _ALL_ON_^(0600),         0200, 0},
  /* UNIX__UPDATE */         {NULL,              _ALL_ON_^(0600),         0400, 0},
 -/* UNIX__NONULL */         {NULL,              _ALL_ON_,               01000, 0},
-+/* UNIX__NONULL */         {NULL,              _ALL_ON_^(0x10000000),   0200, 0},
++/* UNIX__NONULL */         {NULL,              _ALL_ON_^(02000000000),   01000, 0},
  /* UNIX__QUIET */          {NULL,              _ALL_ON_,               02000, 0},
  /* UNIX_USE_AUTHTOK */     {"use_authtok",     _ALL_ON_,               04000, 0},
  /* UNIX_SHADOW */          {"shadow",          _ALL_ON_,              010000, 0},
@@ -222,7 +222,7 @@ index 3729ce0..43cdbea 100644
  /* UNIX_MIN_PASS_LEN */    {"minlen=",		_ALL_ON_,         0400000000, 0},
  /* UNIX_QUIET */           {"quiet",           _ALL_ON_,         01000000000, 0},
  /* UNIX_DES */             {"des",             _ALL_ON_^(0260420000),      0, 1},
-+/* UNIX_NULLOK_SECURE */   {"nullok_secure",   _ALL_ON_^(0x200),  0x10000000, 0},
++/* UNIX_NULLOK_SECURE */   {"nullok_secure",   _ALL_ON_^(01000),  02000000000, 0},
  };
  
  #define UNIX_DEFAULTS  (unix_args[UNIX__NONULL].flag)
