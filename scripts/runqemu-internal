@@ -253,6 +253,14 @@ else
 
 
         n0=$(echo $TAP | sed 's/tap//')
+
+        case $n0 in
+            ''|*[!0-9]*)
+                echo "Error Couldn't turn $TAP into an interface number?"
+                exit 1
+                ;;
+        esac
+
         n1=$(($n0 * 2 + 1))
         n2=$(($n1 + 1))
 
