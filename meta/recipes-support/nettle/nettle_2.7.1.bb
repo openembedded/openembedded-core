@@ -2,6 +2,15 @@ SUMMARY = "A low level cryptographic library"
 HOMEPAGE = "http://www.lysator.liu.se/~nisse/nettle/"
 SECTION = "libs"
 LICENSE = "LGPLv2.1 & GPLv2"
+
+LICENSE_${PN}-cast = "CC0"
+LICENSE_${PN}-gosthash = "MIT"
+
+# both public and GPL license listed
+LICENSE_${PN}-md2 = "CC0 & LGPLv2.1+"
+LICENSE_${PN}-md4 = "CC0 & LGPLv2.1+"
+
+
 LIC_FILES_CHKSUM = "file://COPYING.LIB;md5=2d5025d4aa3495befef8f17206a5b0a1 \
                     file://serpent-decrypt.c;beginline=53;endline=67;md5=bcfd4745d53ca57f82907089898e390d \
                     file://serpent-set-key.c;beginline=56;endline=70;md5=bcfd4745d53ca57f82907089898e390d"
