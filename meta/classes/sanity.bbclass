@@ -259,6 +259,11 @@ def check_not_nfs(path, name):
         return "The %s: %s can't be located on nfs.\n" % (name, path)
     return ""
 
+# Check that path isn't a broken symlink
+def check_symlink(lnk, data):
+    if os.path.islink(lnk) and not os.path.exists(lnk):
+        raise_sanity_error("%s is a broken symlink." % lnk, data)
+
 def check_connectivity(d):
     # URI's to check can be set in the CONNECTIVITY_CHECK_URIS variable
     # using the same syntax as for SRC_URI. If the variable is not set
@@ -718,6 +723,7 @@ def check_sanity_everybuild(status, d):
         status.addresult("DL_DIR is not set. Your environment is misconfigured, check that DL_DIR is set, and if the directory exists, that it is writable. \n")
     if os.path.exists(dldir) and not os.access(dldir, os.W_OK):
         status.addresult("DL_DIR: %s exists but you do not appear to have write access to it. \n" % dldir)
+    check_symlink(dldir, d)
 
     # Check that the MACHINE is valid, if it is set
     machinevalid = True
@@ -811,8 +817,17 @@ def check_sanity_everybuild(status, d):
                 bb.warn('Invalid protocol in %s: %s' % (mirror_var, mirror_entry))
                 continue
 
-            if mirror.startswith('file://') and not mirror.startswith('file:///'):
-                bb.warn('Invalid file url in %s: %s, must be absolute path (file:///)' % (mirror_var, mirror_entry))
+            if mirror.startswith('file://'):
+                if not mirror.startswith('file:///'):
+                    bb.warn('Invalid file url in %s: %s, must be absolute path (file:///)' % (mirror_var, mirror_entry))
+                import urlparse
+                check_symlink(urlparse.urlparse(mirror).path, d)
+                # SSTATE_MIRROR ends with a /PATH string
+                if mirror.endswith('/PATH'):
+                    # remove /PATH$ from SSTATE_MIRROR to get a working
+                    # base directory path
+                    mirror_base = urlparse.urlparse(mirror[:-1*len('/PATH')]).path
+                    check_symlink(mirror_base, d)
 
     # Check that TMPDIR hasn't changed location since the last time we were run
     tmpdir = d.getVar('TMPDIR', True)
@@ -859,6 +874,8 @@ def check_sanity(sanity_data):
 
     tmpdir = sanity_data.getVar('TMPDIR', True)
     sstate_dir = sanity_data.getVar('SSTATE_DIR', True)
+
+    check_symlink(sstate_dir, sanity_data)
 
     # Check saved sanity info
     last_sanity_version = 0
