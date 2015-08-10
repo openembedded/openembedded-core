@@ -24,8 +24,8 @@ SRC_URI = "ftp://ftp.openbsd.org/pub/OpenBSD/OpenSSH/portable/openssh-${PV}.tar.
 
 PAM_SRC_URI = "file://sshd"
 
-SRC_URI[md5sum] = "08f72de6751acfbd0892b5f003922701"
-SRC_URI[sha256sum] = "3ff64ce73ee124480b5bf767b9830d7d3c03bbcb6abe716b78f0192c37ce160e"
+SRC_URI[md5sum] = "0b161c44fc31fbc6b76a6f8ae639f16f"
+SRC_URI[sha256sum] = "6e074df538f357d440be6cf93dc581a21f22d39e236f217fcd8eacbb6c896cfe"
 
 inherit useradd update-rc.d update-alternatives systemd
 
