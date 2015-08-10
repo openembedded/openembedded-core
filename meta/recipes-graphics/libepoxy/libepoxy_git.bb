@@ -12,8 +12,8 @@ SRC_URI = " \
     file://0002-add-an-option-to-disable-glx-support.patch \
     file://no-need-for-python3.patch \
 "
-SRCREV="20062c25e7612cab023cdef44d3277ba1bd0b2de"
-PV = "1.2+git${SRCPV}"
+SRCREV="e2c33af5bfcfc9d168f9e776156dd47c33f428b3"
+PV = "1.3.1"
 
 S = "${WORKDIR}/git"
 
