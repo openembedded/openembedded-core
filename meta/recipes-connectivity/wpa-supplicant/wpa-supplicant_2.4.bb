@@ -24,6 +24,7 @@ SRC_URI = "http://hostap.epitest.fi/releases/wpa_supplicant-${PV}.tar.gz \
            file://wpa_supplicant.conf \
            file://wpa_supplicant.conf-sane \
            file://99_wpa_supplicant \
+           file://0001-AP-WMM-Fix-integer-underflow-in-WMM-Action-frame-par.patch \
            file://0001-P2P-Validate-SSID-element-length-before-copying-it-C.patch \
            file://0001-WPS-Fix-HTTP-chunked-transfer-encoding-parser.patch \
            file://0001-EAP-pwd-peer-Fix-payload-length-validation-for-Commi.patch \
