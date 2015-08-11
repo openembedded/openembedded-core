@@ -1343,13 +1343,10 @@ class OpkgPM(PackageManager):
         with open(rootfs_config, "w+") as config_file:
             uri_iterator = 0
             for uri in self.feed_uris.split():
-                config_file.write("src/gz url-%d %s/ipk\n" %
-                                  (uri_iterator, uri))
-
                 for arch in self.pkg_archs.split():
                     if not os.path.exists(os.path.join(self.deploy_dir, arch)):
                         continue
-                    bb.note('Note: adding opkg channel url-%s-%d (%s)' %
+                    bb.note('Note: adding opkg feed url-%s-%d (%s)' %
                         (arch, uri_iterator, uri))
 
                     config_file.write("src/gz uri-%s-%d %s/ipk/%s\n" %
