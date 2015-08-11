@@ -27,6 +27,11 @@ LDFLAGS_append_libc-uclibc_class-target = "${@['', ' -lintl '][(d.getVar('USE_NL
 EXTRA_OECONF_append_libc-uclibc_class-target = "${@['', ' --disable-gettext '][(d.getVar('USE_NLS', True) == 'no')]}"
 
 fix_symlink () {
+	if [ "${BB_CURRENTTASK}" != "populate_sysroot" -a "${BB_CURRENTTASK}" != "populate_sysroot_setscene" ]
+	then
+		return
+	fi
+
 	if test "${libdir}" = "${base_libdir}" ; then
 		return
 	fi
