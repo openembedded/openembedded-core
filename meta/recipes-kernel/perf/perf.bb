@@ -134,6 +134,7 @@ do_configure_prepend () {
     # config/Makefile.
     #
     # Also need to relocate .config-detected to $(OUTPUT)/config-detected
+    # for kernel sources that do not already do this
     # as two builds (e.g. perf and lib32-perf from mutlilib can conflict
     # with each other if its in the shared source directory
     #
@@ -141,15 +142,15 @@ do_configure_prepend () {
         # Match $(prefix)/$(lib) and $(prefix)/lib
         sed -i -e 's,^libdir = \($(prefix)/.*lib\),libdir ?= \1,' \
                -e 's,^perfexecdir = \(.*\),perfexecdir ?= \1,' \
-               -e 's,\.config-detected,$(OUTPUT)/config-detected,g' \
+               -e 's,\ .config-detected, $(OUTPUT)/config-detected,g' \
             ${S}/tools/perf/config/Makefile
     fi
     if [ -e "${S}/tools/perf/Makefile.perf" ]; then
-        sed -i -e 's,\.config-detected,$(OUTPUT)/config-detected,g' \
+        sed -i -e 's,\ .config-detected, $(OUTPUT)/config-detected,g' \
             ${S}/tools/perf/Makefile.perf
     fi
     if [ -e "${S}/tools/build/Makefile.build" ]; then
-        sed -i -e 's,\.config-detected,$(OUTPUT)/config-detected,g' \
+        sed -i -e 's,\ .config-detected, $(OUTPUT)/config-detected,g' \
             ${S}/tools/build/Makefile.build
     fi
 
