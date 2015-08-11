@@ -522,6 +522,7 @@ class PackageManager(object):
         self.deploy_dir = None
         self.deploy_lock = None
         self.feed_uris = self.d.getVar('PACKAGE_FEED_URIS', True) or ""
+        self.feed_prefix = self.d.getVar('PACKAGE_FEED_PREFIX', True) or ""
 
     """
     Update the package manager package database.
@@ -696,11 +697,14 @@ class RpmPM(PackageManager):
         channel_priority = 10 + 5 * len(self.feed_uris.split()) * len(arch_list)
 
         for uri in self.feed_uris.split():
+            full_uri = uri
+            if self.feed_prefix:
+                full_uri = os.path.join(uri, self.feed_prefix)
             for arch in arch_list:
                 bb.note('Note: adding Smart channel url%d%s (%s)' %
                         (uri_iterator, arch, channel_priority))
-                self._invoke_smart('channel --add url%d-%s type=rpm-md baseurl=%s/rpm/%s -y'
-                                   % (uri_iterator, arch, uri, arch))
+                self._invoke_smart('channel --add url%d-%s type=rpm-md baseurl=%s/%s -y'
+                                   % (uri_iterator, arch, full_uri, arch))
                 self._invoke_smart('channel --set url%d-%s priority=%d' %
                                    (uri_iterator, arch, channel_priority))
                 channel_priority -= 5
@@ -1384,14 +1388,18 @@ class OpkgPM(PackageManager):
         with open(rootfs_config, "w+") as config_file:
             uri_iterator = 0
             for uri in self.feed_uris.split():
+                full_uri = uri
+                if self.feed_prefix:
+                    full_uri = os.path.join(uri, self.feed_prefix)
+
                 for arch in self.pkg_archs.split():
                     if not os.path.exists(os.path.join(self.deploy_dir, arch)):
                         continue
                     bb.note('Note: adding opkg feed url-%s-%d (%s)' %
-                        (arch, uri_iterator, uri))
+                        (arch, uri_iterator, full_uri))
 
-                    config_file.write("src/gz uri-%s-%d %s/ipk/%s\n" %
-                                      (arch, uri_iterator, uri, arch))
+                    config_file.write("src/gz uri-%s-%d %s/%s\n" %
+                                      (arch, uri_iterator, full_uri, arch))
                 uri_iterator += 1
 
     def update(self):
@@ -1744,10 +1752,13 @@ class DpkgPM(PackageManager):
 
         with open(sources_conf, "w+") as sources_file:
             for uri in self.feed_uris.split():
+                full_uri = uri
+                if self.feed_prefix:
+                    full_uri = os.path.join(uri, self.feed_prefix)
                 for arch in arch_list:
                     bb.note('Note: adding dpkg channel at (%s)' % uri)
-                    sources_file.write("deb %s/deb/%s ./\n" %
-                                       (uri, arch))
+                    sources_file.write("deb %s/%s ./\n" %
+                                       (full_uri, arch))
 
     def _create_configs(self, archs, base_archs):
         base_archs = re.sub("_", "-", base_archs)
