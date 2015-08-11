@@ -349,8 +349,6 @@ python () {
     # PACKAGECONFIG ??= "<default options>"
     # PACKAGECONFIG[foo] = "--enable-foo,--disable-foo,foo_depends,foo_runtime_depends"
     pkgconfigflags = d.getVarFlags("PACKAGECONFIG") or {}
-    # Remove PACKAGECONFIG[doc]
-    pkgconfigflags.pop('doc', None)
     if pkgconfigflags:
         pkgconfig = (d.getVar('PACKAGECONFIG', True) or "").split()
         pn = d.getVar("PN", True)
