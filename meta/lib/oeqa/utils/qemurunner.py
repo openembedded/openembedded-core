@@ -37,6 +37,7 @@ class QemuRunner:
         self.deploy_dir_image = deploy_dir_image
         self.logfile = logfile
         self.boottime = boottime
+        self.logged = False
 
         self.runqemutime = 60
 
@@ -159,6 +160,7 @@ class QemuRunner:
                             self.log(data)
                             self.bootlog += data
                             if re.search(".* login:", self.bootlog):
+                                self.server_socket = self.qemusock
                                 stopread = True
                                 reachedlogin = True
                                 logger.info("Reached login banner")
@@ -174,6 +176,15 @@ class QemuRunner:
                 logger.info("Check full boot log: %s" % self.logfile)
                 self.stop()
                 return False
+
+            (status, output) = self.run_serial("root\n")
+            if re.search("root@[a-zA-Z0-9\-]+:~#", output):
+                self.logged = True
+                logger.info("Logged as root in serial console")
+            else:
+                logger.info("Couldn't login into serial console"
+                        " as root using blank password")
+
         else:
             logger.info("Qemu pid didn't appeared in %s seconds" % self.runqemutime)
             self.stop()
