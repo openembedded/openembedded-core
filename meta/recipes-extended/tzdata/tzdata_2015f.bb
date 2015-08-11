@@ -7,8 +7,8 @@ DEPENDS = "tzcode-native"
 
 SRC_URI = "ftp://ftp.iana.org/tz/releases/tzdata${PV}.tar.gz;name=tzdata"
 
-SRC_URI[tzdata.md5sum] = "36f9056efb432ca945c73397acfce0d4"
-SRC_URI[tzdata.sha256sum] = "ffc9b5d38abda8277aa479e3f75aa7668819d0977cd1a0c8ef3b09128334ba6f"
+SRC_URI[tzdata.md5sum] = "e3b82732d20e973e48af1c6f13df9a1d"
+SRC_URI[tzdata.sha256sum] = "959f81b541e042ecb13c50097d264ae92ff03a57979c478dbcf24d5da242531d"
 
 inherit allarch
 
