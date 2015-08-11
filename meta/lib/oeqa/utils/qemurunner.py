@@ -262,3 +262,33 @@ class QemuRunner:
             basecmd = os.path.basename(basecmd)
             if "qemu-system" in basecmd and "-serial tcp" in commands[p]:
                 return [int(p),commands[p]]
+
+    def run_serial(self, command):
+        # We assume target system have echo to get command status
+        self.server_socket.sendall("%s; echo $?\n" % command)
+        data = ''
+        status = 0
+        stopread = False
+        endtime = time.time()+5
+        while time.time()<endtime and not stopread:
+                sread, _, _ = select.select([self.server_socket],[],[],5)
+                for sock in sread:
+                        answer = sock.recv(1024)
+                        if answer:
+                                data += answer
+                        else:
+                                sock.close()
+                                stopread = True
+        if data:
+            # Remove first line (command line) and last line (prompt)
+            data = data[data.find('$?\r\n')+4:data.rfind('\r\n')]
+            index = data.rfind('\r\n')
+            if index == -1:
+                status_cmd = data
+                data = ""
+            else:
+                status_cmd = data[index+2:]
+                data = data[:index]
+            if (status_cmd == "0"):
+                status = 1
+        return (status, str(data))
