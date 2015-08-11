@@ -7,14 +7,14 @@ LABELS_append = " ${SYSLINUX_LABELS} "
 
 # need to define the dependency and the ROOTFS for directdisk
 do_bootdirectdisk[depends] += "${PN}:do_rootfs"
-ROOTFS ?= "${DEPLOY_DIR_IMAGE}/${IMAGE_BASENAME}-${MACHINE}.ext3"
+ROOTFS ?= "${DEPLOY_DIR_IMAGE}/${IMAGE_BASENAME}-${MACHINE}.ext4"
 
 # creating VM images relies on having a hddimg so ensure we inherit it here.
 inherit boot-directdisk
 
-IMAGE_TYPEDEP_vmdk = "ext3"
-IMAGE_TYPEDEP_vdi = "ext3"
-IMAGE_TYPEDEP_qcow2 = "ext3"
+IMAGE_TYPEDEP_vmdk = "ext4"
+IMAGE_TYPEDEP_vdi = "ext4"
+IMAGE_TYPEDEP_qcow2 = "ext4"
 IMAGE_TYPES_MASKED += "vmdk vdi qcow2"
 
 create_vmdk_image () {

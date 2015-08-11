@@ -76,8 +76,8 @@ class ImageDepGraph(object):
 
     def _image_base_type(self, type):
         ctypes = self.d.getVar('COMPRESSIONTYPES', True).split()
-        if type in ["vmdk", "vdi", "live", "iso", "hddimg"]:
-            type = "ext3"
+        if type in ["vmdk", "vdi", "qcow2", "live", "iso", "hddimg"]:
+            type = "ext4"
         basetype = type
         for ctype in ctypes:
             if type.endswith("." + ctype):
