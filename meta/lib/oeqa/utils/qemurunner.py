@@ -284,14 +284,18 @@ class QemuRunner:
         stopread = False
         endtime = time.time()+5
         while time.time()<endtime and not stopread:
-                sread, _, _ = select.select([self.server_socket],[],[],5)
-                for sock in sread:
-                        answer = sock.recv(1024)
-                        if answer:
-                                data += answer
-                        else:
-                                sock.close()
-                                stopread = True
+            sread, _, _ = select.select([self.server_socket],[],[],5)
+            for sock in sread:
+                answer = sock.recv(1024)
+                if answer:
+                    data += answer
+                    # Search the prompt to stop
+                    if re.search("[a-zA-Z0-9]+@[a-zA-Z0-9\-]+:~#", data):
+                        stopread = True
+                        break
+                else:
+                    sock.close()
+                    stopread = True
         if data:
             if raw:
                 status = 1
