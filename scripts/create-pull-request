@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 #
 # Copyright (c) 2010-2013,  Intel Corporation.
 # All Rights Reserved
@@ -177,14 +177,15 @@ mkdir $ODIR
 
 if [ -n "$RELDIR" ]; then
 	ODIR=$(realpath $ODIR)
-	pushd $RELDIR > /dev/null
+	pdir=$(pwd)
+	cd $RELDIR
 	extraopts="--relative"
 fi
 
 # Generate the patches and cover letter
 git format-patch $extraopts -M40 --subject-prefix="$PREFIX" -n -o $ODIR --thread=shallow --cover-letter $RELATIVE_TO..$COMMIT_ID > /dev/null
 
-[ -n "$RELDIR" ] && popd > /dev/null
+[ -n "$RELDIR" ] && cd $pdir
 
 # Customize the cover letter
 CL="$ODIR/0000-cover-letter.patch"
