@@ -25,6 +25,7 @@ SRC_URI = "\
 
 SRC_URI_append_class-native = "\
     file://fix-libcap-header-issue-on-some-distro.patch \
+    file://cpus.c-qemu_cpu_kick_thread_debugging.patch \
     "
 
 EXTRA_OECONF += "--target-list=${@get_qemu_target_list(d)} --disable-werror  --disable-bluez --disable-libiscsi --with-system-pixman --extra-cflags='${CFLAGS}'"
