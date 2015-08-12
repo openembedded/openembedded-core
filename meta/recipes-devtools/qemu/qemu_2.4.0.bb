@@ -7,13 +7,9 @@ SRC_URI += "file://configure-fix-Darwin-target-detection.patch \
             file://qemu-enlarge-env-entry-size.patch \
             file://Qemu-Arm-versatilepb-Add-memory-size-checking.patch \
            "
-SRC_URI_prepend = "http://wiki.qemu-project.org/download/${BPN}-${REALPV}.tar.bz2"
-SRC_URI[md5sum] = "0e9c00b15d383043ce888f7bf17308c9"
-SRC_URI[sha256sum] = "724bc17d29babe2b55107c76af7cd67e162857958a3bfe2f34bb9776f1f5f4b3"
-
-S="${WORKDIR}/${BPN}-${REALPV}"
-REALPV = "2.4.0-rc4"
-PV = "2.3.99+${REALPV}"
+SRC_URI_prepend = "http://wiki.qemu-project.org/download/${BP}.tar.bz2"
+SRC_URI[md5sum] = "186ee8194140a484a455f8e3c74589f4"
+SRC_URI[sha256sum] = "72b0b991bbcc540663a019e1e8c4f714053b691dda32c9b9ee80b25f367e6620"
 
 COMPATIBLE_HOST_class-target_mips64 = "null"
 
