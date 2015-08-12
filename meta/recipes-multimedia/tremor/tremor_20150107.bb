@@ -8,7 +8,7 @@ DEPENDS = "libogg"
 SRCDATE = "${PV}"
 PR = "r1"
 
-SRC_URI = "svn://svn.xiph.org/trunk;module=Tremor;rev=18221;protocol=http \
+SRC_URI = "svn://svn.xiph.org/trunk;module=Tremor;rev=19427;protocol=http \
            file://obsolete_automake_macros.patch;striplevel=0 \
            file://tremor-arm-thumb2.patch \
 "
