@@ -33,7 +33,7 @@ INHIBIT_DEFAULT_DEPS = "1"
 
 PR = "r11"
 
-ADT_DEPLOY = "${TMPDIR}/deploy/sdk/"
+ADT_DEPLOY = "${DEPLOY_DIR}/sdk/"
 ADT_DIR = "${WORKDIR}/adt-installer/"
 S = "${WORKDIR}/opkg-${PV}"
 
