@@ -122,21 +122,18 @@ class oeRuntimeTest(oeTest):
         # If a test fails or there is an exception
         if (self._resultForDoCleanups.failures or
                 self._resultForDoCleanups.errors):
-            commands = ["top -bn1", "ps", "free", "df", "_ping", "dmesg", "netstat -a", "ifconfig -a", "_logs"]
-            dump_dir = "/tmp/oe-saved-tests"
-            dump_dir = os.path.join(dump_dir,
-                    datetime.datetime.now().strftime('%Y%m%d%H%M'))
-            os.makedirs(dump_dir)
-            bb.warn("Test failed, getting data from target "
-                    "and saving it in %s" % dump_dir)
-            output = self.run_bulk_commands(commands)
-            for key,msg in output.iteritems():
-                filename = key.split()[0]
-                with open(os.path.join(dump_dir, filename), 'w') as f:
-                    f.write(msg)
+            self.dump_target_logs()
 
-    def run_bulk_commands(self, commands):
-        all_output = {}
+    def dump_target_logs(self):
+        commands = ["top -bn1", "ps", "free", "df", "_ping", "dmesg", "netstat -a", "ifconfig -a", "_logs"]
+        dump_dir = "/tmp/oe-saved-tests"
+        dump_sub_dir = ("%s_%s" % (
+                datetime.datetime.now().strftime('%Y%m%d%H%M'),
+                self._testMethodName))
+        dump_dir = os.path.join(dump_dir, dump_sub_dir)
+        os.makedirs(dump_dir)
+        bb.warn("%s failed: getting data from target and "
+                "saving into %s" % (self._testMethodName, dump_dir))
         for command in commands:
             # This will ping the host from target
             if command == "_ping":
@@ -151,8 +148,9 @@ class oeRuntimeTest(oeTest):
             else:
                 comm = command 
             (status, output) = self.target.run_serial(comm)
-            all_output[command] = output
-        return all_output
+            filename = command.split()[0]
+            with open(os.path.join(dump_dir, filename), 'w') as f:
+                f.write(output)
 
     #TODO: use package_manager.py to install packages on any type of image
     def install_packages(self, packagelist):
