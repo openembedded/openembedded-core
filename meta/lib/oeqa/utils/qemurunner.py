@@ -177,7 +177,7 @@ class QemuRunner:
                 self.stop()
                 return False
 
-            (status, output) = self.run_serial("root\n")
+            (status, output) = self.run_serial("root\n", raw=True)
             if re.search("root@[a-zA-Z0-9\-]+:~#", output):
                 self.logged = True
                 logger.info("Logged as root in serial console")
@@ -274,9 +274,11 @@ class QemuRunner:
             if "qemu-system" in basecmd and "-serial tcp" in commands[p]:
                 return [int(p),commands[p]]
 
-    def run_serial(self, command):
+    def run_serial(self, command, raw=False):
         # We assume target system have echo to get command status
-        self.server_socket.sendall("%s; echo $?\n" % command)
+        if not raw:
+            command = "%s; echo $?\n" % command
+        self.server_socket.sendall(command)
         data = ''
         status = 0
         stopread = False
@@ -291,15 +293,18 @@ class QemuRunner:
                                 sock.close()
                                 stopread = True
         if data:
-            # Remove first line (command line) and last line (prompt)
-            data = data[data.find('$?\r\n')+4:data.rfind('\r\n')]
-            index = data.rfind('\r\n')
-            if index == -1:
-                status_cmd = data
-                data = ""
-            else:
-                status_cmd = data[index+2:]
-                data = data[:index]
-            if (status_cmd == "0"):
+            if raw:
                 status = 1
+            else:
+                # Remove first line (command line) and last line (prompt)
+                data = data[data.find('$?\r\n')+4:data.rfind('\r\n')]
+                index = data.rfind('\r\n')
+                if index == -1:
+                    status_cmd = data
+                    data = ""
+                else:
+                    status_cmd = data[index+2:]
+                    data = data[:index]
+                if (status_cmd == "0"):
+                    status = 1
         return (status, str(data))
