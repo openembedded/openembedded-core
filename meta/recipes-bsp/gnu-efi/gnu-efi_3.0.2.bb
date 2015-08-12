@@ -39,3 +39,5 @@ do_install() {
 }
 
 FILES_${PN} += "${libdir}/*.lds"
+
+BBCLASSEXTEND = "native"
