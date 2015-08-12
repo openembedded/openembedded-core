@@ -11,6 +11,7 @@ import os, re, mmap
 import unittest
 import inspect
 import subprocess
+import datetime
 import bb
 from oeqa.utils.decorators import LogResults
 
@@ -116,6 +117,42 @@ class oeRuntimeTest(oeTest):
     def __init__(self, methodName='runTest'):
         self.target = oeRuntimeTest.tc.target
         super(oeRuntimeTest, self).__init__(methodName)
+
+    def tearDown(self):
+        # If a test fails or there is an exception
+        if (self._resultForDoCleanups.failures or
+                self._resultForDoCleanups.errors):
+            commands = ["top -bn1", "ps", "free", "df", "_ping", "dmesg", "netstat -a", "ifconfig -a", "_logs"]
+            dump_dir = "/tmp/oe-saved-tests"
+            dump_dir = os.path.join(dump_dir,
+                    datetime.datetime.now().strftime('%Y%m%d%H%M'))
+            os.makedirs(dump_dir)
+            bb.warn("Test failed, getting data from target "
+                    "and saving it in %s" % dump_dir)
+            output = self.run_bulk_commands(commands)
+            for key,msg in output.iteritems():
+                filename = key.split()[0]
+                with open(os.path.join(dump_dir, filename), 'w') as f:
+                    f.write(msg)
+
+    def run_bulk_commands(self, commands):
+        all_output = {}
+        for command in commands:
+            # This will ping the host from target
+            if command == "_ping":
+                 comm = "ping -c3 %s" % self.target.server_ip
+            # This will get all the logs from /var/log/
+            elif command == "_logs":
+                comm = 'find /var/log/ -type f 2>/dev/null '
+                comm = '%s-exec echo "%s" \\; ' % (comm, '='*20)
+                comm = '%s-exec echo {} \\; ' % comm
+                comm = '%s-exec echo "%s" \\; ' % (comm, '='*20)
+                comm = '%s-exec cat {} \\; -exec echo "" \\;' % comm
+            else:
+                comm = command 
+            (status, output) = self.target.run_serial(comm)
+            all_output[command] = output
+        return all_output
 
     #TODO: use package_manager.py to install packages on any type of image
     def install_packages(self, packagelist):
