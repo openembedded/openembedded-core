@@ -12,7 +12,9 @@ SECTION = "devel"
 
 COMPATIBLE_HOST = "powerpc64"
 
-SRC_URI = "http://downloads.sourceforge.net/project/perfmon2/${BPN}/libpfm-${PV}.tar.gz"
+SRC_URI = "http://downloads.sourceforge.net/project/perfmon2/${BPN}/libpfm-${PV}.tar.gz \
+           file://0001-Makefile-Add-LDFLAGS-variable-to-SLDFLAGS.patch \
+          "
 
 SRC_URI[md5sum] = "5077b9022440e4951d96f2d0e73bd487"
 SRC_URI[sha256sum] = "5ab1e5b0472550f9037a8800834f6bc3b927690070f69fac0b67284b4b05fd5f"
