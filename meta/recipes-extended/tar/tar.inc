@@ -16,16 +16,12 @@ EXTRA_OECONF += "DEFAULT_RMT_DIR=${base_sbindir}"
 # directory.
 acpaths = "-I ./m4"
 
-EXTRAINSTALL = "do_install_extra"
-EXTRAINSTALL_class-nativesdk = ""
-
 do_install () {
     autotools_do_install
     ln -s tar ${D}${bindir}/gtar
-    ${EXTRAINSTALL}
 }
 
-do_install_extra () {
+do_install_append_class-target() {
     install -d ${D}${base_bindir}
     mv ${D}${bindir}/tar ${D}${base_bindir}/tar
     mv ${D}${bindir}/gtar ${D}${base_bindir}/gtar
@@ -48,4 +44,7 @@ ALTERNATIVE_${PN}-rmt_class-nativesdk = ""
 ALTERNATIVE_LINK_NAME[tar] = "${base_bindir}/tar"
 ALTERNATIVE_LINK_NAME[rmt] = "${base_sbindir}/rmt"
 
-BBCLASSEXTEND = "nativesdk"
+PROVIDES_append_class-native = " tar-replacement-native"
+NATIVE_PACKAGE_PATH_SUFFIX = "/${PN}"
+
+BBCLASSEXTEND = "native nativesdk"
