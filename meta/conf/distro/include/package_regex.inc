@@ -25,9 +25,6 @@ COMMON_REGEX = "(?P<pver>(\d+[\.\-_]*)+)"
 REGEX_URI_pn-wireless-tools = "http://www.hpl.hp.com/personal/Jean_Tourrilhes/Linux/Tools.html"
 REGEX_pn-wireless-tools = "wireless_tools\.(?P<pver>(\d+)(\..*|))\.tar\.gz"
 
-REGEX_URI_pn-midori="http://midori-browser.org/download/source/"
-REGEX_pn-midori="midori_(?P<pver>((\d+[\.\-_]*)+))_all_\.tar\.bz2"
-
 REGEX_URI_pn-sqlite3="http://www.sqlite.org/"
 REGEX_pn-sqlite3="releaselog/${COMMON_REGEX}.html"
 
@@ -97,6 +94,7 @@ REGEX_URI_pn-python-smartpm="https://launchpad.net/smart/trunk/"
 REGEX_URI_pn-lsof = "ftp://sunsite.ualberta.ca/pub/Mirror/lsof/"
 REGEX_URI_pn-pbzip2 = "http://compression.ca/pbzip2/"
 REGEX_URI_pn-quicky = "http://qt-apps.org/content/download.php?content=80325&id=1&tan=10417482"
+REGEX_URI_pn-libwebp = "http://downloads.webmproject.org/releases/webp/index.html"
 
 # The engine tries to use directory versioning but is a false-positive
 REGEX_URI_pn-intltool = "https://launchpad.net/intltool/trunk/"
@@ -237,6 +235,10 @@ REGEX_pn-clutter-gst-3.0 = "${GNOME_STABLE}"
 REGEX_pn-cogl-1.0 = "${GNOME_STABLE}"
 REGEX_pn-adwaita-icon-theme = "${GNOME_STABLE}"
 REGEX_pn-vte = "${GNOME_STABLE}"
+REGEX_pn-epiphany = "${GNOME_STABLE}"
+REGEX_pn-webkitgtk = "${GNOME_STABLE}"
+REGEX_pn-p11-kit = "${GNOME_STABLE}"
+REGEX_pn-gnome-desktop3 = "${GNOME_STABLE}"
 
 # not GNOME related but uses same even-minor-release-is-stable logic
 REGEX_pn-dbus = "${GNOME_STABLE}"
