@@ -104,7 +104,17 @@ rootprefix ?= "${base_prefix}"
 rootlibdir ?= "${base_libdir}"
 rootlibexecdir = "${rootprefix}/lib"
 
-# The gtk+ tools should get built as a separate recipe e.g. systemd-tools
+CACHED_CONFIGUREVARS_class-target = "\
+                         ac_cv_path_MOUNT_PATH=${base_bindir}/mount \
+                         ac_cv_path_UMOUNT_PATH=${base_bindir}/umount \
+                         ac_cv_path_KMOD=${base_bindir}/kmod \
+                         ac_cv_path_KILL=${base_bindir}/kill \
+                         ac_cv_path_SULOGIN=${base_sbindir}/sulogin \
+                         ac_cv_path_KEXEC=${sbindir}/kexec \
+                         ac_cv_path_QUOTACHECK=${sbindir}/quotacheck \
+                         ac_cv_path_QUOTAON=${sbindir}/quotaon \
+			 "
+
 EXTRA_OECONF = " --with-rootprefix=${rootprefix} \
                  --with-rootlibdir=${rootlibdir} \
                  --with-roothomedir=${ROOT_HOME} \
