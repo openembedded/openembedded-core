@@ -13,17 +13,16 @@ DESCRIPTION = "Text files are nowadays usually encoded in Unicode, and may\
 
 HOMEPAGE = "http://www.gnu.org/software/libunistring/"
 SECTION = "devel"
-LICENSE = "GPLv3&LGPLv3"
+LICENSE = "GPLv3 & LGPLv3"
 LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504 \
-                    file://COPYING.LIB;md5=6a6a8e020838b23406c81b19c1d46df6" 
+                    file://COPYING.LIB;md5=6a6a8e020838b23406c81b19c1d46df6"
 
 SRC_URI = "${GNU_MIRROR}/libunistring/libunistring-${PV}.tar.gz \
            file://iconv-m4-remove-the-test-to-convert-euc-jp.patch \
            file://0001-Unset-need_charset_alias-when-building-for-musl.patch \
 "
-
-SRC_URI[md5sum] = "c24a6a3838d9ad4a41a62549312c4226"
-SRC_URI[sha256sum] = "f5246d63286a42902dc096d6d44541fbe4204b6c02d6d5d28b457c9882ddd8a6"
+SRC_URI[md5sum] = "1a705bcdcb83799d544137617b377cfd"
+SRC_URI[sha256sum] = "1a8c0772467850bef7197318a95f44abbb678ea83cbf119a3500cc7848276a17"
 
 inherit autotools texinfo
 BBCLASSEXTEND = "native nativesdk"
