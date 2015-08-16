@@ -294,6 +294,8 @@ def _extract_source(srctree, keep_temp, devbranch, d):
 
         task_executor = BbTaskExecutor(crd)
 
+        crd.setVar('EXTERNALSRC_forcevariable', '')
+
         logger.info('Fetching %s...' % pn)
         task_executor.exec_func('do_fetch', False)
         logger.info('Unpacking...')
