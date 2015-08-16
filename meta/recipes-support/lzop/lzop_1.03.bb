@@ -13,7 +13,9 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=dfeaf3dc4beef4f5a7bdbc35b197f39e \
 
 SRC_URI = "http://www.lzop.org/download/${BP}.tar.gz \
            file://acinclude.m4 \
-           file://x32_abi_miniacc_h.patch "
+           file://x32_abi_miniacc_h.patch \
+           file://0001-use-static-inlines-as-the-external-inline-definition.patch \
+          "
 SRC_URI[md5sum] = "006c5e27fb78cdd14a628fdfa5aa1905"
 SRC_URI[sha256sum] = "c1425b8c77d49f5a679d5a126c90ea6ad99585a55e335a613cae59e909dbb2c9"
 
