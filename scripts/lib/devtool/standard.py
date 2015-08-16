@@ -301,7 +301,6 @@ def _extract_source(srctree, keep_temp, devbranch, d):
         logger.info('Unpacking...')
         task_executor.exec_func('do_unpack', False)
         srcsubdir = crd.getVar('S', True)
-        patchsubdir = srcsubdir
         if srcsubdir == workdir:
             # Find non-patch sources that were "unpacked" to srctree directory
             recipe_patches = [os.path.basename(patch) for patch in
@@ -322,7 +321,7 @@ def _extract_source(srctree, keep_temp, devbranch, d):
 
         scriptutils.git_convert_standalone_clone(srcsubdir)
 
-        patchdir = os.path.join(patchsubdir, 'patches')
+        patchdir = os.path.join(srcsubdir, 'patches')
         haspatches = False
         if os.path.exists(patchdir):
             if os.listdir(patchdir):
