@@ -630,7 +630,7 @@ def _update_recipe_srcrev(args, srctree, rd, config_data):
                 rd, args.append, None, wildcardver=args.wildcard_version,
                 extralines=patchfields)
     else:
-        oe.recipeutils.patch_recipe(config_data, recipefile, patchfields)
+        oe.recipeutils.patch_recipe(rd, recipefile, patchfields)
 
     if not 'git://' in orig_src_uri:
         logger.info('You will need to update SRC_URI within the recipe to '
@@ -742,7 +742,7 @@ def _update_recipe_patch(args, config, srctree, rd, config_data):
                     updaterecipe = True
             if updaterecipe:
                 logger.info('Updating recipe %s' % os.path.basename(recipefile))
-                oe.recipeutils.patch_recipe(config_data, recipefile,
+                oe.recipeutils.patch_recipe(rd, recipefile,
                                             {'SRC_URI': ' '.join(srcuri)})
             elif not updatepatches:
                 # Neither patches nor recipe were updated

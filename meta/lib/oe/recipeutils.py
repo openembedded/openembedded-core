@@ -79,10 +79,9 @@ def get_var_files(fn, varlist, d):
     """Find the file in which each of a list of variables is set.
     Note: requires variable history to be enabled when parsing.
     """
-    envdata = parse_recipe(fn, [], d)
     varfiles = {}
     for v in varlist:
-        history = envdata.varhistory.variable(v)
+        history = d.varhistory.variable(v)
         files = []
         for event in history:
             if 'file' in event and not 'flag' in event:
