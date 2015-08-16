@@ -11,7 +11,7 @@ DESCRIPTION = "Guile is the GNU Ubiquitous Intelligent Language for Extensions,\
 HOMEPAGE = "http://www.gnu.org/software/guile/"
 SECTION = "devel"
 LICENSE = "GPLv3"
-LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504" 
+LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 
 SRC_URI = "${GNU_MIRROR}/guile/guile-${PV}.tar.xz \
            file://debian/0002-Mark-Unused-modules-are-removed-gc-test-as-unresolve.patch \
@@ -26,7 +26,7 @@ SRC_URI = "${GNU_MIRROR}/guile/guile-${PV}.tar.xz \
            "
 
 #           file://debian/0001-Change-guile-to-guile-X.Y-for-info-pages.patch
-#           file://opensuse/guile-turn-off-gc-test.patch 
+#           file://opensuse/guile-turn-off-gc-test.patch
 
 SRC_URI[md5sum] = "03f1bce1a4983076d955003472306a13"
 SRC_URI[sha256sum] = "aed0a4a6db4e310cbdfeb3613fa6f86fddc91ef624c1e3f8937a6304c69103e2"
@@ -42,6 +42,10 @@ DEPENDS_append_class-target = " guile-native libatomics-ops"
 RDEPENDS_${PN}_append_libc-glibc_class-target = "glibc-gconv-iso8859-1"
 
 EXTRA_OECONF += "${@['--without-libltdl-prefix --without-libgmp-prefix --without-libreadline-prefix', ''][bb.data.inherits_class('native',d)]}"
+
+EXTRA_OECONF_append_class-target = " --with-libunistring-prefix=${STAGING_LIBDIR} \
+                                     --with-libgmp-prefix=${STAGING_LIBDIR} \
+                                     --with-libltdl-prefix=${STAGING_LIBDIR}"
 
 do_configure_prepend() {
 	mkdir -p po
