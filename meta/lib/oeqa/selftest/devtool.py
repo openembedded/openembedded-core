@@ -367,6 +367,36 @@ class DevtoolTests(DevtoolBase):
             self.assertNotEqual(result.status, 0, 'devtool modify on %s should have failed. devtool output: %s' %  (testrecipe, result.output))
             self.assertIn('ERROR: ', result.output, 'devtool modify on %s should have given an ERROR' % testrecipe)
 
+    def test_devtool_modify_native(self):
+        # Check preconditions
+        workspacedir = os.path.join(self.builddir, 'workspace')
+        self.assertTrue(not os.path.exists(workspacedir), 'This test cannot be run with a workspace directory under the build directory')
+        # Try modifying some recipes
+        tempdir = tempfile.mkdtemp(prefix='devtoolqa')
+        self.track_for_cleanup(tempdir)
+        self.track_for_cleanup(workspacedir)
+        self.add_command_to_tearDown('bitbake-layers remove-layer */workspace')
+
+        bbclassextended = False
+        inheritnative = False
+        testrecipes = 'mtools-native apt-native desktop-file-utils-native'.split()
+        for testrecipe in testrecipes:
+            checkextend = 'native' in (get_bb_var('BBCLASSEXTEND', testrecipe) or '').split()
+            if not bbclassextended:
+                bbclassextended = checkextend
+            if not inheritnative:
+                inheritnative = not checkextend
+            result = runCmd('devtool modify %s -x %s' % (testrecipe, os.path.join(tempdir, testrecipe)))
+            self.assertNotIn('ERROR: ', result.output, 'ERROR in devtool modify output: %s' % result.output)
+            result = runCmd('devtool build %s' % testrecipe)
+            self.assertNotIn('ERROR: ', result.output, 'ERROR in devtool build output: %s' % result.output)
+            result = runCmd('devtool reset %s' % testrecipe)
+            self.assertNotIn('ERROR: ', result.output, 'ERROR in devtool reset output: %s' % result.output)
+
+        self.assertTrue(bbclassextended, 'None of these recipes are BBCLASSEXTENDed to native - need to adjust testrecipes list: %s' % ', '.join(testrecipes))
+        self.assertTrue(inheritnative, 'None of these recipes do "inherit native" - need to adjust testrecipes list: %s' % ', '.join(testrecipes))
+
+
     @testcase(1165)
     def test_devtool_modify_git(self):
         # Check preconditions

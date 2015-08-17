@@ -104,15 +104,15 @@ def read_workspace():
         _enable_workspace_layer(config.workspace_path, config, basepath)
 
     logger.debug('Reading workspace in %s' % config.workspace_path)
-    externalsrc_re = re.compile(r'^EXTERNALSRC(_pn-[^ =]+)? =.*$')
+    externalsrc_re = re.compile(r'^EXTERNALSRC(_pn-([^ =]+))? *= *"([^"]*)"$')
     for fn in glob.glob(os.path.join(config.workspace_path, 'appends', '*.bbappend')):
-        pn = os.path.splitext(os.path.basename(fn))[0].split('_')[0]
         with open(fn, 'r') as f:
             for line in f:
-                if externalsrc_re.match(line.rstrip()):
-                    splitval = line.split('=', 2)
-                    workspace[pn] = splitval[1].strip('" \n\r\t')
-                    break
+                res = externalsrc_re.match(line.rstrip())
+                if res:
+                    pn = res.group(2) or os.path.splitext(os.path.basename(fn))[0].split('_')[0]
+                    workspace[pn] = {'srctree': res.group(3),
+                                     'bbappend': fn}
 
 def create_workspace(args, config, basepath, workspace):
     if args.layerpath:

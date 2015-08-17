@@ -430,6 +430,16 @@ def modify(args, config, basepath, workspace):
     if not rd:
         return 1
     recipefile = rd.getVar('FILE', True)
+    appendname = os.path.splitext(os.path.basename(recipefile))[0]
+    if args.wildcard:
+        appendname = re.sub(r'_.*', '_%', appendname)
+    appendpath = os.path.join(config.workspace_path, 'appends')
+    appendfile = os.path.join(appendpath, appendname + '.bbappend')
+    if os.path.exists(appendfile):
+        raise DevtoolError("Another variant of recipe %s is already in your "
+                           "workspace (only one variant of a recipe can "
+                           "currently be worked on at once)"
+                           % args.recipename)
 
     _check_compatible_recipe(args.recipename, rd)
 
@@ -467,14 +477,8 @@ def modify(args, config, basepath, workspace):
         srcsubdir = os.path.relpath(s, workdir).split(os.sep, 1)[1]
         srctree = os.path.join(srctree, srcsubdir)
 
-    appendpath = os.path.join(config.workspace_path, 'appends')
     if not os.path.exists(appendpath):
         os.makedirs(appendpath)
-
-    appendname = os.path.splitext(os.path.basename(recipefile))[0]
-    if args.wildcard:
-        appendname = re.sub(r'_.*', '_%', appendname)
-    appendfile = os.path.join(appendpath, appendname + '.bbappend')
     with open(appendfile, 'w') as f:
         f.write('FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"\n\n')
         f.write('inherit externalsrc\n')
@@ -777,7 +781,7 @@ def update_recipe(args, config, basepath, workspace):
     else:
         mode = args.mode
 
-    srctree = workspace[args.recipename]
+    srctree = workspace[args.recipename]['srctree']
 
     if mode == 'srcrev':
         _update_recipe_srcrev(args, srctree, rd, tinfoil.config_data)
@@ -793,7 +797,7 @@ def status(args, config, basepath, workspace):
     """Entry point for the devtool 'status' subcommand"""
     if workspace:
         for recipe, value in workspace.iteritems():
-            print("%s: %s" % (recipe, value))
+            print("%s: %s" % (recipe, value['srctree']))
     else:
         logger.info('No recipes currently in your workspace - you can use "devtool modify" to work on an existing recipe or "devtool add" to add a new one')
     return 0
