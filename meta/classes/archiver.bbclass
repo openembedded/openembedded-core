@@ -45,6 +45,8 @@ ARCHIVER_WORKDIR = "${WORKDIR}/archiver-work/"
 do_dumpdata[dirs] = "${ARCHIVER_OUTDIR}"
 do_ar_recipe[dirs] = "${ARCHIVER_OUTDIR}"
 do_ar_original[dirs] = "${ARCHIVER_OUTDIR} ${ARCHIVER_WORKDIR}"
+do_deploy_archives[dirs] = "${WORKDIR}"
+do_deploy_all_archives[dirs] = "${WORKDIR}"
 
 # This is a convenience for the shell script to use it
 
