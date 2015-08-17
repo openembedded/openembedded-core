@@ -11,6 +11,7 @@
 #  -Check if packages contains .debug directories or .so files
 #   where they should be in -dev or -dbg
 #  -Check if config.log contains traces to broken autoconf tests
+#  -Check invalid characters (non-utf8) on some package metadata
 #  -Ensure that binaries in base_[bindir|sbindir|libdir] do not link
 #   into exec_prefix
 #  -Check that scripts in base_[bindir|sbindir|libdir] do not reference
@@ -36,7 +37,7 @@ WARN_QA ?= "ldflags useless-rpaths rpaths staticdev libdir xorg-driver-abi \
 ERROR_QA ?= "dev-so debug-deps dev-deps debug-files arch pkgconfig la \
             perms dep-cmp pkgvarcheck perm-config perm-line perm-link \
             split-strip packages-list pkgv-undefined var-undefined \
-            version-going-backwards expanded-d \
+            version-going-backwards expanded-d invalid-chars \
             "
 
 ALL_QA = "${WARN_QA} ${ERROR_QA}"
@@ -947,6 +948,24 @@ def package_qa_check_expanded_d(path,name,d,elf,messages):
                         sane = False
     return sane
 
+def package_qa_check_encoding(keys, encode, d):
+    def check_encoding(key,enc):
+        sane = True
+        value = d.getVar(key, True)
+        if value:
+            try:
+                s = unicode(value, enc)
+            except UnicodeDecodeError as e:
+                error_msg = "%s has non %s characters" % (key,enc)
+                sane = False
+                package_qa_handle_error("invalid-chars", error_msg, d)
+        return sane
+
+    for key in keys:
+        sane = check_encoding(key, encode)
+        if not sane:
+            break
+
 # The PACKAGE FUNC to scan each package
 python do_package_qa () {
     import subprocess
@@ -955,6 +974,9 @@ python do_package_qa () {
     bb.note("DO PACKAGE QA")
 
     bb.build.exec_func("read_subpackage_metadata", d)
+
+    # Check non UTF-8 characters on recipe's metadata
+    package_qa_check_encoding(['DESCRIPTION', 'SUMMARY', 'LICENSE', 'SECTION'], 'utf-8', d)
 
     logdir = d.getVar('T', True)
     pkg = d.getVar('PN', True)
