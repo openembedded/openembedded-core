@@ -57,7 +57,7 @@ RRECOMMENDS_${PN} += "${TCLIBC}-dbg"
 RDEPENDS_${PN}-ptest += " sed perl glibc-utils perl-module-file-glob"
 
 do_compile_ptest() {
-    oe_runmake check
+    oe_runmake check CFLAGS="${CFLAGS} -O0" CXXFLAGS="${CXXFLAGS} -O0"
 }
 
 
