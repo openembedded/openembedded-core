@@ -1,7 +1,7 @@
-From 32eaf738faafad2b16e1f3f5beb91736b3c27a3b Mon Sep 17 00:00:00 2001
+From b40c129ed2d53b69463883a5422dd4a012a398f9 Mon Sep 17 00:00:00 2001
 From: Junling Zheng <zhengjunling@huawei.com>
 Date: Fri, 3 Apr 2015 05:02:27 +0000
-Subject: [PATCH] ldso: limited support for $ORIGIN in rpath
+Subject: [PATCH 6/7] ldso: limited support for $ORIGIN in rpath
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -26,7 +26,10 @@ Upstream-Status: Submitted
 
 Signed-off-by: Timo Teräs <timo.teras at iki.fi>
 Signed-off-by: Junling Zheng <zhengjunling@huawei.com>
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
 ---
+Upstream-Status: Pending
+
  ldso/include/dl-string.h |  2 ++
  ldso/ldso/dl-elf.c       | 79 +++++++++++++++++++++++++-----------------------
  ldso/ldso/ldso.c         | 18 +++++++++--
@@ -47,7 +50,7 @@ index aacad10..14ae617 100644
  # define _dl_memcmp memcmp
  # define _dl_memset memset
 diff --git a/ldso/ldso/dl-elf.c b/ldso/ldso/dl-elf.c
-index 1b06bc1..b323c90 100644
+index 5631905..6ab7afe 100644
 --- a/ldso/ldso/dl-elf.c
 +++ b/ldso/ldso/dl-elf.c
 @@ -133,56 +133,60 @@ _dl_protect_relro (struct elf_resolve *l)
@@ -190,7 +193,7 @@ index 1b06bc1..b323c90 100644
  		return tpnt1;
  
 diff --git a/ldso/ldso/ldso.c b/ldso/ldso/ldso.c
-index 5619629..73bcc41 100644
+index f38f9e3..3812908 100644
 --- a/ldso/ldso/ldso.c
 +++ b/ldso/ldso/ldso.c
 @@ -402,6 +402,20 @@ static ptrdiff_t _dl_build_local_scope (struct elf_resolve **list,
@@ -226,5 +229,5 @@ index 5619629..73bcc41 100644
  #ifdef __DSBT__
  	_dl_ldso_dsbt = (void *)tpnt->dynamic_info[DT_DSBT_BASE_IDX];
 -- 
-1.8.3.4
+2.1.4
 
