@@ -96,9 +96,8 @@ python do_package_deb () {
         bb.utils.mkdirhier(controldir)
         os.chmod(controldir, 0755)
         try:
-            ctrlfile = open(os.path.join(controldir, 'control'), 'w')
-            # import codecs
-            # ctrlfile = codecs.open("someFile", "w", "utf-8")
+            import codecs
+            ctrlfile = codecs.open(os.path.join(controldir, 'control'), 'w', 'utf-8')
         except OSError:
             bb.utils.unlockfile(lf)
             raise bb.build.FuncFailed("unable to open control file for writing.")
@@ -149,7 +148,7 @@ python do_package_deb () {
                 # Special behavior for description...
                 if 'DESCRIPTION' in fs:
                      summary = localdata.getVar('SUMMARY', True) or localdata.getVar('DESCRIPTION', True) or "."
-                     ctrlfile.write('Description: %s\n' % unicode(summary))
+                     ctrlfile.write('Description: %s\n' % unicode(summary,'utf-8'))
                      description = localdata.getVar('DESCRIPTION', True) or "."
                      description = textwrap.dedent(description).strip()
                      if '\\n' in description:
@@ -158,19 +157,24 @@ python do_package_deb () {
                              # We don't limit the width when manually indent, but we do
                              # need the textwrap.fill() to set the initial_indent and
                              # subsequent_indent, so set a large width
-                             ctrlfile.write('%s\n' % unicode(textwrap.fill(t, width=100000, initial_indent=' ', subsequent_indent=' ')))
+                             ctrlfile.write('%s\n' % unicode(textwrap.fill(t, width=100000, initial_indent=' ', subsequent_indent=' '),'utf-8'))
                      else:
                          # Auto indent
-                         ctrlfile.write('%s\n' % unicode(textwrap.fill(description.strip(), width=74, initial_indent=' ', subsequent_indent=' ')))
+                         ctrlfile.write('%s\n' % unicode(textwrap.fill(description.strip(), width=74, initial_indent=' ', subsequent_indent=' '),'utf-8'))
 
                 else:
-                     ctrlfile.write(unicode(c % tuple(pullData(fs, localdata))))
+                     ctrlfile.write(unicode(c % tuple(pullData(fs, localdata)),'utf-8'))
         except KeyError:
             import sys
             (type, value, traceback) = sys.exc_info()
             bb.utils.unlockfile(lf)
             ctrlfile.close()
             raise bb.build.FuncFailed("Missing field for deb generation: %s" % value)
+        except UnicodeDecodeError:
+            bb.utils.unlockfile(lf)
+            ctrlfile.close()
+            raise bb.build.FuncFailed("Non UTF-8 characters found in one of the fields")
+
         # more fields
 
         custom_fields_chunk = get_package_additional_metadata("deb", localdata)
