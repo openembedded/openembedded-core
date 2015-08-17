@@ -4,11 +4,11 @@ DESCRIPTION = "LZ4 is a very fast lossless compression algorithm, providing comp
 LICENSE = "BSD"
 LIC_FILES_CHKSUM = "file://lib/LICENSE;md5=0b0d063f37a4477b54af2459477dcafd"
 
-SRCREV = "5780864c0ce08622238a267c46fb489d7066cad4"
+SRCREV = "d86dc916771c126afb797637dda9f6421c0cb998"
 
-PV = "128+git${SRCPV}"
+PV = "131+git${SRCPV}"
 
-SRC_URI = "git://github.com/Cyan4973/lz4.git;protocol=http"
+SRC_URI = "git://github.com/Cyan4973/lz4.git"
 
 S = "${WORKDIR}/git"
 
