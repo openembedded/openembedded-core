@@ -43,9 +43,6 @@ class QemuRunner:
 
     def create_socket(self):
 
-        self.bootlog = ''
-        self.qemusock = None
-
         try:
             self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             self.server_socket.setblocking(0)
@@ -145,22 +142,24 @@ class QemuRunner:
             socklist = [self.server_socket]
             reachedlogin = False
             stopread = False
+            qemusock = None
+            bootlog = ''
             while time.time() < endtime and not stopread:
                 sread, swrite, serror = select.select(socklist, [], [], 5)
                 for sock in sread:
                     if sock is self.server_socket:
-                        self.qemusock, addr = self.server_socket.accept()
-                        self.qemusock.setblocking(0)
-                        socklist.append(self.qemusock)
+                        qemusock, addr = self.server_socket.accept()
+                        qemusock.setblocking(0)
+                        socklist.append(qemusock)
                         socklist.remove(self.server_socket)
                         logger.info("Connection from %s:%s" % addr)
                     else:
                         data = sock.recv(1024)
                         if data:
                             self.log(data)
-                            self.bootlog += data
-                            if re.search(".* login:", self.bootlog):
-                                self.server_socket = self.qemusock
+                            bootlog += data
+                            if re.search(".* login:", bootlog):
+                                self.server_socket = qemusock
                                 stopread = True
                                 reachedlogin = True
                                 logger.info("Reached login banner")
@@ -171,7 +170,7 @@ class QemuRunner:
 
             if not reachedlogin:
                 logger.info("Target didn't reached login boot in %d seconds" % self.boottime)
-                lines = "\n".join(self.bootlog.splitlines()[-25:])
+                lines = "\n".join(bootlog.splitlines()[-25:])
                 logger.info("Last 25 lines of text:\n%s" % lines)
                 logger.info("Check full boot log: %s" % self.logfile)
                 self.stop()
