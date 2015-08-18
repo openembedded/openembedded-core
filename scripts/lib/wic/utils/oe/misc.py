@@ -46,13 +46,13 @@ NATIVE_RECIPES = {"mcopy": "mtools",
                   "syslinux": "syslinux"
                  }
 
-def __exec_cmd(cmd_and_args, as_shell=False, catch=3):
+def _exec_cmd(cmd_and_args, as_shell=False, catch=3):
     """
     Execute command, catching stderr, stdout
 
     Need to execute as_shell if the command uses wildcards
     """
-    msger.debug("__exec_cmd: %s" % cmd_and_args)
+    msger.debug("_exec_cmd: %s" % cmd_and_args)
     args = cmd_and_args.split()
     msger.debug(args)
 
@@ -61,7 +61,7 @@ def __exec_cmd(cmd_and_args, as_shell=False, catch=3):
     else:
         ret, out = runner.runtool(args, catch)
     out = out.strip()
-    msger.debug("__exec_cmd: output for %s (rc = %d): %s" % \
+    msger.debug("_exec_cmd: output for %s (rc = %d): %s" % \
                 (cmd_and_args, ret, out))
 
     return (ret, out)
@@ -73,7 +73,7 @@ def exec_cmd(cmd_and_args, as_shell=False, catch=3):
 
     Exits if rc non-zero
     """
-    ret, out = __exec_cmd(cmd_and_args, as_shell, catch)
+    ret, out = _exec_cmd(cmd_and_args, as_shell, catch)
 
     if ret != 0:
         msger.error("exec_cmd: %s returned '%s' instead of 0" % \
@@ -99,7 +99,7 @@ def exec_native_cmd(cmd_and_args, native_sysroot, catch=3):
     args = cmd_and_args.split()
     msger.debug(args)
 
-    ret, out = __exec_cmd(native_cmd_and_args, True, catch)
+    ret, out = _exec_cmd(native_cmd_and_args, True, catch)
 
     if ret == 127: # shell command-not-found
         prog = args[0]
@@ -139,7 +139,7 @@ def get_bitbake_var(var, image=None):
 
         log_level = msger.get_loglevel()
         msger.set_loglevel('normal')
-        ret, lines = __exec_cmd(cmd)
+        ret, lines = _exec_cmd(cmd)
         msger.set_loglevel(log_level)
 
         if ret:
