@@ -132,6 +132,6 @@ class SDKBuildProject(BuildProject):
                f.write("%s\n" % msg)
 
     def _run(self, cmd):
-        self.log("Running source %s; " % self.sdkenv + cmd)
-        return subprocess.call("source %s; " % self.sdkenv + cmd, shell=True)
+        self.log("Running . %s; " % self.sdkenv + cmd)
+        return subprocess.call(". %s; " % self.sdkenv + cmd, shell=True)
 
