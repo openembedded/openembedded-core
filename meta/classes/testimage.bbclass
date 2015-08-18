@@ -56,6 +56,30 @@ TESTIMAGEDEPENDS_qemuall = "qemu-native:do_populate_sysroot qemu-helper-native:d
 TESTIMAGELOCK = "${TMPDIR}/testimage.lock"
 TESTIMAGELOCK_qemuall = ""
 
+TESTIMAGE_DUMP_DIR ?= "/tmp/oe-saved-tests/"
+
+testimage_dump_target () {
+    top -bn1
+    ps
+    free
+    df
+    _ping
+    dmesg
+    netstat -an
+    ip address
+    _logs
+}
+
+testimage_dump_host () {
+    top -bn1
+    ps -ef
+    free
+    df
+    memstat
+    dmesg
+    netstat -an
+}
+
 python do_testimage() {
     testimage_main(d)
 }

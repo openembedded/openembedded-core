@@ -12,8 +12,10 @@ import unittest
 import inspect
 import subprocess
 import datetime
+import commands
 import bb
 from oeqa.utils.decorators import LogResults
+from sys import exc_info, exc_clear
 
 def loadTests(tc, type="runtime"):
     if type == "runtime":
@@ -120,35 +122,51 @@ class oeRuntimeTest(oeTest):
 
     def tearDown(self):
         # If a test fails or there is an exception
-        if (self._resultForDoCleanups.failures or
-                self._resultForDoCleanups.errors):
-            self.dump_target_logs()
+        if not exc_info() == (None, None, None):
+            exc_clear()
+            dump_dir = self.create_dump_dir()
+            print ("%s dump data from host and target "
+                "stored in %s" % (self._testMethodName, dump_dir))
+            self.dump_host_logs(dump_dir)
+            self.dump_target_logs(dump_dir)
 
-    def dump_target_logs(self):
-        commands = ["top -bn1", "ps", "free", "df", "_ping", "dmesg", "netstat -a", "ifconfig -a", "_logs"]
-        dump_dir = "/tmp/oe-saved-tests"
+    def create_dump_dir(self):
         dump_sub_dir = ("%s_%s" % (
                 datetime.datetime.now().strftime('%Y%m%d%H%M'),
                 self._testMethodName))
-        dump_dir = os.path.join(dump_dir, dump_sub_dir)
+        dump_dir = os.path.join(self.target.dump_dir, dump_sub_dir)
         os.makedirs(dump_dir)
-        bb.warn("%s failed: getting data from target and "
-                "saving into %s" % (self._testMethodName, dump_dir))
-        for command in commands:
+        return dump_dir
+
+    def dump_host_logs(self, dump_dir):
+        for cmd in self.target.dump_host.split('\n'):
+            cmd = cmd.lstrip()
+            if not cmd:
+                continue
+            output = commands.getoutput(cmd)
+            filename = "host_%s" % cmd.split()[0]
+            with open(os.path.join(dump_dir, filename), 'w') as f:
+                f.write(output)
+
+    def dump_target_logs(self, dump_dir):
+        for cmd in self.target.dump_target.split('\n'):
+            cmd = cmd.lstrip()
+            if not cmd:
+                continue
             # This will ping the host from target
-            if command == "_ping":
+            if cmd == "_ping":
                  comm = "ping -c3 %s" % self.target.server_ip
             # This will get all the logs from /var/log/
-            elif command == "_logs":
+            elif cmd == "_logs":
                 comm = 'find /var/log/ -type f 2>/dev/null '
                 comm = '%s-exec echo "%s" \\; ' % (comm, '='*20)
                 comm = '%s-exec echo {} \\; ' % comm
                 comm = '%s-exec echo "%s" \\; ' % (comm, '='*20)
                 comm = '%s-exec cat {} \\; -exec echo "" \\;' % comm
             else:
-                comm = command 
+                comm = cmd
             (status, output) = self.target.run_serial(comm)
-            filename = command.split()[0]
+            filename = "target_%s" % cmd.split()[0]
             with open(os.path.join(dump_dir, filename), 'w') as f:
                 f.write(output)
 
