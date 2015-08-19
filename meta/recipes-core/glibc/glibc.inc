@@ -49,7 +49,7 @@ DEPENDS = "virtual/${TARGET_PREFIX}gcc-initial libgcc-initial linux-libc-headers
 #RDEPENDS_${PN} += "${@['','libgcc']['nptl' in '${GLIBC_ADDONS}']}"
 PROVIDES = "virtual/libc virtual/${TARGET_PREFIX}libc-for-gcc"
 PROVIDES += "virtual/libintl virtual/libiconv"
-inherit autotools texinfo distro_features_check
+inherit autotools texinfo distro_features_check systemd
 require glibc-options.inc
 
 # The main purpose of setting this variable is to prevent users from accidently
