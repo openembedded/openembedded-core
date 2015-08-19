@@ -262,14 +262,16 @@ class Image(ImageDepGraph):
     def _write_script(self, type, cmds):
         tempdir = self.d.getVar('T', True)
         script_name = os.path.join(tempdir, "create_image." + type)
+        rootfs_size = self._get_rootfs_size()
 
         self.d.setVar('img_creation_func', '\n'.join(cmds))
         self.d.setVarFlag('img_creation_func', 'func', 1)
         self.d.setVarFlag('img_creation_func', 'fakeroot', 1)
+        self.d.setVar('ROOTFS_SIZE', str(rootfs_size))
 
         with open(script_name, "w+") as script:
             script.write("%s" % bb.build.shell_trap_code())
-            script.write("export ROOTFS_SIZE=%d\n" % self._get_rootfs_size())
+            script.write("export ROOTFS_SIZE=%d\n" % rootfs_size)
             bb.data.emit_func('img_creation_func', script, self.d)
             script.write("img_creation_func\n")
 
