@@ -9,6 +9,7 @@ SRC_URI += "file://configure-fix-Darwin-target-detection.patch \
             file://0001-Back-porting-security-fix-CVE-2014-5388.patch \
             file://qemu-CVE-2015-3456.patch \
             file://CVE-2014-7840.patch \
+            file://vnc-CVE-2014-7815.patch \
             "
 SRC_URI_prepend = "http://wiki.qemu-project.org/download/${BP}.tar.bz2"
 SRC_URI[md5sum] = "6726977292b448cbc7f89998fac6983b"
