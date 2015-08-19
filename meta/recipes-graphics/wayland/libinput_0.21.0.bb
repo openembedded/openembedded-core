@@ -9,9 +9,10 @@ DEPENDS = "libevdev udev mtdev"
 
 SRC_URI = "http://www.freedesktop.org/software/${BPN}/${BP}.tar.xz \
            file://libinput-configure.ac-add-arg-with-libunwind.patch \
+           file://touchpad-serial-synaptics-need-to-fake-new-touches-on-TRIPLETAP.patch \
 "
-SRC_URI[md5sum] = "0ddbb0d53d58dec0a86de6791560011a"
-SRC_URI[sha256sum] = "64a70f96bab17a22eaf2fd7af17cf83def3388374096c7623be9448f62808cda"
+SRC_URI[md5sum] = "f91d8f4ced986f1ae16d52ea02bc7837"
+SRC_URI[sha256sum] = "7cce7a9e510dfe5c4a19ad00e9350808d4f59f8611fd2b5e87213c507283f550"
 
 inherit autotools pkgconfig
 
