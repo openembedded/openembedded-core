@@ -79,6 +79,12 @@ do_configure_prepend () {
 	fi
 }
 
+do_compile_ptest() {
+        # skip regress/unittests/ binaries: this will silently skip
+        # unittests in run-ptests which is good because they are so slow.
+        oe_runmake regress/modpipe regress/setuid-allowed regress/netcat
+}
+
 do_install_append () {
 	if [ "${@bb.utils.contains('DISTRO_FEATURES', 'pam', 'pam', '', d)}" = "pam" ]; then
 		install -D -m 0755 ${WORKDIR}/sshd ${D}${sysconfdir}/pam.d/sshd
