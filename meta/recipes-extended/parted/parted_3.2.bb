@@ -36,6 +36,7 @@ do_install_ptest() {
 	cp ${S}/build-aux/test-driver $t/build-aux/
 	cp -r ${S}/tests $t
 	cp ${WORKDIR}/Makefile $t/tests/
+	sed -i "s|^VERSION.*|VERSION = ${PV}|g" $t/tests/Makefile
 	for i in print-align print-max dup-clobber duplicate fs-resize; \
 	  do cp ${B}/tests/.libs/$i $t/tests/; \
 	done
