@@ -12,7 +12,7 @@
             "name": "Local OpenEmbedded",
             "sourcetype": "local",
             "apiurl": "../../",
-            "branches": ["HEAD", "master", "fido", "dizzy"],
+            "branches": ["HEAD", "fido", "dizzy"],
             "layers": [
                 {
                     "name": "openembedded-core",
@@ -26,23 +26,17 @@
             "name": "OpenEmbedded",
             "sourcetype": "layerindex",
             "apiurl": "http://layers.openembedded.org/layerindex/api/",
-            "branches": ["master", "fido", "dizzy"]
+            "branches": ["fido", "dizzy"]
         },
         {
             "name": "Imported layers",
             "sourcetype": "imported",
             "apiurl": "",
-            "branches": ["master", "fido", "dizzy", "HEAD"]
+            "branches": ["fido", "dizzy", "HEAD"]
 
         }
     ],
     "bitbake" : [
-        {
-            "name": "master",
-            "giturl": "git://git.openembedded.org/bitbake",
-            "branch": "master",
-            "dirpath": ""
-        },
         {
             "name": "fido",
             "giturl": "git://git.openembedded.org/bitbake",
@@ -63,18 +57,9 @@
         }
     ],
 
-    "defaultrelease": "master",
+    "defaultrelease": "fido",
 
     "releases": [
-        {
-            "name": "master",
-            "description": "OpenEmbedded master",
-            "bitbake": "master",
-            "branch": "master",
-            "defaultlayers": [ "openembedded-core" ],
-            "layersourcepriority": { "Imported layers": 99, "Local OpenEmbedded" : 10, "OpenEmbedded" :  0 },
-            "helptext": "Toaster will run your builds using the tip of the <a href=\"http://cgit.openembedded.org/openembedded-core/log/\">OpenEmbedded master</a> branch, where active development takes place. This is not a stable branch, so your builds might not work as expected."
-        },
         {
             "name": "fido",
             "description": "OpenEmbedded Fido",
