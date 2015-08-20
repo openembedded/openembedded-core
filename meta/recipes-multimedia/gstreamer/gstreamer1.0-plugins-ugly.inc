@@ -26,6 +26,5 @@ EXTRA_OECONF += " \
     --disable-amrwb \
     --disable-sidplay \
     --disable-twolame \
-    ${GSTREAMER_1_0_ORC} \
     "
 

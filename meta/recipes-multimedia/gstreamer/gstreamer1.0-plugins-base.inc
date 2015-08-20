@@ -32,7 +32,6 @@ EXTRA_OECONF += " \
     --disable-freetypetest \
     --disable-cdparanoia \
     --disable-libvisual \
-    ${GSTREAMER_1_0_ORC} \
 "
 
 FILES_${MLPREFIX}libgsttag-1.0 += "${datadir}/gst-plugins-base/1.0/license-translations.dict"

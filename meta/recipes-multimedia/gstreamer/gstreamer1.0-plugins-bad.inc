@@ -126,7 +126,6 @@ EXTRA_OECONF += " \
     --disable-winscreencap \
     --disable-xvid \
     --disable-zbar \
-    ${GSTREAMER_1_0_ORC} \
     ${@bb.utils.contains("TUNE_FEATURES", "mx32", "--disable-yadif", "", d)} \
     "
 

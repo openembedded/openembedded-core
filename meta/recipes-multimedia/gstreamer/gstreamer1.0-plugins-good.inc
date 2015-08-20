@@ -52,7 +52,6 @@ EXTRA_OECONF += " \
     --disable-shout2 \
     --disable-examples \
     --disable-dv1394 \
-    ${GSTREAMER_1_0_ORC} \
 "
 
 FILES_${PN}-equalizer += "${datadir}/gstreamer-1.0/presets/*.prs"
