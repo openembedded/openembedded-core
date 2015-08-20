@@ -13,6 +13,7 @@ import re
 import socket
 import select
 import errno
+import threading
 
 import logging
 logger = logging.getLogger("BitBake.QemuRunner")
@@ -38,6 +39,7 @@ class QemuRunner:
         self.logfile = logfile
         self.boottime = boottime
         self.logged = False
+        self.thread = None
 
         self.runqemutime = 60
 
@@ -81,6 +83,7 @@ class QemuRunner:
             os.environ["DEPLOY_DIR_IMAGE"] = self.deploy_dir_image
 
         try:
+            threadsock, threadport = self.create_socket()
             self.server_socket, self.serverport = self.create_socket()
         except socket.error, msg:
             logger.error("Failed to create listening socket: %s" % msg[1])
@@ -89,7 +92,7 @@ class QemuRunner:
         # Set this flag so that Qemu doesn't do any grabs as SDL grabs interact
         # badly with screensavers.
         os.environ["QEMU_DONT_GRAB"] = "1"
-        self.qemuparams = 'bootparams="console=tty1 console=ttyS0,115200n8" qemuparams="-serial tcp:127.0.0.1:%s"' % self.serverport
+        self.qemuparams = 'bootparams="console=tty1 console=ttyS0,115200n8" qemuparams="-serial tcp:127.0.0.1:{} -serial tcp:127.0.0.1:{}"'.format(threadport, self.serverport)
         if qemuparams:
             self.qemuparams = self.qemuparams[:-1] + " " + qemuparams + " " + '\"'
 
@@ -138,6 +141,18 @@ class QemuRunner:
                 return False
             logger.info("Target IP: %s" % self.ip)
             logger.info("Server IP: %s" % self.server_ip)
+
+            logger.info("Starting logging thread")
+            self.thread = LoggingThread(self.log, threadsock, logger)
+            self.thread.start()
+            if not self.thread.connection_established.wait(self.boottime):
+                logger.error("Didn't receive a console connection from qemu. "
+                             "Here is the qemu command line used:\n%s\nand "
+                             "output from runqemu:\n%s" % (cmdline,
+                                                           getOutput(output)))
+                self.stop_thread()
+                return False
+
             logger.info("Waiting at most %d seconds for login banner" % self.boottime)
             endtime = time.time() + self.boottime
             socklist = [self.server_socket]
@@ -157,7 +172,6 @@ class QemuRunner:
                     else:
                         data = sock.recv(1024)
                         if data:
-                            self.log(data)
                             bootlog += data
                             if re.search(".* login:", bootlog):
                                 self.server_socket = qemusock
@@ -214,6 +228,12 @@ class QemuRunner:
             self.server_socket = None
         self.qemupid = None
         self.ip = None
+        self.stop_thread()
+
+    def stop_thread(self):
+        if self.thread and self.thread.is_alive():
+            self.thread.stop()
+            self.thread.join()
 
     def restart(self, qemuparams = None):
         logger.info("Restarting qemu process")
@@ -312,3 +332,107 @@ class QemuRunner:
                 if (status_cmd == "0"):
                     status = 1
         return (status, str(data))
+
+# This class is for reading data from a socket and passing it to logfunc
+# to be processed. It's completely event driven and has a straightforward
+# event loop. The mechanism for stopping the thread is a simple pipe which
+# will wake up the poll and allow for tearing everything down.
+class LoggingThread(threading.Thread):
+    def __init__(self, logfunc, sock, logger):
+        self.connection_established = threading.Event()
+        self.serversock = sock
+        self.logfunc = logfunc
+        self.logger = logger
+        self.readsock = None
+        self.running = False
+
+        self.errorevents = select.POLLERR | select.POLLHUP | select.POLLNVAL
+        self.readevents = select.POLLIN | select.POLLPRI
+
+        threading.Thread.__init__(self, target=self.threadtarget)
+
+    def threadtarget(self):
+        try:
+            self.eventloop()
+        finally:
+            self.teardown()
+
+    def run(self):
+        self.logger.info("Starting logging thread")
+        self.readpipe, self.writepipe = os.pipe()
+        threading.Thread.run(self)
+
+    def stop(self):
+        self.logger.info("Stopping logging thread")
+        if self.running:
+            os.write(self.writepipe, "stop")
+
+    def teardown(self):
+        self.close_socket(self.serversock)
+
+        if self.readsock is not None:
+            self.close_socket(self.readsock)
+
+        self.close_ignore_error(self.readpipe)
+        self.close_ignore_error(self.writepipe)
+        self.running = False
+
+    def eventloop(self):
+        poll = select.poll()
+        eventmask = self.errorevents | self.readevents
+        poll.register(self.serversock.fileno())
+        poll.register(self.readpipe, eventmask)
+
+        breakout = False
+        self.running = True
+        self.logger.info("Starting thread event loop")
+        while not breakout:
+            events = poll.poll()
+            for event in events:
+                # An error occurred, bail out
+                if event[1] & self.errorevents:
+                    raise Exception(self.stringify_event(event[1]))
+
+                # Event to stop the thread
+                if self.readpipe == event[0]:
+                    self.logger.info("Stop event received")
+                    breakout = True
+                    break
+
+                # A connection request was received
+                elif self.serversock.fileno() == event[0]:
+                    self.logger.info("Connection request received")
+                    self.readsock, _ = self.serversock.accept()
+                    poll.unregister(self.serversock.fileno())
+                    poll.register(self.readsock.fileno())
+
+                    self.logger.info("Setting connection established event")
+                    self.connection_established.set()
+
+                # Actual data to be logged
+                elif self.readsock.fileno() == event[0]:
+                    data = self.readsock.recv(1024)
+                    if not data:
+                        raise Exception("No data on read ready socket")
+
+                    self.logfunc(data)
+
+    def stringify_event(self, event):
+        val = ''
+        if select.POLLERR == event:
+            val = 'POLLER'
+        elif select.POLLHUP == event:
+            val = 'POLLHUP'
+        elif select.POLLNVAL == event:
+            val = 'POLLNVAL'
+        return val
+
+    def close_socket(self, sock):
+        sock.shutdown(socket.SHUT_RDWR)
+        sock.close()
+
+    def close_ignore_error(self, fd):
+        try:
+            os.close(fd)
+        except OSError:
+            pass
