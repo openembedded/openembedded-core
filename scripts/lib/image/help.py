@@ -42,6 +42,8 @@ def display_help(subcommand, subcommands):
         return False
 
     hlp = subcommands.get(subcommand, subcommand_error)[2]
+    if callable(hlp):
+        hlp = hlp()
     pager = subprocess.Popen('less', stdin=subprocess.PIPE)
     pager.communicate(hlp)
 
