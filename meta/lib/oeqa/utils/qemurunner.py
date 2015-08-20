@@ -42,20 +42,18 @@ class QemuRunner:
         self.runqemutime = 60
 
     def create_socket(self):
-
         try:
-            self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            self.server_socket.setblocking(0)
-            self.server_socket.bind(("127.0.0.1",0))
-            self.server_socket.listen(2)
-            self.serverport = self.server_socket.getsockname()[1]
-            logger.info("Created listening socket for qemu serial console on: 127.0.0.1:%s" % self.serverport)
-            return True
-        except socket.error, msg:
-            self.server_socket.close()
-            logger.error("Failed to create listening socket: %s" % msg[1])
-            return False
+            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            sock.setblocking(0)
+            sock.bind(("127.0.0.1",0))
+            sock.listen(2)
+            port = sock.getsockname()[1]
+            logger.info("Created listening socket for qemu serial console on: 127.0.0.1:%s" % port)
+            return (sock, port)
 
+        except socket.error:
+            sock.close()
+            raise
 
     def log(self, msg):
         if self.logfile:
@@ -82,7 +80,10 @@ class QemuRunner:
         else:
             os.environ["DEPLOY_DIR_IMAGE"] = self.deploy_dir_image
 
-        if not self.create_socket():
+        try:
+            self.server_socket, self.serverport = self.create_socket()
+        except socket.error, msg:
+            logger.error("Failed to create listening socket: %s" % msg[1])
             return False
 
         # Set this flag so that Qemu doesn't do any grabs as SDL grabs interact
