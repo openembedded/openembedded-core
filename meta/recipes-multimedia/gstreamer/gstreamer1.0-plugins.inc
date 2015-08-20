@@ -15,7 +15,9 @@ acpaths = "-I ${S}/common/m4 -I ${S}/m4"
 LIBV = "1.0"
 require gst-plugins-package.inc
 
-PACKAGECONFIG[orc] = "--enable-orc,--disable-orc,orc"
+PACKAGECONFIG[orc] = "--enable-orc,--disable-orc,orc orc-native"
+
+export ORCC = "${STAGING_DIR_NATIVE}${bindir}/orcc"
 
 PACKAGES_DYNAMIC = "^${PN}-.*"
 
