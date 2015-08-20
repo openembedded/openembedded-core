@@ -11,7 +11,6 @@ RDEPENDS_${PN} += " \
         packagegroup-core-standalone-sdk-target \
         qt4${QTLIBPREFIX}-mkspecs \
         libqt${QTLIBPREFIX}multimedia4-dev \
-        libqt${QTLIBPREFIX}phonon4-dev \
         libqt${QTLIBPREFIX}3support4-dev \
         libqt${QTLIBPREFIX}clucene4-dev \
         libqt${QTLIBPREFIX}core4-dev \
@@ -33,4 +32,8 @@ RDEPENDS_${PN} += " \
         libqt${QTLIBPREFIX}xmlpatterns4-dev \
         libsqlite3-dev \
         expat-dev \
+        "
+
+RRECOMMENDS_${PN} += " \
+        libqt${QTLIBPREFIX}phonon4-dev \
         "
