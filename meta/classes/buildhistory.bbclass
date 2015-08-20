@@ -439,20 +439,20 @@ buildhistory_list_files() {
 }
 
 buildhistory_list_pkg_files() {
-        file_prefix="files-in-"
+	file_prefix="files-in-"
 
-        # Create individual files-in-package for each recipe's package
-        for pkgdir in $(find ${PKGDEST}/* -maxdepth 0 -type d); do
-                pkgname=$(basename ${pkgdir})
-                outfolder="${BUILDHISTORY_DIR_PACKAGE}/${pkgname}"
-                outfile="${outfolder}/${file_prefix}${pkgname}.txt"
-                # Make sure the output folder, exist so we can create the files-in-$pkgname.txt file
-                if [ ! -d ${outfolder} ] ; then
-                        bbdebug 2 "Folder ${outfolder} does not exist, file ${outfile} not created"
-                        continue
-                fi
-                buildhistory_list_files ${pkgdir} ${outfile}
-        done
+	# Create individual files-in-package for each recipe's package
+	for pkgdir in $(find ${PKGDEST}/* -maxdepth 0 -type d); do
+		pkgname=$(basename ${pkgdir})
+		outfolder="${BUILDHISTORY_DIR_PACKAGE}/${pkgname}"
+		outfile="${outfolder}/${file_prefix}${pkgname}.txt"
+		# Make sure the output folder, exist so we can create the files-in-$pkgname.txt file
+		if [ ! -d ${outfolder} ] ; then
+			bbdebug 2 "Folder ${outfolder} does not exist, file ${outfile} not created"
+			continue
+		fi
+		buildhistory_list_files ${pkgdir} ${outfile}
+	done
 }
 
 buildhistory_get_imageinfo() {
