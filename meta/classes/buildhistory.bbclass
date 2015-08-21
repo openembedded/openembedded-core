@@ -172,10 +172,13 @@ python buildhistory_emit_pkghistory() {
         for item in os.listdir(pkghistdir):
             if item != "latest" and item != "latest_srcrev":
                 if item not in packagelist:
-                    subdir = os.path.join(pkghistdir, item)
-                    for subfile in os.listdir(subdir):
-                        os.unlink(os.path.join(subdir, subfile))
-                    os.rmdir(subdir)
+                    itempath = os.path.join(pkghistdir, item)
+                    if os.path.isdir(itempath):
+                        for subfile in os.listdir(itempath):
+                            os.unlink(os.path.join(itempath, subfile))
+                        os.rmdir(itempath)
+                    else:
+                        os.unlink(itempath)
 
     rcpinfo = RecipeInfo(pn)
     rcpinfo.pe = pe
