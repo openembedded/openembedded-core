@@ -26,6 +26,7 @@ import argparse
 import scriptutils
 import errno
 from devtool import exec_build_env_command, setup_tinfoil, DevtoolError
+from devtool import add_md5
 
 logger = logging.getLogger('devtool')
 
@@ -104,7 +105,7 @@ def add(args, config, basepath, workspace):
     except bb.process.ExecutionError as e:
         raise DevtoolError('Command \'%s\' failed:\n%s' % (e.command, e.stdout))
 
-    _add_md5(config, args.recipename, recipefile)
+    add_md5(config, args.recipename, recipefile)
 
     initial_rev = None
     if os.path.exists(os.path.join(srctree, '.git')):
@@ -120,7 +121,7 @@ def add(args, config, basepath, workspace):
         if initial_rev:
             f.write('\n# initial_rev: %s\n' % initial_rev)
 
-    _add_md5(config, args.recipename, appendfile)
+    add_md5(config, args.recipename, appendfile)
 
     return 0
 
@@ -371,13 +372,6 @@ def _extract_source(srctree, keep_temp, devbranch, d):
             shutil.rmtree(tempdir)
     return initial_rev
 
-def _add_md5(config, recipename, filename):
-    """Record checksum of a recipe to the md5-file of the workspace"""
-    import bb.utils
-    md5 = bb.utils.md5_file(filename)
-    with open(os.path.join(config.workspace_path, '.devtool_md5'), 'a') as f:
-        f.write('%s|%s|%s\n' % (recipename, os.path.relpath(filename, config.workspace_path), md5))
-
 def _check_preserve(config, recipename):
     """Check if a recipe was manually changed and needs to be saved in 'attic'
        directory"""
@@ -505,7 +499,7 @@ def modify(args, config, basepath, workspace):
             for commit in commits:
                 f.write('# commit: %s\n' % commit)
 
-    _add_md5(config, args.recipename, appendfile)
+    add_md5(config, args.recipename, appendfile)
 
     logger.info('Recipe %s now set up to build from %s' % (args.recipename, srctree))
 

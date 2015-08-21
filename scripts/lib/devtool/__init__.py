@@ -110,3 +110,9 @@ def setup_tinfoil(config_only=False):
     tinfoil.logger.setLevel(logger.getEffectiveLevel())
     return tinfoil
 
+def add_md5(config, recipename, filename):
+    """Record checksum of a recipe to the md5-file of the workspace"""
+    import bb.utils
+    md5 = bb.utils.md5_file(filename)
+    with open(os.path.join(config.workspace_path, '.devtool_md5'), 'a') as f:
+        f.write('%s|%s|%s\n' % (recipename, os.path.relpath(filename, config.workspace_path), md5))
