@@ -99,9 +99,9 @@ class oeTest(unittest.TestCase):
 
     @classmethod
     def hasPackage(self, pkg):
-
-        if re.search(pkg, oeTest.tc.pkgmanifest):
-            return True
+        for item in oeTest.tc.pkgmanifest.split('\n'):
+            if re.match(pkg, item):
+                return True
         return False
 
     @classmethod
