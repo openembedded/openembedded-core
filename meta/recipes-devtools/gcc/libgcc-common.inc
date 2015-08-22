@@ -45,6 +45,12 @@ do_install () {
 	rm -rf ${D}${libdir}/${TARGET_SYS}/${BINV}/include
 }
 
+do_install_append_libc-baremetal () {
+	rmdir ${D}${base_libdir}
+}
+
+RDEPENDS_${PN}-dev_libc-baremetal = ""
+
 BBCLASSEXTEND = "nativesdk"
 
 addtask multilib_install after do_install before do_package do_populate_sysroot
