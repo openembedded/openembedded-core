@@ -12,12 +12,10 @@ SRC_URI = "${KERNELORG_MIRROR}/linux/utils/raid/mdadm/${BPN}-${PV}.tar.xz \
            file://mdadm-3.2.2_fix_for_x32.patch \
            file://gcc-4.9.patch \
            file://mdadm-3.3.2_x32_abi_time_t.patch \
-           file://inline.patch \
            file://run-ptest \
 	  "
-
-SRC_URI[md5sum] = "44698d351501cac6a89072dc877eb220"
-SRC_URI[sha256sum] = "0f3a7e1a76b13892b79f9fceaf99ecb23513260389a768ac644ffa3ae06e5b8c"
+SRC_URI[md5sum] = "7ca8b114710f98f53f20c5787b674a09"
+SRC_URI[sha256sum] = "8ae5f45306b873190e91f410709b00e51997b633c072b33f8efd9f7df022ca68"
 
 CFLAGS += "-fno-strict-aliasing"
 
