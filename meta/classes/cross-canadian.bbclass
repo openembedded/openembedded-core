@@ -29,6 +29,9 @@ python () {
     if d.getVar("MODIFYTOS", True) != "1":
         return
 
+    if d.getVar("TCLIBC", True) == "baremetal":
+        return
+
     tos = d.getVar("TARGET_OS", True)
     whitelist = []
     for variant in ["", "spe", "x32", "eabi", "n32"]:
