@@ -620,6 +620,14 @@ if [ "x$QEMUOPTIONS" = "x" ]; then
     return 1
 fi
 
+if [ $TCPSERIAL_PORTNUM != "" ]; then
+    if [ "$MACHINE" = "qemuarm64" ]; then
+        QEMUOPTIONS="$QEMUOPTIONS -device virtio-serial-device -chardev socket,id=virtcon,port=$TCPSERIAL_PORTNUM,host=127.0.0.1 -device virtconsole,chardev=virtcon"
+    else
+        QEMUOPTIONS="$QEMUOPTIONS -serial tcp:127.0.0.1:$TCPSERIAL_PORTNUM"
+    fi
+fi
+
 PATH=$OECORE_NATIVE_SYSROOT/usr/bin:$PATH
 
 QEMUBIN=`which $QEMU 2> /dev/null`

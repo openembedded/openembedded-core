@@ -92,7 +92,7 @@ class QemuRunner:
         # Set this flag so that Qemu doesn't do any grabs as SDL grabs interact
         # badly with screensavers.
         os.environ["QEMU_DONT_GRAB"] = "1"
-        self.qemuparams = 'bootparams="console=tty1 console=ttyS0,115200n8" qemuparams="-serial tcp:127.0.0.1:{} -serial tcp:127.0.0.1:{}"'.format(threadport, self.serverport)
+        self.qemuparams = 'bootparams="console=tty1 console=ttyS0,115200n8" qemuparams="-serial tcp:127.0.0.1:{}"'.format(threadport)
         if qemuparams:
             self.qemuparams = self.qemuparams[:-1] + " " + qemuparams + " " + '\"'
 
@@ -102,7 +102,7 @@ class QemuRunner:
             fcntl.fcntl(o, fcntl.F_SETFL, fl | os.O_NONBLOCK)
             return os.read(o.fileno(), 1000000)
 
-        launch_cmd = 'runqemu %s %s %s' % (self.machine, self.rootfs, self.qemuparams)
+        launch_cmd = 'runqemu tcpserial=%s %s %s %s' % (self.serverport, self.machine, self.rootfs, self.qemuparams)
         # FIXME: We pass in stdin=subprocess.PIPE here to work around stty
         # blocking at the end of the runqemu script when using this within
         # oe-selftest (this makes stty error out immediately). There ought
