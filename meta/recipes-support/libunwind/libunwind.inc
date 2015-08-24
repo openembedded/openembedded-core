@@ -2,7 +2,7 @@ DESCRIPTION = "a portable and efficient C programming interface (API) to determi
 HOMEPAGE = "http://www.nongnu.org/libunwind"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=3fced11d6df719b47505837a51c16ae5"
-DEPENDS += "libatomics-ops"
+DEPENDS += "libatomic-ops"
 
 SRC_URI = "${SAVANNAH_NONGNU_MIRROR}/${BPN}/${BPN}-${PV}.tar.gz"
 

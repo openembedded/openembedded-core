@@ -36,6 +36,6 @@ inherit autotools pkgconfig
 
 # by default use external libatomic-ops
 PACKAGECONFIG ??= "libatomic-ops"
-PACKAGECONFIG[libatomic-ops] = "--with-libatomic-ops=yes,--with-libatomic-ops=no,libatomics-ops"
+PACKAGECONFIG[libatomic-ops] = "--with-libatomic-ops=yes,--with-libatomic-ops=no,libatomic-ops"
 
 BBCLASSEXTEND = "native nativesdk"

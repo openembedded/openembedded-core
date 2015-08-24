@@ -37,7 +37,7 @@ BBCLASSEXTEND = "native"
 
 DEPENDS = "libunistring bdwgc gmp libtool libffi ncurses readline"
 # add guile-native only to the target recipe's DEPENDS
-DEPENDS_append_class-target = " guile-native libatomics-ops"
+DEPENDS_append_class-target = " guile-native libatomic-ops"
 
 RDEPENDS_${PN}_append_libc-glibc_class-target = "glibc-gconv-iso8859-1"
 
