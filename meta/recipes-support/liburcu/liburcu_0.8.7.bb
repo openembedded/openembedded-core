@@ -10,6 +10,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=0f060c30a27922ce9c0d557a639b4fa3 \
 SRC_URI = "http://lttng.org/files/urcu/userspace-rcu-${PV}.tar.bz2 \
            file://Revert-Blacklist-ARM-gcc-4.8.0-4.8.1-4.8.2.patch \
            file://aarch64.patch \
+           file://0001-uatomic-Specify-complete-types-for-atomic-function-c.patch \
           "
 
 SRC_URI[md5sum] = "7a6ee17871d31226db3f618e28351d22"
