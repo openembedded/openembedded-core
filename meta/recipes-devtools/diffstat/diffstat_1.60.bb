@@ -18,6 +18,8 @@ S = "${WORKDIR}/diffstat-${PV}"
 
 inherit autotools gettext ptest
 
+LDFLAGS += "${TOOLCHAIN_OPTIONS}"
+
 do_configure () {
 	if [ ! -e ${S}/acinclude.m4 ]; then
 		mv ${S}/aclocal.m4 ${S}/acinclude.m4
