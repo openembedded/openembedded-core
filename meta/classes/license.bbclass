@@ -49,24 +49,25 @@ license_create_manifest() {
 
 		pkged_pv="$(sed -n 's/^PV: //p' ${filename})"
 		pkged_name="$(basename $(readlink ${filename}))"
-		pkged_lic="$(sed -n "/^LICENSE_${pkged_name}: /{ s/^LICENSE_${pkged_name}: //; s/[|&()*]/ /g; s/  */ /g; p }" ${filename})"
+		pkged_lic="$(sed -n "/^LICENSE_${pkged_name}: /{ s/^LICENSE_${pkged_name}: //; p }" ${filename})"
 		if [ -z ${pkged_lic} ]; then
 			# fallback checking value of LICENSE
-			pkged_lic="$(sed -n "/^LICENSE: /{ s/^LICENSE: //; s/[|&()*]/ /g; s/  */ /g; p }" ${filename})"
+			pkged_lic="$(sed -n "/^LICENSE: /{ s/^LICENSE: //; p }" ${filename})"
 		fi
 
 		echo "PACKAGE NAME:" ${pkg} >> ${LICENSE_MANIFEST}
 		echo "PACKAGE VERSION:" ${pkged_pv} >> ${LICENSE_MANIFEST}
 		echo "RECIPE NAME:" ${pkged_pn} >> ${LICENSE_MANIFEST}
-		printf "LICENSE:" >> ${LICENSE_MANIFEST}
-		for lic in ${pkged_lic}; do
+		echo "LICENSE:" ${pkged_lic} >> ${LICENSE_MANIFEST}
+		echo "" >> ${LICENSE_MANIFEST}
+
+		lics="$(echo ${pkged_lic} | sed "s/[|&()*]/ /g" | sed "s/  */ /g" )"
+		for lic in ${lics}; do
 			# to reference a license file trim trailing + symbol
 			if ! [ -e "${LICENSE_DIRECTORY}/${pkged_pn}/generic_${lic%+}" ]; then
 				bbwarn "The license listed ${lic} was not in the licenses collected for ${pkged_pn}"
 			fi
-                        printf " ${lic}" >> ${LICENSE_MANIFEST}
 		done
-		printf "\n\n" >> ${LICENSE_MANIFEST}
 	done
 
 	# Two options here:
