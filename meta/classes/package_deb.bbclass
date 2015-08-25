@@ -288,6 +288,9 @@ python do_package_deb () {
         cleanupcontrol(root)
         bb.utils.unlockfile(lf)
 }
+# Otherwise allarch packages may change depending on override configuration
+do_package_deb[vardepsexclude] = "OVERRIDES"
+
 
 SSTATETASKS += "do_package_write_deb"
 do_package_write_deb[sstate-inputdirs] = "${PKGWRITEDIRDEB}"

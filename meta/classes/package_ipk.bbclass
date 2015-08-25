@@ -250,6 +250,8 @@ python do_package_ipk () {
         bb.utils.unlockfile(lf)
 
 }
+# Otherwise allarch packages may change depending on override configuration
+do_package_ipk[vardepsexclude] = "OVERRIDES"
 
 SSTATETASKS += "do_package_write_ipk"
 do_package_write_ipk[sstate-inputdirs] = "${PKGWRITEDIRIPK}"

@@ -645,6 +645,8 @@ python write_specfile () {
 
     specfile.close()
 }
+# Otherwise allarch packages may change depending on override configuration
+write_specfile[vardepsexclude] = "OVERRIDES"
 
 python do_package_rpm () {
     # We need a simple way to remove the MLPREFIX from the package name,
