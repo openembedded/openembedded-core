@@ -220,14 +220,14 @@ BUILD_ARCH = \"x86_64\"
 BUILD_OS = \"linux\"
 """)
         self.track_for_cleanup(topdir + "/tmp-sstatesamehash")
-        bitbake("core-image-sato -S printdiff", ignore_status=True)
+        bitbake("core-image-sato -S none")
         self.write_config("""
 TMPDIR = \"${TOPDIR}/tmp-sstatesamehash2\"
 BUILD_ARCH = \"i686\"
 BUILD_OS = \"linux\"
 """)
         self.track_for_cleanup(topdir + "/tmp-sstatesamehash2")
-        bitbake("core-image-sato -S printdiff", ignore_status=True)
+        bitbake("core-image-sato -S none")
 
         def get_files(d):
             f = []
@@ -249,19 +249,18 @@ BUILD_OS = \"linux\"
         """
 
         topdir = get_bb_var('TOPDIR')
-        targetvendor = get_bb_var('TARGET_VENDOR')
         self.write_config("""
 TMPDIR = \"${TOPDIR}/tmp-sstatesamehash\"
 NATIVELSBSTRING = \"DistroA\"
 """)
         self.track_for_cleanup(topdir + "/tmp-sstatesamehash")
-        bitbake("core-image-sato -S printdiff", ignore_status=True)
+        bitbake("core-image-sato -S none")
         self.write_config("""
 TMPDIR = \"${TOPDIR}/tmp-sstatesamehash2\"
 NATIVELSBSTRING = \"DistroB\"
 """)
         self.track_for_cleanup(topdir + "/tmp-sstatesamehash2")
-        bitbake("core-image-sato -S printdiff", ignore_status=True)
+        bitbake("core-image-sato -S none")
 
         def get_files(d):
             f = []
