@@ -209,6 +209,7 @@ class QemuRunner:
 
     def stop(self):
 
+        self.stop_thread()
         if self.runqemu:
             logger.info("Sending SIGTERM to runqemu")
             try:
@@ -228,7 +229,6 @@ class QemuRunner:
             self.server_socket = None
         self.qemupid = None
         self.ip = None
-        self.stop_thread()
 
     def stop_thread(self):
         if self.thread and self.thread.is_alive():
@@ -403,6 +403,7 @@ class LoggingThread(threading.Thread):
                 elif self.serversock.fileno() == event[0]:
                     self.logger.info("Connection request received")
                     self.readsock, _ = self.serversock.accept()
+                    self.readsock.setblocking(0)
                     poll.unregister(self.serversock.fileno())
                     poll.register(self.readsock.fileno())
 
