@@ -108,8 +108,17 @@ class RpmIndexer(Indexer):
         archs = archs.union(set(sdk_pkg_archs))
 
         rpm_createrepo = bb.utils.which(os.getenv('PATH'), "createrepo")
+        if self.d.getVar('PACKAGE_FEED_SIGN', True) == '1':
+            pkgfeed_gpg_name = self.d.getVar('PACKAGE_FEED_GPG_NAME', True)
+            pkgfeed_gpg_pass = self.d.getVar('PACKAGE_FEED_GPG_PASSPHRASE_FILE', True)
+        else:
+            pkgfeed_gpg_name = None
+            pkgfeed_gpg_pass = None
+        gpg_bin = self.d.getVar('GPG_BIN', True) or \
+                  bb.utils.which(os.getenv('PATH'), "gpg")
 
         index_cmds = []
+        repo_sign_cmds = []
         rpm_dirs_found = False
         for arch in archs:
             dbpath = os.path.join(self.d.getVar('WORKDIR', True), 'rpmdb', arch)
@@ -121,6 +130,12 @@ class RpmIndexer(Indexer):
 
             index_cmds.append("%s --dbpath %s --update -q %s" % \
                              (rpm_createrepo, dbpath, arch_dir))
+            if pkgfeed_gpg_name:
+                repomd_file = os.path.join(arch_dir, 'repodata', 'repomd.xml')
+                gpg_cmd = "%s --detach-sign --armor --batch --no-tty --yes " \
+                          "--passphrase-file '%s' -u '%s' %s" % (gpg_bin,
+                          pkgfeed_gpg_pass, pkgfeed_gpg_name, repomd_file)
+                repo_sign_cmds.append(gpg_cmd)
 
             rpm_dirs_found = True
 
@@ -132,12 +147,20 @@ class RpmIndexer(Indexer):
         result = oe.utils.multiprocess_exec(index_cmds, create_index)
         if result:
             bb.fatal('%s' % ('\n'.join(result)))
-        # Copy pubkey to repo
+        # Sign repomd
+        result = oe.utils.multiprocess_exec(repo_sign_cmds, create_index)
+        if result:
+            bb.fatal('%s' % ('\n'.join(result)))
+        # Copy pubkey(s) to repo
         distro_version = self.d.getVar('DISTRO_VERSION', True) or "oe.0"
         if self.d.getVar('RPM_SIGN_PACKAGES', True) == '1':
             shutil.copy2(self.d.getVar('RPM_GPG_PUBKEY', True),
                          os.path.join(self.deploy_dir,
                                       'RPM-GPG-KEY-%s' % distro_version))
+        if self.d.getVar('PACKAGE_FEED_SIGN', True) == '1':
+            shutil.copy2(self.d.getVar('PACKAGE_FEED_GPG_PUBKEY', True),
+                         os.path.join(self.deploy_dir,
+                                      'REPODATA-GPG-KEY-%s' % distro_version))
 
 
 class OpkgIndexer(Indexer):
