@@ -13,6 +13,7 @@ import inspect
 import subprocess
 import bb
 from oeqa.utils.decorators import LogResults
+from oeqa.targetcontrol import QemuTarget
 from sys import exc_info, exc_clear
 
 def loadTests(tc, type="runtime"):
@@ -123,12 +124,13 @@ class oeRuntimeTest(oeTest):
         if not exc_info() == (None, None, None):
             exc_clear()
             self.tc.host_dumper.create_dir(self._testMethodName)
-            self.target.target_dumper.dump_target(
-                    self.tc.host_dumper.dump_dir)
             self.tc.host_dumper.dump_host()
-            print ("%s dump data from host and target "
-                    "stored in %s" % (self._testMethodName,
-                     self.target.target_dumper.dump_dir))
+            #Only QemuTarget has a serial console
+            if (isinstance(self.target, QemuTarget)):
+                self.target.target_dumper.dump_target(
+                        self.tc.host_dumper.dump_dir)
+            print ("%s dump data stored in %s" % (self._testMethodName,
+                     self.tc.host_dumper.dump_dir))
 
     #TODO: use package_manager.py to install packages on any type of image
     def install_packages(self, packagelist):
