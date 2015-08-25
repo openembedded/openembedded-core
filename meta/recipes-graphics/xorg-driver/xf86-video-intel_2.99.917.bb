@@ -12,6 +12,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=8730ad58d11c7bbad9a7066d69f7808e"
 SRC_URI += "file://disable-x11-dri3.patch \
             file://always_include_xorg_server.h.patch \
             file://sna-Protect-against-ABI-breakage-in-recent-versions-.patch \
+            file://udev-fstat.patch \
            "
 
 SRC_URI[md5sum] = "fa196a66e52c0c624fe5d350af7a5e7b"
