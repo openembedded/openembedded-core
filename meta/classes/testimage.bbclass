@@ -231,6 +231,7 @@ def testimage_main(d):
     import time
     from oeqa.oetest import loadTests, runTests
     from oeqa.targetcontrol import get_target_controller
+    from oeqa.utils.dump import get_host_dumper
 
     pn = d.getVar("PN", True)
     export = oe.utils.conditional("TEST_EXPORT_ONLY", "1", True, False, d)
@@ -245,6 +246,9 @@ def testimage_main(d):
     testslist = get_tests_list(d)
     testsrequired = [t for t in d.getVar("TEST_SUITES", True).split() if t != "auto"]
 
+    # we need the host dumper in test context
+    host_dumper = get_host_dumper(d)
+
     # the robot dance
     target = get_target_controller(d)
 
@@ -255,6 +259,7 @@ def testimage_main(d):
             self.testsrequired = testsrequired
             self.filesdir = os.path.join(os.path.dirname(os.path.abspath(oeqa.runtime.__file__)),"files")
             self.target = target
+            self.host_dumper = host_dumper
             self.imagefeatures = d.getVar("IMAGE_FEATURES", True).split()
             self.distrofeatures = d.getVar("DISTRO_FEATURES", True).split()
             manifest = os.path.join(d.getVar("DEPLOY_DIR_IMAGE", True), d.getVar("IMAGE_LINK_NAME", True) + ".manifest")

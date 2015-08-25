@@ -14,6 +14,7 @@ import logging
 from oeqa.utils.sshcontrol import SSHControl
 from oeqa.utils.qemurunner import QemuRunner
 from oeqa.utils.qemutinyrunner import QemuTinyRunner
+from oeqa.utils.dump import TargetDumper
 from oeqa.controllers.testtargetloader import TestTargetLoader
 from abc import ABCMeta, abstractmethod
 
@@ -123,9 +124,6 @@ class QemuTarget(BaseTarget):
         self.origrootfs = os.path.join(d.getVar("DEPLOY_DIR_IMAGE", True),  d.getVar("IMAGE_LINK_NAME", True) + '.' + self.image_fstype)
         self.rootfs = os.path.join(self.testdir, d.getVar("IMAGE_LINK_NAME", True) + '-testimage.' + self.image_fstype)
         self.kernel = os.path.join(d.getVar("DEPLOY_DIR_IMAGE", True), d.getVar("KERNEL_IMAGETYPE", False) + '-' + d.getVar('MACHINE', False) + '.bin')
-        self.dump_target = d.getVar("testimage_dump_target", True)
-        self.dump_host = d.getVar("testimage_dump_host", True)
-        self.dump_dir = d.getVar("TESTIMAGE_DUMP_DIR", True)
 
         # Log QemuRunner log output to a file
         import oe.path
@@ -154,6 +152,8 @@ class QemuTarget(BaseTarget):
                             display = d.getVar("BB_ORIGENV", False).getVar("DISPLAY", True),
                             logfile = self.qemulog,
                             boottime = int(d.getVar("TEST_QEMUBOOT_TIMEOUT", True)))
+
+        self.target_dumper = TargetDumper(d, self.runner)
 
     def deploy(self):
         try:

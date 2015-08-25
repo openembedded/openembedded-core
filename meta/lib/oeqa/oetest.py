@@ -11,8 +11,6 @@ import os, re, mmap
 import unittest
 import inspect
 import subprocess
-import datetime
-import commands
 import bb
 from oeqa.utils.decorators import LogResults
 from sys import exc_info, exc_clear
@@ -124,51 +122,13 @@ class oeRuntimeTest(oeTest):
         # If a test fails or there is an exception
         if not exc_info() == (None, None, None):
             exc_clear()
-            dump_dir = self.create_dump_dir()
+            self.tc.host_dumper.create_dir(self._testMethodName)
+            self.target.target_dumper.dump_target(
+                    self.tc.host_dumper.dump_dir)
+            self.tc.host_dumper.dump_host()
             print ("%s dump data from host and target "
-                "stored in %s" % (self._testMethodName, dump_dir))
-            self.dump_host_logs(dump_dir)
-            self.dump_target_logs(dump_dir)
-
-    def create_dump_dir(self):
-        dump_sub_dir = ("%s_%s" % (
-                datetime.datetime.now().strftime('%Y%m%d%H%M'),
-                self._testMethodName))
-        dump_dir = os.path.join(self.target.dump_dir, dump_sub_dir)
-        os.makedirs(dump_dir)
-        return dump_dir
-
-    def dump_host_logs(self, dump_dir):
-        for cmd in self.target.dump_host.split('\n'):
-            cmd = cmd.lstrip()
-            if not cmd:
-                continue
-            output = commands.getoutput(cmd)
-            filename = "host_%s" % cmd.split()[0]
-            with open(os.path.join(dump_dir, filename), 'w') as f:
-                f.write(output)
-
-    def dump_target_logs(self, dump_dir):
-        for cmd in self.target.dump_target.split('\n'):
-            cmd = cmd.lstrip()
-            if not cmd:
-                continue
-            # This will ping the host from target
-            if cmd == "_ping":
-                 comm = "ping -c3 %s" % self.target.server_ip
-            # This will get all the logs from /var/log/
-            elif cmd == "_logs":
-                comm = 'find /var/log/ -type f 2>/dev/null '
-                comm = '%s-exec echo "%s" \\; ' % (comm, '='*20)
-                comm = '%s-exec echo {} \\; ' % comm
-                comm = '%s-exec echo "%s" \\; ' % (comm, '='*20)
-                comm = '%s-exec cat {} \\; -exec echo "" \\;' % comm
-            else:
-                comm = cmd
-            (status, output) = self.target.run_serial(comm)
-            filename = "target_%s" % cmd.split()[0]
-            with open(os.path.join(dump_dir, filename), 'w') as f:
-                f.write(output)
+                    "stored in %s" % (self._testMethodName,
+                     self.target.target_dumper.dump_dir))
 
     #TODO: use package_manager.py to install packages on any type of image
     def install_packages(self, packagelist):
