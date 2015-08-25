@@ -11,8 +11,24 @@ def get_host_dumper(d):
 
 class BaseDumper(object):
 
-    def __init__(self, d):
+    def __init__(self, d, cmds):
+        self.cmds = []
         self.parent_dir = d.getVar("TESTIMAGE_DUMP_DIR", True)
+        for cmd in cmds.split('\n'):
+            cmd = cmd.lstrip()
+            if not cmd or cmd[0] == '#':
+                continue
+            # Replae variables from the datastore
+            while True:
+                index_start = cmd.find("${")
+                if index_start == -1:
+                    break
+                index_start += 2
+                index_end = cmd.find("}", index_start)
+                var = cmd[index_start:index_end]
+                value = d.getVar(var, True)
+                cmd = cmd.replace("${%s}" % var, value)
+            self.cmds.append(cmd)
 
     def create_dir(self, dir_suffix):
         dump_subdir = ("%s_%s" % (
@@ -26,7 +42,7 @@ class BaseDumper(object):
                 raise err
         self.dump_dir = dump_dir
 
-    def write_dump(self, command, output):
+    def _write_dump(self, command, output):
         if isinstance(self, HostDumper):
             prefix = "host"
         elif isinstance(self, TargetDumper):
@@ -45,33 +61,27 @@ class BaseDumper(object):
 class HostDumper(BaseDumper):
 
     def __init__(self, d):
-        super(HostDumper, self).__init__(d)
-        self.host_cmds = d.getVar("testimage_dump_host", True)
+        host_cmds = d.getVar("testimage_dump_host", True)
+        super(HostDumper, self).__init__(d, host_cmds)
 
     def dump_host(self, dump_dir=""):
         if dump_dir:
             self.dump_dir = dump_dir
-        for cmd in self.host_cmds.split('\n'):
-            cmd = cmd.lstrip()
-            if not cmd or cmd[0] == '#':
-                continue
+        for cmd in self.cmds:
             result = runCmd(cmd, ignore_status=True)
-            self.write_dump(cmd.split()[0], result.output)
+            self._write_dump(cmd.split()[0], result.output)
 
 
 class TargetDumper(BaseDumper):
 
     def __init__(self, d, qemurunner):
-        super(TargetDumper, self).__init__(d)
-        self.target_cmds = d.getVar("testimage_dump_target", True)
+        target_cmds = d.getVar("testimage_dump_target", True)
+        super(TargetDumper, self).__init__(d, target_cmds)
         self.runner = qemurunner
 
     def dump_target(self, dump_dir=""):
         if dump_dir:
             self.dump_dir = dump_dir
-        for cmd in self.target_cmds.split('\n'):
-            cmd = cmd.lstrip()
-            if not cmd or cmd[0] == '#':
-                continue
+        for cmd in self.cmds:
             (status, output) = self.runner.run_serial(cmd)
-            self.write_dump(cmd.split()[0], output)
+            self._write_dump(cmd.split()[0], output)
