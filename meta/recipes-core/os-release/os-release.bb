@@ -21,6 +21,7 @@ VERSION = "${DISTRO_VERSION}${@' (%s)' % DISTRO_CODENAME if 'DISTRO_CODENAME' in
 VERSION_ID = "${DISTRO_VERSION}"
 PRETTY_NAME = "${DISTRO_NAME} ${VERSION}"
 BUILD_ID ?= "${DATETIME}"
+BUILD_ID[vardepsexclude] = "DATETIME"
 
 python do_compile () {
     with open(d.expand('${B}/os-release'), 'w') as f:
