@@ -819,8 +819,6 @@ def check_sanity_everybuild(status, d):
                 continue
 
             if mirror.startswith('file://'):
-                if not mirror.startswith('file:///'):
-                    bb.warn('Invalid file url in %s: %s, must be absolute path (file:///)' % (mirror_var, mirror_entry))
                 import urlparse
                 check_symlink(urlparse.urlparse(mirror).path, d)
                 # SSTATE_MIRROR ends with a /PATH string
