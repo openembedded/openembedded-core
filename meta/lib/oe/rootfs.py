@@ -235,7 +235,7 @@ class Rootfs(object):
                 installed_pkgs_dir = self.d.expand('${WORKDIR}/installed_pkgs.txt')
                 pkgs_to_remove = list()
                 with open(installed_pkgs_dir, "r+") as installed_pkgs:
-                    pkgs_installed = installed_pkgs.read().split('\n')
+                    pkgs_installed = installed_pkgs.read().splitlines()
                     for pkg_installed in pkgs_installed[:]:
                         pkg = pkg_installed.split()[0]
                         if pkg in ["update-rc.d",

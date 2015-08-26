@@ -995,9 +995,10 @@ class RpmPM(PackageManager):
     '''
     def install(self, pkgs, attempt_only=False):
 
-        bb.note("Installing the following packages: %s" % ' '.join(pkgs))
-        if attempt_only and len(pkgs) == 0:
+        if not pkgs:
+            bb.note("There are no packages to install")
             return
+        bb.note("Installing the following packages: %s" % ' '.join(pkgs))
         pkgs = self._pkg_translate_oe_to_smart(pkgs, attempt_only)
 
         if not attempt_only:
