@@ -593,11 +593,26 @@ buildhistory_single_commit() {
 		commitopts="$3 metadata-revs"
 		item="$3"
 	fi
+	if [ "${BUILDHISTORY_BUILD_FAILURES}" = "0" ] ; then
+		result="succeeded"
+	else
+		result="failed"
+	fi
+	case ${BUILDHISTORY_BUILD_INTERRUPTED} in
+		1)
+			result="$result (interrupted)"
+			;;
+		2)
+			result="$result (force interrupted)"
+			;;
+	esac
 	commitmsgfile=`mktemp`
 	cat > $commitmsgfile << END
 $item: Build ${BUILDNAME} of ${DISTRO} ${DISTRO_VERSION} for machine ${MACHINE} on $2
 
 cmd: $1
+
+result: $result
 
 metadata revisions:
 END
@@ -659,7 +674,11 @@ python buildhistory_eventhandler() {
     if e.data.getVar('BUILDHISTORY_FEATURES', True).strip():
         if e.data.getVar("BUILDHISTORY_COMMIT", True) == "1":
             bb.note("Writing buildhistory")
-            bb.build.exec_func("buildhistory_commit", e.data)
+            localdata = bb.data.createCopy(e.data)
+            localdata.setVar('BUILDHISTORY_BUILD_FAILURES', str(e._failures))
+            interrupted = getattr(e, '_interrupted', 0)
+            localdata.setVar('BUILDHISTORY_BUILD_INTERRUPTED', str(interrupted))
+            bb.build.exec_func("buildhistory_commit", localdata)
 }
 
 addhandler buildhistory_eventhandler
