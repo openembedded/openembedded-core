@@ -412,11 +412,32 @@ class LoggingThread(threading.Thread):
 
                 # Actual data to be logged
                 elif self.readsock.fileno() == event[0]:
-                    data = self.readsock.recv(1024)
-                    if not data:
-                        raise Exception("No data on read ready socket")
-
+                    data = self.recv_loop()
                     self.logfunc(data)
+
+    # Since the socket is non-blocking make sure to honor EAGAIN
+    # and EWOULDBLOCK
+    def recv_loop(self):
+        while True:
+            try:
+                data = self.readsock.recv(1024)
+                break
+            except socket.error as e:
+                if e.errno == errno.EAGAIN or e.errno == errno.EWOULDBLOCK:
+                    continue
+                else:
+                    raise
+
+        if not data:
+            raise Exception("No data on read ready socket")
+        elif data == 0:
+            # This actually means an orderly shutdown
+            # happened. But for this code it counts as an
+            # error since the connection shouldn't go away
+            # until qemu exits.
+            raise Exception("Console connection closed unexpectedly")
+
+        return data
 
     def stringify_event(self, event):
         val = ''
