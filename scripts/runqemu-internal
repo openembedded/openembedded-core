@@ -620,7 +620,7 @@ if [ "x$QEMUOPTIONS" = "x" ]; then
     return 1
 fi
 
-if [ $TCPSERIAL_PORTNUM != "" ]; then
+if [ "$TCPSERIAL_PORTNUM" != "" ]; then
     if [ "$MACHINE" = "qemuarm64" ]; then
         SCRIPT_QEMU_EXTRA_OPT="$SCRIPT_QEMU_EXTRA_OPT -device virtio-serial-device -chardev socket,id=virtcon,port=$TCPSERIAL_PORTNUM,host=127.0.0.1 -device virtconsole,chardev=virtcon"
     else
