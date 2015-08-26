@@ -170,7 +170,7 @@ def extract(args, config, basepath, workspace):
     """Entry point for the devtool 'extract' subcommand"""
     import bb
 
-    tinfoil = setup_tinfoil()
+    tinfoil = _prep_extract_operation(config, basepath, args.recipename)
 
     rd = parse_recipe(config, tinfoil, args.recipename, True)
     if not rd:
@@ -208,6 +208,24 @@ class BbTaskExecutor(object):
             localdata = bb.build._task_data(fn, func, self.rdata)
             bb.build.exec_func(func, localdata)
             self.executed.append(func)
+
+
+def _prep_extract_operation(config, basepath, recipename):
+    """HACK: Ugly workaround for making sure that requirements are met when
+       trying to extract a package. Returns the tinfoil instance to be used."""
+    tinfoil = setup_tinfoil()
+    rd = parse_recipe(config, tinfoil, recipename, True)
+
+    if bb.data.inherits_class('kernel-yocto', rd):
+        tinfoil.shutdown()
+        try:
+            stdout, _ = exec_build_env_command(config.init_path, basepath,
+                                               'bitbake kern-tools-native')
+            tinfoil = setup_tinfoil()
+        except bb.process.ExecutionError as err:
+            raise DevtoolError("Failed to build kern-tools-native:\n%s" %
+                               err.stdout)
+    return tinfoil
 
 
 def _extract_source(srctree, keep_temp, devbranch, d):
@@ -395,8 +413,10 @@ def modify(args, config, basepath, workspace):
         raise DevtoolError("directory %s does not exist or not a directory "
                            "(specify -x to extract source from recipe)" %
                            args.srctree)
-
-    tinfoil = setup_tinfoil()
+    if args.extract:
+        tinfoil = _prep_extract_operation(config, basepath, args.recipename)
+    else:
+        tinfoil = setup_tinfoil()
 
     rd = parse_recipe(config, tinfoil, args.recipename, True)
     if not rd:
