@@ -3,7 +3,7 @@ from oeqa.oetest import oeRuntimeTest, skipModule
 from oeqa.utils.decorators import *
 
 def setUpModule():
-    if not oeRuntimeTest.hasPackage("syslog"):
+    if not (oeRuntimeTest.hasPackage("busybox-syslog") or oeRuntimeTest.hasPackage("sysklogd")):
         skipModule("No syslog package in image")
 
 class SyslogTest(oeRuntimeTest):
