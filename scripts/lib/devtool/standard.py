@@ -273,6 +273,10 @@ def _extract_source(srctree, keep_temp, devbranch, d):
         task_executor.exec_func('do_fetch', False)
         logger.info('Unpacking...')
         task_executor.exec_func('do_unpack', False)
+        if bb.data.inherits_class('kernel-yocto', d):
+            # Extra step for kernel to populate the source directory
+            logger.info('Doing kernel checkout...')
+            task_executor.exec_func('do_kernel_checkout', False)
         srcsubdir = crd.getVar('S', True)
         if srcsubdir == workdir:
             # Find non-patch sources that were "unpacked" to srctree directory
@@ -302,26 +306,21 @@ def _extract_source(srctree, keep_temp, devbranch, d):
             else:
                 os.rmdir(patchdir)
 
-        if bb.data.inherits_class('kernel-yocto', d):
-            (stdout, _) = bb.process.run('git --git-dir="%s" rev-parse HEAD' % crd.expand('${WORKDIR}/git'), cwd=srcsubdir)
-            initial_rev = stdout.rstrip()
-        else:
-            if not os.listdir(srcsubdir):
-                raise DevtoolError("no source unpacked to S, perhaps the %s "
-                                   "recipe doesn't use any source?" % pn)
+        if not os.listdir(srcsubdir):
+            raise DevtoolError("no source unpacked to S, perhaps the %s "
+                               "recipe doesn't use any source?" % pn)
 
-            if not os.path.exists(os.path.join(srcsubdir, '.git')):
-                bb.process.run('git init', cwd=srcsubdir)
-                bb.process.run('git add .', cwd=srcsubdir)
-                bb.process.run('git commit -q -m "Initial commit from upstream at version %s"' % crd.getVar('PV', True), cwd=srcsubdir)
+        if not os.path.exists(os.path.join(srcsubdir, '.git')):
+            bb.process.run('git init', cwd=srcsubdir)
+            bb.process.run('git add .', cwd=srcsubdir)
+            bb.process.run('git commit -q -m "Initial commit from upstream at version %s"' % crd.getVar('PV', True), cwd=srcsubdir)
 
-            (stdout, _) = bb.process.run('git rev-parse HEAD', cwd=srcsubdir)
-            initial_rev = stdout.rstrip()
+        (stdout, _) = bb.process.run('git rev-parse HEAD', cwd=srcsubdir)
+        initial_rev = stdout.rstrip()
 
-            bb.process.run('git checkout -b %s' % devbranch, cwd=srcsubdir)
-            bb.process.run('git tag -f devtool-base', cwd=srcsubdir)
-
-            crd.setVar('PATCHTOOL', 'git')
+        bb.process.run('git checkout -b %s' % devbranch, cwd=srcsubdir)
+        bb.process.run('git tag -f devtool-base', cwd=srcsubdir)
+        crd.setVar('PATCHTOOL', 'git')
 
         logger.info('Patching...')
         task_executor.exec_func('do_patch', False)
