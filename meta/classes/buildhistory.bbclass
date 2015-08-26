@@ -621,11 +621,11 @@ END
 				git commit $entry metadata-revs -m "$entry: Build ${BUILDNAME} of ${DISTRO} ${DISTRO_VERSION} for machine ${MACHINE} on $HOSTNAME" -m "cmd: $CMDLINE" --author "${BUILDHISTORY_COMMIT_AUTHOR}" > /dev/null
 			done
 			git gc --auto --quiet
-			if [ "${BUILDHISTORY_PUSH_REPO}" != "" ] ; then
-				git push -q ${BUILDHISTORY_PUSH_REPO}
-			fi
 		else
 			git commit ${BUILDHISTORY_DIR}/ --allow-empty -m "No changes: Build ${BUILDNAME} of ${DISTRO} ${DISTRO_VERSION} for machine ${MACHINE} on $HOSTNAME" -m "cmd: $CMDLINE" --author "${BUILDHISTORY_COMMIT_AUTHOR}" > /dev/null
+		fi
+		if [ "${BUILDHISTORY_PUSH_REPO}" != "" ] ; then
+			git push -q ${BUILDHISTORY_PUSH_REPO}
 		fi) || true
 }
 
