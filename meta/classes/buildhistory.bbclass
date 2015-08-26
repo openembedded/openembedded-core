@@ -435,7 +435,11 @@ buildhistory_get_sdk_installed_target() {
 buildhistory_list_files() {
 	# List the files in the specified directory, but exclude date/time etc.
 	# This awk script is somewhat messy, but handles where the size is not printed for device files under pseudo
-	( cd $1 && find . ! -path . -printf "%M %-10u %-10g %10s %p -> %l\n" | sort -k5 | sed 's/ * -> $//' > $2 )
+	if [ "$3" = "fakeroot" ] ; then
+		( cd $1 && ${FAKEROOTENV} ${FAKEROOTCMD} find . ! -path . -printf "%M %-10u %-10g %10s %p -> %l\n" | sort -k5 | sed 's/ * -> $//' > $2 )
+	else
+		( cd $1 && find . ! -path . -printf "%M %-10u %-10g %10s %p -> %l\n" | sort -k5 | sed 's/ * -> $//' > $2 )
+	fi
 }
 
 buildhistory_list_pkg_files() {
@@ -449,7 +453,7 @@ buildhistory_list_pkg_files() {
 			bbdebug 2 "Folder $outfolder does not exist, file $outfile not created"
 			continue
 		fi
-		buildhistory_list_files ${pkgdir} ${outfile}
+		buildhistory_list_files $pkgdir $outfile fakeroot
 	done
 }
 
