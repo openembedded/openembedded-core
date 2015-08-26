@@ -75,7 +75,7 @@ CONFIGUREOPTS = " --build=${BUILD_SYS} \
 		  --disable-silent-rules \
 		  ${CONFIGUREOPT_DEPTRACK} \
 		  ${@append_libtool_sysroot(d)}"
-CONFIGUREOPT_DEPTRACK = "--disable-dependency-tracking"
+CONFIGUREOPT_DEPTRACK ?= "--disable-dependency-tracking"
 
 
 oe_runconf () {
