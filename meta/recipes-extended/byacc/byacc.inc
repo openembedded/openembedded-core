@@ -5,7 +5,9 @@ programming language."
 SECTION = "devel"
 LICENSE = "PD"
 
-SRC_URI = "ftp://invisible-island.net/byacc/byacc-${PV}.tgz"
+SRC_URI = "ftp://invisible-island.net/byacc/byacc-${PV}.tgz \
+           file://byacc-open.patch"
+
 EXTRA_OECONF += "--program-transform-name='s,^,b,'"
 
 BBCLASSEXTEND = "native"
