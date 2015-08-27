@@ -15,10 +15,3 @@ SRC_URI[md5sum] = "28cb28097c07a735d6af56e598e1c90f"
 SRC_URI[sha256sum] = "54f94a9527ff0a88477be0a71c0bab09a4c3febe0ed878b24824906cd4b0e1d1"
 
 inherit autotools pkgconfig
-
-# vorbisfile.c reveals a problem in the gcc register spilling for the
-# thumb instruction set...
-FULL_OPTIMIZATION_thumb = "-O0"
-
-EXTRA_OECONF = "--with-ogg-libraries=${STAGING_LIBDIR} \
-                --with-ogg-includes=${STAGING_INCDIR}"
