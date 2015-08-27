@@ -94,9 +94,9 @@ class QemuRunner:
     def start(self, qemuparams = None):
         if self.display:
             os.environ["DISPLAY"] = self.display
-        else:
-            logger.error("To start qemu I need a X desktop, please set DISPLAY correctly (e.g. DISPLAY=:1)")
-            return False
+            # Set this flag so that Qemu doesn't do any grabs as SDL grabs
+            # interact badly with screensavers.
+            os.environ["QEMU_DONT_GRAB"] = "1"
         if not os.path.exists(self.rootfs):
             logger.error("Invalid rootfs %s" % self.rootfs)
             return False
@@ -118,10 +118,10 @@ class QemuRunner:
             logger.error("Failed to create listening socket: %s" % msg[1])
             return False
 
-        # Set this flag so that Qemu doesn't do any grabs as SDL grabs interact
-        # badly with screensavers.
-        os.environ["QEMU_DONT_GRAB"] = "1"
+
         self.qemuparams = 'bootparams="console=tty1 console=ttyS0,115200n8 printk.time=1" qemuparams="-serial tcp:127.0.0.1:{}"'.format(threadport)
+        if not self.display:
+            self.qemuparams = 'nographic ' + self.qemuparams
         if qemuparams:
             self.qemuparams = self.qemuparams[:-1] + " " + qemuparams + " " + '\"'
 
