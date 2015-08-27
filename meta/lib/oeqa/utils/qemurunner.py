@@ -139,6 +139,7 @@ class QemuRunner:
                 logger.info("Couldn't get ip from qemu process arguments! Here is the qemu command line used:\n%s\nand output from runqemu:\n%s" % (cmdline, getOutput(output)))
                 self.stop()
                 return False
+            logger.info("qemu cmdline used:\n{}".format(cmdline))
             logger.info("Target IP: %s" % self.ip)
             logger.info("Server IP: %s" % self.server_ip)
 
@@ -368,6 +369,7 @@ class LoggingThread(threading.Thread):
             os.write(self.writepipe, "stop")
 
     def teardown(self):
+        self.logger.info("Tearing down logging thread")
         self.close_socket(self.serversock)
 
         if self.readsock is not None:
@@ -412,25 +414,23 @@ class LoggingThread(threading.Thread):
 
                 # Actual data to be logged
                 elif self.readsock.fileno() == event[0]:
-                    data = self.recv_loop()
+                    data = self.recv(1024)
                     self.logfunc(data)
 
     # Since the socket is non-blocking make sure to honor EAGAIN
-    # and EWOULDBLOCK
-    def recv_loop(self):
-        while True:
-            try:
-                data = self.readsock.recv(1024)
-                break
-            except socket.error as e:
-                if e.errno == errno.EAGAIN or e.errno == errno.EWOULDBLOCK:
-                    continue
-                else:
-                    raise
+    # and EWOULDBLOCK.
+    def recv(self, count):
+        try:
+            data = self.readsock.recv(count)
+        except socket.error as e:
+            if e.errno == errno.EAGAIN or e.errno == errno.EWOULDBLOCK:
+                return ''
+            else:
+                raise
 
-        if not data:
+        if data is None:
             raise Exception("No data on read ready socket")
-        elif data == 0:
+        elif not data:
             # This actually means an orderly shutdown
             # happened. But for this code it counts as an
             # error since the connection shouldn't go away
