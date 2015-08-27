@@ -21,7 +21,9 @@ SRC_URI = "${GNU_MIRROR}/screen/screen-${PV}.tar.gz \
            file://Remove-redundant-compiler-sanity-checks.patch \
            file://Provide-cross-compile-alternatives-for-AC_TRY_RUN.patch \
            file://Skip-host-file-system-checks-when-cross-compiling.patch \
-           file://Avoid-mis-identifying-systems-as-SVR4.patch"
+           file://Avoid-mis-identifying-systems-as-SVR4.patch \
+           file://0001-fix-for-multijob-build.patch \
+          "
 
 SRC_URI[md5sum] = "5bb3b0ff2674e29378c31ad3411170ad"
 SRC_URI[sha256sum] = "fa4049f8aee283de62e283d427f2cfd35d6c369b40f7f45f947dbfd915699d63"
