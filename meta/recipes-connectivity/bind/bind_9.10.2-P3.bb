@@ -24,7 +24,6 @@ SRC_URI = "ftp://ftp.isc.org/isc/bind9/${PV}/${BPN}-${PV}.tar.gz \
 SRC_URI[md5sum] = "a810d5d65fbdcf28dcda80d646913c3a"
 SRC_URI[sha256sum] = "78079a66dda455ffecfe93ef72d1ffc947f17b1c453d55ec06b860b49a5e1d4a"
 
-# --enable-exportlib is necessary for building dhcp
 ENABLE_IPV6 = "--enable-ipv6=${@bb.utils.contains('DISTRO_FEATURES', 'ipv6', 'yes', 'no', d)}"
 EXTRA_OECONF = " ${ENABLE_IPV6} --with-randomdev=/dev/random --disable-threads \
                  --disable-devpoll --disable-epoll --with-gost=no \
@@ -49,6 +48,7 @@ SYSTEMD_SERVICE_${PN} = "named.service"
 PARALLEL_MAKE = ""
 
 RDEPENDS_${PN} = "python-core"
+RDEPENDS_${PN}-dev = ""
 
 PACKAGE_BEFORE_PN += "${PN}-utils"
 FILES_${PN}-utils = "${bindir}/host ${bindir}/dig"
