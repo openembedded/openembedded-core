@@ -18,11 +18,12 @@ do_install() {
 	install -d ${D}${sysconfdir}
     install -m 0644 ${WORKDIR}/inittab ${D}${sysconfdir}/inittab
 
+    set -x
     tmp="${SERIAL_CONSOLES}"
     for i in $tmp
     do
 	j=`echo ${i} | sed s/\;/\ /g`
-	label=`echo ${i} | sed -e 's/^.*;tty//' -e 's/;.*//'`
+	label=`echo ${i} | sed -e 's/tty//' -e 's/^.*;//' -e 's/;.*//'`
 	echo "$label:12345:respawn:${base_sbindir}/getty -L ${j}" >> ${D}${sysconfdir}/inittab
     done
 
