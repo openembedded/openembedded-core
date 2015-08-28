@@ -20,8 +20,25 @@ class MultilibTest(oeRuntimeTest):
         else:
             self.fail("Cannot parse readelf output\n" + s)
 
-    @testcase('279')
     @skipUnlessPassed('test_ssh')
+    def test_check_multilib_libc(self):
+        """
+        Check that a multilib image has both 32-bit and 64-bit libc in.
+        """
+
+        (status, output) = self.target.run("readelf -h /lib/libc.so.6")
+        self.assertEqual(status, 0, "Failed to readelf /lib/libc.so.6")
+        class32 = self.parse(output)
+
+        (status, output) = self.target.run("readelf -h /lib64/libc.so.6")
+        self.assertEqual(status, 0, "Failed to readelf /lib64/libc.so.6")
+        class64 = self.parse(output)
+
+        self.assertEqual(class32, "ELF32", msg="/lib/libc.so.6 isn't ELF32 (is %s)" % class32)
+        self.assertEqual(class64, "ELF64", msg="/lib64/libc.so.6 isn't ELF64 (is %s)" % class64)
+
+    @testcase('279')
+    @skipUnlessPassed('test_check_multilib_libc')
     def test_file_connman(self):
         self.assertTrue(oeRuntimeTest.hasPackage('lib32-connman-gnome'), msg="This test assumes lib32-connman-gnome is installed")
 
