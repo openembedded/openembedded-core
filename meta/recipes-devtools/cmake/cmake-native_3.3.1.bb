@@ -8,9 +8,6 @@ SRC_URI += "\
     file://cmlibarchive-disable-ext2fs.patch \
 "
 
-SRC_URI[md5sum] = "2da57308071ea98b10253a87d2419281"
-SRC_URI[sha256sum] = "ade94e6e36038774565f2aed8866415443444fb7a362eb0ea5096e40d5407c78"
-
 # Disable ccmake since we don't depend on ncurses
 CMAKE_EXTRACONF = "\
     -DBUILD_CursesDialog=0 \

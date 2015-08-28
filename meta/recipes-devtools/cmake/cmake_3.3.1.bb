@@ -8,9 +8,6 @@ SRC_URI_append_class-nativesdk = " \
     file://OEToolchainConfig.cmake \
     file://environment.d-cmake.sh"
 
-SRC_URI[md5sum] = "2da57308071ea98b10253a87d2419281"
-SRC_URI[sha256sum] = "ade94e6e36038774565f2aed8866415443444fb7a362eb0ea5096e40d5407c78"
-
 # Strip ${prefix} from ${docdir}, set result into docdir_stripped
 python () {
     prefix=d.getVar("prefix", True)
