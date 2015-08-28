@@ -415,7 +415,7 @@ class GitApplyTree(PatchTree):
                     # Fall back to patch
                     output = PatchTree._applypatch(self, patch, force, reverse, run)
                 # Add all files
-                shellcmd = ["git", "add", "-f", "."]
+                shellcmd = ["git", "add", "-f", "-A", "."]
                 output += runcmd(["sh", "-c", " ".join(shellcmd)], self.dir)
                 # Exclude the patches directory
                 shellcmd = ["git", "reset", "HEAD", self.patchdir]
