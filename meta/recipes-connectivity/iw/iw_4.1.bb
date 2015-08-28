@@ -18,8 +18,12 @@ SRC_URI[sha256sum] = "14bfc627b37f7f607e4ffa63a70ded15fa2ea85177f703cb17d7fe36f9
 
 inherit pkgconfig
 
-EXTRA_OEMAKE = ""
+EXTRA_OEMAKE = "\
+    'PREFIX=${prefix}' \
+    'SBINDIR=${sbindir}' \
+    'MANDIR=${mandir}' \
+"
 
 do_install() {
-    oe_runmake DESTDIR=${D} install
+    oe_runmake 'DESTDIR=${D}' install
 }
