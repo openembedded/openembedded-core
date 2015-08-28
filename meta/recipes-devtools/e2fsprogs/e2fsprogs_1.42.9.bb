@@ -1,5 +1,6 @@
 require e2fsprogs.inc
 
+RECIPE_NO_UPDATE_REASON = "Updating backported patches to 1.42.13 is too much pain. Let's wait until 1.43 is released."
 
 SRC_URI += "file://acinclude.m4 \
             file://remove.ldconfig.call.patch \
