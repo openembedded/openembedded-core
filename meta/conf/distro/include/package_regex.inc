@@ -43,6 +43,7 @@ REGEX_pn-iputils="iputils-(?P<pver>s\d+).tar"
 REGEX_pn-nettle = "nettle-(?P<pver>\d+(\.\d+)+)\.tar"
 
 REGEX_pn-cairo = "cairo-(?P<pver>\d+(\.\d+)+)\.tar"
+REGEX_pn-cmake = "cmake-(?P<pver>\d+(\.\d+)+)\.tar"
 
 # Exclude NC versions which lack AES encryption
 REGEX_pn-db = "db-(?P<pver>\d+\.\d+(\.\d+)?).tar"
@@ -199,6 +200,9 @@ GITTAGREGEX_pn-sgmlspl = "(?P<pver>(\d+(\.\d+)+))"
 # Exclude x.99.x versions
 GITTAGREGEX_pn-mx-1.0 = "(?P<pver>^\d+(\.(?!99)\d+)+)"
 
+# Blacklist a bogus tag
+GITTAGREGEX_pn-file = "FILE(?P<pver>(?!6_23).+)"
+
 # GNOME related.
 #
 # GNOME2_STABLE picks stable releases in the 2.x series (so not 2.90 onwards,
@@ -206,8 +210,8 @@ GITTAGREGEX_pn-mx-1.0 = "(?P<pver>^\d+(\.(?!99)\d+)+)"
 #
 # GNOME_STABLE picks the latest stable release.
 
-GNOME2_STABLE = "(?P<pver>2\.([0-8]*[02468])+\.\d+)"
-GNOME_STABLE = "(?P<pver>\d+\.(\d*[02468])+\.\d+)"
+GNOME2_STABLE = "(?P<pver>2\.([0-8]*[02468])+(\.\d+)+)"
+GNOME_STABLE = "(?P<pver>\d+\.(\d*[02468])+(\.\d+)+)"
 
 REGEX_pn-glib-2.0 = "${GNOME_STABLE}"
 REGEX_pn-atk = "${GNOME_STABLE}"
