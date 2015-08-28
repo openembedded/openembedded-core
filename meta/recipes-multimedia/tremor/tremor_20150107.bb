@@ -8,6 +8,11 @@ DEPENDS = "libogg"
 SRCDATE = "${PV}"
 PR = "r1"
 
+# SVN support for upstream version check isn't implemented yet
+RECIPE_UPSTREAM_VERSION = "20150107"
+RECIPE_UPSTREAM_DATE = "Jan 07, 2015"
+CHECK_DATE = "Aug 12, 2015"
+
 SRC_URI = "svn://svn.xiph.org/trunk;module=Tremor;rev=19427;protocol=http \
            file://obsolete_automake_macros.patch;striplevel=0 \
            file://tremor-arm-thumb2.patch \

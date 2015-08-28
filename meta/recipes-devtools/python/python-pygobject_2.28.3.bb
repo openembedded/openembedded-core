@@ -1,6 +1,9 @@
 SUMMARY = "Python GObject bindings"
 SECTION = "devel/python"
 LICENSE = "LGPLv2.1"
+
+RECIPE_NO_UPDATE_REASON = "Newer versions of python-pygobject depend on gobject-introspection which doesn't cross-compile"
+
 LIC_FILES_CHKSUM = "file://COPYING;md5=a916467b91076e631dd8edb7424769c7"
 DEPENDS = "python python-pygobject-native libffi glib-2.0"
 DEPENDS_class-native = "python-native libffi-native glib-2.0-native"

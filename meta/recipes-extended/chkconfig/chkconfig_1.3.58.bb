@@ -4,6 +4,8 @@ information for system services.  Chkconfig manipulates the numerous \
 symbolic links in /etc/rc.d, to relieve system administrators of some \
 of the drudgery of manually editing the symbolic links."
 
+RECIPE_NO_UPDATE_REASON = "Version 1.5 requires selinux"
+
 HOMEPAGE = "http://fedorahosted.org/releases/c/h/chkconfig"
 
 LICENSE = "GPLv2"

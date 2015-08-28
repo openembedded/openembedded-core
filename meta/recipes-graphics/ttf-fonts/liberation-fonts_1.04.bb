@@ -5,6 +5,8 @@ Arial, Times New Roman, Courier New."
 HOMEPAGE = "https://fedorahosted.org/liberation-fonts/"
 BUGTRACKER = "https://bugzilla.redhat.com/"
 
+RECIPE_NO_UPDATE_REASON = "2.x depends on fontforge package, which is not yet provided in oe-core"
+
 SECTION = "x11/fonts"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f"

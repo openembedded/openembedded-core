@@ -5,6 +5,8 @@ verifying, querying, and updating software packages. Each software \
 package consists of an archive of files along with information about \
 the package like its version, a description, etc."
 
+RECIPE_NO_UPDATE_REASON = "5.4.15 has a package database issue: http://lists.openembedded.org/pipermail/openembedded-core/2015-August/109187.html"
+
 SUMMARY_${PN}-libs = "Libraries for manipulating RPM packages"
 DESCRIPTION_${PN}-libs = "This package contains the RPM shared libraries."
 

@@ -3,6 +3,11 @@ SECTION = "console/network"
 LICENSE = "unfs3"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=9475885294e17c0cc0067820d042792e"
 
+# SVN support for upstream version check isn't implemented yet
+RECIPE_UPSTREAM_VERSION = "0.9.22.r495"
+RECIPE_UPSTREAM_DATE = "Feb 05, 2015"
+CHECK_DATE = "Jun 10, 2015"
+
 DEPENDS = "flex-native bison-native flex"
 DEPENDS_append_class-nativesdk += "flex-nativesdk"
 

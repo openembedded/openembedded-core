@@ -1,6 +1,8 @@
 SUMMARY = "Creates metadata indexes for RPM package repositories"
 HOMEPAGE = "http://createrepo.baseurl.org/"
 
+RECIPE_NO_UPDATE_REASON = "Versions after 0.9.* use YUM, so we hold at 0.4.11"
+
 LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=18810669f13b87348459e611d31ab760"
 
