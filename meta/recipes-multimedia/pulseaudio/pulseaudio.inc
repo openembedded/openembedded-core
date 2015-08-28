@@ -9,7 +9,7 @@ LIC_FILES_CHKSUM = "file://GPL;md5=4325afd396febcb659c36b49533135d4 \
 
 DEPENDS = "libatomic-ops liboil libsndfile1 libtool"
 # optional
-DEPENDS += "udev alsa-lib glib-2.0 dbus gconf"
+DEPENDS += "udev alsa-lib glib-2.0 gconf"
 DEPENDS += "json-c gdbm speexdsp libxml-parser-perl-native libcap"
 
 inherit autotools pkgconfig useradd gettext perlnative bluetooth systemd
@@ -37,8 +37,10 @@ PACKAGECONFIG ??= "${@bb.utils.contains('DISTRO_FEATURES', 'bluetooth', '${BLUEZ
                    ${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'x11', '', d)} \
                    ${@bb.utils.contains('DISTRO_FEATURES', '3g', 'ofono', '', d)} \
                    ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'systemd', '', d)} \
+                   dbus \
                    "
 
+PACKAGECONFIG[dbus] = "--enable-dbus,--disable-dbus,dbus"
 PACKAGECONFIG[bluez4] = "--enable-bluez4,--disable-bluez4,bluez4 sbc"
 PACKAGECONFIG[bluez5] = "--enable-bluez5,--disable-bluez5,bluez5 sbc"
 PACKAGECONFIG[ofono] = "--enable-bluez5-ofono-headset,--disable-bluez5-ofono-headset,ofono"
@@ -75,7 +77,7 @@ USERADD_PARAM_pulseaudio-server = "--system --home /var/run/pulse \
 # adding the console-kit module to an image, we also get the necessary
 # consolekit package produced.
 PACKAGES =+ "libpulsecore libpulsecommon libpulse libpulse-simple libpulse-mainloop-glib \
-             pulseaudio-server pulseaudio-misc ${@bb.utils.contains('PACKAGECONFIG', 'x11', 'pulseaudio-module-console-kit', '', d)}"
+             pulseaudio-server pulseaudio-misc ${@bb.utils.contains('PACKAGECONFIG', 'dbus', 'pulseaudio-module-console-kit', '', d)}"
 
 #upgrade path:
 RREPLACES_pulseaudio-server = "libpulse-bin libpulse-conf"
@@ -157,7 +159,9 @@ RDEPENDS_pulseaudio-server = " \
 # that makes the PulseAudio plugin the default ALSA device.
 RDEPENDS_pulseaudio-server += "alsa-plugins-pulseaudio-conf"
 
-RDEPENDS_pulseaudio-module-console-kit =+ "consolekit"
+# pulseaudio-module-console-kit is built whenever dbus is enabled by PACKAGECONFIG
+# but consolekit depends on libx11 and is available only for DISTRO with x11 in DISTRO_FEATURES
+RDEPENDS_pulseaudio-module-console-kit =+ "${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'consolekit', '', d)}"
 RDEPENDS_pulseaudio-misc += "pulseaudio-module-cli-protocol-unix"
 
 FILES_pulseaudio-module-gconf += "${libexecdir}/pulse/gconf-helper"
