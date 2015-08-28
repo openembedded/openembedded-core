@@ -10,9 +10,22 @@ def setUpModule():
 
 class MultilibTest(oeRuntimeTest):
 
+    def parse(self, s):
+        """
+        Parse the output of readelf -h and return the binary class, or fail.
+        """
+        l = [l.split()[1] for l in s.split('\n') if "Class:" in l]
+        if l:
+            return l[0]
+        else:
+            self.fail("Cannot parse readelf output\n" + s)
+
     @testcase('279')
     @skipUnlessPassed('test_ssh')
     def test_file_connman(self):
-        self.assertTrue(oeRuntimeTest.hasPackage('connman-gnome'), msg="This test assumes connman-gnome is installed")
-        (status, output) = self.target.run("readelf -h /usr/bin/connman-applet | sed -n '3p' | awk '{print $2}'")
-        self.assertEqual(output, "ELF32", msg="connman-applet isn't an ELF32 binary. readelf says: %s" % self.target.run("readelf -h /usr/bin/connman-applet")[1])
+        self.assertTrue(oeRuntimeTest.hasPackage('lib32-connman-gnome'), msg="This test assumes lib32-connman-gnome is installed")
+
+        (status, output) = self.target.run("readelf -h /usr/bin/connman-applet")
+        self.assertEqual(status, 0, "Failed to readelf /usr/bin/connman-applet")
+        theclass = self.parse(output)
+        self.assertEqual(theclass, "ELF32", msg="connman-applet isn't ELF32 (is %s)" % theclass)
