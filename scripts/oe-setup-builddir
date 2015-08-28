@@ -24,6 +24,7 @@ if [ -z "$BUILDDIR" ]; then
 fi
 
 mkdir -p "$BUILDDIR/conf"
+chmod -R -st "$BUILDDIR" 
 
 if [ ! -d "$BUILDDIR" ]; then
     echo >&2 "Error: The builddir ($BUILDDIR) does not exist!"

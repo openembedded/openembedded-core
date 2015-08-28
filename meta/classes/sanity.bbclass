@@ -686,6 +686,7 @@ def check_sanity_version_change(status, d):
     status.addresult(check_not_nfs(tmpdir, "TMPDIR"))
 
 def check_sanity_everybuild(status, d):
+    import os, stat
     # Sanity tests which test the users environment so need to run at each build (or are so cheap
     # it makes sense to always run them.
 
@@ -839,6 +840,10 @@ def check_sanity_everybuild(status, d):
                 status.addresult("Error, TMPDIR has changed location. You need to either move it back to %s or rebuild\n" % saved_tmpdir)
     else:
         bb.utils.mkdirhier(tmpdir)
+        # Remove setuid, setgid and sticky bits from TMPDIR
+        os.chmod(tmpdir, os.stat(tmpdir).st_mode & ~ stat.S_ISUID)
+        os.chmod(tmpdir, os.stat(tmpdir).st_mode & ~ stat.S_ISGID)
+        os.chmod(tmpdir, os.stat(tmpdir).st_mode & ~ stat.S_ISVTX)
         with open(checkfile, "w") as f:
             f.write(tmpdir)
 
