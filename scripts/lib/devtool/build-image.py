@@ -21,7 +21,7 @@ import os
 import logging
 
 from bb.process import ExecutionError
-from devtool import exec_build_env_command, add_md5
+from devtool import exec_build_env_command
 
 LOG = logging.getLogger('devtool')
 
@@ -37,8 +37,6 @@ def build_image(args, config, basepath, workspace):
     with open(appendfile, 'w') as afile:
         afile.write('IMAGE_INSTALL_append = " %s"\n' % \
                     ' '.join(workspace.keys()))
-
-    add_md5(config, image, appendfile)
 
     try:
         exec_build_env_command(config.init_path, basepath,
