@@ -711,10 +711,6 @@ def has_non_literals(value):
         return any(has_non_literals(v) for v in value)
 
 
-def plugin_init(pluginlist):
-    pass
-
-
 def register_recipe_handlers(handlers):
     # We need to make sure this is ahead of the makefile fallback handler
     handlers.insert(0, PythonRecipeHandler())

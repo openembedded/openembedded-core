@@ -57,7 +57,7 @@ def load_plugins(logger, plugins, pluginpath):
             plugin = load_plugin(name)
             if hasattr(plugin, 'plugin_init'):
                 plugin.plugin_init(plugins)
-                plugins.append(plugin)
+            plugins.append(plugin)
 
 def git_convert_standalone_clone(repodir):
     """If specified directory is a git repository, ensure it's a standalone clone"""

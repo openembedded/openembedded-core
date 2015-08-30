@@ -31,11 +31,6 @@ from devtool import parse_recipe
 logger = logging.getLogger('devtool')
 
 
-def plugin_init(pluginlist):
-    """Plugin initialization"""
-    pass
-
-
 def add(args, config, basepath, workspace):
     """Entry point for the devtool 'add' subcommand"""
     import bb

@@ -307,9 +307,6 @@ class MakefileRecipeHandler(RecipeHandler):
             self.genfunction(lines_after, 'do_install', ['# Specify install commands here'])
 
 
-def plugin_init(pluginlist):
-    pass
-
 def register_recipe_handlers(handlers):
     # These are in a specific order so that the right one is detected first
     handlers.append(CmakeRecipeHandler())

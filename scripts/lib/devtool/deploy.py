@@ -23,11 +23,6 @@ from devtool import exec_fakeroot, setup_tinfoil, DevtoolError
 
 logger = logging.getLogger('devtool')
 
-def plugin_init(pluginlist):
-    """Plugin initialization"""
-    pass
-
-
 def deploy(args, config, basepath, workspace):
     """Entry point for the devtool 'deploy' subcommand"""
     import re
