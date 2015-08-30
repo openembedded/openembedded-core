@@ -131,6 +131,22 @@ class BitbakeVars(defaultdict):
     def __init__(self):
         defaultdict.__init__(self, dict)
 
+    def _parse_line(self, line, image):
+        """
+        Parse one line from bitbake -e output.
+        Put result key-value pair into the storage.
+        """
+        if "=" not in line:
+            return
+        try:
+            key, val = line.split("=")
+        except ValueError:
+            return
+        key = key.strip()
+        val = val.strip()
+        if key.replace('_', '').isalnum():
+            self[image][key] = val.strip('"')
+
     def get_var(self, var, image=None):
         """
         Get bitbake variable value lazy way, i.e. run
@@ -154,16 +170,7 @@ class BitbakeVars(defaultdict):
 
             # Parse bitbake -e output
             for line in lines.split('\n'):
-                if "=" not in line:
-                    continue
-                try:
-                    key, val = line.split("=")
-                except ValueError:
-                    continue
-                key = key.strip()
-                val = val.strip()
-                if key.replace('_', '').isalnum():
-                    self[image][key] = val.strip('"')
+                self._parse_line(line, image)
 
             # Make first image a default set of variables
             images = [key for key in self if key]
