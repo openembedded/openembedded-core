@@ -26,6 +26,7 @@
 #
 """Miscellaneous functions."""
 
+import os
 from collections import defaultdict
 
 from wic import msger
@@ -131,12 +132,13 @@ class BitbakeVars(defaultdict):
     def __init__(self):
         defaultdict.__init__(self, dict)
 
-        # default_image attribute should be set from outside
+        # default_image and vars_dir attributes should be set from outside
         self.default_image = None
+        self.vars_dir = None
 
     def _parse_line(self, line, image):
         """
-        Parse one line from bitbake -e output.
+        Parse one line from bitbake -e output or from .env file.
         Put result key-value pair into the storage.
         """
         if "=" not in line:
@@ -152,31 +154,44 @@ class BitbakeVars(defaultdict):
 
     def get_var(self, var, image=None):
         """
-        Get bitbake variable value lazy way, i.e. run
-        'bitbake -e' only when variable is requested.
+        Get bitbake variable from 'bitbake -e' output or from .env file.
+        This is a lazy method, i.e. it runs bitbake or parses file only when
+        only when variable is requested. It also caches results.
         """
         if not image:
             image = self.default_image
 
         if image not in self:
-            # Get bitbake -e output
-            cmd = "bitbake -e"
-            if image:
-                cmd += " %s" % image
+            if image and self.vars_dir:
+                fname = os.path.join(self.vars_dir, image + '.env')
+                if os.path.isfile(fname):
+                    # parse .env file
+                    with open(fname) as varsfile:
+                        for line in varsfile:
+                            self._parse_line(line, image)
+                else:
+                    print "Couldn't get bitbake variable from %s." % fname
+                    print "File %s doesn't exist." % fname
+                    return
+            else:
+                # Get bitbake -e output
+                cmd = "bitbake -e"
+                if image:
+                    cmd += " %s" % image
 
-            log_level = msger.get_loglevel()
-            msger.set_loglevel('normal')
-            ret, lines = _exec_cmd(cmd)
-            msger.set_loglevel(log_level)
+                log_level = msger.get_loglevel()
+                msger.set_loglevel('normal')
+                ret, lines = _exec_cmd(cmd)
+                msger.set_loglevel(log_level)
 
-            if ret:
-                print "Couldn't get '%s' output." % cmd
-                print "Bitbake failed with error:\n%s\n" % lines
-                return
+                if ret:
+                    print "Couldn't get '%s' output." % cmd
+                    print "Bitbake failed with error:\n%s\n" % lines
+                    return
 
-            # Parse bitbake -e output
-            for line in lines.split('\n'):
-                self._parse_line(line, image)
+                # Parse bitbake -e output
+                for line in lines.split('\n'):
+                    self._parse_line(line, image)
 
             # Make first image a default set of variables
             images = [key for key in self if key]
