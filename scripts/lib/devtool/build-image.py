@@ -55,6 +55,15 @@ def build_image(args, config, basepath, workspace):
         with open(appendfile, 'w') as afile:
             afile.write('IMAGE_INSTALL_append = " %s"\n' % ' '.join(recipes))
 
+            # Generate notification callback devtool_warn_image_extended
+            afile.write('do_rootfs[prefuncs] += "devtool_warn_image_extended"\n\n')
+            afile.write("python devtool_warn_image_extended() {\n")
+            afile.write("    bb.plain('NOTE: %%s: building with additional '\n"
+                        "             'packages due to \"devtool build-image\"'"
+                        "              %% d.getVar('PN', True))\n"
+                        "    bb.plain('NOTE: delete %%s to clear this' %% \\\n"
+                        "             '%s')\n" % os.path.relpath(appendfile, basepath))
+            afile.write("}\n")
     try:
         exec_build_env_command(config.init_path, basepath,
                                'bitbake %s' % image, watch=True)
