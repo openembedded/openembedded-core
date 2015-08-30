@@ -887,3 +887,29 @@ class DevtoolTests(DevtoolBase):
             result = runCmd('devtool undeploy-target -c %s root@%s' % (testrecipe, qemu.ip))
             result = runCmd('ssh %s root@%s %s' % (sshargs, qemu.ip, testcommand), ignore_status=True)
             self.assertNotEqual(result, 0, 'undeploy-target did not remove command as it should have')
+
+    def test_devtool_build_image(self):
+        """Test devtool build-image plugin"""
+        # Check preconditions
+        workspacedir = os.path.join(self.builddir, 'workspace')
+        self.assertTrue(not os.path.exists(workspacedir), 'This test cannot be run with a workspace directory under the build directory')
+        image = 'core-image-minimal'
+        self.track_for_cleanup(workspacedir)
+        self.add_command_to_tearDown('bitbake-layers remove-layer */workspace')
+        self.add_command_to_tearDown('bitbake -c clean %s' % image)
+        bitbake('%s -c clean' % image)
+        # Add target and native recipes to workspace
+        for recipe in ('mdadm', 'parted-native'):
+            tempdir = tempfile.mkdtemp(prefix='devtoolqa')
+            self.track_for_cleanup(tempdir)
+            self.add_command_to_tearDown('bitbake -c clean %s' % recipe)
+            runCmd('devtool modify %s -x %s' % (recipe, tempdir))
+        # Try to build image
+        result = runCmd('devtool build-image %s' % image)
+        self.assertNotEqual(result, 0, 'devtool build-image failed')
+        # Check if image.bbappend has required content
+        bbappend = os.path.join(workspacedir, 'appends', image+'.bbappend')
+        self.assertTrue(os.path.isfile(bbappend), 'bbappend not created %s' % result.output)
+        # NOTE: native recipe parted-native should not be in IMAGE_INSTALL_append
+        self.assertTrue('IMAGE_INSTALL_append = " mdadm"\n' in open(bbappend).readlines(),
+                        'IMAGE_INSTALL_append = " mdadm" not found in %s' % bbappend)
