@@ -326,6 +326,22 @@ class Image(ImageDepGraph):
 
         return image_cmd_groups
 
+    def _write_env(self):
+        """
+        Write environment variables used by wic
+        to tmp/sysroots/<machine>/imgdata/<image>.env
+        """
+        stdir = self.d.getVar('STAGING_DIR_TARGET', True)
+        outdir = os.path.join(stdir, 'imgdata')
+        if not os.path.exists(outdir):
+            os.makedirs(outdir)
+        basename = self.d.getVar('IMAGE_BASENAME', True)
+        with open(os.path.join(outdir, basename) + '.env', 'w') as envf:
+            for var in self.d.getVar('WICVARS', True).split():
+                value = self.d.getVar(var, True)
+                if value:
+                    envf.write('%s="%s"\n' % (var, value.strip()))
+
     def create(self):
         bb.note("###### Generate images #######")
         pre_process_cmds = self.d.getVar("IMAGE_PREPROCESS_COMMAND", True)
@@ -336,6 +352,8 @@ class Image(ImageDepGraph):
         self._remove_old_symlinks()
 
         image_cmd_groups = self._get_imagecmds()
+
+        self._write_env()
 
         for image_cmds in image_cmd_groups:
             # create the images in parallel
