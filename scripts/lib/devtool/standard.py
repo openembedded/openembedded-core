@@ -26,7 +26,7 @@ import argparse
 import scriptutils
 import errno
 from devtool import exec_build_env_command, setup_tinfoil, DevtoolError
-from devtool import add_md5
+from devtool import add_md5, parse_recipe
 
 logger = logging.getLogger('devtool')
 
@@ -157,34 +157,6 @@ def _check_compatible_recipe(pn, d):
                            "from working. You will need to disable this "
                            "first." % pn)
 
-def _get_recipe_file(cooker, pn):
-    """Find recipe file corresponding a package name"""
-    import oe.recipeutils
-    recipefile = oe.recipeutils.pn_to_recipe(cooker, pn)
-    if not recipefile:
-        skipreasons = oe.recipeutils.get_unavailable_reasons(cooker, pn)
-        if skipreasons:
-            logger.error('\n'.join(skipreasons))
-        else:
-            logger.error("Unable to find any recipe file matching %s" % pn)
-    return recipefile
-
-def _parse_recipe(config, tinfoil, pn, appends):
-    """Parse recipe of a package"""
-    import oe.recipeutils
-    recipefile = _get_recipe_file(tinfoil.cooker, pn)
-    if not recipefile:
-        # Error already logged
-        return None
-    if appends:
-        append_files = tinfoil.cooker.collection.get_file_appends(recipefile)
-        # Filter out appends from the workspace
-        append_files = [path for path in append_files if
-                        not path.startswith(config.workspace_path)]
-    return oe.recipeutils.parse_recipe(recipefile, append_files,
-                                       tinfoil.config_data)
-
-
 def _ls_tree(directory):
     """Recursive listing of files in a directory"""
     ret = []
@@ -200,7 +172,7 @@ def extract(args, config, basepath, workspace):
 
     tinfoil = setup_tinfoil()
 
-    rd = _parse_recipe(config, tinfoil, args.recipename, True)
+    rd = parse_recipe(config, tinfoil, args.recipename, True)
     if not rd:
         return 1
 
@@ -420,7 +392,7 @@ def modify(args, config, basepath, workspace):
 
     tinfoil = setup_tinfoil()
 
-    rd = _parse_recipe(config, tinfoil, args.recipename, True)
+    rd = parse_recipe(config, tinfoil, args.recipename, True)
     if not rd:
         return 1
     recipefile = rd.getVar('FILE', True)
@@ -762,7 +734,7 @@ def update_recipe(args, config, basepath, workspace):
 
     tinfoil = setup_tinfoil()
 
-    rd = _parse_recipe(config, tinfoil, args.recipename, True)
+    rd = parse_recipe(config, tinfoil, args.recipename, True)
     if not rd:
         return 1
 
