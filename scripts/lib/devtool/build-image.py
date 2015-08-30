@@ -64,6 +64,12 @@ def build_image(args, config, basepath, workspace):
                         "    bb.plain('NOTE: delete %%s to clear this' %% \\\n"
                         "             '%s')\n" % os.path.relpath(appendfile, basepath))
             afile.write("}\n")
+
+            logger.info('Building image %s with the following '
+                        'additional packages: %s', image, ' '.join(recipes))
+    else:
+        logger.warning('No recipes in workspace, building image %s unmodified', image)
+
     try:
         exec_build_env_command(config.init_path, basepath,
                                'bitbake %s' % image, watch=True)
