@@ -23,7 +23,7 @@ import logging
 from bb.process import ExecutionError
 from devtool import exec_build_env_command
 
-LOG = logging.getLogger('devtool')
+logger = logging.getLogger('devtool')
 
 def plugin_init(pluginlist):
     """Plugin initialization"""
@@ -44,7 +44,7 @@ def build_image(args, config, basepath, workspace):
     except ExecutionError as err:
         return err.exitcode
 
-    LOG.info('Successfully built %s', image)
+    logger.info('Successfully built %s', image)
 
 def register_commands(subparsers, context):
     """Register devtool subcommands from the build-image plugin"""
