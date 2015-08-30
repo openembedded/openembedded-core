@@ -188,3 +188,17 @@ class Wic(oeSelfTest):
             for var in wicvars:
                 self.assertTrue(var in content, "%s is not in .env file" % var)
                 self.assertTrue(content[var])
+
+    def test20_wic_image_type(self):
+        """Test building wic images by bitbake"""
+        self.assertEqual(0, bitbake('wic-image-minimal').status)
+
+        deploy_dir = get_bb_var('DEPLOY_DIR_IMAGE')
+        machine = get_bb_var('MACHINE')
+        prefix = os.path.join(deploy_dir, 'wic-image-minimal-%s.' % machine)
+        # check if we have result image and manifests symlinks
+        # pointing to existing files
+        for suffix in ('wic.bz2', 'manifest'):
+            path = prefix + suffix
+            self.assertTrue(os.path.islink(path))
+            self.assertTrue(os.path.isfile(os.path.realpath(path)))
