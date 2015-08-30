@@ -131,6 +131,9 @@ class BitbakeVars(defaultdict):
     def __init__(self):
         defaultdict.__init__(self, dict)
 
+        # default_image attribute should be set from outside
+        self.default_image = None
+
     def _parse_line(self, line, image):
         """
         Parse one line from bitbake -e output.
@@ -152,6 +155,9 @@ class BitbakeVars(defaultdict):
         Get bitbake variable value lazy way, i.e. run
         'bitbake -e' only when variable is requested.
         """
+        if not image:
+            image = self.default_image
+
         if image not in self:
             # Get bitbake -e output
             cmd = "bitbake -e"
