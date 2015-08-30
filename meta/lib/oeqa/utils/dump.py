@@ -14,6 +14,8 @@ class BaseDumper(object):
     def __init__(self, d, cmds):
         self.cmds = []
         self.parent_dir = d.getVar("TESTIMAGE_DUMP_DIR", True)
+        if not cmds:
+            return
         for cmd in cmds.split('\n'):
             cmd = cmd.lstrip()
             if not cmd or cmd[0] == '#':
