@@ -50,6 +50,11 @@ def build_image(args, config, basepath, workspace):
     appendfile = os.path.join(config.workspace_path, 'appends',
                               '%s.bbappend' % image)
 
+    # remove <image>.bbapend to make sure setup_tinfoil doesn't
+    # breake because of it
+    if os.path.isfile(appendfile):
+        os.unlink(appendfile)
+
     recipes = _get_recipes(workspace, config)
     if recipes:
         with open(appendfile, 'w') as afile:
