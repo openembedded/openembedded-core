@@ -52,7 +52,7 @@ if bitbake_exe:
 else:
     bitbake_main = None
 
-from wic.utils.oe.misc import get_bitbake_var
+from wic.utils.oe.misc import get_bitbake_var, BB_VARS
 from wic.utils.errors import WicError
 from image import engine
 from image import help as hlp
@@ -141,7 +141,9 @@ def wic_create_subcommand(args, usage_str):
             print "  " + ", ".join(missed)
             sys.exit(1)
 
-    if not options.image_name:
+    if options.image_name:
+        BB_VARS.default_image = options.image_name
+    else:
         options.build_check = False
 
     if options.build_check:
