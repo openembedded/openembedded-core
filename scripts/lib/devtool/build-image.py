@@ -48,7 +48,9 @@ def build_image(args, config, basepath, workspace):
 
 def register_commands(subparsers, context):
     """Register devtool subcommands from the build-image plugin"""
-    parser_package = subparsers.add_parser('build-image', help='Build image')
-    parser_package.add_argument('recipe', help='Image recipe to build')
-    parser_package.set_defaults(func=build_image)
-
+    parser = subparsers.add_parser('build-image',
+                                   help='Build image including workspace recipe packages',
+                                   description='Builds an image, extending it to include '
+                                   'packages from recipes in the workspace')
+    parser.add_argument('recipe', help='Image recipe to build')
+    parser.set_defaults(func=build_image)
