@@ -114,6 +114,9 @@ def wic_create_subcommand(args, usage_str):
     parser.add_option("-c", "--compress-with", choices=("gzip", "bzip2", "xz"),
                       dest='compressor',
                       help="compress image with specified compressor")
+    parser.add_option("-v", "--vars", dest='vars_dir',
+                      help="directory with <image>.env files that store "
+                           "bitbake variables")
     parser.add_option("-D", "--debug", dest="debug", action="store_true",
                       default=False, help="output debug information")
 
@@ -145,6 +148,9 @@ def wic_create_subcommand(args, usage_str):
         BB_VARS.default_image = options.image_name
     else:
         options.build_check = False
+
+    if options.vars_dir:
+        BB_VARS.vars_dir = options.vars_dir
 
     if options.build_check:
         print "Checking basic build environment..."
