@@ -21,7 +21,7 @@ import os
 import logging
 
 from bb.process import ExecutionError
-from devtool import exec_build_env_command
+from devtool import exec_build_env_command, setup_tinfoil, parse_recipe
 
 logger = logging.getLogger('devtool')
 
@@ -29,14 +29,31 @@ def plugin_init(pluginlist):
     """Plugin initialization"""
     pass
 
+def _get_recipes(workspace, config):
+    """Get list of target recipes from the workspace."""
+    result = []
+    tinfoil = setup_tinfoil()
+    for recipe in workspace:
+        data = parse_recipe(config, tinfoil, recipe, True)
+        if 'class-target' in data.getVar('OVERRIDES', True).split(':'):
+            if recipe in data.getVar('PACKAGES', True):
+                result.append(recipe)
+            else:
+                logger.warning("Skipping recipe %s as it doesn't produce "
+                               "package with the same name", recipe)
+    tinfoil.shutdown()
+    return result
+
 def build_image(args, config, basepath, workspace):
     """Entry point for the devtool 'build-image' subcommand."""
     image = args.recipe
     appendfile = os.path.join(config.workspace_path, 'appends',
                               '%s.bbappend' % image)
-    with open(appendfile, 'w') as afile:
-        afile.write('IMAGE_INSTALL_append = " %s"\n' % \
-                    ' '.join(workspace.keys()))
+
+    recipes = _get_recipes(workspace, config)
+    if recipes:
+        with open(appendfile, 'w') as afile:
+            afile.write('IMAGE_INSTALL_append = " %s"\n' % ' '.join(recipes))
 
     try:
         exec_build_env_command(config.init_path, basepath,
