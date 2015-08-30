@@ -23,6 +23,7 @@
 
 """Test cases for wic."""
 
+import os
 import sys
 
 from glob import glob
@@ -168,3 +169,22 @@ class Wic(oeSelfTest):
         self.assertEqual(1, len(glob(self.resultdir + "HYBRID_ISO_IMG-*.direct")))
         self.assertEqual(1, len(glob(self.resultdir + "HYBRID_ISO_IMG-*.iso")))
 
+    def test19_image_env(self):
+        """Test generation of <image>.env files."""
+        image = 'core-image-minimal'
+        stdir = get_bb_var('STAGING_DIR_TARGET', image)
+        imgdatadir = os.path.join(stdir, 'imgdata')
+
+        basename = get_bb_var('IMAGE_BASENAME', image)
+        self.assertEqual(basename, image)
+        path = os.path.join(imgdatadir, basename) + '.env'
+        self.assertTrue(os.path.isfile(path))
+
+        wicvars = get_bb_var('WICVARS', image).split()
+        wicvars.remove('IMAGE_BOOT_FILES') # this variable is optional
+        with open(path) as envfile:
+            content = dict(line.split("=", 1) for line in envfile)
+            # test if variables used by wic present in the .env file
+            for var in wicvars:
+                self.assertTrue(var in content, "%s is not in .env file" % var)
+                self.assertTrue(content[var])
