@@ -58,6 +58,7 @@ def build_image(args, config, basepath, workspace):
     recipes = _get_recipes(workspace, config)
     if recipes:
         with open(appendfile, 'w') as afile:
+            # include selected recipes into the image
             afile.write('IMAGE_INSTALL_append = " %s"\n' % ' '.join(recipes))
 
             # Generate notification callback devtool_warn_image_extended
@@ -75,6 +76,7 @@ def build_image(args, config, basepath, workspace):
     else:
         logger.warning('No recipes in workspace, building image %s unmodified', image)
 
+    # run bitbake to build image
     try:
         exec_build_env_command(config.init_path, basepath,
                                'bitbake %s' % image, watch=True)
