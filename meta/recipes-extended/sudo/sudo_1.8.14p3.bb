@@ -3,6 +3,7 @@ require sudo.inc
 SRC_URI = "http://ftp.sudo.ws/sudo/dist/sudo-${PV}.tar.gz \
            ${@bb.utils.contains('DISTRO_FEATURES', 'pam', '${PAM_SRC_URI}', '', d)} \
            file://0001-Use-correct-path-to-init.d-and-tmpfiles.d-files.patch \
+           file://0001-Include-sys-types.h-for-id_t-definition.patch \
            "
 
 PAM_SRC_URI = "file://sudo.pam"
