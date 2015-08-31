@@ -180,8 +180,10 @@ class Wic(oeSelfTest):
         path = os.path.join(imgdatadir, basename) + '.env'
         self.assertTrue(os.path.isfile(path))
 
-        wicvars = get_bb_var('WICVARS', image).split()
-        wicvars.remove('IMAGE_BOOT_FILES') # this variable is optional
+        wicvars = set(get_bb_var('WICVARS', image).split())
+        # filter out optional variables
+        wicvars = wicvars.difference(('HDDDIR', 'IMAGE_BOOT_FILES',
+                                      'INITRD', 'ISODIR'))
         with open(path) as envfile:
             content = dict(line.split("=", 1) for line in envfile)
             # test if variables used by wic present in the .env file
