@@ -32,15 +32,18 @@ EXTRA_OEMAKE = "\
 INITSCRIPT_NAME = "irattach"
 INITSCRIPT_PARAMS = "defaults 20"
 
+TARGETS ??= "irattach irdaping"
 do_compile () {
-	oe_runmake -C irattach
-	oe_runmake -C irdaping
+	for t in ${TARGETS}; do
+		oe_runmake -C $t
+	done
 }
 
 do_install () {
 	install -d ${D}${sbindir}
-	oe_runmake -C irattach ROOT="${D}" install
-	oe_runmake -C irdaping ROOT="${D}" install
+	for t in ${TARGETS}; do
+		oe_runmake -C $t ROOT="${D}" install
+	done
 
 	install -d ${D}${sysconfdir}/init.d
 	install -m 0755 ${WORKDIR}/init ${D}${sysconfdir}/init.d/${INITSCRIPT_NAME}
