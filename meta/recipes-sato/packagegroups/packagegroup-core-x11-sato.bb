@@ -39,8 +39,7 @@ RDEPENDS_${PN}-base = "\
     libsdl \
     ${NETWORK_MANAGER} \
     udev-extraconf \
-    pulseaudio-server \
-    pulseaudio-client-conf-sato \
+    ${@bb.utils.contains('DISTRO_FEATURES', 'pulseaudio', 'pulseaudio-server pulseaudio-client-conf-sato', '', d)} \
     "
 
 # pcmanfm doesn't work on mips
