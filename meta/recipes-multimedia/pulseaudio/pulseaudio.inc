@@ -49,6 +49,9 @@ PACKAGECONFIG[systemd] = "--enable-systemd-daemon --enable-systemd-login --enabl
 PACKAGECONFIG[x11] = "--enable-x11,--disable-x11,virtual/libx11 libxtst libice libsm libxcb"
 PACKAGECONFIG[avahi] = "--enable-avahi,--disable-avahi,avahi"
 PACKAGECONFIG[jack] = "--enable-jack,--disable-jack,jack"
+# Since many embedded systems don't have non-root users, it's useful to be
+# able to use pulseaudio autospawn for root as well.
+PACKAGECONFIG[autospawn-for-root] = ",,,"
 
 EXTRA_OECONF_append_arm = "${@bb.utils.contains("TUNE_FEATURES", "neon", "", " --enable-neon-opt=no", d)}"
 EXTRA_OECONF_append_armeb = "${@bb.utils.contains("TUNE_FEATURES", "neon", "", " --enable-neon-opt=no", d)}"
@@ -60,6 +63,19 @@ export TARGET_PFPU = "${TARGET_FPU}"
 #OE_LT_RPATH_ALLOW=":${libdir}/pulse-0.9:"
 OE_LT_RPATH_ALLOW = "any"
 OE_LT_RPATH_ALLOW[export]="1"
+
+set_cfg_value () {
+	sed -i -e "s/\(; *\)\?$2 =.*/$2 = $3/" "$1"
+	if ! grep -q "^$2 = $3\$" "$1"; then
+		die "Use of sed to set '$2' to '$3' in '$1' failed"
+	fi
+}
+
+do_compile_append () {
+	if ${@bb.utils.contains('PACKAGECONFIG', 'autospawn-for-root', 'true', 'false', d)}; then
+		set_cfg_value src/client.conf allow-autospawn-for-root yes
+	fi
+}
 
 do_install_append() {
 	install -d ${D}${sysconfdir}/default/volatiles
