@@ -22,6 +22,7 @@ SRC_URI = "ftp://space.mit.edu/pub/davis/slang/v2.2/slang-${PV}.tar.bz2 \
            file://change-char-type-to-signed-char-in-macros.patch \
            file://sprintf-bug-concerning-8-bit-characters.patch \
            file://slang-fix-the-iconv-existence-checking.patch \
+           file://0001-Fix-error-conflicting-types-for-posix_close.patch \
           "
 
 inherit autotools-brokensep
