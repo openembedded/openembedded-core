@@ -173,9 +173,10 @@ def exportTests(d,tc):
     savedata = {}
     savedata["d"] = {}
     savedata["target"] = {}
+    savedata["host_dumper"] = {}
     for key in tc.__dict__:
         # special cases
-        if key != "d" and key != "target":
+        if key != "d" and key != "target" and key != "host_dumper":
             savedata[key] = getattr(tc, key)
     savedata["target"]["ip"] = tc.target.ip or d.getVar("TEST_TARGET_IP", True)
     savedata["target"]["server_ip"] = tc.target.server_ip or d.getVar("TEST_SERVER_IP", True)
@@ -188,6 +189,9 @@ def exportTests(d,tc):
         except bb.data_smart.ExpansionError:
             # we don't care about those anyway
             pass
+
+    savedata["host_dumper"]["parent_dir"] = tc.host_dumper.parent_dir
+    savedata["host_dumper"]["cmds"] = tc.host_dumper.cmds
 
     with open(os.path.join(exportpath, "testdata.json"), "w") as f:
             json.dump(savedata, f, skipkeys=True, indent=4, sort_keys=True)

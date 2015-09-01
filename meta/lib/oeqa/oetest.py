@@ -13,7 +13,6 @@ import inspect
 import subprocess
 import bb
 from oeqa.utils.decorators import LogResults
-from oeqa.targetcontrol import QemuTarget
 from sys import exc_info, exc_clear
 
 def loadTests(tc, type="runtime"):
@@ -124,7 +123,7 @@ class oeRuntimeTest(oeTest):
         if not exc_info() == (None, None, None):
             exc_clear()
             #Only dump for QemuTarget
-            if (isinstance(self.target, QemuTarget)):
+            if (type(self.target).__name__ == "QemuTarget"):
                 self.tc.host_dumper.create_dir(self._testMethodName)
                 self.tc.host_dumper.dump_host()
                 self.target.target_dumper.dump_target(
