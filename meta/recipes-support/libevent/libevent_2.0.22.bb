@@ -28,6 +28,8 @@ inherit ptest
 
 DEPENDS = "zlib"
 
+BBCLASSEXTEND = "native nativesdk"
+
 do_install_ptest() {
 	install -d ${D}${PTEST_PATH}/test
 	for file in ${B}/test/.libs/regress ${B}/test/.libs/test*
