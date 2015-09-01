@@ -460,6 +460,20 @@ rootfs_trim_schemas () {
 	done
 }
 
+rootfs_check_host_user_contaminated () {
+	contaminated="${WORKDIR}/host-user-contaminated.txt"
+	HOST_USER_UID="$(PSEUDO_UNLOAD=1 id -u)"
+	HOST_USER_GID="$(PSEUDO_UNLOAD=1 id -g)"
+
+	find "${IMAGE_ROOTFS}" -wholename "${IMAGE_ROOTFS}/home" -prune \
+	    -user "$HOST_USER_UID" -o -group "$HOST_USER_GID" >"$contaminated"
+
+	if [ -s "$contaminated" ]; then
+		echo "WARNING: Paths in the rootfs are owned by the same user or group as the user running bitbake. See the logfile for the specific paths."
+		cat "$contaminated" | sed "s,^,  ,"
+	fi
+}
+
 # Make any absolute links in a sysroot relative
 rootfs_sysroot_relativelinks () {
 	sysroot-relativelinks.py ${SDK_OUTPUT}/${SDKTARGETSYSROOT}
