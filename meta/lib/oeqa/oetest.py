@@ -123,14 +123,14 @@ class oeRuntimeTest(oeTest):
         # If a test fails or there is an exception
         if not exc_info() == (None, None, None):
             exc_clear()
-            self.tc.host_dumper.create_dir(self._testMethodName)
-            self.tc.host_dumper.dump_host()
-            #Only QemuTarget has a serial console
+            #Only dump for QemuTarget
             if (isinstance(self.target, QemuTarget)):
+                self.tc.host_dumper.create_dir(self._testMethodName)
+                self.tc.host_dumper.dump_host()
                 self.target.target_dumper.dump_target(
                         self.tc.host_dumper.dump_dir)
-            print ("%s dump data stored in %s" % (self._testMethodName,
-                     self.tc.host_dumper.dump_dir))
+                print ("%s dump data stored in %s" % (self._testMethodName,
+                         self.tc.host_dumper.dump_dir))
 
     #TODO: use package_manager.py to install packages on any type of image
     def install_packages(self, packagelist):

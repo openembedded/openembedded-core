@@ -14,13 +14,14 @@ import socket
 import select
 import errno
 import threading
+from oeqa.utils.dump import HostDumper
 
 import logging
 logger = logging.getLogger("BitBake.QemuRunner")
 
 class QemuRunner:
 
-    def __init__(self, machine, rootfs, display, tmpdir, deploy_dir_image, logfile, boottime):
+    def __init__(self, machine, rootfs, display, tmpdir, deploy_dir_image, logfile, boottime, dump_dir, dump_host_cmds):
 
         # Popen object for runqemu
         self.runqemu = None
@@ -42,6 +43,7 @@ class QemuRunner:
         self.thread = None
 
         self.runqemutime = 60
+        self.host_dumper = HostDumper(dump_host_cmds, dump_dir)
 
     def create_socket(self):
         try:
@@ -118,6 +120,7 @@ class QemuRunner:
                 if self.runqemu.returncode:
                     # No point waiting any longer
                     logger.info('runqemu exited with code %d' % self.runqemu.returncode)
+                    self._dump_host()
                     self.stop()
                     logger.info("Output from runqemu:\n%s" % getOutput(output))
                     return False
@@ -137,6 +140,7 @@ class QemuRunner:
                     self.server_ip = ips[1]
             except IndexError, ValueError:
                 logger.info("Couldn't get ip from qemu process arguments! Here is the qemu command line used:\n%s\nand output from runqemu:\n%s" % (cmdline, getOutput(output)))
+                self._dump_host()
                 self.stop()
                 return False
             logger.info("qemu cmdline used:\n{}".format(cmdline))
@@ -189,6 +193,7 @@ class QemuRunner:
                 lines = "\n".join(bootlog.splitlines()[-25:])
                 logger.info("Last 25 lines of text:\n%s" % lines)
                 logger.info("Check full boot log: %s" % self.logfile)
+                self._dump_host()
                 self.stop()
                 return False
 
@@ -202,6 +207,7 @@ class QemuRunner:
 
         else:
             logger.info("Qemu pid didn't appeared in %s seconds" % self.runqemutime)
+            self._dump_host()
             self.stop()
             logger.info("Output from runqemu:\n%s" % getOutput(output))
             return False
@@ -333,6 +339,13 @@ class QemuRunner:
                 if (status_cmd == "0"):
                     status = 1
         return (status, str(data))
+
+
+    def _dump_host(self):
+        self.host_dumper.create_dir("qemu")
+        logger.error("Qemu ended unexpectedly, dump data from host"
+                " is in %s" % self.host_dumper.dump_dir)
+        self.host_dumper.dump_host()
 
 # This class is for reading data from a socket and passing it to logfunc
 # to be processed. It's completely event driven and has a straightforward

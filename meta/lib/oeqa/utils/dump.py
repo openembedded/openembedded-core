@@ -6,30 +6,22 @@ import itertools
 from commands import runCmd
 
 def get_host_dumper(d):
-    return HostDumper(d)
+    cmds = d.getVar("testimage_dump_host", True)
+    parent_dir = d.getVar("TESTIMAGE_DUMP_DIR", True)
+    return HostDumper(cmds, parent_dir)
 
 
 class BaseDumper(object):
 
-    def __init__(self, d, cmds):
+    def __init__(self, cmds, parent_dir):
         self.cmds = []
-        self.parent_dir = d.getVar("TESTIMAGE_DUMP_DIR", True)
+        self.parent_dir = parent_dir
         if not cmds:
             return
         for cmd in cmds.split('\n'):
             cmd = cmd.lstrip()
             if not cmd or cmd[0] == '#':
                 continue
-            # Replae variables from the datastore
-            while True:
-                index_start = cmd.find("${")
-                if index_start == -1:
-                    break
-                index_start += 2
-                index_end = cmd.find("}", index_start)
-                var = cmd[index_start:index_end]
-                value = d.getVar(var, True)
-                cmd = cmd.replace("${%s}" % var, value)
             self.cmds.append(cmd)
 
     def create_dir(self, dir_suffix):
@@ -62,9 +54,8 @@ class BaseDumper(object):
 
 class HostDumper(BaseDumper):
 
-    def __init__(self, d):
-        host_cmds = d.getVar("testimage_dump_host", True)
-        super(HostDumper, self).__init__(d, host_cmds)
+    def __init__(self, cmds, parent_dir):
+        super(HostDumper, self).__init__(cmds, parent_dir)
 
     def dump_host(self, dump_dir=""):
         if dump_dir:
@@ -76,9 +67,8 @@ class HostDumper(BaseDumper):
 
 class TargetDumper(BaseDumper):
 
-    def __init__(self, d, qemurunner):
-        target_cmds = d.getVar("testimage_dump_target", True)
-        super(TargetDumper, self).__init__(d, target_cmds)
+    def __init__(self, cmds, parent_dir, qemurunner):
+        super(TargetDumper, self).__init__(cmds, parent_dir)
         self.runner = qemurunner
 
     def dump_target(self, dump_dir=""):

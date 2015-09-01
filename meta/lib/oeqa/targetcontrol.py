@@ -124,6 +124,9 @@ class QemuTarget(BaseTarget):
         self.origrootfs = os.path.join(d.getVar("DEPLOY_DIR_IMAGE", True),  d.getVar("IMAGE_LINK_NAME", True) + '.' + self.image_fstype)
         self.rootfs = os.path.join(self.testdir, d.getVar("IMAGE_LINK_NAME", True) + '-testimage.' + self.image_fstype)
         self.kernel = os.path.join(d.getVar("DEPLOY_DIR_IMAGE", True), d.getVar("KERNEL_IMAGETYPE", False) + '-' + d.getVar('MACHINE', False) + '.bin')
+        dump_target_cmds = d.getVar("testimage_dump_target", True)
+        dump_host_cmds = d.getVar("testimage_dump_host", True)
+        dump_dir = d.getVar("TESTIMAGE_DUMP_DIR", True)
 
         # Log QemuRunner log output to a file
         import oe.path
@@ -151,9 +154,11 @@ class QemuTarget(BaseTarget):
                             deploy_dir_image = d.getVar("DEPLOY_DIR_IMAGE", True),
                             display = d.getVar("BB_ORIGENV", False).getVar("DISPLAY", True),
                             logfile = self.qemulog,
-                            boottime = int(d.getVar("TEST_QEMUBOOT_TIMEOUT", True)))
+                            boottime = int(d.getVar("TEST_QEMUBOOT_TIMEOUT", True)),
+                            dump_dir = dump_dir,
+                            dump_host_cmds = d.getVar("testimage_dump_host", True))
 
-        self.target_dumper = TargetDumper(d, self.runner)
+        self.target_dumper = TargetDumper(dump_target_cmds, dump_dir, self.runner)
 
     def deploy(self):
         try:
