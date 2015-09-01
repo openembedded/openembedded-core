@@ -39,6 +39,9 @@ ERROR_QA ?= "dev-so debug-deps dev-deps debug-files arch pkgconfig la \
             split-strip packages-list pkgv-undefined var-undefined \
             version-going-backwards expanded-d invalid-chars \
             "
+FAKEROOT_QA = ""
+FAKEROOT_QA[doc] = "QA tests which need to run under fakeroot. If any \
+enabled tests are listed here, the do_package_qa task will run under fakeroot."
 
 ALL_QA = "${WARN_QA} ${ERROR_QA}"
 
@@ -1232,6 +1235,11 @@ python () {
         for var in 'RDEPENDS', 'RRECOMMENDS', 'RSUGGESTS', 'RCONFLICTS', 'RPROVIDES', 'RREPLACES', 'FILES', 'pkg_preinst', 'pkg_postinst', 'pkg_prerm', 'pkg_postrm', 'ALLOW_EMPTY':
             if d.getVar(var, False):
                 issues.append(var)
+
+        fakeroot_tests = d.getVar('FAKEROOT_QA', True).split()
+        if set(tests) & set(fakeroot_tests):
+            d.setVarFlag('do_package_qa', 'fakeroot', '1')
+            d.appendVarFlag('do_package_qa', 'depends', ' virtual/fakeroot-native:do_populate_sysroot')
     else:
         d.setVarFlag('do_package_qa', 'rdeptask', '')
     for i in issues:
