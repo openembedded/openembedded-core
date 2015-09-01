@@ -5,21 +5,20 @@ HOMEPAGE = "http://code.google.com/p/opkg/"
 BUGTRACKER = "http://code.google.com/p/opkg/issues/list"
 LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f \
-                    file://src/opkg-cl.c;beginline=1;endline=20;md5=321f658c3f6b6c832e25c8850b5dffba"
+                    file://src/opkg.c;beginline=2;endline=21;md5=90435a519c6ea69ef22e4a88bcc52fa0"
+
+DEPENDS = "libarchive"
 
 PE = "1"
 
 SRC_URI = "http://downloads.yoctoproject.org/releases/${BPN}/${BPN}-${PV}.tar.gz \
-           file://no-install-recommends.patch \
-           file://add-exclude.patch \
-           file://remove-ACLOCAL_AMFLAGS-I-shave-I-m4.patch \
            file://opkg-configure.service \
            file://opkg.conf \
-           file://0001-opkg-key-Backport-improvements.patch \
+           file://0001-opkg_archive-add-support-for-empty-compressed-files.patch \
 "
 
-SRC_URI[md5sum] = "40ed2aee15abc8d550539449630091bd"
-SRC_URI[sha256sum] = "0f40c7e457d81edf9aedc07c778f4697111ab163a38ef95999faece015453086"
+SRC_URI[md5sum] = "3412cdc71d78b98facc84b19331ec64e"
+SRC_URI[sha256sum] = "7f735d1cdb8ef3718fb0f9fba44ca0d9a5c90d3a7f014f37a6d2f9474f54988f"
 
 inherit autotools pkgconfig systemd
 
@@ -36,11 +35,6 @@ PACKAGECONFIG[ssl-curl] = "--enable-ssl-curl,--disable-ssl-curl,curl openssl"
 PACKAGECONFIG[openssl] = "--enable-openssl,--disable-openssl,openssl"
 PACKAGECONFIG[sha256] = "--enable-sha256,--disable-sha256"
 PACKAGECONFIG[pathfinder] = "--enable-pathfinder,--disable-pathfinder,pathfinder"
-
-EXTRA_OECONF = "\
-  --with-opkgetcdir=${sysconfdir} \
-  --with-opkglibdir=${OPKGLIBDIR} \
-"
 
 do_install_append () {
 	install -d ${D}${sysconfdir}/opkg
@@ -59,15 +53,9 @@ do_install_append () {
 			-e 's,@SYSTEMD_UNITDIR@,${systemd_unitdir},g' \
 			${D}${systemd_unitdir}/system/opkg-configure.service
 	fi
-
-	# The installed binary is 'opkg-cl' but people and scripts often expect
-	# it to just be 'opkg'
-	ln -sf opkg-cl ${D}${bindir}/opkg
-
-	rm ${D}${bindir}/update-alternatives
 }
 
-RDEPENDS_${PN} = "${VIRTUAL-RUNTIME_update-alternatives} opkg-arch-config run-postinsts"
+RDEPENDS_${PN} = "${VIRTUAL-RUNTIME_update-alternatives} opkg-arch-config run-postinsts libarchive"
 RDEPENDS_${PN}_class-native = ""
 RDEPENDS_${PN}_class-nativesdk = ""
 RREPLACES_${PN} = "opkg-nogpg opkg-collateral"

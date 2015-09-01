@@ -156,7 +156,7 @@ validate_config()
 #this installed local opkg
 install_opkg()
 {
-if [ ! -x "$LOCAL_OPKG_LOC/bin/opkg-cl" ]; then
+if [ ! -x "$LOCAL_OPKG_LOC/bin/opkg" ]; then
   echo_info "OPKG is not setup, setting up opkg in local, which is required for installing yocto ADT...\n"
 
   if [ -d $LOCAL_OPKG_LOC ]; then

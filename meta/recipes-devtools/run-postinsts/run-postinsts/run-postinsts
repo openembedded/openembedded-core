@@ -73,7 +73,7 @@ remove_pi_dir=1
 if $pm_installed; then
 	case $pm in
 		"ipk")
-			eval opkg-cl configure $append_log
+			eval opkg configure $append_log
 			;;
 
 		"deb")

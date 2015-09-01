@@ -124,9 +124,9 @@ fi
 
 #first update repository
 if [ "x$SUDO" = "x" ]; then
-    OPKG_CMD="$LOCAL_OPKG_LOC/bin/opkg-cl"
+    OPKG_CMD="$LOCAL_OPKG_LOC/bin/opkg"
 else
-    OPKG_CMD="sudo -E $LOCAL_OPKG_LOC/bin/opkg-cl"
+    OPKG_CMD="sudo -E $LOCAL_OPKG_LOC/bin/opkg"
 fi
 
 echo_info "Updating opkg..."
