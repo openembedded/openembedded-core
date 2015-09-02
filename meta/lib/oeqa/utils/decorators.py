@@ -186,3 +186,35 @@ def timeout(seconds):
         else:
             return fn
     return decorator
+
+__tag_prefix = "tag__"
+def tag(*args, **kwargs):
+    """Decorator that adds attributes to classes or functions
+    for use with the Attribute (-a) plugin.
+    """
+    def wrap_ob(ob):
+        for name in args:
+            setattr(ob, __tag_prefix + name, True)
+        for name, value in kwargs.iteritems():
+            setattr(ob, __tag_prefix + name, value)
+        return ob
+    return wrap_ob
+
+def gettag(obj, key, default=None):
+    key = __tag_prefix + key
+    if not isinstance(obj, unittest.TestCase):
+        return getattr(obj, key, default)
+    tc_method = getattr(obj, obj._testMethodName)
+    ret = getattr(tc_method, key, getattr(obj, key, default))
+    return ret
+
+def getAllTags(obj):
+    def __gettags(o):
+        r = {k[len(__tag_prefix):]:getattr(o,k) for k in dir(o) if k.startswith(__tag_prefix)}
+        return r
+    if not isinstance(obj, unittest.TestCase):
+        return __gettags(obj)
+    tc_method = getattr(obj, obj._testMethodName)
+    ret = __gettags(obj)
+    ret.update(__gettags(tc_method))
+    return ret

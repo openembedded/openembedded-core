@@ -12,8 +12,31 @@ import unittest
 import inspect
 import subprocess
 import bb
-from oeqa.utils.decorators import LogResults
+from oeqa.utils.decorators import LogResults, gettag
 from sys import exc_info, exc_clear
+
+def getVar(obj):
+    #extend form dict, if a variable didn't exists, need find it in testcase
+    class VarDict(dict):
+        def __getitem__(self, key):
+            return gettag(obj, key)
+    return VarDict()
+
+def checkTags(tc, tagexp):
+    return eval(tagexp, None, getVar(tc))
+
+
+def filterByTagExp(testsuite, tagexp):
+    if not tagexp:
+        return testsuite
+    caseList = []
+    for each in testsuite:
+        if not isinstance(each, unittest.BaseTestSuite):
+            if checkTags(each, tagexp):
+                caseList.append(each)
+        else:
+            caseList.append(filterByTagExp(each, tagexp))
+    return testsuite.__class__(caseList)
 
 def loadTests(tc, type="runtime"):
     if type == "runtime":
@@ -29,6 +52,7 @@ def loadTests(tc, type="runtime"):
     testloader = unittest.TestLoader()
     testloader.sortTestMethodsUsing = None
     suites = [testloader.loadTestsFromName(name) for name in tc.testslist]
+    suites = filterByTagExp(suites, getattr(tc, "tagexp", None))
 
     def getTests(test):
         '''Return all individual tests executed when running the suite.'''
@@ -86,6 +110,8 @@ def runTests(tc, type="runtime"):
 
     suite = loadTests(tc, type)
     bb.note("Test modules  %s" % tc.testslist)
+    if hasattr(tc, "tagexp") and tc.tagexp:
+        bb.note("Filter test cases by tags: %s" % tc.tagexp)
     bb.note("Found %s tests" % suite.countTestCases())
     runner = unittest.TextTestRunner(verbosity=2)
     result = runner.run(suite)

@@ -253,6 +253,8 @@ def testimage_main(d):
     testslist = get_tests_list(d)
     testsrequired = [t for t in d.getVar("TEST_SUITES", True).split() if t != "auto"]
 
+    tagexp = d.getVar("TEST_SUITES_TAGS", True)
+
     # we need the host dumper in test context
     host_dumper = get_host_dumper(d)
 
@@ -263,6 +265,7 @@ def testimage_main(d):
         def __init__(self):
             self.d = d
             self.testslist = testslist
+            self.tagexp = tagexp
             self.testsrequired = testsrequired
             self.filesdir = os.path.join(os.path.dirname(os.path.abspath(oeqa.runtime.__file__)),"files")
             self.target = target
