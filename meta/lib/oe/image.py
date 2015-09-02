@@ -326,7 +326,7 @@ class Image(ImageDepGraph):
 
         return image_cmd_groups
 
-    def _write_env(self):
+    def _write_wic_env(self):
         """
         Write environment variables used by wic
         to tmp/sysroots/<machine>/imgdata/<image>.env
@@ -353,7 +353,7 @@ class Image(ImageDepGraph):
 
         image_cmd_groups = self._get_imagecmds()
 
-        self._write_env()
+        self._write_wic_env()
 
         for image_cmds in image_cmd_groups:
             # create the images in parallel
