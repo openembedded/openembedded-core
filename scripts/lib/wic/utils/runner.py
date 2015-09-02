@@ -62,13 +62,13 @@ def runtool(cmdln_or_args, catch=1):
         serr = subprocess.STDOUT
 
     try:
-        p = subprocess.Popen(cmdln_or_args, stdout=sout,
-                             stderr=serr, shell=shell)
-        (sout, serr) = p.communicate()
+        process = subprocess.Popen(cmdln_or_args, stdout=sout,
+                                   stderr=serr, shell=shell)
+        (sout, serr) = process.communicate()
         # combine stdout and stderr, filter None out
         out = ''.join(filter(None, [sout, serr]))
-    except OSError, e:
-        if e.errno == 2:
+    except OSError, err:
+        if err.errno == 2:
             # [Errno 2] No such file or directory
             msger.error('Cannot run command: %s, lost dependency?' % cmd)
         else:
@@ -77,12 +77,12 @@ def runtool(cmdln_or_args, catch=1):
         if catch != 3:
             os.close(dev_null)
 
-    return (p.returncode, out)
+    return (process.returncode, out)
 
 def show(cmdln_or_args):
     # show all the message using msger.verbose
 
-    rc, out = runtool(cmdln_or_args, catch=3)
+    rcode, out = runtool(cmdln_or_args, catch=3)
 
     if isinstance(cmdln_or_args, list):
         cmd = ' '.join(cmdln_or_args)
@@ -100,7 +100,7 @@ def show(cmdln_or_args):
         msg += '\n  +----------------'
 
     msger.verbose(msg)
-    return rc
+    return rcode
 
 def outs(cmdln_or_args, catch=1):
     # get the outputs of tools

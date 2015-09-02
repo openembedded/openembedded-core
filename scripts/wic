@@ -62,9 +62,9 @@ def rootfs_dir_to_args(krootfs_dir):
     Get a rootfs_dir dict and serialize to string
     """
     rootfs_dir = ''
-    for k, v in krootfs_dir.items():
+    for key, val in krootfs_dir.items():
         rootfs_dir += ' '
-        rootfs_dir += '='.join([k, v])
+        rootfs_dir += '='.join([key, val])
     return rootfs_dir.strip()
 
 def callback_rootfs_dir(option, opt, value, parser):

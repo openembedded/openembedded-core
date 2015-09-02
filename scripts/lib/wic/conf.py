@@ -87,9 +87,9 @@ class ConfigMgr(object):
         if not ksconf:
             return
 
-        ks = kickstart.read_kickstart(ksconf)
+        ksobj = kickstart.read_kickstart(ksconf)
 
-        self.create['ks'] = ks
+        self.create['ks'] = ksobj
         self.create['name'] = os.path.splitext(os.path.basename(ksconf))[0]
 
         self.create['name'] = misc.build_name(ksconf,

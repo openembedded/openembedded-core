@@ -51,7 +51,7 @@ class SourcePlugin(_Plugin):
     """
 
     @classmethod
-    def do_install_disk(cls, disk, disk_name, cr, workdir, oe_builddir,
+    def do_install_disk(cls, disk, disk_name, creator, workdir, oe_builddir,
                         bootimg_dir, kernel_dir, native_sysroot):
         """
         Called after all partitions have been prepared and assembled into a
@@ -61,7 +61,7 @@ class SourcePlugin(_Plugin):
         msger.debug("SourcePlugin: do_install_disk: disk: %s" % disk_name)
 
     @classmethod
-    def do_stage_partition(cls, part, source_params, cr, cr_workdir,
+    def do_stage_partition(cls, part, source_params, creator, cr_workdir,
                            oe_builddir, bootimg_dir, kernel_dir,
                            native_sysroot):
         """
@@ -78,7 +78,7 @@ class SourcePlugin(_Plugin):
         msger.debug("SourcePlugin: do_stage_partition: part: %s" % part)
 
     @classmethod
-    def do_configure_partition(cls, part, source_params, cr, cr_workdir,
+    def do_configure_partition(cls, part, source_params, creator, cr_workdir,
                                oe_builddir, bootimg_dir, kernel_dir,
                                native_sysroot):
         """
@@ -89,7 +89,7 @@ class SourcePlugin(_Plugin):
         msger.debug("SourcePlugin: do_configure_partition: part: %s" % part)
 
     @classmethod
-    def do_prepare_partition(cls, part, source_params, cr, cr_workdir,
+    def do_prepare_partition(cls, part, source_params, creator, cr_workdir,
                              oe_builddir, bootimg_dir, kernel_dir, rootfs_dir,
                              native_sysroot):
         """
@@ -99,9 +99,9 @@ class SourcePlugin(_Plugin):
         msger.debug("SourcePlugin: do_prepare_partition: part: %s" % part)
 
 def get_plugins(typen):
-    ps = ImagerPlugin.get_plugins()
-    if typen in ps:
-        return ps[typen]
+    plugins = ImagerPlugin.get_plugins()
+    if typen in plugins:
+        return plugins[typen]
     else:
         return None
 

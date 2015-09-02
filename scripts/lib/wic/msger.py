@@ -151,10 +151,10 @@ def _split_msg(head, msg):
         msg = msg.lstrip()
         head = '\r' + head
 
-    m = PREFIX_RE.match(msg)
-    if m:
-        head += ' <%s>' % m.group(1)
-        msg = m.group(2)
+    match = PREFIX_RE.match(msg)
+    if match:
+        head += ' <%s>' % match.group(1)
+        msg = match.group(2)
 
     return head, msg
 
@@ -271,9 +271,8 @@ def set_logfile(fpath):
 
     def _savelogf():
         if LOG_FILE_FP:
-            fp = open(LOG_FILE_FP, 'w')
-            fp.write(LOG_CONTENT)
-            fp.close()
+            with open(LOG_FILE_FP, 'w') as log:
+                log.write(LOG_CONTENT)
 
     if LOG_FILE_FP is not None:
         warning('duplicate log file configuration')

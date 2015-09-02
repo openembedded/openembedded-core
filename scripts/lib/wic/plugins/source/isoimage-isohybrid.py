@@ -54,7 +54,7 @@ class IsoImagePlugin(SourcePlugin):
     name = 'isoimage-isohybrid'
 
     @classmethod
-    def do_configure_syslinux(cls, cr, cr_workdir):
+    def do_configure_syslinux(cls, creator, cr_workdir):
         """
         Create loader-specific (syslinux) config
         """
@@ -64,9 +64,9 @@ class IsoImagePlugin(SourcePlugin):
         else:
             splashline = ""
 
-        options = cr.ks.handler.bootloader.appendLine
+        options = creator.ks.handler.bootloader.appendLine
 
-        timeout = kickstart.get_timeout(cr.ks, 10)
+        timeout = kickstart.get_timeout(creator.ks, 10)
 
         syslinux_conf = ""
         syslinux_conf += "PROMPT 0\n"
@@ -90,7 +90,7 @@ class IsoImagePlugin(SourcePlugin):
             cfg.write(syslinux_conf)
 
     @classmethod
-    def do_configure_grubefi(cls, part, cr, cr_workdir):
+    def do_configure_grubefi(cls, part, creator, cr_workdir):
         """
         Create loader-specific (grub-efi) config
         """
@@ -100,13 +100,13 @@ class IsoImagePlugin(SourcePlugin):
         else:
             splashline = ""
 
-        options = cr.ks.handler.bootloader.appendLine
+        options = creator.ks.handler.bootloader.appendLine
 
         grubefi_conf = ""
         grubefi_conf += "serial --unit=0 --speed=115200 --word=8 "
         grubefi_conf += "--parity=no --stop=1\n"
         grubefi_conf += "default=boot\n"
-        timeout = kickstart.get_timeout(cr.ks, 10)
+        timeout = kickstart.get_timeout(creator.ks, 10)
         grubefi_conf += "timeout=%s\n" % timeout
         grubefi_conf += "\n"
         grubefi_conf += "search --set=root --label %s " % part.label
@@ -185,7 +185,7 @@ class IsoImagePlugin(SourcePlugin):
         return initrd
 
     @classmethod
-    def do_stage_partition(cls, part, source_params, cr, cr_workdir,
+    def do_stage_partition(cls, part, source_params, creator, cr_workdir,
                            oe_builddir, bootimg_dir, kernel_dir,
                            native_sysroot):
         """
@@ -231,7 +231,7 @@ class IsoImagePlugin(SourcePlugin):
             exec_cmd("bitbake mtools-native")
 
     @classmethod
-    def do_configure_partition(cls, part, source_params, cr, cr_workdir,
+    def do_configure_partition(cls, part, source_params, creator, cr_workdir,
                                oe_builddir, bootimg_dir, kernel_dir,
                                native_sysroot):
         """
@@ -249,11 +249,11 @@ class IsoImagePlugin(SourcePlugin):
         msger.debug("%s" % source_params)
         if 'image_name' in source_params and \
                     source_params['image_name'].strip():
-            cr.name = source_params['image_name'].strip()
-            msger.debug("The name of the image is: %s" % cr.name)
+            creator.name = source_params['image_name'].strip()
+            msger.debug("The name of the image is: %s" % creator.name)
 
     @classmethod
-    def do_prepare_partition(cls, part, source_params, cr, cr_workdir,
+    def do_prepare_partition(cls, part, source_params, creator, cr_workdir,
                              oe_builddir, bootimg_dir, kernel_dir,
                              rootfs_dir, native_sysroot):
         """
@@ -353,7 +353,7 @@ class IsoImagePlugin(SourcePlugin):
                     exec_cmd(install_cmd)
 
                 if not os.path.isfile("%s/EFI/BOOT/boot.cfg" % bootimg_dir):
-                    cls.do_configure_grubefi(part, cr, bootimg_dir)
+                    cls.do_configure_grubefi(part, creator, bootimg_dir)
 
                 # Builds bootx64.efi/bootia32.efi if ISODIR didn't exist or
                 # didn't contains it
@@ -463,7 +463,7 @@ class IsoImagePlugin(SourcePlugin):
         install_cmd = "install -d %s/isolinux" % isodir
         exec_cmd(install_cmd)
 
-        cls.do_configure_syslinux(cr, cr_workdir)
+        cls.do_configure_syslinux(creator, cr_workdir)
 
         install_cmd = "install -m 444 %s/syslinux/ldlinux.sys " % syslinux_dir
         install_cmd += "%s/isolinux/ldlinux.sys" % isodir
@@ -508,7 +508,7 @@ class IsoImagePlugin(SourcePlugin):
         part.set_source_file(iso_img)
 
     @classmethod
-    def do_install_disk(cls, disk, disk_name, cr, workdir, oe_builddir,
+    def do_install_disk(cls, disk, disk_name, creator, workdir, oe_builddir,
                         bootimg_dir, kernel_dir, native_sysroot):
         """
         Called after all partitions have been prepared and assembled into a
@@ -516,9 +516,9 @@ class IsoImagePlugin(SourcePlugin):
         utility for booting via BIOS from disk storage devices.
         """
 
-        full_path = cr._full_path(workdir, disk_name, "direct")
+        full_path = creator._full_path(workdir, disk_name, "direct")
         iso_img = "%s.p1" % full_path
-        full_path_iso = cr._full_path(workdir, disk_name, "iso")
+        full_path_iso = creator._full_path(workdir, disk_name, "iso")
 
         isohybrid_cmd = "isohybrid -u %s" % iso_img
         msger.debug("running command: %s" % \

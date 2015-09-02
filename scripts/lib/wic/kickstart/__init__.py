@@ -58,65 +58,65 @@ def read_kickstart(path):
         def __init__(self):
             superclass.__init__(self, mapping=commandMap[using_version])
 
-    ks = ksparser.KickstartParser(KSHandlers(), errorsAreFatal=True)
+    kickstart = ksparser.KickstartParser(KSHandlers(), errorsAreFatal=True)
 
     try:
-        ks.readKickstart(path)
+        kickstart.readKickstart(path)
     except (kserrors.KickstartParseError, kserrors.KickstartError), err:
         msger.warning("Errors occurred when parsing kickstart file: %s\n" % path)
         msger.error("%s" % err)
 
-    return ks
+    return kickstart
 
-def get_image_size(ks, default=None):
+def get_image_size(kickstart, default=None):
     __size = 0
-    for p in ks.handler.partition.partitions:
-        if p.mountpoint == "/" and p.size:
-            __size = p.size
+    for part in kickstart.handler.partition.partitions:
+        if part.mountpoint == "/" and part.size:
+            __size = part.size
     if __size > 0:
         return int(__size) * 1024L
     else:
         return default
 
-def get_image_fstype(ks, default=None):
-    for p in ks.handler.partition.partitions:
-        if p.mountpoint == "/" and p.fstype:
-            return p.fstype
+def get_image_fstype(kickstart, default=None):
+    for part in kickstart.handler.partition.partitions:
+        if part.mountpoint == "/" and part.fstype:
+            return part.fstype
     return default
 
-def get_image_fsopts(ks, default=None):
-    for p in ks.handler.partition.partitions:
-        if p.mountpoint == "/" and p.fsopts:
-            return p.fsopts
+def get_image_fsopts(kickstart, default=None):
+    for part in kickstart.handler.partition.partitions:
+        if part.mountpoint == "/" and part.fsopts:
+            return part.fsopts
     return default
 
-def get_timeout(ks, default=None):
-    if not hasattr(ks.handler.bootloader, "timeout"):
+def get_timeout(kickstart, default=None):
+    if not hasattr(kickstart.handler.bootloader, "timeout"):
         return default
-    if ks.handler.bootloader.timeout is None:
+    if kickstart.handler.bootloader.timeout is None:
         return default
-    return int(ks.handler.bootloader.timeout)
+    return int(kickstart.handler.bootloader.timeout)
 
-def get_kernel_args(ks, default="ro rd.live.image"):
-    if not hasattr(ks.handler.bootloader, "appendLine"):
+def get_kernel_args(kickstart, default="ro rd.live.image"):
+    if not hasattr(kickstart.handler.bootloader, "appendLine"):
         return default
-    if ks.handler.bootloader.appendLine is None:
+    if kickstart.handler.bootloader.appendLine is None:
         return default
-    return "%s %s" %(default, ks.handler.bootloader.appendLine)
+    return "%s %s" %(default, kickstart.handler.bootloader.appendLine)
 
-def get_menu_args(ks, default=""):
-    if not hasattr(ks.handler.bootloader, "menus"):
+def get_menu_args(kickstart, default=""):
+    if not hasattr(kickstart.handler.bootloader, "menus"):
         return default
-    if ks.handler.bootloader.menus in (None, ""):
+    if kickstart.handler.bootloader.menus in (None, ""):
         return default
-    return "%s" % ks.handler.bootloader.menus
+    return "%s" % kickstart.handler.bootloader.menus
 
-def get_default_kernel(ks, default=None):
-    if not hasattr(ks.handler.bootloader, "default"):
+def get_default_kernel(kickstart, default=None):
+    if not hasattr(kickstart.handler.bootloader, "default"):
         return default
-    if not ks.handler.bootloader.default:
+    if not kickstart.handler.bootloader.default:
         return default
-    return ks.handler.bootloader.default
+    return kickstart.handler.bootloader.default
 
-def get_partitions(ks):
-    return ks.handler.partition.partitions
+def get_partitions(kickstart):
+    return kickstart.handler.partition.partitions

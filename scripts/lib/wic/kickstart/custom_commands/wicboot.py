@@ -49,12 +49,12 @@ class Wic_Bootloader(F8_Bootloader):
         return retval
 
     def _getParser(self):
-        op = F8_Bootloader._getParser(self)
-        op.add_option("--menus", dest="menus")
-        op.add_option("--ptable", dest="ptable", choices=("msdos", "gpt"),
-                      default="msdos")
+        parser = F8_Bootloader._getParser(self)
+        parser.add_option("--menus", dest="menus")
+        parser.add_option("--ptable", dest="ptable", choices=("msdos", "gpt"),
+                          default="msdos")
         # use specified source plugin to implement bootloader-specific methods
-        op.add_option("--source", type="string", action="store",
+        parser.add_option("--source", type="string", action="store",
                       dest="source", default=None)
-        return op
+        return parser
 

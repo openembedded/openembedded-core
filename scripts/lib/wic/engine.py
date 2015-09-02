@@ -53,17 +53,17 @@ def verify_build_env():
 CANNED_IMAGE_DIR = "lib/wic/canned-wks" # relative to scripts
 SCRIPTS_CANNED_IMAGE_DIR = "scripts/" + CANNED_IMAGE_DIR
 
-def build_canned_image_list(dl):
+def build_canned_image_list(path):
     layers_path = misc.get_bitbake_var("BBLAYERS")
     canned_wks_layer_dirs = []
 
     if layers_path is not None:
         for layer_path in layers_path.split():
-            path = os.path.join(layer_path, SCRIPTS_CANNED_IMAGE_DIR)
-            canned_wks_layer_dirs.append(path)
+            cpath = os.path.join(layer_path, SCRIPTS_CANNED_IMAGE_DIR)
+            canned_wks_layer_dirs.append(cpath)
 
-    path = os.path.join(dl, CANNED_IMAGE_DIR)
-    canned_wks_layer_dirs.append(path)
+    cpath = os.path.join(path, CANNED_IMAGE_DIR)
+    canned_wks_layer_dirs.append(cpath)
 
     return canned_wks_layer_dirs
 
@@ -99,14 +99,13 @@ def list_canned_images(scripts_path):
                     continue
                 if fname.endswith(".wks"):
                     fullpath = os.path.join(canned_wks_dir, fname)
-                    f = open(fullpath, "r")
-                    lines = f.readlines()
-                    for line in lines:
-                        desc = ""
-                        idx = line.find("short-description:")
-                        if idx != -1:
-                            desc = line[idx + len("short-description:"):].strip()
-                            break
+                    with open(fullpath) as wks:
+                        for line in wks:
+                            desc = ""
+                            idx = line.find("short-description:")
+                            if idx != -1:
+                                desc = line[idx + len("short-description:"):].strip()
+                                break
                     basename = os.path.splitext(fname)[0]
                     print "  %s\t\t%s" % (basename.ljust(30), desc)
 
@@ -115,24 +114,23 @@ def list_canned_image_help(scripts_path, fullpath):
     """
     List the help and params in the specified canned image.
     """
-    f = open(fullpath, "r")
-    lines = f.readlines()
     found = False
-    for line in lines:
-        if not found:
-            idx = line.find("long-description:")
+    with open(fullpath) as wks:
+        for line in wks:
+            if not found:
+                idx = line.find("long-description:")
+                if idx != -1:
+                    print
+                    print line[idx + len("long-description:"):].strip()
+                    found = True
+                continue
+            if not line.strip():
+                break
+            idx = line.find("#")
             if idx != -1:
-                print
-                print line[idx + len("long-description:"):].strip()
-                found = True
-            continue
-        if not line.strip():
-            break
-        idx = line.find("#")
-        if idx != -1:
-            print line[idx + len("#:"):].rstrip()
-        else:
-            break
+                print line[idx + len("#:"):].rstrip()
+            else:
+                break
 
 
 def list_source_plugins():
@@ -186,10 +184,10 @@ def wic_create(wks_file, rootfs_dir, bootimg_dir, kernel_dir,
     if debug:
         msger.set_loglevel('debug')
 
-    cr = creator.Creator()
+    crobj = creator.Creator()
 
-    cr.main(["direct", native_sysroot, kernel_dir, bootimg_dir, rootfs_dir,
-             wks_file, image_output_dir, oe_builddir, compressor or ""])
+    crobj.main(["direct", native_sysroot, kernel_dir, bootimg_dir, rootfs_dir,
+                wks_file, image_output_dir, oe_builddir, compressor or ""])
 
     print "\nThe image(s) were created using OE kickstart file:\n  %s" % wks_file
 

@@ -80,11 +80,11 @@ class DirectImageCreator(BaseImageCreator):
         in the partition table and logical partitions
         """
         realnum = 0
-        for n, p in enumerate(parts, 1):
-            if not p.no_table:
+        for pnum, part in enumerate(parts, 1):
+            if not part.no_table:
                 realnum += 1
-            if n == num:
-                if  p.no_table:
+            if pnum == num:
+                if  part.no_table:
                     return 0
                 if self.ptable_format == 'msdos' and realnum > 3:
                     # account for logical partition numbering, ex. sda5..
@@ -154,9 +154,9 @@ class DirectImageCreator(BaseImageCreator):
         if not self.ks.handler.partition.partitions:
             partstr = "part / --size 1900 --ondisk sda --fstype=ext3"
             args = partstr.split()
-            pd = self.ks.handler.partition.parse(args[1:])
-            if pd not in self.ks.handler.partition.partitions:
-                self.ks.handler.partition.partitions.append(pd)
+            part = self.ks.handler.partition.parse(args[1:])
+            if part not in self.ks.handler.partition.partitions:
+                self.ks.handler.partition.partitions.append(part)
 
         # partitions list from kickstart file
         return kickstart.get_partitions(self.ks)
@@ -221,19 +221,19 @@ class DirectImageCreator(BaseImageCreator):
 
         self.__image = Image(self.native_sysroot)
 
-        for p in parts:
+        for part in parts:
             # as a convenience, set source to the boot partition source
             # instead of forcing it to be set via bootloader --source
-            if not self.ks.handler.bootloader.source and p.mountpoint == "/boot":
-                self.ks.handler.bootloader.source = p.source
+            if not self.ks.handler.bootloader.source and part.mountpoint == "/boot":
+                self.ks.handler.bootloader.source = part.source
 
         fstab_path = self._write_fstab(self.rootfs_dir.get("ROOTFS_DIR"))
 
-        for p in parts:
+        for part in parts:
             # get rootfs size from bitbake variable if it's not set in .ks file
-            if not p.size:
+            if not part.size:
                 # and if rootfs name is specified for the partition
-                image_name = p.get_rootfs()
+                image_name = part.get_rootfs()
                 if image_name:
                     # Bitbake variable ROOTFS_SIZE is calculated in
                     # Image._get_rootfs_size method from meta/lib/oe/image.py
@@ -242,7 +242,7 @@ class DirectImageCreator(BaseImageCreator):
                     rsize_bb = get_bitbake_var('ROOTFS_SIZE', image_name)
                     if rsize_bb:
                         # convert from Kb to Mb
-                        p.size = int(rsize_bb) / 1024
+                        part.size = int(rsize_bb) / 1024
             # need to create the filesystems in order to get their
             # sizes before we can add them and do the layout.
             # Image.create() actually calls __format_disks() to create
@@ -250,22 +250,22 @@ class DirectImageCreator(BaseImageCreator):
             # self.assemble() calls Image.assemble() which calls
             # __write_partitition() for each partition to dd the fs
             # into the partitions.
-            p.prepare(self, self.workdir, self.oe_builddir, self.rootfs_dir,
-                      self.bootimg_dir, self.kernel_dir, self.native_sysroot)
+            part.prepare(self, self.workdir, self.oe_builddir, self.rootfs_dir,
+                         self.bootimg_dir, self.kernel_dir, self.native_sysroot)
 
 
-            self.__image.add_partition(int(p.size),
-                                       p.disk,
-                                       p.mountpoint,
-                                       p.source_file,
-                                       p.fstype,
-                                       p.label,
-                                       fsopts=p.fsopts,
-                                       boot=p.active,
-                                       align=p.align,
-                                       no_table=p.no_table,
-                                       part_type=p.part_type,
-                                       uuid=p.uuid)
+            self.__image.add_partition(int(part.size),
+                                       part.disk,
+                                       part.mountpoint,
+                                       part.source_file,
+                                       part.fstype,
+                                       part.label,
+                                       fsopts=part.fsopts,
+                                       boot=part.active,
+                                       align=part.align,
+                                       no_table=part.no_table,
+                                       part_type=part.part_type,
+                                       uuid=part.uuid)
 
         if fstab_path:
             shutil.move(fstab_path + ".orig", fstab_path)
@@ -336,14 +336,14 @@ class DirectImageCreator(BaseImageCreator):
             msg += '  %s\n\n' % full_path
 
         msg += 'The following build artifacts were used to create the image(s):\n'
-        for p in parts:
-            if p.get_rootfs() is None:
+        for part in parts:
+            if part.get_rootfs() is None:
                 continue
-            if p.mountpoint == '/':
+            if part.mountpoint == '/':
                 suffix = ':'
             else:
-                suffix = '["%s"]:' % (p.mountpoint or p.label)
-            msg += '  ROOTFS_DIR%s%s\n' % (suffix.ljust(20), p.get_rootfs())
+                suffix = '["%s"]:' % (part.mountpoint or part.label)
+            msg += '  ROOTFS_DIR%s%s\n' % (suffix.ljust(20), part.get_rootfs())
 
         msg += '  BOOTIMG_DIR:                  %s\n' % self.bootimg_dir
         msg += '  KERNEL_DIR:                   %s\n' % self.kernel_dir
