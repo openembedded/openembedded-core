@@ -39,12 +39,21 @@ class Wic(oeSelfTest):
 
     @classmethod
     def setUpClass(cls):
-        """Build wic runtime dependencies and images used in the tests."""
+        """Build wic runtime dependencies."""
         bitbake('syslinux syslinux-native parted-native gptfdisk-native '
-                'dosfstools-native mtools-native core-image-minimal')
+                'dosfstools-native mtools-native')
+        Wic.image_is_ready = False
 
     def setUp(self):
         """This code is executed before each test method."""
+        if not Wic.image_is_ready:
+            # build core-image-minimal with required features
+            features = 'IMAGE_FSTYPES += " hddimg"\nMACHINE_FEATURES_append = " efi"\n'
+            self.append_config(features)
+            bitbake('core-image-minimal')
+            # set this class variable to avoid buiding image many times
+            Wic.image_is_ready = True
+
         rmtree(self.resultdir, ignore_errors=True)
 
     def test01_help(self):
