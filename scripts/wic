@@ -54,8 +54,8 @@ else:
 
 from wic.utils.oe.misc import get_bitbake_var, BB_VARS
 from wic.utils.errors import WicError
-from image import engine
-from image import help as hlp
+from wic import engine
+from wic import help as hlp
 
 def rootfs_dir_to_args(krootfs_dir):
     """

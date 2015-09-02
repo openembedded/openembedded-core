@@ -52,7 +52,7 @@ def verify_build_env():
     return True
 
 
-CANNED_IMAGE_DIR = "lib/image/canned-wks" # relative to scripts
+CANNED_IMAGE_DIR = "lib/wic/canned-wks" # relative to scripts
 SCRIPTS_CANNED_IMAGE_DIR = "scripts/" + CANNED_IMAGE_DIR
 
 def build_canned_image_list(dl):

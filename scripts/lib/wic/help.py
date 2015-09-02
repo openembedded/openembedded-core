@@ -288,7 +288,7 @@ DESCRIPTION
 
     The first form enumerates all the available 'canned' images.
     These are actually just the set of .wks files that have been moved
-    into the /scripts/lib/image/canned-wks directory).
+    into the /scripts/lib/wic/canned-wks directory).
 
     The second form lists the detailed help information for a specific
     'canned' image.
@@ -591,7 +591,7 @@ DESCRIPTION
       NATIVE_SYSROOT:  ...
 
       The image(s) were created using OE kickstart file:
-        .../scripts/lib/image/canned-wks/directdisk.wks
+        .../scripts/lib/wic/canned-wks/directdisk.wks
 
     The output shows the name and location of the image created, and
     so that you know exactly what was used to generate the image, each
