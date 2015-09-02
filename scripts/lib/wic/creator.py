@@ -16,15 +16,15 @@
 # Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 import os, sys
-from optparse import SUPPRESS_HELP
+from optparse import OptionParser, SUPPRESS_HELP
 
 from wic import msger
-from wic.utils import cmdln, errors
+from wic.utils import errors
 from wic.conf import configmgr
 from wic.plugin import pluginmgr
 
 
-class Creator(cmdln.Cmdln):
+class Creator(object):
     """${name}: create an image
 
     Usage:
@@ -37,8 +37,7 @@ class Creator(cmdln.Cmdln):
     name = 'wic create(cr)'
 
     def __init__(self, *args, **kwargs):
-        cmdln.Cmdln.__init__(self, *args, **kwargs)
-        self._subcmds = []
+        self._subcmds = {}
 
         # get cmds from pluginmgr
         # mix-in do_subcmd interface
@@ -48,11 +47,10 @@ class Creator(cmdln.Cmdln):
                 continue
 
             func = getattr(klass, 'do_create')
-            setattr(self.__class__, "do_"+subcmd, func)
-            self._subcmds.append(subcmd)
+            self._subcmds[subcmd] = func
 
     def get_optparser(self):
-        optparser = cmdln.CmdlnOptionParser(self)
+        optparser = OptionParser()
         optparser.add_option('-d', '--debug', action='store_true',
                              dest='debug',
                              help=SUPPRESS_HELP)
@@ -73,69 +71,31 @@ class Creator(cmdln.Cmdln):
                                   ' feature, use it if you have more than 4G memory')
         return optparser
 
-    def preoptparse(self, argv):
-        optparser = self.get_optparser()
-
-        largs = []
-        rargs = []
-        while argv:
-            arg = argv.pop(0)
-
-            if arg in ('-h', '--help'):
-                rargs.append(arg)
-
-            elif optparser.has_option(arg):
-                largs.append(arg)
-
-                if optparser.get_option(arg).takes_value():
-                    try:
-                        largs.append(argv.pop(0))
-                    except IndexError:
-                        raise errors.Usage("option %s requires arguments" % arg)
-
-            else:
-                if arg.startswith("--"):
-                    if "=" in arg:
-                        opt = arg.split("=")[0]
-                    else:
-                        opt = None
-                elif arg.startswith("-") and len(arg) > 2:
-                    opt = arg[0:2]
-                else:
-                    opt = None
-
-                if opt and optparser.has_option(opt):
-                    largs.append(arg)
-                else:
-                    rargs.append(arg)
-
-        return largs + rargs
-
-    def postoptparse(self):
+    def postoptparse(self, options):
         abspath = lambda pth: os.path.abspath(os.path.expanduser(pth))
 
-        if self.options.verbose:
+        if options.verbose:
             msger.set_loglevel('verbose')
-        if self.options.debug:
+        if options.debug:
             msger.set_loglevel('debug')
 
-        if self.options.logfile:
-            logfile_abs_path = abspath(self.options.logfile)
+        if options.logfile:
+            logfile_abs_path = abspath(options.logfile)
             if os.path.isdir(logfile_abs_path):
                 raise errors.Usage("logfile's path %s should be file"
-                                   % self.options.logfile)
+                                   % options.logfile)
             if not os.path.exists(os.path.dirname(logfile_abs_path)):
                 os.makedirs(os.path.dirname(logfile_abs_path))
             msger.set_interactive(False)
             msger.set_logfile(logfile_abs_path)
-            configmgr.create['logfile'] = self.options.logfile
+            configmgr.create['logfile'] = options.logfile
 
-        if self.options.config:
+        if options.config:
             configmgr.reset()
-            configmgr._siteconf = self.options.config
+            configmgr._siteconf = options.config
 
-        if self.options.outdir is not None:
-            configmgr.create['outdir'] = abspath(self.options.outdir)
+        if options.outdir is not None:
+            configmgr.create['outdir'] = abspath(options.outdir)
 
         cdir = 'outdir'
         if os.path.exists(configmgr.create[cdir]) \
@@ -143,8 +103,8 @@ class Creator(cmdln.Cmdln):
             msger.error('Invalid directory specified: %s' \
                         % configmgr.create[cdir])
 
-        if self.options.enabletmpfs:
-            configmgr.create['enabletmpfs'] = self.options.enabletmpfs
+        if options.enabletmpfs:
+            configmgr.create['enabletmpfs'] = options.enabletmpfs
 
     def main(self, argv=None):
         if argv is None:
@@ -152,36 +112,13 @@ class Creator(cmdln.Cmdln):
         else:
             argv = argv[:] # don't modify caller's list
 
-        self.optparser = self.get_optparser()
-        if self.optparser:
-            try:
-                argv = self.preoptparse(argv)
-                self.options, args = self.optparser.parse_args(argv)
+        pname = argv[0]
+        if pname not in self._subcmds:
+            msger.error('Unknown plugin: %s' % pname)
 
-            except cmdln.CmdlnUserError, ex:
-                msg = "%s: %s\nTry '%s help' for info.\n"\
-                      % (self.name, ex, self.name)
-                msger.error(msg)
+        optparser = self.get_optparser()
+        options, args = optparser.parse_args(argv)
 
-            except cmdln.StopOptionProcessing, ex:
-                return 0
-        else:
-            # optparser=None means no process for opts
-            self.options, args = None, argv[1:]
+        self.postoptparse(options)
 
-        if not args:
-            return self.emptyline()
-
-        self.postoptparse()
-
-        return self.cmd(args)
-
-    def precmd(self, argv): # check help before cmd
-
-        if '-h' in argv or '?' in argv or '--help' in argv or 'help' in argv:
-            return argv
-
-        if len(argv) == 1:
-            return ['help', argv[0]]
-
-        return argv
+        return self._subcmds[pname](options, *args[1:])

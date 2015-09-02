@@ -56,7 +56,7 @@ class DirectPlugin(ImagerPlugin):
         return krootfs_dir
 
     @classmethod
-    def do_create(cls, subcmd, opts, *args):
+    def do_create(cls, opts, *args):
         """
         Create direct image, called from creator as 'direct' cmd
         """
