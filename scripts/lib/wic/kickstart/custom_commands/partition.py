@@ -27,10 +27,10 @@
 import os
 import tempfile
 import uuid
+from optparse import OptionValueError
 
 from pykickstart.commands.partition import FC4_PartData, FC4_Partition
 from wic.utils.oe.misc import *
-from wic.kickstart.custom_commands import *
 from wic.plugin import pluginmgr
 
 partition_methods = {
@@ -426,10 +426,10 @@ class Wic_PartData(FC4_PartData):
         if self.label:
             label_str = "-n %s" % self.label
 
-        dosfs_cmd = "mkdosfs %s -S 512 -C %s %d" % (label_str, fs, blocks)
+        dosfs_cmd = "mkdosfs %s -S 512 -C %s %d" % (label_str, rootfs, blocks)
         exec_native_cmd(dosfs_cmd, native_sysroot)
 
-        chmod_cmd = "chmod 644 %s" % fs
+        chmod_cmd = "chmod 644 %s" % rootfs
         exec_cmd(chmod_cmd)
 
     def prepare_empty_partition_squashfs(self, cr_workdir, oe_builddir,
