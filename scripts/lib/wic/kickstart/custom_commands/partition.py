@@ -30,7 +30,8 @@ import uuid
 from optparse import OptionValueError
 
 from pykickstart.commands.partition import FC4_PartData, FC4_Partition
-from wic.utils.oe.misc import *
+from wic.utils.oe.misc import msger, parse_sourceparams
+from wic.utils.oe.misc import exec_cmd, exec_native_cmd
 from wic.plugin import pluginmgr
 
 partition_methods = {

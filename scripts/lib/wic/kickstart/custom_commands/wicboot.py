@@ -23,10 +23,6 @@
 # AUTHORS
 # Tom Zanussi <tom.zanussi (at] linux.intel.com>
 #
-
-from pykickstart.base import *
-from pykickstart.errors import *
-from pykickstart.options import *
 from pykickstart.commands.bootloader import F8_Bootloader
 
 class Wic_Bootloader(F8_Bootloader):
