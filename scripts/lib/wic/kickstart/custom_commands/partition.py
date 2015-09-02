@@ -28,7 +28,7 @@ import os
 import tempfile
 import uuid
 
-from pykickstart.commands.partition import *
+from pykickstart.commands.partition import FC4_PartData, FC4_Partition
 from wic.utils.oe.misc import *
 from wic.kickstart.custom_commands import *
 from wic.plugin import pluginmgr
@@ -39,13 +39,16 @@ partition_methods = {
     "do_configure_partition":None,
 }
 
-class Wic_PartData(Mic_PartData):
-    removedKeywords = Mic_PartData.removedKeywords
-    removedAttrs = Mic_PartData.removedAttrs
+class Wic_PartData(FC4_PartData):
+    removedKeywords = FC4_PartData.removedKeywords
+    removedAttrs = FC4_PartData.removedAttrs
 
     def __init__(self, *args, **kwargs):
-        Mic_PartData.__init__(self, *args, **kwargs)
+        FC4_PartData.__init__(self, *args, **kwargs)
         self.deleteRemovedAttrs()
+        self.align = kwargs.get("align", None)
+        self.extopts = kwargs.get("extopts", None)
+        self.part_type = kwargs.get("part_type", None)
         self.source = kwargs.get("source", None)
         self.sourceparams = kwargs.get("sourceparams", None)
         self.rootfs = kwargs.get("rootfs-dir", None)
@@ -59,8 +62,14 @@ class Wic_PartData(Mic_PartData):
         self.size = 0
 
     def _getArgsAsStr(self):
-        retval = Mic_PartData._getArgsAsStr(self)
+        retval = FC4_PartData._getArgsAsStr(self)
 
+        if self.align:
+            retval += " --align=%d" % self.align
+        if self.extopts:
+            retval += " --extoptions=%s" % self.extopts
+        if self.part_type:
+            retval += " --part-type=%s" % self.part_type
         if self.source:
             retval += " --source=%s" % self.source
             if self.sourceparams:
@@ -468,9 +477,10 @@ class Wic_PartData(Mic_PartData):
         mkswap_cmd = "mkswap %s -U %s %s" % (label_str, str(uuid.uuid1()), fs)
         exec_native_cmd(mkswap_cmd, native_sysroot)
 
-class Wic_Partition(Mic_Partition):
-    removedKeywords = Mic_Partition.removedKeywords
-    removedAttrs = Mic_Partition.removedAttrs
+
+class Wic_Partition(FC4_Partition):
+    removedKeywords = FC4_Partition.removedKeywords
+    removedAttrs = FC4_Partition.removedAttrs
 
     def _getParser(self):
         def overhead_cb(option, opt_str, value, parser):
@@ -479,7 +489,16 @@ class Wic_Partition(Mic_Partition):
                                        (option, value))
             setattr(parser.values, option.dest, value)
 
-        op = Mic_Partition._getParser(self)
+        op = FC4_Partition._getParser(self)
+
+        # The alignment value is given in kBytes. e.g., value 8 means that
+        # the partition is aligned to start from 8096 byte boundary.
+        op.add_option("--align", type="int", action="store", dest="align",
+                      default=None)
+        op.add_option("--extoptions", type="string", action="store", dest="extopts",
+                      default=None)
+        op.add_option("--part-type", type="string", action="store", dest="part_type",
+                      default=None)
         # use specified source file to fill the partition
         # and calculate partition size
         op.add_option("--source", type="string", action="store",
