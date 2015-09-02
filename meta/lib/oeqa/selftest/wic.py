@@ -213,3 +213,24 @@ class Wic(oeSelfTest):
             path = prefix + suffix
             self.assertTrue(os.path.islink(path))
             self.assertTrue(os.path.isfile(os.path.realpath(path)))
+
+    def test21_qemux86_directdisk(self):
+        """Test creation of qemux-86-directdisk image"""
+        image = "qemux86-directdisk"
+        self.assertEqual(0, runCmd("wic create %s -e core-image-minimal" \
+                                   % image).status)
+        self.assertEqual(1, len(glob(self.resultdir + "%s-*direct" % image)))
+
+    def test22_mkgummidisk(self):
+        """Test creation of mkgummidisk image"""
+        image = "mkgummidisk"
+        self.assertEqual(0, runCmd("wic create %s -e core-image-minimal" \
+                                   % image).status)
+        self.assertEqual(1, len(glob(self.resultdir + "%s-*direct" % image)))
+
+    def test23_mkefidisk(self):
+        """Test creation of mkefidisk image"""
+        image = "mkefidisk"
+        self.assertEqual(0, runCmd("wic create %s -e core-image-minimal" \
+                                   % image).status)
+        self.assertEqual(1, len(glob(self.resultdir + "%s-*direct" % image)))
