@@ -197,13 +197,17 @@ class QemuRunner:
                 self.stop()
                 return False
 
-            (status, output) = self.run_serial("root\n", raw=True)
-            if re.search("root@[a-zA-Z0-9\-]+:~#", output):
-                self.logged = True
-                logger.info("Logged as root in serial console")
-            else:
-                logger.info("Couldn't login into serial console"
-                        " as root using blank password")
+            # If we are not able to login the tests can continue
+            try:
+                (status, output) = self.run_serial("root\n", raw=True)
+                if re.search("root@[a-zA-Z0-9\-]+:~#", output):
+                    self.logged = True
+                    logger.info("Logged as root in serial console")
+                else:
+                    logger.info("Couldn't login into serial console"
+                            " as root using blank password")
+            except:
+                logger.info("Serial console failed while trying to login")
 
         else:
             logger.info("Qemu pid didn't appeared in %s seconds" % self.runqemutime)
@@ -321,8 +325,7 @@ class QemuRunner:
                         stopread = True
                         break
                 else:
-                    sock.close()
-                    stopread = True
+                    raise Exception("No data on serial console socket")
         if data:
             if raw:
                 status = 1

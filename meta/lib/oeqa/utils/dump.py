@@ -12,6 +12,7 @@ def get_host_dumper(d):
 
 
 class BaseDumper(object):
+    """ Base class to dump commands from host/target """
 
     def __init__(self, cmds, parent_dir):
         self.cmds = []
@@ -53,6 +54,7 @@ class BaseDumper(object):
 
 
 class HostDumper(BaseDumper):
+    """ Class to get dumps from the host running the tests """
 
     def __init__(self, cmds, parent_dir):
         super(HostDumper, self).__init__(cmds, parent_dir)
@@ -66,6 +68,7 @@ class HostDumper(BaseDumper):
 
 
 class TargetDumper(BaseDumper):
+    """ Class to get dumps from target, it only works with QemuRunner """
 
     def __init__(self, cmds, parent_dir, qemurunner):
         super(TargetDumper, self).__init__(cmds, parent_dir)
@@ -75,5 +78,10 @@ class TargetDumper(BaseDumper):
         if dump_dir:
             self.dump_dir = dump_dir
         for cmd in self.cmds:
-            (status, output) = self.runner.run_serial(cmd)
-            self._write_dump(cmd.split()[0], output)
+            # We can continue with the testing if serial commands fail
+            try:
+                (status, output) = self.runner.run_serial(cmd)
+                self._write_dump(cmd.split()[0], output)
+            except:
+                print("Tried to dump info from target but "
+                        "serial console failed")
