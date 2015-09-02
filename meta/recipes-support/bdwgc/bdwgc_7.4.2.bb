@@ -21,7 +21,9 @@ SECTION = "devel"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://README.QUICK;md5=55f5088f90a982fed7af9a4897047ef7"
 
-SRC_URI = "http://www.hboehm.info/gc/gc_source/gc-${PV}.tar.gz"
+SRC_URI = "http://www.hboehm.info/gc/gc_source/gc-${PV}.tar.gz \
+           file://0001-fix-build-with-musl.patch \
+          "
 
 SRC_URI[md5sum] = "12c05fd2811d989341d8c6d81f66af87"
 SRC_URI[sha256sum] = "63320ad7c45460e4a40e03f5aa4c6893783f21a16416c3282b994f933312afa2"
