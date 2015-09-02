@@ -9,6 +9,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=420477abc567404debca0a2a1cb6b645 \
 SRC_URI = "https://alioth.debian.org/frs/download.php/latestfile/3/${BP}.tar.gz \
            file://allow.to.disable.lockdev.patch \
            file://0001-fix-minicom-h-v-return-value-is-not-0.patch \
+           file://0001-Fix-build-issus-surfaced-due-to-musl.patch \
           "
 
 SRC_URI[md5sum] = "7044ca3e291268c33294f171d426dc2d"
