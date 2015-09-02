@@ -5,6 +5,7 @@ SRC_URI += "\
     file://AArch64-port.patch \
     file://Fix-test-case-link-failure-on-PowerPC-systems-with-Altivec.patch \
     file://Link-libunwind-to-libgcc_s-rather-than-libgcc.patch \
+    file://0001-Invalid-dwarf-opcodes-can-cause-references-beyond-th.patch \
 "
 
 SRC_URI[md5sum] = "fb4ea2f6fbbe45bf032cd36e586883ce"
