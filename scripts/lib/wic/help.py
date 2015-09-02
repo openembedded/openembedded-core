@@ -108,7 +108,7 @@ wic_usage = """
  Current 'wic' commands are:
     help              Show help for command or one of the topics (see below)
     create            Create a new OpenEmbedded image
-    list              List available values for options and image properties
+    list              List available canned images and source plugins
 
  Help topics:
     overview          wic overview - General overview of wic
@@ -221,27 +221,19 @@ DESCRIPTION
 
     The -c option is used to specify compressor utility to compress
     an image. gzip, bzip2 and xz compressors are supported.
-
-    The set of properties available for a given image type can be
-    listed using the 'wic list' command.
 """
 
 wic_list_usage = """
 
- List available OpenEmbedded image properties and values
+ List available OpenEmbedded images and source plugins
 
  usage: wic list images
         wic list <image> help
         wic list source-plugins
-        wic list properties
-        wic list properties <wks file>
-        wic list property <property>
-                [-o <JSON PROPERTY FILE> | --outfile <JSON PROPERTY_FILE>]
 
  This command enumerates the set of available canned images as well as
- help for those images.  It also can be used to enumerate the complete
- set of possible values for a specified option or property needed by
- the image creation process.
+ help for those images.  It also can be used to list of available source
+ plugins.
 
  The first form enumerates all the available 'canned' images.
 
@@ -251,40 +243,23 @@ wic_list_usage = """
  The third form enumerates all the available --sources (source
  plugins).
 
- The fourth form enumerates all the possible values that exist and can
- be specified in an OE kickstart (wks) file.
-
- The fifth form enumerates all the possible options that exist for the
- set of properties specified in a given OE kickstart (ks) file.
-
- The final form enumerates all the possible values that exist and can
- be specified for any given OE kickstart (wks) property.
-
  See 'wic help list' for more details.
 """
 
 wic_list_help = """
 
 NAME
-    wic list - List available OpenEmbedded image properties and values
+    wic list - List available OpenEmbedded images and source plugins
 
 SYNOPSIS
     wic list images
     wic list <image> help
     wic list source-plugins
-    wic list properties
-    wic list properties <wks file>
-    wic list property <property>
-            [-o <JSON PROPERTY FILE> | --outfile <JSON PROPERTY_FILE>]
 
 DESCRIPTION
-    This command enumerates the complete set of possible values for a
-    specified option or property needed by the image creation process.
-
     This command enumerates the set of available canned images as well
-    as help for those images.  It also can be used to enumerate the
-    complete set of possible values for a specified option or property
-    needed by the image creation process.
+    as help for those images.  It also can be used to list available
+    source plugins.
 
     The first form enumerates all the available 'canned' images.
     These are actually just the set of .wks files that have been moved
@@ -301,60 +276,6 @@ DESCRIPTION
     sources listed by the 'list source-plugins' command.  Users can
     also add their own source plugins - see 'wic help plugins' for
     details.
-
-    The third form enumerates all the possible values that exist and
-    can be specified in a OE kickstart (wks) file.  The output of this
-    can be used by the third form to print the description and
-    possible values of a specific property.
-
-    The fourth form enumerates all the possible options that exist for
-    the set of properties specified in a given OE kickstart (wks)
-    file.  If the -o option is specified, the list of properties, in
-    addition to being displayed, will be written to the specified file
-    as a JSON object.  In this case, the object will consist of the
-    set of name:value pairs corresponding to the (possibly nested)
-    dictionary of properties defined by the input statements used by
-    the image.  Some example output for the 'list <wks file>' command:
-
-    $ wic list test.ks
-    "part" : {
-        "mountpoint" : "/"
-        "fstype" : "ext3"
-    }
-    "part" : {
-        "mountpoint" : "/home"
-        "fstype" : "ext3"
-        "offset" : "10000"
-    }
-    "bootloader" : {
-        "type" : "efi"
-    }
-    .
-    .
-    .
-
-    Each entry in the output consists of the name of the input element
-    e.g. "part", followed by the properties defined for that
-    element enclosed in braces.  This information should provide
-    sufficient information to create a complete user interface with.
-
-    The final form enumerates all the possible values that exist and
-    can be specified for any given OE kickstart (wks) property.  If
-    the -o option is specified, the list of values for the given
-    property, in addition to being displayed, will be written to the
-    specified file as a JSON object.  In this case, the object will
-    consist of the set of name:value pairs corresponding to the array
-    of property values associated with the property.
-
-    $ wic list property part
-        ["mountpoint", "where the partition should be mounted"]
-        ["fstype", "filesytem type of the partition"]
-            ["ext3"]
-            ["ext4"]
-            ["btrfs"]
-            ["swap"]
-        ["offset", "offset of the partition within the image"]
-
 """
 
 wic_plugins_help = """

@@ -194,46 +194,29 @@ def wic_create(wks_file, rootfs_dir, bootimg_dir, kernel_dir,
     print "\nThe image(s) were created using OE kickstart file:\n  %s" % wks_file
 
 
-def wic_list(args, scripts_path, properties_file):
+def wic_list(args, scripts_path):
     """
-    Print the complete list of properties defined by the image, or the
-    possible values for a particular image property.
+    Print the list of images or source plugins.
     """
     if len(args) < 1:
         return False
 
-    if len(args) == 1:
-        if args[0] == "images":
-            list_canned_images(scripts_path)
-            return True
-        elif args[0] == "source-plugins":
-            list_source_plugins()
-            return True
-        elif args[0] == "properties":
-            return True
-        else:
-            return False
-
-    if len(args) == 2:
-        if args[0] == "properties":
-            wks_file = args[1]
-            print "print properties contained in wks file: %s" % wks_file
-            return True
-        elif args[0] == "property":
-            print "print property values for property: %s" % args[1]
-            return True
-        elif args[1] == "help":
-            wks_file = args[0]
-            fullpath = find_canned_image(scripts_path, wks_file)
-            if not fullpath:
-                print "No image named %s found, exiting. "\
-                      "(Use 'wic list images' to list available images, or "\
-                      "specify a fully-qualified OE kickstart (.wks) "\
-                      "filename)\n" % wks_file
-                sys.exit(1)
-            list_canned_image_help(scripts_path, fullpath)
-            return True
-        else:
-            return False
+    if args == ["images"]:
+        list_canned_images(scripts_path)
+        return True
+    elif args == ["source-plugins"]:
+        list_source_plugins()
+        return True
+    elif len(args) == 2 and args[1] == "help":
+        wks_file = args[0]
+        fullpath = find_canned_image(scripts_path, wks_file)
+        if not fullpath:
+            print "No image named %s found, exiting. "\
+                  "(Use 'wic list images' to list available images, or "\
+                  "specify a fully-qualified OE kickstart (.wks) "\
+                  "filename)\n" % wks_file
+            sys.exit(1)
+        list_canned_image_help(scripts_path, fullpath)
+        return True
 
     return False

@@ -249,18 +249,13 @@ def wic_create_subcommand(args, usage_str):
 
 def wic_list_subcommand(args, usage_str):
     """
-    Command-line handling for listing available image properties and
-    values.  The real work is done by image.engine.wic_list()
+    Command-line handling for listing available images.
+    The real work is done by image.engine.wic_list()
     """
     parser = optparse.OptionParser(usage=usage_str)
+    args = parser.parse_args(args)[1]
 
-    parser.add_option("-o", "--outfile", action="store",
-                      dest="properties_file",
-                      help="dump the possible values for image properties to a JSON file")
-
-    (options, args) = parser.parse_args(args)
-
-    if not engine.wic_list(args, scripts_path, options.properties_file):
+    if not engine.wic_list(args, scripts_path):
         logging.error("Bad list arguments, exiting\n")
         parser.print_help()
         sys.exit(1)
