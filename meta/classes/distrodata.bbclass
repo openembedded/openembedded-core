@@ -33,7 +33,7 @@ python do_distrodata_np() {
         tmpdir = d.getVar('TMPDIR', True)
         distro_check_dir = os.path.join(tmpdir, "distro_check")
         datetime = localdata.getVar('DATETIME', True)
-        dist_check.update_distro_data(distro_check_dir, datetime)
+        dist_check.update_distro_data(distro_check_dir, datetime, localdata)
 
         if pn.find("-native") != -1:
             pnstripped = pn.split("-native")
@@ -118,7 +118,7 @@ python do_distrodata() {
         tmpdir = d.getVar('TMPDIR', True)
         distro_check_dir = os.path.join(tmpdir, "distro_check")
         datetime = localdata.getVar('DATETIME', True)
-        dist_check.update_distro_data(distro_check_dir, datetime)
+        dist_check.update_distro_data(distro_check_dir, datetime, localdata)
 
         pn = d.getVar("PN", True)
         bb.note("Package Name: %s" % pn)
@@ -406,7 +406,7 @@ python do_distro_check() {
     bb.utils.mkdirhier(logpath)
     result_file = os.path.join(logpath, "distrocheck.csv")
     datetime = localdata.getVar('DATETIME', True)
-    dc.update_distro_data(distro_check_dir, datetime)
+    dc.update_distro_data(distro_check_dir, datetime, localdata)
 
     # do the comparison
     result = dc.compare_in_distro_packages_list(distro_check_dir, d)
