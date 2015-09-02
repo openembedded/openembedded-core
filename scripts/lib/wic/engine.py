@@ -77,11 +77,11 @@ def find_canned_image(scripts_path, wks_file):
 
     for canned_wks_dir in layers_canned_wks_dir:
         for root, dirs, files in os.walk(canned_wks_dir):
-            for file in files:
-                if file.endswith("~") or file.endswith("#"):
+            for fname in files:
+                if fname.endswith("~") or fname.endswith("#"):
                     continue
-                if file.endswith(".wks") and wks_file + ".wks" == file:
-                    fullpath = os.path.join(canned_wks_dir, file)
+                if fname.endswith(".wks") and wks_file + ".wks" == fname:
+                    fullpath = os.path.join(canned_wks_dir, fname)
                     return fullpath
     return None
 
@@ -94,11 +94,11 @@ def list_canned_images(scripts_path):
 
     for canned_wks_dir in layers_canned_wks_dir:
         for root, dirs, files in os.walk(canned_wks_dir):
-            for file in files:
-                if file.endswith("~") or file.endswith("#"):
+            for fname in files:
+                if fname.endswith("~") or fname.endswith("#"):
                     continue
-                if file.endswith(".wks"):
-                    fullpath = os.path.join(canned_wks_dir, file)
+                if fname.endswith(".wks"):
+                    fullpath = os.path.join(canned_wks_dir, fname)
                     f = open(fullpath, "r")
                     lines = f.readlines()
                     for line in lines:
@@ -107,7 +107,7 @@ def list_canned_images(scripts_path):
                         if idx != -1:
                             desc = line[idx + len("short-description:"):].strip()
                             break
-                    basename = os.path.splitext(file)[0]
+                    basename = os.path.splitext(fname)[0]
                     print "  %s\t\t%s" % (basename.ljust(30), desc)
 
 

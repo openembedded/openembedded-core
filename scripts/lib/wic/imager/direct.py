@@ -340,10 +340,10 @@ class DirectImageCreator(BaseImageCreator):
             if p.get_rootfs() is None:
                 continue
             if p.mountpoint == '/':
-                str = ':'
+                suffix = ':'
             else:
-                str = '["%s"]:' % (p.mountpoint or p.label)
-            msg += '  ROOTFS_DIR%s%s\n' % (str.ljust(20), p.get_rootfs())
+                suffix = '["%s"]:' % (p.mountpoint or p.label)
+            msg += '  ROOTFS_DIR%s%s\n' % (suffix.ljust(20), p.get_rootfs())
 
         msg += '  BOOTIMG_DIR:                  %s\n' % self.bootimg_dir
         msg += '  KERNEL_DIR:                   %s\n' % self.kernel_dir

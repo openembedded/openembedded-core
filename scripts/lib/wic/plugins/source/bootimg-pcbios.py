@@ -127,9 +127,9 @@ class BootimgPcbiosPlugin(SourcePlugin):
         'prepares' the partition to be incorporated into the image.
         In this case, prepare content for legacy bios boot partition.
         """
-        def _has_syslinux(dir):
-            if dir:
-                syslinux = "%s/syslinux" % dir
+        def _has_syslinux(dirname):
+            if dirname:
+                syslinux = "%s/syslinux" % dirname
                 if os.path.exists(syslinux):
                     return True
             return False
