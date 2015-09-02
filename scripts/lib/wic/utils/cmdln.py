@@ -443,7 +443,8 @@ class RawCmdln(cmd.Cmd):
         elif line[0] == '?':
             line = 'help ' + line[1:]
         i, n = 0, len(line)
-        while i < n and line[i] in self.identchars: i = i+1
+        while i < n and line[i] in self.identchars:
+            i = i+1
         cmd, arg = line[:i], line[i:].strip()
         return cmd, arg, line
 
@@ -499,8 +500,10 @@ class RawCmdln(cmd.Cmd):
             doc = self.__class__.__doc__  # try class docstring
             if doc is None:
                 # Try to provide some reasonable useful default help.
-                if self.cmdlooping: prefix = ""
-                else:               prefix = self.name+' '
+                if self.cmdlooping:
+                    prefix = ""
+                else:
+                    prefix = self.name+' '
                 doc = """Usage:
                     %sCOMMAND [ARGS...]
                     %shelp [COMMAND]
@@ -629,7 +632,8 @@ class RawCmdln(cmd.Cmd):
         token2canonical = self._get_canonical_map()
         aliases = {}
         for token, cmdname in token2canonical.items():
-            if token == cmdname: continue
+            if token == cmdname:
+                continue
             aliases.setdefault(cmdname, []).append(token)
 
         # Get the list of (non-hidden) commands and their
@@ -697,7 +701,8 @@ class RawCmdln(cmd.Cmd):
         helpnames = {}
         token2cmdname = self._get_canonical_map()
         for attrname, attr in self._gen_names_and_attrs():
-            if not attrname.startswith("help_"): continue
+            if not attrname.startswith("help_"):
+                continue
             helpname = attrname[5:]
             if helpname not in token2cmdname:
                 helpnames[helpname] = attr
@@ -757,8 +762,10 @@ class RawCmdln(cmd.Cmd):
 
         # Adjust argcount for possible *args and **kwargs arguments.
         argcount = co_argcount
-        if co_flags & CO_FLAGS_ARGS:   argcount += 1
-        if co_flags & CO_FLAGS_KWARGS: argcount += 1
+        if co_flags & CO_FLAGS_ARGS:
+            argcount += 1
+        if co_flags & CO_FLAGS_KWARGS:
+            argcount += 1
 
         # Determine the usage string.
         usage = "%s %s" % (self.name, cmdname)
@@ -838,8 +845,10 @@ class RawCmdln(cmd.Cmd):
             token2canonical = {}
             cmd2funcname = {} # use a dict to strip duplicates
             for attr in self.get_names():
-                if attr.startswith("do_"):    cmdname = attr[3:]
-                elif attr.startswith("_do_"): cmdname = attr[4:]
+                if attr.startswith("do_"):
+                    cmdname = attr[3:]
+                elif attr.startswith("_do_"):
+                    cmdname = attr[4:]
                 else:
                     continue
                 cmd2funcname[cmdname] = attr
@@ -1280,12 +1289,14 @@ def line2argv(line):
     i = -1
     while 1:
         i += 1
-        if i >= len(line): break
+        if i >= len(line):
+            break
         ch = line[i]
 
         if ch == "\\" and i+1 < len(line):
             # escaped char always added to arg, regardless of state
-            if arg is None: arg = ""
+            if arg is None:
+                arg = ""
             if (sys.platform == "win32"
                 or state in ("double-quoted", "single-quoted")
                ) and line[i+1] not in tuple('"\''):
@@ -1306,17 +1317,20 @@ def line2argv(line):
                 arg += ch
         elif state == "default":
             if ch == '"':
-                if arg is None: arg = ""
+                if arg is None:
+                    arg = ""
                 state = "double-quoted"
             elif ch == "'":
-                if arg is None: arg = ""
+                if arg is None:
+                    arg = ""
                 state = "single-quoted"
             elif ch in string.whitespace:
                 if arg is not None:
                     argv.append(arg)
                 arg = None
             else:
-                if arg is None: arg = ""
+                if arg is None:
+                    arg = ""
                 arg += ch
     if arg is not None:
         argv.append(arg)
@@ -1380,7 +1394,8 @@ def _dedentlines(lines, tabsize=8, skip_first_line=False):
     indents = []
     margin = None
     for i, line in enumerate(lines):
-        if i == 0 and skip_first_line: continue
+        if i == 0 and skip_first_line:
+            continue
         indent = 0
         for ch in line:
             if ch == ' ':
@@ -1393,16 +1408,19 @@ def _dedentlines(lines, tabsize=8, skip_first_line=False):
                 break
         else:
             continue # skip all-whitespace lines
-        if DEBUG: print "dedent: indent=%d: %r" % (indent, line)
+        if DEBUG:
+            print "dedent: indent=%d: %r" % (indent, line)
         if margin is None:
             margin = indent
         else:
             margin = min(margin, indent)
-    if DEBUG: print "dedent: margin=%r" % margin
+    if DEBUG:
+        print "dedent: margin=%r" % margin
 
     if margin is not None and margin > 0:
         for i, line in enumerate(lines):
-            if i == 0 and skip_first_line: continue
+            if i == 0 and skip_first_line:
+                continue
             removed = 0
             for j, ch in enumerate(line):
                 if ch == ' ':
@@ -1410,7 +1428,8 @@ def _dedentlines(lines, tabsize=8, skip_first_line=False):
                 elif ch == '\t':
                     removed += tabsize - (removed % tabsize)
                 elif ch in '\r\n':
-                    if DEBUG: print "dedent: %r: EOL -> strip up to EOL" % line
+                    if DEBUG:
+                        print "dedent: %r: EOL -> strip up to EOL" % line
                     lines[i] = lines[i][j:]
                     break
                 else:

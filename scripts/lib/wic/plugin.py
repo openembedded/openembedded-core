@@ -82,7 +82,8 @@ class PluginMgr(object):
 
     def _load_all(self):
         for (pdir, loaded) in self.plugin_dirs.iteritems():
-            if loaded: continue
+            if loaded:
+                continue
 
             sys.path.insert(0, pdir)
             for mod in [x[:-3] for x in os.listdir(pdir) if x.endswith(".py")]:
