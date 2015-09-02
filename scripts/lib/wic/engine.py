@@ -43,9 +43,7 @@ def verify_build_env():
 
     Returns True if it is, false otherwise
     """
-    try:
-        builddir = os.environ["BUILDDIR"]
-    except KeyError:
+    if not os.environ.get("BUILDDIR"):
         print "BUILDDIR not found, exiting. (Did you forget to source oe-init-build-env?)"
         sys.exit(1)
 

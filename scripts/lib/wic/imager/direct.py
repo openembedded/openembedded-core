@@ -327,7 +327,7 @@ class DirectImageCreator(BaseImageCreator):
 
         parts = self._get_parts()
 
-        for disk_name, disk in self.__image.disks.items():
+        for disk_name in self.__image.disks:
             extension = "direct" + {"gzip": ".gz",
                                     "bzip2": ".bz2",
                                     "xz": ".xz",

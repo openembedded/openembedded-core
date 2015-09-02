@@ -132,9 +132,9 @@ class BaseImageCreator(object):
                 os.makedirs(self.workdir)
             self.__builddir = tempfile.mkdtemp(dir=self.workdir,
                                                prefix="imgcreate-")
-        except OSError, (err, msg):
+        except OSError as err:
             raise CreatorError("Failed create build directory in %s: %s" %
-                               (self.tmpdir, msg))
+                               (self.tmpdir, err))
 
     def __setup_tmpdir(self):
         if not self.enabletmpfs:

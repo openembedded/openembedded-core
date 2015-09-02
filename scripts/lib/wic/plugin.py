@@ -124,12 +124,7 @@ class PluginMgr(object):
 
         self.append_dirs(plugins_dir)
 
-        plugins = []
-
-        for _source_name, klass in self.get_plugins('source').iteritems():
-            plugins.append(_source_name)
-
-        return plugins
+        return self.get_plugins('source')
 
 
     def get_source_plugin_methods(self, source_name, methods):
