@@ -27,29 +27,36 @@
 from pykickstart.base import *
 from pykickstart.errors import *
 from pykickstart.options import *
-from pykickstart.commands.bootloader import *
+from pykickstart.commands.bootloader import F8_Bootloader
 
-from wic.kickstart.custom_commands.micboot import *
-
-class Wic_Bootloader(Mic_Bootloader):
+class Wic_Bootloader(F8_Bootloader):
     def __init__(self, writePriority=10, appendLine="", driveorder=None,
                  forceLBA=False, location="", md5pass="", password="",
                  upgrade=False, menus=""):
-        Mic_Bootloader.__init__(self, writePriority, appendLine, driveorder,
-                                forceLBA, location, md5pass, password, upgrade)
+        F8_Bootloader.__init__(self, writePriority, appendLine, driveorder,
+                               forceLBA, location, md5pass, password, upgrade)
 
+        self.menus = ""
+        self.ptable = "msdos"
         self.source = ""
 
     def _getArgsAsStr(self):
-        retval = Mic_Bootloader._getArgsAsStr(self)
+        retval = F8_Bootloader._getArgsAsStr(self)
 
+        if self.menus == "":
+            retval += " --menus=%s" %(self.menus,)
+        if self.ptable:
+            retval += " --ptable=\"%s\"" %(self.ptable,)
         if self.source:
             retval += " --source=%s" % self.source
 
         return retval
 
     def _getParser(self):
-        op = Mic_Bootloader._getParser(self)
+        op = F8_Bootloader._getParser(self)
+        op.add_option("--menus", dest="menus")
+        op.add_option("--ptable", dest="ptable", choices=("msdos", "gpt"),
+                      default="msdos")
         # use specified source plugin to implement bootloader-specific methods
         op.add_option("--source", type="string", action="store",
                       dest="source", default=None)
