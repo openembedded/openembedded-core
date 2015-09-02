@@ -67,6 +67,7 @@ class ConfigMgr(object):
     def reset(self):
         self.__ksconf = None
         self.__siteconf = None
+        self.create = {}
 
         # initialize the values with defaults
         for sec, vals in self.DEFAULTS.iteritems():
