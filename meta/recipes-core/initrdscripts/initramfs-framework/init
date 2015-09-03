@@ -13,6 +13,7 @@
 #
 # 'foo=value' as 'bootparam_foo=value'
 # 'foo' as 'bootparam_foo=true'
+# 'foo.bar[=value] as 'foo_bar=[value|true]'
 
 # Register a function to be called before running a module
 # The hook is called as:
@@ -79,7 +80,7 @@ mount -t sysfs sysfs /sys
 # populate bootparam environment
 for p in `cat /proc/cmdline`; do
 	opt=`echo $p | cut -d'=' -f1`
-	opt=`echo $opt | sed -e 's/-/_/'`
+	opt=`echo $opt | tr '.-' '__'`
 	if [ "`echo $p | cut -d'=' -f1`" = "$p" ]; then
 		eval "bootparam_${opt}=true"
 	else
