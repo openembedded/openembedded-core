@@ -5,8 +5,8 @@ LICENSE = "BSD"
 LIC_FILES_CHKSUM = "file://PKG-INFO;beginline=8;endline=8;md5=88df8e78b9edfd744953862179f2d14e"
 
 SRC_URI = "http://pypi.python.org/packages/source/a/async/async-${PV}.tar.gz"
-SRC_URI[md5sum] = "6f0e2ced1fe85f8410b9bde11be08587"
-SRC_URI[sha256sum] = "41d14cc0456e03f34d13af284f65821d07d05c20e621bcaebd38f9ab5095d5d1"
+SRC_URI[md5sum] = "9b06b5997de2154f3bc0273f80bcef6b"
+SRC_URI[sha256sum] = "ac6894d876e45878faae493b0cf61d0e28ec417334448ac0a6ea2229d8343051"
 
 S = "${WORKDIR}/async-${PV}"
 
