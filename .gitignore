@@ -2,7 +2,7 @@ bitbake
 *.pyc
 *.pyo
 /*.patch
-build*/
+/build*/
 pyshtables.py
 pstage/
 scripts/oe-git-proxy-socks
