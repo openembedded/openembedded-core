@@ -1,4 +1,3 @@
-PR = "r1"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504 \
                     file://tests/COPYING;md5=d32239bcb673463ab874e80d47fae504 \
@@ -6,14 +5,11 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504 \
 require remake.inc
 
 SRC_URI += "file://version-remake.texi.patch \
-            file://remake-remove-errors-about-colophon-and-cygnus-comma.patch \
            "
-SRCREV = "f05508e521987c8494c92d9c2871aec46307d51d"
+SRCREV = "cf54641d50a0165bb17622b3e9770f426ccbc561"
 S = "${WORKDIR}/git"
 
-PV = "3.82+dbg-0.9+git${SRCPV}"
-
-DEPENDS += "readline"
+DEPENDS += "readline guile"
 # Need to add "gettext-native" dependency to remake-native.
 # By default only "gettext-minimal-native" is added
 # when inherit gettext.
