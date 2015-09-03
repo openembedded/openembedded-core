@@ -9,7 +9,9 @@ LICENSE = "GPLv3+"
 
 DEPENDS = "zlib"
 
-SRC_URI = "http://samba.org/ftp/ccache/ccache-${PV}.tar.xz"
+SRC_URI = "git://git.samba.org/ccache.git"
+
+S = "${WORKDIR}/git"
 
 inherit autotools
 
