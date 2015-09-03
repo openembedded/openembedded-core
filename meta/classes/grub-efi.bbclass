@@ -26,6 +26,9 @@ GRUB_OPTS ?= "serial --unit=0 --speed=115200 --word=8 --parity=no --stop=1"
 
 EFIDIR = "/EFI/BOOT"
 
+# Need UUID utility code.
+inherit fs-uuid
+
 efi_populate() {
 	# DEST must be the root of the image so that EFIDIR is not
 	# nested under a top level directory.
@@ -129,6 +132,7 @@ python build_efi_cfg() {
             initrd = localdata.getVar('INITRD', True)
 
             if append:
+                append = replace_rootfs_uuid(d, append)
                 cfgfile.write('%s' % (append))
             cfgfile.write(' %s' % btype[1])
             cfgfile.write('\n')

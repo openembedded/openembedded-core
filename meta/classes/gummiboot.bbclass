@@ -15,6 +15,9 @@ GUMMIBOOT_CFG ?= "${S}/loader.conf"
 GUMMIBOOT_ENTRIES ?= ""
 GUMMIBOOT_TIMEOUT ?= "10"
 
+# Need UUID utility code.
+inherit fs-uuid
+
 efi_populate() {
         DEST=$1
 
@@ -108,6 +111,7 @@ python build_efi_cfg() {
             lb = "install-efi"
         entrycfg.write('options LABEL=%s ' % lb)
         if append:
+            append = replace_rootfs_uuid(d, append)
             entrycfg.write('%s' % append)
         entrycfg.write('\n')
         entrycfg.close()
