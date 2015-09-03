@@ -44,6 +44,8 @@ REGEX_pn-nettle = "nettle-(?P<pver>\d+(\.\d+)+)\.tar"
 
 REGEX_pn-cairo = "cairo-(?P<pver>\d+(\.\d+)+)\.tar"
 REGEX_pn-cmake = "cmake-(?P<pver>\d+(\.\d+)+)\.tar"
+REGEX_pn-libsdl = "SDL-(?P<pver>\d+(\.\d+)+)\.tar"
+REGEX_pn-libxslt = "libxslt-(?P<pver>\d+(\.\d+)+)\.tar"
 
 # Exclude NC versions which lack AES encryption
 REGEX_pn-db = "db-(?P<pver>\d+\.\d+(\.\d+)?).tar"
@@ -171,9 +173,8 @@ REGEX_URI_pn-libpng12 = "http://sourceforge.net/projects/libpng/files/libpng12/"
 REGEX_pn-libpng12 = "/libpng12/${COMMON_REGEX}/"
 REGEX_URI_pn-docbook-dsssl-stylesheets = "http://sourceforge.net/projects/docbook/files/docbook-dsssl/"
 REGEX_pn-docbook-dsssl-stylesheets = "/docbook-dsssl/${COMMON_REGEX}/"
-REGEX_URI_pn-openjade = "http://sourceforge.net/projects/openjade/files/openjade/"
-REGEX_pn-openjade = "/openjade/${COMMON_REGEX}/"
 
+REGEX_URI_pn-openjade = "http://openjade.sourceforge.net/download.html"
 REGEX_URI_pn-libpfm4 = "http://sourceforge.net/projects/perfmon2/files/libpfm4/"
 REGEX_URI_pn-liba52 = "http://liba52.sourceforge.net/downloads.html"
 REGEX_URI_pn-mpeg2dec = "http://libmpeg2.sourceforge.net/downloads.html"
@@ -202,6 +203,10 @@ GITTAGREGEX_pn-mx-1.0 = "(?P<pver>^\d+(\.(?!99)\d+)+)"
 
 # Blacklist a bogus tag
 GITTAGREGEX_pn-file = "FILE(?P<pver>(?!6_23).+)"
+GITTAGREGEX_pn-xinetd = "xinetd-(?P<pver>(?!20030122).+)"
+
+# Blacklist debian-specific tags
+GITTAGREGEX_pn-xf86-video-omapfb = "(?P<pver>\d+(\.\d+)+)(?!-)"
 
 # GNOME related.
 #
@@ -231,6 +236,7 @@ REGEX_pn-clutter-gtk-1.0 = "${GNOME_STABLE}"
 REGEX_pn-clutter-gst-3.0 = "${GNOME_STABLE}"
 REGEX_pn-cogl-1.0 = "${GNOME_STABLE}"
 REGEX_pn-adwaita-icon-theme = "${GNOME_STABLE}"
+REGEX_pn-vte = "${GNOME_STABLE}"
 
 # not GNOME related but uses same even-minor-release-is-stable logic
 REGEX_pn-dbus = "${GNOME_STABLE}"
@@ -249,7 +255,7 @@ REGEX_pn-gstreamer1.0-rtsp-server = "${GNOME_STABLE}"
 REGEX_pn-perl = "${GNOME_STABLE}"
 
 # Keep old gcc versions at their major versions
-REGEX_pn-gcc-source-4.9.2 = "gcc-(?P<pver>4\.9\.\d+).tar"
+REGEX_pn-gcc-source-4.9.3 = "gcc-(?P<pver>4\.9\.\d+).tar"
 REGEX_pn-gcc-source-4.8.4 = "gcc-(?P<pver>4\.8\.\d+).tar"
 
 # these packages are taken from snapshots.debian.org; that source is static and goes stale
@@ -267,6 +273,4 @@ DEBIAN_PATCH_REGEX = "(?P<pver>((\d+\.*)+)-((\d+\.*)+))\.(diff|debian\.tar)\.(gz
 REGEX_pn-net-tools = "${DEBIAN_PATCH_REGEX}"
 REGEX_pn-apmd = "${DEBIAN_PATCH_REGEX}"
 REGEX_pn-blktool = "${DEBIAN_PATCH_REGEX}"
-# mailx is fetched from launchpad
-REGEX_URI_pn-mailx = "${DEBIAN_MIRROR}/main/h/heirloom-mailx/"
 REGEX_pn-mailx = "${DEBIAN_PATCH_REGEX}"
