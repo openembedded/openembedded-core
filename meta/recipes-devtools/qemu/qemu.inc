@@ -21,6 +21,7 @@ SRC_URI = "\
     file://wacom.patch \
     file://add-ptest-in-makefile.patch \
     file://run-ptest \
+    file://cpus.c-qemu_mutex_lock_iothread-fix-race-condition-a.patch \
     "
 
 SRC_URI_append_class-native = "\
