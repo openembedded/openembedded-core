@@ -10,3 +10,5 @@ CFLAGS += "-D_GNU_SOURCE"
 
 SRC_URI[archive.md5sum] = "497f26e457308649e6ece32b3bb142ff"
 SRC_URI[archive.sha256sum] = "86cf0b81aa023fa93ed415653d51c96767f20b2d7334c893caba71e42654b0ae"
+
+RECIPE_NO_UPDATE_REASON = "matchbox-terminal needs to be ported over to new vte first"
