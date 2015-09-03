@@ -18,6 +18,7 @@ inherit autotools pkgconfig
 
 PACKAGECONFIG ??= ""
 PACKAGECONFIG[libunwind] = "--with-libunwind,--without-libunwind,libunwind"
+PACKAGECONFIG[gui] = "--enable-event-gui,--disable-event-gui,cairo gtk+3"
 
 FILES_${PN} += "${libdir}/udev/"
 FILES_${PN}-dbg += "${libdir}/udev/.debug"
