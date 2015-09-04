@@ -95,6 +95,7 @@ FILES_${PN}-dbg += "\
   ${libdir}/bluetooth/plugins/.debug \
   ${libdir}/*/.debug \
   */udev/.debug \
+  */*/udev/.debug \
   "
 
 RDEPENDS_${PN}-testtools += "python python-dbus python-pygobject"
