@@ -25,10 +25,6 @@ fi
 
 mkdir -p "$BUILDDIR/conf"
 
-# Attempting to remove sticky and setuid bits from BUILDDIR and
-# BUILDDIR/conf directories. #TODO appropriate checks for this
-chmod -st "$BUILDDIR" "$BUILDDIR/conf"
-
 if [ ! -d "$BUILDDIR" ]; then
     echo >&2 "Error: The builddir ($BUILDDIR) does not exist!"
     exit 1
@@ -38,6 +34,10 @@ if [ ! -w "$BUILDDIR" ]; then
     echo >&2 "Error: Cannot write to $BUILDDIR, perhaps try sourcing with a writable path? i.e. . oe-init-build-env ~/my-build"
     exit 1
 fi
+
+# Attempting removal of sticky,setuid bits from BUILDDIR, BUILDDIR/conf
+chmod -st "$BUILDDIR" 2>/dev/null || echo "WARNING: unable to chmod $BUILDDIR"
+chmod -st "$BUILDDIR/conf" 2>/dev/null || echo "WARNING: unable to chmod $BUILDDIR/conf"
 
 cd "$BUILDDIR"
 
