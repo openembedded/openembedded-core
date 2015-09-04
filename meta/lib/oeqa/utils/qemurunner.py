@@ -280,6 +280,7 @@ class QemuRunner:
             self.server_socket = None
         self.qemupid = None
         self.ip = None
+        signal.signal(signal.SIGCHLD, self.origchldhandler)
 
     def stop_thread(self):
         if self.thread and self.thread.is_alive():
