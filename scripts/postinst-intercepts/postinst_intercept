@@ -48,7 +48,7 @@ if [ -n "$pkgs_line" ]; then
 		sed -i -e "s/##PKGS:.*/\0${package_name} /" $intercept_script
 	fi
 else
-	for var in $@; do
+	for var in "$@"; do
 		sed -i -e "\%^#\!/bin/.*sh%a $var" $intercept_script
 	done
 	echo "##PKGS: ${package_name} " >> $intercept_script
