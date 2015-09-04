@@ -306,10 +306,10 @@ FILES_${PN} = " ${base_bindir}/* \
                 ${exec_prefix}/lib/sysctl.d \
                 ${exec_prefix}/lib/sysusers.d \
                 ${localstatedir} \
-                /lib/udev/rules.d/70-uaccess.rules \
-                /lib/udev/rules.d/71-seat.rules \
-                /lib/udev/rules.d/73-seat-late.rules \
-                /lib/udev/rules.d/99-systemd.rules \
+                ${nonarch_base_libdir}/udev/rules.d/70-uaccess.rules \
+                ${nonarch_base_libdir}/udev/rules.d/71-seat.rules \
+                ${nonarch_base_libdir}/udev/rules.d/73-seat-late.rules \
+                ${nonarch_base_libdir}/udev/rules.d/99-systemd.rules \
                "
 
 FILES_${PN}-dbg += "${rootlibdir}/.debug ${systemd_unitdir}/.debug ${systemd_unitdir}/*/.debug ${base_libdir}/security/.debug/"
@@ -327,7 +327,7 @@ RRECOMMENDS_${PN} += "systemd-serialgetty systemd-vconsole-setup \
 
 PACKAGES =+ "udev-dbg udev udev-hwdb"
 
-FILES_udev-dbg += "/lib/udev/.debug"
+FILES_udev-dbg += "${nonarch_base_libdir}/udev/.debug"
 
 RPROVIDES_udev = "hotplug"
 
