@@ -31,8 +31,9 @@ do_install_append () {
 	[ "${bindir}" != "${base_bindir}" ] && for i in ${base_bindir_progs}; do mv ${D}${bindir}/$i ${D}${base_bindir}/$i; done
 	install -d ${D}${base_sbindir}
 	[ "${sbindir}" != "${base_sbindir}" ] && for i in ${base_sbindir_progs}; do mv ${D}${sbindir}/$i ${D}${base_sbindir}/$i; done
-        # Remove now empty dir
-	rmdir ${D}/${sbindir}
+        if [ "${base_sbindir}" != "${sbindir}" ]; then
+                rmdir ${D}${sbindir}
+        fi
 
         install -d ${D}${sysconfdir}
         install -m 0644 ${WORKDIR}/sysctl.conf ${D}${sysconfdir}/sysctl.conf
