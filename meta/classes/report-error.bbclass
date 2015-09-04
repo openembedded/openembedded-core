@@ -54,13 +54,22 @@ python errorreport_handler () {
             if log:
                 try:
                     logFile = open(log, 'r')
-                    taskdata['log'] = logFile.read().decode('utf-8')
+                    logdata = logFile.read().decode('utf-8')
                     logFile.close()
                 except:
-                    taskdata['log'] = "Unable to read log file"
+                    logdata = "Unable to read log file"
 
             else:
-                taskdata['log'] = "No Log"
+                logdata = "No Log"
+
+            # server will refuse failures longer than param specified in project.settings.py
+            # MAX_UPLOAD_SIZE = "5242880"
+            # use lower value, because 650 chars can be spent in task, package, version
+            max_logdata_size = 5242000
+            # upload last max_logdata_size characters
+            if len(logdata) > max_logdata_size:
+                logdata = "..." + logdata[-max_logdata_size:]
+            taskdata['log'] = logdata
             lock = bb.utils.lockfile(datafile + '.lock')
             jsondata = json.loads(errorreport_getdata(e))
             jsondata['failures'].append(taskdata)
