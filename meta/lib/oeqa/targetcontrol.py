@@ -188,6 +188,9 @@ class QemuTarget(BaseTarget):
                     bb.error("Qemu log output from %s:\n%s" % (self.qemulog, f.read()))
             raise bb.build.FuncFailed("%s - FAILED to start qemu - check the task log and the boot log" % self.pn)
 
+    def check(self):
+        return self.runner.is_alive()
+
     def stop(self):
         self.runner.stop()
         self.connection = None

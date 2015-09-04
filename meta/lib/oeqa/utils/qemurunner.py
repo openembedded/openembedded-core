@@ -64,6 +64,22 @@ class QemuRunner:
             with open(self.logfile, "a") as f:
                 f.write("%s" % msg)
 
+    def getOutput(self, o):
+        import fcntl
+        fl = fcntl.fcntl(o, fcntl.F_GETFL)
+        fcntl.fcntl(o, fcntl.F_SETFL, fl | os.O_NONBLOCK)
+        return os.read(o.fileno(), 1000000)
+
+
+    def handleSIGCHLD(self, signum, frame):
+        if self.runqemu and self.runqemu.poll():
+            if self.runqemu.returncode:
+                logger.info('runqemu exited with code %d' % self.runqemu.returncode)
+                logger.info("Output from runqemu:\n%s" % self.getOutput(self.runqemu.stdout))
+                self.stop()
+                self._dump_host()
+                raise SystemExit
+
     def start(self, qemuparams = None):
         if self.display:
             os.environ["DISPLAY"] = self.display
@@ -98,11 +114,8 @@ class QemuRunner:
         if qemuparams:
             self.qemuparams = self.qemuparams[:-1] + " " + qemuparams + " " + '\"'
 
-        def getOutput(o):
-            import fcntl
-            fl = fcntl.fcntl(o, fcntl.F_GETFL)
-            fcntl.fcntl(o, fcntl.F_SETFL, fl | os.O_NONBLOCK)
-            return os.read(o.fileno(), 1000000)
+        self.origchldhandler = signal.getsignal(signal.SIGCHLD)
+        signal.signal(signal.SIGCHLD, self.handleSIGCHLD)
 
         launch_cmd = 'runqemu tcpserial=%s %s %s %s' % (self.serverport, self.machine, self.rootfs, self.qemuparams)
         # FIXME: We pass in stdin=subprocess.PIPE here to work around stty
@@ -122,7 +135,7 @@ class QemuRunner:
                     logger.info('runqemu exited with code %d' % self.runqemu.returncode)
                     self._dump_host()
                     self.stop()
-                    logger.info("Output from runqemu:\n%s" % getOutput(output))
+                    logger.info("Output from runqemu:\n%s" % self.getOutput(output))
                     return False
             time.sleep(1)
 
@@ -139,7 +152,7 @@ class QemuRunner:
                     self.ip = ips[0]
                     self.server_ip = ips[1]
             except IndexError, ValueError:
-                logger.info("Couldn't get ip from qemu process arguments! Here is the qemu command line used:\n%s\nand output from runqemu:\n%s" % (cmdline, getOutput(output)))
+                logger.info("Couldn't get ip from qemu process arguments! Here is the qemu command line used:\n%s\nand output from runqemu:\n%s" % (cmdline, self.getOutput(output)))
                 self._dump_host()
                 self.stop()
                 return False
@@ -154,7 +167,7 @@ class QemuRunner:
                 logger.error("Didn't receive a console connection from qemu. "
                              "Here is the qemu command line used:\n%s\nand "
                              "output from runqemu:\n%s" % (cmdline,
-                                                           getOutput(output)))
+                                                           self.getOutput(output)))
                 self.stop_thread()
                 return False
 
@@ -213,15 +226,15 @@ class QemuRunner:
             logger.info("Qemu pid didn't appeared in %s seconds" % self.runqemutime)
             self._dump_host()
             self.stop()
-            logger.info("Output from runqemu:\n%s" % getOutput(output))
+            logger.info("Output from runqemu:\n%s" % self.getOutput(output))
             return False
 
         return self.is_alive()
 
     def stop(self):
-
         self.stop_thread()
         if self.runqemu:
+            signal.signal(signal.SIGCHLD, self.origchldhandler)
             logger.info("Sending SIGTERM to runqemu")
             try:
                 os.killpg(self.runqemu.pid, signal.SIGTERM)
@@ -255,6 +268,8 @@ class QemuRunner:
         return False
 
     def is_alive(self):
+        if not self.runqemu:
+            return False
         qemu_child = self.find_child(str(self.runqemu.pid))
         if qemu_child:
             self.qemupid = qemu_child[0]
