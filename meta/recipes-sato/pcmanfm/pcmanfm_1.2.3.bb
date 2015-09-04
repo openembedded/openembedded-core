@@ -36,3 +36,5 @@ do_install_append () {
 }
 
 FILES_${PN} += "${libdir}/pcmanfm"
+
+RRECOMMENDS_${PN} += "adwaita-icon-theme"
