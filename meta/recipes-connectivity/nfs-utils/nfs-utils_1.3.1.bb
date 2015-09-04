@@ -90,6 +90,14 @@ RDEPENDS_${PN}-stats = "python"
 
 FILES_${PN} += "${systemd_unitdir}"
 
+do_configure_prepend() {
+        sed -i -e 's,sbindir = /sbin,sbindir = ${base_sbindir},g' \
+            ${S}/utils/mount/Makefile.am
+
+        sed -i -e 's,sbindir = /sbin,sbindir = ${base_sbindir},g' \
+            ${S}/utils/osd_login/Makefile.am
+}
+
 # Make clean needed because the package comes with
 # precompiled 64-bit objects that break the build
 do_compile_prepend() {
