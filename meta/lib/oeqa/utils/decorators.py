@@ -116,12 +116,13 @@ def LogResults(original_class):
         orig_method(self, result, *args, **kws)
         passed = True
         testMethod = getattr(self, self._testMethodName)
-
         #if test case is decorated then use it's number, else use it's name
         try:
             test_case = testMethod.test_case
         except AttributeError:
             test_case = self._testMethodName
+
+        class_name = str(testMethod.im_class).split("'")[1]
 
         #create custom logging level for filtering.
         custom_log_level = 100
@@ -143,18 +144,19 @@ def LogResults(original_class):
         local_log = logging.getLogger(caller)
 
         #check status of tests and record it
+
         for (name, msg) in result.errors:
-            if self._testMethodName == str(name).split(' ')[0]:
+            if (self._testMethodName == str(name).split(' ')[0]) and (class_name in str(name).split(' ')[1]):
                 local_log.results("Testcase "+str(test_case)+": ERROR")
                 local_log.results("Testcase "+str(test_case)+":\n"+msg)
                 passed = False
         for (name, msg) in result.failures:
-            if self._testMethodName == str(name).split(' ')[0]:
+            if (self._testMethodName == str(name).split(' ')[0]) and (class_name in str(name).split(' ')[1]):
                 local_log.results("Testcase "+str(test_case)+": FAILED")
                 local_log.results("Testcase "+str(test_case)+":\n"+msg)
                 passed = False
         for (name, msg) in result.skipped:
-            if self._testMethodName == str(name).split(' ')[0]:
+            if (self._testMethodName == str(name).split(' ')[0]) and (class_name in str(name).split(' ')[1]):
                 local_log.results("Testcase "+str(test_case)+": SKIPPED")
                 passed = False
         if passed:
