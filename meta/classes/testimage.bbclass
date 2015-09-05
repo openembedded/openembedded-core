@@ -236,6 +236,7 @@ def testimage_main(d):
     import os
     import oeqa.runtime
     import time
+    import signal
     from oeqa.oetest import loadTests, runTests
     from oeqa.targetcontrol import get_target_controller
     from oeqa.utils.dump import get_host_dumper
@@ -273,11 +274,19 @@ def testimage_main(d):
             self.imagefeatures = d.getVar("IMAGE_FEATURES", True).split()
             self.distrofeatures = d.getVar("DISTRO_FEATURES", True).split()
             manifest = os.path.join(d.getVar("DEPLOY_DIR_IMAGE", True), d.getVar("IMAGE_LINK_NAME", True) + ".manifest")
+            self.sigterm = False
+            self.origsigtermhandler = signal.getsignal(signal.SIGTERM)
+            signal.signal(signal.SIGTERM, self.sigterm_exception)
             try:
                 with open(manifest) as f:
                     self.pkgmanifest = f.read()
             except IOError as e:
                 bb.fatal("No package manifest file found. Did you build the image?\n%s" % e)
+
+        def sigterm_exception(self, signum, stackframe):
+            bb.warn("TestImage received SIGTERM, shutting down...")
+            self.sigterm = True
+            self.target.stop()
 
     # test context
     tc = TestContext()
@@ -293,8 +302,8 @@ def testimage_main(d):
 
     target.deploy()
 
-    target.start()
     try:
+        target.start()
         if export:
             exportTests(d,tc)
         else:
@@ -311,6 +320,7 @@ def testimage_main(d):
             else:
                 raise bb.build.FuncFailed("%s - FAILED - check the task log and the ssh log" % pn )
     finally:
+        signal.signal(signal.SIGTERM, tc.origsigtermhandler)
         target.stop()
 
 testimage_main[vardepsexclude] =+ "BB_ORIGENV"

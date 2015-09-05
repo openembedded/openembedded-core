@@ -145,7 +145,11 @@ class oeRuntimeTest(oeTest):
         super(oeRuntimeTest, self).__init__(methodName)
 
     def setUp(self):
-        self.assertTrue(self.target.check(), msg = "Qemu not running?")
+        # Check if test needs to run
+        if self.tc.sigterm:
+            self.fail("Got SIGTERM")
+        elif (type(self.target).__name__ == "QemuTarget"):
+            self.assertTrue(self.target.check(), msg = "Qemu not running?")
 
     def tearDown(self):
         # If a test fails or there is an exception
