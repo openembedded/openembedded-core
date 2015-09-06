@@ -230,6 +230,14 @@ class Rootfs(object):
 
         runtime_pkgmanage = bb.utils.contains("IMAGE_FEATURES", "package-management",
                          True, False, self.d)
+        sysvcompat_in_distro = bb.utils.contains("DISTRO_FEATURES", [ "systemd", "sysvinit" ],
+                         True, False, self.d)
+        image_rorfs = bb.utils.contains("IMAGE_FEATURES", "read-only-rootfs",
+                         True, False, self.d)
+        if sysvcompat_in_distro and not image_rorfs:
+            pkg_to_remove = ""
+        else:
+            pkg_to_remove = "update-rc.d"
         if not runtime_pkgmanage:
             # Remove components that we don't need if we're not going to install
             # additional packages at runtime
@@ -243,7 +251,7 @@ class Rootfs(object):
                         if pkg in ["update-rc.d",
                                 "base-passwd",
                                 "shadow",
-                                "update-alternatives",
+                                "update-alternatives", pkg_to_remove,
                                 self.d.getVar("ROOTFS_BOOTSTRAP_INSTALL", True)
                                 ]:
                             pkgs_to_remove.append(pkg)
