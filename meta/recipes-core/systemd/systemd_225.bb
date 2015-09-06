@@ -10,10 +10,9 @@ state, maintains mount and automount points and implements an \
 elaborate transactional dependency-based service control logic. It can \
 work as a drop-in replacement for sysvinit."
 
-LICENSE = "GPLv2 & LGPLv2.1 & MIT"
+LICENSE = "GPLv2 & LGPLv2.1"
 LIC_FILES_CHKSUM = "file://LICENSE.GPL2;md5=751419260aa954499f7abaabaa882bbe \
-                    file://LICENSE.LGPL2.1;md5=4fbd65380cdd255951079008b364516c \
-                    file://LICENSE.MIT;md5=544799d0b492f119fa04641d1b8868ed"
+                    file://LICENSE.LGPL2.1;md5=4fbd65380cdd255951079008b364516c"
 
 PROVIDES = "udev"
 
@@ -23,14 +22,13 @@ DEPENDS = "kmod docbook-sgml-dtd-4.1-native intltool-native gperf-native acl rea
 
 SECTION = "base/shell"
 
-inherit gtk-doc useradd pkgconfig autotools perlnative update-rc.d update-alternatives qemu systemd ptest gettext
+inherit useradd pkgconfig autotools perlnative update-rc.d update-alternatives qemu systemd ptest gettext
 
-SRCREV = "85a6fabdd3e43cfab0fc6359e9f2a9e368d4a3ed"
+SRCREV = "e1439a1472c5f691733b8ef10e702beac2496a63"
 
-PV = "219-stable+git${SRCPV}"
+PV = "225+git${SRCPV}"
 
-SRC_URI = "git://github.com/systemd/systemd-stable;branch=v219-stable;protocol=git \
-           file://0002-shared-missing.h-fall-back-to-insecure-getenv.patch \
+SRC_URI = "git://github.com/systemd/systemd.git;protocol=git \
            file://0003-binfmt-Don-t-install-dependency-links-at-install-tim.patch \
            file://0004-configure-Check-for-additional-features-that-uclibc-.patch \
            file://0005-nspawn-Use-execvpe-only-when-libc-supports-it.patch \
@@ -40,11 +38,8 @@ SRC_URI = "git://github.com/systemd/systemd-stable;branch=v219-stable;protocol=g
            file://0009-sysv-generator-add-support-for-executing-scripts-und.patch \
            file://0010-Make-root-s-home-directory-configurable.patch \
            file://0011-systemd-user-avoid-using-system-auth.patch \
-           file://0012-systemd-tmpfiles.c-Honor-ordering-within-files-as-th.patch \
            file://0014-Revert-rules-remove-firmware-loading-rules.patch \
            file://0015-Revert-udev-remove-userspace-firmware-loading-suppor.patch \
-           file://tmpfiles-pam.patch \
-           file://0001-Revert-core-mount-add-dependencies-to-dynamically-mo.patch \
            file://touchscreen.rules \
            file://00-create-volatile.conf \
            file://init \
@@ -119,8 +114,6 @@ EXTRA_OECONF = " --with-rootprefix=${rootprefix} \
                  --with-rootlibdir=${rootlibdir} \
                  --with-roothomedir=${ROOT_HOME} \
                  --disable-coredump \
-                 --disable-introspection \
-                 --disable-kdbus \
                  --enable-split-usr \
                  --without-python \
                  --with-sysvrcnd-path=${sysconfdir} \
@@ -220,7 +213,7 @@ python populate_packages_prepend (){
 PACKAGES_DYNAMIC += "^lib(udev|systemd).*"
 
 PACKAGES =+ "${PN}-gui ${PN}-vconsole-setup ${PN}-initramfs ${PN}-analyze ${PN}-kernel-install \
-             ${PN}-rpm-macros ${PN}-binfmt ${PN}-pam ${PN}-zsh libgudev"
+             ${PN}-rpm-macros ${PN}-binfmt ${PN}-pam ${PN}-zsh ${PN}-xorg-xinitrc"
 
 SYSTEMD_PACKAGES = "${PN}-binfmt"
 SYSTEMD_SERVICE_${PN}-binfmt = "systemd-binfmt.service"
@@ -233,8 +226,6 @@ FILES_${PN}-analyze = "${bindir}/systemd-analyze"
 
 FILES_${PN}-initramfs = "/init"
 RDEPENDS_${PN}-initramfs = "${PN}"
-
-FILES_libgudev = "${libdir}/libgudev*${SOLIBS}"
 
 RDEPENDS_${PN}-ptest += "perl python bash"
 FILES_${PN}-ptest += "${libdir}/udev/rules.d"
@@ -254,6 +245,8 @@ FILES_${PN}-kernel-install = "${bindir}/kernel-install \
                              "
 FILES_${PN}-rpm-macros = "${exec_prefix}/lib/rpm \
                          "
+
+FILES_${PN}-xorg-xinitrc = "${sysconfdir}/X11/xinit/xinitrc.d/*"
 
 FILES_${PN}-zsh = "${datadir}/zsh/site-functions"
 

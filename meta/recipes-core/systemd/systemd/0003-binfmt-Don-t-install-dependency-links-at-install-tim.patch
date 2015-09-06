@@ -23,11 +23,11 @@ Signed-off-by: Khem Raj <raj.khem@gmail.com>
  units/systemd-binfmt.service.in         | 5 +++++
  3 files changed, 8 insertions(+), 4 deletions(-)
 
-diff --git a/Makefile.am b/Makefile.am
-index ba63f68..0fb3f9f 100644
---- a/Makefile.am
-+++ b/Makefile.am
-@@ -4838,10 +4838,6 @@ INSTALL_DIRS += \
+Index: git/Makefile.am
+===================================================================
+--- git.orig/Makefile.am
++++ git/Makefile.am
+@@ -4271,10 +4271,6 @@ INSTALL_DIRS += \
  	$(prefix)/lib/binfmt.d \
  	$(sysconfdir)/binfmt.d
  
@@ -38,10 +38,10 @@ index ba63f68..0fb3f9f 100644
  endif
  
  EXTRA_DIST += \
-diff --git a/units/proc-sys-fs-binfmt_misc.automount b/units/proc-sys-fs-binfmt_misc.automount
-index 6be3893..709adef 100644
---- a/units/proc-sys-fs-binfmt_misc.automount
-+++ b/units/proc-sys-fs-binfmt_misc.automount
+Index: git/units/proc-sys-fs-binfmt_misc.automount
+===================================================================
+--- git.orig/units/proc-sys-fs-binfmt_misc.automount
++++ git/units/proc-sys-fs-binfmt_misc.automount
 @@ -16,3 +16,6 @@ ConditionPathIsReadWrite=/proc/sys/
  
  [Automount]
@@ -49,11 +49,11 @@ index 6be3893..709adef 100644
 +
 +[Install]
 +WantedBy=sysinit.target
-diff --git a/units/systemd-binfmt.service.in b/units/systemd-binfmt.service.in
-index 34a5d52..617462b 100644
---- a/units/systemd-binfmt.service.in
-+++ b/units/systemd-binfmt.service.in
-@@ -11,6 +11,8 @@ Documentation=man:systemd-binfmt.service(8) man:binfmt.d(5)
+Index: git/units/systemd-binfmt.service.in
+===================================================================
+--- git.orig/units/systemd-binfmt.service.in
++++ git/units/systemd-binfmt.service.in
+@@ -11,6 +11,8 @@ Documentation=man:systemd-binfmt.service
  Documentation=https://www.kernel.org/doc/Documentation/binfmt_misc.txt
  DefaultDependencies=no
  Conflicts=shutdown.target
@@ -62,13 +62,10 @@ index 34a5d52..617462b 100644
  After=proc-sys-fs-binfmt_misc.automount
  Before=sysinit.target shutdown.target
  ConditionPathIsReadWrite=/proc/sys/
-@@ -24,3 +26,6 @@ ConditionDirectoryNotEmpty=|/run/binfmt.d
- Type=oneshot
+@@ -25,3 +27,6 @@ Type=oneshot
  RemainAfterExit=yes
  ExecStart=@rootlibexecdir@/systemd-binfmt
+ TimeoutSec=90s
 +
 +[Install]
 +WantedBy=sysinit.target
--- 
-2.1.4
-
