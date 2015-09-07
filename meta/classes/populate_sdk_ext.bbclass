@@ -15,7 +15,9 @@ SDK_RDEPENDS_append_task-populate-sdk-ext = " ${SDK_TARGETS}"
 
 SDK_RELOCATE_AFTER_INSTALL_task-populate-sdk-ext = "0"
 
-SDK_META_CONF_WHITELIST ?= "MACHINE DISTRO PACKAGE_CLASSES"
+SDK_LOCAL_CONF_WHITELIST ?= ""
+SDK_LOCAL_CONF_BLACKLIST ?= "CONF_VERSION BB_NUMBER_THREADS PARALLEL_MAKE PRSERV_HOST"
+SDK_INHERIT_BLACKLIST ?= "buildhistory icecc"
 
 SDK_TARGETS ?= "${PN}"
 OE_INIT_ENV_SCRIPT ?= "oe-init-build-env"
@@ -109,14 +111,34 @@ python copy_buildsystem () {
         f.write('    "\n')
 
     # Create local.conf
+    local_conf_whitelist = (d.getVar('SDK_LOCAL_CONF_WHITELIST', True) or '').split()
+    local_conf_blacklist = (d.getVar('SDK_LOCAL_CONF_BLACKLIST', True) or '').split()
+    def handle_var(varname, origvalue, op, newlines):
+        if varname in local_conf_blacklist or (origvalue.strip().startswith('/') and not varname in local_conf_whitelist):
+            newlines.append('# Removed original setting of %s\n' % varname)
+            return None, op, 0, True
+        else:
+            return origvalue, op, 0, True
+    varlist = ['[^#=+ ]*']
+    builddir = d.getVar('TOPDIR', True)
+    with open(builddir + '/conf/local.conf', 'r') as f:
+        oldlines = f.readlines()
+    (updated, newlines) = bb.utils.edit_metadata(oldlines, varlist, handle_var)
+
     with open(baseoutpath + '/conf/local.conf', 'w') as f:
         f.write('# WARNING: this configuration has been automatically generated and in\n')
         f.write('# most cases should not be edited. If you need more flexibility than\n')
         f.write('# this configuration provides, it is strongly suggested that you set\n')
         f.write('# up a proper instance of the full build system and use that instead.\n\n')
+        for line in newlines:
+            if line.strip() and not line.startswith('#'):
+                f.write(line)
 
         f.write('INHERIT += "%s"\n\n' % 'uninative')
         f.write('CONF_VERSION = "%s"\n\n' % d.getVar('CONF_VERSION', False))
+
+        # Some classes are not suitable for SDK, remove them from INHERIT
+        f.write('INHERIT_remove = "%s"\n' % d.getVar('SDK_INHERIT_BLACKLIST'))
 
         # This is a bit of a hack, but we really don't want these dependencies
         # (we're including them in the SDK as nativesdk- versions instead)
@@ -134,8 +156,6 @@ python copy_buildsystem () {
         # Ensure locked sstate cache objects are re-used without error
         f.write('SIGGEN_LOCKEDSIGS_CHECK_LEVEL = "warn"\n\n')
 
-        for varname in d.getVar('SDK_META_CONF_WHITELIST', True).split():
-            f.write('%s = "%s"\n' % (varname, d.getVar(varname, True)))
         f.write('require conf/locked-sigs.inc\n')
         f.write('require conf/work-config.inc\n')
 
