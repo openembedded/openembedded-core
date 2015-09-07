@@ -36,7 +36,6 @@ while getopts ":yd:DRS" OPT; do
 	case $OPT in
 	y)
 		answer="Y"
-		[ "$target_sdk_dir" = "" ] && target_sdk_dir=$DEFAULT_INSTALL_DIR
 		;;
 	d)
 		target_sdk_dir=$OPTARG
@@ -73,9 +72,18 @@ fi
 
 @SDK_PRE_INSTALL_COMMAND@
 
+# SDK_EXTENSIBLE is exposed from the SDK_PRE_INSTALL_COMMAND above
+if [ "$SDK_EXTENSIBLE" = "1" ]; then
+	DEFAULT_INSTALL_DIR="@SDKEXTPATH@"
+fi
+
 if [ "$target_sdk_dir" = "" ]; then
-	read -e -p "Enter target directory for SDK (default: $DEFAULT_INSTALL_DIR): " target_sdk_dir
-	[ "$target_sdk_dir" = "" ] && target_sdk_dir=$DEFAULT_INSTALL_DIR
+	if [ "$answer" = "Y" ]; then
+		target_sdk_dir="$DEFAULT_INSTALL_DIR"
+	else
+		read -e -p "Enter target directory for SDK (default: $DEFAULT_INSTALL_DIR): " target_sdk_dir
+		[ "$target_sdk_dir" = "" ] && target_sdk_dir=$DEFAULT_INSTALL_DIR
+	fi
 fi
 
 eval target_sdk_dir=$(echo "$target_sdk_dir"|sed 's/ /\\ /g')
@@ -155,7 +163,7 @@ echo "done"
 printf "Setting it up..."
 # fix environment paths
 for env_setup_script in `ls $target_sdk_dir/environment-setup-*`; do
-	$SUDO_EXEC sed -e "s:$DEFAULT_INSTALL_DIR:$target_sdk_dir:g" -i $env_setup_script
+	$SUDO_EXEC sed -e "s:@SDKPATH@:$target_sdk_dir:g" -i $env_setup_script
 done
 
 @SDK_POST_INSTALL_COMMAND@
