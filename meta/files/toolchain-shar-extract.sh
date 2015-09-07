@@ -85,9 +85,18 @@ else
 	target_sdk_dir=$(readlink -m "$target_sdk_dir")
 fi
 
-if [ -n "$(echo $target_sdk_dir|grep ' ')" ]; then
-	echo "The target directory path ($target_sdk_dir) contains spaces. Abort!"
-	exit 1
+if [ "$SDK_EXTENSIBLE" = "1" ]; then
+	# We're going to be running the build system, additional restrictions apply
+	if echo "$target_sdk_dir" | grep -q '[+\ @]'; then
+		echo "The target directory path ($target_sdk_dir) contains illegal" \
+		     "characters such as spaces, @ or +. Abort!"
+		exit 1
+	fi
+else
+	if [ -n "$(echo $target_sdk_dir|grep ' ')" ]; then
+		echo "The target directory path ($target_sdk_dir) contains spaces. Abort!"
+		exit 1
+	fi
 fi
 
 if [ -e "$target_sdk_dir/environment-setup-@REAL_MULTIMACH_TARGET_SYS@" ]; then
