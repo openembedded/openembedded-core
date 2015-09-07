@@ -21,8 +21,8 @@ SRC_URI = "ftp://ftp.isc.org/isc/bind9/${PV}/${BPN}-${PV}.tar.gz \
            file://bind-ensure-searching-for-json-headers-searches-sysr.patch \
            "
 
-SRC_URI[md5sum] = "a810d5d65fbdcf28dcda80d646913c3a"
-SRC_URI[sha256sum] = "78079a66dda455ffecfe93ef72d1ffc947f17b1c453d55ec06b860b49a5e1d4a"
+SRC_URI[md5sum] = "8b1f5064837756c938eadc1537dec5c7"
+SRC_URI[sha256sum] = "c00b21ec1def212957f28efe9d10aac52d6ec515e84fbf2c42143f5d71429cb8"
 
 ENABLE_IPV6 = "--enable-ipv6=${@bb.utils.contains('DISTRO_FEATURES', 'ipv6', 'yes', 'no', d)}"
 EXTRA_OECONF = " ${ENABLE_IPV6} --with-randomdev=/dev/random --disable-threads \
