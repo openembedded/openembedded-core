@@ -22,7 +22,14 @@ finish_run() {
 			fi
 
 			if [ -e "$bootparam_root" ]; then
-				mount $bootparam_root $ROOTFS_DIR
+				flags=""
+				if [ -n "$bootparam_rootflags" ]; then
+					flags="$flags -o$bootparam_rootflags"
+				fi
+				if [ -n "$bootparam_rootfstype" ]; then
+					flags="$flags -t$bootparam_rootfstype"
+				fi
+				mount $flags $bootparam_root $ROOTFS_DIR
 			else
 				debug "root '$bootparam_root' doesn't exist."
 			fi
