@@ -136,7 +136,8 @@ mkdir -p $target_sdk_dir >/dev/null 2>&1
 # if don't have the right to access dir, gain by sudo 
 if [ ! -x $target_sdk_dir -o ! -w $target_sdk_dir -o ! -r $target_sdk_dir ]; then 
 	if [ "$SDK_EXTENSIBLE" = "1" ]; then
-		echo "Unable to access \"$target_sdk_dir\"."
+		echo "Unable to access \"$target_sdk_dir\", will not attempt to use" \
+		     "sudo as as extensible SDK cannot be used as root."
 		exit 1
 	fi
 
