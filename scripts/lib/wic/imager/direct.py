@@ -242,7 +242,7 @@ class DirectImageCreator(BaseImageCreator):
                     rsize_bb = get_bitbake_var('ROOTFS_SIZE', image_name)
                     if rsize_bb:
                         # convert from Kb to Mb
-                        part.size = int(rsize_bb) / 1024
+                        part.size = int(round(float(rsize_bb) / 1024.))
             # need to create the filesystems in order to get their
             # sizes before we can add them and do the layout.
             # Image.create() actually calls __format_disks() to create
