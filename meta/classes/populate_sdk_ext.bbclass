@@ -18,6 +18,7 @@ SDK_RELOCATE_AFTER_INSTALL_task-populate-sdk-ext = "0"
 SDK_LOCAL_CONF_WHITELIST ?= ""
 SDK_LOCAL_CONF_BLACKLIST ?= "CONF_VERSION BB_NUMBER_THREADS PARALLEL_MAKE PRSERV_HOST"
 SDK_INHERIT_BLACKLIST ?= "buildhistory icecc"
+SDK_UPDATE_URL ?= ""
 
 SDK_TARGETS ?= "${PN}"
 OE_INIT_ENV_SCRIPT ?= "oe-init-build-env"
@@ -85,6 +86,11 @@ python copy_buildsystem () {
     config.set('General', 'bitbake_subdir', conf_bbpath)
     config.set('General', 'init_path', conf_initpath)
     config.set('General', 'core_meta_subdir', core_meta_subdir)
+    config.add_section('SDK')
+    config.set('SDK', 'sdk_targets', d.getVar('SDK_TARGETS', True))
+    updateurl = d.getVar('SDK_UPDATE_URL', True)
+    if updateurl:
+        config.set('SDK', 'updateserver', updateurl)
     bb.utils.mkdirhier(os.path.join(baseoutpath, 'conf'))
     with open(os.path.join(baseoutpath, 'conf', 'devtool.conf'), 'w') as f:
         config.write(f)
