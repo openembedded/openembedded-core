@@ -11,6 +11,7 @@ LIC_FILES_CHKSUM = "file://LICENCE;md5=33bcd4bce8f3c197f2aefbdbd2d299bc"
 
 SRC_URI = "git://git.tartarus.org/simon/puzzles.git \
            file://fix-compiling-failure-with-option-g-O.patch \
+           file://0001-Use-labs-instead-of-abs.patch \
 "
 SRCREV = "c296301a06ce49b87c954c9d15452521dfeddf1a"
 PE = "1"
