@@ -140,11 +140,6 @@ python copy_buildsystem () {
         # Some classes are not suitable for SDK, remove them from INHERIT
         f.write('INHERIT_remove = "%s"\n' % d.getVar('SDK_INHERIT_BLACKLIST'))
 
-        # This is a bit of a hack, but we really don't want these dependencies
-        # (we're including them in the SDK as nativesdk- versions instead)
-        f.write('POKYQEMUDEPS_forcevariable = ""\n\n')
-        f.write('EXTRA_IMAGEDEPENDS_remove = "qemu-native qemu-helper-native"\n\n')
-
         # Bypass the default connectivity check if any
         f.write('CONNECTIVITY_CHECK_URIS = ""\n\n')
 
