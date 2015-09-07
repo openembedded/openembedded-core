@@ -58,9 +58,13 @@ fatal() {
     echo $1 >/dev/console
     echo >/dev/console
 
+    if [ -n "bootparam_init_fatal_sh" ]; then
+        sh
+    else
 	while [ "true" ]; do
 		sleep 3600
 	done
+    fi
 }
 
 # Variables shared amoung modules
