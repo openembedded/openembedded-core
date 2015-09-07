@@ -16,5 +16,3 @@ S = "${WORKDIR}/git"
 inherit autotools
 
 BBCLASSEXTEND = "native"
-
-TARGET_CC_ARCH += "${LDFLAGS}"
