@@ -13,6 +13,7 @@ SRC_URI = "ftp://ftp.alsa-project.org/pub/tools/${BP}.tar.bz2 \
            ${@bb.utils.contains('DISTRO_FEATURES', 'x11', '', \
                                 'file://makefile_no_gtk.patch', d)} \
            file://gitcompile_hdajacksensetest \
+           file://0001-as10k1-Make-output_tram_line-static-inline.patch \
           "
 
 SRC_URI[md5sum] = "f339a3cd24f748c9d007bdff0e98775b"
