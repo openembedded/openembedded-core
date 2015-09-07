@@ -17,6 +17,7 @@ LIC_FILES_CHKSUM = "file://gnuefi/crt0-efi-arm.S;beginline=4;endline=9;md5=2240d
 SRC_URI = "${SOURCEFORGE_MIRROR}/${BPN}/${BP}.tar.bz2 \
            file://parallel-make-archives.patch \
            file://lib-Makefile-fix-parallel-issue.patch \
+           file://gnu-efi-Make-setjmp.S-portable-to-ARM.patch \
           "
 
 SRC_URI[md5sum] = "15a4bcbc18a9a5e8110ed955970622e6"
