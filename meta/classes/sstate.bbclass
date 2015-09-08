@@ -157,17 +157,14 @@ def sstate_add(ss, source, dest, d):
 
 def sstate_install(ss, d):
     import oe.path
+    import oe.sstatesig
     import subprocess
 
     sharedfiles = []
     shareddirs = []
     bb.utils.mkdirhier(d.expand("${SSTATE_MANIFESTS}"))
 
-    d2 = d.createCopy()
-    extrainf = d.getVarFlag("do_" + ss['task'], 'stamp-extra-info', True)
-    if extrainf:
-        d2.setVar("SSTATE_MANMACH", extrainf)
-    manifest = d2.expand("${SSTATE_MANFILEPREFIX}.%s" % ss['task'])
+    manifest, d2 = oe.sstatesig.sstate_get_manifest_filename(ss['task'], d)
 
     if os.access(manifest, os.R_OK):
         bb.fatal("Package already staged (%s)?!" % manifest)

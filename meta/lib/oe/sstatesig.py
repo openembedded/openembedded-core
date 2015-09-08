@@ -277,3 +277,15 @@ def find_siginfo(pn, taskname, taskhashlist, d):
         return filedates
 
 bb.siggen.find_siginfo = find_siginfo
+
+
+def sstate_get_manifest_filename(task, d):
+    """
+    Return the sstate manifest file path for a particular task.
+    Also returns the datastore that can be used to query related variables.
+    """
+    d2 = d.createCopy()
+    extrainf = d.getVarFlag("do_" + task, 'stamp-extra-info', True)
+    if extrainf:
+        d2.setVar("SSTATE_MANMACH", extrainf)
+    return (d2.expand("${SSTATE_MANFILEPREFIX}.%s" % task), d2)
