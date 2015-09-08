@@ -264,7 +264,7 @@ class QemuRunner:
             os.kill(self.monitorpid, signal.SIGKILL)
             logger.info("Sending SIGTERM to runqemu")
             try:
-                os.killpg(self.runqemu.pid, signal.SIGTERM)
+                os.killpg(os.getpgid(self.runqemu.pid), signal.SIGTERM)
             except OSError as e:
                 if e.errno != errno.ESRCH:
                     raise
@@ -273,7 +273,7 @@ class QemuRunner:
                 time.sleep(1)
             if self.runqemu.poll() is None:
                 logger.info("Sending SIGKILL to runqemu")
-                os.killpg(self.runqemu.pid, signal.SIGKILL)
+                os.killpg(os.getpgid(self.runqemu.pid), signal.SIGKILL)
             self.runqemu = None
         if hasattr(self, 'server_socket') and self.server_socket:
             self.server_socket.close()
