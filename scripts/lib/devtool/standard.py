@@ -178,6 +178,8 @@ def extract(args, config, basepath, workspace):
 
     srctree = os.path.abspath(args.srctree)
     initial_rev = _extract_source(srctree, args.keep_temp, args.branch, rd)
+    logger.info('Source tree extracted to %s' % srctree)
+
     if initial_rev:
         return 0
     else:
@@ -351,7 +353,6 @@ def _extract_source(srctree, keep_temp, devbranch, d):
                 bb.process.run('git checkout patches', cwd=srcsubdir)
 
         shutil.move(srcsubdir, srctree)
-        logger.info('Source tree extracted to %s' % srctree)
     finally:
         bb.logger.setLevel(origlevel)
 
@@ -451,6 +452,7 @@ def modify(args, config, basepath, workspace):
         initial_rev = _extract_source(args.srctree, False, args.branch, rd)
         if not initial_rev:
             return 1
+        logger.info('Source tree extracted to %s' % srctree)
         # Get list of commits since this revision
         (stdout, _) = bb.process.run('git rev-list --reverse %s..HEAD' % initial_rev, cwd=args.srctree)
         commits = stdout.split()

@@ -913,3 +913,39 @@ class DevtoolTests(DevtoolBase):
         # NOTE: native recipe parted-native should not be in IMAGE_INSTALL_append
         self.assertTrue('IMAGE_INSTALL_append = " mdadm"\n' in open(bbappend).readlines(),
                         'IMAGE_INSTALL_append = " mdadm" not found in %s' % bbappend)
+
+    def test_devtool_upgrade(self):
+        # Check preconditions
+        workspacedir = os.path.join(self.builddir, 'workspace')
+        self.assertTrue(not os.path.exists(workspacedir), 'This test cannot be run with a workspace directory under the build directory')
+        # Check parameters
+        result = runCmd('devtool upgrade -h')
+        for param in 'recipename srctree --version -V --branch -b --keep-temp --no-patch'.split():
+            self.assertIn(param, result.output)
+        # For the moment, we are using a real recipe.
+        recipe='devtool-upgrade'
+        version='0.2'
+        tempdir = tempfile.mkdtemp(prefix='devtoolqa')
+        # Check that recipe is not already under devtool control
+        result = runCmd('devtool status')
+        self.assertNotIn(recipe, result.output)
+        # Check upgrade. Code does not check if new PV is older or newer that current PV, so, it may be that
+        # we are downgrading instead of upgrading.
+        result = runCmd('devtool upgrade %s %s -V %s' % (recipe, tempdir, version))
+        # Check if srctree at least is populated
+        self.assertTrue(len(os.listdir(tempdir)) > 0, 'scrtree (%s) should be populated with new (%s) source code' % (tempdir, version))
+        # Check new recipe folder is present
+        self.assertTrue(os.path.exists(os.path.join(workspacedir,'recipes',recipe)), 'Recipe folder should exist')
+        # Check new recipe file is present
+        self.assertTrue(os.path.exists(os.path.join(workspacedir,'recipes',recipe,"%s_%s.bb" % (recipe,version))), 'Recipe folder should exist')
+        # Check devtool status and make sure recipe is present
+        result = runCmd('devtool status')
+        self.assertIn(recipe, result.output)
+        self.assertIn(tempdir, result.output)
+        # Check devtool reset recipe
+        result = runCmd('devtool reset %s -n' % recipe)
+        result = runCmd('devtool status')
+        self.assertNotIn(recipe, result.output)
+        self.track_for_cleanup(tempdir)
+        self.track_for_cleanup(workspacedir)
+        self.add_command_to_tearDown('bitbake-layers remove-layer */workspace')
