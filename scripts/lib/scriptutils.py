@@ -69,3 +69,30 @@ def git_convert_standalone_clone(repodir):
             # of the contents is shared
             bb.process.run('git repack -a', cwd=repodir)
             os.remove(alternatesfile)
+
+def fetch_uri(d, uri, destdir, srcrev=None):
+    """Fetch a URI to a local directory"""
+    import bb.data
+    bb.utils.mkdirhier(destdir)
+    localdata = bb.data.createCopy(d)
+    localdata.setVar('BB_STRICT_CHECKSUM', '')
+    localdata.setVar('SRCREV', srcrev)
+    ret = (None, None)
+    olddir = os.getcwd()
+    try:
+        fetcher = bb.fetch2.Fetch([uri], localdata)
+        for u in fetcher.ud:
+            ud = fetcher.ud[u]
+            ud.ignore_checksums = True
+        fetcher.download()
+        fetcher.unpack(destdir)
+        for u in fetcher.ud:
+            ud = fetcher.ud[u]
+            if ud.method.recommends_checksum(ud):
+                md5value = bb.utils.md5_file(ud.localpath)
+                sha256value = bb.utils.sha256_file(ud.localpath)
+                ret = (md5value, sha256value)
+    finally:
+        os.chdir(olddir)
+    return ret
+

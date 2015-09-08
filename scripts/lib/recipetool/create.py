@@ -58,34 +58,6 @@ class RecipeHandler():
 
 
 
-def fetch_source(uri, destdir, srcrev):
-    import bb.data
-    bb.utils.mkdirhier(destdir)
-    localdata = bb.data.createCopy(tinfoil.config_data)
-    bb.data.update_data(localdata)
-    localdata.setVar('BB_STRICT_CHECKSUM', '')
-    localdata.setVar('SRCREV', srcrev)
-    ret = (None, None)
-    olddir = os.getcwd()
-    try:
-        fetcher = bb.fetch2.Fetch([uri], localdata)
-        for u in fetcher.ud:
-            ud = fetcher.ud[u]
-            ud.ignore_checksums = True
-        fetcher.download()
-        fetcher.unpack(destdir)
-        for u in fetcher.ud:
-            ud = fetcher.ud[u]
-            if ud.method.recommends_checksum(ud):
-                md5value = bb.utils.md5_file(ud.localpath)
-                sha256value = bb.utils.sha256_file(ud.localpath)
-                ret = (md5value, sha256value)
-    except bb.fetch2.BBFetchException, e:
-        raise bb.build.FuncFailed(e)
-    finally:
-        os.chdir(olddir)
-    return ret
-
 def supports_srcrev(uri):
     localdata = bb.data.createCopy(tinfoil.config_data)
     # This is a bit sad, but if you don't have this set there can be some
@@ -123,7 +95,7 @@ def create_recipe(args):
         tempsrc = tempfile.mkdtemp(prefix='recipetool-')
         srctree = tempsrc
         logger.info('Fetching %s...' % srcuri)
-        checksums = fetch_source(args.source, srctree, srcrev)
+        checksums = scriptutils.fetch_uri(tinfoil.config_data, args.source, srctree, srcrev)
         dirlist = os.listdir(srctree)
         if 'git.indirectionsymlink' in dirlist:
             dirlist.remove('git.indirectionsymlink')
