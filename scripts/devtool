@@ -221,6 +221,9 @@ def main():
     if not config.read():
         return -1
 
+    # We need to be in this directory or we won't be able to initialise tinfoil
+    os.chdir(basepath)
+
     bitbake_subdir = config.get('General', 'bitbake_subdir', '')
     if bitbake_subdir:
         # Normally set for use within the SDK
