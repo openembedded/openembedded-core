@@ -362,14 +362,23 @@ def _extract_source(srctree, keep_temp, devbranch, d):
     return initial_rev
 
 def _add_md5(config, recipename, filename):
-    """Record checksum of a recipe to the md5-file of the workspace"""
+    """Record checksum of a file (or recursively for a directory) to the md5-file of the workspace"""
     import bb.utils
-    md5 = bb.utils.md5_file(filename)
-    with open(os.path.join(config.workspace_path, '.devtool_md5'), 'a') as f:
-        f.write('%s|%s|%s\n' % (recipename, os.path.relpath(filename, config.workspace_path), md5))
+
+    def addfile(fn):
+        md5 = bb.utils.md5_file(fn)
+        with open(os.path.join(config.workspace_path, '.devtool_md5'), 'a') as f:
+            f.write('%s|%s|%s\n' % (recipename, os.path.relpath(fn, config.workspace_path), md5))
+
+    if os.path.isdir(filename):
+        for root, _, files in os.walk(os.path.dirname(filename)):
+            for f in files:
+                addfile(os.path.join(root, f))
+    else:
+        addfile(filename)
 
 def _check_preserve(config, recipename):
-    """Check if a recipe was manually changed and needs to be saved in 'attic'
+    """Check if a file was manually changed and needs to be saved in 'attic'
        directory"""
     import bb.utils
     origfile = os.path.join(config.workspace_path, '.devtool_md5')
@@ -830,10 +839,13 @@ def reset(args, config, basepath, workspace):
         preservepath = os.path.join(config.workspace_path, 'attic', pn)
         def preservedir(origdir):
             if os.path.exists(origdir):
-                for fn in os.listdir(origdir):
-                    logger.warn('Preserving %s in %s' % (fn, preservepath))
-                    bb.utils.mkdirhier(preservepath)
-                    shutil.move(os.path.join(origdir, fn), os.path.join(preservepath, fn))
+                for root, dirs, files in os.walk(origdir):
+                    for fn in files:
+                        logger.warn('Preserving %s in %s' % (fn, preservepath))
+                        bb.utils.mkdirhier(preservepath)
+                        shutil.move(os.path.join(origdir, fn), os.path.join(preservepath, fn))
+                    for dn in dirs:
+                        os.rmdir(os.path.join(root, dn))
                 os.rmdir(origdir)
 
         preservedir(os.path.join(config.workspace_path, 'recipes', pn))
