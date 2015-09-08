@@ -51,9 +51,13 @@ base_do_unpack_append () {
     if s != kernsrc:
         bb.utils.mkdirhier(kernsrc)
         bb.utils.remove(kernsrc, recurse=True)
-        import subprocess
-        subprocess.call(d.expand("mv ${S} ${STAGING_KERNEL_DIR}"), shell=True)
-        os.symlink(kernsrc, s)
+        if d.getVar("EXTERNALSRC", True):
+            # With EXTERNALSRC S will not be wiped so we can symlink to it
+            os.symlink(s, kernsrc)
+        else:
+            import shutil
+            shutil.move(s, kernsrc)
+            os.symlink(kernsrc, s)
 }
 
 inherit kernel-arch deploy
