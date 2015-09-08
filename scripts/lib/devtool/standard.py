@@ -757,6 +757,31 @@ def _update_recipe_patch(args, config, srctree, rd, config_data):
 
     _remove_patch_files(args, removepatches, destpath)
 
+def _guess_recipe_update_mode(srctree, rdata):
+    """Guess the recipe update mode to use"""
+    src_uri = (rdata.getVar('SRC_URI', False) or '').split()
+    git_uris = [uri for uri in src_uri if uri.startswith('git://')]
+    if not git_uris:
+        return 'patch'
+    # Just use the first URI for now
+    uri = git_uris[0]
+    # Check remote branch
+    upstr_branch = 'master'
+    for paramdef in uri.split(';')[1:]:
+        name, value = paramdef.split('=', 1)
+        if name == 'branch':
+            upstr_branch = value
+    # Check if current branch HEAD is found in upstream branch
+    stdout, _ = bb.process.run('git rev-parse HEAD', cwd=srctree)
+    head_rev = stdout.rstrip()
+    stdout, _ = bb.process.run('git branch -r --contains %s' % head_rev,
+                               cwd=srctree)
+    remote_brs = [branch.strip() for branch in stdout.splitlines()]
+    if 'origin/' + upstr_branch in remote_brs:
+        return 'srcrev'
+
+    return 'patch'
+
 def update_recipe(args, config, basepath, workspace):
     """Entry point for the devtool 'update-recipe' subcommand"""
     if not args.recipename in workspace:
@@ -777,16 +802,11 @@ def update_recipe(args, config, basepath, workspace):
     if not rd:
         return 1
 
-    orig_src_uri = rd.getVar('SRC_URI', False) or ''
+    srctree = workspace[args.recipename]['srctree']
     if args.mode == 'auto':
-        if 'git://' in orig_src_uri:
-            mode = 'srcrev'
-        else:
-            mode = 'patch'
+        mode = _guess_recipe_update_mode(srctree, rd)
     else:
         mode = args.mode
-
-    srctree = workspace[args.recipename]['srctree']
 
     if mode == 'srcrev':
         _update_recipe_srcrev(args, srctree, rd, tinfoil.config_data)
