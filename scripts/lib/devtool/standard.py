@@ -815,6 +815,10 @@ def update_recipe(args, config, basepath, workspace):
     else:
         raise DevtoolError('update_recipe: invalid mode %s' % mode)
 
+    rf = rd.getVar('FILE', True)
+    if rf.startswith(config.workspace_path):
+        logger.warn('Recipe file %s has been updated but is inside the workspace - you will need to move it (and any associated files next to it) out to the desired layer before using "devtool reset" in order to keep any changes' % rf)
+
     return 0
 
 
