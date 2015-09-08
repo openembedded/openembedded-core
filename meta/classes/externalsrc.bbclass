@@ -36,11 +36,15 @@ python () {
         else:
             d.setVar('B', '${WORKDIR}/${BPN}-${PV}/')
 
-        srcuri = (d.getVar('SRC_URI', True) or '').split()
         local_srcuri = []
-        for uri in srcuri:
-            if uri.startswith('file://'):
-                local_srcuri.append(uri)
+        fetch = bb.fetch2.Fetch((d.getVar('SRC_URI', True) or '').split(), d)
+        for url in fetch.urls:
+            url_data = fetch.ud[url]
+            parm = url_data.parm
+            if (url_data.type == 'file' or
+                    'type' in parm and parm['type'] == 'kmeta'):
+                local_srcuri.append(url)
+
         d.setVar('SRC_URI', ' '.join(local_srcuri))
 
         if '{SRCPV}' in d.getVar('PV', False):
