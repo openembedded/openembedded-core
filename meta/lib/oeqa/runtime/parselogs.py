@@ -34,6 +34,8 @@ common_errors = [
     'kernel: Cannot find map file',
     'omap_hwmod: debugss: _wait_target_disable failed',
     'VGA arbiter: cannot open kernel arbiter, no multi-card support',
+    'Failed to find URL:http://ipv4.connman.net/online/status.html',
+    'Online check failed for',
     ]
 
 x86_common = [
@@ -88,6 +90,7 @@ ignore_errors = {
         '(EE) AIGLX: reverting to software rendering',
         ] + x86_common,
     'core2_32' : [
+        'ACPI: No _BQC method, cannot determine initial brightness',
         '[Firmware Bug]: ACPI: No _BQC method, cannot determine initial brightness',
         '(EE) Failed to load module "psb"',
         '(EE) Failed to load module psb',
@@ -96,6 +99,9 @@ ignore_errors = {
         '(EE) open /dev/fb0: No such file or directory',
         '(EE) AIGLX: reverting to software rendering',
         ] + x86_common,
+    'intel-corei7-64' : [
+        "controller can't do DEVSLP, turning off",
+        ] + common_errors,
     'crownbay' : x86_common,
     'genericx86' : x86_common,
     'genericx86-64' : x86_common,
