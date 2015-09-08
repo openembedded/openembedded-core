@@ -62,18 +62,14 @@ python () {
                 d.appendVarFlag(task, "lockfiles", " ${S}/singletask.lock")
 
             # We do not want our source to be wiped out, ever (kernel.bbclass does this for do_clean)
-            cleandirs = d.getVarFlag(task, 'cleandirs', False)
-            if cleandirs:
-                cleandirs = cleandirs.split()
-                setvalue = False
-                if '${S}' in cleandirs:
-                    cleandirs.remove('${S}')
+            cleandirs = (d.getVarFlag(task, 'cleandirs', False) or '').split()
+            setvalue = False
+            for cleandir in cleandirs[:]:
+                if d.expand(cleandir) == externalsrc:
+                    cleandirs.remove(cleandir)
                     setvalue = True
-                if externalsrcbuild == externalsrc and '${B}' in cleandirs:
-                    cleandirs.remove('${B}')
-                    setvalue = True
-                if setvalue:
-                    d.setVarFlag(task, 'cleandirs', ' '.join(cleandirs))
+            if setvalue:
+                d.setVarFlag(task, 'cleandirs', ' '.join(cleandirs))
 
         fetch_tasks = ['do_fetch', 'do_unpack']
         # If we deltask do_patch, there's no dependency to ensure do_unpack gets run, so add one
