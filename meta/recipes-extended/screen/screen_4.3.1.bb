@@ -23,6 +23,7 @@ SRC_URI = "${GNU_MIRROR}/screen/screen-${PV}.tar.gz \
            file://Skip-host-file-system-checks-when-cross-compiling.patch \
            file://Avoid-mis-identifying-systems-as-SVR4.patch \
            file://0001-fix-for-multijob-build.patch \
+           file://0002-comm.h-now-depends-on-term.h.patch \
           "
 
 SRC_URI[md5sum] = "5bb3b0ff2674e29378c31ad3411170ad"
