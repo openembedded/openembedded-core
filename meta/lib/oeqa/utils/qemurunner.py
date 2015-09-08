@@ -125,6 +125,32 @@ class QemuRunner:
         self.runqemu = subprocess.Popen(launch_cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, stdin=subprocess.PIPE, preexec_fn=os.setpgrp)
         output = self.runqemu.stdout
 
+        #
+        # We need the preexec_fn above so that all runqemu processes can easily be killed 
+        # (by killing their process group). This presents a problem if this controlling
+        # process itself is killed however since those processes don't notice the death 
+        # of the parent and merrily continue on.
+        #
+        # Rather than hack runqemu to deal with this, we add something here instead. 
+        # Basically we fork off another process which holds an open pipe to the parent
+        # and also is setpgrp. If/when the pipe sees EOF from the parent dieing, it kills
+        # the process group. This is like pctrl's PDEATHSIG but for a process group
+        # rather than a single process.
+        #
+        r, w = os.pipe()
+        self.monitorpid = os.fork()
+        if self.monitorpid:
+            os.close(r)
+            self.monitorpipe = os.fdopen(w, "w")
+        else:
+            # child process
+            os.setpgrp()
+            os.close(w)
+            r = os.fdopen(r)
+            x = r.read()
+            os.killpg(os.getpgid(self.runqemu.pid), signal.SIGTERM)
+            sys.exit(0)
+
         logger.info("runqemu started, pid is %s" % self.runqemu.pid)
         logger.info("waiting at most %s seconds for qemu pid" % self.runqemutime)
         endtime = time.time() + self.runqemutime
@@ -235,6 +261,7 @@ class QemuRunner:
         self.stop_thread()
         if self.runqemu:
             signal.signal(signal.SIGCHLD, self.origchldhandler)
+            os.kill(self.monitorpid, signal.SIGKILL)
             logger.info("Sending SIGTERM to runqemu")
             try:
                 os.killpg(self.runqemu.pid, signal.SIGTERM)
