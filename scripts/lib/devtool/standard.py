@@ -857,22 +857,6 @@ def reset(args, config, basepath, workspace):
     return 0
 
 
-def build(args, config, basepath, workspace):
-    """Entry point for the devtool 'build' subcommand"""
-    import bb
-    if not args.recipename in workspace:
-        raise DevtoolError("no recipe named %s in your workspace" %
-                           args.recipename)
-    build_task = config.get('Build', 'build_task', 'populate_sysroot')
-    try:
-        exec_build_env_command(config.init_path, basepath, 'bitbake -c %s %s' % (build_task, args.recipename), watch=True)
-    except bb.process.ExecutionError as e:
-        # We've already seen the output since watch=True, so just ensure we return something to the user
-        return e.exitcode
-
-    return 0
-
-
 def register_commands(subparsers, context):
     """Register devtool subcommands from this plugin"""
     parser_add = subparsers.add_parser('add', help='Add a new recipe',
@@ -920,12 +904,6 @@ def register_commands(subparsers, context):
                                           description='Lists recipes currently in your workspace and the paths to their respective external source trees',
                                           formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser_status.set_defaults(func=status)
-
-    parser_build = subparsers.add_parser('build', help='Build a recipe',
-                                         description='Builds the specified recipe using bitbake',
-                                         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-    parser_build.add_argument('recipename', help='Recipe to build')
-    parser_build.set_defaults(func=build)
 
     parser_reset = subparsers.add_parser('reset', help='Remove a recipe from your workspace',
                                          description='Removes the specified recipe from your workspace (resetting its state)',
