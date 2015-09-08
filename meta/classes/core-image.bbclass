@@ -21,6 +21,7 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=4d92cd373abda3937c2bc47fbc49d
 # - tools-testapps      - tools usable to make some device tests
 # - tools-sdk           - SDK (C/C++ compiler, autotools, etc.)
 # - nfs-server          - NFS server
+# - nfs-client          - NFS client
 # - ssh-server-dropbear - SSH server (dropbear)
 # - ssh-server-openssh  - SSH server (openssh)
 # - qt4-pkgs            - Qt4/X11 and demo applications
@@ -42,6 +43,7 @@ FEATURE_PACKAGES_tools-profile = "packagegroup-core-tools-profile"
 FEATURE_PACKAGES_tools-testapps = "packagegroup-core-tools-testapps"
 FEATURE_PACKAGES_tools-sdk = "packagegroup-core-sdk packagegroup-core-standalone-sdk-target"
 FEATURE_PACKAGES_nfs-server = "packagegroup-core-nfs-server"
+FEATURE_PACKAGES_nfs-client = "packagegroup-core-nfs-client"
 FEATURE_PACKAGES_ssh-server-dropbear = "packagegroup-core-ssh-dropbear"
 FEATURE_PACKAGES_ssh-server-openssh = "packagegroup-core-ssh-openssh"
 FEATURE_PACKAGES_qt4-pkgs = "packagegroup-core-qt-demoapps"
