@@ -43,6 +43,7 @@ fakeroot do_install_ptest_base() {
             oe_runmake DESTDIR=${D}${PTEST_PATH} install-ptest
         fi
         do_install_ptest
+        chown -R root:root ${D}${PTEST_PATH}
     fi
 }
 
