@@ -23,6 +23,12 @@ finish_run() {
 
 			if [ -e "$bootparam_root" ]; then
 				flags=""
+				if [ -n "$bootparam_ro" ]; then
+					if [  -n "$bootparam_rootflags" ]; then
+						bootparam_rootflags="$bootparam_rootflags,"
+					fi
+					bootparam_rootflags="${bootparam_rootflags}ro"
+				fi
 				if [ -n "$bootparam_rootflags" ]; then
 					flags="$flags -o$bootparam_rootflags"
 				fi
