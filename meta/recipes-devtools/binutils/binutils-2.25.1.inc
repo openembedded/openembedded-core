@@ -34,6 +34,7 @@ SRC_URI = "\
      file://0014-gold-arm-Skip-pic-check-for-R_ARM_REL32.patch \
      file://0015-Fix-dynamic-list-so-that-symbols-not-in-the-list-are.patch \
      file://binutils-octeon3.patch \
+     file://add-thunderx-support-for-gas.patch \
      "
 S  = "${WORKDIR}/git"
 
