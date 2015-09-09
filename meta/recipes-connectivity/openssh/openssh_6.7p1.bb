@@ -21,7 +21,11 @@ SRC_URI = "ftp://ftp.openbsd.org/pub/OpenBSD/OpenSSH/portable/openssh-${PV}.tar.
            file://volatiles.99_sshd \
            file://add-test-support-for-busybox.patch \
            file://run-ptest \
-           file://auth2-none.c-avoid-authenticate-empty-passwords-to-m.patch"
+           file://auth2-none.c-avoid-authenticate-empty-passwords-to-m.patch \
+           file://CVE-2015-6563.patch  \
+           file://CVE-2015-6564.patch \
+           file://CVE-2015-6565.patch \
+           "
 
 PAM_SRC_URI = "file://sshd"
 
