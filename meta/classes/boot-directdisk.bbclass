@@ -60,7 +60,7 @@ inherit ${EFI_CLASS}
 
 AUTO_SYSLINUXCFG = "1"
 DISK_SIGNATURE ?= "${DISK_SIGNATURE_GENERATED}"
-SYSLINUX_ROOT ?= "root=UUID=<<uuid-of-rootfs>>"
+SYSLINUX_ROOT ?= "root=/dev/sda2"
 SYSLINUX_TIMEOUT ?= "10"
 
 IS_VM = '${@bb.utils.contains_any("IMAGE_FSTYPES", ["vmdk", "vdi", "qcow2"], "true", "false", d)}'
