@@ -4,6 +4,14 @@ import re
 
 class DateTest(oeRuntimeTest):
 
+    def setUp(self):
+        if oeRuntimeTest.tc.d.getVar("VIRTUAL-RUNTIME_init_manager", True) == "systemd":
+            self.target.run('systemctl stop systemd-timesyncd')
+
+    def tearDown(self):
+        if oeRuntimeTest.tc.d.getVar("VIRTUAL-RUNTIME_init_manager", True) == "systemd":
+            self.target.run('systemctl start systemd-timesyncd')
+
     @testcase(211)
     @skipUnlessPassed("test_ssh")
     def test_date(self):
