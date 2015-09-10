@@ -6,7 +6,7 @@ Subject: [PATCH] Makefile: Add LDFLAGS variable to SLDFLAGS.
 * Add LDFLAGS variable to SLDFLAGS so that extra linker
   flags can be sent via this variable.
 
-Upstream status Sumbitted [perfmon2-libpfm4-commits@lists.sourceforge.net]
+Upstream-Status: Submitted [perfmon2-libpfm4-commits@lists.sourceforge.net]
 
 Signed-off-by: Noor Ahsan <noor_ahsan@mentor.com>
 ---

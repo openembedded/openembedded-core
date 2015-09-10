@@ -25,7 +25,7 @@ to make use of the combination some day.
 [1] https://trac.macports.org/ticket/45305
 [2] https://trac.macports.org/changeset/126406
 
-Upstream-status: Inappropriate [OE Specific]
+Upstream-Status: Inappropriate [OE Specific]
 Signed-off-by: Paul Gortmaker <paul.gortmaker@windriver.com>
 ---
  configure.in | 2 +-

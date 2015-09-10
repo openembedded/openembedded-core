@@ -11,7 +11,7 @@ https://gcc.gnu.org/bugzilla/show_bug.cgi?id=63348
 
 git-svn-id: svn+ssh://gcc.gnu.org/svn/gcc/trunk@215613 138bc75d-0d04-0410-961f-82ee72b054a4
 
-Upstream-status: Backport [https://gcc.gnu.org/viewcvs/gcc?view=revision&revision=215613]
+Upstream-Status: Backport [https://gcc.gnu.org/viewcvs/gcc?view=revision&revision=215613]
 Signed-off-by: Baoshan Pang <baoshan.pang@windriver.com>
 Signed-off-by: Jackie Huang <jackie.huang@windriver.com>
 ---

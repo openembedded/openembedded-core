@@ -1,6 +1,6 @@
 remove "*" for root since we don't have a /etc/shadow so far.
 
-Upstream-Status: Invalid [configuration]
+Upstream-Status: Inappropriate [configuration]
 
 Signed-off-by: Scott Garman <scott.a.garman@intel.com>
 

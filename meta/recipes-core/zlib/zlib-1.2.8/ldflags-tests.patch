@@ -1,7 +1,7 @@
 Obey LDFLAGS for tests
 
 Signed-off-by: Christopher Larson <chris_larson@mentor.com>
-Upstream-status: Pending
+Upstream-Status: Pending
 
 --- zlib-1.2.8.orig/Makefile.in
 +++ zlib-1.2.8/Makefile.in

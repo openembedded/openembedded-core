@@ -3,7 +3,7 @@ From: "Roy.Li" <rongqing.li@windriver.com>
 Date: Wed, 10 Sep 2014 17:03:29 +0800
 Subject: [PATCH] do not compile host tools, since we have native
 
-Upstream-status: Pending
+Upstream-Status: Pending
 
 Signed-off-by: Roy.Li <rongqing.li@windriver.com>
 ---

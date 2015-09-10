@@ -4,7 +4,7 @@ x32 ABI requires to have 64-bit variable to store FLAGS register
 instead of size_t that is 32-bit variable, this fix operand
 type mismatch when try to pop previous pushf value.
 
-Upstream-status: Submitted
+Upstream-Status: Submitted
 
 Signed-off-by: Aníbal Limón <anibal.limon@linux.intel.com>
 

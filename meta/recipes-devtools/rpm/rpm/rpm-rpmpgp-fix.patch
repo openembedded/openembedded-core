@@ -3,7 +3,7 @@ rpmpgp.c: Add missing if defs around crypto implementations
 Without these, the system will error trying to find the correct crypto 
 library to use.
 
-Upstream-status: Pending
+Upstream-Status: Pending
 
 Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
 

@@ -18,8 +18,7 @@ Ignore the argument and use a relative path instead.
 
 
 Signed-off-by: Max Krummenacher <max.oss.09@gmail.com>
-Upstream status pending
-Upstream status Inappropriate (cross environment path)
+Upstream-Status: Inappropriate (cross environment path)
 
 diff -Naur udev-182.orig/src/keymap/95-keymap.rules udev-182/src/keymap/95-keymap.rules
 --- udev-182.orig/src/keymap/95-keymap.rules	2012-02-07 00:01:55.154640792 +0100

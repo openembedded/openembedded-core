@@ -6,7 +6,7 @@ unconditionally as the oe-core initscript has a redhat-style pid file
 path.
 
 Signed-off-by: Andy Ross <andy.ross@windriver.com>
-Upstream-Status: innappropriate [embedded]
+Upstream-Status: Inappropriate [embedded]
 
 diff -u a/configure.ac b/configure.ac
 --- a/configure.ac	2012-08-28 11:23:43.040609874 -0700

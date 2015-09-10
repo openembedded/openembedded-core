@@ -1,7 +1,7 @@
 This patch removes various ways native system options can pass into the python 
 compilation and somehow break C modules.
 
-Upstream-Status: Configuration [OE Specific]
+Upstream-Status: Inappropriate [OE Specific]
 
 RP 2012/04/23
 

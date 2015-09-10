@@ -1,7 +1,7 @@
 Obey LDFLAGS
 
 Signed-off-by: Christopher Larson <chris_larson@mentor.com>
-Upstream-status: Pending
+Upstream-Status: Pending
 
 --- uuid-1.6.2.orig/Makefile.in
 +++ uuid-1.6.2/Makefile.in

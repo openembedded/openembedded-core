@@ -1,7 +1,7 @@
 There is no need to use python3 by this package (the python scripts
 that are using during configuration only need python2.7+)
 
-Upstream-Status: innapropriate [configuration]
+Upstream-Status: Inappropriate [configuration]
 
 Signed-off-by: Gary Thomas <gary@mlbassoc.com>
 --

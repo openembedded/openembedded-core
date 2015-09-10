@@ -1,6 +1,6 @@
 replace deprecated GnuTLS functions with newer ones if available 
 
-Upstream Status: Pending
+Upstream-Status: Pending
 
 Signed-off-by: Armin Kuster <akuster808@gmail.com>
 

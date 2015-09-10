@@ -1,4 +1,4 @@
-Upstream-Status: Rejected
+Upstream-Status: Denied
 
 Add pkgconfig support to libksba.
 This patch is rejected by upstream for the reason below:

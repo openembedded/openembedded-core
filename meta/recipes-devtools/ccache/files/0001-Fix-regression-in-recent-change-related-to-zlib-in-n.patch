@@ -14,7 +14,7 @@ prerequisite.
 This fix is to revert 0220de9c8ebfb18caae2ac1aa163d060e98ceade and
 instead make sure that LDFLAGS comes before extra_ldflags.
 
-Upstream-status: Backport
+Upstream-Status: Backport
 ---
  Makefile.in  |  2 +-
  NEWS.txt     | 10 ++++++++++

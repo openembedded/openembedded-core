@@ -15,7 +15,7 @@ those are larger commits containing other changes not needed here.
 
 Signed-off-by: Paul Barker <paul@paulbarker.me.uk>
 
-Upstream-status: Backport
+Upstream-Status: Backport
 ---
  lib/ext2fs/unix_io.c | 6 +++---
  misc/create_inode.c  | 1 +

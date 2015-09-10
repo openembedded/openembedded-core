@@ -9,7 +9,7 @@ Due to this defect, ctypes.util.find_library() python function fails to
 detect any library due to the old file format that ldconfig-native
 creates. This fix sets architecture-dependent 64bit flags for 64-bit ELF.
 
-Upstream-status: Inappropriate [embedded specific]
+Upstream-Status: Inappropriate [embedded specific]
 
 Signed-off-by: Yuanjie Huang <yuanjie.huang@windriver.com>
 ---

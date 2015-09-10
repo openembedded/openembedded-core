@@ -3,7 +3,7 @@ trace-cmd: Add blktrace_api compatibility for TC_BARRIER
 Newer kernels replace TC_BARRIER with TC_FLUSH. Ensure trace-cmd
 can build regardless of the linux-kernel-headers version.
 
-Upstream-Status: Innapropriate [Stop gap]
+Upstream-Status: Inappropriate [Stop gap]
 
 Signed-off-by: Darren Hart <dvhart@linux.intel.com>
 

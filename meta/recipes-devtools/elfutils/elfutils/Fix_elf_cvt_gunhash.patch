@@ -1,6 +1,6 @@
 Fix elf_cvt_gunhash if dest and src are same.
 
-Upstream-status: Pending
+Upstream-Status: Pending
 
 The 'dest' and 'src' can be same, we need to save the value of src32[2]
 before swaping it.

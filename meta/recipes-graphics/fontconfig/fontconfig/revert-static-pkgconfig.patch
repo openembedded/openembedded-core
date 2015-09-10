@@ -5,7 +5,7 @@ we end up with -I <sysroot>/<sysroot>/usr/include/fontconfig in CFLAGS of client
 is matchbox-panel-2 and it was working fine with gcc < 5 because it tolerated non-existing paths in -I flags but gcc-5
 gently refuses and rightly so.
 
-Upstream-Status: Not-Submitted [OE-Specific]
+Upstream-Status: Inappropriate [OE-Specific]
 Signed-off-by: Khem Raj <raj.khem@gmail.com>
 
 Index: fontconfig-2.11.93/fontconfig.pc.in

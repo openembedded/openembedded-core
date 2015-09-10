@@ -5,7 +5,7 @@ Subject: [PATCH] libpcap: pkgconfig support
 
 Adding basic structure to support pkg-config.
 
-Upstream-status: Inappropriate [embedded specific]
+Upstream-Status: Inappropriate [embedded specific]
 
 Signed-off-by: Joe MacDonald <joe_macdonald@mentor.com>
 ---

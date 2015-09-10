@@ -2,7 +2,7 @@ Add pkgconfig support to libassuan.
 This patch is rejected by upstream for the reason below:
 They think pkgconfig adds no portability and maintaining them is not worthwhile.
 
-Upstream-Status: Rejected
+Upstream-Status: Denied
 Signed-off-by: Chen Qi <Qi.Chen@windriver.com>
 Signed-off-by: Constantin Musca <constantinx.musca@intel.com>
 

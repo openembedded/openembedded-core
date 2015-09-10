@@ -1,7 +1,7 @@
 Obey LDFLAGS
 
 Signed-off-by: Christopher Larson <chris_larson@mentor.com>
-Upstream-status: Pending
+Upstream-Status: Pending
 
 --- setserial-2.17.orig/Makefile.in
 +++ setserial-2.17/Makefile.in

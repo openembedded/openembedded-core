@@ -6,7 +6,7 @@ Subject: [PATCH 3/4] fio.c: Unconditionally require wordexp support
 This patch is taken from
 ftp://ftp.debian.org/debian/pool/main/h/heirloom-mailx/heirloom-mailx_12.5-5.debian.tar.xz
 
-Upstream-status: Inappropriate [upstream is dead]
+Upstream-Status: Inappropriate [upstream is dead]
 ---
  fio.c | 67 +++++--------------------------------------------------------------
  1 file changed, 5 insertions(+), 62 deletions(-)

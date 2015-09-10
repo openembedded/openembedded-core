@@ -1,6 +1,6 @@
 [PATCH] nfs-utils: debianize start-statd
 
-Upstream-status: Pending
+Upstream-Status: Pending
 
 make start-statd command to use nfscommon configure, too.
 

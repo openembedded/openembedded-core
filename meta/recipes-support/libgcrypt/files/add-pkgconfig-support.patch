@@ -1,6 +1,6 @@
 Add and use pkg-config for libgcrypt instead of -config scripts.
 
-Upstream-Status: Rejected [upstream have indicated they don't want a pkg-config dependency]
+Upstream-Status: Denied [upstream have indicated they don't want a pkg-config dependency]
 
 RP 2014/5/22
 

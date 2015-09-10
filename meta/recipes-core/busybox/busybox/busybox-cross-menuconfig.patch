@@ -2,7 +2,7 @@ From: Jason Wessel <jason.wessel@windriver.com>
 Date: Sun, 3 Mar 2013 12:31:40 -0600
 Subject: [PATCH] menuconfig,check-lxdiaglog.sh: Allow specification of ncurses location
 
-Upstream-status: Submitted 
+Upstream-Status: Submitted
 
 [ based on: https://lkml.org/lkml/2013/3/3/103 ]
 

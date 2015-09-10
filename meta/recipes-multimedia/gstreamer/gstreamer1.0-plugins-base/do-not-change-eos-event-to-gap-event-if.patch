@@ -6,7 +6,7 @@ Subject: [PATCH] ENGR00312034: do not change eos event to gap event if no
 
 https://bugzilla.gnome.org/show_bug.cgi?id=727074
 
-Upstream Status: Pending
+Upstream-Status: Pending
 
 Signed-off-by: zhouming <b42586@freescale.com>
 ---

@@ -4,7 +4,7 @@ Date: Wed, 14 May 2014 21:19:41 +0000
 Subject: [PATCH] - verify: fix: broken logic for %ghost avoidance (Mark
  Hatle).
 
-Upstream-status: backport
+Upstream-Status: Backport
 
 Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
 ---

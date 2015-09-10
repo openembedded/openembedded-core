@@ -2,7 +2,7 @@ dist/threads/t/join.t: adjust ps option
 
 The ps's option '-f' is not supported by busybox in oe.
 
-Upstream-Status: [oe specific]
+Upstream-Status: Inappropriate
 Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
 ---
  dist/threads/t/join.t | 6 +++---

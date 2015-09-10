@@ -5,7 +5,7 @@ Subject: [PATCH] Reinstate xdg-terminal
 
 Signed-off-by: Koen Kooi <koen@dominion.thruhere.net>
 
-Upstream-status: Inappropriate [Revert]
+Upstream-Status: Inappropriate [Revert]
 ---
  scripts/Makefile.in  |   6 +-
  scripts/xdg-terminal | 622 +++++++++++++++++++++++++++++++++++++++++++++++++++

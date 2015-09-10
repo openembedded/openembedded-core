@@ -5,7 +5,7 @@ Subject: [PATCH] taglist not send to down stream if all the frame corrupted
 
 https://bugzilla.gnome.org/show_bug.cgi?id=737246
 
-Upstream status: Pending
+Upstream-Status: Pending
 
 Signed-off-by: Jian Li <lj.qfy.sh@gmail.com>
 ---

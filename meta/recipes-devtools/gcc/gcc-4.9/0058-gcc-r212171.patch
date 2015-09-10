@@ -11,7 +11,7 @@ Subject: [PATCH] r212171
 
 git-svn-id: svn+ssh://gcc.gnu.org/svn/gcc/trunk@212171 138bc75d-0d04-0410-961f-82ee72b054a4
 
-Upstream-status: Backport [https://gcc.gnu.org/viewcvs/gcc?view=revision&revision=212171]
+Upstream-Status: Backport [https://gcc.gnu.org/viewcvs/gcc?view=revision&revision=212171]
 Signed-off-by: Baoshan Pang <baoshan.pang@windriver.com>
 ---
  gcc/except.c |   23 ++++++++++++++++++-----

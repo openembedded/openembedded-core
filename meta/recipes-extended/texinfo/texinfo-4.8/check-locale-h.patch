@@ -1,6 +1,6 @@
 fix the macro check
 
-Upstream-status: Pending
+Upstream-Status: Pending
 
 configure does not check if locale.h exists, but check setlocale,
 if setlocale exist, the locale.h should exist.

@@ -1,7 +1,7 @@
 Obey LDFLAGS
 
 Signed-off-by: Christopher Larson <chris_larson@mentor.com>
-Upstream-status: Inappropriate [old version]
+Upstream-Status: Inappropriate [old version]
 
 --- gdbm-1.8.3.orig/Makefile.in
 +++ gdbm-1.8.3/Makefile.in

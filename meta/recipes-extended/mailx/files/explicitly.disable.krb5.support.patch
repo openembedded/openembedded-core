@@ -1,7 +1,7 @@
 krb5 support is autodetected from sysroot making builds undeterministic
 feel free to improve this to support explicitly enabling/disabling it
 
-Upstream-Status: Penging
+Upstream-Status: Pending
 
 Signed-off-by: Martin Jansa <Martin.Jansa@gmail.com>
 

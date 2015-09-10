@@ -1,6 +1,6 @@
 Remove dependency on dpkg
 
-Upstream-Status Submitted
+Upstream-Status: Submitted
 
 Asking the host OS whether it supports multiarch is not useful
 in a cross-compilation environment, or if the user has specified

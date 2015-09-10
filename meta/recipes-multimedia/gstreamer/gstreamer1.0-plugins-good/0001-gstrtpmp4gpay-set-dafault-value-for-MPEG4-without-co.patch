@@ -6,7 +6,7 @@ Subject: [PATCH] gstrtpmp4gpay: set dafault value for MPEG4 without codec
 
 https://bugzilla.gnome.org/show_bug.cgi?id=734263
 
-Upstream Status: Submitted
+Upstream-Status: Submitted
 
 Signed-off-by: Song Bing <b06498@freescale.com>
 ---

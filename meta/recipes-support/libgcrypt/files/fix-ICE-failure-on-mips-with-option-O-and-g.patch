@@ -37,7 +37,7 @@ than 2.
 4. File a bug to GNU, but it could not be reproduced on there environment.
 http://gcc.gnu.org/bugzilla/show_bug.cgi?id=60643
 
-Upstream-Status: [oe specific]
+Upstream-Status: Inappropriate [oe specific]
 
 Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
 ---

@@ -8,7 +8,7 @@ which actually shoudl be fixed in gnulib and then all downstream
 projects will get it eventually. For now we apply the fix to
 coreutils
 
-Upstream-Status: Not Required
+Upstream-Status: Pending
 
 Signed-off-by: Khem Raj <raj.khem@gmail.com>
 ---

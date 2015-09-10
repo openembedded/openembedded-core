@@ -6,7 +6,7 @@ Subject: [PATCH] misc/mke2fs.c: return error when failed to populate filesystem
 We need return retval when "mke2fs -d" failed, otherwise the "$?" would
 be 0 which is misleading.
 
-Upstream-Status Submitted
+Upstream-Status: Submitted
 
 Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
 ---

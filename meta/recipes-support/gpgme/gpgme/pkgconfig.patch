@@ -1,7 +1,7 @@
 Update gpgme to use pkgconfig instead of -config files since its
 simpler and less error prone when cross compiling.
 
-Upstream-Status: Rejected [Upstream not interested in pkg-config support]
+Upstream-Status: Denied [Upstream not interested in pkg-config support]
 RP 2015/4/17
 
 diff --git a/configure.ac b/configure.ac

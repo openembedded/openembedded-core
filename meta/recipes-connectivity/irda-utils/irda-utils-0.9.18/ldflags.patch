@@ -1,7 +1,7 @@
 Obey LDFLAGS
 
 Signed-off-by: Christopher Larson <chris_larson@mentor.com>
-Upstream-status: Pending
+Upstream-Status: Pending
 
 --- irda-utils-0.9.18.orig/findchip/Makefile
 +++ irda-utils-0.9.18/findchip/Makefile

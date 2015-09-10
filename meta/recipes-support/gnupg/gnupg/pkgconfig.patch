@@ -1,6 +1,6 @@
 Use pkg-config to find pth instead of pth-config.
 
-Upstream-Status: Rejected
+Upstream-Status: Denied
 [not submitted but they've been clear they don't want a pkg-config dependency]
 
 RP 2014/5/22

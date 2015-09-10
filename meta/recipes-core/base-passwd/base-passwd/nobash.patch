@@ -1,7 +1,7 @@
 use /bin/sh instead of /bin/bash, since the latter may not be included in
 some images such as minimal
 
-Upstream-Status: Invalid [configuration]
+Upstream-Status: Inappropriate [configuration]
 
 Signed-off-by: Scott Garman <scott.a.garman@intel.com>
 

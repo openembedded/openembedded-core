@@ -1,6 +1,6 @@
 Add an input group for the /dev/input/* devices.
 
-Upstream-Status: Invalid [configuration]
+Upstream-Status: Inappropriate [configuration]
 
 Signed-off-by: Darren Hart <dvhart@linux.intel.com>
 

@@ -3,7 +3,7 @@ configure.in: drop the test of xmllint and xsltproc
 The test is unnecessary, the xmllint and xsltproc were explicitly
 added to RDEPENDS.
 
-Upstream-Status: oe-specific
+Upstream-Status: Inappropriate
 Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
 ---
  configure.in | 4 ++--

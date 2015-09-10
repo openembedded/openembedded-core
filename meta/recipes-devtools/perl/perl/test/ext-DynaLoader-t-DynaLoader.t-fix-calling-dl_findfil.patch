@@ -2,7 +2,7 @@ ext/DynaLoader/t/DynaLoader.t: fix calling dl_findfile() failed
 
 Use '$Config{libc}' as the libc file name
 
-Upstream-Status: oe specific
+Upstream-Status: Inappropriate
 Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
 ---
  ext/DynaLoader/t/DynaLoader.t | 2 +-

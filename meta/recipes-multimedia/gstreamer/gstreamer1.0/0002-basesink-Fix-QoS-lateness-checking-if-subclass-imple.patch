@@ -23,7 +23,7 @@ rewind in slow speed, such as -2X.
 
 https://bugzilla.gnome.org/show_bug.cgi?id=749258
 
-Upstream-Status: Backport [1.5.1]
+Upstream-Status: Backport [1.5.1]
 ---
  libs/gst/base/gstbasesink.c |   26 ++++++++++++++++++++++----
  1 file changed, 22 insertions(+), 4 deletions(-)

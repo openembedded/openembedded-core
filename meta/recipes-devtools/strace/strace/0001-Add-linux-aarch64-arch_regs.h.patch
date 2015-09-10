@@ -6,7 +6,7 @@ Subject: [PATCH] Add linux/aarch64/arch_regs.h
 It is missing from the tarball, but it is present in git for v4.10
 
 Signed-off-by: Koen Kooi <koen.kooi@linaro.org>
-Upstream-status: Pending
+Upstream-Status: Pending
 ---
  linux/aarch64/arch_regs.h | 2 ++
  1 file changed, 2 insertions(+)

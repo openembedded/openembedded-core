@@ -1,4 +1,4 @@
-Upstream-Status: Not applicable
+Upstream-Status: Inappropriate
 
 Hack to prevent unneeded demo app from building on older libc
 where it will break the build

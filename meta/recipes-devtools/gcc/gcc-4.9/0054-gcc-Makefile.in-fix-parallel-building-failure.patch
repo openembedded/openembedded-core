@@ -18,7 +18,7 @@ of gengtype).
 [GCC #61899]
 https://gcc.gnu.org/bugzilla/show_bug.cgi?id=61899
 
-Upstream-Status: Send to gcc-patches@gcc.gnu.org mailing list
+Upstream-Status: Submitted [gcc-patches@gcc.gnu.org]
 
 Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
 ---

@@ -6,7 +6,7 @@ Subject: [PATCH] Run installed tests with tap output
 Configure output from installed-tests to be TAP compliant such that
 gnome-desktop-testing-runner properly interprets the results.
 
-Upstream-status: Pending
+Upstream-Status: Pending
 
 Signed-off-by: Tim Orling <TicoTimo@gmail.com>
 ---
