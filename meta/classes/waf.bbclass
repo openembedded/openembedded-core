@@ -1,9 +1,31 @@
+def get_waf_parallel_make(bb, d):
+    pm = d.getVar('PARALLEL_MAKE', True)
+    if pm:
+        # look for '-j' and throw other options (e.g. '-l') away
+        # because they might have different meaning in bjam
+        pm = pm.split()
+        while pm:
+            v = None
+            opt = pm.pop(0)
+            if opt == '-j':
+                v = pm.pop(0)
+            elif opt.startswith('-j'):
+                v = opt[2:].strip()
+            else:
+                v = None
+
+            if v:
+                v = min(64, int(v))
+                return '-j' + str(v)
+
+    return ""
+
 waf_do_configure() {
 	${S}/waf configure --prefix=${prefix} ${EXTRA_OECONF}
 }
 
 waf_do_compile()  {
-	${S}/waf build ${PARALLEL_MAKE}
+	${S}/waf build ${@get_waf_parallel_make('PARALLEL_MAKE', d)}
 }
 
 waf_do_install() {
