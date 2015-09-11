@@ -375,7 +375,10 @@ def testsdk_main(d):
     sdktestdir = d.expand("${WORKDIR}/testimage-sdk/")
     bb.utils.remove(sdktestdir, True)
     bb.utils.mkdirhier(sdktestdir)
-    subprocess.call("cd %s; %s <<EOF\n./tc\nY\nEOF" % (sdktestdir, tcname), shell=True)
+    try:
+        subprocess.check_output("cd %s; %s <<EOF\n./tc\nY\nEOF" % (sdktestdir, tcname), shell=True)
+    except subprocess.CalledProcessError as e:
+        bb.fatal("Couldn't install the SDK:\n%s" % e.output)
 
     try:
         targets = glob.glob(d.expand(sdktestdir + "/tc/environment-setup-*"))
