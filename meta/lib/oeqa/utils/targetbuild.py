@@ -55,8 +55,8 @@ class BuildProject():
 
     # The timeout parameter of target.run is set to 0 to make the ssh command
     # run with no timeout.
-    def run_configure(self, configure_args=''):
-        return self._run('cd %s; ./configure %s' % (self.targetdir, configure_args))
+    def run_configure(self, configure_args='', extra_cmds=''):
+        return self._run('cd %s; %s ./configure %s' % (self.targetdir, extra_cmds, configure_args))
 
     def run_make(self, make_args=''):
         return self._run('cd %s; make %s' % (self.targetdir, make_args))
@@ -121,7 +121,7 @@ class SDKBuildProject(BuildProject):
         self.targetdir = self.targetdir + self.fname
 
     def run_configure(self, configure_args=''):
-        return super(SDKBuildProject, self).run_configure(configure_args=(configure_args or '$CONFIGURE_FLAGS'))
+        return super(SDKBuildProject, self).run_configure(configure_args=(configure_args or '$CONFIGURE_FLAGS'), extra_cmds=' gnu-configize; ')
 
     def run_install(self, install_args=''):
         return super(SDKBuildProject, self).run_install(install_args=(install_args or "DESTDIR=%s/../install" % self.targetdir))
