@@ -194,7 +194,7 @@ class Image(ImageDepGraph):
 
         os.chdir(deploy_dir)
 
-        if link_name is not None:
+        if link_name:
             for type in subimages:
                 if os.path.exists(img_name + ".rootfs." + type):
                     dst = link_name + "." + type
