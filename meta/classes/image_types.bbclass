@@ -120,7 +120,11 @@ UBI_VOLNAME ?= "${MACHINE}-rootfs"
 multiubi_mkfs() {
 	local mkubifs_args="$1"
 	local ubinize_args="$2"
-	local vname="_$3"
+	if [ -z "$3" ]; then
+		local vname=""
+	else
+		local vname="_$3"
+	fi
 
 	echo \[ubifs\] > ubinize${vname}.cfg
 	echo mode=ubi >> ubinize${vname}.cfg
@@ -158,7 +162,9 @@ IMAGE_CMD_multiubi () {
 	done
 }
 
-IMAGE_CMD_ubi = "multiubi_mkfs "${MKUBIFS_ARGS}" "${UBINIZE_ARGS}" "${UBI_VOLNAME}""
+IMAGE_CMD_ubi () {
+	multiubi_mkfs "${MKUBIFS_ARGS}" "${UBINIZE_ARGS}"
+}
 
 IMAGE_CMD_ubifs = "mkfs.ubifs -r ${IMAGE_ROOTFS} -o ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.ubifs ${MKUBIFS_ARGS}"
 
