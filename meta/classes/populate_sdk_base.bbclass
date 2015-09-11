@@ -81,6 +81,11 @@ python write_host_sdk_manifest () {
 POPULATE_SDK_POST_TARGET_COMMAND_append = " write_target_sdk_manifest ; "
 POPULATE_SDK_POST_HOST_COMMAND_append = " write_host_sdk_manifest; "
 
+# Some archs override this, we need the nativesdk version
+# turns out this is hard to get from the datastore due to TRANSLATED_TARGET_ARCH
+# manipulation.
+SDK_OLDEST_KERNEL = "2.6.32"
+
 fakeroot python do_populate_sdk() {
     from oe.sdk import populate_sdk
     from oe.manifest import create_manifest, Manifest
@@ -156,7 +161,7 @@ EOF
 	sed -i -e 's#@SDK_ARCH@#${SDK_ARCH}#g' \
 		-e 's#@SDKPATH@#${SDKPATH}#g' \
 		-e 's#@SDKEXTPATH@#${SDKEXTPATH}#g' \
-		-e 's#@OLDEST_KERNEL@#${OLDEST_KERNEL}#g' \
+		-e 's#@OLDEST_KERNEL@#${SDK_OLDEST_KERNEL}#g' \
 		-e 's#@REAL_MULTIMACH_TARGET_SYS@#${REAL_MULTIMACH_TARGET_SYS}#g' \
 		-e 's#@SDK_TITLE@#${SDK_TITLE}#g' \
 		-e 's#@SDK_VERSION@#${SDK_VERSION}#g' \
