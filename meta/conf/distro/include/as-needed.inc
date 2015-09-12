@@ -1,6 +1,7 @@
 
 ASNEEDED = "-Wl,--as-needed"
 
+ASNEEDED_pn-babeltrace = ""
 ASNEEDED_pn-console-tools = ""
 ASNEEDED_pn-distcc = ""
 ASNEEDED_pn-openobex = ""
