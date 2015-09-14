@@ -63,7 +63,7 @@ Index: qemu-2.4.0/hw/net/smc91c111.c
          return 0;
      return 1;
  }
-@@ -671,9 +671,11 @@ static ssize_t smc91c111_receive(NetClie
+@@ -671,6 +671,8 @@ static ssize_t smc91c111_receive(NetClie
      /* TODO: Flag overrun and receive errors.  */
      if (packetsize > 2048)
          return -1;
@@ -72,6 +72,3 @@ Index: qemu-2.4.0/hw/net/smc91c111.c
      packetnum = smc91c111_allocate_packet(s);
      if (packetnum == 0x80)
          return -1;
-     s->rx_fifo[s->rx_fifo_len++] = packetnum;
- 
-     p = &s->data[packetnum][0];
