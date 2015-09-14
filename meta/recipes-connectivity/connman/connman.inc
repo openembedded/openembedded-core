@@ -30,6 +30,7 @@ EXTRA_OECONF += "\
     --disable-polkit \
     --enable-client \
 "
+CFLAGS += "-D_GNU_SOURCE"
 
 PACKAGECONFIG ??= "wispr \
                    ${@bb.utils.contains('DISTRO_FEATURES', 'systemd','systemd', '', d)} \
