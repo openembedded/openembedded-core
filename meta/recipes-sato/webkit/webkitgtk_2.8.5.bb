@@ -13,6 +13,7 @@ LIC_FILES_CHKSUM = "file://Source/JavaScriptCore/COPYING.LIB;md5=d0c6d6397a5d842
 SRC_URI = "\
   http://www.webkitgtk.org/releases/${BPN}-${PV}.tar.xz \
   file://0001-This-patch-fixes-a-command-line-that-is-too-long-ove.patch \
+  file://gcc5.patch \
   "
 SRC_URI[md5sum] = "df79991848a5096d3a75289ebce547ae"
 SRC_URI[sha256sum] = "3d1f0c534935f43fd74df90f2648fcee672d60f1f57a30fa557a77891ae04d20"
