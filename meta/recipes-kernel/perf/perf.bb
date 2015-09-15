@@ -148,7 +148,7 @@ do_configure_prepend () {
             ${S}/tools/perf/Makefile.perf
     fi
     sed -i -e "s,--root='/\$(DESTDIR_SQ)',--prefix='\$(DESTDIR_SQ)/usr' --install-lib='\$(DESTDIR)\$(PYTHON_SITEPACKAGES_DIR)',g" \
-        ${S}/tools/perf/Makefile
+        ${S}/tools/perf/Makefile*
 
     if [ -e "${S}/tools/build/Makefile.build" ]; then
         sed -i -e 's,\ .config-detected, $(OUTPUT)/config-detected,g' \
