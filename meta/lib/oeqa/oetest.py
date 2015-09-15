@@ -106,6 +106,17 @@ def loadTests(tc, type="runtime"):
     suites.sort(cmp=lambda a,b: cmp((a.depth, a.index), (b.depth, b.index)))
     return testloader.suiteClass(suites)
 
+_buffer = ""
+
+def custom_verbose(msg, *args, **kwargs):
+    global _buffer
+    if msg[-1] != "\n":
+        _buffer += msg
+    else:
+        _buffer += msg
+        bb.plain(_buffer.rstrip("\n"), *args, **kwargs)
+        _buffer = ""
+
 def runTests(tc, type="runtime"):
 
     suite = loadTests(tc, type)
@@ -114,6 +125,8 @@ def runTests(tc, type="runtime"):
         bb.note("Filter test cases by tags: %s" % tc.tagexp)
     bb.note("Found %s tests" % suite.countTestCases())
     runner = unittest.TextTestRunner(verbosity=2)
+    if bb.msg.loggerDefaultVerbose:
+        runner.stream.write = custom_verbose
     result = runner.run(suite)
 
     return result
