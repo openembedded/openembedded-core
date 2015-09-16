@@ -605,12 +605,12 @@ class PackageManager(object):
             cmd.extend(['-x', exclude])
         try:
             bb.note("Installing complementary packages ...")
+            bb.note('Running %s' % cmd)
             complementary_pkgs = subprocess.check_output(cmd, stderr=subprocess.STDOUT)
         except subprocess.CalledProcessError as e:
             bb.fatal("Could not compute complementary packages list. Command "
                      "'%s' returned %d:\n%s" %
                      (' '.join(cmd), e.returncode, e.output))
-
         self.install(complementary_pkgs.split(), attempt_only=True)
 
     def deploy_dir_lock(self):
@@ -1050,6 +1050,35 @@ class RpmPM(PackageManager):
     def update(self):
         self._invoke_smart('update rpmsys')
 
+    def get_rdepends_recursively(self, pkgs):
+        # pkgs will be changed during the loop, so use [:] to make a copy.
+        for pkg in pkgs[:]:
+            sub_data = oe.packagedata.read_subpkgdata(pkg, self.d)
+            sub_rdep = sub_data.get("RDEPENDS_" + pkg)
+            if not sub_rdep:
+                continue
+            done = bb.utils.explode_dep_versions2(sub_rdep).keys()
+            next = done
+            # Find all the rdepends on dependency chain
+            while next:
+                new = []
+                for sub_pkg in next:
+                    sub_data = oe.packagedata.read_subpkgdata(sub_pkg, self.d)
+                    sub_pkg_rdep = sub_data.get("RDEPENDS_" + sub_pkg)
+                    if not sub_pkg_rdep:
+                        continue
+                    for p in bb.utils.explode_dep_versions2(sub_pkg_rdep):
+                        # Already handled, skip it.
+                        if p in done or p in pkgs:
+                            continue
+                        # It's a new dep
+                        if oe.packagedata.has_subpkgdata(p, self.d):
+                            done.append(p)
+                            new.append(p)
+                next = new
+            pkgs.extend(done)
+        return pkgs
+
     '''
     Install pkgs with smart, the pkg name is oe format
     '''
@@ -1059,8 +1088,58 @@ class RpmPM(PackageManager):
             bb.note("There are no packages to install")
             return
         bb.note("Installing the following packages: %s" % ' '.join(pkgs))
-        pkgs = self._pkg_translate_oe_to_smart(pkgs, attempt_only)
+        if not attempt_only:
+            # Pull in multilib requires since rpm may not pull in them
+            # correctly, for example,
+            # lib32-packagegroup-core-standalone-sdk-target requires
+            # lib32-libc6, but rpm may pull in libc6 rather than lib32-libc6
+            # since it doesn't know mlprefix (lib32-), bitbake knows it and
+            # can handle it well, find out the RDEPENDS on the chain will
+            # fix the problem. Both do_rootfs and do_populate_sdk have this
+            # issue.
+            # The attempt_only packages don't need this since they are
+            # based on the installed ones.
+            #
+            # Separate pkgs into two lists, one is multilib, the other one
+            # is non-multilib.
+            ml_pkgs = []
+            non_ml_pkgs = pkgs[:]
+            for pkg in pkgs:
+                for mlib in (self.d.getVar("MULTILIB_VARIANTS", True) or "").split():
+                    if pkg.startswith(mlib + '-'):
+                        ml_pkgs.append(pkg)
+                        non_ml_pkgs.remove(pkg)
 
+            if len(ml_pkgs) > 0 and len(non_ml_pkgs) > 0:
+                # Found both foo and lib-foo
+                ml_pkgs = self.get_rdepends_recursively(ml_pkgs)
+                non_ml_pkgs = self.get_rdepends_recursively(non_ml_pkgs)
+                # Longer list makes smart slower, so only keep the pkgs
+                # which have the same BPN, and smart can handle others
+                # correctly.
+                pkgs_new = []
+                for pkg in non_ml_pkgs:
+                    for mlib in (self.d.getVar("MULTILIB_VARIANTS", True) or "").split():
+                        mlib_pkg = mlib + "-" + pkg
+                        if mlib_pkg in ml_pkgs:
+                            pkgs_new.append(pkg)
+                            pkgs_new.append(mlib_pkg)
+                for pkg in pkgs:
+                    if pkg not in pkgs_new:
+                        pkgs_new.append(pkg)
+                pkgs = pkgs_new
+                new_depends = {}
+                deps = bb.utils.explode_dep_versions2(" ".join(pkgs))
+                for depend in deps:
+                    data = oe.packagedata.read_subpkgdata(depend, self.d)
+                    key = "PKG_%s" % depend
+                    if key in data:
+                        new_depend = data[key]
+                    else:
+                        new_depend = depend
+                    new_depends[new_depend] = deps[depend]
+                pkgs = bb.utils.join_deps(new_depends, commasep=True).split(', ')
+        pkgs = self._pkg_translate_oe_to_smart(pkgs, attempt_only)
         if not attempt_only:
             bb.note('to be installed: %s' % ' '.join(pkgs))
             cmd = "%s %s install -y %s" % \
