@@ -93,10 +93,6 @@ python __anonymous () {
         # FIXME, we need to map this to something, not delete it!
         d.setVar("PACKAGE_INSTALL_ATTEMPTONLY", "")
 
-    if bb.data.inherits_class('populate_sdk_base', d):
-        clsextend.map_depends_variable("TOOLCHAIN_TARGET_TASK")
-        clsextend.map_depends_variable("TOOLCHAIN_TARGET_TASK_ATTEMPTONLY")
-
     if bb.data.inherits_class('image', d):
         return
 
