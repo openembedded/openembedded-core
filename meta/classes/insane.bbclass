@@ -167,7 +167,7 @@ def package_qa_get_machine_dict():
 
 def package_qa_clean_path(path,d):
     """ Remove the common prefix from the path. In this case it is the TMPDIR"""
-    return path.replace(d.getVar('TMPDIR',True),"")
+    return path.replace(d.getVar("TMPDIR", True) + "/", "")
 
 def package_qa_write_error(type, error, d):
     logfile = d.getVar('QA_LOGFILE', True)
