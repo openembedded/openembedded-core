@@ -54,7 +54,7 @@ else
             mem_size=512
             ;;
         "qemumicroblaze")
-            mem_size=64
+            mem_size=256
             ;;
         "qemumips"|"qemumips64")
             mem_size=256
@@ -587,7 +587,7 @@ fi
 
 if [ "$MACHINE" = "qemumicroblaze" ]; then
     QEMU=qemu-system-microblazeel
-    QEMU_SYSTEM_OPTIONS="$QEMU_NETWORK_CMD -M petalogix-ml605 -serial mon:stdio -dtb $KERNEL-$MACHINE.dtb"
+    QEMU_SYSTEM_OPTIONS="$QEMU_NETWORK_CMD -M petalogix-ml605 -serial mon:stdio"
     if [ "${FSTYPE:0:3}" = "ext" -o "${FSTYPE:0:4}" = "cpio" ]; then
         KERNCMDLINE="earlyprintk root=/dev/ram rw $KERNEL_NETWORK_CMD mem=$QEMU_MEMORY"
         QEMUOPTIONS="$QEMU_SYSTEM_OPTIONS -initrd $ROOTFS"
