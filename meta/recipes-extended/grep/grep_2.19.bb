@@ -5,7 +5,9 @@ SECTION = "console/utils"
 LICENSE = "GPLv3"
 LIC_FILES_CHKSUM = "file://COPYING;md5=8006d9c814277c1bfc4ca22af94b59ee"
 
-SRC_URI = "${GNU_MIRROR}/grep/grep-${PV}.tar.xz"
+SRC_URI = "${GNU_MIRROR}/grep/grep-${PV}.tar.xz \
+           file://grep2.19-CVE-2015-1345.patch \
+           "
 
 SRC_URI[md5sum] = "ac732142227d9fe9567d71301e127979"
 SRC_URI[sha256sum] = "6388295be48cfcaf7665d9cd3914e6625ea000e9414132bfefd45cf1d8eec34d"
