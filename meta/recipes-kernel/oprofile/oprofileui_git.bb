@@ -1,6 +1,6 @@
 require oprofileui.inc
 
-DEPENDS += "gtk+ libglade libxml2 avahi-ui gconf"
+DEPENDS += "gtk+ libglade libxml2 avahi-ui gconf gettext-native"
 
 inherit distro_features_check
 ANY_OF_DISTRO_FEATURES = "${GTK2DISTROFEATURES}"
