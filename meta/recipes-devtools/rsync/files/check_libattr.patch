@@ -1,0 +1,33 @@
+From 677c6e14cc7d5f41371d5616865a5f0cfc0a273f Mon Sep 17 00:00:00 2001
+From: Wayne Davison <wayned@samba.org>
+Date: Mon, 5 May 2014 09:25:13 -0700
+Subject: [PATCH] Check for attr lib.
+
+---
+ configure.ac | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/configure.ac b/configure.ac
+index c7b28c5..8e3703c 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -1007,7 +1007,7 @@ else
+     *)
+ 	AC_MSG_RESULT(running tests:)
+ 	AC_CHECK_LIB(acl,acl_get_file)
+-	    AC_CACHE_CHECK([for ACL support],samba_cv_HAVE_POSIX_ACLS,[
++	AC_CACHE_CHECK([for ACL support],samba_cv_HAVE_POSIX_ACLS,[
+ 	    AC_TRY_LINK([#include <sys/types.h>
+ #include <sys/acl.h>],
+ [ acl_t acl; int entry_id; acl_entry_t *entry_p; return acl_get_entry( acl, entry_id, entry_p);],
+@@ -1057,6 +1057,7 @@ else
+ 	AC_DEFINE(HAVE_LINUX_XATTRS, 1, [True if you have Linux xattrs])
+ 	AC_DEFINE(SUPPORT_XATTRS, 1)
+ 	AC_DEFINE(NO_SYMLINK_USER_XATTRS, 1, [True if symlinks do not support user xattrs])
++	AC_CHECK_LIB(attr,getxattr)
+ 	;;
+     darwin*)
+ 	AC_MSG_RESULT(Using OS X xattrs)
+-- 
+1.9.1
+
