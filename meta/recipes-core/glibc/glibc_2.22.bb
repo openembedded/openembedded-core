@@ -9,11 +9,11 @@ DEPENDS += "gperf-native kconfig-frontends-native"
 
 SRCREV ?= "a34d1c6afc86521d6ad17662a3b5362d8481514c"
 
-BRANCH ?= "release/${PV}/master"
+SRCBRANCH ?= "release/${PV}/master"
 
 GLIBC_GIT_URI ?= "git://sourceware.org/git/glibc.git"
 
-SRC_URI = "${GLIBC_GIT_URI};branch=${BRANCH};name=glibc \
+SRC_URI = "${GLIBC_GIT_URI};branch=${SRCBRANCH};name=glibc \
            file://0004-Backport-https-sourceware.org-ml-libc-ports-2007-12-.patch \
            file://0005-fsl-e500-e5500-e6500-603e-fsqrt-implementation.patch \
            file://0006-readlib-Add-OECORE_KNOWN_INTERPRETER_NAMES-to-known-.patch \
