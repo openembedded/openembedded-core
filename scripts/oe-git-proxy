@@ -120,11 +120,16 @@ if [ "$PORT" = "$ALL_PROXY" ]; then
 	PORT=""
 fi
 
-if [ "$PROTO" = "socks" ]; then
+if [ "$PROTO" = "socks" ] || [ "$PROTO" = "socks4a" ]; then
 	if [ -z "$PORT" ]; then
 		PORT="1080"
 	fi
 	METHOD="SOCKS4A:$PROXY:$1:$2,socksport=$PORT"
+elif [ "$PROTO" = "socks4" ]; then
+	if [ -z "$PORT" ]; then
+		PORT="1080"
+	fi
+	METHOD="SOCKS4:$PROXY:$1:$2,socksport=$PORT"
 else
 	# Assume PROXY (http, https, etc)
 	if [ -z "$PORT" ]; then
