@@ -980,6 +980,7 @@ def package_qa_check_host_user(path, name, d, elf, messages):
         return
 
     dest = d.getVar('PKGDEST', True)
+    pn = d.getVar('PN', True)
     home = os.path.join(dest, 'home')
     if path == home or path.startswith(home + os.sep):
         return
@@ -991,14 +992,15 @@ def package_qa_check_host_user(path, name, d, elf, messages):
         if exc.errno != errno.ENOENT:
             raise
     else:
+        rootfs_path = path[len(dest):]
         check_uid = int(d.getVar('HOST_USER_UID', True))
         if stat.st_uid == check_uid:
-            messages["host-user-contaminated"] = "%s is owned by uid %d, which is the same as the user running bitbake. This may be due to host contamination" % (path, check_uid)
+            messages["host-user-contaminated"] = "%s: %s is owned by uid %d, which is the same as the user running bitbake. This may be due to host contamination" % (pn, rootfs_path, check_uid)
             return False
 
         check_gid = int(d.getVar('HOST_USER_GID', True))
         if stat.st_gid == check_gid:
-            messages["host-user-contaminated"] = "%s is owned by gid %d, which is the same as the user running bitbake. This may be due to host contamination" % (path, check_gid)
+            messages["host-user-contaminated"] = "%s: %s is owned by gid %d, which is the same as the user running bitbake. This may be due to host contamination" % (pn, rootfs_path, check_gid)
             return False
     return True
 
