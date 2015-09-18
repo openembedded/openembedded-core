@@ -311,13 +311,15 @@ def testimage_main(d):
         import traceback
         bb.fatal("Loading tests failed:\n%s" % traceback.format_exc())
 
-    target.deploy()
 
-    try:
-        target.start()
-        if export:
-            exportTests(d,tc)
-        else:
+    if export:
+        signal.signal(signal.SIGTERM, tc.origsigtermhandler)
+        tc.origsigtermhandler = None
+        exportTests(d,tc)
+    else:
+        target.deploy()
+        try:
+            target.start()
             starttime = time.time()
             result = runTests(tc)
             stoptime = time.time()
@@ -330,9 +332,9 @@ def testimage_main(d):
                 bb.plain(msg)
             else:
                 raise bb.build.FuncFailed("%s - FAILED - check the task log and the ssh log" % pn )
-    finally:
-        signal.signal(signal.SIGTERM, tc.origsigtermhandler)
-        target.stop()
+        finally:
+            signal.signal(signal.SIGTERM, tc.origsigtermhandler)
+            target.stop()
 
 testimage_main[vardepsexclude] =+ "BB_ORIGENV"
 
