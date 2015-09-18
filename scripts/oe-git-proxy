@@ -113,7 +113,9 @@ done
 # Proxy is necessary, determine protocol, server, and port
 PROTO=$(echo $ALL_PROXY | sed -e 's/\([^:]*\):\/\/.*/\1/')
 PROXY=$(echo $ALL_PROXY | sed -e 's/.*:\/\/\([^:]*\).*/\1/')
-PORT=$(echo $ALL_PROXY | sed -e 's/.*:\([0-9]*\)\/?$/\1/')
+# For backwards compatibility, this allows the port number to be followed by /?
+# in addition to the customary optional /
+PORT=$(echo $ALL_PROXY | sed -e 's/.*:\([0-9]*\)\(\/?\?\)\?$/\1/')
 if [ "$PORT" = "$ALL_PROXY" ]; then
 	PORT=""
 fi
