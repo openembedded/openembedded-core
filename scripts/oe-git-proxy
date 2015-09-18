@@ -53,6 +53,7 @@ match_ipv4() {
 
 	# Determine the mask bitlength
 	BITS=${CIDR##*/}
+	[ "$BITS" != "$CIDR" ] || BITS=32
 	if [ -z "$BITS" ]; then
 		return 1
 	fi
