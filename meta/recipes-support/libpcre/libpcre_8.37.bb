@@ -22,6 +22,11 @@ S = "${WORKDIR}/pcre-${PV}"
 PROVIDES += "pcre"
 DEPENDS += "bzip2 zlib"
 
+PACKAGECONFIG ??= "pcre8"
+
+PACKAGECONFIG[pcre8] = "--enable-pcre8,--disable-pcre8"
+PACKAGECONFIG[pcre16] = "--enable-pcre16,--disable-pcre16"
+PACKAGECONFIG[pcre32] = "--enable-pcre32,--disable-pcre32"
 PACKAGECONFIG[pcretest-readline] = "--enable-pcretest-libreadline,--disable-pcretest-libreadline,readline,"
 
 BINCONFIG = "${bindir}/pcre-config"
