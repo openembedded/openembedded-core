@@ -1,9 +1,6 @@
-import unittest
 import os
-import logging
 import re
 import glob as g
-import pexpect as p
 
 from oeqa.selftest.base import oeSelfTest
 from oeqa.selftest.buildhistory import BuildhistoryBase
