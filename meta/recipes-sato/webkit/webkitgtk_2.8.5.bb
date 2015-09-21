@@ -18,7 +18,10 @@ SRC_URI = "\
 SRC_URI[md5sum] = "df79991848a5096d3a75289ebce547ae"
 SRC_URI[sha256sum] = "3d1f0c534935f43fd74df90f2648fcee672d60f1f57a30fa557a77891ae04d20"
 
-inherit cmake lib_package pkgconfig perlnative pythonnative
+inherit cmake lib_package pkgconfig perlnative pythonnative distro_features_check
+
+# depends on libxt
+REQUIRED_DISTRO_FEATURES = "x11"
 
 DEPENDS = "zlib enchant libsoup-2.4 curl libxml2 cairo libxslt libxt libidn gnutls \
            gtk+ gtk+3 gstreamer1.0 gstreamer1.0-plugins-base flex-native gperf-native sqlite3 \
