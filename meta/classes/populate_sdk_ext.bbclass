@@ -165,7 +165,6 @@ python copy_buildsystem () {
                 f.write(line.strip() + '\n')
 
         f.write('require conf/locked-sigs.inc\n')
-        f.write('require conf/work-config.inc\n')
 
     sigfile = d.getVar('WORKDIR', True) + '/locked-sigs.inc'
     oe.copy_buildsystem.generate_locked_sigs(sigfile, d)
@@ -185,10 +184,6 @@ python copy_buildsystem () {
                                                    d.getVar('SSTATE_DIR', True),
                                                    sstate_out, d,
                                                    fixedlsbstring)
-
-    # Create a dummy config file for additional settings
-    with open(baseoutpath + '/conf/work-config.inc', 'w') as f:
-        pass
 }
 
 def extsdk_get_buildtools_filename(d):

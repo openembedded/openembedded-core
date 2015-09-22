@@ -170,7 +170,7 @@ def sdk_update(args, config, basepath, workspace):
             logger.error("Updating meta data via git failed")
             return ret
         logger.debug("Updating conf files ...")
-        conf_files = ['local.conf', 'bblayers.conf', 'devtool.conf', 'work-config.inc', 'locked-sigs.inc']
+        conf_files = ['local.conf', 'bblayers.conf', 'devtool.conf', 'locked-sigs.inc']
         for conf in conf_files:
             ret = subprocess.call("wget -q -O - %s/conf/%s > conf/%s" % (args.updateserver, conf, conf), shell=True)
             if ret != 0:
