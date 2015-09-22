@@ -70,40 +70,33 @@ def build_image(args, config, basepath, workspace):
         else:
             raise DevtoolError('Specified recipe %s is not an image recipe' % image)
 
-    if workspace:
-        packages = _get_packages(tinfoil, workspace, config)
-        if packages:
-            with open(appendfile, 'w') as afile:
-                # include packages from workspace recipes into the image
-                afile.write('IMAGE_INSTALL_append = " %s"\n' % ' '.join(packages))
-
-                # Generate notification callback devtool_warn_image_extended
-                afile.write('do_rootfs[prefuncs] += "devtool_warn_image_extended"\n\n')
-                afile.write("python devtool_warn_image_extended() {\n")
-                afile.write("    bb.plain('NOTE: %%s: building with additional '\n"
-                            "             'packages due to \"devtool build-image\"'"
-                            "              %% d.getVar('PN', True))\n"
-                            "    bb.plain('NOTE: delete %%s to clear this' %% \\\n"
-                            "             '%s')\n" % os.path.relpath(appendfile, basepath))
-                afile.write("}\n")
-
-                logger.info('Building image %s with the following '
-                            'additional packages: %s', image, ' '.join(packages))
-        else:
-            logger.warning('No packages to add, building image %s unmodified', image)
-    else:
-        logger.warning('No recipes in workspace, building image %s unmodified', image)
-
-    deploy_dir_image = tinfoil.config_data.getVar('DEPLOY_DIR_IMAGE', True)
-
-    tinfoil.shutdown()
-
-    # run bitbake to build image
     try:
-        exec_build_env_command(config.init_path, basepath,
-                               'bitbake %s' % image, watch=True)
-    except ExecutionError as err:
-        return err.exitcode
+        if workspace:
+            packages = _get_packages(tinfoil, workspace, config)
+            if packages:
+                with open(appendfile, 'w') as afile:
+                    # include packages from workspace recipes into the image
+                    afile.write('IMAGE_INSTALL_append = " %s"\n' % ' '.join(packages))
+                    logger.info('Building image %s with the following '
+                                'additional packages: %s', image, ' '.join(packages))
+            else:
+                logger.warning('No packages to add, building image %s unmodified', image)
+        else:
+            logger.warning('No recipes in workspace, building image %s unmodified', image)
+
+        deploy_dir_image = tinfoil.config_data.getVar('DEPLOY_DIR_IMAGE', True)
+
+        tinfoil.shutdown()
+
+        # run bitbake to build image
+        try:
+            exec_build_env_command(config.init_path, basepath,
+                                'bitbake %s' % image, watch=True)
+        except ExecutionError as err:
+            return err.exitcode
+    finally:
+        if os.path.isfile(appendfile):
+            os.unlink(appendfile)
 
     logger.info('Successfully built %s. You can find output files in %s'
                 % (image, deploy_dir_image))

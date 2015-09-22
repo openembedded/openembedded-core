@@ -919,7 +919,8 @@ class DevtoolTests(DevtoolBase):
         self.add_command_to_tearDown('bitbake -c clean %s' % image)
         bitbake('%s -c clean' % image)
         # Add target and native recipes to workspace
-        for recipe in ('mdadm', 'parted-native'):
+        recipes = ['mdadm', 'parted-native']
+        for recipe in recipes:
             tempdir = tempfile.mkdtemp(prefix='devtoolqa')
             self.track_for_cleanup(tempdir)
             self.add_command_to_tearDown('bitbake -c clean %s' % recipe)
@@ -927,12 +928,19 @@ class DevtoolTests(DevtoolBase):
         # Try to build image
         result = runCmd('devtool build-image %s' % image)
         self.assertNotEqual(result, 0, 'devtool build-image failed')
-        # Check if image.bbappend has required content
-        bbappend = os.path.join(workspacedir, 'appends', image+'.bbappend')
-        self.assertTrue(os.path.isfile(bbappend), 'bbappend not created %s' % result.output)
-        # NOTE: native recipe parted-native should not be in IMAGE_INSTALL_append
-        self.assertTrue('IMAGE_INSTALL_append = " mdadm"\n' in open(bbappend).readlines(),
-                        'IMAGE_INSTALL_append = " mdadm" not found in %s' % bbappend)
+        # Check if image contains expected packages
+        deploy_dir_image = get_bb_var('DEPLOY_DIR_IMAGE')
+        image_link_name = get_bb_var('IMAGE_LINK_NAME', image)
+        reqpkgs = [item for item in recipes if not item.endswith('-native')]
+        with open(os.path.join(deploy_dir_image, image_link_name + '.manifest'), 'r') as f:
+            for line in f:
+                splitval = line.split()
+                if splitval:
+                    pkg = splitval[0]
+                    if pkg in reqpkgs:
+                        reqpkgs.remove(pkg)
+        if reqpkgs:
+            self.fail('The following packages were not present in the image as expected: %s' % ', '.join(reqpkgs))
 
     def test_devtool_upgrade(self):
         # Check preconditions
