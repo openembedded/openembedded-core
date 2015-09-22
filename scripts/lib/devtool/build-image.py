@@ -25,10 +25,9 @@ from devtool import exec_build_env_command, setup_tinfoil, parse_recipe
 
 logger = logging.getLogger('devtool')
 
-def _get_packages(workspace, config):
+def _get_packages(tinfoil, workspace, config):
     """Get list of packages from recipes in the workspace."""
     result = []
-    tinfoil = setup_tinfoil()
     for recipe in workspace:
         data = parse_recipe(config, tinfoil, recipe, True)
         if 'class-target' in data.getVar('OVERRIDES', True).split(':'):
@@ -37,7 +36,6 @@ def _get_packages(workspace, config):
             else:
                 logger.warning("Skipping recipe %s as it doesn't produce a "
                                "package with the same name", recipe)
-    tinfoil.shutdown()
     return result
 
 def build_image(args, config, basepath, workspace):
@@ -51,8 +49,9 @@ def build_image(args, config, basepath, workspace):
     if os.path.isfile(appendfile):
         os.unlink(appendfile)
 
+    tinfoil = setup_tinfoil()
     if workspace:
-        packages = _get_packages(workspace, config)
+        packages = _get_packages(tinfoil, workspace, config)
         if packages:
             with open(appendfile, 'w') as afile:
                 # include packages from workspace recipes into the image
@@ -75,6 +74,10 @@ def build_image(args, config, basepath, workspace):
     else:
         logger.warning('No recipes in workspace, building image %s unmodified', image)
 
+    deploy_dir_image = tinfoil.config_data.getVar('DEPLOY_DIR_IMAGE', True)
+
+    tinfoil.shutdown()
+
     # run bitbake to build image
     try:
         exec_build_env_command(config.init_path, basepath,
@@ -82,7 +85,8 @@ def build_image(args, config, basepath, workspace):
     except ExecutionError as err:
         return err.exitcode
 
-    logger.info('Successfully built %s', image)
+    logger.info('Successfully built %s. You can find output files in %s'
+                % (image, deploy_dir_image))
 
 def register_commands(subparsers, context):
     """Register devtool subcommands from the build-image plugin"""
