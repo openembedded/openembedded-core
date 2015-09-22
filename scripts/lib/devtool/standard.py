@@ -288,7 +288,7 @@ def _extract_source(srctree, keep_temp, devbranch, d):
             if bb.data.inherits_class('kernel', d):
                 crd.setVar('S', '${WORKDIR}/source')
             else:
-                crd.setVar('S', '${WORKDIR}/${BP}')
+                crd.setVar('S', '${WORKDIR}/%s' % os.path.basename(d.getVar('S', True)))
         if bb.data.inherits_class('kernel', d):
             # We don't want to move the source to STAGING_KERNEL_DIR here
             crd.setVar('STAGING_KERNEL_DIR', '${S}')
