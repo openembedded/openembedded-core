@@ -186,7 +186,6 @@ class QemuRunner:
             logger.info("Target IP: %s" % self.ip)
             logger.info("Server IP: %s" % self.server_ip)
 
-            logger.info("Starting logging thread")
             self.thread = LoggingThread(self.log, threadsock, logger)
             self.thread.start()
             if not self.thread.connection_established.wait(self.boottime):
