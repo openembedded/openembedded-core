@@ -222,14 +222,15 @@ sdk_ext_postinst() {
 
 	# Make sure when the user sets up the environment, they also get
 	# the buildtools-tarball tools in their path.
-	echo ". $target_sdk_dir/buildtools/environment-setup*" >> $target_sdk_dir/environment-setup*
+	env_setup_script="$target_sdk_dir/environment-setup-${REAL_MULTIMACH_TARGET_SYS}"
+	echo ". $target_sdk_dir/buildtools/environment-setup*" >> $env_setup_script
 
 	# Allow bitbake environment setup to be ran as part of this sdk.
-	echo "export OE_SKIP_SDK_CHECK=1" >> $target_sdk_dir/environment-setup*
+	echo "export OE_SKIP_SDK_CHECK=1" >> $env_setup_script
 
 	# A bit of another hack, but we need this in the path only for devtool
 	# so put it at the end of $PATH.
-	echo "export PATH=\$PATH:$target_sdk_dir/sysroots/${SDK_SYS}/${bindir_nativesdk}" >> $target_sdk_dir/environment-setup*
+	echo "export PATH=\$PATH:$target_sdk_dir/sysroots/${SDK_SYS}/${bindir_nativesdk}" >> $env_setup_script
 
 	# For now this is where uninative.bbclass expects the tarball
 	mv *-nativesdk-libc.tar.* $target_sdk_dir/`dirname ${oe_init_build_env_path}`
