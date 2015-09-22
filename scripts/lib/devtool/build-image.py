@@ -21,7 +21,7 @@ import os
 import logging
 
 from bb.process import ExecutionError
-from devtool import exec_build_env_command, setup_tinfoil, parse_recipe
+from devtool import exec_build_env_command, setup_tinfoil, parse_recipe, DevtoolError
 
 logger = logging.getLogger('devtool')
 
@@ -40,7 +40,17 @@ def _get_packages(tinfoil, workspace, config):
 
 def build_image(args, config, basepath, workspace):
     """Entry point for the devtool 'build-image' subcommand."""
-    image = args.recipe
+
+    image = args.imagename
+    auto_image = False
+    if not image:
+        sdk_targets = config.get('SDK', 'sdk_targets', '').split()
+        if sdk_targets:
+            image = sdk_targets[0]
+            auto_image = True
+    if not image:
+        raise DevtoolError('Unable to determine image to build, please specify one')
+
     appendfile = os.path.join(config.workspace_path, 'appends',
                               '%s.bbappend' % image)
 
@@ -50,6 +60,16 @@ def build_image(args, config, basepath, workspace):
         os.unlink(appendfile)
 
     tinfoil = setup_tinfoil()
+    rd = parse_recipe(config, tinfoil, image, True)
+    if not rd:
+        # Error already shown
+        return 1
+    if not bb.data.inherits_class('image', rd):
+        if auto_image:
+            raise DevtoolError('Unable to determine image to build, please specify one')
+        else:
+            raise DevtoolError('Specified recipe %s is not an image recipe' % image)
+
     if workspace:
         packages = _get_packages(tinfoil, workspace, config)
         if packages:
@@ -94,5 +114,5 @@ def register_commands(subparsers, context):
                                    help='Build image including workspace recipe packages',
                                    description='Builds an image, extending it to include '
                                    'packages from recipes in the workspace')
-    parser.add_argument('recipe', help='Image recipe to build')
+    parser.add_argument('imagename', help='Image recipe to build', nargs='?')
     parser.set_defaults(func=build_image)
