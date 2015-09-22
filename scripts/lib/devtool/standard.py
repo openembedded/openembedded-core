@@ -25,7 +25,7 @@ import logging
 import argparse
 import scriptutils
 import errno
-from devtool import exec_build_env_command, setup_tinfoil, DevtoolError
+from devtool import exec_build_env_command, setup_tinfoil, check_workspace_recipe, DevtoolError
 from devtool import parse_recipe
 
 logger = logging.getLogger('devtool')
@@ -776,9 +776,7 @@ def _guess_recipe_update_mode(srctree, rdata):
 
 def update_recipe(args, config, basepath, workspace):
     """Entry point for the devtool 'update-recipe' subcommand"""
-    if not args.recipename in workspace:
-        raise DevtoolError("no recipe named %s in your workspace" %
-                           args.recipename)
+    check_workspace_recipe(workspace, args.recipename)
 
     if args.append:
         if not os.path.exists(args.append):
@@ -830,9 +828,8 @@ def reset(args, config, basepath, workspace):
     if args.recipename:
         if args.all:
             raise DevtoolError("Recipe cannot be specified if -a/--all is used")
-        elif not args.recipename in workspace:
-            raise DevtoolError("no recipe named %s in your workspace" %
-                               args.recipename)
+        else:
+            check_workspace_recipe(workspace, args.recipename, checksrc=False)
     elif not args.all:
         raise DevtoolError("Recipe must be specified, or specify -a/--all to "
                            "reset all recipes")

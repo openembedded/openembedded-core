@@ -136,3 +136,17 @@ def parse_recipe(config, tinfoil, pn, appends):
                         not path.startswith(config.workspace_path)]
     return oe.recipeutils.parse_recipe(recipefile, append_files,
                                        tinfoil.config_data)
+
+def check_workspace_recipe(workspace, pn, checksrc=True):
+    """
+    Check that a recipe is in the workspace and (optionally) that source
+    is present.
+    """
+    if not pn in workspace:
+        raise DevtoolError("No recipe named '%s' in your workspace" % pn)
+    if checksrc:
+        srctree = workspace[pn]['srctree']
+        if not os.path.exists(srctree):
+            raise DevtoolError("Source tree %s for recipe %s does not exist" % (srctree, pn))
+        if not os.listdir(srctree):
+            raise DevtoolError("Source tree %s for recipe %s is empty" % (srctree, pn))
