@@ -14,7 +14,9 @@ SRC_URI += "file://run-ptest \
             file://rt_bmark.py \
            "
 # Do not install hwlatdetect
-EXTRA_OEMAKE += "PYLIB=''"
+EXTRA_OEMAKE += "PYLIB='' CROSS_COMPILE=${TARGET_PREFIX}"
+
+CFLAGS_prepend = "${HOST_CC_ARCH}${TOOLCHAIN_OPTIONS}"
 
 do_install() {
         oe_runmake install DESTDIR=${D} SBINDIR=${sbindir} MANDIR=${mandir} \
