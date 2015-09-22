@@ -16,9 +16,18 @@ class BaseDumper(object):
 
     def __init__(self, cmds, parent_dir):
         self.cmds = []
-        self.parent_dir = parent_dir
+        # Some testing doesn't inherit testimage, so it is needed
+        # to set some defaults.
+        self.parent_dir = parent_dir or "/tmp/oe-saved-tests"
+        dft_cmds = """  top -bn1
+                        ps -ef
+                        free
+                        df
+                        memstat
+                        dmesg
+                        netstat -an"""
         if not cmds:
-            return
+            cmds = dft_cmds
         for cmd in cmds.split('\n'):
             cmd = cmd.lstrip()
             if not cmd or cmd[0] == '#':
