@@ -261,6 +261,10 @@ def _extract_source(srctree, keep_temp, devbranch, d):
             raise DevtoolError("output path %s already exists and is "
                                "non-empty" % srctree)
 
+    if 'noexec' in (d.getVarFlags('do_unpack', False) or []):
+        raise DevtoolError("The %s recipe has do_unpack disabled, unable to "
+                           "extract source" % pn)
+
     # Prepare for shutil.move later on
     bb.utils.mkdirhier(srctree)
     os.rmdir(srctree)
