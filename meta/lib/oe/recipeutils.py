@@ -72,6 +72,8 @@ def parse_recipe_simple(cooker, pn, d, appends=True):
             raise bb.providers.NoProvider('Unable to find any recipe file matching %s' % pn)
     if appends:
         appendfiles = cooker.collection.get_file_appends(recipefile)
+    else:
+        appendfiles = None
     return parse_recipe(recipefile, appendfiles, d)
 
 

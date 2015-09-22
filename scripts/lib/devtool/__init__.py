@@ -134,6 +134,8 @@ def parse_recipe(config, tinfoil, pn, appends):
         # Filter out appends from the workspace
         append_files = [path for path in append_files if
                         not path.startswith(config.workspace_path)]
+    else:
+        append_files = None
     return oe.recipeutils.parse_recipe(recipefile, append_files,
                                        tinfoil.config_data)
 
