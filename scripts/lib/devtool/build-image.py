@@ -25,8 +25,8 @@ from devtool import exec_build_env_command, setup_tinfoil, parse_recipe
 
 logger = logging.getLogger('devtool')
 
-def _get_recipes(workspace, config):
-    """Get list of target recipes from the workspace."""
+def _get_packages(workspace, config):
+    """Get list of packages from recipes in the workspace."""
     result = []
     tinfoil = setup_tinfoil()
     for recipe in workspace:
@@ -35,7 +35,7 @@ def _get_recipes(workspace, config):
             if recipe in data.getVar('PACKAGES', True):
                 result.append(recipe)
             else:
-                logger.warning("Skipping recipe %s as it doesn't produce "
+                logger.warning("Skipping recipe %s as it doesn't produce a "
                                "package with the same name", recipe)
     tinfoil.shutdown()
     return result
@@ -46,29 +46,32 @@ def build_image(args, config, basepath, workspace):
     appendfile = os.path.join(config.workspace_path, 'appends',
                               '%s.bbappend' % image)
 
-    # remove <image>.bbapend to make sure setup_tinfoil doesn't
-    # breake because of it
+    # remove <image>.bbappend to make sure setup_tinfoil doesn't
+    # break because of it
     if os.path.isfile(appendfile):
         os.unlink(appendfile)
 
-    recipes = _get_recipes(workspace, config)
-    if recipes:
-        with open(appendfile, 'w') as afile:
-            # include selected recipes into the image
-            afile.write('IMAGE_INSTALL_append = " %s"\n' % ' '.join(recipes))
+    if workspace:
+        packages = _get_packages(workspace, config)
+        if packages:
+            with open(appendfile, 'w') as afile:
+                # include packages from workspace recipes into the image
+                afile.write('IMAGE_INSTALL_append = " %s"\n' % ' '.join(packages))
 
-            # Generate notification callback devtool_warn_image_extended
-            afile.write('do_rootfs[prefuncs] += "devtool_warn_image_extended"\n\n')
-            afile.write("python devtool_warn_image_extended() {\n")
-            afile.write("    bb.plain('NOTE: %%s: building with additional '\n"
-                        "             'packages due to \"devtool build-image\"'"
-                        "              %% d.getVar('PN', True))\n"
-                        "    bb.plain('NOTE: delete %%s to clear this' %% \\\n"
-                        "             '%s')\n" % os.path.relpath(appendfile, basepath))
-            afile.write("}\n")
+                # Generate notification callback devtool_warn_image_extended
+                afile.write('do_rootfs[prefuncs] += "devtool_warn_image_extended"\n\n')
+                afile.write("python devtool_warn_image_extended() {\n")
+                afile.write("    bb.plain('NOTE: %%s: building with additional '\n"
+                            "             'packages due to \"devtool build-image\"'"
+                            "              %% d.getVar('PN', True))\n"
+                            "    bb.plain('NOTE: delete %%s to clear this' %% \\\n"
+                            "             '%s')\n" % os.path.relpath(appendfile, basepath))
+                afile.write("}\n")
 
-            logger.info('Building image %s with the following '
-                        'additional packages: %s', image, ' '.join(recipes))
+                logger.info('Building image %s with the following '
+                            'additional packages: %s', image, ' '.join(packages))
+        else:
+            logger.warning('No packages to add, building image %s unmodified', image)
     else:
         logger.warning('No recipes in workspace, building image %s unmodified', image)
 
