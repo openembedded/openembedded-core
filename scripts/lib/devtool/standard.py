@@ -82,7 +82,7 @@ def add(args, config, basepath, workspace):
     else:
         bp = args.recipename
     recipefile = os.path.join(recipedir, "%s.bb" % bp)
-    if sys.stdout.isatty():
+    if args.color == 'auto' and sys.stdout.isatty():
         color = 'always'
     else:
         color = args.color
