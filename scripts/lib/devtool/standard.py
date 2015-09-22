@@ -25,7 +25,7 @@ import logging
 import argparse
 import scriptutils
 import errno
-from devtool import exec_build_env_command, setup_tinfoil, check_workspace_recipe, use_external_build, DevtoolError
+from devtool import exec_build_env_command, setup_tinfoil, check_workspace_recipe, use_external_build, setup_git_repo, DevtoolError
 from devtool import parse_recipe
 
 logger = logging.getLogger('devtool')
@@ -101,6 +101,9 @@ def add(args, config, basepath, workspace):
         raise DevtoolError('Command \'%s\' failed:\n%s' % (e.command, e.stdout))
 
     _add_md5(config, args.recipename, recipefile)
+
+    if args.fetch and not args.no_git:
+        setup_git_repo(srctree, args.version, 'devtool')
 
     initial_rev = None
     if os.path.exists(os.path.join(srctree, '.git')):
@@ -340,16 +343,11 @@ def _extract_source(srctree, keep_temp, devbranch, d):
                                "correct source directory could not be "
                                "determined" % pn)
 
-        if not os.path.exists(os.path.join(srcsubdir, '.git')):
-            bb.process.run('git init', cwd=srcsubdir)
-            bb.process.run('git add .', cwd=srcsubdir)
-            bb.process.run('git commit -q -m "Initial commit from upstream at version %s"' % crd.getVar('PV', True), cwd=srcsubdir)
+        setup_git_repo(srcsubdir, crd.getVar('PV', True), devbranch)
 
         (stdout, _) = bb.process.run('git rev-parse HEAD', cwd=srcsubdir)
         initial_rev = stdout.rstrip()
 
-        bb.process.run('git checkout -b %s' % devbranch, cwd=srcsubdir)
-        bb.process.run('git tag -f devtool-base', cwd=srcsubdir)
         crd.setVar('PATCHTOOL', 'git')
 
         logger.info('Patching...')
@@ -885,6 +883,7 @@ def register_commands(subparsers, context):
     group.add_argument('--no-same-dir', help='Force build in a separate build directory', action="store_true")
     parser_add.add_argument('--fetch', '-f', help='Fetch the specified URI and extract it to create the source tree', metavar='URI')
     parser_add.add_argument('--version', '-V', help='Version to use within recipe (PV)')
+    parser_add.add_argument('--no-git', '-g', help='If -f/--fetch is specified, do not set up source tree as a git repository', action="store_true")
     parser_add.set_defaults(func=add)
 
     parser_modify = subparsers.add_parser('modify', help='Modify the source for an existing recipe',

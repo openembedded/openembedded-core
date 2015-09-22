@@ -170,3 +170,20 @@ def use_external_build(same_dir, no_same_dir, d):
     else:
         b_is_s = False
     return b_is_s
+
+def setup_git_repo(repodir, version, devbranch, basetag='devtool-base'):
+    """
+    Set up the git repository for the source tree
+    """
+    import bb.process
+    if not os.path.exists(os.path.join(repodir, '.git')):
+        bb.process.run('git init', cwd=repodir)
+        bb.process.run('git add .', cwd=repodir)
+        if version:
+            commitmsg = "Initial commit from upstream at version %s" % version
+        else:
+            commitmsg = "Initial commit from upstream"
+        bb.process.run('git commit -q -m "%s"' % commitmsg, cwd=repodir)
+
+    bb.process.run('git checkout -b %s' % devbranch, cwd=repodir)
+    bb.process.run('git tag -f %s' % basetag, cwd=repodir)
