@@ -29,7 +29,7 @@ import errno
 import bb
 import oe.recipeutils
 from devtool import standard
-from devtool import exec_build_env_command, setup_tinfoil, DevtoolError, parse_recipe
+from devtool import exec_build_env_command, setup_tinfoil, DevtoolError, parse_recipe, use_external_build
 
 logger = logging.getLogger('devtool')
 
@@ -126,21 +126,6 @@ def _rename_recipe_files(bpn, oldpv, newpv, path):
     _rename_recipe_dirs(oldpv, newpv, path)
     return _rename_recipe_file(bpn, oldpv, newpv, path)
 
-def _use_external_build(same_dir, no_same_dir, d):
-    b_is_s = True
-    if no_same_dir:
-        logger.info('using separate build directory since --no-same-dir specified')
-        b_is_s = False
-    elif same_dir:
-        logger.info('using source tree as build directory since --same-dir specified')
-    elif bb.data.inherits_class('autotools-brokensep', d):
-        logger.info('using source tree as build directory since original recipe inherits autotools-brokensep')
-    elif d.getVar('B', True) == os.path.abspath(d.getVar('S', True)):
-        logger.info('using source tree as build directory since that is the default for this recipe')
-    else:
-        b_is_s = False
-    return b_is_s
-
 def _write_append(rc, srctree, same_dir, no_same_dir, rev, workspace, d):
     """Writes an append file"""
     if not os.path.exists(rc):
@@ -161,7 +146,8 @@ def _write_append(rc, srctree, same_dir, no_same_dir, rev, workspace, d):
         f.write(('# NOTE: We use pn- overrides here to avoid affecting'
                  'multiple variants in the case where the recipe uses BBCLASSEXTEND\n'))
         f.write('EXTERNALSRC_pn-%s = "%s"\n' % (pn, srctree))
-        if _use_external_build(same_dir, no_same_dir, d):
+        b_is_s = use_external_build(same_dir, no_same_dir, d)
+        if b_is_s:
             f.write('EXTERNALSRC_BUILD_pn-%s = "%s"\n' % (pn, srctree))
         if rev:
             f.write('\n# initial_rev: %s\n' % rev)

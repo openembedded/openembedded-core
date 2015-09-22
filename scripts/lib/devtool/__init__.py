@@ -152,3 +152,21 @@ def check_workspace_recipe(workspace, pn, checksrc=True):
             raise DevtoolError("Source tree %s for recipe %s does not exist" % (srctree, pn))
         if not os.listdir(srctree):
             raise DevtoolError("Source tree %s for recipe %s is empty" % (srctree, pn))
+
+def use_external_build(same_dir, no_same_dir, d):
+    """
+    Determine if we should use B!=S (separate build and source directories) or not
+    """
+    b_is_s = True
+    if no_same_dir:
+        logger.info('Using separate build directory since --no-same-dir specified')
+        b_is_s = False
+    elif same_dir:
+        logger.info('Using source tree as build directory since --same-dir specified')
+    elif bb.data.inherits_class('autotools-brokensep', d):
+        logger.info('Using source tree as build directory since recipe inherits autotools-brokensep')
+    elif d.getVar('B', True) == os.path.abspath(d.getVar('S', True)):
+        logger.info('Using source tree as build directory since that would be the default for this recipe')
+    else:
+        b_is_s = False
+    return b_is_s
