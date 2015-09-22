@@ -23,6 +23,7 @@ import fnmatch
 import re
 import logging
 import scriptutils
+import urlparse
 
 logger = logging.getLogger('recipetool')
 
@@ -102,7 +103,8 @@ def create_recipe(args):
     srcrev = '${AUTOREV}'
     if '://' in args.source:
         # Fetch a URL
-        srcuri = args.source
+        fetchuri = urlparse.urldefrag(args.source)[0]
+        srcuri = fetchuri
         rev_re = re.compile(';rev=([^;]+)')
         res = rev_re.search(srcuri)
         if res:
@@ -111,7 +113,7 @@ def create_recipe(args):
         tempsrc = tempfile.mkdtemp(prefix='recipetool-')
         srctree = tempsrc
         logger.info('Fetching %s...' % srcuri)
-        checksums = scriptutils.fetch_uri(tinfoil.config_data, args.source, srctree, srcrev)
+        checksums = scriptutils.fetch_uri(tinfoil.config_data, fetchuri, srctree, srcrev)
         dirlist = os.listdir(srctree)
         if 'git.indirectionsymlink' in dirlist:
             dirlist.remove('git.indirectionsymlink')
