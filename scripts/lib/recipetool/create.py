@@ -46,10 +46,26 @@ class RecipeHandler():
             results.extend(glob.glob(os.path.join(path, spec)))
         return results
 
-    def genfunction(self, outlines, funcname, content):
-        outlines.append('%s () {' % funcname)
+    def genfunction(self, outlines, funcname, content, python=False, forcespace=False):
+        if python:
+            prefix = 'python '
+        else:
+            prefix = ''
+        outlines.append('%s%s () {' % (prefix, funcname))
+        if python or forcespace:
+            indent = '    '
+        else:
+            indent = '\t'
+        addnoop = not python
         for line in content:
-            outlines.append('\t%s' % line)
+            outlines.append('%s%s' % (indent, line))
+            if addnoop:
+                strippedline = line.lstrip()
+                if strippedline and not strippedline.startswith('#'):
+                    addnoop = False
+        if addnoop:
+            # Without this there'll be a syntax error
+            outlines.append('%s:' % indent)
         outlines.append('}')
         outlines.append('')
 
