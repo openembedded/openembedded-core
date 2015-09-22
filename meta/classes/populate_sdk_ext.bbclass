@@ -157,6 +157,13 @@ python copy_buildsystem () {
         # Ensure locked sstate cache objects are re-used without error
         f.write('SIGGEN_LOCKEDSIGS_CHECK_LEVEL = "warn"\n\n')
 
+        # If you define a sdk_extraconf() function then it can contain additional config
+        extraconf = (d.getVar('sdk_extraconf', True) or '').strip()
+        if extraconf:
+            # Strip off any leading / trailing spaces
+            for line in extraconf.splitlines():
+                f.write(line.strip() + '\n')
+
         f.write('require conf/locked-sigs.inc\n')
         f.write('require conf/work-config.inc\n')
 
