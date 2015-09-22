@@ -96,7 +96,6 @@ def add(args, config, basepath, workspace):
         extracmdopts += ' -V %s' % args.version
     try:
         stdout, _ = exec_build_env_command(config.init_path, basepath, 'recipetool --color=%s create -o %s "%s" %s' % (color, recipefile, source, extracmdopts))
-        logger.info('Recipe %s has been automatically created; further editing may be required to make it fully functional' % recipefile)
     except bb.process.ExecutionError as e:
         raise DevtoolError('Command \'%s\' failed:\n%s' % (e.command, e.stdout))
 
@@ -127,6 +126,8 @@ def add(args, config, basepath, workspace):
             f.write('\n# initial_rev: %s\n' % initial_rev)
 
     _add_md5(config, args.recipename, appendfile)
+
+    logger.info('Recipe %s has been automatically created; further editing may be required to make it fully functional' % recipefile)
 
     tinfoil.shutdown()
 
