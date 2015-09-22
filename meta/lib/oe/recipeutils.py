@@ -95,6 +95,63 @@ def get_var_files(fn, varlist, d):
     return varfiles
 
 
+def split_var_value(value, assignment=True):
+    """
+    Split a space-separated variable's value into a list of items,
+    taking into account that some of the items might be made up of
+    expressions containing spaces that should not be split.
+    Parameters:
+        value:
+            The string value to split
+        assignment:
+            True to assume that the value represents an assignment
+            statement, False otherwise. If True, and an assignment
+            statement is passed in the first item in
+            the returned list will be the part of the assignment
+            statement up to and including the opening quote character,
+            and the last item will be the closing quote.
+    """
+    inexpr = 0
+    lastchar = None
+    out = []
+    buf = ''
+    for char in value:
+        if char == '{':
+            if lastchar == '$':
+                inexpr += 1
+        elif char == '}':
+            inexpr -= 1
+        elif assignment and char in '"\'' and inexpr == 0:
+            if buf:
+                out.append(buf)
+            out.append(char)
+            char = ''
+            buf = ''
+        elif char.isspace() and inexpr == 0:
+            char = ''
+            if buf:
+                out.append(buf)
+            buf = ''
+        buf += char
+        lastchar = char
+    if buf:
+        out.append(buf)
+
+    # Join together assignment statement and opening quote
+    outlist = out
+    if assignment:
+        assigfound = False
+        for idx, item in enumerate(out):
+            if '=' in item:
+                assigfound = True
+            if assigfound:
+                if '"' in item or "'" in item:
+                    outlist = [' '.join(out[:idx+1])]
+                    outlist.extend(out[idx+1:])
+                    break
+    return outlist
+
+
 def patch_recipe_file(fn, values, patch=False, relpath=''):
     """Update or insert variable values into a recipe file (assuming you
        have already identified the exact file you want to update.)
@@ -112,7 +169,7 @@ def patch_recipe_file(fn, values, patch=False, relpath=''):
             if name in nowrap_vars:
                 tf.write(rawtext)
             elif name in list_vars:
-                splitvalue = values[name].split()
+                splitvalue = split_var_value(values[name], assignment=False)
                 if len(splitvalue) > 1:
                     linesplit = ' \\\n' + (' ' * (len(name) + 4))
                     tf.write('%s = "%s%s"\n' % (name, linesplit.join(splitvalue), linesplit))
@@ -518,7 +575,7 @@ def bbappend_recipe(rd, destlayerdir, srcfiles, install=None, wildcardver=False,
                             instfunclines.append(line)
                     return (instfunclines, None, 4, False)
             else:
-                splitval = origvalue.split()
+                splitval = split_var_value(origvalue, assignment=False)
                 changed = False
                 removevar = varname
                 if varname in ['SRC_URI', 'SRC_URI_append%s' % appendoverride]:
