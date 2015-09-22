@@ -334,9 +334,11 @@ def _extract_source(srctree, keep_temp, devbranch, d):
             else:
                 os.rmdir(patchdir)
 
-        if not os.listdir(srcsubdir):
-            raise DevtoolError("no source unpacked to S, perhaps the %s "
-                               "recipe doesn't use any source?" % pn)
+        if not os.path.exists(srcsubdir) or not os.listdir(srcsubdir):
+            raise DevtoolError("no source unpacked to S, either the %s "
+                               "recipe doesn't use any source or the "
+                               "correct source directory could not be "
+                               "determined" % pn)
 
         if not os.path.exists(os.path.join(srcsubdir, '.git')):
             bb.process.run('git init', cwd=srcsubdir)
