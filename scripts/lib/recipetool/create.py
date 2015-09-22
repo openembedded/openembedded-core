@@ -104,6 +104,10 @@ def create_recipe(args):
     if '://' in args.source:
         # Fetch a URL
         fetchuri = urlparse.urldefrag(args.source)[0]
+        if args.binary:
+            # Assume the archive contains the directory structure verbatim
+            # so we need to extract to a subdirectory
+            fetchuri += ';subdir=%s' % os.path.splitext(os.path.basename(urlparse.urlsplit(fetchuri).path))[0]
         srcuri = fetchuri
         rev_re = re.compile(';rev=([^;]+)')
         res = rev_re.search(srcuri)
@@ -226,6 +230,10 @@ def create_recipe(args):
         lines_after.append('PACKAGE_ARCH = "%s"' % pkgarch)
         lines_after.append('')
 
+    if args.binary:
+        lines_after.append('INSANE_SKIP_${PN} += "already-stripped"')
+        lines_after.append('')
+
     # Find all plugins that want to register handlers
     handlers = []
     for plugin in plugins:
@@ -235,6 +243,11 @@ def create_recipe(args):
     # Apply the handlers
     classes = []
     handled = []
+
+    if args.binary:
+        classes.append('bin_package')
+        handled.append('buildsystem')
+
     for handler in handlers:
         handler.process(srctree, classes, lines_before, lines_after, handled)
 
@@ -426,5 +439,6 @@ def register_command(subparsers):
     parser_create.add_argument('-m', '--machine', help='Make recipe machine-specific as opposed to architecture-specific', action='store_true')
     parser_create.add_argument('-x', '--extract-to', metavar='EXTRACTPATH', help='Assuming source is a URL, fetch it and extract it to the directory specified as %(metavar)s')
     parser_create.add_argument('-V', '--version', help='Version to use within recipe (PV)')
+    parser_create.add_argument('-b', '--binary', help='Treat the source tree as something that should be installed verbatim (no compilation, same directory structure)', action='store_true')
     parser_create.set_defaults(func=create_recipe)
 

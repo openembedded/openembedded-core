@@ -94,6 +94,8 @@ def add(args, config, basepath, workspace):
         source = srctree
     if args.version:
         extracmdopts += ' -V %s' % args.version
+    if args.binary:
+        extracmdopts += ' -b'
     try:
         stdout, _ = exec_build_env_command(config.init_path, basepath, 'recipetool --color=%s create -o %s "%s" %s' % (color, recipefile, source, extracmdopts))
     except bb.process.ExecutionError as e:
@@ -124,6 +126,12 @@ def add(args, config, basepath, workspace):
             f.write('EXTERNALSRC_BUILD = "%s"\n' % srctree)
         if initial_rev:
             f.write('\n# initial_rev: %s\n' % initial_rev)
+
+        if args.binary:
+            f.write('do_install_append() {\n')
+            f.write('    rm -rf ${D}/.git\n')
+            f.write('    rm -f ${D}/singletask.lock\n')
+            f.write('}\n')
 
     _add_md5(config, args.recipename, appendfile)
 
@@ -885,6 +893,7 @@ def register_commands(subparsers, context):
     parser_add.add_argument('--fetch', '-f', help='Fetch the specified URI and extract it to create the source tree', metavar='URI')
     parser_add.add_argument('--version', '-V', help='Version to use within recipe (PV)')
     parser_add.add_argument('--no-git', '-g', help='If -f/--fetch is specified, do not set up source tree as a git repository', action="store_true")
+    parser_add.add_argument('--binary', '-b', help='Treat the source tree as something that should be installed verbatim (no compilation, same directory structure)', action='store_true')
     parser_add.set_defaults(func=add)
 
     parser_modify = subparsers.add_parser('modify', help='Modify the source for an existing recipe',
