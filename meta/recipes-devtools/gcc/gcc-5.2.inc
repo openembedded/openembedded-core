@@ -98,6 +98,7 @@ EXTRA_OECONF_BASE = "\
     --with-cloog=no \
     --enable-checking=release \
     --enable-cheaders=c_global \
+    --without-isl \
 "
 
 EXTRA_OECONF_INITIAL = "\
@@ -109,6 +110,7 @@ EXTRA_OECONF_INITIAL = "\
     --disable-lto \
     --disable-plugin \
     --enable-decimal-float=no \
+    --without-isl \
 "
 
 EXTRA_OECONF_append_libc-uclibc = " --disable-decimal-float "
