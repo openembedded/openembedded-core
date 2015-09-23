@@ -839,9 +839,12 @@ def check_sanity_everybuild(status, d):
     else:
         bb.utils.mkdirhier(tmpdir)
         # Remove setuid, setgid and sticky bits from TMPDIR
-        os.chmod(tmpdir, os.stat(tmpdir).st_mode & ~ stat.S_ISUID)
-        os.chmod(tmpdir, os.stat(tmpdir).st_mode & ~ stat.S_ISGID)
-        os.chmod(tmpdir, os.stat(tmpdir).st_mode & ~ stat.S_ISVTX)
+        try:
+            os.chmod(tmpdir, os.stat(tmpdir).st_mode & ~ stat.S_ISUID)
+            os.chmod(tmpdir, os.stat(tmpdir).st_mode & ~ stat.S_ISGID)
+            os.chmod(tmpdir, os.stat(tmpdir).st_mode & ~ stat.S_ISVTX)
+        except OSError:
+            bb.warn("Unable to chmod TMPDIR: %s" % tmpdir)
         with open(checkfile, "w") as f:
             f.write(tmpdir)
 
