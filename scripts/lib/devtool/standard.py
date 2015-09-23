@@ -701,7 +701,7 @@ def _update_recipe_patch(args, config, srctree, rd, config_data):
         updatepatches = False
         updaterecipe = False
         destpath = None
-        newpatches = os.listdir(tempdir)
+        newpatches = sorted(os.listdir(tempdir))
         if args.append:
             patchfiles = {}
             for patch in existing_patches:
