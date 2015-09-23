@@ -112,7 +112,7 @@ def main():
         d["DEPLOY_DIR"] = options.deploy_dir
     else:
         if not os.path.isdir(d["DEPLOY_DIR"]):
-            raise Exception("The path to DEPLOY_DIR does not exists: %s" % d["DEPLOY_DIR"])
+            print("WARNING: The path to DEPLOY_DIR does not exist: %s" % d["DEPLOY_DIR"])
 
 
     target = FakeTarget(d)
