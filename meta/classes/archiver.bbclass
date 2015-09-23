@@ -99,27 +99,6 @@ python () {
                 d.appendVarFlag('do_package_write_rpm', 'depends', ' %s:do_ar_patched' % pn)
             elif ar_src == "configured":
                 d.appendVarFlag('do_package_write_rpm', 'depends', ' %s:do_ar_configured' % pn)
-
-    # The gcc staff uses shared source
-    flag = d.getVarFlag("do_unpack", "stamp-base", True)
-    if flag:
-        if ar_src in [ 'original', 'patched' ]:
-            ar_outdir = os.path.join(d.getVar('ARCHIVER_TOPDIR', True), 'work-shared')
-            d.setVar('ARCHIVER_OUTDIR', ar_outdir)
-        d.setVarFlag('do_ar_original', 'stamp-base', flag)
-        d.setVarFlag('do_ar_patched', 'stamp-base', flag)
-        d.setVarFlag('do_unpack_and_patch', 'stamp-base', flag)
-        d.setVarFlag('do_ar_original', 'vardepsexclude', 'PN PF ARCHIVER_OUTDIR WORKDIR')
-        d.setVarFlag('do_unpack_and_patch', 'vardepsexclude', 'PN PF ARCHIVER_OUTDIR WORKDIR')
-        d.setVarFlag('do_ar_patched', 'vardepsexclude', 'PN PF ARCHIVER_OUTDIR WORKDIR')
-        d.setVarFlag('create_diff_gz', 'vardepsexclude', 'PF')
-        d.setVarFlag('create_tarball', 'vardepsexclude', 'PF')
-
-        flag_clean = d.getVarFlag('do_unpack', 'stamp-base-clean', True)
-        if flag_clean:
-            d.setVarFlag('do_ar_original', 'stamp-base-clean', flag_clean)
-            d.setVarFlag('do_ar_patched', 'stamp-base-clean', flag_clean)
-            d.setVarFlag('do_unpack_and_patch', 'stamp-base-clean', flag_clean)
 }
 
 # Take all the sources for a recipe and puts them in WORKDIR/archiver-work/.
@@ -179,12 +158,7 @@ python do_ar_patched() {
     ar_outdir = d.getVar('ARCHIVER_OUTDIR', True)
     bb.note('Archiving the patched source...')
     d.setVar('WORKDIR', d.getVar('ARCHIVER_WORKDIR', True))
-    # The gcc staff uses shared source
-    flag = d.getVarFlag('do_unpack', 'stamp-base', True)
-    if flag:
-        create_tarball(d, d.getVar('S', True), 'patched', ar_outdir, 'gcc')
-    else:
-        create_tarball(d, d.getVar('S', True), 'patched', ar_outdir)
+    create_tarball(d, d.getVar('S', True), 'patched', ar_outdir)
 }
 
 python do_ar_configured() {
@@ -222,17 +196,14 @@ python do_ar_configured() {
         create_tarball(d, srcdir, 'configured', ar_outdir)
 }
 
-def create_tarball(d, srcdir, suffix, ar_outdir, pf=None):
+def create_tarball(d, srcdir, suffix, ar_outdir):
     """
     create the tarball from srcdir
     """
     import tarfile
 
     bb.utils.mkdirhier(ar_outdir)
-    if pf:
-        tarname = os.path.join(ar_outdir, '%s-%s.tar.gz' % (pf, suffix))
-    else:
-        tarname = os.path.join(ar_outdir, '%s-%s.tar.gz' % \
+    tarname = os.path.join(ar_outdir, '%s-%s.tar.gz' % \
             (d.getVar('PF', True), suffix))
 
     srcdir = srcdir.rstrip('/')
