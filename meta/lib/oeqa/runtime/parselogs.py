@@ -233,8 +233,7 @@ class ParseLogsTest(oeRuntimeTest):
 
     #get the output of dmesg and write it in a file. This file is added to log_locations.
     def write_dmesg(self):
-        (status, dmesg) = self.target.run("dmesg")
-        (status, dmesg2) = self.target.run("echo \""+str(dmesg)+"\" > /tmp/dmesg_output.log")
+        (status, dmesg) = self.target.run("dmesg > /tmp/dmesg_output.log")
 
     @testcase(1059)
     @skipUnlessPassed('test_ssh')
