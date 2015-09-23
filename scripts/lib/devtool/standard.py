@@ -111,7 +111,7 @@ def add(args, config, basepath, workspace):
         (stdout, _) = bb.process.run('git rev-parse HEAD', cwd=srctree)
         initial_rev = stdout.rstrip()
 
-    tinfoil = setup_tinfoil(config_only=True)
+    tinfoil = setup_tinfoil(config_only=True, basepath=basepath)
     rd = oe.recipeutils.parse_recipe(recipefile, None, tinfoil.config_data)
     if not rd:
         return 1
@@ -231,7 +231,7 @@ class BbTaskExecutor(object):
 def _prep_extract_operation(config, basepath, recipename):
     """HACK: Ugly workaround for making sure that requirements are met when
        trying to extract a package. Returns the tinfoil instance to be used."""
-    tinfoil = setup_tinfoil()
+    tinfoil = setup_tinfoil(basepath=basepath)
     rd = parse_recipe(config, tinfoil, recipename, True)
 
     if bb.data.inherits_class('kernel-yocto', rd):
@@ -239,7 +239,7 @@ def _prep_extract_operation(config, basepath, recipename):
         try:
             stdout, _ = exec_build_env_command(config.init_path, basepath,
                                                'bitbake kern-tools-native')
-            tinfoil = setup_tinfoil()
+            tinfoil = setup_tinfoil(basepath=basepath)
         except bb.process.ExecutionError as err:
             raise DevtoolError("Failed to build kern-tools-native:\n%s" %
                                err.stdout)
@@ -443,7 +443,7 @@ def modify(args, config, basepath, workspace):
     if args.extract:
         tinfoil = _prep_extract_operation(config, basepath, args.recipename)
     else:
-        tinfoil = setup_tinfoil()
+        tinfoil = setup_tinfoil(basepath=basepath)
 
     rd = parse_recipe(config, tinfoil, args.recipename, True)
     if not rd:
@@ -797,7 +797,7 @@ def update_recipe(args, config, basepath, workspace):
             raise DevtoolError('conf/layer.conf not found in bbappend '
                                'destination layer "%s"' % args.append)
 
-    tinfoil = setup_tinfoil()
+    tinfoil = setup_tinfoil(basepath=basepath)
 
     rd = parse_recipe(config, tinfoil, args.recipename, True)
     if not rd:

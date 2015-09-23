@@ -34,7 +34,7 @@ def package(args, config, basepath, workspace):
 
     image_pkgtype = config.get('Package', 'image_pkgtype', '')
     if not image_pkgtype:
-        tinfoil = setup_tinfoil()
+        tinfoil = setup_tinfoil(basepath=basepath)
         try:
             tinfoil.prepare(config_only=True)
             image_pkgtype = tinfoil.config_data.getVar('IMAGE_PKGTYPE', True)

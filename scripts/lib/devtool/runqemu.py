@@ -29,7 +29,7 @@ logger = logging.getLogger('devtool')
 def runqemu(args, config, basepath, workspace):
     """Entry point for the devtool 'runqemu' subcommand"""
 
-    tinfoil = setup_tinfoil()
+    tinfoil = setup_tinfoil(basepath=basepath)
     machine = tinfoil.config_data.getVar('MACHINE', True)
     bindir_native = tinfoil.config_data.getVar('STAGING_BINDIR_NATIVE', True)
     tinfoil.shutdown()

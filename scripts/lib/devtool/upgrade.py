@@ -294,7 +294,7 @@ def upgrade(args, config, basepath, workspace):
     if reason:
         raise DevtoolError(reason)
 
-    tinfoil = setup_tinfoil()
+    tinfoil = setup_tinfoil(basepath=basepath)
 
     rd = parse_recipe(config, tinfoil, args.recipename, True)
     if not rd:

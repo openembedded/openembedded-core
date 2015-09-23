@@ -59,7 +59,7 @@ def build_image(args, config, basepath, workspace):
     if os.path.isfile(appendfile):
         os.unlink(appendfile)
 
-    tinfoil = setup_tinfoil()
+    tinfoil = setup_tinfoil(basepath=basepath)
     rd = parse_recipe(config, tinfoil, image, True)
     if not rd:
         # Error already shown

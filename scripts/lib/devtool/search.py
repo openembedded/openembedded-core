@@ -29,7 +29,7 @@ logger = logging.getLogger('devtool')
 def search(args, config, basepath, workspace):
     """Entry point for the devtool 'search' subcommand"""
 
-    tinfoil = setup_tinfoil(config_only=True)
+    tinfoil = setup_tinfoil(config_only=True, basepath=basepath)
     pkgdata_dir = tinfoil.config_data.getVar('PKGDATA_DIR', True)
     tinfoil.shutdown()
 

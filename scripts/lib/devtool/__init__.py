@@ -96,9 +96,12 @@ def exec_fakeroot(d, cmd, **kwargs):
             newenv[splitval[0]] = splitval[1]
     return subprocess.call("%s %s" % (fakerootcmd, cmd), env=newenv, **kwargs)
 
-def setup_tinfoil(config_only=False):
+def setup_tinfoil(config_only=False, basepath=None):
     """Initialize tinfoil api from bitbake"""
     import scriptpath
+    orig_cwd = os.path.abspath(os.curdir)
+    if basepath:
+        os.chdir(basepath)
     bitbakepath = scriptpath.add_bitbake_lib_path()
     if not bitbakepath:
         logger.error("Unable to find bitbake by searching parent directory of this script or PATH")
@@ -108,6 +111,7 @@ def setup_tinfoil(config_only=False):
     tinfoil = bb.tinfoil.Tinfoil()
     tinfoil.prepare(config_only)
     tinfoil.logger.setLevel(logger.getEffectiveLevel())
+    os.chdir(orig_cwd)
     return tinfoil
 
 def get_recipe_file(cooker, pn):
