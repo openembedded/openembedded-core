@@ -53,7 +53,7 @@ def _copy_source_code(orig, dest):
         dest_dir = os.path.join(dest, os.path.dirname(path))
         bb.utils.mkdirhier(dest_dir)
         dest_path = os.path.join(dest, path)
-        os.rename(os.path.join(orig, path), dest_path)
+        shutil.move(os.path.join(orig, path), dest_path)
 
 def _get_checksums(rf):
     import re
