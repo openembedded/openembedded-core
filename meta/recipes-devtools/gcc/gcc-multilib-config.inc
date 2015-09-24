@@ -206,7 +206,7 @@ python gcc_multilib_setup() {
         # take out '-' mcpu='s and march='s from parameters
         opts = []
         whitelist = (d.getVar("MULTILIB_OPTION_WHITELIST", True) or "").split()
-        for i in tune_parameters['ccargs'].split():
+        for i in d.expand(tune_parameters['ccargs']).split():
             if i in whitelist:
                 # Need to strip '-' from option
                 opts.append(i[1:])
