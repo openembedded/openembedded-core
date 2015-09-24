@@ -174,6 +174,13 @@ def _check_compatible_recipe(pn, d):
                            "from working. You will need to disable this "
                            "first." % pn)
 
+def _move_file(src, dst):
+    """Move a file. Creates all the directory components of destination path."""
+    dst_d = os.path.dirname(dst)
+    if dst_d:
+        bb.utils.mkdirhier(dst_d)
+    shutil.move(src, dst)
+
 def _ls_tree(directory):
     """Recursive listing of files in a directory"""
     ret = []
@@ -330,9 +337,8 @@ def _extract_source(srctree, keep_temp, devbranch, d):
             crd.setVar('S', srcsubdir)
             # Move source files to S
             for path in src_files:
-                tgt_dir = os.path.join(srcsubdir, os.path.dirname(path))
-                bb.utils.mkdirhier(tgt_dir)
-                shutil.move(os.path.join(workdir, path), tgt_dir)
+                _move_file(os.path.join(workdir, path),
+                           os.path.join(srcsubdir, path))
         elif os.path.dirname(srcsubdir) != workdir:
             # Handle if S is set to a subdirectory of the source
             srcsubdir = os.path.join(workdir, os.path.relpath(srcsubdir, workdir).split(os.sep)[0])
@@ -893,8 +899,8 @@ def reset(args, config, basepath, workspace):
                 for root, dirs, files in os.walk(origdir):
                     for fn in files:
                         logger.warn('Preserving %s in %s' % (fn, preservepath))
-                        bb.utils.mkdirhier(preservepath)
-                        shutil.move(os.path.join(origdir, fn), os.path.join(preservepath, fn))
+                        _move_file(os.path.join(origdir, fn),
+                                   os.path.join(preservepath, fn))
                     for dn in dirs:
                         os.rmdir(os.path.join(root, dn))
                 os.rmdir(origdir)
