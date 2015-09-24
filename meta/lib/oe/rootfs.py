@@ -595,7 +595,11 @@ class DpkgOpkgRootfs(Rootfs):
 
         pkg_list = []
 
-        pkgs = self._get_pkgs_postinsts(status_file)
+        pkgs = None
+        if not self.d.getVar('PACKAGE_INSTALL', True).strip():
+            bb.note("Building empty image")
+        else:
+            pkgs = self._get_pkgs_postinsts(status_file)
         if pkgs:
             root = "__packagegroup_postinst__"
             pkgs[root] = pkgs.keys()
