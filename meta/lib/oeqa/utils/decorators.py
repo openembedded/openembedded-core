@@ -111,6 +111,12 @@ class NoParsingFilter(logging.Filter):
 def LogResults(original_class):
     orig_method = original_class.run
 
+    from time import strftime, gmtime
+    caller = os.path.basename(sys.argv[0])
+    timestamp = strftime('%Y%m%d%H%M%S',gmtime())
+    logfile = os.path.join(os.getcwd(),'results-'+caller+'.'+timestamp+'.log')
+    linkfile = os.path.join(os.getcwd(),'results-'+caller+'.log')
+
     #rewrite the run method of unittest.TestCase to add testcase logging
     def run(self, result, *args, **kws):
         orig_method(self, result, *args, **kws)
@@ -127,14 +133,13 @@ def LogResults(original_class):
         #create custom logging level for filtering.
         custom_log_level = 100
         logging.addLevelName(custom_log_level, 'RESULTS')
-        caller = os.path.basename(sys.argv[0])
 
         def results(self, message, *args, **kws):
             if self.isEnabledFor(custom_log_level):
                 self.log(custom_log_level, message, *args, **kws)
         logging.Logger.results = results
 
-        logging.basicConfig(filename=os.path.join(os.getcwd(),'results-'+caller+'.log'),
+        logging.basicConfig(filename=logfile,
                             filemode='w',
                             format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                             datefmt='%H:%M:%S',
@@ -163,6 +168,14 @@ def LogResults(original_class):
             local_log.results("Testcase "+str(test_case)+": PASSED")
 
     original_class.run = run
+
+    # Create symlink to the current log
+    if os.path.islink(linkfile):
+        os.unlink(linkfile)
+    elif os.path.isfile(linkfile):
+            os.remove(linkfile)
+    os.symlink(logfile, linkfile)
+
     return original_class
 
 class TimeOut(BaseException):
