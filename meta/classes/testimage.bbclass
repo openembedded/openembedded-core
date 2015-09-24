@@ -198,8 +198,17 @@ def exportTests(d,tc):
     savedata["host_dumper"]["parent_dir"] = tc.host_dumper.parent_dir
     savedata["host_dumper"]["cmds"] = tc.host_dumper.cmds
 
-    with open(os.path.join(exportpath, "testdata.json"), "w") as f:
+    json_file = os.path.join(exportpath, "testdata.json")
+    with open(json_file, "w") as f:
             json.dump(savedata, f, skipkeys=True, indent=4, sort_keys=True)
+
+    # Replace absolute path with relative in the file
+    exclude_path = os.path.join(d.getVar("COREBASE", True),'meta','lib','oeqa')
+    f1 = open(json_file,'r').read()
+    f2 = open(json_file,'w')
+    m = f1.replace(exclude_path,'oeqa')
+    f2.write(m)
+    f2.close()
 
     # now start copying files
     # we'll basically copy everything under meta/lib/oeqa, with these exceptions
