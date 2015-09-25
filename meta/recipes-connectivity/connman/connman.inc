@@ -113,7 +113,7 @@ RPROVIDES_${PN} = "\
 
 RDEPENDS_${PN} = "\
 	dbus \
-	${@base_conditional('ROOTLESS_X', '1', 'xuser-account', '', d)} \
+	xuser-account \
 	"
 
 PACKAGES_DYNAMIC += "^${PN}-plugin-.*"
