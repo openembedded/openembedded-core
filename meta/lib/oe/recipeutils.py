@@ -732,11 +732,14 @@ def get_recipe_upstream_version(rd):
     ru['type'] = 'U'
     ru['datetime'] = ''
 
+    pv = rd.getVar('PV', True)
+
     # XXX: If don't have SRC_URI means that don't have upstream sources so
-    # returns 1.0.
+    # returns the current recipe version, so that upstream version check
+    # declares a match.
     src_uris = rd.getVar('SRC_URI', True)
     if not src_uris:
-        ru['version'] = '1.0'
+        ru['version'] = pv
         ru['type'] = 'M'
         ru['datetime'] = datetime.now()
         return ru
@@ -744,8 +747,6 @@ def get_recipe_upstream_version(rd):
     # XXX: we suppose that the first entry points to the upstream sources
     src_uri = src_uris.split()[0]
     uri_type, _, _, _, _, _ =  decodeurl(src_uri)
-
-    pv = rd.getVar('PV', True)
 
     manual_upstream_version = rd.getVar("RECIPE_UPSTREAM_VERSION", True)
     if manual_upstream_version:
