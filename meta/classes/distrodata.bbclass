@@ -272,9 +272,10 @@ python do_checkpkg() {
 
         """first check whether a uri is provided"""
         src_uri = d.getVar('SRC_URI', True)
-        if not src_uri:
-                return
-        uri_type, _, _, _, _, _ = decodeurl(src_uri)
+        if src_uri:
+            uri_type, _, _, _, _, _ = decodeurl(src_uri)
+        else:
+            uri_type = "none"
 
         """initialize log files."""
         logpath = d.getVar('LOG_DIR', True)
@@ -354,7 +355,10 @@ python do_checkpkg() {
             elif cmp == 0:
                 pstatus = "MATCH"
 
-        psrcuri = psrcuri.split()[0]
+        if psrcuri:
+            psrcuri = psrcuri.split()[0]
+        else:
+            psrcuri = "none"
         pdepends = "".join(pdepends.split("\t"))
         pdesc = "".join(pdesc.split("\t"))
         no_upgr_reason = d.getVar('RECIPE_NO_UPDATE_REASON', True)
