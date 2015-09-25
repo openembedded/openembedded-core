@@ -64,6 +64,11 @@ do_install () {
 	rm -fr ${D}/${localstatedir}/run
 	rmdir ${D}/${libdir}/${BPN}/driver
 
+	# Fix the pam configuration file permissions
+	if ${@bb.utils.contains('DISTRO_FEATURES', 'pam', 'true', 'false', d)}; then
+	    chmod 0644 ${D}${sysconfdir}/pam.d/cups
+	fi
+
 	# Remove sysinit script and symlinks if sysvinit is not in DISTRO_FEATURES
 	if ${@bb.utils.contains('DISTRO_FEATURES','sysvinit','false','true',d)}; then
 	    rm -rf ${D}${sysconfdir}/init.d/
