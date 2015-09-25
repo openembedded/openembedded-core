@@ -50,17 +50,17 @@ FILES_${PN}-xlib = "${libdir}/*pixbuf_xlib*${SOLIBS}"
 ALLOW_EMPTY_${PN}-xlib = "1"
 
 FILES_${PN} = "${bindir}/gdk-pixbuf-query-loaders \
-	${bindir}/gdk-pixbuf-pixdata \
 	${libdir}/lib*.so.*"
 
 FILES_${PN}-dev += " \
 	${bindir}/gdk-pixbuf-csource \
+	${bindir}/gdk-pixbuf-pixdata \
 	${includedir}/* \
 	${libdir}/gdk-pixbuf-2.0/${LIBV}/loaders/*.la \
 "
 
 FILES_${PN}-dbg += " \
-        ${libdir}/.debug/* \
+	${libdir}/.debug/* \
 	${libdir}/gdk-pixbuf-2.0/${LIBV}/loaders/.debug/* \
 "
 
