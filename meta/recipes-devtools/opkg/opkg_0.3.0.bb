@@ -16,6 +16,7 @@ SRC_URI = "http://downloads.yoctoproject.org/releases/${BPN}/${BPN}-${PV}.tar.gz
            file://opkg.conf \
            file://0001-opkg_archive-add-support-for-empty-compressed-files.patch \
            file://0001-libopkg-include-stdio.h-for-getting-FILE-defined.patch \
+           file://0001-opkg_conf-create-opkg.lock-in-run-instead-of-var-run.patch \
 "
 
 SRC_URI[md5sum] = "3412cdc71d78b98facc84b19331ec64e"
