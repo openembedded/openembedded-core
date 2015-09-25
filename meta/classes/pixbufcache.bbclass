@@ -15,7 +15,7 @@ if [ "x$D" != "x" ]; then
 else
 
 	# Update the pixbuf loaders in case they haven't been registered yet
-	GDK_PIXBUF_MODULEDIR=${libdir}/gdk-pixbuf-2.0/2.10.0/loaders ${libdir}/gdk-pixbuf-2.0/gdk-pixbuf-query-loaders --update-cache
+	${libdir}/gdk-pixbuf-2.0/gdk-pixbuf-query-loaders --update-cache
 
 	if [ -x ${bindir}/gtk-update-icon-cache ] && [ -d ${datadir}/icons ]; then
 		for icondir in /usr/share/icons/*; do
