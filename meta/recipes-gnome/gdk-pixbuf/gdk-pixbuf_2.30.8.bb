@@ -106,7 +106,7 @@ SSTATEPREINSTFUNCS_append_class-native = " gdkpixbuf_sstate_preinst"
 SYSROOT_PREPROCESS_FUNCS_append_class-native = " gdkpixbuf_sstate_preinst"
 
 gdkpixbuf_sstate_preinst() {
-	if [ "${BB_CURRENTTASK}" = "populate_sysroot" -o "${BB_CURRENTTASK}" = "populate_sysroot_setscene" ]; then
+	if [ "${BB_CURRENTTASK}" = "populate_sysroot" ]; then
 		rm -rf ${STAGING_LIBDIR_NATIVE}/gdk-pixbuf-2.0/${LIBV}/*
 	fi
 }
