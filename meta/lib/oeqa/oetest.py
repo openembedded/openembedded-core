@@ -216,7 +216,7 @@ class oeSDKTest(oeTest):
         return False
 
     def _run(self, cmd):
-        return subprocess.check_output(cmd, shell=True)
+        return subprocess.check_output(". %s; " % self.tc.sdkenv + cmd, shell=True)
 
 def getmodule(pos=2):
     # stack returns a list of tuples containg frame information
