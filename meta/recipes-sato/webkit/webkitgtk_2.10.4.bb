@@ -12,6 +12,9 @@ LIC_FILES_CHKSUM = "file://Source/JavaScriptCore/COPYING.LIB;md5=d0c6d6397a5d842
 
 SRC_URI = "\
   http://www.webkitgtk.org/releases/${BPN}-${PV}.tar.xz \
+  file://clang.patch \
+  file://0001-Enable-backtrace-on-linux-when-using-glibc.patch \
+  file://0001-Fix-build-with-non-glibc-libraries-on-linux.patch \
   "
 SRC_URI[md5sum] = "fb010031c6f61c3a1a00793b112badb5"
 SRC_URI[sha256sum] = "dbf8260da5cac0c74de2d3cce1fe7c519da3cd816a2c769cb6c6d56addd2f055"
