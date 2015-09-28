@@ -13,6 +13,7 @@ import re
 import socket
 import select
 import errno
+import string
 import threading
 from oeqa.utils.dump import HostDumper
 
@@ -61,6 +62,9 @@ class QemuRunner:
 
     def log(self, msg):
         if self.logfile:
+            # It is needed to sanitize the data received from qemu
+            # because is possible to have control characters or Unicode
+            msg = "".join(filter(lambda x:x in string.printable, msg))
             with open(self.logfile, "a") as f:
                 f.write("%s" % msg)
 
@@ -170,6 +174,9 @@ class QemuRunner:
             cmdline = ''
             with open('/proc/%s/cmdline' % self.qemupid) as p:
                 cmdline = p.read()
+                # It is needed to sanitize the data received
+                # because is possible to have control characters
+                cmdline = "".join(filter(lambda x:x in string.printable, cmdline))
             try:
                 ips = re.findall("((?:[0-9]{1,3}\.){3}[0-9]{1,3})", cmdline.split("ip=")[1])
                 if not ips or len(ips) != 3:
