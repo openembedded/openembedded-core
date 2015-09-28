@@ -12,6 +12,9 @@ SRC_URI[archive.sha256sum] = "3a8f196b46eb9dbd3ba2afb8fb5fef6a8825539d449a021813
 
 DEPENDS += "gsettings-desktop-schemas gconf libxrandr virtual/libx11 gtk+3 glib-2.0 gnome-doc-utils gnome-common startup-notification iso-codes"
 
+inherit distro_features_check
+REQUIRED_DISTRO_FEATURES = "x11"
+
 EXTRA_OECONF = "--disable-desktop-docs"
 
 PACKAGES =+ "libgnome-desktop3"

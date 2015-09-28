@@ -18,7 +18,8 @@ SRC_URI[sha256sum] = "c692f1624a4cbc8d1dd55f3b3f3369fbf5d26f63a916e2c295230b2344
 
 PR = "r1"
 
-inherit autotools pkgconfig gtk-doc
+inherit autotools pkgconfig gtk-doc distro_features_check
+ANY_OF_DISTRO_FEATURES = "${GTK2DISTROFEATURES}"
 
 do_configure[dirs] =+ "${S}/m4"
 
