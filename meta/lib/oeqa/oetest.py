@@ -16,8 +16,7 @@ try:
 except ImportError:
     pass
 import logging
-from oeqa.utils.decorators import LogResults, gettag
-from sys import exc_info, exc_clear
+from oeqa.utils.decorators import LogResults, gettag, getResults
 
 logger = logging.getLogger("BitBake")
 
@@ -184,17 +183,18 @@ class oeRuntimeTest(oeTest):
         pass
 
     def tearDown(self):
-        # If a test fails or there is an exception
-        if not exc_info() == (None, None, None):
-            exc_clear()
-            #Only dump for QemuTarget
-            if (type(self.target).__name__ == "QemuTarget"):
-                self.tc.host_dumper.create_dir(self._testMethodName)
-                self.tc.host_dumper.dump_host()
-                self.target.target_dumper.dump_target(
-                        self.tc.host_dumper.dump_dir)
-                print ("%s dump data stored in %s" % (self._testMethodName,
-                         self.tc.host_dumper.dump_dir))
+        res = getResults()
+        # If a test fails or there is an exception dump
+        # for QemuTarget only
+        if (type(self.target).__name__ == "QemuTarget" and
+                (self.id() in res.getErrorList() or
+                self.id() in  res.getFailList())):
+            self.tc.host_dumper.create_dir(self._testMethodName)
+            self.tc.host_dumper.dump_host()
+            self.target.target_dumper.dump_target(
+                    self.tc.host_dumper.dump_dir)
+            print ("%s dump data stored in %s" % (self._testMethodName,
+                     self.tc.host_dumper.dump_dir))
 
     #TODO: use package_manager.py to install packages on any type of image
     def install_packages(self, packagelist):
