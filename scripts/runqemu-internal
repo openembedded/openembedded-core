@@ -700,6 +700,38 @@ if [ "x$SERIALSTDIO" = "x1" ]; then
         stty intr ^]
 fi
 
+
+# Preserve the multiplexing behavior for the monitor that would be there based
+# on whether nographic is used.
+if echo "$QEMUOPTIONS $SERIALOPTS $SCRIPT_QEMU_OPT $SCRIPT_QEMU_EXTRA_OPT" | grep -- "-nographic"; then
+    FIRST_SERIAL_OPT="-serial mon:stdio"
+else
+    FIRST_SERIAL_OPT="-serial mon:vc"
+fi
+
+# qemuarm64 uses virtio for any additional serial ports so the normal mechanism
+# of using -serial will not work
+if [ "$MACHINE" = "qemuarm64" ]; then
+    SECOND_SERIAL_OPT="$SCRIPT_QEMU_EXTRA_OPT -device virtio-serial-device -chardev null,id=virtcon -device virtconsole,chardev=virtcon"
+else
+    SECOND_SERIAL_OPT="-serial null"
+fi
+
+# We always want a ttyS1. Since qemu by default adds a serial port when
+# nodefaults is not specified, it seems that all that would be needed is to
+# make sure a "-serial" is there. However, it appears that when "-serial" is
+# specified, it ignores the default serial port that is normally added.
+# So here we make sure to add two -serial if there are none. And only one
+# if there is one -serial already.
+NUM_SERIAL_OPTS=`echo $QEMUOPTIONS $SERIALOPTS $SCRIPT_QEMU_OPT $SCRIPT_QEMU_EXTRA_OPT | sed -e 's/ /\n/g' | grep --count -- -serial`
+
+if [ "$NUM_SERIAL_OPTS" = "0" ]; then
+    SCRIPT_QEMU_EXTRA_OPT="$SCRIPT_QEMU_EXTRA_OPT $FIRST_SERIAL_OPT $SECOND_SERIAL_OPT"
+elif [ "$NUM_SERIAL_OPTS" = "1" ]; then
+    SCRIPT_QEMU_EXTRA_OPT="$SCRIPT_QEMU_EXTRA_OPT $SECOND_SERIAL_OPT"
+fi
+
+
 echo "Running $QEMU..."
 # -no-reboot is a mandatory option - see bug #100
 if [ "$FSTYPE" = "vmdk" -o "$FSTYPE" = "hddimg" -o "$FSTYPE" = "hdddirect" ]; then
