@@ -33,6 +33,10 @@ class getResults(object):
                     ret.append(s.replace("setUpModule (", "").replace(")",""))
                 else:
                     ret.append(s)
+                # Append also the test without the full path
+                testname = s.split('.')[-1]
+                if testname:
+                    ret.append(testname)
             return ret
         self.faillist = handleList(upperf.f_locals['result'].failures)
         self.errorlist = handleList(upperf.f_locals['result'].errors)
