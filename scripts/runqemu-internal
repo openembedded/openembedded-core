@@ -364,8 +364,18 @@ if [ "$MACHINE" = "qemuarm" -o "$MACHINE" = "qemuarmv6" -o "$MACHINE" = "qemuarm
     QEMU_UI_OPTIONS="$QEMU_UI_OPTIONS"
     # QEMU_UI_OPTIONS="$QEMU_UI_OPTIONS -force-pointer"
     if [ "${FSTYPE:0:3}" = "ext" -o "$FSTYPE" = "btrfs" ]; then
-        KERNCMDLINE="root=/dev/sda rw console=ttyAMA0,115200 console=tty $KERNEL_NETWORK_CMD mem=$QEMU_MEMORY highres=off"
-        QEMUOPTIONS="$QEMU_NETWORK_CMD -M ${MACHINE_SUBTYPE} -drive file=$ROOTFS,format=raw -no-reboot $QEMU_UI_OPTIONS"
+        if [ "$MACHINE" = "qemuarm" ]; then
+            QEMU_NETWORK_CMD="-net nic,model=virtio $QEMU_TAP_CMD"
+            DROOT="/dev/vda"
+            ROOTFS_OPTIONS="-drive file=$ROOTFS,if=virtio,format=raw"
+        else
+            QEMU_NETWORK_CMD="-net nic,vlan=0 $QEMU_TAP_CMD"
+            DROOT="/dev/sda"
+            ROOTFS_OPTIONS="-drive file=$ROOTFS,format=raw"
+        fi
+
+        KERNCMDLINE="root=$DROOT rw console=ttyAMA0,115200 console=tty $KERNEL_NETWORK_CMD mem=$QEMU_MEMORY highres=off"
+        QEMUOPTIONS="$QEMU_NETWORK_CMD -M ${MACHINE_SUBTYPE} $ROOTFS_OPTIONS -no-reboot $QEMU_UI_OPTIONS"
     fi
     if [ "$FSTYPE" = "nfs" ]; then
         if [ "$NFS_SERVER" = "192.168.7.1" -a ! -d "$NFS_DIR" ]; then
