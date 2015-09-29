@@ -31,6 +31,8 @@ from shutil import rmtree
 
 from oeqa.selftest.base import oeSelfTest
 from oeqa.utils.commands import runCmd, bitbake, get_bb_var
+from oeqa.utils.decorators import testcase
+
 
 class Wic(oeSelfTest):
     """Wic test class."""
@@ -56,24 +58,29 @@ class Wic(oeSelfTest):
 
         rmtree(self.resultdir, ignore_errors=True)
 
+    @testcase(1208)
     def test01_help(self):
         """Test wic --help"""
         self.assertEqual(0, runCmd('wic --help').status)
 
+    @testcase(1209)
     def test02_createhelp(self):
         """Test wic create --help"""
         self.assertEqual(0, runCmd('wic create --help').status)
 
+    @testcase(1210)
     def test03_listhelp(self):
         """Test wic list --help"""
         self.assertEqual(0, runCmd('wic list --help').status)
 
+    @testcase(1211)
     def test04_build_image_name(self):
         """Test wic create directdisk --image-name core-image-minimal"""
         self.assertEqual(0, runCmd("wic create directdisk "
                                    "--image-name core-image-minimal").status)
         self.assertEqual(1, len(glob(self.resultdir + "directdisk-*.direct")))
 
+    @testcase(1212)
     def test05_build_artifacts(self):
         """Test wic create directdisk providing all artifacts."""
         vars = dict((var.lower(), get_bb_var(var, 'core-image-minimal')) \
@@ -87,33 +94,40 @@ class Wic(oeSelfTest):
         self.assertEqual(0, status)
         self.assertEqual(1, len(glob(self.resultdir + "directdisk-*.direct")))
 
+    @testcase(1157)
     def test06_gpt_image(self):
         """Test creation of core-image-minimal with gpt table and UUID boot"""
         self.assertEqual(0, runCmd("wic create directdisk-gpt "
                                    "--image-name core-image-minimal").status)
         self.assertEqual(1, len(glob(self.resultdir + "directdisk-*.direct")))
 
+    @testcase(1213)
     def test07_unsupported_subcommand(self):
         """Test unsupported subcommand"""
         self.assertEqual(1, runCmd('wic unsupported',
                          ignore_status=True).status)
 
+    @testcase(1214)
     def test08_no_command(self):
         """Test wic without command"""
         self.assertEqual(1, runCmd('wic', ignore_status=True).status)
 
-    def test09_help_kickstart(self):
+    @testcase(1215)
+    def test09_help_overview(self):
         """Test wic help overview"""
         self.assertEqual(0, runCmd('wic help overview').status)
 
+    @testcase(1216)
     def test10_help_plugins(self):
         """Test wic help plugins"""
         self.assertEqual(0, runCmd('wic help plugins').status)
 
+    @testcase(1217)
     def test11_help_kickstart(self):
         """Test wic help kickstart"""
         self.assertEqual(0, runCmd('wic help kickstart').status)
 
+    @testcase(1264)
     def test12_compress_gzip(self):
         """Test compressing an image with gzip"""
         self.assertEqual(0, runCmd("wic create directdisk "
@@ -122,7 +136,8 @@ class Wic(oeSelfTest):
         self.assertEqual(1, len(glob(self.resultdir + \
                                          "directdisk-*.direct.gz")))
 
-    def test13_compress_gzip(self):
+    @testcase(1265)
+    def test13_compress_bzip2(self):
         """Test compressing an image with bzip2"""
         self.assertEqual(0, runCmd("wic create directdisk "
                                    "--image-name core-image-minimal "
@@ -130,7 +145,8 @@ class Wic(oeSelfTest):
         self.assertEqual(1, len(glob(self.resultdir + \
                                          "directdisk-*.direct.bz2")))
 
-    def test14_compress_gzip(self):
+    @testcase(1266)
+    def test14_compress_xz(self):
         """Test compressing an image with xz"""
         self.assertEqual(0, runCmd("wic create directdisk "
                                    "--image-name core-image-minimal "
@@ -138,12 +154,14 @@ class Wic(oeSelfTest):
         self.assertEqual(1, len(glob(self.resultdir + \
                                          "directdisk-*.direct.xz")))
 
+    @testcase(1267)
     def test15_wrong_compressor(self):
         """Test how wic breaks if wrong compressor is provided"""
         self.assertEqual(2, runCmd("wic create directdisk "
                                    "--image-name core-image-minimal "
                                    "-c wrong", ignore_status=True).status)
 
+    @testcase(1268)
     def test16_rootfs_indirect_recipes(self):
         """Test usage of rootfs plugin with rootfs recipes"""
         wks = "directdisk-multi-rootfs"
@@ -154,6 +172,7 @@ class Wic(oeSelfTest):
                                    % wks).status)
         self.assertEqual(1, len(glob(self.resultdir + "%s*.direct" % wks)))
 
+    @testcase(1269)
     def test17_rootfs_artifacts(self):
         """Test usage of rootfs plugin with rootfs paths"""
         vars = dict((var.lower(), get_bb_var(var, 'core-image-minimal')) \
@@ -171,13 +190,15 @@ class Wic(oeSelfTest):
         self.assertEqual(1, len(glob(self.resultdir + \
                                      "%(wks)s-*.direct" % vars)))
 
+    @testcase(1264)
     def test18_iso_image(self):
-        """Test creation of hybrid iso imagewith legacy and EFI boot"""
+        """Test creation of hybrid iso image with legacy and EFI boot"""
         self.assertEqual(0, runCmd("wic create mkhybridiso "
                                    "--image-name core-image-minimal").status)
         self.assertEqual(1, len(glob(self.resultdir + "HYBRID_ISO_IMG-*.direct")))
         self.assertEqual(1, len(glob(self.resultdir + "HYBRID_ISO_IMG-*.iso")))
 
+    @testcase(1347)
     def test19_image_env(self):
         """Test generation of <image>.env files."""
         image = 'core-image-minimal'
@@ -200,6 +221,7 @@ class Wic(oeSelfTest):
                 self.assertTrue(var in content, "%s is not in .env file" % var)
                 self.assertTrue(content[var])
 
+    @testcase(1351)
     def test20_wic_image_type(self):
         """Test building wic images by bitbake"""
         self.assertEqual(0, bitbake('wic-image-minimal').status)
@@ -214,6 +236,7 @@ class Wic(oeSelfTest):
             self.assertTrue(os.path.islink(path))
             self.assertTrue(os.path.isfile(os.path.realpath(path)))
 
+    @testcase(1348)
     def test21_qemux86_directdisk(self):
         """Test creation of qemux-86-directdisk image"""
         image = "qemux86-directdisk"
@@ -221,6 +244,7 @@ class Wic(oeSelfTest):
                                    % image).status)
         self.assertEqual(1, len(glob(self.resultdir + "%s-*direct" % image)))
 
+    @testcase(1349)
     def test22_mkgummidisk(self):
         """Test creation of mkgummidisk image"""
         image = "mkgummidisk"
@@ -228,6 +252,7 @@ class Wic(oeSelfTest):
                                    % image).status)
         self.assertEqual(1, len(glob(self.resultdir + "%s-*direct" % image)))
 
+    @testcase(1350)
     def test23_mkefidisk(self):
         """Test creation of mkefidisk image"""
         image = "mkefidisk"
