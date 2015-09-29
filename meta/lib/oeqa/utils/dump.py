@@ -20,11 +20,13 @@ class BaseDumper(object):
         # to set some defaults.
         self.parent_dir = parent_dir or "/tmp/oe-saved-tests"
         dft_cmds = """  top -bn1
+                        iostat -x -z -N -d -p ALL 20 2
                         ps -ef
                         free
                         df
                         memstat
                         dmesg
+                        ip -s link
                         netstat -an"""
         if not cmds:
             cmds = dft_cmds

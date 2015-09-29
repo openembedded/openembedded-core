@@ -80,11 +80,13 @@ testimage_dump_target () {
 
 testimage_dump_host () {
     top -bn1
+    iostat -x -z -N -d -p ALL 20 2
     ps -ef
     free
     df
     memstat
     dmesg
+    ip -s link
     netstat -an
 }
 
