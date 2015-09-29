@@ -167,14 +167,12 @@ def LogResults(original_class):
         if passed:
             local_log.results("Testcase "+str(test_case)+": PASSED")
 
-    original_class.run = run
-
-    # Create symlink to the current log
-    if os.path.islink(linkfile):
-        os.unlink(linkfile)
-    elif os.path.isfile(linkfile):
+        # Create symlink to the current log
+        if os.path.exists(linkfile):
             os.remove(linkfile)
-    os.symlink(logfile, linkfile)
+        os.symlink(logfile, linkfile)
+
+    original_class.run = run
 
     return original_class
 
