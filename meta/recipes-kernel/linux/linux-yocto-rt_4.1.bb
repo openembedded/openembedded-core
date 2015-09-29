@@ -1,4 +1,4 @@
-KBRANCH ?= "standard/preempt-rt"
+KBRANCH ?= "standard/preempt-rt/base"
 
 require recipes-kernel/linux/linux-yocto.inc
 
