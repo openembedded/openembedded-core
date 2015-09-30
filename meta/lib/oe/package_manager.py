@@ -1512,7 +1512,7 @@ class OpkgPM(PackageManager):
         self.deploy_dir_unlock()
 
     def install(self, pkgs, attempt_only=False):
-        if attempt_only and len(pkgs) == 0:
+        if not pkgs:
             return
 
         cmd = "%s %s install %s" % (self.opkg_cmd, self.opkg_args, ' '.join(pkgs))
