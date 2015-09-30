@@ -239,6 +239,18 @@ read_only_rootfs_hook () {
 	# Tweak the mount option and fs_passno for rootfs in fstab
 	sed -i -e '/^[#[:space:]]*\/dev\/root/{s/defaults/ro/;s/\([[:space:]]*[[:digit:]]\)\([[:space:]]*\)[[:digit:]]$/\1\20/}' ${IMAGE_ROOTFS}/etc/fstab
 
+	# If we're using openssh and the /etc/ssh directory has no pre-generated keys,
+	# we should configure openssh to use the configuration file /etc/ssh/sshd_config_readonly
+	# and the keys under /var/run/ssh.
+	if [ -d ${IMAGE_ROOTFS}/etc/ssh ]; then
+		if [ -e ${IMAGE_ROOTFS}/etc/ssh/ssh_host_rsa_key ]; then
+			echo "SYSCONFDIR=/etc/ssh" >> ${IMAGE_ROOTFS}/etc/default/ssh
+			echo "SSHD_OPTS=" >> ${IMAGE_ROOTFS}/etc/default/ssh
+		else
+			echo "SYSCONFDIR=/var/run/ssh" >> ${IMAGE_ROOTFS}/etc/default/ssh
+			echo "SSHD_OPTS='-f /etc/ssh/sshd_config_readonly'" >> ${IMAGE_ROOTFS}/etc/default/ssh
+		fi
+	fi
 	if ${@bb.utils.contains("DISTRO_FEATURES", "sysvinit", "true", "false", d)}; then
 		# Change the value of ROOTFS_READ_ONLY in /etc/default/rcS to yes
 		if [ -e ${IMAGE_ROOTFS}/etc/default/rcS ]; then
@@ -248,18 +260,6 @@ read_only_rootfs_hook () {
 		# and directories to support read-only rootfs.
 		if [ -x ${IMAGE_ROOTFS}/etc/init.d/populate-volatile.sh ]; then
 			${IMAGE_ROOTFS}/etc/init.d/populate-volatile.sh
-		fi
-		# If we're using openssh and the /etc/ssh directory has no pre-generated keys,
-		# we should configure openssh to use the configuration file /etc/ssh/sshd_config_readonly
-		# and the keys under /var/run/ssh.
-		if [ -d ${IMAGE_ROOTFS}/etc/ssh ]; then
-			if [ -e ${IMAGE_ROOTFS}/etc/ssh/ssh_host_rsa_key ]; then
-				echo "SYSCONFDIR=/etc/ssh" >> ${IMAGE_ROOTFS}/etc/default/ssh
-				echo "SSHD_OPTS=" >> ${IMAGE_ROOTFS}/etc/default/ssh
-			else
-				echo "SYSCONFDIR=/var/run/ssh" >> ${IMAGE_ROOTFS}/etc/default/ssh
-				echo "SSHD_OPTS='-f /etc/ssh/sshd_config_readonly'" >> ${IMAGE_ROOTFS}/etc/default/ssh
-			fi
 		fi
 	fi
 
