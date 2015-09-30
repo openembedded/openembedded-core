@@ -45,6 +45,11 @@ do_install_append() {
 	oe_multilib_header curl/curlbuild.h
 }
 
+do_install_append_class-target() {
+	# cleanup buildpaths from curl-config
+	sed -i -e 's,${STAGING_DIR_HOST},,g' ${D}${bindir}/curl-config
+}
+
 PACKAGES =+ "lib${BPN}"
 
 FILES_lib${BPN} = "${libdir}/lib*.so.*"
