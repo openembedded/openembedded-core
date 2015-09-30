@@ -38,8 +38,6 @@ inherit autotools-brokensep ptest pkgconfig useradd
 USERADD_PACKAGES = "${PN}"
 GROUPADD_PARAM_${PN} = "tracing"
 
-export KERNELDIR="${STAGING_KERNEL_DIR}"
-
 FILES_${PN} += "${libdir}/lttng/libexec/* ${datadir}/xml/lttng \
                 ${libdir}/python${PYTHON_BASEVERSION}/site-packages/*"
 FILES_${PN}-dbg += "${libdir}/lttng/libexec/.debug \
