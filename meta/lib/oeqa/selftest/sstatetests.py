@@ -211,6 +211,8 @@ class SStateTests(SStateBase):
         they're built on a 32 or 64 bit system. Rather than requiring two different 
         build machines and running a builds, override the variables calling uname()
         manually and check using bitbake -S.
+        
+        Also check that SDKMACHINE changing doesn't change any of these stamps.
         """
 
         topdir = get_bb_var('TOPDIR')
@@ -219,6 +221,7 @@ class SStateTests(SStateBase):
 TMPDIR = \"${TOPDIR}/tmp-sstatesamehash\"
 BUILD_ARCH = \"x86_64\"
 BUILD_OS = \"linux\"
+SDKMACHINE = \"x86_64\"
 """)
         self.track_for_cleanup(topdir + "/tmp-sstatesamehash")
         bitbake("core-image-sato -S none")
@@ -226,6 +229,7 @@ BUILD_OS = \"linux\"
 TMPDIR = \"${TOPDIR}/tmp-sstatesamehash2\"
 BUILD_ARCH = \"i686\"
 BUILD_OS = \"linux\"
+SDKMACHINE = \"i686\"
 """)
         self.track_for_cleanup(topdir + "/tmp-sstatesamehash2")
         bitbake("core-image-sato -S none")
@@ -233,11 +237,16 @@ BUILD_OS = \"linux\"
         def get_files(d):
             f = []
             for root, dirs, files in os.walk(d):
+                if "core-image-sato" in root:
+                        # SDKMACHINE changing will change do_rootfs/do_testimage/do_build stamps of core-image-sato itself
+                        # which is safe to ignore
+                        continue
                 f.extend(os.path.join(root, name) for name in files)
             return f
         files1 = get_files(topdir + "/tmp-sstatesamehash/stamps/")
         files2 = get_files(topdir + "/tmp-sstatesamehash2/stamps/")
         files2 = [x.replace("tmp-sstatesamehash2", "tmp-sstatesamehash").replace("i686-linux", "x86_64-linux").replace("i686" + targetvendor + "-linux", "x86_64" + targetvendor + "-linux", ) for x in files2]
+        self.maxDiff = None
         self.assertItemsEqual(files1, files2)
 
 
@@ -271,11 +280,12 @@ NATIVELSBSTRING = \"DistroB\"
         files1 = get_files(topdir + "/tmp-sstatesamehash/stamps/")
         files2 = get_files(topdir + "/tmp-sstatesamehash2/stamps/")
         files2 = [x.replace("tmp-sstatesamehash2", "tmp-sstatesamehash") for x in files2]
+        self.maxDiff = None
         self.assertItemsEqual(files1, files2)
 
     def test_sstate_allarch_samesigs(self):
         """
-        The sstate checksums off allarch packages should be independent of whichever 
+        The sstate checksums of allarch packages should be independent of whichever 
         MACHINE is set. Check this using bitbake -S.
         Also, rather than duplicate the test, check nativesdk stamps are the same between
         the two MACHINE values.
