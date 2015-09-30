@@ -223,5 +223,6 @@ python gcc_multilib_setup() {
 }
 
 gcc_multilib_setup[cleandirs] = "${B}/gcc/config"
+gcc_multilib_setup[vardepsexclude] = "SDK_ARCH"
 
 EXTRACONFFUNCS += "gcc_multilib_setup"
