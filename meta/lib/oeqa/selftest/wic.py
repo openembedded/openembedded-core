@@ -46,7 +46,7 @@ class Wic(oeSelfTest):
                 'dosfstools-native mtools-native')
         Wic.image_is_ready = False
 
-    def setUp(self):
+    def setUpLocal(self):
         """This code is executed before each test method."""
         if not Wic.image_is_ready:
             # build core-image-minimal with required features
