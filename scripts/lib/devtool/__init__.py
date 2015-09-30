@@ -96,7 +96,7 @@ def exec_fakeroot(d, cmd, **kwargs):
             newenv[splitval[0]] = splitval[1]
     return subprocess.call("%s %s" % (fakerootcmd, cmd), env=newenv, **kwargs)
 
-def setup_tinfoil(config_only=False, basepath=None):
+def setup_tinfoil(config_only=False, basepath=None, tracking=False):
     """Initialize tinfoil api from bitbake"""
     import scriptpath
     orig_cwd = os.path.abspath(os.curdir)
@@ -108,7 +108,7 @@ def setup_tinfoil(config_only=False, basepath=None):
         sys.exit(1)
 
     import bb.tinfoil
-    tinfoil = bb.tinfoil.Tinfoil()
+    tinfoil = bb.tinfoil.Tinfoil(tracking=tracking)
     tinfoil.prepare(config_only)
     tinfoil.logger.setLevel(logger.getEffectiveLevel())
     os.chdir(orig_cwd)

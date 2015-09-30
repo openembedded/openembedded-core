@@ -955,7 +955,7 @@ def update_recipe(args, config, basepath, workspace):
             raise DevtoolError('conf/layer.conf not found in bbappend '
                                'destination layer "%s"' % args.append)
 
-    tinfoil = setup_tinfoil(basepath=basepath)
+    tinfoil = setup_tinfoil(basepath=basepath, tracking=True)
 
     rd = parse_recipe(config, tinfoil, args.recipename, True)
     if not rd:
