@@ -413,7 +413,7 @@ do_strip() {
 			  gawk '{print $1}'`
 
 		for str in ${KERNEL_IMAGE_STRIP_EXTRA_SECTIONS}; do {
-			if [ "$headers" != *"$str"* ]; then
+			if ! (echo "$headers" | grep -q "^$str$"); then
 				bbwarn "Section not found: $str";
 			fi
 
