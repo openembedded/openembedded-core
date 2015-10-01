@@ -34,26 +34,26 @@ DEPENDS += " ${@bb.utils.contains('DISTRO_FEATURES', 'opengl', 'virtual/libgl', 
 EXTRA_OECMAKE = " \
 		-DPORT=GTK \
 		-DCMAKE_BUILD_TYPE=Release \
-		-DENABLE_INTROSPECTION=False \
-		-DENABLE_MINIBROWSER=True \
-	        ${@bb.utils.contains('DISTRO_FEATURES', 'opengl', '-DENABLE_WEBGL=True', '-DENABLE_WEBGL=False', d)} \
+		-DENABLE_INTROSPECTION=OFF \
+		-DENABLE_MINIBROWSER=ON \
+	        ${@bb.utils.contains('DISTRO_FEATURES', 'opengl', '-DENABLE_WEBGL=ON', '-DENABLE_WEBGL=OFF', d)} \
 		"
 
 # Javascript JIT is not supported on powerpc
-EXTRA_OECMAKE_append_powerpc = " -DENABLE_JIT=False "
-EXTRA_OECMAKE_append_powerpc64 = " -DENABLE_JIT=False "
+EXTRA_OECMAKE_append_powerpc = " -DENABLE_JIT=OFF "
+EXTRA_OECMAKE_append_powerpc64 = " -DENABLE_JIT=OFF "
 
 # ARM JIT code does not build on ARMv5/6 anymore, apparently they test only on v7 onwards
-EXTRA_OECMAKE_append_armv5 = " -DENABLE_JIT=False "
-EXTRA_OECMAKE_append_armv6 = " -DENABLE_JIT=False "
+EXTRA_OECMAKE_append_armv5 = " -DENABLE_JIT=OFF "
+EXTRA_OECMAKE_append_armv6 = " -DENABLE_JIT=OFF "
 
 # binutils 2.25.1 has a bug on aarch64:
 # https://sourceware.org/bugzilla/show_bug.cgi?id=18430
-EXTRA_OECMAKE_append_aarch64 = " -DUSE_LD_GOLD=False "
+EXTRA_OECMAKE_append_aarch64 = " -DUSE_LD_GOLD=OFF "
 
 # JIT not supported on MIPS either
-EXTRA_OECMAKE_append_mips = " -DENABLE_JIT=False "
-EXTRA_OECMAKE_append_mips64 = " -DENABLE_JIT=False "
+EXTRA_OECMAKE_append_mips = " -DENABLE_JIT=OFF "
+EXTRA_OECMAKE_append_mips64 = " -DENABLE_JIT=OFF "
 
 FILES_${PN} += "${libdir}/webkit2gtk-4.0/injected-bundle/libwebkit2gtkinjectedbundle.so"
 FILES_${PN}-dbg += "${libdir}/webkit2gtk-4.0/injected-bundle/.debug/libwebkit2gtkinjectedbundle.so"
