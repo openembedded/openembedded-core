@@ -26,13 +26,8 @@ python write_package_manifest() {
 }
 
 python license_create_manifest() {
-    import re
     import oe.packagedata
     from oe.rootfs import image_list_installed_packages
-
-    bad_licenses = (d.getVar("INCOMPATIBLE_LICENSE", True) or "").split()
-    bad_licenses = map(lambda l: canonical_license(d, l), bad_licenses)
-    bad_licenses = expand_wildcard_licenses(d, bad_licenses)
 
     build_images_from_feeds = d.getVar('BUILD_IMAGES_FROM_FEEDS', True)
     if build_images_from_feeds == "1":
@@ -49,8 +44,18 @@ python license_create_manifest() {
             pkg_lic_name = "LICENSE_" + pkg_name
             pkg_dic[pkg_name]["LICENSE"] = pkg_dic[pkg_name][pkg_lic_name]
 
-    license_manifest = os.path.join(d.getVar('LICENSE_DIRECTORY', True),
+    rootfs_license_manifest = os.path.join(d.getVar('LICENSE_DIRECTORY', True),
                         d.getVar('IMAGE_NAME', True), 'license.manifest')
+    write_license_files(d, rootfs_license_manifest, pkg_dic)
+}
+
+def write_license_files(d, license_manifest, pkg_dic):
+    import re
+
+    bad_licenses = (d.getVar("INCOMPATIBLE_LICENSE", True) or "").split()
+    bad_licenses = map(lambda l: canonical_license(d, l), bad_licenses)
+    bad_licenses = expand_wildcard_licenses(d, bad_licenses)
+
     with open(license_manifest, "w") as license_file:
         for pkg in sorted(pkg_dic):
             if bad_licenses:
@@ -98,15 +103,16 @@ python license_create_manifest() {
     if copy_lic_manifest == "1":
         rootfs_license_dir = os.path.join(d.getVar('IMAGE_ROOTFS', 'True'), 
                                 'usr', 'share', 'common-licenses')
-        os.makedirs(rootfs_license_dir)
+        bb.utils.mkdirhier(rootfs_license_dir)
         rootfs_license_manifest = os.path.join(rootfs_license_dir,
-                                                'license.manifest')
-        os.link(license_manifest, rootfs_license_manifest)
+                os.path.split(license_manifest)[1])
+        if not os.path.exists(rootfs_license_manifest):
+            os.link(license_manifest, rootfs_license_manifest)
 
         if copy_lic_dirs == "1":
             for pkg in sorted(pkg_dic):
                 pkg_rootfs_license_dir = os.path.join(rootfs_license_dir, pkg)
-                os.makedirs(pkg_rootfs_license_dir)
+                bb.utils.mkdirhier(pkg_rootfs_license_dir)
                 pkg_license_dir = os.path.join(d.getVar('LICENSE_DIRECTORY', True),
                                             pkg_dic[pkg]["PN"]) 
                 licenses = os.listdir(pkg_license_dir)
@@ -124,14 +130,16 @@ python license_create_manifest() {
                         if not os.path.exists(rootfs_license):
                             os.link(pkg_license, rootfs_license)
 
-                        os.symlink(os.path.join('..', lic), pkg_rootfs_license)
+                        if not os.path.exists(pkg_rootfs_license):
+                            os.symlink(os.path.join('..', lic), pkg_rootfs_license)
                     else:
-                        if oe.license.license_ok(canonical_license(d,
-                            lic), bad_licenses) == False:
+                        if (oe.license.license_ok(canonical_license(d,
+                                lic), bad_licenses) == False or
+                                os.path.exists(pkg_rootfs_license)):
                             continue
 
                         os.link(pkg_license, pkg_rootfs_license)
-}
+
 
 python do_populate_lic() {
     """
