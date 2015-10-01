@@ -15,10 +15,17 @@ import select
 import errno
 import string
 import threading
+import codecs
 from oeqa.utils.dump import HostDumper
 
 import logging
 logger = logging.getLogger("BitBake.QemuRunner")
+
+# Get Unicode non printable control chars
+control_range = range(0,32)+range(127,160)
+control_chars = [unichr(x) for x in control_range
+                if unichr(x) not in string.printable]
+re_control_char = re.compile('[%s]' % re.escape("".join(control_chars)))
 
 class QemuRunner:
 
@@ -63,9 +70,9 @@ class QemuRunner:
     def log(self, msg):
         if self.logfile:
             # It is needed to sanitize the data received from qemu
-            # because is possible to have control characters or Unicode
-            msg = "".join(filter(lambda x:x in string.printable, msg))
-            with open(self.logfile, "a") as f:
+            # because is possible to have control characters
+            msg = re_control_char.sub('', unicode(msg, 'utf-8'))
+            with codecs.open(self.logfile, "a", encoding="utf-8") as f:
                 f.write("%s" % msg)
 
     def getOutput(self, o):
@@ -176,7 +183,7 @@ class QemuRunner:
                 cmdline = p.read()
                 # It is needed to sanitize the data received
                 # because is possible to have control characters
-                cmdline = "".join(filter(lambda x:x in string.printable, cmdline))
+                cmdline = re_control_char.sub('', cmdline)
             try:
                 ips = re.findall("((?:[0-9]{1,3}\.){3}[0-9]{1,3})", cmdline.split("ip=")[1])
                 if not ips or len(ips) != 3:
