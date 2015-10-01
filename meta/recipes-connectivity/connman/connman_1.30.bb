@@ -2,7 +2,6 @@ require connman.inc
 
 SRC_URI  = "${KERNELORG_MIRROR}/linux/network/${BPN}/${BP}.tar.xz \
             file://0001-plugin.h-Change-visibility-to-default-for-debug-symb.patch \
-            file://add_xuser_dbus_permission.patch \
             file://0001-Detect-backtrace-API-availability-before-using-it.patch \
             file://0002-resolve-musl-does-not-implement-res_ninit.patch \
             file://0003-Fix-header-inclusions-for-musl.patch \
