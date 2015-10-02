@@ -48,10 +48,10 @@ class Wic(oeSelfTest):
 
     def setUpLocal(self):
         """This code is executed before each test method."""
+        features = 'IMAGE_FSTYPES += " hddimg"\nMACHINE_FEATURES_append = " efi"\n'
+        self.append_config(features)
         if not Wic.image_is_ready:
             # build core-image-minimal with required features
-            features = 'IMAGE_FSTYPES += " hddimg"\nMACHINE_FEATURES_append = " efi"\n'
-            self.append_config(features)
             bitbake('core-image-minimal')
             # set this class variable to avoid buiding image many times
             Wic.image_is_ready = True
