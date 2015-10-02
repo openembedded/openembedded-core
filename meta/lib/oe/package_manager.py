@@ -434,24 +434,30 @@ class OpkgPkgsList(PkgsList):
                 (self.opkg_cmd, self.opkg_args)
 
         try:
-            output = subprocess.check_output(cmd, stderr=subprocess.STDOUT, shell=True).strip()
+            # bb.note(cmd)
+            tmp_output = subprocess.check_output(cmd, stderr=subprocess.STDOUT, shell=True).strip()
+
         except subprocess.CalledProcessError as e:
             bb.fatal("Cannot get the installed packages list. Command '%s' "
                      "returned %d:\n%s" % (cmd, e.returncode, e.output))
 
-        if output and format == "file":
-            tmp_output = ""
-            for line in output.split('\n'):
+        output = list()
+        for line in tmp_output.split('\n'):
+            if len(line.strip()) == 0:
+                continue
+            if format == "file":
                 pkg, pkg_file, pkg_arch = line.split()
                 full_path = os.path.join(self.rootfs_dir, pkg_arch, pkg_file)
                 if os.path.exists(full_path):
-                    tmp_output += "%s %s %s\n" % (pkg, full_path, pkg_arch)
+                    output.append('%s %s %s' % (pkg, full_path, pkg_arch))
                 else:
-                    tmp_output += "%s %s %s\n" % (pkg, pkg_file, pkg_arch)
+                    output.append('%s %s %s' % (pkg, pkg_file, pkg_arch))
+            else:
+                output.append(line)
 
-            output = tmp_output
+        output.sort()
 
-        return output
+        return '\n'.join(output)
 
 
 class DpkgPkgsList(PkgsList):
