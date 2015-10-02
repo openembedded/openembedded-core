@@ -605,6 +605,7 @@ def _get_patchset_revs(args, srctree, recipe_path):
                 commits.append(line.split(':')[-1].strip())
 
     update_rev = initial_rev
+    changed_revs = None
     if initial_rev:
         # Find first actually changed revision
         stdout, _ = bb.process.run('git rev-list --reverse %s..HEAD' %
@@ -614,7 +615,21 @@ def _get_patchset_revs(args, srctree, recipe_path):
             if newcommits[i] == commits[i]:
                 update_rev = commits[i]
 
-    return initial_rev, update_rev
+        try:
+            stdout, _ = bb.process.run('git cherry devtool-patched',
+                                        cwd=srctree)
+        except bb.process.ExecutionError as err:
+            stdout = None
+
+        if stdout is not None:
+            changed_revs = []
+            for line in stdout.splitlines():
+                if line.startswith('+ '):
+                    rev = line.split()[1]
+                    if rev in newcommits:
+                        changed_revs.append(rev)
+
+    return initial_rev, update_rev, changed_revs
 
 def _remove_file_entries(srcuri, filelist):
     """Remove file:// entries from SRC_URI"""
@@ -835,7 +850,7 @@ def _update_recipe_patch(args, config, srctree, rd, config_data):
         raise DevtoolError('unable to find workspace bbappend for recipe %s' %
                            args.recipename)
 
-    initial_rev, update_rev = _get_patchset_revs(args, srctree, append)
+    initial_rev, update_rev, changed_revs = _get_patchset_revs(args, srctree, append)
     if not initial_rev:
         raise DevtoolError('Unable to find initial revision - please specify '
                            'it with --initial-rev')
@@ -888,8 +903,16 @@ def _update_recipe_patch(args, config, srctree, rd, config_data):
                 _move_file(os.path.join(local_files_dir, basepath), path)
                 updatefiles = True
             for basepath, path in upd_p.iteritems():
+                patchfn = os.path.join(patches_dir, basepath)
+                if changed_revs is not None:
+                    # Avoid updating patches that have not actually changed
+                    with open(patchfn, 'r') as f:
+                        firstlineitems = f.readline().split()
+                        if len(firstlineitems) > 1 and len(firstlineitems[1]) == 40:
+                            if not firstlineitems[1] in changed_revs:
+                                continue
                 logger.info('Updating patch %s' % basepath)
-                _move_file(os.path.join(patches_dir, basepath), path)
+                _move_file(patchfn, path)
                 updatefiles = True
             # Add any new files
             files_dir = os.path.join(os.path.dirname(recipefile),
