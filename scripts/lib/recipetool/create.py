@@ -260,6 +260,12 @@ def create_recipe(args):
 
     if args.extract_to:
         scriptutils.git_convert_standalone_clone(srctree)
+        if os.path.isdir(args.extract_to):
+            # If the directory exists we'll move the temp dir into it instead of
+            # its contents - of course, we could try to always move its contents
+            # but that is a pain if there are symlinks; the simplest solution is
+            # to just remove it first
+            os.rmdir(args.extract_to)
         shutil.move(srctree, args.extract_to)
         logger.info('Source extracted to %s' % args.extract_to)
 
