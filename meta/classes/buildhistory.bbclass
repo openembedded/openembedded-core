@@ -80,7 +80,7 @@ python buildhistory_emit_pkghistory() {
         pkginfo = PackageInfo(pkg)
         with open(histfile, "r") as f:
             for line in f:
-                lns = line.split('=')
+                lns = line.split('=', 1)
                 name = lns[0].strip()
                 value = lns[1].strip(" \t\r\n").strip('"')
                 if name == "PE":
