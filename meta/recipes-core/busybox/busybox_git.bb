@@ -44,12 +44,4 @@ SRC_URI = "git://busybox.net/busybox.git \
            file://getopts.cfg \
 "
 
-EXTRA_OEMAKE += "V=1 ARCH=${TARGET_ARCH} CROSS_COMPILE=${TARGET_PREFIX} SKIP_STRIP=y"
-
-do_install_ptest () {
-        cp -r ${B}/testsuite ${D}${PTEST_PATH}/
-        cp ${B}/.config      ${D}${PTEST_PATH}/
-        ln -s /bin/busybox   ${D}${PTEST_PATH}/busybox
-}
-
 DEFAULT_PREFERENCE = "-1"
