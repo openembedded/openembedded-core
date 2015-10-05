@@ -1146,7 +1146,7 @@ python do_qa_configure() {
         if "config.log" in files:
             if subprocess.call(statement, shell=True) == 0:
                 bb.fatal("""This autoconf log indicates errors, it looked at host include and/or library paths while determining system capabilities.
-Rerun configure task after fixing this. The path was '%s'""" % root)
+Rerun configure task after fixing this.""")
 
         if "configure.ac" in files:
             configs.append(os.path.join(root,"configure.ac"))
