@@ -157,7 +157,7 @@ python do_ar_patched() {
     # Get the ARCHIVER_OUTDIR before we reset the WORKDIR
     ar_outdir = d.getVar('ARCHIVER_OUTDIR', True)
     bb.note('Archiving the patched source...')
-    d.setVar('WORKDIR', d.getVar('ARCHIVER_WORKDIR', True))
+    d.setVar('WORKDIR', ar_outdir)
     create_tarball(d, d.getVar('S', True), 'patched', ar_outdir)
 }
 
@@ -201,6 +201,10 @@ def create_tarball(d, srcdir, suffix, ar_outdir):
     create the tarball from srcdir
     """
     import tarfile
+
+    # Make sure we are only creating a single tarball for gcc sources
+    if d.getVar('SRC_URI', True) == "" and 'gcc' in d.getVar('PN', True):
+        return
 
     bb.utils.mkdirhier(ar_outdir)
     tarname = os.path.join(ar_outdir, '%s-%s.tar.gz' % \
@@ -246,11 +250,9 @@ python do_unpack_and_patch() {
             [ 'patched', 'configured'] and \
             d.getVarFlag('ARCHIVER_MODE', 'diff', True) != '1':
         return
-
-    ar_outdir = d.getVar('ARCHIVER_OUTDIR', True)
-
     # Change the WORKDIR to make do_unpack do_patch run in another dir.
-    d.setVar('WORKDIR', d.getVar('ARCHIVER_WORKDIR', True))
+    ar_outdir = d.getVar('ARCHIVER_OUTDIR', True)
+    d.setVar('WORKDIR', ar_outdir)
 
     # The changed 'WORKDIR' also casued 'B' changed, create dir 'B' for the
     # possibly requiring of the following tasks (such as some recipes's
@@ -270,7 +272,11 @@ python do_unpack_and_patch() {
         src = d.getVar('S', True).rstrip('/')
         src_orig = '%s.orig' % src
         oe.path.copytree(src, src_orig)
-    bb.build.exec_func('do_patch', d)
+
+    # Make sure gcc sources are patched only once
+    if not ((d.getVar('SRC_URI', True) == "" and 'gcc' in d.getVar('PN', True))):
+        bb.build.exec_func('do_patch', d)
+
     # Create the patches
     if d.getVarFlag('ARCHIVER_MODE', 'diff', True) == '1':
         bb.note('Creating diff gz...')
@@ -341,7 +347,6 @@ do_deploy_archives[sstate-inputdirs] = "${ARCHIVER_TOPDIR}"
 do_deploy_archives[sstate-outputdirs] = "${DEPLOY_DIR_SRC}"
 
 addtask do_ar_original after do_unpack
-addtask do_unpack_and_patch after do_patch
 addtask do_ar_patched after do_unpack_and_patch
 addtask do_ar_configured after do_unpack_and_patch
 addtask do_dumpdata
@@ -353,4 +358,12 @@ do_deploy_all_archives[recrdeptask] = "do_deploy_archives"
 do_deploy_all_archives[recideptask] = "do_${BB_DEFAULT_TASK}"
 do_deploy_all_archives() {
         :
+}
+
+python () {
+    # Add tasks in the correct order, specifically for linux-yocto to avoid race condition
+    if bb.data.inherits_class('kernel-yocto', d):
+        bb.build.addtask('do_kernel_configme', 'do_configure', 'do_unpack_and_patch', d)
+    else:
+        bb.build.addtask('do_unpack_and_patch', None, 'do_patch', d)
 }
