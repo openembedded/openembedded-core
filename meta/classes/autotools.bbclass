@@ -83,7 +83,9 @@ CONFIGURE_SCRIPT ?= "${AUTOTOOLS_SCRIPT_PATH}/configure"
 AUTOTOOLS_AUXDIR ?= "${AUTOTOOLS_SCRIPT_PATH}"
 
 oe_runconf () {
-	cfgscript="${CONFIGURE_SCRIPT}"
+	# Use relative path to avoid buildpaths in files
+	cfgscript_name="`basename ${CONFIGURE_SCRIPT}`"
+	cfgscript=`python -c "import os; print os.path.relpath(os.path.dirname('${CONFIGURE_SCRIPT}'), '.')"`/$cfgscript_name
 	if [ -x "$cfgscript" ] ; then
 		bbnote "Running $cfgscript ${CONFIGUREOPTS} ${EXTRA_OECONF} $@"
 		set +e
