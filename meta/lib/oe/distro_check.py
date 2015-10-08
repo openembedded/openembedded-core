@@ -10,13 +10,8 @@ def create_socket(url, d):
 
 def get_proxies(d):
     import os
-    proxykeys = ['HTTP_PROXY', 'http_proxy',
-                 'HTTPS_PROXY', 'https_proxy',
-                 'FTP_PROXY', 'ftp_proxy',
-                 'FTPS_PROXY', 'ftps_proxy',
-                 'NO_PROXY', 'no_proxy',
-                 'ALL_PROXY', 'all_proxy']
-    proxyvalues = map(lambda key: d.getVar(key, True), proxykeys)
+    proxykeys = ['http', 'https', 'ftp', 'ftps', 'no', 'all']
+    proxyvalues = map(lambda key: d.getVar(key+'_proxy', True), proxykeys)
     return dict(zip(proxykeys, proxyvalues))
 
 def get_links_from_url(url, d):
