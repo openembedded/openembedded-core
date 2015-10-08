@@ -513,7 +513,8 @@ python () {
                 if unskipped_pkgs:
                     for pkg in skipped_pkgs:
                         bb.debug(1, "SKIPPING the package " + pkg + " at do_rootfs because it's " + recipe_license)
-                        d.setVar('LICENSE_EXCLUSION-' + pkg, 1)
+                        mlprefix = d.getVar('MLPREFIX', True)
+                        d.setVar('LICENSE_EXCLUSION-' + mlprefix + pkg, 1)
                     for pkg in unskipped_pkgs:
                         bb.debug(1, "INCLUDING the package " + pkg)
                 elif all_skipped or incompatible_license(d, bad_licenses):
