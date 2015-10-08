@@ -17,14 +17,8 @@ cpan_build_do_configure () {
 		. ${STAGING_LIBDIR}/perl/config.sh
 	fi
 
-	perl Build.PL --installdirs vendor \
-				--destdir ${D} \
-				--install_path arch="${libdir}/perl" \
-				--install_path script=${bindir} \
-				--install_path bin=${bindir} \
-				--install_path bindoc=${mandir}/man1 \
-				--install_path libdoc=${mandir}/man3 \
-                                ${EXTRA_CPAN_BUILD_FLAGS}
+	perl Build.PL --installdirs vendor --destdir ${D} \
+			${EXTRA_CPAN_BUILD_FLAGS}
 
 	# Build.PLs can exit with success without generating a
 	# Build, e.g. in cases of missing configure time
