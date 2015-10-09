@@ -16,3 +16,6 @@ FILES_${PN} += " \
     ${datadir}/dbus-1 \
     ${datadir}/gcr-3 \
 "
+
+# http://errors.yoctoproject.org/Errors/Details/20229/
+ARM_INSTRUCTION_SET = "arm"
