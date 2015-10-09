@@ -7,7 +7,7 @@ DEPENDS = "ncurses bison-native"
 inherit autotools gettext texinfo update-alternatives ptest
 
 EXTRA_AUTORECONF += "--exclude=autoheader"
-EXTRA_OECONF = "--enable-job-control"
+EXTRA_OECONF = "--enable-job-control --without-bash-malloc"
 
 ALTERNATIVE_${PN} = "sh"
 ALTERNATIVE_LINK_NAME[sh] = "${base_bindir}/sh"
