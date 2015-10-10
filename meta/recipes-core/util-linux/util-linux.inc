@@ -177,7 +177,7 @@ do_install_append_class-native () {
 	rm -f ${D}${base_sbindir}/nologin
 }
 
-ALTERNATIVE_PRIORITY = "100"
+ALTERNATIVE_PRIORITY = "50"
 
 ALTERNATIVE_${PN}  = "dmesg kill more mkswap blockdev pivot_root switch_root"
 ALTERNATIVE_${PN} += "mkfs.minix hexdump last lastb logger mesg renice wall"
