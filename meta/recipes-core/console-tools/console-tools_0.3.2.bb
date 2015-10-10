@@ -29,7 +29,7 @@ do_configure_prepend () {
 
 inherit autotools gettext update-alternatives
 
-ALTERNATIVE_PRIORITY = "100"
+ALTERNATIVE_PRIORITY = "30"
 
 bindir_progs = "chvt deallocvt fgconsole openvt"
 ALTERNATIVE_${PN} = "${bindir_progs}"
