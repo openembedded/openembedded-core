@@ -94,6 +94,7 @@ PACKAGES_DYNAMIC += "^gtk3-immodule-.* ^gtk3-printbackend-.*"
 
 ALTERNATIVE_${PN} = "gtk-update-icon-cache"
 ALTERNATIVE_TARGET[gtk-update-icon-cache] = "${bindir}/gtk-update-icon-cache-3.0"
+ALTERNATIVE_PRIORITY = "30"
 
 python populate_packages_prepend () {
     import os.path
