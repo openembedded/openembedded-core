@@ -34,7 +34,7 @@ FILES_${PN}-run-parts = "${base_bindir}/run-parts.debianutils"
 RDEPENDS_${PN} += "${PN}-run-parts"
 
 
-ALTERNATIVE_PRIORITY="100"
+ALTERNATIVE_PRIORITY="30"
 ALTERNATIVE_${PN} = "add-shell installkernel remove-shell savelog tempfile which"
 ALTERNATIVE_${PN}-run-parts = "run-parts"
 
