@@ -1,4 +1,4 @@
-DESCRIPTION = "ALSA Plugins"
+SUMMARY = "ALSA Plugins"
 HOMEPAGE = "http://alsa-project.org"
 SECTION = "multimedia"
 
