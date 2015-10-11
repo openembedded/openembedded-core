@@ -1,4 +1,4 @@
-DESCRIPTION = "Gstreamer1.0 package groups"
+SUMMARY = "Gstreamer1.0 package groups"
 LICENSE = "MIT"
 
 inherit packagegroup
