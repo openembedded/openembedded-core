@@ -1,3 +1,4 @@
+SUMMARY = "Library for obtaining the call-chain of a program"
 DESCRIPTION = "a portable and efficient C programming interface (API) to determine the call-chain of a program"
 HOMEPAGE = "http://www.nongnu.org/libunwind"
 LICENSE = "MIT"
