@@ -1,6 +1,6 @@
 # note that we allow for us to use data later than our code version
 #
-DESCRIPTION = "tzcode, timezone zoneinfo utils -- zic, zdump, tzselect"
+SUMMARY = "tzcode, timezone zoneinfo utils -- zic, zdump, tzselect"
 LICENSE = "PD & BSD"
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/README;md5=d0ff93a73dd5bc3c6e724bb4343760f6"
