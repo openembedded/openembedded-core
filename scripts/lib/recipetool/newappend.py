@@ -32,11 +32,6 @@ logger = logging.getLogger('recipetool')
 tinfoil = None
 
 
-def plugin_init(pluginlist):
-    # Don't need to do anything here right now, but plugins must have this function defined
-    pass
-
-
 def tinfoil_init(instance):
     global tinfoil
     tinfoil = instance

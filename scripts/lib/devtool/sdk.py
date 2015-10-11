@@ -11,10 +11,6 @@ from devtool import exec_build_env_command, setup_tinfoil, DevtoolError
 
 logger = logging.getLogger('devtool')
 
-def plugin_init(pluginlist):
-    """Plugin initialization"""
-    pass
-
 def parse_locked_sigs(sigfile_path):
     """Return <pn:task>:<hash> dictionary"""
     sig_dict = {}

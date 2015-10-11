@@ -25,10 +25,6 @@ from devtool import exec_build_env_command, check_workspace_recipe, DevtoolError
 
 logger = logging.getLogger('devtool')
 
-def plugin_init(pluginlist):
-    """Plugin initialization"""
-    pass
-
 def _create_conf_file(values, conf_file=None):
     if not conf_file:
         fd, conf_file = tempfile.mkstemp(suffix='.conf')

@@ -24,10 +24,6 @@ from devtool import exec_build_env_command, setup_tinfoil, check_workspace_recip
 
 logger = logging.getLogger('devtool')
 
-def plugin_init(pluginlist):
-    """Plugin initialization"""
-    pass
-
 def package(args, config, basepath, workspace):
     """Entry point for the devtool 'package' subcommand"""
     check_workspace_recipe(workspace, args.recipename)
