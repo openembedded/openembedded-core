@@ -1,4 +1,4 @@
-DESCRIPTION = "Yocto Kernel"
+SUMMARY = "Linux kernel"
 SECTION = "kernel"
 LICENSE = "GPLv2"
 
