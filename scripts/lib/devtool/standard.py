@@ -1166,7 +1166,7 @@ def register_commands(subparsers, context):
     parser_extract.add_argument('srctree', help='Path to where to extract the source tree')
     parser_extract.add_argument('--branch', '-b', default="devtool", help='Name for development branch to checkout')
     parser_extract.add_argument('--keep-temp', action="store_true", help='Keep temporary directory (for debugging)')
-    parser_extract.set_defaults(func=extract)
+    parser_extract.set_defaults(func=extract, no_workspace=True)
 
     parser_sync = subparsers.add_parser('sync', help='Synchronize the source for an existing recipe',
                                        description='Synchronize the source for an existing recipe',

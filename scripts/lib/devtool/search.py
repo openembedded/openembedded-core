@@ -77,4 +77,4 @@ def register_commands(subparsers, context):
     parser_search = subparsers.add_parser('search', help='Search available recipes',
                                             description='Searches for available target recipes. Matches on recipe name, package name, description and installed files, and prints the recipe name on match.')
     parser_search.add_argument('keyword', help='Keyword to search for (regular expression syntax allowed)')
-    parser_search.set_defaults(func=search)
+    parser_search.set_defaults(func=search, no_workspace=True)
