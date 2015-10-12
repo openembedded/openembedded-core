@@ -1015,3 +1015,15 @@ class DevtoolTests(DevtoolBase):
         self.track_for_cleanup(tempdir)
         self.track_for_cleanup(self.workspacedir)
         self.add_command_to_tearDown('bitbake-layers remove-layer */workspace')
+
+    def test_devtool_layer_plugins(self):
+        """Test that devtool can use plugins from other layers.
+
+        This test executes the selftest-reverse command from meta-selftest."""
+
+        self.track_for_cleanup(self.workspacedir)
+        self.add_command_to_tearDown('bitbake-layers remove-layer */workspace')
+
+        s = "Microsoft Made No Profit From Anyone's Zunes Yo"
+        result = runCmd("devtool --quiet selftest-reverse \"%s\"" % s)
+        self.assertEqual(result.output, s[::-1])
