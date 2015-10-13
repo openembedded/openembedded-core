@@ -30,9 +30,6 @@ SRC_URI = "http://www.busybox.net/downloads/busybox-${PV}.tar.bz2;name=tarball \
            file://login-utilities.cfg \
            file://recognize_connmand.patch \
            file://busybox-cross-menuconfig.patch \
-           file://0001-Switch-to-POSIX-utmpx-API.patch \
-           file://0001-ifconfig-fix-double-free-fatal-error-in-INET_sprint.patch \
-           file://0001-chown-fix-help-text.patch \
            file://0001-Use-CC-when-linking-instead-of-LD-and-use-CFLAGS-and.patch \
            file://0002-Passthrough-r-to-linker.patch \
            file://mount-via-label.cfg \
@@ -41,5 +38,5 @@ SRC_URI = "http://www.busybox.net/downloads/busybox-${PV}.tar.bz2;name=tarball \
            file://getopts.cfg \
 "
 
-SRC_URI[tarball.md5sum] = "7925683d7dd105aabe9b6b618d48cc73"
-SRC_URI[tarball.sha256sum] = "05a6f9e21aad8c098e388ae77de7b2361941afa7157ef74216703395b14e319a"
+SRC_URI[tarball.md5sum] = "be98a40cadf84ce2d6b05fa41a275c6a"
+SRC_URI[tarball.sha256sum] = "37d03132cc078937360b392170b7a1d0e5b322eee9f57c0b82292a8b1f0afe3d"
