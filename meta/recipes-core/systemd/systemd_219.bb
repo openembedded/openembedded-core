@@ -43,6 +43,7 @@ SRC_URI = "git://github.com/systemd/systemd-stable;branch=v219-stable;protocol=g
            file://0012-systemd-tmpfiles.c-Honor-ordering-within-files-as-th.patch \
            file://0014-Revert-rules-remove-firmware-loading-rules.patch \
            file://0015-Revert-udev-remove-userspace-firmware-loading-suppor.patch \
+           file://0016-networkd-fix-IFF_UP-when-ipv6-support-is-disabled.patch \
            file://tmpfiles-pam.patch \
            file://0001-Revert-core-mount-add-dependencies-to-dynamically-mo.patch \
            file://touchscreen.rules \

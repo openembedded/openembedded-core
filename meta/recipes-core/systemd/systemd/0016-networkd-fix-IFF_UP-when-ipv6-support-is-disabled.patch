@@ -1,0 +1,78 @@
+From b1362f4f60f192aa62effd9c19e0d98b68050f5a Mon Sep 17 00:00:00 2001
+From: Tom Gundersen <teg@jklm.no>
+Date: Tue, 8 Sep 2015 12:53:46 +0200
+Subject: [PATCH] networkd: fix IFF_UP when ipv6 support is disabled
+
+Passing ipv6 options (even when they should be noops) caused IFF_UP to
+fail when ipv6 was supported.
+
+Fixes: https://bugs.freedesktop.org/show_bug.cgi?id=90103
+
+(Backport from v220 to v219)
+Signed-off-by: Stefan Christ <s.christ@phytec.de>
+---
+ src/network/networkd-link.c | 43 +++++++++++++++++++++++--------------------
+ 1 file changed, 23 insertions(+), 20 deletions(-)
+
+diff --git a/src/network/networkd-link.c b/src/network/networkd-link.c
+index f716e82..1aa1550 100644
+--- a/src/network/networkd-link.c
++++ b/src/network/networkd-link.c
+@@ -1104,31 +1104,34 @@ static int link_up(Link *link) {
+                 return r;
+         }
+ 
+-        r = sd_rtnl_message_open_container(req, AF_INET6);
+-        if (r < 0) {
+-                log_link_error(link, "Could not open AF_INET6 container: %s", strerror(-r));
+-                return r;
+-        }
+-
+-        ipv6ll_mode = link_ipv6ll_enabled(link) ? IN6_ADDR_GEN_MODE_EUI64 : IN6_ADDR_GEN_MODE_NONE;
+-        r = sd_rtnl_message_append_u8(req, IFLA_INET6_ADDR_GEN_MODE, ipv6ll_mode);
+-        if (r < 0) {
+-                log_link_error(link, "Could not append IFLA_INET6_ADDR_GEN_MODE: %s", strerror(-r));
+-                return r;
+-        }
++        if (socket_ipv6_is_supported()) {
++                /* if the kernel lacks ipv6 support setting IFF_UP fails if any ipv6 options are passed */
++                r = sd_rtnl_message_open_container(req, AF_INET6);
++                if (r < 0) {
++                        log_link_error(link, "Could not open AF_INET6 container: %s", strerror(-r));
++                        return r;
++                }
+ 
+-        if (!in_addr_is_null(AF_INET6, &link->network->ipv6_token)) {
+-                r = sd_rtnl_message_append_in6_addr(req, IFLA_INET6_TOKEN, &link->network->ipv6_token.in6);
++                ipv6ll_mode = link_ipv6ll_enabled(link) ? IN6_ADDR_GEN_MODE_EUI64 : IN6_ADDR_GEN_MODE_NONE;
++                r = sd_rtnl_message_append_u8(req, IFLA_INET6_ADDR_GEN_MODE, ipv6ll_mode);
+                 if (r < 0) {
+-                        log_link_error(link, "Could not append IFLA_INET6_TOKEN: %s", strerror(-r));
++                        log_link_error(link, "Could not append IFLA_INET6_ADDR_GEN_MODE: %s", strerror(-r));
+                         return r;
+                 }
+-        }
+ 
+-        r = sd_rtnl_message_close_container(req);
+-        if (r < 0) {
+-                log_link_error(link, "Could not close AF_INET6 container: %s", strerror(-r));
+-                return r;
++                if (!in_addr_is_null(AF_INET6, &link->network->ipv6_token)) {
++                        r = sd_rtnl_message_append_in6_addr(req, IFLA_INET6_TOKEN, &link->network->ipv6_token.in6);
++                        if (r < 0) {
++                                log_link_error(link, "Could not append IFLA_INET6_TOKEN: %s", strerror(-r));
++                                return r;
++                        }
++                }
++
++                r = sd_rtnl_message_close_container(req);
++                if (r < 0) {
++                        log_link_error(link, "Could not close AF_INET6 container: %s", strerror(-r));
++                        return r;
++                }
+         }
+ 
+         r = sd_rtnl_message_close_container(req);
+-- 
+1.9.1
+
