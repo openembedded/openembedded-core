@@ -3,7 +3,7 @@ From: Bruce Ashfield <bruce.ashfield@windriver.com>
 Date: Mon, 11 Jun 2012 15:31:42 -0400
 Subject: [PATCH] linux: version tweak
 
-Upstream-Status: Inapproriate [example code]
+Upstream-Status: Inappropriate [example code]
 
 Signed-off-by: Bruce Ashfield <bruce.ashfield@windriver.com>
 Signed-off-by: Saul Wold <sgw@linux.intel.com>
