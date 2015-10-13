@@ -54,14 +54,16 @@ class ImageDepGraph(object):
             base_type = self._image_base_type(node)
             deps = (self.d.getVar('IMAGE_TYPEDEP_' + node, True) or "")
             base_deps = (self.d.getVar('IMAGE_TYPEDEP_' + base_type, True) or "")
-            if deps != "" or base_deps != "":
-                graph[node] = deps
 
-                for dep in deps.split() + base_deps.split():
-                    if not dep in graph:
-                        add_node(dep)
-            else:
-                graph[node] = ""
+            graph[node] = ""
+            for dep in deps.split() + base_deps.split():
+                if not dep in graph[node]:
+                    if graph[node] != "":
+                        graph[node] += " "
+                    graph[node] += dep
+
+                if not dep in graph:
+                    add_node(dep)
 
         for fstype in image_fstypes:
             add_node(fstype)
