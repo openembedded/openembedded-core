@@ -225,6 +225,9 @@ def extract(args, config, basepath, workspace):
     import bb
 
     tinfoil = _prep_extract_operation(config, basepath, args.recipename)
+    if not tinfoil:
+        # Error already shown
+        return 1
 
     rd = parse_recipe(config, tinfoil, args.recipename, True)
     if not rd:
@@ -271,6 +274,8 @@ def _prep_extract_operation(config, basepath, recipename):
        trying to extract a package. Returns the tinfoil instance to be used."""
     tinfoil = setup_tinfoil(basepath=basepath)
     rd = parse_recipe(config, tinfoil, recipename, True)
+    if not rd:
+        return None
 
     if bb.data.inherits_class('kernel-yocto', rd):
         tinfoil.shutdown()
@@ -500,6 +505,9 @@ def modify(args, config, basepath, workspace):
                            args.srctree)
     if args.extract:
         tinfoil = _prep_extract_operation(config, basepath, args.recipename)
+        if not tinfoil:
+            # Error already shown
+            return 1
     else:
         tinfoil = setup_tinfoil(basepath=basepath)
 
