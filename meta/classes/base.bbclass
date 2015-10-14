@@ -391,7 +391,8 @@ python () {
             items = flagval.split(",")
             num = len(items)
             if num > 4:
-                bb.error("Only enable,disable,depend,rdepend can be specified!")
+                bb.error("%s: PACKAGECONFIG[%s] Only enable,disable,depend,rdepend can be specified!"
+                    % (d.getVar('PN', True), flag))
 
             if flag in pkgconfig:
                 if num >= 3 and items[2]:
