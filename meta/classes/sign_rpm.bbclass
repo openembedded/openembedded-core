@@ -12,6 +12,8 @@
 # GPG_BIN
 #           Optional variable for specifying the gpg binary/wrapper to use for
 #           signing.
+# GPG_PATH
+#           Optional variable for specifying the gnupg "home" directory:
 #
 inherit sanity
 
@@ -41,6 +43,8 @@ def rpmsign_wrapper(d, files, passphrase, gpg_name=None):
                                "(e.g. in  ~/.oerpmmacros", d)
     if d.getVar('GPG_BIN', True):
         cmd += "--define '%%__gpg %s' " % d.getVar('GPG_BIN', True)
+    if d.getVar('GPG_PATH', True):
+        cmd += "--define '_gpg_path %s' " % d.getVar('GPG_PATH', True)
     cmd += ' '.join(files)
 
     # Need to use pexpect for feeding the passphrase
