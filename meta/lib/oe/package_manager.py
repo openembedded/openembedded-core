@@ -133,8 +133,11 @@ class RpmIndexer(Indexer):
             if pkgfeed_gpg_name:
                 repomd_file = os.path.join(arch_dir, 'repodata', 'repomd.xml')
                 gpg_cmd = "%s --detach-sign --armor --batch --no-tty --yes " \
-                          "--passphrase-file '%s' -u '%s' %s" % (gpg_bin,
-                          pkgfeed_gpg_pass, pkgfeed_gpg_name, repomd_file)
+                          "--passphrase-file '%s' -u '%s' " % \
+                          (gpg_bin, pkgfeed_gpg_pass, pkgfeed_gpg_name)
+                if self.d.getVar('GPG_PATH', True):
+                    gpg_cmd += "--homedir %s " % self.d.getVar('GPG_PATH', True)
+                gpg_cmd += repomd_file
                 repo_sign_cmds.append(gpg_cmd)
 
             rpm_dirs_found = True
