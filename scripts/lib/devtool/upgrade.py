@@ -300,7 +300,13 @@ def upgrade(args, config, basepath, workspace):
     if not rd:
         return 1
 
-    standard._check_compatible_recipe(args.recipename, rd)
+    pn = rd.getVar('PN', True)
+    if pn != args.recipename:
+        logger.info('Mapping %s to %s' % (args.recipename, pn))
+    if pn in workspace:
+        raise DevtoolError("recipe %s is already in your workspace" % pn)
+
+    standard._check_compatible_recipe(pn, rd)
     if rd.getVar('PV', True) == args.version and rd.getVar('SRCREV', True) == args.srcrev:
         raise DevtoolError("Current and upgrade versions are the same version" % version)
 
@@ -315,11 +321,11 @@ def upgrade(args, config, basepath, workspace):
         _upgrade_error(e, rf, args.srctree)
     except DevtoolError as e:
         _upgrade_error(e, rf, args.srctree)
-    standard._add_md5(config, args.recipename, os.path.dirname(rf))
+    standard._add_md5(config, pn, os.path.dirname(rf))
 
     af = _write_append(rf, args.srctree, args.same_dir, args.no_same_dir, rev2,
                        config.workspace_path, rd)
-    standard._add_md5(config, args.recipename, af)
+    standard._add_md5(config, pn, af)
     logger.info('Upgraded source extracted to %s' % args.srctree)
     return 0
 

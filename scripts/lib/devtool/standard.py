@@ -45,6 +45,10 @@ def add(args, config, basepath, workspace):
     if reason:
         raise DevtoolError(reason)
 
+    # FIXME this ought to be in validate_pn but we're using that in other contexts
+    if '/' in args.recipename:
+        raise DevtoolError('"/" is not a valid character in recipe names')
+
     srctree = os.path.abspath(args.srctree)
     if os.path.exists(srctree):
         if args.fetch:
@@ -514,6 +518,14 @@ def modify(args, config, basepath, workspace):
     rd = parse_recipe(config, tinfoil, args.recipename, True)
     if not rd:
         return 1
+
+    pn = rd.getVar('PN', True)
+    if pn != args.recipename:
+        logger.info('Mapping %s to %s' % (args.recipename, pn))
+    if pn in workspace:
+        raise DevtoolError("recipe %s is already in your workspace" %
+                           pn)
+
     recipefile = rd.getVar('FILE', True)
     appendname = os.path.splitext(os.path.basename(recipefile))[0]
     if args.wildcard:
@@ -524,9 +536,9 @@ def modify(args, config, basepath, workspace):
         raise DevtoolError("Another variant of recipe %s is already in your "
                            "workspace (only one variant of a recipe can "
                            "currently be worked on at once)"
-                           % args.recipename)
+                           % pn)
 
-    _check_compatible_recipe(args.recipename, rd)
+    _check_compatible_recipe(pn, rd)
 
     initial_rev = None
     commits = []
@@ -574,11 +586,11 @@ def modify(args, config, basepath, workspace):
 
         f.write('\ninherit externalsrc\n')
         f.write('# NOTE: We use pn- overrides here to avoid affecting multiple variants in the case where the recipe uses BBCLASSEXTEND\n')
-        f.write('EXTERNALSRC_pn-%s = "%s"\n' % (args.recipename, srctree))
+        f.write('EXTERNALSRC_pn-%s = "%s"\n' % (pn, srctree))
 
         b_is_s = use_external_build(args.same_dir, args.no_same_dir, rd)
         if b_is_s:
-            f.write('EXTERNALSRC_BUILD_pn-%s = "%s"\n' % (args.recipename, srctree))
+            f.write('EXTERNALSRC_BUILD_pn-%s = "%s"\n' % (pn, srctree))
 
         if bb.data.inherits_class('kernel', rd):
             f.write('SRCTREECOVEREDTASKS = "do_validate_branches do_kernel_checkout do_fetch do_unpack"\n')
@@ -587,9 +599,9 @@ def modify(args, config, basepath, workspace):
             for commit in commits:
                 f.write('# commit: %s\n' % commit)
 
-    _add_md5(config, args.recipename, appendfile)
+    _add_md5(config, pn, appendfile)
 
-    logger.info('Recipe %s now set up to build from %s' % (args.recipename, srctree))
+    logger.info('Recipe %s now set up to build from %s' % (pn, srctree))
 
     return 0
 

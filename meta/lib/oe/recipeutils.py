@@ -31,9 +31,13 @@ def pn_to_recipe(cooker, pn):
     import bb.providers
 
     if pn in cooker.recipecache.pkg_pn:
-        filenames = cooker.recipecache.pkg_pn[pn]
         best = bb.providers.findBestProvider(pn, cooker.data, cooker.recipecache, cooker.recipecache.pkg_pn)
         return best[3]
+    elif pn in cooker.recipecache.providers:
+        filenames = cooker.recipecache.providers[pn]
+        eligible, foundUnique = bb.providers.filterProviders(filenames, pn, cooker.expanded_data, cooker.recipecache)
+        filename = eligible[0]
+        return filename
     else:
         return None
 
