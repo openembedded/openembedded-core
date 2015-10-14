@@ -100,18 +100,20 @@ def setup_tinfoil(config_only=False, basepath=None, tracking=False):
     """Initialize tinfoil api from bitbake"""
     import scriptpath
     orig_cwd = os.path.abspath(os.curdir)
-    if basepath:
-        os.chdir(basepath)
-    bitbakepath = scriptpath.add_bitbake_lib_path()
-    if not bitbakepath:
-        logger.error("Unable to find bitbake by searching parent directory of this script or PATH")
-        sys.exit(1)
+    try:
+        if basepath:
+            os.chdir(basepath)
+        bitbakepath = scriptpath.add_bitbake_lib_path()
+        if not bitbakepath:
+            logger.error("Unable to find bitbake by searching parent directory of this script or PATH")
+            sys.exit(1)
 
-    import bb.tinfoil
-    tinfoil = bb.tinfoil.Tinfoil(tracking=tracking)
-    tinfoil.prepare(config_only)
-    tinfoil.logger.setLevel(logger.getEffectiveLevel())
-    os.chdir(orig_cwd)
+        import bb.tinfoil
+        tinfoil = bb.tinfoil.Tinfoil(tracking=tracking)
+        tinfoil.prepare(config_only)
+        tinfoil.logger.setLevel(logger.getEffectiveLevel())
+    finally:
+        os.chdir(orig_cwd)
     return tinfoil
 
 def get_recipe_file(cooker, pn):
