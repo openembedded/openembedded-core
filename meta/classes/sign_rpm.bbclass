@@ -55,8 +55,11 @@ def rpmsign_wrapper(d, files, passphrase, gpg_name=None):
         proc.expect(pexpect.EOF, timeout=900)
         proc.close()
     except pexpect.TIMEOUT as err:
-        bb.debug('rpmsign timeout: %s' % err)
+        bb.warn('rpmsign timeout: %s' % err)
         proc.terminate()
+    else:
+        if os.WEXITSTATUS(proc.status) or not os.WIFEXITED(proc.status):
+            bb.warn('rpmsign failed: %s' % proc.before.strip())
     return proc.exitstatus
 
 
