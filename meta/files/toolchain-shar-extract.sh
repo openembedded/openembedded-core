@@ -183,7 +183,7 @@ fi
 echo "SDK has been successfully set up and is ready to be used."
 echo "Each time you wish to use the SDK in a new shell session, you need to source the environment setup script e.g."
 for env_setup_script in `ls $target_sdk_dir/environment-setup-*`; do
-	echo " \$ . $target_sdk_dir/$env_setup_script"
+	echo " \$ . $env_setup_script"
 done
 
 exit 0
