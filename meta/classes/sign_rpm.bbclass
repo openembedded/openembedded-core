@@ -4,8 +4,7 @@
 # RPM_GPG_PASSPHRASE_FILE
 #           Path to a file containing the passphrase of the signing key.
 # RPM_GPG_NAME
-#           Name of the key to sign with. Alternatively you can define
-#           %_gpg_name macro in your ~/.oerpmmacros file.
+#           Name of the key to sign with. May be key id or key name.
 # RPM_GPG_PUBKEY
 #           Path to a file containing the public key (in "armor" format)
 #           corresponding the signing key.
@@ -20,9 +19,11 @@ inherit sanity
 RPM_SIGN_PACKAGES='1'
 
 
-_check_gpg_name () {
-    macrodef=`rpm -E '%_gpg_name'`
-    [ "$macrodef" == "%_gpg_name" ] && return 1 || return 0
+python () {
+    # Check configuration
+    for var in ('RPM_GPG_NAME', 'RPM_GPG_PASSPHRASE_FILE'):
+        if not d.getVar(var, True):
+            raise_sanity_error("You need to define %s in the config" % var, d)
 }
 
 
@@ -31,16 +32,7 @@ def rpmsign_wrapper(d, files, passphrase, gpg_name=None):
 
     # Find the correct rpm binary
     rpm_bin_path = d.getVar('STAGING_BINDIR_NATIVE', True) + '/rpm'
-    cmd = rpm_bin_path + " --addsign "
-    if gpg_name:
-        cmd += "--define '%%_gpg_name %s' " % gpg_name
-    else:
-        try:
-            bb.build.exec_func('_check_gpg_name', d)
-        except bb.build.FuncFailed:
-            raise_sanity_error("You need to define RPM_GPG_NAME in bitbake "
-                               "config or the %_gpg_name RPM macro defined "
-                               "(e.g. in  ~/.oerpmmacros", d)
+    cmd = rpm_bin_path + " --addsign --define '_gpg_name %s' " % gpg_name
     if d.getVar('GPG_BIN', True):
         cmd += "--define '%%__gpg %s' " % d.getVar('GPG_BIN', True)
     if d.getVar('GPG_PATH', True):
@@ -66,12 +58,8 @@ def rpmsign_wrapper(d, files, passphrase, gpg_name=None):
 python sign_rpm () {
     import glob
 
-    rpm_gpg_pass_file = (d.getVar("RPM_GPG_PASSPHRASE_FILE", True) or "")
-    if rpm_gpg_pass_file:
-        with open(rpm_gpg_pass_file) as fobj:
-            rpm_gpg_passphrase = fobj.readlines()[0].rstrip('\n')
-    else:
-        raise_sanity_error("You need to define RPM_GPG_PASSPHRASE_FILE in the config", d)
+    with open(d.getVar("RPM_GPG_PASSPHRASE_FILE", True)) as fobj:
+        rpm_gpg_passphrase = fobj.readlines()[0].rstrip('\n')
 
     rpm_gpg_name = (d.getVar("RPM_GPG_NAME", True) or "")
 
