@@ -29,7 +29,7 @@ python do_compile () {
         for field in d.getVar('OS_RELEASE_FIELDS', True).split():
             value = d.getVar(field, True)
             if value:
-                f.write('{0}={1}\n'.format(field, value))
+                f.write('{0}="{1}"\n'.format(field, value))
     if d.getVar('RPM_SIGN_PACKAGES', True) == '1':
         rpm_gpg_pubkey = d.getVar('RPM_GPG_PUBKEY', True)
         bb.utils.mkdirhier('${B}/rpm-gpg')
