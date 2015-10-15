@@ -196,6 +196,12 @@ class oeRuntimeTest(oeTest):
             print ("%s dump data stored in %s" % (self._testMethodName,
                      self.tc.host_dumper.dump_dir))
 
+        self.tearDownLocal()
+
+    # Method to be run after tearDown and implemented by child classes
+    def tearDownLocal(self):
+        pass
+
     #TODO: use package_manager.py to install packages on any type of image
     def install_packages(self, packagelist):
         for package in packagelist:
