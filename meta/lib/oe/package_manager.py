@@ -203,6 +203,8 @@ class OpkgIndexer(Indexer):
         result = oe.utils.multiprocess_exec(index_cmds, create_index)
         if result:
             bb.fatal('%s' % ('\n'.join(result)))
+        if self.d.getVar('PACKAGE_FEED_SIGN', True) == '1':
+            raise NotImplementedError('Package feed signing not implementd for ipk')
 
 
 
@@ -278,6 +280,8 @@ class DpkgIndexer(Indexer):
         result = oe.utils.multiprocess_exec(index_cmds, create_index)
         if result:
             bb.fatal('%s' % ('\n'.join(result)))
+        if self.d.getVar('PACKAGE_FEED_SIGN', True) == '1':
+            raise NotImplementedError('Package feed signing not implementd for dpkg')
 
 
 
