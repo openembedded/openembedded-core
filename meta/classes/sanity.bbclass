@@ -843,8 +843,8 @@ def check_sanity_everybuild(status, d):
             os.chmod(tmpdir, os.stat(tmpdir).st_mode & ~ stat.S_ISUID)
             os.chmod(tmpdir, os.stat(tmpdir).st_mode & ~ stat.S_ISGID)
             os.chmod(tmpdir, os.stat(tmpdir).st_mode & ~ stat.S_ISVTX)
-        except OSError:
-            bb.warn("Unable to chmod TMPDIR: %s" % tmpdir)
+        except OSError as exc:
+            bb.warn("Unable to chmod TMPDIR: %s" % exc)
         with open(checkfile, "w") as f:
             f.write(tmpdir)
 
