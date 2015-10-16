@@ -73,7 +73,7 @@ class Configuration(object):
                 else:
                     # Apply special type transformations for some properties.
                     # Type matches the RawConfigParser.get*() methods.
-                    types = {'signoff': 'boolean'}
+                    types = {'signoff': 'boolean', 'update': 'boolean'}
                     if name in types:
                         value = getattr(parser, 'get' + types[name])(section, name)
                     self.repos[repo][name] = value
@@ -567,7 +567,7 @@ def get_repos(conf, repo_names):
             sys.exit(1)
 
     if not repos:
-        repos = conf.repos
+        repos = [ repo for repo in conf.repos if conf.repos[repo].get("update", True) ]
 
     return repos
 
