@@ -53,6 +53,8 @@ S = "${WORKDIR}/git"
 
 SRC_URI_append_libc-uclibc = "\
             file://0001-units-Prefer-getty-to-agetty-in-console-setup-system.patch \
+            file://0022-Use-getenv-when-secure-versions-are-not-available.patch \
+            file://0001-fix-build-on-uClibc-exp10.patch \
            "
 LDFLAGS_append_libc-uclibc = " -lrt"
 
