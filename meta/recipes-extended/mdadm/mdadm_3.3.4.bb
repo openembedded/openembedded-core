@@ -13,6 +13,7 @@ SRC_URI = "${KERNELORG_MIRROR}/linux/utils/raid/mdadm/${BPN}-${PV}.tar.xz \
            file://gcc-4.9.patch \
            file://mdadm-3.3.2_x32_abi_time_t.patch \
            file://0001-Fix-typo-in-comparision.patch \
+           file://mdadm-fix-ptest-build-errors.patch \
            file://run-ptest \
 	  "
 SRC_URI[md5sum] = "7ca8b114710f98f53f20c5787b674a09"
@@ -22,7 +23,7 @@ CFLAGS += "-fno-strict-aliasing"
 
 inherit autotools-brokensep
 
-EXTRA_OEMAKE = "CHECK_RUN_DIR=0"
+EXTRA_OEMAKE = 'CHECK_RUN_DIR=0 CXFLAGS="${CFLAGS}"'
 # PPC64 and MIPS64 uses long long for u64 in the kernel, but powerpc's asm/types.h
 # prevents 64-bit userland from seeing this definition, instead defaulting
 # to u64 == long in userspace. Define __SANE_USERSPACE_TYPES__ to get
