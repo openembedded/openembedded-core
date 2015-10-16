@@ -4,16 +4,16 @@ LIC_FILES_CHKSUM = "file://sqlite3.h;endline=11;md5=65f0a57ca6928710b418c094b357
 
 def sqlite_download_version(d):
     pvsplit = d.getVar('PV', True).split('.')
+    if len(pvsplit) < 4:
+        pvsplit.append('0')
     return pvsplit[0] + ''.join([part.rjust(2,'0') for part in pvsplit[1:]])
 
 PE = "3"
 SQLITE_PV = "${@sqlite_download_version(d)}"
-SRC_URI = "http://www.sqlite.org/2015/sqlite-autoconf-${SQLITE_PV}.tar.gz \
-           file://0001-using-the-dynamic-library.patch \
-"
+SRC_URI = "http://www.sqlite.org/2015/sqlite-autoconf-${SQLITE_PV}.tar.gz"
 
-SRC_URI[md5sum] = "a18bfc015cd49a1e7a961b7b77bc3b37"
-SRC_URI[sha256sum] = "8382e55a4e7d853c93038562ca3dd00307937fccf1c6b65ddd813e503a56d626"
+SRC_URI[md5sum] = "cd0f883b2ddfc29e8e1bbbbd8e85f555"
+SRC_URI[sha256sum] = "a324143f4cc35cd7e9605a0a8dec9f9e4861d0be8305f3642e7d05008b77e60d"
 
 S = "${WORKDIR}/sqlite-autoconf-${SQLITE_PV}"
 
