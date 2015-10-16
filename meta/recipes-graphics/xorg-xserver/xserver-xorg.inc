@@ -44,8 +44,7 @@ DEPENDS = "${PROTO_DEPS} ${LIB_DEPS} font-util"
 #          libextmod.so
 #          libdbe.so
 
-PACKAGES =+ "${PN}-security-policy \
-             ${PN}-sdl \
+PACKAGES =+ "${PN}-sdl \
              ${PN}-fbdev \
              ${PN}-xvfb \
              ${PN}-utils \
@@ -72,7 +71,7 @@ PACKAGES =+ "${PN}-security-policy \
 SUMMARY_xf86-video-modesetting = "X.Org X server -- modesetting display driver"
 INSANE_SKIP_xf86-video-modesetting = "xorg-driver-abi"
 
-XSERVER_RRECOMMENDS = "${PN}-security-policy xkeyboard-config rgb xserver-xf86-config xkbcomp"
+XSERVER_RRECOMMENDS = "xkeyboard-config rgb xserver-xf86-config xkbcomp"
 RRECOMMENDS_${PN} += "${XSERVER_RRECOMMENDS}"
 RRECOMMENDS_${PN}-xwayland += "${XSERVER_RRECOMMENDS}"
 RDEPENDS_${PN}-xvfb += "xkeyboard-config"
@@ -85,7 +84,6 @@ FILES_${PN}-dbg += "${libdir}/xorg/modules/.debug \
                     ${libdir}/xorg/modules/*/.debug \
                     ${libdir}/xorg/modules/*/*/.debug \
                     "
-FILES_${PN}-security-policy += "${libdir}/xserver/SecurityPolicy"
 FILES_${PN}-sdl = "${bindir}/Xsdl"
 FILES_${PN}-fbdev = "${bindir}/Xfbdev"
 FILES_${PN}-xvfb = "${bindir}/Xvfb"
