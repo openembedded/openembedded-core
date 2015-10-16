@@ -34,6 +34,10 @@ for s in sigs:
     files |= set(glob.glob(p))
 
 for f in files:
+    _, ext = os.path.splitext(f)
+    if not ext in ['.tgz', '.siginfo', '.sig']:
+        # Most likely a temp file, skip it
+        continue
     dst = f.replace(sys.argv[2], sys.argv[3])
     destdir = os.path.dirname(dst)
     mkdir(destdir)
