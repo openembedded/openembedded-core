@@ -37,6 +37,7 @@ python do_compile () {
         shutil.copy2(rpm_gpg_pubkey, d.expand('${B}/rpm-gpg/RPM-GPG-KEY-%s' % distro_version))
 }
 do_compile[vardeps] += "${OS_RELEASE_FIELDS}"
+do_compile[depends] += "signing-keys:do_export_public_keys"
 
 do_install () {
     install -d ${D}${sysconfdir}

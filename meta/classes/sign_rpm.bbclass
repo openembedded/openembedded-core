@@ -5,9 +5,6 @@
 #           Path to a file containing the passphrase of the signing key.
 # RPM_GPG_NAME
 #           Name of the key to sign with. May be key id or key name.
-# RPM_GPG_PUBKEY
-#           Path to a file containing the public key (in "armor" format)
-#           corresponding the signing key.
 # GPG_BIN
 #           Optional variable for specifying the gpg binary/wrapper to use for
 #           signing.
@@ -24,6 +21,10 @@ python () {
     for var in ('RPM_GPG_NAME', 'RPM_GPG_PASSPHRASE_FILE'):
         if not d.getVar(var, True):
             raise_sanity_error("You need to define %s in the config" % var, d)
+
+    # Set the expected location of the public key
+    d.setVar('RPM_GPG_PUBKEY', os.path.join(d.getVar('STAGING_ETCDIR_NATIVE'),
+                                            'RPM-GPG-PUBKEY'))
 }
 
 
@@ -68,3 +69,5 @@ python sign_rpm () {
     if rpmsign_wrapper(d, rpms, rpm_gpg_passphrase, rpm_gpg_name) != 0:
         raise bb.build.FuncFailed("RPM signing failed")
 }
+
+do_package_index[depends] += "signing-keys:do_export_public_keys"
