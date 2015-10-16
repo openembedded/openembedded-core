@@ -17,5 +17,7 @@ SRC_URI = "git://uclibc.org/uClibc.git;branch=master \
         file://0006-ldso-limited-support-for-ORIGIN-in-rpath.patch \
         file://0007-nptl-atfork-Hide-pthread_atfork-in-shared-versions.patch \
         file://0001-gcc5-optimizes-away-the-write-only-static-functions-.patch \
+        file://0001-fcntl-Add-AT_EMPTY_PATH-for-all-and-O_PATH-for-arm.patch \
+        file://0001-wire-in-syncfs.patch \
 "
 S = "${WORKDIR}/git"
