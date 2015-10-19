@@ -493,7 +493,7 @@ def main():
             sys.exit(1)
 
     if not os.path.exists(args.pkgdata_dir):
-        logger.error('Unable to find pkgdata directory %s' % pkgdata_dir)
+        logger.error('Unable to find pkgdata directory %s' % args.pkgdata_dir)
         sys.exit(1)
 
     ret = args.func(args)
