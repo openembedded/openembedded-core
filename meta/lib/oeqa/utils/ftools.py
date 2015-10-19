@@ -1,5 +1,6 @@
 import os
 import re
+import errno
 
 def write_file(path, data):
     wdata = data.rstrip() + "\n"
@@ -18,7 +19,15 @@ def read_file(path):
     return data
 
 def remove_from_file(path, data):
-    lines = read_file(path).splitlines()
+    try:
+        rdata = read_file(path)
+    except IOError as e:
+        # if file does not exit, just quit, otherwise raise an exception
+        if e.errno == errno.ENOENT:
+            return
+        else:
+            raise
+    lines = rdata.splitlines()
     rmdata = data.strip().splitlines()
     for l in rmdata:
         for c in range(0, lines.count(l)):
