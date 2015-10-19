@@ -156,8 +156,7 @@ SSTATE_DIR = \"${TOPDIR}/download-selftest\"
 
     @testcase(1028)
     def test_environment(self):
-        self.append_config("TEST_ENV=\"localconf\"")
-        self.addCleanup(self.remove_config, "TEST_ENV=\"localconf\"")
+        self.write_config("TEST_ENV=\"localconf\"")
         result = runCmd('bitbake -e | grep TEST_ENV=')
         self.assertTrue('localconf' in result.output, msg = "bitbake didn't report any value for TEST_ENV variable. To test, run 'bitbake -e | grep TEST_ENV='")
 
@@ -184,8 +183,7 @@ SSTATE_DIR = \"${TOPDIR}/download-selftest\"
         ftools.write_file(preconf ,"TEST_PREFILE=\"prefile\"")
         result = runCmd('bitbake -r conf/prefile.conf -e | grep TEST_PREFILE=')
         self.assertTrue('prefile' in result.output, "Preconfigure file \"prefile.conf\"was not taken into consideration. ")
-        self.append_config("TEST_PREFILE=\"localconf\"")
-        self.addCleanup(self.remove_config, "TEST_PREFILE=\"localconf\"")
+        self.write_config("TEST_PREFILE=\"localconf\"")
         result = runCmd('bitbake -r conf/prefile.conf -e | grep TEST_PREFILE=')
         self.assertTrue('localconf' in result.output, "Preconfigure file \"prefile.conf\"was not taken into consideration.")
 
@@ -194,8 +192,7 @@ SSTATE_DIR = \"${TOPDIR}/download-selftest\"
         postconf = os.path.join(self.builddir, 'conf/postfile.conf')
         self.track_for_cleanup(postconf)
         ftools.write_file(postconf , "TEST_POSTFILE=\"postfile\"")
-        self.append_config("TEST_POSTFILE=\"localconf\"")
-        self.addCleanup(self.remove_config, "TEST_POSTFILE=\"localconf\"")
+        self.write_config("TEST_POSTFILE=\"localconf\"")
         result = runCmd('bitbake -R conf/postfile.conf -e | grep TEST_POSTFILE=')
         self.assertTrue('postfile' in result.output, "Postconfigure file \"postfile.conf\"was not taken into consideration.")
 

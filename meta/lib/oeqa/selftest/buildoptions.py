@@ -39,7 +39,7 @@ class ImageOptionsTests(oeSelfTest):
         for image_file in deploydir_files:
             if imagename in image_file and os.path.islink(os.path.join(deploydir, image_file)):
                 track_original_files.append(os.path.realpath(os.path.join(deploydir, image_file)))
-        self.append_config("RM_OLD_IMAGE = \"1\"")
+        self.write_config("RM_OLD_IMAGE = \"1\"")
         bitbake("-C rootfs core-image-minimal")
         deploydir_files = os.listdir(deploydir)
         remaining_not_expected = [path for path in track_original_files if os.path.basename(path) in deploydir_files]
@@ -97,7 +97,7 @@ class SanityOptionsTest(oeSelfTest):
 
     @testcase(278)
     def test_sanity_userspace_dependency(self):
-        self.append_config('WARN_QA_append = " unsafe-references-in-binaries unsafe-references-in-scripts"')
+        self.write_config('WARN_QA_append = " unsafe-references-in-binaries unsafe-references-in-scripts"')
         bitbake("-ccleansstate gzip nfs-utils")
         res = bitbake("gzip nfs-utils")
         self.assertTrue("WARNING: QA Issue: gzip" in res.output, "WARNING: QA Issue: gzip message is not present in bitbake's output: %s" % res.output)
