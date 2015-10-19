@@ -32,6 +32,11 @@ CACHED_CONFIGUREVARS += "apr_cv_mutex_recursive=yes"
 #
 CACHED_CONFIGUREVARS += "ac_cv_header_netinet_sctp_h=no ac_cv_header_netinet_sctp_uio_h=no"
 
+# Otherwise libtool fails to compile apr-utils
+# x86_64-linux-libtool: compile: unable to infer tagged configuration
+# x86_64-linux-libtool:   error: specify a tag with '--tag'
+CCACHE = ""
+
 do_configure_prepend() {
 	# Avoid absolute paths for grep since it causes failures
 	# when using sstate between different hosts with different
