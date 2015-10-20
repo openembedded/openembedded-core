@@ -39,7 +39,6 @@
 #    packaging steps
 
 inherit packagedata
-inherit prserv
 inherit chrpath
 
 # Need the package_qa_handle_error() in insane.bbclass
