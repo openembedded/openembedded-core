@@ -279,6 +279,7 @@ class Rootfs(object):
 
         bb.note("Running intercept scripts:")
         os.environ['D'] = self.image_rootfs
+        os.environ['STAGING_DIR_NATIVE'] = self.d.getVar('STAGING_DIR_NATIVE', True)
         for script in os.listdir(intercepts_dir):
             script_full = os.path.join(intercepts_dir, script)
 
