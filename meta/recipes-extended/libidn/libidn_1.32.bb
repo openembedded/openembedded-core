@@ -19,8 +19,8 @@ SRC_URI = "${GNU_MIRROR}/libidn/${BPN}-${PV}.tar.gz \
            file://dont-depend-on-help2man.patch \
 "
 
-SRC_URI[md5sum] = "b17edc8551cd31cc5f14c82a9dabf58e"
-SRC_URI[sha256sum] = "39b9fc94d74081c185757b12e0891ce5a22db55268e7d1bb24533ff4432eb053"
+SRC_URI[md5sum] = "4dd8356ba577287ea7076bfa1554b534"
+SRC_URI[sha256sum] = "ba5d5afee2beff703a34ee094668da5c6ea5afa38784cebba8924105e185c4f5"
 
 # command tool is under GPLv3+, while libidn itself is under LGPLv2.1+ or LGPLv3
 # so package command into a separate package
