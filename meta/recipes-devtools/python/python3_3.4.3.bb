@@ -56,10 +56,7 @@ CACHED_CONFIGUREVARS = "ac_cv_have_chflags=no \
                 ac_cv_file__dev_ptmx=yes \
                 ac_cv_file__dev_ptc=no \
 "
-# The 3 lines below are copied from the libffi recipe, ctypes ships its own copy of the libffi sources
-#Somehow gcc doesn't set __SOFTFP__ when passing -mfloatabi=softp :(
-TARGET_CC_ARCH_append_armv6 = " -D__SOFTFP__"
-TARGET_CC_ARCH_append_armv7a = " -D__SOFTFP__"
+
 TARGET_CC_ARCH += "-DNDEBUG -fno-inline"
 EXTRA_OEMAKE += "CROSS_COMPILE=yes"
 EXTRA_OECONF += "CROSSPYTHONPATH=${STAGING_LIBDIR_NATIVE}/python${PYTHON_MAJMIN}/lib-dynload/ --without-ensurepip"
