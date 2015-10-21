@@ -27,7 +27,7 @@ SRC_URI = "file://filemode-fix.patch \
 
 inherit autotools pkgconfig ptest
 
-EXTRA_OECONF = "--with-kernel=${STAGING_KERNEL_DIR}  --without-x ac_cv_prog_XSLTPROC="
+EXTRA_OECONF = "--with-kernel=${STAGING_DIR_HOST}${prefix}  --without-x ac_cv_prog_XSLTPROC="
 do_configure () {
 	cp ${WORKDIR}/acinclude.m4 ${S}/
 	autotools_do_configure
