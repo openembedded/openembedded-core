@@ -32,7 +32,7 @@ WARN_QA ?= "ldflags useless-rpaths rpaths staticdev libdir xorg-driver-abi \
             installed-vs-shipped compile-host-path install-host-path \
             pn-overrides infodir build-deps file-rdeps \
             unknown-configure-option symlink-to-sysroot multilib \
-            invalid-pkgconfig host-user-contaminated \
+            invalid-packageconfig host-user-contaminated \
             "
 ERROR_QA ?= "dev-so debug-deps dev-deps debug-files arch pkgconfig la \
             perms dep-cmp pkgvarcheck perm-config perm-line perm-link \
@@ -1210,7 +1210,7 @@ Missing inherit gettext?""" % (gt, config))
             if pconfig not in pkgconfigflags:
                 pn = d.getVar('PN', True)
                 error_msg = "%s: invalid PACKAGECONFIG: %s" % (pn, pconfig)
-                package_qa_handle_error("invalid-pkgconfig", error_msg, d)
+                package_qa_handle_error("invalid-packageconfig", error_msg, d)
 }
 
 python do_qa_unpack() {
