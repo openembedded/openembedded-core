@@ -1,6 +1,6 @@
 [PATCH] assume storing is success if not sound card device
 
-Upstream-Statue: Pending
+Upstream-Status: Pending
 
 Systemd will report failure when run alsa-*, if the machine has not the
 sound card. To void this annoyed message, alsa-restore/alsa-state ignore
