@@ -7,7 +7,9 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=55ca817ccb7d5b5b66355690e9abc605"
 
 DEPENDS = "gtk+3 p11-kit glib-2.0 libgcrypt vala"
 
-inherit autotools gnomebase gtk-icon-cache gtk-doc
+inherit autotools gnomebase gtk-icon-cache gtk-doc distro_features_check
+# depends on gtk+3
+ANY_OF_DISTRO_FEATURES = "${GTK3DISTROFEATURES}"
 
 SRC_URI[archive.md5sum] = "d5835680be0b6a838e02a528d5378d9c"
 SRC_URI[archive.sha256sum] = "ecfe8df41cc88158364bb15addc670b11e539fe844742983629ba2323888d075"

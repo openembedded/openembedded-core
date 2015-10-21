@@ -1,7 +1,9 @@
 SUMMARY = "Clutter based UI widget library"
 LICENSE = "LGPLv2.1"
 
-inherit clutter autotools-brokensep
+inherit clutter autotools-brokensep distro_features_check
+# depends on clutter-1.0 which depends on cogl-1.0
+REQUIRED_DISTRO_FEATURES = "opengl"
 
 DEPENDS = "clutter-1.0 dbus-glib gdk-pixbuf"
 

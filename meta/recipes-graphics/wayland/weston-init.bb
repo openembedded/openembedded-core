@@ -11,7 +11,9 @@ do_install() {
 	install -m755 ${WORKDIR}/init ${D}/${sysconfdir}/init.d/weston
 }
 
-inherit allarch update-rc.d
+inherit allarch update-rc.d distro_features_check
+# rdepends on weston which depends on virtual/egl
+REQUIRED_DISTRO_FEATURES = "opengl"
 
 RDEPENDS_${PN} = "weston kbd"
 

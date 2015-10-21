@@ -2,7 +2,9 @@ SUMMARY = "GStreamer integration library for Clutter"
 HOMEPAGE = "http://www.clutter-project.org/"
 LICENSE = "LGPLv2+"
 
-inherit clutter
+inherit clutter distro_features_check
+# depends on clutter-1.0 which depends on cogl-1.0
+REQUIRED_DISTRO_FEATURES ?= "opengl"
 
 SRC_URI += "file://0001-Install-example-binary-needed-for-core-image-clutter.patch"
 

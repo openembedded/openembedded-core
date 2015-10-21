@@ -2,7 +2,9 @@ SUMMARY = "Graphics library for creating hardware-accelerated user interfaces"
 HOMEPAGE = "http://www.clutter-project.org/"
 LICENSE = "LGPLv2.1+"
 
-inherit clutter ptest-gnome
+inherit clutter ptest-gnome distro_features_check
+# depends on cogl-1.0 which needs opengl
+REQUIRED_DISTRO_FEATURES ?= "opengl"
 
 DEPENDS = "pango glib-2.0 json-glib atk udev cogl-1.0"
 PACKAGE_BEFORE_PN += "${PN}-examples"

@@ -11,7 +11,9 @@ SRCREV = "4b317648ec6cf39556a9e5d8078f605bc0edd5de"
 
 S = "${WORKDIR}/git"
 
-inherit waf
+inherit waf distro_features_check
+# depends on virtual/egl
+REQUIRED_DISTRO_FEATURES ?= "opengl"
 
 # BSP layers should add .bbappend files for the -x11 and -fb .bb recipes, which
 # append the respective EGL/OpenGLES/OpenVG libraries to DEPENDS and set

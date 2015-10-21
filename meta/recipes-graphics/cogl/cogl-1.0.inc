@@ -2,7 +2,9 @@ SUMMARY = "Modern 3D graphics API with associated utility APIs"
 HOMEPAGE = "http://wiki.clutter-project.org/wiki/Cogl"
 LICENSE = "MIT"
 
-inherit clutter
+inherit clutter distro_features_check
+# cogl-1.0 needs opengl to build
+REQUIRED_DISTRO_FEATURES ?= "opengl"
 
 DEPENDS = "glib-2.0 gdk-pixbuf"
 PACKAGES =+ "${PN}-examples \
