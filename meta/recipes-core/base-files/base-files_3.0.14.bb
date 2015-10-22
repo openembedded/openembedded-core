@@ -167,6 +167,10 @@ do_install_append_linuxstdbase() {
         done
 }
 
+sysroot_stage_all_append () {
+	sysroot_stage_dir ${D}${sysconfdir}/skel ${SYSROOT_DESTDIR}${sysconfdir}/skel
+}
+
 PACKAGES = "${PN}-doc ${PN} ${PN}-dev ${PN}-dbg"
 FILES_${PN} = "/"
 FILES_${PN}-doc = "${docdir} ${datadir}/common-licenses"
