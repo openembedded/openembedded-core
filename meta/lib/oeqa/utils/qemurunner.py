@@ -210,6 +210,7 @@ class QemuRunner:
                 self.stop_thread()
                 return False
 
+            logger.info("Output from runqemu:\n%s", self.getOutput(output))
             logger.info("Waiting at most %d seconds for login banner" % self.boottime)
             endtime = time.time() + self.boottime
             socklist = [self.server_socket]
