@@ -52,7 +52,9 @@ def get_machine_branch(d, default):
         parm = urldata.parm
         if "branch" in parm:
             branches = urldata.parm.get("branch").split(',')
-            return branches[0]
+            btype = urldata.parm.get("type")
+            if btype != "kmeta":
+                return branches[0]
 	    
     return default
 
