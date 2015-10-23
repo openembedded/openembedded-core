@@ -34,7 +34,7 @@ class SStateTests(SStateBase):
         targetarch = get_bb_var('TUNE_ARCH')
         self.run_test_sstate_creation(['binutils-cross-'+ targetarch, 'binutils-native'], distro_specific=True, distro_nonspecific=False, temp_sstate_location=True)
 
-    @testcase(975)
+    @testcase(1374)
     def test_sstate_creation_distro_specific_fail(self):
         targetarch = get_bb_var('TUNE_ARCH')
         self.run_test_sstate_creation(['binutils-cross-'+ targetarch, 'binutils-native'], distro_specific=False, distro_nonspecific=True, temp_sstate_location=True, should_pass=False)
@@ -43,7 +43,7 @@ class SStateTests(SStateBase):
     def test_sstate_creation_distro_nonspecific_pass(self):
         self.run_test_sstate_creation(['glibc-initial'], distro_specific=False, distro_nonspecific=True, temp_sstate_location=True)
 
-    @testcase(976)
+    @testcase(1375)
     def test_sstate_creation_distro_nonspecific_fail(self):
         self.run_test_sstate_creation(['glibc-initial'], distro_specific=True, distro_nonspecific=False, temp_sstate_location=True, should_pass=False)
 
@@ -70,11 +70,11 @@ class SStateTests(SStateBase):
         targetarch = get_bb_var('TUNE_ARCH')
         self.run_test_cleansstate_task(['binutils-cross-' + targetarch, 'binutils-native', 'glibc-initial'], distro_specific=True, distro_nonspecific=True, temp_sstate_location=True)
 
-    @testcase(977)
+    @testcase(1376)
     def test_cleansstate_task_distro_nonspecific(self):
         self.run_test_cleansstate_task(['glibc-initial'], distro_specific=False, distro_nonspecific=True, temp_sstate_location=True)
 
-    @testcase(977)
+    @testcase(1377)
     def test_cleansstate_task_distro_specific(self):
         targetarch = get_bb_var('TUNE_ARCH')
         self.run_test_cleansstate_task(['binutils-cross-'+ targetarch, 'binutils-native', 'glibc-initial'], distro_specific=True, distro_nonspecific=False, temp_sstate_location=True)
@@ -111,12 +111,12 @@ class SStateTests(SStateBase):
         targetarch = get_bb_var('TUNE_ARCH')
         self.run_test_rebuild_distro_specific_sstate(['binutils-cross-' + targetarch, 'binutils-native'], temp_sstate_location=True)
 
-    @testcase(175)
+    @testcase(1372)
     def test_rebuild_distro_specific_sstate_cross_target(self):
         targetarch = get_bb_var('TUNE_ARCH')
         self.run_test_rebuild_distro_specific_sstate(['binutils-cross-' + targetarch], temp_sstate_location=True)
 
-    @testcase(175)
+    @testcase(1373)
     def test_rebuild_distro_specific_sstate_native_target(self):
         self.run_test_rebuild_distro_specific_sstate(['binutils-native'], temp_sstate_location=True)
 
@@ -283,6 +283,7 @@ NATIVELSBSTRING = \"DistroB\"
         self.maxDiff = None
         self.assertItemsEqual(files1, files2)
 
+    @testcase(1368)
     def test_sstate_allarch_samesigs(self):
         """
         The sstate checksums of allarch packages should be independent of whichever 
@@ -330,6 +331,7 @@ MACHINE = \"qemuarm\"
         self.maxDiff = None
         self.assertItemsEqual(files1, files2)
 
+    @testcase(1369)
     def test_sstate_sametune_samesigs(self):
         """
         The sstate checksums of two identical machines (using the same tune) should be the 

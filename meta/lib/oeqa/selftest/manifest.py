@@ -59,6 +59,7 @@ class VerifyManifest(oeSelfTest):
             unittest.SkipTest("{}: Cannot setup testing scenario"\
                     .format(self.classname))
 
+    @testcase(1380)
     def test_SDK_manifest_entries(self):
         '''Verifying the SDK manifest entries exist, this may take a build'''
 
@@ -124,6 +125,7 @@ class VerifyManifest(oeSelfTest):
                 self.log.info(msg)
                 self.fail(logmsg)
 
+    @testcase(1381)
     def test_image_manifest_entries(self):
         '''Verifying the image manifest entries exist'''
 
