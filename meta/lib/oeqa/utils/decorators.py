@@ -57,11 +57,11 @@ class skipIfFailure(object):
         self.testcase = testcase
 
     def __call__(self,f):
-        def wrapped_f(*args):
+        def wrapped_f(*args, **kwargs):
             res = getResults()
             if self.testcase in (res.getFailList() or res.getErrorList()):
                 raise unittest.SkipTest("Testcase dependency not met: %s" % self.testcase)
-            return f(*args)
+            return f(*args, **kwargs)
         wrapped_f.__name__ = f.__name__
         return wrapped_f
 
@@ -71,11 +71,11 @@ class skipIfSkipped(object):
         self.testcase = testcase
 
     def __call__(self,f):
-        def wrapped_f(*args):
+        def wrapped_f(*args, **kwargs):
             res = getResults()
             if self.testcase in res.getSkipList():
                 raise unittest.SkipTest("Testcase dependency not met: %s" % self.testcase)
-            return f(*args)
+            return f(*args, **kwargs)
         wrapped_f.__name__ = f.__name__
         return wrapped_f
 
@@ -85,13 +85,13 @@ class skipUnlessPassed(object):
         self.testcase = testcase
 
     def __call__(self,f):
-        def wrapped_f(*args):
+        def wrapped_f(*args, **kwargs):
             res = getResults()
             if self.testcase in res.getSkipList() or \
                     self.testcase in res.getFailList() or \
                     self.testcase in res.getErrorList():
                 raise unittest.SkipTest("Testcase dependency not met: %s" % self.testcase)
-            return f(*args)
+            return f(*args, **kwargs)
         wrapped_f.__name__ = f.__name__
         wrapped_f._depends_on = self.testcase
         return wrapped_f
@@ -102,8 +102,8 @@ class testcase(object):
         self.test_case = test_case
 
     def __call__(self, func):
-        def wrapped_f(*args):
-            return func(*args)
+        def wrapped_f(*args, **kwargs):
+            return func(*args, **kwargs)
         wrapped_f.test_case = self.test_case
         wrapped_f.__name__ = func.__name__
         return wrapped_f
