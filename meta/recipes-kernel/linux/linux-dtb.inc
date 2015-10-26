@@ -14,6 +14,15 @@ normalize_dtb () {
 	echo "${DTB}"
 }
 
+get_real_dtb_path_in_kernel () {
+	DTB="$1"
+	DTB_PATH="${B}/arch/${ARCH}/boot/dts/${DTB}"
+	if [ ! -e "${DTB_PATH}" ]; then
+		DTB_PATH="${B}/arch/${ARCH}/boot/${DTB}"
+	fi
+	echo "${DTB_PATH}"
+}
+
 do_compile_append() {
 	for DTB in ${KERNEL_DEVICETREE}; do
 		DTB=`normalize_dtb "${DTB}"`
@@ -26,10 +35,7 @@ do_install_append() {
 		DTB=`normalize_dtb "${DTB}"`
 		DTB_BASE_NAME=`basename ${DTB} .dtb`
 		DTB_SYMLINK_NAME=`echo ${KERNEL_IMAGE_SYMLINK_NAME} | sed "s/${MACHINE}/${DTB_BASE_NAME}/g"`
-		DTB_PATH="${B}/arch/${ARCH}/boot/dts/${DTB}"
-		if [ ! -e "${DTB_PATH}" ]; then
-			DTB_PATH="${B}/arch/${ARCH}/boot/${DTB}"
-		fi
+		DTB_PATH=`get_real_dtb_path_in_kernel "${DTB}"`
 		install -m 0644 ${DTB_PATH} ${D}/${KERNEL_IMAGEDEST}/devicetree-${DTB_SYMLINK_NAME}.dtb
 	done
 }
@@ -40,10 +46,7 @@ do_deploy_append() {
 		DTB_BASE_NAME=`basename ${DTB} .dtb`
 		DTB_NAME=`echo ${KERNEL_IMAGE_BASE_NAME} | sed "s/${MACHINE}/${DTB_BASE_NAME}/g"`
 		DTB_SYMLINK_NAME=`echo ${KERNEL_IMAGE_SYMLINK_NAME} | sed "s/${MACHINE}/${DTB_BASE_NAME}/g"`
-		DTB_PATH="${B}/arch/${ARCH}/boot/dts/${DTB}"
-		if [ ! -e "${DTB_PATH}" ]; then
-			DTB_PATH="${B}/arch/${ARCH}/boot/${DTB}"
-		fi
+		DTB_PATH=`get_real_dtb_path_in_kernel "${DTB}"`
 		install -d ${DEPLOYDIR}
 		install -m 0644 ${DTB_PATH} ${DEPLOYDIR}/${DTB_NAME}.dtb
 		ln -sf ${DTB_NAME}.dtb ${DEPLOYDIR}/${DTB_SYMLINK_NAME}.dtb
