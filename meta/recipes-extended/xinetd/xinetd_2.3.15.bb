@@ -56,6 +56,7 @@ do_install() {
 	install -m 644 "${WORKDIR}/xinetd.default" "${D}${sysconfdir}/default/xinetd"
 	install -m 755 "${B}/xinetd/xinetd" "${D}${sbindir}"
 	install -m 755 "${B}/xinetd/itox" "${D}${sbindir}"
+	install -m 664 ${S}/contrib/xinetd.d/* ${D}${sysconfdir}/xinetd.d
 
 	# Install systemd unit files
 	install -d ${D}${systemd_unitdir}/system
