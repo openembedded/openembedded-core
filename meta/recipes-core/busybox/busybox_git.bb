@@ -42,6 +42,7 @@ SRC_URI = "git://busybox.net/busybox.git \
            file://sha1sum.cfg \
            file://sha256sum.cfg \
            file://getopts.cfg \
+           file://resize.cfg \
 "
 
 DEFAULT_PREFERENCE = "-1"

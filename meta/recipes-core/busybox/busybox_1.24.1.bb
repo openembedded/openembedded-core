@@ -36,6 +36,7 @@ SRC_URI = "http://www.busybox.net/downloads/busybox-${PV}.tar.bz2;name=tarball \
            file://sha1sum.cfg \
            file://sha256sum.cfg \
            file://getopts.cfg \
+           file://resize.cfg \
 "
 
 SRC_URI[tarball.md5sum] = "be98a40cadf84ce2d6b05fa41a275c6a"
