@@ -6,7 +6,7 @@ gtk_icon_cache_postinst() {
 if [ "x$D" != "x" ]; then
 	$INTERCEPT_DIR/postinst_intercept update_icon_cache ${PKG} \
 		mlprefix=${MLPREFIX} \
-		libdir=${libdir}
+		libdir_native=${libdir_native}
 else
 
 	# Update the pixbuf loaders in case they haven't been registered yet
