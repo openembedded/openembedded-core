@@ -40,9 +40,9 @@ class MultilibTest(oeRuntimeTest):
     @testcase('279')
     @skipUnlessPassed('test_check_multilib_libc')
     def test_file_connman(self):
-        self.assertTrue(oeRuntimeTest.hasPackage('lib32-connman-gnome'), msg="This test assumes lib32-connman-gnome is installed")
+        self.assertTrue(oeRuntimeTest.hasPackage('lib32-connman'), msg="This test assumes lib32-connman is installed")
 
-        (status, output) = self.target.run("readelf -h /usr/bin/connman-applet")
-        self.assertEqual(status, 0, "Failed to readelf /usr/bin/connman-applet")
+        (status, output) = self.target.run("readelf -h /usr/sbin/connmand")
+        self.assertEqual(status, 0, "Failed to readelf /usr/sbin/connmand")
         theclass = self.parse(output)
-        self.assertEqual(theclass, "ELF32", msg="connman-applet isn't ELF32 (is %s)" % theclass)
+        self.assertEqual(theclass, "ELF32", msg="connmand isn't ELF32 (is %s)" % theclass)
