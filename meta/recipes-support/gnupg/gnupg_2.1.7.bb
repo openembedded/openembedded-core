@@ -12,6 +12,7 @@ SRC_URI = "ftp://ftp.gnupg.org/gcrypt/${BPN}/${BPN}-${PV}.tar.bz2 \
            file://pkgconfig.patch \
            file://use-pkgconfig-instead-of-npth-config.patch \
            file://dirmngr-uses-libgpg-error.patch \
+           file://autogen.sh-fix-find-version-for-beta-checking.patch \
           "
 
 SRC_URI[md5sum] = "ebdf92b15b8bcd8579b643c7f41a3238"
