@@ -14,6 +14,8 @@ SRC_URI = "ftp://ftp.info-zip.org/pub/infozip/src/unzip60.tgz \
 	file://09-cve-2014-8139-crc-overflow.patch \
 	file://10-cve-2014-8140-test-compr-eb.patch \
 	file://11-cve-2014-8141-getzip64data.patch \
+	file://CVE-2015-7696.patch \
+	file://CVE-2015-7697.patch \
 "
 
 SRC_URI[md5sum] = "62b490407489521db863b523a7f86375"
