@@ -50,6 +50,7 @@ SRC_URI_append_class-nativesdk = "\
            file://0001-nativesdk-glibc-Look-for-host-system-ld.so.cache-as-.patch \
            file://0002-nativesdk-glibc-Fix-buffer-overrun-with-a-relocated-.patch \
            file://0003-nativesdk-glibc-Raise-the-size-of-arrays-containing-.patch \
+           file://use_64bit_atomics.patch \
 "
 
 S = "${WORKDIR}/git"
