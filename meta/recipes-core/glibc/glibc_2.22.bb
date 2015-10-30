@@ -40,6 +40,7 @@ SRC_URI = "${GLIBC_GIT_URI};branch=${SRCBRANCH};name=glibc \
            file://0027-eglibc-use-option-groups-Conditionally-exclude-c-tes.patch \
            file://nscd-no-bash.patch \
            file://strcoll-Remove-incorrect-STRDIFF-based-optimization-.patch \
+           file://0028-Clear-ELF_RTYPE_CLASS_EXTERN_PROTECTED_DATA-for-prel.patch \
 "
 
 SRC_URI += "\
