@@ -25,6 +25,7 @@ SRC_URI = "ftp://ftp.openbsd.org/pub/OpenBSD/OpenSSH/portable/openssh-${PV}.tar.
            file://CVE-2015-6563.patch  \
            file://CVE-2015-6564.patch \
            file://CVE-2015-6565.patch \
+           file://CVE-2015-5600.patch \
            "
 
 PAM_SRC_URI = "file://sshd"
