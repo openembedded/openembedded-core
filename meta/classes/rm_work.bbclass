@@ -63,6 +63,10 @@ do_rm_work () {
                 i=dummy
                 break
                 ;;
+            *do_rootfs*)
+               i=dummy
+               break
+               ;;
             *do_build*)
                 i=dummy
                 break
