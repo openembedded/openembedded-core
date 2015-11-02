@@ -101,9 +101,9 @@ fi
 
 if [ "$SDK_EXTENSIBLE" = "1" ]; then
 	# We're going to be running the build system, additional restrictions apply
-	if echo "$target_sdk_dir" | grep -q '[+\ @]'; then
+	if echo "$target_sdk_dir" | grep -q '[+\ @$]'; then
 		echo "The target directory path ($target_sdk_dir) contains illegal" \
-		     "characters such as spaces, @ or +. Abort!"
+		     "characters such as spaces, @, \$ or +. Abort!"
 		exit 1
 	fi
 else
