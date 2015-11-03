@@ -31,6 +31,12 @@ Netlogic. Also, update vendor name to NLM wherever applicable.
 Upstream-Status: Pending
 
 Signed-off-by: Khem Raj <raj.khem@gmail.com>
+
+Use 0x00000080 for INSN_XLP, the value 0x00000040 has already been assigned
+to INSN_OCTEON3
+
+Signed-off-by: Baoshan Pang <baoshan.pang@windriver.com>
+Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
 ---
  bfd/aoutx.h           |  1 +
  bfd/archures.c        |  1 +
@@ -251,7 +257,7 @@ index ef26167..ef53ec6 100644
 +/* Netlogic Xlr instruction */
 +#define INSN_XLR		0x00000020
 +/* Netlogic XlP instruction */
-+#define INSN_XLP		0x00000040
++#define INSN_XLP		0x00000080
  
  /* DSP ASE */
  #define ASE_DSP			0x00000001
