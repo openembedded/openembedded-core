@@ -270,7 +270,8 @@ RRECOMMENDS_${PN}-binfmt = "kernel-module-binfmt-misc"
 
 RRECOMMENDS_${PN}-vconsole-setup = "kbd kbd-consolefonts kbd-keymaps"
 
-CONFFILES_${PN} = "${sysconfdir}/systemd/journald.conf \
+CONFFILES_${PN} = "${sysconfdir}/machine-id \
+                ${sysconfdir}/systemd/journald.conf \
                 ${sysconfdir}/systemd/logind.conf \
                 ${sysconfdir}/systemd/system.conf \
                 ${sysconfdir}/systemd/user.conf"
