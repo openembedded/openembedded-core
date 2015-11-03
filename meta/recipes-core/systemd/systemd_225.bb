@@ -93,6 +93,7 @@ PACKAGECONFIG[valgrind] = "ac_cv_header_valgrind_memcheck_h=yes ac_cv_header_val
 PACKAGECONFIG[qrencode] = "--enable-qrencode,--disable-qrencode,qrencode"
 PACKAGECONFIG[compat] = "--enable-compat-libs,--disable-compat-libs"
 PACKAGECONFIG[dbus] = "--enable-dbus,--disable-dbus,dbus"
+PACKAGECONFIG[coredump] = "--enable-coredump,--disable-coredump"
 
 CACHED_CONFIGUREVARS += "ac_cv_path_KILL=${base_bindir}/kill"
 CACHED_CONFIGUREVARS += "ac_cv_path_KMOD=${base_bindir}/kmod"
@@ -120,7 +121,6 @@ CACHED_CONFIGUREVARS_class-target = "\
 EXTRA_OECONF = " --with-rootprefix=${rootprefix} \
                  --with-rootlibdir=${rootlibdir} \
                  --with-roothomedir=${ROOT_HOME} \
-                 --disable-coredump \
                  --enable-split-usr \
                  --without-python \
                  --with-sysvrcnd-path=${sysconfdir} \
@@ -271,6 +271,7 @@ RRECOMMENDS_${PN}-binfmt = "kernel-module-binfmt-misc"
 RRECOMMENDS_${PN}-vconsole-setup = "kbd kbd-consolefonts kbd-keymaps"
 
 CONFFILES_${PN} = "${sysconfdir}/machine-id \
+                ${sysconfdir}/systemd/coredump.conf \
                 ${sysconfdir}/systemd/journald.conf \
                 ${sysconfdir}/systemd/logind.conf \
                 ${sysconfdir}/systemd/system.conf \
@@ -300,6 +301,7 @@ FILES_${PN} = " ${base_bindir}/* \
                 /cgroup \
                 ${bindir}/systemd* \
                 ${bindir}/busctl \
+                ${bindir}/coredumpctl \
                 ${bindir}/localectl \
                 ${bindir}/hostnamectl \
                 ${bindir}/timedatectl \
