@@ -15,7 +15,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=12f884d2ae1ff87c09e5b7ccc2c4ca7e \
 
 inherit autotools pkgconfig systemd update-rc.d bluetooth
 
-DEPENDS  = "dbus glib-2.0 ppp iptables"
+DEPENDS  = "dbus glib-2.0 ppp iptables readline"
 
 INC_PR = "r20"
 
