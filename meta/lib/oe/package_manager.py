@@ -625,6 +625,7 @@ class PackageManager(object):
                      "'%s' returned %d:\n%s" %
                      (' '.join(cmd), e.returncode, e.output))
         self.install(complementary_pkgs.split(), attempt_only=True)
+        os.remove(installed_pkgs_file)
 
     def deploy_dir_lock(self):
         if self.deploy_dir is None:
