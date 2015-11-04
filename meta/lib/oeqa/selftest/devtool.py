@@ -582,7 +582,7 @@ class DevtoolTests(DevtoolBase):
         # Now try with auto mode
         runCmd('cd %s; git checkout %s %s' % (os.path.dirname(recipefile), testrecipe, os.path.basename(recipefile)))
         result = runCmd('devtool update-recipe %s' % testrecipe)
-        result = runCmd('git rev-parse --show-toplevel')
+        result = runCmd('git rev-parse --show-toplevel', cwd=os.path.dirname(recipefile))
         topleveldir = result.output.strip()
         relpatchpath = os.path.join(os.path.relpath(os.path.dirname(recipefile), topleveldir), testrecipe)
         expected_status = [(' M', os.path.relpath(recipefile, topleveldir)),
