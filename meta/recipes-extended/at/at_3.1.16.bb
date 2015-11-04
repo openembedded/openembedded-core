@@ -47,10 +47,10 @@ INITSCRIPT_PARAMS = "defaults"
 
 SYSTEMD_SERVICE_${PN} = "atd.service"
 
-
-do_compile_prepend () {
+copy_sources() {
 	cp -f ${WORKDIR}/posixtm.[ch] ${S}
 }
+do_patch[postfuncs] += "copy_sources"
 
 do_install () {
 	oe_runmake -e "IROOT=${D}" install
