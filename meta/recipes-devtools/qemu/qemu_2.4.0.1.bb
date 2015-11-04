@@ -12,8 +12,8 @@ SRC_URI += "file://configure-fix-Darwin-target-detection.patch \
             file://no-valgrind.patch \
            "
 SRC_URI_prepend = "http://wiki.qemu-project.org/download/${BP}.tar.bz2"
-SRC_URI[md5sum] = "186ee8194140a484a455f8e3c74589f4"
-SRC_URI[sha256sum] = "72b0b991bbcc540663a019e1e8c4f714053b691dda32c9b9ee80b25f367e6620"
+SRC_URI[md5sum] = "c99445164e77184a9ba2e7dbf7ed5c29"
+SRC_URI[sha256sum] = "ecfe8b88037e41e817d72c460c56c6a0b573d540d6ba38b162d0de4fd22d1bdb"
 
 COMPATIBLE_HOST_class-target_mips64 = "null"
 
