@@ -121,7 +121,7 @@ class QemuRunner:
         # Set this flag so that Qemu doesn't do any grabs as SDL grabs interact
         # badly with screensavers.
         os.environ["QEMU_DONT_GRAB"] = "1"
-        self.qemuparams = 'bootparams="console=tty1 console=ttyS0,115200n8" qemuparams="-serial tcp:127.0.0.1:{}"'.format(threadport)
+        self.qemuparams = 'bootparams="console=tty1 console=ttyS0,115200n8 printk.time=1" qemuparams="-serial tcp:127.0.0.1:{}"'.format(threadport)
         if qemuparams:
             self.qemuparams = self.qemuparams[:-1] + " " + qemuparams + " " + '\"'
 
