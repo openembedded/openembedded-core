@@ -404,6 +404,18 @@ ALTERNATIVE_TARGET[runlevel] = "${base_bindir}/systemctl"
 ALTERNATIVE_LINK_NAME[runlevel] = "${base_sbindir}/runlevel"
 ALTERNATIVE_PRIORITY[runlevel] ?= "300"
 
+pkg_postinst_${PN} () {
+	sed -e '/^hosts:/s/\s*\<myhostname\>//' \
+		-e 's/\(^hosts:.*\)\(\<files\>\)\(.*\)\(\<dns\>\)\(.*\)/\1\2 myhostname \3\4\5/' \
+		-i $D${sysconfdir}/nsswitch.conf
+}
+
+pkg_prerm_${PN} () {
+	sed -e '/^hosts:/s/\s*\<myhostname\>//' \
+		-e '/^hosts:/s/\s*myhostname//' \
+		-i $D${sysconfdir}/nsswitch.conf
+}
+
 pkg_postinst_udev-hwdb () {
 	if test -n "$D"; then
 		${@qemu_run_binary(d, '$D', '${base_bindir}/udevadm')} hwdb --update \
