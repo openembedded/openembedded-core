@@ -1,6 +1,6 @@
 SUMMARY = "Hardware latency detector"
 DESCRIPTION = "Python utility for controlling the kernel hardware latency detection module (hwlat_detector.ko)."
-HOMEPAGE = "http://git.kernel.org/?p=linux/kernel/git/clrkwllms/rt-tests.git"
+HOMEPAGE = "https://rt.wiki.kernel.org/index.php/Cyclictest"
 SECTION = "tests"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=751419260aa954499f7abaabaa882bbe"
