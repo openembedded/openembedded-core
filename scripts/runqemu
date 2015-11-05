@@ -182,7 +182,7 @@ while true; do
             SLIRP_ENABLED="yes"
             ;;
         "publicvnc")
-            SCRIPT_QEMU_OPT="$SCRIPT_QEMU_OPT -vnc 0.0.0.0:0"
+            SCRIPT_QEMU_OPT="$SCRIPT_QEMU_OPT -vnc :0"
             ;;
         *-image*)
             [ -z "$ROOTFS" ] || \
