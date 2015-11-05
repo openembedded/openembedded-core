@@ -9,6 +9,8 @@ SECTION = "x11/gnome/libs"
 
 DEPENDS = "glib-2.0 gnutls libxml2 sqlite3 intltool-native"
 
+EXTRA_OECONF = "--disable-vala"
+
 # libsoup-gnome is entirely deprecated and just stubs in 2.42 onwards.  Enable
 # by default but let it be easily disabled.
 PACKAGECONFIG ??= "gnome"
@@ -17,8 +19,8 @@ PACKAGECONFIG[gnome] = "--with-gnome,--without-gnome"
 SHRT_VER = "${@bb.data.getVar('PV',d,1).split('.')[0]}.${@bb.data.getVar('PV',d,1).split('.')[1]}"
 SRC_URI = "${GNOME_MIRROR}/libsoup/${SHRT_VER}/libsoup-${PV}.tar.xz"
 
-SRC_URI[md5sum] = "9a84d66e1b7ccd3bd340574b11eccc15"
-SRC_URI[sha256sum] = "1e01365ac4af3817187ea847f9d3588c27eee01fc519a5a7cb212bb78b0f667b"
+SRC_URI[md5sum] = "b80f11674724ab38f96426875bc0e2e5"
+SRC_URI[sha256sum] = "0e19bca047ad50b28e8ed7663840f9e45a94909148822ca44dcb3e8cafb5cc48"
 
 S = "${WORKDIR}/libsoup-${PV}"
 
