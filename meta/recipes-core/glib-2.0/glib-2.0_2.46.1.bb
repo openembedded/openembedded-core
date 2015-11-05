@@ -15,9 +15,10 @@ SRC_URI = "${GNOME_MIRROR}/glib/${SHRT_VER}/glib-${PV}.tar.xz \
            file://0001-configure.ac-Do-not-use-readlink-when-cross-compilin.patch \
            file://allow-run-media-sdX-drive-mount-if-username-root.patch \
 	   file://0001-Remove-the-warning-about-deprecated-paths-in-schemas.patch \
+	   file://0001-gio-tests-Don-t-depend-on-a-data-file-that-s-not-bui.patch \
           "
 
 SRC_URI_append_class-native = " file://glib-gettextize-dir.patch"
 
-SRC_URI[md5sum] = "83efba4722a9674b97437d1d99af79db"
-SRC_URI[sha256sum] = "8811deacaf8a503d0a9b701777ea079ca6a4277be10e3d730d2112735d5eca07"
+SRC_URI[md5sum] = "c90e93ceb45100ffc1d40ec5d2ca3248"
+SRC_URI[sha256sum] = "5a1f03b952ebc3a7e9f612b8724f70898183e31503db329b4f15d07163c8fdfb"

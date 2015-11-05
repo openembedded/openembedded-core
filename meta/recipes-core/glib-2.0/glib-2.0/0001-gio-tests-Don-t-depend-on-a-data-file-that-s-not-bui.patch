@@ -1,0 +1,38 @@
+From 99dabcb02e2b3f90a12d17a9995752fcae57b522 Mon Sep 17 00:00:00 2001
+From: Jussi Kukkonen <jussi.kukkonen@intel.com>
+Date: Thu, 5 Nov 2015 11:08:32 +0200
+Subject: [PATCH] gio/tests: Don't depend on a data file that's not built
+
+data.gresource is not built when cross-compiling: Don't
+add it to test_data in that case.
+
+Signed-off-by: Jussi Kukkonen <jussi.kukkonen@intel.com>
+Upstream-Status: Backport [https://bugzilla.gnome.org/show_bug.cgi?id=757628]
+---
+ gio/tests/Makefile.am | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/gio/tests/Makefile.am b/gio/tests/Makefile.am
+index 894cf43..cc7deb3 100644
+--- a/gio/tests/Makefile.am
++++ b/gio/tests/Makefile.am
+@@ -76,7 +76,6 @@ dist_test_data = \
+ 	$(NULL)
+ 
+ test_data = \
+-	test.gresource				\
+ 	$(NULL)
+ 
+ uninstalled_test_extra_programs = \
+@@ -520,6 +519,8 @@ libresourceplugin_la_SOURCES = resourceplugin.c plugin_resources.c
+ libresourceplugin_la_LDFLAGS = -avoid-version -module -export-dynamic $(no_undefined)
+ libresourceplugin_la_LIBADD = $(LDADD)
+ 
++test_data += test.gresource
++
+ # libtool contains a bug whereby the created .la file doesn't contain the correct dlname='' in the case that
+ # you're building a library but not installing it.  This is apparently because the only considered use for an
+ # uninstalled library is as a convenience library for linking (despite the fact that we give -module).  The lack
+-- 
+2.6.2
+
