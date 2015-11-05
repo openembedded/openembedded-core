@@ -12,8 +12,8 @@ DEPENDS = "glib-2.0"
 
 inherit gnomebase gtk-doc
 
-SRC_URI[archive.md5sum] = "c7c5002bd6e58b4723a165f1bf312116"
-SRC_URI[archive.sha256sum] = "095f986060a6a0b22eb15eef84ae9f14a1cf8082488faa6886d94c37438ae562"
+SRC_URI[archive.md5sum] = "fd3678f35004b4c92e3da39356996054"
+SRC_URI[archive.sha256sum] = "ce6c48d77bf951083029d5a396dd552d836fff3c1715d3a7022e917e46d0c92b"
 
 BBCLASSEXTEND = "native"
 
