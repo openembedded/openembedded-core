@@ -20,10 +20,12 @@ PACKAGECONFIG ??= " \
     ${@bb.utils.contains('DISTRO_FEATURES', 'wayland', 'wayland', '', d)} \
     ${@bb.utils.contains('DISTRO_FEATURES', 'bluetooth', 'bluez', '', d)} \
     ${@bb.utils.contains('DISTRO_FEATURES', 'directfb', 'directfb', '', d)} \
-    orc curl uvch264 neon sndfile \
-    hls sbc dash bz2 smoothstreaming \
+    orc curl uvch264 neon sndfile hls sbc dash bz2 smoothstreaming rsvg dtls \
     "
 
+# gtk is not in the PACKAGECONFIG variable by default until
+# the transition to gtk+3 is finished
+#
 # dash = Dynamic Adaptive Streaming over HTTP
 PACKAGECONFIG[assrender]       = "--enable-assrender,--disable-assrender,libass"
 PACKAGECONFIG[curl]            = "--enable-curl,--disable-curl,curl"
@@ -55,36 +57,46 @@ PACKAGECONFIG[sndfile]         = "--enable-sndfile,--disable-sndfile,libsndfile1
 PACKAGECONFIG[webp]            = "--enable-webp,--disable-webp,libwebp"
 PACKAGECONFIG[rtmp]            = "--enable-rtmp,--disable-rtmp,rtmpdump"
 PACKAGECONFIG[libssh2]         = "--enable-libssh2,--disable-libssh2,libssh2"
+PACKAGECONFIG[dtls]            = "--enable-dtls,--disable-dtls,openssl"
+PACKAGECONFIG[gtk]             = "--enable-gtk3,--disable-gtk3,gtk+3"
+PACKAGECONFIG[srtp]            = "--enable-srtp,--disable-srtp,libsrtp"
+PACKAGECONFIG[voaacenc]        = "--enable-voaacenc,--disable-voaacenc,vo-aacenc"
+PACKAGECONFIG[voamrwbenc]      = "--enable-voamrwbenc,--disable-voamrwbenc,vo-amrwbenc"
+PACKAGECONFIG[resindvd]        = "--enable-resindvd,--disable-resindvd,libdvdread libdvdnav"
 
 # these plugins have not been ported to 1.0 (yet):
-#   directdraw vcd apexsink dc1394 lv2 linsys musepack mythtv
-#   nas timidity teletextdec sdl xvid wininet acm gsettings
-#   sndio qtwrapper cdxaparse dccp faceoverlay hdvparse tta
-#   mve nuvdemux osx_video patchdetect quicktime real sdi
-#   videomeasure gsettings
+#   apexsink dc1394 lv2 linsys musepack nas timidity teletextdec sdl xvid wininet
+#   acm gsettings sndio cdxaparse dccp faceoverlay hdvparse tta mve nuvdemux
+#   patchdetect real sdi videomeasure gsettings
 
 # these plugins have no corresponding library in OE-core or meta-openembedded:
-#   openni2 winks direct3d directdraw directsound winscreencap osx_video
-#   apple_media android_media avc chromaprint daala dts gme gsm kate ladspa mimic
-#   mpeg2enc mplex ofa openjpeg opensles pvr resindvd rtmp soundtouch spandsp spc
-#   srtp vdpau voaacenc voamrwbenc wasapi zbar
+#   openni2 winks direct3d directsound winscreencap
+#   apple_media android_media avc bs2b chromaprint daala dts gme gsm kate ladspa
+#   libde265 mimic mpeg2enc mplex ofa openh264 opensles pvr soundtouch spandsp
+#   spc vdpau wasapi x265 zbar
+
+# qt5 support is disabled, because it is not present in OE core, and requires more work than
+# just adding a packageconfig (it requires access to moc, uic, rcc, and qmake paths).
+# This is better done in a separate qt5 layer (which then should add a "qt5" packageconfig
+# in a gstreamer1.0-plugins-bad bbappend).
 
 EXTRA_OECONF += " \
     --enable-dvb \
     --enable-shm \
     --enable-fbdev \
     --enable-decklink \
+    --enable-vcd \
     --disable-acm \
     --disable-android_media \
     --disable-apexsink \
     --disable-apple_media \
     --disable-avc \
+    --disable-bs2b \
     --disable-chromaprint \
     --disable-cocoa \
     --disable-daala \
     --disable-dc1394 \
     --disable-direct3d \
-    --disable-directdraw \
     --disable-directsound \
     --disable-dts \
     --disable-gme \
@@ -92,44 +104,49 @@ EXTRA_OECONF += " \
     --disable-gsm \
     --disable-kate \
     --disable-ladspa \
+    --disable-libvisual \
+    --disable-libde265 \
     --disable-linsys \
     --disable-lv2 \
     --disable-mimic \
     --disable-mpeg2enc \
     --disable-mplex \
     --disable-musepack \
-    --disable-mythtv \
     --disable-nas \
     --disable-ofa \
+    --disable-openexr \
+    --disable-openh264 \
     --disable-openjpeg \
+    --disable-openni2 \
     --disable-opensles \
-    --disable-osx_video \
     --disable-pvr \
-    --disable-quicktime \
-    --disable-resindvd \
+    --disable-qt \
     --disable-sdl \
     --disable-sdltest \
     --disable-sndio \
     --disable-soundtouch \
     --disable-spandsp \
     --disable-spc \
-    --disable-srtp \
     --disable-teletextdec \
     --disable-timidity \
-    --disable-vcd \
     --disable-vdpau \
-    --disable-voaacenc \
-    --disable-voamrwbenc \
     --disable-wasapi \
     --disable-wildmidi \
     --disable-wininet \
+    --disable-winks \
     --disable-winscreencap \
+    --disable-x265 \
     --disable-xvid \
     --disable-zbar \
     ${@bb.utils.contains("TUNE_FEATURES", "mx32", "--disable-yadif", "", d)} \
     "
 
+OPENCV_PREFIX="${STAGING_DIR_TARGET}${prefix}"
+export OPENCV_PREFIX
+
 ARM_INSTRUCTION_SET = "arm"
 
-FILES_gstreamer1.0-plugins-bad-opencv += "${datadir}/gst-plugins-bad/1.0/opencv*"
-
+FILES_${PN}-opencv += "${datadir}/gst-plugins-bad/1.0/opencv*"
+FILES_${PN}-freeverb += "${datadir}/gstreamer-1.0/presets/GstFreeverb.prs"
+FILES_${PN}-voamrwbenc += "${datadir}/gstreamer-1.0/presets/GstVoAmrwbEnc.prs"
+FILES_${PN}-dev += "${libdir}/gstreamer-1.0/include/gst/gl/gstglconfig.h"
