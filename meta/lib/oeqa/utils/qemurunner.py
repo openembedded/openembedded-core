@@ -366,23 +366,25 @@ class QemuRunner:
         # We assume target system have echo to get command status
         if not raw:
             command = "%s; echo $?\n" % command
-        self.server_socket.sendall(command)
+
         data = ''
         status = 0
-        stopread = False
-        endtime = time.time()+5
-        while time.time()<endtime and not stopread:
+        self.server_socket.sendall(command)
+        keepreading = True
+        while keepreading:
             sread, _, _ = select.select([self.server_socket],[],[],5)
-            for sock in sread:
-                answer = sock.recv(1024)
+            if sread:
+                answer = self.server_socket.recv(1024)
                 if answer:
                     data += answer
                     # Search the prompt to stop
                     if re.search("[a-zA-Z0-9]+@[a-zA-Z0-9\-]+:~#", data):
-                        stopread = True
-                        break
+                        keepreading = False
                 else:
                     raise Exception("No data on serial console socket")
+            else:
+                keepreading = False
+
         if data:
             if raw:
                 status = 1
