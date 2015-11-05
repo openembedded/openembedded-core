@@ -2,9 +2,9 @@ SUMMARY = "Python bindings for libcurl"
 HOMEPAGE = "http://pycurl.sourceforge.net/"
 SECTION = "devel/python"
 LICENSE = "LGPLv2.1+ | MIT"
-LIC_FILES_CHKSUM = "file://README.rst;beginline=166;endline=181;md5=57e5ab0c0f964533fc59d93dec5695bb \
+LIC_FILES_CHKSUM = "file://README.rst;beginline=166;endline=182;md5=e5c36c3ca7e9f0bf6e144267dd760861 \
                     file://COPYING-LGPL;md5=3579a9fd0221d49a237aaa33492f988c \
-                    file://COPYING-MIT;md5=e8200955c773b2a0fd6cea36ea5e87be"
+                    file://COPYING-MIT;md5=0c3eb58d2e99f3102e2ce2db4eb172f1"
 
 DEPENDS = "curl python"
 RDEPENDS_${PN} = "python-core curl"
@@ -15,8 +15,8 @@ SRC_URI = "\
   file://no-static-link.patch \
 "
 
-SRC_URI[archive.md5sum] = "f44cd54256d7a643ab7b16e3f409b26b"
-SRC_URI[archive.sha256sum] = "6e9770f80459757f73bd71af82fbb29cd398b38388cdf1beab31ea91a331bc6c"
+SRC_URI[archive.md5sum] = "59cea96cc3027a1a7ed5020e69d4009a"
+SRC_URI[archive.sha256sum] = "98cc821555d152977fac99b6e5cb0f759275aabdf14e4928890c6fcc944ab736"
 S = "${WORKDIR}/${SRCNAME}-${PV}"
 
 inherit distutils
