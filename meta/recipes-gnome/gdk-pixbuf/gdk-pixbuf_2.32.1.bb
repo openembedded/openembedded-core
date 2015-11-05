@@ -17,11 +17,10 @@ SRC_URI = "${GNOME_MIRROR}/${BPN}/${MAJ_VER}/${BPN}-${PV}.tar.xz \
            file://extending-libinstall-dependencies.patch \
            file://run-ptest \
            file://fatal-loader.patch \
-           file://0001-pixops-Be-more-careful-about-integer-overflow.patch \
            "
 
-SRC_URI[md5sum] = "4fed0d54432f1b69fc6e66e608bd5542"
-SRC_URI[sha256sum] = "4853830616113db4435837992c0aebd94cbb993c44dc55063cee7f72a7bef8be"
+SRC_URI[md5sum] = "b1590189a2e89fab9f871959c168508c"
+SRC_URI[sha256sum] = "4432b74f25538c7d6bcb3ca51adabdd666168955f25812a2568dc9637697f3bc"
 
 inherit autotools pkgconfig gettext pixbufcache ptest-gnome
 
