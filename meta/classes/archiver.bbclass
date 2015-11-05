@@ -254,7 +254,7 @@ python do_unpack_and_patch() {
     ar_outdir = d.getVar('ARCHIVER_OUTDIR', True)
     d.setVar('WORKDIR', ar_outdir)
 
-    # The changed 'WORKDIR' also casued 'B' changed, create dir 'B' for the
+    # The changed 'WORKDIR' also caused 'B' changed, create dir 'B' for the
     # possibly requiring of the following tasks (such as some recipes's
     # do_patch required 'B' existed).
     bb.utils.mkdirhier(d.getVar('B', True))

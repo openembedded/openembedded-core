@@ -21,7 +21,7 @@ APT_ARGS = "${@['', '--no-install-recommends'][d.getVar("NO_RECOMMENDATIONS", Tr
 # INSTALL_BASEARCH_DEB - install base architecutre
 # INSTALL_ARCHS_DEB - list of available archs
 # INSTALL_PACKAGES_NORMAL_DEB - packages to be installed
-# INSTALL_PACKAGES_ATTEMPTONLY_DEB - packages attemped to be installed only
+# INSTALL_PACKAGES_ATTEMPTONLY_DEB - packages attempted to be installed only
 # INSTALL_PACKAGES_LINGUAS_DEB - additional packages for uclibc
 # INSTALL_TASK_DEB - task name
 

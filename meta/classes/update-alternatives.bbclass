@@ -61,7 +61,7 @@
 ALTERNATIVE_PRIORITY = "10"
 
 # We need special processing for vardeps because it can not work on
-# modified flag values.  So we agregate the flags into a new variable
+# modified flag values.  So we aggregate the flags into a new variable
 # and include that vairable in the set.
 UPDALTVARS  = "ALTERNATIVE ALTERNATIVE_LINK_NAME ALTERNATIVE_TARGET ALTERNATIVE_PRIORITY"
 

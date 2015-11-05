@@ -8,7 +8,7 @@
 #
 # 'what' can be one of
 # * target: Returns the target name ("<arch>-<os>")
-# * endianess: Return "be" for big endian targets, "le" for little endian
+# * endianness: Return "be" for big endian targets, "le" for little endian
 # * bits: Returns the bit size of the target, either "32" or "64"
 # * libc: Returns the name of the c library used by the target
 #

@@ -1513,7 +1513,7 @@ python package_do_shlibs() {
             rpath = []
             p = sub.Popen([d.expand("${HOST_PREFIX}otool"), '-l', file],stdout=sub.PIPE,stderr=sub.PIPE)
             err, out = p.communicate()
-            # If returned succesfully, process stderr for results
+            # If returned successfully, process stderr for results
             if p.returncode == 0:
                 for l in err.split("\n"):
                     l = l.strip()
@@ -1522,7 +1522,7 @@ python package_do_shlibs() {
 
         p = sub.Popen([d.expand("${HOST_PREFIX}otool"), '-L', file],stdout=sub.PIPE,stderr=sub.PIPE)
         err, out = p.communicate()
-        # If returned succesfully, process stderr for results
+        # If returned successfully, process stderr for results
         if p.returncode == 0:
             for l in err.split("\n"):
                 l = l.strip()

@@ -24,7 +24,7 @@ sstate_install[vardepsexclude] += "buildhistory_emit_pkghistory"
 SSTATEPOSTINSTFUNCS[vardepvalueexclude] .= "| buildhistory_emit_pkghistory"
 
 #
-# Write out metadata about this package for comparision when writing future packages
+# Write out metadata about this package for comparison when writing future packages
 #
 python buildhistory_emit_pkghistory() {
     if not d.getVar('BB_CURRENTTASK', True) in ['packagedata', 'packagedata_setscene']:

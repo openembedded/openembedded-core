@@ -19,7 +19,7 @@ KERNEL_OBJECT_SUFFIX = ".ko"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 # Function to ensure the kernel scripts are created. Expected to
-# be called before do_compile. See module.bbclass for an exmaple.
+# be called before do_compile. See module.bbclass for an example.
 do_make_scripts() {
 	unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS 
 	make CC="${KERNEL_CC}" LD="${KERNEL_LD}" AR="${KERNEL_AR}" \
