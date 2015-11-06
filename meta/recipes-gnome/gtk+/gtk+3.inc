@@ -29,6 +29,7 @@ EXTRA_OECONF += " \
                  --enable-modules \
                  --disable-cups \
                  --disable-introspection \
+                 --disable-colord \
 "
 
 PACKAGECONFIG ??= "${@bb.utils.contains("DISTRO_FEATURES", "x11", "x11", "", d)} \
@@ -79,7 +80,9 @@ FILES_${PN}-dev += " \
                     ${libdir}/gtk-3.0/${LIBV}/engines/*.la \
                     ${libdir}/gtk-3.0/modules/*.la \
                     ${bindir}/gtk-builder-convert \
-                    ${bindir}/gtk-encode-symbolic-svg"
+                    ${bindir}/gtk-encode-symbolic-svg \
+                    ${bindir}/gtk-builder-tool \
+                    "
 
 FILES_${PN}-dbg += " \
                     ${libdir}/gtk-3.0/${LIBV}/loaders/.debug \

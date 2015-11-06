@@ -8,8 +8,8 @@ SRC_URI = "http://ftp.gnome.org/pub/gnome/sources/gtk+/${MAJ_VER}/gtk+-${PV}.tar
            file://Do-not-try-to-initialize-GL-without-libGL.patch \
           "
 
-SRC_URI[md5sum] = "fc59e5c8b5a4585b60623dd708df400b"
-SRC_URI[sha256sum] = "4d12726d0856a968b41802ae5c5971d7e9bac532717e309d3f81b9989da5ffbe"
+SRC_URI[md5sum] = "230fd78e42419d35ff790784b457e5f2"
+SRC_URI[sha256sum] = "5dbec561c4a00070073bf9cf4cfdd61fab4a14c8ff5b15d700bd378f8185e152"
 
 S = "${WORKDIR}/gtk+-${PV}"
 
