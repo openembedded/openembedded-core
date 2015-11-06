@@ -3,10 +3,9 @@ require cairo.inc
 LIC_FILES_CHKSUM = "file://COPYING;md5=e73e999e0c72b5ac9012424fa157ad77"
 
 SRC_URI = "http://cairographics.org/releases/cairo-${PV}.tar.xz"
-SRC_URI += "file://Manually-transpose-the-matrix-in-_cairo_gl_shader_bi.patch"
 
-SRC_URI[md5sum] = "e1cdfaf1c6c995c4d4c54e07215b0118"
-SRC_URI[sha256sum] = "c919d999ddb1bbbecd4bbe65299ca2abd2079c7e13d224577895afa7005ecceb"
+SRC_URI[md5sum] = "90a929e8fe66fb5d19b5adaaea1e9a12"
+SRC_URI[sha256sum] = "f6ec9c7c844db9ec011f0d66b57ef590c45adf55393d1fc249003512522ee716"
 
 PACKAGES =+ "cairo-gobject cairo-script-interpreter cairo-perf-utils"
 
