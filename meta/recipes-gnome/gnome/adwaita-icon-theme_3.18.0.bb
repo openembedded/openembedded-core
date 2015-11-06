@@ -12,11 +12,10 @@ DEPENDS += "intltool-native"
 
 MAJ_VER = "${@oe.utils.trim_version("${PV}", 2)}"
 SRC_URI = "${GNOME_MIRROR}/${BPN}/${MAJ_VER}/${BPN}-${PV}.tar.xz \
-           file://Create-symlinks-when-installing-cursors.patch \
           "
 
-SRC_URI[md5sum] = "9ef86952c947aa27a1a888b7735d60b3"
-SRC_URI[sha256sum] = "b4556dfbf555d4fac12d4d5c12f7519de0d43ec42a1b649611439a50bf7acb96"
+SRC_URI[md5sum] = "ec1fa3fde83ad166ae7075a97dc1ec4b"
+SRC_URI[sha256sum] = "5e9ce726001fdd8ee93c394fdc3cdb9e1603bbed5b7c62df453ccf521ec50e58"
 
 do_install_append() {
 	# Build uses gtk-encode-symbolic-svg to create png versions:
