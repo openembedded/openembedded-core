@@ -204,7 +204,7 @@ def buildcfg_neededvars(d):
         bb.fatal('The following variable(s) were not set: %s\nPlease set them directly, or choose a MACHINE or DISTRO that sets them.' % ', '.join(pesteruser))
 
 addhandler base_eventhandler
-base_eventhandler[eventmask] = "bb.event.ConfigParsed bb.event.BuildStarted bb.event.RecipePreFinalise bb.runqueue.sceneQueueComplete"
+base_eventhandler[eventmask] = "bb.event.ConfigParsed bb.event.BuildStarted bb.event.RecipePreFinalise bb.runqueue.sceneQueueComplete bb.event.RecipeParsed"
 python base_eventhandler() {
     import bb.runqueue
 
@@ -254,6 +254,24 @@ python base_eventhandler() {
             bb.debug(1, "Executing SceneQueue Completion commands: %s" % "\n".join(cmds))
             bb.build.exec_func("completion_function", e.data)
             os.remove(completions)
+
+    if isinstance(e, bb.event.RecipeParsed):
+        #
+        # If we have multiple providers of virtual/X and a PREFERRED_PROVIDER_virtual/X is set
+        # skip parsing for all the other providers which will mean they get uninstalled from the
+        # sysroot since they're now "unreachable". This makes switching virtual/kernel work in 
+        # particular.
+        #
+        pn = d.getVar('PN', True)
+        source_mirror_fetch = d.getVar('SOURCE_MIRROR_FETCH', False)
+        if not source_mirror_fetch:
+            provs = (d.getVar("PROVIDES", True) or "").split()
+            multiwhitelist = (d.getVar("MULTI_PROVIDER_WHITELIST", True) or "").split()
+            for p in provs:
+                if p.startswith("virtual/") and p not in multiwhitelist:
+                    profprov = d.getVar("PREFERRED_PROVIDER_" + p, True)
+                    if profprov and pn != profprov:
+                        raise bb.parse.SkipPackage("PREFERRED_PROVIDER_%s set to %s, not %s" % (p, profprov, pn))
 }
 
 CONFIGURESTAMPFILE = "${WORKDIR}/configure.sstate"
