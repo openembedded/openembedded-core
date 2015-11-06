@@ -271,9 +271,9 @@ python do_checkpkg() {
         from bb.fetch2 import FetchError, NoMethodError, decodeurl
 
         """first check whether a uri is provided"""
-        src_uri = d.getVar('SRC_URI', True)
+        src_uri = (d.getVar('SRC_URI', True) or '').split()
         if src_uri:
-            uri_type, _, _, _, _, _ = decodeurl(src_uri)
+            uri_type, _, _, _, _, _ = decodeurl(src_uri[0])
         else:
             uri_type = "none"
 
