@@ -65,19 +65,19 @@ def base_get_metadata_svn_revision(path, d):
     return revision
 
 def base_get_metadata_git_branch(path, d):
-    import subprocess
+    import bb.process
 
     try:
-        return subprocess.check_output(["git", "rev-parse", "--abbrev-ref", "HEAD"],
-                                       cwd=path).strip()
-    except:
-        return "<unknown>"
+        rev, _ = bb.process.run('git rev-parse --abbrev-ref HEAD', cwd=path)
+    except bb.process.ExecutionError:
+        rev = '<unknown>'
+    return rev.strip()
 
 def base_get_metadata_git_revision(path, d):
-    import subprocess
+    import bb.process
 
     try:
-        return subprocess.check_output(["git", "rev-parse", "HEAD"],
-                                       cwd=path).strip()
-    except:
-        return "<unknown>"
+        rev, _ = bb.process.run('git rev-parse HEAD', cwd=path)
+    except bb.process.ExecutionError:
+        rev = '<unknown>'
+    return rev.strip()
