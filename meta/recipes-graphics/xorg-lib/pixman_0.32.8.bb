@@ -34,7 +34,7 @@ SRC_URI += "\
 	    file://0001-v3-test-add-a-check-for-FE_DIVBYZERO.patch \
 "
 
-SRC_URI[md5sum] = "8a9e8f14743a39cf303803f369c1f344"
-SRC_URI[sha256sum] = "201fc0d7d6bc0017496f2bd27b3ca14224aea0df6b624c5ee2dc0307a4ff14a4"
+SRC_URI[md5sum] = "18d6b62abdb7bc0f8e6b0ddf48986b2c"
+SRC_URI[sha256sum] = "5c63dbb3523fc4d86ed4186677815918a941b7cb390d5eec4f55cb5d66b59fb1"
 
 REQUIRED_DISTRO_FEATURES = ""
