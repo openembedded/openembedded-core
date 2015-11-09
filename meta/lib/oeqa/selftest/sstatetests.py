@@ -309,27 +309,27 @@ MACHINE = \"qemuarm\"
         bitbake("world meta-toolchain -S none")
 
         def get_files(d):
-            f = []
+            f = {}
             for root, dirs, files in os.walk(d):
                 for name in files:
                     if "meta-environment" in root or "cross-canadian" in root:
                         continue
                     if "do_build" not in name:
-                        f.append(os.path.join(root, name))
+                        # 1.4.1+gitAUTOINC+302fca9f4c-r0.do_package_write_ipk.sigdata.f3a2a38697da743f0dbed8b56aafcf79
+                        (_, task, _, shash) = name.rsplit(".", 3)
+                        f[os.path.join(os.path.basename(root), task)] = shash
             return f
         files1 = get_files(topdir + "/tmp-sstatesamehash/stamps/all" + targetvendor + "-" + targetos)
         files2 = get_files(topdir + "/tmp-sstatesamehash2/stamps/all" + targetvendor + "-" + targetos)
-        files2 = [x.replace("tmp-sstatesamehash2", "tmp-sstatesamehash") for x in files2]
         self.maxDiff = None
-        self.assertItemsEqual(files1, files2)
+        self.assertEqual(files1, files2)
 
         nativesdkdir = os.path.basename(glob.glob(topdir + "/tmp-sstatesamehash/stamps/*-nativesdk*-linux")[0])
 
         files1 = get_files(topdir + "/tmp-sstatesamehash/stamps/" + nativesdkdir)
         files2 = get_files(topdir + "/tmp-sstatesamehash2/stamps/" + nativesdkdir)
-        files2 = [x.replace("tmp-sstatesamehash2", "tmp-sstatesamehash") for x in files2]
         self.maxDiff = None
-        self.assertItemsEqual(files1, files2)
+        self.assertEqual(files1, files2)
 
     @testcase(1369)
     def test_sstate_sametune_samesigs(self):
