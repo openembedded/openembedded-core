@@ -203,7 +203,7 @@ def create_tarball(d, srcdir, suffix, ar_outdir):
     import tarfile
 
     # Make sure we are only creating a single tarball for gcc sources
-    if d.getVar('SRC_URI', True) == "" and 'gcc' in d.getVar('PN', True):
+    if (d.getVar('SRC_URI', True) == ""):
         return
 
     bb.utils.mkdirhier(ar_outdir)
@@ -259,13 +259,12 @@ python do_unpack_and_patch() {
     # do_patch required 'B' existed).
     bb.utils.mkdirhier(d.getVar('B', True))
 
-    # The kernel source is ready after do_validate_branches
-    if bb.data.inherits_class('kernel-yocto', d):
+    # The kernel class functions require it to be on work-shared, so we dont change WORKDIR
+    if not bb.data.inherits_class('kernel-yocto', d):
+        ar_outdir = d.getVar('ARCHIVER_OUTDIR', True)
+        d.setVar('WORKDIR', ar_outdir)
         bb.build.exec_func('do_unpack', d)
-        bb.build.exec_func('do_kernel_checkout', d)
-        bb.build.exec_func('do_validate_branches', d)
-    else:
-        bb.build.exec_func('do_unpack', d)
+
 
     # Save the original source for creating the patches
     if d.getVarFlag('ARCHIVER_MODE', 'diff', True) == '1':
@@ -273,8 +272,8 @@ python do_unpack_and_patch() {
         src_orig = '%s.orig' % src
         oe.path.copytree(src, src_orig)
 
-    # Make sure gcc sources are patched only once
-    if not ((d.getVar('SRC_URI', True) == "" and 'gcc' in d.getVar('PN', True))):
+    # Make sure gcc and kernel sources are patched only once
+    if not ((d.getVar('SRC_URI', True) == "" or bb.data.inherits_class('kernel-yocto', d))):
         bb.build.exec_func('do_patch', d)
 
     # Create the patches
@@ -347,6 +346,7 @@ do_deploy_archives[sstate-inputdirs] = "${ARCHIVER_TOPDIR}"
 do_deploy_archives[sstate-outputdirs] = "${DEPLOY_DIR_SRC}"
 
 addtask do_ar_original after do_unpack
+addtask do_unpack_and_patch after do_patch
 addtask do_ar_patched after do_unpack_and_patch
 addtask do_ar_configured after do_unpack_and_patch
 addtask do_dumpdata
@@ -364,6 +364,4 @@ python () {
     # Add tasks in the correct order, specifically for linux-yocto to avoid race condition
     if bb.data.inherits_class('kernel-yocto', d):
         bb.build.addtask('do_kernel_configme', 'do_configure', 'do_unpack_and_patch', d)
-    else:
-        bb.build.addtask('do_unpack_and_patch', None, 'do_patch', d)
 }
