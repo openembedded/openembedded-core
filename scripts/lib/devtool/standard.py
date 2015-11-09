@@ -238,7 +238,29 @@ def extract(args, config, basepath, workspace):
         return 1
 
     srctree = os.path.abspath(args.srctree)
-    initial_rev = _extract_source(srctree, args.keep_temp, args.branch, rd)
+    initial_rev = _extract_source(srctree, args.keep_temp, args.branch, False, rd)
+    logger.info('Source tree extracted to %s' % srctree)
+
+    if initial_rev:
+        return 0
+    else:
+        return 1
+
+def sync(args, config, basepath, workspace):
+    """Entry point for the devtool 'sync' subcommand"""
+    import bb
+
+    tinfoil = _prep_extract_operation(config, basepath, args.recipename)
+    if not tinfoil:
+        # Error already shown
+        return 1
+
+    rd = parse_recipe(config, tinfoil, args.recipename, True)
+    if not rd:
+        return 1
+
+    srctree = os.path.abspath(args.srctree)
+    initial_rev = _extract_source(srctree, args.keep_temp, args.branch, True, rd)
     logger.info('Source tree extracted to %s' % srctree)
 
     if initial_rev:
@@ -293,7 +315,7 @@ def _prep_extract_operation(config, basepath, recipename):
     return tinfoil
 
 
-def _extract_source(srctree, keep_temp, devbranch, d):
+def _extract_source(srctree, keep_temp, devbranch, sync, d):
     """Extract sources of a recipe"""
     import bb.event
     import oe.recipeutils
@@ -312,21 +334,26 @@ def _extract_source(srctree, keep_temp, devbranch, d):
 
     _check_compatible_recipe(pn, d)
 
-    if os.path.exists(srctree):
-        if not os.path.isdir(srctree):
-            raise DevtoolError("output path %s exists and is not a directory" %
-                               srctree)
-        elif os.listdir(srctree):
-            raise DevtoolError("output path %s already exists and is "
-                               "non-empty" % srctree)
+    if sync:
+        if not os.path.exists(srctree):
+                raise DevtoolError("output path %s does not exist" % srctree)
+    else:
+        if os.path.exists(srctree):
+            if not os.path.isdir(srctree):
+                raise DevtoolError("output path %s exists and is not a directory" %
+                                   srctree)
+            elif os.listdir(srctree):
+                raise DevtoolError("output path %s already exists and is "
+                                   "non-empty" % srctree)
 
-    if 'noexec' in (d.getVarFlags('do_unpack', False) or []):
-        raise DevtoolError("The %s recipe has do_unpack disabled, unable to "
-                           "extract source" % pn)
+        if 'noexec' in (d.getVarFlags('do_unpack', False) or []):
+            raise DevtoolError("The %s recipe has do_unpack disabled, unable to "
+                               "extract source" % pn)
 
-    # Prepare for shutil.move later on
-    bb.utils.mkdirhier(srctree)
-    os.rmdir(srctree)
+    if not sync:
+        # Prepare for shutil.move later on
+        bb.utils.mkdirhier(srctree)
+        os.rmdir(srctree)
 
     # We don't want notes to be printed, they are too verbose
     origlevel = bb.logger.getEffectiveLevel()
@@ -430,13 +457,35 @@ def _extract_source(srctree, keep_temp, devbranch, d):
             if haspatches:
                 bb.process.run('git checkout patches', cwd=srcsubdir)
 
-        # Move oe-local-files directory to srctree
-        if os.path.exists(os.path.join(tempdir, 'oe-local-files')):
-            logger.info('Adding local source files to srctree...')
-            shutil.move(os.path.join(tempdir, 'oe-local-files'), srcsubdir)
+        tempdir_localdir = os.path.join(tempdir, 'oe-local-files')
+        srctree_localdir = os.path.join(srctree, 'oe-local-files')
 
+        if sync:
+            bb.process.run('git fetch file://' + srcsubdir + ' ' + devbranch + ':' + devbranch, cwd=srctree)
 
-        shutil.move(srcsubdir, srctree)
+            # Move oe-local-files directory to srctree
+            # As the oe-local-files is not part of the constructed git tree,
+            # remove them directly during the synchrounizating might surprise
+            # the users.  Instead, we move it to oe-local-files.bak and remind
+            # user in the log message.
+            if os.path.exists(srctree_localdir + '.bak'):
+                shutil.rmtree(srctree_localdir, srctree_localdir + '.bak')
+
+            if os.path.exists(srctree_localdir):
+                logger.info('Backing up current local file directory %s' % srctree_localdir)
+                shutil.move(srctree_localdir, srctree_localdir + '.bak')
+
+            if os.path.exists(tempdir_localdir):
+                logger.info('Syncing local source files to srctree...')
+                shutil.copytree(tempdir_localdir, srctree_localdir)
+        else:
+            # Move oe-local-files directory to srctree
+            if os.path.exists(tempdir_localdir):
+                logger.info('Adding local source files to srctree...')
+                shutil.move(tempdir_localdir, srcsubdir)
+
+            shutil.move(srcsubdir, srctree)
+
     finally:
         bb.logger.setLevel(origlevel)
 
@@ -544,7 +593,7 @@ def modify(args, config, basepath, workspace):
     commits = []
     srctree = os.path.abspath(args.srctree)
     if args.extract:
-        initial_rev = _extract_source(args.srctree, False, args.branch, rd)
+        initial_rev = _extract_source(args.srctree, False, args.branch, False, rd)
         if not initial_rev:
             return 1
         logger.info('Source tree extracted to %s' % srctree)
@@ -1118,6 +1167,15 @@ def register_commands(subparsers, context):
     parser_extract.add_argument('--branch', '-b', default="devtool", help='Name for development branch to checkout')
     parser_extract.add_argument('--keep-temp', action="store_true", help='Keep temporary directory (for debugging)')
     parser_extract.set_defaults(func=extract)
+
+    parser_sync = subparsers.add_parser('sync', help='Synchronize the source for an existing recipe',
+                                       description='Synchronize the source for an existing recipe',
+                                       formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+    parser_sync.add_argument('recipename', help='Name for recipe to sync the source for')
+    parser_sync.add_argument('srctree', help='Path to where to sync the source tree')
+    parser_sync.add_argument('--branch', '-b', default="devtool", help='Name for development branch to checkout')
+    parser_sync.add_argument('--keep-temp', action="store_true", help='Keep temporary directory (for debugging)')
+    parser_sync.set_defaults(func=sync)
 
     parser_update_recipe = subparsers.add_parser('update-recipe', help='Apply changes from external source tree to recipe',
                                        description='Applies changes from external source tree to a recipe (updating/adding/removing patches as necessary, or by updating SRCREV)')
