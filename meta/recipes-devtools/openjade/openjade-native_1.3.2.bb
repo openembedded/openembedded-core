@@ -24,6 +24,10 @@ SRC_URI[sha256sum] = "1d2d7996cc94f9b87d0c51cf0e028070ac177c4123ecbfd7ac1cb8d0b7
 
 inherit autotools-brokensep native
 
+# Statically link local libs to avoid gold link issue [YOCTO #2972]
+PACKAGECONFIG ?= "static-only-libs"
+PACKAGECONFIG[static-only-libs] = "--enable-static --disable-shared,--enable-static --enable-shared,,"
+
 EXTRA_OECONF = "--enable-spincludedir=${STAGING_INCDIR}/OpenSP \
                 --enable-splibdir=${STAGING_LIBDIR}"
 
@@ -57,13 +61,19 @@ do_compile_prepend () {
 do_install() {
 	# Refer to http://www.linuxfromscratch.org/blfs/view/stable/pst/openjade.html
 	# for details.
-	install -d ${D}${bindir}	
-	install -m 0755 ${S}/jade/.libs/openjade ${D}${bindir}/openjade
+	install -d ${D}${bindir} ${D}${libdir}
+	if ${@bb.utils.contains('PACKAGECONFIG', 'static-only-libs', 'true', 'false', d)}; then
+		install -m 0755 jade/openjade ${D}${bindir}/openjade
+		oe_libinstall -a -C style libostyle ${D}${libdir}
+		oe_libinstall -a -C spgrove libospgrove ${D}${libdir}
+		oe_libinstall -a -C grove libogrove ${D}${libdir}
+	else
+		install -m 0755 jade/.libs/openjade ${D}${bindir}/openjade
+		oe_libinstall -a -so -C style libostyle ${D}${libdir}
+		oe_libinstall -a -so -C spgrove libospgrove ${D}${libdir}
+		oe_libinstall -a -so -C grove libogrove ${D}${libdir}
+	fi
 	ln -sf openjade ${D}${bindir}/jade
-
-	oe_libinstall -a -so -C style libostyle ${D}${libdir}
-	oe_libinstall -a -so -C spgrove libospgrove ${D}${libdir}
-	oe_libinstall -a -so -C grove libogrove ${D}${libdir}
 
 	install -d ${D}${datadir}/sgml/openjade-${PV}
 	install -m 644 dsssl/catalog ${D}${datadir}/sgml/openjade-${PV}
