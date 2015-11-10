@@ -1112,6 +1112,7 @@ python do_package_qa () {
     bb.note("DONE with PACKAGE QA")
 }
 
+do_package_qa[vardepsexclude] = "BB_TASKDEPDATA"
 do_package_qa[rdeptask] = "do_packagedata"
 addtask do_package_qa after do_packagedata do_package before do_build
 
