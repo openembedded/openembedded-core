@@ -272,8 +272,8 @@ class Image(ImageDepGraph):
         rootfs_size = self._get_rootfs_size()
 
         self.d.setVar('img_creation_func', '\n'.join(cmds))
-        self.d.setVarFlag('img_creation_func', 'func', 1)
-        self.d.setVarFlag('img_creation_func', 'fakeroot', 1)
+        self.d.setVarFlag('img_creation_func', 'func', '1')
+        self.d.setVarFlag('img_creation_func', 'fakeroot', '1')
         self.d.setVar('ROOTFS_SIZE', str(rootfs_size))
 
         with open(script_name, "w+") as script:
