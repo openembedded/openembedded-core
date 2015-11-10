@@ -26,7 +26,13 @@ do_install_prepend() {
 # Use setuptools site.py instead, avoid shared state issue
 do_install_append() {
     rm ${D}/${libdir}/${PYTHON_DIR}/site-packages/site.py
-    rm ${D}/${libdir}/${PYTHON_DIR}/site-packages/__pycache__/site.cpython-34.pyc
+    rm ${D}/${libdir}/${PYTHON_DIR}/site-packages/__pycache__/site.cpython-*.pyc
+
+    # Install as pip3 and leave pip2 as default
+    rm ${D}/${bindir}/pip
+
+    # Installed eggs need to be passed directly to the interpreter via a pth file
+    echo "./${SRCNAME}-${PV}-py${PYTHON_BASEVERSION}.egg" > ${D}${PYTHON_SITEPACKAGES_DIR}/${SRCNAME}-${PV}.pth
 }
 
 RDEPENDS_${PN} = "\

@@ -17,7 +17,7 @@ import os
 import sys
 import time
 
-VERSION = "3.4.2"
+VERSION = "3.5.0"
 
 __author__ = "Michael 'Mickey' Lauer <mlauer@vanille-media.de>"
 __version__ = "20140131"
