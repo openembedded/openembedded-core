@@ -1,7 +1,7 @@
-From 92598e1515b2ec3851af1f064075d0457f01272d Mon Sep 17 00:00:00 2001
+From 47092c85a2d3dea6fb3ffa59ae6fe737112db93e Mon Sep 17 00:00:00 2001
 From: Zhenhua Luo <zhenhua.luo@freescale.com>
 Date: Mon, 9 Feb 2015 18:33:56 +0800
-Subject: [PATCH] powerpc/cpu/*/u-boot*.lds: remove _GLOBAL_OFFSET_TABLE_
+Subject: [PATCH 1/6] powerpc/cpu/*/u-boot*.lds: remove _GLOBAL_OFFSET_TABLE_
  definition
 Organization: O.S. Systems Software LTDA.
 
@@ -17,9 +17,10 @@ section should be used(https://sourceware.org/ml/binutils/2008-09/msg00122.html)
 Fixed the following build errors with binutils-2.25:
 | powerpc-poky-linux-gnuspe-ld.bfd: _GLOBAL_OFFSET_TABLE_ not defined in linker created .got
 
-Signed-off-by: Zhenhua Luo <zhenhua.luo@freescale.com>
-
 Upstream-Status: Pending
+
+Signed-off-by: Zhenhua Luo <zhenhua.luo@freescale.com>
+Signed-off-by: Otavio Salvador <otavio@ossystems.com.br>
 ---
  arch/powerpc/cpu/mpc512x/u-boot.lds          | 1 -
  arch/powerpc/cpu/mpc5xx/u-boot.lds           | 1 -
@@ -180,5 +181,5 @@ index 1980508..55dd4e1 100644
      KEEP(*(.fixup))
    }
 -- 
-2.4.6
+2.6.2
 
