@@ -70,7 +70,7 @@ class BuildSystem(object):
 
 def generate_locked_sigs(sigfile, d):
     bb.utils.mkdirhier(os.path.dirname(sigfile))
-    depd = d.getVar('BB_TASKDEPDATA', True)
+    depd = d.getVar('BB_TASKDEPDATA', False)
     tasks = ['%s.%s' % (v[2], v[1]) for v in depd.itervalues()]
     bb.parse.siggen.dump_lockedsigs(sigfile, tasks)
 
