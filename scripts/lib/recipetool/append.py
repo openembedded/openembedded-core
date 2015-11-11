@@ -343,6 +343,8 @@ def appendsrc(args, files, rd, extralines=None):
     simplified = {}
     src_uri = rd.getVar('SRC_URI', True).split()
     for uri in src_uri:
+        if uri.endswith(';'):
+            uri = uri[:-1]
         simple_uri = bb.fetch.URI(uri)
         simple_uri.params = {}
         simplified[str(simple_uri)] = uri
