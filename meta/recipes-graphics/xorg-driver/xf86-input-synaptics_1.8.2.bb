@@ -14,5 +14,3 @@ SRC_URI[md5sum] = "8ed68e8cc674dd61adb280704764aafb"
 SRC_URI[sha256sum] = "7b0e164ebd02a680e0c695955e783059f37edb0c2656398e0a972adc8e698c80"
 
 DEPENDS += "libxi mtdev libxtst libevdev"
-
-FILES_${PN} += "${datadir}/X11/xorg.conf.d"
