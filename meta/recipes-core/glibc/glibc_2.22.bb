@@ -12,6 +12,7 @@ SRCREV ?= "a34d1c6afc86521d6ad17662a3b5362d8481514c"
 SRCBRANCH ?= "release/${PV}/master"
 
 GLIBC_GIT_URI ?= "git://sourceware.org/git/glibc.git"
+UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>\d+\.\d+(\.\d+)*)"
 
 SRC_URI = "${GLIBC_GIT_URI};branch=${SRCBRANCH};name=glibc \
            file://0004-Backport-https-sourceware.org-ml-libc-ports-2007-12-.patch \

@@ -182,32 +182,6 @@ REGEX_URI_pn-pcmanfm = "http://sourceforge.net/projects/pcmanfm/files/PCManFM%20
 REGEX_URI_pn-libcgroup = "http://sourceforge.net/projects/libcg/files/libcgroup/"
 REGEX_URI_pn-cdrtools = "http://sourceforge.net/projects/cdrtools/files/alpha/"
 
-# GIT
-GITTAGREGEX_COMMON = "(?P<pver>\d+\.\d+(\.\d+)*)"
-
-GITTAGREGEX_pn-linux-yocto = "${GITTAGREGEX_COMMON}"
-GITTAGREGEX_pn-linux-yocto-tiny = "${GITTAGREGEX_COMMON}"
-GITTAGREGEX_pn-linux-yocto-dev = "${GITTAGREGEX_COMMON}"
-GITTAGREGEX_pn-uclibc = "${GITTAGREGEX_COMMON}"
-GITTAGREGEX_pn-glibc = "${GITTAGREGEX_COMMON}"
-GITTAGREGEX_pn-cross-localedef = "${GITTAGREGEX_COMMON}"
-GITTAGREGEX_pn-binutils = "binutils-(?P<pver>\d+_(\d_?)*)"
-GITTAGREGEX_pn-bootchart2 = "${GITTAGREGEX_COMMON}"
-GITTAGREGEX_pn-remake = "(?P<pver>(\d+(\.\d+)+)\+dbg.+)"
-GITTAGREGEX_pn-tcf-agent = "(?P<pver>(\d+(\.\d+)+))"
-GITTAGREGEX_pn-chkconfig-alternatives = "chkconfig-(?P<pver>(\d+(\.\d+)+))"
-GITTAGREGEX_pn-sgmlspl = "(?P<pver>(\d+(\.\d+)+))"
-
-# Exclude x.99.x versions
-GITTAGREGEX_pn-mx-1.0 = "(?P<pver>^\d+(\.(?!99)\d+)+)"
-
-# Blacklist a bogus tag
-GITTAGREGEX_pn-file = "FILE(?P<pver>(?!6_23).+)"
-GITTAGREGEX_pn-xinetd = "xinetd-(?P<pver>(?!20030122).+)"
-
-# Blacklist debian-specific tags
-GITTAGREGEX_pn-xf86-video-omapfb = "(?P<pver>\d+(\.\d+)+)(?!-)"
-
 # Keep old gcc versions at their major versions
 REGEX_pn-gcc-source-4.9.3 = "gcc-(?P<pver>4\.9\.\d+).tar"
 REGEX_pn-gcc-source-4.8.4 = "gcc-(?P<pver>4\.8\.\d+).tar"

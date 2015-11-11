@@ -21,3 +21,6 @@ SRC_URI = "git://uclibc.org/uClibc.git;branch=master \
         file://0001-wire-in-syncfs.patch \
 "
 S = "${WORKDIR}/git"
+
+UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>\d+\.\d+(\.\d+)*)"
+

@@ -11,6 +11,9 @@ LIC_FILES_CHKSUM = "file://COPYING;beginline=2;md5=6a7382872edb68d33e1a9398b6e03
 DEPENDS = "zlib file-replacement-native"
 DEPENDS_class-native = "zlib-native"
 
+# Blacklist a bogus tag in upstream check
+UPSTREAM_CHECK_GITTAGREGEX = "FILE(?P<pver>(?!6_23).+)"
+
 SRC_URI = "git://github.com/file/file.git \
         file://debian-742262.patch \
         file://0001-Add-P-prompt-into-Usage-info.patch \

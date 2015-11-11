@@ -13,6 +13,9 @@ SRCREV = "33e36c12dde336edbdd34626dd8adfcaebc8fbb8"
 PR = "${INC_PR}.7"
 PV = "0.1.1+gitr${SRCPV}"
 
+# Blacklist debian-specific tags in upstream version check
+UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>\d+(\.\d+)+)(?!-)"
+
 SRC_URI = "git://anonscm.debian.org/collab-maint/xf86-video-omapfb.git \
   file://0001-Prevents-omapfb-from-from-crashing-when-pixelclock-o.patch \
   file://0001-Revert-Set-a-large-CRTC-upper-limit-to-not-prune-lar.patch \

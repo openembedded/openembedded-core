@@ -16,6 +16,8 @@ def binutils_branch_version(d):
 
 BINUPV = "${@binutils_branch_version(d)}"
 
+UPSTREAM_CHECK_GITTAGREGEX = "binutils-(?P<pver>\d+_(\d_?)*)"
+
 SRCREV = "2bd25930221dea4bf33c13a89c111514491440e2"
 SRC_URI = "\
      git://sourceware.org/git/binutils-gdb.git;branch=binutils-${BINUPV}-branch;protocol=git \

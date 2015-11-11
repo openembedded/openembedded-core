@@ -9,6 +9,9 @@ LIC_FILES_CHKSUM = "file://COPYRIGHT;md5=8ad8615198542444f84d28a6cf226dd8"
 DEPENDS = ""
 PR = "r2"
 
+# Blacklist a bogus tag in upstream check
+UPSTREAM_CHECK_GITTAGREGEX = "xinetd-(?P<pver>(?!20030122).+)"
+
 SRC_URI = "git://github.com/xinetd-org/xinetd.git;protocol=https \
       file://xinetd.init \
       file://xinetd.conf \
