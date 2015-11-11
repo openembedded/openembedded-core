@@ -13,7 +13,7 @@ SRC_URI[sha256sum] = "57d555be4cc64905454687bf9bb7dc1e68531bee93befa77222d94ea08
 
 DEPENDS = "dbus glib-2.0 virtual/libx11 libxi libxtst intltool-native gettext-native"
 
-inherit autotools gtk-doc pkgconfig distro_features_check
+inherit autotools gtk-doc pkgconfig distro_features_check upstream-version-is-even
 # depends on virtual/libx11
 REQUIRED_DISTRO_FEATURES = "x11"
 

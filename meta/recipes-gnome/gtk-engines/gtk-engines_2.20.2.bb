@@ -37,6 +37,10 @@ GNOME_COMPRESS_TYPE="bz2"
 inherit distro_features_check
 ANY_OF_DISTRO_FEATURES = "${GTK2DISTROFEATURES}"
 
+# This picks stable releases in the 2.x series (but not 2.90 onwards,
+# which were GNOME 3 betas).
+UPSTREAM_CHECK_REGEX = "(?P<pver>2\.([0-8]*[02468])+(\.\d+)+)"
+
 python populate_packages_prepend() {
     engines_root = os.path.join(d.getVar('libdir', True), "gtk-2.0/2.10.0/engines")
     themes_root = os.path.join(d.getVar('datadir', True), "themes")

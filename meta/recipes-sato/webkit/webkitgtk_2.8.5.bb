@@ -19,7 +19,7 @@ SRC_URI = "\
 SRC_URI[md5sum] = "df79991848a5096d3a75289ebce547ae"
 SRC_URI[sha256sum] = "3d1f0c534935f43fd74df90f2648fcee672d60f1f57a30fa557a77891ae04d20"
 
-inherit cmake lib_package pkgconfig perlnative pythonnative distro_features_check
+inherit cmake lib_package pkgconfig perlnative pythonnative distro_features_check upstream-version-is-even
 
 # depends on libxt
 REQUIRED_DISTRO_FEATURES = "x11"

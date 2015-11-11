@@ -208,57 +208,6 @@ GITTAGREGEX_pn-xinetd = "xinetd-(?P<pver>(?!20030122).+)"
 # Blacklist debian-specific tags
 GITTAGREGEX_pn-xf86-video-omapfb = "(?P<pver>\d+(\.\d+)+)(?!-)"
 
-# GNOME related.
-#
-# GNOME2_STABLE picks stable releases in the 2.x series (so not 2.90 onwards,
-# which were GNOME 3 betas.
-#
-# GNOME_STABLE picks the latest stable release.
-
-GNOME2_STABLE = "(?P<pver>2\.([0-8]*[02468])+(\.\d+)+)"
-GNOME_STABLE = "(?P<pver>\d+\.(\d*[02468])+(\.\d+)+)"
-
-REGEX_pn-glib-2.0 = "${GNOME_STABLE}"
-REGEX_pn-atk = "${GNOME_STABLE}"
-REGEX_pn-at-spi2-core = "${GNOME_STABLE}"
-REGEX_pn-at-spi2-atk = "${GNOME_STABLE}"
-REGEX_pn-gdk-pixbuf = "${GNOME_STABLE}"
-REGEX_pn-pango = "${GNOME_STABLE}"
-REGEX_pn-gtk+ = "${GNOME2_STABLE}"
-REGEX_pn-gtk+3 = "${GNOME_STABLE}"
-REGEX_pn-gtk-engines = "${GNOME2_STABLE}"
-REGEX_pn-gtk-icon-utils-native = "${GNOME2_STABLE}"
-REGEX_pn-glib-networking = "${GNOME_STABLE}"
-REGEX_pn-librsvg = "${GNOME_STABLE}"
-REGEX_pn-libsoup-2.4 = "${GNOME_STABLE}"
-REGEX_pn-vala = "${GNOME_STABLE}"
-REGEX_pn-clutter-1.0 = "${GNOME_STABLE}"
-REGEX_pn-clutter-gtk-1.0 = "${GNOME_STABLE}"
-REGEX_pn-clutter-gst-3.0 = "${GNOME_STABLE}"
-REGEX_pn-cogl-1.0 = "${GNOME_STABLE}"
-REGEX_pn-adwaita-icon-theme = "${GNOME_STABLE}"
-REGEX_pn-vte = "${GNOME_STABLE}"
-REGEX_pn-epiphany = "${GNOME_STABLE}"
-REGEX_pn-webkitgtk = "${GNOME_STABLE}"
-REGEX_pn-p11-kit = "${GNOME_STABLE}"
-REGEX_pn-gnome-desktop3 = "${GNOME_STABLE}"
-
-# not GNOME related but uses same even-minor-release-is-stable logic
-REGEX_pn-dbus = "${GNOME_STABLE}"
-REGEX_pn-dbus-test = "${GNOME_STABLE}"
-
-# same logic applies to gstreamer releases
-REGEX_pn-gstreamer1.0 = "${GNOME_STABLE}"
-REGEX_pn-gstreamer1.0-libav = "${GNOME_STABLE}"
-REGEX_pn-gstreamer1.0-plugins-bad = "${GNOME_STABLE}"
-REGEX_pn-gstreamer1.0-plugins-base = "${GNOME_STABLE}"
-REGEX_pn-gstreamer1.0-plugins-good = "${GNOME_STABLE}"
-REGEX_pn-gstreamer1.0-plugins-ugly = "${GNOME_STABLE}"
-REGEX_pn-gstreamer1.0-rtsp-server = "${GNOME_STABLE}"
-
-# and perl
-REGEX_pn-perl = "${GNOME_STABLE}"
-
 # Keep old gcc versions at their major versions
 REGEX_pn-gcc-source-4.9.3 = "gcc-(?P<pver>4\.9\.\d+).tar"
 REGEX_pn-gcc-source-4.8.4 = "gcc-(?P<pver>4\.8\.\d+).tar"

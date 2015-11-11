@@ -10,7 +10,7 @@ SRC_URI[sha256sum] = "c4b15f9386d34d464ddad5f6cc85669742c016df87141ceee935132459
 
 DEPENDS = "dbus glib-2.0 atk at-spi2-core"
 
-inherit autotools pkgconfig distro_features_check
+inherit autotools pkgconfig distro_features_check upstream-version-is-even
 
 # The at-spi2-core requires x11 in DISTRO_FEATURES
 REQUIRED_DISTRO_FEATURES = "x11"

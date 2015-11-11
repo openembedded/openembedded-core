@@ -18,7 +18,7 @@ PACKAGECONFIG[x11] = "--with-xft,--without-xft,${X11DEPENDS}"
 BBCLASSEXTEND = "native"
 DEPENDS_class-native = "glib-2.0-native cairo-native harfbuzz-native"
 
-inherit gnomebase gtk-doc qemu ptest-gnome
+inherit gnomebase gtk-doc qemu ptest-gnome upstream-version-is-even
 
 EXTRA_AUTORECONF = ""
 

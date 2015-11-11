@@ -2,7 +2,7 @@ SUMMARY = "Provides a way to load and enumerate PKCS#11 modules"
 LICENSE = "BSD"
 LIC_FILES_CHKSUM = "file://COPYING;md5=02933887f609807fbb57aa4237d14a50"
 
-inherit autotools gettext pkgconfig
+inherit autotools gettext pkgconfig upstream-version-is-even
 
 DEPENDS = "libtasn1 libffi"
 

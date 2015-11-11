@@ -20,7 +20,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=5f30f0716dfdd0d91eb439ebec522ec2 \
 
 S = "${WORKDIR}/gtk+-${PV}"
 
-inherit pkgconfig native
+inherit pkgconfig native upstream-version-is-even
 
 PKG_CONFIG_FOR_BUILD = "${STAGING_BINDIR_NATIVE}/pkg-config-native"
 
