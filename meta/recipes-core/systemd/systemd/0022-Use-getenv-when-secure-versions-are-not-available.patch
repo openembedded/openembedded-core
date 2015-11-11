@@ -7,8 +7,8 @@ musl doesnt implement secure version, so we default
 to it if configure does not detect a secure imeplementation
 
 Signed-off-by: Khem Raj <raj.khem@gmail.com>
+Upstream-Status: Denied
 ---
-Upstream-Status: Rejected
 
  src/basic/missing.h | 5 +++--
  1 file changed, 3 insertions(+), 2 deletions(-)
