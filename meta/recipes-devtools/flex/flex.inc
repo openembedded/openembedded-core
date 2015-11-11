@@ -8,6 +8,7 @@ LICENSE = "BSD"
 DEPENDS += "${@'bison-native flex-native' if '${PTEST_ENABLED}' == '1' else ''}"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/flex/flex-${PV}.tar.bz2 \
+           file://0001-bison-test-fixes-Do-not-use-obsolete-bison-construct.patch \
            file://run-ptest \
 "
 
