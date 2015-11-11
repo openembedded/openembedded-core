@@ -24,10 +24,8 @@ LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=10ce5de3b111315ea652a5f74ec0c602"
 DEPENDS += "virtual/libx11 libdrm xf86driproto"
 
-SRC_URI += "file://0001-drmmode_output_dpms-Replace-logical-with-bitwise-ope.patch"
-
-SRC_URI[md5sum] = "be35daf6fa4b75092cc4a8978c437bc5"
-SRC_URI[sha256sum] = "db1e0e69fd4c4c8fdca5ef2cb0447bccd7518a718495876a6904bef57b39986d"
+SRC_URI[md5sum] = "a364e151a537948f75bb8c9b840a31da"
+SRC_URI[sha256sum] = "a7192690b8638f5c8d611a1bae07cc13081e22edd4070f37a2f5c3f8d79e7ebc"
 
 CFLAGS += " -I${STAGING_INCDIR}/xorg "
 
