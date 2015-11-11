@@ -13,8 +13,8 @@ LICENSE = "MIT & MIT-style"
 LIC_FILES_CHKSUM = "file://COPYING;md5=0e7f21ca7db975c63467d2e7624a12f9"
 
 SRC_URI = "${XORG_MIRROR}/individual/data/xkeyboard-config/${BPN}-${PV}.tar.bz2"
-SRC_URI[md5sum] = "4af1deeb7c5f4cad62e65957d98d6758"
-SRC_URI[sha256sum] = "0e443cf7ca2f0b40846472c029647a05933fc705d611e1478c4db8a48a6f38bf"
+SRC_URI[md5sum] = "bf6aa31195584cfce01b2194c3e5ea26"
+SRC_URI[sha256sum] = "1e8a1f212c96b7f71ca0b05da361cac1816d27baae1d8e03e7b53049b58d1d58"
 
 SECTION = "x11/libs"
 DEPENDS = "intltool-native virtual/gettext util-macros libxslt-native"
