@@ -10,6 +10,7 @@ PV = "1.3.0+git${SRCPV}"
 
 SRC_URI = "git://git.eclipse.org/gitroot/tcf/org.eclipse.tcf.agent.git;branch=1.3_mars_bugfix \
            file://fix_ranlib.patch \
+           file://ldflags.patch \
            file://tcf-agent.init \
            file://tcf-agent.service \
           "
