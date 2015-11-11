@@ -4,7 +4,7 @@ later (would not work on i386, i486). Using 64 bit atomic
 instructions bypasses code containing a bug as documented in
 https://bugzilla.yoctoproject.org/show_bug.cgi?id=8140
 
-Upstream-Status: TBD
+Upstream-Status: Pending
 
 Signed-off-by: Juro Bystricky <juro.bystricky@intel.com>
 
