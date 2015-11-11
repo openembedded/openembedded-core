@@ -18,10 +18,11 @@ PACKAGECONFIG[experimental] = "--enable-experimental,--disable-experimental,"
 
 SRC_URI = "\
     ${KERNELORG_MIRROR}/linux/bluetooth/bluez-${PV}.tar.xz \
+    file://init \
 "
 S = "${WORKDIR}/bluez-${PV}"
 
-inherit autotools-brokensep pkgconfig systemd
+inherit autotools-brokensep pkgconfig systemd update-rc.d
 
 EXTRA_OECONF = "\
   --enable-tools \
@@ -42,6 +43,9 @@ NOINST_TOOLS = " \
 "
 
 do_install_append() {
+	install -d ${D}${INIT_D_DIR}
+	install -m 0755 ${WORKDIR}/init ${D}${INIT_D_DIR}/bluetooth
+
 	install -d ${D}${sysconfdir}/bluetooth/
 	if [ -f ${S}/profiles/audio/audio.conf ]; then
 	    install -m 0644 ${S}/profiles/audio/audio.conf ${D}/${sysconfdir}/bluetooth/
@@ -100,5 +104,7 @@ FILES_${PN}-dbg += "\
 RDEPENDS_${PN}-testtools += "python python-dbus python-pygobject"
 
 SYSTEMD_SERVICE_${PN} = "bluetooth.service"
+INITSCRIPT_PACKAGES = "${PN}"
+INITSCRIPT_NAME_${PN} = "bluetooth"
 
 EXCLUDE_FROM_WORLD = "1"
