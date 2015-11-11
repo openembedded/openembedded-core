@@ -39,6 +39,7 @@ def qemu_run_binary(data, rootfs_path, binary):
 # PACKAGE_ARCH, not overrides and hence have to do this dance. Simply being arch 
 # specific isn't good enough.
 QEMU_OPTIONS = "-r ${OLDEST_KERNEL} ${@d.getVar("QEMU_EXTRAOPTIONS_%s" % d.getVar('PACKAGE_ARCH', True), True) or ""}"
+QEMU_OPTIONS[vardeps] += "QEMU_EXTRAOPTIONS_${PACKAGE_ARCH}"
 QEMU_EXTRAOPTIONS_iwmmxt    = " -cpu pxa270-c5"
 QEMU_EXTRAOPTIONS_armv6     = " -cpu arm1136"
 QEMU_EXTRAOPTIONS_armv7a    = " -cpu cortex-a8"
