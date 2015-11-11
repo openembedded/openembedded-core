@@ -10,7 +10,7 @@ advanced features of the touchpad to become available."
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=55aacd3535a741824955c5eb8f061398"
 
-SRC_URI[md5sum] = "8ed68e8cc674dd61adb280704764aafb"
-SRC_URI[sha256sum] = "7b0e164ebd02a680e0c695955e783059f37edb0c2656398e0a972adc8e698c80"
+SRC_URI[md5sum] = "4e3c8bed1ab4a67db2160c2c3d7e2a34"
+SRC_URI[sha256sum] = "d39f100c74f3673778b53f17bab7690161925e25dd998a15dd8cc69b52e83f01"
 
 DEPENDS += "libxi mtdev libxtst libevdev"
