@@ -418,11 +418,7 @@ pkg_postinst_udev-hwdb () {
 }
 
 pkg_prerm_udev-hwdb () {
-	if test -n "$D"; then
-		exit 1
-	fi
-
-	rm -f ${sysconfdir}/udev/hwdb.bin
+	rm -f $D${sysconfdir}/udev/hwdb.bin
 }
 
 # As this recipe builds udev, respect systemd being in DISTRO_FEATURES so
