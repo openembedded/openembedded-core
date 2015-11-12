@@ -141,6 +141,54 @@ def write_license_files(d, license_manifest, pkg_dic):
                         os.link(pkg_license, pkg_rootfs_license)
 
 
+def get_deployed_dependencies(d):
+    """
+    Get all the deployed dependencies of an image
+    """
+
+    deploy = {}
+    # Get all the dependencies for the current task (rootfs).
+    # Also get EXTRA_IMAGEDEPENDS because the bootloader is
+    # usually in this var and not listed in rootfs.
+    # At last, get the dependencies from boot classes because
+    # it might contain the bootloader.
+    taskdata = d.getVar("BB_TASKDEPDATA", True)
+    depends = list(set([dep[0] for dep
+                    in taskdata.itervalues()
+                    if not dep[0].endswith("-native")]))
+    extra_depends = d.getVar("EXTRA_IMAGEDEPENDS", True)
+    boot_depends = get_boot_dependencies(d)
+    depends.extend(extra_depends.split())
+    depends.extend(boot_depends)
+    depends = list(set(depends))
+
+    # To verify what was deployed it checks the rootfs dependencies against
+    # the SSTATE_MANIFESTS for "deploy" task.
+    # The manifest file name contains the arch. Because we are not running
+    # in the recipe context it is necessary to check every arch used.
+    sstate_manifest_dir = d.getVar("SSTATE_MANIFESTS", True)
+    sstate_archs = d.getVar("SSTATE_ARCHS", True)
+    extra_archs = d.getVar("PACKAGE_EXTRA_ARCHS", True)
+    archs = list(set(("%s %s" % (sstate_archs, extra_archs)).split()))
+    for dep in depends:
+        # Some recipes have an arch on their own, so we try that first.
+        special_arch = d.getVar("PACKAGE_ARCH_pn-%s" % dep, True)
+        if special_arch:
+            sstate_manifest_file = os.path.join(sstate_manifest_dir,
+                    "manifest-%s-%s.deploy" % (special_arch, dep))
+            if os.path.exists(sstate_manifest_file):
+                deploy[dep] = sstate_manifest_file
+                continue
+
+        for arch in archs:
+            sstate_manifest_file = os.path.join(sstate_manifest_dir,
+                    "manifest-%s-%s.deploy" % (arch, dep))
+            if os.path.exists(sstate_manifest_file):
+                deploy[dep] = sstate_manifest_file
+                break
+
+    return deploy
+
 def get_boot_dependencies(d):
     """
     Return the dependencies from boot tasks
