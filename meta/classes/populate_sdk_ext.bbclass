@@ -51,7 +51,7 @@ python copy_buildsystem () {
     core_meta_subdir = ''
 
     # Copy in all metadata layers + bitbake (as repositories)
-    buildsystem = oe.copy_buildsystem.BuildSystem(d)
+    buildsystem = oe.copy_buildsystem.BuildSystem('extensible SDK', d)
     baseoutpath = d.getVar('SDK_OUTPUT', True) + '/' + d.getVar('SDKPATH', True)
     layers_copied = buildsystem.copy_bitbake_and_layers(baseoutpath + '/layers')
 
