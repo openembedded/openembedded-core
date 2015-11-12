@@ -141,6 +141,42 @@ def write_license_files(d, license_manifest, pkg_dic):
                         os.link(pkg_license, pkg_rootfs_license)
 
 
+def get_boot_dependencies(d):
+    """
+    Return the dependencies from boot tasks
+    """
+
+    depends = []
+    boot_depends_string = ""
+    taskdepdata = d.getVar("BB_TASKDEPDATA", True)
+    # Only bootimg and bootdirectdisk include the depends flag
+    boot_tasks = ["do_bootimg", "do_bootdirectdisk",]
+
+    for task in boot_tasks:
+        boot_depends_string = "%s %s" % (boot_depends_string,
+                d.getVarFlag(task, "depends", True) or "")
+    boot_depends = [dep.split(":")[0] for dep
+                in boot_depends_string.split()
+                if not dep.split(":")[0].endswith("-native")]
+    for dep in boot_depends:
+        info_file = os.path.join(d.getVar("LICENSE_DIRECTORY", True),
+                dep, "recipeinfo")
+        # If the recipe and dependency name is the same
+        if os.path.exists(info_file):
+            depends.append(dep)
+        # We need to search for the provider of the dependency
+        else:
+            for taskdep in taskdepdata.itervalues():
+                # The fifth field contains what the task provides
+                if dep in taskdep[4]:
+                    info_file = os.path.join(
+                            d.getVar("LICENSE_DIRECTORY", True),
+                            taskdep[0], "recipeinfo")
+                    if os.path.exists(info_file):
+                        depends.append(taskdep[0])
+                        break
+    return depends
+
 python do_populate_lic() {
     """
     Populate LICENSE_DIRECTORY with licenses.
