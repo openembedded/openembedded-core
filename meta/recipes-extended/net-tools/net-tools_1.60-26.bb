@@ -13,6 +13,10 @@ SRC_URI = "http://snapshot.debian.org/archive/debian/20050312T000000Z/pool/main/
            file://ifconfig-interface-0-del-IP-will-remove-the-aliased-.patch \
 	   "
 
+# for this package we're mostly interested in tracking debian patches,
+# and not in the upstream version where all development has effectively stopped
+UPSTREAM_CHECK_REGEX = "(?P<pver>((\d+\.*)+)-((\d+\.*)+))\.(diff|debian\.tar)\.(gz|xz)"
+
 S = "${WORKDIR}/net-tools-1.60"
 
 SRC_URI[tarball.md5sum] = "ecaf37acb5b5daff4bdda77785fd916d"
@@ -20,6 +24,10 @@ SRC_URI[tarball.sha256sum] = "ec67967cf7b1a3a3828a84762fbc013ac50ee5dc9aa3095d5c
 
 SRC_URI[patch.md5sum] = "ea3592f49ac8380962bc4d9b66c7e7e9"
 SRC_URI[patch.sha256sum] = "aeeeafaff68866a446f01bb639d4e0146a60af34dcd20e31a3e46585022fc76c"
+
+# the package is taken from snapshots.debian.org; that source is static and goes stale
+# so we check the latest upstream from a directory that does get updated
+UPSTREAM_CHECK_URI = "${DEBIAN_MIRROR}/main/n/net-tools/"
 
 inherit gettext
 

@@ -185,20 +185,3 @@ REGEX_URI_pn-cdrtools = "http://sourceforge.net/projects/cdrtools/files/alpha/"
 # Keep old gcc versions at their major versions
 REGEX_pn-gcc-source-4.9.3 = "gcc-(?P<pver>4\.9\.\d+).tar"
 REGEX_pn-gcc-source-4.8.4 = "gcc-(?P<pver>4\.8\.\d+).tar"
-
-# these packages are taken from snapshots.debian.org; that source is static and goes stale
-# so we check the latest upstream from a directory that does get updated
-REGEX_URI_pn-apt = "${DEBIAN_MIRROR}/main/a/apt/"
-REGEX_URI_pn-resolvconf = "${DEBIAN_MIRROR}/main/r/resolvconf/"
-REGEX_URI_pn-net-tools = "${DEBIAN_MIRROR}/main/n/net-tools/"
-
-# same for packages from launchpad
-REGEX_URI_pn-base-passwd = "${DEBIAN_MIRROR}/main/b/base-passwd/"
-
-# for these packages we're mostly interested in tracking debian patches,
-# and not in the upstream version where all development has effectively stopped
-DEBIAN_PATCH_REGEX = "(?P<pver>((\d+\.*)+)-((\d+\.*)+))\.(diff|debian\.tar)\.(gz|xz)"
-REGEX_pn-net-tools = "${DEBIAN_PATCH_REGEX}"
-REGEX_pn-apmd = "${DEBIAN_PATCH_REGEX}"
-REGEX_pn-blktool = "${DEBIAN_PATCH_REGEX}"
-REGEX_pn-mailx = "${DEBIAN_PATCH_REGEX}"

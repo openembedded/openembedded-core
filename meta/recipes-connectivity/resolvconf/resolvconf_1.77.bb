@@ -19,6 +19,10 @@ SRC_URI = "http://snapshot.debian.org/archive/debian/20150511T214718Z/pool/main/
 SRC_URI[md5sum] = "7362d766e47bfc253500f42b30330d9f"
 SRC_URI[sha256sum] = "5a6e21e8ba6822a5f93075c8c8fe7977e34780ba551af51930d0b31fdd99ab56"
 
+# the package is taken from snapshots.debian.org; that source is static and goes stale
+# so we check the latest upstream from a directory that does get updated
+UPSTREAM_CHECK_URI = "${DEBIAN_MIRROR}/main/r/resolvconf/"
+
 inherit allarch
 
 do_compile () {
