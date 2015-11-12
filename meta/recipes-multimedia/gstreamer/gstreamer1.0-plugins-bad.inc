@@ -146,7 +146,7 @@ export OPENCV_PREFIX
 
 ARM_INSTRUCTION_SET = "arm"
 
-FILES_${PN}-opencv += "${datadir}/gst-plugins-bad/1.0/opencv*"
-FILES_${PN}-freeverb += "${datadir}/gstreamer-1.0/presets/GstFreeverb.prs"
-FILES_${PN}-voamrwbenc += "${datadir}/gstreamer-1.0/presets/GstVoAmrwbEnc.prs"
-FILES_${PN}-dev += "${libdir}/gstreamer-1.0/include/gst/gl/gstglconfig.h"
+FILES_${PN}-opencv += "${datadir}/gst-plugins-bad/${LIBV}/opencv*"
+FILES_${PN}-freeverb += "${datadir}/gstreamer-${LIBV}/presets/GstFreeverb.prs"
+FILES_${PN}-voamrwbenc += "${datadir}/gstreamer-${LIBV}/presets/GstVoAmrwbEnc.prs"
+FILES_${PN}-dev += "${libdir}/gstreamer-${LIBV}/include/gst/gl/gstglconfig.h"
