@@ -55,6 +55,9 @@ PACKAGECONFIG[sndfile]         = "--enable-sndfile,--disable-sndfile,libsndfile1
 PACKAGECONFIG[webp]            = "--enable-webp,--disable-webp,libwebp"
 PACKAGECONFIG[rtmp]            = "--enable-rtmp,--disable-rtmp,rtmpdump"
 PACKAGECONFIG[libssh2]         = "--enable-libssh2,--disable-libssh2,libssh2"
+PACKAGECONFIG[voamrwbenc]      = "--enable-voamrwbenc,--disable-voamrwbenc,vo-amrwbenc"
+PACKAGECONFIG[voaacenc]        = "--enable-voaacenc,--disable-voaacenc,vo-aacenc"
+PACKAGECONFIG[resindvd]        = "--enable-resindvd,--disable-resindvd,libdvdnav libdvdread"
 
 # these plugins have not been ported to 1.0 (yet):
 #   directdraw vcd apexsink dc1394 lv2 linsys musepack mythtv
@@ -66,8 +69,8 @@ PACKAGECONFIG[libssh2]         = "--enable-libssh2,--disable-libssh2,libssh2"
 # these plugins have no corresponding library in OE-core or meta-openembedded:
 #   openni2 winks direct3d directdraw directsound winscreencap osx_video
 #   apple_media android_media avc chromaprint daala dts gme gsm kate ladspa mimic
-#   mpeg2enc mplex ofa openjpeg opensles pvr resindvd rtmp soundtouch spandsp spc
-#   srtp vdpau voaacenc voamrwbenc wasapi zbar
+#   mpeg2enc mplex ofa openjpeg opensles pvr rtmp soundtouch spandsp spc
+#   srtp vdpau wasapi zbar
 
 EXTRA_OECONF += " \
     --enable-dvb \
@@ -106,7 +109,6 @@ EXTRA_OECONF += " \
     --disable-osx_video \
     --disable-pvr \
     --disable-quicktime \
-    --disable-resindvd \
     --disable-sdl \
     --disable-sdltest \
     --disable-sndio \
@@ -118,8 +120,6 @@ EXTRA_OECONF += " \
     --disable-timidity \
     --disable-vcd \
     --disable-vdpau \
-    --disable-voaacenc \
-    --disable-voamrwbenc \
     --disable-wasapi \
     --disable-wildmidi \
     --disable-wininet \
@@ -133,3 +133,4 @@ ARM_INSTRUCTION_SET = "arm"
 
 FILES_gstreamer1.0-plugins-bad-opencv += "${datadir}/gst-plugins-bad/1.0/opencv*"
 
+FILES_${PN}-voamrwbenc += "${datadir}/gstreamer-${LIBV}/presets/GstVoAmrwbEnc.prs"
