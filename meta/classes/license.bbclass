@@ -225,6 +225,21 @@ def get_boot_dependencies(d):
                         break
     return depends
 
+def get_deployed_files(man_file):
+    """
+    Get the files deployed from the sstate manifest
+    """
+
+    dep_files = []
+    excluded_files = ["README_-_DO_NOT_DELETE_FILES_IN_THIS_DIRECTORY.txt"]
+    with open(man_file, "r") as manifest:
+        all_files = manifest.read()
+    for f in all_files.splitlines():
+        if ((not (os.path.islink(f) or os.path.isdir(f))) and
+                not os.path.basename(f) in excluded_files):
+            dep_files.append(os.path.basename(f))
+    return dep_files
+
 python do_populate_lic() {
     """
     Populate LICENSE_DIRECTORY with licenses.
