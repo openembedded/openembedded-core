@@ -1,0 +1,24 @@
+This needs to be a install-data-hook not an install-exec-hook as the helpers are
+installed into helperdir which is considered data (only path variables with
+"exec" in are considered executables).
+
+The explicit dependency on install-helpersPROGRAMS was an attempt at solving
+this, but this causes occasional races where install-helpersPROGRAMS can run
+twice in parallel (once via install-all, once via the hook's dependency).
+
+Upstream-Status: Backport [09aa20746a0fef97fb811c5503928c13a1f55eb5]
+Signed-off-by: Ross Burton <ross.burton@intel.com>
+
+diff --git a/libs/gst/helpers/Makefile.am b/libs/gst/helpers/Makefile.am
+index 0ae9ab0..2530a34 100644
+--- a/libs/gst/helpers/Makefile.am
++++ b/libs/gst/helpers/Makefile.am
+@@ -23,7 +23,7 @@ gst_ptp_helper_CFLAGS = $(GST_OBJ_CFLAGS) $(GIO_CFLAGS)
+ gst_ptp_helper_LDADD = $(GST_OBJ_LIBS) $(GIO_LIBS) $(CAP_LIBS)
+ endif
+ 
+-install-exec-hook: install-helpersPROGRAMS
++install-data-hook:
+ if HAVE_PTP
+ if HAVE_PTP_HELPER_SETUID
+ 	- chown root $(DESTDIR)$(helpersdir)/gst-ptp-helper
