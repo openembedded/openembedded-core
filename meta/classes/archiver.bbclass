@@ -298,6 +298,16 @@ python do_ar_recipe () {
     bb.utils.mkdirhier(outdir)
     shutil.copy(bbfile, outdir)
 
+    pn = d.getVar('PN', True)
+    bbappend_files = d.getVar('BBINCLUDED', True).split()
+    # If recipe name is aa, we need to match files like aa.bbappend and aa_1.1.bbappend
+    # Files like aa1.bbappend or aa1_1.1.bbappend must be excluded.
+    bbappend_re = re.compile( r".*/%s_[^/]*\.bbappend$" %pn)
+    bbappend_re1 = re.compile( r".*/%s\.bbappend$" %pn)
+    for file in bbappend_files:
+        if bbappend_re.match(file) or bbappend_re1.match(file):
+            shutil.copy(file, outdir)
+
     dirname = os.path.dirname(bbfile)
     bbpath = '%s:%s' % (dirname, d.getVar('BBPATH', True))
     f = open(bbfile, 'r')
