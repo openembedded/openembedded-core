@@ -25,6 +25,10 @@ python write_package_manifest() {
         'w+').write(image_list_installed_packages(d))
 }
 
+python write_deploy_manifest() {
+    license_deployed_manifest(d)
+}
+
 python license_create_manifest() {
     import oe.packagedata
     from oe.rootfs import image_list_installed_packages
@@ -70,16 +74,24 @@ def write_license_files(d, license_manifest, pkg_dic):
                 pkg_dic[pkg]["LICENSES"] = re.sub('  *', ' ', pkg_dic[pkg]["LICENSES"])
                 pkg_dic[pkg]["LICENSES"] = pkg_dic[pkg]["LICENSES"].split()
 
-            license_file.write("PACKAGE NAME: %s\n" % pkg)
-            license_file.write("PACKAGE VERSION: %s\n" % pkg_dic[pkg]["PV"])
-            license_file.write("RECIPE NAME: %s\n" % pkg_dic[pkg]["PN"])
-            license_file.write("LICENSE: %s\n\n" % pkg_dic[pkg]["LICENSE"])
+            if not "IMAGE_MANIFEST" in pkg_dic[pkg]:
+                # Rootfs manifest
+                license_file.write("PACKAGE NAME: %s\n" % pkg)
+                license_file.write("PACKAGE VERSION: %s\n" % pkg_dic[pkg]["PV"])
+                license_file.write("RECIPE NAME: %s\n" % pkg_dic[pkg]["PN"])
+                license_file.write("LICENSE: %s\n\n" % pkg_dic[pkg]["LICENSE"])
 
-            # If the package doesn't contain any file, that is, its size is 0, the license
-            # isn't relevant as far as the final image is concerned. So doing license check
-            # doesn't make much sense, skip it.
-            if pkg_dic[pkg]["PKGSIZE_%s" % pkg] == "0":
-                continue
+                # If the package doesn't contain any file, that is, its size is 0, the license
+                # isn't relevant as far as the final image is concerned. So doing license check
+                # doesn't make much sense, skip it.
+                if pkg_dic[pkg]["PKGSIZE_%s" % pkg] == "0":
+                    continue
+            else:
+                # Image manifest
+                license_file.write("RECIPE NAME: %s\n" % pkg_dic[pkg]["PN"])
+                license_file.write("VERSION: %s\n" % pkg_dic[pkg]["PV"])
+                license_file.write("LICENSE: %s\n" % pkg_dic[pkg]["LICENSE"])
+                license_file.write("FILES: %s\n\n" % pkg_dic[pkg]["FILES"])
 
             for lic in pkg_dic[pkg]["LICENSES"]:
                 lic_file = os.path.join(d.getVar('LICENSE_DIRECTORY', True),
@@ -140,6 +152,34 @@ def write_license_files(d, license_manifest, pkg_dic):
 
                         os.link(pkg_license, pkg_rootfs_license)
 
+
+def license_deployed_manifest(d):
+    """
+    Write the license manifest for the deployed recipes.
+    The deployed recipes usually includes the bootloader
+    and extra files to boot the target.
+    """
+
+    dep_dic = {}
+    man_dic = {}
+    lic_dir = d.getVar("LICENSE_DIRECTORY", True)
+
+    dep_dic = get_deployed_dependencies(d)
+    for dep in dep_dic.keys():
+        man_dic[dep] = {}
+        # It is necessary to mark this will be used for image manifest
+        man_dic[dep]["IMAGE_MANIFEST"] = True
+        man_dic[dep]["PN"] = dep
+        man_dic[dep]["FILES"] = \
+            " ".join(get_deployed_files(dep_dic[dep]))
+        with open(os.path.join(lic_dir, dep, "recipeinfo"), "r") as f:
+            for line in f.readlines():
+                key,val = line.split(": ", 1)
+                man_dic[dep][key] = val[:-1]
+
+    image_license_manifest = os.path.join(d.getVar('LICENSE_DIRECTORY', True),
+            d.getVar('IMAGE_NAME', True), 'image_license.manifest')
+    write_license_files(d, image_license_manifest, man_dic)
 
 def get_deployed_dependencies(d):
     """
@@ -591,7 +631,7 @@ SSTATETASKS += "do_populate_lic"
 do_populate_lic[sstate-inputdirs] = "${LICSSTATEDIR}"
 do_populate_lic[sstate-outputdirs] = "${LICENSE_DIRECTORY}/"
 
-ROOTFS_POSTPROCESS_COMMAND_prepend = "write_package_manifest; license_create_manifest; "
+ROOTFS_POSTPROCESS_COMMAND_prepend = "write_package_manifest; write_deploy_manifest; license_create_manifest; "
 do_rootfs[recrdeptask] += "do_populate_lic"
 
 do_populate_lic_setscene[dirs] = "${LICSSTATEDIR}/${PN}"
