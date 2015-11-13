@@ -847,7 +847,7 @@ def setscene_depvalid(task, taskdependees, notneeded, d):
         return x.endswith("-native") or "-cross-" in x or "-crosssdk" in x
 
     def isPostInstDep(x):
-        if x in ["qemu-native", "gdk-pixbuf-native", "qemuwrapper-cross", "depmodwrapper-cross", "systemd-systemctl-native", "gtk-icon-utils-native"]:
+        if x in ["qemu-native", "gdk-pixbuf-native", "qemuwrapper-cross", "depmodwrapper-cross", "systemd-systemctl-native", "gtk-icon-utils-native", "ca-certificates-native"]:
             return True
         return False
 
