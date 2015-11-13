@@ -33,6 +33,7 @@ SRC_URI = "http://hostap.epitest.fi/releases/wpa_supplicant-${PV}.tar.gz \
            file://0003-EAP-pwd-peer-Fix-Total-Length-parsing-for-fragment-r.patch \
            file://0004-EAP-pwd-server-Fix-Total-Length-parsing-for-fragment.patch \
            file://0005-EAP-pwd-peer-Fix-asymmetric-fragmentation-behavior.patch \
+           file://0001-NFC-Fix-payload-length-validation-in-NDEF-record-par.patch \
           "
 SRC_URI[md5sum] = "f2ed8fef72cf63d8d446a2d0a6da630a"
 SRC_URI[sha256sum] = "eaaa5bf3055270e521b2dff64f2d203ec8040f71958b8588269a82c00c9d7b6a"
