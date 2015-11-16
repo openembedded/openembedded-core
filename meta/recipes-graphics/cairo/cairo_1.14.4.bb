@@ -7,6 +7,8 @@ SRC_URI = "http://cairographics.org/releases/cairo-${PV}.tar.xz"
 SRC_URI[md5sum] = "90a929e8fe66fb5d19b5adaaea1e9a12"
 SRC_URI[sha256sum] = "f6ec9c7c844db9ec011f0d66b57ef590c45adf55393d1fc249003512522ee716"
 
+UPSTREAM_CHECK_REGEX = "cairo-(?P<pver>\d+(\.\d+)+)\.tar"
+
 PACKAGES =+ "cairo-gobject cairo-script-interpreter cairo-perf-utils"
 
 SUMMARY_${PN} = "The Cairo 2D vector graphics library"

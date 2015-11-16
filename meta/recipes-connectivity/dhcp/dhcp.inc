@@ -20,6 +20,9 @@ SRC_URI = "ftp://ftp.isc.org/isc/dhcp/${PV}/dhcp-${PV}.tar.gz \
            file://dhcpd.service file://dhcrelay.service \
            file://dhcpd6.service "
 
+UPSTREAM_CHECK_URI = "ftp://ftp.isc.org/isc/dhcp/"
+UPSTREAM_CHECK_REGEX = "(?P<pver>\d+\.\d+\.(\d+?))/"
+
 inherit autotools systemd
 
 SYSTEMD_PACKAGES = "${PN}-server ${PN}-relay"

@@ -17,6 +17,8 @@ SRC_URI = "http://downloads.webmproject.org/releases/webp/${BP}.tar.gz"
 SRC_URI[md5sum] = "08813525eeeffe7e305b4cbfade8ae9b"
 SRC_URI[sha256sum] = "efbe0d58fda936f2ed99d0b837ed7087d064d6838931f282c4618d2a3f7390c4"
 
+UPSTREAM_CHECK_URI = "http://downloads.webmproject.org/releases/webp/index.html"
+
 EXTRA_OECONF = " \
     --disable-experimental \
     --disable-wic \

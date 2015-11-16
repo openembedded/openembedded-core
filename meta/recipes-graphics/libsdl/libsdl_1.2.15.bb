@@ -26,6 +26,8 @@ SRC_URI = "http://www.libsdl.org/release/SDL-${PV}.tar.gz \
            file://pkgconfig.patch \
           "
 
+UPSTREAM_CHECK_REGEX = "SDL-(?P<pver>\d+(\.\d+)+)\.tar"
+
 S = "${WORKDIR}/SDL-${PV}"
 
 SRC_URI[md5sum] = "9d96df8417572a2afb781a7c4c811a85"

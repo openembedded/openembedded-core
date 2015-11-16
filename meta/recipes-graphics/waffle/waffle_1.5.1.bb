@@ -9,6 +9,8 @@ SRC_URI = "http://waffle-gl.org/files/release/${BPN}-${PV}/${BPN}-${PV}.tar.xz \
 SRC_URI[md5sum] = "c0d802bc3d0aba87c51e423a3a8bdd69"
 SRC_URI[sha256sum] = "cbab0e926515064e818bf089a5af04be33307e5f40d07659fb40d59b2bfe20aa"
 
+UPSTREAM_CHECK_URI = "http://www.waffle-gl.org/releases.html"
+
 inherit cmake distro_features_check lib_package
 
 # This should be overridden per-machine to reflect the capabilities of the GL

@@ -17,6 +17,9 @@ SRC_URI = "${GNU_MIRROR}/autogen/rel${PV}/autogen-${PV}.tar.gz \
 SRC_URI[md5sum] = "385d7c7dfbe60babbee261c054923a53"
 SRC_URI[sha256sum] = "7bbdb73b5518baf64c6d3739fb2ecc66d2cccda888ce5ad573abe235ab5d96ba"
 
+UPSTREAM_CHECK_URI = "http://ftp.gnu.org/gnu/autogen/"
+UPSTREAM_CHECK_REGEX = "rel(?P<pver>\d+(\.\d+)+)/"
+
 DEPENDS = "guile-native libtool-native libxml2-native"
 
 inherit autotools texinfo native pkgconfig

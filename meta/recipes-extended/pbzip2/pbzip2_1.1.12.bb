@@ -16,6 +16,8 @@ SRC_URI = "https://launchpad.net/${BPN}/1.1/${PV}/+download/${BP}.tar.gz"
 SRC_URI[md5sum] = "91a4911b13305850423840eb0fa6f4f9"
 SRC_URI[sha256sum] = "573bb358a5a7d3bf5f42f881af324cedf960c786e8d66dd03d448ddd8a0166ee"
 
+UPSTREAM_CHECK_URI = "http://compression.ca/pbzip2/"
+
 do_configure[noexec] = "1"
 
 EXTRA_OEMAKE = "CXX='${CXX} ${CXXFLAGS}' LDFLAGS='${LDFLAGS}'"

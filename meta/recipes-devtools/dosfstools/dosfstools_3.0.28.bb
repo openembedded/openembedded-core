@@ -13,6 +13,8 @@ SRC_URI = "https://github.com/dosfstools/dosfstools/releases/download/v3.0.28/do
 SRC_URI[md5sum] = "6a047a6c65186b9ebb1853709adb36db"
 SRC_URI[sha256sum] = "ee95913044ecf2719b63ea11212917649709a6e53209a72d622135aaa8517ee2"
 
+UPSTREAM_CHECK_URI = "https://github.com/dosfstools/dosfstools/releases"
+
 FILES_${PN} = "${base_sbindir}"
 FILES_${PN}-doc = "${mandir} ${docdir}"
 

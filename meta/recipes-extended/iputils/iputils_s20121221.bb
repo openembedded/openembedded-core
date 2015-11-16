@@ -24,6 +24,8 @@ SRC_URI = "http://www.skbuff.net/iputils/${BPN}-${PV}.tar.bz2 \
 SRC_URI[md5sum] = "6072aef64205720dd1893b375e184171"
 SRC_URI[sha256sum] = "450f549fc5b620c23c5929aa6d54b7ddfc7ee1cb1e8efdc5e8bb21d8d0c5319f"
 
+UPSTREAM_CHECK_REGEX = "iputils-(?P<pver>s\d+).tar"
+
 do_compile () {
 	oe_runmake 'CC=${CC} -D_GNU_SOURCE' VPATH="${STAGING_LIBDIR}:${STAGING_DIR_HOST}/${base_libdir}" all man
 }

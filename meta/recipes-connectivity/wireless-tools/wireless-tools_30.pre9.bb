@@ -17,6 +17,9 @@ SRC_URI = "http://www.hpl.hp.com/personal/Jean_Tourrilhes/Linux/wireless_tools.$
 SRC_URI[md5sum] = "ca91ba7c7eff9bfff6926b1a34a4697d"
 SRC_URI[sha256sum] = "abd9c5c98abf1fdd11892ac2f8a56737544fe101e1be27c6241a564948f34c63"
 
+UPSTREAM_CHECK_URI = "http://www.hpl.hp.com/personal/Jean_Tourrilhes/Linux/Tools.html"
+UPSTREAM_CHECK_REGEX = "wireless_tools\.(?P<pver>(\d+)(\..*|))\.tar\.gz"
+
 S = "${WORKDIR}/wireless_tools.30"
 
 CFLAGS =+ "-I${S}"

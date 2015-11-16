@@ -9,6 +9,8 @@ SRC_URI = "http://pagesperso-orange.fr/sebastien.godard/sysstat-${PV}.tar.xz \
            file://sysstat.service \
           "
 
+UPSTREAM_CHECK_URI = "http://sebastien.godard.pagesperso-orange.fr/download.html"
+
 DEPENDS += "base-passwd"
 
 inherit autotools-brokensep gettext systemd

@@ -11,6 +11,8 @@ SRC_URI = "http://01.org/sites/default/files/downloads/powertop/powertop-${PV}.t
 SRC_URI[md5sum] = "e0d686e47daaf7e9d89031f7763432ef"
 SRC_URI[sha256sum] = "8d4b1490e2baad4467c0ded3c423db4472dcbf7b2dd8f8f2a928f54047c678ca"
 
+UPSTREAM_CHECK_URI = "https://01.org/powertop/downloads"
+
 inherit autotools gettext pkgconfig
 
 # we need to explicitly link with libintl in uClibc systems

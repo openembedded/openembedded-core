@@ -27,6 +27,9 @@ SRC_URI = "\
 SRC_URI[md5sum] = "b02ffd1e8e8ef5f8512fa02d8ca9db3d"
 SRC_URI[sha256sum] = "1306663e8f61d8449ad8cbcffab743a604dcd9f6f34232c210847c51dce2c9ae"
 
+UPSTREAM_CHECK_URI = "https://developer.mozilla.org/en-US/docs/Mozilla/Projects/NSS/NSS_Releases"
+UPSTREAM_CHECK_REGEX = "NSS_(?P<pver>.+)_release_notes"
+
 inherit siteinfo
 
 DEPENDS = "sqlite3 nspr zlib nss-native"

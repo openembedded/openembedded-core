@@ -12,6 +12,9 @@ SRC_URI = "http://www.cups.org/software/${PV}/${BP}-source.tar.bz2 \
            file://cups.service \
 	  "
 
+UPSTREAM_CHECK_URI = "http://www.cups.org/software.php"
+UPSTREAM_CHECK_REGEX = "cups-(?P<pver>\d+\.\d+(\.\d+)?)-source.tar"
+
 LEAD_SONAME = "libcupsdriver.so"
 
 CLEANBROKEN = "1"

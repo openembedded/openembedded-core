@@ -10,4 +10,6 @@ SRC_URI = "https://github.com/${BPN}/${BPN}/archive/v${PV}.tar.gz"
 SRC_URI[md5sum] = "f4b8e33ae5efb2f025eb43ce69682a36"
 SRC_URI[sha256sum] = "0072e83834092315772e6719b85fc8b11530b1ff53f4d108315fb38cddbce8c2"
 
+UPSTREAM_CHECK_URI = "https://github.com/libical/libical/releases/"
+
 inherit autotools
