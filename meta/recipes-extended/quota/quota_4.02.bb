@@ -17,6 +17,9 @@ SRC_URI_append_libc-musl = " file://replace_getrpcbynumber_r.patch"
 SRC_URI[md5sum] = "a8a5df262261e659716ccad2a5d6df0d"
 SRC_URI[sha256sum] = "f4c2f48abf94bbdc396df33d276f2e9d19af58c232cb85eef9c174a747c33795"
 
+UPSTREAM_CHECK_URI = "http://sourceforge.net/projects/linuxquota/files/quota-tools/"
+UPSTREAM_CHECK_REGEX = "/quota-tools/(?P<pver>(\d+[\.\-_]*)+)/"
+
 S = "${WORKDIR}/quota-tools"
 
 DEPENDS = "gettext-native e2fsprogs"

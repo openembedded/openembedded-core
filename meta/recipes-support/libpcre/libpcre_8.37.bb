@@ -17,6 +17,9 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/project/pcre/pcre/${PV}/pcre-${PV}.tar.bz2 \
 SRC_URI[md5sum] = "ed91be292cb01d21bc7e526816c26981"
 SRC_URI[sha256sum] = "51679ea8006ce31379fb0860e46dd86665d864b5020fc9cd19e71260eef4789d"
 
+UPSTREAM_CHECK_URI = "http://sourceforge.net/projects/pcre/files/pcre/"
+UPSTREAM_CHECK_REGEX = "/pcre/(?P<pver>(\d+[\.\-_]*)+)/"
+
 S = "${WORKDIR}/pcre-${PV}"
 
 PROVIDES += "pcre"

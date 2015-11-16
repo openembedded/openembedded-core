@@ -14,6 +14,9 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/project/libpng/libpng12/${PV}/libpng-${PV}.tar.
 SRC_URI[md5sum] = "bbb7a7264f1c7d9c444fd16bf6f89832"
 SRC_URI[sha256sum] = "cf85516482780f2bc2c5b5073902f12b1519019d47bf473326c2018bdff1d272"
 
+UPSTREAM_CHECK_URI = "http://sourceforge.net/projects/libpng/files/libpng12/"
+UPSTREAM_CHECK_REGEX = "/libpng12/(?P<pver>(\d+[\.\-_]*)+)/"
+
 BINCONFIG_GLOB = "${PN}-config"
 
 inherit autotools binconfig pkgconfig

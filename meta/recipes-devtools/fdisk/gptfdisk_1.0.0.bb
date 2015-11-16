@@ -10,6 +10,9 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/${BPN}/${PV}/${BP}.tar.gz"
 SRC_URI[md5sum] = "2061f917af084215898d4fea04d8388f"
 SRC_URI[sha256sum] = "5b66956743a799fc0471cdb032665c1391e82f9c5b3f1d7d726d29fe2ba01d6c"
 
+UPSTREAM_CHECK_URI = "http://sourceforge.net/projects/gptfdisk/files/gptfdisk/"
+UPSTREAM_CHECK_REGEX = "/gptfdisk/(?P<pver>(\d+[\.\-_]*)+)/"
+
 do_install() {
     install -d ${D}${sbindir}
     install -m 0755 cgdisk ${D}${sbindir}

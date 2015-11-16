@@ -12,6 +12,8 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/project/cdrtools/alpha/cdrtools-${PV}.tar.bz2"
 SRC_URI[md5sum] = "78172557894f469b4584d008e93ec469"
 SRC_URI[sha256sum] = "183b5c12777779e78d8b69461aae52401f863768e7e7391d60730006f8cadc5a"
 
+UPSTREAM_CHECK_URI = "http://sourceforge.net/projects/cdrtools/files/alpha/"
+
 S = "${WORKDIR}/cdrtools-3.01"
 
 inherit native

@@ -23,6 +23,8 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/pcmanfm/pcmanfm-${PV}.tar.xz \
 SRC_URI[md5sum] = "c993402d407b0a3fc076f842ac1bc5c9"
 SRC_URI[sha256sum] = "cfa8d82fc63be147045174bef074807e1e32ce8c6bf4dbd8fad49e260bcf6380"
 
+UPSTREAM_CHECK_URI = "http://sourceforge.net/projects/pcmanfm/files/PCManFM%20%2B%20Libfm%20%28tarball%20release%29/PCManFM/"
+
 inherit autotools pkgconfig distro_features_check
 
 # The startup-notification requires x11 in DISTRO_FEATURES

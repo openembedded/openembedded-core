@@ -13,4 +13,6 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/lxde/menu-cache-${PV}.tar.xz"
 SRC_URI[md5sum] = "4a8e6c1a86d5e64ec725d850a4abfbad"
 SRC_URI[sha256sum] = "ff7df437bbfd3119c5f662c6d209b98f15de03a7203308c6b56a4c1e1d419aaf"
 
+UPSTREAM_CHECK_URI = "http://sourceforge.net/projects/lxde/files/menu-cache/1.0/"
+
 inherit autotools gettext pkgconfig gtk-doc
