@@ -75,6 +75,8 @@ PACKAGECONFIG[libunwind] = "--enable-libunwind,--disable-libunwind,libunwind"
 PACKAGECONFIG[systemd] = "--enable-systemd-login,--disable-systemd-login,systemd dbus"
 # Weston with Xwayland support
 PACKAGECONFIG[xwayland] = "--enable-xwayland,--disable-xwayland,libxcb libxcursor cairo"
+# colord CMS support
+PACKAGECONFIG[colord] = "--enable-colord,--disable-colord,colord"
 
 do_install_append() {
 	# Weston doesn't need the .la files to load modules, so wipe them
