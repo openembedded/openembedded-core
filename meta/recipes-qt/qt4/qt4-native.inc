@@ -19,6 +19,10 @@ SRC_URI = "http://download.qt-project.org/official_releases/qt/4.8/${PV}/qt-ever
            file://g++.conf \
            file://linux.conf \
 	"
+
+UPSTREAM_CHECK_URI = "http://download.qt.io/official_releases/qt/4.8/"
+UPSTREAM_CHECK_REGEX = "(?P<pver>\d+(\.\d+)+)/"
+
 S = "${WORKDIR}/qt-everywhere-opensource-src-${PV}"
 
 EXTRA_OECONF = "-prefix ${prefix} \

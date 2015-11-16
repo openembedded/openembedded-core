@@ -18,6 +18,9 @@ SRC_URI = "http://download.qt-project.org/official_releases/qt/4.8/${PV}/qt-ever
            file://g++.conf \
            file://linux.conf"
 
+UPSTREAM_CHECK_URI = "http://download.qt.io/official_releases/qt/4.8/"
+UPSTREAM_CHECK_REGEX = "(?P<pver>\d+(\.\d+)+)/"
+
 S = "${WORKDIR}/qt-everywhere-opensource-src-${PV}"
 
 LIC_FILES_CHKSUM = "file://LICENSE.LGPL;md5=fbc093901857fcd118f065f900982c24 \

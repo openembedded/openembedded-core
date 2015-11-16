@@ -27,6 +27,10 @@ SRC_URI += "file://arm-thumb-mutex_db5.patch;patchdir=.. \
 SRC_URI[md5sum] = "ad28eb86ad3203b5422844db179c585b"
 SRC_URI[sha256sum] = "608e4b1cf390e9bf54c0ef00c5bd9ca76d36e2261b9f4d33d54516f3f6a20fd2"
 
+# Exclude NC versions which lack AES encryption
+UPSTREAM_CHECK_REGEX = "db-(?P<pver>\d+\.\d+(\.\d+)?).tar"
+UPSTREAM_CHECK_URI = "http://www.oracle.com/technetwork/products/berkeleydb/downloads/index-082944.html"
+
 LIC_FILES_CHKSUM = "file://../LICENSE;md5=1ec8b0b17cc31513fe35ab10716f8490"
 
 inherit autotools

@@ -12,6 +12,10 @@ SRC_URI = "http://www.python.org/ftp/python/${PV}/Python-${PV}.tar.xz"
 SRC_URI[md5sum] = "38d530f7efc373d64a8fb1637e3baaa7"
 SRC_URI[sha256sum] = "90d27e14ea7e03570026850e2e50ba71ad20b7eb31035aada1cf3def8f8d4916"
 
+# python recipe is actually python 2.x
+# also, exclude pre-releases for both python 2.x and 3.x
+UPSTREAM_CHECK_REGEX = "[Pp]ython-(?P<pver>2(\.\d+)+).tar"
+
 PYTHON_MAJMIN = "2.7"
 
 inherit autotools

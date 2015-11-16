@@ -31,6 +31,9 @@ SRC_URI[sha256sum] = "d6d7aa1634a5eeeca6ed4fca266982a04f84bd8f3945a9179e20b24ad2
 
 LIC_FILES_CHKSUM = "file://LICENSE;md5=dd98d01d471fac8d8dbdd975229dba03"
 
+# exclude pre-releases for both python 2.x and 3.x
+UPSTREAM_CHECK_REGEX = "[Pp]ython-(?P<pver>\d+(\.\d+)+).tar"
+
 S = "${WORKDIR}/Python-${PV}"
 
 EXTRANATIVEPATH += "bzip2-native"

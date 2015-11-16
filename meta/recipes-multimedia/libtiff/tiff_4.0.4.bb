@@ -10,6 +10,9 @@ SRC_URI = "ftp://ftp.remotesensing.org/pub/libtiff/tiff-${PV}.tar.gz \
 SRC_URI[md5sum] = "9aee7107408a128c0c7b24286c0db900"
 SRC_URI[sha256sum] = "8cb1d90c96f61cdfc0bcf036acc251c9dbe6320334da941c7a83cfe1576ef890"
 
+# exclude betas
+UPSTREAM_CHECK_REGEX = "tiff-(?P<pver>\d+(\.\d+)+).tar"
+
 inherit autotools
 
 CACHED_CONFIGUREVARS = "ax_cv_check_gl_libgl=no"

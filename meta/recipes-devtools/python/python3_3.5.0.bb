@@ -41,6 +41,9 @@ SRC_URI += "\
 SRC_URI[md5sum] = "d149d2812f10cbe04c042232e7964171"
 SRC_URI[sha256sum] = "d6d7aa1634a5eeeca6ed4fca266982a04f84bd8f3945a9179e20b24ad2e2be91"
 
+# exclude pre-releases for both python 2.x and 3.x
+UPSTREAM_CHECK_REGEX = "[Pp]ython-(?P<pver>\d+(\.\d+)+).tar"
+
 LIC_FILES_CHKSUM = "file://LICENSE;md5=dd98d01d471fac8d8dbdd975229dba03"
 
 S = "${WORKDIR}/Python-${PV}"

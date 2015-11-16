@@ -46,24 +46,8 @@ REGEX_pn-cmake = "cmake-(?P<pver>\d+(\.\d+)+)\.tar"
 REGEX_pn-libsdl = "SDL-(?P<pver>\d+(\.\d+)+)\.tar"
 REGEX_pn-libxslt = "libxslt-(?P<pver>\d+(\.\d+)+)\.tar"
 
-# Exclude NC versions which lack AES encryption
-REGEX_pn-db = "db-(?P<pver>\d+\.\d+(\.\d+)?).tar"
-
 REGEX_URI_pn-autogen = "http://ftp.gnu.org/gnu/autogen/"
 REGEX_pn-autogen = "rel(?P<pver>\d+(\.\d+)+)/"
-
-# python recipe is actually python 2.x
-# also, exclude pre-releases for both python 2.x and 3.x
-REGEX_pn-python = "[Pp]ython-(?P<pver>2(\.\d+)+).tar"
-REGEX_pn-python3 = "[Pp]ython-(?P<pver>\d+(\.\d+)+).tar"
-
-# exclude betas
-REGEX_pn-tiff = "tiff-(?P<pver>\d+(\.\d+)+).tar"
-
-# exclude version 5.5.2 which triggers a false positive
-REGEX_pn-unzip = "unzip(?P<pver>(?!552).+)\.tgz"
-# similar for zip
-REGEX_pn-zip = "^zip(?P<pver>(?!232).+)\.tgz"
 
 # Isn't possible to download with the default URI web server returns
 # (403, 404, 550)
@@ -104,22 +88,3 @@ REGEX_URI_pn-libnfsidmap = "http://www.citi.umich.edu/projects/nfsv4/linux/libnf
 REGEX_URI_pn-mpfr = "http://www.mpfr.org/mpfr-current/"
 REGEX_URI_pn-nss = "https://developer.mozilla.org/en-US/docs/Mozilla/Projects/NSS/NSS_Releases"
 REGEX_pn-nss = "NSS_(?P<pver>.+)_release_notes"
-
-REGEX_URI_pn-docbook-sgml-dtd-3.1 = "http://www.docbook.org/sgml/"
-REGEX_pn-docbook-sgml-dtd-3.1 = "(?P<pver>3\..+)/"
-REGEX_URI_pn-docbook-sgml-dtd-4.1 = "http://www.docbook.org/sgml/"
-REGEX_pn-docbook-sgml-dtd-4.1 = "(?P<pver>4\.1(\.\d+)*)/"
-
-# Qt recipes should be kept at 4.x
-REGEX_URI_pn-qt4-embedded = "http://download.qt.io/official_releases/qt/4.8/"
-REGEX_pn-qt4-embedded = "(?P<pver>\d+(\.\d+)+)/"
-REGEX_URI_pn-qt4-x11-free = "http://download.qt.io/official_releases/qt/4.8/"
-REGEX_pn-qt4-x11-free = "(?P<pver>\d+(\.\d+)+)/"
-REGEX_URI_pn-nativesdk-qt4-tools = "http://download.qt.io/official_releases/qt/4.8/"
-REGEX_pn-nativesdk-qt4-tools = "(?P<pver>\d+(\.\d+)+)/"
-REGEX_URI_pn-qt4-native = "http://download.qt.io/official_releases/qt/4.8/"
-REGEX_pn-qt4-native = "(?P<pver>\d+(\.\d+)+)/"
-
-# Keep old gcc versions at their major versions
-REGEX_pn-gcc-source-4.9.3 = "gcc-(?P<pver>4\.9\.\d+).tar"
-REGEX_pn-gcc-source-4.8.4 = "gcc-(?P<pver>4\.8\.\d+).tar"
