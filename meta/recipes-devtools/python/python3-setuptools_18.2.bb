@@ -14,6 +14,8 @@ SRC_URI = " \
 SRC_URI[md5sum] = "52b4e48939ef311d7204f8fe940764f4"
 SRC_URI[sha256sum] = "0994a58df27ea5dc523782a601357a2198b7493dcc99a30d51827a23585b5b1d"
 
+UPSTREAM_CHECK_URI = "https://pypi.python.org/pypi/setuptools"
+
 S = "${WORKDIR}/${SRCNAME}-${PV}"
 
 inherit distutils3

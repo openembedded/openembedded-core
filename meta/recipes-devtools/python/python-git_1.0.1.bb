@@ -14,6 +14,9 @@ SRC_URI = "http://pypi.python.org/packages/source/G/GitPython/GitPython-${PV}.ta
 SRC_URI[md5sum] = "4659644b42c41e5e5170c0cd83ed6422"
 SRC_URI[sha256sum] = "9c88c17bbcae2a445ff64024ef13526224f70e35e38c33416be5ceb56ca7f760"
 
+UPSTREAM_CHECK_URI = "https://pypi.python.org/pypi/GitPython/"
+UPSTREAM_CHECK_REGEX = "/GitPython/(?P<pver>(\d+[\.\-_]*)+)"
+
 S = "${WORKDIR}/GitPython-${PV}"
 
 inherit setuptools

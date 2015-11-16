@@ -8,6 +8,8 @@ SRC_URI = "https://pypi.python.org/packages/source/p/pexpect/pexpect-${PV}.tar.g
 SRC_URI[md5sum] = "0de72541d3f1374b795472fed841dce8"
 SRC_URI[sha256sum] = "dfea618d43e83cfff21504f18f98019ba520f330e4142e5185ef7c73527de5ba"
 
+UPSTREAM_CHECK_URI = "https://pypi.python.org/pypi/pexpect"
+
 S = "${WORKDIR}/pexpect-${PV}"
 
 inherit distutils

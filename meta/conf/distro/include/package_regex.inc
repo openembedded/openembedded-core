@@ -120,25 +120,6 @@ REGEX_pn-nativesdk-qt4-tools = "(?P<pver>\d+(\.\d+)+)/"
 REGEX_URI_pn-qt4-native = "http://download.qt.io/official_releases/qt/4.8/"
 REGEX_pn-qt4-native = "(?P<pver>\d+(\.\d+)+)/"
 
-# PyPI sites
-REGEX_URI_pn-python-nose = "https://pypi.python.org/pypi/nose/"
-REGEX_pn-python-nose = "/nose/${COMMON_REGEX}"
-# python-distribute 0.7.x is a simple compatibility layer that installs Setuptools 0.7+.
-# so we stick to 0.6.x series
-REGEX_URI_pn-python-distribute = "https://pypi.python.org/pypi/distribute/"
-REGEX_pn-python-distribute = "/distribute/(?P<pver>\d+.6.\d+)"
-REGEX_URI_pn-python-gitdb = "https://pypi.python.org/pypi/gitdb/"
-REGEX_URI_pn-python-async = "https://pypi.python.org/pypi/async/"
-REGEX_URI_pn-python-smmap = "https://pypi.python.org/pypi/smmap/"
-REGEX_pn-python-smmap = "/smmap/${COMMON_REGEX}"
-REGEX_URI_pn-python-git = "https://pypi.python.org/pypi/GitPython/"
-REGEX_pn-python-git = "/GitPython/${COMMON_REGEX}"
-REGEX_URI_pn-python-mako = "https://pypi.python.org/pypi/mako/"
-REGEX_pn-python-mako = "/Mako/${COMMON_REGEX}"
-REGEX_URI_pn-python-pexpect = "https://pypi.python.org/pypi/pexpect"
-REGEX_URI_pn-python3-pip = "https://pypi.python.org/pypi/pip"
-REGEX_URI_pn-python3-setuptools = "https://pypi.python.org/pypi/setuptools"
-
 # Sourceforge sites
 REGEX_URI_pn-python-scons = "http://sourceforge.net/projects/scons/files/scons/"
 REGEX_pn-python-scons = "/scons/${COMMON_REGEX}/"

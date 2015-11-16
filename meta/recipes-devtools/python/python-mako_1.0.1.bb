@@ -8,6 +8,9 @@ SRC_URI = "https://pypi.python.org/packages/source/M/Mako/Mako-${PV}.tar.gz"
 SRC_URI[md5sum] = "9f0aafd177b039ef67b90ea350497a54"
 SRC_URI[sha256sum] = "45f0869febea59dab7efd256fb451c377cbb7947bef386ff0bb44627c31a8d1c"
 
+UPSTREAM_CHECK_URI = "https://pypi.python.org/pypi/mako/"
+UPSTREAM_CHECK_REGEX = "/Mako/(?P<pver>(\d+[\.\-_]*)+)"
+
 S = "${WORKDIR}/Mako-${PV}"
 
 inherit setuptools
