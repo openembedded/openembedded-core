@@ -16,6 +16,7 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/rpcbind/rpcbind-${PV}.tar.bz2 \
            file://rpcbind.conf \
            file://rpcbind.socket \
            file://rpcbind.service \
+           file://cve-2015-7236.patch \
           "
 
 UCLIBCPATCHES_libc-uclibc = "file://0001-uclibc-nss.patch \
