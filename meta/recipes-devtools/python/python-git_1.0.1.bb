@@ -18,6 +18,6 @@ S = "${WORKDIR}/GitPython-${PV}"
 
 inherit setuptools
 
-RDEPENDS_${PN} += "python-gitdb python-lang python-io python-shell python-math python-re python-subprocess python-stringold"
+RDEPENDS_${PN} += "python-gitdb python-lang python-io python-shell python-math python-re python-subprocess python-stringold python-unixadmin"
 
 BBCLASSEXTEND = "nativesdk"
