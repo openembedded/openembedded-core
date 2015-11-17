@@ -80,7 +80,7 @@ python write_host_sdk_manifest () {
 
 POPULATE_SDK_POST_TARGET_COMMAND_append = " write_target_sdk_manifest ; "
 POPULATE_SDK_POST_HOST_COMMAND_append = " write_host_sdk_manifest; "
-SDK_POSTPROCESS_COMMAND = " create_sdk_files; tar_sdk; ${SDK_PACKAGING_FUNC}; "
+SDK_POSTPROCESS_COMMAND = " create_sdk_files; check_sdk_sysroots; tar_sdk; ${SDK_PACKAGING_FUNC}; "
 
 # Some archs override this, we need the nativesdk version
 # turns out this is hard to get from the datastore due to TRANSLATED_TARGET_ARCH
@@ -118,6 +118,57 @@ fakeroot create_sdk_files() {
 	# Escape special characters like '+' and '.' in the SDKPATH
 	escaped_sdkpath=$(echo ${SDKPATH} |sed -e "s:[\+\.]:\\\\\\\\\0:g")
 	sed -i -e "s:##DEFAULT_INSTALL_DIR##:$escaped_sdkpath:" ${SDK_OUTPUT}/${SDKPATH}/relocate_sdk.py
+}
+
+python check_sdk_sysroots() {
+    # Fails build if there are broken or dangling symlinks in SDK sysroots
+
+    if d.getVar('CHECK_SDK_SYSROOTS', True) != '1':
+        # disabled, bail out
+        return
+
+    def norm_path(path):
+        return os.path.abspath(path)
+
+    # Get scan root
+    SCAN_ROOT = norm_path("${SDK_OUTPUT}/${SDKPATH}/sysroots/")
+
+    bb.note('Checking SDK sysroots at ' + SCAN_ROOT)
+
+    def check_symlink(linkPath):
+        if not os.path.islink(linkPath):
+            return
+
+        linkDirPath = os.path.dirname(linkPath)
+
+        targetPath = os.readlink(linkPath)
+        if not os.path.isabs(targetPath):
+            targetPath = os.path.join(linkDirPath, targetPath)
+        targetPath = norm_path(targetPath)
+
+        if SCAN_ROOT != os.path.commonprefix( [SCAN_ROOT, targetPath] ):
+            bb.error("Escaping symlink {0!s} --> {1!s}".format(linkPath, targetPath))
+            return
+
+        if not os.path.exists(targetPath):
+            bb.error("Broken symlink {0!s} --> {1!s}".format(linkPath, targetPath))
+            return
+
+        if os.path.isdir(targetPath):
+            dir_walk(targetPath)
+
+    def walk_error_handler(e):
+        bb.error(str(e))
+
+    def dir_walk(rootDir):
+        for dirPath,subDirEntries,fileEntries in os.walk(rootDir, followlinks=False, onerror=walk_error_handler):
+            entries = subDirEntries + fileEntries
+            for e in entries:
+                ePath = os.path.join(dirPath, e)
+                check_symlink(ePath)
+
+    # start
+    dir_walk(SCAN_ROOT)
 }
 
 SDKTAROPTS = "--owner=root --group=root"
