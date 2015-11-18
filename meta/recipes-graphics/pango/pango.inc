@@ -12,16 +12,13 @@ LICENSE = "LGPLv2.0+"
 X11DEPENDS = "virtual/libx11 libxft"
 DEPENDS = "glib-2.0 fontconfig freetype zlib virtual/libiconv cairo harfbuzz qemu-native"
 
-PACKAGECONFIG ??= "${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'x11', '', d)} \
-                   ${@bb.utils.contains('DISTRO_FEATURES', 'ptest', 'ptest', '', d)}"
-
+PACKAGECONFIG ??= "${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'x11', '', d)}"
 PACKAGECONFIG[x11] = "--with-xft,--without-xft,${X11DEPENDS}"
-PACKAGECONFIG[ptest] = "--enable-installed-tests,--disable-installed-tests,glib-2.0-native"
 
 BBCLASSEXTEND = "native"
 DEPENDS_class-native = "glib-2.0-native cairo-native harfbuzz-native"
 
-inherit gnomebase gtk-doc qemu ptest
+inherit gnomebase gtk-doc qemu ptest-gnome
 
 EXTRA_AUTORECONF = ""
 
@@ -46,11 +43,7 @@ FILES_${PN} = "${bindir}/* ${libdir}/libpango*${SOLIBS}"
 FILES_${PN}-dbg += "${libdir}/pango/${LIBV}/modules/.debug"
 FILES_${PN}-dev += "${libdir}/pango/${LIBV}/modules/*.la"
 
-FILES_${PN}-ptest += "${libexecdir}/installed-tests/* \
-                      ${datadir}/installed-tests/pango"
-FILES_${PN}-dbg += "${libexecdir}/installed-tests/.debug"
-
-RDEPENDS_${PN}-ptest += "gnome-desktop-testing liberation-fonts"
+RDEPENDS_${PN}-ptest += "liberation-fonts"
 
 RPROVIDES_${PN} += "pango-modules pango-module-indic-lang \
                     pango-module-basic-fc pango-module-arabic-lang"
