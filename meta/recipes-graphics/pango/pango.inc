@@ -51,3 +51,6 @@ FILES_${PN}-ptest += "${libexecdir}/installed-tests/* \
 FILES_${PN}-dbg += "${libexecdir}/installed-tests/.debug"
 
 RDEPENDS_${PN}-ptest += "gnome-desktop-testing liberation-fonts"
+
+RPROVIDES_${PN} += "pango-modules pango-module-indic-lang \
+                    pango-module-basic-fc pango-module-arabic-lang"
