@@ -4,8 +4,8 @@ LICENSE = "BSD-2-Clause & BSD-3-Clause"
 LIC_FILES_CHKSUM = "file://COPYING;md5=1400bd9d09e8af56b9ec982b3d85797e"
 
 SRC_URI = "http://gstreamer.freedesktop.org/src/orc/orc-${PV}.tar.xz;name=orc"
-SRC_URI[orc.md5sum] = "72e0612ace54d77aa2f7a006348ee81a"
-SRC_URI[orc.sha256sum] = "767eaebce2941737b43368225ec54598b3055ca78b4dc50c4092f5fcdc0bdfe7"
+SRC_URI[orc.md5sum] = "9e793ec34c0e20339659dd4bbbf62135"
+SRC_URI[orc.sha256sum] = "338cd493b5247300149821c6312bdf7422a3593ae98691fc75d7e4fe727bd39b"
 
 inherit autotools pkgconfig
 
