@@ -1,6 +1,9 @@
 require readline.inc
 
-SRC_URI += "file://readline-cve-2014-2524.patch;striplevel=0 \
+SRC_URI += "file://configure-fix.patch \
+            file://config-dirent-symbols.patch \
+            file://norpath.patch \
+            file://readline-cve-2014-2524.patch;striplevel=0 \
             file://readline-dispatch-multikey.patch"
 
 SRC_URI[archive.md5sum] = "33c8fb279e981274f485fd91da77e94a"
