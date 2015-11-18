@@ -3,8 +3,8 @@ require libpcap.inc
 SRC_URI += "file://aclocal.patch \
             file://libpcap-pkgconfig-support.patch \
            "
-SRC_URI[md5sum] = "5f14191c1a684a75532c739c2c4059fa"
-SRC_URI[sha256sum] = "5db3e2998f1eeba2c76da55da5d474248fe19c44f49e15cac8a796a2c7e19690"
+SRC_URI[md5sum] = "b2e13142bbaba857ab1c6894aedaf547"
+SRC_URI[sha256sum] = "7ad3112187e88328b85e46dce7a9b949632af18ee74d97ffc3f2b41fe7f448b0"
 
 #
 # make install doesn't cover the shared lib
