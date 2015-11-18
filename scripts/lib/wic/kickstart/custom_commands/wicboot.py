@@ -35,6 +35,7 @@ class Wic_Bootloader(F8_Bootloader):
         self.menus = ""
         self.ptable = "msdos"
         self.source = ""
+        self.configfile = ""
 
     def _getArgsAsStr(self):
         retval = F8_Bootloader._getArgsAsStr(self)
@@ -45,6 +46,8 @@ class Wic_Bootloader(F8_Bootloader):
             retval += " --ptable=\"%s\"" %(self.ptable,)
         if self.source:
             retval += " --source=%s" % self.source
+        if self.configfile:
+            retval += " --configfile=%s" % self.configfile
 
         return retval
 
@@ -56,5 +59,7 @@ class Wic_Bootloader(F8_Bootloader):
         # use specified source plugin to implement bootloader-specific methods
         parser.add_option("--source", type="string", action="store",
                       dest="source", default=None)
+        parser.add_option("--configfile", type="string", action="store",
+                      dest="configfile", default=None)
         return parser
 

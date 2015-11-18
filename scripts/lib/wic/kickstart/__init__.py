@@ -97,6 +97,13 @@ def get_timeout(kickstart, default=None):
         return default
     return int(kickstart.handler.bootloader.timeout)
 
+def get_bootloader_file(kickstart, default=None):
+    if not hasattr(kickstart.handler.bootloader, "configfile"):
+        return default
+    if kickstart.handler.bootloader.configfile is None:
+        return default
+    return kickstart.handler.bootloader.configfile
+
 def get_kernel_args(kickstart, default="ro rd.live.image"):
     if not hasattr(kickstart.handler.bootloader, "appendLine"):
         return default
