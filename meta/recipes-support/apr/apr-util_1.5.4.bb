@@ -73,6 +73,8 @@ FILES_${PN}-staticdev += "${libdir}/apr-util-1/apr_dbm_gdbm.a"
 
 inherit ptest
 
+RDEPENDS_${PN}-ptest_append_libc-glibc = " glibc-gconv-iso8859-1 glibc-gconv-iso8859-2 glibc-gconv-utf-7"
+
 do_compile_ptest() {
 	cd ${B}/test
 	oe_runmake
