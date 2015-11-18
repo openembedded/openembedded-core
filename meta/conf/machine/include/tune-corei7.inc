@@ -13,7 +13,7 @@ require conf/machine/include/tune-core2.inc
 
 # Extra tune features
 TUNEVALID[corei7] = "Enable corei7 specific processor optimizations"
-TUNE_CCARGS .= "${@bb.utils.contains("TUNE_FEATURES", "corei7", " -march=corei7 -mtune=corei7 -mfpmath=sse -msse4.2", "", d)}"
+TUNE_CCARGS .= "${@bb.utils.contains('TUNE_FEATURES', 'corei7', ' -march=corei7 -mtune=corei7 -mfpmath=sse -msse4.2', '', d)}"
 
 # Extra tune selections
 AVAILTUNES += "corei7-32"
