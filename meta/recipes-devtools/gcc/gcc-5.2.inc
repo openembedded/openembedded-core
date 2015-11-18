@@ -75,6 +75,10 @@ SRC_URI = "\
            file://0041-handle-target-sysroot-multilib.patch \
            file://0042-cxxflags-for-build.patch \
            file://0043-fix-arm-thumb.patch \
+           file://0043-libstdc-musl.patch \
+           file://0044-gcc-musl-support.patch \
+           file://0045-musl-dynamic-linker.patch \
+           file://0046-musl-no-fixincludes.patch \
           "
 
 BACKPORTS = ""
