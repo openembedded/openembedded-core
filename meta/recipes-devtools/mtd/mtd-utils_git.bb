@@ -15,7 +15,11 @@ SRC_URI = "git://git.infradead.org/mtd-utils.git \
            file://fix-armv7-neon-alignment.patch \
            file://0001-hashtable-Remove-duplicate-hashtable_iterator_value-.patch \
            file://mtd-utils-fix-corrupt-cleanmarker-with-flash_erase--j-command.patch \
+           file://0001-Fix-build-with-musl.patch \
+           file://0001-mtd-utils-libfec-use-standard-C-type-instead-of-u_lo.patch \
 "
+
+SRC_URI_append_libc-musl = " file://010-fix-rpmatch.patch "
 
 S = "${WORKDIR}/git/"
 
