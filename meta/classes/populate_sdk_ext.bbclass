@@ -261,6 +261,11 @@ SDK_POST_INSTALL_COMMAND_task-populate-sdk-ext = "${sdk_ext_postinst}"
 SDK_POSTPROCESS_COMMAND_prepend_task-populate-sdk-ext = "copy_buildsystem; install_tools; "
 
 fakeroot python do_populate_sdk_ext() {
+    # FIXME hopefully we can remove this restriction at some point, but uninative
+    # currently forces this upon us
+    if d.getVar('SDK_ARCH', True) != d.getVar('BUILD_ARCH', True):
+        bb.fatal('The extensible SDK can currently only be built for the same architecture as the machine being built on - SDK_ARCH is set to %s (likely via setting SDKMACHINE) which is different from the architecture of the build machine (%s). Unable to continue.' % (d.getVar('SDK_ARCH', True), d.getVar('BUILD_ARCH', True)))
+
     bb.build.exec_func("do_populate_sdk", d)
 }
 
