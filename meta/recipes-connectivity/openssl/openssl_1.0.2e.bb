@@ -37,6 +37,7 @@ SRC_URI += "file://find.pl;subdir=${BP}/util/ \
             file://crypto_use_bigint_in_x86-64_perl.patch \
             file://openssl-1.0.2a-x32-asm.patch \
             file://ptest_makefile_deps.patch  \
+            file://configure-musl-target.patch \
            "
 
 SRC_URI[md5sum] = "5262bfa25b60ed9de9f28d5d52d77fc5"

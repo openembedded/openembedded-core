@@ -18,10 +18,12 @@ S = "${WORKDIR}/openssl-${PV}"
 PACKAGECONFIG[perl] = ",,,"
 
 AR_append = " r"
+TERMIO_libc-musl = "-DTERMIOS"
+TERMIO ?= "-DTERMIO"
 # Avoid binaries being marked as requiring an executable stack since it 
 # doesn't(which causes and this causes issues with SELinux
 CFLAG = "${@base_conditional('SITEINFO_ENDIANNESS', 'le', '-DL_ENDIAN', '-DB_ENDIAN', d)} \
-	-DTERMIO ${CFLAGS} -Wall -Wa,--noexecstack"
+	 ${TERMIO} ${CFLAGS} -Wall -Wa,--noexecstack"
 
 # -02 does not work on mipsel: ssh hangs when it tries to read /dev/urandom
 CFLAG_mtx-1 := "${@'${CFLAG}'.replace('-O2', '')}"
