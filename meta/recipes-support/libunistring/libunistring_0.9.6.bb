@@ -21,8 +21,8 @@ SRC_URI = "${GNU_MIRROR}/libunistring/libunistring-${PV}.tar.gz \
            file://iconv-m4-remove-the-test-to-convert-euc-jp.patch \
            file://0001-Unset-need_charset_alias-when-building-for-musl.patch \
 "
-SRC_URI[md5sum] = "1a705bcdcb83799d544137617b377cfd"
-SRC_URI[sha256sum] = "1a8c0772467850bef7197318a95f44abbb678ea83cbf119a3500cc7848276a17"
+SRC_URI[md5sum] = "dfae4ff5583649ed24d8f368f1d0543b"
+SRC_URI[sha256sum] = "9625eec2507f4789ebb6fc48ebda98be0e0168979a2f68aa8b680bf8eeabbd47"
 
 inherit autotools texinfo
 BBCLASSEXTEND = "native nativesdk"
