@@ -31,7 +31,10 @@ SRC_URI[sha256sum] = "342b1211c0d3b203a7df2540a5b03a428a087bd8a48c17e49ae268f992
 SRC_URI_append_libc-uclibc = " file://pam-no-innetgr.patch \
                                file://use-utmpx.patch"
 
-SRC_URI_append_libc-musl = " file://pam-no-innetgr.patch"
+SRC_URI_append_libc-musl = " file://pam-no-innetgr.patch \
+                             file://0001-Add-support-for-defining-missing-funcitonality.patch \
+                             file://include_paths_header.patch \
+                           "
 
 DEPENDS = "bison flex flex-native cracklib"
 
