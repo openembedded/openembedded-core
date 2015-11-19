@@ -341,8 +341,7 @@ class Image(ImageDepGraph):
 
         stdir = self.d.getVar('STAGING_DIR_TARGET', True)
         outdir = os.path.join(stdir, 'imgdata')
-        if not os.path.exists(outdir):
-            os.makedirs(outdir)
+        bb.utils.mkdirhier(outdir)
         basename = self.d.getVar('IMAGE_BASENAME', True)
         with open(os.path.join(outdir, basename) + '.env', 'w') as envf:
             for var in wicvars.split():
