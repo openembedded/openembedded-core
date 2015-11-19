@@ -12,7 +12,8 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=01d7fc4496aacf37d90df90b90b0cac1 \
 DEPENDS = "liburcu popt lttng-ust libxml2"
 RDEPENDS_${PN}-ptest += "make perl bash"
 
-SRCREV = "d522c1f14285e2e8b10b7c0cd011847696ffe779"
+SRCREV = "d71e55a5f1f423eeaa47c08e5797e47ce8e825fb"
+PV = "2.7.0+git${SRCPV}"
 
 PYTHON_OPTION = "am_cv_python_pyexecdir='${libdir}/python${PYTHON_BASEVERSION}/site-packages' \
                  am_cv_python_pythondir='${libdir}/python${PYTHON_BASEVERSION}/site-packages' \
@@ -23,13 +24,10 @@ PACKAGECONFIG[python] = "--enable-python-bindings ${PYTHON_OPTION},,python swig-
 PACKAGECONFIG[lttng-ust] = "--enable-lttng-ust, --disable-lttng-ust, lttng-ust"
 PACKAGECONFIG[kmod] = "--enable-kmod, --disable-kmod, kmod"
 
-SRC_URI = "git://git.lttng.org/lttng-tools.git;branch=stable-2.6 \
+SRC_URI = "git://git.lttng.org/lttng-tools.git;branch=stable-2.7 \
+           file://stop-using-SIGUNUSED.patch \
            file://runtest-2.4.0.patch \
-           file://extern-decls.patch \
-           file://run-ptest \
-           file://lttng-tools-Fix-live-timer-calculation-error.patch \
-           file://0001-Fix-sessiond-disable-match-app-event-by-name.patch \
-	  "
+           file://run-ptest"
 
 S = "${WORKDIR}/git"
 
@@ -71,9 +69,6 @@ do_install_ptest () {
 		  -i $i
 	done
 
-	sed -e "s:src/bin/lttng-sessiond:$bindir:g" \
-	    -e "s:src/bin/lttng-consumerd:${libexecdir}/libexec/:g" \
-	-i ${D}${PTEST_PATH}/tests/regression/run-report.py
 	sed -e "s:src/bin:bin:g" -e "s:lt-::g" \
 	-i ${D}${PTEST_PATH}/tests/utils/utils.sh
 	sed -e "s:ini_config:\.libs\/ini_config:" \
