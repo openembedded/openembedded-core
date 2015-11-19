@@ -335,13 +335,17 @@ class Image(ImageDepGraph):
         Write environment variables used by wic
         to tmp/sysroots/<machine>/imgdata/<image>.env
         """
+        wicvars = self.d.getVar('WICVARS', True)
+        if not wicvars:
+            return
+
         stdir = self.d.getVar('STAGING_DIR_TARGET', True)
         outdir = os.path.join(stdir, 'imgdata')
         if not os.path.exists(outdir):
             os.makedirs(outdir)
         basename = self.d.getVar('IMAGE_BASENAME', True)
         with open(os.path.join(outdir, basename) + '.env', 'w') as envf:
-            for var in self.d.getVar('WICVARS', True).split():
+            for var in wicvars.split():
                 value = self.d.getVar(var, True)
                 if value:
                     envf.write('%s="%s"\n' % (var, value.strip()))
