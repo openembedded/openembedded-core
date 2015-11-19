@@ -14,6 +14,7 @@ SRC_URI = "${SAVANNAH_GNU_MIRROR}/sysvinit/sysvinit-${PV}.tar.bz2 \
            file://crypt-lib.patch \
            file://pidof-add-m-option.patch \
            file://0001-This-fixes-an-issue-that-clang-reports-about-mutlipl.patch \
+           file://realpath.patch \
            file://rcS-default \
            file://rc \
            file://rcS \
