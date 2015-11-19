@@ -142,6 +142,10 @@ python do_populate_lic() {
     # The base directory we wrangle licenses to
     destdir = os.path.join(d.getVar('LICSSTATEDIR', True), d.getVar('PN', True))
     copy_license_files(lic_files_paths, destdir)
+    info = get_recipe_info(d)
+    with open(os.path.join(destdir, "recipeinfo"), "w") as f:
+        for key in sorted(info.keys()):
+            f.write("%s: %s\n" % (key, info[key]))
 }
 
 # it would be better to copy them in do_install_append, but find_license_filesa is python
@@ -155,6 +159,13 @@ python perform_packagecopy_prepend () {
         copy_license_files(lic_files_paths, destdir)
         add_package_and_files(d)
 }
+
+def get_recipe_info(d):
+    info = {}
+    info["PV"] = d.getVar("PV", True)
+    info["PR"] = d.getVar("PR", True)
+    info["LICENSE"] = d.getVar("LICENSE", True)
+    return info
 
 def add_package_and_files(d):
     packages = d.getVar('PACKAGES', True)
