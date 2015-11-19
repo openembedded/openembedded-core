@@ -398,6 +398,8 @@ def validate_pn(pn):
         return 'Recipe name "%s" is invalid: is a reserved keyword' % pn
     elif pn.startswith('pn-'):
         return 'Recipe name "%s" is invalid: names starting with "pn-" are reserved' % pn
+    elif pn.endswith(('.bb', '.bbappend', '.bbclass', '.inc', '.conf')):
+        return 'Recipe name "%s" is invalid: should be just a name, not a file name' % pn
     return ''
 
 
