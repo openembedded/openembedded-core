@@ -34,7 +34,7 @@ plugins = []
 def tinfoil_init(parserecipes):
     import bb.tinfoil
     import logging
-    tinfoil = bb.tinfoil.Tinfoil()
+    tinfoil = bb.tinfoil.Tinfoil(tracking=True)
     tinfoil.prepare(not parserecipes)
     tinfoil.logger.setLevel(logger.getEffectiveLevel())
     return tinfoil
@@ -96,7 +96,9 @@ def main():
 
     try:
         if getattr(args, 'parserecipes', False):
+            tinfoil.config_data.disableTracking()
             tinfoil.parseRecipes()
+            tinfoil.config_data.enableTracking()
         ret = args.func(args)
     except bb.BBHandledException:
         ret = 1
