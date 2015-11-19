@@ -1,0 +1,49 @@
+[AArch64] Fix the big endian loader name
+
+Signed-off-by: Szabolcs Nagy  <szabolcs.nagy@arm.com>
+
+The patch was imported from the glibc's official git server
+(https://sourceware.org/git/?p=glibc.git) as of commit id
+44cb254f9a024db33ba549e59dc9d90355b797c9.
+
+Fixed conflicts raised on glibc 2.21.
+
+Upstream-Status: Backport [glibc 2.22]
+
+Signed-off-by: Adrian Calianu <adrian.calianu@enea.com>
+---
+ ChangeLog   | 5 +++++
+ config.h.in | 3 +++
+ 2 files changed, 8 insertions(+)
+
+diff --git a/ChangeLog b/ChangeLog
+index dc1ed1b..503ad41 100644
+--- a/ChangeLog
++++ b/ChangeLog
+@@ -56278,4 +56278,9 @@
+ 	added check.  Only act on the data if no current modification
+ 	happened.
+ 
++2015-05-01  Szabolcs Nagy  <szabolcs.nagy@arm.com>
++
++    * config.h.in (HAVE_AARCH64_BE): Add.
++
++
+ See ChangeLog.17 for earlier changes.
+diff --git a/config.h.in b/config.h.in
+index 695ca35..85c1761 100644
+--- a/config.h.in
++++ b/config.h.in
+@@ -114,6 +114,9 @@
+    include/libc-symbols.h that avoid PLT slots in the shared objects.  */
+ #undef	NO_HIDDEN
+ 
++/* AArch64 big endian ABI */
++#undef HAVE_AARCH64_BE
++
+ 
+ /* Defined to some form of __attribute__ ((...)) if the compiler supports
+    a different, more efficient calling convention.  */
+-- 
+1.9.1
+
