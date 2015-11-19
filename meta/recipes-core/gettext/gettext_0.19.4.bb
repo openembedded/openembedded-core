@@ -42,6 +42,10 @@ EXTRA_OECONF += "--without-lispdir \
 acpaths = '-I ${S}/gettext-runtime/m4 \
            -I ${S}/gettext-tools/m4'
 
+do_install_append_libc-musl () {
+	rm -f ${D}${libdir}/charset.alias
+	rm -f ${D}${includedir}/libintl.h
+}
 
 # these lack the .x behind the .so, but shouldn't be in the -dev package
 # Otherwise you get the following results:
