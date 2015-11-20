@@ -57,8 +57,6 @@ export BUILD_SYS
 export STAGING_LIBDIR
 export STAGING_INCDIR
 
-export LDFLAGS += "-ldl"
-
 python populate_packages_prepend () {
     # autonamer would call this libxml2-2, but we don't want that
     if d.getVar('DEBIAN_NAMES', True):
