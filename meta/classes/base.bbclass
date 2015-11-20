@@ -550,6 +550,10 @@ python () {
         if path.endswith('.lz4'):
             d.appendVarFlag('do_unpack', 'depends', ' lz4-native:do_populate_sysroot')
 
+        # *.lz should DEPEND on lzip-native for unpacking
+        elif path.endswith('.lz'):
+            d.appendVarFlag('do_unpack', 'depends', ' lzip-native:do_populate_sysroot')
+
         # *.xz should DEPEND on xz-native for unpacking
         elif path.endswith('.xz'):
             d.appendVarFlag('do_unpack', 'depends', ' xz-native:do_populate_sysroot')
