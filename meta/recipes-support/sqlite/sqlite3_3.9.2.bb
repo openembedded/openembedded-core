@@ -12,12 +12,11 @@ PE = "3"
 SQLITE_PV = "${@sqlite_download_version(d)}"
 SRC_URI = "http://www.sqlite.org/2015/sqlite-autoconf-${SQLITE_PV}.tar.gz"
 
-SRC_URI[md5sum] = "cd0f883b2ddfc29e8e1bbbbd8e85f555"
-SRC_URI[sha256sum] = "a324143f4cc35cd7e9605a0a8dec9f9e4861d0be8305f3642e7d05008b77e60d"
+SRC_URI[md5sum] = "bc4eb5b3fc5cfcb6e059794306cac1ca"
+SRC_URI[sha256sum] = "064c0abe9c9177534d4c770bca7a5902f9924b629ac886b4c08956be6dfbc36b"
 
 S = "${WORKDIR}/sqlite-autoconf-${SQLITE_PV}"
 
 # Provide column meta-data API
 BUILD_CFLAGS += "-DSQLITE_ENABLE_COLUMN_METADATA"
 TARGET_CFLAGS += "-DSQLITE_ENABLE_COLUMN_METADATA"
-
