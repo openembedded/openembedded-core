@@ -187,10 +187,7 @@ python copy_buildsystem () {
 }
 
 def extsdk_get_buildtools_filename(d):
-    # This is somewhat of a hack
-    localdata = bb.data.createCopy(d)
-    localdata.setVar('PN', 'buildtools-tarball')
-    return localdata.expand('${SDK_NAME}-buildtools-nativesdk-standalone-*.sh')
+    return '*-buildtools-nativesdk-standalone-*.sh'
 
 install_tools() {
 	install -d ${SDK_OUTPUT}/${SDKPATHNATIVE}${bindir_nativesdk}
