@@ -527,39 +527,40 @@ python () {
                     bb.note("INCLUDING " + pn + " as buildable despite INCOMPATIBLE_LICENSE because it has been whitelisted for HOSTTOOLS")
 
     srcuri = d.getVar('SRC_URI', True)
-    # Svn packages should DEPEND on subversion-native
-    if "svn://" in srcuri:
-        d.appendVarFlag('do_fetch', 'depends', ' subversion-native:do_populate_sysroot')
+    for uri in srcuri.split():
+        (scheme, _ , path) = bb.fetch.decodeurl(uri)[:3]
 
-    # Git packages should DEPEND on git-native
-    if "git://" in srcuri:
-        d.appendVarFlag('do_fetch', 'depends', ' git-native:do_populate_sysroot')
+        # Svn packages should DEPEND on subversion-native
+        if scheme == "svn":
+            d.appendVarFlag('do_fetch', 'depends', ' subversion-native:do_populate_sysroot')
 
-    # Mercurial packages should DEPEND on mercurial-native
-    elif "hg://" in srcuri:
-        d.appendVarFlag('do_fetch', 'depends', ' mercurial-native:do_populate_sysroot')
+        # Git packages should DEPEND on git-native
+        elif scheme == "git":
+            d.appendVarFlag('do_fetch', 'depends', ' git-native:do_populate_sysroot')
 
-    # OSC packages should DEPEND on osc-native
-    elif "osc://" in srcuri:
-        d.appendVarFlag('do_fetch', 'depends', ' osc-native:do_populate_sysroot')
+        # Mercurial packages should DEPEND on mercurial-native
+        elif scheme == "hg":
+            d.appendVarFlag('do_fetch', 'depends', ' mercurial-native:do_populate_sysroot')
 
-    # *.lz4 should depends on lz4-native for unpacking
-    # Not endswith because of "*.patch.lz4;patch=1". Need bb.fetch.decodeurl in future
-    if '.lz4' in srcuri:
-        d.appendVarFlag('do_unpack', 'depends', ' lz4-native:do_populate_sysroot')
+        # OSC packages should DEPEND on osc-native
+        elif scheme == "osc":
+            d.appendVarFlag('do_fetch', 'depends', ' osc-native:do_populate_sysroot')
 
-    # *.xz should depends on xz-native for unpacking
-    # Not endswith because of "*.patch.xz;patch=1". Need bb.fetch.decodeurl in future
-    if '.xz' in srcuri:
-        d.appendVarFlag('do_unpack', 'depends', ' xz-native:do_populate_sysroot')
+        # *.lz4 should DEPEND on lz4-native for unpacking
+        if path.endswith('.lz4'):
+            d.appendVarFlag('do_unpack', 'depends', ' lz4-native:do_populate_sysroot')
 
-    # unzip-native should already be staged before unpacking ZIP recipes
-    if ".zip" in srcuri:
-        d.appendVarFlag('do_unpack', 'depends', ' unzip-native:do_populate_sysroot')
+        # *.xz should DEPEND on xz-native for unpacking
+        elif path.endswith('.xz'):
+            d.appendVarFlag('do_unpack', 'depends', ' xz-native:do_populate_sysroot')
 
-    # file is needed by rpm2cpio.sh
-    if ".src.rpm" in srcuri:
-        d.appendVarFlag('do_unpack', 'depends', ' file-native:do_populate_sysroot')
+        # .zip should DEPEND on unzip-native for unpacking
+        elif path.endswith('.zip'):
+            d.appendVarFlag('do_unpack', 'depends', ' unzip-native:do_populate_sysroot')
+
+        # file is needed by rpm2cpio.sh
+        elif path.endswith('.src.rpm'):
+            d.appendVarFlag('do_unpack', 'depends', ' file-native:do_populate_sysroot')
 
     set_packagetriplet(d)
 
