@@ -91,15 +91,13 @@ def _remove_patch_dirs(recipefolder):
         for d in dirs:
             shutil.rmtree(os.path.join(root,d))
 
-def _recipe_contains(rf, var):
-    import re
-    found = False
-    with open(rf) as f:
-        for line in f:
-            if re.match("^%s.*=.*" % var, line):
-                found = True
-                break
-    return found
+def _recipe_contains(rd, var):
+    rf = rd.getVar('FILE', True)
+    varfiles = oe.recipeutils.get_var_files(rf, [var], rd)
+    for var, fn in varfiles.iteritems():
+        if fn and fn.startswith(os.path.dirname(rf) + os.sep):
+            return True
+    return False
 
 def _rename_recipe_dirs(oldpv, newpv, path):
     for root, dirs, files in os.walk(path):
@@ -257,7 +255,7 @@ def _extract_new_source(newpv, srctree, no_patch, srcrev, branch, keep_temp, tin
 
     return (rev, md5, sha256)
 
-def _create_new_recipe(newpv, md5, sha256, workspace, rd):
+def _create_new_recipe(newpv, md5, sha256, srcrev, workspace, tinfoil, rd):
     """Creates the new recipe under workspace"""
     crd = rd.createCopy()
 
@@ -271,8 +269,16 @@ def _create_new_recipe(newpv, md5, sha256, workspace, rd):
         newpv = oldpv
     fullpath = _rename_recipe_files(bpn, oldpv, newpv, path)
 
-    if _recipe_contains(fullpath, 'PV') and newpv != oldpv:
-        oe.recipeutils.patch_recipe(d, fullpath, {'PV':newpv})
+    newvalues = {}
+    if _recipe_contains(rd, 'PV') and newpv != oldpv:
+        newvalues['PV'] = newpv
+
+    if srcrev:
+        newvalues['SRCREV'] = srcrev
+
+    if newvalues:
+        rd = oe.recipeutils.parse_recipe(fullpath, None, tinfoil.config_data)
+        oe.recipeutils.patch_recipe(rd, fullpath, newvalues)
 
     if md5 and sha256:
         # Unfortunately, oe.recipeutils.patch_recipe cannot update flags.
@@ -294,7 +300,7 @@ def upgrade(args, config, basepath, workspace):
     if reason:
         raise DevtoolError(reason)
 
-    tinfoil = setup_tinfoil(basepath=basepath)
+    tinfoil = setup_tinfoil(basepath=basepath, tracking=True)
 
     rd = parse_recipe(config, tinfoil, args.recipename, True)
     if not rd:
@@ -316,7 +322,7 @@ def upgrade(args, config, basepath, workspace):
         rev2, md5, sha256 = _extract_new_source(args.version, args.srctree, args.no_patch,
                                                 args.srcrev, args.branch, args.keep_temp,
                                                 tinfoil, rd)
-        rf = _create_new_recipe(args.version, md5, sha256, config.workspace_path, rd)
+        rf = _create_new_recipe(args.version, md5, sha256, args.srcrev, config.workspace_path, tinfoil, rd)
     except bb.process.CmdError as e:
         _upgrade_error(e, rf, args.srctree)
     except DevtoolError as e:
