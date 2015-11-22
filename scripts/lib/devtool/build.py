@@ -46,12 +46,14 @@ def _set_file_values(fn, values):
             f.writelines(newlines)
     return updated
 
+def _get_build_task(config):
+    return config.get('Build', 'build_task', 'populate_sysroot')
 
 def build(args, config, basepath, workspace):
     """Entry point for the devtool 'build' subcommand"""
     check_workspace_recipe(workspace, args.recipename)
 
-    build_task = config.get('Build', 'build_task', 'populate_sysroot')
+    build_task = _get_build_task(config)
 
     bbappend = workspace[args.recipename]['bbappend']
     if args.disable_parallel_make:
@@ -71,7 +73,7 @@ def build(args, config, basepath, workspace):
 def register_commands(subparsers, context):
     """Register devtool subcommands from this plugin"""
     parser_build = subparsers.add_parser('build', help='Build a recipe',
-                                         description='Builds the specified recipe using bitbake',
+                                         description='Builds the specified recipe using bitbake (up to and including do_%s)' % _get_build_task(context.config),
                                          formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser_build.add_argument('recipename', help='Recipe to build')
     parser_build.add_argument('-s', '--disable-parallel-make', action="store_true", help='Disable make parallelism')

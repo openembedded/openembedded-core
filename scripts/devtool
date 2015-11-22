@@ -220,6 +220,7 @@ def main():
     config = ConfigHandler(os.path.join(basepath, 'conf', 'devtool.conf'))
     if not config.read():
         return -1
+    context.config = config
 
     bitbake_subdir = config.get('General', 'bitbake_subdir', '')
     if bitbake_subdir:
