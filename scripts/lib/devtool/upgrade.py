@@ -117,7 +117,6 @@ def _rename_recipe_file(bpn, oldpv, newpv, path):
         recipe = "%s_git.bb" % bpn
         if os.path.isfile(os.path.join(path, recipe)):
             newrecipe = recipe
-            raise DevtoolError("Original recipe not found on workspace")
     return os.path.join(path, newrecipe)
 
 def _rename_recipe_files(bpn, oldpv, newpv, path):
