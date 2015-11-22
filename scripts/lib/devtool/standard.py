@@ -456,7 +456,7 @@ def _add_md5(config, recipename, filename):
             f.write('%s|%s|%s\n' % (recipename, os.path.relpath(fn, config.workspace_path), md5))
 
     if os.path.isdir(filename):
-        for root, _, files in os.walk(os.path.dirname(filename)):
+        for root, _, files in os.walk(filename):
             for f in files:
                 addfile(os.path.join(root, f))
     else:
