@@ -97,7 +97,7 @@ def newappend(args):
     print(append_path)
 
 
-def register_command(subparsers):
+def register_commands(subparsers):
     parser = subparsers.add_parser('newappend',
                                    help='Create a bbappend for the specified target in the specified layer')
     parser.add_argument('-w', '--wildcard-version', help='Use wildcard to make the bbappend apply to any recipe version', action='store_true')

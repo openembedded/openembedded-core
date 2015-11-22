@@ -82,7 +82,11 @@ def main():
 
     registered = False
     for plugin in plugins:
-        if hasattr(plugin, 'register_command'):
+        if hasattr(plugin, 'register_commands'):
+            registered = True
+            plugin.register_commands(subparsers)
+        elif hasattr(plugin, 'register_command'):
+            # Legacy function name
             registered = True
             plugin.register_command(subparsers)
         if hasattr(plugin, 'tinfoil_init'):

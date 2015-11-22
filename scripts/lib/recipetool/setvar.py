@@ -62,7 +62,7 @@ def setvar(args):
     return 0
 
 
-def register_command(subparsers):
+def register_commands(subparsers):
     parser_setvar = subparsers.add_parser('setvar',
                                           help='Set a variable within a recipe',
                                           description='Adds/updates the value a variable is set to in a recipe')

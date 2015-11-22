@@ -435,7 +435,7 @@ def target_path(targetpath):
     return targetpath
 
 
-def register_command(subparsers):
+def register_commands(subparsers):
     common = argparse.ArgumentParser(add_help=False)
     common.add_argument('-m', '--machine', help='Make bbappend changes specific to a machine only', metavar='MACHINE')
     common.add_argument('-w', '--wildcard-version', help='Use wildcard to make the bbappend apply to any recipe version', action='store_true')

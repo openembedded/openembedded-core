@@ -436,7 +436,7 @@ def convert_debian(debpath):
     return values
 
 
-def register_command(subparsers):
+def register_commands(subparsers):
     parser_create = subparsers.add_parser('create',
                                           help='Create a new recipe',
                                           description='Creates a new recipe from a source tree')
