@@ -12,8 +12,8 @@ DEPENDS = "glib-2.0"
 DEPENDS_class-native = ""
 DEPENDS_class-nativesdk = ""
 
-SRCREV = "40342dd0ead05d457a2a4e692cf865f50033a709"
-PV = "0.28+git${SRCPV}"
+SRCREV = "5914edfe9604abfedd220103cbac382fc4d268bb"
+PV = "0.29+git${SRCPV}"
 SRC_URI = "git://anongit.freedesktop.org/pkg-config"
 
 S = "${WORKDIR}/git"
