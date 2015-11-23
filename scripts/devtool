@@ -258,7 +258,7 @@ def main():
 
     if not context.fixed_setup:
         parser_create_workspace = subparsers.add_parser('create-workspace',
-                                                        help='Set up a workspace',
+                                                        help='Set up workspace in an alternative location',
                                                         description='Sets up a new workspace. NOTE: other devtool subcommands will create a workspace automatically as needed, so you only need to use %(prog)s if you want to specify where the workspace should be located.')
         parser_create_workspace.add_argument('layerpath', nargs='?', help='Path in which the workspace layer should be created')
         parser_create_workspace.add_argument('--create-only', action="store_true", help='Only create the workspace layer, do not alter configuration')

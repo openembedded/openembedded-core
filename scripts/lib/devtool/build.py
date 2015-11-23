@@ -73,8 +73,7 @@ def build(args, config, basepath, workspace):
 def register_commands(subparsers, context):
     """Register devtool subcommands from this plugin"""
     parser_build = subparsers.add_parser('build', help='Build a recipe',
-                                         description='Builds the specified recipe using bitbake (up to and including do_%s)' % _get_build_task(context.config),
-                                         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+                                         description='Builds the specified recipe using bitbake (up to and including do_%s)' % _get_build_task(context.config))
     parser_build.add_argument('recipename', help='Recipe to build')
     parser_build.add_argument('-s', '--disable-parallel-make', action="store_true", help='Disable make parallelism')
     parser_build.set_defaults(func=build)

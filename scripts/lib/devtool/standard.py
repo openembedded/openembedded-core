@@ -1134,8 +1134,8 @@ def reset(args, config, basepath, workspace):
 def register_commands(subparsers, context):
     """Register devtool subcommands from this plugin"""
     parser_add = subparsers.add_parser('add', help='Add a new recipe',
-                                       description='Adds a new recipe')
-    parser_add.add_argument('recipename', help='Name for new recipe to add')
+                                       description='Adds a new recipe to the workspace to build a specified source tree')
+    parser_add.add_argument('recipename', help='Name for new recipe to add (just name - no version, path or extension)')
     parser_add.add_argument('srctree', help='Path to external source tree')
     group = parser_add.add_mutually_exclusive_group()
     group.add_argument('--same-dir', '-s', help='Build in same directory as source', action="store_true")
@@ -1147,24 +1147,22 @@ def register_commands(subparsers, context):
     parser_add.set_defaults(func=add)
 
     parser_modify = subparsers.add_parser('modify', help='Modify the source for an existing recipe',
-                                       description='Enables modifying the source for an existing recipe',
-                                       formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-    parser_modify.add_argument('recipename', help='Name for recipe to edit')
+                                       description='Enables modifying the source for an existing recipe')
+    parser_modify.add_argument('recipename', help='Name of existing recipe to edit (just name - no version, path or extension)')
     parser_modify.add_argument('srctree', help='Path to external source tree')
     parser_modify.add_argument('--wildcard', '-w', action="store_true", help='Use wildcard for unversioned bbappend')
     parser_modify.add_argument('--extract', '-x', action="store_true", help='Extract source as well')
     group = parser_modify.add_mutually_exclusive_group()
     group.add_argument('--same-dir', '-s', help='Build in same directory as source', action="store_true")
     group.add_argument('--no-same-dir', help='Force build in a separate build directory', action="store_true")
-    parser_modify.add_argument('--branch', '-b', default="devtool", help='Name for development branch to checkout (only when using -x)')
+    parser_modify.add_argument('--branch', '-b', default="devtool", help='Name for development branch to checkout (only when using -x) (default "%(default)s")')
     parser_modify.set_defaults(func=modify)
 
     parser_extract = subparsers.add_parser('extract', help='Extract the source for an existing recipe',
-                                       description='Extracts the source for an existing recipe',
-                                       formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-    parser_extract.add_argument('recipename', help='Name for recipe to extract the source for')
+                                       description='Extracts the source for an existing recipe')
+    parser_extract.add_argument('recipename', help='Name of recipe to extract the source for')
     parser_extract.add_argument('srctree', help='Path to where to extract the source tree')
-    parser_extract.add_argument('--branch', '-b', default="devtool", help='Name for development branch to checkout')
+    parser_extract.add_argument('--branch', '-b', default="devtool", help='Name for development branch to checkout (default "%(default)s")')
     parser_extract.add_argument('--keep-temp', action="store_true", help='Keep temporary directory (for debugging)')
     parser_extract.set_defaults(func=extract, no_workspace=True)
 
@@ -1178,23 +1176,21 @@ def register_commands(subparsers, context):
     parser_sync.set_defaults(func=sync)
 
     parser_update_recipe = subparsers.add_parser('update-recipe', help='Apply changes from external source tree to recipe',
-                                       description='Applies changes from external source tree to a recipe (updating/adding/removing patches as necessary, or by updating SRCREV)')
+                                       description='Applies changes from external source tree to a recipe (updating/adding/removing patches as necessary, or by updating SRCREV). Note that these changes need to have been committed to the git repository in order to be recognised.')
     parser_update_recipe.add_argument('recipename', help='Name of recipe to update')
     parser_update_recipe.add_argument('--mode', '-m', choices=['patch', 'srcrev', 'auto'], default='auto', help='Update mode (where %(metavar)s is %(choices)s; default is %(default)s)', metavar='MODE')
-    parser_update_recipe.add_argument('--initial-rev', help='Starting revision for patches')
+    parser_update_recipe.add_argument('--initial-rev', help='Override starting revision for patches')
     parser_update_recipe.add_argument('--append', '-a', help='Write changes to a bbappend in the specified layer instead of the recipe', metavar='LAYERDIR')
     parser_update_recipe.add_argument('--wildcard-version', '-w', help='In conjunction with -a/--append, use a wildcard to make the bbappend apply to any recipe version', action='store_true')
     parser_update_recipe.add_argument('--no-remove', '-n', action="store_true", help='Don\'t remove patches, only add or update')
     parser_update_recipe.set_defaults(func=update_recipe)
 
     parser_status = subparsers.add_parser('status', help='Show workspace status',
-                                          description='Lists recipes currently in your workspace and the paths to their respective external source trees',
-                                          formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+                                          description='Lists recipes currently in your workspace and the paths to their respective external source trees')
     parser_status.set_defaults(func=status)
 
     parser_reset = subparsers.add_parser('reset', help='Remove a recipe from your workspace',
-                                         description='Removes the specified recipe from your workspace (resetting its state)',
-                                         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+                                         description='Removes the specified recipe from your workspace (resetting its state)')
     parser_reset.add_argument('recipename', nargs='?', help='Recipe to reset')
     parser_reset.add_argument('--all', '-a', action="store_true", help='Reset all recipes (clear workspace)')
     parser_reset.add_argument('--no-clean', '-n', action="store_true", help='Don\'t clean the sysroot to remove recipe output')

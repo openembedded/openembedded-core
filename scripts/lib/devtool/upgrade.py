@@ -361,8 +361,8 @@ def upgrade(args, config, basepath, workspace):
 def register_commands(subparsers, context):
     """Register devtool subcommands from this plugin"""
     parser_upgrade = subparsers.add_parser('upgrade', help='Upgrade an existing recipe',
-                                           description='Upgrades an existing recipe to a new upstream version')
-    parser_upgrade.add_argument('recipename', help='Name for recipe to extract the source for')
+                                           description='Upgrades an existing recipe to a new upstream version. Puts the upgraded recipe file into the workspace along with any associated files, and extracts the source tree to a specified location (in case patches need rebasing or adding to as a result of the upgrade).')
+    parser_upgrade.add_argument('recipename', help='Name of recipe to upgrade (just name - no version, path or extension)')
     parser_upgrade.add_argument('srctree', help='Path to where to extract the source tree')
     parser_upgrade.add_argument('--version', '-V', help='Version to upgrade to (PV)')
     parser_upgrade.add_argument('--srcrev', '-S', help='Source revision to upgrade to (if fetching from an SCM such as git)')
