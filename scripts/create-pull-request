@@ -185,6 +185,14 @@ fi
 # Generate the patches and cover letter
 git format-patch $extraopts -M40 --subject-prefix="$PREFIX" -n -o $ODIR --thread=shallow --cover-letter $RELATIVE_TO..$COMMIT_ID > /dev/null
 
+if [ -z "$(ls -A $ODIR 2> /dev/null)" ]; then
+    echo "ERROR: $ODIR is empty, no cover letter and patches was generated!"
+    echo "       This is most likely due to that \$RRELATIVE_TO..\$COMMIT_ID"
+    echo "       ($RELATIVE_TO..$COMMIT_ID) don't contain any differences."
+    rmdir $ODIR
+    exit 1
+fi
+
 [ -n "$RELDIR" ] && cd $pdir
 
 # Customize the cover letter
