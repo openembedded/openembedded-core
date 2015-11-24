@@ -297,7 +297,7 @@ class Wic_PartData(FC4_PartData):
 
         mkfs_cmd = "mkfs.%s -F %s %s %s -d %s" % \
             (self.fstype, extra_imagecmd, rootfs, label_str, rootfs_dir)
-        exec_native_cmd(pseudo + mkfs_cmd, native_sysroot)
+        exec_native_cmd(mkfs_cmd, native_sysroot, pseudo=pseudo)
 
     def prepare_rootfs_btrfs(self, rootfs, oe_builddir, rootfs_dir,
                              native_sysroot, pseudo):
@@ -330,7 +330,7 @@ class Wic_PartData(FC4_PartData):
 
         mkfs_cmd = "mkfs.%s -b %d -r %s %s %s" % \
             (self.fstype, rootfs_size * 1024, rootfs_dir, label_str, rootfs)
-        exec_native_cmd(pseudo + mkfs_cmd, native_sysroot)
+        exec_native_cmd(mkfs_cmd, native_sysroot, pseudo=pseudo)
 
     def prepare_rootfs_vfat(self, rootfs, oe_builddir, rootfs_dir,
                             native_sysroot, pseudo):
@@ -378,7 +378,7 @@ class Wic_PartData(FC4_PartData):
         """
         squashfs_cmd = "mksquashfs %s %s -noappend" % \
                        (rootfs_dir, rootfs)
-        exec_native_cmd(pseudo + squashfs_cmd, native_sysroot)
+        exec_native_cmd(squashfs_cmd, native_sysroot, pseudo=pseudo)
 
     def prepare_empty_partition_ext(self, rootfs, oe_builddir,
                                     native_sysroot):
