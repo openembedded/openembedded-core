@@ -4,7 +4,8 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/meta/files/common-licenses/GPL-2.0;md5=80
 
 PR = "r10"
 
-SRC_URI = "file://inittab"
+SRC_URI = "file://inittab \
+           file://start_getty"
 
 S = "${WORKDIR}"
 
@@ -15,8 +16,10 @@ do_compile() {
 }
 
 do_install() {
-	install -d ${D}${sysconfdir}
+    install -d ${D}${sysconfdir}
+    install -d ${D}${sysconfdir}/init.d
     install -m 0644 ${WORKDIR}/inittab ${D}${sysconfdir}/inittab
+    install -m 0755 ${WORKDIR}/start_getty ${D}${sysconfdir}/init.d/start_getty
 
     set -x
     tmp="${SERIAL_CONSOLES}"
@@ -24,7 +27,7 @@ do_install() {
     do
 	j=`echo ${i} | sed s/\;/\ /g`
 	label=`echo ${i} | sed -e 's/tty//' -e 's/^.*;//' -e 's/;.*//'`
-	echo "$label:12345:respawn:${base_sbindir}/getty -L ${j}" >> ${D}${sysconfdir}/inittab
+	echo "$label:12345:respawn:${sysconfdir}/init.d/start_getty ${j}" >> ${D}${sysconfdir}/inittab
     done
 
     if [ "${USE_VT}" = "1" ]; then
@@ -73,7 +76,7 @@ fi
 # Set PACKAGE_ARCH appropriately.
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-FILES_${PN} = "${sysconfdir}/inittab"
+FILES_${PN} = "${sysconfdir}/inittab ${sysconfdir}/init.d/start_getty"
 CONFFILES_${PN} = "${sysconfdir}/inittab"
 
 USE_VT ?= "1"
