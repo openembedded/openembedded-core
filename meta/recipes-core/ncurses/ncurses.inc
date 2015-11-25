@@ -13,7 +13,7 @@ BINCONFIG = "${bindir}/ncurses-config"
 inherit autotools binconfig-disabled multilib_header pkgconfig
 
 # Upstream has useful patches at times at ftp://invisible-island.net/ncurses/
-SRC_URI = "ftp://invisible-island.net/${BPN}/current/${BP}-${REVISION}.tgz"
+SRC_URI = "git://anonscm.debian.org/collab-maint/ncurses.git"
 
 EXTRA_AUTORECONF = "-I m4"
 CONFIG_SITE =+ "${WORKDIR}/config.cache"
