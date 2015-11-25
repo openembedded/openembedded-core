@@ -41,6 +41,7 @@ SRC_URI = "${GLIBC_GIT_URI};branch=${SRCBRANCH};name=glibc \
            file://nscd-no-bash.patch \
            file://0028-Clear-ELF_RTYPE_CLASS_EXTERN_PROTECTED_DATA-for-prel.patch \
            file://strcoll-Remove-incorrect-STRDIFF-based-optimization-.patch \
+           file://0029-fix-getmntent-empty-lines.patch \
 "
 
 SRC_URI += "\
