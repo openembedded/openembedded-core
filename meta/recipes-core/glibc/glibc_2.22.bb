@@ -39,6 +39,7 @@ SRC_URI = "${GLIBC_GIT_URI};branch=${SRCBRANCH};name=glibc \
            file://0026-eglibc-dl_debug_mask-is-controlled-by-__OPTION_EGLIB.patch \
            file://0027-eglibc-use-option-groups-Conditionally-exclude-c-tes.patch \
            file://nscd-no-bash.patch \
+           file://strcoll-Remove-incorrect-STRDIFF-based-optimization-.patch \
 "
 
 SRC_URI += "\
