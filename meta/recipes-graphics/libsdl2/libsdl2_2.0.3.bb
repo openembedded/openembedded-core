@@ -48,7 +48,7 @@ PACKAGECONFIG[gles2]      = "--enable-video-opengles,--disable-video-opengles,vi
 PACKAGECONFIG[opengl]     = "--enable-video-opengl,--disable-video-opengl,virtual/libgl"
 PACKAGECONFIG[pulseaudio] = "--enable-pulseaudio,--disable-pulseaudio,pulseaudio"
 PACKAGECONFIG[tslib]      = "--enable-input-tslib,--disable-input-tslib,tslib"
-PACKAGECONFIG[wayland]    = "--enable-video-wayland,--disable-video-wayland,wayland"
+PACKAGECONFIG[wayland]    = "--enable-video-wayland,--disable-video-wayland,wayland libxkbcommon"
 PACKAGECONFIG[x11]        = "--enable-video-x11,--disable-video-x11,virtual/libx11 libxext libxrandr libxrender"
 
 EXTRA_AUTORECONF += "--include=acinclude --exclude=autoheader"
