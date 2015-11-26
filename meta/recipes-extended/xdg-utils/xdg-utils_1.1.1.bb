@@ -21,12 +21,13 @@ SRC_URI = "http://portland.freedesktop.org/download/${BPN}-${PV}.tar.gz \
            file://0001-Reinstate-xdg-terminal.patch \
           "
 
-SRC_URI[md5sum] = "fadf5e7a08e0526fc60dbe3e5b7ef8d6"
-SRC_URI[sha256sum] = "7b05558ae4bb8ede356863cae8c42e3e012aa421bf9d45130a570fd209d79102"
+SRC_URI[md5sum] = "2d0aec6037769a5f138ff404b1bb4b15"
+SRC_URI[sha256sum] = "b0dd63a2576e0bb16f1aa78d6ddf7d6784784a098d4df17161cd6a17c7bc4125"
 
 inherit autotools-brokensep distro_features_check
 
 # The xprop requires x11 in DISTRO_FEATURES
 REQUIRED_DISTRO_FEATURES = "x11"
 
+DEPENDS = "xmlto-native libxslt-native"
 RDEPENDS_${PN} += "xprop"
