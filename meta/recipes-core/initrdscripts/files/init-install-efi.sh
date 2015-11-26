@@ -223,6 +223,7 @@ if [ -f /run/media/$1/EFI/BOOT/grub.cfg ]; then
 fi
 
 if [ -d /run/media/$1/loader ]; then
+    rootuuid=$(blkid -o value -s PARTUUID ${rootfs})
     GUMMIBOOT_CFGS="/boot/loader/entries/*.conf"
     # copy config files for gummiboot
     cp -dr /run/media/$1/loader /boot
