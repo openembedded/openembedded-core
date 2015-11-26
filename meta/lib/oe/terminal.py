@@ -244,7 +244,9 @@ def check_terminal_version(terminalName):
         cmdversion = '%s --version' % terminalName
         if terminalName.startswith('tmux'):
             cmdversion = '%s -V' % terminalName
-        p = sub.Popen(['sh', '-c', cmdversion], stdout=sub.PIPE,stderr=sub.PIPE)
+        newenv = os.environ.copy()
+        newenv["LANG"] = "C"
+        p = sub.Popen(['sh', '-c', cmdversion], stdout=sub.PIPE, stderr=sub.PIPE, env=newenv)
         out, err = p.communicate()
         ver_info = out.rstrip().split('\n')
     except OSError as exc:
