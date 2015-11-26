@@ -111,6 +111,7 @@ SRC_URI = "cvs://anonymous@rpm5.org/cvs;tag=rpm-5_4;module=rpm \
 	   file://rpm-rpmpgp-fix.patch \
 	   file://rpm-disable-Wno-override-init.patch \
 	   file://rpm-realpath.patch \
+	   file://rpm-rpmfc.c-fix-for-N32-MIPS64.patch \
 	  "
 
 # Uncomment the following line to enable platform score debugging
