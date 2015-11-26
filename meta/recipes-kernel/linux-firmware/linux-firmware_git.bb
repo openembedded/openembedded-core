@@ -145,13 +145,13 @@ FILES_${PN}-rtl-license = " \
 
 LICENSE_${PN}-rtl8192cu = "Firmware-rtlwifi"
 FILES_${PN}-rtl8192cu = " \
-  /lib/firmware/rtlwifi/rtl8192cufw.bin \
+  /lib/firmware/rtlwifi/rtl8192cufw*.bin \
 "
 RDEPENDS_${PN}-rtl8192cu += "${PN}-rtl-license"
 
 LICENSE_${PN}-rtl8192ce = "Firmware-rtlwifi"
 FILES_${PN}-rtl8192ce = " \
-  /lib/firmware/rtlwifi/rtl8192cfw.bin \
+  /lib/firmware/rtlwifi/rtl8192cfw*.bin \
 "
 RDEPENDS_${PN}-rtl8192ce += "${PN}-rtl-license"
 
