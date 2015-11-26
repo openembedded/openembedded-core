@@ -239,26 +239,27 @@ class Rootfs(object):
             pkg_to_remove = ""
         else:
             pkg_to_remove = "update-rc.d"
-        if not runtime_pkgmanage:
-            # Remove components that we don't need if we're not going to install
-            # additional packages at runtime
-            if delayed_postinsts is None:
-                pkgs_installed = image_list_installed_packages(self.d)
-                pkgs_to_remove = list()
-                for pkg in pkgs_installed.split():
-                    if pkg in ["update-rc.d",
-                            "base-passwd",
-                            "shadow",
-                            "update-alternatives", pkg_to_remove,
-                            self.d.getVar("ROOTFS_BOOTSTRAP_INSTALL", True)
-                            ]:
-                        pkgs_to_remove.append(pkg)
+        if image_rorfs:
+            # Remove components that we don't need if it's a read-only rootfs
+            pkgs_installed = image_list_installed_packages(self.d)
+            pkgs_to_remove = list()
+            for pkg in pkgs_installed.split():
+                if pkg in ["update-rc.d",
+                        "base-passwd",
+                        "shadow",
+                        "update-alternatives", pkg_to_remove,
+                        self.d.getVar("ROOTFS_BOOTSTRAP_INSTALL", True)
+                        ]:
+                    pkgs_to_remove.append(pkg)
 
-                if len(pkgs_to_remove) > 0:
-                    self.pm.remove(pkgs_to_remove, False)
+            if len(pkgs_to_remove) > 0:
+                self.pm.remove(pkgs_to_remove, False)
 
-            else:
-                self._save_postinsts()
+        if delayed_postinsts:
+            self._save_postinsts()
+            if image_rorfs:
+                bb.warn("There are post install scripts "
+                        "in a read-only rootfs")
 
         post_uninstall_cmds = self.d.getVar("ROOTFS_POSTUNINSTALL_COMMAND", True)
         execute_pre_post_process(self.d, post_uninstall_cmds)
