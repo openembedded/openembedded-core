@@ -29,6 +29,7 @@ SRC_URI = "http://download.qt-project.org/official_releases/qt/4.8/${PV}/qt-ever
            file://add_check_for_aarch64_32.patch \
            file://g++.conf \
            file://linux.conf \
+           file://fix-for-mips-n32.patch \
            "
 
 SRC_URI[md5sum] = "d990ee66bf7ab0c785589776f35ba6ad"
