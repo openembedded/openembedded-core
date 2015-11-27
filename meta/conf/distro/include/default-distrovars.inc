@@ -31,8 +31,6 @@ COMMERCIAL_AUDIO_PLUGINS ?= ""
 # COMMERCIAL_AUDIO_PLUGINS ?= "gst-plugins-ugly-mad gst-plugins-ugly-mpegaudioparse"
 COMMERCIAL_VIDEO_PLUGINS ?= ""
 # COMMERCIAL_VIDEO_PLUGINS ?= "gst-plugins-ugly-mpeg2dec gst-plugins-ugly-mpegstream gst-plugins-bad-mpegvideoparse"
-COMMERCIAL_QT ?= ""
-# COMMERCIAL_QT ?= "qmmp"
 # Set of common licenses used for license.bbclass
 COMMON_LICENSE_DIR ??= "${COREBASE}/meta/files/common-licenses"
 
