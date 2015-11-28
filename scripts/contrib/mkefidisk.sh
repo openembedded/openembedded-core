@@ -402,7 +402,7 @@ if [ -e "$GRUB_CFG" ]; then
 	sed -i "s/ LABEL=[^ ]*/ /" $GRUB_CFG
 
 	sed -i "s@ root=[^ ]*@ @" $GRUB_CFG
-	sed -i "s@vmlinuz @vmlinuz root=$TARGET_ROOTFS ro rootwait quiet @" $GRUB_CFG
+	sed -i "s@vmlinuz @vmlinuz root=$TARGET_ROOTFS ro rootwait console=ttyS0 console=tty0 @" $GRUB_CFG
 fi
 
 # Look for a gummiboot installation
@@ -419,7 +419,7 @@ if [ -d "$GUMMI_ENTRIES" ]; then
 
 	sed -i "/initrd /d" $GUMMI_CFG
 	sed -i "s@ root=[^ ]*@ @" $GUMMI_CFG
-	sed -i "s@options *LABEL=boot @options LABEL=Boot root=$TARGET_ROOTFS ro rootwait quiet @" $GUMMI_CFG
+	sed -i "s@options *LABEL=boot @options LABEL=Boot root=$TARGET_ROOTFS ro rootwait console=ttyS0 console=tty0 @" $GUMMI_CFG
 fi
 
 # Ensure we have at least one EFI bootloader configured
