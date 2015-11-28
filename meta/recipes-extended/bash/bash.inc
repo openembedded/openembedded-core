@@ -23,6 +23,9 @@ RDEPENDS_${PN} += "base-files"
 RDEPENDS_${PN}_class-nativesdk = ""
 RDEPENDS_${PN}-ptest += "make"
 
+USERADD_PACKAGES = "${PN}-ptest"
+USERADD_PARAM_${PN}-ptest = "--create-home --user-group test"
+
 do_configure_prepend () {
 	if [ ! -e ${S}/acinclude.m4 ]; then
 		cat ${S}/aclocal.m4 > ${S}/acinclude.m4
