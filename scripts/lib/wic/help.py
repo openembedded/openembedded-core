@@ -740,6 +740,12 @@ DESCRIPTION
                   bootloader command-line - for example, the syslinux
                   APPEND or grub kernel command line.
 
+        --configfile: Specifies a user defined configuration file for
+                      the bootloader. This file must be located in the
+                      canned-wks folder or could be the full path to the
+                      file. Using this option will override any other
+                      bootloader option.
+
       Note that bootloader functionality and boot partitions are
       implemented by the various --source plugins that implement
       bootloader functionality; the bootloader command essentially
