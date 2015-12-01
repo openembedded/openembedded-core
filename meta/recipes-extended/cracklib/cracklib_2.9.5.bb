@@ -28,10 +28,13 @@ do_install_append() {
 	src_dir="${D}${base_libdir}/${PYTHON_DIR}/site-packages"
 	rm -f $src_dir/*.pyo
 	rm -f $src_dir/test_cracklib.py
-	# Move python files from ${base_libdir} to ${libdir} since used --libdir=${base_libdir}
-	install -d -m 0755 ${D}${PYTHON_SITEPACKAGES_DIR}/
-	mv $src_dir/* ${D}${PYTHON_SITEPACKAGES_DIR}
-	rm -fr ${D}${base_libdir}/${PYTHON_DIR}
+
+	if [ "${base_libdir}" != "${libdir}" ] ; then
+	   # Move python files from ${base_libdir} to ${libdir} since used --libdir=${base_libdir}
+	   install -d -m 0755 ${D}${PYTHON_SITEPACKAGES_DIR}/
+	   mv $src_dir/* ${D}${PYTHON_SITEPACKAGES_DIR}
+	   rm -fr ${D}${base_libdir}/${PYTHON_DIR}
+	fi
 }
 
 BBCLASSEXTEND = "native nativesdk"
