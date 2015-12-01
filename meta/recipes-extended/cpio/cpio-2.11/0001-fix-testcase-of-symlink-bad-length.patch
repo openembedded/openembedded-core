@@ -1,0 +1,57 @@
+Upstream-Status: Backport
+
+Subject: fix testcase of symlink-bad-length
+
+Signed-off-by: Chen Qi <Qi.Chen@windriver.com>
+---
+ tests/symlink-bad-length.at | 24 ++++++++++++++++++++----
+ 1 file changed, 20 insertions(+), 4 deletions(-)
+
+diff --git a/tests/symlink-bad-length.at b/tests/symlink-bad-length.at
+index 74208ce..11fc6ce 100644
+--- a/tests/symlink-bad-length.at
++++ b/tests/symlink-bad-length.at
+@@ -1,5 +1,5 @@
+ # Process this file with autom4te to create testsuite.  -*- Autotest -*-
+-# Copyright (C) 2014 Free Software Foundation, Inc.
++# Copyright (C) 2014-2015 Free Software Foundation, Inc.
+ 
+ # This program is free software; you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+@@ -35,14 +35,30 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=
+ ])
+ 
++# The exact error message and exit status depend on the host architecture,
++# therefore strderr is filtered out and error code is not checked.
++
++# So far the only case when cpio would exit with code 0 is when it skips
++# several bytes and encounters a valid record header.  Perhaps it should
++# exit with code 2 (non-critical error), if at least one byte was skipped,
++# but that could hurt backward compatibility.
++
+ AT_CHECK([
+ base64 -d ARCHIVE.base64 > ARCHIVE || AT_SKIP_TEST
+-cpio -ntv < ARCHIVE
+-test $? -eq 2
++TZ=UTC cpio -ntv < ARCHIVE 2>stderr 
++cat stderr | grep -v \
++    -e 'stored filename length is out of range' \
++    -e 'premature end of file' \
++    -e 'archive header has reverse byte-order' \
++    -e 'memory exhausted' \
++    -e 'skipped [[0-9][0-9]*] bytes of junk' \
++    -e '[[0-9][0-9]*] block' \
++    >&2
++echo >&2 STDERR
+ ],
+ [0],
+ [-rw-rw-r--   1 10029    10031          13 Nov 25  2014 FILE
+-],[cpio: premature end of file
++],[STDERR
+ ])
+ 
+ AT_CLEANUP
+-- 
+1.9.1
+
