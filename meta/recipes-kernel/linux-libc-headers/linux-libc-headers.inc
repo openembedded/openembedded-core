@@ -49,6 +49,9 @@ SRC_URI = "${KERNELORG_MIRROR}/linux/kernel/v${HEADER_FETCH_VER}/linux-${PV}.tar
 
 S = "${WORKDIR}/linux-${PV}"
 
+# For the kernel, we don't want the '-e MAKEFLAGS=' in EXTRA_OEMAKE.
+EXTRA_OEMAKE = ""
+
 do_configure() {
 	oe_runmake allnoconfig
 }
