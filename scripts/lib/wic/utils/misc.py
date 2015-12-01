@@ -17,6 +17,7 @@
 
 import os
 import time
+import wic.engine
 
 def build_name(kscfg, release=None, prefix=None, suffix=None):
     """Construct and return an image name string.
@@ -56,3 +57,41 @@ def build_name(kscfg, release=None, prefix=None, suffix=None):
     ret = prefix + name + suffix
 
     return ret
+
+def find_boot_config(scripts_path, boot_file):
+    """
+    Find a config file with the given name in the canned files dir.
+
+    Return False if not found
+    """
+    if os.path.exists(boot_file):
+        return boot_file
+
+    layers_canned_wks_dir = wic.engine.build_canned_image_list(scripts_path)
+    for canned_wks_dir in layers_canned_wks_dir:
+        for root, dirs, files in os.walk(canned_wks_dir):
+            for fname in files:
+                if fname == boot_file:
+                    fullpath = os.path.join(canned_wks_dir, fname)
+                    return fullpath
+
+    return None
+
+def get_custom_config(boot_file):
+    """
+    Get the custom configuration to be used for the bootloader.
+
+    Return None if the file can't be found.
+    """
+    scripts_path = os.path.abspath(os.path.dirname(__file__))
+    # Get the scripts path of poky
+    for x in range(0, 3):
+        scripts_path = os.path.dirname(scripts_path)
+
+    cfg_file = find_boot_config(scripts_path, boot_file)
+    if cfg_file:
+        with open(cfg_file, "r") as f:
+            config = f.read()
+        return config
+
+    return None
