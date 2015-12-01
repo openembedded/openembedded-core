@@ -29,6 +29,7 @@ import os
 from wic.utils.errors import ImageError
 from wic import kickstart, msger
 from wic.utils import runner
+from wic.utils.misc import get_custom_config
 from wic.pluginbase import SourcePlugin
 from wic.utils.oe.misc import exec_cmd, exec_native_cmd, \
                               get_bitbake_var, BOOTDD_EXTRA_SPACE
@@ -83,34 +84,49 @@ class BootimgPcbiosPlugin(SourcePlugin):
         install_cmd = "install -d %s" % hdddir
         exec_cmd(install_cmd)
 
-        splash = os.path.join(cr_workdir, "/hdd/boot/splash.jpg")
-        if os.path.exists(splash):
-            splashline = "menu background splash.jpg"
-        else:
-            splashline = ""
+        configfile = kickstart.get_bootloader_file(creator.ks)
+        custom_cfg = None
+        if configfile:
+            custom_cfg = get_custom_config(configfile)
+            if custom_cfg:
+                # Use a custom configuration for grub
+                syslinux_conf = custom_cfg
+                msger.debug("Using custom configuration file "
+                        "%s for syslinux.cfg" % configfile)
+            else:
+                msger.error("configfile is specified but failed to "
+                        "get it from %s." % configfile)
 
-        options = creator.ks.handler.bootloader.appendLine
+        if not custom_cfg:
+            # Create syslinux configuration using parameters from wks file
+            splash = os.path.join(cr_workdir, "/hdd/boot/splash.jpg")
+            if os.path.exists(splash):
+                splashline = "menu background splash.jpg"
+            else:
+                splashline = ""
 
-        syslinux_conf = ""
-        syslinux_conf += "PROMPT 0\n"
-        timeout = kickstart.get_timeout(creator.ks)
-        if not timeout:
-            timeout = 0
-        syslinux_conf += "TIMEOUT " + str(timeout) + "\n"
-        syslinux_conf += "\n"
-        syslinux_conf += "ALLOWOPTIONS 1\n"
-        syslinux_conf += "SERIAL 0 115200\n"
-        syslinux_conf += "\n"
-        if splashline:
-            syslinux_conf += "%s\n" % splashline
-        syslinux_conf += "DEFAULT boot\n"
-        syslinux_conf += "LABEL boot\n"
+            options = creator.ks.handler.bootloader.appendLine
 
-        kernel = "/vmlinuz"
-        syslinux_conf += "KERNEL " + kernel + "\n"
+            syslinux_conf = ""
+            syslinux_conf += "PROMPT 0\n"
+            timeout = kickstart.get_timeout(creator.ks)
+            if not timeout:
+                timeout = 0
+            syslinux_conf += "TIMEOUT " + str(timeout) + "\n"
+            syslinux_conf += "\n"
+            syslinux_conf += "ALLOWOPTIONS 1\n"
+            syslinux_conf += "SERIAL 0 115200\n"
+            syslinux_conf += "\n"
+            if splashline:
+                syslinux_conf += "%s\n" % splashline
+            syslinux_conf += "DEFAULT boot\n"
+            syslinux_conf += "LABEL boot\n"
 
-        syslinux_conf += "APPEND label=boot root=%s %s\n" % \
-                             (creator.rootdev, options)
+            kernel = "/vmlinuz"
+            syslinux_conf += "KERNEL " + kernel + "\n"
+
+            syslinux_conf += "APPEND label=boot root=%s %s\n" % \
+                                 (creator.rootdev, options)
 
         msger.debug("Writing syslinux config %s/hdd/boot/syslinux.cfg" \
                     % cr_workdir)
