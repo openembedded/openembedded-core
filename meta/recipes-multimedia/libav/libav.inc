@@ -57,13 +57,17 @@ PACKAGECONFIG[x264] = "--enable-libx264,--disable-libx264,x264"
 # Check codecs that require --enable-nonfree
 USE_NONFREE = "${@bb.utils.contains_any('PACKAGECONFIG', [ 'faac', 'openssl' ], 'yes', '', d)}"
 
+# libav will install in /usr/local if prefix is empty. Luckily,
+# passing just "/" instead does the right thing.
+nonempty_prefix = "${@bb.data.getVar('prefix', d, True) or '/'}"
+
 EXTRA_OECONF = " \
     --enable-shared \
     --enable-pthreads \
     ${@bb.utils.contains('USE_NONFREE', 'yes', '--enable-nonfree', '', d)} \
     \
     --cross-prefix=${TARGET_PREFIX} \
-    --prefix=${prefix} \
+    --prefix=${nonempty_prefix} \
     \
     --ld="${CCLD}" \
     --arch=${TARGET_ARCH} \
