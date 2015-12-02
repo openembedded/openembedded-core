@@ -63,7 +63,6 @@ EXTRA_OECONF = " \
     --cross-prefix=${TARGET_PREFIX} \
     --prefix=${prefix} \
     \
-    --enable-avserver \
     --enable-avplay \
     --ld="${CCLD}" \
     --arch=${TARGET_ARCH} \
