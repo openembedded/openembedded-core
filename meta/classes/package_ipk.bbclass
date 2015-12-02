@@ -10,7 +10,7 @@ PKGWRITEDIRIPK = "${WORKDIR}/deploy-ipks"
 # Program to be used to build opkg packages
 OPKGBUILDCMD ??= "opkg-build"
 
-OPKG_ARGS = "--force_postinstall --prefer-arch-to-version"
+OPKG_ARGS += "--force_postinstall --prefer-arch-to-version"
 OPKG_ARGS += "${@['', '--no-install-recommends'][d.getVar("NO_RECOMMENDATIONS", True) == "1"]}"
 OPKG_ARGS += "${@['', '--add-exclude ' + ' --add-exclude '.join((d.getVar('PACKAGE_EXCLUDE', True) or "").split())][(d.getVar("PACKAGE_EXCLUDE", True) or "") != ""]}"
 
