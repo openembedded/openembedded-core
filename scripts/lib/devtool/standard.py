@@ -599,7 +599,8 @@ def modify(args, config, basepath, workspace):
             f.write('EXTERNALSRC_BUILD_pn-%s = "%s"\n' % (pn, srctree))
 
         if bb.data.inherits_class('kernel', rd):
-            f.write('SRCTREECOVEREDTASKS = "do_validate_branches do_kernel_checkout do_fetch do_unpack do_patch"\n')
+            f.write('SRCTREECOVEREDTASKS = "do_validate_branches do_kernel_checkout '
+                    'do_fetch do_unpack do_patch do_kernel_configme do_kernel_configcheck"\n')
         if initial_rev:
             f.write('\n# initial_rev: %s\n' % initial_rev)
             for commit in commits:
