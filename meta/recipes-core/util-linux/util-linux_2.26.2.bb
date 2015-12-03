@@ -16,6 +16,12 @@ SRC_URI += "file://util-linux-ng-replace-siginterrupt.patch \
             file://runuser.pamd \
             file://runuser-l.pamd \
             ${OLDHOST} \
+            file://ptest.patch \
+            file://run-ptest \
+            file://avoid_unsupported_sleep_param.patch \
+            file://avoid_unsupported_grep_opts.patch \
+            file://display_testname_for_subtest.patch \
+            file://avoid_parallel_tests.patch \
 "
 SRC_URI[md5sum] = "9bdf368c395f1b70325d0eb22c7f48fb"
 SRC_URI[sha256sum] = "0e29bda142528a48a0a953c39ff63093651a4809042e1790fbd6aa8663fd9666"

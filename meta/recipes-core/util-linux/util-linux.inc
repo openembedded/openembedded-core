@@ -17,7 +17,7 @@ LIC_FILES_CHKSUM = "file://README.licensing;md5=1715f5ee3e01203ca1e1e0b9ee65918c
                     file://libmount/COPYING;md5=fb93f01d4361069c5616327705373b16 \
                     file://libblkid/COPYING;md5=fb93f01d4361069c5616327705373b16"
 
-inherit autotools gettext pkgconfig systemd update-alternatives python-dir
+inherit autotools gettext pkgconfig systemd update-alternatives python-dir ptest
 DEPENDS = "zlib ncurses"
 DEPENDS_append_class-native = " lzo-native"
 DEPENDS_append_class-nativesdk = " lzo-native"
@@ -271,4 +271,33 @@ python populate_packages_prepend() {
                       output_pattern='util-linux-lib%s',
                       description='util-linux lib%s',
                       extra_depends='', prepend=True, allow_links=True)
+}
+
+RDEPENDS_${PN}-ptest = "bash"
+
+do_compile_ptest() {
+    oe_runmake buildtest-TESTS
+}
+
+do_install_ptest() {
+    mkdir -p ${D}${PTEST_PATH}/tests/ts
+    find . -maxdepth 1 -type f -perm -111 -exec cp {} ${D}${PTEST_PATH} \;
+    cp ${S}/tests/functions.sh ${D}${PTEST_PATH}/tests/
+    cp ${S}/tests/commands.sh ${D}${PTEST_PATH}/tests/
+    cp ${S}/tests/run.sh ${D}${PTEST_PATH}/tests/
+    cp -pR ${S}/tests/expected ${D}${PTEST_PATH}/tests/expected
+
+    list="bitops build-sys cal col colrm column dmesg fsck hexdump hwclock ipcs isosize login look md5 misc more namei paths schedutils script swapon tailf"
+    # The following tests are not installed  yet:
+    # blkid scsi_debug module dependent
+    # cramfs gcc dependent
+    # eject gcc dependent
+    # fdisk scsi_debug module and gcc dependent
+    # lscpu gcc dependant
+    # libmount uuidgen dependent
+    # mount gcc dependant
+    # partx blkid dependant
+    for d in $list; do
+        cp -pR ${S}/tests/ts/$d ${D}${PTEST_PATH}/tests/ts/
+    done
 }
