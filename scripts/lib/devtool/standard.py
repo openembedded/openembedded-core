@@ -435,6 +435,12 @@ def _extract_source(srctree, keep_temp, devbranch, d):
             logger.info('Adding local source files to srctree...')
             shutil.move(os.path.join(tempdir, 'oe-local-files'), srcsubdir)
 
+        if bb.data.inherits_class('kernel-yocto', d):
+            # Store generate and store kernel config
+            logger.info('Generating kernel config')
+            task_executor.exec_func('do_configure', False)
+            kconfig = os.path.join(d.getVar('B', True), '.config')
+            shutil.copy2(kconfig, srcsubdir)
 
         shutil.move(srcsubdir, srctree)
     finally:
