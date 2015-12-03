@@ -457,6 +457,14 @@ def _extract_source(srctree, keep_temp, devbranch, sync, d):
             if haspatches:
                 bb.process.run('git checkout patches', cwd=srcsubdir)
 
+        if bb.data.inherits_class('kernel-yocto', d):
+            # Store generate and store kernel config
+            logger.info('Generating kernel config')
+            task_executor.exec_func('do_configure', False)
+            kconfig = os.path.join(d.getVar('B', True), '.config')
+            shutil.copy2(kconfig, srcsubdir)
+
+
         tempdir_localdir = os.path.join(tempdir, 'oe-local-files')
         srctree_localdir = os.path.join(srctree, 'oe-local-files')
 
