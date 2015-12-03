@@ -21,6 +21,34 @@ class SystemdTest(oeRuntimeTest):
         self.assertEqual(status, expected, message)
         return output
 
+    #TODO: use pyjournalctl instead
+    def journalctl(self, args='',l_match_units=[]):
+        """
+        Request for the journalctl output to the current target system
+
+        Arguments:
+        -args, an optional argument pass through argument
+        -l_match_units, an optional list of units to filter the output
+        Returns:
+        -string output of the journalctl command
+        Raises:
+        -AssertionError, on remote commands that fail
+        -ValueError, on a journalctl call with filtering by l_match_units that
+        returned no entries
+        """
+        query_units=""
+        if len(l_match_units):
+            query_units = ['_SYSTEMD_UNIT='+unit for unit in l_match_units]
+            query_units = " ".join(query_units)
+        command = 'journalctl %s %s' %(args, query_units)
+        status, output = self.target.run(command)
+        if status:
+            raise AssertionError("Command '%s' returned non-zero exit \
+                    code %d:\n%s" % (command, status, output))
+        if len(output) == 1 and "-- No entries --" in output:
+            raise ValueError("List of units to match: %s, returned no entries"
+                    % l_match_units)
+        return output
 
 class SystemdBasicTests(SystemdTest):
 
