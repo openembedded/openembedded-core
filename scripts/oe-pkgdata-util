@@ -365,7 +365,7 @@ def list_pkg_files(args):
             sys.exit(1)
         pkglist = args.pkg
 
-    for pkg in pkglist:
+    for pkg in sorted(pkglist):
         print("%s:" % pkg)
         if args.runtime:
             pkgdatafile = os.path.join(args.pkgdata_dir, "runtime-reverse", pkg)
