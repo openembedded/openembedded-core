@@ -1,24 +1,48 @@
-This needs to be a install-data-hook not an install-exec-hook as the helpers are
-installed into helperdir which is considered data (only path variables with
-"exec" in are considered executables).
+The hooks need to be split into install-data-hook and install-exec-hook as the
+hook fiddles with binaries that are installed by install-data and install-exec,
+otherwise there'll be occasional install failures due to the build racing.
 
-The explicit dependency on install-helpersPROGRAMS was an attempt at solving
-this, but this causes occasional races where install-helpersPROGRAMS can run
-twice in parallel (once via install-all, once via the hook's dependency).
-
-Upstream-Status: Backport [09aa20746a0fef97fb811c5503928c13a1f55eb5]
+Upstream-Status: Backport (0c6be6604aafa84b525088d1ef4a4486d907743c)
 Signed-off-by: Ross Burton <ross.burton@intel.com>
 
 diff --git a/libs/gst/helpers/Makefile.am b/libs/gst/helpers/Makefile.am
-index 0ae9ab0..2530a34 100644
+index 0ae9ab0..0067779 100644
 --- a/libs/gst/helpers/Makefile.am
 +++ b/libs/gst/helpers/Makefile.am
-@@ -23,7 +23,7 @@ gst_ptp_helper_CFLAGS = $(GST_OBJ_CFLAGS) $(GIO_CFLAGS)
+@@ -23,17 +23,8 @@ gst_ptp_helper_CFLAGS = $(GST_OBJ_CFLAGS) $(GIO_CFLAGS)
  gst_ptp_helper_LDADD = $(GST_OBJ_LIBS) $(GIO_LIBS) $(CAP_LIBS)
  endif
  
 -install-exec-hook: install-helpersPROGRAMS
+-if HAVE_PTP
+-if HAVE_PTP_HELPER_SETUID
+-	- chown root $(DESTDIR)$(helpersdir)/gst-ptp-helper
+-	- chmod u+s $(DESTDIR)$(helpersdir)/gst-ptp-helper
+-endif
+-if HAVE_PTP_HELPER_CAPABILITIES
+-	- $(SETCAP) cap_net_bind_service,cap_net_admin+ep $(DESTDIR)$(helpersdir)/gst-ptp-helper
+-endif
+-endif
+ if ENABLE_BASH_COMPLETION
++install-exec-hook:
+ 	$(MKDIR_P) $(DESTDIR)$(BASH_HELPERS_DIR) && \
+ 	cd $(DESTDIR)$(bindir) && \
+ 	$(INSTALL) `echo "gst-completion-helper-" | sed '$(transform)'`@GST_API_VERSION@$(EXEEXT) \
+@@ -44,6 +35,17 @@ uninstall-hook:
+ 	rm -f $(DESTDIR)$(BASH_HELPERS_DIR)/gst-completion-helper-@GST_API_VERSION@$(EXEEXT)
+ endif
+ 
 +install-data-hook:
- if HAVE_PTP
- if HAVE_PTP_HELPER_SETUID
- 	- chown root $(DESTDIR)$(helpersdir)/gst-ptp-helper
++if HAVE_PTP
++if HAVE_PTP_HELPER_SETUID
++	- chown root $(DESTDIR)$(helpersdir)/gst-ptp-helper
++	- chmod u+s $(DESTDIR)$(helpersdir)/gst-ptp-helper
++endif
++if HAVE_PTP_HELPER_CAPABILITIES
++	- $(SETCAP) cap_net_bind_service,cap_net_admin+ep $(DESTDIR)$(helpersdir)/gst-ptp-helper
++endif
++endif
++
+ # clean out the old one to make sure everything is udpated correctly
+ # remove again after release
+ CLEANFILES = plugin-scanner
