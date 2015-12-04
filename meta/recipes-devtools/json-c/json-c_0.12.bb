@@ -15,6 +15,9 @@ UPSTREAM_CHECK_REGEX = "json-c-(?P<pver>\d+(\.\d+)+).tar"
 # json-c releases page is fetching the list of releases in some weird XML format
 # from https://s3.amazonaws.com/json-c_releases and processes it with javascript :-/
 #UPSTREAM_CHECK_URI = "https://s3.amazonaws.com/json-c_releases/releases/index.html"
+RECIPE_UPSTREAM_VERSION = "0.12"
+RECIPE_UPSTREAM_DATE = "Apr 11, 2014"
+CHECK_DATE = "Dec 04, 2015"
 
 RPROVIDES_${PN} = "libjson"
 
