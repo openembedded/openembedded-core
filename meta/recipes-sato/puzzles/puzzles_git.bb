@@ -1,7 +1,7 @@
 SUMMARY = "Simon Tatham's Portable Puzzle Collection"
 HOMEPAGE = "http://www.chiark.greenend.org.uk/~sgtatham/puzzles/"
 
-DEPENDS = "gtk+ libxt"
+DEPENDS = "libxt"
 
 # The libxt requires x11 in DISTRO_FEATURES
 REQUIRED_DISTRO_FEATURES = "x11"
@@ -13,13 +13,17 @@ SRC_URI = "git://git.tartarus.org/simon/puzzles.git \
            file://fix-compiling-failure-with-option-g-O.patch \
            file://0001-Use-labs-instead-of-abs.patch \
 "
-SRCREV = "c296301a06ce49b87c954c9d15452521dfeddf1a"
+SRCREV = "346584bf6e38232be8773c24fd7dedcbd7b3d9ed"
 PE = "1"
 PV = "0.0+git${SRCPV}"
 
 S = "${WORKDIR}/git"
 
 inherit autotools-brokensep distro_features_check
+
+PACKAGECONFIG ??= "gtk2"
+PACKAGECONFIG[gtk2] = "--with-gtk=2,,gtk+,"
+PACKAGECONFIG[gtk3] = "--with-gtk=3,,gtk+3,"
 
 do_configure_prepend () {
     ./mkfiles.pl
