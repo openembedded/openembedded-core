@@ -1,7 +1,7 @@
 SUMMARY = "GNU Transport Layer Security Library"
 HOMEPAGE = "http://www.gnu.org/software/gnutls/"
 BUGTRACKER = "https://savannah.gnu.org/support/?group=gnutls"
-DEPENDS = "nettle"
+DEPENDS = "nettle libidn"
 
 LICENSE = "GPLv3+ & LGPLv2.1+"
 LICENSE_${PN} = "LGPLv2.1+"
@@ -26,6 +26,7 @@ EXTRA_OECONF="--disable-rpath \
               --disable-guile \
               --disable-crywrap \
               --without-p11-kit \
+              --enable-openssl-compatibility \
               "
 
 do_configure_prepend() {
