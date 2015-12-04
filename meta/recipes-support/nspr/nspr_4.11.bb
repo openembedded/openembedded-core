@@ -13,8 +13,11 @@ SRC_URI = "http://ftp.mozilla.org/pub/nspr/releases/v${PV}/src/nspr-${PV}.tar.gz
 
 SRC_URI += "file://nspr.pc.in"
 
-SRC_URI[md5sum] = "8d7c5bd0a5b0a7d0e705be66479030a0"
-SRC_URI[sha256sum] = "507ea57c525c0c524dae4857a642b4ef5c9d795518754c7f83422d22fe544a15"
+UPSTREAM_CHECK_URI = "http://ftp.mozilla.org/pub/nspr/releases/"
+UPSTREAM_CHECK_REGEX = "v(?P<pver>\d+(\.\d+)+)/"
+
+SRC_URI[md5sum] = "4f24b2fb88ca03b5d6d6931d6a67ef9a"
+SRC_URI[sha256sum] = "cb320a9eee7028275ac0fce7adc39dee36f14f02fd8432fce1b7e1aa5e3685c2"
 
 S = "${WORKDIR}/nspr-${PV}/nspr"
 
@@ -136,8 +139,6 @@ TESTS = " \
     writev \
     xnotify \
     zerolen"
-
-PR = "r1"
 
 inherit autotools
 
