@@ -1,4 +1,4 @@
-def get_waf_parallel_make(bb, d):
+def get_waf_parallel_make(d):
     pm = d.getVar('PARALLEL_MAKE', True)
     if pm:
         # look for '-j' and throw other options (e.g. '-l') away
@@ -25,7 +25,7 @@ waf_do_configure() {
 }
 
 waf_do_compile()  {
-	${S}/waf build ${@get_waf_parallel_make('PARALLEL_MAKE', d)}
+	${S}/waf build ${@get_waf_parallel_make(d)}
 }
 
 waf_do_install() {
