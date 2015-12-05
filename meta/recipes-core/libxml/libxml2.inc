@@ -27,6 +27,7 @@ SRC_URI = "ftp://xmlsoft.org/libxml2/libxml2-${PV}.tar.gz;name=libtar \
            file://CVE-2015-7942-Another-variation-of-overflow-in-Conditional-section.patch \
            file://CVE-2015-7942-2-Fix-an-error-in-previous-Conditional-section-patch.patch \
            file://0001-CVE-2015-8035-Fix-XZ-compression-support-loop.patch \
+           file://CVE-2015-7498-Avoid-processing-entities-after-encoding-conversion-.patch \
           "
 
 BINCONFIG = "${bindir}/xml2-config"
