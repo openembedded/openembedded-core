@@ -11,16 +11,14 @@ BBCLASSEXTEND = "native"
 inherit gettext pythonnative
 
 SRC_URI = "${APACHE_MIRROR}/${BPN}/${BPN}-${PV}.tar.bz2 \
-           file://libtool2.patch \
            file://disable_macos.patch \
            file://serf.m4-Regex-modified-to-allow-D-in-paths.patch \
-           file://subversion-CVE-2015-3184.patch \
-           file://subversion-CVE-2015-3187.patch \
-"
-SRC_URI[md5sum] = "4413417b529d7bdf82f74e50df02e88b"
-SRC_URI[sha256sum] = "1099cc68840753b48aedb3a27ebd1e2afbcc84ddb871412e5d500e843d607579"
+           file://0001-Fix-libtool-name-in-configure.ac.patch \
+           "
+SRC_URI[md5sum] = "0a7e55bb58fe77072f19e108a56b468b"
+SRC_URI[sha256sum] = "023da881139b4514647b6f8a830a244071034efcaad8c8e98c6b92393122b4eb"
 
-LIC_FILES_CHKSUM = "file://LICENSE;md5=1c2f0119e478700b5428e26386cff923"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=af81ae49ba359e70626c05e9bf313709"
 
 PACKAGECONFIG[sasl] = "--with-sasl,--without-sasl,cyrus-sasl"
 PACKAGECONFIG[gnome-keyring] = "--with-gnome-keyring,--without-gnome-keyring,glib-2.0 gnome-keyring"
