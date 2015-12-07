@@ -1,3 +1,7 @@
+# gettext - these add sleep delays otherwise
+gl_cv_func_sleep_works=${gl_cv_func_sleep_works=yes}
+gl_cv_header_working_fcntl_h=${gl_cv_header_working_fcntl_h=yes}
+
 # apr
 ac_cv_file__dev_zero=${ac_cv_file__dev_zero=yes}
 ac_cv_sizeof_pid_t=${ac_cv_sizeof_pid_t=4}
