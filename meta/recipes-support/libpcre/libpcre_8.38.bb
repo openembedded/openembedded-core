@@ -17,9 +17,6 @@ SRC_URI = "ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre/pcre-${PV}.tar.
 SRC_URI[md5sum] = "00aabbfe56d5a48b270f999b508c5ad2"
 SRC_URI[sha256sum] = "b9e02d36e23024d6c02a2e5b25204b3a4fa6ade43e0a5f869f254f49535079df"
 
-UPSTREAM_CHECK_URI = "http://sourceforge.net/projects/pcre/files/pcre/"
-UPSTREAM_CHECK_REGEX = "/pcre/(?P<pver>(\d+[\.\-_]*)+)/"
-
 S = "${WORKDIR}/pcre-${PV}"
 
 PROVIDES += "pcre"
