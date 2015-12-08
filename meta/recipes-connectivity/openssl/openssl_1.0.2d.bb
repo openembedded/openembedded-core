@@ -38,6 +38,8 @@ SRC_URI += "file://configure-targets.patch \
             file://openssl-1.0.2a-x32-asm.patch \
             file://ptest_makefile_deps.patch  \
             file://CVE-2015-3193-bn-asm-x86_64-mont5.pl-fix-carry-propagating-bug-CVE.patch \
+            file://CVE-2015-3194-1-Add-PSS-parameter-check.patch \
+            file://0001-Add-test-for-CVE-2015-3194.patch \
            "
 
 SRC_URI[md5sum] = "38dd619b2e77cbac69b99f52a053d25a"
