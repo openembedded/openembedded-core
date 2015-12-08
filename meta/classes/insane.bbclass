@@ -292,6 +292,7 @@ def package_qa_check_libdir(d):
     pkgdest = d.getVar('PKGDEST', True)
     base_libdir = d.getVar("base_libdir",True) + os.sep
     libdir = d.getVar("libdir", True) + os.sep
+    libexecdir = d.getVar("libexecdir", True) + os.sep
     exec_prefix = d.getVar("exec_prefix", True) + os.sep
 
     messages = []
@@ -322,7 +323,7 @@ def package_qa_check_libdir(d):
                     if base_libdir not in rel_path:
                         messages.append("%s: found library in wrong location: %s" % (package, rel_path))
                 if exec_re.match(rel_path):
-                    if libdir not in rel_path:
+                    if libdir not in rel_path and libexecdir not in rel_path:
                         messages.append("%s: found library in wrong location: %s" % (package, rel_path))
 
     if messages:
