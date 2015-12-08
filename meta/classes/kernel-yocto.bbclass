@@ -184,11 +184,18 @@ do_kernel_checkout() {
 	source_dir=`echo ${S} | sed 's%/$%%'`
 	source_workdir="${WORKDIR}/git"
 	if [ -d "${WORKDIR}/git/" ]; then
-		# case: git repository (bare or non-bare)
+		# case: git repository
 		# if S is WORKDIR/git, then we shouldn't be moving or deleting the tree.
 		if [ "${source_dir}" != "${source_workdir}" ]; then
-			rm -rf ${S}
-			mv ${WORKDIR}/git ${S}
+			if [ -d "${source_workdir}/.git" ]; then
+				# regular git repository with .git
+				rm -rf ${S}
+				mv ${WORKDIR}/git ${S}
+			else
+				# create source for bare cloned git repository
+				git clone ${WORKDIR}/git ${S}
+				rm -rf ${WORKDIR}/git
+			fi
 		fi
 		cd ${S}
 	else
