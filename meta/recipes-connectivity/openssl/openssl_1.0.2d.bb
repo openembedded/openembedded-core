@@ -36,6 +36,8 @@ SRC_URI += "file://configure-targets.patch \
             file://run-ptest \
             file://crypto_use_bigint_in_x86-64_perl.patch \
             file://CVE-2015-3193-bn-asm-x86_64-mont5.pl-fix-carry-propagating-bug-CVE.patch \
+            file://CVE-2015-3194-1-Add-PSS-parameter-check.patch \
+            file://0001-Add-test-for-CVE-2015-3194.patch \
            "
 
 SRC_URI[md5sum] = "38dd619b2e77cbac69b99f52a053d25a"
