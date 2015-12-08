@@ -40,6 +40,8 @@ LICENSE = "\
     & Firmware-xc5000 \
     & Firmware-xc5000c \
     & Firmware-siano \
+    & Firmware-qualcommAthos_ar3k \
+    & Firmware-qualcommAthos_ath10k \
 "
 
 LIC_FILES_CHKSUM = "\
@@ -81,6 +83,8 @@ LIC_FILES_CHKSUM = "\
     file://LICENSE.dib0700;md5=f7411825c8a555a1a3e5eab9ca773431 \
     file://LICENSE.radeon;md5=6c7f97c6c62bdd9596d0238bb205118c \
     file://LICENCE.siano;md5=602c79ae3f98f1e73d880fd9f940a418 \
+    file://LICENSE.QualcommAtheros_ar3k;md5=b5fe244fb2b532311de1472a3bc06da5 \
+    file://LICENSE.QualcommAtheros_ath10k;md5=b5fe244fb2b532311de1472a3bc06da5 \
 "
 
 # These are not common licenses, set NO_GENERIC_LICENSE for them
@@ -123,8 +127,10 @@ NO_GENERIC_LICENSE[Firmware-amd-ucode] = "LICENSE.amd-ucode"
 NO_GENERIC_LICENSE[Firmware-dib0700] = "LICENSE.dib0700"
 NO_GENERIC_LICENSE[Firmware-radeon] = "LICENSE.radeon"
 NO_GENERIC_LICENSE[Firmware-siano] = "LICENCE.siano"
+NO_GENERIC_LICENSE[Firmware-qualcommAthos_ar3k] = "LICENSE.QualcommAtheros_ar3k"
+NO_GENERIC_LICENSE[Firmware-qualcommAthos_ath10k] = "LICENSE.QualcommAtheros_ath10k"
 
-SRCREV = "75cc3ef8ba6712fd72c073b17a790282136cc743"
+SRCREV = "bbe4917c054eb0a73e250c6363341e3bf6725839"
 PE = "1"
 PV = "0.0+git${SRCPV}"
 
@@ -169,7 +175,8 @@ PACKAGES =+ "${PN}-ralink-license ${PN}-ralink \
              ${PN}-vt6656-license ${PN}-vt6656 \
              ${PN}-rtl-license ${PN}-rtl8192cu ${PN}-rtl8192ce ${PN}-rtl8192su \
              ${PN}-broadcom-license ${PN}-bcm4329 ${PN}-bcm4330 ${PN}-bcm4334 ${PN}-bcm4339 ${PN}-bcm4354 \
-             ${PN}-atheros-license ${PN}-ar9170 ${PN}-ar3k ${PN}-ath6k ${PN}-ath9k \
+             ${PN}-atheros-license ${PN}-ar9170 ${PN}-ath6k ${PN}-ath9k \
+             ${PN}-ar3k-license  ${PN}-ar3k  ${PN}-ath10k-license  ${PN}-ath10k  \
              \
              ${PN}-iwlwifi-license ${PN}-iwlwifi-135-6 \
              ${PN}-iwlwifi-3160-7 ${PN}-iwlwifi-3160-8 ${PN}-iwlwifi-3160-9 \
@@ -184,16 +191,12 @@ PACKAGES =+ "${PN}-ralink-license ${PN}-ralink \
 
 # For atheros
 LICENSE_${PN}-ar9170 = "Firmware-atheros_firmware"
-LICENSE_${PN}-ar3k = "Firmware-atheros_firmware"
 LICENSE_${PN}-ath6k = "Firmware-atheros_firmware"
 LICENSE_${PN}-ath9k = "Firmware-atheros_firmware"
 
 FILES_${PN}-atheros-license = "/lib/firmware/LICENCE.atheros_firmware"
 FILES_${PN}-ar9170 = " \
   /lib/firmware/ar9170*.fw \
-"
-FILES_${PN}-ar3k = " \
-  /lib/firmware/ar3k \
 "
 FILES_${PN}-ath6k = " \
   /lib/firmware/ath6k \
@@ -206,9 +209,25 @@ FILES_${PN}-ath9k = " \
 "
 
 RDEPENDS_${PN}-ar9170 += "${PN}-atheros-license"
-RDEPENDS_${PN}-ar3k += "${PN}-atheros-license"
 RDEPENDS_${PN}-ath6k += "${PN}-atheros-license"
 RDEPENDS_${PN}-ath9k += "${PN}-atheros-license"
+
+# For QualCommAthos
+LICENSE_${PN}-ar3k = "Firmware-qualcommAthos_ar3k"
+LICENSE_${PN}-ath10k = "Firmware-qualcommAthos_ath10k"
+
+FILES_${PN}-ar3k-license = "/lib/firmware/LICENSE.QualcommAtheros_ar3k"
+FILES_${PN}-ar3k = " \
+  /lib/firmware/ar3k \
+"
+
+FILES_${PN}-ath10k-license = "/lib/firmware/LICENSE.QualcommAtheros_ath10k"
+FILES_${PN}-ath10k = " \
+  /lib/firmware/ath10k \
+"
+
+RDEPENDS_${PN}-ar3k += "${PN}-ar3k-license"
+RDEPENDS_${PN}-ath10k += "${PN}-ath10k-license"
 
 # For ralink
 LICENSE_${PN}-ralink = "Firmware-ralink-firmware"
