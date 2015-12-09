@@ -35,7 +35,7 @@ PACKAGE_EXTRA_ARCHS_tune-armv7at-vfpv3d16 = "${PACKAGE_EXTRA_ARCHS_tune-armv7at}
 PACKAGE_EXTRA_ARCHS_tune-armv7at-vfpv3 = "${PACKAGE_EXTRA_ARCHS_tune-armv7at-vfpv3d16} armv7a-vfp-vfpv3d16-vfpv3 armv7at2-vfp-vfpv3d16-vfpv3"
 PACKAGE_EXTRA_ARCHS_tune-armv7at-neon = "${PACKAGE_EXTRA_ARCHS_tune-armv7at} armv7a-vfp-neon armv7at2-vfp-neon"
 
-# VFP Tunes
+# HF Tunes
 AVAILTUNES += "armv7ahf armv7athf armv7ahf-vfpv3d16 armv7athf-vfpv3d16 armv7ahf-vfpv3 armv7athf-vfpv3 armv7ahf-neon armv7athf-neon armv7ahf-neon-vfpv4 armv7athf-neon-vfpv4"
 ARMPKGARCH_tune-armv7ahf ?= "armv7a"
 ARMPKGARCH_tune-armv7athf ?= "armv7a"
@@ -95,7 +95,7 @@ PACKAGE_EXTRA_ARCHS_tune-armv7atb-vfpv3 = "${PACKAGE_EXTRA_ARCHS_tune-armv7ab-vf
 PACKAGE_EXTRA_ARCHS_tune-armv7ab-neon = "${PACKAGE_EXTRA_ARCHS_tune-armv7ab} armv7ab-vfp-neon"
 PACKAGE_EXTRA_ARCHS_tune-armv7atb-neon = "${PACKAGE_EXTRA_ARCHS_tune-armv7atb} armv7ab-vfp-neon armv7at2b-vfp-neon"
 
-# Big Endian + VFP
+# Big Endian + HF
 AVAILTUNES += "armv7ahfb armv7athfb armv7ahfb-vfpv3d16 armv7athfb-vfpv3d16 armv7ahfb-vfpv3 armv7athfb-vfpv3 armv7ahfb-neon armv7athfb-neon"
 ARMPKGARCH_tune-armv7ahfb ?= "armv7a"
 ARMPKGARCH_tune-armv7athfb ?= "armv7a"
