@@ -346,7 +346,8 @@ kernel_do_configure() {
 	if [ -f "${WORKDIR}/defconfig" ] && [ ! -f "${B}/.config" ]; then
 		cp "${WORKDIR}/defconfig" "${B}/.config"
 	fi
-	eval ${KERNEL_CONFIG_COMMAND}
+
+	${KERNEL_CONFIG_COMMAND}
 }
 
 do_savedefconfig() {
