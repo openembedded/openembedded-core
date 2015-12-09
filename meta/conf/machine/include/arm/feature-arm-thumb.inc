@@ -1,9 +1,3 @@
-# The instruction set the compiler should use when generating application
-# code. The kernel is always compiled with arm code at present. arm code
-# is the original 32 bit ARM instruction set, thumb code is the 16 bit
-# encoded RISC sub-set. Thumb code is smaller (maybe 70% of the ARM size)
-# but requires more instructions (140% for 70% smaller code) so may be
-# slower.
 TUNEVALID[thumb] = "Use thumb instructions instead of ARM"
 ARM_THUMB_OPT = "${@['arm', 'thumb'][d.getVar('ARM_INSTRUCTION_SET', True) == 'thumb']}"
 ARM_THUMB_SUFFIX .= "${@bb.utils.contains('TUNE_FEATURES', 'armv4',  't',  '', d)}"
