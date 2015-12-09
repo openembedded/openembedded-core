@@ -13,5 +13,4 @@ TUNE_PKGARCH = "${ARMPKGARCH}${ARMPKGSFX_THUMB}${ARMPKGSFX_DSP}${ARMPKGSFX_EABI}
 
 ABIEXTENSION = "eabi"
 
-TARGET_FPU = "${@d.getVar('ARMPKGSFX_FPU', True).strip('-') or 'soft'}"
-
+TARGET_FPU = "${@d.getVar('TUNE_CCARGS_MFLOAT', True) or 'soft'}"
