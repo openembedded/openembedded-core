@@ -5,8 +5,6 @@ TUNECONFLICTS[armv5] = "armv4"
 TUNE_CCARGS .= "${@bb.utils.contains('TUNE_FEATURES', 'armv5', ' -march=armv5${ARMPKGSFX_THUMB}${ARMPKGSFX_DSP}', '', d)}"
 MACHINEOVERRIDES =. "${@bb.utils.contains('TUNE_FEATURES', 'armv5', 'armv5:', '' ,d)}"
 
-ARMPKGSFX_DSP = "${@bb.utils.contains('TUNE_FEATURES', [ 'armv5', 'dsp' ], 'e', '', d)}"
-
 require conf/machine/include/arm/arch-armv4.inc
 require conf/machine/include/arm/feature-arm-vfp.inc
 
@@ -33,7 +31,6 @@ PACKAGE_EXTRA_ARCHS_tune-armv5-vfp     = "${PACKAGE_EXTRA_ARCHS_tune-armv5}  arm
 PACKAGE_EXTRA_ARCHS_tune-armv5t-vfp    = "${PACKAGE_EXTRA_ARCHS_tune-armv5t} armv5-vfp armv5t-vfp"
 PACKAGE_EXTRA_ARCHS_tune-armv5hf-vfp   = "armv5hf-vfp"
 PACKAGE_EXTRA_ARCHS_tune-armv5thf-vfp  = "armv5hf-vfp armv5thf-vfp"
-PACKAGE_EXTRA_ARCHS_tune-armv5tehf-vfp = "${PACKAGE_EXTRA_ARCHS_tune-armv5thf-vfp} armv5ehf-vfp armv5tehf-vfp"
 
 # Big Endian
 AVAILTUNES += "armv5b armv5tb"
