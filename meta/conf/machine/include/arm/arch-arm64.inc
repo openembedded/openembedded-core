@@ -10,8 +10,8 @@ MACHINEOVERRIDES .= "${@bb.utils.contains('TUNE_FEATURES', 'aarch64', ':aarch64'
 AVAILTUNES += "aarch64 aarch64_be"
 ARMPKGARCH_tune-aarch64 ?= "aarch64"
 ARMPKGARCH_tune-aarch64_be ?= "aarch64_be"
-TUNE_FEATURES_tune-aarch64 ?= "aarch64"
-TUNE_FEATURES_tune-aarch64_be ?= "${TUNE_FEATURES_tune-aarch64} bigendian"
+TUNE_FEATURES_tune-aarch64 = "aarch64"
+TUNE_FEATURES_tune-aarch64_be = "${TUNE_FEATURES_tune-aarch64} bigendian"
 BASE_LIB_tune-aarch64 = "lib64"
 BASE_LIB_tune-aarch64_be = "lib64"
 
