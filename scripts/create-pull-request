@@ -203,7 +203,7 @@ NEWER_GIT_VERSION=210
 if [ $GIT_VERSION -lt $NEWER_GIT_VERSION ]; then
 	git request-pull $RELATIVE_TO $REMOTE_URL $COMMIT_ID >> "$PM"
 else
-	git request-pull $RELATIVE_TO $REMOTE_URL :$BRANCH >> "$PM"
+	git request-pull $RELATIVE_TO $REMOTE_URL $BRANCH:$BRANCH >> "$PM"
 fi
 if [ $? -ne 0 ]; then
 	echo "ERROR: git request-pull reported an error"
