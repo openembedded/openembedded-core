@@ -12,7 +12,8 @@ SRC_URI[md5sum] = "6dd0f89131cc35bf4f2ed105a1c17771"
 SRC_URI[sha256sum] = "c98f7296ab5c8ccd2e0bc07634976a37f50847df2d8a59bdb1e157664700b467"
 
 UPSTREAM_CHECK_URI = "http://sourceforge.net/projects/docbook/files/docbook-xsl/"
-UPSTREAM_CHECK_REGEX = "/docbook-xsl/(?P<pver>(\d+[\.\-_]*)+)/"
+# Reject versions ending in .0 as those are release candidates
+UPSTREAM_CHECK_REGEX = "/docbook-xsl/(?P<pver>(\d+[\.\-_]*)+(?!\.0)\.\d+)/"
 
 S = "${WORKDIR}/docbook-xsl-${PV}"
 
