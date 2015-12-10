@@ -169,13 +169,7 @@ python native_virtclass_handler () {
 addhandler native_virtclass_handler
 native_virtclass_handler[eventmask] = "bb.event.RecipePreFinalise"
 
-deltask package
-deltask packagedata
-deltask package_qa
-deltask package_write_ipk
-deltask package_write_deb
-deltask package_write_rpm
-deltask package_write
+inherit nopackages
 
 do_packagedata[stamp-extra-info] = ""
 do_populate_sysroot[stamp-extra-info] = ""
