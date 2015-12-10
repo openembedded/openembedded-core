@@ -1,11 +1,10 @@
 SUMMARY = "A sophisticated Numeric Processing Package for Python"
 SECTION = "devel/python"
 LICENSE = "PSF"
-LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=f87832d854acbade6e9f5c601c8b30b1"
-PR = "r1"
+LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=9f4e88b5748e8313caaf33d081ce65a3"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/numpy/numpy-${PV}.tar.gz \
-           file://no-host-paths.patch \
+           file://0001-Don-t-search-usr-and-so-on-for-libraries-by-default-.patch \
            ${CONFIGFILESURI} "
 
 CONFIGFILESURI ?= ""
@@ -70,8 +69,8 @@ do_compile_prepend_class-target() {
 
 FILES_${PN}-staticdev += "${PYTHON_SITEPACKAGES_DIR}/numpy/core/lib/*.a"
 
-SRC_URI[md5sum] = "4fa54e40b6a243416f0248123b6ec332"
-SRC_URI[sha256sum] = "f4fa70b7edbab65ee6432eb63743f5489f1919c614632b20b2fb45aa7e682ac6"
+SRC_URI[md5sum] = "3fed2b50906bc19018cec5fa26168aa5"
+SRC_URI[sha256sum] = "8b9f453f29ce96a14e625100d3dcf8926301d36c5f622623bf8820e748510858"
 
 # install what is needed for numpy.test()
 RDEPENDS_${PN} = "python-unittest \
