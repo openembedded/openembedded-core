@@ -23,7 +23,7 @@ python () {
             raise_sanity_error("You need to define %s in the config" % var, d)
 
     # Set the expected location of the public key
-    d.setVar('RPM_GPG_PUBKEY', os.path.join(d.getVar('STAGING_ETCDIR_NATIVE'),
+    d.setVar('RPM_GPG_PUBKEY', os.path.join(d.getVar('STAGING_ETCDIR_NATIVE', False),
                                             'RPM-GPG-PUBKEY'))
 }
 

@@ -24,7 +24,7 @@ python () {
 
     # Set expected location of the public key
     d.setVar('PACKAGE_FEED_GPG_PUBKEY',
-             os.path.join(d.getVar('STAGING_ETCDIR_NATIVE'),
+             os.path.join(d.getVar('STAGING_ETCDIR_NATIVE', False),
                                    'PACKAGE-FEED-GPG-PUBKEY'))
 }
 
