@@ -19,13 +19,13 @@ SRC_URI[sha256sum] = "b720fd6c7d200e5371affdb3f049cc8f88cff9aed942ff1b824d95eedb
 
 BBCLASSEXTEND = "native nativesdk"
 
-DEPENDS = "xcb-proto xproto libxau xcb-proto-native libpthread-stubs libxdmcp"
+DEPENDS = "xcb-proto xproto libxau libpthread-stubs libxdmcp"
 
 PACKAGES_DYNAMIC = "^libxcb-.*"
 
 FILES_${PN} = "${libdir}/libxcb.so.*"
 
-inherit autotools pkgconfig pythonnative distro_features_check
+inherit autotools pkgconfig distro_features_check
 
 # The libxau and others requires x11 in DISTRO_FEATURES
 REQUIRED_DISTRO_FEATURES = "x11"
