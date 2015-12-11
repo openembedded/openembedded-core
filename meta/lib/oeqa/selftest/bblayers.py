@@ -61,6 +61,7 @@ class BitbakeLayers(oeSelfTest):
         result = runCmd('bitbake-layers show-layers')
         self.assertNotIn('meta-skeleton', result.output, msg = "meta-skeleton should have been removed at this step.  bitbake-layers show-layers output: %s" % result.output)
 
+    @testcase(1384)
     def test_bitbakelayers_showrecipes(self):
         result = runCmd('bitbake-layers show-recipes')
         self.assertIn('aspell:', result.output)

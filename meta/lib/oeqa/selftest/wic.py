@@ -257,7 +257,7 @@ class Wic(oeSelfTest):
                                    % image).status)
         self.assertEqual(1, len(glob(self.resultdir + "%s-*direct" % image)))
 
-    #@testcase()
+    @testcase(1385)
     def test_directdisk_bootloader_config(self):
         """Test creation of directdisk-bootloader-config image"""
         image = "directdisk-bootloader-config"
