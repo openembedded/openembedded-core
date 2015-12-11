@@ -12,8 +12,6 @@ python() {
     d.setVar('PACKAGE_ARCH', 'buildtools-dummy-${SDKPKGSUFFIX}')
 }
 
-PACKAGE_ARCH = "buildtools-dummy-${SDKPKGSUFFIX}"
-
 PERLPACKAGES = "nativesdk-perl \
                 nativesdk-perl-module-file-path"
 
