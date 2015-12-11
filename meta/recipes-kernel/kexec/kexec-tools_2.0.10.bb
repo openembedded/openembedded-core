@@ -17,6 +17,14 @@ PACKAGES =+ "kexec kdump vmcore-dmesg"
 ALLOW_EMPTY_${PN} = "1"
 RRECOMMENDS_${PN} = "kexec kdump vmcore-dmesg"
 
+FILES_${PN} =+ "${sysconfig}/init.d/kdump ${sysconfig}/sysconfig/kdump.conf"
 FILES_kexec = "${sbindir}/kexec"
 FILES_kdump = "${sbindir}/kdump"
 FILES_vmcore-dmesg = "${sbindir}/vmcore-dmesg"
+
+do_install_append () {
+        install -d ${D}${sysconfdir}/init.d
+        install -m 0755 ${WORKDIR}/kdump ${D}${sysconfdir}/init.d/kdump
+        install -d ${D}${sysconfdir}/sysconfig
+        install -m 0644 ${WORKDIR}/kdump.conf ${D}${sysconfdir}/sysconfig
+}
