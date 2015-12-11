@@ -32,3 +32,6 @@ EXTRA_OECONF = "--disable-csharp"
 do_install_append() {
 	rm -rf ${D}${datadir}/emacs
 }
+
+BBCLASSEXTEND = "native nativesdk"
+
