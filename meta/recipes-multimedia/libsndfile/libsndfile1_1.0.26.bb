@@ -4,16 +4,11 @@ AUTHOR = "Erik de Castro Lopo"
 DEPENDS = "sqlite3"
 SECTION = "libs/multimedia"
 LICENSE = "LGPLv2.1"
-PR = "r2"
 
-SRC_URI = "http://www.mega-nerd.com/libsndfile/files/libsndfile-${PV}.tar.gz \
-           file://0001-src-sd2.c-Fix-segfault-in-SD2-RSRC-parser.patch \
-           file://0001-src-sd2.c-Fix-two-potential-buffer-read-overflows.patch \
-           file://libsndfile-fix-CVE-2014-9756.patch \
-"
+SRC_URI = "http://www.mega-nerd.com/libsndfile/files/libsndfile-${PV}.tar.gz"
 
-SRC_URI[md5sum] = "e2b7bb637e01022c7d20f95f9c3990a2"
-SRC_URI[sha256sum] = "59016dbd326abe7e2366ded5c344c853829bebfd1702ef26a07ef662d6aa4882"
+SRC_URI[md5sum] = "ec810a0c60c08772a8a5552704b63393"
+SRC_URI[sha256sum] = "cd6520ec763d1a45573885ecb1f8e4e42505ac12180268482a44b28484a25092"
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=e77fe93202736b47c07035910f47974a"
 
