@@ -13,12 +13,11 @@ DEPENDS = "ncurses"
 inherit autotools gettext pkgconfig update-alternatives
 
 SRC_URI = "http://downloads.sourceforge.net/project/procps-ng/Production/procps-ng-${PV}.tar.xz \
-           file://fix-configure.patch \
            file://sysctl.conf \
           "
 
-SRC_URI[md5sum] = "1fb7f3f6bf92ce6c5c9ed9949ae858fe"
-SRC_URI[sha256sum] = "a02e6f98974dfceab79884df902ca3df30b0e9bad6d76aee0fb5dce17f267f04"
+SRC_URI[md5sum] = "6cc5b94c1c5b8cbc89ad345a7b522f74"
+SRC_URI[sha256sum] = "e9493169a2d2adc0bc045538707310c8e877b385e4e296143b62607d2bb044ed"
 
 S = "${WORKDIR}/procps-ng-${PV}"
 
