@@ -8,7 +8,7 @@ LICENSE = "MIT & GPLv2+ & BSD"
 LIC_FILES_CHKSUM = "file://COPYING;md5=95f3a93a5c3c7888de623b46ea085a84"
 
 # util-linux for libblkid
-DEPENDS = "libcap libnfsidmap libevent util-linux sqlite3"
+DEPENDS = "libcap libnfsidmap libevent util-linux sqlite3 libtirpc"
 RDEPENDS_${PN}-client = "rpcbind bash"
 RDEPENDS_${PN} = "${PN}-client bash"
 RRECOMMENDS_${PN} = "kernel-module-nfsd"
@@ -34,8 +34,8 @@ SRC_URI = "${KERNELORG_MIRROR}/linux/utils/nfs-utils/${PV}/nfs-utils-${PV}.tar.x
            file://0001-nfs-utils-statd-fix-a-segfault-caused-by-improper-us.patch \
 "
 
-SRC_URI[md5sum] = "8de676b9ff34b8f9addc1d0800fabdf8"
-SRC_URI[sha256sum] = "ff79d70b7b58b2c8f9b798c58721127e82bb96022adc04a5c4cb251630e696b8"
+SRC_URI[md5sum] = "cd6b568c2e9301cc3bfac09d87fbbc0b"
+SRC_URI[sha256sum] = "700d689c5622c87953c34102e5befafc4d3c811e676852238f0dd79c9c0c084d"
 
 # Only kernel-module-nfsd is required here (but can be built-in)  - the nfsd module will
 # pull in the remainder of the dependencies.
@@ -59,7 +59,6 @@ EXTRA_OECONF = "--with-statduser=rpcuser \
                 --disable-nfsv41 \
                 --enable-uuid \
                 --disable-gss \
-                --disable-tirpc \
                 --disable-nfsdcltrack \
                 --with-statdpath=/var/lib/nfs/statd \
                "
