@@ -3,11 +3,11 @@
 
 require musl.inc
 
-SRCREV = "6c5cad2aa56745302c1d42d2c8baf6424d29c0f3"
+SRCREV = "3abb094d19ca4c7c4adcf373d971fb5aa05c5252"
 
-PV = "1.1.11+git${SRCPV}"
+PV = "1.1.12+git${SRCPV}"
 
-# mirror is at git://github.com/bminor/musl.git
+# mirror is at git://github.com/kraj/musl.git
 
 SRC_URI = "git://git.musl-libc.org/musl \
           "
