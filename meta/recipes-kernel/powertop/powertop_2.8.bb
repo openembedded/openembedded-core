@@ -8,8 +8,8 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=12f884d2ae1ff87c09e5b7ccc2c4ca7e"
 
 SRC_URI = "http://01.org/sites/default/files/downloads/powertop/powertop-${PV}.tar.gz"
 
-SRC_URI[md5sum] = "e0d686e47daaf7e9d89031f7763432ef"
-SRC_URI[sha256sum] = "8d4b1490e2baad4467c0ded3c423db4472dcbf7b2dd8f8f2a928f54047c678ca"
+SRC_URI[md5sum] = "c55fedb69203e480801b18bd7b886241"
+SRC_URI[sha256sum] = "a87b563f73106babfa3e74dcf92f252938c061e309ace20a361358bbfa579c5a"
 
 UPSTREAM_CHECK_URI = "https://01.org/powertop/downloads"
 
