@@ -12,11 +12,10 @@ RCONFLICTS_${PN} = "console-tools"
 
 SRC_URI = "${KERNELORG_MIRROR}/linux/utils/${BPN}/${BP}.tar.xz \
            file://uclibc-stdarg.patch \
-	   file://0003-Only-inluclude-kernel-headers-with-glibc.patch \
           "
 
-SRC_URI[md5sum] = "87475eb78b1d6e6ab06686dd323ad4ba"
-SRC_URI[sha256sum] = "9dfddabf96012e329c4bebb96a21aeef7c3872f624e96e8156ba542b82aeb912"
+SRC_URI[md5sum] = "231b46e7142eb41ea3ae06d2ded3c208"
+SRC_URI[sha256sum] = "7a899de1c0eb75f3aea737095a736f2375e1cbfbe693fc14a3fe0bfb4649fb5e"
 
 PACKAGECONFIG ?= "${@bb.utils.contains('DISTRO_FEATURES', 'pam', 'pam', '', d)}"
 PACKAGECONFIG[pam] = "--enable-vlock, --disable-vlock, libpam,"
