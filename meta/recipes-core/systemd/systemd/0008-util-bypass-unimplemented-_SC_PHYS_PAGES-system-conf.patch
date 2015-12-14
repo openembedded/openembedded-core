@@ -1,7 +1,7 @@
-From b45ea3bfd6635744c8a6b74d0ac701b44bb1d294 Mon Sep 17 00:00:00 2001
+From 83944758dc0703afea81f3c7aa0ad926bc5df757 Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
-Date: Fri, 20 Feb 2015 05:19:37 +0000
-Subject: [PATCH 08/11] util: bypass unimplemented _SC_PHYS_PAGES system
+Date: Mon, 14 Dec 2015 00:47:53 +0000
+Subject: [PATCH 08/16] util: bypass unimplemented _SC_PHYS_PAGES system
  configuration API on uclibc
 
 Upstream-Status: Inappropriate [uclibc-specific]
@@ -12,10 +12,10 @@ Signed-off-by: Khem Raj <raj.khem@gmail.com>
  1 file changed, 15 insertions(+)
 
 diff --git a/src/basic/util.c b/src/basic/util.c
-index 72f4665..cbbe3b1 100644
+index 9e0b576..65f0edf 100644
 --- a/src/basic/util.c
 +++ b/src/basic/util.c
-@@ -6793,10 +6793,25 @@ uint64_t physical_memory(void) {
+@@ -769,10 +769,25 @@ uint64_t physical_memory(void) {
          /* We return this as uint64_t in case we are running as 32bit
           * process on a 64bit kernel with huge amounts of memory */
  
@@ -25,7 +25,7 @@ index 72f4665..cbbe3b1 100644
 +        if (f == NULL)
 +                return 0;
 +        while (!feof(f) && fgets(line, sizeof(line)-1, f)) {
-+                if (sscanf(line, "MemTotal: %l kB", &mem) == 1) {
++                if (sscanf(line, "MemTotal: %li kB", &mem) == 1) {
 +                        mem *= 1024;
 +                        break;
 +                }
@@ -40,7 +40,7 @@ index 72f4665..cbbe3b1 100644
 +#endif
  }
  
- void hexdump(FILE *f, const void *p, size_t s) {
+ int update_reboot_param_file(const char *param) {
 -- 
-2.1.4
+2.6.4
 

@@ -1,7 +1,7 @@
-From 184a89caacfa00f07e7275bca592bd7dda1b541e Mon Sep 17 00:00:00 2001
+From 319873d22a6b1225ae41aa38bc976e723326ba20 Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Fri, 20 Feb 2015 05:03:44 +0000
-Subject: [PATCH 03/11] binfmt: Don't install dependency links at install time
+Subject: [PATCH 05/16] binfmt: Don't install dependency links at install time
  for the binfmt services
 
 use [Install] blocks so that they get created when the service is enabled
@@ -23,11 +23,11 @@ Signed-off-by: Khem Raj <raj.khem@gmail.com>
  units/systemd-binfmt.service.in         | 5 +++++
  3 files changed, 8 insertions(+), 4 deletions(-)
 
-Index: git/Makefile.am
-===================================================================
---- git.orig/Makefile.am
-+++ git/Makefile.am
-@@ -4271,10 +4271,6 @@ INSTALL_DIRS += \
+diff --git a/Makefile.am b/Makefile.am
+index 00a92e3..4c1143a 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -4455,10 +4455,6 @@ INSTALL_DIRS += \
  	$(prefix)/lib/binfmt.d \
  	$(sysconfdir)/binfmt.d
  
@@ -38,10 +38,10 @@ Index: git/Makefile.am
  endif
  
  EXTRA_DIST += \
-Index: git/units/proc-sys-fs-binfmt_misc.automount
-===================================================================
---- git.orig/units/proc-sys-fs-binfmt_misc.automount
-+++ git/units/proc-sys-fs-binfmt_misc.automount
+diff --git a/units/proc-sys-fs-binfmt_misc.automount b/units/proc-sys-fs-binfmt_misc.automount
+index 6be3893..709adef 100644
+--- a/units/proc-sys-fs-binfmt_misc.automount
++++ b/units/proc-sys-fs-binfmt_misc.automount
 @@ -16,3 +16,6 @@ ConditionPathIsReadWrite=/proc/sys/
  
  [Automount]
@@ -49,11 +49,11 @@ Index: git/units/proc-sys-fs-binfmt_misc.automount
 +
 +[Install]
 +WantedBy=sysinit.target
-Index: git/units/systemd-binfmt.service.in
-===================================================================
---- git.orig/units/systemd-binfmt.service.in
-+++ git/units/systemd-binfmt.service.in
-@@ -11,6 +11,8 @@ Documentation=man:systemd-binfmt.service
+diff --git a/units/systemd-binfmt.service.in b/units/systemd-binfmt.service.in
+index d53073e..8c57ee0 100644
+--- a/units/systemd-binfmt.service.in
++++ b/units/systemd-binfmt.service.in
+@@ -11,6 +11,8 @@ Documentation=man:systemd-binfmt.service(8) man:binfmt.d(5)
  Documentation=https://www.kernel.org/doc/Documentation/binfmt_misc.txt
  DefaultDependencies=no
  Conflicts=shutdown.target
@@ -69,3 +69,6 @@ Index: git/units/systemd-binfmt.service.in
 +
 +[Install]
 +WantedBy=sysinit.target
+-- 
+2.6.4
+

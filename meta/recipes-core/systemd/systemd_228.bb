@@ -24,39 +24,38 @@ SECTION = "base/shell"
 
 inherit useradd pkgconfig autotools perlnative update-rc.d update-alternatives qemu systemd ptest gettext
 
-SRCREV = "e1439a1472c5f691733b8ef10e702beac2496a63"
+SRCREV = "dd050decb6ad131ebdeabb71c4f9ecb4733269c0"
 
-PV = "225+git${SRCPV}"
+PV = "228+git${SRCPV}"
 
 SRC_URI = "git://github.com/systemd/systemd.git;protocol=git \
-           file://0003-binfmt-Don-t-install-dependency-links-at-install-tim.patch \
-           file://0004-configure-Check-for-additional-features-that-uclibc-.patch \
-           file://0005-nspawn-Use-execvpe-only-when-libc-supports-it.patch \
-           file://0006-journal-Use-posix-fallocate-only-if-available.patch \
-           file://0007-util-Use-mkostemp-only-if-libc-supports-it.patch \
+           file://0005-binfmt-Don-t-install-dependency-links-at-install-tim.patch \
+           file://0006-configure-Check-for-additional-features-that-uclibc-.patch \
+           file://0007-nspawn-Use-execvpe-only-when-libc-supports-it.patch \
            file://0008-util-bypass-unimplemented-_SC_PHYS_PAGES-system-conf.patch \
-           file://0009-sysv-generator-add-support-for-executing-scripts-und.patch \
-           file://0010-Make-root-s-home-directory-configurable.patch \
-           file://0011-systemd-user-avoid-using-system-auth.patch \
-           file://0012-implment-systemd-sysv-install-for-OE.patch \
-           file://0014-Revert-rules-remove-firmware-loading-rules.patch \
-           file://0015-Revert-udev-remove-userspace-firmware-loading-suppor.patch \
+           file://0009-implment-systemd-sysv-install-for-OE.patch \
+           file://0010-nss-mymachines-Build-conditionally-when-HAVE_MYHOSTN.patch \
+           file://0011-rules-whitelist-hd-devices.patch \
+           file://0012-sysv-generator-add-support-for-executing-scripts-und.patch \
+           file://0013-Make-root-s-home-directory-configurable.patch \
+           file://0014-systemd-user-avoid-using-system-auth.patch \
+           file://0015-Revert-rules-remove-firmware-loading-rules.patch \
+           file://0016-Revert-udev-remove-userspace-firmware-loading-suppor.patch \
            file://touchscreen.rules \
            file://00-create-volatile.conf \
            file://init \
            file://run-ptest \
-           file://rules-whitelist-hd-devices.patch \
           "
-SRC_URI_append_qemuall = " file://qemuall_io_latency-core-device.c-Change-the-default-device-timeout-to-2.patch"
+SRC_URI_append_libc-uclibc = "\
+            file://0001-define-exp10-if-missing.patch \
+            file://0002-units-Prefer-getty-to-agetty-in-console-setup-system.patch \
+            file://0003-Use-getenv-when-secure-versions-are-not-available.patch \
+           "
+SRC_URI_append_qemuall = " file://0004-core-device.c-Change-the-default-device-timeout-to-2.patch "
 
 S = "${WORKDIR}/git"
 
-SRC_URI_append_libc-uclibc = "\
-            file://0001-units-Prefer-getty-to-agetty-in-console-setup-system.patch \
-            file://0022-Use-getenv-when-secure-versions-are-not-available.patch \
-            file://0001-fix-build-on-uClibc-exp10.patch \
-           "
-LDFLAGS_append_libc-uclibc = " -lrt"
+LDFLAGS_append_libc-uclibc = " -lrt -lssp_nonshared -lssp "
 
 GTKDOC_DOCDIR = "${S}/docs/"
 
@@ -65,7 +64,6 @@ PACKAGECONFIG ??= "xz ldconfig \
                    ${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'xkbcommon', '', d)} \
                    ${@bb.utils.contains('DISTRO_FEATURES', 'selinux', 'selinux', '', d)} \
                   "
-
 PACKAGECONFIG[journal-upload] = "--enable-libcurl,--disable-libcurl,curl"
 # Sign the journal for anti-tampering
 PACKAGECONFIG[gcrypt] = "--enable-gcrypt,--disable-gcrypt,libgcrypt"
@@ -127,7 +125,7 @@ EXTRA_OECONF = " --with-rootprefix=${rootprefix} \
                  --with-firmware-path=/lib/firmware \
                "
 # uclibc does not have NSS
-EXTRA_OECONF_append_libc-uclibc = " --disable-myhostname "
+EXTRA_OECONF_append_libc-uclibc = " --disable-myhostname --disable-sysusers"
 
 # per the systemd README, define VALGRIND=1 to run under valgrind
 CFLAGS .= "${@bb.utils.contains('PACKAGECONFIG', 'valgrind', ' -DVALGRIND=1', '', d)}"

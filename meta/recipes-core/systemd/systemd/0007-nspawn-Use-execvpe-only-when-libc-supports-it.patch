@@ -1,0 +1,41 @@
+From 529e7e2f7f6a5dc0e4527ff5c2237b19ece2f112 Mon Sep 17 00:00:00 2001
+From: Khem Raj <raj.khem@gmail.com>
+Date: Fri, 20 Feb 2015 05:10:37 +0000
+Subject: [PATCH 07/16] nspawn: Use execvpe only when libc supports it
+
+Upstream-Status: Denied [no desire for uclibc support]
+
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+---
+ src/nspawn/nspawn.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/src/nspawn/nspawn.c b/src/nspawn/nspawn.c
+index a4e13bd..4def6ba 100644
+--- a/src/nspawn/nspawn.c
++++ b/src/nspawn/nspawn.c
+@@ -112,6 +112,8 @@ typedef enum LinkJournal {
+         LINK_GUEST
+ } LinkJournal;
+ 
++#include "config.h"
++
+ static char *arg_directory = NULL;
+ static char *arg_template = NULL;
+ static char *arg_user = NULL;
+@@ -2595,7 +2597,12 @@ static int inner_child(
+                 a[0] = (char*) "/sbin/init";
+                 execve(a[0], a, env_use);
+         } else if (!strv_isempty(arg_parameters))
++#ifdef HAVE_EXECVPE
+                 execvpe(arg_parameters[0], arg_parameters, env_use);
++#else
++                environ = env_use;
++                execvp(arg_parameters[0], arg_parameters);
++#endif /* HAVE_EXECVPE */
+         else {
+                 chdir(home ?: "/root");
+                 execle("/bin/bash", "-bash", NULL, env_use);
+-- 
+2.6.4
+

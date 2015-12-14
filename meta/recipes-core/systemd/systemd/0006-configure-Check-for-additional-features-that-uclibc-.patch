@@ -1,7 +1,7 @@
-From 4e2e8dbf3f23ab7dca32286cc0f37bff6ac49e22 Mon Sep 17 00:00:00 2001
+From d1fe5d2dd38cdef984296f453c65ccaebb71d1a9 Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Fri, 20 Feb 2015 05:05:45 +0000
-Subject: [PATCH 04/11] configure: Check for additional features that uclibc
+Subject: [PATCH 06/16] configure: Check for additional features that uclibc
  doesnt support
 
 This helps in supporting uclibc which does not have all features that
@@ -14,11 +14,11 @@ Signed-off-by: Khem Raj <raj.khem@gmail.com>
  configure.ac | 18 ++++++++++++++++++
  1 file changed, 18 insertions(+)
 
-Index: git/configure.ac
-===================================================================
---- git.orig/configure.ac
-+++ git/configure.ac
-@@ -110,6 +110,24 @@ AC_PATH_PROG([UMOUNT_PATH], [umount], [/
+diff --git a/configure.ac b/configure.ac
+index 3128ca8..49f73a4 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -112,6 +112,24 @@ AC_PATH_PROG([UMOUNT_PATH], [umount], [/usr/bin/umount], [$PATH:/usr/sbin:/sbin]
  
  AS_IF([! ln --relative --help > /dev/null 2>&1], [AC_MSG_ERROR([*** ln doesn't support --relative ***])])
  
@@ -43,3 +43,6 @@ Index: git/configure.ac
  M4_DEFINES=
  
  AC_CHECK_TOOL(OBJCOPY, objcopy)
+-- 
+2.6.4
+
