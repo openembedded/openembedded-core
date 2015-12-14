@@ -35,6 +35,7 @@ SANITIZERS_mips64n32 = ""
 SANITIZERS_powerpc64 = ""
 SANITIZERS_sparc = ""
 SANITIZERS_libc-musl = ""
+SANITIZERS_libc-uclibc = ""
 
 RRECOMMENDS_packagegroup-core-sdk = "\
     libgomp \
