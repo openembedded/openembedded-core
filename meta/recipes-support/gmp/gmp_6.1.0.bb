@@ -2,21 +2,18 @@ require gmp.inc
 
 LICENSE="GPLv2+ | LGPLv3+"
 
-REVISION="a"
-
 LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504 \
                    file://COPYING.LESSERv3;md5=6a6a8e020838b23406c81b19c1d46df6 \
                    file://COPYINGv2;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
 "
 
-SRC_URI += "file://configure.patch \
-            file://amd64.patch \
-            file://use-includedir.patch \
-            file://append_user_provided_flags.patch \
-            file://gmp-6.0.0-ppc64.patch \
-            "
-SRC_URI[md5sum] = "b7ff2d88cae7f8085bd5006096eed470"
-SRC_URI[sha256sum] = "7f8e9a804b9c6d07164cf754207be838ece1219425d64e28cfa3e70d5c759aaf"
+SRC_URI = "https://gmplib.org/download/${BPN}/${BP}${REVISION}.tar.bz2 \
+           file://amd64.patch \
+           file://use-includedir.patch \
+           file://0001-Append-the-user-provided-flags-to-the-auto-detected-.patch \
+           "
+SRC_URI[md5sum] = "86ee6e54ebfc4a90b643a65e402c4048"
+SRC_URI[sha256sum] = "498449a994efeba527885c10405993427995d3f86b8768d8cdf8d9dd7c6b73e8"
 
 acpaths = ""
 
