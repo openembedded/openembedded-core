@@ -5,9 +5,8 @@ LICENSE = "Libpng"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=55b60b5bb3ed92fbf9197e565a7fac02 \
                     file://png.h;endline=112;md5=a6352a338642f0dbd2fc280ae060d3e9"
 DEPENDS = "zlib"
-LIBV = "16"
 
-SRC_URI = "${SOURCEFORGE_MIRROR}/project/libpng/libpng${LIBV}/${PV}/libpng-${PV}.tar.xz \
+SRC_URI = "${GENTOO_MIRROR}/libpng-${PV}.tar.xz \
           "
 SRC_URI[md5sum] = "3968acb7c66ef81a9dab867f35d0eb4b"
 SRC_URI[sha256sum] = "55c5959e9f3484d96141a3226c53bc9da42a4845e70879d3e1d6e94833d1918b"
