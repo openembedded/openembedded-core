@@ -1,0 +1,46 @@
+From 56a10a14c0a544df99c97ce279801ddf40b0df52 Mon Sep 17 00:00:00 2001
+From: Jussi Kukkonen <jussi.kukkonen@intel.com>
+Date: Mon, 14 Sep 2015 13:35:42 +0300
+Subject: [PATCH] WIP: Depend on headers to fix parallel build
+
+Parallel builds occasionally fail because generated headers are only
+half built when they're being used.
+
+This fix is extracted
+from https://github.com/libical/libical/commit/dcc40c7ae2d337a0d83c077bf9d8f283499c6717
+
+Upstream-Status: Backport
+Signed-off-by: Jussi Kukkonen <jussi.kukkonen@intel.com>
+
+---
+ examples/CMakeLists.txt    | 1 +
+ src/libical/CMakeLists.txt | 1 +
+ 2 files changed, 2 insertions(+)
+
+diff --git a/examples/CMakeLists.txt b/examples/CMakeLists.txt
+index 3379ffd..514956b 100644
+--- a/examples/CMakeLists.txt
++++ b/examples/CMakeLists.txt
+@@ -16,6 +16,7 @@ set(doesnothing_SRCS
+ )
+ 
+ add_executable(doesnothing ${doesnothing_SRCS})
++add_dependencies(doesnothing ical icalss icalvcal)
+ 
+ target_link_libraries(doesnothing ical icalss icalvcal ical icalss icalvcal)
+ 
+diff --git a/src/libical/CMakeLists.txt b/src/libical/CMakeLists.txt
+index 6774352..468a7d9 100644
+--- a/src/libical/CMakeLists.txt
++++ b/src/libical/CMakeLists.txt
+@@ -261,6 +261,7 @@ add_library(ical ${LIBRARY_TYPE} ${ical_LIB_SRCS})
+ add_library(ical-static STATIC ${ical_LIB_SRCS})
+ 
+ add_dependencies(ical ical-header)
++add_dependencies(ical-static ical-header)
+ 
+ target_link_libraries(ical ${CMAKE_THREAD_LIBS_INIT})
+ 
+-- 
+2.1.4
+
