@@ -7,11 +7,10 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=8006d9c814277c1bfc4ca22af94b59ee"
 
 SRC_URI = "${GNU_MIRROR}/grep/grep-${PV}.tar.xz \
            file://0001-Unset-need_charset_alias-when-building-for-musl.patch \
-           file://grep-fix-CVE-2015-1345.patch \
           "
 
-SRC_URI[md5sum] = "43c48064d6409862b8a850db83c8038a"
-SRC_URI[sha256sum] = "5244a11c00dee8e7e5e714b9aaa053ac6cbfa27e104abee20d3c778e4bb0e5de"
+SRC_URI[md5sum] = "e1015e951a49a82b02e38891026ef5df"
+SRC_URI[sha256sum] = "ca91d22f017bfcb503d4bc3b44295491c89a33a3df0c3d8b8614f2d3831836eb"
 
 inherit autotools gettext texinfo
 
