@@ -8,7 +8,7 @@ REQUIRED_DISTRO_FEATURES ?= "opengl"
 
 SRC_URI += "file://0001-Install-example-binary-needed-for-core-image-clutter.patch"
 
-DEPENDS = "gstreamer1.0-plugins-base gstreamer1.0-plugins-bad clutter-1.0"
+DEPENDS = "gstreamer1.0-plugins-base gstreamer1.0-plugins-bad clutter-1.0 libgudev"
 RDEPENDS_${PN} += "gstreamer1.0-meta-base"
 PACKAGES  =+ "${PN}-examples"
 
