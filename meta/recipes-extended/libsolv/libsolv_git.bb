@@ -18,11 +18,10 @@ inherit cmake
 
 EXTRA_OECMAKE = "-DLIB=${baselib}"
 
-PACKAGES =+ "${PN}-tools ${PN}ext ${PN}ext-dbg"
+PACKAGES =+ "${PN}-tools ${PN}ext"
 
 FILES_${PN}-dev += "${datadir}/cmake/Modules/FindLibSolv.cmake"
 FILES_${PN}-tools = "${bindir}/*"
 FILES_${PN}ext = "${libdir}/${PN}ext.so.*"
-FILES_${PN}ext-dbg = "${libdir}/.debug/${PN}ext.so.*"
 
 BBCLASSEXTEND =+ "native nativesdk"
