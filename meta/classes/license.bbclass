@@ -192,7 +192,7 @@ def get_deployed_dependencies(d):
     # usually in this var and not listed in rootfs.
     # At last, get the dependencies from boot classes because
     # it might contain the bootloader.
-    taskdata = d.getVar("BB_TASKDEPDATA", True)
+    taskdata = d.getVar("BB_TASKDEPDATA", False)
     depends = list(set([dep[0] for dep
                     in taskdata.itervalues()
                     if not dep[0].endswith("-native")]))
@@ -228,6 +228,7 @@ def get_deployed_dependencies(d):
                 break
 
     return deploy
+get_deployed_dependencies[vardepsexclude] = "BB_TASKDEPDATA"
 
 def get_boot_dependencies(d):
     """
@@ -236,7 +237,7 @@ def get_boot_dependencies(d):
 
     depends = []
     boot_depends_string = ""
-    taskdepdata = d.getVar("BB_TASKDEPDATA", True)
+    taskdepdata = d.getVar("BB_TASKDEPDATA", False)
     # Only bootimg and bootdirectdisk include the depends flag
     boot_tasks = ["do_bootimg", "do_bootdirectdisk",]
 
@@ -264,6 +265,7 @@ def get_boot_dependencies(d):
                         depends.append(taskdep[0])
                         break
     return depends
+get_boot_dependencies[vardepsexclude] = "BB_TASKDEPDATA"
 
 def get_deployed_files(man_file):
     """
