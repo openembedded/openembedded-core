@@ -34,6 +34,8 @@ SRC_URI += "file://configure-targets.patch \
             file://Makefiles-ptest.patch \
             file://ptest-deps.patch \
             file://run-ptest \
+            file://CVE-2015-3194-Add-PSS-parameter-check.patch \
+            file://CVE-2015-3195-Fix-leak-with-ASN.1-combine.patch \
            "
 
 SRC_URI[md5sum] = "7563e92327199e0067ccd0f79f436976"
