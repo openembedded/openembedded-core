@@ -49,7 +49,7 @@ bindir_progs = "free pkill pmap pgrep pwdx skill snice top uptime"
 base_bindir_progs += "kill pidof ps watch"
 base_sbindir_progs += "sysctl"
 
-ALTERNATIVE_PRIORITY = "100"
+ALTERNATIVE_PRIORITY = "200"
 
 ALTERNATIVE_${PN} = "${bindir_progs} ${base_bindir_progs} ${base_sbindir_progs}"
 
