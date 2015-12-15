@@ -2,10 +2,10 @@ SUMMARY = "Valgrind memory debugger and instrumentation framework"
 HOMEPAGE = "http://valgrind.org/"
 BUGTRACKER = "http://valgrind.org/support/bug_reports.html"
 LICENSE = "GPLv2 & GPLv2+ & BSD"
-LIC_FILES_CHKSUM = "file://COPYING;md5=c46082167a314d785d012a244748d803 \
-                    file://include/pub_tool_basics.h;beginline=1;endline=29;md5=e7071929a50d4b0fc27a3014b315b0f7 \
-                    file://include/valgrind.h;beginline=1;endline=56;md5=92df8a1bde56fe2af70931ff55f6622f \
-                    file://COPYING.DOCS;md5=8fdeb5abdb235a08e76835f8f3260215"
+LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
+                    file://include/pub_tool_basics.h;beginline=1;endline=29;md5=ebb8e640ef633f940c425686c873f9fa \
+                    file://include/valgrind.h;beginline=1;endline=56;md5=4b5e24908e53016ea561c45f4234a327 \
+                    file://COPYING.DOCS;md5=24ea4c7092233849b4394699333b5c56"
 
 X11DEPENDS = "virtual/libx11"
 DEPENDS = "${@bb.utils.contains('DISTRO_FEATURES', 'x11', '${X11DEPENDS}', '', d)} \
@@ -15,26 +15,19 @@ DEPENDS = "${@bb.utils.contains('DISTRO_FEATURES', 'x11', '${X11DEPENDS}', '', d
 SRC_URI = "http://www.valgrind.org/downloads/valgrind-${PV}.tar.bz2 \
            file://fixed-perl-path.patch \
            file://Added-support-for-PPC-instructions-mfatbu-mfatbl.patch \
-           file://sepbuildfix.patch \
-           file://glibc.patch \
-           file://force-nostabs.patch \
            file://remove-arm-variant-specific.patch \
-           file://remove-ppc-tests-failing-build.patch \
-           file://valgrind-remove-rpath.patch \
-           file://enable.building.on.4.x.kernel.patch \
-           file://add-ptest.patch \
-           file://pass-maltivec-only-if-it-supported.patch \
            file://run-ptest \
-           file://0001-valgrind-Enable-rt_sigpending-syscall-on-ppc64-linux.patch \
            file://11_mips-link-tool.patch \
-          "
+           file://0002-remove-rpath.patch \
+           file://0004-Fix-out-of-tree-builds.patch \
+           file://0005-Modify-vg_test-wrapper-to-support-PTEST-formats.patch \
+           file://0001-Remove-tests-that-fail-to-build-on-some-PPC32-config.patch \
+           "
 
-SRC_URI[md5sum] = "60ddae962bc79e7c95cfc4667245707f"
-SRC_URI[sha256sum] = "fa253dc26ddb661b6269df58144eff607ea3f76a9bcfe574b0c7726e1dfcb997"
+SRC_URI[md5sum] = "4ea62074da73ae82e0162d6550d3f129"
+SRC_URI[sha256sum] = "6c396271a8c1ddd5a6fb9abe714ea1e8a86fce85b30ab26b4266aeb4c2413b42"
 
 COMPATIBLE_HOST = '(i.86|x86_64|arm|mips|powerpc|powerpc64).*-linux'
-
-PR = "r1"
 
 inherit autotools ptest
 
@@ -59,6 +52,10 @@ RDEPENDS_${PN} += "perl"
 RRECOMMENDS_${PN} += "${TCLIBC}-dbg"
 
 RDEPENDS_${PN}-ptest += " sed perl glibc-utils perl-module-file-glob"
+
+# One of the tests contains a bogus interpreter path on purpose, and QA
+# check complains about it
+INSANE_SKIP_${PN}-ptest += "file-rdeps"
 
 do_compile_ptest() {
     oe_runmake check CFLAGS="${CFLAGS} -O0" CXXFLAGS="${CXXFLAGS} -O0"
