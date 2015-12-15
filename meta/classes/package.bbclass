@@ -1039,6 +1039,8 @@ python populate_packages () {
 
     bb.utils.mkdirhier(outdir)
     os.chdir(dvar)
+    
+    autodebug = not (d.getVar("NOAUTOPACKAGEDEBUG", True) or False)
 
     # Sanity check PACKAGES for duplicates
     # Sanity should be moved to sanity.bbclass once we have the infrastucture
@@ -1048,6 +1050,8 @@ python populate_packages () {
         if pkg in package_list:
             msg = "%s is listed in PACKAGES multiple times, this leads to packaging errors." % pkg
             package_qa_handle_error("packages-list", msg, d)
+        elif autodebug and pkg.endswith("-dbg"):
+            package_list.insert(0, pkg)
         else:
             package_list.append(pkg)
     d.setVar('PACKAGES', ' '.join(package_list))
@@ -1057,6 +1061,16 @@ python populate_packages () {
 
     # os.mkdir masks the permissions with umask so we have to unset it first
     oldumask = os.umask(0)
+
+    debug = []
+    for root, dirs, files in cpath.walk(dvar):
+        dir = root[len(dvar):]
+        if not dir:
+            dir = os.sep
+        for f in (files + dirs):
+            path = "." + os.path.join(dir, f)
+            if "/.debug/" in path or path.endswith("/.debug"):
+                debug.append(path)
 
     for pkg in package_list:
         root = os.path.join(pkgdest, pkg)
@@ -1070,6 +1084,9 @@ python populate_packages () {
 
         origfiles = filesvar.split()
         files = files_from_filevars(origfiles)
+
+        if autodebug and pkg.endswith("-dbg"):
+            files.extend(debug)
 
         for file in files:
             if (not cpath.islink(file)) and (not cpath.exists(file)):
