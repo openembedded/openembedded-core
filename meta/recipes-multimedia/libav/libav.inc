@@ -97,7 +97,7 @@ do_install_append() {
     fi
 }
 
-PACKAGES += "${PN}-vhook-dbg ${PN}-vhook ffmpeg-x264-presets"
+PACKAGES += "${PN}-vhook ffmpeg-x264-presets"
 PACKAGES_DYNAMIC += "^lib(av(codec|device|filter|format|util)|swscale).*"
 
 RSUGGESTS_${PN} = "mplayer"
@@ -105,7 +105,6 @@ FILES_${PN} = "${bindir}"
 FILES_${PN}-dev = "${includedir}/${PN}"
 
 FILES_${PN}-vhook = "${libdir}/vhook"
-FILES_${PN}-vhook-dbg += "${libdir}/vhook/.debug"
 
 FILES_ffmpeg-x264-presets = "${datadir}/*.avpreset"
 

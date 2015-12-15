@@ -68,10 +68,6 @@ RRECOMMENDS_${PN} += "udev-cache"
 RCONFLICTS_${PN} += "udev-utils"
 RREPLACES_${PN} += "udev-utils"
 
-FILES_${PN}-dbg += "${libexecdir}/.debug"
-FILES_${PN}-dbg += "${base_libdir}/udev/.debug/"
-FILES_${PN}-dbg += "${base_libdir}/udev/.debug/*"
-FILES_${PN}-dbg += "${nonarch_base_libdir}/udev/.debug/*"
 FILES_${PN}-dev = "${datadir}/pkgconfig/udev.pc \
                    ${includedir}/libudev.h ${libdir}/libudev.so ${libdir}/libudev.la \
                    ${libdir}/libudev.a ${libdir}/pkgconfig/libudev.pc \

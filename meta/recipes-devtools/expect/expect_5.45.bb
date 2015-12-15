@@ -51,9 +51,6 @@ EXTRA_OECONF += "--with-tcl=${STAGING_LIBDIR} \
                 "
 EXTRA_OEMAKE_install = " 'SCRIPTS=' "
 
-FILES_${PN}-dbg += "${libdir}/${BPN}${PV}/.debug \
-                    ${libdir}/.debug \
-                   "
 FILES_${PN}-dev = "${libdir_native}/expect${PV}/libexpect*.so \
                    ${includedir}/expect.h \
                    ${includedir}/expect_tcl.h \

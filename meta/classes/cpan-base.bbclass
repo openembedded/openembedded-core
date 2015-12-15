@@ -38,15 +38,3 @@ PERLLIBDIRS = "${libdir}/perl"
 PERLLIBDIRS_class-native = "${libdir}/perl-native"
 PERLVERSION := "${@get_perl_version(d)}"
 PERLVERSION[vardepvalue] = ""
-
-FILES_${PN}-dbg += "${PERLLIBDIRS}/auto/*/.debug \
-                    ${PERLLIBDIRS}/auto/*/*/.debug \
-                    ${PERLLIBDIRS}/auto/*/*/*/.debug \
-                    ${PERLLIBDIRS}/auto/*/*/*/*/.debug \
-                    ${PERLLIBDIRS}/auto/*/*/*/*/*/.debug \
-                    ${PERLLIBDIRS}/vendor_perl/${PERLVERSION}/auto/*/.debug \
-                    ${PERLLIBDIRS}/vendor_perl/${PERLVERSION}/auto/*/*/.debug \
-                    ${PERLLIBDIRS}/vendor_perl/${PERLVERSION}/auto/*/*/*/.debug \
-                    ${PERLLIBDIRS}/vendor_perl/${PERLVERSION}/auto/*/*/*/*/.debug \
-                    ${PERLLIBDIRS}/vendor_perl/${PERLVERSION}/auto/*/*/*/*/*/.debug \
-                    "

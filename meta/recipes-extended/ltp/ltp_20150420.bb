@@ -65,16 +65,6 @@ do_install(){
 
 RDEPENDS_${PN} = "perl e2fsprogs-mke2fs python-core libaio bash gawk expect"
 
-FILES_${PN}-dbg += "\
-    /opt/ltp/runtest/.debug \
-    /opt/ltp/testcases/*/.debug \
-    /opt/ltp/testcases/*/*/.debug \
-    /opt/ltp/testcases/*/*/*/.debug \
-    /opt/ltp/scenario_groups/.debug \
-    /opt/ltp/testscripts/.debug \
-    /opt/ltp/testscripts/open_posix_testsuite/.debug \
-"
-
 FILES_${PN}-staticdev += "/opt/ltp/lib/libmem.a"
 
 FILES_${PN} += "/opt/ltp/* /opt/ltp/runtest/* /opt/ltp/scenario_groups/* /opt/ltp/testcases/bin/* /opt/ltp/testcases/bin/*/bin/* /opt/ltp/testscripts/* /opt/ltp/testcases/open_posix_testsuite/* /opt/ltp/testcases/open_posix_testsuite/conformance/* /opt/ltp/testcases/open_posix_testsuite/Documentation/* /opt/ltp/testcases/open_posix_testsuite/functional/* /opt/ltp/testcases/open_posix_testsuite/include/* /opt/ltp/testcases/open_posix_testsuite/scripts/* /opt/ltp/testcases/open_posix_testsuite/stress/* /opt/ltp/testcases/open_posix_testsuite/tools/*"

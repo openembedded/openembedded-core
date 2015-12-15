@@ -72,6 +72,5 @@ FILES_${PN}-dev += "${base_libdir}/*.so"
 
 # pam files
 FILES_${PN} += "${base_libdir}/security/*.so"
-FILES_${PN}-dbg += "${base_libdir}/security/.debug/*.so"
 
 BBCLASSEXTEND = "native nativesdk"

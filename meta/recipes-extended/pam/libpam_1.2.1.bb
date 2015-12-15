@@ -57,10 +57,6 @@ PACKAGECONFIG[audit] = "--enable-audit,--disable-audit,audit,"
 
 PACKAGES += "${PN}-runtime ${PN}-xtests"
 FILES_${PN} = "${base_libdir}/lib*${SOLIBS}"
-FILES_${PN}-dbg += "${base_libdir}/security/.debug \
-                    ${base_libdir}/security/pam_filter/.debug \
-                    ${datadir}/Linux-PAM/xtests/.debug"
-
 FILES_${PN}-dev += "${base_libdir}/security/*.la ${base_libdir}/*.la ${base_libdir}/lib*${SOLIBSDEV}"
 FILES_${PN}-runtime = "${sysconfdir}"
 FILES_${PN}-xtests = "${datadir}/Linux-PAM/xtests"

@@ -244,8 +244,6 @@ RDEPENDS_${PN}-initramfs = "${PN}"
 RDEPENDS_${PN}-ptest += "perl python bash"
 FILES_${PN}-ptest += "${libdir}/udev/rules.d"
 
-FILES_${PN}-dbg += "${libdir}/systemd/ptest/.debug"
-
 FILES_${PN}-gui = "${bindir}/systemadm"
 
 FILES_${PN}-vconsole-setup = "${rootlibexecdir}/systemd/systemd-vconsole-setup \
@@ -322,7 +320,6 @@ FILES_${PN} = " ${base_bindir}/* \
                 ${nonarch_base_libdir}/udev/rules.d/99-systemd.rules \
                "
 
-FILES_${PN}-dbg += "${rootlibdir}/.debug ${systemd_unitdir}/.debug ${systemd_unitdir}/*/.debug ${base_libdir}/security/.debug/"
 FILES_${PN}-dev += "${base_libdir}/security/*.la ${datadir}/dbus-1/interfaces/ ${sysconfdir}/rpm/macros.systemd"
 
 RDEPENDS_${PN} += "kmod dbus util-linux-mount udev (= ${EXTENDPKGV})"
@@ -337,9 +334,7 @@ RRECOMMENDS_${PN} += "systemd-serialgetty systemd-vconsole-setup \
 
 INSANE_SKIP_${PN}-doc += " libdir"
 
-PACKAGES =+ "udev-dbg udev udev-hwdb"
-
-FILES_udev-dbg += "${nonarch_base_libdir}/udev/.debug"
+PACKAGES =+ "udev udev-hwdb"
 
 RPROVIDES_udev = "hotplug"
 

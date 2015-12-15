@@ -75,7 +75,6 @@ do_install_append_class-nativesdk() {
 }
 
 FILES_${PN} += "${datadir}/git-core ${libexecdir}/git-core/"
-FILES_${PN}-dbg += "${libexecdir}/git-core/.debug"
 
 PERLTOOLS = " \
     ${libexecdir}/git-core/git-add--interactive \

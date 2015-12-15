@@ -40,8 +40,6 @@ GROUPADD_PARAM_${PN} = "tracing"
 
 FILES_${PN} += "${libdir}/lttng/libexec/* ${datadir}/xml/lttng \
                 ${libdir}/python${PYTHON_BASEVERSION}/site-packages/*"
-FILES_${PN}-dbg += "${libdir}/lttng/libexec/.debug \
-                    ${libdir}/python2.7/site-packages/.debug"
 FILES_${PN}-staticdev += "${libdir}/python${PYTHON_BASEVERSION}/site-packages/*.a"
 FILES_${PN}-dev += "${libdir}/python${PYTHON_BASEVERSION}/site-packages/*.la"
 

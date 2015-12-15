@@ -304,13 +304,6 @@ FILES_${PN}-pod = "${libdir}/perl/${PV}/pod \
                    ${libdir}/perl/${PV}/*/*.pod \
                    ${libdir}/perl/${PV}/*/*/*.pod "
 FILES_perl-misc = "${bindir}/*"
-FILES_${PN}-dbg += "${libdir}/perl/${PV}/auto/*/.debug \
-                    ${libdir}/perl/${PV}/auto/*/*/.debug \
-                    ${libdir}/perl/${PV}/auto/*/*/*/.debug \
-                    ${libdir}/perl/${PV}/CORE/.debug \
-                    ${libdir}/perl/${PV}/*/.debug \
-                    ${libdir}/perl/${PV}/*/*/.debug \
-                    ${libdir}/perl/${PV}/*/*/*/.debug "
 FILES_${PN}-doc = "${libdir}/perl/${PV}/*/*.txt \
                    ${libdir}/perl/${PV}/*/*/*.txt \
                    ${libdir}/perl/${PV}/auto/XS/Typemap \

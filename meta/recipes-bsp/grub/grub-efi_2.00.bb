@@ -55,9 +55,6 @@ do_deploy_class-native() {
 
 addtask deploy after do_install before do_build
 
-FILES_${PN}-dbg += "${libdir}/grub/${GRUB_TARGET}-efi/.debug \
-                   /boot/efi/EFI/BOOT/${GRUB_TARGET}-efi/.debug \
-                    "
 FILES_${PN} += "${libdir}/grub/${GRUB_TARGET}-efi \
                 ${datadir}/grub \
                 "

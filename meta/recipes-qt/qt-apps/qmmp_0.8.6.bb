@@ -69,8 +69,4 @@ FILES_${PN} = "\
                 ${datadir}/applications/* \
                 "
 
-FILES_${PN}-dbg += "\
-                ${libdir}/qmmp/*/.debug/* \
-               "
-
 RDEPENDS_${PN} += "taglib alsa-lib libmad curl libicui18n"

@@ -259,10 +259,6 @@ FILES_${PN} =  "${bindir}/rpm \
 		${bindir}/rpm2cpio.real \
 		"
 
-FILES_${PN}-dbg += "${libdir}/rpm/.debug \
-		${libdir}/rpm/bin/.debug \
-		"
-
 FILES_${PN}-common = "${bindir}/rpm2cpio \
 		${bindir}/gendiff \
 		${sysconfdir}/rpm \
@@ -354,7 +350,6 @@ RDEPENDS_${PN}-build = "file bash perl"
 
 RDEPENDS_python-rpm = "${PN}"
 
-FILES_python-rpm-dbg = "${libdir}/python*/site-packages/rpm/.debug/_*"
 FILES_python-rpm-dev = "${libdir}/python*/site-packages/rpm/*.la"
 FILES_python-rpm-staticdev = "${libdir}/python*/site-packages/rpm/*.a"
 FILES_python-rpm = "${libdir}/python*/site-packages/rpm"

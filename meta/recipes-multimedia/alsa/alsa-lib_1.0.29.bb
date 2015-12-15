@@ -32,7 +32,6 @@ EXTRA_OECONF_append_libc-uclibc = " --with-versioned=no "
 
 PACKAGES =+ "alsa-server libasound alsa-conf-base alsa-conf alsa-doc"
 FILES_${PN} += "${libdir}/${BPN}/smixer/*.so"
-FILES_${PN}-dbg += "${libdir}/${BPN}/smixer/.debug"
 FILES_${PN}-dev += "${libdir}/${BPN}/smixer/*.la"
 FILES_libasound = "${libdir}/libasound.so.*"
 FILES_alsa-server = "${bindir}/*"

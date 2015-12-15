@@ -26,7 +26,6 @@ do_configure_prepend () {
 }
 
 FILES_${PN} = "${prefix}/bin/* ${datadir}/applications/*"
-FILES_${PN}-dbg += "${prefix}/bin/.debug"
 
 do_install () {
     rm -rf ${D}/*

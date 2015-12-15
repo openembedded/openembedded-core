@@ -16,5 +16,4 @@ EXTRA_OECONF += "--disable-introspection"
 
 FILES_${PN}          += "${libdir}/gstreamer-1.0/lib*.so"
 FILES_${PN}-dev      += "${libdir}/gstreamer-1.0/*.la"
-FILES_${PN}-dbg      += "${libdir}/gstreamer-1.0/.debug/lib*.so"
 FILES_${PN}-examples  = "${bindir}/video-player ${bindir}/video-sink"

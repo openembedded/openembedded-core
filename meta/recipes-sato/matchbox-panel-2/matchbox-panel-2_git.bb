@@ -33,7 +33,6 @@ S = "${WORKDIR}/git"
 FILES_${PN} += "${libdir}/matchbox-panel/*.so \
                 ${datadir}/matchbox-panel/brightness/*.png \
                 ${datadir}/matchbox-panel/startup/*.png "
-FILES_${PN}-dbg += "${libdir}/matchbox-panel/.debug"
 FILES_${PN}-dev += "${libdir}/matchbox-panel/*.la"
 
 inherit autotools pkgconfig distro_features_check

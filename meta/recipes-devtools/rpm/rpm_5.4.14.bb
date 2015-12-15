@@ -255,11 +255,6 @@ FILES_${PN} =  "${bindir}/rpm \
 		${bindir}/rpm2cpio.real \
 		"
 
-FILES_${PN}-dbg += "${libdir}/rpm/.debug \
-		${libdir}/rpm/bin/.debug \
-		${libdir}/python*/site-packages/rpm/.debug/_* \
-		"
-
 FILES_${PN}-common = "${bindir}/rpm2cpio \
 		${bindir}/gendiff \
 		${sysconfdir}/rpm \

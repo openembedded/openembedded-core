@@ -17,8 +17,3 @@ FILES_${PN}-dev += "\
   ${libdir}/pkgconfig \
   ${PYTHON_SITEPACKAGES_DIR}/*.la \
 "
-FILES_${PN}-dbg += "\
-  ${PYTHON_SITEPACKAGES_DIR}/.debug \
-  ${PYTHON_SITEPACKAGES_DIR}/*/.debug \
-  ${PYTHON_SITEPACKAGES_DIR}/*/*/.debug \
-"

@@ -44,7 +44,6 @@ do_install_append () {
 INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
 
 RDEPENDS_${PN} = "diffutils freetype"
-FILES_${PN}-dbg += "${libdir}/${BPN}/*/.debug"
 
 INSANE_SKIP_${PN} = "arch"
 INSANE_SKIP_${PN}-dbg = "arch"

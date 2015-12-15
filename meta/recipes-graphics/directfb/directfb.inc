@@ -59,13 +59,6 @@ TARGET_CFLAGS_remove_x86 = "-fno-omit-frame-pointer"
 
 # NOTE: monolithic packaging for now, should improve that eventually
 
-
-
-FILES_${PN}-dbg += "\
-  ${libdir}/directfb-${RV}/*/*/.debug/*.so \
-  ${libdir}/directfb-${RV}/*/.debug/*.so \
-"
-
 FILES_${PN}-dev += "\
   ${bindir}/directfb-config \
   ${libdir}/directfb-${RV}/systems/*.la \

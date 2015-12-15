@@ -53,6 +53,5 @@ RDEPENDS_${PN}-apps += "perl"
 RRECOMMENDS_${PN} += "${PN}-meta"
 
 FILES_${PN} = ""
-FILES_${PN}-dbg += "${libdir}/gstreamer-${LIBV}/.debug"
 FILES_${PN}-glib = "${datadir}/glib-2.0"
 

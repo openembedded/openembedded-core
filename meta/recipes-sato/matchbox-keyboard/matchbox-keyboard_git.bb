@@ -35,8 +35,6 @@ FILES_${PN} = "${bindir}/ \
 	       ${datadir}/pixmaps \
 	       ${datadir}/matchbox-keyboard"
 
-FILES_${PN}-dbg += "${libdir}/gtk-2.0/*/immodules/.debug"
-
 FILES_${PN}-im = "${libdir}/gtk-2.0/*/immodules/*.so"
 
 FILES_${PN}-applet = "${libdir}/matchbox-panel/*.so"

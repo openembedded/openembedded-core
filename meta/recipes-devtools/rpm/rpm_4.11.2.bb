@@ -125,11 +125,6 @@ FILES_${PN} +=  "${libdir}/rpm \
 RDEPENDS_${PN} = "base-files run-postinsts"
 RDEPENDS_${PN}_class-native = ""
 
-FILES_${PN}-dbg += "${libdir}/rpm/.debug/* \
-                    ${libdir}/rpm-plugins/.debug/* \
-                    ${libdir}/python2.7/site-packages/rpm/.debug/* \
-                   "
-
 FILES_${PN}-dev += "${libdir}/python2.7/site-packages/rpm/*.la"
 
 FILES_python-${PN} = "${libdir}/python2.7/site-packages/rpm/*"

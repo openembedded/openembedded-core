@@ -25,7 +25,6 @@ FILES_${PN} = "${libdir}/libnl-3.so.* \
                ${sysconfdir}"
 RREPLACES_${PN} = "libnl2"
 RCONFLICTS_${PN} = "libnl2"
-FILES_${PN}-dbg += "${libdir}/libnl/cli/*/.debug"
 FILES_${PN}-dev += "${libdir}/libnl/cli/*/*.so \
                     ${libdir}/libnl/cli/*/*.la"
 FILES_${PN}-staticdev += "${libdir}/libnl/cli/*/*.a"

@@ -25,7 +25,6 @@ do_configure[dirs] =+ "${S}/m4"
 
 PACKAGES += "${PN}-mime"
 FILES_${PN}-mime = "${datadir}/mime/"
-FILES_${PN}-dbg += "${libdir}/libfm/modules/.debug"
 
 do_install_append () {
     # remove files which are part of libfm-extra
