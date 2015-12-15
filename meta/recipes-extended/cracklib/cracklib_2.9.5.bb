@@ -45,7 +45,6 @@ BBCLASSEXTEND = "native nativesdk"
 FILES_${PN}-python = "${PYTHON_SITEPACKAGES_DIR}/cracklib.py \
 	${PYTHON_SITEPACKAGES_DIR}/_cracklib.so \
     "
-FILES_${PN}-dbg += "${PYTHON_SITEPACKAGES_DIR}/.debug/_cracklib.so"
 FILES_${PN}-staticdev += "${PYTHON_SITEPACKAGES_DIR}/_cracklib.a \
 	${PYTHON_SITEPACKAGES_DIR}/_cracklib.la \
     "

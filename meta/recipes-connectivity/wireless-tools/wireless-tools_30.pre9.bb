@@ -39,11 +39,8 @@ do_install() {
 	install -m 0755 ifrename ${D}${sbindir}/ifrename
 }
 
-PACKAGES = "libiw-dbg ifrename-dbg ${PN}-dbg \
-libiw libiw-dev libiw-doc ifrename-doc ifrename ${PN} ${PN}-doc"
+PACKAGES = "libiw libiw-dev libiw-doc ifrename-doc ifrename ${PN} ${PN}-doc ${PN}-dbg"
 
-FILES_libiw-dbg = "${libdir}/.debug/*.so.*"
-FILES_ifrename-dbg = "${sbindir}/.debug/ifrename"
 FILES_libiw = "${libdir}/*.so.*"
 FILES_libiw-dev = "${libdir}/*.a ${libdir}/*.so ${includedir}"
 FILES_libiw-doc = "${mandir}/man7"

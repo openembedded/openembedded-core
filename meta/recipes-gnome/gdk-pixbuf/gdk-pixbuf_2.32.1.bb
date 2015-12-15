@@ -58,12 +58,6 @@ FILES_${PN}-dev += " \
 	${libdir}/gdk-pixbuf-2.0/${LIBV}/loaders/*.la \
 "
 
-FILES_${PN}-dbg += " \
-	${libdir}/.debug/* \
-	${libdir}/gdk-pixbuf-2.0/.debug/* \
-	${libdir}/gdk-pixbuf-2.0/${LIBV}/loaders/.debug/* \
-"
-
 PACKAGES_DYNAMIC += "^gdk-pixbuf-loader-.*"
 PACKAGES_DYNAMIC_class-native = ""
 

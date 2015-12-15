@@ -28,8 +28,6 @@ do_configure_prepend() {
    fi
 }
 
-FILES_${PN}-dbg += "${libdir}/piglit/*/.debug/"
-
 RDEPENDS_${PN} = "waffle python python-mako python-json python-subprocess \
 	python-argparse python-importlib python-unixadmin \
 	python-multiprocessing python-textutils python-netserver python-shell \

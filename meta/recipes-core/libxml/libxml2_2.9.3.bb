@@ -62,7 +62,6 @@ python populate_packages_prepend () {
 
 PACKAGES += "${PN}-utils ${PN}-python"
 
-FILES_${PN}-dbg += "${PYTHON_SITEPACKAGES_DIR}/.debug"
 FILES_${PN}-staticdev += "${PYTHON_SITEPACKAGES_DIR}/*.a"
 FILES_${PN}-dev += "${libdir}/xml2Conf.sh ${libdir}/cmake/*"
 FILES_${PN}-utils += "${bindir}/*"

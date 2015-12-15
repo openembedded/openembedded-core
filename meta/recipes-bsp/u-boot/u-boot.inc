@@ -187,8 +187,6 @@ do_install () {
 }
 
 FILES_${PN} = "/boot ${sysconfdir}"
-# Ensure the split debug part of any elf files are put into dbg
-FILES_${PN}-dbg += "/boot/.debug"
 
 do_deploy () {
     if [ "x${UBOOT_CONFIG}" != "x" ]

@@ -36,8 +36,6 @@ PACKAGES =+ "${PN}-tc"
 FILES_${PN}-tc = "${base_sbindir}/tc* \
                   ${libdir}/tc/*.so"
 
-FILES_${PN}-dbg += "${libdir}/tc/.debug"
-
 ALTERNATIVE_${PN} = "ip"
 ALTERNATIVE_TARGET[ip] = "${base_sbindir}/ip.${BPN}"
 ALTERNATIVE_LINK_NAME[ip] = "${base_sbindir}/ip"

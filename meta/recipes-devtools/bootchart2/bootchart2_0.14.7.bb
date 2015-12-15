@@ -150,7 +150,6 @@ FILES_bootchartd-stop-initscript += "${sysconfdir}/init.d ${sysconfdir}/rc*.d"
 FILES_${PN} += "${base_libdir}/bootchart/bootchart-collector"
 FILES_${PN} += "${base_libdir}/bootchart/tmpfs"
 FILES_${PN} += "${libdir}"
-FILES_${PN}-dbg += "${base_libdir}/bootchart/.debug"
 FILES_${PN}-doc += "${datadir}/docs"
 
 RCONFLICTS_${PN} = "bootchart"

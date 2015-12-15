@@ -154,8 +154,6 @@ FILES_${PN} = "${bindir}/* ${sbindir}/* ${libexecdir}/* ${libdir}/lib*.so.* \
             ${base_bindir}/* ${base_sbindir}/* ${base_libdir}/*.so* ${datadir}/${PN} \
             ${datadir}/dbus-1/system-services/*"
 
-FILES_${PN}-dbg += "${libdir}/connman/*/.debug"
-
 FILES_${PN}-dev += "${libdir}/connman/*/*.la"
 
 PACKAGES =+ "${PN}-vpn"

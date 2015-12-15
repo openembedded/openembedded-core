@@ -50,8 +50,6 @@ do_install_append () {
 
 RDEPENDS_${PN} += "perl"
 
-FILES_${PN}-dbg += "${libdir}/${PN}/*/.debug/*"
-
 # valgrind needs debug information for ld.so at runtime in order to
 # redirect functions like strlen.
 RRECOMMENDS_${PN} += "${TCLIBC}-dbg"

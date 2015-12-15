@@ -25,6 +25,5 @@ EXTRA_OECONF = "--without-gnome-proxy"
 inherit gnomebase gettext upstream-version-is-even
 
 FILES_${PN} += "${libdir}/gio/modules/libgio*.so ${datadir}/dbus-1/services/"
-FILES_${PN}-dbg += "${libdir}/gio/modules/.debug/"
 FILES_${PN}-dev += "${libdir}/gio/modules/libgio*.la"
 FILES_${PN}-staticdev += "${libdir}/gio/modules/libgio*.a"

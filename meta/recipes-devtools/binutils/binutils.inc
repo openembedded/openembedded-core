@@ -61,8 +61,6 @@ python do_package_prepend() {
         d.setVarFlag('ALTERNATIVE_LINK_NAME', alt, bindir + "/" + alt)
 }
 
-# FILES_${PN}-dbg = "${prefix}/${TARGET_SYS}/bin/.debug ${prefix}/${libdir}/.debug"
-
 B = "${S}/build.${HOST_SYS}.${TARGET_SYS}"
 
 EXTRA_OECONF = "--program-prefix=${TARGET_PREFIX} \

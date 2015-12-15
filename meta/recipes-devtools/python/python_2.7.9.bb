@@ -151,9 +151,6 @@ RRECOMMENDS_${PN}-crypt = "openssl"
 PACKAGES =+ "lib${BPN}2"
 FILES_lib${BPN}2 = "${libdir}/libpython*.so.*"
 
-# catch debug extensions (isn't that already in python-core-dbg?)
-FILES_${PN}-dbg += "${libdir}/python${PYTHON_MAJMIN}/lib-dynload/.debug"
-
 # catch all the rest (unsorted)
 PACKAGES += "${PN}-misc"
 FILES_${PN}-misc = "${libdir}/python${PYTHON_MAJMIN}"

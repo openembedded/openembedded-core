@@ -21,7 +21,6 @@ do_configure_prepend() {
 }
 
 FILES_${PN} += "${datadir}/appdata ${datadir}/dbus-1 ${datadir}/gnome-shell/search-providers"
-FILES_${PN}-dbg += "${libdir}/epiphany/*/web-extensions/.debug/libephywebextension.so"
 RDEPENDS_${PN} = "iso-codes adwaita-icon-theme"
 RRECOMMENDS_${PN} = "ca-certificates"
 

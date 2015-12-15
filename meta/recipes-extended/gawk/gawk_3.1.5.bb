@@ -28,7 +28,6 @@ PACKAGES += "gawk-common pgawk"
 FILES_${PN} = "${bindir}/gawk* ${bindir}/igawk"
 FILES_gawk-common += "${datadir}/awk/* ${libdir}/gawk/awk/*"
 FILES_pgawk = "${bindir}/pgawk*"
-FILES_${PN}-dbg += "${libdir}/gawk/awk/.debug"
 
 ALTERNATIVE_${PN} = "awk"
 ALTERNATIVE_TARGET[awk] = "${bindir}/gawk"

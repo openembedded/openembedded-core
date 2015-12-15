@@ -17,7 +17,6 @@ RRECOMMENDS_${PN} = "kernel-module-x-tables \
                      kernel-module-nf-nat \
                      kernel-module-ipt-masquerade"
 FILES_${PN} =+ "${libdir}/xtables/ ${datadir}/xtables"
-FILES_${PN}-dbg =+ "${libdir}/xtables/.debug"
 
 SRC_URI = "http://netfilter.org/projects/iptables/files/iptables-${PV}.tar.bz2 \
            file://types.h-add-defines-that-are-required-for-if_packet.patch \

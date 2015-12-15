@@ -24,7 +24,6 @@ RDEPENDS_gtk-theme-clearlooks = "gtk-engine-clearlooks"
 
 FILES_${PN} = ""
 FILES_${PN}-dev += "${libdir}/gtk-2.0/*/engines/*.la"
-FILES_${PN}-dbg += "${libdir}/gtk-2.0/*/engines/.debug"
 FILES_${PN}-schemas = "${datadir}/gtk-engines/*.xml"
 
 CFLAGS_prepend = "-DHAVE_ANIMATION "

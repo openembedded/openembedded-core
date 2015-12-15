@@ -15,4 +15,3 @@ inherit autotools pkgconfig upstream-version-is-even
 
 FILES_${PN} += "${datadir}/${BPN}-${SHRT_VER}/vapi ${libdir}/${BPN}-${SHRT_VER}/"
 FILES_${PN}-doc += "${datadir}/devhelp"
-FILES_${PN}-dbg += "${libdir}/${BPN}-${SHRT_VER}/.debug"

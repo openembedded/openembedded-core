@@ -17,4 +17,4 @@ FILES_${PN}-dev += " \
     ${libdir}/pkcs11/p11-kit-trust.so \
 "
 FILES_${PN}-dev += "${libdir}/pkcs11/*.la"
-FILES_${PN}-dbg += "${libdir}/pkcs11/.debug"
+

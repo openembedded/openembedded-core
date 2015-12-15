@@ -25,10 +25,9 @@ EXTRA_OECONF = "--with-glib --with-freetype --with-cairo --without-graphite2"
 PACKAGECONFIG ??= "icu"
 PACKAGECONFIG[icu] = "--with-icu,--without-icu,icu"
 
-PACKAGES =+ "${PN}-icu ${PN}-icu-dbg ${PN}-icu-dev"
+PACKAGES =+ "${PN}-icu ${PN}-icu-dev"
 
 FILES_${PN}-icu = "${libdir}/libharfbuzz-icu.so.*"
-FILES_${PN}-icu-dbg = "${libdir}/.debug/libharfbuzz-icu.so*"
 FILES_${PN}-icu-dev = "${libdir}/libharfbuzz-icu.la \
                        ${libdir}/libharfbuzz-icu.so \
                        ${libdir}/pkgconfig/harfbuzz-icu.pc \

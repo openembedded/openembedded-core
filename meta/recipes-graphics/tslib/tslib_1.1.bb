@@ -46,7 +46,6 @@ DEBIAN_NOAUTONAME_tslib-calibrate = "1"
 RDEPENDS_${PN} = "tslib-conf"
 RRECOMMENDS_${PN} = "pointercal"
 
-FILES_${PN}-dbg += "${libdir}/ts/.debug*"
 FILES_${PN}-dev += "${libdir}/ts/*.la"
 FILES_tslib-conf = "${sysconfdir}/ts.conf ${sysconfdir}/profile.d/tslib.sh ${datadir}/tslib"
 FILES_${PN} = "${libdir}/*.so.* ${libdir}/ts/*.so*"

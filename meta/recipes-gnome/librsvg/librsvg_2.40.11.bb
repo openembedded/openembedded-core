@@ -38,7 +38,6 @@ do_install_append() {
 
 PACKAGES =+ "librsvg-gtk rsvg"
 FILES_${PN} = "${libdir}/*.so.*"
-FILES_${PN}-dbg += "${libdir}/gdk-pixbuf-2.0/*/loaders/.debug"
 FILES_rsvg = "${bindir}/rsvg* \
 	      ${datadir}/pixmaps/svg-viewer.svg \
 	      ${datadir}/themes"

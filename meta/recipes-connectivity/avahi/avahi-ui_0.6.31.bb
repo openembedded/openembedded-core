@@ -26,7 +26,6 @@ S = "${WORKDIR}/avahi-${PV}"
 PACKAGES = "${PN} ${PN}-utils ${PN}-dbg ${PN}-dev ${PN}-staticdev ${PN}-doc python-avahi avahi-discover avahi-discover-standalone"
 
 FILES_${PN} = "${libdir}/libavahi-ui*.so.*"
-FILES_${PN}-dbg += "${libdir}/.debug/libavah-ui*"
 FILES_${PN}-dev += "${libdir}/libavahi-ui${SOLIBSDEV}"
 FILES_${PN}-staticdev += "${libdir}/libavahi-ui.a"
 

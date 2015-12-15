@@ -54,7 +54,6 @@ FILES_${PN} += "${libdir}/GConf/* \
                 ${datadir}/dbus-1/services/*.service \
                 ${datadir}/dbus-1/system-services/*.service \
                "
-FILES_${PN}-dbg += "${libdir}/*/*/.debug"
 FILES_${PN}-dev += "${datadir}/sgml/gconf/gconf-1.0.dtd"
 
 BBCLASSEXTEND = "native"

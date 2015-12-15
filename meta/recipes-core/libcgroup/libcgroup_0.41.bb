@@ -21,7 +21,6 @@ EXTRA_OECONF = "${@bb.utils.contains('DISTRO_FEATURES', 'pam', '--enable-pam-mod
 
 PACKAGES =+ "cgroups-pam-plugin"
 FILES_cgroups-pam-plugin = "${base_libdir}/security/pam_cgroup.so*"
-FILES_${PN}-dbg += "${base_libdir}/security/.debug"
 FILES_${PN}-dev += "${base_libdir}/security/*.la"
 
 do_install_append() {

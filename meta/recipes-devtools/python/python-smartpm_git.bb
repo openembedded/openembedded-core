@@ -128,8 +128,6 @@ RDEPENDS_${PN}-interface-gtk = "gtk+ ${PN}-interface-images"
 
 FILES_smartpm = "${bindir}/smart"
 
-FILES_${PN}-dbg += "${libdir}/python*/site-packages/smart/backends/rpm/.debug"
-
 FILES_${PN}-backend-rpm = "${libdir}/python*/site-packages/smart/backends/rpm"
 
 FILES_${PN}-interface-qt4 = "${libdir}/python*/site-packages/smart/interfaces/qt4"

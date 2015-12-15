@@ -34,9 +34,4 @@ do_install() {
 FILES_${PN} += "${datadir}/rubygems \
                 ${datadir}/ri"
 
-FILES_${PN}-dbg += "${libdir}/ruby/*/.debug \
-                    ${libdir}/ruby/*/*/.debug \
-                    ${libdir}/ruby/*/*/*/.debug \
-                    ${libdir}/ruby/*/*/*/*/.debug"
-
 BBCLASSEXTEND = "native"

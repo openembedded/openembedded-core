@@ -58,10 +58,9 @@ DEPENDS = "gcc-runtime"
 
 BBCLASSEXTEND = "nativesdk"
 
-PACKAGES = "${PN}"
+PACKAGES = "${PN} ${PN}-dbg"
 PACKAGES += "libasan libubsan liblsan libtsan"
 PACKAGES += "libasan-dev libubsan-dev liblsan-dev libtsan-dev"
-PACKAGES += "libasan-dbg libubsan-dbg liblsan-dbg libtsan-dbg"
 PACKAGES += "libasan-staticdev libubsan-staticdev liblsan-staticdev libtsan-staticdev"
 
 RDEPENDS_libasan += "libstdc++"
@@ -84,7 +83,6 @@ do_package_write_rpm[depends] += "virtual/${MLPREFIX}${TARGET_PREFIX}compilerlib
 COMPATIBLE_HOST = '(x86_64|i.86|powerpc|arm).*-linux'
 
 FILES_libasan += "${libdir}/libasan.so.*"
-FILES_libasan-dbg += "${libdir}/.debug/libasan.so.*"
 FILES_libasan-dev += "\
     ${libdir}/libasan_preinit.o \
     ${libdir}/libasan.so \
@@ -93,7 +91,6 @@ FILES_libasan-dev += "\
 FILES_libasan-staticdev += "${libdir}/libasan.a"
 
 FILES_libubsan += "${libdir}/libubsan.so.*"
-FILES_libubsan-dbg += "${libdir}/.debug/libubsan.so.*"
 FILES_libubsan-dev += "\
     ${libdir}/libubsan.so \
     ${libdir}/libubsan.la \
@@ -101,7 +98,6 @@ FILES_libubsan-dev += "\
 FILES_libubsan-staticdev += "${libdir}/libubsan.a"
 
 FILES_liblsan += "${libdir}/liblsan.so.*"
-FILES_liblsan-dbg += "${libdir}/.debug/liblsan.so.*"
 FILES_liblsan-dev += "\
     ${libdir}/liblsan.so \
     ${libdir}/liblsan.la \
@@ -109,7 +105,6 @@ FILES_liblsan-dev += "\
 FILES_liblsan-staticdev += "${libdir}/liblsan.a"
 
 FILES_libtsan += "${libdir}/libtsan.so.*"
-FILES_libtsan-dbg += "${libdir}/.debug/libtsan.so.*"
 FILES_libtsan-dev += "\
     ${libdir}/libtsan.so \
     ${libdir}/libtsan.la \

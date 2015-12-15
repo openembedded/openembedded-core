@@ -220,7 +220,6 @@ FILES_${PN}-dev = "\
     ${libdir}/pkgconfig/* \
     ${includedir}/* \
     "
-# FILES_${PN}-dbg is populated automatically
 
 BBCLASSEXTEND = "native nativesdk"
 

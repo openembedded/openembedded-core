@@ -19,5 +19,4 @@ do_install() {
 	oe_runmake install_tests
 }
 
-FILES_${PN}-dbg += "${bindir}/tests_cryptodev/.debug"
 FILES_${PN} = "${bindir}/tests_cryptodev/*"
