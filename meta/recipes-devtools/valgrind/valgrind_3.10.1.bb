@@ -44,6 +44,8 @@ EXTRA_OECONF_armv7a = "--enable-tls -host=armv7-none-linux-gnueabi --without-mpi
 EXTRA_OECONF += "${@['--enable-only32bit','--enable-only64bit'][d.getVar('SITEINFO_BITS', True) != '32']}"
 EXTRA_OEMAKE = "-w"
 
+CFLAGS_append_libc-uclibc = " -D__UCLIBC__ "
+
 do_install_append () {
     install -m 644 ${B}/default.supp ${D}/${libdir}/valgrind/
 }
