@@ -2,11 +2,11 @@ SUMMARY = "A Pure Python Expect like Module for Python"
 HOMEPAGE = "http://pexpect.readthedocs.org/"
 SECTION = "devel/python"
 LICENSE = "ISC"
-LIC_FILES_CHKSUM = "file://LICENSE;md5=c25d9a0770ba69a9965acc894e9f3644"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=66c2378a96b307d56bfb3a9e58edafa8"
 
 SRC_URI = "https://pypi.python.org/packages/source/p/pexpect/pexpect-${PV}.tar.gz"
-SRC_URI[md5sum] = "0de72541d3f1374b795472fed841dce8"
-SRC_URI[sha256sum] = "dfea618d43e83cfff21504f18f98019ba520f330e4142e5185ef7c73527de5ba"
+SRC_URI[md5sum] = "056df81e6ca7081f1015b4b147b977b7"
+SRC_URI[sha256sum] = "232795ebcaaf2e120396dbbaa3a129eda51757eeaae1911558f4ef8ee414fc6c"
 
 UPSTREAM_CHECK_URI = "https://pypi.python.org/pypi/pexpect"
 
