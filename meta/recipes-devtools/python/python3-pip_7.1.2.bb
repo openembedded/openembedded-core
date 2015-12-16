@@ -10,8 +10,8 @@ DEPENDS += "python3 python3-setuptools-native"
 SRC_URI = " \
   http://pypi.python.org/packages/source/p/${SRCNAME}/${SRCNAME}-${PV}.tar.gz \
 "
-SRC_URI[md5sum] = "6b19e0a934d982a5a4b798e957cb6d45"
-SRC_URI[sha256sum] = "89f3b626d225e08e7f20d85044afa40f612eb3284484169813dc2d0631f2a556"
+SRC_URI[md5sum] = "3823d2343d9f3aaab21cf9c917710196"
+SRC_URI[sha256sum] = "ca047986f0528cfa975a14fb9f7f106271d4e0c3fe1ddced6c1db2e7ae57a477"
 
 UPSTREAM_CHECK_URI = "https://pypi.python.org/pypi/pip"
 
