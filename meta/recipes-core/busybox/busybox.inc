@@ -171,20 +171,20 @@ do_compile() {
 }
 
 do_install () {
-	if [ "${prefix}" != "/usr" ]; then
-		sed -i "s:^/usr/:${prefix}/:" busybox.links*
-	fi
-	if [ "${base_sbindir}" != "/sbin" ]; then
-		sed -i "s:^/sbin/:${base_sbindir}/:" busybox.links*
-	fi
-	if [ "${base_bindir}" != "/bin" ]; then
-		sed -i "s:^/bin/:${base_bindir}/:" busybox.links*
-	fi
+	sed -i "s:^/bin/:BASE_BINDIR/:" busybox.links*
+	sed -i "s:^/sbin/:BASE_SBINDIR/:" busybox.links*
+	sed -i "s:^/usr/bin/:BINDIR/:" busybox.links*
+	sed -i "s:^/usr/sbin/:SBINDIR/:" busybox.links*
+
+	sed -i "s:^BASE_BINDIR/:${base_bindir}/:" busybox.links*
+	sed -i "s:^BASE_SBINDIR/:${base_sbindir}/:" busybox.links*
+	sed -i "s:^BINDIR/:${bindir}/:" busybox.links*
+	sed -i "s:^SBINDIR/:${sbindir}/:" busybox.links*
 
 	install -d ${D}${sysconfdir}/init.d
 
 	if ! grep -q "CONFIG_FEATURE_INDIVIDUAL=y" ${B}/.config; then
-		# Install /bin/busybox, and the /bin/sh link so the postinst script
+		# Install ${base_bindir}/busybox, and the ${base_bindir}/sh link so the postinst script
 		# can run. Let update-alternatives handle the rest.
 		install -d ${D}${base_bindir}
 		if [ "${BUSYBOX_SPLIT_SUID}" = "1" ]; then
@@ -212,7 +212,7 @@ do_install () {
 			# We make this symlink here to eliminate the error when upgrading together
 			# with busybox-syslog. Without this symlink, the opkg may think of the
 			# busybox.nosuid as obsolete and remove it, resulting in dead links like
-			# /bin/sed -> /bin/busybox.nosuid. This will make upgrading busybox-syslog fail.
+			# ${base_bindir}/sed -> ${base_bindir}/busybox.nosuid. This will make upgrading busybox-syslog fail.
 			# This symlink will be safely deleted in postinst, thus no negative effect.
 			ln -sf busybox ${D}${base_bindir}/busybox.nosuid
 		fi
@@ -368,21 +368,10 @@ pkg_postinst_${PN} () {
 			if test -e ${sysconfdir}/busybox.links$suffix; then
 				while read link; do
 					if test ! -e "$link"; then
-						case "$link" in
-							/*/*/*)
-								to="../..${base_bindir}/busybox$suffix"
-								;;
-							/bin/*)
-								to="busybox$suffix"
-								;;
-							/*/*)
-								to="..${base_bindir}/busybox$suffix"
-								;;
-						esac
 						# we can use busybox here because even if we are using splitted busybox
 						# we've made a symlink from /bin/busybox to /bin/busybox.nosuid.
 						busybox rm -f $link
-						busybox ln -s $to $link
+						busybox ln -s "${base_bindir}/busybox$suffix" $link
 					fi
 				done < ${sysconfdir}/busybox.links$suffix
 			fi
