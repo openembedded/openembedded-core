@@ -1,4 +1,4 @@
-require cryptodev_${PV}.inc
+require cryptodev.inc
 
 SUMMARY = "A /dev/crypto device driver kernel module"
 
@@ -9,7 +9,6 @@ DEPENDS += "cryptodev-linux"
 
 SRC_URI += " \
 file://0001-Disable-installing-header-file-provided-by-another-p.patch \
-file://0001-ioctl.c-Fix-build-on-3.19.patch \
 "
 
 EXTRA_OEMAKE='KERNEL_DIR="${STAGING_KERNEL_DIR}" PREFIX="${D}"'

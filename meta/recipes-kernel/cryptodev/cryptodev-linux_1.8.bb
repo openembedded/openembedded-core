@@ -1,4 +1,4 @@
-require cryptodev_${PV}.inc
+require cryptodev.inc
 
 SUMMARY = "A /dev/crypto device driver header file"
 
