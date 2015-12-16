@@ -6,16 +6,16 @@ the file /etc/network/interfaces."
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f"
 
-SRC_URI = "http://archive.ubuntu.com/ubuntu/pool/main/i/ifupdown/ifupdown_0.7.48.1ubuntu5.tar.gz \
+SRC_URI = "git://anonscm.debian.org/git/collab-maint/ifupdown.git;protocol=https \
 	   file://defn2-c-man-don-t-rely-on-dpkg-architecture-to-set-a.patch \
 	   file://inet-6-.defn-fix-inverted-checks-for-loopback.patch \
 	   file://99_network \
 	  "
+SRCREV = "05ea2fd4f49bb1201aeef2a42efbcff8f336112f"
 
 EXTRA_OEMAKE = ""
 
-# needed so we don't get default S="${WORKDIR}/ifupdown-${PV}"
-S = "${WORKDIR}/ifupdown-${PV}ubuntu5"
+S = "${WORKDIR}/git"
 
 
 inherit update-rc.d update-alternatives
@@ -49,6 +49,3 @@ ALTERNATIVE_LINK_NAME[ifdown] = "${base_sbindir}/ifdown"
 
 INITSCRIPT_NAME = "ifup"
 INITSCRIPT_PARAMS = "start 39 S . stop 39 0 6 1 ."
-
-SRC_URI[md5sum] = "85ba375f3c6f26d34efb2a8575e77fc8"
-SRC_URI[sha256sum] = "08dce14692c07b72b583b86c4d3ace0d9dac1928925144cc3ddde15b694ebbdf"
