@@ -9,8 +9,8 @@ SRC_URI += "file://kexec-tools-Refine-kdump-device_tree-sort.patch \
             file://0001-purgatory-Pass-r-directly-to-linker.patch \
          "
 
-SRC_URI[md5sum] = "6cb4d22bcec71b6e070aa8e9d990a5e6"
-SRC_URI[sha256sum] = "c31bb83deef9547a28e8cfc1f0916e70f8e6b92a6bd2ef7077e12e3338239af3"
+SRC_URI[md5sum] = "86de066859f289048f1b286af6f03f78"
+SRC_URI[sha256sum] = "84f652ebf1de3f7b9de757a50cdbf6d5639d88c1d5b5ef9f525edde5ef9590c2"
 
 PACKAGES =+ "kexec kdump vmcore-dmesg"
 
