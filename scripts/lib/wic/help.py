@@ -617,7 +617,7 @@ DESCRIPTION
        This command creates a partition on the system and uses the
        following syntax:
 
-         part <mountpoint>
+         part [<mountpoint>]
 
        The <mountpoint> is where the partition will be mounted and
        must take of one of the following forms:
@@ -625,6 +625,9 @@ DESCRIPTION
          /<path>: For example: /, /usr, or /home
 
          swap: The partition will be used as swap space.
+
+       If a <mountpoint> is not specified the partition will be created
+       but will not be mounted.
 
        The following are supported 'part' options:
 
