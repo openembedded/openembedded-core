@@ -1,5 +1,4 @@
 BUILDSTATS_BASE = "${TMPDIR}/buildstats/"
-BUILDSTATS_BNFILE = "${BUILDSTATS_BASE}/.buildname"
 
 ################################################################################
 # Build statistics gathering.
@@ -20,20 +19,6 @@ def get_cputime():
     with open("/proc/stat", "r") as f:
         fields = f.readline().rstrip().split()[1:]
     return sum(int(field) for field in fields)
-
-def set_bn(e):
-    bn = e.getPkgs()[0] + "-" + e.data.getVar('MACHINE', True)
-    try:
-        os.remove(e.data.getVar('BUILDSTATS_BNFILE', True))
-    except:
-        pass
-    with open(e.data.getVar('BUILDSTATS_BNFILE', True), "w") as f:
-        f.write(os.path.join(bn, e.data.getVar('BUILDNAME', True)))
-
-def get_bn(e):
-    with open(e.data.getVar('BUILDSTATS_BNFILE', True)) as f:
-        bn = f.readline()
-    return bn
 
 def set_timedata(var, data, server_time=None):
     import time
@@ -65,7 +50,7 @@ def get_timedata(var, data, server_time=None):
     return timediff, cpuperc
 
 def write_task_data(status, logfile, e):
-    bn = get_bn(e)
+    bn = e.data.getVar('BUILDNAME', True)
     bsdir = os.path.join(e.data.getVar('BUILDSTATS_BASE', True), bn)
     with open(os.path.join(logfile), "a") as f:
         timedata = get_timedata("__timedata_task", e.data, e.time)
@@ -87,16 +72,15 @@ python run_buildstats () {
     import bb.data
     import time, subprocess, platform
 
+    bn = e.data.getVar('BUILDNAME', True)
+    bsdir = os.path.join(e.data.getVar('BUILDSTATS_BASE', True), bn)
+    taskdir = os.path.join(bsdir, e.data.getVar('PF', True))
+
     if isinstance(e, bb.event.BuildStarted):
         ########################################################################
         # at first pass make the buildstats heriarchy and then
         # set the buildname
         ########################################################################
-        bb.utils.mkdirhier(e.data.getVar('BUILDSTATS_BASE', True))
-        set_bn(e)
-        bn = get_bn(e)
-
-        bsdir = os.path.join(e.data.getVar('BUILDSTATS_BASE', True), bn)
         bb.utils.mkdirhier(bsdir)
         set_timedata("__timedata_build", e.data)
         build_time = os.path.join(bsdir, "build_stats")
@@ -111,8 +95,6 @@ python run_buildstats () {
             f.write("Build Started: %0.2f \n" % time.time())
 
     elif isinstance(e, bb.event.BuildCompleted):
-        bn = get_bn(e)
-        bsdir = os.path.join(e.data.getVar('BUILDSTATS_BASE', True), bn)
         build_time = os.path.join(bsdir, "build_stats")
         with open(build_time, "a") as f:
             ########################################################################
@@ -127,9 +109,6 @@ python run_buildstats () {
                     f.write("CPU usage: %0.1f%% \n" % cpu)
 
     if isinstance(e, bb.build.TaskStarted):
-        bn = get_bn(e)
-        bsdir = os.path.join(e.data.getVar('BUILDSTATS_BASE', True), bn)
-        taskdir = os.path.join(bsdir, e.data.getVar('PF', True))
         set_timedata("__timedata_task", e.data, e.time)
         bb.utils.mkdirhier(taskdir)
         # write into the task event file the name and start time
@@ -138,9 +117,6 @@ python run_buildstats () {
             f.write("Started: %0.2f \n" % e.time)
 
     elif isinstance(e, bb.build.TaskSucceeded):
-        bn = get_bn(e)
-        bsdir = os.path.join(e.data.getVar('BUILDSTATS_BASE', True), bn)
-        taskdir = os.path.join(bsdir, e.data.getVar('PF', True))
         write_task_data("passed", os.path.join(taskdir, e.task), e)
         if e.task == "do_rootfs":
             bs = os.path.join(bsdir, "build_stats")
@@ -150,9 +126,6 @@ python run_buildstats () {
                 f.write("Uncompressed Rootfs size: %s" % rootfs_size)
 
     elif isinstance(e, bb.build.TaskFailed):
-        bn = get_bn(e)
-        bsdir = os.path.join(e.data.getVar('BUILDSTATS_BASE', True), bn)
-        taskdir = os.path.join(bsdir, e.data.getVar('PF', True))
         write_task_data("failed", os.path.join(taskdir, e.task), e)
         ########################################################################
         # Lets make things easier and tell people where the build failed in
