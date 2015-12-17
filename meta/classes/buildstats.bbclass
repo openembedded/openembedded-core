@@ -20,17 +20,33 @@ def get_cputime():
         fields = f.readline().rstrip().split()[1:]
     return sum(int(field) for field in fields)
 
-def set_timedata(var, d, server_time=None):
-    import time
-    if server_time:
-        time = server_time
+def set_timedata(var, d, server_time):
+    cputime = get_cputime()
+    proctime = get_process_cputime(os.getpid())
+    d.setVar(var, (server_time, cputime, proctime))
+
+def get_timedata(var, d, end_time):
+    timedata = d.getVar(var, False)
+    if timedata is None:
+        return
+    oldtime, oldcpu, oldproc = timedata
+    procdiff = get_process_cputime(os.getpid()) - oldproc
+    cpudiff = get_cputime() - oldcpu
+    timediff = end_time - oldtime
+    if cpudiff > 0:
+        cpuperc = float(procdiff) * 100 / cpudiff
     else:
-        time = time.time()
+        cpuperc = None
+    return timediff, cpuperc
+
+def set_buildtimedata(var, d):
+    import time
+    time = time.time()
     cputime = get_cputime()
     proctime = get_process_cputime(os.getpid())
     d.setVar(var, (time, cputime, proctime))
 
-def get_timedata(var, d, server_time=None):
+def get_buildtimedata(var, d):
     import time
     timedata = d.getVar(var, False)
     if timedata is None:
@@ -38,10 +54,7 @@ def get_timedata(var, d, server_time=None):
     oldtime, oldcpu, oldproc = timedata
     procdiff = get_process_cputime(os.getpid()) - oldproc
     cpudiff = get_cputime() - oldcpu
-    if server_time:
-        end_time = server_time
-    else:
-        end_time = time.time()
+    end_time = time.time()
     timediff = end_time - oldtime
     if cpudiff > 0:
         cpuperc = float(procdiff) * 100 / cpudiff
@@ -81,7 +94,7 @@ python run_buildstats () {
         # set the buildname
         ########################################################################
         bb.utils.mkdirhier(bsdir)
-        set_timedata("__timedata_build", d)
+        set_buildtimedata("__timedata_build", d)
         build_time = os.path.join(bsdir, "build_stats")
         # write start of build into build_time
         with open(build_time, "a") as f:
@@ -99,7 +112,7 @@ python run_buildstats () {
             ########################################################################
             # Write build statistics for the build
             ########################################################################
-            timedata = get_timedata("__timedata_build", d)
+            timedata = get_buildtimedata("__timedata_build", d)
             if timedata:
                 time, cpu = timedata
                 # write end of build and cpu used into build_time
