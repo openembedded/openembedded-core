@@ -1,6 +1,5 @@
 BUILDSTATS_BASE = "${TMPDIR}/buildstats/"
 BUILDSTATS_BNFILE = "${BUILDSTATS_BASE}/.buildname"
-BUILDSTATS_DEVFILE = "${BUILDSTATS_BASE}/.device"
 
 ################################################################################
 # Build statistics gathering.
@@ -36,78 +35,6 @@ def get_bn(e):
         bn = f.readline()
     return bn
 
-def set_device(e):
-    tmpdir = e.data.getVar('TMPDIR', True)
-    devfile = e.data.getVar('BUILDSTATS_DEVFILE', True)
-    try:
-        os.remove(devfile)
-    except:
-        pass
-    ############################################################################
-    # We look for the volume TMPDIR lives on. To do all disks would make little
-    # sense and not give us any particularly useful data. In theory we could do
-    # something like stick DL_DIR on a different partition and this would
-    # throw stats gathering off. The same goes with SSTATE_DIR. However, let's
-    # get the basics in here and work on the cornercases later.
-    # A note. /proc/diskstats does not contain info on encryptfs, tmpfs, etc.
-    # If we end up hitting one of these fs, we'll just skip diskstats collection.
-    ############################################################################
-    device = os.stat(tmpdir)
-    majordev = os.major(long(device.st_dev))
-    minordev = os.minor(long(device.st_dev))
-    ############################################################################
-    # Bug 1700:
-    # Because tmpfs/encryptfs/ramfs etc inserts no entry in /proc/diskstats
-    # we set rdev to NoLogicalDevice and search for it later. If we find NLD
-    # we do not collect diskstats as the method to collect meaningful statistics
-    # for these fs types requires a bit more research.
-    ############################################################################
-    rdev = "NoLogicalDevice"
-    try:
-        with open("/proc/diskstats", "r") as f:
-            for line in f:
-                if majordev == int(line.split()[0]) and minordev == int(line.split()[1]):
-                    rdev = line.split()[2]
-    except:
-        pass
-    with open(devfile, "w") as f:
-        f.write(rdev)
-
-def get_device(e):
-    with open(e.data.getVar('BUILDSTATS_DEVFILE', True)) as f:
-        device = f.readline()
-    return device
-
-def get_diskstats(dev):
-    import itertools
-    ############################################################################
-    # For info on what these are, see kernel doc file iostats.txt
-    ############################################################################
-    DSTAT_KEYS = ['ReadsComp', 'ReadsMerged', 'SectRead', 'TimeReads', 'WritesComp', 'SectWrite', 'TimeWrite', 'IOinProgress', 'TimeIO', 'WTimeIO']
-    try:
-        with open("/proc/diskstats", "r") as f:
-            for x in f:
-                if dev in x:
-                    diskstats_val = x.rstrip().split()[4:]
-    except IOError as e:
-        return
-    diskstats = dict(itertools.izip(DSTAT_KEYS, diskstats_val))
-    return diskstats
-
-def set_diskdata(var, dev, data):
-    data.setVar(var, get_diskstats(dev))
-
-def get_diskdata(var, dev, data):
-    olddiskdata = data.getVar(var, False)
-    diskdata = {}
-    if olddiskdata is None:
-        return
-    newdiskdata = get_diskstats(dev)
-    for key in olddiskdata.iterkeys():
-        diskdata["Start"+key] = str(int(olddiskdata[key]))
-        diskdata["End"+key] = str(int(newdiskdata[key]))
-    return diskdata
-
 def set_timedata(var, data, server_time=None):
     import time
     if server_time:
@@ -137,7 +64,7 @@ def get_timedata(var, data, server_time=None):
         cpuperc = None
     return timediff, cpuperc
 
-def write_task_data(status, logfile, dev, e):
+def write_task_data(status, logfile, e):
     bn = get_bn(e)
     bsdir = os.path.join(e.data.getVar('BUILDSTATS_BASE', True), bn)
     with open(os.path.join(logfile), "a") as f:
@@ -148,19 +75,6 @@ def write_task_data(status, logfile, dev, e):
                                     (e.task, elapsedtime), e.data))
             if cpu:
                 f.write("CPU usage: %0.1f%% \n" % cpu)
-        ############################################################################
-        # Here we gather up disk data. In an effort to avoid lying with stats
-        # I do a bare minimum of analysis of collected data.
-        # The simple fact is, doing disk io collection on a per process basis
-        # without effecting build time would be difficult.
-        # For the best information, running things with BB_TOTAL_THREADS = "1"
-        # would return accurate per task results.
-        ############################################################################
-        if dev != "NoLogicalDevice":
-            diskdata = get_diskdata("__diskdata_task", dev, e.data)
-            if diskdata:
-                for key in sorted(diskdata.iterkeys()):
-                    f.write(key + ": " + diskdata[key] + "\n")
         if status is "passed":
             f.write("Status: PASSED \n")
         else:
@@ -181,13 +95,9 @@ python run_buildstats () {
         bb.utils.mkdirhier(e.data.getVar('BUILDSTATS_BASE', True))
         set_bn(e)
         bn = get_bn(e)
-        set_device(e)
-        device = get_device(e)
 
         bsdir = os.path.join(e.data.getVar('BUILDSTATS_BASE', True), bn)
         bb.utils.mkdirhier(bsdir)
-        if device != "NoLogicalDevice":
-            set_diskdata("__diskdata_build", device, e.data)
         set_timedata("__timedata_build", e.data)
         build_time = os.path.join(bsdir, "build_stats")
         # write start of build into build_time
@@ -202,7 +112,6 @@ python run_buildstats () {
 
     elif isinstance(e, bb.event.BuildCompleted):
         bn = get_bn(e)
-        device = get_device(e)
         bsdir = os.path.join(e.data.getVar('BUILDSTATS_BASE', True), bn)
         build_time = os.path.join(bsdir, "build_stats")
         with open(build_time, "a") as f:
@@ -216,19 +125,11 @@ python run_buildstats () {
                 f.write("Elapsed time: %0.2f seconds \n" % (time))
                 if cpu:
                     f.write("CPU usage: %0.1f%% \n" % cpu)
-            if device != "NoLogicalDevice":
-                diskio = get_diskdata("__diskdata_build", device, e.data)
-                if diskio:
-                    for key in sorted(diskio.iterkeys()):
-                        f.write(key + ": " + diskio[key] + "\n")
 
     if isinstance(e, bb.build.TaskStarted):
         bn = get_bn(e)
-        device = get_device(e)
         bsdir = os.path.join(e.data.getVar('BUILDSTATS_BASE', True), bn)
         taskdir = os.path.join(bsdir, e.data.getVar('PF', True))
-        if device != "NoLogicalDevice":
-            set_diskdata("__diskdata_task", device, e.data)
         set_timedata("__timedata_task", e.data, e.time)
         bb.utils.mkdirhier(taskdir)
         # write into the task event file the name and start time
@@ -238,10 +139,9 @@ python run_buildstats () {
 
     elif isinstance(e, bb.build.TaskSucceeded):
         bn = get_bn(e)
-        device = get_device(e)
         bsdir = os.path.join(e.data.getVar('BUILDSTATS_BASE', True), bn)
         taskdir = os.path.join(bsdir, e.data.getVar('PF', True))
-        write_task_data("passed", os.path.join(taskdir, e.task), device, e)
+        write_task_data("passed", os.path.join(taskdir, e.task), e)
         if e.task == "do_rootfs":
             bs = os.path.join(bsdir, "build_stats")
             with open(bs, "a") as f:
@@ -251,10 +151,9 @@ python run_buildstats () {
 
     elif isinstance(e, bb.build.TaskFailed):
         bn = get_bn(e)
-        device = get_device(e)
         bsdir = os.path.join(e.data.getVar('BUILDSTATS_BASE', True), bn)
         taskdir = os.path.join(bsdir, e.data.getVar('PF', True))
-        write_task_data("failed", os.path.join(taskdir, e.task), device, e)
+        write_task_data("failed", os.path.join(taskdir, e.task), e)
         ########################################################################
         # Lets make things easier and tell people where the build failed in
         # build_status. We do this here because BuildCompleted triggers no
