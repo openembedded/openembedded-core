@@ -662,7 +662,14 @@ def action_update(conf, args):
             patch_cmd_range = "%s..%s" % (repo['last_revision'], top_revision)
             rev_cmd_range = patch_cmd_range
 
-        file_filter = repo.get('file_filter',"")
+        file_filter = repo.get('file_filter',".")
+
+        # Filter out unwanted files
+        exclude = repo.get('file_exclude', '')
+        if exclude:
+            for path in exclude.split():
+                p = "%s/%s" % (dest_dir, path) if dest_dir != '.' else path
+                file_filter += " ':!%s'" % p
 
         patch_cmd = "git format-patch -N %s --output-directory %s %s -- %s" % \
             (prefix,repo_patch_dir, patch_cmd_range, file_filter)
@@ -680,38 +687,6 @@ def action_update(conf, args):
             for patch in patchlist:
                 runcmd("%s %s %s %s" % (repo['hook'], patch, revlist[count], name))
                 count=count-1
-
-        # Step 3a: Filter out unwanted files and patches.
-        exclude = repo.get('file_exclude', '')
-        if exclude:
-            filter = ['filterdiff', '-p1']
-            for path in exclude.split():
-                filter.append('-x')
-                filter.append('%s/%s' % (dest_dir, path) if dest_dir != '.' else path)
-            for patch in patchlist[:]:
-                filtered = patch + '.tmp'
-                with open(filtered, 'w') as f:
-                    runcmd(filter + [patch], out=f)
-                # Now check for empty patches.
-                if runcmd(['filterdiff', '--list', filtered]):
-                    # Possibly modified.
-                    os.unlink(patch)
-                    os.rename(filtered, patch)
-                else:
-                    # Empty, ignore it. Must also remove from revlist.
-                    with open(patch, 'r') as f:
-                        fromline = f.readline()
-                    if not fromline:
-                        # Patch must have been empty to start with. No need
-                        # to remove it.
-                        continue
-                    m = re.match(r'''^From ([0-9a-fA-F]+) .*\n''', fromline)
-                    rev = m.group(1)
-                    logger.debug('skipping empty patch %s = %s' % (patch, rev))
-                    os.unlink(patch)
-                    os.unlink(filtered)
-                    patchlist.remove(patch)
-                    revlist.remove(rev)
 
         # Step 4: write patch list and revision list to file, for user to edit later
         patchlist_file = os.path.join(os.getcwd(), patch_dir, "patchlist-%s" % name)
