@@ -2,6 +2,7 @@ SUMMARY = "GNU Transport Layer Security Library"
 HOMEPAGE = "http://www.gnu.org/software/gnutls/"
 BUGTRACKER = "https://savannah.gnu.org/support/?group=gnutls"
 DEPENDS = "nettle libidn"
+DEPENDS_append_libc-musl = " argp-standalone "
 
 LICENSE = "GPLv3+ & LGPLv2.1+"
 LICENSE_${PN} = "LGPLv2.1+"
@@ -28,6 +29,7 @@ EXTRA_OECONF="--disable-rpath \
               --without-p11-kit \
               --enable-openssl-compatibility \
               "
+LDFLAGS_append_libc-musl = " -largp "
 
 do_configure_prepend() {
 	for dir in . lib; do
