@@ -14,17 +14,13 @@ PE = "1"
 SRC_URI = "http://downloads.yoctoproject.org/releases/${BPN}/${BPN}-${PV}.tar.gz \
            file://opkg-configure.service \
            file://opkg.conf \
-           file://0001-opkg_archive-add-support-for-empty-compressed-files.patch \
-           file://0001-libopkg-include-stdio.h-for-getting-FILE-defined.patch \
            file://0001-opkg_conf-create-opkg.lock-in-run-instead-of-var-run.patch \
-           file://0001-string_util-New-file-with-bin_to_hex-function.patch \
-           file://0002-md5-Add-md5_to_string-function.patch \
-           file://0003-sha256-Add-sha256_to_string-function.patch \
-           file://0004-opkg_download-Use-short-cache-file-name.patch \
+           file://0001-libsolv_solver_set_arch_policy-use-correct-logic-dur.patch \
+           file://0001-configure.ac-use-pkg-config-for-libsolv.patch \
 "
 
-SRC_URI[md5sum] = "3412cdc71d78b98facc84b19331ec64e"
-SRC_URI[sha256sum] = "7f735d1cdb8ef3718fb0f9fba44ca0d9a5c90d3a7f014f37a6d2f9474f54988f"
+SRC_URI[md5sum] = "43735e5dc1ebf46bd6ce56a7cdfdc720"
+SRC_URI[sha256sum] = "d2c6c02a8384ec21168a1f0a186cb5e9f577d1452f491d02ed3e56b2ea8b87df"
 
 inherit autotools pkgconfig systemd
 
@@ -41,6 +37,7 @@ PACKAGECONFIG[ssl-curl] = "--enable-ssl-curl,--disable-ssl-curl,curl openssl"
 PACKAGECONFIG[openssl] = "--enable-openssl,--disable-openssl,openssl"
 PACKAGECONFIG[sha256] = "--enable-sha256,--disable-sha256"
 PACKAGECONFIG[pathfinder] = "--enable-pathfinder,--disable-pathfinder,pathfinder"
+PACKAGECONFIG[libsolv] = "--enable-solver=libsolv,--disable-solver,libsolv"
 
 do_install_append () {
 	install -d ${D}${sysconfdir}/opkg
