@@ -4,6 +4,8 @@ LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda
 
 inherit allarch
 
+PR = "r1"
+
 python() {
     # Put the package somewhere separate to ensure it's never used except
     # when we want it
