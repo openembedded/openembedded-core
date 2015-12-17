@@ -25,3 +25,5 @@ SRC_URI_append_class-target = "\
 SRC_URI[md5sum] = "c4a2d71ff56aec5ebfab2a3f059be99d"
 SRC_URI[sha256sum] = "3a64e9105c734dcf631c0b3ed60404531bce6c0f5a64bfe1a6402a4cc2314816"
 
+UPSTREAM_CHECK_REGEX = "(?P<pver>\d+(\.\d+)+)/"
+UPSTREAM_CHECK_URI = "http://download.icu-project.org/files/icu4c/"
