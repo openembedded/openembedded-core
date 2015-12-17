@@ -19,13 +19,12 @@ PE = "1"
 
 IWMMXT = "--disable-arm-iwmmxt"
 LOONGSON_MMI = "--disable-loongson-mmi"
-NEON = " --disable-arm-neon "
-NEON_class-nativesdk = " --disable-arm-neon "
-NEON_armv7a = " "
-NEON_armv7a-vfp-neon = " "
+# If target supports neon then disable the 'simd' (ie VFPv2) fallback, otherwise disable neon.
+NEON = "${@bb.utils.contains("TUNE_FEATURES", "neon", "--disable-arm-simd", "--disable-arm-neon" ,d)}"
 
 EXTRA_OECONF = "--disable-gtk ${IWMMXT} ${LOONGSON_MMI} ${NEON}"
 EXTRA_OECONF_class-native = "--disable-gtk"
+EXTRA_OECONF_class-nativesdk = "--disable-gtk"
 
 SRC_URI += "\
             file://0001-ARM-qemu-related-workarounds-in-cpu-features-detecti.patch \
