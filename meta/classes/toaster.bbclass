@@ -199,8 +199,6 @@ python toaster_collect_task_stats() {
     def _read_stats(filename):
         cpu_usage = 0
         disk_io = 0
-        startio = '0'
-        endio = '0'
         started = '0'
         ended = '0'
         pn = ''
@@ -215,19 +213,17 @@ python toaster_collect_task_stats() {
         if "CPU usage" in statinfo:
             cpu_usage = str(statinfo["CPU usage"]).strip('% \n\r')
 
-        if "EndTimeIO" in statinfo:
-            endio = str(statinfo["EndTimeIO"]).strip('% \n\r')
+        if "IO write_bytes" in statinfo:
+            disk_io = disk_io + str(statinfo["IO write_bytes"]).strip('% \n\r')
 
-        if "StartTimeIO" in statinfo:
-            startio = str(statinfo["StartTimeIO"]).strip('% \n\r')
+        if "IO read_bytes" in statinfo:
+            disk_io = disk_io + str(statinfo["IO read_bytes"]).strip('% \n\r')
 
         if "Started" in statinfo:
             started = str(statinfo["Started"]).strip('% \n\r')
 
         if "Ended" in statinfo:
             ended = str(statinfo["Ended"]).strip('% \n\r')
-
-        disk_io = int(endio) - int(startio)
 
         elapsed_time = float(ended) - float(started)
 
