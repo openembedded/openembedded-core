@@ -13,8 +13,8 @@ DEPENDS = "libgpg-error"
 SRC_URI = "ftp://ftp.gnupg.org/gcrypt/libassuan/libassuan-${PV}.tar.bz2 \
 	   file://libassuan-add-pkgconfig-support.patch"
 
-SRC_URI[md5sum] = "6290e750ee87be3bfd9579fc44c6a186"
-SRC_URI[sha256sum] = "949285bb79345362cb72a40c798defefc007031c60f2f10251720bf60a9de2de"
+SRC_URI[md5sum] = "70151995c2330ae1261c0a7ca34cf478"
+SRC_URI[sha256sum] = "bb06dc81380b74bf1b64d5849be5c0409a336f3b4c45f20ac688e86d1b5bcb20"
 
 BINCONFIG = "${bindir}/libassuan-config"
 
