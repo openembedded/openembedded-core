@@ -22,7 +22,8 @@ class ImageFeatures(oeSelfTest):
         AutomatedBy: Daniel Istrate <daniel.alexandrux.istrate@intel.com>
         """
 
-        features = 'EXTRA_IMAGE_FEATURES = "ssh-server-openssh empty-root-password allow-empty-password"\n'
+        features = 'MACHINE = "qemux86"\n'
+        features += 'EXTRA_IMAGE_FEATURES = "ssh-server-openssh empty-root-password allow-empty-password"\n'
         features += 'INHERIT += "extrausers"\n'
         features += 'EXTRA_USERS_PARAMS = "useradd -p \'\' {}; usermod -s /bin/sh {};"'.format(self.test_user, self.test_user)
         self.write_config(features)
@@ -48,7 +49,8 @@ class ImageFeatures(oeSelfTest):
         AutomatedBy: Daniel Istrate <daniel.alexandrux.istrate@intel.com>
         """
 
-        features = 'EXTRA_IMAGE_FEATURES = "ssh-server-openssh allow-empty-password"\n'
+        features = 'MACHINE = "qemux86"\n'
+        features += 'EXTRA_IMAGE_FEATURES = "ssh-server-openssh allow-empty-password"\n'
         features += 'INHERIT += "extrausers"\n'
         features += 'EXTRA_USERS_PARAMS = "useradd -p \'\' {}; usermod -s /bin/sh {};"'.format(self.test_user, self.test_user)
         self.write_config(features)
@@ -77,7 +79,8 @@ class ImageFeatures(oeSelfTest):
         AutomatedBy: Daniel Istrate <daniel.alexandrux.istrate@intel.com>
         """
 
-        features = 'PREFERRED_VERSION_rpm = "4.%"\n'
+        features = 'MACHINE = "qemux86"\n'
+        features += 'PREFERRED_VERSION_rpm = "4.%"\n'
         features += 'PREFERRED_VERSION_rpm-native = "4.%"\n'
         # Use openssh in IMAGE_INSTALL instead of ssh-server-openssh in EXTRA_IMAGE_FEATURES as a workaround for bug 8047
         features += 'IMAGE_INSTALL_append = " openssh"\n'
