@@ -189,9 +189,7 @@ python toaster_collect_task_stats() {
         lock = bb.utils.lockfile(e.data.expand("${TOPDIR}/toaster.lock"), False, True)
 
         with open(os.path.join(e.data.getVar('BUILDSTATS_BASE', True), "toasterstatlist"), "a") as fout:
-            bn = get_bn(e)
-            bsdir = os.path.join(e.data.getVar('BUILDSTATS_BASE', True), bn)
-            taskdir = os.path.join(bsdir, e.data.expand("${PF}"))
+            taskdir = e.data.expand("${BUILDSTATS_BASE}/${BUILDNAME}/${PF}")
             fout.write("%s::%s::%s::%s\n" % (e.taskfile, e.taskname, os.path.join(taskdir, e.task), e.data.expand("${PN}")))
 
         bb.utils.unlockfile(lock)
