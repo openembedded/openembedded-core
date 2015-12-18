@@ -329,6 +329,7 @@ def check_sanity_validmachine(sanity_data):
     # Check that we don't have duplicate entries in PACKAGE_ARCHS & that TUNE_PKGARCH is in PACKAGE_ARCHS
     pkgarchs = sanity_data.getVar('PACKAGE_ARCHS', True)
     tunepkg = sanity_data.getVar('TUNE_PKGARCH', True)
+    defaulttune = sanity_data.getVar('DEFAULTTUNE', True)
     tunefound = False
     seen = {}
     dups = []
@@ -345,7 +346,7 @@ def check_sanity_validmachine(sanity_data):
         messages = messages + "Error, the PACKAGE_ARCHS variable contains duplicates. The following archs are listed more than once: %s" % " ".join(dups)
 
     if tunefound == False:
-        messages = messages + "Error, the PACKAGE_ARCHS variable does not contain TUNE_PKGARCH (%s)." % tunepkg
+        messages = messages + "Error, the PACKAGE_ARCHS variable (%s) for DEFAULTTUNE (%s) does not contain TUNE_PKGARCH (%s)." % (pkgarchs, defaulttune, tunepkg)
 
     return messages
 
