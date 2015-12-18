@@ -110,30 +110,26 @@ def update_useradd_static_config(d):
                             uaargs.groupname = uaargs.LOGIN if user_group else uaargs.gid
                             uaargs.groupid = field[3] or uaargs.gid or uaargs.groupname
 
-                            if not uaargs.gid or uaargs.gid != uaargs.groupid:
-                                if (uaargs.groupid and uaargs.groupid.isdigit()) and (uaargs.groupname and uaargs.groupname.isdigit()) and (uaargs.groupid != uaargs.groupname):
+                            if uaargs.groupid and uaargs.gid != uaargs.groupid:
+                                newgroup = None
+                                if not uaargs.groupid.isdigit():
+                                    # We don't have a group number, so we have to add a name
+                                    bb.debug(1, "Adding group %s!" % uaargs.groupid)
+                                    newgroup = "%s %s" % (' --system' if uaargs.system else '', uaargs.groupid)
+                                elif uaargs.groupname and not uaargs.groupname.isdigit():
+                                    # We have a group name and a group number to assign it to
+                                    bb.debug(1, "Adding group %s (gid %s)!" % (uaargs.groupname, uaargs.groupid))
+                                    newgroup = "-g %s %s" % (uaargs.groupid, uaargs.groupname)
+                                else:
                                     # We want to add a group, but we don't know it's name... so we can't add the group...
                                     # We have to assume the group has previously been added or we'll fail on the adduser...
                                     # Note: specifying the actual gid is very rare in OE, usually the group name is specified.
-                                    bb.warn("%s: Changing gid for login %s from (%s) to (%s), verify configuration files!" % (d.getVar('PN', True), uaargs.LOGIN, uaargs.groupname, uaargs.gid))
-                                elif (uaargs.groupid and not uaargs.groupid.isdigit()) and uaargs.groupid == uaargs.groupname:
-                                    # We don't have a number, so we have to add a name
-                                    bb.debug(1, "Adding group %s!" % (uaargs.groupname))
-                                    uaargs.gid = uaargs.groupid
-                                    uaargs.user_group = None
+                                    bb.warn("%s: Changing gid for login %s to %s, verify configuration files!" % (d.getVar('PN', True), uaargs.LOGIN, uaargs.groupid))
+
+                                uaargs.gid = uaargs.groupid
+                                uaargs.user_group = None
+                                if newgroup:
                                     groupadd = d.getVar("GROUPADD_PARAM_%s" % pkg, True)
-                                    newgroup = "%s %s" % (' --system' if uaargs.system else '', uaargs.groupname)
-                                    if groupadd:
-                                        d.setVar("GROUPADD_PARAM_%s" % pkg, "%s ; %s" % (groupadd, newgroup))
-                                    else:
-                                        d.setVar("GROUPADD_PARAM_%s" % pkg, newgroup)
-                                elif uaargs.groupname and (uaargs.groupid and uaargs.groupid.isdigit()):
-                                    # We have a group name and a group number to assign it to
-                                    bb.debug(1, "Adding group %s  gid (%s)!" % (uaargs.groupname, uaargs.groupid))
-                                    uaargs.gid = uaargs.groupid
-                                    uaargs.user_group = None
-                                    groupadd = d.getVar("GROUPADD_PARAM_%s" % pkg, True)
-                                    newgroup = "-g %s %s" % (uaargs.gid, uaargs.groupname)
                                     if groupadd:
                                         d.setVar("GROUPADD_PARAM_%s" % pkg, "%s ; %s" % (groupadd, newgroup))
                                     else:
