@@ -8,8 +8,8 @@ DEPENDS = "glib-2.0 libgcrypt gettext-native intltool-native"
 
 EXTRA_OECONF += "--disable-manpages"
 
-SRC_URI[archive.md5sum] = "23cdf8267d11a26f88f0dbec1e2022ad"
-SRC_URI[archive.sha256sum] = "12fd288b012e1b2b1b54d586cd4c6507885715534644b4534b7ef7d7079ba443"
+SRC_URI[archive.md5sum] = "a21605644a64883ab685aec50d63253e"
+SRC_URI[archive.sha256sum] = "f2bf1d0c5ab4640664f3e3c7ef6b086c180e50ff415720b5e22f96750dbf84c9"
 
 # http://errors.yoctoproject.org/Errors/Details/20228/
 ARM_INSTRUCTION_SET = "arm"
