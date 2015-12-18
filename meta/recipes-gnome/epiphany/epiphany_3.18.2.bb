@@ -10,8 +10,8 @@ inherit gnomebase gsettings distro_features_check upstream-version-is-even
 REQUIRED_DISTRO_FEATURES = "x11"
 
 SRC_URI += "file://0001-yelp.m4-drop-the-check-for-itstool.patch"
-SRC_URI[archive.md5sum] = "3296af4532b8019775f4b40d21a341ae"
-SRC_URI[archive.sha256sum] = "d527f1770779ec22d955aeb13b148a846a26144e433ff0480c981af80e2390b1"
+SRC_URI[archive.md5sum] = "ede1e5e7e420a2f4c6231d185a94250f"
+SRC_URI[archive.sha256sum] = "8436170731966bb40b7d8e29dbedfa5d5ddbf78572cf5fd51fce1ac6da5da6c2"
 
 EXTRA_OECONF += " --disable-nss --with-distributor-name=${DISTRO}"
 
