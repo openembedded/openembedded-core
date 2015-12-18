@@ -559,7 +559,7 @@ def _extract_source(srctree, keep_temp, devbranch, sync, d):
             # Store generate and store kernel config
             logger.info('Generating kernel config')
             task_executor.exec_func('do_configure', False)
-            kconfig = os.path.join(d.getVar('B', True), '.config')
+            kconfig = os.path.join(crd.getVar('B', True), '.config')
             shutil.copy2(kconfig, srcsubdir)
 
 
