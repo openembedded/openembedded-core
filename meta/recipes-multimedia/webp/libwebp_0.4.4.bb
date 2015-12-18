@@ -11,11 +11,11 @@ SECTION = "libs"
 
 LICENSE = "BSD"
 LIC_FILES_CHKSUM = "file://COPYING;md5=6e8dee932c26f2dab503abf70c96d8bb \
-                    file://PATENTS;md5=ad2580aee35468675c44d7bebba65ca8"
+                    file://PATENTS;md5=c6926d0cb07d296f886ab6e0cc5a85b7"
 
 SRC_URI = "http://downloads.webmproject.org/releases/webp/${BP}.tar.gz"
-SRC_URI[md5sum] = "08813525eeeffe7e305b4cbfade8ae9b"
-SRC_URI[sha256sum] = "efbe0d58fda936f2ed99d0b837ed7087d064d6838931f282c4618d2a3f7390c4"
+SRC_URI[md5sum] = "b737062cf688e502b940b460ddc3015f"
+SRC_URI[sha256sum] = "c65d34edb57338e331ba4d622227a2b3179444cfca17d02c34f1ead63f603e86"
 
 UPSTREAM_CHECK_URI = "http://downloads.webmproject.org/releases/webp/index.html"
 
