@@ -37,21 +37,21 @@ def update_useradd_static_config(d):
         parser.add_argument("-k", "--skel", metavar="SKEL_DIR", help="use this alternative skeleton directory")
         parser.add_argument("-K", "--key", metavar="KEY=VALUE", help="override /etc/login.defs defaults")
         parser.add_argument("-l", "--no-log-init", help="do not add the user to the lastlog and faillog databases", action="store_true")
-        parser.add_argument("-m", "--create-home", help="create the user's home directory", action="store_true")
-        parser.add_argument("-M", "--no-create-home", help="do not create the user's home directory", action="store_true")
-        parser.add_argument("-N", "--no-user-group", help="do not create a group with the same name as the user", action="store_true")
+        parser.add_argument("-m", "--create-home", help="create the user's home directory", action="store_const", const=True)
+        parser.add_argument("-M", "--no-create-home", dest="create_home", help="do not create the user's home directory", action="store_const", const=False)
+        parser.add_argument("-N", "--no-user-group", dest="user_group", help="do not create a group with the same name as the user", action="store_const", const=False)
         parser.add_argument("-o", "--non-unique", help="allow to create users with duplicate (non-unique UID)", action="store_true")
         parser.add_argument("-p", "--password", metavar="PASSWORD", help="encrypted password of the new account")
         parser.add_argument("-R", "--root", metavar="CHROOT_DIR", help="directory to chroot into")
         parser.add_argument("-r", "--system", help="create a system account", action="store_true")
         parser.add_argument("-s", "--shell", metavar="SHELL", help="login shell of the new account")
         parser.add_argument("-u", "--uid", metavar="UID", help="user ID of the new account")
-        parser.add_argument("-U", "--user-group", help="create a group with the same name as the user", action="store_true")
+        parser.add_argument("-U", "--user-group", help="create a group with the same name as the user", action="store_const", const=True)
         parser.add_argument("LOGIN", help="Login name of the new user")
 
         # Return a list of configuration files based on either the default
         # files/passwd or the contents of USERADD_UID_TABLES
-        # paths are resulved via BBPATH
+        # paths are resolved via BBPATH
         def get_passwd_list(d):
             str = ""
             bbpath = d.getVar('BBPATH', True)
@@ -106,7 +106,8 @@ def update_useradd_static_config(d):
                             # So if the implicit username-group creation is on, then the implicit groupname (LOGIN)
                             # is used, and we disable the user_group option.
                             #
-                            uaargs.groupname = [uaargs.gid, uaargs.LOGIN][not uaargs.gid or uaargs.user_group]
+                            user_group = uaargs.user_group is None or uaargs.user_group is True
+                            uaargs.groupname = [uaargs.gid, uaargs.LOGIN][not uaargs.gid or user_group]
                             uaargs.groupid = [uaargs.gid, uaargs.groupname][not uaargs.gid]
                             uaargs.groupid = [field[3], uaargs.groupid][not field[3]]
 
@@ -120,7 +121,7 @@ def update_useradd_static_config(d):
                                     # We don't have a number, so we have to add a name
                                     bb.debug(1, "Adding group %s!" % (uaargs.groupname))
                                     uaargs.gid = uaargs.groupid
-                                    uaargs.user_group = False
+                                    uaargs.user_group = None
                                     groupadd = d.getVar("GROUPADD_PARAM_%s" % pkg, True)
                                     newgroup = "%s %s" % (['', ' --system'][uaargs.system], uaargs.groupname)
                                     if groupadd:
@@ -131,7 +132,7 @@ def update_useradd_static_config(d):
                                     # We have a group name and a group number to assign it to
                                     bb.debug(1, "Adding group %s  gid (%s)!" % (uaargs.groupname, uaargs.groupid))
                                     uaargs.gid = uaargs.groupid
-                                    uaargs.user_group = False
+                                    uaargs.user_group = None
                                     groupadd = d.getVar("GROUPADD_PARAM_%s" % pkg, True)
                                     newgroup = "-g %s %s" % (uaargs.gid, uaargs.groupname)
                                     if groupadd:
@@ -161,16 +162,16 @@ def update_useradd_static_config(d):
             newparam += ['', ' --skel %s' % uaargs.skel][uaargs.skel != None]
             newparam += ['', ' --key %s' % uaargs.key][uaargs.key != None]
             newparam += ['', ' --no-log-init'][uaargs.no_log_init]
-            newparam += ['', ' --create-home'][uaargs.create_home]
-            newparam += ['', ' --no-create-home'][uaargs.no_create_home]
-            newparam += ['', ' --no-user-group'][uaargs.no_user_group]
+            newparam += ['', ' --create-home'][uaargs.create_home is True]
+            newparam += ['', ' --no-create-home'][uaargs.create_home is False]
+            newparam += ['', ' --no-user-group'][uaargs.user_group is False]
             newparam += ['', ' --non-unique'][uaargs.non_unique]
             newparam += ['', ' --password %s' % uaargs.password][uaargs.password != None]
             newparam += ['', ' --root %s' % uaargs.root][uaargs.root != None]
             newparam += ['', ' --system'][uaargs.system]
             newparam += ['', ' --shell %s' % uaargs.shell][uaargs.shell != None]
             newparam += ['', ' --uid %s' % uaargs.uid][uaargs.uid != None]
-            newparam += ['', ' --user-group'][uaargs.user_group]
+            newparam += ['', ' --user-group'][uaargs.user_group is True]
             newparam += ' %s' % uaargs.LOGIN
 
             newparams.append(newparam)
@@ -192,7 +193,7 @@ def update_useradd_static_config(d):
 
         # Return a list of configuration files based on either the default
         # files/group or the contents of USERADD_GID_TABLES
-        # paths are resulved via BBPATH
+        # paths are resolved via BBPATH
         def get_group_list(d):
             str = ""
             bbpath = d.getVar('BBPATH', True)
