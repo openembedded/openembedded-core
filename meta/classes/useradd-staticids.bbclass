@@ -97,7 +97,7 @@ def update_useradd_static_config(d):
                         if field[0] == uaargs.LOGIN:
                             if uaargs.uid and field[2] and (uaargs.uid != field[2]):
                                 bb.warn("%s: Changing username %s's uid from (%s) to (%s), verify configuration files!" % (d.getVar('PN', True), uaargs.LOGIN, uaargs.uid, field[2]))
-                            uaargs.uid = [field[2], uaargs.uid][not field[2]]
+                            uaargs.uid = field[2] or uaargs.uid
 
                             # Determine the possible groupname
                             # Unless the group name (or gid) is specified, we assume that the LOGIN is the groupname
@@ -107,9 +107,8 @@ def update_useradd_static_config(d):
                             # is used, and we disable the user_group option.
                             #
                             user_group = uaargs.user_group is None or uaargs.user_group is True
-                            uaargs.groupname = [uaargs.LOGIN, uaargs.gid][not user_group]
-                            uaargs.groupid = [uaargs.gid, uaargs.groupname][not uaargs.gid]
-                            uaargs.groupid = [field[3], uaargs.groupid][not field[3]]
+                            uaargs.groupname = uaargs.LOGIN if user_group else uaargs.gid
+                            uaargs.groupid = field[3] or uaargs.gid or uaargs.groupname
 
                             if not uaargs.gid or uaargs.gid != uaargs.groupid:
                                 if (uaargs.groupid and uaargs.groupid.isdigit()) and (uaargs.groupname and uaargs.groupname.isdigit()) and (uaargs.groupid != uaargs.groupname):
@@ -123,7 +122,7 @@ def update_useradd_static_config(d):
                                     uaargs.gid = uaargs.groupid
                                     uaargs.user_group = None
                                     groupadd = d.getVar("GROUPADD_PARAM_%s" % pkg, True)
-                                    newgroup = "%s %s" % (['', ' --system'][uaargs.system], uaargs.groupname)
+                                    newgroup = "%s %s" % (' --system' if uaargs.system else '', uaargs.groupname)
                                     if groupadd:
                                         d.setVar("GROUPADD_PARAM_%s" % pkg, "%s ; %s" % (groupadd, newgroup))
                                     else:
@@ -140,9 +139,9 @@ def update_useradd_static_config(d):
                                     else:
                                         d.setVar("GROUPADD_PARAM_%s" % pkg, newgroup)
 
-                            uaargs.comment = ["'%s'" % field[4], uaargs.comment][not field[4]]
-                            uaargs.home_dir = [field[5], uaargs.home_dir][not field[5]]
-                            uaargs.shell = [field[6], uaargs.shell][not field[6]]
+                            uaargs.comment = "'%s'" % field[4] if field[4] else uaargs.comment
+                            uaargs.home_dir = field[5] or uaargs.home_dir
+                            uaargs.shell = field[6] or uaargs.shell
                             break
 
             # Should be an error if a specific option is set...
