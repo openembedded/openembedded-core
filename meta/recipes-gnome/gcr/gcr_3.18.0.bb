@@ -11,8 +11,8 @@ inherit autotools gnomebase gtk-icon-cache gtk-doc distro_features_check
 # depends on gtk+3, but also x11 through gtk+-x11
 REQUIRED_DISTRO_FEATURES = "x11"
 
-SRC_URI[archive.md5sum] = "d5835680be0b6a838e02a528d5378d9c"
-SRC_URI[archive.sha256sum] = "ecfe8df41cc88158364bb15addc670b11e539fe844742983629ba2323888d075"
+SRC_URI[archive.md5sum] = "b959bac99e17c9bb0990a15c9be11aed"
+SRC_URI[archive.sha256sum] = "d4d16da5af55148a694055835ccd07ad34daf0ad03bdad929bf7cad15637ce00"
 
 FILES_${PN} += " \
     ${datadir}/dbus-1 \
