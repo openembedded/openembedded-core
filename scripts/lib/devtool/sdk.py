@@ -132,7 +132,10 @@ def sdk_update(args, config, basepath, workspace):
         new_layers_dir = os.path.join(args.updateserver, 'layers')
         old_layers_dir = os.path.join(basepath, 'layers')
         shutil.rmtree(old_layers_dir)
-        shutil.copytree(new_layers_dir, old_layers_dir)
+        ret = subprocess.call("cp -a %s %s" % (new_layers_dir, old_layers_dir), shell=True)
+        if ret != 0:
+            logger.error("Copying %s to %s failed" % (new_layers_dir, old_layers_dir))
+            return ret
     else:
         # devtool sdk-update http://myhost/sdk
         tmpsdk_dir = '/tmp/sdk-ext'
