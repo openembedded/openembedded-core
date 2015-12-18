@@ -152,7 +152,7 @@ def update_useradd_static_config(d):
                 if newgroup:
                     groupadd = d.getVar("GROUPADD_PARAM_%s" % pkg, True)
                     if groupadd:
-                        d.setVar("GROUPADD_PARAM_%s" % pkg, "%s ; %s" % (groupadd, newgroup))
+                        d.setVar("GROUPADD_PARAM_%s" % pkg, "%s; %s" % (groupadd, newgroup))
                     else:
                         d.setVar("GROUPADD_PARAM_%s" % pkg, newgroup)
 
@@ -191,7 +191,7 @@ def update_useradd_static_config(d):
 
             newparams.append(newparam)
 
-        return " ;".join(newparams).strip()
+        return ";".join(newparams).strip()
 
     # We parse and rewrite the groupadd components
     def rewrite_groupadd(params):
@@ -269,7 +269,7 @@ def update_useradd_static_config(d):
 
             newparams.append(newparam)
 
-        return " ;".join(newparams).strip()
+        return ";".join(newparams).strip()
 
     # Load and process the users and groups, rewriting the adduser/addgroup params
     useradd_packages = d.getVar('USERADD_PACKAGES', True)
