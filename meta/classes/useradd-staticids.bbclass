@@ -107,7 +107,7 @@ def update_useradd_static_config(d):
                             # is used, and we disable the user_group option.
                             #
                             user_group = uaargs.user_group is None or uaargs.user_group is True
-                            uaargs.groupname = [uaargs.gid, uaargs.LOGIN][not uaargs.gid or user_group]
+                            uaargs.groupname = [uaargs.LOGIN, uaargs.gid][not user_group]
                             uaargs.groupid = [uaargs.gid, uaargs.groupname][not uaargs.gid]
                             uaargs.groupid = [field[3], uaargs.groupid][not field[3]]
 
