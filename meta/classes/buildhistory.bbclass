@@ -11,8 +11,9 @@ BUILDHISTORY_FEATURES ?= "image package sdk"
 BUILDHISTORY_DIR ?= "${TOPDIR}/buildhistory"
 BUILDHISTORY_DIR_IMAGE = "${BUILDHISTORY_DIR}/images/${MACHINE_ARCH}/${TCLIBC}/${IMAGE_BASENAME}"
 BUILDHISTORY_DIR_PACKAGE = "${BUILDHISTORY_DIR}/packages/${MULTIMACH_TARGET_SYS}/${PN}"
-BUILDHISTORY_DIR_SDK = "${BUILDHISTORY_DIR}/sdk/${SDK_NAME}/${IMAGE_BASENAME}"
+BUILDHISTORY_DIR_SDK = "${BUILDHISTORY_DIR}/sdk/${SDK_NAME}${SDK_EXT}/${IMAGE_BASENAME}"
 BUILDHISTORY_IMAGE_FILES ?= "/etc/passwd /etc/group"
+BUILDHISTORY_SDK_FILES ?= "conf/local.conf conf/locked-sigs.inc conf/devtool.conf"
 BUILDHISTORY_COMMIT ?= "0"
 BUILDHISTORY_COMMIT_AUTHOR ?= "buildhistory <buildhistory@${DISTRO}>"
 BUILDHISTORY_PUSH_REPO ?= ""
@@ -510,6 +511,15 @@ buildhistory_get_sdkinfo() {
 
 	buildhistory_list_files ${SDK_OUTPUT} ${BUILDHISTORY_DIR_SDK}/files-in-sdk.txt
 
+	# Collect files requested in BUILDHISTORY_SDK_FILES
+	rm -rf ${BUILDHISTORY_DIR_SDK}/sdk-files
+	for f in ${BUILDHISTORY_SDK_FILES}; do
+		if [ -f ${SDK_OUTPUT}/${SDKPATH}/$f ] ; then
+			mkdir -p ${BUILDHISTORY_DIR_SDK}/sdk-files/`dirname $f`
+			cp ${SDK_OUTPUT}/${SDKPATH}/$f ${BUILDHISTORY_DIR_SDK}/sdk-files/$f
+		fi
+	done
+
 	# Record some machine-readable meta-information about the SDK
 	printf ""  > ${BUILDHISTORY_DIR_SDK}/sdk-info.txt
 	cat >> ${BUILDHISTORY_DIR_SDK}/sdk-info.txt <<END
@@ -517,6 +527,29 @@ ${@buildhistory_get_sdkvars(d)}
 END
 	sdksize=`du -ks ${SDK_OUTPUT} | awk '{ print $1 }'`
 	echo "SDKSIZE = $sdksize" >> ${BUILDHISTORY_DIR_SDK}/sdk-info.txt
+}
+
+python buildhistory_get_extra_sdkinfo() {
+    import operator
+    if d.getVar('BB_CURRENTTASK', True) == 'populate_sdk_ext':
+        tasksizes = {}
+        filesizes = {}
+        for root, _, files in os.walk('${SDK_OUTPUT}/${SDKPATH}/sstate-cache'):
+            for fn in files:
+                if fn.endswith('.tgz'):
+                    fsize = os.path.getsize(os.path.join(root, fn))
+                    task = fn.rsplit(':', 1)[1].split('_', 1)[1].split('.')[0]
+                    origtotal = tasksizes.get(task, 0)
+                    tasksizes[task] = origtotal + fsize
+                    filesizes[fn] = fsize
+        with open('${BUILDHISTORY_DIR_SDK}/sstate-package-sizes.txt', 'w') as f:
+            filesizes_sorted = sorted(filesizes.items(), key=operator.itemgetter(1), reverse=True)
+            for fn, size in filesizes_sorted:
+                f.write('%10d KiB %s\n' % (size, fn))
+        with open('${BUILDHISTORY_DIR_SDK}/sstate-task-sizes.txt', 'w') as f:
+            tasksizes_sorted = sorted(tasksizes.items(), key=operator.itemgetter(1), reverse=True)
+            for task, size in tasksizes_sorted:
+                f.write('%10d KiB %s\n' % (size, task))
 }
 
 # By using ROOTFS_POSTUNINSTALL_COMMAND we get in after uninstallation of
@@ -532,7 +565,7 @@ POPULATE_SDK_POST_TARGET_COMMAND_append = " buildhistory_list_installed_sdk_targ
 POPULATE_SDK_POST_HOST_COMMAND_append = " buildhistory_list_installed_sdk_host ;\
                                           buildhistory_get_sdk_installed_host ; "
 
-SDK_POSTPROCESS_COMMAND_append = " buildhistory_get_sdkinfo ; "
+SDK_POSTPROCESS_COMMAND_append = " buildhistory_get_sdkinfo ; buildhistory_get_extra_sdkinfo; "
 
 def buildhistory_get_build_id(d):
     if d.getVar('BB_WORKERCONTEXT', True) != '1':
@@ -584,7 +617,9 @@ def buildhistory_get_sdkvars(d):
     if d.getVar('BB_WORKERCONTEXT', True) != '1':
         return ""
     sdkvars = "DISTRO DISTRO_VERSION SDK_NAME SDK_VERSION SDKMACHINE SDKIMAGE_FEATURES BAD_RECOMMENDATIONS NO_RECOMMENDATIONS PACKAGE_EXCLUDE"
-    listvars = "SDKIMAGE_FEATURES BAD_RECOMMENDATIONS PACKAGE_EXCLUDE"
+    if d.getVar('BB_CURRENTTASK', True) == 'populate_sdk_ext':
+        sdkvars += " SDK_LOCAL_CONF_WHITELIST SDK_LOCAL_CONF_BLACKLIST SDK_INHERIT_BLACKLIST SDK_UPDATE_URL"
+    listvars = "SDKIMAGE_FEATURES BAD_RECOMMENDATIONS PACKAGE_EXCLUDE SDK_LOCAL_CONF_WHITELIST SDK_LOCAL_CONF_BLACKLIST SDK_INHERIT_BLACKLIST"
     return outputvars(sdkvars, listvars, d)
 
 
