@@ -8,7 +8,7 @@ DEPENDS = "ncurses-native"
 DEPENDS_class-native = ""
 INC_PR = "r15"
 
-BINCONFIG = "${bindir}/ncurses-config"
+BINCONFIG = "${bindir}/ncurses5-config ${bindir}/ncursesw5-config"
 
 inherit autotools binconfig-disabled multilib_header pkgconfig
 
