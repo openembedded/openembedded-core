@@ -11,7 +11,7 @@ SRC_URI += "file://get-caps-from-src-pad-when-query-caps.patch \
             file://encodebin-Need-more-buffers-in-output-queue-for-bett.patch \
 "
 
-SRC_URI[md5sum] = "a89933afbe45d8f8c92d89c2f1199ecb"
-SRC_URI[sha256sum] = "9533dcfaa4ee32d435483d9fa88c06b1eba6e9bb234aacd7583f207199f44ba3"
+SRC_URI[md5sum] = "f530fbbe287edce79c55a37bd1a39fe2"
+SRC_URI[sha256sum] = "c75dd400e451526ed71e1c4955e33d470a2581f5e71ecf84920a41c0a5c75322"
 
 S = "${WORKDIR}/gst-plugins-base-${PV}"
