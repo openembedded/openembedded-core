@@ -6,15 +6,11 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=441c28d2cf86e15a37fa47e15a72fbac \
 SRC_URI += "file://configure-fix-Darwin-target-detection.patch \
             file://qemu-enlarge-env-entry-size.patch \
             file://Qemu-Arm-versatilepb-Add-memory-size-checking.patch \
-            file://smc91c111_fix1.patch \
-            file://smc91c111_fix2.patch \
-            file://smc91c111_fix3.patch \
             file://no-valgrind.patch \
-            file://trace-remove-malloc-tracing.patch \
            "
 SRC_URI_prepend = "http://wiki.qemu-project.org/download/${BP}.tar.bz2"
-SRC_URI[md5sum] = "c99445164e77184a9ba2e7dbf7ed5c29"
-SRC_URI[sha256sum] = "ecfe8b88037e41e817d72c460c56c6a0b573d540d6ba38b162d0de4fd22d1bdb"
+SRC_URI[md5sum] = "f469f2330bbe76e3e39db10e9ac4f8db"
+SRC_URI[sha256sum] = "3443887401619fe33bfa5d900a4f2d6a79425ae2b7e43d5b8c36eb7a683772d4"
 
 COMPATIBLE_HOST_class-target_mips64 = "null"
 
