@@ -230,7 +230,8 @@ python base_eventhandler() {
                     statuslines.extend(flines)
 
         statusheader = e.data.getVar('BUILDCFG_HEADER', True)
-        bb.plain('\n%s\n%s\n' % (statusheader, '\n'.join(statuslines)))
+        if statusheader:
+            bb.plain('\n%s\n%s\n' % (statusheader, '\n'.join(statuslines)))
 
     # This code is to silence warnings where the SDK variables overwrite the 
     # target ones and we'd see dulpicate key names overwriting each other
