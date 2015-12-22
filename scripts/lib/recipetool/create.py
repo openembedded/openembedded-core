@@ -251,10 +251,22 @@ def create_recipe(args):
         lines_after.append('')
 
     # Find all plugins that want to register handlers
-    handlers = []
+    logger.debug('Loading recipe handlers')
+    raw_handlers = []
     for plugin in plugins:
         if hasattr(plugin, 'register_recipe_handlers'):
-            plugin.register_recipe_handlers(handlers)
+            plugin.register_recipe_handlers(raw_handlers)
+    # Sort handlers by priority
+    handlers = []
+    for i, handler in enumerate(raw_handlers):
+        if isinstance(handler, tuple):
+            handlers.append((handler[0], handler[1], i))
+        else:
+            handlers.append((handler, 0, i))
+    handlers.sort(key=lambda item: (item[1], -item[2]), reverse=True)
+    for handler, priority, _ in handlers:
+        logger.debug('Handler: %s (priority %d)' % (handler.__class__.__name__, priority))
+    handlers = [item[0] for item in handlers]
 
     # Apply the handlers
     classes = []
