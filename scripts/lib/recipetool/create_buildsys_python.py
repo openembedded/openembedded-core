@@ -278,7 +278,10 @@ class PythonRecipeHandler(RecipeHandler):
             for k in sorted(bbinfo):
                 v = bbinfo[k]
                 mdinfo.append('{} = "{}"'.format(k, v))
-            lines_before[src_uri_line-1:src_uri_line-1] = mdinfo
+            if src_uri_line:
+                lines_before[src_uri_line-1:src_uri_line-1] = mdinfo
+            else:
+                lines_before.extend(mdinfo)
 
         mapped_deps, unmapped_deps = self.scan_setup_python_deps(srctree, setup_info, setup_non_literals)
 
