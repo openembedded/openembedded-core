@@ -108,6 +108,11 @@ def create_recipe(args):
             # Assume the archive contains the directory structure verbatim
             # so we need to extract to a subdirectory
             fetchuri += ';subdir=%s' % os.path.splitext(os.path.basename(urlparse.urlsplit(fetchuri).path))[0]
+        git_re = re.compile('(https?)://([^;]+\.git)(;.*)?')
+        res = git_re.match(fetchuri)
+        if res:
+            # Need to switch the URI around so that the git fetcher is used
+            fetchuri = 'git://%s;protocol=%s%s' % (res.group(2), res.group(1), res.group(3) or '')
         srcuri = fetchuri
         rev_re = re.compile(';rev=([^;]+)')
         res = rev_re.search(srcuri)
