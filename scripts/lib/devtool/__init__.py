@@ -22,6 +22,7 @@ import os
 import sys
 import subprocess
 import logging
+import re
 
 logger = logging.getLogger('devtool')
 
@@ -199,3 +200,17 @@ def setup_git_repo(repodir, version, devbranch, basetag='devtool-base'):
 
     bb.process.run('git checkout -b %s' % devbranch, cwd=repodir)
     bb.process.run('git tag -f %s' % basetag, cwd=repodir)
+
+def recipe_to_append(recipefile, config, wildcard=False):
+    """
+    Convert a recipe file to a bbappend file path within the workspace.
+    NOTE: if the bbappend already exists, you should be using
+    workspace[args.recipename]['bbappend'] instead of calling this
+    function.
+    """
+    appendname = os.path.splitext(os.path.basename(recipefile))[0]
+    if wildcard:
+        appendname = re.sub(r'_.*', '_%', appendname)
+    appendpath = os.path.join(config.workspace_path, 'appends')
+    appendfile = os.path.join(appendpath, appendname + '.bbappend')
+    return appendfile

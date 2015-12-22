@@ -26,7 +26,7 @@ import argparse
 import scriptutils
 import errno
 from collections import OrderedDict
-from devtool import exec_build_env_command, setup_tinfoil, check_workspace_recipe, use_external_build, setup_git_repo, DevtoolError
+from devtool import exec_build_env_command, setup_tinfoil, check_workspace_recipe, use_external_build, setup_git_repo, recipe_to_append, DevtoolError
 from devtool import parse_recipe
 
 logger = logging.getLogger('devtool')
@@ -63,10 +63,6 @@ def add(args, config, basepath, workspace):
     elif not args.fetch:
         raise DevtoolError("Specified source tree %s could not be found" %
                            srctree)
-
-    appendpath = os.path.join(config.workspace_path, 'appends')
-    if not os.path.exists(appendpath):
-        os.makedirs(appendpath)
 
     recipedir = os.path.join(config.workspace_path, 'recipes', args.recipename)
     bb.utils.mkdirhier(recipedir)
@@ -121,7 +117,8 @@ def add(args, config, basepath, workspace):
     if not rd:
         return 1
 
-    appendfile = os.path.join(appendpath, '%s.bbappend' % bp)
+    appendfile = recipe_to_append(recipefile, config)
+    bb.utils.mkdirhier(os.path.dirname(appendfile))
     with open(appendfile, 'w') as f:
         f.write('inherit externalsrc\n')
         f.write('EXTERNALSRC = "%s"\n' % srctree)
@@ -584,11 +581,7 @@ def modify(args, config, basepath, workspace):
                            pn)
 
     recipefile = rd.getVar('FILE', True)
-    appendname = os.path.splitext(os.path.basename(recipefile))[0]
-    if args.wildcard:
-        appendname = re.sub(r'_.*', '_%', appendname)
-    appendpath = os.path.join(config.workspace_path, 'appends')
-    appendfile = os.path.join(appendpath, appendname + '.bbappend')
+    appendfile = recipe_to_append(recipefile, config, args.wildcard)
     if os.path.exists(appendfile):
         raise DevtoolError("Another variant of recipe %s is already in your "
                            "workspace (only one variant of a recipe can "
@@ -632,8 +625,7 @@ def modify(args, config, basepath, workspace):
         srcsubdir = os.path.relpath(s, workdir).split(os.sep, 1)[1]
         srctree = os.path.join(srctree, srcsubdir)
 
-    if not os.path.exists(appendpath):
-        os.makedirs(appendpath)
+    bb.utils.mkdirhier(os.path.dirname(appendfile))
     with open(appendfile, 'w') as f:
         f.write('FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"\n')
         # Local files can be modified/tracked in separate subdir under srctree
