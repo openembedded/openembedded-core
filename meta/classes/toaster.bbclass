@@ -212,10 +212,10 @@ python toaster_collect_task_stats() {
             cpu_usage = str(statinfo["CPU usage"]).strip('% \n\r')
 
         if "IO write_bytes" in statinfo:
-            disk_io = disk_io + str(statinfo["IO write_bytes"]).strip('% \n\r')
+            disk_io = disk_io + int(statinfo["IO write_bytes"].strip('% \n\r'))
 
         if "IO read_bytes" in statinfo:
-            disk_io = disk_io + str(statinfo["IO read_bytes"]).strip('% \n\r')
+            disk_io = disk_io + int(statinfo["IO read_bytes"].strip('% \n\r'))
 
         if "Started" in statinfo:
             started = str(statinfo["Started"]).strip('% \n\r')
