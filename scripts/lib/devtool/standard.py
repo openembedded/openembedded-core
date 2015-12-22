@@ -644,10 +644,15 @@ def modify(args, config, basepath, workspace):
         raise DevtoolError("recipe %s is already in your workspace" %
                            args.recipename)
 
-    if not args.extract and not os.path.isdir(args.srctree):
+    if args.srctree:
+        srctree = os.path.abspath(args.srctree)
+    else:
+        srctree = get_default_srctree(config, args.recipename)
+
+    if not args.extract and not os.path.isdir(srctree):
         raise DevtoolError("directory %s does not exist or not a directory "
                            "(specify -x to extract source from recipe)" %
-                           args.srctree)
+                           srctree)
     if args.extract:
         tinfoil = _prep_extract_operation(config, basepath, args.recipename)
         if not tinfoil:
@@ -679,29 +684,28 @@ def modify(args, config, basepath, workspace):
 
     initial_rev = None
     commits = []
-    srctree = os.path.abspath(args.srctree)
     if args.extract:
-        initial_rev = _extract_source(args.srctree, False, args.branch, False, rd)
+        initial_rev = _extract_source(srctree, False, args.branch, False, rd)
         if not initial_rev:
             return 1
         logger.info('Source tree extracted to %s' % srctree)
         # Get list of commits since this revision
-        (stdout, _) = bb.process.run('git rev-list --reverse %s..HEAD' % initial_rev, cwd=args.srctree)
+        (stdout, _) = bb.process.run('git rev-list --reverse %s..HEAD' % initial_rev, cwd=srctree)
         commits = stdout.split()
     else:
-        if os.path.exists(os.path.join(args.srctree, '.git')):
+        if os.path.exists(os.path.join(srctree, '.git')):
             # Check if it's a tree previously extracted by us
             try:
-                (stdout, _) = bb.process.run('git branch --contains devtool-base', cwd=args.srctree)
+                (stdout, _) = bb.process.run('git branch --contains devtool-base', cwd=srctree)
             except bb.process.ExecutionError:
                 stdout = ''
             for line in stdout.splitlines():
                 if line.startswith('*'):
-                    (stdout, _) = bb.process.run('git rev-parse devtool-base', cwd=args.srctree)
+                    (stdout, _) = bb.process.run('git rev-parse devtool-base', cwd=srctree)
                     initial_rev = stdout.rstrip()
             if not initial_rev:
                 # Otherwise, just grab the head revision
-                (stdout, _) = bb.process.run('git rev-parse HEAD', cwd=args.srctree)
+                (stdout, _) = bb.process.run('git rev-parse HEAD', cwd=srctree)
                 initial_rev = stdout.rstrip()
 
     # Check that recipe isn't using a shared workdir
@@ -1282,9 +1286,9 @@ def register_commands(subparsers, context):
     parser_add.set_defaults(func=add)
 
     parser_modify = subparsers.add_parser('modify', help='Modify the source for an existing recipe',
-                                       description='Enables modifying the source for an existing recipe')
+                                       description='Enables modifying the source for an existing recipe. You can either provide your own pre-prepared source tree, or specify -x/--extract to extract the source being fetched by the recipe.')
     parser_modify.add_argument('recipename', help='Name of existing recipe to edit (just name - no version, path or extension)')
-    parser_modify.add_argument('srctree', help='Path to external source tree')
+    parser_modify.add_argument('srctree', nargs='?', help='Path to external source tree. If not specified, a subdirectory of %s will be used.' % defsrctree)
     parser_modify.add_argument('--wildcard', '-w', action="store_true", help='Use wildcard for unversioned bbappend')
     parser_modify.add_argument('--extract', '-x', action="store_true", help='Extract source as well')
     group = parser_modify.add_mutually_exclusive_group()
