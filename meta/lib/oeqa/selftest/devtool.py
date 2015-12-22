@@ -93,6 +93,8 @@ class DevtoolBase(oeSelfTest):
         filelist = []
         for line in output.splitlines():
             splitline = line.split()
+            if len(splitline) < 8:
+                self.fail('_process_ls_output: invalid output line: %s' % line)
             # Remove trailing . on perms
             splitline[0] = splitline[0].rstrip('.')
             # Remove leading . on paths
