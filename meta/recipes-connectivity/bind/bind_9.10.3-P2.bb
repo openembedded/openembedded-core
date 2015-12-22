@@ -23,8 +23,8 @@ SRC_URI = "ftp://ftp.isc.org/isc/bind9/${PV}/${BPN}-${PV}.tar.gz \
            file://0001-lib-dns-gen.c-fix-too-long-error.patch \
            "
 
-SRC_URI[md5sum] = "8b1f5064837756c938eadc1537dec5c7"
-SRC_URI[sha256sum] = "c00b21ec1def212957f28efe9d10aac52d6ec515e84fbf2c42143f5d71429cb8"
+SRC_URI[md5sum] = "672dd3c2796b12ac8440f55bcaecfa82"
+SRC_URI[sha256sum] = "4a6c1911ac0d4b6be635b63de3429b6c168ea244043f12bbc8a4eb3368fd6ecd"
 
 ENABLE_IPV6 = "--enable-ipv6=${@bb.utils.contains('DISTRO_FEATURES', 'ipv6', 'yes', 'no', d)}"
 EXTRA_OECONF = " ${ENABLE_IPV6} --with-randomdev=/dev/random --disable-threads \
@@ -35,8 +35,11 @@ EXTRA_OECONF = " ${ENABLE_IPV6} --with-randomdev=/dev/random --disable-threads \
                "
 inherit autotools update-rc.d systemd useradd pkgconfig
 
-PACKAGECONFIG ?= ""
+# PACKAGECONFIGs readline and libedit should NOT be set at same time
+PACKAGECONFIG ?= "readline"
 PACKAGECONFIG[httpstats] = "--with-libxml2,--without-libxml2,libxml2"
+PACKAGECONFIG[readline] = "--with-readline=-lreadline,,readline"
+PACKAGECONFIG[libedit] = "--with-readline=-ledit,,libedit"
 
 USERADD_PACKAGES = "${PN}"
 USERADD_PARAM_${PN} = "--system --home /var/cache/bind --no-create-home \
