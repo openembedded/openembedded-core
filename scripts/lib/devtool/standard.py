@@ -908,14 +908,13 @@ def _update_recipe_srcrev(args, srctree, rd, config_data):
 
     _remove_source_files(args, remove_files, destpath)
 
-def _update_recipe_patch(args, config, srctree, rd, config_data):
+def _update_recipe_patch(args, config, workspace, srctree, rd, config_data):
     """Implement the 'patch' mode of update-recipe"""
     import bb
     import oe.recipeutils
 
     recipefile = rd.getVar('FILE', True)
-    append = os.path.join(config.workspace_path, 'appends', '%s.bbappend' %
-                          os.path.splitext(os.path.basename(recipefile))[0])
+    append = workspace[args.recipename]['bbappend']
     if not os.path.exists(append):
         raise DevtoolError('unable to find workspace bbappend for recipe %s' %
                            args.recipename)
@@ -1063,7 +1062,7 @@ def update_recipe(args, config, basepath, workspace):
     if mode == 'srcrev':
         _update_recipe_srcrev(args, srctree, rd, tinfoil.config_data)
     elif mode == 'patch':
-        _update_recipe_patch(args, config, srctree, rd, tinfoil.config_data)
+        _update_recipe_patch(args, config, workspace, srctree, rd, tinfoil.config_data)
     else:
         raise DevtoolError('update_recipe: invalid mode %s' % mode)
 
