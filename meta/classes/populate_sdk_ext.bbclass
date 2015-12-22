@@ -149,11 +149,6 @@ python copy_buildsystem () {
         # Bypass the default connectivity check if any
         f.write('CONNECTIVITY_CHECK_URIS = ""\n\n')
 
-        # Another hack, but we want the native part of sstate to be kept the same
-        # regardless of the host distro
-        fixedlsbstring = 'SDK-Fixed'
-        f.write('NATIVELSBSTRING_forcevariable = "%s"\n\n' % fixedlsbstring)
-
         # Ensure locked sstate cache objects are re-used without error
         f.write('SIGGEN_LOCKEDSIGS_CHECK_LEVEL = "warn"\n\n')
 
@@ -180,6 +175,8 @@ python copy_buildsystem () {
 
     sstate_out = baseoutpath + '/sstate-cache'
     bb.utils.remove(sstate_out, True)
+    # uninative.bbclass sets NATIVELSBSTRING to 'universal'
+    fixedlsbstring = 'universal'
     oe.copy_buildsystem.create_locked_sstate_cache(lockedsigs_pruned,
                                                    d.getVar('SSTATE_DIR', True),
                                                    sstate_out, d,
