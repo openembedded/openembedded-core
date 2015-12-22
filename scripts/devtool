@@ -37,6 +37,7 @@ lib_path = scripts_path + '/lib'
 sys.path = sys.path + [lib_path]
 from devtool import DevtoolError, setup_tinfoil
 import scriptutils
+import argparse_oe
 logger = scriptutils.logger_create('devtool')
 
 plugins = []
@@ -185,9 +186,9 @@ def main():
             break
         pth = os.path.dirname(pth)
 
-    parser = argparse.ArgumentParser(description="OpenEmbedded development tool",
-                                     add_help=False,
-                                     epilog="Use %(prog)s <subcommand> --help to get help on a specific command")
+    parser = argparse_oe.ArgumentParser(description="OpenEmbedded development tool",
+                                        add_help=False,
+                                        epilog="Use %(prog)s <subcommand> --help to get help on a specific command")
     parser.add_argument('--basepath', help='Base directory of SDK / build directory')
     parser.add_argument('--bbpath', help='Explicitly specify the BBPATH, rather than getting it from the metadata')
     parser.add_argument('-d', '--debug', help='Enable debug output', action='store_true')
