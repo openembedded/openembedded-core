@@ -1,7 +1,7 @@
 SUMMARY = "Audio format Conversion library"
 HOMEPAGE = "http://www.mega-nerd.com/libsndfile"
 AUTHOR = "Erik de Castro Lopo"
-DEPENDS = "sqlite3"
+DEPENDS = "flac libogg libvorbis sqlite3"
 SECTION = "libs/multimedia"
 LICENSE = "LGPLv2.1"
 
@@ -16,8 +16,6 @@ S = "${WORKDIR}/libsndfile-${PV}"
 
 PACKAGECONFIG ??= "${@bb.utils.contains('DISTRO_FEATURES', 'alsa', 'alsa', '', d)}"
 PACKAGECONFIG[alsa] = "--enable-alsa,--disable-alsa,alsa-lib"
-
-EXTRA_OECONF = "--disable-external-libs"
 
 inherit autotools lib_package pkgconfig
 
