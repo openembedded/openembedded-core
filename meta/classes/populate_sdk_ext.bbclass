@@ -152,6 +152,9 @@ python copy_buildsystem () {
         # Ensure locked sstate cache objects are re-used without error
         f.write('SIGGEN_LOCKEDSIGS_CHECK_LEVEL = "warn"\n\n')
 
+        # Hide the config information from bitbake output (since it's fixed within the SDK)
+        f.write('BUILDCFG_HEADER = ""\n')
+
         # If you define a sdk_extraconf() function then it can contain additional config
         extraconf = (d.getVar('sdk_extraconf', True) or '').strip()
         if extraconf:
