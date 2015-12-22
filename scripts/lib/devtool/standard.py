@@ -26,6 +26,7 @@ import argparse
 import argparse_oe
 import scriptutils
 import errno
+import glob
 from collections import OrderedDict
 from devtool import exec_build_env_command, setup_tinfoil, check_workspace_recipe, use_external_build, setup_git_repo, recipe_to_append, DevtoolError
 from devtool import parse_recipe
@@ -1168,7 +1169,16 @@ def status(args, config, basepath, workspace):
     """Entry point for the devtool 'status' subcommand"""
     if workspace:
         for recipe, value in workspace.iteritems():
-            print("%s: %s" % (recipe, value['srctree']))
+            bbfile = os.path.basename(value['bbappend']).replace('.bbappend', '.bb').replace('%', '*')
+            recipefile = glob.glob(os.path.join(config.workspace_path,
+                                                'recipes',
+                                                recipe,
+                                                bbfile))
+            if recipefile:
+                recipestr = ' (%s)' % recipefile[0]
+            else:
+                recipestr = ''
+            print("%s: %s%s" % (recipe, value['srctree'], recipestr))
     else:
         logger.info('No recipes currently in your workspace - you can use "devtool modify" to work on an existing recipe or "devtool add" to add a new one')
     return 0
