@@ -283,6 +283,8 @@ def create_recipe(args):
             # to just remove it first
             os.rmdir(args.extract_to)
         shutil.move(srctree, args.extract_to)
+        if tempsrc == srctree:
+            tempsrc = None
         logger.info('Source extracted to %s' % args.extract_to)
 
     if outfile == '-':
