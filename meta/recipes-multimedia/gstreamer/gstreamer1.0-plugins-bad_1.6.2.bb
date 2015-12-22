@@ -7,8 +7,8 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=73a5855a8119deb017f5f13cf327095d \
 
 SRC_URI += "file://0001-glimagesink-Downrank-to-marginal.patch"
 
-SRC_URI[md5sum] = "c92d7d32de68e7293712bf9b6c99dc77"
-SRC_URI[sha256sum] = "e176a9af125f6874b3d6724aa7566a198fa225d3ece0a7ac2f2b51c57e525466"
+SRC_URI[md5sum] = "7c73bec1d389f0e184ebbbbb9e9f883d"
+SRC_URI[sha256sum] = "650855e39ff56a8bb6cb0c192109c5926ce12f536d06e19ebf829de71ef396fe"
 
 S = "${WORKDIR}/gst-plugins-bad-${PV}"
 
