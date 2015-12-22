@@ -127,6 +127,7 @@ class AutotoolsRecipeHandler(RecipeHandler):
                                 extravalues['PN'] = pn
 
         if autoconf:
+            lines_before.append('')
             lines_before.append('# NOTE: if this software is not capable of being built in a separate build directory')
             lines_before.append('# from the source, you should replace autotools with autotools-brokensep in the')
             lines_before.append('# inherit line')
@@ -150,11 +151,14 @@ class AutotoolsRecipeHandler(RecipeHandler):
         # FIXME this mapping is very thin
         progmap = {'flex': 'flex-native',
                 'bison': 'bison-native',
-                'm4': 'm4-native'}
+                'm4': 'm4-native',
+                'tar': 'tar-native',
+                'ar': 'binutils-native'}
         progclassmap = {'gconftool-2': 'gconf',
                 'pkg-config': 'pkgconfig'}
 
-        ignoredeps = ['gcc-runtime', 'glibc', 'uclibc']
+        ignoredeps = ['gcc-runtime', 'glibc', 'uclibc', 'tar-native', 'binutils-native']
+        ignorelibs = ['socket']
 
         pkg_re = re.compile('PKG_CHECK_MODULES\(\[?[a-zA-Z0-9]*\]?, \[?([^,\]]*)[),].*')
         lib_re = re.compile('AC_CHECK_LIB\(\[?([a-zA-Z0-9]*)\]?, .*')
@@ -245,8 +249,12 @@ class AutotoolsRecipeHandler(RecipeHandler):
                     if res:
                         pcdeps.extend([x[0] for x in res])
                 inherits.append('pkgconfig')
-            elif keyword == 'AM_GNU_GETTEXT':
+            elif keyword in ('AM_GNU_GETTEXT', 'AM_GLIB_GNU_GETTEXT', 'GETTEXT_PACKAGE'):
                 inherits.append('gettext')
+            elif keyword in ('AC_PROG_INTLTOOL', 'IT_PROG_INTLTOOL'):
+                deps.append('intltool-native')
+            elif keyword == 'AM_PATH_GLIB_2_0':
+                deps.append('glib-2.0')
             elif keyword == 'AC_CHECK_PROG' or keyword == 'AC_PATH_PROG':
                 res = progs_re.search(value)
                 if res:
@@ -266,13 +274,16 @@ class AutotoolsRecipeHandler(RecipeHandler):
                 res = lib_re.search(value)
                 if res:
                     lib = res.group(1)
-                    libdep = recipelibmap.get(lib, None)
-                    if libdep:
-                        deps.append(libdep)
+                    if lib in ignorelibs:
+                        logger.debug('Ignoring library dependency %s' % lib)
                     else:
-                        if libdep is None:
-                            if not lib.startswith('$'):
-                                unmappedlibs.append(lib)
+                        libdep = recipelibmap.get(lib, None)
+                        if libdep:
+                            deps.append(libdep)
+                        else:
+                            if libdep is None:
+                                if not lib.startswith('$'):
+                                    unmappedlibs.append(lib)
             elif keyword == 'AC_PATH_X':
                 deps.append('libx11')
             elif keyword == 'AC_INIT':
@@ -303,6 +314,11 @@ class AutotoolsRecipeHandler(RecipeHandler):
 
         keywords = ['PKG_CHECK_MODULES',
                     'AM_GNU_GETTEXT',
+                    'AM_GLIB_GNU_GETTEXT',
+                    'GETTEXT_PACKAGE',
+                    'AC_PROG_INTLTOOL',
+                    'IT_PROG_INTLTOOL',
+                    'AM_PATH_GLIB_2_0',
                     'AC_CHECK_PROG',
                     'AC_PATH_PROG',
                     'AC_CHECK_LIB',
@@ -351,10 +367,10 @@ class AutotoolsRecipeHandler(RecipeHandler):
                         extravalues[k] = v.strip('"\'').rstrip('()')
 
         if unmapped:
-            outlines.append('# NOTE: the following prog dependencies are unknown, ignoring: %s' % ' '.join(unmapped))
+            outlines.append('# NOTE: the following prog dependencies are unknown, ignoring: %s' % ' '.join(list(set(unmapped))))
 
         if unmappedlibs:
-            outlines.append('# NOTE: the following library dependencies are unknown, ignoring: %s' % ' '.join(unmappedlibs))
+            outlines.append('# NOTE: the following library dependencies are unknown, ignoring: %s' % ' '.join(list(set(unmappedlibs))))
             outlines.append('#       (this is based on recipes that have previously been built and packaged)')
 
         recipemap = read_pkgconfig_provides(tinfoil.config_data)
