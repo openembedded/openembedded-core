@@ -85,13 +85,9 @@ def install_sstate_objects(sstate_objects, src_sdk, dest_sdk):
 
 def sdk_update(args, config, basepath, workspace):
     # Fetch locked-sigs.inc file from remote/local destination
-    from ConfigParser import NoSectionError
     updateserver = args.updateserver
     if not updateserver:
-        try:
-            updateserver = config.get('SDK', 'updateserver', None)
-        except NoSectionError:
-            pass
+        updateserver = config.get('SDK', 'updateserver', '')
     if not updateserver:
         raise DevtoolError("Update server not specified in config file, you must specify it on the command line")
     logger.debug("updateserver: %s" % args.updateserver)
