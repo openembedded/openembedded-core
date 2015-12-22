@@ -57,19 +57,6 @@ do_configure_prepend() {
 
 export GUILE_FOR_BUILD="${BUILD_SYS}-guile"
 
-do_compile_append() {
-	# just for target recipe
-	if [ "${PN}" = "guile" ]
-	then
-		sed -i -e s:${STAGING_DIR_TARGET}::g \
-	               -e s:/${TARGET_SYS}::g \
-	               -e s:-L/usr/lib::g \
-        	       -e s:-isystem/usr/include::g \
-	               -e s:,/usr/lib:,\$\{libdir\}:g \
-	                  meta/guile-2.0.pc
-	fi
-}
-
 do_install_append_class-native() {
 	install -m 0755  ${D}${bindir}/guile ${D}${bindir}/${HOST_SYS}-guile
 
@@ -83,8 +70,10 @@ do_install_append_class-native() {
 
 do_install_append_class-target() {
 	# cleanup buildpaths in scripts
-	sed -i -e 's:${STAGING_DIR_NATIVE}::' ${D}/usr/bin/guile-config
-	sed -i -e 's:${STAGING_DIR_HOST}::' ${D}/usr/bin/guile-snarf
+	sed -i -e 's:${STAGING_DIR_NATIVE}::' ${D}${bindir}/guile-config
+	sed -i -e 's:${STAGING_DIR_HOST}::' ${D}${bindir}/guile-snarf
+
+	sed -i -e 's:${STAGING_DIR_TARGET}::g' ${D}${libdir}/pkgconfig/guile-2.0.pc
 }
 
 SYSROOT_PREPROCESS_FUNCS = "guile_cross_config"
