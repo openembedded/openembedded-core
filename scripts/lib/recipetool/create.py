@@ -130,10 +130,17 @@ def create_recipe(args):
         dirlist = os.listdir(srctree)
         if 'git.indirectionsymlink' in dirlist:
             dirlist.remove('git.indirectionsymlink')
-        if len(dirlist) == 1 and os.path.isdir(os.path.join(srctree, dirlist[0])):
-            # We unpacked a single directory, so we should use that
-            srcsubdir = dirlist[0]
-            srctree = os.path.join(srctree, srcsubdir)
+        if len(dirlist) == 1:
+            singleitem = os.path.join(srctree, dirlist[0])
+            if os.path.isdir(singleitem):
+                # We unpacked a single directory, so we should use that
+                srcsubdir = dirlist[0]
+                srctree = os.path.join(srctree, srcsubdir)
+            else:
+                with open(singleitem, 'r') as f:
+                    if '<html' in f.read(100).lower():
+                        logger.error('Fetching "%s" returned a single HTML page - check the URL is correct and functional' % fetchuri)
+                        sys.exit(1)
     else:
         # Assume we're pointing to an existing source tree
         if args.extract_to:
