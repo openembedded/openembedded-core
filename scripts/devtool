@@ -280,6 +280,8 @@ def main():
         if str(err):
             logger.error(str(err))
         ret = 1
+    except argparse_oe.ArgumentUsageError as ae:
+        parser.error_subcommand(ae.message, ae.subcommand)
 
     return ret
 

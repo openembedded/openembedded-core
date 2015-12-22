@@ -1,6 +1,12 @@
 import sys
 import argparse
 
+class ArgumentUsageError(Exception):
+    """Exception class you can raise (and catch) in order to show the help"""
+    def __init__(self, message, subcommand=None):
+        self.message = message
+        self.subcommand = subcommand
+
 class ArgumentParser(argparse.ArgumentParser):
     """Our own version of argparse's ArgumentParser"""
 
@@ -8,6 +14,16 @@ class ArgumentParser(argparse.ArgumentParser):
         sys.stderr.write('ERROR: %s\n' % message)
         self.print_help()
         sys.exit(2)
+
+    def error_subcommand(self, message, subcommand):
+        if subcommand:
+            for action in self._actions:
+                if isinstance(action, argparse._SubParsersAction):
+                    for choice, subparser in action.choices.items():
+                        if choice == subcommand:
+                            subparser.error(message)
+                            return
+        self.error(message)
 
     def add_subparsers(self, *args, **kwargs):
         ret = super(ArgumentParser, self).add_subparsers(*args, **kwargs)
