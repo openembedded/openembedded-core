@@ -395,7 +395,7 @@ class RecipetoolTests(RecipetoolBase):
         checkvars['LICENSE'] = 'LGPLv2.1'
         checkvars['LIC_FILES_CHKSUM'] = 'file://COPYING;md5=7fbc338309ac38fefcd64b04bb903e34'
         checkvars['S'] = '${WORKDIR}/git'
-        checkvars['PV'] = '1.0+git${SRCPV}'
+        checkvars['PV'] = '1.11+git${SRCPV}'
         checkvars['SRC_URI'] = srcuri
         checkvars['DEPENDS'] = 'libpng pango libx11 libxext jpeg'
         inherits = ['autotools', 'pkgconfig']

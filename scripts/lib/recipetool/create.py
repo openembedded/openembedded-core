@@ -41,10 +41,17 @@ def tinfoil_init(instance):
 
 class RecipeHandler():
     @staticmethod
-    def checkfiles(path, speclist):
+    def checkfiles(path, speclist, recursive=False):
         results = []
-        for spec in speclist:
-            results.extend(glob.glob(os.path.join(path, spec)))
+        if recursive:
+            for root, _, files in os.walk(path):
+                for fn in files:
+                    for spec in speclist:
+                        if fnmatch.fnmatch(fn, spec):
+                            results.append(os.path.join(root, fn))
+        else:
+            for spec in speclist:
+                results.extend(glob.glob(os.path.join(path, spec)))
         return results
 
     def genfunction(self, outlines, funcname, content, python=False, forcespace=False):
@@ -70,10 +77,14 @@ class RecipeHandler():
         outlines.append('}')
         outlines.append('')
 
-    def process(self, srctree, classes, lines_before, lines_after, handled):
+    def process(self, srctree, classes, lines_before, lines_after, handled, extravalues):
         return False
 
 
+def validate_pv(pv):
+    if not pv or '_version' in pv.lower() or pv[0] not in '0123456789':
+        return False
+    return True
 
 def supports_srcrev(uri):
     localdata = bb.data.createCopy(tinfoil.config_data)
@@ -152,7 +163,12 @@ def create_recipe(args):
         srcuri = ''
         srctree = args.source
 
-    outfile = args.outfile
+    if args.outfile and os.path.isdir(args.outfile):
+        outfile = None
+        outdir = args.outfile
+    else:
+        outfile = args.outfile
+        outdir = None
     if outfile and outfile != '-':
         if os.path.exists(outfile):
             logger.error('Output file %s already exists' % outfile)
@@ -196,28 +212,29 @@ def create_recipe(args):
     lines_before.append('')
 
     # FIXME This is kind of a hack, we probably ought to be using bitbake to do this
-    # we'd also want a way to automatically set outfile based upon auto-detecting these values from the source if possible
-    recipefn = os.path.splitext(os.path.basename(outfile))[0]
-    fnsplit = recipefn.split('_')
-    if len(fnsplit) > 1:
-        pn = fnsplit[0]
-        pv = fnsplit[1]
-    else:
-        pn = recipefn
-        pv = None
+    pn = None
+    pv = None
+    if outfile:
+        recipefn = os.path.splitext(os.path.basename(outfile))[0]
+        fnsplit = recipefn.split('_')
+        if len(fnsplit) > 1:
+            pn = fnsplit[0]
+            pv = fnsplit[1]
+        else:
+            pn = recipefn
 
     if args.version:
         pv = args.version
+
+    if args.name:
+        pn = args.name
 
     if pv and pv not in 'git svn hg'.split():
         realpv = pv
     else:
         realpv = None
 
-    if srcuri:
-        if realpv:
-            srcuri = srcuri.replace(realpv, '${PV}')
-    else:
+    if not srcuri:
         lines_before.append('# No information for SRC_URI yet (only an external source tree was specified)')
     lines_before.append('SRC_URI = "%s"' % srcuri)
     (md5value, sha256value) = checksums
@@ -232,13 +249,7 @@ def create_recipe(args):
         lines_before.append('SRCREV = "%s"' % srcrev)
     lines_before.append('')
 
-    if srcsubdir and pv:
-        if srcsubdir == "%s-%s" % (pn, pv):
-            # This would be the default, so we don't need to set S in the recipe
-            srcsubdir = ''
     if srcsubdir:
-        if pv and pv not in 'git svn hg'.split():
-            srcsubdir = srcsubdir.replace(pv, '${PV}')
         lines_before.append('S = "${WORKDIR}/%s"' % srcsubdir)
         lines_before.append('')
 
@@ -276,8 +287,74 @@ def create_recipe(args):
         classes.append('bin_package')
         handled.append('buildsystem')
 
+    extravalues = {}
     for handler in handlers:
-        handler.process(srctree, classes, lines_before, lines_after, handled)
+        handler.process(srctree, classes, lines_before, lines_after, handled, extravalues)
+
+    if not realpv:
+        realpv = extravalues.get('PV', None)
+        if realpv:
+            if not validate_pv(realpv):
+                realpv = None
+            else:
+                realpv = realpv.lower().split()[0]
+                if '_' in realpv:
+                    realpv = realpv.replace('_', '-')
+    if not pn:
+        pn = extravalues.get('PN', None)
+        if pn:
+            if pn.startswith('GNU '):
+                pn = pn[4:]
+            if ' ' in pn:
+                # Probably a descriptive identifier rather than a proper name
+                pn = None
+            else:
+                pn = pn.lower()
+                if '_' in pn:
+                    pn = pn.replace('_', '-')
+
+    if not outfile:
+        if not pn:
+            logger.error('Unable to determine short program name from source tree - please specify name with -N/--name or output file name with -o/--outfile')
+            # devtool looks for this specific exit code, so don't change it
+            sys.exit(15)
+        else:
+            if srcuri and srcuri.startswith(('git://', 'hg://', 'svn://')):
+                outfile = '%s_%s.bb' % (pn, srcuri.split(':', 1)[0])
+            elif realpv:
+                outfile = '%s_%s.bb' % (pn, realpv)
+            else:
+                outfile = '%s.bb' % pn
+            if outdir:
+                outfile = os.path.join(outdir, outfile)
+            # We need to check this again
+            if os.path.exists(outfile):
+                logger.error('Output file %s already exists' % outfile)
+                sys.exit(1)
+
+    lines = lines_before
+    lines_before = []
+    skipblank = True
+    for line in lines:
+        if skipblank:
+            skipblank = False
+            if not line:
+                continue
+        if line.startswith('S = '):
+            if realpv and pv not in 'git svn hg'.split():
+                line = line.replace(realpv, '${PV}')
+            if pn:
+                line = line.replace(pn, '${BPN}')
+            if line == 'S = "${WORKDIR}/${BPN}-${PV}"':
+                skipblank = True
+                continue
+        elif line.startswith('SRC_URI = '):
+            if realpv:
+                line = line.replace(realpv, '${PV}')
+        elif line.startswith('PV = '):
+            if realpv:
+                line = re.sub('"[^+]*\+', '"%s+' % realpv, line)
+        lines_before.append(line)
 
     outlines = []
     outlines.extend(lines_before)
@@ -469,9 +546,10 @@ def register_commands(subparsers):
                                           help='Create a new recipe',
                                           description='Creates a new recipe from a source tree')
     parser_create.add_argument('source', help='Path or URL to source')
-    parser_create.add_argument('-o', '--outfile', help='Specify filename for recipe to create', required=True)
+    parser_create.add_argument('-o', '--outfile', help='Specify filename for recipe to create')
     parser_create.add_argument('-m', '--machine', help='Make recipe machine-specific as opposed to architecture-specific', action='store_true')
     parser_create.add_argument('-x', '--extract-to', metavar='EXTRACTPATH', help='Assuming source is a URL, fetch it and extract it to the directory specified as %(metavar)s')
+    parser_create.add_argument('-N', '--name', help='Name to use within recipe (PN)')
     parser_create.add_argument('-V', '--version', help='Version to use within recipe (PV)')
     parser_create.add_argument('-b', '--binary', help='Treat the source tree as something that should be installed verbatim (no compilation, same directory structure)', action='store_true')
     parser_create.set_defaults(func=create_recipe)

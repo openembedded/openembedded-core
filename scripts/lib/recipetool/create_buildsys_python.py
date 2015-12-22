@@ -159,7 +159,7 @@ class PythonRecipeHandler(RecipeHandler):
     def __init__(self):
         pass
 
-    def process(self, srctree, classes, lines_before, lines_after, handled):
+    def process(self, srctree, classes, lines_before, lines_after, handled, extravalues):
         if 'buildsystem' in handled:
             return False
 
