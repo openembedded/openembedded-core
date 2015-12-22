@@ -86,6 +86,27 @@ def validate_pv(pv):
         return False
     return True
 
+def determine_from_filename(srcfile):
+    """Determine name and version from a filename"""
+    part = ''
+    if '.tar.' in srcfile:
+        namepart = srcfile.split('.tar.')[0]
+    else:
+        namepart = os.path.splitext(srcfile)[0]
+    splitval = namepart.rsplit('_', 1)
+    if len(splitval) == 1:
+        splitval = namepart.rsplit('-', 1)
+    pn = splitval[0].replace('_', '-')
+    if len(splitval) > 1:
+        if splitval[1][0] in '0123456789':
+            pv = splitval[1]
+        else:
+            pn = '-'.join(splitval).replace('_', '-')
+            pv = None
+    else:
+        pv = None
+    return (pn, pv)
+
 def supports_srcrev(uri):
     localdata = bb.data.createCopy(tinfoil.config_data)
     # This is a bit sad, but if you don't have this set there can be some
@@ -233,6 +254,17 @@ def create_recipe(args):
         realpv = pv
     else:
         realpv = None
+
+    if srcuri and not realpv or not pn:
+        parseres = urlparse.urlparse(srcuri)
+        if parseres.path:
+            srcfile = os.path.basename(parseres.path)
+            name_pn, name_pv = determine_from_filename(srcfile)
+            logger.debug('Determined from filename: name = "%s", version = "%s"' % (name_pn, name_pv))
+            if name_pn and not pn:
+                pn = name_pn
+            if name_pv and not realpv:
+                realpv = name_pv
 
     if not srcuri:
         lines_before.append('# No information for SRC_URI yet (only an external source tree was specified)')

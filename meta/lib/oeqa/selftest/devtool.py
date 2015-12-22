@@ -232,15 +232,16 @@ class DevtoolTests(DevtoolBase):
         self.assertIn(srcdir, result.output)
         # Check recipe
         recipefile = get_bb_var('FILE', testrecipe)
-        self.assertIn('%s.bb' % testrecipe, recipefile, 'Recipe file incorrectly named')
+        self.assertIn('%s_%s.bb' % (testrecipe, testver), recipefile, 'Recipe file incorrectly named')
         checkvars = {}
-        checkvars['S'] = '${WORKDIR}/MarkupSafe-%s' % testver
-        checkvars['SRC_URI'] = url
+        checkvars['S'] = '${WORKDIR}/MarkupSafe-${PV}'
+        checkvars['SRC_URI'] = url.replace(testver, '${PV}')
         self._test_recipe_contents(recipefile, checkvars, [])
         # Try with version specified
         result = runCmd('devtool reset -n %s' % testrecipe)
         shutil.rmtree(srcdir)
-        result = runCmd('devtool add %s %s -f %s -V %s' % (testrecipe, srcdir, url, testver))
+        fakever = '1.9'
+        result = runCmd('devtool add %s %s -f %s -V %s' % (testrecipe, srcdir, url, fakever))
         self.assertTrue(os.path.isfile(os.path.join(srcdir, 'setup.py')), 'Unable to find setup.py in source directory')
         # Test devtool status
         result = runCmd('devtool status')
@@ -248,10 +249,10 @@ class DevtoolTests(DevtoolBase):
         self.assertIn(srcdir, result.output)
         # Check recipe
         recipefile = get_bb_var('FILE', testrecipe)
-        self.assertIn('%s_%s.bb' % (testrecipe, testver), recipefile, 'Recipe file incorrectly named')
+        self.assertIn('%s_%s.bb' % (testrecipe, fakever), recipefile, 'Recipe file incorrectly named')
         checkvars = {}
-        checkvars['S'] = '${WORKDIR}/MarkupSafe-${PV}'
-        checkvars['SRC_URI'] = url.replace(testver, '${PV}')
+        checkvars['S'] = '${WORKDIR}/MarkupSafe-%s' % testver
+        checkvars['SRC_URI'] = url
         self._test_recipe_contents(recipefile, checkvars, [])
 
     @testcase(1161)
