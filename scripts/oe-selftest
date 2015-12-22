@@ -31,6 +31,7 @@ import unittest
 import logging
 import argparse
 import subprocess
+import time as t
 
 sys.path.insert(0, os.path.dirname(os.path.realpath(__file__)) + '/lib')
 import scriptpath
@@ -44,10 +45,14 @@ from oeqa.utils.commands import runCmd, get_bb_var, get_test_layer
 from oeqa.selftest.base import oeSelfTest
 
 def logger_create():
+    log_file = "oe-selftest-" + t.strftime("%Y-%m-%d_%H:%M:%S") + ".log"
+    if os.path.exists("oe-selftest.log"): os.remove("oe-selftest.log")
+    os.symlink(log_file, "oe-selftest.log")
+
     log = logging.getLogger("selftest")
     log.setLevel(logging.DEBUG)
 
-    fh = logging.FileHandler(filename='oe-selftest.log', mode='w')
+    fh = logging.FileHandler(filename=log_file, mode='w')
     fh.setLevel(logging.DEBUG)
 
     ch = logging.StreamHandler(sys.stdout)
