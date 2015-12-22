@@ -49,7 +49,12 @@ def add(args, config, basepath, workspace):
     if '/' in args.recipename:
         raise DevtoolError('"/" is not a valid character in recipe names')
 
-    srctree = os.path.abspath(args.srctree)
+    if args.srctree:
+        srctree = os.path.abspath(args.srctree)
+    else:
+        srctree = get_default_srctree(config, args.recipename)
+        logger.info('Using default source tree path %s' % srctree)
+
     if os.path.exists(srctree):
         if args.fetch:
             if not os.path.isdir(srctree):
@@ -61,8 +66,16 @@ def add(args, config, basepath, workspace):
                                    "it already exists and is non-empty" %
                                    srctree)
     elif not args.fetch:
-        raise DevtoolError("Specified source tree %s could not be found" %
-                           srctree)
+        if args.srctree:
+            raise DevtoolError("Specified source tree %s could not be found" %
+                               args.srctree)
+        else:
+            raise DevtoolError("No source tree exists at default path %s - "
+                               "either create and populate this directory, "
+                               "or specify a path to a source tree, or use "
+                               "the -f/--fetch option to fetch source code "
+                               "and extract it to the source directory" %
+                               srctree)
 
     recipedir = os.path.join(config.workspace_path, 'recipes', args.recipename)
     bb.utils.mkdirhier(recipedir)
@@ -1168,13 +1181,22 @@ def edit_recipe(args, config, basepath, workspace):
 
     return 0
 
+def get_default_srctree(config, recipename=''):
+    """Get the default srctree path"""
+    srctreeparent = config.get('General', 'default_source_parent_dir', config.workspace_path)
+    if recipename:
+        return os.path.join(srctreeparent, 'sources', recipename)
+    else:
+        return os.path.join(srctreeparent, 'sources')
 
 def register_commands(subparsers, context):
     """Register devtool subcommands from this plugin"""
+
+    defsrctree = get_default_srctree(context.config)
     parser_add = subparsers.add_parser('add', help='Add a new recipe',
                                        description='Adds a new recipe to the workspace to build a specified source tree. Can optionally fetch a remote URI and unpack it to create the source tree.')
     parser_add.add_argument('recipename', help='Name for new recipe to add (just name - no version, path or extension)')
-    parser_add.add_argument('srctree', help='Path to external source tree')
+    parser_add.add_argument('srctree', nargs='?', help='Path to external source tree. If not specified, a subdirectory of %s will be used.' % defsrctree)
     group = parser_add.add_mutually_exclusive_group()
     group.add_argument('--same-dir', '-s', help='Build in same directory as source', action="store_true")
     group.add_argument('--no-same-dir', help='Force build in a separate build directory', action="store_true")
