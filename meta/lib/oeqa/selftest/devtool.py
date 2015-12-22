@@ -15,18 +15,43 @@ class DevtoolBase(oeSelfTest):
 
     def _test_recipe_contents(self, recipefile, checkvars, checkinherits):
         with open(recipefile, 'r') as f:
+            invar = None
+            invalue = None
             for line in f:
-                if '=' in line:
+                var = None
+                if invar:
+                    value = line.strip().strip('"')
+                    if value.endswith('\\'):
+                        invalue += ' ' + value[:-1].strip()
+                        continue
+                    else:
+                        invalue += ' ' + value.strip()
+                        var = invar
+                        value = invalue
+                        invar = None
+                elif '=' in line:
                     splitline = line.split('=', 1)
                     var = splitline[0].rstrip()
                     value = splitline[1].strip().strip('"')
-                    if var in checkvars:
-                        needvalue = checkvars.pop(var)
-                        self.assertEqual(value, needvalue, 'values for %s do not match' % var)
-                if line.startswith('inherit '):
+                    if value.endswith('\\'):
+                        invalue = value[:-1].strip()
+                        invar = var
+                        continue
+                elif line.startswith('inherit '):
                     inherits = line.split()[1:]
 
-        self.assertEqual(checkvars, {}, 'Some variables not found: %s' % checkvars)
+                if var and var in checkvars:
+                    needvalue = checkvars.pop(var)
+                    if needvalue is None:
+                        self.fail('Variable %s should not appear in recipe')
+                    self.assertEqual(value, needvalue, 'values for %s do not match' % var)
+
+
+        missingvars = {}
+        for var, value in checkvars.iteritems():
+            if value is not None:
+                missingvars[var] = value
+        self.assertEqual(missingvars, {}, 'Some expected variables not found in recipe: %s' % checkvars)
 
         for inherit in checkinherits:
             self.assertIn(inherit, inherits, 'Missing inherit of %s' % inherit)
@@ -302,6 +327,32 @@ class DevtoolTests(DevtoolBase):
         checkvars['PV'] = '1.5+git${SRCPV}'
         checkvars['SRC_URI'] = url
         checkvars['SRCREV'] = checkrev
+        self._test_recipe_contents(recipefile, checkvars, [])
+
+    def test_devtool_add_fetch_simple(self):
+        # Fetch source from a remote URL, auto-detecting name
+        tempdir = tempfile.mkdtemp(prefix='devtoolqa')
+        self.track_for_cleanup(tempdir)
+        testver = '1.6.0'
+        url = 'http://www.ivarch.com/programs/sources/pv-%s.tar.bz2' % testver
+        testrecipe = 'pv'
+        srcdir = os.path.join(self.workspacedir, 'sources', testrecipe)
+        # Test devtool add
+        self.track_for_cleanup(self.workspacedir)
+        self.add_command_to_tearDown('bitbake-layers remove-layer */workspace')
+        result = runCmd('devtool add %s' % url)
+        self.assertTrue(os.path.exists(os.path.join(self.workspacedir, 'conf', 'layer.conf')), 'Workspace directory not created. %s' % result.output)
+        self.assertTrue(os.path.isfile(os.path.join(srcdir, 'configure')), 'Unable to find configure script in source directory')
+        # Test devtool status
+        result = runCmd('devtool status')
+        self.assertIn(testrecipe, result.output)
+        self.assertIn(srcdir, result.output)
+        # Check recipe
+        recipefile = get_bb_var('FILE', testrecipe)
+        self.assertIn('%s_%s.bb' % (testrecipe, testver), recipefile, 'Recipe file incorrectly named')
+        checkvars = {}
+        checkvars['S'] = None
+        checkvars['SRC_URI'] = url.replace(testver, '${PV}')
         self._test_recipe_contents(recipefile, checkvars, [])
 
     @testcase(1164)

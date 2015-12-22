@@ -401,6 +401,25 @@ class RecipetoolTests(RecipetoolBase):
         inherits = ['autotools', 'pkgconfig']
         self._test_recipe_contents(recipefile, checkvars, inherits)
 
+    def test_recipetool_create_simple(self):
+        # Try adding a recipe
+        temprecipe = os.path.join(self.tempdir, 'recipe')
+        os.makedirs(temprecipe)
+        pv = '1.7.3.0'
+        srcuri = 'http://www.dest-unreach.org/socat/download/socat-%s.tar.bz2' % pv
+        result = runCmd('recipetool create %s -o %s' % (srcuri, temprecipe))
+        dirlist = os.listdir(temprecipe)
+        if len(dirlist) < 1 or not os.path.isfile(os.path.join(temprecipe, dirlist[0])):
+            self.fail('recipetool did not create recipe file; output:\n%s' % result.output)
+        self.assertEqual(dirlist[0], 'socat_%s.bb' % pv, 'Recipe file incorrectly named')
+        checkvars = {}
+        checkvars['LICENSE'] = 'Unknown GPLv2'
+        checkvars['LIC_FILES_CHKSUM'] = 'file://COPYING.OpenSSL;md5=5c9bccc77f67a8328ef4ebaf468116f4 file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263'
+        # We don't check DEPENDS since they are variable for this recipe depending on what's in the sysroot
+        checkvars['S'] = None
+        checkvars['SRC_URI'] = srcuri.replace(pv, '${PV}')
+        inherits = ['autotools']
+        self._test_recipe_contents(os.path.join(temprecipe, dirlist[0]), checkvars, inherits)
 
 class RecipetoolAppendsrcBase(RecipetoolBase):
     def _try_recipetool_appendsrcfile(self, testrecipe, newfile, destfile, options, expectedlines, expectedfiles):
