@@ -346,7 +346,7 @@ def sync(args, config, basepath, workspace):
 
     srctree = os.path.abspath(args.srctree)
     initial_rev = _extract_source(srctree, args.keep_temp, args.branch, True, rd)
-    logger.info('Source tree extracted to %s' % srctree)
+    logger.info('Source tree %s synchronized' % srctree)
 
     if initial_rev:
         return 0
@@ -1326,11 +1326,11 @@ def register_commands(subparsers, context):
     parser_extract.add_argument('--keep-temp', action="store_true", help='Keep temporary directory (for debugging)')
     parser_extract.set_defaults(func=extract, no_workspace=True)
 
-    parser_sync = subparsers.add_parser('sync', help='Synchronize the source for an existing recipe',
-                                       description='Synchronize the source for an existing recipe',
+    parser_sync = subparsers.add_parser('sync', help='Synchronize the source tree for an existing recipe',
+                                       description='Synchronize the previously extracted source tree for an existing recipe',
                                        formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-    parser_sync.add_argument('recipename', help='Name for recipe to sync the source for')
-    parser_sync.add_argument('srctree', help='Path to where to sync the source tree')
+    parser_sync.add_argument('recipename', help='Name of recipe to sync the source for')
+    parser_sync.add_argument('srctree', help='Path to the source tree')
     parser_sync.add_argument('--branch', '-b', default="devtool", help='Name for development branch to checkout')
     parser_sync.add_argument('--keep-temp', action="store_true", help='Keep temporary directory (for debugging)')
     parser_sync.set_defaults(func=sync)
