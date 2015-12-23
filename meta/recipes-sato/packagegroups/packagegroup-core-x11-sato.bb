@@ -42,9 +42,7 @@ RDEPENDS_${PN}-base = "\
     ${@bb.utils.contains('DISTRO_FEATURES', 'pulseaudio', 'pulseaudio-server pulseaudio-client-conf-sato pulseaudio-misc', '', d)} \
     "
 
-# pcmanfm doesn't work on mips
 FILEMANAGER ?= "pcmanfm"
-FILEMANAGER_mips ?= ""
 
 WEB ?= ""
 #WEB = "epiphany"
