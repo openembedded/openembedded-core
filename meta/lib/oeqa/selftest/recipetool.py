@@ -413,8 +413,8 @@ class RecipetoolTests(RecipetoolBase):
             self.fail('recipetool did not create recipe file; output:\n%s' % result.output)
         self.assertEqual(dirlist[0], 'socat_%s.bb' % pv, 'Recipe file incorrectly named')
         checkvars = {}
-        checkvars['LICENSE'] = 'Unknown GPLv2'
-        checkvars['LIC_FILES_CHKSUM'] = 'file://COPYING.OpenSSL;md5=5c9bccc77f67a8328ef4ebaf468116f4 file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263'
+        checkvars['LICENSE'] = set(['Unknown', 'GPLv2'])
+        checkvars['LIC_FILES_CHKSUM'] = set(['file://COPYING.OpenSSL;md5=5c9bccc77f67a8328ef4ebaf468116f4', 'file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263'])
         # We don't check DEPENDS since they are variable for this recipe depending on what's in the sysroot
         checkvars['S'] = None
         checkvars['SRC_URI'] = srcuri.replace(pv, '${PV}')
