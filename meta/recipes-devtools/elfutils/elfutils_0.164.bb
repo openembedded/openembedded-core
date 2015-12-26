@@ -4,6 +4,7 @@ SECTION = "base"
 LICENSE = "(GPLv3 & Elfutils-Exception)"
 LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 DEPENDS = "libtool bzip2 zlib virtual/libintl"
+DEPENDS_append_libc-musl = " argp-standalone fts "
 
 SRC_URI = "https://fedorahosted.org/releases/e/l/elfutils/${PV}/${BP}.tar.bz2"
 
@@ -11,13 +12,14 @@ SRC_URI[md5sum] = "2e4536c1c48034f188a80789a59114d8"
 SRC_URI[sha256sum] = "9683c025928a12d06b7fe812928aa6235249e22d197d086f7084606a48165900"
 
 SRC_URI += "\
-        file://mempcpy.patch \
         file://dso-link-change.patch \
         file://Fix_elf_cvt_gunhash.patch \
         file://fixheadercheck.patch \
         file://0001-elf_getarsym-Silence-Werror-maybe-uninitialized-fals.patch \
         file://0001-remove-the-unneed-checking.patch \
         file://0001-fix-a-stack-usage-warning.patch \
+        file://aarch64_uio.patch \
+        file://shadow.patch \
 "
 
 # pick the patch from debian
@@ -33,10 +35,9 @@ SRC_URI += "\
         file://0001-Ignore-differences-between-mips-machine-identifiers.patch \
         file://0002-Add-support-for-mips64-abis-in-mips_retval.c.patch \
         file://0003-Add-mips-n64-relocation-format-hack.patch \
+        file://uclibc-support.patch \
 "
-
-# Only apply when building uclibc based target recipe
-SRC_URI_append_libc-uclibc = " file://uclibc-support-for-elfutils-0.161.patch"
+SRC_URI_append_libc-musl = " file://0001-build-Provide-alternatives-for-glibc-assumptions-hel.patch "
 
 # The buildsystem wants to generate 2 .h files from source using a binary it just built,
 # which can not pass the cross compiling, so let's work around it by adding 2 .h files
@@ -50,7 +51,7 @@ EXTRA_OECONF_append_libc-uclibc = " --enable-uclibc"
 
 do_install_append() {
 	if [ "${TARGET_ARCH}" != "x86_64" ] && [ -z `echo "${TARGET_ARCH}"|grep 'i.86'` ];then
-		rm ${D}${bindir}/eu-objdump
+		rm -f ${D}${bindir}/eu-objdump
 	fi
 }
 
@@ -61,6 +62,8 @@ do_install_append() {
 EXTRA_OEMAKE_libc-uclibc = "-C libelf"
 EXTRA_OEMAKE_class-native = ""
 EXTRA_OEMAKE_class-nativesdk = ""
+
+ALLOW_EMPTY_${PN}_libc-musl = "1"
 
 BBCLASSEXTEND = "native nativesdk"
 
