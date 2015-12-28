@@ -1,4 +1,6 @@
 require bluez5.inc
+
+SRC_URI += "file://core-profile-Fix-possible-crash-when-registering-pro.patch"
 SRC_URI[md5sum] = "9a0ee479cacc44fac68f6a65b1cd3eba"
 SRC_URI[sha256sum] = "a343ea1aeb53d3bd139087f3b1c1e1fb70db452d9762cc7a3d23e75962e578f2"
 
