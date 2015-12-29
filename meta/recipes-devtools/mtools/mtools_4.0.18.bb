@@ -5,6 +5,7 @@ SECTION = "optional"
 LICENSE = "GPLv3"
 LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 
+DEPENDS += "virtual/libiconv"
 
 RDEPENDS_${PN}_libc-glibc = "glibc-gconv-ibm850"
 RRECOMMENDS_${PN}_libc-glibc = "\
@@ -34,6 +35,8 @@ SRC_URI = "${GNU_MIRROR}/mtools/mtools-${PV}.tar.bz2 \
 inherit autotools texinfo
 
 EXTRA_OECONF = "--without-x"
+
+LDFLAGS_append_libc-uclibc = " -liconv "
 
 BBCLASSEXTEND = "native nativesdk"
 
