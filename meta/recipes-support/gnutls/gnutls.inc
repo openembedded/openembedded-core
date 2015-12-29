@@ -1,7 +1,7 @@
 SUMMARY = "GNU Transport Layer Security Library"
 HOMEPAGE = "http://www.gnu.org/software/gnutls/"
 BUGTRACKER = "https://savannah.gnu.org/support/?group=gnutls"
-DEPENDS = "nettle libidn"
+DEPENDS = "nettle libidn virtual/libiconv"
 DEPENDS_append_libc-musl = " argp-standalone "
 
 LICENSE = "GPLv3+ & LGPLv2.1+"
@@ -30,6 +30,7 @@ EXTRA_OECONF="--disable-rpath \
               --enable-openssl-compatibility \
               "
 LDFLAGS_append_libc-musl = " -largp "
+LDFLAGS_append_libc-uclibc = " -luargp "
 
 do_configure_prepend() {
 	for dir in . lib; do
