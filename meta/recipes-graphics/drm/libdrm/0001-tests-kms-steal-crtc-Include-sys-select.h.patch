@@ -1,0 +1,33 @@
+From 46fb5516fb0ab17bcf46a0306a11e8966bb36e14 Mon Sep 17 00:00:00 2001
+From: Khem Raj <raj.khem@gmail.com>
+Date: Tue, 29 Dec 2015 22:17:21 +0000
+Subject: [PATCH] tests/kms-steal-crtc: Include sys/select.h
+
+Fixes errors e.g.
+
+error: implicit declaration of function 'select'
+
+and missing definitions of FD_* defines
+
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+---
+Upstream-Status: Submitted
+
+ tests/kms/kms-steal-crtc.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/tests/kms/kms-steal-crtc.c b/tests/kms/kms-steal-crtc.c
+index 2f7f327..24d70ab 100644
+--- a/tests/kms/kms-steal-crtc.c
++++ b/tests/kms/kms-steal-crtc.c
+@@ -31,6 +31,7 @@
+ #include <stdio.h>
+ #include <string.h>
+ #include <unistd.h>
++#include <sys/select.h>
+ 
+ #include <drm_fourcc.h>
+ 
+-- 
+2.6.4
+

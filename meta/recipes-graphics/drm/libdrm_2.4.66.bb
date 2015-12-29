@@ -11,10 +11,12 @@ PROVIDES = "drm"
 DEPENDS = "libpthread-stubs udev libpciaccess"
 
 SRC_URI = "http://dri.freedesktop.org/libdrm/${BP}.tar.bz2 \
-           file://installtests.patch "
+           file://installtests.patch \
+           file://0001-tests-kms-steal-crtc-Include-sys-select.h.patch \
+          "
 
-SRC_URI[md5sum] = "de49916e5f8aef4eba55223c79709b05"
-SRC_URI[sha256sum] = "71960ac8bde7d710992b1bc8879935e8300a870c36bd06f22412d0447e3d96c4"
+SRC_URI[md5sum] = "c6809c48538d6e5999588832045ff014"
+SRC_URI[sha256sum] = "79cb8e988749794edfb2d777b298d5292eff353bbbb71ed813589e61d2bc2d76"
 
 inherit autotools pkgconfig
 
@@ -32,7 +34,7 @@ PACKAGES =+ "${PN}-tests ${PN}-drivers ${PN}-radeon ${PN}-nouveau ${PN}-omap \
 RRECOMMENDS_${PN}-drivers = "${PN}-radeon ${PN}-nouveau ${PN}-omap ${PN}-intel \
                              ${PN}-exynos ${PN}-freedreno ${PN}-amdgpu"
 
-FILES_${PN}-tests = "${bindir}/dr* ${bindir}/mode* ${bindir}/*test"
+FILES_${PN}-tests = "${bindir}/*"
 FILES_${PN}-radeon = "${libdir}/libdrm_radeon.so.*"
 FILES_${PN}-nouveau = "${libdir}/libdrm_nouveau.so.*"
 FILES_${PN}-omap = "${libdir}/libdrm_omap.so.*"

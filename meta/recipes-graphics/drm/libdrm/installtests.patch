@@ -4,22 +4,12 @@ Upstream-Status: Inappropriate [configuration]
 
 Signed-off-by: Yu Ke <ke.yu@intel.com>
 
-Index: libdrm-2.4.65/tests/Makefile.am
+Index: libdrm-2.4.66/tests/Makefile.am
 ===================================================================
---- libdrm-2.4.65.orig/tests/Makefile.am
-+++ libdrm-2.4.65/tests/Makefile.am
-@@ -29,9 +29,11 @@ AM_CFLAGS = \
+--- libdrm-2.4.66.orig/tests/Makefile.am
++++ libdrm-2.4.66/tests/Makefile.am
+@@ -73,3 +73,4 @@ TESTS +=					\
+ endif
  
- LDADD = $(top_builddir)/libdrm.la
- 
--check_PROGRAMS = \
--	dristat \
--	drmstat
-+bin_PROGRAMS = \
-+        dristat \
-+        drmstat
-+ 
-+check_PROGRAMS =
- 
- dristat_LDADD = -lm
- 
+ check_PROGRAMS += $(TESTS)
++bin_PROGRAMS = $(check_PROGRAMS)
