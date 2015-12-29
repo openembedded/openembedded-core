@@ -16,6 +16,9 @@ SRC_URI = "http://www.directfb.org/downloads/Core/DirectFB-1.7/DirectFB-${PV}.ta
            file://fusion.patch \
            file://bashism.patch \
            file://0001-gfx-direct-Aboid-usng-VLAs-and-printf-formats.patch \
+           file://compar_fn_t.patch \
+           file://union-sigval.patch \
+           file://use-PTHREAD_MUTEX_RECURSIVE.patch \
           "
 
 S = "${WORKDIR}/DirectFB-${PV}"
