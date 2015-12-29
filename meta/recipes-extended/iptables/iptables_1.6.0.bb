@@ -21,12 +21,12 @@ FILES_${PN} =+ "${libdir}/xtables/ ${datadir}/xtables"
 SRC_URI = "http://netfilter.org/projects/iptables/files/iptables-${PV}.tar.bz2 \
            file://types.h-add-defines-that-are-required-for-if_packet.patch \
            file://0001-configure-Add-option-to-enable-disable-libnfnetlink.patch \
-           file://0001-fix-build-with-musl.patch \
            file://0002-configure.ac-only-check-conntrack-when-libnfnetlink-enabled.patch \
           "
+SRC_URI_append_libc-musl = " file://0001-fix-build-with-musl.patch"
 
-SRC_URI[md5sum] = "536d048c8e8eeebcd9757d0863ebb0c0"
-SRC_URI[sha256sum] = "52004c68021da9a599feed27f65defcfb22128f7da2c0531c0f75de0f479d3e0"
+SRC_URI[md5sum] = "27ba3451cb622467fc9267a176f19a31"
+SRC_URI[sha256sum] = "4bb72a0a0b18b5a9e79e87631ddc4084528e5df236bc7624472dcaa8480f1c60"
 
 inherit autotools pkgconfig
 
@@ -39,6 +39,9 @@ PACKAGECONFIG[ipv6] = "--enable-ipv6,--disable-ipv6,"
 
 # libnfnetlink recipe is in meta-networking layer
 PACKAGECONFIG[libnfnetlink] = "--enable-libnfnetlink,--disable-libnfnetlink,libnfnetlink libnetfilter-conntrack"
+
+# libnftnl recipe is in meta-networking layer(previously known as libnftables)
+PACKAGECONFIG[libnftnl] = "--enable-nftables,--disable-nftables,libnftnl"
 
 do_configure_prepend() {
 	# Remove some libtool m4 files
