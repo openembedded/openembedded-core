@@ -23,6 +23,7 @@ SRC_URI = "${GNU_MIRROR}/guile/guile-${PV}.tar.xz \
            file://workaround-ice-ssa-corruption.patch \
            file://libguile-Makefile.am-hook.patch \
            file://libguile-VM-ASM_MUL-for-ARM-Add-earlyclobber.patch \
+           file://remove_strcase_l_funcs.patch \
            "
 
 #           file://debian/0001-Change-guile-to-guile-X.Y-for-info-pages.patch
@@ -50,7 +51,7 @@ EXTRA_OECONF += "${@['--without-libltdl-prefix --without-libgmp-prefix --without
 EXTRA_OECONF_append_class-target = " --with-libunistring-prefix=${STAGING_LIBDIR} \
                                      --with-libgmp-prefix=${STAGING_LIBDIR} \
                                      --with-libltdl-prefix=${STAGING_LIBDIR}"
-
+EXTRA_OECONF_append_libc-uclibc = " guile_cv_use_csqrt=no "
 do_configure_prepend() {
 	mkdir -p po
 }
