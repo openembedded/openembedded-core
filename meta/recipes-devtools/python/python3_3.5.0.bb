@@ -37,6 +37,7 @@ SRC_URI += "\
             file://setup.py-check-cross_compiling-when-get-FLAGS.patch \
             file://setup.py-find-libraries-in-staging-dirs.patch \
             file://use_packed_importlib.patch \
+            file://configure.ac-fix-LIBPL.patch \
            "
 SRC_URI[md5sum] = "d149d2812f10cbe04c042232e7964171"
 SRC_URI[sha256sum] = "d6d7aa1634a5eeeca6ed4fca266982a04f84bd8f3945a9179e20b24ad2e2be91"
