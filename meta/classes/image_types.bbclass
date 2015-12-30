@@ -198,9 +198,10 @@ IMAGE_CMD_wic () {
 }
 IMAGE_CMD_wic[vardepsexclude] = "WKS_FULL_PATH WKS_FILES"
 
-# Rebuild when the wks file changes
+# Rebuild when the wks file or vars in WICVARS change
 USING_WIC = "${@bb.utils.contains_any('IMAGE_FSTYPES', 'wic ' + ' '.join('wic.%s' % c for c in '${COMPRESSIONTYPES}'.split()), '1', '', d)}"
 do_rootfs[file-checksums] += "${@'${WKS_FULL_PATH}:%s' % os.path.exists('${WKS_FULL_PATH}') if '${USING_WIC}' else ''}"
+do_rootfs[vardeps] += "${@bb.utils.contains("USING_WIC", "1", "${WICVARS}", "", d)}"
 
 EXTRA_IMAGECMD = ""
 
