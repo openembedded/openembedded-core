@@ -7,6 +7,7 @@ LICENSE = "BSD"
 LIC_FILES_CHKSUM = "file://COPYRIGHT;md5=8ad8615198542444f84d28a6cf226dd8"
 
 DEPENDS = ""
+DEPENDS_append_libc-musl = " libtirpc "
 PR = "r2"
 
 # Blacklist a bogus tag in upstream check
@@ -20,6 +21,7 @@ SRC_URI = "git://github.com/xinetd-org/xinetd.git;protocol=https \
       file://Disable-services-from-inetd.conf-if-a-service-with-t.patch \
       file://xinetd-should-be-able-to-listen-on-IPv6-even-in-ine.patch \
       file://xinetd-CVE-2013-4342.patch \
+      file://0001-configure-Use-HAVE_SYS_RESOURCE_H-to-guard-sys-resou.patch \
       file://xinetd.service \
       "
 
@@ -38,6 +40,9 @@ EXTRA_OECONF="--disable-nls"
 
 PACKAGECONFIG ??= "tcp-wrappers"
 PACKAGECONFIG[tcp-wrappers] = "--with-libwrap,,tcp-wrappers"
+
+CFLAGS_append_libc-musl = " -I${STAGING_INCDIR}/tirpc "
+LDFLAGS_append_libc-musl = " -ltirpc "
 
 do_configure() {
 	# Looks like configure.in is broken, so we are skipping
