@@ -25,6 +25,7 @@ SRC_URI = "ftp://ftp.gnu.org/gnu/grub/grub-${PV}.tar.gz \
           file://fix-endianness-problem.patch \
           file://grub2-remove-sparc64-setup-from-x86-builds.patch \
           file://0001-parse_dhcp_vendor-Add-missing-const-qualifiers.patch \
+          file://0001-Fix-CVE-2015-8370-Grub2-user-pass-vulnerability.patch \
           "
 
 SRC_URI[md5sum] = "e927540b6eda8b024fb0391eeaa4091c"
