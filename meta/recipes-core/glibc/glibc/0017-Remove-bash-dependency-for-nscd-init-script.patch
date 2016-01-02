@@ -1,7 +1,16 @@
-Don't use bashisms (except for echo -n, which busybox supports) to avoid needing bash to start nscd.
+From cd9d9fe7316f4ce4ca9d8e67e22f5718879535e4 Mon Sep 17 00:00:00 2001
+From: Khem Raj <raj.khem@gmail.com>
+Date: Thu, 31 Dec 2015 14:33:02 -0800
+Subject: [PATCH 17/24] Remove bash dependency for nscd init script
 
-Upstream-Status: Pending
+The nscd init script uses #! /bin/bash but only really uses one bashism
+(translated strings), so remove them and switch the shell to #!/bin/sh.
+
 Signed-off-by: Ross Burton <ross.burton@intel.com>
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+---
+ nscd/nscd.init | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
 diff --git a/nscd/nscd.init b/nscd/nscd.init
 index a882da7..b02986e 100644
@@ -59,3 +68,6 @@ index a882da7..b02986e 100644
  	RETVAL=1
  	;;
  esac
+-- 
+2.6.4
+

@@ -16,7 +16,6 @@ do_configure () {
 		--prefix=/usr \
 		--without-cvs --disable-sanity-checks \
 		--with-headers=${STAGING_DIR_TARGET}${includedir} \
-		--with-kconfig=${STAGING_BINDIR_NATIVE} \
 		--enable-hacker-mode --enable-addons
 }
 

@@ -24,22 +24,19 @@ SRC_URI = "${GLIBC_GIT_URI};branch=${SRCBRANCH};name=glibc \
            ${EGLIBCPATCHES} \
 "
 EGLIBCPATCHES = "\
-           file://0017-timezone-re-written-tzselect-as-posix-sh.patch \
+           file://0016-timezone-re-written-tzselect-as-posix-sh.patch \
+           file://0017-Remove-bash-dependency-for-nscd-init-script.patch \
            file://0018-eglibc-Cross-building-and-testing-instructions.patch \
-           file://0019-eglibc-Bring-Eglibc-option-group-infrastructure-to-g.patch \
-           file://0020-eglibc-Help-bootstrap-cross-toolchain.patch \
-           file://0021-eglibc-cherry-picked-from-http-www.eglibc.org-archiv.patch \
-           file://0022-eglibc-Clear-cache-lines-on-ppc8xx.patch \
-           file://0023-eglibc-Resolve-__fpscr_values-on-SH4.patch \
-           file://0024-eglibc-Forward-port-eglibc-options-groups-support.patch \
-           file://0025-eglibc-Install-PIC-archives.patch \
-           file://0026-eglibc-dl_debug_mask-is-controlled-by-__OPTION_EGLIB.patch \
-           file://0027-eglibc-use-option-groups-Conditionally-exclude-c-tes.patch \
-           file://strcoll-Remove-incorrect-STRDIFF-based-optimization-.patch \
+           file://0019-eglibc-Help-bootstrap-cross-toolchain.patch \
+           file://0020-eglibc-cherry-picked-from.patch \
+           file://0021-eglibc-Clear-cache-lines-on-ppc8xx.patch \
+           file://0022-eglibc-Resolve-__fpscr_values-on-SH4.patch \
+           file://0023-eglibc-Install-PIC-archives.patch \
+           file://0025-eglibc-Forward-port-cross-locale-generation-support.patch \
 "
 
-SRCREV_glibc ?= "a34d1c6afc86521d6ad17662a3b5362d8481514c"
-SRCREV_localedef ?= "c833367348d39dad7ba018990bfdaffaec8e9ed3"
+SRCREV_glibc ?= "e742928c1592b43db6809db4f39e67be151cdd27"
+SRCREV_localedef ?= "5a81ff9f06a7a808d4c3d37bbf34077a4c5902ed"
 
 # Makes for a rather long rev (22 characters), but...
 #

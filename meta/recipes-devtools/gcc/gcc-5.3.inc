@@ -118,13 +118,13 @@ EXTRA_OECONF_BASE = "\
 EXTRA_OECONF_INITIAL = "\
     --disable-libmudflap \
     --disable-libgomp \
-    --disable-libssp \
     --disable-libquadmath \
     --with-system-zlib \
     --disable-lto \
     --disable-plugin \
     --enable-decimal-float=no \
     --without-isl \
+    gcc_cv_libc_provides_ssp=yes \
 "
 
 EXTRA_OECONF_append_libc-uclibc = " --disable-decimal-float "

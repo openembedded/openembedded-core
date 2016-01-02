@@ -1,7 +1,7 @@
-From 718e7e5db1c8b073adb9a79ec6f167238c2d8bda Mon Sep 17 00:00:00 2001
+From 8f483cb1f21ab6431ff99e8d30d56b91607ae918 Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Wed, 18 Mar 2015 00:55:53 +0000
-Subject: [PATCH 23/27] eglibc: Resolve __fpscr_values on SH4
+Subject: [PATCH 22/24] eglibc: Resolve __fpscr_values on SH4
 
 2010-09-29  Nobuhiro Iwamatsu  <iwamatsu@nigauri.org>
             Andrew Stubbs  <ams@codesourcery.com>
@@ -52,5 +52,5 @@ index a02b7e2..b9be326 100644
 +weak_alias (___fpscr_values, __fpscr_values)
 +
 -- 
-2.1.4
+2.6.4
 

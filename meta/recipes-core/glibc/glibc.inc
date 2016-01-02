@@ -44,12 +44,6 @@ DEPENDS = "virtual/${TARGET_PREFIX}gcc-initial libgcc-initial linux-libc-headers
 PROVIDES = "virtual/libc virtual/${TARGET_PREFIX}libc-for-gcc"
 PROVIDES += "virtual/libintl virtual/libiconv"
 inherit autotools texinfo distro_features_check systemd
-require glibc-options.inc
-
-# The main purpose of setting this variable is to prevent users from accidently
-# overriding DISTRO_FEATRUES, causing obscure build failures because of lack
-# of libc functions.
-REQUIRED_DISTRO_FEATURES = "${DISTRO_FEATURES_LIBC}"
 
 LEAD_SONAME = "libc.so"
 
@@ -58,6 +52,7 @@ CACHED_CONFIGUREVARS += " \
   libc_cv_slibdir=${base_libdir} \
   libc_cv_rootsbindir=${base_sbindir} \
   libc_cv_localedir=${localedir} \
+  libc_cv_ssp_strong=no \
   libc_cv_ssp=no \
 "
 
@@ -82,18 +77,8 @@ PARALLEL_MAKE = ""
 # ensure make uses /bin/bash
 EXTRA_OEMAKE += "SHELL=/bin/bash"
 
-OE_FEATURES = "${@features_to_glibc_settings(d)}"
 do_configure_prepend() {
 	sed -e "s#@BASH@#/bin/sh#" -i ${S}/elf/ldd.bash.in
-	echo '${OE_FEATURES}' > ${B}/option-groups.config
-}
-
-do_configure_append() {
-	yes '' | oe_runmake config
-
-	# Remove quotation marks from OPTION_EGLIBC_NSSWITCH_FIXED_*. This will
-	# avoid install error.
-	sed -i 's/^OPTION_EGLIBC_NSSWITCH_FIXED_\(.*\)="\(.*\)"$/OPTION_EGLIBC_NSSWITCH_FIXED_\1=\2/' option-groups.config
 }
 
 GLIBC_ADDONS ?= "nptl,libidn"
