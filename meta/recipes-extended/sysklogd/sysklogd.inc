@@ -15,6 +15,7 @@ inherit update-rc.d update-alternatives
 
 SRC_URI = "http://www.infodrom.org/projects/sysklogd/download/sysklogd-${PV}.tar.gz \
            file://no-strip-install.patch \
+           file://0001-Fix-build-with-musl.patch \
            file://sysklogd \
            file://syslog.conf \
            "
