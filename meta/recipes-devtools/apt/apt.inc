@@ -11,6 +11,7 @@ SRC_URI = "http://snapshot.debian.org/archive/debian/20150805T094928Z/pool/main/
            file://nodoc.patch \
            file://disable-configure-in-makefile.patch \
            file://disable-test.patch \
+           file://0001-environment.mak-musl-based-systems-can-generate-shar.patch \
            "
 SRC_URI[md5sum] = "6505c4297b338adb2087ce87bbc4a276"
 SRC_URI[sha256sum] = "3fb1de9598363c416591d49e3c285458e095b035e6c06d5b944a54e15fc9b543"
