@@ -7,6 +7,7 @@ SRC_URI += "\
     file://Link-libunwind-to-libgcc_s-rather-than-libgcc.patch \
     file://0001-Invalid-dwarf-opcodes-can-cause-references-beyond-th.patch \
     file://Add-AO_REQUIRE_CAS-to-fix-build-on-ARM-v6.patch \
+    file://0001-backtrace-Use-only-with-glibc-and-uclibc.patch \
 "
 
 SRC_URI[md5sum] = "fb4ea2f6fbbe45bf032cd36e586883ce"
