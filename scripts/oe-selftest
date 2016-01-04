@@ -82,6 +82,8 @@ def get_args_parser():
                        help='run-tests-by <name|class|module|id|tag> <list of tests|classes|modules|ids|tags>')
     group.add_argument('--list-tests-by', required=False, dest='list_tests_by', default=False, nargs='*',
                        help='list-tests-by <name|class|module|id|tag> <list of tests|classes|modules|ids|tags>')
+    group.add_argument('--list-tests', required=False,  action="store_true", dest="list_tests", default=False,
+                       help='List all available tests.')
     group.add_argument('--list-tags', required=False, dest='list_tags', default=False, action="store_true",
                        help='List all tags that have been set to test cases.')
     return parser
@@ -333,6 +335,22 @@ def list_testsuite_by(criteria, keyword):
     print 'Total found:\t %s' % len(ts)
 
 
+def list_tests():
+    # List all available oe-selftest tests
+
+    ts = get_all_tests()
+
+    print '%-4s\t%-20s\t%-60s\t%-25s\t%-20s' % ('id', 'tag', 'name', 'class', 'module')
+    print '_' * 150
+    for t in ts:
+        if isinstance(t.tctag, (tuple, list)):
+            print '%-4s\t%-20s\t%-60s\t%-25s\t%-20s' % (t.tcid, ', '.join(t.tctag), t.tcname, t.tcclass, t.tcmodule)
+        else:
+            print '%-4s\t%-20s\t%-60s\t%-25s\t%-20s' % (t.tcid, t.tctag, t.tcname, t.tcclass, t.tcmodule)
+    print '_' * 150
+    print 'Total found:\t %s' % len(ts)
+
+
 def list_tags():
     # Get all tags set to test cases
     # This is useful when setting tags to test cases
@@ -428,6 +446,9 @@ def main():
             criteria = args.list_tests_by[0]
             keyword = args.list_tests_by[1:]
             list_testsuite_by(criteria, keyword)
+
+    if args.list_tests:
+        list_tests()
 
     if args.list_tags:
         list_tags()
