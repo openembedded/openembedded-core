@@ -21,19 +21,14 @@ do_configure () {
     echo "Configuring libsanitizer"
     rm -rf ${B}/$target/libsanitizer/
     mkdir -p ${B}/$target/libsanitizer/
-    # This is kind of gross, but it's an easy way to make configure happy
-    # without hacking it up to use the system stdc++ instead of the one it
-    # expects to be newly built.
-    rm -rf ${B}/$target/libstdc++-v3/
-    mkdir -p ${B}/$target/libstdc++-v3/src/
-    ln -s ${STAGING_LIBDIR}/libstdc++.la ${B}/$target/libstdc++-v3/src/
-    ln -s ${STAGING_LIBDIR}/libstdc++.so ${B}/$target/libstdc++-v3/src/
     cd ${B}/$target/libsanitizer/
     chmod a+x ${S}/libsanitizer/configure
     ${S}/libsanitizer/configure ${CONFIGUREOPTS} ${EXTRA_OECONF}
     # Easiest way to stop bad RPATHs getting into the library since we have a
     # broken libtool here
     sed -i -e 's/hardcode_into_libs=yes/hardcode_into_libs=no/' ${B}/$target/libsanitizer/libtool
+    # Link to the sysroot's libstdc++ instead of one gcc thinks it just built
+    sed -i -e '/LIBSTDCXX_RAW_CXX_\(CXXFLAGS\|LDFLAGS\)\s*=/d' ${B}/$target/libsanitizer/*/Makefile
 }
 
 do_compile () {
