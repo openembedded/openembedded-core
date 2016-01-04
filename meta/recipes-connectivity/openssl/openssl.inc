@@ -11,7 +11,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=f9a8f968107345e0b75aa8c2ecaa7ec8"
 DEPENDS = "perl-native-runtime"
 DEPENDS_append_class-target = " openssl-native"
 
-SRC_URI = "http://www.openssl.org/source/openssl-${PV}.tar.gz \
+SRC_URI = "http://www.openssl.org/source/old/1.0.2/openssl-${PV}.tar.gz \
           "
 S = "${WORKDIR}/openssl-${PV}"
 
