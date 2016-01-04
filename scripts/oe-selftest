@@ -453,7 +453,7 @@ def main():
                         if isinstance(t, type(oeSelfTest)) and issubclass(t, oeSelfTest) and t!=oeSelfTest:
                             print " --", v
                             for method in dir(t):
-                                if method.startswith("test_"):
+                                if method.startswith("test_") and callable(vars(t)[method]):
                                     print " --  --", method
 
                 except (AttributeError, ImportError) as e:
