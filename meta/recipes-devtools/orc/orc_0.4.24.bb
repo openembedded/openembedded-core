@@ -12,6 +12,7 @@ inherit autotools pkgconfig
 BBCLASSEXTEND = "native nativesdk"
 
 PACKAGES =+ "orc-examples"
+PACKAGES_DYNAMIC += "^liborc-.*"
 FILES_orc-examples = "${libdir}/orc/*"
 FILES_${PN} = "${bindir}/*"
 
