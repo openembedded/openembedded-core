@@ -39,6 +39,12 @@ COMPATIBLE_HOST = ".*-uclibc.*"
 
 INHIBIT_DEFAULT_DEPS = "1"
 
+# There appears to be a parallel race in uclibc:
+# GEN /extra/locale/locale_collate.h
+# xargs: ../..//extra/locale/gen_collate: Text file busy
+# make[1]: *** [../..//extra/locale/locale_collate.h] Error 126
+PARALLEL_MAKE = ""
+
 # do_stage barfs on a CC with whitespace, therefore put the 'HOST_CC_ARCH' in
 # the CFLAGS (when building the utils).
 OEMAKE_NO_CC = "'STRIPTOOL=true' 'LD=${LD}'"
