@@ -333,6 +333,7 @@ class DevtoolTests(DevtoolBase):
         checkvars['SRCREV'] = checkrev
         self._test_recipe_contents(recipefile, checkvars, [])
 
+    @testcase(1391)
     def test_devtool_add_fetch_simple(self):
         # Fetch source from a remote URL, auto-detecting name
         tempdir = tempfile.mkdtemp(prefix='devtoolqa')

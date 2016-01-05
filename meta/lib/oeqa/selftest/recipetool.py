@@ -401,6 +401,7 @@ class RecipetoolTests(RecipetoolBase):
         inherits = ['autotools', 'pkgconfig']
         self._test_recipe_contents(recipefile, checkvars, inherits)
 
+    @testcase(1392)
     def test_recipetool_create_simple(self):
         # Try adding a recipe
         temprecipe = os.path.join(self.tempdir, 'recipe')
