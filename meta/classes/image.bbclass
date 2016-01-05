@@ -227,7 +227,6 @@ LINGUAS_INSTALL ?= "${@" ".join(map(lambda s: "locale-base-%s" % s, d.getVar('IM
 PSEUDO_PASSWD = "${IMAGE_ROOTFS}:${STAGING_DIR_NATIVE}"
 
 do_rootfs[dirs] = "${TOPDIR}"
-do_rootfs[lockfiles] += "${IMAGE_ROOTFS}.lock"
 do_rootfs[cleandirs] += "${S}"
 
 # Must call real_do_rootfs() from inside here, rather than as a separate
