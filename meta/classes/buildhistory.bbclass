@@ -531,13 +531,14 @@ END
 
 python buildhistory_get_extra_sdkinfo() {
     import operator
+    import math
     if d.getVar('BB_CURRENTTASK', True) == 'populate_sdk_ext':
         tasksizes = {}
         filesizes = {}
         for root, _, files in os.walk('${SDK_OUTPUT}/${SDKPATH}/sstate-cache'):
             for fn in files:
                 if fn.endswith('.tgz'):
-                    fsize = os.path.getsize(os.path.join(root, fn))
+                    fsize = int(math.ceil(float(os.path.getsize(os.path.join(root, fn))) / 1024))
                     task = fn.rsplit(':', 1)[1].split('_', 1)[1].split('.')[0]
                     origtotal = tasksizes.get(task, 0)
                     tasksizes[task] = origtotal + fsize
