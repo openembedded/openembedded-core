@@ -21,6 +21,7 @@ RCONFLICTS_${PN} = "timezones timezone-africa timezone-america timezone-antarcti
 S = "${WORKDIR}"
 
 DEFAULT_TIMEZONE ?= "Universal"
+INSTALL_TIMEZONE_FILE ?= "1"
 
 TZONES= "africa antarctica asia australasia europe northamerica southamerica  \
          factory etcetera backward systemv \
@@ -48,7 +49,9 @@ do_install () {
         # Install default timezone
         if [ -e ${D}${datadir}/zoneinfo/${DEFAULT_TIMEZONE} ]; then
             install -d ${D}${sysconfdir}
-            echo ${DEFAULT_TIMEZONE} > ${D}${sysconfdir}/timezone
+            if [ "${INSTALL_TIMEZONE_FILE}" == "1" ]; then
+                echo ${DEFAULT_TIMEZONE} > ${D}${sysconfdir}/timezone
+            fi
             ln -s ${datadir}/zoneinfo/${DEFAULT_TIMEZONE} ${D}${sysconfdir}/localtime
         else
             bberror "DEFAULT_TIMEZONE is set to an invalid value."
@@ -205,4 +208,5 @@ FILES_${PN} += "${datadir}/zoneinfo/Pacific/Honolulu     \
                 ${datadir}/zoneinfo/iso3166.tab          \
                 ${datadir}/zoneinfo/Etc/*"
 
-CONFFILES_${PN} += "${sysconfdir}/timezone ${sysconfdir}/localtime"
+CONFFILES_${PN} += "${@ "${sysconfdir}/timezone" if bb.utils.to_boolean(d.getVar('INSTALL_TIMEZONE_FILE', True)) else "" }"
+CONFFILES_${PN} += "${sysconfdir}/localtime"
