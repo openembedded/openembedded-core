@@ -191,8 +191,6 @@ inherit ${IMAGE_CLASSES}
 
 IMAGE_POSTPROCESS_COMMAND ?= ""
 
-
-
 # some default locales
 IMAGE_LINGUAS ?= "de-de fr-fr en-gb"
 
@@ -202,19 +200,17 @@ LINGUAS_INSTALL ?= "${@" ".join(map(lambda s: "locale-base-%s" % s, d.getVar('IM
 # aren't yet available.
 PSEUDO_PASSWD = "${IMAGE_ROOTFS}:${STAGING_DIR_NATIVE}"
 
-do_rootfs[dirs] = "${TOPDIR}"
-do_rootfs[cleandirs] += "${S}"
-
-# Must call real_do_rootfs() from inside here, rather than as a separate
-# task, so that we have a single fakeroot context for the whole process.
-do_rootfs[umask] = "022"
-
 inherit rootfs-postcommands
 
 PACKAGE_EXCLUDE ??= ""
 PACKAGE_EXCLUDE[type] = "list"
 
-python rootfs_process_ignore() {
+fakeroot python do_rootfs () {
+    from oe.rootfs import create_rootfs
+    from oe.image import create_image
+    from oe.manifest import create_manifest
+
+    # Handle package exclusions
     excl_pkgs = d.getVar("PACKAGE_EXCLUDE", True).split()
     inst_pkgs = d.getVar("PACKAGE_INSTALL", True).split()
     inst_attempt_pkgs = d.getVar("PACKAGE_INSTALL_ATTEMPTONLY", True).split()
@@ -233,39 +229,34 @@ python rootfs_process_ignore() {
 
     d.setVar("PACKAGE_INSTALL", ' '.join(inst_pkgs))
     d.setVar("PACKAGE_INSTALL_ATTEMPTONLY", ' '.join(inst_attempt_pkgs))
-}
-do_rootfs[prefuncs] += "rootfs_process_ignore"
 
-# We have to delay the runtime_mapping_rename until just before rootfs runs
-# otherwise, the multilib renaming could step in and squash any fixups that
-# may have occurred.
-python rootfs_runtime_mapping() {
+    # Ensure we handle package name remapping
+    # We have to delay the runtime_mapping_rename until just before rootfs runs
+    # otherwise, the multilib renaming could step in and squash any fixups that
+    # may have occurred.
     pn = d.getVar('PN', True)
     runtime_mapping_rename("PACKAGE_INSTALL", pn, d)
     runtime_mapping_rename("PACKAGE_INSTALL_ATTEMPTONLY", pn, d)
     runtime_mapping_rename("BAD_RECOMMENDATIONS", pn, d)
-}
-do_rootfs[prefuncs] += "rootfs_runtime_mapping"
 
-fakeroot python do_rootfs () {
-    from oe.rootfs import create_rootfs
-    from oe.image import create_image
-    from oe.manifest import create_manifest
-
-    # generate the initial manifest
+    # Generate the initial manifest
     create_manifest(d)
 
-    # generate rootfs
+    # Generate rootfs
     create_rootfs(d)
 
     # generate final images
     create_image(d)
 }
+do_rootfs[dirs] = "${TOPDIR}"
+do_rootfs[lockfiles] += "${IMAGE_ROOTFS}.lock"
+do_rootfs[cleandirs] += "${S}"
+do_rootfs[umask] = "022"
+addtask rootfs before do_build
 
 MULTILIBRE_ALLOW_REP =. "${base_bindir}|${base_sbindir}|${bindir}|${sbindir}|${libexecdir}|${sysconfdir}|${nonarch_base_libdir}/udev|/lib/modules/[^/]*/modules.*|"
 MULTILIB_CHECK_FILE = "${WORKDIR}/multilib_check.py"
 MULTILIB_TEMP_ROOTFS = "${WORKDIR}/multilib"
-
 
 do_fetch[noexec] = "1"
 do_unpack[noexec] = "1"
@@ -281,7 +272,6 @@ do_package_write_ipk[noexec] = "1"
 do_package_write_deb[noexec] = "1"
 do_package_write_rpm[noexec] = "1"
 
-addtask rootfs before do_build
 # Allow the kernel to be repacked with the initramfs and boot image file as a single file
 do_bundle_initramfs[depends] += "virtual/kernel:do_bundle_initramfs"
 do_bundle_initramfs[nostamp] = "1"
