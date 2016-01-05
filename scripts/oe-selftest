@@ -42,7 +42,7 @@ import argparse_oe
 import oeqa.selftest
 import oeqa.utils.ftools as ftools
 from oeqa.utils.commands import runCmd, get_bb_var, get_test_layer
-from oeqa.selftest.base import oeSelfTest
+from oeqa.selftest.base import oeSelfTest, get_available_machines
 
 def logger_create():
     log_file = "oe-selftest-" + t.strftime("%Y-%m-%d_%H:%M:%S") + ".log"
@@ -86,6 +86,8 @@ def get_args_parser():
                        help='List all available tests.')
     group.add_argument('--list-tags', required=False, dest='list_tags', default=False, action="store_true",
                        help='List all tags that have been set to test cases.')
+    parser.add_argument('--machine', required=False, dest='machine', choices=['random', 'all'], default=None,
+                        help='Run tests on different machines (random/all).')
     return parser
 
 
@@ -117,7 +119,7 @@ def add_include():
         not in ftools.read_file(os.path.join(builddir, "conf/local.conf")):
             log.info("Adding: \"include selftest.inc\" in local.conf")
             ftools.append_file(os.path.join(builddir, "conf/local.conf"), \
-                    "\n#include added by oe-selftest.py\ninclude selftest.inc")
+                    "\n#include added by oe-selftest.py\ninclude machine.inc\ninclude selftest.inc")
 
     if "#include added by oe-selftest.py" \
         not in ftools.read_file(os.path.join(builddir, "conf/bblayers.conf")):
@@ -133,13 +135,13 @@ def remove_include():
         in ftools.read_file(os.path.join(builddir, "conf/local.conf")):
             log.info("Removing the include from local.conf")
             ftools.remove_from_file(os.path.join(builddir, "conf/local.conf"), \
-                    "#include added by oe-selftest.py\ninclude selftest.inc")
+                    "\n#include added by oe-selftest.py\ninclude machine.inc\ninclude selftest.inc")
 
     if "#include added by oe-selftest.py" \
         in ftools.read_file(os.path.join(builddir, "conf/bblayers.conf")):
             log.info("Removing the include from bblayers.conf")
             ftools.remove_from_file(os.path.join(builddir, "conf/bblayers.conf"), \
-                    "#include added by oe-selftest.py\ninclude bblayers.inc")
+                    "\n#include added by oe-selftest.py\ninclude bblayers.inc")
 
 def remove_inc_files():
     try:
@@ -151,10 +153,11 @@ def remove_inc_files():
     except (AttributeError, OSError,) as e:    # AttributeError may happen if BUILDDIR is not set
         pass
 
-    try:
-        os.remove(os.path.join(os.environ.get("BUILDDIR"), "conf/bblayers.inc"))
-    except:
-        pass
+    for incl_file in ['conf/bblayers.inc', 'conf/machine.inc']:
+        try:
+            os.remove(os.path.join(os.environ.get("BUILDDIR"), incl_file))
+        except:
+            pass
 
 def get_tests(exclusive_modules=[], include_hidden=False):
     testslist = []
@@ -506,7 +509,23 @@ def main():
                 log.error(e)
                 return 1
         add_include()
-        result = runner.run(suite)
+
+        if args.machine:
+            # Custom machine sets only weak default values (??=) for MACHINE in machine.inc
+            # This let test cases that require a specific MACHINE to be able to override it, using (?= or =)
+            log.info('Custom machine mode enabled. MACHINE set to %s' % args.machine)
+            if args.machine == 'random':
+                os.environ['CUSTOMMACHINE'] = 'random'
+                result = runner.run(suite)
+            else:  # all
+                machines = get_available_machines()
+                for m in machines:
+                    log.info('Run tests with custom MACHINE set to: %s' % m)
+                    os.environ['CUSTOMMACHINE'] = m
+                    result = runner.run(suite)
+        else:
+            result = runner.run(suite)
+
         log.info("Finished")
 
         if result.wasSuccessful():
