@@ -155,7 +155,7 @@ python copy_buildsystem () {
         f.write('NATIVELSBSTRING_forcevariable = "%s"\n\n' % fixedlsbstring)
 
         # Ensure locked sstate cache objects are re-used without error
-        f.write('SIGGEN_LOCKEDSIGS_CHECK_LEVEL = "warn"\n\n')
+        f.write('SIGGEN_LOCKEDSIGS_CHECK_LEVEL = "none"\n\n')
 
         # If you define a sdk_extraconf() function then it can contain additional config
         extraconf = (d.getVar('sdk_extraconf', True) or '').strip()
