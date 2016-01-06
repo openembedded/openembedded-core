@@ -160,11 +160,11 @@ def sdk_update(args, config, basepath, workspace):
         logger.debug("Updating meta data via git ...")
         # Try using 'git pull', if failed, use 'git clone'
         if os.path.exists(os.path.join(basepath, 'layers/.git')):
-            ret = subprocess.call("cd layers && git pull", shell=True)
+            ret = subprocess.call("cd layers && git pull %s/layers/.git" % updateserver, shell=True)
         else:
             ret = -1
         if ret != 0:
-            ret = subprocess.call("rm -rf layers && git clone %s/layers" % updateserver, shell=True)
+            ret = subprocess.call("rm -rf layers && git clone %s/layers/.git" % updateserver, shell=True)
         if ret != 0:
             logger.error("Updating meta data via git failed")
             return ret
