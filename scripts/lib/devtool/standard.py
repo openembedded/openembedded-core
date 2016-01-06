@@ -28,7 +28,7 @@ import scriptutils
 import errno
 import glob
 from collections import OrderedDict
-from devtool import exec_build_env_command, setup_tinfoil, check_workspace_recipe, use_external_build, setup_git_repo, recipe_to_append, DevtoolError
+from devtool import exec_build_env_command, setup_tinfoil, check_workspace_recipe, use_external_build, setup_git_repo, recipe_to_append, get_bbclassextend_targets, DevtoolError
 from devtool import parse_recipe
 
 logger = logging.getLogger('devtool')
@@ -1203,8 +1203,17 @@ def reset(args, config, basepath, workspace):
             logger.info('Cleaning sysroot for recipe %s...' % recipes[0])
         else:
             logger.info('Cleaning sysroot for recipes %s...' % ', '.join(recipes))
+        # If the recipe file itself was created in the workspace, and
+        # it uses BBCLASSEXTEND, then we need to also clean the other
+        # variants
+        targets = []
+        for recipe in recipes:
+            targets.append(recipe)
+            recipefile = workspace[recipe]['recipefile']
+            if recipefile:
+                targets.extend(get_bbclassextend_targets(recipefile, recipe))
         try:
-            exec_build_env_command(config.init_path, basepath, 'bitbake -c clean %s' % ' '.join(recipes))
+            exec_build_env_command(config.init_path, basepath, 'bitbake -c clean %s' % ' '.join(targets))
         except bb.process.ExecutionError as e:
             raise DevtoolError('Command \'%s\' failed, output:\n%s\nIf you '
                                 'wish, you may specify -n/--no-clean to '

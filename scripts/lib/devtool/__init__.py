@@ -214,3 +214,27 @@ def recipe_to_append(recipefile, config, wildcard=False):
     appendpath = os.path.join(config.workspace_path, 'appends')
     appendfile = os.path.join(appendpath, appendname + '.bbappend')
     return appendfile
+
+def get_bbclassextend_targets(recipefile, pn):
+    """
+    Cheap function to get BBCLASSEXTEND and then convert that to the
+    list of targets that would result.
+    """
+    import bb.utils
+
+    values = {}
+    def get_bbclassextend_varfunc(varname, origvalue, op, newlines):
+        values[varname] = origvalue
+        return origvalue, None, 0, True
+    with open(recipefile, 'r') as f:
+        bb.utils.edit_metadata(f, ['BBCLASSEXTEND'], get_bbclassextend_varfunc)
+
+    targets = []
+    bbclassextend = values.get('BBCLASSEXTEND', '').split()
+    if bbclassextend:
+        for variant in bbclassextend:
+            if variant == 'nativesdk':
+                targets.append('%s-%s' % (variant, pn))
+            elif variant in ['native', 'cross', 'crosssdk']:
+                targets.append('%s-%s' % (pn, variant))
+    return targets
