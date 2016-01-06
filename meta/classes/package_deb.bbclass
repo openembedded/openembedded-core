@@ -161,6 +161,8 @@ python do_package_deb () {
             return l2
 
         ctrlfile.write("Package: %s\n" % pkgname)
+        if d.getVar('PACKAGE_ARCH', True) == "all":
+            ctrlfile.write("Multi-Arch: foreign\n")
         # check for required fields
         try:
             for (c, fs) in fields:
