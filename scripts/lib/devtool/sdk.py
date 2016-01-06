@@ -40,14 +40,9 @@ def generate_update_dict(sigfile_new, sigfile_old):
             continue
     return update_dict
 
-def get_sstate_objects(update_dict, newsdk_path):
+def get_sstate_objects(update_dict, sstate_dir):
     """Return a list containing sstate objects which are to be installed"""
     sstate_objects = []
-    # Ensure newsdk_path points to an extensible SDK
-    sstate_dir = os.path.join(newsdk_path, 'sstate-cache')
-    if not os.path.exists(sstate_dir):
-        logger.error("sstate-cache directory not found under %s" % newsdk_path)
-        raise
     for k in update_dict:
         files = set()
         hashval = update_dict[k]
@@ -116,7 +111,11 @@ def sdk_update(args, config, basepath, workspace):
             logger.debug("Found conf/locked-sigs.inc in %s" % updateserver)
         update_dict = generate_update_dict(new_locked_sig_file_path, old_locked_sig_file_path)
         logger.debug("update_dict = %s" % update_dict)
-        sstate_objects = get_sstate_objects(update_dict, updateserver)
+        sstate_dir = os.path.join(newsdk_path, 'sstate-cache')
+        if not os.path.exists(sstate_dir):
+            logger.error("sstate-cache directory not found under %s" % newsdk_path)
+            return 1
+        sstate_objects = get_sstate_objects(update_dict, sstate_dir)
         logger.debug("sstate_objects = %s" % sstate_objects)
         if len(sstate_objects) == 0:
             logger.info("No need to update.")
