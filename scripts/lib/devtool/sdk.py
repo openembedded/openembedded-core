@@ -173,14 +173,15 @@ def sdk_update(args, config, basepath, workspace):
         with open(os.path.join(basepath, 'conf/local.conf'), 'a') as f:
             f.write('SSTATE_MIRRORS_append = " file://.* %s/sstate-cache/PATH \\n "\n' % updateserver)
 
-    # Run bitbake command for the whole SDK
-    sdk_targets = config.get('SDK', 'sdk_targets')
-    logger.info("Executing 'bitbake %s' ... (This may take some time.)" % sdk_targets)
-    try:
-        exec_build_env_command(config.init_path, basepath, 'bitbake %s' % sdk_targets)
-    except:
-        logger.error('bitbake %s failed' % sdk_targets)
-        return -1
+    if not args.skip_prepare:
+        # Run bitbake command for the whole SDK
+        sdk_targets = config.get('SDK', 'sdk_targets')
+        logger.info("Preparing build system... (This may take some time.)")
+        try:
+            exec_build_env_command(config.init_path, basepath, 'bitbake %s' % sdk_targets)
+        except:
+            logger.error('bitbake %s failed' % sdk_targets)
+            return -1
     return 0
 
 def register_commands(subparsers, context):
@@ -188,4 +189,5 @@ def register_commands(subparsers, context):
     if context.fixed_setup:
         parser_sdk = subparsers.add_parser('sdk-update', help='Update SDK components from a nominated location')
         parser_sdk.add_argument('updateserver', help='The update server to fetch latest SDK components from', nargs='?')
+        parser_sdk.add_argument('--skip-prepare', action="store_true", help='Skip re-preparing the build system after updating (for debugging only)')
         parser_sdk.set_defaults(func=sdk_update)
