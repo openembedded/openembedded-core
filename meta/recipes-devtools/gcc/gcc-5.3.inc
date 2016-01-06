@@ -76,6 +76,7 @@ SRC_URI = "\
            file://0044-Adding-mmusl-as-a-musl-libc-specifier-and-the-necess.patch \
            file://0045-Support-for-arm-linux-musl.patch \
            file://0046-Get-rid-of-ever-broken-fixincludes-on-musl.patch \
+	   file://0047-Fix-nios2-musl-build.patch \
           "
 
 BACKPORTS = ""
