@@ -9,8 +9,8 @@ LABELS_append = " ${SYSLINUX_LABELS} "
 
 ROOTFS ?= "${DEPLOY_DIR_IMAGE}/${IMAGE_LINK_NAME}.ext4"
 
-do_bootimg[depends] += "${INITRD_IMAGE}:do_rootfs"
-do_bootimg[depends] += "${PN}:do_rootfs"
+do_bootimg[depends] += "${INITRD_IMAGE}:do_image_complete"
+do_bootimg[depends] += "${PN}:do_image_complete"
 
 inherit bootimg
 

@@ -167,7 +167,7 @@ python () {
     initramfs_image = d.getVar('INITRAMFS_IMAGE', True) or ""
     if initramfs_image != "":
         d.appendVarFlag('do_build', 'depends', " %s:do_bundle_initramfs" %  d.getVar('PN', True))
-        d.appendVarFlag('do_bundle_initramfs', 'depends', " %s:do_rootfs" % initramfs_image)
+        d.appendVarFlag('do_bundle_initramfs', 'depends', " %s:do_image_complete" % initramfs_image)
 }
 
 IMAGE_CLASSES += "image_types"
@@ -486,4 +486,4 @@ do_bundle_initramfs[noexec] = "1"
 do_bundle_initramfs () {
 	:
 }
-addtask bundle_initramfs after do_rootfs
+addtask bundle_initramfs after do_image_complete

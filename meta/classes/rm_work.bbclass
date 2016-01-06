@@ -67,6 +67,10 @@ do_rm_work () {
                i=dummy
                break
                ;;
+            *do_image*)
+               i=dummy
+               break
+               ;;
             *do_build*)
                 i=dummy
                 break
@@ -108,7 +112,7 @@ rm_work_populatesdk () {
 }
 rm_work_populatesdk[cleandirs] = "${WORKDIR}/sdk"
 
-do_rootfs[postfuncs] += "rm_work_rootfs"
+do_image_complete[postfuncs] += "rm_work_rootfs"
 rm_work_rootfs () {
     :
 }
