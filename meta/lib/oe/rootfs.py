@@ -63,6 +63,15 @@ class Rootfs(object):
                 if 'log_check' in line:
                     continue
 
+                if hasattr(self, 'log_check_expected_errors_regexes'):
+                    m = None
+                    for ee in self.log_check_expected_errors_regexes:
+                        m = re.search(ee, line)
+                        if m:
+                            break
+                    if m:
+                        continue
+
                 m = r.search(line)
                 if m:
                     found_error = 1
@@ -623,6 +632,10 @@ class DpkgRootfs(DpkgOpkgRootfs):
     def __init__(self, d, manifest_dir):
         super(DpkgRootfs, self).__init__(d)
         self.log_check_regex = '^E:'
+        self.log_check_expected_errors_regexes = \
+        [
+            "^E: Unmet dependencies."
+        ]
 
         bb.utils.remove(self.image_rootfs, True)
         bb.utils.remove(self.d.getVar('MULTILIB_TEMP_ROOTFS', True), True)
