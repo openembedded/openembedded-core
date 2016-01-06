@@ -153,7 +153,7 @@ python copy_buildsystem () {
         f.write('CONNECTIVITY_CHECK_URIS = ""\n\n')
 
         # Ensure locked sstate cache objects are re-used without error
-        f.write('SIGGEN_LOCKEDSIGS_CHECK_LEVEL = "warn"\n\n')
+        f.write('SIGGEN_LOCKEDSIGS_CHECK_LEVEL = "none"\n\n')
 
         # Hide the config information from bitbake output (since it's fixed within the SDK)
         f.write('BUILDCFG_HEADER = ""\n')
