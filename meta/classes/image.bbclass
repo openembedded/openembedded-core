@@ -207,7 +207,6 @@ PACKAGE_EXCLUDE[type] = "list"
 
 fakeroot python do_rootfs () {
     from oe.rootfs import create_rootfs
-    from oe.image import create_image
     from oe.manifest import create_manifest
 
     # Handle package exclusions
@@ -244,14 +243,21 @@ fakeroot python do_rootfs () {
 
     # Generate rootfs
     create_rootfs(d)
-
-    # generate final images
-    create_image(d)
 }
 do_rootfs[dirs] = "${TOPDIR}"
 do_rootfs[cleandirs] += "${S}"
 do_rootfs[umask] = "022"
 addtask rootfs before do_build
+
+fakeroot python do_image () {
+    from oe.image import create_image
+
+    # generate final images
+    create_image(d)
+}
+do_image[dirs] = "${TOPDIR}"
+do_image[umask] = "022"
+addtask do_image after do_rootfs before do_build
 
 MULTILIBRE_ALLOW_REP =. "${base_bindir}|${base_sbindir}|${bindir}|${sbindir}|${libexecdir}|${sysconfdir}|${nonarch_base_libdir}/udev|/lib/modules/[^/]*/modules.*|"
 MULTILIB_CHECK_FILE = "${WORKDIR}/multilib_check.py"
