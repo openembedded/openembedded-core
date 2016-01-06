@@ -249,7 +249,6 @@ fakeroot python do_rootfs () {
     create_image(d)
 }
 do_rootfs[dirs] = "${TOPDIR}"
-do_rootfs[lockfiles] += "${IMAGE_ROOTFS}.lock"
 do_rootfs[cleandirs] += "${S}"
 do_rootfs[umask] = "022"
 addtask rootfs before do_build
