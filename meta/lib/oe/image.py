@@ -351,12 +351,6 @@ class Image(ImageDepGraph):
 
     def create(self):
         bb.note("###### Generate images #######")
-        pre_process_cmds = self.d.getVar("IMAGE_PREPROCESS_COMMAND", True)
-        post_process_cmds = self.d.getVar("IMAGE_POSTPROCESS_COMMAND", True)
-
-        execute_pre_post_process(self.d, pre_process_cmds)
-
-        self._remove_old_symlinks()
 
         image_cmd_groups = self._get_imagecmds()
 
@@ -405,9 +399,6 @@ class Image(ImageDepGraph):
                 else:
                     bb.note("Creating symlinks for %s image ..." % image_type)
                     self._create_symlinks(subimages)
-
-        execute_pre_post_process(self.d, post_process_cmds)
-
 
 def create_image(d):
     Image(d).create()

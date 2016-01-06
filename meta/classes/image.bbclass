@@ -251,13 +251,34 @@ addtask rootfs before do_build
 
 fakeroot python do_image () {
     from oe.image import create_image
+    from oe.image import Image
+    from oe.utils import execute_pre_post_process
 
-    # generate final images
-    create_image(d)
+    i = Image(d)
+
+    pre_process_cmds = d.getVar("IMAGE_PREPROCESS_COMMAND", True)
+
+    execute_pre_post_process(d, pre_process_cmds)
+
+    i._remove_old_symlinks()
+
+    i.create()
 }
 do_image[dirs] = "${TOPDIR}"
 do_image[umask] = "022"
 addtask do_image after do_rootfs before do_build
+
+fakeroot python do_image_complete () {
+    from oe.utils import execute_pre_post_process
+
+    post_process_cmds = d.getVar("IMAGE_POSTPROCESS_COMMAND", True)
+
+    execute_pre_post_process(d, post_process_cmds)
+}
+do_image_complete[dirs] = "${TOPDIR}"
+do_image_complete[umask] = "022"
+addtask do_image_complete after do_image before do_build
+
 
 MULTILIBRE_ALLOW_REP =. "${base_bindir}|${base_sbindir}|${bindir}|${sbindir}|${libexecdir}|${sysconfdir}|${nonarch_base_libdir}/udev|/lib/modules/[^/]*/modules.*|"
 MULTILIB_CHECK_FILE = "${WORKDIR}/multilib_check.py"
