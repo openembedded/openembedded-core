@@ -18,6 +18,8 @@ SRC_URI = "http://www.skbuff.net/iputils/${BPN}-${PV}.tar.bz2 \
            file://debian/use_gethostbyname2.diff \
            file://debian/targets.diff \
            file://nsgmls-path-fix.patch \
+           file://0001-Fix-header-inclusion-for-musl.patch \
+           file://0001-Intialize-struct-elements-by-name.patch \
           "
 
 SRC_URI[md5sum] = "8aaa7395f27dff9f57ae016d4bc753ce"
