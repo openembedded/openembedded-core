@@ -139,6 +139,8 @@ def add(args, config, basepath, workspace):
         extracmdopts += ' -V %s' % args.version
     if args.binary:
         extracmdopts += ' -b'
+    if args.also_native:
+        extracmdopts += ' --also-native'
 
     tempdir = tempfile.mkdtemp(prefix='devtool')
     try:
@@ -1307,6 +1309,7 @@ def register_commands(subparsers, context):
     parser_add.add_argument('--version', '-V', help='Version to use within recipe (PV)')
     parser_add.add_argument('--no-git', '-g', help='If fetching source, do not set up source tree as a git repository', action="store_true")
     parser_add.add_argument('--binary', '-b', help='Treat the source tree as something that should be installed verbatim (no compilation, same directory structure). Useful with binary packages e.g. RPMs.', action='store_true')
+    parser_add.add_argument('--also-native', help='Also add native variant (i.e. support building recipe for the build host as well as the target machine)', action='store_true')
     parser_add.set_defaults(func=add)
 
     parser_modify = subparsers.add_parser('modify', help='Modify the source for an existing recipe',
