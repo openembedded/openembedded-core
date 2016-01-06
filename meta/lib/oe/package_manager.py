@@ -247,7 +247,7 @@ class DpkgIndexer(Indexer):
                 if a not in pkg_archs:
                     arch_list.append(a)
 
-        all_mlb_pkg_arch_list = (self.d.getVar('ALL_MULTILIB_PACKAGE_ARCHS', True) or "").replace('-', '_').split()
+        all_mlb_pkg_arch_list = (self.d.getVar('ALL_MULTILIB_PACKAGE_ARCHS', True) or "").split()
         arch_list.extend(arch for arch in all_mlb_pkg_arch_list if arch not in arch_list)
 
         apt_ftparchive = bb.utils.which(os.getenv('PATH'), "apt-ftparchive")
@@ -1775,7 +1775,7 @@ class DpkgPM(PackageManager):
         self.apt_args = d.getVar("APT_ARGS", True)
 
         self.all_arch_list = archs.split()
-        all_mlb_pkg_arch_list = (self.d.getVar('ALL_MULTILIB_PACKAGE_ARCHS', True) or "").replace('-', '_').split()
+        all_mlb_pkg_arch_list = (self.d.getVar('ALL_MULTILIB_PACKAGE_ARCHS', True) or "").split()
         self.all_arch_list.extend(arch for arch in all_mlb_pkg_arch_list if arch not in self.all_arch_list)
 
         self._create_configs(archs, base_archs)
@@ -1966,6 +1966,7 @@ class DpkgPM(PackageManager):
         bb.utils.mkdirhier(self.apt_conf_dir)
         bb.utils.mkdirhier(self.apt_conf_dir + "/lists/partial/")
         bb.utils.mkdirhier(self.apt_conf_dir + "/apt.conf.d/")
+        bb.utils.mkdirhier(self.apt_conf_dir + "/preferences.d/")
 
         arch_list = []
         for arch in self.all_arch_list:
@@ -2000,10 +2001,14 @@ class DpkgPM(PackageManager):
         base_arch_list = base_archs.split()
         multilib_variants = self.d.getVar("MULTILIB_VARIANTS", True);
         for variant in multilib_variants.split():
-            if variant == "lib32":
-                base_arch_list.append("i386")
-            elif variant == "lib64":
-                base_arch_list.append("amd64")
+            localdata = bb.data.createCopy(self.d)
+            variant_tune = localdata.getVar("DEFAULTTUNE_virtclass-multilib-" + variant, False)
+            orig_arch = localdata.getVar("DPKG_ARCH", True)
+            localdata.setVar("DEFAULTTUNE", variant_tune)
+            bb.data.update_data(localdata)
+            variant_arch = localdata.getVar("DPKG_ARCH", True)
+            if variant_arch not in base_arch_list:
+                base_arch_list.append(variant_arch)
 
         with open(self.apt_conf_file, "w+") as apt_conf:
             with open(self.d.expand("${STAGING_ETCDIR_NATIVE}/apt/apt.conf.sample")) as apt_conf_sample:
