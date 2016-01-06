@@ -232,6 +232,8 @@ def create_recipe(args):
     lines_before.append('LIC_FILES_CHKSUM = "%s"' % ' \\\n                    '.join(lic_files_chksum))
     lines_before.append('')
 
+    classes = []
+
     # FIXME This is kind of a hack, we probably ought to be using bitbake to do this
     pn = None
     pv = None
@@ -249,6 +251,10 @@ def create_recipe(args):
 
     if args.name:
         pn = args.name
+        if args.name.endswith('-native'):
+            classes.append('native')
+        elif args.name.startswith('nativesdk-'):
+            classes.append('nativesdk')
 
     if pv and pv not in 'git svn hg'.split():
         realpv = pv
@@ -312,7 +318,6 @@ def create_recipe(args):
     handlers = [item[0] for item in handlers]
 
     # Apply the handlers
-    classes = []
     handled = []
 
     if args.binary:
