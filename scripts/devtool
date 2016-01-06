@@ -112,8 +112,18 @@ def read_workspace():
                 res = externalsrc_re.match(line.rstrip())
                 if res:
                     pn = res.group(2) or os.path.splitext(os.path.basename(fn))[0].split('_')[0]
+                    # Find the recipe file within the workspace, if any
+                    bbfile = os.path.basename(fn).replace('.bbappend', '.bb').replace('%', '*')
+                    recipefile = glob.glob(os.path.join(config.workspace_path,
+                                                        'recipes',
+                                                        pn,
+                                                        bbfile))
+                    if recipefile:
+                        recipefile = recipefile[0]
                     workspace[pn] = {'srctree': res.group(3),
-                                     'bbappend': fn}
+                                     'bbappend': fn,
+                                     'recipefile': recipefile}
+                    logger.debug('Found recipe %s' % workspace[pn])
 
 def create_workspace(args, config, basepath, workspace):
     if args.layerpath:

@@ -1171,13 +1171,9 @@ def status(args, config, basepath, workspace):
     """Entry point for the devtool 'status' subcommand"""
     if workspace:
         for recipe, value in workspace.iteritems():
-            bbfile = os.path.basename(value['bbappend']).replace('.bbappend', '.bb').replace('%', '*')
-            recipefile = glob.glob(os.path.join(config.workspace_path,
-                                                'recipes',
-                                                recipe,
-                                                bbfile))
+            recipefile = value['recipefile']
             if recipefile:
-                recipestr = ' (%s)' % recipefile[0]
+                recipestr = ' (%s)' % recipefile
             else:
                 recipestr = ''
             print("%s: %s%s" % (recipe, value['srctree'], recipestr))
@@ -1261,15 +1257,8 @@ def edit_recipe(args, config, basepath, workspace):
             tinfoil.shutdown()
     else:
         check_workspace_recipe(workspace, args.recipename)
-        bbappend = workspace[args.recipename]['bbappend']
-        bbfile = os.path.basename(bbappend).replace('.bbappend', '.bb').replace('%', '*')
-        recipefile = glob.glob(os.path.join(config.workspace_path,
-                                            'recipes',
-                                            args.recipename,
-                                            bbfile))
-        if recipefile:
-            recipefile = recipefile[0]
-        else:
+        recipefile = workspace[args.recipename]['recipefile']
+        if not recipefile:
             raise DevtoolError("Recipe file for %s is not under the workspace" %
                                args.recipename)
 
