@@ -90,9 +90,9 @@ def determine_from_filename(srcfile):
     """Determine name and version from a filename"""
     part = ''
     if '.tar.' in srcfile:
-        namepart = srcfile.split('.tar.')[0]
+        namepart = srcfile.split('.tar.')[0].lower()
     else:
-        namepart = os.path.splitext(srcfile)[0]
+        namepart = os.path.splitext(srcfile)[0].lower()
     splitval = namepart.rsplit('_', 1)
     if len(splitval) == 1:
         splitval = namepart.rsplit('-', 1)
