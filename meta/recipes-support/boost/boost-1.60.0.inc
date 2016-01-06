@@ -11,12 +11,9 @@ BOOST_VER = "${@"_".join(d.getVar("PV",1).split("."))}"
 BOOST_MAJ = "${@"_".join(d.getVar("PV",1).split(".")[0:2])}"
 BOOST_P = "boost_${BOOST_VER}"
 
-SRC_URI = "${SOURCEFORGE_MIRROR}/boost/${BOOST_P}.tar.bz2 \
-           file://0001-mips1-fix-added-gcc.jam-was-passing-the-options-m32-.patch \
-           file://0002-Don-t-pass-m32-m64-where-it-s-not-supported.patch \
-"
+SRC_URI = "${SOURCEFORGE_MIRROR}/boost/${BOOST_P}.tar.bz2"
 
-SRC_URI[md5sum] = "b8839650e61e9c1c0a89f371dd475546"
-SRC_URI[sha256sum] = "fdfc204fc33ec79c99b9a74944c3e54bd78be4f7f15e260c0e2700a36dc7d3e5"
+SRC_URI[md5sum] = "65a840e1a0b13a558ff19eeb2c4f0cbe"
+SRC_URI[sha256sum] = "686affff989ac2488f79a97b9479efb9f2abae035b5ed4d8226de6857933fd3b"
 
 S = "${WORKDIR}/${BOOST_P}"

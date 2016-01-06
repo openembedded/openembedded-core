@@ -18,6 +18,7 @@ BOOST_LIBS = "\
 	serialization \
 	signals \
 	system \
+	timer \
 	test \
 	thread \
 	"
