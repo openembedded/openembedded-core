@@ -51,11 +51,11 @@ def _get_build_task(config):
 
 def build(args, config, basepath, workspace):
     """Entry point for the devtool 'build' subcommand"""
-    check_workspace_recipe(workspace, args.recipename)
+    workspacepn = check_workspace_recipe(workspace, args.recipename, bbclassextend=True)
 
     build_task = _get_build_task(config)
 
-    bbappend = workspace[args.recipename]['bbappend']
+    bbappend = workspace[workspacepn]['bbappend']
     if args.disable_parallel_make:
         logger.info("Disabling 'make' parallelism")
         _set_file_values(bbappend, {'PARALLEL_MAKE': ''})

@@ -146,19 +146,35 @@ def parse_recipe(config, tinfoil, pn, appends):
     return oe.recipeutils.parse_recipe(recipefile, append_files,
                                        tinfoil.config_data)
 
-def check_workspace_recipe(workspace, pn, checksrc=True):
+def check_workspace_recipe(workspace, pn, checksrc=True, bbclassextend=False):
     """
     Check that a recipe is in the workspace and (optionally) that source
     is present.
     """
-    if not pn in workspace:
+
+    workspacepn = pn
+
+    for recipe, value in workspace.iteritems():
+        if recipe == pn:
+            break
+        if bbclassextend:
+            recipefile = value['recipefile']
+            if recipefile:
+                targets = get_bbclassextend_targets(recipefile, recipe)
+                if pn in targets:
+                    workspacepn = recipe
+                    break
+    else:
         raise DevtoolError("No recipe named '%s' in your workspace" % pn)
+
     if checksrc:
-        srctree = workspace[pn]['srctree']
+        srctree = workspace[workspacepn]['srctree']
         if not os.path.exists(srctree):
-            raise DevtoolError("Source tree %s for recipe %s does not exist" % (srctree, pn))
+            raise DevtoolError("Source tree %s for recipe %s does not exist" % (srctree, workspacepn))
         if not os.listdir(srctree):
-            raise DevtoolError("Source tree %s for recipe %s is empty" % (srctree, pn))
+            raise DevtoolError("Source tree %s for recipe %s is empty" % (srctree, workspacepn))
+
+    return workspacepn
 
 def use_external_build(same_dir, no_same_dir, d):
     """
