@@ -207,9 +207,20 @@ insert_feed_uris () {
 
 python write_image_manifest () {
     from oe.rootfs import image_list_installed_packages
-    with open(d.getVar('IMAGE_MANIFEST', True), 'w+') as image_manifest:
+
+    deploy_dir = d.getVar('DEPLOY_DIR_IMAGE', True)
+    link_name = d.getVar('IMAGE_LINK_NAME', True)
+    manifest_name = d.getVar('IMAGE_MANIFEST', True)
+
+    with open(manifest_name, 'w+') as image_manifest:
         image_manifest.write(image_list_installed_packages(d, 'ver'))
         image_manifest.write("\n")
+
+    if manifest_name is not None and os.path.exists(manifest_name):
+        manifest_link = deploy_dir + "/" + link_name + ".manifest"
+        if os.path.exists(manifest_link):
+            os.remove(manifest_link)
+        os.symlink(os.path.basename(manifest_name), manifest_link)
 }
 
 # Can be use to create /etc/timestamp during image construction to give a reasonably 

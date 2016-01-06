@@ -106,21 +106,6 @@ python () {
             d.setVarFlag(var, 'func', '1')
 }
 
-def fstype_variables(d):
-    import oe.image
-
-    image = oe.image.Image(d)
-    alltypes, fstype_groups, cimages = image._get_image_types()
-    fstype_vars = set()
-    for fstype_group in fstype_groups:
-        for fstype in fstype_group:
-            fstype_vars.add('IMAGE_CMD_' + fstype)
-            if fstype in cimages:
-                for ctype in cimages[fstype]:
-                    fstype_vars.add('COMPRESS_CMD_' + ctype)
-
-    return sorted(fstype_vars)
-
 def rootfs_variables(d):
     from oe.rootfs import variable_depends
     variables = ['IMAGE_DEVICE_TABLES','BUILD_IMAGES_FROM_FEEDS','IMAGE_TYPES_MASKED','IMAGE_ROOTFS_ALIGNMENT','IMAGE_OVERHEAD_FACTOR','IMAGE_ROOTFS_SIZE','IMAGE_ROOTFS_EXTRA_SPACE',
@@ -129,7 +114,6 @@ def rootfs_variables(d):
                  'MULTILIB_TEMP_ROOTFS','MULTILIB_VARIANTS','MULTILIBS','ALL_MULTILIB_PACKAGE_ARCHS','MULTILIB_GLOBAL_VARIANTS','BAD_RECOMMENDATIONS','NO_RECOMMENDATIONS','PACKAGE_ARCHS',
                  'PACKAGE_CLASSES','TARGET_VENDOR','TARGET_VENDOR','TARGET_ARCH','TARGET_OS','OVERRIDES','BBEXTENDVARIANT','FEED_DEPLOYDIR_BASE_URI','INTERCEPT_DIR','USE_DEVFS',
                  'COMPRESSIONTYPES', 'IMAGE_GEN_DEBUGFS']
-    variables.extend(fstype_variables(d))
     variables.extend(command_variables(d))
     variables.extend(variable_depends(d))
     return " ".join(variables)
@@ -250,19 +234,13 @@ do_rootfs[umask] = "022"
 addtask rootfs before do_build
 
 fakeroot python do_image () {
-    from oe.image import create_image
-    from oe.image import Image
     from oe.utils import execute_pre_post_process
-
-    i = Image(d)
 
     pre_process_cmds = d.getVar("IMAGE_PREPROCESS_COMMAND", True)
 
     execute_pre_post_process(d, pre_process_cmds)
 
-    i._remove_old_symlinks()
-
-    i.create()
+    write_wic_env(d)
 }
 do_image[dirs] = "${TOPDIR}"
 do_image[umask] = "022"
@@ -279,6 +257,209 @@ do_image_complete[dirs] = "${TOPDIR}"
 do_image_complete[umask] = "022"
 addtask do_image_complete after do_image before do_build
 
+#
+# Write environment variables used by wic
+# to tmp/sysroots/<machine>/imgdata/<image>.env
+#
+def write_wic_env(d):
+    wicvars = d.getVar('WICVARS', True)
+    if not wicvars:
+        return
+
+    stdir = d.getVar('STAGING_DIR_TARGET', True)
+    outdir = os.path.join(stdir, 'imgdata')
+    bb.utils.mkdirhier(outdir)
+    basename = d.getVar('IMAGE_BASENAME', True)
+    with open(os.path.join(outdir, basename) + '.env', 'w') as envf:
+        for var in wicvars.split():
+            value = d.getVar(var, True)
+            if value:
+                envf.write('%s="%s"\n' % (var, value.strip()))
+
+def setup_debugfs_variables(d):
+    d.appendVar('IMAGE_ROOTFS', '-dbg')
+    d.appendVar('IMAGE_LINK_NAME', '-dbg')
+    d.appendVar('IMAGE_NAME','-dbg')
+    debugfs_image_fstypes = d.getVar('IMAGE_FSTYPES_DEBUGFS', True)
+    if debugfs_image_fstypes:
+        d.setVar('IMAGE_FSTYPES', debugfs_image_fstypes)
+
+python setup_debugfs () {
+    setup_debugfs_variables(d)
+}
+
+python () {
+    vardeps = set()
+    ctypes = d.getVar('COMPRESSIONTYPES', True).split()
+    old_overrides = d.getVar('OVERRIDES', 0)
+
+    def _image_base_type(type):
+        if type in ["vmdk", "vdi", "qcow2", "live", "iso", "hddimg"]:
+            type = "ext4"
+        basetype = type
+        for ctype in ctypes:
+            if type.endswith("." + ctype):
+                basetype = type[:-len("." + ctype)]
+                break
+
+        return basetype
+
+    basetypes = {}
+    alltypes = d.getVar('IMAGE_FSTYPES', True).split()
+    typedeps = {}
+
+    if d.getVar('IMAGE_GEN_DEBUGFS', True) == "1":
+        debugfs_fstypes = d.getVar('IMAGE_FSTYPES_DEBUGFS', True).split()
+        for t in debugfs_fstypes:
+            alltypes.append("debugfs_" + t)
+
+    def _add_type(t):
+        baset = _image_base_type(t)
+        if baset not in basetypes:
+            basetypes[baset]= []
+        if t not in basetypes[baset]:
+            basetypes[baset].append(t)
+        debug = ""
+        if t.startswith("debugfs_"):
+            t = t[8:]
+            debug = "debugfs_"
+        deps = (d.getVar('IMAGE_TYPEDEP_' + t, True) or "").split()
+        vardeps.add('IMAGE_TYPEDEP_' + t)
+        if baset not in typedeps:
+            typedeps[baset] = set()
+        deps = [debug + dep for dep in deps]
+        for dep in deps:
+            if dep not in alltypes:
+                alltypes.append(dep)
+            _add_type(dep)
+            basedep = _image_base_type(dep)
+            typedeps[baset].add(basedep)
+        
+    for t in alltypes[:]:
+        _add_type(t)
+
+    d.appendVarFlag('do_image', 'vardeps', ' '.join(vardeps))
+
+    for t in basetypes:
+        vardeps = set()
+        cmds = []
+        subimages = []
+        realt = t
+
+        localdata = bb.data.createCopy(d)
+        debug = ""
+        if t.startswith("debugfs_"):
+            setup_debugfs_variables(localdata)
+            debug = "setup_debugfs "
+            realt = t[8:]
+        localdata.setVar('OVERRIDES', '%s:%s' % (realt, old_overrides))
+        bb.data.update_data(localdata)
+        localdata.setVar('type', realt)
+
+        image_cmd = localdata.getVar("IMAGE_CMD", True)
+        vardeps.add('IMAGE_CMD_' + realt)
+        if image_cmd:
+            cmds.append("\t" + image_cmd)
+        else:
+            bb.fatal("No IMAGE_CMD defined for IMAGE_FSTYPES entry '%s' - possibly invalid type name or missing support class" % t)
+        cmds.append(localdata.expand("\tcd ${DEPLOY_DIR_IMAGE}"))
+
+        for bt in basetypes[t]:
+            for ctype in ctypes:
+                if bt.endswith("." + ctype):
+                    cmds.append("\t" + localdata.getVar("COMPRESS_CMD_" + ctype, True))
+                    vardeps.add('COMPRESS_CMD_' + ctype)
+                    subimages.append(realt + "." + ctype)
+
+        if realt not in alltypes:
+            cmds.append(localdata.expand("\trm ${IMAGE_NAME}.rootfs.${type}"))
+        else:
+            subimages.append(realt)
+
+        d.setVar('do_image_%s' % t, '\n'.join(cmds))
+        d.setVarFlag('do_image_%s' % t, 'func', '1')
+        d.setVarFlag('do_image_%s' % t, 'fakeroot', '1')
+        d.setVarFlag('do_image_%s' % t, 'prefuncs', debug + 'set_image_size')
+        d.setVarFlag('do_image_%s' % t, 'postfuncs', 'create_symlinks')
+        d.setVarFlag('do_image_%s' % t, 'subimages', subimages)
+        d.appendVarFlag('do_image_%s' % t, 'vardeps', ' '.join(vardeps))
+
+        after = 'do_image'
+        for dep in typedeps[t]:
+            after += ' do_image_%s' % dep
+
+        bb.debug(2, "Adding type %s before %s, after %s" % (t, 'do_image_complete', after))
+        bb.build.addtask('do_image_%s' % t, 'do_image_complete', after, d)
+}
+
+#
+# Compute the rootfs size
+#
+def get_rootfs_size(d):
+    import subprocess
+
+    rootfs_alignment = int(d.getVar('IMAGE_ROOTFS_ALIGNMENT', True))
+    overhead_factor = float(d.getVar('IMAGE_OVERHEAD_FACTOR', True))
+    rootfs_req_size = int(d.getVar('IMAGE_ROOTFS_SIZE', True))
+    rootfs_extra_space = eval(d.getVar('IMAGE_ROOTFS_EXTRA_SPACE', True))
+    rootfs_maxsize = d.getVar('IMAGE_ROOTFS_MAXSIZE', True)
+
+    output = subprocess.check_output(['du', '-ks',
+                                      d.getVar('IMAGE_ROOTFS', True)])
+    size_kb = int(output.split()[0])
+    base_size = size_kb * overhead_factor
+    base_size = (base_size, rootfs_req_size)[base_size < rootfs_req_size] + \
+        rootfs_extra_space
+
+    if base_size != int(base_size):
+        base_size = int(base_size + 1)
+    else:
+        base_size = int(base_size)
+
+    base_size += rootfs_alignment - 1
+    base_size -= base_size % rootfs_alignment
+
+    # Check the rootfs size against IMAGE_ROOTFS_MAXSIZE (if set)
+    if rootfs_maxsize:
+        rootfs_maxsize_int = int(rootfs_maxsize)
+        if base_size > rootfs_maxsize_int:
+            bb.fatal("The rootfs size %d(K) overrides the max size %d(K)" % \
+                (base_size, rootfs_maxsize_int))
+    return base_size
+
+python set_image_size () {
+        rootfs_size = get_rootfs_size(d)
+        d.setVar('ROOTFS_SIZE', str(rootfs_size))
+        d.setVarFlag('ROOTFS_SIZE', 'export', '1')
+}
+
+#
+# Create symlinks to the newly created image
+#
+python create_symlinks() {
+
+    deploy_dir = d.getVar('DEPLOY_DIR_IMAGE', True)
+    img_name = d.getVar('IMAGE_NAME', True)
+    link_name = d.getVar('IMAGE_LINK_NAME', True)
+    manifest_name = d.getVar('IMAGE_MANIFEST', True)
+    taskname = d.getVar("BB_CURRENTTASK", True)
+    subimages = d.getVarFlag("do_" + taskname, 'subimages', False)
+    os.chdir(deploy_dir)
+
+    if not link_name:
+        return
+    for type in subimages:
+        if os.path.exists(img_name + ".rootfs." + type):
+            dst = deploy_dir + "/" + link_name + "." + type
+            src = img_name + ".rootfs." + type
+            bb.note("Creating symlink: %s -> %s" % (dst, src))
+            if os.path.islink(dst):
+                if d.getVar('RM_OLD_IMAGE', True) == "1" and \
+                        os.path.exists(os.path.realpath(dst)):
+                    os.remove(os.path.realpath(dst))
+                os.remove(dst)
+            os.symlink(src, dst)
+}
 
 MULTILIBRE_ALLOW_REP =. "${base_bindir}|${base_sbindir}|${bindir}|${sbindir}|${libexecdir}|${sysconfdir}|${nonarch_base_libdir}/udev|/lib/modules/[^/]*/modules.*|"
 MULTILIB_CHECK_FILE = "${WORKDIR}/multilib_check.py"
