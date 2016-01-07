@@ -11,18 +11,17 @@ LIC_FILES_CHKSUM = "file://ping.c;beginline=1;endline=35;md5=f9ceb201733e9a6cf8f
                     file://arping.c;beginline=1;endline=11;md5=fe84301b5c2655c950f8b92a057fafa6 \
                     file://tftpd.c;beginline=1;endline=32;md5=28834bf8a91a5b8a92755dbee709ef96 "
 
-DEPENDS = "gnutls docbook-utils-native sgmlspl-native libcap"
+DEPENDS = "gnutls docbook-utils-native sgmlspl-native libcap libgcrypt"
 
 
 SRC_URI = "http://www.skbuff.net/iputils/${BPN}-${PV}.tar.bz2 \
            file://debian/use_gethostbyname2.diff \
            file://debian/targets.diff \
            file://nsgmls-path-fix.patch \
-           file://fix-build-command-line-argument-with-gnutls.patch \
           "
 
-SRC_URI[md5sum] = "6072aef64205720dd1893b375e184171"
-SRC_URI[sha256sum] = "450f549fc5b620c23c5929aa6d54b7ddfc7ee1cb1e8efdc5e8bb21d8d0c5319f"
+SRC_URI[md5sum] = "8aaa7395f27dff9f57ae016d4bc753ce"
+SRC_URI[sha256sum] = "549f58d71951e52b46595829134d4e330642f522f50026917fadc349a54825a1"
 
 UPSTREAM_CHECK_REGEX = "iputils-(?P<pver>s\d+).tar"
 
