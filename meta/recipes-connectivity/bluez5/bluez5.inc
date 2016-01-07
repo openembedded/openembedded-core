@@ -22,7 +22,7 @@ SRC_URI = "\
 "
 S = "${WORKDIR}/bluez-${PV}"
 
-inherit autotools-brokensep pkgconfig systemd update-rc.d
+inherit autotools-brokensep pkgconfig systemd update-rc.d distro_features_check
 
 EXTRA_OECONF = "\
   --enable-tools \

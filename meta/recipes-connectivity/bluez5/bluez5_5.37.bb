@@ -1,8 +1,9 @@
 require bluez5.inc
 
-SRC_URI += "file://core-profile-Fix-possible-crash-when-registering-pro.patch"
-SRC_URI[md5sum] = "9a0ee479cacc44fac68f6a65b1cd3eba"
-SRC_URI[sha256sum] = "a343ea1aeb53d3bd139087f3b1c1e1fb70db452d9762cc7a3d23e75962e578f2"
+REQUIRED_DISTRO_FEATURES = "bluez5"
+
+SRC_URI[md5sum] = "33177e5743e24b2b3738f72be64e3ffb"
+SRC_URI[sha256sum] = "c14ba9ddcb0055522073477b8fd8bf1ddf5d219e75fdfd4699b7e0ce5350d6b0"
 
 # noinst programs in Makefile.tools that are conditional on READLINE
 # support
