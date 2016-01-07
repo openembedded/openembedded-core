@@ -2,12 +2,10 @@ require rsync.inc
 
 
 SRC_URI += "file://acinclude.m4 \
-            file://0001-Complain-if-an-inc-recursive-path-is-not-right-for-i.patch \
-            file://rsync.git-eac858085.patch \
 "
 
-SRC_URI[md5sum] = "43bd6676f0b404326eee2d63be3cdcfe"
-SRC_URI[sha256sum] = "7de4364fcf5fe42f3bdb514417f1c40d10bbca896abe7e7f2c581c6ea08a2621"
+SRC_URI[md5sum] = "0f758d7e000c0f7f7d3792610fad70cb"
+SRC_URI[sha256sum] = "ecfa62a7fa3c4c18b9eccd8c16eaddee4bd308a76ea50b5c02a5840f09c0a1c2"
 
 PACKAGECONFIG ??= "acl attr"
 PACKAGECONFIG[acl] = "--enable-acl-support,--disable-acl-support,acl,"
