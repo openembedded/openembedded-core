@@ -20,7 +20,7 @@ SRC_URI = "git://github.com/file/file.git \
         file://host-file.patch \
         "
 
-SRCREV = "3c0874be4d3232d672b20f513451a39cfd7c585a"
+SRCREV = "f45db89ddc91692b662fffbabbdafc7bc4c00f5e"
 S = "${WORKDIR}/git"
 
 inherit autotools
