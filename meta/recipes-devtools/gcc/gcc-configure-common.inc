@@ -74,6 +74,7 @@ EXTRA_OECONF_append_armv6 = " --with-arch=armv6"
 EXTRA_OECONF_append_armv7a = " --with-arch=armv7-a"
 EXTRA_OECONF_append_armv7m = " --with-arch=armv7-m"
 EXTRA_OECONF_append_armv7r = " --with-arch=armv7-r"
+EXTRA_OECONF_append_armv7ve = " --with-arch=armv7-a"
 
 EXTRA_OECONF_GCC_FLOAT ??= ""
 CPPFLAGS = ""
