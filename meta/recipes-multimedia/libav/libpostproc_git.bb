@@ -18,9 +18,11 @@ S = "${WORKDIR}/git"
 inherit autotools lib_package pkgconfig
 
 FULL_OPTIMIZATION_armv7a = "-fexpensive-optimizations -fomit-frame-pointer -O4 -ffast-math"
+FULL_OPTIMIZATION_armv7ve = "-fexpensive-optimizations -fomit-frame-pointer -O4 -ffast-math"
 BUILD_OPTIMIZATION = "${FULL_OPTIMIZATION}"
 
 EXTRA_FFCONF_armv7a = "--cpu=cortex-a8"
+EXTRA_FFCONF_armv7ve = "--cpu=cortex-a8"
 EXTRA_FFCONF ?= ""
 
 EXTRA_OECONF = " \
