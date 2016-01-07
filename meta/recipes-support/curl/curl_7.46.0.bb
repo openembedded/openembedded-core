@@ -14,8 +14,8 @@ SRC_URI = "http://curl.haxx.se/download/curl-${PV}.tar.bz2 \
 #
 SRC_URI += " file://configure_ac.patch"
 
-SRC_URI[md5sum] = "62c1a352b28558f25ba6209214beadc8"
-SRC_URI[sha256sum] = "65154e66b9f8a442b57c436904639507b4ac37ec13d6f8a48248f1b4012b98ea"
+SRC_URI[md5sum] = "9979f989a2a9930d10f1b3deeabc2148"
+SRC_URI[sha256sum] = "b7d726cdd8ed4b6db0fa1b474a3c59ebbbe4dcd4c61ac5e7ade0e0270d3195ad"
 
 inherit autotools pkgconfig binconfig multilib_header
 
@@ -54,5 +54,7 @@ PACKAGES =+ "lib${BPN}"
 
 FILES_lib${BPN} = "${libdir}/lib*.so.*"
 RRECOMMENDS_lib${BPN} += "ca-certificates"
+
+FILES_${PN} += "${datadir}/zsh"
 
 BBCLASSEXTEND = "native nativesdk"
