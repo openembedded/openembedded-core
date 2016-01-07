@@ -16,7 +16,7 @@ RDEPENDS_${PN} += "\
     perl-module-threads \
     perl-module-vars "
 
-RDEPENDS_${PN}_class-native = "autoconf-native perl-native-runtime"
+RDEPENDS_${PN}_class-native = "autoconf-native hostperl-runtime-native"
 
 SRC_URI += " file://python-libdir.patch \
             file://py-compile-compile-only-optimized-byte-code.patch \
