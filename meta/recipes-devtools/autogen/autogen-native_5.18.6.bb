@@ -14,8 +14,8 @@ SRC_URI = "${GNU_MIRROR}/autogen/rel${PV}/autogen-${PV}.tar.gz \
            file://redirect-output-dir.patch \
 "
 
-SRC_URI[md5sum] = "385d7c7dfbe60babbee261c054923a53"
-SRC_URI[sha256sum] = "7bbdb73b5518baf64c6d3739fb2ecc66d2cccda888ce5ad573abe235ab5d96ba"
+SRC_URI[md5sum] = "fdee403e524c0af3ded6b3becb365671"
+SRC_URI[sha256sum] = "2fc7f12a5ecb3b1e8bd4364aa906b837cff01f80edb7d2fb38ed8b9dfbcd3271"
 
 UPSTREAM_CHECK_URI = "http://ftp.gnu.org/gnu/autogen/"
 UPSTREAM_CHECK_REGEX = "rel(?P<pver>\d+(\.\d+)+)/"
