@@ -174,7 +174,7 @@ python copy_buildsystem () {
     excluded_targets = d.getVar('SDK_TARGETS', True)
     lockedsigs_pruned = baseoutpath + '/conf/locked-sigs.inc'
     oe.copy_buildsystem.prune_lockedsigs([],
-                                         excluded_targets,
+                                         excluded_targets.split(),
                                          sigfile,
                                          lockedsigs_pruned)
 
