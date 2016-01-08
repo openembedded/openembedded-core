@@ -25,6 +25,8 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/${BPN}/${BPN}-${PV}.tar.gz \
            file://run-ptest \
            file://root-home-dir.patch"
 
+SRC_URI_append_libc-musl = " file://musl.patch"
+
 inherit autotools pkgconfig ptest
 
 EXTRA_OECONF = "--with-kernel=${STAGING_DIR_HOST}${prefix} --without-x ac_cv_prog_XSLTPROC="
