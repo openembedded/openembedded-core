@@ -79,6 +79,10 @@ do_install_append () {
 	fi
 }
 
+do_install_append_libc-musl () {
+	rm -f ${D}${libdir}/charset.alias
+}
+
 RDEPENDS_${PN}-ptest += "\
             gnome-desktop-testing \
             tzdata \

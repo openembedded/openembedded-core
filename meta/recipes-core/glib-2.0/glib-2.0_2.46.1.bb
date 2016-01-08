@@ -11,7 +11,7 @@ SRC_URI = "${GNOME_MIRROR}/glib/${SHRT_VER}/glib-${PV}.tar.xz \
            file://glib-2.0-configure-readlink.patch \
            file://run-ptest \
            file://ptest-paths.patch \
-           file://uclibc.patch \
+           file://uclibc_musl_translation.patch \
            file://0001-configure.ac-Do-not-use-readlink-when-cross-compilin.patch \
            file://allow-run-media-sdX-drive-mount-if-username-root.patch \
 	   file://0001-Remove-the-warning-about-deprecated-paths-in-schemas.patch \

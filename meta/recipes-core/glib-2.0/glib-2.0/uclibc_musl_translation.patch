@@ -5,16 +5,18 @@ based systems therefore lets set DATADIRNAME to "share".
 
 Signed-off-by: Khem Raj <raj.khem@gmail.com>
 Upstream-Status: Pending
-Index: glib-2.38.2/m4macros/glib-gettext.m4
+Index: glib-2.46.1/m4macros/glib-gettext.m4
 ===================================================================
---- glib-2.38.2.orig/m4macros/glib-gettext.m4	2013-11-07 07:29:13.000000000 -0800
-+++ glib-2.38.2/m4macros/glib-gettext.m4	2014-03-15 14:51:54.712135644 -0700
-@@ -239,7 +239,7 @@
- 	      [CATOBJEXT=.mo
-                DATADIRNAME=lib])
- 	    ;;
--	    *-*-openbsd*)
-+	    *-*-openbsd* | *-*-linux-uclibc*)
+--- glib-2.46.1.orig/m4macros/glib-gettext.m4
++++ glib-2.46.1/m4macros/glib-gettext.m4
+@@ -243,6 +243,10 @@ msgstr ""
  	    CATOBJEXT=.mo
              DATADIRNAME=share
  	    ;;
++	    *-*-musl* | *-*-linux-uclibc*)
++	    CATOBJEXT=.gmo
++            DATADIRNAME=share
++	    ;;
+ 	    *)
+ 	    CATOBJEXT=.mo
+             DATADIRNAME=lib
