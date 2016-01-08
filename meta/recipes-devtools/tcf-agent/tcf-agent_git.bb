@@ -12,6 +12,7 @@ UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>(\d+(\.\d+)+))"
 SRC_URI = "git://git.eclipse.org/gitroot/tcf/org.eclipse.tcf.agent.git;branch=1.3_mars_bugfix \
            file://fix_ranlib.patch \
            file://ldflags.patch \
+           file://0001-canonicalize_file_name-is-specific-to-glibc.patch;striplevel=2 \
            file://tcf-agent.init \
            file://tcf-agent.service \
           "
