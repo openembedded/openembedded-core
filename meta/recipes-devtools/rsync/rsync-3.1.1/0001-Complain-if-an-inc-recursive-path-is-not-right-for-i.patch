@@ -6,6 +6,7 @@ Subject: [PATCH] Complain if an inc-recursive path is not right for its dir.
  trasnfer path.
 
 Upstream-Status: BackPort
+CVE: CVE-2014-9512
 
 Fix the CVE-2014-9512, rsync 3.1.1 allows remote attackers to write to arbitrary
 files via a symlink attack on a file in the synchronization path.

@@ -4,6 +4,7 @@ Date: Fri, 6 Feb 2015 12:46:39 -0500
 Subject: [PATCH] libext2fs: fix potential buffer overflow in closefs()
 
 Upstream-Status: Backport
+CVE: CVE-2015-1572
 
 The bug fix in f66e6ce4446: "libext2fs: avoid buffer overflow if
 s_first_meta_bg is too big" had a typo in the fix for

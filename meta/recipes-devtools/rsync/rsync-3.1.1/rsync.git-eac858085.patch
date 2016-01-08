@@ -5,6 +5,7 @@ Subject: [PATCH 1/1] Add compat flag to allow proper seed checksum order.
  Fixes the equivalent of librsync's CVE-2014-8242 issue.
 
 Upstream-Status: Backport
+CVE: CVE-2014-8242
 
 Signed-off-by: Roy Li <rongqing.li@windriver.com>
 ---
