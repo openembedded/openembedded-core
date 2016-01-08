@@ -1,0 +1,35 @@
+From 9b9c95e0390395c7e9ad24a882deb87a50846059 Mon Sep 17 00:00:00 2001
+From: Khem Raj <raj.khem@gmail.com>
+Date: Sat, 8 Aug 2015 17:10:34 -0700
+Subject: [PATCH] Remove the check for LINUX == glibc case
+
+Here it does not consider the case where musl can be an options it does
+consider the bionic case with !defined(ANDROID) but musl does not define
+and musl'ism defines like that
+
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+---
+Upstream-Status: Pending
+
+ pr/src/misc/prnetdb.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
+
+diff --git a/pr/src/misc/prnetdb.c b/pr/src/misc/prnetdb.c
+index b86248f..dc83a56 100644
+--- a/pr/src/misc/prnetdb.c
++++ b/pr/src/misc/prnetdb.c
+@@ -61,10 +61,7 @@ PRLock *_pr_dnsLock = NULL;
+ #define _PR_HAVE_GETPROTO_R_POINTER
+ #endif
+ 
+-#if defined(SOLARIS) || (defined(BSDI) && defined(_REENTRANT)) \
+-	|| (defined(LINUX) && defined(_REENTRANT) \
+-        && !(defined(__GLIBC__) && __GLIBC__ >= 2) \
+-        && !defined(ANDROID))
++#if defined(SOLARIS) || (defined(BSDI) && defined(_REENTRANT))
+ #define _PR_HAVE_GETPROTO_R
+ #define _PR_HAVE_GETPROTO_R_POINTER
+ #endif
+-- 
+2.1.4
+
