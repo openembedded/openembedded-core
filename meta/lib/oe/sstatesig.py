@@ -236,6 +236,10 @@ def find_siginfo(pn, taskname, taskhashlist, d):
     localdata.setVar('PR', '*')
     localdata.setVar('EXTENDPE', '')
     stamp = localdata.getVar('STAMP', True)
+    if pn.startswith("gcc-source"):
+        # gcc-source shared workdir is a special case :(
+        stamp = localdata.expand("${STAMPS_DIR}/work-shared/gcc-${PV}-${PR}")
+
     filespec = '%s.%s.sigdata.*' % (stamp, taskname)
     foundall = False
     import glob
