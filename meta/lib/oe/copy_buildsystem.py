@@ -75,7 +75,7 @@ def generate_locked_sigs(sigfile, d):
     tasks = ['%s.%s' % (v[2], v[1]) for v in depd.itervalues()]
     bb.parse.siggen.dump_lockedsigs(sigfile, tasks)
 
-def prune_lockedsigs(allowed_tasks, excluded_targets, lockedsigs, pruned_output):
+def prune_lockedsigs(excluded_tasks, excluded_targets, lockedsigs, pruned_output):
     with open(lockedsigs, 'r') as infile:
         bb.utils.mkdirhier(os.path.dirname(pruned_output))
         with open(pruned_output, 'w') as f:
@@ -84,7 +84,7 @@ def prune_lockedsigs(allowed_tasks, excluded_targets, lockedsigs, pruned_output)
                 if invalue:
                     if line.endswith('\\\n'):
                         splitval = line.strip().split(':')
-                        if splitval[1] in allowed_tasks and not splitval[0] in excluded_targets:
+                        if not splitval[1] in excluded_tasks and not splitval[0] in excluded_targets:
                             f.write(line)
                     else:
                         f.write(line)

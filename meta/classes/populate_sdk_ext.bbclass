@@ -171,10 +171,9 @@ python copy_buildsystem () {
     oe.copy_buildsystem.generate_locked_sigs(sigfile, d)
 
     # Filter the locked signatures file to just the sstate tasks we are interested in
-    allowed_tasks = ['do_populate_lic', 'do_populate_sysroot', 'do_packagedata', 'do_package_write_ipk', 'do_package_write_rpm', 'do_package_write_deb', 'do_package_qa', 'do_deploy']
     excluded_targets = d.getVar('SDK_TARGETS', True)
     lockedsigs_pruned = baseoutpath + '/conf/locked-sigs.inc'
-    oe.copy_buildsystem.prune_lockedsigs(allowed_tasks,
+    oe.copy_buildsystem.prune_lockedsigs([],
                                          excluded_targets,
                                          sigfile,
                                          lockedsigs_pruned)
@@ -187,6 +186,12 @@ python copy_buildsystem () {
                                                    d.getVar('SSTATE_DIR', True),
                                                    sstate_out, d,
                                                    fixedlsbstring)
+    # We don't need sstate do_package files
+    for root, dirs, files in os.walk(sstate_out):
+        for name in files:
+            if name.endswith("_package.tgz"):
+                f = os.path.join(root, name)
+                os.remove(f)
 }
 
 def extsdk_get_buildtools_filename(d):
