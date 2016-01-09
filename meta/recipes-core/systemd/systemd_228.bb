@@ -443,4 +443,8 @@ pkg_prerm_udev-hwdb () {
 python () {
     if not bb.utils.contains ('DISTRO_FEATURES', 'systemd', True, False, d):
         raise bb.parse.SkipPackage("'systemd' not in DISTRO_FEATURES")
+
+    import re
+    if re.match('.*musl*', d.getVar('TARGET_OS', True)) != None:
+        raise bb.parse.SkipPackage("Not _yet_ supported on musl based targets")
 }
