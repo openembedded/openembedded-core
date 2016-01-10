@@ -22,9 +22,15 @@ S = "${WORKDIR}/${BPN}"
 
 do_configure[noexec] = "1"
 
+HASHSTYLE_mips = "sysv"
+HASHSTYLE_mipsel = "sysv"
+HASHSTYLE_mips64 = "sysv"
+HASHSTYLE_mips64el = "sysv"
+HASHSTYLE = "gnu"
+
 VER = "0"
 do_compile () {
-    ${CC} -I${S} -fPIC -shared -o libfts.so.${VER} -Wl,-soname,libfts.so.${VER} ${S}/fts.c
+    ${CC} -I${S} -fPIC -shared -Wl,--hash-style=${HASHSTYLE} -o libfts.so.${VER} -Wl,-soname,libfts.so.${VER} ${S}/fts.c
 }
 
 do_install() {
