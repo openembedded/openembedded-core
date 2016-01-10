@@ -42,6 +42,10 @@ TDS = "${S}/tentative-dist-staging"
 
 TARGET_CC_ARCH += "${LDFLAGS}"
 
+do_configure_prepend_libc-musl () {
+    sed -i -e '/-DHAVE_SYS_CDEFS_H/d' ${S}/nss/lib/dbm/config/config.mk
+}
+
 do_compile_prepend_class-native() {
     export NSPR_INCLUDE_DIR=${STAGING_INCDIR_NATIVE}
     export NSPR_LIB_DIR=${STAGING_LIBDIR_NATIVE}
