@@ -20,6 +20,8 @@ SRC_URI = "git://git.kernel.org/pub/scm/linux/kernel/git/kdave/btrfs-progs.git \
 inherit autotools-brokensep pkgconfig
 
 EXTRA_OECONF += "--disable-documentation"
+EXTRA_OECONF_append_libc-musl = " --disable-backtrace "
+
 
 do_configure_prepend() {
       sh autogen.sh
