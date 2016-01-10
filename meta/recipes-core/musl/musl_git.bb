@@ -10,6 +10,7 @@ PV = "1.1.12+git${SRCPV}"
 # mirror is at git://github.com/kraj/musl.git
 
 SRC_URI = "git://git.musl-libc.org/musl \
+           file://0001-Make-dynamic-linker-a-relative-symlink-to-libc.patch \
           "
 
 S = "${WORKDIR}/git"
@@ -49,7 +50,7 @@ do_install() {
 	oe_runmake install DESTDIR='${D}'
 
 	install -d ${D}${bindir}
-	ln -s ${libdir}/libc.so ${D}${bindir}/ldd
+	ln -s ../../${libdir}/libc.so ${D}${bindir}/ldd
 }
 
 RDEPENDS_${PN}-dev = "linux-libc-headers-dev"
