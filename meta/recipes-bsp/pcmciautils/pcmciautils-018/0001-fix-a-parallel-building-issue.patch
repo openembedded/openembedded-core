@@ -26,20 +26,16 @@ Signed-off-by: Roy Li <rongqing.li@windriver.com>
  Makefile | 3 +--
  1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/Makefile b/Makefile
-index d45fdc3..4c53bc2 100644
---- a/Makefile
-+++ b/Makefile
-@@ -246,8 +246,7 @@ $(PCMCIA_SOCKET_STARTUP): $(LIBC) src/startup.o src/yacc_config.o src/lex_config
+Index: pcmciautils-018/Makefile
+===================================================================
+--- pcmciautils-018.orig/Makefile
++++ pcmciautils-018/Makefile
+@@ -246,7 +246,7 @@ $(PCMCIA_SOCKET_STARTUP): $(LIBC) src/st
  	$(QUIET) $(LD) $(LDFLAGS) -o $@ $(CRT0) src/startup.o src/yacc_config.o src/lex_config.o $(LIB_OBJS) $(ARCH_LIB_OBJS)
  	$(QUIET) $(STRIPCMD) $@
  
 -yacc_config.o lex_config.o: %.o: %.c
--	$(CC) -c -MD -O -pipe $(CPPFLAGS) $<
-+src/lex_config.o:src/yacc_config.h
++yacc_config.o lex_config.o: %.o: %.c src/yacc_config.h
+ 	$(CC) -c -MD -O -pipe $(CPPFLAGS) $<
  
  debugtools: ccdv $(CBDUMP) $(CISDUMP)
- 
--- 
-1.9.1
-
