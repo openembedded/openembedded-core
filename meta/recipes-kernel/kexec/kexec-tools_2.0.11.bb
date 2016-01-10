@@ -7,6 +7,7 @@ SRC_URI += "file://kexec-tools-Refine-kdump-device_tree-sort.patch \
             file://kexec-x32.patch \
             file://0002-powerpc-change-the-memory-size-limit.patch \
             file://0001-purgatory-Pass-r-directly-to-linker.patch \
+            file://0001-vmcore-dmesg-Define-_GNU_SOURCE.patch \
          "
 
 SRC_URI[md5sum] = "86de066859f289048f1b286af6f03f78"
