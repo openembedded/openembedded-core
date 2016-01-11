@@ -7,8 +7,8 @@ DEPENDS = "libtool bzip2 zlib virtual/libintl"
 
 SRC_URI = "https://fedorahosted.org/releases/e/l/elfutils/${PV}/${BP}.tar.bz2"
 
-SRC_URI[md5sum] = "77ce87f259987d2e54e4d87b86cbee41"
-SRC_URI[sha256sum] = "7c774f1eef329309f3b05e730bdac50013155d437518a2ec0e24871d312f2e23"
+SRC_URI[md5sum] = "2e4536c1c48034f188a80789a59114d8"
+SRC_URI[sha256sum] = "9683c025928a12d06b7fe812928aa6235249e22d197d086f7084606a48165900"
 
 SRC_URI += "\
         file://mempcpy.patch \
@@ -21,19 +21,18 @@ SRC_URI += "\
 "
 
 # pick the patch from debian
-# http://ftp.de.debian.org/debian/pool/main/e/elfutils/elfutils_0.159-4.debian.tar.xz
+# http://ftp.de.debian.org/debian/pool/main/e/elfutils/elfutils_0.164-1.debian.tar.xz
 SRC_URI += "\
-        file://redhat-portability.diff \
         file://hppa_backend.diff \
         file://arm_backend.diff \
         file://mips_backend.diff \
         file://m68k_backend.diff \
         file://testsuite-ignore-elflint.diff \
-        file://scanf-format.patch \
         file://mips_readelf_w.patch \
-        file://arm_func_value.patch \
-        file://arm_unwind_ret_mask.patch \
-        file://non_linux.patch \
+        file://kfreebsd_path.patch \
+        file://0001-Ignore-differences-between-mips-machine-identifiers.patch \
+        file://0002-Add-support-for-mips64-abis-in-mips_retval.c.patch \
+        file://0003-Add-mips-n64-relocation-format-hack.patch \
 "
 
 # Only apply when building uclibc based target recipe
