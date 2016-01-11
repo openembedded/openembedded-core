@@ -13,8 +13,8 @@ DEPENDS = "liburcu popt lttng-ust libxml2"
 RDEPENDS_${PN} = "libgcc"
 RDEPENDS_${PN}-ptest += "make perl bash"
 
-SRCREV = "d71e55a5f1f423eeaa47c08e5797e47ce8e825fb"
-PV = "2.7.0+git${SRCPV}"
+SRCREV = "a90f2c1e10b759782653a81815625e9d1bbb75ca"
+PV = "2.7.1+git${SRCPV}"
 
 PYTHON_OPTION = "am_cv_python_pyexecdir='${libdir}/python${PYTHON_BASEVERSION}/site-packages' \
                  am_cv_python_pythondir='${libdir}/python${PYTHON_BASEVERSION}/site-packages' \
