@@ -15,8 +15,8 @@ SRC_URI = "ftp://ftp.gnupg.org/gcrypt/${BPN}/${BPN}-${PV}.tar.bz2 \
            file://autogen.sh-fix-find-version-for-beta-checking.patch \
           "
 
-SRC_URI[md5sum] = "ebdf92b15b8bcd8579b643c7f41a3238"
-SRC_URI[sha256sum] = "c18a3776d47fec98892d51d28b6574ef16bf0a25eabb0956231058aaf2e7846e"
+SRC_URI[md5sum] = "f0a7cb09fe119f8b82eba7efecd27dc0"
+SRC_URI[sha256sum] = "93bd58d81771a4fa488566e5d2e13b1fd7afc86789401eb41731882abfd26cf9"
 
 EXTRA_OECONF = "--disable-ldap \
 		--disable-ccid-driver \
@@ -40,3 +40,6 @@ do_install_append() {
 }
 
 RDEPENDS_${PN} = "gnutls"
+
+PACKAGECONFIG ??= ""
+PACKAGECONFIG[sqlite3] = "--enable-sqlite, --disable-sqlite, sqlite3"
