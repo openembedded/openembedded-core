@@ -24,6 +24,7 @@ SRC_URI = "${GNU_MIRROR}/guile/guile-${PV}.tar.xz \
            file://libguile-Makefile.am-hook.patch \
            file://libguile-VM-ASM_MUL-for-ARM-Add-earlyclobber.patch \
            file://remove_strcase_l_funcs.patch \
+           file://0001-libguile-Check-for-strtol_l-during-configure.patch \
            "
 
 #           file://debian/0001-Change-guile-to-guile-X.Y-for-info-pages.patch
@@ -52,6 +53,13 @@ EXTRA_OECONF_append_class-target = " --with-libunistring-prefix=${STAGING_LIBDIR
                                      --with-libgmp-prefix=${STAGING_LIBDIR} \
                                      --with-libltdl-prefix=${STAGING_LIBDIR}"
 EXTRA_OECONF_append_libc-uclibc = " guile_cv_use_csqrt=no "
+
+CFLAGS_append_libc-musl = " -DHAVE_GC_SET_FINALIZER_NOTIFIER \
+	                    -DHAVE_GC_GET_HEAP_USAGE_SAFE \
+	                    -DHAVE_GC_GET_FREE_SPACE_DIVISOR \
+	                    -DHAVE_GC_SET_FINALIZE_ON_DEMAND \
+                           "
+
 do_configure_prepend() {
 	mkdir -p po
 }
@@ -75,6 +83,10 @@ do_install_append_class-target() {
 	sed -i -e 's:${STAGING_DIR_HOST}::' ${D}${bindir}/guile-snarf
 
 	sed -i -e 's:${STAGING_DIR_TARGET}::g' ${D}${libdir}/pkgconfig/guile-2.0.pc
+}
+
+do_install_append_libc-musl() {
+	rm -f ${D}${libdir}/charset.alias
 }
 
 SYSROOT_PREPROCESS_FUNCS = "guile_cross_config"
