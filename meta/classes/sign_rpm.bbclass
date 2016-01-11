@@ -71,3 +71,4 @@ python sign_rpm () {
 }
 
 do_package_index[depends] += "signing-keys:do_export_public_keys"
+do_rootfs[depends] += "signing-keys:do_export_public_keys"
