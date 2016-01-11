@@ -9,8 +9,8 @@ SRC_URI = "https://fedorahosted.org/releases/x/m/xmlto/xmlto-${PV}.tar.gz \
            file://configure.in-drop-the-test-of-xmllint-and-xsltproc.patch \
            file://catalog.xml \
 "
-SRC_URI[md5sum] = "0cca8be787ba01e00c618cb390c988b9"
-SRC_URI[sha256sum] = "cfd8d2a26077be1d5566dfe22dd66099ae4f4600dea97d6e113a2cc5b8708977"
+SRC_URI[md5sum] = "a1fefad9d83499a15576768f60f847c6"
+SRC_URI[sha256sum] = "2f986b7c9a0e9ac6728147668e776d405465284e13c74d4146c9cbc51fd8aad3"
 
 inherit autotools
 
