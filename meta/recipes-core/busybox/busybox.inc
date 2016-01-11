@@ -338,10 +338,11 @@ python do_package_prepend () {
             # Match coreutils
             if alt_name == '[':
                 alt_name = 'lbracket'
-            d.appendVar('ALTERNATIVE_%s' % (pn), ' ' + alt_name)
-            d.setVarFlag('ALTERNATIVE_LINK_NAME', alt_name, alt_link_name)
-            if os.path.exists('%s%s' % (dvar, target)):
-                d.setVarFlag('ALTERNATIVE_TARGET', alt_name, target)
+            if alt_name != 'sh':
+                d.appendVar('ALTERNATIVE_%s' % (pn), ' ' + alt_name)
+                d.setVarFlag('ALTERNATIVE_LINK_NAME', alt_name, alt_link_name)
+                if os.path.exists('%s%s' % (dvar, target)):
+                    d.setVarFlag('ALTERNATIVE_TARGET', alt_name, target)
         f.close()
         return
 
