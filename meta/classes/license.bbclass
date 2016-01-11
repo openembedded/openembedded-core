@@ -70,7 +70,7 @@ def write_license_files(d, license_manifest, pkg_dic):
                 except oe.license.LicenseError as exc:
                     bb.fatal('%s: %s' % (d.getVar('P', True), exc))
             else:
-                pkg_dic[pkg]["LICENSES"] = re.sub('[|&()*]', '', pkg_dic[pkg]["LICENSE"])
+                pkg_dic[pkg]["LICENSES"] = re.sub('[|&()*]', ' ', pkg_dic[pkg]["LICENSE"])
                 pkg_dic[pkg]["LICENSES"] = re.sub('  *', ' ', pkg_dic[pkg]["LICENSES"])
                 pkg_dic[pkg]["LICENSES"] = pkg_dic[pkg]["LICENSES"].split()
 
