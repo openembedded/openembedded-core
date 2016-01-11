@@ -629,6 +629,13 @@ DESCRIPTION
        If a <mountpoint> is not specified the partition will be created
        but will not be mounted.
 
+       Partitions with a <mountpoint> specified will be automatically mounted.
+       This is achieved by wic adding entries to the fstab during image
+       generation. In order for a valid fstab to be generated one of the
+       --ondrive, --ondisk or --use-uuid partition options must be used for
+       each partition that specifies a mountpoint.
+
+
        The following are supported 'part' options:
 
          --size: The minimum partition size. Specify an integer value
