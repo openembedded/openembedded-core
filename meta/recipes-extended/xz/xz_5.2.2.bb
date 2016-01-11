@@ -22,8 +22,8 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=c475b6c7dca236740ace4bba553e8e1c \
                     file://lib/getopt.c;endline=23;md5=2069b0ee710572c03bb3114e4532cd84 "
 
 SRC_URI = "http://tukaani.org/xz/xz-${PV}.tar.gz"
-SRC_URI[md5sum] = "3e44c766c3fb4f19e348e646fcd5778a"
-SRC_URI[sha256sum] = "b918b6648076e74f8d7ae19db5ee663df800049e187259faf5eb997a7b974681"
+SRC_URI[md5sum] = "7cf6a8544a7dae8e8106fdf7addfa28c"
+SRC_URI[sha256sum] = "73df4d5d34f0468bd57d09f2d8af363e95ed6cc3a4a86129d2f2c366259902a2"
 
 inherit autotools gettext
 
