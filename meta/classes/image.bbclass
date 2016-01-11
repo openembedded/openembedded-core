@@ -1,6 +1,9 @@
 inherit rootfs_${IMAGE_PKGTYPE}
 
-inherit populate_sdk_ext
+# Only Linux SDKs support populate_sdk_ext, fall back to populate_sdk
+# in the non-Linux SDK_OS case, such as mingw32
+SDKEXTCLASS ?= "${@['populate_sdk', 'populate_sdk_ext']['linux' in d.getVar("SDK_OS", True)]}"
+inherit ${SDKEXTCLASS}
 
 TOOLCHAIN_TARGET_TASK += "${PACKAGE_INSTALL}"
 TOOLCHAIN_TARGET_TASK_ATTEMPTONLY += "${PACKAGE_INSTALL_ATTEMPTONLY}"
