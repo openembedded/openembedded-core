@@ -13,8 +13,8 @@ SRC_URI = "${KERNELORG_MIRROR}/software/utils/pciutils/pciutils-${PV}.tar.xz \
            file://guess-fix.patch \
            file://makefile.patch"
 
-SRC_URI[md5sum] = "4c340a317987d61a11ee2cf139ef1191"
-SRC_URI[sha256sum] = "514a3bdb77e4cdbe9e970e1885af46e0ba2011bf97364368c455ade0edd4e3a9"
+SRC_URI[md5sum] = "35763bb1eab7bc9bf6eb6efb72cbc8a1"
+SRC_URI[sha256sum] = "865554cc5604d1644bd8da38d94845405e2a319a6d5acabc6a0296417684a82a"
 
 inherit multilib_header
 
