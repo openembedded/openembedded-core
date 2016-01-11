@@ -4,7 +4,6 @@ inherit gettext
 
 SRC_URI += "file://0002-Change-order-of-CFLAGS.patch \
             file://0003-Add-support-for-Renesas-SH-sh4-architecture.patch \
-            file://fix-detection-of-64-bit-PPC-inferior-in-gdbserver.patch \
             file://0001-Use-exported-definitions-of-SIGRTMIN.patch \
            "
 #LDFLAGS_append = " -s"
