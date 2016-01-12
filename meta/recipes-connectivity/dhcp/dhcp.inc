@@ -18,7 +18,8 @@ SRC_URI = "ftp://ftp.isc.org/isc/dhcp/${PV}/dhcp-${PV}.tar.gz \
            file://init-server file://default-server \
            file://dhclient.conf file://dhcpd.conf \
            file://dhcpd.service file://dhcrelay.service \
-           file://dhcpd6.service "
+           file://dhcpd6.service \
+           file://search-for-libxml2.patch "
 
 UPSTREAM_CHECK_URI = "ftp://ftp.isc.org/isc/dhcp/"
 UPSTREAM_CHECK_REGEX = "(?P<pver>\d+\.\d+\.(\d+?))/"
