@@ -24,8 +24,8 @@ SRC_URI = "http://download.lighttpd.net/lighttpd/releases-1.4.x/lighttpd-${PV}.t
         file://0001-mod_cgi-buffers-data-without-bound.patch \
         "
 
-SRC_URI[md5sum] = "7adc12323f37ed24ecf026c7547b577d"
-SRC_URI[sha256sum] = "4912568b7befcf3f552ca4668bd7f38cd85f42a22944359d00816ec27eb1e504"
+SRC_URI[md5sum] = "63c7563be1c7a7a9819a51f07f1af8b2"
+SRC_URI[sha256sum] = "7eb9a1853c3d6dd5851682b0733a729ba4158d6bdff80974d5ef5f1f6887365b"
 
 PACKAGECONFIG ??= "openssl"
 PACKAGECONFIG[openssl] = "--with-openssl, --without-openssl, openssl"
