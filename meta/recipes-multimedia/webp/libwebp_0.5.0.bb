@@ -14,8 +14,8 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=6e8dee932c26f2dab503abf70c96d8bb \
                     file://PATENTS;md5=c6926d0cb07d296f886ab6e0cc5a85b7"
 
 SRC_URI = "http://downloads.webmproject.org/releases/webp/${BP}.tar.gz"
-SRC_URI[md5sum] = "b737062cf688e502b940b460ddc3015f"
-SRC_URI[sha256sum] = "c65d34edb57338e331ba4d622227a2b3179444cfca17d02c34f1ead63f603e86"
+SRC_URI[md5sum] = "ba81eb9bf23e3c69a2f5cc8dcdb5938f"
+SRC_URI[sha256sum] = "5cd3bb7b623aff1f4e70bd611dc8dbabbf7688fd5eb225b32e02e09e37dfb274"
 
 UPSTREAM_CHECK_URI = "http://downloads.webmproject.org/releases/webp/index.html"
 
