@@ -169,6 +169,19 @@ python copy_buildsystem () {
 
         f.write('require conf/locked-sigs.inc\n')
 
+    if os.path.exists(builddir + '/conf/auto.conf'):
+        with open(builddir + '/conf/auto.conf', 'r') as f:
+            oldlines = f.readlines()
+        (updated, newlines) = bb.utils.edit_metadata(oldlines, varlist, handle_var)
+        with open(baseoutpath + '/conf/auto.conf', 'w') as f:
+            f.write('# WARNING: this configuration has been automatically generated and in\n')
+            f.write('# most cases should not be edited. If you need more flexibility than\n')
+            f.write('# this configuration provides, it is strongly suggested that you set\n')
+            f.write('# up a proper instance of the full build system and use that instead.\n\n')
+            for line in newlines:
+                if line.strip() and not line.startswith('#'):
+                    f.write(line)
+
     sigfile = d.getVar('WORKDIR', True) + '/locked-sigs.inc'
     oe.copy_buildsystem.generate_locked_sigs(sigfile, d)
 
