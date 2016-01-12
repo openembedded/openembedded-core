@@ -182,11 +182,9 @@ python copy_buildsystem () {
                 if line.strip() and not line.startswith('#'):
                     f.write(line)
 
-    sigfile = d.getVar('WORKDIR', True) + '/locked-sigs.inc'
-    oe.copy_buildsystem.generate_locked_sigs(sigfile, d)
-
     # Filter the locked signatures file to just the sstate tasks we are interested in
     excluded_targets = d.getVar('SDK_TARGETS', True)
+    sigfile = d.getVar('WORKDIR', True) + '/locked-sigs.inc'
     lockedsigs_pruned = baseoutpath + '/conf/locked-sigs.inc'
     oe.copy_buildsystem.prune_lockedsigs([],
                                          excluded_targets.split(),
@@ -288,6 +286,24 @@ fakeroot python do_populate_sdk_ext() {
     bb.build.exec_func("do_populate_sdk", d)
 }
 
+def get_ext_sdk_depends(d):
+    return d.getVarFlag('do_rootfs', 'depends', True) + ' ' + d.getVarFlag('do_build', 'depends', True)
+
+python do_sdk_depends() {
+    # We have to do this separately in its own task so we avoid recursing into
+    # dependencies we don't need to (e.g. buildtools-tarball) and bringing those
+    # into the SDK's sstate-cache
+    import oe.copy_buildsystem
+    sigfile = d.getVar('WORKDIR', True) + '/locked-sigs.inc'
+    oe.copy_buildsystem.generate_locked_sigs(sigfile, d)
+}
+addtask sdk_depends
+
+do_sdk_depends[dirs] = "${WORKDIR}"
+do_sdk_depends[depends] = "${@get_ext_sdk_depends(d)}"
+do_sdk_depends[recrdeptask] = "${@d.getVarFlag('do_populate_sdk', 'recrdeptask', False)}"
+do_sdk_depends[recrdeptask] += "do_populate_lic do_package_qa do_populate_sysroot do_deploy"
+
 def get_sdk_ext_rdepends(d):
     localdata = d.createCopy()
     localdata.appendVar('OVERRIDES', ':task-populate-sdk-ext')
@@ -297,15 +313,12 @@ def get_sdk_ext_rdepends(d):
 do_populate_sdk_ext[dirs] = "${@d.getVarFlag('do_populate_sdk', 'dirs', False)}"
 do_populate_sdk_ext[depends] += "${@d.getVarFlag('do_populate_sdk', 'depends', False)}"
 do_populate_sdk_ext[rdepends] = "${@get_sdk_ext_rdepends(d)}"
-do_populate_sdk_ext[recrdeptask] += "${@d.getVarFlag('do_populate_sdk', 'recrdeptask', False)}"
-
 
 do_populate_sdk_ext[depends] += "buildtools-tarball:do_populate_sdk uninative-tarball:do_populate_sdk"
 
 do_populate_sdk_ext[rdepends] += "${@' '.join([x + ':do_build' for x in d.getVar('SDK_TARGETS', True).split()])}"
-do_populate_sdk_ext[recrdeptask] += "do_populate_lic do_package_qa do_populate_sysroot do_deploy"
 
 # Make sure codes change in copy_buildsystem can result in rebuilt
 do_populate_sdk_ext[vardeps] += "copy_buildsystem"
 
-addtask populate_sdk_ext
+addtask populate_sdk_ext after do_sdk_depends
