@@ -2052,6 +2052,10 @@ python do_package () {
 
     for f in (d.getVar('PACKAGEFUNCS', True) or '').split():
         bb.build.exec_func(f, d)
+
+    qa_sane = d.getVar("QA_SANE", True)
+    if not qa_sane:
+        bb.fatal("Fatal QA errors found, failing task.")
 }
 
 do_package[dirs] = "${SHLIBSWORKDIR} ${PKGDESTWORK} ${D}"
