@@ -5,14 +5,13 @@ This derived from Debian's CA Certificates."
 HOMEPAGE = "http://packages.debian.org/sid/ca-certificates"
 SECTION = "misc"
 LICENSE = "GPL-2.0+ & MPL-2.0"
-LIC_FILES_CHKSUM = "file://debian/copyright;md5=48d2baf97986999e776b43c8dd9e0c5a"
+LIC_FILES_CHKSUM = "file://debian/copyright;md5=e7358b9541ccf3029e9705ed8de57968"
 
 # This is needed to ensure we can run the postinst at image creation time
 DEPENDS = "ca-certificates-native"
 DEPENDS_class-native = ""
 
-# tag: debian/20150426 + 2
-SRCREV = "d4790d2832aaac9152f450e06661511067592227"
+SRCREV = "f54715702c5c0581c9461f78fd84e2c8d2ec243c"
 
 SRC_URI = "git://anonscm.debian.org/collab-maint/ca-certificates.git \
            file://0001-update-ca-certificates-remove-c-rehash.patch \
