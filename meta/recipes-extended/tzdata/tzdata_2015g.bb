@@ -49,7 +49,7 @@ do_install () {
         # Install default timezone
         if [ -e ${D}${datadir}/zoneinfo/${DEFAULT_TIMEZONE} ]; then
             install -d ${D}${sysconfdir}
-            if [ "${INSTALL_TIMEZONE_FILE}" == "1" ]; then
+            if [ "${INSTALL_TIMEZONE_FILE}" = "1" ]; then
                 echo ${DEFAULT_TIMEZONE} > ${D}${sysconfdir}/timezone
             fi
             ln -s ${datadir}/zoneinfo/${DEFAULT_TIMEZONE} ${D}${sysconfdir}/localtime
