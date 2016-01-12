@@ -142,6 +142,8 @@ python copy_buildsystem () {
         for line in newlines:
             if line.strip() and not line.startswith('#'):
                 f.write(line)
+        # Write a newline just in case there's none at the end of the original
+        f.write('\n')
 
         f.write('INHERIT += "%s"\n\n' % 'uninative')
         f.write('CONF_VERSION = "%s"\n\n' % d.getVar('CONF_VERSION', False))
