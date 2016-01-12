@@ -7,8 +7,8 @@ SRC_URI  = "${KERNELORG_MIRROR}/linux/network/${BPN}/${BP}.tar.xz \
             file://0003-Fix-header-inclusions-for-musl.patch \
             file://connman \
             "
-SRC_URI[md5sum] = "4a3efdbd6796922db9c6f66da57887fa"
-SRC_URI[sha256sum] = "5c5e464bacc9c27ed4e7269fb9b5059f07947f5be26433b59212133663ffa991"
+SRC_URI[md5sum] = "cb1c413fcc4f49430294bbd7a92f5f3c"
+SRC_URI[sha256sum] = "88fcf0b6df334796b90e2fd2e434d6f5b36cd6f13b886a119b8c90276b72b8e2"
 
 RRECOMMENDS_${PN} = "connman-conf"
 
