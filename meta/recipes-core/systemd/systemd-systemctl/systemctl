@@ -136,7 +136,7 @@ for service in $services; do
 					continue
 				else
 					echo "Found DefaultInstance $default_instance, enabling it"
-					enable_service=$(echo $service | sed "s/@/@$default_instance/")
+					enable_service=$(echo $service | sed "s/@/@$(echo $default_instance | sed 's/\\/\\\\/g')/")
 				fi
 			fi
 			mkdir -p $ROOT/etc/systemd/system/$r.wants
