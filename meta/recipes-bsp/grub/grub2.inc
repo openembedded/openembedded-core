@@ -28,6 +28,7 @@ SRC_URI = "ftp://ftp.gnu.org/gnu/grub/grub-${PV}.tar.gz \
            file://0001-parse_dhcp_vendor-Add-missing-const-qualifiers.patch \
            file://grub2-fix-initrd-size-bug.patch \
            file://0001-Fix-CVE-2015-8370-Grub2-user-pass-vulnerability.patch \
+           file://0001-Remove-direct-_llseek-code-and-require-long-filesyst.patch \
             "
 
 DEPENDS = "flex-native bison-native xz"
