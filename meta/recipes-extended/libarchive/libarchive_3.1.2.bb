@@ -39,7 +39,7 @@ SRC_URI = "http://libarchive.org/downloads/libarchive-${PV}.tar.gz \
 SRC_URI[md5sum] = "efad5a503f66329bb9d2f4308b5de98a"
 SRC_URI[sha256sum] = "eb87eacd8fe49e8d90c8fdc189813023ccc319c5e752b01fb6ad0cc7b2c53d5e"
 
-inherit autotools lib_package pkgconfig
+inherit autotools update-alternatives pkgconfig
 
 CPPFLAGS += "-I${WORKDIR}/extra-includes"
 
@@ -49,5 +49,21 @@ do_configure_prepend() {
 	# build all of e2fsprogs for the target
 	cp -R ${STAGING_INCDIR_NATIVE}/ext2fs ${WORKDIR}/extra-includes/
 }
+
+ALTERNATIVE_PRIORITY = "100"
+
+PACKAGES =+ "bsdtar"
+FILES_bsdtar = "${bindir}/bsdtar"
+
+ALTERNATIVE_bsdtar = "tar"
+ALTERNATIVE_LINK_NAME[tar] = "${base_bindir}/tar"
+ALTERNATIVE_TARGET[tar] = "${bindir}/bsdtar"
+
+PACKAGES =+ "bsdcpio"
+FILES_bsdcpio = "${bindir}/bsdcpio"
+
+ALTERNATIVE_bsdcpio = "cpio"
+ALTERNATIVE_LINK_NAME[cpio] = "${base_bindir}/cpio"
+ALTERNATIVE_TARGET[cpio] = "${bindir}/bsdcpio"
 
 BBCLASSEXTEND = "native nativesdk"
