@@ -17,7 +17,7 @@ EXTRA_OECONF = "--with-perl=${STAGING_BINDIR_NATIVE}/perl-native/perl \
 		--without-tcltk \
 "
 
-inherit autotools-brokensep perlnative
+inherit autotools-brokensep perlnative bash-completion
 
 EXTRA_OEMAKE = "NO_PYTHON=1 CFLAGS='${CFLAGS}' LDFLAGS='${LDFLAGS}'"
 EXTRA_OEMAKE += "'PERL_PATH=/usr/bin/env perl'"
@@ -95,10 +95,6 @@ PERLTOOLS = " \
     ${datadir}/git-core/templates/hooks/prepare-commit-msg.sample \
     ${datadir}/git-core/templates/hooks/pre-rebase.sample \
 "
-
-# Basic tab completion support
-PACKAGES =+ "${PN}-bash-completion"
-FILES_${PN}-bash-completion = "${datadir}/bash-completion/completions/*"
 
 # Git tools requiring perl
 PACKAGES =+ "${PN}-perltools"
