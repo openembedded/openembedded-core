@@ -5,12 +5,12 @@ SECTION = "bootloader"
 
 DEPENDS = "openssl"
 
-# This revision corresponds to the tag "v2015.10"
+# This revision corresponds to the tag "v2016.01"
 # We use the revision in order to avoid having to fetch it from the
 # repo during parse
-SRCREV = "5ec0003b19cbdf06ccd6941237cbc0d1c3468e2d"
+SRCREV = "fa85e826c16b9ce1ad302a57e9c4b24db0d8b930"
 
-PV = "v2015.10+git${SRCPV}"
+PV = "v2016.01+git${SRCPV}"
 
 SRC_URI = "git://git.denx.de/u-boot.git;branch=master"
 
