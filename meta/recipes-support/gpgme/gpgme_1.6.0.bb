@@ -6,7 +6,7 @@ BUGTRACKER = "https://bugs.g10code.com/gnupg/index"
 LICENSE = "GPLv2+ & LGPLv2.1+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f \
                     file://COPYING.LESSER;md5=bbb461211a33b134d42ed5ee802b37ff \
-                    file://src/gpgme.h.in;endline=23;md5=71ba2ae8d6ca034ed10bd099a8cf473c \
+                    file://src/gpgme.h.in;endline=23;md5=5027eec93a996272a9a0a6a86cf35775 \
                     file://src/engine.h;endline=22;md5=4b6d8ba313d9b564cc4d4cfb1640af9d"
 
 SRC_URI = "ftp://ftp.gnupg.org/gcrypt/gpgme/${BP}.tar.bz2 \
@@ -14,8 +14,8 @@ SRC_URI = "ftp://ftp.gnupg.org/gcrypt/gpgme/${BP}.tar.bz2 \
            file://pkgconfig.patch \
           "
 
-SRC_URI[md5sum] = "feafa03ea064e1d1dc11bc2b88404623"
-SRC_URI[sha256sum] = "bb38c0ec8815c9e94e6047b484984808a8dad9d6bec8df33dc5339fd55ffea6c"
+SRC_URI[md5sum] = "60d730d22e8065fd5de309e8b98e304b"
+SRC_URI[sha256sum] = "b09de4197ac280b102080e09eaec6211d081efff1963bf7821cf8f4f9916099d"
 
 DEPENDS = "libgpg-error libassuan"
 
