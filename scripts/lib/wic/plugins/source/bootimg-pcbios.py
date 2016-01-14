@@ -84,18 +84,19 @@ class BootimgPcbiosPlugin(SourcePlugin):
         install_cmd = "install -d %s" % hdddir
         exec_cmd(install_cmd)
 
-        configfile = kickstart.get_bootloader_file(creator.ks)
+        bootloader = creator.ks.bootloader
+
         custom_cfg = None
-        if configfile:
-            custom_cfg = get_custom_config(configfile)
+        if bootloader.configfile:
+            custom_cfg = get_custom_config(bootloader.configfile)
             if custom_cfg:
                 # Use a custom configuration for grub
                 syslinux_conf = custom_cfg
                 msger.debug("Using custom configuration file "
-                        "%s for syslinux.cfg" % configfile)
+                            "%s for syslinux.cfg" % bootloader.configfile)
             else:
                 msger.error("configfile is specified but failed to "
-                        "get it from %s." % configfile)
+                            "get it from %s." % bootloader.configfile)
 
         if not custom_cfg:
             # Create syslinux configuration using parameters from wks file

@@ -159,7 +159,7 @@ class DirectImageCreator(BaseImageCreator):
                 self.ks.partitions.append(part)
 
         # partitions list from kickstart file
-        return kickstart.get_partitions(self.ks)
+        return self.ks.partitions
 
     def get_disk_names(self):
         """ Returns a list of physical target disk names (e.g., 'sdb') which

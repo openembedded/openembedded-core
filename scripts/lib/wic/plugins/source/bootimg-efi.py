@@ -46,7 +46,7 @@ class BootimgEFIPlugin(SourcePlugin):
         """
         Create loader-specific (grub-efi) config
         """
-        configfile = kickstart.get_bootloader_file(creator.ks)
+        configfile = creator.ks.bootloader.configfile
         custom_cfg = None
         if configfile:
             custom_cfg = get_custom_config(configfile)
@@ -104,7 +104,7 @@ class BootimgEFIPlugin(SourcePlugin):
         cfg.write(loader_conf)
         cfg.close()
 
-        configfile = kickstart.get_bootloader_file(creator.ks)
+        configfile = creator.ks.bootloader.configfile
         custom_cfg = None
         if configfile:
             custom_cfg = get_custom_config(configfile)
