@@ -35,6 +35,7 @@ SRC_URI = "\
      file://0013-Fix-an-internal-error-in-do_print_to_mapfile-seen-wi.patch \
      file://0014-gold-arm-Skip-pic-check-for-R_ARM_REL32.patch \
      file://0015-Fix-dynamic-list-so-that-symbols-not-in-the-list-are.patch \
+     file://0016-This-patch-adds-IFUNC-support-for-arm-gold-backend.patch \
      file://binutils-octeon3.patch \
      file://add-thunderx-support-for-gas.patch \
      "
