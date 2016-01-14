@@ -337,6 +337,9 @@ python () {
             _add_type(dep)
             basedep = _image_base_type(dep)
             typedeps[baset].add(basedep)
+
+        if baset != t:
+            _add_type(baset)
         
     for t in alltypes[:]:
         _add_type(t)
