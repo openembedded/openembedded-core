@@ -64,7 +64,7 @@ class DirectImageCreator(BaseImageCreator):
         self.__disks = {}
         self.__disk_format = "direct"
         self._disk_names = []
-        self.ptable_format = self.ks.handler.bootloader.ptable
+        self.ptable_format = self.ks.bootloader.ptable
 
         self.oe_builddir = oe_builddir
         if image_output_dir:
@@ -151,12 +151,12 @@ class DirectImageCreator(BaseImageCreator):
                                "please check your kickstart setting.")
 
         # Set a default partition if no partition is given out
-        if not self.ks.handler.partition.partitions:
+        if not self.ks.partitions:
             partstr = "part / --size 1900 --ondisk sda --fstype=ext3"
             args = partstr.split()
-            part = self.ks.handler.partition.parse(args[1:])
-            if part not in self.ks.handler.partition.partitions:
-                self.ks.handler.partition.partitions.append(part)
+            part = self.ks.parse(args[1:])
+            if part not in self.ks.partitions:
+                self.ks.partitions.append(part)
 
         # partitions list from kickstart file
         return kickstart.get_partitions(self.ks)
@@ -206,7 +206,7 @@ class DirectImageCreator(BaseImageCreator):
         bootloader object, the default can be explicitly set using the
         --source bootloader param.
         """
-        return self.ks.handler.bootloader.source
+        return self.ks.bootloader.source
 
     #
     # Actual implemention
@@ -224,8 +224,8 @@ class DirectImageCreator(BaseImageCreator):
         for part in parts:
             # as a convenience, set source to the boot partition source
             # instead of forcing it to be set via bootloader --source
-            if not self.ks.handler.bootloader.source and part.mountpoint == "/boot":
-                self.ks.handler.bootloader.source = part.source
+            if not self.ks.bootloader.source and part.mountpoint == "/boot":
+                self.ks.bootloader.source = part.source
 
         fstab_path = self._write_fstab(self.rootfs_dir.get("ROOTFS_DIR"))
 

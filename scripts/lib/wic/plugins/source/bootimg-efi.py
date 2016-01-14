@@ -61,7 +61,7 @@ class BootimgEFIPlugin(SourcePlugin):
 
         if not custom_cfg:
             # Create grub configuration using parameters from wks file
-            options = creator.ks.handler.bootloader.appendLine
+            bootloader = creator.ks.bootloader
 
             grubefi_conf = ""
             grubefi_conf += "serial --unit=0 --speed=115200 --word=8 --parity=no --stop=1\n"

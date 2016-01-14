@@ -78,7 +78,7 @@ class RootfsPlugin(SourcePlugin):
 
         Called before do_prepare_partition()
         """
-        options = image_creator.ks.handler.bootloader.appendLine
+        bootloader = image_creator.ks.bootloader
 
         syslinux_conf = ""
         syslinux_conf += "PROMPT 0\n"
@@ -97,7 +97,7 @@ class RootfsPlugin(SourcePlugin):
         syslinux_conf += "  KERNEL /boot/bzImage\n"
 
         syslinux_conf += "  APPEND label=boot root=%s %s\n" % \
-                             (image_creator.rootdev, options)
+                             (image_creator.rootdev, bootloader.append)
 
         syslinux_cfg = os.path.join(image_creator.rootfs_dir['ROOTFS_DIR'], "boot", "syslinux.cfg")
         msger.debug("Writing syslinux config %s" % syslinux_cfg)
