@@ -27,7 +27,7 @@
 import os
 import shutil
 
-from wic import kickstart, msger
+from wic import msger
 from wic.utils import fs_related
 from wic.utils.oe.misc import get_bitbake_var
 from wic.utils.partitionedfs import Image
