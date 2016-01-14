@@ -302,7 +302,7 @@ class IsoImagePlugin(SourcePlugin):
             # which contains rootfs
             du_cmd = "du -bks %s" % rootfs_dir
             out = exec_cmd(du_cmd)
-            part.set_size(int(out.split()[0]))
+            part.size = int(out.split()[0])
             part.extra_space = 0
             part.overhead_factor = 1.2
             part.prepare_rootfs(cr_workdir, oe_builddir, rootfs_dir, \
@@ -502,8 +502,8 @@ class IsoImagePlugin(SourcePlugin):
         out = exec_cmd(du_cmd)
         isoimg_size = int(out.split()[0])
 
-        part.set_size(isoimg_size)
-        part.set_source_file(iso_img)
+        part.size = isoimg_size
+        part.source_file = iso_img
 
     @classmethod
     def do_install_disk(cls, disk, disk_name, creator, workdir, oe_builddir,
