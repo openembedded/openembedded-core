@@ -13,6 +13,7 @@ SRC_URI = "git://git.tartarus.org/simon/puzzles.git \
            file://fix-compiling-failure-with-option-g-O.patch \
            file://0001-Use-labs-instead-of-abs.patch \
            file://0001-rect-Fix-compiler-errors-about-uninitialized-use-of-.patch \
+           file://0001-palisade-Fix-warnings-with-clang-on-arm.patch \
 "
 SRCREV = "346584bf6e38232be8773c24fd7dedcbd7b3d9ed"
 PE = "1"
