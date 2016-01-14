@@ -141,7 +141,7 @@ class RootfsPlugin(SourcePlugin):
 
         real_rootfs_dir = cls._get_rootfs_dir(rootfs_dir)
 
-        part.set_rootfs(real_rootfs_dir)
+        part.rootfs_dir = real_rootfs_dir
         part.prepare_rootfs(image_creator_workdir, oe_builddir, real_rootfs_dir, native_sysroot)
 
         # install syslinux into rootfs partition

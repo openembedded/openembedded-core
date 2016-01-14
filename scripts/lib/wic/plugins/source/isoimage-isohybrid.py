@@ -262,26 +262,26 @@ class IsoImagePlugin(SourcePlugin):
 
         isodir = "%s/ISO" % cr_workdir
 
-        if part.rootfs is None:
+        if part.rootfs_dir is None:
             if not 'ROOTFS_DIR' in rootfs_dir:
                 msger.error("Couldn't find --rootfs-dir, exiting.\n")
             rootfs_dir = rootfs_dir['ROOTFS_DIR']
         else:
-            if part.rootfs in rootfs_dir:
-                rootfs_dir = rootfs_dir[part.rootfs]
-            elif part.rootfs:
-                rootfs_dir = part.rootfs
+            if part.rootfs_dir in rootfs_dir:
+                rootfs_dir = rootfs_dir[part.rootfs_dir]
+            elif part.rootfs_dir:
+                rootfs_dir = part.rootfs_dir
             else:
                 msg = "Couldn't find --rootfs-dir=%s connection "
                 msg += "or it is not a valid path, exiting.\n"
-                msger.error(msg % part.rootfs)
+                msger.error(msg % part.rootfs_dir)
 
         if not os.path.isdir(rootfs_dir):
             rootfs_dir = get_bitbake_var("IMAGE_ROOTFS")
         if not os.path.isdir(rootfs_dir):
             msger.error("Couldn't find IMAGE_ROOTFS, exiting.\n")
 
-        part.set_rootfs(rootfs_dir)
+        part.rootfs_dir = rootfs_dir
 
         # Prepare rootfs.img
         hdd_dir = get_bitbake_var("HDDDIR")

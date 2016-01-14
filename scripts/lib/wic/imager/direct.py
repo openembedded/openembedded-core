@@ -233,7 +233,7 @@ class DirectImageCreator(BaseImageCreator):
             # get rootfs size from bitbake variable if it's not set in .ks file
             if not part.size:
                 # and if rootfs name is specified for the partition
-                image_name = part.get_rootfs()
+                image_name = part.rootfs_dir
                 if image_name:
                     # Bitbake variable ROOTFS_SIZE is calculated in
                     # Image._get_rootfs_size method from meta/lib/oe/image.py
@@ -336,13 +336,13 @@ class DirectImageCreator(BaseImageCreator):
 
         msg += 'The following build artifacts were used to create the image(s):\n'
         for part in parts:
-            if part.get_rootfs() is None:
+            if part.rootfs_dir is None:
                 continue
             if part.mountpoint == '/':
                 suffix = ':'
             else:
                 suffix = '["%s"]:' % (part.mountpoint or part.label)
-            msg += '  ROOTFS_DIR%s%s\n' % (suffix.ljust(20), part.get_rootfs())
+            msg += '  ROOTFS_DIR%s%s\n' % (suffix.ljust(20), part.rootfs_dir)
 
         msg += '  BOOTIMG_DIR:                  %s\n' % self.bootimg_dir
         msg += '  KERNEL_DIR:                   %s\n' % self.kernel_dir
