@@ -221,9 +221,8 @@ class ParseLogsTest(oeRuntimeTest):
                 results[log.replace('target_logs/','')] = {}
                 rez = result.splitlines()
                 for xrez in rez:
-                    command = "grep \"\\"+str(xrez)+"\" -B "+str(lines_before)+" -A "+str(lines_after)+" "+str(log)
                     try:
-                        grep_output = subprocess.check_output(command, shell=True)
+                        grep_output = subprocess.check_output(['grep', '-F', xrez, '-B', str(lines_before), '-A', str(lines_after), log])
                     except:
                         pass
                     results[log.replace('target_logs/','')][xrez]=grep_output
