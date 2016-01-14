@@ -22,12 +22,12 @@ DEPENDS_append = " ${@bb.utils.contains('PTEST_ENABLED', '1', ' dbus', '', d)}"
 DEPENDS_class-native = "pkgconfig-native gettext-native libffi-native zlib-native"
 DEPENDS_class-nativesdk = "nativesdk-libtool nativesdk-gettext nativesdk-libffi nativesdk-zlib glib-2.0-native"
 
-PACKAGES =+ "${PN}-utils ${PN}-bash-completion ${PN}-codegen"
+PACKAGES =+ "${PN}-utils ${PN}-codegen"
 
 LEAD_SONAME = "libglib-2.0.*"
 FILES_${PN}-utils = "${bindir}/* ${datadir}/glib-2.0/gettext"
 
-inherit autotools gettext gtk-doc pkgconfig ptest-gnome upstream-version-is-even
+inherit autotools gettext gtk-doc pkgconfig ptest-gnome upstream-version-is-even bash-completion
 
 S = "${WORKDIR}/glib-${PV}"
 
@@ -51,8 +51,6 @@ FILES_${PN}-dev += "${libdir}/glib-2.0/include \
                     ${libdir}/gio/modules/*.la"
 FILES_${PN}-dbg += "${datadir}/glib-2.0/gdb ${datadir}/gdb"
 FILES_${PN}-codegen = "${datadir}/glib-2.0/codegen/*.py"
-FILES_${PN}-bash-completion = "${sysconfdir}/bash_completion.d \
-                               ${datadir}/bash-completion"
 
 ARM_INSTRUCTION_SET = "arm"
 USE_NLS = "yes"
