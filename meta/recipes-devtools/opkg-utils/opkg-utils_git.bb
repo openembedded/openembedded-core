@@ -34,7 +34,7 @@ do_install() {
 
 do_install_append_class-target() {
 	if [ -e "${D}${bindir}/update-alternatives" ]; then
-		sed -i ${D}${bindir}/update-alternatives -e 's,/usr/bin,${bindir},g; s,/usr/lib,${libdir},g'
+		sed -i ${D}${bindir}/update-alternatives -e 's,/usr/bin,${bindir},g; s,/usr/lib,${nonarch_libdir},g'
 	fi
 }
 
