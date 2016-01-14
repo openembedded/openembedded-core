@@ -16,10 +16,9 @@ ARM_INSTRUCTION_SET = "arm"
 
 SRC_URI = "ftp://ftp.alsa-project.org/pub/lib/${BP}.tar.bz2 \
            file://Check-if-wordexp-function-is-supported.patch \
-           file://0001-build-Do-not-try-to-detect-cross-compiler.patch \
 "
-SRC_URI[md5sum] = "de67e0eca72474d6b1121037dafe1024"
-SRC_URI[sha256sum] = "73043c35eb9636be0f4af6a240235c213f12a25feb1f04aeeac8cb7e30fcbdd0"
+SRC_URI[md5sum] = "69515ca73c3c4a212ef45160dea846c1"
+SRC_URI[sha256sum] = "dfde65d11e82b68f82e562ab6228c1fb7c78854345d3c57e2c68a9dd3dae1f15"
 
 inherit autotools pkgconfig
 
