@@ -83,10 +83,7 @@ class RootfsPlugin(SourcePlugin):
         syslinux_conf = ""
         syslinux_conf += "PROMPT 0\n"
 
-        timeout = kickstart.get_timeout(image_creator.ks)
-        if not timeout:
-            timeout = 0
-        syslinux_conf += "TIMEOUT " + str(timeout) + "\n"
+        syslinux_conf += "TIMEOUT " + str(bootloader.timeout) + "\n"
         syslinux_conf += "ALLOWOPTIONS 1\n"
 
         # Derive SERIAL... line from from kernel boot parameters

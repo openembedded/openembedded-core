@@ -105,14 +105,9 @@ class BootimgPcbiosPlugin(SourcePlugin):
             else:
                 splashline = ""
 
-            options = creator.ks.handler.bootloader.appendLine
-
             syslinux_conf = ""
             syslinux_conf += "PROMPT 0\n"
-            timeout = kickstart.get_timeout(creator.ks)
-            if not timeout:
-                timeout = 0
-            syslinux_conf += "TIMEOUT " + str(timeout) + "\n"
+            syslinux_conf += "TIMEOUT " + str(bootloader.timeout) + "\n"
             syslinux_conf += "\n"
             syslinux_conf += "ALLOWOPTIONS 1\n"
             syslinux_conf += "SERIAL 0 115200\n"
@@ -126,7 +121,7 @@ class BootimgPcbiosPlugin(SourcePlugin):
             syslinux_conf += "KERNEL " + kernel + "\n"
 
             syslinux_conf += "APPEND label=boot root=%s %s\n" % \
-                                 (creator.rootdev, options)
+                             (creator.rootdev, bootloader.append)
 
         msger.debug("Writing syslinux config %s/hdd/boot/syslinux.cfg" \
                     % cr_workdir)

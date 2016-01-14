@@ -66,16 +66,13 @@ class BootimgEFIPlugin(SourcePlugin):
             grubefi_conf = ""
             grubefi_conf += "serial --unit=0 --speed=115200 --word=8 --parity=no --stop=1\n"
             grubefi_conf += "default=boot\n"
-            timeout = kickstart.get_timeout(creator.ks)
-            if not timeout:
-                timeout = 0
-            grubefi_conf += "timeout=%s\n" % timeout
+            grubefi_conf += "timeout=%s\n" % bootloader.timeout
             grubefi_conf += "menuentry 'boot'{\n"
 
             kernel = "/bzImage"
 
             grubefi_conf += "linux %s root=%s rootwait %s\n" \
-                % (kernel, creator.rootdev, options)
+                % (kernel, creator.rootdev, bootloader.append)
             grubefi_conf += "}\n"
 
         msger.debug("Writing grubefi config %s/hdd/boot/EFI/BOOT/grub.cfg" \
@@ -95,15 +92,11 @@ class BootimgEFIPlugin(SourcePlugin):
         install_cmd = "install -d %s/loader/entries" % hdddir
         exec_cmd(install_cmd)
 
-        options = creator.ks.handler.bootloader.appendLine
-
-        timeout = kickstart.get_timeout(creator.ks)
-        if not timeout:
-            timeout = 0
+        bootloader = creator.ks.bootloader
 
         loader_conf = ""
         loader_conf += "default boot\n"
-        loader_conf += "timeout %d\n" % timeout
+        loader_conf += "timeout %d\n" % bootloader.timeout
 
         msger.debug("Writing gummiboot config %s/hdd/boot/loader/loader.conf" \
                         % cr_workdir)
@@ -131,7 +124,8 @@ class BootimgEFIPlugin(SourcePlugin):
             boot_conf = ""
             boot_conf += "title boot\n"
             boot_conf += "linux %s\n" % kernel
-            boot_conf += "options LABEL=Boot root=%s %s\n" % (creator.rootdev, options)
+            boot_conf += "options LABEL=Boot root=%s %s\n" % \
+                             (creator.rootdev, bootloader.append)
 
         msger.debug("Writing gummiboot config %s/hdd/boot/loader/entries/boot.conf" \
                         % cr_workdir)
