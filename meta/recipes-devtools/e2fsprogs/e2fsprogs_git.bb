@@ -1,35 +1,20 @@
 require e2fsprogs.inc
 
-RECIPE_NO_UPDATE_REASON = "Updating backported patches to 1.42.13 is too much pain. Let's wait until 1.43 is released."
-
 SRC_URI += "file://acinclude.m4 \
             file://remove.ldconfig.call.patch \
-            file://fix-icache.patch \
             file://quiet-debugfs.patch \
-            file://0001-mke2fs-add-the-ability-to-copy-files-from-a-given-di.patch \
-            file://0002-misc-create_inode.c-copy-files-recursively.patch \
-            file://0003-misc-create_inode.c-create-special-file.patch \
-            file://0004-misc-create_inode.c-create-symlink.patch \
-            file://0005-misc-create_inode.c-copy-regular-file.patch \
-            file://0006-misc-create_inode.c-create-directory.patch \
-            file://0007-misc-create_inode.c-set-owner-mode-time-for-the-inod.patch \
-            file://0008-mke2fs.c-add-an-option-d-root-directory.patch \
-            file://0009-misc-create_inode.c-handle-hardlinks.patch \
-            file://0010-debugfs-use-the-functions-in-misc-create_inode.c.patch \
-            file://0011-mke2fs.8.in-update-the-manual-for-the-d-option.patch \
-            file://0012-Fix-musl-build-failures.patch \
-            file://0001-e2fsprogs-fix-cross-compilation-problem.patch \
-            file://misc-mke2fs.c-return-error-when-failed-to-populate-fs.patch \
-            file://cache_inode.patch \
-            file://CVE-2015-0247.patch \
-            file://0001-libext2fs-fix-potential-buffer-overflow-in-closefs.patch \
-            file://copy-in-create-hardlinks-with-the-correct-directory-.patch \
+            file://run-ptest \
+            file://ptest.patch \
+            file://mkdir.patch \
 "
 
-SRC_URI[md5sum] = "3f8e41e63b432ba114b33f58674563f7"
-SRC_URI[sha256sum] = "2f92ac06e92fa00f2ada3ee67dad012d74d685537527ad1241d82f2d041f2802"
+SRCREV = "0f26747167cc9d82df849b0aad387bf824f04544"
+PV = "1.42+1.43-git${SRCPV}"
 
-EXTRA_OECONF += "--libdir=${base_libdir} --sbindir=${base_sbindir} --enable-elf-shlibs --disable-libuuid --disable-uuidd --enable-verbose-makecmds"
+EXTRA_OECONF += "--libdir=${base_libdir} --sbindir=${base_sbindir} \
+                --enable-elf-shlibs --disable-libuuid --disable-uuidd \
+                --enable-libblkid --enable-verbose-makecmds"
+
 EXTRA_OECONF_darwin = "--libdir=${base_libdir} --sbindir=${base_sbindir} --enable-bsd-shlibs"
 
 do_configure_prepend () {
@@ -84,10 +69,6 @@ FILES_libe2p = "${base_libdir}/libe2p.so.*"
 FILES_libext2fs = "${libdir}/e2initrd_helper ${base_libdir}/libext2fs.so.*"
 FILES_${PN}-dev += "${datadir}/*/*.awk ${datadir}/*/*.sed ${base_libdir}/*.so"
 
-BBCLASSEXTEND = "native nativesdk"
-
-inherit update-alternatives
-
 ALTERNATIVE_${PN} = "chattr"
 ALTERNATIVE_PRIORITY = "100"
 ALTERNATIVE_LINK_NAME[chattr] = "${base_bindir}/chattr"
@@ -99,12 +80,7 @@ ALTERNATIVE_LINK_NAME[blkid.8] = "${mandir}/man8/blkid.8"
 ALTERNATIVE_LINK_NAME[findfs.8] = "${mandir}/man8/findfs.8"
 ALTERNATIVE_LINK_NAME[fsck.8] = "${mandir}/man8/fsck.8"
 
-inherit ptest
-SRC_URI += "file://run-ptest"
-SRC_URI += "file://ptest.patch"
-
-RDEPENDS_${PN}-ptest += "${PN} ${PN}-tune2fs coreutils procps"
-#RDEPENDS_${PN}-ptest += "expect"
+RDEPENDS_${PN}-ptest += "${PN} ${PN}-tune2fs coreutils procps bash"
 
 do_compile_ptest() {
 	oe_runmake -C ${B}/tests
