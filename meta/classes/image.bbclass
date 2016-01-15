@@ -297,8 +297,6 @@ python () {
     old_overrides = d.getVar('OVERRIDES', 0)
 
     def _image_base_type(type):
-        if type in ["vmdk", "vdi", "qcow2", "live", "iso", "hddimg"]:
-            type = "ext4"
         basetype = type
         for ctype in ctypes:
             if type.endswith("." + ctype):
@@ -346,11 +344,16 @@ python () {
 
     d.appendVarFlag('do_image', 'vardeps', ' '.join(vardeps))
 
+    maskedtypes = (d.getVar('IMAGE_TYPES_MASKED', True) or "").split()
+
     for t in basetypes:
         vardeps = set()
         cmds = []
         subimages = []
         realt = t
+
+        if t in maskedtypes:
+            continue
 
         localdata = bb.data.createCopy(d)
         debug = ""

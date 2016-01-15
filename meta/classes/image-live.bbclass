@@ -15,4 +15,6 @@ do_bootimg[depends] += "${PN}:do_image_complete"
 inherit bootimg
 
 IMAGE_TYPEDEP_live = "ext4"
-IMAGE_TYPES_MASKED += "live"
+IMAGE_TYPEDEP_iso = "ext4"
+IMAGE_TYPEDEP_hddimg = "ext4"
+IMAGE_TYPES_MASKED += "live hddimg iso"
