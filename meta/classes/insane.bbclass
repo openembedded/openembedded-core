@@ -779,15 +779,12 @@ def package_qa_walk(path, warnfuncs, errorfuncs, skip, package, d):
     for e in errors:
         package_qa_handle_error(e, errors[e], d)
 
-    return len(errors) == 0
-
 def package_qa_check_rdepends(pkg, pkgdest, skip, taskdeps, packages, d):
     # Don't do this check for kernel/module recipes, there aren't too many debug/development
     # packages and you can get false positives e.g. on kernel-module-lirc-dev
     if bb.data.inherits_class("kernel", d) or bb.data.inherits_class("module-base", d):
-        return True
+        return
 
-    sane = True
     if not "-dbg" in pkg and not "packagegroup-" in pkg and not "-image" in pkg:
         localdata = bb.data.createCopy(d)
         localdata.setVar('OVERRIDES', pkg)
@@ -801,10 +798,10 @@ def package_qa_check_rdepends(pkg, pkgdest, skip, taskdeps, packages, d):
             for rdepend in rdepends:
                 if "-dbg" in rdepend and "debug-deps" not in skip:
                     error_msg = "%s rdepends on %s" % (pkg,rdepend)
-                    sane = package_qa_handle_error("debug-deps", error_msg, d)
+                    package_qa_handle_error("debug-deps", error_msg, d)
                 if (not "-dev" in pkg and not "-staticdev" in pkg) and rdepend.endswith("-dev") and "dev-deps" not in skip:
                     error_msg = "%s rdepends on %s" % (pkg, rdepend)
-                    sane = package_qa_handle_error("dev-deps", error_msg, d)
+                    package_qa_handle_error("dev-deps", error_msg, d)
                 if rdepend not in packages:
                     rdep_data = oe.packagedata.read_subpkgdata(rdepend, d)
                     if rdep_data and 'PN' in rdep_data and rdep_data['PN'] in taskdeps:
@@ -822,7 +819,7 @@ def package_qa_check_rdepends(pkg, pkgdest, skip, taskdeps, packages, d):
                     if rdep_data and 'PN' in rdep_data and rdep_data['PN'] in taskdeps:
                         continue
                     error_msg = "%s rdepends on %s, but it isn't a build dependency?" % (pkg, rdepend)
-                    sane = package_qa_handle_error("build-deps", error_msg, d)
+                    package_qa_handle_error("build-deps", error_msg, d)
 
         if "file-rdeps" not in skip:
             ignored_file_rdeps = set(['/bin/sh', '/usr/bin/env', 'rtld(GNU_HASH)'])
@@ -889,19 +886,15 @@ def package_qa_check_rdepends(pkg, pkgdest, skip, taskdeps, packages, d):
                 for key in filerdepends:
                     error_msg = "%s contained in package %s requires %s, but no providers found in its RDEPENDS" % \
                             (filerdepends[key],pkg, key)
-                sane = package_qa_handle_error("file-rdeps", error_msg, d)
-
-    return sane
+                package_qa_handle_error("file-rdeps", error_msg, d)
 
 def package_qa_check_deps(pkg, pkgdest, skip, d):
-    sane = True
 
     localdata = bb.data.createCopy(d)
     localdata.setVar('OVERRIDES', pkg)
     bb.data.update_data(localdata)
 
     def check_valid_deps(var):
-        sane = True
         try:
             rvar = bb.utils.explode_dep_versions2(localdata.getVar(var, True) or "")
         except ValueError as e:
@@ -910,24 +903,14 @@ def package_qa_check_deps(pkg, pkgdest, skip, d):
             for v in rvar[dep]:
                 if v and not v.startswith(('< ', '= ', '> ', '<= ', '>=')):
                     error_msg = "%s_%s is invalid: %s (%s)   only comparisons <, =, >, <=, and >= are allowed" % (var, pkg, dep, v)
-                    sane = package_qa_handle_error("dep-cmp", error_msg, d)
-        return sane
+                    package_qa_handle_error("dep-cmp", error_msg, d)
 
-    sane = True
-    if not check_valid_deps('RDEPENDS'):
-        sane = False
-    if not check_valid_deps('RRECOMMENDS'):
-        sane = False
-    if not check_valid_deps('RSUGGESTS'):
-        sane = False
-    if not check_valid_deps('RPROVIDES'):
-        sane = False
-    if not check_valid_deps('RREPLACES'):
-        sane = False
-    if not check_valid_deps('RCONFLICTS'):
-        sane = False
-
-    return sane
+    check_valid_deps('RDEPENDS')
+    check_valid_deps('RRECOMMENDS')
+    check_valid_deps('RSUGGESTS')
+    check_valid_deps('RPROVIDES')
+    check_valid_deps('RREPLACES')
+    check_valid_deps('RCONFLICTS')
 
 QAPATHTEST[expanded-d] = "package_qa_check_expanded_d"
 def package_qa_check_expanded_d(path,name,d,elf,messages):
@@ -1072,9 +1055,6 @@ python do_package_qa () {
         taskdeps.add(taskdepdata[dep][0])
 
     g = globals()
-    walk_sane = True
-    rdepends_sane = True
-    deps_sane = True
     for package in packages:
         skip = (d.getVar('INSANE_SKIP_' + package, True) or "").split()
         if skip:
@@ -1099,19 +1079,16 @@ python do_package_qa () {
                     "%s doesn't match the [a-z0-9.+-]+ regex" % package, d)
 
         path = "%s/%s" % (pkgdest, package)
-        if not package_qa_walk(path, warnchecks, errorchecks, skip, package, d):
-            walk_sane  = False
-        if not package_qa_check_rdepends(package, pkgdest, skip, taskdeps, packages, d):
-            rdepends_sane = False
-        if not package_qa_check_deps(package, pkgdest, skip, d):
-            deps_sane = False
+        package_qa_walk(path, warnchecks, errorchecks, skip, package, d)
 
+        package_qa_check_rdepends(package, pkgdest, skip, taskdeps, packages, d)
+        package_qa_check_deps(package, pkgdest, skip, d)
 
     if 'libdir' in d.getVar("ALL_QA", True).split():
         package_qa_check_libdir(d)
 
     qa_sane = d.getVar("QA_SANE", True)
-    if not walk_sane or not rdepends_sane or not deps_sane or not qa_sane:
+    if not qa_sane:
         bb.fatal("QA run found fatal errors. Please consider fixing them.")
     bb.note("DONE with PACKAGE QA")
 }
