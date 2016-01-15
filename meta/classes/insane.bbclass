@@ -38,6 +38,7 @@ ERROR_QA ?= "dev-so debug-deps dev-deps debug-files arch pkgconfig la \
             perms dep-cmp pkgvarcheck perm-config perm-line perm-link \
             split-strip packages-list pkgv-undefined var-undefined \
             version-going-backwards expanded-d invalid-chars \
+            license-checksum \
             "
 FAKEROOT_QA = "host-user-contaminated"
 FAKEROOT_QA[doc] = "QA tests which need to run under fakeroot. If any \
@@ -631,6 +632,7 @@ def package_qa_check_symlink_to_sysroot(path, name, d, elf, messages):
             if target.startswith(tmpdir):
                 trimmed = path.replace(os.path.join (d.getVar("PKGDEST", True), name), "")
                 messages["symlink-to-sysroot"] = "Symlink %s in %s points to TMPDIR" % (trimmed, name)
+
 def package_qa_check_license(workdir, d):
     """
     Check for changes in the license files 
@@ -643,11 +645,11 @@ def package_qa_check_license(workdir, d):
     pn = d.getVar('PN', True)
 
     if lic == "CLOSED":
-        return True
+        return
 
     if not lic_files:
-        bb.error(pn + ": Recipe file does not have license file information (LIC_FILES_CHKSUM)")
-        return False
+        package_qa_handle_error("license-checksum", pn + ": Recipe file does not have license file information (LIC_FILES_CHKSUM)", d)
+        return
 
     srcdir = d.getVar('S', True)
 
@@ -655,10 +657,12 @@ def package_qa_check_license(workdir, d):
         try:
             (type, host, path, user, pswd, parm) = bb.fetch.decodeurl(url)
         except bb.fetch.MalformedUrl:
-            raise bb.build.FuncFailed( pn + ": LIC_FILES_CHKSUM contains an invalid URL: " + url)
+            package_qa_handle_error("license-checksum", pn + ": LIC_FILES_CHKSUM contains an invalid URL: " + url, d)
+            continue
         srclicfile = os.path.join(srcdir, path)
         if not os.path.isfile(srclicfile):
-            raise bb.build.FuncFailed( pn + ": LIC_FILES_CHKSUM points to an invalid file: " + srclicfile)
+            package_qa_handle_error("license-checksum", pn + ": LIC_FILES_CHKSUM points to an invalid file: " + srclicfile, d)
+            continue
 
         recipemd5 = parm.get('md5', '')
         beginline, endline = 0, 0
@@ -693,8 +697,8 @@ def package_qa_check_license(workdir, d):
             bb.note (pn + ": md5 checksum matched for ", url)
         else:
             if recipemd5:
-                bb.error(pn + ": md5 data is not matching for ", url)
-                bb.error(pn + ": The new md5 checksum is ", md5chksum)
+                msg = pn + ": The LIC_FILES_CHKSUM does not match for " + url
+                msg = msg + "\n" + pn + ": The new md5 checksum is " + md5chksum
                 if beginline:
                     if endline:
                         srcfiledesc = "%s (lines %d through to %d)" % (srclicfile, beginline, endline)
@@ -704,13 +708,12 @@ def package_qa_check_license(workdir, d):
                     srcfiledesc = "%s (ending on line %d)" % (srclicfile, endline)
                 else:
                     srcfiledesc = srclicfile
-                bb.error(pn + ": Check if the license information has changed in %s to verify that the LICENSE value \"%s\" remains valid" % (srcfiledesc, lic))
-            else:
-                bb.error(pn + ": md5 checksum is not specified for ", url)
-                bb.error(pn + ": The md5 checksum is ", md5chksum)
-            sane = False
+                msg = msg + "\n" + pn + ": Check if the license information has changed in %s to verify that the LICENSE value \"%s\" remains valid" % (srcfiledesc, lic)
 
-    return sane
+            else:
+                msg = pn + ": LIC_FILES_CHKSUM is not specified for " +  url
+                msg = msg + "\n" + pn + ": The md5 checksum is " + md5chksum
+            package_qa_handle_error("license-checksum", msg, d)
 
 def package_qa_check_staged(path,d):
     """
@@ -1160,8 +1163,7 @@ Missing inherit gettext?""" % (gt, config))
     # Check license variables
     ###########################################################################
 
-    if not package_qa_check_license(workdir, d):
-        bb.fatal("Licensing Error: LIC_FILES_CHKSUM does not match, please fix")
+    package_qa_check_license(workdir, d)
 
     ###########################################################################
     # Check unrecognised configure options (with a white list)
@@ -1193,6 +1195,10 @@ Missing inherit gettext?""" % (gt, config))
                 pn = d.getVar('PN', True)
                 error_msg = "%s: invalid PACKAGECONFIG: %s" % (pn, pconfig)
                 package_qa_handle_error("invalid-packageconfig", error_msg, d)
+
+    qa_sane = d.getVar("QA_SANE", True)
+    if not qa_sane:
+        bb.fatal("Fatal QA errors found, failing task.")
 }
 
 python do_qa_unpack() {
