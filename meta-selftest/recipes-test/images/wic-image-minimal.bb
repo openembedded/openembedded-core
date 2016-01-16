@@ -11,7 +11,7 @@ DEPENDS = "syslinux syslinux-native parted-native dosfstools-native mtools-nativ
 
 # core-image-minimal is referenced in .wks, so we need its rootfs
 # to be ready before our rootfs
-do_rootfs[depends] += "core-image-minimal:do_rootfs"
+do_rootfs[depends] += "core-image-minimal:do_rootfs_wicenv"
 
 IMAGE_ROOTFS_EXTRA_SPACE = "2000"
 

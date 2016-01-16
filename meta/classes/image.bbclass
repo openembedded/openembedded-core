@@ -242,8 +242,6 @@ fakeroot python do_image () {
     pre_process_cmds = d.getVar("IMAGE_PREPROCESS_COMMAND", True)
 
     execute_pre_post_process(d, pre_process_cmds)
-
-    write_wic_env(d)
 }
 do_image[dirs] = "${TOPDIR}"
 do_image[umask] = "022"
@@ -264,7 +262,7 @@ addtask do_image_complete after do_image before do_build
 # Write environment variables used by wic
 # to tmp/sysroots/<machine>/imgdata/<image>.env
 #
-def write_wic_env(d):
+python do_rootfs_wicenv () {
     wicvars = d.getVar('WICVARS', True)
     if not wicvars:
         return
@@ -278,6 +276,10 @@ def write_wic_env(d):
             value = d.getVar(var, True)
             if value:
                 envf.write('%s="%s"\n' % (var, value.strip()))
+}
+addtask do_rootfs_wicenv after do_rootfs before do_image_wic
+do_rootfs_wicenv[vardeps] += "${WICVARS}"
+do_rootfs_wicenv[prefuncs] = 'set_image_size'
 
 def setup_debugfs_variables(d):
     d.appendVar('IMAGE_ROOTFS', '-dbg')
