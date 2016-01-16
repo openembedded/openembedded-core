@@ -366,6 +366,10 @@ python () {
         localdata.setVar('OVERRIDES', '%s:%s' % (realt, old_overrides))
         bb.data.update_data(localdata)
         localdata.setVar('type', realt)
+        # Delete DATETIME so we don't expand any references to it now
+        # This means the task's hash can be stable rather than having hardcoded
+        # date/time values. It will get expanded at execution time.
+        localdata.delVar('DATETIME')
 
         image_cmd = localdata.getVar("IMAGE_CMD", True)
         vardeps.add('IMAGE_CMD_' + realt)
@@ -394,6 +398,7 @@ python () {
         d.setVarFlag('do_image_%s' % t, 'postfuncs', 'create_symlinks')
         d.setVarFlag('do_image_%s' % t, 'subimages', subimages)
         d.appendVarFlag('do_image_%s' % t, 'vardeps', ' '.join(vardeps))
+        d.appendVarFlag('do_image_%s' % t, 'vardepsexclude', 'DATETIME')
 
         after = 'do_image'
         for dep in typedeps[t]:
