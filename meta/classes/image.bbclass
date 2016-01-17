@@ -393,6 +393,12 @@ python () {
         else:
             subimages.append(realt)
 
+        after = 'do_image'
+        for dep in typedeps[t]:
+            after += ' do_image_%s' % dep.replace("-", "_")
+
+        t = t.replace("-", "_")
+
         d.setVar('do_image_%s' % t, '\n'.join(cmds))
         d.setVarFlag('do_image_%s' % t, 'func', '1')
         d.setVarFlag('do_image_%s' % t, 'fakeroot', '1')
@@ -401,10 +407,6 @@ python () {
         d.setVarFlag('do_image_%s' % t, 'subimages', ' '.join(subimages))
         d.appendVarFlag('do_image_%s' % t, 'vardeps', ' '.join(vardeps))
         d.appendVarFlag('do_image_%s' % t, 'vardepsexclude', 'DATETIME')
-
-        after = 'do_image'
-        for dep in typedeps[t]:
-            after += ' do_image_%s' % dep
 
         bb.debug(2, "Adding type %s before %s, after %s" % (t, 'do_image_complete', after))
         bb.build.addtask('do_image_%s' % t, 'do_image_complete', after, d)
