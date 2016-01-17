@@ -303,6 +303,7 @@ do_sdk_depends[dirs] = "${WORKDIR}"
 do_sdk_depends[depends] = "${@get_ext_sdk_depends(d)}"
 do_sdk_depends[recrdeptask] = "${@d.getVarFlag('do_populate_sdk', 'recrdeptask', False)}"
 do_sdk_depends[recrdeptask] += "do_populate_lic do_package_qa do_populate_sysroot do_deploy"
+do_sdk_depends[rdepends] = "${@get_sdk_ext_rdepends(d)}"
 
 def get_sdk_ext_rdepends(d):
     localdata = d.createCopy()
@@ -311,10 +312,9 @@ def get_sdk_ext_rdepends(d):
     return localdata.getVarFlag('do_populate_sdk', 'rdepends', True)
 
 do_populate_sdk_ext[dirs] = "${@d.getVarFlag('do_populate_sdk', 'dirs', False)}"
-do_populate_sdk_ext[depends] += "${@d.getVarFlag('do_populate_sdk', 'depends', False)}"
-do_populate_sdk_ext[rdepends] = "${@get_sdk_ext_rdepends(d)}"
 
-do_populate_sdk_ext[depends] += "buildtools-tarball:do_populate_sdk uninative-tarball:do_populate_sdk"
+do_populate_sdk_ext[depends] = "${@d.getVarFlag('do_populate_sdk', 'depends', False)} \
+                                buildtools-tarball:do_populate_sdk uninative-tarball:do_populate_sdk"
 
 do_populate_sdk_ext[rdepends] += "${@' '.join([x + ':do_build' for x in d.getVar('SDK_TARGETS', True).split()])}"
 
