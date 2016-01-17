@@ -122,7 +122,7 @@ class BuildhistoryTests(BuildhistoryBase):
     def test_buildhistory_does_not_change_signatures(self):
         """
         Summary:     Ensure that buildhistory does not change signatures
-        Expected:    Only 'do_rootfs' and 'do_build' tasks are rerun
+        Expected:    Only 'do_rootfs' task should be rerun
         Product:     oe-core
         Author:      Daniel Istrate <daniel.alexandrux.istrate@intel.com>
         AutomatedBy: Daniel Istrate <daniel.alexandrux.istrate@intel.com>
@@ -139,12 +139,12 @@ class BuildhistoryTests(BuildhistoryBase):
 
         features = 'TMPDIR = "%s"\n' % tmpdir1
         self.write_config(features)
-        bitbake('core-image-sato -S none')
+        bitbake('core-image-sato -S none -c rootfs')
 
         features = 'TMPDIR = "%s"\n' % tmpdir2
         features += 'INHERIT += "buildhistory"\n'
         self.write_config(features)
-        bitbake('core-image-sato -S none')
+        bitbake('core-image-sato -S none -c rootfs')
 
         def get_files(d):
             f = []
@@ -161,24 +161,20 @@ class BuildhistoryTests(BuildhistoryBase):
         f2 = set(files2)
         sigdiff = f1 - f2
 
-        self.assertEqual(len(sigdiff), 2, 'Expected 2 signature differences. Out: %s' % list(sigdiff))
+        self.assertEqual(len(sigdiff), 1, 'Expected 1 signature differences. Out: %s' % list(sigdiff))
 
         unexpected_diff = []
 
-        # No new signatures should appear apart from do_rootfs and do_build
+        # No new signatures should appear apart from do_rootfs
         found_do_rootfs_flag = False
-        found_do_build_flag = False
 
         for sig in sigdiff:
             if 'do_rootfs' in sig:
                 found_do_rootfs_flag = True
-            elif 'do_build' in sig:
-                found_do_build_flag = True
             else:
                 unexpected_diff.append(sig)
 
         self.assertTrue(found_do_rootfs_flag, 'Task do_rootfs did not rerun.')
-        self.assertTrue(found_do_build_flag, 'Task do_build did not rerun')
         self.assertFalse(unexpected_diff, 'Found unexpected signature differences. Out: %s' % unexpected_diff)
 
 
