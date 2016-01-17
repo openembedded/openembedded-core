@@ -398,7 +398,7 @@ python () {
         d.setVarFlag('do_image_%s' % t, 'fakeroot', '1')
         d.setVarFlag('do_image_%s' % t, 'prefuncs', debug + 'set_image_size')
         d.setVarFlag('do_image_%s' % t, 'postfuncs', 'create_symlinks')
-        d.setVarFlag('do_image_%s' % t, 'subimages', subimages)
+        d.setVarFlag('do_image_%s' % t, 'subimages', ' '.join(subimages))
         d.appendVarFlag('do_image_%s' % t, 'vardeps', ' '.join(vardeps))
         d.appendVarFlag('do_image_%s' % t, 'vardepsexclude', 'DATETIME')
 
@@ -461,15 +461,16 @@ python create_symlinks() {
     link_name = d.getVar('IMAGE_LINK_NAME', True)
     manifest_name = d.getVar('IMAGE_MANIFEST', True)
     taskname = d.getVar("BB_CURRENTTASK", True)
-    subimages = d.getVarFlag("do_" + taskname, 'subimages', False)
+    subimages = (d.getVarFlag("do_" + taskname, 'subimages', False) or "").split()
+    imgsuffix = d.getVarFlag("do_" + taskname, 'imgsuffix', True) or ".rootfs."
     os.chdir(deploy_dir)
 
     if not link_name:
         return
     for type in subimages:
-        if os.path.exists(img_name + ".rootfs." + type):
+        if os.path.exists(img_name + imgsuffix + type):
             dst = deploy_dir + "/" + link_name + "." + type
-            src = img_name + ".rootfs." + type
+            src = img_name + imgsuffix + type
             bb.note("Creating symlink: %s -> %s" % (dst, src))
             if os.path.islink(dst):
                 if d.getVar('RM_OLD_IMAGE', True) == "1" and \
