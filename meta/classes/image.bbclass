@@ -369,7 +369,9 @@ python () {
         # Delete DATETIME so we don't expand any references to it now
         # This means the task's hash can be stable rather than having hardcoded
         # date/time values. It will get expanded at execution time.
+        # Similarly TMPDIR since otherwise we see QA stamp comparision problems
         localdata.delVar('DATETIME')
+        localdata.delVar('TMPDIR')
 
         image_cmd = localdata.getVar("IMAGE_CMD", True)
         vardeps.add('IMAGE_CMD_' + realt)
