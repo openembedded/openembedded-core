@@ -62,20 +62,24 @@ SDK_TARGET_MANIFEST = "${SDK_DEPLOY}/${TOOLCHAIN_OUTPUTNAME}.target.manifest"
 SDK_HOST_MANIFEST = "${SDK_DEPLOY}/${TOOLCHAIN_OUTPUTNAME}.host.manifest"
 python write_target_sdk_manifest () {
     from oe.sdk import sdk_list_installed_packages
+    from oe.utils import format_pkg_list
     sdkmanifestdir = os.path.dirname(d.getVar("SDK_TARGET_MANIFEST", True))
+    pkgs = sdk_list_installed_packages(d, True)
     if not os.path.exists(sdkmanifestdir):
         bb.utils.mkdirhier(sdkmanifestdir)
     with open(d.getVar('SDK_TARGET_MANIFEST', True), 'w') as output:
-        output.write(sdk_list_installed_packages(d, True, 'ver'))
+        output.write(format_pkg_list(pkgs, 'ver'))
 }
 
 python write_host_sdk_manifest () {
     from oe.sdk import sdk_list_installed_packages
+    from oe.utils import format_pkg_list
     sdkmanifestdir = os.path.dirname(d.getVar("SDK_HOST_MANIFEST", True))
+    pkgs = sdk_list_installed_packages(d, False)
     if not os.path.exists(sdkmanifestdir):
         bb.utils.mkdirhier(sdkmanifestdir)
     with open(d.getVar('SDK_HOST_MANIFEST', True), 'w') as output:
-        output.write(sdk_list_installed_packages(d, False, 'ver'))
+        output.write(format_pkg_list(pkgs, 'ver'))
 }
 
 POPULATE_SDK_POST_TARGET_COMMAND_append = " write_target_sdk_manifest ; "

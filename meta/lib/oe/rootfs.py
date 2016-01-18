@@ -252,7 +252,7 @@ class Rootfs(object):
             # Remove components that we don't need if it's a read-only rootfs
             pkgs_installed = image_list_installed_packages(self.d)
             pkgs_to_remove = list()
-            for pkg in pkgs_installed.split():
+            for pkg in pkgs_installed:
                 if pkg in ["update-rc.d",
                         "base-passwd",
                         "shadow",
@@ -976,17 +976,17 @@ def create_rootfs(d, manifest_dir=None):
     os.environ.update(env_bkp)
 
 
-def image_list_installed_packages(d, format=None, rootfs_dir=None):
+def image_list_installed_packages(d, rootfs_dir=None):
     if not rootfs_dir:
         rootfs_dir = d.getVar('IMAGE_ROOTFS', True)
 
     img_type = d.getVar('IMAGE_PKGTYPE', True)
     if img_type == "rpm":
-        return RpmPkgsList(d, rootfs_dir).list(format)
+        return RpmPkgsList(d, rootfs_dir).list_pkgs()
     elif img_type == "ipk":
-        return OpkgPkgsList(d, rootfs_dir, d.getVar("IPKGCONF_TARGET", True)).list(format)
+        return OpkgPkgsList(d, rootfs_dir, d.getVar("IPKGCONF_TARGET", True)).list_pkgs()
     elif img_type == "deb":
-        return DpkgPkgsList(d, rootfs_dir).list(format)
+        return DpkgPkgsList(d, rootfs_dir).list_pkgs()
 
 if __name__ == "__main__":
     """

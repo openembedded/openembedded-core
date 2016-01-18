@@ -337,18 +337,21 @@ def write_pkghistory(pkginfo, d):
 def buildhistory_list_installed(d, rootfs_type="image"):
     from oe.rootfs import image_list_installed_packages
     from oe.sdk import sdk_list_installed_packages
+    from oe.utils import format_pkg_list
 
     process_list = [('file', 'bh_installed_pkgs.txt'),\
                     ('deps', 'bh_installed_pkgs_deps.txt')]
+
+    if rootfs_type == "image":
+        pkgs = image_list_installed_packages(d)
+    else:
+        pkgs = sdk_list_installed_packages(d, rootfs_type == "sdk_target")
 
     for output_type, output_file in process_list:
         output_file_full = os.path.join(d.getVar('WORKDIR', True), output_file)
 
         with open(output_file_full, 'w') as output:
-            if rootfs_type == "image":
-                output.write(image_list_installed_packages(d, output_type))
-            else:
-                output.write(sdk_list_installed_packages(d, rootfs_type == "sdk_target", output_type))
+            output.write(format_pkg_list(pkgs, output_type))
 
 python buildhistory_list_installed_image() {
     buildhistory_list_installed(d)

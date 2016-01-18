@@ -21,8 +21,12 @@ python write_package_manifest() {
     license_image_dir = d.expand('${LICENSE_DIRECTORY}/${IMAGE_NAME}')
     bb.utils.mkdirhier(license_image_dir)
     from oe.rootfs import image_list_installed_packages
+    from oe.utils import format_pkg_list
+
+    pkgs = image_list_installed_packages(d)
+    output = format_pkg_list(pkgs)
     open(os.path.join(license_image_dir, 'package.manifest'),
-        'w+').write(image_list_installed_packages(d))
+        'w+').write(output)
 }
 
 python write_deploy_manifest() {
@@ -38,7 +42,7 @@ python license_create_manifest() {
         return 0
 
     pkg_dic = {}
-    for pkg in image_list_installed_packages(d).splitlines():
+    for pkg in sorted(image_list_installed_packages(d)):
         pkg_info = os.path.join(d.getVar('PKGDATA_DIR', True),
                                 'runtime-reverse', pkg)
         pkg_name = os.path.basename(os.readlink(pkg_info))

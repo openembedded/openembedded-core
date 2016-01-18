@@ -345,7 +345,7 @@ class DpkgSdk(Sdk):
 
 
 
-def sdk_list_installed_packages(d, target, format=None, rootfs_dir=None):
+def sdk_list_installed_packages(d, target, rootfs_dir=None):
     if rootfs_dir is None:
         sdk_output = d.getVar('SDK_OUTPUT', True)
         target_path = d.getVar('SDKTARGETSYSROOT', True).strip('/')
@@ -356,12 +356,12 @@ def sdk_list_installed_packages(d, target, format=None, rootfs_dir=None):
     if img_type == "rpm":
         arch_var = ["SDK_PACKAGE_ARCHS", None][target is True]
         os_var = ["SDK_OS", None][target is True]
-        return RpmPkgsList(d, rootfs_dir, arch_var, os_var).list(format)
+        return RpmPkgsList(d, rootfs_dir, arch_var, os_var).list_pkgs()
     elif img_type == "ipk":
         conf_file_var = ["IPKGCONF_SDK", "IPKGCONF_TARGET"][target is True]
-        return OpkgPkgsList(d, rootfs_dir, d.getVar(conf_file_var, True)).list(format)
+        return OpkgPkgsList(d, rootfs_dir, d.getVar(conf_file_var, True)).list_pkgs()
     elif img_type == "deb":
-        return DpkgPkgsList(d, rootfs_dir).list(format)
+        return DpkgPkgsList(d, rootfs_dir).list_pkgs()
 
 def populate_sdk(d, manifest_dir=None):
     env_bkp = os.environ.copy()

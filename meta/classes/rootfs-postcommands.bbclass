@@ -207,13 +207,15 @@ insert_feed_uris () {
 
 python write_image_manifest () {
     from oe.rootfs import image_list_installed_packages
+    from oe.utils import format_pkg_list
 
     deploy_dir = d.getVar('DEPLOY_DIR_IMAGE', True)
     link_name = d.getVar('IMAGE_LINK_NAME', True)
     manifest_name = d.getVar('IMAGE_MANIFEST', True)
 
+    pkgs = image_list_installed_packages(d)
     with open(manifest_name, 'w+') as image_manifest:
-        image_manifest.write(image_list_installed_packages(d, 'ver'))
+        image_manifest.write(format_pkg_list(pkgs, "ver"))
         image_manifest.write("\n")
 
     if manifest_name is not None and os.path.exists(manifest_name):
