@@ -17,7 +17,7 @@
 
 import os
 
-from wic.kickstart import KickStart, KickStartError
+from wic.ksparser import KickStart, KickStartError
 from wic import msger
 from wic.utils import misc
 
