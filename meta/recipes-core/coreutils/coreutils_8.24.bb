@@ -28,14 +28,19 @@ SRC_URI[manpages.sha256sum] = "cf0333b5f134a331e0b46e2ddf90666f8bdc3281c1ca2c7cc
 EXTRA_OECONF_class-native = "--without-gmp"
 EXTRA_OECONF_class-target = "--enable-install-program=arch --libexecdir=${libdir}"
 
-# acl is not a default feature
+# acl and xattr are not default features
 #
-PACKAGECONFIG_class-target ??= "${@bb.utils.contains('DISTRO_FEATURES', 'acl', 'acl', '', d)}"
+PACKAGECONFIG_class-target ??= "\
+    ${@bb.utils.contains('DISTRO_FEATURES', 'acl', 'acl', '', d)} \
+    ${@bb.utils.contains('DISTRO_FEATURES', 'xattr', 'xattr', '', d)} \
+"
+
 PACKAGECONFIG_class-native ??= ""
 
 # with, without, depends, rdepends
 #
 PACKAGECONFIG[acl] = "--enable-acl,--disable-acl,acl,"
+PACKAGECONFIG[xattr] = "--enable-xattr,--disable-xattr,attr,"
 
 # [ df mktemp base64 gets a special treatment and is not included in this
 bindir_progs = "arch basename chcon cksum comm csplit cut dir dircolors dirname du \
