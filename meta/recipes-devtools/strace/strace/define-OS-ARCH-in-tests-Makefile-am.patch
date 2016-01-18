@@ -1,0 +1,26 @@
+Ensure that OS and ARCH are defined in tests/Makefile.am
+
+For strace v4.10 this is a purely cosmetic fix, since the include
+paths derived from $(OS)/${ARCH) are never used. These variables are
+correctly defined by default in strace v4.11.
+
+Partial backport of upstream commit:
+
+  http://sourceforge.net/p/strace/code/ci/25c804ce42261b24b19d35c637bf2745c237ee07
+
+Upstream-Status: Backport
+
+Signed-off-by: Andre McCurdy <armccurdy@gmail.com>
+
+Index: strace-4.10/tests/Makefile.am
+===================================================================
+--- strace-4.10.orig/tests/Makefile.am
++++ strace-4.10/tests/Makefile.am
+@@ -1,5 +1,7 @@
+ # Automake input for strace tests.
+ 
++OS = linux
++ARCH = @arch@
+ AM_CFLAGS = $(WARN_CFLAGS)
+ AM_CPPFLAGS = -I$(top_builddir)/$(OS)/$(ARCH) \
+ 	      -I$(top_srcdir)/$(OS)/$(ARCH) \

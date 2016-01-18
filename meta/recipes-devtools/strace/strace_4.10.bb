@@ -12,6 +12,7 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/strace/strace-${PV}.tar.xz \
            file://run-ptest \
            file://Include-sys-stat.h-for-S_I-macros.patch \
            file://Include-linux-ioctl.h-for-_IOC_-macros.patch \
+           file://define-OS-ARCH-in-tests-Makefile-am.patch \
           "
 
 SRC_URI[md5sum] = "107a5be455493861189e9b57a3a51912"
@@ -37,7 +38,7 @@ do_install_append() {
 }
 
 do_compile_ptest() {
-	oe_runmake -C ${TESTDIR} buildtest-TESTS OS=linux ARCH="${TARGET_ARCH}"
+	oe_runmake -C ${TESTDIR} buildtest-TESTS
 }
 
 do_install_ptest() {
