@@ -193,4 +193,4 @@ def validate_disk_signature(d):
 
 DISK_SIGNATURE_GENERATED := "${@generate_disk_signature()}"
 
-addtask bootdirectdisk before do_build
+addtask bootdirectdisk before do_image_complete

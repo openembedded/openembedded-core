@@ -9,7 +9,7 @@ INITRD ?= "${@'${DEPLOY_DIR_IMAGE}/${INITRD_IMAGE}-${MACHINE}.cpio.gz' if '${INI
 do_bootdirectdisk[depends] += "${@'${INITRD_IMAGE}:do_image_complete' if '${INITRD_IMAGE}' else ''}"
 
 # need to define the dependency and the ROOTFS for directdisk
-do_bootdirectdisk[depends] += "${PN}:do_image_complete"
+do_bootdirectdisk[depends] += "${PN}:do_image_ext4"
 ROOTFS ?= "${DEPLOY_DIR_IMAGE}/${IMAGE_LINK_NAME}.ext4"
 
 # creating VM images relies on having a hddimg so ensure we inherit it here.
@@ -45,6 +45,6 @@ python do_vmimg() {
         bb.build.exec_func('create_qcow2_image', d)
 }
 
-addtask vmimg after do_bootdirectdisk before do_build
+addtask vmimg after do_bootdirectdisk before do_image_complete
 do_vmimg[depends] += "qemu-native:do_populate_sysroot"
 

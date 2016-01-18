@@ -295,4 +295,4 @@ IMAGE_TYPEDEP_iso = "ext4"
 IMAGE_TYPEDEP_hddimg = "ext4"
 IMAGE_TYPES_MASKED += "iso hddimg"
 
-addtask bootimg before do_build
+addtask bootimg before do_image_complete
