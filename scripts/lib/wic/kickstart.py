@@ -31,6 +31,9 @@ from argparse import ArgumentParser, ArgumentTypeError
 
 from wic.partition import Partition
 
+class KickStartError(Exception):
+    pass
+
 def sizetype(arg):
     """
     Custom type for ArgumentParser
