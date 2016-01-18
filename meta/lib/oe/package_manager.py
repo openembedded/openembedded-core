@@ -296,6 +296,60 @@ class PkgsList(object):
     def list(self, format=None):
         pass
 
+    @abstractmethod
+    def list_pkgs(self):
+        pass
+
+
+    """
+    This method parse the output from the package manager
+    and return a dictionary with the information of the
+    installed packages. This is used whne the packages are
+    in deb or ipk format
+    """
+    def opkg_query(self, cmd_output):
+        verregex = re.compile(' \([=<>]* [^ )]*\)')
+        output = dict()
+        filename = ""
+        dep = []
+        for line in cmd_output.splitlines():
+            line = line.rstrip()
+            if ':' in line:
+                if line.startswith("Package: "):
+                    pkg = line.split(": ")[1]
+                elif line.startswith("Architecture: "):
+                    arch = line.split(": ")[1]
+                elif line.startswith("Version: "):
+                    ver = line.split(": ")[1]
+                elif line.startswith("File: "):
+                    filename = line.split(": ")[1]
+                elif line.startswith("Depends: "):
+                    depends = verregex.sub('', line.split(": ")[1])
+                    for depend in depends.split(", "):
+                        dep.append(depend)
+                elif line.startswith("Recommends: "):
+                    recommends = verregex.sub('', line.split(": ")[1])
+                    for recommend in recommends.split(", "):
+                        dep.append("%s [REC]" % recommend)
+            else:
+                # IPK doesn't include the filename
+                if not filename:
+                    filename = "%s_%s_%s.ipk" % (pkg, ver, arch)
+                if pkg:
+                    output[pkg] = {"arch":arch, "ver":ver,
+                            "filename":filename, "deps": dep }
+                pkg = ""
+                filename = ""
+                dep = []
+
+        if pkg:
+            if not filename:
+                filename = "%s_%s_%s.ipk" % (pkg, ver, arch)
+            output[pkg] = {"arch":arch, "ver":ver,
+                    "filename":filename, "deps": dep }
+
+        return output
+
 
 class RpmPkgsList(PkgsList):
     def __init__(self, d, rootfs_dir, arch_var=None, os_var=None):
@@ -412,6 +466,59 @@ class RpmPkgsList(PkgsList):
 
         return '\n'.join(output)
 
+    def list_pkgs(self):
+        cmd = self.rpm_cmd + ' --root ' + self.rootfs_dir
+        cmd += ' -D "_dbpath /var/lib/rpm" -qa'
+        if self.rpm_version == 4:
+            cmd += " --qf '[%{NAME} %{ARCH} %{VERSION}\n]'"
+        else:
+            cmd += " --qf '[%{NAME} %{ARCH} %{VERSION} %{PACKAGEORIGIN}\n]'"
+
+        try:
+            # bb.note(cmd)
+            tmp_output = subprocess.check_output(cmd, stderr=subprocess.STDOUT, shell=True).strip()
+        except subprocess.CalledProcessError as e:
+            bb.fatal("Cannot get the installed packages list. Command '%s' "
+                     "returned %d:\n%s" % (cmd, e.returncode, e.output))
+
+        output = dict()
+        deps = dict()
+        if self.rpm_version == 4:
+            bb.warn("Dependency listings are not supported with rpm 4 since rpmresolve does not work")
+            dependencies = ""
+        else:
+            dependencies = self._list_pkg_deps()
+
+        # Populate deps dictionary for better manipulation
+        for line in dependencies.splitlines():
+            pkg, dep = line.split("|")
+            if not pkg in deps:
+                deps[pkg] = list()
+            if not dep in deps[pkg]:
+                deps[pkg].append(dep)
+
+        for line in tmp_output.split('\n'):
+            if len(line.strip()) == 0:
+                continue
+            pkg = line.split()[0]
+            arch = line.split()[1]
+            ver = line.split()[2]
+            dep = deps.get(pkg, [])
+
+            # Skip GPG keys
+            if pkg == 'gpg-pubkey':
+                continue
+            if self.rpm_version == 4:
+                pkgorigin = "unknown"
+            else:
+                pkgorigin = line.split()[3]
+            new_pkg, new_arch = self._pkg_translate_smart_to_oe(pkg, arch)
+
+            output[new_pkg] = {"arch":new_arch, "ver":ver,
+                        "filename":pkgorigin, "deps":dep}
+
+        return output
+
 
 class OpkgPkgsList(PkgsList):
     def __init__(self, d, rootfs_dir, config_file):
@@ -465,6 +572,19 @@ class OpkgPkgsList(PkgsList):
         output.sort()
 
         return '\n'.join(output)
+
+    def list_pkgs(self, format=None):
+        cmd = "%s %s status" % (self.opkg_cmd, self.opkg_args)
+
+        try:
+            # bb.note(cmd)
+            cmd_output = subprocess.check_output(cmd, stderr=subprocess.STDOUT, shell=True).strip()
+
+        except subprocess.CalledProcessError as e:
+            bb.fatal("Cannot get the installed packages list. Command '%s' "
+                     "returned %d:\n%s" % (cmd, e.returncode, e.output))
+
+        return self.opkg_query(cmd_output)
 
 
 class DpkgPkgsList(PkgsList):
@@ -522,6 +642,21 @@ class DpkgPkgsList(PkgsList):
             file_out.close()
 
         return output
+
+    def list_pkgs(self):
+        cmd = [bb.utils.which(os.getenv('PATH'), "dpkg-query"),
+               "--admindir=%s/var/lib/dpkg" % self.rootfs_dir,
+               "-W"]
+
+        cmd.append("-f=Package: ${Package}\nArchitecture: ${PackageArch}\nVersion: ${Version}\nFile: ${Package}_${Version}_${Architecture}.deb\nDepends: ${Depends}\nRecommends: ${Recommends}\n\n")
+
+        try:
+            cmd_output = subprocess.check_output(cmd, stderr=subprocess.STDOUT).strip()
+        except subprocess.CalledProcessError as e:
+            bb.fatal("Cannot get the installed packages list. Command '%s' "
+                     "returned %d:\n%s" % (' '.join(cmd), e.returncode, e.output))
+
+        return self.opkg_query(cmd_output)
 
 
 class PackageManager(object):
