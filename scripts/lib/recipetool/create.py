@@ -558,6 +558,8 @@ def create_recipe(args):
     outlines = []
     outlines.extend(lines_before)
     if classes:
+        if outlines[-1] and not outlines[-1].startswith('#'):
+            outlines.append('')
         outlines.append('inherit %s' % ' '.join(classes))
         outlines.append('')
     outlines.extend(lines_after)
@@ -627,6 +629,7 @@ def get_license_md5sums(d, static_only=False):
     md5sums['5f30f0716dfdd0d91eb439ebec522ec2'] = 'LGPLv2'
     md5sums['55ca817ccb7d5b5b66355690e9abc605'] = 'LGPLv2'
     md5sums['252890d9eee26aab7b432e8b8a616475'] = 'LGPLv2'
+    md5sums['3214f080875748938ba060314b4f727d'] = 'LGPLv2'
     md5sums['d32239bcb673463ab874e80d47fae504'] = 'GPLv3'
     md5sums['f27defe1e96c2e1ecd4e0c9be8967949'] = 'GPLv3'
     md5sums['6a6a8e020838b23406c81b19c1d46df6'] = 'LGPLv3'

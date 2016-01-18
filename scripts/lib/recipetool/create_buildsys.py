@@ -36,6 +36,7 @@ class CmakeRecipeHandler(RecipeHandler):
         if RecipeHandler.checkfiles(srctree, ['CMakeLists.txt']):
             classes.append('cmake')
             values = CmakeRecipeHandler.extract_cmake_deps(lines_before, srctree, extravalues)
+            classes.extend(values.pop('inherit', '').split())
             for var, value in values.iteritems():
                 lines_before.append('%s = "%s"' % (var, value))
             lines_after.append('# Specify any options you want to pass to cmake using EXTRA_OECMAKE:')
@@ -48,18 +49,182 @@ class CmakeRecipeHandler(RecipeHandler):
     @staticmethod
     def extract_cmake_deps(outlines, srctree, extravalues, cmakelistsfile=None):
         values = {}
+        inherits = []
 
         if cmakelistsfile:
             srcfiles = [cmakelistsfile]
         else:
             srcfiles = RecipeHandler.checkfiles(srctree, ['CMakeLists.txt'])
 
-        proj_re = re.compile('project\(([^)]*)\)', re.IGNORECASE)
-        with open(srcfiles[0], 'r') as f:
-            for line in f:
-                res = proj_re.match(line.strip())
-                if res:
-                    extravalues['PN'] = res.group(1).split()[0]
+        # Note that some of these are non-standard, but probably better to
+        # be able to map them anyway if we see them
+        cmake_pkgmap = {'alsa': 'alsa-lib',
+                        'aspell': 'aspell',
+                        'atk': 'atk',
+                        'bison': 'bison-native',
+                        'boost': 'boost',
+                        'bzip2': 'bzip2',
+                        'cairo': 'cairo',
+                        'cups': 'cups',
+                        'curl': 'curl',
+                        'curses': 'ncurses',
+                        'cvs': 'cvs',
+                        'drm': 'libdrm',
+                        'dbus': 'dbus',
+                        'dbusglib': 'dbus-glib',
+                        'egl': 'virtual/egl',
+                        'expat': 'expat',
+                        'flex': 'flex-native',
+                        'fontconfig': 'fontconfig',
+                        'freetype': 'freetype',
+                        'gettext': '',
+                        'git': '',
+                        'gio': 'glib-2.0',
+                        'giounix': 'glib-2.0',
+                        'glew': 'glew',
+                        'glib': 'glib-2.0',
+                        'glib2': 'glib-2.0',
+                        'glu': 'libglu',
+                        'glut': 'freeglut',
+                        'gobject': 'glib-2.0',
+                        'gperf': 'gperf-native',
+                        'gnutls': 'gnutls',
+                        'gtk2': 'gtk+',
+                        'gtk3': 'gtk+3',
+                        'gtk': 'gtk+3',
+                        'harfbuzz': 'harfbuzz',
+                        'icu': 'icu',
+                        'intl': 'virtual/libintl',
+                        'jpeg': 'jpeg',
+                        'libarchive': 'libarchive',
+                        'libiconv': 'virtual/libiconv',
+                        'liblzma': 'xz',
+                        'libxml2': 'libxml2',
+                        'libxslt': 'libxslt',
+                        'opengl': 'virtual/libgl',
+                        'openmp': '',
+                        'openssl': 'openssl',
+                        'pango': 'pango',
+                        'perl': '',
+                        'perllibs': '',
+                        'pkgconfig': '',
+                        'png': 'libpng',
+                        'pthread': '',
+                        'pythoninterp': '',
+                        'pythonlibs': '',
+                        'ruby': 'ruby-native',
+                        'sdl': 'libsdl',
+                        'sdl2': 'libsdl2',
+                        'subversion': 'subversion-native',
+                        'swig': 'swig-native',
+                        'tcl': 'tcl-native',
+                        'threads': '',
+                        'tiff': 'tiff',
+                        'wget': 'wget',
+                        'x11': 'libx11',
+                        'xcb': 'libxcb',
+                        'xext': 'libxext',
+                        'xfixes': 'libxfixes',
+                        'zlib': 'zlib',
+                        }
+
+        pcdeps = []
+        libdeps = []
+        deps = []
+        unmappedpkgs = []
+
+        proj_re = re.compile('project\s*\(([^)]*)\)', re.IGNORECASE)
+        pkgcm_re = re.compile('pkg_check_modules\s*\(\s*[a-zA-Z0-9-_]+\s*(REQUIRED)?\s+([^)\s]+)\s*\)', re.IGNORECASE)
+        pkgsm_re = re.compile('pkg_search_module\s*\(\s*[a-zA-Z0-9-_]+\s*(REQUIRED)?((\s+[^)\s]+)+)\s*\)', re.IGNORECASE)
+        findpackage_re = re.compile('find_package\s*\(\s*([a-zA-Z0-9-_]+)\s*.*', re.IGNORECASE)
+        checklib_re = re.compile('check_library_exists\s*\(\s*([^\s)]+)\s*.*', re.IGNORECASE)
+        include_re = re.compile('include\s*\(\s*([^)\s]*)\s*\)', re.IGNORECASE)
+        subdir_re = re.compile('add_subdirectory\s*\(\s*([^)\s]*)\s*([^)\s]*)\s*\)', re.IGNORECASE)
+        dep_re = re.compile('([^ ><=]+)( *[<>=]+ *[^ ><=]+)?')
+
+        def parse_cmake_file(fn, paths=None):
+            searchpaths = (paths or []) + [os.path.dirname(fn)]
+            logger.debug('Parsing file %s' % fn)
+            with open(fn, 'r') as f:
+                for line in f:
+                    line = line.strip()
+                    res = include_re.match(line)
+                    if res:
+                        includefn = bb.utils.which(':'.join(searchpaths), res.group(1))
+                        if includefn:
+                            parse_cmake_file(includefn, searchpaths)
+                        else:
+                            logger.debug('Unable to recurse into include file %s' % res.group(1))
+                        continue
+                    res = subdir_re.match(line)
+                    if res:
+                        subdirfn = os.path.join(os.path.dirname(fn), res.group(1), 'CMakeLists.txt')
+                        if os.path.exists(subdirfn):
+                            parse_cmake_file(subdirfn, searchpaths)
+                        else:
+                            logger.debug('Unable to recurse into subdirectory file %s' % subdirfn)
+                        continue
+                    res = proj_re.match(line)
+                    if res:
+                        extravalues['PN'] = res.group(1).split()[0]
+                        continue
+                    res = pkgcm_re.match(line)
+                    if res:
+                        res = dep_re.findall(res.group(2))
+                        if res:
+                            pcdeps.extend([x[0] for x in res])
+                        inherits.append('pkgconfig')
+                        continue
+                    res = pkgsm_re.match(line)
+                    if res:
+                        res = dep_re.findall(res.group(2))
+                        if res:
+                            # Note: appending a tuple here!
+                            item = tuple((x[0] for x in res))
+                            if len(item) == 1:
+                                item = item[0]
+                            pcdeps.append(item)
+                        inherits.append('pkgconfig')
+                        continue
+                    res = findpackage_re.match(line)
+                    if res:
+                        origpkg = res.group(1)
+                        pkg = origpkg.lower()
+                        if pkg == 'gettext':
+                            inherits.append('gettext')
+                        elif pkg == 'perl':
+                            inherits.append('perlnative')
+                        elif pkg == 'pkgconfig':
+                            inherits.append('pkgconfig')
+                        elif pkg == 'pythoninterp':
+                            inherits.append('pythonnative')
+                        elif pkg == 'pythonlibs':
+                            inherits.append('python-dir')
+                        else:
+                            dep = cmake_pkgmap.get(pkg, None)
+                            if dep:
+                                deps.append(dep)
+                            elif dep is None:
+                                unmappedpkgs.append(origpkg)
+                        continue
+                    res = checklib_re.match(line)
+                    if res:
+                        lib = res.group(1)
+                        if not lib.startswith('$'):
+                            libdeps.append(lib)
+                    if line.lower().startswith('useswig'):
+                        deps.append('swig-native')
+                        continue
+
+        parse_cmake_file(srcfiles[0])
+
+        if unmappedpkgs:
+            outlines.append('# NOTE: unable to map the following CMake package dependencies: %s' % ' '.join(unmappedpkgs))
+
+        RecipeHandler.handle_depends(libdeps, pcdeps, deps, outlines, values, tinfoil.config_data)
+
+        if inherits:
+            values['inherit'] = ' '.join(list(set(inherits)))
 
         return values
 
