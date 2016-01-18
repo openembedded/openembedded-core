@@ -9,7 +9,7 @@ to recode S-Lang procedures in C if you need to."
 
 HOMEPAGE = "http://www.jedsoft.org/slang/"
 SECTION = "libs"
-DEPENDS = "pcre"
+DEPENDS = "pcre ncurses"
 PR = "r12"
 
 LICENSE = "GPLv2"
