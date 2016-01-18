@@ -27,7 +27,7 @@
 
 
 import shlex
-from argparse import ArgumentParser, ArgumentTypeError
+from argparse import ArgumentParser, ArgumentError, ArgumentTypeError
 
 from wic.partition import Partition
 
@@ -113,11 +113,16 @@ class KickStart(object):
                 line = line.strip()
                 lineno += 1
                 if line and line[0] != '#':
-                    parsed = parser.parse_args(shlex.split(line))
+                    try:
+                        parsed = parser.parse_args(shlex.split(line))
+                    except ArgumentError as err:
+                        raise KickStartError('%s:%d: %s' % \
+                                             (confpath, lineno, err))
                     if line.startswith('part'):
                         self.partitions.append(Partition(parsed, lineno))
                     else:
                         if not self.bootloader:
                              self.bootloader = parsed
                         else:
-                             raise KickStartError("Error: more than one bootloader specified")
+                             raise KickStartError("%s:%d: more than one bootloader "\
+                                                  "specified" % (confpath, lineno))
