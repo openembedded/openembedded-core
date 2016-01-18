@@ -277,7 +277,7 @@ python do_rootfs_wicenv () {
             if value:
                 envf.write('%s="%s"\n' % (var, value.strip()))
 }
-addtask do_rootfs_wicenv after do_rootfs before do_image_wic
+addtask do_rootfs_wicenv after do_rootfs before do_image_wic do_image_complete
 do_rootfs_wicenv[vardeps] += "${WICVARS}"
 do_rootfs_wicenv[prefuncs] = 'set_image_size'
 
