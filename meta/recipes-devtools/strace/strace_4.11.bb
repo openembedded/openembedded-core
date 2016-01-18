@@ -5,30 +5,26 @@ LICENSE = "BSD"
 LIC_FILES_CHKSUM = "file://COPYING;md5=124500c21e856f0912df29295ba104c7"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/strace/strace-${PV}.tar.xz \
-           file://0001-Add-linux-aarch64-arch_regs.h.patch \
            file://disable-git-version-gen.patch \
-           file://strace-add-configure-options.patch \
+           file://more-robust-test-for-m32-mx32-compile-support.patch \
+           file://update-gawk-paths.patch \
            file://Makefile-ptest.patch \
            file://run-ptest \
-           file://Include-sys-stat.h-for-S_I-macros.patch \
-           file://Include-linux-ioctl.h-for-_IOC_-macros.patch \
-           file://define-OS-ARCH-in-tests-Makefile-am.patch \
           "
 
-SRC_URI[md5sum] = "107a5be455493861189e9b57a3a51912"
-SRC_URI[sha256sum] = "e6180d866ef9e76586b96e2ece2bfeeb3aa23f5cc88153f76e9caedd65e40ee2"
+SRC_URI[md5sum] = "a15d2555a7febb56d00c6e1a51c655dc"
+SRC_URI[sha256sum] = "e86a5f6cd8f941f67f3e4b28f4e60f3d9185c951cf266404533210a2e5cd8152"
 
 inherit autotools ptest bluetooth
-RDEPENDS_${PN}-ptest += "make coreutils grep gawk"
+
+RDEPENDS_${PN}-ptest += "make coreutils grep gawk sed"
 
 PACKAGECONFIG_class-target ??= "\
-    libaio \
     ${@bb.utils.contains('DISTRO_FEATURES', 'bluetooth', 'bluez', '', d)} \
 "
 
-PACKAGECONFIG[libaio] = "--enable-aio,--disable-aio,libaio"
-PACKAGECONFIG[libunwind] = "--with-libunwind, --without-libunwind, libunwind"
 PACKAGECONFIG[bluez] = "ac_cv_header_bluetooth_bluetooth_h=yes,ac_cv_header_bluetooth_bluetooth_h=no,${BLUEZ}"
+PACKAGECONFIG[libunwind] = "--with-libunwind,--without-libunwind,libunwind"
 
 TESTDIR = "tests"
 
