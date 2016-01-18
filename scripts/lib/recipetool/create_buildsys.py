@@ -157,12 +157,13 @@ class AutotoolsRecipeHandler(RecipeHandler):
         progclassmap = {'gconftool-2': 'gconf',
                 'pkg-config': 'pkgconfig'}
 
-        ignoredeps = ['gcc-runtime', 'glibc', 'uclibc', 'tar-native', 'binutils-native']
+        ignoredeps = ['gcc-runtime', 'glibc', 'uclibc', 'musl', 'tar-native', 'binutils-native']
         ignorelibs = ['socket']
 
-        pkg_re = re.compile('PKG_CHECK_MODULES\(\[?[a-zA-Z0-9]*\]?, \[?([^,\]]*)[),].*')
-        lib_re = re.compile('AC_CHECK_LIB\(\[?([a-zA-Z0-9]*)\]?, .*')
-        progs_re = re.compile('_PROGS?\(\[?[a-zA-Z0-9]*\]?, \[?([^,\]]*)\]?[),].*')
+        pkg_re = re.compile('PKG_CHECK_MODULES\(\[?[a-zA-Z0-9_]*\]?, *\[?([^,\]]*)\]?[),].*')
+        pkgce_re = re.compile('PKG_CHECK_EXISTS\(\[?([^,\]]*)\]?[),].*')
+        lib_re = re.compile('AC_CHECK_LIB\(\[?([^,\]]*)\]?,.*')
+        progs_re = re.compile('_PROGS?\(\[?[a-zA-Z0-9_]*\]?, \[?([^,\]]*)\]?[),].*')
         dep_re = re.compile('([^ ><=]+)( [<>=]+ [^ ><=]+)?')
         ac_init_re = re.compile('AC_INIT\(([^,]+), *([^,]+)[,)].*')
         am_init_re = re.compile('AM_INIT_AUTOMAKE\(([^,]+), *([^,]+)[,)].*')
@@ -249,6 +250,13 @@ class AutotoolsRecipeHandler(RecipeHandler):
                     if res:
                         pcdeps.extend([x[0] for x in res])
                 inherits.append('pkgconfig')
+            elif keyword == 'PKG_CHECK_EXISTS':
+                res = pkgce_re.search(value)
+                if res:
+                    res = dep_re.findall(res.group(1))
+                    if res:
+                        pcdeps.extend([x[0] for x in res])
+                inherits.append('pkgconfig')
             elif keyword in ('AM_GNU_GETTEXT', 'AM_GLIB_GNU_GETTEXT', 'GETTEXT_PACKAGE'):
                 inherits.append('gettext')
             elif keyword in ('AC_PROG_INTLTOOL', 'IT_PROG_INTLTOOL'):
@@ -313,6 +321,7 @@ class AutotoolsRecipeHandler(RecipeHandler):
                         defines[key] = value
 
         keywords = ['PKG_CHECK_MODULES',
+                    'PKG_CHECK_EXISTS',
                     'AM_GNU_GETTEXT',
                     'AM_GLIB_GNU_GETTEXT',
                     'GETTEXT_PACKAGE',
@@ -375,6 +384,7 @@ class AutotoolsRecipeHandler(RecipeHandler):
 
         recipemap = read_pkgconfig_provides(tinfoil.config_data)
         unmapped = []
+        pcdeps = list(set(pcdeps))
         for pcdep in pcdeps:
             recipe = recipemap.get(pcdep, None)
             if recipe:
