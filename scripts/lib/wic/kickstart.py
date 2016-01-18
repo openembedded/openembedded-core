@@ -34,6 +34,14 @@ from wic.partition import Partition
 class KickStartError(Exception):
     pass
 
+class KickStartParser(ArgumentParser):
+    """
+    This class overwrites error method to throw exception
+    instead of producing usage message(default argparse behavior).
+    """
+    def error(self, message):
+        raise ArgumentError(None, message)
+
 def sizetype(arg):
     """
     Custom type for ArgumentParser
@@ -77,7 +85,7 @@ class KickStart(object):
         self.bootloader = None
         self.lineno = 0
 
-        parser = ArgumentParser()
+        parser = KickStartParser()
         subparsers = parser.add_subparsers()
 
         part = subparsers.add_parser('part')
