@@ -296,6 +296,10 @@ class AutotoolsRecipeHandler(RecipeHandler):
                 deps.append('libx11')
             elif keyword in ('AX_BOOST', 'BOOST_REQUIRE'):
                 deps.append('boost')
+            elif keyword in ('AC_PROG_LEX', 'AM_PROG_LEX', 'AX_PROG_FLEX'):
+                deps.append('flex-native')
+            elif keyword in ('AC_PROG_YACC', 'AX_PROG_BISON'):
+                deps.append('bison-native')
             elif keyword == 'AC_INIT':
                 if extravalues is not None:
                     res = ac_init_re.match(value)
@@ -336,6 +340,11 @@ class AutotoolsRecipeHandler(RecipeHandler):
                     'AC_PATH_X',
                     'AX_BOOST',
                     'BOOST_REQUIRE',
+                    'AC_PROG_LEX',
+                    'AM_PROG_LEX',
+                    'AX_PROG_FLEX',
+                    'AC_PROG_YACC',
+                    'AX_PROG_BISON',
                     'AC_INIT',
                     'AM_INIT_AUTOMAKE',
                     'define(',
