@@ -12,7 +12,19 @@ diff --git a/configure.ac b/configure.ac
 index e73958c..9099370 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -745,6 +745,20 @@ if test "x$ac_cv_lib_dl_dladdr" = xyes;
+@@ -303,11 +303,6 @@ AC_CHECK_MEMBERS([struct sysinfo.totalhi
+ 
+ AC_CHECK_TYPES([struct flock64],,, [#include <fcntl.h>])
+ 
+-AC_CHECK_HEADERS([libaio.h], [
+-	AC_CHECK_MEMBERS([struct iocb.u.c.flags],,, [#include <libaio.h>])
+-	AC_CHECK_DECLS([IO_CMD_PWRITE, IO_CMD_PWRITEV],,, [#include <libaio.h>])
+-])
+-
+ AC_CHECK_HEADERS([linux/input.h], [
+ 	AC_CHECK_MEMBERS([struct input_absinfo.resolution],,, [#include <linux/input.h>])
+ ])
+@@ -745,6 +740,20 @@ if test "x$ac_cv_lib_dl_dladdr" = xyes;
  fi
  AC_SUBST(dl_LIBS)
  
