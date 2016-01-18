@@ -17,7 +17,7 @@
 
 import os
 
-from wic.kickstart import KickStart
+from wic.kickstart import KickStart, KickStartError
 from wic import msger
 from wic.utils import misc
 
@@ -87,7 +87,10 @@ class ConfigMgr(object):
         if not ksconf:
             return
 
-        ksobj = KickStart(ksconf)
+        try:
+            ksobj = KickStart(ksconf)
+        except KickStartError as err:
+            msger.error(str(err))
 
         self.create['ks'] = ksobj
         self.create['name'] = os.path.splitext(os.path.basename(ksconf))[0]
