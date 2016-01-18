@@ -854,6 +854,10 @@ def setscene_depvalid(task, taskdependees, notneeded, d):
     if taskdependees[task][1] == "do_populate_lic":
         return True
 
+    # We only need to trigger packagedata through direct dependencies
+    if taskdependees[task][1] == "do_packagedata":
+        return True
+
     for dep in taskdependees:
         bb.debug(2, "  considering dependency: %s" % (str(taskdependees[dep])))
         if task == dep:
