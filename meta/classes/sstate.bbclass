@@ -956,8 +956,12 @@ python sstate_eventhandler2() {
                 if stamp not in stamps:
                     toremove.append(l)
                     if stamp not in seen:
-                        bb.note("Stamp %s is not reachable, removing related manifests" % stamp)
+                        bb.debug(2, "Stamp %s is not reachable, removing related manifests" % stamp)
                         seen.append(stamp)
+
+        if toremove:
+            bb.note("There are %d recipes to be removed from the sysroot, removing..." % (len(toremove)))
+
         for r in toremove:
             (stamp, manifest, workdir) = r.split()
             for m in glob.glob(manifest + ".*"):
