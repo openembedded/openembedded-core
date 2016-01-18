@@ -208,15 +208,16 @@ class DevtoolTests(DevtoolBase):
         # Fetch source
         tempdir = tempfile.mkdtemp(prefix='devtoolqa')
         self.track_for_cleanup(tempdir)
-        url = 'http://www.intra2net.com/en/developer/libftdi/download/libftdi1-1.1.tar.bz2'
+        version = '1.1'
+        url = 'https://www.intra2net.com/en/developer/libftdi/download/libftdi1-%s.tar.bz2' % version
         result = runCmd('wget %s' % url, cwd=tempdir)
-        result = runCmd('tar xfv libftdi1-1.1.tar.bz2', cwd=tempdir)
-        srcdir = os.path.join(tempdir, 'libftdi1-1.1')
+        result = runCmd('tar xfv libftdi1-%s.tar.bz2' % version, cwd=tempdir)
+        srcdir = os.path.join(tempdir, 'libftdi1-%s' % version)
         self.assertTrue(os.path.isfile(os.path.join(srcdir, 'CMakeLists.txt')), 'Unable to find CMakeLists.txt in source directory')
         # Test devtool add (and use -V so we test that too)
         self.track_for_cleanup(self.workspacedir)
         self.add_command_to_tearDown('bitbake-layers remove-layer */workspace')
-        result = runCmd('devtool add libftdi %s -V 1.1' % srcdir)
+        result = runCmd('devtool add libftdi %s -V %s' % (srcdir, version))
         self.assertTrue(os.path.exists(os.path.join(self.workspacedir, 'conf', 'layer.conf')), 'Workspace directory not created')
         # Test devtool status
         result = runCmd('devtool status')
@@ -224,6 +225,9 @@ class DevtoolTests(DevtoolBase):
         self.assertIn(srcdir, result.output)
         # Clean up anything in the workdir/sysroot/sstate cache (have to do this *after* devtool add since the recipe only exists then)
         bitbake('libftdi -c cleansstate')
+        # libftdi's python/CMakeLists.txt is a bit broken, so let's just disable it
+        recipefile = '%s/recipes/libftdi/libftdi_%s.bb' % (self.workspacedir, version)
+        result = runCmd('recipetool setvar %s EXTRA_OECMAKE -- "-DPYTHON_BINDINGS=OFF"' % recipefile)
         # Test devtool build
         result = runCmd('devtool build libftdi')
         staging_libdir = get_bb_var('STAGING_LIBDIR', 'libftdi')
