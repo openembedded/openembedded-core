@@ -294,6 +294,8 @@ class AutotoolsRecipeHandler(RecipeHandler):
                                     unmappedlibs.append(lib)
             elif keyword == 'AC_PATH_X':
                 deps.append('libx11')
+            elif keyword in ('AX_BOOST', 'BOOST_REQUIRE'):
+                deps.append('boost')
             elif keyword == 'AC_INIT':
                 if extravalues is not None:
                     res = ac_init_re.match(value)
@@ -332,6 +334,8 @@ class AutotoolsRecipeHandler(RecipeHandler):
                     'AC_PATH_PROG',
                     'AC_CHECK_LIB',
                     'AC_PATH_X',
+                    'AX_BOOST',
+                    'BOOST_REQUIRE',
                     'AC_INIT',
                     'AM_INIT_AUTOMAKE',
                     'define(',
