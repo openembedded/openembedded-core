@@ -84,6 +84,11 @@ class RecipeHandler(object):
                 else:
                     raise
 
+        # Some overrides - these should be mapped to the virtual
+        RecipeHandler.recipelibmap['GL'] = 'virtual/libgl'
+        RecipeHandler.recipelibmap['EGL'] = 'virtual/egl'
+        RecipeHandler.recipelibmap['GLESv2'] = 'virtual/libgles2'
+
     @staticmethod
     def load_headermap(d):
         '''Build up lib headerfile->recipe mapping'''
