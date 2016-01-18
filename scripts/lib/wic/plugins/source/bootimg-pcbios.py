@@ -27,7 +27,7 @@
 import os
 
 from wic.utils.errors import ImageError
-from wic import kickstart, msger
+from wic import msger
 from wic.utils import runner
 from wic.utils.misc import get_custom_config
 from wic.pluginbase import SourcePlugin

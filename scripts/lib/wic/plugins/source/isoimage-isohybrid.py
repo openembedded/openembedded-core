@@ -24,7 +24,7 @@ import os
 import re
 import shutil
 
-from wic import kickstart, msger
+from wic import msger
 from wic.pluginbase import SourcePlugin
 from wic.utils.oe.misc import exec_cmd, exec_native_cmd, get_bitbake_var
 

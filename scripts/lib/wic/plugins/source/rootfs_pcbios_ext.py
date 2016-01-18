@@ -19,7 +19,6 @@
 #
 
 import os
-from wic import kickstart
 from wic import msger
 from wic.utils import syslinux
 from wic.utils import runner
