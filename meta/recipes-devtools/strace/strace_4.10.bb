@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=124500c21e856f0912df29295ba104c7"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/strace/strace-${PV}.tar.xz \
            file://0001-Add-linux-aarch64-arch_regs.h.patch \
-           file://git-version-gen \
+           file://disable-git-version-gen.patch \
            file://strace-add-configure-options.patch \
            file://Makefile-ptest.patch \
            file://run-ptest \
@@ -30,10 +30,6 @@ PACKAGECONFIG[libunwind] = "--with-libunwind, --without-libunwind, libunwind"
 PACKAGECONFIG[bluez] = "ac_cv_header_bluetooth_bluetooth_h=yes,ac_cv_header_bluetooth_bluetooth_h=no,${BLUEZ}"
 
 TESTDIR = "tests"
-
-do_configure_prepend() {
-	cp ${WORKDIR}/git-version-gen ${S}
-}
 
 do_install_append() {
 	# We don't ship strace-graph here because it needs perl
