@@ -43,11 +43,8 @@ python do_checkuri() {
     if len(src_uri) == 0:
         return
 
-    localdata = bb.data.createCopy(d)
-    bb.data.update_data(localdata)
-
     try:
-        fetcher = bb.fetch2.Fetch(src_uri, localdata)
+        fetcher = bb.fetch2.Fetch(src_uri, d)
         fetcher.checkstatus()
     except bb.fetch2.BBFetchException, e:
         raise bb.build.FuncFailed(e)

@@ -69,7 +69,6 @@ RDEPENDS_packagegroup-core-sys-extended = "\
     minicom \
     neon \
     parted \
-    ${PTH} \
     quota \
     screen \
     setserial \
@@ -282,7 +281,3 @@ RDEPENDS_packagegroup-core-lsb-runtime-add = "\
     libi18n-collate-perl \
     libpod-plainer-perl \
 "
-
-PTH = "pth"
-PTH_libc-uclibc = ""
-

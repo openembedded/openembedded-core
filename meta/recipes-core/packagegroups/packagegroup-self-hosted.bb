@@ -150,7 +150,6 @@ RDEPENDS_packagegroup-self-hosted-extended = "\
     perl-dev \
     perl-modules \
     perl-pod \
-    ${PTH} \
     python \
     python-compiler \
     python-git \
@@ -198,5 +197,3 @@ RDEPENDS_packagegroup-self-hosted-graphics = "\
     pcmanfm \
     vte \
     "
-PTH = "pth"
-PTH_libc-uclibc = ""
