@@ -115,6 +115,9 @@ class KickStart(object):
         bootloader.add_argument('--timeout', type=int)
         bootloader.add_argument('--source')
 
+        self._parse(parser, confpath)
+
+    def _parse(self, parser, confpath):
         with open(confpath) as conf:
             lineno = 0
             for line in conf:
