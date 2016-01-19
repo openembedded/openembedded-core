@@ -32,25 +32,3 @@ oe_runconf_prepend() {
 		sed -i -e "1a\\" -e 'GETTEXT_PACKAGE = @GETTEXT_PACKAGE@' ${S}/po/Makefile.in.in
 	fi
 }
-
-SRC_URI = "${@get_gst_srcuri(d)}"
-
-GSTREAMER_1_0_GIT_BRANCH ?= "master"
-
-def get_gst_srcuri(d):
-    # check if expected prefix is present
-    prefix = "gstreamer1.0-"
-    bpn = d.getVar("BPN", True)
-    if not bpn.startswith(prefix):
-        bb.fatal('Invalid GStreamer 1.0 plugin package name "%s" : must start with "%s"' % (bpn, prefix))
-
-    # replaced prefix with "gst-", which is what is used for the tarball and repository filenames
-    gstpkg_basename = "gst-" + bpn[len(prefix):]
-    pv = d.getVar("PV", True)
-    branch = d.getVar("GSTREAMER_1_0_GIT_BRANCH", True)
-
-    if pv == "git":
-        s = "git://anongit.freedesktop.org/gstreamer/%s;branch=%s" % (gstpkg_basename, branch)
-    else:
-        s = "http://gstreamer.freedesktop.org/src/%s/%s-%s.tar.xz" % (gstpkg_basename, gstpkg_basename, pv)
-    return s

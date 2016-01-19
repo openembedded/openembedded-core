@@ -7,6 +7,8 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=73a5855a8119deb017f5f13cf327095d \
                     file://gst/tta/crc32.h;beginline=12;endline=29;md5=27db269c575d1e5317fffca2d33b3b50 \
                     file://gst/tta/filters.h;beginline=12;endline=29;md5=8a08270656f2f8ad7bb3655b83138e5a"
 
+SRC_URI = "git://anongit.freedesktop.org/gstreamer/gst-plugins-bad"
+
 SRCREV = "6e5db57d2446a753aaa76bee268e1f95600b14ce"
 
 S = "${WORKDIR}/git"
