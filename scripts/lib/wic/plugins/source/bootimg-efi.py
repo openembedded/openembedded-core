@@ -142,8 +142,6 @@ class BootimgEFIPlugin(SourcePlugin):
         Called before do_prepare_partition(), creates loader-specific config
         """
         hdddir = "%s/hdd/boot" % cr_workdir
-        rm_cmd = "rm -rf %s" % cr_workdir
-        exec_cmd(rm_cmd)
 
         install_cmd = "install -d %s/EFI/BOOT" % hdddir
         exec_cmd(install_cmd)

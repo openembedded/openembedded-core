@@ -78,8 +78,6 @@ class BootimgPcbiosPlugin(SourcePlugin):
         Called before do_prepare_partition(), creates syslinux config
         """
         hdddir = "%s/hdd/boot" % cr_workdir
-        rm_cmd = "rm -rf " + cr_workdir
-        exec_cmd(rm_cmd)
 
         install_cmd = "install -d %s" % hdddir
         exec_cmd(install_cmd)

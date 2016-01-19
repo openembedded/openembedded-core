@@ -229,6 +229,9 @@ class DirectImageCreator(BaseImageCreator):
 
         fstab_path = self._write_fstab(self.rootfs_dir.get("ROOTFS_DIR"))
 
+        shutil.rmtree(self.workdir)
+        os.mkdir(self.workdir)
+
         for part in parts:
             # get rootfs size from bitbake variable if it's not set in .ks file
             if not part.size:
