@@ -39,8 +39,8 @@ SRC_URI += "\
             file://use_packed_importlib.patch \
             file://configure.ac-fix-LIBPL.patch \
            "
-SRC_URI[md5sum] = "d149d2812f10cbe04c042232e7964171"
-SRC_URI[sha256sum] = "d6d7aa1634a5eeeca6ed4fca266982a04f84bd8f3945a9179e20b24ad2e2be91"
+SRC_URI[md5sum] = "e9ea6f2623fffcdd871b7b19113fde80"
+SRC_URI[sha256sum] = "c6d57c0c366d9060ab6c0cdf889ebf3d92711d466cc0119c441dbf2746f725c9"
 
 # exclude pre-releases for both python 2.x and 3.x
 UPSTREAM_CHECK_REGEX = "[Pp]ython-(?P<pver>\d+(\.\d+)+).tar"

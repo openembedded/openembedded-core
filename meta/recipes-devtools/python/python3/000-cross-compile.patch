@@ -9,11 +9,11 @@ Upstream-Status: Inappropriate[Configuration Specific]
  Makefile.pre.in |   25 +++++++++++++------------
  1 file changed, 13 insertions(+), 12 deletions(-)
 
-Index: Python-3.5.0/Makefile.pre.in
+Index: Python-3.5.1/Makefile.pre.in
 ===================================================================
---- Python-3.5.0.orig/Makefile.pre.in
-+++ Python-3.5.0/Makefile.pre.in
-@@ -215,6 +215,7 @@ LIBOBJS=	@LIBOBJS@
+--- Python-3.5.1.orig/Makefile.pre.in
++++ Python-3.5.1/Makefile.pre.in
+@@ -220,6 +220,7 @@ LIBOBJS=	@LIBOBJS@
  
  PYTHON=		python$(EXE)
  BUILDPYTHON=	python$(BUILDEXE)
@@ -21,7 +21,7 @@ Index: Python-3.5.0/Makefile.pre.in
  
  PYTHON_FOR_BUILD=@PYTHON_FOR_BUILD@
  _PYTHON_HOST_PLATFORM=@_PYTHON_HOST_PLATFORM@
-@@ -272,6 +273,7 @@ LIBFFI_INCLUDEDIR=	@LIBFFI_INCLUDEDIR@
+@@ -276,6 +277,7 @@ LIBFFI_INCLUDEDIR=	@LIBFFI_INCLUDEDIR@
  ##########################################################################
  # Parser
  PGEN=		Parser/pgen$(EXE)
@@ -29,16 +29,16 @@ Index: Python-3.5.0/Makefile.pre.in
  
  PSRCS=		\
  		Parser/acceler.c \
-@@ -494,7 +496,7 @@ build_all_generate_profile:
+@@ -506,7 +508,7 @@ build_all_generate_profile:
  
  run_profile_task:
  	: # FIXME: can't run for a cross build
--	$(RUNSHARED) ./$(BUILDPYTHON) $(PROFILE_TASK)
-+	$(RUNSHARED) $(HOSTPYTHON) $(PROFILE_TASK)
+-	$(LLVM_PROF_FILE) $(RUNSHARED) ./$(BUILDPYTHON) $(PROFILE_TASK) || true
++	$(LLVM_PROF_FILE) $(RUNSHARED) $(HOSTPYTHON) $(PROFILE_TASK) || true
  
- build_all_use_profile:
- 	$(MAKE) all CFLAGS_NODIST="$(CFLAGS) -fprofile-use -fprofile-correction"
-@@ -764,7 +766,7 @@ $(IO_OBJS): $(IO_H)
+ build_all_merge_profile:
+ 	$(LLVM_PROF_MERGER)
+@@ -779,7 +781,7 @@ $(IO_OBJS): $(IO_H)
  
  $(GRAMMAR_H): $(GRAMMAR_INPUT) $(PGEN)
  		@$(MKDIR_P) Include
@@ -47,7 +47,7 @@ Index: Python-3.5.0/Makefile.pre.in
  $(GRAMMAR_C): $(GRAMMAR_H)
  		touch $(GRAMMAR_C)
  
-@@ -953,7 +955,7 @@ $(LIBRARY_OBJS) $(MODOBJS) Programs/pyth
+@@ -968,7 +970,7 @@ $(LIBRARY_OBJS) $(MODOBJS) Programs/pyth
  ######################################################################
  
  TESTOPTS=	$(EXTRATESTOPTS)
@@ -56,7 +56,7 @@ Index: Python-3.5.0/Makefile.pre.in
  TESTRUNNER=	$(TESTPYTHON) $(srcdir)/Tools/scripts/run_tests.py
  TESTTIMEOUT=	3600
  
-@@ -1440,7 +1442,7 @@ frameworkinstallstructure:	$(LDLIBRARY)
+@@ -1455,7 +1457,7 @@ frameworkinstallstructure:	$(LDLIBRARY)
  		fi; \
  	done
  	$(LN) -fsn include/python$(LDVERSION) $(DESTDIR)$(prefix)/Headers
@@ -65,7 +65,7 @@ Index: Python-3.5.0/Makefile.pre.in
  	$(LN) -fsn $(VERSION) $(DESTDIR)$(PYTHONFRAMEWORKINSTALLDIR)/Versions/Current
  	$(LN) -fsn Versions/Current/$(PYTHONFRAMEWORK) $(DESTDIR)$(PYTHONFRAMEWORKINSTALLDIR)/$(PYTHONFRAMEWORK)
  	$(LN) -fsn Versions/Current/Headers $(DESTDIR)$(PYTHONFRAMEWORKINSTALLDIR)/Headers
-@@ -1506,7 +1508,7 @@ config.status:	$(srcdir)/configure
+@@ -1521,7 +1523,7 @@ config.status:	$(srcdir)/configure
  
  # Run reindent on the library
  reindent:
@@ -74,7 +74,7 @@ Index: Python-3.5.0/Makefile.pre.in
  
  # Rerun configure with the same options as it was run last time,
  # provided the config.status script exists
-@@ -1639,7 +1641,7 @@ funny:
+@@ -1656,7 +1658,7 @@ funny:
  
  # Perform some verification checks on any modified files.
  patchcheck: all
