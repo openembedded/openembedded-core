@@ -47,11 +47,10 @@ ALLOW_EMPTY_${PN}-dev = "1"
 ALLOW_EMPTY_${PN}-staticdev = "1"
 
 PACKAGES += "${PN}-apps ${PN}-meta ${PN}-glib"
+
+FILES_${PN} = ""
 FILES_${PN}-apps = "${bindir}"
+FILES_${PN}-glib = "${datadir}/glib-2.0"
 
 RDEPENDS_${PN}-apps += "perl"
 RRECOMMENDS_${PN} += "${PN}-meta"
-
-FILES_${PN} = ""
-FILES_${PN}-glib = "${datadir}/glib-2.0"
-
