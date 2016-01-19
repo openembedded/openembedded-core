@@ -58,24 +58,22 @@ def build_name(kscfg, release=None, prefix=None, suffix=None):
 
     return ret
 
-def find_boot_config(scripts_path, boot_file):
+def find_canned(scripts_path, file_name):
     """
-    Find a config file with the given name in the canned files dir.
+    Find a file either by its path or by name in the canned files dir.
 
-    Return False if not found
+    Return None if not found
     """
-    if os.path.exists(boot_file):
-        return boot_file
+    if os.path.exists(file_name):
+        return file_name
 
     layers_canned_wks_dir = wic.engine.build_canned_image_list(scripts_path)
     for canned_wks_dir in layers_canned_wks_dir:
         for root, dirs, files in os.walk(canned_wks_dir):
             for fname in files:
-                if fname == boot_file:
+                if fname == file_name:
                     fullpath = os.path.join(canned_wks_dir, fname)
                     return fullpath
-
-    return None
 
 def get_custom_config(boot_file):
     """
@@ -88,7 +86,7 @@ def get_custom_config(boot_file):
     for x in range(0, 3):
         scripts_path = os.path.dirname(scripts_path)
 
-    cfg_file = find_boot_config(scripts_path, boot_file)
+    cfg_file = find_canned(scripts_path, boot_file)
     if cfg_file:
         with open(cfg_file, "r") as f:
             config = f.read()
