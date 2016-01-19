@@ -2,12 +2,12 @@ SUMMARY = "Plugins for the GStreamer multimedia framework 1.x"
 HOMEPAGE = "http://gstreamer.freedesktop.org/"
 BUGTRACKER = "https://bugzilla.gnome.org/enter_bug.cgi?product=Gstreamer"
 SECTION = "multimedia"
+
 DEPENDS = "gstreamer1.0"
 
 inherit autotools pkgconfig upstream-version-is-even
 
 GSTREAMER_1_0_DEBUG ?= "--disable-debug"
-GSTREAMER_1_0_GIT_BRANCH ?= "master"
 EXTRA_OECONF = "--disable-valgrind ${GSTREAMER_1_0_DEBUG} --disable-examples "
 
 acpaths = "-I ${S}/common/m4 -I ${S}/m4"
@@ -31,6 +31,8 @@ oe_runconf_prepend() {
 }
 
 SRC_URI = "${@get_gst_srcuri(d)}"
+
+GSTREAMER_1_0_GIT_BRANCH ?= "master"
 
 def get_gst_srcuri(d):
     # check if expected prefix is present
@@ -56,4 +58,3 @@ delete_liblink_m4_file() {
 }
 
 do_configure[prefuncs] += " delete_liblink_m4_file "
-
