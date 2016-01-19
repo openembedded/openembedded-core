@@ -4,10 +4,6 @@ LICENSE = "GPLv2+ & LGPLv2+ & LGPLv2.1+"
 
 DEPENDS += "gstreamer1.0-plugins-base libpng jpeg"
 
-SRC_URI += "file://configure-allow-to-disable-libssh2.patch"
-
-S = "${WORKDIR}/gst-plugins-bad-${PV}"
-
 inherit gettext bluetooth
 
 # opengl packageconfig factored out to make it easy for distros
