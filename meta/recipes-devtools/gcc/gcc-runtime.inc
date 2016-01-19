@@ -10,7 +10,9 @@ EXTRA_OECONF_PATHS = "\
 
 EXTRA_OECONF_append_linuxstdbase = " --enable-clocale=gnu"
 
-RUNTIMETARGET = "libssp libstdc++-v3 libgomp libatomic"
+RUNTIMETARGET = "libssp libstdc++-v3 libgomp libatomic \
+    ${@bb.utils.contains_any('FORTRAN', [',fortran',',f77'], 'libquadmath', '', d)} \
+"
 #  ?
 # libiberty
 # libmudflap
