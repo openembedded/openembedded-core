@@ -11,8 +11,8 @@ DEPENDS_class-native += "python3-native"
 SRC_URI = " \
   http://pypi.python.org/packages/source/s/${SRCNAME}/${SRCNAME}-${PV}.tar.gz \
 "
-SRC_URI[md5sum] = "a0984da9cd8d7b582e1fd7de67dfdbcc"
-SRC_URI[sha256sum] = "aff36c95035e0b311eacb1434e3f7e85f5ccaad477773847e582978f8f45bd74"
+SRC_URI[md5sum] = "78353b1f80375ca5e088f4b4627ffe03"
+SRC_URI[sha256sum] = "f90ed8eb70b14b0594ba74e9de4ffca040c0ec8ee505cbf3570499467859f71a"
 UPSTREAM_CHECK_URI = "https://pypi.python.org/pypi/setuptools"
 
 S = "${WORKDIR}/${SRCNAME}-${PV}"
