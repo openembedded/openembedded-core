@@ -17,6 +17,9 @@ EXTRA_OECONF += "--libdir=${base_libdir} --sbindir=${base_sbindir} \
 
 EXTRA_OECONF_darwin = "--libdir=${base_libdir} --sbindir=${base_sbindir} --enable-bsd-shlibs"
 
+PACKAGECONFIG ??= ""
+PACKAGECONFIG[fuse] = '--enable-fuse2fs,--disable-fuse2fs,fuse'
+
 do_configure_prepend () {
 	cp ${WORKDIR}/acinclude.m4 ${S}/
 }
