@@ -95,7 +95,7 @@ SRC_URI = "git://github.com/mmeeks/bootchart.git \
           "
 
 S = "${WORKDIR}/git"
-SRCREV = "6f050b65ae9f266645f04f0aecab9efb88375f1c"
+SRCREV = "48e0071048564c6af75ab969e842d6dec808da09"
 
 inherit systemd
 inherit update-rc.d
