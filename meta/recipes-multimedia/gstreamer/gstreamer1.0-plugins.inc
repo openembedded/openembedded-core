@@ -7,17 +7,20 @@ DEPENDS = "gstreamer1.0 glib-2.0-native"
 
 inherit autotools pkgconfig upstream-version-is-even
 
-GSTREAMER_1_0_DEBUG ?= "--disable-debug"
-EXTRA_OECONF = "--disable-valgrind ${GSTREAMER_1_0_DEBUG} --disable-examples "
-
 acpaths = "-I ${S}/common/m4 -I ${S}/m4"
 
 LIBV = "1.0"
 require gst-plugins-package.inc
 
+PACKAGECONFIG[debug] = "--enable-debug,--disable-debug"
 PACKAGECONFIG[orc] = "--enable-orc,--disable-orc,orc orc-native"
+PACKAGECONFIG[valgrind] = "--enable-valgrind,--disable-valgrind,valgrind"
 
 export ORCC = "${STAGING_DIR_NATIVE}${bindir}/orcc"
+
+EXTRA_OECONF = " \
+    --disable-examples \
+"
 
 PACKAGES_DYNAMIC = "^${PN}-.*"
 
