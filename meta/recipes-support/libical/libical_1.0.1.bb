@@ -13,6 +13,7 @@ SRC_URI = "https://github.com/${BPN}/${BPN}/archive/v${PV}.tar.gz \
            "
 SRC_URI[md5sum] = "af91db06b22559f863869c5a382ad08a"
 SRC_URI[sha256sum] = "7d5f613454ec6c7d1bcfb441c919215be53292aa15cd1cb14249d1413d6c610c"
+UPSTREAM_CHECK_URI = "https://github.com/libical/libical/releases"
 
 inherit cmake
 
