@@ -84,6 +84,7 @@ class KickStart(object):
         self.partitions = []
         self.bootloader = None
         self.lineno = 0
+        self.partnum = 0
 
         parser = KickStartParser()
         subparsers = parser.add_subparsers()
@@ -130,7 +131,8 @@ class KickStart(object):
                         raise KickStartError('%s:%d: %s' % \
                                              (confpath, lineno, err))
                     if line.startswith('part'):
-                        self.partitions.append(Partition(parsed, lineno))
+                        self.partnum += 1
+                        self.partitions.append(Partition(parsed, self.partnum))
                     else:
                         if not self.bootloader:
                              self.bootloader = parsed
