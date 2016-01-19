@@ -13,8 +13,8 @@ DEPENDS_append_class-native = " bzip2-replacement-native"
 
 SRC_URI = "https://launchpad.net/${BPN}/1.1/${PV}/+download/${BP}.tar.gz"
 
-SRC_URI[md5sum] = "91a4911b13305850423840eb0fa6f4f9"
-SRC_URI[sha256sum] = "573bb358a5a7d3bf5f42f881af324cedf960c786e8d66dd03d448ddd8a0166ee"
+SRC_URI[md5sum] = "4cb87da2dba05540afce162f34b3a9a6"
+SRC_URI[sha256sum] = "8fd13eaaa266f7ee91f85c1ea97c86d9c9cc985969db9059cdebcb1e1b7bdbe6"
 
 UPSTREAM_CHECK_URI = "http://compression.ca/pbzip2/"
 
