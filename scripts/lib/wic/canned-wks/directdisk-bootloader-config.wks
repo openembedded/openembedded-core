@@ -2,9 +2,7 @@
 # long-description: Creates a partitioned legacy BIOS disk image that the user
 # can directly dd to boot media. The bootloader configuration source is a user file.
 
-
-part /boot --source bootimg-pcbios --ondisk sda --label boot --active --align 1024
-part / --source rootfs --ondisk sda --fstype=ext4 --label platform --align 1024
+include common.wks.inc
 
 bootloader --configfile="directdisk-bootloader-config.cfg"
 
