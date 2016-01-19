@@ -21,9 +21,9 @@
 # This module provides parser for kickstart format
 #
 # AUTHORS
-# Tom Zanussi <tom.zanussi (at] linux.intel.com>
 # Ed Bartosh <ed.bartosh> (at] linux.intel.com>
 
+"""Kickstart parser module."""
 
 import os
 import shlex
@@ -33,6 +33,7 @@ from wic.partition import Partition
 from wic.utils.misc import find_canned
 
 class KickStartError(Exception):
+    """Custom exception."""
     pass
 
 class KickStartParser(ArgumentParser):
@@ -91,6 +92,8 @@ def cannedpathtype(arg):
     return result
 
 class KickStart(object):
+    """"Kickstart parser implementation."""
+
     def __init__(self, confpath):
 
         self.partitions = []
@@ -134,6 +137,9 @@ class KickStart(object):
         self._parse(parser, confpath)
 
     def _parse(self, parser, confpath):
+        """
+        Parse file in .wks format using provided parser.
+        """
         with open(confpath) as conf:
             lineno = 0
             for line in conf:
@@ -152,7 +158,8 @@ class KickStart(object):
                         self._parse(parser, parsed.path)
                     elif line.startswith('bootloader'):
                         if not self.bootloader:
-                             self.bootloader = parsed
+                            self.bootloader = parsed
                         else:
-                             raise KickStartError("%s:%d: more than one bootloader "\
-                                                  "specified" % (confpath, lineno))
+                            err = "%s:%d: more than one bootloader specified" \
+                                      % (confpath, lineno)
+                            raise KickStartError(err)
