@@ -10,6 +10,7 @@ SECTION = "libs"
 SRC_URI = "http://www.lysator.liu.se/~nisse/misc/argp-standalone-${PV}.tar.gz \
            file://0001-throw-in-funcdef.patch \
            file://0002-isprint.patch \
+           file://out_of_tree_build.patch \
           "
 SRC_URI[md5sum] = "720704bac078d067111b32444e24ba69"
 SRC_URI[sha256sum] = "dec79694da1319acd2238ce95df57f3680fea2482096e483323fddf3d818d8be"
