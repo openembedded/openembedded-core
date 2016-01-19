@@ -69,8 +69,8 @@ do_compile_prepend_class-target() {
 
 FILES_${PN}-staticdev += "${PYTHON_SITEPACKAGES_DIR}/numpy/core/lib/*.a"
 
-SRC_URI[md5sum] = "3fed2b50906bc19018cec5fa26168aa5"
-SRC_URI[sha256sum] = "8b9f453f29ce96a14e625100d3dcf8926301d36c5f622623bf8820e748510858"
+SRC_URI[md5sum] = "90bb9034652cefbada19cf7d141a6a61"
+SRC_URI[sha256sum] = "f7f91842056a7cf680b0eaf8cefc5e46c69e2521e651128d2e6aaaccec8652ae"
 
 # install what is needed for numpy.test()
 RDEPENDS_${PN} = "python-unittest \
@@ -91,6 +91,8 @@ RDEPENDS_${PN} = "python-unittest \
                   python-email \
                   python-subprocess \
                   python-compression \
+                  python-ctypes \
+                  python-threading \
 "
 
 RDEPENDS_${PN}_class-native = ""
