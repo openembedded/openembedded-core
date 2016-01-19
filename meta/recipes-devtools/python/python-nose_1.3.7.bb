@@ -7,8 +7,8 @@ LIC_FILES_CHKSUM = "file://lgpl.txt;md5=a6f89e2100d9b6cdffcea4f398e37343"
 
 SRC_URI = "http://pypi.python.org/packages/source/n/nose/nose-${PV}.tar.gz"
 
-SRC_URI[md5sum] = "0ca546d81ca8309080fc80cb389e7a16"
-SRC_URI[sha256sum] = "f61e0909a743eed37b1207e38a8e7b4a2fe0a82185e36f2be252ef1b3f901758"
+SRC_URI[md5sum] = "4d3ad0ff07b61373d2cefc89c5d0b20b"
+SRC_URI[sha256sum] = "f1bffef9cbc82628f6e7d7b40d7e255aefaa1adb6a1b1d26c69a8b79e6208a98"
 
 UPSTREAM_CHECK_URI = "https://pypi.python.org/pypi/nose/"
 UPSTREAM_CHECK_REGEX = "/nose/(?P<pver>(\d+[\.\-_]*)+)"
@@ -16,5 +16,9 @@ UPSTREAM_CHECK_REGEX = "/nose/(?P<pver>(\d+[\.\-_]*)+)"
 S = "${WORKDIR}/nose-${PV}"
 
 inherit setuptools
+
+RDEPENDS_${PN} = "\
+  python-unittest \
+  "
 
 BBCLASSEXTEND = "native nativesdk"
