@@ -12,9 +12,10 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
                     file://gst-libs/ext/libav/COPYING.LGPLv3;md5=e6a600fd5e1d9cbde2d983680233ad02"
 
 SRC_URI = "git://anongit.freedesktop.org/gstreamer/gst-libav;branch=master"
-S = "${WORKDIR}/git"
 
 SRCREV = "127202d6f65584891dabf92be031f0d170b0e7f1"
+
+S = "${WORKDIR}/git"
 
 LIBAV_EXTRA_CONFIGURE_COMMON_ARG = "--target-os=linux \
   --cc='${CC}' --as='${CC}' --ld='${CC}' --nm='${NM}' --ar='${AR}' \
@@ -26,4 +27,3 @@ do_configure_prepend() {
 	./autogen.sh --noconfigure
 	cd ${B}
 }
-
