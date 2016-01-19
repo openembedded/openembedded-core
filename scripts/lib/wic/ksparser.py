@@ -25,11 +25,12 @@
 # Ed Bartosh <ed.bartosh> (at] linux.intel.com>
 
 
-
+import os
 import shlex
 from argparse import ArgumentParser, ArgumentError, ArgumentTypeError
 
 from wic.partition import Partition
+from wic.utils.misc import find_canned
 
 class KickStartError(Exception):
     pass
@@ -78,6 +79,17 @@ def overheadtype(arg):
 
     return result
 
+def cannedpathtype(arg):
+    """
+    Custom type for ArgumentParser
+    Tries to find file in the list of canned wks paths
+    """
+    scripts_path = os.path.abspath(os.path.dirname(__file__) + '../../..')
+    result = find_canned(scripts_path, arg)
+    if not result:
+        raise ArgumentTypeError("file not found: %s" % arg)
+    return result
+
 class KickStart(object):
     def __init__(self, confpath):
 
@@ -117,7 +129,7 @@ class KickStart(object):
         bootloader.add_argument('--source')
 
         include = subparsers.add_parser('include')
-        include.add_argument('path')
+        include.add_argument('path', type=cannedpathtype)
 
         self._parse(parser, confpath)
 
