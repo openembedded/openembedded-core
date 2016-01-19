@@ -11,6 +11,7 @@ PV = "0.6.14+git${SRCPV}"
 
 SRC_URI = "git://github.com/openSUSE/libsolv.git"
 SRCREV = "b1ea39233f86cd62fbab1964d7497244f6be0087"
+UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>\d+(\.\d+)+)"
 
 S = "${WORKDIR}/git"
 
