@@ -585,6 +585,10 @@ def package_qa_check_buildpaths(path, name, d, elf, messages):
     if os.path.islink(path):
         return
 
+    # Ignore ipk and deb's CONTROL dir
+    if path.find(name + "/CONTROL/") != -1 or path.find(name + "/DEBIAN/") != -1:
+        return
+
     tmpdir = d.getVar('TMPDIR', True)
     with open(path) as f:
         file_content = f.read()
