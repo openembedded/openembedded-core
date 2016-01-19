@@ -760,4 +760,18 @@ DESCRIPTION
       implemented by the various --source plugins that implement
       bootloader functionality; the bootloader command essentially
       provides a means of modifying bootloader configuration.
+
+    * include
+
+      This command allows the user to include the content of .wks file
+      into original .wks file.
+
+      Command uses the following syntax:
+
+         include <file>
+
+      The <file> is either path to the file or its name. If name is
+      specified wic will try to find file in the directories with canned
+      .wks files.
+
 """
