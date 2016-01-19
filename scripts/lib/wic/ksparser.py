@@ -116,6 +116,9 @@ class KickStart(object):
         bootloader.add_argument('--timeout', type=int)
         bootloader.add_argument('--source')
 
+        include = subparsers.add_parser('include')
+        include.add_argument('path')
+
         self._parse(parser, confpath)
 
     def _parse(self, parser, confpath):
@@ -133,7 +136,9 @@ class KickStart(object):
                     if line.startswith('part'):
                         self.partnum += 1
                         self.partitions.append(Partition(parsed, self.partnum))
-                    else:
+                    elif line.startswith('include'):
+                        self._parse(parser, parsed.path)
+                    elif line.startswith('bootloader'):
                         if not self.bootloader:
                              self.bootloader = parsed
                         else:
