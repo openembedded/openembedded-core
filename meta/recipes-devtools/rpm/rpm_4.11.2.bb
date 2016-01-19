@@ -101,8 +101,7 @@ do_install_append() {
 }
 
 pkg_postinst_${PN}() {
-
-    [ "x\$D" == "x" ] && ldconfig
+    [ "x\$D" = "x" ] && ldconfig
     test -f ${localstatedir}/lib/rpm/Packages || rpm --initdb
     rm -f ${localstatedir}/lib/rpm/Filemd5s \
           ${localstatedir}/lib/rpm/Filedigests \
@@ -112,7 +111,7 @@ pkg_postinst_${PN}() {
 }
 
 pkg_postrm_${PN}() {
-    [ "x\$D" == "x" ] && ldconfig
+    [ "x\$D" = "x" ] && ldconfig
 
 }
 
