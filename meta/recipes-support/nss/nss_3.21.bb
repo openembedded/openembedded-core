@@ -15,17 +15,18 @@ LIC_FILES_CHKSUM = "file://nss/COPYING;md5=3b1e88e1b9c0b5a4b2881d46cce06a18 \
                     file://nss/lib/freebl/mpi/doc/LICENSE-MPL;md5=5d425c8f3157dbf212db2ec53d9e5132"
 
 SRC_URI = "\
-    http://ftp.mozilla.org/pub/mozilla.org/security/nss/releases/NSS_3_19_2_RTM/src/${BP}.tar.gz \
+    http://ftp.mozilla.org/pub/mozilla.org/security/nss/releases/NSS_3_21_RTM/src/${BP}.tar.gz \
     file://nss-fix-support-cross-compiling.patch \
     file://nss-no-rpath-for-cross-compiling.patch \
     file://nss-fix-incorrect-shebang-of-perl.patch \
     file://nss-fix-nsinstall-build.patch \
+    file://0001-Fix-build-failure-on-opensuse-13.1.patch \
     file://nss.pc.in \
     file://signlibs.sh \
 "
 
-SRC_URI[md5sum] = "b02ffd1e8e8ef5f8512fa02d8ca9db3d"
-SRC_URI[sha256sum] = "1306663e8f61d8449ad8cbcffab743a604dcd9f6f34232c210847c51dce2c9ae"
+SRC_URI[md5sum] = "3c8b2ed880dd3a8d86c9e0151afe6eba"
+SRC_URI[sha256sum] = "3f7a5b027d7cdd5c0e4ff7544da33fdc6f56c2f8c27fff02938fd4a6fbe87239"
 
 UPSTREAM_CHECK_URI = "https://developer.mozilla.org/en-US/docs/Mozilla/Projects/NSS/NSS_Releases"
 UPSTREAM_CHECK_REGEX = "NSS_(?P<pver>.+)_release_notes"
@@ -84,6 +85,8 @@ do_compile() {
         export USE_X32=1
     fi
 
+    export NSS_DISABLE_GTESTS=1
+
     # We can modify CC in the environment, but if we set it via an
     # argument to make, nsinstall, a host program, will also build with it!
     #
@@ -128,6 +131,8 @@ do_install() {
     elif [ "${TARGET_ARCH}" = "x86_64" -a "${SITEINFO_BITS}" = "32" ]; then
         export USE_X32=1
     fi
+
+    export NSS_DISABLE_GTESTS=1
 
     make -C ./nss \
         CCC="${CXX}" \
