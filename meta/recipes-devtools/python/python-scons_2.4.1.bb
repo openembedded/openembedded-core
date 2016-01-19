@@ -6,8 +6,8 @@ SRCNAME = "scons"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/scons/scons-${PV}.tar.gz"
 
-SRC_URI[md5sum] = "9c6a1c3c716cbe5f16515f163c91d928"
-SRC_URI[sha256sum] = "98adaa351d8f4e4068a5bf1894bdd7f85b390c8c3f80d437cf8bb266012404df"
+SRC_URI[md5sum] = "9a0ddf33d9839f04380e0fae87cc4b40"
+SRC_URI[sha256sum] = "8fc4f42928c69bcbb33e1be94b646f2c700b659693fabc778c192d4d22f753a7"
 
 UPSTREAM_CHECK_URI = "http://sourceforge.net/projects/scons/files/scons/"
 UPSTREAM_CHECK_REGEX = "/scons/(?P<pver>(\d+[\.\-_]*)+)/"
@@ -15,3 +15,8 @@ UPSTREAM_CHECK_REGEX = "/scons/(?P<pver>(\d+[\.\-_]*)+)/"
 S = "${WORKDIR}/${SRCNAME}-${PV}"
 
 inherit distutils
+
+RDEPENDS_${PN} = "\
+  python-fcntl \
+  python-io \
+  "
