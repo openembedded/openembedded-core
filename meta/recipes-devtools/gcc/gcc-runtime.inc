@@ -1,6 +1,6 @@
 require gcc-configure-common.inc
 
-CXXFLAGS := "${@oe_filter_out('-fvisibility-inlines-hidden', '${CXXFLAGS}', d)}"
+CXXFLAGS_remove = "-fvisibility-inlines-hidden"
 
 EXTRA_OECONF_PATHS = "\
     --with-gxx-include-dir=${includedir}/c++/${BINV} \
