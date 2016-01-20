@@ -71,6 +71,12 @@ do_install_append () {
 	if [ -f ${D}${bindir}/glib-mkenums ]; then
 		sed -i -e '1s,#!.*perl,#! ${USRBINPATH}/env perl,' ${D}${bindir}/glib-mkenums
 	fi
+
+	if [ -f ${D}${datadir}/installed-tests/glib/gdbus-serialization.test ]; then
+		if ${@bb.utils.contains("DISTRO_FEATURES", "x11", "false", "true", d)}; then
+			rm ${D}${datadir}/installed-tests/glib/gdbus-serialization.test
+		fi
+	fi
 }
 
 RDEPENDS_${PN}-ptest += "\
