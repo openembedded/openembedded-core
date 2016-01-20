@@ -11,7 +11,7 @@ inherit gettext
 PACKAGECONFIG ??= " \
     ${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'x11', '', d)} \
     ${@bb.utils.contains('DISTRO_FEATURES', 'pulseaudio', 'pulseaudio', '', d)} \
-    orc cairo flac gdk-pixbuf gudev jpeg libpng soup speex taglib v4l2 \
+    orc cairo flac gdk-pixbuf jpeg libpng soup speex taglib v4l2\
     "
 
 X11DEPENDS = "virtual/libx11 libsm libxrender libxfixes libxdamage"
