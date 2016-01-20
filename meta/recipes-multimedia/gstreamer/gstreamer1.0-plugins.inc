@@ -54,10 +54,3 @@ def get_gst_srcuri(d):
     else:
         s = "http://gstreamer.freedesktop.org/src/%s/%s-%s.tar.xz" % (gstpkg_basename, gstpkg_basename, pv)
     return s
-
-delete_liblink_m4_file() {
-	# This m4 file contains nastiness which conflicts with libtool 2.2.2
-	rm "${S}/m4/lib-link.m4" || true
-}
-
-do_configure[prefuncs] += " delete_liblink_m4_file "
