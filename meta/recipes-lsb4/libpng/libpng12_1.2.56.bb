@@ -2,8 +2,8 @@ SUMMARY = "PNG image format decoding library"
 HOMEPAGE = "http://www.libpng.org/"
 SECTION = "libs"
 LICENSE = "Libpng"
-LIC_FILES_CHKSUM = "file://LICENSE;md5=6150ae2da16b673fa759402d5fb7ef73 \
-                    file://png.h;beginline=19;endline=109;md5=96ec141aee7c75a15d77dbe249a71f93"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=e7f289af309d98b46321d0f9892def16 \
+                    file://png.h;beginline=19;endline=109;md5=10c940148fe379a535b310c1c54e609c"
 DEPENDS = "zlib"
 
 PN = "libpng12"
@@ -11,8 +11,8 @@ S = "${WORKDIR}/libpng-${PV}"
 
 SRC_URI = "${GENTOO_MIRROR}/libpng-${PV}.tar.xz"
 
-SRC_URI[md5sum] = "68ac486976e73fd164d54740bece57a2"
-SRC_URI[sha256sum] = "5e5227345676fabbba28558f4396514bb06a239eaf69adba12f3669a1650797e"
+SRC_URI[md5sum] = "868562bd1c58b76ed8703f135a2e439a"
+SRC_URI[sha256sum] = "24ce54581468b937734a6ecc86f7e121bc46a90d76a0d948dca08f32ee000dbe"
 
 UPSTREAM_CHECK_URI = "http://sourceforge.net/projects/libpng/files/libpng12/"
 UPSTREAM_CHECK_REGEX = "/libpng12/(?P<pver>(\d+[\.\-_]*)+)/"
