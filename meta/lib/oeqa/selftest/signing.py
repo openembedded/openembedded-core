@@ -3,6 +3,8 @@ from oeqa.utils.commands import runCmd, bitbake, get_bb_var
 import os
 import glob
 import re
+import shutil
+import tempfile
 from oeqa.utils.decorators import testcase
 
 
@@ -69,11 +71,17 @@ class Signing(oeSelfTest):
 
         pkg_deploy = os.path.join(deploy_dir_rpm, package_arch, '.'.join((pf, package_arch, 'rpm')))
 
-        runCmd('%s/rpm --import %s%s' % (staging_bindir_native, self.gpg_dir, self.pub_key_name))
+        # Use a temporary rpmdb
+        rpmdb = tempfile.mkdtemp(prefix='oeqa-rpmdb')
 
-        ret = runCmd('%s/rpm --checksig %s' % (staging_bindir_native, pkg_deploy))
+        runCmd('%s/rpm --define "_dbpath %s" --import %s%s' %
+               (staging_bindir_native, rpmdb, self.gpg_dir, self.pub_key_name))
+
+        ret = runCmd('%s/rpm --define "_dbpath %s" --checksig %s' %
+                     (staging_bindir_native, rpmdb, pkg_deploy))
         # tmp/deploy/rpm/i586/ed-1.9-r0.i586.rpm: rsa sha1 md5 OK
         self.assertIn('rsa sha1 md5 OK', ret.output, 'Package signed incorrectly.')
+        shutil.rmtree(rpmdb)
 
     @testcase(1382)
     def test_signing_sstate_archive(self):
