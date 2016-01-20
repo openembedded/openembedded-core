@@ -2,8 +2,8 @@ SUMMARY = "Weston, a Wayland compositor"
 DESCRIPTION = "Weston is the reference implementation of a Wayland compositor"
 HOMEPAGE = "http://wayland.freedesktop.org"
 LICENSE = "MIT"
-LIC_FILES_CHKSUM = "file://COPYING;md5=275efac2559a224527bd4fd593d38466 \
-                    file://src/compositor.c;endline=23;md5=a9793f1edc8d1a4c344ca8ae252352fb"
+LIC_FILES_CHKSUM = "file://COPYING;md5=d79ee9e66bb0f95d3386a7acae780b70 \
+                    file://src/compositor.c;endline=23;md5=1d535fed266cf39f6d8c0647f52ac331"
 
 SRC_URI = "http://wayland.freedesktop.org/releases/${BPN}-${PV}.tar.xz \
            file://weston.png \
@@ -11,12 +11,11 @@ SRC_URI = "http://wayland.freedesktop.org/releases/${BPN}-${PV}.tar.xz \
            file://make-lcms-explicitly-configurable.patch \
            file://make-libwebp-explicitly-configurable.patch \
            file://0001-make-error-portable.patch \
-           file://parallelmake.patch \
            file://libsystemd.patch \
            file://explicit-enable-disable-systemd.patch \
 "
-SRC_URI[md5sum] = "24cb8a7ed0535b4fc3642643988dab36"
-SRC_URI[sha256sum] = "8963e69f328e815cec42c58046c4af721476c7541bb7d9edc71740fada5ad312"
+SRC_URI[md5sum] = "66bbba12f546570b4d97f676bc79a28e"
+SRC_URI[sha256sum] = "9c1b03f3184fa0b0dfdf67e215048085156e1a2ca344af6613fed36794ac48cf"
 
 inherit autotools pkgconfig useradd distro_features_check
 # depends on virtual/egl
