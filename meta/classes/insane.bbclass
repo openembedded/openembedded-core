@@ -767,7 +767,7 @@ def package_qa_check_staged(path,d):
     return sane
 
 # Walk over all files in a directory and call func
-def package_qa_walk(path, warnfuncs, errorfuncs, skip, package, d):
+def package_qa_walk(warnfuncs, errorfuncs, skip, package, d):
     import oe.qa
 
     #if this will throw an exception, then fix the dict above
@@ -1092,7 +1092,7 @@ python do_package_qa () {
                     "%s doesn't match the [a-z0-9.+-]+ regex" % package, d)
 
         path = "%s/%s" % (pkgdest, package)
-        package_qa_walk(path, warnchecks, errorchecks, skip, package, d)
+        package_qa_walk(warnchecks, errorchecks, skip, package, d)
 
         package_qa_check_rdepends(package, pkgdest, skip, taskdeps, packages, d)
         package_qa_check_deps(package, pkgdest, skip, d)
