@@ -9,7 +9,7 @@ SRC_URI += "file://acinclude.m4 \
 "
 
 SRCREV = "0f26747167cc9d82df849b0aad387bf824f04544"
-PV = "1.42.13+git${SRCPV}"
+PV = "1.42.99+1.43+git${SRCPV}"
 UPSTREAM_CHECK_GITTAGREGEX = "v(?P<pver>\d+\.\d+(\.\d+)*)$"
 
 EXTRA_OECONF += "--libdir=${base_libdir} --sbindir=${base_sbindir} \
