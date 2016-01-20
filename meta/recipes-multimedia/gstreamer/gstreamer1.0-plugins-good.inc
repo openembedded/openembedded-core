@@ -39,7 +39,6 @@ EXTRA_OECONF += " \
     --disable-aalib \
     --disable-aalibtest \
     --disable-directsound \
-    --disable-examples \
     --disable-libcaca \
     --disable-libdv \
     --disable-oss4 \
