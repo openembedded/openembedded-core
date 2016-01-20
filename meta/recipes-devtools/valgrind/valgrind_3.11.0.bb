@@ -22,6 +22,7 @@ SRC_URI = "http://www.valgrind.org/downloads/valgrind-${PV}.tar.bz2 \
            file://0005-Modify-vg_test-wrapper-to-support-PTEST-formats.patch \
            file://0001-Remove-tests-that-fail-to-build-on-some-PPC32-config.patch \
            file://use-appropriate-march-mcpu-mfpu-for-ARM-test-apps.patch \
+           file://avoid-neon-for-targets-which-don-t-support-it.patch \
            "
 
 SRC_URI[md5sum] = "4ea62074da73ae82e0162d6550d3f129"
