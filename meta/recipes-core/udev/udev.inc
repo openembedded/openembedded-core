@@ -31,7 +31,10 @@ SRC_URI = "${KERNELORG_MIRROR}/linux/utils/kernel/hotplug/udev-${PV}.tar.gz \
            file://add-install-ptest.patch \
            file://fix_rule-syntax-regex-ptest.patch \
            file://run-ptest \
-           file://init"
+           file://init \
+           file://0001-mtd_probe.h-Add-stdint.h-as-it-was-removed-from-mtd-.patch \
+           file://0002-configure.ac-Makefile.am-Check-for-input.h-and-input.patch \
+           "
 
 inherit autotools pkgconfig update-rc.d ptest
 RDEPENDS_${PN}-ptest += "make perl python"
