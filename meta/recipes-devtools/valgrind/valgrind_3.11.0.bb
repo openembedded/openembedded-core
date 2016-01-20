@@ -44,6 +44,11 @@ EXTRA_OECONF_append_arm = " --host=armv7${HOST_VENDOR}-${HOST_OS}"
 
 EXTRA_OEMAKE = "-w"
 
+# valgrind likes to control its own optimisation flags. It generally defaults
+# to -O2 but uses -O0 for some specific test apps etc. Passing our own flags
+# (via CFLAGS) means we interfere with that.
+SELECTED_OPTIMIZATION = ""
+
 CFLAGS_append_libc-uclibc = " -D__UCLIBC__ "
 
 do_install_append () {
@@ -63,9 +68,8 @@ RDEPENDS_${PN}-ptest += " sed perl glibc-utils perl-module-file-glob"
 INSANE_SKIP_${PN}-ptest += "file-rdeps"
 
 do_compile_ptest() {
-    oe_runmake check CFLAGS="${CFLAGS} -O0" CXXFLAGS="${CXXFLAGS} -O0"
+    oe_runmake check
 }
-
 
 do_install_ptest() {
     chmod +x ${B}/tests/vg_regtest
@@ -107,4 +111,3 @@ do_install_ptest() {
     # handle multilib
     sed -i s:@libdir@:${libdir}:g ${D}${PTEST_PATH}/run-ptest
 }
-
