@@ -252,7 +252,7 @@ python package_do_filedeps_append () {
             alt_target   = alt_target or d.getVar('ALTERNATIVE_TARGET_%s' % pkg, True) or d.getVar('ALTERNATIVE_TARGET', True) or alt_link
 
             if alt_link == alt_target:
-                bb.warn('alt_link == alt_target: %s == %s' % (alt_link, alt_target))
+                bb.warn('%s: alt_link == alt_target: %s == %s' % (pn, alt_link, alt_target))
                 alt_target = '%s.%s' % (alt_target, pn)
 
             if not os.path.lexists('%s/%s/%s' % (pkgdest, pkg, alt_target)):
