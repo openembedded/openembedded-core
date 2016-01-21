@@ -12,7 +12,7 @@ SRC_URI = " \
     file://encodebin-Need-more-buffers-in-output-queue-for-bett.patch \
 "
 
-SRC_URI[md5sum] = "f530fbbe287edce79c55a37bd1a39fe2"
-SRC_URI[sha256sum] = "c75dd400e451526ed71e1c4955e33d470a2581f5e71ecf84920a41c0a5c75322"
+SRC_URI[md5sum] = "3ddde0ad598ef69f58d6a2e87f8b460f"
+SRC_URI[sha256sum] = "b6154f8fdba4877e95efd94610ef0ada4f0171cd12eb829a3c3c97345d9c7a75"
 
 S = "${WORKDIR}/gst-plugins-base-${PV}"
