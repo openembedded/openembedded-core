@@ -128,7 +128,7 @@ rev=$(git rev-parse --short HEAD)  || exit 1
 OUTDIR="$clonedir/build-perf-test/results-$rev-`date "+%Y%m%d%H%M%S"`"
 BUILDDIR="$OUTDIR/build"
 resultsfile="$OUTDIR/results.log"
-bboutput="$OUTDIR/bitbake.log"
+cmdoutput="$OUTDIR/commands.log"
 myoutput="$OUTDIR/output.log"
 globalres="$clonedir/build-perf-test/globalres.log"
 
@@ -180,14 +180,13 @@ time_count=0
 declare -a SIZES
 size_count=0
 
-bbtime () {
-    local arg="$@"
-    log "   Timing: bitbake ${arg}"
+time_cmd () {
+    log "   Timing: $*"
 
     if [ $verbose -eq 0 ]; then 
-        /usr/bin/time -v -o $resultsfile bitbake ${arg} >> $bboutput
+        /usr/bin/time -v -o $resultsfile "$@" >> $cmdoutput
     else
-        /usr/bin/time -v -o $resultsfile bitbake ${arg}
+        /usr/bin/time -v -o $resultsfile "$@"
     fi
     ret=$?
     if [ $ret -eq 0 ]; then
@@ -206,12 +205,16 @@ bbtime () {
     log "More stats can be found in ${resultsfile}.${i}"    
 }
 
+bbtime () {
+    time_cmd bitbake "$@"
+}
+
 #we don't time bitbake here
 bbnotime () {
     local arg="$@"
     log "   Running: bitbake ${arg}"
     if [ $verbose -eq 0 ]; then
-        bitbake ${arg} >> $bboutput
+        bitbake ${arg} >> $cmdoutput
     else
         bitbake ${arg}
     fi
