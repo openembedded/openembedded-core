@@ -845,7 +845,10 @@ def package_qa_check_rdepends(pkg, pkgdest, skip, taskdeps, packages, d):
                                 break
                     if rdep_data and 'PN' in rdep_data and rdep_data['PN'] in taskdeps:
                         continue
-                    error_msg = "%s rdepends on %s, but it isn't a build dependency?" % (pkg, rdepend)
+                    if rdep_data and 'PN' in rdep_data:
+                        error_msg = "%s rdepends on %s, but it isn't a build dependency, missing %s in DEPENDS or PACKAGECONFIG?" % (pkg, rdepend, rdep_data['PN'])
+                    else:
+                        error_msg = "%s rdepends on %s, but it isn't a build dependency?" % (pkg, rdepend)
                     package_qa_handle_error("build-deps", error_msg, d)
 
         if "file-rdeps" not in skip:
@@ -911,8 +914,8 @@ def package_qa_check_rdepends(pkg, pkgdest, skip, taskdeps, packages, d):
                         break
             if filerdepends:
                 for key in filerdepends:
-                    error_msg = "%s contained in package %s requires %s, but no providers found in its RDEPENDS" % \
-                            (filerdepends[key],pkg, key)
+                    error_msg = "%s contained in package %s requires %s, but no providers found in RDEPENDS_%s?" % \
+                            (filerdepends[key].replace("_%s" % pkg, "").replace("@underscore@", "_"), pkg, key, pkg)
                 package_qa_handle_error("file-rdeps", error_msg, d)
 
 def package_qa_check_deps(pkg, pkgdest, skip, d):
