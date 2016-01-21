@@ -3,7 +3,7 @@
 
 require musl.inc
 
-SRCREV = "3abb094d19ca4c7c4adcf373d971fb5aa05c5252"
+SRCREV = "369b22f9c4aebba2b8fe905db8469b2667572ee1"
 
 PV = "1.1.12+git${SRCPV}"
 
@@ -53,7 +53,7 @@ do_install() {
 	ln -s ../../${libdir}/libc.so ${D}${bindir}/ldd
 }
 
-RDEPENDS_${PN}-dev = "linux-libc-headers-dev"
+RDEPENDS_${PN}-dev += "linux-libc-headers-dev bsd-headers-dev"
 RPROVIDES_${PN}-dev += "libc-dev virtual-libc-dev"
 RPROVIDES_${PN} += "ldd libsegfault rtld(GNU_HASH)"
 
