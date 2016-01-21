@@ -11,7 +11,7 @@ SRC_URI = " \
     file://0001-glimagesink-Downrank-to-marginal.patch \
 "
 
-SRC_URI[md5sum] = "7c73bec1d389f0e184ebbbbb9e9f883d"
-SRC_URI[sha256sum] = "650855e39ff56a8bb6cb0c192109c5926ce12f536d06e19ebf829de71ef396fe"
+SRC_URI[md5sum] = "4857adcafe41e4b9b8805cf88303bd55"
+SRC_URI[sha256sum] = "971b29101d6a9c5e3fe94d99d977a227f58f0b2d29b6ca2c7f292052542b3a61"
 
 S = "${WORKDIR}/gst-plugins-bad-${PV}"
