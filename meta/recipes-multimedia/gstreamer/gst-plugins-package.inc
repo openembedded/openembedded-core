@@ -52,5 +52,4 @@ FILES_${PN} = ""
 FILES_${PN}-apps = "${bindir}"
 FILES_${PN}-glib = "${datadir}/glib-2.0"
 
-RDEPENDS_${PN}-apps += "perl"
 RRECOMMENDS_${PN} += "${PN}-meta"
