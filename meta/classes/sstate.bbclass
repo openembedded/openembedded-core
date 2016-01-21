@@ -960,7 +960,7 @@ python sstate_eventhandler2() {
                         seen.append(stamp)
 
         if toremove:
-            bb.note("There are %d recipes to be removed from the sysroot, removing..." % (len(toremove)))
+            bb.note("There are %d recipes to be removed from sysroot %s, removing..." % (len(toremove), a))
 
         for r in toremove:
             (stamp, manifest, workdir) = r.split()
