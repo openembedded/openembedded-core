@@ -353,6 +353,29 @@ test3 () {
     bbtime -p
 }
 
+#
+# Test 4 - eSDK
+# Measure: eSDK size and installation time
+test4 () {
+    log "Running Test 4: eSDK size and installation time"
+    bbnotime $IMAGE -c do_populate_sdk_ext
+
+    esdk_installer=(tmp/deploy/sdk/*-toolchain-ext-*.sh)
+
+    if [ ${#esdk_installer[*]} -eq 1 ]; then
+        s=$((`stat -c %s "$esdk_installer"` / 1024))
+        SIZES[(( size_count++ ))]="$s"
+        log "Download SIZE of eSDK is: $s kB"
+
+        do_sync
+        time_cmd "$esdk_installer" -y -d "tmp/esdk-deploy"
+    else
+        log "ERROR: other than one sdk found (${esdk_installer[*]}), reporting size and time as 0."
+        SIZES[(( size_count++ ))]="0"
+        TIMES[(( time_count++ ))]="0"
+    fi
+
+}
 
 
 # RUN!
@@ -362,6 +385,7 @@ test1_p2
 test1_p3
 test2
 test3
+test4
 
 # if we got til here write to global results
 write_results
