@@ -2,7 +2,7 @@ SUMMARY = "The PyPA recommended tool for installing Python packages"
 sHOMEPAGEsss = "https://pypi.python.org/pypi/pip"
 SECTION = "devel/python"
 LICENSE = "MIT"
-LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=45665b53032c02b35e29ddab8e61fa91"
+LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=25fba45109565f87de20bae85bc39452"
 
 SRCNAME = "pip"
 DEPENDS += "python3 python3-setuptools-native"
@@ -10,8 +10,8 @@ DEPENDS += "python3 python3-setuptools-native"
 SRC_URI = " \
   http://pypi.python.org/packages/source/p/${SRCNAME}/${SRCNAME}-${PV}.tar.gz \
 "
-SRC_URI[md5sum] = "3823d2343d9f3aaab21cf9c917710196"
-SRC_URI[sha256sum] = "ca047986f0528cfa975a14fb9f7f106271d4e0c3fe1ddced6c1db2e7ae57a477"
+SRC_URI[md5sum] = "5601c4323464add1482291634142894d"
+SRC_URI[sha256sum] = "90112b296152f270cb8dddcd19b7b87488d9e002e8cf622e14c4da9c2f6319b1"
 
 UPSTREAM_CHECK_URI = "https://pypi.python.org/pypi/pip"
 
