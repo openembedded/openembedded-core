@@ -57,7 +57,7 @@
 
 # The following are used to control options related to debugging.
 #
-# Uncomment this to change the optimization to make debugging easer, at the 
+# Uncomment this to change the optimization to make debugging easer, at the
 # possible cost of performance.
 # DEBUG_BUILD = "1"
 #
@@ -131,9 +131,9 @@
 # build both the 32-bit and 64-bit wrapper libraries on a 64-bit build system.
 #
 # Pseudo will attempt to determine if a 32-bit wrapper is necessary, but
-# it doesn't always guess properly.  If you have 32-bit executables on 
-# your 64-bit build system, you likely want to set this to "0", 
-# otherwise you could end up with incorrect file attributes on the 
+# it doesn't always guess properly.  If you have 32-bit executables on
+# your 64-bit build system, you likely want to set this to "0",
+# otherwise you could end up with incorrect file attributes on the
 # target filesystem.
 #
 # Default is to not build 32 bit libs on 64 bit systems, uncomment this
@@ -271,7 +271,7 @@
 
 #
 # GCC/LD FLAGS to enable more secure code generation
-# 
+#
 # By including the security_flags include file you enable flags
 # to the compiler and linker that cause them to generate more secure
 # code, this is enabled by default in the poky-lsb distro.
