@@ -260,6 +260,14 @@ def supports_srcrev(uri):
             return True
     return False
 
+def reformat_git_uri(uri):
+    '''Convert any http[s]://....git URI into git://...;protocol=http[s]'''
+    res = re.match('(https?)://([^;]+\.git)(;.*)?$', uri)
+    if res:
+        # Need to switch the URI around so that the git fetcher is used
+        return 'git://%s;protocol=%s%s' % (res.group(2), res.group(1), res.group(3) or '')
+    return uri
+
 def create_recipe(args):
     import bb.process
     import tempfile
@@ -275,16 +283,11 @@ def create_recipe(args):
     srcrev = '${AUTOREV}'
     if '://' in args.source:
         # Fetch a URL
-        fetchuri = urlparse.urldefrag(args.source)[0]
+        fetchuri = reformat_git_uri(urlparse.urldefrag(args.source)[0])
         if args.binary:
             # Assume the archive contains the directory structure verbatim
             # so we need to extract to a subdirectory
             fetchuri += ';subdir=%s' % os.path.splitext(os.path.basename(urlparse.urlsplit(fetchuri).path))[0]
-        git_re = re.compile('(https?)://([^;]+\.git)(;.*)?$')
-        res = git_re.match(fetchuri)
-        if res:
-            # Need to switch the URI around so that the git fetcher is used
-            fetchuri = 'git://%s;protocol=%s%s' % (res.group(2), res.group(1), res.group(3) or '')
         srcuri = fetchuri
         rev_re = re.compile(';rev=([^;]+)')
         res = rev_re.search(srcuri)
@@ -321,8 +324,21 @@ def create_recipe(args):
         if not os.path.isdir(args.source):
             logger.error('Invalid source directory %s' % args.source)
             sys.exit(1)
-        srcuri = ''
         srctree = args.source
+        srcuri = ''
+        if os.path.exists(os.path.join(srctree, '.git')):
+            # Try to get upstream repo location from origin remote
+            try:
+                stdout, _ = bb.process.run('git remote -v', cwd=srctree, shell=True)
+            except bb.process.ExecutionError as e:
+                stdout = None
+            if stdout:
+                for line in stdout.splitlines():
+                    splitline = line.split()
+                    if len(splitline) > 1:
+                        if splitline[0] == 'origin' and '://' in splitline[1]:
+                            srcuri = reformat_git_uri(splitline[1])
+                            break
 
     if args.src_subdir:
         srcsubdir = os.path.join(srcsubdir, args.src_subdir)
