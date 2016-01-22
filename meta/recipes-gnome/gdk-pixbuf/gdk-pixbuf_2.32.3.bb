@@ -17,11 +17,10 @@ SRC_URI = "${GNOME_MIRROR}/${BPN}/${MAJ_VER}/${BPN}-${PV}.tar.xz \
            file://extending-libinstall-dependencies.patch \
            file://run-ptest \
            file://fatal-loader.patch \
-           file://libc_memfuncs.patch \
            "
 
-SRC_URI[md5sum] = "b1590189a2e89fab9f871959c168508c"
-SRC_URI[sha256sum] = "4432b74f25538c7d6bcb3ca51adabdd666168955f25812a2568dc9637697f3bc"
+SRC_URI[md5sum] = "9275076639baa24a342f3e02c402920e"
+SRC_URI[sha256sum] = "2b6771f1ac72f687a8971e59810b8dc658e65e7d3086bd2e676e618fd541d031"
 
 inherit autotools pkgconfig gettext pixbufcache ptest-gnome upstream-version-is-even
 
