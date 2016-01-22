@@ -308,6 +308,7 @@ class PkgsList(object):
         output = dict()
         filename = ""
         dep = []
+        pkg = ""
         for line in cmd_output.splitlines():
             line = line.rstrip()
             if ':' in line:
