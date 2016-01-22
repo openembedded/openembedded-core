@@ -381,3 +381,21 @@
 # PREFERRED_VERSION_rpm = "4.11.2"
 # PREFERRED_VERSION_rpm-native = "4.11.2"
 # RPMROOTFSDEPENDS_remove = "rpmresolve-native:do_populate_sysroot"
+
+#
+# Use busybox/mdev for system initialization
+#
+#VIRTUAL-RUNTIME_dev_manager = "busybox-mdev"
+#VIRTUAL-RUNTIME_login_manager = "busybox"
+#VIRTUAL-RUNTIME_init_manager = "busybox"
+#VIRTUAL-RUNTIME_initscripts = "initscripts"
+#VIRTUAL-RUNTIME_keymaps = "keymaps"
+#DISTRO_FEATURES_BACKFILL_CONSIDERED += "sysvinit"
+
+#
+# Use systemd for system initialization
+#
+#DISTRO_FEATURES_append = " systemd"
+#DISTRO_FEATURES_BACKFILL_CONSIDERED += "sysvinit"
+#VIRTUAL-RUNTIME_init_manager = "systemd"
+#VIRTUAL-RUNTIME_initscripts = "systemd-compat-units"
