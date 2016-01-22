@@ -2,7 +2,7 @@ require gstreamer1.0-plugins.inc
 
 LICENSE = "GPLv2+ & LGPLv2+"
 
-DEPENDS += "freetype iso-codes liboil util-linux zlib"
+DEPENDS += "freetype iso-codes util-linux zlib"
 
 inherit gettext
 
