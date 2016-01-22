@@ -8,7 +8,7 @@ import shutil
 import errno
 import sys
 import tempfile
-from devtool import exec_build_env_command, setup_tinfoil, DevtoolError
+from devtool import exec_build_env_command, setup_tinfoil, parse_recipe, DevtoolError
 
 logger = logging.getLogger('devtool')
 
@@ -235,6 +235,64 @@ def sdk_update(args, config, basepath, workspace):
             return -1
     return 0
 
+def sdk_install(args, config, basepath, workspace):
+    """Entry point for the devtool sdk-install command"""
+
+    import oe.recipeutils
+    import bb.process
+
+    for recipe in args.recipename:
+        if recipe in workspace:
+            raise DevtoolError('recipe %s is a recipe in your workspace' % recipe)
+
+    tasks = ['do_populate_sysroot', 'do_packagedata']
+    stampprefixes = {}
+    def checkstamp(recipe):
+        stampprefix = stampprefixes[recipe]
+        stamps = glob.glob(stampprefix + '*')
+        for stamp in stamps:
+            if '.sigdata.' not in stamp and stamp.startswith((stampprefix + '.', stampprefix + '_setscene.')):
+                return True
+        else:
+            return False
+
+    install_recipes = []
+    tinfoil = setup_tinfoil(config_only=False, basepath=basepath)
+    try:
+        for recipe in args.recipename:
+            rd = parse_recipe(config, tinfoil, recipe, True)
+            if not rd:
+                return 1
+            stampprefixes[recipe] = '%s.%s' % (rd.getVar('STAMP', True), tasks[0])
+            if checkstamp(recipe):
+                logger.info('%s is already installed' % recipe)
+            else:
+                install_recipes.append(recipe)
+    finally:
+        tinfoil.shutdown()
+
+    if install_recipes:
+        logger.info('Installing %s...' % ', '.join(install_recipes))
+        install_tasks = []
+        for recipe in install_recipes:
+            for task in tasks:
+                if recipe.endswith('-native') and 'package' in task:
+                    continue
+                install_tasks.append('%s:%s' % (recipe, task))
+        try:
+            exec_build_env_command(config.init_path, basepath, 'bitbake --setscene-only %s' % ' '.join(install_tasks))
+        except bb.process.ExecutionError as e:
+            raise DevtoolError('Failed to install %s:\n%s' % (recipe, str(e)))
+        failed = False
+        for recipe in install_recipes:
+            if checkstamp(recipe):
+                logger.info('Successfully installed %s' % recipe)
+            else:
+                raise DevtoolError('Failed to install %s - unavailable' % recipe)
+                failed = True
+        if failed:
+            return 2
+
 def register_commands(subparsers, context):
     """Register devtool subcommands from the sdk plugin"""
     if context.fixed_setup:
@@ -242,3 +300,6 @@ def register_commands(subparsers, context):
         parser_sdk.add_argument('updateserver', help='The update server to fetch latest SDK components from', nargs='?')
         parser_sdk.add_argument('--skip-prepare', action="store_true", help='Skip re-preparing the build system after updating (for debugging only)')
         parser_sdk.set_defaults(func=sdk_update)
+        parser_sdk_install = subparsers.add_parser('sdk-install', help='Install additional SDK components', description='Installs additional recipe development files into the SDK. (You can use "devtool search" to find available recipes.)')
+        parser_sdk_install.add_argument('recipename', help='Name of the recipe to install the development artifacts for', nargs='+')
+        parser_sdk_install.set_defaults(func=sdk_install)
