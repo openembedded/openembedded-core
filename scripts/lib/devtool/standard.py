@@ -141,6 +141,8 @@ def add(args, config, basepath, workspace):
         extracmdopts += ' -b'
     if args.also_native:
         extracmdopts += ' --also-native'
+    if args.src_subdir:
+        extracmdopts += ' --src-subdir "%s"' % args.src_subdir
 
     tempdir = tempfile.mkdtemp(prefix='devtool')
     try:
@@ -207,6 +209,9 @@ def add(args, config, basepath, workspace):
     rd = oe.recipeutils.parse_recipe(recipefile, None, tinfoil.config_data)
     if not rd:
         return 1
+
+    if args.src_subdir:
+        srctree = os.path.join(srctree, args.src_subdir)
 
     bb.utils.mkdirhier(os.path.dirname(appendfile))
     with open(appendfile, 'w') as f:
@@ -1308,6 +1313,7 @@ def register_commands(subparsers, context):
     parser_add.add_argument('--no-git', '-g', help='If fetching source, do not set up source tree as a git repository', action="store_true")
     parser_add.add_argument('--binary', '-b', help='Treat the source tree as something that should be installed verbatim (no compilation, same directory structure). Useful with binary packages e.g. RPMs.', action='store_true')
     parser_add.add_argument('--also-native', help='Also add native variant (i.e. support building recipe for the build host as well as the target machine)', action='store_true')
+    parser_add.add_argument('--src-subdir', help='Specify subdirectory within source tree to use', metavar='SUBDIR')
     parser_add.set_defaults(func=add)
 
     parser_modify = subparsers.add_parser('modify', help='Modify the source for an existing recipe',

@@ -324,6 +324,12 @@ def create_recipe(args):
         srcuri = ''
         srctree = args.source
 
+    if args.src_subdir:
+        srcsubdir = os.path.join(srcsubdir, args.src_subdir)
+        srctree_use = os.path.join(srctree, args.src_subdir)
+    else:
+        srctree_use = srctree
+
     if args.outfile and os.path.isdir(args.outfile):
         outfile = None
         outdir = args.outfile
@@ -343,7 +349,7 @@ def create_recipe(args):
     lines_before.append('# (Feel free to remove these comments when editing.)')
     lines_before.append('#')
 
-    licvalues = guess_license(srctree)
+    licvalues = guess_license(srctree_use)
     lic_files_chksum = []
     if licvalues:
         licenses = []
@@ -472,7 +478,7 @@ def create_recipe(args):
 
     extravalues = {}
     for handler in handlers:
-        handler.process(srctree, classes, lines_before, lines_after, handled, extravalues)
+        handler.process(srctree_use, classes, lines_before, lines_after, handled, extravalues)
 
     if not realpv:
         realpv = extravalues.get('PV', None)
@@ -759,5 +765,6 @@ def register_commands(subparsers):
     parser_create.add_argument('-V', '--version', help='Version to use within recipe (PV)')
     parser_create.add_argument('-b', '--binary', help='Treat the source tree as something that should be installed verbatim (no compilation, same directory structure)', action='store_true')
     parser_create.add_argument('--also-native', help='Also add native variant (i.e. support building recipe for the build host as well as the target machine)', action='store_true')
+    parser_create.add_argument('--src-subdir', help='Specify subdirectory within source tree to use', metavar='SUBDIR')
     parser_create.set_defaults(func=create_recipe)
 
