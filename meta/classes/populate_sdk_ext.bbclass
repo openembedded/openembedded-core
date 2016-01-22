@@ -259,6 +259,7 @@ install_tools() {
 
 	install -m 0644 ${COREBASE}/meta/files/ext-sdk-prepare.py ${SDK_OUTPUT}/${SDKPATH}
 }
+do_populate_sdk_ext[file-checksums] += "${COREBASE}/meta/files/ext-sdk-prepare.py:True"
 
 # Since bitbake won't run as root it doesn't make sense to try and install
 # the extensible sdk as root.
@@ -357,5 +358,9 @@ do_populate_sdk_ext[rdepends] += "${@' '.join([x + ':do_build' for x in d.getVar
 
 # Make sure codes change in copy_buildsystem can result in rebuilt
 do_populate_sdk_ext[vardeps] += "copy_buildsystem"
+
+do_populate_sdk_ext[file-checksums] += "${COREBASE}/meta/files/toolchain-shar-relocate.sh:True \
+                                        ${COREBASE}/meta/files/toolchain-shar-extract.sh:True \
+                                        ${COREBASE}/scripts/gen-lockedsig-cache:True"
 
 addtask populate_sdk_ext after do_sdk_depends
