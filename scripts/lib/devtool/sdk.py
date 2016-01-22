@@ -7,6 +7,7 @@ import glob
 import shutil
 import errno
 import sys
+import tempfile
 from devtool import exec_build_env_command, setup_tinfoil, DevtoolError
 
 logger = logging.getLogger('devtool')
@@ -133,45 +134,45 @@ def sdk_update(args, config, basepath, workspace):
             return ret
     else:
         # devtool sdk-update http://myhost/sdk
-        tmpsdk_dir = '/tmp/sdk-ext'
-        if os.path.exists(tmpsdk_dir):
-            shutil.rmtree(tmpsdk_dir)
-        os.makedirs(tmpsdk_dir)
-        os.makedirs(os.path.join(tmpsdk_dir, 'conf'))
-        # Fetch locked-sigs.inc from update server
-        ret = subprocess.call("wget -q -O - %s/conf/locked-sigs.inc > %s/locked-sigs.inc" % (updateserver, os.path.join(tmpsdk_dir, 'conf')), shell=True)
-        if ret != 0:
-            logger.error("Fetching conf/locked-sigs.inc from %s to %s/locked-sigs.inc failed" % (updateserver, os.path.join(tmpsdk_dir, 'conf')))
-            return ret
-        else:
-            logger.info("Fetching conf/locked-sigs.inc from %s to %s/locked-sigs.inc succeeded" % (updateserver, os.path.join(tmpsdk_dir, 'conf')))
-        new_locked_sig_file_path = os.path.join(tmpsdk_dir, 'conf/locked-sigs.inc')
-        update_dict = generate_update_dict(new_locked_sig_file_path, old_locked_sig_file_path)
-        logger.debug("update_dict = %s" % update_dict)
-        if len(update_dict) == 0:
-            logger.info("No need to update.")
-            return 0
-        # Update metadata
-        logger.debug("Updating meta data via git ...")
-        # Try using 'git pull', if failed, use 'git clone'
-        if os.path.exists(os.path.join(basepath, 'layers/.git')):
-            ret = subprocess.call("cd layers && git pull %s/layers/.git" % updateserver, shell=True)
-        else:
-            ret = -1
-        if ret != 0:
-            ret = subprocess.call("rm -rf layers && git clone %s/layers/.git" % updateserver, shell=True)
-        if ret != 0:
-            logger.error("Updating meta data via git failed")
-            return ret
-        logger.debug("Updating conf files ...")
-        conf_files = ['local.conf', 'bblayers.conf', 'devtool.conf', 'locked-sigs.inc']
-        for conf in conf_files:
-            ret = subprocess.call("wget -q -O - %s/conf/%s > conf/%s" % (updateserver, conf, conf), shell=True)
+        tmpsdk_dir = tempfile.mkdtemp()
+        try:
+            os.makedirs(os.path.join(tmpsdk_dir, 'conf'))
+            new_locked_sig_file_path = os.path.join(tmpsdk_dir, 'conf', 'locked-sigs.inc')
+            # Fetch locked-sigs.inc from update server
+            ret = subprocess.call("wget -q -O - %s/conf/locked-sigs.inc > %s" % (updateserver, new_locked_sig_file_path), shell=True)
             if ret != 0:
-                logger.error("Update %s failed" % conf)
+                logger.error("Fetching conf/locked-sigs.inc from %s to %s failed" % (updateserver, new_locked_sig_file_path))
                 return ret
-        with open(os.path.join(basepath, 'conf/local.conf'), 'a') as f:
-            f.write('SSTATE_MIRRORS_append = " file://.* %s/sstate-cache/PATH \\n "\n' % updateserver)
+            else:
+                logger.info("Fetching conf/locked-sigs.inc from %s to %s succeeded" % (updateserver, new_locked_sig_file_path))
+            update_dict = generate_update_dict(new_locked_sig_file_path, old_locked_sig_file_path)
+            logger.debug("update_dict = %s" % update_dict)
+            if len(update_dict) == 0:
+                logger.info("No need to update.")
+                return 0
+            # Update metadata
+            logger.debug("Updating meta data via git ...")
+            # Try using 'git pull', if failed, use 'git clone'
+            if os.path.exists(os.path.join(basepath, 'layers/.git')):
+                ret = subprocess.call("cd layers && git pull %s/layers/.git" % updateserver, shell=True)
+            else:
+                ret = -1
+            if ret != 0:
+                ret = subprocess.call("rm -rf layers && git clone %s/layers/.git" % updateserver, shell=True)
+            if ret != 0:
+                logger.error("Updating meta data via git failed")
+                return ret
+            logger.debug("Updating conf files ...")
+            conf_files = ['local.conf', 'bblayers.conf', 'devtool.conf', 'locked-sigs.inc']
+            for conf in conf_files:
+                ret = subprocess.call("wget -q -O - %s/conf/%s > conf/%s" % (updateserver, conf, conf), shell=True)
+                if ret != 0:
+                    logger.error("Update %s failed" % conf)
+                    return ret
+            with open(os.path.join(basepath, 'conf/local.conf'), 'a') as f:
+                f.write('SSTATE_MIRRORS_append = " file://.* %s/sstate-cache/PATH \\n "\n' % updateserver)
+        finally:
+            shutil.rmtree(tmpsdk_dir)
 
     if not args.skip_prepare:
         # Run bitbake command for the whole SDK
