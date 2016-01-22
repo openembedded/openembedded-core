@@ -432,7 +432,7 @@ def create_recipe(args):
     if srcuri and not realpv or not pn:
         parseres = urlparse.urlparse(srcuri)
         if parseres.path:
-            srcfile = os.path.basename(parseres.path)
+            srcfile = os.path.basename(parseres.path.rstrip('/'))
             name_pn, name_pv = determine_from_filename(srcfile)
             logger.debug('Determined from filename: name = "%s", version = "%s"' % (name_pn, name_pv))
             if name_pn and not pn:
