@@ -1,6 +1,6 @@
 NATIVELSBSTRING = "universal"
 
-UNINATIVE_LOADER ?= "${@bb.utils.contains('BUILD_ARCH', 'x86_64', '${STAGING_DIR_NATIVE}/lib/ld-linux-x86-64.so.2', '${STAGING_DIR_NATIVE}/lib/ld-linux.so.2', d)}"
+UNINATIVE_LOADER ?= "${STAGING_DIR}-uninative/${BUILD_ARCH}-linux/lib/${@bb.utils.contains('BUILD_ARCH', 'x86_64', 'ld-linux-x86-64.so.2', 'ld-linux.so.2', d)}"
 
 UNINATIVE_URL ?= "unset"
 UNINATIVE_TARBALL ?= "${BUILD_ARCH}-nativesdk-libc.tar.bz2"
@@ -41,7 +41,8 @@ python uninative_eventhandler() {
                 fetcher.download()
             except Exception as exc:
                 bb.fatal("Unable to download uninative tarball: %s" % str(exc))
-        cmd = e.data.expand("mkdir -p ${STAGING_DIR}; cd ${STAGING_DIR}; tar -xjf ${UNINATIVE_DLDIR}/${UNINATIVE_TARBALL}; ${STAGING_DIR}/relocate_sdk.py ${STAGING_DIR_NATIVE} ${UNINATIVE_LOADER} ${UNINATIVE_LOADER} ${STAGING_BINDIR_NATIVE}/patchelf-uninative")
+
+        cmd = e.data.expand("mkdir -p ${STAGING_DIR}-uninative; cd ${STAGING_DIR}-uninative; tar -xjf ${UNINATIVE_DLDIR}/${UNINATIVE_TARBALL}; ${STAGING_DIR}-uninative/relocate_sdk.py ${STAGING_DIR}-uninative/${BUILD_ARCH}-linux ${UNINATIVE_LOADER} ${UNINATIVE_LOADER} ${STAGING_DIR}-uninative/${BUILD_ARCH}-linux/patchelf-uninative")
         try:
             subprocess.check_call(cmd, shell=True)
         except subprocess.CalledProcessError as exc:
@@ -50,6 +51,8 @@ python uninative_eventhandler() {
 }
 
 SSTATEPOSTUNPACKFUNCS_append = " uninative_changeinterp"
+
+PATH_prepend = "${STAGING_DIR}-uninative/${BUILD_ARCH}-linux${bindir_native}:"
 
 python uninative_changeinterp () {
     import subprocess
