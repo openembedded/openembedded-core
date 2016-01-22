@@ -142,6 +142,9 @@ class CmakeRecipeHandler(RecipeHandler):
         subdir_re = re.compile('add_subdirectory\s*\(\s*([^)\s]*)\s*([^)\s]*)\s*\)', re.IGNORECASE)
         dep_re = re.compile('([^ ><=]+)( *[<>=]+ *[^ ><=]+)?')
 
+        def interpret_value(value):
+            return value.strip('"')
+
         def parse_cmake_file(fn, paths=None):
             searchpaths = (paths or []) + [os.path.dirname(fn)]
             logger.debug('Parsing file %s' % fn)
@@ -166,13 +169,13 @@ class CmakeRecipeHandler(RecipeHandler):
                         continue
                     res = proj_re.match(line)
                     if res:
-                        extravalues['PN'] = res.group(1).split()[0]
+                        extravalues['PN'] = interpret_value(res.group(1).split()[0])
                         continue
                     res = pkgcm_re.match(line)
                     if res:
                         res = dep_re.findall(res.group(2))
                         if res:
-                            pcdeps.extend([x[0] for x in res])
+                            pcdeps.extend([interpret_value(x[0]) for x in res])
                         inherits.append('pkgconfig')
                         continue
                     res = pkgsm_re.match(line)
@@ -180,7 +183,7 @@ class CmakeRecipeHandler(RecipeHandler):
                         res = dep_re.findall(res.group(2))
                         if res:
                             # Note: appending a tuple here!
-                            item = tuple((x[0] for x in res))
+                            item = tuple((interpret_value(x[0]) for x in res))
                             if len(item) == 1:
                                 item = item[0]
                             pcdeps.append(item)
@@ -189,7 +192,7 @@ class CmakeRecipeHandler(RecipeHandler):
                     res = findpackage_re.match(line)
                     if res:
                         origpkg = res.group(1)
-                        pkg = origpkg.lower()
+                        pkg = interpret_value(origpkg.lower())
                         if pkg == 'gettext':
                             inherits.append('gettext')
                         elif pkg == 'perl':
@@ -209,7 +212,7 @@ class CmakeRecipeHandler(RecipeHandler):
                         continue
                     res = checklib_re.match(line)
                     if res:
-                        lib = res.group(1)
+                        lib = interpret_value(res.group(1))
                         if not lib.startswith('$'):
                             libdeps.append(lib)
                     if line.lower().startswith('useswig'):
