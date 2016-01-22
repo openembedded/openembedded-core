@@ -175,12 +175,12 @@ def sdk_update(args, config, basepath, workspace):
 
     if not args.skip_prepare:
         # Run bitbake command for the whole SDK
-        sdk_targets = config.get('SDK', 'sdk_targets')
+        sdk_update_targets = config.get('SDK', 'sdk_update_targets', config.get('SDK', 'sdk_targets'))
         logger.info("Preparing build system... (This may take some time.)")
         try:
-            exec_build_env_command(config.init_path, basepath, 'bitbake %s --setscene-only' % sdk_targets)
+            exec_build_env_command(config.init_path, basepath, 'bitbake %s --setscene-only' % sdk_update_targets)
         except:
-            logger.error('bitbake %s failed' % sdk_targets)
+            logger.error('bitbake %s failed' % sdk_update_targets)
             return -1
     return 0
 

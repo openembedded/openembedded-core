@@ -24,6 +24,7 @@ SDK_INHERIT_BLACKLIST ?= "buildhistory icecc"
 SDK_UPDATE_URL ?= ""
 
 SDK_TARGETS ?= "${PN}"
+SDK_INSTALL_TARGETS = "${SDK_TARGETS} ${@'meta-world-pkgdata:do_allpackagedata' if d.getVar('SDK_INCLUDE_PKGDATA', True) == '1' else ''}"
 OE_INIT_ENV_SCRIPT ?= "oe-init-build-env"
 
 # The files from COREBASE that you want preserved in the COREBASE copied
@@ -45,6 +46,7 @@ SDK_TITLE_task-populate-sdk-ext = "${@d.getVar('DISTRO_NAME', True) or d.getVar(
 
 python copy_buildsystem () {
     import re
+    import shutil
     import oe.copy_buildsystem
 
     oe_init_env_script = d.getVar('OE_INIT_ENV_SCRIPT', True)
@@ -91,6 +93,7 @@ python copy_buildsystem () {
     config.set('General', 'core_meta_subdir', core_meta_subdir)
     config.add_section('SDK')
     config.set('SDK', 'sdk_targets', d.getVar('SDK_TARGETS', True))
+    config.set('SDK', 'sdk_update_targets', d.getVar('SDK_INSTALL_TARGETS', True))
     updateurl = d.getVar('SDK_UPDATE_URL', True)
     if updateurl:
         config.set('SDK', 'updateserver', updateurl)
@@ -199,6 +202,22 @@ python copy_buildsystem () {
                                                    d.getVar('SSTATE_DIR', True),
                                                    sstate_out, d,
                                                    fixedlsbstring)
+
+    # Add packagedata if enabled
+    if d.getVar('SDK_INCLUDE_PKGDATA', True) == '1':
+        lockedsigs_base = d.getVar('WORKDIR', True) + '/locked-sigs-base.inc'
+        lockedsigs_copy = d.getVar('WORKDIR', True) + '/locked-sigs-copy.inc'
+        shutil.move(lockedsigs_pruned, lockedsigs_base)
+        oe.copy_buildsystem.merge_lockedsigs(['do_packagedata'],
+                                             lockedsigs_base,
+                                             d.getVar('STAGING_DIR_HOST', True) + '/world-pkgdata/locked-sigs-pkgdata.inc',
+                                             lockedsigs_pruned,
+                                             lockedsigs_copy)
+        oe.copy_buildsystem.create_locked_sstate_cache(lockedsigs_copy,
+                                                       d.getVar('SSTATE_DIR', True),
+                                                       sstate_out, d,
+                                                       fixedlsbstring)
+
     # We don't need sstate do_package files
     for root, dirs, files in os.walk(sstate_out):
         for name in files:
@@ -268,7 +287,7 @@ sdk_ext_postinst() {
 		# current working directory when first ran, nor will it set $1 when
 		# sourcing a script. That is why this has to look so ugly.
 		LOGFILE="$target_sdk_dir/preparing_build_system.log"
-		sh -c ". buildtools/environment-setup* > $LOGFILE && cd $target_sdk_dir/`dirname ${oe_init_build_env_path}` && set $target_sdk_dir && . $target_sdk_dir/${oe_init_build_env_path} $target_sdk_dir >> $LOGFILE && python $target_sdk_dir/ext-sdk-prepare.py '${SDK_TARGETS}' >> $LOGFILE 2>&1" || { echo "ERROR: SDK preparation failed: see $LOGFILE"; echo "printf 'ERROR: this SDK was not fully installed and needs reinstalling\n'" >> $env_setup_script ; exit 1 ; }
+		sh -c ". buildtools/environment-setup* > $LOGFILE && cd $target_sdk_dir/`dirname ${oe_init_build_env_path}` && set $target_sdk_dir && . $target_sdk_dir/${oe_init_build_env_path} $target_sdk_dir >> $LOGFILE && python $target_sdk_dir/ext-sdk-prepare.py '${SDK_INSTALL_TARGETS}' >> $LOGFILE 2>&1" || { echo "ERROR: SDK preparation failed: see $LOGFILE"; echo "printf 'ERROR: this SDK was not fully installed and needs reinstalling\n'" >> $env_setup_script ; exit 1 ; }
 	fi
 	echo done
 }
@@ -314,7 +333,8 @@ def get_sdk_ext_rdepends(d):
 do_populate_sdk_ext[dirs] = "${@d.getVarFlag('do_populate_sdk', 'dirs', False)}"
 
 do_populate_sdk_ext[depends] = "${@d.getVarFlag('do_populate_sdk', 'depends', False)} \
-                                buildtools-tarball:do_populate_sdk uninative-tarball:do_populate_sdk"
+                                buildtools-tarball:do_populate_sdk uninative-tarball:do_populate_sdk \
+                                ${@'meta-world-pkgdata:do_collect_packagedata' if d.getVar('SDK_INCLUDE_PKGDATA', True) == '1' else ''}"
 
 do_populate_sdk_ext[rdepends] += "${@' '.join([x + ':do_build' for x in d.getVar('SDK_TARGETS', True).split()])}"
 

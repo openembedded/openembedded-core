@@ -93,10 +93,64 @@ def prune_lockedsigs(excluded_tasks, excluded_targets, lockedsigs, pruned_output
                     invalue = True
                     f.write(line)
 
+def merge_lockedsigs(copy_tasks, lockedsigs_main, lockedsigs_extra, merged_output, copy_output):
+    merged = {}
+    arch_order = []
+    with open(lockedsigs_main, 'r') as f:
+        invalue = None
+        for line in f:
+            if invalue:
+                if line.endswith('\\\n'):
+                    merged[invalue].append(line)
+                else:
+                    invalue = None
+            elif line.startswith('SIGGEN_LOCKEDSIGS_t-'):
+                invalue = line[18:].split('=', 1)[0].rstrip()
+                merged[invalue] = []
+                arch_order.append(invalue)
+
+    with open(lockedsigs_extra, 'r') as f:
+        invalue = None
+        tocopy = {}
+        for line in f:
+            if invalue:
+                if line.endswith('\\\n'):
+                    if not line in merged[invalue]:
+                        target, task = line.strip().split(':')[:2]
+                        if task in copy_tasks:
+                            tocopy[invalue].append(line)
+                        merged[invalue].append(line)
+                else:
+                    invalue = None
+            elif line.startswith('SIGGEN_LOCKEDSIGS_t-'):
+                invalue = line[18:].split('=', 1)[0].rstrip()
+                if not invalue in merged:
+                    merged[invalue] = []
+                    arch_order.append(invalue)
+                tocopy[invalue] = []
+
+    def write_sigs_file(fn, types, sigs):
+        fulltypes = []
+        bb.utils.mkdirhier(os.path.dirname(fn))
+        with open(fn, 'w') as f:
+            for typename in types:
+                lines = sigs[typename]
+                if lines:
+                    f.write('SIGGEN_LOCKEDSIGS_%s = "\\\n' % typename)
+                    for line in lines:
+                        f.write(line)
+                    f.write('    "\n')
+                    fulltypes.append(typename)
+            f.write('SIGGEN_LOCKEDSIGS_TYPES = "%s"\n' % ' '.join(fulltypes))
+
+    write_sigs_file(copy_output, tocopy.keys(), tocopy)
+    write_sigs_file(merged_output, arch_order, merged)
+
 def create_locked_sstate_cache(lockedsigs, input_sstate_cache, output_sstate_cache, d, fixedlsbstring=""):
     bb.note('Generating sstate-cache...')
 
     bb.process.run("gen-lockedsig-cache %s %s %s" % (lockedsigs, input_sstate_cache, output_sstate_cache))
     if fixedlsbstring:
-        os.rename(output_sstate_cache + '/' + d.getVar('NATIVELSBSTRING', True),
-        output_sstate_cache + '/' + fixedlsbstring)
+        nativedir = output_sstate_cache + '/' + d.getVar('NATIVELSBSTRING', True)
+        if os.path.isdir(nativedir):
+            os.rename(nativedir, output_sstate_cache + '/' + fixedlsbstring)
