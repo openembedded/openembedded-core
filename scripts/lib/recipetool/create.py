@@ -299,8 +299,8 @@ def create_recipe(args):
         logger.info('Fetching %s...' % srcuri)
         try:
             checksums = scriptutils.fetch_uri(tinfoil.config_data, fetchuri, srctree, srcrev)
-        except bb.fetch2.FetchError:
-            # Error already printed
+        except bb.fetch2.BBFetchException as e:
+            logger.error(str(e).rstrip())
             sys.exit(1)
         dirlist = os.listdir(srctree)
         if 'git.indirectionsymlink' in dirlist:
