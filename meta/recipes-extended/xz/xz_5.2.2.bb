@@ -31,6 +31,9 @@ PACKAGES =+ "liblzma"
 
 FILES_liblzma = "${libdir}/liblzma*${SOLIBS}"
 
+PROVIDES_append_class-native = " xz-replacement-native"
+NATIVE_PACKAGE_PATH_SUFFIX = "/${PN}"
+
 BBCLASSEXTEND = "native nativesdk"
 
 export CONFIG_SHELL="/bin/sh"

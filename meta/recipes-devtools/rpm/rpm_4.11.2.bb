@@ -79,6 +79,9 @@ CCFLAGS_append = " -fPIC "
 CXXFLAGS_append = " -fPIC "
 CFLAGS_append = " -fPIC -DRPM_VENDOR_WINDRIVER -DRPM_VENDOR_POKY -DRPM_VENDOR_OE "
 
+BUILD_CFLAGS_append_class-native = " -L${STAGING_DIR_HOST}${libdir}/xz-native/"
+BUILD_LDFLAGS_append_class-native = " -Wl,-rpath,${STAGING_DIR_HOST}${libdir}/xz-native/ -Wl,-rpath-link,${STAGING_DIR_HOST}${libdir}/xz-native/"
+
 do_configure_prepend() {
     rm -rf sqlite
     rm -f m4/libtool.m4
