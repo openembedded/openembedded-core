@@ -226,8 +226,13 @@ class DevtoolTests(DevtoolBase):
         # Clean up anything in the workdir/sysroot/sstate cache (have to do this *after* devtool add since the recipe only exists then)
         bitbake('libftdi -c cleansstate')
         # libftdi's python/CMakeLists.txt is a bit broken, so let's just disable it
+        # There's also the matter of it installing cmake files to a path we don't
+        # normally cover, which triggers the installed-vs-shipped QA test we have
+        # within do_package
         recipefile = '%s/recipes/libftdi/libftdi_%s.bb' % (self.workspacedir, version)
-        result = runCmd('recipetool setvar %s EXTRA_OECMAKE -- "-DPYTHON_BINDINGS=OFF"' % recipefile)
+        result = runCmd('recipetool setvar %s EXTRA_OECMAKE -- \'-DPYTHON_BINDINGS=OFF -DLIBFTDI_CMAKE_CONFIG_DIR=${datadir}/cmake/Modules\'' % recipefile)
+        with open(recipefile, 'a') as f:
+            f.write('\nFILES_${PN}-dev += "${datadir}/cmake/Modules"\n')
         # Test devtool build
         result = runCmd('devtool build libftdi')
         staging_libdir = get_bb_var('STAGING_LIBDIR', 'libftdi')

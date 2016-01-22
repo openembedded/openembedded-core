@@ -46,21 +46,27 @@ def _set_file_values(fn, values):
             f.writelines(newlines)
     return updated
 
-def _get_build_task(config):
-    return config.get('Build', 'build_task', 'populate_sysroot')
+def _get_build_tasks(config):
+    tasks = config.get('Build', 'build_task', 'populate_sysroot,packagedata').split(',')
+    return ['do_%s' % task.strip() for task in tasks]
 
 def build(args, config, basepath, workspace):
     """Entry point for the devtool 'build' subcommand"""
     workspacepn = check_workspace_recipe(workspace, args.recipename, bbclassextend=True)
 
-    build_task = _get_build_task(config)
+    build_tasks = _get_build_tasks(config)
 
     bbappend = workspace[workspacepn]['bbappend']
     if args.disable_parallel_make:
         logger.info("Disabling 'make' parallelism")
         _set_file_values(bbappend, {'PARALLEL_MAKE': ''})
     try:
-        exec_build_env_command(config.init_path, basepath, 'bitbake -c %s %s' % (build_task, args.recipename), watch=True)
+        bbargs = []
+        for task in build_tasks:
+            if args.recipename.endswith('-native') and 'package' in task:
+                continue
+            bbargs.append('%s:%s' % (args.recipename, task))
+        exec_build_env_command(config.init_path, basepath, 'bitbake %s' % ' '.join(bbargs), watch=True)
     except bb.process.ExecutionError as e:
         # We've already seen the output since watch=True, so just ensure we return something to the user
         return e.exitcode
@@ -73,7 +79,7 @@ def build(args, config, basepath, workspace):
 def register_commands(subparsers, context):
     """Register devtool subcommands from this plugin"""
     parser_build = subparsers.add_parser('build', help='Build a recipe',
-                                         description='Builds the specified recipe using bitbake (up to and including do_%s)' % _get_build_task(context.config))
+                                         description='Builds the specified recipe using bitbake (up to and including %s)' % ', '.join(_get_build_tasks(context.config)))
     parser_build.add_argument('recipename', help='Recipe to build')
     parser_build.add_argument('-s', '--disable-parallel-make', action="store_true", help='Disable make parallelism')
     parser_build.set_defaults(func=build)
