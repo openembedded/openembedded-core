@@ -8,8 +8,8 @@ SRC_URI = "${GNOME_MIRROR}/${BPN}/${MAJ_VER}/${BPN}-${PV}.tar.xz \
            file://0001-nls.m4-Take-it-from-gettext-0.15.patch \
           "
 
-SRC_URI[md5sum] = "5f13ba8cfd97cf817261954ef49ebd48"
-SRC_URI[sha256sum] = "57d555be4cc64905454687bf9bb7dc1e68531bee93befa77222d94ea083f01cf"
+SRC_URI[md5sum] = "fc18801e56f6ce6914126f837d42f556"
+SRC_URI[sha256sum] = "ada26add94155f97d0f601a20cb7a0e3fd3ba1588c3520b7288316494027d629"
 
 DEPENDS = "dbus glib-2.0 virtual/libx11 libxi libxtst intltool-native gettext-native"
 
