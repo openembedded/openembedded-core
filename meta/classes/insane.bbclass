@@ -1253,9 +1253,6 @@ python () {
         msg += "%s\n" % extrapaths
         bb.warn(msg)
 
-    if d.getVar('do_stage', True) is not None:
-        bb.fatal("Legacy staging found for %s as it has a do_stage function. This will need conversion to a do_install or often simply removal to work with OE-core" % d.getVar("FILE", True))
-
     overrides = d.getVar('OVERRIDES', True).split(':')
     pn = d.getVar('PN', True)
     if pn in overrides:
