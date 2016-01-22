@@ -21,7 +21,7 @@ PV = "0.0+git${SRCPV}"
 
 S = "${WORKDIR}/git"
 
-inherit autotools-brokensep distro_features_check
+inherit autotools-brokensep distro_features_check pkgconfig
 
 PACKAGECONFIG ??= "gtk2"
 PACKAGECONFIG[gtk2] = "--with-gtk=2,,gtk+,"
