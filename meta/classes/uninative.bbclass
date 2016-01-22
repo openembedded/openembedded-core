@@ -2,16 +2,51 @@ NATIVELSBSTRING = "universal"
 
 UNINATIVE_LOADER ?= "${@bb.utils.contains('BUILD_ARCH', 'x86_64', '${STAGING_DIR_NATIVE}/lib/ld-linux-x86-64.so.2', '${STAGING_DIR_NATIVE}/lib/ld-linux.so.2', d)}"
 
+UNINATIVE_URL ?= "unset"
+UNINATIVE_TARBALL ?= "${BUILD_ARCH}-nativesdk-libc.tar.bz2"
+# Example checksums
+#UNINATIVE_CHECKSUM[i586] = "dead"
+#UNINATIVE_CHECKSUM[x86_64] = "dead"
+UNINATIVE_DLDIR ?= "${COREBASE}"
+
 addhandler uninative_eventhandler
 uninative_eventhandler[eventmask] = "bb.event.BuildStarted"
 
 python uninative_eventhandler() {
     loader = e.data.getVar("UNINATIVE_LOADER", True)
+    tarball = d.getVar("UNINATIVE_TARBALL", True)
+    tarballdir = d.getVar("UNINATIVE_DLDIR", True)
     if not os.path.exists(loader):
         import subprocess
-        cmd = e.data.expand("mkdir -p ${STAGING_DIR}; cd ${STAGING_DIR}; tar -xjf ${COREBASE}/${BUILD_ARCH}-nativesdk-libc.tar.bz2; ${STAGING_DIR}/relocate_sdk.py ${STAGING_DIR_NATIVE} ${UNINATIVE_LOADER} ${UNINATIVE_LOADER} ${STAGING_BINDIR_NATIVE}/patchelf-uninative")
-        #bb.warn("nativesdk lib extraction: " + cmd)
-        subprocess.check_call(cmd, shell=True)
+
+        olddir = os.getcwd()
+        if not os.path.exists(os.path.join(tarballdir, tarball)):
+            # Copy the data object and override DL_DIR and SRC_URI
+            localdata = bb.data.createCopy(d)
+
+            if d.getVar("UNINATIVE_URL", True) == "unset":
+                bb.fatal("Uninative selected but not configured, please set UNINATIVE_URL")
+
+            chksum = d.getVarFlag("UNINATIVE_CHECKSUM", d.getVar("BUILD_ARCH", True), True)
+            if not chksum:
+                bb.fatal("Uninative selected but not configured correctly, please set UNINATIVE_CHECKSUM[%s]" % d.getVar("BUILD_ARCH", True))
+
+            srcuri = d.expand("${UNINATIVE_URL}${UNINATIVE_TARBALL};md5sum=%s" % chksum)
+            dldir = localdata.expand(tarballdir)
+            localdata.setVar('FILESPATH', dldir)
+            localdata.setVar('DL_DIR', dldir)
+            bb.note("Fetching uninative binary shim from %s" % srcuri)
+            fetcher = bb.fetch2.Fetch([srcuri], localdata, cache=False)
+            try:
+                fetcher.download()
+            except Exception as exc:
+                bb.fatal("Unable to download uninative tarball: %s" % str(exc))
+        cmd = e.data.expand("mkdir -p ${STAGING_DIR}; cd ${STAGING_DIR}; tar -xjf ${UNINATIVE_DLDIR}/${UNINATIVE_TARBALL}; ${STAGING_DIR}/relocate_sdk.py ${STAGING_DIR_NATIVE} ${UNINATIVE_LOADER} ${UNINATIVE_LOADER} ${STAGING_BINDIR_NATIVE}/patchelf-uninative")
+        try:
+            subprocess.check_call(cmd, shell=True)
+        except subprocess.CalledProcessError as exc:
+            bb.fatal("Unable to install uninative tarball: %s" % str(exc))
+        os.chdir(olddir)
 }
 
 SSTATEPOSTUNPACKFUNCS_append = " uninative_changeinterp"
