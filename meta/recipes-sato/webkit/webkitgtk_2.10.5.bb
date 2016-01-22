@@ -16,8 +16,8 @@ SRC_URI = "\
   file://0001-Enable-backtrace-on-linux-when-using-glibc.patch \
   file://0001-Fix-build-with-non-glibc-libraries-on-linux.patch \
   "
-SRC_URI[md5sum] = "fb010031c6f61c3a1a00793b112badb5"
-SRC_URI[sha256sum] = "dbf8260da5cac0c74de2d3cce1fe7c519da3cd816a2c769cb6c6d56addd2f055"
+SRC_URI[md5sum] = "bb3bd727960630bb4cbaddf8b1632d18"
+SRC_URI[sha256sum] = "785d5e98eaf07be15fb8891b7d5b13a2df7072c609b3ee631ca07d5dea1d79fa"
 
 inherit cmake lib_package pkgconfig perlnative pythonnative distro_features_check upstream-version-is-even
 
