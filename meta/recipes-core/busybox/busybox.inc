@@ -275,6 +275,21 @@ do_install () {
                        install -m 0755 ${WORKDIR}/mdev-mount.sh ${D}${sysconfdir}/mdev
                fi
 	fi
+        if grep "CONFIG_INIT=y" ${B}/.config; then
+                install -D -m 0777 ${WORKDIR}/rcS ${D}${sysconfdir}/init.d/rcS
+                install -D -m 0777 ${WORKDIR}/rcK ${D}${sysconfdir}/init.d/rcK
+                install -D -m 0755 ${WORKDIR}/runlevel ${D}${base_sbindir}/runlevel
+                if grep "CONFIG_FEATURE_USE_INITTAB=y" ${B}/.config; then
+                        install -D -m 0777 ${WORKDIR}/inittab ${D}${sysconfdir}/inittab
+                        tmp="${SERIAL_CONSOLES}"
+                        for i in $tmp
+                        do
+                                j=`echo ${i} | sed s/\;/\ /g`
+                                label=`echo ${i} | sed -e 's/tty//' -e 's/^.*;//' -e 's/;.*//'`
+                                echo "tty$label::respawn:${base_sbindir}/getty ${j}" >> ${D}${sysconfdir}/inittab
+                        done
+                fi
+        fi
 
     if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
         if grep -q "CONFIG_SYSLOGD=y" ${B}/.config; then
