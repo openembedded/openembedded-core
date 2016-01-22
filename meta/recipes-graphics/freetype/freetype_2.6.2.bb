@@ -15,8 +15,8 @@ SECTION = "libs"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/freetype/freetype-${PV}.tar.bz2 \
            file://use-right-libtool.patch"
-SRC_URI[md5sum] = "5682890cb0267f6671dd3de6eabd3e69"
-SRC_URI[sha256sum] = "8469fb8124764f85029cc8247c31e132a2c5e51084ddce2a44ea32ee4ae8347e"
+SRC_URI[md5sum] = "86109d0c998787d81ac582bad9adf82e"
+SRC_URI[sha256sum] = "baf6bdef7cdcc12ac270583f76ef245efe936267dbecef835f02a3409fcbb892"
 
 BINCONFIG = "${bindir}/freetype-config"
 
@@ -46,7 +46,7 @@ do_configure() {
 }
 
 do_install_append() {
-	oe_multilib_header freetype2/config/ftconfig.h
+	oe_multilib_header freetype2/freetype/config/ftconfig.h
 }
 
 BBCLASSEXTEND = "native"
