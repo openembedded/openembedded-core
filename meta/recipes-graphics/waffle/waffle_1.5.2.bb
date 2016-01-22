@@ -6,8 +6,8 @@ LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=4c5154407c2490750dd461c50ad94797 \
 SRC_URI = "http://waffle-gl.org/files/release/${BPN}-${PV}/${BPN}-${PV}.tar.xz \
            file://0001-third_party-threads-Use-PTHREAD_MUTEX_RECURSIVE-by-d.patch \
           "
-SRC_URI[md5sum] = "c0d802bc3d0aba87c51e423a3a8bdd69"
-SRC_URI[sha256sum] = "cbab0e926515064e818bf089a5af04be33307e5f40d07659fb40d59b2bfe20aa"
+SRC_URI[md5sum] = "c669c91bf2f7e13a5d781c3dbb30fd8c"
+SRC_URI[sha256sum] = "d2c096cf654bf0061323a4b9231a1ef5b749a1e5c7c5bfe067e964219c2a851c"
 
 UPSTREAM_CHECK_URI = "http://www.waffle-gl.org/releases.html"
 
