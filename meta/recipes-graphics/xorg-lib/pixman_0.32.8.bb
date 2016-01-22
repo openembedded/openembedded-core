@@ -7,6 +7,9 @@ including trapezoids, triangles, and rectangles."
 
 require xorg-lib-common.inc
 
+# see http://cairographics.org/releases/ - only even minor versions are stable
+UPSTREAM_CHECK_REGEX = "pixman-(?P<pver>\d+\.(\d*[02468])+(\.\d+)+)"
+
 LICENSE = "MIT & MIT-style & PD"
 LIC_FILES_CHKSUM = "file://COPYING;md5=14096c769ae0cbb5fcb94ec468be11b3 \
                     file://pixman/pixman-matrix.c;endline=25;md5=ba6e8769bfaaee2c41698755af04c4be \
