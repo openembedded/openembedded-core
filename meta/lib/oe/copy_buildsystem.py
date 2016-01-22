@@ -149,8 +149,9 @@ def merge_lockedsigs(copy_tasks, lockedsigs_main, lockedsigs_extra, merged_outpu
 def create_locked_sstate_cache(lockedsigs, input_sstate_cache, output_sstate_cache, d, fixedlsbstring=""):
     bb.note('Generating sstate-cache...')
 
-    bb.process.run("gen-lockedsig-cache %s %s %s" % (lockedsigs, input_sstate_cache, output_sstate_cache))
+    nativelsbstring = d.getVar('NATIVELSBSTRING', True)
+    bb.process.run("gen-lockedsig-cache %s %s %s %s" % (lockedsigs, input_sstate_cache, output_sstate_cache, nativelsbstring))
     if fixedlsbstring:
-        nativedir = output_sstate_cache + '/' + d.getVar('NATIVELSBSTRING', True)
+        nativedir = output_sstate_cache + '/' + nativelsbstring
         if os.path.isdir(nativedir):
             os.rename(nativedir, output_sstate_cache + '/' + fixedlsbstring)
