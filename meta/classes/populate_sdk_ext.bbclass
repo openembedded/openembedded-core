@@ -47,6 +47,7 @@ SDK_TITLE_task-populate-sdk-ext = "${@d.getVar('DISTRO_NAME', True) or d.getVar(
 python copy_buildsystem () {
     import re
     import shutil
+    import glob
     import oe.copy_buildsystem
 
     oe_init_env_script = d.getVar('OE_INIT_ENV_SCRIPT', True)
@@ -224,6 +225,21 @@ python copy_buildsystem () {
             if name.endswith("_package.tgz"):
                 f = os.path.join(root, name)
                 os.remove(f)
+
+    # Write manifest file
+    # Note: at the moment we cannot include the env setup script here to keep
+    # it updated, since it gets modified during SDK installation (see
+    # sdk_ext_postinst() below) thus the checksum we take here would always
+    # be different.
+    manifest_file_list = ['conf/*']
+    manifest_file = os.path.join(baseoutpath, 'conf', 'sdk-conf-manifest')
+    with open(manifest_file, 'w') as f:
+        for item in manifest_file_list:
+            for fn in glob.glob(os.path.join(baseoutpath, item)):
+                if fn == manifest_file:
+                    continue
+                chksum = bb.utils.sha256_file(fn)
+                f.write('%s\t%s\n' % (chksum, os.path.relpath(fn, baseoutpath)))
 }
 
 def extsdk_get_buildtools_filename(d):
