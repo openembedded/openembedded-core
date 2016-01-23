@@ -22,12 +22,12 @@ inherit autotools pkgconfig
 PACKAGECONFIG ?= ""
 PACKAGECONFIG_class-native = ""
 
+PACKAGECONFIG[editline] = "--enable-editline,--disable-editline,libedit"
 PACKAGECONFIG[readline] = "--enable-readline,--disable-readline,readline ncurses"
 
 EXTRA_OECONF = " \
     --enable-shared \
     --enable-threadsafe \
-    --disable-editline \
     --disable-static-shell \
 "
 
