@@ -1,15 +1,16 @@
 SUMMARY = "Embeddable SQL database engine"
 HOMEPAGE = "http://www.sqlite.org"
 SECTION = "libs"
-DEPENDS = "readline ncurses"
-DEPENDS_class-native = ""
 LICENSE = "PD"
 
 inherit autotools pkgconfig
 
-EXTRA_OECONF = "--enable-shared --enable-threadsafe"
-EXTRA_OECONF_class-native = "--enable-shared --enable-threadsafe --disable-readline"
-PACKAGECONFIG[readline] = "--enable-readline,--disable-readline,readline"
+PACKAGECONFIG ?= ""
+PACKAGECONFIG_class-native = ""
+
+PACKAGECONFIG[readline] = "--enable-readline,--disable-readline,readline ncurses"
+
+EXTRA_OECONF = "--enable-shared --enable-threadsafe --disable-editline"
 
 export config_BUILD_CC = "${BUILD_CC}"
 export config_BUILD_CFLAGS = "${BUILD_CFLAGS}"
