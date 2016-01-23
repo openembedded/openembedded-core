@@ -12,14 +12,6 @@ PACKAGECONFIG[readline] = "--enable-readline,--disable-readline,readline ncurses
 
 EXTRA_OECONF = "--enable-shared --enable-threadsafe --disable-editline"
 
-export config_BUILD_CC = "${BUILD_CC}"
-export config_BUILD_CFLAGS = "${BUILD_CFLAGS}"
-export config_BUILD_LIBS = "${BUILD_LDFLAGS}"
-export config_TARGET_CC = "${CC}"
-export config_TARGET_LINK = "${CCLD}"
-export config_TARGET_CFLAGS = "${CFLAGS}"
-export config_TARGET_LFLAGS = "${LDFLAGS}"
-
 # pread() is in POSIX.1-2001 so any reasonable system must surely support it
 BUILD_CFLAGS += "-DUSE_PREAD"
 TARGET_CFLAGS += "-DUSE_PREAD"
