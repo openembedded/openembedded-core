@@ -45,6 +45,8 @@ SRC_URI = "${GLIBC_GIT_URI};branch=${SRCBRANCH};name=glibc \
            file://0029-fix-getmntent-empty-lines.patch \
            file://CVE-2015-8777.patch \
            file://CVE-2015-8779.patch \
+           file://CVE-2015-9761_1.patch \
+           file://CVE-2015-9761_2.patch \
 "
 
 SRC_URI += "\
