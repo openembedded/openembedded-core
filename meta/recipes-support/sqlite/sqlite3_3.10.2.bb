@@ -7,5 +7,5 @@ SRC_URI = "http://www.sqlite.org/2016/sqlite-autoconf-${SQLITE_PV}.tar.gz \
            file://parallel.patch \
 "
 
-SRC_URI[md5sum] = "274364e6ca5c1104d42912f11e61ed26"
-SRC_URI[sha256sum] = "43cc292d70711fa7580250c8a1cd7c64813a4a0a479dbd502cce5f10b5d91042"
+SRC_URI[md5sum] = "adaa31593bb5605ec6d6f34f81b43008"
+SRC_URI[sha256sum] = "a2b3b4bd1291ea7d6c8252f7edff36a4362f2f0e5d5370444ba6cbe313ae2971"
