@@ -24,7 +24,12 @@ PACKAGECONFIG_class-native = ""
 
 PACKAGECONFIG[readline] = "--enable-readline,--disable-readline,readline ncurses"
 
-EXTRA_OECONF = "--enable-shared --enable-threadsafe --disable-editline"
+EXTRA_OECONF = " \
+    --enable-shared \
+    --enable-threadsafe \
+    --disable-editline \
+    --disable-static-shell \
+"
 
 # pread() is in POSIX.1-2001 so any reasonable system must surely support it
 BUILD_CFLAGS += "-DUSE_PREAD"
