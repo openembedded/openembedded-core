@@ -44,6 +44,7 @@ SRC_URI = "${GLIBC_GIT_URI};branch=${SRCBRANCH};name=glibc \
            file://strcoll-Remove-incorrect-STRDIFF-based-optimization-.patch \
            file://0029-fix-getmntent-empty-lines.patch \
            file://CVE-2015-8777.patch \
+           file://CVE-2015-8779.patch \
 "
 
 SRC_URI += "\
