@@ -22,7 +22,7 @@ inherit autotools pkgconfig useradd distro_features_check
 REQUIRED_DISTRO_FEATURES = "opengl"
 
 DEPENDS = "libxkbcommon gdk-pixbuf pixman cairo glib-2.0 jpeg"
-DEPENDS += "wayland libinput virtual/egl pango"
+DEPENDS += "wayland libinput virtual/egl pango wayland-native"
 
 EXTRA_OECONF = "--enable-setuid-install \
                 --enable-simple-clients \
