@@ -5,8 +5,6 @@ EXTRA_OEMAKE = ""
 export STAGING_INCDIR
 export STAGING_LIBDIR
 
-PACKAGES = "${PN}-staticdev ${PN}-dev ${PN}-dbg ${PN}-doc ${PN}"
-
 FILES_${PN} += "${libdir}/* ${libdir}/${PYTHON_DIR}/*"
 
 FILES_${PN}-staticdev += "\
