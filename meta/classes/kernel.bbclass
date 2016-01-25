@@ -511,6 +511,7 @@ kernel_do_deploy() {
 		ln -sf ${initramfs_base_name}.bin ${initramfs_symlink_name}.bin
 	fi
 }
+do_deploy[cleandirs] = "${DEPLOYDIR}"
 do_deploy[dirs] = "${DEPLOYDIR} ${B}"
 do_deploy[prefuncs] += "package_get_auto_pr"
 
