@@ -16,11 +16,13 @@ python uninative_eventhandler() {
     loader = e.data.getVar("UNINATIVE_LOADER", True)
     tarball = d.getVar("UNINATIVE_TARBALL", True)
     tarballdir = d.getVar("UNINATIVE_DLDIR", True)
+    tarballpath = os.path.join(tarballdir, tarball)
+
     if not os.path.exists(loader):
         import subprocess
 
         olddir = os.getcwd()
-        if not os.path.exists(os.path.join(tarballdir, tarball)):
+        if not os.path.exists(tarballpath):
             # Copy the data object and override DL_DIR and SRC_URI
             localdata = bb.data.createCopy(d)
 
@@ -32,13 +34,15 @@ python uninative_eventhandler() {
                 bb.fatal("Uninative selected but not configured correctly, please set UNINATIVE_CHECKSUM[%s]" % d.getVar("BUILD_ARCH", True))
 
             srcuri = d.expand("${UNINATIVE_URL}${UNINATIVE_TARBALL};md5sum=%s" % chksum)
-            dldir = localdata.expand(tarballdir)
-            localdata.setVar('FILESPATH', dldir)
-            localdata.setVar('DL_DIR', dldir)
+            localdata.setVar('FILESPATH', tarballdir)
+            localdata.setVar('DL_DIR', tarballdir)
             bb.note("Fetching uninative binary shim from %s" % srcuri)
             fetcher = bb.fetch2.Fetch([srcuri], localdata, cache=False)
             try:
                 fetcher.download()
+                localpath = fetcher.localpath(srcuri)
+                if localpath != tarballpath and os.path.exists(localpath) and not os.path.exists(tarballpath):
+                    os.symlink(localpath, tarballpath)
             except Exception as exc:
                 bb.fatal("Unable to download uninative tarball: %s" % str(exc))
 
