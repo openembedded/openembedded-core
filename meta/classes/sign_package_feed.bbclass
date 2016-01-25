@@ -6,6 +6,10 @@
 #           Path to a file containing the passphrase of the signing key.
 # PACKAGE_FEED_GPG_NAME
 #           Name of the key to sign with. May be key id or key name.
+# PACKAGE_FEED_GPG_BACKEND
+#           Optional variable for specifying the backend to use for signing.
+#           Currently the only available option is 'local', i.e. local signing
+#           on the build host.
 # GPG_BIN
 #           Optional variable for specifying the gpg binary/wrapper to use for
 #           signing.
@@ -15,6 +19,8 @@
 inherit sanity
 
 PACKAGE_FEED_SIGN = '1'
+PACKAGE_FEED_GPG_BACKEND ?= 'local'
+
 
 python () {
     # Check sanity of configuration
