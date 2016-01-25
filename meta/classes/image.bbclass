@@ -423,6 +423,9 @@ def get_rootfs_size(d):
     rootfs_req_size = int(d.getVar('IMAGE_ROOTFS_SIZE', True))
     rootfs_extra_space = eval(d.getVar('IMAGE_ROOTFS_EXTRA_SPACE', True))
     rootfs_maxsize = d.getVar('IMAGE_ROOTFS_MAXSIZE', True)
+    image_fstypes = d.getVar('IMAGE_FSTYPES', True) or ''
+    initramfs_fstypes = d.getVar('INITRAMFS_FSTYPES', True) or ''
+    initramfs_maxsize = d.getVar('INITRAMFS_MAXSIZE', True)
 
     output = subprocess.check_output(['du', '-ks',
                                       d.getVar('IMAGE_ROOTFS', True)])
@@ -443,8 +446,17 @@ def get_rootfs_size(d):
     if rootfs_maxsize:
         rootfs_maxsize_int = int(rootfs_maxsize)
         if base_size > rootfs_maxsize_int:
-            bb.fatal("The rootfs size %d(K) overrides the max size %d(K)" % \
+            bb.fatal("The rootfs size %d(K) overrides IMAGE_ROOTFS_MAXSIZE: %d(K)" % \
                 (base_size, rootfs_maxsize_int))
+
+    # Check the initramfs size against INITRAMFS_MAXSIZE (if set)
+    if image_fstypes == initramfs_fstypes != ''  and initramfs_maxsize:
+        initramfs_maxsize_int = int(initramfs_maxsize)
+        if base_size > initramfs_maxsize_int:
+            bb.error("The initramfs size %d(K) overrides INITRAMFS_MAXSIZE: %d(K)" % \
+                (base_size, initramfs_maxsize_int))
+            bb.error("You can set INITRAMFS_MAXSIZE a larger value. Usually, it should")
+            bb.fatal("be less than 1/2 of ram size, or you may fail to boot it.\n")
     return base_size
 
 python set_image_size () {
