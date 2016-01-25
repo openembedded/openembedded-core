@@ -553,6 +553,10 @@ python () {
     for uri in srcuri.split():
         (scheme, _ , path) = bb.fetch.decodeurl(uri)[:3]
 
+        # HTTP/FTP use the wget fetcher
+        if scheme in ("http", "https", "ftp"):
+            d.appendVarFlag('do_fetch', 'depends', ' wget-native:do_populate_sysroot')
+
         # Svn packages should DEPEND on subversion-native
         if scheme == "svn":
             d.appendVarFlag('do_fetch', 'depends', ' subversion-native:do_populate_sysroot')
