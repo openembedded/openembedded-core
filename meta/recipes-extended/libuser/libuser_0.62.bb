@@ -19,7 +19,7 @@ SRC_URI = "https://fedorahosted.org/releases/l/i/libuser/libuser-${PV}.tar.xz \
 SRC_URI[md5sum] = "63e5e5c551e99dc5302b40b80bd6d4f2"
 SRC_URI[sha256sum] = "a58ff4fabb01a25043b142185a33eeea961109dd60d4b40b6a9df4fa3cace20b"
 
-DEPENDS = "popt libpam glib-2.0 xz-native docbook-utils-native linuxdoc-tools-native python"
+DEPENDS = "popt libpam glib-2.0 docbook-utils-native linuxdoc-tools-native python"
 
 inherit autotools gettext pythonnative python-dir pkgconfig
 
