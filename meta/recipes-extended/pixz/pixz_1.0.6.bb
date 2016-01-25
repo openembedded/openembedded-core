@@ -1,7 +1,6 @@
 SUMMARY = "Parallel, indexed xz compressor"
 
 DEPENDS = "xz libarchive"
-DEEPNDS_class-native = "xz-replacement-native libarchive-native"
 
 SRC_URI = "https://github.com/vasi/pixz/releases/download/v${PV}/${BPN}-${PV}.tar.xz"
 SRC_URI[md5sum] = "f6dc5909c9a31b192f69aa397ae8df48"
@@ -17,8 +16,5 @@ EXTRA_OECONF += "--without-manpage"
 CACHED_CONFIGUREVARS += "ac_cv_file_src_pixz_1=no"
 
 inherit autotools pkgconfig
-
-PKG_CONFIG_PATH_append_class-native = ":${STAGING_DIR_HOST}${libdir}/xz-native/pkgconfig"
-BUILD_LDFLAGS_append_class-native = " -Wl,-rpath,${STAGING_DIR_HOST}${libdir}/xz-native/"
 
 BBCLASSEXTEND = "native"
