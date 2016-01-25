@@ -45,6 +45,7 @@ SRC_URI = "git://github.com/systemd/systemd.git;protocol=git \
            file://00-create-volatile.conf \
            file://init \
            file://run-ptest \
+           file://0001-make-test-dir-configurable.patch \ 
           "
 SRC_URI_append_libc-uclibc = "\
             file://0001-define-exp10-if-missing.patch \
@@ -127,6 +128,7 @@ EXTRA_OECONF = " --with-rootprefix=${rootprefix} \
                  --without-python \
                  --with-sysvrcnd-path=${sysconfdir} \
                  --with-firmware-path=/lib/firmware \
+                 --with-testdir=${PTEST_PATH} \
                "
 # uclibc does not have NSS
 EXTRA_OECONF_append_libc-uclibc = " --disable-myhostname --disable-sysusers"
@@ -215,7 +217,7 @@ do_install() {
 
 do_install_ptest () {
        install -d ${D}${PTEST_PATH}/test
-       cp -rf ${S}/test/* ${D}${PTEST_PATH}/test
+       cp -rfL ${S}/test/* ${D}${PTEST_PATH}/test
        install -m 0755  ${B}/test-udev ${D}${PTEST_PATH}/
        install -d ${D}${PTEST_PATH}/build-aux
        cp ${S}/build-aux/test-driver ${D}${PTEST_PATH}/build-aux/
