@@ -1,9 +1,10 @@
 #!/bin/sh
 
-# Stop all init scripts in /etc/init.d
-# executing them in reversed numerical order.
+# Stop all init scripts in /etc/rc6.d
+# executing them in numerical order.
 #
 for i in /etc/rc6.d/K??*; do
+
      # Ignore dangling symlinks (if any).
      [ ! -f "$i" ] && continue
 

@@ -1,10 +1,11 @@
 #!/bin/sh
 
-# Stop all init scripts in /etc/init.d
-# executing them in reversed numerical order.
+# Start all init scripts in /etc/rcS.d and /etc/rc5.d
+# executing them in numerical order.
 #
 
 for i in /etc/rcS.d/S??* /etc/rc5.d/S??* ;do
+
      # Ignore dangling symlinks (if any).
      [ ! -f "$i" ] && continue
 
@@ -13,7 +14,7 @@ for i in /etc/rcS.d/S??* /etc/rc5.d/S??* ;do
 	    # Source shell script for speed.
 	    (
 		trap - INT QUIT TSTP
-		set stop
+		set start
 		. $i
 	    )
 	    ;;
