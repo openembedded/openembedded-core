@@ -22,9 +22,6 @@ inherit gnomebase gtk-doc qemu ptest-gnome upstream-version-is-even
 
 EXTRA_AUTORECONF = ""
 
-# seems to go wrong with default cflags
-FULL_OPTIMIZATION_arm = "-O2"
-
 EXTRA_OECONF = "--disable-introspection \
 	        --disable-debug \
 	        "
