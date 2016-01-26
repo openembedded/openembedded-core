@@ -41,7 +41,7 @@ for f in files:
         # Most likely a temp file, skip it
         print('skipping')
         continue
-    dst = f.replace(sys.argv[2], sys.argv[3])
+    dst = os.path.join(sys.argv[3], os.path.relpath(f, sys.argv[2]))
     destdir = os.path.dirname(dst)
     mkdir(destdir)
 
