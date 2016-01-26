@@ -71,8 +71,11 @@ def build_image(args, config, basepath, workspace):
             raise DevtoolError('Specified recipe %s is not an image recipe' % image)
 
     try:
-        if workspace:
-            packages = _get_packages(tinfoil, workspace, config)
+        if workspace or args.add_packages:
+            if args.add_packages:
+                packages = args.add_packages.split(',')
+            else:
+                packages = _get_packages(tinfoil, workspace, config)
             if packages:
                 with open(appendfile, 'w') as afile:
                     # include packages from workspace recipes into the image
@@ -108,4 +111,8 @@ def register_commands(subparsers, context):
                                    description='Builds an image, extending it to include '
                                    'packages from recipes in the workspace')
     parser.add_argument('imagename', help='Image recipe to build', nargs='?')
+    parser.add_argument('-p', '--add-packages', help='Instead of adding packages for the '
+                        'entire workspace, specify packages to be added to the image '
+                        '(separate multiple packages by commas)',
+                        metavar='PACKAGES')
     parser.set_defaults(func=build_image)
