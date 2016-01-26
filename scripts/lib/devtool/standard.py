@@ -1258,36 +1258,6 @@ def reset(args, config, basepath, workspace):
     return 0
 
 
-def edit_recipe(args, config, basepath, workspace):
-    """Entry point for the devtool 'edit-recipe' subcommand"""
-    if args.any_recipe:
-        tinfoil = setup_tinfoil(config_only=False, basepath=basepath)
-        try:
-            rd = parse_recipe(config, tinfoil, args.recipename, True)
-            if not rd:
-                return 1
-            recipefile = rd.getVar('FILE', True)
-        finally:
-            tinfoil.shutdown()
-    else:
-        check_workspace_recipe(workspace, args.recipename)
-        recipefile = workspace[args.recipename]['recipefile']
-        if not recipefile:
-            raise DevtoolError("Recipe file for %s is not under the workspace" %
-                               args.recipename)
-
-    editor = os.environ.get('EDITOR', None)
-    if not editor:
-        raise DevtoolError("EDITOR environment variable not set")
-
-    import subprocess
-    try:
-        subprocess.check_call('%s "%s"' % (editor, recipefile), shell=True)
-    except subprocess.CalledProcessError as e:
-        return e.returncode
-
-    return 0
-
 def get_default_srctree(config, recipename=''):
     """Get the default srctree path"""
     srctreeparent = config.get('General', 'default_source_parent_dir', config.workspace_path)
@@ -1365,9 +1335,3 @@ def register_commands(subparsers, context):
     parser_reset.add_argument('--all', '-a', action="store_true", help='Reset all recipes (clear workspace)')
     parser_reset.add_argument('--no-clean', '-n', action="store_true", help='Don\'t clean the sysroot to remove recipe output')
     parser_reset.set_defaults(func=reset)
-
-    parser_edit_recipe = subparsers.add_parser('edit-recipe', help='Edit a recipe file in your workspace',
-                                         description='Runs the default editor (as specified by the EDITOR variable) on the specified recipe. Note that the recipe file itself must be in the workspace (i.e. as a result of "devtool add" or "devtool upgrade"); you can override this with the -a/--any-recipe option.')
-    parser_edit_recipe.add_argument('recipename', help='Recipe to edit')
-    parser_edit_recipe.add_argument('--any-recipe', '-a', action="store_true", help='Edit any recipe, not just where the recipe file itself is in the workspace')
-    parser_edit_recipe.set_defaults(func=edit_recipe)
