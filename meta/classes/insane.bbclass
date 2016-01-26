@@ -727,19 +727,17 @@ def package_qa_check_license(workdir, d):
 
 def package_qa_check_staged(path,d):
     """
-    Check staged la and pc files for sanity
-      -e.g. installed being false
+    Check staged la and pc files for common problems like references to the work
+    directory.
 
-        As this is run after every stage we should be able
-        to find the one responsible for the errors easily even
-        if we look at every .pc and .la file
+    As this is run after every stage we should be able to find the one
+    responsible for the errors easily even if we look at every .pc and .la file.
     """
 
     sane = True
     tmpdir = d.getVar('TMPDIR', True)
     workdir = os.path.join(tmpdir, "work")
 
-    installed = "installed=yes"
     if bb.data.inherits_class("native", d) or bb.data.inherits_class("cross", d):
         pkgconfigcheck = workdir
     else:
