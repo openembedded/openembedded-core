@@ -129,7 +129,7 @@ def get_recipe_file(cooker, pn):
             logger.error("Unable to find any recipe file matching %s" % pn)
     return recipefile
 
-def parse_recipe(config, tinfoil, pn, appends):
+def parse_recipe(config, tinfoil, pn, appends, filter_workspace=True):
     """Parse recipe of a package"""
     import oe.recipeutils
     recipefile = get_recipe_file(tinfoil.cooker, pn)
@@ -138,9 +138,10 @@ def parse_recipe(config, tinfoil, pn, appends):
         return None
     if appends:
         append_files = tinfoil.cooker.collection.get_file_appends(recipefile)
-        # Filter out appends from the workspace
-        append_files = [path for path in append_files if
-                        not path.startswith(config.workspace_path)]
+        if filter_workspace:
+            # Filter out appends from the workspace
+            append_files = [path for path in append_files if
+                            not path.startswith(config.workspace_path)]
     else:
         append_files = None
     return oe.recipeutils.parse_recipe(recipefile, append_files,
