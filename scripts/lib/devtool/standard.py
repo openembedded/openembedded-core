@@ -386,7 +386,10 @@ class BbTaskExecutor(object):
                 logger.info('Executing %s...' % func)
             fn = self.rdata.getVar('FILE', True)
             localdata = bb.build._task_data(fn, func, self.rdata)
-            bb.build.exec_func(func, localdata)
+            try:
+                bb.build.exec_func(func, localdata)
+            except bb.build.FuncFailed as e:
+                raise DevtoolError(str(e))
             self.executed.append(func)
 
 
