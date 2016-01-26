@@ -190,6 +190,9 @@ def add(args, config, basepath, workspace):
             shutil.move(recipes[0], recipefile)
         else:
             raise DevtoolError('Command \'%s\' did not create any recipe file:\n%s' % (e.command, e.stdout))
+        attic_recipe = os.path.join(config.workspace_path, 'attic', os.path.basename(recipefile))
+        if os.path.exists(attic_recipe):
+            logger.warn('A modified recipe from a previous invocation exists in %s - you may wish to move this over the top of the new recipe if you had changes in it that you want to continue with' % attic_recipe)
     finally:
         if tmpsrcdir and os.path.exists(tmpsrcdir):
             shutil.rmtree(tmpsrcdir)
