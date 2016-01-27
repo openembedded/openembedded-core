@@ -949,7 +949,7 @@ class OpkgRootfs(DpkgOpkgRootfs):
         self._log_check_error()
 
     def _cleanup(self):
-        pass
+        self.pm.remove_lists()
 
 def get_class_for_type(imgtype):
     return {"rpm": RpmRootfs,
