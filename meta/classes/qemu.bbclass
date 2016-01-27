@@ -35,18 +35,20 @@ def qemu_run_binary(data, rootfs_path, binary):
             + " -E LD_LIBRARY_PATH=" + libdir + ":" + base_libdir + " "\
             + rootfs_path + binary
 
-# QEMU_EXTRAOPTIONS is not meant to be directly used, the extensions are 
-# PACKAGE_ARCH, not overrides and hence have to do this dance. Simply being arch 
-# specific isn't good enough.
+# QEMU_EXTRAOPTIONS is not meant to be directly used, the extensions are
+# PACKAGE_ARCH, *NOT* overrides.
+# In some cases (e.g. ppc) simply being arch specific (apparently) isn't good
+# enough and a PACKAGE_ARCH specific -cpu option is needed (hence we have to do
+# this dance). For others (e.g. arm) a -cpu option is not necessary, since the
+# qemu-arm default CPU supports all required architecture levels.
+
 QEMU_OPTIONS = "-r ${OLDEST_KERNEL} ${@d.getVar("QEMU_EXTRAOPTIONS_%s" % d.getVar('PACKAGE_ARCH', True), True) or ""}"
 QEMU_OPTIONS[vardeps] += "QEMU_EXTRAOPTIONS_${PACKAGE_ARCH}"
-QEMU_EXTRAOPTIONS_iwmmxt    = " -cpu pxa270-c5"
-QEMU_EXTRAOPTIONS_armv6     = " -cpu arm1136"
-QEMU_EXTRAOPTIONS_armv7a    = " -cpu cortex-a8"
+
 QEMU_EXTRAOPTIONS_ppce500v2 = " -cpu e500v2"
 QEMU_EXTRAOPTIONS_ppce500mc = " -cpu e500mc"
 QEMU_EXTRAOPTIONS_ppce5500 = " -cpu e5500"
 QEMU_EXTRAOPTIONS_ppc64e5500 = " -cpu e5500"
 QEMU_EXTRAOPTIONS_ppce6500 = " -cpu e6500"
 QEMU_EXTRAOPTIONS_ppc64e6500 = " -cpu e6500"
-QEMU_EXTRAOPTIONS_ppc7400   = " -cpu 7400"
+QEMU_EXTRAOPTIONS_ppc7400 = " -cpu 7400"
