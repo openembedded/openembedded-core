@@ -10,7 +10,7 @@ SECTION = "libs"
 LICENSE = "LGPLv2.0+"
 
 X11DEPENDS = "virtual/libx11 libxft"
-DEPENDS = "glib-2.0 fontconfig freetype zlib virtual/libiconv cairo harfbuzz qemu-native"
+DEPENDS = "glib-2.0 fontconfig freetype zlib virtual/libiconv cairo harfbuzz"
 
 PACKAGECONFIG ??= "${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'x11', '', d)}"
 PACKAGECONFIG[x11] = "--with-xft,--without-xft,${X11DEPENDS}"
@@ -18,7 +18,7 @@ PACKAGECONFIG[x11] = "--with-xft,--without-xft,${X11DEPENDS}"
 BBCLASSEXTEND = "native"
 DEPENDS_class-native = "glib-2.0-native cairo-native harfbuzz-native"
 
-inherit gnomebase gtk-doc qemu ptest-gnome upstream-version-is-even
+inherit gnomebase gtk-doc ptest-gnome upstream-version-is-even
 
 EXTRA_AUTORECONF = ""
 
