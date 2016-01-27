@@ -1,10 +1,8 @@
-SUMMARY = "Open source audio and video processing tools and librairies"
-DESCRIPTION = "Libav is a friendly and community-driven effort to provide its users \
-               with a set of portable, functional and high-performance libraries for \
-               dealing with multimedia formats of all sorts. It originates from the \
-               FFmpeg codebase, but goes its own way these days, providing its users \
-               with reliable releases and a clear vision how to go forward."
-HOMEPAGE = "http://libav.org/"
+SUMMARY = "A complete, cross-platform solution to record, convert and stream audio and video."
+DESCRIPTION = "FFmpeg is the leading multimedia framework, able to decode, encode, transcode, \
+               mux, demux, stream, filter and play pretty much anything that humans and machines \
+               have created. It supports the most obscure ancient formats up to the cutting edge."
+HOMEPAGE = "https://www.ffmpeg.org/"
 SECTION = "libs"
 
 LICENSE = "GPLv2+"
@@ -15,32 +13,22 @@ LIC_FILES_CHKSUM = "file://COPYING.GPLv2;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
                     file://COPYING.LGPLv2.1;md5=bd7a443320af8c812e4c18d1b79df004 \
                     file://COPYING.LGPLv3;md5=e6a600fd5e1d9cbde2d983680233ad02"
 
-SRC_URI = "http://libav.org/releases/${BP}.tar.xz"
+SRC_URI = "https://www.ffmpeg.org/releases/${BP}.tar.xz"
 
-# Provides ffmpeg compat, see http://libav.org/about.html
-PROVIDES = "ffmpeg"
+SRC_URI[md5sum] = "b34164bd181f4f81c21da3dd131d919d"
+SRC_URI[sha256sum] = "76fb83a267d2d1cb332742dadf28ad8b58af7958165f51bb1a2c226a122f0ac7"
 
-ARM_INSTRUCTION_SET = "arm"
+# Should be API compatible with libav (which was a fork of ffmpeg)
+# libpostproc was previously packaged from a separate recipe
+PROVIDES = "libav libpostproc"
 
-DEPENDS = "alsa-lib zlib libogg yasm-native"
+DEPENDS = "alsa-lib zlib libogg yasm-native libxv"
 
 inherit autotools pkgconfig
 
-B = "${S}/build.${HOST_SYS}.${TARGET_SYS}"
-
-FULL_OPTIMIZATION_armv7a = "-fexpensive-optimizations -fomit-frame-pointer -O4 -ffast-math"
-FULL_OPTIMIZATION_armv7ve = "-fexpensive-optimizations -fomit-frame-pointer -O4 -ffast-math"
-BUILD_OPTIMIZATION = "${FULL_OPTIMIZATION}"
-
-EXTRA_FFCONF_armv7a = "--cpu=cortex-a8"
-EXTRA_FFCONF_armv7ve = "--cpu=cortex-a8"
-EXTRA_FFCONF ?= ""
-
-PACKAGECONFIG ??= "avdevice avfilter avplay bzip2 gpl theora x264 ${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'x11', '', d)}"
+PACKAGECONFIG ??= "avdevice avfilter gpl theora x264 ${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'x11', '', d)}"
 PACKAGECONFIG[avdevice] = "--enable-avdevice,--disable-avdevice"
 PACKAGECONFIG[avfilter] = "--enable-avfilter,--disable-avfilter"
-PACKAGECONFIG[avplay] = "--enable-avplay,--disable-avplay"
-PACKAGECONFIG[bzip2] = "--enable-bzlib,--disable-bzlib,bzip2"
 PACKAGECONFIG[faac] = "--enable-libfaac,--disable-libfaac,faac"
 PACKAGECONFIG[gpl] = "--enable-gpl,--disable-gpl"
 PACKAGECONFIG[gsm] = "--enable-libgsm,--disable-libgsm,libgsm"
@@ -59,17 +47,14 @@ PACKAGECONFIG[x264] = "--enable-libx264,--disable-libx264,x264"
 # Check codecs that require --enable-nonfree
 USE_NONFREE = "${@bb.utils.contains_any('PACKAGECONFIG', [ 'faac', 'openssl' ], 'yes', '', d)}"
 
-# libav will install in /usr/local if prefix is empty. Luckily,
-# passing just "/" instead does the right thing.
-nonempty_prefix = "${@bb.data.getVar('prefix', d, True) or '/'}"
-
 EXTRA_OECONF = " \
+    --disable-stripping \
+    --enable-pic \
     --enable-shared \
     --enable-pthreads \
     ${@bb.utils.contains('USE_NONFREE', 'yes', '--enable-nonfree', '', d)} \
     \
     --cross-prefix=${TARGET_PREFIX} \
-    --prefix=${nonempty_prefix} \
     \
     --ld="${CCLD}" \
     --arch=${TARGET_ARCH} \
@@ -82,37 +67,15 @@ EXTRA_OECONF = " \
     ${EXTRA_FFCONF} \
     --libdir=${libdir} \
     --shlibdir=${libdir} \
+    --datadir=${datadir}/ffmpeg \
 "
 
 do_configure() {
-    # We don't have TARGET_PREFIX-pkgconfig
-    sed -i '/pkg_config_default="${cross_prefix}${pkg_config_default}"/d' ${S}/configure
-    mkdir -p ${B}
-    cd ${B}
     ${S}/configure ${EXTRA_OECONF}
-    sed -i -e s:Os:O4:g ${B}/config.h
 }
-
-do_install_append() {
-    if [ -n "${@bb.utils.contains('PACKAGECONFIG', 'avfilter', 'yes', '', d)}" ]; then
-        install -m 0644 ${S}/libavfilter/*.h ${D}${includedir}/libavfilter/
-    fi
-}
-
-PACKAGES += "${PN}-vhook ffmpeg-x264-presets"
-PACKAGES_DYNAMIC += "^lib(av(codec|device|filter|format|util)|swscale).*"
 
 RSUGGESTS_${PN} = "mplayer"
-FILES_${PN} = "${bindir}"
-FILES_${PN}-dev = "${includedir}/${PN}"
-
-FILES_${PN}-vhook = "${libdir}/vhook"
-
-FILES_ffmpeg-x264-presets = "${datadir}/*.avpreset"
-
-LEAD_SONAME = "libavcodec.so"
-
-FILES_${PN}-dev = "${includedir}"
+PACKAGES_DYNAMIC += "^lib(av(codec|device|filter|format|util)|swscale).*"
 
 python populate_packages_prepend() {
     av_libdir = d.expand('${libdir}')
@@ -145,9 +108,4 @@ python populate_packages_prepend() {
                       prepend=True,
                       allow_links=True)
 
-    if d.getVar('TARGET_ARCH', True) in [ 'i586', 'i686' ]:
-        # libav can't be build with -fPIC for 32-bit x86
-        pkgs = d.getVar('PACKAGES', True).split()
-        for pkg in pkgs:
-            d.appendVar('INSANE_SKIP_%s' % pkg, ' textrel')
 }
