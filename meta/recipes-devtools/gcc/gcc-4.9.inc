@@ -47,7 +47,6 @@ SRC_URI = "\
     file://0021-gcc-disable-MASK_RELAX_PIC_CALLS-bit.patch \
     file://0022-COLLECT_GCC_OPTIONS.patch \
     file://0023-Use-the-defaults.h-in-B-instead-of-S-and-t-oe-in-B.patch \
-    file://0024-PR-target-32219.patch \
     file://0025-fortran-cross-compile-hack.patch \
     file://0026-libgcc-sjlj-check.patch \
     file://0027-cpp-honor-sysroot.patch \
