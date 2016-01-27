@@ -9,6 +9,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=a6f89e2100d9b6cdffcea4f398e37343 \
 SRC_URI = " \
     git://anongit.freedesktop.org/gstreamer/gst-plugins-good;name=base \
     git://anongit.freedesktop.org/gstreamer/common;destsuffix=git/common;name=common \
+    file://fix-maybe-uninitialized-warnings-when-compiling-with-Os.patch \
 "
 
 PV = "1.7.1+git${SRCPV}"
