@@ -58,6 +58,3 @@ do_install() {
 	create_wrapper ${D}/${bindir}/gtk-encode-symbolic-svg \
 		GDK_PIXBUF_MODULE_FILE=${STAGING_LIBDIR_NATIVE}/gdk-pixbuf-2.0/2.10.0/loaders.cache
 }
-
-# Prevent bitbake from optimizing away the native librsvg sysroot population
-do_populate_sysroot_setscene[depends] += "librsvg-native:do_populate_sysroot_setscene"
