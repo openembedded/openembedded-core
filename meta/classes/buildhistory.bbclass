@@ -684,7 +684,7 @@ END
 
 	( cd ${BUILDHISTORY_DIR}/
 		# Initialise the repo if necessary
-		if [ ! -d .git ] ; then
+		if [ ! -e .git ] ; then
 			git init -q
 		else
 			git tag -f build-minus-3 build-minus-2 > /dev/null 2>&1 || true
