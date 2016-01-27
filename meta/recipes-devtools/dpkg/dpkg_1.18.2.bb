@@ -13,6 +13,7 @@ SRC_URI += "file://noman.patch \
 	    file://0004-The-lutimes-function-doesn-t-work-properly-for-all-s.patch \
 	    file://0005-dpkg-compiler.m4-remove-Wvla.patch \
 	    file://0006-add-musleabi-to-known-target-tripets.patch \
+	    file://dpkg-CVE-2015-0860.patch \
            "
 
 SRC_URI[md5sum] = "63b9d869081ec49adeef6c5ff62d6576"
