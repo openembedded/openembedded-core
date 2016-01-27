@@ -1,4 +1,4 @@
-# BBMASK is a regular expression that can be used to tell BitBake to ignore
+# BBMASK contains regular expressions that can be used to tell BitBake to ignore
 # certain recipes.
 #BBMASK = ""
 
@@ -376,7 +376,7 @@
 #
 # Currently the rootfs_rpm code has a hard depends on rpmresolve:do_populate_sysroot,
 # when using rpm4 the rpmresolve code will not compile due to a missing header file.
-# That dependency needs to be removed when using RPM4, also the PREFRRED_VERSION needs
+# That dependency needs to be removed when using RPM4, also the PREFERRED_VERSION needs
 # to be set. This example shows how to enable rpm4
 # PREFERRED_VERSION_rpm = "4.11.2"
 # PREFERRED_VERSION_rpm-native = "4.11.2"
