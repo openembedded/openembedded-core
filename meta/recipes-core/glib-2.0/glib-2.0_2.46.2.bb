@@ -7,7 +7,6 @@ SHRT_VER = "${@oe.utils.trim_version("${PV}", 2)}"
 SRC_URI = "${GNOME_MIRROR}/glib/${SHRT_VER}/glib-${PV}.tar.xz \
            file://configure-libtool.patch \
            file://fix-conflicting-rand.patch \
-           file://add-march-i486-into-CFLAGS-automatically.patch \
            file://glib-2.0-configure-readlink.patch \
            file://run-ptest \
            file://ptest-paths.patch \
