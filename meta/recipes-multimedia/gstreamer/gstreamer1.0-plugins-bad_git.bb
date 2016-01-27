@@ -11,6 +11,7 @@ SRC_URI = " \
     git://anongit.freedesktop.org/gstreamer/gst-plugins-bad;name=base \
     git://anongit.freedesktop.org/gstreamer/common;destsuffix=git/common;name=common \
     file://configure-allow-to-disable-libssh2.patch \
+    file://fix-maybe-uninitialized-warnings-when-compiling-with-Os.patch \
 "
 
 PV = "1.7.1+git${SRCPV}"
