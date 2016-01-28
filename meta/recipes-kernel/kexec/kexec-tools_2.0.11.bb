@@ -18,9 +18,9 @@ PACKAGES =+ "kexec kdump vmcore-dmesg"
 ALLOW_EMPTY_${PN} = "1"
 RRECOMMENDS_${PN} = "kexec kdump vmcore-dmesg"
 
-FILES_${PN} =+ "${sysconfig}/init.d/kdump ${sysconfig}/sysconfig/kdump.conf"
 FILES_kexec = "${sbindir}/kexec"
-FILES_kdump = "${sbindir}/kdump"
+FILES_kdump = "${sbindir}/kdump ${sysconfdir}/init.d/kdump \
+               ${sysconfdir}/sysconfig/kdump.conf"
 FILES_vmcore-dmesg = "${sbindir}/vmcore-dmesg"
 
 inherit update-rc.d
