@@ -98,3 +98,48 @@ python do_testsdk() {
 addtask testsdk
 do_testsdk[nostamp] = "1"
 do_testsdk[lockfiles] += "${TESTSDKLOCK}"
+
+TEST_LOG_SDKEXT_DIR ?= "${WORKDIR}/testsdkext"
+TESTSDKEXTLOCK = "${TMPDIR}/testsdkext.lock"
+
+def testsdkext_main(d):
+    import unittest
+    import os
+    import glob
+    import oeqa.sdkext
+    import time
+    import subprocess
+    from oeqa.oetest import loadTests, runTests, get_test_suites, get_tests_list
+
+    pn = d.getVar("PN", True)
+    bb.utils.mkdirhier(d.getVar("TEST_LOG_SDKEXT_DIR", True))
+
+    # tests in TEST_SUITES become required tests
+    # they won't be skipped even if they aren't suitable.
+    # testslist is what we'll actually pass to the unittest loader
+    testslist = get_tests_list(get_test_suites(d, "sdkext"),
+                    d.getVar("BBPATH", True).split(':'), "sdkext")
+    testsrequired = [t for t in (d.getVar("TEST_SUITES_SDKEXT", True) or \
+                    "auto").split() if t != "auto"]
+
+    tcname = d.expand("${SDK_DEPLOY}/${TOOLCHAINEXT_OUTPUTNAME}.sh")
+    if not os.path.exists(tcname):
+        bb.fatal("The toolchain ext is not built. Build it before running the" \
+                 " tests: 'bitbake <image> -c populate_sdk_ext' .")
+
+    testdir = d.expand("${WORKDIR}/testsdkext/")
+    bb.utils.remove(testdir, True)
+    bb.utils.mkdirhier(testdir)
+    try:
+        subprocess.check_output("%s -y -d %s" % (tcname, testdir), shell=True)
+    except subprocess.CalledProcessError as e:
+        bb.fatal("Couldn't install the SDK EXT:\n%s" % e.output)
+
+testsdkext_main[vardepsexclude] =+ "BB_ORIGENV"
+
+python do_testsdkext() {
+    testsdkext_main(d)
+}
+addtask testsdkext
+do_testsdkext[nostamp] = "1"
+do_testsdkext[lockfiles] += "${TESTSDKEXTLOCK}"
