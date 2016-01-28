@@ -855,7 +855,11 @@ def setscene_depvalid(task, taskdependees, notneeded, d):
         return True
 
     # We only need to trigger packagedata through direct dependencies
+    # but need to preserve packagedata on packagedata links
     if taskdependees[task][1] == "do_packagedata":
+        for dep in taskdependees:
+            if taskdependees[dep][1] == "do_packagedata":
+                return False
         return True
 
     for dep in taskdependees:
