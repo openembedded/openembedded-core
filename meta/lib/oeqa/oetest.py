@@ -271,6 +271,8 @@ def get_test_suites(d, type='runtime'):
 
     if type == "sdk":
         testsuites = (d.getVar("TEST_SUITES_SDK", True) or "auto").split()
+    elif type == "sdkext":
+        testsuites = (d.getVar("TEST_SUITES_SDKEXT", True) or "auto").split()
     else:
         manifests = (d.getVar("TEST_SUITES_MANIFEST", True) or '').split()
         if manifests:
