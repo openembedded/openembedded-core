@@ -110,6 +110,9 @@ def testsdkext_main(d):
     import time
     import subprocess
     from oeqa.oetest import loadTests, runTests, get_test_suites, get_tests_list
+    from bb.utils import export_proxies
+
+    export_proxies(d)
 
     pn = d.getVar("PN", True)
     bb.utils.mkdirhier(d.getVar("TEST_LOG_SDKEXT_DIR", True))
