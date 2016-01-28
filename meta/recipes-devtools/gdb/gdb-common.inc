@@ -2,7 +2,7 @@ SUMMARY = "GNU debugger"
 HOMEPAGE = "http://www.gnu.org/software/gdb/"
 LICENSE = "GPLv3+"
 SECTION = "devel"
-DEPENDS = "expat zlib ncurses readline ${LTTNGUST}"
+DEPENDS = "expat zlib ncurses ${LTTNGUST}"
 
 LTTNGUST = "lttng-ust"
 LTTNGUST_aarch64 = ""
@@ -40,12 +40,16 @@ EXTRA_OEMAKE = "'SUBDIRS=intl mmalloc libiberty opcodes bfd sim gdb etc utils'"
 EXPAT = "--with-expat --with-libexpat-prefix=${STAGING_DIR_HOST}"
 
 EXTRA_OECONF = "--disable-gdbtk --disable-tui --disable-x --disable-werror \
-                --with-curses --disable-multilib --with-system-readline --disable-sim \
+                --with-curses --disable-multilib --disable-sim \
                 --without-lzma --without-guile \
                 ${GDBPROPREFIX} ${EXPAT} \
                 ${@bb.utils.contains('DISTRO_FEATURES', 'multiarch', '--enable-64-bit-bfd', '', d)} \
                 --disable-rpath \
                "
+
+PACKAGECONFIG ??= "readline"
+# Use --without-system-readline to compile with readline 5.
+PACKAGECONFIG[readline] = "--with-system-readline,--without-system-readline,readline"
 
 GDBPROPREFIX = "--program-prefix=''"
 
