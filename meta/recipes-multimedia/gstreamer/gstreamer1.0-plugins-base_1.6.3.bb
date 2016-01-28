@@ -10,6 +10,7 @@ SRC_URI = " \
     file://0003-ssaparse-enhance-SSA-text-lines-parsing.patch \
     file://0004-subparse-set-need_segment-after-sink-pad-received-GS.patch \
     file://encodebin-Need-more-buffers-in-output-queue-for-bett.patch \
+    file://0005-convertframe-Support-video-crop-when-convert-frame.patch \
 "
 
 SRC_URI[md5sum] = "3ddde0ad598ef69f58d6a2e87f8b460f"
