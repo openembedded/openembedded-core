@@ -106,74 +106,6 @@ do_testsdk[nostamp] = "1"
 do_testsdk[depends] += "${TESTIMAGEDEPENDS}"
 do_testsdk[lockfiles] += "${TESTIMAGELOCK}"
 
-# get testcase list from specified file
-# if path is a relative path, then relative to build/conf/
-def read_testlist(d, fpath):
-    if not os.path.isabs(fpath):
-        builddir = d.getVar("TOPDIR", True)
-        fpath = os.path.join(builddir, "conf", fpath)
-    if not os.path.exists(fpath):
-        bb.fatal("No such manifest file: ", fpath)
-    tcs = []
-    for line in open(fpath).readlines():
-        line = line.strip()
-        if line and not line.startswith("#"):
-            tcs.append(line)
-    return " ".join(tcs)
-
-def get_tests_list(d, type="runtime"):
-    testsuites = []
-    testslist = []
-    manifests = d.getVar("TEST_SUITES_MANIFEST", True)
-    if manifests is not None:
-        manifests = manifests.split()
-        for manifest in manifests:
-            testsuites.extend(read_testlist(d, manifest).split())
-    else:
-        testsuites = d.getVar("TEST_SUITES", True).split()
-    if type == "sdk":
-        testsuites = (d.getVar("TEST_SUITES_SDK", True) or "auto").split()
-    bbpath = d.getVar("BBPATH", True).split(':')
-
-    # This relies on lib/ under each directory in BBPATH being added to sys.path
-    # (as done by default in base.bbclass)
-    for testname in testsuites:
-        if testname != "auto":
-            if testname.startswith("oeqa."):
-                testslist.append(testname)
-                continue
-            found = False
-            for p in bbpath:
-                if os.path.exists(os.path.join(p, 'lib', 'oeqa', type, testname + '.py')):
-                    testslist.append("oeqa." + type + "." + testname)
-                    found = True
-                    break
-                elif os.path.exists(os.path.join(p, 'lib', 'oeqa', type, testname.split(".")[0] + '.py')):
-                    testslist.append("oeqa." + type + "." + testname)
-                    found = True
-                    break
-            if not found:
-                bb.fatal('Test %s specified in TEST_SUITES could not be found in lib/oeqa/runtime under BBPATH' % testname)
-
-    if "auto" in testsuites:
-        def add_auto_list(path):
-            if not os.path.exists(os.path.join(path, '__init__.py')):
-                bb.fatal('Tests directory %s exists but is missing __init__.py' % path)
-            files = sorted([f for f in os.listdir(path) if f.endswith('.py') and not f.startswith('_')])
-            for f in files:
-                module = 'oeqa.' + type + '.' + f[:-3]
-                if module not in testslist:
-                    testslist.append(module)
-
-        for p in bbpath:
-            testpath = os.path.join(p, 'lib', 'oeqa', type)
-            bb.debug(2, 'Searching for tests in %s' % testpath)
-            if os.path.exists(testpath):
-                add_auto_list(testpath)
-
-    return testslist
-
-
 def exportTests(d,tc):
     import json
     import shutil
@@ -272,7 +204,7 @@ def testimage_main(d):
     import oeqa.runtime
     import time
     import signal
-    from oeqa.oetest import loadTests, runTests
+    from oeqa.oetest import loadTests, runTests, get_test_suites, get_tests_list
     from oeqa.targetcontrol import get_target_controller
     from oeqa.utils.dump import get_host_dumper
 
@@ -286,7 +218,7 @@ def testimage_main(d):
     # tests in TEST_SUITES become required tests
     # they won't be skipped even if they aren't suitable for a image (like xorg for minimal)
     # testslist is what we'll actually pass to the unittest loader
-    testslist = get_tests_list(d)
+    testslist = get_tests_list(get_test_suites(d), d.getVar("BBPATH", True).split(':'))
     testsrequired = [t for t in d.getVar("TEST_SUITES", True).split() if t != "auto"]
 
     tagexp = d.getVar("TEST_SUITES_TAGS", True)
@@ -368,7 +300,6 @@ def testimage_main(d):
 
 testimage_main[vardepsexclude] =+ "BB_ORIGENV"
 
-
 def testsdk_main(d):
     import unittest
     import os
@@ -377,7 +308,7 @@ def testsdk_main(d):
     import oeqa.sdk
     import time
     import subprocess
-    from oeqa.oetest import loadTests, runTests
+    from oeqa.oetest import loadTests, runTests, get_test_suites, get_tests_list
 
     pn = d.getVar("PN", True)
     bb.utils.mkdirhier(d.getVar("TEST_LOG_DIR", True))
@@ -385,7 +316,7 @@ def testsdk_main(d):
     # tests in TEST_SUITES become required tests
     # they won't be skipped even if they aren't suitable.
     # testslist is what we'll actually pass to the unittest loader
-    testslist = get_tests_list(d, "sdk")
+    testslist = get_tests_list(get_test_suites(d, "sdk"), d.getVar("BBPATH", True).split(':'), "sdk")
     testsrequired = [t for t in (d.getVar("TEST_SUITES_SDK", True) or "auto").split() if t != "auto"]
 
     tcname = d.expand("${SDK_DEPLOY}/${TOOLCHAIN_OUTPUTNAME}.sh")
@@ -457,4 +388,3 @@ def testsdk_main(d):
         bb.utils.remove(sdktestdir, True)
 
 testsdk_main[vardepsexclude] =+ "BB_ORIGENV"
-
