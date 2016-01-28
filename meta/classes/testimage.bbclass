@@ -290,3 +290,5 @@ def testimage_main(d):
             target.stop()
 
 testimage_main[vardepsexclude] =+ "BB_ORIGENV"
+
+inherit testsdk
