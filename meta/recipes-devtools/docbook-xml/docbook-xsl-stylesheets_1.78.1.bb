@@ -34,7 +34,8 @@ do_compile (){
 do_install () {
 	# Refer to http://www.linuxfromscratch.org/blfs/view/stable/pst/docbook-xsl.html
 	# for details.
-	install -v -m755 -d ${D}${datadir}/xml/docbook/xsl-stylesheets-1.78.1
+	install -v -m755 -d ${D}${datadir}/xml/docbook/xsl-stylesheets-${PV}
+	ln -s xsl-stylesheets-${PV} ${D}${datadir}/xml/docbook/xsl-stylesheets
 
 	cp -v -R VERSION common eclipse epub extensions fo highlighting html \
 		htmlhelp images javahelp lib manpages params profiling \
