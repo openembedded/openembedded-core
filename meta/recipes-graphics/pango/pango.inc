@@ -9,14 +9,10 @@ BUGTRACKER = "http://bugzilla.gnome.org"
 SECTION = "libs"
 LICENSE = "LGPLv2.0+"
 
-X11DEPENDS = "virtual/libx11 libxft"
-DEPENDS = "glib-2.0 fontconfig freetype zlib virtual/libiconv cairo harfbuzz"
+DEPENDS = "glib-2.0 glib-2.0-native fontconfig freetype virtual/libiconv cairo harfbuzz"
 
 PACKAGECONFIG ??= "${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'x11', '', d)}"
-PACKAGECONFIG[x11] = "--with-xft,--without-xft,${X11DEPENDS}"
-
-BBCLASSEXTEND = "native"
-DEPENDS_class-native = "glib-2.0-native cairo-native harfbuzz-native"
+PACKAGECONFIG[x11] = "--with-xft,--without-xft,virtual/libx11 libxft"
 
 inherit gnomebase gtk-doc ptest-gnome upstream-version-is-even
 
@@ -43,3 +39,5 @@ RDEPENDS_${PN}-ptest += "liberation-fonts"
 
 RPROVIDES_${PN} += "pango-modules pango-module-indic-lang \
                     pango-module-basic-fc pango-module-arabic-lang"
+
+BBCLASSEXTEND = "native"
