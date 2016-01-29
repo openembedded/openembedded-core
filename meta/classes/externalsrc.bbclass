@@ -85,6 +85,17 @@ python () {
 
         # Ensure compilation happens every time
         d.setVarFlag('do_compile', 'nostamp', '1')
+
+        # If B=S the same builddir is used even for different architectures.
+        # Thus, use a shared CONFIGURESTAMPFILE so that change of do_configure
+        # task hash is correctly detected if e.g. MACHINE changes. In addition,
+        # do_configure needs to depend on the stamp file so that the task is
+        # re-run when the stamp was changed since the last run on this
+        # architecture.
+        if d.getVar('S', True) == d.getVar('B', True):
+            configstamp = '${TMPDIR}/work-shared/${PN}/${EXTENDPE}${PV}-${PR}/configure.sstate'
+            d.setVar('CONFIGURESTAMPFILE', configstamp)
+            d.setVarFlag('do_configure', 'file-checksums', configstamp + ':True')
 }
 
 python externalsrc_compile_prefunc() {
