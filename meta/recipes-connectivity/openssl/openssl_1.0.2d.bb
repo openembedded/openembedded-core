@@ -42,6 +42,8 @@ SRC_URI += "file://configure-targets.patch \
             file://0001-Add-test-for-CVE-2015-3194.patch \
             file://CVE-2015-3195-Fix-leak-with-ASN.1-combine.patch \
             file://CVE-2015-3197.patch \
+            file://CVE-2016-0701_1.patch \
+            file://CVE-2016-0701_2.patch \
            "
 
 SRC_URI[md5sum] = "38dd619b2e77cbac69b99f52a053d25a"
