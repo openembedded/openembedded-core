@@ -112,8 +112,7 @@ autotools_preconfigure() {
 				# regenerate them even if CFLAGS/LDFLAGS are different
 				cd ${S}
 				if [ "${CLEANBROKEN}" != "1" -a \( -e Makefile -o -e makefile -o -e GNUmakefile \) ]; then
-					echo "Running \"${MAKE} clean\" in ${S}"
-					${MAKE} clean
+					oe_runmake clean
 				fi
 				find ${S} -ignore_readdir_race -name \*.la -delete
 			fi
