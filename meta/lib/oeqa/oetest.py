@@ -33,7 +33,6 @@ def getVar(obj):
 def checkTags(tc, tagexp):
     return eval(tagexp, None, getVar(tc))
 
-
 def filterByTagExp(testsuite, tagexp):
     if not tagexp:
         return testsuite
@@ -254,96 +253,80 @@ def skipModuleUnless(cond, reason):
     if not cond:
         skipModule(reason, 3)
 
-# get testcase list from specified file
-# if path is a relative path, then relative to build/conf/
-def read_testlist(fpath, builddir):
-    if not os.path.isabs(fpath):
-        fpath = os.path.join(builddir, "conf", fpath)
-    if not os.path.exists(fpath):
-        bb.fatal("No such manifest file: ", fpath)
-    tcs = []
-    for line in open(fpath).readlines():
-        line = line.strip()
-        if line and not line.startswith("#"):
-            tcs.append(line)
-    return " ".join(tcs)
-
-# get test suites, returns test suites based on d variables
-def get_test_suites(d, type='runtime'):
-    testsuites = []
-
-    if type == "sdk":
-        testsuites = (d.getVar("TEST_SUITES_SDK", True) or "auto").split()
-    elif type == "sdkext":
-        testsuites = (d.getVar("TEST_SUITES_SDKEXT", True) or "auto").split()
-    else:
-        manifests = (d.getVar("TEST_SUITES_MANIFEST", True) or '').split()
-        if manifests:
-            for manifest in manifests:
-                testsuites.extend(read_testlist(manifest,
-                                    d.getVar("TOPDIR", True)).split())
-
-        else:
-            testsuites = d.getVar("TEST_SUITES", True).split()
-
-    return testsuites
-
-# return test list by type also filter if TEST_SUITES is specified
-def get_tests_list(testsuites, bbpath, type="runtime"):
-    testslist = []
-
-    # This relies on lib/ under each directory in BBPATH being added to sys.path
-    # (as done by default in base.bbclass)
-    for testname in testsuites:
-        if testname != "auto":
-            if testname.startswith("oeqa."):
-                testslist.append(testname)
-                continue
-            found = False
-            for p in bbpath:
-                if os.path.exists(os.path.join(p, 'lib', 'oeqa', type, testname + '.py')):
-                    testslist.append("oeqa." + type + "." + testname)
-                    found = True
-                    break
-                elif os.path.exists(os.path.join(p, 'lib', 'oeqa', type, testname.split(".")[0] + '.py')):
-                    testslist.append("oeqa." + type + "." + testname)
-                    found = True
-                    break
-            if not found:
-                bb.fatal('Test %s specified in TEST_SUITES could not be found in lib/oeqa/runtime under BBPATH' % testname)
-
-    if "auto" in testsuites:
-        def add_auto_list(path):
-            if not os.path.exists(os.path.join(path, '__init__.py')):
-                bb.fatal('Tests directory %s exists but is missing __init__.py' % path)
-            files = sorted([f for f in os.listdir(path) if f.endswith('.py') and not f.startswith('_')])
-            for f in files:
-                module = 'oeqa.' + type + '.' + f[:-3]
-                if module not in testslist:
-                    testslist.append(module)
-
-        for p in bbpath:
-            testpath = os.path.join(p, 'lib', 'oeqa', type)
-            bb.debug(2, 'Searching for tests in %s' % testpath)
-            if os.path.exists(testpath):
-                add_auto_list(testpath)
-
-    return testslist
-
 class TestContext(object):
-    def __init__(self, d, testslist, testsrequired):
+    def __init__(self, d):
         self.d = d
-        self.testslist = testslist
-        self.testsrequired = testsrequired
+
+        self.testsuites = self._get_test_suites()
+        self.testslist = self._get_tests_list(d.getVar("BBPATH", True).split(':'))
+        self.testsrequired = self._get_test_suites_required()
 
         self.filesdir = os.path.join(os.path.dirname(os.path.abspath(
             oeqa.runtime.__file__)), "files")
         self.imagefeatures = d.getVar("IMAGE_FEATURES", True).split()
         self.distrofeatures = d.getVar("DISTRO_FEATURES", True).split()
 
+    # get testcase list from specified file
+    # if path is a relative path, then relative to build/conf/
+    def _read_testlist(self, fpath, builddir):
+        if not os.path.isabs(fpath):
+            fpath = os.path.join(builddir, "conf", fpath)
+        if not os.path.exists(fpath):
+            bb.fatal("No such manifest file: ", fpath)
+        tcs = []
+        for line in open(fpath).readlines():
+            line = line.strip()
+            if line and not line.startswith("#"):
+                tcs.append(line)
+        return " ".join(tcs)
+
+    # return test list by type also filter if TEST_SUITES is specified
+    def _get_tests_list(self, bbpath):
+        testslist = []
+
+        type = self._get_test_namespace()
+
+        # This relies on lib/ under each directory in BBPATH being added to sys.path
+        # (as done by default in base.bbclass)
+        for testname in self.testsuites:
+            if testname != "auto":
+                if testname.startswith("oeqa."):
+                    testslist.append(testname)
+                    continue
+                found = False
+                for p in bbpath:
+                    if os.path.exists(os.path.join(p, 'lib', 'oeqa', type, testname + '.py')):
+                        testslist.append("oeqa." + type + "." + testname)
+                        found = True
+                        break
+                    elif os.path.exists(os.path.join(p, 'lib', 'oeqa', type, testname.split(".")[0] + '.py')):
+                        testslist.append("oeqa." + type + "." + testname)
+                        found = True
+                        break
+                if not found:
+                    bb.fatal('Test %s specified in TEST_SUITES could not be found in lib/oeqa/runtime under BBPATH' % testname)
+
+        if "auto" in self.testsuites:
+            def add_auto_list(path):
+                if not os.path.exists(os.path.join(path, '__init__.py')):
+                    bb.fatal('Tests directory %s exists but is missing __init__.py' % path)
+                files = sorted([f for f in os.listdir(path) if f.endswith('.py') and not f.startswith('_')])
+                for f in files:
+                    module = 'oeqa.' + type + '.' + f[:-3]
+                    if module not in testslist:
+                        testslist.append(module)
+
+            for p in bbpath:
+                testpath = os.path.join(p, 'lib', 'oeqa', type)
+                bb.debug(2, 'Searching for tests in %s' % testpath)
+                if os.path.exists(testpath):
+                    add_auto_list(testpath)
+
+        return testslist
+
 class ImageTestContext(TestContext):
-    def __init__(self, d, testslist, testsrequired, target, host_dumper):
-        super(ImageTestContext, self).__init__(d, testslist, testsrequired)
+    def __init__(self, d, target, host_dumper):
+        super(ImageTestContext, self).__init__(d)
 
         self.tagexp =  d.getVar("TEST_SUITES_TAGS", True)
 
@@ -371,9 +354,29 @@ class ImageTestContext(TestContext):
         self.sigterm = True
         self.target.stop()
 
+    def _get_test_namespace(self):
+        return "runtime"
+
+    def _get_test_suites(self):
+        testsuites = []
+
+        manifests = (self.d.getVar("TEST_SUITES_MANIFEST", True) or '').split()
+        if manifests:
+            for manifest in manifests:
+                testsuites.extend(self._read_testlist(manifest,
+                                  self.d.getVar("TOPDIR", True)).split())
+
+        else:
+            testsuites = self.d.getVar("TEST_SUITES", True).split()
+
+        return testsuites
+
+    def _get_test_suites_required(self):
+        return [t for t in self.d.getVar("TEST_SUITES", True).split() if t != "auto"]
+
 class SDKTestContext(TestContext):
-    def __init__(self, d, testslist, testsrequired, sdktestdir, sdkenv):
-        super(SDKTestContext, self).__init__(d, testslist, testsrequired)
+    def __init__(self, d, sdktestdir, sdkenv):
+        super(SDKTestContext, self).__init__(d)
 
         self.sdktestdir = sdktestdir
         self.sdkenv = sdkenv
@@ -389,3 +392,24 @@ class SDKTestContext(TestContext):
                 self.hostpkgmanifest = f.read()
         except IOError as e:
             bb.fatal("No host package manifest file found. Did you build the sdk image?\n%s" % e)
+
+    def _get_test_namespace(self):
+        return "sdk"
+
+    def _get_test_suites(self):
+        return (self.d.getVar("TEST_SUITES_SDK", True) or "auto").split()
+
+    def _get_test_suites_required(self):
+        return [t for t in (self.d.getVar("TEST_SUITES_SDK", True) or \
+                "auto").split() if t != "auto"]
+
+class SDKExtTestContext(TestContext):
+    def _get_test_namespace(self):
+        return "sdkext"
+
+    def _get_test_suites(self):
+        return (self.d.getVar("TEST_SUITES_SDK_EXT", True) or "auto").split()
+
+    def _get_test_suites_required(self):
+        return [t for t in (self.d.getVar("TEST_SUITES_SDK_EXT", True) or \
+                "auto").split() if t != "auto"]

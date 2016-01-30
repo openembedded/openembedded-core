@@ -195,8 +195,7 @@ def testimage_main(d):
     import oeqa.runtime
     import time
     import signal
-    from oeqa.oetest import loadTests, runTests, \
-        get_test_suites, get_tests_list, ImageTestContext
+    from oeqa.oetest import loadTests, runTests, ImageTestContext
     from oeqa.targetcontrol import get_target_controller
     from oeqa.utils.dump import get_host_dumper
 
@@ -207,12 +206,6 @@ def testimage_main(d):
         bb.utils.remove(d.getVar("TEST_EXPORT_DIR", True), recurse=True)
         bb.utils.mkdirhier(d.getVar("TEST_EXPORT_DIR", True))
 
-    # tests in TEST_SUITES become required tests
-    # they won't be skipped even if they aren't suitable for a image (like xorg for minimal)
-    # testslist is what we'll actually pass to the unittest loader
-    testslist = get_tests_list(get_test_suites(d), d.getVar("BBPATH", True).split(':'))
-    testsrequired = [t for t in d.getVar("TEST_SUITES", True).split() if t != "auto"]
-
     # we need the host dumper in test context
     host_dumper = get_host_dumper(d)
 
@@ -220,7 +213,7 @@ def testimage_main(d):
     target = get_target_controller(d)
 
     # test context
-    tc = ImageTestContext(d, testslist, testsrequired, target, host_dumper)
+    tc = ImageTestContext(d, target, host_dumper)
 
     # this is a dummy load of tests
     # we are doing that to find compile errors in the tests themselves

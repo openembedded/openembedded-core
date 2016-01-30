@@ -13,17 +13,10 @@ def testsdk_main(d):
     import oeqa.sdk
     import time
     import subprocess
-    from oeqa.oetest import loadTests, runTests, \
-        get_test_suites, get_tests_list, SDKTestContext
+    from oeqa.oetest import loadTests, runTests, SDKTestContext
 
     pn = d.getVar("PN", True)
     bb.utils.mkdirhier(d.getVar("TEST_LOG_DIR", True))
-
-    # tests in TEST_SUITES become required tests
-    # they won't be skipped even if they aren't suitable.
-    # testslist is what we'll actually pass to the unittest loader
-    testslist = get_tests_list(get_test_suites(d, "sdk"), d.getVar("BBPATH", True).split(':'), "sdk")
-    testsrequired = [t for t in (d.getVar("TEST_SUITES_SDK", True) or "auto").split() if t != "auto"]
 
     tcname = d.expand("${SDK_DEPLOY}/${TOOLCHAIN_OUTPUTNAME}.sh")
     if not os.path.exists(tcname):
@@ -41,7 +34,7 @@ def testsdk_main(d):
         targets = glob.glob(d.expand(sdktestdir + "/tc/environment-setup-*"))
         for sdkenv in targets:
             bb.plain("Testing %s" % sdkenv)
-            tc = SDKTestContext(d, testslist, testsrequired, sdktestdir, sdkenv)
+            tc = SDKTestContext(d, sdktestdir, sdkenv)
 
             # this is a dummy load of tests
             # we are doing that to find compile errors in the tests themselves
@@ -93,14 +86,6 @@ def testsdkext_main(d):
 
     pn = d.getVar("PN", True)
     bb.utils.mkdirhier(d.getVar("TEST_LOG_SDKEXT_DIR", True))
-
-    # tests in TEST_SUITES become required tests
-    # they won't be skipped even if they aren't suitable.
-    # testslist is what we'll actually pass to the unittest loader
-    testslist = get_tests_list(get_test_suites(d, "sdkext"),
-                    d.getVar("BBPATH", True).split(':'), "sdkext")
-    testsrequired = [t for t in (d.getVar("TEST_SUITES_SDKEXT", True) or \
-                    "auto").split() if t != "auto"]
 
     tcname = d.expand("${SDK_DEPLOY}/${TOOLCHAINEXT_OUTPUTNAME}.sh")
     if not os.path.exists(tcname):
