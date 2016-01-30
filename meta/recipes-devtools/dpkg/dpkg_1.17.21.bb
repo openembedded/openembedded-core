@@ -14,6 +14,7 @@ SRC_URI += "file://noman.patch \
             file://no-vla-warning.patch \
             file://add_armeb_triplet_entry.patch \
             file://tarfix.patch \
+            file://CVE-2015-0860.patch \
            "
 
 SRC_URI[md5sum] = "765a96fd0180196613bbfa3c4aef0775"
