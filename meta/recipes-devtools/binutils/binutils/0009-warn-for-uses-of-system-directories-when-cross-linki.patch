@@ -1,15 +1,7 @@
-From e02e119b278c3f404e97669e7180cac944134c91 Mon Sep 17 00:00:00 2001
+From e5d18410cb07da09f854b9568f51a873f1166d2a Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
-Date: Mon, 2 Mar 2015 01:41:04 +0000
-Subject: [PATCH 09/13] Upstream-Status: Inappropriate [distribution:
- codesourcery]
-
-Patch originally created by Mark Hatle, forward-ported to
-binutils 2.21 by Scott Garman.
-
-purpose:  warn for uses of system directories when cross linking
-
-Code Merged from Sourcery G++ binutils 2.19 - 4.4-277
+Date: Fri, 15 Jan 2016 06:31:09 +0000
+Subject: [PATCH 09/12] warn for uses of system directories when cross linking
 
 2008-07-02  Joseph Myers  <joseph@codesourcery.com>
 
@@ -57,8 +49,10 @@ Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
 Signed-off-by: Scott Garman <scott.a.garman@intel.com>
 Signed-off-by: Khem Raj <raj.khem@gmail.com>
 ---
+Upstream-Status: Pending
+
  ld/config.in    |  3 +++
- ld/configure    | 14 ++++++++++++++
+ ld/configure    | 16 ++++++++++++++++
  ld/configure.ac | 10 ++++++++++
  ld/ld.h         |  8 ++++++++
  ld/ld.texinfo   | 12 ++++++++++++
@@ -66,13 +60,13 @@ Signed-off-by: Khem Raj <raj.khem@gmail.com>
  ld/ldlex.h      |  2 ++
  ld/ldmain.c     |  2 ++
  ld/lexsup.c     | 16 ++++++++++++++++
- 9 files changed, 84 insertions(+)
+ 9 files changed, 86 insertions(+)
 
 diff --git a/ld/config.in b/ld/config.in
-index 2ab4844..766d23c 100644
+index 276fb77..35c58eb 100644
 --- a/ld/config.in
 +++ b/ld/config.in
-@@ -11,6 +11,9 @@
+@@ -14,6 +14,9 @@
     language is requested. */
  #undef ENABLE_NLS
  
@@ -83,18 +77,18 @@ index 2ab4844..766d23c 100644
  #undef EXTRA_SHLIB_EXTENSION
  
 diff --git a/ld/configure b/ld/configure
-index 2fbaebf..5726a08 100755
+index 7a20e4e..7cff36c 100755
 --- a/ld/configure
 +++ b/ld/configure
-@@ -787,6 +787,7 @@ with_lib_path
+@@ -790,6 +790,7 @@ with_lib_path
  enable_targets
  enable_64_bit_bfd
  with_sysroot
 +enable_poison_system_directories
  enable_gold
  enable_got
- enable_werror
-@@ -1443,6 +1444,8 @@ Optional Features:
+ enable_compressed_debug_sections
+@@ -1446,6 +1447,8 @@ Optional Features:
    --disable-largefile     omit support for large files
    --enable-targets        alternative target configurations
    --enable-64-bit-bfd     64-bit support (on hosts with narrower word sizes)
@@ -103,8 +97,8 @@ index 2fbaebf..5726a08 100755
    --enable-gold[=ARG]     build gold [ARG={default,yes,no}]
    --enable-got=<type>     GOT handling scheme (target, single, negative,
                            multigot)
-@@ -16323,7 +16326,18 @@ else
- fi
+@@ -16306,6 +16309,19 @@ fi
+ 
  
  
 +# Check whether --enable-poison-system-directories was given.
@@ -115,18 +109,19 @@ index 2fbaebf..5726a08 100755
 +fi
 +
 +if test "x${enable_poison_system_directories}" = "xyes"; then
- 
++
 +$as_echo "#define ENABLE_POISON_SYSTEM_DIRECTORIES 1" >>confdefs.h
 +
 +fi
- 
- # Check whether --enable-got was given.
- if test "${enable_got+set}" = set; then :
++
+ # Check whether --enable-gold was given.
+ if test "${enable_gold+set}" = set; then :
+   enableval=$enable_gold; case "${enableval}" in
 diff --git a/ld/configure.ac b/ld/configure.ac
-index 1bddfc9..e9edb7f 100644
+index 188172d..2cd8443 100644
 --- a/ld/configure.ac
 +++ b/ld/configure.ac
-@@ -94,6 +94,16 @@ AC_SUBST(use_sysroot)
+@@ -95,6 +95,16 @@ AC_SUBST(use_sysroot)
  AC_SUBST(TARGET_SYSTEM_ROOT)
  AC_SUBST(TARGET_SYSTEM_ROOT_DEFINE)
  
@@ -144,12 +139,12 @@ index 1bddfc9..e9edb7f 100644
  dnl "install_as_default" is set to false if gold is the default linker.
  dnl "installed_linker" is the installed BFD linker name.
 diff --git a/ld/ld.h b/ld/ld.h
-index f773ce7..adba0f6 100644
+index d84ec4e..3476b26 100644
 --- a/ld/ld.h
 +++ b/ld/ld.h
-@@ -161,6 +161,14 @@ typedef struct {
-   /* If TRUE we'll just print the default output on stdout.  */
-   bfd_boolean print_output_format;
+@@ -164,6 +164,14 @@ typedef struct {
+   /* If set, display the target memory usage (per memory region).  */
+   bfd_boolean print_memory_usage;
  
 +  /* If TRUE (the default) warn for uses of system directories when
 +     cross linking.  */
@@ -163,10 +158,10 @@ index f773ce7..adba0f6 100644
    enum endian_enum endian;
  
 diff --git a/ld/ld.texinfo b/ld/ld.texinfo
-index 502582c..dae168a 100644
+index 1dd7492..fb1438e 100644
 --- a/ld/ld.texinfo
 +++ b/ld/ld.texinfo
-@@ -2212,6 +2212,18 @@ string identifying the original linked file does not change.
+@@ -2332,6 +2332,18 @@ string identifying the original linked file does not change.
  
  Passing @code{none} for @var{style} disables the setting from any
  @code{--build-id} options earlier on the command line.
@@ -186,7 +181,7 @@ index 502582c..dae168a 100644
  
  @c man end
 diff --git a/ld/ldfile.c b/ld/ldfile.c
-index 782ed7f..19a9ab4 100644
+index 96f9ecc..af231c0 100644
 --- a/ld/ldfile.c
 +++ b/ld/ldfile.c
 @@ -114,6 +114,23 @@ ldfile_add_library_path (const char *name, bfd_boolean cmdline)
@@ -214,23 +209,23 @@ index 782ed7f..19a9ab4 100644
  
  /* Try to open a BFD for a lang_input_statement.  */
 diff --git a/ld/ldlex.h b/ld/ldlex.h
-index e3e9b24..29487a3 100644
+index 6f11e7b..0ca3110 100644
 --- a/ld/ldlex.h
 +++ b/ld/ldlex.h
-@@ -140,6 +140,8 @@ enum option_values
-   OPTION_IGNORE_UNRESOLVED_SYMBOL,
-   OPTION_PUSH_STATE,
-   OPTION_POP_STATE,
+@@ -144,6 +144,8 @@ enum option_values
+   OPTION_PRINT_MEMORY_USAGE,
+   OPTION_REQUIRE_DEFINED_SYMBOL,
+   OPTION_ORPHAN_HANDLING,
 +  OPTION_NO_POISON_SYSTEM_DIRECTORIES,
 +  OPTION_ERROR_POISON_SYSTEM_DIRECTORIES,
  };
  
  /* The initial parser states.  */
 diff --git a/ld/ldmain.c b/ld/ldmain.c
-index 818d108..54c49f2 100644
+index bb0b9cc..a23c56c 100644
 --- a/ld/ldmain.c
 +++ b/ld/ldmain.c
-@@ -266,6 +266,8 @@ main (int argc, char **argv)
+@@ -257,6 +257,8 @@ main (int argc, char **argv)
    command_line.warn_mismatch = TRUE;
    command_line.warn_search_mismatch = TRUE;
    command_line.check_section_addresses = -1;
@@ -240,12 +235,12 @@ index 818d108..54c49f2 100644
    /* We initialize DEMANGLING based on the environment variable
       COLLECT_NO_DEMANGLE.  The gcc collect2 program will demangle the
 diff --git a/ld/lexsup.c b/ld/lexsup.c
-index 4812c97..21b49df 100644
+index 4cad209..173b17f 100644
 --- a/ld/lexsup.c
 +++ b/ld/lexsup.c
-@@ -513,6 +513,14 @@ static const struct ld_option ld_options[] =
-   { {"pop-state", no_argument, NULL, OPTION_POP_STATE},
-     '\0', NULL, N_("Pop state of flags governing input file handling"),
+@@ -530,6 +530,14 @@ static const struct ld_option ld_options[] =
+   { {"orphan-handling", required_argument, NULL, OPTION_ORPHAN_HANDLING},
+     '\0', N_("=MODE"), N_("Control how orphan sections are handled."),
      TWO_DASHES },
 +  { {"no-poison-system-directories", no_argument, NULL,
 +     OPTION_NO_POISON_SYSTEM_DIRECTORIES},
@@ -258,9 +253,9 @@ index 4812c97..21b49df 100644
  };
  
  #define OPTION_COUNT ARRAY_SIZE (ld_options)
-@@ -1474,6 +1482,14 @@ parse_args (unsigned argc, char **argv)
- 	      free (oldp);
- 	    }
+@@ -1550,6 +1558,14 @@ parse_args (unsigned argc, char **argv)
+ 	    einfo (_("%P%F: invalid argument to option"
+ 		     " \"--orphan-handling\"\n"));
  	  break;
 +
 +	case OPTION_NO_POISON_SYSTEM_DIRECTORIES:
@@ -274,5 +269,5 @@ index 4812c97..21b49df 100644
      }
  
 -- 
-2.1.4
+2.7.0
 

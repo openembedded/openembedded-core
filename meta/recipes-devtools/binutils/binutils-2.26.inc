@@ -18,7 +18,7 @@ BINUPV = "${@binutils_branch_version(d)}"
 
 UPSTREAM_CHECK_GITTAGREGEX = "binutils-(?P<pver>\d+_(\d_?)*)"
 
-SRCREV = "2bd25930221dea4bf33c13a89c111514491440e2"
+SRCREV = "3c9d874373f2189cb704999b0ba39b9bbca91a61"
 SRC_URI = "\
      git://sourceware.org/git/binutils-gdb.git;branch=binutils-${BINUPV}-branch;protocol=git \
      file://0002-configure-widen-the-regexp-for-SH-architectures.patch \
@@ -28,16 +28,10 @@ SRC_URI = "\
      file://0006-Use-libtool-2.4.patch \
      file://0007-Add-the-armv5e-architecture-to-binutils.patch \
      file://0008-don-t-let-the-distro-compiler-point-to-the-wrong-ins.patch \
-     file://0009-Upstream-Status-Inappropriate-distribution-codesourc.patch \
+     file://0009-warn-for-uses-of-system-directories-when-cross-linki.patch \
      file://0010-Fix-rpath-in-libtool-when-sysroot-is-enabled.patch \
      file://0011-Change-default-emulation-for-mips64-linux.patch \
      file://0012-Add-XLP-instructions-support.patch \
-     file://0013-Fix-an-internal-error-in-do_print_to_mapfile-seen-wi.patch \
-     file://0014-gold-arm-Skip-pic-check-for-R_ARM_REL32.patch \
-     file://0015-Fix-dynamic-list-so-that-symbols-not-in-the-list-are.patch \
-     file://0016-This-patch-adds-IFUNC-support-for-arm-gold-backend.patch \
-     file://binutils-octeon3.patch \
-     file://add-thunderx-support-for-gas.patch \
      "
 S  = "${WORKDIR}/git"
 
