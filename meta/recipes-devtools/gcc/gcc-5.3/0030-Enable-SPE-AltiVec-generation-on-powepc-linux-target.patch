@@ -19,11 +19,11 @@ Signed-off-by: Alexandru-Cezar Sardan <alexandru.sardan@freescale.com>
  gcc/config.gcc | 9 ++++++++-
  1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/gcc/config.gcc b/gcc/config.gcc
-index dd0739d..3825bd5 100644
---- a/gcc/config.gcc
-+++ b/gcc/config.gcc
-@@ -2343,7 +2343,14 @@ powerpc-*-rtems*)
+Index: gcc-5.3.0/gcc/config.gcc
+===================================================================
+--- gcc-5.3.0.orig/gcc/config.gcc
++++ gcc-5.3.0/gcc/config.gcc
+@@ -2346,7 +2346,14 @@ powerpc-*-rtems*)
  	tmake_file="${tmake_file} rs6000/t-fprules rs6000/t-rtems rs6000/t-ppccomm"
  	;;
  powerpc*-*-linux*)
@@ -39,6 +39,14 @@ index dd0739d..3825bd5 100644
  	extra_options="${extra_options} rs6000/sysv4.opt"
  	tmake_file="${tmake_file} rs6000/t-fprules rs6000/t-ppccomm"
  	extra_objs="$extra_objs rs6000-linux.o"
--- 
-2.6.3
-
+Index: gcc-5.3.0/gcc/config/rs6000/linuxspe.h
+===================================================================
+--- gcc-5.3.0.orig/gcc/config/rs6000/linuxspe.h
++++ gcc-5.3.0/gcc/config/rs6000/linuxspe.h
+@@ -27,6 +27,3 @@
+ #undef	TARGET_DEFAULT
+ #define TARGET_DEFAULT MASK_STRICT_ALIGN
+ #endif
+-
+-#undef  ASM_DEFAULT_SPEC
+-#define	ASM_DEFAULT_SPEC "-mppc -mspe -me500"
