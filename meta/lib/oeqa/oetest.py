@@ -11,11 +11,14 @@ import os, re, mmap
 import unittest
 import inspect
 import subprocess
+import signal
 try:
     import bb
 except ImportError:
     pass
 import logging
+
+import oeqa.runtime
 from oeqa.utils.decorators import LogResults, gettag, getResults
 
 logger = logging.getLogger("BitBake")
@@ -326,3 +329,63 @@ def get_tests_list(testsuites, bbpath, type="runtime"):
                 add_auto_list(testpath)
 
     return testslist
+
+class TestContext(object):
+    def __init__(self, d, testslist, testsrequired):
+        self.d = d
+        self.testslist = testslist
+        self.testsrequired = testsrequired
+
+        self.filesdir = os.path.join(os.path.dirname(os.path.abspath(
+            oeqa.runtime.__file__)), "files")
+        self.imagefeatures = d.getVar("IMAGE_FEATURES", True).split()
+        self.distrofeatures = d.getVar("DISTRO_FEATURES", True).split()
+
+class ImageTestContext(TestContext):
+    def __init__(self, d, testslist, testsrequired, target, host_dumper):
+        super(ImageTestContext, self).__init__(d, testslist, testsrequired)
+
+        self.tagexp =  d.getVar("TEST_SUITES_TAGS", True)
+
+        self.target = target
+        self.host_dumper = host_dumper
+
+        manifest = os.path.join(d.getVar("DEPLOY_DIR_IMAGE", True),
+                d.getVar("IMAGE_LINK_NAME", True) + ".manifest")
+        nomanifest = d.getVar("IMAGE_NO_MANIFEST", True)
+        if nomanifest is None or nomanifest != "1":
+            try:
+                with open(manifest) as f:
+                    self.pkgmanifest = f.read()
+            except IOError as e:
+                bb.fatal("No package manifest file found. Did you build the image?\n%s" % e)
+        else:
+            self.pkgmanifest = ""
+
+        self.sigterm = False
+        self.origsigtermhandler = signal.getsignal(signal.SIGTERM)
+        signal.signal(signal.SIGTERM, self._sigterm_exception)
+
+    def _sigterm_exception(self, signum, stackframe):
+        bb.warn("TestImage received SIGTERM, shutting down...")
+        self.sigterm = True
+        self.target.stop()
+
+class SDKTestContext(TestContext):
+    def __init__(self, d, testslist, testsrequired, sdktestdir, sdkenv):
+        super(SDKTestContext, self).__init__(d, testslist, testsrequired)
+
+        self.sdktestdir = sdktestdir
+        self.sdkenv = sdkenv
+
+        try:
+            with open(d.getVar("SDK_TARGET_MANIFEST", True)) as f:
+                 self.pkgmanifest = f.read()
+        except IOError as e:
+            bb.fatal("No package manifest file found. Did you build the sdk image?\n%s" % e)
+
+        try:
+            with open(d.getVar("SDK_HOST_MANIFEST", True)) as f:
+                self.hostpkgmanifest = f.read()
+        except IOError as e:
+            bb.fatal("No host package manifest file found. Did you build the sdk image?\n%s" % e)

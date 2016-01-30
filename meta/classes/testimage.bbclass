@@ -195,7 +195,8 @@ def testimage_main(d):
     import oeqa.runtime
     import time
     import signal
-    from oeqa.oetest import loadTests, runTests, get_test_suites, get_tests_list
+    from oeqa.oetest import loadTests, runTests, \
+        get_test_suites, get_tests_list, ImageTestContext
     from oeqa.targetcontrol import get_target_controller
     from oeqa.utils.dump import get_host_dumper
 
@@ -212,48 +213,14 @@ def testimage_main(d):
     testslist = get_tests_list(get_test_suites(d), d.getVar("BBPATH", True).split(':'))
     testsrequired = [t for t in d.getVar("TEST_SUITES", True).split() if t != "auto"]
 
-    tagexp = d.getVar("TEST_SUITES_TAGS", True)
-
     # we need the host dumper in test context
     host_dumper = get_host_dumper(d)
 
     # the robot dance
     target = get_target_controller(d)
 
-    class TestContext(object):
-        def __init__(self):
-            self.d = d
-            self.testslist = testslist
-            self.tagexp = tagexp
-            self.testsrequired = testsrequired
-            self.filesdir = os.path.join(os.path.dirname(os.path.abspath(oeqa.runtime.__file__)),"files")
-            self.target = target
-            self.host_dumper = host_dumper
-            self.imagefeatures = d.getVar("IMAGE_FEATURES", True).split()
-            self.distrofeatures = d.getVar("DISTRO_FEATURES", True).split()
-            manifest = os.path.join(d.getVar("DEPLOY_DIR_IMAGE", True), d.getVar("IMAGE_LINK_NAME", True) + ".manifest")
-            nomanifest = d.getVar("IMAGE_NO_MANIFEST", True)
-
-            self.sigterm = False
-            self.origsigtermhandler = signal.getsignal(signal.SIGTERM)
-            signal.signal(signal.SIGTERM, self.sigterm_exception)
-
-            if nomanifest is None or nomanifest != "1":
-                try:
-                    with open(manifest) as f:
-                        self.pkgmanifest = f.read()
-                except IOError as e:
-                    bb.fatal("No package manifest file found. Did you build the image?\n%s" % e)
-            else:
-                self.pkgmanifest = ""
-
-        def sigterm_exception(self, signum, stackframe):
-            bb.warn("TestImage received SIGTERM, shutting down...")
-            self.sigterm = True
-            self.target.stop()
-
     # test context
-    tc = TestContext()
+    tc = ImageTestContext(d, testslist, testsrequired, target, host_dumper)
 
     # this is a dummy load of tests
     # we are doing that to find compile errors in the tests themselves
@@ -263,7 +230,6 @@ def testimage_main(d):
     except Exception as e:
         import traceback
         bb.fatal("Loading tests failed:\n%s" % traceback.format_exc())
-
 
     if export:
         signal.signal(signal.SIGTERM, tc.origsigtermhandler)
