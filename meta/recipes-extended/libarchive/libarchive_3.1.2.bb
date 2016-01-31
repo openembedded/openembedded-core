@@ -7,9 +7,10 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=b4e3ffd607d6686c6cb2f63394370841"
 
 DEPENDS = "e2fsprogs-native"
 
-PACKAGECONFIG ?= "libxml2 zlib bz2"
+PACKAGECONFIG ?= "zlib bz2"
 
 PACKAGECONFIG_append_class-target = "\
+	libxml2 \
 	${@bb.utils.contains('DISTRO_FEATURES', 'acl', 'acl', '', d)} \
 	${@bb.utils.contains('DISTRO_FEATURES', 'xattr', 'xattr', '', d)} \
 	${@bb.utils.contains('DISTRO_FEATURES', 'largefile', 'largefile', '', d)} \
