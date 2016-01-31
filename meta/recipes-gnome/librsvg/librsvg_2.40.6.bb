@@ -14,7 +14,11 @@ inherit autotools pkgconfig gnomebase gtk-doc pixbufcache
 
 GNOME_COMPRESS_TYPE = "xz"
 
-SRC_URI += "file://gtk-option.patch"
+SRC_URI += "file://gtk-option.patch \
+            file://CVE-2015-7558_1.patch \
+            file://CVE-2015-7558_2.patch \
+            file://CVE-2015-7558_3.patch \
+            "
 
 SRC_URI[archive.md5sum] = "259fd160b47ec11f3c27d7e18e507c99"
 SRC_URI[archive.sha256sum] = "8af349f241677b04b7a1ea6b9b33a6343e781bcccc8a09d00208a47342584f06"
