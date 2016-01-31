@@ -114,7 +114,15 @@ def testsdkext_main(d):
         bb.plain("Running SDK Compatibility tests ...")
         run_test_context(SDKTestContext, d, testdir, tcname, pn)
     finally:
-        bb.utils.remove(testdir, True)
+        pass
+
+    try:
+        bb.plain("Running Extensible SDK tests ...")
+        run_test_context(SDKExtTestContext, d, testdir, tcname, pn)
+    finally:
+        pass
+
+    bb.utils.remove(testdir, True)
 
 testsdkext_main[vardepsexclude] =+ "BB_ORIGENV"
 

@@ -19,6 +19,7 @@ except ImportError:
 import logging
 
 import oeqa.runtime
+import oeqa.sdkext
 from oeqa.utils.decorators import LogResults, gettag, getResults
 
 logger = logging.getLogger("BitBake")
@@ -125,6 +126,9 @@ class oeSDKTest(oeTest):
 
     def _run(self, cmd):
         return subprocess.check_output(". %s > /dev/null; %s;" % (self.tc.sdkenv, cmd), shell=True)
+
+class oeSDKExtTest(oeSDKTest):
+    pass
 
 def getmodule(pos=2):
     # stack returns a list of tuples containg frame information
@@ -400,7 +404,13 @@ class SDKTestContext(TestContext):
         return [t for t in (self.d.getVar("TEST_SUITES_SDK", True) or \
                 "auto").split() if t != "auto"]
 
-class SDKExtTestContext(TestContext):
+class SDKExtTestContext(SDKTestContext):
+    def __init__(self, d, sdktestdir, sdkenv):
+        super(SDKExtTestContext, self).__init__(d, sdktestdir, sdkenv)
+
+        self.sdkextfilesdir = os.path.join(os.path.dirname(os.path.abspath(
+            oeqa.sdkext.__file__)), "files")
+
     def _get_test_namespace(self):
         return "sdkext"
 
