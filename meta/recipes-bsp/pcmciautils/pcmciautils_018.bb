@@ -1,7 +1,7 @@
 require pcmciautils.inc
 
 SRC_URI += "file://makefile_fix.patch \
-            file://0001-fix-a-parallel-building-issue.patch \
+            file://makefile_race.patch \
             file://lex_sys_types.patch \
 "
 
