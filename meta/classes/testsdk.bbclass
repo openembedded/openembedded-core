@@ -13,7 +13,7 @@ def testsdk_main(d):
     import oeqa.sdk
     import time
     import subprocess
-    from oeqa.oetest import loadTests, runTests, SDKTestContext
+    from oeqa.oetest import SDKTestContext
 
     pn = d.getVar("PN", True)
     bb.utils.mkdirhier(d.getVar("TEST_LOG_DIR", True))
@@ -40,13 +40,13 @@ def testsdk_main(d):
             # we are doing that to find compile errors in the tests themselves
             # before booting the image
             try:
-                loadTests(tc, "sdk")
+                tc.loadTests()
             except Exception as e:
                 import traceback
                 bb.fatal("Loading tests failed:\n%s" % traceback.format_exc())
 
             starttime = time.time()
-            result = runTests(tc, "sdk")
+            result = tc.runTests()
             stoptime = time.time()
             if result.wasSuccessful():
                 bb.plain("%s SDK(%s):%s - Ran %d test%s in %.3fs" % (pn, os.path.basename(tcname), os.path.basename(sdkenv),result.testsRun, result.testsRun != 1 and "s" or "", stoptime - starttime))

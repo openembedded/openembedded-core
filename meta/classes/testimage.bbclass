@@ -195,7 +195,7 @@ def testimage_main(d):
     import oeqa.runtime
     import time
     import signal
-    from oeqa.oetest import loadTests, runTests, ImageTestContext
+    from oeqa.oetest import ImageTestContext
     from oeqa.targetcontrol import get_target_controller
     from oeqa.utils.dump import get_host_dumper
 
@@ -219,7 +219,7 @@ def testimage_main(d):
     # we are doing that to find compile errors in the tests themselves
     # before booting the image
     try:
-        loadTests(tc)
+        tc.loadTests()
     except Exception as e:
         import traceback
         bb.fatal("Loading tests failed:\n%s" % traceback.format_exc())
@@ -233,7 +233,7 @@ def testimage_main(d):
         try:
             target.start()
             starttime = time.time()
-            result = runTests(tc)
+            result = tc.runTests()
             stoptime = time.time()
             if result.wasSuccessful():
                 bb.plain("%s - Ran %d test%s in %.3fs" % (pn, result.testsRun, result.testsRun != 1 and "s" or "", stoptime - starttime))

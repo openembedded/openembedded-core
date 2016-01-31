@@ -45,106 +45,6 @@ def filterByTagExp(testsuite, tagexp):
             caseList.append(filterByTagExp(each, tagexp))
     return testsuite.__class__(caseList)
 
-def loadTests(tc, type="runtime"):
-    if type == "runtime":
-        # set the context object passed from the test class
-        setattr(oeTest, "tc", tc)
-        # set ps command to use
-        setattr(oeRuntimeTest, "pscmd", "ps -ef" if oeTest.hasPackage("procps") else "ps")
-        # prepare test suite, loader and runner
-        suite = unittest.TestSuite()
-    elif type == "sdk":
-        # set the context object passed from the test class
-        setattr(oeTest, "tc", tc)
-    testloader = unittest.TestLoader()
-    testloader.sortTestMethodsUsing = None
-    suites = [testloader.loadTestsFromName(name) for name in tc.testslist]
-    suites = filterByTagExp(suites, getattr(tc, "tagexp", None))
-
-    def getTests(test):
-        '''Return all individual tests executed when running the suite.'''
-        # Unfortunately unittest does not have an API for this, so we have
-        # to rely on implementation details. This only needs to work
-        # for TestSuite containing TestCase.
-        method = getattr(test, '_testMethodName', None)
-        if method:
-            # leaf case: a TestCase
-            yield test
-        else:
-            # Look into TestSuite.
-            tests = getattr(test, '_tests', [])
-            for t1 in tests:
-                for t2 in getTests(t1):
-                    yield t2
-
-    # Determine dependencies between suites by looking for @skipUnlessPassed
-    # method annotations. Suite A depends on suite B if any method in A
-    # depends on a method on B.
-    for suite in suites:
-        suite.dependencies = []
-        suite.depth = 0
-        for test in getTests(suite):
-            methodname = getattr(test, '_testMethodName', None)
-            if methodname:
-                method = getattr(test, methodname)
-                depends_on = getattr(method, '_depends_on', None)
-                if depends_on:
-                    for dep_suite in suites:
-                        if depends_on in [getattr(t, '_testMethodName', None) for t in getTests(dep_suite)]:
-                            if dep_suite not in suite.dependencies and \
-                               dep_suite is not suite:
-                                suite.dependencies.append(dep_suite)
-                            break
-                    else:
-                        logger.warning("Test %s was declared as @skipUnlessPassed('%s') but that test is either not defined or not active. Will run the test anyway." %
-                                (test, depends_on))
-    # Use brute-force topological sort to determine ordering. Sort by
-    # depth (higher depth = must run later), with original ordering to
-    # break ties.
-    def set_suite_depth(suite):
-        for dep in suite.dependencies:
-            new_depth = set_suite_depth(dep) + 1
-            if new_depth > suite.depth:
-                suite.depth = new_depth
-        return suite.depth
-    for index, suite in enumerate(suites):
-        set_suite_depth(suite)
-        suite.index = index
-    suites.sort(cmp=lambda a,b: cmp((a.depth, a.index), (b.depth, b.index)))
-    return testloader.suiteClass(suites)
-
-_buffer = ""
-
-def custom_verbose(msg, *args, **kwargs):
-    global _buffer
-    if msg[-1] != "\n":
-        _buffer += msg
-    else:
-        _buffer += msg
-        try:
-            bb.plain(_buffer.rstrip("\n"), *args, **kwargs)
-        except NameError:
-            logger.info(_buffer.rstrip("\n"), *args, **kwargs)
-        _buffer = ""
-
-def runTests(tc, type="runtime"):
-
-    suite = loadTests(tc, type)
-    logger.info("Test modules  %s" % tc.testslist)
-    if hasattr(tc, "tagexp") and tc.tagexp:
-        logger.info("Filter test cases by tags: %s" % tc.tagexp)
-    logger.info("Found %s tests" % suite.countTestCases())
-    runner = unittest.TextTestRunner(verbosity=2)
-    try:
-        if bb.msg.loggerDefaultVerbose:
-            runner.stream.write = custom_verbose
-    except NameError:
-        # Not in bb environment?
-        pass
-    result = runner.run(suite)
-
-    return result
-
 @LogResults
 class oeTest(unittest.TestCase):
 
@@ -253,6 +153,19 @@ def skipModuleUnless(cond, reason):
     if not cond:
         skipModule(reason, 3)
 
+_buffer_logger = ""
+def custom_verbose(msg, *args, **kwargs):
+    global _buffer_logger
+    if msg[-1] != "\n":
+        _buffer_logger += msg
+    else:
+        _buffer_logger += msg
+        try:
+            bb.plain(_buffer_logger.rstrip("\n"), *args, **kwargs)
+        except NameError:
+            logger.info(_buffer_logger.rstrip("\n"), *args, **kwargs)
+        _buffer_logger = ""
+
 class TestContext(object):
     def __init__(self, d):
         self.d = d
@@ -324,6 +237,86 @@ class TestContext(object):
 
         return testslist
 
+    def loadTests(self):
+        setattr(oeTest, "tc", self)
+
+        testloader = unittest.TestLoader()
+        testloader.sortTestMethodsUsing = None
+        suites = [testloader.loadTestsFromName(name) for name in self.testslist]
+        suites = filterByTagExp(suites, getattr(self, "tagexp", None))
+
+        def getTests(test):
+            '''Return all individual tests executed when running the suite.'''
+            # Unfortunately unittest does not have an API for this, so we have
+            # to rely on implementation details. This only needs to work
+            # for TestSuite containing TestCase.
+            method = getattr(test, '_testMethodName', None)
+            if method:
+                # leaf case: a TestCase
+                yield test
+            else:
+                # Look into TestSuite.
+                tests = getattr(test, '_tests', [])
+                for t1 in tests:
+                    for t2 in getTests(t1):
+                        yield t2
+
+        # Determine dependencies between suites by looking for @skipUnlessPassed
+        # method annotations. Suite A depends on suite B if any method in A
+        # depends on a method on B.
+        for suite in suites:
+            suite.dependencies = []
+            suite.depth = 0
+            for test in getTests(suite):
+                methodname = getattr(test, '_testMethodName', None)
+                if methodname:
+                    method = getattr(test, methodname)
+                    depends_on = getattr(method, '_depends_on', None)
+                    if depends_on:
+                        for dep_suite in suites:
+                            if depends_on in [getattr(t, '_testMethodName', None) for t in getTests(dep_suite)]:
+                                if dep_suite not in suite.dependencies and \
+                                   dep_suite is not suite:
+                                    suite.dependencies.append(dep_suite)
+                                break
+                        else:
+                            logger.warning("Test %s was declared as @skipUnlessPassed('%s') but that test is either not defined or not active. Will run the test anyway." %
+                                    (test, depends_on))
+
+        # Use brute-force topological sort to determine ordering. Sort by
+        # depth (higher depth = must run later), with original ordering to
+        # break ties.
+        def set_suite_depth(suite):
+            for dep in suite.dependencies:
+                new_depth = set_suite_depth(dep) + 1
+                if new_depth > suite.depth:
+                    suite.depth = new_depth
+            return suite.depth
+
+        for index, suite in enumerate(suites):
+            set_suite_depth(suite)
+            suite.index = index
+        suites.sort(cmp=lambda a,b: cmp((a.depth, a.index), (b.depth, b.index)))
+
+        self.suite = testloader.suiteClass(suites)
+
+        return self.suite
+
+    def runTests(self):
+        logger.info("Test modules  %s" % self.testslist)
+        if hasattr(self, "tagexp") and self.tagexp:
+            logger.info("Filter test cases by tags: %s" % self.tagexp)
+        logger.info("Found %s tests" % self.suite.countTestCases())
+        runner = unittest.TextTestRunner(verbosity=2)
+        try:
+            if bb.msg.loggerDefaultVerbose:
+                runner.stream.write = custom_verbose
+        except NameError:
+            # Not in bb environment?
+            pass
+
+        return runner.run(self.suite)
+
 class ImageTestContext(TestContext):
     def __init__(self, d, target, host_dumper):
         super(ImageTestContext, self).__init__(d)
@@ -373,6 +366,10 @@ class ImageTestContext(TestContext):
 
     def _get_test_suites_required(self):
         return [t for t in self.d.getVar("TEST_SUITES", True).split() if t != "auto"]
+
+    def loadTests(self):
+        super(ImageTestContext, self).loadTests()
+        setattr(oeRuntimeTest, "pscmd", "ps -ef" if oeTest.hasPackage("procps") else "ps")
 
 class SDKTestContext(TestContext):
     def __init__(self, d, sdktestdir, sdkenv):
