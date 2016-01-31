@@ -75,16 +75,24 @@ TEST_LOG_SDKEXT_DIR ?= "${WORKDIR}/testsdkext"
 TESTSDKEXTLOCK = "${TMPDIR}/testsdkext.lock"
 
 def testsdkext_main(d):
-    import unittest
     import os
-    import glob
     import oeqa.sdkext
-    import time
     import subprocess
-    from oeqa.oetest import loadTests, runTests, get_test_suites, get_tests_list
+    from oeqa.oetest import SDKTestContext, SDKExtTestContext
     from bb.utils import export_proxies
 
+    # extensible sdk use network
     export_proxies(d)
+
+    # extensible sdk shows a warning if found bitbake in the path
+    # because can cause problems so clean it
+    new_path = ''
+    for p in os.environ['PATH'].split(':'):
+       if 'bitbake/bin' in p or 'poky/scripts' in p:
+           continue
+       new_path = new_path + p + ':'
+    new_path = new_path[:-1]
+    os.environ['PATH'] = new_path
 
     pn = d.getVar("PN", True)
     bb.utils.mkdirhier(d.getVar("TEST_LOG_SDKEXT_DIR", True))
@@ -98,9 +106,15 @@ def testsdkext_main(d):
     bb.utils.remove(testdir, True)
     bb.utils.mkdirhier(testdir)
     try:
-        subprocess.check_output("%s -y -d %s" % (tcname, testdir), shell=True)
+        subprocess.check_output("%s -y -d %s/tc" % (tcname, testdir), shell=True)
     except subprocess.CalledProcessError as e:
         bb.fatal("Couldn't install the SDK EXT:\n%s" % e.output)
+
+    try:
+        bb.plain("Running SDK Compatibility tests ...")
+        run_test_context(SDKTestContext, d, testdir, tcname, pn)
+    finally:
+        bb.utils.remove(testdir, True)
 
 testsdkext_main[vardepsexclude] =+ "BB_ORIGENV"
 
