@@ -7,6 +7,7 @@ EXTRA_OECONF += "--with-sysroot=/ \
                 --enable-install-libbfd \
                 --enable-install-libiberty \
                 --enable-shared \
+                --with-system-zlib \
                 "
 
 EXTRA_OECONF_class-native = "--enable-targets=all \
