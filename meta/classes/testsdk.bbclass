@@ -5,13 +5,40 @@
 TEST_LOG_DIR ?= "${WORKDIR}/testimage"
 TESTSDKLOCK = "${TMPDIR}/testsdk.lock"
 
-def testsdk_main(d):
-    import unittest
-    import os
+def run_test_context(CTestContext, d, testdir, tcname, pn):
     import glob
-    import oeqa.runtime
-    import oeqa.sdk
     import time
+
+    targets = glob.glob(d.expand(testdir + "/tc/environment-setup-*"))
+    for sdkenv in targets:
+        bb.plain("Testing %s" % sdkenv)
+        tc = CTestContext(d, testdir, sdkenv)
+
+        # this is a dummy load of tests
+        # we are doing that to find compile errors in the tests themselves
+        # before booting the image
+        try:
+            tc.loadTests()
+        except Exception as e:
+            import traceback
+            bb.fatal("Loading tests failed:\n%s" % traceback.format_exc())
+
+        starttime = time.time()
+        result = tc.runTests()
+        stoptime = time.time()
+        if result.wasSuccessful():
+            bb.plain("%s SDK(%s):%s - Ran %d test%s in %.3fs" % (pn, os.path.basename(tcname), os.path.basename(sdkenv),result.testsRun, result.testsRun != 1 and "s" or "", stoptime - starttime))
+            msg = "%s - OK - All required tests passed" % pn
+            skipped = len(result.skipped)
+            if skipped:
+                msg += " (skipped=%d)" % skipped
+            bb.plain(msg)
+        else:
+            raise bb.build.FuncFailed("%s - FAILED - check the task log and the commands log" % pn )
+
+def testsdk_main(d):
+    import os
+    import oeqa.sdk
     import subprocess
     from oeqa.oetest import SDKTestContext
 
@@ -31,32 +58,7 @@ def testsdk_main(d):
         bb.fatal("Couldn't install the SDK:\n%s" % e.output)
 
     try:
-        targets = glob.glob(d.expand(sdktestdir + "/tc/environment-setup-*"))
-        for sdkenv in targets:
-            bb.plain("Testing %s" % sdkenv)
-            tc = SDKTestContext(d, sdktestdir, sdkenv)
-
-            # this is a dummy load of tests
-            # we are doing that to find compile errors in the tests themselves
-            # before booting the image
-            try:
-                tc.loadTests()
-            except Exception as e:
-                import traceback
-                bb.fatal("Loading tests failed:\n%s" % traceback.format_exc())
-
-            starttime = time.time()
-            result = tc.runTests()
-            stoptime = time.time()
-            if result.wasSuccessful():
-                bb.plain("%s SDK(%s):%s - Ran %d test%s in %.3fs" % (pn, os.path.basename(tcname), os.path.basename(sdkenv),result.testsRun, result.testsRun != 1 and "s" or "", stoptime - starttime))
-                msg = "%s - OK - All required tests passed" % pn
-                skipped = len(result.skipped)
-                if skipped:
-                    msg += " (skipped=%d)" % skipped
-                bb.plain(msg)
-            else:
-                raise bb.build.FuncFailed("%s - FAILED - check the task log and the commands log" % pn )
+        run_test_context(SDKTestContext, d, sdktestdir, tcname, pn)
     finally:
         bb.utils.remove(sdktestdir, True)
 
