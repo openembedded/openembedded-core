@@ -382,14 +382,18 @@ class SDKTestContext(TestContext):
         self.sdktestdir = sdktestdir
         self.sdkenv = sdkenv
 
+        if not hasattr(self, 'target_manifest'):
+            self.target_manifest = d.getVar("SDK_TARGET_MANIFEST", True)
         try:
-            with open(d.getVar("SDK_TARGET_MANIFEST", True)) as f:
+            with open(self.target_manifest) as f:
                  self.pkgmanifest = f.read()
         except IOError as e:
             bb.fatal("No package manifest file found. Did you build the sdk image?\n%s" % e)
 
+        if not hasattr(self, 'host_manifest'):
+            self.host_manifest = d.getVar("SDK_HOST_MANIFEST", True)
         try:
-            with open(d.getVar("SDK_HOST_MANIFEST", True)) as f:
+            with open(self.host_manifest) as f:
                 self.hostpkgmanifest = f.read()
         except IOError as e:
             bb.fatal("No host package manifest file found. Did you build the sdk image?\n%s" % e)
@@ -406,6 +410,9 @@ class SDKTestContext(TestContext):
 
 class SDKExtTestContext(SDKTestContext):
     def __init__(self, d, sdktestdir, sdkenv):
+        self.target_manifest = d.getVar("SDK_EXT_TARGET_MANIFEST", True)
+        self.host_manifest = d.getVar("SDK_EXT_HOST_MANIFEST", True)
+
         super(SDKExtTestContext, self).__init__(d, sdktestdir, sdkenv)
 
         self.sdkextfilesdir = os.path.join(os.path.dirname(os.path.abspath(
