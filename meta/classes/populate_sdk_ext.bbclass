@@ -19,7 +19,12 @@ SDK_EXT = ""
 SDK_EXT_task-populate-sdk-ext = "-ext"
 
 SDK_LOCAL_CONF_WHITELIST ?= ""
-SDK_LOCAL_CONF_BLACKLIST ?= "CONF_VERSION BB_NUMBER_THREADS PARALLEL_MAKE PRSERV_HOST"
+SDK_LOCAL_CONF_BLACKLIST ?= "CONF_VERSION \
+                             BB_NUMBER_THREADS \
+                             PARALLEL_MAKE \
+                             PRSERV_HOST \
+                             SSTATE_MIRRORS \
+                            "
 SDK_INHERIT_BLACKLIST ?= "buildhistory icecc"
 SDK_UPDATE_URL ?= ""
 
