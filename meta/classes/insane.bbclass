@@ -38,7 +38,7 @@ ERROR_QA ?= "dev-so debug-deps dev-deps debug-files arch pkgconfig la \
             perms dep-cmp pkgvarcheck perm-config perm-line perm-link \
             split-strip packages-list pkgv-undefined var-undefined \
             version-going-backwards expanded-d invalid-chars \
-            license-checksum \
+            license-checksum dev-elf \
             "
 FAKEROOT_QA = "host-user-contaminated"
 FAKEROOT_QA[doc] = "QA tests which need to run under fakeroot. If any \
@@ -273,6 +273,17 @@ def package_qa_check_dev(path, name, d, elf, messages):
 
     if not name.endswith("-dev") and not name.endswith("-dbg") and not name.endswith("-ptest") and not name.startswith("nativesdk-") and path.endswith(".so") and os.path.islink(path):
         package_qa_add_message(messages, "dev-so", "non -dev/-dbg/nativesdk- package contains symlink .so: %s path '%s'" % \
+                 (name, package_qa_clean_path(path,d)))
+
+QAPATHTEST[dev-elf] = "package_qa_check_dev_elf"
+def package_qa_check_dev_elf(path, name, d, elf, messages):
+    """
+    Check that -dev doesn't contain real shared libraries.  The test has to
+    check that the file is not a link and is an ELF object as some recipes
+    install link-time .so files that are linker scripts.
+    """
+    if name.endswith("-dev") and path.endswith(".so") and not os.path.islink(path) and elf:
+        package_qa_add_message(messages, "dev-elf", "-dev package contains non-symlink .so: %s path '%s'" % \
                  (name, package_qa_clean_path(path,d)))
 
 QAPATHTEST[staticdev] = "package_qa_check_staticdev"
