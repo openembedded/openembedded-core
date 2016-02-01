@@ -2,6 +2,16 @@
 #
 # Released under the MIT license (see COPYING.MIT)
 
+# testsdk.bbclass enables testing for SDK and Extensible SDK
+#
+# For run SDK tests you need to do,
+# - bitbake core-image-sato -c populate_sdk
+# - bitbake core-image-sato -c testsdk
+#
+# For run eSDK tests you need to do,
+# - bitbake core-image-sato -c populate_sdk_ext
+# - bitbake core-image-sato -c testsdkext
+
 TEST_LOG_DIR ?= "${WORKDIR}/testimage"
 TESTSDKLOCK = "${TMPDIR}/testsdk.lock"
 
