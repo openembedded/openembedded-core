@@ -145,8 +145,7 @@ class SystemdJournalTests(SystemdTest):
         except AssertionError:
             self.fail("Error occurred while calling journalctl")
         if not len(output):
-            self.fail("Error: unable to obtain the startup time from\
-                    systemd journal")
+            self.fail("Error, unable to get startup time from systemd journal")
 
         # check for the regular expression items that match the startup time
         for line in output.split('\n'):
@@ -156,20 +155,23 @@ class SystemdJournalTests(SystemdTest):
         if check_match:
             print "%s" % check_match
         else:
-            self.fail("Error while obtaining the boot time from journalctl")
+            self.skipTest("Error at obtaining the boot time from journalctl")
         boot_time_sec = 0
 
         # get the numeric values from the string and convert them to seconds
         # same data will be placed in list and string for manipulation
         l_boot_time = check_match.split(" ")[-2:]
         s_boot_time = " ".join(l_boot_time)
-        # Obtain the minutes it took to boot
-        if l_boot_time[0].endswith('min') and l_boot_time[0][0].isdigit():
-            boot_time_min = s_boot_time.split("min")[0]
-            # convert to seconds and accumulate it
-            boot_time_sec += int(boot_time_min) * 60
-        # Obtain the seconds it took to boot and accumulate
-        boot_time_sec += float(l_boot_time[1].split("s")[0])
+        try:
+            # Obtain the minutes it took to boot
+            if l_boot_time[0].endswith('min') and l_boot_time[0][0].isdigit():
+                boot_time_min = s_boot_time.split("min")[0]
+                # convert to seconds and accumulate it
+                boot_time_sec += int(boot_time_min) * 60
+            # Obtain the seconds it took to boot and accumulate
+            boot_time_sec += float(l_boot_time[1].split("s")[0])
+        except ValueError:
+            self.skipTest("Error when parsing time from boot string")
         #Assert the target boot time against systemd's unit start timeout
         if boot_time_sec > systemd_TimeoutStartSec:
             print "Target boot time %s exceeds systemd's TimeoutStartSec %s"\
