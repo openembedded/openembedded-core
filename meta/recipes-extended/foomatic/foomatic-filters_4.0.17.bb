@@ -18,6 +18,7 @@ LIC_FILES_CHKSUM = "file://${WORKDIR}/foomatic-filters-${PV}/COPYING;md5=393a5ca
 SRC_URI = "http://www.openprinting.org/download/foomatic/foomatic-filters-${PV}.tar.gz"
 
 SRC_URI += "file://CVE-2015-8560.patch \
+            file://CVE-2015-8327.patch \
            "
 
 SRC_URI[md5sum] = "b05f5dcbfe359f198eef3df5b283d896"
