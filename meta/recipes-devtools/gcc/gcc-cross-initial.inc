@@ -22,7 +22,6 @@ EXTRA_OECONF = "\
     --disable-multilib \
     --disable-__cxa_atexit \
     --enable-languages=c \
-    ${OPTSPACE} \
     --program-prefix=${TARGET_PREFIX} \
     --with-sysroot=/not/exist \
     --with-build-sysroot=${GCCCROSS_BUILDSYSROOT} \
