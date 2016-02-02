@@ -19,7 +19,7 @@ def image_buildinfo_outputvars(vars, listvars, d):
     ret = ""
     for var in vars:
         value = d.getVar(var, True) or ""
-        if (d.getVarFlag(var, 'type') == "list"):
+        if (d.getVarFlag(var, 'type', True) == "list"):
             value = oe.utils.squashspaces(value)
         ret += "%s = %s\n" % (var, value)
     return ret.rstrip('\n')

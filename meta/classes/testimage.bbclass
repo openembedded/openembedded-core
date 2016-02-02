@@ -194,7 +194,7 @@ def exportTests(d,tc):
     savedata["target"]["server_ip"] = tc.target.server_ip or d.getVar("TEST_SERVER_IP", True)
 
     keys = [ key for key in d.keys() if not key.startswith("_") and not key.startswith("BB") \
-            and not key.startswith("B_pn") and not key.startswith("do_") and not d.getVarFlag(key, "func")]
+            and not key.startswith("B_pn") and not key.startswith("do_") and not d.getVarFlag(key, "func", True)]
     for key in keys:
         try:
             savedata["d"][key] = d.getVar(key, True)

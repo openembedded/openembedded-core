@@ -416,10 +416,10 @@ def find_license_files(d):
 
         for lic_dir in license_source_dirs:
             if not os.path.isfile(os.path.join(lic_dir, license_type)):
-                if d.getVarFlag('SPDXLICENSEMAP', license_type) != None:
+                if d.getVarFlag('SPDXLICENSEMAP', license_type, True) != None:
                     # Great, there is an SPDXLICENSEMAP. We can copy!
                     bb.debug(1, "We need to use a SPDXLICENSEMAP for %s" % (license_type))
-                    spdx_generic = d.getVarFlag('SPDXLICENSEMAP', license_type)
+                    spdx_generic = d.getVarFlag('SPDXLICENSEMAP', license_type, True)
                     license_source = lic_dir
                     break
             elif os.path.isfile(os.path.join(lic_dir, license_type)):
@@ -435,14 +435,14 @@ def find_license_files(d):
 
             # The user may attempt to use NO_GENERIC_LICENSE for a generic license which doesn't make sense
             # and should not be allowed, warn the user in this case.
-            if d.getVarFlag('NO_GENERIC_LICENSE', license_type):
+            if d.getVarFlag('NO_GENERIC_LICENSE', license_type, True):
                 bb.warn("%s: %s is a generic license, please don't use NO_GENERIC_LICENSE for it." % (pn, license_type))
 
-        elif d.getVarFlag('NO_GENERIC_LICENSE', license_type):
+        elif d.getVarFlag('NO_GENERIC_LICENSE', license_type, True):
             # if NO_GENERIC_LICENSE is set, we copy the license files from the fetched source
             # of the package rather than the license_source_dirs.
             for (basename, path) in lic_files_paths:
-                if d.getVarFlag('NO_GENERIC_LICENSE', license_type) == basename:
+                if d.getVarFlag('NO_GENERIC_LICENSE', license_type, True) == basename:
                     lic_files_paths.append(("generic_" + license_type, path))
                     break
         else:
@@ -510,7 +510,7 @@ def expand_wildcard_licenses(d, wildcard_licenses):
     spdxmapkeys = d.getVarFlags('SPDXLICENSEMAP').keys()
     for wld_lic in wildcard_licenses:
         spdxflags = fnmatch.filter(spdxmapkeys, wld_lic)
-        licenses += [d.getVarFlag('SPDXLICENSEMAP', flag) for flag in spdxflags]
+        licenses += [d.getVarFlag('SPDXLICENSEMAP', flag, True) for flag in spdxflags]
 
     spdx_lics = (d.getVar('SRC_DISTRIBUTE_LICENSES', False) or '').split()
     for wld_lic in wildcard_licenses:

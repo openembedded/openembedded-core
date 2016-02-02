@@ -28,7 +28,7 @@ MULTILIBRE_ALLOW_REP = "${OPKGLIBDIR}/opkg|/usr/lib/opkg"
 python () {
 
     if d.getVar('BUILD_IMAGES_FROM_FEEDS', True):
-        flags = d.getVarFlag('do_rootfs', 'recrdeptask')
+        flags = d.getVarFlag('do_rootfs', 'recrdeptask', True)
         flags = flags.replace("do_package_write_ipk", "")
         flags = flags.replace("do_deploy", "")
         flags = flags.replace("do_populate_sysroot", "")

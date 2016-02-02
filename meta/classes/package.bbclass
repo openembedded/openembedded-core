@@ -429,7 +429,7 @@ def get_package_additional_metadata (pkg_type, d):
         if d.getVar(key, False) is None:
             continue
         d.setVarFlag(key, "type", "list")
-        if d.getVarFlag(key, "separator") is None:
+        if d.getVarFlag(key, "separator", True) is None:
             d.setVarFlag(key, "separator", "\\n")
         metadata_fields = [field.strip() for field in oe.data.typed_value(key, d)]
         return "\n".join(metadata_fields).strip()
@@ -1916,7 +1916,7 @@ python package_depchains() {
 
     for suffix in pkgs:
         for pkg in pkgs[suffix]:
-            if d.getVarFlag('RRECOMMENDS_' + pkg, 'nodeprrecs'):
+            if d.getVarFlag('RRECOMMENDS_' + pkg, 'nodeprrecs', True):
                 continue
             (base, func) = pkgs[suffix][pkg]
             if suffix == "-dev":

@@ -51,7 +51,7 @@ python () {
             # Dummy value because the default function can't be called with blank SRC_URI
             d.setVar('SRCPV', '999')
 
-        tasks = filter(lambda k: d.getVarFlag(k, "task"), d.keys())
+        tasks = filter(lambda k: d.getVarFlag(k, "task", True), d.keys())
 
         for task in tasks:
             if task.endswith("_setscene"):
