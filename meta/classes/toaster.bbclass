@@ -159,7 +159,7 @@ python toaster_image_dumpdata() {
             except OSError as e:
                 bb.event.fire(bb.event.MetadataEvent("OSErrorException", e), d)
 
-    bb.event.fire(bb.event.MetadataEvent("ImageFileSize",image_info_data), d)
+    bb.event.fire(bb.event.MetadataEvent("ImageFileSize", image_info_data), d)
 }
 
 python toaster_artifact_dumpdata() {
@@ -175,14 +175,12 @@ python toaster_artifact_dumpdata() {
         for fn in filenames:
             try:
                 artifact_path = os.path.join(dirpath, fn)
-                filestat = os.stat(artifact_path)
                 if not os.path.islink(artifact_path):
-                    artifact_info_data[artifact_path] = filestat.st_size
+                    artifact_info_data[artifact_path] = os.stat(artifact_path).st_size
             except OSError as e:
-                import sys
                 bb.event.fire(bb.event.MetadataEvent("OSErrorException", e), d)
 
-    bb.event.fire(bb.event.MetadataEvent("ArtifactFileSize",artifact_info_data), d)
+    bb.event.fire(bb.event.MetadataEvent("ArtifactFileSize", artifact_info_data), d)
 }
 
 # collect list of buildstats files based on fired events; when the build completes, collect all stats and fire an event with collected data
@@ -357,9 +355,11 @@ toaster_buildhistory_dump[eventmask] = "bb.event.BuildCompleted"
 do_package[postfuncs] += "toaster_package_dumpdata "
 do_package[vardepsexclude] += "toaster_package_dumpdata "
 
-do_rootfs[postfuncs] += "toaster_image_dumpdata "
+do_image_complete[postfuncs] += "toaster_image_dumpdata "
+do_image_complete[vardepsexclude] += "toaster_image_dumpdata "
+
 do_rootfs[postfuncs] += "toaster_licensemanifest_dump "
-do_rootfs[vardepsexclude] += "toaster_image_dumpdata toaster_licensemanifest_dump "
+do_rootfs[vardepsexclude] += "toaster_licensemanifest_dump "
 
 do_populate_sdk[postfuncs] += "toaster_artifact_dumpdata "
 do_populate_sdk[vardepsexclude] += "toaster_artifact_dumpdata "
