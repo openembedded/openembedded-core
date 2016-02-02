@@ -112,7 +112,7 @@ def exportTests(d,tc):
     savedata["host_dumper"] = {}
     for key in tc.__dict__:
         # special cases
-        if key != "d" and key != "target" and key != "host_dumper":
+        if key not in ['d', 'target', 'host_dumper', 'suite']:
             savedata[key] = getattr(tc, key)
     savedata["target"]["ip"] = tc.target.ip or d.getVar("TEST_TARGET_IP", True)
     savedata["target"]["server_ip"] = tc.target.server_ip or d.getVar("TEST_SERVER_IP", True)
