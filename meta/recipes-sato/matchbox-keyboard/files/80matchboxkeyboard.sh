@@ -1,7 +1,6 @@
 #!/bin/sh
 
 . /etc/formfactor/config
-export GTK_IM_MODULE_FILE="/etc/gtk-2.0/gtk.immodules"
 
 CMD=""
 
