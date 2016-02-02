@@ -5,14 +5,14 @@
 TEST_LOG_DIR ?= "${WORKDIR}/testimage"
 TESTSDKLOCK = "${TMPDIR}/testsdk.lock"
 
-def run_test_context(CTestContext, d, testdir, tcname, pn):
+def run_test_context(CTestContext, d, testdir, tcname, pn, *args):
     import glob
     import time
 
     targets = glob.glob(d.expand(testdir + "/tc/environment-setup-*"))
     for sdkenv in targets:
         bb.plain("Testing %s" % sdkenv)
-        tc = CTestContext(d, testdir, sdkenv)
+        tc = CTestContext(d, testdir, sdkenv, args)
 
         # this is a dummy load of tests
         # we are doing that to find compile errors in the tests themselves
@@ -112,7 +112,7 @@ def testsdkext_main(d):
 
     try:
         bb.plain("Running SDK Compatibility tests ...")
-        run_test_context(SDKTestContext, d, testdir, tcname, pn)
+        run_test_context(SDKExtTestContext, d, testdir, tcname, pn, True)
     finally:
         pass
 

@@ -376,7 +376,7 @@ class ImageTestContext(TestContext):
         setattr(oeRuntimeTest, "pscmd", "ps -ef" if oeTest.hasPackage("procps") else "ps")
 
 class SDKTestContext(TestContext):
-    def __init__(self, d, sdktestdir, sdkenv):
+    def __init__(self, d, sdktestdir, sdkenv, *args):
         super(SDKTestContext, self).__init__(d)
 
         self.sdktestdir = sdktestdir
@@ -409,9 +409,13 @@ class SDKTestContext(TestContext):
                 "auto").split() if t != "auto"]
 
 class SDKExtTestContext(SDKTestContext):
-    def __init__(self, d, sdktestdir, sdkenv):
+    def __init__(self, d, sdktestdir, sdkenv, *args):
         self.target_manifest = d.getVar("SDK_EXT_TARGET_MANIFEST", True)
         self.host_manifest = d.getVar("SDK_EXT_HOST_MANIFEST", True)
+        if args:
+            self.cm = args[0] # Compatibility mode for run SDK tests
+        else:
+            self.cm = False
 
         super(SDKExtTestContext, self).__init__(d, sdktestdir, sdkenv)
 
@@ -419,7 +423,10 @@ class SDKExtTestContext(SDKTestContext):
             oeqa.sdkext.__file__)), "files")
 
     def _get_test_namespace(self):
-        return "sdkext"
+        if self.cm:
+            return "sdk"
+        else:
+            return "sdkext"
 
     def _get_test_suites(self):
         return (self.d.getVar("TEST_SUITES_SDK_EXT", True) or "auto").split()
