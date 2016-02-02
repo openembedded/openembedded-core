@@ -38,7 +38,7 @@ export SBINDIR = "${sbindir}"
 export SHAREDIR = "${datadir}"
 export MANDIR = "${mandir}"
 
-EXTRA_OEMAKE += "${PCI_CONF_FLAG}"
+EXTRA_OEMAKE = "-e MAKEFLAGS= ${PCI_CONF_FLAG}"
 
 # The configure script breaks if the HOST variable is set
 HOST[unexport] = "1"
