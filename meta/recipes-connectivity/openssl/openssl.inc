@@ -32,6 +32,7 @@ CFLAG_mtx-2 := "${@'${CFLAG}'.replace('-O2', '')}"
 export DIRS = "crypto ssl apps"
 export EX_LIBS = "-lgcc -ldl"
 export AS = "${CC} -c"
+EXTRA_OEMAKE = "-e MAKEFLAGS="
 
 inherit pkgconfig siteinfo multilib_header ptest
 
