@@ -106,6 +106,6 @@ python populate_packages_prepend () {
     do_split_packages(d, printmodules_root, '^libprintbackend-(.*)\.so$', 'gtk3-printbackend-%s', 'GTK printbackend module for %s')
 
     if (d.getVar('DEBIAN_NAMES', 1)):
-        d.setVar('PKG_${PN}', '${MLPREFIX}libgtk-3.0')
+        d.setVar(d.expand('PKG_${PN}'), '${MLPREFIX}libgtk-3.0')
 }
 

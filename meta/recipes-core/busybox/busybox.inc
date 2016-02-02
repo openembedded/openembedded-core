@@ -346,6 +346,8 @@ python do_package_prepend () {
     dvar = d.getVar('D', True)
     pn = d.getVar('PN', True)
     def set_alternative_vars(links, target):
+        links = d.expand(links)
+        target = d.expand(target)
         f = open('%s%s' % (dvar, links), 'r')
         for alt_link_name in f:
             alt_link_name = alt_link_name.strip()

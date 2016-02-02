@@ -89,7 +89,7 @@ if [ ! -e $D${sysconfdir}/group ]; then
 """ + group + """EOF
 fi
 """
-    d.setVar('pkg_preinst_${PN}', preinst)
+    d.setVar(d.expand('pkg_preinst_${PN}'), preinst)
 }
 
 addtask do_package after do_populate_sysroot

@@ -30,5 +30,5 @@ python populate_packages_prepend () {
     do_split_packages(d, printmodules_root, '^libprintbackend-(.*)\.so$', 'gtk-printbackend-%s', 'GTK printbackend module for %s')
 
     if (d.getVar('DEBIAN_NAMES', True)):
-        d.setVar('PKG_${PN}', '${MLPREFIX}libgtk-2.0')
+        d.setVar(d.expand('PKG_${PN}'), '${MLPREFIX}libgtk-2.0')
 }
