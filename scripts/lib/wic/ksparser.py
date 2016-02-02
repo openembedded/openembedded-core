@@ -29,6 +29,7 @@ import os
 import shlex
 from argparse import ArgumentParser, ArgumentError, ArgumentTypeError
 
+from wic import msger
 from wic.partition import Partition
 from wic.utils.misc import find_canned
 
@@ -135,6 +136,9 @@ class KickStart(object):
         include.add_argument('path', type=cannedpathtype)
 
         self._parse(parser, confpath)
+        if not self.bootloader:
+            msger.warning('bootloader config not specified, using defaults')
+            self.bootloader = bootloader.parse_args([])
 
     def _parse(self, parser, confpath):
         """
