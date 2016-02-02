@@ -143,23 +143,33 @@ python toaster_image_dumpdata() {
     image_types.bbclass will spell out IMAGE_CMD_xxx variables that actually
     have hardcoded ways to create image file names in them.
     So we look for files starting with the set name.
+
+    We also look for other files in the images/ directory which don't
+    match IMAGE_NAME, such as the kernel bzImage, modules tarball etc.
     """
 
-    deploy_dir_image = d.getVar('DEPLOY_DIR_IMAGE', True);
+    dir_to_walk = d.getVar('DEPLOY_DIR_IMAGE', True);
     image_name = d.getVar('IMAGE_NAME', True);
     image_info_data = {}
+    artifact_info_data = {}
 
-    # collect all images
-    for dirpath, dirnames, filenames in os.walk(deploy_dir_image):
-        for fn in filenames:
+    # collect all images and artifacts in the images directory
+    for dirpath, dirnames, filenames in os.walk(dir_to_walk):
+        for filename in filenames:
+            full_path = os.path.join(dirpath, filename)
             try:
-                if fn.startswith(image_name):
-                    image_output = os.path.join(dirpath, fn)
-                    image_info_data[image_output] = os.stat(image_output).st_size
+                if filename.startswith(image_name):
+                    # image
+                    image_info_data[full_path] = os.stat(full_path).st_size
+                else:
+                    # other non-image artifact
+                    if not os.path.islink(full_path):
+                        artifact_info_data[full_path] = os.stat(full_path).st_size
             except OSError as e:
                 bb.event.fire(bb.event.MetadataEvent("OSErrorException", e), d)
 
     bb.event.fire(bb.event.MetadataEvent("ImageFileSize", image_info_data), d)
+    bb.event.fire(bb.event.MetadataEvent("ArtifactFileSize", artifact_info_data), d)
 }
 
 python toaster_artifact_dumpdata() {
@@ -167,16 +177,16 @@ python toaster_artifact_dumpdata() {
     Dump data about artifacts in the SDK_DEPLOY directory
     """
 
-    artifact_dir = d.getVar("SDK_DEPLOY", True)
+    dir_to_walk = d.getVar("SDK_DEPLOY", True)
     artifact_info_data = {}
 
-    # collect all artifacts
-    for dirpath, dirnames, filenames in os.walk(artifact_dir):
-        for fn in filenames:
+    # collect all artifacts in the sdk directory
+    for dirpath, dirnames, filenames in os.walk(dir_to_walk):
+        for filename in filenames:
+            full_path = os.path.join(dirpath, filename)
             try:
-                artifact_path = os.path.join(dirpath, fn)
-                if not os.path.islink(artifact_path):
-                    artifact_info_data[artifact_path] = os.stat(artifact_path).st_size
+                if not os.path.islink(full_path):
+                    artifact_info_data[full_path] = os.stat(full_path).st_size
             except OSError as e:
                 bb.event.fire(bb.event.MetadataEvent("OSErrorException", e), d)
 
