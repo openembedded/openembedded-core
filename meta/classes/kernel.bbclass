@@ -317,18 +317,9 @@ do_shared_workdir () {
 		cp -fR include/generated/* $kerneldir/include/generated/
 	fi
 
-	# When ARCH is set to i386 or x86_64, we need to map ARCH to the real name of src
-	# dir (x86) under arch/ of kenrel tree, so that we can find correct source to copy.
-
-	if [ "${ARCH}" = "i386" ] || [ "${ARCH}" = "x86_64" ]; then
-		KERNEL_SRCARCH=x86
-	else
-		KERNEL_SRCARCH=${ARCH}
-	fi
-
-	if [ -d arch/${KERNEL_SRCARCH}/include/generated ]; then
-		mkdir -p $kerneldir/arch/${KERNEL_SRCARCH}/include/generated/
-		cp -fR arch/${KERNEL_SRCARCH}/include/generated/* $kerneldir/arch/${KERNEL_SRCARCH}/include/generated/
+	if [ -d arch/${ARCH}/include/generated ]; then
+		mkdir -p $kerneldir/arch/${ARCH}/include/generated/
+		cp -fR arch/${ARCH}/include/generated/* $kerneldir/arch/${ARCH}/include/generated/
 	fi
 }
 
