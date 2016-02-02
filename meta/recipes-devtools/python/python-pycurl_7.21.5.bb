@@ -21,12 +21,6 @@ S = "${WORKDIR}/${SRCNAME}-${PV}"
 
 inherit distutils
 
-# need to export these variables for python-config to work
-export BUILD_SYS
-export HOST_SYS
-export STAGING_INCDIR
-export STAGING_LIBDIR
-
 BBCLASSEXTEND = "native"
 
 # Ensure the docstrings are generated as make clean will remove them
