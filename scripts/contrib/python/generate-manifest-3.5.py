@@ -247,7 +247,7 @@ if __name__ == "__main__":
     m.addPackage( "${PN}-distutils-staticdev", "Python distribution utilities (static libraries)", "${PN}-distutils",
     "config/lib*.a" ) # package
 
-    m.addPackage( "${PN}-distutils", "Python Distribution Utilities", "${PN}-core",
+    m.addPackage( "${PN}-distutils", "Python Distribution Utilities", "${PN}-core ${PN}-email",
     "config distutils" ) # package
 
     m.addPackage( "${PN}-doctest", "Python framework for running examples in docstrings", "${PN}-core ${PN}-lang ${PN}-io ${PN}-re ${PN}-unittest ${PN}-debugger ${PN}-difflib",

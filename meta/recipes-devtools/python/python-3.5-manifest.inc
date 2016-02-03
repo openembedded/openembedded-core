@@ -1,6 +1,6 @@
 
 # WARNING: This file is AUTO GENERATED: Manual edits will be lost next time I regenerate the file.
-# Generator: './generate-manifest-3.5.py' Version 20140131 (C) 2002-2010 Michael 'Mickey' Lauer <mlauer@vanille-media.de>
+# Generator: '../../../scripts/contrib/python/generate-manifest-3.5.py' Version 20140131 (C) 2002-2010 Michael 'Mickey' Lauer <mlauer@vanille-media.de>
 # Visit the Python for Embedded Systems Site => http://www.Vanille.de/projects/python.spy
 
  
@@ -70,7 +70,7 @@ RDEPENDS_${PN}-difflib="${PN}-lang ${PN}-re"
 FILES_${PN}-difflib="${libdir}/python3.5/difflib.* "
 
 SUMMARY_${PN}-distutils="Python Distribution Utilities"
-RDEPENDS_${PN}-distutils="${PN}-core"
+RDEPENDS_${PN}-distutils="${PN}-core ${PN}-email"
 FILES_${PN}-distutils="${libdir}/python3.5/config ${libdir}/python3.5/distutils "
 
 SUMMARY_${PN}-distutils-staticdev="Python distribution utilities (static libraries)"

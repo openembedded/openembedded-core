@@ -1,6 +1,6 @@
 
 # WARNING: This file is AUTO GENERATED: Manual edits will be lost next time I regenerate the file.
-# Generator: '../scripts/contrib/python/./generate-manifest-2.7.py' Version 20110222.2 (C) 2002-2010 Michael 'Mickey' Lauer <mlauer@vanille-media.de>
+# Generator: '../../../scripts/contrib/python/generate-manifest-2.7.py' Version 20110222.2 (C) 2002-2010 Michael 'Mickey' Lauer <mlauer@vanille-media.de>
 # Visit the Python for Embedded Systems Site => http://www.Vanille.de/projects/python.spy
 
  
@@ -82,7 +82,7 @@ RDEPENDS_${PN}-difflib="${PN}-lang ${PN}-re"
 FILES_${PN}-difflib="${libdir}/python2.7/difflib.* "
 
 SUMMARY_${PN}-distutils="Python Distribution Utilities"
-RDEPENDS_${PN}-distutils="${PN}-core"
+RDEPENDS_${PN}-distutils="${PN}-core ${PN}-email"
 FILES_${PN}-distutils="${libdir}/python2.7/config ${libdir}/python2.7/distutils "
 
 SUMMARY_${PN}-distutils-staticdev="Python distribution utilities (static libraries)"
