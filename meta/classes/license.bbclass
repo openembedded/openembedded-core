@@ -312,6 +312,7 @@ python perform_packagecopy_prepend () {
         copy_license_files(lic_files_paths, destdir)
         add_package_and_files(d)
 }
+perform_packagecopy[vardeps] += "LICENSE_CREATE_PACKAGE"
 
 def get_recipe_info(d):
     info = {}
