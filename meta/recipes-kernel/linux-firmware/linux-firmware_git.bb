@@ -24,7 +24,7 @@ LICENSE = "\
     & Firmware-myri10ge_firmware \
     & Firmware-OLPC \
     & Firmware-phanfw \
-    & Firmware-qat_dh895xcc_firmware \
+    & Firmware-qat \
     & Firmware-qla2xxx \
     & Firmware-r8a779x_usb3 \
     & Firmware-radeon \
@@ -42,6 +42,7 @@ LICENSE = "\
     & Firmware-siano \
     & Firmware-qualcommAthos_ar3k \
     & Firmware-qualcommAthos_ath10k \
+    & Firmware-ath9k-htc \
 "
 
 LIC_FILES_CHKSUM = "\
@@ -65,7 +66,7 @@ LIC_FILES_CHKSUM = "\
     file://LICENCE.myri10ge_firmware;md5=42e32fb89f6b959ca222e25ac8df8fed \
     file://LICENCE.OLPC;md5=5b917f9d8c061991be4f6f5f108719cd \
     file://LICENCE.phanfw;md5=954dcec0e051f9409812b561ea743bfa \
-    file://LICENCE.qat_dh895xcc_firmware;md5=9e7d8bea77612d7cc7d9e9b54b623062 \
+    file://LICENCE.qat_firmware;md5=9e7d8bea77612d7cc7d9e9b54b623062 \
     file://LICENCE.qla2xxx;md5=f5ce8529ec5c17cb7f911d2721d90e91 \
     file://LICENCE.r8a779x_usb3;md5=4c1671656153025d7076105a5da7e498 \
     file://LICENCE.ralink_a_mediatek_company_firmware;md5=728f1a85fd53fd67fa8d7afb080bc435 \
@@ -85,6 +86,7 @@ LIC_FILES_CHKSUM = "\
     file://LICENCE.siano;md5=602c79ae3f98f1e73d880fd9f940a418 \
     file://LICENSE.QualcommAtheros_ar3k;md5=b5fe244fb2b532311de1472a3bc06da5 \
     file://LICENSE.QualcommAtheros_ath10k;md5=b5fe244fb2b532311de1472a3bc06da5 \
+    file://LICENCE.open-ath9k-htc-firmware;md5=1b33c9f4d17bc4d457bdb23727046837 \
 "
 
 # These are not common licenses, set NO_GENERIC_LICENSE for them
@@ -109,7 +111,7 @@ NO_GENERIC_LICENSE[Firmware-mwl8335] = "LICENCE.mwl8335"
 NO_GENERIC_LICENSE[Firmware-myri10ge_firmware] = "LICENCE.myri10ge_firmware"
 NO_GENERIC_LICENSE[Firmware-OLPC] = "LICENCE.OLPC"
 NO_GENERIC_LICENSE[Firmware-phanfw] = "LICENCE.phanfw"
-NO_GENERIC_LICENSE[Firmware-qat_dh895xcc_firmware] = "LICENCE.qat_dh895xcc_firmware"
+NO_GENERIC_LICENSE[Firmware-qat] = "LICENCE.qat_firmware"
 NO_GENERIC_LICENSE[Firmware-qla2xxx] = "LICENCE.qla2xxx"
 NO_GENERIC_LICENSE[Firmware-r8a779x_usb3] = "LICENCE.r8a779x_usb3"
 NO_GENERIC_LICENSE[Firmware-ralink_a_mediatek_company_firmware] = "LICENCE.ralink_a_mediatek_company_firmware"
@@ -129,8 +131,9 @@ NO_GENERIC_LICENSE[Firmware-radeon] = "LICENSE.radeon"
 NO_GENERIC_LICENSE[Firmware-siano] = "LICENCE.siano"
 NO_GENERIC_LICENSE[Firmware-qualcommAthos_ar3k] = "LICENSE.QualcommAtheros_ar3k"
 NO_GENERIC_LICENSE[Firmware-qualcommAthos_ath10k] = "LICENSE.QualcommAtheros_ath10k"
+NO_GENERIC_LICENSE[Firmware-ath9k-htc] = "LICENCE.open-ath9k-htc-firmware"
 
-SRCREV = "bbe4917c054eb0a73e250c6363341e3bf6725839"
+SRCREV = "52442afee9907bc32a058f22bb3295d040677c26"
 PE = "1"
 PV = "0.0+git${SRCPV}"
 
@@ -451,7 +454,7 @@ LICENSE_${PN} = "\
     & Firmware-myri10ge_firmware \
     & Firmware-OLPC \
     & Firmware-phanfw \
-    & Firmware-qat_dh895xcc_firmware \
+    & Firmware-qat \
     & Firmware-qla2xxx \
     & Firmware-r8a779x_usb3 \
     & Firmware-ralink_a_mediatek_company_firmware \
@@ -461,6 +464,7 @@ LICENSE_${PN} = "\
     & Firmware-xc4000 \
     & Firmware-xc5000 \
     & Firmware-xc5000c \
+    & Firmware-ath9k-htc \
 "
 FILES_${PN}-license += "/lib/firmware/LICEN*"
 FILES_${PN} += "/lib/firmware/*"
