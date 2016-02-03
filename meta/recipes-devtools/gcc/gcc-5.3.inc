@@ -78,6 +78,8 @@ SRC_URI = "\
            file://0046-Get-rid-of-ever-broken-fixincludes-on-musl.patch \
            file://0047-nios2-Define-MUSL_DYNAMIC_LINKER.patch \
            file://0048-ssp_nonshared.patch \
+           file://0049-Disable-the-weak-reference-logic-in-gthr.h-for-os-ge.patch \
+           file://0050-powerpc-pass-secure-plt-to-the-linker.patch \
           "
 
 BACKPORTS = ""
