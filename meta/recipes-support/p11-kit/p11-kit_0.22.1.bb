@@ -18,4 +18,4 @@ FILES_${PN} += " \
     ${libdir}/pkcs11/*.la"
 
 # PN contains p11-kit-proxy.so, a symlink to a loadable module
-INSANE_SKIP_${PN} = "dev-elf"
+INSANE_SKIP_${PN} = "dev-so"
