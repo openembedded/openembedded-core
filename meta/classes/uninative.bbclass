@@ -69,6 +69,8 @@ python uninative_changeinterp () {
     sstateinst = d.getVar('SSTATE_INSTDIR', True)
     for walkroot, dirs, files in os.walk(sstateinst):
         for file in files:
+            if file.endswith(".so") or ".so." in file:
+                continue
             f = os.path.join(walkroot, file)
             if os.path.islink(f):
                 continue
@@ -82,5 +84,5 @@ python uninative_changeinterp () {
                 continue
 
             #bb.warn("patchelf-uninative --set-interpreter %s %s" % (d.getVar("UNINATIVE_LOADER", True), f))
-            subprocess.call("patchelf-uninative --set-interpreter %s %s" % (d.getVar("UNINATIVE_LOADER", True), f), shell=True)
+            subprocess.check_call("patchelf-uninative --set-interpreter %s %s" % (d.getVar("UNINATIVE_LOADER", True), f), shell=True)
 }
