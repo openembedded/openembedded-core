@@ -37,8 +37,6 @@ EXTRA_OEMAKE = " \
 	BINDIR=${bindir} SBINDIR=${sbindir} LIBDIR=${libdir} \
 	DATADIR=${datadir} MANDIR=${mandir} INCDIR=${includedir} \
 "
-# syslinux uses $LD for linking, strip `-Wl,' so it can work
-export LDFLAGS = "`echo $LDFLAGS | sed 's/-Wl,//g'`"
 
 do_configure() {
 	# drop win32 targets or build fails
