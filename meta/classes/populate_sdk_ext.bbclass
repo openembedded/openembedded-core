@@ -99,7 +99,6 @@ python copy_buildsystem () {
     config.set('General', 'core_meta_subdir', core_meta_subdir)
     config.add_section('SDK')
     config.set('SDK', 'sdk_targets', d.getVar('SDK_TARGETS', True))
-    config.set('SDK', 'sdk_update_targets', d.getVar('SDK_INSTALL_TARGETS', True))
     updateurl = d.getVar('SDK_UPDATE_URL', True)
     if updateurl:
         config.set('SDK', 'updateserver', updateurl)
