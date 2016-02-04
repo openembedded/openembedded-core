@@ -69,6 +69,11 @@ do_install_ptest () {
 		  -i $i
 	done
 
+	# Update libdir references in copied .la files
+	for i in `find ${D}${PTEST_PATH} -type f -name *.la`; do
+		sed -i -e 's#${S}/tests/#${STAGING_DIR}${PTEST_PATH}#g' $i
+	done
+
 	sed -e "s:src/bin:bin:g" -e "s:lt-::g" \
 	-i ${D}${PTEST_PATH}/tests/utils/utils.sh
 	sed -e "s:ini_config:\.libs\/ini_config:" \
