@@ -38,7 +38,16 @@ common_errors = [
     'Online check failed for',
     'netlink init failed',
     'Fast TSC calibration',
+    "BAR 0-9",
+    "Failed to load module \"ati\"",
+    "controller can't do DEVSLP, turning off",
+    "stmmac_dvr_probe: warning: cannot get CSR clock",
+    "error: couldn\'t mount because of unsupported optional features",
     ]
+
+video_related = [
+    "uvesafb",
+]
 
 x86_common = [
     '[drm:psb_do_init] *ERROR* Debug is',
@@ -100,11 +109,7 @@ ignore_errors = {
         '(EE) Failed to load module psbdrv',
         '(EE) open /dev/fb0: No such file or directory',
         '(EE) AIGLX: reverting to software rendering',
-        "controller can't do DEVSLP, turning off",
         ] + x86_common,
-    'intel-corei7-64' : [
-        "controller can't do DEVSLP, turning off",
-        ] + common_errors,
     'crownbay' : x86_common,
     'genericx86' : x86_common,
     'genericx86-64' : x86_common,
@@ -127,6 +132,10 @@ class ParseLogsTest(oeRuntimeTest):
         self.ignore_errors = ignore_errors
         self.log_locations = log_locations
         self.msg = ""
+        (is_lsb, location) = oeRuntimeTest.tc.target.run("which LSB_Test.sh")
+        if is_lsb == 0:
+            for machine in self.ignore_errors:
+                self.ignore_errors[machine] = self.ignore_errors[machine] + video_related
 
     def getMachine(self):
         return oeRuntimeTest.tc.d.getVar("MACHINE", True)
@@ -201,6 +210,7 @@ class ParseLogsTest(oeRuntimeTest):
             ignore_error = ignore_error.replace("[", "\[")
             ignore_error = ignore_error.replace("]", "\]")
             ignore_error = ignore_error.replace("*", "\*")
+            ignore_error = ignore_error.replace("0-9", "[0-9]")
             grepcmd += ignore_error+"|"
         grepcmd = grepcmd[:-1]
         grepcmd += "\'"
