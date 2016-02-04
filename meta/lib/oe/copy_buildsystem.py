@@ -160,4 +160,11 @@ def create_locked_sstate_cache(lockedsigs, input_sstate_cache, output_sstate_cac
     if fixedlsbstring:
         nativedir = output_sstate_cache + '/' + nativelsbstring
         if os.path.isdir(nativedir):
-            os.rename(nativedir, output_sstate_cache + '/' + fixedlsbstring)
+            destdir = os.path.join(output_sstate_cache, fixedlsbstring)
+            bb.utils.mkdirhier(destdir)
+
+            dirlist = os.listdir(nativedir)
+            for i in dirlist:
+                src = os.path.join(nativedir, i)
+                dest = os.path.join(destdir, i)
+                os.rename(src, dest)
