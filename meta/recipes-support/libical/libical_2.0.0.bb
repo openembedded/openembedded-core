@@ -18,3 +18,10 @@ UPSTREAM_CHECK_URI = "https://github.com/libical/libical/releases"
 inherit cmake
 
 FILES_${PN}-dev += "${libdir}/cmake/*"
+
+#
+# Turn specific library paths in the pkgconfig file into standard library entries
+#
+do_install_append () {
+	sed -i -e "s#${STAGING_LIBDIR}/lib\([a-z0-9]*\)\.so#-l\1#g" ${D}${libdir}/pkgconfig/libical.pc
+}
