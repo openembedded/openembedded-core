@@ -16,8 +16,8 @@ SRC_URI = "http://www.dest-unreach.org/socat/download/socat-${PV}.tar.bz2 \
            file://Makefile.in-fix-for-parallel-build.patch \
 "
 
-SRC_URI[md5sum] = "b607edb65bc6c57f4a43f06247504274"
-SRC_URI[sha256sum] = "0767e850c0329b9fdf711c6cd468565cbbb28786ba1a8a1cbd5531d4016b3e04"
+SRC_URI[md5sum] = "334e46924f2b386299c9db2ac22bcd36"
+SRC_URI[sha256sum] = "d2da659540c38139f388e9437bfaae16bb458d174d056cb3228432a8f489fbaa"
 
 inherit autotools
 
