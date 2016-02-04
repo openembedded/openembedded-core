@@ -18,6 +18,9 @@ SDK_RELOCATE_AFTER_INSTALL_task-populate-sdk-ext = "0"
 SDK_EXT = ""
 SDK_EXT_task-populate-sdk-ext = "-ext"
 
+# Options are full or minimal
+SDK_EXT_TYPE ?= "full"
+
 SDK_LOCAL_CONF_WHITELIST ?= ""
 SDK_LOCAL_CONF_BLACKLIST ?= "CONF_VERSION \
                              BB_NUMBER_THREADS \
@@ -29,7 +32,7 @@ SDK_INHERIT_BLACKLIST ?= "buildhistory icecc"
 SDK_UPDATE_URL ?= ""
 
 SDK_TARGETS ?= "${PN}"
-SDK_INSTALL_TARGETS = "${SDK_TARGETS} ${@'meta-world-pkgdata:do_allpackagedata' if d.getVar('SDK_INCLUDE_PKGDATA', True) == '1' else ''}"
+SDK_INSTALL_TARGETS = "${@SDK_TARGETS if d.getVar('SDK_EXT_TYPE', True) != 'minimal' else ''} ${@'meta-world-pkgdata:do_allpackagedata' if d.getVar('SDK_INCLUDE_PKGDATA', True) == '1' else ''}"
 OE_INIT_ENV_SCRIPT ?= "oe-init-build-env"
 
 # The files from COREBASE that you want preserved in the COREBASE copied
@@ -203,10 +206,6 @@ python copy_buildsystem () {
     bb.utils.remove(sstate_out, True)
     # uninative.bbclass sets NATIVELSBSTRING to 'universal'
     fixedlsbstring = 'universal'
-    oe.copy_buildsystem.create_locked_sstate_cache(lockedsigs_pruned,
-                                                   d.getVar('SSTATE_DIR', True),
-                                                   sstate_out, d,
-                                                   fixedlsbstring)
 
     # Add packagedata if enabled
     if d.getVar('SDK_INCLUDE_PKGDATA', True) == '1':
@@ -218,7 +217,9 @@ python copy_buildsystem () {
                                              d.getVar('STAGING_DIR_HOST', True) + '/world-pkgdata/locked-sigs-pkgdata.inc',
                                              lockedsigs_pruned,
                                              lockedsigs_copy)
-        oe.copy_buildsystem.create_locked_sstate_cache(lockedsigs_copy,
+
+    if d.getVar('SDK_EXT_TYPE', True) != 'minimal':
+        oe.copy_buildsystem.create_locked_sstate_cache(lockedsigs_pruned,
                                                        d.getVar('SSTATE_DIR', True),
                                                        sstate_out, d,
                                                        fixedlsbstring)
@@ -302,7 +303,7 @@ sdk_ext_postinst() {
 	# For now this is where uninative.bbclass expects the tarball
 	mv *-nativesdk-libc.tar.* $target_sdk_dir/`dirname ${oe_init_build_env_path}`
 
-	if [ "$prepare_buildsystem" != "no" ]; then
+	if [ "$prepare_buildsystem" != "no" -a -n "${@SDK_INSTALL_TARGETS.strip()}" ]; then
 		printf "Preparing build system...\n"
 		# dash which is /bin/sh on Ubuntu will not preserve the
 		# current working directory when first ran, nor will it set $1 when
