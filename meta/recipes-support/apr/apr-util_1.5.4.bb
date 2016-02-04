@@ -66,9 +66,12 @@ do_install_append_class-target() {
 	       -e 's,APU_BUILD_DIR=.*,APR_BUILD_DIR=,g' ${D}${bindir}/apu-1-config
 }
 
-FILES_${PN}     += "${libdir}/apr-util-1/apr_dbm_gdbm-1.so"
-FILES_${PN}-dev += "${libdir}/aprutil.exp ${libdir}/apr-util-1/apr_dbm_gdbm.so* ${libdir}/apr-util-1/apr_dbm_gdbm.la"
-FILES_${PN}-staticdev += "${libdir}/apr-util-1/apr_dbm_gdbm.a"
+#files ${libdir}/apr-util-1/*.so are not symlinks but loadable modules thus they are packaged in ${PN}
+FILES_${PN}     += "${libdir}/apr-util-1/apr*${SOLIBS} ${libdir}/apr-util-1/apr*${SOLIBSDEV}"
+FILES_${PN}-dev += "${libdir}/aprutil.exp ${libdir}/apr-util-1/*.la"
+FILES_${PN}-staticdev += "${libdir}/apr-util-1/*.a"
+
+INSANE_SKIP_${PN} += "dev-so"
 
 inherit ptest
 
