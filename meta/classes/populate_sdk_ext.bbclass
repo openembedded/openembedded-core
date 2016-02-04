@@ -361,8 +361,9 @@ do_populate_sdk_ext[depends] = "${@d.getVarFlag('do_populate_sdk', 'depends', Fa
 
 do_populate_sdk_ext[rdepends] += "${@' '.join([x + ':do_build' for x in d.getVar('SDK_TARGETS', True).split()])}"
 
-# Make sure codes change in copy_buildsystem can result in rebuilt
-do_populate_sdk_ext[vardeps] += "copy_buildsystem"
+# Make sure code changes can result in rebuild
+do_populate_sdk_ext[vardeps] += "copy_buildsystem \
+                                 sdk_ext_postinst"
 
 do_populate_sdk_ext[file-checksums] += "${COREBASE}/meta/files/toolchain-shar-relocate.sh:True \
                                         ${COREBASE}/meta/files/toolchain-shar-extract.sh:True \
