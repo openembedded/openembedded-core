@@ -22,12 +22,13 @@ S = "${WORKDIR}/pcre-${PV}"
 PROVIDES += "pcre"
 DEPENDS += "bzip2 zlib"
 
-PACKAGECONFIG ??= "pcre8"
+PACKAGECONFIG ??= "pcre8 unicode-properties"
 
 PACKAGECONFIG[pcre8] = "--enable-pcre8,--disable-pcre8"
 PACKAGECONFIG[pcre16] = "--enable-pcre16,--disable-pcre16"
 PACKAGECONFIG[pcre32] = "--enable-pcre32,--disable-pcre32"
 PACKAGECONFIG[pcretest-readline] = "--enable-pcretest-libreadline,--disable-pcretest-libreadline,readline,"
+PACKAGECONFIG[unicode-properties] = "--enable-unicode-properties,--disable-unicode-properties"
 
 BINCONFIG = "${bindir}/pcre-config"
 
@@ -36,7 +37,7 @@ inherit autotools binconfig-disabled ptest
 EXTRA_OECONF = "\
     --enable-newline-is-lf \
     --enable-rebuild-chartables \
-    --enable-utf8 \
+    --enable-utf \
     --with-link-size=2 \
     --with-match-limit=10000000 \
 "
