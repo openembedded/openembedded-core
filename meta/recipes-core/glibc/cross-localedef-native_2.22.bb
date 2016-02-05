@@ -20,6 +20,7 @@ GLIBC_GIT_URI ?= "git://sourceware.org/git/glibc.git"
 SRC_URI = "${GLIBC_GIT_URI};branch=${SRCBRANCH};name=glibc \
            git://github.com/kraj/localedef;branch=master;name=localedef;destsuffix=git/localedef \
            file://fix_for_centos_5.8.patch \
+	   file://strcoll-Remove-incorrect-STRDIFF-based-optimization-.patch \
            ${EGLIBCPATCHES} \
 "
 EGLIBCPATCHES = "\
