@@ -31,6 +31,10 @@ inherit autotools gettext gtk-doc pkgconfig ptest-gnome upstream-version-is-even
 
 S = "${WORKDIR}/glib-${PV}"
 
+PACKAGECONFIG ??= "system-pcre"
+# To use the system pcre it must be configured with --enable-unicode-properties
+PACKAGECONFIG[system-pcre] = "--with-pcre=system,--with-pcre=internal,libpcre"
+
 CORECONF = "--disable-dtrace --disable-fam --disable-libelf --disable-systemtap --disable-man"
 
 PRINTF = "--enable-included-printf=no"
