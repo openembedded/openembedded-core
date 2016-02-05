@@ -24,6 +24,9 @@ EXTRA_OECONF = " \
 
 CACHED_CONFIGUREVARS += "ac_cv_header_valgrind_valgrind_h=no"
 
+# musl libc generates warnings if <sys/poll.h> is included directly
+CACHED_CONFIGUREVARS += "ac_cv_header_sys_poll_h=no"
+
 PACKAGES += "${PN}-bash-completion"
 
 FILES_${PN} += "${libdir}/gstreamer-1.0/*.so"
