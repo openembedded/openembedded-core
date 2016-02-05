@@ -37,6 +37,8 @@ INITSCRIPT_PARAMS = "defaults"
 SYSTEMD_SERVICE_${PN} = "apmd.service"
 SYSTEMD_AUTO_ENABLE = "disable"
 
+EXTRA_OEMAKE = "-e MAKEFLAGS="
+
 do_compile() {
 	# apmd doesn't use whole autotools. Just libtool for installation
 	oe_runmake "LIBTOOL=${STAGING_BINDIR_CROSS}/${HOST_SYS}-libtool" apm apmd
