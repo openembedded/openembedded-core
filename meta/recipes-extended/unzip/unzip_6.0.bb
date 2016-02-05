@@ -30,7 +30,7 @@ S = "${WORKDIR}/unzip60"
 # Makefile and add CFLAGS.  Optimization will be overriden by unzip
 # configure to be -O3.
 #
-EXTRA_OEMAKE += "STRIP=true LF2='' \
+EXTRA_OEMAKE = "-e MAKEFLAGS= STRIP=true LF2='' \
                 'CF_NOOPT=-I. -Ibzip2 -DUNIX ${CFLAGS}'"
 
 export LD = "${CC}"
