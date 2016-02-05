@@ -10,6 +10,12 @@ LIBV = "16"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/project/libpng/libpng${LIBV}/${PV}/libpng-${PV}.tar.xz \
           "
+SRC_URI += "\
+            file://CVE-2015-8126_1.patch \
+            file://CVE-2015-8126_2.patch \
+            file://CVE-2015-8126_3.patch \
+            file://CVE-2015-8126_4.patch \
+            "
 
 SRC_URI[md5sum] = "23b7286b5d4a86de950fd2ffc5cac742"
 SRC_URI[sha256sum] = "42f754df633e4e700544e5913cbe2fd4928bbfccdc07708a5cf84e59827fbe60"
