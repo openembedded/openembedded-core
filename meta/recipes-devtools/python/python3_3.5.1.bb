@@ -22,7 +22,6 @@ ${DISTRO_SRC_URI} \
 
 SRC_URI += "\
             file://03-fix-tkinter-detection.patch \
-            file://04-default-is-optimized.patch \
             file://avoid_warning_about_tkinter.patch \
             file://cgi_py.patch \
             file://host_include_contamination.patch \
