@@ -1,5 +1,7 @@
 require perl.inc
 
+EXTRA_OEMAKE = "-e MAKEFLAGS="
+
 SRC_URI += "\
            file://Configure-multilib.patch \
            file://perl-configpm-switch.patch \
