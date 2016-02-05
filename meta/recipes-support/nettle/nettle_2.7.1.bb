@@ -12,6 +12,7 @@ SRC_URI = "http://www.lysator.liu.se/~nisse/archive/${BP}.tar.gz"
 
 SRC_URI += "\
             file://CVE-2015-8803_8805.patch \
+            file://CVE-2015-8804.patch \
             "
 
 SRC_URI[md5sum] = "003d5147911317931dd453520eb234a5"
