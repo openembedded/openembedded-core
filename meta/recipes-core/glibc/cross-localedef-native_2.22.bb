@@ -35,6 +35,7 @@ EGLIBCPATCHES = "\
            file://0025-eglibc-Install-PIC-archives.patch \
            file://0026-eglibc-dl_debug_mask-is-controlled-by-__OPTION_EGLIB.patch \
            file://0027-eglibc-use-option-groups-Conditionally-exclude-c-tes.patch \
+           file://strcoll-Remove-incorrect-STRDIFF-based-optimization-.patch \
 "
 
 SRCREV_glibc ?= "a34d1c6afc86521d6ad17662a3b5362d8481514c"
