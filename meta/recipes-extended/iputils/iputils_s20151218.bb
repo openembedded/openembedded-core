@@ -27,6 +27,8 @@ SRC_URI[sha256sum] = "549f58d71951e52b46595829134d4e330642f522f50026917fadc349a5
 
 UPSTREAM_CHECK_REGEX = "iputils-(?P<pver>s\d+).tar"
 
+EXTRA_OEMAKE = "-e MAKEFLAGS="
+
 do_compile () {
 	oe_runmake 'CC=${CC} -D_GNU_SOURCE' VPATH="${STAGING_LIBDIR}:${STAGING_DIR_HOST}/${base_libdir}" all man
 }
