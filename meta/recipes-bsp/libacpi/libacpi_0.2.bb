@@ -23,7 +23,7 @@ inherit lib_package
 COMPATIBLE_HOST = '(x86_64|i.86).*-(linux|freebsd.*)'
 
 CFLAGS += "-fPIC"
-EXTRA_OEMAKE += 'STRIP="echo"'
+EXTRA_OEMAKE = '-e MAKEFLAGS= STRIP="echo"'
 
 TARGET_CC_ARCH += "${LDFLAGS}"
 
