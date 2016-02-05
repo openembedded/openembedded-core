@@ -25,10 +25,6 @@ TERMIO ?= "-DTERMIO"
 CFLAG = "${@base_conditional('SITEINFO_ENDIANNESS', 'le', '-DL_ENDIAN', '-DB_ENDIAN', d)} \
 	 ${TERMIO} ${CFLAGS} -Wall -Wa,--noexecstack"
 
-# -02 does not work on mipsel: ssh hangs when it tries to read /dev/urandom
-CFLAG_mtx-1 := "${@'${CFLAG}'.replace('-O2', '')}"
-CFLAG_mtx-2 := "${@'${CFLAG}'.replace('-O2', '')}"
-
 export DIRS = "crypto ssl apps"
 export EX_LIBS = "-lgcc -ldl"
 export AS = "${CC} -c"
