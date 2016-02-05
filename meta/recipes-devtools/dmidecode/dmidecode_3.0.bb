@@ -7,6 +7,8 @@ SRC_URI = "${SAVANNAH_NONGNU_MIRROR}/dmidecode/${BP}.tar.xz"
 
 COMPATIBLE_HOST = "(i.86|x86_64|aarch64|arm|powerpc|powerpc64).*-linux"
 
+EXTRA_OEMAKE = "-e MAKEFLAGS="
+
 do_install() {
 	oe_runmake DESTDIR="${D}" install
 }
