@@ -174,7 +174,7 @@ class IsoImagePlugin(SourcePlugin):
             else:
                 msger.error("Couldn't find or build initrd, exiting.\n")
 
-            exec_cmd("cd %s && find . | cpio -o -H newc >%s/initrd.cpio " \
+            exec_cmd("find %s | cpio -o -H newc >%s/initrd.cpio " \
                     % (initrd_dir, cr_workdir), as_shell=True)
             exec_cmd("gzip -f -9 -c %s/initrd.cpio > %s" \
                     % (cr_workdir, initrd), as_shell=True)
