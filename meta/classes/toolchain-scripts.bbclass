@@ -31,7 +31,6 @@ toolchain_create_sdk_env_script () {
 	echo "export OECORE_NATIVE_SYSROOT=\"$sdkpathnative\"" >> $script
 	echo 'export OECORE_TARGET_SYSROOT="$SDKTARGETSYSROOT"' >> $script
 	echo "export OECORE_ACLOCAL_OPTS=\"-I $sdkpathnative/usr/share/aclocal\"" >> $script
-	echo "export PYTHONPATH=$sdkpathnative$prefix" >> $script
 	echo 'unset command_not_found_handle' >> $script
 
 	toolchain_shared_env_script
