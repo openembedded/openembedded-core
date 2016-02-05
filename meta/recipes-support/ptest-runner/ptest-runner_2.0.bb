@@ -15,6 +15,8 @@ S = "${WORKDIR}/git"
 
 FILES_${PN} = "${bindir}/ptest-runner"
 
+EXTRA_OEMAKE = "-e MAKEFLAGS="
+
 do_compile () {
 	oe_runmake
 }
