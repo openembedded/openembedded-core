@@ -9,5 +9,3 @@ PACKAGECONFIG ??= ""
 PACKAGECONFIG[readline] = "--with-readline=yes,--with-readline=no,readline"
 
 ARM_INSTRUCTION_SET = "arm"
-
-BBCLASSEXTEND = "native nativesdk"

@@ -29,3 +29,5 @@ do_install_append_class-target() {
 }
 
 SSTATE_SCAN_FILES += "gmp.h"
+
+BBCLASSEXTEND = "native nativesdk"
