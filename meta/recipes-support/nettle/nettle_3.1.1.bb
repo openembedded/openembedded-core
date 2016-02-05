@@ -9,6 +9,7 @@ LIC_FILES_CHKSUM = "file://COPYING.LESSERv3;md5=6a6a8e020838b23406c81b19c1d46df6
 
 SRC_URI += "\
             file://CVE-2015-8803_8805.patch \
+            file://CVE-2015-8804.patch \
             "
 
 SRC_URI[md5sum] = "b40fa88dc32f37a182b6b42092ebb144"
