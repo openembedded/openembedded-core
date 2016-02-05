@@ -126,18 +126,18 @@ multiubi_mkfs() {
 		local vname="_$3"
 	fi
 
-	echo \[ubifs\] > ubinize${vname}.cfg
-	echo mode=ubi >> ubinize${vname}.cfg
-	echo image=${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}${vname}.rootfs.ubifs >> ubinize${vname}.cfg
-	echo vol_id=0 >> ubinize${vname}.cfg
-	echo vol_type=dynamic >> ubinize${vname}.cfg
-	echo vol_name=${UBI_VOLNAME} >> ubinize${vname}.cfg
-	echo vol_flags=autoresize >> ubinize${vname}.cfg
+	echo \[ubifs\] > ubinize${vname}-${IMAGE_NAME}.cfg
+	echo mode=ubi >> ubinize${vname}-${IMAGE_NAME}.cfg
+	echo image=${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}${vname}.rootfs.ubifs >> ubinize${vname}-${IMAGE_NAME}.cfg
+	echo vol_id=0 >> ubinize${vname}-${IMAGE_NAME}.cfg
+	echo vol_type=dynamic >> ubinize${vname}-${IMAGE_NAME}.cfg
+	echo vol_name=${UBI_VOLNAME} >> ubinize${vname}-${IMAGE_NAME}.cfg
+	echo vol_flags=autoresize >> ubinize${vname}-${IMAGE_NAME}.cfg
 	mkfs.ubifs -r ${IMAGE_ROOTFS} -o ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}${vname}.rootfs.ubifs ${mkubifs_args}
-	ubinize -o ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}${vname}.rootfs.ubi ${ubinize_args} ubinize${vname}.cfg
+	ubinize -o ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}${vname}.rootfs.ubi ${ubinize_args} ubinize${vname}-${IMAGE_NAME}.cfg
 
 	# Cleanup cfg file
-	mv ubinize${vname}.cfg ${DEPLOY_DIR_IMAGE}/
+	mv ubinize${vname}-${IMAGE_NAME}.cfg ${DEPLOY_DIR_IMAGE}/
 
 	# Create own symlinks for 'named' volumes
 	if [ -n "$vname" ]; then
