@@ -49,6 +49,7 @@ EGLIBCPATCHES = "\
 CVEPATCHES = "\
         file://CVE-2015-1781-resolv-nss_dns-dns-host.c-buffer-overf.patch \
         file://CVE-2015-8777.patch \
+        file://CVE-2015-8779.patch \
 "
 
 LIC_FILES_CHKSUM = "file://LICENSES;md5=e9a558e243b36d3209f380deb394b213 \
