@@ -106,6 +106,8 @@ PKG_CONFIG_DIR = "${libdir}/pkgconfig"
 EXTRA_NATIVE_PKGCONFIG_PATH ?= ""
 PKG_CONFIG_PATH .= "${EXTRA_NATIVE_PKGCONFIG_PATH}"
 PKG_CONFIG_SYSROOT_DIR = ""
+PKG_CONFIG_SYSTEM_LIBRARY_PATH[unexport] = "1"
+PKG_CONFIG_SYSTEM_INCLUDE_PATH[unexport] = "1"
 
 # we dont want libc-uclibc or libc-glibc to kick in for native recipes
 LIBCOVERRIDE = ""

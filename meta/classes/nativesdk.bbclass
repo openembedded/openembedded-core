@@ -60,8 +60,6 @@ sbindir = "${bindir}"
 
 export PKG_CONFIG_DIR = "${STAGING_DIR_HOST}${libdir}/pkgconfig"
 export PKG_CONFIG_SYSROOT_DIR = "${STAGING_DIR_HOST}"
-export PKG_CONFIG_SYSTEM_LIBRARY_PATH = "${base_libdir}:${libdir}"
-export PKG_CONFIG_SYSTEM_INCLUDE_PATH = "${includedir}"
 
 python nativesdk_virtclass_handler () {
     pn = e.data.getVar("PN", True)
