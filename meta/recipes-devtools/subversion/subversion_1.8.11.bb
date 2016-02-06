@@ -12,6 +12,7 @@ inherit gettext pythonnative
 SRC_URI = "${APACHE_MIRROR}/${BPN}/${BPN}-${PV}.tar.bz2 \
            file://libtool2.patch \
            file://disable_macos.patch \
+           file://subversion-CVE-2015-3184.patch \
 "
 SRC_URI[md5sum] = "766a89bbbb388f8eb76166672d3b9e49"
 SRC_URI[sha256sum] = "10b056420e1f194c12840368f6bf58842e6200f9cb8cc5ebbf9be2e89e56e4d9"
