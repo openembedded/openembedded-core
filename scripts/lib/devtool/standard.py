@@ -378,7 +378,7 @@ class BbTaskExecutor(object):
     def exec_func(self, func, report):
         """Run bitbake task function"""
         if not func in self.executed:
-            deps = self.rdata.getVarFlag(func, 'deps')
+            deps = self.rdata.getVarFlag(func, 'deps', False)
             if deps:
                 for taskdepfunc in deps:
                     self.exec_func(taskdepfunc, True)
