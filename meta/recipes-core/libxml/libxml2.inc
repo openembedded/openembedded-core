@@ -37,6 +37,7 @@ SRC_URI = "ftp://xmlsoft.org/libxml2/libxml2-${PV}.tar.gz;name=libtar \
            file://0001-CVE-2015-7500-Fix-memory-access-error-due-to-incorre.patch \
            file://0001-CVE-2015-8242-Buffer-overead-with-HTML-parser-in-pus.patch \
            file://0001-CVE-2015-5312-Another-entity-expansion-issue.patch \
+           file://CVE-2015-8241.patch \
           "
 
 BINCONFIG = "${bindir}/xml2-config"
