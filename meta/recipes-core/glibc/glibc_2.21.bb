@@ -52,6 +52,7 @@ CVEPATCHES = "\
         file://CVE-2015-8779.patch \
         file://CVE-2015-9761_1.patch \
         file://CVE-2015-9761_2.patch \
+        file://CVE-2015-8776.patch \
 "
 
 LIC_FILES_CHKSUM = "file://LICENSES;md5=e9a558e243b36d3209f380deb394b213 \
