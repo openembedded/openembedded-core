@@ -651,8 +651,9 @@ addtask cleansstate after do_clean
 python do_cleansstate() {
         sstate_clean_cachefiles(d)
 }
-
 addtask cleanall after do_cleansstate
+do_cleansstate[nostamp] = "1"
+
 python do_cleanall() {
     src_uri = (d.getVar('SRC_URI', True) or "").split()
     if len(src_uri) == 0:
