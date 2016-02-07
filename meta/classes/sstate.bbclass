@@ -124,6 +124,7 @@ def sstate_state_fromvars(d, task = None):
     if task == "populate_lic":
         d.setVar("SSTATE_PKGSPEC", "${SSTATE_SWSPEC}")
         d.setVar("SSTATE_EXTRAPATH", "")
+        d.setVar('SSTATE_EXTRAPATHWILDCARD', "")
 
     ss = sstate_init(task, d)
     for i in range(len(inputs)):
