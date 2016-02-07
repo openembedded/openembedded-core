@@ -23,7 +23,16 @@ class SStateTests(SStateBase):
             bitbake(['-ccleansstate'] + targets)
 
         bitbake(targets)
-        file_tracker = self.search_sstate('|'.join(map(str, targets)), distro_specific, distro_nonspecific)
+        file_tracker = []
+        results = self.search_sstate('|'.join(map(str, targets)), distro_specific, distro_nonspecific)
+        if distro_nonspecific:
+            for r in results:
+                if r.endswith(("_populate_lic.tgz", "_populate_lic.tgz.siginfo", "_fetch.tgz.siginfo", "_unpack.tgz.siginfo", "_patch.tgz.siginfo")):
+                    continue
+                file_tracker.append(r)
+        else:
+            file_tracker = results
+
         if should_pass:
             self.assertTrue(file_tracker , msg="Could not find sstate files for: %s" % ', '.join(map(str, targets)))
         else:
@@ -87,7 +96,13 @@ class SStateTests(SStateBase):
         bitbake(['-ccleansstate'] + targets)
 
         bitbake(targets)
-        self.assertTrue(self.search_sstate('|'.join(map(str, [s + '.*?\.tgz$' for s in targets])), distro_specific=False, distro_nonspecific=True) == [], msg="Found distro non-specific sstate for: %s" % ', '.join(map(str, targets)))
+        results = self.search_sstate('|'.join(map(str, [s + '.*?\.tgz$' for s in targets])), distro_specific=False, distro_nonspecific=True)
+        filtered_results = []
+        for r in results:
+            if r.endswith(("_populate_lic.tgz", "_populate_lic.tgz.siginfo")):
+                continue
+            filtered_results.append(r)
+        self.assertTrue(filtered_results == [], msg="Found distro non-specific sstate for: %s (%s)" % (', '.join(map(str, targets)), str(filtered_results)))
         file_tracker_1 = self.search_sstate('|'.join(map(str, [s + '.*?\.tgz$' for s in targets])), distro_specific=True, distro_nonspecific=False)
         self.assertTrue(len(file_tracker_1) >= len(targets), msg = "Not all sstate files ware created for: %s" % ', '.join(map(str, targets)))
 
