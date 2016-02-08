@@ -19,9 +19,11 @@ inherit cmake pkgconfig
 
 PACKAGECONFIG ?= " \
     ${@ '' if incompatible_license_contains('GPLv3', 'x', '', d) == 'x' or bb.utils.contains('DISTRO_FEATURES', 'x11', 'x', '', d) == '' else 'gnome' } \
+    gnome3 \
 "
 
 PACKAGECONFIG[gnome] = "-DWITH_GNOME=yes,-DWITH_GNOME=no,gconf"
+PACKAGECONFIG[gnome3] = "-DWITH_GNOME3=yes,-DWITH_GNOME3=no"
 
 EXTRA_OECMAKE += " \
     -DWITH_KDE4=no \
