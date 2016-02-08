@@ -58,7 +58,7 @@ class LocalSigner(object):
                   "--passphrase-file '%s' -u '%s' " % \
                   (self.gpg_bin, self.passphrase_file, self.keyid)
         if self.gpg_path:
-            gpg_cmd += "--homedir %s " % self.gpg_path
+            cmd += "--homedir %s " % self.gpg_path
         cmd += input_file
         status, output = oe.utils.getstatusoutput(cmd)
         if status:
