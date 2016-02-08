@@ -31,6 +31,9 @@ class ELFFile:
         self.objdump_output = {}
 
     def open(self):
+        if not os.path.isfile(self.name):
+            raise Exception("File is not a normal file")
+
         self.file = file(self.name, "r")
         self.data = self.file.read(ELFFile.EI_NIDENT+4)
 
