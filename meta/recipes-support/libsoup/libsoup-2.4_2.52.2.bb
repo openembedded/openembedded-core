@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=5f30f0716dfdd0d91eb439ebec522ec2"
 
 SECTION = "x11/gnome/libs"
 
-DEPENDS = "glib-2.0 glib-2.0-native gnutls libxml2 sqlite3 intltool-native"
+DEPENDS = "glib-2.0 glib-2.0-native libxml2 sqlite3 intltool-native"
 
 EXTRA_OECONF = "--disable-vala"
 
