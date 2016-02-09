@@ -223,28 +223,33 @@ class SStateTests(SStateBase):
     def test_sstate_32_64_same_hash(self):
         """
         The sstate checksums for both native and target should not vary whether
-        they're built on a 32 or 64 bit system. Rather than requiring two different 
+        they're built on a 32 or 64 bit system. Rather than requiring two different
         build machines and running a builds, override the variables calling uname()
         manually and check using bitbake -S.
-        
-        Also check that SDKMACHINE changing doesn't change any of these stamps.
+
+        Also check that SDKMACHINE and PARALLEL_MAKE changing doesn't change any
+        of these stamps.
         """
 
         topdir = get_bb_var('TOPDIR')
         targetvendor = get_bb_var('TARGET_VENDOR')
         self.write_config("""
-TMPDIR = \"${TOPDIR}/tmp-sstatesamehash\"
-BUILD_ARCH = \"x86_64\"
-BUILD_OS = \"linux\"
-SDKMACHINE = \"x86_64\"
+MACHINE = "qemux86"
+TMPDIR = "${TOPDIR}/tmp-sstatesamehash"
+BUILD_ARCH = "x86_64"
+BUILD_OS = "linux"
+SDKMACHINE = "x86_64"
+PARALLEL_MAKE = "-j 1"
 """)
         self.track_for_cleanup(topdir + "/tmp-sstatesamehash")
         bitbake("core-image-sato -S none")
         self.write_config("""
-TMPDIR = \"${TOPDIR}/tmp-sstatesamehash2\"
-BUILD_ARCH = \"i686\"
-BUILD_OS = \"linux\"
-SDKMACHINE = \"i686\"
+MACHINE = "qemux86"
+TMPDIR = "${TOPDIR}/tmp-sstatesamehash2"
+BUILD_ARCH = "i686"
+BUILD_OS = "linux"
+SDKMACHINE = "i686"
+PARALLEL_MAKE = "-j 2"
 """)
         self.track_for_cleanup(topdir + "/tmp-sstatesamehash2")
         bitbake("core-image-sato -S none")
@@ -253,9 +258,10 @@ SDKMACHINE = \"i686\"
             f = []
             for root, dirs, files in os.walk(d):
                 if "core-image-sato" in root:
-                        # SDKMACHINE changing will change do_rootfs/do_testimage/do_build stamps of core-image-sato itself
-                        # which is safe to ignore
-                        continue
+                    # SDKMACHINE changing will change
+                    # do_rootfs/do_testimage/do_build stamps of images which
+                    # is safe to ignore.
+                    continue
                 f.extend(os.path.join(root, name) for name in files)
             return f
         files1 = get_files(topdir + "/tmp-sstatesamehash/stamps/")
