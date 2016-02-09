@@ -7,12 +7,12 @@ sed -i "/\t\tagent-ptrace /d" Makefile
 make -k .OBJDIR=`pwd` .CURDIR=`pwd` SUDO="sudo" tests \
         | sed -e 's/^skipped/SKIP: /g' -e 's/^ok /PASS: /g' -e 's/^failed/FAIL: /g'
 
-
 SSHAGENT=`which ssh-agent`
 GDB=`which gdb`
 
 if [ -z "${SSHAGENT}" -o -z "${GDB}" ]; then
        echo "SKIP: agent-ptrace"
+       exit
 fi
 
 useradd openssh-test
@@ -33,9 +33,9 @@ EOF
 	r=$?
 	rm -f /tmp/gdb.out
 	if [ $r -ne 0 ]; then
-		echo "FAIL: ptrace agant"
+		echo "FAIL: ptrace agent"
 	else
-		echo "PASS: ptrace agant"
+		echo "PASS: ptrace agent"
 	fi
 
 	${SSHAGENT} -k > /dev/null
