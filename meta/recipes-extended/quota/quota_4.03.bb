@@ -8,36 +8,31 @@ LIC_FILES_CHKSUM = "file://quota.c;beginline=1;endline=33;md5=331c7d77744bfe0ad2
                     file://svc_socket.c;beginline=1;endline=17;md5=24d5a8792da45910786eeac750be8ceb"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/project/linuxquota/quota-tools/${PV}/quota-${PV}.tar.gz \
-           file://config-tcpwrappers.patch \
+           file://0001-Fix-build-with-disabled-ldap.patch \
+           file://0001-Do-not-accidentaly-override-commandline-passed-CFLAG.patch \
            file://fcntl.patch \
            file://remove_non_posix_types.patch \
-	   "
+          "
 SRC_URI_append_libc-musl = " file://replace_getrpcbynumber_r.patch"
 
-SRC_URI[md5sum] = "a8a5df262261e659716ccad2a5d6df0d"
-SRC_URI[sha256sum] = "f4c2f48abf94bbdc396df33d276f2e9d19af58c232cb85eef9c174a747c33795"
+SRC_URI[md5sum] = "6b09f9c93515c25a528be5754cdfb6f5"
+SRC_URI[sha256sum] = "9c6c4d9ae7bf30506dd2aa3d8056c4ff2f8d087930d7c721616f5c093bdc674b"
 
 UPSTREAM_CHECK_URI = "http://sourceforge.net/projects/linuxquota/files/quota-tools/"
 UPSTREAM_CHECK_REGEX = "/quota-tools/(?P<pver>(\d+[\.\-_]*)+)/"
 
-S = "${WORKDIR}/quota-tools"
-
-DEPENDS = "gettext-native e2fsprogs"
+DEPENDS = "gettext-native e2fsprogs libnl dbus"
 
 inherit autotools-brokensep gettext pkgconfig
 
 CFLAGS += "-I${STAGING_INCDIR}/tirpc"
 LDFLAGS += "-ltirpc"
 ASNEEDED = ""
-EXTRA_OEMAKE += 'STRIP=""'
 
 PACKAGECONFIG ??= "tcp-wrappers rpc bsd"
 PACKAGECONFIG_libc-musl = "tcp-wrappers rpc"
 
-PACKAGECONFIG[tcp-wrappers] = "--with-tcpwrappers,--without-tcpwrappers,tcp-wrappers"
-PACKAGECONFIG[rpc] = "--enable-rpc=yes,--enable-rpc=no,libtirpc"
+PACKAGECONFIG[tcp-wrappers] = "--enable-libwrap,--disable-libwrap,tcp-wrappers"
+PACKAGECONFIG[rpc] = "--enable-rpc,--disable-rpc,libtirpc"
 PACKAGECONFIG[bsd] = "--enable-bsd_behaviour=yes,--enable-bsd_behaviour=no,"
-
-do_install() {
-	oe_runmake ROOTDIR=${D} install
-}
+PACKAGECONFIG[ldapmail] = "--enable-ldapmail,--disable-ldapmail,openldap"
