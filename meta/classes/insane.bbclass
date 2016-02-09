@@ -127,6 +127,9 @@ def package_qa_get_machine_dict():
                         "mipsel":     (   8,     0,    0,          True,          32),
                         "mips64":     (   8,     0,    0,          False,         64),
                         "mips64el":   (   8,     0,    0,          True,          64),
+                        "microblaze":  (189,     0,    0,          False,         32),
+                        "microblazeeb":(189,     0,    0,          False,         32),
+                        "microblazeel":(189,     0,    0,          True,          32),
                       },
             "uclinux-uclibc" : {
                         "bfin":       ( 106,     0,    0,          True,         32),
