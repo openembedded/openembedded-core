@@ -4,8 +4,7 @@ BUILDSTATS_BASE = "${TMPDIR}/buildstats/"
 # Build statistics gathering.
 #
 # The CPU and Time gathering/tracking functions and bbevent inspiration
-# were written by Christopher Larson and can be seen here:
-# http://kergoth.pastey.net/142813
+# were written by Christopher Larson.
 #
 ################################################################################
 
