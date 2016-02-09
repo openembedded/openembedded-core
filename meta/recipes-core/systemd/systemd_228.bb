@@ -90,9 +90,6 @@ PACKAGECONFIG ??= "compat xz ldconfig \
 PACKAGECONFIG[journal-upload] = "--enable-libcurl,--disable-libcurl,curl"
 # Sign the journal for anti-tampering
 PACKAGECONFIG[gcrypt] = "--enable-gcrypt,--disable-gcrypt,libgcrypt"
-# regardless of PACKAGECONFIG, libgcrypt is always required to expand
-# the AM_PATH_LIBGCRYPT autoconf macro
-DEPENDS += "libgcrypt"
 PACKAGECONFIG[cryptsetup] = "--enable-libcryptsetup,--disable-libcryptsetup,cryptsetup"
 PACKAGECONFIG[microhttpd] = "--enable-microhttpd,--disable-microhttpd,libmicrohttpd"
 PACKAGECONFIG[elfutils] = "--enable-elfutils,--disable-elfutils,elfutils"
