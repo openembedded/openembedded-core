@@ -17,11 +17,7 @@ SRC_URI[sha256sum] = "dc3f33de54163718f82b3e7c496a7de97f8862578414b8ecaad3cbfe48
 
 inherit cmake pkgconfig
 
-PACKAGECONFIG ?= " \
-    ${@ '' if incompatible_license_contains('GPLv3', 'x', '', d) == 'x' or bb.utils.contains('DISTRO_FEATURES', 'x11', 'x', '', d) == '' else 'gnome' } \
-    gnome3 \
-"
-
+PACKAGECONFIG ?= "${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'gnome', '', d)} gnome3"
 PACKAGECONFIG[gnome] = "-DWITH_GNOME=yes,-DWITH_GNOME=no,gconf"
 PACKAGECONFIG[gnome3] = "-DWITH_GNOME3=yes,-DWITH_GNOME3=no"
 
@@ -35,11 +31,6 @@ EXTRA_OECMAKE += " \
     -DLIB_INSTALL_DIR=${libdir} \
     -DLIBEXEC_INSTALL_DIR=${libexecdir} \
 "
-
-do_configure_prepend() {
-	export HOST_SYS=${HOST_SYS}
-	export BUILD_SYS=${BUILD_SYS}
-}
 
 FILES_${PN} += "${libdir}/${BPN}/${PV}/modules"
 FILES_${PN}-dev += "${datadir}/cmake"
