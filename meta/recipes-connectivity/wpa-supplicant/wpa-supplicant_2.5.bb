@@ -6,11 +6,11 @@ LICENSE = "BSD"
 LIC_FILES_CHKSUM = "file://COPYING;md5=36b27801447e0662ee0138d17fe93880 \
                     file://README;beginline=1;endline=56;md5=7f393579f8b109fe91f3b9765d26c7d3 \
                     file://wpa_supplicant/wpa_supplicant.c;beginline=1;endline=12;md5=3430fda79f2ba1dd545f0b3c4d6e4d24"
-DEPENDS = "dbus libnl libgcrypt"
+DEPENDS = "dbus libnl"
 RRECOMMENDS_${PN} = "wpa-supplicant-passphrase wpa-supplicant-cli"
 
 PACKAGECONFIG ??= "gnutls"
-PACKAGECONFIG[gnutls] = ",,gnutls"
+PACKAGECONFIG[gnutls] = ",,gnutls libgcrypt"
 PACKAGECONFIG[openssl] = ",,openssl"
 
 inherit systemd
