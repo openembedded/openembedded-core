@@ -9,6 +9,7 @@ SRC_URI = "http://ftp.mozilla.org/pub/nspr/releases/v${PV}/src/nspr-${PV}.tar.gz
            file://remove-rpath-from-tests.patch \
            file://fix-build-on-x86_64.patch \
            file://remove-srcdir-from-configure-in.patch \
+	   file://0002-Add-nios2-support.patch \
           "
 
 SRC_URI += "file://nspr.pc.in"
