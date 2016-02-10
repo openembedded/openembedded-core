@@ -14,11 +14,14 @@ SRC_URI = "${KERNELORG_MIRROR}/linux/utils/raid/mdadm/${BPN}-${PV}.tar.xz \
            file://mdadm-3.3.2_x32_abi_time_t.patch \
            file://0001-Fix-typo-in-comparision.patch \
            file://mdadm-fix-ptest-build-errors.patch \
-           file://0001-Define-_POSIX_C_SOURCE-if-undefined.patch \
+           file://0001-util.c-include-poll.h-instead-of-sys-poll.h.patch \
+           file://0001-mdadm.h-bswap-is-already-defined-in-uclibc.patch \
+           file://0001-Fix-some-type-comparison-problems.patch \
+           file://0001-Fix-the-path-of-corosync-and-dlm-header-files-check.patch \
            file://run-ptest \
 	  "
-SRC_URI[md5sum] = "7ca8b114710f98f53f20c5787b674a09"
-SRC_URI[sha256sum] = "8ae5f45306b873190e91f410709b00e51997b633c072b33f8efd9f7df022ca68"
+SRC_URI[md5sum] = "04b8b21f637540350f8517c7e68d3c63"
+SRC_URI[sha256sum] = "27d0be4627d38a12ddcd1c1c3721d649d4e89e1093914497e22b57245cda8808"
 
 CFLAGS += "-fno-strict-aliasing"
 inherit autotools-brokensep
@@ -28,12 +31,12 @@ EXTRA_OEMAKE = 'CHECK_RUN_DIR=0 CXFLAGS="${CFLAGS}"'
 # prevents 64-bit userland from seeing this definition, instead defaulting
 # to u64 == long in userspace. Define __SANE_USERSPACE_TYPES__ to get
 # int-ll64.h included
-EXTRA_OEMAKE_append_powerpc64 = ' CFLAGS=-D__SANE_USERSPACE_TYPES__'
-EXTRA_OEMAKE_append_mips64 = ' CFLAGS=-D__SANE_USERSPACE_TYPES__'
-EXTRA_OEMAKE_append_mips64n32 = ' CFLAGS=-D__SANE_USERSPACE_TYPES__'
+CFLAGS_append_powerpc64 = ' -D__SANE_USERSPACE_TYPES__'
+CFLAGS_append_mips64 = ' -D__SANE_USERSPACE_TYPES__'
+CFLAGS_append_mips64n32 = ' -D__SANE_USERSPACE_TYPES__'
 
 do_compile() {
-	oe_runmake
+	oe_runmake SYSROOT="${STAGING_DIR_TARGET}"
 }
 
 do_install() {

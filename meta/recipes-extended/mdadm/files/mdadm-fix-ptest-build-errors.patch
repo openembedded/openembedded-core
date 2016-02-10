@@ -1,50 +1,45 @@
-From f3acf8499a4cc400206c5c56f0a6c69192ed55de Mon Sep 17 00:00:00 2001
-From: Wenzong Fan <wenzong.fan@windriver.com>
-Date: Sat, 7 Nov 2015 04:21:17 -0500
-Subject: [PATCH] mdadm: fix ptest build errors
+From c65898b9da82df94e1bae7937e415a7eb80355d5 Mon Sep 17 00:00:00 2001
+From: "Maxin B. John" <maxin.john@intel.com>
+Date: Wed, 10 Feb 2016 17:28:05 +0200
+Subject: [PATCH] mdadm-fix-ptest-build-errors
 
-Check return value for posix_memalign() to fix ptest build error:
+builds fail with ptest enabled:
 
-  raid6check.c:352:2: error: ignoring return value of posix_memalign, \
-  declared with attribute warn_unused_result [-Werror=unused-result]
-
-Initialize *stripe_buf as NULL to fix ptest build error:
-
-  raid6check.c: In function 'check_stripes':
-  raid6check.c:315:8: error: 'stripe_buf' may be used uninitialized \
-  in this function [-Werror=maybe-uninitialized]
+| restripe.c: In function 'test_stripes':
+| restripe.c:845:4: error: ignoring return value of 'read', declared with
+| attribute warn_unused_result [-Werror=unused-result]
+|     read(source[i], stripes[i], chunk_size);
+|     ^
+| cc1: all warnings being treated as errors
+| Makefile:214: recipe for target 'test_stripe' failed
 
 Upstream-Status: Pending
 
-Signed-off-by: Wenzong Fan <wenzong.fan@windriver.com>
+Signed-off-by: Maxin B. John <maxin.john@intel.com>
 ---
- raid6check.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ restripe.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/raid6check.c b/raid6check.c
-index cb8522e..9462bcf 100644
---- a/raid6check.c
-+++ b/raid6check.c
-@@ -312,7 +312,7 @@ int check_stripes(struct mdinfo *info, int *source, unsigned long long *offsets,
- 	/* read the data and p and q blocks, and check we got them right */
- 	int data_disks = raid_disks - 2;
- 	int syndrome_disks = data_disks + is_ddf(layout) * 2;
--	char *stripe_buf;
-+	char *stripe_buf = NULL;
+diff --git a/restripe.c b/restripe.c
+index 56dca73..d24b2b4 100644
+--- a/restripe.c
++++ b/restripe.c
+@@ -842,10 +842,14 @@ int test_stripes(int *source, unsigned long long *offsets,
  
- 	/* stripes[] is indexed by raid_disk and holds chunks from each device */
- 	char **stripes = xmalloc(raid_disks * sizeof(char*));
-@@ -349,7 +349,9 @@ int check_stripes(struct mdinfo *info, int *source, unsigned long long *offsets,
- 	if (!tables_ready)
- 		make_tables();
+ 	while (length > 0) {
+ 		int disk;
++        ssize_t ret;
  
--	posix_memalign((void**)&stripe_buf, 4096, raid_disks * chunk_size);
-+	if (posix_memalign((void**)&stripe_buf, 4096, raid_disks * chunk_size) != 0)
-+		goto exitCheck;
-+
- 	block_index_for_slot += 2;
- 	blocks += 2;
- 	blocks_page += 2;
+ 		for (i = 0 ; i < raid_disks ; i++) {
+ 			lseek64(source[i], offsets[i]+start, 0);
+-			read(source[i], stripes[i], chunk_size);
++			ret = read(source[i], stripes[i], chunk_size);
++            if (ret == -1) {
++			  printf("Read Failed\n");
++            }
+ 		}
+ 		for (i = 0 ; i < data_disks ; i++) {
+ 			int disk = geo_map(i, start/chunk_size, raid_disks,
 -- 
-1.9.1
+2.4.0
 
