@@ -452,12 +452,14 @@ def check_git_version(sanity_data):
 def check_perl_modules(sanity_data):
     ret = ""
     modules = ( "Text::ParseWords", "Thread::Queue", "Data::Dumper" )
+    errresult = ''
     for m in modules:
-        status, result = oe.utils.getstatusoutput("perl -e 'use %s' 2> /dev/null" % m)
+        status, result = oe.utils.getstatusoutput("perl -e 'use %s'" % m)
         if status != 0:
+            errresult += result
             ret += "%s " % m
     if ret:
-        return "Required perl module(s) not found: %s\n" % ret
+        return "Required perl module(s) not found: %s\n\n%s\n" % (ret, errresult)
     return None
 
 def sanity_check_conffiles(status, d):
