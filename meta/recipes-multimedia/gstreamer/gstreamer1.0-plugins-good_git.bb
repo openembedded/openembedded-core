@@ -11,6 +11,7 @@ SRC_URI = " \
     git://anongit.freedesktop.org/gstreamer/common;destsuffix=git/common;name=common \
     file://fix-maybe-uninitialized-warnings-when-compiling-with-Os.patch \
     file://avoid-including-sys-poll.h-directly.patch \
+    file://ensure-valid-sentinel-for-gst_structure_get.patch \
 "
 
 PV = "1.7.1+git${SRCPV}"
