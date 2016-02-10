@@ -253,10 +253,6 @@ if __name__ == "__main__":
     m.addPackage( "${PN}-doctest", "Python framework for running examples in docstrings", "${PN}-core ${PN}-lang ${PN}-io ${PN}-re ${PN}-unittest ${PN}-debugger ${PN}-difflib",
     "doctest.*" )
 
-    # FIXME consider adding to some higher level package
-    m.addPackage( "${PN}-elementtree", "Python elementree", "${PN}-core",
-    "lib-dynload/_elementtree.*.so" )
-
     m.addPackage( "${PN}-email", "Python email support", "${PN}-core ${PN}-io ${PN}-re ${PN}-mime ${PN}-audio ${PN}-image ${PN}-netclient",
     "imaplib.* email" ) # package
 
@@ -376,8 +372,8 @@ if __name__ == "__main__":
     m.addPackage( "${PN}-unixadmin", "Python Unix administration support", "${PN}-core",
     "lib-dynload/nis.*.so lib-dynload/grp.*.so lib-dynload/pwd.*.so getpass.*" )
 
-    m.addPackage( "${PN}-xml", "Python basic XML support", "${PN}-core ${PN}-elementtree ${PN}-re",
-    "lib-dynload/pyexpat.*.so xml xmllib.*" ) # package
+    m.addPackage( "${PN}-xml", "Python basic XML support", "${PN}-core ${PN}-re",
+    "lib-dynload/_elementtree.*.so lib-dynload/pyexpat.*.so xml xmllib.*" ) # package
 
     m.addPackage( "${PN}-xmlrpc", "Python XML-RPC support", "${PN}-core ${PN}-xml ${PN}-netserver ${PN}-lang",
     "xmlrpclib.* SimpleXMLRPCServer.* DocXMLRPCServer.* xmlrpc" )
