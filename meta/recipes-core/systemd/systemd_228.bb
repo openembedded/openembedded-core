@@ -237,8 +237,18 @@ python populate_packages_prepend (){
 }
 PACKAGES_DYNAMIC += "^lib(udev|systemd).*"
 
-PACKAGES =+ "${PN}-gui ${PN}-vconsole-setup ${PN}-initramfs ${PN}-analyze ${PN}-kernel-install \
-             ${PN}-rpm-macros ${PN}-binfmt ${PN}-pam ${PN}-zsh ${PN}-xorg-xinitrc"
+PACKAGES =+ "\
+    ${PN}-gui \
+    ${PN}-vconsole-setup \
+    ${PN}-initramfs \
+    ${PN}-analyze \
+    ${PN}-kernel-install \
+    ${PN}-rpm-macros \
+    ${PN}-binfmt \
+    ${PN}-pam \
+    ${PN}-zsh \
+    ${PN}-xorg-xinitrc \
+"
 
 SYSTEMD_PACKAGES = "${PN}-binfmt"
 SYSTEMD_SERVICE_${PN}-binfmt = "systemd-binfmt.service"
