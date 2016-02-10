@@ -8,15 +8,15 @@ BUGTRACKER = "https://savannah.nongnu.org/bugs/?group=freetype"
 SECTION = "libs"
 
 LICENSE = "FreeType | GPLv2+"
-LIC_FILES_CHKSUM = "file://docs/LICENSE.TXT;md5=c017ff17fc6f0794adf93db5559ccd56 \
+LIC_FILES_CHKSUM = "file://docs/LICENSE.TXT;md5=4af6221506f202774ef74f64932878a1 \
                     file://docs/FTL.TXT;md5=d479e83797f699fe873b38dadd0fcd4c \
                     file://docs/GPLv2.TXT;md5=8ef380476f642c20ebf40fecb0add2ec"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/freetype/freetype-${PV}.tar.bz2 \
            file://use-right-libtool.patch"
 
-SRC_URI[md5sum] = "86109d0c998787d81ac582bad9adf82e"
-SRC_URI[sha256sum] = "baf6bdef7cdcc12ac270583f76ef245efe936267dbecef835f02a3409fcbb892"
+SRC_URI[md5sum] = "0037b25a8c090bc8a1218e867b32beb1"
+SRC_URI[sha256sum] = "371e707aa522acf5b15ce93f11183c725b8ed1ee8546d7b3af549863045863a2"
 
 inherit autotools pkgconfig binconfig-disabled multilib_header
 
