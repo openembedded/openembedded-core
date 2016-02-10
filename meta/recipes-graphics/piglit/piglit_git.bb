@@ -5,8 +5,8 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=b2beded7103a3d8a442a2a0391d607b0"
 SRC_URI = "git://anongit.freedesktop.org/piglit \
            file://0001-tests-Fix-missing-include-of-Xutil.h.patch"
 
-# From 2014/12/04
-SRCREV = "126c7d049b8f32e541625d5a35fbc5f5e4e7fbf8"
+# From 2015-02-19
+SRCREV = "c4585427913e4cb28994b4bfb11d49778273aa2c"
 # (when PV goes above 1.0 remove the trailing r)
 PV = "1.0+gitr${SRCPV}"
 
