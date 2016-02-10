@@ -248,6 +248,7 @@ PACKAGES =+ "\
     ${PN}-pam \
     ${PN}-zsh \
     ${PN}-xorg-xinitrc \
+    ${PN}-extra-utils \
 "
 
 SYSTEMD_PACKAGES = "${PN}-binfmt"
@@ -291,6 +292,51 @@ FILES_${PN}-binfmt = "${sysconfdir}/binfmt.d/ \
 RRECOMMENDS_${PN}-binfmt = "kernel-module-binfmt-misc"
 
 RRECOMMENDS_${PN}-vconsole-setup = "kbd kbd-consolefonts kbd-keymaps"
+
+FILES_${PN}-extra-utils = "\
+                        ${base_bindir}/systemd-escape \
+                        ${base_bindir}/systemd-inhibit \
+                        ${bindir}/systemd-detect-virt \
+                        ${bindir}/systemd-path \
+                        ${bindir}/systemd-run \
+                        ${bindir}/systemd-cat \
+                        ${bindir}/systemd-delta \
+                        ${bindir}/systemd-cgls \
+                        ${bindir}/systemd-cgtop \
+                        ${bindir}/systemd-stdio-bridge \
+                        ${base_bindir}/systemd-ask-password \
+                        ${base_bindir}/systemd-tty-ask-password-agent \
+                        ${systemd_unitdir}/system/systemd-ask-password-console.path \
+                        ${systemd_unitdir}/system/systemd-ask-password-console.service \
+                        ${systemd_unitdir}/system/systemd-ask-password-wall.path \
+                        ${systemd_unitdir}/system/systemd-ask-password-wall.service \
+                        ${systemd_unitdir}/system/sysinit.target.wants/systemd-ask-password-console.path \
+                        ${systemd_unitdir}/system/sysinit.target.wants/systemd-ask-password-wall.path \
+                        ${systemd_unitdir}/system/multi-user.target.wants/systemd-ask-password-wall.path \
+                        ${rootlibexecdir}/systemd/systemd-resolve-host \
+                        ${rootlibexecdir}/systemd/systemd-ac-power \
+                        ${rootlibexecdir}/systemd/systemd-activate \
+                        ${bindir}/systemd-nspawn \
+                        ${exec_prefix}/lib/tmpfiles.d/systemd-nspawn.conf \
+                        ${systemd_unitdir}/system/systemd-nspawn@.service \
+                        ${rootlibexecdir}/systemd/systemd-bus-proxyd \
+                        ${systemd_unitdir}/system/systemd-bus-proxyd.service \
+                        ${systemd_unitdir}/system/systemd-bus-proxyd.socket \
+                        ${rootlibexecdir}/systemd/systemd-socket-proxyd \
+                        ${rootlibexecdir}/systemd/systemd-reply-password \
+                        ${rootlibexecdir}/systemd/systemd-sleep \
+                        ${rootlibexecdir}/systemd/system-sleep \
+                        ${systemd_unitdir}/system/systemd-hibernate.service \
+                        ${systemd_unitdir}/system/systemd-hybrid-sleep.service \
+                        ${systemd_unitdir}/system/systemd-suspend.service \
+                        ${systemd_unitdir}/system/sleep.target \
+                        ${rootlibexecdir}/systemd/systemd-initctl \
+                        ${systemd_unitdir}/system/systemd-initctl.service \
+                        ${systemd_unitdir}/system/systemd-initctl.socket \
+                        ${systemd_unitdir}/system/sockets.target.wants/systemd-initctl.socket \
+                        ${rootlibexecdir}/systemd/system-generators/systemd-gpt-auto-generator \
+                        ${rootlibexecdir}/systemd/systemd-cgroups-agent \
+"
 
 CONFFILES_${PN} = "${sysconfdir}/machine-id \
                 ${sysconfdir}/systemd/coredump.conf \
@@ -346,6 +392,7 @@ RDEPENDS_${PN} += "kmod dbus util-linux-mount udev (= ${EXTENDPKGV})"
 RDEPENDS_${PN} += "volatile-binds update-rc.d"
 
 RRECOMMENDS_${PN} += "systemd-serialgetty systemd-vconsole-setup \
+                      systemd-extra-utils \
                       systemd-compat-units udev-hwdb \
                       util-linux-agetty  util-linux-fsck e2fsprogs-e2fsck \
                       kernel-module-autofs4 kernel-module-unix kernel-module-ipv6 \
