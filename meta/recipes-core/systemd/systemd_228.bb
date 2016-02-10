@@ -64,6 +64,28 @@ PACKAGECONFIG ??= "compat xz ldconfig \
                    ${@bb.utils.contains('DISTRO_FEATURES', 'pam', 'pam', '', d)} \
                    ${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'xkbcommon', '', d)} \
                    ${@bb.utils.contains('DISTRO_FEATURES', 'selinux', 'selinux', '', d)} \
+                   ${@bb.utils.contains('DISTRO_FEATURES', 'wifi', 'rfkill', '', d)} \
+                   ${@bb.utils.contains('MACHINE_FEATURES', 'efi', 'efi', '', d)} \
+                   sysusers \
+                   binfmt \
+                   randomseed \
+                   machined \
+                   backlight \
+                   quotacheck \
+                   bootchart \
+                   hostnamed \
+                   myhostname \
+                   hibernate \
+                   timedated \
+                   timesyncd \
+                   localed \
+                   kdbus \
+                   ima \
+                   smack \
+                   logind \
+                   firstboot \
+                   utmp \
+                   polkit \
                   "
 PACKAGECONFIG[journal-upload] = "--enable-libcurl,--disable-libcurl,curl"
 # Sign the journal for anti-tampering
@@ -76,6 +98,30 @@ PACKAGECONFIG[microhttpd] = "--enable-microhttpd,--disable-microhttpd,libmicroht
 PACKAGECONFIG[elfutils] = "--enable-elfutils,--disable-elfutils,elfutils"
 PACKAGECONFIG[resolved] = "--enable-resolved,--disable-resolved"
 PACKAGECONFIG[networkd] = "--enable-networkd,--disable-networkd"
+PACKAGECONFIG[machined] = "--enable-machined,--disable-machined"
+PACKAGECONFIG[backlight] = "--enable-backlight,--disable-backlight"
+PACKAGECONFIG[quotacheck] = "--enable-quotacheck,--disable-quotacheck"
+PACKAGECONFIG[bootchart] = "--enable-bootchart,--disable-bootchart"
+PACKAGECONFIG[hostnamed] = "--enable-hostnamed,--disable-hostnamed"
+PACKAGECONFIG[myhostname] = "--enable-myhostname,--disable-myhostname"
+PACKAGECONFIG[rfkill] = "--enable-rfkill,--disable-rfkill"
+PACKAGECONFIG[hibernate] = "--enable-hibernate,--disable-hibernate"
+PACKAGECONFIG[timedated] = "--enable-timedated,--disable-timedated"
+PACKAGECONFIG[timesyncd] = "--enable-timesyncd,--disable-timesyncd"
+PACKAGECONFIG[localed] = "--enable-localed,--disable-localed"
+PACKAGECONFIG[efi] = "--enable-efi,--disable-efi"
+PACKAGECONFIG[kdbus] = "--enable-kdbus,--disable-kdbus"
+PACKAGECONFIG[ima] = "--enable-ima,--disable-ima"
+PACKAGECONFIG[smack] = "--enable-smack,--disable-smack"
+# libseccomp is found in meta-security
+PACKAGECONFIG[seccomp] = "--enable-seccomp,--disable-seccomp,libseccomp"
+PACKAGECONFIG[logind] = "--enable-logind,--disable-logind"
+PACKAGECONFIG[sysusers] = "--enable-sysusers,--disable-sysusers"
+PACKAGECONFIG[firstboot] = "--enable-firstboot,--disable-firstboot"
+PACKAGECONFIG[randomseed] = "--enable-randomseed,--disable-randomseed"
+PACKAGECONFIG[binfmt] = "--enable-binfmt,--disable-binfmt"
+PACKAGECONFIG[utmp] = "--enable-utmp,--disable-utmp"
+PACKAGECONFIG[polkit] = "--enable-polkit,--disable-polkit"
 # importd requires curl/xz/zlib/bzip2/gcrypt
 PACKAGECONFIG[importd] = "--enable-importd,--disable-importd"
 PACKAGECONFIG[libidn] = "--enable-libidn,--disable-libidn,libidn"
@@ -186,17 +232,20 @@ do_install() {
         # Delete journal README, as log can be symlinked inside volatile.
         rm -f ${D}/${localstatedir}/log/README
 
-	# Create symlinks for systemd-update-utmp-runlevel.service
 	install -d ${D}${systemd_unitdir}/system/graphical.target.wants
 	install -d ${D}${systemd_unitdir}/system/multi-user.target.wants
 	install -d ${D}${systemd_unitdir}/system/poweroff.target.wants
 	install -d ${D}${systemd_unitdir}/system/reboot.target.wants
 	install -d ${D}${systemd_unitdir}/system/rescue.target.wants
-	ln -sf ../systemd-update-utmp-runlevel.service ${D}${systemd_unitdir}/system/graphical.target.wants/systemd-update-utmp-runlevel.service
-	ln -sf ../systemd-update-utmp-runlevel.service ${D}${systemd_unitdir}/system/multi-user.target.wants/systemd-update-utmp-runlevel.service
-	ln -sf ../systemd-update-utmp-runlevel.service ${D}${systemd_unitdir}/system/poweroff.target.wants/systemd-update-utmp-runlevel.service
-	ln -sf ../systemd-update-utmp-runlevel.service ${D}${systemd_unitdir}/system/reboot.target.wants/systemd-update-utmp-runlevel.service
-	ln -sf ../systemd-update-utmp-runlevel.service ${D}${systemd_unitdir}/system/rescue.target.wants/systemd-update-utmp-runlevel.service
+
+	# Create symlinks for systemd-update-utmp-runlevel.service
+	if ${@bb.utils.contains('PACKAGECONFIG', 'utmp', 'true', 'false', d)}; then
+		ln -sf ../systemd-update-utmp-runlevel.service ${D}${systemd_unitdir}/system/graphical.target.wants/systemd-update-utmp-runlevel.service
+		ln -sf ../systemd-update-utmp-runlevel.service ${D}${systemd_unitdir}/system/multi-user.target.wants/systemd-update-utmp-runlevel.service
+		ln -sf ../systemd-update-utmp-runlevel.service ${D}${systemd_unitdir}/system/poweroff.target.wants/systemd-update-utmp-runlevel.service
+		ln -sf ../systemd-update-utmp-runlevel.service ${D}${systemd_unitdir}/system/reboot.target.wants/systemd-update-utmp-runlevel.service
+		ln -sf ../systemd-update-utmp-runlevel.service ${D}${systemd_unitdir}/system/rescue.target.wants/systemd-update-utmp-runlevel.service
+	fi
 
 	# Enable journal to forward message to syslog daemon
 	sed -i -e 's/.*ForwardToSyslog.*/ForwardToSyslog=yes/' ${D}${sysconfdir}/systemd/journald.conf
@@ -255,7 +304,8 @@ SYSTEMD_PACKAGES = "${PN}-binfmt"
 SYSTEMD_SERVICE_${PN}-binfmt = "systemd-binfmt.service"
 
 USERADD_PACKAGES = "${PN}"
-USERADD_PARAM_${PN} += "--system systemd-journal-gateway; --system systemd-timesync"
+USERADD_PARAM_${PN} += "${@bb.utils.contains('PACKAGECONFIG', 'microhttpd', '--system systemd-journal-gateway;', '', d)}"
+USERADD_PARAM_${PN} += "${@bb.utils.contains('PACKAGECONFIG', 'timesyncd', '--system systemd-timesync;', '', d)}"
 GROUPADD_PARAM_${PN} = "-r lock; -r systemd-journal"
 
 FILES_${PN}-analyze = "${bindir}/systemd-analyze"
