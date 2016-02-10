@@ -18,6 +18,7 @@ from oeqa.utils import CommandError
 from oeqa.utils import ftools
 import re
 import contextlib
+import bb
 
 class Command(object):
     def __init__(self, command, bg=False, timeout=None, data=None, **options):
@@ -207,6 +208,16 @@ def runqemu(pn, test):
         # to run tinfoil-using utilities with the running QEMU instance.
         # Luckily QemuTarget doesn't need it after the constructor.
         tinfoil.shutdown()
+
+    # Setup bitbake logger as console handler is removed by tinfoil.shutdown
+    bblogger = logging.getLogger('BitBake')
+    bblogger.setLevel(logging.INFO)
+    console = logging.StreamHandler(sys.stdout)
+    bbformat = bb.msg.BBLogFormatter("%(levelname)s: %(message)s")
+    if sys.stdout.isatty():
+        bbformat.enable_color()
+    console.setFormatter(bbformat)
+    bblogger.addHandler(console)
 
     try:
         qemu.deploy()
