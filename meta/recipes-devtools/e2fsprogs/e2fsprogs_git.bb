@@ -6,6 +6,7 @@ SRC_URI += "file://acinclude.m4 \
             file://run-ptest \
             file://ptest.patch \
             file://mkdir.patch \
+            file://xattr_ordering.patch \
 "
 
 SRCREV = "0f26747167cc9d82df849b0aad387bf824f04544"
