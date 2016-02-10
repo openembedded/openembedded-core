@@ -65,6 +65,16 @@ class LocalSigner(object):
             raise bb.build.FuncFailed("Failed to create signature for '%s': %s" %
                                       (input_file, output))
 
+    def verify(self, sig_file):
+        """Verify signature"""
+        cmd = self.gpg_bin + " --verify "
+        if self.gpg_path:
+            cmd += "--homedir %s " % self.gpg_path
+        cmd += sig_file
+        status, _ = oe.utils.getstatusoutput(cmd)
+        ret = False if status else True
+        return ret
+
 
 def get_signer(d, backend, keyid, passphrase_file):
     """Get signer object for the specified backend"""
