@@ -25,6 +25,7 @@ SRC_URI = "${GNU_MIRROR}/guile/guile-${PV}.tar.xz \
            file://libguile-VM-ASM_MUL-for-ARM-Add-earlyclobber.patch \
            file://remove_strcase_l_funcs.patch \
            file://0001-libguile-Check-for-strtol_l-during-configure.patch \
+           file://0002-Recognize-nios2-as-compilation-target.patch \
            "
 
 #           file://debian/0001-Change-guile-to-guile-X.Y-for-info-pages.patch
