@@ -52,13 +52,15 @@ class LocalSigner(object):
             bb.error('rpmsign failed: %s' % proc.before.strip())
             raise bb.build.FuncFailed("Failed to sign RPM packages")
 
-    def detach_sign(self, input_file):
+    def detach_sign(self, input_file, armor=True):
         """Create a detached signature of a file"""
-        cmd = "%s --detach-sign --armor --batch --no-tty --yes " \
+        cmd = "%s --detach-sign --batch --no-tty --yes " \
                   "--passphrase-file '%s' -u '%s' " % \
                   (self.gpg_bin, self.passphrase_file, self.keyid)
         if self.gpg_path:
             cmd += "--homedir %s " % self.gpg_path
+        if armor:
+            cmd += "--armor "
         cmd += input_file
         status, output = oe.utils.getstatusoutput(cmd)
         if status:
