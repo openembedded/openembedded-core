@@ -246,7 +246,7 @@ PACKAGES =+ "\
     ${PN}-rpm-macros \
     ${PN}-binfmt \
     ${PN}-pam \
-    ${PN}-zsh \
+    ${PN}-zsh-completion \
     ${PN}-xorg-xinitrc \
     ${PN}-extra-utils \
 "
@@ -282,7 +282,7 @@ FILES_${PN}-rpm-macros = "${exec_prefix}/lib/rpm \
 
 FILES_${PN}-xorg-xinitrc = "${sysconfdir}/X11/xinit/xinitrc.d/*"
 
-FILES_${PN}-zsh = "${datadir}/zsh/site-functions"
+FILES_${PN}-zsh-completion = "${datadir}/zsh/site-functions"
 
 FILES_${PN}-binfmt = "${sysconfdir}/binfmt.d/ \
                       ${exec_prefix}/lib/binfmt.d \
