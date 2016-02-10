@@ -6,31 +6,29 @@ import oe.utils
 
 class LocalSigner(object):
     """Class for handling local (on the build host) signing"""
-    def __init__(self, d, keyid, passphrase_file):
-        self.keyid = keyid
-        self.passphrase_file = passphrase_file
+    def __init__(self, d):
         self.gpg_bin = d.getVar('GPG_BIN', True) or \
                   bb.utils.which(os.getenv('PATH'), 'gpg')
         self.gpg_path = d.getVar('GPG_PATH', True)
         self.rpm_bin = bb.utils.which(os.getenv('PATH'), "rpm")
 
-    def export_pubkey(self, output_file):
+    def export_pubkey(self, output_file, keyid):
         """Export GPG public key to a file"""
         cmd = '%s --batch --yes --export --armor -o %s ' % \
                 (self.gpg_bin, output_file)
         if self.gpg_path:
             cmd += "--homedir %s " % self.gpg_path
-        cmd += self.keyid
+        cmd += keyid
         status, output = oe.utils.getstatusoutput(cmd)
         if status:
             raise bb.build.FuncFailed('Failed to export gpg public key (%s): %s' %
-                                      (self.keyid, output))
+                                      (keyid, output))
 
-    def sign_rpms(self, files):
+    def sign_rpms(self, files, keyid, passphrase_file):
         """Sign RPM files"""
         import pexpect
 
-        cmd = self.rpm_bin + " --addsign --define '_gpg_name %s' " % self.keyid
+        cmd = self.rpm_bin + " --addsign --define '_gpg_name %s' " % keyid
         if self.gpg_bin:
             cmd += "--define '%%__gpg %s' " % self.gpg_bin
         if self.gpg_path:
@@ -41,7 +39,7 @@ class LocalSigner(object):
         proc = pexpect.spawn(cmd)
         try:
             proc.expect_exact('Enter pass phrase:', timeout=15)
-            with open(self.passphrase_file) as fobj:
+            with open(passphrase_file) as fobj:
                 proc.sendline(fobj.readline().rstrip('\n'))
             proc.expect(pexpect.EOF, timeout=900)
             proc.close()
@@ -52,11 +50,11 @@ class LocalSigner(object):
             bb.error('rpmsign failed: %s' % proc.before.strip())
             raise bb.build.FuncFailed("Failed to sign RPM packages")
 
-    def detach_sign(self, input_file, armor=True):
+    def detach_sign(self, input_file, keyid, passphrase_file, armor=True):
         """Create a detached signature of a file"""
         cmd = "%s --detach-sign --batch --no-tty --yes " \
                   "--passphrase-file '%s' -u '%s' " % \
-                  (self.gpg_bin, self.passphrase_file, self.keyid)
+                  (self.gpg_bin, passphrase_file, keyid)
         if self.gpg_path:
             cmd += "--homedir %s " % self.gpg_path
         if armor:
@@ -78,11 +76,11 @@ class LocalSigner(object):
         return ret
 
 
-def get_signer(d, backend, keyid, passphrase_file):
+def get_signer(d, backend):
     """Get signer object for the specified backend"""
     # Use local signing by default
     if backend == 'local':
-        return LocalSigner(d, keyid, passphrase_file)
+        return LocalSigner(d)
     else:
         bb.fatal("Unsupported signing backend '%s'" % backend)
 

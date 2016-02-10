@@ -26,18 +26,14 @@ python do_export_public_keys () {
 
     if d.getVar("RPM_SIGN_PACKAGES", True):
         # Export public key of the rpm signing key
-        signer = get_signer(d,
-                            d.getVar('RPM_GPG_BACKEND', True),
-                            d.getVar('RPM_GPG_NAME', True),
-                            d.getVar('RPM_GPG_PASSPHRASE_FILE', True))
-        signer.export_pubkey(d.getVar('RPM_GPG_PUBKEY', True))
+        signer = get_signer(d, d.getVar('RPM_GPG_BACKEND', True))
+        signer.export_pubkey(d.getVar('RPM_GPG_PUBKEY', True),
+                             d.getVar('RPM_GPG_NAME', True))
 
     if d.getVar('PACKAGE_FEED_SIGN', True) == '1':
         # Export public key of the feed signing key
-        signer = get_signer(d,
-                            d.getVar('PACKAGE_FEED_GPG_BACKEND', True),
-                            d.getVar('PACKAGE_FEED_GPG_NAME', True),
-                            d.getVar('PACKAGE_FEED_GPG_PASSPHRASE_FILE', True))
-        signer.export_pubkey(d.getVar('PACKAGE_FEED_GPG_PUBKEY', True))
+        signer = get_signer(d, d.getVar('PACKAGE_FEED_GPG_BACKEND', True))
+        signer.export_pubkey(d.getVar('PACKAGE_FEED_GPG_PUBKEY', True),
+                             d.getVar('PACKAGE_FEED_GPG_NAME', True))
 }
 addtask do_export_public_keys before do_build

@@ -36,13 +36,12 @@ python sign_rpm () {
     import glob
     from oe.gpg_sign import get_signer
 
-    signer = get_signer(d,
-                        d.getVar('RPM_GPG_BACKEND', True),
-                        d.getVar('RPM_GPG_NAME', True),
-                        d.getVar('RPM_GPG_PASSPHRASE_FILE', True))
+    signer = get_signer(d, d.getVar('RPM_GPG_BACKEND', True))
     rpms = glob.glob(d.getVar('RPM_PKGWRITEDIR', True) + '/*')
 
-    signer.sign_rpms(rpms)
+    signer.sign_rpms(rpms,
+                     d.getVar('RPM_GPG_NAME', True),
+                     d.getVar('RPM_GPG_PASSPHRASE_FILE', True))
 }
 
 do_package_index[depends] += "signing-keys:do_export_public_keys"
