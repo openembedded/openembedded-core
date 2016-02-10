@@ -37,7 +37,7 @@ SRC_URI = " \
     http://libbsd.freedesktop.org/releases/${BPN}-${PV}.tar.xz \
 "
 
-SRC_URI[md5sum] = "f3daff0283af6e30f25d68be2deac4ef"
-SRC_URI[sha256sum] = "adbc8781ad720bce939b689f38a9f0247732a36792147a7c28027c393c2af9b0"
+SRC_URI[md5sum] = "cdee252ccff978b50ad2336278c506c9"
+SRC_URI[sha256sum] = "b2f644cae94a6e2fe109449c20ad79a0f6ee4faec2205b07eefa0020565e250a"
 
 inherit autotools pkgconfig
