@@ -21,20 +21,34 @@ PACKAGECONFIG ??= "${@bb.utils.contains("DISTRO_FEATURES", "ipv6", "ipv6", "", d
 PACKAGECONFIG_class-native = "ipv6 ssl zlib"
 PACKAGECONFIG_class-nativesdk = "ipv6 ssl zlib"
 
-PACKAGECONFIG[ipv6] = "--enable-ipv6,--disable-ipv6,"
-PACKAGECONFIG[ssl] = "--with-ssl --with-random=/dev/urandom,--without-ssl,openssl"
+PACKAGECONFIG[dict] = "--enable-dict,--disable-dict,"
 PACKAGECONFIG[gnutls] = "--with-gnutls,--without-gnutls,gnutls"
-PACKAGECONFIG[zlib] = "--with-zlib=${STAGING_LIBDIR}/../,--without-zlib,zlib"
-PACKAGECONFIG[rtmpdump] = "--with-librtmp,--without-librtmp,rtmpdump"
+PACKAGECONFIG[gopher] = "--enable-gopher,--disable-gopher,"
+PACKAGECONFIG[imap] = "--enable-imap,--disable-imap,"
+PACKAGECONFIG[ipv6] = "--enable-ipv6,--disable-ipv6,"
+PACKAGECONFIG[ldap] = "--enable-ldap,--disable-ldap,"
+PACKAGECONFIG[ldaps] = "--enable-ldaps,--disable-ldaps,"
+PACKAGECONFIG[libidn] = "--with-libidn,--without-libidn,libidn"
 PACKAGECONFIG[libssh2] = "--with-libssh2,--without-libssh2,libssh2"
+PACKAGECONFIG[pop3] = "--enable-pop3,--disable-pop3,"
+PACKAGECONFIG[proxy] = "--enable-proxy,--disable-proxy,"
+PACKAGECONFIG[rtmpdump] = "--with-librtmp,--without-librtmp,rtmpdump"
+PACKAGECONFIG[rtsp] = "--enable-rtsp,--disable-rtsp,"
 PACKAGECONFIG[smb] = "--enable-smb,--disable-smb,"
+PACKAGECONFIG[smtp] = "--enable-smtp,--disable-smtp,"
+PACKAGECONFIG[ssl] = "--with-ssl --with-random=/dev/urandom,--without-ssl,openssl"
+PACKAGECONFIG[telnet] = "--enable-telnet,--disable-telnet,"
+PACKAGECONFIG[tftp] = "--enable-tftp,--disable-tftp,"
+PACKAGECONFIG[zlib] = "--with-zlib=${STAGING_LIBDIR}/../,--without-zlib,zlib"
 
-EXTRA_OECONF = "--without-libidn \
-                --enable-crypto-auth \
-                --disable-ldap \
-                --disable-ldaps \
-                --with-ca-bundle=${sysconfdir}/ssl/certs/ca-certificates.crt \
+EXTRA_OECONF = " \
+    --enable-crypto-auth \
+    --with-ca-bundle=${sysconfdir}/ssl/certs/ca-certificates.crt \
+    --without-libmetalink \
+    --without-libpsl \
+    --without-nghttp2 \
 "
+
 # see https://lists.yoctoproject.org/pipermail/poky/2013-December/009435.html
 # We should ideally drop ac_cv_sizeof_off_t from site files but until then
 EXTRA_OECONF += "${@bb.utils.contains('DISTRO_FEATURES', 'largefile', 'ac_cv_sizeof_off_t=8', '', d)}"
