@@ -23,6 +23,7 @@ RDEPENDS_${PN} = "\
   python-ctypes \
   python-subprocess \
   python-unittest \
+  python-compile \
 "
 
 RDEPENDS_${PN}_class-native = "\
