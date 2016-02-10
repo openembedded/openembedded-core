@@ -50,7 +50,7 @@ fi
 
 # Perform group additions first, since user additions may depend
 # on these groups existing
-if test "x$GROUPADD_PARAM" != "x"; then
+if test "x`echo $GROUPADD_PARAM | tr -d '[:space:]'`" != "x"; then
 	echo "Running groupadd commands..."
 	# Invoke multiple instances of groupadd for parameter lists
 	# separated by ';'
@@ -66,7 +66,7 @@ if test "x$GROUPADD_PARAM" != "x"; then
 	done
 fi 
 
-if test "x$USERADD_PARAM" != "x"; then
+if test "x`echo $USERADD_PARAM | tr -d '[:space:]'`" != "x"; then
 	echo "Running useradd commands..."
 	# Invoke multiple instances of useradd for parameter lists
 	# separated by ';'
@@ -82,7 +82,7 @@ if test "x$USERADD_PARAM" != "x"; then
 	done
 fi
 
-if test "x$GROUPMEMS_PARAM" != "x"; then
+if test "x`echo $GROUPMEMS_PARAM | tr -d '[:space:]'`" != "x"; then
 	echo "Running groupmems commands..."
 	# Invoke multiple instances of groupmems for parameter lists
 	# separated by ';'
