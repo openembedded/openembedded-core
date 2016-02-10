@@ -35,7 +35,7 @@ do_configure_prepend() {
 }
 
 RDEPENDS_${PN} = "waffle python python-mako python-json python-subprocess \
-	python-argparse python-importlib python-unixadmin \
+	python-argparse python-importlib python-unixadmin python-xml \
 	python-multiprocessing python-textutils python-netserver python-shell \
 	mesa-demos bash \
 	"
