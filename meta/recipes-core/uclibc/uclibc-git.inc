@@ -20,5 +20,6 @@ SRC_URI = "git://uclibc.org/uClibc.git;branch=master \
         file://0001-fcntl-Add-AT_EMPTY_PATH-for-all-and-O_PATH-for-arm.patch \
         file://0001-wire-in-syncfs.patch \
         file://CVE-2016-2224.patch \
+        file://CVE-2016-2225.patch \
 "
 S = "${WORKDIR}/git"
