@@ -11,8 +11,8 @@ PACKAGECONFIG ??= "startup-notification"
 PACKAGECONFIG[startup-notification] = "--enable-startup-notification,--disable-startup-notification,startup-notification"
 
 inherit gnomebase
-SRC_URI[archive.md5sum] = "4538672e0d775fadedf10abeb8020047"
-SRC_URI[archive.sha256sum] = "f5080076346609b4c36394b879f3a86b92ced3b90a37cb54c8e9a14f00e7921c"
+SRC_URI[archive.md5sum] = "d96c0b74c4dc5fdae758964098603c90"
+SRC_URI[archive.sha256sum] = "bb643c9c423c8aa79c59973ce27ce91d3b180d1e9907902278fb79391f52befa"
 
 inherit distro_features_check
 # libxres means x11 only
