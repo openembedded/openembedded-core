@@ -15,19 +15,19 @@ LIC_FILES_CHKSUM = "file://COPYING.GPLv2;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
 
 SRC_URI = "https://www.ffmpeg.org/releases/${BP}.tar.xz"
 
-SRC_URI[md5sum] = "b34164bd181f4f81c21da3dd131d919d"
-SRC_URI[sha256sum] = "76fb83a267d2d1cb332742dadf28ad8b58af7958165f51bb1a2c226a122f0ac7"
+SRC_URI[md5sum] = "0cff5dae51375f0a31a651f986ed1534"
+SRC_URI[sha256sum] = "25bcedbdafadac3d09c325c1d46a51f53d858b26a260d5aed6b4f17fea6e07fa"
 
 # Should be API compatible with libav (which was a fork of ffmpeg)
 # libpostproc was previously packaged from a separate recipe
 PROVIDES = "libav libpostproc"
 
-DEPENDS = "alsa-lib zlib libogg yasm-native libxv"
+DEPENDS = "alsa-lib zlib libogg yasm-native"
 
 inherit autotools pkgconfig
 
 PACKAGECONFIG ??= "avdevice avfilter gpl theora x264 ${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'x11', '', d)}"
-PACKAGECONFIG[avdevice] = "--enable-avdevice,--disable-avdevice"
+PACKAGECONFIG[avdevice] = "--enable-avdevice,--disable-avdevice, libxv"
 PACKAGECONFIG[avfilter] = "--enable-avfilter,--disable-avfilter"
 PACKAGECONFIG[faac] = "--enable-libfaac,--disable-libfaac,faac"
 PACKAGECONFIG[gpl] = "--enable-gpl,--disable-gpl"
