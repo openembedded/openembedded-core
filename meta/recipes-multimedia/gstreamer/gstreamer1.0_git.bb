@@ -11,6 +11,7 @@ SRC_URI = " \
 "
 
 PV = "1.7.1+git${SRCPV}"
+UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>(\d+(\.\d+)+))"
 
 SRCREV_base = "2a188848eb2af3c3b357978ff7786a78aad9dd55"
 SRCREV_common = "86e46630ed8af8d94796859db550a9c3d89c9f65"
