@@ -97,9 +97,18 @@ def testsdkext_main(d):
     # extensible sdk shows a warning if found bitbake in the path
     # because can cause problems so clean it
     new_path = ''
+    paths_to_avoid = ['bitbake/bin', 'poky/scripts',
+                       d.getVar('STAGING_DIR', True),
+                       d.getVar('BASE_WORKDIR', True)]
     for p in os.environ['PATH'].split(':'):
-       if 'bitbake/bin' in p or 'poky/scripts' in p:
+       avoid = False
+       for pa in paths_to_avoid:
+           if pa in p:
+              avoid = True
+              break
+       if avoid:
            continue
+
        new_path = new_path + p + ':'
     new_path = new_path[:-1]
     os.environ['PATH'] = new_path
