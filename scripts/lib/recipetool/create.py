@@ -247,6 +247,35 @@ def determine_from_filename(srcfile):
         pv = None
     return (pn, pv)
 
+def determine_from_url(srcuri):
+    """Determine name and version from a URL"""
+    pn = None
+    pv = None
+    parseres = urlparse.urlparse(srcuri.lower())
+    if parseres.path:
+        if 'github.com' in parseres.netloc:
+            res = re.search(r'.*/(.*?)/archive/(.*)-final\.(tar|zip)', parseres.path)
+            if res:
+                pn = res.group(1).strip().replace('_', '-')
+                pv = res.group(2).strip().replace('_', '.')
+            else:
+                res = re.search(r'.*/(.*?)/archive/v?(.*)\.(tar|zip)', parseres.path)
+                if res:
+                    pn = res.group(1).strip().replace('_', '-')
+                    pv = res.group(2).strip().replace('_', '.')
+        elif 'bitbucket.org' in parseres.netloc:
+            res = re.search(r'.*/(.*?)/get/[a-zA-Z_-]*([0-9][0-9a-zA-Z_.]*)\.(tar|zip)', parseres.path)
+            if res:
+                pn = res.group(1).strip().replace('_', '-')
+                pv = res.group(2).strip().replace('_', '.')
+
+        if not pn and not pv:
+            srcfile = os.path.basename(parseres.path.rstrip('/'))
+            pn, pv = determine_from_filename(srcfile)
+
+    logger.debug('Determined from source URL: name = "%s", version = "%s"' % (pn, pv))
+    return (pn, pv)
+
 def supports_srcrev(uri):
     localdata = bb.data.createCopy(tinfoil.config_data)
     # This is a bit sad, but if you don't have this set there can be some
@@ -430,15 +459,12 @@ def create_recipe(args):
         realpv = None
 
     if srcuri and not realpv or not pn:
-        parseres = urlparse.urlparse(srcuri)
-        if parseres.path:
-            srcfile = os.path.basename(parseres.path.rstrip('/'))
-            name_pn, name_pv = determine_from_filename(srcfile)
-            logger.debug('Determined from filename: name = "%s", version = "%s"' % (name_pn, name_pv))
-            if name_pn and not pn:
-                pn = name_pn
-            if name_pv and not realpv:
-                realpv = name_pv
+        name_pn, name_pv = determine_from_url(srcuri)
+        if name_pn and not pn:
+            pn = name_pn
+        if name_pv and not realpv:
+            realpv = name_pv
+
 
     if not srcuri:
         lines_before.append('# No information for SRC_URI yet (only an external source tree was specified)')
