@@ -25,6 +25,7 @@
 #
 
 SRCTREECOVEREDTASKS ?= "do_patch do_unpack do_fetch"
+EXTERNALSRC_SYMLINKS ?= "oe-workdir:${WORKDIR} oe-logs:${T}"
 
 python () {
     externalsrc = d.getVar('EXTERNALSRC', True)
@@ -82,6 +83,7 @@ python () {
             bb.build.deltask(task, d)
 
         d.prependVarFlag('do_compile', 'prefuncs', "externalsrc_compile_prefunc ")
+        d.prependVarFlag('do_configure', 'prefuncs', "externalsrc_configure_prefunc ")
 
         # Ensure compilation happens every time
         d.setVarFlag('do_compile', 'nostamp', '1')
@@ -99,6 +101,24 @@ python () {
             configstamp = '${TMPDIR}/work-shared/${PN}/${EXTENDPE}${PV}-${PR}/configure.sstate'
             d.setVar('CONFIGURESTAMPFILE', configstamp)
             d.setVarFlag('do_configure', 'file-checksums', configstamp + ':True')
+}
+
+python externalsrc_configure_prefunc() {
+    # Create desired symlinks
+    symlinks = (d.getVar('EXTERNALSRC_SYMLINKS', True) or '').split()
+    for symlink in symlinks:
+        symsplit = symlink.split(':', 1)
+        lnkfile = os.path.join(d.getVar('S', True), symsplit[0])
+        target = d.expand(symsplit[1])
+        if len(symsplit) > 1:
+            if os.path.islink(lnkfile):
+                # Link already exists, leave it if it points to the right location already
+                if os.readlink(lnkfile) == target:
+                    continue
+            elif os.path.exists(lnkfile):
+                # File/dir exists with same name as link, just leave it alone
+                continue
+            os.symlink(target, lnkfile)
 }
 
 python externalsrc_compile_prefunc() {
