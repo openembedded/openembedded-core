@@ -13,6 +13,7 @@ DEPENDS = "libpthread-stubs udev libpciaccess"
 SRC_URI = "http://dri.freedesktop.org/libdrm/${BP}.tar.bz2 \
            file://installtests.patch \
            file://0001-tests-kms-steal-crtc-Include-sys-select.h.patch \
+           file://detect.patch \
           "
 
 SRC_URI[md5sum] = "c6809c48538d6e5999588832045ff014"
