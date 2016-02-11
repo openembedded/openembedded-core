@@ -291,10 +291,12 @@ def supports_srcrev(uri):
 
 def reformat_git_uri(uri):
     '''Convert any http[s]://....git URI into git://...;protocol=http[s]'''
-    res = re.match('(https?)://([^;]+\.git)(;.*)?$', uri)
-    if res:
-        # Need to switch the URI around so that the git fetcher is used
-        return 'git://%s;protocol=%s%s' % (res.group(2), res.group(1), res.group(3) or '')
+    checkuri = uri.split(';', 1)[0]
+    if checkuri.endswith('.git') or '/git/' in checkuri:
+        res = re.match('(https?)://([^;]+(\.git)?)(;.*)?$', uri)
+        if res:
+            # Need to switch the URI around so that the git fetcher is used
+            return 'git://%s;protocol=%s%s' % (res.group(2), res.group(1), res.group(4) or '')
     return uri
 
 def create_recipe(args):
