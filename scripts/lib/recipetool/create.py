@@ -369,6 +369,7 @@ def create_recipe(args):
                     if len(splitline) > 1:
                         if splitline[0] == 'origin' and '://' in splitline[1]:
                             srcuri = reformat_git_uri(splitline[1])
+                            srcsubdir = 'git'
                             break
 
     if args.src_subdir:
