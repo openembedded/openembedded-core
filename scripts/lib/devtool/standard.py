@@ -685,11 +685,11 @@ def modify(args, config, basepath, workspace):
     else:
         srctree = get_default_srctree(config, args.recipename)
 
-    if not args.extract and not os.path.isdir(srctree):
-        raise DevtoolError("directory %s does not exist or not a directory "
-                           "(specify -x to extract source from recipe)" %
+    if args.no_extract and not os.path.isdir(srctree):
+        raise DevtoolError("--no-extract specified and source path %s does "
+                           "not exist or is not a directory" %
                            srctree)
-    if args.extract:
+    if not args.no_extract:
         tinfoil = _prep_extract_operation(config, basepath, args.recipename)
         if not tinfoil:
             # Error already shown
@@ -720,7 +720,7 @@ def modify(args, config, basepath, workspace):
 
     initial_rev = None
     commits = []
-    if args.extract:
+    if not args.no_extract:
         initial_rev = _extract_source(srctree, False, args.branch, False, rd)
         if not initial_rev:
             return 1
@@ -1319,7 +1319,9 @@ def register_commands(subparsers, context):
     parser_modify.add_argument('recipename', help='Name of existing recipe to edit (just name - no version, path or extension)')
     parser_modify.add_argument('srctree', nargs='?', help='Path to external source tree. If not specified, a subdirectory of %s will be used.' % defsrctree)
     parser_modify.add_argument('--wildcard', '-w', action="store_true", help='Use wildcard for unversioned bbappend')
-    parser_modify.add_argument('--extract', '-x', action="store_true", help='Extract source as well')
+    group = parser_modify.add_mutually_exclusive_group()
+    group.add_argument('--extract', '-x', action="store_true", help='Extract source for recipe (default)')
+    group.add_argument('--no-extract', '-n', action="store_true", help='Do not extract source, expect it to exist')
     group = parser_modify.add_mutually_exclusive_group()
     group.add_argument('--same-dir', '-s', help='Build in same directory as source', action="store_true")
     group.add_argument('--no-same-dir', help='Force build in a separate build directory', action="store_true")

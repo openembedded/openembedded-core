@@ -570,7 +570,8 @@ class DevtoolTests(DevtoolBase):
         self.track_for_cleanup(self.workspacedir)
         self.add_command_to_tearDown('bitbake-layers remove-layer */workspace')
         # (don't bother with cleaning the recipe on teardown, we won't be building it)
-        result = runCmd('devtool modify %s -x %s' % (testrecipe, tempdir))
+        # We don't use -x here so that we test the behaviour of devtool modify without it
+        result = runCmd('devtool modify %s %s' % (testrecipe, tempdir))
         # Check git repo
         self._check_src_repo(tempdir)
         # Add a couple of commits
