@@ -12,6 +12,8 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/project/cdrtools/cdrtools-${REALPV}.tar.bz2"
 SRC_URI[md5sum] = "7d45c5b7e1f78d85d1583b361aee6e8b"
 SRC_URI[sha256sum] = "ed282eb6276c4154ce6a0b5dee0bdb81940d0cbbfc7d03f769c4735ef5f5860f"
 
+EXTRA_OEMAKE = "-e MAKEFLAGS="
+
 inherit native
 
 PV = "3.01a31+really3.01"
