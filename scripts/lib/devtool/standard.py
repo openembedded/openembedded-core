@@ -393,6 +393,38 @@ class BbTaskExecutor(object):
             self.executed.append(func)
 
 
+class PatchTaskExecutor(BbTaskExecutor):
+    def __init__(self, rdata):
+        self.check_git = False
+        super(PatchTaskExecutor, self).__init__(rdata)
+
+    def exec_func(self, func, report):
+        from oe.patch import GitApplyTree
+        srcsubdir = self.rdata.getVar('S', True)
+        haspatches = False
+        if func == 'do_patch':
+            patchdir = os.path.join(srcsubdir, 'patches')
+            if os.path.exists(patchdir):
+                if os.listdir(patchdir):
+                    haspatches = True
+                else:
+                    os.rmdir(patchdir)
+
+        super(PatchTaskExecutor, self).exec_func(func, report)
+        if self.check_git and os.path.exists(srcsubdir):
+            if func == 'do_patch':
+                if os.path.exists(patchdir):
+                    shutil.rmtree(patchdir)
+                    if haspatches:
+                        stdout, _ = bb.process.run('git status --porcelain patches', cwd=srcsubdir)
+                        if stdout:
+                            bb.process.run('git checkout patches', cwd=srcsubdir)
+
+            stdout, _ = bb.process.run('git status --porcelain', cwd=srcsubdir)
+            if stdout:
+                bb.process.run('git add .; git commit -a -m "Committing changes from %s\n\n%s"' % (func, GitApplyTree.ignore_commit_prefix + ' - from %s' % func), cwd=srcsubdir)
+
+
 def _prep_extract_operation(config, basepath, recipename):
     """HACK: Ugly workaround for making sure that requirements are met when
        trying to extract a package. Returns the tinfoil instance to be used."""
@@ -477,7 +509,7 @@ def _extract_source(srctree, keep_temp, devbranch, sync, d):
             # We don't want to move the source to STAGING_KERNEL_DIR here
             crd.setVar('STAGING_KERNEL_DIR', '${S}')
 
-        task_executor = BbTaskExecutor(crd)
+        task_executor = PatchTaskExecutor(crd)
 
         crd.setVar('EXTERNALSRC_forcevariable', '')
 
@@ -490,6 +522,8 @@ def _extract_source(srctree, keep_temp, devbranch, sync, d):
             logger.info('Doing kernel checkout...')
             task_executor.exec_func('do_kernel_checkout', False)
         srcsubdir = crd.getVar('S', True)
+
+        task_executor.check_git = True
 
         # Move local source files into separate subdir
         recipe_patches = [os.path.basename(patch) for patch in
@@ -524,13 +558,6 @@ def _extract_source(srctree, keep_temp, devbranch, sync, d):
 
         scriptutils.git_convert_standalone_clone(srcsubdir)
 
-        patchdir = os.path.join(srcsubdir, 'patches')
-        haspatches = False
-        if os.path.exists(patchdir):
-            if os.listdir(patchdir):
-                haspatches = True
-            else:
-                os.rmdir(patchdir)
         # Make sure that srcsubdir exists
         bb.utils.mkdirhier(srcsubdir)
         if not os.path.exists(srcsubdir) or not os.listdir(srcsubdir):
@@ -549,11 +576,6 @@ def _extract_source(srctree, keep_temp, devbranch, sync, d):
         task_executor.exec_func('do_patch', False)
 
         bb.process.run('git tag -f devtool-patched', cwd=srcsubdir)
-
-        if os.path.exists(patchdir):
-            shutil.rmtree(patchdir)
-            if haspatches:
-                bb.process.run('git checkout patches', cwd=srcsubdir)
 
         if bb.data.inherits_class('kernel-yocto', d):
             # Store generate and store kernel config

@@ -264,6 +264,7 @@ class PatchTree(PatchSet):
 
 class GitApplyTree(PatchTree):
     patch_line_prefix = '%% original patch'
+    ignore_commit_prefix = '%% ignore'
 
     def __init__(self, dir, d):
         PatchTree.__init__(self, dir, d)
@@ -383,6 +384,8 @@ class GitApplyTree(PatchTree):
                         for line in f:
                             if line.startswith(GitApplyTree.patch_line_prefix):
                                 outfile = line.split()[-1].strip()
+                                continue
+                            if line.startswith(GitApplyTree.ignore_commit_prefix):
                                 continue
                             patchlines.append(line)
                     if not outfile:
