@@ -137,6 +137,7 @@ class CmakeRecipeHandler(RecipeHandler):
         pkgcm_re = re.compile('pkg_check_modules\s*\(\s*[a-zA-Z0-9-_]+\s*(REQUIRED)?\s+([^)\s]+)\s*\)', re.IGNORECASE)
         pkgsm_re = re.compile('pkg_search_module\s*\(\s*[a-zA-Z0-9-_]+\s*(REQUIRED)?((\s+[^)\s]+)+)\s*\)', re.IGNORECASE)
         findpackage_re = re.compile('find_package\s*\(\s*([a-zA-Z0-9-_]+)\s*.*', re.IGNORECASE)
+        findlibrary_re = re.compile('find_library\s*\(\s*[a-zA-Z0-9-_]+\s*(NAMES\s+)?([a-zA-Z0-9-_ ]+)\s*.*')
         checklib_re = re.compile('check_library_exists\s*\(\s*([^\s)]+)\s*.*', re.IGNORECASE)
         include_re = re.compile('include\s*\(\s*([^)\s]*)\s*\)', re.IGNORECASE)
         subdir_re = re.compile('add_subdirectory\s*\(\s*([^)\s]*)\s*([^)\s]*)\s*\)', re.IGNORECASE)
@@ -215,6 +216,15 @@ class CmakeRecipeHandler(RecipeHandler):
                         lib = interpret_value(res.group(1))
                         if not lib.startswith('$'):
                             libdeps.append(lib)
+                    res = findlibrary_re.match(line)
+                    if res:
+                        libs = res.group(2).split()
+                        for lib in libs:
+                            if lib in ['HINTS', 'PATHS', 'PATH_SUFFIXES', 'DOC', 'NAMES_PER_DIR'] or lib.startswith(('NO_', 'CMAKE_', 'ONLY_CMAKE_')):
+                                break
+                            lib = interpret_value(lib)
+                            if not lib.startswith('$'):
+                                libdeps.append(lib)
                     if line.lower().startswith('useswig'):
                         deps.append('swig-native')
                         continue
