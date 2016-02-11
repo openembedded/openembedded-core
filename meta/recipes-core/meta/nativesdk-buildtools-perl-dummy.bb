@@ -20,7 +20,7 @@ PERLPACKAGES = "nativesdk-perl \
 ALLOW_EMPTY_${PN} = "1"
 
 python populate_packages_prepend() {
-    d.appendVar('RPROVIDES_${PN}', '${PERLPACKAGES}')
-    d.appendVar('RCONFLICTS_${PN}', '${PERLPACKAGES}')
+    d.appendVar(d.expand('RPROVIDES_${PN}'), '${PERLPACKAGES}')
+    d.appendVar(d.expand('RCONFLICTS_${PN}'), '${PERLPACKAGES}')
 }
 
