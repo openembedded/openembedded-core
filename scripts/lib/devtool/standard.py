@@ -51,7 +51,7 @@ def add(args, config, basepath, workspace):
                 raise DevtoolError('URI specified as positional argument as well as -f/--fetch')
             args.fetchuri = args.recipename
             args.recipename = ''
-    elif '://' in args.srctree:
+    elif args.srctree and '://' in args.srctree:
         if not args.fetchuri:
             if args.fetch:
                 raise DevtoolError('URI specified as positional argument as well as -f/--fetch')
