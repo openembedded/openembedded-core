@@ -86,6 +86,9 @@ python () {
         # Ensure compilation happens every time
         d.setVarFlag('do_compile', 'nostamp', '1')
 
+        # We don't want the workdir to go away
+        d.appendVar('RM_WORK_EXCLUDE', ' ' + d.getVar('PN', True))
+
         # If B=S the same builddir is used even for different architectures.
         # Thus, use a shared CONFIGURESTAMPFILE so that change of do_configure
         # task hash is correctly detected if e.g. MACHINE changes. In addition,
