@@ -84,5 +84,11 @@ python uninative_changeinterp () {
                 continue
 
             #bb.warn("patchelf-uninative --set-interpreter %s %s" % (d.getVar("UNINATIVE_LOADER", True), f))
-            subprocess.check_call("patchelf-uninative --set-interpreter %s %s" % (d.getVar("UNINATIVE_LOADER", True), f), shell=True)
+            cmd = "patchelf-uninative --set-interpreter %s %s" % (d.getVar("UNINATIVE_LOADER", True), f)
+            p = subprocess.Popen(cmd, shell=True,
+                                 stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+            stdout, stderr = p.communicate()
+            if p.returncode:
+                bb.fatal("'%s' failed with exit code %d and the following output:\n%s" %
+                         (cmd, p.returncode, stdout))
 }
