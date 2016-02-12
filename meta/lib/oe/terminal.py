@@ -83,7 +83,7 @@ class Terminology(XTerminal):
     priority = 2
 
 class Konsole(XTerminal):
-    command = 'konsole --nofork -p tabtitle="{title}" -e {command}'
+    command = 'konsole --nofork --workdir . -p tabtitle="{title}" -e {command}'
     priority = 2
 
     def __init__(self, sh_cmd, title=None, env=None, d=None):
