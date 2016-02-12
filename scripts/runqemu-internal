@@ -434,7 +434,7 @@ if [ "$MACHINE" = "qemux86" ]; then
     fi
     # Currently oprofile's event based interrupt mode doesn't work(Bug #828) in
     # qemux86 and qemux86-64. We can use timer interrupt mode for now.
-    KERNCMDLINE="$KERNCMDLINE oprofile.timer=1"
+    KERNCMDLINE="$KERNCMDLINE oprofile.timer=1 nopat"
 fi
 
 if [ "$MACHINE" = "qemux86-64" ]; then
