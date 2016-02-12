@@ -145,7 +145,7 @@ python buildhistory_emit_pkghistory() {
             return None
 
     def sortpkglist(string):
-        pkgiter = re.finditer(r'[a-zA-Z0-9.+-]+( \([><=]+ [^ )]+\))?', string, 0)
+        pkgiter = re.finditer(r'[a-zA-Z0-9.+-]+( \([><=]+[^)]+\))?', string, 0)
         pkglist = [p.group(0) for p in pkgiter]
         pkglist.sort()
         return ' '.join(pkglist)
