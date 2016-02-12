@@ -564,7 +564,7 @@ python () {
             d.appendVarFlag('do_fetch', 'depends', ' subversion-native:do_populate_sysroot')
 
         # Git packages should DEPEND on git-native
-        elif scheme == "git":
+        elif scheme in ("git", "gitsm"):
             needsrcrev = True
             d.appendVarFlag('do_fetch', 'depends', ' git-native:do_populate_sysroot')
 
