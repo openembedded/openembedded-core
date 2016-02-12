@@ -11,6 +11,29 @@ BUILDHISTORY_FEATURES ?= "image package sdk"
 BUILDHISTORY_DIR ?= "${TOPDIR}/buildhistory"
 BUILDHISTORY_DIR_IMAGE = "${BUILDHISTORY_DIR}/images/${MACHINE_ARCH}/${TCLIBC}/${IMAGE_BASENAME}"
 BUILDHISTORY_DIR_PACKAGE = "${BUILDHISTORY_DIR}/packages/${MULTIMACH_TARGET_SYS}/${PN}"
+
+# Setting this to non-empty will remove the old content of the buildhistory as part of
+# the current bitbake invocation and replace it with information about what was built
+# during the build.
+#
+# This is meant to be used in continuous integration (CI) systems when invoking bitbake
+# for full world builds. The effect in that case is that information about packages
+# that no longer get build also gets removed from the buildhistory, which is not
+# the case otherwise.
+#
+# The advantage over manually cleaning the buildhistory outside of bitbake is that
+# the "version-going-backwards" check still works. When relying on that, be careful
+# about failed world builds: they will lead to incomplete information in the
+# buildhistory because information about packages that could not be built will
+# also get removed. A CI system should handle that by discarding the buildhistory
+# of failed builds.
+#
+# The expected usage is via auto.conf, but passing via the command line also works
+# with: BB_ENV_EXTRAWHITE=BUILDHISTORY_RESET BUILDHISTORY_RESET=1
+BUILDHISTORY_RESET ?= ""
+
+BUILDHISTORY_OLD_DIR = "${BUILDHISTORY_DIR}/${@ "old" if "${BUILDHISTORY_RESET}" else ""}"
+BUILDHISTORY_OLD_DIR_PACKAGE = "${BUILDHISTORY_OLD_DIR}/packages/${MULTIMACH_TARGET_SYS}/${PN}"
 BUILDHISTORY_DIR_SDK = "${BUILDHISTORY_DIR}/sdk/${SDK_NAME}${SDK_EXT}/${IMAGE_BASENAME}"
 BUILDHISTORY_IMAGE_FILES ?= "/etc/passwd /etc/group"
 BUILDHISTORY_SDK_FILES ?= "conf/local.conf conf/bblayers.conf conf/auto.conf conf/locked-sigs.inc conf/devtool.conf"
@@ -49,6 +72,7 @@ python buildhistory_emit_pkghistory() {
     import errno
 
     pkghistdir = d.getVar('BUILDHISTORY_DIR_PACKAGE', True)
+    oldpkghistdir = d.getVar('BUILDHISTORY_OLD_DIR_PACKAGE', True)
 
     class RecipeInfo:
         def __init__(self, name):
@@ -139,7 +163,7 @@ python buildhistory_emit_pkghistory() {
 
     def getlastpkgversion(pkg):
         try:
-            histfile = os.path.join(pkghistdir, pkg, "latest")
+            histfile = os.path.join(oldpkghistdir, pkg, "latest")
             return readPackageInfo(pkg, histfile)
         except EnvironmentError:
             return None
@@ -722,17 +746,35 @@ END
 
 python buildhistory_eventhandler() {
     if e.data.getVar('BUILDHISTORY_FEATURES', True).strip():
-        if e.data.getVar("BUILDHISTORY_COMMIT", True) == "1":
-            bb.note("Writing buildhistory")
-            localdata = bb.data.createCopy(e.data)
-            localdata.setVar('BUILDHISTORY_BUILD_FAILURES', str(e._failures))
-            interrupted = getattr(e, '_interrupted', 0)
-            localdata.setVar('BUILDHISTORY_BUILD_INTERRUPTED', str(interrupted))
-            bb.build.exec_func("buildhistory_commit", localdata)
+        reset = e.data.getVar("BUILDHISTORY_RESET", True)
+        olddir = e.data.getVar("BUILDHISTORY_OLD_DIR", True)
+        if isinstance(e, bb.event.BuildStarted):
+            if reset:
+                import shutil
+                # Clean up after potentially interrupted build.
+                if os.path.isdir(olddir):
+                    shutil.rmtree(olddir)
+                rootdir = e.data.getVar("BUILDHISTORY_DIR", True)
+                entries = [ x for x in os.listdir(rootdir) if not x.startswith('.') ]
+                bb.utils.mkdirhier(olddir)
+                for entry in entries:
+                    os.rename(os.path.join(rootdir, entry),
+                              os.path.join(olddir, entry))
+        elif isinstance(e, bb.event.BuildCompleted):
+            if reset:
+                import shutil
+                shutil.rmtree(olddir)
+            if e.data.getVar("BUILDHISTORY_COMMIT", True) == "1":
+                bb.note("Writing buildhistory")
+                localdata = bb.data.createCopy(e.data)
+                localdata.setVar('BUILDHISTORY_BUILD_FAILURES', str(e._failures))
+                interrupted = getattr(e, '_interrupted', 0)
+                localdata.setVar('BUILDHISTORY_BUILD_INTERRUPTED', str(interrupted))
+                bb.build.exec_func("buildhistory_commit", localdata)
 }
 
 addhandler buildhistory_eventhandler
-buildhistory_eventhandler[eventmask] = "bb.event.BuildCompleted"
+buildhistory_eventhandler[eventmask] = "bb.event.BuildCompleted bb.event.BuildStarted"
 
 
 # FIXME this ought to be moved into the fetcher
