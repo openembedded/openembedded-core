@@ -6,16 +6,15 @@ SUMMARY = "Perl Compatible Regular Expressions"
 HOMEPAGE = "http://www.pcre.org"
 SECTION = "devel"
 LICENSE = "BSD"
-LIC_FILES_CHKSUM = "file://LICENCE;md5=ded617e975f28e15952dc68b84a7ac1a"
+LIC_FILES_CHKSUM = "file://LICENCE;md5=7e4937814aee14758c1c95b59c80c44d"
 SRC_URI = "${SOURCEFORGE_MIRROR}/project/pcre/pcre/${PV}/pcre-${PV}.tar.bz2 \
            file://pcre-cross.patch \
            file://fix-pcre-name-collision.patch \
            file://run-ptest \
            file://Makefile \
 "
-
-SRC_URI[md5sum] = "b767bc9af0c20bc9c1fe403b0d41ad97"
-SRC_URI[sha256sum] = "ef833457de0c40e82f573e34528f43a751ff20257ad0e86d272ed5637eb845bb"
+SRC_URI[md5sum] = "00aabbfe56d5a48b270f999b508c5ad2"
+SRC_URI[sha256sum] = "b9e02d36e23024d6c02a2e5b25204b3a4fa6ade43e0a5f869f254f49535079df"
 
 S = "${WORKDIR}/pcre-${PV}"
 
