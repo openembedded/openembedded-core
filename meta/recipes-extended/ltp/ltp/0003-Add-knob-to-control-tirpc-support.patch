@@ -1,14 +1,19 @@
-[PATCH] add knob to control whether tirpc support should be checked
+From b193011da301b3d944e8fddcf4817513c31c5b88 Mon Sep 17 00:00:00 2001
+From: Fathi Boudra <fathi.boudra@linaro.org>
+Date: Thu, 7 Jan 2016 17:36:19 +0000
+Subject: [PATCH 03/32] Add knob to control tirpc support
 
-Upstream-Status: Pending
-
-tirpc support is broken upstream. in the meantime, allow to disable tirpc.
+allow to disable tirpc. Helps to disable it at top level for eg. musl it
+does not yet work.
 
 Signed-off-by: Fathi Boudra <fathi.boudra@linaro.org>
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
 ---
- configure.ac |    9 +++++++++
+ configure.ac | 9 +++++++++
  1 file changed, 9 insertions(+)
 
+diff --git a/configure.ac b/configure.ac
+index cc50397..9e2936b 100644
 --- a/configure.ac
 +++ b/configure.ac
 @@ -98,6 +98,13 @@ if test "x$with_python" = xyes; then
@@ -25,7 +30,7 @@ Signed-off-by: Fathi Boudra <fathi.boudra@linaro.org>
  # END tools knobs
  
  # Testsuites knobs
-@@ -182,7 +189,9 @@ LTP_CHECK_RENAMEAT
+@@ -169,7 +176,9 @@ LTP_CHECK_RENAMEAT2
  LTP_CHECK_FALLOCATE
  LTP_CHECK_SYSCALL_FCNTL
  LTP_CHECK_SYSCALL_PERF_EVENT_OPEN
@@ -35,3 +40,6 @@ Signed-off-by: Fathi Boudra <fathi.boudra@linaro.org>
  LTP_CHECK_TEE
  LTP_CHECK_SPLICE
  LTP_CHECK_VMSPLICE
+-- 
+2.7.0
+

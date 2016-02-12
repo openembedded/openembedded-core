@@ -20,16 +20,45 @@ LIC_FILES_CHKSUM = "\
 "
 
 DEPENDS = "attr libaio libcap acl openssl zip-native"
-SRCREV = "d19755a1deddd0268d7c29991afddab497da1823"
+DEPENDS_append_libc-musl = " fts "
+EXTRA_OEMAKE_append_libc-musl = " LIBC=musl "
+CFLAGS_append_powerpc64 = " -D__SANE_USERSPACE_TYPES__"
+CFLAGS_append_mips64 = " -D__SANE_USERSPACE_TYPES__"
+SRCREV = "fce797676b14f50406718e7ef640b50da66c9b36"
 
 SRC_URI = "git://github.com/linux-test-project/ltp.git \
-    file://0001-Rename-runtests_noltp.sh-script-so-have-unique-name.patch \
-    file://ltp-Do-not-link-against-libfl.patch \
-    file://make-setregid02-work.patch \
-    file://add-knob-for-numa.patch \
-    file://add-knob-for-tirpc.patch \
-    file://0001-ltp-vma03-fix-the-alginment-of-page-size.patch \
-    file://0001-Fix-compilation-for-gcc-5.x.patch \
+           file://0001-ltp-Don-t-link-against-libfl.patch \
+           file://0002-Add-knob-to-control-whether-numa-support-should-be-c.patch \
+           file://0003-Add-knob-to-control-tirpc-support.patch \
+           file://0004-build-Add-option-to-select-libc-implementation.patch \
+           file://0005-kernel-controllers-Link-with-libfts-explicitly-on-mu.patch \
+           file://0006-sendfile-Use-off64_t-instead-of-__off64_t.patch \
+           file://0007-replace-SIGCLD-with-SIGCHLD.patch \
+           file://0008-Check-if-__GLIBC_PREREQ-is-defined-before-using-it.patch \
+           file://0009-Guard-error.h-with-__GLIBC__.patch \
+           file://0010-replace-__BEGIN_DECLS-and-__END_DECLS.patch \
+           file://0011-Rename-sigset-variable-to-sigset1.patch \
+           file://0012-fsstress.c-Replace-__int64_t-with-int64_t.patch \
+           file://0013-include-fcntl.h-for-getting-O_-definitions.patch \
+           file://0014-hyperthreading-Include-sys-types.h-for-pid_t-definit.patch \
+           file://0015-mincore01-Rename-PAGESIZE-to-pagesize.patch \
+           file://0016-ustat-Change-header-from-ustat.h-to-sys-ustat.h.patch \
+           file://0017-replace-sigval_t-with-union-sigval.patch \
+           file://0018-guard-mallocopt-with-__GLIBC__.patch \
+           file://0019-tomoyo-Replace-canonicalize_file_name-with-realpath.patch \
+           file://0020-getdents-define-getdents-getdents64-only-for-glibc.patch \
+           file://0021-Define-_GNU_SOURCE-for-MREMAP_MAYMOVE-definition.patch \
+           file://0022-include-sys-types.h.patch \
+           file://0023-ptrace-Use-int-instead-of-enum-__ptrace_request.patch \
+           file://0024-rt_sigaction-rt_sigprocmark-Define-_GNU_SOURCE.patch \
+           file://0025-mc_gethost-include-sys-types.h.patch \
+           file://0026-crash01-Define-_GNU_SOURCE.patch \
+           file://0027-sysconf01-Use-_SC_2_C_VERSION-conditionally.patch \
+           file://0028-rt_sigaction.h-Use-sighandler_t-instead-of-__sighand.patch \
+           file://0029-trace_shed-Fix-build-with-musl.patch \
+           file://0030-lib-Use-PTHREAD_MUTEX_RECURSIVE-in-place-of-PTHREAD_.patch \
+           file://0031-vma03-fix-page-size-offset-as-per-page-size-alignmen.patch \
+           file://0032-regen.sh-Include-asm-unistd.h-explicitly.patch \
 "
 
 S = "${WORKDIR}/git"
