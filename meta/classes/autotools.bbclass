@@ -148,12 +148,18 @@ python autotools_copy_aclocals () {
     bb.utils.mkdirhier(aclocaldir)
     start = None
     configuredeps = []
+    # Detect bitbake -b usage
+    # Everything but quilt-native would have dependencies
+    nodeps = (pn != "quilt-native")
 
     for dep in taskdepdata:
         data = taskdepdata[dep]
         if data[1] == "do_configure" and data[0] == pn:
             start = dep
+        if not nodeps and start:
             break
+        if nodeps and data[0] != pn:
+            nodeps = False
     if start is None:
         bb.fatal("Couldn't find ourself in BB_TASKDEPDATA?")
 
@@ -188,6 +194,11 @@ python autotools_copy_aclocals () {
     #bb.warn(str(configuredeps2))
 
     cp = []
+    if nodeps:
+        bb.warn("autotools: Unable to find task dependencies, -b being used? Pulling in all m4 files")
+        for l in [d.expand("${STAGING_DATADIR_NATIVE}/aclocal/"), d.expand("${STAGING_DATADIR}/aclocal/")]:
+            cp.extend(os.path.join(l, f) for f in os.listdir(l))
+
     for c in configuredeps:
         if c.endswith("-native"):
             manifest = d.expand("${SSTATE_MANIFESTS}/manifest-${BUILD_ARCH}-%s.populate_sysroot" % c)
