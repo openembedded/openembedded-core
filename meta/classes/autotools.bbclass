@@ -160,8 +160,8 @@ python autotools_copy_aclocals () {
     # We need to find configure tasks which are either from <target> -> <target>
     # or <native> -> <native> but not <target> -> <native> unless they're direct
     # dependencies. This mirrors what would get restored from sstate.
-    done = [dep]
-    next = [dep]
+    done = [start]
+    next = [start]
     while next:
         new = []
         for dep in next:
@@ -188,7 +188,6 @@ python autotools_copy_aclocals () {
     #bb.warn(str(configuredeps2))
 
     cp = []
-    siteconf = []    
     for c in configuredeps:
         if c.endswith("-native"):
             manifest = d.expand("${SSTATE_MANIFESTS}/manifest-${BUILD_ARCH}-%s.populate_sysroot" % c)
