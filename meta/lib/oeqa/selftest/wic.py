@@ -30,7 +30,7 @@ from glob import glob
 from shutil import rmtree
 
 from oeqa.selftest.base import oeSelfTest
-from oeqa.utils.commands import runCmd, bitbake, get_bb_var
+from oeqa.utils.commands import runCmd, bitbake, get_bb_var, runqemu
 from oeqa.utils.decorators import testcase
 
 
@@ -264,3 +264,13 @@ class Wic(oeSelfTest):
         self.assertEqual(0, runCmd("wic create %s -e core-image-minimal" \
                                    % image).status)
         self.assertEqual(1, len(glob(self.resultdir + "%s-*direct" % image)))
+
+    def test_qemu(self):
+        """Test wic-image-minimal under qemu"""
+        self.assertEqual(0, bitbake('wic-image-minimal').status)
+
+        with runqemu('wic-image-minimal', ssh=False) as qemu:
+            command = "mount |grep '^/dev/' | cut -f1,3 -d ' '"
+            status, output = qemu.run_serial(command)
+            self.assertEqual(1, status, 'Failed to run command "%s": %s' % (command, output))
+            self.assertEqual(output, '/dev/root /\r\n/dev/vda3 /mnt')
