@@ -1,4 +1,0 @@
-require libgcrypt.inc
-
-SRC_URI[md5sum] = "7dc7d51cdbf56ad75e95c4166f90e985"
-SRC_URI[sha256sum] = "5c2076212961712e4774abf32c85cb58537d544d6016a2464fb32783653d1b6d"
