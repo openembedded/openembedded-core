@@ -47,6 +47,7 @@ usage() {
     echo "  $MYNAME qemux86 qemuparams=\"-m 256\""
     echo "  $MYNAME qemux86 bootparams=\"psplash=false\""
     echo "  $MYNAME path/to/<image>-<machine>.vmdk"
+    echo "  $MYNAME path/to/<image>-<machine>.wic"
     exit 1
 }
 
@@ -88,7 +89,7 @@ process_filename() {
 		[ -z "$KERNEL" ] && KERNEL=$filename || \
 		    error "conflicting KERNEL args [$KERNEL] and [$filename]"
 		;;
-	/ext[234]/|/jffs2/|/btrfs/)
+	/ext[234]/|/jffs2/|/btrfs/|/wic/)
 		# A file ending in a supportted fs type is a rootfs image
 		if [ -z "$FSTYPE" -o "$FSTYPE" = "$EXT" ]; then
 		    FSTYPE=$EXT
@@ -235,7 +236,7 @@ elif [ ! -w /dev/net/tun ] ; then
 fi
 
 # Report errors for missing combinations of options
-if [ -z "$MACHINE" -a -z "$KERNEL" -a -z "$VM" ]; then
+if [ -z "$MACHINE" -a -z "$KERNEL" -a -z "$VM" -a "$FSTYPE" != "wic" ]; then
     error "you must specify at least a MACHINE, VM, or KERNEL argument"
 fi
 if [ "$FSTYPE" = "nfs" -a -z "$ROOTFS" ]; then
@@ -243,8 +244,9 @@ if [ "$FSTYPE" = "nfs" -a -z "$ROOTFS" ]; then
 fi
 
 if [ -z "$MACHINE" ]; then
-    if [ "x$FSTYPE" = "xvmdk" ] || [ "x$FSTYPE" = "xhddimg" ] || [ "x$FSTYPE" = "xhdddirect" ]; then
-        MACHINE=`basename $VM | sed -n 's/.*\(qemux86-64\|qemux86\|qemuarm64\|qemuarm\|qemumips64\|qemumips\|qemuppc\|qemush4\).*/\1/p'`
+    if [ "x$FSTYPE" = "xvmdk" ] || [ "x$FSTYPE" = "xhddimg" ] || [ "x$FSTYPE" = "xhdddirect" ] || [ "x$FSTYPE" = "xwic" ]; then
+        [ "x$FSTYPE" = "xwic" ] && filename=$ROOTFS || filename=$VM
+        MACHINE=`basename $filename | sed -n 's/.*\(qemux86-64\|qemux86\|qemuarm64\|qemuarm\|qemumips64\|qemumips\|qemuppc\|qemush4\).*/\1/p'`
         if [ -z "$MACHINE" ]; then
             error "Unable to set MACHINE from image filename [$VM]"
         fi
