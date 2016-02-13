@@ -57,7 +57,10 @@ class Partition(object):
         self.size = args.size
         self.source = args.source
         self.sourceparams = args.sourceparams
+        self.use_uuid = args.use_uuid
         self.uuid = args.uuid
+        if args.use_uuid and not self.uuid:
+            self.uuid = str(uuid.uuid4())
 
         self.lineno = lineno
         self.source_file = ""
