@@ -31,7 +31,7 @@ class ImageFeatures(oeSelfTest):
         # Build a core-image-minimal
         bitbake('core-image-minimal')
 
-        with runqemu("core-image-minimal", self) as qemu:
+        with runqemu("core-image-minimal") as qemu:
             # Attempt to ssh with each user into qemu with empty password
             for user in [self.root_user, self.test_user]:
                 ssh = SSHControl(ip=qemu.ip, logfile=qemu.sshlog, user=user)
@@ -58,7 +58,7 @@ class ImageFeatures(oeSelfTest):
         # Build a core-image-minimal
         bitbake('core-image-minimal')
 
-        with runqemu("core-image-minimal", self) as qemu:
+        with runqemu("core-image-minimal") as qemu:
             # Attempt to ssh with each user into qemu with empty password
             for user in [self.root_user, self.test_user]:
                 ssh = SSHControl(ip=qemu.ip, logfile=qemu.sshlog, user=user)
@@ -112,7 +112,7 @@ class ImageFeatures(oeSelfTest):
                 self.fail('No rpm package found in image')
 
         # Now do a couple of runtime tests
-        with runqemu("core-image-minimal", self) as qemu:
+        with runqemu("core-image-minimal") as qemu:
             command = "rpm --version"
             status, output = qemu.run(command)
             self.assertEqual(0, status, 'Failed to run command "%s": %s' % (command, output))

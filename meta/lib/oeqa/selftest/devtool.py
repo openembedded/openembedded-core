@@ -1025,7 +1025,7 @@ class DevtoolTests(DevtoolBase):
         result = runCmd('devtool deploy-target -n %s root@localhost' % testrecipe)
         self.assertIn('  %s' % testfile, result.output)
         # Boot the image
-        with runqemu(testimage, self) as qemu:
+        with runqemu(testimage) as qemu:
             # Now really test deploy-target
             result = runCmd('devtool deploy-target -c %s root@%s' % (testrecipe, qemu.ip))
             # Run a test command to see if it was installed properly

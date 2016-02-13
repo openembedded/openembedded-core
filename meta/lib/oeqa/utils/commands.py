@@ -178,7 +178,7 @@ def create_temp_layer(templayerdir, templayername, priority=999, recipepathspec=
 
 
 @contextlib.contextmanager
-def runqemu(pn, test):
+def runqemu(pn):
 
     import bb.tinfoil
     import bb.build
