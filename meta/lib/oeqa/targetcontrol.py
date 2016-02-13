@@ -113,7 +113,7 @@ class BaseTarget(object):
 
 class QemuTarget(BaseTarget):
 
-    supported_image_fstypes = ['ext3', 'ext4', 'cpio.gz']
+    supported_image_fstypes = ['ext3', 'ext4', 'cpio.gz', 'wic']
 
     def __init__(self, d):
 
