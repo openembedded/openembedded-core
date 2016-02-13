@@ -91,7 +91,7 @@ class QemuRunner:
                 self._dump_host()
                 raise SystemExit
 
-    def start(self, qemuparams = None):
+    def start(self, qemuparams = None, get_ip = True):
         if self.display:
             os.environ["DISPLAY"] = self.display
             # Set this flag so that Qemu doesn't do any grabs as SDL grabs
@@ -178,27 +178,28 @@ class QemuRunner:
 
         if self.is_alive():
             logger.info("qemu started - qemu procces pid is %s" % self.qemupid)
-            cmdline = ''
-            with open('/proc/%s/cmdline' % self.qemupid) as p:
-                cmdline = p.read()
-                # It is needed to sanitize the data received
-                # because is possible to have control characters
-                cmdline = re_control_char.sub('', cmdline)
-            try:
-                ips = re.findall("((?:[0-9]{1,3}\.){3}[0-9]{1,3})", cmdline.split("ip=")[1])
-                if not ips or len(ips) != 3:
-                    raise ValueError
-                else:
-                    self.ip = ips[0]
-                    self.server_ip = ips[1]
-            except IndexError, ValueError:
-                logger.info("Couldn't get ip from qemu process arguments! Here is the qemu command line used:\n%s\nand output from runqemu:\n%s" % (cmdline, self.getOutput(output)))
-                self._dump_host()
-                self.stop()
-                return False
-            logger.info("qemu cmdline used:\n{}".format(cmdline))
-            logger.info("Target IP: %s" % self.ip)
-            logger.info("Server IP: %s" % self.server_ip)
+            if get_ip:
+                cmdline = ''
+                with open('/proc/%s/cmdline' % self.qemupid) as p:
+                    cmdline = p.read()
+                    # It is needed to sanitize the data received
+                    # because is possible to have control characters
+                    cmdline = re_control_char.sub('', cmdline)
+                try:
+                    ips = re.findall("((?:[0-9]{1,3}\.){3}[0-9]{1,3})", cmdline.split("ip=")[1])
+                    if not ips or len(ips) != 3:
+                        raise ValueError
+                    else:
+                        self.ip = ips[0]
+                        self.server_ip = ips[1]
+                except IndexError, ValueError:
+                    logger.info("Couldn't get ip from qemu process arguments! Here is the qemu command line used:\n%s\nand output from runqemu:\n%s" % (cmdline, self.getOutput(output)))
+                    self._dump_host()
+                    self.stop()
+                    return False
+                logger.info("qemu cmdline used:\n{}".format(cmdline))
+                logger.info("Target IP: %s" % self.ip)
+                logger.info("Server IP: %s" % self.server_ip)
 
             self.thread = LoggingThread(self.log, threadsock, logger)
             self.thread.start()
