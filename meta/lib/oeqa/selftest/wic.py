@@ -228,7 +228,7 @@ class Wic(oeSelfTest):
         prefix = os.path.join(deploy_dir, 'wic-image-minimal-%s.' % machine)
         # check if we have result image and manifests symlinks
         # pointing to existing files
-        for suffix in ('wic.bz2', 'manifest'):
+        for suffix in ('wic', 'manifest'):
             path = prefix + suffix
             self.assertTrue(os.path.islink(path))
             self.assertTrue(os.path.isfile(os.path.realpath(path)))

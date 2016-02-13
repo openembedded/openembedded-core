@@ -4,7 +4,7 @@ SRC_URI = "file://${FILE_DIRNAME}/${BPN}.wks"
 
 IMAGE_INSTALL = "packagegroup-core-boot ${ROOTFS_PKGMANAGE_BOOTSTRAP}"
 
-IMAGE_FSTYPES = "wic.bz2"
+IMAGE_FSTYPES = "wic"
 RM_OLD_IMAGE = "1"
 
 DEPENDS = "syslinux syslinux-native parted-native dosfstools-native mtools-native"
