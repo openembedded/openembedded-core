@@ -1,7 +1,7 @@
-From 0d76940b5507406719635ee154a29e80a8cb1234 Mon Sep 17 00:00:00 2001
+From c008c7f97c1cf487749c6c375820a1f3b3c6c53d Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Mon, 2 Mar 2015 01:27:17 +0000
-Subject: [PATCH 04/12] Only generate an RPATH entry if LD_RUN_PATH is not
+Subject: [PATCH 04/14] Only generate an RPATH entry if LD_RUN_PATH is not
  empty
 
 for cases where -rpath isn't specified. debian (#151024)
@@ -37,5 +37,5 @@ index 0405d4f..73c5447 100644
    for (abfd = link_info.input_bfds; abfd; abfd = abfd->link.next)
      if (bfd_get_flavour (abfd) == bfd_target_elf_flavour)
 -- 
-2.7.0
+2.7.1
 

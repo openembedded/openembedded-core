@@ -1,7 +1,7 @@
-From c2263f6e910f43637fb514de5c48e9ce6a8d55f1 Mon Sep 17 00:00:00 2001
+From 3c75355342a8562ccb65b8bbbe81a0495fec5c57 Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Mon, 2 Mar 2015 01:58:54 +0000
-Subject: [PATCH 01/12] Generate relocatable SDKs
+Subject: [PATCH 01/14] Generate relocatable SDKs
 
 This patch will modify the ELF linker scripts so that the crosssdk
 linker will generate binaries with a 4096 bytes PT_INTERP section. When the binaries
@@ -58,5 +58,5 @@ index ec78c90..f9e7a31 100644
  if test -z "$PLT"; then
    IPLT=".iplt         ${RELOCATING-0} : { *(.iplt) }"
 -- 
-2.7.0
+2.7.1
 

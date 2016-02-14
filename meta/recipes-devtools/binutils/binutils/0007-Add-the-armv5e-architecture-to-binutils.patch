@@ -1,7 +1,7 @@
-From 61789a45c6193519b9da9dd0fa9a94532faaa4a9 Mon Sep 17 00:00:00 2001
+From 4ff9dbe13f38e4fea24fbcc9879cf7352c0561ff Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Mon, 2 Mar 2015 01:37:10 +0000
-Subject: [PATCH 07/12] Add the armv5e architecture to binutils
+Subject: [PATCH 07/14] Add the armv5e architecture to binutils
 
 Binutils has a comment that indicates it is supposed to match gcc for
 all of the support "-march=" settings, but it was lacking the armv5e setting.
@@ -31,5 +31,5 @@ index 3bd4bc9..5d99921 100644
    ARM_ARCH_OPT ("armv5txm",	ARM_ARCH_V5TxM,	 FPU_ARCH_VFP),
    ARM_ARCH_OPT ("armv5te",	ARM_ARCH_V5TE,	 FPU_ARCH_VFP),
 -- 
-2.7.0
+2.7.1
 

@@ -18,7 +18,7 @@ BINUPV = "${@binutils_branch_version(d)}"
 
 UPSTREAM_CHECK_GITTAGREGEX = "binutils-(?P<pver>\d+_(\d_?)*)"
 
-SRCREV = "3c9d874373f2189cb704999b0ba39b9bbca91a61"
+SRCREV = "71fa566a9cf2597b60a58c1d7c148bab637454a6"
 SRC_URI = "\
      git://sourceware.org/git/binutils-gdb.git;branch=binutils-${BINUPV}-branch;protocol=git \
      file://0002-configure-widen-the-regexp-for-SH-architectures.patch \
@@ -31,10 +31,10 @@ SRC_URI = "\
      file://0009-warn-for-uses-of-system-directories-when-cross-linki.patch \
      file://0010-Fix-rpath-in-libtool-when-sysroot-is-enabled.patch \
      file://0011-Change-default-emulation-for-mips64-linux.patch \
-     file://0012-Add-XLP-instructions-support.patch \
+     file://0012-Add-support-for-Netlogic-XLP.patch \
      file://0013-Fix-GOT-address-computations-in-initial-PLT-entries-.patch \
      file://0014-Correct-nios2-_gp-address-computation.patch \
-     "
+"
 S  = "${WORKDIR}/git"
 
 do_configure_prepend () {

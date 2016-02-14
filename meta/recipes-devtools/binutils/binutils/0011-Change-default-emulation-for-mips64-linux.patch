@@ -1,7 +1,7 @@
-From b0bcabc83ba02f984d8c87d612c115c9ab7a9fce Mon Sep 17 00:00:00 2001
+From af1b4ee69b4fd617b88127ed40c3ca7351a9532f Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Mon, 2 Mar 2015 01:44:14 +0000
-Subject: [PATCH 11/12] Change default emulation for mips64*-*-linux
+Subject: [PATCH 11/14] Change default emulation for mips64*-*-linux
 
 we change the default emulations to be N64 instead of N32
 
@@ -55,5 +55,5 @@ index 6b6bbf2..b45b1e5 100644
  mips*el-*-linux-*)	targ_emul=elf32ltsmip
  			targ_extra_emuls="elf32btsmip elf32ltsmipn32 elf64ltsmip elf32btsmipn32 elf64btsmip"
 -- 
-2.7.0
+2.7.1
 

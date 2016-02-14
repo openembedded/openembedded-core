@@ -1,12 +1,9 @@
-From 10e0f42d258164a6a8c0c733518c79e114f5d702 Mon Sep 17 00:00:00 2001
+From 9f967c555b3fda64af4549ae252a0fba00120529 Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
-Date: Fri, 15 Jan 2016 06:37:20 +0000
-Subject: [PATCH 12/12] Add XLP instructions support
+Date: Sun, 14 Feb 2016 17:06:19 +0000
+Subject: [PATCH 12/14] Add support for Netlogic XLP
 
-From 26adb06ce515aadfec08ce13109b4b98287f677b Mon Sep 17 00:00:00 2001
-From: Nebu Philips <nphilips@netlogicmicro.com>
-Date: Fri, 30 Jul 2010 15:10:03 -0700
-Subject: [PATCH] Add support for Netlogic XLP
+Patch From: Nebu Philips <nphilips@netlogicmicro.com>
 
 Using the mipsisa64r2nlm target, add support for XLP from
 Netlogic. Also, update vendor name to NLM wherever applicable.
@@ -188,10 +185,10 @@ index a2d45a4..75902c0 100644
    /* i6400.  */
    { "i6400",	      0, ASE_MSA,		ISA_MIPS64R6, CPU_MIPS64R6},
 diff --git a/gas/configure b/gas/configure
-index 1c2a665..c8010a8 100755
+index 89f18b3..86b19ae 100755
 --- a/gas/configure
 +++ b/gas/configure
-@@ -12826,6 +12826,9 @@ _ACEOF
+@@ -12851,6 +12851,9 @@ _ACEOF
  	  mipsisa64r6 | mipsisa64r6el)
  	    mips_cpu=mips64r6
  	    ;;
@@ -412,5 +409,5 @@ index 402f887..3764836 100644
  {"swc0",		"E,A(b)",	0,    (int) M_SWC0_AB,	INSN_MACRO,		0,		I1,		0,	IOCT|IOCTP|IOCT2|I37 },
  {"swc1",		"T,o(b)",	0xe4000000, 0xfc000000,	RD_1|RD_3|SM|FP_S,	0,		I1,		0,	0 },
 -- 
-2.7.0
+2.7.1
 

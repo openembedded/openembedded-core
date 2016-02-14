@@ -1,7 +1,7 @@
-From e5d18410cb07da09f854b9568f51a873f1166d2a Mon Sep 17 00:00:00 2001
+From 4daa841ce16ba52b717bdff9eb1dfc4f19638814 Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Fri, 15 Jan 2016 06:31:09 +0000
-Subject: [PATCH 09/12] warn for uses of system directories when cross linking
+Subject: [PATCH 09/14] warn for uses of system directories when cross linking
 
 2008-07-02  Joseph Myers  <joseph@codesourcery.com>
 
@@ -77,7 +77,7 @@ index 276fb77..35c58eb 100644
  #undef EXTRA_SHLIB_EXTENSION
  
 diff --git a/ld/configure b/ld/configure
-index 7a20e4e..7cff36c 100755
+index eb4f0d7..e9054b4 100755
 --- a/ld/configure
 +++ b/ld/configure
 @@ -790,6 +790,7 @@ with_lib_path
@@ -118,7 +118,7 @@ index 7a20e4e..7cff36c 100755
  if test "${enable_gold+set}" = set; then :
    enableval=$enable_gold; case "${enableval}" in
 diff --git a/ld/configure.ac b/ld/configure.ac
-index 188172d..2cd8443 100644
+index e28f38e..7b474e7 100644
 --- a/ld/configure.ac
 +++ b/ld/configure.ac
 @@ -95,6 +95,16 @@ AC_SUBST(use_sysroot)
@@ -158,10 +158,10 @@ index d84ec4e..3476b26 100644
    enum endian_enum endian;
  
 diff --git a/ld/ld.texinfo b/ld/ld.texinfo
-index 1dd7492..fb1438e 100644
+index 2389661..d06112b 100644
 --- a/ld/ld.texinfo
 +++ b/ld/ld.texinfo
-@@ -2332,6 +2332,18 @@ string identifying the original linked file does not change.
+@@ -2338,6 +2338,18 @@ string identifying the original linked file does not change.
  
  Passing @code{none} for @var{style} disables the setting from any
  @code{--build-id} options earlier on the command line.
@@ -235,7 +235,7 @@ index bb0b9cc..a23c56c 100644
    /* We initialize DEMANGLING based on the environment variable
       COLLECT_NO_DEMANGLE.  The gcc collect2 program will demangle the
 diff --git a/ld/lexsup.c b/ld/lexsup.c
-index 4cad209..173b17f 100644
+index e2fb212..a2064f1 100644
 --- a/ld/lexsup.c
 +++ b/ld/lexsup.c
 @@ -530,6 +530,14 @@ static const struct ld_option ld_options[] =
@@ -269,5 +269,5 @@ index 4cad209..173b17f 100644
      }
  
 -- 
-2.7.0
+2.7.1
 

@@ -1,7 +1,7 @@
-From fcf984ae68c89e5495e65fe6456650cc014b5ea7 Mon Sep 17 00:00:00 2001
+From 27f155fd0ab4ba954366643dbfdc3c7104933794 Mon Sep 17 00:00:00 2001
 From: Sandra Loosemore <sandra@codesourcery.com>
 Date: Sun, 27 Dec 2015 12:30:26 -0800
-Subject: [PATCH 2/2] Correct nios2 _gp address computation.
+Subject: [PATCH 14/14] Correct nios2 _gp address computation.
 
 2015-12-27  Sandra Loosemore  <sandra@codesourcery.com>
 
@@ -102,5 +102,5 @@ index 1c54320..babecf3 100644
  	    case R_NIOS2_UJMP:
  	      r = nios2_elf32_do_ujmp_relocate (input_bfd, howto,
 -- 
-2.7.0
+2.7.1
 

@@ -1,7 +1,7 @@
-From 887db9238821b4f1f5f469f9c825ed9b2e2dc719 Mon Sep 17 00:00:00 2001
+From 01808e8ef8ee709c8218d962601c18a63a063a1f Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Mon, 2 Mar 2015 01:09:58 +0000
-Subject: [PATCH 03/12] Point scripts location to libdir
+Subject: [PATCH 03/14] Point scripts location to libdir
 
 Upstream-Status: Inappropriate [debian patch]
 
@@ -38,5 +38,5 @@ index ed98f87..530e4c9 100644
  BFDDIR = $(BASEDIR)/bfd
  INCDIR = $(BASEDIR)/include
 -- 
-2.7.0
+2.7.1
 
