@@ -103,8 +103,11 @@ SRC_URI = "http://www.rpm5.org/files/rpm/rpm-5.4/rpm-5.4.14-0.20131024.src.rpm;e
 	   file://0001-define-EM_AARCH64.patch \
 	   file://rpm-rpmfc.c-fix-for-N32-MIPS64.patch \
 	   file://rpm-lib-transaction.c-fix-file-conflicts-for-mips64-N32.patch \
-	  "
+"
 
+SRC_URI_append_libc-musl = "\
+           file://0001-rpm-Fix-build-on-musl.patch \
+"
 # Uncomment the following line to enable platform score debugging
 # This is useful when identifying issues with Smart being unable
 # to process certain package feeds.

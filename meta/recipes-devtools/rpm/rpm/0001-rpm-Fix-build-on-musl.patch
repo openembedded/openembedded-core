@@ -1,0 +1,162 @@
+From 0af17c2ae86c1e8e42b96f6dface08f535bb55ad Mon Sep 17 00:00:00 2001
+From: Khem Raj <raj.khem@gmail.com>
+Date: Sun, 14 Feb 2016 08:33:24 +0000
+Subject: [PATCH] rpm: Fix build on musl
+
+Provide alternatives to assumptions about glibc
+on linux
+
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+---
+Upstream-Status: Pending
+
+ rpmio/fts.c       |  4 ++++
+ rpmqv.c           |  6 +++++-
+ system.h          |  2 +-
+ tools/debugedit.c | 47 +++++++++++++++++++++++++++++++++++++++++++++++
+ tools/rpmfind.c   |  6 +++---
+ 5 files changed, 60 insertions(+), 5 deletions(-)
+
+diff --git a/rpmio/fts.c b/rpmio/fts.c
+index 2d7594c..b7aa9b8 100644
+--- a/rpmio/fts.c
++++ b/rpmio/fts.c
+@@ -124,6 +124,10 @@ static char sccsid[] = "@(#)fts.c	8.6 (Berkeley) 8/14/94";
+ #   define __fxstat64(_stat_ver, _fd, _sbp)    fstat((_fd), (_sbp))
+ #endif
+ 
++#ifndef _STAT_VER
++#   define _STAT_VER      0
++#endif
++
+ #if !defined(_D_EXACT_NAMLEN)
+ #   define _D_EXACT_NAMLEN(d) (strlen((d)->d_name))
+ #endif
+diff --git a/rpmqv.c b/rpmqv.c
+index 14c73e2..b2d3e24 100644
+--- a/rpmqv.c
++++ b/rpmqv.c
+@@ -523,7 +523,11 @@ int main(int argc, const char ** argv)
+     (void) initproctitle(argc, (char **)argv, environ);
+ #endif
+ #endif  
+-
++    /* XXX glibc churn sanity */
++    if (__progname == NULL) {
++        if ((__progname = strrchr(argv[0], '/')) != NULL) __progname++;
++        else __progname = argv[0];
++    }
+     /* Set the major mode based on argv[0] */
+     /*@-nullpass@*/
+ #ifdef	IAM_RPMBT
+diff --git a/system.h b/system.h
+index 72851c0..05f7553 100644
+--- a/system.h
++++ b/system.h
+@@ -791,5 +791,5 @@ static inline const char *rcsid(const char *p) { \
+  * Permit ar(1) payloads. Disabled while rpmio/iosm.c is under development.
+  */
+ #undef	SUPPORT_AR_PAYLOADS
+-
+ #endif	/* H_SYSTEM */
++const char *program_name;
+diff --git a/tools/debugedit.c b/tools/debugedit.c
+index 29e8ee9..b2a8918 100644
+--- a/tools/debugedit.c
++++ b/tools/debugedit.c
+@@ -23,7 +23,12 @@
+ #include <byteswap.h>
+ #include <endian.h>
+ #include <errno.h>
++#ifdef __GLIBC__
+ #include <error.h>
++#else
++#include <stdarg.h>
++void error(int, int, const char *, ...);
++#endif
+ #include <limits.h>
+ #include <string.h>
+ #include <stdlib.h>
+@@ -1531,6 +1536,48 @@ handle_build_id (DSO *dso, Elf_Data *build_id,
+     puts (hex);
+   }
+ }
++#ifndef __GLIBC__
++extern char *__progname;
++
++void (*error_print_progname)(void) = 0;
++unsigned int error_message_count = 0;
++int error_one_per_line = 0;
++
++static void eprint(int status, int e, const char *file, unsigned int line, const char *fmt, va_list ap)
++{
++       if (file && error_one_per_line) {
++               static const char *oldfile;
++               static unsigned int oldline;
++               if (line == oldline && strcmp(file, oldfile) == 0)
++                       return;
++               oldfile = file;
++               oldline = line;
++       }
++       if (error_print_progname)
++               error_print_progname();
++       else
++               fprintf(stderr, "%s: ", __progname);
++       if (file)
++               fprintf(stderr, "%s:%u: ", file, line);
++       vfprintf(stderr, fmt, ap);
++      if (e)
++               fprintf(stderr, ": %s", strerror(e));
++       putc('\n', stderr);
++       fflush(stderr);
++       error_message_count++;
++       if (status)
++               exit(status);
++}
++
++void error(int status, int e, const char *fmt, ...)
++{
++       va_list ap;
++       va_start(ap,fmt);
++       eprint(status, e, 0, 0, fmt, ap);
++       va_end(ap);
++}
++
++#endif
+ 
+ /* It avoided the segment fault while file's bss offset have a large number.
+    See https://bugzilla.redhat.com/show_bug.cgi?id=1019707
+diff --git a/tools/rpmfind.c b/tools/rpmfind.c
+index 816aeef..327fab0 100644
+--- a/tools/rpmfind.c
++++ b/tools/rpmfind.c
+@@ -1174,7 +1174,7 @@ find_parsenum(PLAN *plan, const char *option, char *vp, char *endch)
+      * and endchar points to the beginning of the string we know we have
+      * a syntax error.
+      */
+-#if defined(__sun)
++#if defined(__sun) || !defined(__GLIBC_)
+     value = strtoll(str, &endchar, 10);
+ #else
+     value = strtoq(str, &endchar, 10);
+@@ -1214,7 +1214,7 @@ find_parsetime(PLAN *plan, const char *option, char *vp)
+ 	break;
+     }
+ 
+-#if defined(__sun)
++#if defined(__sun) || !defined(__GLIBC_)
+     value = strtoll(str, &unit, 10);
+ #else
+     value = strtoq(str, &unit, 10);
+@@ -1252,7 +1252,7 @@ find_parsetime(PLAN *plan, const char *option, char *vp)
+ 	str = unit + 1;
+ 	if (*str == '\0')	/* EOS */
+ 	    break;
+-#if defined(__sun)
++#if defined(__sun) || !defined(__GLIBC_)
+ 	value = strtoll(str, &unit, 10);
+ #else
+ 	value = strtoq(str, &unit, 10);
+-- 
+2.7.1
+
