@@ -1,6 +1,9 @@
 SUMMARY = "Gstreamer1.0 package groups"
 LICENSE = "MIT"
 
+# Due to use of COMBINED_FEATURES
+PACKAGE_ARCH = "${MACHINE_ARCH}"
+
 inherit packagegroup
 
 COMMERCIAL_PLUGINS = "${COMMERCIAL_AUDIO_PLUGINS} ${COMMERCIAL_VIDEO_PLUGINS}"
