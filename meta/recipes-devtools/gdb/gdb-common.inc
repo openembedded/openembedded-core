@@ -45,6 +45,8 @@ EXTRA_OECONF = "--disable-gdbtk --disable-tui --disable-x --disable-werror \
 PACKAGECONFIG ??= "readline"
 # Use --without-system-readline to compile with readline 5.
 PACKAGECONFIG[readline] = "--with-system-readline,--without-system-readline,readline"
+PACKAGECONFIG[python] = "--with-python=${WORKDIR}/python,--without-python,python,python python-codecs"
+PACKAGECONFIG[babeltrace] = "--with-babeltrace,--without-babeltrace,babeltrace"
 
 GDBPROPREFIX = "--program-prefix=''"
 
