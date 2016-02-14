@@ -538,7 +538,7 @@ python buildhistory_get_extra_sdkinfo() {
     if d.getVar('BB_CURRENTTASK', True) == 'populate_sdk_ext':
         tasksizes = {}
         filesizes = {}
-        for root, _, files in os.walk('${SDK_OUTPUT}/${SDKPATH}/sstate-cache'):
+        for root, _, files in os.walk(d.expand('${SDK_OUTPUT}/${SDKPATH}/sstate-cache')):
             for fn in files:
                 if fn.endswith('.tgz'):
                     fsize = int(math.ceil(float(os.path.getsize(os.path.join(root, fn))) / 1024))
@@ -546,11 +546,11 @@ python buildhistory_get_extra_sdkinfo() {
                     origtotal = tasksizes.get(task, 0)
                     tasksizes[task] = origtotal + fsize
                     filesizes[fn] = fsize
-        with open('${BUILDHISTORY_DIR_SDK}/sstate-package-sizes.txt', 'w') as f:
+        with open(d.expand('${BUILDHISTORY_DIR_SDK}/sstate-package-sizes.txt'), 'w') as f:
             filesizes_sorted = sorted(filesizes.items(), key=operator.itemgetter(1), reverse=True)
             for fn, size in filesizes_sorted:
                 f.write('%10d KiB %s\n' % (size, fn))
-        with open('${BUILDHISTORY_DIR_SDK}/sstate-task-sizes.txt', 'w') as f:
+        with open(d.expand('${BUILDHISTORY_DIR_SDK}/sstate-task-sizes.txt'), 'w') as f:
             tasksizes_sorted = sorted(tasksizes.items(), key=operator.itemgetter(1), reverse=True)
             for task, size in tasksizes_sorted:
                 f.write('%10d KiB %s\n' % (size, task))
