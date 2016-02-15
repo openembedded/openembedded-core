@@ -55,6 +55,11 @@ do_compile_prepend_class-nativesdk() {
     export LDFLAGS=""
 }
 
+do_compile_prepend_class-native() {
+    # Need to set RPATH so that chrpath will do its job correctly
+    RPATH="-Wl,-rpath-link,${STAGING_LIBDIR_NATIVE} -Wl,-rpath-link,${STAGING_BASE_LIBDIR_NATIVE} -Wl,-rpath,${STAGING_LIBDIR_NATIVE} -Wl,-rpath,${STAGING_BASE_LIBDIR_NATIVE}"
+}
+
 do_compile() {
     export CROSS_COMPILE=1
     export NATIVE_CC="gcc"
@@ -96,7 +101,8 @@ do_compile() {
     #
     export CC="${CC} -g"
     make -C ./nss CCC="${CXX} -g" \
-        OS_TEST=${OS_TEST}
+        OS_TEST=${OS_TEST} \
+        RPATH="${RPATH}"
 }
 
 
