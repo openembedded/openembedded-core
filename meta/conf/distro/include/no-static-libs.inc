@@ -28,3 +28,5 @@ DISABLE_STATIC_pn-eglinfo-fb = ""
 # libssp-static-dev included in build-appliance
 DISABLE_STATIC_pn-gcc-runtime = ""
 EXTRA_OECONF_append = "${DISABLE_STATIC}"
+
+EXTRA_OECMAKE_append_pn-libical = "-DSHARED_ONLY=True"
