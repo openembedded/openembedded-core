@@ -27,7 +27,7 @@ In this situation, we should support large-file for stat64. Add marco
 AC_SYS_LARGEFILE to do the detection at configure time. It can be disabled
 by configuring with the `--disable-largefile' option.
 
-Upstream-Status: Submitted
+Upstream-Status: Backport
 
 Bug: https://bugs.freedesktop.org/show_bug.cgi?id=93545
 https://bugs.freedesktop.org/attachment.cgi?id=120747
@@ -44,8 +44,8 @@ index 82806ba..cb5a60b 100644
  AC_PROG_CC
  AM_PROG_CC_C_O
  AC_PROG_CXX
-+AC_SYS_LARGEFILE
  AC_USE_SYSTEM_EXTENSIONS
++AC_SYS_LARGEFILE
  AC_ISC_POSIX
  AC_HEADER_STDC
 -- 
