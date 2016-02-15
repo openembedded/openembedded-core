@@ -38,7 +38,7 @@ class BuildhistoryBase(oeSelfTest):
         if expect_error:
             self.assertEqual(result.status, 1, msg="Error expected for global config '%s' and target config '%s'" % (global_config, target_config))
             search_for_error = re.search(error_regex, result.output)
-            self.assertTrue(search_for_error, msg="Could not find desired error in output: %s" % error_regex)
+            self.assertTrue(search_for_error, msg="Could not find desired error in output: %s (%s)" % (error_regex, result.output))
         else:
             self.assertEqual(result.status, 0, msg="Command 'bitbake %s' has failed unexpectedly: %s" % (target, result.output))
 

@@ -74,6 +74,10 @@ class DiskMonTest(oeSelfTest):
         self.assertTrue('WARNING: The free space' in res.output, msg = "A warning should have been displayed for disk monitor is set to WARN: %s" %res.output)
 
 class SanityOptionsTest(oeSelfTest):
+    def getline(self, res, line):
+        for l in res.output.split('\n'):
+            if line in l:
+                return l
 
     @testcase(927)
     def test_options_warnqa_errorqa_switch(self):
@@ -85,7 +89,8 @@ class SanityOptionsTest(oeSelfTest):
         self.write_recipeinc('xcursor-transparent-theme', 'PACKAGES += \"${PN}-dbg\"')
         res = bitbake("xcursor-transparent-theme", ignore_status=True)
         self.delete_recipeinc('xcursor-transparent-theme')
-        self.assertTrue("ERROR: QA Issue: xcursor-transparent-theme-dbg is listed in PACKAGES multiple times, this leads to packaging errors." in res.output, msg=res.output)
+        line = self.getline(res, "QA Issue: xcursor-transparent-theme-dbg is listed in PACKAGES multiple times, this leads to packaging errors.")
+        self.assertTrue(line and line.startswith("ERROR:"), msg=res.output)
         self.assertEqual(res.status, 1, msg = "bitbake reported exit code %s. It should have been 1. Bitbake output: %s" % (str(res.status), res.output))
         self.write_recipeinc('xcursor-transparent-theme', 'PACKAGES += \"${PN}-dbg\"')
         self.append_config('ERROR_QA_remove = "packages-list"')
@@ -93,15 +98,18 @@ class SanityOptionsTest(oeSelfTest):
         bitbake("xcursor-transparent-theme -ccleansstate")
         res = bitbake("xcursor-transparent-theme")
         self.delete_recipeinc('xcursor-transparent-theme')
-        self.assertTrue("WARNING: QA Issue: xcursor-transparent-theme-dbg is listed in PACKAGES multiple times, this leads to packaging errors." in res.output, msg=res.output)
+        line = self.getline(res, "QA Issue: xcursor-transparent-theme-dbg is listed in PACKAGES multiple times, this leads to packaging errors.")
+        self.assertTrue(line and line.startswith("WARNING:"), msg=res.output)
 
     @testcase(278)
     def test_sanity_userspace_dependency(self):
         self.write_config('WARN_QA_append = " unsafe-references-in-binaries unsafe-references-in-scripts"')
         bitbake("-ccleansstate gzip nfs-utils")
         res = bitbake("gzip nfs-utils")
-        self.assertTrue("WARNING: QA Issue: gzip" in res.output, "WARNING: QA Issue: gzip message is not present in bitbake's output: %s" % res.output)
-        self.assertTrue("WARNING: QA Issue: nfs-utils" in res.output, "WARNING: QA Issue: nfs-utils message is not present in bitbake's output: %s" % res.output)
+        line = self.getline(res, "QA Issue: gzip")
+        self.assertTrue(line and line.startswith("WARNING:"), "WARNING: QA Issue: gzip message is not present in bitbake's output: %s" % res.output)
+        line = self.getline(res, "QA Issue: nfs-utils")
+        self.assertTrue(line and line.startswith("WARNING:"), "WARNING: QA Issue: nfs-utils message is not present in bitbake's output: %s" % res.output)
 
 class BuildhistoryTests(BuildhistoryBase):
 
@@ -114,7 +122,7 @@ class BuildhistoryTests(BuildhistoryBase):
     def test_buildhistory_buildtime_pr_backwards(self):
         self.add_command_to_tearDown('cleanup-workdir')
         target = 'xcursor-transparent-theme'
-        error = "ERROR: QA Issue: Package version for package %s went backwards which would break package feeds from (.*-r1 to .*-r0)" % target
+        error = "ERROR:.*QA Issue: Package version for package %s went backwards which would break package feeds from (.*-r1.* to .*-r0.*)" % target
         self.run_buildhistory_operation(target, target_config="PR = \"r1\"", change_bh_location=True)
         self.run_buildhistory_operation(target, target_config="PR = \"r0\"", change_bh_location=False, expect_error=True, error_regex=error)
 

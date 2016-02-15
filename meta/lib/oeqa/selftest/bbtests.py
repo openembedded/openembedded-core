@@ -8,6 +8,11 @@ from oeqa.utils.decorators import testcase
 
 class BitbakeTests(oeSelfTest):
 
+    def getline(self, res, line):
+        for l in res.output.split('\n'):
+            if line in l:
+                return l
+
     @testcase(789)
     def test_run_bitbake_from_dir_1(self):
         os.chdir(os.path.join(self.builddir, 'conf'))
@@ -63,7 +68,8 @@ class BitbakeTests(oeSelfTest):
         result = bitbake('man -c patch', ignore_status=True)
         self.delete_recipeinc('man')
         bitbake('-cclean man')
-        self.assertTrue("ERROR: Function failed: patch_do_patch" in result.output, msg = "Though no man-1.5h1-make.patch file exists, bitbake didn't output any err. message. bitbake output: %s" % result.output)
+        line = self.getline(result, "Function failed: patch_do_patch")
+        self.assertTrue(line and line.startswith("ERROR:"), msg = "Though no man-1.5h1-make.patch file exists, bitbake didn't output any err. message. bitbake output: %s" % result.output)
 
     @testcase(1354)
     def test_force_task_1(self):
@@ -135,7 +141,8 @@ SSTATE_DIR = \"${TOPDIR}/download-selftest\"
         self.assertEqual(result.status, 1, msg="Command succeded when it should have failed. bitbake output: %s" % result.output)
         self.assertTrue('Fetcher failure: Unable to find file file://invalid anywhere. The paths that were searched were:' in result.output, msg = "\"invalid\" file \
 doesn't exist, yet no error message encountered. bitbake output: %s" % result.output)
-        self.assertTrue('ERROR: Function failed: Fetcher failure for URL: \'file://invalid\'. Unable to fetch URL from any source.' in result.output, msg = "\"invalid\" file \
+        line = self.getline(result, 'Function failed: Fetcher failure for URL: \'file://invalid\'. Unable to fetch URL from any source.')
+        self.assertTrue(line and line.startswith("ERROR:"), msg = "\"invalid\" file \
 doesn't exist, yet fetcher didn't report any error. bitbake output: %s" % result.output)
 
     @testcase(171)
