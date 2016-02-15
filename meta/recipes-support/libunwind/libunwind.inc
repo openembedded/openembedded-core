@@ -26,7 +26,7 @@ LDFLAGS_append_x86-64 = " -fuse-ld=gold"
 LDFLAGS_append_arm = " -fuse-ld=gold"
 LDFLAGS_append_aarch64 = " -fuse-ld=gold"
 
-LDFLAGS_append_powerpc = " -fuse-ld=gold"
-LDFLAGS_append_powerpc64 = " -fuse-ld=gold"
+LDFLAGS_append_powerpc = " -fuse-ld=gold -mbss-plt"
+LDFLAGS_append_powerpc64 = " -fuse-ld=gold -mbss-plt"
 
 BBCLASSEXTEND = "native"
