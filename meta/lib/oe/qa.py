@@ -23,7 +23,7 @@ class ELFFile:
     def my_assert(self, expectation, result):
         if not expectation == result:
             #print "'%x','%x' %s" % (ord(expectation), ord(result), self.name)
-            raise Exception("This does not work as expected")
+            raise ValueError("%s is not an ELF" % self.name)
 
     def __init__(self, name, bits = 0):
         self.name = name
@@ -32,7 +32,7 @@ class ELFFile:
 
     def open(self):
         if not os.path.isfile(self.name):
-            raise Exception("File is not a normal file")
+            raise ValueError("%s is not a normal file" % self.name)
 
         self.file = file(self.name, "r")
         self.data = self.file.read(ELFFile.EI_NIDENT+4)
@@ -49,24 +49,24 @@ class ELFFile:
                 self.bits = 64
             else:
                 # Not 32-bit or 64.. lets assert
-                raise Exception("ELF but not 32 or 64 bit.")
+                raise ValueError("ELF but not 32 or 64 bit.")
         elif self.bits == 32:
             self.my_assert(self.data[ELFFile.EI_CLASS], chr(ELFFile.ELFCLASS32))
         elif self.bits == 64:
             self.my_assert(self.data[ELFFile.EI_CLASS], chr(ELFFile.ELFCLASS64))
         else:
-            raise Exception("Must specify unknown, 32 or 64 bit size.")
+            raise ValueError("Must specify unknown, 32 or 64 bit size.")
         self.my_assert(self.data[ELFFile.EI_VERSION], chr(ELFFile.EV_CURRENT) )
 
         self.sex = self.data[ELFFile.EI_DATA]
         if self.sex == chr(ELFFile.ELFDATANONE):
-            raise Exception("self.sex == ELFDATANONE")
+            raise ValueError("self.sex == ELFDATANONE")
         elif self.sex == chr(ELFFile.ELFDATA2LSB):
             self.sex = "<"
         elif self.sex == chr(ELFFile.ELFDATA2MSB):
             self.sex = ">"
         else:
-            raise Exception("Unknown self.sex")
+            raise ValueError("Unknown self.sex")
 
     def osAbi(self):
         return ord(self.data[ELFFile.EI_OSABI])
@@ -80,7 +80,7 @@ class ELFFile:
     def isLittleEndian(self):
         return self.sex == "<"
 
-    def isBigEngian(self):
+    def isBigEndian(self):
         return self.sex == ">"
 
     def machine(self):
