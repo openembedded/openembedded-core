@@ -29,7 +29,7 @@ do_install_append() {
 
 	unlink ${D}/${libdir}/libpng.la
 	unlink ${D}/${libdir}/libpng.so
-	unlink ${D}/${libdir}/libpng.a
+	unlink ${D}/${libdir}/libpng.a || true
 	unlink ${D}/${libdir}/pkgconfig/libpng.pc
 
 	unlink ${D}/${bindir}/libpng-config
