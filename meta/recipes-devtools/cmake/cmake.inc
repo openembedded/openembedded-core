@@ -17,8 +17,8 @@ SRC_URI = "https://cmake.org/files/v${CMAKE_MAJOR_VERSION}/cmake-${PV}.tar.gz \
            file://0001-Add-NIOS2-CPU-support.patch \
            "
 
-SRC_URI[md5sum] = "04545d3cc3801fe84223b864c4f7a53c"
-SRC_URI[sha256sum] = "da7cc34e1ce1d82e67a32ab081c02c2845534cd8bf2e09d88077a1b282e97392"
+SRC_URI[md5sum] = "4cb3ff35b2472aae70f542116d616e63"
+SRC_URI[sha256sum] = "b73f8c1029611df7ed81796bf5ca8ba0ef41c6761132340c73ffe42704f980fa"
 
 UPSTREAM_CHECK_REGEX = "cmake-(?P<pver>\d+(\.\d+)+)\.tar"
 
