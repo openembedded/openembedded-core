@@ -8,7 +8,7 @@ BUGTRACKER = "http://bugzilla.libsdl.org/"
 SECTION = "libs"
 
 LICENSE = "Zlib"
-LIC_FILES_CHKSUM = "file://COPYING.txt;md5=67dcb7fae16952557bc5f96e9eb5d188"
+LIC_FILES_CHKSUM = "file://COPYING.txt;md5=b2304ad7e91711027590d3f102a754b7"
 
 PROVIDES = "virtual/libsdl2"
 
@@ -19,8 +19,8 @@ SRC_URI = "http://www.libsdl.org/release/SDL2-${PV}.tar.gz \
 
 S = "${WORKDIR}/SDL2-${PV}"
 
-SRC_URI[md5sum] = "fe6c61d2e9df9ef570e7e80c6e822537"
-SRC_URI[sha256sum] = "a5a69a6abf80bcce713fa873607735fe712f44276a7f048d60a61bb2f6b3c90c"
+SRC_URI[md5sum] = "44fc4a023349933e7f5d7a582f7b886e"
+SRC_URI[sha256sum] = "da55e540bf6331824153805d58b590a29c39d2d506c6d02fa409aedeab21174b"
 
 inherit autotools lib_package binconfig pkgconfig
 
@@ -62,3 +62,5 @@ do_configure_prepend() {
         done
         export SYSROOT=$PKG_CONFIG_SYSROOT_DIR
 }
+
+FILES_${PN}-dev += "${libdir}/cmake"
