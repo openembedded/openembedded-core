@@ -80,6 +80,7 @@ ignore_errors = {
     'qemuarm64' : [
         'Fatal server error:',
         '(EE) Server terminated with error (1). Closing log file.',
+        'dmi: Firmware registration failed.',
         ] + common_errors,
     'emenlow' : [
         '[Firmware Bug]: ACPI: No _BQC method, cannot determine initial brightness',
