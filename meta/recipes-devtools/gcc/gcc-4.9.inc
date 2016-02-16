@@ -86,6 +86,7 @@ SRC_URI = "\
     file://0068-musl-dynamic-linker.patch \
     file://0069-musl-no-fixincludes.patch \
     file://0070-libstdc-musl.patch \
+    file://0071-Ignore-fdebug-prefix-map-in-producer-string-by-Danie.patch \
 "
 SRC_URI[md5sum] = "6f831b4d251872736e8e9cc09746f327"
 SRC_URI[sha256sum] = "2332b2a5a321b57508b9031354a8503af6fdfb868b8c1748d33028d100a8b67e"
