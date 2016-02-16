@@ -14,6 +14,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
 
 SRC_URI = "http://www.dest-unreach.org/socat/download/socat-${PV}.tar.bz2 \
            file://Makefile.in-fix-for-parallel-build.patch \
+           file://0001-define-NETDB_INTERNAL-to-1-if-not-available.patch \
 "
 
 SRC_URI[md5sum] = "334e46924f2b386299c9db2ac22bcd36"
