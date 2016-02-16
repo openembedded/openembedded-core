@@ -1148,19 +1148,21 @@ python do_qa_configure() {
 
     configs = []
     workdir = d.getVar('WORKDIR', True)
-    bb.note("Checking autotools environment for common misconfiguration")
-    for root, dirs, files in os.walk(workdir):
-        statement = "grep -e 'CROSS COMPILE Badness:' -e 'is unsafe for cross-compilation' %s > /dev/null" % \
-                    os.path.join(root,"config.log")
-        if "config.log" in files:
-            if subprocess.call(statement, shell=True) == 0:
-                bb.fatal("""This autoconf log indicates errors, it looked at host include and/or library paths while determining system capabilities.
+
+    if bb.data.inherits_class('autotools', d):
+        bb.note("Checking autotools environment for common misconfiguration")
+        for root, dirs, files in os.walk(workdir):
+            statement = "grep -q -F -e 'CROSS COMPILE Badness:' -e 'is unsafe for cross-compilation' %s" % \
+                        os.path.join(root,"config.log")
+            if "config.log" in files:
+                if subprocess.call(statement, shell=True) == 0:
+                    bb.fatal("""This autoconf log indicates errors, it looked at host include and/or library paths while determining system capabilities.
 Rerun configure task after fixing this.""")
 
-        if "configure.ac" in files:
-            configs.append(os.path.join(root,"configure.ac"))
-        if "configure.in" in files:
-            configs.append(os.path.join(root, "configure.in"))
+            if "configure.ac" in files:
+                configs.append(os.path.join(root,"configure.ac"))
+            if "configure.in" in files:
+                configs.append(os.path.join(root, "configure.in"))
 
     ###########################################################################
     # Check gettext configuration and dependencies are correct
