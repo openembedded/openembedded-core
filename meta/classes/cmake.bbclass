@@ -7,9 +7,6 @@ B = "${WORKDIR}/build"
 # We need to unset CCACHE otherwise cmake gets too confused
 CCACHE = ""
 
-# We want the staging and installing functions from autotools
-inherit autotools
-
 # C/C++ Compiler (without cpu arch/tune arguments)
 OECMAKE_C_COMPILER ?= "`echo ${CC} | sed 's/^\([^ ]*\).*/\1/'`"
 OECMAKE_CXX_COMPILER ?= "`echo ${CXX} | sed 's/^\([^ ]*\).*/\1/'`"
@@ -132,7 +129,7 @@ cmake_do_compile()  {
 
 cmake_do_install() {
 	cd ${B}
-	autotools_do_install
+	oe_runmake 'DESTDIR=${D}' install
 }
 
 EXPORT_FUNCTIONS do_configure do_compile do_install do_generate_toolchain_file
