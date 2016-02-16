@@ -41,6 +41,6 @@ Index: glew-1.11.0/glew.pc.in
 -Libs: -L${libdir} -l@libname@
 -Requires: @requireslib@
 +Version: @VERSION@
-+Cflags: -I${includedir} @CFLAGS@
++Cflags: -I${includedir}
 +Libs: -L${libdir} -lGLEW
 +Requires: glu
