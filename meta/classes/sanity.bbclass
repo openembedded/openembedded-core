@@ -25,21 +25,70 @@ def sanity_conf_update(fn, lines, version_var_name, new_version):
     with open(fn, "w") as f:
         f.write(''.join(lines))
 
-# Functions added to this variable MUST throw an exception (or sys.exit()) unless they
-# successfully changed LCONF_VERSION in bblayers.conf
-BBLAYERS_CONF_UPDATE_FUNCS += "oecore_update_bblayers"
+# Functions added to this variable MUST throw a NotImplementedError exception unless 
+# they successfully changed the config version in the config file. Exceptions
+# are used since exec_func doesn't handle return values.
+BBLAYERS_CONF_UPDATE_FUNCS += " \
+    conf/bblayers.conf:LCONF_VERSION:LAYER_CONF_VERSION:oecore_update_bblayers \
+    conf/local.conf:CONF_VERSION:LOCALCONF_VERSION:oecore_update_localconf \
+    conf/site.conf:SCONF_VERSION:SITE_CONF_VERSION:oecore_update_siteconf \
+"
+
+python oecore_update_localconf() {
+    # Check we are using a valid local.conf
+    current_conf  = d.getVar('CONF_VERSION', True)
+    conf_version =  d.getVar('LOCALCONF_VERSION', True)
+
+    failmsg = "Your version of local.conf was generated from an older/newer version of 
+local.conf.sample and there have been updates made to this file. Please compare the two 
+files and merge any changes before continuing.
+
+Matching the version numbers will remove this message.
+
+\"meld conf/local.conf ${COREBASE}/meta*/conf/local.conf.sample\" 
+
+is a good way to visualise the changes."
+
+    raise NotImplementedError(failmsg)
+}
+
+python oecore_update_siteconf() {
+    # If we have a site.conf, check it's valid
+    current_sconf = d.getVar('SCONF_VERSION', True)
+    sconf_version = d.getVar('SITE_CONF_VERSION', True)
+
+    failmsg = "Your version of site.conf was generated from an older version of 
+site.conf.sample and there have been updates made to this file. Please compare the two 
+files and merge any changes before continuing.
+
+Matching the version numbers will remove this message.
+
+\"meld conf/site.conf ${COREBASE}/meta*/conf/site.conf.sample\" 
+
+is a good way to visualise the changes."
+
+    raise NotImplementedError(failmsg)
+}
 
 python oecore_update_bblayers() {
     # bblayers.conf is out of date, so see if we can resolve that
 
     current_lconf = int(d.getVar('LCONF_VERSION', True))
-    if not current_lconf:
-        sys.exit()
     lconf_version = int(d.getVar('LAYER_CONF_VERSION', True))
+
+    failmsg = """Your version of bblayers.conf has the wrong LCONF_VERSION (has %s, expecting %s).
+Please compare the your file against bblayers.conf.sample and merge any changes before continuing.
+"meld conf/bblayers.conf ${COREBASE}/meta*/conf/bblayers.conf.sample" 
+
+is a good way to visualise the changes.""" % (current_lconf, lconf_version)
+
+    if not current_lconf:
+        raise NotImplementedError(failmsg)
+
     lines = []
 
     if current_lconf < 4:
-        sys.exit()
+        raise NotImplementedError(failmsg)
 
     bblayers_fn = bblayers_conf_file(d)
     lines = sanity_conf_read(bblayers_fn)
@@ -58,13 +107,13 @@ python oecore_update_bblayers() {
                         lines[index] = (bbpath_line[:start + 1] +
                                     topdir_var + ':' + bbpath_line[start + 1:])
             else:
-                sys.exit()
+                raise NotImplementedError(failmsg)
         else:
             index, bbfiles_line = sanity_conf_find_line('BBFILES', lines)
             if bbfiles_line:
                 lines.insert(index, 'BBPATH = "' + topdir_var + '"\n')
             else:
-                sys.exit()
+                raise NotImplementedError(failmsg)
 
         current_lconf += 1
         sanity_conf_update(bblayers_fn, lines, 'LCONF_VERSION', current_lconf)
@@ -76,7 +125,33 @@ python oecore_update_bblayers() {
         sanity_conf_update(bblayers_fn, lines, 'LCONF_VERSION', current_lconf)
         return
 
-    sys.exit()
+        if not status.reparse:
+            status.addresult()
+
+    elif current_lconf == 6 and lconf_version > 6:
+        # Handle rename of meta-yocto -> meta-poky
+        # This marks the start of separate version numbers but code is needed in OE-Core
+        # for the migration, one last time.
+        layers = d.getVar('BBLAYERS', True)
+        if 'meta-yocto' in layers:
+            index, meta_yocto_line = sanity_conf_find_line('.*meta-yocto.*\n', lines)
+            if meta_yocto_line:
+                lines[index] = meta_yocto_line.replace('meta-yocto', 'meta-poky')
+            else:
+                raise NotImplementedError(failmsg)
+            index, meta_yocto_line = sanity_conf_find_line('LCONF_VERSION.*\n', lines)
+            if meta_yocto_line:
+                lines[index] = 'POKY_BBLAYERS_CONF_VERSION = "1"\n'
+            else:
+                raise NotImplementedError(failmsg)
+            with open(bblayers_fn, "w") as f:
+                f.write(''.join(lines))
+            return
+
+        sanity_conf_update(bblayers_fn, lines, 'LCONF_VERSION', "7")
+        return
+
+    raise NotImplementedError(failmsg)
 }
 
 def raise_sanity_error(msg, d, network_error=False):
@@ -463,37 +538,20 @@ def check_perl_modules(sanity_data):
     return None
 
 def sanity_check_conffiles(status, d):
-    # Check we are using a valid local.conf
-    current_conf  = d.getVar('CONF_VERSION', True)
-    conf_version =  d.getVar('LOCALCONF_VERSION', True)
-
-    if current_conf != conf_version:
-        status.addresult("Your version of local.conf was generated from an older/newer version of local.conf.sample and there have been updates made to this file. Please compare the two files and merge any changes before continuing.\nMatching the version numbers will remove this message.\n\"meld conf/local.conf ${COREBASE}/meta*/conf/local.conf.sample\" is a good way to visualise the changes.\n")
-
-    # Check bblayers.conf is valid
-    current_lconf = d.getVar('LCONF_VERSION', True)
-    lconf_version = d.getVar('LAYER_CONF_VERSION', True)
-    if current_lconf != lconf_version:
-        funcs = d.getVar('BBLAYERS_CONF_UPDATE_FUNCS', True).split()
-        for func in funcs:
+    funcs = d.getVar('BBLAYERS_CONF_UPDATE_FUNCS', True).split()
+    for func in funcs:
+        conffile, current_version, required_version, func = func.split(":")
+        if check_conf_exists(conffile, d) and d.getVar(current_version, True) is not None and \
+                d.getVar(current_version, True) != d.getVar(required_version, True):
             success = True
             try:
                 bb.build.exec_func(func, d)
-            except Exception:
+            except NotImplementedError as e:
                 success = False
+                status.addresult(e.msg)
             if success:
                 bb.note("Your conf/bblayers.conf has been automatically updated.")
                 status.reparse = True
-        if not status.reparse:
-            status.addresult("Your version of bblayers.conf has the wrong LCONF_VERSION (has %s, expecting %s).\nPlease compare the your file against bblayers.conf.sample and merge any changes before continuing.\n\"meld conf/bblayers.conf ${COREBASE}/meta*/conf/bblayers.conf.sample\" is a good way to visualise the changes.\n" % (current_lconf, lconf_version))
-
-    # If we have a site.conf, check it's valid
-    if check_conf_exists("conf/site.conf", d):
-        current_sconf = d.getVar('SCONF_VERSION', True)
-        sconf_version = d.getVar('SITE_CONF_VERSION', True)
-        if current_sconf != sconf_version:
-            status.addresult("Your version of site.conf was generated from an older version of site.conf.sample and there have been updates made to this file. Please compare the two files and merge any changes before continuing.\nMatching the version numbers will remove this message.\n\"meld conf/site.conf ${COREBASE}/meta*/conf/site.conf.sample\" is a good way to visualise the changes.\n")
-
 
 def sanity_handle_abichanges(status, d):
     #
