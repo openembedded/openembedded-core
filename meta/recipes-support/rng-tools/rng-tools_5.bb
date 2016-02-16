@@ -1,9 +1,10 @@
 SUMMARY = "Random number generator daemon"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=0b6f033afe6db235e559456585dc8cdc"
-DEPENDS_append_libc-uclibc = " argp-standalone"
 
 SRC_URI = "http://heanet.dl.sourceforge.net/sourceforge/gkernel/${BP}.tar.gz \
+           file://0001-If-the-libc-is-lacking-argp-use-libargp.patch \
+           file://0002-Add-argument-to-control-the-libargp-dependency.patch \
            file://init \
            file://default"
 
@@ -18,6 +19,11 @@ python () {
 }
 
 inherit autotools update-rc.d
+
+PACKAGECONFIG = ""
+PACKAGECONFIG_libc-musl = "libargp"
+PACKAGECONFIG_libc-uclibc = "libargp"
+PACKAGECONFIG[libargp] = "--with-libargp,--without-libargp,argp-standalone,"
 
 RDEPENDS_${PN} = "libgcrypt"
 
