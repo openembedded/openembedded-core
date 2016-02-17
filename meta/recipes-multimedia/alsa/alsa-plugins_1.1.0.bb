@@ -8,21 +8,23 @@ SECTION = "multimedia"
 # build system, and doesn't affect the licensing of the build result.
 #
 # The samplerate plugin source code is licensed under GPLv2+ to be consistent
-# with the libsamplerate license.
+# with the libsamplerate license. However, if the licensee has a commercial
+# license for libsamplerate, the samplerate plugin may be used under the terms
+# of LGPLv2.1 like the rest of the plugins.
 LICENSE = "LGPLv2.1 & GPLv2+"
 LIC_FILES_CHKSUM = "\
         file://COPYING;md5=7fbc338309ac38fefcd64b04bb903e34 \
         file://COPYING.GPL;md5=94d55d512a9ba36caa9b7df079bae19f \
         file://m4/attributes.m4;endline=33;md5=b25958da44c02231e3641f1bccef53eb \
-        file://rate/rate_samplerate.c;endline=19;md5=f3d3ce0b189846a486517d97a854b276 \
+        file://rate/rate_samplerate.c;endline=35;md5=fd77bce85f4a338c0e8ab18430b69fae \
 "
 
-SRC_URI = "ftp://ftp.alsa-project.org/pub/plugins/${BP}.tar.bz2 \
-           file://0001-arcam-av-Include-sys-select.h-for-fd_set-definition.patch \
-           file://0001-include-speexdsp_types.h-not-speex_types.h.patch \
+SRC_URI = "\
+        ftp://ftp.alsa-project.org/pub/plugins/${BP}.tar.bz2 \
+        file://0001-pph-include-config.h-from-rate_speexrate.c.patch \
 "
-SRC_URI[md5sum] = "a66797b4471e3cbe96575207bfbe252c"
-SRC_URI[sha256sum] = "325d85cac285f632b83e0191ae3f348bad03c1f007b937042f164abb81ea6532"
+SRC_URI[md5sum] = "b123e42ed881b9adbc99e4040f257c39"
+SRC_URI[sha256sum] = "3b83c329953bef99f5fe25ae04ec4a455fe6514939f3b45a5321966652b2c9ee"
 
 DEPENDS += "alsa-lib"
 
