@@ -7,6 +7,7 @@ DISABLE_STATIC_pn-nativesdk-qemu = ""
 DISABLE_STATIC_pn-pciutils = ""
 # libcap aborts on unrecognised option
 DISABLE_STATIC_pn-libcap = ""
+DISABLE_STATIC_pn-libcap-native = ""
 # libpcap aborts on unrecognised option
 DISABLE_STATIC_pn-libpcap = ""
 # needed by gdb
