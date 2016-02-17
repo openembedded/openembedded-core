@@ -12,7 +12,7 @@ DEPENDS = "libatomic-ops libsndfile1 libtool"
 DEPENDS += "udev alsa-lib glib-2.0 gconf"
 DEPENDS += "json-c gdbm speexdsp libxml-parser-perl-native libcap"
 
-inherit autotools pkgconfig useradd gettext perlnative bluetooth systemd
+inherit autotools bash-completion pkgconfig useradd gettext perlnative bluetooth systemd
 
 # *.desktop rules wont be generated during configure and build will fail
 # if using --disable-nls
@@ -31,6 +31,10 @@ EXTRA_OECONF = "\
 		--with-udev-rules-dir=`pkg-config --variable=udevdir udev`/rules.d \
                 ac_cv_header_valgrind_memcheck_h=no \
 "
+
+# soxr (the SoX Resampler library) doesn't seem to be currently packaged in
+# oe-core nor meta-oe, so let's not add a PACKAGECONFIG entry for it for now.
+EXTRA_OECONF += "--without-soxr"
 
 PACKAGECONFIG ??= "${@bb.utils.contains('DISTRO_FEATURES', 'bluetooth', '${BLUEZ}', '', d)} \
                    ${@bb.utils.contains('DISTRO_FEATURES', 'zeroconf', 'avahi', '', d)} \
@@ -101,7 +105,7 @@ RREPLACES_pulseaudio-server = "libpulse-bin libpulse-conf"
 
 PACKAGES_DYNAMIC += "^pulseaudio-lib-.* ^pulseaudio-module-.*"
 
-FILES_libpulsecore = "${libdir}/libpulsecore*.so"
+FILES_libpulsecore = "${libdir}/pulseaudio/libpulsecore*.so"
 FILES_libpulsecommon = "${libdir}/pulseaudio/libpulsecommon*.so"
 
 # client.conf configures the behaviour of libpulse, so it belongs in the same
