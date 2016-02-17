@@ -22,6 +22,7 @@ SRC_URI = "https://fedorahosted.org/releases/n/e/newt/newt-${PV}.tar.gz \
            file://fix_SHAREDDIR.patch \
            file://cross_ar.patch \
            file://Makefile.in-Add-tinfo-library-to-the-linking-librari.patch \
+           file://pie-flags.patch \
 "
 
 SRC_URI[md5sum] = "685721bee1a318570704b19dcf31d268"
@@ -37,6 +38,7 @@ CLEANBROKEN = "1"
 
 export STAGING_INCDIR
 export STAGING_LIBDIR
+export CPPFLAGS
 
 export BUILD_SYS
 export HOST_SYS
