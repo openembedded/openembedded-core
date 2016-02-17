@@ -16,8 +16,8 @@ SRC_URI = "ftp://ftp.alsa-project.org/pub/tools/${BP}.tar.bz2 \
            file://0001-as10k1-Make-output_tram_line-static-inline.patch \
           "
 
-SRC_URI[md5sum] = "f339a3cd24f748c9d007bdff0e98775b"
-SRC_URI[sha256sum] = "94abf0ab5a73f0710c70d4fb3dc1003af5bae2d2ed721d59d245b41ad0f2fbd1"
+SRC_URI[md5sum] = "b476a5afaa3ea3230855553ad59d259d"
+SRC_URI[sha256sum] = "7d34558c590a50294b36576d257316a1ac5cd951eb8cd7d330e09f8cc757ab51"
 
 inherit autotools-brokensep pkgconfig
 
