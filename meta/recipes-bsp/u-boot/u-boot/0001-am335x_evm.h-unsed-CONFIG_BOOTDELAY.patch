@@ -1,0 +1,34 @@
+From 7205442e621db54ea06c3bca2d793e1ae2214f9c Mon Sep 17 00:00:00 2001
+From: Tom Rini <trini@konsulko.com>
+Date: Thu, 10 Dec 2015 16:46:01 -0500
+Subject: [PATCH] am335x_evm.h: unsed CONFIG_BOOTDELAY
+
+Now that ti_armv7_common.h uses config_distro_defaults.h we don't need
+to include it again and then undef CONFIG_BOOTDELAY
+
+Signed-off-by: Tom Rini <trini@konsulko.com>
+
+Upstream-Status: Backport
+
+---
+ include/configs/am335x_evm.h | 4 ----
+ 1 file changed, 4 deletions(-)
+
+diff --git a/include/configs/am335x_evm.h b/include/configs/am335x_evm.h
+index c51db8c..cf6a606 100644
+--- a/include/configs/am335x_evm.h
++++ b/include/configs/am335x_evm.h
+@@ -18,10 +18,6 @@
+
+ #include <configs/ti_am335x_common.h>
+
+-/* Don't override the distro default bootdelay */
+-#undef CONFIG_BOOTDELAY
+-#include <config_distro_defaults.h>
+-
+ #ifndef CONFIG_SPL_BUILD
+ #ifndef CONFIG_FIT
+ # define CONFIG_FIT
+--
+2.7.0
+
