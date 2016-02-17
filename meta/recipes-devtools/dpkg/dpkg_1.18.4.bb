@@ -13,9 +13,8 @@ SRC_URI += "file://noman.patch \
 	    file://0004-The-lutimes-function-doesn-t-work-properly-for-all-s.patch \
 	    file://0005-dpkg-compiler.m4-remove-Wvla.patch \
 	    file://0006-add-musleabi-to-known-target-tripets.patch \
-	    file://dpkg-CVE-2015-0860.patch \
            "
 
-SRC_URI[md5sum] = "63b9d869081ec49adeef6c5ff62d6576"
-SRC_URI[sha256sum] = "11484f2a73d027d696e720a60380db71978bb5c06cd88fe30c291e069ac457a4"
+SRC_URI[md5sum] = "e95b513c89693f6ec3ab53b6b1c3defd"
+SRC_URI[sha256sum] = "fe89243868888ce715bf45861f26264f767d4e4dbd0d6f1a26ce60bbbbf106da"
 
