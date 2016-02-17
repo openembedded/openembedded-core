@@ -3,15 +3,13 @@ SECTION = "base"
 LICENSE = "GPLv2 & SMAIL_GPL"
 LIC_FILES_CHKSUM = "file://debian/copyright;md5=f01a5203d50512fc4830b4332b696a9f"
 
-SRC_URI = "http://snapshot.debian.org/archive/debian/20151006T155028Z//pool/main/d/${BPN}/${BPN}_${PV}.tar.xz"
+SRC_URI = "http://snapshot.debian.org/archive/debian/20160204T040501Z/pool/main/d/${BPN}/${BPN}_${PV}.tar.xz"
 # the package is taken from snapshots.debian.org; that source is static and goes stale
 # so we check the latest upstream from a directory that does get updated
 UPSTREAM_CHECK_URI = "${DEBIAN_MIRROR}/main/d/${BPN}/"
 
-SRC_URI[md5sum] = "487524518cd5833a6a4f7007b5d1bd5b"
-SRC_URI[sha256sum] = "a531c23e0105fe01cfa928457a8343a1e947e2621b3cd4d05f4e9656020c63b7"
-
-S = "${WORKDIR}/${BPN}"
+SRC_URI[md5sum] = "00186f527b35e2cecd4db593c6d512d0"
+SRC_URI[sha256sum] = "a269cacd40f52f2fa5d5636357714a49e8538459c16d77772efaa23711fe53d9"
 
 inherit autotools update-alternatives
 
