@@ -17,9 +17,9 @@ SRC_URI[sha256sum] = "ddc643ab9382e24bbe4747d43df189a0a6ce38fcb33df041b9cb0b3cd4
 
 inherit autotools pkgconfig binconfig multilib_header
 
-PACKAGECONFIG ??= "${@bb.utils.contains("DISTRO_FEATURES", "ipv6", "ipv6", "", d)} gnutls zlib"
-PACKAGECONFIG_class-native = "ipv6 ssl zlib"
-PACKAGECONFIG_class-nativesdk = "ipv6 ssl zlib"
+PACKAGECONFIG ??= "${@bb.utils.contains("DISTRO_FEATURES", "ipv6", "ipv6", "", d)} gnutls proxy zlib"
+PACKAGECONFIG_class-native = "ipv6 proxy ssl zlib"
+PACKAGECONFIG_class-nativesdk = "ipv6 proxy ssl zlib"
 
 PACKAGECONFIG[dict] = "--enable-dict,--disable-dict,"
 PACKAGECONFIG[gnutls] = "--with-gnutls,--without-gnutls,gnutls"
