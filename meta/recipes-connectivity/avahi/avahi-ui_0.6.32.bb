@@ -12,10 +12,8 @@ ANY_OF_DISTRO_FEATURES = "${GTK2DISTROFEATURES}"
 PACKAGECONFIG ??= "python"
 PACKAGECONFIG[python] = "--enable-python,--disable-python,python-native python"
 
-PR = "${INC_PR}.0"
-
-SRC_URI[md5sum] = "2f22745b8f7368ad5a0a3fddac343f2d"
-SRC_URI[sha256sum] = "8372719b24e2dd75de6f59bb1315e600db4fd092805bd1201ed0cb651a2dab48"
+SRC_URI[md5sum] = "22b5e705d3eabb31d26f2e1e7b074013"
+SRC_URI[sha256sum] = "d54991185d514a0aba54ebeb408d7575b60f5818a772e28fa0e18b98bc1db454"
 
 DEPENDS += "avahi gtk+ libglade"
 

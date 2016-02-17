@@ -7,28 +7,21 @@ configuration from the link-local 169.254.0.0/16 range without the need for a ce
 server.'
 AUTHOR = "Lennart Poettering <lennart@poettering.net>"
 HOMEPAGE = "http://avahi.org"
-BUGTRACKER = "http://avahi.org/report"
+BUGTRACKER = "https://github.com/lathiat/avahi/issues"
 SECTION = "network"
 
 # major part is under LGPLv2.1+, but several .dtd, .xsl, initscripts and
 # python scripts are under GPLv2+
 LICENSE = "GPLv2+ & LGPLv2.1+"
 
-INC_PR = "r11"
-
 DEPENDS = "expat libcap libdaemon dbus glib-2.0"
 
-SRC_URI = "http://avahi.org/download/avahi-${PV}.tar.gz \
+SRC_URI = "https://github.com/lathiat/avahi/releases/download/v${PV}/avahi-${PV}.tar.gz \
           file://00avahi-autoipd \
           file://99avahi-autoipd \
           file://initscript.patch \
-          file://avahi_fix_install_issue.patch \
-          file://fix_for_automake_1.12.x.patch \
-          file://out-of-tree.patch \
-          file://0001-avahi-fix-avahi-status-command-error-prompt.patch \
-          file://reuseport-check.patch \
-          file://0001-Don-t-log-warnings-about-invalid-packets-Fixes-lathi.patch \
           "
+UPSTREAM_CHECK_URI = "https://github.com/lathiat/avahi/releases/"
 
 USERADD_PACKAGES = "avahi-daemon avahi-autoipd"
 USERADD_PARAM_avahi-daemon = "--system --home /var/run/avahi-daemon \
@@ -53,6 +46,7 @@ EXTRA_OECONF = "--disable-introspection \
              --disable-qt4 \
              --disable-python \
              --disable-doxygen-doc \
+             --disable-manpages \
              ${EXTRA_OECONF_SYSVINIT} \
              ${EXTRA_OECONF_SYSTEMD} \
              ${AVAHI_GTK} \
