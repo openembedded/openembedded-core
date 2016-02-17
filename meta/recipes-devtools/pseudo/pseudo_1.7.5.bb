@@ -2,6 +2,7 @@ require pseudo.inc
 
 SRC_URI = " \
     http://downloads.yoctoproject.org/releases/pseudo/${BPN}-${PV}.tar.bz2 \
+    file://0001-configure-Prune-PIE-flags.patch \
     file://fallback-passwd \
     file://fallback-group \
 "
