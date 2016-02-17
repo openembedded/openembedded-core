@@ -8,17 +8,17 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=59530bdf33659b29e73d4adb9f9f6552 \
 DEPENDS = "alsa-lib ncurses libsamplerate0"
 
 PACKAGECONFIG ??= "udev"
+PACKAGECONFIG[bat] = "--enable-bat,--disable-bat,fftw"
 PACKAGECONFIG[udev] = "--with-udev-rules-dir=`pkg-config --variable=udevdir udev`/rules.d,,udev"
 PACKAGECONFIG[xmlto] = "--enable-xmlto, --disable-xmlto, xmlto-native docbook-xml-dtd4-native docbook-xsl-stylesheets-native"
 
 SRC_URI = "ftp://ftp.alsa-project.org/pub/utils/alsa-utils-${PV}.tar.bz2 \
            file://0001-alsactl-don-t-let-systemd-unit-restore-the-volume-wh.patch \
-           file://alsa-utils-aplay-interrupt-signal-handling.patch \
-           file://assume-storing-is-success-if-not-sound-card-device.patch \
+           file://0001-alsabat-rename-to-avoid-naming-conflict.patch \
           "
 
-SRC_URI[md5sum] = "6b289bf874c4c9a63f4b3973093dd404"
-SRC_URI[sha256sum] = "5160058f3e14483ced5de919dd473f93932059454530a9b7ef97dcabd6833e9b"
+SRC_URI[md5sum] = "b9d6102fbbd0b68040bb77023ed30c0c"
+SRC_URI[sha256sum] = "3b1c3135b76e14532d3dd23fb15759ddd7daf9ffbc183f7a9a0a3a86374748f1"
 
 # lazy hack. needs proper fixing in gettext.m4, see
 # http://bugs.openembedded.org/show_bug.cgi?id=2348
@@ -32,7 +32,9 @@ inherit autotools gettext pkgconfig
 # ipk depends on them.
 
 ALSA_UTILS_PKGS = "\
+             ${@bb.utils.contains('PACKAGECONFIG', 'bat', 'alsa-utils-alsabat', '', d)} \
              alsa-utils-alsamixer \
+             alsa-utils-alsatplg \
              alsa-utils-midi \
              alsa-utils-aplay \
              alsa-utils-amixer \
@@ -50,6 +52,8 @@ PACKAGES += "${ALSA_UTILS_PKGS}"
 RDEPENDS_${PN} += "${ALSA_UTILS_PKGS}"
 
 FILES_${PN} = ""
+FILES_alsa-utils-alsabat     = "${bindir}/alsabat"
+FILES_alsa-utils-alsatplg    = "${bindir}/alsatplg"
 FILES_alsa-utils-aplay       = "${bindir}/aplay ${bindir}/arecord"
 FILES_alsa-utils-amixer      = "${bindir}/amixer"
 FILES_alsa-utils-alsamixer   = "${bindir}/alsamixer"
@@ -63,7 +67,8 @@ FILES_alsa-utils-aseqdump    = "${bindir}/aseqdump"
 FILES_alsa-utils-alsaloop    = "${bindir}/alsaloop"
 FILES_alsa-utils-alsaucm     = "${bindir}/alsaucm"
 
-
+SUMMARY_alsa-utils-alsabat      = "Command-line sound tester for ALSA sound card driver"
+SUMMARY_alsa-utils-alsatplg     = "Converts topology text files into binary format for kernel"
 SUMMARY_alsa-utils-aplay        = "Play (and record) sound files using ALSA"
 SUMMARY_alsa-utils-amixer       = "Command-line control for ALSA mixer and settings"
 SUMMARY_alsa-utils-alsamixer    = "ncurses-based control for ALSA mixer and settings"
