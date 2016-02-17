@@ -44,5 +44,6 @@ SRC_URI = "git://busybox.net/busybox.git \
            file://getopts.cfg \
            file://resize.cfg \
 "
+SRC_URI_append_libc-musl = " file://musl.cfg "
 
 DEFAULT_PREFERENCE = "-1"
