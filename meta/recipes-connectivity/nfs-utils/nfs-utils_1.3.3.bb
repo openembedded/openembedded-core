@@ -32,6 +32,7 @@ SRC_URI = "${KERNELORG_MIRROR}/linux/utils/nfs-utils/${PV}/nfs-utils-${PV}.tar.x
            file://nfs-utils-Do-not-pass-CFLAGS-to-gcc-while-building.patch \
            file://nfs-utils-debianize-start-statd.patch \
            file://0001-nfs-utils-statd-fix-a-segfault-caused-by-improper-us.patch \
+           file://bugfix-adjust-statd-service-name.patch \
 "
 
 SRC_URI[md5sum] = "cd6b568c2e9301cc3bfac09d87fbbc0b"
