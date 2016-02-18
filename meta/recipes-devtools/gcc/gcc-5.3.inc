@@ -82,7 +82,8 @@ SRC_URI = "\
            file://0050-powerpc-pass-secure-plt-to-the-linker.patch \
            file://0051-Ignore-fdebug-prefix-map-in-producer-string-by-Danie.patch \
            file://0052-nios2-use-ret-with-r31.patch \
-          "
+           file://0053-expr.c-PR-target-65358-Avoid-clobbering-partial-argu.patch \
+"
 
 BACKPORTS = ""
 
