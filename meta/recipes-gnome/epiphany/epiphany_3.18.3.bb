@@ -3,7 +3,7 @@ LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=751419260aa954499f7abaabaa882bbe"
 
 DEPENDS = "libsoup-2.4 webkitgtk gtk+3 iso-codes ca-certificates avahi libnotify gcr libwnck3 \
-	   gsettings-desktop-schemas gnome-desktop3"
+	   gsettings-desktop-schemas gnome-desktop3 libxml2-native"
 
 inherit gnomebase gsettings distro_features_check upstream-version-is-even
 # libwnck3 is x11 only
