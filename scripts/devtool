@@ -192,13 +192,6 @@ def main():
 
     # Default basepath
     basepath = os.path.dirname(os.path.abspath(__file__))
-    pth = basepath
-    while pth != '' and pth != os.sep:
-        if os.path.exists(os.path.join(pth, '.devtoolbase')):
-            context.fixed_setup = True
-            basepath = pth
-            break
-        pth = os.path.dirname(pth)
 
     parser = argparse_oe.ArgumentParser(description="OpenEmbedded development tool",
                                         add_help=False,
@@ -224,11 +217,22 @@ def main():
     if global_args.basepath:
         # Override
         basepath = global_args.basepath
-    elif not context.fixed_setup:
-        basepath = os.environ.get('BUILDDIR')
-        if not basepath:
-            logger.error("This script can only be run after initialising the build environment (e.g. by using oe-init-build-env)")
-            sys.exit(1)
+        if os.path.exists(os.path.join(basepath, '.devtoolbase')):
+            context.fixed_setup = True
+    else:
+        pth = basepath
+        while pth != '' and pth != os.sep:
+            if os.path.exists(os.path.join(pth, '.devtoolbase')):
+                context.fixed_setup = True
+                basepath = pth
+                break
+            pth = os.path.dirname(pth)
+
+        if not context.fixed_setup:
+            basepath = os.environ.get('BUILDDIR')
+            if not basepath:
+                logger.error("This script can only be run after initialising the build environment (e.g. by using oe-init-build-env)")
+                sys.exit(1)
 
     logger.debug('Using basepath %s' % basepath)
 
