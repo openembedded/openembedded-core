@@ -32,7 +32,18 @@ SDK_INHERIT_BLACKLIST ?= "buildhistory icecc"
 SDK_UPDATE_URL ?= ""
 
 SDK_TARGETS ?= "${PN}"
-SDK_INSTALL_TARGETS = "${@SDK_TARGETS if d.getVar('SDK_EXT_TYPE', True) != 'minimal' else ''} ${@'meta-world-pkgdata:do_allpackagedata' if d.getVar('SDK_INCLUDE_PKGDATA', True) == '1' else ''}"
+
+def get_sdk_install_targets(d):
+    sdk_install_targets = ''
+    if d.getVar('SDK_EXT_TYPE', True) != 'minimal':
+        sdk_install_targets = d.getVar('SDK_TARGETS', True)
+
+    if d.getVar('SDK_INCLUDE_PKGDATA', True) == '1':
+        sdk_install_targets += ' meta-world-pkgdata:do_allpackagedata'
+
+    return sdk_install_targets
+
+SDK_INSTALL_TARGETS = "${@get_sdk_install_targets(d)}"
 OE_INIT_ENV_SCRIPT ?= "oe-init-build-env"
 
 # The files from COREBASE that you want preserved in the COREBASE copied
