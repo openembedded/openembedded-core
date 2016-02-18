@@ -577,12 +577,12 @@ def _extract_source(srctree, keep_temp, devbranch, sync, d):
 
         bb.process.run('git tag -f devtool-patched', cwd=srcsubdir)
 
+        kconfig = None
         if bb.data.inherits_class('kernel-yocto', d):
             # Store generate and store kernel config
             logger.info('Generating kernel config')
             task_executor.exec_func('do_configure', False)
             kconfig = os.path.join(crd.getVar('B', True), '.config')
-            shutil.copy2(kconfig, srcsubdir)
 
 
         tempdir_localdir = os.path.join(tempdir, 'oe-local-files')
@@ -613,6 +613,10 @@ def _extract_source(srctree, keep_temp, devbranch, sync, d):
                 shutil.move(tempdir_localdir, srcsubdir)
 
             shutil.move(srcsubdir, srctree)
+
+        if kconfig:
+            logger.info('Copying kernel config to srctree')
+            shutil.copy2(kconfig, srctree)
 
     finally:
         bb.logger.setLevel(origlevel)
