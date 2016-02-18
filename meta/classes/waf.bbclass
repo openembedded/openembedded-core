@@ -1,3 +1,6 @@
+# avoids build breaks when using no-static-libs.inc
+DISABLE_STATIC = ""
+
 def get_waf_parallel_make(d):
     pm = d.getVar('PARALLEL_MAKE', True)
     if pm:
