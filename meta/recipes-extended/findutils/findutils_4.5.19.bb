@@ -8,8 +8,8 @@ DEPENDS = "bison-native"
 
 SRC_URI += "file://0001-Unset-need_charset_alias-when-building-for-musl.patch"
 
-SRC_URI[md5sum] = "a8a8176282fd28e8d1234c84d847fa66"
-SRC_URI[sha256sum] = "0de3cf625a5c9f154eee3171e072515ffdde405244dd00502af617ac57b73ae2"
+SRC_URI[md5sum] = "1428516452520b51cf893c05500eda3d"
+SRC_URI[sha256sum] = "e9bc769d78573c91b1d4e504ad39621b870db6fa38fde923acf6896399f16f8e"
 
 # http://savannah.gnu.org/bugs/?27299
 CACHED_CONFIGUREVARS += "${@bb.utils.contains('DISTRO_FEATURES', 'libc-posix-clang-wchar', 'gl_cv_func_wcwidth_works=yes', '', d)}"
