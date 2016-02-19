@@ -20,6 +20,11 @@ SRC_URI[sha256sum] = "371e707aa522acf5b15ce93f11183c725b8ed1ee8546d7b3af54986304
 
 inherit autotools pkgconfig binconfig-disabled multilib_header
 
+# Adapt autotools to work with the minimal autoconf usage in freetype
+AUTOTOOLS_SCRIPT_PATH = "${S}/builds/unix"
+CONFIGURE_SCRIPT = "${S}/configure"
+EXTRA_AUTORECONF += "--exclude=autoheader --exclude=automake"
+
 PACKAGECONFIG ??= "zlib"
 
 PACKAGECONFIG[bzip2] = "--with-bzip2,--without-bzip2,bzip2"
@@ -31,19 +36,6 @@ PACKAGECONFIG[zlib] = "--with-zlib,--without-zlib,zlib"
 EXTRA_OECONF = "CC_BUILD='${BUILD_CC}'"
 
 TARGET_CPPFLAGS += "-D_FILE_OFFSET_BITS=64"
-
-do_configure() {
-	# Need this because although the autotools infrastructure is in
-	# builds/unix the configure script get written to ${S}, so we can't
-	# just use AUTOTOOLS_SCRIPT_PATH.
-	cd ${S}/builds/unix
-	libtoolize --force --copy
-	aclocal -I .
-	gnu-configize --force
-	autoconf
-	cd ${B}
-	oe_runconf
-}
 
 do_install_append() {
 	oe_multilib_header freetype2/freetype/config/ftconfig.h
