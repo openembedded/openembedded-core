@@ -716,4 +716,4 @@ def has_non_literals(value):
 
 def register_recipe_handlers(handlers):
     # We need to make sure this is ahead of the makefile fallback handler
-    handlers.insert(0, PythonRecipeHandler())
+    handlers.append((PythonRecipeHandler(), 70))
