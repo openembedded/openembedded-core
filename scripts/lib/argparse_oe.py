@@ -51,6 +51,10 @@ class ArgumentSubParser(ArgumentParser):
         if 'order' in kwargs:
             self._order = kwargs.pop('order')
         super(ArgumentSubParser, self).__init__(*args, **kwargs)
+        for agroup in self._action_groups:
+            if agroup.title == 'optional arguments':
+                agroup.title = 'options'
+                break
 
     def parse_known_args(self, args=None, namespace=None):
         # This works around argparse not handling optional positional arguments being
