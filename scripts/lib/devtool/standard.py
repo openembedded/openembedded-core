@@ -1034,6 +1034,7 @@ def _update_recipe_srcrev(args, srctree, rd, config_data):
                     'changes')
 
     _remove_source_files(args, remove_files, destpath)
+    return True
 
 def _update_recipe_patch(args, config, workspace, srctree, rd, config_data):
     """Implement the 'patch' mode of update-recipe"""
@@ -1135,10 +1136,12 @@ def _update_recipe_patch(args, config, workspace, srctree, rd, config_data):
             elif not updatefiles:
                 # Neither patches nor recipe were updated
                 logger.info('No patches or files need updating')
+                return False
     finally:
         shutil.rmtree(tempdir)
 
     _remove_source_files(args, remove_files, destpath)
+    return True
 
 def _guess_recipe_update_mode(srctree, rdata):
     """Guess the recipe update mode to use"""
@@ -1187,15 +1190,16 @@ def update_recipe(args, config, basepath, workspace):
         mode = args.mode
 
     if mode == 'srcrev':
-        _update_recipe_srcrev(args, srctree, rd, tinfoil.config_data)
+        updated = _update_recipe_srcrev(args, srctree, rd, tinfoil.config_data)
     elif mode == 'patch':
-        _update_recipe_patch(args, config, workspace, srctree, rd, tinfoil.config_data)
+        updated = _update_recipe_patch(args, config, workspace, srctree, rd, tinfoil.config_data)
     else:
         raise DevtoolError('update_recipe: invalid mode %s' % mode)
 
-    rf = rd.getVar('FILE', True)
-    if rf.startswith(config.workspace_path):
-        logger.warn('Recipe file %s has been updated but is inside the workspace - you will need to move it (and any associated files next to it) out to the desired layer before using "devtool reset" in order to keep any changes' % rf)
+    if updated:
+        rf = rd.getVar('FILE', True)
+        if rf.startswith(config.workspace_path):
+            logger.warn('Recipe file %s has been updated but is inside the workspace - you will need to move it (and any associated files next to it) out to the desired layer before using "devtool reset" in order to keep any changes' % rf)
 
     return 0
 
