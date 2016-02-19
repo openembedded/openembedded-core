@@ -78,6 +78,9 @@ def get_args_parser():
     group.add_argument('--list-modules', required=False, action="store_true", dest="list_modules", default=False, help='List all available test modules.')
     group.add_argument('--list-classes', required=False, action="store_true", dest="list_allclasses", default=False, help='List all available test classes.')
     parser.add_argument('--coverage', action="store_true", help="Run code coverage when testing")
+    parser.add_argument('--coverage-source', dest="coverage_source", nargs="+", help="Specifiy the directories to take coverage from")
+    parser.add_argument('--coverage-include', dest="coverage_include", nargs="+", help="Specify extra patterns to include into the coverage measurement")
+    parser.add_argument('--coverage-omit', dest="coverage_omit", nargs="+", help="Specify with extra patterns to exclude from the coverage measurement")
     group.add_argument('--run-tests-by', required=False, dest='run_tests_by', default=False, nargs='*',
                        help='run-tests-by <name|class|module|id|tag> <list of tests|classes|modules|ids|tags>')
     group.add_argument('--list-tests-by', required=False, dest='list_tests_by', default=False, nargs='*',
@@ -369,7 +372,7 @@ def list_tags():
 
     print 'Tags:\t%s' % ', '.join(str(x) for x in tags)
 
-def coverage_setup(run_tests, run_all_tests):
+def coverage_setup(run_tests, run_all_tests, coverage_source, coverage_include, coverage_omit):
     """ Set up the coverage measurement for the testcases to be run """
     builddir = os.environ.get("BUILDDIR")
     coveragerc = "%s/.coveragerc" % builddir
@@ -384,10 +387,25 @@ def coverage_setup(run_tests, run_all_tests):
         cps.write("branch = True\n")
         # Measure just BBLAYERS, scripts and bitbake folders
         cps.write("source = \n")
-        for layer in get_bb_var('BBLAYERS').split():
-            cps.write("    %s\n" % layer)
-        cps.write("    %s\n" % os.path.dirname(os.path.realpath(__file__)))
-        cps.write("    %s\n" % os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))),'bitbake'))
+        if coverage_source:
+            for directory in coverage_source:
+                if not os.path.isdir(directory):
+                    log.warn("Directory %s is not valid.", directory)
+                cps.write("    %s\n" % directory)
+        else:
+            for layer in get_bb_var('BBLAYERS').split():
+                cps.write("    %s\n" % layer)
+            cps.write("    %s\n" % os.path.dirname(os.path.realpath(__file__)))
+            cps.write("    %s\n" % os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))),'bitbake'))
+
+        if coverage_include:
+            cps.write("include = \n")
+            for pattern in coverage_include:
+                cps.write("    %s\n" % pattern)
+        if coverage_omit:
+            cps.write("omit = \n")
+            for pattern in coverage_omit:
+                cps.write("    %s\n" % pattern)
 
         return coveragerc
 
@@ -550,7 +568,7 @@ def buildResultClass(args):
 
         def startTestRun(self):
             """ Setup coverage before running any testcase """
-            if args.coverage:
+            if args.coverage or args.coverage_source or args.coverage_include or args.coverage_omit:
                 try:
                     # check if user can do coverage
                     import coverage
@@ -561,7 +579,7 @@ def buildResultClass(args):
                     # value indicates where the coverage configuration file resides
                     # More info on https://pypi.python.org/pypi/coverage
                     if not os.environ.get('COVERAGE_PROCESS_START'):
-                        os.environ['COVERAGE_PROCESS_START'] = coverage_setup(args.run_tests, args.run_all_tests)
+                        os.environ['COVERAGE_PROCESS_START'] = coverage_setup(args.run_tests, args.run_all_tests, args.coverage_source, args.coverage_include, args.coverage_omit)
 
                     self.coverage_installed = True
                 except:
