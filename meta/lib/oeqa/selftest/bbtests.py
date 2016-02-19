@@ -247,3 +247,26 @@ SSTATE_DIR = \"${TOPDIR}/download-selftest\"
         for task in tasks:
             self.assertIn('_setscene', task, 'A task different from _setscene ran: %s.\n'
                                              'Executed tasks were: %s' % (task, str(tasks)))
+
+    @testcase(1425)
+    def test_bbappend_order(self):
+        """ Bitbake should bbappend to recipe in a predictable order """
+        test_recipe = 'ed'
+        test_recipe_summary_before = get_bb_var('SUMMARY', test_recipe)
+        test_recipe_pv = get_bb_var('PV', test_recipe)
+        recipe_append_file = test_recipe + '_' + test_recipe_pv + '.bbappend'
+        expected_recipe_summary = test_recipe_summary_before
+
+        for i in range(5):
+            recipe_append_dir = test_recipe + '_test_' + str(i)
+            recipe_append_path = os.path.join(self.testlayer_path, 'recipes-test', recipe_append_dir, recipe_append_file)
+            os.mkdir(os.path.join(self.testlayer_path, 'recipes-test', recipe_append_dir))
+            feature = 'SUMMARY += "%s"\n' % i
+            ftools.write_file(recipe_append_path, feature)
+            expected_recipe_summary += ' %s' % i
+
+        self.add_command_to_tearDown('rm -rf %s' % os.path.join(self.testlayer_path, 'recipes-test',
+                                                               test_recipe + '_test_*'))
+
+        test_recipe_summary_after = get_bb_var('SUMMARY', test_recipe)
+        self.assertEqual(expected_recipe_summary, test_recipe_summary_after)
