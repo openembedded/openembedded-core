@@ -133,6 +133,7 @@ def register_commands(subparsers, context):
     """Register devtool subcommands from the deploy plugin"""
     parser_deploy = subparsers.add_parser('deploy-target',
                                           help='Deploy recipe output files to live target machine',
+                                          description='Deploys a recipe\'s build output (i.e. the output of the do_install task) to a live target machine over ssh. Note: this only deploys the recipe itself and not any runtime dependencies, so it is assumed that those have been installed on the target beforehand.',
                                           group='testbuild')
     parser_deploy.add_argument('recipename', help='Recipe to deploy')
     parser_deploy.add_argument('target', help='Live target machine running an ssh server: user@hostname[:destdir]')
@@ -143,6 +144,7 @@ def register_commands(subparsers, context):
 
     parser_undeploy = subparsers.add_parser('undeploy-target',
                                             help='Undeploy recipe output files in live target machine',
+                                            description='Un-deploys recipe output files previously deployed to a live target machine by devtool deploy-target.',
                                             group='testbuild')
     parser_undeploy.add_argument('recipename', help='Recipe to undeploy')
     parser_undeploy.add_argument('target', help='Live target machine running an ssh server: user@hostname')
