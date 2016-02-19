@@ -9,9 +9,10 @@ import oeqa.utils.ftools as ftools
 from oeqa.selftest.base import oeSelfTest
 from oeqa.utils.commands import runCmd, bitbake, get_bb_var
 from oeqa.utils.decorators import testcase
+from oeqa.utils.network import get_free_port
 
 class BitbakePrTests(oeSelfTest):
-
+ 
     def get_pr_version(self, package_name):
         pkgdata_dir = get_bb_var('PKGDATA_DIR')
         package_data_file = os.path.join(pkgdata_dir, 'runtime', package_name)
@@ -119,3 +120,13 @@ class BitbakePrTests(oeSelfTest):
     @testcase(936)
     def test_pr_service_ipk_arch_indep(self):
         self.run_test_pr_service('xcursor-transparent-theme', 'ipk', 'do_package')
+
+    @testcase(1419)
+    def test_stopping_prservice_message(self):
+        port = get_free_port()
+
+        runCmd('bitbake-prserv --host localhost --port %s --loglevel=DEBUG --start' % port)
+        ret = runCmd('bitbake-prserv --host localhost --port %s --loglevel=DEBUG --stop' % port)
+
+        self.assertEqual(ret.status, 0)
+
