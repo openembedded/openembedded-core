@@ -188,7 +188,15 @@ python copy_buildsystem () {
         # Hide the config information from bitbake output (since it's fixed within the SDK)
         f.write('BUILDCFG_HEADER = ""\n')
 
+        # Allow additional config through sdk-extra.conf
+        fn = bb.cookerdata.findConfigFile('sdk-extra.conf', d)
+        if fn:
+            with open(fn, 'r') as xf:
+                for line in xf:
+                    f.write(line)
+
         # If you define a sdk_extraconf() function then it can contain additional config
+        # (Though this is awkward; sdk-extra.conf should probably be used instead)
         extraconf = (d.getVar('sdk_extraconf', True) or '').strip()
         if extraconf:
             # Strip off any leading / trailing spaces
