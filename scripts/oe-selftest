@@ -553,6 +553,7 @@ def main():
 
 def buildResultClass(args):
     """Build a Result Class to use in the testcase execution"""
+    import site
 
     class StampedResult(unittest.TextTestResult):
         """
@@ -568,25 +569,40 @@ def buildResultClass(args):
 
         def startTestRun(self):
             """ Setup coverage before running any testcase """
+
+            # variable holding the coverage configuration file allowing subprocess to be measured
+            self.coveragepth = None
+
+            # indicates the system if coverage is currently installed
+            self.coverage_installed = True
+
             if args.coverage or args.coverage_source or args.coverage_include or args.coverage_omit:
                 try:
                     # check if user can do coverage
                     import coverage
-                    log.info("Coverage is enabled")
-
-                    # In case the user has not set the variable COVERAGE_PROCESS_START,
-                    # create a default one and export it. The COVERAGE_PROCESS_START
-                    # value indicates where the coverage configuration file resides
-                    # More info on https://pypi.python.org/pypi/coverage
-                    if not os.environ.get('COVERAGE_PROCESS_START'):
-                        os.environ['COVERAGE_PROCESS_START'] = coverage_setup(args.run_tests, args.run_all_tests, args.coverage_source, args.coverage_include, args.coverage_omit)
-
-                    self.coverage_installed = True
                 except:
                     log.warn('\n'.join(["python coverage is not installed",
                         "Make sure your coverage takes into account sub-process",
                         "More info on https://pypi.python.org/pypi/coverage"]))
                     self.coverage_installed = False
+
+                if self.coverage_installed:
+                    log.info("Coverage is enabled")
+
+                # In case the user has not set the variable COVERAGE_PROCESS_START,
+                # create a default one and export it. The COVERAGE_PROCESS_START
+                # value indicates where the coverage configuration file resides
+                # More info on https://pypi.python.org/pypi/coverage
+                if not os.environ.get('COVERAGE_PROCESS_START'):
+                    os.environ['COVERAGE_PROCESS_START'] = coverage_setup(args.run_tests, args.run_all_tests, args.coverage_source, args.coverage_include, args.coverage_omit)
+
+                # Use default site.USER_SITE and write corresponding config file
+                site.ENABLE_USER_SITE = True
+                if not os.path.exists(site.USER_SITE):
+                    os.makedirs(site.USER_SITE)
+                self.coveragepth = os.path.join(site.USER_SITE, "coverage.pth")
+                with open(self.coveragepth, 'w') as cps:
+                    cps.write('import sys,site; sys.path.extend(site.getsitepackages()); import coverage; coverage.process_startup();')
 
         def stopTestRun(self):
             """ Report coverage data after the testcases are run """
@@ -599,8 +615,14 @@ def buildResultClass(args):
 
                 log.info("Coverage Report")
                 log.info("===============")
-
-                coverage_report()
+                try:
+                    coverage_report()
+                    # remove the pth file
+                finally:
+                    try:
+                        os.remove(self.coveragepth)
+                    except OSError:
+                        log.warn("Expected temporal file from coverage is missing, ignoring removal.")
 
     return StampedResult
 
