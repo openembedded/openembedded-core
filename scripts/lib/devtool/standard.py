@@ -190,7 +190,7 @@ def add(args, config, basepath, workspace):
             shutil.move(recipes[0], recipefile)
         else:
             raise DevtoolError('Command \'%s\' did not create any recipe file:\n%s' % (e.command, e.stdout))
-        attic_recipe = os.path.join(config.workspace_path, 'attic', os.path.basename(recipefile))
+        attic_recipe = os.path.join(config.workspace_path, 'attic', recipename, os.path.basename(recipefile))
         if os.path.exists(attic_recipe):
             logger.warn('A modified recipe from a previous invocation exists in %s - you may wish to move this over the top of the new recipe if you had changes in it that you want to continue with' % attic_recipe)
     finally:
@@ -645,7 +645,7 @@ def _check_preserve(config, recipename):
     import bb.utils
     origfile = os.path.join(config.workspace_path, '.devtool_md5')
     newfile = os.path.join(config.workspace_path, '.devtool_md5_new')
-    preservepath = os.path.join(config.workspace_path, 'attic')
+    preservepath = os.path.join(config.workspace_path, 'attic', recipename)
     with open(origfile, 'r') as f:
         with open(newfile, 'w') as tf:
             for line in f.readlines():
@@ -1256,7 +1256,7 @@ def reset(args, config, basepath, workspace):
     for pn in recipes:
         _check_preserve(config, pn)
 
-        preservepath = os.path.join(config.workspace_path, 'attic', pn)
+        preservepath = os.path.join(config.workspace_path, 'attic', pn, pn)
         def preservedir(origdir):
             if os.path.exists(origdir):
                 for root, dirs, files in os.walk(origdir):
@@ -1265,7 +1265,7 @@ def reset(args, config, basepath, workspace):
                         _move_file(os.path.join(origdir, fn),
                                    os.path.join(preservepath, fn))
                     for dn in dirs:
-                        os.rmdir(os.path.join(root, dn))
+                        preservedir(os.path.join(root, dn))
                 os.rmdir(origdir)
 
         preservedir(os.path.join(config.workspace_path, 'recipes', pn))
