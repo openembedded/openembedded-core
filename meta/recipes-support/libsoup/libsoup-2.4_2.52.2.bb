@@ -18,9 +18,8 @@ S = "${WORKDIR}/libsoup-${PV}"
 
 inherit autotools gettext pkgconfig upstream-version-is-even
 
-# libsoup-gnome is entirely deprecated and just stubs in 2.42 onwards.  Enable
-# by default but let it be easily disabled.
-PACKAGECONFIG ??= "gnome"
+# libsoup-gnome is entirely deprecated and just stubs in 2.42 onwards. Disable by default.
+PACKAGECONFIG ??= ""
 PACKAGECONFIG[gnome] = "--with-gnome,--without-gnome"
 
 EXTRA_OECONF = "--disable-vala"
