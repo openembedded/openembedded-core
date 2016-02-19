@@ -95,8 +95,6 @@ def sdk_update(args, config, basepath, workspace):
     updateserver = args.updateserver
     if not updateserver:
         updateserver = config.get('SDK', 'updateserver', '')
-    if not updateserver:
-        raise DevtoolError("Update server not specified in config file, you must specify it on the command line")
     logger.debug("updateserver: %s" % updateserver)
 
     # Make sure we are using sdk-update from within SDK
@@ -297,9 +295,14 @@ def register_commands(subparsers, context):
     """Register devtool subcommands from the sdk plugin"""
     if context.fixed_setup:
         parser_sdk = subparsers.add_parser('sdk-update',
-                                           help='Update SDK components from a nominated location',
+                                           help='Update SDK components',
+                                           description='Updates installed SDK components from a remote server',
                                            group='sdk')
-        parser_sdk.add_argument('updateserver', help='The update server to fetch latest SDK components from', nargs='?')
+        updateserver = context.config.get('SDK', 'updateserver', '')
+        if updateserver:
+            parser_sdk.add_argument('updateserver', help='The update server to fetch latest SDK components from (default %s)' % updateserver, nargs='?')
+        else:
+            parser_sdk.add_argument('updateserver', help='The update server to fetch latest SDK components from')
         parser_sdk.add_argument('--skip-prepare', action="store_true", help='Skip re-preparing the build system after updating (for debugging only)')
         parser_sdk.set_defaults(func=sdk_update)
 
