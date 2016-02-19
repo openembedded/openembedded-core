@@ -29,7 +29,8 @@ do_configure () {
 		mkdir -p ${B}/$target/$d/
 		cd ${B}/$target/$d/
 		chmod a+x ${S}/$d/configure
-		${S}/$d/configure ${CONFIGUREOPTS} ${EXTRA_OECONF}
+		relpath=${@os.path.relpath("${S}/$d", "${B}/$target/$d")}
+		$relpath/configure ${CONFIGUREOPTS} ${EXTRA_OECONF}
 	done
 }
 

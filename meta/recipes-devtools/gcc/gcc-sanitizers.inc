@@ -23,7 +23,8 @@ do_configure () {
     mkdir -p ${B}/$target/libsanitizer/
     cd ${B}/$target/libsanitizer/
     chmod a+x ${S}/libsanitizer/configure
-    ${S}/libsanitizer/configure ${CONFIGUREOPTS} ${EXTRA_OECONF}
+    relpath=${@os.path.relpath("${S}/libsanitizer", "${B}/$target/libsanitizer")}
+    $relpath/configure ${CONFIGUREOPTS} ${EXTRA_OECONF}
     # Easiest way to stop bad RPATHs getting into the library since we have a
     # broken libtool here
     sed -i -e 's/hardcode_into_libs=yes/hardcode_into_libs=no/' ${B}/$target/libsanitizer/libtool
