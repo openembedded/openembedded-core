@@ -24,6 +24,7 @@ import tempfile
 import logging
 import argparse
 import subprocess
+import scriptutils
 from devtool import exec_build_env_command, setup_tinfoil, check_workspace_recipe, DevtoolError
 from devtool import parse_recipe
 
@@ -48,17 +49,7 @@ def edit_recipe(args, config, basepath, workspace):
             raise DevtoolError("Recipe file for %s is not under the workspace" %
                                args.recipename)
 
-    editor = os.environ.get('EDITOR', None)
-    if not editor:
-        raise DevtoolError("EDITOR environment variable not set")
-
-    import subprocess
-    try:
-        subprocess.check_call('%s "%s"' % (editor, recipefile), shell=True)
-    except subprocess.CalledProcessError as e:
-        return e.returncode
-
-    return 0
+    return scriptutils.run_editor(recipefile)
 
 
 def configure_help(args, config, basepath, workspace):

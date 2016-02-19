@@ -27,6 +27,7 @@ import os
 import re
 import subprocess
 import sys
+import scriptutils
 
 
 logger = logging.getLogger('recipetool')
@@ -96,12 +97,7 @@ def newappend(args):
             return 1
 
     if args.edit:
-        editor = os.getenv('VISUAL', os.getenv('EDITOR', 'vi'))
-        try:
-            return subprocess.check_call([editor, append_path, recipe_path])
-        except OSError as exc:
-            logger.error("Execution of editor '%s' failed: %s", editor, exc)
-            return 1
+        return scriptutils.run_editor([append_path, recipe_path])
     else:
         print(append_path)
 
