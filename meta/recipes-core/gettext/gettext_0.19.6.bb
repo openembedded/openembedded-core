@@ -12,6 +12,7 @@ PROVIDES_class-native = "virtual/gettext-native"
 RCONFLICTS_${PN} = "proxy-libintl"
 SRC_URI = "${GNU_MIRROR}/gettext/gettext-${PV}.tar.gz \
 	   file://parallel.patch \
+	   file://add-with-bisonlocaledir.patch \
           "
 
 PACKAGECONFIG[msgcat-curses] = "--with-libncurses-prefix=${STAGING_LIBDIR}/..,--disable-curses,ncurses,"
@@ -38,6 +39,9 @@ EXTRA_OECONF += "--without-lispdir \
                  --with-included-libcroco \
                  --with-included-libunistring \
                 "
+EXTRA_OECONF_append_class-target = " \
+                 --with-bisonlocaledir=${datadir}/locale \
+"
 
 acpaths = '-I ${S}/gettext-runtime/m4 \
            -I ${S}/gettext-tools/m4'
