@@ -27,12 +27,7 @@ python () {
     for var in ('PACKAGE_FEED_GPG_NAME', 'PACKAGE_FEED_GPG_PASSPHRASE_FILE'):
         if not d.getVar(var, True):
             raise_sanity_error("You need to define %s in the config" % var, d)
-
-    # Set expected location of the public key
-    d.setVar('PACKAGE_FEED_GPG_PUBKEY',
-             os.path.join(d.getVar('STAGING_ETCDIR_NATIVE', False),
-                                   'PACKAGE-FEED-GPG-PUBKEY'))
 }
 
-do_package_index[depends] += "signing-keys:do_export_public_keys"
-do_rootfs[depends] += "signing-keys:do_export_public_keys"
+do_package_index[depends] += "signing-keys:do_deploy"
+do_rootfs[depends] += "signing-keys:do_populate_sysroot"
