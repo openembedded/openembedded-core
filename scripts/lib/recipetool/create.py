@@ -43,6 +43,7 @@ def tinfoil_init(instance):
 class RecipeHandler(object):
     recipelibmap = {}
     recipeheadermap = {}
+    recipecmakefilemap = {}
 
     @staticmethod
     def load_libmap(d):
@@ -90,15 +91,18 @@ class RecipeHandler(object):
         RecipeHandler.recipelibmap['GLESv2'] = 'virtual/libgles2'
 
     @staticmethod
-    def load_headermap(d):
-        '''Build up lib headerfile->recipe mapping'''
+    def load_devel_filemap(d):
+        '''Build up development file->recipe mapping'''
         if RecipeHandler.recipeheadermap:
             return
+        pkgdata_dir = d.getVar('PKGDATA_DIR', True)
         includedir = d.getVar('includedir', True)
+        cmakedir = os.path.join(d.getVar('libdir', True), 'cmake')
         for pkg in glob.glob(os.path.join(pkgdata_dir, 'runtime', '*-dev')):
             with open(os.path.join(pkgdata_dir, 'runtime', pkg)) as f:
                 pn = None
                 headers = []
+                cmakefiles = []
                 for line in f:
                     if line.startswith('PN:'):
                         pn = line.split(':', 1)[-1].strip()
@@ -108,9 +112,14 @@ class RecipeHandler(object):
                         for fullpth in sorted(dictval):
                             if fullpth.startswith(includedir) and fullpth.endswith('.h'):
                                 headers.append(os.path.relpath(fullpth, includedir))
+                            elif fullpth.startswith(cmakedir) and fullpth.endswith('.cmake'):
+                                cmakefiles.append(os.path.relpath(fullpth, cmakedir))
                 if pn and headers:
                     for header in headers:
                         RecipeHandler.recipeheadermap[header] = pn
+                if pn and cmakefiles:
+                    for fn in cmakefiles:
+                        RecipeHandler.recipecmakefilemap[fn] = pn
 
     @staticmethod
     def checkfiles(path, speclist, recursive=False):
@@ -172,7 +181,7 @@ class RecipeHandler(object):
                 deps.append(recipe)
             elif recipe is None:
                 if header:
-                    RecipeHandler.load_headermap(d)
+                    RecipeHandler.load_devel_filemap(d)
                     recipe = RecipeHandler.recipeheadermap.get(header, None)
                     if recipe:
                         deps.append(recipe)

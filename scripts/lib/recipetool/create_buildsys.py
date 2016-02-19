@@ -17,6 +17,7 @@
 
 import re
 import logging
+import glob
 from recipetool.create import RecipeHandler, validate_pv
 
 logger = logging.getLogger('recipetool')
@@ -156,6 +157,16 @@ class CmakeRecipeHandler(RecipeHandler):
         subdir_re = re.compile('add_subdirectory\s*\(\s*([^)\s]*)\s*([^)\s]*)\s*\)', re.IGNORECASE)
         dep_re = re.compile('([^ ><=]+)( *[<>=]+ *[^ ><=]+)?')
 
+        def find_cmake_package(pkg):
+            RecipeHandler.load_devel_filemap(tinfoil.config_data)
+            for fn, pn in RecipeHandler.recipecmakefilemap.iteritems():
+                splitname = fn.split('/')
+                if len(splitname) > 1:
+                    if splitname[0].lower().startswith(pkg.lower()):
+                        if splitname[1] == '%s-config.cmake' % pkg.lower() or splitname[1] == '%sConfig.cmake' % pkg or splitname[1] == 'Find%s.cmake' % pkg:
+                            return pn
+            return None
+
         def interpret_value(value):
             return value.strip('"')
 
@@ -209,7 +220,7 @@ class CmakeRecipeHandler(RecipeHandler):
                     res = findpackage_re.match(line)
                     if res:
                         origpkg = res.group(1)
-                        pkg = interpret_value(origpkg.lower())
+                        pkg = interpret_value(origpkg)
                         found = False
                         for handler in handlers:
                             if handler.process_findpackage(srctree, fn, pkg, deps, outlines, inherits, values):
@@ -218,23 +229,29 @@ class CmakeRecipeHandler(RecipeHandler):
                                 break
                         if found:
                             continue
-                        elif pkg == 'gettext':
+                        elif pkg == 'Gettext':
                             inherits.append('gettext')
-                        elif pkg == 'perl':
+                        elif pkg == 'Perl':
                             inherits.append('perlnative')
-                        elif pkg == 'pkgconfig':
+                        elif pkg == 'PkgConfig':
                             inherits.append('pkgconfig')
-                        elif pkg == 'pythoninterp':
+                        elif pkg == 'PythonInterp':
                             inherits.append('pythonnative')
-                        elif pkg == 'pythonlibs':
+                        elif pkg == 'PythonLibs':
                             inherits.append('python-dir')
                         else:
-                            dep = cmake_pkgmap.get(pkg, None)
+                            # Try to map via looking at installed CMake packages in pkgdata
+                            dep = find_cmake_package(pkg)
                             if dep:
-                                logger.debug('Mapped CMake package %s to recipe %s via internal list' % (pkg, dep))
+                                logger.debug('Mapped CMake package %s to recipe %s via pkgdata' % (pkg, dep))
                                 deps.append(dep)
-                            elif dep is None:
-                                unmappedpkgs.append(origpkg)
+                            else:
+                                dep = cmake_pkgmap.get(pkg.lower(), None)
+                                if dep:
+                                    logger.debug('Mapped CMake package %s to recipe %s via internal list' % (pkg, dep))
+                                    deps.append(dep)
+                                elif dep is None:
+                                    unmappedpkgs.append(origpkg)
                         continue
                     res = checklib_re.match(line)
                     if res:
@@ -257,7 +274,7 @@ class CmakeRecipeHandler(RecipeHandler):
         parse_cmake_file(srcfiles[0])
 
         if unmappedpkgs:
-            outlines.append('# NOTE: unable to map the following CMake package dependencies: %s' % ' '.join(unmappedpkgs))
+            outlines.append('# NOTE: unable to map the following CMake package dependencies: %s' % ' '.join(list(set(unmappedpkgs))))
 
         RecipeHandler.handle_depends(libdeps, pcdeps, deps, outlines, values, tinfoil.config_data)
 
