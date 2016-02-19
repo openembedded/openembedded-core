@@ -691,8 +691,8 @@ python sstate_sign_package () {
         sstate_pkg = d.getVar('SSTATE_PKG', True)
         if os.path.exists(sstate_pkg + '.sig'):
             os.unlink(sstate_pkg + '.sig')
-        signer.detach_sign(sstate_pkg, d.getVar('SSTATE_SIG_KEY'), None,
-                           d.getVar('SSTATE_SIG_PASSPHRASE'), armor=False)
+        signer.detach_sign(sstate_pkg, d.getVar('SSTATE_SIG_KEY', False), None,
+                           d.getVar('SSTATE_SIG_PASSPHRASE', True), armor=False)
 }
 
 #
