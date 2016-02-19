@@ -109,7 +109,8 @@ def register_commands(subparsers, context):
     parser = subparsers.add_parser('build-image',
                                    help='Build image including workspace recipe packages',
                                    description='Builds an image, extending it to include '
-                                   'packages from recipes in the workspace')
+                                   'packages from recipes in the workspace',
+                                   group='testbuild', order=-10)
     parser.add_argument('imagename', help='Image recipe to build', nargs='?')
     parser.add_argument('-p', '--add-packages', help='Instead of adding packages for the '
                         'entire workspace, specify packages to be added to the image '

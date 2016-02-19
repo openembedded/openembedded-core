@@ -131,7 +131,9 @@ def undeploy(args, config, basepath, workspace):
 
 def register_commands(subparsers, context):
     """Register devtool subcommands from the deploy plugin"""
-    parser_deploy = subparsers.add_parser('deploy-target', help='Deploy recipe output files to live target machine')
+    parser_deploy = subparsers.add_parser('deploy-target',
+                                          help='Deploy recipe output files to live target machine',
+                                          group='testbuild')
     parser_deploy.add_argument('recipename', help='Recipe to deploy')
     parser_deploy.add_argument('target', help='Live target machine running an ssh server: user@hostname[:destdir]')
     parser_deploy.add_argument('-c', '--no-host-check', help='Disable ssh host key checking', action='store_true')
@@ -139,7 +141,9 @@ def register_commands(subparsers, context):
     parser_deploy.add_argument('-n', '--dry-run', help='List files to be deployed only', action='store_true')
     parser_deploy.set_defaults(func=deploy)
 
-    parser_undeploy = subparsers.add_parser('undeploy-target', help='Undeploy recipe output files in live target machine')
+    parser_undeploy = subparsers.add_parser('undeploy-target',
+                                            help='Undeploy recipe output files in live target machine',
+                                            group='testbuild')
     parser_undeploy.add_argument('recipename', help='Recipe to undeploy')
     parser_undeploy.add_argument('target', help='Live target machine running an ssh server: user@hostname')
     parser_undeploy.add_argument('-c', '--no-host-check', help='Disable ssh host key checking', action='store_true')

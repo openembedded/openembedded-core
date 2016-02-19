@@ -54,6 +54,9 @@ def package(args, config, basepath, workspace):
 def register_commands(subparsers, context):
     """Register devtool subcommands from the package plugin"""
     if context.fixed_setup:
-        parser_package = subparsers.add_parser('package', help='Build packages for a recipe', description='Builds packages for a recipe\'s output files')
+        parser_package = subparsers.add_parser('package',
+                                               help='Build packages for a recipe',
+                                               description='Builds packages for a recipe\'s output files',
+                                               group='testbuild', order=-5)
         parser_package.add_argument('recipename', help='Recipe to package')
         parser_package.set_defaults(func=package)

@@ -275,10 +275,18 @@ def main():
 
     subparsers = parser.add_subparsers(dest="subparser_name", title='subcommands', metavar='<subcommand>')
 
+    subparsers.add_subparser_group('sdk', 'SDK maintenance', -2)
+    subparsers.add_subparser_group('advanced', 'Advanced', -1)
+    subparsers.add_subparser_group('starting', 'Beginning work on a recipe', 100)
+    subparsers.add_subparser_group('info', 'Getting information')
+    subparsers.add_subparser_group('working', 'Working on a recipe in the workspace')
+    subparsers.add_subparser_group('testbuild', 'Testing changes on target')
+
     if not context.fixed_setup:
         parser_create_workspace = subparsers.add_parser('create-workspace',
                                                         help='Set up workspace in an alternative location',
-                                                        description='Sets up a new workspace. NOTE: other devtool subcommands will create a workspace automatically as needed, so you only need to use %(prog)s if you want to specify where the workspace should be located.')
+                                                        description='Sets up a new workspace. NOTE: other devtool subcommands will create a workspace automatically as needed, so you only need to use %(prog)s if you want to specify where the workspace should be located.',
+                                                        group='advanced')
         parser_create_workspace.add_argument('layerpath', nargs='?', help='Path in which the workspace layer should be created')
         parser_create_workspace.add_argument('--create-only', action="store_true", help='Only create the workspace layer, do not alter configuration')
         parser_create_workspace.set_defaults(func=create_workspace, no_workspace=True)

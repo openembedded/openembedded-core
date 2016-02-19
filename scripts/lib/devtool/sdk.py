@@ -296,10 +296,16 @@ def sdk_install(args, config, basepath, workspace):
 def register_commands(subparsers, context):
     """Register devtool subcommands from the sdk plugin"""
     if context.fixed_setup:
-        parser_sdk = subparsers.add_parser('sdk-update', help='Update SDK components from a nominated location')
+        parser_sdk = subparsers.add_parser('sdk-update',
+                                           help='Update SDK components from a nominated location',
+                                           group='sdk')
         parser_sdk.add_argument('updateserver', help='The update server to fetch latest SDK components from', nargs='?')
         parser_sdk.add_argument('--skip-prepare', action="store_true", help='Skip re-preparing the build system after updating (for debugging only)')
         parser_sdk.set_defaults(func=sdk_update)
-        parser_sdk_install = subparsers.add_parser('sdk-install', help='Install additional SDK components', description='Installs additional recipe development files into the SDK. (You can use "devtool search" to find available recipes.)')
+
+        parser_sdk_install = subparsers.add_parser('sdk-install',
+                                                   help='Install additional SDK components',
+                                                   description='Installs additional recipe development files into the SDK. (You can use "devtool search" to find available recipes.)',
+                                                   group='sdk')
         parser_sdk_install.add_argument('recipename', help='Name of the recipe to install the development artifacts for', nargs='+')
         parser_sdk_install.set_defaults(func=sdk_install)
