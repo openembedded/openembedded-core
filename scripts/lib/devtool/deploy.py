@@ -21,13 +21,14 @@ import subprocess
 import logging
 import tempfile
 import shutil
+import argparse_oe
 from devtool import exec_fakeroot, setup_tinfoil, check_workspace_recipe, DevtoolError
 
 logger = logging.getLogger('devtool')
 
 deploylist_path = '/.devtool'
 
-def _prepare_remote_script(deploy, verbose=False):
+def _prepare_remote_script(deploy, verbose=False, dryrun=False, undeployall=False):
     """
     Prepare a shell script for running on the target to
     deploy/undeploy files. We have to be careful what we put in this
@@ -38,19 +39,33 @@ def _prepare_remote_script(deploy, verbose=False):
     lines = []
     lines.append('#!/bin/sh')
     lines.append('set -e')
+    if undeployall:
+        # Yes, I know this is crude - but it does work
+        lines.append('for entry in %s/*.list; do' % deploylist_path)
+        lines.append('[ ! -f $entry ] && exit')
+        lines.append('set `basename $entry | sed "s/.list//"`')
+    if dryrun:
+        if not deploy:
+            lines.append('echo "Previously deployed files for $1:"')
     lines.append('manifest="%s/$1.list"' % deploylist_path)
     lines.append('if [ -f $manifest ] ; then')
     # Read manifest in reverse and delete files / remove empty dirs
     lines.append('    sed \'1!G;h;$!d\' $manifest | while read file')
     lines.append('    do')
-    lines.append('        if [ -d $file ] ; then')
-    lines.append('            rmdir $file > /dev/null 2>&1 || true')
-    lines.append('        else')
-    lines.append('            rm $file')
-    lines.append('        fi')
+    if dryrun:
+        lines.append('        if [ ! -d $file ] ; then')
+        lines.append('            echo $file')
+        lines.append('        fi')
+    else:
+        lines.append('        if [ -d $file ] ; then')
+        lines.append('            rmdir $file > /dev/null 2>&1 || true')
+        lines.append('        else')
+        lines.append('            rm $file')
+        lines.append('        fi')
     lines.append('    done')
-    lines.append('    rm $manifest')
-    if not deploy:
+    if not dryrun:
+        lines.append('    rm $manifest')
+    if not deploy and not dryrun:
         # May as well remove all traces
         lines.append('    rmdir `dirname $manifest` > /dev/null 2>&1 || true')
     lines.append('fi')
@@ -63,6 +78,12 @@ def _prepare_remote_script(deploy, verbose=False):
         else:
             lines.append('    tar xv -C $2 -f - > $manifest')
         lines.append('sed -i "s!^./!$2!" $manifest')
+
+    if undeployall:
+        if not dryrun:
+            lines.append('echo "NOTE: Successfully undeployed $1"')
+        lines.append('done')
+
     # Delete the script itself
     lines.append('rm $0')
     lines.append('')
@@ -149,6 +170,11 @@ def deploy(args, config, basepath, workspace):
 
 def undeploy(args, config, basepath, workspace):
     """Entry point for the devtool 'undeploy' subcommand"""
+    if args.all and args.recipename:
+        raise argparse_oe.ArgumentUsageError('Cannot specify -a/--all with a recipe name', 'undeploy-target')
+    elif not args.recipename and not args.all:
+        raise argparse_oe.ArgumentUsageError('If you don\'t specify a recipe, you must specify -a/--all', 'undeploy-target')
+
     extraoptions = ''
     if args.no_host_check:
         extraoptions += '-o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
@@ -157,19 +183,10 @@ def undeploy(args, config, basepath, workspace):
 
     args.target = args.target.split(':')[0]
 
-    if args.dry_run:
-        listfile = os.path.join(deploylist_path, '%s.list' % args.recipename)
-        print('Previously deployed files to be un-deployed for %s on target %s:' % (args.recipename, args.target))
-        ret = subprocess.call('ssh %s %s \'[ -f %s ] && cat %s || true\'' % (extraoptions, args.target, listfile, listfile), shell=True)
-        if ret != 0:
-            raise DevtoolError('Undeploy failed - rerun with -s to get a complete '
-                               'error message')
-        return 0
-
     tmpdir = tempfile.mkdtemp(prefix='devtool')
     try:
         tmpscript = '/tmp/devtool_undeploy.sh'
-        shellscript = _prepare_remote_script(deploy=False)
+        shellscript = _prepare_remote_script(deploy=False, dryrun=args.dry_run, undeployall=args.all)
         # Write out the script to a file
         with open(os.path.join(tmpdir, os.path.basename(tmpscript)), 'w') as f:
             f.write(shellscript)
@@ -187,7 +204,8 @@ def undeploy(args, config, basepath, workspace):
         raise DevtoolError('Undeploy failed - rerun with -s to get a complete '
                            'error message')
 
-    logger.info('Successfully undeployed %s' % args.recipename)
+    if not args.all and not args.dry_run:
+        logger.info('Successfully undeployed %s' % args.recipename)
     return 0
 
 
@@ -208,9 +226,10 @@ def register_commands(subparsers, context):
                                             help='Undeploy recipe output files in live target machine',
                                             description='Un-deploys recipe output files previously deployed to a live target machine by devtool deploy-target.',
                                             group='testbuild')
-    parser_undeploy.add_argument('recipename', help='Recipe to undeploy')
+    parser_undeploy.add_argument('recipename', help='Recipe to undeploy (if not using -a/--all)', nargs='?')
     parser_undeploy.add_argument('target', help='Live target machine running an ssh server: user@hostname')
     parser_undeploy.add_argument('-c', '--no-host-check', help='Disable ssh host key checking', action='store_true')
     parser_undeploy.add_argument('-s', '--show-status', help='Show progress/status output', action='store_true')
+    parser_undeploy.add_argument('-a', '--all', help='Undeploy all recipes deployed on the target', action='store_true')
     parser_undeploy.add_argument('-n', '--dry-run', help='List files to be undeployed only', action='store_true')
     parser_undeploy.set_defaults(func=undeploy)
