@@ -9,16 +9,16 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=a6f89e2100d9b6cdffcea4f398e37343 \
 SRC_URI = " \
     git://anongit.freedesktop.org/gstreamer/gst-plugins-good;name=base \
     git://anongit.freedesktop.org/gstreamer/common;destsuffix=git/common;name=common \
-    file://fix-maybe-uninitialized-warnings-when-compiling-with-Os.patch \
     file://avoid-including-sys-poll.h-directly.patch \
     file://ensure-valid-sentinel-for-gst_structure_get.patch \
 "
 
-PV = "1.7.1+git${SRCPV}"
+PV = "1.7.2+git${SRCPV}"
+
 UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>(\d+(\.\d+)+))"
 
-SRCREV_base = "e016a70a7c97fc61c6cb5cd3821d38bc5ae5c9a4"
-SRCREV_common = "86e46630ed8af8d94796859db550a9c3d89c9f65"
+SRCREV_base = "1b6fdce67c15d59957e395b1957aa625322092d4"
+SRCREV_common = "b64f03f6090245624608beb5d2fff335e23a01c0"
 SRCREV_FORMAT = "base"
 
 S = "${WORKDIR}/git"
