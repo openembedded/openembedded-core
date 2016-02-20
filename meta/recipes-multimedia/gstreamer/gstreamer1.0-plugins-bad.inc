@@ -37,7 +37,6 @@ PACKAGECONFIG[hls]             = "--enable-hls,--disable-hls,nettle"
 PACKAGECONFIG[libmms]          = "--enable-libmms,--disable-libmms,libmms"
 PACKAGECONFIG[libssh2]         = "--enable-libssh2,--disable-libssh2,libssh2"
 PACKAGECONFIG[modplug]         = "--enable-modplug,--disable-modplug,libmodplug"
-PACKAGECONFIG[mpg123]          = "--enable-mpg123,--disable-mpg123,mpg123"
 PACKAGECONFIG[neon]            = "--enable-neon,--disable-neon,neon"
 PACKAGECONFIG[openal]          = "--enable-openal,--disable-openal,openal-soft"
 PACKAGECONFIG[opencv]          = "--enable-opencv,--disable-opencv,opencv"
@@ -93,7 +92,6 @@ EXTRA_OECONF += " \
     --disable-directsound \
     --disable-dts \
     --disable-gme \
-    --disable-gsettings \
     --disable-gsm \
     --disable-kate \
     --disable-ladspa \
