@@ -151,7 +151,7 @@ def add(args, config, basepath, workspace):
             stdout, _ = exec_build_env_command(config.init_path, basepath, 'recipetool --color=%s create -o %s "%s" %s' % (color, tempdir, source, extracmdopts))
         except bb.process.ExecutionError as e:
             if e.exitcode == 15:
-                raise DevtoolError('Unable to auto-determine recipe name from source tree, please specify it on the command line')
+                raise DevtoolError('Could not auto-determine recipe name, please specify it on the command line')
             else:
                 raise DevtoolError('Command \'%s\' failed:\n%s' % (e.command, e.stdout))
 
