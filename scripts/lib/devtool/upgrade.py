@@ -314,8 +314,13 @@ def upgrade(args, config, basepath, workspace):
         srctree = standard.get_default_srctree(config, pn)
 
     standard._check_compatible_recipe(pn, rd)
-    if rd.getVar('PV', True) == args.version and rd.getVar('SRCREV', True) == args.srcrev:
-        raise DevtoolError("Current and upgrade versions are the same version" % version)
+    old_srcrev = rd.getVar('SRCREV', True)
+    if old_srcrev == 'INVALID':
+        old_srcrev = None
+    if old_srcrev and not args.srcrev:
+        raise DevtoolError("Recipe specifies a SRCREV value; you must specify a new one when upgrading")
+    if rd.getVar('PV', True) == args.version and old_srcrev == args.srcrev:
+        raise DevtoolError("Current and upgrade versions are the same version")
 
     rf = None
     try:
