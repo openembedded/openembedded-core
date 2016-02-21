@@ -386,11 +386,12 @@ class ImageTestContext(TestContext):
         setattr(oeRuntimeTest, "pscmd", "ps -ef" if oeTest.hasPackage("procps") else "ps")
 
 class SDKTestContext(TestContext):
-    def __init__(self, d, sdktestdir, sdkenv, *args):
+    def __init__(self, d, sdktestdir, sdkenv, tcname, *args):
         super(SDKTestContext, self).__init__(d)
 
         self.sdktestdir = sdktestdir
         self.sdkenv = sdkenv
+        self.tcname = tcname
 
         if not hasattr(self, 'target_manifest'):
             self.target_manifest = d.getVar("SDK_TARGET_MANIFEST", True)
@@ -419,7 +420,7 @@ class SDKTestContext(TestContext):
                 "auto").split() if t != "auto"]
 
 class SDKExtTestContext(SDKTestContext):
-    def __init__(self, d, sdktestdir, sdkenv, *args):
+    def __init__(self, d, sdktestdir, sdkenv, tcname, *args):
         self.target_manifest = d.getVar("SDK_EXT_TARGET_MANIFEST", True)
         self.host_manifest = d.getVar("SDK_EXT_HOST_MANIFEST", True)
         if args:
@@ -427,7 +428,7 @@ class SDKExtTestContext(SDKTestContext):
         else:
             self.cm = False
 
-        super(SDKExtTestContext, self).__init__(d, sdktestdir, sdkenv)
+        super(SDKExtTestContext, self).__init__(d, sdktestdir, sdkenv, tcname)
 
         self.sdkextfilesdir = os.path.join(os.path.dirname(os.path.abspath(
             oeqa.sdkext.__file__)), "files")

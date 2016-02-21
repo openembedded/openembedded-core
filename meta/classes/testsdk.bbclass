@@ -22,7 +22,7 @@ def run_test_context(CTestContext, d, testdir, tcname, pn, *args):
     targets = glob.glob(d.expand(testdir + "/tc/environment-setup-*"))
     for sdkenv in targets:
         bb.plain("Testing %s" % sdkenv)
-        tc = CTestContext(d, testdir, sdkenv, args)
+        tc = CTestContext(d, testdir, sdkenv, tcname, args)
 
         # this is a dummy load of tests
         # we are doing that to find compile errors in the tests themselves
