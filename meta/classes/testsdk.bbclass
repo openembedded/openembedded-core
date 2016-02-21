@@ -96,11 +96,10 @@ def testsdkext_main(d):
     # extensible sdk use network
     export_proxies(d)
 
-    # extensible sdk shows a warning if found bitbake in the path
-    # because can cause problems so clean it
-    paths_to_avoid = ['bitbake/bin', 'poky/scripts',
-                       d.getVar('STAGING_DIR', True),
-                       d.getVar('BASE_WORKDIR', True)]
+    # extensible sdk can be contaminated if native programs are
+    # in PATH, i.e. use perl-native instead of eSDK one.
+    paths_to_avoid = [d.getVar('STAGING_DIR', True),
+                      d.getVar('BASE_WORKDIR', True)]
     os.environ['PATH'] = avoid_paths_in_environ(paths_to_avoid)
 
     pn = d.getVar("PN", True)
