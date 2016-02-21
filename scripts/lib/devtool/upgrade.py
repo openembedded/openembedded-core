@@ -297,12 +297,7 @@ def upgrade(args, config, basepath, workspace):
     if args.srcbranch and not args.srcrev:
         raise DevtoolError("If you specify --srcbranch/-B then you must use --srcrev/-S to specify the revision" % args.recipename)
 
-    reason = oe.recipeutils.validate_pn(args.recipename)
-    if reason:
-        raise DevtoolError(reason)
-
     tinfoil = setup_tinfoil(basepath=basepath, tracking=True)
-
     rd = parse_recipe(config, tinfoil, args.recipename, True)
     if not rd:
         return 1
