@@ -42,7 +42,7 @@ do_compile_prepend_class-target () {
 FILES_${PN} = "${bindir}/* ${libdir}/libpango*${SOLIBS}"
 FILES_${PN}-dev += "${libdir}/pango/${LIBV}/modules/*.la"
 
-RDEPENDS_${PN}-ptest += "liberation-fonts"
+RDEPENDS_${PN}-ptest += "liberation-fonts cantarell-fonts"
 
 RPROVIDES_${PN} += "pango-modules pango-module-indic-lang \
                     pango-module-basic-fc pango-module-arabic-lang"
