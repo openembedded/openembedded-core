@@ -426,10 +426,12 @@ class PatchTaskExecutor(BbTaskExecutor):
                 bb.process.run('git add .; git commit -a -m "Committing changes from %s\n\n%s"' % (func, GitApplyTree.ignore_commit_prefix + ' - from %s' % func), cwd=srcsubdir)
 
 
-def _prep_extract_operation(config, basepath, recipename):
+def _prep_extract_operation(config, basepath, recipename, tinfoil=None):
     """HACK: Ugly workaround for making sure that requirements are met when
        trying to extract a package. Returns the tinfoil instance to be used."""
-    tinfoil = setup_tinfoil(basepath=basepath)
+    if not tinfoil:
+        tinfoil = setup_tinfoil(basepath=basepath)
+
     rd = parse_recipe(config, tinfoil, recipename, True)
     if not rd:
         return None
@@ -685,23 +687,7 @@ def modify(args, config, basepath, workspace):
         raise DevtoolError("recipe %s is already in your workspace" %
                            args.recipename)
 
-    if args.srctree:
-        srctree = os.path.abspath(args.srctree)
-    else:
-        srctree = get_default_srctree(config, args.recipename)
-
-    if args.no_extract and not os.path.isdir(srctree):
-        raise DevtoolError("--no-extract specified and source path %s does "
-                           "not exist or is not a directory" %
-                           srctree)
-    if not args.no_extract:
-        tinfoil = _prep_extract_operation(config, basepath, args.recipename)
-        if not tinfoil:
-            # Error already shown
-            return 1
-    else:
-        tinfoil = setup_tinfoil(basepath=basepath)
-
+    tinfoil = setup_tinfoil(basepath=basepath)
     rd = parse_recipe(config, tinfoil, args.recipename, True)
     if not rd:
         return 1
@@ -712,6 +698,21 @@ def modify(args, config, basepath, workspace):
     if pn in workspace:
         raise DevtoolError("recipe %s is already in your workspace" %
                            pn)
+
+    if args.srctree:
+        srctree = os.path.abspath(args.srctree)
+    else:
+        srctree = get_default_srctree(config, pn)
+
+    if args.no_extract and not os.path.isdir(srctree):
+        raise DevtoolError("--no-extract specified and source path %s does "
+                           "not exist or is not a directory" %
+                           srctree)
+    if not args.no_extract:
+        tinfoil = _prep_extract_operation(config, basepath, pn, tinfoil)
+        if not tinfoil:
+            # Error already shown
+            return 1
 
     recipefile = rd.getVar('FILE', True)
     appendfile = recipe_to_append(recipefile, config, args.wildcard)
