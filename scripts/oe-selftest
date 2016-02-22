@@ -162,19 +162,33 @@ def remove_inc_files():
         except:
             pass
 
-def get_tests(exclusive_modules=[], include_hidden=False):
-    testslist = []
-    for x in exclusive_modules:
-        testslist.append('oeqa.selftest.' + x)
-    if not testslist:
-        for testpath in oeqa.selftest.__path__:
-            files = sorted([f for f in os.listdir(testpath) if f.endswith('.py') and not (f.startswith('_') and not include_hidden) and not f.startswith('__') and f != 'base.py'])
-            for f in files:
-                module = 'oeqa.selftest.' + f[:-3]
-                if module not in testslist:
-                    testslist.append(module)
 
-    return testslist
+def get_tests_modules(include_hidden=False):
+    modules_list = list()
+    for modules_path in oeqa.selftest.__path__:
+        for (p, d, f) in os.walk(modules_path):
+            files = sorted([f for f in os.listdir(p) if f.endswith('.py') and not (f.startswith('_') and not include_hidden) and not f.startswith('__') and f != 'base.py'])
+            for f in files:
+                submodules = p.split("selftest")[-1]
+                module = ""
+                if submodules:
+                    module = 'oeqa.selftest' + submodules.replace("/",".") + "." + f.split('.py')[0]
+                else:
+                    module = 'oeqa.selftest.' + f.split('.py')[0]
+                if module not in modules_list:
+                    modules_list.append(module)
+    return modules_list
+
+
+def get_tests(exclusive_modules=[], include_hidden=False):
+    test_modules = list()
+    for x in exclusive_modules:
+        test_modules.append('oeqa.selftest.' + x)
+    if not test_modules:
+        inc_hidden = include_hidden
+        test_modules = get_tests_modules(inc_hidden)
+
+    return test_modules
 
 
 class Tc:
@@ -221,23 +235,12 @@ def get_tests_from_module(tmod):
 
 
 def get_all_tests():
-    tmodules = set()
-    testlist = []
-    prefix = 'oeqa.selftest.'
-
     # Get all the test modules (except the hidden ones)
-    for tpath in oeqa.selftest.__path__:
-        files = sorted([f for f in os.listdir(tpath) if f.endswith('.py') and not
-                        f.startswith(('_', '__')) and f != 'base.py'])
-        for f in files:
-            tmodules.add(prefix + f.rstrip('.py'))
-
+    testlist = []
+    tests_modules = get_tests_modules()
     # Get all the tests from modules
-    tmodules = sorted(list(tmodules))
-
-    for tmod in tmodules:
+    for tmod in sorted(tests_modules):
         testlist += get_tests_from_module(tmod)
-
     return testlist
 
 
@@ -481,7 +484,7 @@ def main():
         log.info('Listing all available test modules:')
         testslist = get_tests(include_hidden=True)
         for test in testslist:
-            module = test.split('.')[-1]
+            module = test.split('oeqa.selftest.')[-1]
             info = ''
             if module.startswith('_'):
                 info = ' (hidden)'
