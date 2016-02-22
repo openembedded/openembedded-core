@@ -1,7 +1,7 @@
-From bfb6562cdbec73d03765ce707e9e0cac138fd223 Mon Sep 17 00:00:00 2001
+From e5f405aba347d216e7f2b73d7dd681b13be442e3 Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Fri, 20 Feb 2015 05:29:15 +0000
-Subject: [PATCH 02/16] units: Prefer getty to agetty in console setup systemd
+Subject: [PATCH 02/36] units: Prefer getty to agetty in console setup systemd
  units
 
 Upstream-Status: Inappropriate [configuration specific]
@@ -40,5 +40,5 @@ index 4522d0d..e6d499d 100644
  Restart=always
  UtmpIdentifier=%I
 -- 
-2.6.4
+1.8.3.1
 

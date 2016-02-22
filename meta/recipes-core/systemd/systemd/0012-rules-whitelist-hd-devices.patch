@@ -1,7 +1,7 @@
-From ae6c9dcb00919e1dd2793fd1b82125d123f69a90 Mon Sep 17 00:00:00 2001
+From 5ebc0d87565a73710dea602c00b1586d5a1364e5 Mon Sep 17 00:00:00 2001
 From: Patrick Ohly <patrick.ohly@intel.com>
 Date: Wed, 16 Sep 2015 13:55:58 +0200
-Subject: [PATCH 11/16] rules: whitelist hd* devices
+Subject: [PATCH 12/36] rules: whitelist hd* devices
 
 qemu by default emulates IDE and the linux-yocto kernel(s) use
 CONFIG_IDE instead of the more modern libsata, so disks appear as
@@ -28,5 +28,5 @@ index 0b14bb4..1c4d97a 100644
  # ignore partitions that span the entire disk
  TEST=="whole_disk", GOTO="persistent_storage_end"
 -- 
-2.6.4
+1.8.3.1
 

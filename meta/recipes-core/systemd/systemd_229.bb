@@ -24,35 +24,40 @@ SECTION = "base/shell"
 
 inherit useradd pkgconfig autotools perlnative update-rc.d update-alternatives qemu systemd ptest gettext bash-completion
 
-SRCREV = "dd050decb6ad131ebdeabb71c4f9ecb4733269c0"
+SRCREV = "714c62b46379abb7558c544665522aca91691e10"
 
-PV = "228+git${SRCPV}"
+PV = "229+git${SRCPV}"
 
 SRC_URI = "git://github.com/systemd/systemd.git;protocol=git \
-           file://0005-binfmt-Don-t-install-dependency-links-at-install-tim.patch \
-           file://0006-configure-Check-for-additional-features-that-uclibc-.patch \
-           file://0007-nspawn-Use-execvpe-only-when-libc-supports-it.patch \
-           file://0008-util-bypass-unimplemented-_SC_PHYS_PAGES-system-conf.patch \
-           file://0009-implment-systemd-sysv-install-for-OE.patch \
-           file://0010-nss-mymachines-Build-conditionally-when-HAVE_MYHOSTN.patch \
-           file://0011-rules-whitelist-hd-devices.patch \
-           file://0012-sysv-generator-add-support-for-executing-scripts-und.patch \
-           file://0013-Make-root-s-home-directory-configurable.patch \
-           file://0014-systemd-user-avoid-using-system-auth.patch \
-           file://0015-Revert-rules-remove-firmware-loading-rules.patch \
-           file://0016-Revert-udev-remove-userspace-firmware-loading-suppor.patch \
            file://touchscreen.rules \
            file://00-create-volatile.conf \
            file://init \
            file://run-ptest \
-           file://0001-make-test-dir-configurable.patch \ 
-          "
+           file://0003-define-exp10-if-missing.patch \
+           file://0004-Use-getenv-when-secure-versions-are-not-available.patch \
+           file://0005-binfmt-Don-t-install-dependency-links-at-install-tim.patch \
+           file://0006-configure-Check-for-additional-features-that-uclibc-.patch \
+           file://0007-use-lnr-wrapper-instead-of-looking-for-relative-opti.patch \
+           file://0008-nspawn-Use-execvpe-only-when-libc-supports-it.patch \
+           file://0009-util-bypass-unimplemented-_SC_PHYS_PAGES-system-conf.patch \
+           file://0010-implment-systemd-sysv-install-for-OE.patch \
+           file://0011-nss-mymachines-Build-conditionally-when-HAVE_MYHOSTN.patch \
+           file://0012-rules-whitelist-hd-devices.patch \
+           file://0013-sysv-generator-add-support-for-executing-scripts-und.patch \
+           file://0014-Make-root-s-home-directory-configurable.patch \
+           file://0015-systemd-user-avoid-using-system-auth.patch \
+           file://0016-Revert-rules-remove-firmware-loading-rules.patch \
+           file://0017-Revert-udev-remove-userspace-firmware-loading-suppor.patch \
+           file://0018-make-test-dir-configurable.patch \
+           file://0019-remove-duplicate-include-uchar.h.patch \
+           file://0020-check-for-uchar.h-in-configure.patch \
+           file://0021-include-missing.h-for-getting-secure_getenv-definiti.patch \
+           file://0022-socket-util-don-t-fail-if-libc-doesn-t-support-IDN.patch \
+"
 SRC_URI_append_libc-uclibc = "\
-            file://0001-define-exp10-if-missing.patch \
-            file://0002-units-Prefer-getty-to-agetty-in-console-setup-system.patch \
-            file://0003-Use-getenv-when-secure-versions-are-not-available.patch \
-           "
-SRC_URI_append_qemuall = " file://0004-core-device.c-Change-the-default-device-timeout-to-2.patch "
+           file://0002-units-Prefer-getty-to-agetty-in-console-setup-system.patch \
+"
+SRC_URI_append_qemuall = " file://0001-core-device.c-Change-the-default-device-timeout-to-2.patch"
 
 S = "${WORKDIR}/git"
 
@@ -60,13 +65,13 @@ LDFLAGS_append_libc-uclibc = " -lrt -lssp_nonshared -lssp "
 
 GTKDOC_DOCDIR = "${S}/docs/"
 
-PACKAGECONFIG ??= "compat xz ldconfig \
+PACKAGECONFIG ??= "xz \
+                   ldconfig \
                    ${@bb.utils.contains('DISTRO_FEATURES', 'pam', 'pam', '', d)} \
                    ${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'xkbcommon', '', d)} \
                    ${@bb.utils.contains('DISTRO_FEATURES', 'selinux', 'selinux', '', d)} \
                    ${@bb.utils.contains('DISTRO_FEATURES', 'wifi', 'rfkill', '', d)} \
                    ${@bb.utils.contains('MACHINE_FEATURES', 'efi', 'efi', '', d)} \
-                   sysusers \
                    binfmt \
                    randomseed \
                    machined \
@@ -74,7 +79,7 @@ PACKAGECONFIG ??= "compat xz ldconfig \
                    quotacheck \
                    bootchart \
                    hostnamed \
-                   myhostname \
+                   ${@bb.utils.contains('TCLIBC', 'glibc', 'myhostname sysusers', '', d)} \
                    hibernate \
                    timedated \
                    timesyncd \
@@ -86,7 +91,10 @@ PACKAGECONFIG ??= "compat xz ldconfig \
                    firstboot \
                    utmp \
                    polkit \
-                  "
+"
+PACKAGECONFIG_remove_libc-musl = "selinux"
+PACKAGECONFIG_remove_libc-musl = "smack"
+
 PACKAGECONFIG[journal-upload] = "--enable-libcurl,--disable-libcurl,curl"
 # Sign the journal for anti-tampering
 PACKAGECONFIG[gcrypt] = "--enable-gcrypt,--disable-gcrypt,libgcrypt"
@@ -133,7 +141,6 @@ PACKAGECONFIG[ldconfig] = "--enable-ldconfig,--disable-ldconfig,,"
 PACKAGECONFIG[selinux] = "--enable-selinux,--disable-selinux,libselinux"
 PACKAGECONFIG[valgrind] = "ac_cv_header_valgrind_memcheck_h=yes ac_cv_header_valgrind_valgrind_h=yes ,ac_cv_header_valgrind_memcheck_h=no ac_cv_header_valgrind_valgrind_h=no ,valgrind"
 PACKAGECONFIG[qrencode] = "--enable-qrencode,--disable-qrencode,qrencode"
-PACKAGECONFIG[compat] = "--enable-compat-libs,--disable-compat-libs"
 PACKAGECONFIG[dbus] = "--enable-dbus,--disable-dbus,dbus"
 PACKAGECONFIG[coredump] = "--enable-coredump,--disable-coredump"
 PACKAGECONFIG[bzip2] = "--enable-bzip2,--disable-bzip2,bzip2"
@@ -173,9 +180,6 @@ EXTRA_OECONF = " --with-rootprefix=${rootprefix} \
                  --with-firmware-path=/lib/firmware \
                  --with-testdir=${PTEST_PATH} \
                "
-# uclibc does not have NSS
-EXTRA_OECONF_append_libc-uclibc = " --disable-myhostname --disable-sysusers"
-
 # per the systemd README, define VALGRIND=1 to run under valgrind
 CFLAGS .= "${@bb.utils.contains('PACKAGECONFIG', 'valgrind', ' -DVALGRIND=1', '', d)}"
 
@@ -192,9 +196,6 @@ do_configure_prepend() {
 	else
 		cp -r ${S}/units ${S}/units.pre_sed
 	fi
-	sed -i '/ln --relative --help/d' ${S}/configure.ac
-	sed -i -e 's:\$(LN_S) --relative -f:lnr:g' ${S}/Makefile.am
-	sed -i -e 's:\$(LN_S) --relative:lnr:g' ${S}/Makefile.am
 }
 
 do_install() {

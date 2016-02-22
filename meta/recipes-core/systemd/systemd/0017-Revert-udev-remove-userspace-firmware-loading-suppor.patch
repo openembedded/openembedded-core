@@ -1,7 +1,7 @@
-From d3661ec7fb4557c47f001986cbb8a684b8dbae4a Mon Sep 17 00:00:00 2001
+From 9a3a4e16b36e762291cd1574ec71d7954f8b5363 Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Mon, 14 Dec 2015 05:33:32 +0000
-Subject: [PATCH 16/16] Revert "udev: remove userspace firmware loading
+Subject: [PATCH 17/36] Revert "udev: remove userspace firmware loading
  support"
 
 This reverts commit be2ea723b1d023b3d385d3b791ee4607cbfb20ca.
@@ -15,19 +15,19 @@ Signed-off-by: Khem Raj <raj.khem@gmail.com>
  Makefile.am                      |  12 +++
  README                           |   6 +-
  TODO                             |   1 +
- configure.ac                     |  25 +++++++
+ configure.ac                     |  22 ++++++
  src/udev/udev-builtin-firmware.c | 154 +++++++++++++++++++++++++++++++++++++++
  src/udev/udev-builtin.c          |   3 +
  src/udev/udev.h                  |   6 ++
  src/udev/udevd.c                 |  13 ++++
- 8 files changed, 217 insertions(+), 3 deletions(-)
+ 8 files changed, 214 insertions(+), 3 deletions(-)
  create mode 100644 src/udev/udev-builtin-firmware.c
 
 diff --git a/Makefile.am b/Makefile.am
-index a511c3d..6181e55 100644
+index a99e8eb..b5c6ba7 100644
 --- a/Makefile.am
 +++ b/Makefile.am
-@@ -3650,6 +3650,18 @@ libudev_core_la_LIBADD = \
+@@ -3573,6 +3573,18 @@ libudev_core_la_LIBADD = \
  	$(BLKID_LIBS) \
  	$(KMOD_LIBS)
  
@@ -47,10 +47,10 @@ index a511c3d..6181e55 100644
  libudev_core_la_SOURCES += \
  	src/udev/udev-builtin-kmod.c
 diff --git a/README b/README
-index bf67f8c..87b6f70 100644
+index 41fb07a..10230ac 100644
 --- a/README
 +++ b/README
-@@ -51,14 +51,14 @@ REQUIREMENTS:
+@@ -50,14 +50,14 @@ REQUIREMENTS:
            CONFIG_PROC_FS
            CONFIG_FHANDLE (libudev, mount and bind mount handling)
  
@@ -69,10 +69,10 @@ index bf67f8c..87b6f70 100644
  
          Some udev rules and virtualization detection relies on it:
 diff --git a/TODO b/TODO
-index 369805f..ce97674 100644
+index 92cc8cc..25f6849 100644
 --- a/TODO
 +++ b/TODO
-@@ -635,6 +635,7 @@ Features:
+@@ -628,6 +628,7 @@ Features:
  * rename "userspace" to "core-os"
  
  * udev:
@@ -81,10 +81,10 @@ index 369805f..ce97674 100644
    - kill scsi_id
    - add trigger --subsystem-match=usb/usb_device device
 diff --git a/configure.ac b/configure.ac
-index a3e639d..00736f5 100644
+index 16c83bb..36d20b5 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -1317,6 +1317,25 @@ AC_ARG_ENABLE(hwdb, [AC_HELP_STRING([--disable-hwdb], [disable hardware database
+@@ -1353,6 +1353,25 @@ AC_ARG_ENABLE(hwdb, [AC_HELP_STRING([--disable-hwdb], [disable hardware database
  AM_CONDITIONAL(ENABLE_HWDB, [test x$enable_hwdb = xyes])
  
  # ------------------------------------------------------------------------------
@@ -109,8 +109,8 @@ index a3e639d..00736f5 100644
 +# ------------------------------------------------------------------------------
  have_manpages=no
  AC_ARG_ENABLE(manpages, AS_HELP_STRING([--disable-manpages], [disable manpages]))
- AS_IF([test "x$enable_manpages" != xno], [
-@@ -1616,6 +1635,9 @@ AC_MSG_RESULT([
+ AC_PATH_PROG([XSLTPROC], [xsltproc])
+@@ -1653,6 +1672,9 @@ AC_MSG_RESULT([
          SysV init scripts:       ${SYSTEM_SYSVINIT_PATH}
          SysV rc?.d directories:  ${SYSTEM_SYSVRCND_PATH}
          Build Python:            ${PYTHON}
@@ -281,10 +281,10 @@ index 0000000..bd8c2fb
 +        .run_once = true,
 +};
 diff --git a/src/udev/udev-builtin.c b/src/udev/udev-builtin.c
-index 18fb661..d0280bf 100644
+index e6b36f1..cd9947e 100644
 --- a/src/udev/udev-builtin.c
 +++ b/src/udev/udev-builtin.c
-@@ -33,6 +33,9 @@ static const struct udev_builtin *builtins[] = {
+@@ -31,6 +31,9 @@ static const struct udev_builtin *builtins[] = {
          [UDEV_BUILTIN_BLKID] = &udev_builtin_blkid,
  #endif
          [UDEV_BUILTIN_BTRFS] = &udev_builtin_btrfs,
@@ -295,10 +295,10 @@ index 18fb661..d0280bf 100644
          [UDEV_BUILTIN_INPUT_ID] = &udev_builtin_input_id,
          [UDEV_BUILTIN_KEYBOARD] = &udev_builtin_keyboard,
 diff --git a/src/udev/udev.h b/src/udev/udev.h
-index 4f40020..8f3560f 100644
+index 1f9c812..fa35a88 100644
 --- a/src/udev/udev.h
 +++ b/src/udev/udev.h
-@@ -149,6 +149,9 @@ enum udev_builtin_cmd {
+@@ -147,6 +147,9 @@ enum udev_builtin_cmd {
          UDEV_BUILTIN_BLKID,
  #endif
          UDEV_BUILTIN_BTRFS,
@@ -308,7 +308,7 @@ index 4f40020..8f3560f 100644
          UDEV_BUILTIN_HWDB,
          UDEV_BUILTIN_INPUT_ID,
          UDEV_BUILTIN_KEYBOARD,
-@@ -177,6 +180,9 @@ struct udev_builtin {
+@@ -175,6 +178,9 @@ struct udev_builtin {
  extern const struct udev_builtin udev_builtin_blkid;
  #endif
  extern const struct udev_builtin udev_builtin_btrfs;
@@ -319,10 +319,10 @@ index 4f40020..8f3560f 100644
  extern const struct udev_builtin udev_builtin_input_id;
  extern const struct udev_builtin udev_builtin_keyboard;
 diff --git a/src/udev/udevd.c b/src/udev/udevd.c
-index 366e7fb..7ca1b51 100644
+index bb92f16..84024ac 100644
 --- a/src/udev/udevd.c
 +++ b/src/udev/udevd.c
-@@ -127,6 +127,9 @@ struct event {
+@@ -125,6 +125,9 @@ struct event {
          bool is_block;
          sd_event_source *timeout_warning;
          sd_event_source *timeout;
@@ -332,7 +332,7 @@ index 366e7fb..7ca1b51 100644
  };
  
  static inline struct event *node_to_event(struct udev_list_node *node) {
-@@ -615,6 +618,10 @@ static int event_queue_insert(Manager *manager, struct udev_device *dev) {
+@@ -613,6 +616,10 @@ static int event_queue_insert(Manager *manager, struct udev_device *dev) {
          event->devnum = udev_device_get_devnum(dev);
          event->is_block = streq("block", udev_device_get_subsystem(dev));
          event->ifindex = udev_device_get_ifindex(dev);
@@ -343,7 +343,7 @@ index 366e7fb..7ca1b51 100644
  
          log_debug("seq %llu queued, '%s' '%s'", udev_device_get_seqnum(dev),
               udev_device_get_action(dev), udev_device_get_subsystem(dev));
-@@ -700,6 +707,12 @@ static bool is_devpath_busy(Manager *manager, struct event *event) {
+@@ -698,6 +705,12 @@ static bool is_devpath_busy(Manager *manager, struct event *event) {
                          return true;
                  }
  
@@ -357,5 +357,5 @@ index 366e7fb..7ca1b51 100644
                  if (event->devpath[common] == '/') {
                          event->delaying_seqnum = loop_event->seqnum;
 -- 
-2.6.4
+1.8.3.1
 

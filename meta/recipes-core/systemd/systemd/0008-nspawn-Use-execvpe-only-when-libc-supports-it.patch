@@ -1,7 +1,7 @@
-From 529e7e2f7f6a5dc0e4527ff5c2237b19ece2f112 Mon Sep 17 00:00:00 2001
+From ae999ff50efb9cc82537adef7696c6f732afcfc8 Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Fri, 20 Feb 2015 05:10:37 +0000
-Subject: [PATCH 07/16] nspawn: Use execvpe only when libc supports it
+Subject: [PATCH 08/36] nspawn: Use execvpe only when libc supports it
 
 Upstream-Status: Denied [no desire for uclibc support]
 
@@ -11,10 +11,10 @@ Signed-off-by: Khem Raj <raj.khem@gmail.com>
  1 file changed, 7 insertions(+)
 
 diff --git a/src/nspawn/nspawn.c b/src/nspawn/nspawn.c
-index a4e13bd..4def6ba 100644
+index 5a68fec..65e65ec 100644
 --- a/src/nspawn/nspawn.c
 +++ b/src/nspawn/nspawn.c
-@@ -112,6 +112,8 @@ typedef enum LinkJournal {
+@@ -111,6 +111,8 @@ typedef enum LinkJournal {
          LINK_GUEST
  } LinkJournal;
  
@@ -22,8 +22,8 @@ index a4e13bd..4def6ba 100644
 +
  static char *arg_directory = NULL;
  static char *arg_template = NULL;
- static char *arg_user = NULL;
-@@ -2595,7 +2597,12 @@ static int inner_child(
+ static char *arg_chdir = NULL;
+@@ -2637,7 +2639,12 @@ static int inner_child(
                  a[0] = (char*) "/sbin/init";
                  execve(a[0], a, env_use);
          } else if (!strv_isempty(arg_parameters))
@@ -34,8 +34,8 @@ index a4e13bd..4def6ba 100644
 +                execvp(arg_parameters[0], arg_parameters);
 +#endif /* HAVE_EXECVPE */
          else {
-                 chdir(home ?: "/root");
-                 execle("/bin/bash", "-bash", NULL, env_use);
+                 if (!arg_chdir)
+                         chdir(home ?: "/root");
 -- 
-2.6.4
+1.8.3.1
 

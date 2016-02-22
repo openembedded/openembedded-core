@@ -1,7 +1,7 @@
-From d1fe5d2dd38cdef984296f453c65ccaebb71d1a9 Mon Sep 17 00:00:00 2001
+From bb6f1d8a000b337280541afde7cccdcfe03cdeb1 Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Fri, 20 Feb 2015 05:05:45 +0000
-Subject: [PATCH 06/16] configure: Check for additional features that uclibc
+Subject: [PATCH 06/36] configure: Check for additional features that uclibc
  doesnt support
 
 This helps in supporting uclibc which does not have all features that
@@ -15,7 +15,7 @@ Signed-off-by: Khem Raj <raj.khem@gmail.com>
  1 file changed, 18 insertions(+)
 
 diff --git a/configure.ac b/configure.ac
-index 3128ca8..49f73a4 100644
+index f51533c..0239fd0 100644
 --- a/configure.ac
 +++ b/configure.ac
 @@ -112,6 +112,24 @@ AC_PATH_PROG([UMOUNT_PATH], [umount], [/usr/bin/umount], [$PATH:/usr/sbin:/sbin]
@@ -44,5 +44,5 @@ index 3128ca8..49f73a4 100644
  
  AC_CHECK_TOOL(OBJCOPY, objcopy)
 -- 
-2.6.4
+1.8.3.1
 

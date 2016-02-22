@@ -1,7 +1,7 @@
-From 548a8d5d456c531444498b3ce8cec3f3dd374cf8 Mon Sep 17 00:00:00 2001
+From f70a1a9605cd3adac450c49a5a69da6e9acda517 Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Fri, 20 Feb 2015 05:26:25 +0000
-Subject: [PATCH 14/16] systemd-user: avoid using system-auth
+Subject: [PATCH 15/36] systemd-user: avoid using system-auth
 
 In OE, we don't provide system-auth, instead, we use common-* files.
 So modify systemd-user file to use common-* files.
@@ -32,5 +32,5 @@ index 7933508..16b73d2 100644
 -session  include system-auth
 +session  include common-session
 -- 
-2.6.4
+1.8.3.1
 

@@ -1,7 +1,7 @@
-From ddad25c809846e08ea39bef49cc668f95d53304a Mon Sep 17 00:00:00 2001
+From 699893a05edac5194f9670529bacfaeb67252edb Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Mon, 14 Dec 2015 00:42:49 +0000
-Subject: [PATCH 01/16] define exp10 if missing
+Subject: [PATCH 03/36] define exp10 if missing
 
 Inspired by: http://peter.korsgaard.com/patches/alsa-utils/alsamixer-fix-build-on-uClibc-exp10.patch
 
@@ -16,12 +16,12 @@ Signed-off-by: Khem Raj <raj.khem@gmail.com>
  1 file changed, 5 insertions(+)
 
 diff --git a/src/basic/missing.h b/src/basic/missing.h
-index d539ed0..09a233b 100644
+index f3d3236..ee7e7ea 100644
 --- a/src/basic/missing.h
 +++ b/src/basic/missing.h
-@@ -1125,3 +1125,8 @@ static inline key_serial_t request_key(const char *type, const char *description
- #ifndef KEY_SPEC_USER_KEYRING
- #define KEY_SPEC_USER_KEYRING -4
+@@ -1169,3 +1169,8 @@ static inline key_serial_t request_key(const char *type, const char *description
+ #endif
+ 
  #endif
 +
 +#ifdef __UCLIBC__
@@ -29,5 +29,5 @@ index d539ed0..09a233b 100644
 +#define exp10(x) (exp((x) * log(10)))
 +#endif /* __UCLIBC__ */
 -- 
-2.6.4
+1.8.3.1
 
