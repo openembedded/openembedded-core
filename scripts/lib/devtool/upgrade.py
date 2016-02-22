@@ -179,7 +179,7 @@ def _extract_new_source(newpv, srctree, no_patch, srcrev, branch, keep_temp, tin
         md5 = None
         sha256 = None
     else:
-        __run('git checkout -b devtool-%s' % newpv)
+        __run('git checkout devtool-base -b devtool-%s' % newpv)
 
         tmpdir = tempfile.mkdtemp(prefix='devtool')
         try:
