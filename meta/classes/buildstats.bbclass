@@ -25,13 +25,14 @@ def get_process_cputime(pid):
         'cstime' : fields[16],  
     }
     iostats = {}
-    with open("/proc/%d/io" % pid, "r") as f:
-        while True:
-            i = f.readline().strip()
-            if not i:
-                break
-            i = i.split(": ")
-            iostats[i[0]] = i[1]
+    if os.path.isfile("/proc/%d/io" % pid):
+        with open("/proc/%d/io" % pid, "r") as f:
+            while True:
+                i = f.readline().strip()
+                if not i:
+                    break
+                i = i.split(": ")
+                iostats[i[0]] = i[1]
     resources = resource.getrusage(resource.RUSAGE_SELF)
     childres = resource.getrusage(resource.RUSAGE_CHILDREN)
     return stats, iostats, resources, childres
@@ -111,7 +112,14 @@ python run_buildstats () {
 
     if isinstance(e, bb.event.BuildStarted):
         ########################################################################
-        # at first pass make the buildstats heriarchy and then
+        # If the kernel was not configured to provide I/O statistics, issue
+        # a one time warning.
+        ########################################################################
+        if not os.path.isfile("/proc/%d/io" % os.getpid()):
+            bb.warn("The Linux kernel on your build host was not configured to provide process I/O statistics. (CONFIG_TASK_IO_ACCOUNTING is not set)")
+
+        ########################################################################
+        # at first pass make the buildstats hierarchy and then
         # set the buildname
         ########################################################################
         bb.utils.mkdirhier(bsdir)
