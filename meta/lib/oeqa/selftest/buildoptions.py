@@ -147,12 +147,12 @@ class BuildhistoryTests(BuildhistoryBase):
 
         features = 'TMPDIR = "%s"\n' % tmpdir1
         self.write_config(features)
-        bitbake('core-image-sato -S none -c rootfs')
+        bitbake('core-image-minimal -S none -c rootfs')
 
         features = 'TMPDIR = "%s"\n' % tmpdir2
         features += 'INHERIT += "buildhistory"\n'
         self.write_config(features)
-        bitbake('core-image-sato -S none -c rootfs')
+        bitbake('core-image-minimal -S none -c rootfs')
 
         def get_files(d):
             f = []
