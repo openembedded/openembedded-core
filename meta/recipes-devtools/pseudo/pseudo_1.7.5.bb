@@ -5,6 +5,7 @@ SRC_URI = " \
     file://0001-configure-Prune-PIE-flags.patch \
     file://fallback-passwd \
     file://fallback-group \
+    file://moreretries.patch \
 "
 
 SRC_URI[md5sum] = "c10209938f03128d0c193f041ff3596d"
