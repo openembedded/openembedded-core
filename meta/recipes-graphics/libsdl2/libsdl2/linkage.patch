@@ -10,11 +10,11 @@ RP
 2016/1/16
 
 
-Index: SDL2-2.0.3/configure.in
+Index: SDL2-2.0.4/configure.in
 ===================================================================
---- SDL2-2.0.3.orig/configure.in
-+++ SDL2-2.0.3/configure.in
-@@ -3136,23 +3136,23 @@ done
+--- SDL2-2.0.4.orig/configure.in
++++ SDL2-2.0.4/configure.in
+@@ -3464,23 +3464,23 @@ done
  
  VERSION_OBJECTS=`echo $VERSION_SOURCES`
  VERSION_DEPENDS=`echo $VERSION_SOURCES`
@@ -32,7 +32,7 @@ Index: SDL2-2.0.3/configure.in
  SDLMAIN_DEPENDS=`echo "$SDLMAIN_DEPENDS" | sed "s,\\([[^ ]]*\\)/\\([[^ ]]*\\)\\.c,\\\\
 -\\$(objects)/\\2.o: \\1/\\2.c\\\\
 +\\$(objects)/\\2.lo: \\1/\\2.c\\\\
- 	\\$(LIBTOOL) --mode=compile \\$(CC) \\$(CFLAGS) \\$(EXTRA_CFLAGS) $DEPENDENCY_TRACKING_OPTIONS -c \\$< -o \\$@,g"`
+ 	\\$(RUN_CMD_CC)\\$(LIBTOOL) --tag=CC --mode=compile \\$(CC) \\$(CFLAGS) \\$(EXTRA_CFLAGS) $DEPENDENCY_TRACKING_OPTIONS -c \\$< -o \\$@,g"`
  
  SDLTEST_OBJECTS=`echo $SDLTEST_SOURCES`
  SDLTEST_DEPENDS=`echo $SDLTEST_SOURCES`
@@ -41,6 +41,6 @@ Index: SDL2-2.0.3/configure.in
  SDLTEST_DEPENDS=`echo "$SDLTEST_DEPENDS" | sed "s,\\([[^ ]]*\\)/\\([[^ ]]*\\)\\.c,\\\\
 -\\$(objects)/\\2.o: \\1/\\2.c\\\\
 +\\$(objects)/\\2.lo: \\1/\\2.c\\\\
- 	\\$(LIBTOOL) --mode=compile \\$(CC) \\$(CFLAGS) \\$(EXTRA_CFLAGS) $DEPENDENCY_TRACKING_OPTIONS -c \\$< -o \\$@,g"`
+ 	\\$(RUN_CMD_CC)\\$(LIBTOOL) --tag=CC --mode=compile \\$(CC) \\$(CFLAGS) \\$(EXTRA_CFLAGS) $DEPENDENCY_TRACKING_OPTIONS -c \\$< -o \\$@,g"`
  
  # Set runtime shared library paths as needed
