@@ -63,7 +63,7 @@ export V="2"
 # http://gcc.gnu.org/bugzilla/show_bug.cgi?id=44860
 #
 CFLAGS_remove_arm = "-fno-omit-frame-pointer"
-UCLIBC_EXTRA_CFLAGS  := "${@oe_filter_out('(-I\S+|-i\S+)', '${CFLAGS}', d)}"
+UCLIBC_EXTRA_CFLAGS  = "${@oe_filter_out('(-I\S+|-i\S+)', '${CFLAGS}', d)}"
 
 configmangle = '/^KERNEL_HEADERS/d; \
                 /^RUNTIME_PREFIX/d; \
@@ -82,8 +82,8 @@ configmangle = '/^KERNEL_HEADERS/d; \
                 /HAS_FPU/d; \
                 ${@["","s,.*MULTILIB_DIR.*,MULTILIB_DIR=\"${baselib}\",;"][d.getVar("baselib", True) != "lib"]} \
                '
-OE_FEATURES := "${@features_to_uclibc_conf(d)}"
-OE_DEL      := "${@features_to_uclibc_del(d)}"
+OE_FEATURES = "${@features_to_uclibc_conf(d)}"
+OE_DEL      = "${@features_to_uclibc_del(d)}"
 python () {
     if "${OE_DEL}":
         d.setVar('configmangle_append', "${OE_DEL}" + "\n")
