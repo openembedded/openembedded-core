@@ -121,7 +121,7 @@ python __anonymous() {
         d.appendVar("RPROVIDES_" + fullp, pkgs)
         d.appendVar("RCONFLICTS_" + fullp, pkgs)
 
-        d.appendVar("RRECOMMENDS_" + fullp, "mesa-megadriver")
+        d.appendVar("RRECOMMENDS_" + fullp, " mesa-megadriver")
 
         # For -dev, the first element is both the Debian and original name
         fullp += "-dev"
