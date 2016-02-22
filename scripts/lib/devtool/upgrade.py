@@ -81,7 +81,7 @@ def _rename_recipe_dirs(oldpv, newpv, path):
             if olddir.find(oldpv) != -1:
                 newdir = olddir.replace(oldpv, newpv)
                 if olddir != newdir:
-                    _run('mv %s %s' % (olddir, newdir))
+                    shutil.move(os.path.join(path, olddir), os.path.join(path, newdir))
 
 def _rename_recipe_file(bpn, oldpv, newpv, path):
     oldrecipe = "%s_%s.bb" % (bpn, oldpv)
