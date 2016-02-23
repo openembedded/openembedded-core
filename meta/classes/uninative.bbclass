@@ -83,12 +83,10 @@ python uninative_changeinterp () {
             except oe.qa.NotELFFileError:
                 continue
 
-            #bb.warn("patchelf-uninative --set-interpreter %s %s" % (d.getVar("UNINATIVE_LOADER", True), f))
-            cmd = "patchelf-uninative --set-interpreter %s %s" % (d.getVar("UNINATIVE_LOADER", True), f)
-            p = subprocess.Popen(cmd, shell=True,
-                                 stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-            stdout, stderr = p.communicate()
-            if p.returncode:
+            try:
+                subprocess.check_output(("patchelf-uninative", "--set-interpreter",
+                                         d.getVar("UNINATIVE_LOADER", True), f))
+            except subprocess.CalledProcessError as e:
                 bb.fatal("'%s' failed with exit code %d and the following output:\n%s" %
-                         (cmd, p.returncode, stdout))
+                         (e.cmd, e.returncode, e.output))
 }
