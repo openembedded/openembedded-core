@@ -83,21 +83,19 @@ def _rename_recipe_dirs(oldpv, newpv, path):
                 if olddir != newdir:
                     shutil.move(os.path.join(path, olddir), os.path.join(path, newdir))
 
-def _rename_recipe_file(bpn, oldpv, newpv, path):
-    oldrecipe = "%s_%s.bb" % (bpn, oldpv)
-    newrecipe = "%s_%s.bb" % (bpn, newpv)
-    if os.path.isfile(os.path.join(path, oldrecipe)):
+def _rename_recipe_file(oldrecipe, bpn, oldpv, newpv, path):
+    oldrecipe = os.path.basename(oldrecipe)
+    if oldrecipe.endswith('_%s.bb' % oldpv):
+        newrecipe = '%s_%s.bb' % (bpn, newpv)
         if oldrecipe != newrecipe:
-            _run('mv %s %s' % (oldrecipe, newrecipe), cwd=path)
+            shutil.move(os.path.join(path, oldrecipe), os.path.join(path, newrecipe))
     else:
-        recipe = "%s_git.bb" % bpn
-        if os.path.isfile(os.path.join(path, recipe)):
-            newrecipe = recipe
+        newrecipe = oldrecipe
     return os.path.join(path, newrecipe)
 
-def _rename_recipe_files(bpn, oldpv, newpv, path):
+def _rename_recipe_files(oldrecipe, bpn, oldpv, newpv, path):
     _rename_recipe_dirs(oldpv, newpv, path)
-    return _rename_recipe_file(bpn, oldpv, newpv, path)
+    return _rename_recipe_file(oldrecipe, bpn, oldpv, newpv, path)
 
 def _write_append(rc, srctree, same_dir, no_same_dir, rev, workspace, d):
     """Writes an append file"""
@@ -243,7 +241,9 @@ def _create_new_recipe(newpv, md5, sha256, srcrev, srcbranch, workspace, tinfoil
     oldpv = crd.getVar('PV', True)
     if not newpv:
         newpv = oldpv
-    fullpath = _rename_recipe_files(bpn, oldpv, newpv, path)
+    origpath = rd.getVar('FILE', True)
+    fullpath = _rename_recipe_files(origpath, bpn, oldpv, newpv, path)
+    logger.debug('Upgraded %s => %s' % (origpath, fullpath))
 
     newvalues = {}
     if _recipe_contains(rd, 'PV') and newpv != oldpv:
