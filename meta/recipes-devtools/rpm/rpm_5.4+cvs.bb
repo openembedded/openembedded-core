@@ -34,24 +34,22 @@ DESCRIPTION_perl-modules-rpm = "The perl-modules-rpm package contains a module t
 written in the Perl programming language to use the interface \
 supplied by the RPM Package Manager libraries."
 
-SUMMARY_perl-module-rpm-dev = "Development components for perl bindings"
-DESCRIPTION_perl-modules-rpm-dev = "Development items such as man pages for use with the Perl \
-language bindings."
-
 HOMEPAGE = "http://rpm5.org/"
-LICENSE = "LGPLv2.1"
+LICENSE = "LGPLv2.1 & Apache-2.0"
 LIC_FILES_CHKSUM = "file://COPYING.LIB;md5=2d5025d4aa3495befef8f17206a5b0a1"
+LIC_FILES_CHKSUM += "file://rpmio/mongo.c;begin=5;end=18;md5=d8327ba2c71664c059143e6d333b8901"
 
-DEPENDS = "libpcre attr acl popt ossp-uuid file byacc-native"
+# We must have gettext-native, we need gettextize, which may not be provided
+DEPENDS = "libpcre attr acl ossp-uuid file byacc-native gettext-native"
 DEPENDS_append_class-native = " file-replacement-native"
-
-S = "${WORKDIR}/rpm"
 
 # Apply various fixups that are unique to the CVS environment
 do_fixup_unpack () {
-	ln -sf ../syck ${S}/syck || :
-	ln -sf ../lua ${S}/lua || :
-	ln ${S}/rpmqv.c ${S}/rpmqv.cc || :
+	# 'ln' isn't reliable, and 'mv' could break later builds
+	rm -rf ${S}/syck ; cp -r ${WORKDIR}/syck ${S}/.
+	rm -rf ${S}/lua ; cp -r ${WORKDIR}/lua ${S}/.
+	rm -rf ${S}/popt ; cp -r ${WORKDIR}/popt ${S}/.
+	rm -rf ${S}/beecrypt ; cp -r ${WORKDIR}/beecrypt ${S}/.
 }
 
 addtask fixup_unpack after do_unpack before do_patch
@@ -60,45 +58,34 @@ addtask fixup_unpack after do_unpack before do_patch
 # community work in progress.
 DEFAULT_PREFERENCE = "-1"
 
+S = "${WORKDIR}/rpm"
+
 # rpm2cpio is a shell script, which is part of the rpm src.rpm.  It is needed
 # in order to extract the distribution SRPM into a format we can extract...
 SRC_URI = "cvs://anonymous@rpm5.org/cvs;tag=rpm-5_4;module=rpm \
 	   cvs://anonymous@rpm5.org/cvs;tag=rpm-5_4;module=syck \
 	   cvs://anonymous@rpm5.org/cvs;tag=rpm-5_4;module=lua \
-	   file://rpm-log-auto-rm.patch \
-	   file://rpm-db-reduce.patch \
+	   cvs://anonymous@rpm5.org/cvs;tag=rpm-5_4;module=popt \
+	   cvs://anonymous@rpm5.org/cvs;tag=rpm-5_4;module=beecrypt \
 	   file://perfile_rpmdeps.sh \
-	   file://rpm-autogen.patch \
-	   file://rpm-libsql-fix.patch \
+	   file://pythondeps.sh \
+"
+
+# Bug fixes
+SRC_URI += " \
 	   file://header-include-fix.patch \
+	   file://rpm-libsql-fix.patch \
 	   file://rpm-platform.patch \
-	   file://rpm-showrc.patch \
+	   file://rpm-platform2.patch \
 	   file://rpm-tools-mtree-LDFLAGS.patch \
-	   file://rpm-fileclass.patch \
 	   file://rpm-canonarch.patch \
 	   file://rpm-no-loopmsg.patch \
-	   file://rpm-scriptletexechelper.patch \
-	   file://pythondeps.sh \
-	   file://rpmdeps-oecore.patch \
 	   file://rpm-resolvedep.patch \
-	   file://rpm-no-perl-urpm.patch \
-	   file://rpm-macros.patch \
-	   file://rpm-lua.patch \
-	   file://rpm-ossp-uuid.patch \
 	   file://rpm-packageorigin.patch \
-	   file://rpm-pkgconfigdeps.patch \
 	   file://uclibc-support.patch \
 	   file://rpmatch.patch \
-	   file://fstack-protector-configure-check.patch \
-	   file://dbconvert.patch \
-	   file://rpm-uuid-include.patch \
 	   file://makefile-am-exec-hook.patch \
-	   file://rpm-db_buffer_small.patch \
-	   file://rpm-py-init.patch \
 	   file://python-rpm-rpmsense.patch \
-	   file://rpm-reloc-macros.patch \
-	   file://rpm-platform2.patch \
-	   file://rpm-remove-sykcparse-decl.patch \
 	   file://debugedit-segv.patch \
 	   file://debugedit-valid-file-to-fix-segment-fault.patch \
 	   file://rpm-platform-file-fix.patch \
@@ -107,13 +94,61 @@ SRC_URI = "cvs://anonymous@rpm5.org/cvs;tag=rpm-5_4;module=rpm \
 	   file://rpm-hardlink-segfault-fix.patch \
 	   file://rpm-payload-use-hashed-inode.patch \
 	   file://rpm-fix-logio-cp.patch \
-	   file://rpm-db5-or-db6.patch \
-	   file://rpm-rpmpgp-fix.patch \
-	   file://rpm-disable-Wno-override-init.patch \
-	   file://rpm-realpath.patch \
+	   file://0001-using-poptParseArgvString-to-parse-the-_gpg_check_pa.patch \
+	   file://rpm-opendb-before-verifyscript-to-avoid-null-point.patch \
+	   file://0001-define-EM_AARCH64.patch \
 	   file://rpm-rpmfc.c-fix-for-N32-MIPS64.patch \
-	  "
+	   file://rpm-lib-transaction.c-fix-file-conflicts-for-mips64-N32.patch \
+	   file://rpm-mongodb-sasl.patch \
+	   file://rpm-fix-parseEmbedded.patch \
+	   file://rpm-rpmio-headers.patch \
+	   file://rpm-python-restore-origin.patch \
+	   file://rpm-keccak-sse-intrin.patch \
+	   file://rpm-atomic-ops.patch \
+	   file://rpm-gnu-atomic.patch \
+	   file://rpm-tagname-type.patch \
+	   file://rpm-python-tagname.patch \
+	   file://rpm-python-AddErase.patch \
+	   file://rpm-rpmpgp-popt.patch \
+"
 
+# OE specific changes
+SRC_URI += " \
+	   file://rpm-log-auto-rm.patch \
+	   file://rpm-db-reduce.patch \
+	   file://rpm-autogen.patch \
+	   file://rpm-showrc.patch \
+	   file://rpm-fileclass.patch \
+	   file://rpm-scriptletexechelper.patch \
+	   file://rpmdeps-oecore.patch \
+	   file://rpm-no-perl-urpm.patch \
+	   file://rpm-macros.patch \
+	   file://rpm-lua.patch \
+	   file://rpm-ossp-uuid.patch \
+	   file://rpm-uuid-include.patch \
+	   file://rpm-pkgconfigdeps.patch \
+	   file://no-ldflags-in-pkgconfig.patch \
+	   file://dbconvert.patch \
+	   file://rpm-db_buffer_small.patch \
+	   file://rpm-py-init.patch \
+	   file://rpm-reloc-macros.patch \
+	   file://rpm-db5-or-db6.patch \
+	   file://rpm-db60.patch \
+	   file://rpmqv_cc_b_gone.patch \
+	   file://rpm-realpath.patch \
+	   file://rpm-check-rootpath-reasonableness.patch \
+	   file://rpm-macros.in-disable-external-key-server.patch \
+	   file://configure.ac-check-for-both-gpg2-and-gpg.patch \
+	   file://rpm-disable-auto-stack-protector.patch \
+	   file://popt-disable-auto-stack-protector.patch \
+	   file://rpm-syck-fix-gram.patch \
+	   file://rpm-rpmdb-grammar.patch \
+	   file://rpm-disable-blaketest.patch \
+"
+
+SRC_URI_append_libc-musl = "\
+           file://0001-rpm-Fix-build-on-musl.patch \
+"
 # Uncomment the following line to enable platform score debugging
 # This is useful when identifying issues with Smart being unable
 # to process certain package feeds.
@@ -123,16 +158,25 @@ inherit autotools gettext
 
 acpaths = "-I ${S}/db/dist/aclocal -I ${S}/db/dist/aclocal_java"
 
+# The local distribution macro directory
+distromacrodir = "${libdir}/rpm/poky"
+
 # Specify the default rpm macros in terms of adjustable variables
-rpm_macros = "%{_usrlibrpm}/macros:%{_usrlibrpm}/poky/macros:%{_usrlibrpm}/poky/%{_target}/macros:%{_etcrpm}/macros.*:%{_etcrpm}/macros:%{_etcrpm}/%{_target}/macros:~/.oerpmmacros"
-rpm_macros_class-native = "%{_usrlibrpm}/macros:%{_usrlibrpm}/poky/macros:%{_usrlibrpm}/poky/%{_target}/macros:~/.oerpmmacros"
-rpm_macros_class-nativesdk = "%{_usrlibrpm}/macros:%{_usrlibrpm}/poky/macros:%{_usrlibrpm}/poky/%{_target}/macros:~/.oerpmmacros"
+rpm_macros = "%{_usrlibrpm}/macros:%{_usrlibrpm}/${DISTRO}/macros:%{_usrlibrpm}/${DISTRO}/%{_target}/macros:%{_etcrpm}/macros.*:%{_etcrpm}/macros:%{_etcrpm}/%{_target}/macros:~/.oerpmmacros"
+rpm_macros_class-native = "%{_usrlibrpm}/macros:%{_usrlibrpm}/${DISTRO}/macros:%{_usrlibrpm}/${DISTRO}/%{_target}/macros:~/.oerpmmacros"
+rpm_macros_class-nativesdk = "%{_usrlibrpm}/macros:%{_usrlibrpm}/${DISTRO}/macros:%{_usrlibrpm}/${DISTRO}/%{_target}/macros:~/.oerpmmacros"
 
 # sqlite lua tcl augeas nss gcrypt neon xz xar keyutils perl selinux
 
 # Note: perl and sqlite w/o db specified does not currently work.
 #       tcl, augeas, nss, gcrypt, xar and keyutils support is untested.
-PACKAGECONFIG ??= "db bzip2 zlib beecrypt openssl libelf python"
+PACKAGECONFIG ??= "db bzip2 zlib popt openssl libelf python"
+
+# Note: switching to internal popt may not work, as it will generate
+# a shared library which will intentionally not be packaged.
+#
+# If you intend to use the internal version, additional work may be required.
+PACKAGECONFIG[popt] = "--with-popt=external,--with-popt=internal,popt,"
 
 PACKAGECONFIG[bzip2] = "--with-bzip2,--without-bzip2,bzip2,"
 PACKAGECONFIG[xz] = "--with-xz,--without-xz,xz,"
@@ -193,7 +237,6 @@ EXTRA_OECONF += "--verbose \
 		--with-uuid \
 		--with-attr \
 		--with-acl \
-		--with-popt=external \
 		--with-pthreads \
 		--without-cudf \
 		--without-ficl \
@@ -205,6 +248,7 @@ EXTRA_OECONF += "--verbose \
 		--without-gpsee \
 		--without-ruby \
 		--without-squirrel \
+		--without-sasl2 \
 		--with-build-extlibdep \
 		--with-build-maxextlibdep \
 		--without-valgrind \
@@ -224,7 +268,7 @@ CFLAGS_append = " -DRPM_VENDOR_WINDRIVER -DRPM_VENDOR_POKY -DRPM_VENDOR_OE"
 
 LDFLAGS_append_libc-uclibc = "-lrt -lpthread"
 
-PACKAGES = "${PN}-dbg ${PN} ${PN}-doc ${PN}-libs ${PN}-dev ${PN}-staticdev ${PN}-common ${PN}-build python-rpm-staticdev python-rpm-dev python-rpm perl-module-rpm perl-module-rpm-dev ${PN}-locale"
+PACKAGES = "${PN}-dbg ${PN} ${PN}-doc ${PN}-libs ${PN}-dev ${PN}-staticdev ${PN}-common ${PN}-build python-rpm perl-module-rpm ${PN}-locale"
 
 SOLIBS = "5.4.so"
 
@@ -342,22 +386,19 @@ FILES_${PN}-build = "${prefix}/src/rpm \
 		${libdir}/rpm/vpkg-provides.sh \
 		${libdir}/rpm/vpkg-provides2.sh \
 		${libdir}/rpm/perfile_rpmdeps.sh \
+		${distromacrodir} \
 		"
 RDEPENDS_${PN} = "base-files run-postinsts"
 RDEPENDS_${PN}_class-native = ""
 RDEPENDS_${PN}_class-nativesdk = ""
 RDEPENDS_${PN}-build = "file bash perl"
 
-RDEPENDS_python-rpm = "${PN}"
+RDEPENDS_python-rpm = "${PN} python"
 
-FILES_python-rpm-dev = "${libdir}/python*/site-packages/rpm/*.la"
-FILES_python-rpm-staticdev = "${libdir}/python*/site-packages/rpm/*.a"
 FILES_python-rpm = "${libdir}/python*/site-packages/rpm"
+PROVIDES += "python-rpm"
 
 FILES_perl-module-rpm = "${libdir}/perl/*/* \
-		"
-
-FILES_perl-module-rpm-dev = "${prefix}/share/man/man3/RPM* \
 		"
 
 RDEPENDS_${PN}-dev += "bash"
@@ -388,6 +429,7 @@ FILES_${PN}-staticdev = " \
 		${libdir}/librpmmisc.a \
 		${libdir}/librpmbuild.a \
 		${libdir}/rpm/lib/liblua.a \
+		${libdir}/python*/site-packages/rpm/*.a \
 		"
 
 do_configure() {
@@ -408,11 +450,17 @@ do_configure() {
 }
 
 do_install_append() {
+	# Preserve the previous default of DSA self-signed pkgs
+	sed -i -e 's,%_build_sign.*,%_build_sign DSA,' ${D}/${libdir}/rpm/macros.rpmbuild
+
 	sed -i -e 's,%__scriptlet_requires,#%%__scriptlet_requires,' ${D}/${libdir}/rpm/macros
 	sed -i -e 's,%__perl_provides,#%%__perl_provides,' ${D}/${libdir}/rpm/macros ${D}/${libdir}/rpm/macros.d/*
 	sed -i -e 's,%__perl_requires,#%%__perl_requires,' ${D}/${libdir}/rpm/macros ${D}/${libdir}/rpm/macros.d/*
 	sed -i -e 's,%_repackage_all_erasures[^_].*,%_repackage_all_erasures 0,' ${D}/${libdir}/rpm/macros
 	sed -i -e 's,^#%_openall_before_chroot.*,%_openall_before_chroot\t1,' ${D}/${libdir}/rpm/macros
+
+	# Enable MIPS64 N32 transactions.  (This is a no-op on non-MIPS targets.)
+	sed -i -e 's,%_transaction_color[^_].*,%_transaction_color 7,' ${D}/${libdir}/rpm/macros
 
 	# Enable Debian style arbitrary tags...
 	sed -i -e 's,%_arbitrary_tags[^_].*,%_arbitrary_tags %{_arbitrary_tags_debian},' ${D}/${libdir}/rpm/macros
@@ -484,6 +532,83 @@ do_install_append() {
 	rm -f ${D}/${libdir}/rpm/bin/api-sanity-checker.pl
 
 }
+
+do_install_append_class-target() {
+	# Create and install distribution specific macros
+	mkdir -p ${D}/${distromacrodir}
+	cat << EOF > ${D}/${distromacrodir}/macros
+%_defaultdocdir		${docdir}
+
+%_prefix                ${prefix}
+%_exec_prefix           ${exec_prefix}
+%_datarootdir           ${datadir}
+%_bindir                ${bindir}
+%_sbindir               ${sbindir}
+%_libexecdir            %{_libdir}/%{name}
+%_datadir               ${datadir}
+%_sysconfdir            ${sysconfdir}
+%_sharedstatedir        ${sharedstatedir}
+%_localstatedir         ${localstatedir}
+%_lib                   lib
+%_libdir                %{_exec_prefix}/%{_lib}
+%_includedir            ${includedir}
+%_oldincludedir         ${oldincludedir}
+%_infodir               ${infodir}
+%_mandir                ${mandir}
+%_localedir             %{_libdir}/locale
+EOF
+
+	# Create and install multilib specific macros
+	${@multilib_rpmmacros(d)}
+}
+
+def multilib_rpmmacros(d):
+    localdata = d.createCopy()
+    # We need to clear the TOOLCHAIN_OPTIONS (--sysroot)
+    localdata.delVar('TOOLCHAIN_OPTIONS')
+
+    # Set 'localdata' values to be consistent with 'd' values.
+    localdata.setVar('distromacrodir', d.getVar('distromacrodir', True))
+    localdata.setVar('WORKDIR', d.getVar('WORKDIR', True))
+
+    ret = gen_arch_macro(localdata)
+
+    variants = d.getVar("MULTILIB_VARIANTS", True) or ""
+    for item in variants.split():
+        # Load overrides from 'd' to avoid having to reset the value...
+        localdata = d.createCopy()
+        overrides = d.getVar("OVERRIDES", False) + ":virtclass-multilib-" + item
+        localdata.setVar("OVERRIDES", overrides)
+        localdata.setVar("MLPREFIX", item + "-")
+        bb.data.update_data(localdata)
+        ret += gen_arch_macro(localdata)
+    return ret
+
+def gen_arch_macro(d):
+    # Generate shell script to produce the file as part of do_install
+    val  = "mkdir -p ${D}/${distromacrodir}/${TARGET_ARCH}-${TARGET_OS}\n"
+    val += "cat << EOF > ${D}/${distromacrodir}/${TARGET_ARCH}-${TARGET_OS}/macros\n"
+    val += "%_lib               ${baselib}\n"
+    val += "%_libdir            ${libdir}\n"
+    val += "%_localedir         ${localedir}\n"
+    val += "\n"
+    val += "# Toolchain configuration\n"
+    val += "%TOOLCHAIN_OPTIONS  %{nil}\n"
+    val += "%__ar               ${@d.getVar('AR', True).replace('$','%')}\n"
+    val += "%__as               ${@d.getVar('AS', True).replace('$','%')}\n"
+    val += "%__cc               ${@d.getVar('CC', True).replace('$','%')}\n"
+    val += "%__cpp              ${@d.getVar('CPP', True).replace('$','%')}\n"
+    val += "%__cxx              ${@d.getVar('CXX', True).replace('$','%')}\n"
+    val += "%__ld               ${@d.getVar('LD', True).replace('$','%')}\n"
+    val += "%__nm               ${@d.getVar('NM', True).replace('$','%')}\n"
+    val += "%__objcopy          ${@d.getVar('OBJCOPY', True).replace('$','%')}\n"
+    val += "%__objdump          ${@d.getVar('OBJDUMP', True).replace('$','%')}\n"
+    val += "%__ranlib           ${@d.getVar('RANLIB', True).replace('$','%')}\n"
+    val += "%__strip            ${@d.getVar('STRIP', True).replace('$','%')}\n"
+    val += "EOF\n"
+    val += "\n"
+    return d.expand(val)
+
 
 add_native_wrapper() {
         create_wrapper ${D}/${bindir}/rpm \

@@ -418,11 +418,15 @@ class RpmPkgsList(PkgsList):
 
         # Populate deps dictionary for better manipulation
         for line in dependencies.splitlines():
-            pkg, dep = line.split("|")
-            if not pkg in deps:
-                deps[pkg] = list()
-            if not dep in deps[pkg]:
-                deps[pkg].append(dep)
+            try:
+                pkg, dep = line.split("|")
+                if not pkg in deps:
+                    deps[pkg] = list()
+                if not dep in deps[pkg]:
+                    deps[pkg].append(dep)
+            except:
+                # Ignore any other lines they're debug or errors
+                pass
 
         for line in tmp_output.split('\n'):
             if len(line.strip()) == 0:
