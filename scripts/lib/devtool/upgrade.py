@@ -188,9 +188,19 @@ def _extract_new_source(newpv, srctree, no_patch, srcrev, branch, keep_temp, tin
             raise DevtoolError(e)
 
         tmpsrctree = _get_srctree(tmpdir)
+        srctree = os.path.abspath(srctree)
 
-        scrtree = os.path.abspath(srctree)
+        # Delete all sources so we ensure no stray files are left over
+        for item in os.listdir(srctree):
+            if item in ['.git', 'oe-local-files']:
+                continue
+            itempath = os.path.join(srctree, item)
+            if os.path.isdir(itempath):
+                shutil.rmtree(itempath)
+            else:
+                os.remove(itempath)
 
+        # Copy in new ones
         _copy_source_code(tmpsrctree, srctree)
 
         (stdout,_) = __run('git ls-files --modified --others --exclude-standard')
