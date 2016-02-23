@@ -241,14 +241,13 @@ def _extract_new_source(newpv, srctree, no_patch, srcrev, branch, keep_temp, tin
 
 def _create_new_recipe(newpv, md5, sha256, srcrev, srcbranch, workspace, tinfoil, rd):
     """Creates the new recipe under workspace"""
-    crd = rd.createCopy()
 
-    bpn = crd.getVar('BPN', True)
+    bpn = rd.getVar('BPN', True)
     path = os.path.join(workspace, 'recipes', bpn)
     bb.utils.mkdirhier(path)
-    oe.recipeutils.copy_recipe_files(crd, path)
+    oe.recipeutils.copy_recipe_files(rd, path)
 
-    oldpv = crd.getVar('PV', True)
+    oldpv = rd.getVar('PV', True)
     if not newpv:
         newpv = oldpv
     origpath = rd.getVar('FILE', True)
