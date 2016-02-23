@@ -15,13 +15,15 @@ LICENSE = "AGPL-3.0"
 VIRTUAL_NAME ?= "virtual/db"
 RCONFLICTS_${PN} = "db3"
 
+PR = "r1"
+
 # Note, when upgraded to 6.1.x, a patch in RPM will need to be removed to activate db 6.1 support.
 
-SRC_URI = "http://download.oracle.com/berkeley-db/db-${PV}.tar.gz"
-SRC_URI += "file://arm-thumb-mutex_db5.patch;patchdir=.. \
-            file://fix-parallel-build.patch \
-            file://Makefile-let-libso_target-depend-on-bt_rec.patch \
-            file://Makefile-let-libdb-6.0.la-depend-os_map.l.patch;patchdir=.. \
+SRC_URI = "http://download.oracle.com/berkeley-db/db-${PV}.tar.gz \
+           file://arm-thumb-mutex_db5.patch \
+           file://fix-parallel-build.patch \
+           file://Makefile-let-libso_target-depend-on-bt_rec.patch \
+           file://Makefile-let-libdb-6.0.la-depend-os_map.l.patch \
            "
 
 SRC_URI[md5sum] = "ad28eb86ad3203b5422844db179c585b"
@@ -31,9 +33,7 @@ SRC_URI[sha256sum] = "608e4b1cf390e9bf54c0ef00c5bd9ca76d36e2261b9f4d33d54516f3f6
 UPSTREAM_CHECK_REGEX = "db-(?P<pver>\d+\.\d+(\.\d+)?).tar"
 UPSTREAM_CHECK_URI = "http://www.oracle.com/technetwork/products/berkeleydb/downloads/index-082944.html"
 
-LIC_FILES_CHKSUM = "file://../LICENSE;md5=1ec8b0b17cc31513fe35ab10716f8490"
-
-inherit autotools
+LIC_FILES_CHKSUM = "file://LICENSE;md5=1ec8b0b17cc31513fe35ab10716f8490"
 
 # Put virtual/db in any appropriate provider of a
 # relational database, use it as a dependency in
@@ -44,13 +44,7 @@ inherit autotools
 # to select the correct db in the build (distro) .conf
 PROVIDES += "${VIRTUAL_NAME}"
 
-# bitbake isn't quite clever enough to deal with sleepycat,
-# the distribution sits in the expected directory, but all
-# the builds must occur from a sub-directory.  The following
-# persuades bitbake to go to the right place
-S = "${WORKDIR}/db-${PV}/dist"
-B = "${WORKDIR}/db-${PV}/build_unix"
-SPDX_S = "${WORKDIR}/db-${PV}"
+inherit autotools
 
 # The executables go in a separate package - typically there
 # is no need to install these unless doing real database
@@ -59,7 +53,6 @@ inherit lib_package
 
 PACKAGES =+ "${PN}-cxx"
 FILES_${PN}-cxx = "${libdir}/*cxx*so"
-
 
 # The dev package has the .so link (as in db3) and the .a's -
 # it is therefore incompatible (cannot be installed at the
@@ -74,6 +67,17 @@ DB6_CONFIG ?= "--enable-o_direct --disable-cryptography --disable-queue --disabl
 
 EXTRA_OECONF = "${DB6_CONFIG} --enable-shared --enable-cxx --with-sysroot"
 
+# Cancel the site stuff - it's set for db3 and destroys the configure.
+CONFIG_SITE = ""
+
+AUTOTOOLS_SCRIPT_PATH = "${S}/dist"
+
+do_configure() {
+	cd ${B}
+	gnu-configize --force ${AUTOTOOLS_SCRIPT_PATH}
+	oe_runconf
+}
+
 # Override the MUTEX setting here, the POSIX library is
 # the default - "POSIX/pthreads/library".
 # Don't ignore the nice SWP instruction on the ARM:
@@ -83,20 +87,11 @@ MUTEX = ""
 MUTEX_arm = "${ARM_MUTEX}"
 MUTEX_armeb = "${ARM_MUTEX}"
 EXTRA_OECONF += "${MUTEX}"
-EXTRA_OEMAKE_class-target = "LIBTOOL=${STAGING_BINDIR_CROSS}/${HOST_SYS}-libtool"
-
-# Cancel the site stuff - it's set for db3 and destroys the
-# configure.
-CONFIG_SITE = ""
-do_configure() {
-	gnu-configize --force ${S}
-	export STRIP="true"
-	oe_runconf
-}
+EXTRA_OEMAKE += "STRIP=true"
 
 do_compile_prepend() {
-	sed -i -e 's|hardcode_into_libs=yes|hardcode_into_libs=no|' \
-		${B}/libtool
+	# Stop libtool adding RPATHs
+	sed -i -e 's|hardcode_into_libs=yes|hardcode_into_libs=no|' ${B}/libtool
 }
 
 do_install_append() {
@@ -117,6 +112,8 @@ do_install_append() {
 	chown -R root:root ${D}
 }
 
+# libdb isn't versioned in the typical manner (libdb-6.0.so is the full library
+# name) so skip these checks.
 INSANE_SKIP_${PN} = "dev-so"
 INSANE_SKIP_${PN}-cxx = "dev-so"
 

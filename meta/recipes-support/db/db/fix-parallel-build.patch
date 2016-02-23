@@ -6,8 +6,8 @@ Upstream-Status: Pending
 
 Signed-off-by: Martin Jansa <Martin.Jansa@gmail.com>
 
---- dist.orig/Makefile.in	2012-05-11 19:57:48.000000000 +0200
-+++ dist/Makefile.in	2013-10-31 18:17:11.875532522 +0100
+--- db/dist.orig/Makefile.in	2012-05-11 19:57:48.000000000 +0200
++++ db/dist/Makefile.in	2013-10-31 18:17:11.875532522 +0100
 @@ -1034,7 +1034,7 @@
  	    db_recover@o@ util_sig@o@ $(DEF_LIB) $(LIBS)
  	$(POSTLINK) $@

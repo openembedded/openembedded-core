@@ -17,8 +17,8 @@ Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
 
 diff --git a/Makefile.in b/Makefile.in
 index e451f70..0a42375 100644
---- a/Makefile.in
-+++ b/Makefile.in
+--- db/dist/Makefile.in
++++ db/dist/Makefile.in
 @@ -863,7 +863,7 @@ $(libdb_version): $(C_OBJS)
  	$(LN) -s $(libdb_version) $(libdb)
  
