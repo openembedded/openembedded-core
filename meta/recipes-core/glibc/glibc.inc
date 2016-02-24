@@ -8,19 +8,15 @@ PATH_prepend = "${STAGING_BINDIR_TOOLCHAIN}.${STAGINGCC}:"
 
 TOOLCHAIN_OPTIONS = " --sysroot=${STAGING_DIR_TCBOOTSTRAP}"
 
-# glibc can't be built without optimization, if someone tries to compile an
-# entire image as -O0, break with fatal.
 python () {
-    if bb.utils.contains("SELECTED_OPTIMIZATION", "-O", "x", "", d) == "x":
-        bb.note("glibc can't be built with -O, -O -Wno-error will be used instead.")
-        d.appendVar("SELECTED_OPTIMIZATION", " -Wno-error")
-    elif bb.utils.contains("SELECTED_OPTIMIZATION", "-O0", "x", "", d) == "x":
-        bb.fatal("glibc can't be built with -O0, using -O1 -Wno-error or -O1 instead.")
-    elif bb.utils.contains("SELECTED_OPTIMIZATION", "-Os", "x", "", d) == "x":
-        bb.note("glibc can't be built with -Os, -Os -Wno-error will be used instead.")
-        d.appendVar("SELECTED_OPTIMIZATION", " -Wno-error")
-    elif bb.utils.contains("SELECTED_OPTIMIZATION", "-O1", "x", "", d) == "x":
-        bb.note("glibc can't be built with -O1, -O1 -Wno-error will be used instead.")
+    opt_effective = "-O"
+    for opt in d.getVar('SELECTED_OPTIMIZATION', True).split():
+        if opt in ("-O0", "-O", "-O1", "-O2", "-O3", "-Os"):
+            opt_effective = opt
+    if opt_effective == "-O0":
+        bb.fatal("%s can't be built with %s, try -O1 instead" % (d.getVar('PN', True), opt_effective))
+    if opt_effective in ("-O", "-O1", "-Os"):
+        bb.note("%s doesn't build cleanly with %s, adding -Wno-error to SELECTED_OPTIMIZATION" % (d.getVar('PN', True), opt_effective))
         d.appendVar("SELECTED_OPTIMIZATION", " -Wno-error")
 }
 
