@@ -62,8 +62,6 @@ DISK_SIGNATURE ?= "${DISK_SIGNATURE_GENERATED}"
 SYSLINUX_ROOT ?= "root=/dev/sda2"
 SYSLINUX_TIMEOUT ?= "10"
 
-IS_VM = '${@bb.utils.contains_any("IMAGE_FSTYPES", ["vmdk", "vdi", "qcow2"], "true", "false", d)}'
-
 boot_direct_populate() {
 	dest=$1
 	install -d $dest
@@ -102,12 +100,10 @@ build_boot_dd() {
 		efi_hddimg_populate $HDDDIR
 	fi
 
-	if [ "${IS_VM}" = "true" ]; then
-		if [ "x${AUTO_SYSLINUXMENU}" = "x1" ] ; then
-			install -m 0644 ${STAGING_DIR}/${MACHINE}/usr/share/syslinux/vesamenu.c32 $HDDDIR/${SYSLINUXDIR}/
-			if [ "x${SYSLINUX_SPLASH}" != "x" ] ; then
-				install -m 0644 ${SYSLINUX_SPLASH} $HDDDIR/${SYSLINUXDIR}/splash.lss
-			fi
+	if [ "x${AUTO_SYSLINUXMENU}" = "x1" ] ; then
+		install -m 0644 ${STAGING_DIR}/${MACHINE}/usr/share/syslinux/vesamenu.c32 $HDDDIR/${SYSLINUXDIR}/
+		if [ "x${SYSLINUX_SPLASH}" != "x" ] ; then
+			install -m 0644 ${SYSLINUX_SPLASH} $HDDDIR/${SYSLINUXDIR}/splash.lss
 		fi
 	fi
 
