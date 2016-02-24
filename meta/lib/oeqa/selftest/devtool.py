@@ -1095,14 +1095,18 @@ class DevtoolTests(DevtoolBase):
     def test_devtool_upgrade(self):
         # Check preconditions
         self.assertTrue(not os.path.exists(self.workspacedir), 'This test cannot be run with a workspace directory under the build directory')
+        self.track_for_cleanup(self.workspacedir)
+        self.add_command_to_tearDown('bitbake-layers remove-layer */workspace')
         # Check parameters
         result = runCmd('devtool upgrade -h')
         for param in 'recipename srctree --version -V --branch -b --keep-temp --no-patch'.split():
             self.assertIn(param, result.output)
         # For the moment, we are using a real recipe.
-        recipe='devtool-upgrade'
-        version='0.2'
+        recipe = 'devtool-upgrade-test1'
+        version = '1.6.0'
+        oldrecipefile = get_bb_var('FILE', recipe)
         tempdir = tempfile.mkdtemp(prefix='devtoolqa')
+        self.track_for_cleanup(tempdir)
         # Check that recipe is not already under devtool control
         result = runCmd('devtool status')
         self.assertNotIn(recipe, result.output)
@@ -1110,22 +1114,27 @@ class DevtoolTests(DevtoolBase):
         # we are downgrading instead of upgrading.
         result = runCmd('devtool upgrade %s %s -V %s' % (recipe, tempdir, version))
         # Check if srctree at least is populated
-        self.assertTrue(len(os.listdir(tempdir)) > 0, 'scrtree (%s) should be populated with new (%s) source code' % (tempdir, version))
-        # Check new recipe folder is present
-        self.assertTrue(os.path.exists(os.path.join(self.workspacedir,'recipes',recipe)), 'Recipe folder should exist')
+        self.assertTrue(len(os.listdir(tempdir)) > 0, 'srctree (%s) should be populated with new (%s) source code' % (tempdir, version))
+        # Check new recipe subdirectory is present
+        self.assertTrue(os.path.exists(os.path.join(self.workspacedir, 'recipes', recipe, '%s-%s' % (recipe, version))), 'Recipe folder should exist')
         # Check new recipe file is present
-        self.assertTrue(os.path.exists(os.path.join(self.workspacedir,'recipes',recipe,"%s_%s.bb" % (recipe,version))), 'Recipe folder should exist')
+        newrecipefile = os.path.join(self.workspacedir, 'recipes', recipe, '%s_%s.bb' % (recipe, version))
+        self.assertTrue(os.path.exists(newrecipefile), 'Recipe file should exist after upgrade')
         # Check devtool status and make sure recipe is present
         result = runCmd('devtool status')
         self.assertIn(recipe, result.output)
         self.assertIn(tempdir, result.output)
+        # Check recipe got changed as expected
+        with open(oldrecipefile + '.upgraded', 'r') as f:
+            desiredlines = f.readlines()
+        with open(newrecipefile, 'r') as f:
+            newlines = f.readlines()
+        self.assertEqual(desiredlines, newlines)
         # Check devtool reset recipe
         result = runCmd('devtool reset %s -n' % recipe)
         result = runCmd('devtool status')
         self.assertNotIn(recipe, result.output)
-        self.track_for_cleanup(tempdir)
-        self.track_for_cleanup(self.workspacedir)
-        self.add_command_to_tearDown('bitbake-layers remove-layer */workspace')
+        self.assertFalse(os.path.exists(os.path.join(self.workspacedir, 'recipes', recipe)), 'Recipe directory should not exist after resetting')
 
     @testcase(1352)
     def test_devtool_layer_plugins(self):
