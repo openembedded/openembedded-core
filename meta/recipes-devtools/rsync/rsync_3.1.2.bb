@@ -26,3 +26,5 @@ do_configure_prepend () {
 do_configure_append () {
 	cp -f ${S}/configure ${S}/configure.sh
 }
+
+BBCLASSEXTEND = "native"
