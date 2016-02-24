@@ -26,8 +26,8 @@ SRC_URI_append_libc-musl = "\
 UPSTREAM_CHECK_URI = "http://ftp.mozilla.org/pub/nspr/releases/"
 UPSTREAM_CHECK_REGEX = "v(?P<pver>\d+(\.\d+)+)/"
 
-SRC_URI[md5sum] = "4f24b2fb88ca03b5d6d6931d6a67ef9a"
-SRC_URI[sha256sum] = "cb320a9eee7028275ac0fce7adc39dee36f14f02fd8432fce1b7e1aa5e3685c2"
+SRC_URI[md5sum] = "0de760c1e00a92e180e611cf06ce9589"
+SRC_URI[sha256sum] = "e0b10a1e569153668ff8bdea6c7e491b389fab69c2f18285a1ebf7c2ea4269de"
 
 S = "${WORKDIR}/nspr-${PV}/nspr"
 
