@@ -349,6 +349,7 @@ def upgrade(args, config, basepath, workspace):
                        config.workspace_path, rd)
     standard._add_md5(config, pn, af)
     logger.info('Upgraded source extracted to %s' % srctree)
+    logger.info('New recipe is %s' % rf)
     return 0
 
 def register_commands(subparsers, context):
