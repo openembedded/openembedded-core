@@ -23,11 +23,20 @@ PRETTY_NAME = "${DISTRO_NAME} ${VERSION}"
 BUILD_ID ?= "${DATETIME}"
 BUILD_ID[vardepsexclude] = "DATETIME"
 
+def sanitise_version(ver):
+    # VERSION_ID should be (from os-release(5)):
+    #    lower-case string (mostly numeric, no spaces or other characters
+    #    outside of 0-9, a-z, ".", "_" and "-")
+    ret = ver.replace('+', '-').replace(' ','_')
+    return ret.lower()
+
 python do_compile () {
     import shutil
     with open(d.expand('${B}/os-release'), 'w') as f:
         for field in d.getVar('OS_RELEASE_FIELDS', True).split():
             value = d.getVar(field, True)
+            if value and field == 'VERSION_ID':
+                value = sanitise_version(value)
             if value:
                 f.write('{0}="{1}"\n'.format(field, value))
 }
