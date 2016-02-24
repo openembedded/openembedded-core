@@ -23,7 +23,9 @@ PE = "2"
 PV = "2.7.1+git${SRCPV}"
 
 SRC_URI = "git://git.lttng.org/lttng-ust.git;branch=stable-2.7 \
-           file://lttng-ust-doc-examples-disable.patch"
+           file://lttng-ust-doc-examples-disable.patch \
+           file://lttng-ust-add-support-for-aarch64_be.patch \
+          "
 
 S = "${WORKDIR}/git"
 
