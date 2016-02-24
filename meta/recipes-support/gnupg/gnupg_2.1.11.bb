@@ -15,8 +15,8 @@ SRC_URI = "ftp://ftp.gnupg.org/gcrypt/${BPN}/${BPN}-${PV}.tar.bz2 \
            file://autogen.sh-fix-find-version-for-beta-checking.patch \
           "
 
-SRC_URI[md5sum] = "f0a7cb09fe119f8b82eba7efecd27dc0"
-SRC_URI[sha256sum] = "93bd58d81771a4fa488566e5d2e13b1fd7afc86789401eb41731882abfd26cf9"
+SRC_URI[md5sum] = "873302c475c4c90badb67daac90ebd5d"
+SRC_URI[sha256sum] = "b7b0fb2c8c5d47d7ec916d4a1097c0ddcb94a12bb1c0ac424ad86b1ee316b61a"
 
 EXTRA_OECONF = "--disable-ldap \
 		--disable-ccid-driver \
