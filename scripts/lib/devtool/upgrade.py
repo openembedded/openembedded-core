@@ -286,13 +286,14 @@ def _create_new_recipe(newpv, md5, sha256, srcrev, srcbranch, workspace, tinfoil
         if changed:
             newvalues['SRC_URI'] = ' '.join(new_src_uri)
 
+    newvalues['PR'] = None
+
     if md5 and sha256:
         newvalues['SRC_URI[md5sum]'] = md5
         newvalues['SRC_URI[sha256sum]'] = sha256
 
-    if newvalues:
-        rd = oe.recipeutils.parse_recipe(fullpath, None, tinfoil.config_data)
-        oe.recipeutils.patch_recipe(rd, fullpath, newvalues)
+    rd = oe.recipeutils.parse_recipe(fullpath, None, tinfoil.config_data)
+    oe.recipeutils.patch_recipe(rd, fullpath, newvalues)
 
     return fullpath
 
