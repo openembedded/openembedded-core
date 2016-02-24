@@ -792,9 +792,8 @@ def package_qa_walk(warnfuncs, errorfuncs, skip, package, d):
             elf = oe.qa.ELFFile(path)
             try:
                 elf.open()
-            except (IOError, ValueError):
+            except (IOError, oe.qa.NotELFFileError):
                 # IOError can happen if the packaging control files disappear,
-                # ValueError means the file isn't an ELF.
                 elf = None
             for func in warnfuncs:
                 func(path, package, d, elf, warnings)

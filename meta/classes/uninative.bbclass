@@ -80,7 +80,7 @@ python uninative_changeinterp () {
             elf = oe.qa.ELFFile(f)
             try:
                 elf.open()
-            except ValueError:
+            except oe.qa.NotELFFileError:
                 continue
 
             #bb.warn("patchelf-uninative --set-interpreter %s %s" % (d.getVar("UNINATIVE_LOADER", True), f))
