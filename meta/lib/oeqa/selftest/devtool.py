@@ -1136,6 +1136,42 @@ class DevtoolTests(DevtoolBase):
         self.assertNotIn(recipe, result.output)
         self.assertFalse(os.path.exists(os.path.join(self.workspacedir, 'recipes', recipe)), 'Recipe directory should not exist after resetting')
 
+    def test_devtool_upgrade_git(self):
+        # Check preconditions
+        self.assertTrue(not os.path.exists(self.workspacedir), 'This test cannot be run with a workspace directory under the build directory')
+        self.track_for_cleanup(self.workspacedir)
+        self.add_command_to_tearDown('bitbake-layers remove-layer */workspace')
+        recipe = 'devtool-upgrade-test2'
+        commit = '6cc6077a36fe2648a5f993fe7c16c9632f946517'
+        oldrecipefile = get_bb_var('FILE', recipe)
+        tempdir = tempfile.mkdtemp(prefix='devtoolqa')
+        self.track_for_cleanup(tempdir)
+        # Check that recipe is not already under devtool control
+        result = runCmd('devtool status')
+        self.assertNotIn(recipe, result.output)
+        # Check upgrade
+        result = runCmd('devtool upgrade %s %s -S %s' % (recipe, tempdir, commit))
+        # Check if srctree at least is populated
+        self.assertTrue(len(os.listdir(tempdir)) > 0, 'srctree (%s) should be populated with new (%s) source code' % (tempdir, commit))
+        # Check new recipe file is present
+        newrecipefile = os.path.join(self.workspacedir, 'recipes', recipe, os.path.basename(oldrecipefile))
+        self.assertTrue(os.path.exists(newrecipefile), 'Recipe file should exist after upgrade')
+        # Check devtool status and make sure recipe is present
+        result = runCmd('devtool status')
+        self.assertIn(recipe, result.output)
+        self.assertIn(tempdir, result.output)
+        # Check recipe got changed as expected
+        with open(oldrecipefile + '.upgraded', 'r') as f:
+            desiredlines = f.readlines()
+        with open(newrecipefile, 'r') as f:
+            newlines = f.readlines()
+        self.assertEqual(desiredlines, newlines)
+        # Check devtool reset recipe
+        result = runCmd('devtool reset %s -n' % recipe)
+        result = runCmd('devtool status')
+        self.assertNotIn(recipe, result.output)
+        self.assertFalse(os.path.exists(os.path.join(self.workspacedir, 'recipes', recipe)), 'Recipe directory should not exist after resetting')
+
     @testcase(1352)
     def test_devtool_layer_plugins(self):
         """Test that devtool can use plugins from other layers.
