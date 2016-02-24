@@ -281,6 +281,7 @@ build_hddimg() {
 
 python do_bootimg() {
     if d.getVar("PCBIOS", True) == "1":
+        syslinux_set_vars(d, 'LIVE')
         bb.build.exec_func('build_syslinux_cfg', d)
     if d.getVar("EFI", True) == "1":
         bb.build.exec_func('build_efi_cfg', d)

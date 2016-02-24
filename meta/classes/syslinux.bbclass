@@ -20,8 +20,6 @@
 do_bootimg[depends] += "${MLPREFIX}syslinux:do_populate_sysroot \
                         syslinux-native:do_populate_sysroot"
 
-SYSLINUXCFG  = "${S}/syslinux.cfg"
-
 ISOLINUXDIR = "/isolinux"
 SYSLINUXDIR = "/"
 # The kernel has an internal default console, which you can override with
@@ -29,6 +27,9 @@ SYSLINUXDIR = "/"
 SYSLINUX_DEFAULT_CONSOLE ?= ""
 SYSLINUX_SERIAL ?= "0 115200"
 SYSLINUX_SERIAL_TTY ?= "console=ttyS0,115200"
+SYSLINUX_PROMPT ?= "0"
+SYSLINUX_TIMEOUT ?= "50"
+AUTO_SYSLINUXMENU ?= "1"
 ISO_BOOTIMG = "isolinux/isolinux.bin"
 ISO_BOOTCAT = "isolinux/boot.cat"
 MKISOFS_OPTIONS = "-no-emul-boot -boot-load-size 4 -boot-info-table"
@@ -36,6 +37,18 @@ APPEND_prepend = " ${SYSLINUX_ROOT} "
 
 # Need UUID utility code.
 inherit fs-uuid
+
+# Some of the vars for vm and live image are conflicted, this function
+# is used for fixing the problem.
+def syslinux_set_vars(d, suffix):
+    vars = ['SYSLINUX_ROOT', 'SYSLINUX_CFG', 'LABELS', 'INITRD']
+    for var in vars:
+        var_with_suffix = var + '_' + suffix
+        if d.getVar(var, True):
+            bb.warn('Found potential conflicted var %s, please use %s rather than %s' % \
+                (var, var_with_suffix, var))
+        elif d.getVar(var_with_suffix, True):
+            d.setVar(var, d.getVar(var_with_suffix, True))
 
 syslinux_populate() {
 	DEST=$1
@@ -45,7 +58,7 @@ syslinux_populate() {
 	install -d ${DEST}${BOOTDIR}
 
 	# Install the config files
-	install -m 0644 ${SYSLINUXCFG} ${DEST}${BOOTDIR}/${CFGNAME}
+	install -m 0644 ${SYSLINUX_CFG} ${DEST}${BOOTDIR}/${CFGNAME}
 	if [ "${AUTO_SYSLINUXMENU}" = 1 ] ; then
 		install -m 0644 ${STAGING_DATADIR}/syslinux/vesamenu.c32 ${DEST}${BOOTDIR}/vesamenu.c32
 		install -m 0444 ${STAGING_DATADIR}/syslinux/libcom32.c32 ${DEST}${BOOTDIR}/libcom32.c32
@@ -96,9 +109,9 @@ python build_syslinux_cfg () {
         bb.debug(1, "No labels, nothing to do")
         return
 
-    cfile = d.getVar('SYSLINUXCFG', True)
+    cfile = d.getVar('SYSLINUX_CFG', True)
     if not cfile:
-        raise bb.build.FuncFailed('Unable to read SYSLINUXCFG')
+        raise bb.build.FuncFailed('Unable to read SYSLINUX_CFG')
 
     try:
         cfgfile = file(cfile, 'w')
