@@ -8,16 +8,15 @@ LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=eb723b61539feef013de476e68b5c50a"
 
 SRC_URI = "http://gentoo.osuosl.org/distfiles/pax-utils-${PV}.tar.xz \
-           file://fix-configure-failure.patch \
 "
 
-SRC_URI[md5sum] = "1bfbb5237881f0c5e476b2f7ffcc00d5"
-SRC_URI[sha256sum] = "796860fbd48c5f811e699e8492dc1110459bad0a62efa8d346b74a4f6f556414"
+SRC_URI[md5sum] = "bc3614322eaf88f167a608ae85d6b207"
+SRC_URI[sha256sum] = "2945b3e4df2e0dc95800bfbd3d88ab2243b2ee4ff064bbfc75734f6d9d986a89"
 
 RDEPENDS_${PN} += "bash"
 
 do_configure_prepend() {
-    touch ${S}/NEWS ${S}/AUTHORS ${S}/ChangeLog
+    touch ${S}/NEWS ${S}/AUTHORS ${S}/ChangeLog ${S}/README
 }
 
 do_install() {
