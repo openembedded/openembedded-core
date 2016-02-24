@@ -58,7 +58,6 @@ inherit ${EFI_CLASS}
 
 # Get the build_syslinux_cfg() function from the syslinux class
 
-AUTO_SYSLINUXCFG = "1"
 DISK_SIGNATURE ?= "${DISK_SIGNATURE_GENERATED}"
 SYSLINUX_ROOT ?= "root=/dev/sda2"
 SYSLINUX_TIMEOUT ?= "10"
