@@ -40,12 +40,17 @@ def get_sdk_install_targets(d):
     if d.getVar('SDK_EXT_TYPE', True) != 'minimal':
         sdk_install_targets = d.getVar('SDK_TARGETS', True)
 
+        depd = d.getVar('BB_TASKDEPDATA', False)
+        for v in depd.itervalues():
+            if v[1] == 'do_image_complete':
+                if v[0] not in sdk_install_targets:
+                    sdk_install_targets += ' {}'.format(v[0])
+
     if d.getVar('SDK_INCLUDE_PKGDATA', True) == '1':
         sdk_install_targets += ' meta-world-pkgdata:do_allpackagedata'
 
     return sdk_install_targets
 
-SDK_INSTALL_TARGETS = "${@get_sdk_install_targets(d)}"
 OE_INIT_ENV_SCRIPT ?= "oe-init-build-env"
 
 # The files from COREBASE that you want preserved in the COREBASE copied
@@ -344,11 +349,14 @@ SDK_POST_INSTALL_COMMAND_task-populate-sdk-ext = "${sdk_ext_postinst}"
 
 SDK_POSTPROCESS_COMMAND_prepend_task-populate-sdk-ext = "copy_buildsystem; install_tools; "
 
+SDK_INSTALL_TARGETS = ""
 fakeroot python do_populate_sdk_ext() {
     # FIXME hopefully we can remove this restriction at some point, but uninative
     # currently forces this upon us
     if d.getVar('SDK_ARCH', True) != d.getVar('BUILD_ARCH', True):
         bb.fatal('The extensible SDK can currently only be built for the same architecture as the machine being built on - SDK_ARCH is set to %s (likely via setting SDKMACHINE) which is different from the architecture of the build machine (%s). Unable to continue.' % (d.getVar('SDK_ARCH', True), d.getVar('BUILD_ARCH', True)))
+
+    d.setVar('SDK_INSTALL_TARGETS', get_sdk_install_targets(d))
 
     bb.build.exec_func("do_populate_sdk", d)
 }
