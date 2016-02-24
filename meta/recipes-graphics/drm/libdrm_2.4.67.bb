@@ -12,13 +12,11 @@ DEPENDS = "libpthread-stubs udev libpciaccess"
 
 SRC_URI = "http://dri.freedesktop.org/libdrm/${BP}.tar.bz2 \
            file://installtests.patch \
-           file://0001-tests-kms-steal-crtc-Include-sys-select.h.patch \
-           file://detect.patch \
            file://fix_O_CLOEXEC_undeclared.patch \
           "
 
-SRC_URI[md5sum] = "c6809c48538d6e5999588832045ff014"
-SRC_URI[sha256sum] = "79cb8e988749794edfb2d777b298d5292eff353bbbb71ed813589e61d2bc2d76"
+SRC_URI[md5sum] = "b844c6af34e613ebf52f80b3cd8d7055"
+SRC_URI[sha256sum] = "ee5b71e1113be37544d0752681c12f040c01f782e2933df7d7bc21fd0d10cebe"
 
 inherit autotools pkgconfig
 
