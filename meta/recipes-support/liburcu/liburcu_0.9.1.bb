@@ -10,6 +10,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=e548d28737289d75a8f1e01ba2fd7825 \
 SRC_URI = " \
 	http://lttng.org/files/urcu/userspace-rcu-${PV}.tar.bz2 \
 	file://0001-Support-for-NIOS2-architecture.patch \
+        file://0002-Support-for-aarch64_be.patch \
 	"
 
 SRC_URI[md5sum] = "124eaeea06863271c0bdf2a0cc1d8e4b"
