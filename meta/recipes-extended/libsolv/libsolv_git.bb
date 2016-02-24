@@ -7,10 +7,10 @@ LIC_FILES_CHKSUM = "file://LICENSE.BSD;md5=62272bd11c97396d4aaf1c41bc11f7d8"
 
 DEPENDS = "expat zlib"
 
-PV = "0.6.17+git${SRCPV}"
+PV = "0.6.19"
 
 SRC_URI = "git://github.com/openSUSE/libsolv.git"
-SRCREV = "6ea235973e942436c8815dadddf2c318a8b5ca7d"
+SRCREV = "4c5af401a89858d4cebbfe40c59a0031ff9db5b0"
 UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>\d+(\.\d+)+)"
 
 S = "${WORKDIR}/git"
