@@ -13,7 +13,18 @@ SRC_URI = "git://git.gnome.org/${BPN}"
 
 S = "${WORKDIR}/git"
 
-inherit autotools
+do_configure() {
+	./configure --prefix=${prefix} \
+                    --sysconfdir=${sysconfdir} \
+                    --bindir=${bindir} \
+                    --libdir=${libdir} \
+                    --datadir=${datadir} \
+                    --datarootdir=${datadir}
+}
+
+do_install() {
+	oe_runmake install DESTDIR="${D}"
+}
 
 FILES_${PN} += "${datadir}"
 
