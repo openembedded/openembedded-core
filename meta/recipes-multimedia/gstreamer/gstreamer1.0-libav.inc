@@ -22,6 +22,13 @@ PACKAGECONFIG[yasm] = "--enable-yasm,--disable-yasm,yasm-native"
 GSTREAMER_1_0_DEBUG ?= "--disable-debug"
 
 LIBAV_EXTRA_CONFIGURE = "--with-libav-extra-configure"
+
+LIBAV_EXTRA_CONFIGURE_COMMON_ARG = "--target-os=linux \
+  --cc='${CC}' --as='${CC}' --ld='${CC}' --nm='${NM}' --ar='${AR}' \
+  --ranlib='${RANLIB}' \
+  ${GSTREAMER_1_0_DEBUG} \
+  --cross-prefix='${HOST_PREFIX}'"
+
 LIBAV_EXTRA_CONFIGURE_COMMON = \
 '${LIBAV_EXTRA_CONFIGURE}="${LIBAV_EXTRA_CONFIGURE_COMMON_ARG}"'
 
