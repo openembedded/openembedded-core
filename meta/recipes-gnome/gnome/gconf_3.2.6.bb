@@ -4,8 +4,6 @@ LICENSE = "LGPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=55ca817ccb7d5b5b66355690e9abc605"
 
 DEPENDS = "glib-2.0 dbus dbus-glib libxml2 intltool-native gobject-introspection-stub"
-DEPENDS_class-native = "glib-2.0-native dbus-native dbus-glib-native libxml2-native intltool-native gnome-common-native gobject-introspection-stub-native"
-
 
 inherit gnomebase gtk-doc gettext
 
@@ -43,10 +41,6 @@ do_install_append_class-native() {
 	create_wrapper ${D}/${bindir}/gconftool-2 \
 		GCONF_BACKEND_DIR=${STAGING_LIBDIR_NATIVE}/GConf/2
 }
-
-# disable dbus-x11 when x11 isn't in DISTRO_FEATURES
-RDEPENDS_${PN} += "${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'dbus-x11', '', d)}"
-RDEPENDS_${PN}_class-native = ""
 
 FILES_${PN} += "${libdir}/GConf/* \
                 ${libdir}/gio/*/*.so \
