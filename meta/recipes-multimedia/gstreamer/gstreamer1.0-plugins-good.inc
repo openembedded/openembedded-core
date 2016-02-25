@@ -4,8 +4,6 @@ LICENSE = "GPLv2+ & LGPLv2.1+"
 
 DEPENDS += "gstreamer1.0-plugins-base libcap zlib bzip2"
 
-inherit gettext
-
 PACKAGECONFIG ??= " \
     ${@bb.utils.contains('DISTRO_FEATURES', 'pulseaudio', 'pulseaudio', '', d)} \
     ${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'x11', '', d)} \

@@ -4,8 +4,6 @@ LICENSE = "GPLv2+ & LGPLv2+"
 
 DEPENDS += "iso-codes util-linux zlib"
 
-inherit gettext
-
 PACKAGES_DYNAMIC =+ "^libgst.*"
 
 PACKAGECONFIG ??= " \

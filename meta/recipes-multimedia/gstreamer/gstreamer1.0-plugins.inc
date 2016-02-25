@@ -5,7 +5,7 @@ SECTION = "multimedia"
 
 DEPENDS = "gstreamer1.0 glib-2.0-native"
 
-inherit autotools pkgconfig upstream-version-is-even
+inherit autotools pkgconfig gettext upstream-version-is-even
 
 acpaths = "-I ${S}/common/m4 -I ${S}/m4"
 
