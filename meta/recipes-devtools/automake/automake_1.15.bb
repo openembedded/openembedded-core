@@ -19,7 +19,6 @@ RDEPENDS_${PN} += "\
 RDEPENDS_${PN}_class-native = "autoconf-native hostperl-runtime-native"
 
 SRC_URI += " file://python-libdir.patch \
-            file://py-compile-compile-only-optimized-byte-code.patch \
             file://buildtest.patch \
             file://performance.patch \
             file://new_rt_path_for_test-driver.patch"
