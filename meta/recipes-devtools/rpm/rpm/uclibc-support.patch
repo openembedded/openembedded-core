@@ -1,6 +1,6 @@
 Define the x* wrappers for uclibc as well
 
-Upstream-Status: Pending
+Upstream-Status: Submitted [RPM5 maintainer]
 
 Signed-off-by: Khem Raj <raj.khem@gmail.com>
 

@@ -1,6 +1,6 @@
 Fix errors when building with sasl2 disabled
 
-Upstream-Status: Pending
+Upstream-Status: Submitted [RPM5 maintainer]
 
 Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
 

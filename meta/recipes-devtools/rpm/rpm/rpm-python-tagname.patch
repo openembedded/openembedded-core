@@ -5,7 +5,7 @@ tag.  Without this, any custom tag extensions will be returned in a format
 that the tagNumFromPyObject and related functions like hdr_subscript will
 failed to process.  Usually the failure is error: expected a string or integer
 
-Upstream-Status: Pending
+Upstream-Status: Submitted [RPM5 maintainer]
 
 Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
 

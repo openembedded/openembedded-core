@@ -9,7 +9,7 @@ getent: ELF 32-bit MSB executable, MIPS, N32 MIPS64 [snip]
 
 And "rpm -qp --filecolor" was wrong (it was 1, but should be 4).
 
-Upstream-Status: Pending
+Upstream-Status: Submitted [RPM5 maintainer]
 
 Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
 ---

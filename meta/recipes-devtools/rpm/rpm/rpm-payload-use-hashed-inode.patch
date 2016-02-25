@@ -17,7 +17,7 @@ Patch taken from http://git.pld-linux.org/?p=packages/rpm.git;a=commitdiff;h=105
 
 RP 2014/6/10
 
-Upstream-Status: Pending
+Upstream-Status: Submitted [RPM5 maintainer]
 
 Index: rpm-5.4.14/build/files.c
 ===================================================================

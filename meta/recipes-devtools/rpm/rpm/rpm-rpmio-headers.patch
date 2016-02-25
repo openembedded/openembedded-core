@@ -1,6 +1,6 @@
 Fix a typo in the rpmio Makefile.am
 
-Upstream-Status: Pending
+Upstream-Status: Submitted [RPM5 maintainer]
 
 Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
 

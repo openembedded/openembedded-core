@@ -1,6 +1,6 @@
 [PATCH] define EM_AARCH64
 
-Upstream-Status: pending
+Upstream-Status: Submitted [RPM5 maintainer]
 
 EM_AARCH64 maybe not be defined due to old version elf.h, and lead to
 that debugedit can not work on aarch64 elf object files, since there is

@@ -20,7 +20,7 @@ This caused the system to only permit a binary comparison - "new preferred" or
 else comparison the system will now perform a 'last-in-wins' resolution when
 "neither is preferred".
 
-Upstream-Status: Pending
+Upstream-Status: Submitted [RPM5 maintainer]
 
 Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
 Signed-off-by: Mark Hatle <mark.hatle@windriver.com>

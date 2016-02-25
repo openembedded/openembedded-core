@@ -11,7 +11,7 @@ Note: in all other places a backup copy was used, just not buildid processing.
 Also the process (...) function was modified to verify the data is not
 NULL as well.  This is an extra check and is not strictly necessary.
 
-Upstream-Status: Pending
+Upstream-Status: Submitted [RPM5 maintainer]
 
 Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
 

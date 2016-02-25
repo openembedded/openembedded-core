@@ -3,7 +3,7 @@ configure.ac: Check if the current compiler supports the transactions
 Some distributions appear to have compilers that are built without support
 for transactions, even though they are GCC 4.7 or newer.
 
-Upstream-Status: Pending
+Upstream-Status: Submitted [RPM5 maintainer]
 
 Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
 

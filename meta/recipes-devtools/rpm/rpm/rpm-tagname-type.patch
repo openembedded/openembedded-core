@@ -5,7 +5,7 @@ special 'filenames' item is value.  This adds a similar patch to the
 _tagType to return the proper type, otherwise it comes back as a simple
 RPM_STRING_ARRAY_TYPE which limits the response to the first element.
 
-Upstream-Status: Pending
+Upstream-Status: Submitted [RPM5 maintainer]
 
 Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
 

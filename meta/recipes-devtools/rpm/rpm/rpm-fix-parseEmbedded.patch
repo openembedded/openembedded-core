@@ -1,6 +1,6 @@
 Fix an issue where parseEmbedded is not defined, but is still used.
 
-Upstream-Status: Pending
+Upstream-Status: Submitted [RPM5 maintainer]
 
 Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
 

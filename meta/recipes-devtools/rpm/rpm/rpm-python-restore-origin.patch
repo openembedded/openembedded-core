@@ -2,7 +2,7 @@ Fix an issue where the PACKAGEORIGIN is not properly stored.
 
 Restore the rpmtsCallback fdSetOpen call and related code.
 
-Upstream-Status: Pending
+Upstream-Status: Submitted [RPM5 maintainer]
 
 Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
 

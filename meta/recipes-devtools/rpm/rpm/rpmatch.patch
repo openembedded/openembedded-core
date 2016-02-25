@@ -5,7 +5,7 @@ This uses an existing configure check.
 This is needed for uclibc since it does not have the above function
 implemented.
 
-Upstream-Status: Pending
+Upstream-Status: Submitted [RPM5 maintainer]
 
 Signed-off-by: Khem Raj <raj.khem@gmail.com>
 
