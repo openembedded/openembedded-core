@@ -12,6 +12,12 @@ acpaths = "-I ${S}/common/m4 -I ${S}/m4"
 LIBV = "1.0"
 require gst-plugins-package.inc
 
+# Orc enables runtime JIT compilation of data processing routines from Orc
+# bytecode to SIMD instructions for various architectures (currently SSE, MMX,
+# MIPS, Altivec and NEON are supported).
+
+GSTREAMER_ORC ?= "orc"
+
 PACKAGECONFIG[debug] = "--enable-debug,--disable-debug"
 PACKAGECONFIG[orc] = "--enable-orc,--disable-orc,orc orc-native"
 PACKAGECONFIG[valgrind] = "--enable-valgrind,--disable-valgrind,valgrind"

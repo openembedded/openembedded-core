@@ -13,11 +13,12 @@ PACKAGECONFIG_GL ?= "${@bb.utils.contains('DISTRO_FEATURES', 'opengl', 'gles2', 
 # gtk is not in the PACKAGECONFIG variable by default until
 # the transition to gtk+3 is finished
 PACKAGECONFIG ??= " \
+    ${GSTREAMER_ORC} \
     ${PACKAGECONFIG_GL} \
     ${@bb.utils.contains('DISTRO_FEATURES', 'bluetooth', 'bluez', '', d)} \
     ${@bb.utils.contains('DISTRO_FEATURES', 'directfb', 'directfb', '', d)} \
     ${@bb.utils.contains('DISTRO_FEATURES', 'wayland', 'wayland', '', d)} \
-    bz2 curl dash dtls hls neon orc rsvg sbc smoothstreaming sndfile uvch264 \
+    bz2 curl dash dtls hls neon rsvg sbc smoothstreaming sndfile uvch264 \
 "
 
 PACKAGECONFIG[assrender]       = "--enable-assrender,--disable-assrender,libass"
