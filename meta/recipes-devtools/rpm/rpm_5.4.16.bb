@@ -173,6 +173,68 @@ rpm_macros_class-nativesdk = "%{_usrlibrpm}/macros:%{_usrlibrpm}/${DISTRO}/macro
 
 # sqlite lua tcl augeas nss gcrypt neon xz xar keyutils perl selinux
 
+# Set the digest algorithm used for verifying file integrity
+# If this value changes, and two different packages have different values
+# the "same file" validation (two packages have a non-conflict file)
+# will fail.  This may lead to upgrade problems.  You should treat this
+# value as a distribution wide setting, and only change it when you intend
+# a full system upgrade!
+#
+# Defined file digest algorithm values (note: not all are available!):
+#       1       MD5 (legacy RPM default)
+#       2       SHA1
+#       3       RIPEMD-160
+#       5       MD2
+#       6       TIGER-192
+#       8       SHA256
+#       9       SHA384
+#       10      SHA512
+#       11      SHA224
+#       104     MD4
+#       105     RIPEMD-128
+#       106     CRC-32
+#       107     ADLER-32
+#       108     CRC-64 (ECMA-182 polynomial, untested uint64_t problems)
+#       109     Jenkins lookup3.c hashlittle()
+#       111     RIPEMD-256
+#       112     RIPEMD-320
+#       188     BLAKE2B
+#       189     BLAKE2BP
+#       190     BLAKE2S
+#       191     BLAKE2SP
+RPM_FILE_DIGEST_ALGO ?= "1"
+
+# All packages build with RPM5 contain a non-repudiable signature.
+# The purpose of this signature is not to show authenticity of a package,
+# but instead act as a secondary package wide validation that shows it
+# wasn't damaged by accident in transport.  (When later you sign the package, 
+# this signature may or may not be replaced as there are three signature 
+# slots, one for DSA/RSA, one for ECSDA, and one reserved.)
+#
+# There is a known issue w/ RSA signatures that if they start with an 0x00
+# the signing and validation may fail.
+#
+# The following is the list of choices for the non-rpudiable signature
+# (note: not all of these are implemented):
+#       DSA             (default)
+#       RSA             (implies SHA1)
+#       ECDSA           (implies SHA256)
+#       DSA/SHA1
+#       DSA/SHA224
+#       DSA/SHA256
+#       DSA/SHA384
+#       DSA/SHA512
+#       RSA/SHA1
+#       RSA/SHA224
+#       RSA/SHA256
+#       RSA/SHA384
+#       RSA/SHA512
+#       ECDSA/SHA224    (using NIST P-224)
+#       ECDSA/SHA256    (using NIST P-256)
+#       ECDSA/SHA384    (using NIST P-384)
+#       ECDSA/SHA512    (using NIST P-521)
+RPM_SELF_SIGN_ALGO ?= "DSA"
+
 # Note: perl and sqlite w/o db specified does not currently work.
 #       tcl, augeas, nss, gcrypt, xar and keyutils support is untested.
 PACKAGECONFIG ??= "db bzip2 zlib popt openssl libelf python"
@@ -208,10 +270,17 @@ PACKAGECONFIG[db] = "${WITH_DB},--without-db,db,"
 
 PACKAGECONFIG[sqlite] = "--with-sqlite,--without-sqlite,sqlite3,"
 
+# This switch simply disables external beecrypt, RPM5 always uses beecrypt
+# for base64 processing and various digest algorithms.
+# Beecrypt is only the preferred crypto engine if it's the only engine enabled.
 PACKAGECONFIG[beecrypt] = "--with-beecrypt=external,--with-beecrypt=internal,beecrypt,"
-PACKAGECONFIG[openssl] = "--with-openssl,--without-openssl,openssl,"
-PACKAGECONFIG[nss] = "--with-nss,--without-nss,nss,"
-PACKAGECONFIG[gcrypt] = "--with-gcrypt,--without-gcrypt,gcrypt,"
+
+# --with-usecrypto= setting defined the item as the preferred system
+# crypto engine, which will take priority over the included beecrypt
+PACKAGECONFIG[openssl] = "--with-openssl --with-usecrypto=openssl,--without-openssl,openssl,"
+PACKAGECONFIG[nss] = "--with-nss --with-usecrypto=nss,--without-nss,nss,"
+PACKAGECONFIG[gcrypt] = "--with-gcrypt --with-usecrypto=gcrypt,--without-gcrypt,gcrypt,"
+
 PACKAGECONFIG[keyutils] = "--with-keyutils,--without-keyutils,keyutils,"
 PACKAGECONFIG[libelf] = "--with-libelf,--without-libelf,elfutils,"
 
@@ -455,8 +524,10 @@ do_configure() {
 }
 
 do_install_append() {
-	# Preserve the previous default of DSA self-signed pkgs
-	sed -i -e 's,%_build_sign.*,%_build_sign DSA,' ${D}/${libdir}/rpm/macros.rpmbuild
+	# Configure -distribution wide- package crypto settings
+	# If these change, effectively all packages have to be upgraded!
+	sed -i -e 's,%_build_file_digest_algo.*,%_build_sign ${RPM_FILE_DIGEST_ALGO},' ${D}/${libdir}/rpm/macros.rpmbuild
+	sed -i -e 's,%_build_sign.*,%_build_sign ${RPM_SELF_SIGN_ALGO},' ${D}/${libdir}/rpm/macros.rpmbuild
 
 	sed -i -e 's,%__scriptlet_requires,#%%__scriptlet_requires,' ${D}/${libdir}/rpm/macros
 	sed -i -e 's,%__perl_provides,#%%__perl_provides,' ${D}/${libdir}/rpm/macros ${D}/${libdir}/rpm/macros.d/*
