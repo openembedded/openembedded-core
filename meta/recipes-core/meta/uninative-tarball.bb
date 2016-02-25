@@ -13,7 +13,7 @@ TOOLCHAIN_HOST_TASK = "\
 
 INHIBIT_DEFAULT_DEPS = "1"
 
-TOOLCHAIN_OUTPUTNAME ?= "${BUILD_ARCH}-nativesdk-libc"
+TOOLCHAIN_OUTPUTNAME ?= "${SDK_ARCH}-nativesdk-libc"
 
 RDEPENDS = "${TOOLCHAIN_HOST_TASK}"
 
@@ -43,9 +43,11 @@ fakeroot create_sdk_files() {
 fakeroot tar_sdk() {
 	mkdir -p ${SDK_DEPLOY}
 	cd ${SDK_OUTPUT}/${SDKPATH}
-	mv sysroots/${SDK_SYS} ./${BUILD_SYS}
+
+	DEST="./${SDK_ARCH}-${SDK_OS}"
+	mv sysroots/${SDK_SYS} $DEST
 	rm sysroots -rf
-	patchelf --set-interpreter ${@''.join('a' for n in xrange(1024))} ./${BUILD_SYS}/usr/bin/patchelf
-	mv ./${BUILD_SYS}/usr/bin/patchelf ./${BUILD_SYS}/usr/bin/patchelf-uninative
+	patchelf --set-interpreter ${@''.join('a' for n in xrange(1024))} $DEST/usr/bin/patchelf
+	mv $DEST/usr/bin/patchelf $DEST/usr/bin/patchelf-uninative
 	tar ${SDKTAROPTS} -c -j --file=${SDK_DEPLOY}/${TOOLCHAIN_OUTPUTNAME}.tar.bz2 .
 }
