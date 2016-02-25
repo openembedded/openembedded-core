@@ -10,6 +10,8 @@ DEPENDS = "glib-2.0 glib-2.0-native libcap libxml2 bison-native flex-native"
 
 inherit autotools pkgconfig gettext upstream-version-is-even
 
+PACKAGECONFIG ??= ""
+
 PACKAGECONFIG[check] = "--enable-check,--disable-check"
 PACKAGECONFIG[debug] = "--enable-debug,--disable-debug"
 PACKAGECONFIG[tests] = "--enable-tests,--disable-tests"
