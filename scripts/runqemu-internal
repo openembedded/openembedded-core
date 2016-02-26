@@ -28,7 +28,6 @@
 #   ROOTFS - the disk image file to use
 #
 
-
 mem_size=-1
 
 #Get rid of <> and get the contents of extra qemu running params
@@ -720,18 +719,32 @@ elif [ "$NUM_SERIAL_OPTS" = "1" ]; then
     SCRIPT_QEMU_EXTRA_OPT="$SCRIPT_QEMU_EXTRA_OPT $SECOND_SERIAL_OPT"
 fi
 
-
 echo "Running $QEMU..."
 # -no-reboot is a mandatory option - see bug #100
 if [ "$FSTYPE" = "vmdk" -o "$FSTYPE" = "hddimg" -o "$FSTYPE" = "hdddirect" ]; then
-    echo $QEMUBIN $VM $QEMUOPTIONS $SERIALOPTS -no-reboot $SCRIPT_QEMU_OPT $SCRIPT_QEMU_EXTRA_OPT
-    LD_PRELOAD="$GL_LD_PRELOAD" $QEMUBIN $VM $QEMUOPTIONS $SERIALOPTS -no-reboot $SCRIPT_QEMU_OPT $SCRIPT_QEMU_EXTRA_OPT
+    # Check root=/dev/sdX or root=/dev/vdX
+    [ ! -e "$VM" ] && error "VM image is not found!"
+    if grep -q 'root=/dev/sd' $VM; then
+        echo "Using scsi drive"
+        VM_DRIVE="-drive if=none,id=hd,file=$VM -device virtio-scsi-pci,id=scsi -device scsi-hd,drive=hd"
+    elif grep -q 'root=/dev/hd' $VM; then
+        echo "Using ide drive"
+        VM_DRIVE="$VM"
+    else
+        echo "Using virtio block drive"
+        VM_DRIVE="-drive if=virtio,file=$VM"
+    fi
+    QEMU_FIRE="$QEMUBIN $VM_DRIVE $QEMUOPTIONS $SERIALOPTS -no-reboot $SCRIPT_QEMU_OPT $SCRIPT_QEMU_EXTRA_OPT"
+    echo $QEMU_FIRE
+    LD_PRELOAD="$GL_LD_PRELOAD" $QEMU_FIRE
 elif [ "$FSTYPE" = "iso" -o "$FSTYPE" = "wic" ]; then
-    echo $QEMUBIN $QEMUOPTIONS $SERIALOPTS -no-reboot $SCRIPT_QEMU_OPT $SCRIPT_QEMU_EXTRA_OPT
-    LD_PRELOAD="$GL_LD_PRELOAD" $QEMUBIN $QEMUOPTIONS $SERIALOPTS -no-reboot $SCRIPT_QEMU_OPT $SCRIPT_QEMU_EXTRA_OPT
+    QEMU_FIRE="$QEMUBIN $QEMUOPTIONS $SERIALOPTS -no-reboot $SCRIPT_QEMU_OPT $SCRIPT_QEMU_EXTRA_OPT"
+    echo $QEMU_FIRE
+    LD_PRELOAD="$GL_LD_PRELOAD" $QEMU_FIRE
 else
-    echo $QEMUBIN -kernel $KERNEL $QEMUOPTIONS $SLIRP_CMD $SERIALOPTS -no-reboot $SCRIPT_QEMU_OPT $SCRIPT_QEMU_EXTRA_OPT --append '"'$KERNCMDLINE $SCRIPT_KERNEL_OPT'"'
-    LD_PRELOAD="$GL_LD_PRELOAD" $QEMUBIN -kernel $KERNEL $QEMUOPTIONS $SERIALOPTS -no-reboot $SCRIPT_QEMU_OPT $SCRIPT_QEMU_EXTRA_OPT --append "$KERNCMDLINE $SCRIPT_KERNEL_OPT"
+    QEMU_FIRE="$QEMUBIN -kernel $KERNEL $QEMUOPTIONS $SLIRP_CMD $SERIALOPTS -no-reboot $SCRIPT_QEMU_OPT $SCRIPT_QEMU_EXTRA_OPT"
+    echo $QEMU_FIRE -append '"'$KERNCMDLINE $SCRIPT_KERNEL_OPT'"'
+    LD_PRELOAD="$GL_LD_PRELOAD" $QEMU_FIRE -append "$KERNCMDLINE $SCRIPT_KERNEL_OPT"
 fi
 ret=$?
 if [ "$SLIRP_ENABLED" != "yes" ]; then
