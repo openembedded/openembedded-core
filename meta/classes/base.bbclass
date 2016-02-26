@@ -577,6 +577,9 @@ python () {
         elif scheme == "osc":
             d.appendVarFlag('do_fetch', 'depends', ' osc-native:do_populate_sysroot')
 
+        elif scheme == "npm":
+            d.appendVarFlag('do_fetch', 'depends', ' nodejs-native:do_populate_sysroot')
+
         # *.lz4 should DEPEND on lz4-native for unpacking
         if path.endswith('.lz4'):
             d.appendVarFlag('do_unpack', 'depends', ' lz4-native:do_populate_sysroot')
