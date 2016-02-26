@@ -13,14 +13,14 @@ RCONFLICTS_${PN} = "proxy-libintl"
 SRC_URI = "${GNU_MIRROR}/gettext/gettext-${PV}.tar.gz \
 	   file://parallel.patch \
 	   file://add-with-bisonlocaledir.patch \
-          "
+"
+
+SRC_URI[md5sum] = "6d1447f8c5c45c329371ef4bfe7d79a5"
+SRC_URI[sha256sum] = "ed4b4c19bd3a3034eb6769500a3592ff616759ef43cf30586dbb7a17c9dd695d"
 
 PACKAGECONFIG[msgcat-curses] = "--with-libncurses-prefix=${STAGING_LIBDIR}/..,--disable-curses,ncurses,"
 
 LDFLAGS_prepend_libc-uclibc = " -lrt -lpthread "
-
-SRC_URI[md5sum] = "6d1447f8c5c45c329371ef4bfe7d79a5"
-SRC_URI[sha256sum] = "ed4b4c19bd3a3034eb6769500a3592ff616759ef43cf30586dbb7a17c9dd695d"
 
 inherit autotools texinfo
 
@@ -49,6 +49,7 @@ acpaths = '-I ${S}/gettext-runtime/m4 \
 do_install_append_libc-musl () {
 	rm -f ${D}${libdir}/charset.alias
 	rm -f ${D}${includedir}/libintl.h
+	rm -f ${D}${libdir}/libintl.la
 }
 
 # these lack the .x behind the .so, but shouldn't be in the -dev package
