@@ -44,6 +44,15 @@ PACKAGECONFIG ??= ""
 PACKAGECONFIG[grub-mount] = "--enable-grub-mount,--disable-grub-mount,fuse"
 PACKAGECONFIG[device-mapper] = "--enable-device-mapper,--disable-device-mapper,lvm2"
 
+# grub2 creates its own set of -nostdinc / -isystem / -ffreestanding CFLAGS and
+# OE's default BUILD_CFLAGS (assigned to CFLAGS for native builds) etc, conflict
+# with that. Note that since BUILD_CFLAGS etc are not used by grub2 target
+# builds, it's safe to clear them unconditionally for both target and native.
+BUILD_CPPFLAGS = ""
+BUILD_CFLAGS = ""
+BUILD_CXXFLAGS = ""
+BUILD_LDFLAGS = ""
+
 do_configure_prepend() {
 	# The grub2 configure script uses variables such as TARGET_CFLAGS etc
 	# for its own purposes. Remove the OE versions from the environment to
