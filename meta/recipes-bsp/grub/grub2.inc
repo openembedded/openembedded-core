@@ -31,7 +31,7 @@ SRC_URI = "ftp://ftp.gnu.org/gnu/grub/grub-${PV}.tar.gz \
            file://0001-Remove-direct-_llseek-code-and-require-long-filesyst.patch \
             "
 
-DEPENDS = "flex-native bison-native xz"
+DEPENDS = "flex-native bison-native"
 
 SRC_URI[md5sum] = "e927540b6eda8b024fb0391eeaa4091c"
 SRC_URI[sha256sum] = "65b39a0558f8c802209c574f4d02ca263a804e8a564bc6caf1cd0fd3b3cc11e3"
