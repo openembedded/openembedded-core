@@ -48,7 +48,9 @@ CVEPATCHES = "\
         file://CVE-2015-1781-resolv-nss_dns-dns-host.c-buffer-overf.patch \
 	file://CVE-2015-1472-wscanf-allocates-too-little-memory.patch \
         file://CVE-2015-7547.patch \
-    "
+        file://CVE-2015-8777.patch \
+"
+
 LIC_FILES_CHKSUM = "file://LICENSES;md5=e9a558e243b36d3209f380deb394b213 \
       file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
       file://posix/rxspencer/COPYRIGHT;md5=dc5485bb394a13b2332ec1c785f5d83a \
