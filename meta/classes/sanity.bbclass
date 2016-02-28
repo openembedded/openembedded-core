@@ -147,8 +147,8 @@ is a good way to visualise the changes.""" % (current_lconf, lconf_version)
             with open(bblayers_fn, "w") as f:
                 f.write(''.join(lines))
             return
-
-        sanity_conf_update(bblayers_fn, lines, 'LCONF_VERSION', "7")
+        current_lconf += 1
+        sanity_conf_update(bblayers_fn, lines, 'LCONF_VERSION', current_lconf)
         return
 
     raise NotImplementedError(failmsg)
