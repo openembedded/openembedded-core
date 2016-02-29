@@ -77,7 +77,7 @@ python oecore_update_bblayers() {
     lconf_version = int(d.getVar('LAYER_CONF_VERSION', True))
 
     failmsg = """Your version of bblayers.conf has the wrong LCONF_VERSION (has %s, expecting %s).
-Please compare the your file against bblayers.conf.sample and merge any changes before continuing.
+Please compare your file against bblayers.conf.sample and merge any changes before continuing.
 "meld conf/bblayers.conf ${COREBASE}/meta*/conf/bblayers.conf.sample" 
 
 is a good way to visualise the changes.""" % (current_lconf, lconf_version)
@@ -132,12 +132,18 @@ is a good way to visualise the changes.""" % (current_lconf, lconf_version)
         # Handle rename of meta-yocto -> meta-poky
         # This marks the start of separate version numbers but code is needed in OE-Core
         # for the migration, one last time.
-        layers = d.getVar('BBLAYERS', True)
+        layers = d.getVar('BBLAYERS', True).split()
+	layers = [ os.path.basename(path) for path in layers ]
         if 'meta-yocto' in layers:
-            index, meta_yocto_line = sanity_conf_find_line('.*meta-yocto.*\n', lines)
-            if meta_yocto_line:
-                lines[index] = meta_yocto_line.replace('meta-yocto', 'meta-poky')
-            else:
+            found = False
+            while True:
+                index, meta_yocto_line = sanity_conf_find_line(r'.*meta-yocto[\'"\s\n]', lines)
+                if meta_yocto_line:
+                    lines[index] = meta_yocto_line.replace('meta-yocto', 'meta-poky')
+                    found = True
+                else:
+                    break
+            if not found:
                 raise NotImplementedError(failmsg)
             index, meta_yocto_line = sanity_conf_find_line('LCONF_VERSION.*\n', lines)
             if meta_yocto_line:
