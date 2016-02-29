@@ -313,6 +313,9 @@ sdk_ext_postinst() {
 	cd $target_sdk_dir
 	printf "buildtools\ny" | ./*buildtools-nativesdk-standalone* > /dev/null || ( printf 'ERROR: buildtools installation failed\n' ; exit 1 )
 
+	# Delete the buildtools tar file since it won't be used again
+	rm ./*buildtools-nativesdk-standalone*.sh -f
+
 	# Make sure when the user sets up the environment, they also get
 	# the buildtools-tarball tools in their path.
 	env_setup_script="$target_sdk_dir/environment-setup-${REAL_MULTIMACH_TARGET_SYS}"
