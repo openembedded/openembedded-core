@@ -11,6 +11,10 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/strace/strace-${PV}.tar.xz \
            file://use-asm-sgidefs.h.patch \
            file://0001-arc-metag-nios2-or1k-tile-fix-build.patch \
            file://Makefile-ptest.patch \
+           file://0001-tests-scm_rights.c-use-libtests.patch \
+           file://0001-scm_rights-fd.test-rewrite-without-fork.patch \
+           file://0001-Move-gcc-compat-macros-to-gcc_compat.h.patch \
+           file://0001-tests-introduce-libtests.patch \
            file://run-ptest \
           "
 
