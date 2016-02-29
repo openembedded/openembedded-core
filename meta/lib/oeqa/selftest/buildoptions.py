@@ -102,12 +102,38 @@ class SanityOptionsTest(oeSelfTest):
         self.assertTrue(line and line.startswith("WARNING:"), msg=res.output)
 
     @testcase(278)
-    def test_sanity_userspace_dependency(self):
-        self.write_config('WARN_QA_append = " unsafe-references-in-binaries unsafe-references-in-scripts"')
-        bitbake("-ccleansstate gzip nfs-utils")
-        res = bitbake("gzip nfs-utils")
+    def test_sanity_unsafe_script_references(self):
+        self.write_config('WARN_QA_append = " unsafe-references-in-scripts"')
+
+        bitbake("-ccleansstate gzip")
+        res = bitbake("gzip")
+        line = self.getline(res, "QA Issue: gzip")
+        self.assertFalse(line, "WARNING: QA Issue: gzip message is present in bitbake's output and shouldn't be: %s" % res.output)
+
+        self.append_config("""
+do_install_append_pn-gzip () {
+	echo "\n${bindir}/test" >> ${D}${bindir}/zcat
+}
+""")
+        res = bitbake("gzip")
         line = self.getline(res, "QA Issue: gzip")
         self.assertTrue(line and line.startswith("WARNING:"), "WARNING: QA Issue: gzip message is not present in bitbake's output: %s" % res.output)
+
+    def test_sanity_unsafe_binary_references(self):
+        self.write_config('WARN_QA_append = " unsafe-references-in-binaries"')
+
+        bitbake("-ccleansstate nfs-utils")
+        #res = bitbake("nfs-utils")
+        # FIXME when nfs-utils passes this test
+        #line = self.getline(res, "QA Issue: nfs-utils")
+        #self.assertFalse(line, "WARNING: QA Issue: nfs-utils message is present in bitbake's output and shouldn't be: %s" % res.output)
+
+#        self.append_config("""
+#do_install_append_pn-nfs-utils () {
+#	echo "\n${bindir}/test" >> ${D}${base_sbindir}/osd_login
+#}
+#""")
+        res = bitbake("nfs-utils")
         line = self.getline(res, "QA Issue: nfs-utils")
         self.assertTrue(line and line.startswith("WARNING:"), "WARNING: QA Issue: nfs-utils message is not present in bitbake's output: %s" % res.output)
 
