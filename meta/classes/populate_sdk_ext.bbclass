@@ -143,7 +143,12 @@ python copy_buildsystem () {
         f.write('# this configuration provides, it is strongly suggested that you set\n')
         f.write('# up a proper instance of the full build system and use that instead.\n\n')
 
-        f.write('LCONF_VERSION = "%s"\n\n' % d.getVar('LCONF_VERSION', False))
+        # LCONF_VERSION may not be set, for example when using meta-poky
+        # so don't error if it isn't found
+        lconf_version = d.getVar('LCONF_VERSION', False)
+        if lconf_version is not None:
+            f.write('LCONF_VERSION = "%s"\n\n' % lconf_version)
+
         f.write('BBPATH = "$' + '{TOPDIR}"\n')
         f.write('SDKBASEMETAPATH = "$' + '{TOPDIR}"\n')
         f.write('BBLAYERS := " \\\n')
