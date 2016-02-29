@@ -380,7 +380,7 @@ tail -c +18 $tmpname | head -c -4
                             if not parent:
                                 parent = '.'
                             # May run outside of the current directory, so do not assume that .git exists.
-                            filter_branch.extend(['--tree-filter', 'mkdir -p .git/tmptree && mv $(ls -1 -a | grep -v -e ^.git$ -e ^.$ -e ^..$) .git/tmptree && mkdir -p %s && mv .git/tmptree %s' % (parent, dest_dir)])
+                            filter_branch.extend(['--tree-filter', 'mkdir -p .git/tmptree && find . -mindepth 1 -maxdepth 1 ! -name .git -print0 | xargs -0 -I SOURCE mv SOURCE .git/tmptree && mkdir -p %s && mv .git/tmptree %s' % (parent, dest_dir)])
                         filter_branch.append('HEAD')
                         runcmd(filter_branch)
                         runcmd('git update-ref -d refs/original/refs/heads/%s' % name)
