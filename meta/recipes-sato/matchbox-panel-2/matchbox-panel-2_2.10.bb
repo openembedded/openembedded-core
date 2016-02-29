@@ -5,25 +5,23 @@ BUGTRACKER = "http://bugzilla.yoctoproject.org/"
 LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f \
                     file://matchbox-panel/mb-panel.h;endline=10;md5=0b7db28f4b6863fb853d0467e590019a \
-                    file://applets/startup/startup.c;endline=22;md5=b0a64fbef3097d79f8264e6907a98f03"
+                    file://applets/startup/startup.c;endline=22;md5=7cbcea60b667f609495222faf3e07917"
 
-DEPENDS = "gnome-common gtk+ startup-notification dbus dbus-glib dbus-glib-native"
+DEPENDS = "gnome-common gtk+3 startup-notification dbus dbus-glib dbus-glib-native"
 DEPENDS += " ${@bb.utils.contains("MACHINE_FEATURES", "acpi", "libacpi", "",d)}"
 DEPENDS += " ${@bb.utils.contains("MACHINE_FEATURES", "apm", "apmd", "",d)}"
 
 # The startup-notification requires x11 in DISTRO_FEATURES
 REQUIRED_DISTRO_FEATURES = "x11"
 
-SRCREV = "26a3a67b41c50e0ae163d8fe86ccf7a0f0a671ae"
-PV = "2.0+git${SRCPV}"
+# SRCREV tagged 2.10
+SRCREV = "145a8075c66952dad9ab5f36d944c78c1ae3f4ab"
 
 RPROVIDES_${PN} = "matchbox-panel"
 RREPLACES_${PN} = "matchbox-panel"
 RCONFLICTS_${PN} = "matchbox-panel"
 
-SRC_URI = "git://git.yoctoproject.org/${BPN} \
-           file://0001-showdesktop-Make-sure-active-state-is-initialized.patch \
-           file://silence-warnings.patch"
+SRC_URI = "git://git.yoctoproject.org/${BPN}"
 
 EXTRA_OECONF = "--enable-startup-notification --enable-dbus"
 EXTRA_OECONF += " ${@bb.utils.contains("MACHINE_FEATURES", "acpi", "--with-battery=acpi", "",d)}"
@@ -33,7 +31,8 @@ S = "${WORKDIR}/git"
 
 FILES_${PN} += "${libdir}/matchbox-panel/*.so \
                 ${datadir}/matchbox-panel/brightness/*.png \
-                ${datadir}/matchbox-panel/startup/*.png "
+                ${datadir}/matchbox-panel/startup/*.png \
+                ${datadir}/icons/"
 FILES_${PN}-dev += "${libdir}/matchbox-panel/*.la"
 
 inherit autotools pkgconfig distro_features_check
