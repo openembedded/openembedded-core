@@ -13,13 +13,16 @@ SECTION = "console/utils"
 LICENSE = "GPLv3"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=b17cea54743435ab2a581c237bea294a"
 
-DEPENDS = "ghostscript-native tiff jpeg fontconfig cups"
-DEPENDS_class-native = ""
+DEPENDS = "ghostscript-native tiff jpeg fontconfig cups libpng"
+DEPENDS_class-native = "libpng-native"
 
 SRC_URI_BASE = "http://downloads.ghostscript.com/public/ghostscript-${PV}.tar.gz \
                 file://ghostscript-9.15-parallel-make.patch \
                 file://ghostscript-9.16-Werror-return-type.patch \
                 file://png_mak.patch \
+                file://0001-Bug-696497-Fix-support-for-building-with-no-jbig2-de.patch \
+                file://0002-Bug-696497-part-2-fix-support-for-building-with-a-JP.patch \
+                file://do-not-check-local-libpng-source.patch \
 "
 
 SRC_URI = "${SRC_URI_BASE} \
@@ -34,8 +37,8 @@ SRC_URI_class-native = "${SRC_URI_BASE} \
                         file://base-genht.c-add-a-preprocessor-define-to-allow-fope.patch \
                         "
 
-SRC_URI[md5sum] = "829319325bbdb83f5c81379a8f86f38f"
-SRC_URI[sha256sum] = "746d77280cca8afdd3d4c2c1389e332ed9b0605bd107bcaae1d761b061d1a68d"
+SRC_URI[md5sum] = "33a47567d7a591c00a253caddd12a88a"
+SRC_URI[sha256sum] = "5fc93079749a250be5404c465943850e3ed5ffbc0d5c07e10c7c5ee8afbbdb1b"
 
 EXTRA_OECONF = "--without-x --with-system-libtiff --without-jbig2dec \
                 --with-fontpath=${datadir}/fonts \
