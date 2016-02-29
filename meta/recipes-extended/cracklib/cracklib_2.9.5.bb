@@ -29,8 +29,7 @@ do_install_append_class-target() {
 
 do_install_append() {
 	src_dir="${D}${base_libdir}/${PYTHON_DIR}/site-packages"
-	rm -f $src_dir/*.pyo
-	rm -f $src_dir/test_cracklib.py
+	rm -f $src_dir/test_cracklib.py*
 
 	if [ "${base_libdir}" != "${libdir}" ] ; then
 	   # Move python files from ${base_libdir} to ${libdir} since used --libdir=${base_libdir}
@@ -42,9 +41,7 @@ do_install_append() {
 
 BBCLASSEXTEND = "native nativesdk"
 
-FILES_${PN}-python = "${PYTHON_SITEPACKAGES_DIR}/cracklib.py \
-	${PYTHON_SITEPACKAGES_DIR}/_cracklib.so \
-    "
-FILES_${PN}-staticdev += "${PYTHON_SITEPACKAGES_DIR}/_cracklib.a \
-	${PYTHON_SITEPACKAGES_DIR}/_cracklib.la \
-    "
+FILES_${PN}-python = "${PYTHON_SITEPACKAGES_DIR}/cracklib.py* \
+	${PYTHON_SITEPACKAGES_DIR}/_cracklib.*"
+
+FILES_${PN}-staticdev += "${PYTHON_SITEPACKAGES_DIR}/_cracklib.a"
