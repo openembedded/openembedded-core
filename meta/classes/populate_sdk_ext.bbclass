@@ -440,8 +440,9 @@ do_populate_sdk_ext[rdepends] += "${@' '.join([x + ':do_build' for x in d.getVar
 do_populate_sdk_ext[vardeps] += "copy_buildsystem \
                                  sdk_ext_postinst"
 
-do_populate_sdk_ext[file-checksums] += "${COREBASE}/meta/files/toolchain-shar-relocate.sh:True \
-                                        ${COREBASE}/meta/files/toolchain-shar-extract.sh:True \
-                                        ${COREBASE}/scripts/gen-lockedsig-cache:True"
+# Since any change in the metadata of any layer should cause a rebuild of the
+# sdk(since the layers are put in the sdk) set the task to nostamp so it
+# always runs.
+do_populate_sdk_ext[nostamp] = "1"
 
 addtask populate_sdk_ext after do_sdk_depends
