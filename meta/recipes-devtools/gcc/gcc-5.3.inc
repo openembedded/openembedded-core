@@ -103,6 +103,7 @@ LTO = "--enable-lto"
 EXTRA_OECONF_BASE = "\
     ${LTO} \
     --enable-libssp \
+    --enable-libitm \
     --disable-bootstrap \
     --disable-libmudflap \
     --with-system-zlib \
@@ -118,6 +119,7 @@ EXTRA_OECONF_BASE = "\
 EXTRA_OECONF_INITIAL = "\
     --disable-libmudflap \
     --disable-libgomp \
+    --disable-libitm \
     --disable-libquadmath \
     --with-system-zlib \
     --disable-lto \
