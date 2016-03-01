@@ -14,7 +14,7 @@ SECTION = "network"
 # python scripts are under GPLv2+
 LICENSE = "GPLv2+ & LGPLv2.1+"
 
-DEPENDS = "expat libcap libdaemon dbus glib-2.0"
+DEPENDS = "expat libcap libdaemon glib-2.0"
 
 SRC_URI = "https://github.com/lathiat/avahi/releases/download/v${PV}/avahi-${PV}.tar.gz \
           file://00avahi-autoipd \
@@ -22,6 +22,9 @@ SRC_URI = "https://github.com/lathiat/avahi/releases/download/v${PV}/avahi-${PV}
           file://initscript.patch \
           "
 UPSTREAM_CHECK_URI = "https://github.com/lathiat/avahi/releases/"
+
+PACKAGECONFIG ??= "dbus"
+PACKAGECONFIG[dbus] = "--enable-dbus,--disable-dbus,dbus"
 
 USERADD_PACKAGES = "avahi-daemon avahi-autoipd"
 USERADD_PARAM_avahi-daemon = "--system --home /var/run/avahi-daemon \
@@ -125,7 +128,7 @@ do_install() {
 	rm -rf ${D}${localstatedir}/run
 	rmdir --ignore-fail-on-non-empty ${D}${localstatedir}
 	rm -rf ${D}${datadir}/dbus-1/interfaces
-	rmdir --ignore-fail-on-non-empty ${D}${datadir}/dbus-1
+	test -d ${D}${datadir}/dbus-1 && rmdir --ignore-fail-on-non-empty ${D}${datadir}/dbus-1
 	rm -rf ${D}${libdir}/avahi
 
 	install -d ${D}${sysconfdir}/udhcpc.d
