@@ -415,6 +415,7 @@ pkg_prerm_${PN} () {
 	ln -s ${base_bindir}/busybox $tmpdir/sed
 	ln -s ${base_bindir}/busybox $tmpdir/sort
 	ln -s ${base_bindir}/busybox $tmpdir/grep
+	ln -s ${base_bindir}/busybox $tmpdir/tail
 	export PATH=$PATH:$tmpdir
 }
 
