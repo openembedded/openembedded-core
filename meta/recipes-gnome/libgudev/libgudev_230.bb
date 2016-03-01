@@ -10,6 +10,5 @@ RCONFLICTS_${PN} = "systemd (<= 220)"
 LICENSE = "LGPLv2.1"
 LIC_FILES_CHKSUM = "file://COPYING;md5=4fbd65380cdd255951079008b364516c"
 
-inherit gnomebase distro_features_check
+inherit gnomebase
 
-REQUIRED_DISTRO_FEATURES = "systemd"
