@@ -12,7 +12,10 @@ SRC_URI = "http://snapshot.debian.org/archive/debian/20050312T000000Z/pool/main/
            file://net-tools-config.make \
            file://ifconfig-interface-0-del-IP-will-remove-the-aliased-.patch \
            file://musl-fixes.patch \
-	   "
+           file://net-tools-1.60-sctp1.patch \
+           file://net-tools-1.60-sctp2-quiet.patch \
+           file://net-tools-1.60-sctp3-addrs.patch \
+          "
 
 # for this package we're mostly interested in tracking debian patches,
 # and not in the upstream version where all development has effectively stopped
