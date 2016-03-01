@@ -19,7 +19,7 @@ prelink_image () {
 
 	# We need a prelink conf on the filesystem, add one if it's missing
 	if [ ! -e ${IMAGE_ROOTFS}${sysconfdir}/prelink.conf ]; then
-		cp ${STAGING_DIR_NATIVE}${sysconfdir_native}/prelink.conf \
+		cp ${STAGING_ETCDIR_NATIVE}/prelink.conf \
 			${IMAGE_ROOTFS}${sysconfdir}/prelink.conf
 		dummy_prelink_conf=true;
 	else
@@ -36,7 +36,7 @@ prelink_image () {
 	dynamic_loader=$(linuxloader)
 
 	# prelink!
-	${STAGING_DIR_NATIVE}${sbindir_native}/prelink --root ${IMAGE_ROOTFS} -amR -N -c ${sysconfdir}/prelink.conf --dynamic-linker $dynamic_loader
+	${STAGING_SBINDIR_NATIVE}/prelink --root ${IMAGE_ROOTFS} -amR -N -c ${sysconfdir}/prelink.conf --dynamic-linker $dynamic_loader
 
 	# Remove the prelink.conf if we had to add it.
 	if [ "$dummy_prelink_conf" = "true" ]; then
