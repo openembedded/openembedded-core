@@ -26,8 +26,6 @@ of the following environment variables (in any order):
   KERNEL - the kernel image file to use
   ROOTFS - the rootfs image file or nfsroot directory to use
   MACHINE - the machine name (optional, autodetected from KERNEL filename if unspecified)
-  RAMFS - boot a ramfs-based image
-  ISO - boot an ISO image
   Simplified QEMU command-line options can be passed with:
     nographic - disables video console
     serial - enables a serial console on /dev/ttyS0
