@@ -133,6 +133,7 @@ def sdk_update(args, config, basepath, workspace):
             logger.debug("Found conf/locked-sigs.inc in %s" % updateserver)
         update_dict = generate_update_dict(new_locked_sig_file_path, old_locked_sig_file_path)
         logger.debug("update_dict = %s" % update_dict)
+        newsdk_path = updateserver
         sstate_dir = os.path.join(newsdk_path, 'sstate-cache')
         if not os.path.exists(sstate_dir):
             logger.error("sstate-cache directory not found under %s" % newsdk_path)
