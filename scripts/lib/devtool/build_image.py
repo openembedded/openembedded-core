@@ -25,6 +25,9 @@ from devtool import exec_build_env_command, setup_tinfoil, parse_recipe, Devtool
 
 logger = logging.getLogger('devtool')
 
+class TargetNotImageError(Exception):
+    pass
+
 def _get_packages(tinfoil, workspace, config):
     """Get list of packages from recipes in the workspace."""
     result = []
@@ -51,6 +54,24 @@ def build_image(args, config, basepath, workspace):
     if not image:
         raise DevtoolError('Unable to determine image to build, please specify one')
 
+    try:
+        if args.add_packages:
+            add_packages = args.add_packages.split(',')
+        else:
+            add_packages = None
+        result, outputdir = build_image_task(config, basepath, workspace, image, add_packages)
+    except TargetNotImageError:
+        if auto_image:
+            raise DevtoolError('Unable to determine image to build, please specify one')
+        else:
+            raise DevtoolError('Specified recipe %s is not an image recipe' % image)
+
+    if result == 0:
+        logger.info('Successfully built %s. You can find output files in %s'
+                    % (image, outputdir))
+    return result
+
+def build_image_task(config, basepath, workspace, image, add_packages=None, task=None, extra_append=None):
     appendfile = os.path.join(config.workspace_path, 'appends',
                               '%s.bbappend' % image)
 
@@ -63,46 +84,60 @@ def build_image(args, config, basepath, workspace):
     rd = parse_recipe(config, tinfoil, image, True)
     if not rd:
         # Error already shown
-        return 1
+        return (1, None)
     if not bb.data.inherits_class('image', rd):
-        if auto_image:
-            raise DevtoolError('Unable to determine image to build, please specify one')
-        else:
-            raise DevtoolError('Specified recipe %s is not an image recipe' % image)
+        raise TargetNotImageError()
 
+    outputdir = None
     try:
-        if workspace or args.add_packages:
-            if args.add_packages:
-                packages = args.add_packages.split(',')
+        if workspace or add_packages:
+            if add_packages:
+                packages = add_packages
             else:
                 packages = _get_packages(tinfoil, workspace, config)
-            if packages:
-                with open(appendfile, 'w') as afile:
+        else:
+            packages = None
+        if not task:
+            if not packages and not add_packages and workspace:
+                logger.warning('No recipes in workspace, building image %s unmodified', image)
+            elif not packages:
+                logger.warning('No packages to add, building image %s unmodified', image)
+
+        if packages or extra_append:
+            bb.utils.mkdirhier(os.path.dirname(appendfile))
+            with open(appendfile, 'w') as afile:
+                if packages:
                     # include packages from workspace recipes into the image
                     afile.write('IMAGE_INSTALL_append = " %s"\n' % ' '.join(packages))
-                    logger.info('Building image %s with the following '
-                                'additional packages: %s', image, ' '.join(packages))
-            else:
-                logger.warning('No packages to add, building image %s unmodified', image)
-        else:
-            logger.warning('No recipes in workspace, building image %s unmodified', image)
+                    if not task:
+                        logger.info('Building image %s with the following '
+                                    'additional packages: %s', image, ' '.join(packages))
+                if extra_append:
+                    for line in extra_append:
+                        afile.write('%s\n' % line)
 
-        deploy_dir_image = tinfoil.config_data.getVar('DEPLOY_DIR_IMAGE', True)
+        if task in ['populate_sdk', 'populate_sdk_ext']:
+            outputdir = rd.getVar('SDK_DEPLOY', True)
+        else:
+            outputdir = rd.getVar('DEPLOY_DIR_IMAGE', True)
 
         tinfoil.shutdown()
 
-        # run bitbake to build image
+        options = ''
+        if task:
+            options += '-c %s' % task
+
+        # run bitbake to build image (or specified task)
         try:
             exec_build_env_command(config.init_path, basepath,
-                                'bitbake %s' % image, watch=True)
+                                   'bitbake %s %s' % (options, image), watch=True)
         except ExecutionError as err:
-            return err.exitcode
+            return (err.exitcode, None)
     finally:
         if os.path.isfile(appendfile):
             os.unlink(appendfile)
+    return (0, outputdir)
 
-    logger.info('Successfully built %s. You can find output files in %s'
-                % (image, deploy_dir_image))
 
 def register_commands(subparsers, context):
     """Register devtool subcommands from the build-image plugin"""

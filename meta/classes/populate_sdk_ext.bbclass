@@ -89,7 +89,14 @@ python copy_buildsystem () {
     # Copy in all metadata layers + bitbake (as repositories)
     buildsystem = oe.copy_buildsystem.BuildSystem('extensible SDK', d)
     baseoutpath = d.getVar('SDK_OUTPUT', True) + '/' + d.getVar('SDKPATH', True)
-    layers_copied = buildsystem.copy_bitbake_and_layers(baseoutpath + '/layers')
+
+    # Determine if we're building a derivative extensible SDK (from devtool build-sdk)
+    derivative = (d.getVar('SDK_DERIVATIVE', True) or '') == '1'
+    if derivative:
+        workspace_name = 'orig-workspace'
+    else:
+        workspace_name = None
+    layers_copied = buildsystem.copy_bitbake_and_layers(baseoutpath + '/layers', workspace_name)
 
     sdkbblayers = []
     corebase = os.path.basename(d.getVar('COREBASE', True))
@@ -158,68 +165,24 @@ python copy_buildsystem () {
         f.write('    "\n')
 
     # Create local.conf
-    local_conf_whitelist = (d.getVar('SDK_LOCAL_CONF_WHITELIST', True) or '').split()
-    local_conf_blacklist = (d.getVar('SDK_LOCAL_CONF_BLACKLIST', True) or '').split()
-    def handle_var(varname, origvalue, op, newlines):
-        if varname in local_conf_blacklist or (origvalue.strip().startswith('/') and not varname in local_conf_whitelist):
-            newlines.append('# Removed original setting of %s\n' % varname)
-            return None, op, 0, True
-        else:
-            return origvalue, op, 0, True
-    varlist = ['[^#=+ ]*']
     builddir = d.getVar('TOPDIR', True)
-    with open(builddir + '/conf/local.conf', 'r') as f:
-        oldlines = f.readlines()
-    (updated, newlines) = bb.utils.edit_metadata(oldlines, varlist, handle_var)
-
-    with open(baseoutpath + '/conf/local.conf', 'w') as f:
-        f.write('# WARNING: this configuration has been automatically generated and in\n')
-        f.write('# most cases should not be edited. If you need more flexibility than\n')
-        f.write('# this configuration provides, it is strongly suggested that you set\n')
-        f.write('# up a proper instance of the full build system and use that instead.\n\n')
-        for line in newlines:
-            if line.strip() and not line.startswith('#'):
-                f.write(line)
-        # Write a newline just in case there's none at the end of the original
-        f.write('\n')
-
-        f.write('INHERIT += "%s"\n\n' % 'uninative')
-        f.write('CONF_VERSION = "%s"\n\n' % d.getVar('CONF_VERSION', False))
-
-        # Some classes are not suitable for SDK, remove them from INHERIT
-        f.write('INHERIT_remove = "%s"\n' % d.getVar('SDK_INHERIT_BLACKLIST', False))
-
-        # Bypass the default connectivity check if any
-        f.write('CONNECTIVITY_CHECK_URIS = ""\n\n')
-
-        # Ensure locked sstate cache objects are re-used without error
-        f.write('SIGGEN_LOCKEDSIGS_CHECK_LEVEL = "none"\n\n')
-
-        # Hide the config information from bitbake output (since it's fixed within the SDK)
-        f.write('BUILDCFG_HEADER = ""\n')
-
-        # Allow additional config through sdk-extra.conf
-        fn = bb.cookerdata.findConfigFile('sdk-extra.conf', d)
-        if fn:
-            with open(fn, 'r') as xf:
-                for line in xf:
-                    f.write(line)
-
-        # If you define a sdk_extraconf() function then it can contain additional config
-        # (Though this is awkward; sdk-extra.conf should probably be used instead)
-        extraconf = (d.getVar('sdk_extraconf', True) or '').strip()
-        if extraconf:
-            # Strip off any leading / trailing spaces
-            for line in extraconf.splitlines():
-                f.write(line.strip() + '\n')
-
-        f.write('require conf/locked-sigs.inc\n')
-
-    if os.path.exists(builddir + '/conf/auto.conf'):
-        with open(builddir + '/conf/auto.conf', 'r') as f:
+    if derivative:
+        shutil.copyfile(builddir + '/conf/local.conf', baseoutpath + '/conf/local.conf')
+    else:
+        local_conf_whitelist = (d.getVar('SDK_LOCAL_CONF_WHITELIST', True) or '').split()
+        local_conf_blacklist = (d.getVar('SDK_LOCAL_CONF_BLACKLIST', True) or '').split()
+        def handle_var(varname, origvalue, op, newlines):
+            if varname in local_conf_blacklist or (origvalue.strip().startswith('/') and not varname in local_conf_whitelist):
+                newlines.append('# Removed original setting of %s\n' % varname)
+                return None, op, 0, True
+            else:
+                return origvalue, op, 0, True
+        varlist = ['[^#=+ ]*']
+        with open(builddir + '/conf/local.conf', 'r') as f:
             oldlines = f.readlines()
         (updated, newlines) = bb.utils.edit_metadata(oldlines, varlist, handle_var)
-        with open(baseoutpath + '/conf/auto.conf', 'w') as f:
+
+        with open(baseoutpath + '/conf/local.conf', 'w') as f:
             f.write('# WARNING: this configuration has been automatically generated and in\n')
             f.write('# most cases should not be edited. If you need more flexibility than\n')
             f.write('# this configuration provides, it is strongly suggested that you set\n')
@@ -227,6 +190,56 @@ python copy_buildsystem () {
             for line in newlines:
                 if line.strip() and not line.startswith('#'):
                     f.write(line)
+            # Write a newline just in case there's none at the end of the original
+            f.write('\n')
+
+            f.write('INHERIT += "%s"\n\n' % 'uninative')
+            f.write('CONF_VERSION = "%s"\n\n' % d.getVar('CONF_VERSION', False))
+
+            # Some classes are not suitable for SDK, remove them from INHERIT
+            f.write('INHERIT_remove = "%s"\n' % d.getVar('SDK_INHERIT_BLACKLIST', False))
+
+            # Bypass the default connectivity check if any
+            f.write('CONNECTIVITY_CHECK_URIS = ""\n\n')
+
+            # Ensure locked sstate cache objects are re-used without error
+            f.write('SIGGEN_LOCKEDSIGS_CHECK_LEVEL = "none"\n\n')
+
+            # Hide the config information from bitbake output (since it's fixed within the SDK)
+            f.write('BUILDCFG_HEADER = ""\n')
+
+            # Allow additional config through sdk-extra.conf
+            fn = bb.cookerdata.findConfigFile('sdk-extra.conf', d)
+            if fn:
+                with open(fn, 'r') as xf:
+                    for line in xf:
+                        f.write(line)
+
+            # If you define a sdk_extraconf() function then it can contain additional config
+            # (Though this is awkward; sdk-extra.conf should probably be used instead)
+            extraconf = (d.getVar('sdk_extraconf', True) or '').strip()
+            if extraconf:
+                # Strip off any leading / trailing spaces
+                for line in extraconf.splitlines():
+                    f.write(line.strip() + '\n')
+
+            f.write('require conf/locked-sigs.inc\n')
+
+    if os.path.exists(builddir + '/conf/auto.conf'):
+        if derivative:
+            shutil.copyfile(builddir + '/conf/auto.conf', baseoutpath + '/conf/auto.conf')
+        else:
+            with open(builddir + '/conf/auto.conf', 'r') as f:
+                oldlines = f.readlines()
+            (updated, newlines) = bb.utils.edit_metadata(oldlines, varlist, handle_var)
+            with open(baseoutpath + '/conf/auto.conf', 'w') as f:
+                f.write('# WARNING: this configuration has been automatically generated and in\n')
+                f.write('# most cases should not be edited. If you need more flexibility than\n')
+                f.write('# this configuration provides, it is strongly suggested that you set\n')
+                f.write('# up a proper instance of the full build system and use that instead.\n\n')
+                for line in newlines:
+                    if line.strip() and not line.startswith('#'):
+                        f.write(line)
 
     # Filter the locked signatures file to just the sstate tasks we are interested in
     excluded_targets = d.getVar('SDK_TARGETS', True)
@@ -253,7 +266,24 @@ python copy_buildsystem () {
                                              lockedsigs_pruned,
                                              lockedsigs_copy)
 
-    if d.getVar('SDK_EXT_TYPE', True) != 'minimal':
+    if d.getVar('SDK_EXT_TYPE', True) == 'minimal':
+        if derivative:
+            # Assume the user is not going to set up an additional sstate
+            # mirror, thus we need to copy the additional artifacts (from
+            # workspace recipes) into the derivative SDK
+            lockedsigs_orig = d.getVar('TOPDIR', True) + '/conf/locked-sigs.inc'
+            if os.path.exists(lockedsigs_orig):
+                lockedsigs_extra = d.getVar('WORKDIR', True) + '/locked-sigs-extra.inc'
+                oe.copy_buildsystem.merge_lockedsigs(None,
+                                                     lockedsigs_orig,
+                                                     lockedsigs_pruned,
+                                                     None,
+                                                     lockedsigs_extra)
+                oe.copy_buildsystem.create_locked_sstate_cache(lockedsigs_extra,
+                                                               d.getVar('SSTATE_DIR', True),
+                                                               sstate_out, d,
+                                                               fixedlsbstring)
+    else:
         oe.copy_buildsystem.create_locked_sstate_cache(lockedsigs_pruned,
                                                        d.getVar('SSTATE_DIR', True),
                                                        sstate_out, d,
