@@ -115,6 +115,7 @@ python externalsrc_configure_prefunc() {
                 # Link already exists, leave it if it points to the right location already
                 if os.readlink(lnkfile) == target:
                     continue
+                os.unlink(lnkfile)
             elif os.path.exists(lnkfile):
                 # File/dir exists with same name as link, just leave it alone
                 continue
