@@ -27,7 +27,7 @@ SRC_URI += "file://find.pl;subdir=${BP}/util/ \
             file://debian/no-rpath.patch \
             file://debian/no-symbolic.patch \
             file://debian/pic.patch \
-            file://debian/version-script.patch \
+            file://debian1.0.2/version-script.patch \
             file://openssl_fix_for_x32.patch \
             file://fix-cipher-des-ede3-cfb1.patch \
             file://openssl-avoid-NULL-pointer-dereference-in-EVP_DigestInit_ex.patch \
@@ -40,8 +40,8 @@ SRC_URI += "file://find.pl;subdir=${BP}/util/ \
             file://configure-musl-target.patch \
            "
 
-SRC_URI[md5sum] = "b3bf73f507172be9292ea2a8c28b659d"
-SRC_URI[sha256sum] = "932b4ee4def2b434f85435d9e3e19ca8ba99ce9a065a61524b429a9d5e9b2e9c"
+SRC_URI[md5sum] = "f3c710c045cdee5fd114feb69feba7aa"
+SRC_URI[sha256sum] = "b784b1b3907ce39abf4098702dade6365522a253ad1552e267a9a0e89594aa33"
 
 PACKAGES =+ "${PN}-engines"
 FILES_${PN}-engines = "${libdir}/ssl/engines/*.so ${libdir}/engines"
