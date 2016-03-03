@@ -77,23 +77,12 @@ fi
 # QEMU_MEMORY has 'M' appended to mem_size
 QEMU_MEMORY="$mem_size"M
 
-# Bug 433: qemuarm cannot use > 256 MB RAM
-if [ "$MACHINE" = "qemuarm" ]; then
-    if [ -z "$mem_size" -o $mem_size -gt 256 ]; then
-        echo "WARNING: qemuarm does not support > 256M of RAM."
-        echo "Changing QEMU_MEMORY to default of 256M."
-        QEMU_MEMORY="256M"
-	mem_size="256"
-        SCRIPT_QEMU_EXTRA_OPT=`echo $SCRIPT_QEMU_EXTRA_OPT | sed -e "s/$mem_set/-m 256/" `
-    fi
-fi
-
 # We need to specify -m <mem_size> to overcome a bug in qemu 0.14.0
 # https://bugs.launchpad.net/ubuntu/+source/qemu-kvm/+bug/584480
-
 if [ -z "$mem_set" ] ; then
   SCRIPT_QEMU_EXTRA_OPT="$SCRIPT_QEMU_EXTRA_OPT -m $mem_size"
 fi
+
 # This file is created when runqemu-gen-tapdevs creates a bank of tap
 # devices, indicating that the user should not bring up new ones using
 # sudo.
@@ -292,8 +281,6 @@ case "$MACHINE" in
     "qemux86") ;;
     "qemux86-64") ;;
     "qemuzynq") ;;
-    "akita") ;;
-    "spitz") ;;
     *)
         echo "Error: Unsupported machine type $MACHINE"
         return 1
@@ -472,20 +459,6 @@ if [ "$MACHINE" = "qemux86-64" ]; then
     KERNCMDLINE="$KERNCMDLINE oprofile.timer=1"
 fi
 
-if [ "$MACHINE" = "spitz" ]; then
-    QEMU=qemu-system-arm
-    if [ "${FSTYPE:0:3}" = "ext" -o "$FSTYPE" = "btrfs" ]; then
-        echo $ROOTFS
-        ROOTFS=`readlink -f $ROOTFS`
-        echo $ROOTFS
-        if [ ! -e "$ROOTFS.qemudisk" ]; then
-            echo "Adding a partition table to the ext3 image for use by QEMU, please wait..."
-            runqemu-addptable2image $ROOTFS $ROOTFS.qemudisk
-        fi
-        QEMUOPTIONS="$QEMU_NETWORK_CMD -M spitz -hda $ROOTFS.qemudisk -portrait"
-    fi
-fi
-
 if [ "$MACHINE" = "qemumips" -o "$MACHINE" = "qemumipsel" -o "$MACHINE" = "qemumips64" ]; then
     case "$MACHINE" in
        qemumips)   QEMU=qemu-system-mips ;;
@@ -559,18 +532,6 @@ fi
 
 if [ "${FSTYPE:0:3}" = "ext" ]; then
     KERNCMDLINE="$KERNCMDLINE rootfstype=$FSTYPE"
-fi
-
-if [ "$MACHINE" = "akita" ]; then
-    QEMU=qemu-system-arm
-    if [ "$FSTYPE" = "jffs2" ]; then
-        ROOTFS=`readlink -f $ROOTFS`
-        if [ ! -e "$ROOTFS.qemuflash" ]; then
-            echo "Converting raw image into flash image format for use by QEMU, please wait..."
-        raw2flash.akita < $ROOTFS > $ROOTFS.qemuflash
-        fi
-        QEMUOPTIONS="$QEMU_NETWORK_CMD -M akita -mtdblock $ROOTFS.qemuflash -portrait"
-    fi
 fi
 
 if [ "$MACHINE" = "qemumicroblaze" ]; then
