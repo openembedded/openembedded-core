@@ -516,7 +516,7 @@ class AutotoolsRecipeHandler(RecipeHandler):
                     lib = res.group(2)
                     if not lib.startswith('$'):
                         header = res.group(1)
-                        libdeps.add((lib, header))
+                        libdeps.append((lib, header))
             elif keyword == 'AC_PATH_X':
                 deps.append('libx11')
             elif keyword in ('AX_BOOST', 'BOOST_REQUIRE'):
