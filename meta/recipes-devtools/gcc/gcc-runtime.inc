@@ -12,7 +12,9 @@ EXTRA_OECONF_append_linuxstdbase = " --enable-clocale=gnu"
 
 RUNTIMELIBITM = "libitm"
 RUNTIMELIBITM_mips = ""
+RUNTIMELIBITM_mipsel = ""
 RUNTIMELIBITM_mips64 = ""
+RUNTIMELIBITM_mips64el = ""
 
 RUNTIMETARGET = "libssp libstdc++-v3 libgomp libatomic ${RUNTIMELIBITM} \
     ${@bb.utils.contains_any('FORTRAN', [',fortran',',f77'], 'libquadmath', '', d)} \
