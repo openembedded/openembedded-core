@@ -13,7 +13,7 @@ ARM_THUMB_SUFFIX .= "${@bb.utils.contains('TUNE_FEATURES', 'armv7ve', 't2', '', 
 # some recipe explicitly sets ARM_INSTRUCTION_SET to "arm"
 ARM_M_OPT = "${@bb.utils.contains('TUNE_FEATURES', 'arm', '${ARM_THUMB_OPT}', 'thumb', d)}"
 python () {
-    if bb.utils.contains('TUNE_FEATURES', 'thumb', 'False', 'True', d):
+    if bb.utils.contains('TUNE_FEATURES', 'thumb', False, True, d):
         return
     selected = d.getVar('ARM_INSTRUCTION_SET', True)
     if selected == None:
