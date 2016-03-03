@@ -125,7 +125,7 @@ while true; do
             [ -z "$MACHINE" -o "$MACHINE" = "$arg" ] && MACHINE=$arg || \
                 error "conflicting MACHINE types [$MACHINE] and [$arg]"
             ;;
-        "ext"[234] | "jffs2" | "nfs" | "btrfs")
+        "ext"[234] | "jffs2" | "nfs" | "btrfs" | "iso")
             check_fstype_conflicts $arg
             ;;
         "hddimg" | "hdddirect" | "wic" | "vmdk" | "qcow2" | "vdi")
@@ -134,12 +134,7 @@ while true; do
             ;;
         "ramfs")
             FSTYPE=cpio.gz
-            RAMFS=true
             ;;
-        "iso")
-            FSTYPE=iso
-            ISOFS=true
-	    ;;
         "nographic")
             SCRIPT_QEMU_OPT="$SCRIPT_QEMU_OPT -nographic"
             SCRIPT_KERNEL_OPT="$SCRIPT_KERNEL_OPT console=ttyS0"

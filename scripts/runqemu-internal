@@ -593,12 +593,12 @@ if [ "$MACHINE" = "qemuzynq" ]; then
     fi
 fi
 
-if [ "x$RAMFS" = "xtrue" ]; then
+if [ "$FSTYPE" = "cpio.gz" ]; then
     QEMUOPTIONS="-initrd $ROOTFS -nographic"
     KERNCMDLINE="root=/dev/ram0 console=ttyS0 debugshell"
 fi
 
-if [ "x$ISOFS" = "xtrue" ]; then
+if [ "$FSTYPE" = "iso" ]; then
     QEMUOPTIONS="$QEMU_NETWORK_CMD -cdrom $ROOTFS $QEMU_UI_OPTIONS"
 fi
 
