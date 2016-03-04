@@ -293,3 +293,14 @@ class ThreadedPool:
         self.tasks.join()
         for worker in self.workers:
             worker.join()
+
+def write_ld_so_conf(d):
+    # Some utils like prelink may not have the correct target library paths
+    # so write an ld.so.conf to help them
+    ldsoconf = d.expand("${STAGING_DIR_TARGET}${sysconfdir}/ld.so.conf")
+    if os.path.exists(ldsoconf):
+        bb.utils.remove(ldsoconf)
+    bb.utils.mkdirhier(os.path.dirname(ldsoconf))
+    with open(ldsoconf, "w") as f:
+        f.write(d.getVar("base_libdir", True) + '\n')
+        f.write(d.getVar("libdir", True) + '\n')

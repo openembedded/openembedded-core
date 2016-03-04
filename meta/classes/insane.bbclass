@@ -1094,12 +1094,17 @@ python do_package_qa () {
                continue
             if w in testmatrix and testmatrix[w] in g:
                 warnchecks.append(g[testmatrix[w]])
+            if w == 'unsafe-references-in-binaries':
+                oe.utils.write_ld_so_conf(d)
+
         errorchecks = []
         for e in (d.getVar("ERROR_QA", True) or "").split():
             if e in skip:
                continue
             if e in testmatrix and testmatrix[e] in g:
                 errorchecks.append(g[testmatrix[e]])
+            if e == 'unsafe-references-in-binaries':
+                oe.utils.write_ld_so_conf(d)
 
         bb.note("Checking Package: %s" % package)
         # Check package name
