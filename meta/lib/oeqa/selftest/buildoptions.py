@@ -1,7 +1,8 @@
 import os
 import re
 import glob as g
-
+import shutil
+import tempfile
 from oeqa.selftest.base import oeSelfTest
 from oeqa.selftest.buildhistory import BuildhistoryBase
 from oeqa.utils.commands import runCmd, bitbake, get_bb_var
@@ -136,6 +137,46 @@ do_install_append_pn-gzip () {
         res = bitbake("nfs-utils")
         line = self.getline(res, "QA Issue: nfs-utils")
         self.assertTrue(line and line.startswith("WARNING:"), "WARNING: QA Issue: nfs-utils message is not present in bitbake's output: %s" % res.output)
+
+    @testcase(1421)
+    def test_layer_git_revisions_are_displayed_and_do_not_fail_without_git_repo(self):
+        """
+        Summary:     Test that layer git revisions are displayed and do not fail without git repository
+        Expected:    The build to be successful and without "fatal" errors
+        Product:     oe-core
+        Author:      Daniel Istrate <daniel.alexandrux.istrate@intel.com>
+        AutomatedBy: Daniel Istrate <daniel.alexandrux.istrate@intel.com>
+        """
+
+        dirpath = tempfile.mkdtemp()
+
+        dummy_layer_name = 'meta-dummy'
+        dummy_layer_path = os.path.join(dirpath, dummy_layer_name)
+        dummy_layer_conf_dir = os.path.join(dummy_layer_path, 'conf')
+        os.makedirs(dummy_layer_conf_dir)
+        dummy_layer_conf_path = os.path.join(dummy_layer_conf_dir, 'layer.conf')
+
+        dummy_layer_content = 'BBPATH .= ":${LAYERDIR}"\n' \
+                              'BBFILES += "${LAYERDIR}/recipes-*/*/*.bb ${LAYERDIR}/recipes-*/*/*.bbappend"\n' \
+                              'BBFILE_COLLECTIONS += "%s"\n' \
+                              'BBFILE_PATTERN_%s = "^${LAYERDIR}/"\n' \
+                              'BBFILE_PRIORITY_%s = "6"\n' % (dummy_layer_name, dummy_layer_name, dummy_layer_name)
+
+        ftools.write_file(dummy_layer_conf_path, dummy_layer_content)
+
+        bblayers_conf = 'BBLAYERS += "%s"\n' % dummy_layer_path
+        self.write_bblayers_config(bblayers_conf)
+
+        test_recipe = 'ed'
+
+        ret = bitbake('-n %s' % test_recipe)
+
+        err = 'fatal: Not a git repository'
+
+        shutil.rmtree(dirpath)
+
+        self.assertNotIn(err, ret.output)
+
 
 class BuildhistoryTests(BuildhistoryBase):
 
