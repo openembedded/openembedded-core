@@ -72,12 +72,14 @@ def main():
                 else:
                     line = line.split('Running', 1)[-1]
                     unexpected.append(line.rstrip())
+            elif 'Running setscene' in line:
+                unexpected.append(line.rstrip())
     except subprocess.CalledProcessError as e:
         print('ERROR: Failed to execute dry-run:\n%s' % e.output)
         return 1
 
     if unexpected:
-        print('ERROR: Unexpected tasks left over to be executed:')
+        print('ERROR: Unexpected tasks or setscene left over to be executed:')
         for line in unexpected:
             print('  ' + line)
         return 1
