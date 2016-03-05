@@ -37,6 +37,7 @@ SRC_URI += "file://configure-targets.patch \
             file://crypto_use_bigint_in_x86-64_perl.patch \
             file://openssl-1.0.2a-x32-asm.patch \
             file://ptest_makefile_deps.patch  \
+            file://parallel.patch \
            "
 
 SRC_URI[md5sum] = "9392e65072ce4b614c1392eefc1f23d0"
