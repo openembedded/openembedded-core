@@ -27,7 +27,7 @@ RDEPENDS_${PN}_append_class-target = " \
 
 BBCLASSEXTEND = "native"
 
-EXTRA_OECONF_append = " XMLLINT=xmllint XSLTPROC=xsltproc"
+EXTRA_OECONF_append = " BASH=/bin/bash XMLLINT=xmllint XSLTPROC=xsltproc"
 
 do_install_append() {
     install -d ${D}${sysconfdir}/xml/
