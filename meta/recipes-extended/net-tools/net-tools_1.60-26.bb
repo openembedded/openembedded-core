@@ -83,6 +83,10 @@ do_compile() {
 }
 
 do_install() {
+	export COPTS="$CFLAGS"
+	export LOPTS="$LDFLAGS"
+	unset CFLAGS
+	unset LDFLAGS
 	oe_runmake 'BASEDIR=${D}' install
 }
 
