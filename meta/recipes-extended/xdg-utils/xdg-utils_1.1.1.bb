@@ -4,13 +4,13 @@ DESCRIPTION = "The xdg-utils package is a set of simple scripts that provide bas
 desktop integration functions for any Free Desktop, such as Linux. \
 They are intended to provide a set of defacto standards. \
 The following scripts are provided at this time: \
-xdg-desktop-icon \     
-xdg-desktop-menu \  
-xdg-email \ 
+xdg-desktop-icon \
+xdg-desktop-menu \
+xdg-email \
 xdg-icon-resource \
-xdg-mime \       
-xdg-open \     
-xdg-screensaver \ 
+xdg-mime \
+xdg-open \
+xdg-screensaver \
 xdg-terminal \
 "
 
