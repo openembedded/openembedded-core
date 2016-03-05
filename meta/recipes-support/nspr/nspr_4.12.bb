@@ -9,19 +9,14 @@ SRC_URI = "http://ftp.mozilla.org/pub/nspr/releases/v${PV}/src/nspr-${PV}.tar.gz
            file://remove-rpath-from-tests.patch \
            file://fix-build-on-x86_64.patch \
            file://remove-srcdir-from-configure-in.patch \
-	   file://0002-Add-nios2-support.patch \
-          "
-
-SRC_URI += "file://nspr.pc.in"
+           file://0002-Add-nios2-support.patch \
+           file://nspr.pc.in \
+"
 
 CACHED_CONFIGUREVARS_append_libc-musl = " CFLAGS='${CFLAGS} -D_PR_POLL_AVAILABLE \
                                           -D_PR_HAVE_OFF64_T -D_PR_INET6 -D_PR_HAVE_INET_NTOP \
                                           -D_PR_HAVE_GETHOSTBYNAME2 -D_PR_HAVE_GETADDRINFO \
                                           -D_PR_INET6_PROBE'"
-
-SRC_URI_append_libc-musl = "\
-        file://0001-Remove-the-check-for-LINUX-glibc-case.patch \
-        "
 
 UPSTREAM_CHECK_URI = "http://ftp.mozilla.org/pub/nspr/releases/"
 UPSTREAM_CHECK_REGEX = "v(?P<pver>\d+(\.\d+)+)/"
