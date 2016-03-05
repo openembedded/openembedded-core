@@ -7,6 +7,12 @@ UNINATIVE_TARBALL ?= "${BUILD_ARCH}-nativesdk-libc.tar.bz2"
 #UNINATIVE_CHECKSUM[x86_64] = "dead"
 UNINATIVE_DLDIR ?= "${COREBASE}"
 
+# https://wiki.debian.org/GCC5
+# We may see binaries built with gcc5 run or linked into gcc4 environment
+# so use the older libstdc++ standard for now until we don't support gcc4
+# on the host system.
+BUILD_CXXFLAGS_append = " -D_GLIBCXX_USE_CXX11_ABI=0"
+
 addhandler uninative_event_fetchloader
 uninative_event_fetchloader[eventmask] = "bb.event.BuildStarted"
 
