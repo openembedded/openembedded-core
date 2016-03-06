@@ -5,9 +5,12 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=4d92cd373abda3937c2bc47fbc49d
 
 TOOLCHAIN_TARGET_TASK = ""
 
+# ibm850 - mcopy from mtools
+# iso8859-1 - guile
 TOOLCHAIN_HOST_TASK = "\
     nativesdk-glibc \
     nativesdk-glibc-gconv-ibm850 \
+    nativesdk-glibc-gconv-iso8859-1 \
     nativesdk-patchelf \
     "
 
