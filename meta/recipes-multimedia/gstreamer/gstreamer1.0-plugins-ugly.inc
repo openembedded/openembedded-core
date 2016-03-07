@@ -5,6 +5,8 @@ LICENSE_FLAGS = "commercial"
 
 DEPENDS += "gstreamer1.0-plugins-base libid3tag"
 
+inherit gettext
+
 PACKAGECONFIG ??= " \
     ${GSTREAMER_ORC} \
     a52dec lame mad mpeg2dec \
