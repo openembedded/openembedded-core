@@ -121,6 +121,16 @@ index 70d4aeb..5c726d0 100644
  #ifndef add_system_dir
  # define add_system_dir(dir) add_dir (dir)
  #endif
--- 
-2.6.4
-
+Index: git/iconv/gconv_conf.c
+===================================================================
+--- git.orig/iconv/gconv_conf.c
++++ git/iconv/gconv_conf.c
+@@ -36,7 +36,7 @@
+ 
+ 
+ /* This is the default path where we look for module lists.  */
+-static const char default_gconv_path[] = GCONV_PATH;
++static char default_gconv_path[4096] __attribute__ ((section (".gccrelocprefix"))) = GCONV_PATH;
+ 
+ /* The path elements, as determined by the __gconv_get_path function.
+    All path elements end in a slash.  */
