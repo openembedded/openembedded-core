@@ -298,7 +298,7 @@ PACKAGES =+ "\
     ${PN}-extra-utils \
 "
 
-SYSTEMD_PACKAGES = "${PN}-binfmt"
+SYSTEMD_PACKAGES = "${@bb.utils.contains('PACKAGECONFIG', 'binfmt', '${PN}-binfmt', '', d)}"
 SYSTEMD_SERVICE_${PN}-binfmt = "systemd-binfmt.service"
 
 USERADD_PACKAGES = "${PN}"
