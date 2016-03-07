@@ -29,6 +29,7 @@ SDK_LOCAL_CONF_BLACKLIST ?= "CONF_VERSION \
                              PARALLEL_MAKE \
                              PRSERV_HOST \
                              SSTATE_MIRRORS \
+                             DL_DIR \
                             "
 SDK_INHERIT_BLACKLIST ?= "buildhistory icecc"
 SDK_UPDATE_URL ?= ""
@@ -321,11 +322,17 @@ install_tools() {
 	lnr ${SDK_OUTPUT}/${SDKPATH}/${scriptrelpath}/recipetool ${SDK_OUTPUT}/${SDKPATHNATIVE}${bindir_nativesdk}/recipetool
 	touch ${SDK_OUTPUT}/${SDKPATH}/.devtoolbase
 
+	localconf=${SDK_OUTPUT}/${SDKPATH}/conf/local.conf
+
 	# find latest buildtools-tarball and install it
 	buildtools_path=`ls -t1 ${SDK_DEPLOY}/${@extsdk_get_buildtools_filename(d)} | head -n1`
 	install $buildtools_path ${SDK_OUTPUT}/${SDKPATH}
 
-	install ${SDK_DEPLOY}/${BUILD_ARCH}-nativesdk-libc.tar.bz2 ${SDK_OUTPUT}/${SDKPATH}
+	# For now this is where uninative.bbclass expects the tarball
+	chksum=`md5sum ${SDK_DEPLOY}/${BUILD_ARCH}-nativesdk-libc.tar.bz2 | cut -f 1 -d ' '`
+	install -d ${SDK_OUTPUT}/${SDKPATH}/downloads/uninative/$chksum/
+	install ${SDK_DEPLOY}/${BUILD_ARCH}-nativesdk-libc.tar.bz2 ${SDK_OUTPUT}/${SDKPATH}/downloads/uninative/$chksum/
+	echo "UNINATIVE_CHECKSUM[${BUILD_ARCH}] = '$chksum'" >> ${SDK_OUTPUT}/${SDKPATH}/conf/local.conf
 
 	install -m 0644 ${COREBASE}/meta/files/ext-sdk-prepare.py ${SDK_OUTPUT}/${SDKPATH}
 }
@@ -367,9 +374,6 @@ sdk_ext_postinst() {
 
 	# Warn if trying to use external bitbake and the ext SDK together
 	echo "(which bitbake > /dev/null 2>&1 && echo 'WARNING: attempting to use the extensible SDK in an environment set up to run bitbake - this may lead to unexpected results. Please source this script in a new shell session instead.') || true" >> $env_setup_script
-
-	# For now this is where uninative.bbclass expects the tarball
-	mv *-nativesdk-libc.tar.* $target_sdk_dir/`dirname ${oe_init_build_env_path}`
 
 	if [ "$prepare_buildsystem" != "no" -a -n "${@SDK_INSTALL_TARGETS.strip()}" ]; then
 		printf "Preparing build system...\n"
