@@ -5,7 +5,7 @@ UNINATIVE_TARBALL ?= "${BUILD_ARCH}-nativesdk-libc.tar.bz2"
 # Example checksums
 #UNINATIVE_CHECKSUM[i586] = "dead"
 #UNINATIVE_CHECKSUM[x86_64] = "dead"
-UNINATIVE_DLDIR ?= "${COREBASE}"
+UNINATIVE_DLDIR ?= "${DL_DIR}/uninative/"
 
 # https://wiki.debian.org/GCC5
 # We may see binaries built with gcc5 run or linked into gcc4 environment
@@ -25,26 +25,31 @@ python uninative_event_fetchloader() {
     loader isn't already present.
     """
 
-    loader = d.getVar("UNINATIVE_LOADER", True)
-    if os.path.exists(loader):
-        return
+    chksum = d.getVarFlag("UNINATIVE_CHECKSUM", d.getVar("BUILD_ARCH", True), True)
+    if not chksum:
+        bb.fatal("Uninative selected but not configured correctly, please set UNINATIVE_CHECKSUM[%s]" % d.getVar("BUILD_ARCH", True))
 
+    loader = d.getVar("UNINATIVE_LOADER", True)
+    loaderchksum = loader + ".chksum"
+    if os.path.exists(loader) and os.path.exists(loaderchksum):
+        with open(loaderchksum, "r") as f:
+            readchksum = f.read().strip()
+        if readchksum == chksum:
+            return
+
+    import subprocess
     try:
         # Save and restore cwd as Fetch.download() does a chdir()
         olddir = os.getcwd()
 
         tarball = d.getVar("UNINATIVE_TARBALL", True)
-        tarballdir = d.getVar("UNINATIVE_DLDIR", True)
+        tarballdir = os.path.join(d.getVar("UNINATIVE_DLDIR", True), chksum)
         tarballpath = os.path.join(tarballdir, tarball)
 
         if not os.path.exists(tarballpath):
+            bb.utils.mkdirhier(tarballdir)
             if d.getVar("UNINATIVE_URL", True) == "unset":
                 bb.fatal("Uninative selected but not configured, please set UNINATIVE_URL")
-
-            chksum = d.getVarFlag("UNINATIVE_CHECKSUM", d.getVar("BUILD_ARCH", True), True)
-            if not chksum:
-                bb.fatal("Uninative selected but not configured correctly, please set UNINATIVE_CHECKSUM[%s]" % d.getVar("BUILD_ARCH", True))
-
 
             localdata = bb.data.createCopy(d)
             localdata.setVar('FILESPATH', "")
@@ -59,9 +64,11 @@ python uninative_event_fetchloader() {
             if localpath != tarballpath and os.path.exists(localpath) and not os.path.exists(tarballpath):
                     os.symlink(localpath, tarballpath)
 
-        import subprocess
-        cmd = d.expand("mkdir -p ${STAGING_DIR}-uninative; cd ${STAGING_DIR}-uninative; tar -xjf ${UNINATIVE_DLDIR}/${UNINATIVE_TARBALL}; ${STAGING_DIR}-uninative/relocate_sdk.py ${STAGING_DIR}-uninative/${BUILD_ARCH}-linux ${UNINATIVE_LOADER} ${UNINATIVE_LOADER} ${STAGING_DIR}-uninative/${BUILD_ARCH}-linux/${bindir_native}/patchelf-uninative")
+        cmd = d.expand("mkdir -p ${STAGING_DIR}-uninative; cd ${STAGING_DIR}-uninative; tar -xjf ${UNINATIVE_DLDIR}/%s/${UNINATIVE_TARBALL}; ${STAGING_DIR}-uninative/relocate_sdk.py ${STAGING_DIR}-uninative/${BUILD_ARCH}-linux ${UNINATIVE_LOADER} ${UNINATIVE_LOADER} ${STAGING_DIR}-uninative/${BUILD_ARCH}-linux/${bindir_native}/patchelf-uninative" % chksum)
         subprocess.check_call(cmd, shell=True)
+
+        with open(loaderchksum, "w") as f:
+            f.write(chksum)
 
         enable_uninative(d)
 
