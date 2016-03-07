@@ -63,9 +63,7 @@ python uninative_event_fetchloader() {
         cmd = d.expand("mkdir -p ${STAGING_DIR}-uninative; cd ${STAGING_DIR}-uninative; tar -xjf ${UNINATIVE_DLDIR}/${UNINATIVE_TARBALL}; ${STAGING_DIR}-uninative/relocate_sdk.py ${STAGING_DIR}-uninative/${BUILD_ARCH}-linux ${UNINATIVE_LOADER} ${UNINATIVE_LOADER} ${STAGING_DIR}-uninative/${BUILD_ARCH}-linux/${bindir_native}/patchelf-uninative")
         subprocess.check_call(cmd, shell=True)
 
-        d.setVar("NATIVELSBSTRING", "universal")
-        d.appendVar("SSTATEPOSTUNPACKFUNCS", " uninative_changeinterp")
-        d.prependVar("PATH", "${STAGING_DIR}-uninative/${BUILD_ARCH}-linux${bindir_native}:")
+        enable_uninative(d)
 
     except bb.fetch2.BBFetchException as exc:
         bb.warn("Disabling uninative as unable to fetch uninative tarball: %s" % str(exc))
@@ -82,14 +80,16 @@ python uninative_event_enable() {
     This event handler is called in the workers and is responsible for setting
     up uninative if a loader is found.
     """
+    enable_uninative(d)
+}
 
+def enable_uninative(d):
     loader = d.getVar("UNINATIVE_LOADER", True)
     if os.path.exists(loader):
         bb.debug(2, "Enabling uninative")
         d.setVar("NATIVELSBSTRING", "universal")
         d.appendVar("SSTATEPOSTUNPACKFUNCS", " uninative_changeinterp")
         d.prependVar("PATH", "${STAGING_DIR}-uninative/${BUILD_ARCH}-linux${bindir_native}:")
-}
 
 python uninative_changeinterp () {
     import subprocess
