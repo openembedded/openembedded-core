@@ -9,7 +9,7 @@ require avahi.inc
 inherit python-dir pythonnative distro_features_check
 ANY_OF_DISTRO_FEATURES = "${GTK2DISTROFEATURES}"
 
-PACKAGECONFIG ??= "python"
+PACKAGECONFIG ??= "dbus python"
 PACKAGECONFIG[python] = "--enable-python,--disable-python,python-native python"
 
 SRC_URI[md5sum] = "22b5e705d3eabb31d26f2e1e7b074013"
