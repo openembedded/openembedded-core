@@ -2,7 +2,7 @@ SUMMARY = "Modern 3D graphics API with associated utility APIs"
 HOMEPAGE = "http://wiki.clutter-project.org/wiki/Cogl"
 LICENSE = "MIT"
 
-inherit clutter distro_features_check upstream-version-is-even
+inherit clutter distro_features_check upstream-version-is-even gobject-introspection
 # cogl-1.0 needs opengl to build
 REQUIRED_DISTRO_FEATURES ?= "opengl"
 
@@ -26,8 +26,7 @@ ERDEPENDS_GL    = "libgl"
 ERDEPENDS_GLES2 = "libgles2"
 
 # GLESv1 is rarely tested, so disable it
-EXTRA_OECONF += "--disable-introspection	\
-	       	 --enable-examples-install	\
+EXTRA_OECONF += "--enable-examples-install	\
 	       	 --enable-debug		 	\
 	       	 --disable-gles1		\
 	         --disable-cairo                \
@@ -58,6 +57,9 @@ PACKAGECONFIG ??= "cogl-pango gles2 \
                    ${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'glx egl-x11', '', d)} \
                    "
 
+do_compile_prepend() {
+        export GIR_EXTRA_LIBS_PATH="${B}/cogl/.libs"
+}
 
 FILES_${PN}-examples = "${bindir}/* ${datadir}/cogl/examples-data/*"
 FILES_libcogl = "${libdir}/libcogl${SOLIBS}"

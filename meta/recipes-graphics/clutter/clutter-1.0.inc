@@ -2,7 +2,7 @@ SUMMARY = "Graphics library for creating hardware-accelerated user interfaces"
 HOMEPAGE = "http://www.clutter-project.org/"
 LICENSE = "LGPLv2.1+"
 
-inherit clutter ptest-gnome distro_features_check upstream-version-is-even
+inherit clutter ptest-gnome distro_features_check upstream-version-is-even gobject-introspection
 # depends on cogl-1.0 which needs opengl
 REQUIRED_DISTRO_FEATURES ?= "opengl"
 
@@ -19,8 +19,7 @@ EDEPENDS_EVDEV = "libxkbcommon"
 ERDEPENDS_EVDEV = "xkeyboard-config"
 
 # Disable pretty much everything, override in platform specific set up
-EXTRA_OECONF += "--disable-introspection	\
-	     	 --disable-quartz-backend	\
+EXTRA_OECONF += "--disable-quartz-backend	\
 	     	 --disable-win32-backend	\
 	     	 --disable-gdk-backend		\
 	     	 --disable-cex100-backend	\
