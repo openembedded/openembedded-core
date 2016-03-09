@@ -194,6 +194,8 @@ class SignatureGeneratorOEBasicHash(bb.siggen.SignatureGeneratorBasicHash):
             if task not in ret:
                 for pn in self.lockedsigs:
                     if sq_hash[task] in self.lockedsigs[pn].itervalues():
+                        if sq_task[task] == 'do_shared_workdir':
+                            continue
                         self.mismatch_msgs.append("Locked sig is set for %s:%s (%s) yet not in sstate cache?"
                                                % (pn, sq_task[task], sq_hash[task]))
 
