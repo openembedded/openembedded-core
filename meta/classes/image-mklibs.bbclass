@@ -9,13 +9,15 @@ mklibs_optimize_image_doit() {
 	mkdir -p ${WORKDIR}/mklibs/dest
 	cd ${IMAGE_ROOTFS}
 	du -bs > ${WORKDIR}/mklibs/du.before.mklibs.txt
-	for i in `find .`; do file $i; done \
-		| grep ELF \
-		| grep "LSB *executable" \
-		| grep "dynamically linked" \
-		| sed "s/:.*//" \
-		| sed "s+^\./++" \
-		> ${WORKDIR}/mklibs/executables.list
+
+	# Build a list of dynamically linked executable ELF files.
+	# Omit libc/libpthread as a special case because it has an interpreter
+	# but is primarily what we intend to strip down.
+	for i in `find . -type f -executable ! -name 'libc-*' ! -name 'libpthread-*'`; do
+		file $i | grep -q ELF || continue
+		${HOST_PREFIX}readelf -l $i | grep -q INTERP || continue
+		echo $i
+	done > ${WORKDIR}/mklibs/executables.list
 
 	dynamic_loader=$(linuxloader)
 
