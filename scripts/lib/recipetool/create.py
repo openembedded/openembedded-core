@@ -544,6 +544,7 @@ def create_recipe(args):
 
     # Apply the handlers
     handled = []
+    handled.append(('license', licvalues))
 
     if args.binary:
         classes.append('bin_package')
@@ -814,6 +815,33 @@ def guess_license(srctree):
     # FIXME should we grab at least one source file with a license header and add that too?
 
     return licenses
+
+def split_pkg_licenses(licvalues, packages, outlines, fallback_licenses=None, pn='${PN}'):
+    """
+    Given a list of (license, path, md5sum) as returned by guess_license(),
+    a dict of package name to path mappings, write out a set of
+    package-specific LICENSE values.
+    """
+    pkglicenses = {pn: []}
+    for license, licpath, _ in licvalues:
+        for pkgname, pkgpath in packages.iteritems():
+            if licpath.startswith(pkgpath + '/'):
+                if pkgname in pkglicenses:
+                    pkglicenses[pkgname].append(license)
+                else:
+                    pkglicenses[pkgname] = [license]
+                break
+        else:
+            # Accumulate on the main package
+            pkglicenses[pn].append(license)
+    outlicenses = {}
+    for pkgname in packages:
+        license = ' '.join(list(set(pkglicenses.get(pkgname, ['Unknown']))))
+        if license == 'Unknown' and pkgname in fallback_licenses:
+            license = fallback_licenses[pkgname]
+        outlines.append('LICENSE_%s = "%s"' % (pkgname, license))
+        outlicenses[pkgname] = license.split()
+    return outlicenses
 
 def read_pkgconfig_provides(d):
     pkgdatadir = d.getVar('PKGDATA_DIR', True)

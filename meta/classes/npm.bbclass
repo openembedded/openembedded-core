@@ -18,6 +18,26 @@ npm_do_install() {
 	cp -a ${S}/* ${D}${libdir}/node_modules/${PN}/ --no-preserve=ownership
 }
 
+python populate_packages_prepend () {
+    instdir = d.expand('${D}${libdir}/node_modules/${PN}')
+    extrapackages = oe.package.npm_split_package_dirs(instdir)
+    pkgnames = extrapackages.keys()
+    d.prependVar('PACKAGES', '%s ' % ' '.join(pkgnames))
+    for pkgname in pkgnames:
+        pkgrelpath, pdata = extrapackages[pkgname]
+        pkgpath = '${libdir}/node_modules/${PN}/' + pkgrelpath
+        expanded_pkgname = d.expand(pkgname)
+        d.setVar('FILES_%s' % expanded_pkgname, pkgpath)
+        if pdata:
+            version = pdata.get('version', None)
+            if version:
+                d.setVar('PKGV_%s' % expanded_pkgname, version.encode("utf8"))
+            description = pdata.get('description', None)
+            if description:
+                d.setVar('SUMMARY_%s' % expanded_pkgname, description.replace(u"\u2018", "'").replace(u"\u2019", "'").encode("utf8"))
+    d.appendVar('RDEPENDS_%s' % d.getVar('PN', True), ' %s' % ' '.join(pkgnames))
+}
+
 FILES_${PN} += " \
     ${libdir}/node_modules/${PN} \
 "
