@@ -355,6 +355,12 @@ def create_recipe(args):
             srcuri = rev_re.sub('', srcuri)
         tempsrc = tempfile.mkdtemp(prefix='recipetool-')
         srctree = tempsrc
+        if fetchuri.startswith('npm://'):
+            # Check if npm is available
+            npm = bb.utils.which(tinfoil.config_data.getVar('PATH', True), 'npm')
+            if not npm:
+                logger.error('npm:// URL requested but npm is not available - you need to either build nodejs-native or install npm using your package manager')
+                sys.exit(1)
         logger.info('Fetching %s...' % srcuri)
         try:
             checksums = scriptutils.fetch_uri(tinfoil.config_data, fetchuri, srctree, srcrev)
