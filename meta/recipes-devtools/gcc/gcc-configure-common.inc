@@ -66,14 +66,6 @@ EXTRA_OECONF_append_mipsisa32r6 = " --with-abi=32 --with-arch=mips32r6"
 EXTRA_OECONF_append_mipsisa64r6el = " --with-abi=64 --with-arch-64=mips64r6"
 EXTRA_OECONF_append_mipsisa64r6 = " --with-abi=64 --with-arch-64=mips64r6"
 
-# ARMv6+ adds atomic instructions that affect the ABI in libraries built
-# with TUNE_CCARGS in gcc-runtime.  Make the compiler default to a
-# compatible architecture.  armv6 and armv7a cover the minimum tune
-# features used in OE.
-EXTRA_OECONF_append_armv6 = " --with-arch=armv6"
-EXTRA_OECONF_append_armv7a = " --with-arch=armv7-a"
-EXTRA_OECONF_append_armv7ve = " --with-arch=armv7-a"
-
 EXTRA_OECONF_GCC_FLOAT ??= ""
 CPPFLAGS = ""
 
