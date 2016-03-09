@@ -17,11 +17,11 @@ SRC_URI[sha256sum] = "d54991185d514a0aba54ebeb408d7575b60f5818a772e28fa0e18b98bc
 
 DEPENDS += "avahi gtk+ libglade"
 
-AVAHI_GTK = "--enable-gtk --disable-gtk3"
+AVAHI_GTK = "--enable-gtk --disable-gtk3 --disable-pygtk"
 
 S = "${WORKDIR}/avahi-${PV}"
 
-PACKAGES = "${PN} ${PN}-utils ${PN}-dbg ${PN}-dev ${PN}-staticdev ${PN}-doc python-avahi avahi-discover avahi-discover-standalone"
+PACKAGES = "${PN} ${PN}-utils ${PN}-dbg ${PN}-dev ${PN}-staticdev ${PN}-doc python-avahi avahi-discover"
 
 FILES_${PN} = "${libdir}/libavahi-ui*.so.*"
 FILES_${PN}-dev += "${libdir}/libavahi-ui${SOLIBSDEV}"
@@ -30,13 +30,11 @@ FILES_${PN}-staticdev += "${libdir}/libavahi-ui.a"
 FILES_${PN}-utils = "${bindir}/b* ${datadir}/applications/b*"
 
 FILES_python-avahi = "${PYTHON_SITEPACKAGES_DIR}/avahi ${PYTHON_SITEPACKAGES_DIR}/avahi_discover"
-FILES_avahi-discover = "${bindir}/avahi-discover \
-                        ${datadir}/applications/avahi-discover.desktop \
-                        ${datadir}/avahi/interfaces/avahi-discover*"
-FILES_avahi-discover-standalone = "${bindir}/avahi-discover-standalone \
-                                   ${datadir}/avahi/interfaces/avahi-discover.glade"
+FILES_avahi-discover = "${datadir}/applications/avahi-discover.desktop \
+                        ${datadir}/avahi/interfaces/avahi-discover* \
+                        ${bindir}/avahi-discover-standalone \
+                        ${datadir}/avahi/interfaces/avahi-discover.glade"
 
-RDEPENDS_avahi-discover = "python-avahi python-pygtk"
 RDEPENDS_python-avahi = "python-core python-dbus"
 
 
