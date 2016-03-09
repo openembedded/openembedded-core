@@ -64,5 +64,7 @@ do_install_append () {
 	rm ${D}${mandir}/man1/a*
 	rm ${D}${mandir}/man5 -rf
 	rm ${D}${mandir}/man8 -rf
+        rm ${D}${libdir}/girepository-1.0/ -rf
+        rm ${D}${datadir}/gir-1.0/ -rf
 }
 
