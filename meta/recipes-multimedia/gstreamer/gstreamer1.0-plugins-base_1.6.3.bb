@@ -17,6 +17,10 @@ SRC_URI = " \
     file://0004-subparse-set-need_segment-after-sink-pad-received-GS.patch \
     file://encodebin-Need-more-buffers-in-output-queue-for-bett.patch \
     file://0005-convertframe-Support-video-crop-when-convert-frame.patch \
+    file://0001-Makefile.am-don-t-hardcode-libtool-name-when-running.patch \
+    file://0002-Makefile.am-prefix-calls-to-pkg-config-with-PKG_CONF.patch \
+    file://0003-riff-add-missing-include-directories-when-calling-in.patch \
+    file://0004-rtsp-drop-incorrect-reference-to-gstreamer-sdp-in-Ma.patch \
 "
 
 SRC_URI[md5sum] = "3ddde0ad598ef69f58d6a2e87f8b460f"

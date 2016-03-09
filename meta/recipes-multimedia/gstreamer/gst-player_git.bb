@@ -15,7 +15,7 @@ SRCREV = "5386c5b984d40ef5434673ed62204e69aaf52645"
 
 S = "${WORKDIR}/git"
 
-inherit autotools gtk-doc lib_package pkgconfig distro_features_check
+inherit autotools gtk-doc lib_package pkgconfig distro_features_check gobject-introspection
 
 ANY_OF_DISTRO_FEATURES = "${GTK2DISTROFEATURES}"
 
