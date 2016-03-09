@@ -39,6 +39,8 @@ RDEPENDS_${PN}-base = "\
     ${NETWORK_MANAGER} \
     udev-extraconf \
     ${@bb.utils.contains('DISTRO_FEATURES', 'pulseaudio', 'pulseaudio-server pulseaudio-client-conf-sato pulseaudio-misc', '', d)} \
+    python-pygobject \
+    gtk+3 \
     "
 
 FILEMANAGER ?= "pcmanfm"
