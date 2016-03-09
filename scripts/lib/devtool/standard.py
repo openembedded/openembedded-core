@@ -189,6 +189,9 @@ def add(args, config, basepath, workspace):
                     raise DevtoolError('Couldn\'t find source tree created by recipetool')
             bb.utils.mkdirhier(recipedir)
             shutil.move(recipes[0], recipefile)
+            # Move any additional files created by recipetool
+            for fn in os.listdir(tempdir):
+                shutil.move(os.path.join(tempdir, fn), recipedir)
         else:
             raise DevtoolError('Command \'%s\' did not create any recipe file:\n%s' % (e.command, e.stdout))
         attic_recipe = os.path.join(config.workspace_path, 'attic', recipename, os.path.basename(recipefile))
@@ -199,7 +202,8 @@ def add(args, config, basepath, workspace):
             shutil.rmtree(tmpsrcdir)
         shutil.rmtree(tempdir)
 
-    _add_md5(config, recipename, recipefile)
+    for fn in os.listdir(recipedir):
+        _add_md5(config, recipename, os.path.join(recipedir, fn))
 
     if args.fetch and not args.no_git:
         setup_git_repo(srctree, args.version, 'devtool')

@@ -560,6 +560,8 @@ def create_recipe(args):
     for handler in handlers:
         handler.process(srctree_use, classes, lines_before, lines_after, handled, extravalues)
 
+    extrafiles = extravalues.pop('extrafiles', {})
+
     if not realpv:
         realpv = extravalues.get('PV', None)
         if realpv:
@@ -600,6 +602,15 @@ def create_recipe(args):
             if os.path.exists(outfile):
                 logger.error('Output file %s already exists' % outfile)
                 sys.exit(1)
+
+    # Move any extra files the plugins created to a directory next to the recipe
+    if outfile == '-':
+        extraoutdir = pn
+    else:
+        extraoutdir = os.path.join(os.path.dirname(outfile), pn)
+    bb.utils.mkdirhier(extraoutdir)
+    for destfn, extrafile in extrafiles.iteritems():
+        shutil.move(extrafile, os.path.join(extraoutdir, destfn))
 
     lines = lines_before
     lines_before = []
