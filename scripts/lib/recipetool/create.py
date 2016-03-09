@@ -1,6 +1,6 @@
 # Recipe creation tool - create command plugin
 #
-# Copyright (C) 2014-2015 Intel Corporation
+# Copyright (C) 2014-2016 Intel Corporation
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License version 2 as
@@ -44,6 +44,7 @@ class RecipeHandler(object):
     recipelibmap = {}
     recipeheadermap = {}
     recipecmakefilemap = {}
+    recipebinmap = {}
 
     @staticmethod
     def load_libmap(d):
@@ -122,6 +123,23 @@ class RecipeHandler(object):
                         RecipeHandler.recipecmakefilemap[fn] = pn
 
     @staticmethod
+    def load_binmap(d):
+        '''Build up native binary->recipe mapping'''
+        if RecipeHandler.recipebinmap:
+            return
+        sstate_manifests = d.getVar('SSTATE_MANIFESTS', True)
+        staging_bindir_native = d.getVar('STAGING_BINDIR_NATIVE', True)
+        build_arch = d.getVar('BUILD_ARCH', True)
+        fileprefix = 'manifest-%s-' % build_arch
+        for fn in glob.glob(os.path.join(sstate_manifests, '%s*-native.populate_sysroot' % fileprefix)):
+            with open(fn, 'r') as f:
+                pn = os.path.basename(fn).rsplit('.', 1)[0][len(fileprefix):]
+                for line in f:
+                    if line.startswith(staging_bindir_native):
+                        prog = os.path.basename(line.rstrip())
+                        RecipeHandler.recipebinmap[prog] = pn
+
+    @staticmethod
     def checkfiles(path, speclist, recursive=False):
         results = []
         if recursive:
@@ -143,7 +161,7 @@ class RecipeHandler(object):
             RecipeHandler.load_libmap(d)
 
         ignorelibs = ['socket']
-        ignoredeps = ['gcc-runtime', 'glibc', 'uclibc', 'musl', 'tar-native', 'binutils-native']
+        ignoredeps = ['gcc-runtime', 'glibc', 'uclibc', 'musl', 'tar-native', 'binutils-native', 'coreutils-native']
 
         unmappedpc = []
         pcdeps = list(set(pcdeps))
