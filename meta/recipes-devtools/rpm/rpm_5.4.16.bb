@@ -147,6 +147,7 @@ SRC_URI += " \
 	   file://rpm-syck-fix-gram.patch \
 	   file://rpm-rpmdb-grammar.patch \
 	   file://rpm-disable-blaketest.patch \
+	   file://rpm-autogen-force.patch \
 "
 
 SRC_URI_append_libc-musl = "\
