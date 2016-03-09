@@ -10,7 +10,7 @@ SECTION = "x11/utils"
 DEPENDS = "cairo gdk-pixbuf glib-2.0 libcroco libxml2 pango"
 BBCLASSEXTEND = "native"
 
-inherit autotools pkgconfig gnomebase gtk-doc pixbufcache upstream-version-is-even
+inherit autotools pkgconfig gnomebase gtk-doc pixbufcache upstream-version-is-even gobject-introspection
 
 SRC_URI += "file://gtk-option.patch"
 
@@ -18,8 +18,6 @@ SRC_URI[archive.md5sum] = "ad03780e12c56e52474d8edf86976c73"
 SRC_URI[archive.sha256sum] = "4d6ea93ec05f5dabe7262d711d246a0a99b2311e215360dd3dcabd6afe3b9804"
 
 CACHED_CONFIGUREVARS = "ac_cv_path_GDK_PIXBUF_QUERYLOADERS=${STAGING_LIBDIR_NATIVE}/gdk-pixbuf-2.0/gdk-pixbuf-query-loaders"
-
-EXTRA_OECONF = "--disable-introspection --disable-vala"
 
 # The older ld (2.22) on the host (Centos 6.5) doesn't have the
 # -Bsymbolic-functions option, we can disable it for native.
@@ -37,7 +35,6 @@ do_install_append() {
 }
 
 PACKAGES =+ "librsvg-gtk rsvg"
-FILES_${PN} = "${libdir}/*.so.*"
 FILES_rsvg = "${bindir}/rsvg* \
 	      ${datadir}/pixmaps/svg-viewer.svg \
 	      ${datadir}/themes"

@@ -22,7 +22,7 @@ SRC_URI = "${GNOME_MIRROR}/${BPN}/${MAJ_VER}/${BPN}-${PV}.tar.xz \
 SRC_URI[md5sum] = "9275076639baa24a342f3e02c402920e"
 SRC_URI[sha256sum] = "2b6771f1ac72f687a8971e59810b8dc658e65e7d3086bd2e676e618fd541d031"
 
-inherit autotools pkgconfig gettext pixbufcache ptest-gnome upstream-version-is-even
+inherit autotools pkgconfig gettext pixbufcache ptest-gnome upstream-version-is-even gobject-introspection
 
 LIBV = "2.10.0"
 
@@ -41,15 +41,12 @@ PACKAGECONFIG[jpeg2000] = "--with-libjasper,--without-libjasper,jasper"
 PACKAGECONFIG[gio-sniff] = "--enable-gio-sniffing,--disable-gio-sniffing,,shared-mime-info"
 PACKAGECONFIG[x11] = "--with-x11,--without-x11,virtual/libx11"
 
-EXTRA_OECONF = "--disable-introspection"
-
 PACKAGES =+ "${PN}-xlib"
 
 FILES_${PN}-xlib = "${libdir}/*pixbuf_xlib*${SOLIBS}"
 ALLOW_EMPTY_${PN}-xlib = "1"
 
-FILES_${PN} = "${libdir}/gdk-pixbuf-2.0/gdk-pixbuf-query-loaders \
-	${libdir}/lib*.so.*"
+FILES_${PN} += "${libdir}/gdk-pixbuf-2.0/gdk-pixbuf-query-loaders"
 
 FILES_${PN}-dev += " \
 	${bindir}/gdk-pixbuf-csource \

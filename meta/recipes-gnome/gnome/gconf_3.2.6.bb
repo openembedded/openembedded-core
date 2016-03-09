@@ -3,9 +3,9 @@ SECTION = "x11/gnome"
 LICENSE = "LGPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=55ca817ccb7d5b5b66355690e9abc605"
 
-DEPENDS = "glib-2.0 dbus dbus-glib libxml2 intltool-native gobject-introspection-stub"
+DEPENDS = "glib-2.0 dbus dbus-glib libxml2 intltool-native"
 
-inherit gnomebase gtk-doc gettext
+inherit gnomebase gtk-doc gettext gobject-introspection
 
 SRC_URI = "${GNOME_MIRROR}/GConf/${@gnome_verdir("${PV}")}/GConf-${PV}.tar.xz;name=archive \
            file://remove_plus_from_invalid_characters_list.patch \
@@ -18,7 +18,7 @@ SRC_URI[archive.sha256sum] = "1912b91803ab09a5eed34d364bf09fe3a2a9c96751fde03a4e
 S = "${WORKDIR}/GConf-${PV}"
 
 EXTRA_OECONF = "--enable-shared --disable-static --enable-debug=yes \
-                --disable-introspection --disable-orbit --with-openldap=no --disable-gtk"
+                --disable-orbit --with-openldap=no --disable-gtk"
 
 # Disable PolicyKit by default
 PACKAGECONFIG ??= ""
