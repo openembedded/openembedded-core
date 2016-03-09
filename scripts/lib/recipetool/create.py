@@ -722,7 +722,7 @@ def guess_license(srctree):
     md5sums = get_license_md5sums(tinfoil.config_data)
 
     licenses = []
-    licspecs = ['LICENSE*', 'COPYING*', '*[Ll]icense*', 'LICENCE*', 'LEGAL*', '[Ll]egal*', '*GPL*', 'README.lic*', 'COPYRIGHT*', '[Cc]opyright*']
+    licspecs = ['*LICEN[CS]E*', 'COPYING*', '*[Ll]icense*', 'LEGAL*', '[Ll]egal*', '*GPL*', 'README.lic*', 'COPYRIGHT*', '[Cc]opyright*']
     licfiles = []
     for root, dirs, files in os.walk(srctree):
         for fn in files:
