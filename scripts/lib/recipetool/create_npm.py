@@ -15,14 +15,27 @@
 # with this program; if not, write to the Free Software Foundation, Inc.,
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
+import os
 import logging
+import subprocess
+import tempfile
+import shutil
 import json
 from recipetool.create import RecipeHandler, split_pkg_licenses
 
 logger = logging.getLogger('recipetool')
 
 
+tinfoil = None
+
+def tinfoil_init(instance):
+    global tinfoil
+    tinfoil = instance
+
+
 class NpmRecipeHandler(RecipeHandler):
+    lockdownpath = None
+
     def _handle_license(self, data):
         '''
         Handle the license value from an npm package.json file
@@ -34,7 +47,44 @@ class NpmRecipeHandler(RecipeHandler):
                 license = license.get('type', None)
         return None
 
+    def _shrinkwrap(self, srctree, localfilesdir, extravalues, lines_before):
+        try:
+            runenv = dict(os.environ, PATH=tinfoil.config_data.getVar('PATH', True))
+            bb.process.run('npm shrinkwrap', cwd=srctree, stderr=subprocess.STDOUT, env=runenv, shell=True)
+        except bb.process.ExecutionError as e:
+            logger.warn('npm shrinkwrap failed:\n%s' % e.stdout)
+            return
+
+        tmpfile = os.path.join(localfilesdir, 'npm-shrinkwrap.json')
+        shutil.move(os.path.join(srctree, 'npm-shrinkwrap.json'), tmpfile)
+        extravalues.setdefault('extrafiles', {})
+        extravalues['extrafiles']['npm-shrinkwrap.json'] = tmpfile
+        lines_before.append('NPM_SHRINKWRAP := "${THISDIR}/${PN}/npm-shrinkwrap.json"')
+
+    def _lockdown(self, srctree, localfilesdir, extravalues, lines_before):
+        runenv = dict(os.environ, PATH=tinfoil.config_data.getVar('PATH', True))
+        if not NpmRecipeHandler.lockdownpath:
+            NpmRecipeHandler.lockdownpath = tempfile.mkdtemp('recipetool-npm-lockdown')
+            bb.process.run('npm install lockdown --prefix %s' % NpmRecipeHandler.lockdownpath,
+                           cwd=srctree, stderr=subprocess.STDOUT, env=runenv, shell=True)
+        relockbin = os.path.join(NpmRecipeHandler.lockdownpath, 'node_modules', 'lockdown', 'relock.js')
+        if not os.path.exists(relockbin):
+            logger.warn('Could not find relock.js within lockdown directory; skipping lockdown')
+            return
+        try:
+            bb.process.run('node %s' % relockbin, cwd=srctree, stderr=subprocess.STDOUT, env=runenv, shell=True)
+        except bb.process.ExecutionError as e:
+            logger.warn('lockdown-relock failed:\n%s' % e.stdout)
+            return
+
+        tmpfile = os.path.join(localfilesdir, 'lockdown.json')
+        shutil.move(os.path.join(srctree, 'lockdown.json'), tmpfile)
+        extravalues.setdefault('extrafiles', {})
+        extravalues['extrafiles']['lockdown.json'] = tmpfile
+        lines_before.append('NPM_LOCKDOWN := "${THISDIR}/${PN}/lockdown.json"')
+
     def process(self, srctree, classes, lines_before, lines_after, handled, extravalues):
+        import bb.utils
         import oe
         from collections import OrderedDict
 
@@ -57,6 +107,13 @@ class NpmRecipeHandler(RecipeHandler):
                     lines_before.append('SUMMARY = "%s"' % data['description'])
                 if 'homepage' in data:
                     lines_before.append('HOMEPAGE = "%s"' % data['homepage'])
+
+                # Shrinkwrap
+                localfilesdir = tempfile.mkdtemp(prefix='recipetool-npm')
+                self._shrinkwrap(srctree, localfilesdir, extravalues, lines_before)
+
+                # Lockdown
+                self._lockdown(srctree, localfilesdir, extravalues, lines_before)
 
                 # Split each npm module out to is own package
                 npmpackages = oe.package.npm_split_package_dirs(srctree)
