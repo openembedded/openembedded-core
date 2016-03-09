@@ -14,3 +14,5 @@ SRC_URI += "\
             file://CVE-2015-8803_8805.patch \
             file://CVE-2015-8804.patch \
             "
+
+DISABLE_STATIC = ""
