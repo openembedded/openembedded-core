@@ -25,6 +25,7 @@ import json
 import logging
 import scriptutils
 import urlparse
+import hashlib
 
 logger = logging.getLogger('recipetool')
 
@@ -717,6 +718,76 @@ def get_license_md5sums(d, static_only=False):
     md5sums['54c7042be62e169199200bc6477f04d1'] = 'BSD-3-Clause'
     return md5sums
 
+def crunch_license(licfile):
+    '''
+    Remove non-material text from a license file and then check
+    its md5sum against a known list. This works well for licenses
+    which contain a copyright statement, but is also a useful way
+    to handle people's insistence upon reformatting the license text
+    slightly (with no material difference to the text of the
+    license).
+    '''
+
+    import oe.utils
+
+    # Note: these are carefully constructed!
+    license_title_re = re.compile('^\(?(#+ *)?(The )?.{1,10} [Ll]icen[sc]e( \(.{1,10}\))?\)?:?$')
+    license_statement_re = re.compile('^This (project|software) is( free software)? released under the .{1,10} [Ll]icen[sc]e:?$')
+    copyright_re = re.compile('^(#+)? *Copyright .*$')
+
+    crunched_md5sums = {}
+    # The following two were gleaned from the "forever" npm package
+    crunched_md5sums['0a97f8e4cbaf889d6fa51f84b89a79f6'] = 'ISC'
+    crunched_md5sums['eecf6429523cbc9693547cf2db790b5c'] = 'MIT'
+    # https://github.com/vasi/pixz/blob/master/LICENSE
+    crunched_md5sums['2f03392b40bbe663597b5bd3cc5ebdb9'] = 'BSD-2-Clause'
+    # https://github.com/waffle-gl/waffle/blob/master/LICENSE.txt
+    crunched_md5sums['e72e5dfef0b1a4ca8a3d26a60587db66'] = 'BSD-2-Clause'
+    # https://github.com/spigwitmer/fakeds1963s/blob/master/LICENSE
+    crunched_md5sums['8be76ac6d191671f347ee4916baa637e'] = 'GPLv2'
+    # https://github.com/datto/dattobd/blob/master/COPYING
+    # http://git.savannah.gnu.org/cgit/freetype/freetype2.git/tree/docs/GPLv2.TXT
+    crunched_md5sums['1d65c5ad4bf6489f85f4812bf08ae73d'] = 'GPLv2'
+    # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt
+    # http://git.neil.brown.name/?p=mdadm.git;a=blob;f=COPYING;h=d159169d1050894d3ea3b98e1c965c4058208fe1;hb=HEAD
+    crunched_md5sums['fb530f66a7a89ce920f0e912b5b66d4b'] = 'GPLv2'
+    # https://github.com/gkos/nrf24/blob/master/COPYING
+    crunched_md5sums['7b6aaa4daeafdfa6ed5443fd2684581b'] = 'GPLv2'
+    # https://github.com/josch09/resetusb/blob/master/COPYING
+    crunched_md5sums['8b8ac1d631a4d220342e83bcf1a1fbc3'] = 'GPLv3'
+    # https://github.com/FFmpeg/FFmpeg/blob/master/COPYING.LGPLv2.1
+    crunched_md5sums['2ea316ed973ae176e502e2297b574bb3'] = 'LGPLv2.1'
+    # unixODBC-2.3.4 COPYING
+    crunched_md5sums['1daebd9491d1e8426900b4fa5a422814'] = 'LGPLv2.1'
+    # https://github.com/FFmpeg/FFmpeg/blob/master/COPYING.LGPLv3
+    crunched_md5sums['2ebfb3bb49b9a48a075cc1425e7f4129'] = 'LGPLv3'
+    lictext = []
+    with open(licfile, 'r') as f:
+        for line in f:
+            # Drop opening statements
+            if copyright_re.match(line):
+                continue
+            elif license_title_re.match(line):
+                continue
+            elif license_statement_re.match(line):
+                continue
+            # Squash spaces, and replace smart quotes, double quotes
+            # and backticks with single quotes
+            line = oe.utils.squashspaces(line.strip()).decode("utf-8")
+            line = line.replace(u"\u2018", "'").replace(u"\u2019", "'").replace(u"\u201c","'").replace(u"\u201d", "'").replace('"', '\'').replace('`', '\'')
+            if line:
+                lictext.append(line)
+
+    m = hashlib.md5()
+    try:
+        m.update(' '.join(lictext))
+        md5val = m.hexdigest()
+    except UnicodeEncodeError:
+        md5val = None
+        lictext = ''
+    license = crunched_md5sums.get(md5val, None)
+    return license, md5val, lictext
+
 def guess_license(srctree):
     import bb
     md5sums = get_license_md5sums(tinfoil.config_data)
@@ -733,7 +804,11 @@ def guess_license(srctree):
                         licfiles.append(fullpath)
     for licfile in licfiles:
         md5value = bb.utils.md5_file(licfile)
-        license = md5sums.get(md5value, 'Unknown')
+        license = md5sums.get(md5value, None)
+        if not license:
+            license, crunched_md5, lictext = crunch_license(licfile)
+            if not license:
+                license = 'Unknown'
         licenses.append((license, os.path.relpath(licfile, srctree), md5value))
 
     # FIXME should we grab at least one source file with a license header and add that too?
