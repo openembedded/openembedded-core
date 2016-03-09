@@ -29,7 +29,6 @@ SDK_LOCAL_CONF_BLACKLIST ?= "CONF_VERSION \
                              PARALLEL_MAKE \
                              PRSERV_HOST \
                              SSTATE_MIRRORS \
-                             DL_DIR \
                             "
 SDK_INHERIT_BLACKLIST ?= "buildhistory icecc"
 SDK_UPDATE_URL ?= ""
