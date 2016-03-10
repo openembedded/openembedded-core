@@ -27,7 +27,7 @@ class BitbakePrTests(oeSelfTest):
         package_stamps_path = "/".join(stampdata[:-1])
         stamps = []
         for stamp in os.listdir(package_stamps_path):
-            find_stamp = re.match("%s\.%s\.([a-z0-9]{32})" % (prefix, recipe_task), stamp)
+            find_stamp = re.match("%s\.%s\.([a-z0-9]{32})" % (re.escape(prefix), recipe_task), stamp)
             if find_stamp:
                 stamps.append(find_stamp.group(1))
         self.assertFalse(len(stamps) == 0, msg="Cound not find stamp for task %s for recipe %s" % (recipe_task, package_name))
