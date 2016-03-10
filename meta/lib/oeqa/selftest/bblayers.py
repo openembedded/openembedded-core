@@ -23,8 +23,10 @@ class BitbakeLayers(oeSelfTest):
 
     @testcase(93)
     def test_bitbakelayers_showappends(self):
+        recipe = "xcursor-transparent-theme"
+        bb_file = self.get_recipe_basename(recipe)
         result = runCmd('bitbake-layers show-appends')
-        self.assertTrue('xcursor-transparent-theme_0.1.1.bbappend' in result.output, msg="xcursor-transparent-theme_0.1.1.bbappend file was not recognised.  bitbake-layers show-appends output: %s" % result.output)
+        self.assertTrue(bb_file in result.output, msg="%s file was not recognised. bitbake-layers show-appends output: %s" % (bb_file, result.output))
 
     @testcase(90)
     def test_bitbakelayers_showoverlayed(self):
@@ -33,11 +35,14 @@ class BitbakeLayers(oeSelfTest):
 
     @testcase(95)
     def test_bitbakelayers_flatten(self):
+        recipe = "xcursor-transparent-theme"
+        recipe_path = "recipes-graphics/xcursor-transparent-theme"
+        recipe_file = self.get_recipe_basename(recipe)
         testoutdir = os.path.join(self.builddir, 'test_bitbakelayers_flatten')
         self.assertFalse(os.path.isdir(testoutdir), msg = "test_bitbakelayers_flatten should not exist at this point in time")
         self.track_for_cleanup(testoutdir)
         result = runCmd('bitbake-layers flatten %s' % testoutdir)
-        bb_file = os.path.join(testoutdir, 'recipes-graphics/xcursor-transparent-theme/xcursor-transparent-theme_0.1.1.bb')
+        bb_file = os.path.join(testoutdir, recipe_path, recipe_file)
         self.assertTrue(os.path.isfile(bb_file), msg = "Cannot find xcursor-transparent-theme_0.1.1.bb in the test_bitbakelayers_flatten local dir.")
         contents = ftools.read_file(bb_file)
         find_in_contents = re.search("##### bbappended from meta-selftest #####\n(.*\n)*include test_recipe.inc", contents)
@@ -86,3 +91,14 @@ class BitbakeLayers(oeSelfTest):
         result = runCmd('bitbake-layers show-recipes -i nonexistentclass', ignore_status=True)
         self.assertNotEqual(result.status, 0, 'bitbake-layers show-recipes -i nonexistentclass should have failed')
         self.assertIn('ERROR:', result.output)
+
+    def get_recipe_basename(self, recipe):
+        recipe_file = ""
+        result = runCmd("bitbake-layers show-recipes -f %s" % recipe)
+        for line in result.output.splitlines():
+            if recipe in line:
+                recipe_file = line
+                break
+
+        self.assertTrue(os.path.isfile(recipe_file), msg = "Can't find recipe file for %s" % recipe)
+        return os.path.basename(recipe_file)
