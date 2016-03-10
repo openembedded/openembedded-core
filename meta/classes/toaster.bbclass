@@ -112,6 +112,26 @@ def _toaster_load_pkgdatafile(dirpath, filepath):
                 pass    # ignore lines without valid key: value pairs
     return pkgdata
 
+python toaster_package_dumpdata_setscene() {
+    """
+    Dumps the data created by package_setscene
+    """
+    # replicate variables from the package.bbclass
+    packages = d.getVar('PACKAGES', True)
+    pkgdatadir = d.getVar('PKGDATA_DIR', True)
+    # scan and send data for each package
+    lpkgdata = {}
+    for pkg in packages.split():
+        try:
+          lpkgdata = _toaster_load_pkgdatafile(pkgdatadir + "/runtime/", pkg)
+        except:
+          # these are typically foo-locale which actually point into foo-locale-<language> in runtime-rprovides
+          bb.note("toaster_package_dumpdata_setscene: failed to load pkg information for: %s:%s"%(pkg,sys.exc_info()[0]))
+        # Fire an event containing the pkg data
+        bb.event.fire(bb.event.MetadataEvent("SinglePackageInfo", lpkgdata), d)
+
+}
+
 
 python toaster_package_dumpdata() {
     """
@@ -120,8 +140,6 @@ python toaster_package_dumpdata() {
     # replicate variables from the package.bbclass
 
     packages = d.getVar('PACKAGES', True)
-    pkgdest = d.getVar('PKGDEST', True)
-
     pkgdatadir = d.getVar('PKGDESTWORK', True)
 
     # scan and send data for each package
@@ -381,6 +399,9 @@ toaster_collect_task_stats[eventmask] = "bb.event.BuildCompleted bb.build.TaskSu
 
 addhandler toaster_buildhistory_dump
 toaster_buildhistory_dump[eventmask] = "bb.event.BuildCompleted"
+
+do_packagedata_setscene[postfuncs] += "toaster_package_dumpdata_setscene "
+do_packagedata_setscene[vardepsexclude] += "toaster_package_dumpdata_setscene "
 
 do_package[postfuncs] += "toaster_package_dumpdata "
 do_package[vardepsexclude] += "toaster_package_dumpdata "
