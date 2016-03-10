@@ -50,6 +50,7 @@ class LocalSigner(object):
             bb.error('rpmsign failed: %s' % proc.before.strip())
             raise bb.build.FuncFailed("Failed to sign RPM packages")
 
+
     def detach_sign(self, input_file, keyid, passphrase_file, passphrase=None, armor=True):
         """Create a detached signature of a file"""
         import subprocess
@@ -58,22 +59,35 @@ class LocalSigner(object):
             raise Exception("You should use either passphrase_file of passphrase, not both")
 
         cmd = [self.gpg_bin, '--detach-sign', '--batch', '--no-tty', '--yes',
-               '-u', keyid]
-        if passphrase_file:
-            cmd += ['--passphrase-file', passphrase_file]
-        else:
-            cmd += ['--passphrase-fd', '0']
+               '--passphrase-fd', '0', '-u', keyid]
+
         if self.gpg_path:
             cmd += ['--homedir', self.gpg_path]
         if armor:
             cmd += ['--armor']
-        cmd.append(input_file)
-        job = subprocess.Popen(cmd, stdin=subprocess.PIPE, stdout=subprocess.PIPE,
-                               stderr=subprocess.PIPE)
-        _, stderr = job.communicate(passphrase)
-        if job.returncode:
-            raise bb.build.FuncFailed("Failed to create signature for '%s': %s" %
-                                      (input_file, stderr))
+
+        cmd += [input_file]
+
+        try:
+            if passphrase_file:
+                with open(passphrase_file) as fobj:
+                    passphrase = fobj.readline();
+
+            job = subprocess.Popen(cmd, stdin=subprocess.PIPE, stderr=subprocess.PIPE)
+            (_, stderr) = job.communicate(passphrase)
+
+            if job.returncode:
+                raise bb.build.FuncFailed("GPG exited with code %d: %s" %
+                                          (job.returncode, stderr))
+
+        except IOError as e:
+            bb.error("IO error (%s): %s" % (e.errno, e.strerror))
+            raise Exception("Failed to sign '%s'" % input_file)
+
+        except OSError as e:
+            bb.error("OS error (%s): %s" % (e.errno, e.strerror))
+            raise Exception("Failed to sign '%s" % input_file)
+
 
     def verify(self, sig_file):
         """Verify signature"""
