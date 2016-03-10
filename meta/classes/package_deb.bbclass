@@ -235,6 +235,9 @@ python do_package_deb () {
         rdepends = bb.utils.explode_dep_versions2(localdata.getVar("RDEPENDS", True) or "")
         debian_cmp_remap(rdepends)
         for dep in rdepends.keys():
+                if dep == pkg:
+                        del rdepends[dep]
+                        continue
                 if '*' in dep:
                         del rdepends[dep]
         rrecommends = bb.utils.explode_dep_versions2(localdata.getVar("RRECOMMENDS", True) or "")
