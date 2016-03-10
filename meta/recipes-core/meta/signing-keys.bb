@@ -12,9 +12,10 @@ inherit allarch deploy
 EXCLUDE_FROM_WORLD = "1"
 INHIBIT_DEFAULT_DEPS = "1"
 
-PACKAGES =+ "${PN}-rpm ${PN}-packagefeed"
+PACKAGES =+ "${PN}-ipk ${PN}-rpm ${PN}-packagefeed"
 
 FILES_${PN}-rpm = "${sysconfdir}/pki/rpm-gpg"
+FILES_${PN}-ipk = "${sysconfdir}/pki/ipk-gpg"
 FILES_${PN}-packagefeed = "${sysconfdir}/pki/packagefeed-gpg"
 
 python do_get_public_keys () {
@@ -25,6 +26,12 @@ python do_get_public_keys () {
         signer = get_signer(d, d.getVar('RPM_GPG_BACKEND', True))
         signer.export_pubkey(os.path.join(d.expand('${B}'), 'rpm-key'),
                              d.getVar('RPM_GPG_NAME', True))
+
+    if d.getVar("IPK_SIGN_PACKAGES", True):
+        # Export public key of the ipk signing key
+        signer = get_signer(d, d.getVar('IPK_GPG_BACKEND', True))
+        signer.export_pubkey(os.path.join(d.expand('${B}'), 'ipk-key'),
+                             d.getVar('IPK_GPG_NAME', True))
 
     if d.getVar('PACKAGE_FEED_SIGN', True) == '1':
         # Export public key of the feed signing key
@@ -39,6 +46,9 @@ do_install () {
     if [ -f "${B}/rpm-key" ]; then
         install -D -m 0644 "${B}/rpm-key" "${D}${sysconfdir}/pki/rpm-gpg/RPM-GPG-KEY-${DISTRO_VERSION}"
     fi
+    if [ -f "${B}/ipk-key" ]; then
+        install -D -m 0644 "${B}/ipk-key" "${D}${sysconfdir}/pki/ipk-gpg/IPK-GPG-KEY-${DISTRO_VERSION}"
+    fi
     if [ -f "${B}/pf-key" ]; then
         install -D -m 0644 "${B}/pf-key" "${D}${sysconfdir}/pki/packagefeed-gpg/PACKAGEFEED-GPG-KEY-${DISTRO_VERSION}"
     fi
@@ -51,6 +61,9 @@ sysroot_stage_all_append () {
 do_deploy () {
     if [ -f "${B}/rpm-key" ]; then
         install -D -m 0644 "${B}/rpm-key" "${DEPLOYDIR}/RPM-GPG-KEY-${DISTRO_VERSION}"
+    fi
+    if [ -f "${B}/ipk-key" ]; then
+        install -D -m 0644 "${B}/ipk-key" "${DEPLOYDIR}/IPK-GPG-KEY-${DISTRO_VERSION}"
     fi
     if [ -f "${B}/pf-key" ]; then
         install -D -m 0644 "${B}/pf-key" "${DEPLOYDIR}/PACKAGEFEED-GPG-KEY-${DISTRO_VERSION}"
