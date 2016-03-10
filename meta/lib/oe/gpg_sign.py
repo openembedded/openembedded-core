@@ -66,6 +66,13 @@ class LocalSigner(object):
         if armor:
             cmd += ['--armor']
 
+        #gpg > 2.1 supports password pipes only through the loopback interface
+        #gpg < 2.1 errors out if given unknown parameters
+        dots = self.get_gpg_version().split('.')
+        assert len(dots) >= 2
+        if int(dots[0]) >= 2 and int(dots[1]) >= 1:
+            cmd += ['--pinentry-mode', 'loopback']
+
         cmd += [input_file]
 
         try:
@@ -87,6 +94,15 @@ class LocalSigner(object):
         except OSError as e:
             bb.error("OS error (%s): %s" % (e.errno, e.strerror))
             raise Exception("Failed to sign '%s" % input_file)
+
+
+    def get_gpg_version(self):
+        """Return the gpg version"""
+        import subprocess
+        try:
+            return subprocess.check_output((self.gpg_bin, "--version")).split()[2]
+        except subprocess.CalledProcessError as e:
+            raise bb.build.FuncFailed("Could not get gpg version: %s" % e)
 
 
     def verify(self, sig_file):
