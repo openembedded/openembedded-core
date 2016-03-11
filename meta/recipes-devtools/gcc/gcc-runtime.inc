@@ -138,9 +138,9 @@ LICENSE_libitm = "GPL-3.0-with-GCC-exception"
 LICENSE_libitm-dev = "GPL-3.0-with-GCC-exception"
 LICENSE_libitm-staticdev = "GPL-3.0-with-GCC-exception"
 
-LICENSE_libgomp = "GPL-3.0-with-GCC-exception"
-LICENSE_libgomp-dev = "GPL-3.0-with-GCC-exception"
-LICENSE_libgomp-staticdev = "GPL-3.0-with-GCC-exception"
+LICENSE_libgomp = "GPLv3"
+LICENSE_libgomp-dev = "GPLv3"
+LICENSE_libgomp-staticdev = "GPLv3"
 
 # The base package doesn't exist, so we clear the recommends.
 RRECOMMENDS_${PN}-dbg = ""
