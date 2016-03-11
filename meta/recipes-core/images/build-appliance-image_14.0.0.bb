@@ -26,6 +26,7 @@ SRC_URI = "git://git.yoctoproject.org/poky \
            file://Yocto_Build_Appliance.vmx \
            file://Yocto_Build_Appliance.vmxf \
           "
+BA_INCLUDE_SOURCES ??= "0"
 
 IMAGE_CMD_ext4_append () {
 	# We don't need to reserve much space for root, 0.5% is more than enough
@@ -42,7 +43,9 @@ fakeroot do_populate_poky_src () {
 
 	mkdir -p ${IMAGE_ROOTFS}/home/builder/poky/build/conf
 	mkdir -p ${IMAGE_ROOTFS}/home/builder/poky/build/downloads
-	cp -RpL ${DL_DIR}/* ${IMAGE_ROOTFS}/home/builder/poky/build/downloads/
+	if [ ${BA_INCLUDE_SOURCES} != 0 ]; then
+		cp -RpL ${DL_DIR}/* ${IMAGE_ROOTFS}/home/builder/poky/build/downloads/
+	fi
 
 	# Remove the git2_* tarballs -- this is ok since we still have the git2/.
 	rm -rf ${IMAGE_ROOTFS}/home/builder/poky/build/downloads/git2_*
