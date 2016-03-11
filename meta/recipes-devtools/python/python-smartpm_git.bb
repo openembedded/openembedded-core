@@ -19,7 +19,6 @@ SRC_URI = "\
           file://smart-channelsdir.patch \
           file://smart-attempt.patch \
           file://smart-attempt-fix.patch \
-          file://smart-rpm4-fixes.patch \
           file://smart-add-for-rpm-ignoresize-check.patch \
           file://smart-already-installed-message.patch \
           file://smart-set-noprogress-for-pycurl.patch \
