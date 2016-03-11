@@ -18,7 +18,8 @@ SRC_URI = "${GNOME_MIRROR}/glib/${SHRT_VER}/glib-${PV}.tar.xz \
            file://gi-exclude.patch \
           "
 
-SRC_URI_append_class-native = " file://glib-gettextize-dir.patch"
+SRC_URI_append_class-native = " file://glib-gettextize-dir.patch \
+                                file://relocate-modules.patch"
 
 SRC_URI[md5sum] = "7f815d6e46df68e070cb421ed7f1139e"
 SRC_URI[sha256sum] = "5031722e37036719c1a09163cc6cf7c326e4c4f1f1e074b433c156862bd733db"
