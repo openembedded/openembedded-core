@@ -2,6 +2,7 @@ require ncurses.inc
 
 SRC_URI += "file://tic-hang.patch \
             file://config.cache \
+            file://fix-include-files-race.patch \
 "
 # commit id corresponds to the revision in package version
 SRCREV = "a25949ff653ac5ae7a204381a3ebfd800feeaa01"

@@ -1,0 +1,32 @@
+There is a race condition when running 
+
+    $ make install.libs install.includes
+    
+As both targets install identical files. The remedy is to either prevent
+parallel make of install.libs and install.includes, or ensure only one 
+target installs the files. 
+The second approch will only work if we always install both libs and 
+includes (which we do).
+
+
+Upstream-Status: Inappropriate [configuration]
+
+Index: git/mk-hdr.awk
+===================================================================
+--- a/mk-hdr.awk
++++ b/mk-hdr.awk
+@@ -73,11 +73,13 @@ BEGIN	{
+ END	{
+ 		if ( count > 0 )
+ 		{
++			print" # patched here: Removed install.libs due the race "
+ 			print "${INCLUDEDIR} :"
+ 			print "	mkdir -p $@"
+ 			print ""
++			print "install.libs :: ;"
++			print ""
+ 			print "install \\"
+-			print "install.libs \\"
+ 			print "install.includes :: ${AUTO_SRC} ${INCLUDEDIR} \\"
+ 
+ 			for (i = 0; i < count - 1; ++i) {
