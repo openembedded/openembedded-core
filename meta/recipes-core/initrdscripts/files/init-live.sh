@@ -214,11 +214,7 @@ mount_and_boot() {
     boot_live_root
 }
 
-case $label in
-    boot)
-	mount_and_boot
-	;;
-    install|install-efi)
+if [ "$label" != "boot" -a -f $label.sh ] ; then
 	if [ -f /run/media/$i/$ISOLINUX/$ROOT_IMAGE ] ; then
 	    ./$label.sh $i/$ISOLINUX $ROOT_IMAGE $video_mode $vga_mode $console_params
 	else
@@ -226,10 +222,8 @@ case $label in
 	fi
 
 	# If we're getting here, we failed...
-	fatal "Installation image failed"
-	;;
-    *)
-	# Not sure what boot label is provided.  Try to boot to avoid locking up.
-	mount_and_boot
-	;;
-esac
+	fatal "Target $label failed"
+fi
+
+mount_and_boot
+
