@@ -30,8 +30,4 @@ fi
 cd /home/builder/poky
 . ./oe-init-build-env
 
-hob &
-
 matchbox-terminal&
-
-/etc/mini_x/please_wait_dialog.py &
