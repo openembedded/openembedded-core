@@ -1,6 +1,6 @@
 require busybox.inc
 
-SRCREV = "966423d4034067f52b419570a1016d1dfc4aeacd"
+SRCREV = "1b7c17391de66502dd7a97c866e0a33681edbb1f"
 # Lookout for PV bump too when SRCREV is changed
 PV = "1.25.0+git${SRCPV}"
 
@@ -35,12 +35,17 @@ SRC_URI = "git://busybox.net/busybox.git \
            file://recognize_connmand.patch \
            file://busybox-cross-menuconfig.patch \
            file://0001-Use-CC-when-linking-instead-of-LD-and-use-CFLAGS-and.patch \
-           file://0002-Passthrough-r-to-linker.patch \
            file://mount-via-label.cfg \
            file://sha1sum.cfg \
            file://sha256sum.cfg \
            file://getopts.cfg \
            file://resize.cfg \
+           ${@["", "file://init.cfg"][(d.getVar('VIRTUAL-RUNTIME_init_manager', True) == 'busybox')]} \
+           ${@["", "file://mdev.cfg"][(d.getVar('VIRTUAL-RUNTIME_dev_manager', True) == 'busybox-mdev')]} \
+           file://inittab \
+           file://rcS \
+           file://rcK \
+           file://runlevel \
 "
 SRC_URI_append_libc-musl = " file://musl.cfg "
 
