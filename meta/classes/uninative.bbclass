@@ -13,6 +13,11 @@ UNINATIVE_DLDIR ?= "${DL_DIR}/uninative/"
 # on the host system.
 BUILD_CXXFLAGS_append = " -D_GLIBCXX_USE_CXX11_ABI=0"
 
+#
+# icu configure defaults to CXX11 if no -std= option is passed in CXXFLAGS
+# therefore pass one
+BUILD_CXXFLAGS_append_pn-icu-native = " -std=c++98"
+
 addhandler uninative_event_fetchloader
 uninative_event_fetchloader[eventmask] = "bb.event.BuildStarted"
 
