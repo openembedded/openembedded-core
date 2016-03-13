@@ -604,13 +604,14 @@ def create_recipe(args):
                 sys.exit(1)
 
     # Move any extra files the plugins created to a directory next to the recipe
-    if outfile == '-':
-        extraoutdir = pn
-    else:
-        extraoutdir = os.path.join(os.path.dirname(outfile), pn)
-    bb.utils.mkdirhier(extraoutdir)
-    for destfn, extrafile in extrafiles.iteritems():
-        shutil.move(extrafile, os.path.join(extraoutdir, destfn))
+    if extrafiles:
+        if outfile == '-':
+            extraoutdir = pn
+        else:
+            extraoutdir = os.path.join(os.path.dirname(outfile), pn)
+        bb.utils.mkdirhier(extraoutdir)
+        for destfn, extrafile in extrafiles.iteritems():
+            shutil.move(extrafile, os.path.join(extraoutdir, destfn))
 
     lines = lines_before
     lines_before = []
