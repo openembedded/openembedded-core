@@ -410,9 +410,9 @@ class RecipetoolTests(RecipetoolBase):
         srcuri = 'http://www.dest-unreach.org/socat/download/socat-%s.tar.bz2' % pv
         result = runCmd('recipetool create %s -o %s' % (srcuri, temprecipe))
         dirlist = os.listdir(temprecipe)
-        if len(dirlist) < 1 or not os.path.isfile(os.path.join(temprecipe, dirlist[0])):
+        if len(dirlist) < 1 or not os.path.isfile(os.path.join(temprecipe, 'socat_%s.bb' % pv)):
             self.fail('recipetool did not create recipe file; output:\n%s\ndirlist:\n%s' % (result.output, str(dirlist)))
-        self.assertEqual(dirlist[0], 'socat_%s.bb' % pv, 'Recipe file incorrectly named')
+        self.assertIn('socat_%s.bb' % pv, dirlist, 'Recipe file incorrectly named')
         checkvars = {}
         checkvars['LICENSE'] = set(['Unknown', 'GPLv2'])
         checkvars['LIC_FILES_CHKSUM'] = set(['file://COPYING.OpenSSL;md5=5c9bccc77f67a8328ef4ebaf468116f4', 'file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263'])
