@@ -23,7 +23,7 @@ UPSTREAM_CHECK_URI = "https://github.com/gentoo/eudev/releases"
 SRC_URI[md5sum] = "e130f892d8744e292cb855db79935f68"
 SRC_URI[sha256sum] = "ce9d5fa91e3a42c7eb95512ca0fa2a631e89833053066bb6cdf42046b2a88553"
 
-inherit autotools update-rc.d
+inherit autotools update-rc.d qemu
 
 EXTRA_OECONF = " \
     --sbindir=${base_sbindir} \
@@ -69,6 +69,8 @@ INITSCRIPT_PARAMS_udev-cache = "start 36 S ."
 
 PACKAGES =+ "libudev"
 PACKAGES =+ "udev-cache"
+PACKAGES =+ "eudev-hwdb"
+
 
 FILES_${PN} += "${libexecdir} ${nonarch_base_libdir}/udev ${bindir}/udevadm"
 FILES_${PN}-dev = "${datadir}/pkgconfig/udev.pc \
@@ -77,12 +79,29 @@ FILES_${PN}-dev = "${datadir}/pkgconfig/udev.pc \
                    ${libdir}/libudev.a ${libdir}/pkgconfig/libudev.pc"
 FILES_libudev = "${base_libdir}/libudev.so.*"
 FILES_udev-cache = "${sysconfdir}/init.d/udev-cache ${sysconfdir}/default/udev-cache"
+FILES_eudev-hwdb = "${sysconfdir}/udev/hwdb.d"
+
+RDEPENDS_eudev-hwdb += "eudev"
+
+RRECOMMENDS_${PN} += "udev-cache eudev-hwdb"
+
+RPROVIDES_${PN} = "hotplug udev"
 
 python () {
     if bb.utils.contains ('DISTRO_FEATURES', 'systemd', True, False, d):
         raise bb.parse.SkipPackage("'systemd' in DISTRO_FEATURES")
 }
 
-RRECOMMENDS_${PN} += "udev-cache"
+pkg_postinst_eudev-hwdb () {
+    if test -n "$D"; then
+        ${@qemu_run_binary(d, '$D', '${bindir}/udevadm')} hwdb --update --root $D
+        chown root:root $D${sysconfdir}/udev/hwdb.bin
+    else
+        udevadm hwdb --update
+    fi
+}
 
-RPROVIDES_${PN} = "hotplug udev"
+pkg_prerm_eudev-hwdb () {
+        rm -f $D${sysconfdir}/udev/hwdb.bin
+}
+
