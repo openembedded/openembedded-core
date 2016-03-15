@@ -7,6 +7,7 @@ SRC_URI += "file://dhcp-3.0.3-dhclient-dbus.patch;striplevel=0 \
             file://dhclient-script-drop-resolv.conf.dhclient.patch \
             file://replace-ifconfig-route.patch \
             file://CVE-2015-8605.patch \
+            file://0001-site.h-enable-gentle-shutdown.patch \
            "
 
 SRC_URI[md5sum] = "c5577b09c9017cdd319a11ff6364268e"
