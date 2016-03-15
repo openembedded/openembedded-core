@@ -33,12 +33,12 @@ EXTRA_OEMAKE = "-e MAKEFLAGS="
 inherit pkgconfig siteinfo multilib_header ptest
 
 PACKAGES =+ "libcrypto libssl ${PN}-misc openssl-conf"
-FILES_libcrypto = "${base_libdir}/libcrypto${SOLIBS}"
+FILES_libcrypto = "${libdir}/libcrypto${SOLIBS}"
 FILES_libssl = "${libdir}/libssl.so.*"
 FILES_${PN} =+ " ${libdir}/ssl/*"
 FILES_${PN}-misc = "${libdir}/ssl/misc ${bindir}/c_rehash"
 RDEPENDS_${PN}-misc = "${@bb.utils.contains('PACKAGECONFIG', 'perl', 'perl', '', d)}"
-FILES_${PN}-dev += "${base_libdir}/libcrypto${SOLIBSDEV}"
+FILES_${PN}-dev += "${libdir}/libcrypto${SOLIBSDEV}"
 
 # Add the openssl.cnf file to the openssl-conf package.  Make the libcrypto
 # package RRECOMMENDS on this package.  This will enable the configuration
@@ -165,13 +165,6 @@ do_install () {
 
 	oe_libinstall -so libcrypto ${D}${libdir}
 	oe_libinstall -so libssl ${D}${libdir}
-
-	# Moving libcrypto to /lib
-	if [ ! ${D}${libdir} -ef ${D}${base_libdir} ]; then
-		mkdir -p ${D}/${base_libdir}/
-		mv ${D}${libdir}/libcrypto* ${D}${base_libdir}/
-		sed -i s#libdir=\$\{exec_prefix\}\/lib#libdir=${base_libdir}# ${D}/${libdir}/pkgconfig/libcrypto.pc
-	fi
 
 	install -d ${D}${includedir}
 	cp --dereference -R include/openssl ${D}${includedir}
