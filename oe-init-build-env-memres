@@ -34,30 +34,32 @@ else
 fi
 
 if [ -n "$BASH_SOURCE" ]; then
-  OEROOT="`dirname $BASH_SOURCE`"
+    THIS_SCRIPT=$BASH_SOURCE
 elif [ -n "$ZSH_NAME" ]; then
-  OEROOT="`dirname $0`"
+    THIS_SCRIPT=$0
 else
-  OEROOT="`pwd`"
+    THIS_SCRIPT="$(pwd)/oe-init-build-env"
 fi
 if [ -n "$BBSERVER" ]; then
   unset BBSERVER
 fi
 
-THIS_SCRIPT=$OEROOT/oe-init-build-env-memres
 if [ -z "$ZSH_NAME" ] && [ "x$0" = "x$THIS_SCRIPT" ]; then
    echo "Error: This script needs to be sourced. Please run as '. $THIS_SCRIPT'"
    exit 1
 fi
 
-OEROOT=`readlink -f "$OEROOT"`
+if [ -z "$OEROOT" ]; then
+    OEROOT=$(dirname "$THIS_SCRIPT")
+    OEROOT=$(readlink -f "$OEROOT")
+fi
+unset THIS_SCRIPT
+
 export OEROOT
 . $OEROOT/scripts/oe-buildenv-internal && \
     $OEROOT/scripts/oe-setup-builddir && \
     [ -n "$BUILDDIR" ] && cd $BUILDDIR
 unset OEROOT
-unset BBPATH
-unset THIS_SCRIPT
 
 res=1
 if [ -e bitbake.lock ] && grep : bitbake.lock > /dev/null ; then
