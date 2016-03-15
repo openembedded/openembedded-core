@@ -19,11 +19,11 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #
-# Normally this is called as '. ./oe-init-build-env builddir <portnumber> <builddir>'
+# Normally this is called as '. ./oe-init-build-env-memres <portnumber> <builddir>'
 #
-# This works in most shells (not dash), but not all of them pass arg1 when
-# being sourced.   To workaround the shell limitation use "set arg1" prior 
-# to sourcing this script.
+# This works in most shells (not dash), but not all of them pass the arguments
+# when being sourced.  To workaround the shell limitation use "set <portnumber>
+# <builddir>" prior to sourcing this script.
 #
 if [ -z "$1" ]; then
     echo "No port specified, using dynamically selected port"
