@@ -95,9 +95,14 @@ if ! (test -d "$BITBAKEDIR"); then
 fi
 
 # Make sure our paths are at the beginning of $PATH
-NEWPATHS="${OEROOT}/scripts:$BITBAKEDIR/bin:"
-PATH=$NEWPATHS$(echo $PATH | sed -e "s|:$NEWPATHS|:|g" -e "s|^$NEWPATHS||")
-unset BITBAKEDIR NEWPATHS
+for newpath in "$BITBAKEDIR/bin" "$OEROOT/scripts"; do
+    # Remove any existences of $newpath from $PATH
+    PATH=$(echo $PATH | sed -re "s#(^|:)$newpath(:|$)#\1#g;s#^:##")
+
+    # Add $newpath to $PATH
+    PATH="$newpath:$PATH"
+done
+unset BITBAKEDIR newpath
 
 # Used by the runqemu script
 export BUILDDIR
