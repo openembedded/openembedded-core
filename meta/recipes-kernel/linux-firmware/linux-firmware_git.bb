@@ -173,7 +173,7 @@ do_install() {
 
 PACKAGES =+ "${PN}-ralink-license ${PN}-ralink \
              ${PN}-radeon-license ${PN}-radeon \
-             ${PN}-marvell-license ${PN}-sd8686 ${PN}-sd8787 ${PN}-sd8797 \
+             ${PN}-marvell-license ${PN}-sd8686 ${PN}-sd8688 ${PN}-sd8787 ${PN}-sd8797 \
              ${PN}-ti-connectivity-license ${PN}-wl12xx ${PN}-wl18xx \
              ${PN}-vt6656-license ${PN}-vt6656 \
              ${PN}-rtl-license ${PN}-rtl8192cu ${PN}-rtl8192ce ${PN}-rtl8192su \
@@ -254,6 +254,7 @@ RDEPENDS_${PN}-radeon += "${PN}-radeon-license"
 
 # For marvell
 LICENSE_${PN}-sd8686 = "Firmware-Marvell"
+LICENSE_${PN}-sd8688 = "Firmware-Marvell"
 LICENSE_${PN}-sd8787 = "Firmware-Marvell"
 LICENSE_${PN}-sd8797 = "Firmware-Marvell"
 
@@ -261,6 +262,10 @@ FILES_${PN}-marvell-license = "/lib/firmware/LICENCE.Marvell"
 FILES_${PN}-sd8686 = " \
   /lib/firmware/libertas/sd8686_v9* \
   /lib/firmware/sd8686* \
+"
+FILES_${PN}-sd8688 = " \
+  /lib/firmware/libertas/sd8688* \
+  /lib/firmware/mrvl/sd8688* \
 "
 FILES_${PN}-sd8787 = " \
   /lib/firmware/mrvl/sd8787_uapsta.bin \
@@ -270,6 +275,7 @@ FILES_${PN}-sd8797 = " \
 "
 
 RDEPENDS_${PN}-sd8686 += "${PN}-marvell-license"
+RDEPENDS_${PN}-sd8688 += "${PN}-marvell-license"
 RDEPENDS_${PN}-sd8787 += "${PN}-marvell-license"
 RDEPENDS_${PN}-sd8797 += "${PN}-marvell-license"
 
