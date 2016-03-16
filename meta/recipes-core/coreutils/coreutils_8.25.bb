@@ -28,6 +28,7 @@ SRC_URI[manpages.sha256sum] = "2ee31c3a6d2276f49c5515375d4a0c1047580da6ac1053689
 
 EXTRA_OECONF_class-native = "--without-gmp"
 EXTRA_OECONF_class-target = "--enable-install-program=arch --libexecdir=${libdir}"
+EXTRA_OECONF_class-nativesdk = "--enable-install-program=arch"
 
 # acl and xattr are not default features
 #
@@ -68,7 +69,7 @@ do_compile_prepend () {
 	mkdir -p ${B}/src
 }
 
-do_install_append_class-target() {
+do_install_append() {
 	for i in df mktemp base64; do mv ${D}${bindir}/$i ${D}${bindir}/$i.${BPN}; done
 
 	install -d ${D}${base_bindir}
