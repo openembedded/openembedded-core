@@ -9,6 +9,7 @@ DISABLE_STATIC_pn-pciutils = ""
 # libcap aborts on unrecognised option
 DISABLE_STATIC_pn-libcap = ""
 DISABLE_STATIC_pn-libcap-native = ""
+DISABLE_STATIC_pn-nativesdk-libcap = ""
 # libpcap aborts on unrecognised option
 DISABLE_STATIC_pn-libpcap = ""
 # needed by gdb
