@@ -783,7 +783,7 @@ def modify(args, config, basepath, workspace):
                     'do_fetch do_unpack do_patch do_kernel_configme do_kernel_configcheck"\n')
             f.write('\ndo_configure_append() {\n'
                     '    cp ${B}/.config ${S}/.config.baseline\n'
-                    '    ln -sfT ${B}/.config ${S}/.config\n'
+                    '    ln -sfT ${B}/.config ${S}/.config.new\n'
                     '}\n')
         if initial_rev:
             f.write('\n# initial_rev: %s\n' % initial_rev)
@@ -930,7 +930,7 @@ def _create_kconfig_diff(srctree, rd, outfile):
     """Create a kconfig fragment"""
     # Only update config fragment if both config files exist
     orig_config = os.path.join(srctree, '.config.baseline')
-    new_config = os.path.join(srctree, '.config')
+    new_config = os.path.join(srctree, '.config.new')
     if os.path.exists(orig_config) and os.path.exists(new_config):
         cmd = ['diff', '--new-line-format=%L', '--old-line-format=',
                '--unchanged-line-format=', orig_config, new_config]
