@@ -139,7 +139,7 @@ do_install_append_pn-gzip () {
         self.assertTrue(line and line.startswith("WARNING:"), "WARNING: QA Issue: nfs-utils message is not present in bitbake's output: %s" % res.output)
 
     @testcase(1421)
-    def test_layer_git_revisions_are_displayed_and_do_not_fail_without_git_repo(self):
+    def test_layer_without_git_dir(self):
         """
         Summary:     Test that layer git revisions are displayed and do not fail without git repository
         Expected:    The build to be successful and without "fatal" errors
