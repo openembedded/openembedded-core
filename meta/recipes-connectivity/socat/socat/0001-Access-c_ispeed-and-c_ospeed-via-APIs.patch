@@ -1,0 +1,39 @@
+From 545d3dec8c91d6074516ffcfa79323ddf9d83839 Mon Sep 17 00:00:00 2001
+From: Khem Raj <raj.khem@gmail.com>
+Date: Tue, 15 Mar 2016 21:36:02 +0000
+Subject: [PATCH] Access c_ispeed and c_ospeed via APIs
+
+Use cfsetispeed(), cfsetospeed(), cfgetispeed, and cfgetospeed()
+instead of operating on c_ispeed and c_ospeed termios structure
+members directly because they are not guaranteed to exist on all
+libc implementations
+
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+---
+Upstream-Status: Submitted
+
+ xioinitialize.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/xioinitialize.c b/xioinitialize.c
+index 9f50155..632ca4c 100644
+--- a/xioinitialize.c
++++ b/xioinitialize.c
+@@ -65,10 +65,10 @@ int xioinitialize(void) {
+ #if HAVE_TERMIOS_ISPEED && (ISPEED_OFFSET != -1) && (OSPEED_OFFSET != -1)
+ #if defined(ISPEED_OFFSET) && (ISPEED_OFFSET != -1)
+ #if defined(OSPEED_OFFSET) && (OSPEED_OFFSET != -1)
+-      tdata.termarg.c_ispeed = 0x56789abc;
+-      tdata.termarg.c_ospeed = 0x6789abcd;
+-      assert(tdata.termarg.c_ispeed == tdata.speeds[ISPEED_OFFSET]);
+-      assert(tdata.termarg.c_ospeed == tdata.speeds[OSPEED_OFFSET]);
++      cfsetispeed(&tdata.termarg, 0x56789abc);
++      cfsetospeed(&tdata.termarg, 0x6789abcd);
++      assert(cfgetispeed(&tdata.termarg) == tdata.speeds[ISPEED_OFFSET]);
++      assert(cfgetospeed(&tdata.termarg) == tdata.speeds[OSPEED_OFFSET]);
+ #endif
+ #endif
+ #endif
+-- 
+1.9.1
+
