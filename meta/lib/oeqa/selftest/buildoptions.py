@@ -57,6 +57,10 @@ class ImageOptionsTests(oeSelfTest):
         res = runCmd("grep ccache %s" % (os.path.join(get_bb_var("WORKDIR","m4"),"temp/log.do_compile")), ignore_status=True)
         self.assertEqual(0, res.status, msg="No match for ccache in m4 log.do_compile. For further details: %s" % os.path.join(get_bb_var("WORKDIR","m4"),"temp/log.do_compile"))
 
+    def test_read_only_image(self):
+        self.write_config('IMAGE_FEATURES += "read-only-rootfs"')
+        bitbake("core-image-sato")
+        # do_image will fail if there are any pending postinsts
 
 class DiskMonTest(oeSelfTest):
 
