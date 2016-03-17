@@ -36,6 +36,7 @@ SYSTEMTAP_libc-uclibc = ""
 SYSTEMTAP_mips = ""
 SYSTEMTAP_mips64 = ""
 SYSTEMTAP_mips64n32 = ""
+SYSTEMTAP_nios2 = ""
 SYSTEMTAP_aarch64 = ""
 
 # lttng-ust uses sched_getcpu() which is not there on uclibc
