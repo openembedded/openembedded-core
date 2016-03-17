@@ -10,7 +10,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=4fbd65380cdd255951079008b364516c \
 
 DEPENDS = "libfakekey expat libxft gtk+ matchbox-panel-2"
 
-SRCREV = "217f1bfe14c41cf7e291d04a63aa2d79cc13d063"
+SRCREV = "ebc330eac8b9d38e9aef9f01e7241c904bd01073"
 PV = "0.0+git${SRCPV}"
 PR = "r4"
 
