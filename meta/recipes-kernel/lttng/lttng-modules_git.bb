@@ -11,7 +11,7 @@ inherit module
 SRCREV = "45e0ebd91f995cc73c2b0d5c60cf9d12e8c838bf"
 PV = "2.7.1+git${SRCPV}"
 
-COMPATIBLE_HOST = '(x86_64|i.86|powerpc|aarch64|mips|arm).*-linux'
+COMPATIBLE_HOST = '(x86_64|i.86|powerpc|aarch64|mips|nios2|arm).*-linux'
 
 SRC_URI = "git://git.lttng.org/lttng-modules.git;branch=stable-2.7"
 
