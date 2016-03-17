@@ -28,6 +28,7 @@ inherit update-rc.d
 DEPENDS_append_libc-musl = " libtirpc "
 CFLAGS_append_libc-musl = " -I${STAGING_INCDIR}/tirpc "
 LDFLAGS_append_libc-musl = " -ltirpc "
+EXTRA_OECONF_append_libc-musl = " --disable-nfs "
 
 INITSCRIPT_NAME = "watchdog.sh"
 INITSCRIPT_PARAMS = "start 15 1 2 3 4 5 . stop 85 0 6 ."
