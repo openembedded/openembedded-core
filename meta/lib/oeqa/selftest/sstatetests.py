@@ -240,6 +240,8 @@ BUILD_ARCH = "x86_64"
 BUILD_OS = "linux"
 SDKMACHINE = "x86_64"
 PARALLEL_MAKE = "-j 1"
+DL_DIR = "${TOPDIR}/download1"
+TIME = "111111"
 """)
         self.track_for_cleanup(topdir + "/tmp-sstatesamehash")
         bitbake("core-image-sato -S none")
@@ -250,6 +252,8 @@ BUILD_ARCH = "i686"
 BUILD_OS = "linux"
 SDKMACHINE = "i686"
 PARALLEL_MAKE = "-j 2"
+DL_DIR = "${TOPDIR}/download2"
+TIME = "222222"
 """)
         self.track_for_cleanup(topdir + "/tmp-sstatesamehash2")
         bitbake("core-image-sato -S none")
