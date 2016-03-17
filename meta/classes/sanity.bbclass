@@ -34,6 +34,9 @@ BBLAYERS_CONF_UPDATE_FUNCS += " \
     conf/site.conf:SCONF_VERSION:SITE_CONF_VERSION:oecore_update_siteconf \
 "
 
+SANITY_DIFF_TOOL ?= "meld"
+
+SANITY_LOCALCONF_SAMPLE ?= "${COREBASE}/meta*/conf/local.conf.sample"
 python oecore_update_localconf() {
     # Check we are using a valid local.conf
     current_conf  = d.getVar('CONF_VERSION', True)
@@ -45,7 +48,7 @@ files and merge any changes before continuing.
 
 Matching the version numbers will remove this message.
 
-\"meld conf/local.conf ${COREBASE}/meta*/conf/local.conf.sample\" 
+\"${SANITY_DIFF_TOOL} conf/local.conf ${SANITY_LOCALCONF_SAMPLE}\" 
 
 is a good way to visualise the changes."
     failmsg = d.expand(failmsg)
@@ -53,6 +56,7 @@ is a good way to visualise the changes."
     raise NotImplementedError(failmsg)
 }
 
+SANITY_SITECONF_SAMPLE ?= "${COREBASE}/meta*/conf/site.conf.sample"
 python oecore_update_siteconf() {
     # If we have a site.conf, check it's valid
     current_sconf = d.getVar('SCONF_VERSION', True)
@@ -64,7 +68,7 @@ files and merge any changes before continuing.
 
 Matching the version numbers will remove this message.
 
-\"meld conf/site.conf ${COREBASE}/meta*/conf/site.conf.sample\" 
+\"${SANITY_DIFF_TOOL} conf/site.conf ${SANITY_SITECONF_SAMPLE}\" 
 
 is a good way to visualise the changes."
     failmsg = d.expand(failmsg)
@@ -72,6 +76,7 @@ is a good way to visualise the changes."
     raise NotImplementedError(failmsg)
 }
 
+SANITY_BBLAYERCONF_SAMPLE ?= "${COREBASE}/meta*/conf/bblayers.conf.sample"
 python oecore_update_bblayers() {
     # bblayers.conf is out of date, so see if we can resolve that
 
@@ -80,7 +85,7 @@ python oecore_update_bblayers() {
 
     failmsg = """Your version of bblayers.conf has the wrong LCONF_VERSION (has ${LCONF_VERSION}, expecting ${LAYER_CONF_VERSION}).
 Please compare your file against bblayers.conf.sample and merge any changes before continuing.
-"meld conf/bblayers.conf ${COREBASE}/meta*/conf/bblayers.conf.sample" 
+"${SANITY_DIFF_TOOL} conf/bblayers.conf ${SANITY_BBLAYERCONF_SAMPLE}" 
 
 is a good way to visualise the changes."""
     failmsg = d.expand(failmsg)
