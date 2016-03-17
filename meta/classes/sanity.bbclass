@@ -559,7 +559,7 @@ def sanity_check_conffiles(status, d):
                 success = False
                 status.addresult(e.msg)
             if success:
-                bb.note("Your conf/bblayers.conf has been automatically updated.")
+                bb.note("Your %s file has been automatically updated." % conffile)
                 status.reparse = True
 
 def sanity_handle_abichanges(status, d):
