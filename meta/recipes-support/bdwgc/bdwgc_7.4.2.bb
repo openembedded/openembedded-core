@@ -23,6 +23,7 @@ LIC_FILES_CHKSUM = "file://README.QUICK;md5=55f5088f90a982fed7af9a4897047ef7"
 
 SRC_URI = "http://www.hboehm.info/gc/gc_source/gc-${PV}.tar.gz \
            file://0001-fix-build-with-musl.patch \
+           file://0001-configure.ac-add-check-for-NO_GETCONTEXT-definition.patch \
           "
 
 SRC_URI[md5sum] = "12c05fd2811d989341d8c6d81f66af87"
