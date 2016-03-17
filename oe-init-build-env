@@ -48,10 +48,14 @@ fi
 unset THIS_SCRIPT
 
 export OEROOT
-. $OEROOT/scripts/oe-buildenv-internal && \
-    TEMPLATECONF="$TEMPLATECONF" $OEROOT/scripts/oe-setup-builddir && \
-    [ -n "$BUILDDIR" ] && cd "$BUILDDIR"
+. $OEROOT/scripts/oe-buildenv-internal &&
+    TEMPLATECONF="$TEMPLATECONF" $OEROOT/scripts/oe-setup-builddir || {
+    unset OEROOT
+    return 1
+}
 unset OEROOT
+
+[ -z "$BUILDDIR" ] || cd "$BUILDDIR"
 
 # Shutdown any bitbake server if the BBSERVER variable is not set
 if [ -z "$BBSERVER" ] && [ -f bitbake.lock ]; then
