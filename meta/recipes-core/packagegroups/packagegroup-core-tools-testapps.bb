@@ -11,9 +11,10 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 inherit packagegroup
 
-# kexec-tools doesn't work on e5500-64b yet
+# kexec-tools doesn't work on e5500-64b and nios2 yet
 KEXECTOOLS ?= "kexec"
 KEXECTOOLS_e5500-64b ?= ""
+KEXECTOOLS_nios2 ?= ""
 
 X11GLTOOLS = "\
     mesa-demos \
