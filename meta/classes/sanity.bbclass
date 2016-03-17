@@ -48,6 +48,7 @@ Matching the version numbers will remove this message.
 \"meld conf/local.conf ${COREBASE}/meta*/conf/local.conf.sample\" 
 
 is a good way to visualise the changes."
+    failmsg = d.expand(failmsg)
 
     raise NotImplementedError(failmsg)
 }
@@ -66,6 +67,7 @@ Matching the version numbers will remove this message.
 \"meld conf/site.conf ${COREBASE}/meta*/conf/site.conf.sample\" 
 
 is a good way to visualise the changes."
+    failmsg = d.expand(failmsg)
 
     raise NotImplementedError(failmsg)
 }
@@ -76,11 +78,12 @@ python oecore_update_bblayers() {
     current_lconf = int(d.getVar('LCONF_VERSION', True))
     lconf_version = int(d.getVar('LAYER_CONF_VERSION', True))
 
-    failmsg = """Your version of bblayers.conf has the wrong LCONF_VERSION (has %s, expecting %s).
+    failmsg = """Your version of bblayers.conf has the wrong LCONF_VERSION (has ${LCONF_VERSION}, expecting ${LAYER_CONF_VERSION}).
 Please compare your file against bblayers.conf.sample and merge any changes before continuing.
 "meld conf/bblayers.conf ${COREBASE}/meta*/conf/bblayers.conf.sample" 
 
-is a good way to visualise the changes.""" % (current_lconf, lconf_version)
+is a good way to visualise the changes."""
+    failmsg = d.expand(failmsg)
 
     if not current_lconf:
         raise NotImplementedError(failmsg)
