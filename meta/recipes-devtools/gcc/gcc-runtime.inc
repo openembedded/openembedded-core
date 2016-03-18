@@ -1,5 +1,9 @@
 require gcc-configure-common.inc
 
+# Over-ride the LICENSE set by gcc-${PV}.inc to remove "& GPLv3"
+# All gcc-runtime packages are now covered by the runtime exception.
+LICENSE = "GPL-3.0-with-GCC-exception"
+
 CXXFLAGS_remove = "-fvisibility-inlines-hidden"
 
 EXTRA_OECONF_PATHS = "\
@@ -108,11 +112,6 @@ PACKAGES = "\
     libitm-dev \
     libitm-staticdev \
 "
-
-LICENSE_${PN}-dbg = "GPL-3.0-with-GCC-exception"
-LICENSE_${PN} = "GPL-3.0-with-GCC-exception"
-LICENSE_${PN}-dev = "GPL-3.0-with-GCC-exception"
-LICENSE_${PN}-staticdev = "GPL-3.0-with-GCC-exception"
 
 # The base package doesn't exist, so we clear the recommends.
 RRECOMMENDS_${PN}-dbg = ""
