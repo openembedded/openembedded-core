@@ -54,6 +54,7 @@ x86_common = [
     'wrong ELF class',
     'Could not enable PowerButton event',
     'probe of LNXPWRBN:00 failed with error -22',
+    'pmd_set_huge: Cannot satisfy',
 ] + common_errors
 
 qemux86_common = [
