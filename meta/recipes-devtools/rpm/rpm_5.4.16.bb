@@ -113,6 +113,7 @@ SRC_URI += " \
 	   file://rpm-python-tagname.patch \
 	   file://rpm-python-AddErase.patch \
 	   file://rpm-rpmpgp-popt.patch \
+	   file://rpm-fix-lua-tests-compilation-failure.patch \
 "
 
 # OE specific changes
@@ -494,6 +495,7 @@ FILES_${PN}-dev = "${includedir}/rpm \
 		${libdir}/rpm/lib/liblua.la \
 		${libdir}/pkgconfig/rpm.pc \
 		${libdir}/rpm/rpmdb_loadcvt \
+		${libdir}/rpm/include \
 		"
 
 FILES_${PN}-staticdev = " \
