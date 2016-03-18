@@ -49,8 +49,9 @@ EXTRA_OEMAKE = "-w"
 
 # valgrind likes to control its own optimisation flags. It generally defaults
 # to -O2 but uses -O0 for some specific test apps etc. Passing our own flags
-# (via CFLAGS) means we interfere with that.
-SELECTED_OPTIMIZATION = ""
+# (via CFLAGS) means we interfere with that. Only pass DEBUG_FLAGS to it
+# which fixes build path issue in DWARF.
+SELECTED_OPTIMIZATION = "${DEBUG_FLAGS}"
 
 CFLAGS_append_libc-uclibc = " -D__UCLIBC__ "
 
