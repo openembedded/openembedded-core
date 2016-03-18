@@ -83,6 +83,7 @@ SRC_URI = "\
            file://0051-Ignore-fdebug-prefix-map-in-producer-string-by-Danie.patch \
            file://0052-nios2-use-ret-with-r31.patch \
            file://0053-expr.c-PR-target-65358-Avoid-clobbering-partial-argu.patch \
+           file://0054-support-ffile-prefix-map.patch \
 "
 
 BACKPORTS = ""
