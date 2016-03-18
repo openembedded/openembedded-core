@@ -84,6 +84,7 @@ SRC_URI = "\
            file://0052-nios2-use-ret-with-r31.patch \
            file://0053-expr.c-PR-target-65358-Avoid-clobbering-partial-argu.patch \
            file://0054-support-ffile-prefix-map.patch \
+           file://0055-Reuse-fdebug-prefix-map-to-replace-ffile-prefix-map.patch \
 "
 
 BACKPORTS = ""
