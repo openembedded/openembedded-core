@@ -29,6 +29,7 @@ SRC_URI = "ftp://ftp.gnu.org/gnu/grub/grub-${PV}.tar.gz \
            file://grub2-fix-initrd-size-bug.patch \
            file://0001-Fix-CVE-2015-8370-Grub2-user-pass-vulnerability.patch \
            file://0001-Remove-direct-_llseek-code-and-require-long-filesyst.patch \
+           file://fix-texinfo.patch \
             "
 
 DEPENDS = "flex-native bison-native"
