@@ -32,6 +32,8 @@ import logging
 import argparse
 import subprocess
 import time as t
+import re
+import fnmatch
 
 sys.path.insert(0, os.path.dirname(os.path.realpath(__file__)) + '/lib')
 import scriptpath
@@ -197,7 +199,7 @@ class Tc:
         self.tcclass = tcclass
         self.tcmodule = tcmodule
         self.tcid = tcid
-        # A test case can have multiple tags (as list or as tuples) otherwise str suffice
+        # A test case can have multiple tags (as tuples) otherwise str will suffice
         self.tctag = tctag
         self.fullpath = '.'.join(['oeqa', 'selftest', tcmodule, tcclass, tcname])
 
@@ -243,19 +245,17 @@ def get_all_tests():
         testlist += get_tests_from_module(tmod)
     return testlist
 
+
 def get_testsuite_by(criteria, keyword):
     # Get a testsuite based on 'keyword'
     # criteria: name, class, module, id, tag
     # keyword: a list of tests, classes, modules, ids, tags
 
-    import re
-    import fnmatch
-
     ts = []
     all_tests = get_all_tests()
 
     def get_matches(values):
-        # Get a items and return the ones that match with keyword(s)
+        # Get an item and return the ones that match with keyword(s)
         # values: the list of items (names, modules, classes...)
         result = []
         remaining = values[:]
@@ -267,9 +267,9 @@ def get_testsuite_by(criteria, keyword):
             else:
                 # Wildcard matching
                 pattern = re.compile(fnmatch.translate(r"%s" % key))
-                added = [ x for x in remaining if pattern.match(x) ]
+                added = [x for x in remaining if pattern.match(x)]
                 result.extend(added)
-                remaining = [ x for x in remaining if not x in added ]
+                remaining = [x for x in remaining if x not in added]
 
         return result
 
@@ -292,14 +292,23 @@ def get_testsuite_by(criteria, keyword):
     elif criteria == 'tag':
         values = set()
         for tc in all_tests:
-            # tc can have multiple tags (as list or tuple) otherwise as str
-            if isinstance(tc.tctag, (list, tuple)):
+            # tc can have multiple tags (as tuple) otherwise str will suffice
+            if isinstance(tc.tctag, tuple):
                 values |= { str(tag) for tag in tc.tctag }
             else:
                 values.add(str(tc.tctag))
 
         tags = get_matches(list(values))
-        ts = [ tc for tc in all_tests if str(tc.tctag) in tags ]
+
+        for tc in all_tests:
+            for tag in tags:
+                if isinstance(tc.tctag, tuple) and tag in tc.tctag:
+                    ts.append(tc)
+                elif tag == tc.tctag:
+                    ts.append(tc)
+
+        # Remove duplicates from the list
+        ts = list(set(ts))
 
     return ts
 
