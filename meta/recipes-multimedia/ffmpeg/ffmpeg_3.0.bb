@@ -80,7 +80,6 @@ do_configure() {
     ${S}/configure ${EXTRA_OECONF}
 }
 
-RSUGGESTS_${PN} = "mplayer"
 PACKAGES_DYNAMIC += "^lib(av(codec|device|filter|format|util)|swscale).*"
 
 python populate_packages_prepend() {
