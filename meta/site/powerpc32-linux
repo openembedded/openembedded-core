@@ -38,8 +38,6 @@ cookie_io_functions_use_off64_t=${cookie_io_functions_use_off64_t=yes}
 
 
 # apache
-ac_cv_func_pthread_key_delete=${ac_cv_func_pthread_key_delete=yes}
-apr_cv_process_shared_works=${apr_cv_process_shared_works=no}
 ac_cv_sizeof_ssize_t=${ac_cv_sizeof_ssize_t=4}
 
 ac_cv_header_netinet_sctp_h=${ac_cv_header_netinet_sctp_h=no}
