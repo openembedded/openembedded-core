@@ -205,7 +205,7 @@ def add(args, config, basepath, workspace):
     for fn in os.listdir(recipedir):
         _add_md5(config, recipename, os.path.join(recipedir, fn))
 
-    if args.fetch and not args.no_git:
+    if args.fetchuri and not args.no_git:
         setup_git_repo(srctree, args.version, 'devtool')
 
     initial_rev = None
