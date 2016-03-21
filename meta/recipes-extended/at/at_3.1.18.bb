@@ -25,6 +25,7 @@ SRC_URI = "${DEBIAN_MIRROR}/main/a/at/at_${PV}.orig.tar.gz;subdir=${BP} \
     ${@bb.utils.contains('DISTRO_FEATURES', 'pam', '${PAM_SRC_URI}', '', d)} \
     file://makefile-fix-parallel.patch \
     file://0001-remove-glibc-assumption.patch \
+    file://configure-fix-with-without-selinux.patch \
     "
 
 PAM_SRC_URI = "file://pam.conf.patch \
