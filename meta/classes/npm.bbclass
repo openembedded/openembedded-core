@@ -1,6 +1,8 @@
 DEPENDS_prepend = "nodejs-native "
 S = "${WORKDIR}/npmpkg"
 
+NPM_INSTALLDIR = "${D}${libdir}/node_modules/${PN}"
+
 npm_do_compile() {
 	# changing the home directory to the working directory, the .npmrc will
 	# be created in this directory
@@ -14,8 +16,8 @@ npm_do_compile() {
 }
 
 npm_do_install() {
-	mkdir -p ${D}${libdir}/node_modules/${PN}/
-	cp -a ${S}/* ${D}${libdir}/node_modules/${PN}/ --no-preserve=ownership
+	mkdir -p ${NPM_INSTALLDIR}/
+	cp -a ${S}/* ${NPM_INSTALLDIR}/ --no-preserve=ownership
 }
 
 python populate_packages_prepend () {
