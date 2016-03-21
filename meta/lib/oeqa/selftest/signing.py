@@ -54,7 +54,7 @@ class Signing(oeSelfTest):
         test_recipe = 'ed'
 
         feature = 'INHERIT += "sign_rpm"\n'
-        feature += 'RPM_GPG_PASSPHRASE_FILE = "%ssecret.txt"\n' % self.gpg_dir
+        feature += 'RPM_GPG_PASSPHRASE = "test123"\n'
         feature += 'RPM_GPG_NAME = "testuser"\n'
         feature += 'RPM_GPG_PUBKEY = "%s%s"\n' % (self.gpg_dir, self.pub_key_name)
         feature += 'GPG_PATH = "%s"\n' % self.gpg_dir
