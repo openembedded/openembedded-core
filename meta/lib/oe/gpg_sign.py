@@ -26,32 +26,20 @@ class LocalSigner(object):
             raise bb.build.FuncFailed('Failed to export gpg public key (%s): %s' %
                                       (keyid, output))
 
-    def sign_rpms(self, files, keyid, passphrase_file):
+    def sign_rpms(self, files, keyid, passphrase):
         """Sign RPM files"""
-        import pexpect
 
-        cmd = self.rpm_bin + " --addsign --define '_gpg_name %s' " % keyid
+        cmd = self.rpm_bin + " --addsign --define '_gpg_name %s'  " % keyid
+        cmd += "--define '_gpg_passphrase %s' " % passphrase
         if self.gpg_bin:
             cmd += "--define '%%__gpg %s' " % self.gpg_bin
         if self.gpg_path:
             cmd += "--define '_gpg_path %s' " % self.gpg_path
         cmd += ' '.join(files)
 
-        # Need to use pexpect for feeding the passphrase
-        proc = pexpect.spawn(cmd)
-        try:
-            proc.expect_exact('Enter pass phrase:', timeout=15)
-            with open(passphrase_file) as fobj:
-                proc.sendline(fobj.readline().rstrip('\n'))
-            proc.expect(pexpect.EOF, timeout=900)
-            proc.close()
-        except pexpect.TIMEOUT as err:
-            bb.error('rpmsign timeout: %s' % err)
-            proc.terminate()
-        if os.WEXITSTATUS(proc.status) or not os.WIFEXITED(proc.status):
-            bb.error('rpmsign failed: %s' % proc.before.strip())
-            raise bb.build.FuncFailed("Failed to sign RPM packages")
-
+        status, output = oe.utils.getstatusoutput(cmd)
+        if status:
+            raise bb.build.FuncFailed("Failed to sign RPM packages: %s" % output)
 
     def detach_sign(self, input_file, keyid, passphrase_file, passphrase=None, armor=True):
         """Create a detached signature of a file"""
