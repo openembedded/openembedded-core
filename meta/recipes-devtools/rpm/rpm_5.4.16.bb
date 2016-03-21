@@ -114,6 +114,7 @@ SRC_URI += " \
 	   file://rpm-python-AddErase.patch \
 	   file://rpm-rpmpgp-popt.patch \
 	   file://rpm-fix-lua-tests-compilation-failure.patch \
+	   file://rpmqv.c-check-_gpg_passphrase-before-ask-for-input.patch \
 "
 
 # OE specific changes
