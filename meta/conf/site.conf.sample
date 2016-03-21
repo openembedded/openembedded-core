@@ -17,7 +17,7 @@ SCONF_VERSION = "1"
 #
 
 # To use git with a proxy, you must use an external git proxy command, such as
-# the one provided by scripts/oe-git-proxy.sh. To use this script, copy it to
+# the one provided by scripts/oe-git-proxy. To use this script, copy it to
 # your PATH and uncomment the following:
 #GIT_PROXY_COMMAND ?= "oe-git-proxy"
 #ALL_PROXY ?= "socks://socks.example.com:1080"
