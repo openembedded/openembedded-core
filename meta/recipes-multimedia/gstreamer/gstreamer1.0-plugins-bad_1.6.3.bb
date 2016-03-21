@@ -20,7 +20,6 @@ SRC_URI = " \
     file://configure-allow-to-disable-libssh2.patch \
     file://0001-glimagesink-Downrank-to-marginal.patch \
     file://0002-glplugin-glwindow-fix-memory-leak-of-navigation-thre.patch \
-    file://0001-Makefile.am-don-t-hardcode-libtool-name-when-running.patch \
 "
 
 SRC_URI[md5sum] = "4857adcafe41e4b9b8805cf88303bd55"

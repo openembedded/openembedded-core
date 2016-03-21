@@ -10,6 +10,14 @@ DEPENDS = "glib-2.0 glib-2.0-native libcap libxml2 bison-native flex-native"
 
 inherit autotools pkgconfig gettext upstream-version-is-even gobject-introspection
 
+# This way common/m4/introspection.m4 will come first
+# (it has a custom INTROSPECTION_INIT macro, and so must be used instead of our common introspection.m4 file)
+acpaths = "-I ${S}/common/m4 -I ${S}/m4"
+
+SRC_URI_append = " \
+    file://0001-introspection.m4-prefix-pkgconfig-paths-with-PKG_CON.patch \
+"
+
 PACKAGECONFIG ??= ""
 
 PACKAGECONFIG[check] = "--enable-check,--disable-check"
