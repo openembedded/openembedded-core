@@ -300,6 +300,15 @@ def get_conffiles(pkg, d):
     os.chdir(cwd)
     return conf_list
 
+def checkbuildpath(file, d):
+    tmpdir = d.getVar('TMPDIR', True)
+    with open(file) as f:
+        file_content = f.read()
+        if tmpdir in file_content:
+            return True
+
+    return False
+
 def splitdebuginfo(file, debugfile, debugsrcdir, sourcefile, d):
     # Function to split a single file into two components, one is the stripped
     # target system binary, the other contains any debugging information. The
@@ -312,8 +321,6 @@ def splitdebuginfo(file, debugfile, debugsrcdir, sourcefile, d):
     dvar = d.getVar('PKGD', True)
     objcopy = d.getVar("OBJCOPY", True)
     debugedit = d.expand("${STAGING_LIBDIR_NATIVE}/rpm/bin/debugedit")
-    workdir = d.getVar("WORKDIR", True)
-    workparentdir = d.getVar("DEBUGSRC_OVERRIDE_PATH", True) or os.path.dirname(os.path.dirname(workdir))
 
     # We ignore kernel modules, we don't generate debug info files.
     if file.find("/lib/modules/") != -1 and file.endswith(".ko"):
@@ -327,7 +334,7 @@ def splitdebuginfo(file, debugfile, debugsrcdir, sourcefile, d):
 
     # We need to extract the debug src information here...
     if debugsrcdir:
-        cmd = "'%s' -b '%s' -d '%s' -i -l '%s' '%s'" % (debugedit, workparentdir, debugsrcdir, sourcefile, file)
+        cmd = "'%s' -i -l '%s' '%s'" % (debugedit, sourcefile, file)
         (retval, output) = oe.utils.getstatusoutput(cmd)
         if retval:
             bb.fatal("debugedit failed with exit code %s (cmd was %s)%s" % (retval, cmd, ":\n%s" % output if output else ""))
@@ -366,6 +373,13 @@ def copydebugsources(debugsrcdir, d):
         workparentdir = os.path.dirname(os.path.dirname(workdir))
         workbasedir = os.path.basename(os.path.dirname(workdir)) + "/" + os.path.basename(workdir)
 
+        # If build path exists in sourcefile, it means toolchain did not use
+        # -fdebug-prefix-map to compile
+        if checkbuildpath(sourcefile, d):
+            localsrc_prefix = workparentdir + "/"
+        else:
+            localsrc_prefix = "/usr/src/debug/"
+
         nosuchdir = []
         basepath = dvar
         for p in debugsrcdir.split("/"):
@@ -379,9 +393,11 @@ def copydebugsources(debugsrcdir, d):
         # We need to ignore files that are not actually ours
         # we do this by only paying attention to items from this package
         processdebugsrc += "fgrep -zw '%s' | "
+        # Remove prefix in the source paths
+        processdebugsrc += "sed 's#%s##g' | "
         processdebugsrc += "(cd '%s' ; cpio -pd0mlL --no-preserve-owner '%s%s' 2>/dev/null)"
 
-        cmd = processdebugsrc % (sourcefile, workbasedir, workparentdir, dvar, debugsrcdir)
+        cmd = processdebugsrc % (sourcefile, workbasedir, localsrc_prefix, workparentdir, dvar, debugsrcdir)
         (retval, output) = oe.utils.getstatusoutput(cmd)
         # Can "fail" if internal headers/transient sources are attempted
         #if retval:
