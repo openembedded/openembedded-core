@@ -30,10 +30,14 @@ def exec_watch(cmd, **options):
 
 def main():
     if len(sys.argv) < 2:
-        print('Please specify target to prepare with')
-        return 1
+        sdk_targets = []
+    else:
+        sdk_targets = ' '.join(sys.argv[1:]).split()
+    if not sdk_targets:
+        # Just do a parse so the cache is primed
+        ret, _ = exec_watch('bitbake -p')
+        return ret
 
-    sdk_targets = ' '.join(sys.argv[1:]).split()
     print('Preparing SDK for %s...' % ', '.join(sdk_targets))
 
     ret, out = exec_watch('bitbake %s --setscene-only' % ' '.join(sdk_targets))
