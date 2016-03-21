@@ -2,13 +2,20 @@
 
 # OpenEmbedded SDK publishing tool
 
-# oe-publish-sdk publish <ext-sdk> <destination>
-# <ext-sdk>: extensible SDK to publish (path to the installer shell script)
-# <destination>: local or remote location which servers as an SDK update server
-# e.g.
-# oe-publish-sdk /path/to/sdk-ext.sh /mnt/poky/sdk-ext
-# oe-publish-sdk /path/to/sdk-ext.sh user@host:/opt/poky/sdk-ext
+# Copyright (C) 2015-2016 Intel Corporation
 #
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License version 2 as
+# published by the Free Software Foundation.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License along
+# with this program; if not, write to the Free Software Foundation, Inc.,
+# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 import sys
 import os
@@ -118,13 +125,12 @@ def publish(args):
 
 
 def main():
-    parser = argparse_oe.ArgumentParser(description="OpenEmbedded development tool",
-                                        epilog="Use %(prog)s <subcommand> --help to get help on a specific command")
+    parser = argparse_oe.ArgumentParser(description="OpenEmbedded extensible SDK publishing tool - writes server-side data to support the extensible SDK update process to a specified location")
     parser.add_argument('-d', '--debug', help='Enable debug output', action='store_true')
     parser.add_argument('-q', '--quiet', help='Print only errors', action='store_true')
 
-    parser.add_argument('sdk', help='Extensible SDK to publish')
-    parser.add_argument('dest', help='Destination to publish SDK to')
+    parser.add_argument('sdk', help='Extensible SDK to publish (path to .sh installer file)')
+    parser.add_argument('dest', help='Destination to publish SDK to; can be local path or remote in the form of user@host:/path (in the latter case ssh/scp will be used).')
 
     parser.set_defaults(func=publish)
 
