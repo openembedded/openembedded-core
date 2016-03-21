@@ -86,7 +86,7 @@ def configure_help(args, config, basepath, workspace):
         logger.info('Running do_configure to generate configure script')
         try:
             stdout, _ = exec_build_env_command(config.init_path, basepath,
-                                               'bitbake -c configure %s' % msg, args.recipename,
+                                               'bitbake -c configure %s' % args.recipename,
                                                stderr=subprocess.STDOUT)
         except bb.process.ExecutionError:
             pass
