@@ -1,4 +1,19 @@
 # Development tool - sdk-update command plugin
+#
+# Copyright (C) 2015-2016 Intel Corporation
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License version 2 as
+# published by the Free Software Foundation.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License along
+# with this program; if not, write to the Free Software Foundation, Inc.,
+# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 import os
 import subprocess
@@ -278,8 +293,11 @@ def sdk_install(args, config, basepath, workspace):
                 if recipe.endswith('-native') and 'package' in task:
                     continue
                 install_tasks.append('%s:%s' % (recipe, task))
+        options = ''
+        if not args.allow_build:
+            options += ' --setscene-only'
         try:
-            exec_build_env_command(config.init_path, basepath, 'bitbake --setscene-only %s' % ' '.join(install_tasks))
+            exec_build_env_command(config.init_path, basepath, 'bitbake %s %s' % (options, ' '.join(install_tasks)), watch=True)
         except bb.process.ExecutionError as e:
             raise DevtoolError('Failed to install %s:\n%s' % (recipe, str(e)))
         failed = False
@@ -312,4 +330,5 @@ def register_commands(subparsers, context):
                                                    description='Installs additional recipe development files into the SDK. (You can use "devtool search" to find available recipes.)',
                                                    group='sdk')
         parser_sdk_install.add_argument('recipename', help='Name of the recipe to install the development artifacts for', nargs='+')
+        parser_sdk_install.add_argument('-s', '--allow-build', help='Allow building requested item(s) from source', action='store_true')
         parser_sdk_install.set_defaults(func=sdk_install)
