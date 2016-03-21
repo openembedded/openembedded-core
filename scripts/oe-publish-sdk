@@ -53,6 +53,7 @@ def publish(args):
     else:
         is_remote = False
         dest_sdk = os.path.join(destination, sdk_basename)
+        destdir = destination
 
     # Making sure the directory exists
     logger.debug("Making sure the destination directory exists")
@@ -83,16 +84,19 @@ def publish(args):
 
     # Unpack the SDK
     logger.info("Unpacking SDK")
+    cleanupfiles = [dest_sdk, os.path.join(destdir, 'ext-sdk-prepare.py')]
     if not is_remote:
         cmd = "sh %s -n -y -d %s" % (dest_sdk, destination)
         ret = subprocess.call(cmd, shell=True)
         if ret == 0:
             logger.info('Successfully unpacked %s to %s' % (dest_sdk, destination))
+            for cleanupfile in cleanupfiles:
+                os.remove(cleanupfile)
         else:
             logger.error('Failed to unpack %s to %s' % (dest_sdk, destination))
             return ret
     else:
-        cmd = "ssh %s 'sh %s -n -y -d %s'" % (host, dest_sdk, destdir)
+        cmd = "ssh %s 'sh %s -n -y -d %s && rm -f %s'" % (host, dest_sdk, destdir, ' '.join(cleanupfiles))
         ret = subprocess.call(cmd, shell=True)
         if ret == 0:
             logger.info('Successfully unpacked %s to %s' % (dest_sdk, destdir))
