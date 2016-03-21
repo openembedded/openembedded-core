@@ -20,7 +20,7 @@ def sanity_conf_find_line(pattern, lines):
         if re.search(pattern, line)), (None, None))
 
 def sanity_conf_update(fn, lines, version_var_name, new_version):
-    index, line = sanity_conf_find_line(version_var_name, lines)
+    index, line = sanity_conf_find_line(r"^%s" % version_var_name, lines)
     lines[index] = '%s = "%d"\n' % (version_var_name, new_version)
     with open(fn, "w") as f:
         f.write(''.join(lines))
@@ -125,12 +125,14 @@ is a good way to visualise the changes."""
 
         current_lconf += 1
         sanity_conf_update(bblayers_fn, lines, 'LCONF_VERSION', current_lconf)
+        bb.note("Your conf/bblayers.conf has been automatically updated.")
         return
 
     elif current_lconf == 5 and lconf_version > 5:
         # Null update, to avoid issues with people switching between poky and other distros
         current_lconf = 6
         sanity_conf_update(bblayers_fn, lines, 'LCONF_VERSION', current_lconf)
+        bb.note("Your conf/bblayers.conf has been automatically updated.")
         return
 
         if not status.reparse:
@@ -141,7 +143,7 @@ is a good way to visualise the changes."""
         # This marks the start of separate version numbers but code is needed in OE-Core
         # for the migration, one last time.
         layers = d.getVar('BBLAYERS', True).split()
-	layers = [ os.path.basename(path) for path in layers ]
+        layers = [ os.path.basename(path) for path in layers ]
         if 'meta-yocto' in layers:
             found = False
             while True:
@@ -160,9 +162,11 @@ is a good way to visualise the changes."""
                 raise NotImplementedError(failmsg)
             with open(bblayers_fn, "w") as f:
                 f.write(''.join(lines))
+            bb.note("Your conf/bblayers.conf has been automatically updated.")
             return
         current_lconf += 1
         sanity_conf_update(bblayers_fn, lines, 'LCONF_VERSION', current_lconf)
+        bb.note("Your conf/bblayers.conf has been automatically updated.")
         return
 
     raise NotImplementedError(failmsg)
@@ -564,7 +568,6 @@ def sanity_check_conffiles(status, d):
                 success = False
                 status.addresult(e.msg)
             if success:
-                bb.note("Your %s file has been automatically updated." % conffile)
                 status.reparse = True
 
 def sanity_handle_abichanges(status, d):
