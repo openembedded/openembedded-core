@@ -22,6 +22,7 @@ RREPLACES_${PN} = "matchbox-panel"
 RCONFLICTS_${PN} = "matchbox-panel"
 
 SRC_URI = "git://git.yoctoproject.org/${BPN} \
+           file://0001-showdesktop-Make-sure-active-state-is-initialized.patch \
            file://silence-warnings.patch"
 
 EXTRA_OECONF = "--enable-startup-notification --enable-dbus"
