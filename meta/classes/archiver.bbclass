@@ -126,21 +126,9 @@ python do_ar_original() {
         if os.path.isfile(local):
             shutil.copy(local, ar_outdir)
         elif os.path.isdir(local):
-            basename = os.path.basename(local)
-
             tmpdir = tempfile.mkdtemp(dir=d.getVar('ARCHIVER_WORKDIR', True))
             fetch.unpack(tmpdir, (url,))
-
-            os.chdir(tmpdir)
-            # We eliminate any AUTOINC+ in the revision.
-            try:
-                src_rev = bb.fetch2.get_srcrev(d).replace('AUTOINC+','')
-            except:
-                src_rev = 'NOREV'
-            tarname = os.path.join(ar_outdir, basename + '.' + src_rev + '.tar.gz')
-            tar = tarfile.open(tarname, 'w:gz')
-            tar.add('.')
-            tar.close()
+            create_tarball(d, tmpdir + '/.', '', ar_outdir)
 
     # Emit patch series files for 'original'
     bb.note('Writing patch series files...')
@@ -222,8 +210,11 @@ def create_tarball(d, srcdir, suffix, ar_outdir):
         return
 
     bb.utils.mkdirhier(ar_outdir)
-    tarname = os.path.join(ar_outdir, '%s-%s.tar.gz' % \
-            (d.getVar('PF', True), suffix))
+    if suffix:
+        filename = '%s-%s.tar.gz' % (d.getVar('PF', True), suffix)
+    else:
+        filename = '%s.tar.gz' % d.getVar('PF', True)
+    tarname = os.path.join(ar_outdir, filename)
 
     srcdir = srcdir.rstrip('/')
     dirname = os.path.dirname(srcdir)
