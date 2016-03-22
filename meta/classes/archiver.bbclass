@@ -335,14 +335,13 @@ python do_dumpdata () {
     dumpfile = os.path.join(d.getVar('ARCHIVER_OUTDIR', True), \
         '%s-showdata.dump' % d.getVar('PF', True))
     bb.note('Dumping metadata into %s' % dumpfile)
-    f = open(dumpfile, 'w')
-    # emit variables and shell functions
-    bb.data.emit_env(f, d, True)
-    # emit the metadata which isn't valid shell
-    for e in d.keys():
-        if bb.data.getVarFlag(e, 'python', d):
-            f.write("\npython %s () {\n%s}\n" % (e, bb.data.getVar(e, d, True)))
-    f.close()
+    with open(dumpfile, "w") as f:
+        # emit variables and shell functions
+        bb.data.emit_env(f, d, True)
+        # emit the metadata which isn't valid shell
+        for e in d.keys():
+            if d.getVarFlag(e, "python", False):
+                f.write("\npython %s () {\n%s}\n" % (e, d.getVar(e, False)))
 }
 
 SSTATETASKS += "do_deploy_archives"
