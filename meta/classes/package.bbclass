@@ -907,7 +907,7 @@ python split_and_strip_files () {
                     continue
                 # Check its an excutable
                 if (s[stat.ST_MODE] & stat.S_IXUSR) or (s[stat.ST_MODE] & stat.S_IXGRP) or (s[stat.ST_MODE] & stat.S_IXOTH) \
-                        or ((file.startswith(libdir) or file.startswith(baselibdir)) and ".so" in f):
+                        or ((file.startswith(libdir) or file.startswith(baselibdir)) and (".so" in f or ".node" in f)):
                     # If it's a symlink, and points to an ELF file, we capture the readlink target
                     if cpath.islink(file):
                         target = os.readlink(file)
