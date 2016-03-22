@@ -19,7 +19,8 @@ do_bootimg[depends] += "${MLPREFIX}grub-efi:do_deploy"
 do_bootdirectdisk[depends] += "${MLPREFIX}grub-efi:do_deploy"
 
 GRUB_SERIAL ?= "console=ttyS0,115200"
-GRUBCFG = "${S}/grub.cfg"
+GRUB_CFG_VM = "${S}/grub_vm.cfg"
+GRUB_CFG_LIVE = "${S}/grub_live.cfg"
 GRUB_TIMEOUT ?= "10"
 #FIXME: build this from the machine config
 GRUB_OPTS ?= "serial --unit=0 --speed=115200 --word=8 --parity=no --stop=1"
@@ -43,7 +44,7 @@ efi_populate() {
 	fi
 	install -m 0644 ${DEPLOY_DIR_IMAGE}/${GRUB_IMAGE} ${DEST}${EFIDIR}
 
-	install -m 0644 ${GRUBCFG} ${DEST}${EFIDIR}/grub.cfg
+	install -m 0644 ${GRUB_CFG} ${DEST}${EFIDIR}/grub.cfg
 }
 
 efi_iso_populate() {
@@ -83,9 +84,9 @@ python build_efi_cfg() {
         bb.debug(1, "No labels, nothing to do")
         return
 
-    cfile = d.getVar('GRUBCFG', True)
+    cfile = d.getVar('GRUB_CFG', True)
     if not cfile:
-        raise bb.build.FuncFailed('Unable to read GRUBCFG')
+        raise bb.build.FuncFailed('Unable to read GRUB_CFG')
 
     try:
          cfgfile = file(cfile, 'w')

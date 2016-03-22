@@ -543,7 +543,7 @@ addtask bundle_initramfs after do_image_complete
 # Some of the vars for vm and live image are conflicted, this function
 # is used for fixing the problem.
 def set_live_vm_vars(d, suffix):
-    vars = ['SYSLINUX_CFG', 'ROOT', 'LABELS', 'INITRD']
+    vars = ['GRUB_CFG', 'SYSLINUX_CFG', 'ROOT', 'LABELS', 'INITRD']
     for var in vars:
         var_with_suffix = var + '_' + suffix
         if d.getVar(var, True):
