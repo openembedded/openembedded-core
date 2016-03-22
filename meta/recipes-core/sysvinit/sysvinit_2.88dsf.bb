@@ -39,6 +39,8 @@ ALTERNATIVE_LINK_NAME[init] = "${base_sbindir}/init"
 ALTERNATIVE_PRIORITY[init] = "50"
 
 ALTERNATIVE_LINK_NAME[mountpoint] = "${base_bindir}/mountpoint"
+ALTERNATIVE_PRIORITY[mountpoint] = "20"
+
 ALTERNATIVE_LINK_NAME[halt] = "${base_sbindir}/halt"
 ALTERNATIVE_LINK_NAME[reboot] = "${base_sbindir}/reboot"
 ALTERNATIVE_LINK_NAME[runlevel] = "${base_sbindir}/runlevel"
