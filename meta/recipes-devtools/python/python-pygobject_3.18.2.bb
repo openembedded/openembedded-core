@@ -3,9 +3,9 @@ SECTION = "devel/python"
 LICENSE = "LGPLv2.1"
 LIC_FILES_CHKSUM = "file://COPYING;md5=a916467b91076e631dd8edb7424769c7"
 
-inherit autotools pkgconfig gnomebase distutils3-base gobject-introspection
+inherit autotools pkgconfig gnomebase distutils-base gobject-introspection
 
-DEPENDS += "python3 glib-2.0 gnome-common"
+DEPENDS += "python glib-2.0 gnome-common"
 
 SRCNAME="pygobject"
 SRC_URI = " \
@@ -20,6 +20,6 @@ S = "${WORKDIR}/${SRCNAME}-${PV}"
 
 BBCLASSEXTEND = "native"
 
-EXTRA_OECONF = "--disable-cairo"
+EXTRA_OECONF = "--disable-cairo --with-python=python2.7"
 
-RDEPENDS_${PN} += "python3-setuptools"
+RDEPENDS_${PN} += "python-setuptools"
