@@ -156,8 +156,9 @@ python do_ar_patched() {
 
     # Get the ARCHIVER_OUTDIR before we reset the WORKDIR
     ar_outdir = d.getVar('ARCHIVER_OUTDIR', True)
+    ar_workdir = d.getVar('ARCHIVER_WORKDIR', True)
     bb.note('Archiving the patched source...')
-    d.setVar('WORKDIR', ar_outdir)
+    d.setVar('WORKDIR', ar_workdir)
     create_tarball(d, d.getVar('S', True), 'patched', ar_outdir)
 }
 
@@ -250,21 +251,20 @@ python do_unpack_and_patch() {
             [ 'patched', 'configured'] and \
             d.getVarFlag('ARCHIVER_MODE', 'diff', True) != '1':
         return
-    # Change the WORKDIR to make do_unpack do_patch run in another dir.
     ar_outdir = d.getVar('ARCHIVER_OUTDIR', True)
-    d.setVar('WORKDIR', ar_outdir)
-
-    # The changed 'WORKDIR' also caused 'B' changed, create dir 'B' for the
-    # possibly requiring of the following tasks (such as some recipes's
-    # do_patch required 'B' existed).
-    bb.utils.mkdirhier(d.getVar('B', True))
+    ar_workdir = d.getVar('ARCHIVER_WORKDIR', True)
 
     # The kernel class functions require it to be on work-shared, so we dont change WORKDIR
     if not bb.data.inherits_class('kernel-yocto', d):
-        ar_outdir = d.getVar('ARCHIVER_OUTDIR', True)
-        d.setVar('WORKDIR', ar_outdir)
-        bb.build.exec_func('do_unpack', d)
+        # Change the WORKDIR to make do_unpack do_patch run in another dir.
+        d.setVar('WORKDIR', ar_workdir)
 
+        # The changed 'WORKDIR' also caused 'B' changed, create dir 'B' for the
+        # possibly requiring of the following tasks (such as some recipes's
+        # do_patch required 'B' existed).
+        bb.utils.mkdirhier(d.getVar('B', True))
+
+        bb.build.exec_func('do_unpack', d)
 
     # Save the original source for creating the patches
     if d.getVarFlag('ARCHIVER_MODE', 'diff', True) == '1':
