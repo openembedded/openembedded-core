@@ -1,6 +1,5 @@
 
-SYSLINUX_LABELS_VM ?= "boot"
-LABELS_VM ?= "${SYSLINUX_LABELS_VM}"
+LABELS_VM ?= "boot"
 
 # Using an initramfs is optional. Enable it by setting INITRD_IMAGE_VM.
 INITRD_IMAGE_VM ?= ""

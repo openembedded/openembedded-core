@@ -1,9 +1,8 @@
 
 INITRD_IMAGE_LIVE ?= "core-image-minimal-initramfs"
 INITRD_LIVE ?= "${DEPLOY_DIR_IMAGE}/${INITRD_IMAGE_LIVE}-${MACHINE}.cpio.gz"
-SYSLINUX_ROOT_LIVE ?= "root=/dev/ram0"
-SYSLINUX_LABELS_LIVE ?= "boot install"
-LABELS_LIVE ?= "${SYSLINUX_LABELS_LIVE}"
+ROOT_LIVE ?= "root=/dev/ram0"
+LABELS_LIVE ?= "boot install"
 SYSLINUX_CFG_LIVE ?= "${S}/syslinux_live.cfg"
 
 ROOTFS ?= "${DEPLOY_DIR_IMAGE}/${IMAGE_LINK_NAME}.ext4"

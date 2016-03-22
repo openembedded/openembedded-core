@@ -25,6 +25,7 @@ GRUB_TIMEOUT ?= "10"
 GRUB_OPTS ?= "serial --unit=0 --speed=115200 --word=8 --parity=no --stop=1"
 
 EFIDIR = "/EFI/BOOT"
+APPEND_prepend = " ${ROOT} "
 
 # Need UUID utility code.
 inherit fs-uuid
