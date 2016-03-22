@@ -42,7 +42,7 @@ PACKAGECONFIG[readline] = "--with-readline=-lreadline,,readline"
 PACKAGECONFIG[libedit] = "--with-readline=-ledit,,libedit"
 
 USERADD_PACKAGES = "${PN}"
-USERADD_PARAM_${PN} = "--system --home /var/cache/bind --no-create-home \
+USERADD_PARAM_${PN} = "--system --home ${localstatedir}/cache/bind --no-create-home \
                        --user-group bind"
 
 INITSCRIPT_NAME = "bind"
@@ -72,7 +72,7 @@ do_install_append() {
 	rm "${D}${mandir}/man1/nslookup.1"
 	rmdir "${D}${localstatedir}/run"
 	rmdir --ignore-fail-on-non-empty "${D}${localstatedir}"
-	install -d "${D}${localstatedir}/cache/bind"
+	install -d -o bind "${D}${localstatedir}/cache/bind"
 	install -d "${D}${sysconfdir}/bind"
 	install -d "${D}${sysconfdir}/init.d"
 	install -m 644 ${S}/conf/* "${D}${sysconfdir}/bind/"
@@ -80,7 +80,6 @@ do_install_append() {
 	sed -i -e '1s,#!.*python,#! /usr/bin/env python,' ${D}${sbindir}/dnssec-coverage ${D}${sbindir}/dnssec-checkds
 
 	# Install systemd related files
-	install -d ${D}${localstatedir}/cache/bind
 	install -d ${D}${sbindir}
 	install -m 755 ${WORKDIR}/generate-rndc-key.sh ${D}${sbindir}
 	install -d ${D}${systemd_unitdir}/system
