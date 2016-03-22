@@ -73,8 +73,15 @@ python () {
         # We can't use "addtask do_ar_configured after do_configure" since it
         # will cause the deptask of do_populate_sysroot to run not matter what
         # archives we need, so we add the depends here.
-        d.appendVarFlag('do_ar_configured', 'depends', ' %s:do_configure' % pn)
+
+        # There is a corner case with "gcc-source-${PV}" recipes, they don't have
+        # the "do_configure" task, so we need to use "do_preconfigure"
+        if pn.startswith("gcc-source-"):
+            d.appendVarFlag('do_ar_configured', 'depends', ' %s:do_preconfigure' % pn)
+        else:
+            d.appendVarFlag('do_ar_configured', 'depends', ' %s:do_configure' % pn)
         d.appendVarFlag('do_deploy_archives', 'depends', ' %s:do_ar_configured' % pn)
+
     elif ar_src:
         bb.fatal("Invalid ARCHIVER_MODE[src]: %s" % ar_src)
 
@@ -168,11 +175,18 @@ python do_ar_configured() {
     ar_outdir = d.getVar('ARCHIVER_OUTDIR', True)
     if d.getVarFlag('ARCHIVER_MODE', 'src', True) == 'configured':
         bb.note('Archiving the configured source...')
+        pn = d.getVar('PN', True)
+        # "gcc-source-${PV}" recipes don't have "do_configure"
+        # task, so we need to run "do_preconfigure" instead
+        if pn.startswith("gcc-source-"):
+            d.setVar('WORKDIR', d.getVar('ARCHIVER_WORKDIR', True))
+            bb.build.exec_func('do_preconfigure', d)
+
         # The libtool-native's do_configure will remove the
         # ${STAGING_DATADIR}/aclocal/libtool.m4, so we can't re-run the
         # do_configure, we archive the already configured ${S} to
         # instead of.
-        if d.getVar('PN', True) != 'libtool-native':
+        elif pn != 'libtool-native':
             # Change the WORKDIR to make do_configure run in another dir.
             d.setVar('WORKDIR', d.getVar('ARCHIVER_WORKDIR', True))
             if bb.data.inherits_class('kernel-yocto', d):
