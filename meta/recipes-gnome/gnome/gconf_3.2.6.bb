@@ -17,7 +17,7 @@ SRC_URI[archive.sha256sum] = "1912b91803ab09a5eed34d364bf09fe3a2a9c96751fde03a4e
 
 S = "${WORKDIR}/GConf-${PV}"
 
-EXTRA_OECONF = "--enable-shared --disable-static --enable-debug=yes \
+EXTRA_OECONF = "--enable-shared --disable-static \
                 --disable-orbit --with-openldap=no --disable-gtk"
 
 # Disable PolicyKit by default
@@ -27,6 +27,7 @@ PACKAGECONFIG_class-native = ""
 PACKAGECONFIG_libc-uclibc = ""
 
 PACKAGECONFIG[policykit] = "--enable-defaults-service,--disable-defaults-service,polkit"
+PACKAGECONFIG[debug] = "--enable-debug=yes, --enable-debug=minimum"
 
 do_install_append() {
 	# this directory need to be created to avoid an Error 256 at gdm launch
