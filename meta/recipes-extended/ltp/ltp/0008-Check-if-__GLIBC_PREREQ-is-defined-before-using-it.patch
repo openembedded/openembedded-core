@@ -1,17 +1,18 @@
-From 714024e4699b28eed866d775f4c715b0e55b76f7 Mon Sep 17 00:00:00 2001
+From a3cbee31daae2466bc8dcac36b33a01352693346 Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Thu, 7 Jan 2016 19:40:08 +0000
-Subject: [PATCH 08/32] Check if __GLIBC_PREREQ is defined before using it
+Subject: [PATCH 01/26] Check if __GLIBC_PREREQ is defined before using it
 
 __GLIBC_PREREQ is specific to glibc so it should be checked if it is
 defined or not.
 
 Signed-off-by: Khem Raj <raj.khem@gmail.com>
+
 ---
- testcases/kernel/syscalls/accept4/accept4_01.c     |  9 ++++++-
- testcases/kernel/syscalls/getcpu/getcpu01.c        | 31 ++++++++++++++++++++++
- .../sched_getaffinity/sched_getaffinity01.c        | 26 ++++++++++++++++++
- 3 files changed, 65 insertions(+), 1 deletion(-)
+ testcases/kernel/syscalls/accept4/accept4_01.c     |  9 ++++-
+ testcases/kernel/syscalls/getcpu/getcpu01.c        | 40 +++++++++++++++++++++-
+ .../sched_getaffinity/sched_getaffinity01.c        | 26 ++++++++++++++
+ 3 files changed, 73 insertions(+), 2 deletions(-)
 
 diff --git a/testcases/kernel/syscalls/accept4/accept4_01.c b/testcases/kernel/syscalls/accept4/accept4_01.c
 index 6072bfa..2b090cb 100644
@@ -58,47 +59,52 @@ index 6072bfa..2b090cb 100644
  	acceptfd = accept4(lfd, (struct sockaddr *)&claddr, &addrlen,
  			   closeonexec_flag | nonblock_flag);
 diff --git a/testcases/kernel/syscalls/getcpu/getcpu01.c b/testcases/kernel/syscalls/getcpu/getcpu01.c
-index c927512..6de6362 100644
+index c927512..921b107 100644
 --- a/testcases/kernel/syscalls/getcpu/getcpu01.c
 +++ b/testcases/kernel/syscalls/getcpu/getcpu01.c
 @@ -62,6 +62,7 @@
  #include <dirent.h>
  
  #if defined(__i386__) || defined(__x86_64__)
-+#if defined(__GLIBC__) && defined(__GLIBC_PREREQ)
++#if defined(__GLIBC__)
  #if __GLIBC_PREREQ(2,6)
  #if defined(__x86_64__)
  #include <utmpx.h>
-@@ -72,13 +73,16 @@ int sys_support = 1;
+@@ -75,10 +76,17 @@ int sys_support = 0;
  #else
  int sys_support = 0;
  #endif
++#else
++int sys_support = 0;
 +#endif
- #else
- int sys_support = 0;
- #endif
  
-+#if defined(__GLIBC__) && defined(__GLIBC_PREREQ)
++#if defined(__GLIBC__)
  #if !(__GLIBC_PREREQ(2, 7))
  #define CPU_FREE(ptr) free(ptr)
  #endif
++#else
++#define CPU_FREE(ptr) free(ptr)
 +#endif
  
  void cleanup(void);
  void setup(void);
-@@ -164,9 +168,11 @@ static inline int getcpu(unsigned *cpu_id, unsigned *node_id,
+@@ -164,9 +172,14 @@ static inline int getcpu(unsigned *cpu_id, unsigned *node_id,
  {
  #if defined(__i386__)
  	return syscall(318, cpu_id, node_id, cache_struct);
-+#if defined(__GLIBC__) && defined(__GLIBC_PREREQ)
- #elif __GLIBC_PREREQ(2,6)
+-#elif __GLIBC_PREREQ(2,6)
++#if defined(__GLIBC__)
++#if __GLIBC_PREREQ(2,6)
++	*cpu_id = sched_getcpu();
++#endif
++#else
  	*cpu_id = sched_getcpu();
  #endif
 +#endif
  	return 0;
  }
  
-@@ -191,15 +197,20 @@ unsigned int set_cpu_affinity(void)
+@@ -191,15 +204,20 @@ unsigned int set_cpu_affinity(void)
  	cpu_set_t *set;
  	size_t size;
  	int nrcpus = 1024;
@@ -119,7 +125,7 @@ index c927512..6de6362 100644
  #if __GLIBC_PREREQ(2, 7)
  	size = CPU_ALLOC_SIZE(nrcpus);
  	CPU_ZERO_S(size, set);
-@@ -207,8 +218,13 @@ realloc:
+@@ -207,8 +225,13 @@ realloc:
  	size = sizeof(cpu_set_t);
  	CPU_ZERO(set);
  #endif
@@ -133,7 +139,7 @@ index c927512..6de6362 100644
  #if __GLIBC_PREREQ(2, 7)
  		if (errno == EINVAL && nrcpus < (1024 << 8)) {
  			nrcpus = nrcpus << 2;
-@@ -220,10 +236,17 @@ realloc:
+@@ -220,10 +243,17 @@ realloc:
  				 "NR_CPUS of the kernel is more than 1024, so we'd better use a newer glibc(>= 2.7)");
  		else
  #endif
@@ -151,7 +157,7 @@ index c927512..6de6362 100644
  #if __GLIBC_PREREQ(2, 7)
  	CPU_ZERO_S(size, set);
  	CPU_SET_S(cpu_max, size, set);
-@@ -231,6 +254,10 @@ realloc:
+@@ -231,6 +261,10 @@ realloc:
  	CPU_ZERO(set);
  	CPU_SET(cpu_max, set);
  #endif
@@ -162,7 +168,7 @@ index c927512..6de6362 100644
  	if (sched_setaffinity(0, size, set) < 0) {
  		CPU_FREE(set);
  		tst_brkm(TFAIL, NULL, "sched_setaffinity:errno:%d", errno);
-@@ -247,11 +274,15 @@ unsigned int max_cpuid(size_t size, cpu_set_t * set)
+@@ -247,11 +281,15 @@ unsigned int max_cpuid(size_t size, cpu_set_t * set)
  {
  	unsigned int index, max = 0;
  	for (index = 0; index < size * BITS_PER_BYTE; index++)
@@ -275,5 +281,5 @@ index 9d6a81a..4ed13b2 100644
  	QUICK_TEST(sched_getaffinity(0, len, (cpu_set_t *) - 1));
  	QUICK_TEST(sched_getaffinity(0, 0, mask));
 -- 
-2.7.0
+1.9.1
 

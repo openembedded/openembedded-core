@@ -59,7 +59,8 @@ SRC_URI = "git://github.com/linux-test-project/ltp.git \
            file://0030-lib-Use-PTHREAD_MUTEX_RECURSIVE-in-place-of-PTHREAD_.patch \
            file://0031-vma03-fix-page-size-offset-as-per-page-size-alignmen.patch \
            file://0032-regen.sh-Include-asm-unistd.h-explicitly.patch \
-"
+           file://0033-shmat1-Cover-GNU-specific-code-under-__USE_GNU.patch \
+           "
 
 S = "${WORKDIR}/git"
 
