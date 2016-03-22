@@ -59,7 +59,6 @@ inherit ${EFI_CLASS}
 
 DISK_SIGNATURE ?= "${DISK_SIGNATURE_GENERATED}"
 ROOT_VM ?= "root=/dev/sda2"
-SYSLINUX_CFG_VM  ?= "${S}/syslinux_vm.cfg"
 
 boot_direct_populate() {
 	dest=$1

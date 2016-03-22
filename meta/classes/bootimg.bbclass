@@ -40,6 +40,11 @@ EFIIMGDIR = "${S}/efi_img"
 COMPACT_ISODIR = "${S}/iso.z"
 COMPRESSISO ?= "0"
 
+ISOLINUXDIR ?= "/isolinux"
+ISO_BOOTIMG = "isolinux/isolinux.bin"
+ISO_BOOTCAT = "isolinux/boot.cat"
+MKISOFS_OPTIONS = "-no-emul-boot -boot-load-size 4 -boot-info-table"
+
 BOOTIMG_VOLUME_ID   ?= "boot"
 BOOTIMG_EXTRA_SPACE ?= "512"
 
@@ -59,10 +64,10 @@ def pcbios(d):
     return pcbios
 
 PCBIOS = "${@pcbios(d)}"
+PCBIOS_CLASS = "${@['','syslinux'][d.getVar('PCBIOS', True) == '1']}"
 
-# The syslinux is required for the isohybrid command and boot catalog
-inherit syslinux
 inherit ${EFI_CLASS}
+inherit ${PCBIOS_CLASS}
 
 populate() {
 	DEST=$1
