@@ -149,5 +149,5 @@ def srctree_hash_files(d):
             fobj.write(sha1)
         ret = oe_hash_file + ':True'
     else:
-        d.setVarFlag('do_compile', 'nostamp', '1')
+        ret = d.getVar('EXTERNALSRC', True) + '/*:True'
     return ret
