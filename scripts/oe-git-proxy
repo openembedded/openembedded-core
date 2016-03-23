@@ -1,10 +1,12 @@
 #!/bin/bash
 
 # oe-git-proxy is a simple tool to be via GIT_PROXY_COMMAND. It uses socat
-# to make SOCKS5 or HTTPS proxy connections. It uses ALL_PROXY to determine the
-# proxy server, protocol, and port. It uses NO_PROXY to skip using the proxy for
-# a comma delimited list of hosts, host globs (*.example.com), IPs, or CIDR
-# masks (192.168.1.0/24). It is known to work with both bash and dash shells.
+# to make SOCKS5 or HTTPS proxy connections.
+# It uses ALL_PROXY or all_proxy or http_proxy to determine the proxy server,
+# protocol, and port.
+# It uses NO_PROXY to skip using the proxy for a comma delimited list of
+# hosts, host globs (*.example.com), IPs, or CIDR masks (192.168.1.0/24). It
+# is known to work with both bash and dash shells.
 #
 # Example ALL_PROXY values:
 # ALL_PROXY=socks://socks.example.com:1080
@@ -98,6 +100,9 @@ match_host() {
 
 # If no proxy is set or needed, just connect directly
 METHOD="TCP:$1:$2"
+
+[ -z "${ALL_PROXY}" ] && ALL_PROXY=$all_proxy
+[ -z "${ALL_PROXY}" ] && ALL_PROXY=$http_proxy
 
 if [ -z "$ALL_PROXY" ]; then
 	exec $SOCAT STDIO $METHOD
