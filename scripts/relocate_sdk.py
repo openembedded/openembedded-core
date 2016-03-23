@@ -166,6 +166,7 @@ def change_dl_sysdirs():
                 while (offset + 4096) <= sh_size:
                     path = f.read(4096)
                     new_path = old_prefix.sub(new_prefix, path)
+                    new_path = new_path.rstrip(b("\0"))
                     # pad with zeros
                     new_path += b("\0") * (4096 - len(new_path))
                     #print "Changing %s to %s at %s" % (str(path), str(new_path), str(offset))
