@@ -16,6 +16,7 @@ SRC_URI = "${GNOME_MIRROR}/glib/${SHRT_VER}/glib-${PV}.tar.xz \
 	   file://0001-Remove-the-warning-about-deprecated-paths-in-schemas.patch \
            file://Enable-more-tests-while-cross-compiling.patch \
            file://gi-exclude.patch \
+           file://0001-Install-gio-querymodules-as-libexec_PROGRAM.patch \
           "
 
 SRC_URI_append_class-native = " file://glib-gettextize-dir.patch \

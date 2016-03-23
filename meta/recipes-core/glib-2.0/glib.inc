@@ -48,8 +48,12 @@ do_configure_prepend() {
 	sed -i -e '1s,#!.*,#!${USRBINPATH}/env python,' ${S}/gio/gdbus-2.0/codegen/gdbus-codegen.in
 }
 
-FILES_${PN} = "${libdir}/lib*${SOLIBS} ${libdir}/gio ${datadir}/glib-2.0/schemas \
-               ${datadir}/glib-2.0/gettext/mkinstalldirs ${datadir}/glib-2.0/gettext/po/Makefile.in.in"
+FILES_${PN} = "${libdir}/lib*${SOLIBS} \
+               ${libdir}/gio \
+               ${libexecdir}/*gio-querymodules \
+               ${datadir}/glib-2.0/schemas \
+               ${datadir}/glib-2.0/gettext/mkinstalldirs \
+               ${datadir}/glib-2.0/gettext/po/Makefile.in.in"
 FILES_${PN}-dev += "${libdir}/glib-2.0/include \
                     ${libdir}/gio/modules/lib*${SOLIBSDEV} \
                     ${libdir}/gio/modules/*.la"
@@ -81,6 +85,11 @@ do_install_append () {
 			rm ${D}${datadir}/installed-tests/glib/gdbus-serialization.test
 		fi
 	fi
+
+        # Make sure gio-querymodules is unique among multilibs
+        if test "x${MLPREFIX}" != "x"; then
+                mv ${D}${libexecdir}/gio-querymodules ${D}${libexecdir}/${MLPREFIX}gio-querymodules
+        fi
 }
 
 do_install_append_libc-musl () {
