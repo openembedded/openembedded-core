@@ -186,9 +186,8 @@ PACKAGES =+ "${PN}-ralink-license ${PN}-ralink \
              ${PN}-iwlwifi-6000-4 ${PN}-iwlwifi-6000g2a-5 ${PN}-iwlwifi-6000g2a-6 \
              ${PN}-iwlwifi-6000g2b-5 ${PN}-iwlwifi-6000g2b-6 \
              ${PN}-iwlwifi-6050-4 ${PN}-iwlwifi-6050-5 \
-             ${PN}-iwlwifi-7260-7 ${PN}-iwlwifi-7260-8 ${PN}-iwlwifi-7260-9 \
-             ${PN}-iwlwifi-7265-8 ${PN}-iwlwifi-7265-9 \
-             \
+             ${PN}-iwlwifi-7260 \
+             ${PN}-iwlwifi-7265 \
              ${PN}-license \
              "
 
@@ -399,11 +398,8 @@ LICENSE_${PN}-iwlwifi-6000g2a-5 = "Firmware-iwlwifi_firmware"
 LICENSE_${PN}-iwlwifi-6000g2b-6 = "Firmware-iwlwifi_firmware"
 LICENSE_${PN}-iwlwifi-6050-4    = "Firmware-iwlwifi_firmware"
 LICENSE_${PN}-iwlwifi-6050-5    = "Firmware-iwlwifi_firmware"
-LICENSE_${PN}-iwlwifi-7260-7    = "Firmware-iwlwifi_firmware"
-LICENSE_${PN}-iwlwifi-7260-8    = "Firmware-iwlwifi_firmware"
-LICENSE_${PN}-iwlwifi-7260-9    = "Firmware-iwlwifi_firmware"
-LICENSE_${PN}-iwlwifi-7265-8    = "Firmware-iwlwifi_firmware"
-LICENSE_${PN}-iwlwifi-7265-9    = "Firmware-iwlwifi_firmware"
+LICENSE_${PN}-iwlwifi-7260      = "Firmware-iwlwifi_firmware"
+LICENSE_${PN}-iwlwifi-7265      = "Firmware-iwlwifi_firmware"
 
 FILES_${PN}-iwlwifi-license = "/lib/firmware/LICENCE.iwlwifi_firmware"
 FILES_${PN}-iwlwifi-135-6 = "/lib/firmware/iwlwifi-135-6.ucode"
@@ -417,11 +413,8 @@ FILES_${PN}-iwlwifi-6000g2b-5 = "/lib/firmware/iwlwifi-6000g2b-5.ucode"
 FILES_${PN}-iwlwifi-6000g2b-6 = "/lib/firmware/iwlwifi-6000g2b-6.ucode"
 FILES_${PN}-iwlwifi-6050-4 = "/lib/firmware/iwlwifi-6050-4.ucode"
 FILES_${PN}-iwlwifi-6050-5 = "/lib/firmware/iwlwifi-6050-5.ucode"
-FILES_${PN}-iwlwifi-7260-7 = "/lib/firmware/iwlwifi-7260-7.ucode"
-FILES_${PN}-iwlwifi-7260-8 = "/lib/firmware/iwlwifi-7260-8.ucode"
-FILES_${PN}-iwlwifi-7260-9 = "/lib/firmware/iwlwifi-7260-9.ucode"
-FILES_${PN}-iwlwifi-7265-8 = "/lib/firmware/iwlwifi-7265-8.ucode"
-FILES_${PN}-iwlwifi-7265-9 = "/lib/firmware/iwlwifi-7265-9.ucode"
+FILES_${PN}-iwlwifi-7260   = "/lib/firmware/iwlwifi-7260-*.ucode"
+FILES_${PN}-iwlwifi-7265   = "/lib/firmware/iwlwifi-7265-*.ucode"
 
 RDEPENDS_${PN}-iwlwifi-135-6     = "${PN}-iwlwifi-license"
 RDEPENDS_${PN}-iwlwifi-3160-7    = "${PN}-iwlwifi-license"
@@ -434,11 +427,17 @@ RDEPENDS_${PN}-iwlwifi-6000g2a-5 = "${PN}-iwlwifi-license"
 RDEPENDS_${PN}-iwlwifi-6000g2b-6 = "${PN}-iwlwifi-license"
 RDEPENDS_${PN}-iwlwifi-6050-4    = "${PN}-iwlwifi-license"
 RDEPENDS_${PN}-iwlwifi-6050-5    = "${PN}-iwlwifi-license"
-RDEPENDS_${PN}-iwlwifi-7260-7    = "${PN}-iwlwifi-license"
-RDEPENDS_${PN}-iwlwifi-7260-8    = "${PN}-iwlwifi-license"
-RDEPENDS_${PN}-iwlwifi-7260-9    = "${PN}-iwlwifi-license"
-RDEPENDS_${PN}-iwlwifi-7265-8    = "${PN}-iwlwifi-license"
-RDEPENDS_${PN}-iwlwifi-7265-9    = "${PN}-iwlwifi-license"
+RDEPENDS_${PN}-iwlwifi-7260      = "${PN}-iwlwifi-license"
+RDEPENDS_${PN}-iwlwifi-7265      = "${PN}-iwlwifi-license"
+
+# Handle package updating for the newly merged iwlwifi groupings
+RPROVIDES_${PN}-iwlwifi-7265 = "${PN}-iwlwifi-7265-8 ${PN}-iwlwifi-7265-9"
+RREPLACES_${PN}-iwlwifi-7265 = "${PN}-iwlwifi-7265-8 ${PN}-iwlwifi-7265-9"
+RCONFLICTS_${PN}-iwlwifi-7265 = "${PN}-iwlwifi-7265-8 ${PN}-iwlwifi-7265-9"
+
+RPROVIDES_${PN}-iwlwifi-7260 = "${PN}-iwlwifi-7260-7 ${PN}-iwlwifi-7260-8 ${PN}-iwlwifi-7260-9"
+RREPLACES_${PN}-iwlwifi-7260 = "${PN}-iwlwifi-7260-7 ${PN}-iwlwifi-7260-8 ${PN}-iwlwifi-7260-9"
+RCONFLICTS_${PN}-iwlwifi-7260 = "${PN}-iwlwifi-7260-7 ${PN}-iwlwifi-7260-8 ${PN}-iwlwifi-7260-9"
 
 # For other firmwares
 # Maybe split out to separate packages when needed.
