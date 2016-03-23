@@ -15,7 +15,7 @@ DEPENDS += "readline guile"
 # By default only "gettext-minimal-native" is added
 # when inherit gettext.
 DEPENDS_class-native += "gettext-native"
-PROVIDES += "make"
+PROVIDES += "virtual/make"
 
 do_configure_prepend() {
     # remove the default LINGUAS since we are not going to generate languages
