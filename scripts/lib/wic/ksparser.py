@@ -113,7 +113,7 @@ class KickStart(object):
         part.add_argument('--fsoptions', dest='fsopts')
         part.add_argument('--fstype')
         part.add_argument('--label')
-        part.add_argument('--no-table')
+        part.add_argument('--no-table', action='store_true')
         part.add_argument('--ondisk', '--ondrive', dest='disk')
         part.add_argument("--overhead-factor", type=overheadtype, default=1.3)
         part.add_argument('--part-type')
