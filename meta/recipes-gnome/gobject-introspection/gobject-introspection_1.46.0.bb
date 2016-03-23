@@ -16,7 +16,7 @@ SRC_URI = "${GNOME_MIRROR}/${BPN}/1.46/${BPN}-${PV}.tar.xz \
 SRC_URI[md5sum] = "adb40a31c7c80b65b0f4c8fd71b493dc"
 SRC_URI[sha256sum] = "6658bd3c2b8813eb3e2511ee153238d09ace9d309e4574af27443d87423e4233"
 
-inherit autotools pkgconfig gtk-doc pythonnative qemu
+inherit autotools pkgconfig gtk-doc pythonnative qemu gobject-introspection-data
 BBCLASSEXTEND = "native"
 
 # necessary to let the call for python-config from configure.ac succeed
@@ -105,7 +105,7 @@ EOF
 EXTRA_OECONF_class-target += "--enable-host-gi \
                               --enable-gi-cross-wrapper=${B}/g-ir-scanner-qemuwrapper \
                               --enable-gi-ldd-wrapper=${B}/g-ir-scanner-lddwrapper \
-                              ${@bb.utils.contains('COMBINED_FEATURES', 'gobject-introspection-data', '--enable-introspection-data', '--disable-introspection-data', d)} \
+                              ${@bb.utils.contains('GI_DATA_ENABLED', 'True', '--enable-introspection-data', '--disable-introspection-data', d)} \
                              "
 
 

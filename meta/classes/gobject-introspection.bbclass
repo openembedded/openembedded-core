@@ -1,9 +1,9 @@
 # Inherit this class in recipes to enable building their introspection files
 
-# This allows disabling introspection support (and therefore avoiding the use
-# of qemu) in recipes if gobject-introspection-data is omitted from
-# DISTRO_FEATURES or MACHINE_FEATURES.
-EXTRA_OECONF_prepend = "${@bb.utils.contains('COMBINED_FEATURES', 'gobject-introspection-data', '--enable-introspection', '--disable-introspection', d)} "
+# This sets up autoconf-based recipes to build introspection data (or not),
+# depending on distro and machine features (see gobject-introspection-data class).
+inherit gobject-introspection-data
+EXTRA_OECONF_prepend = "${@bb.utils.contains('GI_DATA_ENABLED', 'True', '--enable-introspection', '--disable-introspection', d)} "
 
 UNKNOWN_CONFIGURE_WHITELIST_append = " --enable-introspection --disable-introspection"
 
