@@ -22,10 +22,9 @@ DEPENDS_append = " ${@bb.utils.contains('PTEST_ENABLED', '1', ' dbus', '', d)}"
 DEPENDS_class-native = "pkgconfig-native gettext-native libffi-native zlib-native"
 DEPENDS_class-nativesdk = "nativesdk-libtool nativesdk-gettext nativesdk-libffi nativesdk-zlib glib-2.0-native"
 
-PACKAGES =+ "${PN}-utils ${PN}-codegen"
+PACKAGES += "${PN}-codegen ${PN}-utils"
 
 LEAD_SONAME = "libglib-2.0.*"
-FILES_${PN}-utils = "${bindir}/* ${datadir}/glib-2.0/gettext"
 
 inherit autotools gettext gtk-doc pkgconfig ptest-gnome upstream-version-is-even bash-completion gio-module-cache
 
@@ -51,14 +50,21 @@ do_configure_prepend() {
 FILES_${PN} = "${libdir}/lib*${SOLIBS} \
                ${libdir}/gio \
                ${libexecdir}/*gio-querymodules \
-               ${datadir}/glib-2.0/schemas \
-               ${datadir}/glib-2.0/gettext/mkinstalldirs \
-               ${datadir}/glib-2.0/gettext/po/Makefile.in.in"
+               ${datadir}/glib-2.0/schemas"
 FILES_${PN}-dev += "${libdir}/glib-2.0/include \
                     ${libdir}/gio/modules/lib*${SOLIBSDEV} \
-                    ${libdir}/gio/modules/*.la"
+                    ${libdir}/gio/modules/*.la \
+                    ${bindir}/glib-genmarshal \
+                    ${bindir}/glib-gettextize \
+                    ${bindir}/glib-mkenums \
+                    ${bindir}/glib-compile-schemas \
+                    ${bindir}/glib-compile-resources \
+                    ${datadir}/glib-2.0/gettext/po/Makefile.in.in \
+                    ${datadir}/glib-2.0/schemas/gschema.dtd"
 FILES_${PN}-dbg += "${datadir}/glib-2.0/gdb ${datadir}/gdb"
-FILES_${PN}-codegen = "${datadir}/glib-2.0/codegen/*.py"
+FILES_${PN}-codegen = "${datadir}/glib-2.0/codegen/*.py \
+                       ${bindir}/gdbus-codegen"
+FILES_${PN}-utils = "${bindir}/*"
 
 ARM_INSTRUCTION_SET_armv4 = "arm"
 ARM_INSTRUCTION_SET_armv5 = "arm"
