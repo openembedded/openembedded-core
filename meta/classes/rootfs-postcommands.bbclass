@@ -215,12 +215,15 @@ python write_image_manifest () {
     link_name = d.getVar('IMAGE_LINK_NAME', True)
     manifest_name = d.getVar('IMAGE_MANIFEST', True)
 
+    if not manifest_name:
+        return
+
     pkgs = image_list_installed_packages(d)
     with open(manifest_name, 'w+') as image_manifest:
         image_manifest.write(format_pkg_list(pkgs, "ver"))
         image_manifest.write("\n")
 
-    if manifest_name is not None and os.path.exists(manifest_name):
+    if os.path.exists(manifest_name):
         manifest_link = deploy_dir + "/" + link_name + ".manifest"
         if os.path.exists(manifest_link):
             if d.getVar('RM_OLD_IMAGE', True) == "1" and \
