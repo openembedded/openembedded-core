@@ -110,6 +110,12 @@ else
 	target_sdk_dir=$(readlink -m "$target_sdk_dir")
 fi
 
+# limit the length for target_sdk_dir, ensure the relocation behaviour in relocate_sdk.py has right result.
+if [ ${#target_sdk_dir} -gt 2048 ]; then
+	echo "Error: The target directory path is too long!!!"
+	exit 1
+fi
+
 if [ "$SDK_EXTENSIBLE" = "1" ]; then
 	# We're going to be running the build system, additional restrictions apply
 	if echo "$target_sdk_dir" | grep -q '[+\ @$]'; then
