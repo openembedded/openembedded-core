@@ -132,9 +132,9 @@ NO_GENERIC_LICENSE[Firmware-e100] = "LICENCE.e100"
 NO_GENERIC_LICENSE[Firmware-ene_firmware] = "LICENCE.ene_firmware"
 NO_GENERIC_LICENSE[Firmware-fw_sst_0f28] = "LICENCE.fw_sst_0f28"
 NO_GENERIC_LICENSE[Firmware-go7007] = "LICENCE.go7007"
-NO_GENERIC_LICENSE[Firmware-hfi1_firmware] = "LICENCE.hfi1_firmware"
+NO_GENERIC_LICENSE[Firmware-hfi1_firmware] = "LICENSE.hfi1_firmware"
 NO_GENERIC_LICENSE[Firmware-i2400m] = "LICENCE.i2400m"
-NO_GENERIC_LICENSE[Firmware-i915] = "LICENCE.915"
+NO_GENERIC_LICENSE[Firmware-i915] = "LICENSE.i915"
 NO_GENERIC_LICENSE[Firmware-ibt_firmware] = "LICENCE.ibt_firmware"
 NO_GENERIC_LICENSE[Firmware-IntcSST2] = "LICENCE.IntcSST2"
 NO_GENERIC_LICENSE[Firmware-it913x] = "LICENCE.it913x"
@@ -224,6 +224,9 @@ PACKAGES =+ "${PN}-ralink-license ${PN}-ralink \
              ${PN}-iwlwifi-6050-4 ${PN}-iwlwifi-6050-5 \
              ${PN}-iwlwifi-7260 \
              ${PN}-iwlwifi-7265 \
+             ${PN}-iwlwifi-7265d ${PN}-iwlwifi-8000c ${PN}-iwlwifi-8265 \
+             ${PN}-i915-license ${PN}-i915 \
+             ${PN}-adsp-sst-license ${PN}-adsp-sst \
              ${PN}-license \
              "
 
@@ -436,6 +439,10 @@ LICENSE_${PN}-iwlwifi-6050-4    = "Firmware-iwlwifi_firmware"
 LICENSE_${PN}-iwlwifi-6050-5    = "Firmware-iwlwifi_firmware"
 LICENSE_${PN}-iwlwifi-7260      = "Firmware-iwlwifi_firmware"
 LICENSE_${PN}-iwlwifi-7265      = "Firmware-iwlwifi_firmware"
+LICENSE_${PN}-iwlwifi-7265d     = "Firmware-iwlwifi_firmware"
+LICENSE_${PN}-iwlwifi-8000c     = "Firmware-iwlwifi_firmware"
+LICENSE_${PN}-iwlwifi-8265      = "Firmware-iwlwifi_firmware"
+
 
 FILES_${PN}-iwlwifi-license = "/lib/firmware/LICENCE.iwlwifi_firmware"
 FILES_${PN}-iwlwifi-135-6 = "/lib/firmware/iwlwifi-135-6.ucode"
@@ -451,6 +458,9 @@ FILES_${PN}-iwlwifi-6050-4 = "/lib/firmware/iwlwifi-6050-4.ucode"
 FILES_${PN}-iwlwifi-6050-5 = "/lib/firmware/iwlwifi-6050-5.ucode"
 FILES_${PN}-iwlwifi-7260   = "/lib/firmware/iwlwifi-7260-*.ucode"
 FILES_${PN}-iwlwifi-7265   = "/lib/firmware/iwlwifi-7265-*.ucode"
+FILES_${PN}-iwlwifi-7265d   = "/lib/firmware/iwlwifi-7265D-*.ucode"
+FILES_${PN}-iwlwifi-8000c   = "/lib/firmware/iwlwifi-8000C-*.ucode"
+FILES_${PN}-iwlwifi-8265   = "/lib/firmware/iwlwifi-8265-*.ucode"
 
 RDEPENDS_${PN}-iwlwifi-135-6     = "${PN}-iwlwifi-license"
 RDEPENDS_${PN}-iwlwifi-3160-7    = "${PN}-iwlwifi-license"
@@ -465,6 +475,9 @@ RDEPENDS_${PN}-iwlwifi-6050-4    = "${PN}-iwlwifi-license"
 RDEPENDS_${PN}-iwlwifi-6050-5    = "${PN}-iwlwifi-license"
 RDEPENDS_${PN}-iwlwifi-7260      = "${PN}-iwlwifi-license"
 RDEPENDS_${PN}-iwlwifi-7265      = "${PN}-iwlwifi-license"
+RDEPENDS_${PN}-iwlwifi-7265d     = "${PN}-iwlwifi-license"
+RDEPENDS_${PN}-iwlwifi-8000c     = "${PN}-iwlwifi-license"
+RDEPENDS_${PN}-iwlwifi-8265      = "${PN}-iwlwifi-license"
 
 # Handle package updating for the newly merged iwlwifi groupings
 RPROVIDES_${PN}-iwlwifi-7265 = "${PN}-iwlwifi-7265-8 ${PN}-iwlwifi-7265-9"
@@ -475,13 +488,20 @@ RPROVIDES_${PN}-iwlwifi-7260 = "${PN}-iwlwifi-7260-7 ${PN}-iwlwifi-7260-8 ${PN}-
 RREPLACES_${PN}-iwlwifi-7260 = "${PN}-iwlwifi-7260-7 ${PN}-iwlwifi-7260-8 ${PN}-iwlwifi-7260-9"
 RCONFLICTS_${PN}-iwlwifi-7260 = "${PN}-iwlwifi-7260-7 ${PN}-iwlwifi-7260-8 ${PN}-iwlwifi-7260-9"
 
+LICENSE_${PN}-i915       = "Firmware-i915"
+FILES_${PN}-i915-license = "/lib/firmware/LICENSE.i915"
+FILES_${PN}-i915         = "/lib/firmware/i915"
+RDEPENDS_${PN}-i915      = "${PN}-i915-license"
 
+FILES_${PN}-adsp-sst-license      = "/lib/firmware/LICENCE.adsp_sst"
+LICENSE_${PN}-adsp-sst            = "Firmware-adsp_sst"
+FILES_${PN}-adsp-sst              = "/lib/firmware/intel/dsp_fw*"
+RDEPENDS_${PN}-adsp-sst           = "${PN}-adsp-sst-license"
 
 # For other firmwares
 # Maybe split out to separate packages when needed.
 LICENSE_${PN} = "\
     Firmware-Abilis \
-    & Firmware-adsp_sst \
     & Firmware-agere \
     & Firmware-amdgpu \
     & Firmware-amd-ucode \
@@ -497,7 +517,6 @@ LICENSE_${PN} = "\
     & Firmware-go7007 \
     & Firmware-hfi1_firmware \
     & Firmware-i2400m \
-    & Firmware-i915 \
     & Firmware-ibt_firmware \
     & Firmware-it913x \
     & Firmware-IntcSST2 \
