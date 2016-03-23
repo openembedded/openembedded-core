@@ -22,7 +22,7 @@ PACKAGECONFIG[pkcs11] = "--with-pkcs11,--without-pkcs11,p11-kit"
 
 EXTRA_OECONF = "--without-gnome-proxy"
 
-inherit gnomebase gettext upstream-version-is-even
+inherit gnomebase gettext upstream-version-is-even gio-module-cache
 
 FILES_${PN} += "${libdir}/gio/modules/libgio*.so ${datadir}/dbus-1/services/"
 FILES_${PN}-dev += "${libdir}/gio/modules/libgio*.la"
