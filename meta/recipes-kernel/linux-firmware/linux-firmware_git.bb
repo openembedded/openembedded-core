@@ -133,7 +133,7 @@ NO_GENERIC_LICENSE[Firmware-qualcommAthos_ar3k] = "LICENSE.QualcommAtheros_ar3k"
 NO_GENERIC_LICENSE[Firmware-qualcommAthos_ath10k] = "LICENSE.QualcommAtheros_ath10k"
 NO_GENERIC_LICENSE[Firmware-ath9k-htc] = "LICENCE.open-ath9k-htc-firmware"
 
-SRCREV = "52442afee9907bc32a058f22bb3295d040677c26"
+SRCREV = "5f8ca0c1db6106a2d6d7e85eee778917ff03c3de"
 PE = "1"
 PV = "0.0+git${SRCPV}"
 
