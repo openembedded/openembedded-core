@@ -42,7 +42,7 @@ python oecore_update_localconf() {
     current_conf  = d.getVar('CONF_VERSION', True)
     conf_version =  d.getVar('LOCALCONF_VERSION', True)
 
-    failmsg = "Your version of local.conf was generated from an older/newer version of 
+    failmsg = """Your version of local.conf was generated from an older/newer version of 
 local.conf.sample and there have been updates made to this file. Please compare the two 
 files and merge any changes before continuing.
 
@@ -50,7 +50,7 @@ Matching the version numbers will remove this message.
 
 \"${SANITY_DIFF_TOOL} conf/local.conf ${SANITY_LOCALCONF_SAMPLE}\" 
 
-is a good way to visualise the changes."
+is a good way to visualise the changes."""
     failmsg = d.expand(failmsg)
 
     raise NotImplementedError(failmsg)
@@ -62,7 +62,7 @@ python oecore_update_siteconf() {
     current_sconf = d.getVar('SCONF_VERSION', True)
     sconf_version = d.getVar('SITE_CONF_VERSION', True)
 
-    failmsg = "Your version of site.conf was generated from an older version of 
+    failmsg = """Your version of site.conf was generated from an older version of 
 site.conf.sample and there have been updates made to this file. Please compare the two 
 files and merge any changes before continuing.
 
@@ -70,7 +70,7 @@ Matching the version numbers will remove this message.
 
 \"${SANITY_DIFF_TOOL} conf/site.conf ${SANITY_SITECONF_SAMPLE}\" 
 
-is a good way to visualise the changes."
+is a good way to visualise the changes."""
     failmsg = d.expand(failmsg)
 
     raise NotImplementedError(failmsg)
