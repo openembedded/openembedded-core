@@ -127,6 +127,8 @@ python uninative_changeinterp () {
                 elf.open()
             except oe.qa.NotELFFileError:
                 continue
+            if not elf.isDynamic():
+                continue
 
             try:
                 subprocess.check_output(("patchelf-uninative", "--set-interpreter",
