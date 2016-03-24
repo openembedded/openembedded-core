@@ -1,3 +1,5 @@
+import os, struct
+
 class NotELFFileError(Exception):
     pass
 
@@ -9,6 +11,8 @@ class ELFFile:
     EI_VERSION    = 6
     EI_OSABI      = 7
     EI_ABIVERSION = 8
+
+    E_MACHINE    = 0x12
 
     # possible values for EI_CLASS
     ELFCLASSNONE = 0
@@ -22,6 +26,8 @@ class ELFFile:
     ELFDATANONE  = 0
     ELFDATA2LSB  = 1
     ELFDATA2MSB  = 2
+
+    PT_INTERP = 3
 
     def my_assert(self, expectation, result):
         if not expectation == result:
@@ -38,9 +44,12 @@ class ELFFile:
             raise NotELFFileError("%s is not a normal file" % self.name)
 
         self.file = file(self.name, "r")
-        self.data = self.file.read(ELFFile.EI_NIDENT+4)
+        # Read 4k which should cover most of the headers we're after
+        self.data = self.file.read(4096)
 
-        self.my_assert(len(self.data), ELFFile.EI_NIDENT+4)
+        if len(self.data) < ELFFile.EI_NIDENT + 4:
+            raise NotELFFileError("%s is not an ELF" % self.name)
+
         self.my_assert(self.data[0], chr(0x7f) )
         self.my_assert(self.data[1], 'E')
         self.my_assert(self.data[2], 'L')
@@ -86,14 +95,33 @@ class ELFFile:
     def isBigEndian(self):
         return self.sex == ">"
 
+    def getShort(self, offset):
+        return struct.unpack_from(self.sex+"H", self.data, offset)[0]
+
+    def getWord(self, offset):
+        return struct.unpack_from(self.sex+"i", self.data, offset)[0]
+
+    def isDynamic(self):
+        """
+        Return True if there is a .interp segment (therefore dynamically
+        linked), otherwise False (statically linked).
+        """
+        offset = self.getWord(self.bits == 32 and 0x1C or 0x20)
+        size = self.getShort(self.bits == 32 and 0x2A or 0x36)
+        count = self.getShort(self.bits == 32 and 0x2C or 0x38)
+
+        for i in range(0, count):
+            p_type = self.getWord(offset + i * size)
+            if p_type == ELFFile.PT_INTERP:
+                return True
+        return False
+
     def machine(self):
         """
         We know the sex stored in self.sex and we
         know the position
         """
-        import struct
-        (a,) = struct.unpack(self.sex+"H", self.data[18:20])
-        return a
+        return self.getShort(ELFFile.E_MACHINE)
 
     def run_objdump(self, cmd, d):
         import bb.process
@@ -115,3 +143,9 @@ class ELFFile:
         except Exception as e:
             bb.note("%s %s %s failed: %s" % (objdump, cmd, self.name, e))
             return ""
+
+if __name__ == "__main__":
+    import sys
+    elf = ELFFile(sys.argv[1])
+    elf.open()
+    print elf.isDynamic()
