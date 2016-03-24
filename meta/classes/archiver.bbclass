@@ -61,6 +61,12 @@ python () {
     else:
         bb.debug(1, 'archiver: %s is included: %s' % (pn, reason))
 
+    # We just archive gcc-source for all the gcc related recipes
+    if d.getVar('BPN', True) in ['gcc', 'libgcc'] \
+            and not pn.startswith('gcc-source'):
+        bb.debug(1, 'archiver: %s is excluded, covered by gcc-source' % pn)
+        return
+
     ar_src = d.getVarFlag('ARCHIVER_MODE', 'src', True)
     ar_dumpdata = d.getVarFlag('ARCHIVER_MODE', 'dumpdata', True)
     ar_recipe = d.getVarFlag('ARCHIVER_MODE', 'recipe', True)
