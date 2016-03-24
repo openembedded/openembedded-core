@@ -110,29 +110,12 @@ unset BITBAKEDIR newpath
 export BUILDDIR
 export PATH
 
-add_extrawhite() {
-    # If the current shell is zsh, then temporarily set it to emulate sh in this
-    # function so that the for and case statements below work as expected.
-    [ -z "$ZSH_NAME" ] || emulate -L sh
-
-    local extrawhite="MACHINE DISTRO TCMODE TCLIBC HTTP_PROXY http_proxy \
+BB_ENV_EXTRAWHITE_OE="MACHINE DISTRO TCMODE TCLIBC HTTP_PROXY http_proxy \
 HTTPS_PROXY https_proxy FTP_PROXY ftp_proxy FTPS_PROXY ftps_proxy ALL_PROXY \
 all_proxy NO_PROXY no_proxy SSH_AGENT_PID SSH_AUTH_SOCK BB_SRCREV_POLICY \
 SDKMACHINE BB_NUMBER_THREADS BB_NO_NETWORK PARALLEL_MAKE GIT_PROXY_COMMAND \
 SOCKS5_PASSWD SOCKS5_USER SCREENDIR STAMPS_DIR"
 
-    local var
-    for var in $extrawhite; do
-        case " $BB_ENV_EXTRAWHITE " in
-            *[[:blank:]]$var[[:blank:]]*)
-                ;;
-            *)
-                BB_ENV_EXTRAWHITE="${BB_ENV_EXTRAWHITE:+$BB_ENV_EXTRAWHITE }$var"
-                ;;
-        esac
-    done
-}
+BB_ENV_EXTRAWHITE=$(echo $BB_ENV_EXTRAWHITE $BB_ENV_EXTRAWHITE_OE | sed 's/ /\n/g' | LC_ALL=C sort --unique)
 
-add_extrawhite
-unset -f add_extrawhite
 export BB_ENV_EXTRAWHITE
