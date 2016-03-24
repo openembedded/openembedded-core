@@ -364,16 +364,21 @@ def list_tags():
 
     print 'Tags:\t%s' % ', '.join(str(x) for x in tags)
 
-def coverage_setup(run_tests, run_all_tests, coverage_source, coverage_include, coverage_omit):
+def coverage_setup(coverage_source, coverage_include, coverage_omit):
     """ Set up the coverage measurement for the testcases to be run """
+    import datetime
+    import subprocess
     builddir = os.environ.get("BUILDDIR")
+    pokydir = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
+    curcommit= subprocess.check_output(["git", "--git-dir", os.path.join(pokydir, ".git"), "rev-parse", "HEAD"])
     coveragerc = "%s/.coveragerc" % builddir
     data_file = "%s/.coverage." % builddir
-    data_file += ((run_tests and '.'.join(run_tests)) or
-        (run_all_tests and "all_tests") or "")
+    data_file += datetime.datetime.now().strftime('%Y%m%dT%H%M%S')
     if os.path.isfile(data_file):
         os.remove(data_file)
     with open(coveragerc, 'w') as cps:
+        cps.write("# Generated with command '%s'\n" % " ".join(sys.argv))
+        cps.write("# HEAD commit %s\n" % curcommit.strip())
         cps.write("[run]\n")
         cps.write("data_file = %s\n" % data_file)
         cps.write("branch = True\n")
@@ -586,7 +591,7 @@ def buildResultClass(args):
                 # value indicates where the coverage configuration file resides
                 # More info on https://pypi.python.org/pypi/coverage
                 if not os.environ.get('COVERAGE_PROCESS_START'):
-                    os.environ['COVERAGE_PROCESS_START'] = coverage_setup(args.run_tests, args.run_all_tests, args.coverage_source, args.coverage_include, args.coverage_omit)
+                    os.environ['COVERAGE_PROCESS_START'] = coverage_setup(args.coverage_source, args.coverage_include, args.coverage_omit)
 
                 # Use default site.USER_SITE and write corresponding config file
                 site.ENABLE_USER_SITE = True
