@@ -138,7 +138,7 @@ def use_icc(bb,d):
     return "yes"
 
 def icc_is_allarch(bb, d):
-    return d.getVar("PACKAGE_ARCH", False) == "all"
+    return d.getVar("PACKAGE_ARCH", False) == "all" or bb.data.inherits_class('allarch', d)
 
 def icc_is_kernel(bb, d):
     return \
