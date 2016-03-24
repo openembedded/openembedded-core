@@ -130,7 +130,8 @@ python uninative_changeinterp () {
 
             try:
                 subprocess.check_output(("patchelf-uninative", "--set-interpreter",
-                                         d.getVar("UNINATIVE_LOADER", True), f))
+                                         d.getVar("UNINATIVE_LOADER", True), f),
+                                        stderr=subprocess.STDOUT)
             except subprocess.CalledProcessError as e:
                 bb.fatal("'%s' failed with exit code %d and the following output:\n%s" %
                          (e.cmd, e.returncode, e.output))
