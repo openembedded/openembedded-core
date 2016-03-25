@@ -42,6 +42,10 @@ bash_cv_job_control_missing=${bash_cv_job_control_missing=present}
 bash_cv_sys_named_pipes=${bash_cv_sys_named_pipes=present}
 bash_cv_unusable_rtsigs=${bash_cv_unusable_rtsigs=no}
 
+# ccache
+hw_cv_func_snprintf_c99=${hw_cv_func_snprintf_c99=yes}
+hw_cv_func_vsnprintf_c99=${hw_cv_func_vsnprintf_c99=yes}
+
 # coreutils
 gl_cv_func_fstatat_zero_flag=${gl_cv_func_fstatat_zero_flag=yes}
 
