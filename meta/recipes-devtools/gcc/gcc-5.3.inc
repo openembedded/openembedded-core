@@ -87,6 +87,7 @@ SRC_URI = "\
            file://0055-Reuse-fdebug-prefix-map-to-replace-ffile-prefix-map.patch \
            file://0056-Enable-libc-provide-ssp-and-gcc_cv_target_dl_iterate.patch \
            file://0057-unwind-fix-for-musl.patch \
+           file://0058-fdebug-prefix-map-support-to-remap-relative-path.patch \
 "
 
 BACKPORTS = ""
