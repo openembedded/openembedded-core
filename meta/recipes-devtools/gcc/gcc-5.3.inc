@@ -85,6 +85,8 @@ SRC_URI = "\
            file://0053-expr.c-PR-target-65358-Avoid-clobbering-partial-argu.patch \
            file://0054-support-ffile-prefix-map.patch \
            file://0055-Reuse-fdebug-prefix-map-to-replace-ffile-prefix-map.patch \
+           file://0056-Enable-libc-provide-ssp-and-gcc_cv_target_dl_iterate.patch \
+           file://0057-unwind-fix-for-musl.patch \
 "
 
 BACKPORTS = ""
@@ -132,7 +134,6 @@ EXTRA_OECONF_INITIAL = "\
 "
 
 EXTRA_OECONF_append_libc-uclibc = " --disable-decimal-float "
-EXTRA_OECONF_append_libc-musl = " gcc_cv_libc_provides_ssp=yes gcc_cv_target_dl_iterate_phdr=yes "
 
 EXTRA_OECONF_PATHS = "\
     --with-gxx-include-dir=/not/exist{target_includedir}/c++/${BINV} \
