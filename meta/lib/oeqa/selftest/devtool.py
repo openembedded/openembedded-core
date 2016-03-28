@@ -929,6 +929,7 @@ class DevtoolTests(DevtoolBase):
         tempdir = tempfile.mkdtemp(prefix='devtoolqa')
         # Try devtool extract
         self.track_for_cleanup(tempdir)
+        self.append_config('PREFERRED_PROVIDER_virtual/make = "remake"')
         result = runCmd('devtool extract remake %s' % tempdir)
         self.assertTrue(os.path.exists(os.path.join(tempdir, 'Makefile.am')), 'Extracted source could not be found')
         # devtool extract shouldn't create the workspace
