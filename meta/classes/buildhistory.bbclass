@@ -504,6 +504,7 @@ buildhistory_get_imageinfo() {
 		return
 	fi
 
+        mkdir -p ${BUILDHISTORY_DIR_IMAGE}
 	buildhistory_list_files ${IMAGE_ROOTFS} ${BUILDHISTORY_DIR_IMAGE}/files-in-image.txt
 
 	# Collect files requested in BUILDHISTORY_IMAGE_FILES
