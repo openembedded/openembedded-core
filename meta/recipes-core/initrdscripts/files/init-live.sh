@@ -169,8 +169,8 @@ mount_and_boot() {
 
     # determine which unification filesystem to use
     union_fs_type=""
-    if grep -q -w "overlayfs" /proc/filesystems; then
-	union_fs_type="overlayfs"
+    if grep -q -w "overlay" /proc/filesystems; then
+	union_fs_type="overlay"
     elif grep -q -w "aufs" /proc/filesystems; then
 	union_fs_type="aufs"
     else
@@ -179,14 +179,15 @@ mount_and_boot() {
 
     # make a union mount if possible
     case $union_fs_type in
-	"overlayfs")
+	"overlay")
 	    mkdir -p /rootfs.ro /rootfs.rw
 	    if ! mount -n --move $ROOT_MOUNT /rootfs.ro; then
 		rm -rf /rootfs.ro /rootfs.rw
 		fatal "Could not move rootfs mount point"
 	    else
 		mount -t tmpfs -o rw,noatime,mode=755 tmpfs /rootfs.rw
-		mount -t overlayfs -o "lowerdir=/rootfs.ro,upperdir=/rootfs.rw" overlayfs $ROOT_MOUNT
+		mkdir -p /rootfs.rw/upperdir /rootfs.rw/work
+		mount -t overlay overlay -o "lowerdir=/rootfs.ro,upperdir=/rootfs.rw/upperdir,workdir=/rootfs.rw/work" $ROOT_MOUNT
 		mkdir -p $ROOT_MOUNT/rootfs.ro $ROOT_MOUNT/rootfs.rw
 		mount --move /rootfs.ro $ROOT_MOUNT/rootfs.ro
 		mount --move /rootfs.rw $ROOT_MOUNT/rootfs.rw
