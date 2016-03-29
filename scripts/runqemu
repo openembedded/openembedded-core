@@ -125,10 +125,10 @@ while true; do
             [ -z "$MACHINE" -o "$MACHINE" = "$arg" ] && MACHINE=$arg || \
                 error "conflicting MACHINE types [$MACHINE] and [$arg]"
             ;;
-        "ext"[234] | "jffs2" | "nfs" | "btrfs" | "iso")
+        "ext"[234] | "jffs2" | "nfs" | "btrfs")
             check_fstype_conflicts $arg
             ;;
-        "hddimg" | "hdddirect" | "wic" | "vmdk" | "qcow2" | "vdi")
+        "hddimg" | "hdddirect" | "wic" | "vmdk" | "qcow2" | "vdi" | "iso")
             check_fstype_conflicts $arg
             IS_VM="true"
             ;;
