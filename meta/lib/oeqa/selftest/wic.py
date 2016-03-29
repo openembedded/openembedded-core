@@ -50,7 +50,7 @@ class Wic(oeSelfTest):
         if not Wic.image_is_ready:
             bitbake('syslinux syslinux-native parted-native gptfdisk-native '
                     'dosfstools-native mtools-native')
-            bitbake('core-image-minimal -c do_rootfs_wicenv')
+            bitbake('core-image-minimal')
             Wic.image_is_ready = True
 
         rmtree(self.resultdir, ignore_errors=True)
@@ -199,6 +199,7 @@ class Wic(oeSelfTest):
     def test_image_env(self):
         """Test generation of <image>.env files."""
         image = 'core-image-minimal'
+        self.assertEqual(0, bitbake('%s -c do_rootfs_wicenv' % image).status)
         stdir = get_bb_var('STAGING_DIR_TARGET', image)
         imgdatadir = os.path.join(stdir, 'imgdata')
 
