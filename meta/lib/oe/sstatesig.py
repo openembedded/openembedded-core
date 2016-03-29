@@ -40,7 +40,7 @@ def sstate_rundepfilter(siggen, fn, recipename, task, dep, depname, dataCache):
     # Only target packages beyond here
 
     # allarch packagegroups are assumed to have well behaved names which don't change between architecures/tunes
-    if isPackageGroup(fn) and isAllArch(fn):
+    if isPackageGroup(fn) and isAllArch(fn) and not isNative(depname):
         return False  
 
     # Exclude well defined machine specific configurations which don't change ABI
