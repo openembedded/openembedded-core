@@ -131,6 +131,17 @@ class ParseLogsTest(oeRuntimeTest):
     @classmethod
     def setUpClass(self):
         self.errors = errors
+
+        # When systemd is enabled we need to notice errors on
+        # circular dependencies in units.
+        if self.hasFeature("systemd"):
+            self.errors.extend([
+                'Found ordering cycle on',
+                'Breaking ordering cycle by deleting job',
+                'deleted to break ordering cycle',
+                'Ordering cycle found, skipping',
+                ])
+
         self.ignore_errors = ignore_errors
         self.log_locations = log_locations
         self.msg = ""
