@@ -1,5 +1,5 @@
 # image-vm.bbclass
-# (loosly based off bootimg.bbclass Copyright (C) 2004, Advanced Micro Devices, Inc.)
+# (loosly based off image-live.bbclass Copyright (C) 2004, Advanced Micro Devices, Inc.)
 #
 # Create an image which can be placed directly onto a harddisk using dd and then
 # booted.
