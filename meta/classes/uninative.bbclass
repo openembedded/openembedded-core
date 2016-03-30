@@ -60,7 +60,7 @@ python uninative_event_fetchloader() {
             localdata.setVar('FILESPATH', "")
             localdata.setVar('DL_DIR', tarballdir)
 
-            srcuri = d.expand("${UNINATIVE_URL}${UNINATIVE_TARBALL};md5sum=%s" % chksum)
+            srcuri = d.expand("${UNINATIVE_URL}${UNINATIVE_TARBALL};sha256sum=%s" % chksum)
             bb.note("Fetching uninative binary shim from %s" % srcuri)
 
             fetcher = bb.fetch2.Fetch([srcuri], localdata, cache=False)

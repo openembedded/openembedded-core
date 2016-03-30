@@ -328,7 +328,7 @@ install_tools() {
 	install $buildtools_path ${SDK_OUTPUT}/${SDKPATH}
 
 	# For now this is where uninative.bbclass expects the tarball
-	chksum=`md5sum ${SDK_DEPLOY}/${BUILD_ARCH}-nativesdk-libc.tar.bz2 | cut -f 1 -d ' '`
+	chksum=`sha256sum ${SDK_DEPLOY}/${BUILD_ARCH}-nativesdk-libc.tar.bz2 | cut -f 1 -d ' '`
 	install -d ${SDK_OUTPUT}/${SDKPATH}/downloads/uninative/$chksum/
 	install ${SDK_DEPLOY}/${BUILD_ARCH}-nativesdk-libc.tar.bz2 ${SDK_OUTPUT}/${SDKPATH}/downloads/uninative/$chksum/
 	echo "UNINATIVE_CHECKSUM[${BUILD_ARCH}] = '$chksum'" >> ${SDK_OUTPUT}/${SDKPATH}/conf/local.conf
