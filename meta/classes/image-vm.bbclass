@@ -61,13 +61,6 @@ build_boot_dd() {
 		efi_hddimg_populate $HDDDIR
 	fi
 
-	if [ "x${AUTO_SYSLINUXMENU}" = "x1" ] ; then
-		install -m 0644 ${STAGING_DIR}/${MACHINE}/usr/share/syslinux/vesamenu.c32 $HDDDIR/${SYSLINUXDIR}/
-		if [ "x${SYSLINUX_SPLASH}" != "x" ] ; then
-			install -m 0644 ${SYSLINUX_SPLASH} $HDDDIR/${SYSLINUXDIR}/splash.lss
-		fi
-	fi
-
 	BLOCKS=`du -bks $HDDDIR | cut -f 1`
 	BLOCKS=`expr $BLOCKS + ${BOOTDD_EXTRA_SPACE}`
 
