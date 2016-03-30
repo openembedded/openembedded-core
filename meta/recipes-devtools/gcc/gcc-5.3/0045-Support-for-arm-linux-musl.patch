@@ -1,7 +1,9 @@
-From a32a7901315bf01d0605e43cb7d0427a6d7e4b75 Mon Sep 17 00:00:00 2001
+From a6c649571d49c972e6d207577780ada7e9b6bad5 Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Tue, 8 Dec 2015 08:31:52 +0000
-Subject: [PATCH 45/46] Support for arm-linux-musl.
+Subject: [PATCH 45/57] Support for arm-linux-musl.
+
+Fix musl ldso for all arches
 
 Upstream-Status: backport [partial]
 Signed-off-by: Khem Raj <raj.khem@gmail.com>
@@ -10,12 +12,12 @@ Signed-off-by: Khem Raj <raj.khem@gmail.com>
  gcc/config/arm/linux-eabi.h        | 17 +++++++++++++++++
  gcc/config/i386/linux.h            |  1 +
  gcc/config/i386/linux64.h          |  5 +++++
- gcc/config/mips/linux.h            |  6 +++++-
+ gcc/config/mips/linux.h            |  8 +++++++-
  gcc/config/rs6000/linux64.h        | 13 +++++++++----
  gcc/config/rs6000/sysv4.h          | 10 +++++++---
  libitm/config/arm/hwcap.cc         |  4 ++++
  libitm/config/linux/x86/tls.h      |  8 ++++++--
- 9 files changed, 55 insertions(+), 10 deletions(-)
+ 9 files changed, 57 insertions(+), 10 deletions(-)
 
 diff --git a/gcc/config/aarch64/aarch64-linux.h b/gcc/config/aarch64/aarch64-linux.h
 index f9e65fc..1b2d0c0 100644
@@ -80,21 +82,23 @@ index 6185cce..5a3a977 100644
 +#define MUSL_DYNAMIC_LINKERX32 SYSTEMLIBS_DIR "ld-musl-x32.so.1"
 +
 diff --git a/gcc/config/mips/linux.h b/gcc/config/mips/linux.h
-index c306afb..44d4c12 100644
+index c306afb..b899388 100644
 --- a/gcc/config/mips/linux.h
 +++ b/gcc/config/mips/linux.h
-@@ -21,6 +21,10 @@ along with GCC; see the file COPYING3.  If not see
+@@ -21,6 +21,12 @@ along with GCC; see the file COPYING3.  If not see
  #define GNU_USER_LINK_EMULATION64 "elf64%{EB:b}%{EL:l}tsmip"
  #define GNU_USER_LINK_EMULATIONN32 "elf32%{EB:b}%{EL:l}tsmipn32"
  
-+#define MUSL_DYNAMIC_LINKERN32 SYSTEMLIBS_DIR "ld-musl-mips.so.1"
-+#define MUSL_DYNAMIC_LINKER32 SYSTEMLIBS_DIR "ld-musl-mips.so.1"
-+#define MUSL_DYNAMIC_LINKER64 SYSTEMLIBS_DIR "ld-musl-mips.so.1"
++#undef MUSL_DYNAMIC_LINKER32
++#define MUSL_DYNAMIC_LINKER32 SYSTEMLIBS_DIR "ld-musl-mips%{EL:el}%{msoft-float:-sf}.so.1"
++#undef MUSL_DYNAMIC_LINKER64
++#define MUSL_DYNAMIC_LINKER64 SYSTEMLIBS_DIR "ld-musl-mips64%{EL:el}%{msoft-float:-sf}.so.1"
++#define MUSL_DYNAMIC_LINKERN32 SYSTEMLIBS_DIR "ld-musl-mipsn32%{EL:el}%{msoft-float:-sf}.so.1"
 +
  #define GLIBC_DYNAMIC_LINKER32 \
    "%{mnan=2008:" SYSTEMLIBS_DIR "ld-linux-mipsn8.so.1;:" SYSTEMLIBS_DIR "ld.so.1}"
  #define GLIBC_DYNAMIC_LINKER64 \
-@@ -40,4 +44,4 @@ along with GCC; see the file COPYING3.  If not see
+@@ -40,4 +46,4 @@ along with GCC; see the file COPYING3.  If not see
  #define BIONIC_DYNAMIC_LINKERN32 "/system/bin/linker32"
  #define GNU_USER_DYNAMIC_LINKERN32 \
    CHOOSE_DYNAMIC_LINKER (GLIBC_DYNAMIC_LINKERN32, UCLIBC_DYNAMIC_LINKERN32, \
@@ -208,5 +212,5 @@ index e731ab7..54ad8b6 100644
  
  #endif // LIBITM_X86_TLS_H
 -- 
-2.6.3
+2.7.4
 
