@@ -563,10 +563,10 @@ def sanity_check_conffiles(status, d):
                 d.getVar(current_version, True) != d.getVar(required_version, True):
             success = True
             try:
-                bb.build.exec_func(func, d)
+                bb.build.exec_func(func, d, pythonexception=True)
             except NotImplementedError as e:
                 success = False
-                status.addresult(e.msg)
+                status.addresult(str(e))
             if success:
                 status.reparse = True
 
