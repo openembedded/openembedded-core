@@ -25,6 +25,8 @@
 # ${HDDIMG_ID} - FAT image volume-id
 # ${ROOTFS} - indicates a filesystem image to include as the root filesystem (optional)
 
+inherit live-vm-common
+
 do_bootimg[depends] += "dosfstools-native:do_populate_sysroot \
                         mtools-native:do_populate_sysroot \
                         cdrtools-native:do_populate_sysroot \
@@ -71,52 +73,11 @@ MKISOFS_OPTIONS = "-no-emul-boot -boot-load-size 4 -boot-info-table"
 BOOTIMG_VOLUME_ID   ?= "boot"
 BOOTIMG_EXTRA_SPACE ?= "512"
 
-EFI = "${@bb.utils.contains("MACHINE_FEATURES", "efi", "1", "0", d)}"
-EFI_PROVIDER ?= "grub-efi"
-EFI_CLASS = "${@bb.utils.contains("MACHINE_FEATURES", "efi", "${EFI_PROVIDER}", "", d)}"
-
-KERNEL_IMAGETYPE ??= "bzImage"
-
-# Include legacy boot if MACHINE_FEATURES includes "pcbios" or if it does not
-# contain "efi". This way legacy is supported by default if neither is
-# specified, maintaining the original behavior.
-def pcbios(d):
-    pcbios = bb.utils.contains("MACHINE_FEATURES", "pcbios", "1", "0", d)
-    if pcbios == "0":
-        pcbios = bb.utils.contains("MACHINE_FEATURES", "efi", "0", "1", d)
-    return pcbios
-
-PCBIOS = "${@pcbios(d)}"
-PCBIOS_CLASS = "${@['','syslinux'][d.getVar('PCBIOS', True) == '1']}"
-
-inherit ${EFI_CLASS}
-inherit ${PCBIOS_CLASS}
-
-populate() {
-	DEST=$1
-	install -d ${DEST}
-
-	# Install kernel, initrd, and rootfs.img in DEST for all loaders to use.
-	install -m 0644 ${DEPLOY_DIR_IMAGE}/${KERNEL_IMAGETYPE} ${DEST}/vmlinuz
-
-	# initrd is made of concatenation of multiple filesystem images
-	if [ -n "${INITRD}" ]; then
-		rm -f ${DEST}/initrd
-		for fs in ${INITRD}
-		do
-			if [ -s "${fs}" ]; then
-				cat ${fs} >> ${DEST}/initrd
-			else
-				bbfatal "${fs} is invalid. initrd image creation failed."
-			fi
-		done
-		chmod 0644 ${DEST}/initrd
+populate_live() {
+    populate_kernel $1
+	if [ -s "${ROOTFS}" ]; then
+		install -m 0644 ${ROOTFS} $1/rootfs.img
 	fi
-
-	if [ -n "${ROOTFS}" ] && [ -s "${ROOTFS}" ]; then
-		install -m 0644 ${ROOTFS} ${DEST}/rootfs.img
-	fi
-
 }
 
 build_iso() {
@@ -128,14 +89,13 @@ build_iso() {
 	# ${INITRD} is a list of multiple filesystem images
 	for fs in ${INITRD}
 	do
-		if [ ! -s "${fs}" ]; then
-			bbnote "ISO image will not be created. ${fs} is invalid."
+		if [ ! -s "$fs" ]; then
+			bbnote "ISO image will not be created. $fs is invalid."
 			return
 		fi
 	done
 
-
-	populate ${ISODIR}
+	populate_live ${ISODIR}
 
 	if [ "${PCBIOS}" = "1" ]; then
 		syslinux_iso_populate ${ISODIR}
@@ -275,7 +235,7 @@ build_fat_img() {
 build_hddimg() {
 	# Create an HDD image
 	if [ "${NOHDD}" != "1" ] ; then
-		populate ${HDDDIR}
+		populate_live ${HDDDIR}
 
 		if [ "${PCBIOS}" = "1" ]; then
 			syslinux_hddimg_populate ${HDDDIR}

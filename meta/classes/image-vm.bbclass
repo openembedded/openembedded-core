@@ -15,6 +15,8 @@
 # We have to push the msdos parition table size > 16MB so fat 16 is used as parted
 # won't touch fat12 partitions.
 
+inherit live-vm-common
+
 do_bootdirectdisk[depends] += "dosfstools-native:do_populate_sysroot \
                                virtual/kernel:do_deploy \
                                syslinux:do_populate_sysroot \
@@ -43,63 +45,14 @@ do_bootdirectdisk[depends] += "${@'${INITRD_IMAGE_VM}:do_image_complete' if '${I
 BOOTDD_VOLUME_ID   ?= "boot"
 BOOTDD_EXTRA_SPACE ?= "16384"
 
-EFI = "${@bb.utils.contains("MACHINE_FEATURES", "efi", "1", "0", d)}"
-EFI_PROVIDER ?= "grub-efi"
-EFI_CLASS = "${@bb.utils.contains("MACHINE_FEATURES", "efi", "${EFI_PROVIDER}", "", d)}"
-
-# Include legacy boot if MACHINE_FEATURES includes "pcbios" or if it does not
-# contain "efi". This way legacy is supported by default if neither is
-# specified, maintaining the original behavior.
-def pcbios(d):
-    pcbios = bb.utils.contains("MACHINE_FEATURES", "pcbios", "1", "0", d)
-    if pcbios == "0":
-        pcbios = bb.utils.contains("MACHINE_FEATURES", "efi", "0", "1", d)
-    return pcbios
-
-def pcbios_class(d):
-    if d.getVar("PCBIOS", True) == "1":
-        return "syslinux"
-    return ""
-
-PCBIOS = "${@pcbios(d)}"
-PCBIOS_CLASS = "${@pcbios_class(d)}"
-
-# Get the build_syslinux_cfg() function from the syslinux class
-inherit ${PCBIOS_CLASS}
-inherit ${EFI_CLASS}
-
 DISK_SIGNATURE ?= "${DISK_SIGNATURE_GENERATED}"
-
-boot_direct_populate() {
-	dest=$1
-	install -d $dest
-
-	# Install bzImage, initrd, and rootfs.img in DEST for all loaders to use.
-	if [ -e ${DEPLOY_DIR_IMAGE}/bzImage ]; then
-		install -m 0644 ${DEPLOY_DIR_IMAGE}/bzImage $dest/vmlinuz
-	fi
-
-	# initrd is made of concatenation of multiple filesystem images
-	if [ -n "${INITRD}" ]; then
-		rm -f $dest/initrd
-		for fs in ${INITRD}
-		do
-			if [ -s "${fs}" ]; then
-				cat ${fs} >> $dest/initrd
-			else
-				bbfatal "${fs} is invalid. initrd image creation failed."
-			fi
-		done
-		chmod 0644 $dest/initrd
-	fi
-}
 
 build_boot_dd() {
 	HDDDIR="${S}/hdd/boot"
 	HDDIMG="${S}/hdd.image"
 	IMAGE=${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.hdddirect
 
-	boot_direct_populate $HDDDIR
+	populate_kernel $HDDDIR
 
 	if [ "${PCBIOS}" = "1" ]; then
 		syslinux_hddimg_populate $HDDDIR
