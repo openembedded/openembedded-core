@@ -424,6 +424,7 @@ class RecipetoolTests(RecipetoolBase):
         inherits = ['autotools']
         self._test_recipe_contents(os.path.join(temprecipe, dirlist[0]), checkvars, inherits)
 
+    @testcase(1418)
     def test_recipetool_create_cmake(self):
         # Try adding a recipe
         temprecipe = os.path.join(self.tempdir, 'recipe')

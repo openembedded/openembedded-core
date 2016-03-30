@@ -57,6 +57,7 @@ class ImageOptionsTests(oeSelfTest):
         res = runCmd("grep ccache %s" % (os.path.join(get_bb_var("WORKDIR","m4"),"temp/log.do_compile")), ignore_status=True)
         self.assertEqual(0, res.status, msg="No match for ccache in m4 log.do_compile. For further details: %s" % os.path.join(get_bb_var("WORKDIR","m4"),"temp/log.do_compile"))
 
+    @testcase(1435)
     def test_read_only_image(self):
         self.write_config('IMAGE_FEATURES += "read-only-rootfs"')
         bitbake("core-image-sato")
@@ -124,6 +125,7 @@ do_install_append_pn-gzip () {
         line = self.getline(res, "QA Issue: gzip")
         self.assertTrue(line and line.startswith("WARNING:"), "WARNING: QA Issue: gzip message is not present in bitbake's output: %s" % res.output)
 
+    @testcase(1434)
     def test_sanity_unsafe_binary_references(self):
         self.write_config('WARN_QA_append = " unsafe-references-in-binaries"')
 
