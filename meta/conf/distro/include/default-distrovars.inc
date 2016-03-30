@@ -26,7 +26,7 @@ IMAGE_FEATURES ?= ""
 # directly part of the distribution. 
 HOSTTOOLS_WHITELIST_GPL-3.0 ?= ""
 WHITELIST_GPL-3.0 ?= ""
-LGPLv2_WHITELIST_GPL-3.0 ?= "libassuan gnutls libtasn1 libidn"
+LGPLv2_WHITELIST_GPL-3.0 ?= "libassuan libidn"
 
 COMMERCIAL_AUDIO_PLUGINS ?= ""
 # COMMERCIAL_AUDIO_PLUGINS ?= "gst-plugins-ugly-mad gst-plugins-ugly-mpegaudioparse"
