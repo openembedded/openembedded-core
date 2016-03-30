@@ -2,8 +2,8 @@ KBRANCH ?= "standard/preempt-rt"
 
 require recipes-kernel/linux/linux-yocto.inc
 
-SRCREV_machine ?= "dfa88200087a7ef73741383c05c14ff2f3978947"
-SRCREV_meta ?= "194a6c1c4b783cff90e925ec26fd77ff0e67fdd5"
+SRCREV_machine ?= "8d68782597a31dd55c018c0be7d6799f89aadbf7"
+SRCREV_meta ?= "28bff6d39803ad83f83e353f158fc1aa14d5492d"
 
 SRC_URI = "git://git.yoctoproject.org/linux-yocto-4.4.git;branch=${KBRANCH};name=machine \
            git://git.yoctoproject.org/yocto-kernel-cache;type=kmeta;name=meta;branch=yocto-4.4;destsuffix=${KMETA}"
