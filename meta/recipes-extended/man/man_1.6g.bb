@@ -39,7 +39,6 @@ SRC_URI = "http://pkgs.fedoraproject.org/lookaside/pkgs/man2html/${BP}.tar.gz/ba
            file://man-1.5i2-initial.patch \
            file://man-1.5h1-gencat.patch;striplevel=0 \
            file://man-1.5g-nonrootbuild.patch \
-           file://man-1.5m2-tv_fhs.patch;striplevel=0 \
            file://man-1.5j-i18n.patch \
            file://man-1.6e-whatis2.patch \
            file://man-1.6e-use_i18n_vars_in_a_std_way.patch \
@@ -54,6 +53,7 @@ SRC_URI = "http://pkgs.fedoraproject.org/lookaside/pkgs/man2html/${BP}.tar.gz/ba
            file://man-1.6g-whatis3.patch \
            file://configure_sed.patch \
            file://man-1.6g-parallel.patch \
+           file://man-1.6g-compile-warnings.patch \
 "
 
 SRC_URI[md5sum] = "ba154d5796928b841c9c69f0ae376660"
