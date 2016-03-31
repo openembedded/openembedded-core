@@ -238,28 +238,13 @@ class Rootfs(object):
                                       self.d.getVar('IMAGE_ROOTFS', True),
                                       "run-postinsts", "remove"])
 
-        runtime_pkgmanage = bb.utils.contains("IMAGE_FEATURES", "package-management",
-                         True, False, self.d)
-        sysvcompat_in_distro = bb.utils.contains("DISTRO_FEATURES", [ "systemd", "sysvinit" ],
-                         True, False, self.d)
         image_rorfs = bb.utils.contains("IMAGE_FEATURES", "read-only-rootfs",
-                         True, False, self.d)
-        if sysvcompat_in_distro and not image_rorfs:
-            pkg_to_remove = ""
-        else:
-            pkg_to_remove = "update-rc.d"
+                                        True, False, self.d)
         if image_rorfs:
             # Remove components that we don't need if it's a read-only rootfs
+            unneeded_pkgs = self.d.getVar("ROOTFS_RO_UNNEEDED", True).split()
             pkgs_installed = image_list_installed_packages(self.d)
-            pkgs_to_remove = list()
-            for pkg in pkgs_installed:
-                if pkg in ["update-rc.d",
-                        "base-passwd",
-                        "shadow",
-                        "update-alternatives", pkg_to_remove,
-                        self.d.getVar("ROOTFS_BOOTSTRAP_INSTALL", True)
-                        ]:
-                    pkgs_to_remove.append(pkg)
+            pkgs_to_remove = [pkg for pkg in pkgs_installed if pkg in unneeded_pkgs]
 
             if len(pkgs_to_remove) > 0:
                 self.pm.remove(pkgs_to_remove, False)
@@ -273,6 +258,8 @@ class Rootfs(object):
         post_uninstall_cmds = self.d.getVar("ROOTFS_POSTUNINSTALL_COMMAND", True)
         execute_pre_post_process(self.d, post_uninstall_cmds)
 
+        runtime_pkgmanage = bb.utils.contains("IMAGE_FEATURES", "package-management",
+                                              True, False, self.d)
         if not runtime_pkgmanage:
             # Remove the package manager data files
             self.pm.remove_packaging_data()
