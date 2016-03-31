@@ -46,6 +46,7 @@ class Signing(oeSelfTest):
         Author:      Daniel Istrate <daniel.alexandrux.istrate@intel.com>
         AutomatedBy: Daniel Istrate <daniel.alexandrux.istrate@intel.com>
         """
+        import oe.packagedata
 
         package_classes = get_bb_var('PACKAGE_CLASSES')
         if 'package_rpm' not in package_classes:
@@ -65,7 +66,12 @@ class Signing(oeSelfTest):
         bitbake(test_recipe)
         self.add_command_to_tearDown('bitbake -c clean %s' % test_recipe)
 
-        pf = get_bb_var('PF', test_recipe)
+        pkgdatadir = get_bb_var('PKGDATA_DIR', test_recipe)
+        pkgdata = oe.packagedata.read_pkgdatafile(pkgdatadir + "/runtime/ed")
+        if 'PKGE' in pkgdata:
+            pf = pkgdata['PN'] + "-" + pkgdata['PKGE'] + pkgdata['PKGV'] + '-' + pkgdata['PKGR']
+        else:
+            pf = pkgdata['PN'] + "-" + pkgdata['PKGV'] + '-' + pkgdata['PKGR']
         deploy_dir_rpm = get_bb_var('DEPLOY_DIR_RPM', test_recipe)
         package_arch = get_bb_var('PACKAGE_ARCH', test_recipe).replace('-', '_')
         staging_bindir_native = get_bb_var('STAGING_BINDIR_NATIVE')
