@@ -516,7 +516,6 @@ python () {
                         incompatwl.extend((d.getVar(w + spdx_license, True) or "").split())
 
             if not pn in whitelist:
-                recipe_license = d.getVar('LICENSE', True)
                 pkgs = d.getVar('PACKAGES', True).split()
                 skipped_pkgs = []
                 unskipped_pkgs = []
@@ -528,14 +527,14 @@ python () {
                 all_skipped = skipped_pkgs and not unskipped_pkgs
                 if unskipped_pkgs:
                     for pkg in skipped_pkgs:
-                        bb.debug(1, "SKIPPING the package " + pkg + " at do_rootfs because it's " + recipe_license)
+                        bb.debug(1, "SKIPPING the package " + pkg + " at do_rootfs because it's " + license)
                         mlprefix = d.getVar('MLPREFIX', True)
                         d.setVar('LICENSE_EXCLUSION-' + mlprefix + pkg, 1)
                     for pkg in unskipped_pkgs:
                         bb.debug(1, "INCLUDING the package " + pkg)
                 elif all_skipped or incompatible_license(d, bad_licenses):
-                    bb.debug(1, "SKIPPING recipe %s because it's %s" % (pn, recipe_license))
-                    raise bb.parse.SkipPackage("incompatible with license %s" % recipe_license)
+                    bb.debug(1, "SKIPPING recipe %s because it's %s" % (pn, license))
+                    raise bb.parse.SkipPackage("incompatible with license %s" % license)
             elif pn in whitelist:
                 if pn in incompatwl:
                     bb.note("INCLUDING " + pn + " as buildable despite INCOMPATIBLE_LICENSE because it has been whitelisted")
