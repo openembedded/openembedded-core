@@ -365,6 +365,12 @@ sdk_ext_preinst() {
 		exit 1
 	fi
 	SDK_EXTENSIBLE="1"
+	if [ "$publish" = "1" ] ; then
+		EXTRA_TAR_OPTIONS="$EXTRA_TAR_OPTIONS --exclude=ext-sdk-prepare.py"
+		if [ "${SDK_EXT_TYPE}" = "minimal" ] ; then
+			EXTRA_TAR_OPTIONS="$EXTRA_TAR_OPTIONS --exclude=sstate-cache"
+		fi
+	fi
 }
 SDK_PRE_INSTALL_COMMAND_task-populate-sdk-ext = "${sdk_ext_preinst}"
 

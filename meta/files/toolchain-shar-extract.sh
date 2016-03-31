@@ -38,12 +38,14 @@ fi
 
 DEFAULT_INSTALL_DIR="@SDKPATH@"
 SUDO_EXEC=""
+EXTRA_TAR_OPTIONS=""
 target_sdk_dir=""
 answer=""
 relocate=1
 savescripts=0
 verbose=0
-while getopts ":yd:nDRS" OPT; do
+publish=0
+while getopts ":yd:npDRS" OPT; do
 	case $OPT in
 	y)
 		answer="Y"
@@ -53,6 +55,10 @@ while getopts ":yd:nDRS" OPT; do
 		;;
 	n)
 		prepare_buildsystem="no"
+		;;
+	p)
+		prepare_buildsystem="no"
+		publish=1
 		;;
 	D)
 		verbose=1
@@ -70,6 +76,7 @@ while getopts ":yd:nDRS" OPT; do
 		echo "  -d <dir>   Install the SDK to <dir>"
 		echo "======== Extensible SDK only options ============"
 		echo "  -n         Do not prepare the build system"
+		echo "  -p         Publish mode (implies -n)"
 		echo "======== Advanced DEBUGGING ONLY OPTIONS ========"
 		echo "  -S         Save relocation scripts"
 		echo "  -R         Do not relocate executables"
@@ -181,7 +188,7 @@ fi
 payload_offset=$(($(grep -na -m1 "^MARKER:$" $0|cut -d':' -f1) + 1))
 
 printf "Extracting SDK..."
-tail -n +$payload_offset $0| $SUDO_EXEC tar xJ -C $target_sdk_dir --checkpoint=.2500 || exit 1
+tail -n +$payload_offset $0| $SUDO_EXEC tar xJ -C $target_sdk_dir --checkpoint=.2500 $EXTRA_TAR_OPTIONS || exit 1
 echo "done"
 
 printf "Setting it up..."

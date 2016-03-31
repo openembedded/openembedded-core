@@ -94,19 +94,17 @@ def publish(args):
 
     # Unpack the SDK
     logger.info("Unpacking SDK")
-    cleanupfiles = [dest_sdk, os.path.join(destdir, 'ext-sdk-prepare.py')]
     if not is_remote:
-        cmd = "sh %s -n -y -d %s" % (dest_sdk, destination)
+        cmd = "sh %s -p -y -d %s" % (dest_sdk, destination)
         ret = subprocess.call(cmd, shell=True)
         if ret == 0:
             logger.info('Successfully unpacked %s to %s' % (dest_sdk, destination))
-            for cleanupfile in cleanupfiles:
-                os.remove(cleanupfile)
+            os.remove(dest_sdk)
         else:
             logger.error('Failed to unpack %s to %s' % (dest_sdk, destination))
             return ret
     else:
-        cmd = "ssh %s 'sh %s -n -y -d %s && rm -f %s'" % (host, dest_sdk, destdir, ' '.join(cleanupfiles))
+        cmd = "ssh %s 'sh %s -p -y -d %s && rm -f %s'" % (host, dest_sdk, destdir, dest_sdk)
         ret = subprocess.call(cmd, shell=True)
         if ret == 0:
             logger.info('Successfully unpacked %s to %s' % (dest_sdk, destdir))
