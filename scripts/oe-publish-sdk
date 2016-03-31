@@ -50,7 +50,10 @@ def publish(args):
 
     # Ensure the SDK exists
     if not os.path.exists(target_sdk):
-        logger.error("%s doesn't exist" % target_sdk)
+        logger.error("Specified SDK %s doesn't exist" % target_sdk)
+        return -1
+    if os.path.isdir(target_sdk):
+        logger.error("%s is a directory - expected path to SDK installer file" % target_sdk)
         return -1
 
     if ':' in destination:
