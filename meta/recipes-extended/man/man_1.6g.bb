@@ -54,6 +54,7 @@ SRC_URI = "http://pkgs.fedoraproject.org/lookaside/pkgs/man2html/${BP}.tar.gz/ba
            file://configure_sed.patch \
            file://man-1.6g-parallel.patch \
            file://man-1.6g-compile-warnings.patch \
+           file://man-1.6g-configure.patch \
 "
 
 SRC_URI[md5sum] = "ba154d5796928b841c9c69f0ae376660"
