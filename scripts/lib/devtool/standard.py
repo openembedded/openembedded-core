@@ -805,6 +805,8 @@ def modify(args, config, basepath, workspace):
 
     logger.info('Recipe %s now set up to build from %s' % (pn, srctree))
 
+    tinfoil.shutdown()
+
     return 0
 
 def _get_patchset_revs(args, srctree, recipe_path):
