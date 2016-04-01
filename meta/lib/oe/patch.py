@@ -214,13 +214,17 @@ class PatchTree(PatchSet):
         if not force:
             shellcmd.append('--dry-run')
 
-        output = runcmd(["sh", "-c", " ".join(shellcmd)], self.dir)
+        try:
+            output = runcmd(["sh", "-c", " ".join(shellcmd)], self.dir)
 
-        if force:
-            return
+            if force:
+                return
 
-        shellcmd.pop(len(shellcmd) - 1)
-        output = runcmd(["sh", "-c", " ".join(shellcmd)], self.dir)
+            shellcmd.pop(len(shellcmd) - 1)
+            output = runcmd(["sh", "-c", " ".join(shellcmd)], self.dir)
+        except CmdError as err:
+            raise bb.BBHandledException("Applying '%s' failed:\n%s" %
+                                        (os.path.basename(patch['file']), err.output))
 
         if not reverse:
             self._appendPatchFile(patch['file'], patch['strippath'])
