@@ -23,6 +23,7 @@
 import os
 import re
 import shutil
+import glob
 
 from wic import msger
 from wic.pluginbase import SourcePlugin
@@ -150,8 +151,7 @@ class IsoImagePlugin(SourcePlugin):
             if not machine_arch:
                 msger.error("Couldn't find MACHINE_ARCH, exiting.\n")
 
-            initrd = "%s/%s-initramfs-%s.%s" \
-                    % (initrd_dir, image_name, machine_arch, image_type)
+            initrd = glob.glob('%s/%s*%s.%s' % (initrd_dir, image_name, machine_arch, image_type))[0]
 
         if not os.path.exists(initrd):
             # Create initrd from rootfs directory
