@@ -19,11 +19,13 @@ PACKAGECONFIG[experimental] = "--enable-experimental,--disable-experimental,"
 SRC_URI = "\
     ${KERNELORG_MIRROR}/linux/bluetooth/bluez-${PV}.tar.xz \
     file://init \
+    file://run-ptest \
     ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', '', 'file://0001-Allow-using-obexd-without-systemd-in-the-user-sessio.patch', d)} \
+    file://0001-tests-add-a-target-for-building-tests-without-runnin.patch \
 "
 S = "${WORKDIR}/bluez-${PV}"
 
-inherit autotools-brokensep pkgconfig systemd update-rc.d distro_features_check
+inherit autotools-brokensep pkgconfig systemd update-rc.d distro_features_check ptest
 
 EXTRA_OECONF = "\
   --enable-tools \
@@ -101,3 +103,12 @@ INITSCRIPT_PACKAGES = "${PN}"
 INITSCRIPT_NAME_${PN} = "bluetooth"
 
 EXCLUDE_FROM_WORLD = "1"
+
+do_compile_ptest() {
+        oe_runmake buildtests
+}
+
+do_install_ptest() {
+        cp -r ${B}/unit/ ${D}${PTEST_PATH}
+        rm ${D}${PTEST_PATH}/unit/*.c ${D}${PTEST_PATH}/unit/*.o
+}
