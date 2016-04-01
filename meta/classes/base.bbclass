@@ -398,11 +398,11 @@ python () {
             if not appends:
                 return
             if varname.find("DEPENDS") != -1:
-                if pn.startswith("nativesdk-"):
+                if bb.data.inherits_class('nativesdk', d) or bb.data.inherits_class('cross-canadian', d) :
                     appends = expandFilter(appends, "", "nativesdk-")
-                if pn.endswith("-native"):
+                elif bb.data.inherits_class('native', d):
                     appends = expandFilter(appends, "-native", "")
-                if mlprefix:
+                elif mlprefix:
                     appends = expandFilter(appends, "", mlprefix)
             varname = d.expand(varname)
             d.appendVar(varname, " " + " ".join(appends))
