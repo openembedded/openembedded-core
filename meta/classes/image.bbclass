@@ -324,6 +324,7 @@ python () {
 
     def _add_type(t):
         baset = _image_base_type(t)
+        input_t = t
         if baset not in basetypes:
             basetypes[baset]= []
         if t not in basetypes[baset]:
@@ -344,9 +345,9 @@ python () {
             basedep = _image_base_type(dep)
             typedeps[baset].add(basedep)
 
-        if baset != t:
+        if baset != input_t:
             _add_type(baset)
-        
+
     for t in alltypes[:]:
         _add_type(t)
 
