@@ -217,7 +217,7 @@ if [ -f /run/media/$1/EFI/BOOT/grub.cfg ]; then
     # Delete any LABEL= strings
     sed -i "s/ LABEL=[^ ]*/ /" $GRUBCFG
     # Delete any root= strings
-    sed -i "s/ root=[^ ]*/ /" $GRUBCFG
+    sed -i "s/ root=[^ ]*/ /g" $GRUBCFG
     # Add the root= and other standard boot options
     sed -i "s@linux /vmlinuz *@linux /vmlinuz root=PARTUUID=$root_part_uuid rw $rootwait quiet @" $GRUBCFG
 fi
