@@ -318,6 +318,9 @@ def package_qa_check_libdir(d):
 
     messages = []
 
+    # The re's are purposely fuzzy, as some there are some .so.x.y.z files
+    # that don't follow the standard naming convention. It checks later
+    # that they are actual ELF files
     lib_re = re.compile("^/lib.+\.so(\..+)?$")
     exec_re = re.compile("^%s.*/lib.+\.so(\..+)?$" % exec_prefix)
 
@@ -342,10 +345,22 @@ def package_qa_check_libdir(d):
                 rel_path = os.sep + rel_path
                 if lib_re.match(rel_path):
                     if base_libdir not in rel_path:
-                        messages.append("%s: found library in wrong location: %s" % (package, rel_path))
+                        # make sure it's an actual ELF file
+                        elf = oe.qa.ELFFile(full_path)
+                        try:
+                            elf.open()
+                            messages.append("%s: found library in wrong location: %s" % (package, rel_path))
+                        except (oe.qa.NotELFFileError):
+                            pass
                 if exec_re.match(rel_path):
                     if libdir not in rel_path and libexecdir not in rel_path:
-                        messages.append("%s: found library in wrong location: %s" % (package, rel_path))
+                        # make sure it's an actual ELF file
+                        elf = oe.qa.ELFFile(full_path)
+                        try:
+                            elf.open()
+                            messages.append("%s: found library in wrong location: %s" % (package, rel_path))
+                        except (oe.qa.NotELFFileError):
+                            pass
 
     if messages:
         package_qa_handle_error("libdir", "\n".join(messages), d)
