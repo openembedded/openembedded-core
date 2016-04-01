@@ -14,6 +14,7 @@
 # ${APPEND} - an override list of append strings for each label
 # ${GRUB_OPTS} - additional options to add to the config, ';' delimited # (optional)
 # ${GRUB_TIMEOUT} - timeout before executing the deault label (optional)
+# ${GRUB_ROOT} - grub's root device.
 
 do_bootimg[depends] += "${MLPREFIX}grub-efi:do_deploy"
 do_bootdirectdisk[depends] += "${MLPREFIX}grub-efi:do_deploy"
@@ -26,7 +27,8 @@ GRUB_TIMEOUT ?= "10"
 GRUB_OPTS ?= "serial --unit=0 --speed=115200 --word=8 --parity=no --stop=1"
 
 EFIDIR = "/EFI/BOOT"
-APPEND_prepend = " ${ROOT} "
+GRUB_ROOT ?= "${ROOT}"
+APPEND ?= ""
 
 # Need UUID utility code.
 inherit fs-uuid
@@ -108,6 +110,10 @@ python build_efi_cfg() {
     else:
         cfgfile.write('timeout=50\n')
 
+    root = d.getVar('GRUB_ROOT', True)
+    if not root:
+        raise bb.build.FuncFailed('GRUB_ROOT not defined')
+
     if gfxserial == "1":
         btypes = [ [ " graphics console", "" ],
             [ " serial console", d.getVar('GRUB_SERIAL', True) or "" ] ]
@@ -130,6 +136,8 @@ python build_efi_cfg() {
             if label == "install":
                 lb = "install-efi"
             cfgfile.write('linux /vmlinuz LABEL=%s' % (lb))
+
+            cfgfile.write(' %s' % replace_rootfs_uuid(d, root))
 
             append = localdata.getVar('APPEND', True)
             initrd = localdata.getVar('INITRD', True)

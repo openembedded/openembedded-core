@@ -33,7 +33,7 @@ AUTO_SYSLINUXMENU ?= "1"
 SYSLINUX_ROOT ?= "${ROOT}"
 SYSLINUX_CFG_VM  ?= "${S}/syslinux_vm.cfg"
 SYSLINUX_CFG_LIVE ?= "${S}/syslinux_live.cfg"
-APPEND_prepend = " ${SYSLINUX_ROOT} "
+APPEND ?= ""
 
 # Need UUID utility code.
 inherit fs-uuid
@@ -164,6 +164,10 @@ python build_syslinux_cfg () {
             btypes = [ [ "Graphics console ", syslinux_default_console  ],
                 [ "Serial console ", syslinux_serial_tty ] ]
 
+        root= d.getVar('SYSLINUX_ROOT', True)
+        if not root:
+            raise bb.build.FuncFailed('SYSLINUX_ROOT not defined')
+
         for btype in btypes:
             cfgfile.write('LABEL %s%s\nKERNEL /vmlinuz\n' % (btype[0], label))
 
@@ -174,17 +178,15 @@ python build_syslinux_cfg () {
             append = localdata.getVar('APPEND', True)
             initrd = localdata.getVar('INITRD', True)
 
-            if append:
-                cfgfile.write('APPEND ')
+            append = root + " " + append
+            cfgfile.write('APPEND ')
 
-                if initrd:
-                    cfgfile.write('initrd=/initrd ')
+            if initrd:
+                cfgfile.write('initrd=/initrd ')
 
-                cfgfile.write('LABEL=%s '% (label))
-                append = replace_rootfs_uuid(d, append)
-                cfgfile.write('%s %s\n' % (append, btype[1]))
-            else:
-                cfgfile.write('APPEND %s\n' % btype[1])
+            cfgfile.write('LABEL=%s '% (label))
+            append = replace_rootfs_uuid(d, append)
+            cfgfile.write('%s %s\n' % (append, btype[1]))
 
     cfgfile.close()
 }
