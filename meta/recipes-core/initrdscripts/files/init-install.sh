@@ -116,7 +116,7 @@ if [ ! -L /etc/mtab ]; then
     cat /proc/mounts > /etc/mtab
 fi
 
-disk_size=$(parted ${device} unit mb print | grep Disk | cut -d" " -f 3 | sed -e "s/MB//")
+disk_size=$(parted ${device} unit mb print | tail -n2 | head -n1 | awk '{print $4}' | grep [0-9]* -o)
 
 grub_version=$(grub-install -v|sed 's/.* \([0-9]\).*/\1/')
 
