@@ -12,12 +12,12 @@ SRC_URI = " \
     file://make-gio_unix_2_0-dependency-configurable.patch \
 "
 
-PV = "1.7.2+git${SRCPV}"
+PV = "1.9.0+git${SRCPV}"
 
 UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>(\d+(\.\d+)+))"
 
-SRCREV_base = "97e108bebaa58821f4566a74cbf0135e93407c01"
-SRCREV_common = "b64f03f6090245624608beb5d2fff335e23a01c0"
+SRCREV_base = "a7809ecc8fe024d32f26db7517b3cd16bd867d4c"
+SRCREV_common = "1b39f6d85a3d51ac6d1b44d8c821fd9b76b34454"
 SRCREV_FORMAT = "base"
 
 S = "${WORKDIR}/git"
