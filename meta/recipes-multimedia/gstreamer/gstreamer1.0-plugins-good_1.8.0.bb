@@ -9,7 +9,7 @@ SRC_URI = " \
     file://0001-gstrtpmp4gpay-set-dafault-value-for-MPEG4-without-co.patch \
 "
 
-SRC_URI[md5sum] = "a1958df7aa498b42793e2f2048673815"
-SRC_URI[sha256sum] = "24b19db70b2a83461ebddfe20033db432dadfdb5d4b54ffb1dfa0d830134a177"
+SRC_URI[md5sum] = "91ed4649c7c2e43a61f731d144f6f6d0"
+SRC_URI[sha256sum] = "c20c134d47dbc238d921707a3b66da709c2b4dd89f9d267cec13d1ddf16e9f4d"
 
 S = "${WORKDIR}/gst-plugins-good-${PV}"
