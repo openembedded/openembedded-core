@@ -170,6 +170,17 @@ do_patch() {
 		fi
 	fi
 
+        current_branch=`git rev-parse --abbrev-ref HEAD`
+        machine_branch="${@ get_machine_branch(d, "${KBRANCH}" )}"
+        if [ "${current_branch}" != "${machine_branch}" ]; then
+            bbwarn "After meta data application, the kernel tree branch is ${current_branch}. The"
+            bbwarn "SRC_URI specified branch ${machine_branch}. The branch will be forced to ${machine_branch},"
+            bbwarn "but this means the board meta data (.scc files) do not match the SRC_URI specification."
+            bbwarn "The meta data and branch ${machine_branch} should be inspected to ensure the proper"
+            bbwarn "kernel is being built."
+            git checkout -f ${machine_branch}
+        fi
+
 	if [ "${machine_srcrev}" != "AUTOINC" ]; then
 		if ! [ "$(git rev-parse --verify ${machine_srcrev}~0)" = "$(git merge-base ${machine_srcrev} HEAD)" ]; then
 			bberror "SRCREV ${machine_srcrev} was specified, but is not reachable"
