@@ -13,12 +13,12 @@ SRC_URI = " \
     file://ensure-valid-sentinel-for-gst_structure_get.patch \
 "
 
-PV = "1.7.2+git${SRCPV}"
+PV = "1.9.0+git${SRCPV}"
 
 UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>(\d+(\.\d+)+))"
 
-SRCREV_base = "1b6fdce67c15d59957e395b1957aa625322092d4"
-SRCREV_common = "b64f03f6090245624608beb5d2fff335e23a01c0"
+SRCREV_base = "4b7e377d2563697a4b13d401112195d1fa4cb451"
+SRCREV_common = "1b39f6d85a3d51ac6d1b44d8c821fd9b76b34454"
 SRCREV_FORMAT = "base"
 
 S = "${WORKDIR}/git"

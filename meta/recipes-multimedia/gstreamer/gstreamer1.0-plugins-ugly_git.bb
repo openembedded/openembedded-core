@@ -10,12 +10,12 @@ SRC_URI = " \
     git://anongit.freedesktop.org/gstreamer/common;destsuffix=git/common;name=common \
 "
 
-PV = "1.7.2+git${SRCPV}"
+PV = "1.9.0+git${SRCPV}"
 
 UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>(\d+(\.\d+)+))"
 
-SRCREV_base = "8bdb68edbc605e21314b608e7a39bdbaab7302b8"
-SRCREV_common = "b64f03f6090245624608beb5d2fff335e23a01c0"
+SRCREV_base = "eacdaa56b3ad388cd28c7ff04ae78aed82c9edd4"
+SRCREV_common = "1b39f6d85a3d51ac6d1b44d8c821fd9b76b34454"
 SRCREV_FORMAT = "base"
 
 S = "${WORKDIR}/git"
