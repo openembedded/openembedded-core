@@ -22,13 +22,13 @@ SRC_URI = " \
     file://workaround-to-build-gst-libav-for-i586-with-gcc.patch \
 "
 
-PV = "1.7.2+git${SRCPV}"
+PV = "1.9.0+git${SRCPV}"
 
 UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>(\d+(\.\d+)+))"
 
-SRCREV_base = "6c4878b6abc916b7f6f25b8926c4859119acf1ec"
-SRCREV_common = "b64f03f6090245624608beb5d2fff335e23a01c0"
-SRCREV_ffmpeg = "c40983a6f631d22fede713d535bb9c31d5c9740c"
+SRCREV_base = "1af733a6366d0f148874bd10958a38ceb79b9be4"
+SRCREV_common = "1b39f6d85a3d51ac6d1b44d8c821fd9b76b34454"
+SRCREV_ffmpeg = "fda00aa7749326f02a6ca0a7d9bd9bcda1054071"
 SRCREV_FORMAT = "base"
 
 S = "${WORKDIR}/git"
