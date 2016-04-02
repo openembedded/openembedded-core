@@ -19,10 +19,9 @@ SRC_URI = " \
     http://gstreamer.freedesktop.org/src/gst-plugins-bad/gst-plugins-bad-${PV}.tar.xz \
     file://configure-allow-to-disable-libssh2.patch \
     file://0001-glimagesink-Downrank-to-marginal.patch \
-    file://0002-glplugin-glwindow-fix-memory-leak-of-navigation-thre.patch \
-"
+    "
 
-SRC_URI[md5sum] = "4857adcafe41e4b9b8805cf88303bd55"
-SRC_URI[sha256sum] = "971b29101d6a9c5e3fe94d99d977a227f58f0b2d29b6ca2c7f292052542b3a61"
+SRC_URI[md5sum] = "1c2d797bb96a81e9ef570c7a0a37203e"
+SRC_URI[sha256sum] = "116376dd1085082422e0b21b0ecd3d1cb345c469c58e32463167d4675f4ca90e"
 
 S = "${WORKDIR}/gst-plugins-bad-${PV}"
