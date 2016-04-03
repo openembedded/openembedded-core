@@ -51,6 +51,8 @@ def get_sdk_install_targets(d):
 
     return sdk_install_targets
 
+get_sdk_install_targets[vardepsexclude] = "BB_TASKDEPDATA"
+
 OE_INIT_ENV_SCRIPT ?= "oe-init-build-env"
 
 # The files from COREBASE that you want preserved in the COREBASE copied
