@@ -46,6 +46,7 @@ BOOTDD_VOLUME_ID   ?= "boot"
 BOOTDD_EXTRA_SPACE ?= "16384"
 
 DISK_SIGNATURE ?= "${DISK_SIGNATURE_GENERATED}"
+DISK_SIGNATURE[vardepsexclude] = "DISK_SIGNATURE_GENERATED"
 
 build_boot_dd() {
 	HDDDIR="${S}/hdd/boot"
