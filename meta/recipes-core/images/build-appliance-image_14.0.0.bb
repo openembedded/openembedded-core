@@ -96,6 +96,7 @@ create_bundle_files () {
 	zip -r ${DEPLOY_DIR_IMAGE}/Yocto_Build_Appliance-${DATETIME}.zip Yocto_Build_Appliance
 	ln -sf Yocto_Build_Appliance-${DATETIME}.zip ${DEPLOY_DIR_IMAGE}/Yocto_Build_Appliance.zip 
 }
+create_bundle_files[vardepsexclude] = "DATETIME"
 
 python do_bundle_files() {
     bb.build.exec_func('create_bundle_files', d)
