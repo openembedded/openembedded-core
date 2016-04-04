@@ -61,10 +61,11 @@ do_compile_prepend() {
         export GIR_EXTRA_LIBS_PATH="${B}/cogl/.libs"
 }
 
+FILES_${PN} = ""
 FILES_${PN}-examples = "${bindir}/* ${datadir}/cogl/examples-data/*"
-FILES_libcogl = "${libdir}/libcogl${SOLIBS}"
+FILES_libcogl = "${libdir}/libcogl${SOLIBS} ${libdir}/girepository-1.0/Cogl-*.typelib"
 FILES_libcogl-gles2 = "${libdir}/libcogl-gles2${SOLIBS}"
-FILES_libcogl-pango = "${libdir}/libcogl-pango${SOLIBS}"
+FILES_libcogl-pango = "${libdir}/libcogl-pango${SOLIBS} ${libdir}/girepository-1.0/CoglPango*.typelib"
 
 FILES_libcogl-path = "${libdir}/libcogl-path${SOLIBS}"
 
