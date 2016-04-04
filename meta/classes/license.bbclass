@@ -354,9 +354,11 @@ def copy_license_files(lic_files_paths, destdir):
                     os.chown(dst,0,0)
                 except OSError as err:
                     import errno
-                    if err.errno == errno.EPERM:
-                        # suppress "Operation not permitted" error, as
-                        # sometimes this function is not executed under pseudo
+                    if err.errno in (errno.EPERM, errno.EINVAL):
+                        # Suppress "Operation not permitted" error, as
+                        # sometimes this function is not executed under pseudo.
+                        # Also ignore "Invalid argument" errors that happen in
+                        # some (unprivileged) container environments (no root).
                         pass
                     else:
                         raise
