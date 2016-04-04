@@ -3,7 +3,7 @@
 #
 # Based in part on testlab.bbclass and packagehistory.bbclass
 #
-# Copyright (C) 2011-2014 Intel Corporation
+# Copyright (C) 2011-2016 Intel Corporation
 # Copyright (C) 2007-2011 Koen Kooi <koen@openembedded.org>
 #
 
@@ -416,15 +416,8 @@ buildhistory_get_installed() {
 	rm $1/depends.tmp
 
 	# Produce installed package sizes list
-	printf "" > $1/installed-package-sizes.tmp
-	cat $pkgcache | while read pkg pkgfile pkgarch
-	do
-		size=`oe-pkgdata-util -p ${PKGDATA_DIR} read-value "PKGSIZE" ${pkg}_${pkgarch}`
-		if [ "$size" != "" ] ; then
-			echo "$size $pkg" >> $1/installed-package-sizes.tmp
-		fi
-	done
-	cat $1/installed-package-sizes.tmp | sort -n -r | awk '{print $1 "\tKiB " $2}' > $1/installed-package-sizes.txt
+	oe-pkgdata-util -p ${PKGDATA_DIR} read-value "PKGSIZE" -n -f $pkgcache > $1/installed-package-sizes.tmp
+	cat $1/installed-package-sizes.tmp | awk '{print $2 "\tKiB " $1}' | sort -n -r > $1/installed-package-sizes.txt
 	rm $1/installed-package-sizes.tmp
 
 	# We're now done with the cache, delete it

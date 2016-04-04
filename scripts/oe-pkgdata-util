@@ -161,8 +161,18 @@ def glob(args):
 def read_value(args):
     # Handle both multiple arguments and multiple values within an arg (old syntax)
     packages = []
-    for pkgitem in args.pkg:
-        packages.extend(pkgitem.split())
+    if args.file:
+        with open(args.file, 'r') as f:
+            for line in f:
+                splitline = line.split()
+                if splitline:
+                    packages.append(splitline[0])
+    else:
+        for pkgitem in args.pkg:
+            packages.extend(pkgitem.split())
+        if not packages:
+            logger.error("No packages specified")
+            sys.exit(1)
 
     def readvar(pkgdata_file, valuename):
         val = ""
@@ -187,9 +197,13 @@ def read_value(args):
                 qvar = "%s_%s" % (args.valuename, mappedpkg)
                 # PKGSIZE is now in bytes, but we we want it in KB
                 pkgsize = (int(readvar(revlink, qvar)) + 1024 // 2) // 1024
-                print("%d" % pkgsize)
+                value = "%d" % pkgsize
             else:
-                print(readvar(revlink, qvar))
+                value = readvar(revlink, qvar)
+            if args.prefix_name:
+                print('%s %s' % (pkg_name, value))
+            else:
+                print(value)
 
 def lookup_pkglist(pkgs, pkgdata_dir, reverse):
     if reverse:
@@ -465,7 +479,9 @@ def main():
                                           help='Read any pkgdata value for one or more packages',
                                           description='Reads the named value from the pkgdata files for the specified packages')
     parser_read_value.add_argument('valuename', help='Name of the value to look up')
-    parser_read_value.add_argument('pkg', nargs='+', help='Runtime package name to look up')
+    parser_read_value.add_argument('pkg', nargs='*', help='Runtime package name to look up')
+    parser_read_value.add_argument('-f', '--file', help='Read package names from the specified file (one per line, first field only)')
+    parser_read_value.add_argument('-n', '--prefix-name', help='Prefix output with package name', action='store_true')
     parser_read_value.set_defaults(func=read_value)
 
     parser_glob = subparsers.add_parser('glob',
