@@ -96,6 +96,11 @@ PACKAGECONFIG ??= "xz \
 PACKAGECONFIG_remove_libc-musl = "selinux"
 PACKAGECONFIG_remove_libc-musl = "smack"
 
+# Use the upstream systemd serial-getty@.service and rely on
+# systemd-getty-generator instead of using the OE-core specific
+# systemd-serialgetty.bb - not enabled by default.
+PACKAGECONFIG[serial-getty-generator] = ""
+
 PACKAGECONFIG[journal-upload] = "--enable-libcurl,--disable-libcurl,curl"
 # Sign the journal for anti-tampering
 PACKAGECONFIG[gcrypt] = "--enable-gcrypt,--disable-gcrypt,libgcrypt"
@@ -204,8 +209,10 @@ do_configure_prepend() {
 do_install() {
 	autotools_do_install
 	install -d ${D}/${base_sbindir}
-	# Provided by a separate recipe
-	rm ${D}${systemd_unitdir}/system/serial-getty* -f
+	if ${@bb.utils.contains('PACKAGECONFIG', 'serial-getty-generator', 'false', 'true', d)}; then
+		# Provided by a separate recipe
+		rm ${D}${systemd_unitdir}/system/serial-getty* -f
+	fi
 
 	# Provide support for initramfs
 	[ ! -e ${D}/init ] && ln -s ${rootlibexecdir}/systemd/systemd ${D}/init
@@ -455,7 +462,8 @@ FILES_${PN}-dev += "${base_libdir}/security/*.la ${datadir}/dbus-1/interfaces/ $
 RDEPENDS_${PN} += "kmod dbus util-linux-mount udev (= ${EXTENDPKGV})"
 RDEPENDS_${PN} += "volatile-binds update-rc.d"
 
-RRECOMMENDS_${PN} += "systemd-serialgetty systemd-vconsole-setup \
+RRECOMMENDS_${PN} += "${@bb.utils.contains('PACKAGECONFIG', 'serial-getty-generator', '', 'systemd-serialgetty', d)} \
+                      systemd-vconsole-setup \
                       systemd-extra-utils \
                       systemd-compat-units udev-hwdb \
                       util-linux-agetty  util-linux-fsck e2fsprogs-e2fsck \
