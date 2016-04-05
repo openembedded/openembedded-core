@@ -130,21 +130,22 @@ python externalsrc_compile_prefunc() {
 def srctree_hash_files(d):
     import shutil
     import subprocess
+    import tempfile
 
     s_dir = d.getVar('EXTERNALSRC', True)
     git_dir = os.path.join(s_dir, '.git')
-    oe_index_file = os.path.join(git_dir, 'oe-devtool-index')
     oe_hash_file = os.path.join(git_dir, 'oe-devtool-tree-sha1')
 
     ret = " "
     if os.path.exists(git_dir):
-        # Clone index
-        shutil.copy2(os.path.join(git_dir, 'index'), oe_index_file)
-        # Update our custom index
-        env = os.environ.copy()
-        env['GIT_INDEX_FILE'] = oe_index_file
-        subprocess.check_output(['git', 'add', '.'], cwd=s_dir, env=env)
-        sha1 = subprocess.check_output(['git', 'write-tree'], cwd=s_dir, env=env)
+        with tempfile.NamedTemporaryFile(dir=git_dir, prefix='oe-devtool-index') as tmp_index:
+            # Clone index
+            shutil.copy2(os.path.join(git_dir, 'index'), tmp_index.name)
+            # Update our custom index
+            env = os.environ.copy()
+            env['GIT_INDEX_FILE'] = tmp_index.name
+            subprocess.check_output(['git', 'add', '.'], cwd=s_dir, env=env)
+            sha1 = subprocess.check_output(['git', 'write-tree'], cwd=s_dir, env=env)
         with open(oe_hash_file, 'w') as fobj:
             fobj.write(sha1)
         ret = oe_hash_file + ':True'
