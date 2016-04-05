@@ -14,6 +14,7 @@ SRC_URI += "file://disable-x11-dri3.patch \
             file://sna-Protect-against-ABI-breakage-in-recent-versions-.patch \
             file://udev-fstat.patch \
             file://0001-uxa-fix-the-call-to-PixmapSyncDirtyHelper-broken-by-.patch \
+            file://0001-gen8-Fix-the-YUV-RGB-shader.patch \
            "
 
 SRC_URI[md5sum] = "fa196a66e52c0c624fe5d350af7a5e7b"
