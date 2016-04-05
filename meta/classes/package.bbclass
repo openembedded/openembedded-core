@@ -123,6 +123,7 @@ def do_split_packages(d, root, file_regex, output_pattern, description, postinst
     dvar = d.getVar('PKGD', True)
     root = d.expand(root)
     output_pattern = d.expand(output_pattern)
+    extra_depends = d.expand(extra_depends)
 
     # If the root directory doesn't exist, don't error out later but silently do
     # no splitting.
