@@ -369,6 +369,10 @@ test4 () {
 
         do_sync
         time_cmd "$esdk_installer" -y -d "tmp/esdk-deploy"
+
+        s=$((`du -sb "tmp/esdk-deploy" | cut -f1` / 1024))
+        SIZES[(( size_count++ ))]="$s"
+        log "Install SIZE of eSDK is: $s kB"
     else
         log "ERROR: other than one sdk found (${esdk_installer[*]}), reporting size and time as 0."
         SIZES[(( size_count++ ))]="0"
