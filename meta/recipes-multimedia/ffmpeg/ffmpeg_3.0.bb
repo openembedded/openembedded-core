@@ -94,6 +94,17 @@ do_configure() {
 
 PACKAGES_DYNAMIC += "^lib(av(codec|device|filter|format|util|resample)|swscale|swresample|postproc).*"
 
+# ffmpeg disables PIC on some platforms (e.g. x86-32)
+INSANE_SKIP_${MLPREFIX}libavcodec = "textrel"
+INSANE_SKIP_${MLPREFIX}libavdevice = "textrel"
+INSANE_SKIP_${MLPREFIX}libavfilter = "textrel"
+INSANE_SKIP_${MLPREFIX}libavformat = "textrel"
+INSANE_SKIP_${MLPREFIX}libavutil = "textrel"
+INSANE_SKIP_${MLPREFIX}libavresample = "textrel"
+INSANE_SKIP_${MLPREFIX}libswscale = "textrel"
+INSANE_SKIP_${MLPREFIX}libswresample = "textrel"
+INSANE_SKIP_${MLPREFIX}libpostproc = "textrel"
+
 python populate_packages_prepend() {
     av_libdir = d.expand('${libdir}')
     av_pkgconfig = d.expand('${libdir}/pkgconfig')
