@@ -29,9 +29,21 @@ DEPENDS = "alsa-lib zlib libogg yasm-native"
 
 inherit autotools pkgconfig
 
-PACKAGECONFIG ??= "avdevice avfilter bzlib gpl lzma theora x264 ${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'x11 xv', '', d)}"
+PACKAGECONFIG ??= "avdevice avfilter avcodec avformat swresample swscale postproc \
+                   bzlib gpl lzma theora x264 \
+                   ${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'x11 xv', '', d)}"
+
+# libraries to build in addition to avutil
 PACKAGECONFIG[avdevice] = "--enable-avdevice,--disable-avdevice"
 PACKAGECONFIG[avfilter] = "--enable-avfilter,--disable-avfilter"
+PACKAGECONFIG[avcodec] = "--enable-avcodec,--disable-avcodec"
+PACKAGECONFIG[avformat] = "--enable-avformat,--disable-avformat"
+PACKAGECONFIG[swresample] = "--enable-swresample,--disable-swresample"
+PACKAGECONFIG[swscale] = "--enable-swscale,--disable-swscale"
+PACKAGECONFIG[postproc] = "--enable-postproc,--disable-postproc"
+PACKAGECONFIG[avresample] = "--enable-avresample,--disable-avresample"
+
+# features to support
 PACKAGECONFIG[bzlib] = "--enable-bzlib,--disable-bzlib,bzip2"
 PACKAGECONFIG[faac] = "--enable-libfaac,--disable-libfaac,faac"
 PACKAGECONFIG[gpl] = "--enable-gpl,--disable-gpl"
@@ -80,7 +92,7 @@ do_configure() {
     ${S}/configure ${EXTRA_OECONF}
 }
 
-PACKAGES_DYNAMIC += "^lib(av(codec|device|filter|format|util)|swscale).*"
+PACKAGES_DYNAMIC += "^lib(av(codec|device|filter|format|util|resample)|swscale|swresample|postproc).*"
 
 python populate_packages_prepend() {
     av_libdir = d.expand('${libdir}')
