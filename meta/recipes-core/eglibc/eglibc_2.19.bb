@@ -29,6 +29,7 @@ SRC_URI = "http://downloads.yoctoproject.org/releases/eglibc/eglibc-${PV}-svnr25
            file://CVE-2014-5119.patch \
            file://CVE-2014-7817-wordexp-fails-to-honour-WRDE_NOCMD.patch \
            file://CVE-2012-3406-Stack-overflow-in-vfprintf-BZ-16617.patch \
+           file://CVE-2015-7547.patch \
           "
 SRC_URI[md5sum] = "197836c2ba42fb146e971222647198dd"
 SRC_URI[sha256sum] = "baaa030531fc308f7820c46acdf8e1b2f8e3c1f40bcd28b6e440d1c95d170d4c"
