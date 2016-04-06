@@ -2,9 +2,11 @@
     "config": {
         "MACHINE"      : "qemux86",
         "DISTRO"       : "nodistro",
+        "DL_DIR"       : "${TOPDIR}/../downloads",
         "IMAGE_FSTYPES": "ext4 jffs2 tar.bz2",
         "IMAGE_INSTALL_append": "",
-        "PACKAGE_CLASSES": "package_rpm"
+        "PACKAGE_CLASSES": "package_rpm",
+        "SSTATE_DIR"   : "${TOPDIR}/../sstate-cache"
     },
     "layersources": [
         {
