@@ -127,6 +127,35 @@ useradd_sysroot_sstate () {
 	fi
 }
 
+userdel_sysroot_sstate () {
+if test "x${STAGING_DIR_TARGET}" != "x"; then
+    if [ "${BB_CURRENTTASK}" = "configure" -o "${BB_CURRENTTASK}" = "clean" ]; then
+        export PSEUDO="${FAKEROOTENV} PSEUDO_LOCALSTATEDIR=${STAGING_DIR_TARGET}${localstatedir}/pseudo ${STAGING_DIR_NATIVE}${bindir}/pseudo"
+        OPT="--root ${STAGING_DIR_TARGET}"
+
+        # Remove groups and users defined for package
+        GROUPADD_PARAM="${@get_all_cmd_params(d, 'groupadd')}"
+        USERADD_PARAM="${@get_all_cmd_params(d, 'useradd')}"
+
+        if test "x`echo $USERADD_PARAM | tr -d '[:space:]'`" != "x"; then
+            user=`echo "$USERADD_PARAM" | cut -d ';' -f 1 | awk '{ print $NF }'`
+            perform_userdel "${STAGING_DIR_TARGET}" "$OPT $user"
+        fi
+
+        if test "x`echo $GROUPADD_PARAM | tr -d '[:space:]'`" != "x"; then
+            group=`echo "$GROUPADD_PARAM" | cut -d ';' -f 1 | awk '{ print $NF }'`
+            perform_groupdel "${STAGING_DIR_TARGET}" "$OPT $group"
+        fi
+
+    fi
+fi
+}
+
+SSTATECLEANFUNCS = "userdel_sysroot_sstate"
+SSTATECLEANFUNCS_class-cross = ""
+SSTATECLEANFUNCS_class-native = ""
+SSTATECLEANFUNCS_class-nativesdk = ""
+
 do_install[prefuncs] += "${SYSROOTFUNC}"
 SYSROOTFUNC = "useradd_sysroot"
 SYSROOTFUNC_class-cross = ""
