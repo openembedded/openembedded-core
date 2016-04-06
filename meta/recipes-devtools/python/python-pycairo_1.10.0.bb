@@ -23,7 +23,7 @@ inherit distutils pkgconfig
 BBCLASSEXTEND = "native"
 
 do_configure() {
-	BUILD_SYS=${BUILD_SYS} HOST_SYS=${HOST_SYS} ./waf configure --prefix=${D}${prefix} --libdir=${D}${libdir}
+	./waf configure --prefix=${D}${prefix} --libdir=${D}${libdir}
 }
 
 do_compile() {

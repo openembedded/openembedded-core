@@ -40,9 +40,6 @@ export STAGING_INCDIR
 export STAGING_LIBDIR
 export CPPFLAGS
 
-export BUILD_SYS
-export HOST_SYS
-
 PACKAGES_prepend = "whiptail "
 
 do_configure_prepend() {

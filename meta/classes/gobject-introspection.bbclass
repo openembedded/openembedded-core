@@ -23,8 +23,6 @@ DEPENDS_append_class-nativesdk = " gobject-introspection-native"
 
 # This is necessary for python scripts to succeed - distutils fails if these
 # are not set
-export BUILD_SYS
-export HOST_SYS
 export STAGING_INCDIR
 export STAGING_LIBDIR
 

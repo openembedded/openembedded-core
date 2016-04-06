@@ -47,8 +47,6 @@ RPROVIDES += "python3-distutils-native python3-compression-native python3-textut
 EXTRA_OECONF_append = " --bindir=${bindir}/${PN} --without-ensurepip"
 
 EXTRA_OEMAKE = '\
-  BUILD_SYS="" \
-  HOST_SYS="" \
   LIBC="" \
   STAGING_LIBDIR=${STAGING_LIBDIR_NATIVE} \
   STAGING_INCDIR=${STAGING_INCDIR_NATIVE} \

@@ -8,7 +8,7 @@ SRC_URI += "\
             file://05-enable-ctypes-cross-build.patch \
             file://10-distutils-fix-swig-parameter.patch \
             file://11-distutils-never-modify-shebang-line.patch \
-            file://12-distutils-prefix-is-inside-staging-area.patch \
+            file://0001-distutils-set-the-prefix-to-be-inside-staging-direct.patch \
             file://debug.patch \
             file://unixccompiler.patch \
             file://nohostlibs.patch \
@@ -30,8 +30,6 @@ RPROVIDES += "python-distutils-native python-compression-native python-textutils
 EXTRA_OECONF_append = " --bindir=${bindir}/${PN} --with-system-expat=${STAGING_DIR_HOST}"
 
 EXTRA_OEMAKE = '\
-  BUILD_SYS="" \
-  HOST_SYS="" \
   LIBC="" \
   STAGING_LIBDIR=${STAGING_LIBDIR_NATIVE} \
   STAGING_INCDIR=${STAGING_INCDIR_NATIVE} \

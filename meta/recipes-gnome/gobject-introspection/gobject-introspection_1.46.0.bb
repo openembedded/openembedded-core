@@ -21,8 +21,6 @@ inherit autotools pkgconfig gtk-doc pythonnative qemu gobject-introspection-data
 BBCLASSEXTEND = "native"
 
 # necessary to let the call for python-config from configure.ac succeed
-export BUILD_SYS
-export HOST_SYS
 export STAGING_INCDIR
 export STAGING_LIBDIR
 

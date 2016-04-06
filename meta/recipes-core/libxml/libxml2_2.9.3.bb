@@ -49,8 +49,6 @@ EXTRA_OECONF_class-nativesdk = "--without-legacy --without-docbook --with-c14n -
 EXTRA_OECONF_linuxstdbase = "--with-debug --with-legacy --with-docbook --with-c14n --without-lzma --with-zlib"
 
 # required for python binding
-export HOST_SYS
-export BUILD_SYS
 export STAGING_LIBDIR
 export STAGING_INCDIR
 
