@@ -576,15 +576,14 @@ do_install_append() {
 	rm -f ${D}/${mandir}/man1/lz*.1
 	rm -f ${D}/${libdir}/pkgconfig/liblzma*
 
-	rm -f ${D}/${libdir}/python%{with_python_version}/site-packages/*.{a,la}
-	rm -f ${D}/${libdir}/python%{with_python_version}/site-packages/rpm/*.{a,la}
+	rm -f ${D}/${libdir}/python%{with_python_version}/site-packages/*.a
+	rm -f ${D}/${libdir}/python%{with_python_version}/site-packages/*.la
+	rm -f ${D}/${libdir}/python%{with_python_version}/site-packages/rpm/*.a
+	rm -f ${D}/${libdir}/python%{with_python_version}/site-packages/rpm/*.la
 
 	#find ${D}/${libdir}/perl5 -type f -a \( -name perllocal.pod -o -name .packlist \
 	#	-o \( -name '*.bs' -a -empty \) \) -exec rm -f {} ';'
 	#find ${D}/${libdir}/perl5 -type d -depth -exec rmdir {} 2>/dev/null ';'
-
-	# We don't want the default macro set
-	rm -rf ${D}/${libdir}/rpm/{i[3456]86*,athlon*,pentium*,x86_64*,alpha*,sparc*,ia64*,ppc*,s390*,armv[34][lb]*,armv[345]*,mips*,noarch*}
 
 	rm -f ${D}/${libdir}/rpm/dbconvert.sh
 
