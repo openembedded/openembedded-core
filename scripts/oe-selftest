@@ -578,9 +578,7 @@ def buildResultClass(args):
                     # check if user can do coverage
                     import coverage
                 except:
-                    log.warn('\n'.join(["python coverage is not installed",
-                        "Make sure your coverage takes into account sub-process",
-                        "More info on https://pypi.python.org/pypi/coverage"]))
+                    log.warn("python coverage is not installed. More info on https://pypi.python.org/pypi/coverage")
                     self.coverage_installed = False
 
                 if self.coverage_installed:
