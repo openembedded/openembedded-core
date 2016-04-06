@@ -602,22 +602,23 @@ def buildResultClass(args):
         def stopTestRun(self):
             """ Report coverage data after the testcases are run """
 
-            if args.coverage and self.coverage_installed:
-                with open(os.environ['COVERAGE_PROCESS_START']) as ccf:
-                    log.info("Coverage configuration file (%s)" % os.environ.get('COVERAGE_PROCESS_START'))
-                    log.info("===========================")
-                    log.info("\n%s" % "".join(ccf.readlines()))
+            if args.coverage or args.coverage_source or args.coverage_include or args.coverage_omit:
+                if self.coverage_installed:
+                    with open(os.environ['COVERAGE_PROCESS_START']) as ccf:
+                        log.info("Coverage configuration file (%s)" % os.environ.get('COVERAGE_PROCESS_START'))
+                        log.info("===========================")
+                        log.info("\n%s" % "".join(ccf.readlines()))
 
-                log.info("Coverage Report")
-                log.info("===============")
-                try:
-                    coverage_report()
-                    # remove the pth file
-                finally:
+                    log.info("Coverage Report")
+                    log.info("===============")
                     try:
-                        os.remove(self.coveragepth)
-                    except OSError:
-                        log.warn("Expected temporal file from coverage is missing, ignoring removal.")
+                        coverage_report()
+                    finally:
+                        # remove the pth file
+                        try:
+                            os.remove(self.coveragepth)
+                        except OSError:
+                            log.warn("Expected temporal file from coverage is missing, ignoring removal.")
 
     return StampedResult
 
