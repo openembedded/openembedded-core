@@ -146,7 +146,7 @@ def do_split_packages(d, root, file_regex, output_pattern, description, postinst
 
 
     packages = d.getVar('PACKAGES', True).split()
-    split_packages = []
+    split_packages = set()
 
     if postinst:
         postinst = '#!/bin/sh\n' + postinst + '\n'
@@ -183,7 +183,7 @@ def do_split_packages(d, root, file_regex, output_pattern, description, postinst
             continue
         on = legitimize_package_name(m.group(1))
         pkg = output_pattern % on
-        split_packages.append(pkg)
+        split_packages.add(pkg)
         if not pkg in packages:
             if prepend:
                 packages = [pkg] + packages
@@ -226,7 +226,7 @@ def do_split_packages(d, root, file_regex, output_pattern, description, postinst
             hook(f, pkg, file_regex, output_pattern, m.group(1))
 
     d.setVar('PACKAGES', ' '.join(packages))
-    return split_packages
+    return list(split_packages)
 
 PACKAGE_DEPENDS += "file-native"
 
