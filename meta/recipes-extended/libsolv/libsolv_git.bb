@@ -9,7 +9,9 @@ DEPENDS = "expat zlib"
 
 PV = "0.6.19"
 
-SRC_URI = "git://github.com/openSUSE/libsolv.git"
+SRC_URI = "git://github.com/openSUSE/libsolv.git \
+           file://0001-CMakeLists.txt-fix-MAN_INSTALL_DIR.patch \
+"
 SRCREV = "4c5af401a89858d4cebbfe40c59a0031ff9db5b0"
 UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>\d+(\.\d+)+)"
 
