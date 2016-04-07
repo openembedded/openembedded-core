@@ -317,6 +317,7 @@ python toaster_buildhistory_dump() {
     allpkgs = {}
     files = {}
     for target in e._pkgs:
+        target = target.split(':')[0] # strip ':<task>' suffix from the target
         installed_img_path = e.data.expand(os.path.join(BUILDHISTORY_DIR_IMAGE_BASE, target))
         if os.path.exists(installed_img_path):
             images[target] = {}
