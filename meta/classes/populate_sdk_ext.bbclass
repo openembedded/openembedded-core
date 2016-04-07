@@ -209,8 +209,15 @@ python copy_buildsystem () {
             # Bypass the default connectivity check if any
             f.write('CONNECTIVITY_CHECK_URIS = ""\n\n')
 
-            # Ensure locked sstate cache objects are re-used without error
-            f.write('SIGGEN_LOCKEDSIGS_CHECK_LEVEL = "none"\n\n')
+            # This warning will come out if reverse dependencies for a task
+            # don't have sstate as well as the task itself. We already know
+            # this will be the case for the extensible sdk, so turn off the
+            # warning.
+            f.write('SIGGEN_LOCKEDSIGS_SSTATE_EXISTS_CHECK = "none"\n\n')
+
+            # Error if the sigs in the locked-signature file don't match
+            # the sig computed from the metadata.
+            f.write('SIGGEN_LOCKEDSIGS_TASKSIG_CHECK = "error"\n\n')
 
             # Hide the config information from bitbake output (since it's fixed within the SDK)
             f.write('BUILDCFG_HEADER = ""\n')
