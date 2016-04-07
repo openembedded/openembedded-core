@@ -22,4 +22,4 @@ BBCLASSEXTEND = "native"
 
 EXTRA_OECONF = "--disable-cairo --with-python=python2.7"
 
-RDEPENDS_${PN} += "python-setuptools"
+RDEPENDS_${PN} += "python-setuptools python-importlib"
