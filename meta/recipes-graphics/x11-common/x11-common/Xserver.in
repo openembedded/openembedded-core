@@ -5,7 +5,7 @@ XSERVER=/usr/bin/Xorg
 
 . /etc/profile
 
-ARGS=" -br -pn"
+ARGS=" -br -pn @BLANK_ARGS@"
 
 DISPLAY=':0'
 
