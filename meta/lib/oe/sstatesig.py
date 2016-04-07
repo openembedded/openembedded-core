@@ -65,12 +65,13 @@ def sstate_lockedsigs(d):
     sigs = {}
     types = (d.getVar("SIGGEN_LOCKEDSIGS_TYPES", True) or "").split()
     for t in types:
-        lockedsigs = (d.getVar("SIGGEN_LOCKEDSIGS_%s" % t, True) or "").split()
+        siggen_lockedsigs_var = "SIGGEN_LOCKEDSIGS_%s" % t
+        lockedsigs = (d.getVar(siggen_lockedsigs_var, True) or "").split()
         for ls in lockedsigs:
             pn, task, h = ls.split(":", 2)
             if pn not in sigs:
                 sigs[pn] = {}
-            sigs[pn][task] = h
+            sigs[pn][task] = [h, siggen_lockedsigs_var]
     return sigs
 
 class SignatureGeneratorOEBasic(bb.siggen.SignatureGeneratorBasic):
@@ -138,14 +139,15 @@ class SignatureGeneratorOEBasicHash(bb.siggen.SignatureGeneratorBasicHash):
         if recipename in self.lockedsigs:
             if task in self.lockedsigs[recipename]:
                 k = fn + "." + task
-                h_locked = self.lockedsigs[recipename][task]
+                h_locked = self.lockedsigs[recipename][task][0]
+                var = self.lockedsigs[recipename][task][1]
                 self.lockedhashes[k] = h_locked
                 self.taskhash[k] = h_locked
                 #bb.warn("Using %s %s %s" % (recipename, task, h))
 
                 if h != h_locked:
-                    self.mismatch_msgs.append('The %s:%s sig (%s) changed, use locked sig %s to instead'
-                                          % (recipename, task, h, h_locked))
+                    self.mismatch_msgs.append('The %s:%s sig is computed to be %s, but the sig is locked to %s in %s'
+                                          % (recipename, task, h, h_locked, var))
 
                 return h_locked
         #bb.warn("%s %s %s" % (recipename, task, h))
