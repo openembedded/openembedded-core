@@ -94,6 +94,9 @@ class SignatureGeneratorOEBasicHash(bb.siggen.SignatureGeneratorBasicHash):
         self.lockedhashfn = {}
         self.machine = data.getVar("MACHINE", True)
         self.mismatch_msgs = []
+        self.unlockedrecipes = (data.getVar("SIGGEN_UNLOCKED_RECIPES", True) or
+                                "").split()
+        self.unlockedrecipes = { k: "" for k in self.unlockedrecipes }
         pass
 
     def tasks_resolved(self, virtmap, virtpnmap, dataCache):
@@ -136,7 +139,26 @@ class SignatureGeneratorOEBasicHash(bb.siggen.SignatureGeneratorBasicHash):
         recipename = dataCache.pkg_fn[fn]
         self.lockedpnmap[fn] = recipename
         self.lockedhashfn[fn] = dataCache.hashfn[fn]
-        if recipename in self.lockedsigs:
+
+        unlocked = False
+        if recipename in self.unlockedrecipes:
+            unlocked = True
+        else:
+            def recipename_from_dep(dep):
+                # The dep entry will look something like
+                # /path/path/recipename.bb.task, virtual:native:/p/foo.bb.task,
+                # ...
+                fn = dep.rsplit('.', 1)[0]
+                return dataCache.pkg_fn[fn]
+
+            # If any unlocked recipe is in the direct dependencies then the
+            # current recipe should be unlocked as well.
+            depnames = [ recipename_from_dep(x) for x in deps ]
+            if any(x in y for y in depnames for x in self.unlockedrecipes):
+                self.unlockedrecipes[recipename] = ''
+                unlocked = True
+
+        if not unlocked and recipename in self.lockedsigs:
             if task in self.lockedsigs[recipename]:
                 k = fn + "." + task
                 h_locked = self.lockedsigs[recipename][task][0]
