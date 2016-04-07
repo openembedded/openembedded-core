@@ -140,6 +140,10 @@ python copy_buildsystem () {
     with open(os.path.join(baseoutpath, 'conf', 'devtool.conf'), 'w') as f:
         config.write(f)
 
+    unlockedsigs =  os.path.join(baseoutpath, 'conf', 'unlocked-sigs.inc')
+    with open(unlockedsigs, 'w') as f:
+        pass
+
     # Create a layer for new recipes / appends
     bbpath = d.getVar('BBPATH', True)
     bb.process.run(['devtool', '--bbpath', bbpath, '--basepath', baseoutpath, 'create-workspace', '--create-only', os.path.join(baseoutpath, 'workspace')])
@@ -238,6 +242,7 @@ python copy_buildsystem () {
                     f.write(line.strip() + '\n')
 
             f.write('require conf/locked-sigs.inc\n')
+            f.write('require conf/unlocked-sigs.inc\n')
 
     if os.path.exists(builddir + '/conf/auto.conf'):
         if derivative:
