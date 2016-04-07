@@ -189,20 +189,35 @@ class SignatureGeneratorOEBasicHash(bb.siggen.SignatureGeneratorBasicHash):
             f.write('SIGGEN_LOCKEDSIGS_TYPES_%s = "%s"' % (self.machine, " ".join(types.keys())))
 
     def checkhashes(self, missed, ret, sq_fn, sq_task, sq_hash, sq_hashfn, d):
-        checklevel = d.getVar("SIGGEN_LOCKEDSIGS_CHECK_LEVEL", True)
+        warn_msgs = []
+        error_msgs = []
+        sstate_missing_msgs = []
+
         for task in range(len(sq_fn)):
             if task not in ret:
                 for pn in self.lockedsigs:
                     if sq_hash[task] in self.lockedsigs[pn].itervalues():
                         if sq_task[task] == 'do_shared_workdir':
                             continue
-                        self.mismatch_msgs.append("Locked sig is set for %s:%s (%s) yet not in sstate cache?"
+                        sstate_missing_msgs.append("Locked sig is set for %s:%s (%s) yet not in sstate cache?"
                                                % (pn, sq_task[task], sq_hash[task]))
 
-        if self.mismatch_msgs and checklevel == 'warn':
-            bb.warn("\n".join(self.mismatch_msgs))
-        elif self.mismatch_msgs and checklevel == 'error':
-            bb.fatal("\n".join(self.mismatch_msgs))
+        checklevel = d.getVar("SIGGEN_LOCKEDSIGS_TASKSIG_CHECK", True)
+        if checklevel == 'warn':
+            warn_msgs += self.mismatch_msgs
+        elif checklevel == 'error':
+            error_msgs += self.mismatch_msgs
+
+        checklevel = d.getVar("SIGGEN_LOCKEDSIGS_SSTATE_EXISTS_CHECK", True)
+        if checklevel == 'warn':
+            warn_msgs += sstate_missing_msgs
+        elif checklevel == 'error':
+            error_msgs += sstate_missing_msgs
+
+        if warn_msgs:
+            bb.warn("\n".join(warn_msgs))
+        if error_msgs:
+            bb.fatal("\n".join(error_msgs))
 
 
 # Insert these classes into siggen's namespace so it can see and select them

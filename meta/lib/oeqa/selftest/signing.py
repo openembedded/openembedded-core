@@ -160,7 +160,7 @@ class LockedSignatures(oeSelfTest):
         bitbake('-S none %s' % test_recipe)
 
         feature = 'require %s\n' % locked_sigs_file
-        feature += 'SIGGEN_LOCKEDSIGS_CHECK_LEVEL = "warn"\n'
+        feature += 'SIGGEN_LOCKEDSIGS_TASKSIG_CHECK = "warn"\n'
         self.write_config(feature)
 
         # Build a locked recipe
@@ -180,7 +180,7 @@ class LockedSignatures(oeSelfTest):
         ret = bitbake(test_recipe)
 
         # Verify you get the warning and that the real task *isn't* run (i.e. the locked signature has worked)
-        patt = r'WARNING: The %s:do_package sig \S+ changed, use locked sig \S+ to instead' % test_recipe
+        patt = r'WARNING: The %s:do_package sig is computed to be \S+, but the sig is locked to \S+ in SIGGEN_LOCKEDSIGS\S+' % test_recipe
         found_warn = re.search(patt, ret.output)
 
         self.assertIsNotNone(found_warn, "Didn't find the expected warning message. Output: %s" % ret.output)
