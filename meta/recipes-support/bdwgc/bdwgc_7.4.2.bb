@@ -28,7 +28,7 @@ SRC_URI = "git://github.com/ivmai/bdwgc.git;branch=release-7_4 \
            file://0002-Altera-NIOS2-support.patch \
           "
 
-FILES_${PN}-doc = "/usr/share"
+FILES_${PN}-doc = "${datadir}"
 
 S = "${WORKDIR}/git"
 
