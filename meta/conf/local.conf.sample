@@ -85,9 +85,9 @@ MACHINE ??= "qemux86"
 PACKAGE_CLASSES ?= "package_ipk"
 
 #
-# SDK/ADT target architecture
+# SDK target architecture
 #
-# This variable specifies the architecture to build SDK/ADT items for and means
+# This variable specifies the architecture to build SDK items for and means
 # you can build the SDK packages for architectures other than the machine you are
 # running the build on (i.e. building i686 packages on an x86_64 host).
 # Supported values are i686 and x86_64
