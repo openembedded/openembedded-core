@@ -6,7 +6,7 @@ LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=4d92cd373abda3937c2bc47fbc49d690 \
                     file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
 
-IMAGE_INSTALL = "packagegroup-core-boot packagegroup-core-ssh-openssh packagegroup-self-hosted"
+IMAGE_INSTALL = "packagegroup-core-boot packagegroup-core-ssh-openssh packagegroup-self-hosted kernel-dev kernel-devsrc "
 
 IMAGE_FEATURES += "x11-base package-management splash"
 
@@ -19,12 +19,13 @@ APPEND += "rootfstype=ext4 quiet"
 DEPENDS = "zip-native"
 IMAGE_FSTYPES = "vmdk"
 
-inherit core-image
+inherit core-image module-base
 
 SRCREV ?= "00c4c9bf0007b964dfa4559fe8fc8687f14cdec3"
 SRC_URI = "git://git.yoctoproject.org/poky \
            file://Yocto_Build_Appliance.vmx \
            file://Yocto_Build_Appliance.vmxf \
+           file://README_VirtualBox_Guest_Additions.txt \
           "
 BA_INCLUDE_SOURCES ??= "0"
 
@@ -49,6 +50,12 @@ fakeroot do_populate_poky_src () {
 		rm -rf ${IMAGE_ROOTFS}/home/builder/poky/build/downloads/git2_*
 	fi
 
+	# Place the README_VirtualBox_Guest_Additions file in builders home folder.
+	cp ${WORKDIR}/README_VirtualBox_Guest_Additions.txt ${IMAGE_ROOTFS}/home/builder/
+
+	# Create a symlink, needed for out-of-tree kernel modules build
+	ln -snr ${IMAGE_ROOTFS}/usr/src/kernel ${IMAGE_ROOTFS}/lib/modules/${KERNEL_VERSION}/build
+
 	echo "/usr/bin" > ${IMAGE_ROOTFS}/home/builder/poky/build/pseudodone
 	echo "INHERIT += \"rm_work\"" >> ${IMAGE_ROOTFS}/home/builder/poky/build/conf/auto.conf
 	mkdir -p ${IMAGE_ROOTFS}/home/builder/pseudo
@@ -69,6 +76,9 @@ fakeroot do_populate_poky_src () {
 
 	chown -R builder.builder ${IMAGE_ROOTFS}/home/builder/poky
 	chmod -R ug+rw ${IMAGE_ROOTFS}/home/builder/poky
+
+	# Assume we will need CDROM to install guest additions
+	mkdir -p ${IMAGE_ROOTFS}/media/cdrom
 
 	# Allow builder to use sudo to setup tap/tun
 	echo "builder ALL=(ALL) NOPASSWD: ALL" >> ${IMAGE_ROOTFS}/etc/sudoers
