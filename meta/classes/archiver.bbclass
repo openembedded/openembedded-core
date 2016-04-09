@@ -53,6 +53,12 @@ do_deploy_all_archives[dirs] = "${WORKDIR}"
 
 python () {
     pn = d.getVar('PN', True)
+    assume_provided = (d.getVar("ASSUME_PROVIDED", True) or "").split()
+    if pn in assume_provided:
+        for p in d.getVar("PROVIDES", True).split():
+            if p != pn:
+                pn = p
+                break
 
     included, reason = copyleft_should_include(d)
     if not included:
