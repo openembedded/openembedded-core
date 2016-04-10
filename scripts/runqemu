@@ -40,7 +40,7 @@ Examples:
   $MYNAME qemux86-64 core-image-sato ext4
   $MYNAME qemux86-64 wic-image-minimal wic
   $MYNAME path/to/bzImage-qemux86.bin path/to/nfsrootdir/ serial
-  $MYNAME qemux86 iso/hddimg/vmdk/qcow2/vdi/ramfs...
+  $MYNAME qemux86 iso/hddimg/vmdk/qcow2/vdi/ramfs/cpio.gz...
   $MYNAME qemux86 qemuparams="-m 256"
   $MYNAME qemux86 bootparams="psplash=false"
   $MYNAME path/to/<image>-<machine>.vmdk
@@ -132,7 +132,7 @@ while true; do
             check_fstype_conflicts $arg
             IS_VM="true"
             ;;
-        "ramfs")
+        "ramfs" | "cpio.gz")
             FSTYPE=cpio.gz
             ;;
         "nographic")
