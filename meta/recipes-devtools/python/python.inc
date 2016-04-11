@@ -20,8 +20,6 @@ PYTHON_MAJMIN = "2.7"
 
 inherit autotools
 
-PYTHONLSBOPTS_linuxstdbase = "ac_cv_sizeof_off_t=8"
-
 EXTRA_OECONF = "\
   --with-threads \
   --with-pymalloc \

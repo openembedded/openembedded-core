@@ -25,8 +25,4 @@ SRC_URI_append_libc-musl = " file://0001-Fix-build-with-musl.patch \
 SRC_URI[md5sum] = "fbd9023b590b45ac3ade95870702a0d6"
 SRC_URI[sha256sum] = "ac3c06048e02828077cf7757d3d142241429238893b91d529af29a2e8cc5623b"
 
-# see https://lists.yoctoproject.org/pipermail/poky/2013-December/009435.html
-# We should ideally drop ac_cv_sizeof_off_t from site files but until then
-EXTRA_OECONF += "${@bb.utils.contains('DISTRO_FEATURES', 'largefile', 'ac_cv_sizeof_off_t=8', '', d)}"
-
 inherit autotools
