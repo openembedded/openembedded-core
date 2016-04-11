@@ -1,6 +1,6 @@
 require busybox.inc
 
-SRCREV = "be947c4d97c0dacb703a6f24dd813ff6dd3a33b6"
+SRCREV = "4d15068d83054a9f82b3f8842706cd6deb401e25"
 # Lookout for PV bump too when SRCREV is changed
 PV = "1.23.2+git${SRCPV}"
 
