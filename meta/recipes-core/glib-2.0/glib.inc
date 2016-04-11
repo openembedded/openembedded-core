@@ -57,7 +57,6 @@ FILES_${PN}-dev += "${libdir}/glib-2.0/include \
                     ${bindir}/glib-genmarshal \
                     ${bindir}/glib-gettextize \
                     ${bindir}/glib-mkenums \
-                    ${bindir}/glib-compile-schemas \
                     ${bindir}/glib-compile-resources \
                     ${datadir}/glib-2.0/gettext/po/Makefile.in.in \
                     ${datadir}/glib-2.0/schemas/gschema.dtd"
