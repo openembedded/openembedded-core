@@ -203,7 +203,6 @@ apr_cv_pthreads_cflags=${apr_cv_pthreads_cflags=-pthread}
 apr_cv_pthreads_lib=${apr_cv_pthreads_lib=-lpthread}
 ac_cv_func_mmap=${ac_cv_func_mmap=yes}
 ac_cv_file__dev_zero=${ac_cv_file__dev_zero=yes}
-ac_cv_sizeof_off_t=${ac_cv_sizeof_off_t=4}
 ac_cv_sizeof_pid_t=${ac_cv_sizeof_pid_t=4}
 ac_cv_socklen_t=${ac_cv_socklen_t=yes}
 ac_cv_struct_rlimit=${ac_cv_struct_rlimit=yes}
