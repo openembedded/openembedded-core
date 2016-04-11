@@ -4,6 +4,7 @@ import os
 import re
 import shutil
 import glob
+import subprocess
 
 import oeqa.utils.ftools as ftools
 from oeqa.selftest.base import oeSelfTest
@@ -226,9 +227,6 @@ class SStateTests(SStateBase):
         they're built on a 32 or 64 bit system. Rather than requiring two different
         build machines and running a builds, override the variables calling uname()
         manually and check using bitbake -S.
-
-        Also check that SDKMACHINE and PARALLEL_MAKE changing doesn't change any
-        of these stamps.
         """
 
         topdir = get_bb_var('TOPDIR')
@@ -239,9 +237,6 @@ TMPDIR = "${TOPDIR}/tmp-sstatesamehash"
 BUILD_ARCH = "x86_64"
 BUILD_OS = "linux"
 SDKMACHINE = "x86_64"
-PARALLEL_MAKE = "-j 1"
-DL_DIR = "${TOPDIR}/download1"
-TIME = "111111"
 """)
         self.track_for_cleanup(topdir + "/tmp-sstatesamehash")
         bitbake("core-image-sato -S none")
@@ -251,9 +246,6 @@ TMPDIR = "${TOPDIR}/tmp-sstatesamehash2"
 BUILD_ARCH = "i686"
 BUILD_OS = "linux"
 SDKMACHINE = "i686"
-PARALLEL_MAKE = "-j 2"
-DL_DIR = "${TOPDIR}/download2"
-TIME = "222222"
 """)
         self.track_for_cleanup(topdir + "/tmp-sstatesamehash2")
         bitbake("core-image-sato -S none")
@@ -279,7 +271,7 @@ TIME = "222222"
     def test_sstate_nativelsbstring_same_hash(self):
         """
         The sstate checksums should be independent of whichever NATIVELSBSTRING is
-        detected. Rather than requiring two different build machines and running 
+        detected. Rather than requiring two different build machines and running
         builds, override the variables manually and check using bitbake -S.
         """
 
@@ -311,7 +303,7 @@ NATIVELSBSTRING = \"DistroB\"
     @testcase(1368)
     def test_sstate_allarch_samesigs(self):
         """
-        The sstate checksums of allarch packages should be independent of whichever 
+        The sstate checksums of allarch packages should be independent of whichever
         MACHINE is set. Check this using bitbake -S.
         Also, rather than duplicate the test, check nativesdk stamps are the same between
         the two MACHINE values.
@@ -359,7 +351,7 @@ MACHINE = \"qemuarm\"
     @testcase(1369)
     def test_sstate_sametune_samesigs(self):
         """
-        The sstate checksums of two identical machines (using the same tune) should be the 
+        The sstate checksums of two identical machines (using the same tune) should be the
         same, apart from changes within the machine specific stamps directory. We use the
         qemux86copy machine to test this. Also include multilibs in the test.
         """
@@ -402,3 +394,67 @@ DEFAULTTUNE_virtclass-multilib-lib32 = "x86"
         files2 = [x.replace("tmp-sstatesamehash2", "tmp-sstatesamehash") for x in files2]
         self.maxDiff = None
         self.assertItemsEqual(files1, files2)
+
+
+    def test_sstate_noop_samesigs(self):
+        """
+        The sstate checksums of two builds with these variables changed or
+        classes inherits should be the same.
+        """
+
+        topdir = get_bb_var('TOPDIR')
+        targetvendor = get_bb_var('TARGET_VENDOR')
+        self.write_config("""
+TMPDIR = "${TOPDIR}/tmp-sstatesamehash"
+BB_NUMBER_THREADS = "1"
+PARALLEL_MAKE = "-j 1"
+DL_DIR = "${TOPDIR}/download1"
+TIME = "111111"
+DATE = "20161111"
+""")
+        self.track_for_cleanup(topdir + "/tmp-sstatesamehash")
+        bitbake("world meta-toolchain -S none")
+        self.write_config("""
+TMPDIR = "${TOPDIR}/tmp-sstatesamehash2"
+BB_NUMBER_THREADS = "2"
+PARALLEL_MAKE = "-j 2"
+DL_DIR = "${TOPDIR}/download2"
+TIME = "222222"
+DATE = "20161212"
+INHERIT += "buildstats-summary buildhistory"
+""")
+        self.track_for_cleanup(topdir + "/tmp-sstatesamehash2")
+        bitbake("world meta-toolchain -S none")
+
+        def get_files(d):
+            f = {}
+            for root, dirs, files in os.walk(d):
+                for name in files:
+                    name, shash = name.rsplit('.', 1)
+                    # Extract just the machine and recipe name
+                    base = os.sep.join(root.rsplit(os.sep, 2)[-2:] + [name])
+                    f[base] = shash
+            return f
+        files1 = get_files(topdir + "/tmp-sstatesamehash/stamps/")
+        files2 = get_files(topdir + "/tmp-sstatesamehash2/stamps/")
+        # Remove items that are identical in both sets
+        for k,v in files1.viewitems() & files2.viewitems():
+            del files1[k]
+            del files2[k]
+        if not files1 and not files2:
+            # No changes, so we're done
+            return
+
+        for k in files1.viewkeys() | files2.viewkeys():
+            if k in files1 and k in files2:
+                print "%s differs:" % k
+                print subprocess.check_output(("bitbake-diffsigs",
+                                               topdir + "/tmp-sstatesamehash/stamps/" + k + "." + files1[k],
+                                               topdir + "/tmp-sstatesamehash2/stamps/" + k + "." + files2[k]))
+            elif k in files1 and k not in files2:
+                print "%s in files1" % k
+            elif k not in files1 and k in files2:
+                print "%s in files2" % k
+            else:
+                assert "shouldn't reach here"
+        self.fail("sstate hashes not identical.")
