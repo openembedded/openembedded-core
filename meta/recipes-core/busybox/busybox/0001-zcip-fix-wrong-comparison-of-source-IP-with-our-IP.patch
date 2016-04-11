@@ -1,0 +1,38 @@
+From 4d15068d83054a9f82b3f8842706cd6deb401e25 Mon Sep 17 00:00:00 2001
+From: Vladislav Grishenko <themiron@mail.ru>
+Date: Thu, 19 Mar 2015 16:19:35 +0500
+Subject: [PATCH] zcip: fix wrong comparison of source IP with our IP
+
+Commit "zcip: fix link-local IP conflict detection" has introduced
+wrong comparsion of source IP with our IP. This leads to a new IP
+being picked unnecessarily on every incoming ARP packet.
+
+Signed-off-by: Vladislav Grishenko <themiron@mail.ru>
+Signed-off-by: Denys Vlasenko <vda.linux@googlemail.com>
+
+This change was picked from Busybox without modification
+(git://git.busybox.net/busybox, commit 4d15068)
+
+Upstream-Status: Backport (added in 1.24)
+Signed-off-by: Brad Mouring <brad.mouring@ni.com>
+
+---
+ networking/zcip.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/networking/zcip.c b/networking/zcip.c
+index a3307c5..962ba2e 100644
+--- a/networking/zcip.c
++++ b/networking/zcip.c
+@@ -521,7 +521,7 @@ int zcip_main(int argc UNUSED_PARAM, char **argv)
+ 			target_ip_conflict = 0;
+ 
+ 			if (memcmp(&p.arp.arp_sha, &eth_addr, ETH_ALEN) != 0) {
+-				if (memcmp(p.arp.arp_spa, &ip.s_addr, sizeof(struct in_addr))) {
++				if (memcmp(p.arp.arp_spa, &ip.s_addr, sizeof(struct in_addr)) == 0) {
+ 					/* A probe or reply with source_ip == chosen ip */
+ 					source_ip_conflict = 1;
+ 				}
+-- 
+2.7.3
+
