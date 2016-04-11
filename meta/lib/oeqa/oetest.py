@@ -19,7 +19,11 @@ except ImportError:
 import logging
 
 import oeqa.runtime
-import oeqa.sdkext
+# Exported test doesn't require sdkext
+try:
+    import oeqa.sdkext
+except ImportError:
+    pass
 from oeqa.utils.decorators import LogResults, gettag, getResults
 from oeqa.utils import avoid_paths_in_environ
 

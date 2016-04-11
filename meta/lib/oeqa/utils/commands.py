@@ -18,7 +18,11 @@ from oeqa.utils import CommandError
 from oeqa.utils import ftools
 import re
 import contextlib
-import bb
+# Export test doesn't require bb
+try:
+    import bb
+except ImportError:
+    pass
 
 class Command(object):
     def __init__(self, command, bg=False, timeout=None, data=None, **options):
