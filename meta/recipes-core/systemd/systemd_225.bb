@@ -46,6 +46,7 @@ SRC_URI = "git://github.com/systemd/systemd.git;protocol=git \
            file://init \
            file://run-ptest \
            file://rules-whitelist-hd-devices.patch \
+           file://0023-backported-fixes-for-null-messages.patch \
           "
 SRC_URI_append_qemuall = " file://qemuall_io_latency-core-device.c-Change-the-default-device-timeout-to-2.patch"
 
