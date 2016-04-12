@@ -340,7 +340,7 @@ class Image(object):
             source = part['source_file']
             if source:
                 # install source_file contents into a partition
-                cmd = "dd if=%s of=%s bs=%d seek=%d count=%d conv=notrunc,sparse" % \
+                cmd = "dd if=%s of=%s bs=%d seek=%d count=%d conv=notrunc" % \
                       (source, image_file, self.sector_size,
                        part['start'], part['size'])
                 exec_cmd(cmd)
