@@ -1,5 +1,7 @@
 require rsync.inc
 
+SRC_URI += "file://makefile-no-rebuild.patch"
+
 SRC_URI[md5sum] = "0f758d7e000c0f7f7d3792610fad70cb"
 SRC_URI[sha256sum] = "ecfa62a7fa3c4c18b9eccd8c16eaddee4bd308a76ea50b5c02a5840f09c0a1c2"
 
