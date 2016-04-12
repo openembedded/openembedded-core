@@ -11,7 +11,6 @@ RPROVIDES_${PN} = "console-tools"
 RCONFLICTS_${PN} = "console-tools"
 
 SRC_URI = "${KERNELORG_MIRROR}/linux/utils/${BPN}/${BP}.tar.xz \
-           file://uclibc-stdarg.patch \
           "
 
 SRC_URI[md5sum] = "231b46e7142eb41ea3ae06d2ded3c208"
