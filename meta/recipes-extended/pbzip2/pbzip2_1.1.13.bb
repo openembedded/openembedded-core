@@ -18,8 +18,6 @@ SRC_URI[sha256sum] = "8fd13eaaa266f7ee91f85c1ea97c86d9c9cc985969db9059cdebcb1e1b
 
 UPSTREAM_CHECK_URI = "http://compression.ca/pbzip2/"
 
-do_configure[noexec] = "1"
-
 EXTRA_OEMAKE = "CXX='${CXX} ${CXXFLAGS}' LDFLAGS='${LDFLAGS}'"
 
 do_install() {
