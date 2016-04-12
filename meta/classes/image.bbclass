@@ -455,8 +455,7 @@ def get_rootfs_size(d):
                                       d.getVar('IMAGE_ROOTFS', True)])
     size_kb = int(output.split()[0])
     base_size = size_kb * overhead_factor
-    base_size = (base_size, rootfs_req_size)[base_size < rootfs_req_size] + \
-        rootfs_extra_space
+    base_size = max(base_size, rootfs_req_size) + rootfs_extra_space
 
     if base_size != int(base_size):
         base_size = int(base_size + 1)
@@ -544,4 +543,3 @@ do_bundle_initramfs () {
 	:
 }
 addtask bundle_initramfs after do_image_complete
-
