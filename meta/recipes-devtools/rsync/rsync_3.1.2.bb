@@ -7,15 +7,14 @@ PACKAGECONFIG ??= "acl attr"
 PACKAGECONFIG[acl] = "--enable-acl-support,--disable-acl-support,acl,"
 PACKAGECONFIG[attr] = "--enable-xattr-support,--disable-xattr-support,attr,"
 
+# By default, if crosscompiling, rsync disables a number of
+# capabilities, hardlinking symlinks and special files (i.e. devices)
+CACHED_CONFIGUREVARS += "rsync_cv_can_hardlink_special=yes rsync_cv_can_hardlink_symlink=yes"
+
 # rsync 3.0 uses configure.sh instead of configure, and
 # makefile checks the existence of configure.sh
 do_configure_prepend () {
 	rm -f ${S}/configure ${S}/configure.sh
-
-	# By default, if crosscompiling, rsync disables a number of
-	# capabilities, hardlinking symlinks and special files (i.e. devices)
-	export rsync_cv_can_hardlink_special=yes
-	export rsync_cv_can_hardlink_symlink=yes
 }
 
 do_configure_append () {
