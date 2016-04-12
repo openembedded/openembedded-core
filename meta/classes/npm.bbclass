@@ -28,7 +28,9 @@ python populate_packages_prepend () {
     for pkgname in pkgnames:
         pkgrelpath, pdata = extrapackages[pkgname]
         pkgpath = '${libdir}/node_modules/${PN}/' + pkgrelpath
-        expanded_pkgname = d.expand(pkgname)
+        # package names can't have underscores but npm packages sometimes use them
+        oe_pkg_name = pkgname.replace('_', '-')
+        expanded_pkgname = d.expand(oe_pkg_name)
         d.setVar('FILES_%s' % expanded_pkgname, pkgpath)
         if pdata:
             version = pdata.get('version', None)
@@ -37,7 +39,7 @@ python populate_packages_prepend () {
             description = pdata.get('description', None)
             if description:
                 d.setVar('SUMMARY_%s' % expanded_pkgname, description.replace(u"\u2018", "'").replace(u"\u2019", "'").encode("utf8"))
-    d.appendVar('RDEPENDS_%s' % d.getVar('PN', True), ' %s' % ' '.join(pkgnames))
+    d.appendVar('RDEPENDS_%s' % d.getVar('PN', True), ' %s' % ' '.join(pkgnames).replace('_', '-'))
 }
 
 FILES_${PN} += " \

@@ -143,7 +143,7 @@ def npm_split_package_dirs(pkgdir):
                     if pathitem == 'node_modules':
                         continue
                     pkgitems.append(pathitem)
-                pkgname = '-'.join(pkgitems)
+                pkgname = '-'.join(pkgitems).replace('_', '-')
                 pkgfile = os.path.join(root, dn, 'package.json')
                 data = None
                 if os.path.exists(pkgfile):
