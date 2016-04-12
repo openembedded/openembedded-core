@@ -18,7 +18,7 @@ perform_groupadd () {
 	local group_exists="`grep "^$groupname:" $rootdir/etc/group || true`"
 	if test "x$group_exists" = "x"; then
 		opts=`echo $opts | sed s/\'/\"/g`
-		eval flock -x -w 100 $rootdir${sysconfdir} -c \"$PSEUDO groupadd \$opts\" || true
+		eval flock -x $rootdir${sysconfdir} -c \"$PSEUDO groupadd \$opts\" || true
 		group_exists="`grep "^$groupname:" $rootdir/etc/group || true`"
 		if test "x$group_exists" = "x"; then
 			bbfatal "${PN}: groupadd command did not succeed."
@@ -36,7 +36,7 @@ perform_useradd () {
 	local user_exists="`grep "^$username:" $rootdir/etc/passwd || true`"
 	if test "x$user_exists" = "x"; then
 		opts=`echo $opts | sed s/\'/\"/g`
-		eval flock -x -w 100 $rootdir${sysconfdir} -c  \"$PSEUDO useradd \$opts\" || true
+		eval flock -x $rootdir${sysconfdir} -c  \"$PSEUDO useradd \$opts\" || true
 		user_exists="`grep "^$username:" $rootdir/etc/passwd || true`"
 		if test "x$user_exists" = "x"; then
 			bbfatal "${PN}: useradd command did not succeed."
@@ -63,7 +63,7 @@ perform_groupmems () {
 	fi
 	local mem_exists="`grep "^$groupname:[^:]*:[^:]*:\([^,]*,\)*$username\(,[^,]*\)*" $rootdir/etc/group || true`"
 	if test "x$mem_exists" = "x"; then
-		eval flock -x -w 100 $rootdir${sysconfdir} -c \"$PSEUDO groupmems \$opts\" || true
+		eval flock -x $rootdir${sysconfdir} -c \"$PSEUDO groupmems \$opts\" || true
 		mem_exists="`grep "^$groupname:[^:]*:[^:]*:\([^,]*,\)*$username\(,[^,]*\)*" $rootdir/etc/group || true`"
 		if test "x$mem_exists" = "x"; then
 			bbfatal "${PN}: groupmems command did not succeed."
@@ -84,7 +84,7 @@ perform_groupdel () {
 	local groupname=`echo "$opts" | awk '{ print $NF }'`
 	local group_exists="`grep "^$groupname:" $rootdir/etc/group || true`"
 	if test "x$group_exists" != "x"; then
-		eval flock -x -w 100 $rootdir${sysconfdir} -c \"$PSEUDO groupdel \$opts\" || true
+		eval flock -x $rootdir${sysconfdir} -c \"$PSEUDO groupdel \$opts\" || true
 		group_exists="`grep "^$groupname:" $rootdir/etc/group || true`"
 		if test "x$group_exists" != "x"; then
 			bbfatal "${PN}: groupdel command did not succeed."
@@ -101,7 +101,7 @@ perform_userdel () {
 	local username=`echo "$opts" | awk '{ print $NF }'`
 	local user_exists="`grep "^$username:" $rootdir/etc/passwd || true`"
 	if test "x$user_exists" != "x"; then
-		eval flock -x -w 100 $rootdir${sysconfdir} -c \"$PSEUDO userdel \$opts\" || true
+		eval flock -x $rootdir${sysconfdir} -c \"$PSEUDO userdel \$opts\" || true
 		user_exists="`grep "^$username:" $rootdir/etc/passwd || true`"
 		if test "x$user_exists" != "x"; then
 			bbfatal "${PN}: userdel command did not succeed."
@@ -121,7 +121,7 @@ perform_groupmod () {
 	local groupname=`echo "$opts" | awk '{ print $NF }'`
 	local group_exists="`grep "^$groupname:" $rootdir/etc/group || true`"
 	if test "x$group_exists" != "x"; then
-		eval flock -x -w 100 $rootdir${sysconfdir} -c \"$PSEUDO groupmod \$opts\"
+		eval flock -x $rootdir${sysconfdir} -c \"$PSEUDO groupmod \$opts\"
 		if test $? != 0; then
 			bbwarn "${PN}: groupmod command did not succeed."
 		fi
@@ -140,7 +140,7 @@ perform_usermod () {
 	local username=`echo "$opts" | awk '{ print $NF }'`
 	local user_exists="`grep "^$username:" $rootdir/etc/passwd || true`"
 	if test "x$user_exists" != "x"; then
-		eval flock -x -w 100 $rootdir${sysconfdir} -c \"$PSEUDO usermod \$opts\"
+		eval flock -x $rootdir${sysconfdir} -c \"$PSEUDO usermod \$opts\"
 		if test $? != 0; then
 			bbfatal "${PN}: usermod command did not succeed."
 		fi
