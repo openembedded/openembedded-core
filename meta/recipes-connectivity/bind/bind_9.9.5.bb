@@ -28,6 +28,10 @@ SRC_URI = "ftp://ftp.isc.org/isc/bind9/${PV}/${BPN}-${PV}.tar.gz \
            file://CVE-2015-8000.patch \
            file://CVE-2015-8704.patch \
            file://CVE-2015-8461.patch \
+           file://CVE-2016-1285.patch \
+           file://fix-typo-in-CVE-2016-1285.patch \
+           file://CVE-2016-1286_1.patch \
+           file://CVE-2016-1286_2.patch \
            "
 
 SRC_URI[md5sum] = "e676c65cad5234617ee22f48e328c24e"
