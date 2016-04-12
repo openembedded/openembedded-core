@@ -173,6 +173,7 @@ class Rootfs(object):
         bb.note("###### Generate rootfs #######")
         pre_process_cmds = self.d.getVar("ROOTFS_PREPROCESS_COMMAND", True)
         post_process_cmds = self.d.getVar("ROOTFS_POSTPROCESS_COMMAND", True)
+        rootfs_post_install_cmds = self.d.getVar('ROOTFS_POSTINSTALL_COMMAND', True)
 
         postinst_intercepts_dir = self.d.getVar("POSTINST_INTERCEPTS_DIR", True)
         if not postinst_intercepts_dir:
@@ -201,6 +202,8 @@ class Rootfs(object):
         bb.utils.mkdirhier(sysconfdir)
         with open(sysconfdir + "/version", "w+") as ver:
             ver.write(self.d.getVar('BUILDNAME', True) + "\n")
+
+        execute_pre_post_process(self.d, rootfs_post_install_cmds)
 
         self._run_intercepts()
 
@@ -877,7 +880,6 @@ class OpkgRootfs(DpkgOpkgRootfs):
         pkgs_to_install = self.manifest.parse_initial_manifest()
         opkg_pre_process_cmds = self.d.getVar('OPKG_PREPROCESS_COMMANDS', True)
         opkg_post_process_cmds = self.d.getVar('OPKG_POSTPROCESS_COMMANDS', True)
-        rootfs_post_install_cmds = self.d.getVar('ROOTFS_POSTINSTALL_COMMAND', True)
 
         # update PM index files, unless users provide their own feeds
         if (self.d.getVar('BUILD_IMAGES_FROM_FEEDS', True) or "") != "1":
@@ -908,7 +910,6 @@ class OpkgRootfs(DpkgOpkgRootfs):
         self._setup_dbg_rootfs(['/var/lib/opkg'])
 
         execute_pre_post_process(self.d, opkg_post_process_cmds)
-        execute_pre_post_process(self.d, rootfs_post_install_cmds)
 
         if self.inc_opkg_image_gen == "1":
             self.pm.backup_packaging_data()
