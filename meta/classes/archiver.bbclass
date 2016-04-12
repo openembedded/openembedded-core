@@ -368,6 +368,7 @@ do_deploy_archives () {
 python do_deploy_archives_setscene () {
     sstate_setscene(d)
 }
+do_deploy_archives[dirs] = "${ARCHIVER_TOPDIR}"
 do_deploy_archives[sstate-inputdirs] = "${ARCHIVER_TOPDIR}"
 do_deploy_archives[sstate-outputdirs] = "${DEPLOY_DIR_SRC}"
 addtask do_deploy_archives_setscene
