@@ -276,16 +276,3 @@ class Wic(oeSelfTest):
             status, output = qemu.run_serial(command)
             self.assertEqual(1, status, 'Failed to run command "%s": %s' % (command, output))
             self.assertEqual(output, '/dev/root /\r\n/dev/vda3 /mnt')
-
-    def test_sparseness(self):
-        """Test that assembled images are sparse; apparent size > disk usage"""
-        self.assertEqual(0, runCmd("wic create directdisk "
-                                   "--image-name core-image-minimal").status)
-        images = glob(self.resultdir + "directdisk-*.direct")
-        self.assertEqual(1, len(images))
-
-        imagestat = os.stat(images.pop())
-        # st_blocks is the "number of 512-byte blocks allocated for file"
-        used = imagestat.st_blocks*512
-        apparent = imagestat.st_size
-        self.assertLess(used, apparent)
