@@ -13,7 +13,7 @@ python __anonymous () {
 	# KEEPUIMAGE == yes. Otherwise, we pack compressed vmlinux into
 	# the uImage .
 	if d.getVar("KEEPUIMAGE", True) != 'yes':
-            d.setVar("KERNEL_IMAGETYPE_FOR_MAKE", "zImage")
+            d.setVar("KERNEL_IMAGETYPE_FOR_MAKE", "vmlinux")
 }
 
 do_uboot_mkimage() {
