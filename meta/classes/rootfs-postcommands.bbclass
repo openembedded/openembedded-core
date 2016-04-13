@@ -225,7 +225,7 @@ python write_image_manifest () {
 
     if os.path.exists(manifest_name):
         manifest_link = deploy_dir + "/" + link_name + ".manifest"
-        if os.path.exists(manifest_link):
+        if os.path.lexists(manifest_link):
             if d.getVar('RM_OLD_IMAGE', True) == "1" and \
                     os.path.exists(os.path.realpath(manifest_link)):
                 os.remove(os.path.realpath(manifest_link))
@@ -275,5 +275,3 @@ rootfs_check_host_user_contaminated () {
 rootfs_sysroot_relativelinks () {
 	sysroot-relativelinks.py ${SDK_OUTPUT}/${SDKTARGETSYSROOT}
 }
-
-
