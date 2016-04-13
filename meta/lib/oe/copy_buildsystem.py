@@ -8,7 +8,7 @@ def _smart_copy(src, dest):
     # source is a file or a directory.
     mode = os.stat(src).st_mode
     if stat.S_ISDIR(mode):
-        shutil.copytree(src, dest, symlinks=True)
+        shutil.copytree(src, dest, symlinks=True, ignore=shutil.ignore_patterns('.git'))
     else:
         shutil.copyfile(src, dest)
         shutil.copymode(src, dest)
