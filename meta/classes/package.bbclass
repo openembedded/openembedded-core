@@ -775,9 +775,13 @@ python fixup_perms () {
                 entry = fs_perms_entry(d.expand(line))
                 if entry and entry.path:
                     if entry.link:
-                        fs_link_table[entry.link] = entry
+                        fs_link_table[entry.path] = entry
+                        if entry.path in fs_perms_table:
+                            fs_perms_table.pop(entry.path)
                     else:
                         fs_perms_table[entry.path] = entry
+                        if entry.path in fs_link_table:
+                            fs_link_table.pop(entry.path)
             f.close()
 
     # Debug -- list out in-memory table
@@ -789,8 +793,9 @@ python fixup_perms () {
     # We process links first, so we can go back and fixup directory ownership
     # for any newly created directories
     # Process in sorted order so /run gets created before /run/lock, etc.
-    for link in sorted(fs_link_table):
-        dir = fs_link_table[link].path
+    for entry in sorted(fs_link_table.values(), key=lambda x: x.link):
+        link = entry.link
+        dir = entry.path
         origin = dvar + dir
         if not (cpath.exists(origin) and cpath.isdir(origin) and not cpath.islink(origin)):
             continue
