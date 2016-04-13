@@ -150,6 +150,7 @@ SRC_URI += " \
 	   file://rpm-rpmdb-grammar.patch \
 	   file://rpm-disable-blaketest.patch \
 	   file://rpm-autogen-force.patch \
+	   file://rpmdb-more-verbose-error-logging-in-rpmTempFile.patch \
 "
 
 SRC_URI_append_libc-musl = "\
