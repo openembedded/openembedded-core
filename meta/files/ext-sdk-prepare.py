@@ -27,6 +27,21 @@ def exec_watch(cmd, **options):
 
     return process.returncode, buf
 
+def check_unexpected(lines, recipes):
+    """Check for unexpected output lines from dry run"""
+    unexpected = []
+    for line in lines.splitlines():
+        if 'Running task' in line:
+            for recipe in recipes:
+                if recipe in line:
+                    break
+            else:
+                line = line.split('Running', 1)[-1]
+                if 'do_rm_work' not in line:
+                    unexpected.append(line.rstrip())
+        elif 'Running setscene' in line:
+            unexpected.append(line.rstrip())
+    return unexpected
 
 def main():
     if len(sys.argv) < 2:
@@ -67,17 +82,7 @@ def main():
 
     try:
         out = subprocess.check_output('bitbake %s -n' % ' '.join(sdk_targets), stderr=subprocess.STDOUT, shell=True)
-        unexpected = []
-        for line in out.splitlines():
-            if 'Running task' in line:
-                for recipe in recipes:
-                    if recipe in line:
-                        break
-                else:
-                    line = line.split('Running', 1)[-1]
-                    unexpected.append(line.rstrip())
-            elif 'Running setscene' in line:
-                unexpected.append(line.rstrip())
+        unexpected = check_unexpected(out, recipes)
     except subprocess.CalledProcessError as e:
         print('ERROR: Failed to execute dry-run:\n%s' % e.output)
         return 1
