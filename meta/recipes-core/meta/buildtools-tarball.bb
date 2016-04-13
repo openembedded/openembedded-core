@@ -64,3 +64,6 @@ create_sdk_files_append () {
 		echo '[ $? != 0 ] && export BB_ENV_EXTRAWHITE="NO32LIBS $BB_ENV_EXTRAWHITE"' >>$script
 	fi
 }
+
+# buildtools-tarball doesn't need config site
+TOOLCHAIN_NEED_CONFIGSITE_CACHE = ""
