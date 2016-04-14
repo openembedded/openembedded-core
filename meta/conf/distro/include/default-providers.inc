@@ -51,3 +51,6 @@ PREFERRED_RPROVIDER_bluez-hcidump ?= "${@bb.utils.contains('DISTRO_FEATURES','bl
 # Alternative is ltp-ddt in meta-oe: meta-oe/recipes-devtools/ltp-ddt/ltp-ddt_0.0.4.bb
 PREFERRED_PROVIDER_ltp ?= "ltp"
 PREFERRED_PROVIDER_getopt ?= "util-linux-getopt"
+PREFERRED_PROVIDER_openssl ?= "openssl"
+PREFERRED_PROVIDER_openssl-native ?= "openssl-native"
+PREFERRED_PROVIDER_nativesdk-openssl ?= "nativesdk-openssl"
