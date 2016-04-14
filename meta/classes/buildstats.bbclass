@@ -167,6 +167,8 @@ python run_buildstats () {
                 f.write("Uncompressed Rootfs size: %s" % rootfs_size)
 
     elif isinstance(e, bb.build.TaskFailed):
+        # Can have a failure before TaskStarted so need to mkdir here too
+        bb.utils.mkdirhier(taskdir)
         write_task_data("failed", os.path.join(taskdir, e.task), e, d)
         ########################################################################
         # Lets make things easier and tell people where the build failed in
