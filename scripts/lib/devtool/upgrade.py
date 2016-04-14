@@ -145,7 +145,15 @@ def _get_uri(rd):
     srcuris = rd.getVar('SRC_URI', True).split()
     if not len(srcuris):
         raise DevtoolError('SRC_URI not found on recipe')
-    srcuri = srcuris[0] # it is assumed, URI is at first position
+    # Get first non-local entry in SRC_URI - usually by convention it's
+    # the first entry, but not always!
+    srcuri = None
+    for entry in srcuris:
+        if not entry.startswith('file://'):
+            srcuri = entry
+            break
+    if not srcuri:
+        raise DevtoolError('Unable to find non-local entry in SRC_URI')
     srcrev = '${AUTOREV}'
     if '://' in srcuri:
         # Fetch a URL
