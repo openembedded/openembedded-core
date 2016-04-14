@@ -235,9 +235,10 @@ def patch_recipe_file(fn, values, patch=False, relpath=''):
                     outputvalue(k, newlines, rewindcomments=True)
                     del remainingnames[k]
             # Now change this variable, if it needs to be changed
-            if varname in existingnames:
-                outputvalue(varname, newlines)
-                del remainingnames[varname]
+            if varname in existingnames and op in ['+=', '=', '=+']:
+                if varname in remainingnames:
+                    outputvalue(varname, newlines)
+                    del remainingnames[varname]
                 return None, None, 0, True
         else:
             if varname in values:
