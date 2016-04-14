@@ -411,6 +411,7 @@ PARALLEL_MAKE = "-j 1"
 DL_DIR = "${TOPDIR}/download1"
 TIME = "111111"
 DATE = "20161111"
+INHERIT_remove = "buildstats-summary buildhistory"
 """)
         self.track_for_cleanup(topdir + "/tmp-sstatesamehash")
         bitbake("world meta-toolchain -S none")
