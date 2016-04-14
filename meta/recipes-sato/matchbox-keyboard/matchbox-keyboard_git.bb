@@ -26,7 +26,7 @@ REQUIRED_DISTRO_FEATURES = "x11"
 
 EXTRA_OECONF = "--disable-cairo"
 
-PACKAGECONFIG ??= "gtk2-im applet"
+PACKAGECONFIG ??= "gtk3-im applet"
 PACKAGECONFIG[applet] = "--enable-applet,--disable-applet,matchbox-panel-2"
 PACKAGECONFIG[gtk2-im] = "--enable-gtk-im,--disable-gtk-im,gtk+"
 PACKAGECONFIG[gtk3-im] = "--enable-gtk3-im,--disable-gtk3-im,gtk+3"
@@ -39,7 +39,8 @@ FILES_${PN} = "${bindir}/ \
 	       ${datadir}/pixmaps \
 	       ${datadir}/matchbox-keyboard"
 
-FILES_${PN}-im = "${libdir}/gtk-2.0/*/immodules/*.so"
+FILES_${PN}-im = "${libdir}/gtk-2.0/*/immodules/*.so \
+                  ${libdir}/gtk-3.0/*/immodules/*.so"
 
 FILES_${PN}-applet = "${libdir}/matchbox-panel/*.so"
 
@@ -49,6 +50,7 @@ do_install_append () {
 	install -m 755 ${WORKDIR}/80matchboxkeyboard.sh ${D}/${sysconfdir}/X11/Xsession.d/
 
 	rm -f ${D}${libdir}/gtk-2.0/*/immodules/*.la
+	rm -f ${D}${libdir}/gtk-3.0/*/immodules/*.la
 	rm -f ${D}${libdir}/matchbox-panel/*.la
 }
 
