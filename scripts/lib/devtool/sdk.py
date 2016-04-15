@@ -186,9 +186,15 @@ def sdk_update(args, config, basepath, workspace):
                 return 0
             # Update metadata
             logger.debug("Updating metadata via git ...")
-            # Try using 'git pull', if failed, use 'git clone'
+            #Check for the status before doing a fetch and reset
             if os.path.exists(os.path.join(basepath, 'layers/.git')):
-                ret = subprocess.call("git pull %s/layers/.git" % updateserver, shell=True, cwd=layers_dir)
+                out = subprocess.check_output("git status --porcelain", shell=True, cwd=layers_dir)
+                if not out:
+                    ret = subprocess.call("git fetch --all; git reset --hard", shell=True, cwd=layers_dir)
+                else:
+                    logger.error("Failed to update metadata as there have been changes made to it. Aborting.");
+                    logger.error("Changed files:\n%s" % out);
+                    return -1
             else:
                 ret = -1
             if ret != 0:
