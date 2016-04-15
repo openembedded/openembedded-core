@@ -21,7 +21,7 @@ IMAGE_FSTYPES = "vmdk"
 
 inherit core-image module-base
 
-SRCREV ?= "00c4c9bf0007b964dfa4559fe8fc8687f14cdec3"
+SRCREV ?= "5c8124df2efed4b8691239cd357cf69211b0c844"
 SRC_URI = "git://git.yoctoproject.org/poky \
            file://Yocto_Build_Appliance.vmx \
            file://Yocto_Build_Appliance.vmxf \
@@ -80,8 +80,12 @@ fakeroot do_populate_poky_src () {
 	# Assume we will need CDROM to install guest additions
 	mkdir -p ${IMAGE_ROOTFS}/media/cdrom
 
-	# Allow builder to use sudo to setup tap/tun
+	# Allow builder to use sudo
 	echo "builder ALL=(ALL) NOPASSWD: ALL" >> ${IMAGE_ROOTFS}/etc/sudoers
+
+	# Load tap/tun at startup
+	ln -sr ${IMAGE_ROOTFS}/usr/sbin/iptables ${IMAGE_ROOTFS}/sbin/iptables
+	echo "tun" >> ${IMAGE_ROOTFS}/etc/modules
 
 	# Use Clearlooks GTK+ theme
 	mkdir -p ${IMAGE_ROOTFS}/etc/gtk-2.0
