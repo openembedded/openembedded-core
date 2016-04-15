@@ -4,7 +4,7 @@
 
 
 # DESCRIPTION
-# Base class inherited by test classes in meta/lib/selftest
+# Base class inherited by test classes in meta/lib/oeqa/selftest
 
 import unittest
 import os
