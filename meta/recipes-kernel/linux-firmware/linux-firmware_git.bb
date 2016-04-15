@@ -55,6 +55,7 @@ LICENSE = "\
     & Firmware-xc4000 \
     & Firmware-xc5000 \
     & Firmware-xc5000c \
+    & WHENCE \
 "
 
 LIC_FILES_CHKSUM = "\
@@ -111,6 +112,7 @@ LIC_FILES_CHKSUM = "\
     file://LICENCE.xc4000;md5=0ff51d2dc49fce04814c9155081092f0 \
     file://LICENCE.xc5000;md5=1e170c13175323c32c7f4d0998d53f66 \
     file://LICENCE.xc5000c;md5=12b02efa3049db65d524aeb418dd87ca \
+    file://WHENCE;md5=2ec7cdcaf7b1f57b77665b4d77b76e50 \
 "
 
 # These are not common licenses, set NO_GENERIC_LICENSE for them
@@ -168,6 +170,7 @@ NO_GENERIC_LICENSE[Firmware-wl1251] = "LICENCE.wl1251"
 NO_GENERIC_LICENSE[Firmware-xc4000] = "LICENCE.xc4000"
 NO_GENERIC_LICENSE[Firmware-xc5000] = "LICENCE.xc5000"
 NO_GENERIC_LICENSE[Firmware-xc5000c] = "LICENCE.xc5000c"
+NO_GENERIC_LICENSE[WHENCE] = "WHENCE"
 
 SRCREV = "5f8ca0c1db6106a2d6d7e85eee778917ff03c3de"
 PE = "1"
@@ -227,6 +230,8 @@ PACKAGES =+ "${PN}-ralink-license ${PN}-ralink \
              ${PN}-iwlwifi-7265d ${PN}-iwlwifi-8000c ${PN}-iwlwifi-8265 \
              ${PN}-i915-license ${PN}-i915 \
              ${PN}-adsp-sst-license ${PN}-adsp-sst \
+             ${PN}-bnx2-mips \
+             ${PN}-whence-license \
              ${PN}-license \
              "
 
@@ -425,6 +430,19 @@ RDEPENDS_${PN}-bcm43340 += "${PN}-broadcom-license"
 RDEPENDS_${PN}-bcm4339 += "${PN}-broadcom-license"
 RDEPENDS_${PN}-bcm4354 += "${PN}-broadcom-license"
 
+# For Broadcom bnx2-mips
+#
+# which is a separate case to the other Broadcom firmwares since its
+# license is contained in the shared WHENCE file.
+
+LICENSE_${PN}-bnx2-mips = "WHENCE"
+LICENSE_${PN}-whence-license = "WHENCE"
+
+FILES_${PN}-bnx2-mips = "/lib/firmware/bnx2/bnx2-mips-09-6.2.1b.fw"
+FILES_${PN}-whence-license = "/lib/firmware/WHENCE"
+
+RDEPENDS_${PN}-bnx2-mips += "${PN}-whence-license"
+
 # For iwlwifi
 LICENSE_${PN}-iwlwifi-135-6     = "Firmware-iwlwifi_firmware"
 LICENSE_${PN}-iwlwifi-3160-7    = "Firmware-iwlwifi_firmware"
@@ -543,11 +561,13 @@ LICENSE_${PN} = "\
     & Firmware-xc4000 \
     & Firmware-xc5000 \
     & Firmware-xc5000c \
+    & WHENCE \
 "
 
 FILES_${PN}-license += "/lib/firmware/LICEN*"
 FILES_${PN} += "/lib/firmware/*"
 RDEPENDS_${PN} += "${PN}-license"
+RDEPENDS_${PN} += "${PN}-whence-license"
 
 # Make linux-firmware depend on all of the split-out packages.
 python populate_packages_prepend () {
