@@ -115,6 +115,7 @@ SRC_URI += " \
 	   file://rpm-rpmpgp-popt.patch \
 	   file://rpm-fix-lua-tests-compilation-failure.patch \
 	   file://rpmqv.c-check-_gpg_passphrase-before-ask-for-input.patch \
+	   file://0001-Disable-__sync_add_and_fetch_8-on-nios2.patch \
 "
 
 # OE specific changes
