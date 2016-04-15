@@ -388,6 +388,10 @@ python () {
             bb.fatal("No IMAGE_CMD defined for IMAGE_FSTYPES entry '%s' - possibly invalid type name or missing support class" % t)
         cmds.append(localdata.expand("\tcd ${DEPLOY_DIR_IMAGE}"))
 
+        # Since a copy of IMAGE_CMD_xxx will be inlined within do_image_xxx,
+        # prevent a redundant copy of IMAGE_CMD_xxx being emitted as a function.
+        d.delVarFlag('IMAGE_CMD_' + realt, 'func')
+
         rm_tmp_images = set()
         def gen_conversion_cmds(bt):
             for ctype in ctypes:
