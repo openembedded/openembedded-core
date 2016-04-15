@@ -16,13 +16,13 @@
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 # DESCRIPTION
-# This script runs tests defined in meta/lib/selftest/
+# This script runs tests defined in meta/lib/oeqa/selftest/
 # It's purpose is to automate the testing of different bitbake tools.
 # To use it you just need to source your build environment setup script and
 # add the meta-selftest layer to your BBLAYERS.
-# Call the script as: "oe-selftest" to run all the tests in in meta/lib/selftest/
-# Call the script as: "oe-selftest <module>.<Class>.<method>" to run just a single test
-# E.g: "oe-selftest bboutput.BitbakeLayers" will run just the BitbakeLayers class from meta/lib/selftest/bboutput.py
+# Call the script as: "oe-selftest -a" to run all the tests in meta/lib/oeqa/selftest/
+# Call the script as: "oe-selftest -r <module>.<Class>.<method>" to run just a single test
+# E.g: "oe-selftest -r bblayers.BitbakeLayers" will run just the BitbakeLayers class from meta/lib/oeqa/selftest/bblayers.py
 
 
 import os
