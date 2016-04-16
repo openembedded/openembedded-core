@@ -1,7 +1,7 @@
-From e76048898ae9aa49dc70d6f9b1bbc22082e61fe3 Mon Sep 17 00:00:00 2001
+From c99892f2018cd7fa0f37b53e6cebec99fa036472 Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Wed, 18 Mar 2015 01:51:38 +0000
-Subject: [PATCH 03/24] nativesdk-glibc: Raise the size of arrays containing dl
+Subject: [PATCH 03/25] nativesdk-glibc: Raise the size of arrays containing dl
  paths
 
 This patch puts the dynamic loader path in the binaries, SYSTEM_DIRS strings
@@ -25,7 +25,7 @@ Signed-off-by: Khem Raj <raj.khem@gmail.com>
  6 files changed, 13 insertions(+), 9 deletions(-)
 
 diff --git a/elf/dl-cache.c b/elf/dl-cache.c
-index dec49bc..862f1d8 100644
+index cfa335e..daa12ec 100644
 --- a/elf/dl-cache.c
 +++ b/elf/dl-cache.c
 @@ -132,6 +132,10 @@ do									      \
@@ -40,7 +40,7 @@ index dec49bc..862f1d8 100644
  internal_function
  _dl_cache_libcmp (const char *p1, const char *p2)
 diff --git a/elf/dl-load.c b/elf/dl-load.c
-index c4a42e9..acf6c03 100644
+index c7b8797..37a1beb 100644
 --- a/elf/dl-load.c
 +++ b/elf/dl-load.c
 @@ -106,8 +106,8 @@ static size_t max_capstrlen attribute_relro;
@@ -55,7 +55,7 @@ index c4a42e9..acf6c03 100644
    SYSTEM_DIRS_LEN
  };
 diff --git a/elf/interp.c b/elf/interp.c
-index 422ea95e..6d61a36 100644
+index 9448802..e7e8c70 100644
 --- a/elf/interp.c
 +++ b/elf/interp.c
 @@ -18,5 +18,5 @@
@@ -66,10 +66,10 @@ index 422ea95e..6d61a36 100644
 +const char __invoke_dynamic_linker__[4096] __attribute__ ((section (".interp")))
    = RUNTIME_LINKER;
 diff --git a/elf/ldconfig.c b/elf/ldconfig.c
-index f54ec22..0e78a83 100644
+index 467ca82..631a2a9 100644
 --- a/elf/ldconfig.c
 +++ b/elf/ldconfig.c
-@@ -167,6 +167,9 @@ static struct argp argp =
+@@ -168,6 +168,9 @@ static struct argp argp =
    options, parse_opt, NULL, doc, NULL, more_help, NULL
  };
  
@@ -80,7 +80,7 @@ index f54ec22..0e78a83 100644
     a platform.  */
  static int
 diff --git a/elf/rtld.c b/elf/rtld.c
-index 52160df..80f0582 100644
+index 647661c..4e16a43 100644
 --- a/elf/rtld.c
 +++ b/elf/rtld.c
 @@ -99,6 +99,7 @@ uintptr_t __pointer_chk_guard_local
@@ -107,7 +107,7 @@ index 52160df..80f0582 100644
        ++_dl_skip_args;
        --_dl_argc;
 diff --git a/sysdeps/generic/dl-cache.h b/sysdeps/generic/dl-cache.h
-index 70d4aeb..5c726d0 100644
+index eb2f900..505804e 100644
 --- a/sysdeps/generic/dl-cache.h
 +++ b/sysdeps/generic/dl-cache.h
 @@ -27,10 +27,6 @@
@@ -121,16 +121,6 @@ index 70d4aeb..5c726d0 100644
  #ifndef add_system_dir
  # define add_system_dir(dir) add_dir (dir)
  #endif
-Index: git/iconv/gconv_conf.c
-===================================================================
---- git.orig/iconv/gconv_conf.c
-+++ git/iconv/gconv_conf.c
-@@ -36,7 +36,7 @@
- 
- 
- /* This is the default path where we look for module lists.  */
--static const char default_gconv_path[] = GCONV_PATH;
-+static char default_gconv_path[4096] __attribute__ ((section (".gccrelocprefix"))) = GCONV_PATH;
- 
- /* The path elements, as determined by the __gconv_get_path function.
-    All path elements end in a slash.  */
+-- 
+2.8.2
+

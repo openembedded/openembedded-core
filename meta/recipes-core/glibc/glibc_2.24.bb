@@ -7,9 +7,10 @@ LIC_FILES_CHKSUM = "file://LICENSES;md5=e9a558e243b36d3209f380deb394b213 \
 
 DEPENDS += "gperf-native"
 
-SRCREV ?= "e742928c1592b43db6809db4f39e67be151cdd27"
+SRCREV ?= "1ac3eaa6bcc473a56340c24511786ff48a91293e"
 
-SRCBRANCH ?= "release/${PV}/master"
+#SRCBRANCH ?= "release/${PV}/master"
+SRCBRANCH ?= "master"
 
 GLIBC_GIT_URI ?= "git://sourceware.org/git/glibc.git"
 UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>\d+\.\d+(\.\d+)*)"
@@ -34,8 +35,8 @@ SRC_URI = "${GLIBC_GIT_URI};branch=${SRCBRANCH};name=glibc \
            file://0021-eglibc-Clear-cache-lines-on-ppc8xx.patch \
            file://0022-eglibc-Resolve-__fpscr_values-on-SH4.patch \
            file://0023-eglibc-Install-PIC-archives.patch \
-           file://0025-eglibc-Forward-port-cross-locale-generation-support.patch \
-           file://0026-When-disabling-SSE-make-sure-fpmath-is-not-set-to-us.patch \
+           file://0024-eglibc-Forward-port-cross-locale-generation-support.patch \
+           file://0025-Define-DUMMY_LOCALE_T-if-not-defined.patch \
 "
 
 SRC_URI += "\
@@ -59,8 +60,7 @@ PACKAGES_DYNAMIC = ""
 BUILD_CPPFLAGS = "-I${STAGING_INCDIR_NATIVE}"
 TARGET_CPPFLAGS = "-I${STAGING_DIR_TARGET}${includedir}"
 
-GLIBC_BROKEN_LOCALES = " _ER _ET so_ET yn_ER sid_ET tr_TR mn_MN gez_ET gez_ER bn_BD te_IN es_CR.ISO-8859-1"
-
+GLIBC_BROKEN_LOCALES = ""
 #
 # We will skip parsing glibc when target system C library selection is not glibc
 # this helps in easing out parsing for non-glibc system libraries
