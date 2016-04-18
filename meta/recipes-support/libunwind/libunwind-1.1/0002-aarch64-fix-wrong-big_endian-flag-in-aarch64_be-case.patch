@@ -1,0 +1,34 @@
+From 16e98c8cf37b006c3879ee57acc23c9af13c40d5 Mon Sep 17 00:00:00 2001
+From: Victor Kamensky <victor.kamensky@linaro.org>
+Date: Wed, 3 Dec 2014 17:35:44 -0800
+Subject: [PATCH 2/2] aarch64: fix wrong big_endian flag in aarch64_be case
+
+Upstream-Status: backport
+
+Set local_addr_space.big_endian flag according to current target
+endianness. Before it was set by memset to 0, which corresponds
+to little endian and it worked perfectly fine for aarch64.
+But it breaks aarch64_be because dwarf_readu16, dwarf_readu32,
+etc functions do not read values correctly since they operate
+with wrong idea about current target endianness.
+
+Signed-off-by: Victor Kamensky <victor.kamensky@linaro.org>
+---
+ src/aarch64/Ginit.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/src/aarch64/Ginit.c b/src/aarch64/Ginit.c
+index 0bc8997..b9181ef 100644
+--- a/src/aarch64/Ginit.c
++++ b/src/aarch64/Ginit.c
+@@ -181,6 +181,7 @@ aarch64_local_addr_space_init (void)
+   local_addr_space.acc.access_fpreg = access_fpreg;
+   local_addr_space.acc.resume = aarch64_local_resume;
+   local_addr_space.acc.get_proc_name = get_static_proc_name;
++  local_addr_space.big_endian = (__BYTE_ORDER == __BIG_ENDIAN);
+   unw_flush_cache (&local_addr_space, 0, 0);
+ }
+ 
+-- 
+1.9.1
+
