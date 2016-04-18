@@ -1,0 +1,33 @@
+From 743668f66916b6bb03c92b04be5216400951ace6 Mon Sep 17 00:00:00 2001
+From: Victor Kamensky <victor.kamensky@linaro.org>
+Date: Wed, 3 Dec 2014 17:35:43 -0800
+Subject: [PATCH 1/2] aarch64: introduce build support for aarch64_be target
+
+Upstream-Status: backport
+
+Introduce support for aarch64_be, aarch64 big endian, target.
+We would like to reuse all code that was done for aarch64
+(little endian) target. So we do similar thing that is done
+for ARM v7 (arm) target for any aarch64* arch we set it
+just to aarch64.
+
+Signed-off-by: Victor Kamensky <victor.kamensky@linaro.org>
+---
+ configure.ac | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/configure.ac b/configure.ac
+index 582e71f..c59f526 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -88,6 +88,7 @@ AC_COMPILE_IFELSE([AC_LANG_SOURCE([[
+ 
+ AC_DEFUN([SET_ARCH],[
+     AS_CASE([$1],
++        [aarch64*],[$2=aarch64],
+         [arm*],[$2=arm],
+         [i?86],[$2=x86],
+         [hppa*],[$2=hppa],
+-- 
+1.9.1
+

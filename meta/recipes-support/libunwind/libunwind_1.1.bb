@@ -8,6 +8,8 @@ SRC_URI = "${SAVANNAH_NONGNU_MIRROR}/${BPN}/${BPN}-${PV}.tar.gz \
            file://0001-Invalid-dwarf-opcodes-can-cause-references-beyond-th.patch \
            file://Add-AO_REQUIRE_CAS-to-fix-build-on-ARM-v6.patch \
            file://0001-backtrace-Use-only-with-glibc-and-uclibc.patch \
+           file://0001-aarch64-introduce-build-support-for-aarch64_be-targe.patch \
+           file://0002-aarch64-fix-wrong-big_endian-flag-in-aarch64_be-case.patch \
 "
 SRC_URI_append_libc-musl = "\
            file://0001-x86-Stub-out-x86_local_resume.patch \
