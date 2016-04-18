@@ -29,7 +29,6 @@ SRC_URI = "git://anonscm.debian.org/collab-maint/xf86-video-omapfb.git \
 
 S = "${WORKDIR}/git"
 
-EXTRA_OECONF_armv7a = " --enable-neon "
 CFLAGS += " -I${STAGING_INCDIR}/xorg "
 
 # Use overlay 2 on omap3 to enable other apps to use overlay 1 (e.g. dmai or omapfbplay)
