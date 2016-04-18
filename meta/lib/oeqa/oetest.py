@@ -7,7 +7,7 @@
 
 # It also has some helper functions and it's responsible for actually starting the tests
 
-import os, re, mmap
+import os, re, mmap, sys
 import unittest
 import inspect
 import subprocess
@@ -326,12 +326,8 @@ class TestContext(object):
             logger.info("Filter test cases by tags: %s" % self.tagexp)
         logger.info("Found %s tests" % self.suite.countTestCases())
         runner = unittest.TextTestRunner(verbosity=2)
-        try:
-            if bb.msg.loggerDefaultVerbose:
-                runner.stream.write = custom_verbose
-        except NameError:
-            # Not in bb environment?
-            pass
+        if 'bb' in sys.modules:
+            runner.stream.write = custom_verbose
 
         return runner.run(self.suite)
 
