@@ -142,7 +142,7 @@ def get_boost_parallel_make(d):
 BOOST_PARALLEL_MAKE = "${@get_boost_parallel_make(d)}"
 BJAM_OPTS    = '${BOOST_PARALLEL_MAKE} -d+2 -q \
 		${BJAM_TOOLS} \
-		-sBOOST_BUILD_USER_CONFIG=${S}/tools/build/example/user-config.jam \
+		-sBOOST_BUILD_USER_CONFIG=${WORKDIR}/user-config.jam \
 		--build-dir=${S}/${TARGET_SYS} \
 		--disable-icu \
 		${BJAM_EXTRA}'
@@ -150,22 +150,18 @@ BJAM_OPTS    = '${BOOST_PARALLEL_MAKE} -d+2 -q \
 # Native compilation of bzip2 isn't working
 BJAM_OPTS_append_class-native = ' -sNO_BZIP2=1'
 
-do_boostconfig() {
-	cp -f boost/config/platform/linux.hpp boost/config/platform/linux-gnueabi.hpp
+do_configure() {
+	cp -f ${S}/boost/config/platform/linux.hpp ${S}/boost/config/platform/linux-gnueabi.hpp
 
 	# D2194:Fixing the failure of "error: duplicate initialization of gcc with the following parameters" during compilation.
-	sed -i "/^using gcc : 4.3.1/d" ${S}/tools/build/example/user-config.jam
-	sed -i "/^using python : ${PYTHON_BASEVERSION}"/d ${S}/tools/build/example/user-config.jam
-	echo 'using gcc : 4.3.1 : ${CXX} : <cflags>"${CFLAGS}" <cxxflags>"${CXXFLAGS}" <linkflags>"${LDFLAGS}" ;' >> ${S}/tools/build/example/user-config.jam
-	echo "using python : ${PYTHON_BASEVERSION} : : ${STAGING_INCDIR}/python${PYTHON_BASEVERSION} ;" >> ${S}/tools/build/example/user-config.jam
-	echo "using python : 3.5 : : ${STAGING_INCDIR}/python3.5m ;" >> ${S}/tools/build/example/user-config.jam
+	rm -f ${WORKDIR}/user-config.jam
+	echo 'using gcc : 4.3.1 : ${CXX} : <cflags>"${CFLAGS}" <cxxflags>"${CXXFLAGS}" <linkflags>"${LDFLAGS}" ;' >> ${WORKDIR}/user-config.jam
+	echo "using python : ${PYTHON_BASEVERSION} : : ${STAGING_INCDIR}/python${PYTHON_BASEVERSION} ;" >> ${WORKDIR}/user-config.jam
+	echo "using python : 3.5 : : ${STAGING_INCDIR}/python3.5m ;" >> ${WORKDIR}/user-config.jam
 
 	CC="${BUILD_CC}" CFLAGS="${BUILD_CFLAGS}" ./bootstrap.sh --with-bjam=bjam --with-toolset=gcc --with-python-root=${PYTHON_ROOT}
-	sed -i '/^using python/d' project-config.jam
+	sed -i '/^using python/d' ${S}/project-config.jam
 }
-
-do_boostconfig[dirs] = "${S}"
-addtask do_boostconfig after do_patch before do_configure
 
 do_compile() {
 	set -ex
