@@ -67,3 +67,6 @@ create_sdk_files_append () {
 
 # buildtools-tarball doesn't need config site
 TOOLCHAIN_NEED_CONFIGSITE_CACHE = ""
+
+# The recipe doesn't need any default deps
+INHIBIT_DEFAULT_DEPS = "1"
