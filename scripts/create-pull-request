@@ -261,7 +261,13 @@ if [ -n "$BODY" ]; then
 	sed -i "/BLURB HERE/ d" "$CL"
 fi
 
-# If the user specified a subject, replace the SUBJECT token with it.
+# Set subject automatically if there is only one patch
+patch_cnt=`git log --pretty=oneline ${RELATIVE_TO}..${L_BRANCH} | wc -l`
+if [ -z "$SUBJECT" -a $patch_cnt -eq 1 ]; then
+    SUBJECT="`git log --format=%s ${RELATIVE_TO}..${L_BRANCH}`"
+fi
+
+# Replace the SUBJECT token with it.
 if [ -n "$SUBJECT" ]; then
 	sed -i -e "s/\*\*\* SUBJECT HERE \*\*\*/$SUBJECT/" "$CL"
 fi
