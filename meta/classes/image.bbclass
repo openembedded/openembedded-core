@@ -393,6 +393,8 @@ python () {
             for ctype in ctypes:
                 if bt.endswith("." + ctype):
                     type = bt[0:-len(ctype) - 1]
+                    if type.startswith("debugfs_"):
+                        type = type[8:]
                     # Create input image first.
                     gen_conversion_cmds(type)
                     localdata.setVar('type', type)
@@ -406,7 +408,7 @@ python () {
             gen_conversion_cmds(bt)
 
         localdata.setVar('type', realt)
-        if realt not in alltypes:
+        if t not in alltypes:
             rm_tmp_images.add(localdata.expand("${IMAGE_NAME}${IMAGE_NAME_SUFFIX}.${type}"))
         else:
             subimages.append(realt)
