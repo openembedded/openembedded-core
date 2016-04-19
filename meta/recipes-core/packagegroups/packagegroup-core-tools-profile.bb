@@ -59,7 +59,7 @@ LTTNGMODULES = "lttng-modules"
 
 BABELTRACE = "babeltrace"
 
-# valgrind does not work on mips
+# valgrind does not work on the following configurations/architectures
 
 VALGRIND = "valgrind"
 VALGRIND_libc-uclibc = ""
@@ -68,7 +68,9 @@ VALGRIND_mips = ""
 VALGRIND_mips64 = ""
 VALGRIND_mips64n32 = ""
 VALGRIND_nios2 = ""
-VALGRIND_arm = ""
+VALGRIND_armv4 = ""
+VALGRIND_armv5 = ""
+VALGRIND_armv6 = ""
 VALGRIND_aarch64 = ""
 
 RDEPENDS_${PN} = "\
