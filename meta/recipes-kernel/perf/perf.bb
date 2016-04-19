@@ -88,6 +88,7 @@ EXTRA_OEMAKE = '\
 '
 
 EXTRA_OEMAKE += "\
+    'DESTDIR=${D}' \
     'prefix=${prefix}' \
     'bindir=${bindir}' \
     'sharedir=${datadir}' \
@@ -110,7 +111,7 @@ do_compile() {
 do_install() {
 	# Linux kernel build system is expected to do the right thing
 	unset CFLAGS
-	oe_runmake DESTDIR=${D} install
+	oe_runmake install
 	# we are checking for this make target to be compatible with older perf versions
 	if [ "${@perf_feature_enabled('perf-scripting', 1, 0, d)}" = "1" ] && grep -q install-python_ext ${S}/tools/perf/Makefile*; then
 		oe_runmake DESTDIR=${D} install-python_ext
