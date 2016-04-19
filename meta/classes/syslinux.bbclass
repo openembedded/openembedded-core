@@ -121,7 +121,7 @@ python build_syslinux_cfg () {
     if syslinux_serial:
         cfgfile.write('SERIAL %s\n' % syslinux_serial)
 
-    menu = d.getVar('AUTO_SYSLINUXMENU', True)
+    menu = (d.getVar('AUTO_SYSLINUXMENU', True) == "1")
 
     if menu and syslinux_serial:
         cfgfile.write('DEFAULT Graphics console %s\n' % (labels.split()[0]))
