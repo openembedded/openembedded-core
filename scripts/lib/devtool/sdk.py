@@ -23,6 +23,7 @@ import shutil
 import errno
 import sys
 import tempfile
+import re
 from devtool import exec_build_env_command, setup_tinfoil, parse_recipe, DevtoolError
 
 logger = logging.getLogger('devtool')
@@ -209,6 +210,28 @@ def sdk_update(args, config, basepath, workspace):
                     logger.error("Updating %s failed" % changedfile)
                     return ret
 
+            # Check if UNINATIVE_CHECKSUM changed
+            uninative = False
+            if 'conf/local.conf' in changedfiles:
+                def read_uninative_checksums(fn):
+                    chksumitems = []
+                    with open(fn, 'r') as f:
+                        for line in f:
+                            if line.startswith('UNINATIVE_CHECKSUM'):
+                                splitline = re.split(r'[\[\]"\']', line)
+                                if len(splitline) > 3:
+                                    chksumitems.append((splitline[1], splitline[3]))
+                    return chksumitems
+
+                oldsums = read_uninative_checksums(os.path.join(basepath, 'conf/local.conf'))
+                newsums = read_uninative_checksums(os.path.join(tmpsdk_dir, 'conf/local.conf'))
+                if oldsums != newsums:
+                    uninative = True
+                    for buildarch, chksum in newsums:
+                        uninative_file = os.path.join('downloads', 'uninative', chksum, '%s-nativesdk-libc.tar.bz2' % buildarch)
+                        mkdir(os.path.join(tmpsdk_dir, os.path.dirname(uninative_file)))
+                        ret = subprocess.call("wget -q -O %s %s/%s" % (uninative_file, updateserver, uninative_file), shell=True, cwd=tmpsdk_dir)
+
             # Ok, all is well at this point - move everything over
             tmplayers_dir = os.path.join(tmpsdk_dir, 'layers')
             if os.path.exists(tmplayers_dir):
@@ -220,6 +243,9 @@ def sdk_update(args, config, basepath, workspace):
                 shutil.move(os.path.join(tmpsdk_dir, changedfile), destfile)
             os.remove(os.path.join(conf_dir, 'sdk-conf-manifest'))
             shutil.move(tmpmanifest, conf_dir)
+            if uninative:
+                shutil.rmtree(os.path.join(basepath, 'downloads', 'uninative'))
+                shutil.move(os.path.join(tmpsdk_dir, 'downloads', 'uninative'), os.path.join(basepath, 'downloads'))
 
             if not sstate_mirrors:
                 with open(os.path.join(conf_dir, 'site.conf'), 'a') as f:
