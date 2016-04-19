@@ -169,6 +169,7 @@ addtask do_boostconfig after do_patch before do_configure
 
 do_compile() {
 	set -ex
+	rm -rf ${S}/${TARGET_SYS}
 	bjam ${BJAM_OPTS} --prefix=${prefix} \
 		--exec-prefix=${exec_prefix} \
 		--libdir=${libdir} \
