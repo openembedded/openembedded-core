@@ -190,4 +190,3 @@ python build_syslinux_cfg () {
 
     cfgfile.close()
 }
-build_syslinux_cfg[vardeps] += "APPEND"
