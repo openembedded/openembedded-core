@@ -5,7 +5,7 @@ inherit clutter autotools-brokensep distro_features_check gobject-introspection
 # depends on clutter-1.0 which depends on cogl-1.0
 REQUIRED_DISTRO_FEATURES = "opengl"
 
-DEPENDS = "clutter-1.0 dbus-glib gdk-pixbuf"
+DEPENDS = "intltool-native clutter-1.0 dbus-glib gdk-pixbuf"
 
 SRC_URI = "http://source.clutter-project.org/sources/mx/${@get_verdir("${PV}")}/mx-${PV}.tar.xz"
 
