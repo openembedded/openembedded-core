@@ -39,6 +39,8 @@ Usage: $CMD [-h] [-o output_dir] [-m msg_body_file] [-s subject] [-r relative_to
   -l local branch     Local branch name (default: HEAD)
   -c                  Create an RFC (Request for Comment) patch series
   -h                  Display this help message
+  -a                  Automatically push local branch (-l) to remote branch (-b),
+                      or set CPR_CONTRIB_AUTO_PUSH in env
   -i commit_id        Ending commit (default: HEAD)
   -m msg_body_file    The file containing a blurb to be inserted into the summary email
   -o output_dir       Specify the output directory for the messages (default: pull-PID)
@@ -59,7 +61,7 @@ EOM
 }
 
 # Parse and validate arguments
-while getopts "b:cd:hi:m:o:p:r:s:u:l:" OPT; do
+while getopts "b:acd:hi:m:o:p:r:s:u:l:" OPT; do
 	case $OPT in
 	b)
 		BRANCH="$OPTARG"
@@ -127,6 +129,9 @@ while getopts "b:cd:hi:m:o:p:r:s:u:l:" OPT; do
 			;;
 		esac
 		;;
+	a)
+		CPR_CONTRIB_AUTO_PUSH="1"
+		;;
 	esac
 done
 
@@ -171,6 +176,11 @@ esac
 # Perform a sanity test on the web URL. Issue a warning if it is not
 # accessible, but do not abort as users may want to run offline.
 if [ -n "$WEB_URL" ]; then
+	if [ "$CPR_CONTRIB_AUTO_PUSH" = "1" ]; then
+		echo "Pushing '$BRANCH' on '$REMOTE' as requested..."
+		git push $REMOTE $L_BRANCH:$BRANCH
+		echo ""
+	fi
 	wget --no-check-certificate -q $WEB_URL -O /dev/null
 	if [ $? -ne 0 ]; then
 		echo "WARNING: Branch '$BRANCH' was not found on the contrib git tree."
