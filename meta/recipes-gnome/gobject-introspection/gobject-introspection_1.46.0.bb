@@ -108,6 +108,8 @@ EXTRA_OECONF_class-target += "--enable-host-gi \
                               ${@bb.utils.contains('GI_DATA_ENABLED', 'True', '--enable-introspection-data', '--disable-introspection-data', d)} \
                              "
 
+PACKAGECONFIG ?= ""
+PACKAGECONFIG[doctool] = "--enable-doctool,--disable-doctool,python-mako,"
 
 do_compile_prepend_class-target() {
         # This prevents g-ir-scanner from writing cache data to $HOME
