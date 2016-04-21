@@ -25,6 +25,7 @@ SRC_URI[md5sum] = "15a4bcbc18a9a5e8110ed955970622e6"
 SRC_URI[sha256sum] = "c530f21a15fd9c214dd92d29a6caa20fac989289267512020b6da1f5e6f5b4cb"
 
 COMPATIBLE_HOST = "(x86_64.*|i.86.*|aarch64.*|arm.*)-linux"
+COMPATIBLE_HOST_armv4 = 'null'
 
 def gnu_efi_arch(d):
     import re
