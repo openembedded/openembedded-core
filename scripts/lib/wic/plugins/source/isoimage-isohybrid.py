@@ -60,7 +60,7 @@ class IsoImagePlugin(SourcePlugin):
         """
         Create loader-specific (syslinux) config
         """
-        splash = os.path.join(cr_workdir, "/ISO/boot/splash.jpg")
+        splash = os.path.join(cr_workdir, "ISO/boot/splash.jpg")
         if os.path.exists(splash):
             splashline = "menu background splash.jpg"
         else:
@@ -105,7 +105,7 @@ class IsoImagePlugin(SourcePlugin):
                 msger.error("configfile is specified but failed to "
                         "get it from %s." % configfile)
         else:
-            splash = os.path.join(cr_workdir, "/EFI/boot/splash.jpg")
+            splash = os.path.join(cr_workdir, "EFI/boot/splash.jpg")
             if os.path.exists(splash):
                 splashline = "menu background splash.jpg"
             else:
