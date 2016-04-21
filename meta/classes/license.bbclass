@@ -181,8 +181,10 @@ def license_deployed_manifest(d):
                 key,val = line.split(": ", 1)
                 man_dic[dep][key] = val[:-1]
 
-    image_license_manifest = os.path.join(d.getVar('LICENSE_DIRECTORY', True),
-            d.getVar('IMAGE_NAME', True), 'image_license.manifest')
+    lic_manifest_dir = os.path.join(d.getVar('LICENSE_DIRECTORY', True),
+                                    d.getVar('IMAGE_NAME', True))
+    bb.utils.mkdirhier(lic_manifest_dir)
+    image_license_manifest = os.path.join(lic_manifest_dir, 'image_license.manifest')
     write_license_files(d, image_license_manifest, man_dic)
 
 def get_deployed_dependencies(d):
