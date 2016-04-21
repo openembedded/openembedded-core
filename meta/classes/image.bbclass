@@ -402,9 +402,13 @@ python () {
                     # Create input image first.
                     gen_conversion_cmds(type)
                     localdata.setVar('type', type)
-                    cmds.append("\t" + localdata.getVar("COMPRESS_CMD_" + ctype, True))
+                    cmd = "\t" + localdata.getVar("COMPRESS_CMD_" + ctype, True)
+                    if cmd not in cmds:
+                        cmds.append(cmd)
                     vardeps.add('COMPRESS_CMD_' + ctype)
-                    subimages.append(type + "." + ctype)
+                    subimage = type + "." + ctype
+                    if subimage not in subimages:
+                        subimages.append(subimage)
                     if type not in alltypes:
                         rm_tmp_images.add(localdata.expand("${IMAGE_NAME}${IMAGE_NAME_SUFFIX}.${type}"))
 
