@@ -29,7 +29,7 @@ export STAGING_LIBDIR
 export STAGING_DIR_HOST
 export B
 
-DEPENDS_append = " libffi zlib glib-2.0 python"
+DEPENDS_append = " libffi zlib glib-2.0 python flex-native bison-native"
 
 # target build needs qemu to run temporary introspection binaries created
 # on the fly by g-ir-scanner and a native version of itself to run
