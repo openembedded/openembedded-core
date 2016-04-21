@@ -68,9 +68,9 @@ RRECOMMENDS_${PN} += "${TCLIBC}-dbg"
 RDEPENDS_${PN}-ptest += " sed perl perl-module-file-glob"
 RDEPENDS_${PN}-ptest_append_libc-glibc = " glibc-utils"
 
-# One of the tests contains a bogus interpreter path on purpose, and QA
-# check complains about it
-INSANE_SKIP_${PN}-ptest += "file-rdeps"
+# One of the tests contains a bogus interpreter path on purpose.
+# Skip file dependency check
+SKIP_FILEDEPS_${PN}-ptest = '1'
 
 do_compile_ptest() {
     oe_runmake check
