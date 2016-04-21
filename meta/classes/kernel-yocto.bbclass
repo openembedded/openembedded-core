@@ -170,15 +170,20 @@ do_patch() {
 		fi
 	fi
 
-        current_branch=`git rev-parse --abbrev-ref HEAD`
-        machine_branch="${@ get_machine_branch(d, "${KBRANCH}" )}"
-        if [ "${current_branch}" != "${machine_branch}" ]; then
-            bbwarn "After meta data application, the kernel tree branch is ${current_branch}. The"
-            bbwarn "SRC_URI specified branch ${machine_branch}. The branch will be forced to ${machine_branch},"
-            bbwarn "but this means the board meta data (.scc files) do not match the SRC_URI specification."
-            bbwarn "The meta data and branch ${machine_branch} should be inspected to ensure the proper"
-            bbwarn "kernel is being built."
-            git checkout -f ${machine_branch}
+        if [ -n "${KMETA_AUDIT}" ]; then
+            current_branch=`git rev-parse --abbrev-ref HEAD`
+            machine_branch="${@ get_machine_branch(d, "${KBRANCH}" )}"
+            if [ "${current_branch}" != "${machine_branch}" ]; then
+                bbwarn "After meta data application, the kernel tree branch is ${current_branch}."
+                bbwarn "The SRC_URI specified branch ${machine_branch}."
+                bbwarn ""
+                bbwarn "The branch will be forced to ${machine_branch}, but this means the board meta data"
+                bbwarn "(.scc files) do not match the SRC_URI specification."
+                bbwarn ""
+                bbwarn "The meta data and branch ${machine_branch} should be inspected to ensure the proper"
+                bbwarn "kernel is being built."
+                git checkout -f ${machine_branch}
+            fi
         fi
 
 	if [ "${machine_srcrev}" != "AUTOINC" ]; then
