@@ -738,6 +738,10 @@ DESCRIPTION
                  in bootloader configuration before running wic. In this case .wks file can
                  be generated or modified to set preconfigured parition UUID using this option.
 
+         --system-id: This option is specific to wic. It specifies partition system id. It's useful
+                      for the harware that requires non-default partition system ids. The parameter
+                      in one byte long hex number either with 0x prefix or without it.
+
     * bootloader
 
       This command allows the user to specify various bootloader
