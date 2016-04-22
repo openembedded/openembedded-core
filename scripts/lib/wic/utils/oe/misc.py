@@ -43,6 +43,7 @@ NATIVE_RECIPES = {"mcopy": "mtools",
                   "mksquashfs": "squashfs-tools",
                   "mkswap": "util-linux",
                   "parted": "parted",
+                  "sfdisk": "util-linux",
                   "sgdisk": "gptfdisk",
                   "syslinux": "syslinux"
                  }
