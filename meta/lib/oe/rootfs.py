@@ -122,7 +122,7 @@ class Rootfs(object):
         bb.note("  Copying back package database...")
         for dir in dirs:
             bb.utils.mkdirhier(self.image_rootfs + os.path.dirname(dir))
-            shutil.copytree(self.image_rootfs + '-orig' + dir, self.image_rootfs + dir)
+            shutil.copytree(self.image_rootfs + '-orig' + dir, self.image_rootfs + dir, symlinks=True)
 
         cpath = oe.cachedpath.CachedPath()
         # Copy files located in /usr/lib/debug or /usr/src/debug
@@ -907,7 +907,7 @@ class OpkgRootfs(DpkgOpkgRootfs):
 
         self.pm.install_complementary()
 
-        self._setup_dbg_rootfs(['/var/lib/opkg'])
+        self._setup_dbg_rootfs(['/etc', '/var/lib/opkg'])
 
         execute_pre_post_process(self.d, opkg_post_process_cmds)
 
