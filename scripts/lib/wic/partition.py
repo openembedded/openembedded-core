@@ -57,6 +57,7 @@ class Partition(object):
         self.size = args.size
         self.source = args.source
         self.sourceparams = args.sourceparams
+        self.system_id = args.system_id
         self.use_uuid = args.use_uuid
         self.uuid = args.uuid
         if args.use_uuid and not self.uuid:
