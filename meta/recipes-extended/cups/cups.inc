@@ -44,6 +44,7 @@ EXTRA_OECONF = " \
                --without-perl \
                --without-python \
                --without-java \
+               DSOFLAGS='${LDFLAGS}' \
                "
 
 EXTRA_AUTORECONF += "--exclude=autoheader"
