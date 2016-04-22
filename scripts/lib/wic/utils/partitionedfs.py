@@ -110,7 +110,8 @@ class Image(object):
                 'align': align, # Partition alignment
                 'no_table' : no_table, # Partition does not appear in partition table
                 'part_type' : part_type, # Partition type
-                'uuid': uuid} # Partition UUID
+                'uuid': uuid, # Partition UUID
+                'system_id': system_id} # Partition system id
 
         self.__add_partition(part)
 
@@ -309,6 +310,10 @@ class Image(object):
                             (flag_name, part['num'], disk['disk'].device))
                 exec_native_cmd("parted -s %s set %d %s on" % \
                                 (disk['disk'].device, part['num'], flag_name),
+                                self.native_sysroot)
+            if part['system_id']:
+                exec_native_cmd("sfdisk --part-type %s %s %s" % \
+                                (disk['disk'].device, part['num'], part['system_id']),
                                 self.native_sysroot)
 
             # Parted defaults to enabling the lba flag for fat16 partitions,
