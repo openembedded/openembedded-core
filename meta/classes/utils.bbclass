@@ -24,6 +24,7 @@ def base_version_less_or_equal(variable, checkvalue, truevalue, falsevalue, d):
     return oe.utils.version_less_or_equal(variable, checkvalue, truevalue, falsevalue, d)
 
 def base_contains(variable, checkvalues, truevalue, falsevalue, d):
+    bb.note('base_contains is deprecated, please use bb.utils.contains instead.')
     return bb.utils.contains(variable, checkvalues, truevalue, falsevalue, d)
 
 def base_both_contain(variable1, variable2, checkvalue, d):
