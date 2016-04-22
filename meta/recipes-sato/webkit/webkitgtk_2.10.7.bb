@@ -34,8 +34,8 @@ DEPENDS = "zlib libsoup-2.4 curl libxml2 cairo libxslt libxt libidn gnutls \
 	   ruby-native libnotify gstreamer1.0-plugins-bad \
           "
 
-PACKAGECONFIG ??= "${@base_contains('DISTRO_FEATURES', 'x11', 'x11', 'wayland' ,d)} \
-                   ${@base_contains('DISTRO_FEATURES', 'opengl', 'webgl', '' ,d)} \
+PACKAGECONFIG ??= "${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'x11', 'wayland' ,d)} \
+                   ${@bb.utils.contains('DISTRO_FEATURES', 'opengl', 'webgl', '' ,d)} \
                    enchant \
                    gtk2 \
                    libsecret \

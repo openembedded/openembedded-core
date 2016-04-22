@@ -26,7 +26,7 @@ S = "${WORKDIR}/DirectFB-${PV}"
 LDFLAGS_append =" -lts -lm"
 
 # Workaround for linking issues seen with armv7a + gold
-LDFLAGS_append_arm = "${@base_contains('DISTRO_FEATURES', 'ld-is-gold', ' -fuse-ld=bfd ', '', d)}"
+LDFLAGS_append_arm = "${@bb.utils.contains('DISTRO_FEATURES', 'ld-is-gold', ' -fuse-ld=bfd ', '', d)}"
 
 BINCONFIG = "${bindir}/directfb-config"
 
