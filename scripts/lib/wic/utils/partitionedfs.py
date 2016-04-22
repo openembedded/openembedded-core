@@ -87,7 +87,7 @@ class Image(object):
 
     def add_partition(self, size, disk_name, mountpoint, source_file=None, fstype=None,
                       label=None, fsopts=None, boot=False, align=None, no_table=False,
-                      part_type=None, uuid=None):
+                      part_type=None, uuid=None, system_id=None):
         """ Add the next partition. Prtitions have to be added in the
         first-to-last order. """
 
