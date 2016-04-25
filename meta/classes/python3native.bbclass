@@ -1,6 +1,4 @@
-PYTHON_BASEVERSION = "3.5"
-
-inherit python-dir
+inherit python3-dir
 
 PYTHON="${STAGING_BINDIR_NATIVE}/${PYTHON_PN}-native/${PYTHON_PN}"
 EXTRANATIVEPATH += "${PYTHON_PN}-native"
