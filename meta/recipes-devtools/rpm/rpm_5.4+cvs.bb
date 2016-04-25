@@ -156,7 +156,7 @@ SRC_URI_append_libc-musl = "\
 # to process certain package feeds.
 #SRC_URI += "file://rpm-debug-platform.patch"
 
-inherit autotools gettext
+inherit autotools gettext python-dir
 
 acpaths = "-I ${S}/db/dist/aclocal -I ${S}/db/dist/aclocal_java"
 

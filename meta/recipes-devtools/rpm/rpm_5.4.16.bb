@@ -165,7 +165,7 @@ SRC_URI_append_libc-musl = "\
 
 UPSTREAM_CHECK_REGEX = "rpm-(?P<pver>(\d+[\.\-_]*)+)-.*$"
 
-inherit autotools gettext
+inherit autotools gettext python-dir
 
 acpaths = "-I ${S}/db/dist/aclocal -I ${S}/db/dist/aclocal_java"
 
