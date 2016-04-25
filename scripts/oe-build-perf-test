@@ -1,0 +1,51 @@
+#!/usr/bin/python3
+#
+# Build performance test script
+#
+# Copyright (c) 2016, Intel Corporation.
+#
+# This program is free software; you can redistribute it and/or modify it
+# under the terms and conditions of the GNU General Public License,
+# version 2, as published by the Free Software Foundation.
+#
+# This program is distributed in the hope it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+# FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+# more details.
+#
+"""Build performance test script"""
+import argparse
+import logging
+import sys
+
+
+# Set-up logging
+LOG_FORMAT = '[%(asctime)s] %(levelname)s: %(message)s'
+logging.basicConfig(level=logging.INFO, format=LOG_FORMAT)
+log = logging.getLogger()
+
+
+def parse_args(argv):
+    """Parse command line arguments"""
+    parser = argparse.ArgumentParser(
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+
+    parser.add_argument('-D', '--debug', action='store_true',
+                        help='Enable debug level logging')
+
+    return parser.parse_args(argv)
+
+
+def main(argv=None):
+    """Script entry point"""
+    args = parse_args(argv)
+
+    if args.debug:
+        log.setLevel(logging.DEBUG)
+
+    return 0
+
+
+if __name__ == '__main__':
+    sys.exit(main())
+
