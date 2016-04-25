@@ -411,7 +411,8 @@ PARALLEL_MAKE = "-j 1"
 DL_DIR = "${TOPDIR}/download1"
 TIME = "111111"
 DATE = "20161111"
-INHERIT_remove = "buildstats-summary buildhistory"
+INHERIT_remove = "buildstats-summary buildhistory uninative"
+http_proxy = ""
 """)
         self.track_for_cleanup(topdir + "/tmp-sstatesamehash")
         bitbake("world meta-toolchain -S none")
@@ -422,7 +423,10 @@ PARALLEL_MAKE = "-j 2"
 DL_DIR = "${TOPDIR}/download2"
 TIME = "222222"
 DATE = "20161212"
+# Always remove uninative as we're changing proxies
+INHERIT_remove = "uninative"
 INHERIT += "buildstats-summary buildhistory"
+http_proxy = "http://example.com/"
 """)
         self.track_for_cleanup(topdir + "/tmp-sstatesamehash2")
         bitbake("world meta-toolchain -S none")
