@@ -9,6 +9,10 @@ LIC_FILES_CHKSUM = "file://LICENSES;md5=e9a558e243b36d3209f380deb394b213 \
       file://COPYING.LIB;md5=4fbd65380cdd255951079008b364516c"
 
 
+# Tell autotools that we're working in the localedef directory
+#
+AUTOTOOLS_SCRIPT_PATH = "${S}/localedef"
+
 inherit native
 inherit autotools
 
@@ -46,11 +50,6 @@ S = "${WORKDIR}/git"
 
 EXTRA_OECONF = "--with-glibc=${S}"
 CFLAGS += "-fgnu89-inline -std=gnu99 -DIS_IN\(x\)='0'"
-
-do_configure () {
-	${S}/localedef/configure ${EXTRA_OECONF}
-}
-
 
 do_install() {
 	install -d ${D}${bindir}
