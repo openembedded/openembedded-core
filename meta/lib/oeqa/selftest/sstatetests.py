@@ -415,6 +415,7 @@ INHERIT_remove = "buildstats-summary buildhistory uninative"
 http_proxy = ""
 """)
         self.track_for_cleanup(topdir + "/tmp-sstatesamehash")
+        self.track_for_cleanup(topdir + "/download1")
         bitbake("world meta-toolchain -S none")
         self.write_config("""
 TMPDIR = "${TOPDIR}/tmp-sstatesamehash2"
@@ -429,6 +430,7 @@ INHERIT += "buildstats-summary buildhistory"
 http_proxy = "http://example.com/"
 """)
         self.track_for_cleanup(topdir + "/tmp-sstatesamehash2")
+        self.track_for_cleanup(topdir + "/download2")
         bitbake("world meta-toolchain -S none")
 
         def get_files(d):
