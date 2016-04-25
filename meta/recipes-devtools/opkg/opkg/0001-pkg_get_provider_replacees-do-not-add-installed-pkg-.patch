@@ -1,0 +1,112 @@
+From c5acac4ca0633088ea3f2d92dc236a43593e13b7 Mon Sep 17 00:00:00 2001
+From: Alejandro del Castillo <alejandro.delcastillo@ni.com>
+Date: Tue, 12 Jan 2016 17:12:18 -0600
+Subject: [PATCH] pkg_get_provider_replacees: do not add installed pkg to
+ replacee list
+
+If package A replaces provider B, and B is provided by A,
+pkg_get_provider_replacees incorrectly adds A to the list of B replacees
+when A is installed. During an upgrade, pacakge A is removed during
+pkg_remove_installed_replacees, then once more during the package
+upgrade.
+
+Add check to skip the insertion of package A into the replacees vector
+in pkg_get_provider_replacees.
+
+Signed-off-by: Alejandro del Castillo <alejandro.delcastillo@ni.com>
+---
+ libopkg/opkg_install.c     | 13 +++++++++----
+ tests/Makefile             |  1 +
+ tests/regress/issue8913.py | 44 ++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 54 insertions(+), 4 deletions(-)
+ create mode 100755 tests/regress/issue8913.py
+
+diff --git a/libopkg/opkg_install.c b/libopkg/opkg_install.c
+index dbfafa5..c2db870 100644
+--- a/libopkg/opkg_install.c
++++ b/libopkg/opkg_install.c
+@@ -427,10 +427,15 @@ static void pkg_get_provider_replacees(pkg_t * pkg,
+             continue;
+         for (j = 0; j < ap->pkgs->len; j++) {
+             pkg_t *replacee = ap->pkgs->pkgs[j];
+-            int installed = (replacee->state_status == SS_INSTALLED)
+-                    || (replacee->state_status == SS_UNPACKED);
+-            if (installed)
+-                pkg_vec_insert(replacees, replacee);
++            pkg_t *old = pkg_hash_fetch_installed_by_name(pkg->name);
++            /* skip pkg if installed: it  will be removed during upgrade
++             * issue 8913 */
++            if (old != replacee) {
++                int installed = (replacee->state_status == SS_INSTALLED)
++                        || (replacee->state_status == SS_UNPACKED);
++                if (installed)
++                    pkg_vec_insert(replacees, replacee);
++            }
+         }
+     }
+ }
+diff --git a/tests/Makefile b/tests/Makefile
+index 707434f..d01e97b 100644
+--- a/tests/Makefile
++++ b/tests/Makefile
+@@ -39,6 +39,7 @@ REGRESSION_TESTS := core/01_install.py \
+ 		    regress/issue127.py \
+ 		    regress/issue152.py \
+ 		    regress/issue154.py \
++		    regress/issue8913.py \
+ 		    misc/filehash.py \
+ 		    misc/update_loses_autoinstalled_flag.py
+ RUN_TESTS := $(REGRESSION_TESTS:%.py=run-%.py)
+diff --git a/tests/regress/issue8913.py b/tests/regress/issue8913.py
+new file mode 100755
+index 0000000..aaa940f
+--- /dev/null
++++ b/tests/regress/issue8913.py
+@@ -0,0 +1,44 @@
++#! /usr/bin/env python3
++#
++# Reporter: alejandro.delcastillo@ni.com
++#
++# What steps will reproduce the problem?
++# ======================================
++#
++# 1.- Create package a (v 1.0) that Provides b and c, Replaces b, Conflicts with b.
++#         install it
++# 2.- Create package a (v 2.0) that Provides b and c, Replaces b, Conflicts with b.
++#         upgrade
++#
++# What is the expected output? What do you see instead?
++# =====================================================
++#
++# Upgrade fails
++#
++
++import os
++import opk, cfg, opkgcl
++
++opk.regress_init()
++
++o = opk.OpkGroup()
++o.add(Package="a", Version="1.0", Provides="b, c", Replaces="b", Conflicts="b")
++o.write_opk()
++o.write_list()
++
++opkgcl.update()
++
++opkgcl.install("a", "--force-postinstall")
++
++o = opk.OpkGroup()
++o.add(Package="a", Version="2.0", Provides="b, c", Replaces="b", Conflicts="b")
++o.write_opk()
++o.write_list()
++
++opkgcl.update()
++status = opkgcl.upgrade("--force-postinstall")
++
++if not opkgcl.is_installed("a", "2.0"):
++	opk.fail("New version of package 'a' available during upgrade but was not installed")
++
++opkgcl.remove("a")
+-- 
+2.8.0
+

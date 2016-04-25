@@ -21,6 +21,7 @@ SRC_URI = "http://downloads.yoctoproject.org/releases/${BPN}/${BPN}-${PV}.tar.gz
            file://0002-md5-Add-md5_to_string-function.patch \
            file://0003-sha256-Add-sha256_to_string-function.patch \
            file://0004-opkg_download-Use-short-cache-file-name.patch \
+           file://0001-pkg_get_provider_replacees-do-not-add-installed-pkg-.patch \
 "
 
 SRC_URI[md5sum] = "3412cdc71d78b98facc84b19331ec64e"
