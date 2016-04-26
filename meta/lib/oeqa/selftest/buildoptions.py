@@ -199,65 +199,6 @@ class BuildhistoryTests(BuildhistoryBase):
         self.run_buildhistory_operation(target, target_config="PR = \"r1\"", change_bh_location=True)
         self.run_buildhistory_operation(target, target_config="PR = \"r0\"", change_bh_location=False, expect_error=True, error_regex=error)
 
-    @testcase(1386)
-    def test_buildhistory_does_not_change_signatures(self):
-        """
-        Summary:     Ensure that buildhistory does not change signatures
-        Expected:    Only 'do_rootfs' task should be rerun
-        Product:     oe-core
-        Author:      Daniel Istrate <daniel.alexandrux.istrate@intel.com>
-        AutomatedBy: Daniel Istrate <daniel.alexandrux.istrate@intel.com>
-        """
-
-        tmpdir1_name = 'tmpsig1'
-        tmpdir2_name = 'tmpsig2'
-        builddir = os.environ.get('BUILDDIR')
-        tmpdir1 = os.path.join(builddir, tmpdir1_name)
-        tmpdir2 = os.path.join(builddir, tmpdir2_name)
-
-        self.track_for_cleanup(tmpdir1)
-        self.track_for_cleanup(tmpdir2)
-
-        features = 'TMPDIR = "%s"\n' % tmpdir1
-        self.write_config(features)
-        bitbake('core-image-minimal -S none -c rootfs')
-
-        features = 'TMPDIR = "%s"\n' % tmpdir2
-        features += 'INHERIT += "buildhistory"\n'
-        self.write_config(features)
-        bitbake('core-image-minimal -S none -c rootfs')
-
-        def get_files(d):
-            f = []
-            for root, dirs, files in os.walk(d):
-                for name in files:
-                    f.append(os.path.join(root, name))
-            return f
-
-        files1 = get_files(tmpdir1 + '/stamps')
-        files2 = get_files(tmpdir2 + '/stamps')
-        files2 = [x.replace(tmpdir2_name, tmpdir1_name) for x in files2]
-
-        f1 = set(files1)
-        f2 = set(files2)
-        sigdiff = f1 - f2
-
-        self.assertEqual(len(sigdiff), 1, 'Expected 1 signature differences. Out: %s' % list(sigdiff))
-
-        unexpected_diff = []
-
-        # No new signatures should appear apart from do_rootfs
-        found_do_rootfs_flag = False
-
-        for sig in sigdiff:
-            if 'do_rootfs' in sig:
-                found_do_rootfs_flag = True
-            else:
-                unexpected_diff.append(sig)
-
-        self.assertTrue(found_do_rootfs_flag, 'Task do_rootfs did not rerun.')
-        self.assertFalse(unexpected_diff, 'Found unexpected signature differences. Out: %s' % unexpected_diff)
-
 
 class BuildImagesTest(oeSelfTest):
     @testcase(563)
