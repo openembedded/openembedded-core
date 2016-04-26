@@ -57,5 +57,5 @@ RDEPENDS_${PN}-apps = "\
 
 SUMMARY_${PN}-games = "Sato desktop - games"
 RDEPENDS_${PN}-games = "\
-    oh-puzzles \
+    puzzles \
     "
