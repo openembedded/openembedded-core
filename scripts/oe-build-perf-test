@@ -22,6 +22,7 @@ import sys
 sys.path.insert(0, os.path.dirname(os.path.realpath(__file__)) + '/lib')
 import scriptpath
 scriptpath.add_oe_lib_path()
+from oeqa.buildperf import KernelDropCaches
 from oeqa.utils.commands import runCmd
 
 
@@ -70,6 +71,9 @@ def main(argv=None):
 
     if not pre_run_sanity_check():
         return 1
+
+    # Check our capability to drop caches and ask pass if needed
+    KernelDropCaches.check()
 
     return 0
 

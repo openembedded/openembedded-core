@@ -10,3 +10,4 @@
 # more details.
 #
 """Build performance tests"""
+from .base import KernelDropCaches
