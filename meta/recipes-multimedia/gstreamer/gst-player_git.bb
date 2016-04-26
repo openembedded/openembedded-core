@@ -2,11 +2,10 @@ SUMMARY = "GStreamer playback helper library and examples"
 LICENSE = "LGPL-2.0+"
 LIC_FILES_CHKSUM = "file://lib/gst/player/gstplayer.c;beginline=1;endline=19;md5=03aeca9d8295f811817909075a15ff65"
 
-DEPENDS = "glib-2.0 gstreamer1.0 gstreamer1.0-plugins-base gtk+"
+DEPENDS = "glib-2.0 gstreamer1.0 gstreamer1.0-plugins-base gtk+3"
 
 SRC_URI = "git://github.com/sdroege/gst-player.git \
            file://filechooser.patch \
-           file://gtk2.patch \
            file://Fix-pause-play.patch \
            file://Add-error-signal-emission-for-missing-plugins.patch \
            file://gst-player.desktop"
@@ -17,7 +16,7 @@ S = "${WORKDIR}/git"
 
 inherit autotools gtk-doc lib_package pkgconfig distro_features_check gobject-introspection
 
-ANY_OF_DISTRO_FEATURES = "${GTK2DISTROFEATURES}"
+ANY_OF_DISTRO_FEATURES = "${GTK3DISTROFEATURES}"
 
 do_configure_prepend() {
 	touch ${S}/ChangeLog
