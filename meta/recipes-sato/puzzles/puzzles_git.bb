@@ -23,15 +23,27 @@ S = "${WORKDIR}/git"
 
 inherit autotools-brokensep distro_features_check pkgconfig
 
-PACKAGECONFIG ??= "gtk2"
+PACKAGECONFIG ??= "gtk3"
 PACKAGECONFIG[gtk2] = "--with-gtk=2,,gtk+,"
 PACKAGECONFIG[gtk3] = "--with-gtk=3,,gtk+3,"
+
+PACKAGES += "${PN}-extra"
+FILES_${PN} = ""
+FILES_${PN}-extra = "${prefix}/bin ${datadir}/applications"
+
+python __anonymous () {
+    var = bb.data.expand("FILES_${PN}", d, 1)
+    data = d.getVar(var, True)
+    for name in ("bridges", "fifteen", "inertia", "map", "samegame", "slant"):
+        data = data + " ${prefix}/bin/%s" % name
+        data = data + " ${datadir}/applications/%s.desktop" % name
+    d.setVar(var, data)
+}
+
 
 do_configure_prepend () {
     ./mkfiles.pl
 }
-
-FILES_${PN} = "${prefix}/bin/* ${datadir}/applications/*"
 
 do_install () {
     rm -rf ${D}/*
