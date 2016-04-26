@@ -69,6 +69,15 @@ do_compile_prepend () {
 	mkdir -p ${B}/src
 }
 
+do_install_class-native() {
+	autotools_do_install
+	# remove groups to fix conflict with shadow-native
+	rm -f ${D}${STAGING_BINDIR_NATIVE}/groups
+	# The return is a must since native doesn't need the
+	# do_install_append() in the below.
+	return
+}
+
 do_install_append() {
 	for i in df mktemp base64; do mv ${D}${bindir}/$i ${D}${bindir}/$i.${BPN}; done
 
@@ -89,11 +98,6 @@ do_install_append() {
 	# prebuilt man pages don't do a separate man page for [ vs test.
 	# see comment above r.e. sed and update-alternatives
 	cp -a ${D}${mandir}/man1/test.1 ${D}${mandir}/man1/lbracket.1.${BPN}
-}
-
-do_install_append_class-native(){
-	# remove groups to fix conflict with shadow-native
-	rm -f ${D}${STAGING_BINDIR_NATIVE}/groups
 }
 
 inherit update-alternatives
