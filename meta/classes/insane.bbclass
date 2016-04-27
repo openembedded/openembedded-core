@@ -672,7 +672,9 @@ def package_qa_check_symlink_to_sysroot(path, name, d, elf, messages):
                 trimmed = path.replace(os.path.join (d.getVar("PKGDEST", True), name), "")
                 package_qa_add_message(messages, "symlink-to-sysroot", "Symlink %s in %s points to TMPDIR" % (trimmed, name))
 
-def package_qa_check_license(d):
+# Check license variables
+do_populate_lic[postfuncs] += "populate_lic_qa_checksum"
+python populate_lic_qa_checksum() {
     """
     Check for changes in the license files 
     """
@@ -753,6 +755,7 @@ def package_qa_check_license(d):
                 msg = pn + ": LIC_FILES_CHKSUM is not specified for " +  url
                 msg = msg + "\n" + pn + ": The md5 checksum is " + md5chksum
             package_qa_handle_error("license-checksum", msg, d)
+}
 
 def package_qa_check_staged(path,d):
     """
@@ -1208,12 +1211,6 @@ Rerun configure task after fixing this.""")
 Missing inherit gettext?""" % (gt, config))
 
     ###########################################################################
-    # Check license variables
-    ###########################################################################
-
-    package_qa_check_license(d)
-
-    ###########################################################################
     # Check unrecognised configure options (with a white list)
     ###########################################################################
     if bb.data.inherits_class("autotools", d):
@@ -1261,8 +1258,8 @@ python do_qa_unpack() {
 #addtask qa_staging after do_populate_sysroot before do_build
 do_populate_sysroot[postfuncs] += "do_qa_staging "
 
-# Check broken config.log files, for packages requiring Gettext which don't
-# have it in DEPENDS and for correct LIC_FILES_CHKSUM
+# Check broken config.log files, for packages requiring Gettext which
+# don't have it in DEPENDS.
 #addtask qa_configure after do_configure before do_compile
 do_configure[postfuncs] += "do_qa_configure "
 
