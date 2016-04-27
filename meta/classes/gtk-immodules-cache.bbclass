@@ -15,7 +15,8 @@ if [ "x$D" != "x" ]; then
             ${@qemu_run_binary(d, '$D', '${bindir}/gtk-query-immodules-2.0')} \
                 $IMFILES > $D${libdir}/gtk-2.0/2.10.0/immodules.cache 2>/dev/null &&
                 sed -i -e "s:$D::" $D${libdir}/gtk-2.0/2.10.0/immodules.cache
-        elif [ -x $D${bindir}/gtk-query-immodules-3.0 ]; then
+        fi
+        if [ -x $D${bindir}/gtk-query-immodules-3.0 ]; then
             IMFILES=$(ls $D${libdir}/gtk-3.0/*/immodules/*.so)
             ${@qemu_run_binary(d, '$D', '${bindir}/gtk-query-immodules-3.0')} \
                 $IMFILES > $D${libdir}/gtk-3.0/3.0.0/immodules.cache 2>/dev/null &&
@@ -40,7 +41,8 @@ if [ "x$D" != "x" ]; then
             ${@qemu_run_binary(d, '$D', '${bindir}/gtk-query-immodules-2.0')} \
                 $IMFILES > $D${libdir}/gtk-2.0/2.10.0/immodules.cache 2>/dev/null &&
                 sed -i -e "s:$D::" $D${libdir}/gtk-2.0/2.10.0/immodules.cache
-        elif [ -x $D${bindir}/gtk-query-immodules-3.0 ]; then
+        fi
+        if [ -x $D${bindir}/gtk-query-immodules-3.0 ]; then
             IMFILES=$(ls $D${libdir}/gtk-3.0/*/immodules/*.so)
             ${@qemu_run_binary(d, '$D', '${bindir}/gtk-query-immodules-3.0')} \
                 $IMFILES > $D${libdir}/gtk-3.0/3.0.0/immodules.cache 2>/dev/null &&
