@@ -12,7 +12,6 @@ RDEPENDS_${PN}-dev = ""
 
 SRC_URI = "http://dbus.freedesktop.org/releases/dbus/dbus-${PV}.tar.gz \
            file://tmpdir.patch \
-           file://dbus-1.init  \
            file://run-ptest \
            file://python-config.patch \
            file://clear-guid_from_server-if-send_negotiate_unix_f.patch \
@@ -49,13 +48,11 @@ do_install() {
 
 do_install_ptest() {
 	install -d ${D}${PTEST_PATH}/test
-	case1="shell printf refs syslog"
-	for i in ${case1}; do install ${B}/test/test-$i ${D}${PTEST_PATH}/test; done
-	case2="marshal syntax corrupt dbus-daemon dbus-daemon-eavesdrop loopback relay"
-	for i in ${case2}; do install ${B}/test/.libs/test-$i ${D}${PTEST_PATH}/test; done
-	case3="bus bus-system bus-launch-helper"
-	for i in ${case3}; do install ${B}/bus/test-$i ${D}${PTEST_PATH}/test; done
-	install ${B}/dbus/test-dbus ${D}${PTEST_PATH}/test
+	l="shell printf refs syslog marshal syntax corrupt dbus-daemon dbus-daemon-eavesdrop loopback relay"
+	for i in $l; do install ${B}/test/.libs/test-$i ${D}${PTEST_PATH}/test; done
+	l="bus bus-system bus-launch-helper"
+	for i in $l; do install ${B}/bus/.libs/test-$i ${D}${PTEST_PATH}/test; done
+	install ${B}/dbus/.libs/test-dbus ${D}${PTEST_PATH}/test
 	cp -r ${B}/test/data ${D}${PTEST_PATH}/test
 }
 RDEPENDS_${PN}-ptest += "bash"
