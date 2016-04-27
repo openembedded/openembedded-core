@@ -149,7 +149,7 @@ def npm_split_package_dirs(pkgdir):
                 if os.path.exists(pkgfile):
                     with open(pkgfile, 'r') as f:
                         data = json.loads(f.read())
-                packages[pkgname] = (relpth, data)
+                    packages[pkgname] = (relpth, data)
     # We want the main package for a module sorted *after* its subpackages
     # (so that it doesn't otherwise steal the files for the subpackage), so
     # this is a cheap way to do that whilst still having an otherwise
