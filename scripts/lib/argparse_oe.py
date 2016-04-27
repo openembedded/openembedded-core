@@ -27,15 +27,20 @@ class ArgumentParser(argparse.ArgumentParser):
 
     def error_subcommand(self, message, subcommand):
         if subcommand:
-            for action in self._actions:
-                if isinstance(action, argparse._SubParsersAction):
-                    for choice, subparser in action.choices.items():
-                        if choice == subcommand:
-                            subparser.error(message)
-                            return
+            action = self._get_subparser_action()
+            try:
+                subparser = action._name_parser_map[subcommand]
+            except KeyError:
+                self.error('no subparser for name "%s"' % subcommand)
+            else:
+                subparser.error(message)
+
         self.error(message)
 
     def add_subparsers(self, *args, **kwargs):
+        if 'dest' not in kwargs:
+            kwargs['dest'] = '_subparser_name'
+
         ret = super(ArgumentParser, self).add_subparsers(*args, **kwargs)
         # Need a way of accessing the parent parser
         ret._parent_parser = self
@@ -47,6 +52,38 @@ class ArgumentParser(argparse.ArgumentParser):
 
     def add_subparser_group(self, groupname, groupdesc, order=0):
         self._subparser_groups[groupname] = (groupdesc, order)
+
+    def parse_args(self, args=None, namespace=None):
+        """Parse arguments, using the correct subparser to show the error."""
+        args, argv = self.parse_known_args(args, namespace)
+        if argv:
+            message = 'unrecognized arguments: %s' % ' '.join(argv)
+            if self._subparsers:
+                subparser = self._get_subparser(args)
+                subparser.error(message)
+            else:
+                self.error(message)
+            sys.exit(2)
+        return args
+
+    def _get_subparser(self, args):
+        action = self._get_subparser_action()
+        if action.dest == argparse.SUPPRESS:
+            self.error('cannot get subparser, the subparser action dest is suppressed')
+
+        name = getattr(args, action.dest)
+        try:
+            return action._name_parser_map[name]
+        except KeyError:
+            self.error('no subparser for name "%s"' % name)
+
+    def _get_subparser_action(self):
+        if not self._subparsers:
+            self.error('cannot return the subparser action, no subparsers added')
+
+        for action in self._subparsers._group_actions:
+            if isinstance(action, argparse._SubParsersAction):
+                return action
 
 
 class ArgumentSubParser(ArgumentParser):
