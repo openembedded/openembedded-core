@@ -16,8 +16,13 @@ class ArgumentParser(argparse.ArgumentParser):
         super(ArgumentParser, self).__init__(*args, **kwargs)
 
     def error(self, message):
-        sys.stderr.write('ERROR: %s\n' % message)
-        self.print_help()
+        """error(message: string)
+
+        Prints a help message incorporating the message to stderr and
+        exits.
+        """
+        self._print_message('%s: error: %s\n' % (self.prog, message), sys.stderr)
+        self.print_help(sys.stderr)
         sys.exit(2)
 
     def error_subcommand(self, message, subcommand):
