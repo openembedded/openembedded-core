@@ -5,7 +5,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=a916467b91076e631dd8edb7424769c7"
 
 inherit autotools pkgconfig gnomebase distutils-base gobject-introspection
 
-DEPENDS += "python glib-2.0 gnome-common"
+DEPENDS += "python glib-2.0"
 
 SRCNAME="pygobject"
 SRC_URI = " \
