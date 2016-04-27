@@ -35,6 +35,7 @@ SRC_URI = "\
      file://0015-Fix-dynamic-list-so-that-symbols-not-in-the-list-are.patch \
      file://binutils-octeon3.patch \
      file://add-thunderx-support-for-gas.patch \
+     file://fix-internal-error-when-applying-TLSDESC-relocs-without-TLS-segment.patch \
      "
 S  = "${WORKDIR}/git"
 
