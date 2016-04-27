@@ -45,7 +45,7 @@ class NpmRecipeHandler(RecipeHandler):
             license = data['license']
             if isinstance(license, dict):
                 license = license.get('type', None)
-        return None
+        return license
 
     def _shrinkwrap(self, srctree, localfilesdir, extravalues, lines_before):
         try:

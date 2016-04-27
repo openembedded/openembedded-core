@@ -854,7 +854,7 @@ def split_pkg_licenses(licvalues, packages, outlines, fallback_licenses=None, pn
             pkglicenses[pn].append(license)
     outlicenses = {}
     for pkgname in packages:
-        license = ' '.join(list(set(pkglicenses.get(pkgname, ['Unknown']))))
+        license = ' '.join(list(set(pkglicenses.get(pkgname, ['Unknown'])))) or 'Unknown'
         if license == 'Unknown' and pkgname in fallback_licenses:
             license = fallback_licenses[pkgname]
         outlines.append('LICENSE_%s = "%s"' % (pkgname, license))
