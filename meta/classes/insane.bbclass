@@ -672,7 +672,7 @@ def package_qa_check_symlink_to_sysroot(path, name, d, elf, messages):
                 trimmed = path.replace(os.path.join (d.getVar("PKGDEST", True), name), "")
                 package_qa_add_message(messages, "symlink-to-sysroot", "Symlink %s in %s points to TMPDIR" % (trimmed, name))
 
-def package_qa_check_license(workdir, d):
+def package_qa_check_license(d):
     """
     Check for changes in the license files 
     """
@@ -1211,7 +1211,7 @@ Missing inherit gettext?""" % (gt, config))
     # Check license variables
     ###########################################################################
 
-    package_qa_check_license(workdir, d)
+    package_qa_check_license(d)
 
     ###########################################################################
     # Check unrecognised configure options (with a white list)
