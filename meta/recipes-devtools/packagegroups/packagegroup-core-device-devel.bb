@@ -1,5 +1,4 @@
 SUMMARY = "Provides a small set of tools for development on the device"
-LICENSE = "MIT"
 
 PR = "r1"
 

@@ -5,7 +5,6 @@
 SUMMARY = "Linux Standard Base (LSB)"
 DESCRIPTION = "Packages required to satisfy the Linux Standard Base (LSB) specification"
 PR = "r10"
-LICENSE = "MIT"
 
 inherit packagegroup distro_features_check
 

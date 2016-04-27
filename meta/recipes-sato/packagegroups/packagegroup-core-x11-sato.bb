@@ -3,7 +3,6 @@
 #
 
 SUMMARY = "Sato desktop"
-LICENSE = "MIT"
 PR = "r33"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"

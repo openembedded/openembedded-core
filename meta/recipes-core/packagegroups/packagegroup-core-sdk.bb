@@ -3,7 +3,6 @@
 #
 
 SUMMARY = "Software development tools"
-LICENSE = "MIT"
 PR = "r9"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"

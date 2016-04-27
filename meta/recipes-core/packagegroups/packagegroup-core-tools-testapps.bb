@@ -3,7 +3,6 @@
 #
 
 SUMMARY = "Testing tools/applications"
-LICENSE = "MIT"
 
 PR = "r2"
 

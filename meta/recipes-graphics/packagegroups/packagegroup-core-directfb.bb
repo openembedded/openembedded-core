@@ -1,5 +1,4 @@
 SUMMARY = "DirectFB without X11"
-LICENSE = "MIT"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 

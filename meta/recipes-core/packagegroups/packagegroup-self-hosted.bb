@@ -5,7 +5,6 @@
 SUMMARY = "Self-hosting"
 DESCRIPTION = "Packages required to run the build system"
 PR = "r13"
-LICENSE = "MIT"
 
 inherit packagegroup  distro_features_check
 # rdepends on libx11-dev

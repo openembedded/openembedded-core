@@ -3,7 +3,6 @@
 #
 
 SUMMARY = "Profiling tools"
-LICENSE = "MIT"
 
 PR = "r3"
 
