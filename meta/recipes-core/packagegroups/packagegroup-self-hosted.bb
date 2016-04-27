@@ -187,7 +187,7 @@ RDEPENDS_packagegroup-self-hosted-graphics = "\
     gtk-theme-clearlooks \
     xdg-utils \
     epiphany \
-    leafpad \
+    l3afpad \
     pcmanfm \
     vte \
     "

@@ -47,7 +47,7 @@ WEB ?= ""
 
 SUMMARY_${PN}-apps = "Sato desktop - applications"
 RDEPENDS_${PN}-apps = "\
-    leafpad \
+    l3afpad \
     gst-player-bin \
     matchbox-terminal \
     sato-screenshot \
