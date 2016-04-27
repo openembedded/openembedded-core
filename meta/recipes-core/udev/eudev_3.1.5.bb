@@ -32,6 +32,9 @@ EXTRA_OECONF = " \
     --with-rootprefix= \
 "
 
+PACKAGECONFIG ??= "hwdb"
+PACKAGECONFIG[hwdb] = "--enable-hwdb,--disable-hwdb"
+
 do_install_append() {
 	install -d ${D}${sysconfdir}/init.d
 	install -m 0755 ${WORKDIR}/init ${D}${sysconfdir}/init.d/udev
@@ -104,4 +107,3 @@ pkg_postinst_eudev-hwdb () {
 pkg_prerm_eudev-hwdb () {
         rm -f $D${sysconfdir}/udev/hwdb.bin
 }
-
