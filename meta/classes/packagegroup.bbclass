@@ -14,6 +14,11 @@ PACKAGE_ARCH ?= "all"
 # Fully expanded - so it applies the overrides as well
 PACKAGE_ARCH_EXPANDED := "${PACKAGE_ARCH}"
 
+LICENSE ?= "MIT"
+LIC_FILES_CHKSUM ?= "${@oe.utils.ifelse(d.getVar('LICENSE', True) == 'MIT', \
+                     'file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420', \
+                    '')}"
+
 inherit ${@oe.utils.ifelse(d.getVar('PACKAGE_ARCH_EXPANDED', True) == 'all', 'allarch', '')}
 
 # This automatically adds -dbg and -dev flavours of all PACKAGES
