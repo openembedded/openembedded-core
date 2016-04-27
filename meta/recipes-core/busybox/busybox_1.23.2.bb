@@ -42,6 +42,8 @@ SRC_URI = "http://www.busybox.net/downloads/busybox-${PV}.tar.bz2;name=tarball \
            file://sha256sum.cfg \
            file://getopts.cfg \
            file://CVE-2016-2148.patch \
+           file://CVE-2016-2147.patch \
+           file://CVE-2016-2147_2.patch \
 "
 
 SRC_URI[tarball.md5sum] = "7925683d7dd105aabe9b6b618d48cc73"
