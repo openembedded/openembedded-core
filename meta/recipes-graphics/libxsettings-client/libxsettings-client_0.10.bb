@@ -9,7 +9,9 @@ SECTION = "x/libs"
 LICENSE = "MIT-style"
 LIC_FILES_CHKSUM = "file://COPYING;md5=7cfac9d2d4dc3694cc7eb605cf32a69b \
                     file://xsettings-client.h;endline=22;md5=7cfac9d2d4dc3694cc7eb605cf32a69b \
-                    file://xsettings-common.h;endline=22;md5=7cfac9d2d4dc3694cc7eb605cf32a69b"
+                    file://xsettings-client.c;endline=22;md5=7cfac9d2d4dc3694cc7eb605cf32a69b \
+                    file://xsettings-common.h;endline=22;md5=7cfac9d2d4dc3694cc7eb605cf32a69b \
+                    file://xsettings-common.c;endline=22;md5=7cfac9d2d4dc3694cc7eb605cf32a69b"
 DEPENDS = "virtual/libx11"
 
 PR = "r5"
@@ -31,10 +33,11 @@ inherit autotools gettext distro_features_check
 # depends on virtual/libx11
 REQUIRED_DISTRO_FEATURES = "x11"
 
-do_configure_prepend() {
-    # This package doesn't ship with its own COPYING file and
-    # autotools will install a GPLv2 one instead of the actual MIT-style license here.
-    # Add the correct license here to avoid confusion.
+do_patch[postfuncs] += "update_copying_file"
+update_copying_file() {
+    # This package ships with a GPLv2 COPYING file, but the author says
+    # it is actual MIT-style license, add the correct license here to
+    # avoid confusion.
     cp -f ${WORKDIR}/MIT-style-license ${S}/COPYING
 }
 
