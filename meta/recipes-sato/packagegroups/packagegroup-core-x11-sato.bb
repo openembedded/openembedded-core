@@ -32,7 +32,6 @@ RDEPENDS_${PN}-base = "\
     xcursor-transparent-theme \
     adwaita-icon-theme \
     settings-daemon \
-    gtk-sato-engine \
     shutdown-desktop \
     libsdl \
     ${NETWORK_MANAGER} \
