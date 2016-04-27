@@ -14,6 +14,7 @@ class ArgumentParser(argparse.ArgumentParser):
         kwargs.setdefault('formatter_class', OeHelpFormatter)
         self._subparser_groups = OrderedDict()
         super(ArgumentParser, self).__init__(*args, **kwargs)
+        self._positionals.title = 'arguments'
         self._optionals.title = 'options'
 
     def error(self, message):
