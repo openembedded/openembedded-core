@@ -9,8 +9,11 @@
 # -O0 which then results in a compiler warning.
 lcl_maybe_fortify = "${@base_conditional('DEBUG_BUILD','1','','-D_FORTIFY_SOURCE=2',d)}"
 
-SECURITY_CFLAGS ?= "-fstack-protector-strong -pie -fpie ${lcl_maybe_fortify}"
-SECURITY_NO_PIE_CFLAGS ?= "-fstack-protector-strong ${lcl_maybe_fortify}"
+# Error on use of format strings that represent possible security problems
+SECURITY_STRINGFORMAT ?= "-Wformat -Wformat-security -Werror=format-security"
+
+SECURITY_CFLAGS ?= "-fstack-protector-strong -pie -fpie ${lcl_maybe_fortify} ${SECURITY_STRINGFORMAT}"
+SECURITY_NO_PIE_CFLAGS ?= "-fstack-protector-strong ${lcl_maybe_fortify} ${SECURITY_STRINGFORMAT}"
 
 SECURITY_LDFLAGS ?= "-fstack-protector-strong -Wl,-z,relro,-z,now"
 SECURITY_X_LDFLAGS ?= "-fstack-protector-strong -Wl,-z,relro"
@@ -91,6 +94,23 @@ SECURITY_CFLAGS_pn-zlib = "${SECURITY_NO_PIE_CFLAGS}"
 # These 2 have text relco errors with the pie options enabled
 SECURITY_CFLAGS_pn-ltp = "${SECURITY_NO_PIE_CFLAGS}"
 SECURITY_CFLAGS_pn-pulseaudio = "${SECURITY_NO_PIE_CFLAGS}"
+
+# Recipes which fail to compile when elevating -Wformat-security to an error
+SECURITY_STRINGFORMAT_pn-busybox = ""
+SECURITY_STRINGFORMAT_pn-console-tools = ""
+SECURITY_STRINGFORMAT_pn-cmake = ""
+SECURITY_STRINGFORMAT_pn-expect = ""
+SECURITY_STRINGFORMAT_pn-gcc = ""
+SECURITY_STRINGFORMAT_pn-gettext = ""
+SECURITY_STRINGFORMAT_pn-kexec-tools = ""
+SECURITY_STRINGFORMAT_pn-leafpad = ""
+SECURITY_STRINGFORMAT_pn-libuser = ""
+SECURITY_STRINGFORMAT_pn-ltp = ""
+SECURITY_STRINGFORMAT_pn-makedevs = ""
+SECURITY_STRINGFORMAT_pn-oh-puzzles = ""
+SECURITY_STRINGFORMAT_pn-stat = ""
+SECURITY_STRINGFORMAT_pn-unzip = ""
+SECURITY_STRINGFORMAT_pn-zip = ""
 
 TARGET_CFLAGS_append_class-target = " ${SECURITY_CFLAGS}"
 TARGET_LDFLAGS_append_class-target = " ${SECURITY_LDFLAGS}"
