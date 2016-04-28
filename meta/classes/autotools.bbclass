@@ -77,6 +77,8 @@ CONFIGUREOPTS = " --build=${BUILD_SYS} \
 		  ${@append_libtool_sysroot(d)}"
 CONFIGUREOPT_DEPTRACK ?= "--disable-dependency-tracking"
 
+CACHED_CONFIGUREVARS ?= ""
+
 AUTOTOOLS_SCRIPT_PATH ?= "${S}"
 CONFIGURE_SCRIPT ?= "${AUTOTOOLS_SCRIPT_PATH}/configure"
 
