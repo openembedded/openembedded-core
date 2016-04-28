@@ -1,7 +1,7 @@
 require python.inc
 
 EXTRANATIVEPATH += "bzip2-native"
-DEPENDS = "openssl-native bzip2-replacement-native zlib-native readline-native sqlite3-native"
+DEPENDS = "openssl-native bzip2-replacement-native zlib-native readline-native sqlite3-native expat-native"
 PR = "${INC_PR}.1"
 
 SRC_URI += "\
@@ -27,7 +27,7 @@ inherit native
 
 RPROVIDES += "python-distutils-native python-compression-native python-textutils-native python-codecs-native python-core-native python-unittest-native"
 
-EXTRA_OECONF_append = " --bindir=${bindir}/${PN}"
+EXTRA_OECONF_append = " --bindir=${bindir}/${PN} --with-system-expat=${STAGING_DIR_HOST}"
 
 EXTRA_OEMAKE = '\
   BUILD_SYS="" \
