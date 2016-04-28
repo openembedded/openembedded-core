@@ -15,6 +15,10 @@ S = "${WORKDIR}/${PNREAL}-${PV}"
 
 inherit autotools pkgconfig upstream-version-is-even gobject-introspection
 
+# Starting with 1.8.0 gst-rtsp-server includes dependency-less plugins as well
+LIBV = "1.0"
+require gst-plugins-package.inc
+
 delete_pkg_m4_file() {
         # This m4 file is out of date and is missing PKG_CONFIG_SYSROOT_PATH tweaks which we need for introspection
         rm "${S}/common/m4/pkg.m4" || true
