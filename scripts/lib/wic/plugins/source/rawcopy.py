@@ -20,6 +20,7 @@ import os
 from wic import msger
 from wic.pluginbase import SourcePlugin
 from wic.utils.oe.misc import exec_cmd, get_bitbake_var
+from wic.filemap import sparse_copy
 
 class RawCopyPlugin(SourcePlugin):
     """
@@ -70,11 +71,9 @@ class RawCopyPlugin(SourcePlugin):
         dst = os.path.join(cr_workdir, source_params['file'])
 
         if 'skip' in source_params:
-            dd_cmd = "dd if=%s of=%s ibs=%s skip=1 conv=notrunc" % \
-                    (src, dst, source_params['skip'])
+            sparse_copy(src, dst, skip=source_params['skip'])
         else:
-            dd_cmd = "cp %s %s" % (src, dst)
-        exec_cmd(dd_cmd)
+            sparse_copy(src, dst)
 
         # get the size in the right units for kickstart (kB)
         du_cmd = "du -Lbks %s" % dst
