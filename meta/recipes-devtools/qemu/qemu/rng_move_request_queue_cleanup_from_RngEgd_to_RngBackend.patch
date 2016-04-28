@@ -1,0 +1,150 @@
+From 9f14b0add1dcdbfa2ee61051d068211fb0a1fcc9 Mon Sep 17 00:00:00 2001
+From: Ladi Prosek <lprosek@redhat.com>
+Date: Thu, 3 Mar 2016 09:37:17 +0100
+Subject: [PATCH] rng: move request queue cleanup from RngEgd to RngBackend
+
+RngBackend is now in charge of cleaning up the linked list on
+instance finalization. It also exposes a function to finalize
+individual RngRequest instances, called by its child classes.
+
+Signed-off-by: Ladi Prosek <lprosek@redhat.com>
+Reviewed-by: Amit Shah <amit.shah@redhat.com>
+Message-Id: <1456994238-9585-4-git-send-email-lprosek@redhat.com>
+Signed-off-by: Amit Shah <amit.shah@redhat.com>
+
+Upstream-Status: Backport
+in support of CVE-2016-2858
+
+Signed-off-by: Armin Kuster <akuster@mvista.com>
+
+---
+ backends/rng-egd.c   | 25 +------------------------
+ backends/rng.c       | 32 ++++++++++++++++++++++++++++++++
+ include/sysemu/rng.h | 12 ++++++++++++
+ 3 files changed, 45 insertions(+), 24 deletions(-)
+
+Index: qemu-2.5.0/backends/rng-egd.c
+===================================================================
+--- qemu-2.5.0.orig/backends/rng-egd.c
++++ qemu-2.5.0/backends/rng-egd.c
+@@ -57,12 +57,6 @@ static void rng_egd_request_entropy(RngB
+     s->parent.requests = g_slist_append(s->parent.requests, req);
+ }
+ 
+-static void rng_egd_free_request(RngRequest *req)
+-{
+-    g_free(req->data);
+-    g_free(req);
+-}
+-
+ static int rng_egd_chr_can_read(void *opaque)
+ {
+     RngEgd *s = RNG_EGD(opaque);
+@@ -92,28 +86,13 @@ static void rng_egd_chr_read(void *opaqu
+         size -= len;
+ 
+         if (req->offset == req->size) {
+-            s->parent.requests = g_slist_remove_link(s->parent.requests,
+-                                                     s->parent.requests);
+ 
+             req->receive_entropy(req->opaque, req->data, req->size);
+-
+-            rng_egd_free_request(req);
++            rng_backend_finalize_request(&s->parent, req);
+         }
+     }
+ }
+ 
+-static void rng_egd_free_requests(RngEgd *s)
+-{
+-    GSList *i;
+-
+-    for (i = s->parent.requests; i; i = i->next) {
+-        rng_egd_free_request(i->data);
+-    }
+-
+-    g_slist_free(s->parent.requests);
+-    s->parent.requests = NULL;
+-}
+-
+ static void rng_egd_opened(RngBackend *b, Error **errp)
+ {
+     RngEgd *s = RNG_EGD(b);
+@@ -182,8 +161,6 @@ static void rng_egd_finalize(Object *obj
+     }
+ 
+     g_free(s->chr_name);
+-
+-    rng_egd_free_requests(s);
+ }
+ 
+ static void rng_egd_class_init(ObjectClass *klass, void *data)
+Index: qemu-2.5.0/backends/rng.c
+===================================================================
+--- qemu-2.5.0.orig/backends/rng.c
++++ qemu-2.5.0/backends/rng.c
+@@ -63,6 +63,30 @@ static void rng_backend_prop_set_opened(
+     s->opened = true;
+ }
+ 
++static void rng_backend_free_request(RngRequest *req)
++{
++    g_free(req->data);
++    g_free(req);
++}
++
++static void rng_backend_free_requests(RngBackend *s)
++{
++    GSList *i;
++
++    for (i = s->requests; i; i = i->next) {
++        rng_backend_free_request(i->data);
++    }
++
++    g_slist_free(s->requests);
++    s->requests = NULL;
++}
++
++void rng_backend_finalize_request(RngBackend *s, RngRequest *req)
++{
++    s->requests = g_slist_remove(s->requests, req);
++    rng_backend_free_request(req);
++}
++
+ static void rng_backend_init(Object *obj)
+ {
+     object_property_add_bool(obj, "opened",
+@@ -71,6 +95,13 @@ static void rng_backend_init(Object *obj
+                              NULL);
+ }
+ 
++static void rng_backend_finalize(Object *obj)
++{
++    RngBackend *s = RNG_BACKEND(obj);
++
++    rng_backend_free_requests(s);
++}
++
+ static void rng_backend_class_init(ObjectClass *oc, void *data)
+ {
+     UserCreatableClass *ucc = USER_CREATABLE_CLASS(oc);
+@@ -83,6 +114,7 @@ static const TypeInfo rng_backend_info =
+     .parent = TYPE_OBJECT,
+     .instance_size = sizeof(RngBackend),
+     .instance_init = rng_backend_init,
++    .instance_finalize = rng_backend_finalize,
+     .class_size = sizeof(RngBackendClass),
+     .class_init = rng_backend_class_init,
+     .abstract = true,
+Index: qemu-2.5.0/include/sysemu/rng.h
+===================================================================
+--- qemu-2.5.0.orig/include/sysemu/rng.h
++++ qemu-2.5.0/include/sysemu/rng.h
+@@ -61,6 +61,7 @@ struct RngBackend
+     GSList *requests;
+ };
+ 
++
+ /**
+  * rng_backend_request_entropy:
+  * @s: the backend to request entropy from
