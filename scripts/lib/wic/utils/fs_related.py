@@ -32,47 +32,22 @@ def makedirs(dirname):
         if err.errno != errno.EEXIST:
             raise
 
-class Disk:
-    """
-    Generic base object for a disk.
-    """
-    def __init__(self, size, device=None):
-        self._device = device
-        self._size = size
-
-    def create(self):
-        pass
-
-    def cleanup(self):
-        pass
-
-    def get_device(self):
-        return self._device
-    def set_device(self, path):
-        self._device = path
-    device = property(get_device, set_device)
-
-    def get_size(self):
-        return self._size
-    size = property(get_size)
-
-
-class DiskImage(Disk):
+class DiskImage():
     """
     A Disk backed by a file.
     """
-    def __init__(self, image_file, size):
-        Disk.__init__(self, size)
-        self.image_file = image_file
+    def __init__(self, device, size):
+        self.size = size
+        self.device = device
+        self.created = False
 
     def exists(self):
-        return os.path.exists(self.image_file)
+        return os.path.exists(self.device)
 
     def create(self):
-        if self.device is not None:
+        if self.created:
             return
         # create sparse disk image
-        cmd = "truncate %s -s %s" % (self.image_file, self.size)
+        cmd = "truncate %s -s %s" % (self.device, self.size)
         exec_cmd(cmd)
-
-        self.device = self.image_file
+        self.created = True
