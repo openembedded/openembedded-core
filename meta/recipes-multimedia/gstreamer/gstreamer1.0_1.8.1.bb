@@ -5,10 +5,9 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=6762ed442b3822387a51c92d928ead0d \
 
 SRC_URI = " \
     http://gstreamer.freedesktop.org/src/gstreamer/gstreamer-${PV}.tar.xz \
-    file://0001-Fix-crash-with-gst-inspect.patch \
 "
 
-SRC_URI[md5sum] = "b4cdeb2b9cb20dd6ac022a4f417eae0d"
-SRC_URI[sha256sum] = "22f9568d67b87cf700a111f381144bd37cb93790a77e4e331db01fe854a37f24"
+SRC_URI[md5sum] = "711ada79b63e47ac96adb4e5444dc908"
+SRC_URI[sha256sum] = "5a3722fb9302dd977c17ced4240293dc777cb716dc98c8cca63d75c27e5e3107"
 
 S = "${WORKDIR}/gstreamer-${PV}"

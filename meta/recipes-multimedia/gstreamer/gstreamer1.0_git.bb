@@ -20,11 +20,6 @@ SRCREV_FORMAT = "base"
 
 S = "${WORKDIR}/git"
 
-# The option to configure tracer hooks was added prior to the 1.7.2 release
-# https://cgit.freedesktop.org/gstreamer/gstreamer/commit/?id=e5ca47236e4df4683707f0bcf99181a937d358d5
-PACKAGECONFIG[gst-tracer-hooks] = "--enable-gst-tracer-hooks,--disable-gst-tracer-hooks,"
-PACKAGECONFIG[trace-historic] = "--enable-trace,--disable-trace,"
-
 do_configure_prepend() {
 	${S}/autogen.sh --noconfigure
 }
