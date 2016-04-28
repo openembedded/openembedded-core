@@ -529,3 +529,33 @@ def filemap(image, log=None):
         return FilemapFiemap(image, log)
     except ErrorNotSupp:
         return FilemapSeek(image, log)
+
+def sparse_copy(src_fname, dst_fname, offset=0, skip=0):
+    """Efficiently copy sparse file to or into another file."""
+    fmap = filemap(src_fname)
+    try:
+        dst_file = open(dst_fname, 'r+b')
+    except IOError:
+        dst_file = open(dst_fname, 'wb')
+
+    for first, last in fmap.get_mapped_ranges(0, fmap.blocks_cnt):
+        start = first * fmap.block_size
+        end = (last + 1) * fmap.block_size
+
+        if start < skip < end:
+            start = skip
+
+        fmap._f_image.seek(start, os.SEEK_SET)
+        dst_file.seek(offset + start, os.SEEK_SET)
+
+        chunk_size = 1024 * 1024
+        to_read = end - start
+        read = 0
+
+        while read < to_read:
+            if read + chunk_size > to_read:
+                chunk_size = to_read - read
+            chunk = fmap._f_image.read(chunk_size)
+            dst_file.write(chunk)
+            read += chunk_size
+    dst_file.close()
