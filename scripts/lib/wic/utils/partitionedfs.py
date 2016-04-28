@@ -22,6 +22,7 @@ import os
 from wic import msger
 from wic.utils.errors import ImageError
 from wic.utils.oe.misc import exec_cmd, exec_native_cmd
+from wic.filemap import sparse_copy
 
 # Overhead of the MBR partitioning scheme (just one sector)
 MBR_OVERHEAD = 1
@@ -343,10 +344,7 @@ class Image(object):
             source = part['source_file']
             if source:
                 # install source_file contents into a partition
-                cmd = "dd if=%s of=%s bs=%d seek=%d count=%d conv=notrunc" % \
-                      (source, image_file, self.sector_size,
-                       part['start'], part['size'])
-                exec_cmd(cmd)
+                sparse_copy(source, image_file, part['start'] * self.sector_size)
 
                 msger.debug("Installed %s in partition %d, sectors %d-%d, "
                             "size %d sectors" % \
