@@ -28,7 +28,6 @@ import os
 import shutil
 
 from wic import msger
-from wic.utils import fs_related
 from wic.utils.oe.misc import get_bitbake_var
 from wic.utils.partitionedfs import Image
 from wic.utils.errors import CreatorError, ImageError
@@ -39,6 +38,26 @@ from wic.utils.oe.misc import exec_cmd
 disk_methods = {
     "do_install_disk":None,
 }
+
+class DiskImage():
+    """
+    A Disk backed by a file.
+    """
+    def __init__(self, device, size):
+        self.size = size
+        self.device = device
+        self.created = False
+
+    def exists(self):
+        return os.path.exists(self.device)
+
+    def create(self):
+        if self.created:
+            return
+        # create sparse disk image
+        cmd = "truncate %s -s %s" % (self.device, self.size)
+        exec_cmd(cmd)
+        self.created = True
 
 class DirectImageCreator(BaseImageCreator):
     """
@@ -280,7 +299,7 @@ class DirectImageCreator(BaseImageCreator):
             full_path = self._full_path(self.__imgdir, disk_name, "direct")
             msger.debug("Adding disk %s as %s with size %s bytes" \
                         % (disk_name, full_path, disk['min_size']))
-            disk_obj = fs_related.DiskImage(full_path, disk['min_size'])
+            disk_obj = DiskImage(full_path, disk['min_size'])
             self.__disks[disk_name] = disk_obj
             self.__image.add_disk(disk_name, disk_obj)
 
