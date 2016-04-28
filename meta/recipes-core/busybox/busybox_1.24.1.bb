@@ -44,6 +44,7 @@ SRC_URI = "http://www.busybox.net/downloads/busybox-${PV}.tar.bz2;name=tarball \
            file://rcS \
            file://rcK \
            file://runlevel \
+           file://CVE-2016-2148.patch \
 "
 SRC_URI_append_libc-musl = " file://musl.cfg "
 
