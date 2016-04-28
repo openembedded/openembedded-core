@@ -71,14 +71,8 @@ class DiskImage(Disk):
     def create(self):
         if self.device is not None:
             return
-
-        blocks = self.size / 1024
-        if self.size - blocks * 1024:
-            blocks += 1
-
-        # create disk image
-        dd_cmd = "dd if=/dev/zero of=%s bs=1024 seek=%d count=1" % \
-            (self.image_file, blocks)
-        exec_cmd(dd_cmd)
+        # create sparse disk image
+        cmd = "truncate %s -s %s" % (self.image_file, self.size)
+        exec_cmd(cmd)
 
         self.device = self.image_file

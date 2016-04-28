@@ -220,9 +220,7 @@ class Partition(object):
         msger.debug("Added %d extra blocks to %s to get to %d total blocks" % \
                     (extra_blocks, self.mountpoint, rootfs_size))
 
-        dd_cmd = "dd if=/dev/zero of=%s bs=1024 seek=%d count=0 bs=1k" % \
-            (rootfs, rootfs_size)
-        exec_cmd(dd_cmd)
+        exec_cmd("truncate %s -s %d" % (rootfs, rootfs_size * 1024))
 
         extra_imagecmd = "-i 8192"
 
@@ -255,9 +253,7 @@ class Partition(object):
         msger.debug("Added %d extra blocks to %s to get to %d total blocks" % \
                     (extra_blocks, self.mountpoint, rootfs_size))
 
-        dd_cmd = "dd if=/dev/zero of=%s bs=1024 seek=%d count=0 bs=1k" % \
-            (rootfs, rootfs_size)
-        exec_cmd(dd_cmd)
+        exec_cmd("truncate %s -s %d" % (rootfs, rootfs_size * 1024))
 
         label_str = ""
         if self.label:
@@ -320,9 +316,7 @@ class Partition(object):
         """
         Prepare an empty ext2/3/4 partition.
         """
-        dd_cmd = "dd if=/dev/zero of=%s bs=1k seek=%d count=0" % \
-            (rootfs, self.size)
-        exec_cmd(dd_cmd)
+        exec_cmd("truncate %s -s %d" % (rootfs, self.size * 1024))
 
         extra_imagecmd = "-i 8192"
 
@@ -339,9 +333,7 @@ class Partition(object):
         """
         Prepare an empty btrfs partition.
         """
-        dd_cmd = "dd if=/dev/zero of=%s bs=1k seek=%d count=0" % \
-            (rootfs, self.size)
-        exec_cmd(dd_cmd)
+        exec_cmd("truncate %s -s %d" % (rootfs, self.size * 1024))
 
         label_str = ""
         if self.label:
@@ -402,9 +394,7 @@ class Partition(object):
         """
         path = "%s/fs.%s" % (cr_workdir, self.fstype)
 
-        dd_cmd = "dd if=/dev/zero of=%s bs=1k seek=%d count=0" % \
-            (path, self.size)
-        exec_cmd(dd_cmd)
+        exec_cmd("truncate %s -s %d" % (path, self.size * 1024))
 
         import uuid
         label_str = ""
