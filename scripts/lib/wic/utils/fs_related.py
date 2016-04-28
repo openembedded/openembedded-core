@@ -16,21 +16,7 @@
 # with this program; if not, write to the Free Software Foundation, Inc., 59
 # Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
-from __future__ import with_statement
-import os
-import errno
-
 from wic.utils.oe.misc import exec_cmd
-
-def makedirs(dirname):
-    """A version of os.makedirs() that doesn't throw an
-    exception if the leaf directory already exists.
-    """
-    try:
-        os.makedirs(dirname)
-    except OSError, err:
-        if err.errno != errno.EEXIST:
-            raise
 
 class DiskImage():
     """
