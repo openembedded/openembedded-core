@@ -141,6 +141,39 @@ def get_bb_env(target=None, postconfig=None):
     else:
         return bitbake("-e", postconfig=postconfig).output
 
+def get_bb_vars(variables=None, target=None, postconfig=None):
+    """Get values of multiple bitbake variables"""
+    bbenv = get_bb_env(target, postconfig=postconfig)
+
+    var_re = re.compile(r'^(export )?(?P<var>[a-zA-Z]\w+)="(?P<value>.*)"$')
+    unset_re = re.compile(r'^unset (?P<var>[a-zA-Z]\w+)$')
+    lastline = None
+    values = {}
+    for line in bbenv.splitlines():
+        match = var_re.match(line)
+        val = None
+        if match:
+            val = match.group('value')
+        else:
+            match = unset_re.match(line)
+            if match:
+                # Handle [unexport] variables
+                if lastline.startswith('#   "'):
+                    val = lastline.split('"')[1]
+        if val:
+            var = match.group('var')
+            if variables is None:
+                values[var] = val
+            else:
+                if var in variables:
+                    values[var] = val
+                    variables.remove(var)
+                # Stop after all required variables have been found
+                if not variables:
+                    break
+        lastline = line
+    return values
+
 def get_bb_var(var, target=None, postconfig=None):
     val = None
     bbenv = get_bb_env(target, postconfig=postconfig)
