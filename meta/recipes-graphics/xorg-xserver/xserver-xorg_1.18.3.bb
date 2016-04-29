@@ -1,11 +1,8 @@
 require xserver-xorg.inc
 
-SRC_URI += "file://configure.ac-Use-libsystemd-in-REQUIRED_LIBS-check.patch \
-            file://musl-arm-inb-outb.patch \
-            file://modesetting_libdrm_requirements.patch \
-           "
-SRC_URI[md5sum] = "3c1c1057d3ad27380d8dd87ffcc182cd"
-SRC_URI[sha256sum] = "195670819695d9cedd8dde95fbe069be0d0f488a77797a2d409f9f702daf312e"
+SRC_URI += "file://musl-arm-inb-outb.patch"
+SRC_URI[md5sum] = "043d720bf2472a65bb8f0daa97f83dfa"
+SRC_URI[sha256sum] = "ea739c22517cdbe2b5f7c0a5fd05fe8a10ac0629003e71c0c7862f4bb60142cd"
 
 # These extensions are now integrated into the server, so declare the migration
 # path for in-place upgrades.
