@@ -1,0 +1,55 @@
+From b9744428d6dfb1cba7b6e3fdbf0613977914b12f Mon Sep 17 00:00:00 2001
+From: Dengke Du <dengke.du@windriver.com>
+Date: Fri, 29 Apr 2016 03:25:58 -0400
+Subject: [PATCH] lttng-tools: filter random filename of tests output
+
+Show the failed tests, filter the random filename when the test
+passed, add up the result.
+
+Upstream-Status: Pending
+
+Signed-off-by: Dengke Du <dengke.du@windriver.com>
+---
+ tests/run.sh | 25 +++++++++++++++++++++++--
+ 1 file changed, 23 insertions(+), 2 deletions(-)
+
+diff --git a/tests/run.sh b/tests/run.sh
+index 6455359..9080afc 100755
+--- a/tests/run.sh
++++ b/tests/run.sh
+@@ -17,9 +17,30 @@
+ # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ #
+ 
++# Define two variable to store the passed and failed result
++pass_count=0
++fail_count=0
++
+ [ -z "$1" ] && echo "Error: No testlist. Please specify a testlist to run." && exit 1
+ 
+-prove --merge -v --exec '' - < $1 | sed \
++# Using a while loop to add up the passed and failed result, we use Here Strings
++# "<<<" in bash in order to redirect the test output to the while loop. If put the
++# test output as a pipeline, the while loop will run in subshell, we can't get the
++# pass_count and fail_count when the subshell exit. 
++while read line
++do
++	if [[ $line == "FAIL"* ]]; then
++		echo $line;((fail_count=fail_count+1))
++	fi  
++	if [[ $line == "PASS"* ]]; then
++		((pass_count=pass_count+1))
++	fi  
++done <<< "$(prove --merge -v --exec '' - < $1 | sed \
+   -e 's|^ok \(.*\)|PASS: \1|' \
+   -e 's|^not ok \(.*\)|FAIL: \1|' \
+-  | egrep -h 'PASS|FAIL'
++  | egrep -h 'PASS|FAIL')"
++
++# Add up the result and output the passed and failed tests
++echo "$1 statistics"
++echo "total pass: $pass_count tests passed!"
++echo "total fail: $fail_count tests failed!"
+-- 
+2.8.1
+
