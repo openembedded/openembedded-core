@@ -30,6 +30,7 @@ SRC_URI = "git://git.lttng.org/lttng-tools.git;branch=stable-2.7 \
            file://Revert-Build-look-for-python-3.0-when-building-pytho.patch \
            file://stop-using-SIGUNUSED.patch \
            file://runtest-2.4.0.patch \
+           file://0001-lttng-tools-filter-random-filename-of-tests-output.patch \
            file://run-ptest"
 
 S = "${WORKDIR}/git"
