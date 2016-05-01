@@ -1,3 +1,8 @@
+From f3932cb2960fd54655a448b13d5a5b80f356f8de Mon Sep 17 00:00:00 2001
+From: Khem Raj <raj.khem@gmail.com>
+Date: Sat, 30 Apr 2016 15:25:03 -0700
+Subject: [PATCH 06/10] Dont disable libreadline.a when using --disable-static
+
 If gdb is configured with --disable-static then this is dutifully passed to
 readline which then disables libreadline.a, which causes a problem when gdb
 tries to link against that.
@@ -7,12 +12,17 @@ the sub-configure.
 
 Upstream-Status: Pending
 Signed-off-by: Ross Burton <ross.burton@intel.com>
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+---
+ Makefile.def | 3 ++-
+ Makefile.in  | 2 +-
+ 2 files changed, 3 insertions(+), 2 deletions(-)
 
 diff --git a/Makefile.def b/Makefile.def
-index 4394188..05c661a 100644
+index ea8453e..0fc66c6 100644
 --- a/Makefile.def
 +++ b/Makefile.def
-@@ -100,7 +100,8 @@ host_modules= { module= libiconv;
+@@ -104,7 +104,8 @@ host_modules= { module= libiconv;
  		missing= install-html;
  		missing= install-info; };
  host_modules= { module= m4; };
@@ -23,10 +33,10 @@ index 4394188..05c661a 100644
  host_modules= { module= sim; };
  host_modules= { module= texinfo; no_install= true; };
 diff --git a/Makefile.in b/Makefile.in
-index 61e0ab6..837f36e 100644
+index 2733c4d..3e04e80 100644
 --- a/Makefile.in
 +++ b/Makefile.in
-@@ -24971,7 +24971,7 @@ configure-readline:
+@@ -25380,7 +25380,7 @@ configure-readline:
  	  $$s/$$module_srcdir/configure \
  	  --srcdir=$${topdir}/$$module_srcdir \
  	  $(HOST_CONFIGARGS) --build=${build_alias} --host=${host_alias} \
@@ -35,3 +45,6 @@ index 61e0ab6..837f36e 100644
  	  || exit 1
  @endif readline
  
+-- 
+2.8.2
+
