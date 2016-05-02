@@ -73,7 +73,7 @@ class Configuration(object):
                 else:
                     # Apply special type transformations for some properties.
                     # Type matches the RawConfigParser.get*() methods.
-                    types = {'signoff': 'boolean', 'update': 'boolean'}
+                    types = {'signoff': 'boolean', 'update': 'boolean', 'history': 'boolean'}
                     if name in types:
                         value = getattr(parser, 'get' + types[name])(section, name)
                     self.repos[repo][name] = value
@@ -610,8 +610,12 @@ def action_pull(conf, args):
 def action_update(conf, args):
     """
         update the component repos
-        generate the patch list
-        apply the generated patches
+        either:
+           generate the patch list
+           apply the generated patches
+        or:
+           re-creates the entire component history and merges them
+           into the current branch with a merge commit
     """
     components = [arg.split(':')[0] for arg in args[1:]]
     revisions = {}
@@ -624,16 +628,41 @@ def action_update(conf, args):
     # make sure combo repo is clean
     check_repo_clean(os.getcwd())
 
-    import uuid
-    patch_dir = "patch-%s" % uuid.uuid4()
-    if not os.path.exists(patch_dir):
-        os.mkdir(patch_dir)
+    # Check whether we keep the component histories. Must be
+    # set either via --history command line parameter or consistently
+    # in combo-layer.conf. Mixing modes is (currently, and probably
+    # permanently because it would be complicated) not supported.
+    if conf.history:
+        history = True
+    else:
+        history = None
+        for name in repos:
+            repo = conf.repos[name]
+            repo_history = repo.get('history', True)
+            logger.error('%s: %s' % (name, repo_history))
+            if history is None:
+                history = repo_history
+            elif history != repo_history:
+                logger.error("'history' property is set inconsistently")
+                sys.exit(1)
 
     # Step 1: update the component repos
     if conf.nopull:
         logger.info("Skipping pull (-n)")
     else:
         action_pull(conf, ['arg0'] + components)
+
+    if history:
+        logger.error("update with history not implemented yet")
+        sys.exit(1)
+    else:
+        update_with_patches(conf, components, revisions, repos)
+
+def update_with_patches(conf, components, revisions, repos):
+    import uuid
+    patch_dir = "patch-%s" % uuid.uuid4()
+    if not os.path.exists(patch_dir):
+        os.mkdir(patch_dir)
 
     for name in repos:
         revision = revisions.get(name, None)
@@ -711,6 +740,21 @@ def action_update(conf, args):
     runcmd("rm -rf %s" % patch_dir)
 
     # Step 7: commit the updated config file if it's being tracked
+    commit_conf_file(conf, components)
+
+def conf_commit_msg(conf, components):
+    # create the "components" string
+    component_str = "all components"
+    if len(components) > 0:
+        # otherwise tell which components were actually changed
+        component_str = ", ".join(components)
+
+    # expand the template with known values
+    template = Template(conf.commit_msg_template)
+    msg = template.substitute(components = component_str)
+    return msg
+
+def commit_conf_file(conf, components, commit=True):
     relpath = os.path.relpath(conf.conffile)
     try:
         output = runcmd("git status --porcelain %s" % relpath, printerr=False)
@@ -718,23 +762,15 @@ def action_update(conf, args):
         # Outside the repository
         output = None
     if output:
-        logger.info("Committing updated configuration file")
         if output.lstrip().startswith("M"):
-
-            # create the "components" string
-            component_str = "all components"
-            if len(components) > 0:
-                # otherwise tell which components were actually changed
-                component_str = ", ".join(components)
-
-            # expand the template with known values
-            template = Template(conf.commit_msg_template)
-            raw_msg = template.substitute(components = component_str)
-
-            # sanitize the string before using it in command line
-            msg = raw_msg.replace('"', '\\"')
-
-            runcmd('git commit -m "%s" %s' % (msg, relpath))
+            logger.info("Committing updated configuration file")
+            if commit:
+                msg = conf_commit_msg(conf, components)
+                runcmd('git commit -m'.split() + [msg, relpath])
+            else:
+                runcmd('git add %s' % relpath)
+            return True
+    return False
 
 def apply_patchlist(conf, repos):
     """
