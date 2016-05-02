@@ -13,6 +13,7 @@ NOINST_TOOLS_READLINE ?= " \
     tools/obex-server-tool \
     tools/bluetooth-player \
     tools/obexctl \
+    tools/btmgmt \
 "
 
 # noinst programs in Makefile.tools that are conditional on EXPERIMENTAL
@@ -37,7 +38,6 @@ NOINST_TOOLS_EXPERIMENTAL ?= " \
     tools/hwdb \
     tools/hcieventmask \
     tools/hcisecfilter \
-    tools/btmgmt \
     tools/btinfo \
     tools/btattach \
     tools/btsnoop \
