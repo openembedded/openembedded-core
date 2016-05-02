@@ -103,6 +103,7 @@ def runCmd(command, ignore_status=False, timeout=None, assert_error=True, **opti
     result.command = command
     result.status = cmd.status
     result.output = cmd.output
+    result.error = cmd.error
     result.pid = cmd.process.pid
 
     if result.status and not ignore_status:
