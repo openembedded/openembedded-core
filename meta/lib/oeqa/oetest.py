@@ -186,11 +186,19 @@ def custom_verbose(msg, *args, **kwargs):
         _buffer_logger = ""
 
 class TestContext(object):
-    def __init__(self, d):
+    def __init__(self, d, exported=False):
         self.d = d
 
         self.testsuites = self._get_test_suites()
-        self.testslist = self._get_tests_list(d.getVar("BBPATH", True).split(':'))
+
+        if exported:
+            path = [os.path.dirname(os.path.abspath(__file__))]
+            extrapath = ""
+        else:
+            path = d.getVar("BBPATH", True).split(':')
+            extrapath = "lib/oeqa"
+
+        self.testslist = self._get_tests_list(path, extrapath)
         self.testsrequired = self._get_test_suites_required()
 
         self.filesdir = os.path.join(os.path.dirname(os.path.abspath(
@@ -213,7 +221,7 @@ class TestContext(object):
         return " ".join(tcs)
 
     # return test list by type also filter if TEST_SUITES is specified
-    def _get_tests_list(self, bbpath):
+    def _get_tests_list(self, bbpath, extrapath):
         testslist = []
 
         type = self._get_test_namespace()
@@ -227,11 +235,11 @@ class TestContext(object):
                     continue
                 found = False
                 for p in bbpath:
-                    if os.path.exists(os.path.join(p, 'lib', 'oeqa', type, testname + '.py')):
+                    if os.path.exists(os.path.join(p, extrapath, type, testname + ".py")):
                         testslist.append("oeqa." + type + "." + testname)
                         found = True
                         break
-                    elif os.path.exists(os.path.join(p, 'lib', 'oeqa', type, testname.split(".")[0] + '.py')):
+                    elif os.path.exists(os.path.join(p, extrapath, type, testname.split(".")[0] + ".py")):
                         testslist.append("oeqa." + type + "." + testname)
                         found = True
                         break
@@ -333,8 +341,8 @@ class TestContext(object):
         return runner.run(self.suite)
 
 class RuntimeTestContext(TestContext):
-    def __init__(self, d, target):
-        super(RuntimeTestContext, self).__init__(d)
+    def __init__(self, d, target, exported=False):
+        super(RuntimeTestContext, self).__init__(d, exported)
 
         self.tagexp =  d.getVar("TEST_SUITES_TAGS", True)
 
@@ -393,8 +401,8 @@ class ImageTestContext(RuntimeTestContext):
         self.target.stop()
 
 class ExportTestContext(RuntimeTestContext):
-    def __init__(self, d, target):
-        super(ExportTestContext, self).__init__(d, target)
+    def __init__(self, d, target, exported=False):
+        super(ExportTestContext, self).__init__(d, target, exported)
         self.sigterm = None
 
 class SDKTestContext(TestContext):
