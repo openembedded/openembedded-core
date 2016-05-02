@@ -221,7 +221,7 @@ python copy_buildsystem () {
 
             # Error if the sigs in the locked-signature file don't match
             # the sig computed from the metadata.
-            f.write('SIGGEN_LOCKEDSIGS_TASKSIG_CHECK = "error"\n\n')
+            f.write('SIGGEN_LOCKEDSIGS_TASKSIG_CHECK = "warn"\n\n')
 
             # Hide the config information from bitbake output (since it's fixed within the SDK)
             f.write('BUILDCFG_HEADER = ""\n')
