@@ -174,7 +174,7 @@ class Configuration(object):
             logger.error("ERROR: patchutils package is missing, please install it (e.g. # apt-get install patchutils)")
             sys.exit(1)
 
-def runcmd(cmd,destdir=None,printerr=True,out=None):
+def runcmd(cmd,destdir=None,printerr=True,out=None,env=None):
     """
         execute command, raise CalledProcessError if fail
         return output if succeed
@@ -186,7 +186,7 @@ def runcmd(cmd,destdir=None,printerr=True,out=None):
     else:
         err = os.tmpfile()
     try:
-        subprocess.check_call(cmd, stdout=out, stderr=err, cwd=destdir, shell=isinstance(cmd, str))
+        subprocess.check_call(cmd, stdout=out, stderr=err, cwd=destdir, shell=isinstance(cmd, str), env=env or os.environ)
     except subprocess.CalledProcessError,e:
         err.seek(0)
         if printerr:
@@ -195,7 +195,7 @@ def runcmd(cmd,destdir=None,printerr=True,out=None):
 
     err.seek(0)
     output = err.read()
-    logger.debug("output: %s" % output )
+    logger.debug("output: %s" % output.replace(chr(0), '\\0'))
     return output
 
 def action_init(conf, args):
