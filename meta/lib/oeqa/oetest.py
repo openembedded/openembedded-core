@@ -331,14 +331,13 @@ class TestContext(object):
 
         return runner.run(self.suite)
 
-class ImageTestContext(TestContext):
-    def __init__(self, d, target, host_dumper):
-        super(ImageTestContext, self).__init__(d)
+class RuntimeTestContext(TestContext):
+    def __init__(self, d, target):
+        super(RuntimeTestContext, self).__init__(d)
 
         self.tagexp =  d.getVar("TEST_SUITES_TAGS", True)
 
         self.target = target
-        self.host_dumper = host_dumper
 
         manifest = os.path.join(d.getVar("DEPLOY_DIR_IMAGE", True),
                 d.getVar("IMAGE_LINK_NAME", True) + ".manifest")
@@ -351,15 +350,6 @@ class ImageTestContext(TestContext):
                 bb.fatal("No package manifest file found. Did you build the image?\n%s" % e)
         else:
             self.pkgmanifest = ""
-
-        self.sigterm = False
-        self.origsigtermhandler = signal.getsignal(signal.SIGTERM)
-        signal.signal(signal.SIGTERM, self._sigterm_exception)
-
-    def _sigterm_exception(self, signum, stackframe):
-        bb.warn("TestImage received SIGTERM, shutting down...")
-        self.sigterm = True
-        self.target.stop()
 
     def _get_test_namespace(self):
         return "runtime"
@@ -382,8 +372,28 @@ class ImageTestContext(TestContext):
         return [t for t in self.d.getVar("TEST_SUITES", True).split() if t != "auto"]
 
     def loadTests(self):
-        super(ImageTestContext, self).loadTests()
+        super(RuntimeTestContext, self).loadTests()
         setattr(oeRuntimeTest, "pscmd", "ps -ef" if oeTest.hasPackage("procps") else "ps")
+
+class ImageTestContext(RuntimeTestContext):
+    def __init__(self, d, target, host_dumper):
+        super(ImageTestContext, self).__init__(d, target)
+
+        self.host_dumper = host_dumper
+
+        self.sigterm = False
+        self.origsigtermhandler = signal.getsignal(signal.SIGTERM)
+        signal.signal(signal.SIGTERM, self._sigterm_exception)
+
+    def _sigterm_exception(self, signum, stackframe):
+        bb.warn("TestImage received SIGTERM, shutting down...")
+        self.sigterm = True
+        self.target.stop()
+
+class ExportTestContext(RuntimeTestContext):
+    def __init__(self, d, target):
+        super(ExportTestContext, self).__init__(d, target)
+        self.sigterm = None
 
 class SDKTestContext(TestContext):
     def __init__(self, d, sdktestdir, sdkenv, tcname, *args):
