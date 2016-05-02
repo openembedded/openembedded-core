@@ -116,16 +116,11 @@ def main():
     for key in loaded["target"].keys():
         setattr(target, key, loaded["target"][key])
 
-    host_dumper = get_host_dumper(d)
-    host_dumper.parent_dir = loaded["host_dumper"]["parent_dir"]
-    host_dumper.cmds = loaded["host_dumper"]["cmds"]
-
     target.exportStart()
     tc = ExportTestContext(d)
 
     setattr(tc, "d", d)
     setattr(tc, "target", target)
-    setattr(tc, "host_dumper", host_dumper)
     for key in loaded.keys():
         if key != "d" and key != "target" and key != "host_dumper":
             setattr(tc, key, loaded[key])
