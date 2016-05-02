@@ -172,24 +172,14 @@ def get_bb_vars(variables=None, target=None, postconfig=None):
                 if not variables:
                     break
         lastline = line
+    if variables:
+        # Fill in missing values
+        for var in variables:
+            values[var] = None
     return values
 
 def get_bb_var(var, target=None, postconfig=None):
-    val = None
-    bbenv = get_bb_env(target, postconfig=postconfig)
-    lastline = None
-    for line in bbenv.splitlines():
-        if re.search("^(export )?%s=" % var, line):
-            val = line.split('=', 1)[1]
-            val = val.strip('\"')
-            break
-        elif re.match("unset %s$" % var, line):
-            # Handle [unexport] variables
-            if lastline.startswith('#   "'):
-                val = lastline.split('\"')[1]
-                break
-        lastline = line
-    return val
+    return get_bb_vars([var], target, postconfig)[var]
 
 def get_test_layer():
     layers = get_bb_var("BBLAYERS").split()
