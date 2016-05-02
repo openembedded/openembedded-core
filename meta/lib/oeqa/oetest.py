@@ -54,6 +54,7 @@ def filterByTagExp(testsuite, tagexp):
 @LogResults
 class oeTest(unittest.TestCase):
 
+    pscmd = "ps"
     longMessage = True
 
     @classmethod
@@ -373,7 +374,8 @@ class RuntimeTestContext(TestContext):
 
     def loadTests(self):
         super(RuntimeTestContext, self).loadTests()
-        setattr(oeRuntimeTest, "pscmd", "ps -ef" if oeTest.hasPackage("procps") else "ps")
+        if oeTest.hasPackage("procps"):
+            oeRuntimeTest.pscmd = "ps -ef"
 
 class ImageTestContext(RuntimeTestContext):
     def __init__(self, d, target, host_dumper):
