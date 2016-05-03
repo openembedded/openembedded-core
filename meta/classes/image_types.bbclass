@@ -193,6 +193,8 @@ def wks_search(files, search_path):
             if searched:
                 return searched
 
+WIC_CREATE_EXTRA_ARGS ?= ""
+
 IMAGE_CMD_wic () {
 	out="${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}"
 	wks="${WKS_FULL_PATH}"
@@ -200,7 +202,7 @@ IMAGE_CMD_wic () {
 		bbfatal "No kickstart files from WKS_FILES were found: ${WKS_FILES}. Please set WKS_FILE or WKS_FILES appropriately."
 	fi
 
-	BUILDDIR="${TOPDIR}" wic create "$wks" --vars "${STAGING_DIR_TARGET}/imgdata/" -e "${IMAGE_BASENAME}" -o "$out/"
+	BUILDDIR="${TOPDIR}" wic create "$wks" --vars "${STAGING_DIR_TARGET}/imgdata/" -e "${IMAGE_BASENAME}" -o "$out/" ${WIC_CREATE_EXTRA_ARGS}
 	mv "$out/build/$(basename "${wks%.wks}")"*.direct "$out${IMAGE_NAME_SUFFIX}.wic"
 	rm -rf "$out/"
 }
