@@ -11,32 +11,28 @@ IMAGE_ROOTFS_ALIGNMENT ?= "1"
 
 def imagetypes_getdepends(d):
     def adddep(depstr, deps):
-        for i in (depstr or "").split():
-            if i not in deps:
-                deps.append(i)
+        for d in (depstr or "").split():
+            # Add task dependency if not already present
+            if ":" not in d:
+                d += ":do_populate_sysroot"
+            deps.add(d)
 
-    deps = []
-    ctypes = d.getVar('COMPRESSIONTYPES', True).split()
     fstypes = set((d.getVar('IMAGE_FSTYPES', True) or "").split())
     fstypes |= set((d.getVar('IMAGE_FSTYPES_DEBUGFS', True) or "").split())
-    for type in fstypes:
-        if type in ["vmdk", "vdi", "qcow2", "hdddirect", "live", "iso", "hddimg"]:
-            type = "ext4"
-        basetype = type
-        for ctype in ctypes:
-            if type.endswith("." + ctype):
-                basetype = type[:-len("." + ctype)]
-                adddep(d.getVar("COMPRESS_DEPENDS_%s" % ctype, True), deps)
-                break
+
+    deps = set()
+    for typestring in fstypes:
+        types = typestring.split(".")
+        basetype, resttypes = types[0], types[1:]
+
+        adddep(d.getVar('IMAGE_DEPENDS_%s' % basetype, True) , deps)
         for typedepends in (d.getVar("IMAGE_TYPEDEP_%s" % basetype, True) or "").split():
             adddep(d.getVar('IMAGE_DEPENDS_%s' % typedepends, True) , deps)
-        adddep(d.getVar('IMAGE_DEPENDS_%s' % basetype, True) , deps)
+        for ctype in resttypes:
+            adddep(d.getVar("COMPRESS_DEPENDS_%s" % ctype, True), deps)
 
-    depstr = ""
-    for dep in deps:
-        depstr += " " + dep + ":do_populate_sysroot"
-    return depstr
-
+    # Sort the set so that ordering is consistant
+    return " ".join(sorted(deps))
 
 XZ_COMPRESSION_LEVEL ?= "-e -6"
 XZ_INTEGRITY_CHECK ?= "crc32"
