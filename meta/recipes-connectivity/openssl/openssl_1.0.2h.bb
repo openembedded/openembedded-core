@@ -34,15 +34,13 @@ SRC_URI += "file://find.pl;subdir=${BP}/util/ \
             file://openssl-fix-des.pod-error.patch \
             file://Makefiles-ptest.patch \
             file://ptest-deps.patch \
-            file://crypto_use_bigint_in_x86-64_perl.patch \
             file://openssl-1.0.2a-x32-asm.patch \
             file://ptest_makefile_deps.patch  \
             file://configure-musl-target.patch \
             file://parallel.patch \
            "
-
-SRC_URI[md5sum] = "f3c710c045cdee5fd114feb69feba7aa"
-SRC_URI[sha256sum] = "b784b1b3907ce39abf4098702dade6365522a253ad1552e267a9a0e89594aa33"
+SRC_URI[md5sum] = "9392e65072ce4b614c1392eefc1f23d0"
+SRC_URI[sha256sum] = "1d4007e53aad94a5b2002fe045ee7bb0b3d98f1a47f8b2bc851dcd1c74332919"
 
 PACKAGES =+ "${PN}-engines"
 FILES_${PN}-engines = "${libdir}/ssl/engines/*.so ${libdir}/engines"
