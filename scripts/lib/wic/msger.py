@@ -66,10 +66,6 @@ def _general_print(head, color, msg=None, stream=None, level='normal'):
         # skip
         return
 
-    # encode raw 'unicode' str to utf8 encoded str
-    if msg and isinstance(msg, unicode):
-        msg = msg.encode('utf-8', 'ignore')
-
     errormsg = ''
     if CATCHERR_BUFFILE_FD > 0:
         size = os.lseek(CATCHERR_BUFFILE_FD, 0, os.SEEK_END)
@@ -118,9 +114,6 @@ def _color_print(head, color, msg, stream, level):
                 newline = True
 
     if msg is not None:
-        if isinstance(msg, unicode):
-            msg = msg.encode('utf8', 'ignore')
-
         stream.write('%s%s' % (head, msg))
         if newline:
             stream.write('\n')
