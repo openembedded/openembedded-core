@@ -90,6 +90,7 @@ SRC_URI = "\
     file://0072-support-ffile-prefix-map.patch \
     file://0073-Reuse-fdebug-prefix-map-to-replace-ffile-prefix-map.patch \
     file://0074-fdebug-prefix-map-support-to-remap-relative-path.patch \
+    file://0075-libgcc-use-ldflags.patch \
 "
 SRC_URI[md5sum] = "6f831b4d251872736e8e9cc09746f327"
 SRC_URI[sha256sum] = "2332b2a5a321b57508b9031354a8503af6fdfb868b8c1748d33028d100a8b67e"
