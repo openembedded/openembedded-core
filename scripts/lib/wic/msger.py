@@ -148,7 +148,7 @@ def _split_msg(head, msg):
     return head, msg
 
 def get_loglevel():
-    return (k for k, v in LOG_LEVELS.items() if v == LOG_LEVEL).next()
+    return next((k for k, v in LOG_LEVELS.items() if v == LOG_LEVEL))
 
 def set_loglevel(level):
     global LOG_LEVEL
