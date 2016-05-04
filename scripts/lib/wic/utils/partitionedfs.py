@@ -95,7 +95,7 @@ class Image():
         ks_pnum = len(self.partitions)
 
         # Converting kB to sectors for parted
-        size = size * 1024 / self.sector_size
+        size = size * 1024 // self.sector_size
 
         part = {'ks_pnum': ks_pnum, # Partition number in the KS file
                 'size': size, # In sectors
@@ -173,12 +173,12 @@ class Image():
                 # gaps we could enlargea the previous partition?
 
                 # Calc how much the alignment is off.
-                align_sectors = disk['offset'] % (part['align'] * 1024 / self.sector_size)
+                align_sectors = disk['offset'] % (part['align'] * 1024 // self.sector_size)
 
                 if align_sectors:
                     # If partition is not aligned as required, we need
                     # to move forward to the next alignment point
-                    align_sectors = (part['align'] * 1024 / self.sector_size) - align_sectors
+                    align_sectors = (part['align'] * 1024 // self.sector_size) - align_sectors
 
                     msger.debug("Realignment for %s%s with %s sectors, original"
                                 " offset %s, target alignment is %sK." %

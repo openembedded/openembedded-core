@@ -95,7 +95,7 @@ class _FilemapBase(object):
                         % (self._image_path, err))
 
         self.blocks_cnt = self.image_size + self.block_size - 1
-        self.blocks_cnt /= self.block_size
+        self.blocks_cnt //= self.block_size
 
         try:
             self._f_image.flush()
@@ -254,7 +254,7 @@ class FilemapSeek(_FilemapBase):
         if offs == -1:
             result = False
         else:
-            result = (offs / self.block_size == block)
+            result = (offs // self.block_size == block)
 
         self._log.debug("FilemapSeek: block_is_mapped(%d) returns %s"
                         % (block, result))
@@ -286,8 +286,8 @@ class FilemapSeek(_FilemapBase):
             if end > limit:
                 end = limit
 
-            start_blk = start / self.block_size
-            end_blk = end / self.block_size - 1
+            start_blk = start // self.block_size
+            end_blk = end // self.block_size - 1
             self._log.debug("FilemapSeek: yielding range (%d, %d)"
                             % (start_blk, end_blk))
             yield (start_blk, end_blk)
@@ -351,7 +351,7 @@ class FilemapFiemap(_FilemapBase):
 
         # Calculate how many 'struct fiemap_extent' elements fit the buffer
         self._buf_size -= _FIEMAP_SIZE
-        self._fiemap_extent_cnt = self._buf_size / _FIEMAP_EXTENT_SIZE
+        self._fiemap_extent_cnt = self._buf_size // _FIEMAP_EXTENT_SIZE
         assert self._fiemap_extent_cnt > 0
         self._buf_size = self._fiemap_extent_cnt * _FIEMAP_EXTENT_SIZE
         self._buf_size += _FIEMAP_SIZE
@@ -456,11 +456,11 @@ class FilemapFiemap(_FilemapBase):
                 # Start of the extent
                 extent_start = fiemap_extent[0]
                 # Starting block number of the extent
-                extent_block = extent_start / self.block_size
+                extent_block = extent_start // self.block_size
                 # Length of the extent
                 extent_len = fiemap_extent[2]
                 # Count of blocks in the extent
-                extent_count = extent_len / self.block_size
+                extent_count = extent_len // self.block_size
 
                 # Extent length and offset have to be block-aligned
                 assert extent_start % self.block_size == 0
