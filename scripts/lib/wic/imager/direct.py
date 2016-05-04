@@ -395,6 +395,6 @@ class DirectImageCreator(BaseImageCreator):
         if not self.__image is None:
             try:
                 self.__image.cleanup()
-            except ImageError, err:
+            except ImageError as err:
                 msger.warning("%s" % err)
 
