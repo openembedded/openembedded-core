@@ -81,7 +81,7 @@ class PluginMgr(object):
             # the value True/False means "loaded"
 
     def _load_all(self):
-        for (pdir, loaded) in self.plugin_dirs.iteritems():
+        for (pdir, loaded) in self.plugin_dirs.items():
             if loaded:
                 continue
 
@@ -135,7 +135,7 @@ class PluginMgr(object):
         None is returned.
         """
         return_methods = None
-        for _source_name, klass in self.get_plugins('source').iteritems():
+        for _source_name, klass in self.get_plugins('source').items():
             if _source_name == source_name:
                 for _method_name in methods.keys():
                     if not hasattr(klass, _method_name):

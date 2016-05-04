@@ -41,7 +41,7 @@ class Creator(object):
 
         # get cmds from pluginmgr
         # mix-in do_subcmd interface
-        for subcmd, klass in pluginmgr.get_plugins('imager').iteritems():
+        for subcmd, klass in pluginmgr.get_plugins('imager').items():
             if not hasattr(klass, 'do_create'):
                 msger.warning("Unsupported subcmd: %s" % subcmd)
                 continue
