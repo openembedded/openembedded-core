@@ -132,7 +132,7 @@ class Image(object):
         for num in range(len(self.partitions)):
             part = self.partitions[num]
 
-            if not self.disks.has_key(part['disk_name']):
+            if part['disk_name'] not in self.disks:
                 raise ImageError("No disk %s for partition %s" \
                                  % (part['disk_name'], part['mountpoint']))
 
@@ -236,7 +236,7 @@ class Image(object):
     def __format_disks(self):
         self.layout_partitions()
 
-        for dev in self.disks.keys():
+        for dev in self.disks:
             disk = self.disks[dev]
             msger.debug("Initializing partition table for %s" % \
                         (disk['disk'].device))
@@ -354,7 +354,7 @@ class Image(object):
                 os.rename(source, image_file + '.p%d' % part['num'])
 
     def create(self):
-        for dev in self.disks.keys():
+        for dev in self.disks:
             disk = self.disks[dev]
             disk['disk'].create()
 

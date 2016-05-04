@@ -68,7 +68,7 @@ class BaseImageCreator(object):
                      }
 
             # update setting from createopts
-            for key in createopts.keys():
+            for key in createopts:
                 if key in optmap:
                     option = optmap[key]
                 else:

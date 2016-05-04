@@ -137,7 +137,7 @@ class PluginMgr(object):
         return_methods = None
         for _source_name, klass in self.get_plugins('source').items():
             if _source_name == source_name:
-                for _method_name in methods.keys():
+                for _method_name in methods:
                     if not hasattr(klass, _method_name):
                         msger.warning("Unimplemented %s source interface for: %s"\
                                       % (_method_name, _source_name))
