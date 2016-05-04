@@ -51,7 +51,7 @@ def sizetype(arg):
     Converts size string in <num>[K|k|M|G] format into the integer value
     """
     if arg.isdigit():
-        return int(arg) * 1024L
+        return int(arg) * 1024
 
     if not arg[:-1].isdigit():
         raise ArgumentTypeError("Invalid size: %r" % arg)
@@ -60,9 +60,9 @@ def sizetype(arg):
     if arg.endswith("k") or arg.endswith("K"):
         return size
     if arg.endswith("M"):
-        return size * 1024L
+        return size * 1024
     if arg.endswith("G"):
-        return size * 1024L * 1024L
+        return size * 1024 * 1024
 
     raise ArgumentTypeError("Invalid size: %r" % arg)
 
@@ -127,7 +127,7 @@ class KickStart():
         part.add_argument('mountpoint')
         part.add_argument('--active', action='store_true')
         part.add_argument('--align', type=int)
-        part.add_argument("--extra-space", type=sizetype, default=10*1024L)
+        part.add_argument("--extra-space", type=sizetype, default=10*1024)
         part.add_argument('--fsoptions', dest='fsopts')
         part.add_argument('--fstype')
         part.add_argument('--label')
