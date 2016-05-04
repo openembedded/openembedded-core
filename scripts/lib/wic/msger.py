@@ -21,18 +21,14 @@ import sys
 import re
 import time
 
-__ALL__ = ['set_mode',
-           'get_loglevel',
+__ALL__ = ['get_loglevel',
            'set_loglevel',
            'set_logfile',
-           'raw',
            'debug',
            'verbose',
            'info',
            'warning',
            'error',
-           'ask',
-           'pause',
           ]
 
 # COLORs in ANSI
@@ -182,9 +178,6 @@ def log(msg=''):
     if msg:
         LOG_CONTENT += msg
 
-def raw(msg=''):
-    _general_print('', NO_COLOR, msg)
-
 def info(msg):
     head, msg = _split_msg('Info', msg)
     _general_print(head, INFO_COLOR, msg)
@@ -205,66 +198,6 @@ def error(msg):
     head, msg = _split_msg('Error', msg)
     _color_perror(head, ERR_COLOR, msg)
     sys.exit(1)
-
-def ask(msg, default=True):
-    _general_print('\rQ', ASK_COLOR, '')
-    try:
-        if default:
-            msg += '(Y/n) '
-        else:
-            msg += '(y/N) '
-        if INTERACTIVE:
-            while True:
-                repl = raw_input(msg)
-                if repl.lower() == 'y':
-                    return True
-                elif repl.lower() == 'n':
-                    return False
-                elif not repl.strip():
-                    # <Enter>
-                    return default
-
-                # else loop
-        else:
-            if default:
-                msg += ' Y'
-            else:
-                msg += ' N'
-            _general_print('', NO_COLOR, msg)
-
-            return default
-    except KeyboardInterrupt:
-        sys.stdout.write('\n')
-        sys.exit(2)
-
-def choice(msg, choices, default=0):
-    if default >= len(choices):
-        return None
-    _general_print('\rQ', ASK_COLOR, '')
-    try:
-        msg += " [%s] " % '/'.join(choices)
-        if INTERACTIVE:
-            while True:
-                repl = raw_input(msg)
-                if repl in choices:
-                    return repl
-                elif not repl.strip():
-                    return choices[default]
-        else:
-            msg += choices[default]
-            _general_print('', NO_COLOR, msg)
-
-            return choices[default]
-    except KeyboardInterrupt:
-        sys.stdout.write('\n')
-        sys.exit(2)
-
-def pause(msg=None):
-    if INTERACTIVE:
-        _general_print('\rQ', ASK_COLOR, '')
-        if msg is None:
-            msg = 'press <ENTER> to continue ...'
-        raw_input(msg)
 
 def set_logfile(fpath):
     global LOG_FILE_FP
