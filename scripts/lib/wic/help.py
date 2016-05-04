@@ -55,7 +55,7 @@ def wic_help(args, usage_str, subcommands):
     Subcommand help dispatcher.
     """
     if len(args) == 1 or not display_help(args[1], subcommands):
-        print usage_str
+        print(usage_str)
 
 
 def get_wic_plugins_help():
