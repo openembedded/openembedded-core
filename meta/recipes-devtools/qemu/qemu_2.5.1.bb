@@ -7,19 +7,16 @@ SRC_URI += "file://configure-fix-Darwin-target-detection.patch \
             file://qemu-enlarge-env-entry-size.patch \
             file://Qemu-Arm-versatilepb-Add-memory-size-checking.patch \
             file://no-valgrind.patch \
-            file://CVE-2016-1568.patch \
-            file://CVE-2016-2197.patch \
             file://CVE-2016-2198.patch \
             file://pathlimit.patch \
-            file://CVE-2016-2857.patch \
             file://rng_move_request_from_RngEgd_to_RngBackend.patch \
             file://rng_remove_the_unused_request_cancellation_code.patch \
             file://rng_move_request_queue_cleanup_from_RngEgd_to_RngBackend.patch \
             file://CVE-2016-2858.patch \
            "
 SRC_URI_prepend = "http://wiki.qemu-project.org/download/${BP}.tar.bz2"
-SRC_URI[md5sum] = "f469f2330bbe76e3e39db10e9ac4f8db"
-SRC_URI[sha256sum] = "3443887401619fe33bfa5d900a4f2d6a79425ae2b7e43d5b8c36eb7a683772d4"
+SRC_URI[md5sum] = "42e73182dea8b9213fa7050e168a4615"
+SRC_URI[sha256sum] = "028752c33bb786abbfe496ba57315dc5a7d0a33b5a7a767f6d7a29020c525d2c"
 
 COMPATIBLE_HOST_class-target_mips64 = "null"
 
