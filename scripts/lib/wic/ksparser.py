@@ -110,7 +110,7 @@ def systemidtype(arg):
 
     return arg
 
-class KickStart(object):
+class KickStart():
     """"Kickstart parser implementation."""
 
     def __init__(self, confpath):

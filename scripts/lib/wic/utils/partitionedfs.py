@@ -33,7 +33,7 @@ GPT_OVERHEAD = 34
 # Size of a sector in bytes
 SECTOR_SIZE = 512
 
-class Image(object):
+class Image():
     """
     Generic base object for an image.
 

@@ -38,7 +38,7 @@ partition_methods = {
     "do_configure_partition":None,
 }
 
-class Partition(object):
+class Partition():
 
     def __init__(self, args, lineno):
         self.args = args

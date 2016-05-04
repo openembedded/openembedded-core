@@ -25,7 +25,7 @@ from wic import msger
 from wic.utils.errors import CreatorError
 from wic.utils import runner
 
-class BaseImageCreator(object):
+class BaseImageCreator():
     """Base class for image creation.
 
     BaseImageCreator is the simplest creator class available; it will

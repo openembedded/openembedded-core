@@ -24,7 +24,7 @@ from wic.conf import configmgr
 from wic.plugin import pluginmgr
 
 
-class Creator(object):
+class Creator():
     """${name}: create an image
 
     Usage:

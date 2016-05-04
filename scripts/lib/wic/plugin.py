@@ -29,7 +29,7 @@ PLUGIN_TYPES = ["imager", "source"]
 PLUGIN_DIR = "/lib/wic/plugins" # relative to scripts
 SCRIPTS_PLUGIN_DIR = "scripts" + PLUGIN_DIR
 
-class PluginMgr(object):
+class PluginMgr():
     plugin_dirs = {}
 
     # make the manager class as singleton
