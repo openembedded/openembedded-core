@@ -74,6 +74,7 @@ SRC_URI = "\
            file://0040-nativesdk-gcc-support.patch \
            file://0041-handle-target-sysroot-multilib.patch \
            file://0042-cxxflags-for-build.patch \
+           file://CVE-2016-4488.patch \
           "
 
 BACKPORTS = ""
