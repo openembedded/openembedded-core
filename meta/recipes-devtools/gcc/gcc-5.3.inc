@@ -91,6 +91,7 @@ SRC_URI = "\
            file://0059-libgcc-use-ldflags.patch \
            file://0060-remove-prototypes-cfns.patch \
            file://CVE-2016-4488.patch \
+           file://CVE-2016-4489.patch \
 "
 
 BACKPORTS = ""
