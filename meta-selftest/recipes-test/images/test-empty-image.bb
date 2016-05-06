@@ -2,5 +2,6 @@ SUMMARY = "An empty image."
 IMAGE_INSTALL = ""
 IMAGE_LINGUAS = ""
 PACKAGE_INSTALL = ""
+IC_FILES_CHKSUM = "file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
 
 inherit image
