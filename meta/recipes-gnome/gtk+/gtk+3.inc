@@ -61,10 +61,6 @@ FILES_${PN}-demo = "${bindir}/gtk3-demo \
                     ${datadir}/icons/hicolor/*/apps/gtk3-demo*.png \
                     ${datadir}/icons/hicolor/*/apps/gtk3-widget-factory*.png"
 
-# The demo uses PNG files and mime type sniffing, so ensure that these
-# dependencies are present.
-RDEPENDS_${PN}-demo += "gdk-pixbuf-loader-png shared-mime-info"
-
 FILES_${PN}_append = " ${bindir}/gtk-update-icon-cache-3.0 \
                ${bindir}/gtk-query-immodules-3.0 \
                ${bindir}/gtk-launch \
@@ -86,7 +82,18 @@ FILES_${PN}-dev += " \
                     ${bindir}/gtk-builder-tool \
                     "
 
-RRECOMMENDS_${PN} = "adwaita-icon-theme-symbolic"
+GTKBASE_RRECOMMENDS ?= "liberation-fonts \
+                        gdk-pixbuf-loader-png \
+                        gdk-pixbuf-loader-jpeg \
+                        gdk-pixbuf-loader-gif \
+                        gdk-pixbuf-loader-xpm \
+                        shared-mime-info \
+                        adwaita-icon-theme-symbolic \
+                        "
+GTKGLIBC_RRECOMMENDS ?= "${GTKBASE_RRECOMMENDS} glibc-gconv-iso8859-1"
+
+RRECOMMENDS_${PN} = "${GTKBASE_RRECOMMENDS}"
+RRECOMMENDS_${PN}_libc-glibc = "${GTKGLIBC_RRECOMMENDS}"
 
 PACKAGES_DYNAMIC += "^gtk3-immodule-.* ^gtk3-printbackend-.*"
 
