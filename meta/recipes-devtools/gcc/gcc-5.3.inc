@@ -93,6 +93,7 @@ SRC_URI = "\
            file://CVE-2016-4488.patch \
            file://CVE-2016-4489.patch \
            file://CVE-2016-2226.patch \
+           file://CVE-2016-4490.patch \
 "
 
 BACKPORTS = ""
