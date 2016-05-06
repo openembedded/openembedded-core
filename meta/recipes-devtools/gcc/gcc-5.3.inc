@@ -90,6 +90,7 @@ SRC_URI = "\
            file://0058-fdebug-prefix-map-support-to-remap-relative-path.patch \
            file://0059-libgcc-use-ldflags.patch \
            file://0060-remove-prototypes-cfns.patch \
+           file://CVE-2016-4488.patch \
 "
 
 BACKPORTS = ""
