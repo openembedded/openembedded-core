@@ -11,8 +11,9 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 inherit packagegroup
 
 PROFILE_TOOLS_X = "${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'sysprof', '', d)}"
-# sysprof doesn't support aarch64
+# sysprof doesn't support aarch64 and nios2
 PROFILE_TOOLS_X_aarch64 = ""
+PROFILE_TOOLS_X_nios2 = ""
 PROFILE_TOOLS_SYSTEMD = "${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'systemd-analyze', '', d)}"
 
 RRECOMMENDS_${PN} = "\
