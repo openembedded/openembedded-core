@@ -90,6 +90,8 @@ def parse_args(argv):
     parser.add_argument('--lock-file', default='./oe-build-perf.lock',
                         metavar='FILENAME',
                         help="Lock file to use")
+    parser.add_argument('-o', '--out-dir', default='results-{date}',
+                        help="Output directory for test results")
 
     return parser.parse_args(argv)
 
@@ -113,7 +115,7 @@ def main(argv=None):
     KernelDropCaches.check()
 
     # Set-up log file
-    out_dir = 'results-{}'.format(datetime.now().strftime('%Y%m%d%H%M%S'))
+    out_dir = args.out_dir.format(date=datetime.now().strftime('%Y%m%d%H%M%S'))
     setup_file_logging(os.path.join(out_dir, 'output.log'))
 
     # Run actual tests
