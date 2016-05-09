@@ -18,6 +18,7 @@
 """Devtool plugin containing the build-image subcommand."""
 
 import os
+import errno
 import logging
 
 from bb.process import ExecutionError
@@ -72,13 +73,17 @@ def build_image(args, config, basepath, workspace):
     return result
 
 def build_image_task(config, basepath, workspace, image, add_packages=None, task=None, extra_append=None):
-    appendfile = os.path.join(config.workspace_path, 'appends',
-                              '%s.bbappend' % image)
-
     # remove <image>.bbappend to make sure setup_tinfoil doesn't
     # break because of it
-    if os.path.isfile(appendfile):
-        os.unlink(appendfile)
+    target_basename = config.get('SDK', 'target_basename', '')
+    if target_basename:
+        appendfile = os.path.join(config.workspace_path, 'appends',
+                                  '%s.bbappend' % target_basename)
+        try:
+            os.unlink(appendfile)
+        except OSError as exc:
+            if exc.errno != errno.ENOENT:
+                raise
 
     tinfoil = setup_tinfoil(basepath=basepath)
     rd = parse_recipe(config, tinfoil, image, True)
@@ -87,6 +92,15 @@ def build_image_task(config, basepath, workspace, image, add_packages=None, task
         return (1, None)
     if not bb.data.inherits_class('image', rd):
         raise TargetNotImageError()
+
+    # Get the actual filename used and strip the .bb and full path
+    target_basename = rd.getVar('FILE', True)
+    target_basename = os.path.splitext(os.path.basename(target_basename))[0]
+    config.set('SDK', 'target_basename', target_basename)
+    config.write()
+
+    appendfile = os.path.join(config.workspace_path, 'appends',
+                              '%s.bbappend' % target_basename)
 
     outputdir = None
     try:
