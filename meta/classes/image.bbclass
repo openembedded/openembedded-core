@@ -166,7 +166,7 @@ python () {
         if temp:
             bb.fatal("%s contains conflicting IMAGE_FEATURES %s %s" % (d.getVar('PN', True), feature, ' '.join(list(temp))))
 
-    d.setVar('IMAGE_FEATURES', ' '.join(list(remain_features)))
+    d.setVar('IMAGE_FEATURES', ' '.join(sorted(list(remain_features))))
 
     check_image_features(d)
     initramfs_image = d.getVar('INITRAMFS_IMAGE', True) or ""
