@@ -681,15 +681,15 @@ python populate_lic_qa_checksum() {
     import tempfile
     sane = True
 
-    lic_files = d.getVar('LIC_FILES_CHKSUM', True)
+    lic_files = d.getVar('LIC_FILES_CHKSUM', True) or ''
     lic = d.getVar('LICENSE', True)
     pn = d.getVar('PN', True)
 
     if lic == "CLOSED":
         return
 
-    if not lic_files:
-        package_qa_handle_error("license-checksum", pn + ": Recipe file does not have license file information (LIC_FILES_CHKSUM)", d)
+    if not lic_files and d.getVar('SRC_URI', True):
+        package_qa_handle_error("license-checksum", pn + ": Recipe file fetches files and does not have license file information (LIC_FILES_CHKSUM)", d)
         return
 
     srcdir = d.getVar('S', True)
