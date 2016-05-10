@@ -26,9 +26,13 @@ SDK_RECRDEP_TASKS ?= ""
 SDK_LOCAL_CONF_WHITELIST ?= ""
 SDK_LOCAL_CONF_BLACKLIST ?= "CONF_VERSION \
                              BB_NUMBER_THREADS \
+                             BB_NUMBER_PARSE_THREADS \
                              PARALLEL_MAKE \
                              PRSERV_HOST \
                              SSTATE_MIRRORS \
+                             DL_DIR \
+                             SSTATE_DIR \
+                             TMPDIR \
                             "
 SDK_INHERIT_BLACKLIST ?= "buildhistory icecc"
 SDK_UPDATE_URL ?= ""
