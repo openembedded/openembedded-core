@@ -52,6 +52,10 @@ do_install() {
 
 	install -d ${D}${bindir}
 	ln -s ../../${libdir}/libc.so ${D}${bindir}/ldd
+	for l in crypt dl m pthread resolv rt util xnet
+	do
+		ln -s libc.so ${D}${libdir}/lib$l.so
+	done
 }
 
 RDEPENDS_${PN}-dev += "linux-libc-headers-dev bsd-headers-dev"
