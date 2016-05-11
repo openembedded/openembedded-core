@@ -105,6 +105,9 @@ def get_lic_checksum_file_list(d):
         # any others should be covered by SRC_URI.
         try:
             path = bb.fetch.decodeurl(url)[2]
+            if not path:
+                raise bb.fetch.MalformedUrl(url)
+
             if path[0] == '/':
                 if path.startswith(tmpdir):
                     continue
