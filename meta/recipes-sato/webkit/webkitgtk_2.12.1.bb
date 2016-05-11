@@ -12,15 +12,14 @@ LIC_FILES_CHKSUM = "file://Source/JavaScriptCore/COPYING.LIB;md5=d0c6d6397a5d842
 
 SRC_URI = "\
   http://www.webkitgtk.org/releases/${BPN}-${PV}.tar.xz \
-  file://clang.patch \
-  file://0001-Enable-backtrace-on-linux-when-using-glibc.patch \
-  file://0001-Fix-build-with-non-glibc-libraries-on-linux.patch \
   file://0001-FindGObjectIntrospection.cmake-prefix-variables-obta.patch \
   file://0001-When-building-introspection-files-add-CMAKE_C_FLAGS-.patch \
   file://0001-OptionsGTK.cmake-drop-the-hardcoded-introspection-gt.patch \
+  file://0001-WebKitMacros-Append-to-I-and-not-to-isystem.patch \
+  file://musl-fixes.patch \
   "
-SRC_URI[md5sum] = "84832b9d8329413b4f1d87df5f7e8efe"
-SRC_URI[sha256sum] = "990d62c82ed6dede31a6ff0a82d847f16b812842ff3e1093d17113627652864e"
+SRC_URI[md5sum] = "adcbee440d81acfb1ead9ada91bd5e79"
+SRC_URI[sha256sum] = "5b1a2d5227553f3cecbdb258c68b384f9235747b2c07c15afb555fe4fa6ae896"
 
 inherit cmake lib_package pkgconfig perlnative pythonnative distro_features_check upstream-version-is-even gobject-introspection
 
@@ -74,6 +73,9 @@ EXTRA_OECMAKE_append_aarch64 = " -DUSE_LD_GOLD=OFF "
 # JIT not supported on MIPS either
 EXTRA_OECMAKE_append_mips = " -DENABLE_JIT=OFF "
 EXTRA_OECMAKE_append_mips64 = " -DENABLE_JIT=OFF "
+
+SECURITY_CFLAGS_remove_aarch64 = "-fpie"
+SECURITY_CFLAGS_append_aarch64 = " -fPIE"
 
 FILES_${PN} += "${libdir}/webkit2gtk-4.0/injected-bundle/libwebkit2gtkinjectedbundle.so"
 
