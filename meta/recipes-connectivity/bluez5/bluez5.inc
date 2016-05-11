@@ -61,6 +61,10 @@ do_install_append() {
 	    install -m 0644 ${S}/profiles/input/input.conf ${D}/${sysconfdir}/bluetooth/
 	fi
 
+  if [ -f ${D}/${sysconfdir}/init.d/bluetooth ]; then
+    sed -i -e 's#@LIBEXECDIR@#${libexecdir}#g' ${D}/${sysconfdir}/init.d/bluetooth
+  fi
+
 	# Install desired tools that upstream leaves in build area
         for f in ${NOINST_TOOLS} ; do
 	    install -m 755 ${B}/$f ${D}/${bindir}
