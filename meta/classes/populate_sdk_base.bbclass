@@ -90,7 +90,7 @@ SDK_POSTPROCESS_COMMAND = " create_sdk_files; check_sdk_sysroots; tar_sdk; ${SDK
 # Some archs override this, we need the nativesdk version
 # turns out this is hard to get from the datastore due to TRANSLATED_TARGET_ARCH
 # manipulation.
-SDK_OLDEST_KERNEL = "2.6.32"
+SDK_OLDEST_KERNEL = "3.2.0"
 
 fakeroot python do_populate_sdk() {
     from oe.sdk import populate_sdk
