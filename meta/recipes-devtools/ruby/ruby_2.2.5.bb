@@ -1,7 +1,7 @@
 require ruby.inc
 
-SRC_URI[md5sum] = "326e99ddc75381c7b50c85f7089f3260"
-SRC_URI[sha256sum] = "5ffc0f317e429e6b29d4a98ac521c3ce65481bfd22a8cf845fa02a7b113d9b44"
+SRC_URI[md5sum] = "bd8e349d4fb2c75d90817649674f94be"
+SRC_URI[sha256sum] = "30c4b31697a4ca4ea0c8db8ad30cf45e6690a0f09687e5d483c933c03ca335e3"
 
 # it's unknown to configure script, but then passed to extconf.rb
 # maybe it's not really needed as we're hardcoding the result with
@@ -21,10 +21,6 @@ EXTRA_OECONF = "\
     --disable-dtrace \
     --enable-shared \
     --enable-load-relative \
-"
-
-EXTRA_OEMAKE = " \
-    LIBRUBYARG='-lruby-static' \
 "
 
 do_install() {
