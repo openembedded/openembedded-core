@@ -75,6 +75,7 @@ SRC_URI = "\
            file://0041-handle-target-sysroot-multilib.patch \
            file://0042-cxxflags-for-build.patch \
            file://CVE-2016-4488.patch \
+           file://CVE-2016-4489.patch \
           "
 
 BACKPORTS = ""
