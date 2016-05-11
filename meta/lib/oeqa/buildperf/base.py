@@ -172,6 +172,11 @@ class BuildPerfTest(object):
         measurement['values'] = {'size': size}
         self.results['measurements'].append(measurement)
 
+    def save_buildstats(self):
+        """Save buildstats"""
+        shutil.move(self.bb_vars['BUILDSTATS_BASE'],
+                    os.path.join(self.out_dir, 'buildstats-' + self.name))
+
     @staticmethod
     def force_rm(path):
         """Equivalent of 'rm -rf'"""
