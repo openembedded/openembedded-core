@@ -18,6 +18,7 @@ PV = "0.29.1+git${SRCPV}"
 SRC_URI = "git://anongit.freedesktop.org/pkg-config \
            file://pkg-config-native.in \
            file://fix-glib-configure-libtool-usage.patch \
+           file://0001-gdate-Move-warning-pragma-outside-of-function.patch \
            "
 
 S = "${WORKDIR}/git"
