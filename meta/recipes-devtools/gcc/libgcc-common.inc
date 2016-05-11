@@ -1,6 +1,6 @@
 BPN = "libgcc"
 
-require gcc-shared-source.inc
+require gcc-configure-common.inc
 
 INHIBIT_DEFAULT_DEPS = "1"
 
