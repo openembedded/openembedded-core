@@ -7,9 +7,8 @@ DEPENDS = "libtool bzip2 zlib virtual/libintl"
 DEPENDS_append_libc-musl = " argp-standalone fts "
 
 SRC_URI = "https://fedorahosted.org/releases/e/l/elfutils/${PV}/${BP}.tar.bz2"
-
-SRC_URI[md5sum] = "2e4536c1c48034f188a80789a59114d8"
-SRC_URI[sha256sum] = "9683c025928a12d06b7fe812928aa6235249e22d197d086f7084606a48165900"
+SRC_URI[md5sum] = "d4e462b7891915dc5326bccefa2024ff"
+SRC_URI[sha256sum] = "3c056914c8a438b210be0d790463b960fc79d234c3f05ce707cbff80e94cba30"
 
 SRC_URI += "\
         file://dso-link-change.patch \
@@ -36,6 +35,7 @@ SRC_URI += "\
         file://0002-Add-support-for-mips64-abis-in-mips_retval.c.patch \
         file://0003-Add-mips-n64-relocation-format-hack.patch \
         file://uclibc-support.patch \
+        file://elfcmp-fix-self-comparision.patch \
 "
 SRC_URI_append_libc-musl = " file://0001-build-Provide-alternatives-for-glibc-assumptions-hel.patch "
 
