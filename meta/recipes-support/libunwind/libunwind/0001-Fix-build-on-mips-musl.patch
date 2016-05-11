@@ -15,23 +15,17 @@ Upstream-Status: Pending
  src/mips/getcontext.S        |  3 +--
  2 files changed, 35 insertions(+), 2 deletions(-)
 
-diff --git a/src/coredump/_UCD_internal.h b/src/coredump/_UCD_internal.h
-index 3c95a2a..80acc15 100644
---- a/src/coredump/_UCD_internal.h
-+++ b/src/coredump/_UCD_internal.h
-@@ -34,6 +34,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.  */
- #ifdef HAVE_SYS_PROCFS_H
- #include <sys/procfs.h> /* struct elf_prstatus */
- #endif
-+#include <sys/reg.h>
- #include <errno.h>
- #include <string.h>
- #include <limits.h>
-@@ -44,6 +45,39 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.  */
+Index: git/src/coredump/_UCD_internal.h
+===================================================================
+--- git.orig/src/coredump/_UCD_internal.h
++++ git/src/coredump/_UCD_internal.h
+@@ -44,6 +44,41 @@ WITH THE SOFTWARE OR THE USE OR OTHER DE
  
  #include "libunwind_i.h"
  
 +#ifndef __GLIBC__
++#include <sys/reg.h>
++
 +#define EF_REG0			6
 +#define EF_REG1			7
 +#define EF_REG2			8
@@ -67,11 +61,11 @@ index 3c95a2a..80acc15 100644
  
  #if SIZEOF_OFF_T == 4
  typedef uint32_t uoff_t;
-diff --git a/src/mips/getcontext.S b/src/mips/getcontext.S
-index d1dbd57..de9b681 100644
---- a/src/mips/getcontext.S
-+++ b/src/mips/getcontext.S
-@@ -24,12 +24,11 @@ OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+Index: git/src/mips/getcontext.S
+===================================================================
+--- git.orig/src/mips/getcontext.S
++++ git/src/mips/getcontext.S
+@@ -24,12 +24,11 @@ OF CONTRACT, TORT OR OTHERWISE, ARISING
  WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.  */
  
  #include "offsets.h"
@@ -85,6 +79,3 @@ index d1dbd57..de9b681 100644
  #  define OFFSET 4
  # else
  #  define OFFSET 0
--- 
-1.8.3.1
-
