@@ -73,8 +73,20 @@ do_install () {
 	if [ "${TARGET_VENDOR_MULTILIB_ORIGINAL}" != "" -a "${TARGET_VENDOR}" != "${TARGET_VENDOR_MULTILIB_ORIGINAL}" ]; then
 		ln -s ${TARGET_SYS} ${D}${includedir}/c++/${BINV}/${TARGET_ARCH}${TARGET_VENDOR_MULTILIB_ORIGINAL}-${TARGET_OS}
 	fi
+
+}
+
+do_install_append_class-target () {
 	if [ "${TARGET_OS}" = "linux-gnuspe" ]; then
 		ln -s ${TARGET_SYS} ${D}${includedir}/c++/${BINV}/${TARGET_ARCH}${TARGET_VENDOR}-linux
+	fi
+	if [ "${TCLIBC}" != "glibc" ]; then
+		case "${TARGET_OS}" in
+			"linux-musl" | "linux-uclibc" | "linux-*spe") extra_target_os="linux";;
+			"linux-musleabi" | "linux-uclibceabi") extra_target_os="linux-gnueabi";;
+			*) extra_target_os="linux";;
+		esac
+		ln -s ${TARGET_SYS} ${D}${includedir}/c++/${BINV}/${TARGET_ARCH}${TARGET_VENDOR}-$extra_target_os
 	fi
 	chown -R root:root ${D}
 }
