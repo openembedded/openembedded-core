@@ -13,18 +13,12 @@ UPSTREAM_CHECK_REGEX = "/Mako/(?P<pver>(\d+[\.\-_]*)+)"
 
 S = "${WORKDIR}/Mako-${PV}"
 
-inherit setuptools
+inherit setuptools3
 
-RDEPENDS_${PN} = "python-threading \
-                  python-netclient \
-                  python-html \
+RDEPENDS_${PN} = "python3-threading \
+                  python3-netclient \
+                  python3-html \
 "
 RDEPENDS_${PN}_class-native = ""
 
 BBCLASSEXTEND = "native nativesdk"
-
-# The same utility is packaged in python3-mako, so it would conflict
-do_install_append() {
-    rm -f ${D}${bindir}/mako-render
-    rm -df ${D}${bindir}
-}
