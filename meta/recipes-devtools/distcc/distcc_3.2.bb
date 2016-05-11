@@ -5,7 +5,7 @@ SECTION = "devel"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f"
 
-DEPENDS = "avahi"
+DEPENDS = "avahi binutils"
 
 GTKCONFIG = "gtk"
 GTKCONFIG_libc-uclibc = ""
@@ -17,19 +17,19 @@ PACKAGECONFIG[popt] = "--without-included-popt,--with-included-popt,popt"
 
 RRECOMMENDS_${PN} = "avahi-daemon"
 
-SRC_URI = "git://github.com/distcc/distcc.git \
+SRC_URI = "git://github.com/distcc/distcc.git;branch=${PV} \
            file://separatebuilddir.patch \
            file://0001-zeroconf-Include-fcntl.h.patch \
            file://default \
            file://distccmon-gnome.desktop \
            file://distcc \
            file://distcc.service"
-SRCREV = "9a172d3d20042754a30c0cd9a5d63fd1a8120c31"
+SRCREV = "d8b18df3e9dcbe4f092bed565835d3975e99432c"
 S = "${WORKDIR}/git"
 
 inherit autotools pkgconfig update-rc.d useradd systemd
 
-EXTRA_OECONF += "--disable-Werror PYTHON=/dev/null"
+EXTRA_OECONF += "--disable-Werror PYTHON='' --disable-pump-mode"
 
 USERADD_PACKAGES = "${PN}"
 USERADD_PARAM_${PN} = "--system \
