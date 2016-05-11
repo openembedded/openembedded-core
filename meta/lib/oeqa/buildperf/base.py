@@ -75,6 +75,7 @@ def time_cmd(cmd, **kwargs):
 class BuildPerfTest(object):
     """Base class for build performance tests"""
     SYSRES = 'sysres'
+    DISKUSAGE = 'diskusage'
 
     name = None
     description = None
@@ -152,6 +153,24 @@ class BuildPerfTest(object):
                                    'results.log.{}'.format(nlogs + 1))
         with open(results_log, 'w') as fobj:
             fobj.write(timedata)
+
+    def measure_disk_usage(self, path, name, legend):
+        """Estimate disk usage of a file or directory"""
+        # TODO: 'ignore_status' could/should be removed when globalres.log is
+        # deprecated. The function would just raise an exception, instead
+        ret = runCmd(['du', '-s', path], ignore_status=True)
+        if ret.status:
+            log.error("du failed, disk usage will be reported as 0")
+            size = 0
+            self._failed = True
+        else:
+            size = int(ret.output.split()[0])
+            log.debug("Size of %s path is %s", path, size)
+        measurement = {'type': self.DISKUSAGE,
+                       'name': name,
+                       'legend': legend}
+        measurement['values'] = {'size': size}
+        self.results['measurements'].append(measurement)
 
     @staticmethod
     def force_rm(path):
