@@ -17,15 +17,13 @@ URL: https://bugs.gentoo.org/542618
 
 Signed-off-By: Armin Kuster <akuster@mvista.com>
 
-Index: openssl-1.0.2a/crypto/perlasm/x86_64-xlate.pl
-===================================================================
---- openssl-1.0.2a.orig/crypto/perlasm/x86_64-xlate.pl
-+++ openssl-1.0.2a/crypto/perlasm/x86_64-xlate.pl
-@@ -194,7 +194,10 @@ my %globals;
-     }
-     sub out {
+diff --git a/crypto/perlasm/x86_64-xlate.pl b/crypto/perlasm/x86_64-xlate.pl
+--- a/crypto/perlasm/x86_64-xlate.pl
++++ b/crypto/perlasm/x86_64-xlate.pl
+@@ -196,6 +196,10 @@ my %globals;
      	my $self = shift;
--
+ 
+ 	$self->{value} =~ s/\b(0b[0-1]+)/oct($1)/eig;
 +	# When building on x32 ABIs, the expanded hex value might be too
 +	# big to fit into 32bits. Enable transparent 64bit support here
 +	# so we can safely print it out.
