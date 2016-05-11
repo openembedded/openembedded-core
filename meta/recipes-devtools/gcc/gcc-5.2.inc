@@ -76,6 +76,7 @@ SRC_URI = "\
            file://0042-cxxflags-for-build.patch \
            file://CVE-2016-4488.patch \
            file://CVE-2016-4489.patch \
+           file://CVE-2016-2226.patch \
           "
 
 BACKPORTS = ""
