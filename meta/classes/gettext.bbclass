@@ -15,5 +15,5 @@ def gettext_oeconf(d):
 
 DEPENDS_GETTEXT ??= "virtual/gettext gettext-native"
 
-BASEDEPENDS =+ "${@gettext_dependencies(d)}"
+BASEDEPENDS_append = " ${@gettext_dependencies(d)}"
 EXTRA_OECONF_append = " ${@gettext_oeconf(d)}"
