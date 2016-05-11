@@ -68,6 +68,7 @@ python () {
     elif tarch == "mips64":
         d.appendVar("CANADIANEXTRAOS", " linux-gnun32 linux-uclibcn32 linux-musln32")
     if tarch == "arm" or tarch == "armeb":
+        d.appendVar("CANADIANEXTRAOS", " linux-musleabi linux-uclibceabi")
         d.setVar("TARGET_OS", "linux-gnueabi")
     else:
         d.setVar("TARGET_OS", "linux")
