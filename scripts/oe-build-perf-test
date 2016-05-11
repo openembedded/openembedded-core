@@ -18,11 +18,12 @@ import argparse
 import logging
 import os
 import sys
+from datetime import datetime
 
 sys.path.insert(0, os.path.dirname(os.path.realpath(__file__)) + '/lib')
 import scriptpath
 scriptpath.add_oe_lib_path()
-from oeqa.buildperf import KernelDropCaches
+from oeqa.buildperf import BuildPerfTestRunner, KernelDropCaches
 from oeqa.utils.commands import runCmd
 
 
@@ -75,7 +76,12 @@ def main(argv=None):
     # Check our capability to drop caches and ask pass if needed
     KernelDropCaches.check()
 
-    return 0
+    # Run actual tests
+    out_dir = 'results-{}'.format(datetime.now().strftime('%Y%m%d%H%M%S'))
+    runner = BuildPerfTestRunner(out_dir)
+    ret = runner.run_tests()
+
+    return ret
 
 
 if __name__ == '__main__':

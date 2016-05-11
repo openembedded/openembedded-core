@@ -15,8 +15,10 @@ import logging
 import os
 import re
 import shutil
+import socket
 import tempfile
 import time
+import traceback
 from datetime import datetime, timedelta
 
 from oeqa.utils.commands import runCmd, get_bb_vars
@@ -70,6 +72,51 @@ def time_cmd(cmd, **kwargs):
         ret = runCmd(timecmd, ignore_status=True, **kwargs)
         timedata = tmpf.file.read()
     return ret, timedata
+
+
+class BuildPerfTestRunner(object):
+    """Runner class for executing the individual tests"""
+    # List of test cases to run
+    test_run_queue = []
+
+    def __init__(self, out_dir):
+        self.results = {}
+        self.out_dir = os.path.abspath(out_dir)
+        if not os.path.exists(self.out_dir):
+            os.makedirs(self.out_dir)
+
+
+    def run_tests(self):
+        """Method that actually runs the tests"""
+        self.results['schema_version'] = 1
+        self.results['tester_host'] = socket.gethostname()
+        start_time = datetime.utcnow()
+        self.results['start_time'] = start_time
+        self.results['tests'] = {}
+
+        for test_class in self.test_run_queue:
+            log.info("Executing test %s: %s", test_class.name,
+                     test_class.description)
+
+            test = test_class(self.out_dir)
+            try:
+                test.run()
+            except Exception:
+                # Catch all exceptions. This way e.g buggy tests won't scrap
+                # the whole test run
+                sep = '-' * 5 + ' TRACEBACK ' + '-' * 60 + '\n'
+                tb_msg = sep + traceback.format_exc() + sep
+                log.error("Test execution failed with:\n" + tb_msg)
+            self.results['tests'][test.name] = test.results
+
+        self.results['elapsed_time'] = datetime.utcnow() - start_time
+        return 0
+
+
+def perf_test_case(obj):
+    """Decorator for adding test classes"""
+    BuildPerfTestRunner.test_run_queue.append(obj)
+    return obj
 
 
 class BuildPerfTest(object):
