@@ -10,11 +10,14 @@
 # more details.
 #
 """Build performance test base classes and functionality"""
+import glob
 import logging
 import os
+import re
 import shutil
+import tempfile
 import time
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from oeqa.utils.commands import runCmd, get_bb_vars
 
@@ -55,8 +58,24 @@ class KernelDropCaches(object):
         runCmd(cmd, data=input_data)
 
 
+def time_cmd(cmd, **kwargs):
+    """TIme a command"""
+    with tempfile.NamedTemporaryFile(mode='w+') as tmpf:
+        timecmd = ['/usr/bin/time', '-v', '-o', tmpf.name]
+        if isinstance(cmd, str):
+            timecmd = ' '.join(timecmd) + ' '
+        timecmd += cmd
+        # TODO: 'ignore_status' could/should be removed when globalres.log is
+        # deprecated. The function would just raise an exception, instead
+        ret = runCmd(timecmd, ignore_status=True, **kwargs)
+        timedata = tmpf.file.read()
+    return ret, timedata
+
+
 class BuildPerfTest(object):
     """Base class for build performance tests"""
+    SYSRES = 'sysres'
+
     name = None
     description = None
 
@@ -73,6 +92,10 @@ class BuildPerfTest(object):
         if not self.name:
             self.name = self.__class__.__name__
         self.bb_vars = get_bb_vars()
+        # TODO: remove the _failed flag when globalres.log is ditched as all
+        # failures should raise an exception
+        self._failed = False
+        self.cmd_log = os.path.join(self.out_dir, 'commands.log')
 
     def run(self):
         """Run test"""
@@ -82,11 +105,48 @@ class BuildPerfTest(object):
         self.results['elapsed_time'] = (datetime.now() -
                                         self.results['start_time'])
         # Test is regarded as completed if it doesn't raise an exception
-        self.results['status'] = 'COMPLETED'
+        if not self._failed:
+            self.results['status'] = 'COMPLETED'
 
     def _run(self):
         """Actual test payload"""
         raise NotImplementedError
+
+    def measure_cmd_resources(self, cmd, name, legend):
+        """Measure system resource usage of a command"""
+        def str_time_to_timedelta(strtime):
+            """Convert time strig from the time utility to timedelta"""
+            split = strtime.split(':')
+            hours = int(split[0]) if len(split) > 2 else 0
+            mins = int(split[-2])
+            secs, frac = split[-1].split('.')
+            secs = int(secs)
+            microsecs = int(float('0.' + frac) * pow(10, 6))
+            return timedelta(0, hours*3600 + mins*60 + secs, microsecs)
+
+        cmd_str = cmd if isinstance(cmd, str) else ' '.join(cmd)
+        log.info("Timing command: %s", cmd_str)
+        with open(self.cmd_log, 'a') as fobj:
+            ret, timedata = time_cmd(cmd, stdout=fobj)
+        if ret.status:
+            log.error("Time will be reported as 0. Command failed: %s",
+                      ret.status)
+            etime = timedelta(0)
+            self._failed = True
+        else:
+            match = re.search(r'.*wall clock.*: (?P<etime>.*)\n', timedata)
+            etime = str_time_to_timedelta(match.group('etime'))
+
+        measurement = {'type': self.SYSRES,
+                       'name': name,
+                       'legend': legend}
+        measurement['values'] = {'elapsed_time': etime}
+        self.results['measurements'].append(measurement)
+        nlogs = len(glob.glob(self.out_dir + '/results.log*'))
+        results_log = os.path.join(self.out_dir,
+                                   'results.log.{}'.format(nlogs + 1))
+        with open(results_log, 'w') as fobj:
+            fobj.write(timedata)
 
     @staticmethod
     def force_rm(path):
