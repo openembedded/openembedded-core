@@ -52,6 +52,17 @@ def pre_run_sanity_check():
     return True
 
 
+def setup_file_logging(log_file):
+    """Setup loggin to file"""
+    log_dir = os.path.dirname(log_file)
+    if not os.path.exists(log_dir):
+        os.makedirs(log_dir)
+    formatter = logging.Formatter(LOG_FORMAT)
+    handler = logging.FileHandler(log_file)
+    handler.setFormatter(formatter)
+    log.addHandler(handler)
+
+
 def parse_args(argv):
     """Parse command line arguments"""
     parser = argparse.ArgumentParser(
@@ -76,8 +87,11 @@ def main(argv=None):
     # Check our capability to drop caches and ask pass if needed
     KernelDropCaches.check()
 
-    # Run actual tests
+    # Set-up log file
     out_dir = 'results-{}'.format(datetime.now().strftime('%Y%m%d%H%M%S'))
+    setup_file_logging(os.path.join(out_dir, 'output.log'))
+
+    # Run actual tests
     runner = BuildPerfTestRunner(out_dir)
     ret = runner.run_tests()
 
