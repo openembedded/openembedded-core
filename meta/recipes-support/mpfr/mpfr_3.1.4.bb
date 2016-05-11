@@ -8,9 +8,8 @@ DEPENDS = "gmp"
 SRC_URI = "http://www.mpfr.org/mpfr-${PV}/mpfr-${PV}.tar.xz \
            file://long-long-thumb.patch \
            "
-
-SRC_URI[md5sum] = "6969398cd2fbc56a6af570b5273c56a9"
-SRC_URI[sha256sum] = "6835a08bd992c8257641791e9a6a2b35b02336c8de26d0a8577953747e514a16"
+SRC_URI[md5sum] = "064b2c18185038e404a401b830d59be8"
+SRC_URI[sha256sum] = "761413b16d749c53e2bfd2b1dfaa3b027b0e793e404b90b5fbaeef60af6517f5"
 
 UPSTREAM_CHECK_URI = "http://www.mpfr.org/mpfr-current/"
 
