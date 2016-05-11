@@ -16,7 +16,8 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/strace/strace-${PV}.tar.xz \
            file://0001-Move-gcc-compat-macros-to-gcc_compat.h.patch \
            file://0001-tests-introduce-libtests.patch \
            file://run-ptest \
-          "
+           file://0001-Fix-build-when-using-non-glibc-libc-implementation-o.patch \
+           "
 
 SRC_URI[md5sum] = "a15d2555a7febb56d00c6e1a51c655dc"
 SRC_URI[sha256sum] = "e86a5f6cd8f941f67f3e4b28f4e60f3d9185c951cf266404533210a2e5cd8152"
