@@ -40,7 +40,10 @@ EXTRA_OECONF = "--disable-gdbtk --disable-tui --disable-x --disable-werror \
                 ${GDBPROPREFIX} ${EXPAT} \
                 ${@bb.utils.contains('DISTRO_FEATURES', 'multiarch', '--enable-64-bit-bfd', '', d)} \
                 --disable-rpath \
-               "
+                --disable-gas --disable-binutils \
+                --disable-ld --disable-gold \
+                --disable-gprof \
+"
 
 PACKAGECONFIG ??= "readline"
 # Use --without-system-readline to compile with readline 5.
