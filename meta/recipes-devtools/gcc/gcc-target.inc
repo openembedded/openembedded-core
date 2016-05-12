@@ -205,6 +205,4 @@ do_install_append () {
 # and builds track file dependencies (e.g. perl and its makedepends code).
 # For determinism we don't install this ever and rely on the copy from gcc-cross.
 # [YOCTO #7287]
-sysroot_stage_dirs_append () {
-	rm -rf $to${libdir}/gcc
-}
+SYSROOT_DIRS_BLACKLIST += "${libdir}/gcc"
