@@ -1408,6 +1408,91 @@ class RpmPM(PackageManager):
         for f in rpm_db_locks:
             bb.utils.remove(f, True)
 
+    """
+    Returns a dictionary with the package info.
+    """
+    def package_info(self, pkg):
+        cmd = "%s %s info --urls %s" % (self.smart_cmd, self.smart_opt, pkg)
+        try:
+            output = subprocess.check_output(cmd, stderr=subprocess.STDOUT, shell=True)
+        except subprocess.CalledProcessError as e:
+            bb.fatal("Unable to list available packages. Command '%s' "
+                     "returned %d:\n%s" % (cmd, e.returncode, e.output))
+
+        # Set default values to avoid UnboundLocalError
+        arch = ""
+        ver = ""
+        filename = ""
+
+        #Parse output
+        for line in output.splitlines():
+            line = line.rstrip()
+            if line.startswith("Name:"):
+                pkg = line.split(": ")[1]
+            elif line.startswith("Version:"):
+                tmp_str = line.split(": ")[1]
+                ver, arch = tmp_str.split("@")
+                break
+
+        # Get filename
+        index = re.search("^URLs", output, re.MULTILINE)
+        tmp_str = output[index.end():]
+        for line in tmp_str.splitlines():
+            if "/" in line:
+                line = line.lstrip()
+                filename = line.split(" ")[0]
+                break
+
+        # To have the same data type than other package_info methods
+        pkg_dict = {}
+        pkg_dict[pkg] = {"arch":arch, "ver":ver, "filename":filename}
+
+        return pkg_dict
+
+    """
+    Returns the path to a tmpdir where resides the contents of a package.
+
+    Deleting the tmpdir is responsability of the caller.
+
+    """
+    def extract(self, pkg):
+        pkg_info = self.package_info(pkg)
+        if not pkg_info:
+            bb.fatal("Unable to get information for package '%s' while "
+                     "trying to extract the package."  % pkg)
+
+        pkg_arch = pkg_info[pkg]["arch"]
+        pkg_filename = pkg_info[pkg]["filename"]
+        pkg_path = os.path.join(self.deploy_dir, pkg_arch, pkg_filename)
+
+        cpio_cmd = bb.utils.which(os.getenv("PATH"), "cpio")
+        rpm2cpio_cmd = bb.utils.which(os.getenv("PATH"), "rpm2cpio")
+
+        if not os.path.isfile(pkg_path):
+            bb.fatal("Unable to extract package for '%s'."
+                     "File %s doesn't exists" % (pkg, pkg_path))
+
+        tmp_dir = tempfile.mkdtemp()
+        current_dir = os.getcwd()
+        os.chdir(tmp_dir)
+
+        try:
+            cmd = "%s %s | %s -idmv" % (rpm2cpio_cmd, pkg_path, cpio_cmd)
+            output = subprocess.check_output(cmd, stderr=subprocess.STDOUT, shell=True)
+        except subprocess.CalledProcessError as e:
+            bb.utils.remove(tmp_dir, recurse=True)
+            bb.fatal("Unable to extract %s package. Command '%s' "
+                     "returned %d:\n%s" % (pkg_path, cmd, e.returncode, e.output))
+        except OSError as e:
+            bb.utils.remove(tmp_dir, recurse=True)
+            bb.fatal("Unable to extract %s package. Command '%s' "
+                     "returned %d:\n%s at %s" % (pkg_path, cmd, e.errno, e.strerror, e.filename))
+
+        bb.note("Extracted %s to %s" % (pkg_path, tmp_dir))
+        os.chdir(current_dir)
+
+        return tmp_dir
+
 
 class OpkgDpkgPM(PackageManager):
     """
