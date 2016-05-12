@@ -12,6 +12,8 @@ inherit allarch deploy
 EXCLUDE_FROM_WORLD = "1"
 INHIBIT_DEFAULT_DEPS = "1"
 
+SYSROOT_DIRS += "${sysconfdir}/pki"
+
 PACKAGES =+ "${PN}-ipk ${PN}-rpm ${PN}-packagefeed"
 
 FILES_${PN}-rpm = "${sysconfdir}/pki/rpm-gpg"
@@ -52,10 +54,6 @@ do_install () {
     if [ -f "${B}/pf-key" ]; then
         install -D -m 0644 "${B}/pf-key" "${D}${sysconfdir}/pki/packagefeed-gpg/PACKAGEFEED-GPG-KEY-${DISTRO_VERSION}"
     fi
-}
-
-sysroot_stage_all_append () {
-    sysroot_stage_dir ${D}${sysconfdir}/pki ${SYSROOT_DESTDIR}${sysconfdir}/pki
 }
 
 do_deploy () {
