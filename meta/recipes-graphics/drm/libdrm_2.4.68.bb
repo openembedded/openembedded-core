@@ -15,8 +15,8 @@ SRC_URI = "http://dri.freedesktop.org/libdrm/${BP}.tar.bz2 \
            file://fix_O_CLOEXEC_undeclared.patch \
           "
 
-SRC_URI[md5sum] = "b844c6af34e613ebf52f80b3cd8d7055"
-SRC_URI[sha256sum] = "ee5b71e1113be37544d0752681c12f040c01f782e2933df7d7bc21fd0d10cebe"
+SRC_URI[md5sum] = "bcc96848d969cecf28223f668eeff354"
+SRC_URI[sha256sum] = "5b4bd9a5922929bc716411cb74061fbf31b06ba36feb89bc1358a91a8d0ca9df"
 
 inherit autotools pkgconfig
 
