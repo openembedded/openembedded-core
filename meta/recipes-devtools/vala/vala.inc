@@ -36,15 +36,14 @@ do_install_append_class-target() {
         install ${B}/vapigen-wrapper ${D}${bindir}/
 }
 
+# Put vapigen wrapper into target sysroot so that it can be used when building
+# vapi files.
+SYSROOT_DIRS_append_class-target = " ${bindir}"
 
-SYSROOT_PREPROCESS_FUNCS_append_class-target += "vapigen_sysroot_preprocess"
-
+SYSROOT_PREPROCESS_FUNCS_append_class-target = " vapigen_sysroot_preprocess"
 vapigen_sysroot_preprocess() {
-        # Put vapigen wrapper into target sysroot so that it can be used when building vapi files.
-        sysroot_stage_dir ${D}${bindir} ${SYSROOT_DESTDIR}${bindir}
-
-        # Also, tweak the vapigen name in vapigen pkgconfig file, so that it picks up our
-        # wrapper.
+        # Tweak the vapigen name in the vapigen pkgconfig file, so that it picks
+        # up our wrapper.
         sed -i \
            -e "s|vapigen=.*|vapigen=${bindir}/vapigen-wrapper|" \
            ${SYSROOT_DESTDIR}${datadir}/pkgconfig/vapigen-${SHRT_VER}.pc
