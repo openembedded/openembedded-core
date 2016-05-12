@@ -58,6 +58,11 @@ python errorreport_handler () {
                 try:
                     logFile = codecs.open(log, 'r', 'utf-8')
                     logdata = logFile.read()
+
+                    topdir = e.data.getVar('TOPDIR', True)
+                    if topdir:
+                        logdata = logdata.replace(topdir, ' ')
+
                     logFile.close()
                 except:
                     logdata = "Unable to read log file"
