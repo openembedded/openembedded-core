@@ -151,13 +151,12 @@ FILES_${PN}-staticdev += "${libdir}/gobject-introspection/giscanner/*.a"
 
 # we need target versions of introspection tools in sysroot so that they can be run via qemu
 # when building introspection files in other packages
-SYSROOT_PREPROCESS_FUNCS_append_class-target += "gi_binaries_sysroot_preprocess"
+SYSROOT_DIRS_append_class-target = " ${bindir}"
 
+SYSROOT_PREPROCESS_FUNCS_append_class-target = " gi_binaries_sysroot_preprocess"
 gi_binaries_sysroot_preprocess() {
-        sysroot_stage_dir ${D}${bindir} ${SYSROOT_DESTDIR}${bindir}
-
-        # Also, tweak the binary names in introspection pkgconfig file, so that it picks up our 
-        # wrappers which do the cross-compile and qemu magic.
+        # Tweak the binary names in the introspection pkgconfig file, so that it
+        # picks up our wrappers which do the cross-compile and qemu magic.
         sed -i \
            -e "s|g_ir_scanner=.*|g_ir_scanner=${bindir}/g-ir-scanner-wrapper|" \
            -e "s|g_ir_compiler=.*|g_ir_compiler=${bindir}/g-ir-compiler-wrapper|" \
