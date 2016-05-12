@@ -68,10 +68,7 @@ do_install() {
 	done
 }
 
-SYSROOT_PREPROCESS_FUNCS += "tcl_sysroot_preprocess"
-tcl_sysroot_preprocess () {
-	sysroot_stage_dir ${D}${bindir_crossscripts} ${SYSROOT_DESTDIR}${bindir_crossscripts}
-}
+SYSROOT_DIRS += "${bindir_crossscripts}"
 
 PACKAGES =+ "tcl-lib"
 FILES_tcl-lib = "${libdir}/libtcl8.6.so.*"
