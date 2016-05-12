@@ -63,7 +63,4 @@ do_configure_prepend() {
 
 # grub and grub-efi's sysroot/${datadir}/grub/grub-mkconfig_lib are
 # conflicted, remove it since no one uses it.
-SYSROOT_PREPROCESS_FUNCS_class-target += "remove_sysroot_mkconfig_lib"
-remove_sysroot_mkconfig_lib() {
-    rm -r "${SYSROOT_DESTDIR}${datadir}/grub/grub-mkconfig_lib"
-}
+SYSROOT_DIRS_BLACKLIST += "${datadir}/grub/grub-mkconfig_lib"
