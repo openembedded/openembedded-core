@@ -121,7 +121,7 @@ while true; do
     arg=${1}
     case "$arg" in
         "qemux86" | "qemux86-64" | "qemuarm" | "qemuarm64" | "qemumips" | "qemumipsel" | \
-        "qemumips64" | "qemush4"  | "qemuppc" | "qemumicroblaze" | "qemuzynq")
+        "qemumips64" | "qemush4"  | "qemuppc" | "qemumicroblaze" | "qemuzynq" | "qemuzynqmp")
             [ -z "$MACHINE" -o "$MACHINE" = "$arg" ] && MACHINE=$arg || \
                 error "conflicting MACHINE types [$MACHINE] and [$arg]"
             ;;
@@ -350,6 +350,10 @@ QEMUMICROBLAZE_DEFAULT_FSTYPE=cpio
 QEMUZYNQ_DEFAULT_KERNEL=uImage
 QEMUZYNQ_DEFAULT_FSTYPE=cpio
 
+# Default to booting u-boot as a direct Linux boot isn't supported yet.
+QEMUZYNQMP_DEFAULT_KERNEL=u-boot-qemuzynqmp.elf
+QEMUZYNQMP_DEFAULT_FSTYPE=cpio
+
 setup_path_vars() {
     if [ -z "$OE_TMPDIR" ] ; then
         PATHS_REQUIRED=true
@@ -381,6 +385,9 @@ setup_path_vars() {
         fi
         if [ -z "$DEPLOY_DIR_IMAGE" ] ; then
             DEPLOY_DIR_IMAGE=`sed -n 's/^DEPLOY_DIR_IMAGE=\"\(.*\)\"/\1/p' $BITBAKE_ENV_TMPFILE`
+        fi
+        if [ -z "$QEMU_DTB" ] ; then
+            QEMU_DTB=`sed -n 's/^QEMU_DTB=\"\(.*\)\"/\1/p' $BITBAKE_ENV_TMPFILE`
         fi
         if [ -z "$OE_TMPDIR" ]; then
             # Check for errors from bitbake that the user needs to know about

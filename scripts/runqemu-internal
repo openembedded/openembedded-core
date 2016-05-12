@@ -498,6 +498,24 @@ config_qemuzynq() {
     fi
 }
 
+config_qemuzynqmp() {
+    set_mem_size 2048
+    QEMU=qemu-system-aarch64
+
+    export QEMU_AUDIO_DRV="none"
+    if [ "x$SERIALSTDIO" = "x" ] ; then
+        QEMU_UI_OPTIONS="-nographic"
+    else
+        QEMU_UI_OPTIONS=""
+    fi
+
+    # Networking and system options required for QEMU ZynqMP machine
+    QEMU_NETWORK_CMD="-net nic -net nic -net nic -net nic -net user,net=10.10.70.0,dhcpstart=10.10.70.1,host=10.10.70.101"
+    QEMU_SYSTEM_OPTIONS="$QEMU_NETWORK_CMD -M xlnx-ep108 -serial mon:stdio -dtb $DEPLOY_DIR_IMAGE/${QEMU_DTB}.dtb"
+
+    QEMUOPTIONS="$QEMU_SYSTEM_OPTIONS $QEMU_UI_OPTIONS -tftp $DEPLOY_DIR_IMAGE"
+}
+
 config_qemumicroblaze() {
     set_mem_size 256
     QEMU=qemu-system-microblazeel
@@ -532,6 +550,9 @@ case "$MACHINE" in
         ;;
     "qemuzynq")
         config_qemuzynq
+        ;;
+    "qemuzynqmp")
+        config_qemuzynqmp
         ;;
     "qemumicroblaze")
         config_qemumicroblaze
