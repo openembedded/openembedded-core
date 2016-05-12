@@ -903,13 +903,13 @@ def check_sanity_everybuild(status, d):
                 continue
 
             if mirror.startswith('file://'):
-                import urlparse
-                check_symlink(urlparse.urlparse(mirror).path, d)
+                import urllib
+                check_symlink(urllib.parse.urlparse(mirror).path, d)
                 # SSTATE_MIRROR ends with a /PATH string
                 if mirror.endswith('/PATH'):
                     # remove /PATH$ from SSTATE_MIRROR to get a working
                     # base directory path
-                    mirror_base = urlparse.urlparse(mirror[:-1*len('/PATH')]).path
+                    mirror_base = urllib.parse.urlparse(mirror[:-1*len('/PATH')]).path
                     check_symlink(mirror_base, d)
 
     # Check that TMPDIR hasn't changed location since the last time we were run
