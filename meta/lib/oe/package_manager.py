@@ -27,6 +27,55 @@ def create_index(arg):
 
     return None
 
+"""
+This method parse the output from the package managerand return
+a dictionary with the information of the packages. This is used
+when the packages are in deb or ipk format.
+"""
+def opkg_query(cmd_output):
+    verregex = re.compile(' \([=<>]* [^ )]*\)')
+    output = dict()
+    filename = ""
+    dep = []
+    pkg = ""
+    for line in cmd_output.splitlines():
+        line = line.rstrip()
+        if ':' in line:
+            if line.startswith("Package: "):
+                pkg = line.split(": ")[1]
+            elif line.startswith("Architecture: "):
+                arch = line.split(": ")[1]
+            elif line.startswith("Version: "):
+                ver = line.split(": ")[1]
+            elif line.startswith("File: "):
+                filename = line.split(": ")[1]
+            elif line.startswith("Depends: "):
+                depends = verregex.sub('', line.split(": ")[1])
+                for depend in depends.split(", "):
+                    dep.append(depend)
+            elif line.startswith("Recommends: "):
+                recommends = verregex.sub('', line.split(": ")[1])
+                for recommend in recommends.split(", "):
+                    dep.append("%s [REC]" % recommend)
+        else:
+            # IPK doesn't include the filename
+            if not filename:
+                filename = "%s_%s_%s.ipk" % (pkg, ver, arch)
+            if pkg:
+                output[pkg] = {"arch":arch, "ver":ver,
+                        "filename":filename, "deps": dep }
+            pkg = ""
+            filename = ""
+            dep = []
+
+    if pkg:
+        if not filename:
+            filename = "%s_%s_%s.ipk" % (pkg, ver, arch)
+        output[pkg] = {"arch":arch, "ver":ver,
+                "filename":filename, "deps": dep }
+
+    return output
+
 
 class Indexer(object):
     __metaclass__ = ABCMeta
@@ -293,57 +342,6 @@ class PkgsList(object):
         pass
 
 
-    """
-    This method parse the output from the package manager
-    and return a dictionary with the information of the
-    installed packages. This is used whne the packages are
-    in deb or ipk format
-    """
-    def opkg_query(self, cmd_output):
-        verregex = re.compile(' \([=<>]* [^ )]*\)')
-        output = dict()
-        filename = ""
-        dep = []
-        pkg = ""
-        for line in cmd_output.splitlines():
-            line = line.rstrip()
-            if ':' in line:
-                if line.startswith("Package: "):
-                    pkg = line.split(": ")[1]
-                elif line.startswith("Architecture: "):
-                    arch = line.split(": ")[1]
-                elif line.startswith("Version: "):
-                    ver = line.split(": ")[1]
-                elif line.startswith("File: "):
-                    filename = line.split(": ")[1]
-                elif line.startswith("Depends: "):
-                    depends = verregex.sub('', line.split(": ")[1])
-                    for depend in depends.split(", "):
-                        dep.append(depend)
-                elif line.startswith("Recommends: "):
-                    recommends = verregex.sub('', line.split(": ")[1])
-                    for recommend in recommends.split(", "):
-                        dep.append("%s [REC]" % recommend)
-            else:
-                # IPK doesn't include the filename
-                if not filename:
-                    filename = "%s_%s_%s.ipk" % (pkg, ver, arch)
-                if pkg:
-                    output[pkg] = {"arch":arch, "ver":ver,
-                            "filename":filename, "deps": dep }
-                pkg = ""
-                filename = ""
-                dep = []
-
-        if pkg:
-            if not filename:
-                filename = "%s_%s_%s.ipk" % (pkg, ver, arch)
-            output[pkg] = {"arch":arch, "ver":ver,
-                    "filename":filename, "deps": dep }
-
-        return output
-
-
 class RpmPkgsList(PkgsList):
     def __init__(self, d, rootfs_dir, arch_var=None, os_var=None):
         super(RpmPkgsList, self).__init__(d, rootfs_dir)
@@ -479,7 +477,7 @@ class OpkgPkgsList(PkgsList):
             bb.fatal("Cannot get the installed packages list. Command '%s' "
                      "returned %d and stderr:\n%s" % (cmd, p.returncode, cmd_stderr))
 
-        return self.opkg_query(cmd_output)
+        return opkg_query(cmd_output)
 
 
 class DpkgPkgsList(PkgsList):
@@ -497,7 +495,7 @@ class DpkgPkgsList(PkgsList):
             bb.fatal("Cannot get the installed packages list. Command '%s' "
                      "returned %d:\n%s" % (' '.join(cmd), e.returncode, e.output))
 
-        return self.opkg_query(cmd_output)
+        return opkg_query(cmd_output)
 
 
 class PackageManager(object):
