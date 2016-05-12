@@ -15,8 +15,8 @@ SRC_URI += "file://configure-fix-Darwin-target-detection.patch \
             file://CVE-2016-2858.patch \
            "
 SRC_URI_prepend = "http://wiki.qemu-project.org/download/${BP}.tar.bz2"
-SRC_URI[md5sum] = "42e73182dea8b9213fa7050e168a4615"
-SRC_URI[sha256sum] = "028752c33bb786abbfe496ba57315dc5a7d0a33b5a7a767f6d7a29020c525d2c"
+SRC_URI[md5sum] = "f5ff0e71398b9e428b4f177001ba4285"
+SRC_URI[sha256sum] = "28d9946e43765a44ccccca3cba5f4f9034f2759ec1f2ce16594ddb6776c8efe6"
 
 COMPATIBLE_HOST_class-target_mips64 = "null"
 
