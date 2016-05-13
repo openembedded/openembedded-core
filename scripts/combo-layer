@@ -641,8 +641,7 @@ def action_update(conf, args):
         history = None
         for name in repos:
             repo = conf.repos[name]
-            repo_history = repo.get('history', True)
-            logger.error('%s: %s' % (name, repo_history))
+            repo_history = repo.get('history', False)
             if history is None:
                 history = repo_history
             elif history != repo_history:
