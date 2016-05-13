@@ -11,7 +11,9 @@ DEPENDS = "gtk+ intltool-native libowl gettext-native"
 REQUIRED_DISTRO_FEATURES = "x11"
 
 SRC_URI = "${SAVANNAH_NONGNU_MIRROR}/${BPN}/${BPN}-${PV}.tar.gz \
-	   file://leafpad.desktop"
+           file://leafpad.desktop \
+           file://src-dialog-gtkprint-.c-Fix-security-formatting-issue.patch \
+           "
 
 SRC_URI[md5sum] = "254a72fc67505e3aa52884c729cd7b97"
 SRC_URI[sha256sum] = "959d22ae07f22803bc66ff40d373a854532a6e4732680bf8a96a3fbcb9f80a2c"
