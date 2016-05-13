@@ -1266,8 +1266,35 @@ def apply_commit(parent, rev, largs, wargs, dest_dir, file_filter=None):
         target = os.path.join(wargs["destdir"], dest_dir)
         if not os.path.isdir(target):
             os.makedirs(target)
-        runcmd("git archive %s %s | tar -C %s -xf -" % (rev, ' '.join([pipes.quote(x) for x in update]), pipes.quote(target)), **largs)
-        runcmd("git add -f".split() + [os.path.join(dest_dir, x) for x in update], **wargs)
+        quoted_target = pipes.quote(target)
+        # os.sysconf('SC_ARG_MAX') is lying: running a command with
+        # string length 629343 already failed with "Argument list too
+        # long" although SC_ARG_MAX = 2097152. "man execve" explains
+        # the limitations, but those are pretty complicated. So here
+        # we just hard-code a fixed value which is more likely to work.
+        max_cmdsize = 64 * 1024
+        while update:
+            quoted_args = []
+            unquoted_args = []
+            cmdsize = 100 + len(quoted_target)
+            while update:
+                quoted_next = pipes.quote(update[0])
+                size_next = len(quoted_next) + len(dest_dir) + 1
+                logger.debug('cmdline length %d + %d < %d?' % (cmdsize, size_next, os.sysconf('SC_ARG_MAX')))
+                if cmdsize + size_next < max_cmdsize:
+                    quoted_args.append(quoted_next)
+                    unquoted_args.append(update.pop(0))
+                    cmdsize += size_next
+                else:
+                    logger.debug('Breaking the cmdline at length %d' % cmdsize)
+                    break
+            logger.debug('Final cmdline length %d / %d' % (cmdsize, os.sysconf('SC_ARG_MAX')))
+            cmd = "git archive %s %s | tar -C %s -xf -" % (rev, ' '.join(quoted_args), quoted_target)
+            logger.debug('First cmdline length %d' % len(cmd))
+            runcmd(cmd, **largs)
+            cmd = "git add -f".split() + [os.path.join(dest_dir, x) for x in unquoted_args]
+            logger.debug('Second cmdline length %d' % reduce(lambda x, y: x + len(y), cmd, 0))
+            runcmd(cmd, **wargs)
     if delete:
         for path in delete:
             if dest_dir:
