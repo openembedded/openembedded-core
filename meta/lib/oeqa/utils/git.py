@@ -30,9 +30,13 @@ class GitRepo(object):
                 cmd_str, ret.status, ret.output))
         return ret.output.strip()
 
-    def run_cmd(self, git_args):
+    def run_cmd(self, git_args, env_update=None):
         """Run Git command"""
-        return self._run_git_cmd_at(git_args, self.top_dir)
+        env = None
+        if env_update:
+            env = os.environ.copy()
+            env.update(env_update)
+        return self._run_git_cmd_at(git_args, self.top_dir, env=env)
 
 
 
