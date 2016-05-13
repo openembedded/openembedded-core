@@ -14,7 +14,8 @@ SECTION = "base"
 SRC_URI = "https://fedorahosted.org/releases/l/i/libuser/libuser-${PV}.tar.xz \
            file://0001-Check-for-issetugid.patch \
            file://0002-remove-unused-execinfo.h.patch \
-          "
+           file://0001-modules-files.c-parse_field-fix-string-formating-in-.patch \
+           "
 
 SRC_URI[md5sum] = "63e5e5c551e99dc5302b40b80bd6d4f2"
 SRC_URI[sha256sum] = "a58ff4fabb01a25043b142185a33eeea961109dd60d4b40b6a9df4fa3cace20b"
