@@ -57,6 +57,7 @@ class skipIfFailure(object):
         self.testcase = testcase
 
     def __call__(self,f):
+        @wraps(f)
         def wrapped_f(*args, **kwargs):
             res = getResults()
             if self.testcase in (res.getFailList() or res.getErrorList()):
@@ -71,6 +72,7 @@ class skipIfSkipped(object):
         self.testcase = testcase
 
     def __call__(self,f):
+        @wraps(f)
         def wrapped_f(*args, **kwargs):
             res = getResults()
             if self.testcase in res.getSkipList():
@@ -85,6 +87,7 @@ class skipUnlessPassed(object):
         self.testcase = testcase
 
     def __call__(self,f):
+        @wraps(f)
         def wrapped_f(*args, **kwargs):
             res = getResults()
             if self.testcase in res.getSkipList() or \
@@ -97,11 +100,11 @@ class skipUnlessPassed(object):
         return wrapped_f
 
 class testcase(object):
-
     def __init__(self, test_case):
         self.test_case = test_case
 
     def __call__(self, func):
+        @wraps(func)
         def wrapped_f(*args, **kwargs):
             return func(*args, **kwargs)
         wrapped_f.test_case = self.test_case
