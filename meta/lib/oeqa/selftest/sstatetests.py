@@ -454,14 +454,14 @@ http_proxy = "http://example.com/"
 
         for k in files1.viewkeys() | files2.viewkeys():
             if k in files1 and k in files2:
-                print "%s differs:" % k
-                print subprocess.check_output(("bitbake-diffsigs",
+                print("%s differs:" % k)
+                print(subprocess.check_output(("bitbake-diffsigs",
                                                topdir + "/tmp-sstatesamehash/stamps/" + k + "." + files1[k],
-                                               topdir + "/tmp-sstatesamehash2/stamps/" + k + "." + files2[k]))
+                                               topdir + "/tmp-sstatesamehash2/stamps/" + k + "." + files2[k])))
             elif k in files1 and k not in files2:
-                print "%s in files1" % k
+                print("%s in files1" % k)
             elif k not in files1 and k in files2:
-                print "%s in files2" % k
+                print("%s in files2" % k)
             else:
                 assert "shouldn't reach here"
         self.fail("sstate hashes not identical.")

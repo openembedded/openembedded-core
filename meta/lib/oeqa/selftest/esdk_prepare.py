@@ -28,8 +28,8 @@ class ExtSdkPrepareTest(unittest.TestCase):
             # load module under test
             self.test_mod = imp.load_source("", module_dest_path)
         except:
-            print "error: unable to copy or load %s [src: %s, dst: %s]" % \
-                    (module_file_name, module_path, module_dest_path)
+            print("error: unable to copy or load %s [src: %s, dst: %s]" % \
+                    (module_file_name, module_path, module_dest_path))
             sys.exit(1)
 
     def test_prepare_unexpected(self):
@@ -66,8 +66,8 @@ if __name__ == '__main__':
         unittest.TextTestRunner().run(suite)
     else:
         progname = os.path.basename(sys.argv[0])
-        print "%s: missing directory path" % progname
-        print "usage: %s /path/to/directory-of(ext-sdk-prepare.py)" % progname
+        print("%s: missing directory path" % progname)
+        print("usage: %s /path/to/directory-of(ext-sdk-prepare.py)" % progname)
         sys.exit(1)
 else:
     # running under oe-selftest

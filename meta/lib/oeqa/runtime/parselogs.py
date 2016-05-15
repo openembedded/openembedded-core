@@ -262,7 +262,7 @@ class ParseLogsTest(oeRuntimeTest):
         self.write_dmesg()
         log_list = self.get_local_log_list(self.log_locations)
         result = self.parse_logs(self.errors, self.ignore_errors, log_list)
-        print self.getHardwareInfo()
+        print(self.getHardwareInfo())
         errcount = 0
         for log in result:
             self.msg += "Log: "+log+"\n"
