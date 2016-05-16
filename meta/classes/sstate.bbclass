@@ -95,7 +95,7 @@ python () {
         scan_cmd = "grep -Irl ${STAGING_DIR} ${SSTATE_BUILDDIR}"
         d.setVar('SSTATE_SCAN_CMD', scan_cmd)
 
-    unique_tasks = set((d.getVar('SSTATETASKS', True) or "").split())
+    unique_tasks = sorted(set((d.getVar('SSTATETASKS', True) or "").split()))
     d.setVar('SSTATETASKS', " ".join(unique_tasks))
     for task in unique_tasks:
         d.prependVarFlag(task, 'prefuncs', "sstate_task_prefunc ")
