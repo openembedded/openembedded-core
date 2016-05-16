@@ -376,14 +376,14 @@ class QemuRunner:
 
         data = ''
         status = 0
-        self.server_socket.sendall(command)
+        self.server_socket.sendall(command.encode('utf-8'))
         keepreading = True
         while keepreading:
             sread, _, _ = select.select([self.server_socket],[],[],5)
             if sread:
                 answer = self.server_socket.recv(1024)
                 if answer:
-                    data += answer
+                    data += answer.decode('utf-8')
                     # Search the prompt to stop
                     if re.search("[a-zA-Z0-9]+@[a-zA-Z0-9\-]+:~#", data):
                         keepreading = False
