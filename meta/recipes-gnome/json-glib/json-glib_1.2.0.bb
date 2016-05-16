@@ -10,8 +10,8 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=7fbc338309ac38fefcd64b04bb903e34"
 
 DEPENDS = "glib-2.0"
 
-SRC_URI[archive.md5sum] = "3131b0417ecde3da1ae72acceaa375cf"
-SRC_URI[archive.sha256sum] = "80f3593cb6bd13f1465828e46a9f740e2e9bd3cd2257889442b3e62bd6de05cd"
+SRC_URI[archive.md5sum] = "efe14b6b8e7aa95ee3240cc60627dc9f"
+SRC_URI[archive.sha256sum] = "99d6dfbe49c08fd7529f1fe8dcb1893b810a1bb222f1e7b65f41507658b8a7d3"
 
 inherit gnomebase gettext lib_package gobject-introspection
 
