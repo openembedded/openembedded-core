@@ -1,0 +1,5 @@
+require expat.inc
+LIC_FILES_CHKSUM = "file://COPYING;md5=1b71f681713d1256e1c23b0890920874"
+
+SRC_URI[md5sum] = "7380a64a8e3a9d66a9887b01d0d7ea81"
+SRC_URI[sha256sum] = "aff584e5a2f759dcfc6d48671e9529f6afe1e30b0cd6a4cec200cbe3f793de67"

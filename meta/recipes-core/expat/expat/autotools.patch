@@ -11,8 +11,8 @@ Updated to apply over expat 2.1.0
 Signed-off-by: Marko Lindqvist <cazfi74@gmail.com>
 
 diff -Nurd expat-2.1.0/configure.in expat-2.1.0/configure.in
---- expat-2.1.0/configure.in	2012-03-04 01:45:53.000000000 +0200
-+++ expat-2.1.0/configure.in	2012-05-10 21:04:44.000000000 +0300
+--- expat-2.1.0/configure.ac	2012-03-04 01:45:53.000000000 +0200
++++ expat-2.1.0/configure.ac	2012-05-10 21:04:44.000000000 +0300
 @@ -51,8 +51,6 @@
  
  AC_CONFIG_HEADER(expat_config.h)
