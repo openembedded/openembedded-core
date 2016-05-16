@@ -102,7 +102,7 @@ python build_syslinux_cfg () {
         raise bb.build.FuncFailed('Unable to read SYSLINUX_CFG')
 
     try:
-        cfgfile = file(cfile, 'w')
+        cfgfile = open(cfile, 'w')
     except OSError:
         raise bb.build.funcFailed('Unable to open %s' % (cfile))
 

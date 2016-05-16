@@ -17,13 +17,13 @@ except ImportError:
             pass
         def plain(self, msg):
             if msg:
-                print msg
+                print(msg)
         def warn(self, msg):
             if msg:
-                print "WARNING: " + msg
+                print("WARNING: " + msg)
         def fatal(self, msg):
             if msg:
-                print "FATAL:" + msg
+                print("FATAL:" + msg)
                 sys.exit(1)
     bb = my_log()    
 

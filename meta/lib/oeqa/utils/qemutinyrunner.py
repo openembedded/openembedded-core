@@ -160,7 +160,7 @@ class QemuTinyRunner(QemuRunner):
                 if p not in parents:
                     parents.append(p)
                     newparents = next
-        #print "Children matching %s:" % str(parents)
+        #print("Children matching %s:" % str(parents))
         for p in parents:
             # Need to be careful here since runqemu-internal runs "ldd qemu-system-xxxx"
             # Also, old versions of ldd (2.11) run "LD_XXXX qemu-system-xxxx"
