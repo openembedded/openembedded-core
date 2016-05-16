@@ -45,7 +45,7 @@ def display_help(subcommand, subcommands):
     if callable(hlp):
         hlp = hlp()
     pager = subprocess.Popen('less', stdin=subprocess.PIPE)
-    pager.communicate(hlp)
+    pager.communicate(hlp.encode('utf-8'))
 
     return True
 
