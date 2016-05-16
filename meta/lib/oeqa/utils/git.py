@@ -38,5 +38,12 @@ class GitRepo(object):
             env.update(env_update)
         return self._run_git_cmd_at(git_args, self.top_dir, env=env)
 
+    def rev_parse(self, revision):
+        """Do git rev-parse"""
+        try:
+            return self.run_cmd(['rev-parse', revision])
+        except GitError:
+            # Revision does not exist
+            return None
 
 

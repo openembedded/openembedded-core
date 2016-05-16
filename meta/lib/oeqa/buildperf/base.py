@@ -114,7 +114,7 @@ class BuildPerfTestResult(unittest.TextTestResult):
                      "and OE_BUILDPERFTEST_GIT_BRANCH environment variables")
         else:
             if not rev:
-                rev = self.repo.run_cmd(['rev-parse', 'HEAD'])
+                rev = self.repo.rev_parse('HEAD')
             if not branch:
                 try:
                     # Strip 11 chars, i.e. 'refs/heads' from the beginning
