@@ -16,9 +16,8 @@ inherit gnomebase gtk-doc ptest-gnome upstream-version-is-even gobject-introspec
 SRC_URI += "file://run-ptest \
             file://0001-Drop-introspection-macros-from-acinclude.m4.patch \
 "
-
-SRC_URI[archive.md5sum] = "7fde35d4a127b55ce8bbcefe109bc80d"
-SRC_URI[archive.sha256sum] = "1320569f6c6d75d6b66172b2d28e59c56ee864ee9df202b76799c4506a214eb7"
+SRC_URI[archive.md5sum] = "6fc88c6529890d6c8e03074d57a3eceb"
+SRC_URI[archive.sha256sum] = "e27af54172c72b3ac6be53c9a4c67053e16c905e02addcf3a603ceb2005c1a40"
 
 DEPENDS = "glib-2.0 glib-2.0-native fontconfig freetype virtual/libiconv cairo harfbuzz"
 
