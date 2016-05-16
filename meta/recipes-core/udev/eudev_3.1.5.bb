@@ -86,7 +86,7 @@ FILES_eudev-hwdb = "${sysconfdir}/udev/hwdb.d"
 
 RDEPENDS_eudev-hwdb += "eudev"
 
-RRECOMMENDS_${PN} += "udev-cache eudev-hwdb"
+RRECOMMENDS_${PN} += "udev-cache"
 
 RPROVIDES_${PN} = "hotplug udev"
 
