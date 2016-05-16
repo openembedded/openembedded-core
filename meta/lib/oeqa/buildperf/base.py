@@ -116,12 +116,9 @@ class BuildPerfTestResult(unittest.TextTestResult):
             if not rev:
                 rev = self.repo.rev_parse('HEAD')
             if not branch:
-                try:
-                    # Strip 11 chars, i.e. 'refs/heads' from the beginning
-                    branch = self.repo.run_cmd(['symbolic-ref', 'HEAD'])[11:]
-                except GitError:
+                branch = self.repo.get_current_branch()
+                if not branch:
                     log.debug('Currently on detached HEAD')
-                    branch = None
         return str(rev), str(branch)
 
     def addSuccess(self, test):

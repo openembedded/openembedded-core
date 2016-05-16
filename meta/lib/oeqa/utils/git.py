@@ -46,4 +46,12 @@ class GitRepo(object):
             # Revision does not exist
             return None
 
+    def get_current_branch(self):
+        """Get current branch"""
+        try:
+            # Strip 11 chars, i.e. 'refs/heads' from the beginning
+            return self.run_cmd(['symbolic-ref', 'HEAD'])[11:]
+        except GitError:
+            return None
+
 
