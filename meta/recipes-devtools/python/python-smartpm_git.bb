@@ -17,6 +17,7 @@ SRC_URI = "\
           file://smart-recommends.patch \
           file://smart-improve-error-reporting.patch \
           file://smart-channelsdir.patch \
+          file://smart-rpm-transaction-failure-check.patch \
           file://smart-attempt.patch \
           file://smart-attempt-fix.patch \
           file://smart-add-for-rpm-ignoresize-check.patch \
