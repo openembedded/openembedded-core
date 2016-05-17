@@ -15,7 +15,6 @@ SRC_URI = "\
           git://github.com/smartpm/smart.git \
           file://smartpm-rpm5-nodig.patch \
           file://smart-recommends.patch \
-          file://smart-improve-error-reporting.patch \
           file://smart-channelsdir.patch \
           file://smart-rpm-transaction-failure-check.patch \
           file://smart-attempt.patch \
