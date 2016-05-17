@@ -510,7 +510,7 @@ int main(int argc, char **argv)
 	umask (0);
 
 	if (argc==1) {
-		fprintf(stderr, helptext);
+		fputs( helptext , stderr );
 		exit(1);
 	}
 
@@ -525,7 +525,7 @@ int main(int argc, char **argv)
 				error_msg_and_die("%s: not a proper device table file", optarg);
 			break;
 		case 'h':
-			printf(helptext);
+			puts(helptext);
 			exit(0);
 		case 'r':
 		case 'd':				/* for compatibility with mkfs.jffs, genext2fs, etc... */
@@ -553,13 +553,13 @@ int main(int argc, char **argv)
 			printf("%s: %s\n", app_name, VERSION);
 			exit(0);
 		default:
-			fprintf(stderr, helptext);
+			fputs(helptext,stderr);
 			exit(1);
 		}
 	}
 
 	if (argv[optind] != NULL) {
-		fprintf(stderr, helptext);
+		fputs(helptext,stderr);
 		exit(1);
 	}
 
