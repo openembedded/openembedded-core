@@ -5,6 +5,7 @@ LIC_FILES_CHKSUM = "file://COPYING.GPL;md5=eb723b61539feef013de476e68b5c50a \
 SRC_URI += "file://xsltproc_nonet.patch \
             file://use-usr-bin-env-for-python-in-xml2po.patch \
             file://sysrooted-pkg-config.patch \
+            file://0001-glib-gettext.m4-Update-AM_GLIB_GNU_GETTEXT-to-match-.patch \
            "
 
 SRC_URI[archive.md5sum] = "3c64ad7bacd617b04999e4a168afaac5"
