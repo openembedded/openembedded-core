@@ -19,6 +19,7 @@ SRC_URI = "git://anongit.freedesktop.org/pkg-config \
            file://pkg-config-native.in \
            file://fix-glib-configure-libtool-usage.patch \
            file://0001-gdate-Move-warning-pragma-outside-of-function.patch \
+           file://0001-glib-gettext.m4-Update-AM_GLIB_GNU_GETTEXT-to-match-.patch \
            "
 
 S = "${WORKDIR}/git"
