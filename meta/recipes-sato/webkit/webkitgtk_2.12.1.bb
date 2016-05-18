@@ -62,9 +62,14 @@ EXTRA_OECMAKE = " \
 EXTRA_OECMAKE_append_powerpc = " -DENABLE_JIT=OFF "
 EXTRA_OECMAKE_append_powerpc64 = " -DENABLE_JIT=OFF "
 
-# ARM JIT code does not build on ARMv5/6 anymore, apparently they test only on v7 onwards
+# ARM JIT code does not build on ARMv4/5/6 anymore
 EXTRA_OECMAKE_append_armv5 = " -DENABLE_JIT=OFF "
 EXTRA_OECMAKE_append_armv6 = " -DENABLE_JIT=OFF "
+EXTRA_OECMAKE_append_armv4 = " -DENABLE_JIT=OFF "
+
+# ARM JIT can build on armv7a, but doesnt' work on runtime, cause
+# displaying problems or ephiphany hang.
+EXTRA_OECMAKE_append_armv7a = " -DENABLE_JIT=OFF "
 
 # binutils 2.25.1 has a bug on aarch64:
 # https://sourceware.org/bugzilla/show_bug.cgi?id=18430
