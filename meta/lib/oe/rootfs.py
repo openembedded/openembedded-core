@@ -40,7 +40,7 @@ class Rootfs(object):
     def _log_check(self):
         pass
 
-    def _log_check_warn(self):
+    def _log_check_common(self, type, match):
         # Ignore any lines containing log_check to avoid recursion, and ignore
         # lines beginning with a + since sh -x may emit code which isn't
         # actually executed, but may contain error messages
@@ -48,7 +48,7 @@ class Rootfs(object):
         if hasattr(self, 'log_check_expected_regexes'):
             excludes.extend(self.log_check_expected_regexes)
         excludes = [re.compile(x) for x in excludes]
-        r = re.compile('^(warn|Warn|WARNING:)')
+        r = re.compile(match)
         log_path = self.d.expand("${T}/log.do_rootfs")
         messages = []
         with open(log_path, 'r') as log:
@@ -65,45 +65,21 @@ class Rootfs(object):
                     messages.append('[log_check] %s' % line)
         if messages:
             if len(messages) == 1:
-                msg = 'a warning message'
+                msg = '1 %s message' % type
             else:
-                msg = '%d warning messages' % len(messages)
-            bb.warn('[log_check] %s: found %s in the logfile:\n%s'
-                    % (self.d.getVar('PN', True), msg, ''.join(messages)))
+                msg = '%d %s messages' % (len(messages), type)
+            msg = '[log_check] %s: found %s in the logfile:\n%s' % \
+                (self.d.getVar('PN', True), msg, ''.join(messages))
+            if type == 'error':
+                bb.fatal(msg)
+            else:
+                bb.warn(msg)
+
+    def _log_check_warn(self):
+        self._log_check_common('warning', '^(warn|Warn|WARNING:)')
 
     def _log_check_error(self):
-        # Ignore any lines containing log_check to avoid recursion, and ignore
-        # lines beginning with a + since sh -x may emit code which isn't
-        # actually executed, but may contain error messages
-        excludes = [ 'log_check', r'^\+' ]
-        if hasattr(self, 'log_check_expected_regexes'):
-            excludes.extend(self.log_check_expected_regexes)
-        excludes = [re.compile(x) for x in excludes]
-        r = re.compile(self.log_check_regex)
-        log_path = self.d.expand("${T}/log.do_rootfs")
-        with open(log_path, 'r') as log:
-            found_error = 0
-            message = "\n"
-            for line in log:
-                for ee in excludes:
-                    m = ee.search(line)
-                    if m:
-                        break
-                if m:
-                    continue
-
-                m = r.search(line)
-                if m:
-                    found_error = 1
-                    bb.warn('[log_check] %s: found an error message in the logfile (keyword \'%s\'):\n[log_check] %s'
-				    % (self.d.getVar('PN', True), m.group(), line))
-
-                if found_error >= 1 and found_error <= 5:
-                    message += line + '\n'
-                    found_error += 1
-
-                if found_error == 6:
-                    bb.fatal(message)
+        self._log_check_common('error', self.log_check_regex)
 
     def _insert_feed_uris(self):
         if bb.utils.contains("IMAGE_FEATURES", "package-management",
