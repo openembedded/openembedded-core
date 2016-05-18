@@ -31,6 +31,11 @@ if [ -n "$WAYLAND_DISPLAY" ]; then
 	echo "ERROR: A Wayland compositor is already running, nested Weston instance is not supported yet."
 	exit 1
 fi
+if [ -n "$DISPLAY" ]; then
+	launcher="weston"
+else
+	launcher="weston-launch --"
+fi
 
 openvt_args=""
 while [ -n "$1" ]; do
@@ -64,4 +69,4 @@ if test -z "$XDG_RUNTIME_DIR"; then
     chmod 0700 $XDG_RUNTIME_DIR
 fi
 
-exec openvt $openvt_args -- weston $weston_args --log=/var/log/weston.log
+exec openvt $openvt_args -- $launcher $weston_args --log=/var/log/weston.log
