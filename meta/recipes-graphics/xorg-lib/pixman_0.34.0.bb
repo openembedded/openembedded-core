@@ -32,6 +32,7 @@ EXTRA_OECONF_class-nativesdk = "--disable-gtk"
 SRC_URI += "\
             file://0001-ARM-qemu-related-workarounds-in-cpu-features-detecti.patch \
 	    file://asm_include.patch \
+	    file://0001-test-utils-Check-for-FE_INVALID-definition-before-us.patch \
 "
 
 SRC_URI[md5sum] = "002a4fcb644ddfcb4b0e4191576a0d59"
