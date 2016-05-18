@@ -152,7 +152,7 @@ SYNOPSIS
         [-e | --image-name] [-s, --skip-build-check] [-D, --debug]
         [-r, --rootfs-dir] [-b, --bootimg-dir]
         [-k, --kernel-dir] [-n, --native-sysroot] [-f, --build-rootfs]
-        [-c, --compress-with]
+        [-c, --compress-with] [-m, --bmap]
 
 DESCRIPTION
     This command creates an OpenEmbedded image based on the 'OE
@@ -221,6 +221,9 @@ DESCRIPTION
 
     The -c option is used to specify compressor utility to compress
     an image. gzip, bzip2 and xz compressors are supported.
+
+    The -m option is used to produce .bmap file for the image. This file
+    can be used to flash image using bmaptool utility.
 """
 
 wic_list_usage = """
