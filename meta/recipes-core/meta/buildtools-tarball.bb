@@ -1,4 +1,4 @@
-DESCRIPTION = "SDK type target for building a standalone tarball containing python, chrpath, make, git and tar. The \
+DESCRIPTION = "SDK type target for building a standalone tarball containing python3, chrpath, make, git and tar. The \
                tarball can be used to run bitbake builds on systems which don't meet the usual version requirements."
 SUMMARY = "Standalone tarball for running builds on systems with inadequate software"
 LICENSE = "MIT"
@@ -8,10 +8,10 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=4d92cd373abda3937c2bc47fbc49d
 TOOLCHAIN_TARGET_TASK ?= ""
 
 TOOLCHAIN_HOST_TASK ?= "\
-    nativesdk-python-core \
-    nativesdk-python-modules \
-    nativesdk-python-misc \
-    nativesdk-python-git \
+    nativesdk-python3-core \
+    nativesdk-python3-modules \
+    nativesdk-python3-misc \
+    nativesdk-python3-git \
     nativesdk-ncurses-terminfo-base \
     nativesdk-chrpath \
     nativesdk-tar \
