@@ -41,11 +41,11 @@ class Rootfs(object):
         pass
 
     def _log_check_warn(self):
-        r = re.compile('^(warn|Warn|NOTE: warn|NOTE: Warn|WARNING:)')
+        r = re.compile('^(warn|Warn|WARNING:)')
         log_path = self.d.expand("${T}/log.do_rootfs")
         with open(log_path, 'r') as log:
             for line in log:
-                if 'log_check' in line or 'NOTE:' in line:
+                if 'log_check' in line:
                     continue
 
                 m = r.search(line)
