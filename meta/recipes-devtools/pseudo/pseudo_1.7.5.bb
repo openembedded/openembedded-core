@@ -7,6 +7,7 @@ SRC_URI = "http://downloads.yoctoproject.org/releases/pseudo/${BPN}-${PV}.tar.bz
            file://moreretries.patch \
            file://handle-remove-xattr.patch \
            file://obey-ldflags.patch \
+           file://pseudo-glibc-rtld-next-workaround.patch \
            "
 
 SRC_URI[md5sum] = "c10209938f03128d0c193f041ff3596d"
