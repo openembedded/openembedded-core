@@ -516,7 +516,7 @@ class PythonRecipeHandler(RecipeHandler):
         except (OSError, subprocess.CalledProcessError):
             pass
         else:
-            for line in dep_output.splitlines():
+            for line in dep_output.decode('utf-8').splitlines():
                 line = line.rstrip()
                 dep, filename = line.split('\t', 1)
                 if filename.endswith('/setup.py'):

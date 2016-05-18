@@ -90,7 +90,7 @@ def find_target_file(targetpath, d, pkglist=None):
                             if fnmatch.fnmatchcase(fullpth, targetpath):
                                 recipes[targetpath].append(pn)
                     elif line.startswith('pkg_preinst_') or line.startswith('pkg_postinst_'):
-                        scriptval = line.split(':', 1)[1].strip().decode('string_escape')
+                        scriptval = line.split(':', 1)[1].strip().encode('utf-8').decode('unicode_escape')
                         if 'update-alternatives --install %s ' % targetpath in scriptval:
                             recipes[targetpath].append('?%s' % pn)
                         elif targetpath_re.search(scriptval):
@@ -172,7 +172,7 @@ def get_source_path(cmdelements):
     """Find the source path specified within a command"""
     command = cmdelements[0]
     if command in ['install', 'cp']:
-        helptext = subprocess.check_output('LC_ALL=C %s --help' % command, shell=True)
+        helptext = subprocess.check_output('LC_ALL=C %s --help' % command, shell=True).decode('utf-8')
         argopts = ''
         argopt_line_re = re.compile('^-([a-zA-Z0-9]), --[a-z-]+=')
         for line in helptext.splitlines():

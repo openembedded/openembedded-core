@@ -69,6 +69,7 @@ def exec_watch(cmd, **options):
     buf = ''
     while True:
         out = process.stdout.read(1)
+        out = out.decode('utf-8')
         if out:
             sys.stdout.write(out)
             sys.stdout.flush()

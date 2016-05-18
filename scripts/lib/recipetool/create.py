@@ -851,14 +851,14 @@ def crunch_license(licfile):
                 continue
             # Squash spaces, and replace smart quotes, double quotes
             # and backticks with single quotes
-            line = oe.utils.squashspaces(line.strip()).decode("utf-8")
+            line = oe.utils.squashspaces(line.strip())
             line = line.replace(u"\u2018", "'").replace(u"\u2019", "'").replace(u"\u201c","'").replace(u"\u201d", "'").replace('"', '\'').replace('`', '\'')
             if line:
                 lictext.append(line)
 
     m = hashlib.md5()
     try:
-        m.update(' '.join(lictext))
+        m.update(' '.join(lictext).encode('utf-8'))
         md5val = m.hexdigest()
     except UnicodeEncodeError:
         md5val = None
