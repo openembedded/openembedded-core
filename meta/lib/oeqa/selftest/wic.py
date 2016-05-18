@@ -276,3 +276,11 @@ class Wic(oeSelfTest):
             status, output = qemu.run_serial(command)
             self.assertEqual(1, status, 'Failed to run command "%s": %s' % (command, output))
             self.assertEqual(output, '/dev/root /\r\n/dev/vda3 /mnt')
+
+    def test_bmap(self):
+        """Test generation of .bmap file"""
+        image = "directdisk"
+        status = runCmd("wic create %s -e core-image-minimal --bmap" % image).status
+        self.assertEqual(0, status)
+        self.assertEqual(1, len(glob(self.resultdir + "%s-*direct" % image)))
+        self.assertEqual(1, len(glob(self.resultdir + "%s-*direct.bmap" % image)))
