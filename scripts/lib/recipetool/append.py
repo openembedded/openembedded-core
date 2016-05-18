@@ -61,7 +61,7 @@ def find_target_file(targetpath, d, pkglist=None):
                       '/etc/gshadow': '/etc/gshadow should be managed through the useradd and extrausers classes',
                       '${sysconfdir}/hostname': '${sysconfdir}/hostname contents should be set by setting hostname_pn-base-files = "value" in configuration',}
 
-    for pthspec, message in invalidtargets.iteritems():
+    for pthspec, message in invalidtargets.items():
         if fnmatch.fnmatchcase(targetpath, d.expand(pthspec)):
             raise InvalidTargetFileError(d.expand(message))
 
@@ -152,7 +152,7 @@ def determine_file_source(targetpath, rd):
         # Check patches
         srcpatches = []
         patchedfiles = oe.recipeutils.get_recipe_patched_files(rd)
-        for patch, filelist in patchedfiles.iteritems():
+        for patch, filelist in patchedfiles.items():
             for fileitem in filelist:
                 if fileitem[0] == srcpath:
                     srcpatches.append((patch, fileitem[1]))
@@ -270,7 +270,7 @@ def appendfile(args):
     postinst_pns = []
 
     selectpn = None
-    for targetpath, pnlist in recipes.iteritems():
+    for targetpath, pnlist in recipes.items():
         for pn in pnlist:
             if pn.startswith('?'):
                 alternative_pns.append(pn[1:])
@@ -351,7 +351,7 @@ def appendsrc(args, files, rd, extralines=None):
 
     copyfiles = {}
     extralines = extralines or []
-    for newfile, srcfile in files.iteritems():
+    for newfile, srcfile in files.items():
         src_destdir = os.path.dirname(srcfile)
         if not args.use_workdir:
             if rd.getVar('S', True) == rd.getVar('STAGING_KERNEL_DIR', True):

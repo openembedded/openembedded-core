@@ -100,7 +100,7 @@ class MakefileMaker:
         # generate package variables
         #
 
-        for name, data in sorted(self.packages.iteritems()):
+        for name, data in sorted(self.packages.items()):
             desc, deps, files = data
 
             #
@@ -133,7 +133,7 @@ class MakefileMaker:
         self.out( 'SUMMARY_${PN}-modules="All Python modules"' )
         line = 'RDEPENDS_${PN}-modules="'
 
-        for name, data in sorted(self.packages.iteritems()):
+        for name, data in sorted(self.packages.items()):
             if name not in ['${PN}-dev', '${PN}-distutils-staticdev']:
                 line += "%s " % name
 

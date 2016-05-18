@@ -155,7 +155,7 @@ def check_workspace_recipe(workspace, pn, checksrc=True, bbclassextend=False):
 
     workspacepn = pn
 
-    for recipe, value in workspace.iteritems():
+    for recipe, value in workspace.items():
         if recipe == pn:
             break
         if bbclassextend:

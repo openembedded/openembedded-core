@@ -59,8 +59,8 @@ def collect_bbvars(metadir):
     for root,dirs,files in os.walk(metadir):
         for name in files:
             if name.find(".bb") >= 0:
-                for key in recipe_bbvars(os.path.join(root,name)).iterkeys():
-                    if bbvars.has_key(key):
+                for key in recipe_bbvars(os.path.join(root,name)).keys():
+                    if key in bbvars:
                         bbvars[key] = bbvars[key] + 1
                     else:
                         bbvars[key] = 1
@@ -155,15 +155,15 @@ def main():
 
     # Collect all the variable names from the recipes in the metadirs
     for m in metadirs:
-        for key,cnt in collect_bbvars(m).iteritems():
-            if bbvars.has_key(key):
+        for key,cnt in collect_bbvars(m).items():
+            if key in bbvars:
                 bbvars[key] = bbvars[key] + cnt
             else:
                 bbvars[key] = cnt
 
     # Check each var for documentation
     varlen = 0
-    for v in bbvars.iterkeys():
+    for v in bbvars.keys():
         if len(v) > varlen:
             varlen = len(v)
         if not bbvar_is_documented(v, docfiles):

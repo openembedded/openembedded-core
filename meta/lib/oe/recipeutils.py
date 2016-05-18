@@ -194,7 +194,7 @@ def patch_recipe_lines(fromlines, values, trailing_newline=True):
     remainingnames = {}
     for k in values.keys():
         remainingnames[k] = get_recipe_pos(k)
-    remainingnames = OrderedDict(sorted(remainingnames.iteritems(), key=lambda x: x[1]))
+    remainingnames = OrderedDict(sorted(remainingnames.items(), key=lambda x: x[1]))
 
     modifying = False
 
@@ -234,7 +234,7 @@ def patch_recipe_lines(fromlines, values, trailing_newline=True):
         if modifying:
             # Insert anything that should come before this variable
             pos = get_recipe_pos(varname)
-            for k in remainingnames.keys()[:]:
+            for k in list(remainingnames):
                 if remainingnames[k] > -1 and pos >= remainingnames[k] and not k in existingnames:
                     outputvalue(k, newlines, rewindcomments=True)
                     del remainingnames[k]

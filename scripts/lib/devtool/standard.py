@@ -1091,11 +1091,11 @@ def _update_recipe_srcrev(args, srctree, rd, config_data):
         else:
             files_dir = os.path.join(os.path.dirname(recipefile),
                                      rd.getVar('BPN', True))
-            for basepath, path in upd_f.iteritems():
+            for basepath, path in upd_f.items():
                 logger.info('Updating file %s' % basepath)
                 _move_file(os.path.join(local_files_dir, basepath), path)
                 update_srcuri= True
-            for basepath, path in new_f.iteritems():
+            for basepath, path in new_f.items():
                 logger.info('Adding new file %s' % basepath)
                 _move_file(os.path.join(local_files_dir, basepath),
                            os.path.join(files_dir, basepath))
@@ -1173,11 +1173,11 @@ def _update_recipe_patch(args, config, workspace, srctree, rd, config_data):
                 logger.info('No patches or local source files needed updating')
         else:
             # Update existing files
-            for basepath, path in upd_f.iteritems():
+            for basepath, path in upd_f.items():
                 logger.info('Updating file %s' % basepath)
                 _move_file(os.path.join(local_files_dir, basepath), path)
                 updatefiles = True
-            for basepath, path in upd_p.iteritems():
+            for basepath, path in upd_p.items():
                 patchfn = os.path.join(patches_dir, basepath)
                 if changed_revs is not None:
                     # Avoid updating patches that have not actually changed
@@ -1192,13 +1192,13 @@ def _update_recipe_patch(args, config, workspace, srctree, rd, config_data):
             # Add any new files
             files_dir = os.path.join(os.path.dirname(recipefile),
                                      rd.getVar('BPN', True))
-            for basepath, path in new_f.iteritems():
+            for basepath, path in new_f.items():
                 logger.info('Adding new file %s' % basepath)
                 _move_file(os.path.join(local_files_dir, basepath),
                            os.path.join(files_dir, basepath))
                 srcuri.append('file://%s' % basepath)
                 updaterecipe = True
-            for basepath, path in new_p.iteritems():
+            for basepath, path in new_p.items():
                 logger.info('Adding new patch %s' % basepath)
                 _move_file(os.path.join(patches_dir, basepath),
                            os.path.join(files_dir, basepath))
@@ -1285,7 +1285,7 @@ def update_recipe(args, config, basepath, workspace):
 def status(args, config, basepath, workspace):
     """Entry point for the devtool 'status' subcommand"""
     if workspace:
-        for recipe, value in workspace.iteritems():
+        for recipe, value in workspace.items():
             recipefile = value['recipefile']
             if recipefile:
                 recipestr = ' (%s)' % recipefile

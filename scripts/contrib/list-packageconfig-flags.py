@@ -86,7 +86,7 @@ def collect_flags(pkg_dict):
     ''' Collect available PACKAGECONFIG flags and all affected pkgs '''
     # flag_dict = {'flag': ['pkg1', 'pkg2',...]}
     flag_dict = {}
-    for pkgname, flaglist in pkg_dict.iteritems():
+    for pkgname, flaglist in pkg_dict.items():
         for flag in flaglist:
             if flag in flag_dict:
                 flag_dict[flag].append(pkgname)
@@ -132,7 +132,7 @@ def display_all(data_dict):
             packageconfig = 'None'
         print('PACKAGECONFIG %s' % packageconfig)
 
-        for flag,flag_val in data_dict[fn].getVarFlags("PACKAGECONFIG").iteritems():
+        for flag,flag_val in data_dict[fn].getVarFlags("PACKAGECONFIG").items():
             if flag == "doc":
                 continue
             print('PACKAGECONFIG[%s] %s' % (flag, flag_val))

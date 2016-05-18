@@ -1178,7 +1178,7 @@ def update_with_history(conf, components, revisions, repos):
     # components imported head revision.
     if additional_heads:
         runcmd("git reset --hard", **wargs)
-        for rev, base in additional_heads.iteritems():
+        for rev, base in additional_heads.items():
             apply_commit(base, rev, wargs, wargs, None)
 
         # Commit with all component branches as parents as well as the previous head.

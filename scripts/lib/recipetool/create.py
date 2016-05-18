@@ -61,8 +61,8 @@ class RecipeHandler(object):
         libpaths = list(set([base_libdir, libdir]))
         libname_re = re.compile('^lib(.+)\.so.*$')
         pkglibmap = {}
-        for lib, item in shlib_providers.iteritems():
-            for path, pkg in item.iteritems():
+        for lib, item in shlib_providers.items():
+            for path, pkg in item.items():
                 if path in libpaths:
                     res = libname_re.match(lib)
                     if res:
@@ -74,7 +74,7 @@ class RecipeHandler(object):
 
         # Now turn it into a library->recipe mapping
         pkgdata_dir = d.getVar('PKGDATA_DIR', True)
-        for libname, pkg in pkglibmap.iteritems():
+        for libname, pkg in pkglibmap.items():
             try:
                 with open(os.path.join(pkgdata_dir, 'runtime', pkg)) as f:
                     for line in f:
@@ -663,7 +663,7 @@ def create_recipe(args):
         else:
             extraoutdir = os.path.join(os.path.dirname(outfile), pn)
         bb.utils.mkdirhier(extraoutdir)
-        for destfn, extrafile in extrafiles.iteritems():
+        for destfn, extrafile in extrafiles.items():
             shutil.move(extrafile, os.path.join(extraoutdir, destfn))
 
     lines = lines_before
@@ -901,7 +901,7 @@ def split_pkg_licenses(licvalues, packages, outlines, fallback_licenses=None, pn
     """
     pkglicenses = {pn: []}
     for license, licpath, _ in licvalues:
-        for pkgname, pkgpath in packages.iteritems():
+        for pkgname, pkgpath in packages.items():
             if licpath.startswith(pkgpath + '/'):
                 if pkgname in pkglicenses:
                     pkglicenses[pkgname].append(license)
@@ -928,7 +928,7 @@ def read_pkgconfig_provides(d):
             for line in f:
                 pkgmap[os.path.basename(line.rstrip())] = os.path.splitext(os.path.basename(fn))[0]
     recipemap = {}
-    for pc, pkg in pkgmap.iteritems():
+    for pc, pkg in pkgmap.items():
         pkgdatafile = os.path.join(pkgdatadir, 'runtime', pkg)
         if os.path.exists(pkgdatafile):
             with open(pkgdatafile, 'r') as f:

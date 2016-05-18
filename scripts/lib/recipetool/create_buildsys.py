@@ -44,7 +44,7 @@ class CmakeRecipeHandler(RecipeHandler):
             classes.append('cmake')
             values = CmakeRecipeHandler.extract_cmake_deps(lines_before, srctree, extravalues)
             classes.extend(values.pop('inherit', '').split())
-            for var, value in values.iteritems():
+            for var, value in values.items():
                 lines_before.append('%s = "%s"' % (var, value))
             lines_after.append('# Specify any options you want to pass to cmake using EXTRA_OECMAKE:')
             lines_after.append('EXTRA_OECMAKE = ""')
@@ -159,7 +159,7 @@ class CmakeRecipeHandler(RecipeHandler):
 
         def find_cmake_package(pkg):
             RecipeHandler.load_devel_filemap(tinfoil.config_data)
-            for fn, pn in RecipeHandler.recipecmakefilemap.iteritems():
+            for fn, pn in RecipeHandler.recipecmakefilemap.items():
                 splitname = fn.split('/')
                 if len(splitname) > 1:
                     if splitname[0].lower().startswith(pkg.lower()):
@@ -348,7 +348,7 @@ class AutotoolsRecipeHandler(RecipeHandler):
             autoconf = True
             values = AutotoolsRecipeHandler.extract_autotools_deps(lines_before, srctree, extravalues)
             classes.extend(values.pop('inherit', '').split())
-            for var, value in values.iteritems():
+            for var, value in values.items():
                 lines_before.append('%s = "%s"' % (var, value))
         else:
             conffile = RecipeHandler.checkfiles(srctree, ['configure'])
@@ -446,7 +446,7 @@ class AutotoolsRecipeHandler(RecipeHandler):
         defines = {}
         def subst_defines(value):
             newvalue = value
-            for define, defval in defines.iteritems():
+            for define, defval in defines.items():
                 newvalue = newvalue.replace(define, defval)
             if newvalue != value:
                 return subst_defines(newvalue)
@@ -753,7 +753,7 @@ class MakefileRecipeHandler(RecipeHandler):
             if scanfile and os.path.exists(scanfile):
                 values = AutotoolsRecipeHandler.extract_autotools_deps(lines_before, srctree, acfile=scanfile)
                 classes.extend(values.pop('inherit', '').split())
-                for var, value in values.iteritems():
+                for var, value in values.items():
                     if var == 'DEPENDS':
                         lines_before.append('# NOTE: some of these dependencies may be optional, check the Makefile and/or upstream documentation')
                     lines_before.append('%s = "%s"' % (var, value))

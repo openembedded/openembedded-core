@@ -128,7 +128,7 @@ class NpmRecipeHandler(RecipeHandler):
                     license = self._handle_license(data)
                     if license:
                         licenses['${PN}'] = license
-                    for pkgname, pkgitem in npmpackages.iteritems():
+                    for pkgname, pkgitem in npmpackages.items():
                         _, pdata = pkgitem
                         license = self._handle_license(pdata)
                         if license:
@@ -136,7 +136,7 @@ class NpmRecipeHandler(RecipeHandler):
                     # Now write out the package-specific license values
                     # We need to strip out the json data dicts for this since split_pkg_licenses
                     # isn't expecting it
-                    packages = OrderedDict((x,y[0]) for x,y in npmpackages.iteritems())
+                    packages = OrderedDict((x,y[0]) for x,y in npmpackages.items())
                     packages['${PN}'] = ''
                     pkglicenses = split_pkg_licenses(licvalues, packages, lines_after, licenses)
                     all_licenses = list(set([item for pkglicense in pkglicenses.values() for item in pkglicense]))

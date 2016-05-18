@@ -70,7 +70,7 @@ def _remove_patch_dirs(recipefolder):
 def _recipe_contains(rd, var):
     rf = rd.getVar('FILE', True)
     varfiles = oe.recipeutils.get_var_files(rf, [var], rd)
-    for var, fn in varfiles.iteritems():
+    for var, fn in varfiles.items():
         if fn and fn.startswith(os.path.dirname(rf) + os.sep):
             return True
     return False
