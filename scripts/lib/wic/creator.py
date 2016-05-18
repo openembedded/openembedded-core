@@ -69,6 +69,7 @@ class Creator():
         optparser.add_option('', '--tmpfs', action='store_true', dest='enabletmpfs',
                              help='Setup tmpdir as tmpfs to accelerate, experimental'
                                   ' feature, use it if you have more than 4G memory')
+        optparser.add_option('', '--bmap', action='store_true', help='generate .bmap')
         return optparser
 
     def postoptparse(self, options):

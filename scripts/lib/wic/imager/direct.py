@@ -33,7 +33,7 @@ from wic.utils.partitionedfs import Image
 from wic.utils.errors import CreatorError, ImageError
 from wic.imager.baseimager import BaseImageCreator
 from wic.plugin import pluginmgr
-from wic.utils.oe.misc import exec_cmd
+from wic.utils.oe.misc import exec_cmd, exec_native_cmd
 
 disk_methods = {
     "do_install_disk":None,
@@ -71,7 +71,8 @@ class DirectImageCreator(BaseImageCreator):
     """
 
     def __init__(self, oe_builddir, image_output_dir, rootfs_dir, bootimg_dir,
-                 kernel_dir, native_sysroot, compressor, creatoropts=None):
+                 kernel_dir, native_sysroot, compressor, creatoropts=None,
+                 bmap=False):
         """
         Initialize a DirectImageCreator instance.
 
@@ -93,6 +94,7 @@ class DirectImageCreator(BaseImageCreator):
         self.kernel_dir = kernel_dir
         self.native_sysroot = native_sysroot
         self.compressor = compressor
+        self.bmap = bmap
 
     def __get_part_num(self, num, parts):
         """calculate the real partition number, accounting for partitions not
@@ -333,12 +335,17 @@ class DirectImageCreator(BaseImageCreator):
                                                         self.bootimg_dir,
                                                         self.kernel_dir,
                                                         self.native_sysroot)
-        # Compress the image
-        if self.compressor:
-            for disk_name, disk in self.__image.disks.items():
-                full_path = self._full_path(self.__imgdir, disk_name, "direct")
-                msger.debug("Compressing disk %s with %s" % \
-                            (disk_name, self.compressor))
+
+        for disk_name, disk in self.__image.disks.items():
+            full_path = self._full_path(self.__imgdir, disk_name, "direct")
+            # Generate .bmap
+            if self.bmap:
+                msger.debug("Generating bmap file for %s" % disk_name)
+                exec_native_cmd("bmaptool create %s -o %s.bmap" % (full_path, full_path),
+                                self.native_sysroot)
+            # Compress the image
+            if self.compressor:
+                msger.debug("Compressing disk %s with %s" % (disk_name, self.compressor))
                 exec_cmd("%s %s" % (self.compressor, full_path))
 
     def print_outimage_info(self):

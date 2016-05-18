@@ -115,6 +115,7 @@ def wic_create_subcommand(args, usage_str):
     parser.add_option("-c", "--compress-with", choices=("gzip", "bzip2", "xz"),
                       dest='compressor',
                       help="compress image with specified compressor")
+    parser.add_option("-m", "--bmap", action="store_true", help="generate .bmap")
     parser.add_option("-v", "--vars", dest='vars_dir',
                       help="directory with <image>.env files that store "
                            "bitbake variables")
@@ -245,7 +246,7 @@ def wic_create_subcommand(args, usage_str):
     print("Creating image(s)...\n")
     engine.wic_create(wks_file, rootfs_dir, bootimg_dir, kernel_dir,
                       native_sysroot, scripts_path, image_output_dir,
-                      options.compressor, options.debug)
+                      options.compressor, options.bmap, options.debug)
 
 
 def wic_list_subcommand(args, usage_str):

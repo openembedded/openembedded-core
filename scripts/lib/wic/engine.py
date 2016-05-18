@@ -145,7 +145,7 @@ def list_source_plugins():
 
 def wic_create(wks_file, rootfs_dir, bootimg_dir, kernel_dir,
                native_sysroot, scripts_path, image_output_dir,
-               compressor, debug):
+               compressor, bmap, debug):
     """Create image
 
     wks_file - user-defined OE kickstart file
@@ -156,6 +156,7 @@ def wic_create(wks_file, rootfs_dir, bootimg_dir, kernel_dir,
     scripts_path - absolute path to /scripts dir
     image_output_dir - dirname to create for image
     compressor - compressor utility to compress the image
+    bmap - enable generation of .bmap
 
     Normally, the values for the build artifacts values are determined
     by 'wic -e' from the output of the 'bitbake -e' command given an
@@ -186,8 +187,12 @@ def wic_create(wks_file, rootfs_dir, bootimg_dir, kernel_dir,
 
     crobj = creator.Creator()
 
-    crobj.main(["direct", native_sysroot, kernel_dir, bootimg_dir, rootfs_dir,
-                wks_file, image_output_dir, oe_builddir, compressor or ""])
+    cmdline = ["direct", native_sysroot, kernel_dir, bootimg_dir, rootfs_dir,
+                wks_file, image_output_dir, oe_builddir, compressor or ""]
+    if bmap:
+        cmdline.append('--bmap')
+
+    crobj.main(cmdline)
 
     print("\nThe image(s) were created using OE kickstart file:\n  %s" % wks_file)
 
