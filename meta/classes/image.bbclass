@@ -523,9 +523,9 @@ python create_symlinks() {
     if not link_name:
         return
     for type in subimages:
-        if os.path.exists(img_name + imgsuffix + type):
-            dst = deploy_dir + "/" + link_name + "." + type
-            src = img_name + imgsuffix + type
+        dst = deploy_dir + "/" + link_name + "." + type
+        src = img_name + imgsuffix + type
+        if os.path.exists(src):
             bb.note("Creating symlink: %s -> %s" % (dst, src))
             if os.path.islink(dst):
                 if d.getVar('RM_OLD_IMAGE', True) == "1" and \
@@ -533,6 +533,8 @@ python create_symlinks() {
                     os.remove(os.path.realpath(dst))
                 os.remove(dst)
             os.symlink(src, dst)
+        else:
+            bb.note("Skipping symlink, source does not exist: %s -> %s" % (dst, src))
 }
 
 MULTILIBRE_ALLOW_REP =. "${base_bindir}|${base_sbindir}|${bindir}|${sbindir}|${libexecdir}|${sysconfdir}|${nonarch_base_libdir}/udev|/lib/modules/[^/]*/modules.*|"
