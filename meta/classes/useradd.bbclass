@@ -54,14 +54,14 @@ if test "x`echo $GROUPADD_PARAM | tr -d '[:space:]'`" != "x"; then
 	echo "Running groupadd commands..."
 	# Invoke multiple instances of groupadd for parameter lists
 	# separated by ';'
-	opts=`echo "$GROUPADD_PARAM" | cut -d ';' -f 1`
+	opts=`echo "$GROUPADD_PARAM" | cut -d ';' -f 1 | sed -e 's#[ \t]*$##'`
 	remaining=`echo "$GROUPADD_PARAM" | cut -d ';' -f 2-`
 	while test "x$opts" != "x"; do
 		perform_groupadd "$SYSROOT" "$OPT $opts"
 		if test "x$opts" = "x$remaining"; then
 			break
 		fi
-		opts=`echo "$remaining" | cut -d ';' -f 1`
+		opts=`echo "$remaining" | cut -d ';' -f 1 | sed -e 's#[ \t]*$##'`
 		remaining=`echo "$remaining" | cut -d ';' -f 2-`
 	done
 fi 
@@ -70,14 +70,14 @@ if test "x`echo $USERADD_PARAM | tr -d '[:space:]'`" != "x"; then
 	echo "Running useradd commands..."
 	# Invoke multiple instances of useradd for parameter lists
 	# separated by ';'
-	opts=`echo "$USERADD_PARAM" | cut -d ';' -f 1`
+	opts=`echo "$USERADD_PARAM" | cut -d ';' -f 1 | sed -e 's#[ \t]*$##'`
 	remaining=`echo "$USERADD_PARAM" | cut -d ';' -f 2-`
 	while test "x$opts" != "x"; do
 		perform_useradd "$SYSROOT" "$OPT $opts"
 		if test "x$opts" = "x$remaining"; then
 			break
 		fi
-		opts=`echo "$remaining" | cut -d ';' -f 1`
+		opts=`echo "$remaining" | cut -d ';' -f 1 | sed -e 's#[ \t]*$##'`
 		remaining=`echo "$remaining" | cut -d ';' -f 2-`
 	done
 fi
@@ -86,14 +86,14 @@ if test "x`echo $GROUPMEMS_PARAM | tr -d '[:space:]'`" != "x"; then
 	echo "Running groupmems commands..."
 	# Invoke multiple instances of groupmems for parameter lists
 	# separated by ';'
-	opts=`echo "$GROUPMEMS_PARAM" | cut -d ';' -f 1`
+	opts=`echo "$GROUPMEMS_PARAM" | cut -d ';' -f 1 | sed -e 's#[ \t]*$##'`
 	remaining=`echo "$GROUPMEMS_PARAM" | cut -d ';' -f 2-`
 	while test "x$opts" != "x"; do
 		perform_groupmems "$SYSROOT" "$OPT $opts"
 		if test "x$opts" = "x$remaining"; then
 			break
 		fi
-		opts=`echo "$remaining" | cut -d ';' -f 1`
+		opts=`echo "$remaining" | cut -d ';' -f 1 | sed -e 's#[ \t]*$##'`
 		remaining=`echo "$remaining" | cut -d ';' -f 2-`
 	done
 fi
@@ -203,7 +203,7 @@ def get_all_cmd_params(d, cmd_type):
     for pkg in useradd_packages.split():
         param = d.getVar(param_type % pkg, True)
         if param:
-            params.append(param)
+            params.append(param.rstrip(" ;"))
 
     return "; ".join(params)
 
