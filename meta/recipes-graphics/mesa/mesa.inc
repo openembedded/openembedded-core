@@ -142,16 +142,17 @@ python mesa_populate_packages() {
         d.setVar("RREPLACES_%s" % pkg, pkg.replace("mesa", "mesa-dri", 1))
 
     import re
-    dri_drivers_root = os.path.join(d.getVar('libdir', True), "dri")
-    dri_pkgs = os.listdir(d.getVar('PKGD', True) + dri_drivers_root)
-    lib_name = d.expand("${MLPREFIX}mesa-megadriver")
-    for p in dri_pkgs:
-        m = re.match('^(.*)_dri\.so$', p)
-        if m:
-            pkg_name = " ${MLPREFIX}mesa-driver-%s" % legitimize_package_name(m.group(1))
-            d.appendVar("RPROVIDES_%s" % lib_name, pkg_name)
-            d.appendVar("RCONFLICTS_%s" % lib_name, pkg_name)
-            d.appendVar("RREPLACES_%s" % lib_name, pkg_name)
+    dri_drivers_root = oe.path.join(d.getVar('PKGD', True), d.getVar('libdir', True), "dri")
+    if os.path.isdir(dri_drivers_root):
+        dri_pkgs = os.listdir(dri_drivers_root)
+        lib_name = d.expand("${MLPREFIX}mesa-megadriver")
+        for p in dri_pkgs:
+            m = re.match('^(.*)_dri\.so$', p)
+            if m:
+                pkg_name = " ${MLPREFIX}mesa-driver-%s" % legitimize_package_name(m.group(1))
+                d.appendVar("RPROVIDES_%s" % lib_name, pkg_name)
+                d.appendVar("RCONFLICTS_%s" % lib_name, pkg_name)
+                d.appendVar("RREPLACES_%s" % lib_name, pkg_name)
 
     pipe_drivers_root = os.path.join(d.getVar('libdir', True), "gallium-pipe")
     do_split_packages(d, pipe_drivers_root, '^pipe_(.*)\.so$', 'mesa-driver-pipe-%s', 'Mesa %s pipe driver', extra_depends='')
