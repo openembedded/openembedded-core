@@ -50,6 +50,7 @@ class Rootfs(object):
         excludes = [re.compile(x) for x in excludes]
         r = re.compile('^(warn|Warn|WARNING:)')
         log_path = self.d.expand("${T}/log.do_rootfs")
+        messages = []
         with open(log_path, 'r') as log:
             for line in log:
                 for ee in excludes:
@@ -61,8 +62,14 @@ class Rootfs(object):
 
                 m = r.search(line)
                 if m:
-                    bb.warn('[log_check] %s: found a warning message in the logfile (keyword \'%s\'):\n[log_check] %s'
-				    % (self.d.getVar('PN', True), m.group(), line))
+                    messages.append('[log_check] %s' % line)
+        if messages:
+            if len(messages) == 1:
+                msg = 'a warning message'
+            else:
+                msg = '%d warning messages' % len(messages)
+            bb.warn('[log_check] %s: found %s in the logfile:\n%s'
+                    % (self.d.getVar('PN', True), msg, ''.join(messages)))
 
     def _log_check_error(self):
         # Ignore any lines containing log_check to avoid recursion, and ignore
