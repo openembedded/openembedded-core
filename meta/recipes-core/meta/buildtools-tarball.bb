@@ -12,7 +12,6 @@ TOOLCHAIN_HOST_TASK ?= "\
     nativesdk-python-modules \
     nativesdk-python-misc \
     nativesdk-python-git \
-    nativesdk-python-pexpect \
     nativesdk-ncurses-terminfo-base \
     nativesdk-chrpath \
     nativesdk-tar \
