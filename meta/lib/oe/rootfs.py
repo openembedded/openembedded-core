@@ -41,11 +41,22 @@ class Rootfs(object):
         pass
 
     def _log_check_warn(self):
+        # Ignore any lines containing log_check to avoid recursion, and ignore
+        # lines beginning with a + since sh -x may emit code which isn't
+        # actually executed, but may contain error messages
+        excludes = [ 'log_check', r'^\+' ]
+        if hasattr(self, 'log_check_expected_regexes'):
+            excludes.extend(self.log_check_expected_regexes)
+        excludes = [re.compile(x) for x in excludes]
         r = re.compile('^(warn|Warn|WARNING:)')
         log_path = self.d.expand("${T}/log.do_rootfs")
         with open(log_path, 'r') as log:
             for line in log:
-                if 'log_check' in line:
+                for ee in excludes:
+                    m = ee.search(line)
+                    if m:
+                        break
+                if m:
                     continue
 
                 m = r.search(line)
@@ -58,8 +69,8 @@ class Rootfs(object):
         # lines beginning with a + since sh -x may emit code which isn't
         # actually executed, but may contain error messages
         excludes = [ 'log_check', r'^\+' ]
-        if hasattr(self, 'log_check_expected_errors_regexes'):
-            excludes.extend(self.log_check_expected_errors_regexes)
+        if hasattr(self, 'log_check_expected_regexes'):
+            excludes.extend(self.log_check_expected_regexes)
         excludes = [re.compile(x) for x in excludes]
         r = re.compile(self.log_check_regex)
         log_path = self.d.expand("${T}/log.do_rootfs")
@@ -597,7 +608,7 @@ class DpkgRootfs(DpkgOpkgRootfs):
     def __init__(self, d, manifest_dir):
         super(DpkgRootfs, self).__init__(d)
         self.log_check_regex = '^E:'
-        self.log_check_expected_errors_regexes = \
+        self.log_check_expected_regexes = \
         [
             "^E: Unmet dependencies."
         ]
