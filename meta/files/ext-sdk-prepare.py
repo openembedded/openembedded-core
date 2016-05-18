@@ -8,7 +8,7 @@ import subprocess
 
 def exec_watch(cmd, **options):
     """Run program with stdout shown on sys.stdout"""
-    if isinstance(cmd, basestring) and not "shell" in options:
+    if isinstance(cmd, str) and not "shell" in options:
         options["shell"] = True
 
     process = subprocess.Popen(

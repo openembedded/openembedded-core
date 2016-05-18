@@ -103,7 +103,7 @@ def fetch_uri(d, uri, destdir, srcrev=None):
     return ret
 
 def run_editor(fn):
-    if isinstance(fn, basestring):
+    if isinstance(fn, str):
         params = '"%s"' % fn
     else:
         params = ''

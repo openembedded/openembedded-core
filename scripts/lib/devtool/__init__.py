@@ -59,7 +59,7 @@ def exec_build_env_command(init_path, builddir, cmd, watch=False, **options):
 def exec_watch(cmd, **options):
     """Run program with stdout shown on sys.stdout"""
     import bb
-    if isinstance(cmd, basestring) and not "shell" in options:
+    if isinstance(cmd, str) and not "shell" in options:
         options["shell"] = True
 
     process = subprocess.Popen(

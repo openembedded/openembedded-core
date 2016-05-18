@@ -245,7 +245,7 @@ class PythonRecipeHandler(RecipeHandler):
             if field not in self.bbvar_map:
                 continue
 
-            if isinstance(values, basestring):
+            if isinstance(values, str):
                 value = values
             else:
                 value = ' '.join(str(v) for v in values if v)
@@ -436,7 +436,7 @@ class PythonRecipeHandler(RecipeHandler):
                 return value
 
             value = info[variable]
-            if isinstance(value, basestring):
+            if isinstance(value, str):
                 new_value = replace_value(search, replace, value)
                 if new_value is None:
                     del info[variable]
@@ -706,7 +706,7 @@ class LiteralAstTransform(ast.NodeTransformer):
 def has_non_literals(value):
     if isinstance(value, ast.AST):
         return True
-    elif isinstance(value, basestring):
+    elif isinstance(value, str):
         return False
     elif hasattr(value, 'values'):
         return any(has_non_literals(v) for v in value.values())
