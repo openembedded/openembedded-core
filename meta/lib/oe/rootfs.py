@@ -54,26 +54,25 @@ class Rootfs(object):
 				    % (self.d.getVar('PN', True), m.group(), line))
 
     def _log_check_error(self):
+        # Ignore any lines containing log_check to avoid recursion, and ignore
+        # lines beginning with a + since sh -x may emit code which isn't
+        # actually executed, but may contain error messages
+        excludes = [ 'log_check', r'^\+' ]
+        if hasattr(self, 'log_check_expected_errors_regexes'):
+            excludes.extend(self.log_check_expected_errors_regexes)
+        excludes = [re.compile(x) for x in excludes]
         r = re.compile(self.log_check_regex)
         log_path = self.d.expand("${T}/log.do_rootfs")
         with open(log_path, 'r') as log:
             found_error = 0
             message = "\n"
             for line in log:
-                if 'log_check' in line:
-                    continue
-                # sh -x may emit code which isn't actually executed
-                if line.startswith('+'):
-                    continue
-
-                if hasattr(self, 'log_check_expected_errors_regexes'):
-                    m = None
-                    for ee in self.log_check_expected_errors_regexes:
-                        m = re.search(ee, line)
-                        if m:
-                            break
+                for ee in excludes:
+                    m = ee.search(line)
                     if m:
-                        continue
+                        break
+                if m:
+                    continue
 
                 m = r.search(line)
                 if m:
