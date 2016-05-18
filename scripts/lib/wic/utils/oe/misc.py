@@ -34,7 +34,8 @@ from wic import msger
 from wic.utils import runner
 
 # executable -> recipe pairs for exec_native_cmd
-NATIVE_RECIPES = {"mcopy": "mtools",
+NATIVE_RECIPES = {"bmaptool": "bmap-tools",
+                  "mcopy": "mtools",
                   "mkdosfs": "dosfstools",
                   "mkfs.btrfs": "btrfs-tools",
                   "mkfs.ext2": "e2fsprogs",
