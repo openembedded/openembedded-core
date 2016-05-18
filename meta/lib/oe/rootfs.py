@@ -62,6 +62,9 @@ class Rootfs(object):
             for line in log:
                 if 'log_check' in line:
                     continue
+                # sh -x may emit code which isn't actually executed
+                if line.startswith('+'):
+                    continue
 
                 if hasattr(self, 'log_check_expected_errors_regexes'):
                     m = None
@@ -472,32 +475,6 @@ class RpmRootfs(Rootfs):
         # this is just a stub. For RPM, the failed postinstalls are
         # already saved in /etc/rpm-postinsts
         pass
-
-    def _log_check_error(self):
-        r = re.compile('(unpacking of archive failed|Cannot find package|exit 1|ERR|Fail)')
-        log_path = self.d.expand("${T}/log.do_rootfs")
-        with open(log_path, 'r') as log:
-            found_error = 0
-            message = "\n"
-            for line in log.read().split('\n'):
-                if 'log_check' in line:
-                    continue
-                # sh -x may emit code which isn't actually executed
-                if line.startswith('+'):
-		    continue
-
-                m = r.search(line)
-                if m:
-                    found_error = 1
-                    bb.warn('log_check: There were error messages in the logfile')
-                    bb.warn('log_check: Matched keyword: [%s]\n\n' % m.group())
-
-                if found_error >= 1 and found_error <= 5:
-                    message += line + '\n'
-                    found_error += 1
-
-                if found_error == 6:
-                    bb.fatal(message)
 
     def _log_check(self):
         self._log_check_warn()
