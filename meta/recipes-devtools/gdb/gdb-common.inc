@@ -36,6 +36,7 @@ SRC_URI = "git://sourceware.org/git/binutils-gdb.git;branch=gdb-7.11-branch \
            file://0008-Use-exorted-definitions-of-SIGRTMIN.patch \
            file://0009-Change-order-of-CFLAGS.patch \
            file://0010-resolve-restrict-keyword-conflict.patch \
+           file://0011-avx_mpx.patch \
 "
 
 S = "${WORKDIR}/git"
@@ -84,4 +85,3 @@ RRECOMMENDS_gdb_append_linux = " glibc-thread-db "
 RRECOMMENDS_gdb_append_linux-gnueabi = " glibc-thread-db "
 RRECOMMENDS_gdbserver_append_linux = " glibc-thread-db "
 RRECOMMENDS_gdbserver_append_linux-gnueabi = " glibc-thread-db "
-
