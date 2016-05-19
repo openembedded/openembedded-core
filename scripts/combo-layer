@@ -26,7 +26,7 @@ import optparse
 import logging
 import subprocess
 import tempfile
-import ConfigParser
+import configparser
 import re
 import copy
 import pipes
@@ -87,7 +87,7 @@ class Configuration(object):
                     self.commit_msg_template = value
 
         logger.debug("Loading config file %s" % self.conffile)
-        self.parser = ConfigParser.ConfigParser()
+        self.parser = configparser.ConfigParser()
         with open(self.conffile) as f:
             self.parser.readfp(f)
 
@@ -116,7 +116,7 @@ class Configuration(object):
 
                 self.localconffile = lcfile
                 logger.debug("Loading local config file %s" % self.localconffile)
-                self.localparser = ConfigParser.ConfigParser()
+                self.localparser = configparser.ConfigParser()
                 with open(self.localconffile) as f:
                     self.localparser.readfp(f)
 

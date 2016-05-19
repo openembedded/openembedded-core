@@ -22,7 +22,7 @@ import os
 import argparse
 import glob
 import re
-import ConfigParser
+import configparser
 import subprocess
 import logging
 
@@ -51,12 +51,12 @@ class ConfigHandler(object):
 
     def __init__(self, filename):
         self.config_file = filename
-        self.config_obj = ConfigParser.SafeConfigParser()
+        self.config_obj = configparser.SafeConfigParser()
 
     def get(self, section, option, default=None):
         try:
             ret = self.config_obj.get(section, option)
-        except (ConfigParser.NoOptionError, ConfigParser.NoSectionError):
+        except (configparser.NoOptionError, configparser.NoSectionError):
             if default != None:
                 ret = default
             else:
