@@ -7,3 +7,4 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=59530bdf33659b29e73d4adb9f9f6552 \
 SRC_URI[md5sum] = "f3b97de919a9dba84490b2e076ec4cb0"
 SRC_URI[sha256sum] = "4994ad986726ac4128a6f1bd8020cd672e9a92aa76b80736563ef992992764ef"
 
+SRC_URI += "file://0001-7.9.1-Add-target-descriptions-for-AVX-MPX.patch"
