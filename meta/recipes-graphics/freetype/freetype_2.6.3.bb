@@ -15,6 +15,9 @@ LIC_FILES_CHKSUM = "file://docs/LICENSE.TXT;md5=4af6221506f202774ef74f64932878a1
 SRC_URI = "${SOURCEFORGE_MIRROR}/freetype/freetype-${PV}.tar.bz2 \
            file://use-right-libtool.patch"
 
+UPSTREAM_CHECK_URI = "http://sourceforge.net/projects/freetype/files/freetype2/"
+UPSTREAM_CHECK_REGEX = "(?P<pver>\d+(\.\d+)+)"
+
 SRC_URI[md5sum] = "0037b25a8c090bc8a1218e867b32beb1"
 SRC_URI[sha256sum] = "371e707aa522acf5b15ce93f11183c725b8ed1ee8546d7b3af549863045863a2"
 
