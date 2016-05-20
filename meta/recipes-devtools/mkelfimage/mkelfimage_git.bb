@@ -13,8 +13,8 @@ http://review.coreboot.org/gitweb?p=coreboot.git;a=commit;h=34fc4ab80b507739e258
 DEPENDS += "zlib"
 
 SRC_URI = "git://review.coreboot.org/p/coreboot;protocol=http \
-           file://cross-compile.patch   \
-          "
+           file://cross-compile.patch \
+           "
 SRC_URI_append_class-native = " \
            file://fix-makefile-to-find-libz.patch   \
 "
