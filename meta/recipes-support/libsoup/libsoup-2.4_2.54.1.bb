@@ -21,6 +21,7 @@ inherit autotools gettext pkgconfig upstream-version-is-even gobject-introspecti
 # libsoup-gnome is entirely deprecated and just stubs in 2.42 onwards. Disable by default.
 PACKAGECONFIG ??= ""
 PACKAGECONFIG[gnome] = "--with-gnome,--without-gnome"
+PACKAGECONFIG[gssapi] = "--with-gssapi,--without-gssapi,krb5"
 
 EXTRA_OECONF = "--disable-vala"
 
