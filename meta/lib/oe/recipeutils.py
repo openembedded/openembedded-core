@@ -692,7 +692,7 @@ def bbappend_recipe(rd, destlayerdir, srcfiles, install=None, wildcardver=False,
 
         varnames = [item[0] for item in bbappendlines]
         if removevalues:
-            varnames.extend(removevalues.keys())
+            varnames.extend(list(removevalues.keys()))
 
         with open(appendpath, 'r') as f:
             (updated, newlines) = bb.utils.edit_metadata(f, varnames, appendfile_varfunc)
@@ -743,12 +743,12 @@ def replace_dir_vars(path, d):
     """Replace common directory paths with appropriate variable references (e.g. /etc becomes ${sysconfdir})"""
     dirvars = {}
     # Sort by length so we get the variables we're interested in first
-    for var in sorted(d.keys(), key=len):
+    for var in sorted(list(d.keys()), key=len):
         if var.endswith('dir') and var.lower() == var:
             value = d.getVar(var, True)
             if value.startswith('/') and not '\n' in value and value not in dirvars:
                 dirvars[value] = var
-    for dirpath in sorted(dirvars.keys(), reverse=True):
+    for dirpath in sorted(list(dirvars.keys()), reverse=True):
         path = path.replace(dirpath, '${%s}' % dirvars[dirpath])
     return path
 

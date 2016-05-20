@@ -219,7 +219,7 @@ class RpmManifest(Manifest):
                 if var in self.vars_to_split:
                     split_pkgs = self._split_multilib(self.d.getVar(var, True))
                     if split_pkgs is not None:
-                        pkgs = dict(pkgs.items() + split_pkgs.items())
+                        pkgs = dict(list(pkgs.items()) + list(split_pkgs.items()))
                 else:
                     pkg_list = self.d.getVar(var, True)
                     if pkg_list is not None:
@@ -269,7 +269,7 @@ class OpkgManifest(Manifest):
                 if var in self.vars_to_split:
                     split_pkgs = self._split_multilib(self.d.getVar(var, True))
                     if split_pkgs is not None:
-                        pkgs = dict(pkgs.items() + split_pkgs.items())
+                        pkgs = dict(list(pkgs.items()) + list(split_pkgs.items()))
                 else:
                     pkg_list = self.d.getVar(var, True)
                     if pkg_list is not None:

@@ -536,7 +536,7 @@ class DpkgOpkgRootfs(Rootfs):
                     pkg_depends = m_depends.group(1)
 
         # remove package dependencies not in postinsts
-        pkg_names = pkgs.keys()
+        pkg_names = list(pkgs.keys())
         for pkg_name in pkg_names:
             deps = pkgs[pkg_name][:]
 
@@ -569,7 +569,7 @@ class DpkgOpkgRootfs(Rootfs):
             pkgs = self._get_pkgs_postinsts(status_file)
         if pkgs:
             root = "__packagegroup_postinst__"
-            pkgs[root] = pkgs.keys()
+            pkgs[root] = list(pkgs.keys())
             _dep_resolve(pkgs, root, pkg_list, [])
             pkg_list.remove(root)
 

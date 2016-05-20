@@ -643,8 +643,8 @@ class PackageManager(object):
     def construct_uris(self, uris, base_paths):
         def _append(arr1, arr2, sep='/'):
             res = []
-            narr1 = map(lambda a: string.rstrip(a, sep), arr1)
-            narr2 = map(lambda a: string.lstrip(string.rstrip(a, sep), sep), arr2)
+            narr1 = [string.rstrip(a, sep) for a in arr1]
+            narr2 = [string.lstrip(string.rstrip(a, sep), sep) for a in arr2]
             for a1 in narr1:
                 if arr2:
                     for a2 in narr2:
@@ -1111,7 +1111,7 @@ class RpmPM(PackageManager):
             sub_rdep = sub_data.get("RDEPENDS_" + pkg)
             if not sub_rdep:
                 continue
-            done = bb.utils.explode_dep_versions2(sub_rdep).keys()
+            done = list(bb.utils.explode_dep_versions2(sub_rdep).keys())
             next = done
             # Find all the rdepends on dependency chain
             while next:

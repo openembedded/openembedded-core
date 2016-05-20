@@ -195,7 +195,7 @@ def merge_lockedsigs(copy_tasks, lockedsigs_main, lockedsigs_extra, merged_outpu
                     fulltypes.append(typename)
             f.write('SIGGEN_LOCKEDSIGS_TYPES = "%s"\n' % ' '.join(fulltypes))
 
-    write_sigs_file(copy_output, tocopy.keys(), tocopy)
+    write_sigs_file(copy_output, list(tocopy.keys()), tocopy)
     if merged_output:
         write_sigs_file(merged_output, arch_order, merged)
 

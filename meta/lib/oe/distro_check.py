@@ -104,8 +104,8 @@ def get_source_package_list_from_url(url, section, d):
 
     bb.note("Reading %s: %s" % (url, section))
     links = get_links_from_url(url, d)
-    srpms = filter(is_src_rpm, links)
-    names_list = map(package_name_from_srpm, srpms)
+    srpms = list(filter(is_src_rpm, links))
+    names_list = list(map(package_name_from_srpm, srpms))
 
     new_pkgs = []
     for pkgs in names_list:

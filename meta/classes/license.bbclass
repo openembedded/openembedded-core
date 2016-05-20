@@ -635,7 +635,7 @@ def check_license_format(d):
     licenses = d.getVar('LICENSE', True)
     from oe.license import license_operator, license_operator_chars, license_pattern
 
-    elements = filter(lambda x: x.strip(), license_operator.split(licenses))
+    elements = list(filter(lambda x: x.strip(), license_operator.split(licenses)))
     for pos, element in enumerate(elements):
         if license_pattern.match(element):
             if pos > 0 and license_pattern.match(elements[pos - 1]):

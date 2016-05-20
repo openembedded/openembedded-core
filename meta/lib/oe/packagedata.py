@@ -66,7 +66,7 @@ def _pkgmap(d):
         bb.warn("No files in %s?" % pkgdatadir)
         files = []
 
-    for pn in filter(lambda f: not os.path.isdir(os.path.join(pkgdatadir, f)), files):
+    for pn in [f for f in files if not os.path.isdir(os.path.join(pkgdatadir, f))]:
         try:
             pkgdata = read_pkgdatafile(os.path.join(pkgdatadir, pn))
         except OSError:

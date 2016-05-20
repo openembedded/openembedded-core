@@ -85,11 +85,11 @@ def prune_suffix(var, suffixes, d):
 
 def str_filter(f, str, d):
     from re import match
-    return " ".join(filter(lambda x: match(f, x, 0), str.split()))
+    return " ".join([x for x in str.split() if match(f, x, 0)])
 
 def str_filter_out(f, str, d):
     from re import match
-    return " ".join(filter(lambda x: not match(f, x, 0), str.split()))
+    return " ".join([x for x in str.split() if not match(f, x, 0)])
 
 def param_bool(cfg, field, dflt = None):
     """Lookup <field> in <cfg> map and convert it to a boolean; take
@@ -134,7 +134,7 @@ def packages_filter_out_system(d):
     PN-dbg PN-doc PN-locale-eb-gb removed.
     """
     pn = d.getVar('PN', True)
-    blacklist = map(lambda suffix: pn + suffix, ('', '-dbg', '-dev', '-doc', '-locale', '-staticdev'))
+    blacklist = [pn + suffix for suffix in ('', '-dbg', '-dev', '-doc', '-locale', '-staticdev')]
     localepkg = pn + "-locale-"
     pkgs = []
 

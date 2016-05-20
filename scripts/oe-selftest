@@ -211,7 +211,7 @@ def get_tests_from_module(tmod):
     try:
         import importlib
         modlib = importlib.import_module(tmod)
-        for mod in vars(modlib).values():
+        for mod in list(vars(modlib).values()):
             if isinstance(mod, type(oeSelfTest)) and issubclass(mod, oeSelfTest) and mod is not oeSelfTest:
                 for test in dir(mod):
                     if test.startswith('test_') and hasattr(vars(mod)[test], '__call__'):

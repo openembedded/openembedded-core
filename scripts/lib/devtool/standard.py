@@ -321,7 +321,7 @@ def _git_exclude_path(srctree, path):
     # becomes greater than that.
     path = os.path.normpath(path)
     recurse = True if len(path.split(os.path.sep)) > 1 else False
-    git_files = _git_ls_tree(srctree, 'HEAD', recurse).keys()
+    git_files = list(_git_ls_tree(srctree, 'HEAD', recurse).keys())
     if path in git_files:
         git_files.remove(path)
         return git_files
@@ -1073,14 +1073,14 @@ def _update_recipe_srcrev(args, srctree, rd, config_data):
                                                   patches_dir)
 
             # Remove deleted local files and "overlapping" patches
-            remove_files = del_f.values() + upd_p.values()
+            remove_files = list(del_f.values()) + list(upd_p.values())
             if remove_files:
                 removedentries = _remove_file_entries(srcuri, remove_files)[0]
                 update_srcuri = True
 
         if args.append:
             files = dict((os.path.join(local_files_dir, key), val) for
-                          key, val in upd_f.items() + new_f.items())
+                          key, val in list(upd_f.items()) + list(new_f.items()))
             removevalues = {}
             if update_srcuri:
                 removevalues  = {'SRC_URI': removedentries}
@@ -1142,7 +1142,7 @@ def _update_recipe_patch(args, config, workspace, srctree, rd, config_data):
             upd_p, new_p, del_p = _export_patches(srctree, rd, initial_rev,
                                                   all_patches_dir)
             # Remove deleted local files and  patches
-            remove_files = del_f.values() + del_p.values()
+            remove_files = list(del_f.values()) + list(del_p.values())
 
         # Get updated patches from source tree
         patches_dir = tempfile.mkdtemp(dir=tempdir)
@@ -1154,9 +1154,9 @@ def _update_recipe_patch(args, config, workspace, srctree, rd, config_data):
         srcuri = (rd.getVar('SRC_URI', False) or '').split()
         if args.append:
             files = dict((os.path.join(local_files_dir, key), val) for
-                         key, val in upd_f.items() + new_f.items())
+                         key, val in list(upd_f.items()) + list(new_f.items()))
             files.update(dict((os.path.join(patches_dir, key), val) for
-                              key, val in upd_p.items() + new_p.items()))
+                              key, val in list(upd_p.items()) + list(new_p.items())))
             if files or remove_files:
                 removevalues = None
                 if remove_files:

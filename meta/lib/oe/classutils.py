@@ -34,7 +34,7 @@ abstract base classes out of the registry)."""
 
     @classmethod
     def prioritized(tcls):
-        return sorted(tcls.registry.values(),
+        return sorted(list(tcls.registry.values()),
                       key=lambda v: v.priority, reverse=True)
 
     def unregister(cls):

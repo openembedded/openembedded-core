@@ -274,7 +274,7 @@ python buildhistory_emit_pkghistory() {
         # Gather information about packaged files
         val = pkgdata.get('FILES_INFO', '')
         dictval = json.loads(val)
-        filelist = dictval.keys()
+        filelist = list(dictval.keys())
         filelist.sort()
         pkginfo.filelist = " ".join(filelist)
 

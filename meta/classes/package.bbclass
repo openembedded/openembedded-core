@@ -1504,7 +1504,7 @@ python package_do_shlibs() {
             m = re.match("\s+RPATH\s+([^\s]*)", l)
             if m:
                 rpaths = m.group(1).replace("$ORIGIN", ldir).split(":")
-                rpath = map(os.path.normpath, rpaths)
+                rpath = list(map(os.path.normpath, rpaths))
         for l in lines:
             m = re.match("\s+NEEDED\s+([^\s]*)", l)
             if m:
@@ -1674,7 +1674,7 @@ python package_do_shlibs() {
                 bb.debug(2, '%s: Dependency %s covered by PRIVATE_LIBS' % (pkg, n[0]))
                 continue
             if n[0] in shlib_provider.keys():
-                shlib_provider_path = list()
+                shlib_provider_path = []
                 for k in shlib_provider[n[0]].keys():
                     shlib_provider_path.append(k)
                 match = None

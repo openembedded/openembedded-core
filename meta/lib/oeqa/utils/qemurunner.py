@@ -22,7 +22,7 @@ import logging
 logger = logging.getLogger("BitBake.QemuRunner")
 
 # Get Unicode non printable control chars
-control_range = range(0,32)+range(127,160)
+control_range = list(range(0,32))+list(range(127,160))
 control_chars = [unichr(x) for x in control_range
                 if unichr(x) not in string.printable]
 re_control_char = re.compile('[%s]' % re.escape("".join(control_chars)))
