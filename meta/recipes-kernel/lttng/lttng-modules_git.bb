@@ -8,8 +8,8 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=362844633a08753bd96ab322a6c7f9f6 \
 
 inherit module
 
-SRCREV = "45e0ebd91f995cc73c2b0d5c60cf9d12e8c838bf"
-PV = "2.7.1+git${SRCPV}"
+SRCREV = "5362a1f26060e0d64464bb35cdd285c914ae6171"
+PV = "2.7.3+git${SRCPV}"
 
 COMPATIBLE_HOST = '(x86_64|i.86|powerpc|aarch64|mips|nios2|arm).*-linux'
 
