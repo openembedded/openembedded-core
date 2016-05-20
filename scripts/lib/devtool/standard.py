@@ -837,7 +837,7 @@ def _get_patchset_revs(args, srctree, recipe_path):
         stdout, _ = bb.process.run('git rev-list --reverse %s..HEAD' %
                                    initial_rev, cwd=srctree)
         newcommits = stdout.split()
-        for i in xrange(min(len(commits), len(newcommits))):
+        for i in range(min(len(commits), len(newcommits))):
             if newcommits[i] == commits[i]:
                 update_rev = commits[i]
 
@@ -863,7 +863,7 @@ def _remove_file_entries(srcuri, filelist):
     entries = []
     for fname in filelist:
         basename = os.path.basename(fname)
-        for i in xrange(len(srcuri)):
+        for i in range(len(srcuri)):
             if (srcuri[i].startswith('file://') and
                     os.path.basename(srcuri[i].split(';')[0]) == basename):
                 entries.append(srcuri[i])

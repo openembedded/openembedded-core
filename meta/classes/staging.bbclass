@@ -187,7 +187,7 @@ def sysroot_checkhashes(covered, tasknames, fnids, fns, d, invalidtasks = None):
     problems = set()
     configurefnids = set()
     if not invalidtasks:
-        invalidtasks = xrange(len(tasknames))
+        invalidtasks = range(len(tasknames))
     for task in invalidtasks:
         if tasknames[task] == "do_configure" and task not in covered:
             configurefnids.add(fnids[task])

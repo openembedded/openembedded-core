@@ -324,7 +324,7 @@ def run_cyclictest_suite():
         t = time.time()
         max_list = []
 
-        for i in xrange(0, suite_size):
+        for i in range(0, suite_size):
                 tmp_min, tmp_avg, tmp_max = run_cyclictest_once()
 
                 msg = "%2d/%2d:" % (i+1, suite_size)

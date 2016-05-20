@@ -568,14 +568,14 @@ def bbappend_recipe(rd, destlayerdir, srcfiles, install=None, wildcardver=False,
                     raise Exception('Invalid extralines value passed')
 
     def popline(varname):
-        for i in xrange(0, len(bbappendlines)):
+        for i in range(0, len(bbappendlines)):
             if bbappendlines[i][0] == varname:
                 line = bbappendlines.pop(i)
                 return line
         return None
 
     def appendline(varname, op, value):
-        for i in xrange(0, len(bbappendlines)):
+        for i in range(0, len(bbappendlines)):
             item = bbappendlines[i]
             if item[0] == varname:
                 bbappendlines[i] = (item[0], item[1], item[2] + ' ' + value)
