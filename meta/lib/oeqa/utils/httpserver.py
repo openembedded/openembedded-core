@@ -1,8 +1,8 @@
-import SimpleHTTPServer
+import http.server
 import multiprocessing
 import os
 
-class HTTPServer(SimpleHTTPServer.BaseHTTPServer.HTTPServer):
+class HTTPServer(http.server.HTTPServer):
 
     def server_start(self, root_dir):
         import signal
@@ -10,7 +10,7 @@ class HTTPServer(SimpleHTTPServer.BaseHTTPServer.HTTPServer):
         os.chdir(root_dir)
         self.serve_forever()
 
-class HTTPRequestHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
+class HTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
 
     def log_message(self, format_str, *args):
         pass

@@ -8,7 +8,7 @@ def runstrip(arg):
     # 8 - shared library
     # 16 - kernel module
 
-    import commands, stat, subprocess
+    import stat, subprocess
 
     (file, elftype, strip) = arg
 

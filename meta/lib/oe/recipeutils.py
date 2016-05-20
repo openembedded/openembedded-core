@@ -11,7 +11,7 @@ import os.path
 import tempfile
 import textwrap
 import difflib
-import utils
+from . import utils
 import shutil
 import re
 import fnmatch
@@ -662,7 +662,7 @@ def bbappend_recipe(rd, destlayerdir, srcfiles, install=None, wildcardver=False,
 
                 if removevar in removevalues:
                     remove = removevalues[removevar]
-                    if isinstance(remove, basestring):
+                    if isinstance(remove, str):
                         if remove in splitval:
                             splitval.remove(remove)
                             changed = True

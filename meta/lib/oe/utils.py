@@ -46,7 +46,7 @@ def both_contain(variable1, variable2, checkvalue, d):
     val2 = d.getVar(variable2, True)
     val1 = set(val1.split())
     val2 = set(val2.split())
-    if isinstance(checkvalue, basestring):
+    if isinstance(checkvalue, str):
         checkvalue = set(checkvalue.split())
     else:
         checkvalue = set(checkvalue)
@@ -235,7 +235,7 @@ def format_pkg_list(pkg_dict, ret_format=None):
 # so implement a version here
 #
 
-from Queue import Queue
+from queue import Queue
 from threading import Thread
 
 class ThreadedWorker(Thread):
@@ -249,7 +249,7 @@ class ThreadedWorker(Thread):
         self.worker_end = worker_end
 
     def run(self):
-        from Queue import Empty
+        from queue import Empty
 
         if self.worker_init is not None:
             self.worker_init(self)

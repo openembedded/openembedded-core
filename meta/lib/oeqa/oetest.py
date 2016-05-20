@@ -13,6 +13,7 @@ import inspect
 import subprocess
 import signal
 import shutil
+import functools
 try:
     import bb
 except ImportError:
@@ -340,7 +341,14 @@ class TestContext(object):
         for index, suite in enumerate(suites):
             set_suite_depth(suite)
             suite.index = index
-        suites.sort(cmp=lambda a,b: cmp((a.depth, a.index), (b.depth, b.index)))
+
+        def cmp(a, b):
+            return (a > b) - (a < b)
+
+        def cmpfunc(a, b):
+            return cmp((a.depth, a.index), (b.depth, b.index))
+
+        suites.sort(key=functools.cmp_to_key(cmpfunc))
 
         self.suite = testloader.suiteClass(suites)
 

@@ -8,9 +8,7 @@ import glob
 import traceback
 
 
-class Sdk(object):
-    __metaclass__ = ABCMeta
-
+class Sdk(object, metaclass=ABCMeta):
     def __init__(self, d, manifest_dir):
         self.d = d
         self.sdk_output = self.d.getVar('SDK_OUTPUT', True)

@@ -264,7 +264,7 @@ SDKMACHINE = "i686"
         files2 = get_files(topdir + "/tmp-sstatesamehash2/stamps/")
         files2 = [x.replace("tmp-sstatesamehash2", "tmp-sstatesamehash").replace("i686-linux", "x86_64-linux").replace("i686" + targetvendor + "-linux", "x86_64" + targetvendor + "-linux", ) for x in files2]
         self.maxDiff = None
-        self.assertItemsEqual(files1, files2)
+        self.assertCountEqual(files1, files2)
 
 
     @testcase(1271)
@@ -298,7 +298,7 @@ NATIVELSBSTRING = \"DistroB\"
         files2 = get_files(topdir + "/tmp-sstatesamehash2/stamps/")
         files2 = [x.replace("tmp-sstatesamehash2", "tmp-sstatesamehash") for x in files2]
         self.maxDiff = None
-        self.assertItemsEqual(files1, files2)
+        self.assertCountEqual(files1, files2)
 
     @testcase(1368)
     def test_sstate_allarch_samesigs(self):
@@ -393,7 +393,7 @@ DEFAULTTUNE_virtclass-multilib-lib32 = "x86"
         files2 = get_files(topdir + "/tmp-sstatesamehash2/stamps")
         files2 = [x.replace("tmp-sstatesamehash2", "tmp-sstatesamehash") for x in files2]
         self.maxDiff = None
-        self.assertItemsEqual(files1, files2)
+        self.assertCountEqual(files1, files2)
 
 
     def test_sstate_noop_samesigs(self):

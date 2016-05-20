@@ -10,9 +10,7 @@ import bb.utils
 import subprocess
 from abc import ABCMeta, abstractmethod
 
-class BuildProject():
-
-    __metaclass__ = ABCMeta
+class BuildProject(metaclass=ABCMeta):
 
     def __init__(self, d, uri, foldername=None, tmpdir="/tmp/"):
         self.d = d

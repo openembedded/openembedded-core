@@ -13,7 +13,7 @@ import re
 import socket
 import select
 import bb
-from qemurunner import QemuRunner
+from .qemurunner import QemuRunner
 
 class QemuTinyRunner(QemuRunner):
 

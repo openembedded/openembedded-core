@@ -115,6 +115,8 @@ class NoParsingFilter(logging.Filter):
     def filter(self, record):
         return record.levelno == 100
 
+import inspect
+
 def LogResults(original_class):
     orig_method = original_class.run
 
@@ -123,6 +125,19 @@ def LogResults(original_class):
     timestamp = strftime('%Y%m%d%H%M%S',gmtime())
     logfile = os.path.join(os.getcwd(),'results-'+caller+'.'+timestamp+'.log')
     linkfile = os.path.join(os.getcwd(),'results-'+caller+'.log')
+
+    def get_class_that_defined_method(meth):
+        if inspect.ismethod(meth):
+            for cls in inspect.getmro(meth.__self__.__class__):
+               if cls.__dict__.get(meth.__name__) is meth:
+                    return cls
+            meth = meth.__func__ # fallback to __qualname__ parsing
+        if inspect.isfunction(meth):
+            cls = getattr(inspect.getmodule(meth),
+                          meth.__qualname__.split('.<locals>', 1)[0].rsplit('.', 1)[0])
+            if isinstance(cls, type):
+               return cls
+        return None
 
     #rewrite the run method of unittest.TestCase to add testcase logging
     def run(self, result, *args, **kws):
@@ -135,7 +150,7 @@ def LogResults(original_class):
         except AttributeError:
             test_case = self._testMethodName
 
-        class_name = str(testMethod.im_class).split("'")[1]
+        class_name = str(get_class_that_defined_method(testMethod)).split("'")[1]
 
         #create custom logging level for filtering.
         custom_log_level = 100

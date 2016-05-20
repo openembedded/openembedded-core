@@ -43,9 +43,7 @@ def get_target_controller(d):
         return controller(d)
 
 
-class BaseTarget(object):
-
-    __metaclass__ = ABCMeta
+class BaseTarget(object, metaclass=ABCMeta):
 
     supported_image_fstypes = []
 

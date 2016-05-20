@@ -145,7 +145,7 @@ python buildhistory_emit_pkghistory() {
                 elif name == "RCONFLICTS":
                     pkginfo.rconflicts = value
                 elif name == "PKGSIZE":
-                    pkginfo.size = long(value)
+                    pkginfo.size = int(value)
                 elif name == "FILES":
                     pkginfo.files = value
                 elif name == "FILELIST":

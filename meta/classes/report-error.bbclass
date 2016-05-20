@@ -43,7 +43,7 @@ python errorreport_handler () {
             data['target_sys'] = e.data.getVar("TARGET_SYS", True)
             data['failures'] = []
             data['component'] = e.getPkgs()[0]
-            data['branch_commit'] = base_detect_branch(e.data) + ": " + base_detect_revision(e.data)
+            data['branch_commit'] = str(base_detect_branch(e.data)) + ": " + str(base_detect_revision(e.data))
             lock = bb.utils.lockfile(datafile + '.lock')
             errorreport_savedata(e, data, "error-report.txt")
             bb.utils.unlockfile(lock)

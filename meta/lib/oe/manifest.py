@@ -4,11 +4,10 @@ import re
 import bb
 
 
-class Manifest(object):
+class Manifest(object, metaclass=ABCMeta):
     """
     This is an abstract class. Do not instantiate this directly.
     """
-    __metaclass__ = ABCMeta
 
     PKG_TYPE_MUST_INSTALL = "mip"
     PKG_TYPE_MULTILIB = "mlp"

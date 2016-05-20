@@ -41,7 +41,7 @@ class Command(object):
         self.data = data
 
         self.options = dict(self.defaultopts)
-        if isinstance(self.cmd, basestring):
+        if isinstance(self.cmd, str):
             self.options["shell"] = True
         if self.data:
             self.options['stdin'] = subprocess.PIPE
@@ -123,7 +123,7 @@ def bitbake(command, ignore_status=False, timeout=None, postconfig=None, **optio
     else:
         extra_args = ""
 
-    if isinstance(command, basestring):
+    if isinstance(command, str):
         cmd = "bitbake " + extra_args + " " + command
     else:
         cmd = [ "bitbake" ] + [a for a in (command + extra_args.split(" ")) if a not in [""]]

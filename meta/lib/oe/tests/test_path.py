@@ -85,5 +85,5 @@ class TestRealPath(unittest.TestCase):
 
     def test_loop(self):
         for e in self.EXCEPTIONS:
-            self.assertRaisesRegexp(OSError, r'\[Errno %u\]' % e[1],
+            self.assertRaisesRegex(OSError, r'\[Errno %u\]' % e[1],
                                     self.__realpath, e[0], False, False)

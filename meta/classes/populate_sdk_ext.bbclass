@@ -129,8 +129,8 @@ python copy_buildsystem () {
     d.setVar('scriptrelpath', scriptrelpath)
 
     # Write out config file for devtool
-    import ConfigParser
-    config = ConfigParser.SafeConfigParser()
+    import configparser
+    config = configparser.SafeConfigParser()
     config.add_section('General')
     config.set('General', 'bitbake_subdir', conf_bbpath)
     config.set('General', 'init_path', conf_initpath)

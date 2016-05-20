@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 # Copyright (c) 2013 Intel Corporation
 #
@@ -34,6 +34,8 @@ import subprocess
 import time as t
 import re
 import fnmatch
+import collections
+import imp
 
 sys.path.insert(0, os.path.dirname(os.path.realpath(__file__)) + '/lib')
 import scriptpath
@@ -414,7 +416,7 @@ def coverage_report():
         # Coverage under version 4 uses coverage.coverage
         from coverage import coverage as Coverage
 
-    import cStringIO as StringIO
+    import io as StringIO
     from coverage.misc import CoverageException
 
     cov_output = StringIO.StringIO()
@@ -442,7 +444,7 @@ def main():
     bbpath = get_bb_var('BBPATH').split(':')
     layer_libdirs = [p for p in (os.path.join(l, 'lib') for l in bbpath) if os.path.exists(p)]
     sys.path.extend(layer_libdirs)
-    reload(oeqa.selftest)
+    imp.reload(oeqa.selftest)
 
     if args.run_tests_by and len(args.run_tests_by) >= 2:
         valid_options = ['name', 'class', 'module', 'id', 'tag']
@@ -491,7 +493,7 @@ def main():
                         if isinstance(t, type(oeSelfTest)) and issubclass(t, oeSelfTest) and t!=oeSelfTest:
                             print(" --", v)
                             for method in dir(t):
-                                if method.startswith("test_") and callable(vars(t)[method]):
+                                if method.startswith("test_") and isinstance(vars(t)[method], collections.Callable):
                                     print(" --  --", method)
 
                 except (AttributeError, ImportError) as e:

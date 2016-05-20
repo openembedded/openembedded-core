@@ -1,8 +1,8 @@
 from contextlib import contextmanager
 @contextmanager
 def create_socket(url, d):
-    import urllib
-    socket = urllib.urlopen(url, proxies=get_proxies(d))
+    import urllib.request, urllib.parse, urllib.error
+    socket = urllib.request.urlopen(url, proxies=get_proxies(d))
     try:
         yield socket
     finally:

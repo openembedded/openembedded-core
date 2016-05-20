@@ -89,9 +89,7 @@ def opkg_query(cmd_output):
     return output
 
 
-class Indexer(object):
-    __metaclass__ = ABCMeta
-
+class Indexer(object, metaclass=ABCMeta):
     def __init__(self, d, deploy_dir):
         self.d = d
         self.deploy_dir = deploy_dir
@@ -342,9 +340,7 @@ class DpkgIndexer(Indexer):
 
 
 
-class PkgsList(object):
-    __metaclass__ = ABCMeta
-
+class PkgsList(object, metaclass=ABCMeta):
     def __init__(self, d, rootfs_dir):
         self.d = d
         self.rootfs_dir = rootfs_dir
@@ -512,11 +508,10 @@ class DpkgPkgsList(PkgsList):
         return opkg_query(cmd_output)
 
 
-class PackageManager(object):
+class PackageManager(object, metaclass=ABCMeta):
     """
     This is an abstract class. Do not instantiate this directly.
     """
-    __metaclass__ = ABCMeta
 
     def __init__(self, d):
         self.d = d

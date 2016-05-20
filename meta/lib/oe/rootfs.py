@@ -10,11 +10,10 @@ import subprocess
 import re
 
 
-class Rootfs(object):
+class Rootfs(object, metaclass=ABCMeta):
     """
     This is an abstract class. Do not instantiate this directly.
     """
-    __metaclass__ = ABCMeta
 
     def __init__(self, d):
         self.d = d

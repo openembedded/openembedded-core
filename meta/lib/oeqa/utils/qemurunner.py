@@ -23,8 +23,8 @@ logger = logging.getLogger("BitBake.QemuRunner")
 
 # Get Unicode non printable control chars
 control_range = list(range(0,32))+list(range(127,160))
-control_chars = [unichr(x) for x in control_range
-                if unichr(x) not in string.printable]
+control_chars = [chr(x) for x in control_range
+                if chr(x) not in string.printable]
 re_control_char = re.compile('[%s]' % re.escape("".join(control_chars)))
 
 class QemuRunner:
@@ -220,6 +220,7 @@ class QemuRunner:
             stopread = False
             qemusock = None
             bootlog = ''
+            data = b''
             while time.time() < endtime and not stopread:
                 sread, swrite, serror = select.select(socklist, [], [], 5)
                 for sock in sread:
@@ -283,13 +284,14 @@ class QemuRunner:
         if hasattr(self, "origchldhandler"):
             signal.signal(signal.SIGCHLD, self.origchldhandler)
         if self.runqemu:
-            os.kill(self.monitorpid, signal.SIGKILL)
-            logger.info("Sending SIGTERM to runqemu")
-            try:
-                os.killpg(os.getpgid(self.runqemu.pid), signal.SIGTERM)
-            except OSError as e:
-                if e.errno != errno.ESRCH:
-                    raise
+            if hasattr(self, "monitorpid"):
+                os.kill(self.monitorpid, signal.SIGKILL)
+                logger.info("Sending SIGTERM to runqemu")
+                try:
+                    os.killpg(os.getpgid(self.runqemu.pid), signal.SIGTERM)
+                except OSError as e:
+                    if e.errno != errno.ESRCH:
+                        raise
             endtime = time.time() + self.runqemutime
             while self.runqemu.poll() is None and time.time() < endtime:
                 time.sleep(1)
@@ -448,7 +450,7 @@ class LoggingThread(threading.Thread):
     def stop(self):
         self.logger.info("Stopping logging thread")
         if self.running:
-            os.write(self.writepipe, "stop")
+            os.write(self.writepipe, bytes("stop", "utf-8"))
 
     def teardown(self):
         self.logger.info("Tearing down logging thread")

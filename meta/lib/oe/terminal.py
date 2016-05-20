@@ -25,9 +25,7 @@ class Registry(oe.classutils.ClassRegistry):
         return bool(cls.command)
 
 
-class Terminal(Popen):
-    __metaclass__ = Registry
-
+class Terminal(Popen, metaclass=Registry):
     def __init__(self, sh_cmd, title=None, env=None, d=None):
         fmt_sh_cmd = self.format_command(sh_cmd, title)
         try:
@@ -41,7 +39,7 @@ class Terminal(Popen):
 
     def format_command(self, sh_cmd, title):
         fmt = {'title': title or 'Terminal', 'command': sh_cmd}
-        if isinstance(self.command, basestring):
+        if isinstance(self.command, str):
             return shlex.split(self.command.format(**fmt))
         else:
             return [element.format(**fmt) for element in self.command]

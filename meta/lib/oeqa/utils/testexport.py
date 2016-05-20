@@ -6,7 +6,7 @@
 
 import os, re, glob as g, shutil as sh,sys
 from time import sleep
-from commands import runCmd
+from .commands import runCmd
 from difflib import SequenceMatcher as SM
 
 try:
