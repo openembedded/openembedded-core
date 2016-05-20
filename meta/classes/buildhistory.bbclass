@@ -233,7 +233,7 @@ python buildhistory_emit_pkghistory() {
                 key = item[0]
                 if key.endswith('_' + pkg):
                     key = key[:-len(pkg)-1]
-                pkgdata[key] = item[1].decode('utf-8').decode('string_escape')
+                pkgdata[key] = item[1]
 
         pkge = pkgdata.get('PKGE', '0')
         pkgv = pkgdata['PKGV']
@@ -288,14 +288,12 @@ python buildhistory_emit_pkghistory() {
 
 
 def write_recipehistory(rcpinfo, d):
-    import codecs
-
     bb.debug(2, "Writing recipe history")
 
     pkghistdir = d.getVar('BUILDHISTORY_DIR_PACKAGE', True)
 
     infofile = os.path.join(pkghistdir, "latest")
-    with codecs.open(infofile, "w", encoding='utf8') as f:
+    with open(infofile, "w") as f:
         if rcpinfo.pe != "0":
             f.write(u"PE = %s\n" %  rcpinfo.pe)
         f.write(u"PV = %s\n" %  rcpinfo.pv)
@@ -305,8 +303,6 @@ def write_recipehistory(rcpinfo, d):
 
 
 def write_pkghistory(pkginfo, d):
-    import codecs
-
     bb.debug(2, "Writing package history for package %s" % pkginfo.name)
 
     pkghistdir = d.getVar('BUILDHISTORY_DIR_PACKAGE', True)
@@ -316,7 +312,7 @@ def write_pkghistory(pkginfo, d):
         bb.utils.mkdirhier(pkgpath)
 
     infofile = os.path.join(pkgpath, "latest")
-    with codecs.open(infofile, "w", encoding='utf8') as f:
+    with open(infofile, "w") as f:
         if pkginfo.pe != "0":
             f.write(u"PE = %s\n" %  pkginfo.pe)
         f.write(u"PV = %s\n" %  pkginfo.pv)
@@ -349,7 +345,7 @@ def write_pkghistory(pkginfo, d):
         filevarpath = os.path.join(pkgpath, "latest.%s" % filevar)
         val = pkginfo.filevars[filevar]
         if val:
-            with codecs.open(filevarpath, "w", encoding='utf8') as f:
+            with open(filevarpath, "w") as f:
                 f.write(val)
         else:
             if os.path.exists(filevarpath):

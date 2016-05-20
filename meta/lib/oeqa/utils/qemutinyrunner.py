@@ -102,7 +102,7 @@ class QemuTinyRunner(QemuRunner):
             bb.note("Qemu pid didn't appeared in %s seconds" % self.runqemutime)
             output = self.runqemu.stdout
             self.stop()
-            bb.note("Output from runqemu:\n%s" % output.read())
+            bb.note("Output from runqemu:\n%s" % output.read().decode("utf-8"))
             return False
 
         return self.is_alive()
@@ -131,7 +131,7 @@ class QemuTinyRunner(QemuRunner):
         # Walk the process tree from the process specified looking for a qemu-system. Return its [pid'cmd]
         #
         ps = subprocess.Popen(['ps', 'axww', '-o', 'pid,ppid,command'], stdout=subprocess.PIPE).communicate()[0]
-        processes = ps.split('\n')
+        processes = ps.decode("utf-8").split('\n')
         nfields = len(processes[0].split()) - 1
         pids = {}
         commands = {}

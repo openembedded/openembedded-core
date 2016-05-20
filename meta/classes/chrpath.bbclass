@@ -10,6 +10,8 @@ def process_file_linux(cmd, fpath, rootdir, baseprefix, tmpdir, d):
     if p.returncode != 0:
         return
 
+    err = err.decode('utf-8')
+
     # Handle RUNPATH as well as RPATH
     err = err.replace("RUNPATH=","RPATH=")
     # Throw away everything other than the rpath list

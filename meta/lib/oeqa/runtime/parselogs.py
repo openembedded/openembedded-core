@@ -238,7 +238,7 @@ class ParseLogsTest(oeRuntimeTest):
             result = None
             thegrep = self.build_grepcmd(errors, ignore_errors, log)
             try:
-                result = subprocess.check_output(thegrep, shell=True)
+                result = subprocess.check_output(thegrep, shell=True).decode("utf-8")
             except:
                 pass
             if (result is not None):
@@ -246,7 +246,7 @@ class ParseLogsTest(oeRuntimeTest):
                 rez = result.splitlines()
                 for xrez in rez:
                     try:
-                        grep_output = subprocess.check_output(['grep', '-F', xrez, '-B', str(lines_before), '-A', str(lines_after), log])
+                        grep_output = subprocess.check_output(['grep', '-F', xrez, '-B', str(lines_before), '-A', str(lines_after), log]).decode("utf-8")
                     except:
                         pass
                     results[log.replace('target_logs/','')][xrez]=grep_output

@@ -145,7 +145,7 @@ def srctree_hash_files(d):
             env = os.environ.copy()
             env['GIT_INDEX_FILE'] = tmp_index.name
             subprocess.check_output(['git', 'add', '.'], cwd=s_dir, env=env)
-            sha1 = subprocess.check_output(['git', 'write-tree'], cwd=s_dir, env=env)
+            sha1 = subprocess.check_output(['git', 'write-tree'], cwd=s_dir, env=env).decode("utf-8")
         with open(oe_hash_file, 'w') as fobj:
             fobj.write(sha1)
         ret = oe_hash_file + ':True'

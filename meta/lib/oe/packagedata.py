@@ -8,7 +8,7 @@ def read_pkgdatafile(fn):
     pkgdata = {}
 
     def decode(str):
-        c = codecs.getdecoder("string_escape")
+        c = codecs.getdecoder("unicode_escape")
         return c(str)[0]
 
     if os.access(fn, os.R_OK):

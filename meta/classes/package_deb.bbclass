@@ -173,7 +173,7 @@ python do_package_deb () {
                 # Special behavior for description...
                 if 'DESCRIPTION' in fs:
                      summary = localdata.getVar('SUMMARY', True) or localdata.getVar('DESCRIPTION', True) or "."
-                     ctrlfile.write('Description: %s\n' % unicode(summary,'utf-8'))
+                     ctrlfile.write('Description: %s\n' % summary)
                      description = localdata.getVar('DESCRIPTION', True) or "."
                      description = textwrap.dedent(description).strip()
                      if '\\n' in description:
@@ -182,29 +182,25 @@ python do_package_deb () {
                              # We don't limit the width when manually indent, but we do
                              # need the textwrap.fill() to set the initial_indent and
                              # subsequent_indent, so set a large width
-                             ctrlfile.write('%s\n' % unicode(textwrap.fill(t, width=100000, initial_indent=' ', subsequent_indent=' '),'utf-8'))
+                             ctrlfile.write('%s\n' % textwrap.fill(t, width=100000, initial_indent=' ', subsequent_indent=' '))
                      else:
                          # Auto indent
-                         ctrlfile.write('%s\n' % unicode(textwrap.fill(description.strip(), width=74, initial_indent=' ', subsequent_indent=' '),'utf-8'))
+                         ctrlfile.write('%s\n' % textwrap.fill(description.strip(), width=74, initial_indent=' ', subsequent_indent=' '))
 
                 else:
-                     ctrlfile.write(unicode(c % tuple(pullData(fs, localdata)),'utf-8'))
+                     ctrlfile.write(c % tuple(pullData(fs, localdata)))
         except KeyError:
             import sys
             (type, value, traceback) = sys.exc_info()
             bb.utils.unlockfile(lf)
             ctrlfile.close()
             raise bb.build.FuncFailed("Missing field for deb generation: %s" % value)
-        except UnicodeDecodeError:
-            bb.utils.unlockfile(lf)
-            ctrlfile.close()
-            raise bb.build.FuncFailed("Non UTF-8 characters found in one of the fields")
 
         # more fields
 
         custom_fields_chunk = get_package_additional_metadata("deb", localdata)
         if custom_fields_chunk is not None:
-            ctrlfile.write(unicode(custom_fields_chunk))
+            ctrlfile.write(custom_fields_chunk)
             ctrlfile.write("\n")
 
         mapping_rename_hook(localdata)
@@ -255,17 +251,17 @@ python do_package_deb () {
         rconflicts = bb.utils.explode_dep_versions2(localdata.getVar("RCONFLICTS", True) or "")
         debian_cmp_remap(rconflicts)
         if rdepends:
-            ctrlfile.write("Depends: %s\n" % unicode(bb.utils.join_deps(rdepends)))
+            ctrlfile.write("Depends: %s\n" % bb.utils.join_deps(rdepends))
         if rsuggests:
-            ctrlfile.write("Suggests: %s\n" % unicode(bb.utils.join_deps(rsuggests)))
+            ctrlfile.write("Suggests: %s\n" % bb.utils.join_deps(rsuggests))
         if rrecommends:
-            ctrlfile.write("Recommends: %s\n" % unicode(bb.utils.join_deps(rrecommends)))
+            ctrlfile.write("Recommends: %s\n" % bb.utils.join_deps(rrecommends))
         if rprovides:
-            ctrlfile.write("Provides: %s\n" % unicode(bb.utils.join_deps(rprovides)))
+            ctrlfile.write("Provides: %s\n" % bb.utils.join_deps(rprovides))
         if rreplaces:
-            ctrlfile.write("Replaces: %s\n" % unicode(bb.utils.join_deps(rreplaces)))
+            ctrlfile.write("Replaces: %s\n" % bb.utils.join_deps(rreplaces))
         if rconflicts:
-            ctrlfile.write("Conflicts: %s\n" % unicode(bb.utils.join_deps(rconflicts)))
+            ctrlfile.write("Conflicts: %s\n" % bb.utils.join_deps(rconflicts))
         ctrlfile.close()
 
         for script in ["preinst", "postinst", "prerm", "postrm"]:

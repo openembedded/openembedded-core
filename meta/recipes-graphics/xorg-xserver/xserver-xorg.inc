@@ -168,9 +168,10 @@ python populate_packages_prepend() {
         }
         p = subprocess.Popen(args="pkg-config --variable=%s xorg-server" % abis[name],
                              shell=True, env=newenv, stdout=subprocess.PIPE)
-        output = p.communicate()[0]
+        stdout, stderr = p.communicate()
+        output = stdout.decode("utf-8").split(".")[0]
         mlprefix = d.getVar('MLPREFIX', True) or ''
-        return "%sxorg-abi-%s-%s" % (mlprefix, name, output.split(".")[0])
+        return "%sxorg-abi-%s-%s" % (mlprefix, name, output)
 
     pn = d.getVar("PN", True)
     d.appendVar("RPROVIDES_" + pn, " " + get_abi("input"))

@@ -132,7 +132,7 @@ class oeSDKTest(oeTest):
         return False
 
     def _run(self, cmd):
-        return subprocess.check_output(". %s > /dev/null; %s;" % (self.tc.sdkenv, cmd), shell=True)
+        return subprocess.check_output(". %s > /dev/null; %s;" % (self.tc.sdkenv, cmd), shell=True).decode("utf-8")
 
 class oeSDKExtTest(oeSDKTest):
     def _run(self, cmd):
@@ -144,7 +144,7 @@ class oeSDKExtTest(oeSDKTest):
         env['PATH'] = avoid_paths_in_environ(paths_to_avoid)
 
         return subprocess.check_output(". %s > /dev/null;"\
-            " %s;" % (self.tc.sdkenv, cmd), shell=True, env=env)
+            " %s;" % (self.tc.sdkenv, cmd), shell=True, env=env).decode("utf-8")
 
 def getmodule(pos=2):
     # stack returns a list of tuples containg frame information

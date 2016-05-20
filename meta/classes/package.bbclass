@@ -63,7 +63,7 @@ def legitimize_package_name(s):
     def fixutf(m):
         cp = m.group(1)
         if cp:
-            return ('\u%s' % cp).decode('unicode_escape').encode('utf-8')
+            return ('\\u%s' % cp).encode('latin-1').decode('unicode_escape')
 
     # Handle unicode codepoints encoded as <U0123>, as in glibc locale files.
     s = re.sub('<U([0-9A-Fa-f]{1,4})>', fixutf, s)
@@ -1259,8 +1259,8 @@ python emit_pkgdata() {
     def write_if_exists(f, pkg, var):
         def encode(str):
             import codecs
-            c = codecs.getencoder("string_escape")
-            return c(str)[0]
+            c = codecs.getencoder("unicode_escape")
+            return c(str)[0].decode("latin1")
 
         val = d.getVar('%s_%s' % (var, pkg), True)
         if val:

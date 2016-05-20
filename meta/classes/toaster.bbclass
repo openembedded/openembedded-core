@@ -33,6 +33,7 @@ python toaster_layerinfo_dumpdata() {
 
     def _get_git_branch(layer_path):
         branch = subprocess.Popen("git symbolic-ref HEAD 2>/dev/null ", cwd=layer_path, shell=True, stdout=subprocess.PIPE).communicate()[0]
+        branch = branch.decode('utf-8')
         branch = branch.replace('refs/heads/', '').rstrip()
         return branch
 

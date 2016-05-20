@@ -150,6 +150,7 @@ python package_do_split_gconvs () {
         c_re = re.compile('^copy "(.*)"')
         i_re = re.compile('^include "(\w+)".*')
         for l in f.readlines():
+            l = l.decode("latin-1")
             m = c_re.match(l) or i_re.match(l)
             if m:
                 dp = legitimize_package_name('%s%s-gconv-%s' % (mlprefix, bpn, m.group(1)))
@@ -171,6 +172,7 @@ python package_do_split_gconvs () {
         c_re = re.compile('^copy "(.*)"')
         i_re = re.compile('^include "(\w+)".*')
         for l in f.readlines():
+            l = l.decode("latin-1")
             m = c_re.match(l) or i_re.match(l)
             if m:
                 dp = legitimize_package_name('%s%s-charmap-%s' % (mlprefix, bpn, m.group(1)))
@@ -191,6 +193,7 @@ python package_do_split_gconvs () {
         c_re = re.compile('^copy "(.*)"')
         i_re = re.compile('^include "(\w+)".*')
         for l in f.readlines():
+            l = l.decode("latin-1")
             m = c_re.match(l) or i_re.match(l)
             if m:
                 dp = legitimize_package_name(mlprefix+bpn+'-localedata-%s' % m.group(1))

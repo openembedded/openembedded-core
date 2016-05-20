@@ -58,6 +58,7 @@ class SSHProcess(object):
                         self.process.stdout.close()
                         eof = True
                     else:
+                        data = data.decode("utf-8")
                         output += data
                         self.log(data)
                         endtime = time.time() + timeout

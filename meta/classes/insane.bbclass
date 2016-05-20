@@ -399,7 +399,7 @@ def package_qa_check_unsafe_references_in_binaries(path, name, d, elf, messages)
         sysroot_path_usr = sysroot_path + exec_prefix
 
         try:
-            ldd_output = bb.process.Popen(["prelink-rtld", "--root", sysroot_path, path], stdout=sub.PIPE).stdout.read()
+            ldd_output = bb.process.Popen(["prelink-rtld", "--root", sysroot_path, path], stdout=sub.PIPE).stdout.read().decode("utf-8")
         except bb.process.CmdError:
             error_msg = pn + ": prelink-rtld aborted when processing %s" % path
             package_qa_handle_error("unsafe-references-in-binaries", error_msg, d)
@@ -986,12 +986,12 @@ def package_qa_check_expanded_d(path,name,d,elf,messages):
     return sane
 
 def package_qa_check_encoding(keys, encode, d):
-    def check_encoding(key,enc):
+    def check_encoding(key, enc):
         sane = True
         value = d.getVar(key, True)
         if value:
             try:
-                s = unicode(value, enc)
+                s = value.encode(enc)
             except UnicodeDecodeError as e:
                 error_msg = "%s has non %s characters" % (key,enc)
                 sane = False
@@ -1217,7 +1217,7 @@ Missing inherit gettext?""" % (gt, config))
         try:
             flag = "WARNING: unrecognized options:"
             log = os.path.join(d.getVar('B', True), 'config.log')
-            output = subprocess.check_output(['grep', '-F', flag, log]).replace(', ', ' ')
+            output = subprocess.check_output(['grep', '-F', flag, log]).decode("utf-8").replace(', ', ' ')
             options = set()
             for line in output.splitlines():
                 options |= set(line.partition(flag)[2].split())

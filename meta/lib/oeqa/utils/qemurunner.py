@@ -71,7 +71,8 @@ class QemuRunner:
         if self.logfile:
             # It is needed to sanitize the data received from qemu
             # because is possible to have control characters
-            msg = re_control_char.sub('', unicode(msg, 'utf-8'))
+            msg = msg.decode("utf-8")
+            msg = re_control_char.sub('', msg)
             with codecs.open(self.logfile, "a", encoding="utf-8") as f:
                 f.write("%s" % msg)
 
@@ -79,7 +80,7 @@ class QemuRunner:
         import fcntl
         fl = fcntl.fcntl(o, fcntl.F_GETFL)
         fcntl.fcntl(o, fcntl.F_SETFL, fl | os.O_NONBLOCK)
-        return os.read(o.fileno(), 1000000)
+        return os.read(o.fileno(), 1000000).decode("utf-8")
 
 
     def handleSIGCHLD(self, signum, frame):
@@ -229,14 +230,19 @@ class QemuRunner:
                         socklist.remove(self.server_socket)
                         logger.info("Connection from %s:%s" % addr)
                     else:
-                        data = sock.recv(1024)
+                        data = data + sock.recv(1024)
                         if data:
-                            bootlog += data
-                            if re.search(".* login:", bootlog):
-                                self.server_socket = qemusock
-                                stopread = True
-                                reachedlogin = True
-                                logger.info("Reached login banner")
+                            try:
+                                data = data.decode("utf-8")
+                                bootlog += data
+                                data = b''
+                                if re.search(".* login:", bootlog):
+                                    self.server_socket = qemusock
+                                    stopread = True
+                                    reachedlogin = True
+                                    logger.info("Reached login banner")
+                            except UnicodeDecodeError:
+                                continue
                         else:
                             socklist.remove(sock)
                             sock.close()
@@ -325,7 +331,7 @@ class QemuRunner:
         # Walk the process tree from the process specified looking for a qemu-system. Return its [pid'cmd]
         #
         ps = subprocess.Popen(['ps', 'axww', '-o', 'pid,ppid,command'], stdout=subprocess.PIPE).communicate()[0]
-        processes = ps.split('\n')
+        processes = ps.decode("utf-8").split('\n')
         nfields = len(processes[0].split()) - 1
         pids = {}
         commands = {}
