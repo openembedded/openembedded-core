@@ -200,7 +200,7 @@ def get_deployed_dependencies(d):
     # it might contain the bootloader.
     taskdata = d.getVar("BB_TASKDEPDATA", False)
     depends = list(set([dep[0] for dep
-                    in taskdata.itervalues()
+                    in list(taskdata.values())
                     if not dep[0].endswith("-native")]))
     extra_depends = d.getVar("EXTRA_IMAGEDEPENDS", True)
     boot_depends = get_boot_dependencies(d)
@@ -261,7 +261,7 @@ def get_boot_dependencies(d):
             depends.append(dep)
         # We need to search for the provider of the dependency
         else:
-            for taskdep in taskdepdata.itervalues():
+            for taskdep in taskdepdata.values():
                 # The fifth field contains what the task provides
                 if dep in taskdep[4]:
                     info_file = os.path.join(

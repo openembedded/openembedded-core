@@ -445,14 +445,14 @@ http_proxy = "http://example.com/"
         files1 = get_files(topdir + "/tmp-sstatesamehash/stamps/")
         files2 = get_files(topdir + "/tmp-sstatesamehash2/stamps/")
         # Remove items that are identical in both sets
-        for k,v in files1.viewitems() & files2.viewitems():
+        for k,v in files1.items() & files2.items():
             del files1[k]
             del files2[k]
         if not files1 and not files2:
             # No changes, so we're done
             return
 
-        for k in files1.viewkeys() | files2.viewkeys():
+        for k in files1.keys() | files2.keys():
             if k in files1 and k in files2:
                 print("%s differs:" % k)
                 print(subprocess.check_output(("bitbake-diffsigs",

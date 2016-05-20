@@ -50,7 +50,7 @@ class DevtoolBase(oeSelfTest):
 
 
         missingvars = {}
-        for var, value in checkvars.iteritems():
+        for var, value in checkvars.items():
             if value is not None:
                 missingvars[var] = value
         self.assertEqual(missingvars, {}, 'Some expected variables not found in recipe: %s' % checkvars)

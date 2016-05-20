@@ -840,7 +840,7 @@ class SpecFileRecipeHandler(RecipeHandler):
             linecount = 0
             with open(fileitem, 'r') as f:
                 for line in f:
-                    for value, varname in valuemap.iteritems():
+                    for value, varname in valuemap.items():
                         if line.startswith(value + ':') and not varname in foundvalues:
                             foundvalues[varname] = line.split(':', 1)[1].strip()
                             break

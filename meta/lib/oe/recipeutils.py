@@ -336,7 +336,7 @@ def patch_recipe(d, fn, varvalues, patch=False, relpath=''):
     varfiles = get_var_files(fn, varlist, d)
     locs = localise_file_vars(fn, varfiles, varlist)
     patches = []
-    for f,v in locs.iteritems():
+    for f,v in locs.items():
         vals = {k: varvalues[k] for k in v}
         patchdata = patch_recipe_file(f, vals, patch, relpath)
         if patch:
@@ -554,7 +554,7 @@ def bbappend_recipe(rd, destlayerdir, srcfiles, install=None, wildcardver=False,
     bbappendlines = []
     if extralines:
         if isinstance(extralines, dict):
-            for name, value in extralines.iteritems():
+            for name, value in extralines.items():
                 bbappendlines.append((name, '=', value))
         else:
             # Do our best to split it
@@ -594,7 +594,7 @@ def bbappend_recipe(rd, destlayerdir, srcfiles, install=None, wildcardver=False,
     copyfiles = {}
     if srcfiles:
         instfunclines = []
-        for newfile, origsrcfile in srcfiles.iteritems():
+        for newfile, origsrcfile in srcfiles.items():
             srcfile = origsrcfile
             srcurientry = None
             if not srcfile:
@@ -717,7 +717,7 @@ def bbappend_recipe(rd, destlayerdir, srcfiles, install=None, wildcardver=False,
     if copyfiles:
         if machine:
             destsubdir = os.path.join(destsubdir, machine)
-        for newfile, srcfile in copyfiles.iteritems():
+        for newfile, srcfile in copyfiles.items():
             filedest = os.path.join(appenddir, destsubdir, os.path.basename(srcfile))
             if os.path.abspath(newfile) != os.path.abspath(filedest):
                 bb.note('Copying %s to %s' % (newfile, filedest))

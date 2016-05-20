@@ -7,7 +7,7 @@ def typed_value(key, d):
     flags = d.getVarFlags(key)
     if flags is not None:
         flags = dict((flag, d.expand(value))
-                     for flag, value in flags.iteritems())
+                     for flag, value in list(flags.items()))
     else:
         flags = {}
 

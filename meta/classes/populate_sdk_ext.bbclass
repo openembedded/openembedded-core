@@ -45,7 +45,7 @@ def get_sdk_install_targets(d):
         sdk_install_targets = d.getVar('SDK_TARGETS', True)
 
         depd = d.getVar('BB_TASKDEPDATA', False)
-        for v in depd.itervalues():
+        for v in depd.values():
             if v[1] == 'do_image_complete':
                 if v[0] not in sdk_install_targets:
                     sdk_install_targets += ' {}'.format(v[0])
@@ -267,7 +267,7 @@ python copy_buildsystem () {
     # Ensure any variables set from the external environment (by way of
     # BB_ENV_EXTRAWHITE) are set in the SDK's configuration
     extralines = []
-    for name, value in env_whitelist_values.iteritems():
+    for name, value in env_whitelist_values.items():
         actualvalue = d.getVar(name, True) or ''
         if value != actualvalue:
             extralines.append('%s = "%s"\n' % (name, actualvalue))

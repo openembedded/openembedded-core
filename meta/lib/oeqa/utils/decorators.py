@@ -215,7 +215,7 @@ def tag(*args, **kwargs):
     def wrap_ob(ob):
         for name in args:
             setattr(ob, __tag_prefix + name, True)
-        for name, value in kwargs.iteritems():
+        for name, value in kwargs.items():
             setattr(ob, __tag_prefix + name, value)
         return ob
     return wrap_ob

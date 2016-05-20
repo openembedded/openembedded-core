@@ -62,7 +62,7 @@ class ChangeRecord:
 
         def pkglist_combine(depver):
             pkglist = []
-            for k,v in depver.iteritems():
+            for k,v in depver.items():
                 if v:
                     pkglist.append("%s (%s)" % (k,v))
                 else:
@@ -220,7 +220,7 @@ def compare_file_lists(alines, blines):
     adict = file_list_to_dict(alines)
     bdict = file_list_to_dict(blines)
     filechanges = []
-    for path, splitv in adict.iteritems():
+    for path, splitv in adict.items():
         newsplitv = bdict.pop(path, None)
         if newsplitv:
             # Check type
