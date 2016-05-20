@@ -734,7 +734,7 @@ class RpmPM(PackageManager):
         for uri in feed_uris:
             if arch_list:
                 for arch in arch_list:
-                    bb.note('Note: adding Smart channel url%d%s (%s)' %
+                    bb.note('Adding Smart channel url%d%s (%s)' %
                             (uri_iterator, arch, channel_priority))
                     self._invoke_smart('channel --add url%d-%s type=rpm-md baseurl=%s/%s -y'
                                        % (uri_iterator, arch, uri, arch))
@@ -742,7 +742,7 @@ class RpmPM(PackageManager):
                                        (uri_iterator, arch, channel_priority))
                     channel_priority -= 5
             else:
-                bb.note('Note: adding Smart channel url%d (%s)' %
+                bb.note('Adding Smart channel url%d (%s)' %
                         (uri_iterator, channel_priority))
                 self._invoke_smart('channel --add url%d type=rpm-md baseurl=%s -y'
                                    % (uri_iterator, uri))
@@ -1018,7 +1018,7 @@ class RpmPM(PackageManager):
             arch = canonical_arch.split('-')[0]
             arch_channel = os.path.join(self.deploy_dir, arch)
             if os.path.exists(arch_channel) and not arch in ch_already_added:
-                bb.note('Note: adding Smart channel %s (%s)' %
+                bb.note('Adding Smart channel %s (%s)' %
                         (arch, channel_priority))
                 self._invoke_smart('channel --add %s type=rpm-md baseurl=%s -y'
                                    % (arch, arch_channel))
@@ -1090,7 +1090,7 @@ class RpmPM(PackageManager):
                                                 native_root)
         open(self.scriptlet_wrapper, 'w+').write(scriptlet_content)
 
-        bb.note("Note: configuring RPM cross-install scriptlet_wrapper")
+        bb.note("Configuring RPM cross-install scriptlet_wrapper")
         os.chmod(self.scriptlet_wrapper, 0755)
         cmd = 'config --set rpm-extra-macros._cross_scriptlet_wrapper=%s' % \
               self.scriptlet_wrapper
@@ -1710,12 +1710,12 @@ class OpkgPM(OpkgDpkgPM):
                     for arch in archs:
                         if (self.feed_archs is None) and (not os.path.exists(os.path.join(self.deploy_dir, arch))):
                             continue
-                        bb.note('Note: adding opkg feed url-%s-%d (%s)' %
+                        bb.note('Adding opkg feed url-%s-%d (%s)' %
                             (arch, uri_iterator, uri))
                         config_file.write("src/gz uri-%s-%d %s/%s\n" %
                                           (arch, uri_iterator, uri, arch))
                 else:
-                    bb.note('Note: adding opkg feed url-%d (%s)' %
+                    bb.note('Adding opkg feed url-%d (%s)' %
                         (uri_iterator, uri))
                     config_file.write("src/gz uri-%d %s\n" %
                                       (uri_iterator, uri))
@@ -2110,11 +2110,11 @@ class DpkgPM(OpkgDpkgPM):
             for uri in feed_uris:
                 if arch_list:
                     for arch in arch_list:
-                        bb.note('Note: adding dpkg channel at (%s)' % uri)
+                        bb.note('Adding dpkg channel at (%s)' % uri)
                         sources_file.write("deb %s/%s ./\n" %
                                            (uri, arch))
                 else:
-                    bb.note('Note: adding dpkg channel at (%s)' % uri)
+                    bb.note('Adding dpkg channel at (%s)' % uri)
                     sources_file.write("deb %s ./\n" % uri)
 
     def _create_configs(self, archs, base_archs):
