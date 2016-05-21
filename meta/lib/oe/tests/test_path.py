@@ -55,7 +55,7 @@ class TestRealPath(unittest.TestCase):
         for d in self.DIRS:
             os.mkdir(os.path.join(self.root, d))
         for f in self.FILES:
-            file(os.path.join(self.root, f), "w")
+            open(os.path.join(self.root, f), "w")
         for l in self.LINKS:
             os.symlink(l[1], os.path.join(self.root, l[0]))
 

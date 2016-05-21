@@ -43,9 +43,9 @@ class ELFFile:
         if not os.path.isfile(self.name):
             raise NotELFFileError("%s is not a normal file" % self.name)
 
-        self.file = file(self.name, "r")
-        # Read 4k which should cover most of the headers we're after
-        self.data = self.file.read(4096)
+        with open(self.name, "rb") as f:
+            # Read 4k which should cover most of the headers we're after
+            self.data = f.read(4096)
 
         if len(self.data) < ELFFile.EI_NIDENT + 4:
             raise NotELFFileError("%s is not an ELF" % self.name)

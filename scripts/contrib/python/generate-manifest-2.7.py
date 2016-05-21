@@ -153,7 +153,7 @@ if __name__ == "__main__":
             os.unlink(sys.argv[1])
         except Exception:
             sys.exc_clear()
-        outfile = file( sys.argv[1], "w" )
+        outfile = open( sys.argv[1], "w" )
     else:
         outfile = sys.stdout
 

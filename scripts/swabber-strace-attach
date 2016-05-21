@@ -16,8 +16,8 @@ else:
     sys.exit()
 
 
-si = file(os.devnull, 'r')
-so = file(sys.argv[2], 'w')
+si = open(os.devnull, 'r')
+so = open(sys.argv[2], 'w')
 se = so
 
 # Replace those fds with our own
