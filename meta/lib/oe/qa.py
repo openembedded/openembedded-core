@@ -148,4 +148,4 @@ if __name__ == "__main__":
     import sys
     elf = ELFFile(sys.argv[1])
     elf.open()
-    print elf.isDynamic()
+    print(elf.isDynamic())

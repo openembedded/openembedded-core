@@ -220,12 +220,12 @@ def get_tests_from_module(tmod):
                         try:
                             tid = vars(mod)[test].test_case
                         except:
-                            print 'DEBUG: tc id missing for ' + str(test)
+                            print('DEBUG: tc id missing for ' + str(test))
                             tid = None
                         try:
                             ttag = vars(mod)[test].tag__feature
                         except:
-                            # print 'DEBUG: feature tag missing for ' + str(test)
+                            # print('DEBUG: feature tag missing for ' + str(test))
                             ttag = None
 
                         # NOTE: for some reason lstrip() doesn't work for mod.__module__
@@ -320,17 +320,17 @@ def list_testsuite_by(criteria, keyword):
 
     ts = sorted([ (tc.tcid, tc.tctag, tc.tcname, tc.tcclass, tc.tcmodule) for tc in get_testsuite_by(criteria, keyword) ])
 
-    print '%-4s\t%-20s\t%-60s\t%-25s\t%-20s' % ('id', 'tag', 'name', 'class', 'module')
-    print '_' * 150
+    print('%-4s\t%-20s\t%-60s\t%-25s\t%-20s' % ('id', 'tag', 'name', 'class', 'module'))
+    print('_' * 150)
     for t in ts:
         if isinstance(t[1], (tuple, list)):
-            print '%-4s\t%-20s\t%-60s\t%-25s\t%-20s' % (t[0], ', '.join(t[1]), t[2], t[3], t[4])
+            print('%-4s\t%-20s\t%-60s\t%-25s\t%-20s' % (t[0], ', '.join(t[1]), t[2], t[3], t[4]))
         else:
-            print '%-4s\t%-20s\t%-60s\t%-25s\t%-20s' % t
-    print '_' * 150
-    print 'Filtering by:\t %s' % criteria
-    print 'Looking for:\t %s' % ', '.join(str(x) for x in keyword)
-    print 'Total found:\t %s' % len(ts)
+            print('%-4s\t%-20s\t%-60s\t%-25s\t%-20s' % t)
+    print('_' * 150)
+    print('Filtering by:\t %s' % criteria)
+    print('Looking for:\t %s' % ', '.join(str(x) for x in keyword))
+    print('Total found:\t %s' % len(ts))
 
 
 def list_tests():
@@ -338,16 +338,15 @@ def list_tests():
 
     ts = get_all_tests()
 
-    print '%-4s\t%-10s\t%-50s' % ('id', 'tag', 'test')
-    print '_' * 80
+    print('%-4s\t%-10s\t%-50s' % ('id', 'tag', 'test'))
+    print('_' * 80)
     for t in ts:
         if isinstance(t.tctag, (tuple, list)):
-            print '%-4s\t%-10s\t%-50s' % (t.tcid, ', '.join(t.tctag), '.'.join([t.tcmodule, t.tcclass, t.tcname]))
+            print('%-4s\t%-10s\t%-50s' % (t.tcid, ', '.join(t.tctag), '.'.join([t.tcmodule, t.tcclass, t.tcname])))
         else:
-            print '%-4s\t%-10s\t%-50s' % (t.tcid, t.tctag, '.'.join([t.tcmodule, t.tcclass, t.tcname]))
-    print '_' * 80
-    print 'Total found:\t %s' % len(ts)
-
+            print('%-4s\t%-10s\t%-50s' % (t.tcid, t.tctag, '.'.join([t.tcmodule, t.tcclass, t.tcname])))
+    print('_' * 80)
+    print('Total found:\t %s' % len(ts))
 
 def list_tags():
     # Get all tags set to test cases
@@ -362,7 +361,7 @@ def list_tags():
         else:
             tags.add(tc.tctag)
 
-    print 'Tags:\t%s' % ', '.join(str(x) for x in tags)
+    print('Tags:\t%s' % ', '.join(str(x) for x in tags))
 
 def coverage_setup(coverage_source, coverage_include, coverage_omit):
     """ Set up the coverage measurement for the testcases to be run """
@@ -443,12 +442,12 @@ def main():
     bbpath = get_bb_var('BBPATH').split(':')
     layer_libdirs = [p for p in (os.path.join(l, 'lib') for l in bbpath) if os.path.exists(p)]
     sys.path.extend(layer_libdirs)
-    reload(oeqa.selftest)
+    imp.reload(oeqa.selftest)
 
     if args.run_tests_by and len(args.run_tests_by) >= 2:
         valid_options = ['name', 'class', 'module', 'id', 'tag']
         if args.run_tests_by[0] not in valid_options:
-            print '--run-tests-by %s not a valid option. Choose one of <name|class|module|id|tag>.' % args.run_tests_by[0]
+            print('--run-tests-by %s not a valid option. Choose one of <name|class|module|id|tag>.' % args.run_tests_by[0])
             return 1
         else:
             criteria = args.run_tests_by[0]
@@ -458,7 +457,7 @@ def main():
     if args.list_tests_by and len(args.list_tests_by) >= 2:
         valid_options = ['name', 'class', 'module', 'id', 'tag']
         if args.list_tests_by[0] not in valid_options:
-            print '--list-tests-by %s not a valid option. Choose one of <name|class|module|id|tag>.' % args.list_tests_by[0]
+            print('--list-tests-by %s not a valid option. Choose one of <name|class|module|id|tag>.' % args.list_tests_by[0])
             return 1
         else:
             criteria = args.list_tests_by[0]
@@ -482,7 +481,7 @@ def main():
             info = ''
             if module.startswith('_'):
                 info = ' (hidden)'
-            print module + info
+            print(module + info)
             if args.list_allclasses:
                 try:
                     import importlib
@@ -490,13 +489,13 @@ def main():
                     for v in vars(modlib):
                         t = vars(modlib)[v]
                         if isinstance(t, type(oeSelfTest)) and issubclass(t, oeSelfTest) and t!=oeSelfTest:
-                            print " --", v
+                            print(" --", v)
                             for method in dir(t):
                                 if method.startswith("test_") and callable(vars(t)[method]):
-                                    print " --  --", method
+                                    print(" --  --", method)
 
                 except (AttributeError, ImportError) as e:
-                    print e
+                    print(e)
                     pass
 
     if args.run_tests or args.run_all_tests or args.run_tests_by:
