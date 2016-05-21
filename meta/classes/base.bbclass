@@ -661,7 +661,7 @@ python do_cleanall() {
     try:
         fetcher = bb.fetch2.Fetch(src_uri, d)
         fetcher.clean()
-    except bb.fetch2.BBFetchException, e:
+    except bb.fetch2.BBFetchException as e:
         raise bb.build.FuncFailed(e)
 }
 do_cleanall[nostamp] = "1"

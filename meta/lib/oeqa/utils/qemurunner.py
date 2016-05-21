@@ -114,7 +114,7 @@ class QemuRunner:
         try:
             threadsock, threadport = self.create_socket()
             self.server_socket, self.serverport = self.create_socket()
-        except socket.error, msg:
+        except socket.error as msg:
             logger.error("Failed to create listening socket: %s" % msg[1])
             return False
 
@@ -192,7 +192,7 @@ class QemuRunner:
                     else:
                         self.ip = ips[0]
                         self.server_ip = ips[1]
-                except IndexError, ValueError:
+                except (IndexError, ValueError):
                     logger.info("Couldn't get ip from qemu process arguments! Here is the qemu command line used:\n%s\nand output from runqemu:\n%s" % (cmdline, self.getOutput(output)))
                     self._dump_host()
                     self.stop()
