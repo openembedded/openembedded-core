@@ -442,7 +442,7 @@ def main():
     bbpath = get_bb_var('BBPATH').split(':')
     layer_libdirs = [p for p in (os.path.join(l, 'lib') for l in bbpath) if os.path.exists(p)]
     sys.path.extend(layer_libdirs)
-    imp.reload(oeqa.selftest)
+    reload(oeqa.selftest)
 
     if args.run_tests_by and len(args.run_tests_by) >= 2:
         valid_options = ['name', 'class', 'module', 'id', 'tag']
