@@ -10,22 +10,17 @@ LIC_FILES_CHKSUM = "file://src/xdemos/glxgears.c;beginline=1;endline=20;md5=9142
                     file://src/xdemos/glxdemo.c;beginline=1;endline=8;md5=b01d5ab1aee94d35b7efaa2ef48e1a06"
 
 SRC_URI = "ftp://ftp.freedesktop.org/pub/mesa/demos/${PV}/${BPN}-${PV}.tar.bz2 \
-    file://0001-mesa-demos-Add-missing-data-files.patch \
-    file://0002-Correctly-implement-with-AC_WITH-glut-so-that-withou.patch \
-    file://0003-configure-Allow-to-disable-demos-which-require-GLEW-.patch \
-    file://0004-Use-DEMOS_DATA_DIR-to-locate-data-files.patch \
-    file://0005-Fix-build-when-EGL_MESA_screen_surface-extension-isn.patch \
-    file://0006-Query-display-for-EGL_MESA_screen_surface-extension-.patch \
-    file://0007-Install-few-more-test-programs.patch \
-    file://0008-glsl-perf-Add-few-missing-.glsl-.vert-.frag-files-to.patch \
-    file://0009-glsl-perf-Install-.glsl-.vert-.frag-files.patch \
-    file://0010-sharedtex_mt-fix-rendering-thread-hang.patch \
-    file://0011-drop-demos-dependant-on-obsolete-MESA_screen_surface.patch \
-    file://0012-mesa-demos-OpenVG-demos-with-single-frame-need-eglSw.patch \
-    file://0013-only-build-GLX-demos-if-needed.patch \
-"
-SRC_URI[md5sum] = "72613a2c8c013716db02e3ff59d29061"
-SRC_URI[sha256sum] = "e4bfecb5816ddd4b7b37c1bc876b63f1f7f06fda5879221a9774d0952f90ba92"
+           file://0001-mesa-demos-Add-missing-data-files.patch \
+           file://0003-configure-Allow-to-disable-demos-which-require-GLEW-.patch \
+           file://0004-Use-DEMOS_DATA_DIR-to-locate-data-files.patch \
+           file://0007-Install-few-more-test-programs.patch \
+           file://0008-glsl-perf-Add-few-missing-.glsl-.vert-.frag-files-to.patch \
+           file://0009-glsl-perf-Install-.glsl-.vert-.frag-files.patch \
+           file://0012-mesa-demos-OpenVG-demos-with-single-frame-need-eglSw.patch \
+           file://0013-only-build-GLX-demos-if-needed.patch \
+           "
+SRC_URI[md5sum] = "628e75c23c17394f11a316c36f8e4164"
+SRC_URI[sha256sum] = "c173154bbd0d5fb53d732471984def42fb1b14ac85fcb834138fb9518b3e0bef"
 
 inherit autotools pkgconfig distro_features_check
 # depends on virtual/egl, virtual/libgl ...
