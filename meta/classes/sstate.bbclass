@@ -623,22 +623,16 @@ def pstaging_fetch(sstatefetch, sstatepkg, d):
 
     # Try a fetch from the sstate mirror, if it fails just return and
     # we will build the package
-    uris = ['file://{0}'.format(sstatefetch),
-            'file://{0}.siginfo'.format(sstatefetch)]
+    uris = ['file://{0};downloadfilename={0}'.format(sstatefetch),
+            'file://{0}.siginfo;downloadfilename={0}.siginfo'.format(sstatefetch)]
     if bb.utils.to_boolean(d.getVar("SSTATE_VERIFY_SIG", True), False):
-        uris += ['file://{0}.sig'.format(sstatefetch)]
+        uris += ['file://{0}.sig;downloadfilename={0}.sig'.format(sstatefetch)]
 
     for srcuri in uris:
         localdata.setVar('SRC_URI', srcuri)
         try:
             fetcher = bb.fetch2.Fetch([srcuri], localdata, cache=False)
             fetcher.download()
-
-            # Need to optimise this, if using file:// urls, the fetcher just changes the local path
-            # For now work around by symlinking
-            localpath = bb.data.expand(fetcher.localpath(srcuri), localdata)
-            if localpath != sstatepkg and os.path.exists(localpath) and not os.path.exists(sstatepkg):
-                os.symlink(localpath, sstatepkg)
 
         except bb.fetch2.BBFetchException:
             break
