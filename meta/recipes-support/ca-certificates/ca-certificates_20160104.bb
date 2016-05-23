@@ -14,7 +14,6 @@ DEPENDS_class-native = ""
 SRCREV = "f54715702c5c0581c9461f78fd84e2c8d2ec243c"
 
 SRC_URI = "git://anonscm.debian.org/collab-maint/ca-certificates.git \
-           file://0001-update-ca-certificates-remove-c-rehash.patch \
            file://0002-update-ca-certificates-use-SYSROOT.patch \
            file://0001-update-ca-certificates-don-t-use-Debianisms-in-run-p.patch \
            file://update-ca-certificates-support-Toybox.patch \
