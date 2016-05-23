@@ -43,8 +43,8 @@ RDEPENDS_${PN}-misc = "${@bb.utils.contains('PACKAGECONFIG', 'perl', 'perl', '',
 # package RRECOMMENDS on this package.  This will enable the configuration
 # file to be installed for both the base openssl package and the libcrypto
 # package since the base openssl package depends on the libcrypto package.
-FILES_openssl-conf = "${libdir}/ssl/openssl.cnf"
-CONFFILES_openssl-conf = "${libdir}/ssl/openssl.cnf"
+FILES_openssl-conf = "${sysconfdir}/ssl/openssl.cnf"
+CONFFILES_openssl-conf = "${sysconfdir}/ssl/openssl.cnf"
 RRECOMMENDS_libcrypto += "openssl-conf"
 RDEPENDS_${PN}-ptest += "${PN}-misc make perl perl-module-filehandle bc"
 
@@ -178,6 +178,17 @@ do_install () {
 	else
 		rm -f ${D}${libdir}/ssl/misc/CA.pl ${D}${libdir}/ssl/misc/tsget
 	fi
+
+	# Create SSL structure
+	install -d ${D}${sysconfdir}/ssl/
+	mv ${D}${libdir}/ssl/openssl.cnf \
+	   ${D}${libdir}/ssl/certs \
+	   ${D}${libdir}/ssl/private \
+	   \
+	   ${D}${sysconfdir}/ssl/
+	ln -sf ${sysconfdir}/ssl/certs ${D}${libdir}/ssl/certs
+	ln -sf ${sysconfdir}/ssl/private ${D}${libdir}/ssl/private
+	ln -sf ${sysconfdir}/ssl/openssl.cnf ${D}${libdir}/ssl/openssl.cnf
 }
 
 do_install_ptest () {
@@ -191,7 +202,7 @@ do_install_ptest () {
 	cp -r certs ${D}${PTEST_PATH}
 	mkdir -p ${D}${PTEST_PATH}/apps
 	ln -sf ${libdir}/ssl/misc/CA.sh  ${D}${PTEST_PATH}/apps
-	ln -sf ${libdir}/ssl/openssl.cnf ${D}${PTEST_PATH}/apps
+	ln -sf ${sysconfdir}/ssl/openssl.cnf ${D}${PTEST_PATH}/apps
 	ln -sf ${bindir}/openssl         ${D}${PTEST_PATH}/apps
 	cp apps/server2.pem             ${D}${PTEST_PATH}/apps
 	mkdir -p ${D}${PTEST_PATH}/util
