@@ -67,7 +67,7 @@ index 51531d6..7e8aa3c 100644
  $(LI386_OBJ)/mkelf-linux-i386.o: $(LI386_DIR)/mkelf-linux-i386.c $(LI386_DIR)/convert.bin.c $(LI386_DEP)
  	$(MKDIR) -p $(@D)
 -	$(HOST_CC) $(HOST_CFLAGS) -c -g $< -o $@
-+	$(CC) $(HOST_CFLAGS) -c -g $< -o $@
++	$(CC) $(CFLAGS) -c -g $< -o $@
  
  
  ifdef I386_CC
@@ -80,7 +80,7 @@ index 38f5d8c..5df8870 100644
  $(LIA64_OBJ)/mkelf-linux-ia64.o: $(LIA64_DIR)/mkelf-linux-ia64.c $(LIA64_DIR)/convert.bin.c $(LIA64_DEP)
  	$(MKDIR) -p $(@D)
 -	$(HOST_CC) $(HOST_CFLAGS) -c -g $< -o $@
-+	$(CC) $(HOST_CFLAGS) -c -g $< -o $@
++	$(CC) $(CFLAGS) -c -g $< -o $@
  
  ifdef IA64_CC
  

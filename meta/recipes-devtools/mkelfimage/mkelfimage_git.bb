@@ -24,8 +24,11 @@ CLEANBROKEN = "1"
 S = "${WORKDIR}/git/util/mkelfImage"
 
 CFLAGS += "-fno-stack-protector"
-CACHED_CONFIGUREVARS += "HOST_CC='${BUILD_CC}'"
-EXTRA_OEMAKE += "HOST_CPPFLAGS='${BUILD_CPPFLAGS}'"
+CACHED_CONFIGUREVARS += "\
+    HOST_CC='${BUILD_CC}' \
+    HOST_CFLAGS='${BUILD_CFLAGS}' \
+    HOST_CPPFLAGS='${BUILD_CPPFLAGS}' \
+"
 
 inherit autotools-brokensep
 
