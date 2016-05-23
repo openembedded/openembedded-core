@@ -13,6 +13,7 @@ export OE_LDFLAGS="${LDFLAGS}"
 
 SRC_URI += "file://find.pl;subdir=${BP}/util/ \
             file://run-ptest \
+            file://openssl-c_rehash.sh \
             file://configure-targets.patch \
             file://shared-libs.patch \
             file://oe-ldflags.patch \

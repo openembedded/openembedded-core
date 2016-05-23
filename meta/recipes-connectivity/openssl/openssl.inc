@@ -36,7 +36,7 @@ PACKAGES =+ "libcrypto libssl ${PN}-misc openssl-conf"
 FILES_libcrypto = "${libdir}/libcrypto${SOLIBS}"
 FILES_libssl = "${libdir}/libssl${SOLIBS}"
 FILES_${PN} =+ " ${libdir}/ssl/*"
-FILES_${PN}-misc = "${libdir}/ssl/misc ${bindir}/c_rehash"
+FILES_${PN}-misc = "${libdir}/ssl/misc"
 RDEPENDS_${PN}-misc = "${@bb.utils.contains('PACKAGECONFIG', 'perl', 'perl', '', d)}"
 
 # Add the openssl.cnf file to the openssl-conf package.  Make the libcrypto
@@ -168,15 +168,14 @@ do_install () {
 	install -d ${D}${includedir}
 	cp --dereference -R include/openssl ${D}${includedir}
 
+	install -Dm 0755 ${WORKDIR}/openssl-c_rehash.sh ${D}${bindir}/c_rehash
+	sed -i -e 's,/etc/openssl,${sysconfdir}/ssl,g' ${D}${bindir}/c_rehash
+
 	oe_multilib_header openssl/opensslconf.h
 	if [ "${@bb.utils.contains('PACKAGECONFIG', 'perl', 'perl', '', d)}" = "perl" ]; then
-		install -m 0755 ${S}/tools/c_rehash ${D}${bindir}
-		sed -i -e '1s,.*,#!${bindir}/env perl,' ${D}${bindir}/c_rehash
 		sed -i -e '1s,.*,#!${bindir}/env perl,' ${D}${libdir}/ssl/misc/CA.pl
 		sed -i -e '1s,.*,#!${bindir}/env perl,' ${D}${libdir}/ssl/misc/tsget
-		# The c_rehash utility isn't installed by the normal installation process.
 	else
-		rm -f ${D}${bindir}/c_rehash
 		rm -f ${D}${libdir}/ssl/misc/CA.pl ${D}${libdir}/ssl/misc/tsget
 	fi
 }
