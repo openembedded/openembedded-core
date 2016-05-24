@@ -3,6 +3,17 @@ S = "${WORKDIR}/npmpkg"
 
 NPM_INSTALLDIR = "${D}${libdir}/node_modules/${PN}"
 
+# function maps arch names to npm arch names
+def npm_oe_arch_map(target_arch, d):
+    import re
+    if   re.match('p(pc|owerpc)(|64)', target_arch): return 'ppc'
+    elif re.match('i.86$', target_arch): return 'ia32'
+    elif re.match('x86_64$', target_arch): return 'x64'
+    elif re.match('arm64$', target_arch): return 'arm'
+    return target_arch
+
+NPM_ARCH ?= "${@npm_oe_arch_map(d.getVar('TARGET_ARCH', True), d)}"
+
 npm_do_compile() {
 	# changing the home directory to the working directory, the .npmrc will
 	# be created in this directory
@@ -12,7 +23,7 @@ npm_do_compile() {
 	# clear cache before every build
 	npm cache clear
 	# Install pkg into ${S} without going to the registry
-	npm --arch=${TARGET_ARCH} --production --no-registry install
+	npm --arch=${NPM_ARCH} --target_arch=${NPM_ARCH} --production --no-registry install
 }
 
 npm_do_install() {
