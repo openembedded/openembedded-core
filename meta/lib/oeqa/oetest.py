@@ -385,6 +385,43 @@ class RuntimeTestContext(TestContext):
         if oeTest.hasPackage("procps"):
             oeRuntimeTest.pscmd = "ps -ef"
 
+    def _getJsonFile(self, module):
+        """
+        Returns the path of the JSON file for a module, empty if doesn't exitst.
+        """
+
+        module_file = module.filename
+        json_file = "%s.json" % module_file.rsplit(".", 1)[0]
+        if os.path.isfile(module_file) and os.path.isfile(json_file):
+            return json_file
+        else:
+            return ""
+
+    def _getNeededPackages(self, json_file, test=None):
+        """
+        Returns a dict with needed packages based on a JSON file.
+
+
+        If a test is specified it will return the dict just for that test.
+        """
+
+        import json
+
+        needed_packages = {}
+
+        with open(json_file) as f:
+            test_packages = json.load(f)
+        for key,value in test_packages.items():
+            needed_packages[key] = value
+
+        if test:
+            if test in needed_packages:
+                needed_packages = needed_packages[test]
+            else:
+                needed_packages = {}
+
+        return needed_packages
+
 class ImageTestContext(RuntimeTestContext):
     def __init__(self, d, target, host_dumper):
         super(ImageTestContext, self).__init__(d, target)
