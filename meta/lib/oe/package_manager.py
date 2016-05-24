@@ -1444,8 +1444,10 @@ class RpmPM(PackageManager):
                 break
 
         # To have the same data type than other package_info methods
+        filepath = os.path.join(self.deploy_dir, arch, filename)
         pkg_dict = {}
-        pkg_dict[pkg] = {"arch":arch, "ver":ver, "filename":filename}
+        pkg_dict[pkg] = {"arch":arch, "ver":ver, "filename":filename,
+                         "filepath": filepath}
 
         return pkg_dict
 
@@ -1461,9 +1463,7 @@ class RpmPM(PackageManager):
             bb.fatal("Unable to get information for package '%s' while "
                      "trying to extract the package."  % pkg)
 
-        pkg_arch = pkg_info[pkg]["arch"]
-        pkg_filename = pkg_info[pkg]["filename"]
-        pkg_path = os.path.join(self.deploy_dir, pkg_arch, pkg_filename)
+        pkg_path = pkg_info[pkg]["filepath"]
 
         cpio_cmd = bb.utils.which(os.getenv("PATH"), "cpio")
         rpm2cpio_cmd = bb.utils.which(os.getenv("PATH"), "rpm2cpio")
@@ -1522,10 +1522,11 @@ class OpkgDpkgPM(PackageManager):
 
     This method extracts the common parts for Opkg and Dpkg
     """
-    def extract(self, pkg, pkg_path):
+    def extract(self, pkg, pkg_info):
 
         ar_cmd = bb.utils.which(os.getenv("PATH"), "ar")
         tar_cmd = bb.utils.which(os.getenv("PATH"), "tar")
+        pkg_path = pkg_info[pkg]["filepath"]
 
         if not os.path.isfile(pkg_path):
             bb.fatal("Unable to extract package for '%s'."
@@ -1897,7 +1898,14 @@ class OpkgPM(OpkgDpkgPM):
     """
     def package_info(self, pkg):
         cmd = "%s %s info %s" % (self.opkg_cmd, self.opkg_args, pkg)
-        return super(OpkgPM, self).package_info(pkg, cmd)
+        pkg_info = super(OpkgPM, self).package_info(pkg, cmd)
+
+        pkg_arch = pkg_info[pkg]["arch"]
+        pkg_filename = pkg_info[pkg]["filename"]
+        pkg_info[pkg]["filepath"] = \
+                os.path.join(self.deploy_dir, pkg_arch, pkg_filename)
+
+        return pkg_info
 
     """
     Returns the path to a tmpdir where resides the contents of a package.
@@ -1910,11 +1918,7 @@ class OpkgPM(OpkgDpkgPM):
             bb.fatal("Unable to get information for package '%s' while "
                      "trying to extract the package."  % pkg)
 
-        pkg_arch = pkg_info[pkg]["arch"]
-        pkg_filename = pkg_info[pkg]["filename"]
-        pkg_path = os.path.join(self.deploy_dir, pkg_arch, pkg_filename)
-
-        tmp_dir = super(OpkgPM, self).extract(pkg, pkg_path)
+        tmp_dir = super(OpkgPM, self).extract(pkg, pkg_info)
         bb.utils.remove(os.path.join(tmp_dir, "data.tar.gz"))
 
         return tmp_dir
@@ -2219,7 +2223,14 @@ class DpkgPM(OpkgDpkgPM):
     """
     def package_info(self, pkg):
         cmd = "%s show %s" % (self.apt_cache_cmd, pkg)
-        return super(DpkgPM, self).package_info(pkg, cmd)
+        pkg_info = super(DpkgPM, self).package_info(pkg, cmd)
+
+        pkg_arch = pkg_info[pkg]["pkgarch"]
+        pkg_filename = pkg_info[pkg]["filename"]
+        pkg_info[pkg]["filepath"] = \
+                os.path.join(self.deploy_dir, pkg_arch, pkg_filename)
+
+        return pkg_info
 
     """
     Returns the path to a tmpdir where resides the contents of a package.
@@ -2232,11 +2243,7 @@ class DpkgPM(OpkgDpkgPM):
             bb.fatal("Unable to get information for package '%s' while "
                      "trying to extract the package."  % pkg)
 
-        pkg_arch = pkg_info[pkg]["pkgarch"]
-        pkg_filename = pkg_info[pkg]["filename"]
-        pkg_path = os.path.join(self.deploy_dir, pkg_arch, pkg_filename)
-
-        tmp_dir = super(DpkgPM, self).extract(pkg, pkg_path)
+        tmp_dir = super(DpkgPM, self).extract(pkg, pkg_info)
         bb.utils.remove(os.path.join(tmp_dir, "data.tar.xz"))
 
         return tmp_dir
