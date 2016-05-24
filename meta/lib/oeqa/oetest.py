@@ -409,6 +409,7 @@ class RuntimeTestContext(TestContext):
 
         needed_packages = {}
         extracted_path = self.d.getVar("TEST_EXTRACTED_DIR", True)
+        packaged_path = self.d.getVar("TEST_PACKAGED_DIR", True)
         modules = self.getTestModules()
         bbpaths = self.d.getVar("BBPATH", True).split(":")
 
@@ -433,12 +434,18 @@ class RuntimeTestContext(TestContext):
                 extract = package.get("extract", True)
                 if extract:
                     dst_dir = os.path.join(extracted_path, pkg)
+                else:
+                    dst_dir = os.path.join(packaged_path)
 
                 # Extract package and copy it to TEST_EXTRACTED_DIR
                 if extract and not os.path.exists(dst_dir):
                     pkg_dir = self._extract_in_tmpdir(pkg)
                     shutil.copytree(pkg_dir, dst_dir)
                     shutil.rmtree(pkg_dir)
+
+                # Copy package to TEST_PACKAGED_DIR
+                elif not extract:
+                    self._copy_package(pkg)
 
     def _getJsonFile(self, module):
         """
@@ -491,6 +498,21 @@ class RuntimeTestContext(TestContext):
         shutil.rmtree(pkg_path)
 
         return extract_dir
+
+    def _copy_package(self, pkg):
+        """
+        Copy the RPM, DEB or IPK package to dst_dir
+        """
+
+        from oeqa.utils.package_manager import get_package_manager
+
+        pkg_path = os.path.join(self.d.getVar("TEST_INSTALL_TMP_DIR", True), pkg)
+        dst_dir = self.d.getVar("TEST_PACKAGED_DIR", True)
+        pm = get_package_manager(self.d, pkg_path)
+        pkg_info = pm.package_info(pkg)
+        file_path = pkg_info[pkg]["filepath"]
+        shutil.copy2(file_path, dst_dir)
+        shutil.rmtree(pkg_path)
 
 class ImageTestContext(RuntimeTestContext):
     def __init__(self, d, target, host_dumper):
