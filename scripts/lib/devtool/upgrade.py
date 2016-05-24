@@ -77,11 +77,19 @@ def _recipe_contains(rd, var):
 
 def _rename_recipe_dirs(oldpv, newpv, path):
     for root, dirs, files in os.walk(path):
+        # Rename directories with the version in their name
         for olddir in dirs:
             if olddir.find(oldpv) != -1:
                 newdir = olddir.replace(oldpv, newpv)
                 if olddir != newdir:
                     shutil.move(os.path.join(path, olddir), os.path.join(path, newdir))
+        # Rename any inc files with the version in their name (unusual, but possible)
+        for oldfile in files:
+            if oldfile.endswith('.inc'):
+                if oldfile.find(oldpv) != -1:
+                    newfile = oldfile.replace(oldpv, newpv)
+                    if oldfile != newfile:
+                        os.rename(os.path.join(path, oldfile), os.path.join(path, newfile))
 
 def _rename_recipe_file(oldrecipe, bpn, oldpv, newpv, path):
     oldrecipe = os.path.basename(oldrecipe)
