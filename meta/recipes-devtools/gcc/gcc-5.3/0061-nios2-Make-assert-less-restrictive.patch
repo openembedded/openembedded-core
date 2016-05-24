@@ -1,0 +1,35 @@
+From 802c64857074cb7b002d91ce6352139c2353ca06 Mon Sep 17 00:00:00 2001
+From: cltang <cltang@138bc75d-0d04-0410-961f-82ee72b054a4>
+Date: Sat, 21 May 2016 08:26:11 +0000
+Subject: [PATCH] 2016-05-21  Chung-Lin Tang  <cltang@codesourcery.com>
+
+	Backport from mainline
+	2015-06-29  Sandra Loosemore  <sandra@codesourcery.com>
+
+	* config/nios2/nios2.c (nios2_delegitimize_address): Make
+	assert less restrictive.
+
+
+
+git-svn-id: svn+ssh://gcc.gnu.org/svn/gcc/branches/gcc-5-branch@236555 138bc75d-0d04-0410-961f-82ee72b054a4
+Upstream-Status: Backport (git-svn-id: svn+ssh://gcc.gnu.org/svn/gcc/branches/gcc-5-branch@236555 138bc75d-0d04-0410-961f-82ee72b054a4)
+---
+ gcc/config/nios2/nios2.c | 2 +-
+ 1 files changed, 1 insertions(+), 1 deletion(-)
+
+diff --git a/gcc/config/nios2/nios2.c b/gcc/config/nios2/nios2.c
+index 7b6b389..3b22331 100644
+--- a/gcc/config/nios2/nios2.c
++++ b/gcc/config/nios2/nios2.c
+@@ -1930,7 +1930,7 @@ nios2_delegitimize_address (rtx x)
+ 	case UNSPEC_LOAD_TLS_IE:
+ 	case UNSPEC_ADD_TLS_LE:
+ 	  x = XVECEXP (XEXP (x, 0), 0, 0);
+-	  gcc_assert (GET_CODE (x) == SYMBOL_REF);
++	  gcc_assert (CONSTANT_P (x));
+ 	  break;
+ 	}
+     }
+-- 
+2.8.1
+
