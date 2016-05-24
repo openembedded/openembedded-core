@@ -765,6 +765,17 @@ def check_sanity_version_change(status, d):
     # Check that TMPDIR isn't located on nfs
     status.addresult(check_not_nfs(tmpdir, "TMPDIR"))
 
+def sanity_check_locale(d):
+    """
+    Currently bitbake switches locale to en_US.UTF-8 so check that this locale actually exists.
+    """
+    import locale
+    try:
+        locale.setlocale(locale.LC_ALL, "en_US.UTF-8")
+    except locale.Error:
+        raise_sanity_error("You system needs to support the en_US.UTF-8 locale.", d)
+    locale.setlocale(locale.LC_ALL, "C")
+
 def check_sanity_everybuild(status, d):
     import os, stat
     # Sanity tests which test the users environment so need to run at each build (or are so cheap
@@ -783,6 +794,8 @@ def check_sanity_everybuild(status, d):
     minversion = d.getVar('BB_MIN_VERSION', True)
     if (LooseVersion(bb.__version__) < LooseVersion(minversion)):
         status.addresult('Bitbake version %s is required and version %s was found\n' % (minversion, bb.__version__))
+
+    sanity_check_locale(d)
 
     sanity_check_conffiles(status, d)
 
