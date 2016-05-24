@@ -12,6 +12,7 @@ import unittest
 import inspect
 import subprocess
 import signal
+import shutil
 try:
     import bb
 except ImportError:
@@ -264,6 +265,22 @@ class TestContext(object):
 
         return testslist
 
+    def getTestModules(self):
+        """
+        Returns all the test modules in the testlist.
+        """
+
+        import pkgutil
+
+        modules = []
+        for test in self.testslist:
+            if re.search("\w+\.\w+\.test_\S+", test):
+                test = '.'.join(t.split('.')[:3])
+            module = pkgutil.get_loader(test)
+            modules.append(module)
+
+        return modules
+
     def getTests(self, test):
         '''Return all individual tests executed when running the suite.'''
         # Unfortunately unittest does not have an API for this, so we have
@@ -385,6 +402,44 @@ class RuntimeTestContext(TestContext):
         if oeTest.hasPackage("procps"):
             oeRuntimeTest.pscmd = "ps -ef"
 
+    def extract_packages(self):
+        """
+        Find and extract packages that will be needed during runtime.
+        """
+
+        needed_packages = {}
+        extracted_path = self.d.getVar("TEST_EXTRACTED_DIR", True)
+        modules = self.getTestModules()
+        bbpaths = self.d.getVar("BBPATH", True).split(":")
+
+        for module in modules:
+            json_file = self._getJsonFile(module)
+            if json_file:
+                needed_packages = self._getNeededPackages(json_file)
+
+        for key,value in needed_packages.items():
+            packages = ()
+            if isinstance(value, dict):
+                packages = (value, )
+            elif isinstance(value, list):
+                packages = value
+            else:
+                bb.fatal("Failed to process needed packages for %s; "
+                         "Value must be a dict or list" % key)
+
+            for package in packages:
+                pkg = package["pkg"]
+                rm = package.get("rm", False)
+                extract = package.get("extract", True)
+                if extract:
+                    dst_dir = os.path.join(extracted_path, pkg)
+
+                # Extract package and copy it to TEST_EXTRACTED_DIR
+                if extract and not os.path.exists(dst_dir):
+                    pkg_dir = self._extract_in_tmpdir(pkg)
+                    shutil.copytree(pkg_dir, dst_dir)
+                    shutil.rmtree(pkg_dir)
+
     def _getJsonFile(self, module):
         """
         Returns the path of the JSON file for a module, empty if doesn't exitst.
@@ -421,6 +476,21 @@ class RuntimeTestContext(TestContext):
                 needed_packages = {}
 
         return needed_packages
+
+    def _extract_in_tmpdir(self, pkg):
+        """"
+        Returns path to a temp directory where the package was
+        extracted without dependencies.
+        """
+
+        from oeqa.utils.package_manager import get_package_manager
+
+        pkg_path = os.path.join(self.d.getVar("TEST_INSTALL_TMP_DIR", True), pkg)
+        pm = get_package_manager(self.d, pkg_path)
+        extract_dir = pm.extract(pkg)
+        shutil.rmtree(pkg_path)
+
+        return extract_dir
 
 class ImageTestContext(RuntimeTestContext):
     def __init__(self, d, target, host_dumper):
