@@ -1,15 +1,15 @@
 SUMMARY = "XSL stylesheets for processing DocBook XML to various output formats"
 HOMEPAGE = "http://docbook.sourceforge.net"
 LICENSE = "XSL"
-LIC_FILES_CHKSUM = "file://COPYING;md5=a6eeeed43d498c22a835382533356462"
+LIC_FILES_CHKSUM = "file://COPYING;md5=6beadd98f9c54ab0c387e14211ee4d0e"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/docbook/docbook-xsl-${PV}.tar.bz2 \
            file://docbook-xsl.xml \
            file://docbook-xsl-stylesheets-no-bashism-in-docbook-xsl-up.patch \
 "
 
-SRC_URI[md5sum] = "6dd0f89131cc35bf4f2ed105a1c17771"
-SRC_URI[sha256sum] = "c98f7296ab5c8ccd2e0bc07634976a37f50847df2d8a59bdb1e157664700b467"
+SRC_URI[md5sum] = "b48cbf929a2ad85e6672f710777ca7bc"
+SRC_URI[sha256sum] = "725f452e12b296956e8bfb876ccece71eeecdd14b94f667f3ed9091761a4a968"
 
 UPSTREAM_CHECK_URI = "http://sourceforge.net/projects/docbook/files/docbook-xsl/"
 # Reject versions ending in .0 as those are release candidates
@@ -37,18 +37,18 @@ do_install () {
 	install -v -m755 -d ${D}${datadir}/xml/docbook/xsl-stylesheets-${PV}
 	ln -s xsl-stylesheets-${PV} ${D}${datadir}/xml/docbook/xsl-stylesheets
 
-	cp -v -R VERSION common eclipse epub extensions fo highlighting html \
-		htmlhelp images javahelp lib manpages params profiling \
-		roundtrip slides template tests tools webhelp website \
-		xhtml xhtml-1_1 catalog.xml \
-	${D}${datadir}/xml/docbook/xsl-stylesheets-1.78.1
+	cp -v -R VERSION assembly common eclipse epub epub3 fo \
+		highlighting html htmlhelp images javahelp lib manpages \
+		params profiling roundtrip slides template webhelp website \
+		xhtml xhtml-1_1 xhtml5 catalog.xml \
+		${D}${datadir}/xml/docbook/xsl-stylesheets-${PV}
 
-	ln -s VERSION ${D}/${datadir}/xml/docbook/xsl-stylesheets-1.78.1/VERSION.xsl
+	ln -s VERSION ${D}/${datadir}/xml/docbook/xsl-stylesheets-${PV}/VERSION.xsl
 
 	install -v -m644 -D README \
-		${D}${datadir}/doc/docbook-xsl-1.78.1/README.txt
+		${D}${datadir}/doc/docbook-xsl-${PV}/README.txt
 	install -v -m644    RELEASE-NOTES* NEWS* \
-		${D}${datadir}/doc/docbook-xsl-1.78.1
+		${D}${datadir}/doc/docbook-xsl-${PV}
 
 	install -d ${D}${sysconfdir}/xml/
 	install -m 755  ${WORKDIR}/docbook-xsl.xml ${D}${sysconfdir}/xml/docbook-xsl.xml
