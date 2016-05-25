@@ -25,14 +25,12 @@ SRC_URI = "http://linux-pam.org/library/Linux-PAM-${PV}.tar.bz2 \
            file://crypt_configure.patch \
           "
 
-SRC_URI[md5sum] = "9dc53067556d2dd567808fd509519dd6"
-SRC_URI[sha256sum] = "342b1211c0d3b203a7df2540a5b03a428a087bd8a48c17e49ae268f992b334d9"
+SRC_URI[md5sum] = "da4b2289b7cfb19583d54e9eaaef1c3a"
+SRC_URI[sha256sum] = "241aed1ef522f66ed672719ecf2205ec513fd0075ed80cda8e086a5b1a01d1bb"
 
-SRC_URI_append_libc-uclibc = " file://pam-no-innetgr.patch \
-                               file://use-utmpx.patch"
+SRC_URI_append_libc-uclibc = " file://use-utmpx.patch"
 
-SRC_URI_append_libc-musl = " file://pam-no-innetgr.patch \
-                             file://0001-Add-support-for-defining-missing-funcitonality.patch \
+SRC_URI_append_libc-musl = " file://0001-Add-support-for-defining-missing-funcitonality.patch \
                              file://include_paths_header.patch \
                            "
 
