@@ -818,28 +818,28 @@ class DevtoolTests(DevtoolBase):
 
         # Check bbappend contents
         result = runCmd('git rev-parse HEAD', cwd=tempsrcdir)
-        expectedlines = ['SRCREV = "%s"\n' % result.output,
-                         '\n',
-                         'SRC_URI = "%s"\n' % git_uri,
-                         '\n']
+        expectedlines = set(['SRCREV = "%s"\n' % result.output,
+                             '\n',
+                             'SRC_URI = "%s"\n' % git_uri,
+                             '\n'])
         with open(bbappendfile, 'r') as f:
-            self.assertEqual(expectedlines, f.readlines())
+            self.assertEqual(expectedlines, set(f.readlines()))
 
         # Check we can run it again and bbappend isn't modified
         result = runCmd('devtool update-recipe -m srcrev %s -a %s' % (testrecipe, templayerdir))
         with open(bbappendfile, 'r') as f:
-            self.assertEqual(expectedlines, f.readlines())
+            self.assertEqual(expectedlines, set(f.readlines()))
         # Drop new commit and check SRCREV changes
         result = runCmd('git reset HEAD^', cwd=tempsrcdir)
         result = runCmd('devtool update-recipe -m srcrev %s -a %s' % (testrecipe, templayerdir))
         self.assertFalse(os.path.exists(os.path.join(appenddir, testrecipe)), 'Patch directory should not be created')
         result = runCmd('git rev-parse HEAD', cwd=tempsrcdir)
-        expectedlines = ['SRCREV = "%s"\n' % result.output,
-                         '\n',
-                         'SRC_URI = "%s"\n' % git_uri,
-                         '\n']
+        expectedlines = set(['SRCREV = "%s"\n' % result.output,
+                             '\n',
+                             'SRC_URI = "%s"\n' % git_uri,
+                             '\n'])
         with open(bbappendfile, 'r') as f:
-            self.assertEqual(expectedlines, f.readlines())
+            self.assertEqual(expectedlines, set(f.readlines()))
         # Put commit back and check we can run it if layer isn't in bblayers.conf
         os.remove(bbappendfile)
         result = runCmd('git commit -a -m "Change the Makefile"', cwd=tempsrcdir)
@@ -848,12 +848,12 @@ class DevtoolTests(DevtoolBase):
         self.assertIn('WARNING: Specified layer is not currently enabled in bblayers.conf', result.output)
         self.assertFalse(os.path.exists(os.path.join(appenddir, testrecipe)), 'Patch directory should not be created')
         result = runCmd('git rev-parse HEAD', cwd=tempsrcdir)
-        expectedlines = ['SRCREV = "%s"\n' % result.output,
-                         '\n',
-                         'SRC_URI = "%s"\n' % git_uri,
-                         '\n']
+        expectedlines = set(['SRCREV = "%s"\n' % result.output,
+                             '\n',
+                             'SRC_URI = "%s"\n' % git_uri,
+                             '\n'])
         with open(bbappendfile, 'r') as f:
-            self.assertEqual(expectedlines, f.readlines())
+            self.assertEqual(expectedlines, set(f.readlines()))
         # Deleting isn't expected to work under these circumstances
 
     @testcase(1370)
