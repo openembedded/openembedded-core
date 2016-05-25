@@ -569,6 +569,10 @@ python () {
             needsrcrev = True
             d.appendVarFlag('do_fetch', 'depends', ' mercurial-native:do_populate_sysroot')
 
+        # Perforce packages support SRCREV = "${AUTOREV}"
+        elif scheme == "p4":
+            needsrcrev = True
+
         # OSC packages should DEPEND on osc-native
         elif scheme == "osc":
             d.appendVarFlag('do_fetch', 'depends', ' osc-native:do_populate_sysroot')
