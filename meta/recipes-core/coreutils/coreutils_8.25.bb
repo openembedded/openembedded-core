@@ -19,6 +19,7 @@ SRC_URI = "${GNU_MIRROR}/coreutils/${BP}.tar.xz;name=tarball \
            file://fix-selinux-flask.patch \
            file://0001-Unset-need_charset_alias-when-building-for-musl.patch \
            file://0001-uname-report-processor-and-hardware-correctly.patch \
+           file://disable-ls-output-quoting.patch \
           "
 
 SRC_URI[tarball.md5sum] = "070e43ba7f618d747414ef56ab248a48"
