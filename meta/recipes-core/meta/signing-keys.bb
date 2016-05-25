@@ -1,7 +1,7 @@
 # Copyright (C) 2015 Intel Corporation
 # Released under the MIT license (see COPYING.MIT for the terms)
 
-DESCRIPTION = "Make public keys of the signing keys available"
+SUMMARY = "Makes public keys of the signing keys available"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=4d92cd373abda3937c2bc47fbc49d690 \
                     file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
