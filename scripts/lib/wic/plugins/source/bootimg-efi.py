@@ -197,6 +197,11 @@ class BootimgEFIPlugin(SourcePlugin):
         except KeyError:
             msger.error("bootimg-efi requires a loader, none specified")
 
+        startup = os.path.join(bootimg_dir, "startup.nsh")
+        if os.path.exists(startup):
+            cp_cmd = "cp %s %s/" % (startup, hdddir)
+            exec_cmd(cp_cmd, True)
+
         du_cmd = "du -bks %s" % hdddir
         out = exec_cmd(du_cmd)
         blocks = int(out.split()[0])
