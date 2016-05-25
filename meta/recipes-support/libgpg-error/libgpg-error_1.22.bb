@@ -5,8 +5,8 @@ BUGTRACKER = "https://bugs.g10code.com/gnupg/index"
 LICENSE = "GPLv2+ & LGPLv2.1+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=59530bdf33659b29e73d4adb9f9f6552 \
                     file://COPYING.LIB;md5=2d5025d4aa3495befef8f17206a5b0a1 \
-                    file://src/gpg-error.h.in;endline=23;md5=93d3155af141ae3b369a5d09ca9d6234 \
-                    file://src/init.c;endline=20;md5=8f5a9b59634f4aebcd0ec9d3ebd53bfe"
+                    file://src/gpg-error.h.in;endline=23;md5=cf562f60b9dba7df20d6ee3f97ea1d5a \
+                    file://src/init.c;endline=20;md5=872b2389fe9bae7ffb80d2b91225afbc"
 
 
 SECTION = "libs"
@@ -14,10 +14,9 @@ SECTION = "libs"
 UPSTREAM_CHECK_URI = "https://gnupg.org/download/index.html"
 SRC_URI = "${GNUPG_MIRROR}/libgpg-error/libgpg-error-${PV}.tar.bz2 \
            file://pkgconfig.patch \
-	   file://0001-libgpg-error-Add-nios2-support.patch \
 	  "
-SRC_URI[md5sum] = "ab0b5aba6d0a185b41d07bda804fd8b2"
-SRC_URI[sha256sum] = "b7dbdb3cad63a740e9f0c632a1da32d4afdb694ec86c8625c98ea0691713b84d"
+SRC_URI[md5sum] = "83c686abe3fa223ec89f3b51da830770"
+SRC_URI[sha256sum] = "f2a04ee6317bdb41a625bea23fdc7f0b5a63fb677f02447c647ed61fb9e69d7b"
 
 BINCONFIG = "${bindir}/gpg-error-config"
 
