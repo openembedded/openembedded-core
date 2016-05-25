@@ -190,7 +190,7 @@ class FileChange:
 
 
 def blob_to_dict(blob):
-    alines = blob.data_stream.read().splitlines()
+    alines = [line.decode() for line in blob.data_stream.read().splitlines()]
     adict = {}
     for line in alines:
         splitv = [i.strip() for i in line.split('=',1)]
