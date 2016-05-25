@@ -13,7 +13,8 @@ BINCONFIG = "${bindir}/ksba-config"
 
 inherit autotools binconfig-disabled pkgconfig texinfo
 
-SRC_URI = "ftp://ftp.gnupg.org/gcrypt/${BPN}/${BPN}-${PV}.tar.bz2 \
+UPSTREAM_CHECK_URI = "https://gnupg.org/download/index.html"
+SRC_URI = "${GNUPG_MIRROR}/${BPN}/${BPN}-${PV}.tar.bz2 \
            file://ksba-add-pkgconfig-support.patch"
 
 SRC_URI[md5sum] = "a5dd3c57fca254935f5cf8db26e39065"
