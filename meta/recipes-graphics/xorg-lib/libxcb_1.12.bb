@@ -14,8 +14,8 @@ SRC_URI = "http://xcb.freedesktop.org/dist/libxcb-${PV}.tar.bz2 \
            file://disable-check.patch \
            file://gcc-mips-pr68302-mips-workaround.patch \
           "
-SRC_URI[md5sum] = "f97a65e6158775de518ac391935634c2"
-SRC_URI[sha256sum] = "b720fd6c7d200e5371affdb3f049cc8f88cff9aed942ff1b824d95eedbf69d30"
+SRC_URI[md5sum] = "28e552bd78bc1050b6b26ca1db0e5bb6"
+SRC_URI[sha256sum] = "4adfb1b7c67e99bc9c2ccb110b2f175686576d2f792c8a71b9c8b19014057b5b"
 
 BBCLASSEXTEND = "native nativesdk"
 
