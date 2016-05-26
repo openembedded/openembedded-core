@@ -79,13 +79,13 @@ do_compile () {
 		echo ${UBOOT_LOCALVERSION} > ${B}/.scmversion
 		echo ${UBOOT_LOCALVERSION} > ${S}/.scmversion
 	fi
-    
-    if [ "x${UBOOT_CONFIG}" != "x" ]
+
+    if [ -n "${UBOOT_CONFIG}" ]
     then
         for config in ${UBOOT_MACHINE}; do
-            i=`expr $i + 1`;
+            i=$(expr $i + 1);
             for type  in ${UBOOT_CONFIG}; do
-                j=`expr $j + 1`;
+                j=$(expr $j + 1);
                 if [ $j -eq $i ]
                 then
                     oe_runmake O=${config} ${config}
@@ -104,12 +104,12 @@ do_compile () {
 }
 
 do_install () {
-    if [ "x${UBOOT_CONFIG}" != "x" ]
+    if [ -n "${UBOOT_CONFIG}" ]
     then
         for config in ${UBOOT_MACHINE}; do
-            i=`expr $i + 1`;
+            i=$(expr $i + 1);
             for type in ${UBOOT_CONFIG}; do
-                j=`expr $j + 1`;
+                j=$(expr $j + 1);
                 if [ $j -eq $i ]
                 then
                     install -d ${D}/boot
@@ -127,14 +127,14 @@ do_install () {
         ln -sf ${UBOOT_IMAGE} ${D}/boot/${UBOOT_BINARY}
     fi
 
-    if [ "x${UBOOT_ELF}" != "x" ]
+    if [ -n "${UBOOT_ELF}" ]
     then
-        if [ "x${UBOOT_CONFIG}" != "x" ]
+        if [ -n "${UBOOT_CONFIG}" ]
         then
             for config in ${UBOOT_MACHINE}; do
-                i=`expr $i + 1`;
+                i=$(expr $i + 1);
                 for type in ${UBOOT_CONFIG}; do
-                    j=`expr $j + 1`;
+                    j=$(expr $j + 1);
                     if [ $j -eq $i ]
                     then
                         install ${S}/${config}/${UBOOT_ELF} ${D}/boot/u-boot-${type}-${PV}-${PR}.${UBOOT_ELF_SUFFIX}
@@ -156,14 +156,14 @@ do_install () {
         install -m 644 ${WORKDIR}/fw_env.config ${D}${sysconfdir}/fw_env.config
     fi
 
-    if [ "x${SPL_BINARY}" != "x" ]
+    if [ -n "${SPL_BINARY}" ]
     then
-        if [ "x${UBOOT_CONFIG}" != "x" ]   
+        if [ -n "${UBOOT_CONFIG}" ]
         then
             for config in ${UBOOT_MACHINE}; do
-                i=`expr $i + 1`;
+                i=$(expr $i + 1);
                 for type in ${UBOOT_CONFIG}; do
-                    j=`expr $j + 1`;
+                    j=$(expr $j + 1);
                     if [ $j -eq $i ]
                     then
                          install ${S}/${config}/${SPL_BINARY} ${D}/boot/${SPL_IMAGE}-${type}-${PV}-${PR}
@@ -180,7 +180,7 @@ do_install () {
         fi
     fi
 
-    if [ "x${UBOOT_ENV}" != "x" ]
+    if [ -n "${UBOOT_ENV}" ]
     then
         install ${WORKDIR}/${UBOOT_ENV_BINARY} ${D}/boot/${UBOOT_ENV_IMAGE}
         ln -sf ${UBOOT_ENV_IMAGE} ${D}/boot/${UBOOT_ENV_BINARY}
@@ -190,12 +190,12 @@ do_install () {
 FILES_${PN} = "/boot ${sysconfdir}"
 
 do_deploy () {
-    if [ "x${UBOOT_CONFIG}" != "x" ]
+    if [ -n "${UBOOT_CONFIG}" ]
     then
         for config in ${UBOOT_MACHINE}; do
-            i=`expr $i + 1`;
+            i=$(expr $i + 1);
             for type in ${UBOOT_CONFIG}; do
-                j=`expr $j + 1`;
+                j=$(expr $j + 1);
                 if [ $j -eq $i ]
                 then
                     install -d ${DEPLOYDIR}
@@ -205,8 +205,8 @@ do_deploy () {
                     ln -sf u-boot-${type}-${PV}-${PR}.${UBOOT_SUFFIX} ${UBOOT_SYMLINK}
                     ln -sf u-boot-${type}-${PV}-${PR}.${UBOOT_SUFFIX} ${UBOOT_BINARY}-${type}
                     ln -sf u-boot-${type}-${PV}-${PR}.${UBOOT_SUFFIX} ${UBOOT_BINARY}
-                fi 
-            done 
+                fi
+            done
             unset  j
         done
         unset  i
@@ -219,14 +219,14 @@ do_deploy () {
         ln -sf ${UBOOT_IMAGE} ${UBOOT_BINARY}
    fi
 
-    if [ "x${UBOOT_ELF}" != "x" ]
+    if [ -n "${UBOOT_ELF}" ]
     then
-        if [ "x${UBOOT_CONFIG}" != "x" ]
+        if [ -n "${UBOOT_CONFIG}" ]
         then
             for config in ${UBOOT_MACHINE}; do
-                i=`expr $i + 1`;
+                i=$(expr $i + 1);
                 for type in ${UBOOT_CONFIG}; do
-                    j=`expr $j + 1`;
+                    j=$(expr $j + 1);
                     if [ $j -eq $i ]
                     then
                         install ${S}/${config}/${UBOOT_ELF} ${DEPLOYDIR}/u-boot-${type}-${PV}-${PR}.${UBOOT_ELF_SUFFIX}
@@ -247,14 +247,14 @@ do_deploy () {
     fi
 
 
-     if [ "x${SPL_BINARY}" != "x" ]
+     if [ -n "${SPL_BINARY}" ]
      then
-         if [ "x${UBOOT_CONFIG}" != "x" ]   
+         if [ -n "${UBOOT_CONFIG}" ]
          then
              for config in ${UBOOT_MACHINE}; do
-                 i=`expr $i + 1`;
+                 i=$(expr $i + 1);
                  for type in ${UBOOT_CONFIG}; do
-                     j=`expr $j + 1`;
+                     j=$(expr $j + 1);
                      if [ $j -eq $i ]
                      then
                          install ${S}/${config}/${SPL_BINARY} ${DEPLOYDIR}/${SPL_IMAGE}-${type}-${PV}-${PR}
@@ -277,7 +277,7 @@ do_deploy () {
      fi
 
 
-    if [ "x${UBOOT_ENV}" != "x" ]
+    if [ -n "${UBOOT_ENV}" ]
     then
         install ${WORKDIR}/${UBOOT_ENV_BINARY} ${DEPLOYDIR}/${UBOOT_ENV_IMAGE}
         rm -f ${DEPLOYDIR}/${UBOOT_ENV_BINARY} ${DEPLOYDIR}/${UBOOT_ENV_SYMLINK}
