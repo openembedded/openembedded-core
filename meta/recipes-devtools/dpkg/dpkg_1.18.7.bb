@@ -4,7 +4,6 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=751419260aa954499f7abaabaa882bbe"
 SRC_URI_append_class-native =" file://glibc2.5-sync_file_range.patch "
 SRC_URI += "file://noman.patch \
             file://remove-tar-no-timestamp.patch \
-            file://fix-abs-redefine.patch \
             file://arch_pm.patch \
             file://dpkg-configure.service \
             file://add_armeb_triplet_entry.patch \
@@ -15,6 +14,5 @@ SRC_URI += "file://noman.patch \
 	    file://0006-add-musleabi-to-known-target-tripets.patch \
            "
 
-SRC_URI[md5sum] = "e95b513c89693f6ec3ab53b6b1c3defd"
-SRC_URI[sha256sum] = "fe89243868888ce715bf45861f26264f767d4e4dbd0d6f1a26ce60bbbbf106da"
-
+SRC_URI[md5sum] = "073dbf2129a54b0fc627464bf8af4a1b"
+SRC_URI[sha256sum] = "ace36d3a6dc750a42baf797f9e75ec580a21f92bb9ff96b482100755d6d9b87b"
