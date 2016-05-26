@@ -28,9 +28,6 @@ RDEPENDS_packagegroup-self-hosted = "\
     "
 
 RDEPENDS_packagegroup-self-hosted-host-tools = "\
-    connman \
-    connman-plugin-ethernet \
-    dhcp-client \
     e2fsprogs \
     e2fsprogs-e2fsck \
     e2fsprogs-mke2fs \
