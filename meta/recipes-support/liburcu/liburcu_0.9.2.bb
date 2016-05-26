@@ -13,8 +13,8 @@ SRC_URI = " \
         file://0002-Support-for-aarch64_be.patch \
 	"
 
-SRC_URI[md5sum] = "124eaeea06863271c0bdf2a0cc1d8e4b"
-SRC_URI[sha256sum] = "f8d278e9d95bec97c9ba954fc4c3fb584936bc0010713a8fe358b916bafd8715"
+SRC_URI[md5sum] = "49f86e68c1e2f41d303381a271b791d1"
+SRC_URI[sha256sum] = "8f7fa313b1e0a3f742cea24ce63a39c0efe63e615a769e2961e55bd2663ecaa3"
 
 S = "${WORKDIR}/userspace-rcu-${PV}"
 CFLAGS_append_libc-uclibc = " -D_GNU_SOURCE"
