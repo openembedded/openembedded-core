@@ -14,16 +14,18 @@ SRC_URI[sha256sum] = "2f986b7c9a0e9ac6728147668e776d405465284e13c74d4146c9cbc51f
 
 inherit autotools
 
-# xmlto needs getopt/xmllint/xsltproc/bash at runtime
+# xmlto needs getopt/xmllint/xsltproc/bash/tail at runtime
 RDEPENDS_${PN} = "docbook-xml-dtd4 \
                   docbook-xsl-stylesheets \
                   util-linux \
                   libxml2 \
                   bash \
+                  coreutils \
 "
 RDEPENDS_${PN}_append_class-target = " \
                   libxslt-bin \
 "
+CACHED_CONFIGUREVARS += "ac_cv_path_TAIL=${bindir}/tail"
 
 BBCLASSEXTEND = "native"
 
