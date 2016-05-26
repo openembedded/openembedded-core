@@ -10,7 +10,7 @@ DEPENDS = "glib-2.0 util-linux popt bison-native flex-native"
 
 inherit autotools pkgconfig
 
-SRCREV = "6e2b9096c77138593097335b9b27202d98918089"
+SRCREV = "c551f7a1ed635138b083b4e9e0c445ef63d0a562"
 
 SRC_URI = "git://git.efficios.com/babeltrace.git;branch=stable-1.3 \
            file://0001-Fix-invalid-pointer-free-with-trace-collection.patch \
