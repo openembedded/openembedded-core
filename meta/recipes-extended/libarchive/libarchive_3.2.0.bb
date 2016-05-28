@@ -3,7 +3,7 @@ DESCRIPTION = "C library and command-line tools for reading and writing tar, cpi
 HOMEPAGE = "http://www.libarchive.org/"
 SECTION = "devel"
 LICENSE = "BSD"
-LIC_FILES_CHKSUM = "file://COPYING;md5=b4e3ffd607d6686c6cb2f63394370841"
+LIC_FILES_CHKSUM = "file://COPYING;md5=ed99aca006bc346974bb745a35336425"
 
 DEPENDS = "e2fsprogs-native"
 
@@ -31,15 +31,10 @@ PACKAGECONFIG[lzo] = "--with-lzo2,--without-lzo2,lzo,"
 PACKAGECONFIG[nettle] = "--with-nettle,--without-nettle,nettle,"
 
 SRC_URI = "http://libarchive.org/downloads/libarchive-${PV}.tar.gz \
-           file://libarchive-CVE-2013-0211.patch \
-           file://pkgconfig.patch \
-           file://libarchive-CVE-2015-2304.patch \
-           file://mkdir.patch \
-           file://0001-Set-xattrs-after-setting-times.patch \
            "
 
-SRC_URI[md5sum] = "efad5a503f66329bb9d2f4308b5de98a"
-SRC_URI[sha256sum] = "eb87eacd8fe49e8d90c8fdc189813023ccc319c5e752b01fb6ad0cc7b2c53d5e"
+SRC_URI[md5sum] = "596210b5a9c2ff74a0f7ca34838d655f"
+SRC_URI[sha256sum] = "7bce45fd71ff01dc20d19edd78322d4965583d81b8bed8e26cacb65d6f5baa87"
 
 inherit autotools update-alternatives pkgconfig
 
