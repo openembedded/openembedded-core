@@ -158,9 +158,8 @@ def split_var_value(value, assignment=True):
     return outlist
 
 
-def patch_recipe_file(fn, values, patch=False, relpath=''):
-    """Update or insert variable values into a recipe file (assuming you
-       have already identified the exact file you want to update.)
+def patch_recipe_lines(fromlines, values):
+    """Update or insert variable values into lines from a recipe.
        Note that some manual inspection/intervention may be required
        since this cannot handle all situations.
     """
@@ -247,8 +246,7 @@ def patch_recipe_file(fn, values, patch=False, relpath=''):
 
     # First run - establish which values we want to set are already in the file
     varlist = [re.escape(item) for item in values.keys()]
-    with open(fn, 'r') as f:
-        changed, fromlines = bb.utils.edit_metadata(f, varlist, patch_recipe_varfunc)
+    bb.utils.edit_metadata(fromlines, varlist, patch_recipe_varfunc)
     # Second run - actually set everything
     modifying = True
     varlist.extend(recipe_progression_restrs)
@@ -259,6 +257,21 @@ def patch_recipe_file(fn, values, patch=False, relpath=''):
             tolines.append('\n')
         for k in remainingnames.keys():
             outputvalue(k, tolines)
+
+    return changed, tolines
+
+
+def patch_recipe_file(fn, values, patch=False, relpath=''):
+    """Update or insert variable values into a recipe file (assuming you
+       have already identified the exact file you want to update.)
+       Note that some manual inspection/intervention may be required
+       since this cannot handle all situations.
+    """
+
+    with open(fn, 'r') as f:
+        fromlines = f.readlines()
+
+    _, tolines = patch_recipe_lines(fromlines, values)
 
     if patch:
         relfn = os.path.relpath(fn, relpath)
