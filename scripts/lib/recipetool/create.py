@@ -563,6 +563,10 @@ def create_recipe(args):
         lines_before.append('')
         lines_before.append('# Modify these as desired')
         lines_before.append('PV = "%s+git${SRCPV}"' % (realpv or '1.0'))
+        if not args.autorev and srcrev == '${AUTOREV}':
+            if os.path.exists(os.path.join(srctree, '.git')):
+                (stdout, _) = bb.process.run('git rev-parse HEAD', cwd=srctree)
+            srcrev = stdout.rstrip()
         lines_before.append('SRCREV = "%s"' % srcrev)
     lines_before.append('')
 
@@ -1049,5 +1053,6 @@ def register_commands(subparsers):
     parser_create.add_argument('-b', '--binary', help='Treat the source tree as something that should be installed verbatim (no compilation, same directory structure)', action='store_true')
     parser_create.add_argument('--also-native', help='Also add native variant (i.e. support building recipe for the build host as well as the target machine)', action='store_true')
     parser_create.add_argument('--src-subdir', help='Specify subdirectory within source tree to use', metavar='SUBDIR')
+    parser_create.add_argument('-a', '--autorev', help='When fetching from a git repository, set SRCREV in the recipe to a floating revision instead of fixed', action="store_true")
     parser_create.set_defaults(func=create_recipe)
 
