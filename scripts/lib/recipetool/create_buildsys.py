@@ -830,22 +830,35 @@ class SpecFileRecipeHandler(RecipeHandler):
         if 'PV' in extravalues and 'PN' in extravalues:
             return
         filelist = RecipeHandler.checkfiles(srctree, ['*.spec'], recursive=True)
-        pn = None
-        pv = None
+        valuemap = {'Name': 'PN',
+                    'Version': 'PV',
+                    'Summary': 'SUMMARY',
+                    'Url': 'HOMEPAGE',
+                    'License': 'LICENSE'}
+        foundvalues = {}
         for fileitem in filelist:
             linecount = 0
             with open(fileitem, 'r') as f:
                 for line in f:
-                    if line.startswith('Name:') and not pn:
-                        pn = line.split(':')[1].strip()
-                    if line.startswith('Version:') and not pv:
-                        pv = line.split(':')[1].strip()
-            if pv or pn:
-                if pv and not 'PV' in extravalues and validate_pv(pv):
-                    extravalues['PV'] = pv
-                if pn and not 'PN' in extravalues:
-                    extravalues['PN'] = pn
-                break
+                    for value, varname in valuemap.iteritems():
+                        if line.startswith(value + ':') and not varname in foundvalues:
+                            foundvalues[varname] = line.split(':', 1)[1].strip()
+                            break
+                    if len(foundvalues) == len(valuemap):
+                        break
+        if 'PV' in foundvalues:
+            if not validate_pv(foundvalues['PV']):
+                del foundvalues['PV']
+        license = foundvalues.pop('LICENSE', None)
+        if license:
+            liccomment = '# NOTE: spec file indicates the license may be "%s"' % license
+            for i, line in enumerate(lines_before):
+                if line.startswith('LICENSE ='):
+                    lines_before.insert(i, liccomment)
+                    break
+            else:
+                lines_before.append(liccomment)
+        extravalues.update(foundvalues)
 
 def register_recipe_handlers(handlers):
     # Set priorities with some gaps so that other plugins can insert

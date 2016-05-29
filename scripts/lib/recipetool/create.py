@@ -331,6 +331,7 @@ def create_recipe(args):
     import bb.process
     import tempfile
     import shutil
+    import oe.recipeutils
 
     pkgarch = ""
     if args.machine:
@@ -429,7 +430,8 @@ def create_recipe(args):
     lines_before.append('# Recipe created by %s' % os.path.basename(sys.argv[0]))
     lines_before.append('# This is the basis of a recipe and may need further editing in order to be fully functional.')
     lines_before.append('# (Feel free to remove these comments when editing.)')
-    lines_before.append('#')
+    # We need a blank line here so that patch_recipe_lines can rewind before the LICENSE comments
+    lines_before.append('')
 
     licvalues = guess_license(srctree_use)
     lic_files_chksum = []
@@ -561,28 +563,28 @@ def create_recipe(args):
         handler.process(srctree_use, classes, lines_before, lines_after, handled, extravalues)
 
     extrafiles = extravalues.pop('extrafiles', {})
+    extra_pn = extravalues.pop('PN', None)
+    extra_pv = extravalues.pop('PV', None)
 
-    if not realpv:
-        realpv = extravalues.get('PV', None)
-        if realpv:
-            if not validate_pv(realpv):
-                realpv = None
-            else:
-                realpv = realpv.lower().split()[0]
-                if '_' in realpv:
-                    realpv = realpv.replace('_', '-')
-    if not pn:
-        pn = extravalues.get('PN', None)
-        if pn:
-            if pn.startswith('GNU '):
-                pn = pn[4:]
-            if ' ' in pn:
-                # Probably a descriptive identifier rather than a proper name
-                pn = None
-            else:
-                pn = pn.lower()
-                if '_' in pn:
-                    pn = pn.replace('_', '-')
+    if extra_pv and not realpv:
+        realpv = extra_pv
+        if not validate_pv(realpv):
+            realpv = None
+        else:
+            realpv = realpv.lower().split()[0]
+            if '_' in realpv:
+                realpv = realpv.replace('_', '-')
+    if extra_pn and not pn:
+        pn = extra_pn
+        if pn.startswith('GNU '):
+            pn = pn[4:]
+        if ' ' in pn:
+            # Probably a descriptive identifier rather than a proper name
+            pn = None
+        else:
+            pn = pn.lower()
+            if '_' in pn:
+                pn = pn.replace('_', '-')
 
     if not outfile:
         if not pn:
@@ -661,6 +663,9 @@ def create_recipe(args):
         outlines.append('inherit %s' % ' '.join(classes))
         outlines.append('')
     outlines.extend(lines_after)
+
+    if extravalues:
+        _, outlines = oe.recipeutils.patch_recipe_lines(outlines, extravalues, trailing_newline=False)
 
     if args.extract_to:
         scriptutils.git_convert_standalone_clone(srctree)

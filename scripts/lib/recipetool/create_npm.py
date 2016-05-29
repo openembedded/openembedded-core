@@ -104,9 +104,9 @@ class NpmRecipeHandler(RecipeHandler):
                 classes.append('npm')
                 handled.append('buildsystem')
                 if 'description' in data:
-                    lines_before.append('SUMMARY = "%s"' % data['description'])
+                    extravalues['SUMMARY'] = data['description']
                 if 'homepage' in data:
-                    lines_before.append('HOMEPAGE = "%s"' % data['homepage'])
+                    extravalues['HOMEPAGE'] = data['homepage']
 
                 # Shrinkwrap
                 localfilesdir = tempfile.mkdtemp(prefix='recipetool-npm')
