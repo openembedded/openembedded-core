@@ -158,13 +158,18 @@ def split_var_value(value, assignment=True):
     return outlist
 
 
-def patch_recipe_lines(fromlines, values):
+def patch_recipe_lines(fromlines, values, trailing_newline=True):
     """Update or insert variable values into lines from a recipe.
        Note that some manual inspection/intervention may be required
        since this cannot handle all situations.
     """
 
     import bb.utils
+
+    if trailing_newline:
+        newline = '\n'
+    else:
+        newline = ''
 
     recipe_progression_res = []
     recipe_progression_restrs = []
@@ -196,7 +201,7 @@ def patch_recipe_lines(fromlines, values):
     def outputvalue(name, lines, rewindcomments=False):
         if values[name] is None:
             return
-        rawtext = '%s = "%s"\n' % (name, values[name])
+        rawtext = '%s = "%s"%s' % (name, values[name], newline)
         addlines = []
         if name in nowrap_vars:
             addlines.append(rawtext)
@@ -204,19 +209,19 @@ def patch_recipe_lines(fromlines, values):
             splitvalue = split_var_value(values[name], assignment=False)
             if len(splitvalue) > 1:
                 linesplit = ' \\\n' + (' ' * (len(name) + 4))
-                addlines.append('%s = "%s%s"\n' % (name, linesplit.join(splitvalue), linesplit))
+                addlines.append('%s = "%s%s"%s' % (name, linesplit.join(splitvalue), linesplit, newline))
             else:
                 addlines.append(rawtext)
         else:
             wrapped = textwrap.wrap(rawtext)
             for wrapline in wrapped[:-1]:
-                addlines.append('%s \\\n' % wrapline)
-            addlines.append('%s\n' % wrapped[-1])
+                addlines.append('%s \\%s' % (wrapline, newline))
+            addlines.append('%s%s' % (wrapped[-1], newline))
         if rewindcomments:
             # Ensure we insert the lines before any leading comments
             # (that we'd want to ensure remain leading the next value)
             for i, ln in reversed(list(enumerate(lines))):
-                if ln[0] != '#':
+                if not ln.startswith('#'):
                     lines[i+1:i+1] = addlines
                     break
             else:
