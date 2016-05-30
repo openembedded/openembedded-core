@@ -108,7 +108,7 @@ def prepare_data(args):
         if max_log_size != 0:
             for fail in jsondata['failures']:
                 if len(fail['log']) > max_log_size:
-                    print "Truncating log to allow for upload"
+                    print("Truncating log to allow for upload")
                     fail['log'] = fail['log'][-max_log_size:]
 
         data = json.dumps(jsondata, indent=4, sort_keys=True)
@@ -143,7 +143,7 @@ def send_data(data, args):
         logging.error(e.reason)
         sys.exit(1)
 
-    print response.read()
+    print(response.read())
 
 
 if __name__ == '__main__':
@@ -192,7 +192,7 @@ if __name__ == '__main__':
     args = arg_parse.parse_args()
 
     if (args.json == False):
-        print "Preparing to send errors to: "+args.server
+        print("Preparing to send errors to: "+args.server)
 
     data = prepare_data(args)
     send_data(data, args)

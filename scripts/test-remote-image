@@ -289,7 +289,7 @@ class HwAuto():
         result = bitbake("%s -c testimage" % image_type, ignore_status=True, postconfig=postconfig)
         testimage_results = ftools.read_file(os.path.join(get_bb_var("T", image_type), "log.do_testimage"))
         log.info('Runtime tests results for %s:' % image_type)
-        print testimage_results
+        print(testimage_results)
         return result
 
     # Start the procedure!

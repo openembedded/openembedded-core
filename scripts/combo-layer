@@ -519,7 +519,7 @@ def check_patch(patchfile):
 
 def drop_to_shell(workdir=None):
     if not sys.stdin.isatty():
-        print "Not a TTY so can't drop to shell for resolution, exiting."
+        print("Not a TTY so can't drop to shell for resolution, exiting.")
         return False
 
     shell = os.environ.get('SHELL', 'bash')
@@ -529,7 +529,7 @@ def drop_to_shell(workdir=None):
           '       exit 1  -- abort\n' % shell);
     ret = subprocess.call([shell], cwd=workdir)
     if ret != 0:
-        print "Aborting"
+        print("Aborting")
         return False
     else:
         return True

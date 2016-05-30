@@ -71,7 +71,7 @@ class Record:
         total = 0
         if self.size <= minsize:
             return 0
-        print "%10d %s" % (self.size, self.path)
+        print("%10d %s" % (self.size, self.path))
         for r in self.records:
             total += r.show(minsize)
         if len(self.records) == 0:
@@ -85,8 +85,8 @@ def main():
         minsize = int(sys.argv[1])
     rootfs = Record.create(".")
     total = rootfs.show(minsize)
-    print "Displayed %d/%d bytes (%.2f%%)" % \
-          (total, rootfs.size, 100 * float(total) / rootfs.size)
+    print("Displayed %d/%d bytes (%.2f%%)" % \
+          (total, rootfs.size, 100 * float(total) / rootfs.size))
 
 
 if __name__ == "__main__":
