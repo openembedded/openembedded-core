@@ -2,14 +2,14 @@ SUMMARY = "PNG image format decoding library"
 HOMEPAGE = "http://www.libpng.org/"
 SECTION = "libs"
 LICENSE = "Libpng"
-LIC_FILES_CHKSUM = "file://LICENSE;md5=06a1b6fde6d93170bb72201c8000bf3d \
-                    file://png.h;endline=112;md5=9a8b5f83e1e8046df672deab87f235be"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=327e99f9f6299935eab27262a3d0d97c \
+                    file://png.h;endline=149;md5=5b1126380a15a28a275c88bf13fe39c8"
 DEPENDS = "zlib"
 
 SRC_URI = "${GENTOO_MIRROR}/libpng-${PV}.tar.xz \
           "
-SRC_URI[md5sum] = "3bacb4728f6694a64ad9052769d6a4ce"
-SRC_URI[sha256sum] = "6c8f1849eb9264219bf5d703601e5abe92a58651ecae927a03d1a1aa15ee2083"
+SRC_URI[md5sum] = "f4ca54a3d945b8678fafed168c503f3b"
+SRC_URI[sha256sum] = "6b5a6ad5c5801ec4d24aacc87a0ed7b666cd586478174f69368a1d7747715226"
 
 BINCONFIG = "${bindir}/libpng-config ${bindir}/libpng16-config"
 
