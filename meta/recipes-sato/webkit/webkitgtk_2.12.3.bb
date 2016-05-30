@@ -95,3 +95,7 @@ ARM_INSTRUCTION_SET = "arm"
 # qemu: uncaught target signal 11 (Segmentation fault) - core dumped
 # Segmentation fault
 EXTRA_OECMAKE_append_powerpc = " -DENABLE_INTROSPECTION=OFF "
+
+# WebKit2-4.0: ../../libgpg-error-1.21/src/posix-lock.c:119: get_lock_object: Assertion `!"sizeof lock obj"' failed.
+# qemu: uncaught target signal 6 (Aborted) - core dumped
+EXTRA_OECMAKE_append_mips64 = " -DENABLE_INTROSPECTION=OFF "
