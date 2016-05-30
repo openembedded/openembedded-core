@@ -178,7 +178,7 @@ def package_qa_write_error(type, error, d):
     if logfile:
         p = d.getVar('P', True)
         with open(logfile, "a+") as f:
-            f.write("%s: %s [%s]" % (p, error, type))
+            f.write("%s: %s [%s]\n" % (p, error, type))
 
 def package_qa_handle_error(error_class, error_msg, d):
     package_qa_write_error(error_class, error_msg, d)
