@@ -278,7 +278,7 @@ class RecipetoolTests(RecipetoolBase):
                          '}\n']
         _, output = self._try_recipetool_appendfile('selftest-recipetool-appendfile', '/etc/selftest-replaceme-patched', self.testfile, '', expectedlines, ['testfile'])
         for line in output.splitlines():
-            if line.startswith('WARNING: '):
+            if 'WARNING: ' in line:
                 self.assertIn('add-file.patch', line, 'Unexpected warning found in output:\n%s' % line)
                 break
         else:
