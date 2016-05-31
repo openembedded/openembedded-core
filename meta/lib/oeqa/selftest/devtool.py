@@ -467,12 +467,11 @@ class DevtoolTests(DevtoolBase):
         testrecipes = 'perf kernel-devsrc package-index core-image-minimal meta-toolchain packagegroup-core-sdk meta-ide-support'.split()
         # Find actual name of gcc-source since it now includes the version - crude, but good enough for this purpose
         result = runCmd('bitbake-layers show-recipes gcc-source*')
-        reading = False
         for line in result.output.splitlines():
-            if line.startswith('=='):
-                reading = True
-            elif reading and not line.startswith(' '):
-                testrecipes.append(line.split(':')[0])
+            # just match those lines that contain a real target
+            m = re.match('(?P<recipe>^[a-zA-Z0-9.-]+)(?P<colon>:$)', line)
+            if m:
+                testrecipes.append(m.group('recipe'))
         for testrecipe in testrecipes:
             # Check it's a valid recipe
             bitbake('%s -e' % testrecipe)
