@@ -195,7 +195,7 @@ do_install_ptest () {
 	cp -r -L Makefile.org Makefile test ${D}${PTEST_PATH}
 	cp Configure config e_os.h ${D}${PTEST_PATH}
 	cp -r -L include ${D}${PTEST_PATH}
-	ln -sf ${base_libdir}/libcrypto.a ${D}${PTEST_PATH}
+	ln -sf ${libdir}/libcrypto.a ${D}${PTEST_PATH}
 	ln -sf ${libdir}/libssl.a ${D}${PTEST_PATH}
 	mkdir -p ${D}${PTEST_PATH}/crypto
 	cp crypto/constant_time_locl.h ${D}${PTEST_PATH}/crypto
