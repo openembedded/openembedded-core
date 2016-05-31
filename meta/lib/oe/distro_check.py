@@ -357,8 +357,8 @@ def compare_in_distro_packages_list(distro_check_dir, d):
 
     
     if tmp != None:
-	list = tmp.split(' ')
-	for item in list:
+        list = tmp.split(' ')
+        for item in list:
             matching_distros.append(item)
     bb.note("Matching: %s" % matching_distros)
     return matching_distros
