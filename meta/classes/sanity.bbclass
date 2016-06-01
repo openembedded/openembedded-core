@@ -774,7 +774,6 @@ def sanity_check_locale(d):
         locale.setlocale(locale.LC_ALL, "en_US.UTF-8")
     except locale.Error:
         raise_sanity_error("You system needs to support the en_US.UTF-8 locale.", d)
-    locale.setlocale(locale.LC_ALL, "C")
 
 def check_sanity_everybuild(status, d):
     import os, stat
