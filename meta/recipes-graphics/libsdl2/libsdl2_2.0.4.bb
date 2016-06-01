@@ -15,7 +15,9 @@ PROVIDES = "virtual/libsdl2"
 DEPENDS_class-nativesdk = "${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'virtual/nativesdk-libx11 nativesdk-libxrandr nativesdk-libxrender nativesdk-libxext', '', d)}"
 
 SRC_URI = "http://www.libsdl.org/release/SDL2-${PV}.tar.gz \
-           file://linkage.patch"
+           file://linkage.patch \
+           file://0001-src-video-make-it-compatible-with-wayland-1.10.patch \
+"
 
 S = "${WORKDIR}/SDL2-${PV}"
 
