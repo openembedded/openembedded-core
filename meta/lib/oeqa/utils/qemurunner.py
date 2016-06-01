@@ -234,7 +234,7 @@ class QemuRunner:
                         data = data + sock.recv(1024)
                         if data:
                             try:
-                                data = data.decode("utf-8")
+                                data = data.decode("utf-8", errors="surrogateescape")
                                 bootlog += data
                                 data = b''
                                 if re.search(".* login:", bootlog):
