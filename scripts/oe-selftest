@@ -371,7 +371,7 @@ def coverage_setup(coverage_source, coverage_include, coverage_omit):
     import subprocess
     builddir = os.environ.get("BUILDDIR")
     pokydir = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
-    curcommit= subprocess.check_output(["git", "--git-dir", os.path.join(pokydir, ".git"), "rev-parse", "HEAD"])
+    curcommit= subprocess.check_output(["git", "--git-dir", os.path.join(pokydir, ".git"), "rev-parse", "HEAD"]).decode('utf-8')
     coveragerc = "%s/.coveragerc" % builddir
     data_file = "%s/.coverage." % builddir
     data_file += datetime.datetime.now().strftime('%Y%m%dT%H%M%S')

@@ -45,7 +45,7 @@ def run_command(cmd):
     if pipe.returncode != 0:
         print("Execute command '%s' failed." % cmd)
         sys.exit(1)
-    return output
+    return output.decode('utf-8')
 
 def get_cur_arch_dirs(workdir, arch_dirs):
     pattern = workdir + '/(.*?)/'

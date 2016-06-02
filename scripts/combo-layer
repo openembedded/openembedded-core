@@ -198,7 +198,7 @@ def runcmd(cmd,destdir=None,printerr=True,out=None,env=None):
         raise e
 
     err.seek(0)
-    output = err.read()
+    output = err.read().decode('utf-8')
     logger.debug("output: %s" % output.replace(chr(0), '\\0'))
     return output
 
