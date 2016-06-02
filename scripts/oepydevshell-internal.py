@@ -67,7 +67,7 @@ try:
                     i = i[4096:]
                 if sys.stdin in ready:
                     echonocbreak(sys.stdin.fileno())
-                    o = raw_input()
+                    o = input()
                     cbreaknoecho(sys.stdin.fileno())
                     pty.write(o + "\n")
             except (IOError, OSError) as e:

@@ -44,12 +44,12 @@ def getPayloadLimit(url):
 
 def ask_for_contactdetails():
     print("Please enter your name and your email (optionally), they'll be saved in the file you send.")
-    username = raw_input("Name (required): ")
-    email = raw_input("E-mail (not required): ")
+    username = input("Name (required): ")
+    email = input("E-mail (not required): ")
     return username, email
 
 def edit_content(json_file_path):
-    edit = raw_input("Review information before sending? (y/n): ")
+    edit = input("Review information before sending? (y/n): ")
     if 'y' in edit or 'Y' in edit:
         editor = os.environ.get('EDITOR', None)
         if editor:
