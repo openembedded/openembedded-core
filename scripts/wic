@@ -28,8 +28,6 @@
 # AUTHORS
 # Tom Zanussi <tom.zanussi (at] linux.intel.com>
 #
-from __future__ import print_function
-
 __version__ = "0.2.0"
 
 # Python Standard Library modules
