@@ -281,14 +281,6 @@ class Partition():
         msger.debug("Added %d extra blocks to %s to get to %d total blocks" % \
                     (extra_blocks, self.mountpoint, blocks))
 
-        # Ensure total sectors is an integral number of sectors per
-        # track or mcopy will complain. Sectors are 512 bytes, and we
-        # generate images with 32 sectors per track. This calculation
-        # is done in blocks, thus the mod by 16 instead of 32. Apply
-        # sector count fix only when needed.
-        if blocks % 16 != 0:
-            blocks += (16 - (blocks % 16))
-
         label_str = "-n boot"
         if self.label:
             label_str = "-n %s" % self.label

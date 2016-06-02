@@ -441,12 +441,6 @@ class IsoImagePlugin(SourcePlugin):
                     % (part.mountpoint, blocks)
             msger.debug(msg)
 
-            # Ensure total sectors is an integral number of sectors per
-            # track or mcopy will complain. Sectors are 512 bytes, and we
-            # generate images with 32 sectors per track. This calculation is
-            # done in blocks, thus the mod by 16 instead of 32.
-            blocks += (16 - (blocks % 16))
-
             # dosfs image for EFI boot
             bootimg = "%s/efi.img" % isodir
 
