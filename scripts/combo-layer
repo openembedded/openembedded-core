@@ -185,10 +185,10 @@ def runcmd(cmd,destdir=None,printerr=True,out=None,env=None):
     """
     logger.debug("run cmd '%s' in %s" % (cmd, os.getcwd() if destdir is None else destdir))
     if not out:
-        out = os.tmpfile()
+        out = tempfile.TemporaryFile()
         err = out
     else:
-        err = os.tmpfile()
+        err = tempfile.TemporaryFile()
     try:
         subprocess.check_call(cmd, stdout=out, stderr=err, cwd=destdir, shell=isinstance(cmd, str), env=env or os.environ)
     except subprocess.CalledProcessError as e:
