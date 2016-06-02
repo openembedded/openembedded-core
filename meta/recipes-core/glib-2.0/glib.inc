@@ -26,7 +26,7 @@ PACKAGES += "${PN}-codegen ${PN}-utils"
 
 LEAD_SONAME = "libglib-2.0.*"
 
-inherit autotools gettext gtk-doc pkgconfig ptest-gnome upstream-version-is-even bash-completion gio-module-cache
+inherit autotools gettext gtk-doc pkgconfig ptest-gnome upstream-version-is-even bash-completion gio-module-cache python3native
 
 S = "${WORKDIR}/glib-${PV}"
 
@@ -44,7 +44,7 @@ EXTRA_OECONF_class-native = "${CORECONF} --disable-selinux"
 EXTRA_OECONF_append_libc-uclibc = " --with-libiconv=gnu"
 
 do_configure_prepend() {
-	sed -i -e '1s,#!.*,#!${USRBINPATH}/env python,' ${S}/gio/gdbus-2.0/codegen/gdbus-codegen.in
+	sed -i -e '1s,#!.*,#!${USRBINPATH}/env python3,' ${S}/gio/gdbus-2.0/codegen/gdbus-codegen.in
 }
 
 FILES_${PN} = "${libdir}/lib*${SOLIBS} \
@@ -73,7 +73,7 @@ USE_NLS = "yes"
 
 do_install_append () {
 	if [ -f ${D}${bindir}/gtester-report ]; then
-		sed ${D}${bindir}/gtester-report -i -e '1s|^#!.*|#!/usr/bin/env python|'
+		sed ${D}${bindir}/gtester-report -i -e '1s|^#!.*|#!/usr/bin/env python3|'
 	fi
 
 	# Remove some unpackaged files
@@ -109,8 +109,6 @@ RDEPENDS_${PN}-ptest += "\
             tzdata-asia \
             tzdata-europe \
             tzdata-posix \
-            python-pygobject \
-            python-dbus \
             shared-mime-info \
            "
 
