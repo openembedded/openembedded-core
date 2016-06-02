@@ -7,7 +7,7 @@
 import sys
 import os
 import subprocess
-import urllib2
+import urllib.request
 
 
 # Allow importing scripts/lib modules
@@ -47,7 +47,7 @@ def verifyHomepage(bbhandler):
             homepage = data.getVar("HOMEPAGE", True)
             if homepage:
                 try:
-                    urllib2.urlopen(homepage, timeout=5)
+                    urllib.request.urlopen(homepage, timeout=5)
                 except Exception:
                     count = count + wgetHomepage(os.path.basename(realfn), homepage)
             checked.append(realfn)
