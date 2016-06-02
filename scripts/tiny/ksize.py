@@ -28,8 +28,6 @@ import sys
 import getopt
 import os
 from subprocess import *
-from string import join
-
 
 def usage():
     prog = os.path.basename(sys.argv[0])
@@ -66,7 +64,7 @@ class Report:
 
         p = Popen("ls " + path + "/*.o | grep -v built-in.o",
                   shell=True, stdout=PIPE, stderr=PIPE)
-        glob = join(p.communicate()[0].splitlines())
+        glob = ' '.join(p.communicate()[0].splitlines())
         oreport = Report(glob, path + "/*.o")
         oreport.sizes.title = path + "/*.o"
         r.parts.append(oreport)
