@@ -95,9 +95,9 @@ def exportTests(d,tc):
                     if not os.path.exists(target_folder):
                         shutil.copytree(foldername, target_folder)
         if not isfolder:
-            shutil.copy2(mod.filename, os.path.join(exportpath, "oeqa/runtime"))
+            shutil.copy2(mod.path, os.path.join(exportpath, "oeqa/runtime"))
     # copy __init__.py files
-    oeqadir = pkgutil.get_loader("oeqa").filename
+    oeqadir = os.path.dirname(pkgutil.get_loader("oeqa").path)
     shutil.copy2(os.path.join(oeqadir, "__init__.py"), os.path.join(exportpath, "oeqa"))
     shutil.copy2(os.path.join(oeqadir, "runtime/__init__.py"), os.path.join(exportpath, "oeqa/runtime"))
     # copy oeqa/oetest.py and oeqa/runexported.py
