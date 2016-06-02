@@ -314,7 +314,7 @@ FILES_${PN}-analyze = "${bindir}/systemd-analyze"
 FILES_${PN}-initramfs = "/init"
 RDEPENDS_${PN}-initramfs = "${PN}"
 
-RDEPENDS_${PN}-ptest += "gawk make perl python bash xz \
+RDEPENDS_${PN}-ptest += "gawk make perl bash xz \
                          tzdata tzdata-americas tzdata-asia \
                          tzdata-europe tzdata-africa tzdata-antarctica \
                          tzdata-arctic tzdata-atlantic tzdata-australia \
