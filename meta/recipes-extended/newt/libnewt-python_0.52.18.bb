@@ -1,10 +1,10 @@
 require recipes-extended/newt/libnewt_${PV}.bb
 
 SUMMARY .= " - python"
-DEPENDS = "libnewt python"
-RDEPENDS_${PN} += "python-core"
+DEPENDS = "libnewt python3"
+RDEPENDS_${PN} += "python3-core"
 
-inherit pythonnative python-dir
+inherit python3native python3-dir
 
 EXTRA_OECONF += "--with-python"
 EXTRA_OEMAKE += "PYTHONVERS=${PYTHON_DIR}"
