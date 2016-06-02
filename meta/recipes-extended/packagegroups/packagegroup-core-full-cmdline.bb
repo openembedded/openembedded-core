@@ -143,7 +143,6 @@ RDEPENDS_packagegroup-core-full-cmdline-sys-services = "\
     cronie \
     dbus \
     dbus-glib \
-    python-dbus \
     elfutils \
     gzip \
     less \
