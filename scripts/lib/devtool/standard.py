@@ -998,7 +998,7 @@ def _export_local_files(srctree, rd, destdir):
         bb.process.run(['git', 'checkout', tree, '--', '.'], cwd=srctree,
                         env=dict(os.environ, GIT_WORK_TREE=destdir,
                                  GIT_INDEX_FILE=tmp_index))
-        new_set = _git_ls_tree(srctree, tree, True).keys()
+        new_set = list(_git_ls_tree(srctree, tree, True).keys())
     elif os.path.isdir(local_files_dir):
         # If not tracked by Git, just copy from working copy
         new_set = _ls_tree(os.path.join(srctree, 'oe-local-files'))
@@ -1309,7 +1309,7 @@ def reset(args, config, basepath, workspace):
         raise DevtoolError("Recipe must be specified, or specify -a/--all to "
                            "reset all recipes")
     if args.all:
-        recipes = workspace.keys()
+        recipes = list(workspace.keys())
     else:
         recipes = [args.recipename]
 

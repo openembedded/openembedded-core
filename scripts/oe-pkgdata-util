@@ -240,7 +240,7 @@ def lookup_pkg(args):
         sys.exit(1)
 
     if args.reverse:
-        items = mappings.values()
+        items = list(mappings.values())
     else:
         items = []
         for pkg in pkgs:

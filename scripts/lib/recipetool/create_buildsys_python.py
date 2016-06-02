@@ -361,7 +361,7 @@ class PythonRecipeHandler(RecipeHandler):
 
         # Naive mapping of setup() arguments to PKG-INFO field names
         for d in [info, non_literals]:
-            for key, value in d.items():
+            for key, value in list(d.items()):
                 new_key = _map(key)
                 if new_key != key:
                     del d[key]
@@ -443,7 +443,7 @@ class PythonRecipeHandler(RecipeHandler):
                 elif new_value != value:
                     info[variable] = new_value
             elif hasattr(value, 'items'):
-                for dkey, dvalue in value.items():
+                for dkey, dvalue in list(value.items()):
                     new_list = []
                     for pos, a_value in enumerate(dvalue):
                         new_value = replace_value(search, replace, a_value)
@@ -608,7 +608,7 @@ def gather_setup_info(fileobj):
     visitor.visit(parsed)
 
     non_literals, extensions = {}, []
-    for key, value in visitor.keywords.items():
+    for key, value in list(visitor.keywords.items()):
         if key == 'ext_modules':
             if isinstance(value, list):
                 for ext in value:

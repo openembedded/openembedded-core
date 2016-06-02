@@ -682,7 +682,7 @@ class AutotoolsRecipeHandler(RecipeHandler):
                 process_macro(in_keyword, partial)
 
         if extravalues:
-            for k,v in extravalues.items():
+            for k,v in list(extravalues.items()):
                 if v:
                     if v.startswith('$') or v.startswith('@') or v.startswith('%'):
                         del extravalues[k]

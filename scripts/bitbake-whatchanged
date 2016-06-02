@@ -120,7 +120,7 @@ def print_added(d_new = None, d_old = None):
     Print the newly added tasks
     """
     added = {}
-    for k in d_new.keys():
+    for k in list(d_new.keys()):
         if k not in d_old:
             # Add the new one to added dict, and remove it from
             # d_new, so the remaining ones are the changed ones
@@ -155,7 +155,7 @@ def print_vrchanged(d_new = None, d_old = None, vr = None):
     """
     pvchanged = {}
     counter = 0
-    for k in d_new.keys():
+    for k in list(d_new.keys()):
         if d_new.get(k).get(vr) != d_old.get(k).get(vr):
             counter += 1
             pn, task = split_pntask(k)
@@ -279,7 +279,7 @@ Note:
 
         # Remove the same one from both stamps.
         cnt_unchanged = 0
-        for k in new_dict.keys():
+        for k in list(new_dict.keys()):
             if k in old_dict:
                 cnt_unchanged += 1
                 del(new_dict[k])

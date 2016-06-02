@@ -1186,7 +1186,7 @@ def update_with_history(conf, components, revisions, repos):
         msg = conf_commit_msg(conf, components)
         new_tree = runcmd("git write-tree", **wargs).strip()
         new_rev = runcmd("git commit-tree".split() +
-                         add_p([head] + additional_heads.keys()) +
+                         add_p([head] + list(additional_heads.keys())) +
                          ["-m", msg, new_tree],
                          **wargs).strip()
         # And done! This is the first time we change the HEAD in the actual work tree.
