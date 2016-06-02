@@ -9,7 +9,8 @@ LIC_FILES_CHKSUM = "file://debian/copyright;md5=e7358b9541ccf3029e9705ed8de57968
 
 # This is needed to ensure we can run the postinst at image creation time
 DEPENDS = "ca-certificates-native"
-DEPENDS_class-native = ""
+DEPENDS_class-native = "openssl-native"
+DEPENDS_class-nativesdk = "ca-certificates-native openssl-native"
 
 SRCREV = "f54715702c5c0581c9461f78fd84e2c8d2ec243c"
 
