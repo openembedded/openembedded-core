@@ -16,7 +16,6 @@ SRC_URI[archive.sha256sum] = "be699d484371111abae754e669187215df73e21533f461e513
 EXTRA_OECONF += " --disable-nss --with-distributor-name=${DISTRO}"
 
 do_configure_prepend() {
-    touch ${S}/gnome-doc-utils.make
     sed -i -e s:help::g ${S}/Makefile.am
 }
 
