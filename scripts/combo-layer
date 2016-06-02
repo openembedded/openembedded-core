@@ -33,6 +33,7 @@ import pipes
 import shutil
 from collections import OrderedDict
 from string import Template
+from functools import reduce
 
 __version__ = "0.2.1"
 
