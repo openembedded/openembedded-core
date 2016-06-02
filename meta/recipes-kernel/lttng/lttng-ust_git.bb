@@ -11,7 +11,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=c963eb366b781252b0bf0fdf1624d9e9 \
 inherit autotools lib_package
 
 DEPENDS = "liburcu util-linux"
-RDEPENDS_${PN}-bin = "python-core"
+RDEPENDS_${PN}-bin = "python3-core"
 
 # For backwards compatibility after rename
 RPROVIDES_${PN} = "lttng2-ust"
@@ -26,6 +26,13 @@ SRC_URI = "git://git.lttng.org/lttng-ust.git;branch=stable-2.7 \
            file://lttng-ust-doc-examples-disable.patch \
            file://lttng-ust-add-support-for-aarch64_be.patch \
           "
+
+do_install_append() {
+        # Patch python tools to use Python 3; they should be source compatible, but
+        # still refer to Python 2 in the shebang
+        sed -i -e '1s,#!.*python.*,#!${bindir}/python3,' ${D}${bindir}/lttng-gen-tp
+}
+
 
 S = "${WORKDIR}/git"
 
