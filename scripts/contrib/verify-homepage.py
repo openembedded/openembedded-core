@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 # This script can be used to verify HOMEPAGE values for all recipes in
 # the current configuration.

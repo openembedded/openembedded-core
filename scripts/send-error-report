@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 # Sends an error report (if the report-error class was enabled) to a
 # remote server.
