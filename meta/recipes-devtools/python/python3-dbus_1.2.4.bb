@@ -3,24 +3,25 @@ SECTION = "devel/python"
 HOMEPAGE = "http://www.freedesktop.org/Software/dbus"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://COPYING;md5=0b83047ce9e948b67c0facc5f233476a"
-DEPENDS = "expat dbus dbus-glib virtual/libintl python-pyrex-native"
+DEPENDS = "expat dbus dbus-glib virtual/libintl"
 
 SRC_URI = "http://dbus.freedesktop.org/releases/dbus-python/dbus-python-${PV}.tar.gz \
 "
 
-SRC_URI[md5sum] = "b09cd2d1a057cc432ce944de3fc06bf7"
-SRC_URI[sha256sum] = "e12c6c8b2bf3a9302f75166952cbe41d6b38c3441bbc6767dbd498942316c6df"
+SRC_URI[md5sum] = "7372a588c83a7232b4e08159bfd48fe5"
+SRC_URI[sha256sum] = "e2f1d6871f74fba23652e51d10873e54f71adab0525833c19bad9e99b1b2f9cc"
 S = "${WORKDIR}/dbus-python-${PV}"
 
-inherit distutils-base autotools pkgconfig
+inherit distutils3-base autotools pkgconfig
 
 PACKAGECONFIG ?= ""
 PACKAGECONFIG[docs] = "--enable-html-docs,--disable-html-docs,python-docutils-native"
 PACKAGECONFIG[api-docs] = "--enable-api-docs,--disable-api-docs,python-docutils-native python-epydoc-native"
 
-export STAGING_LIBDIR
-export STAGING_INCDIR
+do_configure_prepend() {
+    export PYTHON=${PYTHON}
+}
 
-RDEPENDS_${PN} = "python-io python-logging python-stringold python-threading python-xml"
+RDEPENDS_${PN} = "python3-io python3-logging python3-stringold python3-threading python3-xml"
 
 FILES_${PN}-dev += "${libdir}/pkgconfig"
