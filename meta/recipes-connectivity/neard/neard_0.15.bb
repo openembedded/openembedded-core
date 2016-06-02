@@ -33,26 +33,15 @@ do_install_append() {
 		  > ${D}${sysconfdir}/init.d/neard
 		chmod 0755 ${D}${sysconfdir}/init.d/neard
 	fi
-
-	# Install the tests for neard-tests
-	install -d ${D}${libdir}/neard
-	install -m 0755 ${S}/test/* ${D}${libdir}/${BPN}/
-	install -m 0755 ${B}/tools/nfctool/nfctool ${D}${libdir}/${BPN}/
 }
 
-PACKAGES =+ "${PN}-tests"
-
-FILES_${PN}-tests = "${libdir}/${BPN}/*-test"
-
-RDEPENDS_${PN} = "dbus python python-dbus python-pygobject"
+RDEPENDS_${PN} = "dbus"
 
 # Bluez & Wifi are not mandatory except for handover
 RRECOMMENDS_${PN} = "\
                      ${@bb.utils.contains('DISTRO_FEATURES', 'bluetooth', '${BLUEZ}', '', d)} \
                      ${@bb.utils.contains('DISTRO_FEATURES', 'wifi','wpa-supplicant', '', d)} \
                     "
-
-RDEPENDS_${PN}-tests = "python python-dbus python-pygobject"
 
 INITSCRIPT_NAME = "neard"
 INITSCRIPT_PARAMS = "defaults 64"
