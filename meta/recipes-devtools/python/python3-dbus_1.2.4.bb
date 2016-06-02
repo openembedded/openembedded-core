@@ -15,8 +15,8 @@ S = "${WORKDIR}/dbus-python-${PV}"
 inherit distutils3-base autotools pkgconfig
 
 PACKAGECONFIG ?= ""
-PACKAGECONFIG[docs] = "--enable-html-docs,--disable-html-docs,python-docutils-native"
-PACKAGECONFIG[api-docs] = "--enable-api-docs,--disable-api-docs,python-docutils-native python-epydoc-native"
+PACKAGECONFIG[docs] = "--enable-html-docs,--disable-html-docs,python3-docutils-native"
+PACKAGECONFIG[api-docs] = "--enable-api-docs,--disable-api-docs,python3-docutils-native python3-epydoc-native"
 
 do_configure_prepend() {
     export PYTHON=${PYTHON}
