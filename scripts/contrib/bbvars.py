@@ -37,9 +37,9 @@ def recipe_bbvars(recipe):
     vset = set()
     try:
         r = open(recipe)
-    except IOError as (errno, strerror):
+    except IOError as err:
         print('WARNING: Failed to open recipe ', recipe)
-        print(strerror)
+        print(err.args[1])
 
     for line in r:
         # Strip any comments from the line
@@ -71,9 +71,9 @@ def bbvar_is_documented(var, docfiles):
     for doc in docfiles:
         try:
             f = open(doc)
-        except IOError as (errno, strerror):
+        except IOError as err:
             print('WARNING: Failed to open doc ', doc)
-            print(strerror)
+            print(err.args[1])
         for line in f:
             if prog.match(line):
                 return True
@@ -87,8 +87,8 @@ def bbvar_doctag(var, docconf):
 
     try:
         f = open(docconf)
-    except IOError as (errno, strerror):
-        return strerror
+    except IOError as err:
+        return err.args[1]
 
     for line in f:
         m = prog.search(line)
@@ -109,7 +109,7 @@ def main():
     # Collect and validate input
     try:
         opts, args = getopt.getopt(sys.argv[1:], "d:hm:t:T", ["help"])
-    except getopt.GetoptError, err:
+    except getopt.GetoptError as err:
         print('%s' % str(err))
         usage()
         sys.exit(2)

@@ -133,7 +133,7 @@ class Report:
 def main():
     try:
         opts, args = getopt.getopt(sys.argv[1:], "dh", ["help"])
-    except getopt.GetoptError, err:
+    except getopt.GetoptError as err:
         print('%s' % str(err))
         usage()
         sys.exit(2)

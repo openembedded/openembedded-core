@@ -190,7 +190,7 @@ def runcmd(cmd,destdir=None,printerr=True,out=None,env=None):
         err = os.tmpfile()
     try:
         subprocess.check_call(cmd, stdout=out, stderr=err, cwd=destdir, shell=isinstance(cmd, str), env=env or os.environ)
-    except subprocess.CalledProcessError,e:
+    except subprocess.CalledProcessError as e:
         err.seek(0)
         if printerr:
             logger.error("%s" % err.read())
@@ -429,7 +429,7 @@ file_exclude = %s''' % (name, file_filter or '<empty>', repo.get('file_exclude',
                     runcmd('git replace --graft %s %s' % (start, startrev))
             try:
                 runcmd(merge)
-            except Exception, error:
+            except Exception as error:
                 logger.info('''Merging component repository history failed, perhaps because of merge conflicts.
 It may be possible to commit anyway after resolving these conflicts.
 
