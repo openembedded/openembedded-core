@@ -9,7 +9,7 @@ SRC_URI = "https://www.cups.org/software/${PV}/${BP}-source.tar.bz2 \
            file://cups_serverbin.patch \
 	  "
 
-UPSTREAM_CHECK_URI = "http://www.cups.org/software.php"
+UPSTREAM_CHECK_URI = "https://github.com/apple/cups/releases"
 UPSTREAM_CHECK_REGEX = "cups-(?P<pver>\d+\.\d+(\.\d+)?)-source.tar"
 
 LEAD_SONAME = "libcupsdriver.so"
