@@ -2,7 +2,7 @@ require kexec-tools.inc
 export LDFLAGS = "-L${STAGING_LIBDIR}"
 EXTRA_OECONF = " --with-zlib=yes"
 
-SRC_URI += "file://kexec-tools-Refine-kdump-device_tree-sort.patch \
+SRC_URI += " \
             file://kexec-aarch64.patch \
             file://kexec-x32.patch \
             file://0002-powerpc-change-the-memory-size-limit.patch \
@@ -10,8 +10,8 @@ SRC_URI += "file://kexec-tools-Refine-kdump-device_tree-sort.patch \
             file://0001-vmcore-dmesg-Define-_GNU_SOURCE.patch \
          "
 
-SRC_URI[md5sum] = "86de066859f289048f1b286af6f03f78"
-SRC_URI[sha256sum] = "84f652ebf1de3f7b9de757a50cdbf6d5639d88c1d5b5ef9f525edde5ef9590c2"
+SRC_URI[md5sum] = "10ddaae0e86af54407b164a1f5a39cc3"
+SRC_URI[sha256sum] = "cc7b60dad0da202004048a6179d8a53606943062dd627a2edba45a8ea3a85135"
 
 PACKAGES =+ "kexec kdump vmcore-dmesg"
 
