@@ -9,15 +9,12 @@ LICENSE = "GPL-2.0+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=ecc0551bf54ad97f6b541720f84d6569"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/watchdog/watchdog-${PV}.tar.gz \
-           file://fixsepbuild.patch \
-	   file://fix-ping-failure.patch \
 	   file://watchdog-init.patch \
 	   file://watchdog-conf.patch \
-	   file://0001-Fix-build-issues-found-with-non-glibc-C-libraries.patch \
 "
 
-SRC_URI[md5sum] = "5b2dba0c593942f4acc100bca0d560c4"
-SRC_URI[sha256sum] = "620b2f49e9879f2e85c73d4c1f422f9101e6b38e824fea2414befd8bb6866ad1"
+SRC_URI[md5sum] = "678c32f6f35a0492c9c1b76b4aa88828"
+SRC_URI[sha256sum] = "ffdc865137ad5d8e53664bd22bad4de6ca136d1b4636720320cb52af0c18947c"
 
 UPSTREAM_CHECK_URI = "http://sourceforge.net/projects/watchdog/files/watchdog/"
 UPSTREAM_CHECK_REGEX = "/watchdog/(?P<pver>(\d+[\.\-_]*)+)/"
