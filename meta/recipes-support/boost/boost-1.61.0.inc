@@ -13,7 +13,7 @@ BOOST_P = "boost_${BOOST_VER}"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/boost/${BOOST_P}.tar.bz2"
 
-SRC_URI[md5sum] = "65a840e1a0b13a558ff19eeb2c4f0cbe"
-SRC_URI[sha256sum] = "686affff989ac2488f79a97b9479efb9f2abae035b5ed4d8226de6857933fd3b"
+SRC_URI[md5sum] = "6095876341956f65f9d35939ccea1a9f"
+SRC_URI[sha256sum] = "a547bd06c2fd9a71ba1d169d9cf0339da7ebf4753849a8f7d6fdb8feee99b640"
 
 S = "${WORKDIR}/${BOOST_P}"
