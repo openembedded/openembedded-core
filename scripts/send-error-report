@@ -125,7 +125,7 @@ def prepare_data(args):
         with open(args.error_file, 'r') as json_fp:
             data = json_fp.read()
 
-    return data
+    return data.encode('utf-8')
 
 
 def send_data(data, args):
