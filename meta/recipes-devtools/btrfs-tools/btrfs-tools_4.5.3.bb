@@ -13,10 +13,9 @@ SECTION = "base"
 DEPENDS = "util-linux attr e2fsprogs lzo acl"
 RDEPENDS_${PN} = "libgcc"
 
-SRCREV = "21258fab2caeade405a15ba932d373b364aa6e8c"
+SRCREV = "b72438362b2dbce880cefe9427ffe0947a94e060"
 SRC_URI = "git://git.kernel.org/pub/scm/linux/kernel/git/kdave/btrfs-progs.git \
            file://fix-parallel.patch \
-           file://fix-symlink-creation-multiple-times.patch \
 "
 
 inherit autotools-brokensep pkgconfig
