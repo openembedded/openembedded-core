@@ -190,7 +190,7 @@ class FileChange:
 
 
 def blob_to_dict(blob):
-    alines = [line.decode() for line in blob.data_stream.read().splitlines()]
+    alines = [line for line in blob.data_stream.read().decode('utf-8').splitlines()]
     adict = {}
     for line in alines:
         splitv = [i.strip() for i in line.split('=',1)]
@@ -378,34 +378,34 @@ def process_changes(repopath, revision1, revision2='HEAD', report_all=False, rep
             if filename == 'latest':
                 changes.extend(compare_dict_blobs(path, d.a_blob, d.b_blob, report_all, report_ver))
             elif filename.startswith('latest.'):
-                chg = ChangeRecord(path, filename, d.a_blob.data_stream.read(), d.b_blob.data_stream.read(), True)
+                chg = ChangeRecord(path, filename, d.a_blob.data_stream.read().decode('utf-8'), d.b_blob.data_stream.read().decode('utf-8'), True)
                 changes.append(chg)
         elif path.startswith('images/'):
             filename = os.path.basename(d.a_blob.path)
             if filename in img_monitor_files:
                 if filename == 'files-in-image.txt':
-                    alines = d.a_blob.data_stream.read().splitlines()
-                    blines = d.b_blob.data_stream.read().splitlines()
+                    alines = d.a_blob.data_stream.read().decode('utf-8').splitlines()
+                    blines = d.b_blob.data_stream.read().decode('utf-8').splitlines()
                     filechanges = compare_file_lists(alines,blines)
                     if filechanges:
                         chg = ChangeRecord(path, filename, None, None, True)
                         chg.filechanges = filechanges
                         changes.append(chg)
                 elif filename == 'installed-package-names.txt':
-                    alines = d.a_blob.data_stream.read().splitlines()
-                    blines = d.b_blob.data_stream.read().splitlines()
+                    alines = d.a_blob.data_stream.read().decode('utf-8').splitlines()
+                    blines = d.b_blob.data_stream.read().decode('utf-8').splitlines()
                     filechanges = compare_lists(alines,blines)
                     if filechanges:
                         chg = ChangeRecord(path, filename, None, None, True)
                         chg.filechanges = filechanges
                         changes.append(chg)
                 else:
-                    chg = ChangeRecord(path, filename, d.a_blob.data_stream.read(), d.b_blob.data_stream.read(), True)
+                    chg = ChangeRecord(path, filename, d.a_blob.data_stream.read().decode('utf-8'), d.b_blob.data_stream.read().decode('utf-8'), True)
                     changes.append(chg)
             elif filename == 'image-info.txt':
                 changes.extend(compare_dict_blobs(path, d.a_blob, d.b_blob, report_all, report_ver))
             elif '/image-files/' in path:
-                chg = ChangeRecord(path, filename, d.a_blob.data_stream.read(), d.b_blob.data_stream.read(), True)
+                chg = ChangeRecord(path, filename, d.a_blob.data_stream.read().decode('utf-8'), d.b_blob.data_stream.read().decode('utf-8'), True)
                 changes.append(chg)
 
     # Look for added preinst/postinst/prerm/postrm
@@ -419,7 +419,7 @@ def process_changes(repopath, revision1, revision2='HEAD', report_all=False, rep
             if filename == 'latest':
                 addedpkgs.append(path)
             elif filename.startswith('latest.'):
-                chg = ChangeRecord(path, filename[7:], '', d.b_blob.data_stream.read(), True)
+                chg = ChangeRecord(path, filename[7:], '', d.b_blob.data_stream.read().decode('utf-8'), True)
                 addedchanges.append(chg)
     for chg in addedchanges:
         found = False
@@ -436,7 +436,7 @@ def process_changes(repopath, revision1, revision2='HEAD', report_all=False, rep
         if path.startswith('packages/'):
             filename = os.path.basename(d.a_blob.path)
             if filename != 'latest' and filename.startswith('latest.'):
-                chg = ChangeRecord(path, filename[7:], d.a_blob.data_stream.read(), '', True)
+                chg = ChangeRecord(path, filename[7:], d.a_blob.data_stream.read().decode('utf-8'), '', True)
                 changes.append(chg)
 
     # Link related changes
