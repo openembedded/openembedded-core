@@ -101,6 +101,7 @@ BACKPORTS = ""
 
 SRC_URI[md5sum] = "c9616fd448f980259c31de613e575719"
 SRC_URI[sha256sum] = "b84f5592e9218b73dbae612b5253035a7b34a9a1f7688d2e1bfaaf7267d5c4db"
+UPSTREAM_CHECK_REGEX = "gcc-(?P<pver>5\.\d+\.\d+).tar"
 
 #S = "${TMPDIR}/work-shared/gcc-${PV}-${PR}/gcc-${SNAP}"
 S = "${TMPDIR}/work-shared/gcc-${PV}-${PR}/gcc-${PV}"
