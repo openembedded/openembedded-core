@@ -1,7 +1,7 @@
-From a57604e205e6535acd9989444ad1f5f5038f4fba Mon Sep 17 00:00:00 2001
+From e08b3677dd04d6ec407ba8f74f601b2d51310eff Mon Sep 17 00:00:00 2001
 From: Alexander Kanavin <alex.kanavin@gmail.com>
 Date: Thu, 8 Oct 2015 18:30:35 +0300
-Subject: [PATCH 1/4] Prefix pkg-config paths with PKG_CONFIG_SYSROOT_DIR
+Subject: [PATCH 5/5] Prefix pkg-config paths with PKG_CONFIG_SYSROOT_DIR
  environment variable
 
 This environment variable sets the location of sysroot directory in cross-compilation
@@ -9,14 +9,13 @@ environments; if the variable is not set, the prefix will be empty.
 
 Upstream-Status: Pending [review on oe-core list]
 Signed-off-by: Alexander Kanavin <alex.kanavin@gmail.com>
-
 ---
  Makefile-gir.am     | 18 +++++++++---------
  m4/introspection.m4 |  8 ++++----
  2 files changed, 13 insertions(+), 13 deletions(-)
 
 diff --git a/Makefile-gir.am b/Makefile-gir.am
-index 9aca664..09b9360 100644
+index a09260a..ba6e89e 100644
 --- a/Makefile-gir.am
 +++ b/Makefile-gir.am
 @@ -55,8 +55,8 @@ else
@@ -64,11 +63,11 @@ index 9aca664..09b9360 100644
  GIO_LIBRARY=gio-2.0
  
  if HAVE_GIO_UNIX
--GIO_UNIX_HDRS=$(shell "${PKG_CONFIG}" --variable=includedir gio-unix-2.0)/gio-unix-2.0/gio/*.h
-+GIO_UNIX_HDRS=$(PKG_CONFIG_SYSROOT_DIR)$(shell "${PKG_CONFIG}" --variable=includedir gio-unix-2.0)/gio-unix-2.0/gio/*.h
+-GIO_UNIX_INCLUDEDIR = $(shell "${PKG_CONFIG}" --variable=includedir gio-unix-2.0)/gio-unix-2.0
++GIO_UNIX_INCLUDEDIR = $(PKG_CONFIG_SYSROOT_DIR)$(shell "${PKG_CONFIG}" --variable=includedir gio-unix-2.0)/gio-unix-2.0
+ GIO_UNIX_HDRS = $(GIO_UNIX_INCLUDEDIR)/gio/*.h
  GIO_UNIX_PACKAGES = gio-unix-2.0
  else
- GIO_UNIX_HDRS=
 diff --git a/m4/introspection.m4 b/m4/introspection.m4
 index d89c3d9..b562266 100644
 --- a/m4/introspection.m4

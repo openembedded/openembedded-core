@@ -8,14 +8,15 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=90d577535a3898e1ae5dbf0ae3509a8c \
                     file://giscanner/sourcescanner.c;endline=22;md5=194d6e0c1d00662f32d030ce44de8d39 \
                     file://girepository/giregisteredtypeinfo.c;endline=21;md5=661847611ae6979465415f31a759ba27"
 
-SRC_URI = "${GNOME_MIRROR}/${BPN}/1.46/${BPN}-${PV}.tar.xz \
-           file://0001-Prefix-pkg-config-paths-with-PKG_CONFIG_SYSROOT_DIR-.patch \
-           file://0001-giscanner-add-use-binary-wrapper-option.patch \
-           file://0001-giscanner-add-a-use-ldd-wrapper-option.patch \
-           file://0001-configure.ac-add-host-gi-gi-cross-wrapper-and-gi-ldd.patch \
+SRC_URI = "${GNOME_MIRROR}/${BPN}/1.48/${BPN}-${PV}.tar.xz \
+           file://0001-Revert-an-incomplete-upstream-attempt-at-cross-compi.patch \
+           file://0002-configure.ac-add-host-gi-gi-cross-wrapper-gi-ldd-wra.patch \
+           file://0003-giscanner-add-use-binary-wrapper-option.patch \
+           file://0004-giscanner-add-a-use-ldd-wrapper-option.patch \
+           file://0005-Prefix-pkg-config-paths-with-PKG_CONFIG_SYSROOT_DIR-.patch \
            "
-SRC_URI[md5sum] = "adb40a31c7c80b65b0f4c8fd71b493dc"
-SRC_URI[sha256sum] = "6658bd3c2b8813eb3e2511ee153238d09ace9d309e4574af27443d87423e4233"
+SRC_URI[md5sum] = "01301fa9019667d48e927353e08bc218"
+SRC_URI[sha256sum] = "fa275aaccdbfc91ec0bc9a6fd0562051acdba731e7d584b64a277fec60e75877"
 
 inherit autotools pkgconfig gtk-doc pythonnative qemu gobject-introspection-data
 BBCLASSEXTEND = "native"
