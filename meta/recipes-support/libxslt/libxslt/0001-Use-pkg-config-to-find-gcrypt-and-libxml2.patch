@@ -1,14 +1,22 @@
-Use pkg-config to find gcrypt and libxml2.
+From ed71ac9548a2bb6ecd2dc5ad880c604975f872b0 Mon Sep 17 00:00:00 2001
+From: Alexander Kanavin <alex.kanavin@gmail.com>
+Date: Thu, 2 Jun 2016 14:20:04 +0300
+Subject: [PATCH] Use pkg-config to find gcrypt and libxml2.
 
 Upstream-Status: Pending [libxml2 is upstreamable]
 
 RP 2014/5/22
 
-Index: libxslt-1.1.28/configure.in
-===================================================================
---- libxslt-1.1.28.orig/configure.in	2014-05-13 16:46:02.278474967 +0000
-+++ libxslt-1.1.28/configure.in	2014-05-13 16:53:56.510472561 +0000
-@@ -376,6 +376,8 @@
+Signed-off-by: Alexander Kanavin <alex.kanavin@gmail.com>
+---
+ configure.in | 70 +++++++++++-------------------------------------------------
+ 1 file changed, 12 insertions(+), 58 deletions(-)
+
+diff --git a/configure.in b/configure.in
+index 8bdf45a..0b2b312 100644
+--- a/configure.in
++++ b/configure.in
+@@ -377,6 +377,8 @@ AC_SUBST(pythondir)
  AC_SUBST(PYTHON_SUBDIR)
  AC_SUBST(PYTHON_LIBS)
  
@@ -16,12 +24,12 @@ Index: libxslt-1.1.28/configure.in
 +
  AC_ARG_WITH(crypto, [  --with-crypto           Add crypto support to exslt (on)])
  WITH_CRYPTO=0
- if test "$with_crypto" = "no" ; then
-@@ -391,26 +393,13 @@
-     WITH_CRYPTO=1
+ CRYPTO_TESTDIR=
+@@ -394,27 +396,14 @@ case $host in
+     CRYPTO_TESTDIR=crypto
      ;;
    *)
--    AC_PATH_PROG(LIBGCRYPT_CONFIG, libgcrypt-config, no)
+-    AC_PATH_TOOL(LIBGCRYPT_CONFIG, libgcrypt-config, no)
 -    if test "$LIBGCRYPT_CONFIG" != "no" ; then
 -      LIBGCRYPT_VERSION=`$LIBGCRYPT_CONFIG --version`
 -      if test VERSION_TO_NUMBER(echo $LIBGCRYPT_VERSION) -lt VERSION_TO_NUMBER(echo "1.1.42")
@@ -37,20 +45,21 @@ Index: libxslt-1.1.28/configure.in
 +    PKG_CHECK_MODULES(LIBGCRYPT, [libgcrypt >= 1.1.42], [
 +          AC_DEFINE(HAVE_GCRYPT, 1, [Define if gcrypt library is available.])
 +          echo 'Crypto extensions will be available.'
- 		WITH_CRYPTO=1
+         WITH_CRYPTO=1
+         CRYPTO_TESTDIR=crypto
 -      fi
 -    else
 -      LIBGCRYPT_CFLAGS=""
 -      LIBGCRYPT_LIBS=""
 -      echo 'Crypto extensions will not be available. Install libgcrypt and reconfigure to make available.'
 -    fi
-+	], [
++       ], [
 +          echo 'Crypto extensions will not be available. Install libgcrypt >= 1.1.42 and reconfigure to make available.'
 +        ])
  esac
  fi
  AC_SUBST(WITH_CRYPTO)
-@@ -471,24 +460,8 @@
+@@ -476,24 +465,8 @@ dnl original work - Mathieu Lacage 30/03/2000
  dnl some tweaking - David Härdeman 30/10/2001
  dnl
  
@@ -75,7 +84,7 @@ Index: libxslt-1.1.28/configure.in
  AC_ARG_WITH(libxml-src,
  	[  --with-libxml-src=[DIR]              For libxml thats not installed yet (sets all three above)],
  	LIBXML_SRC="$withval"
-@@ -551,28 +524,9 @@
+@@ -556,28 +529,9 @@ then
  	fi
  fi
  
@@ -107,7 +116,7 @@ Index: libxslt-1.1.28/configure.in
  
  AC_SUBST(CFLAGS)
  AC_SUBST(CPPFLAGS)
-@@ -597,7 +551,7 @@
+@@ -602,7 +556,7 @@ fi
  
  if test "$with_plugins" = "yes" ; then
    AC_MSG_CHECKING([libxml2 module support])
@@ -116,3 +125,6 @@ Index: libxslt-1.1.28/configure.in
    if test "${WITH_MODULES}" = "1"; then
      AC_MSG_RESULT(yes)
    else
+-- 
+2.8.1
+

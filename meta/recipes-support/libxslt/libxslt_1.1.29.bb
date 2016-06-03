@@ -10,11 +10,11 @@ DEPENDS = "libxml2"
 
 SRC_URI = "ftp://xmlsoft.org/libxslt/libxslt-${PV}.tar.gz \
            file://pkgconfig_fix.patch \
-           file://pkgconfig.patch \
-           file://CVE-2015-7995.patch"
+           file://0001-Use-pkg-config-to-find-gcrypt-and-libxml2.patch \
+           "
 
-SRC_URI[md5sum] = "9667bf6f9310b957254fdcf6596600b7"
-SRC_URI[sha256sum] = "5fc7151a57b89c03d7b825df5a0fae0a8d5f05674c0e7cf2937ecec4d54a028c"
+SRC_URI[md5sum] = "a129d3c44c022de3b9dcf6d6f288d72e"
+SRC_URI[sha256sum] = "b5976e3857837e7617b29f2249ebb5eeac34e249208d31f1fbf7a6ba7a4090ce"
 
 UPSTREAM_CHECK_REGEX = "libxslt-(?P<pver>\d+(\.\d+)+)\.tar"
 
