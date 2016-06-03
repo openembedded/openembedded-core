@@ -18,8 +18,8 @@ SRC_URI = "\
   file://0001-WebKitMacros-Append-to-I-and-not-to-isystem.patch \
   file://musl-fixes.patch \
   "
-SRC_URI[md5sum] = "adcbee440d81acfb1ead9ada91bd5e79"
-SRC_URI[sha256sum] = "5b1a2d5227553f3cecbdb258c68b384f9235747b2c07c15afb555fe4fa6ae896"
+SRC_URI[md5sum] = "aebb4029c09dd81664aa830e4a584c85"
+SRC_URI[sha256sum] = "173cbb9a2eca23eee52e99965483ab25aa9c0569ef5b57041fc0c129cc26c307"
 
 inherit cmake lib_package pkgconfig perlnative pythonnative distro_features_check upstream-version-is-even gobject-introspection
 
