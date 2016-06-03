@@ -7,6 +7,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=76ae2becfcb9a685041c6f166b44c2c2"
 DEPENDS = "tzcode-native"
 
 SRC_URI = "http://www.iana.org/time-zones/repository/releases/tzdata${PV}.tar.gz;name=tzdata"
+UPSTREAM_CHECK_URI = "http://www.iana.org/time-zones"
 
 SRC_URI[tzdata.md5sum] = "14bf84b6c2cdab0a9428991e0150ebe6"
 SRC_URI[tzdata.sha256sum] = "d9554dfba0efd76053582bd89e8c7036ef12eee14fdd506675b08a5b59f0a1b4"
