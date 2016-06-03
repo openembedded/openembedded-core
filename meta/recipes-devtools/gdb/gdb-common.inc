@@ -39,6 +39,8 @@ SRC_URI = "git://sourceware.org/git/binutils-gdb.git;branch=gdb-7.11-branch \
            file://0011-avx_mpx.patch \
 "
 
+UPSTREAM_CHECK_GITTAGREGEX = "gdb\-(?P<pver>.+)\-release"
+
 S = "${WORKDIR}/git"
 
 B = "${WORKDIR}/build-${TARGET_SYS}"
