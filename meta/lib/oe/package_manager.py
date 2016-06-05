@@ -638,8 +638,8 @@ class PackageManager(object, metaclass=ABCMeta):
     def construct_uris(self, uris, base_paths):
         def _append(arr1, arr2, sep='/'):
             res = []
-            narr1 = [string.rstrip(a, sep) for a in arr1]
-            narr2 = [string.lstrip(string.rstrip(a, sep), sep) for a in arr2]
+            narr1 = [a.rstrip(sep) for a in arr1]
+            narr2 = [a.rstrip(sep).lstrip(sep) for a in arr2]
             for a1 in narr1:
                 if arr2:
                     for a2 in narr2:
