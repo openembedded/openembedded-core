@@ -32,6 +32,7 @@ PACKAGECONFIG[nettle] = "--with-nettle,--without-nettle,nettle,"
 PACKAGECONFIG[lz4] = "--with-lz4,--without-lz4,lz4,"
 
 SRC_URI = "http://libarchive.org/downloads/libarchive-${PV}.tar.gz \
+           file://0001-configure.ac-check-acl-libacl.h-and-sys-acl.h-based-.patch \
            "
 
 SRC_URI[md5sum] = "596210b5a9c2ff74a0f7ca34838d655f"
