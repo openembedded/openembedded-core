@@ -122,3 +122,4 @@ INSANE_SKIP_${PN}-cxx = "dev-so"
 
 BBCLASSEXTEND = "native nativesdk"
 
+RECIPE_NO_UPDATE_REASON = "latest db does not work with RPM-5.x due to changes in locking semantics"
