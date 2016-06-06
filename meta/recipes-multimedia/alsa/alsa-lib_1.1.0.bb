@@ -1,6 +1,6 @@
 SUMMARY = "ALSA sound library"
 HOMEPAGE = "http://www.alsa-project.org"
-BUGTRACKER = "https://bugtrack.alsa-project.org/alsa-bug/login_page.php"
+BUGTRACKER = "http://alsa-project.org/main/index.php/Bug_Tracking"
 SECTION = "libs/multimedia"
 LICENSE = "LGPLv2.1 & GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=7fbc338309ac38fefcd64b04bb903e34 \

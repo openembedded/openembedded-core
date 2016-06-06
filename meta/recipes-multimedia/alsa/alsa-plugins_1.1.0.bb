@@ -1,5 +1,6 @@
 SUMMARY = "ALSA Plugins"
 HOMEPAGE = "http://alsa-project.org"
+BUGTRACKER = "http://alsa-project.org/main/index.php/Bug_Tracking"
 SECTION = "multimedia"
 
 # The primary license of alsa-plugins is LGPLv2.1.

@@ -1,6 +1,6 @@
 SUMMARY = "Advanced tools for certain ALSA sound card drivers"
 HOMEPAGE = "http://www.alsa-project.org"
-BUGTRACKER = "https://bugtrack.alsa-project.org/alsa-bug/login_page.php"
+BUGTRACKER = "http://alsa-project.org/main/index.php/Bug_Tracking"
 SECTION = "console/utils"
 LICENSE = "GPLv2 & LGPLv2+"
 DEPENDS = "alsa-lib ncurses glib-2.0"
