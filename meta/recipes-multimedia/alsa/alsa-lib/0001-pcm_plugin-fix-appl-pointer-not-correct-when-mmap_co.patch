@@ -9,7 +9,7 @@ which cause the avail_update()'s result wrong.
 This patch move the snd_pcm_mmap_appl_forward() to the place when
 snd_pcm_mmap_commit() is successfully returned.
 
-Upstream-Status: Submitted [https://patchwork.kernel.org/patch/8760881/]
+Upstream-Status: Accepted [expected in 1.1.2]
 
 Signed-off-by: Shengjiu Wang <shengjiu.wang@freescale.com>
 Signed-off-by: Takashi Iwai <tiwai@suse.de>

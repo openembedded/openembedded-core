@@ -17,11 +17,10 @@ ARM_INSTRUCTION_SET = "arm"
 SRC_URI = "ftp://ftp.alsa-project.org/pub/lib/${BP}.tar.bz2 \
            file://Check-if-wordexp-function-is-supported.patch \
            file://avoid-including-sys-poll.h-directly.patch \
-           file://0001-topology-Add-missing-include-sys-stat.h.patch \
            file://0001-pcm_plugin-fix-appl-pointer-not-correct-when-mmap_co.patch \
 "
-SRC_URI[md5sum] = "69515ca73c3c4a212ef45160dea846c1"
-SRC_URI[sha256sum] = "dfde65d11e82b68f82e562ab6228c1fb7c78854345d3c57e2c68a9dd3dae1f15"
+SRC_URI[md5sum] = "881060d2c568f7f49db82c58df2f9ddc"
+SRC_URI[sha256sum] = "8ac76c3144ed2ed49da7622ab65ac5415205913ccbedde877972383cbc234269"
 
 inherit autotools pkgconfig
 

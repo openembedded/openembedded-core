@@ -73,7 +73,7 @@ index b429f5d..e05898f 100644
 +#include <poll.h>
  #include <sys/types.h>
  #include <errno.h>
- #include <linux/types.h>
+ #if defined(__linux__)
 diff --git a/src/control/control.c b/src/control/control.c
 index 4a28cf6..071c5db 100644
 --- a/src/control/control.c
