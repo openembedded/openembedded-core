@@ -18,18 +18,21 @@ SRC_URI = "${GNOME_MIRROR}/${BPN}/1.48/${BPN}-${PV}.tar.xz \
 SRC_URI[md5sum] = "01301fa9019667d48e927353e08bc218"
 SRC_URI[sha256sum] = "fa275aaccdbfc91ec0bc9a6fd0562051acdba731e7d584b64a277fec60e75877"
 
-inherit autotools pkgconfig gtk-doc pythonnative qemu gobject-introspection-data
+inherit autotools pkgconfig gtk-doc python3native qemu gobject-introspection-data
 BBCLASSEXTEND = "native"
 
 # necessary to let the call for python-config from configure.ac succeed
 export STAGING_INCDIR
 export STAGING_LIBDIR
 
+# autoconf macros otherwise will default to Python 2
+export PYTHON
+
 # needed for writing out the qemu wrapper script
 export STAGING_DIR_HOST
 export B
 
-DEPENDS_append = " libffi zlib glib-2.0 python flex-native bison-native"
+DEPENDS_append = " libffi zlib glib-2.0 python3 flex-native bison-native"
 
 # target build needs qemu to run temporary introspection binaries created
 # on the fly by g-ir-scanner and a native version of itself to run
@@ -44,7 +47,7 @@ do_configure_prepend_class-native() {
         # Tweak the native python scripts so that they don't refer to the
         # full path of native python binary (the solution is taken from glib-2.0 recipe)
         # This removes the risk of exceeding Linux kernel's shebang line limit (128 bytes)
-        sed -i -e '1s,#!.*,#!${USRBINPATH}/env nativepython,' ${S}/tools/g-ir-tool-template.in
+        sed -i -e '1s,#!.*,#!${USRBINPATH}/env python3,' ${S}/tools/g-ir-tool-template.in
 }
 
 do_configure_prepend_class-target() {
@@ -97,7 +100,7 @@ EOF
 
         # Also tweak the target python scripts so that they don't refer to the
         # native version of python binary (the solution is taken from glib-2.0 recipe)
-        sed -i -e '1s,#!.*,#!${USRBINPATH}/env python,' ${S}/tools/g-ir-tool-template.in
+        sed -i -e '1s,#!.*,#!${USRBINPATH}/env python3,' ${S}/tools/g-ir-tool-template.in
 }
 
 # Configure target build to use native tools of itself and to use a qemu wrapper
@@ -109,7 +112,7 @@ EXTRA_OECONF_class-target += "--enable-host-gi \
                              "
 
 PACKAGECONFIG ?= ""
-PACKAGECONFIG[doctool] = "--enable-doctool,--disable-doctool,python-mako,"
+PACKAGECONFIG[doctool] = "--enable-doctool,--disable-doctool,python3-mako,"
 
 do_compile_prepend_class-target() {
         # This prevents g-ir-scanner from writing cache data to $HOME

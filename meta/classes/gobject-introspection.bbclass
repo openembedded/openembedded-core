@@ -1,8 +1,11 @@
 # Inherit this class in recipes to enable building their introspection files
 
-# This sets up autoconf-based recipes to build introspection data (or not),
+# python3native is inherited to prevent introspection tools being run with
+# host's python 3 (they need to be run with native python 3)
+#
+# This also sets up autoconf-based recipes to build introspection data (or not),
 # depending on distro and machine features (see gobject-introspection-data class).
-inherit gobject-introspection-data
+inherit python3native gobject-introspection-data
 EXTRA_OECONF_prepend_class-target = "${@bb.utils.contains('GI_DATA_ENABLED', 'True', '--enable-introspection', '--disable-introspection', d)} "
 
 # When building native recipes, disable introspection, as it is not necessary,

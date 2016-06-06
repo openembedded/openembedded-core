@@ -21,7 +21,10 @@ SRC_URI = "\
 SRC_URI[md5sum] = "aebb4029c09dd81664aa830e4a584c85"
 SRC_URI[sha256sum] = "173cbb9a2eca23eee52e99965483ab25aa9c0569ef5b57041fc0c129cc26c307"
 
-inherit cmake lib_package pkgconfig perlnative pythonnative distro_features_check upstream-version-is-even gobject-introspection
+# pythonnative must come after gobject-introspection, otherwise
+# webkit build configuration will not attempt to find Python 2.x after
+# finding (and rejecting) Python 3.x
+inherit cmake lib_package pkgconfig gobject-introspection perlnative pythonnative distro_features_check upstream-version-is-even
 
 # depends on libxt
 REQUIRED_DISTRO_FEATURES = "x11"
