@@ -30,6 +30,7 @@ SYSLINUX_SERIAL_TTY ?= "console=ttyS0,115200"
 SYSLINUX_PROMPT ?= "0"
 SYSLINUX_TIMEOUT ?= "50"
 AUTO_SYSLINUXMENU ?= "1"
+SYSLINUX_ALLOWOPTIONS ?= "1"
 SYSLINUX_ROOT ?= "${ROOT}"
 SYSLINUX_CFG_VM  ?= "${S}/syslinux_vm.cfg"
 SYSLINUX_CFG_LIVE ?= "${S}/syslinux_live.cfg"
@@ -114,7 +115,12 @@ python build_syslinux_cfg () {
         for opt in opts.split(';'):
             cfgfile.write('%s\n' % opt)
 
-    cfgfile.write('ALLOWOPTIONS 1\n');
+    allowoptions = d.getVar('SYSLINUX_ALLOWOPTIONS', True)
+    if allowoptions:
+        cfgfile.write('ALLOWOPTIONS %s\n' % allowoptions)
+    else:
+        cfgfile.write('ALLOWOPTIONS 1\n')
+
     syslinux_default_console = d.getVar('SYSLINUX_DEFAULT_CONSOLE', True)
     syslinux_serial_tty = d.getVar('SYSLINUX_SERIAL_TTY', True)
     syslinux_serial = d.getVar('SYSLINUX_SERIAL', True)
