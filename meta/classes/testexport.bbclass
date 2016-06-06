@@ -96,11 +96,13 @@ def exportTests(d,tc):
                         shutil.copytree(foldername, target_folder)
         if not isfolder:
             shutil.copy2(mod.path, os.path.join(exportpath, "oeqa/runtime"))
-    # copy __init__.py files
-    oeqadir = os.path.dirname(pkgutil.get_loader("oeqa").path)
-    shutil.copy2(os.path.join(oeqadir, "__init__.py"), os.path.join(exportpath, "oeqa"))
-    shutil.copy2(os.path.join(oeqadir, "runtime/__init__.py"), os.path.join(exportpath, "oeqa/runtime"))
+    # Get meta layer
+    for layer in d.getVar("BBLAYERS", True).split():
+        if os.path.basename(layer) == "meta":
+            meta_layer = layer
+            break
     # copy oeqa/oetest.py and oeqa/runexported.py
+    oeqadir = os.path.join(meta_layer, "lib/oeqa")
     shutil.copy2(os.path.join(oeqadir, "oetest.py"), os.path.join(exportpath, "oeqa"))
     shutil.copy2(os.path.join(oeqadir, "runexported.py"), exportpath)
     # copy oeqa/utils/*.py

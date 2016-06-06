@@ -203,8 +203,7 @@ class TestContext(object):
         self.testslist = self._get_tests_list(path, extrapath)
         self.testsrequired = self._get_test_suites_required()
 
-        self.filesdir = os.path.join(os.path.dirname(os.path.abspath(
-            oeqa.runtime.__file__)), "files")
+        self.filesdir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "runtime/files")
         self.imagefeatures = d.getVar("IMAGE_FEATURES", True).split()
         self.distrofeatures = d.getVar("DISTRO_FEATURES", True).split()
 
@@ -460,7 +459,7 @@ class RuntimeTestContext(TestContext):
         Returns the path of the JSON file for a module, empty if doesn't exitst.
         """
 
-        module_file = module.filename
+        module_file = module.path
         json_file = "%s.json" % module_file.rsplit(".", 1)[0]
         if os.path.isfile(module_file) and os.path.isfile(json_file):
             return json_file
