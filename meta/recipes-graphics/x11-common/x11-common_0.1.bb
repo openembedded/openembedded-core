@@ -26,5 +26,5 @@ do_install() {
 	chmod -R 755 ${D}${sysconfdir}
 }
 
-RDEPENDS_${PN} = "dbus-x11 xmodmap xdpyinfo xtscal xinit formfactor"
+RDEPENDS_${PN} = "dbus-x11 xmodmap xdpyinfo xinput-calibrator xinit formfactor"
 
