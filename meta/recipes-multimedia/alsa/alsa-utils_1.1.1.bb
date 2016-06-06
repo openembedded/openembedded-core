@@ -8,17 +8,23 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=59530bdf33659b29e73d4adb9f9f6552 \
 DEPENDS = "alsa-lib ncurses libsamplerate0"
 
 PACKAGECONFIG ??= "udev"
+
+# alsabat can be built also without fftw support (with reduced functionality).
+# It would be better to always enable alsabat, but provide an option for
+# enabling/disabling fftw. The configure script doesn't support that, however
+# (at least in any obvious way), so for now we only support alsabat with fftw
+# or no alsabat at all.
 PACKAGECONFIG[bat] = "--enable-bat,--disable-bat,fftw"
+
 PACKAGECONFIG[udev] = "--with-udev-rules-dir=`pkg-config --variable=udevdir udev`/rules.d,,udev"
 PACKAGECONFIG[xmlto] = "--enable-xmlto, --disable-xmlto, xmlto-native docbook-xml-dtd4-native docbook-xsl-stylesheets-native"
 
 SRC_URI = "ftp://ftp.alsa-project.org/pub/utils/alsa-utils-${PV}.tar.bz2 \
            file://0001-alsactl-don-t-let-systemd-unit-restore-the-volume-wh.patch \
-           file://0001-alsabat-rename-to-avoid-naming-conflict.patch \
           "
 
-SRC_URI[md5sum] = "b9d6102fbbd0b68040bb77023ed30c0c"
-SRC_URI[sha256sum] = "3b1c3135b76e14532d3dd23fb15759ddd7daf9ffbc183f7a9a0a3a86374748f1"
+SRC_URI[md5sum] = "f8d00ad5fba757b4c3735d066cc288e2"
+SRC_URI[sha256sum] = "89757c9abaf420831b088fce354d492acc170bd02bb50eb7392c175f594b8041"
 
 # lazy hack. needs proper fixing in gettext.m4, see
 # http://bugs.openembedded.org/show_bug.cgi?id=2348
