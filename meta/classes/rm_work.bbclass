@@ -119,6 +119,8 @@ rm_work_rootfs () {
 rm_work_rootfs[cleandirs] = "${WORKDIR}/rootfs"
 
 python () {
+    if bb.data.inherits_class('kernel', d):
+        d.appendVar("RM_WORK_EXCLUDE", ' ' + d.getVar("PN", True))
     # If the recipe name is in the RM_WORK_EXCLUDE, skip the recipe.
     excludes = (d.getVar("RM_WORK_EXCLUDE", True) or "").split()
     pn = d.getVar("PN", True)
