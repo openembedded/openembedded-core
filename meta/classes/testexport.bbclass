@@ -24,6 +24,7 @@ TEST_TARGET_IP ?= ""
 TEST_SERVER_IP ?= ""
 
 TEST_EXPORT_DEPENDS = ""
+TEST_EXPORT_DEPENDS += "${@bb.utils.contains('IMAGE_PKGTYPE', 'rpm', 'cpio-native:do_populate_sysroot', '', d)}"
 TEST_EXPORT_LOCK = "${TMPDIR}/testimage.lock"
 
 python do_testexport() {
