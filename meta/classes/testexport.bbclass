@@ -23,8 +23,14 @@ TEST_TARGET ?= "simpleremote"
 TEST_TARGET_IP ?= ""
 TEST_SERVER_IP ?= ""
 
+TEST_EXPORT_SDK_PACKAGES ?= ""
+TEST_EXPORT_SDK_ENABLED ?= "0"
+TEST_EXPORT_SDK_NAME ?= "testexport-tools-nativesdk"
+TEST_EXPORT_SDK_DIR ?= "sdk"
+
 TEST_EXPORT_DEPENDS = ""
 TEST_EXPORT_DEPENDS += "${@bb.utils.contains('IMAGE_PKGTYPE', 'rpm', 'cpio-native:do_populate_sysroot', '', d)}"
+TEST_EXPORT_DEPENDS += "${@bb.utils.contains('TEST_EXPORT_SDK_ENABLED', '1', 'testexport-tarball:do_populate_sdk', '', d)}"
 TEST_EXPORT_LOCK = "${TMPDIR}/testimage.lock"
 
 python do_testexport() {
@@ -135,6 +141,16 @@ def exportTests(d,tc):
             src_f = os.path.join(root, f)
             dst_f = os.path.join(export_pkg_dir, root.replace(test_pkg_dir, "").lstrip("/"), f)
             shutil.copy2(src_f, dst_f)
+
+    # Copy SDK
+    if d.getVar("TEST_EXPORT_SDK_ENABLED", True) == "1":
+        sdk_deploy = d.getVar("SDK_DEPLOY", True)
+        tarball_name = "%s.sh" % d.getVar("TEST_EXPORT_SDK_NAME", True)
+        tarball_path = os.path.join(sdk_deploy, tarball_name)
+        export_sdk_dir = os.path.join(d.getVar("TEST_EXPORT_DIR", True),
+                                      d.getVar("TEST_EXPORT_SDK_DIR", True))
+        bb.utils.mkdirhier(export_sdk_dir)
+        shutil.copy2(tarball_path, export_sdk_dir)
 
     bb.plain("Exported tests to: %s" % exportpath)
 
