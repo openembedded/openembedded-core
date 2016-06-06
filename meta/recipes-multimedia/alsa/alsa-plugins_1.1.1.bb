@@ -20,12 +20,9 @@ LIC_FILES_CHKSUM = "\
         file://rate/rate_samplerate.c;endline=35;md5=fd77bce85f4a338c0e8ab18430b69fae \
 "
 
-SRC_URI = "\
-        ftp://ftp.alsa-project.org/pub/plugins/${BP}.tar.bz2 \
-        file://0001-pph-include-config.h-from-rate_speexrate.c.patch \
-"
-SRC_URI[md5sum] = "b123e42ed881b9adbc99e4040f257c39"
-SRC_URI[sha256sum] = "3b83c329953bef99f5fe25ae04ec4a455fe6514939f3b45a5321966652b2c9ee"
+SRC_URI = "ftp://ftp.alsa-project.org/pub/plugins/${BP}.tar.bz2"
+SRC_URI[md5sum] = "69f9f3e2de3c97fc71d496e91e271fe5"
+SRC_URI[sha256sum] = "8ea4d1e082c36528a896a2581e5eb62d4dc2683238e353050d0d624e65f901f1"
 
 DEPENDS += "alsa-lib"
 
