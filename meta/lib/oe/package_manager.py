@@ -1411,7 +1411,7 @@ class RpmPM(PackageManager):
     def package_info(self, pkg):
         cmd = "%s %s info --urls %s" % (self.smart_cmd, self.smart_opt, pkg)
         try:
-            output = subprocess.check_output(cmd, stderr=subprocess.STDOUT, shell=True)
+            output = subprocess.check_output(cmd, stderr=subprocess.STDOUT, shell=True).decode("utf-8")
         except subprocess.CalledProcessError as e:
             bb.fatal("Unable to list available packages. Command '%s' "
                      "returned %d:\n%s" % (cmd, e.returncode, e.output.decode("utf-8")))
@@ -1506,7 +1506,7 @@ class OpkgDpkgPM(PackageManager):
     def package_info(self, pkg, cmd):
 
         try:
-            output = subprocess.check_output(cmd, stderr=subprocess.STDOUT, shell=True)
+            output = subprocess.check_output(cmd, stderr=subprocess.STDOUT, shell=True).decode("utf-8")
         except subprocess.CalledProcessError as e:
             bb.fatal("Unable to list available packages. Command '%s' "
                      "returned %d:\n%s" % (cmd, e.returncode, e.output.decode("utf-8")))
