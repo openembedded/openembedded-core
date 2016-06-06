@@ -16,6 +16,9 @@
 
 TEST_LOG_DIR ?= "${WORKDIR}/testexport"
 TEST_EXPORT_DIR ?= "${TMPDIR}/testexport/${PN}"
+TEST_EXPORT_PACKAGED_DIR ?= "packages/packaged"
+TEST_EXPORT_EXTRACTED_DIR ?= "packages/extracted"
+
 TEST_TARGET ?= "simpleremote"
 TEST_TARGET_IP ?= ""
 TEST_SERVER_IP ?= ""
@@ -28,9 +31,9 @@ python do_testexport() {
 }
 
 addtask testexport
-do_testimage[nostamp] = "1"
-do_testimage[depends] += "${TEST_EXPORT_DEPENDS}"
-do_testimage[lockfiles] += "${TEST_EXPORT_LOCK}"
+do_testexport[nostamp] = "1"
+do_testexport[depends] += "${TEST_EXPORT_DEPENDS} ${TESTIMAGEDEPENDS}"
+do_testexport[lockfiles] += "${TEST_EXPORT_LOCK}"
 
 def exportTests(d,tc):
     import json
@@ -96,6 +99,9 @@ def exportTests(d,tc):
                         shutil.copytree(foldername, target_folder)
         if not isfolder:
             shutil.copy2(mod.path, os.path.join(exportpath, "oeqa/runtime"))
+            json_file = "%s.json" % mod.path.rsplit(".", 1)[0]
+            if os.path.isfile(json_file):
+                shutil.copy2(json_file, os.path.join(exportpath, "oeqa/runtime"))
     # Get meta layer
     for layer in d.getVar("BBLAYERS", True).split():
         if os.path.basename(layer) == "meta":
@@ -115,6 +121,20 @@ def exportTests(d,tc):
         for f in files:
             shutil.copy2(os.path.join(root, f), os.path.join(exportpath, "oeqa/runtime/files"))
 
+    # Copy packages needed for runtime testing
+    export_pkg_dir = os.path.join(d.getVar("TEST_EXPORT_DIR", True), "packages")
+    test_pkg_dir = d.getVar("TEST_NEEDED_PACKAGES_DIR", True)
+    for root, subdirs, files in os.walk(test_pkg_dir):
+        for subdir in subdirs:
+            tmp_dir = os.path.join(root.replace(test_pkg_dir, "").lstrip("/"), subdir)
+            new_dir = os.path.join(export_pkg_dir, tmp_dir)
+            bb.utils.mkdirhier(new_dir)
+
+        for f in files:
+            src_f = os.path.join(root, f)
+            dst_f = os.path.join(export_pkg_dir, root.replace(test_pkg_dir, "").lstrip("/"), f)
+            shutil.copy2(src_f, dst_f)
+
     bb.plain("Exported tests to: %s" % exportpath)
 
 def testexport_main(d):
@@ -122,9 +142,11 @@ def testexport_main(d):
     from oeqa.targetcontrol import get_target_controller
     from oeqa.utils.dump import get_host_dumper
 
+    test_create_extract_dirs(d)
+    export_dir = d.getVar("TEST_EXPORT_DIR", True)
     bb.utils.mkdirhier(d.getVar("TEST_LOG_DIR", True))
-    bb.utils.remove(d.getVar("TEST_EXPORT_DIR", True), recurse=True)
-    bb.utils.mkdirhier(d.getVar("TEST_EXPORT_DIR", True))
+    bb.utils.remove(export_dir, recurse=True)
+    bb.utils.mkdirhier(export_dir)
 
     # the robot dance
     target = get_target_controller(d)
@@ -141,6 +163,7 @@ def testexport_main(d):
         import traceback
         bb.fatal("Loading tests failed:\n%s" % traceback.format_exc())
 
+    tc.extract_packages()
     exportTests(d,tc)
 
 testexport_main[vardepsexclude] =+ "BB_ORIGENV"
