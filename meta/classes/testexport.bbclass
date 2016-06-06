@@ -128,9 +128,13 @@ def exportTests(d,tc):
         for f in files:
             shutil.copy2(os.path.join(root, f), os.path.join(exportpath, "oeqa/runtime/files"))
 
+    # Create tar file for common parts of testexport
+    create_tarball(d, "testexport.tar.gz", d.getVar("TEST_EXPORT_DIR", True))
+
     # Copy packages needed for runtime testing
     export_pkg_dir = os.path.join(d.getVar("TEST_EXPORT_DIR", True), "packages")
     test_pkg_dir = d.getVar("TEST_NEEDED_PACKAGES_DIR", True)
+    need_pkg_dir = False
     for root, subdirs, files in os.walk(test_pkg_dir):
         for subdir in subdirs:
             tmp_dir = os.path.join(root.replace(test_pkg_dir, "").lstrip("/"), subdir)
@@ -138,9 +142,17 @@ def exportTests(d,tc):
             bb.utils.mkdirhier(new_dir)
 
         for f in files:
+            need_pkg_dir = True
             src_f = os.path.join(root, f)
             dst_f = os.path.join(export_pkg_dir, root.replace(test_pkg_dir, "").lstrip("/"), f)
             shutil.copy2(src_f, dst_f)
+
+    if need_pkg_dir:
+        # Create tar file for packages needed by the DUT
+        create_tarball(d, "testexport_packages_%s.tar.gz" % d.getVar("MACHINE", True), export_pkg_dir)
+    else:
+        # Remov packages dir from exported test
+        bb.utils.remove(export_pkg_dir, True)
 
     # Copy SDK
     if d.getVar("TEST_EXPORT_SDK_ENABLED", True) == "1":
@@ -151,6 +163,9 @@ def exportTests(d,tc):
                                       d.getVar("TEST_EXPORT_SDK_DIR", True))
         bb.utils.mkdirhier(export_sdk_dir)
         shutil.copy2(tarball_path, export_sdk_dir)
+
+        # Create tar file for the sdk
+        create_tarball(d, "testexport_sdk_%s.tar.gz" % d.getVar("SDK_ARCH", True), export_sdk_dir)
 
     bb.plain("Exported tests to: %s" % exportpath)
 
@@ -182,6 +197,23 @@ def testexport_main(d):
 
     tc.extract_packages()
     exportTests(d,tc)
+
+def create_tarball(d, tar_name, src_dir):
+
+    import tarfile
+
+    tar_path = os.path.join(d.getVar("TEST_EXPORT_DIR", True), tar_name)
+    current_dir = os.getcwd()
+    src_dir = src_dir.rstrip('/')
+    dir_name = os.path.dirname(src_dir)
+    base_name = os.path.basename(src_dir)
+
+    os.chdir(dir_name)
+    tar = tarfile.open(tar_path, "w:gz")
+    tar.add(base_name)
+    tar.close()
+    os.chdir(current_dir)
+
 
 testexport_main[vardepsexclude] =+ "BB_ORIGENV"
 
