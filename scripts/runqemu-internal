@@ -489,7 +489,8 @@ config_qemush4() {
 config_qemuzynq() {
     set_mem_size 1024
     QEMU=qemu-system-arm
-    QEMU_SYSTEM_OPTIONS="$QEMU_NETWORK_CMD -M xilinx-zynq-a9 -serial null -serial mon:stdio -dtb $KERNEL-$MACHINE.dtb"
+    QEMU_NETWORK_CMD="-net nic -net nic $QEMU_TAP_CMD"
+    QEMU_SYSTEM_OPTIONS="$QEMU_NETWORK_CMD -M xilinx-zynq-a9 -serial null -serial mon:stdio -nographic -dtb $KERNEL-$MACHINE.dtb"
     # zynq serial ports are named 'ttyPS0' and 'ttyPS1', fixup the default values
     SCRIPT_KERNEL_OPT=$(echo "$SCRIPT_KERNEL_OPT" | sed 's/console=ttyS/console=ttyPS/g')
     if [ "${FSTYPE:0:3}" = "ext" -o "${FSTYPE:0:4}" = "cpio" ]; then
