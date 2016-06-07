@@ -148,12 +148,9 @@ RDEPENDS_packagegroup-self-hosted-extended = "\
     perl-dev \
     perl-modules \
     perl-pod \
-    python \
-    python-compiler \
-    python-git \
-    python-misc \
-    python-modules \
-    python-rpm \
+    python3 \
+    python3-modules \
+    python3-git \
     quota \
     readline \
     rpm \
