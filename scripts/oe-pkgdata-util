@@ -437,6 +437,7 @@ def main():
     parser.add_argument('-d', '--debug', help='Enable debug output', action='store_true')
     parser.add_argument('-p', '--pkgdata-dir', help='Path to pkgdata directory (determined automatically if not specified)')
     subparsers = parser.add_subparsers(title='subcommands', metavar='<subcommand>')
+    subparsers.required = True
 
     parser_lookup_pkg = subparsers.add_parser('lookup-pkg',
                                           help='Translate between recipe-space package names and runtime package names',
