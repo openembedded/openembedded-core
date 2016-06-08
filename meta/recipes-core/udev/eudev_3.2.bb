@@ -20,8 +20,8 @@ SRC_URI = "https://github.com/gentoo/${BPN}/archive/v${PV}.tar.gz \
 "
 UPSTREAM_CHECK_URI = "https://github.com/gentoo/eudev/releases"
 
-SRC_URI[md5sum] = "e130f892d8744e292cb855db79935f68"
-SRC_URI[sha256sum] = "ce9d5fa91e3a42c7eb95512ca0fa2a631e89833053066bb6cdf42046b2a88553"
+SRC_URI[md5sum] = "9eb477cc8718db272b5d24dff1126b04"
+SRC_URI[sha256sum] = "37829d37f4beb7e358ca33abc1ad0907d87f917ce157777aeaeebeacae24efdc"
 
 inherit autotools update-rc.d qemu
 
