@@ -26,7 +26,7 @@ diff --git a/smart/backends/rpm/pm.py b/smart/backends/rpm/pm.py
 index 9bbd952..ba6405a 100644
 --- a/smart/backends/rpm/pm.py
 +++ b/smart/backends/rpm/pm.py
-@@ -241,15 +241,48 @@ class RPMPackageManager(PackageManager):
+@@ -241,15 +241,56 @@ class RPMPackageManager(PackageManager):
          cb = RPMCallback(prog, upgradednames)
          cb.grabOutput(True)
          probs = None
@@ -36,7 +36,12 @@ index 9bbd952..ba6405a 100644
          finally:
              del getTS.ts
              cb.grabOutput(False)
-+            if (probs is not None) and sysconf.has("attempt-install", soft=True):
++            # If there are file conflicts, and we're attempting installation,
++            # remove conflicting packages from the transaction and retry
++            # If there are other problems returned by ts.run(), that are not
++            # linked with packages/files conflicts (the returned list is empty),
++            # then don't retry
++            if (probs is not None) and (len(probs) != 0) and sysconf.has("attempt-install", soft=True):
 +                def remove_conflict(pkgNEVR):
 +                    for key in changeset.keys():
 +                        if pkgNEVR == str(key):
@@ -68,7 +73,10 @@ index 9bbd952..ba6405a 100644
 +
              prog.setDone()
 -            if probs is not None:
-+            if (probs is not None) and (not retry):
++            # If there are other problems than packages/files conflicts
++            # returned by ts.run(), the returned list is empty, and if
++            # we're only attempting installation, then don't raise any error
++            if (probs is not None) and ((len(probs) != 0) or not sysconf.has("attempt-install", soft=True)) and (not retry):
                  raise Error, "\n".join([x[0] for x in probs])
              prog.stop()
 +            if retry and len(changeset):
