@@ -246,7 +246,7 @@ def check_terminal_version(terminalName):
         newenv["LANG"] = "C"
         p = sub.Popen(['sh', '-c', cmdversion], stdout=sub.PIPE, stderr=sub.PIPE, env=newenv)
         out, err = p.communicate()
-        ver_info = out.rstrip().split('\n')
+        ver_info = out.decode().rstrip().split('\n')
     except OSError as exc:
         import errno
         if exc.errno == errno.ENOENT:
