@@ -12,6 +12,7 @@ SRC_URI="http://bash-completion.alioth.debian.org/files/${BPN}-${PV}.tar.bz2"
 SRC_URI[md5sum] = "4e2a9f11a4042a38ee79ddcd048e8b9e"
 SRC_URI[sha256sum] = "2b606804a7d5f823380a882e0f7b6c8a37b0e768e72c3d4107c51fbe8a46ae4f"
 UPSTREAM_CHECK_REGEX = "bash-completion-(?P<pver>(?!2008).+)\.tar"
+UPSTREAM_CHECK_URI = "https://github.com/scop/bash-completion/releases"
 
 PARALLEL_MAKE = ""
 
