@@ -14,7 +14,7 @@ from distutils.version import LooseVersion
 try:
     import git
 except ImportError:
-    print("Please install GitPython (python-git) 0.3.1 or later in order to use this script")
+    print("Please install GitPython (python3-git) 0.3.4 or later in order to use this script")
     sys.exit(1)
 
 def main():
