@@ -46,10 +46,10 @@ python populate_packages_prepend () {
         if pdata:
             version = pdata.get('version', None)
             if version:
-                d.setVar('PKGV_%s' % expanded_pkgname, version.encode("utf8"))
+                d.setVar('PKGV_%s' % expanded_pkgname, version)
             description = pdata.get('description', None)
             if description:
-                d.setVar('SUMMARY_%s' % expanded_pkgname, description.replace(u"\u2018", "'").replace(u"\u2019", "'").encode("utf8"))
+                d.setVar('SUMMARY_%s' % expanded_pkgname, description.replace(u"\u2018", "'").replace(u"\u2019", "'"))
     d.appendVar('RDEPENDS_%s' % d.getVar('PN', True), ' %s' % ' '.join(pkgnames).replace('_', '-'))
 }
 
