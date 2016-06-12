@@ -9,8 +9,8 @@ DEPENDS = "hostperl-runtime-native"
 
 SRC_URI = "${KERNELORG_MIRROR}/linux/libs/security/linux-privs/${BPN}2/${BPN}-${PV}.tar.xz"
 
-SRC_URI[md5sum] = "d43ab9f680435a7fff35b4ace8d45b80"
-SRC_URI[sha256sum] = "cee4568f78dc851d726fc93f25f4ed91cc223b1fe8259daa4a77158d174e6c65"
+SRC_URI[md5sum] = "6666b839e5d46c2ad33fc8aa2ceb5f77"
+SRC_URI[sha256sum] = "693c8ac51e983ee678205571ef272439d83afe62dd8e424ea14ad9790bc35162"
 
 inherit lib_package
 
@@ -54,7 +54,7 @@ do_install() {
 		${EXTRA_OECONF} \
 		DESTDIR="${D}" \
 		prefix="${prefix}" \
-		SBINDIR="${D}${sbindir}"
+		SBINDIR="${sbindir}"
 }
 
 do_install_append() {
