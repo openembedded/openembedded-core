@@ -9,8 +9,8 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 SRC_URI += "file://remove-gets.patch \
             file://musl_dirent.patch \
            "
-SRC_URI[md5sum] = "8f32b2bc1ed7ddf4cf4e4a39711341b0"
-SRC_URI[sha256sum] = "60e4bfe0602fef34cd908d91cf638e17eeb09394d7b98c2487217dc4d3147562"
+SRC_URI[md5sum] = "955cd533955acb1804b83fd70218da51"
+SRC_URI[sha256sum] = "236b11190c0a3a6885bdb8d61424f2b36a5872869aa3f7f695dea4b4843ae2f2"
 
 do_install_append_libc-musl() {
 	rm -f ${D}${libdir}/charset.alias
