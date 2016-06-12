@@ -11,13 +11,13 @@ AUTHOR = "Thomas Hood"
 HOMEPAGE = "http://packages.debian.org/resolvconf"
 RDEPENDS_${PN} = "bash"
 
-SRC_URI = "http://snapshot.debian.org/archive/debian/20150828T220730Z/pool/main/r/${BPN}/${BPN}_1.78.tar.xz \
+SRC_URI = "http://snapshot.debian.org/archive/debian/20160520T044340Z/pool/main/r/${BPN}/${BPN}_1.79.tar.xz \
            file://fix-path-for-busybox.patch \
            file://99_resolvconf \
           "
 
-SRC_URI[md5sum] = "373a9f9544c84aa477a7425ae773b8b5"
-SRC_URI[sha256sum] = "961b22e8fcf0c7de7e90a050323e6fa221bc8b25a5348c160be3506f7e73a7a3"
+SRC_URI[md5sum] = "aab2382020fc518f06a06e924c56d300"
+SRC_URI[sha256sum] = "8e2843cd4162b706f0481b3c281657728cbc2822e50a64fff79b79bd8aa870a0"
 
 # the package is taken from snapshots.debian.org; that source is static and goes stale
 # so we check the latest upstream from a directory that does get updated
