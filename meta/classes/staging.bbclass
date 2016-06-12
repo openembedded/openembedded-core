@@ -181,6 +181,19 @@ python sysroot_cleansstate () {
 do_configure[prefuncs] += "sysroot_cleansstate"
 
 
+BB_SETSCENE_VERIFY_FUNCTION2 = "sysroot_checkhashes2"
+
+def sysroot_checkhashes2(covered, tasknames, fns, d, invalidtasks):
+    problems = set()
+    configurefns = set()
+    for tid in invalidtasks:
+        if tasknames[tid] == "do_configure" and tid not in covered:
+            configurefns.add(fns[tid])
+    for tid in covered:
+        if tasknames[tid] == "do_populate_sysroot" and fns[tid] in configurefns:
+            problems.add(tid)
+    return problems
+
 BB_SETSCENE_VERIFY_FUNCTION = "sysroot_checkhashes"
 
 def sysroot_checkhashes(covered, tasknames, fnids, fns, d, invalidtasks = None):
