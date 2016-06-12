@@ -7,8 +7,8 @@ SRC_URI = "http://ftp.sudo.ws/sudo/dist/sudo-${PV}.tar.gz \
 
 PAM_SRC_URI = "file://sudo.pam"
 
-SRC_URI[md5sum] = "7cf6b9b76d0478a572432bed481dd7b5"
-SRC_URI[sha256sum] = "4316381708324da8b6cb151f655c1a11855207c7c02244d8ffdea5104d7cc308"
+SRC_URI[md5sum] = "a977449587dc857e129bb20555b46af4"
+SRC_URI[sha256sum] = "2d83826fc5125bf073acc203dbda1cf2abeee017090ccc9dddb0431a53d5064d"
 
 DEPENDS += " ${@bb.utils.contains('DISTRO_FEATURES', 'pam', 'libpam', '', d)}"
 RDEPENDS_${PN} += " ${@bb.utils.contains('DISTRO_FEATURES', 'pam', 'pam-plugin-limits pam-plugin-keyinit', '', d)}"
