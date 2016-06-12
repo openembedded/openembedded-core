@@ -13,17 +13,15 @@ Signed-off-by: Ming Liu <ming.liu@windriver.com>
 
 Upstream-Status: Pending
 
-Index: gzip-1.3.12/Makefile.am
+Index: gzip-1.8/Makefile.am
 ===================================================================
-diff -urpN a/Makefile.am b/Makefile.am
---- a/Makefile.am	2013-11-30 10:06:09.402234871 +0800
-+++ b/Makefile.am	2013-11-30 10:13:42.952236025 +0800
-@@ -81,9 +81,8 @@ gzip.doc.gz: gzip.doc $(bin_PROGRAMS)
+--- gzip-1.8.orig/Makefile.am
++++ gzip-1.8/Makefile.am
+@@ -81,8 +81,7 @@ gzip.doc.gz: gzip.doc $(bin_PROGRAMS)
  SUFFIXES = .in
  .in:
  	$(AM_V_GEN)sed \
 -		-e 's|/bin/sh|$(SHELL)|g' \
- 		-e 's|[@]bindir@|'\''$(bindir)'\''|g' \
 -		-e 's|[@]GREP@|$(GREP)|g' \
 +		-e 's|[@]GREP@|$(base_bindir)/grep|g' \
  		-e 's|[@]VERSION@|$(VERSION)|g' \
