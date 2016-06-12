@@ -6,12 +6,9 @@ SRC_URI += "file://acinclude.m4 \
             file://run-ptest \
             file://ptest.patch \
             file://mkdir.patch \
-            file://xattr_ordering.patch \
-            file://Revert-mke2fs-enable-the-metadata_csum-and-64bit-fea.patch \
 "
 
-SRCREV = "0f26747167cc9d82df849b0aad387bf824f04544"
-PV = "1.42.99+1.43+git${SRCPV}"
+SRCREV = "d6adf070b0e85f209c0d7f310188b134b5cb7180"
 UPSTREAM_CHECK_GITTAGREGEX = "v(?P<pver>\d+\.\d+(\.\d+)*)$"
 
 EXTRA_OECONF += "--libdir=${base_libdir} --sbindir=${base_sbindir} \
