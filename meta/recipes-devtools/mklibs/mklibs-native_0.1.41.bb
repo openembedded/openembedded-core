@@ -15,7 +15,7 @@ SRC_URI = "http://ftp.de.debian.org/debian/pool/main/m/mklibs/${BPN}_${PV}.tar.x
 	file://fix_cross_compile.patch \
 "
 
-SRC_URI[md5sum] = "e1dafe5f962caa9dc5f2651c0723812a"
-SRC_URI[sha256sum] = "1db24ae779d21ccfed49f22e49a2b7ee43ec0e9197bc206d81cd02f96e91e125"
+SRC_URI[md5sum] = "6b2979876a611717df3d49e7f9cf291d"
+SRC_URI[sha256sum] = "058c7349f8ec8a03b529c546a95cd6426741bd819f1e1211f499273eb4bf5d89"
 
 inherit autotools gettext native pythonnative
