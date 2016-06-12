@@ -1,0 +1,36 @@
+From 78decbeb84fb60db4e549ad3e8eb34e030e96d39 Mon Sep 17 00:00:00 2001
+From: Zhenhua Luo <zhenhua.luo@nxp.com>
+Date: Sat, 11 Jun 2016 22:08:29 -0500
+Subject: [PATCH] fix the incorrect assembling for ppc wait mnemonic
+
+Signed-off-by: Zhenhua Luo <zhenhua.luo@nxp.com>
+
+Upstream-Status: Pending
+---
+ opcodes/ppc-opc.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/opcodes/ppc-opc.c b/opcodes/ppc-opc.c
+index e8c92f6..a9de474 100644
+--- a/opcodes/ppc-opc.c
++++ b/opcodes/ppc-opc.c
+@@ -4777,7 +4777,6 @@ const struct powerpc_opcode powerpc_opcodes[] = {
+ {"ldepx",	X(31,29),	X_MASK,      E500MC|PPCA2|PPCVLE, PPCNONE, {RT, RA0, RB}},
+ 
+ {"waitasec",	X(31,30),	XRTRARB_MASK,POWER8,	POWER9,		{0}},
+-{"wait",	X(31,30),	XWC_MASK,    POWER9,	PPCNONE,	{WC}},
+ 
+ {"lwepx",	X(31,31),	X_MASK,	     E500MC|PPCA2|PPCVLE, PPCNONE, {RT, RA0, RB}},
+ 
+@@ -4831,7 +4830,7 @@ const struct powerpc_opcode powerpc_opcodes[] = {
+ 
+ {"waitrsv",	X(31,62)|(1<<21), 0xffffffff, E500MC|PPCA2, PPCNONE,	{0}},
+ {"waitimpl",	X(31,62)|(2<<21), 0xffffffff, E500MC|PPCA2, PPCNONE,	{0}},
+-{"wait",	X(31,62),	XWC_MASK,    E500MC|PPCA2|PPCVLE, PPCNONE, {WC}},
++{"wait",	X(31,62),	XWC_MASK,    E500MC|PPCA2|PPCVLE|POWER9, PPCNONE, {WC}},
+ 
+ {"dcbstep",	XRT(31,63,0),	XRT_MASK,    E500MC|PPCA2|PPCVLE, PPCNONE, {RA0, RB}},
+ 
+-- 
+2.5.0
+

@@ -34,6 +34,7 @@ SRC_URI = "\
      file://0012-Add-support-for-Netlogic-XLP.patch \
      file://0013-Fix-GOT-address-computations-in-initial-PLT-entries-.patch \
      file://0014-Correct-nios2-_gp-address-computation.patch \
+     file://0015-fix-the-incorrect-assembling-for-ppc-wait-mnemonic.patch \
 "
 S  = "${WORKDIR}/git"
 
