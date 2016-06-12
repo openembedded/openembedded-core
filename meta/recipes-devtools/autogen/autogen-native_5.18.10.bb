@@ -11,11 +11,10 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 SRC_URI = "${GNU_MIRROR}/autogen/rel${PV}/autogen-${PV}.tar.gz \
            file://increase-timeout-limit.patch \
            file://mk-tpl-config.sh-force-exit-value-to-be-0-in-subproc.patch \
-           file://redirect-output-dir.patch \
 "
 
-SRC_URI[md5sum] = "fdee403e524c0af3ded6b3becb365671"
-SRC_URI[sha256sum] = "2fc7f12a5ecb3b1e8bd4364aa906b837cff01f80edb7d2fb38ed8b9dfbcd3271"
+SRC_URI[md5sum] = "2d1b5226e1929d0680011df631289571"
+SRC_URI[sha256sum] = "0b8681d9724c481d3b726b5a9e81d3d09dc7f307d1a801c76d0a30d8f843d20a"
 
 UPSTREAM_CHECK_URI = "http://ftp.gnu.org/gnu/autogen/"
 UPSTREAM_CHECK_REGEX = "rel(?P<pver>\d+(\.\d+)+)/"
