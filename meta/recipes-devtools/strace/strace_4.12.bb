@@ -9,18 +9,13 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/strace/strace-${PV}.tar.xz \
            file://more-robust-test-for-m32-mx32-compile-support.patch \
            file://update-gawk-paths.patch \
            file://use-asm-sgidefs.h.patch \
-           file://0001-arc-metag-nios2-or1k-tile-fix-build.patch \
            file://Makefile-ptest.patch \
-           file://0001-tests-scm_rights.c-use-libtests.patch \
-           file://0001-scm_rights-fd.test-rewrite-without-fork.patch \
-           file://0001-Move-gcc-compat-macros-to-gcc_compat.h.patch \
-           file://0001-tests-introduce-libtests.patch \
            file://run-ptest \
            file://0001-Fix-build-when-using-non-glibc-libc-implementation-o.patch \
            "
 
-SRC_URI[md5sum] = "a15d2555a7febb56d00c6e1a51c655dc"
-SRC_URI[sha256sum] = "e86a5f6cd8f941f67f3e4b28f4e60f3d9185c951cf266404533210a2e5cd8152"
+SRC_URI[md5sum] = "efb8611fc332e71ec419c53f59faa93e"
+SRC_URI[sha256sum] = "51144b78cb9ba22211b95a5aafe0af3694c0d575b25975d80ca9dd4dfd7c1e59"
 
 inherit autotools ptest bluetooth
 
