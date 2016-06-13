@@ -21,6 +21,8 @@ python do_package_ipk () {
     import textwrap
     import subprocess
 
+    oldcwd = os.getcwd()
+
     workdir = d.getVar('WORKDIR', True)
     outdir = d.getVar('PKGWRITEDIRIPK', True)
     tmpdir = d.getVar('TMPDIR', True)
@@ -254,6 +256,7 @@ python do_package_ipk () {
         cleanupcontrol(root)
         bb.utils.unlockfile(lf)
 
+    os.chdir(oldcwd)
 }
 # Otherwise allarch packages may change depending on override configuration
 do_package_ipk[vardepsexclude] = "OVERRIDES"
