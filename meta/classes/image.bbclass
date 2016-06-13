@@ -519,14 +519,13 @@ python create_symlinks() {
     taskname = d.getVar("BB_CURRENTTASK", True)
     subimages = (d.getVarFlag("do_" + taskname, 'subimages', False) or "").split()
     imgsuffix = d.getVarFlag("do_" + taskname, 'imgsuffix', True) or d.expand("${IMAGE_NAME_SUFFIX}.")
-    os.chdir(deploy_dir)
 
     if not link_name:
         return
     for type in subimages:
-        dst = deploy_dir + "/" + link_name + "." + type
+        dst = os.path.join(deploy_dir, link_name + "." + type)
         src = img_name + imgsuffix + type
-        if os.path.exists(src):
+        if os.path.exists(os.path.join(deploy_dir, src)):
             bb.note("Creating symlink: %s -> %s" % (dst, src))
             if os.path.islink(dst):
                 if d.getVar('RM_OLD_IMAGE', True) == "1" and \
