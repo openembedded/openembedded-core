@@ -42,3 +42,23 @@ class TestExport(oeSelfTest):
             # Verify ping test was succesful
             failure = True if 'FAIL' in result.output else False
             self.assertNotEqual(True, failure, 'ping test failed')
+
+
+class TestImage(oeSelfTest):
+
+    def test_testimage_install(self):
+        """
+        Summary: Check install packages functionality for testimage/testexport.
+        Expected: 1. Import tests from a directory other than meta.
+                  2. Check install/unistall of socat.
+        Product: oe-core
+        Author: Mariano Lopez <mariano.lopez@intel.com>
+        """
+
+        features = 'INHERIT += "testimage"\n'
+        features += 'TEST_SUITES = "ping ssh selftest"\n'
+        self.write_config(features)
+
+        # Build core-image-sato and testimage
+        bitbake('core-image-full-cmdline socat')
+        bitbake('-c testimage core-image-full-cmdline')
