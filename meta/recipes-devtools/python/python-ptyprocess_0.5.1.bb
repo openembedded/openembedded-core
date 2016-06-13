@@ -19,3 +19,5 @@ inherit setuptools
 RDEPENDS_${PN} = "\
     python-core \
 "
+
+BBCLASSEXTEND = "nativesdk"
