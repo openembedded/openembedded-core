@@ -6,8 +6,8 @@ DEPENDS = "autoconf-native automake-native"
 
 SRC_URI = "${GNU_MIRROR}/${BPN}/${BPN}-${PV}.tar.xz"
 
-SRC_URI[md5sum] = "d1d44a7a7b2bd61755a2045d96ecaea0"
-SRC_URI[sha256sum] = "c232af6475ef65bee02770862a362f4c4c2e6c9967d39e987eb94cadcfc13856"
+SRC_URI[md5sum] = "544aca496a7d89de3e5d99e56a2f03d3"
+SRC_URI[sha256sum] = "d4ecf697d13f14dd1a78c5995f06459bff706fd1ce593d1c02d81667c0207753"
 
 inherit autotools native
 
