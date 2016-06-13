@@ -1304,14 +1304,15 @@ def reset(args, config, basepath, workspace):
         if args.all:
             raise DevtoolError("Recipe cannot be specified if -a/--all is used")
         else:
-            check_workspace_recipe(workspace, args.recipename, checksrc=False)
+            for recipe in args.recipename:
+                check_workspace_recipe(workspace, recipe, checksrc=False)
     elif not args.all:
         raise DevtoolError("Recipe must be specified, or specify -a/--all to "
                            "reset all recipes")
     if args.all:
         recipes = list(workspace.keys())
     else:
-        recipes = [args.recipename]
+        recipes = args.recipename
 
     if recipes and not args.no_clean:
         if len(recipes) == 1:
@@ -1449,9 +1450,9 @@ def register_commands(subparsers, context):
     parser_status.set_defaults(func=status)
 
     parser_reset = subparsers.add_parser('reset', help='Remove a recipe from your workspace',
-                                         description='Removes the specified recipe from your workspace (resetting its state)',
+                                         description='Removes the specified recipe(s) from your workspace (resetting its state back to that defined by the metadata).',
                                          group='working', order=-100)
-    parser_reset.add_argument('recipename', nargs='?', help='Recipe to reset')
+    parser_reset.add_argument('recipename', nargs='*', help='Recipe to reset')
     parser_reset.add_argument('--all', '-a', action="store_true", help='Reset all recipes (clear workspace)')
     parser_reset.add_argument('--no-clean', '-n', action="store_true", help='Don\'t clean the sysroot to remove recipe output')
     parser_reset.set_defaults(func=reset)
