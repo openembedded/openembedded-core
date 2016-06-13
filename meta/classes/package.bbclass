@@ -841,6 +841,9 @@ python split_and_strip_files () {
     dvar = d.getVar('PKGD', True)
     pn = d.getVar('PN', True)
 
+    oldcwd = os.getcwd()
+    os.chdir(dvar)
+
     # We default to '.debug' style
     if d.getVar('PACKAGE_DEBUG_SPLIT_STYLE', True) == 'debug-file-directory':
         # Single debug-file-directory style debug info
@@ -863,8 +866,6 @@ python split_and_strip_files () {
 
     sourcefile = d.expand("${WORKDIR}/debugsources.list")
     bb.utils.remove(sourcefile)
-
-    os.chdir(dvar)
 
     # Return type (bits):
     # 0 - not elf
@@ -1052,6 +1053,7 @@ python split_and_strip_files () {
     #
     # End of strip
     #
+    os.chdir(oldcwd)
 }
 
 python populate_packages () {
@@ -2129,4 +2131,3 @@ def mapping_rename_hook(d):
     runtime_mapping_rename("RDEPENDS", pkg, d)
     runtime_mapping_rename("RRECOMMENDS", pkg, d)
     runtime_mapping_rename("RSUGGESTS", pkg, d)
-
