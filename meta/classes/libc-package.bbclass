@@ -226,7 +226,7 @@ python package_do_split_gconvs () {
     # GLIBC_GENERATE_LOCALES var specifies which locales to be generated. empty or "all" means all locales
     to_generate = d.getVar('GLIBC_GENERATE_LOCALES', True)
     if not to_generate or to_generate == 'all':
-        to_generate = supported.keys()
+        to_generate = sorted(supported.keys())
     else:
         to_generate = to_generate.split()
         for locale in to_generate:
@@ -391,4 +391,3 @@ python package_do_split_gconvs () {
 python populate_packages_prepend () {
     bb.build.exec_func('package_do_split_gconvs', d)
 }
-
