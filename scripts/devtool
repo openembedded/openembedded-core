@@ -301,6 +301,7 @@ def main():
         tinfoil.shutdown()
 
     subparsers = parser.add_subparsers(dest="subparser_name", title='subcommands', metavar='<subcommand>')
+    subparsers.required = True
 
     subparsers.add_subparser_group('sdk', 'SDK maintenance', -2)
     subparsers.add_subparser_group('advanced', 'Advanced', -1)

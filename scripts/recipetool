@@ -60,6 +60,7 @@ def main():
     parser.add_argument('-h', '--help', action='help', default=argparse.SUPPRESS,
                         help='show this help message and exit')
     subparsers = parser.add_subparsers(title='subcommands', metavar='<subcommand>')
+    subparsers.required = True
 
     if global_args.debug:
         logger.setLevel(logging.DEBUG)
