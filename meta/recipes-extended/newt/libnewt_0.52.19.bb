@@ -18,15 +18,14 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=5f30f0716dfdd0d91eb439ebec522ec2"
 DEPENDS = "slang popt"
 
 SRC_URI = "https://fedorahosted.org/releases/n/e/newt/newt-${PV}.tar.gz \
-           file://remove_slang_include.patch \
            file://fix_SHAREDDIR.patch \
            file://cross_ar.patch \
            file://Makefile.in-Add-tinfo-library-to-the-linking-librari.patch \
            file://pie-flags.patch \
 "
 
-SRC_URI[md5sum] = "685721bee1a318570704b19dcf31d268"
-SRC_URI[sha256sum] = "771b0e634ede56ae6a6acd910728bb5832ac13ddb0d1d27919d2498dab70c91e"
+SRC_URI[md5sum] = "e4aa0f7943edd39c52481a87f68f412a"
+SRC_URI[sha256sum] = "08c0db56c21996af6a7cbab99491b774c6c09cef91cd9b03903c84634bff2e80"
 
 S = "${WORKDIR}/newt-${PV}"
 
