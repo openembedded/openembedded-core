@@ -41,7 +41,7 @@ DEPENDS = "openssl-native bzip2-replacement-native zlib-native readline-native s
 
 inherit native
 
-RPROVIDES += "python3-distutils-native python3-compression-native python3-textutils-native python3-core-native"
+RPROVIDES += "python3-distutils-native python3-compression-native python3-textutils-native python3-core-native python3-importlib-native"
 
 EXTRA_OECONF_append = " --bindir=${bindir}/${PN} --without-ensurepip"
 
