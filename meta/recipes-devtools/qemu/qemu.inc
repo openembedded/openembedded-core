@@ -30,8 +30,12 @@ SRC_URI_append_class-native = "\
 
 EXTRA_OECONF += "--target-list=${@get_qemu_target_list(d)} --disable-werror  --disable-bluez --disable-libiscsi --with-system-pixman --extra-cflags='${CFLAGS}'"
 
-EXTRA_OECONF_class-nativesdk = "--target-list=${@get_qemu_target_list(d)} --disable-werror \
-				"
+EXTRA_OECONF_class-nativesdk = "--target-list=${@get_qemu_target_list(d)} --disable-werror"
+
+EXTRA_OEMAKE_append_class-native = " LD='${LD}' AR='${AR}' OBJCOPY='${OBJCOPY}' LDFLAGS='${LDFLAGS}'"
+
+LDFLAGS_append_class-native = " -fuse-ld=bfd"
+
 export LIBTOOL="${HOST_SYS}-libtool"
 
 do_configure_prepend_class-native() {
@@ -40,6 +44,11 @@ do_configure_prepend_class-native() {
 	if [ ! -z "$BHOST_PKGCONFIG_PATH" ]; then
 		export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:$BHOST_PKGCONFIG_PATH
 	fi
+
+	# Alter target makefiles to accept CFLAGS set via env
+	sed -i -r \
+		-e 's/^(C|OP_C|HELPER_C)FLAGS=/\1FLAGS+=/' \
+		"${S}"/Makefile "${S}"/Makefile.target
 }
 
 KVMENABLE = "--enable-kvm"
