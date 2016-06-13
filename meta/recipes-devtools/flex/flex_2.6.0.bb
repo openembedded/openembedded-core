@@ -51,5 +51,8 @@ do_install_ptest() {
 	cp ${S}/build-aux/test-driver ${D}${PTEST_PATH}/build-aux/
 	cp -r ${S}/tests/* ${D}${PTEST_PATH}
 	cp -r ${B}/tests/* ${D}${PTEST_PATH}
-	sed -e 's/^Makefile:/_Makefile:/' -e 's/^srcdir = \(.*\)/srcdir = ./' -e 's/^top_srcdir = \(.*\)/top_srcdir = ./'  -i ${D}${PTEST_PATH}/Makefile
+	sed -e 's/^Makefile:/_Makefile:/' \
+	    -e 's/^srcdir = \(.*\)/srcdir = ./' -e 's/^top_srcdir = \(.*\)/top_srcdir = ./' \
+	    -e 's/^builddir = \(.*\)/builddir = ./' -e 's/^top_builddir = \(.*\)/top_builddir = ./' \
+	    -i ${D}${PTEST_PATH}/Makefile
 }
