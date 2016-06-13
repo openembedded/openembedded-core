@@ -6,7 +6,9 @@ SECTION = "x11/gnome"
 LICENSE = "LGPL-2.1"
 LIC_FILES_CHKSUM = "file://COPYING;md5=2d5025d4aa3495befef8f17206a5b0a1"
 
-inherit autotools pkgconfig gettext gtk-icon-cache upstream-version-is-even
+inherit autotools pkgconfig gettext gtk-icon-cache upstream-version-is-even distro_features_check
+
+ANY_OF_DISTRO_FEATURES = "${GTK2DISTROFEATURES}"
 
 DEPENDS += "intltool-native gtk+"
 
