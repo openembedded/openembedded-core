@@ -15,6 +15,9 @@
 # to try and reduce disk usage
 BB_SCHEDULER ?= "completion"
 
+# Run the rm_work task in the idle scheduling class
+BB_TASK_IONICE_LEVEL_task-rm_work = "3.0"
+
 RMWORK_ORIG_TASK := "${BB_DEFAULT_TASK}"
 BB_DEFAULT_TASK = "rm_work_all"
 
