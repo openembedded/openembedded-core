@@ -61,14 +61,24 @@ class oeTest(unittest.TestCase):
 
     @classmethod
     def hasPackage(self, pkg):
-        for item in oeTest.tc.pkgmanifest.split('\n'):
-            if re.match(pkg, item):
+        """
+        True if the full package name exists in the manifest, False otherwise.
+        """
+        return pkg in oeTest.tc.pkgmanifest
+
+    @classmethod
+    def hasPackageMatch(self, match):
+        """
+        True if match exists in the manifest as a regular expression substring,
+        False otherwise.
+        """
+        for s in oeTest.tc.pkgmanifest:
+            if re.match(match, s):
                 return True
         return False
 
     @classmethod
     def hasFeature(self,feature):
-
         if feature in oeTest.tc.imagefeatures or \
                 feature in oeTest.tc.distrofeatures:
             return True
@@ -391,17 +401,18 @@ class RuntimeTestContext(TestContext):
 
         self.target = target
 
+        self.pkgmanifest = {}
         manifest = os.path.join(d.getVar("DEPLOY_DIR_IMAGE", True),
                 d.getVar("IMAGE_LINK_NAME", True) + ".manifest")
         nomanifest = d.getVar("IMAGE_NO_MANIFEST", True)
         if nomanifest is None or nomanifest != "1":
             try:
                 with open(manifest) as f:
-                    self.pkgmanifest = f.read()
+                    for line in f:
+                        (pkg, arch, version) = line.strip().split()
+                        self.pkgmanifest[pkg] = (version, arch)
             except IOError as e:
                 bb.fatal("No package manifest file found. Did you build the image?\n%s" % e)
-        else:
-            self.pkgmanifest = ""
 
     def _get_test_namespace(self):
         return "runtime"
@@ -626,8 +637,11 @@ class SDKTestContext(TestContext):
         if not hasattr(self, 'target_manifest'):
             self.target_manifest = d.getVar("SDK_TARGET_MANIFEST", True)
         try:
+            self.pkgmanifest = {}
             with open(self.target_manifest) as f:
-                 self.pkgmanifest = f.read()
+                for line in f:
+                    (pkg, arch, version) = line.strip().split()
+                    self.pkgmanifest[pkg] = (version, arch)
         except IOError as e:
             bb.fatal("No package manifest file found. Did you build the sdk image?\n%s" % e)
 
