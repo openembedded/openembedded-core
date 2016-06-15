@@ -312,6 +312,10 @@ autotools_do_configure() {
 	fi
 }
 
+autotools_do_compile() {
+    oe_runmake
+}
+
 autotools_do_install() {
 	oe_runmake 'DESTDIR=${D}' install
 	# Info dir listing isn't interesting at this point so remove it if it exists.
@@ -322,6 +326,6 @@ autotools_do_install() {
 
 inherit siteconfig
 
-EXPORT_FUNCTIONS do_configure do_install
+EXPORT_FUNCTIONS do_configure do_compile do_install
 
 B = "${WORKDIR}/build"
