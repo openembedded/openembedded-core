@@ -7,7 +7,7 @@ from oeqa.utils.httpserver import HTTPService
 def setUpModule():
     if not oeRuntimeTest.hasFeature("package-management"):
         skipModule("Image doesn't have package management feature")
-    if not oeRuntimeTest.hasPackage("smart"):
+    if not oeRuntimeTest.hasPackage("smartpm"):
         skipModule("Image doesn't have smart installed")
     if "package_rpm" != oeRuntimeTest.tc.d.getVar("PACKAGE_CLASSES", True).split()[0]:
         skipModule("Rpm is not the primary package manager")
