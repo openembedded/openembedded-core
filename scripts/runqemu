@@ -350,8 +350,7 @@ QEMUMICROBLAZE_DEFAULT_FSTYPE=cpio
 QEMUZYNQ_DEFAULT_KERNEL=uImage
 QEMUZYNQ_DEFAULT_FSTYPE=cpio
 
-# Default to booting u-boot as a direct Linux boot isn't supported yet.
-QEMUZYNQMP_DEFAULT_KERNEL=u-boot-qemuzynqmp.elf
+QEMUZYNQMP_DEFAULT_KERNEL=Image
 QEMUZYNQMP_DEFAULT_FSTYPE=cpio
 
 setup_path_vars() {
