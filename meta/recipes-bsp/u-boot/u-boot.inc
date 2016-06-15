@@ -32,7 +32,6 @@ UBOOT_LOCALVERSION ?= ""
 # but enable individual recipes to change this value.
 UBOOT_SUFFIX ??= "bin"
 UBOOT_IMAGE ?= "u-boot-${MACHINE}-${PV}-${PR}.${UBOOT_SUFFIX}"
-UBOOT_BINARY ?= "u-boot.${UBOOT_SUFFIX}"
 UBOOT_SYMLINK ?= "u-boot-${MACHINE}.${UBOOT_SUFFIX}"
 UBOOT_MAKE_TARGET ?= "all"
 
@@ -82,15 +81,22 @@ do_compile () {
 
     if [ -n "${UBOOT_CONFIG}" ]
     then
+        unset i j k
         for config in ${UBOOT_MACHINE}; do
             i=$(expr $i + 1);
-            for type  in ${UBOOT_CONFIG}; do
+            for type in ${UBOOT_CONFIG}; do
                 j=$(expr $j + 1);
                 if [ $j -eq $i ]
                 then
                     oe_runmake O=${config} ${config}
                     oe_runmake O=${config} ${UBOOT_MAKE_TARGET}
-                    cp  ${S}/${config}/${UBOOT_BINARY}  ${S}/${config}/u-boot-${type}.${UBOOT_SUFFIX}
+                    for binary in ${UBOOT_BINARIES}; do
+                        k=$(expr $k + 1);
+                        if [ $k -eq $i ]; then
+                            cp ${S}/${config}/${binary} ${S}/${config}/u-boot-${type}.${UBOOT_SUFFIX}
+                        fi
+                    done
+                    unset k
                 fi
             done
             unset  j
