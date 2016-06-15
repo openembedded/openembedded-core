@@ -10,7 +10,6 @@ RCONFLICTS_${PN} = "qemu-config"
 
 RDEPENDS_${PN} = "\
     distcc-config \
-    oprofileui-server \
     nfs-export-root \
     bash \
     "
