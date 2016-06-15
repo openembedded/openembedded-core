@@ -15,12 +15,10 @@ SRC_URI = "http://downloads.yoctoproject.org/releases/${BPN}/${BPN}-${PV}.tar.gz
            file://opkg-configure.service \
            file://opkg.conf \
            file://0001-opkg_conf-create-opkg.lock-in-run-instead-of-var-run.patch \
-           file://0001-libsolv_solver_set_arch_policy-use-correct-logic-dur.patch \
-           file://0001-configure.ac-use-pkg-config-for-libsolv.patch \
 "
 
-SRC_URI[md5sum] = "43735e5dc1ebf46bd6ce56a7cdfdc720"
-SRC_URI[sha256sum] = "d2c6c02a8384ec21168a1f0a186cb5e9f577d1452f491d02ed3e56b2ea8b87df"
+SRC_URI[md5sum] = "b2cc1baa89d0b3d49e63ab002fd2e0a6"
+SRC_URI[sha256sum] = "c9fa948a779a4e493b9669c239de317d43c43accbccbb0cf84056f9b269ba7b0"
 
 inherit autotools pkgconfig systemd
 
@@ -37,7 +35,7 @@ PACKAGECONFIG[ssl-curl] = "--enable-ssl-curl,--disable-ssl-curl,curl openssl"
 PACKAGECONFIG[openssl] = "--enable-openssl,--disable-openssl,openssl"
 PACKAGECONFIG[sha256] = "--enable-sha256,--disable-sha256"
 PACKAGECONFIG[pathfinder] = "--enable-pathfinder,--disable-pathfinder,pathfinder"
-PACKAGECONFIG[libsolv] = "--enable-solver=libsolv,--disable-solver,libsolv"
+PACKAGECONFIG[libsolv] = "--with-libsolv,--without-libsolv,libsolv"
 
 do_install_append () {
 	install -d ${D}${sysconfdir}/opkg
