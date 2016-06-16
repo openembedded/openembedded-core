@@ -112,6 +112,11 @@ class BuildPerfTest(object):
         """Actual test payload"""
         raise NotImplementedError
 
+    def log_cmd_output(self, cmd):
+        """Run a command and log it's output"""
+        with open(self.cmd_log, 'a') as fobj:
+            runCmd(cmd, stdout=fobj)
+
     def measure_cmd_resources(self, cmd, name, legend):
         """Measure system resource usage of a command"""
         def str_time_to_timedelta(strtime):
