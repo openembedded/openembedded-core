@@ -14,11 +14,11 @@ LICENSE = "GPLv2 & LGPLv2.1"
 LIC_FILES_CHKSUM = "file://LICENSE.GPL2;md5=751419260aa954499f7abaabaa882bbe \
                     file://LICENSE.LGPL2.1;md5=4fbd65380cdd255951079008b364516c"
 
-SRCREV = "714c62b46379abb7558c544665522aca91691e10"
+SRCREV = "3a74d4fc90cb322a4784a3515bef7118c8f8c5ba"
 
 SRC_URI = "git://github.com/systemd/systemd.git;protocol=git"
 
-PV = "229+git${SRCPV}"
+PV = "230+git${SRCPV}"
 
 S = "${WORKDIR}/git"
 

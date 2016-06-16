@@ -35,7 +35,6 @@ SRC_URI += " \
            file://0020-check-for-uchar.h-in-configure.patch \
            file://0021-include-missing.h-for-getting-secure_getenv-definiti.patch \
            file://0022-socket-util-don-t-fail-if-libc-doesn-t-support-IDN.patch \
-           file://0023-build-sys-fix-build-with-libgrcypt-disabled.patch \
            file://udev-re-enable-mount-propagation-for-udevd.patch \
 "
 SRC_URI_append_libc-uclibc = "\
@@ -57,7 +56,6 @@ PACKAGECONFIG ??= "xz \
                    machined \
                    backlight \
                    quotacheck \
-                   bootchart \
                    hostnamed \
                    ${@bb.utils.contains('TCLIBC', 'glibc', 'myhostname sysusers', '', d)} \
                    hibernate \
@@ -91,7 +89,6 @@ PACKAGECONFIG[networkd] = "--enable-networkd,--disable-networkd"
 PACKAGECONFIG[machined] = "--enable-machined,--disable-machined"
 PACKAGECONFIG[backlight] = "--enable-backlight,--disable-backlight"
 PACKAGECONFIG[quotacheck] = "--enable-quotacheck,--disable-quotacheck"
-PACKAGECONFIG[bootchart] = "--enable-bootchart,--disable-bootchart"
 PACKAGECONFIG[hostnamed] = "--enable-hostnamed,--disable-hostnamed"
 PACKAGECONFIG[myhostname] = "--enable-myhostname,--disable-myhostname"
 PACKAGECONFIG[rfkill] = "--enable-rfkill,--disable-rfkill"
@@ -255,6 +252,8 @@ do_install_ptest () {
        # install data files needed for tests
        install -d ${D}${PTEST_PATH}/tests/test
        cp -rfL ${S}/test/* ${D}${PTEST_PATH}/tests/test
+       # python is disabled for systemd, thus removing these python testing scripts
+       rm ${D}${PTEST_PATH}/tests/test/*.py
        sed -i 's/"tree"/"ls"/' ${D}${PTEST_PATH}/tests/test/udev-test.pl
 
        install -d ${D}${PTEST_PATH}/tests/catalog
