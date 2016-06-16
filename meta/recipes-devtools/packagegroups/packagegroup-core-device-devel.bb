@@ -12,5 +12,5 @@ RDEPENDS_${PN} = "\
     distcc-config \
     nfs-export-root \
     bash \
+    binutils-symlinks \
     "
-
