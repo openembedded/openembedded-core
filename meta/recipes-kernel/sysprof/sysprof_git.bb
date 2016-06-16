@@ -28,10 +28,8 @@ EXTRA_OECONF = "--enable-compile-warnings"
 PACKAGECONFIG ?= "${@bb.utils.contains_any('DISTRO_FEATURES', '${GTK3DISTROFEATURES}', 'gtk', '', d)}"
 PACKAGECONFIG[gtk] = "--enable-gtk,--disable-gtk,gtk+3"
 
-FILES_${PN} += "${datadir}/icons/ ${libdir}"
-FILES_${PN}-dev = "${prefix}/include"
+FILES_${PN} += "${datadir}/icons/ ${libdir}/libsysprof*"
+FILES_${PN}-dev = "${includedir} ${libdir}/pkgconfig"
 
 # We do not yet work for aarch64.
-#
 COMPATIBLE_HOST = "^(?!aarch64).*"
-
