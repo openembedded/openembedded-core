@@ -53,6 +53,8 @@ python do_package_deb () {
     import textwrap
     import subprocess
 
+    oldcwd = os.getcwd()
+
     workdir = d.getVar('WORKDIR', True)
     if not workdir:
         bb.error("WORKDIR not defined, unable to package")
@@ -311,6 +313,7 @@ python do_package_deb () {
 
         cleanupcontrol(root)
         bb.utils.unlockfile(lf)
+    os.chdir(oldcwd)
 }
 # Indirect references to these vars
 do_package_write_deb[vardeps] += "PKGV PKGR PKGV DESCRIPTION SECTION PRIORITY MAINTAINER DPKG_ARCH PN HOMEPAGE"
