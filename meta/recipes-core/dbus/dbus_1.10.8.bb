@@ -17,11 +17,10 @@ SRC_URI = "http://dbus.freedesktop.org/releases/dbus/dbus-${PV}.tar.gz \
            file://dbus-1.init \
            file://os-test.patch \
            file://clear-guid_from_server-if-send_negotiate_unix_f.patch \
-           file://0001-configure.ac-support-large-file-for-stat64.patch \
 "
 
-SRC_URI[md5sum] = "26d0cf3a1c9782cb0e342101f0450440"
-SRC_URI[sha256sum] = "b5fefa08a77edd76cd64d872db949eebc02cf6f3f8be82e4bbc641742af5d35f"
+SRC_URI[md5sum] = "e912e930f249454752512aa7ac864d43"
+SRC_URI[sha256sum] = "baf3d22baa26d3bdd9edc587736cd5562196ce67996d65b82103bedbe1f0c014"
 
 inherit useradd autotools pkgconfig gettext update-rc.d upstream-version-is-even
 
