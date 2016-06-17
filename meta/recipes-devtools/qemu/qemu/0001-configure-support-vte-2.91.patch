@@ -1,0 +1,79 @@
+From f40a8ceaaf0ee37fcfeb6900960632d7a7085a9f Mon Sep 17 00:00:00 2001
+From: Jussi Kukkonen <jussi.kukkonen@intel.com>
+Date: Fri, 17 Jun 2016 21:09:03 +0300
+Subject: [PATCH] configure: support vte-2.91
+
+Upstream-status: Backport [c6feff9e09aa99]
+Signed-off-by: Jussi Kukkonen <jussi.kukkonen@intel.com>
+
+Original commit message below:
+
+From: Cole Robinson <crobinso@redhat.com>
+Date: Fri, 6 May 2016 14:03:12 -0400
+Subject: [PATCH] configure: support vte-2.91
+
+vte >= 0.37 expores API version 2.91, which is where all the active
+development is. qemu builds and runs fine with that version, so use it
+if it's available.
+
+Signed-off-by: Cole Robinson <crobinso@redhat.com>
+Message-id: b4f0375647f7b368d3dbd3834aee58cb0253566a.1462557436.git.crobinso@redhat.com
+Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+---
+ configure | 17 +++++++++++------
+ 1 file changed, 11 insertions(+), 6 deletions(-)
+
+diff --git a/configure b/configure
+index 54a3189..a16fa2b 100755
+--- a/configure
++++ b/configure
+@@ -2394,20 +2394,25 @@ fi
+ 
+ if test "$vte" != "no"; then
+     if test "$gtkabi" = "3.0"; then
+-      vtepackage="vte-2.90"
+-      vteversion="0.32.0"
++      vteminversion="0.32.0"
++      if $pkg_config --exists "vte-2.91"; then
++        vtepackage="vte-2.91"
++      else
++        vtepackage="vte-2.90"
++      fi
+     else
+       vtepackage="vte"
+-      vteversion="0.24.0"
++      vteminversion="0.24.0"
+     fi
+-    if $pkg_config --exists "$vtepackage >= $vteversion"; then
++    if $pkg_config --exists "$vtepackage >= $vteminversion"; then
+         vte_cflags=`$pkg_config --cflags $vtepackage`
+         vte_libs=`$pkg_config --libs $vtepackage`
++        vteversion=`$pkg_config --modversion $vtepackage`
+         libs_softmmu="$vte_libs $libs_softmmu"
+         vte="yes"
+     elif test "$vte" = "yes"; then
+         if test "$gtkabi" = "3.0"; then
+-            feature_not_found "vte" "Install libvte-2.90 devel"
++            feature_not_found "vte" "Install libvte-2.90/2.91 devel"
+         else
+             feature_not_found "vte" "Install libvte devel"
+         fi
+@@ -4759,6 +4764,7 @@ echo "pixman            $pixman"
+ echo "SDL support       $sdl"
+ echo "GTK support       $gtk"
+ echo "GTK GL support    $gtk_gl"
++echo "VTE support       $vte `echo_version $vte $vteversion`"
+ echo "GNUTLS support    $gnutls"
+ echo "GNUTLS hash       $gnutls_hash"
+ echo "GNUTLS rnd        $gnutls_rnd"
+@@ -4771,7 +4777,6 @@ else
+ fi
+ echo "nettle kdf        $nettle_kdf"
+ echo "libtasn1          $tasn1"
+-echo "VTE support       $vte"
+ echo "curses support    $curses"
+ echo "virgl support     $virglrenderer"
+ echo "curl support      $curl"
+-- 
+2.1.4
+
