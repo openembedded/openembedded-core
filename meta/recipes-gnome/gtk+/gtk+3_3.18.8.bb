@@ -6,6 +6,7 @@ SRC_URI = "http://ftp.gnome.org/pub/gnome/sources/gtk+/${MAJ_VER}/gtk+-${PV}.tar
            file://hardcoded_libtool.patch \
            file://Dont-force-csd.patch \
            file://Do-not-try-to-initialize-GL-without-libGL.patch \
+           file://0001-Add-disable-opengl-configure-option.patch \
           "
 
 SRC_URI[md5sum] = "9671acb41dc13561d19233f1a75cf184"

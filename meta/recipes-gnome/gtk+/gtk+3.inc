@@ -6,7 +6,7 @@ BUGTRACKER = "https://bugzilla.gnome.org/"
 SECTION = "libs"
 
 DEPENDS = "glib-2.0 cairo pango atk jpeg libpng gdk-pixbuf \
-           docbook-utils-native gdk-pixbuf-native libepoxy"
+           docbook-utils-native gdk-pixbuf-native"
 
 LICENSE = "LGPLv2 & LGPLv2+ & LGPLv2.1+"
 
@@ -21,6 +21,8 @@ do_configure_prepend() {
     # Do this because the configure script is running ./libtool directly
     rm -f libtool
     ln -s ${TARGET_PREFIX}libtool libtool
+    #delete a file that will get confused with generated one in ${B}
+    rm -f ${S}/gtk/gtktypefuncs.c
 }
 
 EXTRA_OECONF += " \
@@ -36,10 +38,13 @@ do_compile_prepend() {
 }
 
 PACKAGECONFIG ??= "${@bb.utils.contains("DISTRO_FEATURES", "x11", "x11", "", d)} \
+                   ${@bb.utils.contains("DISTRO_FEATURES", "opengl", "opengl", "", d)} \
                    ${@bb.utils.contains("DISTRO_FEATURES", "opengl x11", "glx", "", d)} \
                    ${@bb.utils.contains("DISTRO_FEATURES", "wayland", "wayland", "", d)}"
 
 PACKAGECONFIG[x11] = "--enable-x11-backend,--disable-x11-backend,at-spi2-atk fontconfig libx11 libxext libxcursor libxi libxdamage libxrandr libxrender libxcomposite libxfixes"
+# this is provided by oe-core patch that removes epoxy/gl dependency from a X11 build
+PACKAGECONFIG[opengl] = "--enable-opengl,--disable-opengl,libepoxy"
 PACKAGECONFIG[glx] = "--enable-glx,--disable-glx,,libgl"
 PACKAGECONFIG[wayland] = "--enable-wayland-backend,--disable-wayland-backend,wayland libxkbcommon virtual/mesa wayland-native"
 
