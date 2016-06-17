@@ -129,6 +129,7 @@ do_install_append_class-nativesdk () {
 		mkdir -p ${D}${prefix}/lib/pseudo/lib
 		cp lib/pseudo/lib/libpseudo.so ${D}${prefix}/lib/pseudo/lib/.
 	fi
+	chrpath -d ${D}${prefix}/lib/pseudo/lib*/libpseudo.so
 }
 
 BBCLASSEXTEND = "native nativesdk"
