@@ -51,9 +51,12 @@ def update_useradd_static_config(d):
         return id_table
 
     def handle_missing_id(id, type, pkg):
-        if d.getVar('USERADD_ERROR_DYNAMIC', True) == '1':
+        # For backwards compatibility we accept "1" in addition to "error"
+        if d.getVar('USERADD_ERROR_DYNAMIC', True) == 'error' or d.getVar('USERADD_ERROR_DYNAMIC', True) == '1':
             #bb.error("Skipping recipe %s, package %s which adds %sname %s does not have a static ID defined." % (d.getVar('PN', True),  pkg, type, id))
             raise bb.build.FuncFailed("%s - %s: %sname %s does not have a static ID defined." % (d.getVar('PN', True), pkg, type, id))
+        elif d.getVar('USERADD_ERROR_DYNAMIC', True) == 'warn':
+            bb.warn("%s - %s: %sname %s does not have a static ID defined." % (d.getVar('PN', True), pkg, type, id))
 
     # We parse and rewrite the useradd components
     def rewrite_useradd(params):
