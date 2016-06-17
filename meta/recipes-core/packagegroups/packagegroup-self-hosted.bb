@@ -146,6 +146,9 @@ RDEPENDS_packagegroup-self-hosted-extended = "\
     perl-dev \
     perl-modules \
     perl-pod \
+    python \
+    python-modules \
+    python-git \
     python3 \
     python3-modules \
     python3-git \
