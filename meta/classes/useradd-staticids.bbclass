@@ -50,6 +50,11 @@ def update_useradd_static_config(d):
 
         return id_table
 
+    def handle_missing_id(id, type, pkg):
+        if d.getVar('USERADD_ERROR_DYNAMIC', True) == '1':
+            #bb.error("Skipping recipe %s, package %s which adds %sname %s does not have a static ID defined." % (d.getVar('PN', True),  pkg, type, id))
+            raise bb.build.FuncFailed("%s - %s: %sname %s does not have a static ID defined." % (d.getVar('PN', True), pkg, type, id))
+
     # We parse and rewrite the useradd components
     def rewrite_useradd(params):
         # The following comes from --help on useradd from shadow
@@ -116,6 +121,8 @@ def update_useradd_static_config(d):
                 users = merge_files(get_passwd_list(d), 7)
 
             if uaargs.LOGIN not in users:
+                if not uaargs.uid or not uaargs.uid.isdigit() or not uaargs.gid:
+                    handle_missing_id(uaargs.LOGIN, 'user', pkg)
                 continue
 
             field = users[uaargs.LOGIN]
@@ -165,9 +172,8 @@ def update_useradd_static_config(d):
             uaargs.shell = field[6] or uaargs.shell
 
             # Should be an error if a specific option is set...
-            if d.getVar('USERADD_ERROR_DYNAMIC', True) == '1' and not ((uaargs.uid and uaargs.uid.isdigit()) and uaargs.gid):
-                #bb.error("Skipping recipe %s, package %s which adds username %s does not have a static uid defined." % (d.getVar('PN', True),  pkg, uaargs.LOGIN))
-                raise bb.build.FuncFailed("%s - %s: Username %s does not have a static uid defined." % (d.getVar('PN', True), pkg, uaargs.LOGIN))
+            if not uaargs.uid or not uaargs.uid.isdigit() or not uaargs.gid:
+                 handle_missing_id(uaargs.LOGIN, 'user', pkg)
 
             # Reconstruct the args...
             newparam  = ['', ' --defaults'][uaargs.defaults]
@@ -248,6 +254,8 @@ def update_useradd_static_config(d):
                 groups = merge_files(get_group_list(d), 4)
 
             if gaargs.GROUP not in groups:
+                if not gaargs.gid or not gaargs.gid.isdigit():
+                    handle_missing_id(gaargs.GROUP, 'group', pkg)
                 continue
 
             field = groups[gaargs.GROUP]
@@ -257,9 +265,8 @@ def update_useradd_static_config(d):
                     bb.warn("%s: Changing groupname %s's gid from (%s) to (%s), verify configuration files!" % (d.getVar('PN', True), gaargs.GROUP, gaargs.gid, field[2]))
                 gaargs.gid = field[2]
 
-            if d.getVar('USERADD_ERROR_DYNAMIC', True) == '1' and not (gaargs.gid and gaargs.gid.isdigit()):
-                #bb.error("Skipping recipe %s, package %s which adds groupname %s does not have a static gid defined." % (d.getVar('PN', True),  pkg, gaargs.GROUP))
-                raise bb.build.FuncFailed("%s - %s: Groupname %s does not have a static gid defined." % (d.getVar('PN', True), pkg, gaargs.GROUP))
+            if not gaargs.gid or not gaargs.gid.isdigit():
+                handle_missing_id(gaargs.GROUP, 'group', pkg)
 
             # Reconstruct the args...
             newparam  = ['', ' --force'][gaargs.force]
