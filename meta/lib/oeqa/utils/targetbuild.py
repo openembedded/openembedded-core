@@ -17,9 +17,10 @@ class BuildProject(metaclass=ABCMeta):
         self.uri = uri
         self.archive = os.path.basename(uri)
         self.localarchive = os.path.join(tmpdir,self.archive)
-        self.fname = re.sub(r'.tar.bz2|tar.gz$', '', self.archive)
         if foldername:
             self.fname = foldername
+        else:
+            self.fname = re.sub(r'\.tar\.bz2$|\.tar\.gz$|\.tar\.xz$', '', self.archive)
 
     # Download self.archive to self.localarchive
     def _download_archive(self):
