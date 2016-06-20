@@ -50,7 +50,7 @@ PACKAGES = "${PN}-base \
 FILES_${PN}-base = "/init /init.d/99-finish /dev"
 
 SUMMARY_initramfs-module-mdev = "initramfs support for mdev"
-RDEPENDS_initramfs-module-mdev = "${PN}-base"
+RDEPENDS_initramfs-module-mdev = "${PN}-base busybox-mdev"
 FILES_initramfs-module-mdev = "/init.d/01-mdev"
 
 SUMMARY_initramfs-module-udev = "initramfs support for udev"
