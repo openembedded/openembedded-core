@@ -117,7 +117,7 @@ class SDKBuildProject(BuildProject):
         subprocess.check_call(cmd, shell=True)
 
         #Change targetdir to project folder
-        self.targetdir = self.targetdir + self.fname
+        self.targetdir = os.path.join(self.targetdir, self.fname)
 
     def run_configure(self, configure_args='', extra_cmds=' gnu-configize; '):
         return super(SDKBuildProject, self).run_configure(configure_args=(configure_args or '$CONFIGURE_FLAGS'), extra_cmds=extra_cmds)
