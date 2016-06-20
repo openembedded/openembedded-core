@@ -229,7 +229,8 @@ PACKAGES =+ "${PN}-ralink-license ${PN}-ralink \
              ${PN}-atheros-license ${PN}-ar9170 ${PN}-ath6k ${PN}-ath9k \
              ${PN}-ar3k-license  ${PN}-ar3k  ${PN}-ath10k-license  ${PN}-ath10k  \
              \
-             ${PN}-iwlwifi-license ${PN}-iwlwifi-135-6 \
+             ${PN}-iwlwifi-license ${PN}-iwlwifi \
+             ${PN}-iwlwifi-135-6 \
              ${PN}-iwlwifi-3160-7 ${PN}-iwlwifi-3160-8 ${PN}-iwlwifi-3160-9 \
              ${PN}-iwlwifi-6000-4 ${PN}-iwlwifi-6000g2a-5 ${PN}-iwlwifi-6000g2a-6 \
              ${PN}-iwlwifi-6000g2b-5 ${PN}-iwlwifi-6000g2b-6 \
@@ -453,6 +454,7 @@ FILES_${PN}-whence-license = "/lib/firmware/WHENCE"
 RDEPENDS_${PN}-bnx2-mips += "${PN}-whence-license"
 
 # For iwlwifi
+LICENSE_${PN}-iwlwifi           = "Firmware-iwlwifi_firmware"
 LICENSE_${PN}-iwlwifi-135-6     = "Firmware-iwlwifi_firmware"
 LICENSE_${PN}-iwlwifi-3160-7    = "Firmware-iwlwifi_firmware"
 LICENSE_${PN}-iwlwifi-3160-8    = "Firmware-iwlwifi_firmware"
@@ -506,6 +508,8 @@ RDEPENDS_${PN}-iwlwifi-7265      = "${PN}-iwlwifi-license"
 RDEPENDS_${PN}-iwlwifi-7265d     = "${PN}-iwlwifi-license"
 RDEPENDS_${PN}-iwlwifi-8000c     = "${PN}-iwlwifi-license"
 RDEPENDS_${PN}-iwlwifi-8265      = "${PN}-iwlwifi-license"
+
+ALLOW_EMPTY_${PN}-iwlwifi = "1"
 
 # Handle package updating for the newly merged iwlwifi groupings
 RPROVIDES_${PN}-iwlwifi-7265 = "${PN}-iwlwifi-7265-8 ${PN}-iwlwifi-7265-9"
@@ -580,7 +584,11 @@ RDEPENDS_${PN} += "${PN}-license"
 RDEPENDS_${PN} += "${PN}-whence-license"
 
 # Make linux-firmware depend on all of the split-out packages.
+# Make linux-firmware-iwlwifi depend on all of the split-out iwlwifi packages.
 python populate_packages_prepend () {
     firmware_pkgs = oe.utils.packages_filter_out_system(d)
     d.appendVar('RDEPENDS_linux-firmware', ' ' + ' '.join(firmware_pkgs))
+
+    iwlwifi_pkgs = filter(lambda x: x.find('-iwlwifi-') != -1, firmware_pkgs)
+    d.appendVar('RDEPENDS_linux-firmware-iwlwifi', ' ' + ' '.join(iwlwifi_pkgs))
 }
