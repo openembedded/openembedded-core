@@ -1,5 +1,7 @@
 require e2fsprogs.inc
 
+PR = "r1"
+
 SRC_URI += "file://acinclude.m4 \
             file://remove.ldconfig.call.patch \
             file://quiet-debugfs.patch \
