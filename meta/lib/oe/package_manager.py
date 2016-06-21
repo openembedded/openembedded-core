@@ -5,6 +5,7 @@ import subprocess
 import shutil
 import multiprocessing
 import re
+import collections
 import bb
 import tempfile
 import oe.utils
@@ -101,13 +102,8 @@ class Indexer(object, metaclass=ABCMeta):
 
 class RpmIndexer(Indexer):
     def get_ml_prefix_and_os_list(self, arch_var=None, os_var=None):
-        package_archs = {
-            'default': [],
-        }
-
-        target_os = {
-            'default': "",
-        }
+        package_archs = collections.OrderedDict()
+        target_os = collections.OrderedDict()
 
         if arch_var is not None and os_var is not None:
             package_archs['default'] = self.d.getVar(arch_var, True).split()
@@ -138,7 +134,7 @@ class RpmIndexer(Indexer):
                         target_os[eext[1]] = localdata.getVar("TARGET_OS",
                                                               True).strip()
 
-        ml_prefix_list = dict()
+        ml_prefix_list = collections.OrderedDict()
         for mlib in package_archs:
             if mlib == 'default':
                 ml_prefix_list[mlib] = package_archs[mlib]
