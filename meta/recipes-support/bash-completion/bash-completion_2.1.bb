@@ -25,7 +25,7 @@ do_install_append() {
 
 	# Delete files already provided by util-linux
 	local i
-	for i in cal dmesg eject hexdump hwclock ionice look renice rtcwake su; do
+	for i in cal dmesg eject hexdump hwclock ionice look renice rtcwake su mount umount; do
 		rm ${D}${datadir}/${BPN}/completions/$i
 	done
 
