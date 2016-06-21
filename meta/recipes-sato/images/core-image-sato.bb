@@ -8,5 +8,4 @@ LICENSE = "MIT"
 
 inherit core-image
 
-# Add GTK+ to the image temporarily for M1 testing
-IMAGE_INSTALL += "packagegroup-core-x11-sato-games gtk+"
+IMAGE_INSTALL += "packagegroup-core-x11-sato-games"
