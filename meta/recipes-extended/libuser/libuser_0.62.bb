@@ -24,8 +24,6 @@ DEPENDS = "popt libpam glib-2.0 docbook-utils-native linuxdoc-tools-native pytho
 
 inherit autotools gettext python3native python3-dir pkgconfig
 
-export PYTHON
-
 EXTRA_OEMAKE = "PYTHON_CPPFLAGS=-I${STAGING_INCDIR}/${PYTHON_DIR}${PYTHON_ABI}"
 
 PACKAGES += "${PN}-python "

@@ -35,8 +35,6 @@ inherit autotools-brokensep
 
 CLEANBROKEN = "1"
 
-export STAGING_INCDIR
-export STAGING_LIBDIR
 export CPPFLAGS
 
 PACKAGES_prepend = "whiptail "

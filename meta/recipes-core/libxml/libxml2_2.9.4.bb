@@ -47,10 +47,6 @@ EXTRA_OECONF_class-native = "--without-legacy --without-docbook --with-c14n --wi
 EXTRA_OECONF_class-nativesdk = "--without-legacy --without-docbook --with-c14n --without-lzma --with-zlib"
 EXTRA_OECONF_linuxstdbase = "--with-debug --with-legacy --with-docbook --with-c14n --without-lzma --with-zlib"
 
-# required for python binding
-export STAGING_LIBDIR
-export STAGING_INCDIR
-
 python populate_packages_prepend () {
     # autonamer would call this libxml2-2, but we don't want that
     if d.getVar('DEBIAN_NAMES', True):

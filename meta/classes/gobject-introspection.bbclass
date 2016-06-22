@@ -24,11 +24,6 @@ DEPENDS_append_class-target = " gobject-introspection gobject-introspection-nati
 DEPENDS_append_class-native = " gobject-introspection-native"
 DEPENDS_append_class-nativesdk = " gobject-introspection-native"
 
-# This is necessary for python scripts to succeed - distutils fails if these
-# are not set
-export STAGING_INCDIR
-export STAGING_LIBDIR
-
 # This is used by introspection tools to find .gir includes
 export XDG_DATA_DIRS = "${STAGING_DATADIR}"
 

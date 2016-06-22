@@ -17,9 +17,6 @@ SRC_URI[sha256sum] = "615549ce39b333f6b78baee0c0b4ef18bc726c6bf1cca123dfd89dd963
 
 DEPENDS += "swig-native python3"
 
-export PYTHON
-export STAGING_INCDIR
-export STAGING_LIBDIR
 EXTRA_OECONF += "--with-python --with-python3"
 EXTRA_OEMAKE += "PYLIBVER='python${PYTHON_BASEVERSION}${PYTHON_ABI}' PYINC='${STAGING_INCDIR}/${PYLIBVER}'"
 

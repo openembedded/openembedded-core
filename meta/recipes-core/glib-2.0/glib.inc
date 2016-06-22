@@ -77,6 +77,7 @@ do_install_append () {
 	fi
 
 	# Remove some unpackaged files
+	rm -rf ${D}${datadir}/glib-2.0/codegen/__pycache__
 	rm -f ${D}${datadir}/glib-2.0/codegen/*.pyc
 	rm -f ${D}${datadir}/glib-2.0/codegen/*.pyo
 

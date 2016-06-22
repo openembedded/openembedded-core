@@ -21,13 +21,6 @@ SRC_URI[sha256sum] = "fa275aaccdbfc91ec0bc9a6fd0562051acdba731e7d584b64a277fec60
 inherit autotools pkgconfig gtk-doc python3native qemu gobject-introspection-data
 BBCLASSEXTEND = "native"
 
-# necessary to let the call for python-config from configure.ac succeed
-export STAGING_INCDIR
-export STAGING_LIBDIR
-
-# autoconf macros otherwise will default to Python 2
-export PYTHON
-
 # needed for writing out the qemu wrapper script
 export STAGING_DIR_HOST
 export B
