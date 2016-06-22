@@ -106,7 +106,7 @@ link_hash()
     do
 	if [ ${FINGERPRINT} = $( fingerprint ${LINKFILE} ${2} ) ]
 	then
-	    echo "WARNING: Skipping duplicate file ${1}" >&2
+	    echo "NOTE: Skipping duplicate file ${1}" >&2
 	    return 1
 	fi	
 
@@ -153,7 +153,7 @@ hash_dir()
         then
             TYPE_STR='crl'
         else
-            echo "WARNING: ${FILE} does not contain a certificate or CRL: skipping" >&2
+            echo "NOTE: ${FILE} does not contain a certificate or CRL: skipping" >&2
 	    continue
         fi
 
