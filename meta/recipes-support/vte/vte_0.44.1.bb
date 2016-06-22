@@ -18,7 +18,7 @@ PACKAGECONFIG[gnutls] = "--with-gnutls,--without-gnutls,gnutls"
 CFLAGS += "-D_GNU_SOURCE"
 
 # Enable vala only if gobject-introspection is enabled
-EXTRA_OECONF = "--enable-vala=auto"
+EXTRA_OECONF = "--enable-vala=auto --disable-test-application"
 
 # libtool adds "-nostdlib" when g++ is used. This breaks PIE builds.
 # Use libtool-cross (which has a hack to prevent that) instead.
