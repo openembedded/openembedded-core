@@ -9,7 +9,6 @@ def setUpModule():
 class SyslogTest(oeRuntimeTest):
 
     @testcase(201)
-    @skipUnlessPassed("test_syslog_help")
     def test_syslog_running(self):
         (status,output) = self.target.run(oeRuntimeTest.pscmd + ' | grep -i [s]yslogd')
         self.assertEqual(status, 0, msg="no syslogd process, ps output: %s" % self.target.run(oeRuntimeTest.pscmd)[1])
