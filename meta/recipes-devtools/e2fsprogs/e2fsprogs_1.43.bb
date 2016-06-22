@@ -8,6 +8,7 @@ SRC_URI += "file://acinclude.m4 \
             file://run-ptest \
             file://ptest.patch \
             file://mkdir.patch \
+            file://Revert-mke2fs-enable-the-metadata_csum-and-64bit-fea.patch \
 "
 
 SRCREV = "d6adf070b0e85f209c0d7f310188b134b5cb7180"
