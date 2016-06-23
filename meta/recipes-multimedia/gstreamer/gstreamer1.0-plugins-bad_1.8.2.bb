@@ -13,8 +13,8 @@ SRC_URI = " \
     file://ensure-valid-sentinels-for-gst_structure_get-etc.patch \
     file://0001-gstreamer-gl.pc.in-don-t-append-GL_CFLAGS-to-CFLAGS.patch \
 "
-SRC_URI[md5sum] = "e508da2a8a5c3d12264fe3415be2f451"
-SRC_URI[sha256sum] = "0bbd58f363734fc0c4a620b2d6fb01d427fdafdbda7b90b4e15d03b751ca40f5"
+SRC_URI[md5sum] = "83abc2e70684e7b195f18ca2992ef6e8"
+SRC_URI[sha256sum] = "d7995317530c8773ec088f94d9320909d41da61996b801ebacce9a56af493f97"
 
 S = "${WORKDIR}/gst-plugins-bad-${PV}"
 
