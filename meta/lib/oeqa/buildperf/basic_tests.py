@@ -83,3 +83,23 @@ class Test2(BuildPerfTest):
         self.sync()
         cmd = ['bitbake', self.build_target, '-c', 'rootfs']
         self.measure_cmd_resources(cmd, 'do_rootfs', 'bitbake do_rootfs')
+
+
+@perf_test_case
+class Test3(BuildPerfTest):
+    name = "test3"
+    description = "Parsing time metrics (bitbake -p)"
+
+    def _run(self):
+        # Drop all caches and parse
+        self.rm_cache()
+        self.force_rm(os.path.join(self.bb_vars['TMPDIR'], 'cache'))
+        self.measure_cmd_resources(['bitbake', '-p'], 'parse_1',
+                                   'bitbake -p (no caches)')
+        # Drop tmp/cache
+        self.force_rm(os.path.join(self.bb_vars['TMPDIR'], 'cache'))
+        self.measure_cmd_resources(['bitbake', '-p'], 'parse_2',
+                                   'bitbake -p (no tmp/cache)')
+        # Parse with fully cached data
+        self.measure_cmd_resources(['bitbake', '-p'], 'parse_3',
+                                   'bitbake -p (cached)')
