@@ -152,6 +152,38 @@ class BuildPerfTestRunner(object):
         os.makedirs(os.path.dirname(tgt_dir))
         shutil.copytree(src_dir, tgt_dir)
 
+    def update_globalres_file(self, filename):
+        """Write results to globalres csv file"""
+        if self.repo:
+            git_tag_rev = self.repo.run_cmd(['describe', self.git_rev])
+        else:
+            git_tag_rev = self.git_rev
+        times = []
+        sizes = []
+        for test in self.results['tests'].values():
+            for measurement in test['measurements']:
+                res_type = measurement['type']
+                values = measurement['values']
+                if res_type == BuildPerfTest.SYSRES:
+                    e_sec = values['elapsed_time'].total_seconds()
+                    times.append('{:d}:{:02d}:{:.2f}'.format(
+                        int(e_sec / 3600),
+                        int((e_sec % 3600) / 60),
+                        e_sec % 60))
+                elif res_type == BuildPerfTest.DISKUSAGE:
+                    sizes.append(str(values['size']))
+                else:
+                    log.warning("Unable to handle '%s' values in "
+                                "globalres.log", res_type)
+
+        log.debug("Writing globalres log to %s", filename)
+        with open(filename, 'a') as fobj:
+            fobj.write('{},{}:{},{},'.format(self.results['tester_host'],
+                                             self.results['git_branch'],
+                                             self.results['git_revision'],
+                                             git_tag_rev))
+            fobj.write(','.join(times + sizes) + '\n')
+
 
 def perf_test_case(obj):
     """Decorator for adding test classes"""

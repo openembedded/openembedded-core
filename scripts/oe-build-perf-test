@@ -70,6 +70,8 @@ def parse_args(argv):
 
     parser.add_argument('-D', '--debug', action='store_true',
                         help='Enable debug level logging')
+    parser.add_argument('--globalres-file',
+                        help="Append results to 'globalres' csv file")
 
     return parser.parse_args(argv)
 
@@ -94,6 +96,9 @@ def main(argv=None):
     # Run actual tests
     runner = BuildPerfTestRunner(out_dir)
     ret = runner.run_tests()
+    if not ret:
+        if args.globalres_file:
+            runner.update_globalres_file(args.globalres_file)
 
     return ret
 
