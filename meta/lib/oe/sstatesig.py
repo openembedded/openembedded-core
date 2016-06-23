@@ -130,7 +130,9 @@ class SignatureGeneratorOEBasicHash(bb.siggen.SignatureGeneratorBasicHash):
         super(bb.siggen.SignatureGeneratorBasicHash, self).set_taskdata(coredata)
 
     def dump_sigs(self, dataCache, options):
-        self.dump_lockedsigs()
+        sigfile = os.getcwd() + "/locked-sigs.inc"
+        bb.plain("Writing locked sigs to %s" % sigfile)
+        self.dump_lockedsigs(sigfile)
         return super(bb.siggen.SignatureGeneratorBasicHash, self).dump_sigs(dataCache, options)
 
     def get_taskhash(self, fn, task, deps, dataCache):
@@ -181,11 +183,7 @@ class SignatureGeneratorOEBasicHash(bb.siggen.SignatureGeneratorBasicHash):
             return
         super(bb.siggen.SignatureGeneratorBasicHash, self).dump_sigtask(fn, task, stampbase, runtime)
 
-    def dump_lockedsigs(self, sigfile=None, taskfilter=None):
-        if not sigfile:
-            sigfile = os.getcwd() + "/locked-sigs.inc"
-
-        bb.plain("Writing locked sigs to %s" % sigfile)
+    def dump_lockedsigs(self, sigfile, taskfilter=None):
         types = {}
         for k in self.runtaskdeps:
             if taskfilter:
