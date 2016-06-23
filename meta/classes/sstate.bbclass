@@ -719,6 +719,7 @@ def sstate_checkhashes(sq_fn, sq_task, sq_hash, sq_hashfn, d, siginfo=False):
 
     ret = []
     missed = []
+    missing = []
     extension = ".tgz"
     if siginfo:
         extension = extension + ".siginfo"
@@ -739,6 +740,18 @@ def sstate_checkhashes(sq_fn, sq_task, sq_hash, sq_hashfn, d, siginfo=False):
             extrapath = ""
 
         return spec, extrapath, tname
+
+    def sstate_pkg_to_pn(pkg, d):
+        """
+        Translate an sstate filename to a PN value by way of SSTATE_PKGSPEC. This is slightly hacky but
+        we don't have access to everything in this context.
+        """
+        pkgspec = d.getVar('SSTATE_PKGSPEC', False)
+        try:
+            idx = pkgspec.split(':').index('${PN}')
+        except ValueError:
+            bb.fatal('Unable to find ${PN} in SSTATE_PKGSPEC')
+        return pkg.split(':')[idx]
 
 
     for task in range(len(sq_fn)):
@@ -774,6 +787,8 @@ def sstate_checkhashes(sq_fn, sq_task, sq_hash, sq_hashfn, d, siginfo=False):
         if localdata.getVar('BB_NO_NETWORK', True) == "1" and localdata.getVar('SSTATE_MIRROR_ALLOW_NETWORK', True) == "1":
             localdata.delVar('BB_NO_NETWORK')
 
+        whitelist = bb.runqueue.get_setscene_enforce_whitelist(d)
+
         from bb.fetch2 import FetchConnectionCache
         def checkstatus_init(thread_worker):
             thread_worker.connection_cache = FetchConnectionCache()
@@ -800,6 +815,12 @@ def sstate_checkhashes(sq_fn, sq_task, sq_hash, sq_hashfn, d, siginfo=False):
             except:
                 missed.append(task)
                 bb.debug(2, "SState: Unsuccessful fetch test for %s" % srcuri)
+                if whitelist:
+                    pn = sstate_pkg_to_pn(sstatefile, d)
+                    taskname = sq_task[task]
+                    if not bb.runqueue.check_setscene_enforce_whitelist(pn, taskname, whitelist):
+                        missing.append(task)
+                        bb.error('Sstate artifact unavailable for %s.%s' % (pn, taskname))
                 pass
             bb.event.fire(bb.event.ProcessProgress("Checking sstate mirror object availability", len(tasklist) - thread_worker.tasks.qsize()), d)
 
@@ -823,6 +844,8 @@ def sstate_checkhashes(sq_fn, sq_task, sq_hash, sq_hashfn, d, siginfo=False):
             pool.start()
             pool.wait_completion()
             bb.event.fire(bb.event.ProcessFinished("Checking sstate mirror object availability"), d)
+            if whitelist and missing:
+                bb.fatal('Required artifacts were unavailable - exiting')
 
     inheritlist = d.getVar("INHERIT", True)
     if "toaster" in inheritlist:
