@@ -65,7 +65,7 @@ def testsdk_main(d):
     try:
         subprocess.check_output("cd %s; %s <<EOF\n./tc\nY\nEOF" % (sdktestdir, tcname), shell=True)
     except subprocess.CalledProcessError as e:
-        bb.fatal("Couldn't install the SDK:\n%s" % e.output)
+        bb.fatal("Couldn't install the SDK:\n%s" % e.output.decode("utf-8"))
 
     try:
         run_test_context(SDKTestContext, d, sdktestdir, tcname, pn)
@@ -116,7 +116,7 @@ def testsdkext_main(d):
     try:
         subprocess.check_output("%s -y -d %s/tc" % (tcname, testdir), shell=True)
     except subprocess.CalledProcessError as e:
-        bb.fatal("Couldn't install the SDK EXT:\n%s" % e.output)
+        bb.fatal("Couldn't install the SDK EXT:\n%s" % e.output.decode("utf-8"))
 
     try:
         bb.plain("Running SDK Compatibility tests ...")
