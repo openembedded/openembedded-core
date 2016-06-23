@@ -10,6 +10,8 @@
 # more details.
 #
 """Basic set of build performance tests"""
+import os
+
 from . import BuildPerfTest, perf_test_case
 
 
@@ -43,3 +45,27 @@ class Test1P2(BuildPerfTest):
         self.sync()
         self.measure_cmd_resources(['bitbake', self.build_target], 'build',
                                    'bitbake ' + self.build_target)
+
+
+@perf_test_case
+class Test1P3(BuildPerfTest):
+    name = "test13"
+    build_target = 'core-image-sato'
+    description = "Build {} with rm_work enabled".format(build_target)
+
+    def _run(self):
+        postfile = os.path.join(self.out_dir, 'postfile.conf')
+        with open(postfile, 'w') as fobj:
+            fobj.write('INHERIT += "rm_work"\n')
+        try:
+            self.rm_tmp()
+            self.rm_sstate()
+            self.rm_cache()
+            self.sync()
+            cmd = ['bitbake', '-R', postfile, self.build_target]
+            self.measure_cmd_resources(cmd, 'build',
+                                       'bitbake' + self.build_target)
+            self.measure_disk_usage(self.bb_vars['TMPDIR'], 'tmpdir', 'tmpdir')
+        finally:
+            os.unlink(postfile)
+        self.save_buildstats()
