@@ -29,3 +29,17 @@ class Test1P1(BuildPerfTest):
                                    'bitbake ' + self.build_target)
         self.measure_disk_usage(self.bb_vars['TMPDIR'], 'tmpdir', 'tmpdir')
         self.save_buildstats()
+
+
+@perf_test_case
+class Test1P2(BuildPerfTest):
+    name = "test12"
+    build_target = 'virtual/kernel'
+    description = "Measure bitbake {}".format(build_target)
+
+    def _run(self):
+        self.log_cmd_output("bitbake {} -c cleansstate".format(
+            self.build_target))
+        self.sync()
+        self.measure_cmd_resources(['bitbake', self.build_target], 'build',
+                                   'bitbake ' + self.build_target)
