@@ -69,3 +69,17 @@ class Test1P3(BuildPerfTest):
         finally:
             os.unlink(postfile)
         self.save_buildstats()
+
+
+@perf_test_case
+class Test2(BuildPerfTest):
+    name = "test2"
+    build_target = 'core-image-sato'
+    description = "Measure bitbake {} -c rootfs with sstate".format(build_target)
+
+    def _run(self):
+        self.rm_tmp()
+        self.rm_cache()
+        self.sync()
+        cmd = ['bitbake', self.build_target, '-c', 'rootfs']
+        self.measure_cmd_resources(cmd, 'do_rootfs', 'bitbake do_rootfs')
