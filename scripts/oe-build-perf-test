@@ -15,6 +15,8 @@
 #
 """Build performance test script"""
 import argparse
+import errno
+import fcntl
 import logging
 import os
 import sys
@@ -31,6 +33,19 @@ from oeqa.utils.commands import runCmd
 LOG_FORMAT = '[%(asctime)s] %(levelname)s: %(message)s'
 logging.basicConfig(level=logging.INFO, format=LOG_FORMAT)
 log = logging.getLogger()
+
+
+def acquire_lock(lock_f):
+    """Acquire flock on file"""
+    log.debug("Acquiring lock %s", os.path.abspath(lock_f.name))
+    try:
+        fcntl.flock(lock_f, fcntl.LOCK_EX | fcntl.LOCK_NB)
+    except IOError as err:
+        if err.errno == errno.EAGAIN:
+            return False
+        raise
+    log.debug("Lock acquired")
+    return True
 
 
 def pre_run_sanity_check():
@@ -72,6 +87,9 @@ def parse_args(argv):
                         help='Enable debug level logging')
     parser.add_argument('--globalres-file',
                         help="Append results to 'globalres' csv file")
+    parser.add_argument('--lock-file', default='./oe-build-perf.lock',
+                        metavar='FILENAME',
+                        help="Lock file to use")
 
     return parser.parse_args(argv)
 
@@ -82,6 +100,11 @@ def main(argv=None):
 
     if args.debug:
         log.setLevel(logging.DEBUG)
+
+    lock_f = open(args.lock_file, 'w')
+    if not acquire_lock(lock_f):
+        log.error("Another instance of this script is running, exiting...")
+        return 1
 
     if not pre_run_sanity_check():
         return 1
