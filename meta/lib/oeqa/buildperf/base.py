@@ -94,6 +94,7 @@ class BuildPerfTestRunner(object):
         self.results['start_time'] = start_time
         self.results['tests'] = {}
 
+        self.archive_build_conf()
         for test_class in self.test_run_queue:
             log.info("Executing test %s: %s", test_class.name,
                      test_class.description)
@@ -111,6 +112,13 @@ class BuildPerfTestRunner(object):
 
         self.results['elapsed_time'] = datetime.utcnow() - start_time
         return 0
+
+    def archive_build_conf(self):
+        """Archive build/conf to test results"""
+        src_dir = os.path.join(os.environ['BUILDDIR'], 'conf')
+        tgt_dir = os.path.join(self.out_dir, 'build', 'conf')
+        os.makedirs(os.path.dirname(tgt_dir))
+        shutil.copytree(src_dir, tgt_dir)
 
 
 def perf_test_case(obj):
