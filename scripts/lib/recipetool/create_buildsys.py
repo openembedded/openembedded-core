@@ -737,7 +737,7 @@ class MakefileRecipeHandler(RecipeHandler):
         if 'buildsystem' in handled:
             return False
 
-        makefile = RecipeHandler.checkfiles(srctree, ['Makefile'])
+        makefile = RecipeHandler.checkfiles(srctree, ['Makefile', 'makefile', 'GNUmakefile'])
         if makefile:
             lines_after.append('# NOTE: this is a Makefile-only piece of software, so we cannot generate much of the')
             lines_after.append('# recipe automatically - you will need to examine the Makefile yourself and ensure')
