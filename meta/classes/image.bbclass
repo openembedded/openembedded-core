@@ -198,6 +198,17 @@ fakeroot python do_rootfs () {
     from oe.rootfs import create_rootfs
     from oe.manifest import create_manifest
 
+    # NOTE: if you add, remove or significantly refactor the stages of this
+    # process then you should recalculate the weightings here. This is quite
+    # easy to do - just change the MultiStageProgressReporter line temporarily
+    # to pass debug=True as the last parameter and you'll get a printout of
+    # the weightings as well as a map to the lines where next_stage() was
+    # called. Of course this isn't critical, but it helps to keep the progress
+    # reporting accurate.
+    stage_weights = [1, 203, 354, 186, 65, 4228, 1, 353, 49, 330, 382, 23, 1]
+    progress_reporter = bb.progress.MultiStageProgressReporter(d, stage_weights)
+    progress_reporter.next_stage()
+
     # Handle package exclusions
     excl_pkgs = d.getVar("PACKAGE_EXCLUDE", True).split()
     inst_pkgs = d.getVar("PACKAGE_INSTALL", True).split()
@@ -230,8 +241,12 @@ fakeroot python do_rootfs () {
     # Generate the initial manifest
     create_manifest(d)
 
-    # Generate rootfs
-    create_rootfs(d)
+    progress_reporter.next_stage()
+
+    # generate rootfs
+    create_rootfs(d, progress_reporter=progress_reporter)
+
+    progress_reporter.finish()
 }
 do_rootfs[dirs] = "${TOPDIR}"
 do_rootfs[cleandirs] += "${S}"
