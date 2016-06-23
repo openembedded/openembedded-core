@@ -800,7 +800,8 @@ def sstate_checkhashes(sq_fn, sq_task, sq_hash, sq_hashfn, d, siginfo=False):
             except:
                 missed.append(task)
                 bb.debug(2, "SState: Unsuccessful fetch test for %s" % srcuri)
-                pass     
+                pass
+            bb.event.fire(bb.event.ProcessProgress("Checking sstate mirror object availability", len(tasklist) - thread_worker.tasks.qsize()), d)
 
         tasklist = []
         for task in range(len(sq_fn)):
@@ -811,7 +812,7 @@ def sstate_checkhashes(sq_fn, sq_task, sq_hash, sq_hashfn, d, siginfo=False):
             tasklist.append((task, sstatefile))
 
         if tasklist:
-            bb.note("Checking sstate mirror object availability (for %s objects)" % len(tasklist))
+            bb.event.fire(bb.event.ProcessStarted("Checking sstate mirror object availability", len(tasklist)), d)
             import multiprocessing
             nproc = min(multiprocessing.cpu_count(), len(tasklist))
 
@@ -821,6 +822,7 @@ def sstate_checkhashes(sq_fn, sq_task, sq_hash, sq_hashfn, d, siginfo=False):
                 pool.add_task(checkstatus, t)
             pool.start()
             pool.wait_completion()
+            bb.event.fire(bb.event.ProcessFinished("Checking sstate mirror object availability"), d)
 
     inheritlist = d.getVar("INHERIT", True)
     if "toaster" in inheritlist:
