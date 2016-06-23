@@ -14,3 +14,5 @@ CMAKE_EXTRACONF = "\
     -DENABLE_ACL=0 -DHAVE_ACL_LIBACL_H=0 \
     -DHAVE_SYS_ACL_H=0 \
 "
+
+do_compile[progress] = "percent"

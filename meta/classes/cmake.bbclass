@@ -124,6 +124,7 @@ cmake_do_configure() {
 	  -Wno-dev
 }
 
+do_compile[progress] = "percent"
 cmake_do_compile()  {
 	cd ${B}
 	base_do_compile VERBOSE=1
