@@ -11,8 +11,10 @@
 #
 """Basic set of build performance tests"""
 import os
+import shutil
 
 from . import BuildPerfTest, perf_test_case
+from oeqa.utils.commands import get_bb_vars
 
 
 @perf_test_case
@@ -103,3 +105,29 @@ class Test3(BuildPerfTest):
         # Parse with fully cached data
         self.measure_cmd_resources(['bitbake', '-p'], 'parse_3',
                                    'bitbake -p (cached)')
+
+
+@perf_test_case
+class Test4(BuildPerfTest):
+    name = "test4"
+    build_target = 'core-image-sato'
+    description = "eSDK metrics"
+
+    def _run(self):
+        self.log_cmd_output("bitbake {} -c do_populate_sdk_ext".format(
+            self.build_target))
+        self.bb_vars = get_bb_vars(None, self.build_target)
+        tmp_dir = self.bb_vars['TMPDIR']
+        installer = os.path.join(
+            self.bb_vars['SDK_DEPLOY'],
+            self.bb_vars['TOOLCHAINEXT_OUTPUTNAME'] + '.sh')
+        # Measure installer size
+        self.measure_disk_usage(installer, 'installer_bin', 'eSDK installer')
+        # Measure deployment time and deployed size
+        deploy_dir = os.path.join(tmp_dir, 'esdk-deploy')
+        if os.path.exists(deploy_dir):
+            shutil.rmtree(deploy_dir)
+        self.sync()
+        self.measure_cmd_resources([installer, '-y', '-d', deploy_dir],
+                                   'deploy', 'eSDK deploy')
+        self.measure_disk_usage(deploy_dir, 'deploy_dir', 'deploy dir')
