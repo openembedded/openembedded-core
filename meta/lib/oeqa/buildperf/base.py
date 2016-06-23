@@ -22,6 +22,7 @@ import traceback
 from datetime import datetime, timedelta
 
 from oeqa.utils.commands import runCmd, get_bb_vars
+from oeqa.utils.git import GitError, GitRepo
 
 # Get logger for this module
 log = logging.getLogger('build-perf')
@@ -85,10 +86,41 @@ class BuildPerfTestRunner(object):
         if not os.path.exists(self.out_dir):
             os.makedirs(self.out_dir)
 
+        # Get Git parameters
+        try:
+            self.repo = GitRepo('.')
+        except GitError:
+            self.repo = None
+        self.git_rev, self.git_branch = self.get_git_revision()
+        log.info("Using Git branch:revision %s:%s", self.git_branch,
+                 self.git_rev)
+
+    def get_git_revision(self):
+        """Get git branch and revision under testing"""
+        rev = os.getenv('OE_BUILDPERFTEST_GIT_REVISION')
+        branch = os.getenv('OE_BUILDPERFTEST_GIT_BRANCH')
+        if not self.repo and (not rev or not branch):
+            log.info("The current working directory doesn't seem to be a Git "
+                     "repository clone. You can specify branch and revision "
+                     "used in test results with OE_BUILDPERFTEST_GIT_REVISION "
+                     "and OE_BUILDPERFTEST_GIT_BRANCH environment variables")
+        else:
+            if not rev:
+                rev = self.repo.run_cmd(['rev-parse', 'HEAD'])
+            if not branch:
+                try:
+                    # Strip 11 chars, i.e. 'refs/heads' from the beginning
+                    branch = self.repo.run_cmd(['symbolic-ref', 'HEAD'])[11:]
+                except GitError:
+                    log.debug('Currently on detached HEAD')
+                    branch = None
+        return str(rev), str(branch)
 
     def run_tests(self):
         """Method that actually runs the tests"""
         self.results['schema_version'] = 1
+        self.results['git_revision'] = self.git_rev
+        self.results['git_branch'] = self.git_branch
         self.results['tester_host'] = socket.gethostname()
         start_time = datetime.utcnow()
         self.results['start_time'] = start_time
