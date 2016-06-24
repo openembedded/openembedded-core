@@ -586,8 +586,7 @@ kernel_do_deploy() {
 			initramfs_base_name=${type}-${INITRAMFS_BASE_NAME}
 			initramfs_symlink_name=${type}-initramfs-${MACHINE}
 			install -m 0644 ${KERNEL_OUTPUT_DIR}/${type}.initramfs ${DEPLOYDIR}/${initramfs_base_name}.bin
-			cd ${DEPLOYDIR}
-			ln -sf ${initramfs_base_name}.bin ${initramfs_symlink_name}.bin
+			ln -sf ${initramfs_base_name}.bin ${DEPLOYDIR}/${initramfs_symlink_name}.bin
 		fi
 	done
 }
