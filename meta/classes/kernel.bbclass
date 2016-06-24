@@ -232,8 +232,7 @@ do_bundle_initramfs () {
 			if [ -n "$realpath" ]; then
 				mv -f $realpath $realpath.initramfs
 				mv -f $realpath.bak $realpath
-				cd ${B}/${KERNEL_OUTPUT_DIR}
-				ln -sf $linkpath.initramfs
+				ln -sf $linkpath.initramfs ${B}/${KERNEL_OUTPUT_DIR}/$type.initramfs
 			else
 				mv -f ${KERNEL_OUTPUT_DIR}/$type ${KERNEL_OUTPUT_DIR}/$type.initramfs
 				mv -f ${KERNEL_OUTPUT_DIR}/$type.bak ${KERNEL_OUTPUT_DIR}/$type
