@@ -10,6 +10,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=df4be47940a91ee69556f5f71eed4aec \
                     file://COPYINGv3;md5=d32239bcb673463ab874e80d47fae504 \
                     file://lib/idna.h;endline=21;md5=7c0b3828d1b153663be9a04ad4f7975f \
                     file://src/idn.c;endline=20;md5=f4235f2a2cb2b65786b2979fb3cf7fbf"
+DEPENDS = "virtual/libiconv"
 
 inherit pkgconfig autotools gettext texinfo
 
