@@ -9,8 +9,9 @@ LICENSE = "GPL-2.0+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=ecc0551bf54ad97f6b541720f84d6569"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/watchdog/watchdog-${PV}.tar.gz \
-	   file://watchdog-init.patch \
-	   file://watchdog-conf.patch \
+           file://0001-Include-linux-param.h-for-EXEC_PAGESIZE-definition.patch \
+           file://watchdog-init.patch \
+           file://watchdog-conf.patch \
 "
 
 SRC_URI[md5sum] = "678c32f6f35a0492c9c1b76b4aa88828"
