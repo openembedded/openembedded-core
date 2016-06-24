@@ -30,6 +30,8 @@ PACKAGESPLITFUNCS_prepend = "split_kernel_module_packages "
 
 KERNEL_MODULES_META_PACKAGE ?= "kernel-modules"
 
+KERNEL_MODULE_PACKAGE_PREFIX ?= ""
+
 python split_kernel_module_packages () {
     import re
 
@@ -181,7 +183,9 @@ python split_kernel_module_packages () {
 
     module_deps = parse_depmod()
     module_regex = '^(.*)\.k?o$'
-    module_pattern = 'kernel-module-%s'
+
+    module_pattern_prefix = d.getVar('KERNEL_MODULE_PACKAGE_PREFIX', True)
+    module_pattern = module_pattern_prefix + 'kernel-module-%s'
 
     postinst = d.getVar('pkg_postinst_modules', True)
     postrm = d.getVar('pkg_postrm_modules', True)
