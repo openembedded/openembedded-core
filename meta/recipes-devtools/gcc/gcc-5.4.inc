@@ -2,15 +2,15 @@ require gcc-common.inc
 
 # Third digit in PV should be incremented after a minor release
 
-PV = "5.3.0"
+PV = "5.4.0"
 
 #SNAP = "5-20150405"
 
 # BINV should be incremented to a revision after a minor gcc release
 
-BINV = "5.3.0"
+BINV = "5.4.0"
 
-FILESEXTRAPATHS =. "${FILE_DIRNAME}/gcc-5.3:${FILE_DIRNAME}/gcc-5.3/backport:"
+FILESEXTRAPATHS =. "${FILE_DIRNAME}/gcc-5.4:${FILE_DIRNAME}/gcc-5.4/backport:"
 
 DEPENDS =+ "mpfr gmp libmpc zlib"
 NATIVEDEPS = "mpfr-native gmp-native libmpc-native zlib-native"
@@ -89,18 +89,13 @@ SRC_URI = "\
            file://0057-unwind-fix-for-musl.patch \
            file://0058-fdebug-prefix-map-support-to-remap-relative-path.patch \
            file://0059-libgcc-use-ldflags.patch \
-           file://0060-remove-prototypes-cfns.patch \
-	   file://0061-nios2-Make-assert-less-restrictive.patch \
-           file://CVE-2016-4488.patch \
-           file://CVE-2016-4489.patch \
-           file://CVE-2016-2226.patch \
-           file://CVE-2016-4490.patch \
 "
 
 BACKPORTS = ""
 
-SRC_URI[md5sum] = "c9616fd448f980259c31de613e575719"
-SRC_URI[sha256sum] = "b84f5592e9218b73dbae612b5253035a7b34a9a1f7688d2e1bfaaf7267d5c4db"
+SRC_URI[md5sum] = "4c626ac2a83ef30dfb9260e6f59c2b30"
+SRC_URI[sha256sum] = "608df76dec2d34de6558249d8af4cbee21eceddbcb580d666f7a5a583ca3303a"
+
 UPSTREAM_CHECK_REGEX = "gcc-(?P<pver>5\.\d+\.\d+).tar"
 
 #S = "${TMPDIR}/work-shared/gcc-${PV}-${PR}/gcc-${SNAP}"
