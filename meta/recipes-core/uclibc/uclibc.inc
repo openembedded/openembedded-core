@@ -52,12 +52,10 @@ EXTRA_OEMAKE = "${OEMAKE_NO_CC} \
                 'HOSTCC=${BUILD_CC}' \
                 'HOST_CFLAGS=${BUILD_CFLAGS}' \
                 'CC=${CC}' \
-                ARCH=${UCLIBC_ARCH}"
+                ARCH=${UCLIBC_ARCH} \
+                V=1"
 
 EXTRA_OEMAKE_task_do_package = "${OEMAKE_NO_CC}"
-
-# enable verbose output:
-export V="2"
 
 # -O<n> -fno-omit-frame-pointer ends up with GCC ICE on thumb as reported
 # http://gcc.gnu.org/bugzilla/show_bug.cgi?id=44860
