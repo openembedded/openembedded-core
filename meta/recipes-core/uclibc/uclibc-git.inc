@@ -6,6 +6,7 @@ FILESEXTRAPATHS =. "${FILE_DIRNAME}/uclibc-git:"
 
 SRC_URI = "git://uclibc-ng.org/git/uclibc-ng \
         file://0001-Disable-lrount_tes-function.patch \
+        file://0001-Provide-an-alias-to-_obstack_free.patch \
         file://uClibc.machine \
         file://uClibc.distro \
         file://obstack.cfg \

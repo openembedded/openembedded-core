@@ -1,0 +1,44 @@
+From 06e4fe64bbd01f16ee84da161b8e1a61e73b4cdb Mon Sep 17 00:00:00 2001
+From: Alexey Neyman <aneyman@lynx.com>
+Date: Thu, 31 Mar 2016 13:02:47 -0700
+Subject: [PATCH] Provide an alias to _obstack_free
+
+GDB 7.11 does not build if compiled against uclibc-ng (1.0.12 was used,
+but the problematic code exists in 1.0.13 as well). The reason is that
+GDB release includes its own obstack implementation, but elides the code
+if <gnu-versions.h> declares a compatible obstack implementation in
+libc. uclibc-ng does claim compatible obstack interface (GDB expects
+version 2, but accepts version 1 if sizeof(int) == sizeof(size_t)),
+however, uclibc-ng does not provide the _obstack_free symbol that is a
+part of the interface (glibc does provide this symbol). This later
+causes a link failure.
+
+The attached patch makes uclibc-ng enables an alias _obstack_free ->
+obstack_free.
+
+Signed-off-by: Alexey Neyman <stilor@att.net>
+---
+Upstream-Status: Backport
+
+ libc/misc/gnu/obstack.c | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/libc/misc/gnu/obstack.c b/libc/misc/gnu/obstack.c
+index 38cfd83..6acc567 100644
+--- a/libc/misc/gnu/obstack.c
++++ b/libc/misc/gnu/obstack.c
+@@ -385,11 +385,9 @@ obstack_free (struct obstack *h, void *obj)
+     abort ();
+ }
+ 
+-# if 0
+ /* Older versions of libc used a function _obstack_free intended to be
+    called by non-GCC compilers.  */
+ strong_alias (obstack_free, _obstack_free)
+-# endif
+ 
+ int
+ _obstack_memory_used (struct obstack *h)
+-- 
+2.8.1
+
