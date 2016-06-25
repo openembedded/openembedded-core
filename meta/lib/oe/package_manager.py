@@ -700,18 +700,19 @@ class RpmPM(PackageManager):
             arch_list = self.feed_archs.split()
         else:
             # List must be prefered to least preferred order
-            default_platform_extra = set()
-            platform_extra = set()
+            default_platform_extra = list()
+            platform_extra = list()
             bbextendvariant = self.d.getVar('BBEXTENDVARIANT', True) or ""
             for mlib in self.ml_os_list:
                 for arch in self.ml_prefix_list[mlib]:
                     plt = arch.replace('-', '_') + '-.*-' + self.ml_os_list[mlib]
                     if mlib == bbextendvariant:
-                            default_platform_extra.add(plt)
+                        if plt not in default_platform_extra:
+                            default_platform_extra.append(plt)
                     else:
-                            platform_extra.add(plt)
-
-            platform_extra = platform_extra.union(default_platform_extra)
+                        if plt not in platform_extra:
+                            platform_extra.append(plt)
+            platform_extra = default_platform_extra + platform_extra
 
             for canonical_arch in platform_extra:
                 arch = canonical_arch.split('-')[0]
