@@ -21,12 +21,15 @@ import logging
 import os
 import shutil
 import sys
+import unittest
 from datetime import datetime
 
 sys.path.insert(0, os.path.dirname(os.path.realpath(__file__)) + '/lib')
 import scriptpath
 scriptpath.add_oe_lib_path()
-from oeqa.buildperf import BuildPerfTestRunner, KernelDropCaches
+import oeqa.buildperf
+from oeqa.buildperf import (BuildPerfTestLoader, BuildPerfTestResult,
+                            BuildPerfTestRunner, KernelDropCaches)
 from oeqa.utils.commands import runCmd
 
 
@@ -123,19 +126,23 @@ def main(argv=None):
     # Check our capability to drop caches and ask pass if needed
     KernelDropCaches.check()
 
+    # Load build perf tests
+    loader = BuildPerfTestLoader()
+    suite = loader.discover(start_dir=os.path.dirname(oeqa.buildperf.__file__))
     # Set-up log file
     out_dir = args.out_dir.format(date=datetime.now().strftime('%Y%m%d%H%M%S'))
     setup_file_logging(os.path.join(out_dir, 'output.log'))
 
     # Run actual tests
-    runner = BuildPerfTestRunner(out_dir)
     archive_build_conf(out_dir)
-    ret = runner.run_tests()
-    if not ret:
+    runner = BuildPerfTestRunner(out_dir, verbosity=2)
+    result = runner.run(suite)
+    if result.wasSuccessful():
         if args.globalres_file:
-            runner.update_globalres_file(args.globalres_file)
+            result.update_globalres_file(args.globalres_file)
+        return 0
 
-    return ret
+    return 1
 
 
 if __name__ == '__main__':
