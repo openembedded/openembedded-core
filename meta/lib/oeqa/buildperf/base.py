@@ -325,3 +325,8 @@ class BuildPerfTestCase(unittest.TestCase):
         os.sync()
         # Wait a bit for all the dirty blocks to be written onto disk
         time.sleep(3)
+
+
+class BuildPerfTestLoader(unittest.TestLoader):
+    """Test loader for build performance tests"""
+    sortTestMethodsUsing = None

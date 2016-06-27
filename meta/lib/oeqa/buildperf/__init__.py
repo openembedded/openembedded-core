@@ -12,6 +12,7 @@
 """Build performance tests"""
 from .base import (perf_test_case,
                    BuildPerfTestCase,
+                   BuildPerfTestLoader,
                    BuildPerfTestRunner,
                    KernelDropCaches)
 from .test_basic import *
