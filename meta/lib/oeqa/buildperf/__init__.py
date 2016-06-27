@@ -10,6 +10,8 @@
 # more details.
 #
 """Build performance tests"""
-from .base import (perf_test_case, BuildPerfTest, BuildPerfTestRunner,
+from .base import (perf_test_case,
+                   BuildPerfTestCase,
+                   BuildPerfTestRunner,
                    KernelDropCaches)
 from .test_basic import *

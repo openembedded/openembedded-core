@@ -19,6 +19,7 @@ import socket
 import tempfile
 import time
 import traceback
+import unittest
 from datetime import datetime, timedelta
 
 from oeqa.utils.commands import runCmd, get_bb_vars
@@ -191,50 +192,34 @@ def perf_test_case(obj):
     return obj
 
 
-class BuildPerfTest(object):
+class BuildPerfTestCase(unittest.TestCase):
     """Base class for build performance tests"""
     SYSRES = 'sysres'
     DISKUSAGE = 'diskusage'
 
-    name = None
-    description = None
-
-    def __init__(self, out_dir):
-        self.out_dir = out_dir
-        self.results = {'name':self.name,
-                        'description': self.description,
-                        'status': 'NOTRUN',
-                        'start_time': None,
-                        'elapsed_time': None,
-                        'measurements': []}
-        if not os.path.exists(self.out_dir):
-            os.makedirs(self.out_dir)
-        if not self.name:
-            self.name = self.__class__.__name__
+    def __init__(self, *args, **kwargs):
+        super(BuildPerfTestCase, self).__init__(*args, **kwargs)
+        self.name = self._testMethodName
+        self.out_dir = None
+        self.start_time = None
+        self.elapsed_time = None
+        self.measurements = []
         self.bb_vars = get_bb_vars()
-        # TODO: remove the _failed flag when globalres.log is ditched as all
-        # failures should raise an exception
-        self._failed = False
-        self.cmd_log = os.path.join(self.out_dir, 'commands.log')
+        # TODO: remove 'times' and 'sizes' arrays when globalres support is
+        # removed
+        self.times = []
+        self.sizes = []
 
-    def run(self):
+    def run(self, *args, **kwargs):
         """Run test"""
-        self.results['status'] = 'FAILED'
-        self.results['start_time'] = datetime.now()
-        self._run()
-        self.results['elapsed_time'] = (datetime.now() -
-                                        self.results['start_time'])
-        # Test is regarded as completed if it doesn't raise an exception
-        if not self._failed:
-            self.results['status'] = 'COMPLETED'
-
-    def _run(self):
-        """Actual test payload"""
-        raise NotImplementedError
+        self.start_time = datetime.now()
+        super(BuildPerfTestCase, self).run(*args, **kwargs)
+        self.elapsed_time = datetime.now() - self.start_time
 
     def log_cmd_output(self, cmd):
         """Run a command and log it's output"""
-        with open(self.cmd_log, 'a') as fobj:
+        cmd_log = os.path.join(self.out_dir, 'commands.log')
+        with open(cmd_log, 'a') as fobj:
             runCmd(cmd, stdout=fobj)
 
     def measure_cmd_resources(self, cmd, name, legend):
@@ -255,7 +240,8 @@ class BuildPerfTest(object):
 
         cmd_str = cmd if isinstance(cmd, str) else ' '.join(cmd)
         log.info("Timing command: %s", cmd_str)
-        with open(self.cmd_log, 'a') as fobj:
+        cmd_log = os.path.join(self.out_dir, 'commands.log')
+        with open(cmd_log, 'a') as fobj:
             ret, timedata = time_cmd(cmd, stdout=fobj)
         if ret.status:
             log.error("Time will be reported as 0. Command failed: %s",
@@ -270,12 +256,17 @@ class BuildPerfTest(object):
                        'name': name,
                        'legend': legend}
         measurement['values'] = {'elapsed_time': etime}
-        self.results['measurements'].append(measurement)
+        self.measurements.append(measurement)
+        e_sec = etime.total_seconds()
         nlogs = len(glob.glob(self.out_dir + '/results.log*'))
         results_log = os.path.join(self.out_dir,
                                    'results.log.{}'.format(nlogs + 1))
         with open(results_log, 'w') as fobj:
             fobj.write(timedata)
+        # Append to 'times' array for globalres log
+        self.times.append('{:d}:{:02d}:{:.2f}'.format(int(e_sec / 3600),
+                                                      int((e_sec % 3600) / 60),
+                                                       e_sec % 60))
 
     def measure_disk_usage(self, path, name, legend):
         """Estimate disk usage of a file or directory"""
@@ -293,7 +284,9 @@ class BuildPerfTest(object):
                        'name': name,
                        'legend': legend}
         measurement['values'] = {'size': size}
-        self.results['measurements'].append(measurement)
+        self.measurements.append(measurement)
+        # Append to 'sizes' array for globalres log
+        self.sizes.append(str(size))
 
     def save_buildstats(self):
         """Save buildstats"""
