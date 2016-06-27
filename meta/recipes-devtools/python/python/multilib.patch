@@ -1,5 +1,5 @@
 Rebased for python-2.7.9
-Signed-Off-By: Alejandro Hernandez <alejandro.hernandez@linux.intel.com>
+Signed-off-by: Alejandro Hernandez <alejandro.hernandez@linux.intel.com>
 
 Index: Python-2.7.9/configure.ac
 ===================================================================

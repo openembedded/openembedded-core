@@ -7,7 +7,7 @@ Signed-off-by: Michael 'Mickey' Lauer <mickey@vanille-media.de>
 Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
 
 Rebased for python-2.7.9
-Signed-Off-By: Alejandro Hernandez <alejandro.hernandez@linux.intel.com>
+Signed-off-by: Alejandro Hernandez <alejandro.hernandez@linux.intel.com>
 
 Index: Python-2.7.9/Makefile.pre.in
 ===================================================================

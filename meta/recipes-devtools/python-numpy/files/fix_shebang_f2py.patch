@@ -3,7 +3,7 @@ Upstream-Status: Inappropriate [embedded specific]
 Avoids using python from the HOSTs native sysroot for f2py,
 uses TARGET env python instead.
 
-Signed-Off-By: Alejandro Hernandez <alejandro.hernandez@linux.intel.com>
+Signed-off-by: Alejandro Hernandez <alejandro.hernandez@linux.intel.com>
 
 Index: numpy-1.11.0/numpy/f2py/setup.py
 ===================================================================

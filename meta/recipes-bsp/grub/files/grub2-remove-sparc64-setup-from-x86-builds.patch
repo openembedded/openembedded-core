@@ -2,7 +2,7 @@ Upstream-Status: Inappropriate [embedded specific]
 
 remove the grub-sparc64-setup files from the x86 builds.
 
-Signed-Off-By: Nitin A Kamble <nitin.a.kamble@intel.com>
+Signed-off-by: Nitin A Kamble <nitin.a.kamble@intel.com>
 
 --- a/Makefile.util.am	2014-08-15 11:41:02.441011278 -0700
 +++ b/Makefile.util.am	2014-08-15 11:44:26.245021142 -0700

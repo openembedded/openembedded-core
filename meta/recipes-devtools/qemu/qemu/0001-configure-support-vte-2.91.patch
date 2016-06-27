@@ -3,7 +3,7 @@ From: Jussi Kukkonen <jussi.kukkonen@intel.com>
 Date: Fri, 17 Jun 2016 21:09:03 +0300
 Subject: [PATCH] configure: support vte-2.91
 
-Upstream-status: Backport [c6feff9e09aa99]
+Upstream-Status: Backport [c6feff9e09aa99]
 Signed-off-by: Jussi Kukkonen <jussi.kukkonen@intel.com>
 
 Original commit message below:

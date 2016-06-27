@@ -8,7 +8,7 @@ Exit the program if an unrecognized command line option is found.
 
 Upstream-Status: Submitted
 
-Signed-off-by; Tom Hochstein <tom.hochstein@nxp.com>
+Signed-off-by: Tom Hochstein <tom.hochstein@nxp.com>
 Signed-off-by: Otavio Salvador <otavio@ossystems.com.br>
 ---
 

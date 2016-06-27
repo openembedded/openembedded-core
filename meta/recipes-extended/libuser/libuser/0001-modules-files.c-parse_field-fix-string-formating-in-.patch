@@ -11,7 +11,7 @@ Content-Transfer-Encoding: 8bit
 
 Signed-off-by: Aníbal Limón <anibal.limon@linux.intel.com>
 
-Upstream-status: Pending
+Upstream-Status: Pending
 ---
  modules/files.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)

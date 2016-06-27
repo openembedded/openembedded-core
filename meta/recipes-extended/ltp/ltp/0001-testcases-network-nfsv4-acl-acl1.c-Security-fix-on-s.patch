@@ -18,7 +18,7 @@ acl1.c:317:2: error: format not a string literal and no format arguments
 
 Signed-off-by: Aníbal Limón <anibal.limon@linux.intel.com>
 
-Upstream-status: Pending
+Upstream-Status: Pending
 ---
  testcases/network/nfsv4/acl/acl1.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)

@@ -1,6 +1,6 @@
-ensure the XATTR_NAME_CAPS is defined when it is used
+Ensure the XATTR_NAME_CAPS is defined when it is used
 
-Upstream-status: Pending
+Upstream-Status: Pending
 
 VFS_CAP_U32 can not ensure that XATTR_NAME_CAPS is defined, and failed to build
 libcap-native in old release, like CentOS release 6.7 (Final), with the blow

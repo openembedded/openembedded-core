@@ -1,6 +1,6 @@
 Rebased for Python 2.7.9
 
-Signed-Off-By: Alejandro Hernandez <alejandro.hernandez@linux.intel.com>
+Signed-off-by: Alejandro Hernandez <alejandro.hernandez@linux.intel.com>
 
 2011/09/29
 The python recipe building was failing because python-native 
@@ -10,7 +10,7 @@ recipe.
 
 Upstream-Status: Inappropriate [oe-specific]
 
-Signed-Off-By: Nitin A Kamble <nitin.a.kamble@intel.com>
+Signed-off-by: Nitin A Kamble <nitin.a.kamble@intel.com>
 
 Index: Python-2.7.9/Include/pythonrun.h
 ===================================================================

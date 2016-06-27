@@ -15,7 +15,7 @@ We don't enable this globally as there are some cases where we'd get
 Reported-by: Bertrand Jacquin <bertrand@jacquin.bzh>
 URL: https://bugs.gentoo.org/542618
 
-Signed-off-By: Armin Kuster <akuster@mvista.com>
+Signed-off-by: Armin Kuster <akuster@mvista.com>
 
 Index: openssl-1.0.2a/crypto/perlasm/x86_64-xlate.pl
 ===================================================================
