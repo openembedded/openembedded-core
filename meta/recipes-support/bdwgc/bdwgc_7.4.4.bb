@@ -21,9 +21,8 @@ SECTION = "devel"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://README.QUICK;md5=55f5088f90a982fed7af9a4897047ef7"
 
-SRCREV = "e31cdc288ffbee5bf25f948e19deb5a7ce846971"
+SRCREV = "d8bfa89c2a9c7c86fb98acbc53b5750600b95492"
 SRC_URI = "git://github.com/ivmai/bdwgc.git;branch=release-7_4 \
-           file://0001-fix-build-with-musl.patch \
            file://0001-configure.ac-add-check-for-NO_GETCONTEXT-definition.patch \
            file://0002-Altera-NIOS2-support.patch \
           "
