@@ -13,17 +13,15 @@
 import os
 import shutil
 
-from . import BuildPerfTest, perf_test_case
+from oeqa.buildperf import BuildPerfTestCase
 from oeqa.utils.commands import get_bb_vars
 
 
-@perf_test_case
-class Test1P1(BuildPerfTest):
-    name = "test1"
+class Test1P1(BuildPerfTestCase):
     build_target = 'core-image-sato'
-    description = "Measure wall clock of bitbake {} and size of tmp dir".format(build_target)
 
-    def _run(self):
+    def test1(self):
+        """Measure wall clock of bitbake core-image-sato and size of tmp dir"""
         self.log_cmd_output("bitbake {} -c fetchall".format(self.build_target))
         self.rm_tmp()
         self.rm_sstate()
@@ -35,13 +33,11 @@ class Test1P1(BuildPerfTest):
         self.save_buildstats()
 
 
-@perf_test_case
-class Test1P2(BuildPerfTest):
-    name = "test12"
+class Test1P2(BuildPerfTestCase):
     build_target = 'virtual/kernel'
-    description = "Measure bitbake {}".format(build_target)
 
-    def _run(self):
+    def test12(self):
+        """Measure bitbake virtual/kernel"""
         self.log_cmd_output("bitbake {} -c cleansstate".format(
             self.build_target))
         self.sync()
@@ -49,13 +45,11 @@ class Test1P2(BuildPerfTest):
                                    'bitbake ' + self.build_target)
 
 
-@perf_test_case
-class Test1P3(BuildPerfTest):
-    name = "test13"
+class Test1P3(BuildPerfTestCase):
     build_target = 'core-image-sato'
-    description = "Build {} with rm_work enabled".format(build_target)
 
-    def _run(self):
+    def test13(self):
+        """Build core-image-sato with rm_work enabled"""
         postfile = os.path.join(self.out_dir, 'postfile.conf')
         with open(postfile, 'w') as fobj:
             fobj.write('INHERIT += "rm_work"\n')
@@ -73,13 +67,11 @@ class Test1P3(BuildPerfTest):
         self.save_buildstats()
 
 
-@perf_test_case
-class Test2(BuildPerfTest):
-    name = "test2"
+class Test2(BuildPerfTestCase):
     build_target = 'core-image-sato'
-    description = "Measure bitbake {} -c rootfs with sstate".format(build_target)
 
-    def _run(self):
+    def test2(self):
+        """Measure bitbake core-image-sato -c rootfs with sstate"""
         self.rm_tmp()
         self.rm_cache()
         self.sync()
@@ -87,12 +79,10 @@ class Test2(BuildPerfTest):
         self.measure_cmd_resources(cmd, 'do_rootfs', 'bitbake do_rootfs')
 
 
-@perf_test_case
-class Test3(BuildPerfTest):
-    name = "test3"
-    description = "Parsing time metrics (bitbake -p)"
+class Test3(BuildPerfTestCase):
 
-    def _run(self):
+    def test3(self):
+        """Parsing time metrics (bitbake -p)"""
         # Drop all caches and parse
         self.rm_cache()
         self.force_rm(os.path.join(self.bb_vars['TMPDIR'], 'cache'))
@@ -107,13 +97,11 @@ class Test3(BuildPerfTest):
                                    'bitbake -p (cached)')
 
 
-@perf_test_case
-class Test4(BuildPerfTest):
-    name = "test4"
+class Test4(BuildPerfTestCase):
     build_target = 'core-image-sato'
-    description = "eSDK metrics"
 
-    def _run(self):
+    def test4(self):
+        """eSDK metrics"""
         self.log_cmd_output("bitbake {} -c do_populate_sdk_ext".format(
             self.build_target))
         self.bb_vars = get_bb_vars(None, self.build_target)
