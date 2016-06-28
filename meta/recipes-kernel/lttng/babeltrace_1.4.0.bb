@@ -12,9 +12,11 @@ inherit autotools pkgconfig
 
 SRCREV = "c551f7a1ed635138b083b4e9e0c445ef63d0a562"
 
-SRC_URI = "git://git.efficios.com/babeltrace.git;branch=stable-1.3 \
-           file://0001-Fix-invalid-pointer-free-with-trace-collection.patch \
-           file://0001-lttng-live-Include-sys-param.h-for-MAXNAMLEN-definti.patch \
+SRC_URI = "http://www.efficios.com/files/babeltrace/babeltrace-${PV}.tar.bz2 \
 "
 
-S = "${WORKDIR}/git"
+EXTRA_OECONF = "--disable-debug-info"
+
+SRC_URI[md5sum] = "fa99064048af5c9c6ff00e489ac809c2"
+SRC_URI[sha256sum] = "9469eeb22617cd12668683b04c27003e5337e9ac66ade914988df3642fc0d0e4"
+
