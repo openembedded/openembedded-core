@@ -12,8 +12,8 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=1e86753638d3cf2512528b99079bc4f3"
 
 SRC_URI = "https://www.mpg123.de/download/${BP}.tar.bz2"
 
-SRC_URI[md5sum] = "dea9e3a815d127d04ebe9f6b80f229ce"
-SRC_URI[sha256sum] = "3495e678dec9a60f29cbcd4fc698abc4c811ec60d1276e744f7a10ac35023b48"
+SRC_URI[md5sum] = "6a318579dd7b52c5851bb7950af969ac"
+SRC_URI[sha256sum] = "b658df672813511ff9b68a1553917220b675067204cdb58dbb59a2b8179350b2"
 
 inherit autotools pkgconfig
 
