@@ -32,11 +32,10 @@ PACKAGECONFIG[nettle] = "--with-nettle,--without-nettle,nettle,"
 PACKAGECONFIG[lz4] = "--with-lz4,--without-lz4,lz4,"
 
 SRC_URI = "http://libarchive.org/downloads/libarchive-${PV}.tar.gz \
-           file://0001-configure.ac-check-acl-libacl.h-and-sys-acl.h-based-.patch \
            "
 
-SRC_URI[md5sum] = "596210b5a9c2ff74a0f7ca34838d655f"
-SRC_URI[sha256sum] = "7bce45fd71ff01dc20d19edd78322d4965583d81b8bed8e26cacb65d6f5baa87"
+SRC_URI[md5sum] = "afa257047d1941a565216edbf0171e72"
+SRC_URI[sha256sum] = "72ee1a4e3fd534525f13a0ba1aa7b05b203d186e0c6072a8a4738649d0b3cfd2"
 
 inherit autotools update-alternatives pkgconfig
 
