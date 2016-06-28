@@ -15,17 +15,16 @@ LIC_FILES_CHKSUM = "file://nss/COPYING;md5=3b1e88e1b9c0b5a4b2881d46cce06a18 \
                     file://nss/lib/freebl/mpi/doc/LICENSE-MPL;md5=5d425c8f3157dbf212db2ec53d9e5132"
 
 SRC_URI = "\
-    http://ftp.mozilla.org/pub/mozilla.org/security/nss/releases/NSS_3_23_RTM/src/${BP}.tar.gz \
+    http://ftp.mozilla.org/pub/mozilla.org/security/nss/releases/NSS_3_24_RTM/src/${BP}.tar.gz \
     file://nss-fix-support-cross-compiling.patch \
     file://nss-no-rpath-for-cross-compiling.patch \
     file://nss-fix-incorrect-shebang-of-perl.patch \
     file://nss-fix-nsinstall-build.patch \
-    file://0001-Fix-build-failure-on-opensuse-13.1.patch \
     file://nss.pc.in \
     file://signlibs.sh \
 "
-SRC_URI[md5sum] = "21c3fed84441b2ab4c50ac626f6517e7"
-SRC_URI[sha256sum] = "94b383e31c9671e9dfcca81084a8a813817e8f05a57f54533509b318d26e11cf"
+SRC_URI[md5sum] = "35854c549cb02100d0f90a6ef328e2e8"
+SRC_URI[sha256sum] = "2f0841492f91cca473b73dec6cab9cf765a485e032d48d2e8ae7261e54c419ed"
 
 UPSTREAM_CHECK_URI = "https://developer.mozilla.org/en-US/docs/Mozilla/Projects/NSS/NSS_Releases"
 UPSTREAM_CHECK_REGEX = "NSS_(?P<pver>.+)_release_notes"
