@@ -681,7 +681,7 @@ fi
 # qemuarm64 uses virtio for any additional serial ports so the normal mechanism
 # of using -serial will not work
 if [ "$MACHINE" = "qemuarm64" ]; then
-    SECOND_SERIAL_OPT="$SCRIPT_QEMU_EXTRA_OPT -device virtio-serial-device -chardev null,id=virtcon -device virtconsole,chardev=virtcon"
+    SECOND_SERIAL_OPT="-device virtio-serial-device -chardev null,id=virtcon -device virtconsole,chardev=virtcon"
 else
     SECOND_SERIAL_OPT="-serial null"
 fi
