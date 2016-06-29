@@ -390,7 +390,7 @@ def create_recipe(args):
                 srcsubdir = dirlist[0]
                 srctree = os.path.join(srctree, srcsubdir)
             else:
-                with open(singleitem, 'r') as f:
+                with open(singleitem, 'r', errors='surrogateescape') as f:
                     if '<html' in f.read(100).lower():
                         logger.error('Fetching "%s" returned a single HTML page - check the URL is correct and functional' % fetchuri)
                         sys.exit(1)
@@ -840,7 +840,7 @@ def crunch_license(licfile):
     # https://github.com/FFmpeg/FFmpeg/blob/master/COPYING.LGPLv3
     crunched_md5sums['2ebfb3bb49b9a48a075cc1425e7f4129'] = 'LGPLv3'
     lictext = []
-    with open(licfile, 'r') as f:
+    with open(licfile, 'r', errors='surrogateescape') as f:
         for line in f:
             # Drop opening statements
             if copyright_re.match(line):
@@ -978,7 +978,7 @@ def convert_debian(debpath):
 
     values = {}
     depends = []
-    with open(os.path.join(debpath, 'control')) as f:
+    with open(os.path.join(debpath, 'control'), 'r', errors='surrogateescape') as f:
         indesc = False
         for line in f:
             if indesc:

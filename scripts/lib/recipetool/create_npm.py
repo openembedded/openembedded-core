@@ -92,7 +92,7 @@ class NpmRecipeHandler(RecipeHandler):
             return False
 
         def read_package_json(fn):
-            with open(fn, 'r') as f:
+            with open(fn, 'r', errors='surrogateescape') as f:
                 return json.loads(f.read())
 
         files = RecipeHandler.checkfiles(srctree, ['package.json'])
