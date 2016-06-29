@@ -937,35 +937,6 @@ def read_pkgconfig_provides(d):
                         recipemap[pc] = line.split(':', 1)[1].strip()
     return recipemap
 
-def convert_pkginfo(pkginfofile):
-    values = {}
-    with open(pkginfofile, 'r') as f:
-        indesc = False
-        for line in f:
-            if indesc:
-                if line.strip():
-                    values['DESCRIPTION'] += ' ' + line.strip()
-                else:
-                    indesc = False
-            else:
-                splitline = line.split(': ', 1)
-                key = line[0]
-                value = line[1]
-                if key == 'LICENSE':
-                    for dep in value.split(','):
-                        dep = dep.split()[0]
-                        mapped = depmap.get(dep, '')
-                        if mapped:
-                            depends.append(mapped)
-                elif key == 'License':
-                    values['LICENSE'] = value
-                elif key == 'Summary':
-                    values['SUMMARY'] = value
-                elif key == 'Description':
-                    values['DESCRIPTION'] = value
-                    indesc = True
-    return values
-
 def convert_debian(debpath):
     value_map = {'Package': 'PN',
                  'Version': 'PV',
