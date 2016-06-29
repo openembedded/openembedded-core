@@ -39,7 +39,7 @@ SDK_UPDATE_URL ?= ""
 
 SDK_TARGETS ?= "${PN}"
 
-def get_sdk_install_targets(d):
+def get_sdk_install_targets(d, images_only=False):
     sdk_install_targets = ''
     if d.getVar('SDK_EXT_TYPE', True) != 'minimal':
         sdk_install_targets = d.getVar('SDK_TARGETS', True)
@@ -50,8 +50,9 @@ def get_sdk_install_targets(d):
                 if v[0] not in sdk_install_targets:
                     sdk_install_targets += ' {}'.format(v[0])
 
-    if d.getVar('SDK_INCLUDE_PKGDATA', True) == '1':
-        sdk_install_targets += ' meta-world-pkgdata:do_allpackagedata'
+    if not images_only:
+        if d.getVar('SDK_INCLUDE_PKGDATA', True) == '1':
+            sdk_install_targets += ' meta-world-pkgdata:do_allpackagedata'
 
     return sdk_install_targets
 
@@ -283,7 +284,7 @@ python copy_buildsystem () {
             f.write('\n')
 
     # Filter the locked signatures file to just the sstate tasks we are interested in
-    excluded_targets = d.getVar('SDK_TARGETS', True)
+    excluded_targets = get_sdk_install_targets(d, images_only=True)
     sigfile = d.getVar('WORKDIR', True) + '/locked-sigs.inc'
     lockedsigs_pruned = baseoutpath + '/conf/locked-sigs.inc'
     oe.copy_buildsystem.prune_lockedsigs([],
