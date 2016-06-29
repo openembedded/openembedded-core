@@ -76,25 +76,26 @@ def time_cmd(cmd, **kwargs):
     return ret, timedata
 
 
-class BuildPerfTestRunner(object):
+class BuildPerfTestResult(unittest.TextTestResult):
     """Runner class for executing the individual tests"""
     # List of test cases to run
     test_run_queue = []
 
-    def __init__(self, out_dir):
-        self.results = {}
-        self.out_dir = os.path.abspath(out_dir)
-        if not os.path.exists(self.out_dir):
-            os.makedirs(self.out_dir)
+    def __init__(self, out_dir, *args, **kwargs):
+        super(BuildPerfTestResult, self).__init__(*args, **kwargs)
 
+        self.out_dir = out_dir
         # Get Git parameters
         try:
             self.repo = GitRepo('.')
         except GitError:
             self.repo = None
-        self.git_rev, self.git_branch = self.get_git_revision()
+        self.git_revision, self.git_branch = self.get_git_revision()
+        self.hostname = socket.gethostname()
+        self.start_time = self.elapsed_time = None
+        self.successes = []
         log.info("Using Git branch:revision %s:%s", self.git_branch,
-                 self.git_rev)
+                 self.git_revision)
 
     def get_git_revision(self):
         """Get git branch and revision under testing"""
@@ -117,79 +118,71 @@ class BuildPerfTestRunner(object):
                     branch = None
         return str(rev), str(branch)
 
-    def run_tests(self):
-        """Method that actually runs the tests"""
-        self.results['schema_version'] = 1
-        self.results['git_revision'] = self.git_rev
-        self.results['git_branch'] = self.git_branch
-        self.results['tester_host'] = socket.gethostname()
-        start_time = datetime.utcnow()
-        self.results['start_time'] = start_time
-        self.results['tests'] = {}
+    def addSuccess(self, test):
+        """Record results from successful tests"""
+        super(BuildPerfTestResult, self).addSuccess(test)
+        self.successes.append((test, None))
 
-        self.archive_build_conf()
-        for test_class in self.test_run_queue:
-            log.info("Executing test %s: %s", test_class.name,
-                     test_class.description)
+    def startTest(self, test):
+        """Pre-test hook"""
+        test.out_dir = self.out_dir
+        log.info("Executing test %s: %s", test.name, test.shortDescription())
+        self.stream.write(datetime.now().strftime("[%Y-%m-%d %H:%M:%S] "))
+        super(BuildPerfTestResult, self).startTest(test)
 
-            test = test_class(self.out_dir)
-            try:
-                test.run()
-            except Exception:
-                # Catch all exceptions. This way e.g buggy tests won't scrap
-                # the whole test run
-                sep = '-' * 5 + ' TRACEBACK ' + '-' * 60 + '\n'
-                tb_msg = sep + traceback.format_exc() + sep
-                log.error("Test execution failed with:\n" + tb_msg)
-            self.results['tests'][test.name] = test.results
+    def startTestRun(self):
+        """Pre-run hook"""
+        self.start_time = datetime.utcnow()
 
-        self.results['elapsed_time'] = datetime.utcnow() - start_time
-        return 0
+    def stopTestRun(self):
+        """Pre-run hook"""
+        self.elapsed_time = datetime.utcnow() - self.start_time
 
-    def archive_build_conf(self):
-        """Archive build/conf to test results"""
-        src_dir = os.path.join(os.environ['BUILDDIR'], 'conf')
-        tgt_dir = os.path.join(self.out_dir, 'build', 'conf')
-        os.makedirs(os.path.dirname(tgt_dir))
-        shutil.copytree(src_dir, tgt_dir)
+    def all_results(self):
+        result_map = {'SUCCESS': self.successes,
+                      'FAIL': self.failures,
+                      'ERROR': self.errors,
+                      'EXP_FAIL': self.expectedFailures,
+                      'UNEXP_SUCCESS': self.unexpectedSuccesses}
+        for status, tests in result_map.items():
+            for test in tests:
+                yield (status, test)
+
 
     def update_globalres_file(self, filename):
         """Write results to globalres csv file"""
+        # Map test names to time and size columns in globalres
+        # The tuples represent index and length of times and sizes
+        # respectively
+        gr_map = {'test1': ((0, 1), (8, 1)),
+                  'test12': ((1, 1), (None, None)),
+                  'test13': ((2, 1), (9, 1)),
+                  'test2': ((3, 1), (None, None)),
+                  'test3': ((4, 3), (None, None)),
+                  'test4': ((7, 1), (10, 2))}
+
         if self.repo:
-            git_tag_rev = self.repo.run_cmd(['describe', self.git_rev])
+            git_tag_rev = self.repo.run_cmd(['describe', self.git_revision])
         else:
-            git_tag_rev = self.git_rev
-        times = []
-        sizes = []
-        for test in self.results['tests'].values():
-            for measurement in test['measurements']:
-                res_type = measurement['type']
-                values = measurement['values']
-                if res_type == BuildPerfTest.SYSRES:
-                    e_sec = values['elapsed_time'].total_seconds()
-                    times.append('{:d}:{:02d}:{:.2f}'.format(
-                        int(e_sec / 3600),
-                        int((e_sec % 3600) / 60),
-                        e_sec % 60))
-                elif res_type == BuildPerfTest.DISKUSAGE:
-                    sizes.append(str(values['size']))
-                else:
-                    log.warning("Unable to handle '%s' values in "
-                                "globalres.log", res_type)
+            git_tag_rev = self.git_revision
+
+        values = ['0'] * 12
+        for status, test in self.all_results():
+            if status not in ['SUCCESS', 'FAILURE', 'EXP_SUCCESS']:
+                continue
+            (t_ind, t_len), (s_ind, s_len) = gr_map[test.name]
+            if t_ind is not None:
+                values[t_ind:t_ind + t_len] = test.times
+            if s_ind is not None:
+                values[s_ind:s_ind + s_len] = test.sizes
 
         log.debug("Writing globalres log to %s", filename)
         with open(filename, 'a') as fobj:
-            fobj.write('{},{}:{},{},'.format(self.results['tester_host'],
-                                             self.results['git_branch'],
-                                             self.results['git_revision'],
+            fobj.write('{},{}:{},{},'.format(self.hostname,
+                                             self.git_branch,
+                                             self.git_revision,
                                              git_tag_rev))
-            fobj.write(','.join(times + sizes) + '\n')
-
-
-def perf_test_case(obj):
-    """Decorator for adding test classes"""
-    BuildPerfTestRunner.test_run_queue.append(obj)
-    return obj
+            fobj.write(','.join(values) + '\n')
 
 
 class BuildPerfTestCase(unittest.TestCase):
@@ -330,3 +323,16 @@ class BuildPerfTestCase(unittest.TestCase):
 class BuildPerfTestLoader(unittest.TestLoader):
     """Test loader for build performance tests"""
     sortTestMethodsUsing = None
+
+
+class BuildPerfTestRunner(unittest.TextTestRunner):
+    """Test loader for build performance tests"""
+    sortTestMethodsUsing = None
+
+    def __init__(self, out_dir, *args, **kwargs):
+        super(BuildPerfTestRunner, self).__init__(*args, **kwargs)
+        self.out_dir = out_dir
+
+    def _makeResult(self):
+       return BuildPerfTestResult(self.out_dir, self.stream, self.descriptions,
+                                  self.verbosity)

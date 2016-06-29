@@ -19,6 +19,7 @@ import errno
 import fcntl
 import logging
 import os
+import shutil
 import sys
 from datetime import datetime
 
@@ -78,6 +79,14 @@ def setup_file_logging(log_file):
     log.addHandler(handler)
 
 
+def archive_build_conf(out_dir):
+    """Archive build/conf to test results"""
+    src_dir = os.path.join(os.environ['BUILDDIR'], 'conf')
+    tgt_dir = os.path.join(out_dir, 'build', 'conf')
+    os.makedirs(os.path.dirname(tgt_dir))
+    shutil.copytree(src_dir, tgt_dir)
+
+
 def parse_args(argv):
     """Parse command line arguments"""
     parser = argparse.ArgumentParser(
@@ -120,6 +129,7 @@ def main(argv=None):
 
     # Run actual tests
     runner = BuildPerfTestRunner(out_dir)
+    archive_build_conf(out_dir)
     ret = runner.run_tests()
     if not ret:
         if args.globalres_file:
