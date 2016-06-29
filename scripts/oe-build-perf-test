@@ -133,10 +133,19 @@ def main(argv=None):
     out_dir = args.out_dir.format(date=datetime.now().strftime('%Y%m%d%H%M%S'))
     setup_file_logging(os.path.join(out_dir, 'output.log'))
 
-    # Run actual tests
     archive_build_conf(out_dir)
     runner = BuildPerfTestRunner(out_dir, verbosity=2)
+
+    # Suppress logger output to stderr so that the output from unittest
+    # is not mixed with occasional logger output
+    log.handlers[0].setLevel(logging.CRITICAL)
+
+    # Run actual tests
     result = runner.run(suite)
+
+    # Restore logger output to stderr
+    log.handlers[0].setLevel(log.level)
+
     if result.wasSuccessful():
         if args.globalres_file:
             result.update_globalres_file(args.globalres_file)
