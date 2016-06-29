@@ -14,5 +14,6 @@ from .base import (BuildPerfTestCase,
                    BuildPerfTestLoader,
                    BuildPerfTestResult,
                    BuildPerfTestRunner,
-                   KernelDropCaches)
+                   KernelDropCaches,
+                   runCmd2)
 from .test_basic import *

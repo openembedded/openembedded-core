@@ -21,12 +21,17 @@ import time
 import traceback
 import unittest
 from datetime import datetime, timedelta
+from functools import partial
 
 from oeqa.utils.commands import runCmd, get_bb_vars
 from oeqa.utils.git import GitError, GitRepo
 
 # Get logger for this module
 log = logging.getLogger('build-perf')
+
+# Our own version of runCmd which does not raise AssertErrors which would cause
+# errors to interpreted as failures
+runCmd2 = partial(runCmd, assert_error=False)
 
 
 class KernelDropCaches(object):
@@ -39,7 +44,7 @@ class KernelDropCaches(object):
         from getpass import getpass
         from locale import getdefaultlocale
         cmd = ['sudo', '-k', '-n', 'tee', '/proc/sys/vm/drop_caches']
-        ret = runCmd(cmd, ignore_status=True, data=b'0')
+        ret = runCmd2(cmd, ignore_status=True, data=b'0')
         if ret.output.startswith('sudo:'):
             pass_str = getpass(
                 "\nThe script requires sudo access to drop caches between "
@@ -59,7 +64,7 @@ class KernelDropCaches(object):
             input_data = b''
         cmd += ['tee', '/proc/sys/vm/drop_caches']
         input_data += b'3'
-        runCmd(cmd, data=input_data)
+        runCmd2(cmd, data=input_data)
 
 
 def time_cmd(cmd, **kwargs):
@@ -71,7 +76,7 @@ def time_cmd(cmd, **kwargs):
         timecmd += cmd
         # TODO: 'ignore_status' could/should be removed when globalres.log is
         # deprecated. The function would just raise an exception, instead
-        ret = runCmd(timecmd, ignore_status=True, **kwargs)
+        ret = runCmd2(timecmd, ignore_status=True, **kwargs)
         timedata = tmpf.file.read()
     return ret, timedata
 
@@ -213,7 +218,7 @@ class BuildPerfTestCase(unittest.TestCase):
         """Run a command and log it's output"""
         cmd_log = os.path.join(self.out_dir, 'commands.log')
         with open(cmd_log, 'a') as fobj:
-            runCmd(cmd, stdout=fobj)
+            runCmd2(cmd, stdout=fobj)
 
     def measure_cmd_resources(self, cmd, name, legend):
         """Measure system resource usage of a command"""
@@ -265,7 +270,7 @@ class BuildPerfTestCase(unittest.TestCase):
         """Estimate disk usage of a file or directory"""
         # TODO: 'ignore_status' could/should be removed when globalres.log is
         # deprecated. The function would just raise an exception, instead
-        ret = runCmd(['du', '-s', path], ignore_status=True)
+        ret = runCmd2(['du', '-s', path], ignore_status=True)
         if ret.status:
             log.error("du failed, disk usage will be reported as 0")
             size = 0
