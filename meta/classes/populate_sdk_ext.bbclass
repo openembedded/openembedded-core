@@ -450,7 +450,13 @@ fakeroot python do_populate_sdk_ext() {
 }
 
 def get_ext_sdk_depends(d):
-    return d.getVarFlag('do_rootfs', 'depends', True) + ' ' + d.getVarFlag('do_build', 'depends', True)
+    # Note: the deps varflag is a list not a string, so we need to specify expand=False
+    deps = d.getVarFlag('do_image_complete', 'deps', False)
+    pn = d.getVar('PN', True)
+    deplist = ['%s:%s' % (pn, dep) for dep in deps]
+    for task in ['do_image_complete', 'do_rootfs', 'do_build']:
+        deplist.extend((d.getVarFlag(task, 'depends', True) or '').split())
+    return ' '.join(deplist)
 
 python do_sdk_depends() {
     # We have to do this separately in its own task so we avoid recursing into
