@@ -294,7 +294,7 @@ subcommands = {
 
 
 def start_logging(loglevel):
-    logging.basicConfig(filname='wic.log', filemode='w', level=loglevel)
+    logging.basicConfig(filename='wic.log', filemode='w', level=loglevel)
 
 
 def main(argv):
