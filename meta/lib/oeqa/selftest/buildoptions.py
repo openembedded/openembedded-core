@@ -199,19 +199,6 @@ class BuildhistoryTests(BuildhistoryBase):
         self.run_buildhistory_operation(target, target_config="PR = \"r1\"", change_bh_location=True)
         self.run_buildhistory_operation(target, target_config="PR = \"r0\"", change_bh_location=False, expect_error=True, error_regex=error)
 
-
-class BuildImagesTest(oeSelfTest):
-    @testcase(563)
-    def test_directfb(self):
-        """
-        This method is used to test the build of directfb image for arm arch.
-        In essence we build a coreimagedirectfb and test the exitcode of bitbake that in case of success is 0.
-        """
-        self.add_command_to_tearDown('cleanup-workdir')
-        self.write_config("DISTRO_FEATURES_remove = \"x11\"\nDISTRO_FEATURES_append = \" directfb\"\nMACHINE ??= \"qemuarm\"")
-        res = bitbake("core-image-directfb", ignore_status=True)
-        self.assertEqual(res.status, 0, "\ncoreimagedirectfb failed to build. Please check logs for further details.\nbitbake output %s" % res.output)
-
 class ArchiverTest(oeSelfTest):
     @testcase(926)
     def test_arch_work_dir_and_export_source(self):
