@@ -4,13 +4,6 @@ require gcc-configure-common.inc
 
 INHIBIT_DEFAULT_DEPS = "1"
 
-EXTRA_OECONF += "\
-    ${@get_gcc_mips_plt_setting(bb, d)} \
-    ${@get_gcc_ppc_plt_settings(bb, d)} \
-    ${@get_long_double_setting(bb, d)} \
-    ${@get_gcc_multiarch_setting(bb, d)} \
-"
-
 do_configure () {
 	target=`echo ${TARGET_SYS} | sed -e s#-${SDKPKGSUFFIX}##`
 	install -d ${D}${base_libdir} ${D}${libdir}
