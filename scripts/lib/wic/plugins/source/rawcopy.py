@@ -67,7 +67,7 @@ class RawCopyPlugin(SourcePlugin):
             return
 
         src = os.path.join(bootimg_dir, source_params['file'])
-        dst = os.path.join(cr_workdir, source_params['file'])
+        dst = os.path.join(cr_workdir, "%s.%s" % (source_params['file'], part.lineno))
 
         if 'skip' in source_params:
             dd_cmd = "dd if=%s of=%s ibs=%s skip=1 conv=notrunc" % \
