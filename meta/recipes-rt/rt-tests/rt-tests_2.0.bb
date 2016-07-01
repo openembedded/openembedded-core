@@ -28,6 +28,6 @@ do_install_ptest() {
         cp ${WORKDIR}/rt_bmark.py ${D}${PTEST_PATH}
 }
 
-RDEPENDS_${PN}-ptest += " stress python python-subprocess python-multiprocessing python-datetime python-re python-lang"
+RDEPENDS_${PN}-ptest += " stress python3 python3-subprocess python3-multiprocessing python3-datetime python3-re python3-lang python3-misc"
 
 FILES_${PN} += "${prefix}/src/backfire"
