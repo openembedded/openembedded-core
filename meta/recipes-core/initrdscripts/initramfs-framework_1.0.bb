@@ -8,6 +8,7 @@ PR = "r2"
 inherit allarch
 
 SRC_URI = "file://init \
+           file://rootfs \
            file://finish \
            file://mdev \
            file://udev \
@@ -21,6 +22,7 @@ do_install() {
 
     # base
     install -m 0755 ${WORKDIR}/init ${D}/init
+    install -m 0755 ${WORKDIR}/rootfs ${D}/init.d/90-rootfs
     install -m 0755 ${WORKDIR}/finish ${D}/init.d/99-finish
 
     # mdev
@@ -47,7 +49,7 @@ PACKAGES = "${PN}-base \
             initramfs-module-e2fs \
             initramfs-module-debug"
 
-FILES_${PN}-base = "/init /init.d/99-finish /dev"
+FILES_${PN}-base = "/init /init.d/90-rootfs /init.d/99-finish /dev"
 
 SUMMARY_initramfs-module-mdev = "initramfs support for mdev"
 RDEPENDS_initramfs-module-mdev = "${PN}-base busybox-mdev"
