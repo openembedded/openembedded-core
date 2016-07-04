@@ -9,7 +9,7 @@ PR = "r6"
 DEPENDS = "virtual/libiconv"
 DEPENDS_class-native = ""
 PROVIDES = "virtual/libintl virtual/gettext"
-PROVIDES_class-native = ""
+PROVIDES_class-native = "virtual/gettext-native"
 
 SRC_URI = "${GNU_MIRROR}/gettext/gettext-${PV}.tar.gz \
            file://gettext-vpath.patch \
