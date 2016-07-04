@@ -65,7 +65,6 @@ def devpyshell(d):
         os.dup2(m, sys.stdout.fileno())
         os.dup2(m, sys.stderr.fileno())
 
-        sys.stdout = os.fdopen(sys.stdout.fileno(), 'w', 0)
         sys.stdin = os.fdopen(sys.stdin.fileno(), 'r', 0)
 
         bb.utils.nonblockingfd(sys.stdout)
