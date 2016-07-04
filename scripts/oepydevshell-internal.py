@@ -47,7 +47,7 @@ try:
     # Need cbreak/noecho whilst in select so we trigger on any keypress
     cbreaknoecho(sys.stdin.fileno())
     # Send our PID to the other end so they can kill us.
-    pty.write(str(os.getpid()) + "\n")
+    pty.write(str(os.getpid()).encode('utf-8') + b"\n")
     while True:
         try:
             writers = []
@@ -56,7 +56,7 @@ try:
             (ready, _, _) = select.select([pty, sys.stdin], writers , [], 0)
             try:
                 if pty in ready:
-                    i = i + pty.read()
+                    i = i + pty.read().decode('utf-8')
                 if i:
                     # Write a page at a time to avoid overflowing output 
                     # d.keys() is a good way to do that
@@ -65,9 +65,9 @@ try:
                     i = i[4096:]
                 if sys.stdin in ready:
                     echonocbreak(sys.stdin.fileno())
-                    o = input()
+                    o = input().encode('utf-8')
                     cbreaknoecho(sys.stdin.fileno())
-                    pty.write(o + "\n")
+                    pty.write(o + b"\n")
             except (IOError, OSError) as e:
                 if e.errno == 11:
                     continue
