@@ -12,8 +12,8 @@ SRC_URI = "\
 	file://0001-Add-initial-nios2-architecture-support.patch \
 	"
 
-SRC_URI[md5sum] = "1d6538604b314d2fccdf86915e5c0857"
-SRC_URI[sha256sum] = "04fa615f62992547bcbda562260e28b504bc4c06e2f985f267f3ade30304b5dd"
+SRC_URI[md5sum] = "426d804baae12c372967a6d183e25af2"
+SRC_URI[sha256sum] = "bf210a600dd1becbf7936dd2914cf5f5d3356046904848dcfd27d0c8b12b6f8f"
 
 S = "${WORKDIR}/libatomic_ops-${PV}"
 
