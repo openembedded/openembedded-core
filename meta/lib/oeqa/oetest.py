@@ -397,8 +397,6 @@ class RuntimeTestContext(TestContext):
     def __init__(self, d, target, exported=False):
         super(RuntimeTestContext, self).__init__(d, exported)
 
-        self.tagexp =  d.getVar("TEST_SUITES_TAGS", True)
-
         self.target = target
 
         self.pkgmanifest = {}
@@ -598,6 +596,8 @@ class ImageTestContext(RuntimeTestContext):
     def __init__(self, d, target, host_dumper):
         super(ImageTestContext, self).__init__(d, target)
 
+        self.tagexp = d.getVar("TEST_SUITES_TAGS", True)
+
         self.host_dumper = host_dumper
 
         self.sigterm = False
@@ -618,8 +618,18 @@ class ImageTestContext(RuntimeTestContext):
         super(ImageTestContext, self).install_uninstall_packages(test_id, pkg_dir, install)
 
 class ExportTestContext(RuntimeTestContext):
-    def __init__(self, d, target, exported=False):
+    def __init__(self, d, target, exported=False, parsedArgs={}):
+        """
+        This class is used when exporting tests and when are executed outside OE environment.
+
+        parsedArgs can contain the following:
+            - tag:      Filter test by tag.
+        """
         super(ExportTestContext, self).__init__(d, target, exported)
+
+        tag = parsedArgs.get("tag", None)
+        self.tagexp = tag if tag != None else d.getVar("TEST_SUITES_TAGS", True)
+
         self.sigterm = None
 
     def install_uninstall_packages(self, test_id, install=True):

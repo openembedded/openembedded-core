@@ -81,6 +81,7 @@ def main():
             specified in the json if that directory actually exists or it will error out.")
     parser.add_argument("-l", "--log-dir", dest="log_dir", help="This sets the path for TEST_LOG_DIR. If not specified \
             the current dir is used. This is used for usually creating a ssh log file and a scp test file.")
+    parser.add_argument("-a", "--tag", dest="tag", help="Only run test with specified tag.")
     parser.add_argument("json", help="The json file exported by the build system", default="testdata.json", nargs='?')
 
     args = parser.parse_args()
@@ -107,6 +108,9 @@ def main():
         if not os.path.isdir(d["DEPLOY_DIR"]):
             print("WARNING: The path to DEPLOY_DIR does not exist: %s" % d["DEPLOY_DIR"])
 
+    parsedArgs = {}
+    parsedArgs["tag"] = args.tag
+
     extract_sdk(d)
 
     target = FakeTarget(d)
@@ -114,7 +118,7 @@ def main():
         setattr(target, key, loaded["target"][key])
 
     target.exportStart()
-    tc = ExportTestContext(d, target, True)
+    tc = ExportTestContext(d, target, True, parsedArgs)
     tc.loadTests()
     tc.runTests()
 
