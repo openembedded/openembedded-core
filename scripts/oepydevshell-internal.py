@@ -29,9 +29,6 @@ if len(sys.argv) != 3:
 pty = open(sys.argv[1], "w+b", 0)
 parent = int(sys.argv[2])
 
-# Don't buffer output by line endings
-sys.stdout = os.fdopen(sys.stdout.fileno(), 'w', 0)
-sys.stdin = os.fdopen(sys.stdin.fileno(), 'r', 0)
 nonblockingfd(pty)
 nonblockingfd(sys.stdin)
 
@@ -64,6 +61,7 @@ try:
                     # Write a page at a time to avoid overflowing output 
                     # d.keys() is a good way to do that
                     sys.stdout.write(i[:4096])
+                    sys.stdout.flush()
                     i = i[4096:]
                 if sys.stdin in ready:
                     echonocbreak(sys.stdin.fileno())
