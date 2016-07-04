@@ -15,6 +15,7 @@ SRC_URI = " \
     file://0002-glplugin-enable-gldeinterlace-on-OpenGL-ES.patch \
     file://0003-glcolorconvert-implement-multiple-render-targets-for.patch \
     file://0004-glcolorconvert-don-t-use-the-predefined-variable-nam.patch \
+    file://0005-glshader-add-glBindFragDataLocation.patch \
 "
 SRC_URI[md5sum] = "83abc2e70684e7b195f18ca2992ef6e8"
 SRC_URI[sha256sum] = "d7995317530c8773ec088f94d9320909d41da61996b801ebacce9a56af493f97"
