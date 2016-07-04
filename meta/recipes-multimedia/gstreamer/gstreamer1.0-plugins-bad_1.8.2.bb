@@ -16,6 +16,7 @@ SRC_URI = " \
     file://0003-glcolorconvert-implement-multiple-render-targets-for.patch \
     file://0004-glcolorconvert-don-t-use-the-predefined-variable-nam.patch \
     file://0005-glshader-add-glBindFragDataLocation.patch \
+    file://0006-glcolorconvert-GLES3-deprecates-texture2D-and-it-doe.patch \
 "
 SRC_URI[md5sum] = "83abc2e70684e7b195f18ca2992ef6e8"
 SRC_URI[sha256sum] = "d7995317530c8773ec088f94d9320909d41da61996b801ebacce9a56af493f97"
