@@ -1,11 +1,15 @@
 require pseudo.inc
 
-SRCREV = "786c6d3813622d18e12d36c4aa722af6a417c8fa"
-PV = "1.7.5+git${SRCPV}"
+SRCREV = "eb47d855a831b6dc0ad34890e84b8f6f483693df"
+PV = "1.8.1+git${SRCPV}"
 
 DEFAULT_PREFERENCE = "-1"
 
-SRC_URI = "git://git.yoctoproject.org/pseudo"
+SRC_URI = "git://git.yoctoproject.org/pseudo \
+           file://0001-configure-Prune-PIE-flags.patch \
+           file://fallback-passwd \
+           file://fallback-group \
+           file://moreretries.patch"
 
 S = "${WORKDIR}/git"
 
