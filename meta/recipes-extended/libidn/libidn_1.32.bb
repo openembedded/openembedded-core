@@ -29,6 +29,9 @@ SRC_URI[sha256sum] = "ba5d5afee2beff703a34ee094668da5c6ea5afa38784cebba8924105e1
 PACKAGES =+ "idn"
 FILES_idn = "${bindir}/*"
 
+LICENSE_${PN} = "LGPLv2.1+ | LGPLv3"
+LICENSE_idn = "GPLv3+"
+
 EXTRA_OECONF = "--disable-csharp"
 
 do_install_append() {
