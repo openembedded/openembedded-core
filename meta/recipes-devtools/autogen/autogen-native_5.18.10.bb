@@ -11,6 +11,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 SRC_URI = "${GNU_MIRROR}/autogen/rel${PV}/autogen-${PV}.tar.gz \
            file://increase-timeout-limit.patch \
            file://mk-tpl-config.sh-force-exit-value-to-be-0-in-subproc.patch \
+           file://fix-script-err-when-processing-libguile.patch \
 "
 
 SRC_URI[md5sum] = "2d1b5226e1929d0680011df631289571"
