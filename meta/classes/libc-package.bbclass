@@ -47,7 +47,6 @@ python __anonymous () {
 
 OVERRIDES_append = ":${TARGET_ARCH}-${TARGET_OS}"
 
-# indentation removed on purpose
 locale_base_postinst() {
 #!/bin/sh
 
@@ -55,33 +54,14 @@ if [ "x$D" != "x" ]; then
 	exit 1
 fi
 
-rm -rf ${TMP_LOCALE}
-mkdir -p ${TMP_LOCALE}
-if [ -f ${localedir}/locale-archive ]; then
-        cp ${localedir}/locale-archive ${TMP_LOCALE}/
-fi
-localedef --inputfile=${datadir}/i18n/locales/%s --charmap=%s --prefix=/tmp/locale %s
-mkdir -p ${localedir}/
-mv ${TMP_LOCALE}/locale-archive ${localedir}/
-rm -rf ${TMP_LOCALE}
+localedef --inputfile=${datadir}/i18n/locales/%s --charmap=%s %s
 }
 
-# indentation removed on purpose
 locale_base_postrm() {
 #!/bin/sh
-
-rm -rf ${TMP_LOCALE}
-mkdir -p ${TMP_LOCALE}
-if [ -f ${localedir}/locale-archive ]; then
-	cp ${localedir}/locale-archive ${TMP_LOCALE}/
-fi
-localedef --delete-from-archive --inputfile=${datadir}/locales/%s --charmap=%s --prefix=/tmp/locale %s
-mv ${TMP_LOCALE}/locale-archive ${localedir}/
-rm -rf ${TMP_LOCALE}
+localedef --delete-from-archive --inputfile=${datadir}/locales/%s --charmap=%s %s
 }
 
-
-TMP_LOCALE="/tmp/locale${localedir}"
 LOCALETREESRC ?= "${PKGD}"
 
 do_prep_locale_tree() {
