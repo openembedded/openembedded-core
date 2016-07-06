@@ -57,7 +57,7 @@ class SystemdBasicTests(SystemdTest):
         self.systemctl('--version')
 
     @testcase(551)
-    @skipUnlessPassed('test_system_basic')
+    @skipUnlessPassed('test_systemd_basic')
     def test_systemd_list(self):
         self.systemctl('list-unit-files')
 
