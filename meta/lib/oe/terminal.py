@@ -66,7 +66,28 @@ class Gnome(XTerminal):
         if vernum and LooseVersion(vernum) >= '3.10':
             logger.debug(1, 'Gnome-Terminal 3.10 or later does not support --disable-factory')
             self.command = 'gnome-terminal -t "{title}" -x {command}'
-        XTerminal.__init__(self, sh_cmd, title, env, d)
+
+        # We need to know when the command completes but gnome-terminal gives us no way 
+        # to do this. We therefore write the pid to a file using a "phonehome" wrapper
+        # script, then monitor the pid until it exits. Thanks gnome!
+
+        import tempfile
+        pidfile = tempfile.NamedTemporaryFile(delete = False).name
+        try:
+            sh_cmd = "oe-gnome-terminal-phonehome " + pidfile + " " + sh_cmd
+            XTerminal.__init__(self, sh_cmd, title, env, d)
+            while os.stat(pidfile).st_size <= 0:
+                continue
+            with open(pidfile, "r") as f:
+                pid = int(f.readline())
+        finally:
+            os.unlink(pidfile)
+
+        while True:
+            try:
+                os.kill(pid, 0)
+            except OSError:
+               return
 
 class Mate(XTerminal):
     command = 'mate-terminal -t "{title}" -x {command}'
