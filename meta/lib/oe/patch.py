@@ -117,43 +117,50 @@ class PatchSet(object):
                 return None
             return os.sep.join(filesplit[striplevel:])
 
-        copiedmode = False
-        filelist = []
-        with open(patchfile) as f:
-            for line in f:
-                if line.startswith('--- '):
-                    patchpth = patchedpath(line)
-                    if not patchpth:
-                        break
-                    if copiedmode:
-                        addedfile = patchpth
-                    else:
-                        removedfile = patchpth
-                elif line.startswith('+++ '):
-                    addedfile = patchedpath(line)
-                    if not addedfile:
-                        break
-                elif line.startswith('*** '):
-                    copiedmode = True
-                    removedfile = patchedpath(line)
-                    if not removedfile:
-                        break
-                else:
-                    removedfile = None
-                    addedfile = None
+        for encoding in ['utf-8', 'latin-1']:
+            try:
+                copiedmode = False
+                filelist = []
+                with open(patchfile) as f:
+                    for line in f:
+                        if line.startswith('--- '):
+                            patchpth = patchedpath(line)
+                            if not patchpth:
+                                break
+                            if copiedmode:
+                                addedfile = patchpth
+                            else:
+                                removedfile = patchpth
+                        elif line.startswith('+++ '):
+                            addedfile = patchedpath(line)
+                            if not addedfile:
+                                break
+                        elif line.startswith('*** '):
+                            copiedmode = True
+                            removedfile = patchedpath(line)
+                            if not removedfile:
+                                break
+                        else:
+                            removedfile = None
+                            addedfile = None
 
-                if addedfile and removedfile:
-                    if removedfile == '/dev/null':
-                        mode = 'A'
-                    elif addedfile == '/dev/null':
-                        mode = 'D'
-                    else:
-                        mode = 'M'
-                    if srcdir:
-                        fullpath = os.path.abspath(os.path.join(srcdir, addedfile))
-                    else:
-                        fullpath = addedfile
-                    filelist.append((fullpath, mode))
+                        if addedfile and removedfile:
+                            if removedfile == '/dev/null':
+                                mode = 'A'
+                            elif addedfile == '/dev/null':
+                                mode = 'D'
+                            else:
+                                mode = 'M'
+                            if srcdir:
+                                fullpath = os.path.abspath(os.path.join(srcdir, addedfile))
+                            else:
+                                fullpath = addedfile
+                            filelist.append((fullpath, mode))
+            except UnicodeDecodeError:
+                continue
+            break
+        else:
+            raise PatchError('Unable to decode %s' % patchfile)
 
         return filelist
 
@@ -280,12 +287,19 @@ class GitApplyTree(PatchTree):
         """
         Extract just the header lines from the top of a patch file
         """
-        lines = []
-        with open(patchfile, 'r') as f:
-            for line in f.readlines():
-                if line.startswith('Index: ') or line.startswith('diff -') or line.startswith('---'):
-                    break
-                lines.append(line)
+        for encoding in ['utf-8', 'latin-1']:
+            lines = []
+            try:
+                with open(patchfile, 'r', encoding=encoding) as f:
+                    for line in f:
+                        if line.startswith('Index: ') or line.startswith('diff -') or line.startswith('---'):
+                            break
+                        lines.append(line)
+            except UnicodeDecodeError:
+                continue
+            break
+        else:
+            raise PatchError('Unable to find a character encoding to decode %s' % patchfile)
         return lines
 
     @staticmethod
