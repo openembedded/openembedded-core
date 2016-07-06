@@ -65,6 +65,10 @@ def add(args, config, basepath, workspace):
         elif os.path.isdir(args.recipename):
             logger.warn('Ambiguous argument %s - assuming you mean it to be the recipe name')
 
+    if args.srctree and os.path.isfile(args.srctree):
+        args.fetchuri = 'file://' + os.path.abspath(args.srctree)
+        args.srctree = ''
+
     if args.fetch:
         if args.fetchuri:
             raise DevtoolError('URI specified as positional argument as well as -f/--fetch')

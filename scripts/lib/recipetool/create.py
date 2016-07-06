@@ -351,11 +351,16 @@ def create_recipe(args):
     extravalues = {}
     checksums = (None, None)
     tempsrc = ''
+    source = args.source
     srcsubdir = ''
     srcrev = '${AUTOREV}'
-    if '://' in args.source:
+
+    if os.path.isfile(source):
+        source = 'file://%s' % os.path.abspath(source)
+
+    if '://' in source:
         # Fetch a URL
-        fetchuri = reformat_git_uri(urldefrag(args.source)[0])
+        fetchuri = reformat_git_uri(urldefrag(source)[0])
         if args.binary:
             # Assume the archive contains the directory structure verbatim
             # so we need to extract to a subdirectory
@@ -426,10 +431,10 @@ def create_recipe(args):
         if args.extract_to:
             logger.error('--extract-to cannot be specified if source is a directory')
             sys.exit(1)
-        if not os.path.isdir(args.source):
-            logger.error('Invalid source directory %s' % args.source)
+        if not os.path.isdir(source):
+            logger.error('Invalid source directory %s' % source)
             sys.exit(1)
-        srctree = args.source
+        srctree = source
         srcuri = ''
         if os.path.exists(os.path.join(srctree, '.git')):
             # Try to get upstream repo location from origin remote
