@@ -223,7 +223,7 @@ def main():
     parser.add_argument('-d', '--debug', help='Enable debug output', action='store_true')
     parser.add_argument('-r', '--resume-from', help='Resume from specified recipe', metavar='PN')
     parser.add_argument('-o', '--only', help='Only test specified recipes (comma-separated without spaces, wildcards allowed)', metavar='PNLIST')
-    parser.add_argument('-s', '--skip', help='Skip specified recipes (comma-separated without spaces, wildcards allowed)', metavar='PNLIST')
+    parser.add_argument('-s', '--skip', help='Skip specified recipes (comma-separated without spaces, wildcards allowed)', metavar='PNLIST', default='gcc-source-*,kernel-devsrc,package-index,perf,meta-world-pkgdata,glibc-locale,glibc-mtrace,glibc-scripts,os-release')
     parser.add_argument('-c', '--skip-classes', help='Skip recipes inheriting specified classes (comma-separated) - default %(default)s', metavar='CLASSLIST', default='native,nativesdk,cross,cross-canadian,image,populate_sdk,meta,packagegroup')
     subparsers = parser.add_subparsers(title='subcommands', metavar='<subcommand>')
     subparsers.required = True
