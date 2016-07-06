@@ -1323,7 +1323,7 @@ def reset(args, config, basepath, workspace):
         for recipe in recipes:
             targets.append(recipe)
             recipefile = workspace[recipe]['recipefile']
-            if recipefile:
+            if recipefile and os.path.exists(recipefile):
                 targets.extend(get_bbclassextend_targets(recipefile, recipe))
         try:
             exec_build_env_command(config.init_path, basepath, 'bitbake -c clean %s' % ' '.join(targets))
