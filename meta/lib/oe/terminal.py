@@ -51,7 +51,7 @@ class XTerminal(Terminal):
             raise UnsupportedTerminal(self.name)
 
 class Gnome(XTerminal):
-    command = 'gnome-terminal -t "{title}" --disable-factory -x {command}'
+    command = 'gnome-terminal -t "{title}" -x {command}'
     priority = 2
 
     def __init__(self, sh_cmd, title=None, env=None, d=None):
@@ -61,16 +61,9 @@ class Gnome(XTerminal):
         # Once fixed on the gnome-terminal project, this should be removed.
         if os.getenv('LC_ALL'): os.putenv('LC_ALL','')
 
-        # Check version
-        vernum = check_terminal_version("gnome-terminal")
-        if vernum and LooseVersion(vernum) >= '3.10':
-            logger.debug(1, 'Gnome-Terminal 3.10 or later does not support --disable-factory')
-            self.command = 'gnome-terminal -t "{title}" -x {command}'
-
         # We need to know when the command completes but gnome-terminal gives us no way 
         # to do this. We therefore write the pid to a file using a "phonehome" wrapper
         # script, then monitor the pid until it exits. Thanks gnome!
-
         import tempfile
         pidfile = tempfile.NamedTemporaryFile(delete = False).name
         try:
