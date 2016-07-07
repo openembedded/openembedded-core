@@ -9,8 +9,8 @@ LINUX_VERSION ?= "4.1.26"
 KMETA = "kernel-meta"
 KCONF_BSP_AUDIT_LEVEL = "2"
 
-SRCREV_machine ?= "6ea8af4a9bc8797d71e14d9e641d9e28b1dee917"
-SRCREV_meta ?= "886dacbd6290bbd5bb0632883f661fb57b232d94"
+SRCREV_machine ?= "75d56a13f86fc48002e4a3f9ed60546db30432b7"
+SRCREV_meta ?= "0845ec79bc2fbc45efcf4c44138fd698039960c5"
 
 PV = "${LINUX_VERSION}+git${SRCPV}"
 
