@@ -98,6 +98,13 @@ do_install_append() {
 	rm -f ${D}${libdir}/preloadable_libintl.so
 }
 
+do_install_append_class-native () {
+	rm ${D}${datadir}/aclocal/*
+	rm ${D}${datadir}/gettext/config.rpath
+	rm ${D}${datadir}/gettext/po/Makefile.in.in
+	rm ${D}${datadir}/gettext/po/remove-potcdate.sin
+}
+
 # Anyone inheriting gettext will have both gettext-native and gettext
 # available, and we don't want to use older macros from the target gettext in
 # a non-gplv3 build, so kill them and let dependent recipes rely on
