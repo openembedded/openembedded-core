@@ -31,7 +31,7 @@ except ImportError:
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "oeqa")))
 
 from oeqa.oetest import ExportTestContext
-from oeqa.utils.commands import runCmd
+from oeqa.utils.commands import runCmd, updateEnv
 from oeqa.utils.sshcontrol import SSHControl
 
 # this isn't pretty but we need a fake target object
@@ -137,19 +137,7 @@ def extract_sdk(d):
             if f.startswith("environment-setup"):
                 print("Setting up SDK environment...")
                 env_file = os.path.join(extract_path, f)
-                update_env(env_file)
-
-def update_env(env_file):
-    """
-    Source a file and update environment
-    """
-
-    cmd = ". %s; env -0" % env_file
-    result = runCmd(cmd)
-
-    for line in result.output.split("\0"):
-        (key, _, value) = line.partition("=")
-        os.environ[key] = value
+                updateEnv(env_file)
 
 if __name__ == "__main__":
     try:
