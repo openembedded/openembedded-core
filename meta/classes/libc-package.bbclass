@@ -262,7 +262,7 @@ python package_do_split_gconvs () {
                 bb.error("locale_arch_options not found for target_arch=" + target_arch)
                 raise bb.build.FuncFailed("unknown arch:" + target_arch + " for locale_arch_options")
 
-            localedef_opts += " --force --old-style --no-archive --prefix=%s \
+            localedef_opts += " --force  --no-archive --prefix=%s \
                 --inputfile=%s/%s/i18n/locales/%s --charmap=%s %s/%s" \
                 % (treedir, treedir, datadir, locale, encoding, outputpath, name)
 
@@ -270,7 +270,7 @@ python package_do_split_gconvs () {
                 (path, i18npath, gconvpath, localedef_opts)
         else: # earlier slower qemu way 
             qemu = qemu_target_binary(d) 
-            localedef_opts = "--force --old-style --no-archive --prefix=%s \
+            localedef_opts = "--force --no-archive --prefix=%s \
                 --inputfile=%s/i18n/locales/%s --charmap=%s %s" \
                 % (treedir, datadir, locale, encoding, name)
 
