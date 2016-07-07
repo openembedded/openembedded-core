@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 # Simple graph query utility
 # useful for getting answers from .dot files produced by bitbake -g
@@ -56,7 +56,7 @@ def find_paths(args, usage):
     paths = list(get_path_networkx(args[0], fromnode, tonode))
     if paths:
         for path in paths:
-            print ' -> '.join(path)
+            print(" -> ".join(map(str,path)))
     else:
         print("ERROR: no path from %s to %s in graph" % (fromnode, tonode))
         sys.exit(1)
