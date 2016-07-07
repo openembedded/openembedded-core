@@ -668,8 +668,6 @@ do_rootfs[recrdeptask] += "do_populate_lic"
 IMAGE_POSTPROCESS_COMMAND_prepend = "write_deploy_manifest; "
 do_image[recrdeptask] += "do_populate_lic"
 
-do_populate_lic_setscene[dirs] = "${LICSSTATEDIR}/${PN}"
-do_populate_lic_setscene[cleandirs] = "${LICSSTATEDIR}"
 python do_populate_lic_setscene () {
     sstate_setscene(d)
 }
