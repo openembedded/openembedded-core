@@ -13,6 +13,11 @@ PN = "gcc-cross-${TARGET_ARCH}"
 
 require gcc-configure-common.inc
 
+# While we want the 'gnu' hash style, we explicitly set it to sysv here to
+# ensure that any recipe which doesn't obey our LDFLAGS (which also set it to
+# gnu) will hit a QA failure.
+LINKER_HASH_STYLE ?= "sysv"
+
 EXTRA_OECONF += "--enable-poison-system-directories"
 EXTRA_OECONF_append_sh4 = " \
     --with-multilib-list= \
