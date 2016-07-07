@@ -14,8 +14,8 @@ SRC_URI = "https://gmplib.org/download/${BPN}/${BP}${REVISION}.tar.bz2 \
            file://0001-Append-the-user-provided-flags-to-the-auto-detected-.patch \
            "
 
-SRC_URI[md5sum] = "86ee6e54ebfc4a90b643a65e402c4048"
-SRC_URI[sha256sum] = "498449a994efeba527885c10405993427995d3f86b8768d8cdf8d9dd7c6b73e8"
+SRC_URI[md5sum] = "4c175f86e11eb32d8bf9872ca3a8e11d"
+SRC_URI[sha256sum] = "a8109865f2893f1373b0a8ed5ff7429de8db696fc451b1036bd7bdf95bbeffd6"
 
 acpaths = ""
 
