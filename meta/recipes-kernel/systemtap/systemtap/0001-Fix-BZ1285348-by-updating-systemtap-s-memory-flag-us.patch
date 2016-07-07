@@ -1,0 +1,73 @@
+From 3d010295efd215cf83a7d07eecf89137973c154a Mon Sep 17 00:00:00 2001
+Message-Id: <3d010295efd215cf83a7d07eecf89137973c154a.1467836241.git.tom.zanussi@linux.intel.com>
+From: Jesper Brouer <jbrouer@redhat.com>
+Date: Mon, 30 Nov 2015 11:24:29 -0600
+Subject: [PATCH] Fix BZ1285348 by updating systemtap's memory flag usage.
+
+* runtime/linux/runtime_defines.h: Make sure __GFP_WAIT is defined.
+* runtime/stp_utrace.c (utrace_task_alloc): Change GFP_IOFS to
+  STP_ALLOC_FLAGS.
+  (utrace_attach_task): Ditto.
+
+Upstream-Status: Backport
+
+Signed-off-by: Tom Zanussi <tom.zanussi@intel.com>
+---
+ runtime/linux/runtime_defines.h | 23 +++++++++++++++++++++++
+ runtime/stp_utrace.c            |  5 +++--
+ 2 files changed, 26 insertions(+), 2 deletions(-)
+
+diff --git a/runtime/linux/runtime_defines.h b/runtime/linux/runtime_defines.h
+index e69de29..6b44e0d 100644
+--- a/runtime/linux/runtime_defines.h
++++ b/runtime/linux/runtime_defines.h
+@@ -0,0 +1,23 @@
++// The following kernel commit renamed __GFP_WAIT to __GRP_RECLAIM:
++//
++//   commit 71baba4b92dc1fa1bc461742c6ab1942ec6034e9
++//   Author: Mel Gorman <mgorman@techsingularity.net>
++//   Date:   Fri Nov 6 16:28:28 2015 -0800
++// 
++//       mm, page_alloc: rename __GFP_WAIT to __GFP_RECLAIM
++//     
++//       __GFP_WAIT was used to signal that the caller was in atomic
++//       context and could not sleep.  Now it is possible to
++//       distinguish between true atomic context and callers that are
++//       not willing to sleep.  The latter should clear
++//       __GFP_DIRECT_RECLAIM so kswapd will still wake.  As clearing
++//       __GFP_WAIT behaves differently, there is a risk that people
++//       will clear the wrong flags.  This patch renames __GFP_WAIT to
++//       __GFP_RECLAIM to clearly indicate what it does -- setting it
++//       allows all reclaim activity, clearing them prevents it.
++//
++// Handle the rename by defining __GFP_WAIT as __GFP_RECLAIM.
++#include <linux/gfp.h>
++#ifndef __GFP_WAIT
++#define __GFP_WAIT __GFP_RECLAIM
++#endif
+diff --git a/runtime/stp_utrace.c b/runtime/stp_utrace.c
+index c69dec1..a8afc0d 100644
+--- a/runtime/stp_utrace.c
++++ b/runtime/stp_utrace.c
+@@ -511,7 +511,8 @@ static struct utrace *__task_utrace_struct(struct task_struct *task)
+  */
+ static bool utrace_task_alloc(struct task_struct *task)
+ {
+-	struct utrace *utrace = kmem_cache_zalloc(utrace_cachep, GFP_IOFS);
++	struct utrace *utrace = kmem_cache_zalloc(utrace_cachep,
++						  STP_ALLOC_FLAGS);
+ 	struct utrace *u;
+ 
+ 	if (unlikely(!utrace))
+@@ -782,7 +783,7 @@ static struct utrace_engine *utrace_attach_task(
+ 		utrace = task_utrace_struct(target);
+ 	}
+ 
+-	engine = kmem_cache_alloc(utrace_engine_cachep, GFP_IOFS);
++	engine = kmem_cache_alloc(utrace_engine_cachep, STP_ALLOC_FLAGS);
+ 	if (unlikely(!engine))
+ 		return ERR_PTR(-ENOMEM);
+ 
+-- 
+2.5.0
+
