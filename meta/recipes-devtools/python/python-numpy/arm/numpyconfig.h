@@ -13,5 +13,6 @@
 
 #define NPY_SIZEOF_LONGLONG 8 
 #define NPY_SIZEOF_PY_LONG_LONG 8 
+#define NPY_SIZEOF_OFF_T 8
 /* #define CHAR_BIT 8 */
 
