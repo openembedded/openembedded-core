@@ -359,6 +359,24 @@ def compare_dict_blobs(path, ablob, bblob, report_all, report_ver):
                 if ' '.join(alist) == ' '.join(blist):
                     continue
 
+            if key == 'PKGR' and not report_all:
+                vers = []
+                # strip leading 'r' and dots
+                for ver in (astr.split()[0], bstr.split()[0]):
+                    if ver.startswith('r'):
+                        ver = ver[1:]
+                    vers.append(ver.replace('.', ''))
+                maxlen = max(len(vers[0]), len(vers[1]))
+                try:
+                    # pad with '0' and convert to int
+                    vers = [int(ver.ljust(maxlen, '0')) for ver in vers]
+                except ValueError:
+                    pass
+                else:
+                     # skip decrements and increments
+                    if abs(vers[0] - vers[1]) == 1:
+                        continue
+
             chg = ChangeRecord(path, key, astr, bstr, monitored)
             changes.append(chg)
     return changes
