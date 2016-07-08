@@ -79,6 +79,7 @@ SRC_URI = "\
            file://0045-libgcc-Add-knob-to-use-ldbl-128-on-ppc.patch \
            file://0046-Link-libgcc-using-LDFLAGS-not-just-SHLIB_LDFLAGS.patch \
            ${BACKPORTS} \
+           file://CVE-2016-4490.patch \
 "
 
 BACKPORTS = ""
