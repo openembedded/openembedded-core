@@ -84,7 +84,7 @@ class BootimgEFIPlugin(SourcePlugin):
     @classmethod
     def do_configure_gummiboot(cls, hdddir, creator, cr_workdir):
         """
-        Create loader-specific (gummiboot) config
+        Create loader-specific systemd-boot/gummiboot config
         """
         install_cmd = "install -d %s/loader" % hdddir
         exec_cmd(install_cmd)
@@ -149,7 +149,8 @@ class BootimgEFIPlugin(SourcePlugin):
         try:
             if source_params['loader'] == 'grub-efi':
                 cls.do_configure_grubefi(hdddir, creator, cr_workdir)
-            elif source_params['loader'] == 'gummiboot':
+            elif source_params['loader'] == 'gummiboot' \
+                 or source_params['loader'] == 'systemd-boot':
                 cls.do_configure_gummiboot(hdddir, creator, cr_workdir)
             else:
                 msger.error("unrecognized bootimg-efi loader: %s" % source_params['loader'])
@@ -189,7 +190,8 @@ class BootimgEFIPlugin(SourcePlugin):
                 exec_cmd(cp_cmd, True)
                 shutil.move("%s/grub.cfg" % cr_workdir,
                             "%s/hdd/boot/EFI/BOOT/grub.cfg" % cr_workdir)
-            elif source_params['loader'] == 'gummiboot':
+            elif source_params['loader'] == 'gummiboot' \
+                 or source_params['loader'] == 'systemd-boot':
                 cp_cmd = "cp %s/EFI/BOOT/* %s/EFI/BOOT" % (bootimg_dir, hdddir)
                 exec_cmd(cp_cmd, True)
             else:
