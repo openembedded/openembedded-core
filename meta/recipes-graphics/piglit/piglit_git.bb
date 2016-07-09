@@ -4,6 +4,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=b2beded7103a3d8a442a2a0391d607b0"
 
 SRC_URI = "git://anongit.freedesktop.org/piglit \
            file://0001-cmake-install-bash-completions-in-the-right-place.patch \
+           file://0001-tests-Use-FE_UPWARD-only-if-its-defined-in-fenv.h.patch \
            "
 
 # From 2016-07-07
