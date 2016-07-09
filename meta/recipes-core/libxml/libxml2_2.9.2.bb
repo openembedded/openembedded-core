@@ -6,6 +6,7 @@ SRC_URI += "http://www.w3.org/XML/Test/xmlts20080827.tar.gz;name=testtar \
 	   "
 SRC_URI += "file://CVE-2016-1762.patch \
             file://CVE-2016-3705.patch \
+            file://CVE-2016-1834.patch \
     "
 
 SRC_URI[libtar.md5sum] = "9e6a9aca9d155737868b3dc5fd82f788"
