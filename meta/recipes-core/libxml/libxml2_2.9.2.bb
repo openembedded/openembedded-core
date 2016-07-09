@@ -12,6 +12,7 @@ SRC_URI += "file://CVE-2016-1762.patch \
             file://CVE-2016-1838.patch \
             file://CVE-2016-1839.patch \
             file://CVE-2016-1836.patch \
+            file://CVE-2016-4449.patch \
     "
 
 SRC_URI[libtar.md5sum] = "9e6a9aca9d155737868b3dc5fd82f788"
