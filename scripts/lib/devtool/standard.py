@@ -264,28 +264,30 @@ def _check_compatible_recipe(pn, d):
     """Check if the recipe is supported by devtool"""
     if pn == 'perf':
         raise DevtoolError("The perf recipe does not actually check out "
-                           "source and thus cannot be supported by this tool")
+                           "source and thus cannot be supported by this tool",
+                           4)
 
     if pn in ['kernel-devsrc', 'package-index'] or pn.startswith('gcc-source'):
-        raise DevtoolError("The %s recipe is not supported by this tool" % pn)
+        raise DevtoolError("The %s recipe is not supported by this tool" % pn, 4)
 
     if bb.data.inherits_class('image', d):
         raise DevtoolError("The %s recipe is an image, and therefore is not "
-                           "supported by this tool" % pn)
+                           "supported by this tool" % pn, 4)
 
     if bb.data.inherits_class('populate_sdk', d):
         raise DevtoolError("The %s recipe is an SDK, and therefore is not "
-                           "supported by this tool" % pn)
+                           "supported by this tool" % pn, 4)
 
     if bb.data.inherits_class('packagegroup', d):
         raise DevtoolError("The %s recipe is a packagegroup, and therefore is "
-                           "not supported by this tool" % pn)
+                           "not supported by this tool" % pn, 4)
 
     if bb.data.inherits_class('meta', d):
         raise DevtoolError("The %s recipe is a meta-recipe, and therefore is "
-                           "not supported by this tool" % pn)
+                           "not supported by this tool" % pn, 4)
 
     if bb.data.inherits_class('externalsrc', d) and d.getVar('EXTERNALSRC', True):
+        # Not an incompatibility error per se, so we don't pass the error code
         raise DevtoolError("externalsrc is currently enabled for the %s "
                            "recipe. This prevents the normal do_patch task "
                            "from working. You will need to disable this "
@@ -498,7 +500,7 @@ def _extract_source(srctree, keep_temp, devbranch, sync, d):
 
         if 'noexec' in (d.getVarFlags('do_unpack', False) or []):
             raise DevtoolError("The %s recipe has do_unpack disabled, unable to "
-                               "extract source" % pn)
+                               "extract source" % pn, 4)
 
     if not sync:
         # Prepare for shutil.move later on

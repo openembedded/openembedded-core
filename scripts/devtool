@@ -334,7 +334,7 @@ def main():
     except DevtoolError as err:
         if str(err):
             logger.error(str(err))
-        ret = 1
+        ret = err.exitcode
     except argparse_oe.ArgumentUsageError as ae:
         parser.error_subcommand(ae.message, ae.subcommand)
 

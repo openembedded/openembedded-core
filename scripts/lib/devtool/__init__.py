@@ -26,10 +26,11 @@ import re
 
 logger = logging.getLogger('devtool')
 
-
 class DevtoolError(Exception):
     """Exception for handling devtool errors"""
-    pass
+    def __init__(self, message, exitcode=1):
+        super(DevtoolError, self).__init__(message)
+        self.exitcode = exitcode
 
 
 def exec_build_env_command(init_path, builddir, cmd, watch=False, **options):
