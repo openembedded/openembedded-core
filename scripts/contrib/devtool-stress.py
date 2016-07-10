@@ -121,14 +121,18 @@ def stress_extract(args):
             sys.stdout.write('Testing %s ' % (pn + ' ').ljust(40, '.'))
             sys.stdout.flush()
             failed = False
+            skipped = None
 
             srctree = os.path.join(tmpdir, pn)
             try:
                 bb.process.run('devtool extract %s %s' % (pn, srctree))
-            except bb.process.CmdError as exc:
-                failed = True
-                with open('stress_%s_extract.log' % pn, 'w') as f:
-                    f.write(str(exc))
+            except bb.process.ExecutionError as exc:
+                if exc.exitcode == 4:
+                    skipped = 'incompatible'
+                else:
+                    failed = True
+                    with open('stress_%s_extract.log' % pn, 'w') as f:
+                        f.write(str(exc))
 
             if os.path.exists(srctree):
                 shutil.rmtree(srctree)
@@ -136,6 +140,8 @@ def stress_extract(args):
             if failed:
                 print('failed')
                 failures += 1
+            elif skipped:
+                print('skipped (%s)' % skipped)
             else:
                 print('ok')
     except KeyboardInterrupt:
@@ -162,29 +168,34 @@ def stress_modify(args):
             sys.stdout.flush()
             failed = False
             reset = True
+            skipped = None
 
             srctree = os.path.join(tmpdir, pn)
             try:
                 bb.process.run('devtool modify -x %s %s' % (pn, srctree))
-            except bb.process.CmdError as exc:
-                with open('stress_%s_modify.log' % pn, 'w') as f:
-                    f.write(str(exc))
-                failed = 'modify'
-                reset = False
-
-            if not failed:
-                try:
-                    bb.process.run('bitbake -c install %s' % pn)
-                except bb.process.CmdError as exc:
-                    with open('stress_%s_install.log' % pn, 'w') as f:
+            except bb.process.ExecutionError as exc:
+                if exc.exitcode == 4:
+                    skipped = 'incompatible'
+                else:
+                    with open('stress_%s_modify.log' % pn, 'w') as f:
                         f.write(str(exc))
-                    failed = 'build'
-            if reset:
-                try:
-                    bb.process.run('devtool reset %s' % pn)
-                except bb.process.CmdError as exc:
-                    print('devtool reset failed: %s' % str(exc))
-                    break
+                    failed = 'modify'
+                    reset = False
+
+            if not skipped:
+                if not failed:
+                    try:
+                        bb.process.run('bitbake -c install %s' % pn)
+                    except bb.process.CmdError as exc:
+                        with open('stress_%s_install.log' % pn, 'w') as f:
+                            f.write(str(exc))
+                        failed = 'build'
+                if reset:
+                    try:
+                        bb.process.run('devtool reset %s' % pn)
+                    except bb.process.CmdError as exc:
+                        print('devtool reset failed: %s' % str(exc))
+                        break
 
             if os.path.exists(srctree):
                 shutil.rmtree(srctree)
@@ -192,6 +203,8 @@ def stress_modify(args):
             if failed:
                 print('failed (%s)' % failed)
                 failures += 1
+            elif skipped:
+                print('skipped (%s)' % skipped)
             else:
                 print('ok')
     except KeyboardInterrupt:
