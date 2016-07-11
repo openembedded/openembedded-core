@@ -13,6 +13,7 @@ SRC_URI = "git://git.yoctoproject.org/xsettings-daemon \
            file://addsoundkeys.patch;apply=yes \
            file://70settings-daemon.sh \
            "
+UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>(\d+(\.\d+)+))"
 
 S = "${WORKDIR}/git"
 

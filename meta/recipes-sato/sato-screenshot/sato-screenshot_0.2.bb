@@ -12,6 +12,7 @@ DEPENDS = "matchbox-panel-2 gtk+3"
 # SRCREV tagged 0.2
 SRCREV = "5db2672fb857b2c80b949d8fce92e0f0029cc947"
 SRC_URI = "git://git.yoctoproject.org/screenshot"
+UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>(\d+(\.\d+)+))"
 
 S = "${WORKDIR}/git"
 

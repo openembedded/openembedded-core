@@ -12,6 +12,7 @@ SECTION = "x11/utils"
 #SRCREV tagged 0.1
 SRCREV = "3ad357db2302760b8a8817b5f4478dd87479442f"
 SRC_URI = "git://git.yoctoproject.org/${BPN}"
+UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>(\d+(\.\d+)+))"
 
 S = "${WORKDIR}/git"
 
