@@ -17,6 +17,9 @@ SSTATE_EXTRAPATH   = ""
 SSTATE_EXTRAPATHWILDCARD = ""
 SSTATE_PATHSPEC   = "${SSTATE_DIR}/${SSTATE_EXTRAPATHWILDCARD}*/${SSTATE_PKGSPEC}"
 
+# explicitly make PV to depend on evaluated value of PV variable
+PV[vardepvalue] = "${PV}"
+
 # We don't want the sstate to depend on things like the distro string
 # of the system, we let the sstate paths take care of this.
 SSTATE_EXTRAPATH[vardepvalue] = ""
