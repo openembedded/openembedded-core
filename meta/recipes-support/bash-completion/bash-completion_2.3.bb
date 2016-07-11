@@ -7,10 +7,10 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=751419260aa954499f7abaabaa882bbe"
 
 SECTION = "console/utils"
 
-SRC_URI="http://bash-completion.alioth.debian.org/files/${BPN}-${PV}.tar.bz2"
+SRC_URI = "https://github.com/scop/bash-completion/releases/download/${PV}/${BPN}-${PV}.tar.xz"
 
-SRC_URI[md5sum] = "4e2a9f11a4042a38ee79ddcd048e8b9e"
-SRC_URI[sha256sum] = "2b606804a7d5f823380a882e0f7b6c8a37b0e768e72c3d4107c51fbe8a46ae4f"
+SRC_URI[md5sum] = "6697dc47adfe70cab5023b7b8186ad57"
+SRC_URI[sha256sum] = "b2e081af317f3da4fff3a332bfdbebeb5514ebc6c2d2a9cf781180acab15e8e9"
 UPSTREAM_CHECK_REGEX = "bash-completion-(?P<pver>(?!2008).+)\.tar"
 UPSTREAM_CHECK_URI = "https://github.com/scop/bash-completion/releases"
 
@@ -25,12 +25,9 @@ do_install_append() {
 
 	# Delete files already provided by util-linux
 	local i
-	for i in cal dmesg eject hexdump hwclock ionice look renice rtcwake su mount umount; do
+	for i in mount umount; do
 		rm ${D}${datadir}/${BPN}/completions/$i
 	done
-
-	# Delete files for networkmanager
-	rm ${D}${datadir}/${BPN}/completions/nmcli
 }
 
 RDEPENDS_${PN} = "bash"
@@ -39,5 +36,7 @@ RDEPENDS_${PN} = "bash"
 PACKAGES =+ "${PN}-extra"
 FILES_${PN}-extra = "${datadir}/${BPN}/completions/ \
     ${datadir}/${BPN}/helpers/"
+
+FILES_${PN}-dev += "${datadir}/cmake"
 
 BBCLASSEXTEND = "nativesdk"
