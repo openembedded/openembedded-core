@@ -10,6 +10,7 @@ SRC_URI = "https://files.pythonhosted.org/packages/source/n/${SRCNAME}/${SRCNAME
            file://remove-build-path-in-comments.patch \
            file://fix_shebang_f2py.patch \
            ${CONFIGFILESURI} "
+UPSTREAM_CHECK_URI = "https://sourceforge.net/projects/numpy/files/"
 
 CONFIGFILESURI ?= ""
 
