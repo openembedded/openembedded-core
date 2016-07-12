@@ -92,7 +92,7 @@ class QemuRunner:
                 self._dump_host()
                 raise SystemExit
 
-    def start(self, qemuparams = None, get_ip = True):
+    def start(self, qemuparams = None, get_ip = True, extra_bootparams = None):
         if self.display:
             os.environ["DISPLAY"] = self.display
             # Set this flag so that Qemu doesn't do any grabs as SDL grabs
@@ -120,7 +120,11 @@ class QemuRunner:
             return False
 
 
-        self.qemuparams = 'bootparams="console=tty1 console=ttyS0,115200n8 printk.time=1" qemuparams="-serial tcp:127.0.0.1:{}"'.format(threadport)
+        bootparams = 'console=tty1 console=ttyS0,115200n8 printk.time=1'
+        if extra_bootparams:
+            bootparams = bootparams + ' ' + extra_bootparams
+
+        self.qemuparams = 'bootparams="{0}" qemuparams="-serial tcp:127.0.0.1:{1}"'.format(bootparams, threadport)
         if not self.display:
             self.qemuparams = 'nographic ' + self.qemuparams
         if qemuparams:
