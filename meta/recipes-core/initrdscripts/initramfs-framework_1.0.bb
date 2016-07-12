@@ -47,9 +47,18 @@ PACKAGES = "${PN}-base \
             initramfs-module-mdev \
             initramfs-module-udev \
             initramfs-module-e2fs \
+            initramfs-module-rootfs \
             initramfs-module-debug"
 
-FILES_${PN}-base = "/init /init.d/90-rootfs /init.d/99-finish /dev"
+FILES_${PN}-base = "/init /init.d/99-finish /dev"
+
+# 99-finish in base depends on some other module which mounts
+# the rootfs, like 90-rootfs. To replace that default, use
+# BAD_RECOMMENDATIONS += "initramfs-module-rootfs" in your
+# initramfs recipe and install something else, or install
+# something that runs earlier (for example, a 89-my-rootfs)
+# and mounts the rootfs. Then 90-rootfs will proceed immediately.
+RRECOMMENDS_${PN}-base += "initramfs-module-rootfs"
 
 SUMMARY_initramfs-module-mdev = "initramfs support for mdev"
 RDEPENDS_initramfs-module-mdev = "${PN}-base busybox-mdev"
@@ -62,6 +71,10 @@ FILES_initramfs-module-udev = "/init.d/01-udev"
 SUMMARY_initramfs-module-e2fs = "initramfs support for ext4/ext3/ext2 filesystems"
 RDEPENDS_initramfs-module-e2fs = "${PN}-base"
 FILES_initramfs-module-e2fs = "/init.d/10-e2fs"
+
+SUMMARY_initramfs-module-rootfs = "initramfs support for locating and mounting the root partition"
+RDEPENDS_initramfs-module-rootfs = "${PN}-base"
+FILES_initramfs-module-rootfs = "/init.d/90-rootfs"
 
 SUMMARY_initramfs-module-debug = "initramfs dynamic debug support"
 RDEPENDS_initramfs-module-debug = "${PN}-base"
