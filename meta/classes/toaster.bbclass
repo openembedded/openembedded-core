@@ -136,60 +136,16 @@ python toaster_package_dumpdata() {
 
 # 2. Dump output image files information
 
-python toaster_image_dumpdata() {
-    """
-    Image filename for output images is not standardized.
-    image_types.bbclass will spell out IMAGE_CMD_xxx variables that actually
-    have hardcoded ways to create image file names in them.
-    So we look for files starting with the set name.
-
-    We also look for other files in the images/ directory which don't
-    match IMAGE_NAME, such as the kernel bzImage, modules tarball etc.
-    """
-
-    dir_to_walk = d.getVar('DEPLOY_DIR_IMAGE', True);
-    image_name = d.getVar('IMAGE_NAME', True);
-    image_info_data = {}
-    artifact_info_data = {}
-
-    # collect all images and artifacts in the images directory
-    for dirpath, dirnames, filenames in os.walk(dir_to_walk):
-        for filename in filenames:
-            full_path = os.path.join(dirpath, filename)
-            try:
-                if filename.startswith(image_name):
-                    # image
-                    image_info_data[full_path] = os.stat(full_path).st_size
-                else:
-                    # other non-image artifact
-                    if not os.path.islink(full_path):
-                        artifact_info_data[full_path] = os.stat(full_path).st_size
-            except OSError as e:
-                bb.event.fire(bb.event.MetadataEvent("OSErrorException", e), d)
-
-    bb.event.fire(bb.event.MetadataEvent("ImageFileSize", image_info_data), d)
-    bb.event.fire(bb.event.MetadataEvent("ArtifactFileSize", artifact_info_data), d)
-}
-
 python toaster_artifact_dumpdata() {
     """
-    Dump data about artifacts in the SDK_DEPLOY directory
+    Dump data about SDK variables
     """
 
-    dir_to_walk = d.getVar("SDK_DEPLOY", True)
-    artifact_info_data = {}
+    event_data = {
+      "TOOLCHAIN_OUTPUTNAME": d.getVar("TOOLCHAIN_OUTPUTNAME", True)
+    }
 
-    # collect all artifacts in the sdk directory
-    for dirpath, dirnames, filenames in os.walk(dir_to_walk):
-        for filename in filenames:
-            full_path = os.path.join(dirpath, filename)
-            try:
-                if not os.path.islink(full_path):
-                    artifact_info_data[full_path] = os.stat(full_path).st_size
-            except OSError as e:
-                bb.event.fire(bb.event.MetadataEvent("OSErrorException", e), d)
-
-    bb.event.fire(bb.event.MetadataEvent("ArtifactFileSize", artifact_info_data), d)
+    bb.event.fire(bb.event.MetadataEvent("SDKArtifactInfo", event_data), d)
 }
 
 # collect list of buildstats files based on fired events; when the build completes, collect all stats and fire an event with collected data
@@ -361,17 +317,6 @@ python toaster_buildhistory_dump() {
 
 }
 
-# dump information related to license manifest path
-
-python toaster_licensemanifest_dump() {
-    deploy_dir = d.getVar('DEPLOY_DIR', True);
-    image_name = d.getVar('IMAGE_NAME', True);
-
-    data = { 'deploy_dir' : deploy_dir, 'image_name' : image_name }
-
-    bb.event.fire(bb.event.MetadataEvent("LicenseManifestPath", data), d)
-}
-
 # set event handlers
 addhandler toaster_layerinfo_dumpdata
 toaster_layerinfo_dumpdata[eventmask] = "bb.event.TreeDataPreparationCompleted"
@@ -388,11 +333,8 @@ do_packagedata_setscene[vardepsexclude] += "toaster_package_dumpdata "
 do_package[postfuncs] += "toaster_package_dumpdata "
 do_package[vardepsexclude] += "toaster_package_dumpdata "
 
-do_image_complete[postfuncs] += "toaster_image_dumpdata "
-do_image_complete[vardepsexclude] += "toaster_image_dumpdata "
-
-do_rootfs[postfuncs] += "toaster_licensemanifest_dump "
-do_rootfs[vardepsexclude] += "toaster_licensemanifest_dump "
-
 do_populate_sdk[postfuncs] += "toaster_artifact_dumpdata "
 do_populate_sdk[vardepsexclude] += "toaster_artifact_dumpdata "
+
+do_populate_sdk_ext[postfuncs] += "toaster_artifact_dumpdata "
+do_populate_sdk_ext[vardepsexclude] += "toaster_artifact_dumpdata "
