@@ -8,7 +8,7 @@
 # To use it add testimage to global inherit and call your target image with -c testimage
 # You can try it out like this:
 # - first build a qemu core-image-sato
-# - add INHERIT += "testimage" in local.conf
+# - add IMAGE_CLASSES += "testimage" in local.conf
 # - then bitbake core-image-sato -c testimage. That will run a standard suite of tests.
 
 # You can set (or append to) TEST_SUITES in local.conf to select the tests
