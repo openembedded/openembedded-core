@@ -288,15 +288,22 @@ python toaster_buildhistory_dump() {
                             images[target][dependsname] = {'size': 0, 'depends' : []}
                         images[target][pname]['depends'].append((dependsname, deptype))
 
-            with open("%s/files-in-image.txt" % installed_img_path, "r") as fin:
-                for line in fin:
-                    lc = [ x for x in line.strip().split(" ") if len(x) > 0 ]
-                    if lc[0].startswith("l"):
-                        files[target]['syms'].append(lc)
-                    elif lc[0].startswith("d"):
-                        files[target]['dirs'].append(lc)
-                    else:
-                        files[target]['files'].append(lc)
+            # files-in-image.txt is only generated if an image file is created,
+            # so the file entries ('syms', 'dirs', 'files') for a target will be
+            # empty for rootfs builds and other "image" tasks which don't
+            # produce image files
+            # (e.g. "bitbake core-image-minimal -c populate_sdk")
+            files_in_image_path = "%s/files-in-image.txt" % installed_img_path
+            if os.path.exists(files_in_image_path):
+                with open(files_in_image_path, "r") as fin:
+                    for line in fin:
+                        lc = [ x for x in line.strip().split(" ") if len(x) > 0 ]
+                        if lc[0].startswith("l"):
+                            files[target]['syms'].append(lc)
+                        elif lc[0].startswith("d"):
+                            files[target]['dirs'].append(lc)
+                        else:
+                            files[target]['files'].append(lc)
 
             for pname in images[target]:
                 if not pname in allpkgs:
