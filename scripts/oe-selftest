@@ -262,16 +262,22 @@ def get_testsuite_by(criteria, keyword):
         result = []
         remaining = values[:]
         for key in keyword:
+            found = False
             if key in remaining:
                 # Regular matching of exact item
                 result.append(key)
                 remaining.remove(key)
+                found = True
             else:
                 # Wildcard matching
                 pattern = re.compile(fnmatch.translate(r"%s" % key))
                 added = [x for x in remaining if pattern.match(x)]
-                result.extend(added)
-                remaining = [x for x in remaining if x not in added]
+                if added:
+                    result.extend(added)
+                    remaining = [x for x in remaining if x not in added]
+                    found = True
+            if not found:
+                log.error("Failed to find test: %s" % key)
 
         return result
 
@@ -455,6 +461,8 @@ def main():
             criteria = args.run_tests_by[0]
             keyword = args.run_tests_by[1:]
             ts = sorted([ tc.fullpath for tc in get_testsuite_by(criteria, keyword) ])
+        if not ts:
+            return 1
 
     if args.list_tests_by and len(args.list_tests_by) >= 2:
         valid_options = ['name', 'class', 'module', 'id', 'tag']
