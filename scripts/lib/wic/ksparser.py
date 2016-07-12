@@ -124,7 +124,7 @@ class KickStart():
         subparsers = parser.add_subparsers()
 
         part = subparsers.add_parser('part')
-        part.add_argument('mountpoint')
+        part.add_argument('mountpoint', nargs='?')
         part.add_argument('--active', action='store_true')
         part.add_argument('--align', type=int)
         part.add_argument("--extra-space", type=sizetype, default=10*1024)
