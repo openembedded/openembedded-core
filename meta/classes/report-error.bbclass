@@ -59,9 +59,11 @@ python errorreport_handler () {
                     logFile = codecs.open(log, 'r', 'utf-8')
                     logdata = logFile.read()
 
-                    topdir = e.data.getVar('TOPDIR', True)
-                    if topdir:
-                        logdata = logdata.replace(topdir, ' ')
+                    # Replace host-specific paths so the logs are cleaner
+                    for d in ("TOPDIR", "TMPDIR"):
+                        s = e.data.getVar(d, True)
+                        if s:
+                            logdata = logdata.replace(s, d)
 
                     logFile.close()
                 except:
