@@ -42,7 +42,7 @@ class BootimgEFIPlugin(SourcePlugin):
     name = 'bootimg-efi'
 
     @classmethod
-    def do_configure_grubefi(cls, hdddir, creator, cr_workdir):
+    def do_configure_grubefi(cls, hdddir, creator, cr_workdir, source_params):
         """
         Create loader-specific (grub-efi) config
         """
@@ -82,7 +82,7 @@ class BootimgEFIPlugin(SourcePlugin):
         cfg.close()
 
     @classmethod
-    def do_configure_systemdboot(cls, hdddir, creator, cr_workdir):
+    def do_configure_systemdboot(cls, hdddir, creator, cr_workdir, source_params):
         """
         Create loader-specific systemd-boot/gummiboot config
         """
@@ -97,6 +97,19 @@ class BootimgEFIPlugin(SourcePlugin):
         loader_conf = ""
         loader_conf += "default boot\n"
         loader_conf += "timeout %d\n" % bootloader.timeout
+
+        initrd = source_params.get('initrd')
+
+        if initrd:
+            # obviously we need to have a common common deploy var
+            bootimg_dir = get_bitbake_var("DEPLOY_DIR_IMAGE")
+            if not bootimg_dir:
+                msger.error("Couldn't find DEPLOY_DIR_IMAGE, exiting\n")
+
+            cp_cmd = "cp %s/%s %s" % (bootimg_dir, initrd, hdddir)
+            exec_cmd(cp_cmd, True)
+        else:
+            msger.debug("Ignoring missing initrd")
 
         msger.debug("Writing systemd-boot config %s/hdd/boot/loader/loader.conf" \
                         % cr_workdir)
@@ -127,6 +140,9 @@ class BootimgEFIPlugin(SourcePlugin):
             boot_conf += "options LABEL=Boot root=%s %s\n" % \
                              (creator.rootdev, bootloader.append)
 
+            if initrd:
+                boot_conf += "initrd /%s\n" % initrd
+
         msger.debug("Writing systemd-boot config %s/hdd/boot/loader/entries/boot.conf" \
                         % cr_workdir)
         cfg = open("%s/hdd/boot/loader/entries/boot.conf" % cr_workdir, "w")
@@ -148,9 +164,9 @@ class BootimgEFIPlugin(SourcePlugin):
 
         try:
             if source_params['loader'] == 'grub-efi':
-                cls.do_configure_grubefi(hdddir, creator, cr_workdir)
+                cls.do_configure_grubefi(hdddir, creator, cr_workdir, source_params)
             elif source_params['loader'] == 'systemd-boot':
-                cls.do_configure_systemdboot(hdddir, creator, cr_workdir)
+                cls.do_configure_systemdboot(hdddir, creator, cr_workdir, source_params)
             else:
                 msger.error("unrecognized bootimg-efi loader: %s" % source_params['loader'])
         except KeyError:
@@ -167,9 +183,9 @@ class BootimgEFIPlugin(SourcePlugin):
         In this case, prepare content for an EFI (grub) boot partition.
         """
         if not bootimg_dir:
-            bootimg_dir = get_bitbake_var("HDDDIR")
+            bootimg_dir = get_bitbake_var("DEPLOY_DIR_IMAGE")
             if not bootimg_dir:
-                msger.error("Couldn't find HDDDIR, exiting\n")
+                 msger.error("Couldn't find DEPLOY_DIR_IMAGE, exiting\n")
             # just so the result notes display it
             creator.set_bootimg_dir(bootimg_dir)
 
@@ -181,17 +197,20 @@ class BootimgEFIPlugin(SourcePlugin):
             (staging_kernel_dir, hdddir)
         exec_cmd(install_cmd)
 
+
         try:
             if source_params['loader'] == 'grub-efi':
                 shutil.copyfile("%s/hdd/boot/EFI/BOOT/grub.cfg" % cr_workdir,
                                 "%s/grub.cfg" % cr_workdir)
-                cp_cmd = "cp %s/EFI/BOOT/* %s/EFI/BOOT" % (bootimg_dir, hdddir)
-                exec_cmd(cp_cmd, True)
+                for mod in [x for x in os.listdir(bootimg_dir) if x.startswith("grub-efi-")]:
+                    cp_cmd = "cp %s/%s %s/EFI/BOOT/%s" % (bootimg_dir, mod, hdddir, mod[9:])
+                    exec_cmd(cp_cmd, True)
                 shutil.move("%s/grub.cfg" % cr_workdir,
                             "%s/hdd/boot/EFI/BOOT/grub.cfg" % cr_workdir)
             elif source_params['loader'] == 'systemd-boot':
-                cp_cmd = "cp %s/EFI/BOOT/* %s/EFI/BOOT" % (bootimg_dir, hdddir)
-                exec_cmd(cp_cmd, True)
+                for mod in [x for x in os.listdir(bootimg_dir) if x.startswith("systemd-")]:
+                    cp_cmd = "cp %s/%s %s/EFI/BOOT/%s" % (bootimg_dir, mod, hdddir, mod[8:])
+                    exec_cmd(cp_cmd, True)
             else:
                 msger.error("unrecognized bootimg-efi loader: %s" % source_params['loader'])
         except KeyError:

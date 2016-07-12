@@ -249,6 +249,7 @@ class IsoImagePlugin(SourcePlugin):
         part.rootfs_dir = rootfs_dir
 
         # Prepare rootfs.img
+        hdd_dir = get_bitbake_var("DEPLOY_DIR_IMAGE")
         img_iso_dir = get_bitbake_var("ISODIR")
         rootfs_img = "%s/rootfs.img" % img_iso_dir
         if not os.path.isfile(rootfs_img):
@@ -278,10 +279,19 @@ class IsoImagePlugin(SourcePlugin):
         if os.path.isfile(part.source_file):
             os.remove(part.source_file)
 
-        # Prepare initial ramdisk
-        initrd = "%s/initrd" % img_iso_dir
-        if not os.path.isfile(initrd):
-            initrd = cls._build_initramfs_path(rootfs_dir, cr_workdir)
+        # Support using a different initrd other than default
+        if source_params.get('initrd'):
+            initrd = source_params['initrd']
+            if not hdd_dir:
+                msger.error("Couldn't find DEPLOY_DIR_IMAGE, exiting\n")
+            cp_cmd = "cp %s/%s %s" % (hdd_dir, initrd, cr_workdir)
+        else:
+            # Prepare initial ramdisk
+            initrd = "%s/initrd" % hdd_dir
+            if not os.path.isfile(initrd):
+                initrd = "%s/initrd" % img_iso_dir
+            if not os.path.isfile(initrd):
+                initrd = cls._build_initramfs_path(rootfs_dir, cr_workdir)
 
         install_cmd = "install -m 0644 %s %s/initrd" \
             % (initrd, isodir)
