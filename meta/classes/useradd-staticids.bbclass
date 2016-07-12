@@ -43,7 +43,7 @@ def update_useradd_static_config(d):
                         if fields[0] not in id_table:
                             id_table[fields[0]] = fields
                         else:
-                            id_table[fields[0]] = list(itertools.imap(lambda x, y: x or y, fields, id_table[fields[0]]))
+                            id_table[fields[0]] = list(map(lambda x, y: x or y, fields, id_table[fields[0]]))
             except IOError as e:
                 if e.errno == errno.ENOENT:
                     pass
