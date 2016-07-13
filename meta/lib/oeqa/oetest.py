@@ -441,12 +441,9 @@ class RuntimeTestContext(TestContext):
 
     def extract_packages(self):
         """
-        Find and extract packages that will be needed during runtime.
+        Find packages that will be needed during runtime.
         """
 
-        needed_packages = {}
-        extracted_path = self.d.getVar("TEST_EXTRACTED_DIR", True)
-        packaged_path = self.d.getVar("TEST_PACKAGED_DIR", True)
         modules = self.getTestModules()
         bbpaths = self.d.getVar("BBPATH", True).split(":")
 
@@ -454,6 +451,15 @@ class RuntimeTestContext(TestContext):
             json_file = self._getJsonFile(module)
             if json_file:
                 needed_packages = self._getNeededPackages(json_file)
+                self._perform_package_extraction(needed_packages)
+
+    def _perform_package_extraction(self, needed_packages):
+        """
+        Extract packages that will be needed during runtime.
+        """
+
+        extracted_path = self.d.getVar("TEST_EXTRACTED_DIR", True)
+        packaged_path = self.d.getVar("TEST_PACKAGED_DIR", True)
 
         for key,value in needed_packages.items():
             packages = ()
