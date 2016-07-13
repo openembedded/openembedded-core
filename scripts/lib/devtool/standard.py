@@ -1314,24 +1314,10 @@ def status(args, config, basepath, workspace):
     return 0
 
 
-def reset(args, config, basepath, workspace):
-    """Entry point for the devtool 'reset' subcommand"""
-    import bb
-    if args.recipename:
-        if args.all:
-            raise DevtoolError("Recipe cannot be specified if -a/--all is used")
-        else:
-            for recipe in args.recipename:
-                check_workspace_recipe(workspace, recipe, checksrc=False)
-    elif not args.all:
-        raise DevtoolError("Recipe must be specified, or specify -a/--all to "
-                           "reset all recipes")
-    if args.all:
-        recipes = list(workspace.keys())
-    else:
-        recipes = args.recipename
+def _reset(recipes, no_clean, config, basepath, workspace):
+    """Reset one or more recipes"""
 
-    if recipes and not args.no_clean:
+    if recipes and not no_clean:
         if len(recipes) == 1:
             logger.info('Cleaning sysroot for recipe %s...' % recipes[0])
         else:
@@ -1382,6 +1368,26 @@ def reset(args, config, basepath, workspace):
             else:
                 # This is unlikely, but if it's empty we can just remove it
                 os.rmdir(srctree)
+
+
+def reset(args, config, basepath, workspace):
+    """Entry point for the devtool 'reset' subcommand"""
+    import bb
+    if args.recipename:
+        if args.all:
+            raise DevtoolError("Recipe cannot be specified if -a/--all is used")
+        else:
+            for recipe in args.recipename:
+                check_workspace_recipe(workspace, recipe, checksrc=False)
+    elif not args.all:
+        raise DevtoolError("Recipe must be specified, or specify -a/--all to "
+                           "reset all recipes")
+    if args.all:
+        recipes = list(workspace.keys())
+    else:
+        recipes = args.recipename
+
+    _reset(recipes, args.no_clean, config, basepath, workspace)
 
     return 0
 
