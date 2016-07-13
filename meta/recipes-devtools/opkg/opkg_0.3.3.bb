@@ -17,8 +17,8 @@ SRC_URI = "http://downloads.yoctoproject.org/releases/${BPN}/${BPN}-${PV}.tar.gz
            file://0001-opkg_conf-create-opkg.lock-in-run-instead-of-var-run.patch \
 "
 
-SRC_URI[md5sum] = "b2cc1baa89d0b3d49e63ab002fd2e0a6"
-SRC_URI[sha256sum] = "c9fa948a779a4e493b9669c239de317d43c43accbccbb0cf84056f9b269ba7b0"
+SRC_URI[md5sum] = "a4613038c8afc7d8d482f5c53f137bdf"
+SRC_URI[sha256sum] = "19db9e73121a5e4c91fa228b0a6a4c55cc3591056130cfb3c66c30aa32f8d00e"
 
 inherit autotools pkgconfig systemd
 
