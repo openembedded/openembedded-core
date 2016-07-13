@@ -28,6 +28,7 @@ import argparse_oe
 import scriptutils
 import errno
 import glob
+import filecmp
 from collections import OrderedDict
 from devtool import exec_build_env_command, setup_tinfoil, check_workspace_recipe, use_external_build, setup_git_repo, recipe_to_append, get_bbclassextend_targets, DevtoolError
 from devtool import parse_recipe
@@ -1031,7 +1032,10 @@ def _export_local_files(srctree, rd, destdir):
     if new_set is not None:
         for fname in new_set:
             if fname in existing_files:
-                updated[fname] = existing_files.pop(fname)
+                origpath = existing_files.pop(fname)
+                workpath = os.path.join(local_files_dir, fname)
+                if not filecmp.cmp(origpath, workpath):
+                    updated[fname] = origpath
             elif fname != '.gitignore':
                 added[fname] = None
 
