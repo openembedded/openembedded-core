@@ -72,17 +72,23 @@ for hdname in $hdnamelist; do
         cat /sys/block/$hdname/device/uevent
     fi
     echo
-    # Get user choice
-    while true; do
-        echo -n "Do you want to install this image there? [y/n] "
-        read answer
-        if [ "$answer" = "y" -o "$answer" = "n" ]; then
+done
+
+# Get user choice
+while true; do
+    echo "Please select an install target or press n to exit ($hdnamelist ): "
+    read answer
+    if [ "$answer" = "n" ]; then
+        echo "Installation manually aborted."
+        exit 1
+    fi
+    for hdname in $hdnamelist; do
+        if [ "$answer" = "$hdname" ]; then
+            TARGET_DEVICE_NAME=$answer
             break
         fi
-        echo "Please answer y or n"
     done
-    if [ "$answer" = "y" ]; then
-        TARGET_DEVICE_NAME=$hdname
+    if [ -n "$TARGET_DEVICE_NAME" ]; then
         break
     fi
 done
