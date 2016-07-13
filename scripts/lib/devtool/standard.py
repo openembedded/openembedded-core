@@ -1,6 +1,6 @@
 # Development tool - standard commands plugin
 #
-# Copyright (C) 2014-2015 Intel Corporation
+# Copyright (C) 2014-2016 Intel Corporation
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License version 2 as
@@ -1394,6 +1394,106 @@ def reset(args, config, basepath, workspace):
     return 0
 
 
+def _get_layer(layername, d):
+    """Determine the base layer path for the specified layer name/path"""
+    layerdirs = d.getVar('BBLAYERS', True).split()
+    layers = {os.path.basename(p): p for p in layerdirs}
+    # Provide some shortcuts
+    if layername.lower() in ['oe-core', 'openembedded-core']:
+        layerdir = layers.get('meta', None)
+    else:
+        layerdir = layers.get(layername, None)
+    if layerdir:
+        layerdir = os.path.abspath(layerdir)
+    return layerdir or layername
+
+def finish(args, config, basepath, workspace):
+    """Entry point for the devtool 'finish' subcommand"""
+    import bb
+    import oe.recipeutils
+
+    check_workspace_recipe(workspace, args.recipename)
+
+    tinfoil = setup_tinfoil(basepath=basepath, tracking=True)
+    try:
+        rd = parse_recipe(config, tinfoil, args.recipename, True)
+        if not rd:
+            return 1
+
+        destlayerdir = _get_layer(args.destination, tinfoil.config_data)
+        origlayerdir = oe.recipeutils.find_layerdir(rd.getVar('FILE', True))
+
+        if not os.path.isdir(destlayerdir):
+            raise DevtoolError('Unable to find layer or directory matching "%s"' % args.destination)
+
+        if os.path.abspath(destlayerdir) == config.workspace_path:
+            raise DevtoolError('"%s" specifies the workspace layer - that is not a valid destination' % args.destination)
+
+        # If it's an upgrade, grab the original path
+        origpath = None
+        origfilelist = None
+        append = workspace[args.recipename]['bbappend']
+        with open(append, 'r') as f:
+            for line in f:
+                if line.startswith('# original_path:'):
+                    origpath = line.split(':')[1].strip()
+                elif line.startswith('# original_files:'):
+                    origfilelist = line.split(':')[1].split()
+
+        if origlayerdir == config.workspace_path:
+            # Recipe file itself is in workspace, update it there first
+            appendlayerdir = None
+            origrelpath = None
+            if origpath:
+                origlayerpath = oe.recipeutils.find_layerdir(origpath)
+                if origlayerpath:
+                    origrelpath = os.path.relpath(origpath, origlayerpath)
+            destpath = oe.recipeutils.get_bbfile_path(rd, destlayerdir, origrelpath)
+            if not destpath:
+                raise DevtoolError("Unable to determine destination layer path - check that %s specifies an actual layer and %s/conf/layer.conf specifies BBFILES. You may also need to specify a more complete path." % (args.destination, destlayerdir))
+        elif destlayerdir == origlayerdir:
+            # Same layer, update the original recipe
+            appendlayerdir = None
+            destpath = None
+        else:
+            # Create/update a bbappend in the specified layer
+            appendlayerdir = destlayerdir
+            destpath = None
+
+        # Remove any old files in the case of an upgrade
+        if origpath and origfilelist and oe.recipeutils.find_layerdir(origpath) == oe.recipeutils.find_layerdir(destlayerdir):
+            for fn in origfilelist:
+                fnp = os.path.join(origpath, fn)
+                try:
+                    os.remove(fnp)
+                except FileNotFoundError:
+                    pass
+
+        # Actually update the recipe / bbappend
+        _update_recipe(args.recipename, workspace, rd, args.mode, appendlayerdir, wildcard_version=True, no_remove=False, initial_rev=args.initial_rev)
+
+        if origlayerdir == config.workspace_path and destpath:
+            # Recipe file itself is in the workspace - need to move it and any
+            # associated files to the specified layer
+            logger.info('Moving recipe file to %s' % destpath)
+            recipedir = os.path.dirname(rd.getVar('FILE', True))
+            for root, _, files in os.walk(recipedir):
+                for fn in files:
+                    srcpath = os.path.join(root, fn)
+                    relpth = os.path.relpath(os.path.dirname(srcpath), recipedir)
+                    destdir = os.path.abspath(os.path.join(destpath, relpth))
+                    bb.utils.mkdirhier(destdir)
+                    shutil.move(srcpath, os.path.join(destdir, fn))
+
+    finally:
+        tinfoil.shutdown()
+
+    # Everything else has succeeded, we can now reset
+    _reset([args.recipename], no_clean=False, config=config, basepath=basepath, workspace=workspace)
+
+    return 0
+
+
 def get_default_srctree(config, recipename=''):
     """Get the default srctree path"""
     srctreeparent = config.get('General', 'default_source_parent_dir', config.workspace_path)
@@ -1481,3 +1581,12 @@ def register_commands(subparsers, context):
     parser_reset.add_argument('--all', '-a', action="store_true", help='Reset all recipes (clear workspace)')
     parser_reset.add_argument('--no-clean', '-n', action="store_true", help='Don\'t clean the sysroot to remove recipe output')
     parser_reset.set_defaults(func=reset)
+
+    parser_finish = subparsers.add_parser('finish', help='Finish working on a recipe in your workspace',
+                                         description='Pushes any committed changes to the specified recipe to the specified layer and removes it from your workspace. Roughly equivalent to an update-recipe followed by reset, except the update-recipe step will do the "right thing" depending on the recipe and the destination layer specified.',
+                                         group='working', order=-100)
+    parser_finish.add_argument('recipename', help='Recipe to finish')
+    parser_finish.add_argument('destination', help='Layer/path to put recipe into. Can be the name of a layer configured in your bblayers.conf, the path to the base of a layer, or a partial path inside a layer. %(prog)s will attempt to complete the path based on the layer\'s structure.')
+    parser_finish.add_argument('--mode', '-m', choices=['patch', 'srcrev', 'auto'], default='auto', help='Update mode (where %(metavar)s is %(choices)s; default is %(default)s)', metavar='MODE')
+    parser_finish.add_argument('--initial-rev', help='Override starting revision for patches')
+    parser_finish.set_defaults(func=finish)

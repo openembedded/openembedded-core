@@ -5,10 +5,11 @@ import re
 import shutil
 import tempfile
 import glob
+import fnmatch
 
 import oeqa.utils.ftools as ftools
 from oeqa.selftest.base import oeSelfTest
-from oeqa.utils.commands import runCmd, bitbake, get_bb_var, create_temp_layer, runqemu
+from oeqa.utils.commands import runCmd, bitbake, get_bb_var, create_temp_layer, runqemu, get_test_layer
 from oeqa.utils.decorators import testcase
 
 class DevtoolBase(oeSelfTest):
@@ -1189,3 +1190,157 @@ class DevtoolTests(DevtoolBase):
         s = "Microsoft Made No Profit From Anyone's Zunes Yo"
         result = runCmd("devtool --quiet selftest-reverse \"%s\"" % s)
         self.assertEqual(result.output, s[::-1])
+
+    def _setup_test_devtool_finish_upgrade(self):
+        # Check preconditions
+        self.assertTrue(not os.path.exists(self.workspacedir), 'This test cannot be run with a workspace directory under the build directory')
+        self.track_for_cleanup(self.workspacedir)
+        self.add_command_to_tearDown('bitbake-layers remove-layer */workspace')
+        # Use a "real" recipe from meta-selftest
+        recipe = 'devtool-upgrade-test1'
+        oldversion = '1.5.3'
+        newversion = '1.6.0'
+        oldrecipefile = get_bb_var('FILE', recipe)
+        recipedir = os.path.dirname(oldrecipefile)
+        result = runCmd('git status --porcelain .', cwd=recipedir)
+        if result.output.strip():
+            self.fail('Recipe directory for %s contains uncommitted changes' % recipe)
+        tempdir = tempfile.mkdtemp(prefix='devtoolqa')
+        self.track_for_cleanup(tempdir)
+        # Check that recipe is not already under devtool control
+        result = runCmd('devtool status')
+        self.assertNotIn(recipe, result.output)
+        # Do the upgrade
+        result = runCmd('devtool upgrade %s %s -V %s' % (recipe, tempdir, newversion))
+        # Check devtool status and make sure recipe is present
+        result = runCmd('devtool status')
+        self.assertIn(recipe, result.output)
+        self.assertIn(tempdir, result.output)
+        # Make a change to the source
+        result = runCmd('sed -i \'/^#include "pv.h"/a \\/* Here is a new comment *\\/\' src/pv/number.c', cwd=tempdir)
+        result = runCmd('git status --porcelain', cwd=tempdir)
+        self.assertIn('M src/pv/number.c', result.output)
+        result = runCmd('git commit src/pv/number.c -m "Add a comment to the code"', cwd=tempdir)
+        # Check if patch is there
+        recipedir = os.path.dirname(oldrecipefile)
+        olddir = os.path.join(recipedir, recipe + '-' + oldversion)
+        patchfn = '0001-Add-a-note-line-to-the-quick-reference.patch'
+        self.assertTrue(os.path.exists(os.path.join(olddir, patchfn)), 'Original patch file does not exist')
+        return recipe, oldrecipefile, recipedir, olddir, newversion, patchfn
+
+    def test_devtool_finish_upgrade_origlayer(self):
+        recipe, oldrecipefile, recipedir, olddir, newversion, patchfn = self._setup_test_devtool_finish_upgrade()
+        # Ensure the recipe is where we think it should be (so that cleanup doesn't trash things)
+        self.assertIn('/meta-selftest/', recipedir)
+        # Try finish to the original layer
+        self.add_command_to_tearDown('rm -rf %s ; cd %s ; git checkout %s' % (recipedir, os.path.dirname(recipedir), recipedir))
+        result = runCmd('devtool finish %s meta-selftest' % recipe)
+        result = runCmd('devtool status')
+        self.assertNotIn(recipe, result.output, 'Recipe should have been reset by finish but wasn\'t')
+        self.assertFalse(os.path.exists(os.path.join(self.workspacedir, 'recipes', recipe)), 'Recipe directory should not exist after finish')
+        self.assertFalse(os.path.exists(oldrecipefile), 'Old recipe file should have been deleted but wasn\'t')
+        self.assertFalse(os.path.exists(os.path.join(olddir, patchfn)), 'Old patch file should have been deleted but wasn\'t')
+        newrecipefile = os.path.join(recipedir, '%s_%s.bb' % (recipe, newversion))
+        newdir = os.path.join(recipedir, recipe + '-' + newversion)
+        self.assertTrue(os.path.exists(newrecipefile), 'New recipe file should have been copied into existing layer but wasn\'t')
+        self.assertTrue(os.path.exists(os.path.join(newdir, patchfn)), 'Patch file should have been copied into new directory but wasn\'t')
+        self.assertTrue(os.path.exists(os.path.join(newdir, '0002-Add-a-comment-to-the-code.patch')), 'New patch file should have been created but wasn\'t')
+
+    def test_devtool_finish_upgrade_otherlayer(self):
+        recipe, oldrecipefile, recipedir, olddir, newversion, patchfn = self._setup_test_devtool_finish_upgrade()
+        # Ensure the recipe is where we think it should be (so that cleanup doesn't trash things)
+        self.assertIn('/meta-selftest/', recipedir)
+        # Try finish to a different layer - should create a bbappend
+        # This cleanup isn't strictly necessary but do it anyway just in case it goes wrong and writes to here
+        self.add_command_to_tearDown('rm -rf %s ; cd %s ; git checkout %s' % (recipedir, os.path.dirname(recipedir), recipedir))
+        oe_core_dir = os.path.join(get_bb_var('COREBASE'), 'meta')
+        newrecipedir = os.path.join(oe_core_dir, 'recipes-test', 'devtool')
+        newrecipefile = os.path.join(newrecipedir, '%s_%s.bb' % (recipe, newversion))
+        self.track_for_cleanup(newrecipedir)
+        result = runCmd('devtool finish %s oe-core' % recipe)
+        result = runCmd('devtool status')
+        self.assertNotIn(recipe, result.output, 'Recipe should have been reset by finish but wasn\'t')
+        self.assertFalse(os.path.exists(os.path.join(self.workspacedir, 'recipes', recipe)), 'Recipe directory should not exist after finish')
+        self.assertTrue(os.path.exists(oldrecipefile), 'Old recipe file should not have been deleted')
+        self.assertTrue(os.path.exists(os.path.join(olddir, patchfn)), 'Old patch file should not have been deleted')
+        newdir = os.path.join(newrecipedir, recipe + '-' + newversion)
+        self.assertTrue(os.path.exists(newrecipefile), 'New recipe file should have been copied into existing layer but wasn\'t')
+        self.assertTrue(os.path.exists(os.path.join(newdir, patchfn)), 'Patch file should have been copied into new directory but wasn\'t')
+        self.assertTrue(os.path.exists(os.path.join(newdir, '0002-Add-a-comment-to-the-code.patch')), 'New patch file should have been created but wasn\'t')
+
+    def _setup_test_devtool_finish_modify(self):
+        # Check preconditions
+        self.assertTrue(not os.path.exists(self.workspacedir), 'This test cannot be run with a workspace directory under the build directory')
+        # Try modifying a recipe
+        self.track_for_cleanup(self.workspacedir)
+        recipe = 'mdadm'
+        oldrecipefile = get_bb_var('FILE', recipe)
+        recipedir = os.path.dirname(oldrecipefile)
+        result = runCmd('git status --porcelain .', cwd=recipedir)
+        if result.output.strip():
+            self.fail('Recipe directory for %s contains uncommitted changes' % recipe)
+        tempdir = tempfile.mkdtemp(prefix='devtoolqa')
+        self.track_for_cleanup(tempdir)
+        self.add_command_to_tearDown('bitbake-layers remove-layer */workspace')
+        result = runCmd('devtool modify %s %s' % (recipe, tempdir))
+        self.assertTrue(os.path.exists(os.path.join(tempdir, 'Makefile')), 'Extracted source could not be found')
+        # Test devtool status
+        result = runCmd('devtool status')
+        self.assertIn(recipe, result.output)
+        self.assertIn(tempdir, result.output)
+        # Make a change to the source
+        result = runCmd('sed -i \'/^#include "mdadm.h"/a \\/* Here is a new comment *\\/\' maps.c', cwd=tempdir)
+        result = runCmd('git status --porcelain', cwd=tempdir)
+        self.assertIn('M maps.c', result.output)
+        result = runCmd('git commit maps.c -m "Add a comment to the code"', cwd=tempdir)
+        for entry in os.listdir(recipedir):
+            filesdir = os.path.join(recipedir, entry)
+            if os.path.isdir(filesdir):
+                break
+        else:
+            self.fail('Unable to find recipe files directory for %s' % recipe)
+        return recipe, oldrecipefile, recipedir, filesdir
+
+    def test_devtool_finish_modify_origlayer(self):
+        recipe, oldrecipefile, recipedir, filesdir = self._setup_test_devtool_finish_modify()
+        # Ensure the recipe is where we think it should be (so that cleanup doesn't trash things)
+        self.assertIn('/meta/', recipedir)
+        # Try finish to the original layer
+        self.add_command_to_tearDown('rm -rf %s ; cd %s ; git checkout %s' % (recipedir, os.path.dirname(recipedir), recipedir))
+        result = runCmd('devtool finish %s meta' % recipe)
+        result = runCmd('devtool status')
+        self.assertNotIn(recipe, result.output, 'Recipe should have been reset by finish but wasn\'t')
+        self.assertFalse(os.path.exists(os.path.join(self.workspacedir, 'recipes', recipe)), 'Recipe directory should not exist after finish')
+        expected_status = [(' M', '.*/%s$' % os.path.basename(oldrecipefile)),
+                           ('??', '.*/.*-Add-a-comment-to-the-code.patch$')]
+        self._check_repo_status(recipedir, expected_status)
+
+    def test_devtool_finish_modify_otherlayer(self):
+        recipe, oldrecipefile, recipedir, filesdir = self._setup_test_devtool_finish_modify()
+        # Ensure the recipe is where we think it should be (so that cleanup doesn't trash things)
+        self.assertIn('/meta/', recipedir)
+        relpth = os.path.relpath(recipedir, os.path.join(get_bb_var('COREBASE'), 'meta'))
+        appenddir = os.path.join(get_test_layer(), relpth)
+        self.track_for_cleanup(appenddir)
+        # Try finish to the original layer
+        self.add_command_to_tearDown('rm -rf %s ; cd %s ; git checkout %s' % (recipedir, os.path.dirname(recipedir), recipedir))
+        result = runCmd('devtool finish %s meta-selftest' % recipe)
+        result = runCmd('devtool status')
+        self.assertNotIn(recipe, result.output, 'Recipe should have been reset by finish but wasn\'t')
+        self.assertFalse(os.path.exists(os.path.join(self.workspacedir, 'recipes', recipe)), 'Recipe directory should not exist after finish')
+        result = runCmd('git status --porcelain .', cwd=recipedir)
+        if result.output.strip():
+            self.fail('Recipe directory for %s contains the following unexpected changes after finish:\n%s' % (recipe, result.output.strip()))
+        appendfile = os.path.join(appenddir, os.path.splitext(os.path.basename(oldrecipefile))[0] + '.bbappend')
+        self.assertTrue(os.path.exists(appendfile), 'bbappend %s should have been created but wasn\'t' % appendfile)
+        newdir = os.path.join(appenddir, recipe)
+        files = os.listdir(newdir)
+        foundpatch = None
+        for fn in files:
+            if fnmatch.fnmatch(fn, '*-Add-a-comment-to-the-code.patch'):
+                foundpatch = fn
+        if not foundpatch:
+            self.fail('No patch file created next to bbappend')
+        files.remove(foundpatch)
+        if files:
+            self.fail('Unexpected file(s) copied next to bbappend: %s' % ', '.join(files))
