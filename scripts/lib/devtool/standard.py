@@ -1039,6 +1039,18 @@ def _export_local_files(srctree, rd, destdir):
     return (updated, added, removed)
 
 
+def _determine_files_dir(rd):
+    """Determine the appropriate files directory for a recipe"""
+    recipedir = rd.getVar('FILE_DIRNAME', True)
+    for entry in rd.getVar('FILESPATH', True).split(':'):
+        relpth = os.path.relpath(entry, recipedir)
+        if not os.sep in relpth:
+            # One (or zero) levels below only, so we don't put anything in machine-specific directories
+            if os.path.isdir(entry):
+                return entry
+    return os.path.join(recipedir, rd.getVar('BPN', True))
+
+
 def _update_recipe_srcrev(args, srctree, rd, config_data):
     """Implement the 'srcrev' mode of update-recipe"""
     import bb
@@ -1092,8 +1104,7 @@ def _update_recipe_srcrev(args, srctree, rd, config_data):
                     rd, args.append, files, wildcardver=args.wildcard_version,
                     extralines=patchfields, removevalues=removevalues)
         else:
-            files_dir = os.path.join(os.path.dirname(recipefile),
-                                     rd.getVar('BPN', True))
+            files_dir = _determine_files_dir(rd)
             for basepath, path in upd_f.items():
                 logger.info('Updating file %s' % basepath)
                 _move_file(os.path.join(local_files_dir, basepath), path)
@@ -1193,8 +1204,7 @@ def _update_recipe_patch(args, config, workspace, srctree, rd, config_data):
                 _move_file(patchfn, path)
                 updatefiles = True
             # Add any new files
-            files_dir = os.path.join(os.path.dirname(recipefile),
-                                     rd.getVar('BPN', True))
+            files_dir = _determine_files_dir(rd)
             for basepath, path in new_f.items():
                 logger.info('Adding new file %s' % basepath)
                 _move_file(os.path.join(local_files_dir, basepath),
