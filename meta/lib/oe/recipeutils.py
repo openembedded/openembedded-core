@@ -728,14 +728,16 @@ def bbappend_recipe(rd, destlayerdir, srcfiles, install=None, wildcardver=False,
 
 
 def find_layerdir(fn):
-    """ Figure out relative path to base of layer for a file (e.g. a recipe)"""
-    pth = os.path.dirname(fn)
+    """ Figure out the path to the base of the layer containing a file (e.g. a recipe)"""
+    pth = fn
     layerdir = ''
     while pth:
         if os.path.exists(os.path.join(pth, 'conf', 'layer.conf')):
             layerdir = pth
             break
         pth = os.path.dirname(pth)
+        if pth == '/':
+            return None
     return layerdir
 
 
