@@ -114,7 +114,12 @@ def read_shlib_providers(d):
             m = list_re.match(file)
             if m:
                 dep_pkg = m.group(1)
-                fd = open(os.path.join(dir, file))
+                try:
+                    fd = open(os.path.join(dir, file))
+                except IOError:
+                    # During a build unrelated shlib files may be deleted, so
+                    # handle files disappearing between the listdirs and open.
+                    continue
                 lines = fd.readlines()
                 fd.close()
                 for l in lines:
