@@ -105,7 +105,7 @@ def _rename_recipe_files(oldrecipe, bpn, oldpv, newpv, path):
     _rename_recipe_dirs(oldpv, newpv, path)
     return _rename_recipe_file(oldrecipe, bpn, oldpv, newpv, path)
 
-def _write_append(rc, srctree, same_dir, no_same_dir, rev, workspace, d):
+def _write_append(rc, srctree, same_dir, no_same_dir, rev, copied, workspace, d):
     """Writes an append file"""
     if not os.path.exists(rc):
         raise DevtoolError("bbappend not created because %s does not exist" % rc)
@@ -128,8 +128,12 @@ def _write_append(rc, srctree, same_dir, no_same_dir, rev, workspace, d):
         b_is_s = use_external_build(same_dir, no_same_dir, d)
         if b_is_s:
             f.write('EXTERNALSRC_BUILD_pn-%s = "%s"\n' % (pn, srctree))
+        f.write('\n')
         if rev:
-            f.write('\n# initial_rev: %s\n' % rev)
+            f.write('# initial_rev: %s\n' % rev)
+        if copied:
+            f.write('# original_path: %s\n' % os.path.dirname(d.getVar('FILE', True)))
+            f.write('# original_files: %s\n' % ' '.join(copied))
     return af
 
 def _cleanup_on_error(rf, srctree):
@@ -267,7 +271,7 @@ def _create_new_recipe(newpv, md5, sha256, srcrev, srcbranch, workspace, tinfoil
     bpn = rd.getVar('BPN', True)
     path = os.path.join(workspace, 'recipes', bpn)
     bb.utils.mkdirhier(path)
-    oe.recipeutils.copy_recipe_files(rd, path)
+    copied, _ = oe.recipeutils.copy_recipe_files(rd, path)
 
     oldpv = rd.getVar('PV', True)
     if not newpv:
@@ -317,7 +321,7 @@ def _create_new_recipe(newpv, md5, sha256, srcrev, srcbranch, workspace, tinfoil
     rd = oe.recipeutils.parse_recipe(fullpath, None, tinfoil.config_data)
     oe.recipeutils.patch_recipe(rd, fullpath, newvalues)
 
-    return fullpath
+    return fullpath, copied
 
 def upgrade(args, config, basepath, workspace):
     """Entry point for the devtool 'upgrade' subcommand"""
@@ -360,7 +364,7 @@ def upgrade(args, config, basepath, workspace):
         rev2, md5, sha256 = _extract_new_source(args.version, srctree, args.no_patch,
                                                 args.srcrev, args.branch, args.keep_temp,
                                                 tinfoil, rd)
-        rf = _create_new_recipe(args.version, md5, sha256, args.srcrev, args.srcbranch, config.workspace_path, tinfoil, rd)
+        rf, copied = _create_new_recipe(args.version, md5, sha256, args.srcrev, args.srcbranch, config.workspace_path, tinfoil, rd)
     except bb.process.CmdError as e:
         _upgrade_error(e, rf, srctree)
     except DevtoolError as e:
@@ -368,7 +372,7 @@ def upgrade(args, config, basepath, workspace):
     standard._add_md5(config, pn, os.path.dirname(rf))
 
     af = _write_append(rf, srctree, args.same_dir, args.no_same_dir, rev2,
-                       config.workspace_path, rd)
+                       copied, config.workspace_path, rd)
     standard._add_md5(config, pn, af)
     logger.info('Upgraded source extracted to %s' % srctree)
     logger.info('New recipe is %s' % rf)

@@ -365,6 +365,7 @@ def copy_recipe_files(d, tgt_dir, whole_dir=False, download=True):
     # Copy local files to target directory and gather any remote files
     bb_dir = os.path.dirname(d.getVar('FILE', True)) + os.sep
     remotes = []
+    copied = []
     includes = [path for path in d.getVar('BBINCLUDED', True).split() if
                 path.startswith(bb_dir) and os.path.exists(path)]
     for path in fetch.localpaths() + includes:
@@ -376,13 +377,14 @@ def copy_recipe_files(d, tgt_dir, whole_dir=False, download=True):
                 if not os.path.exists(subdir):
                     os.makedirs(subdir)
                 shutil.copy2(path, os.path.join(tgt_dir, relpath))
+                copied.append(relpath)
         else:
             remotes.append(path)
     # Simply copy whole meta dir, if requested
     if whole_dir:
         shutil.copytree(bb_dir, tgt_dir)
 
-    return remotes
+    return copied, remotes
 
 
 def get_recipe_local_files(d, patches=False):
