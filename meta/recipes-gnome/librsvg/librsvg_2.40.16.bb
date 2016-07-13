@@ -14,8 +14,8 @@ inherit autotools pkgconfig gnomebase gtk-doc pixbufcache upstream-version-is-ev
 
 SRC_URI += "file://gtk-option.patch"
 
-SRC_URI[archive.md5sum] = "3a66ab5b4fe1fb43b471708e4ff39a0e"
-SRC_URI[archive.sha256sum] = "d9cac4a123eec6e553a26e120979bab7425def9ae7ce7c079eba5e4a45db05f4"
+SRC_URI[archive.md5sum] = "f474fe37177a2bf8050787df2046095c"
+SRC_URI[archive.sha256sum] = "d48bcf6b03fa98f07df10332fb49d8c010786ddca6ab34cbba217684f533ff2e"
 
 CACHED_CONFIGUREVARS = "ac_cv_path_GDK_PIXBUF_QUERYLOADERS=${STAGING_LIBDIR_NATIVE}/gdk-pixbuf-2.0/gdk-pixbuf-query-loaders"
 
