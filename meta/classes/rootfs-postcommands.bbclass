@@ -45,6 +45,15 @@ systemd_create_users () {
 			[ "$id" != "-" ] && groupadd_params="$groupadd_params --gid $id"
 			groupadd_params="$groupadd_params --system $name"
 			eval groupadd --root ${IMAGE_ROOTFS} $groupadd_params || true
+		elif [ "$type" = "m" ]; then
+			group=$id
+			if [ ! `grep -q "^${group}:" ${IMAGE_ROOTFS}${sysconfdir}/group` ]; then
+				eval groupadd --root ${IMAGE_ROOTFS} --system $group
+			fi
+			if [ ! `grep -q "^${name}:" ${IMAGE_ROOTFS}${sysconfdir}/passwd` ]; then
+				eval useradd --root ${IMAGE_ROOTFS} --shell /sbin/nologin --system $name
+			fi
+			eval usermod --root ${IMAGE_ROOTFS} -a -G $group $name
 		fi
 		done
 	done
