@@ -275,6 +275,36 @@ do_image_complete[dirs] = "${TOPDIR}"
 do_image_complete[umask] = "022"
 addtask do_image_complete after do_image before do_build
 
+# Add image-level QA/sanity checks to IMAGE_QA_COMMANDS
+#
+# IMAGE_QA_COMMANDS += " \
+#     image_check_everything_ok \
+# "
+# This task runs all functions in IMAGE_QA_COMMANDS after the image
+# construction has completed in order to validate the resulting image.
+fakeroot python do_image_qa () {
+    from oe.utils import ImageQAFailed
+
+    qa_cmds = (d.getVar('IMAGE_QA_COMMANDS', True) or '').split()
+    qamsg = ""
+
+    for cmd in qa_cmds:
+        try:
+            bb.build.exec_func(cmd, d)
+        except oe.utils.ImageQAFailed as e:
+            qamsg = qamsg + '\tImage QA function %s failed: %s\n' % (e.name, e.description)
+        except bb.build.FuncFailed as e:
+            qamsg = qamsg + '\tImage QA function %s failed' % e.name
+            if e.logfile:
+                qamsg = qamsg + ' (log file is located at %s)' % e.logfile
+            qamsg = qamsg + '\n'
+
+    if qamsg:
+        imgname = d.getVar('IMAGE_NAME', True)
+        bb.fatal("QA errors found whilst validating image: %s\n%s" % (imgname, qamsg))
+}
+addtask do_image_qa after do_image_complete before do_build
+
 #
 # Write environment variables used by wic
 # to tmp/sysroots/<machine>/imgdata/<image>.env
