@@ -34,6 +34,7 @@ SRC_URI += " \
 	file://debian/cpan-missing-site-dirs.diff \
 	file://debian/fixes/memoize_storable_nstore.diff \
 	file://debian/regen-skip.diff \
+	file://perl-fix-CVE-2016-2381.patch \
 "
 
 SRC_URI += " \
