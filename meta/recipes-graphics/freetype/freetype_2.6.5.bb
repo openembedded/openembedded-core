@@ -46,4 +46,4 @@ do_install_append() {
 
 BINCONFIG = "${bindir}/freetype-config"
 
-BBCLASSEXTEND = "native"
+BBCLASSEXTEND = "native nativesdk"
