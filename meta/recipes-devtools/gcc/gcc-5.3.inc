@@ -89,6 +89,7 @@ SRC_URI = "\
            file://0057-unwind-fix-for-musl.patch \
            file://0058-fdebug-prefix-map-support-to-remap-relative-path.patch \
            file://0059-libgcc-use-ldflags.patch \
+	   file://0060-fix-build-when-using-gcc6.patch \
            file://CVE-2016-4488.patch \
            file://CVE-2016-4489.patch \
            file://CVE-2016-2226.patch \
