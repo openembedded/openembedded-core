@@ -18,5 +18,5 @@ XORG_PN = "libXfixes"
 
 BBCLASSEXTEND = "native nativesdk"
 
-SRC_URI[md5sum] = "b985b85f8b9386c85ddcfe1073906b4d"
-SRC_URI[sha256sum] = "63bec085084fa3caaee5180490dd871f1eb2020ba9e9b39a30f93693ffc34767"
+SRC_URI[md5sum] = "544d73df94e638ba7b64147be416e576"
+SRC_URI[sha256sum] = "9bd20edfec084a1bed481d48dd4815dee88139fffad091418cdda081129a9aea"
