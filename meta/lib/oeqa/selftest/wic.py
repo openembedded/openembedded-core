@@ -49,7 +49,7 @@ class Wic(oeSelfTest):
         # setUpClass being unavailable.
         if not Wic.image_is_ready:
             bitbake('syslinux syslinux-native parted-native gptfdisk-native '
-                    'dosfstools-native mtools-native')
+                    'dosfstools-native mtools-native bmap-tools-native')
             bitbake('core-image-minimal')
             Wic.image_is_ready = True
 
