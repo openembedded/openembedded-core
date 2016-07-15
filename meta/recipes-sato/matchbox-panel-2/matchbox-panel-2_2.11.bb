@@ -14,8 +14,8 @@ DEPENDS += " ${@bb.utils.contains("MACHINE_FEATURES", "apm", "apmd", "",d)}"
 # The startup-notification requires x11 in DISTRO_FEATURES
 REQUIRED_DISTRO_FEATURES = "x11"
 
-# SRCREV tagged 2.10
-SRCREV = "145a8075c66952dad9ab5f36d944c78c1ae3f4ab"
+# SRCREV tagged 2.11
+SRCREV = "850d5fffde7dbfb32015916524d88014cc2cfb30"
 
 RPROVIDES_${PN} = "matchbox-panel"
 RREPLACES_${PN} = "matchbox-panel"
