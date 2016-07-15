@@ -42,8 +42,6 @@ SRC_URI_append_libc-uclibc = "\
 "
 SRC_URI_append_qemuall = " file://0001-core-device.c-Change-the-default-device-timeout-to-2.patch"
 
-GTKDOC_DOCDIR = "${S}/docs/"
-
 PACKAGECONFIG ??= "xz \
                    ldconfig \
                    ${@bb.utils.contains('DISTRO_FEATURES', 'pam', 'pam', '', d)} \
