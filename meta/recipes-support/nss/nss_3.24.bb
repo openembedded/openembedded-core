@@ -21,6 +21,7 @@ SRC_URI = "\
     file://nss-fix-incorrect-shebang-of-perl.patch \
     file://nss-fix-nsinstall-build.patch \
     file://disable-Wvarargs-with-clang.patch \
+    file://pqg.c-ULL_addend.patch \
     file://nss.pc.in \
     file://signlibs.sh \
 "
