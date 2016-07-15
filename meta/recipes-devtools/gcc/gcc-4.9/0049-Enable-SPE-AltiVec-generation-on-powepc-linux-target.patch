@@ -37,6 +37,17 @@ index cb7a94e..d392c2b 100644
  	extra_options="${extra_options} rs6000/sysv4.opt"
  	tmake_file="rs6000/t-fprules rs6000/t-ppcos ${tmake_file} rs6000/t-ppccomm"
  	case ${target} in
+Index: gcc-4.9.3/gcc/config/rs6000/linuxspe.h
+===================================================================
+--- gcc-4.9.3.orig/gcc/config/rs6000/linuxspe.h
++++ gcc-4.9.3/gcc/config/rs6000/linuxspe.h
+@@ -27,6 +27,3 @@
+ #undef	TARGET_DEFAULT
+ #define TARGET_DEFAULT MASK_STRICT_ALIGN
+ #endif
+-
+-#undef  ASM_DEFAULT_SPEC
+-#define	ASM_DEFAULT_SPEC "-mppc -mspe -me500"
 -- 
 1.7.9.5
 
