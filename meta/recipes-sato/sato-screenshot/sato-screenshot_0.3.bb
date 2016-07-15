@@ -9,8 +9,8 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f \
 
 DEPENDS = "matchbox-panel-2 gtk+3"
 
-# SRCREV tagged 0.2
-SRCREV = "5db2672fb857b2c80b949d8fce92e0f0029cc947"
+# SRCREV tagged 0.3
+SRCREV = "9250fa5a012d84ff45984e8c4345ee7635227756"
 SRC_URI = "git://git.yoctoproject.org/screenshot"
 UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>(\d+(\.\d+)+))"
 
