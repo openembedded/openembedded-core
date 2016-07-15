@@ -10,9 +10,8 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=4fbd65380cdd255951079008b364516c \
 
 DEPENDS = "libfakekey expat libxft"
 
-SRCREV = "69d03e2aceb79cf7a616c07f8e0be4e1f9f7976b"
-PV = "0.0+git${SRCPV}"
-
+#SRCREV for 0.1.1
+SRCREV = "630d89068dc0a1e9199306d405cb32f892dfa4d3"
 SRC_URI = "git://git.yoctoproject.org/${BPN};branch=matchbox-keyboard-0-1 \
            file://0001-desktop-file-Hide-the-keyboard-from-app-list.patch \
            file://80matchboxkeyboard.sh"
