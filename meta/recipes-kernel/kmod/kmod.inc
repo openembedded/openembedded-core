@@ -33,7 +33,7 @@ PACKAGECONFIG[debug] = "--enable-debug,--disable-debug"
 PACKAGECONFIG[logging] = " --enable-logging,--disable-logging"
 
 do_configure_prepend () {
-        gtkdocize --docdir ${S}/libkmod/docs || touch ${S}/libkmod/docs/gtk-doc.make
+        gtkdocize --docdir ${S}/libkmod/docs --srcdir ${S}
 }
 
 do_configure_append () {
