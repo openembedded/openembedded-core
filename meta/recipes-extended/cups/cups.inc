@@ -3,7 +3,7 @@ SECTION = "console/utils"
 LICENSE = "GPLv2 & LGPLv2"
 DEPENDS = "gnutls libpng jpeg dbus dbus-glib zlib libusb"
 
-SRC_URI = "https://www.cups.org/software/${PV}/${BP}-source.tar.bz2 \
+SRC_URI = "https://github.com/apple/cups/releases/download/release-${PV}/${BP}-source.tar.gz \
            file://use_echo_only_in_init.patch \
            file://0001-don-t-try-to-run-generated-binaries.patch \
            file://cups_serverbin.patch \
