@@ -10,9 +10,11 @@ LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://COPYING;md5=b31d8f53b6aaf2b4985d7dd7810a70d1 \
                     file://src/wayland-server.c;endline=24;md5=b8e046164a766bb1ede8ba38e9dcd7ce"
 
-SRC_URI = "https://wayland.freedesktop.org/releases/${BPN}-${PV}.tar.xz"
-SRC_URI[md5sum] = "e7751c38807c231afaba9d6b68f2a2b7"
-SRC_URI[sha256sum] = "4bf6e790aa6f50ab3825676282ecd75850ec9c4767af96ecb7127b1f3c3d60dc"
+SRC_URI = "https://wayland.freedesktop.org/releases/${BPN}-${PV}.tar.xz \
+           file://0001-scanner-Use-unit32_t-instead-of-uint.patch \
+           "
+SRC_URI[md5sum] = "fccf680be066e234729d5b69e0bd0fa9"
+SRC_URI[sha256sum] = "9540925f7928becfdf5e3b84c70757f6589bf1ceef09bea78784d8e4772c0db0"
 
 EXTRA_OECONF_class-native = "--disable-documentation --disable-libraries"
 
