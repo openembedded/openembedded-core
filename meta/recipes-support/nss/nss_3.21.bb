@@ -21,6 +21,7 @@ SRC_URI = "\
     file://nss-fix-incorrect-shebang-of-perl.patch \
     file://nss-fix-nsinstall-build.patch \
     file://0001-Fix-build-failure-on-opensuse-13.1.patch \
+    file://nss-gcc6-fix.patch \
     file://nss.pc.in \
     file://signlibs.sh \
 "
