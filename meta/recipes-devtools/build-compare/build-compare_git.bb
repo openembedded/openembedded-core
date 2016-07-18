@@ -14,6 +14,7 @@ SRC_URI = "git://github.com/openSUSE/build-compare.git \
            file://pkg-diff.sh-check-for-fifo-named-pipe.patch \
            file://pkg-diff.sh-check_single_file-return-at-once-when-sa.patch \
            file://pkg-diff.sh-remove-space-in-the-end-for-ftype.patch \
+           file://functions.sh-improve-deb-and-ipk-checking.patch \
            "
 
 SRCREV = "c5352c054c6ef15735da31b76d6d88620f4aff0a"
