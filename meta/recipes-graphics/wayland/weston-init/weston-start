@@ -5,7 +5,7 @@ export PATH="/sbin:/usr/sbin:/bin:/usr/bin"
 
 usage() {
     cat <<EOF
-    $0 <openvt arguments> -- <weston options>
+    $0 [<openvt arguments>] [-- <weston options>]
 EOF
 }
 
@@ -21,11 +21,6 @@ add_weston_argument() {
 add_openvt_argument() {
 	openvt_args="$openvt_args $1"
 }
-
-if test $# -lt 2; then
-	usage
-	exit 1
-fi
 
 if [ -n "$WAYLAND_DISPLAY" ]; then
 	echo "ERROR: A Wayland compositor is already running, nested Weston instance is not supported yet."
