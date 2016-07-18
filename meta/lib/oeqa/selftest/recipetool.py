@@ -389,7 +389,7 @@ class RecipetoolTests(RecipetoolBase):
         os.makedirs(tempsrc)
         recipefile = os.path.join(self.tempdir, 'libmatchbox.bb')
         srcuri = 'git://git.yoctoproject.org/libmatchbox'
-        result = runCmd('recipetool create -o %s %s -x %s' % (recipefile, srcuri, tempsrc))
+        result = runCmd(['recipetool', 'create', '-o', recipefile, srcuri + ";rev=9f7cf8895ae2d39c465c04cc78e918c157420269", '-x', tempsrc])
         self.assertTrue(os.path.isfile(recipefile), 'recipetool did not create recipe file; output:\n%s' % result.output)
         checkvars = {}
         checkvars['LICENSE'] = 'LGPLv2.1'
