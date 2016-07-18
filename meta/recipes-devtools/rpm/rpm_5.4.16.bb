@@ -117,6 +117,7 @@ SRC_URI += " \
 	   file://rpmqv.c-check-_gpg_passphrase-before-ask-for-input.patch \
 	   file://0001-Disable-__sync_add_and_fetch_8-on-nios2.patch \
 	   file://gcc6-stdlib.patch \
+	   file://0001-system.h-query.c-support-nosignature.patch \
 "
 
 # OE specific changes
