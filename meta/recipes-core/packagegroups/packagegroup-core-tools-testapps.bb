@@ -17,7 +17,6 @@ KEXECTOOLS_nios2 ?= ""
 
 X11GLTOOLS = "\
     mesa-demos \
-    piglit \
     "
 
 3GTOOLS = "\
