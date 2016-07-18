@@ -25,6 +25,8 @@
 # package files so they will definitely be copied the next time.
 
 python() {
+    if bb.data.inherits_class('native', d) or bb.data.inherits_class('cross', d):
+        return
     # Package backend agnostic intercept
     # This assumes that the package_write task is called package_write_<pkgtype>
     # and that the directory in which packages should be written is
@@ -49,7 +51,7 @@ python() {
 
             d.appendVarFlag('do_build', 'recrdeptask', ' ' + pkgcomparefunc)
 
-            if d.getVarFlag(pkgwritefunc, 'noexec', True) or (not d.getVarFlag(pkgwritefunc, 'task', True)) or pkgwritefunc in (d.getVar('__BBDELTASKS', True) or []):
+            if d.getVarFlag(pkgwritefunc, 'noexec', True) or not d.getVarFlag(pkgwritefunc, 'task', True):
                 # Packaging is disabled for this recipe, we shouldn't do anything
                 continue
 
@@ -118,7 +120,7 @@ def package_compare_impl(pkgtype, d):
     # Prepare a list of the runtime package names for packages that were
     # actually produced
     rpkglist = []
-    for pkg, rpkg in rpkgnames.iteritems():
+    for pkg, rpkg in rpkgnames.items():
         if os.path.exists(os.path.join(pkgdatadir, 'runtime', pkg + '.packaged')):
             rpkglist.append((rpkg, pkg))
     rpkglist.sort(key=lambda x: len(x[0]), reverse=True)
@@ -187,7 +189,7 @@ def package_compare_impl(pkgtype, d):
             if not rdeps:
                 continue
             rdepvers = bb.utils.explode_dep_versions2(rdeps)
-            for rdep, versions in rdepvers.iteritems():
+            for rdep, versions in rdepvers.items():
                 dep = rpkgdict.get(rdep, None)
                 for version in versions:
                     if version and version.startswith('= '):
