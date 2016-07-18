@@ -1,5 +1,6 @@
 #!/bin/sh
 # Copyright (C) 2016 O.S. Systems Software LTDA.
+# Copyright (C) 2016 Freescale Semiconductor
 
 export PATH="/sbin:/usr/sbin:/bin:/usr/bin"
 
@@ -32,7 +33,7 @@ else
 	launcher="weston-launch --"
 fi
 
-openvt_args=""
+openvt_args="-s"
 while [ -n "$1" ]; do
 	if [ "$1" = "--" ]; then
 		shift
