@@ -39,13 +39,12 @@ fi
 
 openvt_args=""
 while [ -n "$1" ]; do
-	openvt_args="$openvt_args $1"
-	shift
-
 	if [ "$1" = "--" ]; then
 		shift
 		break
 	fi
+	openvt_args="$openvt_args $1"
+	shift
 done
 
 weston_args=$*
