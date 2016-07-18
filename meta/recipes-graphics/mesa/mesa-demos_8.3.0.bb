@@ -24,10 +24,10 @@ SRC_URI[sha256sum] = "c173154bbd0d5fb53d732471984def42fb1b14ac85fcb834138fb9518b
 
 inherit autotools pkgconfig distro_features_check
 # depends on virtual/egl, virtual/libgl ...
-REQUIRED_DISTRO_FEATURES = "opengl"
+REQUIRED_DISTRO_FEATURES = "opengl x11"
 
 PACKAGECONFIG ?= "drm osmesa freetype2 gbm egl gles1 gles2 \
-                  ${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'x11 glew glu glx', '', d)}"
+                  x11 glew glu glx"
 
 # The Wayland code doesn't work with Wayland 1.0, so disable it for now
 #${@bb.utils.contains('DISTRO_FEATURES', 'wayland', 'wayland', '', d)}"
