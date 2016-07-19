@@ -1186,6 +1186,9 @@ class RpmPM(PackageManager):
                     new_depends[new_depend] = deps[depend]
                 pkgs = bb.utils.join_deps(new_depends, commasep=True).split(', ')
         pkgs = self._pkg_translate_oe_to_smart(pkgs, attempt_only)
+        if not pkgs:
+            bb.note("There are no packages to install")
+            return
         if not attempt_only:
             bb.note('to be installed: %s' % ' '.join(pkgs))
             cmd = "%s %s install -y %s" % \
