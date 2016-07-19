@@ -23,6 +23,8 @@ SRC_URI = "http://ftp.openbsd.org/pub/OpenBSD/OpenSSH/portable/openssh-${PV}.tar
            file://add-test-support-for-busybox.patch \
            file://run-ptest \
            file://CVE-2015-8325.patch \
+           file://openssh-7.1p1-conditional-compile-des-in-cipher.patch \
+           file://openssh-7.1p1-conditional-compile-des-in-pkcs11.patch \
            "
 
 PAM_SRC_URI = "file://sshd"
