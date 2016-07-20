@@ -7,8 +7,8 @@ LICENSE = "LGPLv2.1"
 
 SRC_URI = "http://www.mega-nerd.com/libsndfile/files/libsndfile-${PV}.tar.gz"
 
-SRC_URI[md5sum] = "ec810a0c60c08772a8a5552704b63393"
-SRC_URI[sha256sum] = "cd6520ec763d1a45573885ecb1f8e4e42505ac12180268482a44b28484a25092"
+SRC_URI[md5sum] = "fd1d97c6077f03b5d984d7956ffedb7a"
+SRC_URI[sha256sum] = "a391952f27f4a92ceb2b4c06493ac107896ed6c76be9a613a4731f076d30fac0"
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=e77fe93202736b47c07035910f47974a"
 
