@@ -13,7 +13,6 @@ SRCNAME = "smart"
 
 SRC_URI = "\
           git://github.com/smartpm/smart.git \
-          file://smartpm-rpm5-nodig.patch \
           file://smart-recommends.patch \
           file://smart-channelsdir.patch \
           file://smart-rpm-transaction-failure-check.patch \
@@ -25,6 +24,7 @@ SRC_URI = "\
           file://smart-cache.py-getPackages-matches-name-version.patch \
           file://smart-channel-remove-all.patch \
           file://smart-locale.patch \
+          file://smartpm-rpm5-support-check-signatures.patch \
          "
 
 SRCREV = "407a7eca766431257dcd1da15175cc36a1bb22d0"
