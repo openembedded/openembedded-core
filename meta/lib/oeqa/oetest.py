@@ -265,8 +265,6 @@ class TestContext(object):
 
         if "auto" in self.testsuites:
             def add_auto_list(path):
-                if not os.path.exists(os.path.join(path, '__init__.py')):
-                    bb.fatal('Tests directory %s exists but is missing __init__.py' % path)
                 files = sorted([f for f in os.listdir(path) if f.endswith('.py') and not f.startswith('_')])
                 for f in files:
                     module = 'oeqa.' + type + '.' + f[:-3]
