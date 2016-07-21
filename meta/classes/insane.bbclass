@@ -1256,10 +1256,9 @@ Missing inherit gettext?""" % (gt, config))
 }
 
 python do_qa_unpack() {
-    bb.note("Checking has ${S} been created")
-
+    src_uri = d.getVar('SRC_URI', True)
     s_dir = d.getVar('S', True)
-    if not os.path.exists(s_dir):
+    if src_uri and not os.path.exists(s_dir):
         bb.warn('%s: the directory %s (%s) pointed to by the S variable doesn\'t exist - please set S within the recipe to point to where the source has been unpacked to' % (d.getVar('PN', True), d.getVar('S', False), s_dir))
 }
 
