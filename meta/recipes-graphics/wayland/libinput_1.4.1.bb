@@ -20,4 +20,6 @@ PACKAGECONFIG[libunwind] = "--with-libunwind,--without-libunwind,libunwind"
 PACKAGECONFIG[libwacom] = "--enable-libwacom,--disable-libwacom,libwacom"
 PACKAGECONFIG[gui] = "--enable-event-gui,--disable-event-gui,cairo gtk+3"
 
-FILES_${PN} += "${libdir}/udev/"
+UDEVDIR = "`pkg-config --variable=udevdir udev`"
+
+EXTRA_OECONF += "--with-udev-dir=${UDEVDIR}"
