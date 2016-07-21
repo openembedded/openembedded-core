@@ -246,6 +246,7 @@ do_bundle_initramfs () {
 		done
 	fi
 }
+do_bundle_initramfs[dirs] = "${B}"
 
 python do_devshell_prepend () {
     os.environ["LDFLAGS"] = ''
