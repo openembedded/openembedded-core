@@ -46,8 +46,6 @@ do_install() {
 	autotools_do_install
 }
 
-FILES_${PN} += "${base_libdir}/udev/rules.d/*.rules"
-
 inherit ptest
 
 do_compile_ptest() {
