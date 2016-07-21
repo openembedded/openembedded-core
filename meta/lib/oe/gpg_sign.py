@@ -24,7 +24,7 @@ class LocalSigner(object):
         status, output = oe.utils.getstatusoutput(cmd)
         if status:
             raise bb.build.FuncFailed('Failed to export gpg public key (%s): %s' %
-                                      (keyid, output.decode("utf-8")))
+                                      (keyid, output))
 
     def sign_rpms(self, files, keyid, passphrase):
         """Sign RPM files"""
@@ -39,7 +39,7 @@ class LocalSigner(object):
 
         status, output = oe.utils.getstatusoutput(cmd)
         if status:
-            raise bb.build.FuncFailed("Failed to sign RPM packages: %s" % output.decode("utf-8"))
+            raise bb.build.FuncFailed("Failed to sign RPM packages: %s" % output)
 
     def detach_sign(self, input_file, keyid, passphrase_file, passphrase=None, armor=True):
         """Create a detached signature of a file"""
@@ -113,4 +113,3 @@ def get_signer(d, backend):
         return LocalSigner(d)
     else:
         bb.fatal("Unsupported signing backend '%s'" % backend)
-
