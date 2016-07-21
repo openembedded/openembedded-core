@@ -27,7 +27,6 @@ inherit autotools update-rc.d qemu pkgconfig
 
 EXTRA_OECONF = " \
     --sbindir=${base_sbindir} \
-    --libexecdir=${nonarch_base_libdir} \
     --with-rootlibdir=${base_libdir} \
     --with-rootprefix= \
 "
@@ -53,13 +52,6 @@ do_install_append() {
 	# Use classic network interface naming scheme
 	touch ${D}${sysconfdir}/udev/rules.d/80-net-name-slot.rules
 
-	# Fix for multilib systems where libs along with confs are installed incorrectly
-	if ! [ -d ${D}${nonarch_base_libdir}/udev ]
-	then
-		install -d ${D}${nonarch_base_libdir}/udev
-		mv ${D}${base_libdir}/udev ${D}${nonarch_base_libdir}
-	fi
-
 	# hid2hci has moved to bluez4. removed in udev as of version 169
 	rm -f ${D}${base_libdir}/udev/hid2hci
 }
@@ -75,7 +67,7 @@ PACKAGES =+ "udev-cache"
 PACKAGES =+ "eudev-hwdb"
 
 
-FILES_${PN} += "${libexecdir} ${nonarch_base_libdir}/udev ${bindir}/udevadm"
+FILES_${PN} += "${libexecdir} ${base_libdir}/udev ${bindir}/udevadm"
 FILES_${PN}-dev = "${datadir}/pkgconfig/udev.pc \
                    ${includedir}/libudev.h ${libdir}/libudev.so \
                    ${includedir}/udev.h ${libdir}/libudev.la \
