@@ -37,6 +37,6 @@ PACKAGES =+ "${PN}-tests"
 RDEPENDS_${PN} += "dbus"
 RRECOMMENDS_${PN} += "kernel-module-tun mobile-broadband-provider-info"
 
-FILES_${PN} += "${base_libdir}/udev ${systemd_unitdir}"
+FILES_${PN} += "${systemd_unitdir}"
 FILES_${PN}-tests = "${libdir}/${BPN}/test"
 RDEPENDS_${PN}-tests = "python3 python3-pygobject python3-dbus"
