@@ -17,6 +17,10 @@ class Signing(oeSelfTest):
 
     @classmethod
     def setUpClass(cls):
+        # Check that we can find the gpg binary and fail early if we can't
+        if not shutil.which("gpg"):
+            raise AssertionError("This test needs GnuPG")
+
         cls.gpg_home_dir = tempfile.TemporaryDirectory(prefix="oeqa-signing-")
         cls.gpg_dir = cls.gpg_home_dir.name
 
