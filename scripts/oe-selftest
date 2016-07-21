@@ -57,7 +57,7 @@ except ImportError:
     from unittest import TextTestResult as TestResult
     from unittest import TextTestRunner as _TestRunner
 
-log_prefix = "oe-selftest-" + t.strftime("%Y-%m-%d_%H:%M:%S")
+log_prefix = "oe-selftest-" + t.strftime("%Y%m%d-%H%M%S")
 
 def logger_create():
     log_file = log_prefix + ".log"
