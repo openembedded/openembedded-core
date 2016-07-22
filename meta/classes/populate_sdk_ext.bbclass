@@ -21,6 +21,7 @@ SDK_EXT_task-populate-sdk-ext = "-ext"
 # Options are full or minimal
 SDK_EXT_TYPE ?= "full"
 SDK_INCLUDE_PKGDATA ?= "0"
+SDK_INCLUDE_TOOLCHAIN ?= "0"
 
 SDK_RECRDEP_TASKS ?= ""
 
@@ -54,6 +55,8 @@ def get_sdk_install_targets(d, images_only=False):
     if not images_only:
         if d.getVar('SDK_INCLUDE_PKGDATA', True) == '1':
             sdk_install_targets += ' meta-world-pkgdata:do_allpackagedata'
+        if d.getVar('SDK_INCLUDE_TOOLCHAIN', True) == '1':
+            sdk_install_targets += ' meta-extsdk-toolchain:do_populate_sysroot'
 
     return sdk_install_targets
 
@@ -309,6 +312,19 @@ python copy_buildsystem () {
                                              lockedsigs_pruned,
                                              lockedsigs_copy)
 
+    if d.getVar('SDK_INCLUDE_TOOLCHAIN', True) == '1':
+        lockedsigs_base = d.getVar('WORKDIR', True) + '/locked-sigs-base2.inc'
+        lockedsigs_toolchain = d.getVar('STAGING_DIR_HOST', True) + '/locked-sigs/locked-sigs-extsdk-toolchain.inc'
+        shutil.move(lockedsigs_pruned, lockedsigs_base)
+        oe.copy_buildsystem.merge_lockedsigs(['do_populate_sysroot'],
+                                             lockedsigs_base,
+                                             lockedsigs_toolchain,
+                                             lockedsigs_pruned)
+        oe.copy_buildsystem.create_locked_sstate_cache(lockedsigs_toolchain,
+                                                       d.getVar('SSTATE_DIR', True),
+                                                       sstate_out, d,
+                                                       fixedlsbstring)
+
     if d.getVar('SDK_EXT_TYPE', True) == 'minimal':
         if derivative:
             # Assume the user is not going to set up an additional sstate
@@ -486,7 +502,8 @@ do_populate_sdk_ext[dirs] = "${@d.getVarFlag('do_populate_sdk', 'dirs', False)}"
 
 do_populate_sdk_ext[depends] = "${@d.getVarFlag('do_populate_sdk', 'depends', False)} \
                                 buildtools-tarball:do_populate_sdk uninative-tarball:do_populate_sdk \
-                                ${@'meta-world-pkgdata:do_collect_packagedata' if d.getVar('SDK_INCLUDE_PKGDATA', True) == '1' else ''}"
+                                ${@'meta-world-pkgdata:do_collect_packagedata' if d.getVar('SDK_INCLUDE_PKGDATA', True) == '1' else ''} \
+                                ${@'meta-extsdk-toolchain:do_locked_sigs' if d.getVar('SDK_INCLUDE_TOOLCHAIN', True) == '1' else ''}"
 
 do_populate_sdk_ext[rdepends] += "${@' '.join([x + ':do_build' for x in d.getVar('SDK_TARGETS', True).split()])}"
 
