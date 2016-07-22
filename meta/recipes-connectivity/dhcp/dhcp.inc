@@ -95,7 +95,6 @@ FILES_${PN}-server-config = "${sysconfdir}/default/dhcp-server ${sysconfdir}/dhc
 FILES_${PN}-relay = "${sbindir}/dhcrelay ${sysconfdir}/init.d/dhcp-relay ${sysconfdir}/default/dhcp-relay"
 
 FILES_${PN}-client = "${base_sbindir}/dhclient ${base_sbindir}/dhclient-script ${sysconfdir}/dhcp/dhclient.conf"
-RDEPENDS_${PN}-client = "bash"
 
 FILES_${PN}-omshell = "${bindir}/omshell"
 

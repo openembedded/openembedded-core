@@ -8,6 +8,7 @@ SRC_URI += "file://dhcp-3.0.3-dhclient-dbus.patch;striplevel=0 \
             file://0001-site.h-enable-gentle-shutdown.patch \
             file://libxml2-configure-argument.patch \
             file://tweak-to-support-external-bind.patch \
+            file://remove-dhclient-script-bash-dependency.patch \
            "
 
 SRC_URI[md5sum] = "0138319fe2b788cf4bdf34fbeaf9ff54"
