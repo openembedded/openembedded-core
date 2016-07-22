@@ -20,9 +20,6 @@ include recipes-kernel/linux/linux-yocto-dev-revisions.inc
 python () {
     if d.getVar("PREFERRED_PROVIDER_virtual/kernel", True) != "linux-yocto-dev":
         raise bb.parse.SkipPackage("Set PREFERRED_PROVIDER_virtual/kernel to linux-yocto-dev to enable it")
-    else:
-        d.setVar("SRCREV_machine", "${AUTOREV}")
-        d.setVar("SRCREV_meta", "${AUTOREV}")
 }
 
 KBRANCH = "standard/base"
@@ -36,8 +33,8 @@ SRC_URI = "git://git.yoctoproject.org/linux-yocto-dev.git;branch=${KBRANCH};name
 # linux-yocto-dev is the preferred provider, they will be overridden to
 # AUTOREV in following anonymous python routine and resolved when the
 # variables are finalized.
-SRCREV_machine ?= "29594404d7fe73cd80eaa4ee8c43dcc53970c60e"
-SRCREV_meta ?= "29594404d7fe73cd80eaa4ee8c43dcc53970c60e"
+SRCREV_machine ?= '${@oe.utils.conditional("PREFERRED_PROVIDER_virtual/kernel", "linux-yocto-dev", "${AUTOREV}", "29594404d7fe73cd80eaa4ee8c43dcc53970c60e", d)}'
+SRCREV_meta ?= '${@oe.utils.conditional("PREFERRED_PROVIDER_virtual/kernel", "linux-yocto-dev", "${AUTOREV}", "29594404d7fe73cd80eaa4ee8c43dcc53970c60e", d)}'
 
 LINUX_VERSION ?= "4.6-rc+"
 LINUX_VERSION_EXTENSION ?= "-yoctodev-${LINUX_KERNEL_TYPE}"
