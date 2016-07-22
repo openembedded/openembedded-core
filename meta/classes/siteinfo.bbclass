@@ -107,6 +107,14 @@ def siteinfo_data(d):
         "x86_64-mingw32": "bit-64",
     }
 
+    # Add in any extra user supplied data which may come from a BSP layer, removing the
+    # need to always change this class directly
+    extra_siteinfo = (d.getVar("SITEINFO_EXTRA_DATAFUNCS", True) or "").split()
+    for m in extra_siteinfo:
+        call = m + "(archinfo, osinfo, targetinfo, d)"
+        locs = { "archinfo" : archinfo, "osinfo" : osinfo, "targetinfo" : targetinfo, "d" : d}
+        archinfo, osinfo, targetinfo = bb.utils.better_eval(call, locs)
+
     hostarch = d.getVar("HOST_ARCH", True)
     hostos = d.getVar("HOST_OS", True)
     target = "%s-%s" % (hostarch, hostos)
