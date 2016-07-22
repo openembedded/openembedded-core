@@ -54,8 +54,8 @@ UNKNOWN_CONFIGURE_WHITELIST ?= "--enable-nls --disable-nls --disable-silent-rule
 # feel free to add and correct.
 #
 #           TARGET_OS  TARGET_ARCH   MACHINE, OSABI, ABIVERSION, Little Endian, 32bit?
-def package_qa_get_machine_dict():
-    return {
+def package_qa_get_machine_dict(d):
+    machdata = {
             "darwin9" : { 
                         "arm" :       (40,     0,    0,          True,          32),
                       },
@@ -167,6 +167,16 @@ def package_qa_get_machine_dict():
                         "mips64el":     ( 8,     0,    0,          True,          32),
                       },
         }
+
+    # Add in any extra user supplied data which may come from a BSP layer, removing the
+    # need to always change this class directly
+    extra_machdata = (d.getVar("PACKAGEQA_EXTRA_MACHDEFFUNCS", True) or "").split()
+    for m in extra_machdata:
+        call = m + "(machdata, d)"
+        locs = { "machdata" : machdata, "d" : d}
+        machdata = bb.utils.better_eval(call, locs)
+
+    return machdata
 
 
 def package_qa_clean_path(path,d):
@@ -519,7 +529,7 @@ def package_qa_check_arch(path,name,d, elf, messages):
 
     #if this will throw an exception, then fix the dict above
     (machine, osabi, abiversion, littleendian, bits) \
-        = package_qa_get_machine_dict()[target_os][target_arch]
+        = package_qa_get_machine_dict(d)[target_os][target_arch]
 
     # Check the architecture and endiannes of the binary
     if not ((machine == elf.machine()) or \
