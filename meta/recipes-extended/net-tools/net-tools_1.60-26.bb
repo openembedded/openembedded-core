@@ -15,6 +15,7 @@ SRC_URI = "http://snapshot.debian.org/archive/debian/20050312T000000Z/pool/main/
            file://net-tools-1.60-sctp1.patch \
            file://net-tools-1.60-sctp2-quiet.patch \
            file://net-tools-1.60-sctp3-addrs.patch \
+           file://0001-lib-inet6.c-INET6_rresolve-various-fixes.patch \
           "
 
 # for this package we're mostly interested in tracking debian patches,
