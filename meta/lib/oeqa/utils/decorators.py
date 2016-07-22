@@ -190,7 +190,7 @@ def LogResults(original_class):
             local_log.results("Testcase "+str(test_case)+": PASSED")
 
         # Create symlink to the current log
-        if os.path.exists(linkfile):
+        if os.path.lexists(linkfile):
             os.remove(linkfile)
         os.symlink(logfile, linkfile)
 
