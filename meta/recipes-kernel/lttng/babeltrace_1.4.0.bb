@@ -10,8 +10,6 @@ DEPENDS = "glib-2.0 util-linux popt bison-native flex-native"
 
 inherit autotools pkgconfig
 
-SRCREV = "c551f7a1ed635138b083b4e9e0c445ef63d0a562"
-
 SRC_URI = "http://www.efficios.com/files/babeltrace/babeltrace-${PV}.tar.bz2 \
 "
 
