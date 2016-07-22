@@ -19,6 +19,7 @@ include recipes-kernel/linux/linux-yocto-dev-revisions.inc
 # by the use of AUTOREV SRCREVs, which are the default for this recipe.
 python () {
     if d.getVar("PREFERRED_PROVIDER_virtual/kernel", True) != "linux-yocto-dev":
+        d.delVar("BB_DONT_CACHE")
         raise bb.parse.SkipPackage("Set PREFERRED_PROVIDER_virtual/kernel to linux-yocto-dev to enable it")
 }
 
