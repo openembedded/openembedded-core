@@ -21,7 +21,7 @@ SDK_EXT_task-populate-sdk-ext = "-ext"
 # Options are full or minimal
 SDK_EXT_TYPE ?= "full"
 SDK_INCLUDE_PKGDATA ?= "0"
-SDK_INCLUDE_TOOLCHAIN ?= "0"
+SDK_INCLUDE_TOOLCHAIN ?= "${@'1' if d.getVar('SDK_EXT_TYPE', True) == 'full' else '0'}"
 
 SDK_RECRDEP_TASKS ?= ""
 
