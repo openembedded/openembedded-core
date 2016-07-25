@@ -15,8 +15,8 @@ SRC_URI = "${GNU_MIRROR}/gettext/gettext-${PV}.tar.gz \
 	   file://add-with-bisonlocaledir.patch \
 "
 
-SRC_URI[md5sum] = "6d1447f8c5c45c329371ef4bfe7d79a5"
-SRC_URI[sha256sum] = "ed4b4c19bd3a3034eb6769500a3592ff616759ef43cf30586dbb7a17c9dd695d"
+SRC_URI[md5sum] = "97e034cf8ce5ba73a28ff6c3c0638092"
+SRC_URI[sha256sum] = "ff942af0e438ced4a8b0ea4b0b6e0d6d657157c5e2364de57baa279c1c125c43"
 
 PACKAGECONFIG[msgcat-curses] = "--with-libncurses-prefix=${STAGING_LIBDIR}/..,--disable-curses,ncurses,"
 
@@ -69,6 +69,11 @@ FILES_libgettextsrc = "${libdir}/libgettextsrc-*.so*"
 PACKAGES =+ "gettext-runtime gettext-runtime-dev gettext-runtime-doc"
 
 FILES_${PN} += "${libdir}/${BPN}/*"
+
+# The its/Makefile.am has defined:
+# itsdir = $(pkgdatadir)$(PACKAGE_SUFFIX)/its
+# not itsdir = $(pkgdatadir), so use wildcard to match the version.
+FILES_${PN} += "${datadir}/${BPN}-*/*"
 
 FILES_gettext-runtime = "${bindir}/gettext \
                          ${bindir}/ngettext \
