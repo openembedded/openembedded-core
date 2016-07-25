@@ -259,7 +259,7 @@ def patch_recipe_lines(fromlines, values, trailing_newline=True):
     changed, tolines = bb.utils.edit_metadata(fromlines, varlist, patch_recipe_varfunc, match_overrides=True)
 
     if remainingnames:
-        if tolines[-1].strip() != '':
+        if tolines and tolines[-1].strip() != '':
             tolines.append('\n')
         for k in remainingnames.keys():
             outputvalue(k, tolines)
