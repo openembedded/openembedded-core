@@ -200,11 +200,11 @@ def merge_lockedsigs(copy_tasks, lockedsigs_main, lockedsigs_extra, merged_outpu
     if merged_output:
         write_sigs_file(merged_output, arch_order, merged)
 
-def create_locked_sstate_cache(lockedsigs, input_sstate_cache, output_sstate_cache, d, fixedlsbstring=""):
+def create_locked_sstate_cache(lockedsigs, input_sstate_cache, output_sstate_cache, d, fixedlsbstring="", filterfile=None):
     bb.note('Generating sstate-cache...')
 
     nativelsbstring = d.getVar('NATIVELSBSTRING', True)
-    bb.process.run("gen-lockedsig-cache %s %s %s %s" % (lockedsigs, input_sstate_cache, output_sstate_cache, nativelsbstring))
+    bb.process.run("gen-lockedsig-cache %s %s %s %s %s" % (lockedsigs, input_sstate_cache, output_sstate_cache, nativelsbstring, filterfile or ''))
     if fixedlsbstring:
         nativedir = output_sstate_cache + '/' + nativelsbstring
         if os.path.isdir(nativedir):
@@ -216,3 +216,21 @@ def create_locked_sstate_cache(lockedsigs, input_sstate_cache, output_sstate_cac
                 src = os.path.join(nativedir, i)
                 dest = os.path.join(destdir, i)
                 os.rename(src, dest)
+
+def check_sstate_task_list(d, targets, filteroutfile, cmdprefix='', cwd=None, logfile=None):
+    import subprocess
+
+    bb.note('Generating sstate task list...')
+
+    if not cwd:
+        cwd = os.getcwd()
+    if logfile:
+        logparam = '-l %s' % logfile
+    else:
+        logparam = ''
+    cmd = "%sBB_SETSCENE_ENFORCE=1 PSEUDO_DISABLED=1 oe-check-sstate %s -s -o %s %s" % (cmdprefix, targets, filteroutfile, logparam)
+    env = dict(d.getVar('BB_ORIGENV', False))
+    env.pop('BUILDDIR', '')
+    pathitems = env['PATH'].split(':')
+    env['PATH'] = ':'.join([item for item in pathitems if not item.endswith('/bitbake/bin')])
+    bb.process.run(cmd, stderr=subprocess.STDOUT, env=env, cwd=cwd, executable='/bin/bash')
