@@ -22,18 +22,11 @@ SRC_URI = "${GNU_MIRROR}/guile/guile-${PV}.tar.xz \
            file://arm_aarch64.patch \
            file://workaround-ice-ssa-corruption.patch \
            file://libguile-Makefile.am-hook.patch \
-           file://libguile-VM-ASM_MUL-for-ARM-Add-earlyclobber.patch \
-           file://remove_strcase_l_funcs.patch \
-           file://0001-libguile-Check-for-strtol_l-during-configure.patch \
            file://0002-Recognize-nios2-as-compilation-target.patch \
            "
 
-#           file://debian/0001-Change-guile-to-guile-X.Y-for-info-pages.patch
-#           file://opensuse/guile-turn-off-gc-test.patch
-
-SRC_URI[md5sum] = "03f1bce1a4983076d955003472306a13"
-SRC_URI[sha256sum] = "aed0a4a6db4e310cbdfeb3613fa6f86fddc91ef624c1e3f8937a6304c69103e2"
-
+SRC_URI[md5sum] = "081fdf80cd3a76f260a2a0d87f773d6b"
+SRC_URI[sha256sum] = "de8187736f9b260f2fa776ed39b52cb74dd389ccf7039c042f0606270196b7e9"
 
 inherit autotools gettext pkgconfig texinfo
 BBCLASSEXTEND = "native"
