@@ -137,15 +137,21 @@ if test "x${STAGING_DIR_TARGET}" != "x"; then
         GROUPADD_PARAM="${@get_all_cmd_params(d, 'groupadd')}"
         USERADD_PARAM="${@get_all_cmd_params(d, 'useradd')}"
 
-        if test "x`echo $USERADD_PARAM | tr -d '[:space:]'`" != "x"; then
-            user=`echo "$USERADD_PARAM" | cut -d ';' -f 1 | awk '{ print $NF }'`
+        user=`echo "$USERADD_PARAM" | cut -d ';' -f 1 | awk '{ print $NF }'`
+        remaining=`echo "$USERADD_PARAM" | cut -d ';' -f 2- -s | sed -e 's#[ \t]*$##'`
+        while test "x$user" != "x"; do
             perform_userdel "${STAGING_DIR_TARGET}" "$OPT $user"
-        fi
+            user=`echo "$remaining" | cut -d ';' -f 1 | awk '{ print $NF }'`
+            remaining=`echo "$remaining" | cut -d ';' -f 2- -s | sed -e 's#[ \t]*$##'`
+        done
 
-        if test "x`echo $GROUPADD_PARAM | tr -d '[:space:]'`" != "x"; then
-            group=`echo "$GROUPADD_PARAM" | cut -d ';' -f 1 | awk '{ print $NF }'`
-            perform_groupdel "${STAGING_DIR_TARGET}" "$OPT $group"
-        fi
+        user=`echo "$GROUPADD_PARAM" | cut -d ';' -f 1 | awk '{ print $NF }'`
+        remaining=`echo "$GROUPADD_PARAM" | cut -d ';' -f 2- -s | sed -e 's#[ \t]*$##'`
+        while test "x$user" != "x"; do
+            perform_groupdel "${STAGING_DIR_TARGET}" "$OPT $user"
+            user=`echo "$remaining" | cut -d ';' -f 1 | awk '{ print $NF }'`
+            remaining=`echo "$remaining" | cut -d ';' -f 2- -s | sed -e 's#[ \t]*$##'`
+        done
 
     fi
 fi
