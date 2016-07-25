@@ -479,12 +479,15 @@ def create_recipe(args):
 
     licvalues = guess_license(srctree_use)
     lic_files_chksum = []
+    lic_unknown = []
     if licvalues:
         licenses = []
         for licvalue in licvalues:
             if not licvalue[0] in licenses:
                 licenses.append(licvalue[0])
             lic_files_chksum.append('file://%s;md5=%s' % (licvalue[1], licvalue[2]))
+            if licvalue[0] == 'Unknown':
+                lic_unknown.append(licvalue[1])
         lines_before.append('# WARNING: the following LICENSE and LIC_FILES_CHKSUM values are best guesses - it is')
         lines_before.append('# your responsibility to verify that the values are complete and correct.')
         if len(licvalues) > 1:
@@ -493,6 +496,13 @@ def create_recipe(args):
             lines_before.append('# these in the LICENSE value using & if the multiple licenses all apply, or | if there')
             lines_before.append('# is a choice between the multiple licenses. If in doubt, check the accompanying')
             lines_before.append('# documentation to determine which situation is applicable.')
+        if lic_unknown:
+            lines_before.append('#')
+            lines_before.append('# The following license files were not able to be identified and are')
+            lines_before.append('# represented as "Unknown" below, you will need to check them yourself:')
+            for licfile in lic_unknown:
+                lines_before.append('#   %s' % licfile)
+            lines_before.append('#')
     else:
         lines_before.append('# Unable to find any files that looked like license statements. Check the accompanying')
         lines_before.append('# documentation and source headers and set LICENSE and LIC_FILES_CHKSUM accordingly.')
