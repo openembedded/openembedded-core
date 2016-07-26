@@ -47,6 +47,7 @@ def exportTests(d,tc):
     import shutil
     import pkgutil
     import re
+    import oe.path
 
     exportpath = d.getVar("TEST_EXPORT_DIR", True)
 
@@ -103,7 +104,7 @@ def exportTests(d,tc):
                     isfolder = True
                     target_folder = os.path.join(exportpath, "oeqa", "runtime", os.path.basename(foldername))
                     if not os.path.exists(target_folder):
-                        shutil.copytree(foldername, target_folder)
+                        oe.path.copytree(foldername, target_folder)
         if not isfolder:
             shutil.copy2(mod.path, os.path.join(exportpath, "oeqa/runtime"))
             json_file = "%s.json" % mod.path.rsplit(".", 1)[0]
@@ -132,27 +133,12 @@ def exportTests(d,tc):
     create_tarball(d, "testexport.tar.gz", d.getVar("TEST_EXPORT_DIR", True))
 
     # Copy packages needed for runtime testing
-    export_pkg_dir = os.path.join(d.getVar("TEST_EXPORT_DIR", True), "packages")
     test_pkg_dir = d.getVar("TEST_NEEDED_PACKAGES_DIR", True)
-    need_pkg_dir = False
-    for root, subdirs, files in os.walk(test_pkg_dir):
-        for subdir in subdirs:
-            tmp_dir = os.path.join(root.replace(test_pkg_dir, "").lstrip("/"), subdir)
-            new_dir = os.path.join(export_pkg_dir, tmp_dir)
-            bb.utils.mkdirhier(new_dir)
-
-        for f in files:
-            need_pkg_dir = True
-            src_f = os.path.join(root, f)
-            dst_f = os.path.join(export_pkg_dir, root.replace(test_pkg_dir, "").lstrip("/"), f)
-            shutil.copy2(src_f, dst_f)
-
-    if need_pkg_dir:
+    if os.listdir(test_pkg_dir):
+        export_pkg_dir = os.path.join(d.getVar("TEST_EXPORT_DIR", True), "packages")
+        oe.path.copytree(test_pkg_dir, export_pkg_dir)
         # Create tar file for packages needed by the DUT
         create_tarball(d, "testexport_packages_%s.tar.gz" % d.getVar("MACHINE", True), export_pkg_dir)
-    else:
-        # Remov packages dir from exported test
-        bb.utils.remove(export_pkg_dir, True)
 
     # Copy SDK
     if d.getVar("TEST_EXPORT_SDK_ENABLED", True) == "1":

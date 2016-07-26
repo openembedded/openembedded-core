@@ -443,6 +443,8 @@ class RuntimeTestContext(TestContext):
         modules = self.getTestModules()
         bbpaths = self.d.getVar("BBPATH", True).split(":")
 
+        shutil.rmtree(self.d.getVar("TEST_EXTRACTED_DIR", True))
+        shutil.rmtree(self.d.getVar("TEST_PACKAGED_DIR", True))
         for module in modules:
             json_file = self._getJsonFile(module)
             if json_file:
@@ -453,6 +455,8 @@ class RuntimeTestContext(TestContext):
         """
         Extract packages that will be needed during runtime.
         """
+
+        import oe.path
 
         extracted_path = self.d.getVar("TEST_EXTRACTED_DIR", True)
         packaged_path = self.d.getVar("TEST_PACKAGED_DIR", True)
@@ -477,13 +481,18 @@ class RuntimeTestContext(TestContext):
                     dst_dir = os.path.join(packaged_path)
 
                 # Extract package and copy it to TEST_EXTRACTED_DIR
-                if extract and not os.path.exists(dst_dir):
-                    pkg_dir = self._extract_in_tmpdir(pkg)
-                    shutil.copytree(pkg_dir, dst_dir)
+                pkg_dir = self._extract_in_tmpdir(pkg)
+                if extract:
+
+                    # Same package used for more than one test,
+                    # don't need to extract again.
+                    if os.path.exists(dst_dir):
+                        continue
+                    oe.path.copytree(pkg_dir, dst_dir)
                     shutil.rmtree(pkg_dir)
 
                 # Copy package to TEST_PACKAGED_DIR
-                elif not extract:
+                else:
                     self._copy_package(pkg)
 
     def _getJsonFile(self, module):
