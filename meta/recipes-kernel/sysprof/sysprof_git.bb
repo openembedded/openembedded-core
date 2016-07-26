@@ -30,8 +30,9 @@ PACKAGECONFIG ?= "${@bb.utils.contains_any('DISTRO_FEATURES', '${GTK3DISTROFEATU
 PACKAGECONFIG[gtk] = "--enable-gtk,--disable-gtk,gtk+3"
 PACKAGECONFIG[polkit] = "--enable-polkit,--disable-polkit,polkit dbus"
 
-FILES_${PN} += "${datadir}/icons/ ${libdir}/libsysprof* ${datadir}/dbus-1/"
-FILES_${PN}-dev = "${includedir} ${libdir}/pkgconfig"
+SOLIBS = ".so"
+FILES_SOLIBSDEV = ""
+FILES_${PN} += "${datadir}/icons/"
 
 SYSTEMD_SERVICE_${PN} = "${@bb.utils.contains('PACKAGECONFIG', 'polkit', 'sysprof2.service', '', d)}"
 
