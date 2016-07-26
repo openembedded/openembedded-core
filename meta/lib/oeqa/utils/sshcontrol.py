@@ -147,8 +147,13 @@ class SSHControl(object):
         return self._internal_run(command, timeout, self.ignore_status)
 
     def copy_to(self, localpath, remotepath):
-        command = self.scp + [localpath, '%s@%s:%s' % (self.user, self.ip, remotepath)]
-        return self._internal_run(command, ignore_status=False)
+        if os.path.islink(localpath):
+            link = os.readlink(localpath)
+            dst_dir, dst_base = os.path.split(remotepath)
+            return self.run("cd %s; ln -s %s %s" % (dst_dir, link, dst_base))
+        else:
+            command = self.scp + [localpath, '%s@%s:%s' % (self.user, self.ip, remotepath)]
+            return self._internal_run(command, ignore_status=False)
 
     def copy_from(self, remotepath, localpath):
         command = self.scp + ['%s@%s:%s' % (self.user, self.ip, remotepath), localpath]
