@@ -442,6 +442,49 @@ class RecipetoolTests(RecipetoolBase):
         inherits = ['cmake', 'python-dir', 'gettext', 'pkgconfig']
         self._test_recipe_contents(recipefile, checkvars, inherits)
 
+    def test_recipetool_create_github(self):
+        # Basic test to see if github URL mangling works
+        temprecipe = os.path.join(self.tempdir, 'recipe')
+        os.makedirs(temprecipe)
+        recipefile = os.path.join(temprecipe, 'meson_git.bb')
+        srcuri = 'https://github.com/mesonbuild/meson'
+        result = runCmd('recipetool create -o %s %s' % (temprecipe, srcuri))
+        self.assertTrue(os.path.isfile(recipefile))
+        checkvars = {}
+        checkvars['LICENSE'] = set(['Apache-2.0'])
+        checkvars['SRC_URI'] = 'git://github.com/mesonbuild/meson;protocol=https'
+        inherits = ['setuptools']
+        self._test_recipe_contents(recipefile, checkvars, inherits)
+
+    def test_recipetool_create_github_tarball(self):
+        # Basic test to ensure github URL mangling doesn't apply to release tarballs
+        temprecipe = os.path.join(self.tempdir, 'recipe')
+        os.makedirs(temprecipe)
+        pv = '0.32.0'
+        recipefile = os.path.join(temprecipe, 'meson_%s.bb' % pv)
+        srcuri = 'https://github.com/mesonbuild/meson/releases/download/%s/meson-%s.tar.gz' % (pv, pv)
+        result = runCmd('recipetool create -o %s %s' % (temprecipe, srcuri))
+        self.assertTrue(os.path.isfile(recipefile))
+        checkvars = {}
+        checkvars['LICENSE'] = set(['Apache-2.0'])
+        checkvars['SRC_URI'] = 'https://github.com/mesonbuild/meson/releases/download/${PV}/meson-${PV}.tar.gz'
+        inherits = ['setuptools']
+        self._test_recipe_contents(recipefile, checkvars, inherits)
+
+    def test_recipetool_create_git_http(self):
+        # Basic test to check http git URL mangling works
+        temprecipe = os.path.join(self.tempdir, 'recipe')
+        os.makedirs(temprecipe)
+        recipefile = os.path.join(temprecipe, 'matchbox-terminal_git.bb')
+        srcuri = 'http://git.yoctoproject.org/git/matchbox-terminal'
+        result = runCmd('recipetool create -o %s %s' % (temprecipe, srcuri))
+        self.assertTrue(os.path.isfile(recipefile))
+        checkvars = {}
+        checkvars['LICENSE'] = set(['GPLv2'])
+        checkvars['SRC_URI'] = 'git://git.yoctoproject.org/git/matchbox-terminal;protocol=http'
+        inherits = ['pkgconfig', 'autotools']
+        self._test_recipe_contents(recipefile, checkvars, inherits)
+
 class RecipetoolAppendsrcBase(RecipetoolBase):
     def _try_recipetool_appendsrcfile(self, testrecipe, newfile, destfile, options, expectedlines, expectedfiles):
         cmd = 'recipetool appendsrcfile %s %s %s %s %s' % (options, self.templayerdir, testrecipe, newfile, destfile)
