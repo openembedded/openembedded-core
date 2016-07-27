@@ -144,7 +144,10 @@ def testimage_main(d):
     tc.extract_packages()
     target.deploy()
     try:
-        target.start()
+        bootparams = None
+        if d.getVar('VIRTUAL-RUNTIME_init_manager', '') == 'systemd':
+            bootparams = 'systemd.log_level=debug systemd.log_target=console'
+        target.start(extra_bootparams=bootparams)
         starttime = time.time()
         result = tc.runTests()
         stoptime = time.time()
