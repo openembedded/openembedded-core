@@ -8,8 +8,8 @@ SRC_URI_append_libc-musl = "file://0002-resolve-musl-does-not-implement-res_nini
                             file://0003-Fix-header-inclusions-for-musl.patch \
                            "
 
-SRC_URI[md5sum] = "d0c3071c1d8dec9cd17b760f862de2ad"
-SRC_URI[sha256sum] = "3185864c73206a6033d12e9f583689dcd03f714a40a58333709d3f74a4e0934c"
+SRC_URI[md5sum] = "c51903fd3e7a6a371d12ac5d72a1fa01"
+SRC_URI[sha256sum] = "bc8946036fa70124d663136f9f6b6238d897ca482782df907b07a428b09df5a0"
 
 RRECOMMENDS_${PN} = "connman-conf"
 
