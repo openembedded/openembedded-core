@@ -30,6 +30,8 @@ DEPENDS = " \
     ${SCRIPTING_DEPENDS} \
     ${LIBUNWIND_DEPENDS} \
     bison flex xz \
+    xmlto-native \
+    asciidoc-native \
 "
 
 do_configure[depends] += "virtual/kernel:do_shared_workdir"
@@ -90,7 +92,6 @@ EXTRA_OEMAKE += "\
     'sharedir=${datadir}' \
     'sysconfdir=${sysconfdir}' \
     'perfexecdir=${libexecdir}/perf-core' \
-    \
     'ETC_PERFCONFIG=${@os.path.relpath(sysconfdir, prefix)}' \
     'sharedir=${@os.path.relpath(datadir, prefix)}' \
     'mandir=${@os.path.relpath(mandir, prefix)}' \
@@ -137,6 +138,13 @@ do_configure_prepend () {
                -e 's,^perfexecdir = \(.*\),perfexecdir ?= \1,' \
                -e 's,\ .config-detected, $(OUTPUT)/config-detected,g' \
             ${S}/tools/perf/config/Makefile
+    fi
+    # The man pages installation is "$(INSTALL) -d -m 755 $(DESTDIR)$(man1dir)"
+    # in ${S}/tools/perf/Documentation/Makefile, if the mandir set to '?=', it
+    # will use the relative path 'share/man', in the way it will resulting in
+    # incorrect installation for man pages.
+    if [ -e "${S}/tools/perf/Documentation/Makefile" ]; then
+	sed -i 's,^mandir?=,mandir:=,' ${S}/tools/perf/Documentation/Makefile
     fi
     if [ -e "${S}/tools/perf/Makefile.perf" ]; then
         sed -i -e 's,\ .config-detected, $(OUTPUT)/config-detected,g' \
@@ -197,6 +205,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 PACKAGES =+ "${PN}-archive ${PN}-tests ${PN}-perl ${PN}-python"
 
 RDEPENDS_${PN} += "elfutils bash"
+RDEPENDS_${PN}-doc += "man"
 RDEPENDS_${PN}-archive =+ "bash"
 RDEPENDS_${PN}-python =+ "bash python python-modules"
 RDEPENDS_${PN}-perl =+ "bash perl perl-modules"
