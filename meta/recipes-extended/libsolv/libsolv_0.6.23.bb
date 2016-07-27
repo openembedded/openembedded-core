@@ -11,7 +11,7 @@ SRC_URI = "git://github.com/openSUSE/libsolv.git \
           "
 SRC_URI_append_libc-musl = " file://0001-Add-fallback-fopencookie-implementation.patch"
 
-SRCREV = "58655da7eccc0ba8e768f9df6482bb08b90f4da8"
+SRCREV = "f654c8cfa52427ed42d7142e58452dae08c0c2d0"
 UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>\d+(\.\d+)+)"
 
 S = "${WORKDIR}/git"
