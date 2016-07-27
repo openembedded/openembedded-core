@@ -16,8 +16,8 @@ SRC_URI = "https://cmake.org/files/v${CMAKE_MAJOR_VERSION}/cmake-${PV}.tar.gz \
            file://qt4-fail-silent.patch \
            "
 
-SRC_URI[md5sum] = "701386a1b5ec95f8d1075ecf96383e02"
-SRC_URI[sha256sum] = "92d8410d3d981bb881dfff2aed466da55a58d34c7390d50449aa59b32bb5e62a"
+SRC_URI[md5sum] = "d6dd661380adacdb12f41b926ec99545"
+SRC_URI[sha256sum] = "28ee98ec40427d41a45673847db7a905b59ce9243bb866eaf59dce0f58aaef11"
 
 UPSTREAM_CHECK_REGEX = "cmake-(?P<pver>\d+(\.\d+)+)\.tar"
 
