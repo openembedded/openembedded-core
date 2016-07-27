@@ -16,8 +16,8 @@ UPSTREAM_CHECK_URI = "https://gnupg.org/download/index.html"
 SRC_URI = "${GNUPG_MIRROR}/libassuan/libassuan-${PV}.tar.bz2 \
 	   file://libassuan-add-pkgconfig-support.patch"
 
-SRC_URI[md5sum] = "70151995c2330ae1261c0a7ca34cf478"
-SRC_URI[sha256sum] = "bb06dc81380b74bf1b64d5849be5c0409a336f3b4c45f20ac688e86d1b5bcb20"
+SRC_URI[md5sum] = "8e01a7c72d3e5d154481230668e6eb5a"
+SRC_URI[sha256sum] = "22843a3bdb256f59be49842abf24da76700354293a066d82ade8134bb5aa2b71"
 
 BINCONFIG = "${bindir}/libassuan-config"
 
