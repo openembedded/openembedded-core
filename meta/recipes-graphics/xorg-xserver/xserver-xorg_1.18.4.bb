@@ -1,8 +1,8 @@
 require xserver-xorg.inc
 
 SRC_URI += "file://musl-arm-inb-outb.patch"
-SRC_URI[md5sum] = "043d720bf2472a65bb8f0daa97f83dfa"
-SRC_URI[sha256sum] = "ea739c22517cdbe2b5f7c0a5fd05fe8a10ac0629003e71c0c7862f4bb60142cd"
+SRC_URI[md5sum] = "d4842dfe3bd9a9d062f2fa1df9104a46"
+SRC_URI[sha256sum] = "278459b2c31d61a15655d95a72fb79930c480a6bb8cf9226e48a07df8b1d31c8"
 
 # These extensions are now integrated into the server, so declare the migration
 # path for in-place upgrades.
