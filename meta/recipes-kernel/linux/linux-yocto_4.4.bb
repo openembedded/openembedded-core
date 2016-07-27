@@ -13,13 +13,13 @@ KBRANCH_qemumips64 ?= "standard/mti-malta64"
 
 SRCREV_machine_qemuarm ?= "c2507bd62854f90030433307a3d783474332f821"
 SRCREV_machine_qemuarm64 ?= "ddab242999407fadae68e7ee5381b0ec6679d443"
-SRCREV_machine_qemumips ?= "8d0a4875a93017329b32b42ce7d67b02f63a173b"
+SRCREV_machine_qemumips ?= "e42198f28a2c3e57ef64a0f5ccfdeed906d1c257"
 SRCREV_machine_qemuppc ?= "ddab242999407fadae68e7ee5381b0ec6679d443"
 SRCREV_machine_qemux86 ?= "ddab242999407fadae68e7ee5381b0ec6679d443"
 SRCREV_machine_qemux86-64 ?= "ddab242999407fadae68e7ee5381b0ec6679d443"
-SRCREV_machine_qemumips64 ?= "df3ba701aa1fa3b2faadc5445003e7577aa4f016"
+SRCREV_machine_qemumips64 ?= "2d0080f2350e088bdc6129c376eb9e2654a0448a"
 SRCREV_machine ?= "ddab242999407fadae68e7ee5381b0ec6679d443"
-SRCREV_meta ?= "4789b41c5605189902d2c1a674f8616d41ee218d"
+SRCREV_meta ?= "d3cc76c3cb20247b16c16b2367decf08b5fb90fa"
 
 SRC_URI = "git://git.yoctoproject.org/linux-yocto-4.4.git;name=machine;branch=${KBRANCH}; \
            git://git.yoctoproject.org/yocto-kernel-cache;type=kmeta;name=meta;branch=yocto-4.4;destsuffix=${KMETA}"
