@@ -56,8 +56,11 @@ python() {
                 continue
 
             if deploydirvarref in sstate_outputdirs:
+                deplor_dir_pkgtype = d.expand(deploydirvarref + '-prediff')
                 # Set intermediate output directory
-                d.setVarFlag(pkgwritefunc, 'sstate-outputdirs', sstate_outputdirs.replace(deploydirvarref, deploydirvarref + '-prediff'))
+                d.setVarFlag(pkgwritefunc, 'sstate-outputdirs', sstate_outputdirs.replace(deploydirvarref, deplor_dir_pkgtype))
+                # Update SSTATE_DUPWHITELIST to avoid shared location conflicted error
+                d.appendVar('SSTATE_DUPWHITELIST', ' %s' % deplor_dir_pkgtype)
 
             d.setVar(pkgcomparefunc, d.getVar('do_package_compare', False))
             d.setVarFlags(pkgcomparefunc, d.getVarFlags('do_package_compare', False))
@@ -135,6 +138,7 @@ def package_compare_impl(pkgtype, d):
     files = []
     docopy = False
     manifest, _ = oe.sstatesig.sstate_get_manifest_filename(pkgwritetask, d)
+    mlprefix = d.getVar('MLPREFIX', True)
     # Copy recipe's all packages if one of the packages are different to make
     # they have the same PR.
     with open(manifest, 'r') as f:
@@ -150,6 +154,8 @@ def package_compare_impl(pkgtype, d):
                     pkgbasename = os.path.basename(destpath)
                     pkgname = None
                     for rpkg, pkg in rpkglist:
+                        if mlprefix and pkgtype == 'rpm' and rpkg.startswith(mlprefix):
+                            rpkg = rpkg[len(mlprefix):]
                         if pkgbasename.startswith(rpkg):
                             pkgr = pkgrvalues[pkg]
                             destpathspec = destpath.replace(pkgr, '*')
@@ -205,6 +211,12 @@ def package_compare_impl(pkgtype, d):
             for pkgname, pkgbasename, srcpath, destpath in files:
                 destdir = os.path.dirname(destpath)
                 bb.utils.mkdirhier(destdir)
+                # Remove allarch rpm pkg if it is already existed (for
+                # multilib), they're identical in theory, but sstate.bbclass
+                # copies it again, so keep align with that.
+                if os.path.exists(destpath) and pkgtype == 'rpm' \
+                        and d.getVar('PACKAGE_ARCH', True) == 'all':
+                    os.unlink(destpath)
                 if (os.stat(srcpath).st_dev == os.stat(destdir).st_dev):
                     # Use a hard link to save space
                     os.link(srcpath, destpath)
@@ -212,7 +224,7 @@ def package_compare_impl(pkgtype, d):
                     shutil.copyfile(srcpath, destpath)
                 f.write('%s\n' % destpath)
     else:
-        bb.plain('Not copying packages for %s' % pn)
+        bb.plain('Not copying packages for recipe %s' % pn)
 
 do_cleanall_append() {
     import errno
