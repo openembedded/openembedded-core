@@ -15,8 +15,8 @@ UPSTREAM_CHECK_URI = "https://gnupg.org/download/index.html"
 SRC_URI = "${GNUPG_MIRROR}/libgpg-error/libgpg-error-${PV}.tar.bz2 \
            file://pkgconfig.patch \
 	  "
-SRC_URI[md5sum] = "5bc2d7ec28f91f883fb6f23d5c784ca7"
-SRC_URI[sha256sum] = "7f0c7f65b98c4048f649bfeebfa4d4c1559707492962504592b985634c939eaa"
+SRC_URI[md5sum] = "feb42198c0aaf3b28eabe8f41a34b983"
+SRC_URI[sha256sum] = "9268e1cc487de5e6e4460fca612a06e4f383072ac43ae90603e5e46783d3e540"
 
 BINCONFIG = "${bindir}/gpg-error-config"
 
