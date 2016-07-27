@@ -15,7 +15,7 @@ PAM_DEPS = "libpam libpam-runtime pam-plugin-env pam-plugin-limits"
 RCONFLICTS_${PN} = "atd"
 RREPLACES_${PN} = "atd"
 
-SRC_URI = "${DEBIAN_MIRROR}/main/a/at/at_${PV}.orig.tar.gz;subdir=${BP} \
+SRC_URI += "http://snapshot.debian.org/archive/debian/20160509T100042Z/pool/main/a/${BPN}/${BPN}_${PV}.orig.tar.gz;subdir=${BP} \
     file://fix_parallel_build_error.patch \
     file://posixtm.c \
     file://posixtm.h \
@@ -27,6 +27,8 @@ SRC_URI = "${DEBIAN_MIRROR}/main/a/at/at_${PV}.orig.tar.gz;subdir=${BP} \
     file://0001-remove-glibc-assumption.patch \
     file://configure-fix-with-without-selinux.patch \
     "
+
+UPSTREAM_CHECK_URI = "${DEBIAN_MIRROR}/main/a/at/"
 
 PAM_SRC_URI = "file://pam.conf.patch \
                file://configure-add-enable-pam.patch"
