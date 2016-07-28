@@ -15,7 +15,7 @@ PAM_DEPS = "libpam libpam-runtime pam-plugin-env pam-plugin-limits"
 RCONFLICTS_${PN} = "atd"
 RREPLACES_${PN} = "atd"
 
-SRC_URI = "${DEBIAN_MIRROR}/main/a/at/at_${PV}.orig.tar.gz \
+SRC_URI = "http://snapshot.debian.org/archive/debian/20160728T043443Z/pool/main/a/${BPN}/${BPN}_${PV}.orig.tar.gz \
     file://fix_parallel_build_error.patch \
     file://posixtm.c \
     file://posixtm.h \
@@ -32,6 +32,8 @@ PAM_SRC_URI = "file://pam.conf.patch \
 
 SRC_URI[md5sum] = "e7bd7b785b2cbb17e133d6bdc0fb099e"
 SRC_URI[sha256sum] = "0871923cab73050b98ace020664eb2ddc1e669e4166b5abb64d864d02fcefab9"
+
+UPSTREAM_CHECK_URI = "${DEBIAN_MIRROR}/main/a/at/"
 
 EXTRA_OECONF += "ac_cv_path_SENDMAIL=/bin/true \
                  --with-daemon_username=root \
