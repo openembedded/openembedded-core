@@ -8,12 +8,14 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=4fbd65380cdd255951079008b364516c \
 
 DEPENDS = "glib-2.0"
 
-SRC_URI = "${DEBIAN_MIRROR}/main/libp/${BPN}/${BPN}_${PV}.orig.tar.gz \
+SRC_URI = "http://snapshot.debian.org/archive/debian/20160728T043443Z/pool/main/libp/${BPN}/${BPN}_${PV}.orig.tar.gz \
            file://0001-test-Include-sys-select.h-for-select.patch \
           "
 
 SRC_URI[md5sum] = "3cd1ae2a4abecf44b3f24d6639d2cd84"
 SRC_URI[sha256sum] = "dc3f33de54163718f82b3e7c496a7de97f8862578414b8ecaad3cbfe4821864b"
+
+UPSTREAM_CHECK_URI = "${DEBIAN_MIRROR}/main/libp/libproxy/"
 
 inherit cmake pkgconfig
 
