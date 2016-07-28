@@ -6,6 +6,9 @@ REAL_MULTIMACH_TARGET_SYS ?= "${MULTIMACH_TARGET_SYS}"
 TARGET_CC_ARCH_append_libc-uclibc = " -muclibc"
 TARGET_CC_ARCH_append_libc-musl = " -mmusl"
 
+# default debug prefix map isn't valid in the SDK
+DEBUG_PREFIX_MAP = ""
+
 # This function creates an environment-setup-script for use in a deployable SDK
 toolchain_create_sdk_env_script () {
 	# Create environment setup script.  Remember that $SDKTARGETSYSROOT should
