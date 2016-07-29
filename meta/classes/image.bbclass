@@ -118,7 +118,7 @@ def rootfs_variables(d):
                  'IMAGE_ROOTFS_MAXSIZE','IMAGE_NAME','IMAGE_LINK_NAME','IMAGE_MANIFEST','DEPLOY_DIR_IMAGE','RM_OLD_IMAGE','IMAGE_FSTYPES','IMAGE_INSTALL_COMPLEMENTARY','IMAGE_LINGUAS',
                  'MULTILIBRE_ALLOW_REP','MULTILIB_TEMP_ROOTFS','MULTILIB_VARIANTS','MULTILIBS','ALL_MULTILIB_PACKAGE_ARCHS','MULTILIB_GLOBAL_VARIANTS','BAD_RECOMMENDATIONS','NO_RECOMMENDATIONS',
                  'PACKAGE_ARCHS','PACKAGE_CLASSES','TARGET_VENDOR','TARGET_ARCH','TARGET_OS','OVERRIDES','BBEXTENDVARIANT','FEED_DEPLOYDIR_BASE_URI','INTERCEPT_DIR','USE_DEVFS',
-                 'COMPRESSIONTYPES', 'IMAGE_GEN_DEBUGFS', 'ROOTFS_RO_UNNEEDED']
+                 'CONVERSIONTYPES', 'IMAGE_GEN_DEBUGFS', 'ROOTFS_RO_UNNEEDED']
     variables.extend(rootfs_command_variables(d))
     variables.extend(variable_depends(d))
     return " ".join(variables)
@@ -343,7 +343,7 @@ python setup_debugfs () {
 
 python () {
     vardeps = set()
-    # We allow COMPRESSIONTYPES to have duplicates. That avoids breaking
+    # We allow CONVERSIONTYPES to have duplicates. That avoids breaking
     # derived distros when OE-core or some other layer independently adds
     # the same type. There is still only one command for each type, but
     # presumably the commands will do the same when the type is the same,
@@ -351,7 +351,7 @@ python () {
     #
     # Without de-duplication, gen_conversion_cmds() below
     # would create the same compression command multiple times.
-    ctypes = set(d.getVar('COMPRESSIONTYPES', True).split())
+    ctypes = set(d.getVar('CONVERSIONTYPES', True).split())
     old_overrides = d.getVar('OVERRIDES', 0)
 
     def _image_base_type(type):
@@ -456,9 +456,10 @@ python () {
                     # Create input image first.
                     gen_conversion_cmds(type)
                     localdata.setVar('type', type)
-                    cmd = "\t" + localdata.getVar("COMPRESS_CMD_" + ctype, True)
+                    cmd = "\t" + (localdata.getVar("CONVERSION_CMD_" + ctype, True) or localdata.getVar("COMPRESS_CMD_" + ctype, True))
                     if cmd not in cmds:
                         cmds.append(cmd)
+                    vardeps.add('CONVERSION_CMD_' + ctype)
                     vardeps.add('COMPRESS_CMD_' + ctype)
                     subimage = type + "." + ctype
                     if subimage not in subimages:
