@@ -11,8 +11,8 @@ DEPENDS = "virtual/libx11 virtual/libgl libglu libxext libxi libxmu"
 SRC_URI = "${SOURCEFORGE_MIRROR}/project/glew/glew/${PV}/glew-${PV}.tgz \
            file://no-strip.patch"
 
-SRC_URI[md5sum] = "7cbada3166d2aadfc4169c4283701066"
-SRC_URI[sha256sum] = "aa25dc48ed84b0b64b8d41cdd42c8f40f149c37fa2ffa39cd97f42c78d128bc7"
+SRC_URI[md5sum] = "2a2cd7c98f13854d2fcddae0d2b20411"
+SRC_URI[sha256sum] = "c572c30a4e64689c342ba1624130ac98936d7af90c3103f9ce12b8a0c5736764"
 
 UPSTREAM_CHECK_URI = "http://sourceforge.net/projects/glew/files/glew"
 UPSTREAM_CHECK_REGEX = "/glew/(?P<pver>(\d+[\.\-_]*)+)/"
@@ -29,7 +29,7 @@ EXTRA_OEMAKE = "SYSTEM='linux' \
                 LDFLAGS.EXTRA='${LDFLAGS}' \
                 POPT='${CFLAGS}' \
                 GLEW_PREFIX='${prefix}' BINDIR='${bindir}' \
-                LIBDIR='${libdir}' INCDIR='${includedir}/GL'"
+                LIBDIR='${libdir}' INCDIR='${includedir}/GL' PKGDIR='${libdir}/pkgconfig'"
 
 do_compile() {
 	oe_runmake
