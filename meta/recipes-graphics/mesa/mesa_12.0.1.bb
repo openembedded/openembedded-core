@@ -2,6 +2,8 @@ require ${BPN}.inc
 
 SRC_URI = "ftp://ftp.freedesktop.org/pub/mesa/${PV}/mesa-${PV}.tar.xz \
            file://replace_glibc_check_with_linux.patch \
+           file://clang-compile-PR89599.patch \
+           file://disable-asm-on-non-gcc.patch \
 "
 
 SRC_URI[md5sum] = "972fd5ad5a63aeabf173fb9adefc6522"
