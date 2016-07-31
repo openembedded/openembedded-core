@@ -1,0 +1,130 @@
+From 343a405c03ce478634d8ce5a38faae832d39b361 Mon Sep 17 00:00:00 2001
+From: Alan Modra <amodra@gmail.com>
+Date: Wed, 9 Mar 2016 17:01:54 +1030
+Subject: [PATCH] Allow zero length archive elements
+
+bfd/
+	PR binutils/19775
+	* archive.c (bfd_generic_openr_next_archived_file): Allow zero
+	length elements in the archive.
+	* coff-alpha.c (alpha_ecoff_openr_next_archived_file): Likewise.
+
+binutils/
+	PR binutils/19775
+	* testsuite/binutils-all/ar.exp (proc empty_archive): New proc.
+	Run the new proc.
+	* testsuite/binutils-all/empty: New, empty, file.
+---
+ bfd/ChangeLog                          |    8 ++++++
+ bfd/archive.c                          |    2 +-
+ bfd/coff-alpha.c                       |    2 +-
+ binutils/ChangeLog                     |    7 +++++
+ binutils/testsuite/binutils-all/ar.exp |   40 ++++++++++++++++++++++++++++++++
+ 5 files changed, 57 insertions(+), 2 deletions(-)
+ create mode 100644 binutils/testsuite/binutils-all/empty
+
+diff --git a/bfd/archive.c b/bfd/archive.c
+index b3d03d3..1fc3a94 100644
+--- a/bfd/archive.c
++++ b/bfd/archive.c
+@@ -802,7 +802,7 @@ bfd_generic_openr_next_archived_file (bfd *archive, bfd *last_file)
+ 	     Note that last_file->origin can be odd in the case of
+ 	     BSD-4.4-style element with a long odd size.  */
+ 	  filestart += filestart % 2;
+-	  if (filestart <= last_file->proxy_origin)
++	  if (filestart < last_file->proxy_origin)
+ 	    {
+ 	      /* Prevent looping.  See PR19256.  */
+ 	      bfd_set_error (bfd_error_malformed_archive);
+diff --git a/bfd/coff-alpha.c b/bfd/coff-alpha.c
+index 7478f2f..fffb9f7 100644
+--- a/bfd/coff-alpha.c
++++ b/bfd/coff-alpha.c
+@@ -2208,7 +2208,7 @@ alpha_ecoff_openr_next_archived_file (bfd *archive, bfd *last_file)
+ 	 BSD-4.4-style element with a long odd size.  */
+       filestart = last_file->proxy_origin + size;
+       filestart += filestart % 2;
+-      if (filestart <= last_file->proxy_origin)
++      if (filestart < last_file->proxy_origin)
+ 	{
+ 	  /* Prevent looping.  See PR19256.  */
+ 	  bfd_set_error (bfd_error_malformed_archive);
+diff --git a/binutils/ChangeLog b/binutils/ChangeLog
+index 4648d93..b04c745 100644
+--- a/binutils/ChangeLog
++++ b/binutils/ChangeLog
+@@ -1,3 +1,10 @@
++2016-03-09  Nick Clifton  <nickc@redhat.com>
++
++	PR binutils/19775
++	* testsuite/binutils-all/ar.exp (proc empty_archive): New proc.
++	Run the new proc.
++	* testsuite/binutils-all/empty: New, empty, file.
++
+ 2016-02-12  H.J. Lu  <hongjiu.lu@intel.com>
+ 
+ 	Backport from master
+diff --git a/binutils/testsuite/binutils-all/ar.exp b/binutils/testsuite/binutils-all/ar.exp
+index 4c33874..e971350 100644
+--- a/binutils/testsuite/binutils-all/ar.exp
++++ b/binutils/testsuite/binutils-all/ar.exp
+@@ -555,6 +555,45 @@ proc move_an_element { } {
+     pass $testname
+ }
+ 
++# PR 19775: Test creating and listing archives with an empty element.
++
++proc empty_archive { } {
++    global AR
++    global srcdir
++    global subdir
++
++    set testname "archive with empty element"
++
++    # FIXME: There ought to be a way to dynamically create an empty file.
++    set empty $srcdir/$subdir/empty
++    
++    if [is_remote host] {
++	set archive artest.a
++	set objfile [remote_download host $empty]
++	remote_file host delete $archive
++    } else {
++	set archive tmpdir/artest.a
++	set objfile $empty
++    }
++
++    remote_file build delete tmpdir/artest.a
++
++    set got [binutils_run $AR "-r -c $archive ${objfile}"]
++    if ![string match "" $got] {
++	fail $testname
++	return
++    }
++
++    # This commmand used to fail with: "Malformed archive".
++    set got [binutils_run $AR "-t $archive"]
++    if ![string match "empty" $got] {
++	fail $testname
++	return
++    }
++
++    pass $testname
++}
++
+ # Run the tests.
+ 
+ # Only run the bfdtest checks if the programs exist.  Since these
+@@ -574,6 +613,7 @@ argument_parsing
+ deterministic_archive
+ delete_an_element
+ move_an_element
++empty_archive
+ 
+ if { [is_elf_format]
+      && ![istarget "*-*-hpux*"]
+diff --git a/binutils/testsuite/binutils-all/empty b/binutils/testsuite/binutils-all/empty
+new file mode 100644
+index 0000000..e69de29
+-- 
+1.7.1
+
