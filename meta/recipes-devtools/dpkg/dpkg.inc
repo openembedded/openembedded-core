@@ -72,4 +72,14 @@ RPROVIDES_update-alternatives-dpkg += "update-alternatives"
 PACKAGES += "${PN}-perl"
 FILES_${PN}-perl = "${libdir}/perl"
 
+# Split out start-stop-daemon to its own package.  Note that it
+# is installed in a different directory than the one used for
+# the bitbake version.
+#
+PACKAGES =+ "${PN}-start-stop"
+FILES_${PN}-start-stop = "${sbindir}/start-stop-daemon"
+
+RDEPENDS_${PN} += "${PN}-start-stop"
+
+
 BBCLASSEXTEND = "native"
