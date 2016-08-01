@@ -3,7 +3,7 @@ From: Haiqing Bai <Haiqing.Bai@windriver.com>
 Date: Fri, 18 Mar 2016 15:49:31 +0800
 Subject: [PATCH 2/3] remove des in cipher.
 
-Upstream-status: Pending
+Upstream-Status: Pending
 
 Signed-off-by: Haiqing Bai <Haiqing.Bai@windriver.com>
 

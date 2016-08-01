@@ -8,7 +8,7 @@ Subject: [PATCH] system.h/query.c: support nosignature
   otherwise, when use --nosignature would read database and verify
   signature, this is not expected.
 
-Upstream-Status: Submitting [Sent email to rpm-devel@rpm5.org]
+Upstream-Status: Submitted [Sent email to rpm-devel@rpm5.org]
 
 Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
 ---
@@ -61,4 +61,3 @@ index 2ff8906..ad4619a 100644
   * Permit ar(1) payloads. Disabled while rpmio/iosm.c is under development.
 -- 
 2.9.0
-

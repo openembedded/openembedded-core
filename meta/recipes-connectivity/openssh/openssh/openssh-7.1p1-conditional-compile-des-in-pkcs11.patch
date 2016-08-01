@@ -3,7 +3,7 @@ From: Haiqing Bai <Haiqing.Bai@windriver.com>
 Date: Fri, 18 Mar 2016 15:59:21 +0800
 Subject: [PATCH 3/3] remove des in pkcs11.
 
-Upstream-status: Pending
+Upstream-Status: Pending
 
 Signed-off-by: Haiqing Bai <Haiqing.Bai@windriver.com>
 
