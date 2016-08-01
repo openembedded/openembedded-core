@@ -5,6 +5,7 @@ SRC_URI = "http://downloads.yoctoproject.org/releases/pseudo/${BPN}-${PV}.tar.bz
            file://fallback-passwd \
            file://fallback-group \
            file://moreretries.patch \
+           file://Fix-xattr-performance.patch \
            "
 
 SRC_URI[md5sum] = "ee38e4fb62ff88ad067b1a5a3825bac7"
