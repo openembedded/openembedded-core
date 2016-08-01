@@ -43,6 +43,46 @@ class TestExport(oeSelfTest):
             failure = True if 'FAIL' in result.output else False
             self.assertNotEqual(True, failure, 'ping test failed')
 
+    def test_testexport_sdk(self):
+        """
+        Summary: Check sdk functionality for testexport.
+        Expected: 1. testexport directory must be created.
+                  2. SDK tarball must exists.
+                  3. Uncompressing of tarball must succeed.
+                  4. Check if the SDK directory is added to PATH.
+                  5. Run tar from the SDK directory.
+        Product: oe-core
+        Author: Mariano Lopez <mariano.lopez@intel.com>
+        """
+
+        features = 'INHERIT += "testexport"\n'
+        # These aren't the actual IP addresses but testexport class needs something defined
+        features += 'TEST_SERVER_IP = "192.168.7.1"\n'
+        features += 'TEST_TARGET_IP = "192.168.7.1"\n'
+        features += 'TEST_SUITES = "ping"\n'
+        features += 'TEST_SUITES_TAGS = "selftest_sdk"\n'
+        features += 'TEST_EXPORT_SDK_ENABLED = "1"\n'
+        features += 'TEST_EXPORT_SDK_PACKAGES = "nativesdk-tar"\n'
+        self.write_config(features)
+
+        # Build tesexport for core-image-minimal
+        bitbake('core-image-minimal')
+        bitbake('-c testexport core-image-minimal')
+
+        # Check for SDK
+        testexport_dir = get_bb_var('TEST_EXPORT_DIR', 'core-image-minimal')
+        sdk_dir = get_bb_var('TEST_EXPORT_SDK_DIR', 'core-image-minimal')
+        tarball_name = "%s.sh" % get_bb_var('TEST_EXPORT_SDK_NAME', 'core-image-minimal')
+        tarball_path = os.path.join(testexport_dir, sdk_dir, tarball_name)
+        self.assertEqual(os.path.isfile(tarball_path), True, "Couldn't find SDK tarball: %s" % tarball_path)
+
+        # Run runexported.py
+        runexported_path = os.path.join(testexport_dir, "runexported.py")
+        testdata_path = os.path.join(testexport_dir, "testdata.json")
+        cmd = "%s %s" % (runexported_path, testdata_path)
+        result = runCmd(cmd)
+        self.assertEqual(0, result.status, 'runexported.py returned a non 0 status')
+
 
 class TestImage(oeSelfTest):
 
@@ -57,6 +97,7 @@ class TestImage(oeSelfTest):
 
         features = 'INHERIT += "testimage"\n'
         features += 'TEST_SUITES = "ping ssh selftest"\n'
+        features += 'TEST_SUITES_TAGS = "selftest_package_install"\n'
         self.write_config(features)
 
         # Build core-image-sato and testimage
