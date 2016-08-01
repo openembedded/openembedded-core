@@ -124,8 +124,8 @@ if [ ! -b /dev/loop0 ] ; then
 fi
 
 mkdir -p /tmp
-if [ ! -L /etc/mtab ]; then
-    cat /proc/mounts > /etc/mtab
+if [ ! -L /etc/mtab ] && [ -e /proc/mounts ]; then
+    ln -sf /proc/mounts /etc/mtab
 fi
 
 disk_size=$(parted ${device} unit mb print | grep '^Disk .*: .*MB' | cut -d" " -f 3 | sed -e "s/MB//")
