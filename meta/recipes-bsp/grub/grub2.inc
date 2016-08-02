@@ -33,7 +33,7 @@ SRC_URI = "ftp://ftp.gnu.org/gnu/grub/grub-${PV}.tar.gz \
            file://0001-grub-core-gettext-gettext.c-main_context-secondary_c.patch \
             "
 
-DEPENDS = "flex-native bison-native"
+DEPENDS = "flex-native bison-native autogen-native"
 
 SRC_URI[md5sum] = "e927540b6eda8b024fb0391eeaa4091c"
 SRC_URI[sha256sum] = "65b39a0558f8c802209c574f4d02ca263a804e8a564bc6caf1cd0fd3b3cc11e3"
@@ -60,6 +60,8 @@ do_configure_prepend() {
 	# for its own purposes. Remove the OE versions from the environment to
 	# avoid conflicts.
 	unset TARGET_CPPFLAGS TARGET_CFLAGS TARGET_CXXFLAGS TARGET_LDFLAGS
+	( cd ${S}
+	${S}/autogen.sh )
 }
 
 # grub and grub-efi's sysroot/${datadir}/grub/grub-mkconfig_lib are

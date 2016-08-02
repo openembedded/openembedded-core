@@ -1,7 +1,5 @@
 require grub2.inc
 
-DEPENDS += "autogen-native"
-
 DEFAULT_PREFERENCE = "-1"
 DEFAULT_PREFERENCE_arm = "1"
 
@@ -33,11 +31,6 @@ EXTRA_OECONF = "--with-platform=${GRUBPLATFORM} --disable-grub-mkfont --program-
                 --enable-liblzma=no --enable-device-mapper=no --enable-libzfs=no"
 
 EXTRA_OECONF += "${@bb.utils.contains('DISTRO_FEATURES', 'largefile', '--enable-largefile', '--disable-largefile', d)}"
-
-do_configure_prepend() {
-    ( cd ${S}
-      ${S}/autogen.sh )
-}
 
 do_install_append () {
     install -d ${D}${sysconfdir}/grub.d
