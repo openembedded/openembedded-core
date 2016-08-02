@@ -14,8 +14,8 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/strace/strace-${PV}.tar.xz \
            file://0001-Fix-build-when-using-non-glibc-libc-implementation-o.patch \
            "
 
-SRC_URI[md5sum] = "efb8611fc332e71ec419c53f59faa93e"
-SRC_URI[sha256sum] = "51144b78cb9ba22211b95a5aafe0af3694c0d575b25975d80ca9dd4dfd7c1e59"
+SRC_URI[md5sum] = "4b78c7febdd24c79d5147824d1a080a3"
+SRC_URI[sha256sum] = "d48f732576c91ece36a5843d63f9be054c40ef59f1e4773986042636861625d7"
 
 inherit autotools ptest bluetooth
 
