@@ -543,6 +543,19 @@ python () {
                 if pn in incompatwl:
                     bb.note("INCLUDING " + pn + " as buildable despite INCOMPATIBLE_LICENSE because it has been whitelisted")
 
+        # Try to verify per-package (LICENSE_<pkg>) values. LICENSE should be a
+        # superset of all per-package licenses. We do not do advanced (pattern)
+        # matching of license expressions - just check that all license strings
+        # in LICENSE_<pkg> are found in LICENSE.
+        license_set = oe.license.list_licenses(license)
+        for pkg in d.getVar('PACKAGES', True).split():
+            pkg_license = d.getVar('LICENSE_' + pkg, True)
+            if pkg_license:
+                unlisted = oe.license.list_licenses(pkg_license) - license_set
+                if unlisted:
+                    bb.warn("LICENSE_%s includes licenses (%s) that are not "
+                            "listed in LICENSE" % (pkg, ' '.join(unlisted)))
+
     needsrcrev = False
     srcuri = d.getVar('SRC_URI', True)
     for uri in srcuri.split():

@@ -215,3 +215,21 @@ def manifest_licenses(licensestr, dont_want_licenses, canonical_license, d):
     manifest.licensestr = manifest.licensestr.replace('[', '(').replace(']', ')')
 
     return (manifest.licensestr, manifest.licenses)
+
+class ListVisitor(LicenseVisitor):
+    """Record all different licenses found in the license string"""
+    def __init__(self):
+        self.licenses = set()
+
+    def visit_Str(self, node):
+        self.licenses.add(node.s)
+
+def list_licenses(licensestr):
+    """Simply get a list of all licenses mentioned in a license string.
+       Binary operators are not applied or taken into account in any way"""
+    visitor = ListVisitor()
+    try:
+        visitor.visit_string(licensestr)
+    except SyntaxError as exc:
+        raise LicenseSyntaxError(licensestr, exc)
+    return visitor.licenses
