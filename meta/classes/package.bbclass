@@ -1152,9 +1152,6 @@ python populate_packages () {
             fpath = os.path.join(root,file)
             if not cpath.islink(file):
                 os.link(file, fpath)
-                fstat = cpath.stat(file)
-                os.chmod(fpath, fstat.st_mode)
-                os.chown(fpath, fstat.st_uid, fstat.st_gid)
                 continue
             ret = bb.utils.copyfile(file, fpath)
             if ret is False or ret == 0:
