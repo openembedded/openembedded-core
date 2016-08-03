@@ -14,8 +14,8 @@ SRC_URI = "http://curl.haxx.se/download/curl-${PV}.tar.bz2 \
 #
 SRC_URI += " file://configure_ac.patch"
 
-SRC_URI[md5sum] = "6bb1f7af5b58b30e4e6414b8c1abccab"
-SRC_URI[sha256sum] = "eb63cec4bef692eab9db459033f409533e6d10e20942f4b060b32819e81885f1"
+SRC_URI[md5sum] = "9e463ff8fdc1b5daa81c850c514980ec"
+SRC_URI[sha256sum] = "608dfe2db77f48db792c387e7791aca55a25f0b42385707ad927164199ecfa9a"
 
 inherit autotools pkgconfig binconfig multilib_header
 
