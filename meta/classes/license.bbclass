@@ -387,20 +387,6 @@ def find_license_files(d):
     import oe.license
     from collections import defaultdict, OrderedDict
 
-    pn = d.getVar('PN', True)
-    for package in d.getVar('PACKAGES', True):
-        if d.getVar('LICENSE_' + package, True):
-            license_types = license_types + ' & ' + \
-                            d.getVar('LICENSE_' + package, True)
-
-    #If we get here with no license types, then that means we have a recipe 
-    #level license. If so, we grab only those.
-    try:
-        license_types
-    except NameError:        
-        # All the license types at the recipe level
-        license_types = d.getVar('LICENSE', True)
- 
     # All the license files for the package
     lic_files = d.getVar('LIC_FILES_CHKSUM', True)
     pn = d.getVar('PN', True)
@@ -498,7 +484,7 @@ def find_license_files(d):
 
     v = FindVisitor()
     try:
-        v.visit_string(license_types)
+        v.visit_string(d.getVar('LICENSE', True))
     except oe.license.InvalidLicense as exc:
         bb.fatal('%s: %s' % (d.getVar('PF', True), exc))
     except SyntaxError:
