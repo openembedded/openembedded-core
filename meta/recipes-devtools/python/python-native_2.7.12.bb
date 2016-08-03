@@ -17,8 +17,8 @@ SRC_URI += "\
             file://builddir.patch \
             file://parallel-makeinst-create-bindir.patch \
             file://revert_use_of_sysconfigdata.patch \
-            file://avoid_parallel_make_races_on_pgen.patch \
            "
+
 S = "${WORKDIR}/Python-${PV}"
 
 FILESEXTRAPATHS =. "${FILE_DIRNAME}/${PN}:"
