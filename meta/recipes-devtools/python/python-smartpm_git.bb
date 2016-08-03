@@ -25,6 +25,7 @@ SRC_URI = "\
           file://smart-channel-remove-all.patch \
           file://smart-locale.patch \
           file://smartpm-rpm5-support-check-signatures.patch \
+          file://smart-add-deugging-when-targetpath-is-empty.patch \
          "
 
 SRCREV = "407a7eca766431257dcd1da15175cc36a1bb22d0"
