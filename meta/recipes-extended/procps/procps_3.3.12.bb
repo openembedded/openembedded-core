@@ -16,8 +16,8 @@ SRC_URI = "http://downloads.sourceforge.net/project/procps-ng/Production/procps-
            file://sysctl.conf \
           "
 
-SRC_URI[md5sum] = "6cc5b94c1c5b8cbc89ad345a7b522f74"
-SRC_URI[sha256sum] = "e9493169a2d2adc0bc045538707310c8e877b385e4e296143b62607d2bb044ed"
+SRC_URI[md5sum] = "957e42e8b193490b2111252e4a2b443c"
+SRC_URI[sha256sum] = "6ed65ab86318f37904e8f9014415a098bec5bc53653e5d9ab404f95ca5e1a7d4"
 
 S = "${WORKDIR}/procps-ng-${PV}"
 
