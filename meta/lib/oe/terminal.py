@@ -76,9 +76,11 @@ class Gnome(XTerminal):
         finally:
             os.unlink(pidfile)
 
+        import time
         while True:
             try:
                 os.kill(pid, 0)
+                time.sleep(0.1)
             except OSError:
                return
 
