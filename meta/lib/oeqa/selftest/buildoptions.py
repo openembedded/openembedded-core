@@ -89,8 +89,9 @@ class SanityOptionsTest(oeSelfTest):
     def test_options_warnqa_errorqa_switch(self):
         bitbake("xcursor-transparent-theme -ccleansstate")
 
+        self.write_config("INHERIT_remove = \"report-error\"")
         if "packages-list" not in get_bb_var("ERROR_QA"):
-            self.write_config("ERROR_QA_append = \" packages-list\"")
+            self.append_config("ERROR_QA_append = \" packages-list\"")
 
         self.write_recipeinc('xcursor-transparent-theme', 'PACKAGES += \"${PN}-dbg\"')
         res = bitbake("xcursor-transparent-theme", ignore_status=True)
