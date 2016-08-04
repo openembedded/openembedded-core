@@ -259,14 +259,27 @@ def files_from_filevars(filevars):
                 continue
         files.append(f)
 
-    for f in files:
+    symlink_paths = []
+    for ind, f in enumerate(files):
+        # Handle directory symlinks. Truncate path to the lowest level symlink
+        parent = ''
+        for dirname in f.split('/')[:-1]:
+            parent = os.path.join(parent, dirname)
+            if dirname == '.':
+                continue
+            if cpath.islink(parent):
+                symlink_paths.append(f)
+                files[ind] = parent
+                f = parent
+                break
+
         if not cpath.islink(f):
             if cpath.isdir(f):
                 newfiles = [ os.path.join(f,x) for x in os.listdir(f) ]
                 if newfiles:
                     files += newfiles
 
-    return files
+    return files, symlink_paths
 
 # Called in package_<rpm,ipk,deb>.bbclass to get the correct list of configuration files
 def get_conffiles(pkg, d):
@@ -281,7 +294,7 @@ def get_conffiles(pkg, d):
     if conffiles == None:
         conffiles = ""
     conffiles = conffiles.split()
-    conf_orig_list = files_from_filevars(conffiles)
+    conf_orig_list = files_from_filevars(conffiles)[0]
 
     # Remove links and directories from conf_orig_list to get conf_list which only contains normal files
     conf_list = []
@@ -1111,7 +1124,7 @@ python populate_packages () {
             filesvar.replace("//", "/")
 
         origfiles = filesvar.split()
-        files = files_from_filevars(origfiles)
+        files, symlink_paths = files_from_filevars(origfiles)
 
         if autodebug and pkg.endswith("-dbg"):
             files.extend(debug)
@@ -1156,6 +1169,15 @@ python populate_packages () {
             ret = bb.utils.copyfile(file, fpath)
             if ret is False or ret == 0:
                 raise bb.build.FuncFailed("File population failed")
+
+        # Check if symlink paths exist
+        for file in symlink_paths:
+            if not os.path.exists(os.path.join(root,file)):
+                bb.fatal("File '%s' cannot be packaged into '%s' because its "
+                         "parent directory structure does not exist. One of "
+                         "its parent directories is a symlink whose target "
+                         "directory is not included in the package." %
+                         (file, pkg))
 
     os.umask(oldumask)
     os.chdir(workdir)
