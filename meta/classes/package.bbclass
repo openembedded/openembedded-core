@@ -268,6 +268,9 @@ def files_from_filevars(filevars):
             if dirname == '.':
                 continue
             if cpath.islink(parent):
+                bb.warn("FILES contains file '%s' which resides under a "
+                        "directory symlink. Please fix the recipe and use the "
+                        "real path for the file." % f[1:])
                 symlink_paths.append(f)
                 files[ind] = parent
                 f = parent
