@@ -385,6 +385,7 @@ def find_license_files(d):
     """
     import shutil
     import oe.license
+    from collections import defaultdict, OrderedDict
 
     pn = d.getVar('PN', True)
     for package in d.getVar('PACKAGES', True):
@@ -409,6 +410,8 @@ def find_license_files(d):
     generic_directory = d.getVar('COMMON_LICENSE_DIR', True)
     # List of basename, path tuples
     lic_files_paths = []
+    # Entries from LIC_FILES_CHKSUM
+    lic_chksums = {}
     license_source_dirs = []
     license_source_dirs.append(generic_directory)
     try:
@@ -438,7 +441,6 @@ def find_license_files(d):
         license_source = None
         # If the generic does not exist we need to check to see if there is an SPDX mapping to it,
         # unless NO_GENERIC_LICENSE is set.
-
         for lic_dir in license_source_dirs:
             if not os.path.isfile(os.path.join(lic_dir, license_type)):
                 if d.getVarFlag('SPDXLICENSEMAP', license_type, True) != None:
@@ -452,6 +454,7 @@ def find_license_files(d):
                 license_source = lic_dir
                 break
 
+        non_generic_lic = d.getVarFlag('NO_GENERIC_LICENSE', license_type, True)
         if spdx_generic and license_source:
             # we really should copy to generic_ + spdx_generic, however, that ends up messing the manifest
             # audit up. This should be fixed in emit_pkgdata (or, we actually got and fix all the recipes)
@@ -463,13 +466,11 @@ def find_license_files(d):
             if d.getVarFlag('NO_GENERIC_LICENSE', license_type, True):
                 bb.warn("%s: %s is a generic license, please don't use NO_GENERIC_LICENSE for it." % (pn, license_type))
 
-        elif d.getVarFlag('NO_GENERIC_LICENSE', license_type, True):
+        elif non_generic_lic and non_generic_lic in lic_chksums:
             # if NO_GENERIC_LICENSE is set, we copy the license files from the fetched source
             # of the package rather than the license_source_dirs.
-            for (basename, path) in lic_files_paths:
-                if d.getVarFlag('NO_GENERIC_LICENSE', license_type, True) == basename:
-                    lic_files_paths.append(("generic_" + license_type, path))
-                    break
+            lic_files_paths.append(("generic_" + license_type,
+                                    os.path.join(srcdir, non_generic_lic)))
         else:
             # Add explicity avoid of CLOSED license because this isn't generic
             if license_type != 'CLOSED':
@@ -492,8 +493,8 @@ def find_license_files(d):
         except bb.fetch.MalformedUrl:
             raise bb.build.FuncFailed("%s: LIC_FILES_CHKSUM contains an invalid URL:  %s" % (d.getVar('PF', True), url))
         # We want the license filename and path
-        srclicfile = os.path.join(srcdir, path)
-        lic_files_paths.append((os.path.basename(path), srclicfile))
+        chksum = parm['md5'] if 'md5' in parm else parm['sha256']
+        lic_chksums[path] = chksum
 
     v = FindVisitor()
     try:
@@ -502,6 +503,19 @@ def find_license_files(d):
         bb.fatal('%s: %s' % (d.getVar('PF', True), exc))
     except SyntaxError:
         bb.warn("%s: Failed to parse it's LICENSE field." % (d.getVar('PF', True)))
+
+    # Add files from LIC_FILES_CHKSUM to list of license files
+    lic_chksum_paths = defaultdict(OrderedDict)
+    for path, chksum in lic_chksums.items():
+        lic_chksum_paths[os.path.basename(path)][chksum] = os.path.join(srcdir, path)
+    for basename, files in lic_chksum_paths.items():
+        if len(files) == 1:
+            lic_files_paths.append((basename, list(files.values())[0]))
+        else:
+            # If there are multiple different license files with identical
+            # basenames we rename them to <file>.0, <file>.1, ...
+            for i, path in enumerate(files.values()):
+                lic_files_paths.append(("%s.%d" % (basename, i), path))
 
     return lic_files_paths
 
