@@ -12,6 +12,9 @@ Signed-off-by: Ross Burton <ross.burton@intel.com>
 
 --- a/intltool.m4.orig	2013-07-02 11:22:23.000000000 -0700
 +++ b/intltool.m4	2013-07-02 11:22:32.000000000 -0700
+@@ -26,1 +26,1 @@ dnl IT_PROG_INTLTOOL([MINIMUM-VERSION], [no-xml])
+-# serial 42 IT_PROG_INTLTOOL
++# serial 42.1 IT_PROG_INTLTOOL
 @@ -131,27 +131,6 @@ if test -z "$xgversion" -o -z "$mmversio
      AC_MSG_ERROR([GNU gettext tools not found; required for intltool])
  fi
