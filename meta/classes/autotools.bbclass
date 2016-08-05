@@ -134,7 +134,7 @@ EXTRACONFFUNCS ??= ""
 do_configure[prefuncs] += "autotools_preconfigure autotools_copy_aclocals ${EXTRACONFFUNCS}"
 do_configure[postfuncs] += "autotools_postconfigure"
 
-ACLOCALDIR = "${B}/aclocal-copy"
+ACLOCALDIR = "${WORKDIR}/aclocal-copy"
 
 python autotools_copy_aclocals () {
     s = d.getVar("AUTOTOOLS_SCRIPT_PATH", True)
@@ -248,7 +248,7 @@ autotools_do_configure() {
 		if [ x"${acpaths}" = xdefault ]; then
 			acpaths=
 			for i in `find ${AUTOTOOLS_SCRIPT_PATH} -ignore_readdir_race -maxdepth 2 -name \*.m4|grep -v 'aclocal.m4'| \
-				grep -v 'acinclude.m4' | grep -v 'aclocal-copy' | sed -e 's,\(.*/\).*$,\1,'|sort -u`; do
+				grep -v 'acinclude.m4' | sed -e 's,\(.*/\).*$,\1,'|sort -u`; do
 				acpaths="$acpaths -I $i"
 			done
 		else
@@ -288,9 +288,7 @@ autotools_do_configure() {
 				fi
 			fi
 			for i in gettext.m4 iconv.m4 lib-ld.m4 lib-link.m4 lib-prefix.m4 nls.m4 po.m4 progtest.m4; do
-				for j in `find ${S} -ignore_readdir_race -name $i | grep -v aclocal-copy`; do
-					rm $j
-				done
+				find ${S} -ignore_readdir_race -name $i -delete
 			done
 		fi
 		mkdir -p m4
