@@ -7,10 +7,9 @@ LIC_FILES_CHKSUM = "file://LICENSES;md5=e9a558e243b36d3209f380deb394b213 \
 
 DEPENDS += "gperf-native"
 
-SRCREV ?= "d957c4d3fa48d685ff2726c605c988127ef99395"
+SRCREV ?= "ea23815a795f72035262953dad5beb03e09c17dd"
 
-#SRCBRANCH ?= "release/${PV}/master"
-SRCBRANCH ?= "master"
+SRCBRANCH ?= "release/${PV}/master"
 
 GLIBC_GIT_URI ?= "git://sourceware.org/git/glibc.git"
 UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>\d+\.\d+(\.\d+)*)"
