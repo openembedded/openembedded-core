@@ -99,10 +99,11 @@ do_install() {
 	# See alsa-utils-scripts_${PV}.bb
 	rm ${D}${sbindir}/alsaconf
 	rm ${D}${sbindir}/alsa-info.sh
+	rm -f ${D}${sbindir}/alsabat-test.sh
 
 	if ${@bb.utils.contains('PACKAGECONFIG', 'udev', 'false', 'true', d)}; then
-	   # This is where alsa-utils will install its rules if we don't tell it anything else.
-	   rm -rf ${D}/lib/udev
-	   rmdir --ignore-fail-on-non-empty ${D}/lib
+		# This is where alsa-utils will install its rules if we don't tell it anything else.
+		rm -rf ${D}/lib/udev
+		rmdir --ignore-fail-on-non-empty ${D}/lib
 	fi
 }
