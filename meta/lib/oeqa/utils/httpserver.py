@@ -1,8 +1,9 @@
 import http.server
 import multiprocessing
 import os
+from socketserver import ThreadingMixIn
 
-class HTTPServer(http.server.HTTPServer):
+class HTTPServer(ThreadingMixIn, http.server.HTTPServer):
 
     def server_start(self, root_dir):
         import signal
