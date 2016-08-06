@@ -1579,19 +1579,19 @@ python package_do_shlibs() {
         if file.endswith('.dylib') or file.endswith('.so'):
             rpath = []
             p = sub.Popen([d.expand("${HOST_PREFIX}otool"), '-l', file],stdout=sub.PIPE,stderr=sub.PIPE)
-            err, out = p.communicate()
-            # If returned successfully, process stderr for results
+            out, err = p.communicate()
+            # If returned successfully, process stdout for results
             if p.returncode == 0:
-                for l in err.split("\n"):
+                for l in out.split("\n"):
                     l = l.strip()
                     if l.startswith('path '):
                         rpath.append(l.split()[1])
 
         p = sub.Popen([d.expand("${HOST_PREFIX}otool"), '-L', file],stdout=sub.PIPE,stderr=sub.PIPE)
-        err, out = p.communicate()
-        # If returned successfully, process stderr for results
+        out, err = p.communicate()
+        # If returned successfully, process stdout for results
         if p.returncode == 0:
-            for l in err.split("\n"):
+            for l in out.split("\n"):
                 l = l.strip()
                 if not l or l.endswith(":"):
                     continue
