@@ -105,7 +105,7 @@ python build_syslinux_cfg () {
     try:
         cfgfile = open(cfile, 'w')
     except OSError:
-        raise bb.build.funcFailed('Unable to open %s' % (cfile))
+        raise bb.build.FuncFailed('Unable to open %s' % (cfile))
 
     cfgfile.write('# Automatically created by OE\n')
 

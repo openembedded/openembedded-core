@@ -74,7 +74,7 @@ python build_efi_cfg() {
     try:
          cfgfile = open(cfile, 'w')
     except OSError:
-        raise bb.build.funcFailed('Unable to open %s' % (cfile))
+        raise bb.build.FuncFailed('Unable to open %s' % (cfile))
 
     cfgfile.write('# Automatically created by OE\n')
     cfgfile.write('default %s\n' % (labels.split()[0]))
@@ -97,7 +97,7 @@ python build_efi_cfg() {
         try:
             entrycfg = open(entryfile, "w")
         except OSError:
-            raise bb.build.funcFailed('Unable to open %s' % (entryfile))
+            raise bb.build.FuncFailed('Unable to open %s' % (entryfile))
         localdata.setVar('OVERRIDES', label + ':' + overrides)
         bb.data.update_data(localdata)
 
