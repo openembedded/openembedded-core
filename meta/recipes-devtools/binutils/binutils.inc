@@ -57,7 +57,6 @@ USE_ALTERNATIVES_FOR = " \
 	strings \
 	strip \
 "
-USE_ALTERNATIVES_FOR_remove_mips = "ld.gold dwp"
 
 python do_package_prepend() {
     make_alts = d.getVar("USE_ALTERNATIVES_FOR", True) or ""
