@@ -318,16 +318,14 @@ def write_pkghistory(pkginfo, d):
         f.write(u"PV = %s\n" %  pkginfo.pv)
         f.write(u"PR = %s\n" %  pkginfo.pr)
 
-        pkgvars = {}
-        pkgvars['PKG'] = pkginfo.pkg if pkginfo.pkg != pkginfo.name else ''
-        pkgvars['PKGE'] = pkginfo.pkge if pkginfo.pkge != pkginfo.pe else ''
-        pkgvars['PKGV'] = pkginfo.pkgv if pkginfo.pkgv != pkginfo.pv else ''
-        pkgvars['PKGR'] = pkginfo.pkgr if pkginfo.pkgr != pkginfo.pr else ''
-        for pkgvar in pkgvars:
-            val = pkgvars[pkgvar]
-            if val:
-                f.write(u"%s = %s\n" % (pkgvar, val))
-
+        if pkginfo.pkg != pkginfo.name:
+            f.write(u"PKG = %s\n" % pkginfo.pkg)
+        if pkginfo.pkge != pkginfo.pe:
+            f.write(u"PKGE = %s\n" % pkginfo.pkge)
+        if pkginfo.pkgv != pkginfo.pv:
+            f.write(u"PKGV = %s\n" % pkginfo.pkgv)
+        if pkginfo.pkgr != pkginfo.pr:
+            f.write(u"PKGR = %s\n" % pkginfo.pkgr)
         f.write(u"RPROVIDES = %s\n" %  pkginfo.rprovides)
         f.write(u"RDEPENDS = %s\n" %  pkginfo.rdepends)
         f.write(u"RRECOMMENDS = %s\n" %  pkginfo.rrecommends)
