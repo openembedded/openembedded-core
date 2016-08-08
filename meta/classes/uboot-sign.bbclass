@@ -66,6 +66,7 @@ do_concat_dtb () {
 	if [ "x${UBOOT_SIGN_ENABLE}" = "x1" ]; then
 		if [ "x${UBOOT_SUFFIX}" = "ximg" -o "x${UBOOT_SUFFIX}" = "xrom" ] && \
 			[ -e "${DEPLOYDIR}/${UBOOT_DTB_IMAGE}" ]; then
+			cd ${B}
 			oe_runmake EXT_DTB=${DEPLOYDIR}/${UBOOT_DTB_IMAGE}
 			install ${S}/${UBOOT_BINARY} ${DEPLOYDIR}/${UBOOT_IMAGE}
 			install ${S}/${UBOOT_BINARY} ${DEPLOY_DIR_IMAGE}/${UBOOT_IMAGE}
