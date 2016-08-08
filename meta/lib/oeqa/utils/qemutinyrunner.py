@@ -60,7 +60,7 @@ class QemuTinyRunner(QemuRunner):
             with open(self.logfile, "a") as f:
                 f.write("%s" % msg)
 
-    def start(self, qemuparams = None):
+    def start(self, qemuparams = None, ssh=True, extra_bootparams=None):
 
         if self.display:
             os.environ["DISPLAY"] = self.display

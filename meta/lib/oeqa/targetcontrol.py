@@ -66,7 +66,7 @@ class BaseTarget(object, metaclass=ABCMeta):
         bb.note("SSH log file: %s" %  self.sshlog)
 
     @abstractmethod
-    def start(self, params=None, ssh=True):
+    def start(self, params=None, ssh=True, extra_bootparams=None):
         pass
 
     @abstractmethod
@@ -230,7 +230,7 @@ class SimpleRemoteTarget(BaseTarget):
     def deploy(self):
         super(SimpleRemoteTarget, self).deploy()
 
-    def start(self, params=None, ssh=True):
+    def start(self, params=None, ssh=True, extra_bootparams=None):
         if ssh:
             self.connection = SSHControl(self.ip, logfile=self.sshlog, port=self.port)
 
