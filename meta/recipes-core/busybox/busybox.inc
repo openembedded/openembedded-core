@@ -286,8 +286,8 @@ do_install () {
                         for i in $tmp
                         do
                                 j=`echo ${i} | sed s/\;/\ /g`
-                                label=`echo ${i} | sed -e 's/tty//' -e 's/^.*;//' -e 's/;.*//'`
-                                echo "tty$label::respawn:${base_sbindir}/getty ${j}" >> ${D}${sysconfdir}/inittab
+                                id=`echo ${i} | sed -e 's/^.*;//' -e 's/;.*//'`
+                                echo "$id::respawn:${base_sbindir}/getty ${j}" >> ${D}${sysconfdir}/inittab
                         done
                 fi
         fi
