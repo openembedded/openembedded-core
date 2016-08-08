@@ -33,6 +33,7 @@ EXTRA_OECONF = "\
 		"
 
 EXTRA_OECONF += "TAR=tar"
+EXTRA_OECONF += "DEB_HOST_ARCH=${DPKG_ARCH}"
 
 do_configure () {
     echo >> ${S}/m4/compiler.m4
