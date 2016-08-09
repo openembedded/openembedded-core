@@ -144,6 +144,12 @@ if [ ! "${device#/dev/mmcblk}" = "${device}" ]; then
     part_prefix="p"
     rootwait="rootwait"
 fi
+
+# USB devices also require rootwait
+if [ -n `readlink /dev/disk/by-id/usb* | grep $TARGET_DEVICE_NAME` ]; then
+    rootwait="rootwait"
+fi
+
 bootfs=${device}${part_prefix}1
 rootfs=${device}${part_prefix}2
 swap=${device}${part_prefix}3

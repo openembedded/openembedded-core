@@ -152,6 +152,11 @@ if [ ! "${device#/dev/mmcblk}" = "${device}" ]; then
     rootwait="rootwait"
 fi
 
+# USB devices also require rootwait
+if [ -n `readlink /dev/disk/by-id/usb* | grep $TARGET_DEVICE_NAME` ]; then
+    rootwait="rootwait"
+fi
+
 if [ $grub_version -eq 0 ] ; then
     bios_boot=''
     bootfs=${device}${part_prefix}1
