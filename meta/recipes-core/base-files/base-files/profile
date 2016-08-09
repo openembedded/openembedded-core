@@ -6,7 +6,7 @@ EDITOR="vi"			# needed for packages like cron, git-commit
 test -z "$TERM" && TERM="vt100"	# Basic terminal capab. For screen etc.
 
 if [ ! -e /etc/localtime -a ! -e /etc/TZ ]; then
-	TZ="UTC"		# Time Zone. Look at http://theory.uwinnipeg.ca/gnu/glibc/libc_303.html 
+	TZ="UTC"		# Time Zone. Look at http://theory.uwinnipeg.ca/gnu/glibc/libc_303.html
 				# for an explanation of how to set this to your local timezone.
 	export TZ
 fi
@@ -29,10 +29,11 @@ if [ -d /etc/profile.d ]; then
 fi
 
 if [ -x /usr/bin/resize ];then
-  /usr/bin/resize >/dev/null
+  # Make sure we are on a serial console (i.e. the device used starts with /dev/tty),
+  # otherwise we confuse e.g. the eclipse launcher which tries do use ssh
+  test `tty | cut -c1-8` = "/dev/tty" && resize >/dev/null
 fi
 
 export PATH PS1 OPIEDIR QPEDIR QTDIR EDITOR TERM
 
 umask 022
-
