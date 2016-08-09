@@ -56,41 +56,41 @@ inherit distutils
 
 do_install_append() {
    # We don't support the following items
-   rm -rf ${D}${libdir}/python*/site-packages/smart/backends/slack
-   rm -rf ${D}${libdir}/python*/site-packages/smart/backends/arch
-   rm -rf ${D}${libdir}/python*/site-packages/smart/interfaces/qt
+   rm -rf ${D}${PYTHON_SITEPACKAGES_DIR}/smart/backends/slack
+   rm -rf ${D}${PYTHON_SITEPACKAGES_DIR}/smart/backends/arch
+   rm -rf ${D}${PYTHON_SITEPACKAGES_DIR}/smart/interfaces/qt
 
    # Temporary, debian support in OE is missing the python module
-   rm -f ${D}${libdir}/python*/site-packages/smart/plugins/aptchannelsync.py*
-   rm -f ${D}${libdir}/python*/site-packages/smart/plugins/debdir.py*
-   rm -rf ${D}${libdir}/python*/site-packages/smart/backends/deb
+   rm -f ${D}${PYTHON_SITEPACKAGES_DIR}/smart/plugins/aptchannelsync.py*
+   rm -f ${D}${PYTHON_SITEPACKAGES_DIR}/smart/plugins/debdir.py*
+   rm -rf ${D}${PYTHON_SITEPACKAGES_DIR}/smart/backends/deb
 
    # Disable automatic channel detection
-   rm -f ${D}${libdir}/python*/site-packages/smart/plugins/detectsys.py*
+   rm -f ${D}${PYTHON_SITEPACKAGES_DIR}/smart/plugins/detectsys.py*
 
    # Disable landscape support
-   rm -f ${D}${libdir}/python*/site-packages/smart/plugins/landscape.py*
+   rm -f ${D}${PYTHON_SITEPACKAGES_DIR}/smart/plugins/landscape.py*
 
    # Disable urpmi channel support
-   rm -f ${D}${libdir}/python*/site-packages/smart/plugins/urpmichannelsync.py*
+   rm -f ${D}${PYTHON_SITEPACKAGES_DIR}/smart/plugins/urpmichannelsync.py*
 
    # Disable yum channel support
-   rm -f ${D}${libdir}/python*/site-packages/smart/plugins/yumchannelsync.py*
+   rm -f ${D}${PYTHON_SITEPACKAGES_DIR}/smart/plugins/yumchannelsync.py*
 
    # Disable zypper channel support
-   rm -f ${D}${libdir}/python*/site-packages/smart/plugins/zyppchannelsync.py*
+   rm -f ${D}${PYTHON_SITEPACKAGES_DIR}/smart/plugins/zyppchannelsync.py*
 
    if [ -z "${@bb.utils.contains('PACKAGECONFIG', 'rpm', 'rpm', '', d)}" ]; then
-      rm -f ${D}${libdir}/python*/site-packages/smart/plugins/rpmdir.py*
-      rm -rf ${D}${libdir}/python*/site-packages/smart/backends/rpm
+      rm -f ${D}${PYTHON_SITEPACKAGES_DIR}/smart/plugins/rpmdir.py*
+      rm -rf ${D}${PYTHON_SITEPACKAGES_DIR}/smart/backends/rpm
    fi
 
    if [ -z "${@bb.utils.contains('PACKAGECONFIG', 'qt4', 'qt4', '', d)}" ]; then
-      rm -rf ${D}${libdir}/python*/site-packages/smart/interfaces/qt4
+      rm -rf ${D}${PYTHON_SITEPACKAGES_DIR}/smart/interfaces/qt4
    fi
 
    if [ -z "${@bb.utils.contains('PACKAGECONFIG', 'gtk+', 'gtk', '', d)}" ]; then
-      rm -rf ${D}${libdir}/python*/site-packages/smart/interfaces/gtk
+      rm -rf ${D}${PYTHON_SITEPACKAGES_DIR}/smart/interfaces/gtk
    fi
 }
 
@@ -130,10 +130,10 @@ RDEPENDS_${PN}-interface-gtk = "gtk+ ${PN}-interface-images"
 
 FILES_smartpm = "${bindir}/smart"
 
-FILES_${PN}-backend-rpm = "${libdir}/python*/site-packages/smart/backends/rpm"
+FILES_${PN}-backend-rpm = "${PYTHON_SITEPACKAGES_DIR}/smart/backends/rpm"
 
-FILES_${PN}-interface-qt4 = "${libdir}/python*/site-packages/smart/interfaces/qt4"
-FILES_${PN}-interface-gtk = "${libdir}/python*/site-packages/smart/interfaces/gtk"
+FILES_${PN}-interface-qt4 = "${PYTHON_SITEPACKAGES_DIR}/smart/interfaces/qt4"
+FILES_${PN}-interface-gtk = "${PYTHON_SITEPACKAGES_DIR}/smart/interfaces/gtk"
 FILES_${PN}-interface-images = "${datadir}/${baselib}/python*/site-packages/smart/interfaces/images"
 
 BBCLASSEXTEND = "native nativesdk"

@@ -259,7 +259,7 @@ PACKAGECONFIG[xar] = "--with-xar,--without-xar,xar,"
 
 WITH_PYTHON = " --with-python=${PYTHON_BASEVERSION} \
 		--with-python-inc-dir=${STAGING_INCDIR}/python${PYTHON_BASEVERSION} \
-		--with-python-lib-dir=${libdir}/python${PYTHON_BASEVERSION}/site-packages \
+		--with-python-lib-dir=${PYTHON_SITEPACKAGES_DIR} \
 		--without-pythonembed"
 PACKAGECONFIG[python] = "${WITH_PYTHON},--without-python,python,"
 
@@ -477,7 +477,7 @@ RDEPENDS_${PN}-build = "file bash perl"
 
 RDEPENDS_python-rpm = "${PN} python"
 
-FILES_python-rpm = "${libdir}/python*/site-packages/rpm"
+FILES_python-rpm = "${PYTHON_SITEPACKAGES_DIR}/rpm"
 PROVIDES += "python-rpm"
 
 FILES_perl-module-rpm = "${libdir}/perl/*/* \
@@ -512,7 +512,7 @@ FILES_${PN}-staticdev = " \
 		${libdir}/librpmmisc.a \
 		${libdir}/librpmbuild.a \
 		${libdir}/rpm/lib/liblua.a \
-		${libdir}/python*/site-packages/rpm/*.a \
+		${PYTHON_SITEPACKAGES_DIR}/rpm/*.a \
 		"
 
 do_configure() {
@@ -581,10 +581,10 @@ do_install_append() {
 	rm -f ${D}/${mandir}/man1/lz*.1
 	rm -f ${D}/${libdir}/pkgconfig/liblzma*
 
-	rm -f ${D}/${libdir}/python%{with_python_version}/site-packages/*.a
-	rm -f ${D}/${libdir}/python%{with_python_version}/site-packages/*.la
-	rm -f ${D}/${libdir}/python%{with_python_version}/site-packages/rpm/*.a
-	rm -f ${D}/${libdir}/python%{with_python_version}/site-packages/rpm/*.la
+	rm -f ${D}${PYTHON_SITEPACKAGES_DIR}/*.a
+	rm -f ${D}${PYTHON_SITEPACKAGES_DIR}/*.la
+	rm -f ${D}${PYTHON_SITEPACKAGES_DIR}/rpm/*.a
+	rm -f ${D}${PYTHON_SITEPACKAGES_DIR}/rpm/*.la
 
 	#find ${D}/${libdir}/perl5 -type f -a \( -name perllocal.pod -o -name .packlist \
 	#	-o \( -name '*.bs' -a -empty \) \) -exec rm -f {} ';'
@@ -647,11 +647,11 @@ EOF
 }
 
 do_install_append_class-native () {
-	sed -i -e 's|^#!.*/usr/bin/python|#! /usr/bin/env nativepython|' ${D}/${libdir}/python2.7/site-packages/rpm/transaction.py
+	sed -i -e 's|^#!.*/usr/bin/python|#! /usr/bin/env nativepython|' ${D}${PYTHON_SITEPACKAGES_DIR}/rpm/transaction.py
 }
 
 do_install_append_class-nativesdk () {
-	sed -i -e 's|^#!.*/usr/bin/python|#! /usr/bin/env python|' ${D}/${libdir}/python2.7/site-packages/rpm/transaction.py
+	sed -i -e 's|^#!.*/usr/bin/python|#! /usr/bin/env python|' ${D}${PYTHON_SITEPACKAGES_DIR}/rpm/transaction.py
 }
 
 def multilib_rpmmacros(d):

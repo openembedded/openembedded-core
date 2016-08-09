@@ -16,8 +16,8 @@ RDEPENDS_${PN}-ptest += "make perl bash"
 SRCREV = "a90f2c1e10b759782653a81815625e9d1bbb75ca"
 PV = "2.7.1+git${SRCPV}"
 
-PYTHON_OPTION = "am_cv_python_pyexecdir='${libdir}/python${PYTHON_BASEVERSION}/site-packages' \
-                 am_cv_python_pythondir='${libdir}/python${PYTHON_BASEVERSION}/site-packages' \
+PYTHON_OPTION = "am_cv_python_pyexecdir='${PYTHON_SITEPACKAGES_DIR}' \
+                 am_cv_python_pythondir='${PYTHON_SITEPACKAGES_DIR}' \
                  PYTHON_INCLUDE='-I${STAGING_INCDIR}/python${PYTHON_BASEVERSION}${PYTHON_ABI}' \
 "
 PACKAGECONFIG ??= "lttng-ust"
@@ -39,9 +39,9 @@ USERADD_PACKAGES = "${PN}"
 GROUPADD_PARAM_${PN} = "tracing"
 
 FILES_${PN} += "${libdir}/lttng/libexec/* ${datadir}/xml/lttng \
-                ${libdir}/python${PYTHON_BASEVERSION}/site-packages/*"
-FILES_${PN}-staticdev += "${libdir}/python${PYTHON_BASEVERSION}/site-packages/*.a"
-FILES_${PN}-dev += "${libdir}/python${PYTHON_BASEVERSION}/site-packages/*.la"
+                ${PYTHON_SITEPACKAGES_DIR}/*"
+FILES_${PN}-staticdev += "${PYTHON_SITEPACKAGES_DIR}/*.a"
+FILES_${PN}-dev += "${PYTHON_SITEPACKAGES_DIR}/*.la"
 
 # Since files are installed into ${libdir}/lttng/libexec we match 
 # the libexec insane test so skip it.
