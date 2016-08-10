@@ -932,10 +932,11 @@ def check_sanity_everybuild(status, d):
         with open(checkfile, "w") as f:
             f.write(tmpdir)
 
-    # Check /bin/sh links to dash or bash
-    real_sh = os.path.realpath('/bin/sh')
-    if not real_sh.endswith('/dash') and not real_sh.endswith('/bash'):
-        status.addresult("Error, /bin/sh links to %s, must be dash or bash\n" % real_sh)
+    # If /bin/sh is a symlink, check that it points to dash or bash
+    if os.path.islink('/bin/sh'):
+        real_sh = os.path.realpath('/bin/sh')
+        if not real_sh.endswith('/dash') and not real_sh.endswith('/bash'):
+            status.addresult("Error, /bin/sh links to %s, must be dash or bash\n" % real_sh)
 
 def check_sanity(sanity_data):
     class SanityStatus(object):
