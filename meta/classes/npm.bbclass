@@ -1,4 +1,5 @@
 DEPENDS_prepend = "nodejs-native "
+RDEPENDS_${PN}_prepend = "nodejs "
 S = "${WORKDIR}/npmpkg"
 
 NPM_INSTALLDIR = "${D}${libdir}/node_modules/${PN}"
