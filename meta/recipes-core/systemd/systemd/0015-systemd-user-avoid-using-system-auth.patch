@@ -29,7 +29,7 @@ index f188a8e..862d8d7 100644
  )m4_dnl
  session  required pam_loginuid.so
 -session  include system-auth
-+session  include common-account
++session  include common-session
 -- 
 2.8.3
 
