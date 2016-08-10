@@ -9,6 +9,7 @@ import collections
 import bb
 import tempfile
 import oe.utils
+import oe.path
 import string
 from oe.gpg_sign import get_signer
 
@@ -175,7 +176,7 @@ class RpmIndexer(Indexer):
             dbpath = os.path.join(self.d.getVar('WORKDIR', True), 'rpmdb', arch)
             if os.path.exists(dbpath):
                 bb.utils.remove(dbpath, True)
-            arch_dir = os.path.join(self.deploy_dir, arch)
+            arch_dir = os.path.join(self.d.getVar('WORKDIR', True), 'rpms', arch)
             if not os.path.isdir(arch_dir):
                 continue
 
@@ -1010,8 +1011,18 @@ class RpmPM(PackageManager):
         ch_already_added = []
         for canonical_arch in platform_extra:
             arch = canonical_arch.split('-')[0]
-            arch_channel = os.path.join(self.deploy_dir, arch)
-            if os.path.exists(arch_channel) and not arch in ch_already_added:
+            arch_channel = os.path.join(self.d.getVar('WORKDIR', True), 'rpms', arch)
+            oe.path.remove(arch_channel)
+            deploy_arch_dir = os.path.join(self.deploy_dir, arch)
+            if not os.path.exists(deploy_arch_dir):
+                    continue
+
+            lockfilename = self.d.getVar('DEPLOY_DIR_RPM', True) + "/rpm.lock"
+            lf = bb.utils.lockfile(lockfilename, False)
+            oe.path.copyhardlinktree(deploy_arch_dir, arch_channel)
+            bb.utils.unlockfile(lf)
+
+            if not arch in ch_already_added:
                 bb.note('Adding Smart channel %s (%s)' %
                         (arch, channel_priority))
                 self._invoke_smart('channel --add %s type=rpm-md baseurl=%s -y'
