@@ -244,7 +244,11 @@ class BuildPerfTest(object):
             split = strtime.split(':')
             hours = int(split[0]) if len(split) > 2 else 0
             mins = int(split[-2])
-            secs, frac = split[-1].split('.')
+            try:
+                secs, frac = split[-1].split('.')
+            except:
+                secs = split[-1]
+                frac = '0'
             secs = int(secs)
             microsecs = int(float('0.' + frac) * pow(10, 6))
             return timedelta(0, hours*3600 + mins*60 + secs, microsecs)
