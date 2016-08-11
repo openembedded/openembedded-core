@@ -105,6 +105,8 @@ def parse_args(argv):
                         help="Lock file to use")
     parser.add_argument('-o', '--out-dir', default='results-{date}',
                         help="Output directory for test results")
+    parser.add_argument('--run-tests', nargs='+', metavar='TEST',
+                        help="List of tests to run")
 
     return parser.parse_args(argv)
 
@@ -133,7 +135,10 @@ def main(argv=None):
 
     # Load build perf tests
     loader = BuildPerfTestLoader()
-    suite = loader.discover(start_dir=os.path.dirname(oeqa.buildperf.__file__))
+    if args.run_tests:
+        suite = loader.loadTestsFromNames(args.run_tests, oeqa.buildperf)
+    else:
+        suite = loader.loadTestsFromModule(oeqa.buildperf)
 
     archive_build_conf(out_dir)
     runner = BuildPerfTestRunner(out_dir, verbosity=2)
