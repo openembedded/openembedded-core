@@ -452,8 +452,12 @@ python copy_buildsystem () {
                 f.write('%s\t%s\n' % (chksum, os.path.relpath(fn, baseoutpath)))
 }
 
-def extsdk_get_buildtools_filename(d):
-    return '*-buildtools-nativesdk-standalone-*.sh'
+def get_current_buildtools(d):
+    """Get the file name of the current buildtools installer"""
+    import glob
+    btfiles = glob.glob(os.path.join(d.getVar('SDK_DEPLOY', True), '*-buildtools-nativesdk-standalone-*.sh'))
+    btfiles.sort(key=os.path.getctime)
+    return os.path.basename(btfiles[-1])
 
 install_tools() {
 	install -d ${SDK_OUTPUT}/${SDKPATHNATIVE}${bindir_nativesdk}
@@ -462,8 +466,7 @@ install_tools() {
 	touch ${SDK_OUTPUT}/${SDKPATH}/.devtoolbase
 
 	# find latest buildtools-tarball and install it
-	buildtools_path=`ls -t1 ${SDK_DEPLOY}/${@extsdk_get_buildtools_filename(d)} | head -n1`
-	install $buildtools_path ${SDK_OUTPUT}/${SDKPATH}
+	install ${SDK_DEPLOY}/${SDK_BUILDTOOLS_INSTALLER} ${SDK_OUTPUT}/${SDKPATH}
 
 	install -m 0644 ${COREBASE}/meta/files/ext-sdk-prepare.py ${SDK_OUTPUT}/${SDKPATH}
 }
@@ -491,10 +494,10 @@ sdk_ext_postinst() {
 	printf "\nExtracting buildtools...\n"
 	cd $target_sdk_dir
 	env_setup_script="$target_sdk_dir/environment-setup-${REAL_MULTIMACH_TARGET_SYS}"
-	printf "buildtools\ny" | ./*buildtools-nativesdk-standalone* > buildtools.log || { printf 'ERROR: buildtools installation failed:\n' ; cat buildtools.log ; echo "printf 'ERROR: this SDK was not fully installed and needs reinstalling\n'" >> $env_setup_script ; exit 1 ; }
+	printf "buildtools\ny" | ./${SDK_BUILDTOOLS_INSTALLER} > buildtools.log || { printf 'ERROR: buildtools installation failed:\n' ; cat buildtools.log ; echo "printf 'ERROR: this SDK was not fully installed and needs reinstalling\n'" >> $env_setup_script ; exit 1 ; }
 
 	# Delete the buildtools tar file since it won't be used again
-	rm ./*buildtools-nativesdk-standalone*.sh -f
+	rm -f ./${SDK_BUILDTOOLS_INSTALLER}
 	# We don't need the log either since it succeeded
 	rm -f buildtools.log
 
@@ -538,6 +541,8 @@ fakeroot python do_populate_sdk_ext() {
         bb.fatal('The extensible SDK can currently only be built for the same architecture as the machine being built on - SDK_ARCH is set to %s (likely via setting SDKMACHINE) which is different from the architecture of the build machine (%s). Unable to continue.' % (d.getVar('SDK_ARCH', True), d.getVar('BUILD_ARCH', True)))
 
     d.setVar('SDK_INSTALL_TARGETS', get_sdk_install_targets(d))
+    buildtools_fn = get_current_buildtools(d)
+    d.setVar('SDK_BUILDTOOLS_INSTALLER', buildtools_fn)
 
     bb.build.exec_func("do_populate_sdk", d)
 }
