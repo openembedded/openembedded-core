@@ -5,7 +5,7 @@ SECTION = "multimedia"
 
 DEPENDS = "gstreamer1.0 glib-2.0-native"
 
-inherit autotools pkgconfig upstream-version-is-even gobject-introspection
+inherit autotools pkgconfig upstream-version-is-even gobject-introspection gtk-doc
 
 acpaths = "-I ${S}/common/m4 -I ${S}/m4"
 
@@ -35,6 +35,18 @@ delete_pkg_m4_file() {
 	rm "${S}/common/m4/pkg.m4" || true
 }
 
-do_configure[prefuncs] += " delete_pkg_m4_file"
+# gstreamer is not using system-wide makefiles (which we patch in gtkdoc recipe,
+# but its own custom ones, which we have to patch here
+patch_gtk_doc_makefiles() {
+        # Patch the gtk-doc makefiles so that the qemu wrapper is used to run transient binaries
+        # instead of libtool wrapper or running them directly
+        # Also substitute a bogus plugin scanner, as trying to run the real one is causing issues during build on x86_64.
+        sed -i \
+           -e "s|GTKDOC_RUN =.*|GTKDOC_RUN = \$(top_builddir)/gtkdoc-qemuwrapper|" \
+           -e "s|\$(GTKDOC_EXTRA_ENVIRONMENT)|\$(GTKDOC_EXTRA_ENVIRONMENT) GST_PLUGIN_SCANNER_1_0=\$(top_builddir)/libs/gst/helpers/gst-plugin-scanner-dummy|" \
+           ${S}/common/gtk-doc*mak
+}
+
+do_configure[prefuncs] += " delete_pkg_m4_file patch_gtk_doc_makefiles"
 
 PACKAGES_DYNAMIC = "^${PN}-.*"
