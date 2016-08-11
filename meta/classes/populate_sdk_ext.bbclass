@@ -85,10 +85,11 @@ SDK_EXT_HOST_MANIFEST = "${SDK_DEPLOY}/${TOOLCHAINEXT_OUTPUTNAME}.host.manifest"
 
 SDK_TITLE_task-populate-sdk-ext = "${@d.getVar('DISTRO_NAME', True) or d.getVar('DISTRO', True)} Extensible SDK"
 
-def clean_esdk_builddir(sdkbasepath):
+def clean_esdk_builddir(d, sdkbasepath):
     """Clean up traces of the fake build for create_filtered_tasklist()"""
     import shutil
-    cleanpaths = 'tmp cache conf/sanity_info conf/templateconf.cfg downloads'.split()
+    cleanpaths = 'cache conf/sanity_info conf/templateconf.cfg'.split()
+    cleanpaths.append(os.path.basename(d.getVar('TMPDIR', True)))
     for pth in cleanpaths:
         fullpth = os.path.join(sdkbasepath, pth)
         if os.path.isdir(fullpth):
@@ -140,7 +141,7 @@ def create_filtered_tasklist(d, sdkbasepath, tasklistfile, conf_initpath):
             os.rename(temp_sdkbasepath, sdkbasepath)
         # Clean out residue of running bitbake, which check_sstate_task_list()
         # will effectively do
-        clean_esdk_builddir(sdkbasepath)
+        clean_esdk_builddir(d, sdkbasepath)
     finally:
         os.replace(sdkbasepath + '/conf/local.conf.bak', sdkbasepath + '/conf/local.conf')
 
