@@ -59,7 +59,7 @@ def main():
                 for line in f:
                     logf.write(line)
         if ret:
-            print('ERROR: SDK preparation failed: see %s' % logfile)
+            print('ERROR: SDK preparation failed: error log written to %s' % logfile)
             return ret
 
 if __name__ == "__main__":
