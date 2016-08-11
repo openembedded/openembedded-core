@@ -96,7 +96,7 @@ BITBAKEDIR=$(readlink -f "$BITBAKEDIR")
 BUILDDIR=$(readlink -f "$BUILDDIR")
 
 if [ ! -d "$BITBAKEDIR" ]; then
-    echo >&2 "Error: The bitbake directory ($BITBAKEDIR) does not exist!  Please ensure a copy of bitbake exists at this location"
+    echo >&2 "Error: The bitbake directory ($BITBAKEDIR) does not exist!  Please ensure a copy of bitbake exists at this location or specify an alternative path on the command line"
     return 1
 fi
 
