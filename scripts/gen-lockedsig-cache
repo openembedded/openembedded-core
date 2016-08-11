@@ -57,13 +57,14 @@ for f in files:
     destdir = os.path.dirname(dst)
     mkdir(destdir)
 
+    src = os.path.realpath(f)
     if os.path.exists(dst):
         os.remove(dst)
-    if (os.stat(f).st_dev == os.stat(destdir).st_dev):
+    if (os.stat(src).st_dev == os.stat(destdir).st_dev):
         print('linking')
-        os.link(f, dst)
+        os.link(src, dst)
     else:
         print('copying')
-        shutil.copyfile(f, dst)
+        shutil.copyfile(src, dst)
 
 print('Done!')
