@@ -143,6 +143,16 @@ if [ "$SDK_EXTENSIBLE" = "1" ]; then
 		     "characters such as spaces, @, \$ or +. Abort!"
 		exit 1
 	fi
+	# The build system doesn't work well with /tmp on NFS
+	fs_dev_path="$target_sdk_dir"
+	while [ ! -d "$fs_dev_path" ] ; do
+		fs_dev_path=`dirname $fs_dev_path`
+        done
+	fs_dev_type=`stat -f -c '%t' "$fs_dev_path"`
+	if [ "$fsdevtype" = "6969" ] ; then
+		echo "The target directory path $target_sdk_dir is on NFS, this is not possible. Abort!"
+		exit 1
+	fi
 else
 	if [ -n "$(echo $target_sdk_dir|grep ' ')" ]; then
 		echo "The target directory path ($target_sdk_dir) contains spaces. Abort!"
