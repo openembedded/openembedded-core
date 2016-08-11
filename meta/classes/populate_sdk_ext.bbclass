@@ -108,9 +108,14 @@ def create_filtered_tasklist(d, sdkbasepath, tasklistfile, conf_initpath):
     # Create a temporary build directory that we can pass to the env setup script
     shutil.copyfile(sdkbasepath + '/conf/local.conf', sdkbasepath + '/conf/local.conf.bak')
     try:
+        # Force the use of sstate from the build system
         with open(sdkbasepath + '/conf/local.conf', 'a') as f:
             f.write('\nSSTATE_DIR_forcevariable = "%s"\n' % d.getVar('SSTATE_DIR', True))
             f.write('SSTATE_MIRRORS_forcevariable = ""\n')
+            # Drop uninative if the build isn't using it (or else NATIVELSBSTRING will
+            # be different and we won't be able to find our native sstate)
+            if not bb.data.inherits_class('uninative', d):
+                f.write('INHERIT_remove = "uninative"\n')
 
         # Unfortunately the default SDKPATH (or even a custom value) may contain characters that bitbake
         # will not allow in its COREBASE path, so we need to rename the directory temporarily
