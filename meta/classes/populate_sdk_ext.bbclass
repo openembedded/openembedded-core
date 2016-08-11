@@ -233,6 +233,14 @@ python copy_buildsystem () {
         f.write('    $' + '{SDKBASEMETAPATH}/workspace \\\n')
         f.write('    "\n')
 
+    # Copy uninative tarball
+    # For now this is where uninative.bbclass expects the tarball
+    uninative_file = d.expand('${SDK_DEPLOY}/${BUILD_ARCH}-nativesdk-libc.tar.bz2')
+    uninative_checksum = bb.utils.sha256_file(uninative_file)
+    uninative_outdir = '%s/downloads/uninative/%s' % (baseoutpath, uninative_checksum)
+    bb.utils.mkdirhier(uninative_outdir)
+    shutil.copy(uninative_file, uninative_outdir)
+
     env_whitelist = (d.getVar('BB_ENV_EXTRAWHITE', True) or '').split()
     env_whitelist_values = {}
 
@@ -267,7 +275,8 @@ python copy_buildsystem () {
             # Write a newline just in case there's none at the end of the original
             f.write('\n')
 
-            f.write('INHERIT += "%s"\n\n' % 'uninative')
+            f.write('INHERIT += "%s"\n' % 'uninative')
+            f.write('UNINATIVE_CHECKSUM[%s] = "%s"\n\n' % (d.getVar('BUILD_ARCH', True), uninative_checksum))
             f.write('CONF_VERSION = "%s"\n\n' % d.getVar('CONF_VERSION', False))
 
             # Some classes are not suitable for SDK, remove them from INHERIT
@@ -446,17 +455,9 @@ install_tools() {
 	lnr ${SDK_OUTPUT}/${SDKPATH}/${scriptrelpath}/recipetool ${SDK_OUTPUT}/${SDKPATHNATIVE}${bindir_nativesdk}/recipetool
 	touch ${SDK_OUTPUT}/${SDKPATH}/.devtoolbase
 
-	localconf=${SDK_OUTPUT}/${SDKPATH}/conf/local.conf
-
 	# find latest buildtools-tarball and install it
 	buildtools_path=`ls -t1 ${SDK_DEPLOY}/${@extsdk_get_buildtools_filename(d)} | head -n1`
 	install $buildtools_path ${SDK_OUTPUT}/${SDKPATH}
-
-	# For now this is where uninative.bbclass expects the tarball
-	chksum=`sha256sum ${SDK_DEPLOY}/${BUILD_ARCH}-nativesdk-libc.tar.bz2 | cut -f 1 -d ' '`
-	install -d ${SDK_OUTPUT}/${SDKPATH}/downloads/uninative/$chksum/
-	install ${SDK_DEPLOY}/${BUILD_ARCH}-nativesdk-libc.tar.bz2 ${SDK_OUTPUT}/${SDKPATH}/downloads/uninative/$chksum/
-	echo "UNINATIVE_CHECKSUM[${BUILD_ARCH}] = '$chksum'" >> ${SDK_OUTPUT}/${SDKPATH}/conf/local.conf
 
 	install -m 0644 ${COREBASE}/meta/files/ext-sdk-prepare.py ${SDK_OUTPUT}/${SDKPATH}
 }
