@@ -22,8 +22,11 @@ class SyslogTestConfig(oeRuntimeTest):
         self.assertEqual(status, 0, msg="Can't log into syslog. Output: %s " % output)
 
         (status, output) = self.target.run('grep foobar /var/log/messages')
-        if status != 0 and not oeRuntimeTest.tc.d.getVar("VIRTUAL-RUNTIME_init_manager", "") == "systemd":
-            (status, output) = self.target.run('logread | grep foobar')
+        if status != 0:
+            if oeRuntimeTest.tc.d.getVar("VIRTUAL-RUNTIME_init_manager", "") == "systemd":
+                (status, output) = self.target.run('journalctl -o cat | grep foobar')
+            else:
+                (status, output) = self.target.run('logread | grep foobar')
         self.assertEqual(status, 0, msg="Test log string not found in /var/log/messages or logread. Output: %s " % output)
 
     @testcase(1150)
