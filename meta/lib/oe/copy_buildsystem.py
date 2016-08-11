@@ -201,21 +201,25 @@ def merge_lockedsigs(copy_tasks, lockedsigs_main, lockedsigs_extra, merged_outpu
         write_sigs_file(merged_output, arch_order, merged)
 
 def create_locked_sstate_cache(lockedsigs, input_sstate_cache, output_sstate_cache, d, fixedlsbstring="", filterfile=None):
+    import shutil
     bb.note('Generating sstate-cache...')
 
     nativelsbstring = d.getVar('NATIVELSBSTRING', True)
     bb.process.run("gen-lockedsig-cache %s %s %s %s %s" % (lockedsigs, input_sstate_cache, output_sstate_cache, nativelsbstring, filterfile or ''))
-    if fixedlsbstring:
+    if fixedlsbstring and nativelsbstring != fixedlsbstring:
         nativedir = output_sstate_cache + '/' + nativelsbstring
         if os.path.isdir(nativedir):
             destdir = os.path.join(output_sstate_cache, fixedlsbstring)
-            bb.utils.mkdirhier(destdir)
-
-            dirlist = os.listdir(nativedir)
-            for i in dirlist:
-                src = os.path.join(nativedir, i)
-                dest = os.path.join(destdir, i)
-                os.rename(src, dest)
+            for root, _, files in os.walk(nativedir):
+                for fn in files:
+                    src = os.path.join(root, fn)
+                    dest = os.path.join(destdir, os.path.relpath(src, nativedir))
+                    if os.path.exists(dest):
+                        # Already exists, and it'll be the same file, so just delete it
+                        os.unlink(src)
+                    else:
+                        bb.utils.mkdirhier(os.path.dirname(dest))
+                        shutil.move(src, dest)
 
 def check_sstate_task_list(d, targets, filteroutfile, cmdprefix='', cwd=None, logfile=None):
     import subprocess
