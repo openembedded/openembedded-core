@@ -490,14 +490,16 @@ SDK_PRE_INSTALL_COMMAND_task-populate-sdk-ext = "${sdk_ext_preinst}"
 sdk_ext_postinst() {
 	printf "\nExtracting buildtools...\n"
 	cd $target_sdk_dir
-	printf "buildtools\ny" | ./*buildtools-nativesdk-standalone* > /dev/null || ( printf 'ERROR: buildtools installation failed\n' ; exit 1 )
+	env_setup_script="$target_sdk_dir/environment-setup-${REAL_MULTIMACH_TARGET_SYS}"
+	printf "buildtools\ny" | ./*buildtools-nativesdk-standalone* > buildtools.log || { printf 'ERROR: buildtools installation failed:\n' ; cat buildtools.log ; echo "printf 'ERROR: this SDK was not fully installed and needs reinstalling\n'" >> $env_setup_script ; exit 1 ; }
 
 	# Delete the buildtools tar file since it won't be used again
 	rm ./*buildtools-nativesdk-standalone*.sh -f
+	# We don't need the log either since it succeeded
+	rm -f buildtools.log
 
 	# Make sure when the user sets up the environment, they also get
 	# the buildtools-tarball tools in their path.
-	env_setup_script="$target_sdk_dir/environment-setup-${REAL_MULTIMACH_TARGET_SYS}"
 	echo ". $target_sdk_dir/buildtools/environment-setup*" >> $env_setup_script
 
 	# Allow bitbake environment setup to be ran as part of this sdk.
