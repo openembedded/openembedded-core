@@ -12,6 +12,7 @@ SRC_URI = "https://gmplib.org/download/${BPN}/${BP}${REVISION}.tar.bz2 \
            file://amd64.patch \
            file://use-includedir.patch \
            file://0001-Append-the-user-provided-flags-to-the-auto-detected-.patch \
+           file://0001-confiure.ac-Believe-the-cflags-from-environment.patch \
            "
 
 SRC_URI[md5sum] = "4c175f86e11eb32d8bf9872ca3a8e11d"
