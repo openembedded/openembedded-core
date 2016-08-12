@@ -13,6 +13,7 @@
 import os
 import shutil
 
+import oe.path
 from oeqa.buildperf import BuildPerfTestCase
 from oeqa.utils.commands import get_bb_vars
 
@@ -85,11 +86,11 @@ class Test3(BuildPerfTestCase):
         """Parsing time metrics (bitbake -p)"""
         # Drop all caches and parse
         self.rm_cache()
-        self.force_rm(os.path.join(self.bb_vars['TMPDIR'], 'cache'))
+        oe.path.remove(os.path.join(self.bb_vars['TMPDIR'], 'cache'), True)
         self.measure_cmd_resources(['bitbake', '-p'], 'parse_1',
                                    'bitbake -p (no caches)')
         # Drop tmp/cache
-        self.force_rm(os.path.join(self.bb_vars['TMPDIR'], 'cache'))
+        oe.path.remove(os.path.join(self.bb_vars['TMPDIR'], 'cache'), True)
         self.measure_cmd_resources(['bitbake', '-p'], 'parse_2',
                                    'bitbake -p (no tmp/cache)')
         # Parse with fully cached data

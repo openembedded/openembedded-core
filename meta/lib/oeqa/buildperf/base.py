@@ -23,6 +23,7 @@ import unittest
 from datetime import datetime, timedelta
 from functools import partial
 
+import oe.path
 from oeqa.utils.commands import CommandError, runCmd, get_bb_vars
 from oeqa.utils.git import GitError, GitRepo
 
@@ -297,29 +298,21 @@ class BuildPerfTestCase(unittest.TestCase):
         shutil.move(self.bb_vars['BUILDSTATS_BASE'],
                     os.path.join(self.out_dir, 'buildstats-' + self.name))
 
-    @staticmethod
-    def force_rm(path):
-        """Equivalent of 'rm -rf'"""
-        if os.path.isfile(path) or os.path.islink(path):
-            os.unlink(path)
-        elif os.path.isdir(path):
-            shutil.rmtree(path)
-
     def rm_tmp(self):
         """Cleanup temporary/intermediate files and directories"""
         log.debug("Removing temporary and cache files")
         for name in ['bitbake.lock', 'conf/sanity_info',
                      self.bb_vars['TMPDIR']]:
-            self.force_rm(name)
+            oe.path.remove(name, recurse=True)
 
     def rm_sstate(self):
         """Remove sstate directory"""
         log.debug("Removing sstate-cache")
-        self.force_rm(self.bb_vars['SSTATE_DIR'])
+        oe.path.remove(self.bb_vars['SSTATE_DIR'], recurse=True)
 
     def rm_cache(self):
         """Drop bitbake caches"""
-        self.force_rm(self.bb_vars['PERSISTENT_DIR'])
+        oe.path.remove(self.bb_vars['PERSISTENT_DIR'], recurse=True)
 
     @staticmethod
     def sync():
