@@ -109,6 +109,9 @@ def parse_args(argv):
                         help="Output directory for test results")
     parser.add_argument('--run-tests', nargs='+', metavar='TEST',
                         help="List of tests to run")
+    parser.add_argument('--commit-results', metavar='GIT_DIR',
+                        type=os.path.abspath,
+                        help="Commit result data to a (local) git repository")
 
     return parser.parse_args(argv)
 
@@ -158,6 +161,8 @@ def main(argv=None):
     if result.wasSuccessful():
         if args.globalres_file:
             result.update_globalres_file(args.globalres_file)
+        if args.commit_results:
+            result.git_commit_results(args.commit_results)
         return 0
 
     return 1

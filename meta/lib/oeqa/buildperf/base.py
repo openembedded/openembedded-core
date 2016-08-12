@@ -188,6 +188,41 @@ class BuildPerfTestResult(unittest.TextTestResult):
             fobj.write(','.join(values) + '\n')
 
 
+    def git_commit_results(self, repo_path, branch=None):
+        """Commit results into a Git repository"""
+        repo = GitRepo(repo_path, is_topdir=True)
+        if not branch:
+            branch = self.git_branch
+        log.info("Committing test results into %s %s", repo_path, branch)
+        tmp_index = os.path.join(repo_path, '.git', 'index.oe-build-perf')
+        try:
+            # Create new commit object from the new results
+            env_update = {'GIT_INDEX_FILE': tmp_index,
+                          'GIT_WORK_TREE': self.out_dir}
+            repo.run_cmd('add .', env_update)
+            tree = repo.run_cmd('write-tree', env_update)
+            parent = repo.rev_parse(branch)
+            msg = "Results of {}:{}\n".format(self.git_branch, self.git_commit)
+            git_cmd = ['commit-tree', tree, '-m', msg]
+            if parent:
+                git_cmd += ['-p', parent]
+            commit = repo.run_cmd(git_cmd, env_update)
+
+            # Update branch head
+            git_cmd = ['update-ref', 'refs/heads/' + branch, commit]
+            if parent:
+                git_cmd.append(parent)
+            repo.run_cmd(git_cmd)
+
+            # Update current HEAD, if we're on branch 'branch'
+            if repo.get_current_branch() == branch:
+                log.info("Updating %s HEAD to latest commit", repo_path)
+                repo.run_cmd('reset --hard')
+        finally:
+            if os.path.exists(tmp_index):
+                os.unlink(tmp_index)
+
+
 class BuildPerfTestCase(unittest.TestCase):
     """Base class for build performance tests"""
     SYSRES = 'sysres'
