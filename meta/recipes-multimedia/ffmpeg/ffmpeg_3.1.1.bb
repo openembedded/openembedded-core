@@ -76,6 +76,8 @@ EXTRA_OECONF = " \
     --cross-prefix=${TARGET_PREFIX} \
     \
     --ld="${CCLD}" \
+    --cc="${CC}" \
+    --cxx="${CXX}" \
     --arch=${TARGET_ARCH} \
     --target-os="linux" \
     --enable-cross-compile \
