@@ -218,7 +218,7 @@ if __name__ == "__main__":
     "py_compile.* compileall.*" )
 
     m.addPackage( "${PN}-compression", "Python high-level compression support", "${PN}-core ${PN}-codecs ${PN}-importlib ${PN}-threading ${PN}-shell",
-    "gzip.* zipfile.* tarfile.* lib-dynload/bz2.*.so" )
+    "gzip.* zipfile.* tarfile.* lib-dynload/bz2.*.so lib-dynload/zlib.*.so" )
 
     m.addPackage( "${PN}-crypt", "Python basic cryptographic and hashing support", "${PN}-core",
     "hashlib.* md5.* sha.* lib-dynload/crypt.*.so lib-dynload/_hashlib.*.so lib-dynload/_sha256.*.so lib-dynload/_sha512.*.so" )
@@ -233,7 +233,7 @@ if __name__ == "__main__":
     "ctypes lib-dynload/_ctypes.*.so lib-dynload/_ctypes_test.*.so" ) # directory + low level module
 
     m.addPackage( "${PN}-datetime", "Python calendar and time support", "${PN}-core ${PN}-codecs",
-    "_strptime.* calendar.* lib-dynload/datetime.*.so" )
+    "_strptime.* calendar.* datetime.* lib-dynload/_datetime.*.so" )
 
     m.addPackage( "${PN}-db", "Python file-based database support", "${PN}-core",
     "anydbm.* dumbdbm.* whichdb.* dbm lib-dynload/_dbm.*.so" )
@@ -255,6 +255,9 @@ if __name__ == "__main__":
 
     m.addPackage( "${PN}-email", "Python email support", "${PN}-core ${PN}-io ${PN}-re ${PN}-mime ${PN}-audio ${PN}-image ${PN}-netclient",
     "imaplib.* email" ) # package
+
+    m.addPackage( "${PN}-enum", "Python support for enumerations", "${PN}-core",
+    "enum.*" )
 
     m.addPackage( "${PN}-fcntl", "Python's fcntl interface", "${PN}-core",
     "lib-dynload/fcntl.*.so" )
@@ -336,11 +339,17 @@ if __name__ == "__main__":
     m.addPackage( "${PN}-resource", "Python resource control interface", "${PN}-core",
     "lib-dynload/resource.*.so" )
 
+    m.addPackage( "${PN}-selectors", "Python High-level I/O multiplexing", "${PN}-core",
+    "selectors.*" )
+
     m.addPackage( "${PN}-shell", "Python shell-like functionality", "${PN}-core ${PN}-re ${PN}-compression",
     "cmd.* commands.* dircache.* fnmatch.* glob.* popen2.* shlex.* shutil.*" )
 
-    m.addPackage( "${PN}-subprocess", "Python subprocess support", "${PN}-core ${PN}-io ${PN}-re ${PN}-fcntl ${PN}-pickle ${PN}-threading",
-    "subprocess.*" )
+    m.addPackage( "${PN}-signal", "Python set handlers for asynchronous events support", "${PN}-core",
+    "signal.*" )
+
+    m.addPackage( "${PN}-subprocess", "Python subprocess support", "${PN}-core ${PN}-io ${PN}-re ${PN}-fcntl ${PN}-pickle ${PN}-threading ${PN}-signal ${PN}-selectors",
+    "subprocess.* lib-dynload/_posixsubprocess.*.so" )
 
     m.addPackage( "${PN}-sqlite3", "Python Sqlite3 database support", "${PN}-core ${PN}-datetime ${PN}-lang ${PN}-crypt ${PN}-io ${PN}-threading",
     "lib-dynload/_sqlite3.*.so sqlite3/dbapi2.* sqlite3/__init__.* sqlite3/dump.*" )
