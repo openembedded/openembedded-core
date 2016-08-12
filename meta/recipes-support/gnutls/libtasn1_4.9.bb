@@ -10,6 +10,10 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504 \
 
 SRC_URI = "${GNU_MIRROR}/libtasn1/libtasn1-${PV}.tar.gz \
            file://dont-depend-on-help2man.patch \
+           file://0001-configure-don-t-add-Werror-to-build-flags.patch \
+           file://0002-ASN.y-corrected-compiler-warning.patch \
+           file://0003-parser_aux-corrected-potential-null-pointer-derefere.patch \
+           file://0004-tools-eliminated-compiler-warnings.patch \
            "
 
 SRC_URI[md5sum] = "3018d0f466a32b66dde41bb122e6cab6"
