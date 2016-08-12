@@ -193,6 +193,11 @@ class BuildPerfTestResult(unittest.TextTestResult):
         repo = GitRepo(repo_path, is_topdir=True)
         if not branch:
             branch = self.git_branch
+        else:
+            # Replace keywords
+            branch = branch.format(git_branch=self.git_branch,
+                                   tester_host=self.hostname)
+
         log.info("Committing test results into %s %s", repo_path, branch)
         tmp_index = os.path.join(repo_path, '.git', 'index.oe-build-perf')
         try:

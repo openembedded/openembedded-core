@@ -112,6 +112,9 @@ def parse_args(argv):
     parser.add_argument('--commit-results', metavar='GIT_DIR',
                         type=os.path.abspath,
                         help="Commit result data to a (local) git repository")
+    parser.add_argument('--commit-results-branch', metavar='BRANCH',
+                        default="{git_branch}",
+                        help="Commit results to branch BRANCH.")
 
     return parser.parse_args(argv)
 
@@ -162,7 +165,8 @@ def main(argv=None):
         if args.globalres_file:
             result.update_globalres_file(args.globalres_file)
         if args.commit_results:
-            result.git_commit_results(args.commit_results)
+            result.git_commit_results(args.commit_results,
+                                      args.commit_results_branch)
         return 0
 
     return 1
