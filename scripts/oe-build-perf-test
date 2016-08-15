@@ -31,6 +31,7 @@ import oeqa.buildperf
 from oeqa.buildperf import (BuildPerfTestLoader, BuildPerfTestResult,
                             BuildPerfTestRunner, KernelDropCaches)
 from oeqa.utils.commands import runCmd
+from oeqa.utils.git import GitRepo, GitError
 
 
 # Set-up logging
@@ -68,7 +69,30 @@ def pre_run_sanity_check():
     if ret.status:
         log.error("bitbake command not found")
         return False
+    return True
 
+def init_git_repo(path):
+    """Check/create Git repository where to store results"""
+    path = os.path.abspath(path)
+    if os.path.isfile(path):
+        log.error("Invalid Git repo %s: path exists but is not a directory", path)
+        return False
+    if not os.path.isdir(path):
+        try:
+            os.mkdir(path)
+        except (FileNotFoundError, PermissionError) as err:
+            log.error("Failed to mkdir %s: %s", path, err)
+            return False
+    if not os.listdir(path):
+        log.info("Initializing a new Git repo at %s", path)
+        GitRepo.init(path)
+    try:
+        GitRepo(path, is_topdir=True)
+    except GitError:
+        log.error("No Git repository but a non-empty directory found at %s.\n"
+                  "Please specify a Git repository, an empty directory or "
+                  "a non-existing directory", path)
+        return False
     return True
 
 
@@ -137,6 +161,9 @@ def main(argv=None):
 
     if not pre_run_sanity_check():
         return 1
+    if args.commit_results:
+        if not init_git_repo(args.commit_results):
+            return 1
 
     # Check our capability to drop caches and ask pass if needed
     KernelDropCaches.check()
