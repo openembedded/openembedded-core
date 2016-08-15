@@ -35,6 +35,12 @@ class GitRepo(object):
                 cmd_str, ret.status, ret.output))
         return ret.output.strip()
 
+    @staticmethod
+    def init(path):
+        """Initialize a new Git repository"""
+        GitRepo._run_git_cmd_at('init', cwd=path)
+        return GitRepo(path, is_topdir=True)
+
     def run_cmd(self, git_args, env_update=None):
         """Run Git command"""
         env = None
