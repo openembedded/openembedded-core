@@ -4,6 +4,8 @@
 # Released under the MIT license (see COPYING.MIT)
 #
 """Git repository interactions"""
+import os
+
 from oeqa.utils.commands import runCmd
 
 
@@ -13,9 +15,12 @@ class GitError(Exception):
 
 class GitRepo(object):
     """Class representing a Git repository clone"""
-    def __init__(self, cwd):
+    def __init__(self, path, is_topdir=False):
         self.top_dir = self._run_git_cmd_at(['rev-parse', '--show-toplevel'],
-                                            cwd)
+                                            path)
+        realpath = os.path.realpath(path)
+        if is_topdir and realpath != self.top_dir:
+            raise GitError("{} is not a Git top directory".format(realpath))
 
     @staticmethod
     def _run_git_cmd_at(git_args, cwd, **kwargs):
