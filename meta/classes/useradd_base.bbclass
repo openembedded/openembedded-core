@@ -17,7 +17,6 @@ perform_groupadd () {
 	local groupname=`echo "$opts" | awk '{ print $NF }'`
 	local group_exists="`grep "^$groupname:" $rootdir/etc/group || true`"
 	if test "x$group_exists" = "x"; then
-		opts=`echo $opts | sed s/\'/\"/g`
 		eval flock -x $rootdir${sysconfdir} -c \"$PSEUDO groupadd \$opts\" || true
 		group_exists="`grep "^$groupname:" $rootdir/etc/group || true`"
 		if test "x$group_exists" = "x"; then
@@ -35,7 +34,6 @@ perform_useradd () {
 	local username=`echo "$opts" | awk '{ print $NF }'`
 	local user_exists="`grep "^$username:" $rootdir/etc/passwd || true`"
 	if test "x$user_exists" = "x"; then
-		opts=`echo $opts | sed s/\'/\"/g`
 		eval flock -x $rootdir${sysconfdir} -c  \"$PSEUDO useradd \$opts\" || true
 		user_exists="`grep "^$username:" $rootdir/etc/passwd || true`"
 		if test "x$user_exists" = "x"; then
