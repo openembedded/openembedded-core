@@ -112,6 +112,10 @@ def main(argv=None):
     """Script entry point"""
     args = parse_args(argv)
 
+    # Set-up log file
+    out_dir = args.out_dir.format(date=datetime.now().strftime('%Y%m%d%H%M%S'))
+    setup_file_logging(os.path.join(out_dir, 'output.log'))
+
     if args.debug:
         log.setLevel(logging.DEBUG)
 
@@ -129,9 +133,6 @@ def main(argv=None):
     # Load build perf tests
     loader = BuildPerfTestLoader()
     suite = loader.discover(start_dir=os.path.dirname(oeqa.buildperf.__file__))
-    # Set-up log file
-    out_dir = args.out_dir.format(date=datetime.now().strftime('%Y%m%d%H%M%S'))
-    setup_file_logging(os.path.join(out_dir, 'output.log'))
 
     archive_build_conf(out_dir)
     runner = BuildPerfTestRunner(out_dir, verbosity=2)
