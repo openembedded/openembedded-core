@@ -2,15 +2,15 @@ require gcc-common.inc
 
 # Third digit in PV should be incremented after a minor release
 
-PV = "6.1.1"
+PV = "6.2.0"
 
-#SNAP = "5-20150405"
+SNAP = "-RC-20160815"
 
 # BINV should be incremented to a revision after a minor gcc release
 
 BINV = "6.1.1"
 
-FILESEXTRAPATHS =. "${FILE_DIRNAME}/gcc-6.1:${FILE_DIRNAME}/gcc-6.1/backport:"
+FILESEXTRAPATHS =. "${FILE_DIRNAME}/gcc-6.2:${FILE_DIRNAME}/gcc-6.2/backport:"
 
 DEPENDS =+ "mpfr gmp libmpc zlib"
 NATIVEDEPS = "mpfr-native gmp-native libmpc-native zlib-native"
@@ -25,10 +25,11 @@ LIC_FILES_CHKSUM = "\
     file://COPYING.RUNTIME;md5=fe60d87048567d4fe8c8a0ed2448bcc8 \
 "
 
-SRCREV = "bd9a826d5448db11d29d2ec5884e7e679066f140"
 
 #BASEURI ?= "${GNU_MIRROR}/gcc/gcc-${PV}/gcc-${PV}.tar.bz2"
-BASEURI ?= "git://github.com/gcc-mirror/gcc;branch=gcc-6-branch;protocol=git"
+#SRCREV = "bd9a826d5448db11d29d2ec5884e7e679066f140"
+#BASEURI ?= "git://github.com/gcc-mirror/gcc;branch=gcc-6-branch;protocol=git"
+BASEURI ?= "ftp://sourceware.org/pub/gcc/snapshots/6.2.0-RC-20160815/gcc-6.2.0-RC-20160815.tar.bz2"
 
 SRC_URI = "\
            ${BASEURI} \
@@ -79,15 +80,15 @@ SRC_URI = "\
            file://0045-libgcc-Add-knob-to-use-ldbl-128-on-ppc.patch \
            file://0046-Link-libgcc-using-LDFLAGS-not-just-SHLIB_LDFLAGS.patch \
            file://0047-libgcc_s-Use-alias-for-__cpu_indicator_init-instead-.patch \
-           file://0048-ARM-PR-target-71056-Don-t-use-vectorized-builtins-wh.patch \
            ${BACKPORTS} \
-           file://CVE-2016-4490.patch \
 "
-
 BACKPORTS = ""
 
-#S = "${TMPDIR}/work-shared/gcc-${PV}-${PR}/gcc-${PV}"
-S = "${TMPDIR}/work-shared/gcc-${PV}-${PR}/git"
+SRC_URI[md5sum] = "9ef78bb894dfb38f567416eb67a68989"
+SRC_URI[sha256sum] = "0754995253eb0efc061264b1c4e99efcaee45489a8b940ac5d2fd52e6773f27e"
+
+S = "${TMPDIR}/work-shared/gcc-${PV}-${PR}/gcc-${PV}${SNAP}"
+#S = "${TMPDIR}/work-shared/gcc-${PV}-${PR}/git"
 B = "${WORKDIR}/gcc-${PV}/build.${HOST_SYS}.${TARGET_SYS}"
 
 # Language Overrides
