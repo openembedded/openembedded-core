@@ -139,6 +139,9 @@ def parse_args(argv):
     parser.add_argument('--commit-results-branch', metavar='BRANCH',
                         default="{git_branch}",
                         help="Commit results to branch BRANCH.")
+    parser.add_argument('--commit-results-tag', metavar='TAG',
+                        default="{git_branch}/{git_commit}",
+                        help="Tag results commit with TAG.")
 
     return parser.parse_args(argv)
 
@@ -193,7 +196,8 @@ def main(argv=None):
             result.update_globalres_file(args.globalres_file)
         if args.commit_results:
             result.git_commit_results(args.commit_results,
-                                      args.commit_results_branch)
+                                      args.commit_results_branch,
+                                      args.commit_results_tag)
         return 0
 
     return 1

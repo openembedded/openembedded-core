@@ -188,7 +188,7 @@ class BuildPerfTestResult(unittest.TextTestResult):
             fobj.write(','.join(values) + '\n')
 
 
-    def git_commit_results(self, repo_path, branch=None):
+    def git_commit_results(self, repo_path, branch=None, tag=None):
         """Commit results into a Git repository"""
         repo = GitRepo(repo_path, is_topdir=True)
         if not branch:
@@ -223,6 +223,15 @@ class BuildPerfTestResult(unittest.TextTestResult):
             if repo.get_current_branch() == branch:
                 log.info("Updating %s HEAD to latest commit", repo_path)
                 repo.run_cmd('reset --hard')
+
+            # Create (annotated) tag
+            if tag:
+                # Replace keywords
+                tag = tag.format(git_branch=self.git_branch,
+                                 git_commit=self.git_commit,
+                                 tester_host=self.hostname)
+                repo.run_cmd(['tag', '-a', '-m', msg, tag, commit])
+
         finally:
             if os.path.exists(tmp_index):
                 os.unlink(tmp_index)
