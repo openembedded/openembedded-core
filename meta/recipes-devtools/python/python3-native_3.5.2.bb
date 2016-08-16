@@ -46,9 +46,23 @@ RPROVIDES += " \
     python3-compression-native \
     python3-core-native \
     python3-distutils-native \
+    python3-email-native \
     python3-importlib-native \
     python3-io-native \
+    python3-json-native \
+    python3-lang-native \
+    python3-misc-native \
+    python3-netclient-native \
+    python3-netserver-native \
+    python3-numbers-native \
+    python3-pkgutil-native \
+    python3-pprint-native \
+    python3-re-native \
+    python3-shell-native \
+    python3-subprocess-native \
     python3-textutils-native \
+    python3-threading-native \
+    python3-unittest-native \
 "
 
 EXTRA_OECONF_append = " --bindir=${bindir}/${PN} --without-ensurepip"
