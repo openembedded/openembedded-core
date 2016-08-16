@@ -125,7 +125,7 @@ useradd_sysroot_sstate () {
 
 userdel_sysroot_sstate () {
 if test "x${STAGING_DIR_TARGET}" != "x"; then
-    if [ "${BB_CURRENTTASK}" = "configure" -o "${BB_CURRENTTASK}" = "clean" ]; then
+    if [ "${BB_CURRENTTASK}" = "clean" ]; then
         export PSEUDO="${FAKEROOTENV} PSEUDO_LOCALSTATEDIR=${STAGING_DIR_TARGET}${localstatedir}/pseudo ${STAGING_DIR_NATIVE}${bindir_native}/pseudo"
         OPT="--root ${STAGING_DIR_TARGET}"
 
