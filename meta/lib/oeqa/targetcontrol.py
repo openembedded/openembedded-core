@@ -125,6 +125,12 @@ class QemuTarget(BaseTarget):
         dump_target_cmds = d.getVar("testimage_dump_target", True)
         dump_host_cmds = d.getVar("testimage_dump_host", True)
         dump_dir = d.getVar("TESTIMAGE_DUMP_DIR", True)
+        if d.getVar("QEMU_USE_KVM", False) is not None \
+           and d.getVar("QEMU_USE_KVM", False) == "True" \
+           and "x86" in d.getVar("MACHINE", True):
+            use_kvm = True
+        else:
+            use_kvm = False
 
         # Log QemuRunner log output to a file
         import oe.path
@@ -153,6 +159,7 @@ class QemuTarget(BaseTarget):
                             display = d.getVar("BB_ORIGENV", False).getVar("DISPLAY", True),
                             logfile = self.qemulog,
                             boottime = int(d.getVar("TEST_QEMUBOOT_TIMEOUT", True)),
+                            use_kvm = use_kvm,
                             dump_dir = dump_dir,
                             dump_host_cmds = d.getVar("testimage_dump_host", True))
 
