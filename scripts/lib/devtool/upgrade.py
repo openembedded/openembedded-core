@@ -318,7 +318,7 @@ def _create_new_recipe(newpv, md5, sha256, srcrev, srcbranch, workspace, tinfoil
         newvalues['SRC_URI[md5sum]'] = md5
         newvalues['SRC_URI[sha256sum]'] = sha256
 
-    rd = oe.recipeutils.parse_recipe(fullpath, None, tinfoil.config_data)
+    rd = oe.recipeutils.parse_recipe(tinfoil.cooker, fullpath, None)
     oe.recipeutils.patch_recipe(rd, fullpath, newvalues)
 
     return fullpath, copied

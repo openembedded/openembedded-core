@@ -27,16 +27,16 @@ list_vars = ['SRC_URI', 'LIC_FILES_CHKSUM']
 meta_vars = ['SUMMARY', 'DESCRIPTION', 'HOMEPAGE', 'BUGTRACKER', 'SECTION']
 
 
-def pn_to_recipe(cooker, pn):
+def pn_to_recipe(cooker, pn, mc=''):
     """Convert a recipe name (PN) to the path to the recipe file"""
     import bb.providers
 
-    if pn in cooker.recipecache.pkg_pn:
-        best = bb.providers.findBestProvider(pn, cooker.data, cooker.recipecache, cooker.recipecache.pkg_pn)
+    if pn in cooker.recipecaches[mc].pkg_pn:
+        best = bb.providers.findBestProvider(pn, cooker.data, cooker.recipecaches[mc], cooker.recipecaches[mc].pkg_pn)
         return best[3]
-    elif pn in cooker.recipecache.providers:
-        filenames = cooker.recipecache.providers[pn]
-        eligible, foundUnique = bb.providers.filterProviders(filenames, pn, cooker.expanded_data, cooker.recipecache)
+    elif pn in cooker.recipecaches[mc].providers:
+        filenames = cooker.recipecaches[mc].providers[pn]
+        eligible, foundUnique = bb.providers.filterProviders(filenames, pn, cooker.expanded_data, cooker.recipecaches[mc])
         filename = eligible[0]
         return filename
     else:
@@ -50,13 +50,14 @@ def get_unavailable_reasons(cooker, pn):
     return taskdata.get_reasons(pn)
 
 
-def parse_recipe(fn, appendfiles, d):
+def parse_recipe(cooker, fn, appendfiles):
     """
     Parse an individual recipe file, optionally with a list of
     bbappend files.
     """
     import bb.cache
-    envdata = bb.cache.Cache.loadDataFull(fn, appendfiles, d)
+    parser = bb.cache.NoCache(cooker.databuilder)
+    envdata = parser.loadDataFull(fn, appendfiles)
     return envdata
 
 
@@ -79,7 +80,7 @@ def parse_recipe_simple(cooker, pn, d, appends=True):
         appendfiles = cooker.collection.get_file_appends(recipefile)
     else:
         appendfiles = None
-    return parse_recipe(recipefile, appendfiles, d)
+    return parse_recipe(cooker, recipefile, appendfiles)
 
 
 def get_var_files(fn, varlist, d):

@@ -115,8 +115,7 @@ def _parse_recipe(pn, tinfoil):
         # Error already logged
         return None
     append_files = tinfoil.cooker.collection.get_file_appends(recipefile)
-    rd = oe.recipeutils.parse_recipe(recipefile, append_files,
-                                    tinfoil.config_data)
+    rd = oe.recipeutils.parse_recipe(tinfoil.cooker, recipefile, append_files)
     return rd
 
 def determine_file_source(targetpath, rd):

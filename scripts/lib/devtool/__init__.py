@@ -146,8 +146,7 @@ def parse_recipe(config, tinfoil, pn, appends, filter_workspace=True):
                             not path.startswith(config.workspace_path)]
     else:
         append_files = None
-    return oe.recipeutils.parse_recipe(recipefile, append_files,
-                                       tinfoil.config_data)
+    return oe.recipeutils.parse_recipe(tinfoil.cooker, recipefile, append_files)
 
 def check_workspace_recipe(workspace, pn, checksrc=True, bbclassextend=False):
     """

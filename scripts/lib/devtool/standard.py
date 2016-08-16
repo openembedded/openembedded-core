@@ -221,7 +221,7 @@ def add(args, config, basepath, workspace):
         initial_rev = stdout.rstrip()
 
     tinfoil = setup_tinfoil(config_only=True, basepath=basepath)
-    rd = oe.recipeutils.parse_recipe(recipefile, None, tinfoil.config_data)
+    rd = oe.recipeutils.parse_recipe(tinfoil.cooker, recipefile, None)
     if not rd:
         return 1
 

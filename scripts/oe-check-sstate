@@ -40,13 +40,13 @@ def translate_virtualfns(tasks):
     try:
         tinfoil.prepare(False)
 
-        pkg_fn = tinfoil.cooker.recipecache.pkg_fn
+        recipecaches = tinfoil.cooker.recipecaches
         outtasks = []
         for task in tasks:
-            fn, taskname = task.rsplit(':', 1)
+            (mc, fn, taskname) = bb.runqueue.split_tid(task)
             if taskname.endswith('_setscene'):
                 taskname = taskname[:-9]
-            outtasks.append('%s:%s' % (pkg_fn[fn], taskname))
+            outtasks.append('%s:%s' % (recipecaches[mc].pkg_fn[fn], taskname))
     finally:
         tinfoil.shutdown()
     return outtasks
