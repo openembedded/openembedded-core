@@ -12,6 +12,7 @@ LICENSE = "GPLv3"
 LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 
 SRC_URI = "ftp://ftp.gnu.org/gnu/grub/grub-${PV}.tar.gz \
+           file://grub-module-explicitly-keeps-symbole-.module_license.patch \
            file://grub-2.00-fpmath-sse-387-fix.patch \
            file://check-if-liblzma-is-disabled.patch \
            file://fix-issue-with-flex-2.5.37.patch \
