@@ -55,6 +55,7 @@ x86_common = [
     'Could not enable PowerButton event',
     'probe of LNXPWRBN:00 failed with error -22',
     'pmd_set_huge: Cannot satisfy',
+    'failed to setup card detect gpio',
 ] + common_errors
 
 qemux86_common = [
