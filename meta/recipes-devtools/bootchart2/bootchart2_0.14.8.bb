@@ -92,6 +92,7 @@ UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>\d+\.\d+(\.\d+)*)"
 
 SRC_URI = "git://github.com/mmeeks/bootchart.git \
            file://bootchartd_stop.sh \
+           file://0001-Fixed-Missing-default-value-for-BOOTLOG_DEST.patch \
           "
 
 S = "${WORKDIR}/git"
