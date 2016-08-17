@@ -8,14 +8,13 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=c84cac88e46fc07647ea07e6c24eeb7c"
 
 inherit allarch autotools pkgconfig gettext gtk-icon-cache upstream-version-is-even
 
-DEPENDS += "intltool-native"
 
 MAJ_VER = "${@oe.utils.trim_version("${PV}", 2)}"
 SRC_URI = "${GNOME_MIRROR}/${BPN}/${MAJ_VER}/${BPN}-${PV}.tar.xz \
           "
 
-SRC_URI[md5sum] = "ec1fa3fde83ad166ae7075a97dc1ec4b"
-SRC_URI[sha256sum] = "5e9ce726001fdd8ee93c394fdc3cdb9e1603bbed5b7c62df453ccf521ec50e58"
+SRC_URI[md5sum] = "411be2bd68dd8b0a3c86aca2eb351ce4"
+SRC_URI[sha256sum] = "7a0a887349f340dd644032f89d81264b694c4b006bd51af1c2c368d431e7ae35"
 
 do_install_append() {
 	# Build uses gtk-encode-symbolic-svg to create png versions:
