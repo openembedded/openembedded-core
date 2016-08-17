@@ -114,7 +114,13 @@ ignore_errors = {
     'intel-corei7-64' : x86_common,
     'crownbay' : x86_common,
     'genericx86' : x86_common,
-    'genericx86-64' : x86_common,
+    'genericx86-64' : [
+        'Direct firmware load for i915',
+        'Failed to load firmware i915',
+        'Failed to fetch GuC',
+        'Failed to initialize GuC',
+        'The driver is built-in, so to load the firmware you need to',
+        ] + x86_common,
     'edgerouter' : [
         'Fatal server error:',
         ] + common_errors,
