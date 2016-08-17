@@ -14,7 +14,7 @@ PACKAGECONFIG ??= "udev"
 # enabling/disabling fftw. The configure script doesn't support that, however
 # (at least in any obvious way), so for now we only support alsabat with fftw
 # or no alsabat at all.
-PACKAGECONFIG[bat] = "--enable-bat,--disable-bat,fftw"
+PACKAGECONFIG[bat] = "--enable-bat,--disable-bat,fftwf"
 
 PACKAGECONFIG[udev] = "--with-udev-rules-dir=`pkg-config --variable=udevdir udev`/rules.d,,udev"
 PACKAGECONFIG[xmlto] = "--enable-xmlto, --disable-xmlto, xmlto-native docbook-xml-dtd4-native docbook-xsl-stylesheets-native"
@@ -23,8 +23,8 @@ SRC_URI = "ftp://ftp.alsa-project.org/pub/utils/alsa-utils-${PV}.tar.bz2 \
            file://0001-alsactl-don-t-let-systemd-unit-restore-the-volume-wh.patch \
           "
 
-SRC_URI[md5sum] = "f8d00ad5fba757b4c3735d066cc288e2"
-SRC_URI[sha256sum] = "89757c9abaf420831b088fce354d492acc170bd02bb50eb7392c175f594b8041"
+SRC_URI[md5sum] = "38ac7c781f80c41c02b4664d8cbafa87"
+SRC_URI[sha256sum] = "7af603c0877d1251599d65b4fbc372e63a54371b888f5c26c6a86ac1d0519071"
 
 # lazy hack. needs proper fixing in gettext.m4, see
 # http://bugs.openembedded.org/show_bug.cgi?id=2348
