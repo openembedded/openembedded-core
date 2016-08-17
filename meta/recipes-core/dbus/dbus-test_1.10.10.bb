@@ -17,8 +17,8 @@ SRC_URI = "http://dbus.freedesktop.org/releases/dbus/dbus-${PV}.tar.gz \
            file://clear-guid_from_server-if-send_negotiate_unix_f.patch \
            "
 
-SRC_URI[md5sum] = "e912e930f249454752512aa7ac864d43"
-SRC_URI[sha256sum] = "baf3d22baa26d3bdd9edc587736cd5562196ce67996d65b82103bedbe1f0c014"
+SRC_URI[md5sum] = "495676d240eb982921b3ad1343526849"
+SRC_URI[sha256sum] = "9d8f1d069ab4d1a0255d7b400ea3bcef4430c42e729b1012abb2890e3f739a43"
 
 S="${WORKDIR}/dbus-${PV}"
 FILESEXTRAPATHS =. "${FILE_DIRNAME}/dbus:"
