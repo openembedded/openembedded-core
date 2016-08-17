@@ -158,3 +158,16 @@ gi_binaries_sysroot_preprocess() {
            -e "s|g_ir_compiler=.*|g_ir_compiler=${bindir}/g-ir-compiler-wrapper|" \
            ${SYSROOT_DESTDIR}${libdir}/pkgconfig/gobject-introspection-1.0.pc
 }
+
+# Need to ensure ld.so.conf exists so prelink-native works
+# both before we build and if we install from sstate
+do_configure[prefuncs] += "gobject_introspection_preconfigure"
+python gobject_introspection_preconfigure () {
+    oe.utils.write_ld_so_conf(d)
+}
+
+SSTATEPOSTINSTFUNCS += "gobject_introspection_postinst"
+python gobject_introspection_postinst () {
+    if d.getVar("BB_CURRENTTASK", True).startswith("populate_sysroot"):
+        oe.utils.write_ld_so_conf(d)
+}
