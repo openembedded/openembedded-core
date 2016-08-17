@@ -110,6 +110,8 @@ ignore_errors = {
         '(EE) Failed to load module psbdrv',
         '(EE) open /dev/fb0: No such file or directory',
         '(EE) AIGLX: reverting to software rendering',
+        'dmi: Firmware registration failed.',
+        'ioremap error for 0x78',
         ] + x86_common,
     'intel-corei7-64' : x86_common,
     'crownbay' : x86_common,
