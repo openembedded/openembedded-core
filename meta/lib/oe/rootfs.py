@@ -253,7 +253,9 @@ class Rootfs(object, metaclass=ABCMeta):
 
         image_rorfs = bb.utils.contains("IMAGE_FEATURES", "read-only-rootfs",
                                         True, False, self.d)
-        if image_rorfs:
+        image_rorfs_force = self.d.getVar('FORCE_RO_REMOVE', True)
+
+        if image_rorfs or image_rorfs_force == "1":
             # Remove components that we don't need if it's a read-only rootfs
             unneeded_pkgs = self.d.getVar("ROOTFS_RO_UNNEEDED", True).split()
             pkgs_installed = image_list_installed_packages(self.d)
