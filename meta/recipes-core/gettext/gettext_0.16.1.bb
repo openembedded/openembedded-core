@@ -32,6 +32,9 @@ inherit autotools texinfo
 
 EXTRA_OECONF += "--without-lispdir \
                  --disable-csharp \
+                 --disable-libasprintf \
+                 --disable-java \
+                 --disable-native-java \
                  --disable-openmp \
                  --without-emacs \
                 "
