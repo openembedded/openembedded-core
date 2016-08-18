@@ -31,6 +31,11 @@ PARALLEL_MAKE = ""
 inherit autotools texinfo
 
 EXTRA_OECONF += "--without-lisp --disable-csharp --disable-openmp --without-emacs"
+EXTRA_OECONF_append_libc-musl = "\
+                                 gt_cv_func_gnugettext1_libc=yes \
+                                 gt_cv_func_gnugettext2_libc=yes \
+                                "
+
 acpaths = '-I ${S}/autoconf-lib-link/m4/ \
            -I ${S}/gettext-runtime/m4 \
            -I ${S}/gettext-tools/m4'
@@ -41,7 +46,6 @@ do_configure_prepend() {
 
 do_install_append_libc-musl () {
 	rm -f ${D}${libdir}/charset.alias
-	rm -f ${D}${includedir}/libintl.h
 }
 
 # these lack the .x behind the .so, but shouldn't be in the -dev package
