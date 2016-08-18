@@ -9,9 +9,11 @@ DEPENDS = "systemd-systemctl-native"
 
 S = "${WORKDIR}"
 
-inherit allarch
+inherit allarch distro_features_check
 
 ALLOW_EMPTY_${PN} = "1"
+
+REQUIRED_DISTRO_FEATURES = "systemd"
 
 SYSTEMD_DISABLED_SYSV_SERVICES = " \
   busybox-udhcpc \
