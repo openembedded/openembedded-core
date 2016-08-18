@@ -173,7 +173,15 @@ python split_kernel_module_packages () {
             d.setVar('DESCRIPTION_' + pkg, old_desc + "; " + vals["description"])
 
         rdepends = bb.utils.explode_dep_versions2(d.getVar('RDEPENDS_' + pkg, True) or "")
-        for dep in get_dependencies(file, pattern, format):
+        modinfo_deps = []
+        if "depends" in vals and vals["depends"] != "":
+            for dep in vals["depends"].split(","):
+                on = legitimize_package_name(dep)
+                dependency_pkg = format % on
+                modinfo_deps.append(dependency_pkg)
+        depmod_deps = get_dependencies(file, pattern, format)
+        all_deps = list(set(modinfo_deps + depmod_deps))
+        for dep in all_deps:
             if not dep in rdepends:
                 rdepends[dep] = []
         d.setVar('RDEPENDS_' + pkg, bb.utils.join_deps(rdepends, commasep=False))
