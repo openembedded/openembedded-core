@@ -30,7 +30,11 @@ PARALLEL_MAKE = ""
 
 inherit autotools texinfo
 
-EXTRA_OECONF += "--without-lisp --disable-csharp --disable-openmp --without-emacs"
+EXTRA_OECONF += "--without-lispdir \
+                 --disable-csharp \
+                 --disable-openmp \
+                 --without-emacs \
+                "
 EXTRA_OECONF_append_libc-musl = "\
                                  gt_cv_func_gnugettext1_libc=yes \
                                  gt_cv_func_gnugettext2_libc=yes \
