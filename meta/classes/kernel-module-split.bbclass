@@ -36,12 +36,6 @@ python split_kernel_module_packages () {
     import re
 
     modinfoexp = re.compile("([^=]+)=(.*)")
-    kerverrexp = re.compile('^(.*-hh.*)[\.\+].*$')
-    depmodpat0 = re.compile("^(.*\.k?o):..*$")
-    depmodpat1 = re.compile("^(.*\.k?o):\s*(.*\.k?o)\s*$")
-    depmodpat2 = re.compile("^(.*\.k?o):\s*(.*\.k?o)\s*\\\$")
-    depmodpat3 = re.compile("^\t(.*\.k?o)\s*\\\$")
-    depmodpat4 = re.compile("^\t(.*\.k?o)\s*$")
 
     def extract_modinfo(file):
         import tempfile, subprocess
@@ -62,68 +56,6 @@ python split_kernel_module_packages () {
                 continue
             vals[m.group(1)] = m.group(2)
         return vals
-
-    def parse_depmod():
-
-        dvar = d.getVar('PKGD', True)
-
-        kernelver = d.getVar('KERNEL_VERSION', True)
-        kernelver_stripped = kernelver
-        m = kerverrexp.match(kernelver)
-        if m:
-            kernelver_stripped = m.group(1)
-        staging_kernel_dir = d.getVar("STAGING_KERNEL_BUILDDIR", True)
-        system_map_file = "%s/boot/System.map-%s" % (dvar, kernelver)
-        if not os.path.exists(system_map_file):
-            system_map_file = "%s/System.map-%s" % (staging_kernel_dir, kernelver)
-            if not os.path.exists(system_map_file):
-                bb.fatal("System.map-%s does not exist in '%s/boot' nor STAGING_KERNEL_BUILDDIR '%s'" % (kernelver, dvar, staging_kernel_dir))
-
-        cmd = "depmod -n -a -b %s -F %s %s" % (dvar, system_map_file, kernelver_stripped)
-        f = os.popen(cmd, 'r')
-
-        deps = {}
-        line = f.readline()
-        while line:
-            if not depmodpat0.match(line):
-                line = f.readline()
-                continue
-            m1 = depmodpat1.match(line)
-            if m1:
-                deps[m1.group(1)] = m1.group(2).split()
-            else:
-                m2 = depmodpat2.match(line)
-                if m2:
-                    deps[m2.group(1)] = m2.group(2).split()
-                    line = f.readline()
-                    m3 = depmodpat3.match(line)
-                    while m3:
-                        deps[m2.group(1)].extend(m3.group(1).split())
-                        line = f.readline()
-                        m3 = depmodpat3.match(line)
-                    m4 = depmodpat4.match(line)
-                    deps[m2.group(1)].extend(m4.group(1).split())
-            line = f.readline()
-        f.close()
-        return deps
-
-    def get_dependencies(file, pattern, format):
-        # file no longer includes PKGD
-        file = file.replace(d.getVar('PKGD', True) or '', '', 1)
-        # instead is prefixed with /lib/modules/${KERNEL_VERSION}
-        file = file.replace("/lib/modules/%s/" % d.getVar('KERNEL_VERSION', True) or '', '', 1)
-
-        if file in module_deps:
-            dependencies = []
-            for i in module_deps[file]:
-                m = re.match(pattern, os.path.basename(i))
-                if not m:
-                    continue
-                on = legitimize_package_name(m.group(1))
-                dependency_pkg = format % on
-                dependencies.append(dependency_pkg)
-            return dependencies
-        return []
 
     def frob_metadata(file, pkg, pattern, format, basename):
         vals = extract_modinfo(file)
@@ -179,9 +111,7 @@ python split_kernel_module_packages () {
                 on = legitimize_package_name(dep)
                 dependency_pkg = format % on
                 modinfo_deps.append(dependency_pkg)
-        depmod_deps = get_dependencies(file, pattern, format)
-        all_deps = list(set(modinfo_deps + depmod_deps))
-        for dep in all_deps:
+        for dep in modinfo_deps:
             if not dep in rdepends:
                 rdepends[dep] = []
         d.setVar('RDEPENDS_' + pkg, bb.utils.join_deps(rdepends, commasep=False))
@@ -189,7 +119,6 @@ python split_kernel_module_packages () {
         # Avoid automatic -dev recommendations for modules ending with -dev.
         d.setVarFlag('RRECOMMENDS_' + pkg, 'nodeprrecs', 1)
 
-    module_deps = parse_depmod()
     module_regex = '^(.*)\.k?o$'
 
     module_pattern_prefix = d.getVar('KERNEL_MODULE_PACKAGE_PREFIX', True)
