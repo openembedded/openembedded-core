@@ -13,6 +13,7 @@ SRC_URI = "git://git.sv.gnu.org/libunwind.git \
            file://0001-ppc32-Consider-ucontext-mismatches-between-glibc-and.patch \
            "
 
+SRC_URI_append_libc-musl = " file://musl-header-conflict.patch"
 EXTRA_OECONF_append_libc-musl = " --disable-documentation --disable-tests "
 
 # http://errors.yoctoproject.org/Errors/Details/20487/
