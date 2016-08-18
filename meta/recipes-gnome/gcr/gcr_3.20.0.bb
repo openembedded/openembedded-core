@@ -33,7 +33,7 @@ ARM_INSTRUCTION_SET = "arm"
 # gcrypt-Message: select() error: Bad address
 #
 # This will be investigated later.
-EXTRA_OECONF_append_x86-64 = " --disable-introspection"
+EXTRA_OECONF_append_x86-64 = " --disable-introspection --disable-gtk-doc"
 
 # Gcr-3.broken: poky/build-mips64/tmp/work/mips64-poky-linux/libgpg-error/1.19-r0/libgpg-error-1.19/src/posix-lock.c:119: get_lock_object: Assertion `!"sizeof lock obj"' failed.
 # qemu: uncaught target signal 6 (Aborted) - core dumped
