@@ -226,7 +226,8 @@ def package_compare_impl(pkgtype, d):
     else:
         bb.plain('Not copying packages for recipe %s' % pn)
 
-do_cleanall_append() {
+do_cleansstate[postfuncs] += "pfs_cleanpkgs"
+python pfs_cleanpkgs () {
     import errno
     for pkgclass in (d.getVar('PACKAGE_CLASSES', True) or '').split():
         if pkgclass.startswith('package_'):
