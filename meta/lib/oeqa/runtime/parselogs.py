@@ -62,6 +62,7 @@ qemux86_common = [
     'wrong ELF class',
     "fail to add MMCONFIG information, can't access extended PCI configuration space under this bridge.",
     "can't claim BAR ",
+    'amd_nb: Cannot enumerate AMD northbridges',
 ] + common_errors
 
 ignore_errors = { 
