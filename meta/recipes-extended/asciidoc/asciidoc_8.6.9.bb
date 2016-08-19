@@ -16,5 +16,6 @@ SRC_URI[sha256sum] = "78db9d0567c8ab6570a6eff7ffdf84eadd91f2dfc0a92a2d0105d323ca
 inherit distutils autotools-brokensep
 
 export DESTDIR = "${D}"
+DEPENDS_class-native = "docbook-xml-dtd4-native"
 RDEPENDS_${PN} += "python" 
 BBCLASSEXTEND = "native"
