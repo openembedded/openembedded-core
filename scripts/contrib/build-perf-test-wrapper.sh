@@ -25,6 +25,8 @@ Usage: $script [-h] [-c COMMITISH] [-C GIT_REPO]
 
 Optional arguments:
   -h                show this help and exit.
+  -a ARCHIVE_DIR    archive results tarball here, give an empty string to
+                    disable tarball archiving
   -c COMMITISH      test (checkout) this commit
   -C GIT_REPO       commit results into Git
 EOF
@@ -32,12 +34,15 @@ EOF
 
 
 # Parse command line arguments
+archive_dir=~/perf-results/archives
 commitish=""
 results_repo=""
-while getopts "hc:C:" opt; do
+while getopts "ha:c:C:" opt; do
     case $opt in
         h)  usage
             exit 0
+            ;;
+        a)  archive_dir=`realpath "$OPTARG"`
             ;;
         c)  commitish=$OPTARG
             ;;
@@ -112,13 +117,14 @@ echo -ne "\n"
 
 cat "$globalres_log"
 
-echo -ne "\n\n-----------------\n"
-echo "Archiving results dir..."
-archive_dir=~/perf-results/archives
-mkdir -p "$archive_dir"
-results_basename=`basename "$results_dir"`
-results_dirname=`dirname "$results_dir"`
-tar -czf "$archive_dir/`uname -n`-${results_basename}.tar.gz" -C "$results_dirname" "$results_basename"
+if [ -n "$archive_dir" ]; then
+    echo -ne "\n\n-----------------\n"
+    echo "Archiving results in $archive_dir"
+    mkdir -p "$archive_dir"
+    results_basename=`basename "$results_dir"`
+    results_dirname=`dirname "$results_dir"`
+    tar -czf "$archive_dir/`uname -n`-${results_basename}.tar.gz" -C "$results_dirname" "$results_basename"
+fi
 
 rm -rf "$build_dir"
 rm -rf "$results_dir"
