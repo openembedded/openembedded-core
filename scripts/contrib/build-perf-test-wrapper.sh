@@ -20,17 +20,33 @@
 
 script=`basename $0`
 usage () {
-    echo "Usage: $script [COMMITISH]"
+cat << EOF
+Usage: $script [-h] [-c COMMITISH] [-C GIT_REPO]
+
+Optional arguments:
+  -h                show this help and exit.
+  -c COMMITISH      test (checkout) this commit
+EOF
 }
 
-if [ $# -gt 1 ]; then
-    usage
-    exit 1
-fi
-commitish=$1
+
+# Parse command line arguments
+commitish=""
+while getopts "hc:" opt; do
+    case $opt in
+        h)  usage
+            exit 0
+            ;;
+        c)  commitish=$OPTARG
+            ;;
+        *)  usage
+            exit 1
+            ;;
+    esac
+done
+
 
 echo "Running on `uname -n`"
-
 if ! git_topdir=$(git rev-parse --show-toplevel); then
         echo "The current working dir doesn't seem to be a git clone. Please cd there before running `basename $0`"
         exit 1
