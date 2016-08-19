@@ -459,19 +459,19 @@ def check_gcc_march(sanity_data):
 
         # Check if GCC could work without march
         if not result:
-            status,res = oe.utils.getstatusoutput("${BUILD_PREFIX}gcc gcc_test.c -o gcc_test")
+            status,res = oe.utils.getstatusoutput(sanity_data.expand("${BUILD_PREFIX}gcc gcc_test.c -o gcc_test"))
             if status == 0:
                 result = True;
 
         if not result:
-            status,res = oe.utils.getstatusoutput("${BUILD_PREFIX}gcc -march=native gcc_test.c -o gcc_test")
+            status,res = oe.utils.getstatusoutput(sanity_data.expand("${BUILD_PREFIX}gcc -march=native gcc_test.c -o gcc_test"))
             if status == 0:
                 message = "BUILD_CFLAGS_append = \" -march=native\""
                 result = True;
 
         if not result:
             build_arch = sanity_data.getVar('BUILD_ARCH', True)
-            status,res = oe.utils.getstatusoutput("${BUILD_PREFIX}gcc -march=%s gcc_test.c -o gcc_test" % build_arch)
+            status,res = oe.utils.getstatusoutput(sanity_data.expand("${BUILD_PREFIX}gcc -march=%s gcc_test.c -o gcc_test" % build_arch))
             if status == 0:
                 message = "BUILD_CFLAGS_append = \" -march=%s\"" % build_arch
                 result = True;
