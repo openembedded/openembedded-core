@@ -26,18 +26,22 @@ Usage: $script [-h] [-c COMMITISH] [-C GIT_REPO]
 Optional arguments:
   -h                show this help and exit.
   -c COMMITISH      test (checkout) this commit
+  -C GIT_REPO       commit results into Git
 EOF
 }
 
 
 # Parse command line arguments
 commitish=""
-while getopts "hc:" opt; do
+results_repo=""
+while getopts "hc:C:" opt; do
     case $opt in
         h)  usage
             exit 0
             ;;
         c)  commitish=$OPTARG
+            ;;
+        C)  results_repo=`realpath "$OPTARG"`
             ;;
         *)  usage
             exit 1
@@ -73,13 +77,14 @@ base_dir="$git_topdir/build-perf-test"
 build_dir="$base_dir/build-$git_rev-$timestamp"
 results_dir="$base_dir/results-$git_rev-$timestamp"
 globalres_log="$base_dir/globalres.log"
+machine="qemux86"
 
 mkdir -p "$base_dir"
 source ./oe-init-build-env $build_dir >/dev/null || exit 1
 
 # Additional config
 auto_conf="$build_dir/conf/auto.conf"
-echo 'MACHINE = "qemux86"' > "$auto_conf"
+echo "MACHINE = \"$machine\"" > "$auto_conf"
 echo 'BB_NUMBER_THREADS = "8"' >> "$auto_conf"
 echo 'PARALLEL_MAKE = "-j 8"' >> "$auto_conf"
 echo "DL_DIR = \"$base_dir/downloads\"" >> "$auto_conf"
@@ -93,7 +98,10 @@ fi
 # Run actual test script
 if ! oe-build-perf-test --out-dir "$results_dir" \
                         --globalres-file "$globalres_log" \
-                        --lock-file "$base_dir/oe-build-perf.lock"; then
+                        --lock-file "$base_dir/oe-build-perf.lock" \
+                        --commit-results "$results_repo" \
+                        --commit-results-branch "{tester_host}/{git_branch}/$machine" \
+                        --commit-results-tag "{tester_host}/{git_branch}/$machine/{git_commit_count}-g{git_commit}/{tag_num}"; then
     echo "oe-build-perf-test script failed!"
     exit 1
 fi
