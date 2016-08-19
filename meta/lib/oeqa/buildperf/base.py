@@ -173,7 +173,7 @@ class BuildPerfTestResult(unittest.TextTestResult):
             git_tag_rev = self.git_revision
 
         values = ['0'] * 12
-        for status, test in self.all_results():
+        for status, (test, msg) in self.all_results():
             if status not in ['SUCCESS', 'FAILURE', 'EXP_SUCCESS']:
                 continue
             (t_ind, t_len), (s_ind, s_len) = gr_map[test.name]
