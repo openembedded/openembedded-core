@@ -29,6 +29,7 @@ Optional arguments:
                     disable tarball archiving
   -c COMMITISH      test (checkout) this commit
   -C GIT_REPO       commit results into Git
+  -w WORK_DIR       work dir for this script
 EOF
 }
 
@@ -37,7 +38,7 @@ EOF
 archive_dir=~/perf-results/archives
 commitish=""
 results_repo=""
-while getopts "ha:c:C:" opt; do
+while getopts "ha:c:C:w:" opt; do
     case $opt in
         h)  usage
             exit 0
@@ -48,12 +49,13 @@ while getopts "ha:c:C:" opt; do
             ;;
         C)  results_repo=`realpath "$OPTARG"`
             ;;
+        w)  base_dir=`realpath "$OPTARG"`
+            ;;
         *)  usage
             exit 1
             ;;
     esac
 done
-
 
 echo "Running on `uname -n`"
 if ! git_topdir=$(git rev-parse --show-toplevel); then
@@ -76,9 +78,13 @@ if [ -n "$commitish" ]; then
 fi
 
 # Setup build environment
+if [ -z "$base_dir" ]; then
+    base_dir="$git_topdir/build-perf-test"
+fi
+echo "Using working dir $base_dir"
+
 timestamp=`date "+%Y%m%d%H%M%S"`
 git_rev=$(git rev-parse --short HEAD)  || exit 1
-base_dir="$git_topdir/build-perf-test"
 build_dir="$base_dir/build-$git_rev-$timestamp"
 results_dir="$base_dir/results-$git_rev-$timestamp"
 globalres_log="$base_dir/globalres.log"
