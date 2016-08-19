@@ -34,7 +34,9 @@ from oeqa.utils.commands import runCmd
 
 
 # Set-up logging
-logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s')
+LOG_FORMAT = '[%(asctime)s] %(levelname)s: %(message)s'
+logging.basicConfig(level=logging.INFO, format=LOG_FORMAT,
+                    datefmt='%Y-%m-%d %H:%M:%S')
 log = logging.getLogger()
 
 
@@ -75,7 +77,7 @@ def setup_file_logging(log_file):
     log_dir = os.path.dirname(log_file)
     if not os.path.exists(log_dir):
         os.makedirs(log_dir)
-    formatter = logging.Formatter('[%(asctime)s] %(levelname)s: %(message)s')
+    formatter = logging.Formatter(LOG_FORMAT)
     handler = logging.FileHandler(log_file)
     handler.setFormatter(formatter)
     log.addHandler(handler)
