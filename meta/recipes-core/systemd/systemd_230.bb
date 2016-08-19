@@ -291,8 +291,12 @@ PACKAGES =+ "\
     ${PN}-pam \
     ${PN}-zsh-completion \
     ${PN}-xorg-xinitrc \
+    ${PN}-container \
     ${PN}-extra-utils \
 "
+
+SUMMARY_${PN}-container = "Tools for containers and VMs"
+DESCRIPTION_${PN}-container = "Systemd tools to spawn and manage containers and virtual machines."
 
 SYSTEMD_PACKAGES = "${@bb.utils.contains('PACKAGECONFIG', 'binfmt', '${PN}-binfmt', '', d)}"
 SYSTEMD_SERVICE_${PN}-binfmt = "systemd-binfmt.service"
@@ -348,6 +352,37 @@ RRECOMMENDS_${PN}-binfmt = "kernel-module-binfmt-misc"
 
 RRECOMMENDS_${PN}-vconsole-setup = "kbd kbd-consolefonts kbd-keymaps"
 
+FILES_${PN}-container = "${sysconfdir}/dbus-1/system.d/org.freedesktop.import1.conf \
+                         ${sysconfdir}/dbus-1/system.d/org.freedesktop.machine1.conf \
+                         ${base_bindir}/machinectl \
+                         ${bindir}/systemd-nspawn \
+                         ${nonarch_libdir}/systemd/import-pubring.gpg \
+                         ${systemd_system_unitdir}/busnames.target.wants/org.freedesktop.import1.busname \
+                         ${systemd_system_unitdir}/busnames.target.wants/org.freedesktop.machine1.busname \
+                         ${systemd_system_unitdir}/local-fs.target.wants/var-lib-machines.mount \
+                         ${systemd_system_unitdir}/machine.slice \
+                         ${systemd_system_unitdir}/machines.target \
+                         ${systemd_system_unitdir}/org.freedesktop.import1.busname \
+                         ${systemd_system_unitdir}/org.freedesktop.machine1.busname \
+                         ${systemd_system_unitdir}/systemd-importd.service \
+                         ${systemd_system_unitdir}/systemd-machined.service \
+                         ${systemd_system_unitdir}/var-lib-machines.mount \
+                         ${rootlibexecdir}/systemd/systemd-import \
+                         ${rootlibexecdir}/systemd/systemd-importd \
+                         ${rootlibexecdir}/systemd/systemd-journal-gatewayd \
+                         ${rootlibexecdir}/systemd/systemd-journal-remote \
+                         ${rootlibexecdir}/systemd/systemd-journal-upload \
+                         ${rootlibexecdir}/systemd/systemd-machined \
+                         ${rootlibexecdir}/systemd/systemd-pull \
+                         ${exec_prefix}/lib/tmpfiles.d/systemd-nspawn.conf \
+                         ${systemd_system_unitdir}/systemd-nspawn@.service \
+                         ${libdir}/libnss_mymachines.so.2 \
+                         ${datadir}/dbus-1/system-services/org.freedesktop.import1.service \
+                         ${datadir}/dbus-1/system-services/org.freedesktop.machine1.service \
+                         ${datadir}/polkit-1/actions/org.freedesktop.import1.policy \
+                         ${datadir}/polkit-1/actions/org.freedesktop.machine1.policy \
+                        "
+
 FILES_${PN}-extra-utils = "\
                         ${base_bindir}/systemd-escape \
                         ${base_bindir}/systemd-inhibit \
@@ -371,9 +406,6 @@ FILES_${PN}-extra-utils = "\
                         ${rootlibexecdir}/systemd/systemd-resolve-host \
                         ${rootlibexecdir}/systemd/systemd-ac-power \
                         ${rootlibexecdir}/systemd/systemd-activate \
-                        ${bindir}/systemd-nspawn \
-                        ${exec_prefix}/lib/tmpfiles.d/systemd-nspawn.conf \
-                        ${systemd_unitdir}/system/systemd-nspawn@.service \
                         ${rootlibexecdir}/systemd/systemd-bus-proxyd \
                         ${systemd_unitdir}/system/systemd-bus-proxyd.service \
                         ${systemd_unitdir}/system/systemd-bus-proxyd.socket \
