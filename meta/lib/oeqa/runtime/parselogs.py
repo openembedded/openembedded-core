@@ -63,6 +63,11 @@ qemux86_common = [
     "fail to add MMCONFIG information, can't access extended PCI configuration space under this bridge.",
     "can't claim BAR ",
     'amd_nb: Cannot enumerate AMD northbridges',
+    'uvesafb: 5000 ms task timeout error',
+    'detected fb_set_par error, error code: -22',
+    'Getting VBE info block failed',
+    'vbe_init() failed with -22',
+    'uvesafb: mode switch failed',
 ] + common_errors
 
 ignore_errors = { 
