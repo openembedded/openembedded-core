@@ -32,4 +32,3 @@ ALTERNATIVE_${PN} = "chvt deallocvt fgconsole openvt"
 ALTERNATIVE_PRIORITY = "100"
 
 BBCLASSEXTEND = "native"
-PARALLEL_MAKEINST = ""
