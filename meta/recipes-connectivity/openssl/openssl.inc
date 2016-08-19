@@ -154,6 +154,9 @@ do_compile () {
 }
 
 do_compile_ptest () {
+	# build dependencies for test directory too
+	export DIRS="$DIRS test"
+	oe_runmake depend
 	oe_runmake buildtest
 }
 
