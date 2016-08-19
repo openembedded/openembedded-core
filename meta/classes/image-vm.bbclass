@@ -105,8 +105,12 @@ build_boot_dd() {
 	dd if=${ROOTFS} of=$IMAGE conv=notrunc seek=$OFFSET bs=512
 
 	cd ${DEPLOY_DIR_IMAGE}
-	rm -f ${DEPLOY_DIR_IMAGE}/${IMAGE_LINK_NAME}.hdddirect
-	ln -s ${IMAGE_NAME}.hdddirect ${DEPLOY_DIR_IMAGE}/${IMAGE_LINK_NAME}.hdddirect
+
+	if [ "${RM_OLD_IMAGE}" = "1" ] && [ -L ${DEPLOY_DIR_IMAGE}/${IMAGE_LINK_NAME}.hdddirect ]; then
+		rm -f $(readlink -f ${DEPLOY_DIR_IMAGE}/${IMAGE_LINK_NAME}.hdddirect)
+	fi
+
+	ln -sf ${IMAGE_NAME}.hdddirect ${DEPLOY_DIR_IMAGE}/${IMAGE_LINK_NAME}.hdddirect
 } 
 
 python do_bootdirectdisk() {
@@ -142,6 +146,11 @@ DISK_SIGNATURE_GENERATED := "${@generate_disk_signature()}"
 run_qemu_img (){
     type="$1"
     qemu-img convert -O $type ${DEPLOY_DIR_IMAGE}/${IMAGE_LINK_NAME}.hdddirect ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.$type
+
+    if [ "${RM_OLD_IMAGE}" = "1" ] && [ -L ${DEPLOY_DIR_IMAGE}/${IMAGE_LINK_NAME}.$type ]; then
+        rm -f $(readlink -f ${DEPLOY_DIR_IMAGE}/${IMAGE_LINK_NAME}.$type)
+    fi
+
     ln -sf ${IMAGE_NAME}.$type ${DEPLOY_DIR_IMAGE}/${IMAGE_LINK_NAME}.$type
 }
 create_vmdk_image () {
