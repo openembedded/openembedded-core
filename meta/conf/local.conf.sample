@@ -131,15 +131,6 @@ EXTRA_IMAGE_FEATURES ?= "debug-tweaks"
 # NOTE: mklibs also needs to be explicitly enabled for a given image, see local.conf.extended
 USER_CLASSES ?= "buildstats image-mklibs image-prelink"
 
-# Prelinker tests are currently failing on ARM and PPC.  Prevent us from
-# running on those architectures until the failure is explained.
-USER_CLASSES_remove_arm = 'image-prelink'
-USER_CLASSES_remove_armeb = 'image-prelink'
-USER_CLASSES_remove_aarch64 = 'image-prelink'
-USER_CLASSES_remove_aarch64eb = 'image-prelink'
-USER_CLASSES_remove_powerpc = 'image-prelink'
-USER_CLASSES_remove_powerpc64 = 'image-prelink'
-
 
 #
 # Runtime testing of images
