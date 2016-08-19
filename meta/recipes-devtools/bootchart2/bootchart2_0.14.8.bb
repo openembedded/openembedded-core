@@ -97,9 +97,11 @@ SRC_URI = "git://github.com/mmeeks/bootchart.git \
 S = "${WORKDIR}/git"
 SRCREV = "48e0071048564c6af75ab969e842d6dec808da09"
 
-inherit systemd
-inherit update-rc.d
-inherit python3native
+inherit systemd update-rc.d python3native update-alternatives
+
+ALTERNATIVE_${PN} = "bootchartd"
+ALTERNATIVE_LINK_NAME[bootchartd] = "${base_sbindir}/bootchartd"
+ALTERNATIVE_PRIORITY = "100"
 
 # The only reason to build bootchart2-native is for a native pybootchartgui.
 BBCLASSEXTEND = "native"
@@ -142,6 +144,7 @@ DEPENDS_append_class-native = " python3-pycairo-native"
 
 PACKAGES =+ "bootchartd-stop-initscript"
 FILES_bootchartd-stop-initscript += "${sysconfdir}/init.d ${sysconfdir}/rc*.d"
+RDEPENDS_bootchartd-stop-initscript = "${PN}"
 
 FILES_${PN} += "${base_libdir}/bootchart/bootchart-collector"
 FILES_${PN} += "${base_libdir}/bootchart/tmpfs"
