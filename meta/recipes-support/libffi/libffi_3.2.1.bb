@@ -25,6 +25,6 @@ FILES_${PN}-dev += "${libdir}/libffi-${PV}"
 
 # Doesn't compile in MIPS16e mode due to use of hand-written
 # assembly
-MIPS_INSTRUCTION_SET = "mips16"
+MIPS_INSTRUCTION_SET = "mips"
 
 BBCLASSEXTEND = "native nativesdk"
