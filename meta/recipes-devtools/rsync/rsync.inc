@@ -16,3 +16,5 @@ do_install_append() {
 }
 
 EXTRA_OEMAKE='STRIP=""'
+
+PACKAGECONFIG[ipv6] = "--enable-ipv6,--disable-ipv6,"
