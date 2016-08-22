@@ -1,18 +1,18 @@
-From 1cd94ed4750d5392cf3c09ed64d2c162a0833bdb Mon Sep 17 00:00:00 2001
+From d7eb26785ad4f25fb09fae46726ab8ca3fe16921 Mon Sep 17 00:00:00 2001
 From: Haiqing Bai <Haiqing.Bai@windriver.com>
-Date: Fri, 18 Mar 2016 15:49:31 +0800
-Subject: [PATCH 2/3] remove des in cipher.
+Date: Mon, 22 Aug 2016 14:11:16 +0300
+Subject: [PATCH] Remove des in cipher.
 
 Upstream-Status: Pending
 
 Signed-off-by: Haiqing Bai <Haiqing.Bai@windriver.com>
-
+Signed-off-by: Jussi Kukkonen <jussi.kukkonen@intel.com>
 ---
  cipher.c | 18 ++++++++++++++++++
  1 file changed, 18 insertions(+)
 
 diff --git a/cipher.c b/cipher.c
-index 02dae6f..63d3c29 100644
+index 031bda9..6cd667a 100644
 --- a/cipher.c
 +++ b/cipher.c
 @@ -53,8 +53,10 @@
@@ -26,7 +26,7 @@ index 02dae6f..63d3c29 100644
  #endif
  
  struct sshcipher {
-@@ -79,13 +81,17 @@ struct sshcipher {
+@@ -79,15 +81,19 @@ struct sshcipher {
  
  static const struct sshcipher ciphers[] = {
  #ifdef WITH_SSH1
@@ -34,17 +34,19 @@ index 02dae6f..63d3c29 100644
  	{ "des",	SSH_CIPHER_DES, 8, 8, 0, 0, 0, 1, EVP_des_cbc },
  	{ "3des",	SSH_CIPHER_3DES, 8, 16, 0, 0, 0, 1, evp_ssh1_3des },
 +#endif /* OPENSSL_NO_DES */
+ # ifndef OPENSSL_NO_BF
  	{ "blowfish",	SSH_CIPHER_BLOWFISH, 8, 32, 0, 0, 0, 1, evp_ssh1_bf },
+ # endif /* OPENSSL_NO_BF */
  #endif /* WITH_SSH1 */
  #ifdef WITH_OPENSSL
  	{ "none",	SSH_CIPHER_NONE, 8, 0, 0, 0, 0, 0, EVP_enc_null },
 +#ifndef OPENSSL_NO_DES
  	{ "3des-cbc",	SSH_CIPHER_SSH2, 8, 24, 0, 0, 0, 1, EVP_des_ede3_cbc },
 +#endif /* OPENSSL_NO_DES */
+ # ifndef OPENSSL_NO_BF
  	{ "blowfish-cbc",
  			SSH_CIPHER_SSH2, 8, 16, 0, 0, 0, 1, EVP_bf_cbc },
- 	{ "cast128-cbc",
-@@ -163,8 +169,10 @@ cipher_keylen(const struct sshcipher *c)
+@@ -171,8 +177,10 @@ cipher_keylen(const struct sshcipher *c)
  u_int
  cipher_seclen(const struct sshcipher *c)
  {
@@ -55,7 +57,7 @@ index 02dae6f..63d3c29 100644
  	return cipher_keylen(c);
  }
  
-@@ -201,11 +209,13 @@ u_int
+@@ -209,11 +217,13 @@ u_int
  cipher_mask_ssh1(int client)
  {
  	u_int mask = 0;
@@ -69,7 +71,7 @@ index 02dae6f..63d3c29 100644
  	return mask;
  }
  
-@@ -546,7 +556,9 @@ cipher_get_keyiv(struct sshcipher_ctx *cc, u_char *iv, u_int len)
+@@ -553,7 +563,9 @@ cipher_get_keyiv(struct sshcipher_ctx *cc, u_char *iv, u_int len)
  	switch (c->number) {
  #ifdef WITH_OPENSSL
  	case SSH_CIPHER_SSH2:
@@ -79,7 +81,7 @@ index 02dae6f..63d3c29 100644
  	case SSH_CIPHER_BLOWFISH:
  		evplen = EVP_CIPHER_CTX_iv_length(&cc->evp);
  		if (evplen == 0)
-@@ -569,8 +581,10 @@ cipher_get_keyiv(struct sshcipher_ctx *cc, u_char *iv, u_int len)
+@@ -576,8 +588,10 @@ cipher_get_keyiv(struct sshcipher_ctx *cc, u_char *iv, u_int len)
  		break;
  #endif
  #ifdef WITH_SSH1
@@ -90,7 +92,7 @@ index 02dae6f..63d3c29 100644
  #endif
  	default:
  		return SSH_ERR_INVALID_ARGUMENT;
-@@ -594,7 +608,9 @@ cipher_set_keyiv(struct sshcipher_ctx *cc, const u_char *iv)
+@@ -601,7 +615,9 @@ cipher_set_keyiv(struct sshcipher_ctx *cc, const u_char *iv)
  	switch (c->number) {
  #ifdef WITH_OPENSSL
  	case SSH_CIPHER_SSH2:
@@ -100,7 +102,7 @@ index 02dae6f..63d3c29 100644
  	case SSH_CIPHER_BLOWFISH:
  		evplen = EVP_CIPHER_CTX_iv_length(&cc->evp);
  		if (evplen <= 0)
-@@ -609,8 +625,10 @@ cipher_set_keyiv(struct sshcipher_ctx *cc, const u_char *iv)
+@@ -616,8 +632,10 @@ cipher_set_keyiv(struct sshcipher_ctx *cc, const u_char *iv)
  		break;
  #endif
  #ifdef WITH_SSH1
@@ -112,5 +114,5 @@ index 02dae6f..63d3c29 100644
  	default:
  		return SSH_ERR_INVALID_ARGUMENT;
 -- 
-1.9.1
+2.1.4
 
