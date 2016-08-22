@@ -8,8 +8,8 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=4fbd65380cdd255951079008b364516c"
 inherit gnomebase gtk-doc distro_features_check upstream-version-is-even vala gobject-introspection
 
 SRC_URI += "file://0001-Don-t-enable-stack-protection-by-default.patch"
-SRC_URI[archive.md5sum] = "20916d97a5902657e54307cc2757beee"
-SRC_URI[archive.sha256sum] = "712dd548339f600fd7e221d12b2670a13a4361b2cd23ba0e057e76cc19fe5d4e"
+SRC_URI[archive.md5sum] = "eca8f8a9d9f9bb8e9d592d0acfeec015"
+SRC_URI[archive.sha256sum] = "a1ea594814bb136a3a9a6c7656b46240571f6a198825c1111007fe99194b0949"
 
 ANY_OF_DISTRO_FEATURES = "${GTK3DISTROFEATURES}"
 
