@@ -10,7 +10,9 @@ SRC_URI = "http://curl.haxx.se/download/curl-${PV}.tar.bz2"
 # curl likes to set -g0 in CFLAGS, so we stop it
 # from mucking around with debug options
 #
-SRC_URI += " file://configure_ac.patch"
+SRC_URI += " file://configure_ac.patch \
+             file://CVE-2016-5419.patch \
+           "
 
 SRC_URI[md5sum] = "9ea3123449439bbd960cd25cf98796fb"
 SRC_URI[sha256sum] = "ddc643ab9382e24bbe4747d43df189a0a6ce38fcb33df041b9cb0b3cd47ae98f"
