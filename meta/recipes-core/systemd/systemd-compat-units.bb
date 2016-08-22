@@ -9,7 +9,7 @@ DEPENDS = "systemd-systemctl-native"
 
 S = "${WORKDIR}"
 
-inherit allarch distro_features_check
+inherit distro_features_check
 
 ALLOW_EMPTY_${PN} = "1"
 
