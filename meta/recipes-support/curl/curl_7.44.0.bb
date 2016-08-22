@@ -13,6 +13,7 @@ SRC_URI = "http://curl.haxx.se/download/curl-${PV}.tar.bz2 \
 # from mucking around with debug options
 #
 SRC_URI += " file://configure_ac.patch \
+             file://CVE-2016-5420.patch \
              file://CVE-2016-5419.patch \
              file://CVE-2016-0754.patch \
              file://CVE-2016-0755.patch"
