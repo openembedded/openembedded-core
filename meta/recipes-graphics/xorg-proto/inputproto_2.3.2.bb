@@ -18,3 +18,5 @@ BBCLASSEXTEND = "native nativesdk"
 
 SRC_URI[md5sum] = "b290a463af7def483e6e190de460f31a"
 SRC_URI[sha256sum] = "893a6af55733262058a27b38eeb1edc733669f01d404e8581b167f03c03ef31d"
+
+EXTRA_OECONF += "--without-asciidoc"
