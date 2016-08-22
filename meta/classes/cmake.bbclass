@@ -108,15 +108,15 @@ cmake_do_configure() {
 	  ${OECMAKE_SITEFILE} \
 	  ${OECMAKE_SOURCEPATH} \
 	  -DCMAKE_INSTALL_PREFIX:PATH=${prefix} \
-	  -DCMAKE_INSTALL_BINDIR:PATH=${bindir} \
-	  -DCMAKE_INSTALL_SBINDIR:PATH=${sbindir} \
-	  -DCMAKE_INSTALL_LIBEXECDIR:PATH=${libexecdir} \
+	  -DCMAKE_INSTALL_BINDIR:PATH=${@os.path.relpath(d.getVar('bindir', True), d.getVar('prefix', True))} \
+	  -DCMAKE_INSTALL_SBINDIR:PATH=${@os.path.relpath(d.getVar('sbindir', True), d.getVar('prefix', True))} \
+	  -DCMAKE_INSTALL_LIBEXECDIR:PATH=${@os.path.relpath(d.getVar('libexecdir', True), d.getVar('prefix', True))} \
 	  -DCMAKE_INSTALL_SYSCONFDIR:PATH=${sysconfdir} \
-	  -DCMAKE_INSTALL_SHAREDSTATEDIR:PATH=${sharedstatedir} \
+	  -DCMAKE_INSTALL_SHAREDSTATEDIR:PATH=${@os.path.relpath(d.getVar('sharedstatedir', True), d.  getVar('prefix', True))} \
 	  -DCMAKE_INSTALL_LOCALSTATEDIR:PATH=${localstatedir} \
-	  -DCMAKE_INSTALL_LIBDIR:PATH=${libdir} \
-	  -DCMAKE_INSTALL_INCLUDEDIR:PATH=${includedir} \
-	  -DCMAKE_INSTALL_DATAROOTDIR:PATH=${datadir} \
+	  -DCMAKE_INSTALL_LIBDIR:PATH=${@os.path.relpath(d.getVar('libdir', True), d.getVar('prefix', True))} \
+	  -DCMAKE_INSTALL_INCLUDEDIR:PATH=${@os.path.relpath(d.getVar('includedir', True), d.getVar('prefix', True))} \
+	  -DCMAKE_INSTALL_DATAROOTDIR:PATH=${@os.path.relpath(d.getVar('datadir', True), d.getVar('prefix', True))} \
 	  -DCMAKE_INSTALL_SO_NO_EXE=0 \
 	  -DCMAKE_TOOLCHAIN_FILE=${WORKDIR}/toolchain.cmake \
 	  -DCMAKE_VERBOSE_MAKEFILE=1 \
