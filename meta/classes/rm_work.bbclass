@@ -66,14 +66,10 @@ do_rm_work () {
                 i=dummy
                 break
                 ;;
-            *do_rootfs*)
-               i=dummy
-               break
-               ;;
-            *do_image*)
-               i=dummy
-               break
-               ;;
+            *do_rootfs*|*do_image*|*do_bootimg*|*do_bootdirectdisk*|*do_vmimg*)
+                i=dummy
+                break
+                ;;
             *do_build*)
                 i=dummy
                 break
