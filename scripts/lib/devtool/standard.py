@@ -1186,6 +1186,7 @@ def _update_recipe_patch(recipename, workspace, srctree, rd, appendlayerdir, wil
                         removevalues = {'SRC_URI': removedentries + remaining}
                 _, destpath = oe.recipeutils.bbappend_recipe(
                                 rd, appendlayerdir, files,
+                                wildcardver=wildcard_version,
                                 removevalues=removevalues)
             else:
                 logger.info('No patches or local source files needed updating')
