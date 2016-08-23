@@ -233,6 +233,7 @@ class BuildPerfTestResult(unittest.TextTestResult):
                 # Find tags matching the pattern
                 tag_keywords = dict(git_branch=self.git_branch,
                                     git_commit=self.git_commit,
+                                    git_commit_count=self.git_commit_count,
                                     tester_host=self.hostname,
                                     tag_num='[0-9]{1,5}')
                 tag_re = re.compile(tag.format(**tag_keywords) + '$')
