@@ -4,11 +4,9 @@ require gcc-common.inc
 
 PV = "6.2.0"
 
-SNAP = "-RC-20160815"
-
 # BINV should be incremented to a revision after a minor gcc release
 
-BINV = "6.1.1"
+BINV = "6.2.0"
 
 FILESEXTRAPATHS =. "${FILE_DIRNAME}/gcc-6.2:${FILE_DIRNAME}/gcc-6.2/backport:"
 
@@ -26,10 +24,10 @@ LIC_FILES_CHKSUM = "\
 "
 
 
-#BASEURI ?= "${GNU_MIRROR}/gcc/gcc-${PV}/gcc-${PV}.tar.bz2"
+BASEURI ?= "${GNU_MIRROR}/gcc/gcc-${PV}/gcc-${PV}.tar.bz2"
 #SRCREV = "bd9a826d5448db11d29d2ec5884e7e679066f140"
 #BASEURI ?= "git://github.com/gcc-mirror/gcc;branch=gcc-6-branch;protocol=git"
-BASEURI ?= "ftp://sourceware.org/pub/gcc/snapshots/6.2.0-RC-20160815/gcc-6.2.0-RC-20160815.tar.bz2"
+#BASEURI ?= "ftp://sourceware.org/pub/gcc/snapshots/6.2.0-RC-20160815/gcc-6.2.0-RC-20160815.tar.bz2"
 
 SRC_URI = "\
            ${BASEURI} \
@@ -84,10 +82,10 @@ SRC_URI = "\
 "
 BACKPORTS = ""
 
-SRC_URI[md5sum] = "9ef78bb894dfb38f567416eb67a68989"
-SRC_URI[sha256sum] = "0754995253eb0efc061264b1c4e99efcaee45489a8b940ac5d2fd52e6773f27e"
+SRC_URI[md5sum] = "9768625159663b300ae4de2f4745fcc4"
+SRC_URI[sha256sum] = "9944589fc722d3e66308c0ce5257788ebd7872982a718aa2516123940671b7c5"
 
-S = "${TMPDIR}/work-shared/gcc-${PV}-${PR}/gcc-${PV}${SNAP}"
+S = "${TMPDIR}/work-shared/gcc-${PV}-${PR}/gcc-${PV}"
 #S = "${TMPDIR}/work-shared/gcc-${PV}-${PR}/git"
 B = "${WORKDIR}/gcc-${PV}/build.${HOST_SYS}.${TARGET_SYS}"
 
