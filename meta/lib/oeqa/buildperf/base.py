@@ -96,30 +96,34 @@ class BuildPerfTestResult(unittest.TextTestResult):
             self.repo = GitRepo('.')
         except GitError:
             self.repo = None
-        self.git_commit, self.git_branch = self.get_git_revision()
+        self.git_commit, self.git_commit_count, self.git_branch = \
+                self.get_git_revision()
         self.hostname = socket.gethostname()
         self.start_time = self.elapsed_time = None
         self.successes = []
-        log.info("Using Git branch:commit %s:%s", self.git_branch,
-                 self.git_commit)
+        log.info("Using Git branch:commit %s:%s (%s)", self.git_branch,
+                 self.git_commit, self.git_commit_count)
 
     def get_git_revision(self):
         """Get git branch and commit under testing"""
         commit = os.getenv('OE_BUILDPERFTEST_GIT_COMMIT')
+        commit_cnt = os.getenv('OE_BUILDPERFTEST_GIT_COMMIT_COUNT')
         branch = os.getenv('OE_BUILDPERFTEST_GIT_BRANCH')
-        if not self.repo and (not commit or not branch):
+        if not self.repo and (not commit or not commit_cnt or not branch):
             log.info("The current working directory doesn't seem to be a Git "
                      "repository clone. You can specify branch and commit "
-                     "displayed in test results with OE_BUILDPERFTEST_GIT_BRANCH "
-                     "and OE_BUILDPERFTEST_GIT_COMMIT environment variables")
+                     "displayed in test results with OE_BUILDPERFTEST_GIT_BRANCH, "
+                     "OE_BUILDPERFTEST_GIT_COMMIT and "
+                     "OE_BUILDPERFTEST_GIT_COMMIT_COUNT environment variables")
         else:
             if not commit:
                 commit = self.repo.rev_parse('HEAD^0')
+                commit_cnt = self.repo.run_cmd(['rev-list', '--count', 'HEAD^0'])
             if not branch:
                 branch = self.repo.get_current_branch()
                 if not branch:
                     log.debug('Currently on detached HEAD')
-        return str(commit), str(branch)
+        return str(commit), str(commit_cnt), str(branch)
 
     def addSuccess(self, test):
         """Record results from successful tests"""
