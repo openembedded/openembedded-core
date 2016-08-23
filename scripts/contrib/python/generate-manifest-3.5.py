@@ -370,7 +370,7 @@ if __name__ == "__main__":
     "test" ) # package
 
     m.addPackage( "${PN}-threading", "Python threading & synchronization support", "${PN}-core ${PN}-lang",
-    "_threading_local.* dummy_thread.* dummy_threading.* mutex.* threading.* Queue.*" )
+    "_threading_local.* dummy_thread.* dummy_threading.* mutex.* threading.* queue.*" )
 
     m.addPackage( "${PN}-tkinter", "Python Tcl/Tk bindings", "${PN}-core",
     "lib-dynload/_tkinter.*.so lib-tk tkinter" ) # package
