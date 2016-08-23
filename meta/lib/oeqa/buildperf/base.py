@@ -226,10 +226,21 @@ class BuildPerfTestResult(unittest.TextTestResult):
 
             # Create (annotated) tag
             if tag:
-                # Replace keywords
-                tag = tag.format(git_branch=self.git_branch,
-                                 git_commit=self.git_commit,
-                                 tester_host=self.hostname)
+                # Find tags matching the pattern
+                tag_keywords = dict(git_branch=self.git_branch,
+                                    git_commit=self.git_commit,
+                                    tester_host=self.hostname,
+                                    tag_num='[0-9]{1,5}')
+                tag_re = re.compile(tag.format(**tag_keywords) + '$')
+                tag_keywords['tag_num'] = 0
+                for existing_tag in repo.run_cmd('tag').splitlines():
+                    if tag_re.match(existing_tag):
+                        tag_keywords['tag_num'] += 1
+
+                tag = tag.format(**tag_keywords)
+                msg = "Test run #{} of {}:{}\n".format(tag_keywords['tag_num'],
+                                                       self.git_branch,
+                                                       self.git_commit)
                 repo.run_cmd(['tag', '-a', '-m', msg, tag, commit])
 
         finally:
