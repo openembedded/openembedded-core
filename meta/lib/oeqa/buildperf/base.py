@@ -96,30 +96,30 @@ class BuildPerfTestResult(unittest.TextTestResult):
             self.repo = GitRepo('.')
         except GitError:
             self.repo = None
-        self.git_revision, self.git_branch = self.get_git_revision()
+        self.git_commit, self.git_branch = self.get_git_revision()
         self.hostname = socket.gethostname()
         self.start_time = self.elapsed_time = None
         self.successes = []
-        log.info("Using Git branch:revision %s:%s", self.git_branch,
-                 self.git_revision)
+        log.info("Using Git branch:commit %s:%s", self.git_branch,
+                 self.git_commit)
 
     def get_git_revision(self):
-        """Get git branch and revision under testing"""
-        rev = os.getenv('OE_BUILDPERFTEST_GIT_REVISION')
+        """Get git branch and commit under testing"""
+        commit = os.getenv('OE_BUILDPERFTEST_GIT_COMMIT')
         branch = os.getenv('OE_BUILDPERFTEST_GIT_BRANCH')
-        if not self.repo and (not rev or not branch):
+        if not self.repo and (not commit or not branch):
             log.info("The current working directory doesn't seem to be a Git "
-                     "repository clone. You can specify branch and revision "
-                     "used in test results with OE_BUILDPERFTEST_GIT_REVISION "
-                     "and OE_BUILDPERFTEST_GIT_BRANCH environment variables")
+                     "repository clone. You can specify branch and commit "
+                     "displayed in test results with OE_BUILDPERFTEST_GIT_BRANCH "
+                     "and OE_BUILDPERFTEST_GIT_COMMIT environment variables")
         else:
-            if not rev:
-                rev = self.repo.rev_parse('HEAD')
+            if not commit:
+                commit = self.repo.rev_parse('HEAD^0')
             if not branch:
                 branch = self.repo.get_current_branch()
                 if not branch:
                     log.debug('Currently on detached HEAD')
-        return str(rev), str(branch)
+        return str(commit), str(branch)
 
     def addSuccess(self, test):
         """Record results from successful tests"""
@@ -165,9 +165,9 @@ class BuildPerfTestResult(unittest.TextTestResult):
                   'test4': ((7, 1), (10, 2))}
 
         if self.repo:
-            git_tag_rev = self.repo.run_cmd(['describe', self.git_revision])
+            git_tag_rev = self.repo.run_cmd(['describe', self.git_commit])
         else:
-            git_tag_rev = self.git_revision
+            git_tag_rev = self.git_commit
 
         values = ['0'] * 12
         for status, (test, msg) in self.all_results():
@@ -183,7 +183,7 @@ class BuildPerfTestResult(unittest.TextTestResult):
         with open(filename, 'a') as fobj:
             fobj.write('{},{}:{},{},'.format(self.hostname,
                                              self.git_branch,
-                                             self.git_revision,
+                                             self.git_commit,
                                              git_tag_rev))
             fobj.write(','.join(values) + '\n')
 
