@@ -15,8 +15,9 @@ SRC_URI = "${APACHE_MIRROR}/${BPN}/${BPN}-${PV}.tar.bz2 \
            file://serf.m4-Regex-modified-to-allow-D-in-paths.patch \
            file://0001-Fix-libtool-name-in-configure.ac.patch \
            "
-SRC_URI[md5sum] = "243036eb28b50ce517fc228eb3250add"
-SRC_URI[sha256sum] = "8bbf6bb125003d88ee1c22935a36b7b1ab7d957e0c8b5fbfe5cb6310b6e86ae0"
+
+SRC_URI[md5sum] = "29121a038f87641055a8183f49e9739f"
+SRC_URI[sha256sum] = "1267f9e2ab983f260623bee841e6c9cc458bf4bf776238ed5f100983f79e9299"
 
 LIC_FILES_CHKSUM = "file://LICENSE;md5=af81ae49ba359e70626c05e9bf313709"
 
