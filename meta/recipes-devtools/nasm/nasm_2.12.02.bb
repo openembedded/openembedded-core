@@ -4,11 +4,10 @@ LICENSE = "BSD-2-Clause"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=90904486f8fbf1861cf42752e1a39efe"
 COMPATIBLE_HOST = '(x86_64|i.86).*-(linux|freebsd.*)'
 
-
 SRC_URI = "http://www.nasm.us/pub/nasm/releasebuilds/${PV}/nasm-${PV}.tar.bz2 "
 
-SRC_URI[md5sum] = "7aae5cb8e03fac48029c82a7470ab066"
-SRC_URI[sha256sum] = "9da3a0291a0bdc06305b7ba194f1e2c2b55ae6f11210b4af43729868149d5445"
+SRC_URI[md5sum] = "d15843c3fb7db39af80571ee27ec6fad"
+SRC_URI[sha256sum] = "00b0891c678c065446ca59bcee64719d0096d54d6886e6e472aeee2e170ae324"
 
 inherit autotools-brokensep
 
