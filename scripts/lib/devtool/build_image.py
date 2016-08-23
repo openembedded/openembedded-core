@@ -35,7 +35,7 @@ def _get_packages(tinfoil, workspace, config):
     for recipe in workspace:
         data = parse_recipe(config, tinfoil, recipe, True)
         if 'class-target' in data.getVar('OVERRIDES', True).split(':'):
-            if recipe in data.getVar('PACKAGES', True):
+            if recipe in data.getVar('PACKAGES', True).split():
                 result.append(recipe)
             else:
                 logger.warning("Skipping recipe %s as it doesn't produce a "
