@@ -482,32 +482,32 @@ def check_repo_clean(repodir):
         sys.exit(1)
 
 def check_patch(patchfile):
-    f = open(patchfile)
+    f = open(patchfile, 'rb')
     ln = f.readline()
     of = None
     in_patch = False
     beyond_msg = False
-    pre_buf = ''
+    pre_buf = b''
     while ln:
         if not beyond_msg:
-            if ln == '---\n':
+            if ln == b'---\n':
                 if not of:
                     break
                 in_patch = False
                 beyond_msg = True
-            elif ln.startswith('--- '):
+            elif ln.startswith(b'--- '):
                 # We have a diff in the commit message
                 in_patch = True
                 if not of:
                     print('WARNING: %s contains a diff in its commit message, indenting to avoid failure during apply' % patchfile)
-                    of = open(patchfile + '.tmp', 'w')
+                    of = open(patchfile + '.tmp', 'wb')
                     of.write(pre_buf)
-                    pre_buf = ''
-            elif in_patch and not ln[0] in '+-@ \n\r':
+                    pre_buf = b''
+            elif in_patch and not ln[0] in b'+-@ \n\r':
                 in_patch = False
         if of:
             if in_patch:
-                of.write(' ' + ln)
+                of.write(b' ' + ln)
             else:
                 of.write(ln)
         else:
