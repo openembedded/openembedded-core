@@ -56,6 +56,12 @@ do_install_append() {
 	if [ -e ${D}${libdir}/charset.alias ]; then
 		rm -rf ${D}${libdir}/charset.alias
 	fi
+
+	# awk is located at /usr/bin/, not /bin/
+	SPECIAL_AWK=`find ${D} -name special.awk`
+	if [ -f ${SPECIAL_AWK} ]; then
+		sed -i -e 's:#!.*awk:#! ${USRBINPATH}/awk:' ${SPECIAL_AWK}
+	fi
 }
 
 do_install_append_class-native() {
