@@ -8,7 +8,7 @@ SRC_URI = "http://gstreamer.freedesktop.org/src/orc/orc-${PV}.tar.xz"
 SRC_URI[md5sum] = "8582a28b15f53110c88d8043d9f55bcf"
 SRC_URI[sha256sum] = "c1b1d54a58f26d483f0b3881538984789fe5d5460ab8fab74a1cacbd3d1c53d1"
 
-inherit autotools pkgconfig
+inherit autotools pkgconfig gtk-doc
 
 BBCLASSEXTEND = "native nativesdk"
 
