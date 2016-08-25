@@ -12,7 +12,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=df4be47940a91ee69556f5f71eed4aec \
                     file://src/idn.c;endline=20;md5=09e97034a8877b3451cb65065fc2c06e"
 DEPENDS = "virtual/libiconv"
 
-inherit pkgconfig autotools gettext texinfo
+inherit pkgconfig autotools gettext texinfo gtk-doc
 
 SRC_URI = "${GNU_MIRROR}/libidn/${BPN}-${PV}.tar.gz \
            file://libidn_fix_for_automake-1.12.patch \
