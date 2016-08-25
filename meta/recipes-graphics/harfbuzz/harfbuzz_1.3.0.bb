@@ -15,7 +15,7 @@ SRC_URI = "http://www.freedesktop.org/software/harfbuzz/release/${BP}.tar.bz2"
 SRC_URI[md5sum] = "a82d49ff67197bc3c96ea34b98880c52"
 SRC_URI[sha256sum] = "b04be31633efee2cae1d62d46434587302554fa837224845a62565ec68a0334d"
 
-inherit autotools pkgconfig lib_package
+inherit autotools pkgconfig lib_package gtk-doc
 
 PACKAGECONFIG ??= "icu"
 PACKAGECONFIG[icu] = "--with-icu,--without-icu,icu"
