@@ -13,6 +13,6 @@ DEPENDS = "glib-2.0"
 SRC_URI[archive.md5sum] = "c1daefb8d0fb59612af0c072c8aabb58"
 SRC_URI[archive.sha256sum] = "ea128ab52a824fcd06e5448fbb2bd8d9a13740d51c66d445828edba71321a621"
 
-inherit gnomebase gettext lib_package gobject-introspection
+inherit gnomebase gettext lib_package gobject-introspection gtk-doc
 
 BBCLASSEXTEND = "native"
