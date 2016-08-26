@@ -191,13 +191,13 @@ def main(argv=None):
     # Restore logger output to stderr
     log.handlers[0].setLevel(log.level)
 
+    if args.globalres_file:
+        result.update_globalres_file(args.globalres_file)
+    if args.commit_results:
+        result.git_commit_results(args.commit_results,
+                                  args.commit_results_branch,
+                                  args.commit_results_tag)
     if result.wasSuccessful():
-        if args.globalres_file:
-            result.update_globalres_file(args.globalres_file)
-        if args.commit_results:
-            result.git_commit_results(args.commit_results,
-                                      args.commit_results_branch,
-                                      args.commit_results_tag)
         return 0
 
     return 1
