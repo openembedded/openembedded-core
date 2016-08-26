@@ -27,26 +27,6 @@ SRCREV_FORMAT = "base"
 
 S = "${WORKDIR}/git"
 
-# over-ride the default hls PACKAGECONFIG in gstreamer1.0-plugins-bad.inc to
-# pass an additional --with-hls-crypto=XXX option (new in 1.7.x) and switch HLS
-# AES decryption from nettle to openssl (ie a shared dependency with dtls).
-# This should move back to the common .inc once the main recipe updates to 1.8.x
-PACKAGECONFIG[hls] = "--enable-hls --with-hls-crypto=openssl,--disable-hls,openssl"
-
-# The tinyalsa plugin was added prior to the 1.7.2 release
-# https://cgit.freedesktop.org/gstreamer/gst-plugins-bad/commit/?id=c8bd74fa9a81398f57d976c478d2043f30188684
-PACKAGECONFIG[tinyalsa] = "--enable-tinyalsa,--disable-tinyalsa,tinyalsa"
-
-# The vulkan based video sink plugin was added prior to the 1.7.2 release
-# https://cgit.freedesktop.org/gstreamer/gst-plugins-bad/commit/?id=5de6dd9f40629562acf90e35e1fa58464d66617d
-PACKAGECONFIG[vulkan] = "--enable-vulkan,--disable-vulkan,libxcb"
-
-# The dependency-less netsim plugin was added prior to the 1.7.2 release
-# https://cgit.freedesktop.org/gstreamer/gst-plugins-bad/commit/?id=e3f9e854f08e82bfab11182c5a2aa6f9a0c73cd5
-EXTRA_OECONF += " \
-    --enable-netsim \
-"
-
 do_configure_prepend() {
 	${S}/autogen.sh --noconfigure
 }
