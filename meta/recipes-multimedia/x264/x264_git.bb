@@ -42,8 +42,6 @@ do_configure() {
     ./configure ${EXTRA_OECONF}
 }
 
-# Get rid of -e
-EXTRA_OEMAKE = ""
 AS = "${TARGET_PREFIX}gcc"
 
 do_install() {
