@@ -257,6 +257,7 @@ class BuildPerfTestCase(unittest.TestCase):
     """Base class for build performance tests"""
     SYSRES = 'sysres'
     DISKUSAGE = 'diskusage'
+    build_target = None
 
     def __init__(self, *args, **kwargs):
         super(BuildPerfTestCase, self).__init__(*args, **kwargs)
@@ -270,6 +271,12 @@ class BuildPerfTestCase(unittest.TestCase):
         # removed
         self.times = []
         self.sizes = []
+
+    def setUp(self):
+        """Set-up fixture for each test"""
+        if self.build_target:
+            self.log_cmd_output(['bitbake', self.build_target,
+                                 '-c', 'fetchall'])
 
     def run(self, *args, **kwargs):
         """Run test"""
