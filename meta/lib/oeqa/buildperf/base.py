@@ -175,7 +175,7 @@ class BuildPerfTestResult(unittest.TextTestResult):
 
         values = ['0'] * 12
         for status, (test, msg) in self.all_results():
-            if status not in ['SUCCESS', 'FAILURE', 'EXP_SUCCESS']:
+            if status in ['ERROR', 'SKIPPED']:
                 continue
             (t_ind, t_len), (s_ind, s_len) = gr_map[test.name]
             if t_ind is not None:
