@@ -75,9 +75,7 @@ def time_cmd(cmd, **kwargs):
         if isinstance(cmd, str):
             timecmd = ' '.join(timecmd) + ' '
         timecmd += cmd
-        # TODO: 'ignore_status' could/should be removed when globalres.log is
-        # deprecated. The function would just raise an exception, instead
-        ret = runCmd2(timecmd, ignore_status=True, **kwargs)
+        ret = runCmd2(timecmd, **kwargs)
         timedata = tmpf.file.read()
     return ret, timedata
 
@@ -315,16 +313,15 @@ class BuildPerfTestCase(unittest.TestCase):
         cmd_str = cmd if isinstance(cmd, str) else ' '.join(cmd)
         log.info("Timing command: %s", cmd_str)
         cmd_log = os.path.join(self.out_dir, 'commands.log')
-        with open(cmd_log, 'a') as fobj:
-            ret, timedata = time_cmd(cmd, stdout=fobj)
-        if ret.status:
-            log.error("Time will be reported as 0. Command failed: %s",
-                      ret.status)
-            etime = timedelta(0)
-            self._failed = True
-        else:
-            match = re.search(r'.*wall clock.*: (?P<etime>.*)\n', timedata)
-            etime = str_time_to_timedelta(match.group('etime'))
+        try:
+            with open(cmd_log, 'a') as fobj:
+                ret, timedata = time_cmd(cmd, stdout=fobj)
+        except CommandError:
+            log.error("Command '%s' failed, see %s for more details", cmd_str,
+                      cmd_log)
+            raise
+        match = re.search(r'.*wall clock.*: (?P<etime>.*)\n', timedata)
+        etime = str_time_to_timedelta(match.group('etime'))
 
         measurement = {'type': self.SYSRES,
                        'name': name,
@@ -344,16 +341,9 @@ class BuildPerfTestCase(unittest.TestCase):
 
     def measure_disk_usage(self, path, name, legend):
         """Estimate disk usage of a file or directory"""
-        # TODO: 'ignore_status' could/should be removed when globalres.log is
-        # deprecated. The function would just raise an exception, instead
-        ret = runCmd2(['du', '-s', path], ignore_status=True)
-        if ret.status:
-            log.error("du failed, disk usage will be reported as 0")
-            size = 0
-            self._failed = True
-        else:
-            size = int(ret.output.split()[0])
-            log.debug("Size of %s path is %s", path, size)
+        ret = runCmd2(['du', '-s', path])
+        size = int(ret.output.split()[0])
+        log.debug("Size of %s path is %s", path, size)
         measurement = {'type': self.DISKUSAGE,
                        'name': name,
                        'legend': legend}
