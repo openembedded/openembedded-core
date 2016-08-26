@@ -40,6 +40,9 @@ INITSCRIPT_PARAMS_${PN}-keepalive = "start 15 1 2 3 4 5 . stop 85 0 6 ."
 do_install_append() {
 	install -D ${S}/redhat/watchdog.init ${D}/${sysconfdir}/init.d/watchdog.sh
     install -Dm 0755 ${WORKDIR}/wd_keepalive.init ${D}${sysconfdir}/init.d/wd_keepalive
+
+    # watchdog.conf is provided by the watchdog-config recipe
+    rm ${D}${sysconfdir}/watchdog.conf
 }
 
 PACKAGES =+ "${PN}-keepalive"
@@ -49,7 +52,8 @@ FILES_${PN}-keepalive = " \
     ${sbindir}/wd_keepalive \
 "
 
-RDEPENDS_${PN} += "${PN}-keepalive"
+RDEPENDS_${PN} += "${PN}-config ${PN}-keepalive"
+RDEPENDS_${PN}-keepalive += "${PN}-config"
 
 RRECOMMENDS_${PN} = "kernel-module-softdog"
 
