@@ -12,7 +12,10 @@ DEPENDS = "flex-native bison-native"
 SRC_URI = "https://github.com/thom311/${BPN}/releases/download/${BPN}${@d.getVar('PV', True).replace('.','_')}/${BP}.tar.gz \
            file://fix-pktloc_syntax_h-race.patch \
            file://fix-pc-file.patch \
-          "
+           file://0001-lib-add-utility-function-nl_strerror_l.patch \
+           file://0002-lib-switch-to-using-strerror_l-instead-of-strerror_r.patch \
+           file://0003-src-switch-to-using-strerror_l-instead-of-strerror_r.patch \
+"
 UPSTREAM_CHECK_URI = "https://github.com/thom311/${BPN}/releases"
 
 SRC_URI[md5sum] = "bab12db1eb94a42129f712a44be91a67"
