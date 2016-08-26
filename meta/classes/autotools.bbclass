@@ -19,8 +19,6 @@ def autotools_dep_prepend(d):
 
     return deps + 'gnu-config-native '
 
-EXTRA_OEMAKE = ""
-
 DEPENDS_prepend = "${@autotools_dep_prepend(d)} "
 
 inherit siteinfo
