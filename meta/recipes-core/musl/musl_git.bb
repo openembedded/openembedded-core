@@ -26,8 +26,6 @@ DEPENDS = "virtual/${TARGET_PREFIX}binutils \
 
 export CROSS_COMPILE="${TARGET_PREFIX}"
 
-EXTRA_OEMAKE = ""
-
 LDFLAGS += "-Wl,-soname,libc.so"
 
 CONFIGUREOPTS = " \
