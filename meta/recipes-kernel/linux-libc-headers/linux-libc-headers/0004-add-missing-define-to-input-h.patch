@@ -1,0 +1,10 @@
+--- a/include/uapi/linux/input.h	2016-07-01 11:59:02.000000000 -0700
++++ b/include/uapi/linux/input.h	2016-06-23 14:49:39.481597369 -0700
+@@ -244,6 +244,7 @@
+ #define BUS_GSC			0x1A
+ #define BUS_ATARI		0x1B
+ #define BUS_SPI			0x1C
++#define BUS_RMI			0x1D
+ 
+ /*
+  * MT_TOOL types
