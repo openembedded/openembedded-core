@@ -395,7 +395,11 @@ class BuildPerfTestCase(unittest.TestCase):
 
     def save_buildstats(self):
         """Save buildstats"""
-        shutil.move(self.bb_vars['BUILDSTATS_BASE'],
+        bs_dirs = os.listdir(self.bb_vars['BUILDSTATS_BASE'])
+        if len(bs_dirs) > 1:
+            log.warning("Multiple buildstats found for test %s, only "
+                        "archiving the last one", self.name)
+        shutil.move(os.path.join(self.bb_vars['BUILDSTATS_BASE'], bs_dirs[-1]),
                     os.path.join(self.out_dir, 'buildstats-' + self.name))
 
     def rm_tmp(self):
