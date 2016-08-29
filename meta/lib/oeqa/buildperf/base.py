@@ -97,6 +97,7 @@ class BuildPerfTestResult(unittest.TextTestResult):
         self.git_commit, self.git_commit_count, self.git_branch = \
                 self.get_git_revision()
         self.hostname = socket.gethostname()
+        self.product = os.getenv('OE_BUILDPERFTEST_PRODUCT', 'oe-core')
         self.start_time = self.elapsed_time = None
         self.successes = []
         log.info("Using Git branch:commit %s:%s (%s)", self.git_branch,
