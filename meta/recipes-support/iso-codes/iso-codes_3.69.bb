@@ -3,8 +3,8 @@ LICENSE = "LGPLv2.1"
 LIC_FILES_CHKSUM = "file://COPYING;md5=4fbd65380cdd255951079008b364516c"
 
 SRC_URI = "https://pkg-isocodes.alioth.debian.org/downloads/iso-codes-${PV}.tar.xz"
-SRC_URI[md5sum] = "a5ce7d78b80f6d29150883d892f2e185"
-SRC_URI[sha256sum] = "5881cf7caa5adfffb14ade99138949324c28a277babe8d07dafbff521acef9d1"
+SRC_URI[md5sum] = "33ed5ea7eed84a7609f041c838fc96d7"
+SRC_URI[sha256sum] = "3f285d3c13f4dccfbdb9e432f172403ac1a54ab432616f10556eb18c23a1c0b2"
 
 # inherit gettext cannot be used, because it adds gettext-native to BASEDEPENDS which
 # are inhibited by allarch
