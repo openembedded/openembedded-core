@@ -13,7 +13,7 @@ SECTION = "base"
 DEPENDS = "util-linux attr e2fsprogs lzo acl"
 RDEPENDS_${PN} = "libgcc"
 
-SRCREV = "40650bf1694bbc833a40afa239a81627ef4fb5c6"
+SRCREV = "6819fbcdcab63c2d95da1a2997e37be9a71ca533"
 SRC_URI = "git://git.kernel.org/pub/scm/linux/kernel/git/kdave/btrfs-progs.git \
            file://fix-parallel.patch \
 "
