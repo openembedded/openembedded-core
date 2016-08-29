@@ -15,14 +15,16 @@ import json
 import logging
 import os
 import re
+import resource
 import shutil
 import socket
-import tempfile
 import time
 import traceback
 import unittest
 from datetime import datetime, timedelta
 from functools import partial
+from multiprocessing import Process
+from multiprocessing import SimpleQueue
 
 import oe.path
 from oeqa.utils.commands import CommandError, runCmd, get_bb_vars
@@ -69,16 +71,9 @@ class KernelDropCaches(object):
         runCmd2(cmd, data=input_data)
 
 
-def time_cmd(cmd, **kwargs):
-    """TIme a command"""
-    with tempfile.NamedTemporaryFile(mode='w+') as tmpf:
-        timecmd = ['/usr/bin/time', '-v', '-o', tmpf.name]
-        if isinstance(cmd, str):
-            timecmd = ' '.join(timecmd) + ' '
-        timecmd += cmd
-        ret = runCmd2(timecmd, **kwargs)
-        timedata = tmpf.file.read()
-    return ret, timedata
+def str_to_fn(string):
+    """Convert string to a sanitized filename"""
+    return re.sub(r'(\W+)', '-', string, flags=re.LOCALE)
 
 
 class ResultsJsonEncoder(json.JSONEncoder):
@@ -338,45 +333,56 @@ class BuildPerfTestCase(unittest.TestCase):
 
     def measure_cmd_resources(self, cmd, name, legend):
         """Measure system resource usage of a command"""
-        def str_time_to_timedelta(strtime):
-            """Convert time strig from the time utility to timedelta"""
-            split = strtime.split(':')
-            hours = int(split[0]) if len(split) > 2 else 0
-            mins = int(split[-2])
+        def _worker(data_q, cmd, **kwargs):
+            """Worker process for measuring resources"""
             try:
-                secs, frac = split[-1].split('.')
-            except:
-                secs = split[-1]
-                frac = '0'
-            secs = int(secs)
-            microsecs = int(float('0.' + frac) * pow(10, 6))
-            return timedelta(0, hours*3600 + mins*60 + secs, microsecs)
+                start_time = datetime.now()
+                ret = runCmd2(cmd, **kwargs)
+                etime = datetime.now() - start_time
+                rusage_struct = resource.getrusage(resource.RUSAGE_CHILDREN)
+                rusage = {}
+                # Skip unused fields, (i.e. 'ru_ixrss', 'ru_idrss', 'ru_isrss',
+                # 'ru_nswap', 'ru_msgsnd', 'ru_msgrcv' and 'ru_nsignals')
+                for key in ['ru_utime', 'ru_stime', 'ru_maxrss', 'ru_minflt',
+                            'ru_majflt', 'ru_inblock', 'ru_oublock',
+                            'ru_nvcsw', 'ru_nivcsw']:
+                    rusage[key] = getattr(rusage_struct, key)
+                data_q.put({'ret': ret,
+                            'start_time': start_time,
+                            'elapsed_time': etime,
+                            'rusage': rusage})
+            except Exception as err:
+                data_q.put(err)
 
         cmd_str = cmd if isinstance(cmd, str) else ' '.join(cmd)
         log.info("Timing command: %s", cmd_str)
+        data_q = SimpleQueue()
         cmd_log = os.path.join(self.out_dir, 'commands.log')
         try:
             with open(cmd_log, 'a') as fobj:
-                ret, timedata = time_cmd(cmd, stdout=fobj)
+                proc = Process(target=_worker, args=(data_q, cmd,),
+                               kwargs={'stdout': fobj})
+                proc.start()
+                data = data_q.get()
+                proc.join()
+            if isinstance(data, Exception):
+                raise data
         except CommandError:
             log.error("Command '%s' failed, see %s for more details", cmd_str,
                       cmd_log)
             raise
-        match = re.search(r'.*wall clock.*: (?P<etime>.*)\n', timedata)
-        etime = str_time_to_timedelta(match.group('etime'))
+        etime = data['elapsed_time']
 
         measurement = {'type': self.SYSRES,
                        'name': name,
                        'legend': legend}
-        measurement['values'] = {'elapsed_time': etime}
+        measurement['values'] = {'start_time': data['start_time'],
+                                 'elapsed_time': etime,
+                                 'rusage': data['rusage']}
         self.measurements.append(measurement)
-        e_sec = etime.total_seconds()
-        nlogs = len(glob.glob(self.out_dir + '/results.log*'))
-        results_log = os.path.join(self.out_dir,
-                                   'results.log.{}'.format(nlogs + 1))
-        with open(results_log, 'w') as fobj:
-            fobj.write(timedata)
+
         # Append to 'times' array for globalres log
+        e_sec = etime.total_seconds()
         self.times.append('{:d}:{:02d}:{:.2f}'.format(int(e_sec / 3600),
                                                       int((e_sec % 3600) / 60),
                                                        e_sec % 60))
