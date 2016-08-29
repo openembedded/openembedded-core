@@ -141,7 +141,7 @@ class BuildPerfTestResult(unittest.TextTestResult):
 
     def startTest(self, test):
         """Pre-test hook"""
-        test.out_dir = os.path.join(self.out_dir, test.name)
+        test.base_dir = self.out_dir
         os.mkdir(test.out_dir)
         log.info("Executing test %s: %s", test.name, test.shortDescription())
         self.stream.write(datetime.now().strftime("[%Y-%m-%d %H:%M:%S] "))
@@ -298,7 +298,7 @@ class BuildPerfTestCase(unittest.TestCase):
     def __init__(self, *args, **kwargs):
         super(BuildPerfTestCase, self).__init__(*args, **kwargs)
         self.name = self._testMethodName
-        self.out_dir = None
+        self.base_dir = None
         self.start_time = None
         self.elapsed_time = None
         self.measurements = []
@@ -307,6 +307,10 @@ class BuildPerfTestCase(unittest.TestCase):
         # removed
         self.times = []
         self.sizes = []
+
+    @property
+    def out_dir(self):
+        return os.path.join(self.base_dir, self.name)
 
     def setUp(self):
         """Set-up fixture for each test"""
@@ -332,7 +336,7 @@ class BuildPerfTestCase(unittest.TestCase):
             log.error("Command failed: %s", err.retcode)
             raise
 
-    def measure_cmd_resources(self, cmd, name, legend):
+    def measure_cmd_resources(self, cmd, name, legend, save_bs=False):
         """Measure system resource usage of a command"""
         def _worker(data_q, cmd, **kwargs):
             """Worker process for measuring resources"""
@@ -387,6 +391,11 @@ class BuildPerfTestCase(unittest.TestCase):
                                  'elapsed_time': etime,
                                  'rusage': data['rusage'],
                                  'iostat': data['iostat']}
+        if save_bs:
+            bs_file = self.save_buildstats(legend)
+            measurement['values']['buildstats_file'] = \
+                    os.path.relpath(bs_file, self.base_dir)
+
         self.measurements.append(measurement)
 
         # Append to 'times' array for globalres log
@@ -474,12 +483,13 @@ class BuildPerfTestCase(unittest.TestCase):
             buildstats.append(recipe_bs)
 
         # Write buildstats into json file
-        postfix = '.' + label if label else ''
+        postfix = '.' + str_to_fn(label) if label else ''
         postfix += '.json'
         outfile = os.path.join(self.out_dir, 'buildstats' + postfix)
         with open(outfile, 'w') as fobj:
             json.dump(buildstats, fobj, indent=4, sort_keys=True,
                       cls=ResultsJsonEncoder)
+        return outfile
 
     def rm_tmp(self):
         """Cleanup temporary/intermediate files and directories"""
