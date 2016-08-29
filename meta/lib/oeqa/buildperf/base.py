@@ -394,14 +394,15 @@ class BuildPerfTestCase(unittest.TestCase):
         # Append to 'sizes' array for globalres log
         self.sizes.append(str(size))
 
-    def save_buildstats(self):
+    def save_buildstats(self, label=None):
         """Save buildstats"""
         bs_dirs = os.listdir(self.bb_vars['BUILDSTATS_BASE'])
         if len(bs_dirs) > 1:
             log.warning("Multiple buildstats found for test %s, only "
                         "archiving the last one", self.name)
+        postfix = '-' + label if label else ''
         shutil.move(os.path.join(self.bb_vars['BUILDSTATS_BASE'], bs_dirs[-1]),
-                    os.path.join(self.out_dir, 'buildstats-' + self.name))
+                    os.path.join(self.out_dir, 'buildstats' + postfix))
 
     def rm_tmp(self):
         """Cleanup temporary/intermediate files and directories"""
