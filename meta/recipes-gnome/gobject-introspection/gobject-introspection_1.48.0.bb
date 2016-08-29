@@ -18,7 +18,7 @@ SRC_URI = "${GNOME_MIRROR}/${BPN}/1.48/${BPN}-${PV}.tar.xz \
 SRC_URI[md5sum] = "01301fa9019667d48e927353e08bc218"
 SRC_URI[sha256sum] = "fa275aaccdbfc91ec0bc9a6fd0562051acdba731e7d584b64a277fec60e75877"
 
-inherit autotools pkgconfig gtk-doc python3native qemu gobject-introspection-data
+inherit autotools pkgconfig gtk-doc python3native qemu gobject-introspection-data upstream-version-is-even
 BBCLASSEXTEND = "native"
 
 # needed for writing out the qemu wrapper script
