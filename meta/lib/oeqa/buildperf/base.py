@@ -11,6 +11,7 @@
 #
 """Build performance test base classes and functionality"""
 import glob
+import json
 import logging
 import os
 import re
@@ -80,6 +81,20 @@ def time_cmd(cmd, **kwargs):
     return ret, timedata
 
 
+class ResultsJsonEncoder(json.JSONEncoder):
+    """Extended encoder for build perf test results"""
+    unix_epoch = datetime.utcfromtimestamp(0)
+
+    def default(self, obj):
+        """Encoder for our types"""
+        if isinstance(obj, datetime):
+            # NOTE: we assume that all timestamps are in UTC time
+            return (obj - self.unix_epoch).total_seconds()
+        if isinstance(obj, timedelta):
+            return obj.total_seconds()
+        return json.JSONEncoder.default(self, obj)
+
+
 class BuildPerfTestResult(unittest.TextTestResult):
     """Runner class for executing the individual tests"""
     # List of test cases to run
@@ -143,6 +158,7 @@ class BuildPerfTestResult(unittest.TextTestResult):
     def stopTestRun(self):
         """Pre-run hook"""
         self.elapsed_time = datetime.utcnow() - self.start_time
+        self.write_results_json()
 
     def all_results(self):
         result_map = {'SUCCESS': self.successes,
@@ -189,6 +205,30 @@ class BuildPerfTestResult(unittest.TextTestResult):
                                              self.git_commit,
                                              git_tag_rev))
             fobj.write(','.join(values) + '\n')
+
+    def write_results_json(self):
+        """Write test results into a json-formatted file"""
+        results = {'tester_host': self.hostname,
+                   'git_branch': self.git_branch,
+                   'git_commit': self.git_commit,
+                   'git_commit_count': self.git_commit_count,
+                   'product': self.product,
+                   'start_time': self.start_time,
+                   'elapsed_time': self.elapsed_time}
+
+        tests = {}
+        for status, (test, reason) in self.all_results():
+            tests[test.name] = {'name': test.name,
+                                'description': test.shortDescription(),
+                                'status': status,
+                                'start_time': test.start_time,
+                                'elapsed_time': test.elapsed_time,
+                                'measurements': test.measurements}
+        results['tests'] = tests
+
+        with open(os.path.join(self.out_dir, 'results.json'), 'w') as fobj:
+            json.dump(results, fobj, indent=4, sort_keys=True,
+                      cls=ResultsJsonEncoder)
 
 
     def git_commit_results(self, repo_path, branch=None, tag=None):
