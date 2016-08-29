@@ -1331,7 +1331,9 @@ class DevtoolTests(DevtoolBase):
         result = runCmd('git status --porcelain .', cwd=recipedir)
         if result.output.strip():
             self.fail('Recipe directory for %s contains the following unexpected changes after finish:\n%s' % (recipe, result.output.strip()))
-        appendfile = os.path.join(appenddir, os.path.splitext(os.path.basename(oldrecipefile))[0] + '.bbappend')
+        recipefn = os.path.splitext(os.path.basename(oldrecipefile))[0]
+        recipefn = recipefn.split('_')[0] + '_%'
+        appendfile = os.path.join(appenddir, recipefn + '.bbappend')
         self.assertTrue(os.path.exists(appendfile), 'bbappend %s should have been created but wasn\'t' % appendfile)
         newdir = os.path.join(appenddir, recipe)
         files = os.listdir(newdir)
