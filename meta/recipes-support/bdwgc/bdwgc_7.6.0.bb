@@ -19,12 +19,11 @@ DESCRIPTION = "The Boehm-Demers-Weiser conservative garbage collector can be\
 HOMEPAGE = "http://www.hboehm.info/gc/"
 SECTION = "devel"
 LICENSE = "MIT"
-LIC_FILES_CHKSUM = "file://README.QUICK;md5=55f5088f90a982fed7af9a4897047ef7"
+LIC_FILES_CHKSUM = "file://README.QUICK;md5=4f81f24ec69726c312487c2ac740e9e3"
 
-SRCREV = "d8bfa89c2a9c7c86fb98acbc53b5750600b95492"
-SRC_URI = "git://github.com/ivmai/bdwgc.git;branch=release-7_4 \
+SRCREV = "8ac1d84a40eb7a431fec1b8097e3f24b48fb23fa"
+SRC_URI = "git://github.com/ivmai/bdwgc.git \
            file://0001-configure.ac-add-check-for-NO_GETCONTEXT-definition.patch \
-           file://0002-Altera-NIOS2-support.patch \
           "
 
 FILES_${PN}-doc = "${datadir}"
