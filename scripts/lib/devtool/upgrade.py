@@ -227,7 +227,9 @@ def _extract_new_source(newpv, srctree, no_patch, srcrev, branch, keep_temp, tin
         for f in stdout.splitlines():
             __run('git add "%s"' % f)
 
-        __run('git commit -q -m "Commit of upstream changes at version %s" --allow-empty' % newpv)
+        useroptions = []
+        oe.patch.GitApplyTree.gitCommandUserOptions(useroptions, d=rd)
+        __run('git %s commit -q -m "Commit of upstream changes at version %s" --allow-empty' % (' '.join(useroptions), newpv))
         __run('git tag -f devtool-base-%s' % newpv)
 
     (stdout, _) = __run('git rev-parse HEAD')

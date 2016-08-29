@@ -212,18 +212,18 @@ def add(args, config, basepath, workspace):
     for fn in os.listdir(recipedir):
         _add_md5(config, recipename, os.path.join(recipedir, fn))
 
+    tinfoil = setup_tinfoil(config_only=True, basepath=basepath)
+    rd = oe.recipeutils.parse_recipe(tinfoil.cooker, recipefile, None)
+    if not rd:
+        return 1
+
     if args.fetchuri and not args.no_git:
-        setup_git_repo(srctree, args.version, 'devtool')
+        setup_git_repo(srctree, args.version, 'devtool', d=tinfoil.config_data)
 
     initial_rev = None
     if os.path.exists(os.path.join(srctree, '.git')):
         (stdout, _) = bb.process.run('git rev-parse HEAD', cwd=srctree)
         initial_rev = stdout.rstrip()
-
-    tinfoil = setup_tinfoil(config_only=True, basepath=basepath)
-    rd = oe.recipeutils.parse_recipe(tinfoil.cooker, recipefile, None)
-    if not rd:
-        return 1
 
     if args.src_subdir:
         srctree = os.path.join(srctree, args.src_subdir)
@@ -420,7 +420,10 @@ class BbTaskExecutor(object):
 
 class PatchTaskExecutor(BbTaskExecutor):
     def __init__(self, rdata):
+        import oe.patch
         self.check_git = False
+        self.useroptions = []
+        oe.patch.GitApplyTree.gitCommandUserOptions(self.useroptions, d=rdata)
         super(PatchTaskExecutor, self).__init__(rdata)
 
     def exec_func(self, func, report):
@@ -447,7 +450,7 @@ class PatchTaskExecutor(BbTaskExecutor):
 
             stdout, _ = bb.process.run('git status --porcelain', cwd=srcsubdir)
             if stdout:
-                bb.process.run('git add .; git commit -a -m "Committing changes from %s\n\n%s"' % (func, GitApplyTree.ignore_commit_prefix + ' - from %s' % func), cwd=srcsubdir)
+                bb.process.run('git add .; git %s commit -a -m "Committing changes from %s\n\n%s"' % (' '.join(self.useroptions), func, GitApplyTree.ignore_commit_prefix + ' - from %s' % func), cwd=srcsubdir)
 
 
 def _prep_extract_operation(config, basepath, recipename, tinfoil=None):
@@ -592,7 +595,7 @@ def _extract_source(srctree, keep_temp, devbranch, sync, d):
                            "doesn't use any source or the correct source "
                            "directory could not be determined" % pn)
 
-        setup_git_repo(srcsubdir, crd.getVar('PV', True), devbranch)
+        setup_git_repo(srcsubdir, crd.getVar('PV', True), devbranch, d=d)
 
         (stdout, _) = bb.process.run('git rev-parse HEAD', cwd=srcsubdir)
         initial_rev = stdout.rstrip()

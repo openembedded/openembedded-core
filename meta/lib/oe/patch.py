@@ -281,6 +281,8 @@ class GitApplyTree(PatchTree):
 
     def __init__(self, dir, d):
         PatchTree.__init__(self, dir, d)
+        self.commituser = d.getVar('PATCH_GIT_USER_NAME', True)
+        self.commitemail = d.getVar('PATCH_GIT_USER_EMAIL', True)
 
     @staticmethod
     def extractPatchHeader(patchfile):
@@ -348,7 +350,17 @@ class GitApplyTree(PatchTree):
         return outlines, author, date, subject
 
     @staticmethod
-    def prepareCommit(patchfile):
+    def gitCommandUserOptions(cmd, commituser=None, commitemail=None, d=None):
+        if d:
+            commituser = d.getVar('PATCH_GIT_USER_NAME', True)
+            commitemail = d.getVar('PATCH_GIT_USER_EMAIL', True)
+        if commituser:
+            cmd += ['-c', 'user.name="%s"' % commituser]
+        if commitemail:
+            cmd += ['-c', 'user.email="%s"' % commitemail]
+
+    @staticmethod
+    def prepareCommit(patchfile, commituser=None, commitemail=None):
         """
         Prepare a git commit command line based on the header from a patch file
         (typically this is useful for patches that cannot be applied with "git am" due to formatting)
@@ -380,7 +392,9 @@ class GitApplyTree(PatchTree):
             for line in outlines:
                 tf.write(line)
         # Prepare git command
-        cmd = ["git", "commit", "-F", tmpfile]
+        cmd = ["git"]
+        GitApplyTree.gitCommandUserOptions(cmd, commituser, commitemail)
+        cmd += ["commit", "-F", tmpfile]
         # git doesn't like plain email addresses as authors
         if author and '<' in author:
             cmd.append('--author="%s"' % author)
@@ -456,7 +470,9 @@ class GitApplyTree(PatchTree):
         try:
             patchfilevar = 'PATCHFILE="%s"' % os.path.basename(patch['file'])
             try:
-                shellcmd = [patchfilevar, "git", "--work-tree=%s" % reporoot, "am", "-3", "--keep-cr", "-p%s" % patch['strippath']]
+                shellcmd = [patchfilevar, "git", "--work-tree=%s" % reporoot]
+                self.gitCommandUserOptions(shellcmd, self.commituser, self.commitemail)
+                shellcmd += ["am", "-3", "--keep-cr", "-p%s" % patch['strippath']]
                 return _applypatchhelper(shellcmd, patch, force, reverse, run)
             except CmdError:
                 # Need to abort the git am, or we'll still be within it at the end
@@ -486,7 +502,7 @@ class GitApplyTree(PatchTree):
                 shellcmd = ["git", "reset", "HEAD", self.patchdir]
                 output += runcmd(["sh", "-c", " ".join(shellcmd)], self.dir)
                 # Commit the result
-                (tmpfile, shellcmd) = self.prepareCommit(patch['file'])
+                (tmpfile, shellcmd) = self.prepareCommit(patch['file'], self.commituser, self.commitemail)
                 try:
                     shellcmd.insert(0, patchfilevar)
                     output += runcmd(["sh", "-c", " ".join(shellcmd)], self.dir)

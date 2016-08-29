@@ -196,15 +196,18 @@ def use_external_build(same_dir, no_same_dir, d):
         b_is_s = False
     return b_is_s
 
-def setup_git_repo(repodir, version, devbranch, basetag='devtool-base'):
+def setup_git_repo(repodir, version, devbranch, basetag='devtool-base', d=None):
     """
     Set up the git repository for the source tree
     """
     import bb.process
+    import oe.patch
     if not os.path.exists(os.path.join(repodir, '.git')):
         bb.process.run('git init', cwd=repodir)
         bb.process.run('git add .', cwd=repodir)
-        commit_cmd = ['git', 'commit', '-q']
+        commit_cmd = ['git']
+        oe.patch.GitApplyTree.gitCommandUserOptions(commit_cmd, d=d)
+        commit_cmd += ['commit', '-q']
         stdout, _ = bb.process.run('git status --porcelain', cwd=repodir)
         if not stdout:
             commit_cmd.append('--allow-empty')
