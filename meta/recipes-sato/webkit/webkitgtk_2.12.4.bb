@@ -18,6 +18,7 @@ SRC_URI = "\
   file://0001-WebKitMacros-Append-to-I-and-not-to-isystem.patch \
   file://musl-fixes.patch \
   file://ppc-musl-fix.patch \
+  file://0001-Fix-racy-parallel-build-of-WebKit2-4.0.gir.patch \
   "
 SRC_URI[md5sum] = "0331ac714fd1a0587ffea470ef1afb20"
 SRC_URI[sha256sum] = "424d3177599abbc1eb1a1ad7928dd280a62006e992f2fada2e059375a9609a77"
