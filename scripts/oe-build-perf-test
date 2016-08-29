@@ -131,6 +131,9 @@ def parse_args(argv):
     parser.add_argument('-o', '--out-dir', default='results-{date}',
                         type=os.path.abspath,
                         help="Output directory for test results")
+    parser.add_argument('--log-file', type=os.path.abspath,
+                        default='{out_dir}/oe-build-perf-test.log',
+                        help="Log file of this script")
     parser.add_argument('--run-tests', nargs='+', metavar='TEST',
                         help="List of tests to run")
     parser.add_argument('--commit-results', metavar='GIT_DIR',
@@ -152,7 +155,7 @@ def main(argv=None):
 
     # Set-up log file
     out_dir = args.out_dir.format(date=datetime.now().strftime('%Y%m%d%H%M%S'))
-    setup_file_logging(os.path.join(out_dir, 'output.log'))
+    setup_file_logging(args.log_file.format(out_dir=out_dir))
 
     if args.debug:
         log.setLevel(logging.DEBUG)
