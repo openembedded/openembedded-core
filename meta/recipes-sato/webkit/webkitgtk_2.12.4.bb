@@ -19,8 +19,8 @@ SRC_URI = "\
   file://musl-fixes.patch \
   file://ppc-musl-fix.patch \
   "
-SRC_URI[md5sum] = "aebb4029c09dd81664aa830e4a584c85"
-SRC_URI[sha256sum] = "173cbb9a2eca23eee52e99965483ab25aa9c0569ef5b57041fc0c129cc26c307"
+SRC_URI[md5sum] = "0331ac714fd1a0587ffea470ef1afb20"
+SRC_URI[sha256sum] = "424d3177599abbc1eb1a1ad7928dd280a62006e992f2fada2e059375a9609a77"
 
 inherit cmake lib_package pkgconfig gobject-introspection perlnative distro_features_check upstream-version-is-even
 
