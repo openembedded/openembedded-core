@@ -340,6 +340,11 @@ class BuildPerfTestCase(unittest.TestCase):
                 ret = runCmd2(cmd, **kwargs)
                 etime = datetime.now() - start_time
                 rusage_struct = resource.getrusage(resource.RUSAGE_CHILDREN)
+                iostat = {}
+                with open('/proc/{}/io'.format(os.getpid())) as fobj:
+                    for line in fobj.readlines():
+                        key, val = line.split(':')
+                        iostat[key] = int(val)
                 rusage = {}
                 # Skip unused fields, (i.e. 'ru_ixrss', 'ru_idrss', 'ru_isrss',
                 # 'ru_nswap', 'ru_msgsnd', 'ru_msgrcv' and 'ru_nsignals')
@@ -350,7 +355,8 @@ class BuildPerfTestCase(unittest.TestCase):
                 data_q.put({'ret': ret,
                             'start_time': start_time,
                             'elapsed_time': etime,
-                            'rusage': rusage})
+                            'rusage': rusage,
+                            'iostat': iostat})
             except Exception as err:
                 data_q.put(err)
 
@@ -378,7 +384,8 @@ class BuildPerfTestCase(unittest.TestCase):
                        'legend': legend}
         measurement['values'] = {'start_time': data['start_time'],
                                  'elapsed_time': etime,
-                                 'rusage': data['rusage']}
+                                 'rusage': data['rusage'],
+                                 'iostat': data['iostat']}
         self.measurements.append(measurement)
 
         # Append to 'times' array for globalres log
