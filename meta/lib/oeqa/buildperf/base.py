@@ -220,6 +220,8 @@ class BuildPerfTestResult(unittest.TextTestResult):
                                 'status': status,
                                 'start_time': test.start_time,
                                 'elapsed_time': test.elapsed_time,
+                                'cmd_log_file': os.path.relpath(test.cmd_log_file,
+                                                                self.out_dir),
                                 'measurements': test.measurements}
         results['tests'] = tests
 
@@ -312,6 +314,10 @@ class BuildPerfTestCase(unittest.TestCase):
     def out_dir(self):
         return os.path.join(self.base_dir, self.name)
 
+    @property
+    def cmd_log_file(self):
+        return os.path.join(self.out_dir, 'commands.log')
+
     def setUp(self):
         """Set-up fixture for each test"""
         if self.build_target:
@@ -328,9 +334,8 @@ class BuildPerfTestCase(unittest.TestCase):
         """Run a command and log it's output"""
         cmd_str = cmd if isinstance(cmd, str) else ' '.join(cmd)
         log.info("Logging command: %s", cmd_str)
-        cmd_log = os.path.join(self.out_dir, 'commands.log')
         try:
-            with open(cmd_log, 'a') as fobj:
+            with open(self.cmd_log_file, 'a') as fobj:
                 runCmd2(cmd, stdout=fobj)
         except CommandError as err:
             log.error("Command failed: %s", err.retcode)
@@ -368,9 +373,8 @@ class BuildPerfTestCase(unittest.TestCase):
         cmd_str = cmd if isinstance(cmd, str) else ' '.join(cmd)
         log.info("Timing command: %s", cmd_str)
         data_q = SimpleQueue()
-        cmd_log = os.path.join(self.out_dir, 'commands.log')
         try:
-            with open(cmd_log, 'a') as fobj:
+            with open(self.cmd_log_file, 'a') as fobj:
                 proc = Process(target=_worker, args=(data_q, cmd,),
                                kwargs={'stdout': fobj})
                 proc.start()
@@ -380,7 +384,7 @@ class BuildPerfTestCase(unittest.TestCase):
                 raise data
         except CommandError:
             log.error("Command '%s' failed, see %s for more details", cmd_str,
-                      cmd_log)
+                      self.cmd_log_file)
             raise
         etime = data['elapsed_time']
 
