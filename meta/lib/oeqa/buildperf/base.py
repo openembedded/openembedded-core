@@ -161,7 +161,8 @@ class BuildPerfTestResult(unittest.TextTestResult):
                       'FAIL': self.failures,
                       'ERROR': self.errors,
                       'EXP_FAIL': self.expectedFailures,
-                      'UNEXP_SUCCESS': self.unexpectedSuccesses}
+                      'UNEXP_SUCCESS': self.unexpectedSuccesses,
+                      'SKIPPED': self.skipped}
         for status, tests in result_map.items():
             for test in tests:
                 yield (status, test)
