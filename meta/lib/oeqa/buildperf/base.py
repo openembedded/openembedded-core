@@ -409,13 +409,76 @@ class BuildPerfTestCase(unittest.TestCase):
 
     def save_buildstats(self, label=None):
         """Save buildstats"""
+        def split_nevr(nevr):
+            """Split name and version information from recipe "nevr" string"""
+            name, e_v, revision = nevr.rsplit('-', 2)
+            match = re.match(r'^((?P<epoch>[0-9]{1,5})_)?(?P<version>.*)$', e_v)
+            version = match.group('version')
+            epoch = match.group('epoch')
+            return name, epoch, version, revision
+
+        def bs_to_json(filename):
+            """Convert (task) buildstats file into json format"""
+            bs_json = {'iostat': {},
+                       'rusage': {},
+                       'child_rusage': {}}
+            with open(filename) as fobj:
+                for line in fobj.readlines():
+                    key, val = line.split(':', 1)
+                    val = val.strip()
+                    if key == 'Started':
+                        start_time = datetime.utcfromtimestamp(float(val))
+                        bs_json['start_time'] = start_time
+                    elif key == 'Ended':
+                        end_time = datetime.utcfromtimestamp(float(val))
+                    elif key.startswith('IO '):
+                        split = key.split()
+                        bs_json['iostat'][split[1]] = int(val)
+                    elif key.find('rusage') >= 0:
+                        split = key.split()
+                        ru_key = split[-1]
+                        if ru_key in ('ru_stime', 'ru_utime'):
+                            val = float(val)
+                        else:
+                            val = int(val)
+                        ru_type = 'rusage' if split[0] == 'rusage' else \
+                                                          'child_rusage'
+                        bs_json[ru_type][ru_key] = val
+                    elif key == 'Status':
+                        bs_json['status'] = val
+            bs_json['elapsed_time'] = end_time - start_time
+            return bs_json
+
+        log.info('Saving buildstats in JSON format')
         bs_dirs = os.listdir(self.bb_vars['BUILDSTATS_BASE'])
         if len(bs_dirs) > 1:
             log.warning("Multiple buildstats found for test %s, only "
                         "archiving the last one", self.name)
-        postfix = '-' + label if label else ''
-        shutil.move(os.path.join(self.bb_vars['BUILDSTATS_BASE'], bs_dirs[-1]),
-                    os.path.join(self.out_dir, 'buildstats' + postfix))
+        bs_dir = os.path.join(self.bb_vars['BUILDSTATS_BASE'], bs_dirs[-1])
+
+        buildstats = []
+        for fname in os.listdir(bs_dir):
+            recipe_dir = os.path.join(bs_dir, fname)
+            if not os.path.isdir(recipe_dir):
+                continue
+            name, epoch, version, revision = split_nevr(fname)
+            recipe_bs = {'name': name,
+                         'epoch': epoch,
+                         'version': version,
+                         'revision': revision,
+                         'tasks': {}}
+            for task in os.listdir(recipe_dir):
+                recipe_bs['tasks'][task] = bs_to_json(os.path.join(recipe_dir,
+                                                                   task))
+            buildstats.append(recipe_bs)
+
+        # Write buildstats into json file
+        postfix = '.' + label if label else ''
+        postfix += '.json'
+        outfile = os.path.join(self.out_dir, 'buildstats' + postfix)
+        with open(outfile, 'w') as fobj:
+            json.dump(buildstats, fobj, indent=4, sort_keys=True,
+                      cls=ResultsJsonEncoder)
 
     def rm_tmp(self):
         """Cleanup temporary/intermediate files and directories"""
