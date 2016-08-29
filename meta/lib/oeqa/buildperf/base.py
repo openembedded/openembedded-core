@@ -146,7 +146,8 @@ class BuildPerfTestResult(unittest.TextTestResult):
 
     def startTest(self, test):
         """Pre-test hook"""
-        test.out_dir = self.out_dir
+        test.out_dir = os.path.join(self.out_dir, test.name)
+        os.mkdir(test.out_dir)
         log.info("Executing test %s: %s", test.name, test.shortDescription())
         self.stream.write(datetime.now().strftime("[%Y-%m-%d %H:%M:%S] "))
         super(BuildPerfTestResult, self).startTest(test)
