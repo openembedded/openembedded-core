@@ -131,6 +131,8 @@ autotools_postconfigure(){
 
 EXTRACONFFUNCS ??= ""
 
+EXTRA_OECONF_append = " ${PACKAGECONFIG_CONFARGS}"
+
 do_configure[prefuncs] += "autotools_preconfigure autotools_copy_aclocals ${EXTRACONFFUNCS}"
 do_configure[postfuncs] += "autotools_postconfigure"
 

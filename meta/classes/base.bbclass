@@ -431,12 +431,6 @@ python () {
         appendVar('RDEPENDS_${PN}', extrardeps)
         appendVar('PACKAGECONFIG_CONFARGS', extraconf)
 
-        # TODO: once all recipes/classes abusing EXTRA_OECONF
-        # to get PACKAGECONFIG options are fixed to use PACKAGECONFIG_CONFARGS
-        # move this appendVar to autotools.bbclass.
-        if not bb.data.inherits_class('cmake', d):
-            appendVar('EXTRA_OECONF', extraconf)
-
     pn = d.getVar('PN', True)
     license = d.getVar('LICENSE', True)
     if license == "INVALID":
