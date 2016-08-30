@@ -133,11 +133,17 @@ do_configure_prepend () {
     # with each other if its in the shared source directory
     #
     if [ -e "${S}/tools/perf/config/Makefile" ]; then
+        perfconfig="${S}/tools/perf/config/Makefile"
+    fi
+    if [ -e "${S}/tools/perf/Makefile.config" ]; then
+        perfconfig="${S}/tools/perf/Makefile.config"
+    fi
+    if [ -n "${perfconfig}" ]; then
         # Match $(prefix)/$(lib) and $(prefix)/lib
         sed -i -e 's,^libdir = \($(prefix)/.*lib\),libdir ?= \1,' \
                -e 's,^perfexecdir = \(.*\),perfexecdir ?= \1,' \
                -e 's,\ .config-detected, $(OUTPUT)/config-detected,g' \
-            ${S}/tools/perf/config/Makefile
+            ${perfconfig}
     fi
     # The man pages installation is "$(INSTALL) -d -m 755 $(DESTDIR)$(man1dir)"
     # in ${S}/tools/perf/Documentation/Makefile, if the mandir set to '?=', it
@@ -214,6 +220,7 @@ RDEPENDS_${PN}-tests =+ "python"
 RSUGGESTS_SCRIPTING = "${@perf_feature_enabled('perf-scripting', '${PN}-perl ${PN}-python', '',d)}"
 RSUGGESTS_${PN} += "${PN}-archive ${PN}-tests ${RSUGGESTS_SCRIPTING}"
 
+#FILES_${PN} += "${libexecdir}/perf-core ${exec_prefix}/libexec/perf-core /usr/lib64/traceevent ${libdir}/traceevent"
 FILES_${PN} += "${libexecdir}/perf-core ${exec_prefix}/libexec/perf-core ${libdir}/traceevent"
 FILES_${PN}-archive = "${libdir}/perf/perf-core/perf-archive"
 FILES_${PN}-tests = "${libdir}/perf/perf-core/tests ${libexecdir}/perf-core/tests"
