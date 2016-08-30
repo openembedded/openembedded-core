@@ -28,6 +28,8 @@ LINUX_KERNEL_TYPE = "preempt-rt"
 
 COMPATIBLE_MACHINE = "(qemux86|qemux86-64|qemuarm|qemuppc|qemumips)"
 
+KERNEL_DEVICETREE_qemuarm = "versatile-pb.dtb"
+
 # Functionality flags
 KERNEL_EXTRA_FEATURES ?= "features/netfilter/netfilter.scc features/taskstats/taskstats.scc"
 KERNEL_FEATURES_append = " ${KERNEL_EXTRA_FEATURES}"

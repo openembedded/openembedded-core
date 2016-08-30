@@ -21,3 +21,5 @@ COMPATIBLE_MACHINE = "(qemux86$)"
 
 # Functionality flags
 KERNEL_FEATURES = ""
+
+KERNEL_DEVICETREE_qemuarm = "versatile-pb.dtb"
