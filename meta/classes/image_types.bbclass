@@ -30,6 +30,7 @@ def imagetypes_getdepends(d):
             adddep(d.getVar('IMAGE_DEPENDS_%s' % typedepends, True) , deps)
         for ctype in resttypes:
             adddep(d.getVar("CONVERSION_DEPENDS_%s" % ctype, True), deps)
+            adddep(d.getVar("COMPRESS_DEPENDS_%s" % ctype, True), deps)
 
     # Sort the set so that ordering is consistant
     return " ".join(sorted(deps))
