@@ -30,8 +30,8 @@ echo "Searching for hard drives ..."
 
 # Some eMMC devices have special sub devices such as mmcblk0boot0 etc
 # we're currently only interested in the root device so pick them wisely
-devices=`ls /sys/block/ | grep -v mmcblk`
-mmc_devices=`ls /sys/block/ | grep "mmcblk[0-9]\{1,\}$"`
+devices=`ls /sys/block/ | grep -v mmcblk` || true
+mmc_devices=`ls /sys/block/ | grep "mmcblk[0-9]\{1,\}$"` || true
 devices="$devices $mmc_devices"
 
 for device in $devices; do
