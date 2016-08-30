@@ -31,7 +31,7 @@ fi
 if [ -x /usr/bin/resize ];then
   # Make sure we are on a serial console (i.e. the device used starts with /dev/tty),
   # otherwise we confuse e.g. the eclipse launcher which tries do use ssh
-  test `tty | cut -c1-8` = "/dev/tty" && resize >/dev/null
+  test "`tty | cut -c1-8`" = "/dev/tty" && resize >/dev/null
 fi
 
 export PATH PS1 OPIEDIR QPEDIR QTDIR EDITOR TERM
