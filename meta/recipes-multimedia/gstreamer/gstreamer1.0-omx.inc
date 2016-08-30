@@ -11,7 +11,6 @@ inherit autotools pkgconfig gettext
 
 acpaths = "-I ${S}/common/m4 -I ${S}/m4"
 
-PR = "r1"
 
 GSTREAMER_1_0_OMX_TARGET ?= "bellagio"
 GSTREAMER_1_0_OMX_CORE_NAME ?= "${libdir}/libomxil-bellagio.so.0"

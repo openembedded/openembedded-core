@@ -7,7 +7,7 @@ SRC_URI = " \
     http://gstreamer.freedesktop.org/src/gstreamer/gstreamer-${PV}.tar.xz \
 "
 
-SRC_URI[md5sum] = "0f011ee793cbcfa96d6b51d8271349fa"
-SRC_URI[sha256sum] = "9dbebe079c2ab2004ef7f2649fa317cabea1feb4fb5605c24d40744b90918341"
+SRC_URI[md5sum] = "e88dad542df9d986822e982105d2b530"
+SRC_URI[sha256sum] = "66b37762d4fdcd63bce5a2bec57e055f92420e95037361609900278c0db7c53f"
 
 S = "${WORKDIR}/gstreamer-${PV}"
