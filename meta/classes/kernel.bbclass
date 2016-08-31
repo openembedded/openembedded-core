@@ -430,6 +430,7 @@ kernel_do_configure() {
 }
 
 do_savedefconfig() {
+	bbplain "Saving defconfig to:\n${B}/defconfig"
 	oe_runmake -C ${B} savedefconfig
 }
 do_savedefconfig[nostamp] = "1"
