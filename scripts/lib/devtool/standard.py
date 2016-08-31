@@ -307,6 +307,13 @@ def _move_file(src, dst):
         bb.utils.mkdirhier(dst_d)
     shutil.move(src, dst)
 
+def _copy_file(src, dst):
+    """Copy a file. Creates all the directory components of destination path."""
+    dst_d = os.path.dirname(dst)
+    if dst_d:
+        bb.utils.mkdirhier(dst_d)
+    shutil.copy(src, dst)
+
 def _git_ls_tree(repodir, treeish='HEAD', recursive=False):
     """List contents of a git treeish"""
     import bb
@@ -1050,6 +1057,23 @@ def _export_local_files(srctree, rd, destdir):
             elif fname != '.gitignore':
                 added[fname] = None
 
+        workdir = rd.getVar('WORKDIR', True)
+        s = rd.getVar('S', True)
+        if not s.endswith(os.sep):
+            s += os.sep
+
+        if workdir != s:
+            # Handle files where subdir= was specified
+            for fname in list(existing_files.keys()):
+                # FIXME handle both subdir starting with BP and not?
+                fworkpath = os.path.join(workdir, fname)
+                if fworkpath.startswith(s):
+                    fpath = os.path.join(srctree, os.path.relpath(fworkpath, s))
+                    if os.path.exists(fpath):
+                        origpath = existing_files.pop(fname)
+                        if not filecmp.cmp(origpath, fpath):
+                            updated[fpath] = origpath
+
         removed = existing_files
     return (updated, added, removed)
 
@@ -1122,7 +1146,12 @@ def _update_recipe_srcrev(srctree, rd, appendlayerdir, wildcard_version, no_remo
             files_dir = _determine_files_dir(rd)
             for basepath, path in upd_f.items():
                 logger.info('Updating file %s' % basepath)
-                _move_file(os.path.join(local_files_dir, basepath), path)
+                if os.path.isabs(basepath):
+                    # Original file (probably with subdir pointing inside source tree)
+                    # so we do not want to move it, just copy
+                    _copy_file(basepath, path)
+                else:
+                    _move_file(os.path.join(local_files_dir, basepath), path)
                 update_srcuri= True
             for basepath, path in new_f.items():
                 logger.info('Adding new file %s' % basepath)
@@ -1205,7 +1234,12 @@ def _update_recipe_patch(recipename, workspace, srctree, rd, appendlayerdir, wil
             # Update existing files
             for basepath, path in upd_f.items():
                 logger.info('Updating file %s' % basepath)
-                _move_file(os.path.join(local_files_dir, basepath), path)
+                if os.path.isabs(basepath):
+                    # Original file (probably with subdir pointing inside source tree)
+                    # so we do not want to move it, just copy
+                    _copy_file(basepath, path)
+                else:
+                    _move_file(os.path.join(local_files_dir, basepath), path)
                 updatefiles = True
             for basepath, path in upd_p.items():
                 patchfn = os.path.join(patches_dir, basepath)

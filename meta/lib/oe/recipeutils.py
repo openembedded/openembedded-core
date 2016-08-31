@@ -400,8 +400,16 @@ def get_recipe_local_files(d, patches=False):
                     bb.utils.exec_flat_python_func('patch_path', uri, fetch, '')):
                 continue
             # Skip files that are referenced by absolute path
-            if not os.path.isabs(fetch.ud[uri].basepath):
-                ret[fetch.ud[uri].basepath] = fetch.localpath(uri)
+            fname = fetch.ud[uri].basepath
+            if os.path.isabs(fname):
+                continue
+            # Handle subdir=
+            subdir = fetch.ud[uri].parm.get('subdir', '')
+            if subdir:
+                if os.path.isabs(subdir):
+                    continue
+                fname = os.path.join(subdir, fname)
+            ret[fname] = fetch.localpath(uri)
     return ret
 
 
