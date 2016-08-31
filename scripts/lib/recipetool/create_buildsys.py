@@ -570,7 +570,7 @@ class AutotoolsRecipeHandler(RecipeHandler):
             elif keyword == 'AX_LIB_TAGLIB':
                 deps.append('taglib')
             elif keyword == 'AX_PKG_SWIG':
-                deps.append('swig')
+                deps.append('swig-native')
             elif keyword == 'AX_PROG_XSLTPROC':
                 deps.append('libxslt-native')
             elif keyword == 'AX_WITH_CURSES':
