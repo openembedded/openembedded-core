@@ -43,15 +43,15 @@ def select_recipes(args):
     tinfoil = bb.tinfoil.Tinfoil()
     tinfoil.prepare(False)
 
-    pkg_pn = tinfoil.cooker.recipecache.pkg_pn
-    (latest_versions, preferred_versions) = bb.providers.findProviders(tinfoil.config_data, tinfoil.cooker.recipecache, pkg_pn)
+    pkg_pn = tinfoil.cooker.recipecaches[''].pkg_pn
+    (latest_versions, preferred_versions) = bb.providers.findProviders(tinfoil.config_data, tinfoil.cooker.recipecaches[''], pkg_pn)
 
     skip_classes = args.skip_classes.split(',')
 
     recipelist = []
     for pn in sorted(pkg_pn):
         pref = preferred_versions[pn]
-        inherits = [os.path.splitext(os.path.basename(f))[0] for f in tinfoil.cooker.recipecache.inherits[pref[1]]]
+        inherits = [os.path.splitext(os.path.basename(f))[0] for f in tinfoil.cooker.recipecaches[''].inherits[pref[1]]]
         for cls in skip_classes:
             if cls in inherits:
                 break

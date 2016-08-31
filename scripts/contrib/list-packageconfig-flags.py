@@ -37,7 +37,6 @@ if not bitbakepath:
     sys.stderr.write("Unable to find bitbake by searching parent directory of this script or PATH\n")
     sys.exit(1)
 
-import bb.cache
 import bb.cooker
 import bb.providers
 import bb.tinfoil
@@ -45,7 +44,7 @@ import bb.tinfoil
 def get_fnlist(bbhandler, pkg_pn, preferred):
     ''' Get all recipe file names '''
     if preferred:
-        (latest_versions, preferred_versions) = bb.providers.findProviders(bbhandler.config_data, bbhandler.cooker.recipecache, pkg_pn)
+        (latest_versions, preferred_versions) = bb.providers.findProviders(bbhandler.config_data, bbhandler.cooker.recipecaches[''], pkg_pn)
 
     fn_list = []
     for pn in sorted(pkg_pn):
@@ -58,11 +57,11 @@ def get_fnlist(bbhandler, pkg_pn, preferred):
 
 def get_recipesdata(bbhandler, preferred):
     ''' Get data of all available recipes which have PACKAGECONFIG flags '''
-    pkg_pn = bbhandler.cooker.recipecache.pkg_pn
+    pkg_pn = bbhandler.cooker.recipecaches[''].pkg_pn
 
     data_dict = {}
     for fn in get_fnlist(bbhandler, pkg_pn, preferred):
-        data = bb.cache.Cache.loadDataFull(fn, bbhandler.cooker.collection.get_file_appends(fn), bbhandler.config_data)
+        data = bbhandler.parse_recipe_file(fn)
         flags = data.getVarFlags("PACKAGECONFIG")
         flags.pop('doc', None)
         if flags:
