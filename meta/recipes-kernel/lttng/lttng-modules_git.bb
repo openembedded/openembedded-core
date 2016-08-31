@@ -8,12 +8,12 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=362844633a08753bd96ab322a6c7f9f6 \
 
 inherit module
 
-SRCREV = "5362a1f26060e0d64464bb35cdd285c914ae6171"
-PV = "2.7.3+git${SRCPV}"
+SRCREV = "e36de50dd09527901339797a61a0a40d241c1a6d"
+PV = "2.8.0+git${SRCPV}"
 
 COMPATIBLE_HOST = '(x86_64|i.86|powerpc|aarch64|mips|nios2|arm).*-linux'
 
-SRC_URI = "git://git.lttng.org/lttng-modules.git;branch=stable-2.7"
+SRC_URI = "git://git.lttng.org/lttng-modules.git;branch=master"
 
 export INSTALL_MOD_DIR="kernel/lttng-modules"
 
