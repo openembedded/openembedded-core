@@ -13,8 +13,8 @@ DEPENDS = "liburcu popt libxml2"
 RDEPENDS_${PN} = "libgcc"
 RDEPENDS_${PN}-ptest += "make perl bash"
 
-SRCREV = "a90f2c1e10b759782653a81815625e9d1bbb75ca"
-PV = "2.7.1+git${SRCPV}"
+SRCREV = "d11e0dba0df9024b8613c51e167a379b91e8b20b"
+PV = "2.8.1+git${SRCPV}"
 
 PYTHON_OPTION = "am_cv_python_pyexecdir='${PYTHON_SITEPACKAGES_DIR}' \
                  am_cv_python_pythondir='${PYTHON_SITEPACKAGES_DIR}' \
@@ -22,12 +22,11 @@ PYTHON_OPTION = "am_cv_python_pyexecdir='${PYTHON_SITEPACKAGES_DIR}' \
 "
 PACKAGECONFIG ??= "lttng-ust"
 PACKAGECONFIG[python] = "--enable-python-bindings ${PYTHON_OPTION},,python3 swig-native"
-PACKAGECONFIG[lttng-ust] = "--enable-lttng-ust, --disable-lttng-ust, lttng-ust"
+PACKAGECONFIG[lttng-ust] = "--with-lttng-ust, --without-lttng-ust, lttng-ust"
 PACKAGECONFIG[kmod] = "--enable-kmod, --disable-kmod, kmod"
 PACKAGECONFIG_remove_libc-musl = "lttng-ust"
 
-SRC_URI = "git://git.lttng.org/lttng-tools.git;branch=stable-2.7 \
-           file://stop-using-SIGUNUSED.patch \
+SRC_URI = "git://git.lttng.org/lttng-tools.git;branch=stable-2.8 \
            file://runtest-2.4.0.patch \
            file://run-ptest"
 
@@ -51,7 +50,7 @@ INSANE_SKIP_${PN}-dbg = "libexec"
 
 do_configure_prepend () {
 	# Delete a shipped m4 file that overrides our patched one
-	rm -f ${S}/config/libxml.m4
+	rm -f ${S}/m4/libxml.m4
 }
 
 do_install_ptest () {
