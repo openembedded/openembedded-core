@@ -18,14 +18,15 @@ RPROVIDES_${PN} = "lttng2-ust"
 RREPLACES_${PN} = "lttng2-ust"
 RCONFLICTS_${PN} = "lttng2-ust"
 
-SRCREV = "f89c1a3cf2b06a4970b9154c00ff6409870aefb5"
+SRCREV = "514a87f3b64181e384399935a5708a8f85b0cc83"
 PE = "2"
-PV = "2.7.1+git${SRCPV}"
+PV = "2.8.1+git${SRCPV}"
 
-SRC_URI = "git://git.lttng.org/lttng-ust.git;branch=stable-2.7 \
+SRC_URI = "git://git.lttng.org/lttng-ust.git;branch=stable-2.8 \
            file://lttng-ust-doc-examples-disable.patch \
-           file://lttng-ust-add-support-for-aarch64_be.patch \
           "
+
+EXTRA_OECONF += "--disable-man-pages"
 
 do_install_append() {
         # Patch python tools to use Python 3; they should be source compatible, but
