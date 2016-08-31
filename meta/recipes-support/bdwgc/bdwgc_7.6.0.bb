@@ -24,6 +24,7 @@ LIC_FILES_CHKSUM = "file://README.QUICK;md5=4f81f24ec69726c312487c2ac740e9e3"
 SRCREV = "8ac1d84a40eb7a431fec1b8097e3f24b48fb23fa"
 SRC_URI = "git://github.com/ivmai/bdwgc.git \
            file://0001-configure.ac-add-check-for-NO_GETCONTEXT-definition.patch \
+           file://musl_header_fix.patch \
           "
 
 FILES_${PN}-doc = "${datadir}"
