@@ -324,6 +324,20 @@ python toaster_buildhistory_dump() {
 
 }
 
+# get list of artifacts from sstate manifest
+python toaster_artifacts() {
+    if e.taskname in ["do_deploy", "do_image_complete", "do_populate_sdk", "do_populate_sdk_ext"]:
+        d2 = d.createCopy()
+        d2.setVar('FILE', e.taskfile)
+        d2.setVar('SSTATE_MANMACH', d2.expand("${MACHINE}"))
+        manifest = oe.sstatesig.sstate_get_manifest_filename(e.taskname[3:], d2)[0]
+        if os.access(manifest, os.R_OK):
+            with open(manifest) as fmanifest:
+                artifacts = [fname.strip() for fname in fmanifest]
+                data = {"task": e.taskid, "artifacts": artifacts}
+                bb.event.fire(bb.event.MetadataEvent("TaskArtifacts", data), d2)
+}
+
 # set event handlers
 addhandler toaster_layerinfo_dumpdata
 toaster_layerinfo_dumpdata[eventmask] = "bb.event.TreeDataPreparationCompleted"
@@ -333,6 +347,9 @@ toaster_collect_task_stats[eventmask] = "bb.event.BuildCompleted bb.build.TaskSu
 
 addhandler toaster_buildhistory_dump
 toaster_buildhistory_dump[eventmask] = "bb.event.BuildCompleted"
+
+addhandler toaster_artifacts
+toaster_artifacts[eventmask] = "bb.runqueue.runQueueTaskSkipped bb.runqueue.runQueueTaskCompleted"
 
 do_packagedata_setscene[postfuncs] += "toaster_package_dumpdata "
 do_packagedata_setscene[vardepsexclude] += "toaster_package_dumpdata "
