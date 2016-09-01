@@ -107,6 +107,7 @@ ignore_errors = {
         'Fatal server error:',
         '(EE) Server terminated with error (1). Closing log file.',
         'dmi: Firmware registration failed.',
+        'irq: type mismatch, failed to map hwirq-27 for /intc',
         ] + common_errors,
     'emenlow' : [
         '[Firmware Bug]: ACPI: No _BQC method, cannot determine initial brightness',
