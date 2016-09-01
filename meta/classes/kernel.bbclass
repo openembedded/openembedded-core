@@ -360,6 +360,14 @@ do_shared_workdir () {
 	cp .config $kerneldir/
 	mkdir -p $kerneldir/include/config
 	cp include/config/kernel.release $kerneldir/include/config/kernel.release
+	if [ -e certs/signing_key.pem ]; then
+		# The signing_key.* files are stored in the certs/ dir in
+		# newer Linux kernels
+		mkdir -p $kerneldir/certs
+		cp certs/signing_key.* $kerneldir/certs/
+	elif [ -e signing_key.priv ]; then
+		cp signing_key.* $kerneldir/
+	fi
 
 	# We can also copy over all the generated files and avoid special cases
 	# like version.h, but we've opted to keep this small until file creep starts
