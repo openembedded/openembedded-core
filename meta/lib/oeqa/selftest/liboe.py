@@ -1,5 +1,5 @@
 from oeqa.selftest.base import oeSelfTest
-from oeqa.utils.commands import get_bb_var
+from oeqa.utils.commands import get_bb_var, bitbake, runCmd
 import oe.path
 import glob
 import os
@@ -29,5 +29,36 @@ class LibOE(oeSelfTest):
         # ensure path exists in dest
         fileindst = os.path.isfile(oe.path.join(dst, testfilename))
         self.assertTrue(fileindst, "File with spaces doesn't exist in dst")
+
+        oe.path.remove(testloc)
+
+    def test_copy_tree_xattr(self):
+        """
+        Summary:    oe.path.copytree() should preserve xattr on copied files
+        Expected:   testxattr file in destination should have user.oetest
+                    extended attribute
+        Product:    OE-Core
+        Author:     Joshua Lock <joshua.g.lock@intel.com>
+        """
+        tmp_dir = get_bb_var('TMPDIR')
+        testloc = oe.path.join(tmp_dir, 'liboetests')
+        src = oe.path.join(testloc, 'src')
+        dst = oe.path.join(testloc, 'dst')
+        bb.utils.mkdirhier(testloc)
+        bb.utils.mkdirhier(src)
+        testfilename = 'testxattr'
+
+        # ensure we have setfattr available
+        bitbake("attr-native")
+        bindir = get_bb_var('STAGING_BINDIR_NATIVE')
+
+        # create a file with xattr and copy it
+        open(oe.path.join(src, testfilename), 'w+b').close()
+        runCmd('%s/setfattr -n user.oetest -v "testing liboe" %s' % (bindir, oe.path.join(src, testfilename)))
+        oe.path.copytree(src, dst)
+
+        # ensure file in dest has user.oetest xattr
+        result = runCmd('%s/getfattr -n user.oetest %s' % (bindir, oe.path.join(dst, testfilename)))
+        self.assertIn('user.oetest="testing liboe"', result.output, 'Extended attribute not sert in dst')
 
         oe.path.remove(testloc)
