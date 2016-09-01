@@ -113,9 +113,9 @@ class ImageFeatures(oeSelfTest):
         image_name = 'core-image-minimal'
         bitbake(image_name)
 
-        deploy_dir = get_bb_var('DEPLOY_DIR_IMAGE')
+        deploy_dir_image = get_bb_var('DEPLOY_DIR_IMAGE')
         link_name = get_bb_var('IMAGE_LINK_NAME', image_name)
-        image_path = os.path.join(deploy_dir, "%s.ext4" % link_name)
+        image_path = os.path.join(deploy_dir_image, "%s.ext4" % link_name)
         bmap_path = "%s.bmap" % image_path
 
         # check if result image and bmap file are in deploy directory

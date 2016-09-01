@@ -72,7 +72,7 @@ syslinux_hddimg_populate() {
 }
 
 syslinux_hddimg_install() {
-	syslinux ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.hddimg
+	syslinux ${IMGDEPLOYDIR}/${IMAGE_NAME}.hddimg
 }
 
 syslinux_hdddirect_install() {

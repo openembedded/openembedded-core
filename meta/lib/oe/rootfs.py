@@ -19,7 +19,7 @@ class Rootfs(object, metaclass=ABCMeta):
         self.d = d
         self.pm = None
         self.image_rootfs = self.d.getVar('IMAGE_ROOTFS', True)
-        self.deploy_dir_image = self.d.getVar('DEPLOY_DIR_IMAGE', True)
+        self.deploydir = self.d.getVar('IMGDEPLOYDIR', True)
         self.progress_reporter = progress_reporter
 
         self.install_order = Manifest.INSTALL_ORDER
@@ -182,12 +182,12 @@ class Rootfs(object, metaclass=ABCMeta):
 
         bb.utils.mkdirhier(self.image_rootfs)
 
-        bb.utils.mkdirhier(self.deploy_dir_image)
+        bb.utils.mkdirhier(self.deploydir)
 
         shutil.copytree(postinst_intercepts_dir, intercepts_dir)
 
         shutil.copy(self.d.expand("${COREBASE}/meta/files/deploydir_readme.txt"),
-                    self.deploy_dir_image +
+                    self.deploydir +
                     "/README_-_DO_NOT_DELETE_FILES_IN_THIS_DIRECTORY.txt")
 
         execute_pre_post_process(self.d, pre_process_cmds)
