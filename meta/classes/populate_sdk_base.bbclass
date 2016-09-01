@@ -26,7 +26,7 @@ SDK_DIR = "${WORKDIR}/sdk"
 SDK_OUTPUT = "${SDK_DIR}/image"
 SDK_DEPLOY = "${DEPLOY_DIR}/sdk"
 
-SDKDEPLOYDIR = "${SDK_DEPLOY}"
+SDKDEPLOYDIR = "${WORKDIR}/deploy-${PN}-populate-sdk"
 
 B_task-populate-sdk = "${SDK_DIR}"
 
@@ -94,7 +94,7 @@ SDK_POSTPROCESS_COMMAND = " create_sdk_files; check_sdk_sysroots; tar_sdk; ${SDK
 # manipulation.
 SDK_OLDEST_KERNEL = "3.2.0"
 
-fakeroot python do_populate_sdk() {
+def populate_sdk_common(d):
     from oe.sdk import populate_sdk
     from oe.manifest import create_manifest, Manifest
 
@@ -116,7 +116,16 @@ fakeroot python do_populate_sdk() {
                     manifest_type=Manifest.MANIFEST_TYPE_SDK_TARGET)
 
     populate_sdk(d)
+
+fakeroot python do_populate_sdk() {
+    populate_sdk_common(d)
 }
+SSTATETASKS += "do_populate_sdk"
+SSTATE_SKIP_CREATION_task-populate-sdk = '1'
+do_populate_sdk[cleandirs] = "${SDKDEPLOYDIR}"
+do_populate_sdk[sstate-inputdirs] = "${SDKDEPLOYDIR}"
+do_populate_sdk[sstate-outputdirs] = "${SDK_DEPLOY}"
+do_populate_sdk[stamp-extra-info] = "${MACHINE}"
 
 fakeroot create_sdk_files() {
 	cp ${COREBASE}/scripts/relocate_sdk.py ${SDK_OUTPUT}/${SDKPATH}/

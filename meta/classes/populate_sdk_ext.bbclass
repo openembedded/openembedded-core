@@ -599,8 +599,9 @@ fakeroot python do_populate_sdk_ext() {
     buildtools_fn = get_current_buildtools(d)
     d.setVar('SDK_REQUIRED_UTILITIES', get_sdk_required_utilities(buildtools_fn, d))
     d.setVar('SDK_BUILDTOOLS_INSTALLER', buildtools_fn)
+    d.setVar('SDKDEPLOYDIR', '${DEPLOY_DIR}/sdk')
 
-    bb.build.exec_func("do_populate_sdk", d)
+    populate_sdk_common(d)
 }
 
 def get_ext_sdk_depends(d):
