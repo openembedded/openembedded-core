@@ -504,8 +504,10 @@ class PythonRecipeHandler(RecipeHandler):
         for dep in scanned_deps:
             mapped = provided_packages.get(dep)
             if mapped:
+                logger.debug('Mapped %s to %s' % (dep, mapped))
                 mapped_deps.add(mapped)
             else:
+                logger.debug('Could not map %s' % dep)
                 unmapped_deps.add(dep)
         return mapped_deps, unmapped_deps
 
@@ -566,6 +568,8 @@ class PythonRecipeHandler(RecipeHandler):
                     continue
 
                 if fn.startswith(dynload_dir + os.sep):
+                    if '/.debug/' in fn:
+                        continue
                     base = os.path.basename(fn)
                     provided = base.split('.', 1)[0]
                     packages[provided] = os.path.basename(pkgdatafile)
