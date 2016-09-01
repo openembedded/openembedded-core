@@ -20,6 +20,9 @@ TUNECONFLICTS[n32] = "o32 n64"
 ABIEXTENSION .= "${@bb.utils.contains('TUNE_FEATURES', 'n32', 'n32', '' ,d)}"
 TUNE_CCARGS .= "${@bb.utils.contains('TUNE_FEATURES', 'n32', ' -mabi=n32', '', d)}"
 
+# user mode qemu doesn't support mips64 n32: "Invalid ELF image for this architecture"
+MACHINE_FEATURES_BACKFILL_CONSIDERED_append = " ${@bb.utils.contains('TUNE_FEATURES', 'n32', 'qemu-usermode', '', d)}"
+
 TUNEVALID[n64] = "MIPS64 n64 ABI"
 TUNECONFLICTS[n64] = "o32 n32"
 TUNE_CCARGS .= "${@bb.utils.contains('TUNE_FEATURES', 'n64', ' -mabi=64', '', d)}"
