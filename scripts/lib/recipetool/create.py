@@ -399,6 +399,10 @@ def create_recipe(args):
                     if '<html' in f.read(100).lower():
                         logger.error('Fetching "%s" returned a single HTML page - check the URL is correct and functional' % fetchuri)
                         sys.exit(1)
+        if os.path.exists(os.path.join(srctree, '.gitmodules')) and srcuri.startswith('git://'):
+            srcuri = 'gitsm://' + srcuri[6:]
+            logger.info('Fetching submodules...')
+            bb.process.run('git submodule update --init --recursive', cwd=srctree)
 
         if is_package(fetchuri):
             tmpfdir = tempfile.mkdtemp(prefix='recipetool-')
@@ -658,8 +662,11 @@ def create_recipe(args):
             # devtool looks for this specific exit code, so don't change it
             sys.exit(15)
         else:
-            if srcuri and srcuri.startswith(('git://', 'hg://', 'svn://')):
-                outfile = '%s_%s.bb' % (pn, srcuri.split(':', 1)[0])
+            if srcuri and srcuri.startswith(('gitsm://', 'git://', 'hg://', 'svn://')):
+                suffix = srcuri.split(':', 1)[0]
+                if suffix == 'gitsm':
+                    suffix = 'git'
+                outfile = '%s_%s.bb' % (pn, suffix)
             elif realpv:
                 outfile = '%s_%s.bb' % (pn, realpv)
             else:
