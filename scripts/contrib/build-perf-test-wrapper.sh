@@ -37,7 +37,6 @@ EOF
 # Parse command line arguments
 archive_dir=~/perf-results/archives
 commitish=""
-results_repo=""
 while getopts "ha:c:C:w:" opt; do
     case $opt in
         h)  usage
@@ -48,6 +47,7 @@ while getopts "ha:c:C:w:" opt; do
         c)  commitish=$OPTARG
             ;;
         C)  results_repo=`realpath "$OPTARG"`
+            commit_results=("--commit-results" "$results_repo")
             ;;
         w)  base_dir=`realpath "$OPTARG"`
             ;;
@@ -110,7 +110,7 @@ fi
 if ! oe-build-perf-test --out-dir "$results_dir" \
                         --globalres-file "$globalres_log" \
                         --lock-file "$base_dir/oe-build-perf.lock" \
-                        --commit-results "$results_repo" \
+                        "${commit_results[@]}" \
                         --commit-results-branch "{tester_host}/{git_branch}/$machine" \
                         --commit-results-tag "{tester_host}/{git_branch}/$machine/{git_commit_count}-g{git_commit}/{tag_num}"; then
     echo "oe-build-perf-test script failed!"
