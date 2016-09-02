@@ -32,6 +32,7 @@ EXTRA_OECONF += " \
                  --disable-cups \
                  --disable-colord \
                  WAYLAND_PROTOCOLS_SYSROOT_DIR=${STAGING_DIR}/${MACHINE} \
+                 ${@bb.utils.contains("DISTRO_FEATURES", "x11", "", "--disable-gtk-doc", d)} \
                  "
 EXTRA_OECONF[vardepsexclude] = "MACHINE"
 
