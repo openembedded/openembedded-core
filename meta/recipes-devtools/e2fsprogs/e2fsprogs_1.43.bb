@@ -52,6 +52,10 @@ do_install () {
 	mv ${D}${bindir}/chattr ${D}${base_bindir}/chattr.e2fsprogs
 
 	install -v -m 755 ${S}/contrib/populate-extfs.sh ${D}${base_sbindir}/
+
+	# Clean host path (build directory) in compile_et, mk_cmds
+	sed -i -e "s,\(ET_DIR=.*\)${S}/lib/et\(.*\),\1${datadir}/et\2,g" ${D}${bindir}/compile_et
+	sed -i -e "s,\(SS_DIR=.*\)${S}/lib/ss\(.*\),\1${datadir}/ss\2,g" ${D}${bindir}/mk_cmds
 }
 
 # Need to find the right mke2fs.conf file
@@ -59,12 +63,6 @@ e2fsprogs_conf_fixup () {
 	for i in mke2fs mkfs.ext2 mkfs.ext3 mkfs.ext4 mkfs.ext4dev; do
 		create_wrapper ${D}${base_sbindir}/$i MKE2FS_CONFIG=${sysconfdir}/mke2fs.conf
 	done
-}
-
-do_install_append_class-target() {
-	# Clean host path in compile_et, mk_cmds
-	sed -i -e "s,ET_DIR=\"${S}/lib/et\",ET_DIR=\"${datadir}/et\",g" ${D}${bindir}/compile_et
-	sed -i -e "s,SS_DIR=\"${S}/lib/ss\",SS_DIR=\"${datadir}/ss\",g" ${D}${bindir}/mk_cmds
 }
 
 do_install_append_class-native() {
@@ -90,7 +88,7 @@ FILES_libcomerr = "${base_libdir}/libcom_err.so.*"
 FILES_libss = "${base_libdir}/libss.so.*"
 FILES_libe2p = "${base_libdir}/libe2p.so.*"
 FILES_libext2fs = "${libdir}/e2initrd_helper ${base_libdir}/libext2fs.so.*"
-FILES_${PN}-dev += "${datadir}/*/*.awk ${datadir}/*/*.sed ${base_libdir}/*.so"
+FILES_${PN}-dev += "${datadir}/*/*.awk ${datadir}/*/*.sed ${base_libdir}/*.so ${bindir}/compile_et ${bindir}/mk_cmds"
 
 ALTERNATIVE_${PN} = "chattr"
 ALTERNATIVE_PRIORITY = "100"
