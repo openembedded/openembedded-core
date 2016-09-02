@@ -26,6 +26,9 @@ TOOLCHAIN_HOST_TASK ?= "\
     nativesdk-locale-base-en-us \
     "
 
+MULTIMACH_TARGET_SYS = "${SDK_ARCH}-nativesdk${SDK_VENDOR}-${SDK_OS}"
+PACKAGE_ARCH = "${SDK_ARCH}"
+
 SDK_PACKAGE_ARCHS += "buildtools-dummy-${SDKPKGSUFFIX}"
 
 TOOLCHAIN_OUTPUTNAME ?= "${SDK_NAME}-buildtools-nativesdk-standalone-${DISTRO_VERSION}"
@@ -39,6 +42,8 @@ EXCLUDE_FROM_WORLD = "1"
 inherit meta
 inherit populate_sdk
 inherit toolchain-scripts
+
+do_populate_sdk[stamp-extra-info] = ""
 
 create_sdk_files_append () {
 	rm -f ${SDK_OUTPUT}/${SDKPATH}/site-config-*

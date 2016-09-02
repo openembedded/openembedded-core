@@ -16,6 +16,9 @@ TOOLCHAIN_HOST_TASK = "\
 
 INHIBIT_DEFAULT_DEPS = "1"
 
+MULTIMACH_TARGET_SYS = "${SDK_ARCH}-nativesdk${SDK_VENDOR}-${SDK_OS}"
+PACKAGE_ARCH = "${SDK_ARCH}"
+
 TOOLCHAIN_OUTPUTNAME ?= "${SDK_ARCH}-nativesdk-libc"
 
 RDEPENDS = "${TOOLCHAIN_HOST_TASK}"
@@ -28,6 +31,8 @@ inherit populate_sdk
 deltask install
 deltask package
 deltask packagedata
+
+do_populate_sdk[stamp-extra-info] = ""
 
 SDK_DEPENDS += "patchelf-native"
 
@@ -44,7 +49,6 @@ fakeroot create_sdk_files() {
 
 
 fakeroot tar_sdk() {
-	mkdir -p ${SDK_DEPLOY}
 	cd ${SDK_OUTPUT}/${SDKPATH}
 
 	DEST="./${SDK_ARCH}-${SDK_OS}"
@@ -52,5 +56,5 @@ fakeroot tar_sdk() {
 	rm sysroots -rf
 	patchelf --set-interpreter ${@''.join('a' for n in range(1024))} $DEST/usr/bin/patchelf
 	mv $DEST/usr/bin/patchelf $DEST/usr/bin/patchelf-uninative
-	tar ${SDKTAROPTS} -c -j --file=${SDK_DEPLOY}/${TOOLCHAIN_OUTPUTNAME}.tar.bz2 .
+	tar ${SDKTAROPTS} -c -j --file=${SDKDEPLOYDIR}/${TOOLCHAIN_OUTPUTNAME}.tar.bz2 .
 }
