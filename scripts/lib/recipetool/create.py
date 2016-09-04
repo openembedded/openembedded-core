@@ -764,7 +764,10 @@ def create_recipe(args):
         logger.info('Recipe %s has been created; further editing may be required to make it fully functional' % outfile)
 
     if tempsrc:
-        shutil.rmtree(tempsrc)
+        if args.keep_temp:
+            logger.info('Preserving temporary directory %s' % tempsrc)
+        else:
+            shutil.rmtree(tempsrc)
 
     return 0
 
@@ -1047,5 +1050,6 @@ def register_commands(subparsers):
     parser_create.add_argument('--also-native', help='Also add native variant (i.e. support building recipe for the build host as well as the target machine)', action='store_true')
     parser_create.add_argument('--src-subdir', help='Specify subdirectory within source tree to use', metavar='SUBDIR')
     parser_create.add_argument('-a', '--autorev', help='When fetching from a git repository, set SRCREV in the recipe to a floating revision instead of fixed', action="store_true")
+    parser_create.add_argument('--keep-temp', action="store_true", help='Keep temporary directory (for debugging)')
     parser_create.set_defaults(func=create_recipe)
 
