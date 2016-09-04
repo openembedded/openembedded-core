@@ -47,12 +47,12 @@ EXTRA_OEMAKE_append_class-target = " SYSTEM_HEADERS=${STAGING_INCDIR}"
 CFLAGS += "-D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64"
 
 do_compile() {
-	oe_runmake ${EXTRA_OECONF}
+	oe_runmake ${PACKAGECONFIG_CONFARGS}
 }
 
 do_install() {
 	oe_runmake install \
-		${EXTRA_OECONF} \
+		${PACKAGECONFIG_CONFARGS} \
 		DESTDIR="${D}" \
 		prefix="${prefix}" \
 		SBINDIR="${sbindir}"
