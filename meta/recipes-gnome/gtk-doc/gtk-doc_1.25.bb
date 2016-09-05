@@ -20,6 +20,7 @@ PACKAGECONFIG[working-scripts] = "--with-highlight=source-highlight,--with-highl
 SRC_URI += "file://0001-Do-not-hardocode-paths-to-perl-python-in-scripts.patch \
             file://0001-Do-not-error-out-if-xsltproc-is-not-found.patch \
            "
+SRC_URI_append_class-native = " file://pkg-config-native.patch"
 
 SRC_URI[archive.md5sum] = "0dc6570953112a464a409fb99258ccbc"
 SRC_URI[archive.sha256sum] = "1ea46ed400e6501f975acaafea31479cea8f32f911dca4dff036f59e6464fd42"
@@ -45,4 +46,3 @@ gtkdoc_makefiles_sysroot_preprocess() {
            -e "s|GTKDOC_RUN =.*|GTKDOC_RUN = \$(top_builddir)/gtkdoc-qemuwrapper|" \
            ${SYSROOT_DESTDIR}${datadir}/gtk-doc/data/gtk-doc*make
 }
-
