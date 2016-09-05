@@ -79,12 +79,15 @@ def copyhardlinktree(src, dst):
         # writers try and create a directory at the same time
         cmd = "cd %s; find . -type d -print | tar --xattrs --xattrs-include='*' -cf - -C %s -p --no-recursion --files-from - | tar --xattrs --xattrs-include='*' -xf - -C %s" % (src, src, dst)
         subprocess.check_output(cmd, shell=True, stderr=subprocess.STDOUT)
+        source = ''
         if os.path.isdir(src):
             import glob
             if len(glob.glob('%s/.??*' % src)) > 0:
-                src = src + '/.??* '
-            src = src + '/*'
-        cmd = 'cp -afl --preserve=xattr %s %s' % (src, dst)
+                source = '%s/.??* ' % src
+            source = source + '%s/*' % src
+        else:
+            source = src
+        cmd = 'cp -afl --preserve=xattr %s %s' % (source, dst)
         subprocess.check_output(cmd, shell=True, stderr=subprocess.STDOUT)
     else:
         copytree(src, dst)
