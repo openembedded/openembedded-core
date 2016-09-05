@@ -415,6 +415,7 @@ python () {
     d.appendVarFlag('do_image', 'vardeps', ' '.join(vardeps))
 
     maskedtypes = (d.getVar('IMAGE_TYPES_MASKED', True) or "").split()
+    maskedtypes = [dbg + t for t in maskedtypes for dbg in ("", "debugfs_")]
 
     for t in basetypes:
         vardeps = set()
