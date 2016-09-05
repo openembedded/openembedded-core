@@ -16,6 +16,10 @@ def npm_oe_arch_map(target_arch, d):
 NPM_ARCH ?= "${@npm_oe_arch_map(d.getVar('TARGET_ARCH', True), d)}"
 
 npm_do_compile() {
+	# Copy in any additionally fetched modules
+	if [ -d ${WORKDIR}/node_modules ] ; then
+		cp -a ${WORKDIR}/node_modules ${S}/
+	fi
 	# changing the home directory to the working directory, the .npmrc will
 	# be created in this directory
 	export HOME=${WORKDIR}
