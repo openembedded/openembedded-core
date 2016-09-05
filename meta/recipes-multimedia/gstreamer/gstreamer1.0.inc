@@ -49,6 +49,7 @@ RRECOMMENDS_${PN}_qemux86-64 += "kernel-module-snd-ens1370 kernel-module-snd-raw
 delete_pkg_m4_file() {
         # This m4 file is out of date and is missing PKG_CONFIG_SYSROOT_PATH tweaks which we need for introspection
         rm "${S}/common/m4/pkg.m4" || true
+        rm -f "${S}/common/m4/gtk-doc.m4"
 }
 
 # gstreamer is not using system-wide makefiles (which we patch in gtkdoc recipe,
