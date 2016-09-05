@@ -143,6 +143,7 @@ class BaseConfig(object):
         self.nfs_server = ''
         self.rootfs = ''
         self.qemuboot = ''
+        self.qbconfload = False
         self.kernel = ''
         self.kernel_cmdline = ''
         self.kernel_cmdline_script = ''
@@ -239,6 +240,7 @@ class BaseConfig(object):
         """
         if p.endswith('.qemuboot.conf'):
             self.qemuboot = p
+            self.qbconfload = True
         elif re.search('\.bin$', p) or re.search('bzImage', p) or \
              re.search('zImage', p) or re.search('vmlinux', p) or \
              re.search('fitImage', p) or re.search('uImage', p):
@@ -250,7 +252,8 @@ class BaseConfig(object):
             if m:
                 qb = '%s%s' % (re.sub('\.rootfs$', '', m.group(1)), '.qemuboot.conf')
                 if os.path.exists(qb):
-                    self.qemuboot = qb 
+                    self.qemuboot = qb
+                    self.qbconfload = True
                 else:
                     logger.warn("%s doesn't exist" % qb)
                 fst = m.group(2)
@@ -533,6 +536,7 @@ class BaseConfig(object):
                 qbs = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE).stdout.read().decode('utf-8')
                 if qbs:
                     self.qemuboot = qbs.split()[0]
+                    self.qbconfload = True
 
         if not os.path.exists(self.qemuboot):
             raise Exception("Failed to find <image>.qemuboot.conf!")
@@ -544,6 +548,15 @@ class BaseConfig(object):
         for k, v in cf.items('config_bsp'):
             k_upper = k.upper()
             self.set(k_upper, v)
+
+        # When we're started with a *.qemuboot.conf arg assume that image
+        # artefacts are relative to that file, rather than in whatever
+        # directory DEPLOY_DIR_IMAGE in the conf file points to.
+        if self.qbconfload:
+            imgdir = os.path.dirname(self.qemuboot)
+            if imgdir != self.get('DEPLOY_DIR_IMAGE'):
+                logger.info('Setting DEPLOY_DIR_IMAGE to folder containing %s (%s)' % (self.qemuboot, imgdir))
+                self.set('DEPLOY_DIR_IMAGE', imgdir)
 
     def print_config(self):
         logger.info('Continuing with the following parameters:\n')
