@@ -558,6 +558,22 @@ class BaseConfig(object):
                 logger.info('Setting DEPLOY_DIR_IMAGE to folder containing %s (%s)' % (self.qemuboot, imgdir))
                 self.set('DEPLOY_DIR_IMAGE', imgdir)
 
+        # If the STAGING_*_NATIVE directories from the config file don't exist
+        # and we're in a sourced OE build directory try to extract the paths
+        # from `bitbake -e`
+        havenative = os.path.exists(self.get('STAGING_DIR_NATIVE')) and \
+            os.path.exists(self.get('STAGING_BINDIR_NATIVE'))
+
+        if not havenative:
+            if not self.bitbake_e:
+                self.load_bitbake_env()
+            native_vars = ['STAGING_DIR_NATIVE', 'STAGING_BINDIR_NATIVE']
+            for nv in native_vars:
+                s = re.search('^%s="(.*)"' % nv, self.bitbake_e, re.M)
+                if s and s.group(1) != self.get(nv):
+                    logger.info('Overriding conf file setting of %s to %s from Bitbake environment' % (nv, s.group(1)))
+                    self.set(nv, s.group(1))
+
     def print_config(self):
         logger.info('Continuing with the following parameters:\n')
         if not self.fstype in self.vmtypes:
@@ -814,6 +830,29 @@ class BaseConfig(object):
             logger.info('Removing %s' % self.nfs_dir)
             shutil.rmtree(self.nfs_dir)
             shutil.rmtree('%s.pseudo_state' % self.nfs_dir)
+
+    def load_bitbake_env(self, mach=None):
+        if self.bitbake_e:
+            return
+
+        bitbake = shutil.which('bitbake')
+        if not bitbake:
+            return
+
+        if not mach:
+            mach = self.get('MACHINE')
+
+        if mach:
+            cmd = 'MACHINE=%s bitbake -e' % mach
+        else:
+            cmd = 'bitbake -e'
+
+        logger.info('Running %s...' % cmd)
+        try:
+            self.bitbake_e = subprocess.check_output(cmd, shell=True).decode('utf-8')
+        except subprocess.CalledProcessError as err:
+            self.bitbake_e = ''
+            logger.warn("Couldn't run 'bitbake -e' to gather environment information:\n%s" % err.output.decode('utf-8'))
 
 def main():
     if len(sys.argv) == 1 or "help" in sys.argv:
