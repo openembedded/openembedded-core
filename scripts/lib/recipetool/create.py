@@ -714,7 +714,13 @@ def create_recipe(args):
         sys.stdout.write('\n'.join(outlines) + '\n')
     else:
         with open(outfile, 'w') as f:
-            f.write('\n'.join(outlines) + '\n')
+            lastline = None
+            for line in outlines:
+                if not lastline and not line:
+                    # Skip extra blank lines
+                    continue
+                f.write('%s\n' % line)
+                lastline = line
         logger.info('Recipe %s has been created; further editing may be required to make it fully functional' % outfile)
 
     if tempsrc:
