@@ -131,7 +131,7 @@ def parse_args(argv):
     parser.add_argument('-o', '--out-dir', default='results-{date}',
                         type=os.path.abspath,
                         help="Output directory for test results")
-    parser.add_argument('--log-file', type=os.path.abspath,
+    parser.add_argument('--log-file',
                         default='{out_dir}/oe-build-perf-test.log',
                         help="Log file of this script")
     parser.add_argument('--run-tests', nargs='+', metavar='TEST',
