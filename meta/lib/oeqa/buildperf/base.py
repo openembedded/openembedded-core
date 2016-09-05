@@ -404,7 +404,7 @@ class BuildPerfTestCase(unittest.TestCase):
 
         # Append to 'times' array for globalres log
         e_sec = etime.total_seconds()
-        self.times.append('{:d}:{:02d}:{:.2f}'.format(int(e_sec / 3600),
+        self.times.append('{:d}:{:02d}:{:05.2f}'.format(int(e_sec / 3600),
                                                       int((e_sec % 3600) / 60),
                                                        e_sec % 60))
 
