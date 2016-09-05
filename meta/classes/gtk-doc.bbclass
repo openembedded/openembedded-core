@@ -18,7 +18,7 @@ EXTRA_OECONF_prepend_class-target = "${@bb.utils.contains('GTKDOC_ENABLED', 'Tru
 EXTRA_OECONF_prepend_class-native = "--disable-gtk-doc "
 EXTRA_OECONF_prepend_class-nativesdk = "--disable-gtk-doc "
 
-DEPENDS_append_class-target = " gtk-doc-native qemu-native gtk-doc"
+DEPENDS_append_class-target = " gtk-doc-native qemu-native"
 
 # Even though gtkdoc is disabled on -native, gtk-doc package is still
 # needed for m4 macros.
