@@ -38,7 +38,8 @@ PACKAGECONFIG_class-target ??= "\
     ${@bb.utils.contains('DISTRO_FEATURES', 'xattr', 'xattr', '', d)} \
 "
 
-PACKAGECONFIG_class-native ??= ""
+# The lib/oe/path.py requires xattr
+PACKAGECONFIG_class-native ??= "xattr"
 
 # with, without, depends, rdepends
 #
