@@ -13,7 +13,8 @@ PV = "2.8.0+git${SRCPV}"
 
 COMPATIBLE_HOST = '(x86_64|i.86|powerpc|aarch64|mips|nios2|arm).*-linux'
 
-SRC_URI = "git://git.lttng.org/lttng-modules.git;branch=stable-2.8"
+SRC_URI = "git://git.lttng.org/lttng-modules.git;branch=stable-2.8 \
+           file://Makefile-Do-not-fail-if-CONFIG_TRACEPOINTS-is-not-en.patch"
 
 export INSTALL_MOD_DIR="kernel/lttng-modules"
 
