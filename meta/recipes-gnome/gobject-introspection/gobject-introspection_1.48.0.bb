@@ -107,7 +107,7 @@ EXTRA_OECONF_class-target += "--enable-host-gi \
 PACKAGECONFIG ?= ""
 PACKAGECONFIG[doctool] = "--enable-doctool,--disable-doctool,python3-mako,"
 
-do_compile_prepend_class-target() {
+do_compile_prepend() {
         # This prevents g-ir-scanner from writing cache data to $HOME
         export GI_SCANNER_DISABLE_CACHE=1
 
