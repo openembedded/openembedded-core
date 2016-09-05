@@ -537,6 +537,12 @@ def get_rootfs_size(d):
     base_size += rootfs_alignment - 1
     base_size -= base_size % rootfs_alignment
 
+    # Do not check image size of the debugfs image. This is not supposed
+    # to be deployed, etc. so it doesn't make sense to limit the size
+    # of the debug.
+    if (d.getVar('IMAGE_BUILDING_DEBUGFS', True) or "") == "true":
+        return base_size
+
     # Check the rootfs size against IMAGE_ROOTFS_MAXSIZE (if set)
     if rootfs_maxsize:
         rootfs_maxsize_int = int(rootfs_maxsize)
