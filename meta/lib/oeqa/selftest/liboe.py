@@ -62,3 +62,32 @@ class LibOE(oeSelfTest):
         self.assertIn('user.oetest="testing liboe"', result.output, 'Extended attribute not sert in dst')
 
         oe.path.remove(testloc)
+
+    def test_copy_hardlink_tree_count(self):
+        """
+        Summary:    oe.path.copyhardlinktree() shouldn't miss out files
+        Expected:   src and dst should have the same number of files
+        Product:    OE-Core
+        Author:     Joshua Lock <joshua.g.lock@intel.com>
+        """
+        tmp_dir = get_bb_var('TMPDIR')
+        testloc = oe.path.join(tmp_dir, 'liboetests')
+        src = oe.path.join(testloc, 'src')
+        dst = oe.path.join(testloc, 'dst')
+        bb.utils.mkdirhier(testloc)
+        bb.utils.mkdirhier(src)
+        testfiles = ['foo', 'bar', '.baz', 'quux']
+
+        def touchfile(tf):
+            open(oe.path.join(src, tf), 'w+b').close()
+
+        for f in testfiles:
+            touchfile(f)
+
+        oe.path.copyhardlinktree(src, dst)
+
+        dstcnt = len(os.listdir(dst))
+        srccnt = len(os.listdir(src))
+        self.assertEquals(dstcnt, len(testfiles), "Number of files in dst (%s) differs from number of files in src(%s)." % (dstcnt, srccnt))
+
+        oe.path.remove(testloc)
