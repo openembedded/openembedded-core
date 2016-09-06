@@ -741,7 +741,7 @@ class BaseConfig(object):
         if qb_tap_opt:
             qemu_tap_opt = qb_tap_opt.replace('@TAP@', tap).replace('@MAC@', mac)
         else:
-            qemu_tap_opt = "-net nic,model=virtio,mac=%s -net tap,vlan=0,ifname=%s,script=no,downscript=no" % (mac, self.tap)
+            qemu_tap_opt = "-device virtio-net-pci,netdev=net0,mac=%s -netdev tap,id=net0,ifname=%s,script=no,downscript=no" % (mac, self.tap)
 
         if self.vhost_enabled:
             qemu_tap_opt += ',vhost=on'
