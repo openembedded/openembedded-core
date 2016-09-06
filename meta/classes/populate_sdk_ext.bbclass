@@ -43,7 +43,7 @@ SDK_TARGETS ?= "${PN}"
 
 def get_sdk_install_targets(d, images_only=False):
     sdk_install_targets = ''
-    if d.getVar('SDK_EXT_TYPE', True) != 'minimal':
+    if images_only or d.getVar('SDK_EXT_TYPE', True) != 'minimal':
         sdk_install_targets = d.getVar('SDK_TARGETS', True)
 
         depd = d.getVar('BB_TASKDEPDATA', False)
