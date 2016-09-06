@@ -249,7 +249,7 @@ oe_machinstall() {
 create_cmdline_wrapper () {
 	# Create a wrapper script where commandline options are needed
 	#
-	# These are useful to work around relocation issues, by passing extra options 
+	# These are useful to work around relocation issues, by passing extra options
 	# to a program
 	#
 	# Usage: create_cmdline_wrapper FILENAME <extra-options>
@@ -323,7 +323,7 @@ def base_set_filespath(path, d):
     overrides.reverse()
     for o in overrides:
         for p in path:
-            if p != "": 
+            if p != "":
                 filespath.append(os.path.join(p, o))
     return ":".join(filespath)
 
