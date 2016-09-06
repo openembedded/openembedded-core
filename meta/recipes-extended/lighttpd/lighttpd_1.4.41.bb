@@ -36,7 +36,7 @@ EXTRA_OECONF = " \
              --without-bzip2 \
              --without-ldap \
              --without-lua \
-             --without-memcache \
+             --without-memcached \
              --with-pcre \
              --without-webdav-props \
              --without-webdav-locks \
