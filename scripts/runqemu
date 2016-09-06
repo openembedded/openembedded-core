@@ -736,11 +736,12 @@ class BaseConfig(object):
         if self.fstype == 'nfs':
             self.setup_nfs()
         self.kernel_cmdline_script += " ip=192.168.7.%s::192.168.7.%s:255.255.255.0" % (n2, n1)
+        mac = "52:54:00:12:34:%02x" % n2
         qb_tap_opt = self.get('QB_TAP_OPT')
         if qb_tap_opt:
-            qemu_tap_opt = qb_tap_opt.replace('@TAP@', tap)
+            qemu_tap_opt = qb_tap_opt.replace('@TAP@', tap).replace('@MAC@', mac)
         else:
-            qemu_tap_opt = "-net nic,model=virtio -net tap,vlan=0,ifname=%s,script=no,downscript=no" % self.tap
+            qemu_tap_opt = "-net nic,model=virtio,mac=%s -net tap,vlan=0,ifname=%s,script=no,downscript=no" % (mac, self.tap)
 
         if self.vhost_enabled:
             qemu_tap_opt += ',vhost=on'
