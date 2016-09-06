@@ -134,7 +134,7 @@ class QemuRunner:
         self.origchldhandler = signal.getsignal(signal.SIGCHLD)
         signal.signal(signal.SIGCHLD, self.handleSIGCHLD)
 
-        launch_cmd = 'runqemu '
+        launch_cmd = 'runqemu snapshot '
         if self.use_kvm:
             logger.info('Using kvm for runqemu')
             launch_cmd += 'kvm '

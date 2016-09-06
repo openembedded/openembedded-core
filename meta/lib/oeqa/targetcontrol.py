@@ -119,8 +119,7 @@ class QemuTarget(BaseTarget):
 
         self.image_fstype = self.get_image_fstype(d)
         self.qemulog = os.path.join(self.testdir, "qemu_boot_log.%s" % self.datetime)
-        self.origrootfs = os.path.join(d.getVar("DEPLOY_DIR_IMAGE", True),  d.getVar("IMAGE_LINK_NAME", True) + '.' + self.image_fstype)
-        self.rootfs = os.path.join(self.testdir, d.getVar("IMAGE_LINK_NAME", True) + '-testimage.' + self.image_fstype)
+        self.rootfs = os.path.join(d.getVar("DEPLOY_DIR_IMAGE", True),  d.getVar("IMAGE_LINK_NAME", True) + '.' + self.image_fstype)
         self.kernel = os.path.join(d.getVar("DEPLOY_DIR_IMAGE", True), d.getVar("KERNEL_IMAGETYPE", False) + '-' + d.getVar('MACHINE', False) + '.bin')
         dump_target_cmds = d.getVar("testimage_dump_target", True)
         dump_host_cmds = d.getVar("testimage_dump_host", True)
@@ -166,11 +165,7 @@ class QemuTarget(BaseTarget):
         self.target_dumper = TargetDumper(dump_target_cmds, dump_dir, self.runner)
 
     def deploy(self):
-        try:
-            bb.utils.mkdirhier(self.testdir)
-            shutil.copyfile(self.origrootfs, self.rootfs)
-        except Exception as e:
-            bb.fatal("Error copying rootfs: %s" % e)
+        bb.utils.mkdirhier(self.testdir)
 
         qemuloglink = os.path.join(self.testdir, "qemu_boot_log")
         if os.path.islink(qemuloglink):
