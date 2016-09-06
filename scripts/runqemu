@@ -162,6 +162,7 @@ class BaseConfig(object):
         self.lock = ''
         self.lock_descriptor = ''
         self.bitbake_e = ''
+        self.snapshot = False
         self.fstypes = ('ext2', 'ext3', 'ext4', 'jffs2', 'nfs', 'btrfs', 'cpio.gz', 'cpio', 'ramfs')
         self.vmtypes = ('hddimg', 'hdddirect', 'wic', 'vmdk', 'qcow2', 'vdi', 'iso')
 
@@ -328,6 +329,8 @@ class BaseConfig(object):
                 self.vhost_enabled = True
             elif arg == 'slirp':
                 self.slirp_enabled = True
+            elif arg == 'snapshot':
+                self.snapshot = True
             elif arg == 'publicvnc':
                 self.qemu_opt_script += ' -vnc :0'
             elif arg.startswith('tcpserial='):
@@ -808,6 +811,9 @@ class BaseConfig(object):
 
         # Enable virtio RNG else we can run out of entropy in guests
         self.qemu_opt += " -device virtio-rng-pci"
+
+        if self.snapshot:
+            self.qemu_opt += " -snapshot"
 
         if self.serialstdio:
             logger.info("Interrupt character is '^]'")
