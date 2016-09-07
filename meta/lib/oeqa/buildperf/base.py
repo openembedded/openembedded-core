@@ -466,7 +466,7 @@ class BuildPerfTestCase(unittest.TestCase):
             return bs_json
 
         log.info('Saving buildstats in JSON format')
-        bs_dirs = os.listdir(self.bb_vars['BUILDSTATS_BASE'])
+        bs_dirs = sorted(os.listdir(self.bb_vars['BUILDSTATS_BASE']))
         if len(bs_dirs) > 1:
             log.warning("Multiple buildstats found for test %s, only "
                         "archiving the last one", self.name)
