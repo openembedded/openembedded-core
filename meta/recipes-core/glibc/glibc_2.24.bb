@@ -42,7 +42,8 @@ SRC_URI = "${GLIBC_GIT_URI};branch=${SRCBRANCH};name=glibc \
 SRC_URI += "\
            file://etc/ld.so.conf \
            file://generate-supported.mk \
-"
+           file://0001-locale-fix-hard-coded-reference-to-gcc-E.patch \
+           "
 
 SRC_URI_append_class-nativesdk = "\
            file://0001-nativesdk-glibc-Look-for-host-system-ld.so.cache-as-.patch \
