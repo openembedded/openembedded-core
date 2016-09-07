@@ -62,15 +62,18 @@ def is_machine_specific(d):
 oe_soinstall() {
 	# Purpose: Install shared library file and
 	#          create the necessary links
-	# Example:
-	#
-	# oe_
-	#
-	#bbnote installing shared library $1 to $2
-	#
+	# Example: oe_soinstall libfoo.so.1.2.3 ${D}${libdir}
 	libname=`basename $1`
+	case "$libname" in
+	    *.so)
+	        bbfatal "oe_soinstall: Shared library must haved versioned filename (e.g. libfoo.so.1.2.3)"
+	        ;;
+	esac
 	install -m 755 $1 $2/$libname
 	sonamelink=`${HOST_PREFIX}readelf -d $1 |grep 'Library soname:' |sed -e 's/.*\[\(.*\)\].*/\1/'`
+	if [ -z $sonamelink ]; then
+		bbfatal "oe_soinstall: $libname is missing ELF tag 'SONAME'."
+	fi
 	solink=`echo $libname | sed -e 's/\.so\..*/.so/'`
 	ln -sf $libname $2/$sonamelink
 	ln -sf $libname $2/$solink
