@@ -26,6 +26,11 @@ EXTRA_OECONF = " \
     --enable-libwebpdemux \
     --enable-threading \
 "
+# Do not trust configure to determine if neon is available.
+#
+EXTRA_OECONF_append_arm = " \
+    ${@bb.utils.contains("TUNE_FEATURES","neon","--enable-neon","--disable-neon",d)} \
+"
 
 inherit autotools lib_package
 
