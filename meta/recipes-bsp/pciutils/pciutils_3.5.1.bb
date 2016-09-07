@@ -27,9 +27,9 @@ PCI_CONF_FLAG = "ZLIB=yes DNS=yes SHARED=yes"
 do_configure () {
 	(
 	  cd lib && \
-	  # EXTRA_OECONF for this recipe could only possibly contain 'HWDB=yes/no', so we put it
-	  # before ./configure
-	  ${PCI_CONF_FLAG} ${EXTRA_OECONF} ./configure ${PV} ${datadir} ${TARGET_OS} ${TARGET_ARCH}
+	  # PACKAGECONFIG_CONFARGS for this recipe could only possibly contain 'HWDB=yes/no',
+	  # so we put it before ./configure
+	  ${PCI_CONF_FLAG} ${PACKAGECONFIG_CONFARGS} ./configure ${PV} ${datadir} ${TARGET_OS} ${TARGET_ARCH}
 	)
 }
 
