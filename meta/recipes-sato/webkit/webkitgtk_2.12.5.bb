@@ -20,8 +20,8 @@ SRC_URI = "\
   file://ppc-musl-fix.patch \
   file://0001-Fix-racy-parallel-build-of-WebKit2-4.0.gir.patch \
   "
-SRC_URI[md5sum] = "0331ac714fd1a0587ffea470ef1afb20"
-SRC_URI[sha256sum] = "424d3177599abbc1eb1a1ad7928dd280a62006e992f2fada2e059375a9609a77"
+SRC_URI[md5sum] = "7a9ea00ec195488db90fdeb2d174ddaf"
+SRC_URI[sha256sum] = "6b147854b864a5f115fadb97b2b6200b2f696db015216a34e7298d11c88b1c40"
 
 inherit cmake lib_package pkgconfig gobject-introspection perlnative distro_features_check upstream-version-is-even
 
