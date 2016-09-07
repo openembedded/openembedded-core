@@ -567,12 +567,28 @@ class BaseConfig(object):
         if not havenative:
             if not self.bitbake_e:
                 self.load_bitbake_env()
-            native_vars = ['STAGING_DIR_NATIVE', 'STAGING_BINDIR_NATIVE']
-            for nv in native_vars:
-                s = re.search('^%s="(.*)"' % nv, self.bitbake_e, re.M)
-                if s and s.group(1) != self.get(nv):
-                    logger.info('Overriding conf file setting of %s to %s from Bitbake environment' % (nv, s.group(1)))
-                    self.set(nv, s.group(1))
+
+            if self.bitbake_e:
+                native_vars = ['STAGING_DIR_NATIVE', 'STAGING_BINDIR_NATIVE']
+                for nv in native_vars:
+                    s = re.search('^%s="(.*)"' % nv, self.bitbake_e, re.M)
+                    if s and s.group(1) != self.get(nv):
+                        logger.info('Overriding conf file setting of %s to %s from Bitbake environment' % (nv, s.group(1)))
+                        self.set(nv, s.group(1))
+            else:
+                # when we're invoked from a running bitbake instance we won't
+                # be able to call `bitbake -e` but should have OE_TMPDIR set in
+                # the environment and can guess paths based on it
+                tmpdir = os.environ.get('OE_TMPDIR', None)
+                if tmpdir:
+                    logger.info('Setting STAGING_DIR_NATIVE and STAGING_BINDIR_NATIVE relative to OE_TMPDIR (%s)' % tmpdir)
+                    hostos, _, _, _, machine = os.uname()
+                    buildsys = '%s-%s' % (machine, hostos.lower())
+                    staging_dir_native = '%s/sysroots/%s' % (tmpdir, buildsys)
+                    self.set('STAGING_DIR_NATIVE', staging_dir_native)
+                    # we have to assume that STAGING_BINDIR_NATIVE is at usr/bin
+                    staging_bindir_native = '%s/usr/bin' % staging_dir_native
+                    self.set('STAGING_BINDIR_NATIVE', staging_bindir_native)
 
     def print_config(self):
         logger.info('Continuing with the following parameters:\n')
