@@ -68,4 +68,16 @@ do_install () {
 
 USE_NLS = "no"
 
+export CC = "${BUILD_CC}"
+export CXX = "${BUILD_CXX}"
+export FC = "${BUILD_FC}"
+export CPP = "${BUILD_CPP}"
+export LD = "${BUILD_LD}"
+export CCLD = "${BUILD_CCLD}"
+export AR = "${BUILD_AR}"
+export AS = "${BUILD_AS}"
+export RANLIB = "${BUILD_RANLIB}"
+export STRIP = "${BUILD_STRIP}"
+export NM = "${BUILD_NM}"
+
 inherit nopackages
