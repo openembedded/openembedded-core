@@ -50,6 +50,8 @@ SRC_URI = "${KERNELORG_MIRROR}/linux/kernel/v${HEADER_FETCH_VER}/linux-${PV}.tar
 
 S = "${WORKDIR}/linux-${PV}"
 
+EXTRA_OEMAKE = " HOSTCC="${BUILD_CC}" HOSTCPP="${BUILD_CPP}""
+
 do_configure() {
 	oe_runmake allnoconfig
 }
