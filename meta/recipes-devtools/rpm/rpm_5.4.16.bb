@@ -527,7 +527,7 @@ do_configure() {
 	sed -e 's/pkg-config --exists uuid/pkg-config --exists ossp-uuid/g' \
 	    -e 's/pkg-config uuid/pkg-config ossp-uuid/g' -i ${S}/configure
 
-	( cd ${S}/syck ; set +e ; rm -- -l* ; make distclean ) || :
+	( cd ${S}/syck ; set +e ; rm -- -l* ; rm Makefile config.h config.status lib/Makefile libtool stamp-h1 tests/.deps tests/Makefile  ) || :
 
 	export varprefix=${localstatedir}
 	oe_runconf
