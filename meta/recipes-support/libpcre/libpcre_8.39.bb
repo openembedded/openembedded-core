@@ -48,6 +48,8 @@ BUILD_CFLAGS =+ "-DLINK_SIZE=2 -I${B}"
 CFLAGS += "-D_REENTRANT"
 CXXFLAGS_append_powerpc = " -lstdc++"
 
+export CCLD_FOR_BUILD ="${BUILD_CCLD}"
+
 PACKAGES =+ "libpcrecpp libpcreposix pcregrep pcregrep-doc pcretest pcretest-doc"
 
 SUMMARY_libpcrecpp = "${SUMMARY} - C++ wrapper functions"
