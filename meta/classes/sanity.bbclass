@@ -459,19 +459,19 @@ def check_gcc_march(sanity_data):
 
         # Check if GCC could work without march
         if not result:
-            status,res = oe.utils.getstatusoutput(sanity_data.expand("${BUILD_PREFIX}gcc gcc_test.c -o gcc_test"))
+            status,res = oe.utils.getstatusoutput(sanity_data.expand("${BUILD_CC} gcc_test.c -o gcc_test"))
             if status == 0:
                 result = True;
 
         if not result:
-            status,res = oe.utils.getstatusoutput(sanity_data.expand("${BUILD_PREFIX}gcc -march=native gcc_test.c -o gcc_test"))
+            status,res = oe.utils.getstatusoutput(sanity_data.expand("${BUILD_CC} -march=native gcc_test.c -o gcc_test"))
             if status == 0:
                 message = "BUILD_CFLAGS_append = \" -march=native\""
                 result = True;
 
         if not result:
             build_arch = sanity_data.getVar('BUILD_ARCH', True)
-            status,res = oe.utils.getstatusoutput(sanity_data.expand("${BUILD_PREFIX}gcc -march=%s gcc_test.c -o gcc_test" % build_arch))
+            status,res = oe.utils.getstatusoutput(sanity_data.expand("${BUILD_CC} -march=%s gcc_test.c -o gcc_test" % build_arch))
             if status == 0:
                 message = "BUILD_CFLAGS_append = \" -march=%s\"" % build_arch
                 result = True;
@@ -673,11 +673,11 @@ def check_sanity_version_change(status, d):
     if not check_app_exists("${MAKE}", d):
         missing = missing + "GNU make,"
 
-    if not check_app_exists('${BUILD_PREFIX}gcc', d):
-        missing = missing + "C Compiler (%sgcc)," % d.getVar("BUILD_PREFIX", True)
+    if not check_app_exists('${BUILD_CC}', d):
+        missing = missing + "C Compiler (%s)," % d.getVar("BUILD_CC", True)
 
-    if not check_app_exists('${BUILD_PREFIX}g++', d):
-        missing = missing + "C++ Compiler (%sg++)," % d.getVar("BUILD_PREFIX", True)
+    if not check_app_exists('${BUILD_CXX}', d):
+        missing = missing + "C++ Compiler (%s)," % d.getVar("BUILD_CXX", True)
 
     required_utilities = d.getVar('SANITY_REQUIRED_UTILITIES', True)
 
