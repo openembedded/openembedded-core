@@ -425,8 +425,10 @@ class BuildPerfTestCase(unittest.TestCase):
         """Save buildstats"""
         def split_nevr(nevr):
             """Split name and version information from recipe "nevr" string"""
-            name, e_v, revision = nevr.rsplit('-', 2)
-            match = re.match(r'^((?P<epoch>[0-9]{1,5})_)?(?P<version>.*)$', e_v)
+            n_e_v, revision = nevr.rsplit('-', 1)
+            match = re.match(r'^(?P<name>\S+)-((?P<epoch>[0-9]{1,5})_)?(?P<version>[0-9]\S*)$',
+                             n_e_v)
+            name = match.group('name')
             version = match.group('version')
             epoch = match.group('epoch')
             return name, epoch, version, revision
