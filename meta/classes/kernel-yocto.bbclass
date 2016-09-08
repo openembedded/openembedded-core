@@ -239,10 +239,10 @@ do_kernel_configme() {
 	# translate the kconfig_mode into something that merge_config.sh
 	# understands
 	case ${KCONFIG_MODE} in
-		allnoconfig)
+		*allnoconfig)
 			config_flags="-n"
 			;;
-		alldefconfig)
+		*alldefconfig)
 			config_flags=""
 			;;
 	    *)
