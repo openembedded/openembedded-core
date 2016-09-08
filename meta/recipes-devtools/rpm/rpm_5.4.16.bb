@@ -554,53 +554,19 @@ do_install_append() {
 	install -m 0755 ${WORKDIR}/pythondeps.sh ${D}/${libdir}/rpm/pythondeps.sh
 	install -m 0755 ${WORKDIR}/perfile_rpmdeps.sh ${D}/${libdir}/rpm/perfile_rpmdeps.sh
 
-	# Remove unpackaged files (based on list in rpm.spec)
-	rm -f ${D}/${libdir}/rpm/{Specfile.pm,cpanflute,cpanflute2,rpmdiff,rpmdiff.cgi,sql.prov,sql.req,tcl.req,trpm}
-
-	rm -f ${D}/${mandir}/man8/rpmcache.8*
-	rm -f ${D}/${mandir}/man8/rpmgraph.8*
-	rm -f ${D}/${mandir}/*/man8/rpmcache.8*
-	rm -f ${D}/${mandir}/*/man8/rpmgraph.8*
-	rm -rf ${D}/${mandir}/{fr,ko}
-
 	rm -f ${D}/${includedir}/popt.h
 	rm -f ${D}/${libdir}/libpopt.*
 	rm -f ${D}/${libdir}/pkgconfig/popt.pc
 	rm -f ${D}/${datadir}/locale/*/LC_MESSAGES/popt.mo
 	rm -f ${D}/${mandir}/man3/popt.3
 
-	rm -f ${D}/${mandir}/man1/xar.1*
-	rm -f ${D}/${bindir}/xar
-	rm -rf ${D}/${includedir}/xar
-	rm -f ${D}/${libdir}/libxar*
-
-	rm -f ${D}/${bindir}/lz*
-	rm -f ${D}/${bindir}/unlzma
-	rm -f ${D}/${bindir}/unxz
-	rm -f ${D}/${bindir}/xz*
-	rm -rf ${D}/${includedir}/lzma*
-	rm -f ${D}/${mandir}/man1/lz*.1
-	rm -f ${D}/${libdir}/pkgconfig/liblzma*
-
 	rm -f ${D}${PYTHON_SITEPACKAGES_DIR}/*.a
 	rm -f ${D}${PYTHON_SITEPACKAGES_DIR}/*.la
 	rm -f ${D}${PYTHON_SITEPACKAGES_DIR}/rpm/*.a
 	rm -f ${D}${PYTHON_SITEPACKAGES_DIR}/rpm/*.la
 
-	#find ${D}/${libdir}/perl5 -type f -a \( -name perllocal.pod -o -name .packlist \
-	#	-o \( -name '*.bs' -a -empty \) \) -exec rm -f {} ';'
-	#find ${D}/${libdir}/perl5 -type d -depth -exec rmdir {} 2>/dev/null ';'
-
 	rm -f ${D}/${libdir}/rpm/dbconvert.sh
-
 	rm -f ${D}/${libdir}/rpm/libsqldb.*
-
-	# We don't want, nor need the Mandriva multiarch items
-	rm -f ${D}/${bindir}/multiarch-dispatch
-	rm -f ${D}/${bindir}/multiarch-platform
-	rm -f ${D}/${libdir}/rpm/check-multiarch-files
-	rm -f ${D}/${libdir}/rpm/mkmultiarch
-	rm -f ${D}/${includedir}/multiarch-dispatch.h
 
 	rm -f ${D}/${libdir}/rpm/gstreamer.sh
 	rm -f ${D}/${libdir}/rpm/gem_helper.rb
@@ -610,12 +576,10 @@ do_install_append() {
 	rm -f ${D}/${libdir}/rpm/macros.d/kernel
 	rm -f ${D}/${libdir}/rpm/macros.d/gstreamer
 	rm -f ${D}/${libdir}/rpm/bin/mgo
-	rm -f ${D}/${libdir}/rpm/bin/dbconvert
 	rm -f ${D}/${libdir}/rpm/bin/pom2spec
 
 	rm -rf ${D}/var/lib/wdj ${D}/var/cache/wdj
 	rm -f ${D}/${libdir}/rpm/bin/api-sanity-checker.pl
-
 }
 
 do_install_append_class-target() {
