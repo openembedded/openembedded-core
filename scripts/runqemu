@@ -277,6 +277,19 @@ class BaseConfig(object):
         elif self.get('MACHINE') == arg:
             return
         logger.info('Assuming MACHINE = %s' % arg)
+
+        # if we're running under testimage, or similarly as a child
+        # of an existing bitbake invocation, we can't invoke bitbake
+        # to validate the MACHINE setting and must assume it's correct...
+        # FIXME: testimage.bbclass exports these two variables into env,
+        # are there other scenarios in which we need to support being
+        # invoked by bitbake?
+        deploy = os.environ.get('DEPLOY_DIR_IMAGE', None)
+        bbchild = deploy and os.environ.get('OE_TMPDIR', None)
+        if bbchild:
+            self.set_machine_deploy_dir(arg, deploy)
+            return
+
         cmd = 'MACHINE=%s bitbake -e' % arg
         logger.info('Running %s...' % cmd)
         self.bitbake_e = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE).stdout.read().decode('utf-8')
