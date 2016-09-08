@@ -76,7 +76,7 @@ do_install_ptest() {
 	cp -rL ${B}/tests ${D}${PTEST_PATH}
 	find ${D}${PTEST_PATH}/tests -type f -name "*.[Sshcod]" | xargs -i rm -rf {}
 
-	cp ${S}/tests/Makefile ${D}${PTEST_PATH}/tests
+	cp ${S}/tests/Makefile.include ${D}${PTEST_PATH}/tests
 }
 
 do_install () {
