@@ -88,6 +88,8 @@ ignore_errors = {
         'host side 80-wire cable detection failed, limiting max speed',
         'mode "640x480" test failed',
         'Failed to load module "glx"',
+        'can\'t handle BAR above 4GB',
+        'Cannot reserve Legacy IO',
         ] + common_errors,
     'qemuarm' : [
         'mmci-pl18x: probe of fpga:05 failed with error -22',
