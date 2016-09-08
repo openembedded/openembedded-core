@@ -87,6 +87,10 @@ class SmartRepoTest(SmartTest):
             lockfilename = oeRuntimeTest.tc.d.getVar('DEPLOY_DIR_RPM', True) + "/rpm.lock"
             lf = bb.utils.lockfile(lockfilename, False)
             oe.path.copyhardlinktree(rpm_dir, idx_path)
+            # Full indexes overload a 256MB image so reduce the number of rpms
+            # in the feed. Filter to p* since we use the psplash packages and
+            # this leaves some allarch and machine arch packages too.
+            bb.utils.remove(idx_path + "*/[a-oq-z]*.rpm")
             bb.utils.unlockfile(lf)
             index_cmds.append("%s --dbpath %s --update -q %s" % (rpm_createrepo, db_path, idx_path))
             rpm_dirs_found = True
