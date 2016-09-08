@@ -124,14 +124,19 @@ do_kernel_metadata() {
 	# for the update part of the process
 	for f in ${feat_dirs}; do
 		if [ -d "${WORKDIR}/$f/meta" ]; then
-			includes="$includes -I${WORKDIR}/$f/meta"
-		elif [ -d "${WORKDIR}/$f" ]; then
+			includes="$includes -I${WORKDIR}/$f/kernel-meta"
+	        elif [ -d "${WORKDIR}/$f" ]; then
 			includes="$includes -I${WORKDIR}/$f"
 		fi
 	done
-	for s in ${sccs}; do
+	for s in ${sccs} ${patches}; do
 		sdir=$(dirname $s)
 		includes="$includes -I${sdir}"
+                # if a SRC_URI passed patch or .scc has a subdir of "kernel-meta",
+                # then we add it to the search path
+                if [ -d "${sdir}/kernel-meta" ]; then
+			includes="$includes -I${sdir}/kernel-meta"
+                fi
 	done
 
 	# expand kernel features into their full path equivalents
