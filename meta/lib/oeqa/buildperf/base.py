@@ -428,6 +428,11 @@ class BuildPerfTestCase(unittest.TestCase):
             n_e_v, revision = nevr.rsplit('-', 1)
             match = re.match(r'^(?P<name>\S+)-((?P<epoch>[0-9]{1,5})_)?(?P<version>[0-9]\S*)$',
                              n_e_v)
+            if not match:
+                # If we're not able to parse a version starting with a number, just
+                # take the part after last dash
+                match = re.match(r'^(?P<name>\S+)-((?P<epoch>[0-9]{1,5})_)?(?P<version>[^-]+)$',
+                                 n_e_v)
             name = match.group('name')
             version = match.group('version')
             epoch = match.group('epoch')
