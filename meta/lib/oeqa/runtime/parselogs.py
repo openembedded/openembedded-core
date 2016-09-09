@@ -181,6 +181,9 @@ class ParseLogsTest(oeRuntimeTest):
     def getMachine(self):
         return oeRuntimeTest.tc.d.getVar("MACHINE", True)
 
+    def getWorkdir(self):
+        return oeRuntimeTest.tc.d.getVar("WORKDIR", True)
+
     #get some information on the CPU of the machine to display at the beginning of the output. This info might be useful in some cases.
     def getHardwareInfo(self):
         hwi = ""
@@ -218,16 +221,19 @@ class ParseLogsTest(oeRuntimeTest):
 
     #copy the log files to be parsed locally
     def transfer_logs(self, log_list):
-        target_logs = 'target_logs'
+        workdir = self.getWorkdir()
+        self.target_logs = workdir + '/' + 'target_logs'
+        target_logs = self.target_logs
         if not os.path.exists(target_logs):
             os.makedirs(target_logs)
+        bb.utils.remove(self.target_logs + "/*")
         for f in log_list:
             self.target.copy_from(f, target_logs)
 
     #get the local list of logs
     def get_local_log_list(self, log_locations):
         self.transfer_logs(self.getLogList(log_locations))
-        logs = [ os.path.join('target_logs',f) for f in os.listdir('target_logs') if os.path.isfile(os.path.join('target_logs',f)) ]
+        logs = [ os.path.join(self.target_logs, f) for f in os.listdir(self.target_logs) if os.path.isfile(os.path.join(self.target_logs, f)) ]
         return logs
 
     #build the grep command to be used with filters and exclusions
