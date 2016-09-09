@@ -141,6 +141,8 @@ class QemuRunner:
         else:
             logger.info('Not using kvm for runqemu')
         launch_cmd += 'tcpserial=%s %s %s %s' % (self.serverport, self.machine, self.rootfs, self.qemuparams)
+        logger.info('launchcmd=%s'%(launch_cmd))
+
         # FIXME: We pass in stdin=subprocess.PIPE here to work around stty
         # blocking at the end of the runqemu script when using this within
         # oe-selftest (this makes stty error out immediately). There ought
@@ -149,12 +151,12 @@ class QemuRunner:
         output = self.runqemu.stdout
 
         #
-        # We need the preexec_fn above so that all runqemu processes can easily be killed 
+        # We need the preexec_fn above so that all runqemu processes can easily be killed
         # (by killing their process group). This presents a problem if this controlling
-        # process itself is killed however since those processes don't notice the death 
+        # process itself is killed however since those processes don't notice the death
         # of the parent and merrily continue on.
         #
-        # Rather than hack runqemu to deal with this, we add something here instead. 
+        # Rather than hack runqemu to deal with this, we add something here instead.
         # Basically we fork off another process which holds an open pipe to the parent
         # and also is setpgrp. If/when the pipe sees EOF from the parent dieing, it kills
         # the process group. This is like pctrl's PDEATHSIG but for a process group
