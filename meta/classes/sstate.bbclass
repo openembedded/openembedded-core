@@ -205,6 +205,7 @@ def sstate_install(ss, d):
             f = os.path.normpath(f)
             realmatch = True
             for w in whitelist:
+                w = os.path.normpath(w)
                 if f.startswith(w):
                     realmatch = False
                     break
