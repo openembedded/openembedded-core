@@ -472,7 +472,7 @@ python () {
         else:
             raise bb.parse.SkipPackage("incompatible with machine %s (not in COMPATIBLE_MACHINE)" % d.getVar('MACHINE', True))
 
-    source_mirror_fetch = d.getVar('SOURCE_MIRROR_FETCH', 0)
+    source_mirror_fetch = d.getVar('SOURCE_MIRROR_FETCH', False)
     if not source_mirror_fetch:
         need_host = d.getVar('COMPATIBLE_HOST', True)
         if need_host:

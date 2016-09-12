@@ -359,7 +359,7 @@ python () {
     # Without de-duplication, gen_conversion_cmds() below
     # would create the same compression command multiple times.
     ctypes = set(d.getVar('CONVERSIONTYPES', True).split())
-    old_overrides = d.getVar('OVERRIDES', 0)
+    old_overrides = d.getVar('OVERRIDES', False)
 
     def _image_base_type(type):
         basetype = type

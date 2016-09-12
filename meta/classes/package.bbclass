@@ -1490,7 +1490,7 @@ python package_do_shlibs() {
     import re, pipes
     import subprocess as sub
 
-    exclude_shlibs = d.getVar('EXCLUDE_FROM_SHLIBS', 0)
+    exclude_shlibs = d.getVar('EXCLUDE_FROM_SHLIBS', False)
     if exclude_shlibs:
         bb.note("not generating shlibs")
         return
