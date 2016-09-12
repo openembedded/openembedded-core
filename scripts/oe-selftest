@@ -605,6 +605,10 @@ def buildResultClass(args):
                 if self.coverage_installed:
                     log.info("Coverage is enabled")
 
+                    major_version = int(coverage.version.__version__[0])
+                    if major_version < 4:
+                        log.error("python coverage %s installed. Require version 4 or greater." % coverage.version.__version__)
+                        self.stop()
                     # In case the user has not set the variable COVERAGE_PROCESS_START,
                     # create a default one and export it. The COVERAGE_PROCESS_START
                     # value indicates where the coverage configuration file resides
