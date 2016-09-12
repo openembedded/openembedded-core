@@ -127,9 +127,9 @@ PACKAGES_DYNAMIC += "^kernel-firmware-.*"
 export OS = "${TARGET_OS}"
 export CROSS_COMPILE = "${TARGET_PREFIX}"
 
-KERNEL_PRIORITY ?= "${@int(d.getVar('PV',1).split('-')[0].split('+')[0].split('.')[0]) * 10000 + \
-                       int(d.getVar('PV',1).split('-')[0].split('+')[0].split('.')[1]) * 100 + \
-                       int(d.getVar('PV',1).split('-')[0].split('+')[0].split('.')[-1])}"
+KERNEL_PRIORITY ?= "${@int(d.getVar('PV', True).split('-')[0].split('+')[0].split('.')[0]) * 10000 + \
+                       int(d.getVar('PV', True).split('-')[0].split('+')[0].split('.')[1]) * 100 + \
+                       int(d.getVar('PV', True).split('-')[0].split('+')[0].split('.')[-1])}"
 
 KERNEL_RELEASE ?= "${KERNEL_VERSION}"
 
@@ -140,7 +140,7 @@ KERNEL_IMAGEDEST = "boot"
 #
 # configuration
 #
-export CMDLINE_CONSOLE = "console=${@d.getVar("KERNEL_CONSOLE",1) or "ttyS0"}"
+export CMDLINE_CONSOLE = "console=${@d.getVar("KERNEL_CONSOLE", True) or "ttyS0"}"
 
 KERNEL_VERSION = "${@get_kernelversion_headers('${B}')}"
 

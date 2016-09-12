@@ -32,7 +32,7 @@ EXTRA_OECONF += "--disable-gconf --disable-qconf"
 
 # Some packages have the version preceeding the .so instead properly
 # versioned .so.<version>, so we need to reorder and repackage.
-SOLIBS = "-${@d.getVar('PV',1)[:-2]}.so"
+SOLIBS = "-${@d.getVar('PV', True)[:-2]}.so"
 FILES_SOLIBSDEV = "${libdir}/libkconfig-parser.so"
 
 BBCLASSEXTEND = "native"

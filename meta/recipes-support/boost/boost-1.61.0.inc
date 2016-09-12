@@ -7,8 +7,8 @@ HOMEPAGE = "http://www.boost.org/"
 LICENSE = "BSL-1.0 & MIT & Python-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE_1_0.txt;md5=e4224ccaecb14d942c71d31bef20d78c"
 
-BOOST_VER = "${@"_".join(d.getVar("PV",1).split("."))}"
-BOOST_MAJ = "${@"_".join(d.getVar("PV",1).split(".")[0:2])}"
+BOOST_VER = "${@"_".join(d.getVar("PV", True).split("."))}"
+BOOST_MAJ = "${@"_".join(d.getVar("PV", True).split(".")[0:2])}"
 BOOST_P = "boost_${BOOST_VER}"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/boost/${BOOST_P}.tar.bz2"

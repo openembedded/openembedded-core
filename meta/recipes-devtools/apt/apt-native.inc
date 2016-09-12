@@ -17,7 +17,7 @@ python do_install () {
 }
 
 python do_install_config () {
-    indir = os.path.dirname(d.getVar('FILE',1))
+    indir = os.path.dirname(d.getVar('FILE', True))
     infile = open(oe.path.join(indir, 'files', 'apt.conf'), 'r')
     data = infile.read()
     infile.close()

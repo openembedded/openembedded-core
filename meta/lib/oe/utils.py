@@ -23,13 +23,13 @@ def ifelse(condition, iftrue = True, iffalse = False):
         return iffalse
 
 def conditional(variable, checkvalue, truevalue, falsevalue, d):
-    if d.getVar(variable,1) == checkvalue:
+    if d.getVar(variable, True) == checkvalue:
         return truevalue
     else:
         return falsevalue
 
 def less_or_equal(variable, checkvalue, truevalue, falsevalue, d):
-    if float(d.getVar(variable,1)) <= float(checkvalue):
+    if float(d.getVar(variable, True)) <= float(checkvalue):
         return truevalue
     else:
         return falsevalue

@@ -245,7 +245,7 @@ python do_package_ipk () {
 
         os.chdir(basedir)
         ret = subprocess.call("PATH=\"%s\" %s %s %s" % (localdata.getVar("PATH", True),
-                                                          d.getVar("OPKGBUILDCMD",1), pkg, pkgoutdir), shell=True)
+                                                          d.getVar("OPKGBUILDCMD", True), pkg, pkgoutdir), shell=True)
         if ret != 0:
             bb.utils.unlockfile(lf)
             raise bb.build.FuncFailed("opkg-build execution failed")
