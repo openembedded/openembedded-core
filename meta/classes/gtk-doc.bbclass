@@ -7,7 +7,7 @@
 #
 # It should be used in recipes to determine whether gtk-doc based documentation should be built,
 # so that qemu use can be avoided when necessary.
-GTKDOC_ENABLED = "${@bb.utils.contains('DISTRO_FEATURES', 'api-documentation', \
+GTKDOC_ENABLED ?= "${@bb.utils.contains('DISTRO_FEATURES', 'api-documentation', \
                       bb.utils.contains('MACHINE_FEATURES', 'qemu-usermode', 'True', 'False', d), 'False', d)}"
 
 EXTRA_OECONF_prepend_class-target = "${@bb.utils.contains('GTKDOC_ENABLED', 'True', '--enable-gtk-doc --enable-gtk-doc-html --disable-gtk-doc-pdf', \
