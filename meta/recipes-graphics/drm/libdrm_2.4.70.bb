@@ -13,6 +13,7 @@ DEPENDS = "libpthread-stubs udev libpciaccess"
 SRC_URI = "http://dri.freedesktop.org/libdrm/${BP}.tar.bz2 \
            file://installtests.patch \
            file://fix_O_CLOEXEC_undeclared.patch \
+           file://0001-configure.ac-Allow-explicit-enabling-of-cunit-tests.patch \
           "
 
 SRC_URI[md5sum] = "920957cfe25a80efb02be9bd90bf3c1e"
@@ -21,6 +22,7 @@ SRC_URI[sha256sum] = "b17d4b39ed97ca0e4cffa0db06ff609e617bac94646ec38e8e0579d530
 inherit autotools pkgconfig
 
 EXTRA_OECONF += "--disable-cairo-tests \
+                 --without-cunit \
                  --enable-omap-experimental-api \
                  --enable-install-test-programs \
                  --disable-manpages \
