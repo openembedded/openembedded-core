@@ -91,7 +91,7 @@ class DevtoolTest(oeSDKExtTest):
     @testcase(1478)
     @skipUnlessPassed('test_devtool_location')
     def test_recipes_for_nodejs(self):
-        package_nodejs = "npm://registry.npmjs.org;name=forever;version=0.15.1"
+        package_nodejs = "npm://registry.npmjs.org;name=winston;version=2.2.0"
         self._run('devtool add %s ' % package_nodejs)
         try:
             self._run('devtool build %s ' % package_nodejs)
