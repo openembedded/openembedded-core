@@ -13,7 +13,7 @@ This may have appeared now because xcb-dri2 used to overlink publicly
 but now does not.
 
 Signed-off-by: Jussi Kukkonen <jussi.kukkonen@intel.com>
-Upstream-Status: Pending
+Upstream-Status: Accepted
 ---
  CMakeLists.txt            | 1 +
  tests/util/CMakeLists.txt | 2 ++
