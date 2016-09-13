@@ -176,7 +176,7 @@ class RpmIndexer(Indexer):
             dbpath = os.path.join(self.d.getVar('WORKDIR', True), 'rpmdb', arch)
             if os.path.exists(dbpath):
                 bb.utils.remove(dbpath, True)
-            arch_dir = os.path.join(self.d.getVar('WORKDIR', True), 'rpms', arch)
+            arch_dir = os.path.join(self.deploy_dir, arch)
             if not os.path.isdir(arch_dir):
                 continue
 
@@ -686,7 +686,8 @@ class RpmPM(PackageManager):
         if not os.path.exists(self.d.expand('${T}/saved')):
             bb.utils.mkdirhier(self.d.expand('${T}/saved'))
 
-        self.indexer = RpmIndexer(self.d, self.deploy_dir)
+        packageindex_dir = os.path.join(self.d.getVar('WORKDIR', True), 'rpms')
+        self.indexer = RpmIndexer(self.d, packageindex_dir)
         self.pkgs_list = RpmPkgsList(self.d, self.target_rootfs, arch_var, os_var)
 
         self.ml_prefix_list, self.ml_os_list = self.indexer.get_ml_prefix_and_os_list(arch_var, os_var)
