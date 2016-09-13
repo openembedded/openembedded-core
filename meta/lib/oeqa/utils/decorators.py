@@ -189,10 +189,24 @@ def LogResults(original_class):
         if passed:
             local_log.results("Testcase "+str(test_case)+": PASSED")
 
+        # XXX: In order to avoid race condition when test if exists the linkfile
+        # use bb.utils.lock, the best solution is to create a unique name for the
+        # link file.
+        try:
+            import bb
+            has_bb = True
+            lockfilename = linkfile + '.lock'
+        except ImportError:
+            has_bb = False
+
+        if has_bb:
+            lf = bb.utils.lockfile(lockfilename, block=True)
         # Create symlink to the current log
         if os.path.lexists(linkfile):
             os.remove(linkfile)
         os.symlink(logfile, linkfile)
+        if has_bb:
+            bb.utils.unlockfile(lf)
 
     original_class.run = run
 
