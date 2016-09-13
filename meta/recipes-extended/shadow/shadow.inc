@@ -22,6 +22,7 @@ SRC_URI = "http://pkg-shadow.alioth.debian.org/releases/${BPN}-${PV}.tar.xz \
 SRC_URI_append_class-target = " \
            file://login_defs_pam.sed \
            file://shadow-update-pam-conf.patch \
+           file://shadow-relaxed-usernames.patch \
            "
 
 SRC_URI_append_class-native = " \
