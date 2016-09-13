@@ -137,6 +137,8 @@ do_configure[postfuncs] += "autotools_postconfigure"
 ACLOCALDIR = "${WORKDIR}/aclocal-copy"
 
 python autotools_copy_aclocals () {
+    import copy
+
     s = d.getVar("AUTOTOOLS_SCRIPT_PATH", True)
     if not os.path.exists(s + "/configure.in") and not os.path.exists(s + "/configure.ac"):
         if not d.getVar("AUTOTOOLS_COPYACLOCAL", False):
@@ -165,35 +167,62 @@ python autotools_copy_aclocals () {
     if start is None:
         bb.fatal("Couldn't find ourself in BB_TASKDEPDATA?")
 
-    # We need to find configure tasks which are either from <target> -> <target>
-    # or <native> -> <native> but not <target> -> <native> unless they're direct
-    # dependencies. This mirrors what would get restored from sstate.
-    done = [start]
-    next = [start]
+    # We need to figure out which m4 files we need to expose to this do_configure task.
+    # This needs to match what would get restored from sstate, which is controlled 
+    # ultimately by calls from bitbake to setscene_depvalid().
+    # That function expects a setscene dependency tree. We build a dependency tree 
+    # condensed to do_populate_sysroot -> do_populate_sysroot dependencies, similar to 
+    # that used by setscene tasks. We can then call into setscene_depvalid() and decide
+    # which dependencies we can "see" and should expose the m4 files for.
+    setscenedeps = copy.deepcopy(taskdepdata)
+
+    start = set([start])
+
+    # Create collapsed do_populate_sysroot -> do_populate_sysroot tree
+    for dep in taskdepdata:
+        data = setscenedeps[dep]        
+        if data[1] != "do_populate_sysroot":
+            for dep2 in setscenedeps:
+                data2 = setscenedeps[dep2]
+                if dep in data2[3]:
+                    data2[3].update(setscenedeps[dep][3])
+                    data2[3].remove(dep)
+            if dep in start:
+                start.update(setscenedeps[dep][3])
+                start.remove(dep)
+            del setscenedeps[dep]
+
+    # Remove circular references
+    for dep in setscenedeps:
+        if dep in setscenedeps[dep][3]:
+            setscenedeps[dep][3].remove(dep)
+
+    # Direct dependencies should be present and can be depended upon
+    for dep in start:
+        configuredeps.append(setscenedeps[dep][0])
+
+    # Call into setscene_depvalid for each sub-dependency and only copy m4 files
+    # for ones that would be restored from sstate.
+    done = list(start)
+    next = list(start)
     while next:
         new = []
         for dep in next:
-            data = taskdepdata[dep]
+            data = setscenedeps[dep]
             for datadep in data[3]:
                 if datadep in done:
                     continue
-                if (not data[0].endswith("-native")) and taskdepdata[datadep][0].endswith("-native") and dep != start:
+                taskdeps = {}
+                taskdeps[dep] = setscenedeps[dep][:2]
+                taskdeps[datadep] = setscenedeps[datadep][:2]
+                retval = setscene_depvalid(datadep, taskdeps, [], d)
+                if retval:
+                    bb.note("Skipping setscene dependency %s for m4 macro copying" % datadep)
                     continue
                 done.append(datadep)
                 new.append(datadep)
-                if taskdepdata[datadep][1] == "do_configure":
-                    configuredeps.append(taskdepdata[datadep][0])
+                configuredeps.append(setscenedeps[datadep][0])
         next = new
-
-    #configuredeps2 = []
-    #for dep in taskdepdata:
-    #    data = taskdepdata[dep]
-    #    if data[1] == "do_configure" and data[0] != pn:
-    #        configuredeps2.append(data[0])
-    #configuredeps.sort()
-    #configuredeps2.sort()
-    #bb.warn(str(configuredeps))
-    #bb.warn(str(configuredeps2))
 
     cp = []
     if nodeps:
