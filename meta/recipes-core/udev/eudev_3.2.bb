@@ -23,7 +23,7 @@ UPSTREAM_CHECK_URI = "https://github.com/gentoo/eudev/releases"
 SRC_URI[md5sum] = "9eb477cc8718db272b5d24dff1126b04"
 SRC_URI[sha256sum] = "37829d37f4beb7e358ca33abc1ad0907d87f917ce157777aeaeebeacae24efdc"
 
-inherit autotools update-rc.d qemu
+inherit autotools update-rc.d qemu pkgconfig
 
 EXTRA_OECONF = " \
     --sbindir=${base_sbindir} \
