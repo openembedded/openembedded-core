@@ -694,7 +694,12 @@ class BaseConfig(object):
             raise Exception("runqemu-ifup, runqemu-ifdown or ip not found")
 
         if not os.path.exists(lockdir):
-            os.mkdir(lockdir)
+            # There might be a race issue when multi runqemu processess are
+            # running at the same time.
+            try:
+                os.mkdir(lockdir)
+            except FileExistsError:
+                pass
 
         cmd = '%s link' % ip
         logger.info('Running %s...' % cmd)
