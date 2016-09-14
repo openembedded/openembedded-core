@@ -2,7 +2,6 @@ import unittest
 import re
 import oe
 import subprocess
-from time import sleep
 from oeqa.oetest import oeRuntimeTest, skipModule
 from oeqa.utils.decorators import *
 from oeqa.utils.httpserver import HTTPService
@@ -145,21 +144,13 @@ class SmartRepoTest(SmartTest):
     @skipUnlessPassed('test_smart_channel_add')
     def test_smart_install(self):
         self.smart('remove -y psplash-default')
-        # NOTE: this sleep is a hack for working around #10244
-        sleep(1)
         self.smart('install -y psplash-default')
-        # NOTE: this sleep is a hack for working around #10244
-        sleep(1)
 
     @testcase(728)
     @skipUnlessPassed('test_smart_install')
     def test_smart_install_dependency(self):
         self.smart('remove -y psplash')
-        # NOTE: this sleep is a hack for working around #10244
-        sleep(1)
         self.smart('install -y psplash-default')
-        # NOTE: this sleep is a hack for working around #10244
-        sleep(1)
 
     @testcase(723)
     @skipUnlessPassed('test_smart_channel_add')
@@ -167,8 +158,6 @@ class SmartRepoTest(SmartTest):
         self.smart('remove -y psplash-default')
         self.smart('download psplash-default')
         self.smart('install -y ./psplash-default*')
-        # NOTE: this sleep is a hack for working around #10244
-        sleep(1)
 
     @testcase(725)
     @skipUnlessPassed('test_smart_channel_add')
@@ -177,29 +166,19 @@ class SmartRepoTest(SmartTest):
         url = re.search('(http://.*/psplash-default.*\.rpm)', output)
         self.assertTrue(url, msg="Couln't find download url in %s" % output)
         self.smart('remove -y psplash-default')
-        # NOTE: this sleep is a hack for working around #10244
-        sleep(1)
         self.smart('install -y %s' % url.group(0))
-        # NOTE: this sleep is a hack for working around #10244
-        sleep(1)
 
     @testcase(729)
     @skipUnlessPassed('test_smart_install')
     def test_smart_reinstall(self):
         self.smart('reinstall -y psplash-default')
-        # NOTE: this sleep is a hack for working around #10244
-        sleep(1)
 
     @testcase(727)
     @skipUnlessPassed('test_smart_channel_add')
     def test_smart_remote_repo(self):
         self.smart('update')
         self.smart('install -y psplash')
-        # NOTE: this sleep is a hack for working around #10244
-        sleep(1)
         self.smart('remove -y psplash')
-        # NOTE: this sleep is a hack for working around #10244
-        sleep(1)
 
     @testcase(726)
     def test_smart_local_dir(self):
@@ -213,8 +192,6 @@ class SmartRepoTest(SmartTest):
                 self.smart('channel --disable '+str(i))
         self.target.run('cd $HOME')
         self.smart('install psplash')
-        # NOTE: this sleep is a hack for working around #10244
-        sleep(1)
         for i in output.split("\n"):
             if ("rpmsys" != str(i)) and ("myrpmdir" != str(i)):
                 self.smart('channel --enable '+str(i))
@@ -238,6 +215,4 @@ class SmartRepoTest(SmartTest):
     @skipUnlessPassed('test_smart_channel_add')
     def test_smart_remove_package(self):
         self.smart('install -y psplash')
-        # NOTE: this sleep is a hack for working around #10244
-        sleep(1)
         self.smart('remove -y psplash')
