@@ -229,6 +229,7 @@ else
 fi
 if [ $? -ne 0 ]; then
 	echo "ERROR: git request-pull reported an error"
+	rm -rf $ODIR
 	exit 1
 fi
 
