@@ -88,8 +88,7 @@ SDK_TITLE_task-populate-sdk-ext = "${@d.getVar('DISTRO_NAME', True) or d.getVar(
 def clean_esdk_builddir(d, sdkbasepath):
     """Clean up traces of the fake build for create_filtered_tasklist()"""
     import shutil
-    cleanpaths = 'cache conf/sanity_info conf/templateconf.cfg'.split()
-    cleanpaths.append(os.path.basename(d.getVar('TMPDIR', True)))
+    cleanpaths = 'cache conf/sanity_info conf/templateconf.cfg tmp'.split()
     for pth in cleanpaths:
         fullpth = os.path.join(sdkbasepath, pth)
         if os.path.isdir(fullpth):
@@ -109,10 +108,12 @@ def create_filtered_tasklist(d, sdkbasepath, tasklistfile, conf_initpath):
     # Create a temporary build directory that we can pass to the env setup script
     shutil.copyfile(sdkbasepath + '/conf/local.conf', sdkbasepath + '/conf/local.conf.bak')
     try:
-        # Force the use of sstate from the build system
         with open(sdkbasepath + '/conf/local.conf', 'a') as f:
+            # Force the use of sstate from the build system
             f.write('\nSSTATE_DIR_forcevariable = "%s"\n' % d.getVar('SSTATE_DIR', True))
             f.write('SSTATE_MIRRORS_forcevariable = ""\n')
+            # Ensure TMPDIR is the default so that clean_esdk_builddir() can delete it
+            f.write('TMPDIR_forcevariable = "${TOPDIR}/tmp"\n')
             # Drop uninative if the build isn't using it (or else NATIVELSBSTRING will
             # be different and we won't be able to find our native sstate)
             if not bb.data.inherits_class('uninative', d):
