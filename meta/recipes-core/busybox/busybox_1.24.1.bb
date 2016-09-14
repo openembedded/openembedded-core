@@ -49,8 +49,10 @@ SRC_URI = "http://www.busybox.net/downloads/busybox-${PV}.tar.bz2;name=tarball \
            file://CVE-2016-2147_2.patch \
            file://ip_fix_problem_on_mips64_n64_big_endian_musl_systems.patch \
            file://makefile-fix-backport.patch \
-           file://parallel-make-fix.patch \
            file://0001-sed-fix-sed-n-flushes-pattern-space-terminates-early.patch \
+           file://busybox-kbuild-race-fix-commit-d8e61bb.patch \
+           file://commit-applet_tables-fix-commit-0dddbc1.patch \
+           file://makefile-libbb-race.patch \
 "
 SRC_URI_append_libc-musl = " file://musl.cfg "
 
