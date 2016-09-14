@@ -21,8 +21,6 @@ SRC_URI[sha256sum] = "28ee98ec40427d41a45673847db7a905b59ce9243bb866eaf59dce0f58
 
 UPSTREAM_CHECK_REGEX = "cmake-(?P<pver>\d+(\.\d+)+)\.tar"
 
-inherit autotools
-
 # Ugly hack to work around undefined OE_QMAKE_PATH_EXTERNAL_HOST_BINS variable
 # and possibly missing qmake binary (qtbase-native can be removed from sysroot
 # e.g. in order to upgrade it, even when there is target qtbase)
@@ -44,11 +42,4 @@ do_configure_prepend() {
 	sed -i 's/^  find_package(Qt5Widgets REQUIRED)/#  find_package(Qt5Widgets REQUIRED)/g' ${S}/Tests/QtAutoUicInterface/CMakeLists.txt
 	sed -i 's/^  find_package(Qt5Widgets REQUIRED)/#  find_package(Qt5Widgets REQUIRED)/g' ${S}/Tests/QtAutogen/CMakeLists.txt
 	sed -i 's/^  find_package(Qt5Core REQUIRED)/#  find_package(Qt5Core REQUIRED)/g' ${S}/Tests/QtAutogen/autorcc_depends/CMakeLists.txt
-}
-
-# Extra flags to pass to cmake invoked by bootstrap
-CMAKE_EXTRACONF = ""
-
-do_configure () {
-	${S}/configure --prefix=${prefix} -- ${CMAKE_EXTRACONF}
 }
