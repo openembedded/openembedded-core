@@ -152,13 +152,12 @@ class oeSDKTest(oeTest):
 
     @classmethod
     def hasHostPackage(self, pkg):
-
         if re.search(pkg, oeTest.tc.hostpkgmanifest):
             return True
         return False
 
     def _run(self, cmd):
-        return subprocess.check_output(". %s > /dev/null; %s;" % (self.tc.sdkenv, cmd), shell=True).decode("utf-8")
+        return subprocess.check_output(". %s > /dev/null; %s;" % (self.tc.sdkenv, cmd), shell=True, stderr=subprocess.STDOUT).decode("utf-8")
 
 class oeSDKExtTest(oeSDKTest):
     def _run(self, cmd):
@@ -170,7 +169,7 @@ class oeSDKExtTest(oeSDKTest):
         env['PATH'] = avoid_paths_in_environ(paths_to_avoid)
 
         return subprocess.check_output(". %s > /dev/null;"\
-            " %s;" % (self.tc.sdkenv, cmd), shell=True, env=env).decode("utf-8")
+            " %s;" % (self.tc.sdkenv, cmd), stderr=subprocess.STDOUT, shell=True, env=env).decode("utf-8")
 
 def getmodule(pos=2):
     # stack returns a list of tuples containg frame information
