@@ -17,7 +17,7 @@ class BuildSystem(object):
     def __init__(self, context, d):
         self.d = d
         self.context = context
-        self.layerdirs = d.getVar('BBLAYERS', True).split()
+        self.layerdirs = [os.path.abspath(pth) for pth in d.getVar('BBLAYERS', True).split()]
         self.layers_exclude = (d.getVar('SDK_LAYERS_EXCLUDE', True) or "").split()
 
     def copy_bitbake_and_layers(self, destdir, workspace_name=None):
@@ -26,7 +26,7 @@ class BuildSystem(object):
         bb.utils.mkdirhier(destdir)
         layers = list(self.layerdirs)
 
-        corebase = self.d.getVar('COREBASE', True)
+        corebase = os.path.abspath(self.d.getVar('COREBASE', True))
         layers.append(corebase)
 
         # Exclude layers
