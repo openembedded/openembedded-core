@@ -690,7 +690,7 @@ def package_qa_check_symlink_to_sysroot(path, name, d, elf, messages):
 do_populate_lic[postfuncs] += "populate_lic_qa_checksum"
 python populate_lic_qa_checksum() {
     """
-    Check for changes in the license files 
+    Check for changes in the license files.
     """
     import tempfile
     sane = True
@@ -703,8 +703,7 @@ python populate_lic_qa_checksum() {
         return
 
     if not lic_files and d.getVar('SRC_URI', True):
-        package_qa_handle_error("license-checksum", pn + ": Recipe file fetches files and does not have license file information (LIC_FILES_CHKSUM)", d)
-        return
+        sane = package_qa_handle_error("license-checksum", pn + ": Recipe file fetches files and does not have license file information (LIC_FILES_CHKSUM)", d)
 
     srcdir = d.getVar('S', True)
 
@@ -712,7 +711,7 @@ python populate_lic_qa_checksum() {
         try:
             (type, host, path, user, pswd, parm) = bb.fetch.decodeurl(url)
         except bb.fetch.MalformedUrl:
-            package_qa_handle_error("license-checksum", pn + ": LIC_FILES_CHKSUM contains an invalid URL: " + url, d)
+            sane = package_qa_handle_error("license-checksum", pn + ": LIC_FILES_CHKSUM contains an invalid URL: " + url, d)
             continue
         srclicfile = os.path.join(srcdir, path)
         if not os.path.isfile(srclicfile):
@@ -736,7 +735,7 @@ python populate_lic_qa_checksum() {
             linesout = 0
             for line in fi:
                 lineno += 1
-                if (lineno >= beginline): 
+                if (lineno >= beginline):
                     if ((lineno <= endline) or not endline):
                         fo.write(line)
                         linesout += 1
@@ -768,7 +767,10 @@ python populate_lic_qa_checksum() {
             else:
                 msg = pn + ": LIC_FILES_CHKSUM is not specified for " +  url
                 msg = msg + "\n" + pn + ": The md5 checksum is " + md5chksum
-            package_qa_handle_error("license-checksum", msg, d)
+            sane = package_qa_handle_error("license-checksum", msg, d)
+
+    if not sane:
+        bb.fatal("Fatal QA errors found, failing task.")
 }
 
 def package_qa_check_staged(path,d):
