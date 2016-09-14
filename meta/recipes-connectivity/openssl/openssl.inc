@@ -114,7 +114,10 @@ do_configure () {
 		target=debian-mipsel
 		;;
         linux-*-mips64 | linux-mips64)
-               target=linux-mips
+               target=debian-mips64
+                ;;
+        linux-*-mips64el | linux-mips64el)
+               target=debian-mips64el
                 ;;
 	linux-microblaze*|linux-nios2*)
 		target=linux-generic32
