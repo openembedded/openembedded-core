@@ -51,14 +51,6 @@ perform_groupmems () {
 	local groupname=`echo "$opts" | awk '{ for (i = 1; i < NF; i++) if ($i == "-g" || $i == "--group") print $(i+1) }'`
 	local username=`echo "$opts" | awk '{ for (i = 1; i < NF; i++) if ($i == "-a" || $i == "--add") print $(i+1) }'`
 	bbnote "${PN}: Running groupmems command with group $groupname and user $username"
-	# groupmems fails if /etc/gshadow does not exist
-	local gshadow=""
-	if [ -f $rootdir${sysconfdir}/gshadow ]; then
-		gshadow="yes"
-	else
-		gshadow="no"
-		touch $rootdir${sysconfdir}/gshadow
-	fi
 	local mem_exists="`grep "^$groupname:[^:]*:[^:]*:\([^,]*,\)*$username\(,[^,]*\)*" $rootdir/etc/group || true`"
 	if test "x$mem_exists" = "x"; then
 		eval flock -x $rootdir${sysconfdir} -c \"$PSEUDO groupmems \$opts\" || true
@@ -68,10 +60,6 @@ perform_groupmems () {
 		fi
 	else
 		bbnote "${PN}: group $groupname already contains $username, not re-adding it"
-	fi
-	if test "x$gshadow" = "xno"; then
-		rm -f $rootdir${sysconfdir}/gshadow
-		rm -f $rootdir${sysconfdir}/gshadow-
 	fi
 }
 
