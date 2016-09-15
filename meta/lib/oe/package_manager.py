@@ -839,10 +839,10 @@ class RpmPM(PackageManager):
                     new_pkg = self._search_pkg_name_in_feeds(subst, feed_archs)
                     if not new_pkg:
                         # Failed to translate, package not found!
-                        err_msg = '%s not found in the %s feeds (%s).\n' % \
+                        err_msg = '%s not found in the %s feeds (%s).' % \
                                   (pkg, mlib, " ".join(feed_archs))
                         if not attempt_only:
-                            err_msg += " ".join(self.fullpkglist)
+                            bb.error("List of available packages: " + " ".join(self.fullpkglist))
                             bb.fatal(err_msg)
                         bb.warn(err_msg)
                     else:
@@ -856,10 +856,10 @@ class RpmPM(PackageManager):
                 default_archs = self.ml_prefix_list['default']
                 new_pkg = self._search_pkg_name_in_feeds(pkg, default_archs)
                 if not new_pkg:
-                    err_msg = '%s not found in the base feeds (%s).\n' % \
+                    err_msg = '%s not found in the feeds (%s).' % \
                               (pkg, ' '.join(default_archs))
                     if not attempt_only:
-                        err_msg += " ".join(self.fullpkglist)
+                        bb.error("List of available packages: " + " ".join(self.fullpkglist))
                         bb.fatal(err_msg)
                     bb.warn(err_msg)
                 else:
