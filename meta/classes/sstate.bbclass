@@ -175,6 +175,8 @@ def sstate_install(ss, d):
     if os.access(manifest, os.R_OK):
         bb.fatal("Package already staged (%s)?!" % manifest)
 
+    d.setVar("SSTATE_INST_POSTRM", manifest + ".postrm")
+
     locks = []
     for lock in ss['lockfiles-shared']:
         locks.append(bb.utils.lockfile(lock, True))
@@ -407,6 +409,13 @@ def sstate_clean_manifest(manifest, d):
                 oe.path.remove(entry)
         except OSError:
             pass
+
+    postrm = manifest + ".postrm"
+    if os.path.exists(manifest + ".postrm"):
+        import subprocess
+        os.chmod(postrm, 0o755)
+        subprocess.call(postrm, shell=True)
+        oe.path.remove(postrm)
 
     oe.path.remove(manifest)
 
@@ -1012,6 +1021,8 @@ python sstate_eventhandler2() {
         for r in toremove:
             (stamp, manifest, workdir) = r.split()
             for m in glob.glob(manifest + ".*"):
+                if m.endswith(".postrm"):
+                    continue
                 sstate_clean_manifest(m, d)
             bb.utils.remove(stamp + "*")
             if removeworkdir:
