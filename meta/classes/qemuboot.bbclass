@@ -72,6 +72,7 @@ python write_qemuboot_conf() {
     kernel = os.readlink(kernel_link)
     cf.set('config_bsp', 'QB_DEFAULT_KERNEL', kernel)
 
+    bb.utils.mkdirhier(os.path.dirname(qemuboot))
     with open(qemuboot, 'w') as f:
         cf.write(f)
 
