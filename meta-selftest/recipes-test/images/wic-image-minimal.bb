@@ -7,7 +7,7 @@ IMAGE_INSTALL = "packagegroup-core-boot ${ROOTFS_PKGMANAGE_BOOTSTRAP}"
 IMAGE_FSTYPES = "wic"
 RM_OLD_IMAGE = "1"
 
-DEPENDS = "syslinux syslinux-native parted-native dosfstools-native mtools-native gptfdisk-native"
+DEPENDS = "syslinux syslinux-native dosfstools-native mtools-native gptfdisk-native"
 
 LIC_FILES_CHKSUM = "file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
 
