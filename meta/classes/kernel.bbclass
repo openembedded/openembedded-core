@@ -327,6 +327,36 @@ kernel_do_install() {
 }
 do_install[prefuncs] += "package_get_auto_pr"
 
+# Must be ran no earlier than after do_kernel_checkout or else Makefile won't be in ${S}/Makefile
+do_kernel_version_sanity_check() {
+	# The Makefile determines the kernel version shown at runtime
+	# Don't use KERNEL_VERSION because the headers it grabs the version from aren't generated until do_compile
+	VERSION=$(grep "^VERSION =" ${S}/Makefile | sed s/.*=\ *//)
+	PATCHLEVEL=$(grep "^PATCHLEVEL =" ${S}/Makefile | sed s/.*=\ *//)
+	SUBLEVEL=$(grep "^SUBLEVEL =" ${S}/Makefile | sed s/.*=\ *//)
+	EXTRAVERSION=$(grep "^EXTRAVERSION =" ${S}/Makefile | sed s/.*=\ *//)
+
+	# Build a string for regex and a plain version string
+	reg="^${VERSION}\.${PATCHLEVEL}"
+	vers="${VERSION}.${PATCHLEVEL}"
+	if [ -n "${SUBLEVEL}" ]; then
+		# Ignoring a SUBLEVEL of zero is fine
+		if [ "${SUBLEVEL}" = "0" ]; then
+			reg="${reg}(\.${SUBLEVEL})?"
+		else
+			reg="${reg}\.${SUBLEVEL}"
+			vers="${vers}.${SUBLEVEL}"
+		fi
+	fi
+	vers="${vers}${EXTRAVERSION}"
+	reg="${reg}${EXTRAVERSION}"
+
+	if [ -z `echo ${PV} | grep -E "${reg}"` ]; then
+		bbfatal "Package Version (${PV}) does not match of kernel being built (${vers}). Please update the PV variable to match the kernel source."
+	fi
+	exit 0
+}
+
 addtask shared_workdir after do_compile before do_compile_kernelmodules
 addtask shared_workdir_setscene
 
