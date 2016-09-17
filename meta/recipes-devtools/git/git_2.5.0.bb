@@ -16,4 +16,9 @@ SRC_URI += "\
     file://0010-CVE-2015-7545-3.patch \
     file://0011-CVE-2015-7545-4.patch \
     file://0012-CVE-2015-7545-5.patch \
+    file://CVE-2016-2315_p1.patch \
+    file://CVE-2016-2315_p2.patch \
+    file://CVE-2016-2315_p3.patch \
+    file://CVE-2016-2315_p4.patch \
+    file://CVE-2016-2315_2324.patch \
     "
