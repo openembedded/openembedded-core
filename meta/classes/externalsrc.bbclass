@@ -29,6 +29,23 @@ EXTERNALSRC_SYMLINKS ?= "oe-workdir:${WORKDIR} oe-logs:${T}"
 
 python () {
     externalsrc = d.getVar('EXTERNALSRC', True)
+
+    # If this is the base recipe and EXTERNALSRC is set for it or any of its
+    # derivatives, then enable BB_DONT_CACHE to force the recipe to always be
+    # re-parsed so that the file-checksums function for do_compile is run every
+    # time.
+    bpn = d.getVar('BPN', True)
+    if bpn == d.getVar('PN', True):
+        classextend = (d.getVar('BBCLASSEXTEND', True) or '').split()
+        if (externalsrc or
+                ('native' in classextend and
+                 d.getVar('EXTERNALSRC_pn-%s-native' % bpn, True)) or
+                ('nativesdk' in classextend and
+                 d.getVar('EXTERNALSRC_pn-nativesdk-%s' % bpn, True)) or
+                ('cross' in classextend and
+                 d.getVar('EXTERNALSRC_pn-%s-cross' % bpn, True))):
+            d.setVar('BB_DONT_CACHE', '1')
+
     if externalsrc:
         d.setVar('S', externalsrc)
         externalsrcbuild = d.getVar('EXTERNALSRC_BUILD', True)
@@ -85,9 +102,6 @@ python () {
         d.prependVarFlag('do_compile', 'prefuncs', "externalsrc_compile_prefunc ")
         d.prependVarFlag('do_configure', 'prefuncs', "externalsrc_configure_prefunc ")
 
-        # Force the recipe to be always re-parsed so that the file_checksums
-        # function is run every time
-        d.setVar('BB_DONT_CACHE', '1')
         d.setVarFlag('do_compile', 'file-checksums', '${@srctree_hash_files(d)}')
 
         # We don't want the workdir to go away
