@@ -872,7 +872,7 @@ def crunch_license(licfile):
 
     # Note: these are carefully constructed!
     license_title_re = re.compile('^\(?(#+ *)?(The )?.{1,10} [Ll]icen[sc]e( \(.{1,10}\))?\)?:?$')
-    license_statement_re = re.compile('^This (project|software) is( free software)? released under the .{1,10} [Ll]icen[sc]e:?$')
+    license_statement_re = re.compile('^(This (project|software) is( free software)? (released|licen[sc]ed)|(Released|Licen[cs]ed)) under the .{1,10} [Ll]icen[sc]e:?$')
     copyright_re = re.compile('^(#+)? *Copyright .*$')
 
     crunched_md5sums = {}
