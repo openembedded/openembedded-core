@@ -137,6 +137,16 @@ def check_libgl(qemu_bin):
             logger.error("Fedora package names are: mesa-libGL-devel mesa-libGLU-devel.")
             raise Exception('%s requires libGLU, but not found' % qemu_bin)
 
+def get_first_file(cmds):
+    """Return first file found in wildcard cmds"""
+    for cmd in cmds:
+        all_files = glob.glob(cmd)
+        if all_files:
+            for f in all_files:
+                if not os.path.isdir(f):
+                    return f
+    return ''
+
 class BaseConfig(object):
     def __init__(self):
         # Vars can be merged with .qemuboot.conf, use a dict to manage them.
@@ -157,6 +167,7 @@ class BaseConfig(object):
         self.kernel = ''
         self.kernel_cmdline = ''
         self.kernel_cmdline_script = ''
+        self.dtb = ''
         self.fstype = ''
         self.kvm_enabled = False
         self.vhost_enabled = False
@@ -446,17 +457,12 @@ class BaseConfig(object):
                     self.rootfs, self.get('MACHINE'),
                     self.fstype)
         elif not self.rootfs:
-            cmd = '%s/%s*.%s' % (self.get('DEPLOY_DIR_IMAGE'), self.get('IMAGE_NAME'), self.fstype)
-            all_files = glob.glob(cmd)
-            if all_files:
-                self.rootfs = all_files[0]
-            else:
-                cmd = '%s/%s*.%s' % (self.get('DEPLOY_DIR_IMAGE'), self.get('IMAGE_LINK_NAME'), self.fstype)
-                all_files = glob.glob(cmd)
-                if all_files:
-                    self.rootfs = all_files[0]
-                else:
-                    raise Exception("Failed to find rootfs: %s" % cmd)
+            cmd_name = '%s/%s*.%s' % (self.get('DEPLOY_DIR_IMAGE'), self.get('IMAGE_NAME'), self.fstype)
+            cmd_link = '%s/%s*.%s' % (self.get('DEPLOY_DIR_IMAGE'), self.get('IMAGE_LINK_NAME'), self.fstype)
+            cmds = (cmd_name, cmd_link)
+            self.rootfs = get_first_file(cmds)
+            if not self.rootfs:
+                raise Exception("Failed to find rootfs: %s or %s" % cmds)
 
         if not os.path.exists(self.rootfs):
             raise Exception("Can't find rootfs: %s" % self.rootfs)
@@ -466,28 +472,29 @@ class BaseConfig(object):
         # The vm image doesn't need a kernel
         if self.fstype in self.vmtypes:
             return
-        kernel = self.kernel
-        deploy_dir_image = self.get('DEPLOY_DIR_IMAGE')
-        if not kernel:
-            kernel = "%s/%s" % (deploy_dir_image, self.get('QB_DEFAULT_KERNEL'))
 
-        if os.path.exists(kernel):
-            self.kernel = kernel
-        else:
-            kernel = "%s/%s" % (deploy_dir_image, self.get('KERNEL_IMAGETYPE'))
-            if kernel != deploy_dir_image and os.path.exists(kernel):
-                self.kernel = kernel
-            else:
-                raise Exception("KERNEL %s not found" % kernel)
+        deploy_dir_image = self.get('DEPLOY_DIR_IMAGE')
+        if not self.kernel:
+            kernel_match_name = "%s/%s" % (deploy_dir_image, self.get('QB_DEFAULT_KERNEL'))
+            kernel_match_link = "%s/%s" % (deploy_dir_image, self.get('KERNEL_IMAGETYPE'))
+            kernel_startswith = "%s/%s*" % (deploy_dir_image, self.get('KERNEL_IMAGETYPE'))
+            cmds = (kernel_match_name, kernel_match_link, kernel_startswith)
+            self.kernel = get_first_file(cmds)
+            if not self.kernel:
+                raise Exception('KERNEL not found: %s, %s or %s' % cmds)
+
+        if not os.path.exists(self.kernel):
+            raise Exception("KERNEL %s not found" % self.kernel)
 
         dtb = self.get('QB_DTB')
         if dtb:
-            dtb = "%s/%s" % (self.get('DEPLOY_DIR_IMAGE'), dtb)
-            if os.path.exists(dtb):
-                self.set('QB_DTB', '-dtb %s' % dtb)
-            else:
-                raise Exception("DTB %s not found" % dtb)
-
+            cmd_match = "%s/%s" % (deploy_dir_image, dtb)
+            cmd_startswith = "%s/%s*" % (deploy_dir_image, dtb)
+            cmd_wild = "%s/*.dtb" % deploy_dir_image
+            cmds = (cmd_match, cmd_startswith, cmd_wild)
+            self.dtb = get_first_file(cmds)
+            if not os.path.exists(self.dtb):
+                raise Exception('DTB not found: %s, %s or %s' % cmds)
 
     def check_biosdir(self):
         """Check custombiosdir"""
@@ -643,6 +650,8 @@ class BaseConfig(object):
         logger.info('Continuing with the following parameters:\n')
         if not self.fstype in self.vmtypes:
             print('KERNEL: [%s]' % self.kernel)
+            if self.dtb:
+                print('DTB: [%s]' % self.dtb)
         print('MACHINE: [%s]' % self.get('MACHINE'))
         print('FSTYPE: [%s]' % self.fstype)
         if self.fstype  == 'nfs':
@@ -687,7 +696,7 @@ class BaseConfig(object):
                 elif os.path.exists(src2):
                     src = src2
                 if not src:
-                    raise Exception("No NFS_DIR is set but can't find %s or %s to extract" % (src1, src2))
+                    raise Exception("No NFS_DIR is set, and can't find %s or %s to extract" % (src1, src2))
                 logger.info('NFS_DIR not found, extracting %s to %s' % (src, dest))
                 cmd = 'runqemu-extract-sdk %s %s' % (src, dest)
                 logger.info('Running %s...' % cmd)
@@ -845,7 +854,7 @@ class BaseConfig(object):
 
         check_libgl(qemu_bin)
 
-        self.qemu_opt = "%s %s %s %s %s %s" % (qemu_bin, self.get('NETWORK_CMD'), self.qemu_opt_script, self.get('ROOTFS_OPTIONS'), self.get('QB_DTB'), self.get('QB_OPT_APPEND'))
+        self.qemu_opt = "%s %s %s %s %s" % (qemu_bin, self.get('NETWORK_CMD'), self.qemu_opt_script, self.get('ROOTFS_OPTIONS'), self.get('QB_OPT_APPEND'))
 
         # Enable virtio RNG else we can run out of entropy in guests
         self.qemu_opt += " -device virtio-rng-pci"
@@ -877,6 +886,8 @@ class BaseConfig(object):
     def start_qemu(self):
         if self.kernel:
             kernel_opts = "-kernel %s -append '%s %s %s'" % (self.kernel, self.kernel_cmdline, self.kernel_cmdline_script, self.get('QB_KERNEL_CMDLINE_APPEND'))
+            if self.dtb:
+                kernel_opts += " -dtb %s" % self.dtb
         else:
             kernel_opts = ""
         cmd = "%s %s" % (self.qemu_opt, kernel_opts)
