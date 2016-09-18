@@ -85,10 +85,6 @@ def add(args, config, basepath, workspace):
         if reason:
             raise DevtoolError(reason)
 
-        # FIXME this ought to be in validate_pn but we're using that in other contexts
-        if '/' in args.recipename:
-            raise DevtoolError('"/" is not a valid character in recipe names')
-
     if args.srctree:
         srctree = os.path.abspath(args.srctree)
         srctreeparent = None
