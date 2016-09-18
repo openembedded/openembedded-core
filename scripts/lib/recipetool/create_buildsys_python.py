@@ -61,8 +61,6 @@ class PythonRecipeHandler(RecipeHandler):
     }
     # PN/PV are already set by recipetool core & desc can be extremely long
     excluded_fields = [
-        'Name',
-        'Version',
         'Description',
     ]
     setup_parse_map = {
@@ -237,7 +235,6 @@ class PythonRecipeHandler(RecipeHandler):
 
 
         # Map PKG-INFO & setup.py fields to bitbake variables
-        bbinfo = {}
         for field, values in info.items():
             if field in self.excluded_fields:
                 continue
@@ -251,37 +248,8 @@ class PythonRecipeHandler(RecipeHandler):
                 value = ' '.join(str(v) for v in values if v)
 
             bbvar = self.bbvar_map[field]
-            if bbvar not in bbinfo and value:
-                bbinfo[bbvar] = value
-
-        comment_lic_line = None
-        for pos, line in enumerate(list(lines_before)):
-            if line.startswith('#') and 'LICENSE' in line:
-                comment_lic_line = pos
-            elif line.startswith('LICENSE =') and 'LICENSE' in bbinfo:
-                if line in ('LICENSE = "Unknown"', 'LICENSE = "CLOSED"'):
-                    lines_before[pos] = 'LICENSE = "{}"'.format(bbinfo['LICENSE'])
-                    if line == 'LICENSE = "CLOSED"' and comment_lic_line:
-                        lines_before[comment_lic_line:pos] = [
-                            '# WARNING: the following LICENSE value is a best guess - it is your',
-                            '# responsibility to verify that the value is complete and correct.'
-                        ]
-                del bbinfo['LICENSE']
-
-        src_uri_line = None
-        for pos, line in enumerate(lines_before):
-            if line.startswith('SRC_URI ='):
-                src_uri_line = pos
-
-        if bbinfo:
-            mdinfo = ['']
-            for k in sorted(bbinfo):
-                v = bbinfo[k]
-                mdinfo.append('{} = "{}"'.format(k, v))
-            if src_uri_line:
-                lines_before[src_uri_line-1:src_uri_line-1] = mdinfo
-            else:
-                lines_before.extend(mdinfo)
+            if bbvar not in extravalues and value:
+                extravalues[bbvar] = value
 
         mapped_deps, unmapped_deps = self.scan_setup_python_deps(srctree, setup_info, setup_non_literals)
 
