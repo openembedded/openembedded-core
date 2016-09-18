@@ -1,0 +1,108 @@
+From 0e6d6ca963f13e0c4d239cd9e7aea62d176da8eb Mon Sep 17 00:00:00 2001
+From: Nikolay Merinov <kim.roader@gmail.com>
+Date: Fri, 17 Apr 2015 23:32:30 +0500
+Subject: [PATCH] Fix timestamping and continue behaviour with ftp protocol.
+
+* src/ftp.c (ftp_loop_internal): Add option `force_full_retrieve' that force to
+retrieve full file.
+(ftp_retrieve_list): Pass `true' as `force_full_retrieve' option to
+`ftp_loop_internal' if we want to download file with newer timestamp than local
+copy.
+
+Upstream-Status: Backport
+In support of CVE-2016-4971
+Signed-off-by: Armin Kuster <akuster@mvista.com>
+
+---
+ src/ftp.c | 21 +++++++++++++--------
+ 1 file changed, 13 insertions(+), 8 deletions(-)
+
+Index: wget-1.16.3/src/ftp.c
+===================================================================
+--- wget-1.16.3.orig/src/ftp.c
++++ wget-1.16.3/src/ftp.c
+@@ -1540,7 +1540,8 @@ Error in server response, closing contro
+    This loop either gets commands from con, or (if ON_YOUR_OWN is
+    set), makes them up to retrieve the file given by the URL.  */
+ static uerr_t
+-ftp_loop_internal (struct url *u, struct fileinfo *f, ccon *con, char **local_file)
++ftp_loop_internal (struct url *u, struct fileinfo *f, ccon *con, char **local_file,
++                   bool force_full_retrieve)
+ {
+   int count, orig_lp;
+   wgint restval, len = 0, qtyread = 0;
+@@ -1642,6 +1643,8 @@ ftp_loop_internal (struct url *u, struct
+       /* Decide whether or not to restart.  */
+       if (con->cmd & DO_LIST)
+         restval = 0;
++      else if (force_full_retrieve)
++        restval = 0;
+       else if (opt.start_pos >= 0)
+         restval = opt.start_pos;
+       else if (opt.always_rest
+@@ -1856,7 +1859,7 @@ ftp_get_listing (struct url *u, ccon *co
+ 
+   con->target = xstrdup (lf);
+   xfree (lf);
+-  err = ftp_loop_internal (u, NULL, con, NULL);
++  err = ftp_loop_internal (u, NULL, con, NULL, false);
+   lf = xstrdup (con->target);
+   xfree (con->target);
+   con->target = old_target;
+@@ -1901,6 +1904,7 @@ ftp_retrieve_list (struct url *u, struct
+   time_t tml;
+   bool dlthis; /* Download this (file). */
+   const char *actual_target = NULL;
++  bool force_full_retrieve = false;
+ 
+   /* Increase the depth.  */
+   ++depth;
+@@ -1980,9 +1984,10 @@ ftp_retrieve_list (struct url *u, struct
+ Remote file no newer than local file %s -- not retrieving.\n"), quote (con->target));
+                   dlthis = false;
+                 }
+-              else if (eq_size)
++              else if (f->tstamp > tml)
+                 {
+-                  /* Remote file is newer or sizes cannot be matched */
++                  /* Remote file is newer */
++                  force_full_retrieve = true;
+                   logprintf (LOG_VERBOSE, _("\
+ Remote file is newer than local file %s -- retrieving.\n\n"),
+                              quote (con->target));
+@@ -2051,7 +2056,7 @@ Already have correct symlink %s -> %s\n\
+           else                /* opt.retr_symlinks */
+             {
+               if (dlthis)
+-                err = ftp_loop_internal (u, f, con, NULL);
++                err = ftp_loop_internal (u, f, con, NULL, force_full_retrieve);
+             } /* opt.retr_symlinks */
+           break;
+         case FT_DIRECTORY:
+@@ -2062,7 +2067,7 @@ Already have correct symlink %s -> %s\n\
+         case FT_PLAINFILE:
+           /* Call the retrieve loop.  */
+           if (dlthis)
+-            err = ftp_loop_internal (u, f, con, NULL);
++            err = ftp_loop_internal (u, f, con, NULL, force_full_retrieve);
+           break;
+         case FT_UNKNOWN:
+           logprintf (LOG_NOTQUIET, _("%s: unknown/unsupported file type.\n"),
+@@ -2368,7 +2373,7 @@ ftp_retrieve_glob (struct url *u, ccon *
+         {
+           /* Let's try retrieving it anyway.  */
+           con->st |= ON_YOUR_OWN;
+-          res = ftp_loop_internal (u, NULL, con, NULL);
++          res = ftp_loop_internal (u, NULL, con, NULL, false);
+           return res;
+         }
+ 
+@@ -2468,7 +2473,7 @@ ftp_loop (struct url *u, char **local_fi
+                                    ispattern ? GLOB_GLOBALL : GLOB_GETONE);
+         }
+       else
+-        res = ftp_loop_internal (u, NULL, &con, local_file);
++        res = ftp_loop_internal (u, NULL, &con, local_file, false);
+     }
+   if (res == FTPOK)
+     res = RETROK;
