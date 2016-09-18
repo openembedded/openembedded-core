@@ -619,18 +619,25 @@ class BaseConfig(object):
                         self.set(nv, s.group(1))
             else:
                 # when we're invoked from a running bitbake instance we won't
-                # be able to call `bitbake -e` but should have OE_TMPDIR set in
-                # the environment and can guess paths based on it
+                # be able to call `bitbake -e`, then try:
+                # - get OE_TMPDIR from environment and guess paths based on it
+                # - get OECORE_NATIVE_SYSROOT from environment (for sdk)
                 tmpdir = os.environ.get('OE_TMPDIR', None)
+                oecore_native_sysroot = os.environ.get('OECORE_NATIVE_SYSROOT', None)
                 if tmpdir:
                     logger.info('Setting STAGING_DIR_NATIVE and STAGING_BINDIR_NATIVE relative to OE_TMPDIR (%s)' % tmpdir)
                     hostos, _, _, _, machine = os.uname()
                     buildsys = '%s-%s' % (machine, hostos.lower())
                     staging_dir_native = '%s/sysroots/%s' % (tmpdir, buildsys)
                     self.set('STAGING_DIR_NATIVE', staging_dir_native)
+                elif oecore_native_sysroot:
+                    logger.info('Setting STAGING_DIR_NATIVE to OECORE_NATIVE_SYSROOT (%s)' % oecore_native_sysroot)
+                    self.set('STAGING_DIR_NATIVE', oecore_native_sysroot)
+                if self.get('STAGING_DIR_NATIVE'):
                     # we have to assume that STAGING_BINDIR_NATIVE is at usr/bin
-                    staging_bindir_native = '%s/usr/bin' % staging_dir_native
-                    self.set('STAGING_BINDIR_NATIVE', staging_bindir_native)
+                    staging_bindir_native = '%s/usr/bin' % self.get('STAGING_DIR_NATIVE')
+                    logger.info('Setting STAGING_BINDIR_NATIVE to %s' % staging_bindir_native)
+                    self.set('STAGING_BINDIR_NATIVE', '%s/usr/bin' % self.get('STAGING_DIR_NATIVE'))
 
     def print_config(self):
         logger.info('Continuing with the following parameters:\n')
