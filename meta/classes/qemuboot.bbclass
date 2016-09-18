@@ -63,6 +63,14 @@ python write_qemuboot_conf() {
     cf.add_section('config_bsp')
     for k in build_vars + qb_vars:
         cf.set('config_bsp', k, '%s' % d.getVar(k, True))
+
+    # QB_DEFAULT_KERNEL's value of KERNEL_IMAGETYPE is the name of a symlink
+    # to the kernel file, which hinders relocatability of the qb conf.
+    # Read the link and replace it with the full filename of the target.
+    kernel_link = os.path.join(d.getVar('DEPLOY_DIR_IMAGE', True), d.getVar('QB_DEFAULT_KERNEL', True))
+    kernel = os.readlink(kernel_link)
+    cf.set('config_bsp', 'QB_DEFAULT_KERNEL', kernel)
+
     with open(qemuboot, 'w') as f:
         cf.write(f)
 
