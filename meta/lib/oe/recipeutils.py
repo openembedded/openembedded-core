@@ -449,8 +449,8 @@ def get_recipe_patched_files(d):
 def validate_pn(pn):
     """Perform validation on a recipe name (PN) for a new recipe."""
     reserved_names = ['forcevariable', 'append', 'prepend', 'remove']
-    if not re.match('[0-9a-z-.]+', pn):
-        return 'Recipe name "%s" is invalid: only characters 0-9, a-z, - and . are allowed' % pn
+    if not re.match('^[0-9a-z-.+]+$', pn):
+        return 'Recipe name "%s" is invalid: only characters 0-9, a-z, -, + and . are allowed' % pn
     elif pn in reserved_names:
         return 'Recipe name "%s" is invalid: is a reserved keyword' % pn
     elif pn.startswith('pn-'):
