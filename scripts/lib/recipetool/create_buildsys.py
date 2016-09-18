@@ -442,6 +442,7 @@ class AutotoolsRecipeHandler(RecipeHandler):
         ac_init_re = re.compile('AC_INIT\(\s*([^,]+),\s*([^,]+)[,)].*')
         am_init_re = re.compile('AM_INIT_AUTOMAKE\(\s*([^,]+),\s*([^,]+)[,)].*')
         define_re = re.compile('\s*(m4_)?define\(\s*([^,]+),\s*([^,]+)\)')
+        version_re = re.compile('([0-9.]+)')
 
         defines = {}
         def subst_defines(value):
@@ -488,6 +489,7 @@ class AutotoolsRecipeHandler(RecipeHandler):
             for handler in handlers:
                 if handler.process_macro(srctree, keyword, value, process_value, libdeps, pcdeps, deps, outlines, inherits, values):
                     return
+            logger.debug('Found keyword %s with value "%s"' % (keyword, value))
             if keyword == 'PKG_CHECK_MODULES':
                 res = pkg_re.search(value)
                 if res:
@@ -573,6 +575,17 @@ class AutotoolsRecipeHandler(RecipeHandler):
                 deps.append('swig-native')
             elif keyword == 'AX_PROG_XSLTPROC':
                 deps.append('libxslt-native')
+            elif keyword in ['AC_PYTHON_DEVEL', 'AX_PYTHON_DEVEL', 'AM_PATH_PYTHON']:
+                pythonclass = 'pythonnative'
+                res = version_re.search(value)
+                if res:
+                    if res.group(1).startswith('3'):
+                        pythonclass = 'python3native'
+                # Avoid replacing python3native with pythonnative
+                if not pythonclass in inherits and not 'python3native' in inherits:
+                    if 'pythonnative' in inherits:
+                        inherits.remove('pythonnative')
+                    inherits.append(pythonclass)
             elif keyword == 'AX_WITH_CURSES':
                 deps.append('ncurses')
             elif keyword == 'AX_PATH_BDB':
@@ -639,6 +652,9 @@ class AutotoolsRecipeHandler(RecipeHandler):
                     'AX_LIB_TAGLIB',
                     'AX_PKG_SWIG',
                     'AX_PROG_XSLTPROC',
+                    'AC_PYTHON_DEVEL',
+                    'AX_PYTHON_DEVEL',
+                    'AM_PATH_PYTHON',
                     'AX_WITH_CURSES',
                     'AX_PATH_BDB',
                     'AX_PATH_LIB_PCRE',
