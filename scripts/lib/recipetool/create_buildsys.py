@@ -571,7 +571,7 @@ class AutotoolsRecipeHandler(RecipeHandler):
                 deps.append('sqlite3')
             elif keyword == 'AX_LIB_TAGLIB':
                 deps.append('taglib')
-            elif keyword == 'AX_PKG_SWIG':
+            elif keyword in ['AX_PKG_SWIG', 'AC_PROG_SWIG']:
                 deps.append('swig-native')
             elif keyword == 'AX_PROG_XSLTPROC':
                 deps.append('libxslt-native')
@@ -651,6 +651,7 @@ class AutotoolsRecipeHandler(RecipeHandler):
                     'AX_LIB_SQLITE3',
                     'AX_LIB_TAGLIB',
                     'AX_PKG_SWIG',
+                    'AC_PROG_SWIG',
                     'AX_PROG_XSLTPROC',
                     'AC_PYTHON_DEVEL',
                     'AX_PYTHON_DEVEL',
