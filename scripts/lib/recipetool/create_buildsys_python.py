@@ -86,8 +86,11 @@ class PythonRecipeHandler(RecipeHandler):
     ]
     setuparg_multi_line_values = ['Description']
     replacements = [
+        ('License', r' +$', ''),
+        ('License', r'^ +', ''),
         ('License', r' ', '-'),
-        ('License', r'-License$', ''),
+        ('License', r'^GNU-', ''),
+        ('License', r'-[Ll]icen[cs]e(,?-[Vv]ersion)?', ''),
         ('License', r'^UNKNOWN$', ''),
 
         # Remove currently unhandled version numbers from these variables
@@ -216,6 +219,9 @@ class PythonRecipeHandler(RecipeHandler):
             else:
                 info = self.get_setup_args_info(setupscript)
 
+        # Grab the license value before applying replacements
+        license_str = info.get('License', '').strip()
+
         self.apply_info_replacements(info)
 
         if uses_setuptools:
@@ -223,16 +229,36 @@ class PythonRecipeHandler(RecipeHandler):
         else:
             classes.append('distutils')
 
+        if license_str:
+            for i, line in enumerate(lines_before):
+                if line.startswith('LICENSE = '):
+                    lines_before.insert(i, '# NOTE: License in setup.py/PKGINFO is: %s' % license_str)
+                    break
+
         if 'Classifier' in info:
+            existing_licenses = info.get('License', '')
             licenses = []
             for classifier in info['Classifier']:
                 if classifier in self.classifier_license_map:
                     license = self.classifier_license_map[classifier]
+                    if license == 'Apache' and 'Apache-2.0' in existing_licenses:
+                        license = 'Apache-2.0'
+                    elif license == 'GPL':
+                        if 'GPL-2.0' in existing_licenses or 'GPLv2' in existing_licenses:
+                            license = 'GPL-2.0'
+                        elif 'GPL-3.0' in existing_licenses or 'GPLv3' in existing_licenses:
+                            license = 'GPL-3.0'
+                    elif license == 'LGPL':
+                        if 'LGPL-2.1' in existing_licenses or 'LGPLv2.1' in existing_licenses:
+                            license = 'LGPL-2.1'
+                        elif 'LGPL-2.0' in existing_licenses or 'LGPLv2' in existing_licenses:
+                            license = 'LGPL-2.0'
+                        elif 'LGPL-3.0' in existing_licenses or 'LGPLv3' in existing_licenses:
+                            license = 'LGPL-3.0'
                     licenses.append(license)
 
             if licenses:
                 info['License'] = ' & '.join(licenses)
-
 
         # Map PKG-INFO & setup.py fields to bitbake variables
         for field, values in info.items():
