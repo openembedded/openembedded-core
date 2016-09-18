@@ -451,7 +451,12 @@ class BaseConfig(object):
             if all_files:
                 self.rootfs = all_files[0]
             else:
-                raise Exception("Failed to find rootfs: %s" % cmd)
+                cmd = '%s/%s*.%s' % (self.get('DEPLOY_DIR_IMAGE'), self.get('IMAGE_LINK_NAME'), self.fstype)
+                all_files = glob.glob(cmd)
+                if all_files:
+                    self.rootfs = all_files[0]
+                else:
+                    raise Exception("Failed to find rootfs: %s" % cmd)
 
         if not os.path.exists(self.rootfs):
             raise Exception("Can't find rootfs: %s" % self.rootfs)
@@ -462,13 +467,18 @@ class BaseConfig(object):
         if self.fstype in self.vmtypes:
             return
         kernel = self.kernel
+        deploy_dir_image = self.get('DEPLOY_DIR_IMAGE')
         if not kernel:
-            kernel = "%s/%s" % (self.get('DEPLOY_DIR_IMAGE'), self.get('QB_DEFAULT_KERNEL'))
+            kernel = "%s/%s" % (deploy_dir_image, self.get('QB_DEFAULT_KERNEL'))
 
         if os.path.exists(kernel):
             self.kernel = kernel
         else:
-            raise Exception("KERNEL %s not found" % kernel)
+            kernel = "%s/%s" % (deploy_dir_image, self.get('KERNEL_IMAGETYPE'))
+            if kernel != deploy_dir_image and os.path.exists(kernel):
+                self.kernel = kernel
+            else:
+                raise Exception("KERNEL %s not found" % kernel)
 
         dtb = self.get('QB_DTB')
         if dtb:
