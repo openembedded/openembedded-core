@@ -47,13 +47,13 @@ def add(args, config, basepath, workspace):
     # These are positional arguments, but because we're nice, allow
     # specifying e.g. source tree without name, or fetch URI without name or
     # source tree (if we can detect that that is what the user meant)
-    if '://' in args.recipename:
+    if scriptutils.is_src_url(args.recipename):
         if not args.fetchuri:
             if args.fetch:
                 raise DevtoolError('URI specified as positional argument as well as -f/--fetch')
             args.fetchuri = args.recipename
             args.recipename = ''
-    elif args.srctree and '://' in args.srctree:
+    elif scriptutils.is_src_url(args.srctree):
         if not args.fetchuri:
             if args.fetch:
                 raise DevtoolError('URI specified as positional argument as well as -f/--fetch')

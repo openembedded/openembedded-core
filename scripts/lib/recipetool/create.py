@@ -353,10 +353,13 @@ def reformat_git_uri(uri):
     '''Convert any http[s]://....git URI into git://...;protocol=http[s]'''
     checkuri = uri.split(';', 1)[0]
     if checkuri.endswith('.git') or '/git/' in checkuri or re.match('https?://github.com/[^/]+/[^/]+/?$', checkuri):
-        res = re.match('(https?)://([^;]+(\.git)?)(;.*)?$', uri)
+        res = re.match('(http|https|ssh)://([^;]+(\.git)?)(;.*)?$', uri)
         if res:
             # Need to switch the URI around so that the git fetcher is used
             return 'git://%s;protocol=%s%s' % (res.group(2), res.group(1), res.group(4) or '')
+        elif '@' in checkuri:
+            # Catch e.g. git@git.example.com:repo.git
+            return 'git://%s;protocol=ssh' % checkuri.replace(':', '/', 1)
     return uri
 
 def is_package(url):
@@ -386,7 +389,7 @@ def create_recipe(args):
     if os.path.isfile(source):
         source = 'file://%s' % os.path.abspath(source)
 
-    if '://' in source:
+    if scriptutils.is_src_url(source):
         # Fetch a URL
         fetchuri = reformat_git_uri(urldefrag(source)[0])
         if args.binary:
@@ -478,7 +481,7 @@ def create_recipe(args):
                 for line in stdout.splitlines():
                     splitline = line.split()
                     if len(splitline) > 1:
-                        if splitline[0] == 'origin' and '://' in splitline[1]:
+                        if splitline[0] == 'origin' and scriptutils.is_src_url(splitline[1]):
                             srcuri = reformat_git_uri(splitline[1])
                             srcsubdir = 'git'
                             break
