@@ -256,27 +256,49 @@ def validate_pv(pv):
 
 def determine_from_filename(srcfile):
     """Determine name and version from a filename"""
-    part = ''
-    if '.tar.' in srcfile:
-        namepart = srcfile.split('.tar.')[0].lower()
-    else:
-        namepart = os.path.splitext(srcfile)[0].lower()
     if is_package(srcfile):
         # Force getting the value from the package metadata
         return None, None
+
+    if '.tar.' in srcfile:
+        namepart = srcfile.split('.tar.')[0]
     else:
-        splitval = namepart.rsplit('_', 1)
+        namepart = os.path.splitext(srcfile)[0]
+    namepart = namepart.lower().replace('_', '-')
+    if namepart.endswith('.src'):
+        namepart = namepart[:-4]
+    if namepart.endswith('.orig'):
+        namepart = namepart[:-5]
+    splitval = namepart.split('-')
+    logger.debug('determine_from_filename: split name %s into: %s' % (srcfile, splitval))
+
+    ver_re = re.compile('^v?[0-9]')
+
+    pv = None
+    pn = None
     if len(splitval) == 1:
-        splitval = namepart.rsplit('-', 1)
-    pn = splitval[0].replace('_', '-')
-    if len(splitval) > 1:
-        if splitval[1][0] in '0123456789':
-            pv = splitval[1]
+        # Try to split the version out if there is no separator (or a .)
+        res = re.match('^([^0-9]+)([0-9.]+.*)$', namepart)
+        if res:
+            if len(res.group(1)) > 1 and len(res.group(2)) > 1:
+                pn = res.group(1).rstrip('.')
+                pv = res.group(2)
         else:
-            pn = '-'.join(splitval).replace('_', '-')
-            pv = None
+            pn = namepart
     else:
-        pv = None
+        if splitval[-1] in ['source', 'src']:
+            splitval.pop()
+        if len(splitval) > 2 and re.match('^(alpha|beta|stable|release|rc[0-9]|pre[0-9]|p[0-9]|[0-9]{8})', splitval[-1]) and ver_re.match(splitval[-2]):
+            pv = '-'.join(splitval[-2:])
+            if pv.endswith('-release'):
+                pv = pv[:-8]
+            splitval = splitval[:-2]
+        elif ver_re.match(splitval[-1]):
+            pv = splitval.pop()
+        pn = '-'.join(splitval)
+        if pv and pv.startswith('v'):
+            pv = pv[1:]
+    logger.debug('determine_from_filename: name = "%s" version = "%s"' % (pn, pv))
     return (pn, pv)
 
 def determine_from_url(srcuri):
