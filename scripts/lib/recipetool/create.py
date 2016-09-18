@@ -336,10 +336,16 @@ def supports_srcrev(uri):
     # odd interactions with the urldata cache which lead to errors
     localdata.setVar('SRCREV', '${AUTOREV}')
     bb.data.update_data(localdata)
-    fetcher = bb.fetch2.Fetch([uri], localdata)
-    urldata = fetcher.ud
-    for u in urldata:
-        if urldata[u].method.supports_srcrev():
+    try:
+        fetcher = bb.fetch2.Fetch([uri], localdata)
+        urldata = fetcher.ud
+        for u in urldata:
+            if urldata[u].method.supports_srcrev():
+                return True
+    except bb.fetch2.FetchError as e:
+        logger.debug('FetchError in supports_srcrev: %s' % str(e))
+        # Fall back to basic check
+        if uri.startswith(('git://', 'gitsm://')):
             return True
     return False
 
