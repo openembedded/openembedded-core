@@ -557,7 +557,8 @@ class BaseConfig(object):
             elif os.getenv('DEPLOY_DIR_IMAGE'):
                 deploy_dir_image = os.getenv('DEPLOY_DIR_IMAGE')
             else:
-                raise OEPathError("DEPLOY_DIR_IMAGE is NULL!")
+                logger.info("Can't find qemuboot conf file, DEPLOY_DIR_IMAGE is NULL!")
+                return
 
             if self.rootfs and not os.path.exists(self.rootfs):
                 # Lazy rootfs
@@ -573,6 +574,11 @@ class BaseConfig(object):
                 if qbs:
                     self.qemuboot = qbs.split()[0]
                     self.qbconfload = True
+
+        if not self.qemuboot:
+            # If we haven't found a .qemuboot.conf at this point it probably
+            # doesn't exist, continue without
+            return
 
         if not os.path.exists(self.qemuboot):
             raise Exception("Failed to find <image>.qemuboot.conf!")
