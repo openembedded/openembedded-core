@@ -205,7 +205,7 @@ class BaseConfig(object):
     def is_deploy_dir_image(self, p):
         if os.path.isdir(p):
             if not re.search('.qemuboot.conf$', '\n'.join(os.listdir(p)), re.M):
-                logger.info("Can't find required qemuboot.conf in %s" % p)
+                logger.info("Can't find required *.qemuboot.conf in %s" % p)
                 return False
             if not re.search('-image-', '\n'.join(os.listdir(p))):
                 logger.info("Can't find *-image-* in %s" % p)
