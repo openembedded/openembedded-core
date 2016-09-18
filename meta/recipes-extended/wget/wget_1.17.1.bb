@@ -1,5 +1,6 @@
 SRC_URI = "${GNU_MIRROR}/wget/wget-${PV}.tar.gz \
            file://0001-Unset-need_charset_alias-when-building-for-musl.patch \
+           file://CVE-2016-4971.patch \
           "
 
 SRC_URI[md5sum] = "a6a908c9ae0e6a4194c628974cc3f05a"
