@@ -48,8 +48,9 @@ python write_qemuboot_conf() {
     import configparser
 
     build_vars = ['MACHINE', 'TUNE_ARCH', 'DEPLOY_DIR_IMAGE', \
-                'IMAGE_NAME', 'IMAGE_LINK_NAME', 'STAGING_DIR_NATIVE', \
-                'STAGING_BINDIR_NATIVE', 'STAGING_DIR_HOST']
+                'KERNEL_IMAGETYPE', 'IMAGE_NAME', 'IMAGE_LINK_NAME', \
+                'STAGING_DIR_NATIVE', 'STAGING_BINDIR_NATIVE', \
+                'STAGING_DIR_HOST']
 
     # Vars from bsp
     qb_vars = []
