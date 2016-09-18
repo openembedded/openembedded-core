@@ -28,6 +28,16 @@ import shutil
 import glob
 import configparser
 
+class OEPathError(Exception):
+    """Custom Exception to give better guidance on missing binaries"""
+    def __init__(self, message):
+        self.message = "In order for this script to dynamically infer paths\n \
+kernels or filesystem images, you either need bitbake in your PATH\n \
+or to source oe-init-build-env before running this script.\n\n \
+Dynamic path inference can be avoided by passing a *.qemuboot.conf to\n \
+runqemu, i.e. `runqemu /path/to/my-image-name.qemuboot.conf`\n\n %s" % message
+
+
 def create_logger():
     logger = logging.getLogger('runqemu')
     logger.setLevel(logging.INFO)
@@ -537,7 +547,7 @@ class BaseConfig(object):
             elif os.getenv('DEPLOY_DIR_IMAGE'):
                 deploy_dir_image = os.getenv('DEPLOY_DIR_IMAGE')
             else:
-                raise Exception("DEPLOY_DIR_IMAGE is NULL!")
+                raise OEPathError("DEPLOY_DIR_IMAGE is NULL!")
 
             if self.rootfs and not os.path.exists(self.rootfs):
                 # Lazy rootfs
@@ -691,7 +701,7 @@ class BaseConfig(object):
         lockdir = "/tmp/qemu-tap-locks"
 
         if not (self.qemuifup and self.qemuifdown and ip):
-            raise Exception("runqemu-ifup, runqemu-ifdown or ip not found")
+            raise OEPathError("runqemu-ifup, runqemu-ifdown or ip not found")
 
         if not os.path.exists(lockdir):
             # There might be a race issue when multi runqemu processess are
@@ -808,7 +818,7 @@ class BaseConfig(object):
 
         qemu_bin = '%s/%s' % (self.get('STAGING_BINDIR_NATIVE'), qemu_system)
         if not os.access(qemu_bin, os.X_OK):
-            raise Exception("No QEMU binary '%s' could be found" % qemu_bin)
+            raise OEPathError("No QEMU binary '%s' could be found" % qemu_bin)
 
         check_libgl(qemu_bin)
 
@@ -923,6 +933,9 @@ def main():
 if __name__ == "__main__":
     try:
         ret = main()
+    except OEPathError as err:
+        ret = 1
+        logger.error(err.message)
     except Exception as esc:
         ret = 1
         import traceback
