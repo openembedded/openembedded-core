@@ -168,14 +168,14 @@ class BaseConfig(object):
 
     def acquire_lock(self):
         logger.info("Acquiring lockfile %s..." % self.lock)
-        lock_descriptor = open(self.lock, 'w')
         try:
-            fcntl.flock(lock_descriptor, fcntl.LOCK_EX|fcntl.LOCK_NB)
+            self.lock_descriptor = open(self.lock, 'w')
+            fcntl.flock(self.lock_descriptor, fcntl.LOCK_EX|fcntl.LOCK_NB)
         except Exception as e:
             logger.info("Acquiring lockfile %s failed: %s" % (self.lock, e))
-            lock_descriptor.close()
+            if self.lock_descriptor:
+                self.lock_descriptor.close()
             return False
-        self.lock_descriptor = lock_descriptor
         return True
 
     def release_lock(self):
