@@ -44,6 +44,10 @@ EXTRA_OECONF = "\
     ${@get_gcc_multiarch_setting(bb, d)} \
 "
 
+# Set this here since GCC configure won't auto-detect and enable
+# initfini-arry when cross compiling.
+EXTRA_OECONF_append = " --enable-initfini-array"
+
 export gcc_cv_collect2_libs = 'none required'
 # We need to set gcc_cv_collect2_libs else there is cross-compilation badness
 # in the config.log files (which might not get generated until do_compile
