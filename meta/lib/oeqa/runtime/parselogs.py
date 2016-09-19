@@ -68,6 +68,7 @@ qemux86_common = [
     'Getting VBE info block failed',
     'vbe_init() failed with -22',
     'uvesafb: mode switch failed',
+    'tsc: HPET/PMTIMER calibration failed',
 ] + common_errors
 
 ignore_errors = { 
