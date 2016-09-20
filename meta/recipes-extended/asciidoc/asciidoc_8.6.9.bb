@@ -20,3 +20,5 @@ export DESTDIR = "${D}"
 DEPENDS_class-native = "docbook-xml-dtd4-native"
 RDEPENDS_${PN} += "python" 
 BBCLASSEXTEND = "native"
+
+CLEANBROKEN = "1"
