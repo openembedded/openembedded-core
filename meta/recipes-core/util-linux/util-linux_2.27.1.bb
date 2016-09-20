@@ -20,6 +20,8 @@ SRC_URI += "file://util-linux-ng-2.16-mount_lock_path.patch \
             file://display_testname_for_subtest.patch \
             file://avoid_parallel_tests.patch \
             file://uuid-test-error-api.patch \
+            file://CVE-2016-5011.patch \
+            file://CVE-2016-5011_p2.patch \
 "
 SRC_URI[md5sum] = "3cd2698d1363a2c64091c2dadc974647"
 SRC_URI[sha256sum] = "0a818fcdede99aec43ffe6ca5b5388bff80d162f2f7bd4541dca94fecb87a290"
