@@ -32,7 +32,7 @@ deltask install
 deltask package
 deltask packagedata
 
-do_populate_sdk[stamp-extra-info] = ""
+do_populate_sdk[stamp-extra-info] = "${SDKMACHINE}"
 
 SDK_DEPENDS += "patchelf-native"
 
