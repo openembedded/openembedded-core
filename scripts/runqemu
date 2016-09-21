@@ -536,6 +536,7 @@ class BaseConfig(object):
 
     def check_and_set(self):
         """Check configs sanity and set when needed"""
+        self.validate_paths()
         check_tun()
         # Check audio
         if self.audio_enabled:
@@ -598,6 +599,8 @@ class BaseConfig(object):
             k_upper = k.upper()
             self.set(k_upper, v)
 
+    def validate_paths(self):
+        """Ensure all relevant path variables are set"""
         # When we're started with a *.qemuboot.conf arg assume that image
         # artefacts are relative to that file, rather than in whatever
         # directory DEPLOY_DIR_IMAGE in the conf file points to.
