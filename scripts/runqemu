@@ -846,8 +846,44 @@ class BaseConfig(object):
 
         self.set('ROOTFS_OPTIONS', self.rootfs_options)
 
+    def guess_qb_system(self):
+        """attempt to determine the appropriate qemu-system binary"""
+        mach = self.get('MACHINE')
+        if not mach:
+            search = '.*(qemux86-64|qemux86|qemuarm64|qemuarm|qemumips64|qemumips|qemuppc).*'
+            if self.rootfs:
+                match = re.match(search, self.rootfs)
+                if match:
+                    mach = match.group(1)
+            elif self.kernel:
+                match = re.match(search, self.kernel)
+                if match:
+                    mach = match.group(1)
+
+        if not mach:
+            return None
+
+        if mach == 'qemuarm':
+            qbsys = 'arm'
+        elif mach == 'qemuarm64':
+            qbsys = 'aarch64'
+        elif mach == 'qemux86':
+            qbsys = 'i386'
+        elif mach == 'qemux86-64':
+            qbsys = 'x86_64'
+        elif mach == 'qemuppc':
+            qbsys = 'ppc'
+        elif mach == 'qemumips':
+            qbsys = 'mips'
+        elif mach == 'qemumips64':
+            qbsys = 'mips64'
+
+        return 'qemu-system-%s' % qbsys
+
     def setup_final(self):
         qemu_system = self.get('QB_SYSTEM_NAME')
+        if not qemu_system:
+            qemu_system = self.guess_qb_system()
         if not qemu_system:
             raise Exception("Failed to boot, QB_SYSTEM_NAME is NULL!")
 
