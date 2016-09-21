@@ -43,7 +43,7 @@ inherit meta
 inherit populate_sdk
 inherit toolchain-scripts
 
-do_populate_sdk[stamp-extra-info] = ""
+do_populate_sdk[stamp-extra-info] = "${SDKMACHINE}"
 
 create_sdk_files_append () {
 	rm -f ${SDK_OUTPUT}/${SDKPATH}/site-config-*
