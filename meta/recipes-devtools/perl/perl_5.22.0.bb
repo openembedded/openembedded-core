@@ -36,6 +36,7 @@ SRC_URI += " \
 	file://debian/regen-skip.diff \
 	file://perl-fix-CVE-2016-2381.patch \
         file://perl-fix-CVE-2016-6185.patch \
+        file://perl-fix-CVE-2015-8607.patch \
 "
 
 SRC_URI += " \
