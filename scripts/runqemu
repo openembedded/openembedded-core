@@ -306,10 +306,15 @@ class BaseConfig(object):
         # FIXME: testimage.bbclass exports these two variables into env,
         # are there other scenarios in which we need to support being
         # invoked by bitbake?
-        deploy = os.environ.get('DEPLOY_DIR_IMAGE', None)
-        bbchild = deploy and os.environ.get('OE_TMPDIR', None)
+        deploy = os.environ.get('DEPLOY_DIR_IMAGE')
+        bbchild = deploy and os.environ.get('OE_TMPDIR')
         if bbchild:
             self.set_machine_deploy_dir(arg, deploy)
+            return
+        # also check whether we're running under a sourced toolchain
+        # environment file
+        if os.environ.get('OECORE_NATIVE_SYSROOT'):
+            self.set("MACHINE", arg)
             return
 
         cmd = 'MACHINE=%s bitbake -e' % arg
