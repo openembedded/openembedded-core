@@ -79,6 +79,7 @@ EXTRA_OEMAKE = '\
     ARCH=${ARCH} \
     CC="${CC}" \
     AR="${AR}" \
+    LD="${LD}" \
     EXTRA_CFLAGS="-ldw" \
     perfexecdir=${libexecdir} \
     NO_GTK2=1 ${TUI_DEFINES} NO_DWARF=1 ${LIBUNWIND_DEFINES} \
@@ -97,7 +98,6 @@ EXTRA_OEMAKE += "\
     'mandir=${@os.path.relpath(mandir, prefix)}' \
     'infodir=${@os.path.relpath(infodir, prefix)}' \
 "
-
 
 do_compile() {
 	# Linux kernel build system is expected to do the right thing
@@ -174,6 +174,7 @@ do_configure_prepend () {
     if [ -e "${S}/tools/lib/api/Makefile" ]; then
         sed -i 's,CC = $(CROSS_COMPILE)gcc,#CC,' ${S}/tools/lib/api/Makefile
         sed -i 's,AR = $(CROSS_COMPILE)ar,#AR,' ${S}/tools/lib/api/Makefile
+        sed -i 's,LD = $(CROSS_COMPILE)ld,#LD,' ${S}/tools/lib/api/Makefile
     fi
     if [ -e "${S}/tools/lib/subcmd/Makefile" ]; then
         sed -i 's,CC = $(CROSS_COMPILE)gcc,#CC,' ${S}/tools/lib/subcmd/Makefile
