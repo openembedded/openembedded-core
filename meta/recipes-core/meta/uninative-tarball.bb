@@ -18,6 +18,9 @@ INHIBIT_DEFAULT_DEPS = "1"
 
 MULTIMACH_TARGET_SYS = "${SDK_ARCH}-nativesdk${SDK_VENDOR}-${SDK_OS}"
 PACKAGE_ARCH = "${SDK_ARCH}"
+PACKAGE_ARCHS = ""
+TARGET_ARCH = "none"
+TARGET_OS = "none"
 
 TOOLCHAIN_OUTPUTNAME ?= "${SDK_ARCH}-nativesdk-libc"
 
@@ -27,16 +30,19 @@ EXCLUDE_FROM_WORLD = "1"
 
 inherit meta
 inherit populate_sdk
+inherit nopackages
 
 deltask install
 deltask package
 deltask packagedata
+deltask populate_sysroot
 
 do_populate_sdk[stamp-extra-info] = "${SDKMACHINE}"
 
 SDK_DEPENDS += "patchelf-native"
 
 SDK_PACKAGING_FUNC = ""
+REAL_MULTIMACH_TARGET_SYS = "none"
 
 fakeroot create_sdk_files() {
 	cp ${COREBASE}/scripts/relocate_sdk.py ${SDK_OUTPUT}/${SDKPATH}/
