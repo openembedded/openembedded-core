@@ -35,6 +35,7 @@ SRC_URI += " \
 	file://debian/fixes/memoize_storable_nstore.diff \
 	file://debian/regen-skip.diff \
 	file://perl-fix-CVE-2016-2381.patch \
+        file://perl-fix-CVE-2016-6185.patch \
 "
 
 SRC_URI += " \
