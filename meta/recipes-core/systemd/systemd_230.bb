@@ -211,8 +211,8 @@ do_install() {
 
 	chown root:systemd-journal ${D}/${localstatedir}/log/journal
 
-        # Delete journal README, as log can be symlinked inside volatile.
-        rm -f ${D}/${localstatedir}/log/README
+	# Delete journal README, as log can be symlinked inside volatile.
+	rm -f ${D}/${localstatedir}/log/README
 
 	install -d ${D}${systemd_unitdir}/system/graphical.target.wants
 	install -d ${D}${systemd_unitdir}/system/multi-user.target.wants
