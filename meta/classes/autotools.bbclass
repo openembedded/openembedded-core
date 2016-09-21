@@ -25,7 +25,7 @@ inherit siteinfo
 
 # Space separated list of shell scripts with variables defined to supply test
 # results for autoconf tests we cannot run at build time.
-export CONFIG_SITE = "${@siteinfo_get_files(d, False)}"
+export CONFIG_SITE = "${@siteinfo_get_files(d)}"
 
 acpaths = "default"
 EXTRA_AUTORECONF = "--exclude=autopoint"
@@ -253,8 +253,9 @@ python autotools_copy_aclocals () {
         t = os.path.join(aclocaldir, os.path.basename(c))
         if not os.path.exists(t):
             os.symlink(c, t)
-            
-    d.setVar("CONFIG_SITE", siteinfo_get_files(d, False))
+
+    # Refresh variable with cache files
+    d.setVar("CONFIG_SITE", siteinfo_get_files(d, aclocalcache=True))
 }
 autotools_copy_aclocals[vardepsexclude] += "MACHINE SDK_ARCH BUILD_ARCH SDK_OS BB_TASKDEPDATA"
 
