@@ -332,7 +332,7 @@ class BaseConfig(object):
             self.set_machine_deploy_dir(arg, deploy_dir_image)
         else:
             logger.error("%s not a directory valid DEPLOY_DIR_IMAGE" % deploy_dir_image)
-            raise Exception("Failed to set MACHINE to %s. Unknown arg: %s" % (arg, arg))
+            self.set("MACHINE", arg)
 
     def check_args(self):
         unknown_arg = ""
