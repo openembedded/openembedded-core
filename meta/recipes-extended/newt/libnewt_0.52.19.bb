@@ -22,6 +22,7 @@ SRC_URI = "https://fedorahosted.org/releases/n/e/newt/newt-${PV}.tar.gz \
            file://cross_ar.patch \
            file://Makefile.in-Add-tinfo-library-to-the-linking-librari.patch \
            file://pie-flags.patch \
+           file://0001-detect-gold-as-GNU-linker-too.patch \
 "
 
 SRC_URI[md5sum] = "e4aa0f7943edd39c52481a87f68f412a"
