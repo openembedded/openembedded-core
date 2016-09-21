@@ -48,6 +48,6 @@ do_install() {
     oe_runmake install DESTDIR=${D}
 }
 
-# PIC can't be enabled for 32-bit x86
-INSANE_SKIP_${PN}_append_x86 = " textrel"
+# PIC can't be enabled for few BSP's
+INSANE_SKIP_${PN}_append = " textrel"
 
