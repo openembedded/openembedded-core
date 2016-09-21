@@ -26,3 +26,4 @@ SECURITY_CFLAGS_append_aarch64 = " -fPIE"
 
 S = "${WORKDIR}/git"
 
+LDFLAGS += "-Wl,-z,relro,-z,now ${@bb.utils.contains('DISTRO_FEATURES', 'ld-is-gold', ' -fuse-ld=bfd ', '', d)}"
