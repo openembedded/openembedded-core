@@ -69,7 +69,7 @@ PACKAGES =+ "${PN}-sdl \
              xf86-video-modesetting"
 
 SUMMARY_xf86-video-modesetting = "X.Org X server -- modesetting display driver"
-INSANE_SKIP_xf86-video-modesetting = "xorg-driver-abi"
+INSANE_SKIP_${MLPREFIX}xf86-video-modesetting = "xorg-driver-abi"
 
 XSERVER_RRECOMMENDS = "xkeyboard-config rgb xserver-xf86-config xkbcomp"
 RRECOMMENDS_${PN} += "${XSERVER_RRECOMMENDS}"
