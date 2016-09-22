@@ -1,4 +1,4 @@
-inherit siteinfo kernel-arch
+inherit toolchain-scripts-base siteinfo kernel-arch
 
 # We want to be able to change the value of MULTIMACH_TARGET_SYS, because it
 # doesn't always match our expectations... but we default to the stock value
@@ -135,18 +135,6 @@ toolchain_create_sdk_siteconfig () {
 }
 # The immediate expansion above can result in unwanted path dependencies here
 toolchain_create_sdk_siteconfig[vardepsexclude] = "TOOLCHAIN_CONFIGSITE_SYSROOTCACHE"
-
-#This function create a version information file
-toolchain_create_sdk_version () {
-	local versionfile=$1
-	rm -f $versionfile
-	touch $versionfile
-	echo 'Distro: ${DISTRO}' >> $versionfile
-	echo 'Distro Version: ${DISTRO_VERSION}' >> $versionfile
-	echo 'Metadata Revision: ${METADATA_REVISION}' >> $versionfile
-	echo 'Timestamp: ${DATETIME}' >> $versionfile
-}
-toolchain_create_sdk_version[vardepsexclude] = "DATETIME"
 
 python __anonymous () {
     import oe.classextend
