@@ -28,10 +28,13 @@ TOOLCHAIN_HOST_TASK ?= "\
 
 MULTIMACH_TARGET_SYS = "${SDK_ARCH}-nativesdk${SDK_VENDOR}-${SDK_OS}"
 PACKAGE_ARCH = "${SDK_ARCH}"
+PACKAGE_ARCHS = ""
+TARGET_ARCH = "none"
+TARGET_OS = "none"
 
 SDK_PACKAGE_ARCHS += "buildtools-dummy-${SDKPKGSUFFIX}"
 
-TOOLCHAIN_OUTPUTNAME ?= "${SDK_NAME}-buildtools-nativesdk-standalone-${DISTRO_VERSION}"
+TOOLCHAIN_OUTPUTNAME ?= "${SDK_ARCH}-buildtools-nativesdk-standalone-${DISTRO_VERSION}"
 
 SDK_TITLE = "Build tools"
 
@@ -41,9 +44,17 @@ EXCLUDE_FROM_WORLD = "1"
 
 inherit meta
 inherit populate_sdk
-inherit toolchain-scripts
+inherit toolchain-scripts-base
+inherit nopackages
+
+deltask install
+deltask package
+deltask packagedata
+deltask populate_sysroot
 
 do_populate_sdk[stamp-extra-info] = "${SDKMACHINE}"
+
+REAL_MULTIMACH_TARGET_SYS = "none"
 
 create_sdk_files_append () {
 	rm -f ${SDK_OUTPUT}/${SDKPATH}/site-config-*
