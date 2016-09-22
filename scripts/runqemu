@@ -900,9 +900,6 @@ class BaseConfig(object):
 
         self.qemu_opt = "%s %s %s %s %s" % (qemu_bin, self.get('NETWORK_CMD'), self.qemu_opt_script, self.get('ROOTFS_OPTIONS'), self.get('QB_OPT_APPEND'))
 
-        # Enable virtio RNG else we can run out of entropy in guests
-        self.qemu_opt += " -device virtio-rng-pci"
-
         if self.snapshot:
             self.qemu_opt += " -snapshot"
 
