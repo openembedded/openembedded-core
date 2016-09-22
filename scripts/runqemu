@@ -821,7 +821,6 @@ class BaseConfig(object):
             self.rootfs_options = '-drive file=%s,if=virtio,format=raw' % self.rootfs
 
         if self.fstype in ('cpio.gz', 'cpio'):
-            self.set('NETWORK_CMD', '')
             self.kernel_cmdline = 'root=/dev/ram0 rw debugshell'
             self.rootfs_options = '-initrd %s' % self.rootfs
         else:
