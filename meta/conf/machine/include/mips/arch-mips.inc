@@ -103,3 +103,29 @@ TUNE_FEATURES_tune-mips64el-nf = "n64"
 BASE_LIB_tune-mips64el-nf = "lib64"
 MIPSPKGSFX_VARIANT_tune-mips64el-nf = "${TUNE_ARCH}"
 PACKAGE_EXTRA_ARCHS_tune-mips64el-nf = "mips64el-nf"
+
+# MIPS 64 + o32
+AVAILTUNES += "mips64-o32 mips64el-o32"
+
+TUNE_FEATURES_tune-mips64-o32 = "o32 bigendian fpu-hard"
+BASE_LIB_tune-mips64-o32 = "lib"
+MIPSPKGSFX_VARIANT_tune-mips64-o32 = "${TUNE_ARCH}"
+PACKAGE_EXTRA_ARCHS_tune-mips64-o32 = "mips mips64-o32 mips64-o32"
+
+TUNE_FEATURES_tune-mips64el-o32 = "o32 fpu-hard"
+BASE_LIB_tune-mips64el-o32 = "lib"
+MIPSPKGSFX_VARIANT_tune-mips64el-o32 = "${TUNE_ARCH}"
+PACKAGE_EXTRA_ARCHS_tune-mips64el-o32 = "mipsel mips64el-o32 mips64el-o32"
+
+# MIPS 64 o32 and Soft Float
+AVAILTUNES += "mips64-nf-o32 mips64el-nf-o32"
+
+TUNE_FEATURES_tune-mips64-nf-o32 = "o32 bigendian"
+BASE_LIB_tune-mips64-nf-o32 = "lib"
+MIPSPKGSFX_VARIANT_tune-mips64-nf-o32 = "${TUNE_ARCH}"
+PACKAGE_EXTRA_ARCHS_tune-mips64-nf-o32 = "mips-nf mips64-nf-o32"
+
+TUNE_FEATURES_tune-mips64el-nf-o32 = "o32"
+BASE_LIB_tune-mips64el-nf-o32 = "lib"
+MIPSPKGSFX_VARIANT_tune-mips64el-nf-o32 = "${TUNE_ARCH}"
+PACKAGE_EXTRA_ARCHS_tune-mips64el-nf-o32 = "mipsel-nf mips64el-nf-o32"
