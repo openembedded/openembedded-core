@@ -786,6 +786,9 @@ class BaseConfig(object):
             self.cleantap = True
             logger.info('Created tap: %s' % tap)
 
+        if not tap:
+            logger.error("Failed to setup tap device. Run runqemu-gen-tapdevs to manually create.")
+            return 1
         self.tap = tap
         n0 = tap[3:]
         n1 = int(n0) * 2 + 1
