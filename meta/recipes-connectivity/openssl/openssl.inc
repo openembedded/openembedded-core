@@ -216,6 +216,19 @@ do_install_ptest () {
 	mkdir -p ${D}${PTEST_PATH}/util
 	install util/opensslwrap.sh    ${D}${PTEST_PATH}/util
 	install util/shlib_wrap.sh     ${D}${PTEST_PATH}/util
+	# Time stamps are relevant for "make alltests", otherwise
+	# make may try to recompile binaries. Not only must the
+	# binary files be newer than the sources, they also must
+	# be more recent than the header files in /usr/include.
+	#
+	# Using "cp -a" is not sufficient, because do_install
+	# does not preserve the original time stamps.
+	#
+	# So instead of using the original file stamps, we set
+	# the current time for all files. Binaries will get
+	# modified again later when stripping them, but that's okay.
+	touch ${D}${PTEST_PATH}
+	find ${D}${PTEST_PATH} -type f -print0 | xargs --verbose -0 touch -r ${D}${PTEST_PATH}
 }
 
 do_install_append_class-native() {
