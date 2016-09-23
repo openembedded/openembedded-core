@@ -39,12 +39,11 @@ SRC_URI += "file://find.pl;subdir=${BP}/util/ \
             file://ptest_makefile_deps.patch  \
             file://configure-musl-target.patch \
             file://parallel.patch \
-            file://CVE-2016-2177.patch \
-            file://CVE-2016-2178.patch \
             file://openssl-util-perlpath.pl-cwd.patch \
+            file://Fix-typo-introduced-by-a03f81f4.patch \
            "
-SRC_URI[md5sum] = "9392e65072ce4b614c1392eefc1f23d0"
-SRC_URI[sha256sum] = "1d4007e53aad94a5b2002fe045ee7bb0b3d98f1a47f8b2bc851dcd1c74332919"
+SRC_URI[md5sum] = "678374e63f8df456a697d3e5e5a931fb"
+SRC_URI[sha256sum] = "9287487d11c9545b6efb287cdb70535d4e9b284dd10d51441d9b9963d000de6f"
 
 PACKAGES =+ "${PN}-engines"
 FILES_${PN}-engines = "${libdir}/ssl/engines/*.so ${libdir}/engines"
