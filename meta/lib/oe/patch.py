@@ -351,6 +351,21 @@ class GitApplyTree(PatchTree):
                 # We don't want the From <commit> line - if it's present it will break rebasing
                 continue
             outlines.append(line)
+
+        if not subject:
+            firstline = None
+            for line in headerlines:
+                line = line.strip()
+                if firstline:
+                    if line:
+                        # Second line is not blank, the first line probably isn't usable
+                        firstline = None
+                    break
+                elif line:
+                    firstline = line
+            if firstline and not firstline.startswith(('#', 'Index:', 'Upstream-Status:')) and len(firstline) < 100:
+                subject = firstline
+
         return outlines, author, date, subject
 
     @staticmethod
@@ -373,21 +388,24 @@ class GitApplyTree(PatchTree):
         # Process patch header and extract useful information
         lines = GitApplyTree.extractPatchHeader(patchfile)
         outlines, author, date, subject = GitApplyTree.interpretPatchHeader(lines)
-        if not author or not subject:
+        if not author or not subject or not date:
             try:
-                shellcmd = ["git", "log", "--format=email", "--diff-filter=A", "--", patchfile]
+                shellcmd = ["git", "log", "--format=email", "--follow", "--diff-filter=A", "--", patchfile]
                 out = runcmd(["sh", "-c", " ".join(shellcmd)], os.path.dirname(patchfile))
             except CmdError:
                 out = None
             if out:
                 _, newauthor, newdate, newsubject = GitApplyTree.interpretPatchHeader(out.splitlines())
-                if not author or not date:
-                    # These really need to go together
+                if not author:
+                    # If we're setting the author then the date should be set as well
                     author = newauthor
+                    date = newdate
+                elif not date:
+                    # If we don't do this we'll get the current date, at least this will be closer
                     date = newdate
                 if not subject:
                     subject = newsubject
-        if subject:
+        if subject and outlines and not outlines[0].strip() == subject:
             outlines.insert(0, '%s\n\n' % subject.strip())
 
         # Write out commit message to a file
