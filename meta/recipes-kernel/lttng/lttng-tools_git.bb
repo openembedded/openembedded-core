@@ -28,6 +28,7 @@ PACKAGECONFIG[manpages] = "--enable-man-pages, --disable-man-pages, asciidoc-nat
 PACKAGECONFIG_remove_libc-musl = "lttng-ust"
 
 SRC_URI = "git://git.lttng.org/lttng-tools.git;branch=stable-2.8 \
+           file://0001-Fix-error.h-common-error.h.patch \
            file://runtest-2.4.0.patch \
            file://run-ptest"
 
