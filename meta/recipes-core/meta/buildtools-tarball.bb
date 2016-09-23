@@ -27,7 +27,7 @@ TOOLCHAIN_HOST_TASK ?= "\
     "
 
 MULTIMACH_TARGET_SYS = "${SDK_ARCH}-nativesdk${SDK_VENDOR}-${SDK_OS}"
-PACKAGE_ARCH = "${SDK_ARCH}"
+PACKAGE_ARCH = "${SDK_ARCH}_${SDK_OS}"
 PACKAGE_ARCHS = ""
 TARGET_ARCH = "none"
 TARGET_OS = "none"
@@ -52,7 +52,7 @@ deltask package
 deltask packagedata
 deltask populate_sysroot
 
-do_populate_sdk[stamp-extra-info] = "${SDKMACHINE}"
+do_populate_sdk[stamp-extra-info] = "${PACKAGE_ARCH}"
 
 REAL_MULTIMACH_TARGET_SYS = "none"
 
