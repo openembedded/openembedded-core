@@ -43,6 +43,7 @@ class Image():
     def __init__(self, native_sysroot=None):
         self.disks = {}
         self.partitions = []
+        self.partimages = []
         # Size of a sector used in calculations
         self.sector_size = SECTOR_SIZE
         self._partitions_layed_out = False
@@ -336,6 +337,10 @@ class Image():
                     disk['disk'].cleanup()
                 except:
                     pass
+        # remove partition images
+        for image in self.partimages:
+            if os.path.isfile(image):
+                os.remove(image)
 
     def assemble(self, image_file):
         msger.debug("Installing partitions")
@@ -351,7 +356,9 @@ class Image():
                             (source, part['num'], part['start'],
                              part['start'] + part['size'] - 1, part['size']))
 
-                os.rename(source, image_file + '.p%d' % part['num'])
+                partimage = image_file + '.p%d' % part['num']
+                os.rename(source, partimage)
+                self.partimages.append(partimage)
 
     def create(self):
         for dev in self.disks:
