@@ -56,6 +56,7 @@ x86_common = [
     'probe of LNXPWRBN:00 failed with error -22',
     'pmd_set_huge: Cannot satisfy',
     'failed to setup card detect gpio',
+    'amd_nb: Cannot enumerate AMD northbridges',
 ] + common_errors
 
 qemux86_common = [
