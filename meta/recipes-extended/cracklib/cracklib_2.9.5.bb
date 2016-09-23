@@ -10,6 +10,7 @@ EXTRA_OECONF = "--without-python --libdir=${base_libdir}"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/cracklib/cracklib-${PV}.tar.gz \
            file://0001-packlib.c-support-dictionary-byte-order-dependent.patch \
+           file://0001-Apply-patch-to-fix-CVE-2016-6318.patch \
            file://0002-craklib-fix-testnum-and-teststr-failed.patch"
 
 SRC_URI[md5sum] = "376790a95c1fb645e59e6e9803c78582"
