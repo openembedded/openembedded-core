@@ -317,6 +317,7 @@ class GitApplyTree(PatchTree):
     def interpretPatchHeader(headerlines):
         import re
         author_re = re.compile('[\S ]+ <\S+@\S+\.\S+>')
+        from_commit_re = re.compile('^From [a-z0-9]{40} .*')
         outlines = []
         author = None
         date = None
@@ -346,6 +347,9 @@ class GitApplyTree(PatchTree):
                 # git is fussy about author formatting i.e. it must be Name <email@domain>
                 if author_re.match(authorval):
                     author = authorval
+            elif from_commit_re.match(line):
+                # We don't want the From <commit> line - if it's present it will break rebasing
+                continue
             outlines.append(line)
         return outlines, author, date, subject
 
