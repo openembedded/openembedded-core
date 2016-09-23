@@ -1,5 +1,5 @@
 if ! xargs --version > /dev/null 2>&1; then
-	echo "xargs is required by the relocation script, please install it firts. Abort!"
+	echo "xargs is required by the relocation script, please install it first. Abort!"
 	exit 1
 fi
 
