@@ -44,6 +44,7 @@ SRC_URI += "file://configure-targets.patch \
             file://CVE-2016-2181_p1.patch \
             file://CVE-2016-2181_p2.patch \
             file://CVE-2016-2181_p3.patch \
+            file://CVE-2016-2182.patch \
            "
 
 SRC_URI[md5sum] = "9392e65072ce4b614c1392eefc1f23d0"
