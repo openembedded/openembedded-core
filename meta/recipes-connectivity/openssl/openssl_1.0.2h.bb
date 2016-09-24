@@ -41,6 +41,9 @@ SRC_URI += "file://find.pl;subdir=${BP}/util/ \
 	    file://CVE-2016-2178.patch \
             file://CVE-2016-2179.patch \
             file://CVE-2016-2180.patch \
+            file://CVE-2016-2181_p1.patch \
+            file://CVE-2016-2181_p2.patch \
+            file://CVE-2016-2181_p3.patch \
            "
 SRC_URI[md5sum] = "9392e65072ce4b614c1392eefc1f23d0"
 SRC_URI[sha256sum] = "1d4007e53aad94a5b2002fe045ee7bb0b3d98f1a47f8b2bc851dcd1c74332919"
