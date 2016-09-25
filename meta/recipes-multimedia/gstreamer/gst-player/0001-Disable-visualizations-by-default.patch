@@ -1,0 +1,36 @@
+From 93e1838f8b8704e4d7d71965f61bee931377b080 Mon Sep 17 00:00:00 2001
+From: Jussi Kukkonen <jussi.kukkonen@intel.com>
+Date: Thu, 22 Sep 2016 19:26:40 +0300
+Subject: [PATCH] Disable visualizations by default
+
+As documented in [YOCTO #10041] visualizations trigger a bug in
+xvimagesink on some hardware, which prevents playback in the
+mediaplayer. Disable visualizations until the xv issue is solved
+to enable playback QA.
+
+Upstream-Status: Inappropriate [workaround]
+Signed-off-by: Jussi Kukkonen <jussi.kukkonen@intel.com>
+Signed-off-by: Maxin B. John <maxin.john@intel.com>
+---
+ gtk/gtk-play.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
+
+diff --git a/gtk/gtk-play.c b/gtk/gtk-play.c
+index 8ae0fea..322e599 100644
+--- a/gtk/gtk-play.c
++++ b/gtk/gtk-play.c
+@@ -1751,9 +1751,8 @@ gtk_play_constructor (GType type, guint n_construct_params,
+   g_signal_connect (self->player, "volume-changed",
+       G_CALLBACK (player_volume_changed_cb), self);
+ 
+-  /* enable visualization (by default playbin uses goom) */
+-  /* if visualization is enabled then use the first element */
+-  gst_player_set_visualization_enabled (self->player, TRUE);
++  /* Disable visualization by default */
++  gst_player_set_visualization_enabled (self->player, FALSE);
+ 
+   g_signal_connect (G_OBJECT (self), "show", G_CALLBACK (show_cb), NULL);
+ 
+-- 
+2.4.0
+
