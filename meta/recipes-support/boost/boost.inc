@@ -8,11 +8,14 @@ ARM_INSTRUCTION_SET_armv5 = "arm"
 BOOST_LIBS = "\
 	atomic \
 	chrono \
+	container \
 	date_time \
+	exception \
 	filesystem \
 	graph \
 	iostreams \
 	log \
+	math \
 	program_options \
 	random \
 	regex \
@@ -22,12 +25,28 @@ BOOST_LIBS = "\
 	timer \
 	test \
 	thread \
+	wave \
 	"
 
-# optional boost-python library
-PACKAGECONFIG ??= ""
+# only supported by x86 and powerpc
+BOOST_LIBS_append_x86 = " context coroutine"
+BOOST_LIBS_append_x86-64 = " context coroutine"
+BOOST_LIBS_append_powerpc = " context coroutine"
+
+# optional libraries
+PACKAGECONFIG ??= "locale"
+PACKAGECONFIG[locale] = ",,icu"
+PACKAGECONFIG[graph_parallel] = ",,,boost-mpi mpich"
+PACKAGECONFIG[mpi] = ",,mpich"
 PACKAGECONFIG[python] = ",,python python3"
-BOOST_LIBS += "${@bb.utils.contains('PACKAGECONFIG', 'python', 'python python3', '', d)}"
+
+BOOST_LIBS += "\
+    ${@bb.utils.contains('PACKAGECONFIG', 'locale', 'locale', '', d)} \
+    ${@bb.utils.contains('PACKAGECONFIG', 'graph_parallel', 'graph_parallel mpi', \
+                         bb.utils.contains('PACKAGECONFIG', 'mpi', 'mpi', '', d), d)} \
+    ${@bb.utils.contains('PACKAGECONFIG', 'python', 'python python3', '', d)} \
+"
+
 inherit python-dir
 PYTHON_ROOT = "${STAGING_DIR_HOST}/${prefix}"
 
@@ -54,6 +73,10 @@ python __anonymous () {
 }
 
 # Override the contents of specific packages
+FILES_${PN}-graph = "${libdir}/libboost_graph.so.*"
+FILES_${PN}-graph_parallel = "${libdir}/libboost_graph_parallel.so.*"
+FILES_${PN}-locale = "${libdir}/libboost_locale.so.*"
+FILES_${PN}-mpi = "${libdir}/mpi.so ${libdir}/libboost_mpi*.so.*"
 FILES_boost-serialization = "${libdir}/libboost_serialization*.so.* \
 	${libdir}/libboost_wserialization*.so.*"
 FILES_boost-test = "${libdir}/libboost_prg_exec_monitor*.so.* \
@@ -158,6 +181,10 @@ do_configure() {
 	echo 'using gcc : 4.3.1 : ${CXX} : <cflags>"${CFLAGS}" <cxxflags>"${CXXFLAGS}" <linkflags>"${LDFLAGS}" ;' >> ${WORKDIR}/user-config.jam
 	echo "using python : ${PYTHON_BASEVERSION} : : ${STAGING_INCDIR}/python${PYTHON_BASEVERSION} ;" >> ${WORKDIR}/user-config.jam
 	echo "using python : 3.5 : : ${STAGING_INCDIR}/python3.5m ;" >> ${WORKDIR}/user-config.jam
+
+	if ${@bb.utils.contains('BOOST_LIBS', 'mpi', 'true', 'false', d)}; then
+		echo "using mpi : : <find-shared-library>mpi ;" >> ${WORKDIR}/user-config.jam
+	fi
 
 	CC="${BUILD_CC}" CFLAGS="${BUILD_CFLAGS}" ./bootstrap.sh --with-bjam=bjam --with-toolset=gcc --with-python-root=${PYTHON_ROOT}
 	sed -i '/^using python/d' ${S}/project-config.jam
