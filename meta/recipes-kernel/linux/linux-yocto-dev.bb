@@ -14,15 +14,6 @@ require recipes-kernel/linux/linux-yocto.inc
 # provide this .inc to set specific revisions
 include recipes-kernel/linux/linux-yocto-dev-revisions.inc
 
-# Skip processing of this recipe if it is not explicitly specified as the
-# PREFERRED_PROVIDER for virtual/kernel. This avoids network access required
-# by the use of AUTOREV SRCREVs, which are the default for this recipe.
-python () {
-    if d.getVar("PREFERRED_PROVIDER_virtual/kernel", True) != "linux-yocto-dev":
-        d.delVar("BB_DONT_CACHE")
-        raise bb.parse.SkipPackage("Set PREFERRED_PROVIDER_virtual/kernel to linux-yocto-dev to enable it")
-}
-
 KBRANCH = "standard/base"
 KMETA = "kernel-meta"
 
