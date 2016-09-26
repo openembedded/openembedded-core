@@ -37,6 +37,7 @@ SRC_URI += " \
 	file://perl-fix-CVE-2016-2381.patch \
         file://perl-fix-CVE-2016-6185.patch \
         file://perl-fix-CVE-2015-8607.patch \
+        file://perl-fix-CVE-2016-1238.patch \
 "
 
 SRC_URI += " \
