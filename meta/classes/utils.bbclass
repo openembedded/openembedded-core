@@ -382,3 +382,40 @@ def all_multilib_tune_values(d, var, unique = True, need_split = True, delim = '
     else:
         ret = values
     return " ".join(ret)
+
+def all_multilib_tune_list(vars, d):
+    """
+    Return a list of ${VAR} for each variable VAR in vars from each 
+    multilib tune configuration.
+    Is safe to be called from a multilib recipe/context as it can
+    figure out the original tune and remove the multilib overrides.
+    """
+    values = {}
+    for v in vars:
+        values[v] = []
+
+    localdata = bb.data.createCopy(d)
+    overrides = localdata.getVar("OVERRIDES", False).split(":")
+    newoverrides = []
+    for o in overrides:
+        if not o.startswith("virtclass-multilib-"):
+            newoverrides.append(o)
+    localdata.setVar("OVERRIDES", ":".join(newoverrides))
+    localdata.setVar("MLPREFIX", "")
+    origdefault = localdata.getVar("DEFAULTTUNE_MULTILIB_ORIGINAL", True)
+    if origdefault:
+        localdata.setVar("DEFAULTTUNE", origdefault)
+    bb.data.update_data(localdata)
+    values['ml'] = ['']
+    for v in vars:
+        values[v].append(localdata.getVar(v, True))
+    variants = d.getVar("MULTILIB_VARIANTS", True) or ""
+    for item in variants.split():
+        localdata = bb.data.createCopy(d)
+        overrides = localdata.getVar("OVERRIDES", False) + ":virtclass-multilib-" + item
+        localdata.setVar("OVERRIDES", overrides)
+        localdata.setVar("MLPREFIX", item + "-")
+        bb.data.update_data(localdata)
+        values[v].append(localdata.getVar(v, True))
+        values['ml'].append(item)
+    return values
