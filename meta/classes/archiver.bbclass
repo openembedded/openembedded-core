@@ -151,6 +151,7 @@ python do_ar_original() {
         encoded = bb.fetch2.encodeurl(decoded)
         urls[i] = encoded
     fetch = bb.fetch2.Fetch(urls, d)
+    tarball_suffix = {}
     for url in fetch.urls:
         local = fetch.localpath(url).rstrip("/");
         if os.path.isfile(local):
@@ -158,7 +159,21 @@ python do_ar_original() {
         elif os.path.isdir(local):
             tmpdir = tempfile.mkdtemp(dir=d.getVar('ARCHIVER_WORKDIR', True))
             fetch.unpack(tmpdir, (url,))
-            create_tarball(d, tmpdir + '/.', '', ar_outdir)
+            # To handle recipes with more than one source, we add the "name"
+            # URL parameter as suffix. We treat it as an error when
+            # there's more than one URL without a name, or a name gets reused.
+            # This is an additional safety net, in practice the name has
+            # to be set when using the git fetcher, otherwise SRCREV cannot
+            # be set separately for each URL.
+            params = bb.fetch2.decodeurl(url)[5]
+            name = params.get('name', '')
+            if name in tarball_suffix:
+                if not name:
+                    bb.fatal("Cannot determine archive names for original source because 'name' URL parameter is unset in more than one URL. Add it to at least one of these: %s %s" % (tarball_suffix[name], url))
+                else:
+                    bb.fatal("Cannot determine archive names for original source because 'name=' URL parameter '%s' is used twice. Make it unique in: %s %s" % (tarball_suffix[name], url))
+            tarball_suffix[name] = url
+            create_tarball(d, tmpdir + '/.', name, ar_outdir)
 
     # Emit patch series files for 'original'
     bb.note('Writing patch series files...')
