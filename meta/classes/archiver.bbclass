@@ -132,7 +132,25 @@ python do_ar_original() {
 
     ar_outdir = d.getVar('ARCHIVER_OUTDIR', True)
     bb.note('Archiving the original source...')
-    fetch = bb.fetch2.Fetch([], d)
+    urls = d.getVar("SRC_URI", True).split()
+    # destsuffix (git fetcher) and subdir (everything else) are allowed to be
+    # absolute paths (for example, destsuffix=${S}/foobar).
+    # That messes with unpacking inside our tmpdir below, because the fetchers
+    # will then unpack in that directory and completely ignore the tmpdir.
+    # That breaks parallel tasks relying on ${S}, like do_compile.
+    #
+    # To solve this, we remove these parameters from all URLs.
+    # We do this even for relative paths because it makes the content of the
+    # archives more useful (no extra paths that are only used during
+    # compilation).
+    for i, url in enumerate(urls):
+        decoded = bb.fetch2.decodeurl(url)
+        for param in ('destsuffix', 'subdir'):
+            if param in decoded[5]:
+                del decoded[5][param]
+        encoded = bb.fetch2.encodeurl(decoded)
+        urls[i] = encoded
+    fetch = bb.fetch2.Fetch(urls, d)
     for url in fetch.urls:
         local = fetch.localpath(url).rstrip("/");
         if os.path.isfile(local):
