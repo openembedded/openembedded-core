@@ -485,7 +485,7 @@ python () {
 
         check_license = False if pn.startswith("nativesdk-") else True
         for t in ["-native", "-cross-${TARGET_ARCH}", "-cross-initial-${TARGET_ARCH}",
-              "-crosssdk-${SDK_ARCH}", "-crosssdk-initial-${SDK_ARCH}",
+              "-crosssdk-${SDK_SYS}", "-crosssdk-initial-${SDK_SYS}",
               "-cross-canadian-${TRANSLATED_TARGET_ARCH}"]:
             if pn.endswith(d.expand(t)):
                 check_license = False

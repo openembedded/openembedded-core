@@ -2,7 +2,7 @@ require binutils-cross_${PV}.bb
 
 inherit crosssdk
 
-PN = "binutils-crosssdk-${TARGET_ARCH}"
+PN = "binutils-crosssdk-${SDK_SYS}"
 
 PROVIDES = "virtual/${TARGET_PREFIX}binutils-crosssdk"
 
