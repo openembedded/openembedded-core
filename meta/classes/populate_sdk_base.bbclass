@@ -147,7 +147,8 @@ python check_sdk_sysroots() {
         return os.path.abspath(path)
 
     # Get scan root
-    SCAN_ROOT = norm_path("${SDK_OUTPUT}/${SDKPATH}/sysroots/")
+    SCAN_ROOT = norm_path("%s/%s/sysroots/" % (d.getVar('SDK_OUTPUT', True),
+                                               d.getVar('SDKPATH', True)))
 
     bb.note('Checking SDK sysroots at ' + SCAN_ROOT)
 
