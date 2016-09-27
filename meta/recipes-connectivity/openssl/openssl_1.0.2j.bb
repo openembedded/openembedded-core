@@ -40,10 +40,9 @@ SRC_URI += "file://find.pl;subdir=${BP}/util/ \
             file://configure-musl-target.patch \
             file://parallel.patch \
             file://openssl-util-perlpath.pl-cwd.patch \
-            file://Fix-typo-introduced-by-a03f81f4.patch \
            "
-SRC_URI[md5sum] = "678374e63f8df456a697d3e5e5a931fb"
-SRC_URI[sha256sum] = "9287487d11c9545b6efb287cdb70535d4e9b284dd10d51441d9b9963d000de6f"
+SRC_URI[md5sum] = "96322138f0b69e61b7212bc53d5e912b"
+SRC_URI[sha256sum] = "e7aff292be21c259c6af26469c7a9b3ba26e9abaaffd325e3dccc9785256c431"
 
 PACKAGES =+ "${PN}-engines"
 FILES_${PN}-engines = "${libdir}/ssl/engines/*.so ${libdir}/engines"
