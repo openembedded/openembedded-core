@@ -39,16 +39,6 @@ def tinfoil_init(instance):
     tinfoil = instance
 
 
-def _provide_to_pn(cooker, provide):
-    """Get the name of the preferred recipe for the specified provide."""
-    import bb.providers
-    filenames = cooker.recipecache.providers[provide]
-    eligible, foundUnique = bb.providers.filterProviders(filenames, provide, cooker.expanded_data, cooker.recipecache)
-    filename = eligible[0]
-    pn = cooker.recipecache.pkg_fn[filename]
-    return pn
-
-
 def _get_recipe_file(cooker, pn):
     import oe.recipeutils
     recipefile = oe.recipeutils.pn_to_recipe(cooker, pn)
@@ -70,8 +60,7 @@ def layer(layerpath):
 def newappend(args):
     import oe.recipeutils
 
-    pn = _provide_to_pn(tinfoil.cooker, args.target)
-    recipe_path = _get_recipe_file(tinfoil.cooker, pn)
+    recipe_path = _get_recipe_file(tinfoil.cooker, args.target)
 
     rd = tinfoil.config_data.createCopy()
     rd.setVar('FILE', recipe_path)
