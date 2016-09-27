@@ -20,6 +20,7 @@ RDEPENDS_${PN}-pod += "perl"
 RDEPENDS_${PN}-module-file-spec += "${PN}-module-file-spec-unix"
 RDEPENDS_${PN}-module-math-bigint += "${PN}-module-math-bigint-calc"
 RDEPENDS_${PN}-module-thread-queue += "${PN}-module-attributes"
+RDEPENDS_${PN}-module-overload += "${PN}-module-overloading"
 
 
 # Depends list
