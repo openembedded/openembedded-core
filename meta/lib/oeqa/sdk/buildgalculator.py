@@ -15,8 +15,11 @@ class GalculatorTest(oeSDKTest):
 
             project.download_archive()
 
-            self.assertEqual(project.run_configure(), 0,
-                            msg="Running configure failed")
+            # regenerate configure to get support for --with-libtool-sysroot
+            legacy_preconf=("autoreconf -i -f -I ${OECORE_TARGET_SYSROOT}/usr/share/aclocal -I m4;")
+
+            self.assertEqual(project.run_configure(extra_cmds=legacy_preconf),
+                             0, msg="Running configure failed")
 
             self.assertEqual(project.run_make(), 0,
                             msg="Running make failed")
