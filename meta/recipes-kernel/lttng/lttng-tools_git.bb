@@ -11,7 +11,9 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=01d7fc4496aacf37d90df90b90b0cac1 \
 
 DEPENDS = "liburcu popt libxml2 util-linux"
 RDEPENDS_${PN} = "libgcc"
-RDEPENDS_${PN}-ptest += "make perl bash"
+RDEPENDS_${PN}-ptest += "make perl bash gawk ${PN} babeltrace procps"
+# babelstats.pl wants getopt-long
+RDEPENDS_${PN}-ptest += "perl-module-getopt-long"
 
 SRCREV = "d11e0dba0df9024b8613c51e167a379b91e8b20b"
 PV = "2.8.1+git${SRCPV}"
@@ -29,7 +31,6 @@ PACKAGECONFIG_remove_libc-musl = "lttng-ust"
 
 SRC_URI = "git://git.lttng.org/lttng-tools.git;branch=stable-2.8 \
            file://0001-Fix-error.h-common-error.h.patch \
-           file://runtest-2.4.0.patch \
            file://run-ptest"
 
 S = "${WORKDIR}/git"
@@ -56,27 +57,60 @@ do_configure_prepend () {
 }
 
 do_install_ptest () {
-	chmod +x ${D}${PTEST_PATH}/tests/utils/utils.sh
-	for i in `find ${D}${PTEST_PATH} -perm /u+x -type f`; do
-		sed -e "s:\$TESTDIR.*/src/bin/lttng/\$LTTNG_BIN:\$LTTNG_BIN:g" \
-		  -e "s:\$TESTDIR/../src/bin/lttng-sessiond/\$SESSIOND_BIN:\$SESSIOND_BIN:g" \
-		  -e "s:\$DIR/../src/bin/lttng-sessiond/\$SESSIOND_BIN:\$SESSIOND_BIN:g" \
-		  -e "s:\$TESTDIR/../src/bin/lttng-consumerd/:${libdir}/lttng/libexec/:g" \
-		  -e "s:\$DIR/../src/bin/lttng-consumerd/:${libdir}/lttng/libexec/:g" \
-		  -e "s:\$TESTDIR/../src/bin/lttng-relayd/\$RELAYD_BIN:\$RELAYD_BIN:g" \
-		  -e "s:\$DIR/../src/bin/lttng-sessiond/lttng-sessiond:\$SESSIOND_BIN:g" \
-		  -e "s:\$DIR/../src/bin/lttng-relayd/\$RELAYD_BIN:\$RELAYD_BIN:g" \
-		  -e "s:\$DIR/../bin/lttng-relayd/\$RELAYD_BIN:\$RELAYD_BIN:g" \
-		  -i $i
+	mkdir -p ${D}${PTEST_PATH}
+
+	cp -a -T ${B} ${D}${PTEST_PATH}
+
+	# Prevent attempts to update Makefiles during test runs, and
+	# silence "Making check in $SUBDIR" messages.
+	find ${D}${PTEST_PATH} -name Makefile -type f -exec \
+		sed -i -e 's!^Makefile:!_Makefile:!' \
+		-e '/echo "Making $$target in $$subdir"; \\/d' {} +
+
+	# Prevent attempts to update version.h during test runs.
+	sed -i -e '/^\.PHONY: version\.h$/d' ${D}${PTEST_PATH}/include/Makefile
+
+	# Silence "Making check in $SUBDIR" messages.
+	find ${D}${PTEST_PATH} -name Makefile -type f -exec \
+		sed -i -e '/echo "Making $$target in $$subdir"; \\/d' {} +
+
+	# Substitute links to installed binaries.
+	for prog in lttng lttng-relayd lttng-sessiond lttng-consumerd ; do
+		orig="${D}${PTEST_PATH}/src/bin/${prog}/${prog}"
+		rm "$orig"
+		case "$prog" in
+			lttng-consumerd)
+				ln -s "${libdir}/lttng/libexec/$prog" "$orig"
+				;;
+			*)
+				ln -s "${bindir}/$prog" "$orig"
+				;;
+		esac
 	done
 
-	# Update libdir references in copied .la files
-	for i in `find ${D}${PTEST_PATH} -type f -name *.la`; do
-		sed -i -e 's#${S}/tests/#${STAGING_DIR}${PTEST_PATH}#g' $i
+	# Remove libtool artifacts.
+	find ${D}${PTEST_PATH} \( -name '*.l[ao]' -o -name '*.lai' \) -delete
+
+	# Remove object files and archives.
+	find ${D}${PTEST_PATH} -name '*.[oa]' -type f -delete
+
+	# Remove Makefile.am and Makefile.in.
+	find ${D}${PTEST_PATH} -name 'Makefile.*' -type f -delete
+
+	# Remove autom4te.cache.
+	rm -rf ${D}${PTEST_PATH}/autom4te.cache
+
+	# Replace libtool wrapper scripts (which won't work on the
+	# target) with their corresponding binaries.
+	for prog in unit/ini_config/ini_config \
+		regression/tools/live/live_test \
+		regression/tools/health/health_check ; do
+		basename=${prog##*/}
+		ldir=${D}${PTEST_PATH}/tests/${prog%/*}
+		mv -f ${ldir}/.libs/${basename} ${ldir}
 	done
 
-	sed -e "s:src/bin:bin:g" -e "s:lt-::g" \
-	-i ${D}${PTEST_PATH}/tests/utils/utils.sh
-	sed -e "s:ini_config:\.libs\/ini_config:" \
-	-i ${D}${PTEST_PATH}/tests/unit/ini_config/test_ini_config
+	# checkpatch.pl is unneeded on target and causes file-rdeps QA
+	# warnings.
+	rm -f ${D}${PTEST_PATH}/extras/checkpatch.pl
 }
