@@ -50,12 +50,12 @@ def run_command(cmd):
 def get_cur_arch_dirs(workdir, arch_dirs):
     pattern = workdir + '/(.*?)/'
 
-    cmd = "bitbake -e | grep ^SDK_ARCH="
+    cmd = "bitbake -e | grep ^SDK_SYS="
     output = run_command(cmd)
-    sdk_arch = output.split('"')[1]
+    sdk_sys = output.split('"')[1]
 
     # select thest 5 packages to get the dirs of current arch
-    pkgs = ['hicolor-icon-theme', 'base-files', 'acl-native', 'binutils-crosssdk-' + sdk_arch, 'nativesdk-autoconf']
+    pkgs = ['hicolor-icon-theme', 'base-files', 'acl-native', 'binutils-crosssdk-' + sdk_sys, 'nativesdk-autoconf']
 
     for pkg in pkgs:
         cmd = "bitbake -e " + pkg + " | grep ^IMAGE_ROOTFS="
