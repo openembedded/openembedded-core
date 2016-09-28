@@ -80,7 +80,7 @@ python () {
         for extraos in d.getVar("BASECANADIANEXTRAOS", True).split():
             d.appendVar("CANADIANEXTRAOS", " " + extraos + "n32")
     if tarch == "arm" or tarch == "armeb":
-        d.appendVar("CANADIANEXTRAOS", " linux-musleabi linux-uclibceabi")
+        d.appendVar("CANADIANEXTRAOS", " linux-gnueabi linux-musleabi linux-uclibceabi")
         d.setVar("TARGET_OS", "linux-gnueabi")
     else:
         d.setVar("TARGET_OS", "linux")
