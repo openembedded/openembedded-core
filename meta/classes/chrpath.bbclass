@@ -17,19 +17,24 @@ def process_file_linux(cmd, fpath, rootdir, baseprefix, tmpdir, d):
     # Throw away everything other than the rpath list
     curr_rpath = out.partition("RPATH=")[2]
     #bb.note("Current rpath for %s is %s" % (fpath, curr_rpath.strip()))
-    rpaths = curr_rpath.split(":")
+    rpaths = curr_rpath.strip().split(":")
     new_rpaths = []
     modified = False
     for rpath in rpaths:
         # If rpath is already dynamic copy it to new_rpath and continue
         if rpath.find("$ORIGIN") != -1:
-            new_rpaths.append(rpath.strip())
+            new_rpaths.append(rpath)
             continue
         rpath =  os.path.normpath(rpath)
         if baseprefix not in rpath and tmpdir not in rpath:
-            new_rpaths.append(rpath.strip())
+            # Skip standard search paths
+            if rpath in ['/lib', '/usr/lib', '/lib64/', '/usr/lib64']:
+                bb.warn("Skipping RPATH %s as is a standard search path for %s" % (rpath, fpath))
+                modified = True
+                continue
+            new_rpaths.append(rpath)
             continue
-        new_rpaths.append("$ORIGIN/" + os.path.relpath(rpath.strip(), os.path.dirname(fpath.replace(rootdir, "/"))))
+        new_rpaths.append("$ORIGIN/" + os.path.relpath(rpath, os.path.dirname(fpath.replace(rootdir, "/"))))
         modified = True
 
     # if we have modified some rpaths call chrpath to update the binary
