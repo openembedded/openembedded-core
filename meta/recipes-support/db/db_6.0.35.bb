@@ -18,16 +18,15 @@ RCONFLICTS_${PN} = "db3"
 PR = "r1"
 
 # Note, when upgraded to 6.1.x, a patch in RPM will need to be removed to activate db 6.1 support.
-
-SRC_URI = "http://download.oracle.com/berkeley-db/db-${PV}.tar.gz \
+SRC_URI = "http://distfiles.gentoo.org/distfiles/db-${PV}.tar.gz \
            file://arm-thumb-mutex_db5.patch \
            file://fix-parallel-build.patch \
            file://Makefile-let-libso_target-depend-on-bt_rec.patch \
            file://Makefile-let-libdb-6.0.la-depend-os_map.l.patch \
            "
 
-SRC_URI[md5sum] = "ad28eb86ad3203b5422844db179c585b"
-SRC_URI[sha256sum] = "608e4b1cf390e9bf54c0ef00c5bd9ca76d36e2261b9f4d33d54516f3f6a20fd2"
+SRC_URI[md5sum] = "c65a4d3e930a116abaaf69edfc697f25"
+SRC_URI[sha256sum] = "24421affa8ae436fe427ae4f5f2d1634da83d3d55a5ad6354a98eeedb825de55"
 
 # Exclude NC versions which lack AES encryption
 UPSTREAM_CHECK_REGEX = "db-(?P<pver>\d+\.\d+(\.\d+)?).tar"
