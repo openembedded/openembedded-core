@@ -817,11 +817,13 @@ class BaseConfig(object):
         else:
             self.setup_tap()
 
+        rootfs_format = self.fstype if self.fstype in ('vmdk', 'qcow2', 'vdi') else 'raw'
+
         qb_rootfs_opt = self.get('QB_ROOTFS_OPT')
         if qb_rootfs_opt:
             self.rootfs_options = qb_rootfs_opt.replace('@ROOTFS@', self.rootfs)
         else:
-            self.rootfs_options = '-drive file=%s,if=virtio,format=raw' % self.rootfs
+            self.rootfs_options = '-drive file=%s,if=virtio,format=%s' % (self.rootfs, rootfs_format)
 
         if self.fstype in ('cpio.gz', 'cpio'):
             self.kernel_cmdline = 'root=/dev/ram0 rw debugshell'
@@ -835,14 +837,15 @@ class BaseConfig(object):
                     cmd2 = "grep -q 'root=/dev/hd' %s" % self.rootfs
                     if subprocess.call(cmd1, shell=True) == 0:
                         logger.info('Using scsi drive')
-                        vm_drive = '-drive if=none,id=hd,file=%s -device virtio-scsi-pci,id=scsi -device scsi-hd,drive=hd' % self.rootfs
+                        vm_drive = '-drive if=none,id=hd,file=%s,format=%s -device virtio-scsi-pci,id=scsi -device scsi-hd,drive=hd' \
+                                       % (self.rootfs, rootfs_format)
                     elif subprocess.call(cmd2, shell=True) == 0:
                         logger.info('Using scsi drive')
-                        vm_drive = self.rootfs
+                        vm_drive = "%s,format=%s" % (self.rootfs, rootfs_format)
                     else:
                         logger.warn("Can't detect drive type %s" % self.rootfs)
                         logger.warn('Tring to use virtio block drive')
-                        vm_drive = '-drive if=virtio,file=%s' % self.rootfs
+                        vm_drive = '-drive if=virtio,file=%s,format=%s' % (self.rootfs, rootfs_format)
                 self.rootfs_options = '%s -no-reboot' % vm_drive
             self.kernel_cmdline = 'root=%s rw highres=off' % (self.get('QB_KERNEL_ROOT'))
 
