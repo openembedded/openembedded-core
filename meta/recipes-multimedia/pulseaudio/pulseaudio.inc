@@ -13,7 +13,7 @@ DEPENDS = "libatomic-ops libsndfile1 libtool intltool-native"
 DEPENDS += "udev alsa-lib glib-2.0 gconf"
 DEPENDS += "json-c gdbm speexdsp libxml-parser-perl-native libcap"
 
-inherit autotools bash-completion pkgconfig useradd gettext perlnative bluetooth systemd
+inherit autotools bash-completion pkgconfig useradd gettext perlnative bluetooth systemd manpages
 
 # *.desktop rules wont be generated during configure and build will fail
 # if using --disable-nls
@@ -62,6 +62,7 @@ PACKAGECONFIG[autospawn-for-root] = ",,,"
 PACKAGECONFIG[lirc] = "--enable-lirc,--disable-lirc,lirc"
 PACKAGECONFIG[webrtc] = "--enable-webrtc-aec,--disable-webrtc-aec,webrtc-audio-processing"
 PACKAGECONFIG[ipv6] = "--enable-ipv6,--disable-ipv6,"
+PACKAGECONFIG[manpages] = "--enable-manpages, --disable-manpages, "
 
 EXTRA_OECONF_append_arm = "${@bb.utils.contains("TUNE_FEATURES", "neon", "", " --enable-neon-opt=no", d)}"
 EXTRA_OECONF_append_armeb = "${@bb.utils.contains("TUNE_FEATURES", "neon", "", " --enable-neon-opt=no", d)}"
