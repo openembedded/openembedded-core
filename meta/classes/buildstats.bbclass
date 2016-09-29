@@ -163,7 +163,11 @@ python run_buildstats () {
             bs = os.path.join(bsdir, "build_stats")
             with open(bs, "a") as f:
                 rootfs = d.getVar('IMAGE_ROOTFS', True)
-                rootfs_size = subprocess.Popen(["du", "-sh", rootfs], stdout=subprocess.PIPE).stdout.read()
+                try:
+                    rootfs_size = subprocess.check_output(["du", "-sh", rootfs],
+                            stderr=subprocess.STDOUT).decode('utf-8')
+                except subprocess.CalledProcessError as e:
+                    bb.error("Failed to get rootfs size: %s" % e.output)
                 f.write("Uncompressed Rootfs size: %s" % rootfs_size)
 
     elif isinstance(e, bb.build.TaskFailed):
