@@ -20,6 +20,7 @@ from oeqa.utils.dump import HostDumper
 
 import logging
 logger = logging.getLogger("BitBake.QemuRunner")
+logger.addHandler(logging.StreamHandler())
 
 # Get Unicode non printable control chars
 control_range = list(range(0,32))+list(range(127,160))
