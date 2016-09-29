@@ -17,9 +17,9 @@ SRCREV = "d8d0a60406b14b140e83a8c0d5eaedb5dca44092"
 SRC_URI = "git://git.kernel.org/pub/scm/linux/kernel/git/kdave/btrfs-progs.git \
 "
 
-inherit autotools-brokensep pkgconfig
+inherit autotools-brokensep pkgconfig manpages
 
-EXTRA_OECONF += "--disable-documentation"
+PACKAGECONFIG[manpages] = "--enable-documentation, --disable-documentation, asciidoc-native xmlto-native"
 EXTRA_OECONF_append_libc-musl = " --disable-backtrace "
 
 
