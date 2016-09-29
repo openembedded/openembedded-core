@@ -64,7 +64,7 @@ do_install_append(){
 }
 
 # extra tasks
-addtask kernel_version_sanity_check after do_kernel_checkout before do_compile
+addtask kernel_version_sanity_check after do_kernel_metadata do_kernel_checkout before do_compile
 addtask kernel_link_images after do_compile before do_install
 addtask validate_branches before do_patch after do_kernel_checkout
 addtask kernel_configcheck after do_configure before do_compile
