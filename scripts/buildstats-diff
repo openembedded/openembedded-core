@@ -30,6 +30,11 @@ logging.basicConfig(level=logging.INFO)
 log = logging.getLogger()
 
 
+class ScriptError(Exception):
+    """Exception for internal error handling of this script"""
+    pass
+
+
 class TimeZone(tzinfo):
     """Simple fixed-offset tzinfo"""
     def __init__(self, seconds, name):
@@ -161,8 +166,7 @@ def read_buildstats_dir(bs_dir):
             log.warning("Multiple buildstats found, using the first one")
         top_dir = subdirs[0]
     else:
-        log.error("No such directory: %s", bs_dir)
-        sys.exit(1)
+        raise ScriptError("No such directory: {}".format(bs_dir))
     log.debug("Reading buildstats directory %s", top_dir)
     subdirs = os.listdir(top_dir)
 
@@ -187,9 +191,8 @@ def read_buildstats_dir(bs_dir):
             recipe_bs['tasks'][task] = read_buildstats_file(
                     os.path.join(recipe_dir, task))
         if name in buildstats:
-            log.error("Cannot handle multiple versions of the same package (%s)",
-                      name)
-            sys.exit(1)
+            raise ScriptError("Cannot handle multiple versions of the same "
+                              "package ({})".format(name))
         buildstats[name] = recipe_bs
 
     return buildstats
@@ -202,9 +205,8 @@ def read_buildstats_json(path):
         bs_json = json.load(fobj)
     for recipe_bs in bs_json:
         if recipe_bs['name'] in buildstats:
-            log.error("Cannot handle multiple versions of the same package (%s)",
-                      recipe_bs['name'])
-            sys.exit(1)
+            raise ScriptError("Cannot handle multiple versions of the same "
+                              "package ({})".format(recipe_bs['name']))
 
         if recipe_bs['epoch'] is None:
             recipe_bs['nevr'] = "{}-{}-{}".format(recipe_bs['name'], recipe_bs['version'], recipe_bs['revision'])
@@ -497,16 +499,18 @@ def main(argv=None):
             sys.exit(1)
         sort_by.append(field)
 
+    try:
+        bs1 = read_buildstats(args.buildstats1)
+        bs2 = read_buildstats(args.buildstats2)
 
-    bs1 = read_buildstats(args.buildstats1)
-    bs2 = read_buildstats(args.buildstats2)
-
-    if args.ver_diff:
-        print_ver_diff(bs1, bs2)
-    else:
-        print_task_diff(bs1, bs2, args.diff_attr, args.min_val,
-                        args.min_absdiff, sort_by)
-
+        if args.ver_diff:
+            print_ver_diff(bs1, bs2)
+        else:
+            print_task_diff(bs1, bs2, args.diff_attr, args.min_val,
+                            args.min_absdiff, sort_by)
+    except ScriptError as err:
+        log.error(str(err))
+        return 1
     return 0
 
 if __name__ == "__main__":
