@@ -8,7 +8,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=c963eb366b781252b0bf0fdf1624d9e9 \
                     file://snprintf/snprintf.c;endline=32;md5=d3d544959d8a3782b2e07451be0a903c \
                     file://snprintf/various.h;endline=31;md5=89f2509b6b4682c4fc95255eec4abe44"
 
-inherit autotools lib_package
+inherit autotools lib_package manpages
 
 DEPENDS = "liburcu util-linux"
 RDEPENDS_${PN}-bin = "python3-core"
@@ -26,7 +26,7 @@ SRC_URI = "git://git.lttng.org/lttng-ust.git;branch=stable-2.8 \
            file://lttng-ust-doc-examples-disable.patch \
           "
 
-EXTRA_OECONF += "--disable-man-pages"
+PACKAGECONFIG[manpages] = "--enable-man-pages, --disable-man-pages, asciidoc-native xmlto-native libxslt-native"
 
 do_install_append() {
         # Patch python tools to use Python 3; they should be source compatible, but
