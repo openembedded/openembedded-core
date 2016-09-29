@@ -8,7 +8,7 @@ DEPENDS = "kmod intltool-native gperf-native acl readline libcap libcgroup qemu-
 
 SECTION = "base/shell"
 
-inherit useradd pkgconfig autotools perlnative update-rc.d update-alternatives qemu systemd ptest gettext bash-completion
+inherit useradd pkgconfig autotools perlnative update-rc.d update-alternatives qemu systemd ptest gettext bash-completion manpages
 
 SRC_URI += " \
            file://touchscreen.rules \
