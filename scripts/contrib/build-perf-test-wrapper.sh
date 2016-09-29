@@ -57,6 +57,14 @@ while getopts "ha:c:C:w:" opt; do
     esac
 done
 
+# Check positional args
+shift "$((OPTIND - 1))"
+if [ $# -ne 0 ]; then
+    echo "ERROR: No positional args are accepted."
+    usage
+    exit 1
+fi
+
 echo "Running on `uname -n`"
 if ! git_topdir=$(git rev-parse --show-toplevel); then
         echo "The current working dir doesn't seem to be a git clone. Please cd there before running `basename $0`"
