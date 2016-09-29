@@ -54,7 +54,7 @@ EXTRA_OECONF = "--with-avahi-priv-access-group=adm \
              --disable-qt4 \
              --disable-python \
              --disable-doxygen-doc \
-             --disable-manpages \
+             --enable-manpages \
              ${EXTRA_OECONF_SYSVINIT} \
              ${EXTRA_OECONF_SYSTEMD} \
            "
