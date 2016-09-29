@@ -62,11 +62,26 @@ def to_datetime_obj(obj):
         return datetime.utcfromtimestamp(obj).replace(tzinfo=TIMEZONES['UTC'])
 
 
+class BSTask(dict):
+    def __init__(self, *args, **kwargs):
+        self['start_time'] = None
+        self['elapsed_time'] = None
+        self['status'] = None
+        self['iostat'] = {}
+        self['rusage'] = {}
+        self['child_rusage'] = {}
+        super(BSTask, self).__init__(*args, **kwargs)
+
+    @property
+    def cputime(self):
+        """Sum of user and system time taken by the task"""
+        return self['rusage']['ru_stime'] + self['rusage']['ru_utime'] + \
+               self['child_rusage']['ru_stime'] + self['child_rusage']['ru_utime']
+
+
 def read_buildstats_file(buildstat_file):
     """Convert buildstat text file into dict/json"""
-    bs_json = {'iostat': {},
-               'rusage': {},
-               'child_rusage': {}}
+    bs_task = BSTask()
     log.debug("Reading task buildstats from %s", buildstat_file)
     with open(buildstat_file) as fobj:
         for line in fobj.readlines():
@@ -74,12 +89,12 @@ def read_buildstats_file(buildstat_file):
             val = val.strip()
             if key == 'Started':
                 start_time = to_datetime_obj(float(val))
-                bs_json['start_time'] = start_time
+                bs_task['start_time'] = start_time
             elif key == 'Ended':
                 end_time = to_datetime_obj(float(val))
             elif key.startswith('IO '):
                 split = key.split()
-                bs_json['iostat'][split[1]] = int(val)
+                bs_task['iostat'][split[1]] = int(val)
             elif key.find('rusage') >= 0:
                 split = key.split()
                 ru_key = split[-1]
@@ -89,11 +104,11 @@ def read_buildstats_file(buildstat_file):
                     val = int(val)
                 ru_type = 'rusage' if split[0] == 'rusage' else \
                                                   'child_rusage'
-                bs_json[ru_type][ru_key] = val
+                bs_task[ru_type][ru_key] = val
             elif key == 'Status':
-                bs_json['status'] = val
-    bs_json['elapsed_time'] = end_time - start_time
-    return bs_json
+                bs_task['status'] = val
+    bs_task['elapsed_time'] = end_time - start_time
+    return bs_task
 
 
 def read_buildstats_dir(bs_dir):
@@ -170,6 +185,10 @@ def read_buildstats_json(path):
             recipe_bs['nevr'] = "{}-{}-{}".format(recipe_bs['name'], recipe_bs['version'], recipe_bs['revision'])
         else:
             recipe_bs['nevr'] = "{}-{}_{}-{}".format(recipe_bs['name'], recipe_bs['epoch'], recipe_bs['version'], recipe_bs['revision'])
+
+        for task, data in recipe_bs['tasks'].copy().items():
+            recipe_bs['tasks'][task] = BSTask(data)
+
         buildstats[recipe_bs['name']] = recipe_bs
 
     return buildstats
@@ -253,12 +272,6 @@ def print_ver_diff(bs1, bs2):
             print(fmt_str.format(pkg, field1, field2, maxlen=maxlen))
 
 
-def task_time(task):
-    """Calculate sum of user and system time taken by a task"""
-    cputime = task['rusage']['ru_stime'] + task['rusage']['ru_utime'] + \
-              task['child_rusage']['ru_stime'] + task['child_rusage']['ru_utime']
-    return cputime
-
 
 def print_task_diff(bs1, bs2, min_val=0, min_absdiff=0, sort_by=('absdiff',)):
     """Diff task execution times"""
@@ -283,8 +296,8 @@ def print_task_diff(bs1, bs2, min_val=0, min_absdiff=0, sort_by=('absdiff',)):
             if len(task) > task_maxlen:
                 task_maxlen = len(task)
 
-            t1 = task_time(bs1[pkg]['tasks'][task]) if task in tasks1 else 0
-            t2 = task_time(bs2[pkg]['tasks'][task]) if task in tasks2 else 0
+            t1 = bs1[pkg]['tasks'][task].cputime if task in tasks1 else 0
+            t2 = bs2[pkg]['tasks'][task].cputime if task in tasks2 else 0
             task_op = '  '
             if t1 == 0:
                 reldiff = float('inf')
@@ -334,8 +347,8 @@ def print_timediff_summary(bs1, bs2):
     def total_cputime(buildstats):
         sum = 0.0
         for recipe_data in buildstats.values():
-            for task_data in recipe_data['tasks'].values():
-                sum += task_time(task_data)
+            for bs_task in recipe_data['tasks'].values():
+                sum += bs_task.cputime
         return sum
 
     def hms_time(secs):
