@@ -17,6 +17,7 @@ import argparse
 import glob
 import json
 import logging
+import math
 import os
 import re
 import sys
@@ -77,6 +78,15 @@ class BSTask(dict):
         return self['rusage']['ru_stime'] + self['rusage']['ru_utime'] + \
                self['child_rusage']['ru_stime'] + self['child_rusage']['ru_utime']
 
+    @property
+    def read_bytes(self):
+        """Bytes read from the block layer"""
+        return self['iostat']['read_bytes']
+
+    @property
+    def write_bytes(self):
+        """Bytes written to the block layer"""
+        return self['iostat']['write_bytes']
 
 def read_buildstats_file(buildstat_file):
     """Convert buildstat text file into dict/json"""
@@ -290,8 +300,13 @@ def print_task_diff(bs1, bs2, val_type, min_val=0, min_absdiff=0, sort_by=('absd
                 return hms_time(val)
             else:
                 return "{:.1f}s".format(val)
-        else:
-            return str(val)
+        elif 'bytes' in val_type and human_readable:
+                prefix = ['', 'Ki', 'Mi', 'Gi', 'Ti', 'Pi']
+                dec = int(math.log(val, 2) / 10)
+                prec = 1 if dec > 0 else 0
+                return "{:.{prec}f}{}B".format(val / (2 ** (10 * dec)),
+                                               prefix[dec], prec=prec)
+        return str(int(val))
 
     def sum_vals(buildstats):
         """Get cumulative sum of all tasks"""
@@ -323,16 +338,22 @@ def print_task_diff(bs1, bs2, val_type, min_val=0, min_absdiff=0, sort_by=('absd
             pkg_op = '  '
 
         for task in set(tasks1.keys()).union(set(tasks2.keys())):
-            val1 = getattr(bs1[pkg]['tasks'][task], val_type) if task in tasks1 else 0
-            val2 = getattr(bs2[pkg]['tasks'][task], val_type) if task in tasks2 else 0
             task_op = '  '
+            if task in tasks1:
+                val1 = getattr(bs1[pkg]['tasks'][task], val_type)
+            else:
+                task_op = '+ '
+                val1 = 0
+            if task in tasks2:
+                val2 = getattr(bs2[pkg]['tasks'][task], val_type)
+            else:
+                val2 = 0
+                task_op = '- '
+
             if val1 == 0:
                 reldiff = float('inf')
-                task_op = '+ '
             else:
                 reldiff = 100 * (val2 - val1) / val1
-                if val2 == 0:
-                    task_op = '- '
 
             if max(val1, val2) < min_val:
                 log.debug("Filtering out %s:%s (%s)", pkg, task,
@@ -395,14 +416,19 @@ Script for comparing buildstats of two separate builds."""
             formatter_class=argparse.ArgumentDefaultsHelpFormatter,
             description=description)
 
-    min_val_defaults = {'cputime': 3.0}
-    min_absdiff_defaults = {'cputime': 1.0}
+    min_val_defaults = {'cputime': 3.0,
+                        'read_bytes': 524288,
+                        'write_bytes': 524288}
+    min_absdiff_defaults = {'cputime': 1.0,
+                            'read_bytes': 131072,
+                            'write_bytes': 131072}
 
     parser.add_argument('--debug', '-d', action='store_true',
                         help="Verbose logging")
     parser.add_argument('--ver-diff', action='store_true',
                         help="Show package version differences and exit")
-    parser.add_argument('--diff-attr', default='cputime', choices=('cputime',),
+    parser.add_argument('--diff-attr', default='cputime',
+                        choices=('cputime', 'read_bytes', 'write_bytes'),
                         help="Buildstat attribute which to compare")
     parser.add_argument('--min-val', default=min_val_defaults, type=float,
                         help="Filter out tasks less than MIN_VAL. "
