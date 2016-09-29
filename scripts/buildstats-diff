@@ -88,6 +88,17 @@ class BSTask(dict):
         """Bytes written to the block layer"""
         return self['iostat']['write_bytes']
 
+    @property
+    def read_ops(self):
+        """Number of read operations on the block layer"""
+        return self['rusage']['ru_inblock'] + self['child_rusage']['ru_inblock']
+
+    @property
+    def write_ops(self):
+        """Number of write operations on the block layer"""
+        return self['rusage']['ru_oublock'] + self['child_rusage']['ru_oublock']
+
+
 def read_buildstats_file(buildstat_file):
     """Convert buildstat text file into dict/json"""
     bs_task = BSTask()
@@ -306,6 +317,12 @@ def print_task_diff(bs1, bs2, val_type, min_val=0, min_absdiff=0, sort_by=('absd
                 prec = 1 if dec > 0 else 0
                 return "{:.{prec}f}{}B".format(val / (2 ** (10 * dec)),
                                                prefix[dec], prec=prec)
+        elif 'ops' in val_type and human_readable:
+                prefix = ['', 'k', 'M', 'G', 'T', 'P']
+                dec = int(math.log(val, 1000))
+                prec = 1 if dec > 0 else 0
+                return "{:.{prec}f}{}ops".format(val / (1000 ** dec),
+                                                 prefix[dec], prec=prec)
         return str(int(val))
 
     def sum_vals(buildstats):
@@ -418,17 +435,21 @@ Script for comparing buildstats of two separate builds."""
 
     min_val_defaults = {'cputime': 3.0,
                         'read_bytes': 524288,
-                        'write_bytes': 524288}
+                        'write_bytes': 524288,
+                        'read_ops': 500,
+                        'write_ops': 500}
     min_absdiff_defaults = {'cputime': 1.0,
                             'read_bytes': 131072,
-                            'write_bytes': 131072}
+                            'write_bytes': 131072,
+                            'read_ops': 50,
+                            'write_ops': 50}
 
     parser.add_argument('--debug', '-d', action='store_true',
                         help="Verbose logging")
     parser.add_argument('--ver-diff', action='store_true',
                         help="Show package version differences and exit")
     parser.add_argument('--diff-attr', default='cputime',
-                        choices=('cputime', 'read_bytes', 'write_bytes'),
+                        choices=min_val_defaults.keys(),
                         help="Buildstat attribute which to compare")
     parser.add_argument('--min-val', default=min_val_defaults, type=float,
                         help="Filter out tasks less than MIN_VAL. "
