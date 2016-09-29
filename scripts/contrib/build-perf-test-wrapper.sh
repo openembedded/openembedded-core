@@ -19,6 +19,8 @@
 # oe-build-perf-test and archives the results.
 
 script=`basename $0`
+archive_dir=~/perf-results/archives
+
 usage () {
 cat << EOF
 Usage: $script [-h] [-c COMMITISH] [-C GIT_REPO]
@@ -26,16 +28,16 @@ Usage: $script [-h] [-c COMMITISH] [-C GIT_REPO]
 Optional arguments:
   -h                show this help and exit.
   -a ARCHIVE_DIR    archive results tarball here, give an empty string to
-                    disable tarball archiving
+                    disable tarball archiving (default: $archive_dir)
   -c COMMITISH      test (checkout) this commit
   -C GIT_REPO       commit results into Git
   -w WORK_DIR       work dir for this script
+                    (default: GIT_TOP_DIR/build-perf-test)
 EOF
 }
 
 
 # Parse command line arguments
-archive_dir=~/perf-results/archives
 commitish=""
 while getopts "ha:c:C:w:" opt; do
     case $opt in
