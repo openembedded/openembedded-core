@@ -79,6 +79,11 @@ class BSTask(dict):
                self['child_rusage']['ru_stime'] + self['child_rusage']['ru_utime']
 
     @property
+    def walltime(self):
+        """Elapsed wall clock time"""
+        return self['elapsed_time'].total_seconds()
+
+    @property
     def read_bytes(self):
         """Bytes read from the block layer"""
         return self['iostat']['read_bytes']
@@ -306,7 +311,7 @@ def print_task_diff(bs1, bs2, val_type, min_val=0, min_absdiff=0, sort_by=('absd
             else:
                 return "{:d}:{:02d}:{:04.1f}".format(h, m, s)
 
-        if val_type == 'cputime':
+        if 'time' in val_type:
             if human_readable:
                 return hms_time(val)
             else:
@@ -437,12 +442,14 @@ Script for comparing buildstats of two separate builds."""
                         'read_bytes': 524288,
                         'write_bytes': 524288,
                         'read_ops': 500,
-                        'write_ops': 500}
+                        'write_ops': 500,
+                        'walltime': 5}
     min_absdiff_defaults = {'cputime': 1.0,
                             'read_bytes': 131072,
                             'write_bytes': 131072,
                             'read_ops': 50,
-                            'write_ops': 50}
+                            'write_ops': 50,
+                            'walltime': 2}
 
     parser.add_argument('--debug', '-d', action='store_true',
                         help="Verbose logging")
