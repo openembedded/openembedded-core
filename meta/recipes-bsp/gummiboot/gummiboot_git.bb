@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=4fbd65380cdd255951079008b364516c"
 
 DEPENDS = "gnu-efi util-linux"
 
-inherit autotools pkgconfig
+inherit autotools pkgconfig manpages
 inherit deploy
 
 PV = "48+git${SRCPV}"
@@ -16,6 +16,8 @@ SRC_URI = "git://anongit.freedesktop.org/gummiboot \
            file://0001-console-Fix-C-syntax-errors-for-function-declaration.patch \
           "
 
+PACKAGECONFIG[manpages] = "--enable-manpages, --disable-manpages, libxslt-native xmlto-native"
+
 # Note: Add COMPATIBLE_HOST here is only because it depends on gnu-efi
 # which has set the COMPATIBLE_HOST, the gummiboot itself may work on
 # more hosts.
@@ -23,7 +25,7 @@ COMPATIBLE_HOST = "(x86_64.*|i.86.*)-linux"
 
 S = "${WORKDIR}/git"
 
-EXTRA_OECONF = "--disable-manpages --with-efi-includedir=${STAGING_INCDIR} \
+EXTRA_OECONF = "--with-efi-includedir=${STAGING_INCDIR} \
                 --with-efi-ldsdir=${STAGING_LIBDIR} \
                 --with-efi-libdir=${STAGING_LIBDIR}"
 
