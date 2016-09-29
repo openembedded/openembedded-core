@@ -26,7 +26,7 @@ from datetime import datetime, timedelta, tzinfo
 from operator import attrgetter
 
 # Setup logging
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
 log = logging.getLogger()
 
 
