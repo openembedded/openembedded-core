@@ -71,7 +71,9 @@ Build Configuration:  |
 Layer Revisions:      |
 -----------------------
 ''',
-            get_layer_revs(d)
+            get_layer_revs(d),
+            '''
+'''
        ))
 }
 
