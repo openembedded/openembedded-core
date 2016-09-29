@@ -7,6 +7,7 @@ SRC_URI += "file://0001-use-lnr-wrapper-instead-of-looking-for-relative-opti.pat
 inherit autotools pkgconfig gettext
 inherit deploy
 
+# Man pages are packaged through the main systemd recipe
 EXTRA_OECONF = " --enable-gnuefi \
                  --with-efi-includedir=${STAGING_INCDIR} \
                  --with-efi-ldsdir=${STAGING_LIBDIR} \
