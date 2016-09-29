@@ -17,7 +17,7 @@ PACKAGECONFIG ??= "udev"
 PACKAGECONFIG[bat] = "--enable-bat,--disable-bat,fftwf"
 
 PACKAGECONFIG[udev] = "--with-udev-rules-dir=`pkg-config --variable=udevdir udev`/rules.d,,udev"
-PACKAGECONFIG[xmlto] = "--enable-xmlto, --disable-xmlto, xmlto-native docbook-xml-dtd4-native docbook-xsl-stylesheets-native"
+PACKAGECONFIG[manpages] = "--enable-xmlto, --disable-xmlto, xmlto-native docbook-xml-dtd4-native docbook-xsl-stylesheets-native"
 
 SRC_URI = "ftp://ftp.alsa-project.org/pub/utils/alsa-utils-${PV}.tar.bz2 \
            file://0001-alsactl-don-t-let-systemd-unit-restore-the-volume-wh.patch \
@@ -32,7 +32,7 @@ SRC_URI[sha256sum] = "7af603c0877d1251599d65b4fbc372e63a54371b888f5c26c6a86ac1d0
 #
 EXTRA_OECONF_append_libc-uclibc = " --disable-nls"
 
-inherit autotools gettext pkgconfig
+inherit autotools gettext pkgconfig manpages
 
 # This are all packages that we need to make. Also, the now empty alsa-utils
 # ipk depends on them.
