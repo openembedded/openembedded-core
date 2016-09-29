@@ -115,11 +115,14 @@ def read_buildstats_dir(bs_dir):
 
     if os.path.isfile(os.path.join(bs_dir, 'build_stats')):
         top_dir = bs_dir
-    else:
+    elif os.path.exists(bs_dir):
         subdirs = sorted(glob.glob(bs_dir + '/*'))
         if len(subdirs) > 1:
             log.warning("Multiple buildstats found, using the first one")
         top_dir = subdirs[0]
+    else:
+        log.error("No such directory: %s", bs_dir)
+        sys.exit(1)
     log.debug("Reading buildstats directory %s", top_dir)
     subdirs = os.listdir(top_dir)
 
