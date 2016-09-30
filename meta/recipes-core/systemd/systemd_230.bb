@@ -4,7 +4,7 @@ PROVIDES = "udev"
 
 PE = "1"
 
-DEPENDS = "kmod docbook-sgml-dtd-4.1-native intltool-native gperf-native acl readline libcap libcgroup qemu-native util-linux"
+DEPENDS = "kmod intltool-native gperf-native acl readline libcap libcgroup qemu-native util-linux"
 
 SECTION = "base/shell"
 
