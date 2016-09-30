@@ -32,6 +32,8 @@ BOOST_LIBS = "\
 BOOST_LIBS_append_x86 = " context coroutine"
 BOOST_LIBS_append_x86-64 = " context coroutine"
 BOOST_LIBS_append_powerpc = " context coroutine"
+# need consistent settings for native builds (x86 override not applied for native)
+BOOST_LIBS_remove_class-native = " context coroutine"
 
 # optional libraries
 PACKAGECONFIG ??= "locale"
