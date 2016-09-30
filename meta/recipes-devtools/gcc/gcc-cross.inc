@@ -194,6 +194,9 @@ do_install () {
 		;;
 	esac
 }
+# This is reflected in the recipe name and target gcc shouldn't depend 
+# on SDK settings either
+do_install[vardepsexclude] += "SDK_SYS"
 
 do_package[noexec] = "1"
 do_packagedata[noexec] = "1"
