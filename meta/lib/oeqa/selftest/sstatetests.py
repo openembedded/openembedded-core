@@ -311,19 +311,48 @@ NATIVELSBSTRING = \"DistroB\"
         the two MACHINE values.
         """
 
+        configA = """
+TMPDIR = \"${TOPDIR}/tmp-sstatesamehash\"
+MACHINE = \"qemux86-64\"
+"""
+        configB = """
+TMPDIR = \"${TOPDIR}/tmp-sstatesamehash2\"
+MACHINE = \"qemuarm\"
+"""
+        self.sstate_allarch_samesigs(configA, configB)
+
+    def test_sstate_allarch_samesigs_multilib(self):
+        """
+        The sstate checksums of allarch multilib packages should be independent of whichever
+        MACHINE is set. Check this using bitbake -S.
+        Also, rather than duplicate the test, check nativesdk stamps are the same between
+        the two MACHINE values.
+        """
+
+        configA = """
+TMPDIR = \"${TOPDIR}/tmp-sstatesamehash\"
+MACHINE = \"qemux86-64\"
+require conf/multilib.conf
+MULTILIBS = \"multilib:lib32\"
+DEFAULTTUNE_virtclass-multilib-lib32 = \"x86\"
+"""
+        configB = """
+TMPDIR = \"${TOPDIR}/tmp-sstatesamehash2\"
+MACHINE = \"qemuarm\"
+require conf/multilib.conf
+MULTILIBS = \"\"
+"""
+        self.sstate_allarch_samesigs(configA, configB)
+
+    def sstate_allarch_samesigs(self, configA, configB):
+
         topdir = get_bb_var('TOPDIR')
         targetos = get_bb_var('TARGET_OS')
         targetvendor = get_bb_var('TARGET_VENDOR')
-        self.write_config("""
-TMPDIR = \"${TOPDIR}/tmp-sstatesamehash\"
-MACHINE = \"qemux86\"
-""")
+        self.write_config(configA)
         self.track_for_cleanup(topdir + "/tmp-sstatesamehash")
         bitbake("world meta-toolchain -S none")
-        self.write_config("""
-TMPDIR = \"${TOPDIR}/tmp-sstatesamehash2\"
-MACHINE = \"qemuarm\"
-""")
+        self.write_config(configB)
         self.track_for_cleanup(topdir + "/tmp-sstatesamehash2")
         bitbake("world meta-toolchain -S none")
 
