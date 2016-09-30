@@ -85,7 +85,7 @@ def _prepare_remote_script(deploy, verbose=False, dryrun=False, undeployall=Fals
             lines.append('do')
             lines.append('    checkpath=`dirname "$checkpath"`')
             lines.append('done')
-            lines.append('freespace=`df -P $checkpath | sed "1d" | awk \'{ print $4 }\'`')
+            lines.append(r'freespace=$(df -P $checkpath | sed -nre "s/^(\S+\s+){3}([0-9]+).*/\2/p")')
             # First line of the file is the total space
             lines.append('total=`head -n1 $3`')
             lines.append('if [ $total -gt $freespace ] ; then')
