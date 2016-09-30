@@ -117,15 +117,20 @@ if [ -f "$base_dir/auto.conf.extra" ]; then
 fi
 
 # Run actual test script
-if ! oe-build-perf-test --out-dir "$results_dir" \
-                        --globalres-file "$globalres_log" \
-                        --lock-file "$base_dir/oe-build-perf.lock" \
-                        "${commit_results[@]}" \
-                        --commit-results-branch "{tester_host}/{git_branch}/$machine" \
-                        --commit-results-tag "{tester_host}/{git_branch}/$machine/{git_commit_count}-g{git_commit}/{tag_num}"; then
-    echo "oe-build-perf-test script failed!"
-    exit 1
-fi
+oe-build-perf-test --out-dir "$results_dir" \
+                   --globalres-file "$globalres_log" \
+                   --lock-file "$base_dir/oe-build-perf.lock" \
+                   "${commit_results[@]}" \
+                   --commit-results-branch "{tester_host}/{git_branch}/$machine" \
+                   --commit-results-tag "{tester_host}/{git_branch}/$machine/{git_commit_count}-g{git_commit}/{tag_num}"
+
+case $? in
+    1)  echo "ERROR: oe-build-perf-test script failed!"
+        exit 1
+        ;;
+    2)  echo "NOTE: some tests failed!"
+        ;;
+esac
 
 echo -ne "\n\n-----------------\n"
 echo "Global results file:"
