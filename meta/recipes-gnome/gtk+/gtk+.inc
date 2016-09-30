@@ -18,7 +18,7 @@ ANY_OF_DISTRO_FEATURES = "${GTK2DISTROFEATURES}"
 UPSTREAM_CHECK_REGEX = "(?P<pver>2\.([0-8]*[02468])+(\.\d+)+)"
 
 X11DEPENDS = "virtual/libx11 libxext libxcursor libxrandr libxdamage libxrender libxcomposite"
-DEPENDS = "glib-2.0 pango atk jpeg libpng gdk-pixbuf-native docbook-utils-native \
+DEPENDS = "glib-2.0 pango atk jpeg libpng gdk-pixbuf-native \
  cairo gdk-pixbuf"
 
 PACKAGECONFIG ??= "${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'x11', '', d)} \
