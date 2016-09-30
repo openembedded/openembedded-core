@@ -146,7 +146,8 @@ python build_efi_cfg() {
 
             if append:
                 append = replace_rootfs_uuid(d, append)
-                cfgfile.write('%s' % (append))
+                cfgfile.write(' %s' % (append))
+
             cfgfile.write(' %s' % btype[1])
             cfgfile.write('\n')
 
