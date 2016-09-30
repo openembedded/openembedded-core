@@ -57,6 +57,7 @@ x86_common = [
     'pmd_set_huge: Cannot satisfy',
     'failed to setup card detect gpio',
     'amd_nb: Cannot enumerate AMD northbridges',
+    'failed to retrieve link info, disabling eDP',
 ] + common_errors
 
 qemux86_common = [
