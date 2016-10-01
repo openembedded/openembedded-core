@@ -108,7 +108,7 @@ python do_package_ipk () {
             ctrlfile = open(os.path.join(controldir, 'control'), 'w')
         except OSError:
             bb.utils.unlockfile(lf)
-            raise bb.build.FuncFailed("unable to open control file for writing.")
+            bb.fatal("unable to open control file for writing")
 
         fields = []
         pe = d.getVar('PKGE', True)
@@ -162,7 +162,7 @@ python do_package_ipk () {
             (type, value, traceback) = sys.exc_info()
             ctrlfile.close()
             bb.utils.unlockfile(lf)
-            raise bb.build.FuncFailed("Missing field for ipk generation: %s" % value)
+            bb.fatal("Missing field for ipk generation: %s" % value)
         # more fields
 
         custom_fields_chunk = get_package_additional_metadata("ipk", localdata)
@@ -226,7 +226,7 @@ python do_package_ipk () {
                 scriptfile = open(os.path.join(controldir, script), 'w')
             except OSError:
                 bb.utils.unlockfile(lf)
-                raise bb.build.FuncFailed("unable to open %s script file for writing." % script)
+                bb.fatal("unable to open %s script file for writing" % script)
             scriptfile.write(scriptvar)
             scriptfile.close()
             os.chmod(os.path.join(controldir, script), 0o755)
@@ -237,7 +237,7 @@ python do_package_ipk () {
                 conffiles = open(os.path.join(controldir, 'conffiles'), 'w')
             except OSError:
                 bb.utils.unlockfile(lf)
-                raise bb.build.FuncFailed("unable to open conffiles for writing.")
+                bb.fatal("unable to open conffiles for writing")
             for f in conffiles_str.split():
                 if os.path.exists(oe.path.join(root, f)):
                     conffiles.write('%s\n' % f)
@@ -248,7 +248,7 @@ python do_package_ipk () {
                                                           d.getVar("OPKGBUILDCMD", True), pkg, pkgoutdir), shell=True)
         if ret != 0:
             bb.utils.unlockfile(lf)
-            raise bb.build.FuncFailed("opkg-build execution failed")
+            bb.fatal("opkg-build execution failed")
 
         if d.getVar('IPK_SIGN_PACKAGES', True) == '1':
             ipkver = "%s-%s" % (d.getVar('PKGV', True), d.getVar('PKGR', True))
