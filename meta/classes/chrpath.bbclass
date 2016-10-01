@@ -39,8 +39,7 @@ def process_file_linux(cmd, fpath, rootdir, baseprefix, tmpdir, d):
         p = sub.Popen([cmd, '-r', args, fpath],stdout=sub.PIPE,stderr=sub.PIPE)
         out, err = p.communicate()
         if p.returncode != 0:
-            bb.error("%s: chrpath command failed with exit code %d:\n%s%s" % (d.getVar('PN', True), p.returncode, out, err))
-            raise bb.build.FuncFailed
+            bb.fatal("%s: chrpath command failed with exit code %d:\n%s%s" % (d.getVar('PN', True), p.returncode, out, err))
 
 def process_file_darwin(cmd, fpath, rootdir, baseprefix, tmpdir, d):
     import subprocess as sub
