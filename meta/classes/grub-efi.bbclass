@@ -90,12 +90,12 @@ python build_efi_cfg() {
 
     cfile = d.getVar('GRUB_CFG', True)
     if not cfile:
-        raise bb.build.FuncFailed('Unable to read GRUB_CFG')
+        bb.fatal('Unable to read GRUB_CFG')
 
     try:
          cfgfile = open(cfile, 'w')
     except OSError:
-        raise bb.build.FuncFailed('Unable to open %s' % (cfile))
+        bb.fatal('Unable to open %s' % cfile)
 
     cfgfile.write('# Automatically created by OE\n')
 
@@ -114,7 +114,7 @@ python build_efi_cfg() {
 
     root = d.getVar('GRUB_ROOT', True)
     if not root:
-        raise bb.build.FuncFailed('GRUB_ROOT not defined')
+        bb.fatal('GRUB_ROOT not defined')
 
     if gfxserial == "1":
         btypes = [ [ " graphics console", "" ],
@@ -127,7 +127,7 @@ python build_efi_cfg() {
 
         overrides = localdata.getVar('OVERRIDES', True)
         if not overrides:
-            raise bb.build.FuncFailed('OVERRIDES not defined')
+            bb.fatal('OVERRIDES not defined')
 
         for btype in btypes:
             localdata.setVar('OVERRIDES', label + ':' + overrides)
