@@ -465,7 +465,7 @@ def find_license_files(d):
             pass
 
     if not generic_directory:
-        raise bb.build.FuncFailed("COMMON_LICENSE_DIR is unset. Please set this in your distro config")
+        bb.fatal("COMMON_LICENSE_DIR is unset. Please set this in your distro config")
 
     if not lic_files:
         # No recipe should have an invalid license file. This is checked else
@@ -477,7 +477,7 @@ def find_license_files(d):
         try:
             (type, host, path, user, pswd, parm) = bb.fetch.decodeurl(url)
         except bb.fetch.MalformedUrl:
-            raise bb.build.FuncFailed("%s: LIC_FILES_CHKSUM contains an invalid URL:  %s" % (d.getVar('PF', True), url))
+            bb.fatal("%s: LIC_FILES_CHKSUM contains an invalid URL:  %s" % (d.getVar('PF', True), url))
         # We want the license filename and path
         chksum = parm['md5'] if 'md5' in parm else parm['sha256']
         lic_chksums[path] = chksum
