@@ -100,12 +100,12 @@ python build_syslinux_cfg () {
 
     cfile = d.getVar('SYSLINUX_CFG', True)
     if not cfile:
-        raise bb.build.FuncFailed('Unable to read SYSLINUX_CFG')
+        bb.fatal('Unable to read SYSLINUX_CFG')
 
     try:
         cfgfile = open(cfile, 'w')
     except OSError:
-        raise bb.build.FuncFailed('Unable to open %s' % (cfile))
+        bb.fatal('Unable to open %s' % cfile)
 
     cfgfile.write('# Automatically created by OE\n')
 
@@ -160,7 +160,7 @@ python build_syslinux_cfg () {
 
         overrides = localdata.getVar('OVERRIDES', True)
         if not overrides:
-            raise bb.build.FuncFailed('OVERRIDES not defined')
+            bb.fatal('OVERRIDES not defined')
 
         localdata.setVar('OVERRIDES', label + ':' + overrides)
         bb.data.update_data(localdata)
@@ -172,7 +172,7 @@ python build_syslinux_cfg () {
 
         root= d.getVar('SYSLINUX_ROOT', True)
         if not root:
-            raise bb.build.FuncFailed('SYSLINUX_ROOT not defined')
+            bb.fatal('SYSLINUX_ROOT not defined')
 
         for btype in btypes:
             cfgfile.write('LABEL %s%s\nKERNEL /vmlinuz\n' % (btype[0], label))
