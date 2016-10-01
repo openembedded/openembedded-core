@@ -44,7 +44,7 @@ def run_test_context(CTestContext, d, testdir, tcname, pn, *args):
                 msg += " (skipped=%d)" % skipped
             bb.plain(msg)
         else:
-            raise bb.build.FuncFailed("%s - FAILED - check the task log and the commands log" % pn )
+            bb.fatal("%s - FAILED - check the task log and the commands log" % pn)
 
 def testsdk_main(d):
     import os
