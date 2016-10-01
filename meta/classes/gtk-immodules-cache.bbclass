@@ -84,6 +84,6 @@ python __anonymous() {
         gtkimmodules_check = d.getVar('GTKIMMODULES_PACKAGES', False)
         if not gtkimmodules_check:
             bb_filename = d.getVar('FILE', False)
-            raise bb.build.FuncFailed("ERROR: %s inherits gtk-immodules-cache but doesn't set GTKIMMODULES_PACKAGES" % bb_filename)
+            bb.fatal("ERROR: %s inherits gtk-immodules-cache but doesn't set GTKIMMODULES_PACKAGES" % bb_filename)
 }
 
