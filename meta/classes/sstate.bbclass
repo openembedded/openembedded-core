@@ -658,7 +658,7 @@ def sstate_setscene(d):
     shared_state = sstate_state_fromvars(d)
     accelerate = sstate_installpkg(shared_state, d)
     if not accelerate:
-        raise bb.build.FuncFailed("No suitable staging package found")
+        bb.fatal("No suitable staging package found")
 
 python sstate_task_prefunc () {
     shared_state = sstate_state_fromvars(d)
