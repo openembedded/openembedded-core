@@ -58,7 +58,7 @@ def write_rpm_perfiledata(srcname, d):
     try:
         dependsfile = open(outdepends, 'w')
     except OSError:
-        raise bb.build.FuncFailed("unable to open spec file for writing.")
+        bb.fatal("unable to open spec file for writing")
 
     dump_filerdeps('RDEPENDS', dependsfile, d)
 
@@ -71,7 +71,7 @@ def write_rpm_perfiledata(srcname, d):
     try:
         providesfile = open(outprovides, 'w')
     except OSError:
-        raise bb.build.FuncFailed("unable to open spec file for writing.")
+        bb.fatal("unable to open spec file for writing")
 
     dump_filerdeps('RPROVIDES', providesfile, d)
 
@@ -617,7 +617,7 @@ python write_specfile () {
     try:
         specfile = open(outspecfile, 'w')
     except OSError:
-        raise bb.build.FuncFailed("unable to open spec file for writing.")
+        bb.fatal("unable to open spec file for writing")
 
     # RPMSPEC_PREAMBLE is a way to add arbitrary text to the top
     # of the generated spec file
