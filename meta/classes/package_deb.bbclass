@@ -126,7 +126,7 @@ python do_package_deb () {
             ctrlfile = codecs.open(os.path.join(controldir, 'control'), 'w', 'utf-8')
         except OSError:
             bb.utils.unlockfile(lf)
-            raise bb.build.FuncFailed("unable to open control file for writing.")
+            bb.fatal("unable to open control file for writing")
 
         fields = []
         pe = d.getVar('PKGE', True)
@@ -197,7 +197,7 @@ python do_package_deb () {
             (type, value, traceback) = sys.exc_info()
             bb.utils.unlockfile(lf)
             ctrlfile.close()
-            raise bb.build.FuncFailed("Missing field for deb generation: %s" % value)
+            bb.fatal("Missing field for deb generation: %s" % value)
 
         # more fields
 
@@ -277,7 +277,7 @@ python do_package_deb () {
                 scriptfile = open(os.path.join(controldir, script), 'w')
             except OSError:
                 bb.utils.unlockfile(lf)
-                raise bb.build.FuncFailed("unable to open %s script file for writing." % script)
+                bb.fatal("unable to open %s script file for writing" % script)
 
             if scriptvar.startswith("#!"):
                 pos = scriptvar.find("\n") + 1
@@ -301,7 +301,7 @@ python do_package_deb () {
                 conffiles = open(os.path.join(controldir, 'conffiles'), 'w')
             except OSError:
                 bb.utils.unlockfile(lf)
-                raise bb.build.FuncFailed("unable to open conffiles for writing.")
+                bb.fatal("unable to open conffiles for writing")
             for f in conffiles_str.split():
                 if os.path.exists(oe.path.join(root, f)):
                     conffiles.write('%s\n' % f)
@@ -311,7 +311,7 @@ python do_package_deb () {
         ret = subprocess.call("PATH=\"%s\" dpkg-deb -b %s %s" % (localdata.getVar("PATH", True), root, pkgoutdir), shell=True)
         if ret != 0:
             bb.utils.unlockfile(lf)
-            raise bb.build.FuncFailed("dpkg-deb execution failed")
+            bb.fatal("dpkg-deb execution failed")
 
         cleanupcontrol(root)
         bb.utils.unlockfile(lf)
