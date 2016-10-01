@@ -47,7 +47,7 @@ python do_checkuri() {
         fetcher = bb.fetch2.Fetch(src_uri, d)
         fetcher.checkstatus()
     except bb.fetch2.BBFetchException as e:
-        raise bb.build.FuncFailed(e)
+        bb.fatal(str(e))
 }
 
 addtask checkuriall after do_checkuri
