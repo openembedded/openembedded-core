@@ -260,7 +260,7 @@ python package_do_split_gconvs () {
                 localedef_opts = locale_arch_options[target_arch]
             else:
                 bb.error("locale_arch_options not found for target_arch=" + target_arch)
-                raise bb.build.FuncFailed("unknown arch:" + target_arch + " for locale_arch_options")
+                bb.fatal("unknown arch:" + target_arch + " for locale_arch_options")
 
             localedef_opts += " --force  --no-archive --prefix=%s \
                 --inputfile=%s/%s/i18n/locales/%s --charmap=%s %s/%s" \
