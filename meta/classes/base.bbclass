@@ -113,7 +113,7 @@ def get_lic_checksum_file_list(d):
                     continue
                 filelist.append(path + ":" + str(os.path.exists(path)))
         except bb.fetch.MalformedUrl:
-            raise bb.build.FuncFailed(d.getVar('PN', True) + ": LIC_FILES_CHKSUM contains an invalid URL: " + url)
+            bb.fatal(d.getVar('PN', True) + ": LIC_FILES_CHKSUM contains an invalid URL: " + url)
     return " ".join(filelist)
 
 addtask fetch
@@ -131,7 +131,7 @@ python base_do_fetch() {
         fetcher = bb.fetch2.Fetch(src_uri, d)
         fetcher.download()
     except bb.fetch2.BBFetchException as e:
-        raise bb.build.FuncFailed(e)
+        bb.fatal(str(e))
 }
 
 addtask unpack after do_fetch
@@ -152,7 +152,7 @@ python base_do_unpack() {
         fetcher = bb.fetch2.Fetch(src_uri, d)
         fetcher.unpack(d.getVar('WORKDIR', True))
     except bb.fetch2.BBFetchException as e:
-        raise bb.build.FuncFailed(e)
+        bb.fatal(str(e))
 }
 
 def pkgarch_mapping(d):
@@ -671,7 +671,7 @@ python do_cleanall() {
         fetcher = bb.fetch2.Fetch(src_uri, d)
         fetcher.clean()
     except bb.fetch2.BBFetchException as e:
-        raise bb.build.FuncFailed(e)
+        bb.fatal(str(e))
 }
 do_cleanall[nostamp] = "1"
 
