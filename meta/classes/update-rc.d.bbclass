@@ -57,9 +57,9 @@ fi
 def update_rc_after_parse(d):
     if d.getVar('INITSCRIPT_PACKAGES', False) == None:
         if d.getVar('INITSCRIPT_NAME', False) == None:
-            raise bb.build.FuncFailed("%s inherits update-rc.d but doesn't set INITSCRIPT_NAME" % d.getVar('FILE', False))
+            bb.fatal("%s inherits update-rc.d but doesn't set INITSCRIPT_NAME" % d.getVar('FILE', False))
         if d.getVar('INITSCRIPT_PARAMS', False) == None:
-            raise bb.build.FuncFailed("%s inherits update-rc.d but doesn't set INITSCRIPT_PARAMS" % d.getVar('FILE', False))
+            bb.fatal("%s inherits update-rc.d but doesn't set INITSCRIPT_PARAMS" % d.getVar('FILE', False))
 
 python __anonymous() {
     update_rc_after_parse(d)
