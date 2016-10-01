@@ -164,7 +164,7 @@ def testimage_main(d):
                 msg += " (skipped=%d)" % skipped
             bb.plain(msg)
         else:
-            raise bb.build.FuncFailed("%s - FAILED - check the task log and the ssh log" % pn )
+            bb.fatal("%s - FAILED - check the task log and the ssh log" % pn)
     finally:
         signal.signal(signal.SIGTERM, tc.origsigtermhandler)
         target.stop()
