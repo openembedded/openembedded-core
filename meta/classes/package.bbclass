@@ -1171,7 +1171,7 @@ python populate_packages () {
                 continue
             ret = bb.utils.copyfile(file, fpath)
             if ret is False or ret == 0:
-                raise bb.build.FuncFailed("File population failed")
+                bb.fatal("File population failed")
 
         # Check if symlink paths exist
         for file in symlink_paths:
