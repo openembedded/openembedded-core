@@ -1,7 +1,6 @@
 require linux-libc-headers.inc
 
-SRC_URI_forcevariable = "${KERNELORG_MIRROR}/linux/kernel/v${HEADER_FETCH_VER}/testing/linux-4.8-rc4.tar.${KORG_ARCHIVE_COMPRESSION}"
-PV = "4.8-rc4"
+PV = "4.8"
 
 SRC_URI_append_libc-musl = "\
     file://0001-libc-compat.h-fix-some-issues-arising-from-in6.h.patch \
@@ -9,5 +8,5 @@ SRC_URI_append_libc-musl = "\
     file://0003-remove-inclusion-of-sysinfo.h-in-kernel.h.patch \
    "
 
-SRC_URI[md5sum] = "269067213995c7742730ce53b8140c90"
-SRC_URI[sha256sum] = "8f07a0d76a7d1a30490582ba9642b7f28370102bc4acc4bb4b2586c8eabf4447"
+SRC_URI[md5sum] = "c1af0afbd3df35c1ccdc7a5118cd2d07"
+SRC_URI[sha256sum] = "3e9150065f193d3d94bcf46a1fe9f033c7ef7122ab71d75a7fb5a2f0c9a7e11a"
