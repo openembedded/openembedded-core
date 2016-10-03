@@ -16352,7 +16352,7 @@ index 9503ec8..70e856e 100644
  	      case "$perm_rpath " in
  	      *" $libdir "*) ;;
 -	      *) perm_rpath="$perm_rpath $libdir" ;;
-+	      *) func_apped perm_rpath " $libdir" ;;
++	      *) func_append perm_rpath " $libdir" ;;
  	      esac
  	    fi
  	  done
@@ -21175,4 +21175,3 @@ index bba9fd2..25a2dae 100755
  
 -- 
 2.9.0
-
