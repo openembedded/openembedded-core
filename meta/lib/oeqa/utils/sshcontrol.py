@@ -52,17 +52,19 @@ class SSHProcess(object):
             endtime = self.starttime + timeout
             eof = False
             while time.time() < endtime and not eof:
-                if select.select([self.process.stdout], [], [], 5)[0] != []:
-                    data = os.read(self.process.stdout.fileno(), 1024)
-                    if not data:
-                        self.process.stdout.close()
-                        eof = True
-                    else:
-                        data = data.decode("utf-8")
-                        output += data
-                        self.log(data)
-                        endtime = time.time() + timeout
-
+                try:
+                    if select.select([self.process.stdout], [], [], 5)[0] != []:
+                        data = os.read(self.process.stdout.fileno(), 1024)
+                        if not data:
+                            self.process.stdout.close()
+                            eof = True
+                        else:
+                            data = data.decode("utf-8")
+                            output += data
+                            self.log(data)
+                            endtime = time.time() + timeout
+                except InterruptedError:
+                    continue
 
             # process hasn't returned yet
             if not eof:
