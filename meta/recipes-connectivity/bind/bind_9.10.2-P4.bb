@@ -30,6 +30,7 @@ SRC_URI = "ftp://ftp.isc.org/isc/bind9/${PV}/${BPN}-${PV}.tar.gz \
            file://CVE-2016-1286_2.patch \
            file://CVE-2016-2088.patch \
            file://CVE-2016-2775.patch \
+           file://CVE-2016-2776.patch \
            "
 
 SRC_URI[md5sum] = "8b1f5064837756c938eadc1537dec5c7"
