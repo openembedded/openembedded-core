@@ -8,12 +8,6 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=7fbc338309ac38fefcd64b04bb903e34 \
 
 BBCLASSEXTEND = "native nativesdk"
 
-# configure.in sets -D__arm__ on the command line for any arm system
-# (not just those with the ARM instruction set), this should be removed,
-# (or replaced by a permitted #define).
-#FIXME: remove the following
-ARM_INSTRUCTION_SET = "arm"
-
 SRC_URI = "ftp://ftp.alsa-project.org/pub/lib/${BP}.tar.bz2 \
            file://Check-if-wordexp-function-is-supported.patch \
            file://avoid-including-sys-poll.h-directly.patch \
