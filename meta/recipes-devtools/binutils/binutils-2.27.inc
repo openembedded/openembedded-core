@@ -33,6 +33,7 @@ SRC_URI = "\
      file://0011-Change-default-emulation-for-mips64-linux.patch \
      file://0012-Add-support-for-Netlogic-XLP.patch \
      file://0013-fix-the-incorrect-assembling-for-ppc-wait-mnemonic.patch \
+     file://0014-libtool-remove-rpath.patch \
 "
 S  = "${WORKDIR}/git"
 
