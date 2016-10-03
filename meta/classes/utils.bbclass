@@ -419,3 +419,13 @@ def all_multilib_tune_list(vars, d):
         values[v].append(localdata.getVar(v, True))
         values['ml'].append(item)
     return values
+
+# If the user hasn't set up their name/email, set some defaults
+check_git_config() {
+	if ! git config user.email > /dev/null ; then
+		git config --local user.email "${PATCH_GIT_USER_EMAIL}"
+	fi
+	if ! git config user.name > /dev/null ; then
+		git config --local user.name "${PATCH_GIT_USER_NAME}"
+	fi
+}

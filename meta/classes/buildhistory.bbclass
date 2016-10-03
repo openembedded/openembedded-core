@@ -57,6 +57,9 @@ SSTATEPOSTINSTFUNCS[vardepvalueexclude] .= "| buildhistory_emit_pkghistory"
 # class.
 BUILDHISTORY_PRESERVE = "latest latest_srcrev"
 
+PATCH_GIT_USER_EMAIL ?= "buildhistory@oe"
+PATCH_GIT_USER_NAME ?= "OpenEmbedded"
+
 #
 # Write out metadata about this package for comparison when writing future packages
 #
@@ -708,15 +711,9 @@ END
 			git tag -f build-minus-2 build-minus-1 > /dev/null 2>&1 || true
 			git tag -f build-minus-1 > /dev/null 2>&1 || true
 		fi
-		# If the user hasn't set up their name/email, set some defaults
-		# just for this repo (otherwise the commit will fail with older
-		# versions of git)
-		if ! git config user.email > /dev/null ; then
-			git config --local user.email "buildhistory@${DISTRO}"
-		fi
-		if ! git config user.name > /dev/null ; then
-			git config --local user.name "buildhistory"
-		fi
+
+		check_git_config
+
 		# Check if there are new/changed files to commit (other than metadata-revs)
 		repostatus=`git status --porcelain | grep -v " metadata-revs$"`
 		HOSTNAME=`hostname 2>/dev/null || echo unknown`

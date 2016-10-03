@@ -1,5 +1,7 @@
 # remove tasks that modify the source tree in case externalsrc is inherited
 SRCTREECOVEREDTASKS += "do_kernel_configme do_validate_branches do_kernel_configcheck do_kernel_checkout do_fetch do_unpack do_patch"
+PATCH_GIT_USER_EMAIL ?= "kernel-yocto@oe"
+PATCH_GIT_USER_NAME ?= "OpenEmbedded"
 
 # returns local (absolute) path names for all valid patches in the
 # src_uri
@@ -159,6 +161,7 @@ do_kernel_metadata() {
 do_patch() {
 	cd ${S}
 
+	check_git_config
 	meta_dir=$(kgit --meta)
 	(cd ${meta_dir}; ln -sf patch.queue series)
 	if [ -f "${meta_dir}/series" ]; then
