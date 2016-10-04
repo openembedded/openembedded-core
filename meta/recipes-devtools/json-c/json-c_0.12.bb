@@ -28,3 +28,5 @@ do_configure_prepend() {
     # Clean up autoconf cruft that should not be in the tarball
     rm -f ${S}/config.status
 }
+
+BBCLASSEXTEND = "native nativesdk"
