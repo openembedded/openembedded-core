@@ -259,3 +259,32 @@ def get_bbclassextend_targets(recipefile, pn):
             elif variant in ['native', 'cross', 'crosssdk']:
                 targets.append('%s-%s' % (pn, variant))
     return targets
+
+def ensure_npm(config, basepath, fixed_setup=False):
+    """
+    Ensure that npm is available and either build it or show a
+    reasonable error message
+    """
+    tinfoil = setup_tinfoil(config_only=True, basepath=basepath)
+    try:
+        nativepath = tinfoil.config_data.getVar('STAGING_BINDIR_NATIVE', True)
+    finally:
+        tinfoil.shutdown()
+
+    npmpath = os.path.join(nativepath, 'npm')
+    if not os.path.exists(npmpath):
+        logger.info('Building nodejs-native')
+        try:
+            exec_build_env_command(config.init_path, basepath,
+                                'bitbake -q nodejs-native', watch=True)
+        except bb.process.ExecutionError as e:
+            if "Nothing PROVIDES 'nodejs-native'" in e.stdout:
+                if fixed_setup:
+                    msg = 'nodejs-native is required for npm but is not available within this SDK'
+                else:
+                    msg = 'nodejs-native is required for npm but is not available - you will likely need to add a layer that provides nodejs'
+                raise DevtoolError(msg)
+            else:
+                raise
+        if not os.path.exists(npmpath):
+            raise DevtoolError('Built nodejs-native but npm binary still could not be found at %s' % npmpath)

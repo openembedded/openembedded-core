@@ -406,10 +406,7 @@ def create_recipe(args):
         srctree = tempsrc
         if fetchuri.startswith('npm://'):
             # Check if npm is available
-            npm = bb.utils.which(tinfoil.config_data.getVar('PATH', True), 'npm')
-            if not npm:
-                logger.error('npm:// URL requested but npm is not available - you need to either build nodejs-native or install npm using your package manager')
-                sys.exit(1)
+            check_npm(tinfoil.config_data)
         logger.info('Fetching %s...' % srcuri)
         try:
             checksums = scriptutils.fetch_uri(tinfoil.config_data, fetchuri, srctree, srcrev)
@@ -1075,6 +1072,11 @@ def convert_rpm_xml(xmlfile):
                     values[varname] = child[0].text
     return values
 
+
+def check_npm(d):
+    if not os.path.exists(os.path.join(d.getVar('STAGING_BINDIR_NATIVE', True), 'npm')):
+        logger.error('npm required to process specified source, but npm is not available - you need to build nodejs-native first')
+        sys.exit(14)
 
 def register_commands(subparsers):
     parser_create = subparsers.add_parser('create',

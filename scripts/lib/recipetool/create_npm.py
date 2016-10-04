@@ -21,7 +21,7 @@ import subprocess
 import tempfile
 import shutil
 import json
-from recipetool.create import RecipeHandler, split_pkg_licenses, handle_license_vars
+from recipetool.create import RecipeHandler, split_pkg_licenses, handle_license_vars, check_npm
 
 logger = logging.getLogger('recipetool')
 
@@ -157,6 +157,8 @@ class NpmRecipeHandler(RecipeHandler):
 
         files = RecipeHandler.checkfiles(srctree, ['package.json'])
         if files:
+            check_npm(tinfoil.config_data)
+
             data = read_package_json(files[0])
             if 'name' in data and 'version' in data:
                 extravalues['PN'] = data['name']
