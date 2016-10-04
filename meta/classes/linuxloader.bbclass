@@ -4,6 +4,9 @@ linuxloader () {
 		powerpc | mips | mipsel | microblaze )
 			dynamic_loader="${base_libdir}/ld.so.1"
 			;;
+		mipsisa32r6el | mipsisa32r6 | mipsisa64r6el | mipsisa64r6)
+			dynamic_loader="${base_libdir}/ld-linux-mipsn8.so.1"
+			;;
 		powerpc64)
 			dynamic_loader="${base_libdir}/ld64.so.1"
 			;;
