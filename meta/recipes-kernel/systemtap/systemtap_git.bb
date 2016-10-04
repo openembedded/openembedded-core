@@ -2,9 +2,7 @@ SUMMARY = "Script-directed dynamic tracing and performance analysis tool for Lin
 
 require systemtap_git.inc
 
-DEPENDS = "elfutils sqlite3 systemtap-native ncurses json-c"
-DEPENDS_class-native = "elfutils-native sqlite3-native gettext-native"
-DEPENDS_class-nativesdk = "nativesdk-elfutils nativesdk-sqlite3 nativesdk-gettext"
+DEPENDS = "boost elfutils"
 
 RDEPENDS_${PN} += "python3-core bash"
 
@@ -19,8 +17,10 @@ STAP_DOCS ?= "--disable-docs --disable-publican --disable-refdocs"
 
 EXTRA_OECONF += "${STAP_DOCS} "
 
-PACKAGECONFIG ??= ""
+PACKAGECONFIG ??= "sqlite monitor"
 PACKAGECONFIG[libvirt] = "--enable-libvirt,--disable-libvirt,libvirt"
+PACKAGECONFIG[sqlite] = "--enable-sqlite,--disable-sqlite,sqlite3"
+PACKAGECONFIG[monitor] = "--enable-monitor,--disable-monitor,ncurses json-c"
 
 inherit autotools gettext pkgconfig
 
