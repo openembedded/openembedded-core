@@ -32,14 +32,22 @@ TUNEVALID[fpu-hard] = "Use hardware FPU"
 TUNE_CCARGS .= "${@bb.utils.contains('TUNE_FEATURES', 'fpu-hard', ' -mhard-float', ' -msoft-float', d)}"
 TARGET_FPU = "${@bb.utils.contains('TUNE_FEATURES', 'fpu-hard', '', 'soft', d)}"
 
+# MIPS r6 ABI
+TUNEVALID[r6] = "Use r6"
+TUNEVALID[mipsisa64r6] = "Use 64r6"
+TUNEVALID[mipsisa32r6] = "Use 32r6"
+
 # Package naming
 MIPSPKGSFX_ENDIAN = "${@bb.utils.contains('TUNE_FEATURES', 'bigendian', '', 'el', d)}"
 MIPSPKGSFX_BYTE = "${@bb.utils.contains('TUNE_FEATURES', 'n64' , '64', '', d)}"
 MIPSPKGSFX_BYTE .= "${@bb.utils.contains('TUNE_FEATURES', 'n32' , '64', '', d)}"
 MIPSPKGSFX_FPU = "${@bb.utils.contains('TUNE_FEATURES', 'fpu-hard' , '', '-nf', d)}"
 MIPSPKGSFX_ABI = "${@bb.utils.contains('TUNE_FEATURES', 'n32', '-n32', '', d)}"
+MIPSPKGSFX_R6 = "${@bb.utils.contains('TUNE_FEATURES', 'r6', 'r6', '', d)}"
+MIPSPKGSFX_64R6 = "${@bb.utils.contains('TUNE_FEATURES', 'mipsisa64r6', 'isa', '', d)}"
+MIPSPKGSFX_32R6 = "${@bb.utils.contains('TUNE_FEATURES', 'mipsisa32r6', 'isa32', '', d)}"
 
-TUNE_ARCH = "mips${MIPSPKGSFX_BYTE}${MIPSPKGSFX_ENDIAN}"
+TUNE_ARCH = "mips${MIPSPKGSFX_32R6}${MIPSPKGSFX_64R6}${MIPSPKGSFX_BYTE}${MIPSPKGSFX_R6}${MIPSPKGSFX_ENDIAN}"
 TUNE_PKGARCH = "${MIPSPKGSFX_VARIANT_tune-${DEFAULTTUNE}}${MIPSPKGSFX_FPU}${MIPSPKGSFX_ABI}"
 
 # Base tunes
