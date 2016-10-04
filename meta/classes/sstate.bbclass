@@ -851,15 +851,19 @@ def sstate_checkhashes(sq_fn, sq_task, sq_hash, sq_hashfn, d, siginfo=False):
 
         if tasklist:
             bb.event.fire(bb.event.ProcessStarted("Checking sstate mirror object availability", len(tasklist)), d)
+
             import multiprocessing
             nproc = min(multiprocessing.cpu_count(), len(tasklist))
 
+            bb.event.enable_threadlock()
             pool = oe.utils.ThreadedPool(nproc, len(tasklist),
                     worker_init=checkstatus_init, worker_end=checkstatus_end)
             for t in tasklist:
                 pool.add_task(checkstatus, t)
             pool.start()
             pool.wait_completion()
+            bb.event.disable_threadlock()
+
             bb.event.fire(bb.event.ProcessFinished("Checking sstate mirror object availability"), d)
             if whitelist and missing:
                 bb.fatal('Required artifacts were unavailable - exiting')
