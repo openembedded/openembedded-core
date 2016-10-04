@@ -9,12 +9,13 @@ Infrastructure (DRI)."
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=8730ad58d11c7bbad9a7066d69f7808e"
 
-SRC_URI += "file://disable-x11-dri3.patch \
-            file://always_include_xorg_server.h.patch \
-            file://sna-Protect-against-ABI-breakage-in-recent-versions-.patch \
-            file://udev-fstat.patch \
-            file://0001-uxa-fix-the-call-to-PixmapSyncDirtyHelper-broken-by-.patch \
-            file://0001-gen8-Fix-the-YUV-RGB-shader.patch \
+SRCREV = "8f33f80100096f7790c7b819ce37a3ed8ce8b5fa"
+PV = "2.99.917+git${SRCPV}"
+S = "${WORKDIR}/git"
+
+SRC_URI = "git://anongit.freedesktop.org/xorg/driver/xf86-video-intel \
+           file://disable-x11-dri3.patch \
+           file://always_include_xorg_server.h.patch \
            "
 
 SRC_URI[md5sum] = "fa196a66e52c0c624fe5d350af7a5e7b"
