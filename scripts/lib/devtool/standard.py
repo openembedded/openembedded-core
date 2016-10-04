@@ -63,7 +63,7 @@ def add(args, config, basepath, workspace):
             args.srctree = args.recipename
             args.recipename = None
         elif os.path.isdir(args.recipename):
-            logger.warn('Ambiguous argument %s - assuming you mean it to be the recipe name')
+            logger.warn('Ambiguous argument "%s" - assuming you mean it to be the recipe name' % args.recipename)
 
     if args.fetch:
         if args.fetchuri:
