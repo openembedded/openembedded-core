@@ -114,7 +114,8 @@ class Test4(BuildPerfTestCase):
             self.bb_vars['SDK_DEPLOY'],
             self.bb_vars['TOOLCHAINEXT_OUTPUTNAME'] + '.sh')
         # Measure installer size
-        self.measure_disk_usage(installer, 'installer_bin', 'eSDK installer')
+        self.measure_disk_usage(installer, 'installer_bin', 'eSDK installer',
+                                apparent_size=True)
         # Measure deployment time and deployed size
         deploy_dir = os.path.join(tmp_dir, 'esdk-deploy')
         if os.path.exists(deploy_dir):
@@ -122,4 +123,5 @@ class Test4(BuildPerfTestCase):
         self.sync()
         self.measure_cmd_resources([installer, '-y', '-d', deploy_dir],
                                    'deploy', 'eSDK deploy')
-        self.measure_disk_usage(deploy_dir, 'deploy_dir', 'deploy dir')
+        self.measure_disk_usage(deploy_dir, 'deploy_dir', 'deploy dir',
+                                apparent_size=True)

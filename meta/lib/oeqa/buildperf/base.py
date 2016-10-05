@@ -408,9 +408,14 @@ class BuildPerfTestCase(unittest.TestCase):
                                                       int((e_sec % 3600) / 60),
                                                        e_sec % 60))
 
-    def measure_disk_usage(self, path, name, legend):
+    def measure_disk_usage(self, path, name, legend, apparent_size=False):
         """Estimate disk usage of a file or directory"""
-        ret = runCmd2(['du', '-s', path])
+        cmd = ['du', '-s', '--block-size', '1024']
+        if apparent_size:
+            cmd.append('--apparent-size')
+        cmd.append(path)
+
+        ret = runCmd2(cmd)
         size = int(ret.output.split()[0])
         log.debug("Size of %s path is %s", path, size)
         measurement = {'type': self.DISKUSAGE,
