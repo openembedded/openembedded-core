@@ -598,7 +598,7 @@ class PackageManager(object, metaclass=ABCMeta):
                globs]
         exclude = self.d.getVar('PACKAGE_EXCLUDE_COMPLEMENTARY', True)
         if exclude:
-            cmd.extend(['-x', exclude])
+            cmd.extend(['--exclude=' + exclude])
         try:
             bb.note("Installing complementary packages ...")
             bb.note('Running %s' % cmd)
