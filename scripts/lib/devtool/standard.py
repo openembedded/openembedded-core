@@ -581,8 +581,14 @@ def _extract_source(srctree, keep_temp, devbranch, sync, d):
         recipe_patches = [os.path.basename(patch) for patch in
                           oe.recipeutils.get_recipe_patches(crd)]
         local_files = oe.recipeutils.get_recipe_local_files(crd)
+
+        # Ignore local files with subdir={BP}
+        srcabspath = os.path.abspath(srcsubdir)
         local_files = [fname for fname in local_files if
-                       os.path.exists(os.path.join(workdir, fname))]
+                       os.path.exists(os.path.join(workdir, fname)) and
+                       (srcabspath == workdir or not
+                       os.path.join(workdir, fname).startswith(srcabspath +
+                           os.sep))]
         if local_files:
             for fname in local_files:
                 _move_file(os.path.join(workdir, fname),
