@@ -26,6 +26,7 @@
 
 import os
 import shutil
+import uuid
 
 from wic import msger
 from wic.utils.oe.misc import get_bitbake_var
@@ -242,11 +243,22 @@ class DirectImageCreator(BaseImageCreator):
 
         self.__image = Image(self.native_sysroot)
 
-        for part in parts:
+        disk_ids = {}
+        for num, part in enumerate(parts, 1):
             # as a convenience, set source to the boot partition source
             # instead of forcing it to be set via bootloader --source
             if not self.ks.bootloader.source and part.mountpoint == "/boot":
                 self.ks.bootloader.source = part.source
+
+            # generate parition UUIDs
+            if not part.uuid and part.use_uuid:
+                if self.ptable_format == 'gpt':
+                    part.uuid = str(uuid.uuid4())
+                else: # msdos partition table
+                    if part.disk not in disk_ids:
+                        disk_ids[part.disk] = int.from_bytes(os.urandom(4), 'little')
+                    disk_id = disk_ids[part.disk]
+                    part.uuid = '%0x-%02d' % (disk_id, self.__get_part_num(num, parts))
 
         fstab_path = self._write_fstab(self.rootfs_dir.get("ROOTFS_DIR"))
 

@@ -26,7 +26,6 @@
 
 import os
 import tempfile
-import uuid
 
 from wic.utils.oe.misc import msger, parse_sourceparams
 from wic.utils.oe.misc import exec_cmd, exec_native_cmd
@@ -60,8 +59,6 @@ class Partition():
         self.system_id = args.system_id
         self.use_uuid = args.use_uuid
         self.uuid = args.uuid
-        if args.use_uuid and not self.uuid:
-            self.uuid = str(uuid.uuid4())
 
         self.lineno = lineno
         self.source_file = ""
