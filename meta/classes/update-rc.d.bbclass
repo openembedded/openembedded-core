@@ -37,7 +37,7 @@ fi
 }
 
 updatercd_prerm() {
-if [ -z "$D" ]; then
+if [ -z "$D" -a -x "${INIT_D_DIR}/${INITSCRIPT_NAME}" ]; then
 	${INIT_D_DIR}/${INITSCRIPT_NAME} stop
 fi
 }
