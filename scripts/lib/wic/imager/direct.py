@@ -315,7 +315,7 @@ class DirectImageCreator(BaseImageCreator):
                         % (disk_name, full_path, disk['min_size']))
             disk_obj = DiskImage(full_path, disk['min_size'])
             self.__disks[disk_name] = disk_obj
-            self.__image.add_disk(disk_name, disk_obj)
+            self.__image.add_disk(disk_name, disk_obj, disk_ids.get(disk_name))
 
         self.__image.create()
 

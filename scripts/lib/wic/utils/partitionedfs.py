@@ -68,15 +68,17 @@ class Image():
                  'offset': 0,      # Offset of next partition (in sectors)
                  # Minimum required disk size to fit all partitions (in bytes)
                  'min_size': 0,
-                 'ptable_format': "msdos"} # Partition table format
+                 'ptable_format': "msdos", # Partition table format
+                 'identifier': None} # Disk system identifier
 
-    def add_disk(self, disk_name, disk_obj):
+    def add_disk(self, disk_name, disk_obj, identifier):
         """ Add a disk object which have to be partitioned. More than one disk
         can be added. In case of multiple disks, disk partitions have to be
         added for each disk separately with 'add_partition()". """
 
         self.__add_disk(disk_name)
         self.disks[disk_name]['disk'] = disk_obj
+        self.disks[disk_name]['identifier'] = identifier
 
     def __add_partition(self, part):
         """ This is a helper function for 'add_partition()' which adds a
@@ -244,6 +246,12 @@ class Image():
             exec_native_cmd("parted -s %s mklabel %s" % \
                             (disk['disk'].device, disk['ptable_format']),
                             self.native_sysroot)
+
+            if disk['identifier']:
+                msger.debug("Set disk identifier %x" % disk['identifier'])
+                with open(disk['disk'].device, 'r+b') as img:
+                    img.seek(0x1B8)
+                    img.write(disk['identifier'].to_bytes(4, 'little'))
 
         msger.debug("Creating partitions")
 
