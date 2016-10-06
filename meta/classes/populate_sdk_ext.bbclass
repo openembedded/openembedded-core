@@ -492,8 +492,18 @@ def get_sdk_required_utilities(buildtools_fn, d):
 
 install_tools() {
 	install -d ${SDK_OUTPUT}/${SDKPATHNATIVE}${bindir_nativesdk}
-	lnr ${SDK_OUTPUT}/${SDKPATH}/${scriptrelpath}/devtool ${SDK_OUTPUT}/${SDKPATHNATIVE}${bindir_nativesdk}/devtool
-	lnr ${SDK_OUTPUT}/${SDKPATH}/${scriptrelpath}/recipetool ${SDK_OUTPUT}/${SDKPATHNATIVE}${bindir_nativesdk}/recipetool
+	scripts="devtool recipetool oe-find-native-sysroot runqemu*"
+	for script in $scripts; do
+		for scriptfn in `find ${SDK_OUTPUT}/${SDKPATH}/${scriptrelpath} -maxdepth 1 -executable -name "$script"`; do
+			lnr ${scriptfn} ${SDK_OUTPUT}/${SDKPATHNATIVE}${bindir_nativesdk}/`basename $scriptfn`
+		done
+	done
+	# We can't use the same method as above because files in the sysroot won't exist at this point
+	# (they get populated from sstate on installation)
+	if [ "${SDK_INCLUDE_TOOLCHAIN}" == "1" ] ; then
+		binrelpath=${@os.path.relpath(d.getVar('STAGING_BINDIR_NATIVE',True), d.getVar('TOPDIR', True))}
+		lnr ${SDK_OUTPUT}/${SDKPATH}/$binrelpath/unfsd ${SDK_OUTPUT}/${SDKPATHNATIVE}${bindir_nativesdk}/unfsd
+	fi
 	touch ${SDK_OUTPUT}/${SDKPATH}/.devtoolbase
 
 	# find latest buildtools-tarball and install it
