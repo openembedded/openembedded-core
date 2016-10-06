@@ -58,6 +58,12 @@ DEFAULT_TEST_SUITES_pn-meta-toolchain = "auto"
 # aarch64 has no graphics
 DEFAULT_TEST_SUITES_remove_aarch64 = "xorg"
 
+# qemumips is quite slow and has reached the timeout limit several times on the YP build cluster,
+# mitigate this by removing build tests for qemumips machines.
+MIPSREMOVE ??= "buildcvs buildiptables buildgalculator"
+DEFAULT_TEST_SUITES_remove_qemumips = "${MIPSREMOVE}"
+DEFAULT_TEST_SUITES_remove_qemumips64 = "${MIPSREMOVE}"
+
 TEST_SUITES ?= "${DEFAULT_TEST_SUITES}"
 
 TEST_QEMUBOOT_TIMEOUT ?= "1000"
