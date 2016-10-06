@@ -299,7 +299,7 @@ class Image():
                                          (part['num'], part['part_type'],
                                           disk['disk'].device), self.native_sysroot)
 
-            if part['uuid']:
+            if part['uuid'] and disk['ptable_format'] == "gpt":
                 msger.debug("partition %d: set UUID to %s" % \
                             (part['num'], part['uuid']))
                 exec_native_cmd("sgdisk --partition-guid=%d:%s %s" % \
