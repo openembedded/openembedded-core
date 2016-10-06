@@ -9,6 +9,7 @@ SRC_URI = "http://downloads.yoctoproject.org/releases/pseudo/${BPN}-${PV}.tar.bz
            file://0001-Don-t-send-SIGUSR1-to-init.patch \
            file://0001-Quiet-diagnostics-during-startup-for-pseudo-d.patch \
            file://0002-Use-correct-file-descriptor.patch \
+           file://0003-Fix-renameat-parallel-to-previous-fix-to-rename.patch \
            "
 
 SRC_URI[md5sum] = "ee38e4fb62ff88ad067b1a5a3825bac7"
