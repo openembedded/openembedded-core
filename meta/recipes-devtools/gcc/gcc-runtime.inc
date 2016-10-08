@@ -95,6 +95,14 @@ do_install_append_class-target () {
 			ln -s ${TARGET_SYS} ${D}${includedir}/c++/${BINV}/${TARGET_ARCH}${TARGET_VENDOR}-linux
 		fi
 	fi
+	if [ "${TARGET_OS}" = "linux-gnux32" ]; then
+		if [ "${MULTILIBS}" != "" ]; then
+			mkdir ${D}${includedir}/c++/${BINV}/${TARGET_ARCH}-poky-linux
+			ln -s ../${TARGET_SYS} ${D}${includedir}/c++/${BINV}/${TARGET_ARCH}-poky-linux/x32
+		else
+			ln -s ${TARGET_SYS} ${D}${includedir}/c++/${BINV}/${TARGET_ARCH}${TARGET_VENDOR}-linux
+		fi
+	fi
 
 	if [ "${TCLIBC}" != "glibc" ]; then
 		case "${TARGET_OS}" in
