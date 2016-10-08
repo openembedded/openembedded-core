@@ -111,9 +111,15 @@ fakeroot python do_multilib_install() {
         if not tune_bitness:
             tune_bitness = '32' # /lib => 32bit lib
 
+        tune_abiextension = tune_parameters['abiextension']
+        if tune_abiextension:
+            libcextension = '-gnu' + tune_abiextension
+        else:
+            libcextension = ''
+
         src = '../../../' + tune_baselib + '/' + \
             tune_arch + d.getVar('TARGET_VENDOR', True) + 'ml' + ml + \
-            '-' + d.getVar('TARGET_OS', True) + '/' + binv + '/'
+            '-' + d.getVar('TARGET_OS', True) + libcextension +  '/' + binv + '/'
 
         dest = d.getVar('D', True) + d.getVar('libdir', True) + '/' + \
             d.getVar('TARGET_SYS', True) + '/' + binv + '/' + tune_bitness
