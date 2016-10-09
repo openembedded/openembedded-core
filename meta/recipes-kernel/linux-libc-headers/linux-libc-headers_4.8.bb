@@ -10,7 +10,6 @@ SRC_URI_append_libc-musl = "\
 
 SRC_URI_append = "\
     file://0001-ppp-fix-in-if.h-includes.patch \
-    file://0001-if_tunnel-remove-include-of-if-ip-in6.h.patch \
     "
 
 SRC_URI[md5sum] = "c1af0afbd3df35c1ccdc7a5118cd2d07"
