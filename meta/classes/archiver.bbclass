@@ -303,9 +303,10 @@ python do_unpack_and_patch() {
         return
     ar_outdir = d.getVar('ARCHIVER_OUTDIR', True)
     ar_workdir = d.getVar('ARCHIVER_WORKDIR', True)
+    pn = d.getVar('PN', True)
 
     # The kernel class functions require it to be on work-shared, so we dont change WORKDIR
-    if not bb.data.inherits_class('kernel-yocto', d):
+    if not (bb.data.inherits_class('kernel-yocto', d) or pn.startswith('gcc-source')):
         # Change the WORKDIR to make do_unpack do_patch run in another dir.
         d.setVar('WORKDIR', ar_workdir)
 
@@ -323,7 +324,7 @@ python do_unpack_and_patch() {
         oe.path.copytree(src, src_orig)
 
     # Make sure gcc and kernel sources are patched only once
-    if not ((d.getVar('SRC_URI', True) == "" or bb.data.inherits_class('kernel-yocto', d))):
+    if not (d.getVar('SRC_URI', True) == "" or (bb.data.inherits_class('kernel-yocto', d) or pn.startswith('gcc-source'))):
         bb.build.exec_func('do_patch', d)
 
     # Create the patches
