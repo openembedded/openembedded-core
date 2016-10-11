@@ -84,6 +84,8 @@ EOF
 
 addtask generate_toolchain_file after do_patch before do_configure
 
+CONFIGURE_FILES = "CMakeLists.txt"
+
 cmake_do_configure() {
 	if [ "${OECMAKE_BUILDPATH}" ]; then
 		bbnote "cmake.bbclass no longer uses OECMAKE_BUILDPATH.  The default behaviour is now out-of-tree builds with B=WORKDIR/build."

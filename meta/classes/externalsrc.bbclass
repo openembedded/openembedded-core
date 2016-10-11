@@ -103,6 +103,7 @@ python () {
         d.prependVarFlag('do_configure', 'prefuncs', "externalsrc_configure_prefunc ")
 
         d.setVarFlag('do_compile', 'file-checksums', '${@srctree_hash_files(d)}')
+        d.setVarFlag('do_configure', 'file-checksums', '${@srctree_configure_hash_files(d)}')
 
         # We don't want the workdir to go away
         d.appendVar('RM_WORK_EXCLUDE', ' ' + d.getVar('PN', True))
@@ -166,3 +167,24 @@ def srctree_hash_files(d):
     else:
         ret = d.getVar('EXTERNALSRC', True) + '/*:True'
     return ret
+
+def srctree_configure_hash_files(d):
+    """
+    Get the list of files that should trigger do_configure to re-execute,
+    based on the value of CONFIGURE_FILES
+    """
+    in_files = (d.getVar('CONFIGURE_FILES', True) or '').split()
+    out_items = []
+    search_files = []
+    for entry in in_files:
+        if entry.startswith('/'):
+            out_items.append('%s:%s' % (entry, os.path.exists(entry)))
+        else:
+            search_files.append(entry)
+    if search_files:
+        s_dir = d.getVar('EXTERNALSRC', True)
+        for root, _, files in os.walk(s_dir):
+            for f in files:
+                if f in search_files:
+                    out_items.append('%s:True' % os.path.join(root, f))
+    return ' '.join(out_items)
