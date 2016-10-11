@@ -543,8 +543,8 @@ def package_qa_check_arch(path,name,d, elf, messages):
     # Check the architecture and endiannes of the binary
     if not ((machine == elf.machine()) or \
         ((("virtual/kernel" in provides) or bb.data.inherits_class("module", d) ) and (target_os == "linux-gnux32" or target_os == "linux-gnun32"))):
-        package_qa_add_message(messages, "arch", "Architecture did not match (%d to %d) on %s" % \
-                 (machine, elf.machine(), package_qa_clean_path(path,d)))
+        package_qa_add_message(messages, "arch", "Architecture did not match (%s, expected %s) on %s" % \
+                 (oe.qa.elf_machine_to_string(elf.machine()), oe.qa.elf_machine_to_string(machine), package_qa_clean_path(path,d)))
     elif not ((bits == elf.abiSize()) or  \
         ((("virtual/kernel" in provides) or bb.data.inherits_class("module", d) ) and (target_os == "linux-gnux32" or target_os == "linux-gnun32"))):
         package_qa_add_message(messages, "arch", "Bit size did not match (%d to %d) %s on %s" % \
