@@ -144,6 +144,26 @@ class ELFFile:
             bb.note("%s %s %s failed: %s" % (objdump, cmd, self.name, e))
             return ""
 
+def elf_machine_to_string(machine):
+    """
+    Return the name of a given ELF e_machine field or the hex value as a string
+    if it isn't recognised.
+    """
+    try:
+        return {
+            0x02: "SPARC",
+            0x03: "x86",
+            0x08: "MIPS",
+            0x14: "PowerPC",
+            0x28: "ARM",
+            0x2A: "SuperH",
+            0x32: "IA-64",
+            0x3E: "x86-64",
+            0xB7: "AArch64"
+        }[machine]
+    except:
+        return "Unknown (%s)" % repr(machine)
+
 if __name__ == "__main__":
     import sys
     elf = ELFFile(sys.argv[1])
