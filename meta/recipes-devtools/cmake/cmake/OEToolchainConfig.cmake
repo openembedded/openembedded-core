@@ -10,8 +10,10 @@ set( CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY )
 set( CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY )
 set( CMAKE_FIND_ROOT_PATH_MODE_PACKAGE ONLY )
 
-string(REGEX MATCH "sysroots/([a-zA-Z0-9]+)" CMAKE_SYSTEM_PROCESSOR $ENV{SDKTARGETSYSROOT})
-string(REGEX REPLACE "sysroots/" "" CMAKE_SYSTEM_PROCESSOR ${CMAKE_SYSTEM_PROCESSOR})
+# Set CMAKE_SYSTEM_PROCESSOR from the sysroot name (assuming processor-distro-os).
+if ($ENV{SDKTARGETSYSROOT} MATCHES "/sysroots/([a-zA-Z0-9_-]+)-.+-.+")
+  set(CMAKE_SYSTEM_PROCESSOR ${CMAKE_MATCH_1})
+endif()
 
 # Include the toolchain configuration subscripts
 file( GLOB toolchain_config_files "${CMAKE_TOOLCHAIN_FILE}.d/*.cmake" )
