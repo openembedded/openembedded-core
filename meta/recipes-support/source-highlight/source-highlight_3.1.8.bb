@@ -15,7 +15,7 @@ DEPENDS_append = " boost"
 
 DEPENDS_append_class-target = " source-highlight-native"
 
-EXTRA_OECONF = "--with-boost=${PKG_CONFIG_SYSROOT_DIR}/${prefix}"
+EXTRA_OECONF = "--with-boost=yes --with-boost-libdir=${STAGING_DIR_TARGET}${libdir}"
 
 BBCLASSEXTEND = "native"
 
