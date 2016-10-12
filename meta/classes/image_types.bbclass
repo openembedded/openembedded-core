@@ -219,6 +219,11 @@ USING_WIC = "${@bb.utils.contains_any('IMAGE_FSTYPES', 'wic ' + ' '.join('wic.%s
 WKS_FILE_CHECKSUM = "${@'${WKS_FULL_PATH}:%s' % os.path.exists('${WKS_FULL_PATH}') if '${USING_WIC}' else ''}"
 do_image_wic[file-checksums] += "${WKS_FILE_CHECKSUM}"
 
+python () {
+    if d.getVar('USING_WIC', True) and 'do_bootimg' in d:
+        bb.build.addtask('do_image_wic', '', 'do_bootimg', d)
+}
+
 python do_write_wks_template () {
     """Write out expanded template contents to WKS_FULL_PATH."""
     import re
