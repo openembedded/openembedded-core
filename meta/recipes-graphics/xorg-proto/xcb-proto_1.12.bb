@@ -12,7 +12,10 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=d763b081cb10c223435b01e00dc0aba7 \
                     file://src/dri2.xml;beginline=2;endline=28;md5=f8763b13ff432e8597e0d610cf598e65"
 
 SRC_URI = "http://xcb.freedesktop.org/dist/xcb-proto-${PV}.tar.bz2 \
-           file://no-python-native.patch"
+           file://no-python-native.patch \
+           file://0001-Make-whitespace-use-consistent.patch \
+           file://0002-print-is-a-function-and-needs-parentheses.patch \
+           "
 SRC_URI[md5sum] = "14e60919f859560f28426a685a555962"
 SRC_URI[sha256sum] = "5922aba4c664ab7899a29d92ea91a87aa4c1fc7eb5ee550325c3216c480a4906"
 
