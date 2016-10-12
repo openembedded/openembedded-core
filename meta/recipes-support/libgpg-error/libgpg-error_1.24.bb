@@ -33,8 +33,8 @@ do_compile_prepend() {
 	  arm)	      TUPLE=arm-unknown-linux-gnueabi ;;
 	  armeb)      TUPLE=arm-unknown-linux-gnueabi ;;
 	  i586|i686)  TUPLE=i686-pc-linux-gnu ;;
-	  mips64el)   TUPLE=mipsel-unknown-linux-gnu ;;
-	  mips64)     TUPLE=mips-unknown-linux-gnu ;;
+	  mips*el)    TUPLE=mipsel-unknown-linux-gnu ;;
+	  mips*)      TUPLE=mips-unknown-linux-gnu ;;
 	  x86_64)     TUPLE=x86_64-pc-linux-gnu ;;
 	  *)          TUPLE=${TARGET_ARCH}-unknown-linux-gnu ;; 
 	esac
