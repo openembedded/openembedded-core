@@ -30,22 +30,6 @@ class ImageOptionsTests(oeSelfTest):
         incremental_removed = re.search("NOTE: load old install solution for incremental install\nNOTE: creating new install solution for incremental install(\n.*)*NOTE: incremental removed:.*openssh-sshd-.*", log_data_removed)
         self.assertTrue(incremental_removed, msg = "Match failed in:\n%s" % log_data_removed)
 
-    @testcase(925)
-    def test_rm_old_image(self):
-        bitbake("core-image-minimal")
-        deploydir = get_bb_var("DEPLOY_DIR_IMAGE", target="core-image-minimal")
-        imagename = get_bb_var("IMAGE_LINK_NAME", target="core-image-minimal")
-        deploydir_files = os.listdir(deploydir)
-        track_original_files = []
-        for image_file in deploydir_files:
-            if imagename in image_file and os.path.islink(os.path.join(deploydir, image_file)):
-                track_original_files.append(os.path.realpath(os.path.join(deploydir, image_file)))
-        self.write_config("RM_OLD_IMAGE = \"1\"")
-        bitbake("-C rootfs core-image-minimal")
-        deploydir_files = os.listdir(deploydir)
-        remaining_not_expected = [path for path in track_original_files if os.path.basename(path) in deploydir_files]
-        self.assertFalse(remaining_not_expected, msg="\nThe following image files were not removed: %s" % ', '.join(map(str, remaining_not_expected)))
-
     @testcase(286)
     def test_ccache_tool(self):
         bitbake("ccache-native")

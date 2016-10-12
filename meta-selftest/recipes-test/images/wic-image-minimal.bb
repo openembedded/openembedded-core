@@ -5,7 +5,6 @@ SRC_URI = "file://${FILE_DIRNAME}/${BPN}.wks"
 IMAGE_INSTALL = "packagegroup-core-boot ${ROOTFS_PKGMANAGE_BOOTSTRAP}"
 
 IMAGE_FSTYPES = "wic"
-RM_OLD_IMAGE = "1"
 
 DEPENDS = "syslinux syslinux-native dosfstools-native mtools-native gptfdisk-native"
 

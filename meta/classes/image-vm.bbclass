@@ -106,10 +106,6 @@ build_boot_dd() {
 
 	cd ${IMGDEPLOYDIR}
 
-	if [ "${RM_OLD_IMAGE}" = "1" ] && [ -L ${IMGDEPLOYDIR}/${IMAGE_LINK_NAME}.hdddirect ]; then
-		rm -f $(readlink -f ${IMGDEPLOYDIR}/${IMAGE_LINK_NAME}.hdddirect)
-	fi
-
 	ln -sf ${IMAGE_NAME}.hdddirect ${IMGDEPLOYDIR}/${IMAGE_LINK_NAME}.hdddirect
 } 
 
@@ -146,10 +142,6 @@ DISK_SIGNATURE_GENERATED := "${@generate_disk_signature()}"
 run_qemu_img (){
     type="$1"
     qemu-img convert -O $type ${IMGDEPLOYDIR}/${IMAGE_LINK_NAME}.hdddirect ${IMGDEPLOYDIR}/${IMAGE_NAME}.$type
-
-    if [ "${RM_OLD_IMAGE}" = "1" ] && [ -L ${IMGDEPLOYDIR}/${IMAGE_LINK_NAME}.$type ]; then
-        rm -f $(readlink -f ${IMGDEPLOYDIR}/${IMAGE_LINK_NAME}.$type)
-    fi
 
     ln -sf ${IMAGE_NAME}.$type ${IMGDEPLOYDIR}/${IMAGE_LINK_NAME}.$type
 }

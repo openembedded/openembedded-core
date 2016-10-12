@@ -76,9 +76,6 @@ python write_qemuboot_conf() {
     with open(qemuboot, 'w') as f:
         cf.write(f)
 
-    if d.getVar('RM_OLD_IMAGE', True) == "1" and os.path.exists(qemuboot_link):
-       os.remove(os.path.realpath(qemuboot_link))
-
     if os.path.lexists(qemuboot_link):
        os.remove(qemuboot_link)
     os.symlink(os.path.basename(qemuboot), qemuboot_link)
