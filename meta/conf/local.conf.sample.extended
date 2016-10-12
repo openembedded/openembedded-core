@@ -266,9 +266,6 @@
 #COPYLEFT_RECIPE_TYPES = 'target'
 #
 
-# Remove the old image before the new one generated to save disk space
-#RM_OLD_IMAGE = "1"
-
 #
 # GCC/LD FLAGS to enable more secure code generation
 #
