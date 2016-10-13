@@ -34,6 +34,7 @@ SRC_URI = "\
      file://0012-Add-support-for-Netlogic-XLP.patch \
      file://0013-fix-the-incorrect-assembling-for-ppc-wait-mnemonic.patch \
      file://0014-libtool-remove-rpath.patch \
+     file://0015-binutils-mips-gas-pic-relax-linkonce.diff \
 "
 S  = "${WORKDIR}/git"
 
