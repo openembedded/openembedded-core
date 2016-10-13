@@ -41,5 +41,3 @@ FILES_rsvg = "${bindir}/rsvg* \
 FILES_librsvg-gtk = "${libdir}/gdk-pixbuf-2.0/*/*/*.so"
 
 PIXBUF_PACKAGES = "librsvg-gtk"
-
-PIXBUFCACHE_SYSROOT_DEPS_append_class-native = " harfbuzz-native:do_populate_sysroot_setscene pango-native:do_populate_sysroot_setscene icu-native:do_populate_sysroot_setscene"
