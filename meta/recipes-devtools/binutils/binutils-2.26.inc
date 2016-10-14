@@ -36,6 +36,7 @@ SRC_URI = "\
      file://0014-Correct-nios2-_gp-address-computation.patch \
      file://0015-allow-zero-length-elements.patch \
      file://aarch64-tls.patch \
+     file://0015-Refine-.cfi_sections-check-to-only-consider-compact-.patch \
 "
 S  = "${WORKDIR}/git"
 
