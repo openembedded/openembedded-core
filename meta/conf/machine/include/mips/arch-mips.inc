@@ -118,7 +118,7 @@ AVAILTUNES += "mips64-o32 mips64el-o32"
 TUNE_FEATURES_tune-mips64-o32 = "o32 bigendian fpu-hard"
 BASE_LIB_tune-mips64-o32 = "lib"
 MIPSPKGSFX_VARIANT_tune-mips64-o32 = "${TUNE_ARCH}"
-PACKAGE_EXTRA_ARCHS_tune-mips64-o32 = "mips mips64-o32 mips64-o32"
+PACKAGE_EXTRA_ARCHS_tune-mips64-o32 = "mips mips64-o32"
 
 TUNE_FEATURES_tune-mips64el-o32 = "o32 fpu-hard"
 BASE_LIB_tune-mips64el-o32 = "lib"
