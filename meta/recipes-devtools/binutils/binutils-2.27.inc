@@ -35,6 +35,7 @@ SRC_URI = "\
      file://0013-fix-the-incorrect-assembling-for-ppc-wait-mnemonic.patch \
      file://0014-libtool-remove-rpath.patch \
      file://0015-binutils-mips-gas-pic-relax-linkonce.diff \
+     file://0015-Refine-.cfi_sections-check-to-only-consider-compact-.patch \
 "
 S  = "${WORKDIR}/git"
 
