@@ -282,6 +282,8 @@ python copy_buildsystem () {
             # Write a newline just in case there's none at the end of the original
             f.write('\n')
 
+            f.write('DL_DIR = "${TOPDIR}/downloads"\n')
+
             f.write('INHERIT += "%s"\n' % 'uninative')
             f.write('UNINATIVE_CHECKSUM[%s] = "%s"\n\n' % (d.getVar('BUILD_ARCH', True), uninative_checksum))
             f.write('CONF_VERSION = "%s"\n\n' % d.getVar('CONF_VERSION', False))
