@@ -63,6 +63,11 @@ FILES_${PN}-dev += "${libdir}/xml2Conf.sh ${libdir}/cmake/*"
 FILES_${PN}-utils += "${bindir}/*"
 FILES_${PN}-python += "${PYTHON_SITEPACKAGES_DIR}"
 
+do_configure_prepend () {
+	# executables take longer to package: these should not be executable
+	find ${WORKDIR}/xmlconf/ -type f -exec chmod -x {} \+
+}
+
 do_install_ptest () {
 	cp -r ${WORKDIR}/xmlconf ${D}${PTEST_PATH}
 }
