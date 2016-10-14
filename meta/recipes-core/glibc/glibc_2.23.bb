@@ -38,6 +38,9 @@ SRC_URI = "${GLIBC_GIT_URI};branch=${SRCBRANCH};name=glibc \
            file://0026-When-disabling-SSE-make-sure-fpmath-is-not-set-to-us.patch \
            file://CVE-2016-3706.patch \
            file://CVE-2016-4429.patch \
+           file://CVE-2016-1234.patch \
+           file://CVE-2016-3075.patch \
+           file://CVE-2016-5417.patch \
 "
 
 SRC_URI += "\
