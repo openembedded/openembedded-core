@@ -833,7 +833,7 @@ python write_srcrev() {
                         f.write('# SRCREV_%s = "%s"\n' % (name, orig_srcrev))
                     f.write('SRCREV_%s = "%s"\n' % (name, srcrev))
             else:
-                f.write('SRCREV = "%s"\n' % srcrevs.values())
+                f.write('SRCREV = "%s"\n' % next(iter(srcrevs.values())))
             if len(tag_srcrevs) > 0:
                 for name, srcrev in tag_srcrevs.items():
                     f.write('# tag_%s = "%s"\n' % (name, srcrev))
