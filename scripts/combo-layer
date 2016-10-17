@@ -426,7 +426,7 @@ file_exclude = %s''' % (name, file_filter or '<empty>', repo.get('file_exclude',
                 merge.append(name)
                 # Root all commits which have no parent in the common
                 # ancestor in the new repository.
-                for start in runcmd('git log --pretty=format:%%H --max-parents=0 %s' % name).split('\n'):
+                for start in runcmd('git log --pretty=format:%%H --max-parents=0 %s --' % name).split('\n'):
                     runcmd('git replace --graft %s %s' % (start, startrev))
             try:
                 runcmd(merge)
