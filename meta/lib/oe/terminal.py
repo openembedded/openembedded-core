@@ -97,7 +97,7 @@ class Terminology(XTerminal):
     priority = 2
 
 class Konsole(XTerminal):
-    command = 'konsole --nofork --workdir . -p tabtitle="{title}" -e {command}'
+    command = 'konsole --separate --workdir . -p tabtitle="{title}" -e {command}'
     priority = 2
 
     def __init__(self, sh_cmd, title=None, env=None, d=None):
@@ -106,6 +106,9 @@ class Konsole(XTerminal):
         if vernum and LooseVersion(vernum) < '2.0.0':
             # Konsole from KDE 3.x
             self.command = 'konsole -T "{title}" -e {command}'
+        elif vernum and LooseVersion(vernum) < '16.08.1':
+            # Konsole pre 16.08.01 Has nofork
+            self.command = 'konsole --nofork --workdir . -p tabtitle="{title}" -e {command}'
         XTerminal.__init__(self, sh_cmd, title, env, d)
 
 class XTerm(XTerminal):
