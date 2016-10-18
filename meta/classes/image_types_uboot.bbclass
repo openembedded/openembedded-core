@@ -8,7 +8,7 @@ oe_mkimage () {
     fi
 }
 
-CONVERSIONTYPES += "gz.u-boot bz2.u-boot lz4.u-boot lzma.u-boot u-boot"
+CONVERSIONTYPES += "gz.u-boot bz2.u-boot lz4.u-boot lzma.u-boot lzo.u-boot u-boot"
 
 CONVERSION_DEPENDS_u-boot = "u-boot-mkimage-native"
 CONVERSION_CMD_u-boot      = "oe_mkimage ${IMAGE_NAME}.rootfs.${type} none"
@@ -24,6 +24,9 @@ CONVERSION_CMD_lz4.u-boot      = "${CONVERSION_CMD_lz4_legacy}; oe_mkimage ${IMA
 
 CONVERSION_DEPENDS_lzma.u-boot = "u-boot-mkimage-native"
 CONVERSION_CMD_lzma.u-boot      = "${CONVERSION_CMD_lzma}; oe_mkimage ${IMAGE_NAME}.rootfs.${type}.lzma lzma clean"
+
+CONVERSION_DEPENDS_lzo.u-boot = "u-boot-mkimage-native"
+CONVERSION_CMD_lzo.u-boot      = "${CONVERSION_CMD_lzo}; oe_mkimage ${IMAGE_NAME}.rootfs.${type}.lzo lzo clean"
 
 IMAGE_TYPES += "ext2.u-boot ext2.gz.u-boot ext2.bz2.u-boot ext2.lzma.u-boot ext3.gz.u-boot ext4.gz.u-boot cpio.gz.u-boot"
 
