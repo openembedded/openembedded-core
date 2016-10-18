@@ -13,9 +13,8 @@ SECTION = "base"
 DEPENDS = "util-linux attr e2fsprogs lzo acl"
 RDEPENDS_${PN} = "libgcc"
 
-SRCREV = "6819fbcdcab63c2d95da1a2997e37be9a71ca533"
+SRCREV = "d8d0a60406b14b140e83a8c0d5eaedb5dca44092"
 SRC_URI = "git://git.kernel.org/pub/scm/linux/kernel/git/kdave/btrfs-progs.git \
-           file://fix-parallel.patch \
 "
 
 inherit autotools-brokensep pkgconfig
