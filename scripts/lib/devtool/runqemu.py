@@ -48,7 +48,12 @@ def runqemu(args, config, basepath, workspace):
         raise DevtoolError('Unable to determine image name to run, please specify one')
 
     try:
-        exec_build_env_command(config.init_path, basepath, 'runqemu %s %s %s' % (machine, imagename, " ".join(args.args)), watch=True)
+        # FIXME runqemu assumes that if OECORE_NATIVE_SYSROOT is set then it shouldn't
+        # run bitbake to find out the values of various environment variables, which
+        # isn't the case for the extensible SDK. Work around it for now.
+        newenv = dict(os.environ)
+        newenv.pop('OECORE_NATIVE_SYSROOT', '')
+        exec_build_env_command(config.init_path, basepath, 'runqemu %s %s %s' % (machine, imagename, " ".join(args.args)), watch=True, env=newenv)
     except bb.process.ExecutionError as e:
         # We've already seen the output since watch=True, so just ensure we return something to the user
         return e.exitcode
