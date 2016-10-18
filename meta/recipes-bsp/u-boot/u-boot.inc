@@ -1,14 +1,6 @@
 SUMMARY = "Universal Boot Loader for embedded devices"
-HOMEPAGE = "http://www.denx.de/wiki/U-Boot/WebHome"
-SECTION = "bootloaders"
 PROVIDES = "virtual/bootloader"
 
-LICENSE = "GPLv2+"
-LIC_FILES_CHKSUM = "file://Licenses/README;md5=a2c678cfd4a4d97135585cad908541c6"
-
-SRC_URI = "git://git.denx.de/u-boot.git;branch=master"
-
-S = "${WORKDIR}/git"
 B = "${WORKDIR}/build"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
