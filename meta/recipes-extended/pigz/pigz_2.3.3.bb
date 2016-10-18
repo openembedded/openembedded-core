@@ -1,7 +1,7 @@
 require pigz.inc
 LIC_FILES_CHKSUM = "file://pigz.c;beginline=7;endline=21;md5=a21d4075cb00ab4ca17fce5e7534ca95"
 
-UPSTREAM_CHECK_URI := "${SRC_URI}"
+UPSTREAM_CHECK_URI = "http://zlib.net/${BPN}/"
 SRC_URI = "http://downloads.yoctoproject.org/mirror/sources/${BP}.tar.gz"
 SRC_URI += "file://link-order.patch"
 
