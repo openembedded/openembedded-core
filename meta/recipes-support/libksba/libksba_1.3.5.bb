@@ -17,8 +17,8 @@ UPSTREAM_CHECK_URI = "https://gnupg.org/download/index.html"
 SRC_URI = "${GNUPG_MIRROR}/${BPN}/${BPN}-${PV}.tar.bz2 \
            file://ksba-add-pkgconfig-support.patch"
 
-SRC_URI[md5sum] = "2bfc3d69053db7b6983b5627706033f4"
-SRC_URI[sha256sum] = "f6c2883cebec5608692d8730843d87f237c0964d923bbe7aa89c05f20558ad4f"
+SRC_URI[md5sum] = "8302a3e263a7c630aa7dea7d341f07a2"
+SRC_URI[sha256sum] = "41444fd7a6ff73a79ad9728f985e71c9ba8cd3e5e53358e70d5f066d35c1a340"
 
 do_configure_prepend () {
 	# Else these could be used in preference to those in aclocal-copy
