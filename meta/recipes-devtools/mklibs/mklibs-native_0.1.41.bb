@@ -18,4 +18,6 @@ SRC_URI = "http://snapshot.debian.org/archive/debian/20160207T221625Z/pool/main/
 SRC_URI[md5sum] = "6b2979876a611717df3d49e7f9cf291d"
 SRC_URI[sha256sum] = "058c7349f8ec8a03b529c546a95cd6426741bd819f1e1211f499273eb4bf5d89"
 
+UPSTREAM_CHECK_URI = "${DEBIAN_MIRROR}/main/m/mklibs/"
+
 inherit autotools gettext native pythonnative
