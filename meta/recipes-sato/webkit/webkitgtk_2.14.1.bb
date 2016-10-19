@@ -10,19 +10,19 @@ LIC_FILES_CHKSUM = "file://Source/JavaScriptCore/COPYING.LIB;md5=d0c6d6397a5d842
 		    file://Source/WebCore/LICENSE-LGPL-2.1;md5=a778a33ef338abbaf8b8a7c36b6eec80 \
 		   "
 
-SRC_URI = "\
-  http://www.webkitgtk.org/releases/${BPN}-${PV}.tar.xz \
-  file://0001-FindGObjectIntrospection.cmake-prefix-variables-obta.patch \
-  file://0001-When-building-introspection-files-add-CMAKE_C_FLAGS-.patch \
-  file://0001-OptionsGTK.cmake-drop-the-hardcoded-introspection-gt.patch \
-  file://0001-WebKitMacros-Append-to-I-and-not-to-isystem.patch \
-  file://musl-fixes.patch \
-  file://ppc-musl-fix.patch \
-  file://0001-Fix-racy-parallel-build-of-WebKit2-4.0.gir.patch \
-  file://0001-Tweak-gtkdoc-settings-so-that-gtkdoc-generation-work.patch \
-  "
-SRC_URI[md5sum] = "7a9ea00ec195488db90fdeb2d174ddaf"
-SRC_URI[sha256sum] = "6b147854b864a5f115fadb97b2b6200b2f696db015216a34e7298d11c88b1c40"
+SRC_URI = "http://www.webkitgtk.org/releases/${BPN}-${PV}.tar.xz \
+           file://0001-FindGObjectIntrospection.cmake-prefix-variables-obta.patch \
+           file://0001-When-building-introspection-files-add-CMAKE_C_FLAGS-.patch \
+           file://0001-OptionsGTK.cmake-drop-the-hardcoded-introspection-gt.patch \
+           file://musl-fixes.patch \
+           file://ppc-musl-fix.patch \
+           file://0001-Fix-racy-parallel-build-of-WebKit2-4.0.gir.patch \
+           file://0001-Tweak-gtkdoc-settings-so-that-gtkdoc-generation-work.patch \
+           file://0001-WebKitMacros-Append-to-I-and-not-to-isystem.patch \
+           "
+
+SRC_URI[md5sum] = "8d6c60dc41604d3bbd43165a674c07e5"
+SRC_URI[sha256sum] = "2e2d76c328de65bed6e0e4f096b2720a366654b27fc1af0830ece90bc4b7ceb5"
 
 inherit cmake lib_package pkgconfig gobject-introspection perlnative distro_features_check upstream-version-is-even gtk-doc
 
