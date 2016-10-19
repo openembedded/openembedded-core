@@ -24,7 +24,7 @@ SRC_URI = "http://www.webkitgtk.org/releases/${BPN}-${PV}.tar.xz \
 SRC_URI[md5sum] = "8d6c60dc41604d3bbd43165a674c07e5"
 SRC_URI[sha256sum] = "2e2d76c328de65bed6e0e4f096b2720a366654b27fc1af0830ece90bc4b7ceb5"
 
-inherit cmake lib_package pkgconfig gobject-introspection perlnative distro_features_check upstream-version-is-even gtk-doc
+inherit cmake pkgconfig gobject-introspection perlnative distro_features_check upstream-version-is-even gtk-doc
 
 # We cannot inherit pythonnative because that would conflict with inheriting python3native
 # (which is done by gobject-introspection). But webkit only needs the path to native Python 2.x binary
