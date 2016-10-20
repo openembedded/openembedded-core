@@ -30,9 +30,10 @@ inherit autotools gettext gtk-doc pkgconfig ptest-gnome upstream-version-is-even
 
 S = "${WORKDIR}/glib-${PV}"
 
-PACKAGECONFIG ??= "system-pcre"
+PACKAGECONFIG ??= "system-pcre libmount"
 # To use the system pcre it must be configured with --enable-unicode-properties
 PACKAGECONFIG[system-pcre] = "--with-pcre=system,--with-pcre=internal,libpcre"
+PACKAGECONFIG[libmount] = "--enable-libmount,--disable-libmount,util-linux"
 PACKAGECONFIG[manpages] = "--enable-man --with-xml-catalog=${STAGING_ETCDIR_NATIVE}/xml/catalog.xml, --disable-man, libxslt-native xmlto-native"
 
 CORECONF = "--disable-dtrace --disable-fam --disable-libelf --disable-systemtap"
