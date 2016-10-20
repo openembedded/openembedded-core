@@ -9,8 +9,8 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=5f30f0716dfdd0d91eb439ebec522ec2"
 SECTION = "libs"
 DEPENDS = "glib-2.0 intltool-native"
 
-SRC_URI[archive.md5sum] = "d7cf81d52c856b0c66f7821021f40e08"
-SRC_URI[archive.sha256sum] = "925c0c49d6b2b8b5695f2e33cd952d1dbb7d18d3f2f796413577719315bb3a84"
+SRC_URI[archive.md5sum] = "4d06d0224646f274918b1cb6da9a07f6"
+SRC_URI[archive.sha256sum] = "3f1a442f3c2a734946983532ce59ed49120319fdb10c938447c373d5e5286bee"
 
 PACKAGECONFIG ??= "ca-certificates gnutls"
 
