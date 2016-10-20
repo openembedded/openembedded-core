@@ -2,12 +2,11 @@ require ${BPN}.inc
 
 SRC_URI = "ftp://ftp.freedesktop.org/pub/mesa/${PV}/mesa-${PV}.tar.xz \
            file://replace_glibc_check_with_linux.patch \
-           file://clang-compile-PR89599.patch \
            file://disable-asm-on-non-gcc.patch \
 "
 
-SRC_URI[md5sum] = "972fd5ad5a63aeabf173fb9adefc6522"
-SRC_URI[sha256sum] = "bab24fb79f78c876073527f515ed871fc9c81d816f66c8a0b051d8d653896389"
+SRC_URI[md5sum] = "1113699c714042d8c4df4766be8c57d8"
+SRC_URI[sha256sum] = "1dc86dd9b51272eee1fad3df65e18cda2e556ef1bc0b6e07cd750b9757f493b1"
 
 #because we cannot rely on the fact that all apps will use pkgconfig,
 #make eglplatform.h independent of MESA_EGL_NO_X11_HEADER
