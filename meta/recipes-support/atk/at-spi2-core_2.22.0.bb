@@ -9,8 +9,8 @@ SRC_URI = "${GNOME_MIRROR}/${BPN}/${MAJ_VER}/${BPN}-${PV}.tar.xz \
            file://0001-build-Add-with-systemduserunitdir.patch \
           "
 
-SRC_URI[md5sum] = "f6f6303da2e72317f881703f40bf0c62"
-SRC_URI[sha256sum] = "88a4de9d43139f13cca531b47b901bc1b56e0ab06ba899126644abd4ac16a143"
+SRC_URI[md5sum] = "3da5fe62a653e49dad1c47f9a46fee56"
+SRC_URI[sha256sum] = "415ea3af21318308798e098be8b3a17b2f0cf2fe16cecde5ad840cf4e0f2c80a"
 
 DEPENDS = "dbus glib-2.0 virtual/libx11 libxi libxtst intltool-native"
 
