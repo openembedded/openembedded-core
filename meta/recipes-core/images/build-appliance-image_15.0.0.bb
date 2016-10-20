@@ -63,6 +63,9 @@ fakeroot do_populate_poky_src () {
 	# Also save (for reference only) the actual SRCREV used to create this image
 	echo "export BA_SRCREV=${SRCREV}" >> ${IMAGE_ROOTFS}/home/builder/.bashrc
 	echo "" >> ${IMAGE_ROOTFS}/home/builder/.bashrc
+	echo "export PATH=$PATH:/sbin" >> ${IMAGE_ROOTFS}/home/builder/.bashrc
+	echo "" >> ${IMAGE_ROOTFS}/home/builder/.bashrc
+
 	echo "# If working behind a proxy and using the provided oe-git-proxy script" >> ${IMAGE_ROOTFS}/home/builder/.bashrc
 	echo "# you need to set ALL_PROXY based on your proxy settings." >> ${IMAGE_ROOTFS}/home/builder/.bashrc
 	echo "# Example ALL_PROXY values:" >> ${IMAGE_ROOTFS}/home/builder/.bashrc
