@@ -13,8 +13,8 @@ MAJ_VER = "${@oe.utils.trim_version("${PV}", 2)}"
 SRC_URI = "${GNOME_MIRROR}/${BPN}/${MAJ_VER}/${BPN}-${PV}.tar.xz \
           "
 
-SRC_URI[md5sum] = "411be2bd68dd8b0a3c86aca2eb351ce4"
-SRC_URI[sha256sum] = "7a0a887349f340dd644032f89d81264b694c4b006bd51af1c2c368d431e7ae35"
+SRC_URI[md5sum] = "cde51d7dfcbcfa3b8cdc3e5f0df8c799"
+SRC_URI[sha256sum] = "c18bf6e26087d9819a962c77288b291efab25d0419b73d909dd771716a45dcb7"
 
 do_install_append() {
 	# Build uses gtk-encode-symbolic-svg to create png versions:
@@ -36,6 +36,7 @@ FILES_${PN}-symbolic-hires = "${prefix}/share/icons/Adwaita/96x96/*/*.symbolic.p
                               ${prefix}/share/icons/Adwaita/32x32/*/*.symbolic.png"
 FILES_${PN}-symbolic = "${prefix}/share/icons/Adwaita/16x16/*/*.symbolic.png \
                         ${prefix}/share/icons/Adwaita/24x24/*/*.symbolic.png"
-FILES_${PN}-hires = "${prefix}/share/icons/Adwaita/256x256/"
+FILES_${PN}-hires = "${prefix}/share/icons/Adwaita/256x256/ \
+                     ${prefix}/share/icons/Adwaita/512x512/"
 FILES_${PN} = "${prefix}/share/icons/Adwaita/ \
                ${prefix}/share/pkgconfig/adwaita-icon-theme.pc"
