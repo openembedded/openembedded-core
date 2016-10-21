@@ -53,8 +53,7 @@ def update_useradd_static_config(d):
     def handle_missing_id(id, type, pkg):
         # For backwards compatibility we accept "1" in addition to "error"
         if d.getVar('USERADD_ERROR_DYNAMIC', True) == 'error' or d.getVar('USERADD_ERROR_DYNAMIC', True) == '1':
-            #bb.error("Skipping recipe %s, package %s which adds %sname %s does not have a static ID defined." % (d.getVar('PN', True),  pkg, type, id))
-            bb.fatal("%s - %s: %sname %s does not have a static ID defined." % (d.getVar('PN', True), pkg, type, id))
+            raise NotImplementedError("%s - %s: %sname %s does not have a static ID defined. Skipping it." % (d.getVar('PN', True), pkg, type, id))
         elif d.getVar('USERADD_ERROR_DYNAMIC', True) == 'warn':
             bb.warn("%s - %s: %sname %s does not have a static ID defined." % (d.getVar('PN', True), pkg, type, id))
 
@@ -323,7 +322,7 @@ python __anonymous() {
         and not bb.data.inherits_class('native', d):
         try:
             update_useradd_static_config(d)
-        except bb.build.FuncFailed as f:
+        except NotImplementedError as f:
             bb.debug(1, "Skipping recipe %s: %s" % (d.getVar('PN', True), f))
             raise bb.parse.SkipPackage(f)
 }
