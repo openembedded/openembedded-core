@@ -294,6 +294,8 @@ def action_init(conf, args):
                     # again. Uses the list of files created by tar (easier
                     # than walking the tree).
                     for file in files.split('\n'):
+                        if file.endswith(os.path.sep):
+                            continue
                         for pattern in exclude_patterns:
                             if fnmatch.fnmatch(file, pattern):
                                 os.unlink(os.path.join(*([extract_dir] + ['..'] * subdir_components + [file])))
