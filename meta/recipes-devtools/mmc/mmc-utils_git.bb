@@ -4,7 +4,7 @@ LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://mmc.c;beginline=1;endline=20;md5=fae32792e20f4d27ade1c5a762d16b7d"
 
 SRCBRANCH ?= "master"
-SRCREV = "bb779acfc385d135b32a6998c1d1fceef0491400"
+SRCREV = "2cb6695e8dec00d887bdd5309d1b57d836fcd214"
 
 PV = "0.1"
 
