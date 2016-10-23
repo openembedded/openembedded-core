@@ -11,8 +11,8 @@ SRC_URI = "${KERNELORG_MIRROR}/software/network/ethtool/ethtool-${PV}.tar.gz \
            file://avoid_parallel_tests.patch \
            "
 
-SRC_URI[md5sum] = "1186dd83a0384109b92c6cd40a7bb0e5"
-SRC_URI[sha256sum] = "ad45620887f7e61312fc2f9ca3fd50d49ac7737ed874b0b02845d07e0fa3ca49"
+SRC_URI[md5sum] = "28c4a4d85c33f573c49ff6d81ec094fd"
+SRC_URI[sha256sum] = "1bd82ebe3d41de1b7b0d8f4fb18a8e8466fba934c952bc5c5002836ffa8bb606"
 
 inherit autotools ptest
 RDEPENDS_${PN}-ptest += "make"
