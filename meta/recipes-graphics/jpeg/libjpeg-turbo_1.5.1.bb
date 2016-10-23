@@ -9,9 +9,10 @@ LIC_FILES_CHKSUM = "file://cdjpeg.h;endline=13;md5=05bab7c7ad899d85bfba60da1a127
 "
 DEPENDS = "nasm-native"
 
-SRC_URI = "${SOURCEFORGE_MIRROR}/${BPN}/${BPN}-${PV}.tar.gz"
-SRC_URI[md5sum] = "3fc5d9b6a8bce96161659ae7a9939257"
-SRC_URI[sha256sum] = "9f397c31a67d2b00ee37597da25898b03eb282ccd87b135a50a69993b6a2035f"
+SRC_URI = "${SOURCEFORGE_MIRROR}/${BPN}/${BPN}-${PV}.tar.gz \
+           file://fix-mips.patch"
+SRC_URI[md5sum] = "55deb139b0cac3c8200b75d485fc13f3"
+SRC_URI[sha256sum] = "41429d3d253017433f66e3d472b8c7d998491d2f41caa7306b8d9a6f2a2c666c"
 UPSTREAM_CHECK_URI = "http://sourceforge.net/projects/libjpeg-turbo/files/"
 UPSTREAM_CHECK_REGEX = "/libjpeg-turbo/files/(?P<pver>(\d+[\.\-_]*)+)/"
 
