@@ -7,10 +7,10 @@ LIC_FILES_CHKSUM = "file://src/COPYING.LIB;md5=f30a9716ef3762e3467a2f62bf790f0a 
 
 SRC_URI = "http://www.webdav.org/${BPN}/${BPN}-${PV}.tar.gz \
            file://pkgconfig.patch \
-           file://gnutls_4.3_fixup.patch"
+          "
 
-SRC_URI[md5sum] = "231adebe5c2f78fded3e3df6e958878e"
-SRC_URI[sha256sum] = "00c626c0dc18d094ab374dbd9a354915bfe4776433289386ed489c2ec0845cdd"
+SRC_URI[md5sum] = "e28d77bf14032d7f5046b3930704ef41"
+SRC_URI[sha256sum] = "db0bd8cdec329b48f53a6f00199c92d5ba40b0f015b153718d1b15d3d967fbca"
 
 inherit autotools binconfig-disabled lib_package pkgconfig
 
