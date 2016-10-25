@@ -294,7 +294,8 @@ def main():
         finally:
             tinfoil.shutdown()
 
-    for path in [scripts_path] + global_args.bbpath.split(':'):
+    # Search BBPATH first to allow layers to override plugins in scripts_path
+    for path in global_args.bbpath.split(':') + [scripts_path]:
         pluginpath = os.path.join(path, 'lib', 'devtool')
         scriptutils.load_plugins(logger, plugins, pluginpath)
 

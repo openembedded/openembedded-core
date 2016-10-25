@@ -52,10 +52,14 @@ def load_plugins(logger, plugins, pluginpath):
             if fp:
                 fp.close()
 
+    def plugin_name(filename):
+        return os.path.splitext(os.path.basename(filename))[0]
+
+    known_plugins = [plugin_name(p.__name__) for p in plugins]
     logger.debug('Loading plugins from %s...' % pluginpath)
     for fn in glob.glob(os.path.join(pluginpath, '*.py')):
-        name = os.path.splitext(os.path.basename(fn))[0]
-        if name != '__init__':
+        name = plugin_name(fn)
+        if name != '__init__' and name not in known_plugins:
             plugin = load_plugin(name)
             if hasattr(plugin, 'plugin_init'):
                 plugin.plugin_init(plugins)
