@@ -1,5 +1,6 @@
 import os
 import logging
+import shutil
 import tempfile
 import urllib.parse
 
@@ -485,6 +486,47 @@ class RecipetoolTests(RecipetoolBase):
         inherits = ['pkgconfig', 'autotools']
         self._test_recipe_contents(recipefile, checkvars, inherits)
 
+    def _copy_file_with_cleanup(self, srcfile, basedstdir, *paths):
+        dstdir = basedstdir
+        self.assertTrue(os.path.exists(dstdir))
+        for p in paths:
+            dstdir = os.path.join(dstdir, p)
+            if not os.path.exists(dstdir):
+                os.makedirs(dstdir)
+                self.track_for_cleanup(dstdir)
+        dstfile = os.path.join(dstdir, os.path.basename(srcfile))
+        if srcfile != dstfile:
+            shutil.copy(srcfile, dstfile)
+            self.track_for_cleanup(dstfile)
+
+    def test_recipetool_load_plugin(self):
+        """Test that recipetool loads only the first found plugin in BBPATH."""
+
+        recipetool = runCmd("which recipetool")
+        fromname = runCmd("recipetool --quiet pluginfile")
+        srcfile = fromname.output
+        bbpath = get_bb_var('BBPATH')
+        searchpath = bbpath.split(':') + [os.path.dirname(recipetool.output)]
+        plugincontent = []
+        with open(srcfile) as fh:
+            plugincontent = fh.readlines()
+        try:
+            self.assertIn('meta-selftest', srcfile, 'wrong bbpath plugin found')
+            for path in searchpath:
+                self._copy_file_with_cleanup(srcfile, path, 'lib', 'recipetool')
+            result = runCmd("recipetool --quiet count")
+            self.assertEqual(result.output, '1')
+            result = runCmd("recipetool --quiet multiloaded")
+            self.assertEqual(result.output, "no")
+            for path in searchpath:
+                result = runCmd("recipetool --quiet bbdir")
+                self.assertEqual(result.output, path)
+                os.unlink(os.path.join(result.output, 'lib', 'recipetool', 'bbpath.py'))
+        finally:
+            with open(srcfile, 'w') as fh:
+                fh.writelines(plugincontent)
+
+
 class RecipetoolAppendsrcBase(RecipetoolBase):
     def _try_recipetool_appendsrcfile(self, testrecipe, newfile, destfile, options, expectedlines, expectedfiles):
         cmd = 'recipetool appendsrcfile %s %s %s %s %s' % (options, self.templayerdir, testrecipe, newfile, destfile)
@@ -572,6 +614,8 @@ class RecipetoolAppendsrcBase(RecipetoolBase):
         filesdir = os.path.join(os.path.dirname(bbappendfile), testrecipe)
         filesextrapaths = get_bb_var('FILESEXTRAPATHS', testrecipe).split(':')
         self.assertIn(filesdir, filesextrapaths)
+
+
 
 
 class RecipetoolAppendsrcTests(RecipetoolAppendsrcBase):
