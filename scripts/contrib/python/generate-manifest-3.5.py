@@ -59,9 +59,19 @@ class MakefileMaker:
         for filename in filenames:
             if filename[0] != "$":
                 fullFilenames.append( "%s%s" % ( self.targetPrefix, filename ) )
+                fullFilenames.append( "%s%s" % ( self.targetPrefix,
+                                                 self.pycachePath( filename ) ) )
             else:
                 fullFilenames.append( filename )
         self.packages[name] = description, dependencies, fullFilenames
+
+    def pycachePath( self, filename ):
+        dirname = os.path.dirname( filename )
+        basename = os.path.basename( filename )
+        if '.' in basename:
+            return os.path.join( dirname, '__pycache__', basename )
+        else:
+            return os.path.join( dirname, basename, '__pycache__' )
 
     def doBody( self ):
         """generate body of Makefile"""

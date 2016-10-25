@@ -9,7 +9,6 @@ DISTRO_SRC_URI_linuxstdbase = ""
 SRC_URI = "http://www.python.org/ftp/python/${PV}/Python-${PV}.tar.xz \
 file://python-config.patch \
 file://000-cross-compile.patch \
-file://020-dont-compile-python-files.patch \
 file://030-fixup-include-dirs.patch \
 file://070-dont-clean-ipkg-install.patch \
 file://080-distutils-dont_adjust_files.patch \
