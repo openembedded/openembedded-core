@@ -542,7 +542,8 @@ class BaseConfig(object):
     def check_and_set(self):
         """Check configs sanity and set when needed"""
         self.validate_paths()
-        check_tun()
+        if not self.slirp_enabled:
+            check_tun()
         # Check audio
         if self.audio_enabled:
             if not self.get('QB_AUDIO_DRV'):
