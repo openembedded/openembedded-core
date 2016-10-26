@@ -23,7 +23,8 @@ do_install_ptest () {
 	    ${D}${PTEST_PATH}/lib/Config.pm
 
 	ln -sf ${bindir}/perl ${D}${PTEST_PATH}/t/perl
-
+	# Remove plan9 related stuff
+	rm -rf ${D}${PTEST_PATH}/plan9 ${D}${PTEST_PATH}/README.plan9 ${D}${PTEST_PATH}/pod/perlplan9.pod
 }
 
 python populate_packages_prepend() {
