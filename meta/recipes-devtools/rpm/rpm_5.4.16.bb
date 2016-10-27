@@ -384,10 +384,10 @@ FILES_${PN} =  "${bindir}/rpm \
 		${localstatedir}/lib/wdj \
 		${bindir}/rpm.real \
 		${bindir}/rpmconstant.real \
-		${bindir}/rpm2cpio.real \
 		"
 
 FILES_${PN}-common = "${bindir}/rpm2cpio \
+		${bindir}/rpm2cpio.real \
 		${bindir}/gendiff \
 		${sysconfdir}/rpm \
 		${localstatedir}/spool/repackage \
