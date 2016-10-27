@@ -21,10 +21,12 @@ import socket
 import time
 import traceback
 import unittest
+import xml.etree.ElementTree as ET
 from datetime import datetime, timedelta
 from functools import partial
 from multiprocessing import Process
 from multiprocessing import SimpleQueue
+from xml.dom import minidom
 
 import oe.path
 from oeqa.utils.commands import CommandError, runCmd, get_bb_vars
@@ -169,7 +171,6 @@ class BuildPerfTestResult(unittest.TextTestResult):
     def stopTestRun(self):
         """Pre-run hook"""
         self.elapsed_time = datetime.utcnow() - self.start_time
-        self.write_results_json()
 
     def all_results(self):
         result_map = {'SUCCESS': self.successes,
@@ -254,6 +255,46 @@ class BuildPerfTestResult(unittest.TextTestResult):
             json.dump(results, fobj, indent=4, sort_keys=True,
                       cls=ResultsJsonEncoder)
 
+    def write_results_xml(self):
+        """Write test results into a JUnit XML file"""
+        top = ET.Element('testsuites')
+        suite = ET.SubElement(top, 'testsuite')
+        suite.set('name', 'oeqa.buildperf')
+        suite.set('timestamp', self.start_time.isoformat())
+        suite.set('time', str(self.elapsed_time.total_seconds()))
+        suite.set('hostname', self.hostname)
+        suite.set('failures', str(len(self.failures) + len(self.expectedFailures)))
+        suite.set('errors', str(len(self.errors)))
+        suite.set('skipped', str(len(self.skipped)))
+
+        test_cnt = 0
+        for status, (test, reason) in self.all_results():
+            testcase = ET.SubElement(suite, 'testcase')
+            testcase.set('classname', test.__module__ + '.' + test.__class__.__name__)
+            testcase.set('name', test.name)
+            testcase.set('timestamp', test.start_time.isoformat())
+            testcase.set('time', str(test.elapsed_time.total_seconds()))
+            if status in ('ERROR', 'FAILURE', 'EXP_FAILURE'):
+                if status in ('FAILURE', 'EXP_FAILURE'):
+                    result = ET.SubElement(testcase, 'failure')
+                else:
+                    result = ET.SubElement(testcase, 'error')
+                result.set('message', str(test.err[1]))
+                result.set('type', test.err[0].__name__)
+                result.text = reason
+            elif status == 'SKIPPED':
+                result = ET.SubElement(testcase, 'skipped')
+                result.text = reason
+            elif status not in ('SUCCESS', 'UNEXPECTED_SUCCESS'):
+                raise TypeError("BUG: invalid test status '%s'" % status)
+            test_cnt += 1
+        suite.set('tests', str(test_cnt))
+
+        # Use minidom for pretty-printing
+        dom_doc = minidom.parseString(ET.tostring(top, 'utf-8'))
+        with open(os.path.join(self.out_dir, 'results.xml'), 'w') as fobj:
+            dom_doc.writexml(fobj, addindent='  ', newl='\n', encoding='utf-8')
+        return
 
     def git_commit_results(self, repo_path, branch=None, tag=None):
         """Commit results into a Git repository"""

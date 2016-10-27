@@ -131,6 +131,8 @@ def parse_args(argv):
     parser.add_argument('-o', '--out-dir', default='results-{date}',
                         type=os.path.abspath,
                         help="Output directory for test results")
+    parser.add_argument('-x', '--xml', action='store_true',
+                        help='Enable JUnit xml output')
     parser.add_argument('--log-file',
                         default='{out_dir}/oe-build-perf-test.log',
                         help="Log file of this script")
@@ -194,6 +196,10 @@ def main(argv=None):
     # Restore logger output to stderr
     log.handlers[0].setLevel(log.level)
 
+    if args.xml:
+        result.write_results_xml()
+    else:
+        result.write_results_json()
     if args.globalres_file:
         result.update_globalres_file(args.globalres_file)
     if args.commit_results:
