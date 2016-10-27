@@ -158,10 +158,10 @@ class BuildPerfTestResult(unittest.TextTestResult):
 
     def all_results(self):
         result_map = {'SUCCESS': self.successes,
-                      'FAIL': self.failures,
+                      'FAILURE': self.failures,
                       'ERROR': self.errors,
-                      'EXP_FAIL': self.expectedFailures,
-                      'UNEXP_SUCCESS': self.unexpectedSuccesses,
+                      'EXPECTED_FAILURE': self.expectedFailures,
+                      'UNEXPECTED_SUCCESS': self.unexpectedSuccesses,
                       'SKIPPED': self.skipped}
         for status, tests in result_map.items():
             for test in tests:
