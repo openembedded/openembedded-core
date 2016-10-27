@@ -137,7 +137,7 @@ class BuildPerfTestResult(unittest.TextTestResult):
     def addSuccess(self, test):
         """Record results from successful tests"""
         super(BuildPerfTestResult, self).addSuccess(test)
-        self.successes.append((test, None))
+        self.successes.append(test)
 
     def startTest(self, test):
         """Pre-test hook"""
@@ -165,7 +165,10 @@ class BuildPerfTestResult(unittest.TextTestResult):
                       'SKIPPED': self.skipped}
         for status, tests in result_map.items():
             for test in tests:
-                yield (status, test)
+                if isinstance(test, tuple):
+                    yield (status, test)
+                else:
+                    yield (status, (test, None))
 
 
     def update_globalres_file(self, filename):
