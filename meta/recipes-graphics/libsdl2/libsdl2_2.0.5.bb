@@ -14,15 +14,16 @@ PROVIDES = "virtual/libsdl2"
 
 DEPENDS_class-nativesdk = "${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'virtual/nativesdk-libx11 nativesdk-libxrandr nativesdk-libxrender nativesdk-libxext', '', d)}"
 
-SRC_URI = "http://www.libsdl.org/release/SDL2-${PV}.tar.gz \
-           file://linkage.patch \
-           file://0001-src-video-make-it-compatible-with-wayland-1.10.patch \
+SRC_URI = " \
+    http://www.libsdl.org/release/SDL2-${PV}.tar.gz \
+    file://linkage.patch \
+    file://0001-prepend-our-sysroot-path-so-that-make-finds-our-wayl.patch \
 "
 
 S = "${WORKDIR}/SDL2-${PV}"
 
-SRC_URI[md5sum] = "44fc4a023349933e7f5d7a582f7b886e"
-SRC_URI[sha256sum] = "da55e540bf6331824153805d58b590a29c39d2d506c6d02fa409aedeab21174b"
+SRC_URI[md5sum] = "d4055424d556b4a908aa76fad63abd3c"
+SRC_URI[sha256sum] = "442038cf55965969f2ff06d976031813de643af9c9edc9e331bd761c242e8785"
 
 inherit autotools lib_package binconfig pkgconfig
 
@@ -31,7 +32,8 @@ EXTRA_OECONF = "--disable-oss --disable-esd --disable-arts \
                 --disable-video-dummy \
                 --enable-pthreads \
                 --enable-sdl-dlopen \
-                --disable-rpath"
+                --disable-rpath \
+                WAYLAND_PROTOCOLS_SYSROOT_DIR=${STAGING_DIR}/${MACHINE}"
 
 # opengl packageconfig factored out to make it easy for distros
 # and BSP layers to pick either (desktop) opengl, gles2, or no GL
