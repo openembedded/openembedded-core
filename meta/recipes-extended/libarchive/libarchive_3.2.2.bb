@@ -34,8 +34,8 @@ PACKAGECONFIG[lz4] = "--with-lz4,--without-lz4,lz4,"
 SRC_URI = "http://libarchive.org/downloads/libarchive-${PV}.tar.gz \
            "
 
-SRC_URI[md5sum] = "afa257047d1941a565216edbf0171e72"
-SRC_URI[sha256sum] = "72ee1a4e3fd534525f13a0ba1aa7b05b203d186e0c6072a8a4738649d0b3cfd2"
+SRC_URI[md5sum] = "1ec00b7dcaf969dd2a5712f85f23c764"
+SRC_URI[sha256sum] = "691c194ee132d1f0f7a42541f091db811bc2e56f7107e9121be2bc8c04f1060f"
 
 inherit autotools update-alternatives pkgconfig
 
