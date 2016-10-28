@@ -16,20 +16,18 @@ SRC_URI = "http://www.valgrind.org/downloads/valgrind-${PV}.tar.bz2 \
            file://fixed-perl-path.patch \
            file://Added-support-for-PPC-instructions-mfatbu-mfatbl.patch \
            file://run-ptest \
-           file://11_mips-link-tool.patch \
            file://0002-remove-rpath.patch \
            file://0004-Fix-out-of-tree-builds.patch \
            file://0005-Modify-vg_test-wrapper-to-support-PTEST-formats.patch \
            file://0001-Remove-tests-that-fail-to-build-on-some-PPC32-config.patch \
            file://use-appropriate-march-mcpu-mfpu-for-ARM-test-apps.patch \
            file://avoid-neon-for-targets-which-don-t-support-it.patch \
-           file://gcc5-port.patch \
 "
 SRC_URI_append_libc-musl = "\
            file://0001-fix-build-for-musl-targets.patch \
 "
-SRC_URI[md5sum] = "4ea62074da73ae82e0162d6550d3f129"
-SRC_URI[sha256sum] = "6c396271a8c1ddd5a6fb9abe714ea1e8a86fce85b30ab26b4266aeb4c2413b42"
+SRC_URI[md5sum] = "6eb03c0c10ea917013a7622e483d61bb"
+SRC_URI[sha256sum] = "67ca4395b2527247780f36148b084f5743a68ab0c850cb43e4a5b4b012cf76a1"
 
 COMPATIBLE_HOST = '(i.86|x86_64|arm|aarch64|mips|powerpc|powerpc64).*-linux'
 
