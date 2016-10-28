@@ -269,6 +269,7 @@ class BuildPerfTestResult(unittest.TextTestResult):
 
         test_cnt = 0
         for status, (test, reason) in self.all_results():
+            test_cnt += 1
             testcase = ET.SubElement(suite, 'testcase')
             testcase.set('classname', test.__module__ + '.' + test.__class__.__name__)
             testcase.set('name', test.name)
@@ -287,7 +288,27 @@ class BuildPerfTestResult(unittest.TextTestResult):
                 result.text = reason
             elif status not in ('SUCCESS', 'UNEXPECTED_SUCCESS'):
                 raise TypeError("BUG: invalid test status '%s'" % status)
-            test_cnt += 1
+
+            for data in test.measurements:
+                measurement = ET.SubElement(testcase, data['type'])
+                measurement.set('name', data['name'])
+                measurement.set('legend', data['legend'])
+                vals = data['values']
+                if data['type'] == BuildPerfTestCase.SYSRES:
+                    ET.SubElement(measurement, 'time',
+                                  timestamp=vals['start_time'].isoformat()).text = \
+                        str(vals['elapsed_time'].total_seconds())
+                    if 'buildstats_file' in vals:
+                        ET.SubElement(measurement, 'buildstats_file').text = vals['buildstats_file']
+                    attrib = dict((k, str(v)) for k, v in vals['iostat'].items())
+                    ET.SubElement(measurement, 'iostat', attrib=attrib)
+                    attrib = dict((k, str(v)) for k, v in vals['rusage'].items())
+                    ET.SubElement(measurement, 'rusage', attrib=attrib)
+                elif data['type'] == BuildPerfTestCase.DISKUSAGE:
+                    ET.SubElement(measurement, 'size').text = str(vals['size'])
+                else:
+                    raise TypeError('BUG: unsupported measurement type')
+
         suite.set('tests', str(test_cnt))
 
         # Use minidom for pretty-printing
