@@ -16,7 +16,7 @@ diff --git a/src/scanner.c b/src/scanner.c
 index 5f06e8e..10a4023 100644
 --- a/src/scanner.c
 +++ b/src/scanner.c
-@@ -808,7 +808,7 @@ find_enumeration(struct protocol *protocol,
+@@ -812,7 +812,7 @@ find_enumeration(struct protocol *protocol,
  	struct interface *i;
  	struct enumeration *e;
  	char *enum_name;
