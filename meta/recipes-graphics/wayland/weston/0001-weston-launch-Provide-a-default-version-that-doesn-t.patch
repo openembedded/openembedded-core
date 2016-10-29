@@ -14,12 +14,10 @@ Upstream-Status: Pending
 
 Signed-off-by: Tom Hochstein <tom.hochstein@nxp.com>
 ---
- configure.ac        |  9 +++++++--
- src/weston-launch.c | 20 ++++++++++++++++++++
+ configure.ac        |    9 +++++++--
+ src/weston-launch.c |   20 ++++++++++++++++++++
  2 files changed, 27 insertions(+), 2 deletions(-)
 
-diff --git a/configure.ac b/configure.ac
-index 32fdde7..240966f 100644
 --- a/configure.ac
 +++ b/configure.ac
 @@ -416,13 +416,17 @@ AC_ARG_ENABLE(resize-optimization,
@@ -50,8 +48,6 @@ index 32fdde7..240966f 100644
  	systemd-login support		${have_systemd_login}
  	systemd notify support		${enable_systemd_notify}
  
-diff --git a/src/weston-launch.c b/src/weston-launch.c
-index b8b2ba0..a865061 100644
 --- a/src/weston-launch.c
 +++ b/src/weston-launch.c
 @@ -51,7 +51,9 @@
@@ -75,7 +71,7 @@ index b8b2ba0..a865061 100644
  	int tty;
  	int ttynr;
  	int sock[2];
-@@ -181,6 +185,7 @@ weston_launch_allowed(struct weston_launch *wl)
+@@ -181,6 +185,7 @@ weston_launch_allowed(struct weston_laun
  	return false;
  }
  
@@ -91,7 +87,7 @@ index b8b2ba0..a865061 100644
  
  static int
  setup_launcher_socket(struct weston_launch *wl)
-@@ -414,6 +420,7 @@ quit(struct weston_launch *wl, int status)
+@@ -414,6 +420,7 @@ quit(struct weston_launch *wl, int statu
  	close(wl->signalfd);
  	close(wl->sock[0]);
  
@@ -99,7 +95,7 @@ index b8b2ba0..a865061 100644
  	if (wl->new_user) {
  		err = pam_close_session(wl->ph, 0);
  		if (err)
-@@ -421,6 +428,7 @@ quit(struct weston_launch *wl, int status)
+@@ -421,6 +428,7 @@ quit(struct weston_launch *wl, int statu
  				err, pam_strerror(wl->ph, err));
  		pam_end(wl->ph, err);
  	}
@@ -157,7 +153,7 @@ index b8b2ba0..a865061 100644
  			break;
  		case 't':
  			tty = optarg;
-@@ -730,8 +748,10 @@ main(int argc, char *argv[])
+@@ -732,8 +750,10 @@ main(int argc, char *argv[])
  	if (setup_tty(&wl, tty) < 0)
  		exit(EXIT_FAILURE);
  
@@ -168,6 +164,3 @@ index b8b2ba0..a865061 100644
  
  	if (setup_launcher_socket(&wl) < 0)
  		exit(EXIT_FAILURE);
--- 
-2.1.4
-

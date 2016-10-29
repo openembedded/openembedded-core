@@ -8,11 +8,9 @@ This fixes build on musl.
 Signed-off-by: Jussi Kukkonen <jussi.kukkonen@intel.com>
 Upstream-Status: Submitted
 ---
- shared/xalloc.h | 1 +
+ shared/xalloc.h |    1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/shared/xalloc.h b/shared/xalloc.h
-index 85fccb4..484de2d 100644
 --- a/shared/xalloc.h
 +++ b/shared/xalloc.h
 @@ -30,6 +30,7 @@
@@ -23,6 +21,3 @@ index 85fccb4..484de2d 100644
  #include <stdlib.h>
  #include <string.h>
  
--- 
-2.1.4
-
