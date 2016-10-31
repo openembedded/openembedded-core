@@ -11,9 +11,11 @@ BOOST_VER = "${@"_".join(d.getVar("PV", True).split("."))}"
 BOOST_MAJ = "${@"_".join(d.getVar("PV", True).split(".")[0:2])}"
 BOOST_P = "boost_${BOOST_VER}"
 
-SRC_URI = "${SOURCEFORGE_MIRROR}/boost/${BOOST_P}.tar.bz2"
+SRC_URI = "${SOURCEFORGE_MIRROR}/project/boost/boost/${PV}/${BOOST_P}.tar.bz2"
 
-SRC_URI[md5sum] = "7ef085456c48c49a7fe8237f07e5f674"
-SRC_URI[sha256sum] = "bce80293052e2d6230f1bec9b7524b33412e4fb26e9723460a0f362ac15b7acb"
+SRC_URI[md5sum] = "5fb94629535c19e48703bdb2b2e9490f"
+SRC_URI[sha256sum] = "36c96b0f6155c98404091d8ceb48319a28279ca0333fba1ad8611eb90afb2ca0"
+
+PR = "r1"
 
 S = "${WORKDIR}/${BOOST_P}"
