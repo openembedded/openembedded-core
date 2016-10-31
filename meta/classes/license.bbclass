@@ -351,6 +351,8 @@ def copy_license_files(lic_files_paths, destdir):
             dst = os.path.join(destdir, basename)
             if os.path.exists(dst):
                 os.remove(dst)
+            if os.path.islink(src):
+                src = os.path.realpath(src)
             canlink = os.access(src, os.W_OK) and (os.stat(src).st_dev == os.stat(destdir).st_dev)
             if canlink:
                 try:
