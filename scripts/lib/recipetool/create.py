@@ -787,10 +787,12 @@ def handle_license_vars(srctree, lines_before, handled, extravalues, d):
         lines_before.append('# your responsibility to verify that the values are complete and correct.')
         if len(licvalues) > 1:
             lines_before.append('#')
-            lines_before.append('# NOTE: multiple licenses have been detected; if that is correct you should separate')
-            lines_before.append('# these in the LICENSE value using & if the multiple licenses all apply, or | if there')
-            lines_before.append('# is a choice between the multiple licenses. If in doubt, check the accompanying')
-            lines_before.append('# documentation to determine which situation is applicable.')
+            lines_before.append('# NOTE: multiple licenses have been detected; they have been separated with &')
+            lines_before.append('# in the LICENSE value for now since it is a reasonable assumption that all')
+            lines_before.append('# of the licenses apply. If instead there is a choice between the multiple')
+            lines_before.append('# licenses then you should change the value to separate the licenses with |')
+            lines_before.append('# instead of &. If there is any doubt, check the accompanying documentation')
+            lines_before.append('# to determine which situation is applicable.')
         if lic_unknown:
             lines_before.append('#')
             lines_before.append('# The following license files were not able to be identified and are')
@@ -814,7 +816,7 @@ def handle_license_vars(srctree, lines_before, handled, extravalues, d):
             licenses = [pkg_license]
         else:
             lines_before.append('# NOTE: Original package metadata indicates license is: %s' % pkg_license)
-    lines_before.append('LICENSE = "%s"' % ' '.join(licenses))
+    lines_before.append('LICENSE = "%s"' % ' & '.join(licenses))
     lines_before.append('LIC_FILES_CHKSUM = "%s"' % ' \\\n                    '.join(lic_files_chksum))
     lines_before.append('')
     handled.append(('license', licvalues))

@@ -46,7 +46,10 @@ class DevtoolBase(oeSelfTest):
                     if needvalue is None:
                         self.fail('Variable %s should not appear in recipe')
                     if isinstance(needvalue, set):
-                        value = set(value.split())
+                        if var == 'LICENSE':
+                            value = set(value.split(' & '))
+                        else:
+                            value = set(value.split())
                     self.assertEqual(value, needvalue, 'values for %s do not match' % var)
 
 
