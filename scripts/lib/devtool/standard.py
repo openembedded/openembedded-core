@@ -1479,6 +1479,7 @@ def finish(args, config, basepath, workspace):
 
     check_workspace_recipe(workspace, args.recipename)
 
+    no_clean = False
     tinfoil = setup_tinfoil(basepath=basepath, tracking=True)
     try:
         rd = parse_recipe(config, tinfoil, args.recipename, True)
@@ -1540,6 +1541,7 @@ def finish(args, config, basepath, workspace):
         if origlayerdir == config.workspace_path and destpath:
             # Recipe file itself is in the workspace - need to move it and any
             # associated files to the specified layer
+            no_clean = True
             logger.info('Moving recipe file to %s' % destpath)
             recipedir = os.path.dirname(rd.getVar('FILE', True))
             for root, _, files in os.walk(recipedir):
@@ -1554,7 +1556,7 @@ def finish(args, config, basepath, workspace):
         tinfoil.shutdown()
 
     # Everything else has succeeded, we can now reset
-    _reset([args.recipename], no_clean=False, config=config, basepath=basepath, workspace=workspace)
+    _reset([args.recipename], no_clean=no_clean, config=config, basepath=basepath, workspace=workspace)
 
     return 0
 
