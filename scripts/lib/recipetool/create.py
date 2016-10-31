@@ -32,6 +32,18 @@ logger = logging.getLogger('recipetool')
 tinfoil = None
 plugins = None
 
+def log_error_cond(message, debugonly):
+    if debugonly:
+        logger.debug(message)
+    else:
+        logger.error(message)
+
+def log_info_cond(message, debugonly):
+    if debugonly:
+        logger.debug(message)
+    else:
+        logger.info(message)
+
 def plugin_init(pluginlist):
     # Take a reference to the list so we can use it later
     global plugins
@@ -406,7 +418,7 @@ def create_recipe(args):
         srctree = tempsrc
         if fetchuri.startswith('npm://'):
             # Check if npm is available
-            check_npm(tinfoil.config_data)
+            check_npm(tinfoil.config_data, args.devtool)
         logger.info('Fetching %s...' % srcuri)
         try:
             checksums = scriptutils.fetch_uri(tinfoil.config_data, fetchuri, srctree, srcrev)
@@ -640,7 +652,7 @@ def create_recipe(args):
 
     if not outfile:
         if not pn:
-            logger.error('Unable to determine short program name from source tree - please specify name with -N/--name or output file name with -o/--outfile')
+            log_error_cond('Unable to determine short program name from source tree - please specify name with -N/--name or output file name with -o/--outfile', args.devtool)
             # devtool looks for this specific exit code, so don't change it
             sys.exit(15)
         else:
@@ -736,7 +748,7 @@ def create_recipe(args):
         shutil.move(srctree, args.extract_to)
         if tempsrc == srctree:
             tempsrc = None
-        logger.info('Source extracted to %s' % args.extract_to)
+        log_info_cond('Source extracted to %s' % args.extract_to, args.devtool)
 
     if outfile == '-':
         sys.stdout.write('\n'.join(outlines) + '\n')
@@ -749,7 +761,7 @@ def create_recipe(args):
                     continue
                 f.write('%s\n' % line)
                 lastline = line
-        logger.info('Recipe %s has been created; further editing may be required to make it fully functional' % outfile)
+        log_info_cond('Recipe %s has been created; further editing may be required to make it fully functional' % outfile, args.devtool)
 
     if tempsrc:
         if args.keep_temp:
@@ -1073,9 +1085,9 @@ def convert_rpm_xml(xmlfile):
     return values
 
 
-def check_npm(d):
+def check_npm(d, debugonly=False):
     if not os.path.exists(os.path.join(d.getVar('STAGING_BINDIR_NATIVE', True), 'npm')):
-        logger.error('npm required to process specified source, but npm is not available - you need to build nodejs-native first')
+        log_error_cond('npm required to process specified source, but npm is not available - you need to build nodejs-native first', debugonly)
         sys.exit(14)
 
 def register_commands(subparsers):
@@ -1093,5 +1105,6 @@ def register_commands(subparsers):
     parser_create.add_argument('--src-subdir', help='Specify subdirectory within source tree to use', metavar='SUBDIR')
     parser_create.add_argument('-a', '--autorev', help='When fetching from a git repository, set SRCREV in the recipe to a floating revision instead of fixed', action="store_true")
     parser_create.add_argument('--keep-temp', action="store_true", help='Keep temporary directory (for debugging)')
+    parser_create.add_argument('--devtool', action="store_true", help=argparse.SUPPRESS)
     parser_create.set_defaults(func=create_recipe)
 

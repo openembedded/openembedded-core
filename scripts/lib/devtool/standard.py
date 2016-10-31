@@ -155,7 +155,7 @@ def add(args, config, basepath, workspace):
     try:
         while True:
             try:
-                stdout, _ = exec_build_env_command(config.init_path, basepath, 'recipetool --color=%s create -o %s "%s" %s' % (color, tempdir, source, extracmdopts))
+                stdout, _ = exec_build_env_command(config.init_path, basepath, 'recipetool --color=%s create --devtool -o %s \'%s\' %s' % (color, tempdir, source, extracmdopts), watch=True)
             except bb.process.ExecutionError as e:
                 if e.exitcode == 14:
                     # FIXME this is a horrible hack that is unfortunately
@@ -164,11 +164,12 @@ def add(args, config, basepath, workspace):
                     # with references to it throughout the code, so we have
                     # to exit out and come back here to do it.
                     ensure_npm(config, basepath, args.fixed_setup)
+                    logger.info('Re-running recipe creation process after building nodejs')
                     continue
                 elif e.exitcode == 15:
                     raise DevtoolError('Could not auto-determine recipe name, please specify it on the command line')
                 else:
-                    raise DevtoolError('Command \'%s\' failed:\n%s' % (e.command, e.stdout))
+                    raise DevtoolError('Command \'%s\' failed' % e.command)
             break
 
         recipes = glob.glob(os.path.join(tempdir, '*.bb'))
