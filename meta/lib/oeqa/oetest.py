@@ -145,20 +145,6 @@ class OETestCalledProcessError(subprocess.CalledProcessError):
 
 subprocess.CalledProcessError = OETestCalledProcessError
 
-class oeSDKTest(oeTest):
-    def __init__(self, methodName='runTest'):
-        self.sdktestdir = oeSDKTest.tc.sdktestdir
-        super(oeSDKTest, self).__init__(methodName)
-
-    @classmethod
-    def hasHostPackage(self, pkg):
-        if re.search(pkg, oeTest.tc.hostpkgmanifest):
-            return True
-        return False
-
-    def _run(self, cmd):
-        return subprocess.check_output(". %s > /dev/null; %s;" % (self.tc.sdkenv, cmd), shell=True, stderr=subprocess.STDOUT).decode("utf-8")
-
 class oeSDKExtTest(oeSDKTest):
     def _run(self, cmd):
         # extensible sdk shows a warning if found bitbake in the path
@@ -656,43 +642,6 @@ class ExportTestContext(RuntimeTestContext):
         extracted_dir = self.d.getVar("TEST_EXPORT_EXTRACTED_DIR")
         pkg_dir = os.path.join(export_dir, extracted_dir)
         super(ExportTestContext, self).install_uninstall_packages(test_id, pkg_dir, install)
-
-class SDKTestContext(TestContext):
-    def __init__(self, d, sdktestdir, sdkenv, tcname, *args):
-        super(SDKTestContext, self).__init__(d)
-
-        self.sdktestdir = sdktestdir
-        self.sdkenv = sdkenv
-        self.tcname = tcname
-
-        if not hasattr(self, 'target_manifest'):
-            self.target_manifest = d.getVar("SDK_TARGET_MANIFEST")
-        try:
-            self.pkgmanifest = {}
-            with open(self.target_manifest) as f:
-                for line in f:
-                    (pkg, arch, version) = line.strip().split()
-                    self.pkgmanifest[pkg] = (version, arch)
-        except IOError as e:
-            bb.fatal("No package manifest file found. Did you build the sdk image?\n%s" % e)
-
-        if not hasattr(self, 'host_manifest'):
-            self.host_manifest = d.getVar("SDK_HOST_MANIFEST")
-        try:
-            with open(self.host_manifest) as f:
-                self.hostpkgmanifest = f.read()
-        except IOError as e:
-            bb.fatal("No host package manifest file found. Did you build the sdk image?\n%s" % e)
-
-    def _get_test_namespace(self):
-        return "sdk"
-
-    def _get_test_suites(self):
-        return (self.d.getVar("TEST_SUITES_SDK") or "auto").split()
-
-    def _get_test_suites_required(self):
-        return [t for t in (self.d.getVar("TEST_SUITES_SDK") or \
-                "auto").split() if t != "auto"]
 
 class SDKExtTestContext(SDKTestContext):
     def __init__(self, d, sdktestdir, sdkenv, tcname, *args):
