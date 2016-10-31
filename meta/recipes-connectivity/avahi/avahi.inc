@@ -153,13 +153,3 @@ if [ -z "$D" ]; then
 	killall -q -HUP dbus-daemon || true
 fi
 }
-
-pkg_postrm_avahi-daemon () {
-	deluser avahi || true
-	delgroup avahi || true
-}
-
-pkg_postrm_avahi-autoipd () {
-	deluser avahi-autoipd || true
-	delgroup avahi-autoipd || true
-}
