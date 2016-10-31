@@ -1349,3 +1349,63 @@ class DevtoolTests(DevtoolBase):
         files.remove(foundpatch)
         if files:
             self.fail('Unexpected file(s) copied next to bbappend: %s' % ', '.join(files))
+
+    def test_devtool_rename(self):
+        # Check preconditions
+        self.assertTrue(not os.path.exists(self.workspacedir), 'This test cannot be run with a workspace directory under the build directory')
+        self.track_for_cleanup(self.workspacedir)
+        self.add_command_to_tearDown('bitbake-layers remove-layer */workspace')
+
+        # First run devtool add
+        # We already have this recipe in OE-Core, but that doesn't matter
+        recipename = 'i2c-tools'
+        recipever = '3.1.2'
+        recipefile = os.path.join(self.workspacedir, 'recipes', recipename, '%s_%s.bb' % (recipename, recipever))
+        url = 'http://downloads.yoctoproject.org/mirror/sources/i2c-tools-%s.tar.bz2' % recipever
+        def add_recipe():
+            result = runCmd('devtool add %s' % url)
+            self.assertTrue(os.path.exists(recipefile), 'Expected recipe file not created')
+            self.assertTrue(os.path.exists(os.path.join(self.workspacedir, 'sources', recipename)), 'Source directory not created')
+            checkvars = {}
+            checkvars['S'] = None
+            checkvars['SRC_URI'] = url.replace(recipever, '${PV}')
+            self._test_recipe_contents(recipefile, checkvars, [])
+        add_recipe()
+        # Now rename it - change both name and version
+        newrecipename = 'mynewrecipe'
+        newrecipever = '456'
+        newrecipefile = os.path.join(self.workspacedir, 'recipes', newrecipename, '%s_%s.bb' % (newrecipename, newrecipever))
+        result = runCmd('devtool rename %s %s -V %s' % (recipename, newrecipename, newrecipever))
+        self.assertTrue(os.path.exists(newrecipefile), 'Recipe file not renamed')
+        self.assertFalse(os.path.exists(os.path.join(self.workspacedir, 'recipes', recipename)), 'Old recipe directory still exists')
+        newsrctree = os.path.join(self.workspacedir, 'sources', newrecipename)
+        self.assertTrue(os.path.exists(newsrctree), 'Source directory not renamed')
+        checkvars = {}
+        checkvars['S'] = '${WORKDIR}/%s-%s' % (recipename, recipever)
+        checkvars['SRC_URI'] = url
+        self._test_recipe_contents(newrecipefile, checkvars, [])
+        # Try again - change just name this time
+        result = runCmd('devtool reset -n %s' % newrecipename)
+        shutil.rmtree(newsrctree)
+        add_recipe()
+        newrecipefile = os.path.join(self.workspacedir, 'recipes', newrecipename, '%s_%s.bb' % (newrecipename, recipever))
+        result = runCmd('devtool rename %s %s' % (recipename, newrecipename))
+        self.assertTrue(os.path.exists(newrecipefile), 'Recipe file not renamed')
+        self.assertFalse(os.path.exists(os.path.join(self.workspacedir, 'recipes', recipename)), 'Old recipe directory still exists')
+        self.assertTrue(os.path.exists(os.path.join(self.workspacedir, 'sources', newrecipename)), 'Source directory not renamed')
+        checkvars = {}
+        checkvars['S'] = '${WORKDIR}/%s-${PV}' % recipename
+        checkvars['SRC_URI'] = url.replace(recipever, '${PV}')
+        self._test_recipe_contents(newrecipefile, checkvars, [])
+        # Try again - change just version this time
+        result = runCmd('devtool reset -n %s' % newrecipename)
+        shutil.rmtree(newsrctree)
+        add_recipe()
+        newrecipefile = os.path.join(self.workspacedir, 'recipes', recipename, '%s_%s.bb' % (recipename, newrecipever))
+        result = runCmd('devtool rename %s -V %s' % (recipename, newrecipever))
+        self.assertTrue(os.path.exists(newrecipefile), 'Recipe file not renamed')
+        self.assertTrue(os.path.exists(os.path.join(self.workspacedir, 'sources', recipename)), 'Source directory no longer exists')
+        checkvars = {}
+        checkvars['S'] = '${WORKDIR}/${BPN}-%s' % recipever
+        checkvars['SRC_URI'] = url
+        self._test_recipe_contents(newrecipefile, checkvars, [])
