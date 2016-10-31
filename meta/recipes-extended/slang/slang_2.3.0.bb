@@ -22,6 +22,7 @@ SRC_URI = "http://www.jedsoft.org/releases/${BPN}/${BP}.tar.bz2 \
            file://0001-Fix-error-conflicting-types-for-posix_close.patch \
           "
 UPSTREAM_CHECK_URI = "http://www.jedsoft.org/releases/slang/"
+PREMIRRORS_append = "\n http://www.jedsoft.org/releases/slang/.* http://www.jedsoft.org/releases/slang/old/ \n"
 
 inherit autotools-brokensep
 
