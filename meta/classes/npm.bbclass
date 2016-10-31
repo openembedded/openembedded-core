@@ -33,7 +33,11 @@ npm_do_compile() {
 
 npm_do_install() {
 	mkdir -p ${NPM_INSTALLDIR}/
-	cp -a ${S}/* ${NPM_INSTALLDIR}/ --no-preserve=ownership
+	npm install --prefix ${D}${prefix} -g --arch=${NPM_ARCH} --target_arch=${NPM_ARCH} --production --no-registry
+	if [ -d ${D}${prefix}/etc ] ; then
+		# This will be empty
+		rmdir ${D}${prefix}/etc
+	fi
 }
 
 python populate_packages_prepend () {
