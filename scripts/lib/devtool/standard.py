@@ -1517,6 +1517,11 @@ def finish(args, config, basepath, workspace):
             destpath = oe.recipeutils.get_bbfile_path(rd, destlayerdir, origrelpath)
             if not destpath:
                 raise DevtoolError("Unable to determine destination layer path - check that %s specifies an actual layer and %s/conf/layer.conf specifies BBFILES. You may also need to specify a more complete path." % (args.destination, destlayerdir))
+            # Warn if the layer isn't in bblayers.conf (the code to create a bbappend will do this in other cases)
+            layerdirs = [os.path.abspath(layerdir) for layerdir in rd.getVar('BBLAYERS', True).split()]
+            if not os.path.abspath(destlayerdir) in layerdirs:
+                bb.warn('Specified destination layer is not currently enabled in bblayers.conf, so the %s recipe will now be unavailable in your current configuration until you add the layer there' % args.recipename)
+
         elif destlayerdir == origlayerdir:
             # Same layer, update the original recipe
             appendlayerdir = None
