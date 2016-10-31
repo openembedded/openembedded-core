@@ -20,6 +20,11 @@
 
 LANG=C
 
+echo
+echo "WARNING: This script is deprecated and will be removed soon."
+echo "Please consider using wic EFI images instead."
+echo
+
 # Set to 1 to enable additional output
 DEBUG=0
 OUT="/dev/null"
