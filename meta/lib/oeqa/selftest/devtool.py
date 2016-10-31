@@ -44,7 +44,7 @@ class DevtoolBase(oeSelfTest):
                 if var and var in checkvars:
                     needvalue = checkvars.pop(var)
                     if needvalue is None:
-                        self.fail('Variable %s should not appear in recipe')
+                        self.fail('Variable %s should not appear in recipe, but value is being set to "%s"' % (var, value))
                     if isinstance(needvalue, set):
                         if var == 'LICENSE':
                             value = set(value.split(' & '))
