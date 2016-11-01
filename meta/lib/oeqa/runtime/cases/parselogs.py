@@ -1,8 +1,12 @@
 import os
-import unittest
-import subprocess
-from oeqa.oetest import oeRuntimeTest
-from oeqa.utils.decorators import *
+
+from subprocess import check_output
+from shutil import rmtree
+from oeqa.runtime.case import OERuntimeTestCase
+from oeqa.core.decorator.depends import OETestDepends
+from oeqa.core.decorator.oeid import OETestID
+from oeqa.core.decorator.data import skipIfDataVar
+from oeqa.runtime.decorator.package import OEHasPackage
 
 #in the future these lists could be moved outside of module
 errors = ["error", "cannot", "can\'t", "failed"]
@@ -168,144 +172,173 @@ ignore_errors = {
 
 log_locations = ["/var/log/","/var/log/dmesg", "/tmp/dmesg_output.log"]
 
-class ParseLogsTest(oeRuntimeTest):
+class ParseLogsTest(OERuntimeTestCase):
 
     @classmethod
-    def setUpClass(self):
-        self.errors = errors
+    def setUpClass(cls):
+        cls.errors = errors
 
         # When systemd is enabled we need to notice errors on
         # circular dependencies in units.
-        if self.hasFeature("systemd"):
-            self.errors.extend([
+        if 'systemd' in cls.td.get('DISTRO_FEATURES', ''):
+            cls.errors.extend([
                 'Found ordering cycle on',
                 'Breaking ordering cycle by deleting job',
                 'deleted to break ordering cycle',
                 'Ordering cycle found, skipping',
                 ])
 
-        self.ignore_errors = ignore_errors
-        self.log_locations = log_locations
-        self.msg = ""
-        (is_lsb, location) = oeRuntimeTest.tc.target.run("which LSB_Test.sh")
+        cls.ignore_errors = ignore_errors
+        cls.log_locations = log_locations
+        cls.msg = ''
+        is_lsb, _ = cls.tc.target.run("which LSB_Test.sh")
         if is_lsb == 0:
-            for machine in self.ignore_errors:
-                self.ignore_errors[machine] = self.ignore_errors[machine] + video_related
+            for machine in cls.ignore_errors:
+                cls.ignore_errors[machine] = cls.ignore_errors[machine] \
+                                             + video_related
 
     def getMachine(self):
-        return oeRuntimeTest.tc.d.getVar("MACHINE")
+        return self.td.get('MACHINE', '')
 
     def getWorkdir(self):
-        return oeRuntimeTest.tc.d.getVar("WORKDIR")
+        return self.td.get('WORKDIR', '')
 
-    #get some information on the CPU of the machine to display at the beginning of the output. This info might be useful in some cases.
+    # Get some information on the CPU of the machine to display at the
+    # beginning of the output. This info might be useful in some cases.
     def getHardwareInfo(self):
         hwi = ""
-        (status, cpu_name) = self.target.run("cat /proc/cpuinfo | grep \"model name\" | head -n1 | awk 'BEGIN{FS=\":\"}{print $2}'")
-        (status, cpu_physical_cores) = self.target.run("cat /proc/cpuinfo | grep \"cpu cores\" | head -n1 | awk {'print $4'}")
-        (status, cpu_logical_cores) = self.target.run("cat /proc/cpuinfo | grep \"processor\" | wc -l")
-        (status, cpu_arch) = self.target.run("uname -m")
-        hwi += "Machine information: \n"
-        hwi += "*******************************\n"
-        hwi += "Machine name: "+self.getMachine()+"\n"
-        hwi += "CPU: "+str(cpu_name)+"\n"
-        hwi += "Arch: "+str(cpu_arch)+"\n"
-        hwi += "Physical cores: "+str(cpu_physical_cores)+"\n"
-        hwi += "Logical cores: "+str(cpu_logical_cores)+"\n"
-        hwi += "*******************************\n"
+        cmd = ('cat /proc/cpuinfo | grep "model name" | head -n1 | '
+               " awk 'BEGIN{FS=\":\"}{print $2}'")
+        _, cpu_name = self.target.run(cmd)
+
+        cmd = ('cat /proc/cpuinfo | grep "cpu cores" | head -n1 | '
+               "awk {'print $4'}")
+        _, cpu_physical_cores = self.target.run(cmd)
+
+        cmd = 'cat /proc/cpuinfo | grep "processor" | wc -l'
+        _, cpu_logical_cores = self.target.run(cmd)
+
+        _, cpu_arch = self.target.run('uname -m')
+
+        hwi += 'Machine information: \n'
+        hwi += '*******************************\n'
+        hwi += 'Machine name: ' + self.getMachine() + '\n'
+        hwi += 'CPU: ' + str(cpu_name) + '\n'
+        hwi += 'Arch: ' + str(cpu_arch)+ '\n'
+        hwi += 'Physical cores: ' + str(cpu_physical_cores) + '\n'
+        hwi += 'Logical cores: ' + str(cpu_logical_cores) + '\n'
+        hwi += '*******************************\n'
+
         return hwi
 
-    #go through the log locations provided and if it's a folder create a list with all the .log files in it, if it's a file just add
-    #it to that list
+    # Go through the log locations provided and if it's a folder
+    # create a list with all the .log files in it, if it's a file
+    # just add it to that list.
     def getLogList(self, log_locations):
         logs = []
         for location in log_locations:
-            (status, output) = self.target.run("test -f "+str(location))
-            if (status == 0):
+            status, _ = self.target.run('test -f ' + str(location))
+            if status == 0:
                 logs.append(str(location))
             else:
-                (status, output) = self.target.run("test -d "+str(location))
-                if (status == 0):
-                    (status, output) = self.target.run("find "+str(location)+"/*.log -maxdepth 1 -type f")
-                    if (status == 0):
+                status, _ = self.target.run('test -d ' + str(location))
+                if status == 0:
+                    cmd = 'find ' + str(location) + '/*.log -maxdepth 1 -type f'
+                    status, output = self.target.run(cmd)
+                    if status == 0:
                         output = output.splitlines()
                         for logfile in output:
-                            logs.append(os.path.join(location,str(logfile)))
+                            logs.append(os.path.join(location, str(logfile)))
         return logs
 
-    #copy the log files to be parsed locally
+    # Copy the log files to be parsed locally
     def transfer_logs(self, log_list):
         workdir = self.getWorkdir()
         self.target_logs = workdir + '/' + 'target_logs'
         target_logs = self.target_logs
-        if not os.path.exists(target_logs):
-            os.makedirs(target_logs)
-        bb.utils.remove(self.target_logs + "/*")
+        if os.path.exists(target_logs):
+            rmtree(self.target_logs)
+        os.makedirs(target_logs)
         for f in log_list:
-            self.target.copy_from(f, target_logs)
+            self.target.copyFrom(str(f), target_logs)
 
-    #get the local list of logs
+    # Get the local list of logs
     def get_local_log_list(self, log_locations):
         self.transfer_logs(self.getLogList(log_locations))
-        logs = [ os.path.join(self.target_logs, f) for f in os.listdir(self.target_logs) if os.path.isfile(os.path.join(self.target_logs, f)) ]
+        list_dir = os.listdir(self.target_logs)
+        dir_files = [os.path.join(self.target_logs, f) for f in list_dir]
+        logs = [f for f in dir_files if os.path.isfile(f)]
         return logs
 
-    #build the grep command to be used with filters and exclusions
+    # Build the grep command to be used with filters and exclusions
     def build_grepcmd(self, errors, ignore_errors, log):
-        grepcmd = "grep "
-        grepcmd +="-Ei \""
+        grepcmd = 'grep '
+        grepcmd += '-Ei "'
         for error in errors:
-            grepcmd += error+"|"
+            grepcmd += error + '|'
         grepcmd = grepcmd[:-1]
-        grepcmd += "\" "+str(log)+" | grep -Eiv \'"
+        grepcmd += '" ' + str(log) + " | grep -Eiv \'"
+
         try:
             errorlist = ignore_errors[self.getMachine()]
         except KeyError:
-            self.msg += "No ignore list found for this machine, using default\n"
+            self.msg += 'No ignore list found for this machine, using default\n'
             errorlist = ignore_errors['default']
+
         for ignore_error in errorlist:
-            ignore_error = ignore_error.replace("(", "\(")
-            ignore_error = ignore_error.replace(")", "\)")
-            ignore_error = ignore_error.replace("'", ".")
-            ignore_error = ignore_error.replace("?", "\?")
-            ignore_error = ignore_error.replace("[", "\[")
-            ignore_error = ignore_error.replace("]", "\]")
-            ignore_error = ignore_error.replace("*", "\*")
-            ignore_error = ignore_error.replace("0-9", "[0-9]")
-            grepcmd += ignore_error+"|"
+            ignore_error = ignore_error.replace('(', '\(')
+            ignore_error = ignore_error.replace(')', '\)')
+            ignore_error = ignore_error.replace("'", '.')
+            ignore_error = ignore_error.replace('?', '\?')
+            ignore_error = ignore_error.replace('[', '\[')
+            ignore_error = ignore_error.replace(']', '\]')
+            ignore_error = ignore_error.replace('*', '\*')
+            ignore_error = ignore_error.replace('0-9', '[0-9]')
+            grepcmd += ignore_error + '|'
         grepcmd = grepcmd[:-1]
         grepcmd += "\'"
+
         return grepcmd
 
-    #grep only the errors so that their context could be collected. Default context is 10 lines before and after the error itself
-    def parse_logs(self, errors, ignore_errors, logs, lines_before = 10, lines_after = 10):
+    # Grep only the errors so that their context could be collected.
+    # Default context is 10 lines before and after the error itself
+    def parse_logs(self, errors, ignore_errors, logs,
+                   lines_before = 10, lines_after = 10):
         results = {}
         rez = []
         grep_output = ''
+
         for log in logs:
             result = None
             thegrep = self.build_grepcmd(errors, ignore_errors, log)
+
             try:
-                result = subprocess.check_output(thegrep, shell=True).decode("utf-8")
+                result = check_output(thegrep, shell=True).decode('utf-8')
             except:
                 pass
-            if (result is not None):
+
+            if result is not None:
                 results[log.replace('target_logs/','')] = {}
                 rez = result.splitlines()
+
                 for xrez in rez:
                     try:
-                        grep_output = subprocess.check_output(['grep', '-F', xrez, '-B', str(lines_before), '-A', str(lines_after), log]).decode("utf-8")
+                        cmd = ['grep', '-F', xrez, '-B', str(lines_before)]
+                        cmd += ['-A', str(lines_after), log]
+                        grep_output = check_output(cmd).decode('utf-8')
                     except:
                         pass
                     results[log.replace('target_logs/','')][xrez]=grep_output
+
         return results
 
-    #get the output of dmesg and write it in a file. This file is added to log_locations.
+    # Get the output of dmesg and write it in a file.
+    # This file is added to log_locations.
     def write_dmesg(self):
-        (status, dmesg) = self.target.run("dmesg > /tmp/dmesg_output.log")
+        (status, dmesg) = self.target.run('dmesg > /tmp/dmesg_output.log')
 
-    @testcase(1059)
-    @skipUnlessPassed('test_ssh')
+    @OETestID(1059)
+    @OETestDepends(['ssh.SSHTest.test_ssh'])
     def test_parselogs(self):
         self.write_dmesg()
         log_list = self.get_local_log_list(self.log_locations)
@@ -313,13 +346,13 @@ class ParseLogsTest(oeRuntimeTest):
         print(self.getHardwareInfo())
         errcount = 0
         for log in result:
-            self.msg += "Log: "+log+"\n"
-            self.msg += "-----------------------\n"
+            self.msg += 'Log: ' + log + '\n'
+            self.msg += '-----------------------\n'
             for error in result[log]:
                 errcount += 1
-                self.msg += "Central error: "+str(error)+"\n"
-                self.msg +=  "***********************\n"
-                self.msg +=  result[str(log)][str(error)]+"\n"
-                self.msg +=  "***********************\n"
-        self.msg += "%s errors found in logs." % errcount
+                self.msg += 'Central error: ' + str(error) + '\n'
+                self.msg +=  '***********************\n'
+                self.msg +=  result[str(log)][str(error)] + '\n'
+                self.msg +=  '***********************\n'
+        self.msg += '%s errors found in logs.' % errcount
         self.assertEqual(errcount, 0, msg=self.msg)
