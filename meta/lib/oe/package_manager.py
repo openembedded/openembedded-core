@@ -1776,7 +1776,7 @@ class OpkgPM(OpkgDpkgPM):
 
     def remove(self, pkgs, with_dependencies=True):
         if with_dependencies:
-            cmd = "%s %s --force-depends --force-remove --force-removal-of-dependent-packages remove %s" % \
+            cmd = "%s %s --force-remove --force-removal-of-dependent-packages remove %s" % \
                 (self.opkg_cmd, self.opkg_args, ' '.join(pkgs))
         else:
             cmd = "%s %s --force-depends remove %s" % \
