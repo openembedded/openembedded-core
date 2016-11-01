@@ -14,8 +14,8 @@ SRC_URI = "${GNU_MIRROR}/autogen/rel${PV}/autogen-${PV}.tar.gz \
            file://fix-script-err-when-processing-libguile.patch \
 "
 
-SRC_URI[md5sum] = "2d1b5226e1929d0680011df631289571"
-SRC_URI[sha256sum] = "0b8681d9724c481d3b726b5a9e81d3d09dc7f307d1a801c76d0a30d8f843d20a"
+SRC_URI[md5sum] = "551d15ccbf5b5fc5658da375d5003389"
+SRC_URI[sha256sum] = "805c20182f3cb0ebf1571d3b01972851c56fb34348dfdc38799fd0ec3b2badbe"
 
 UPSTREAM_CHECK_URI = "http://ftp.gnu.org/gnu/autogen/"
 UPSTREAM_CHECK_REGEX = "rel(?P<pver>\d+(\.\d+)+)/"
