@@ -223,7 +223,7 @@ EOF
 		-e 's#@SDKEXTPATH@#${SDKEXTPATH}#g' \
 		-e 's#@OLDEST_KERNEL@#${SDK_OLDEST_KERNEL}#g' \
 		-e 's#@REAL_MULTIMACH_TARGET_SYS@#${REAL_MULTIMACH_TARGET_SYS}#g' \
-		-e 's#@SDK_TITLE@#${SDK_TITLE}#g' \
+		-e 's#@SDK_TITLE@#${@d.getVar("SDK_TITLE", True).replace('&', '\&')}#g' \
 		-e 's#@SDK_VERSION@#${SDK_VERSION}#g' \
 		-e '/@SDK_PRE_INSTALL_COMMAND@/d' \
 		-e '/@SDK_POST_INSTALL_COMMAND@/d' \
