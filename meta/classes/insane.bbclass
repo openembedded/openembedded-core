@@ -647,8 +647,8 @@ def package_qa_check_buildpaths(path, name, d, elf, messages):
         return
 
     tmpdir = d.getVar('TMPDIR', True)
-    with open(path) as f:
-        file_content = f.read()
+    with open(path, 'rb') as f:
+        file_content = f.read().decode('utf-8', errors='ignore')
         if tmpdir in file_content:
             package_qa_add_message(messages, "buildpaths", "File %s in package contained reference to tmpdir" % package_qa_clean_path(path,d))
 
