@@ -390,7 +390,7 @@ def find_license_files(d):
     from collections import defaultdict, OrderedDict
 
     # All the license files for the package
-    lic_files = d.getVar('LIC_FILES_CHKSUM', True)
+    lic_files = d.getVar('LIC_FILES_CHKSUM', True) or ""
     pn = d.getVar('PN', True)
     # The license files are located in S/LIC_FILE_CHECKSUM.
     srcdir = d.getVar('S', True)
@@ -468,12 +468,6 @@ def find_license_files(d):
 
     if not generic_directory:
         bb.fatal("COMMON_LICENSE_DIR is unset. Please set this in your distro config")
-
-    if not lic_files:
-        # No recipe should have an invalid license file. This is checked else
-        # where, but let's be pedantic
-        bb.note(pn + ": Recipe file does not have license file information.")
-        return lic_files_paths
 
     for url in lic_files.split():
         try:
