@@ -56,8 +56,9 @@ class DiskImage():
         if self.created:
             return
         # create sparse disk image
-        cmd = "truncate %s -s %s" % (self.device, self.size)
-        exec_cmd(cmd)
+        with open(self.device, 'w') as sparse:
+            os.ftruncate(sparse.fileno(), self.size)
+
         self.created = True
 
 class DirectImageCreator(BaseImageCreator):

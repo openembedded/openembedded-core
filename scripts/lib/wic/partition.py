@@ -217,7 +217,8 @@ class Partition():
         msger.debug("Added %d extra blocks to %s to get to %d total blocks" % \
                     (extra_blocks, self.mountpoint, rootfs_size))
 
-        exec_cmd("truncate %s -s %d" % (rootfs, rootfs_size * 1024))
+        with open(rootfs, 'w') as sparse:
+            os.ftruncate(sparse.fileno(), rootfs_size * 1024)
 
         extra_imagecmd = "-i 8192"
 
@@ -250,7 +251,8 @@ class Partition():
         msger.debug("Added %d extra blocks to %s to get to %d total blocks" % \
                     (extra_blocks, self.mountpoint, rootfs_size))
 
-        exec_cmd("truncate %s -s %d" % (rootfs, rootfs_size * 1024))
+        with open(rootfs, 'w') as sparse:
+            os.ftruncate(sparse.fileno(), rootfs_size * 1024)
 
         label_str = ""
         if self.label:
@@ -305,7 +307,8 @@ class Partition():
         """
         Prepare an empty ext2/3/4 partition.
         """
-        exec_cmd("truncate %s -s %d" % (rootfs, self.size * 1024))
+        with open(rootfs, 'w') as sparse:
+            os.ftruncate(sparse.fileno(), rootfs_size * 1024)
 
         extra_imagecmd = "-i 8192"
 
@@ -322,7 +325,8 @@ class Partition():
         """
         Prepare an empty btrfs partition.
         """
-        exec_cmd("truncate %s -s %d" % (rootfs, self.size * 1024))
+        with open(rootfs, 'w') as sparse:
+            os.ftruncate(sparse.fileno(), rootfs_size * 1024)
 
         label_str = ""
         if self.label:
@@ -383,7 +387,8 @@ class Partition():
         """
         path = "%s/fs.%s" % (cr_workdir, self.fstype)
 
-        exec_cmd("truncate %s -s %d" % (path, self.size * 1024))
+        with open(path, 'w') as sparse:
+            os.ftruncate(sparse.fileno(), self.size * 1024)
 
         import uuid
         label_str = ""
