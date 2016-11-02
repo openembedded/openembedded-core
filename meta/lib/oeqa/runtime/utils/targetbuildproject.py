@@ -5,13 +5,13 @@ from oeqa.utils.buildproject import BuildProject
 
 class TargetBuildProject(BuildProject):
 
-    def __init__(self, target, d, uri, foldername=None):
+    def __init__(self, target, uri, foldername=None, dl_dir=None):
         self.target = target
         self.targetdir = "~/"
-        BuildProject.__init__(self, d, uri, foldername, tmpdir="/tmp")
+        BuildProject.__init__(self, uri, foldername, tmpdir="/tmp",
+                dl_dir=dl_dir)
 
     def download_archive(self):
-
         self._download_archive()
 
         (status, output) = self.target.copy_to(self.localarchive, self.targetdir)

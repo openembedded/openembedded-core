@@ -7,17 +7,17 @@ import subprocess
 from oeqa.utils.buildproject import BuildProject
 
 class SDKBuildProject(BuildProject):
-
-    def __init__(self, testpath, sdkenv, d, uri, foldername=None):
+    def __init__(self, testpath, sdkenv, uri, testlogdir, builddatetime,
+            foldername=None, dl_dir=None):
         self.sdkenv = sdkenv
         self.testdir = testpath
         self.targetdir = testpath
-        bb.utils.mkdirhier(testpath)
-        self.datetime = d.getVar('DATETIME')
-        self.testlogdir = d.getVar("TEST_LOG_DIR")
-        bb.utils.mkdirhier(self.testlogdir)
+        os.makedirs(testpath, exist_ok=True)
+        self.datetime = builddatetime
+        self.testlogdir = testlogdir
+        os.makedirs(self.testlogdir, exist_ok=True)
         self.logfile = os.path.join(self.testlogdir, "sdk_target_log.%s" % self.datetime)
-        BuildProject.__init__(self, d, uri, foldername, tmpdir=testpath)
+        BuildProject.__init__(self, uri, foldername, tmpdir=testpath, dl_dir=dl_dir)
 
     def download_archive(self):
 
