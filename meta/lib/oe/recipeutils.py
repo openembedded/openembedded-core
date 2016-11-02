@@ -786,7 +786,11 @@ def bbappend_recipe(rd, destlayerdir, srcfiles, install=None, wildcardver=False,
         for newfile, srcfile in copyfiles.items():
             filedest = os.path.join(appenddir, destsubdir, os.path.basename(srcfile))
             if os.path.abspath(newfile) != os.path.abspath(filedest):
-                bb.note('Copying %s to %s' % (newfile, filedest))
+                if newfile.startswith(tempfile.gettempdir()):
+                    newfiledisp = os.path.basename(newfile)
+                else:
+                    newfiledisp = newfile
+                bb.note('Copying %s to %s' % (newfiledisp, filedest))
                 bb.utils.mkdirhier(os.path.dirname(filedest))
                 shutil.copyfile(newfile, filedest)
 
