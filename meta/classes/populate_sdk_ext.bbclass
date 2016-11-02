@@ -88,7 +88,7 @@ SDK_TITLE_task-populate-sdk-ext = "${@d.getVar('DISTRO_NAME', True) or d.getVar(
 def clean_esdk_builddir(d, sdkbasepath):
     """Clean up traces of the fake build for create_filtered_tasklist()"""
     import shutil
-    cleanpaths = 'cache conf/sanity_info conf/templateconf.cfg tmp'.split()
+    cleanpaths = 'cache conf/sanity_info tmp'.split()
     for pth in cleanpaths:
         fullpth = os.path.join(sdkbasepath, pth)
         if os.path.isdir(fullpth):
@@ -343,6 +343,10 @@ python copy_buildsystem () {
                 for line in newlines:
                     if line.strip() and not line.startswith('#'):
                         f.write(line)
+
+    # Write a templateconf.cfg
+    with open(baseoutpath + '/conf/templateconf.cfg', 'w') as f:
+        f.write('meta/conf\n')
 
     # Ensure any variables set from the external environment (by way of
     # BB_ENV_EXTRAWHITE) are set in the SDK's configuration
