@@ -87,7 +87,7 @@ MUTEX_arm = "${ARM_MUTEX}"
 MUTEX_armeb = "${ARM_MUTEX}"
 EXTRA_OECONF += "${MUTEX}"
 EXTRA_OEMAKE_append_class-target = " LIBTOOL=${STAGING_BINDIR_CROSS}/${HOST_SYS}-libtool"
-EXTRA_OEMAKE += "STRIP=true"
+EXTRA_OEMAKE += "STRIP=true docdir=${docdir}/db/"
 
 do_compile_prepend() {
 	# Stop libtool adding RPATHs
@@ -101,14 +101,12 @@ do_install_append() {
 	ln -s db60/db.h ${D}/${includedir}/db.h
 	ln -s db60/db_cxx.h ${D}/${includedir}/db_cxx.h
 
-	# The docs end up in /usr/docs - not right.
-	if test -d "${D}/${prefix}/docs"
-	then
-		mkdir -p "${D}/${datadir}"
-		test ! -d "${D}/${docdir}" || rm -rf "${D}/${docdir}"
-		mv "${D}/${prefix}/docs" "${D}/${docdir}"
-	fi
+	# Prune the documentation to remove large (PDF) or pointless (Java) files.
+	find ${D}${docdir} -name *.pdf -delete
+	rm -rf ${D}${docdir}/db/java
+	rm -rf ${D}${docdir}/db/csharp
 
+	# The makefiles use cp -p, so we need to chmod until that is fixed.
 	chown -R root:root ${D}
 }
 
