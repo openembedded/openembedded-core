@@ -457,7 +457,7 @@ def sstate_clean(ss, d):
     rm_nohash = ".do_%s" % ss['task']
     for stfile in glob.glob(wildcard_stfile):
         # Keep the sigdata
-        if ".sigdata." in stfile:
+        if ".sigdata." in stfile or ".sigbasedata." in stfile:
             continue
         # Preserve taint files in the stamps directory
         if stfile.endswith('.taint'):
