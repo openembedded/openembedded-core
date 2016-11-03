@@ -139,6 +139,21 @@ class BuildPerfTestResult(unittest.TextTestResult):
         super(BuildPerfTestResult, self).addSuccess(test)
         self.successes.append(test)
 
+    def addError(self, test, err):
+        """Record results from crashed test"""
+        test.err = err
+        super(BuildPerfTestResult, self).addError(test, err)
+
+    def addFailure(self, test, err):
+        """Record results from failed test"""
+        test.err = err
+        super(BuildPerfTestResult, self).addFailure(test, err)
+
+    def addExpectedFailure(self, test, err):
+        """Record results from expectedly failed test"""
+        test.err = err
+        super(BuildPerfTestResult, self).addExpectedFailure(test, err)
+
     def startTest(self, test):
         """Pre-test hook"""
         test.base_dir = self.out_dir
@@ -226,6 +241,13 @@ class BuildPerfTestResult(unittest.TextTestResult):
                                 'cmd_log_file': os.path.relpath(test.cmd_log_file,
                                                                 self.out_dir),
                                 'measurements': test.measurements}
+            if status in ('ERROR', 'FAILURE', 'EXPECTED_FAILURE'):
+                tests[test.name]['message'] = str(test.err[1])
+                tests[test.name]['err_type'] = test.err[0].__name__
+                tests[test.name]['err_output'] = reason
+            elif reason:
+                tests[test.name]['message'] = reason
+
         results['tests'] = tests
 
         with open(os.path.join(self.out_dir, 'results.json'), 'w') as fobj:
@@ -307,6 +329,8 @@ class BuildPerfTestCase(unittest.TestCase):
         self.start_time = None
         self.elapsed_time = None
         self.measurements = []
+        # self.err is supposed to be a tuple from sys.exc_info()
+        self.err = None
         self.bb_vars = get_bb_vars()
         # TODO: remove 'times' and 'sizes' arrays when globalres support is
         # removed
