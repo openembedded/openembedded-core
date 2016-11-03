@@ -478,9 +478,12 @@ class BaseConfig(object):
         if self.fstype in self.vmtypes:
             return
 
+        # QB_DEFAULT_KERNEL is always a full file path
+        kernel_name = os.path.basename(self.get('QB_DEFAULT_KERNEL'))
+
         deploy_dir_image = self.get('DEPLOY_DIR_IMAGE')
         if not self.kernel:
-            kernel_match_name = "%s/%s" % (deploy_dir_image, self.get('QB_DEFAULT_KERNEL'))
+            kernel_match_name = "%s/%s" % (deploy_dir_image, kernel_name)
             kernel_match_link = "%s/%s" % (deploy_dir_image, self.get('KERNEL_IMAGETYPE'))
             kernel_startswith = "%s/%s*" % (deploy_dir_image, self.get('KERNEL_IMAGETYPE'))
             cmds = (kernel_match_name, kernel_match_link, kernel_startswith)
