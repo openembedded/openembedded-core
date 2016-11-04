@@ -28,7 +28,9 @@ def image_buildinfo_outputvars(vars, listvars, d):
 def get_layer_git_status(path):
     import subprocess
     try:
-        subprocess.check_output("cd %s; PSEUDO_UNLOAD=1 git diff --quiet --no-ext-diff" % path,
+        subprocess.check_output("""cd %s; export PSEUDO_UNLOAD=1; set -e;
+                                git diff --quiet --no-ext-diff
+                                git diff --quiet --no-ext-diff --cached""" % path,
                                 shell=True,
                                 stderr=subprocess.STDOUT)
         return ""
