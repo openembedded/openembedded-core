@@ -8,10 +8,10 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=ef1a352b901ee7b75a75df8171d6aca7"
 SRC_URI =" http://www.iana.org/time-zones/repository/releases/tzcode${PV}.tar.gz;name=tzcode \
            http://www.iana.org/time-zones/repository/releases/tzdata${PV}.tar.gz;name=tzdata"
 
-SRC_URI[tzcode.md5sum] = "00c20689d996dea4cf5b45504724ce8f"
-SRC_URI[tzcode.sha256sum] = "30e62f0b86a78fb020d378b950930da023ca31b1a58f08d8fb2066627c4d6566"
-SRC_URI[tzdata.md5sum] = "878f0ec3fd9e4026ea11dd1b649a315a"
-SRC_URI[tzdata.sha256sum] = "da1b74fc2dec2ce8b64948dafb0bfc2f923c830d421a7ae4d016226135697a64"
+SRC_URI[tzcode.md5sum] = "8fae14cba9396462955b7859cf04ba48"
+SRC_URI[tzcode.sha256sum] = "411e8adcb6288b17d6c2624fde65e7d82654ca69b813ae121504ff66f0cfba7b"
+SRC_URI[tzdata.md5sum] = "73912ecfa6a9a8048ddf2e719d9bc39d"
+SRC_URI[tzdata.sha256sum] = "b6966ec982ef64fe48cebec437096b4f57f4287519ed32dde59c86d3a1853845"
 
 S = "${WORKDIR}"
 
