@@ -29,6 +29,7 @@ SRC_URI += "\
   file://CVE-2016-0772.patch \
   file://CVE-2016-5636.patch \
   file://CVE-2016-5699.patch \
+  file://CVE-2016-1000110.patch \
 "
 
 S = "${WORKDIR}/Python-${PV}"
