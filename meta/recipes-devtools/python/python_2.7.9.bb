@@ -28,6 +28,7 @@ SRC_URI += "\
   file://avoid_parallel_make_races_on_pgen.patch \
   file://CVE-2016-0772.patch \
   file://CVE-2016-5636.patch \
+  file://CVE-2016-5699.patch \
 "
 
 S = "${WORKDIR}/Python-${PV}"
