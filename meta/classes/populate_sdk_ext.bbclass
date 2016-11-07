@@ -502,9 +502,10 @@ install_tools() {
 	done
 	# We can't use the same method as above because files in the sysroot won't exist at this point
 	# (they get populated from sstate on installation)
-	if [ "${SDK_INCLUDE_TOOLCHAIN}" == "1" ] ; then
+	unfsd_path="${SDK_OUTPUT}/${SDKPATHNATIVE}${bindir_nativesdk}/unfsd"
+	if [ "${SDK_INCLUDE_TOOLCHAIN}" == "1" -a ! -e $unfsd_path ] ; then
 		binrelpath=${@os.path.relpath(d.getVar('STAGING_BINDIR_NATIVE',True), d.getVar('TOPDIR', True))}
-		lnr ${SDK_OUTPUT}/${SDKPATH}/$binrelpath/unfsd ${SDK_OUTPUT}/${SDKPATHNATIVE}${bindir_nativesdk}/unfsd
+		lnr ${SDK_OUTPUT}/${SDKPATH}/$binrelpath/unfsd $unfsd_path
 	fi
 	touch ${SDK_OUTPUT}/${SDKPATH}/.devtoolbase
 
