@@ -13,8 +13,8 @@ SRC_URI = "git://git.kernel.org/pub/scm/linux/kernel/git/cjb/mmc-utils.git;branc
 S = "${WORKDIR}/git"
 
 CFLAGS_append_powerpc64 = " -D__SANE_USERSPACE_TYPES__"
-CFLAGS_append_mips64 = " -D__SANE_USERSPACE_TYPES__"
-CFLAGS_append_mips64n32 = " -D__SANE_USERSPACE_TYPES__"
+CFLAGS_append_mipsarchn64 = " -D__SANE_USERSPACE_TYPES__"
+CFLAGS_append_mipsarchn32 = " -D__SANE_USERSPACE_TYPES__"
 
 do_install() {
     install -d ${D}${bindir}
