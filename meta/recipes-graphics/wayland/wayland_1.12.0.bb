@@ -11,10 +11,9 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=b31d8f53b6aaf2b4985d7dd7810a70d1 \
                     file://src/wayland-server.c;endline=24;md5=b8e046164a766bb1ede8ba38e9dcd7ce"
 
 SRC_URI = "https://wayland.freedesktop.org/releases/${BPN}-${PV}.tar.xz \
-           file://0001-scanner-Use-unit32_t-instead-of-uint.patch \
            "
-SRC_URI[md5sum] = "82f227c65faec3df0335847626811303"
-SRC_URI[sha256sum] = "4c8a99d030282740e898dead98c92d92023be9c3536c7f504444d215a7e39195"
+SRC_URI[md5sum] = "ee615e2d1e205eec48b02f069327eb96"
+SRC_URI[sha256sum] = "d6b4135cba0188abcb7275513c72dede751d6194f6edc5b82183a3ba8b821ab1"
 
 EXTRA_OECONF_class-native = "--disable-documentation --disable-libraries"
 
