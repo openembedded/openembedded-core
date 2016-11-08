@@ -46,8 +46,7 @@ EXTRA_OECONF = "--without-x --with-system-libtiff --without-jbig2dec \
                 --with-cups-datadir=${datadir}/cups \
                 "
 
-EXTRA_OECONF_append_mips = " --with-large_color_index=0"
-EXTRA_OECONF_append_mipsel = " --with-large_color_index=0"
+EXTRA_OECONF_append_mipsarcho32 = " --with-large_color_index=0"
 
 # Explicity disable libtiff, fontconfig,
 # freetype, cups for ghostscript-native
