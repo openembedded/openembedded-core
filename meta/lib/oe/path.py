@@ -81,7 +81,6 @@ def copyhardlinktree(src, dst):
         subprocess.check_output(cmd, shell=True, stderr=subprocess.STDOUT)
         source = ''
         if os.path.isdir(src):
-            import glob
             if len(glob.glob('%s/.??*' % src)) > 0:
                 source = '%s/.??* ' % src
             source = source + '%s/*' % src
