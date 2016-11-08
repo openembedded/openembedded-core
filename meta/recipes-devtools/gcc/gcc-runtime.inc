@@ -17,14 +17,7 @@ EXTRA_OECONF_PATHS = "\
 EXTRA_OECONF_append_linuxstdbase = " --enable-clocale=gnu"
 
 RUNTIMELIBITM = "libitm"
-RUNTIMELIBITM_mips = ""
-RUNTIMELIBITM_mipsel = ""
-RUNTIMELIBITM_mips64 = ""
-RUNTIMELIBITM_mips64el = ""
-RUNTIMELIBITM_mipsisa32r6 = ""
-RUNTIMELIBITM_mipsisa32r6el = ""
-RUNTIMELIBITM_mipsisa64r6 = ""
-RUNTIMELIBITM_mipsisa64r6el = ""
+RUNTIMELIBITM_mipsarch = ""
 RUNTIMELIBITM_nios2 = ""
 RUNTIMELIBITM_microblaze = ""
 
