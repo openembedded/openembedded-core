@@ -8,11 +8,11 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f"
 
 DEPENDS = "yasm-native"
 
-SRC_URI = "git://git.videolan.org/x264.git \
+SRC_URI = "git://github.com/mirror/x264;branch=stable \
            file://don-t-default-to-cortex-a9-with-neon.patch \
            "
 
-SRCREV = "c8a773ebfca148ef04f5a60d42cbd7336af0baf6"
+SRCREV = "86b71982e131eaa70125f8d0e725fcade9c4c677"
 
 PV = "r2491+git${SRCPV}"
 
@@ -34,6 +34,7 @@ EXTRA_OECONF = '--prefix=${prefix} \
                 --enable-static \
                 --disable-lavf \
                 --disable-swscale \
+                --disable-opencl \
                 --enable-pic \
                 ${X264_DISABLE_ASM} \
                '
@@ -42,12 +43,8 @@ do_configure() {
     ./configure ${EXTRA_OECONF}
 }
 
-AS = "${TARGET_PREFIX}gcc"
-
 do_install() {
     oe_runmake install DESTDIR=${D}
 }
 
-# PIC can't be enabled for few BSP's
-INSANE_SKIP_${PN}_append = " textrel"
-
+AS[unexport] = "1"
