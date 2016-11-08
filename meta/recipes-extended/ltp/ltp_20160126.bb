@@ -23,7 +23,7 @@ DEPENDS = "attr libaio libcap acl openssl zip-native"
 DEPENDS_append_libc-musl = " fts "
 EXTRA_OEMAKE_append_libc-musl = " LIBC=musl "
 CFLAGS_append_powerpc64 = " -D__SANE_USERSPACE_TYPES__"
-CFLAGS_append_mips64 = " -D__SANE_USERSPACE_TYPES__"
+CFLAGS_append_mipsarchn64 = " -D__SANE_USERSPACE_TYPES__"
 SRCREV = "fce797676b14f50406718e7ef640b50da66c9b36"
 
 SRC_URI = "git://github.com/linux-test-project/ltp.git \
