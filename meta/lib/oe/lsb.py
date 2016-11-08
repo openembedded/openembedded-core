@@ -1,3 +1,25 @@
+def release_dict_osr():
+    """ Populate a dict with pertinent values from /etc/os-release """
+    if not os.path.exists('/etc/os-release'):
+        return None
+
+    data = {}
+    with open('/etc/os-release') as f:
+        for line in f:
+            try:
+                key, val = line.rstrip().split('=', 1)
+            except ValueError:
+                continue
+            if key == 'NAME':
+                data['DISTRIB_ID'] = val.strip('"')
+            if key == 'VERSION_ID':
+                data['DISTRIB_RELEASE'] = val.strip('"')
+
+    if len(data.keys()) != 2:
+        return None
+
+    return data
+
 def release_dict_lsb():
     """ Return the output of lsb_release -ir as a dictionary """
     from subprocess import PIPE
@@ -46,14 +68,6 @@ def release_dict_file():
             if match:
                 data['DISTRIB_ID'] = match.group(1)
                 data['DISTRIB_RELEASE'] = match.group(2)
-        elif os.path.exists('/etc/os-release'):
-            data = {}
-            with open('/etc/os-release') as f:
-                for line in f:
-                    if line.startswith('NAME='):
-                        data['DISTRIB_ID'] = line[5:].rstrip().strip('"')
-                    if line.startswith('VERSION_ID='):
-                        data['DISTRIB_RELEASE'] = line[11:].rstrip().strip('"')
         elif os.path.exists('/etc/SuSE-release'):
             data = {}
             data['DISTRIB_ID'] = 'SUSE LINUX'
@@ -73,7 +87,12 @@ def distro_identifier(adjust_hook=None):
 
     import re
 
-    distro_data = release_dict_lsb()
+    # Try /etc/os-release first, then the output of `lsb_release -ir` and
+    # finally fall back on parsing various release files in order to determine
+    # host distro name and version.
+    distro_data = release_dict_osr()
+    if not distro_data:
+        distro_data = release_dict_lsb()
     if not distro_data:
         distro_data = release_dict_file()
 
