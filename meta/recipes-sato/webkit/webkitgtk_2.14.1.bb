@@ -18,7 +18,6 @@ SRC_URI = "http://www.webkitgtk.org/releases/${BPN}-${PV}.tar.xz \
            file://ppc-musl-fix.patch \
            file://0001-Fix-racy-parallel-build-of-WebKit2-4.0.gir.patch \
            file://0001-Tweak-gtkdoc-settings-so-that-gtkdoc-generation-work.patch \
-           file://0001-WebKitMacros-Append-to-I-and-not-to-isystem.patch \
            "
 
 SRC_URI[md5sum] = "8d6c60dc41604d3bbd43165a674c07e5"
