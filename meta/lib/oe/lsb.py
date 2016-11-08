@@ -1,5 +1,5 @@
-def release_dict():
-    """Return the output of lsb_release -ir as a dictionary"""
+def release_dict_lsb():
+    """ Return the output of lsb_release -ir as a dictionary """
     from subprocess import PIPE
 
     try:
@@ -7,19 +7,28 @@ def release_dict():
     except bb.process.CmdError as exc:
         return None
 
+    lsb_map = { 'Distributor ID': 'DISTRIB_ID',
+                'Release': 'DISTRIB_RELEASE'}
+    lsb_keys = lsb_map.keys()
+
     data = {}
     for line in output.splitlines():
-        if line.startswith("-e"): line = line[3:]
+        if line.startswith("-e"):
+            line = line[3:]
         try:
             key, value = line.split(":\t", 1)
         except ValueError:
             continue
-        else:
-            data[key] = value
+        if key in lsb_keys:
+            data[lsb_map[key]] = value
+
+    if len(data.keys()) != 2:
+        return None
+
     return data
 
 def release_dict_file():
-    """ Try to gather LSB release information manually when lsb_release tool is unavailable """
+    """ Try to gather release information manually when other methods fail """
     data = None
     try:
         if os.path.exists('/etc/lsb-release'):
@@ -64,15 +73,12 @@ def distro_identifier(adjust_hook=None):
 
     import re
 
-    lsb_data = release_dict()
-    if lsb_data:
-        distro_id, release = lsb_data['Distributor ID'], lsb_data['Release']
-    else:
-        lsb_data_file = release_dict_file()
-        if lsb_data_file:
-            distro_id, release = lsb_data_file['DISTRIB_ID'], lsb_data_file.get('DISTRIB_RELEASE', None)
-        else:
-            distro_id, release = None, None
+    distro_data = release_dict_lsb()
+    if not distro_data:
+        distro_data = release_dict_file()
+
+    distro_id = distro_data['DISTRIB_ID']
+    release = distro_data['DISTRIB_RELEASE']
 
     if adjust_hook:
         distro_id, release = adjust_hook(distro_id, release)
