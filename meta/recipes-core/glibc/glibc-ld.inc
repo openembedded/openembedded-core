@@ -7,21 +7,8 @@ def ld_append_if_tune_exists(d, infos, dict):
 
 def glibc_dl_info(d):
     ld_info_all = {
-        "mips": ["ld.so.1", "FLAG_ELF_LIBC6"],
-        "mips64-n32": ["ld.so.1", "FLAG_ELF_LIBC6"],
-        "mips64": ["ld.so.1", "FLAG_ELF_LIBC6"],
-        "mipsel": ["ld.so.1", "FLAG_ELF_LIBC6"],
-        "mips64el-n32": ["ld.so.1", "FLAG_ELF_LIBC6"],
-        "mips64el": ["ld.so.1", "FLAG_ELF_LIBC6"],
-        "mips-nf": ["ld.so.1", "FLAG_ELF_LIBC6"],
-        "mipsisa32r6": ["ld-linux-mipsn8.so.1", "FLAG_ELF_LIBC6"],
-        "mipsisa32r6el": ["ld-linux-mipsn8.so.1", "FLAG_ELF_LIBC6"],
-        "mips64-nf-n32": ["ld.so.1", "FLAG_ELF_LIBC6"],
-        "mips64-nf": ["ld.so.1", "FLAG_ELF_LIBC6"],
-        "mips64el-nf-n32": ["ld.so.1", "FLAG_ELF_LIBC6"],
-        "mips64el-nf": ["ld.so.1", "FLAG_ELF_LIBC6"],
-        "mipsisa64r6": ["ld-linux-mipsn8.so.1", "FLAG_ELF_LIBC6"],
-        "mipsisa64r6el": ["ld-linux-mipsn8.so.1", "FLAG_ELF_LIBC6"],
+        "mipsarch": ["ld.so.1", "FLAG_ELF_LIBC6"],
+        "mipsarchr6": ["ld-linux-mipsn8.so.1", "FLAG_ELF_LIBC6"],
         "powerpc": ["ld.so.1", "FLAG_ELF_LIBC6"],
         "powerpc-nf": ["ld.so.1", "FLAG_ELF_LIBC6"],
         "powerpc64": ["ld64.so.1", "FLAG_ELF_LIBC6"],
