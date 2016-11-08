@@ -10,7 +10,7 @@ def release_dict_osr():
                 key, val = line.rstrip().split('=', 1)
             except ValueError:
                 continue
-            if key == 'NAME':
+            if key == 'ID':
                 data['DISTRIB_ID'] = val.strip('"')
             if key == 'VERSION_ID':
                 data['DISTRIB_RELEASE'] = val.strip('"')
@@ -107,7 +107,7 @@ def distro_identifier(adjust_hook=None):
     distro_id = re.sub(r'\W', '', distro_id)
 
     if release:
-        id_str = '{0}-{1}'.format(distro_id, release)
+        id_str = '{0}-{1}'.format(distro_id.lower(), release)
     else:
         id_str = distro_id
     return id_str.replace(' ','-').replace('/','-')
