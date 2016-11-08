@@ -34,8 +34,8 @@ EXTRA_OEMAKE = 'CHECK_RUN_DIR=0 CXFLAGS="${CFLAGS}"'
 # to u64 == long in userspace. Define __SANE_USERSPACE_TYPES__ to get
 # int-ll64.h included
 CFLAGS_append_powerpc64 = ' -D__SANE_USERSPACE_TYPES__'
-CFLAGS_append_mips64 = ' -D__SANE_USERSPACE_TYPES__'
-CFLAGS_append_mips64n32 = ' -D__SANE_USERSPACE_TYPES__'
+CFLAGS_append_mipsarchn64 = ' -D__SANE_USERSPACE_TYPES__'
+CFLAGS_append_mipsarchn32 = ' -D__SANE_USERSPACE_TYPES__'
 
 do_compile() {
 	oe_runmake SYSROOT="${STAGING_DIR_TARGET}"
