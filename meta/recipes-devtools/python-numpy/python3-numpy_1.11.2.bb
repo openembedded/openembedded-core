@@ -73,8 +73,8 @@ do_compile_prepend_class-target() {
 
 FILES_${PN}-staticdev += "${PYTHON_SITEPACKAGES_DIR}/numpy/core/lib/*.a"
 
-SRC_URI[md5sum] = "bc56fb9fc2895aa4961802ffbdb31d0b"
-SRC_URI[sha256sum] = "a1d1268d200816bfb9727a7a27b78d8e37ecec2e4d5ebd33eb64e2789e0db43e"
+SRC_URI[md5sum] = "03bd7927c314c43780271bf1ab795ebc"
+SRC_URI[sha256sum] = "04db2fbd64e2e7c68e740b14402b25af51418fc43a59d9e54172b38b906b0f69"
 
 # install what is needed for numpy.test()
 RDEPENDS_${PN} = "python3-unittest \
