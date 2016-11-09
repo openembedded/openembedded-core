@@ -148,7 +148,7 @@ hash_dir()
 	then
 	    FILE=$( readlink ${FILE} )
 	    # check the symlink is absolute (or dangling in other word)
-	    if [ "x/" == "x$( echo ${FILE} | cut -c1 -)" ]
+	    if [ "x/" = "x$( echo ${FILE} | cut -c1 -)" ]
 	    then
 		REAL_FILE=${SYSROOT}/${FILE}
 	    fi
