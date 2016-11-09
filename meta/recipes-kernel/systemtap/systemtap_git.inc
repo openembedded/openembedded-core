@@ -10,6 +10,7 @@ SRC_URI = "git://sourceware.org/git/systemtap.git \
            file://x32_abi_time.patch \
            file://monitor-option.patch \
            file://no-msgfmt-check.patch \
+           file://fix-monitor-linking.patch \
           "
 
 # systemtap doesn't support mips
