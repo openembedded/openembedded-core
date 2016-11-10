@@ -1104,6 +1104,15 @@ def _remove_file_entries(srcuri, filelist):
                 break
     return entries, remaining
 
+def _replace_srcuri_entry(srcuri, filename, newentry):
+    """Replace entry corresponding to specified file with a new entry"""
+    basename = os.path.basename(filename)
+    for i in range(len(srcuri)):
+        if os.path.basename(srcuri[i].split(';')[0]) == basename:
+            srcuri.pop(i)
+            srcuri.insert(i, newentry)
+            break
+
 def _remove_source_files(append, files, destpath):
     """Unlink existing patch files"""
     for path in files:
@@ -1424,6 +1433,10 @@ def _update_recipe_patch(recipename, workspace, srctree, rd, appendlayerdir, wil
         raise DevtoolError('Unable to find initial revision - please specify '
                            'it with --initial-rev')
 
+    dl_dir = rd.getVar('DL_DIR', True)
+    if not dl_dir.endswith('/'):
+        dl_dir += '/'
+
     tempdir = tempfile.mkdtemp(prefix='devtool')
     try:
         local_files_dir = tempfile.mkdtemp(dir=tempdir)
@@ -1468,6 +1481,7 @@ def _update_recipe_patch(recipename, workspace, srctree, rd, appendlayerdir, wil
                 logger.info('No patches or local source files needed updating')
         else:
             # Update existing files
+            files_dir = _determine_files_dir(rd)
             for basepath, path in upd_f.items():
                 logger.info('Updating file %s' % basepath)
                 if os.path.isabs(basepath):
@@ -1479,11 +1493,19 @@ def _update_recipe_patch(recipename, workspace, srctree, rd, appendlayerdir, wil
                 updatefiles = True
             for basepath, path in upd_p.items():
                 patchfn = os.path.join(patches_dir, basepath)
-                logger.info('Updating patch %s' % basepath)
+                if os.path.dirname(path) + '/' == dl_dir:
+                    # This is a a downloaded patch file - we now need to
+                    # replace the entry in SRC_URI with our local version
+                    logger.info('Replacing remote patch %s with updated local version' % basepath)
+                    path = os.path.join(files_dir, basepath)
+                    _replace_srcuri_entry(srcuri, basepath, 'file://%s' % basepath)
+                    updaterecipe = True
+                else:
+                    logger.info('Updating patch %s' % basepath)
+                logger.debug('Moving new patch %s to %s' % (patchfn, path))
                 _move_file(patchfn, path)
                 updatefiles = True
             # Add any new files
-            files_dir = _determine_files_dir(rd)
             for basepath, path in new_f.items():
                 logger.info('Adding new file %s' % basepath)
                 _move_file(os.path.join(local_files_dir, basepath),
