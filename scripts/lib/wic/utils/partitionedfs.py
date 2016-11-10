@@ -92,7 +92,7 @@ class Image():
     def add_partition(self, size, disk_name, mountpoint, source_file=None, fstype=None,
                       label=None, fsopts=None, boot=False, align=None, no_table=False,
                       part_type=None, uuid=None, system_id=None):
-        """ Add the next partition. Prtitions have to be added in the
+        """ Add the next partition. Partitions have to be added in the
         first-to-last order. """
 
         ks_pnum = len(self.partitions)
@@ -292,7 +292,7 @@ class Image():
             # even number of sectors.
             if part['mountpoint'] == "/boot" and part['fstype'] in ["vfat", "msdos"] \
                and part['size'] % 2:
-                msger.debug("Substracting one sector from '%s' partition to " \
+                msger.debug("Subtracting one sector from '%s' partition to " \
                             "get even number of sectors for the partition" % \
                             part['mountpoint'])
                 part['size'] -= 1
