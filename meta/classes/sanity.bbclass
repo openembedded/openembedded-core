@@ -565,7 +565,7 @@ def sanity_check_conffiles(d):
             try:
                 bb.build.exec_func(func, d, pythonexception=True)
             except NotImplementedError as e:
-                bb.fatal(e)
+                bb.fatal(str(e))
             d.setVar("BB_INVALIDCONF", True)
 
 def sanity_handle_abichanges(status, d):
