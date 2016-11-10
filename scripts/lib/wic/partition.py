@@ -190,6 +190,10 @@ class Partition():
         if os.path.isfile(rootfs):
             os.remove(rootfs)
 
+        if not self.fstype:
+            msger.error("File system for partition %s not specified in kickstart, " \
+                        "use --fstype option" % (self.mountpoint))
+
         for prefix in ("ext", "btrfs", "vfat", "squashfs"):
             if self.fstype.startswith(prefix):
                 method = getattr(self, "prepare_rootfs_" + prefix)
