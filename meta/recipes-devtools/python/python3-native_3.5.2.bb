@@ -46,6 +46,9 @@ RPROVIDES += " \
     python3-compression-native \
     python3-core-native \
     python3-distutils-native \
+    python3-datetime-native \
+    python3-enum-native \
+    python3-terminal-native \
     python3-email-native \
     python3-importlib-native \
     python3-io-native \
