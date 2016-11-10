@@ -336,10 +336,15 @@ def list_testsuite_by(criteria, keyword):
     # Get a testsuite based on 'keyword'
     # criteria: name, class, module, id, tag
     # keyword: a list of tests, classes, modules, ids, tags
-
-    ts = sorted([ (tc.tcid, tc.tctag, tc.tcname, tc.tcclass, tc.tcmodule) for tc in get_testsuite_by(criteria, keyword) ])
-
-    print('%-4s\t%-20s\t%-60s\t%-25s\t%-20s' % ('id', 'tag', 'name', 'class', 'module'))
+    def tc_key(t):
+        if t[0] is None:
+            return  (0,) + t[1:]
+        return t
+    # tcid may be None if no ID was assigned, in which case sorted() will throw
+    # a TypeError as Python 3 does not allow comparison (<,<=,>=,>) of
+    # heterogeneous types, handle this by using a custom key generator
+    ts = sorted([ (tc.tcid, tc.tctag, tc.tcname, tc.tcclass, tc.tcmodule) \
+                  for tc in get_testsuite_by(criteria, keyword) ], key=tc_key)
     print('_' * 150)
     for t in ts:
         if isinstance(t[1], (tuple, list)):
