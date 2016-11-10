@@ -397,7 +397,7 @@ def get_recipe_local_files(d, patches=False):
     for uri in uris:
         if fetch.ud[uri].type == 'file':
             if (not patches and
-                    bb.utils.exec_flat_python_func('patch_path', uri, fetch, '')):
+                    bb.utils.exec_flat_python_func('patch_path', uri, fetch, '', expand=False)):
                 continue
             # Skip files that are referenced by absolute path
             fname = fetch.ud[uri].basepath
@@ -418,7 +418,7 @@ def get_recipe_patches(d):
     patchfiles = []
     # Execute src_patches() defined in patch.bbclass - this works since that class
     # is inherited globally
-    patches = bb.utils.exec_flat_python_func('src_patches', d)
+    patches = bb.utils.exec_flat_python_func('src_patches', d, expand=False)
     for patch in patches:
         _, _, local, _, _, parm = bb.fetch.decodeurl(patch)
         patchfiles.append(local)
@@ -437,7 +437,7 @@ def get_recipe_patched_files(d):
     import oe.patch
     # Execute src_patches() defined in patch.bbclass - this works since that class
     # is inherited globally
-    patches = bb.utils.exec_flat_python_func('src_patches', d)
+    patches = bb.utils.exec_flat_python_func('src_patches', d, expand=False)
     patchedfiles = {}
     for patch in patches:
         _, _, patchfile, _, _, parm = bb.fetch.decodeurl(patch)

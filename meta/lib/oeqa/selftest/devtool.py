@@ -948,6 +948,30 @@ class DevtoolTests(DevtoolBase):
         expected_status = [(' M', '.*/%s/file2$' % testrecipe)]
         self._check_repo_status(os.path.dirname(recipefile), expected_status)
 
+    def test_devtool_update_recipe_local_patch_gz(self):
+        # First, modify the recipe
+        testrecipe = 'devtool-test-patch-gz'
+        recipefile = get_bb_var('FILE', testrecipe)
+        src_uri = get_bb_var('SRC_URI', testrecipe)
+        tempdir = tempfile.mkdtemp(prefix='devtoolqa')
+        self.track_for_cleanup(tempdir)
+        self.track_for_cleanup(self.workspacedir)
+        self.add_command_to_tearDown('bitbake-layers remove-layer */workspace')
+        # (don't bother with cleaning the recipe on teardown, we won't be building it)
+        result = runCmd('devtool modify %s' % testrecipe)
+        # Modify one file
+        srctree = os.path.join(self.workspacedir, 'sources', testrecipe)
+        runCmd('echo "Another line" >> README', cwd=srctree)
+        runCmd('git commit -a --amend --no-edit', cwd=srctree)
+        self.add_command_to_tearDown('cd %s; rm %s/*; git checkout %s %s' % (os.path.dirname(recipefile), testrecipe, testrecipe, os.path.basename(recipefile)))
+        result = runCmd('devtool update-recipe %s' % testrecipe)
+        expected_status = [(' M', '.*/%s/readme.patch.gz$' % testrecipe)]
+        self._check_repo_status(os.path.dirname(recipefile), expected_status)
+        patch_gz = os.path.join(os.path.dirname(recipefile), testrecipe, 'readme.patch.gz')
+        result = runCmd('file %s' % patch_gz)
+        if 'gzip compressed data' not in result.output:
+            self.fail('New patch file is not gzipped - file reports:\n%s' % result.output)
+
     @testcase(1163)
     def test_devtool_extract(self):
         tempdir = tempfile.mkdtemp(prefix='devtoolqa')

@@ -10,13 +10,13 @@ PATCH_GIT_USER_EMAIL ?= "oe.patch@oe"
 
 inherit terminal
 
-def src_patches(d, all = False ):
+def src_patches(d, all=False, expand=True):
     workdir = d.getVar('WORKDIR', True)
     fetch = bb.fetch2.Fetch([], d)
     patches = []
     sources = []
     for url in fetch.urls:
-        local = patch_path(url, fetch, workdir)
+        local = patch_path(url, fetch, workdir, expand)
         if not local:
             if all:
                 local = fetch.localpath(url)
@@ -55,13 +55,14 @@ def src_patches(d, all = False ):
 
     return patches
 
-def patch_path(url, fetch, workdir):
+def patch_path(url, fetch, workdir, expand=True):
     """Return the local path of a patch, or None if this isn't a patch"""
 
     local = fetch.localpath(url)
     base, ext = os.path.splitext(os.path.basename(local))
     if ext in ('.gz', '.bz2', '.Z'):
-        local = os.path.join(workdir, base)
+        if expand:
+            local = os.path.join(workdir, base)
         ext = os.path.splitext(base)[1]
 
     urldata = fetch.ud[url]

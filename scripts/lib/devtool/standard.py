@@ -1128,7 +1128,7 @@ def _remove_source_files(append, files, destpath):
                     raise
 
 
-def _export_patches(srctree, rd, start_rev, destdir):
+def _export_patches(srctree, rd, start_rev, destdir, changed_revs=None):
     """Export patches from srctree to given location.
        Returns three-tuple of dicts:
          1. updated - patches that already exist in SRCURI
@@ -1157,18 +1157,44 @@ def _export_patches(srctree, rd, start_rev, destdir):
         # revision This does assume that people are using unique shortlog
         # values, but they ought to be anyway...
         new_basename = seqpatch_re.match(new_patch).group(2)
-        found = False
+        match_name = None
         for old_patch in existing_patches:
             old_basename = seqpatch_re.match(old_patch).group(2)
-            if new_basename == old_basename:
-                updated[new_patch] = existing_patches.pop(old_patch)
-                found = True
-                # Rename patch files
-                if new_patch != old_patch:
-                    os.rename(os.path.join(destdir, new_patch),
-                              os.path.join(destdir, old_patch))
+            old_basename_splitext = os.path.splitext(old_basename)
+            if old_basename.endswith(('.gz', '.bz2', '.Z')) and old_basename_splitext[0] == new_basename:
+                old_patch_noext = os.path.splitext(old_patch)[0]
+                match_name = old_patch_noext
                 break
-        if not found:
+            elif new_basename == old_basename:
+                match_name = old_patch
+                break
+        if match_name:
+            # Rename patch files
+            if new_patch != match_name:
+                os.rename(os.path.join(destdir, new_patch),
+                          os.path.join(destdir, match_name))
+            # Need to pop it off the list now before checking changed_revs
+            oldpath = existing_patches.pop(old_patch)
+            if changed_revs is not None:
+                # Avoid updating patches that have not actually changed
+                with open(os.path.join(destdir, match_name), 'r') as f:
+                    firstlineitems = f.readline().split()
+                    # Looking for "From <hash>" line
+                    if len(firstlineitems) > 1 and len(firstlineitems[1]) == 40:
+                        if not firstlineitems[1] in changed_revs:
+                            continue
+            # Recompress if necessary
+            if oldpath.endswith(('.gz', '.Z')):
+                bb.process.run(['gzip', match_name], cwd=destdir)
+                if oldpath.endswith('.gz'):
+                    match_name += '.gz'
+                else:
+                    match_name += '.Z'
+            elif oldpath.endswith('.bz2'):
+                bb.process.run(['bzip2', match_name], cwd=destdir)
+                match_name += '.bz2'
+            updated[match_name] = oldpath
+        else:
             added[new_patch] = None
     return (updated, added, existing_patches)
 
@@ -1415,7 +1441,7 @@ def _update_recipe_patch(recipename, workspace, srctree, rd, appendlayerdir, wil
         # Get updated patches from source tree
         patches_dir = tempfile.mkdtemp(dir=tempdir)
         upd_p, new_p, del_p = _export_patches(srctree, rd, update_rev,
-                                              patches_dir)
+                                              patches_dir, changed_revs)
         updatefiles = False
         updaterecipe = False
         destpath = None
@@ -1453,13 +1479,6 @@ def _update_recipe_patch(recipename, workspace, srctree, rd, appendlayerdir, wil
                 updatefiles = True
             for basepath, path in upd_p.items():
                 patchfn = os.path.join(patches_dir, basepath)
-                if changed_revs is not None:
-                    # Avoid updating patches that have not actually changed
-                    with open(patchfn, 'r') as f:
-                        firstlineitems = f.readline().split()
-                        if len(firstlineitems) > 1 and len(firstlineitems[1]) == 40:
-                            if not firstlineitems[1] in changed_revs:
-                                continue
                 logger.info('Updating patch %s' % basepath)
                 _move_file(patchfn, path)
                 updatefiles = True
