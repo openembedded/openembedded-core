@@ -972,6 +972,31 @@ class DevtoolTests(DevtoolBase):
         if 'gzip compressed data' not in result.output:
             self.fail('New patch file is not gzipped - file reports:\n%s' % result.output)
 
+    def test_devtool_update_recipe_local_files_subdir(self):
+        # Try devtool extract on a recipe that has a file with subdir= set in
+        # SRC_URI such that it overwrites a file that was in an archive that
+        # was also in SRC_URI
+        # First, modify the recipe
+        testrecipe = 'devtool-test-subdir'
+        recipefile = get_bb_var('FILE', testrecipe)
+        src_uri = get_bb_var('SRC_URI', testrecipe)
+        tempdir = tempfile.mkdtemp(prefix='devtoolqa')
+        self.track_for_cleanup(tempdir)
+        self.track_for_cleanup(self.workspacedir)
+        self.add_command_to_tearDown('bitbake-layers remove-layer */workspace')
+        # (don't bother with cleaning the recipe on teardown, we won't be building it)
+        result = runCmd('devtool modify %s' % testrecipe)
+        testfile = os.path.join(self.workspacedir, 'sources', testrecipe, 'testfile')
+        self.assertTrue(os.path.exists(testfile), 'Extracted source could not be found')
+        with open(testfile, 'r') as f:
+            contents = f.read().rstrip()
+        self.assertEqual(contents, 'Modified version', 'File has apparently not been overwritten as it should have been')
+        # Test devtool update-recipe without modifying any files
+        self.add_command_to_tearDown('cd %s; rm %s/*; git checkout %s %s' % (os.path.dirname(recipefile), testrecipe, testrecipe, os.path.basename(recipefile)))
+        result = runCmd('devtool update-recipe %s' % testrecipe)
+        expected_status = []
+        self._check_repo_status(os.path.dirname(recipefile), expected_status)
+
     @testcase(1163)
     def test_devtool_extract(self):
         tempdir = tempfile.mkdtemp(prefix='devtoolqa')
