@@ -78,9 +78,9 @@ class RawCopyPlugin(SourcePlugin):
         # get the size in the right units for kickstart (kB)
         du_cmd = "du -Lbks %s" % dst
         out = exec_cmd(du_cmd)
-        filesize = out.split()[0]
+        filesize = int(out.split()[0])
 
-        if int(filesize) > int(part.size):
+        if filesize > part.size:
             part.size = filesize
 
         part.source_file = dst
