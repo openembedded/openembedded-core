@@ -18,6 +18,7 @@ PACKAGECONFIG[gpl] = "--enable-gpl,--disable-gpl,"
 PACKAGECONFIG[libav] = "--with-system-libav,,libav"
 PACKAGECONFIG[orc] = "--enable-orc,--disable-orc,orc"
 PACKAGECONFIG[yasm] = "--enable-yasm,--disable-yasm,yasm-native"
+PACKAGECONFIG[valgrind] = "--enable-valgrind,--disable-valgrind,valgrind"
 
 GSTREAMER_1_0_DEBUG ?= "--disable-debug"
 
