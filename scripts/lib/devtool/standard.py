@@ -332,10 +332,11 @@ def _git_ls_tree(repodir, treeish='HEAD', recursive=False):
         cmd.append('-r')
     out, _ = bb.process.run(cmd, cwd=repodir)
     ret = {}
-    for line in out.split('\0'):
-        if line:
-            split = line.split(None, 4)
-            ret[split[3]] = split[0:3]
+    if out:
+        for line in out.split('\0'):
+            if line:
+                split = line.split(None, 4)
+                ret[split[3]] = split[0:3]
     return ret
 
 def _git_exclude_path(srctree, path):
