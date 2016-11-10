@@ -389,10 +389,15 @@ def copy_recipe_files(d, tgt_dir, whole_dir=False, download=True):
     return copied, remotes
 
 
-def get_recipe_local_files(d, patches=False):
+def get_recipe_local_files(d, patches=False, archives=False):
     """Get a list of local files in SRC_URI within a recipe."""
     uris = (d.getVar('SRC_URI', True) or "").split()
     fetch = bb.fetch2.Fetch(uris, d)
+    # FIXME this list should be factored out somewhere else (such as the
+    # fetcher) though note that this only encompasses actual container formats
+    # i.e. that can contain multiple files as opposed to those that only
+    # contain a compressed stream (i.e. .tar.gz as opposed to just .gz)
+    archive_exts = ['.tar', '.tgz', '.tar.gz', '.tar.Z', '.tbz', '.tbz2', '.tar.bz2', '.tar.xz', '.tar.lz', '.zip', '.jar', '.rpm', '.srpm', '.deb', '.ipk', '.tar.7z', '.7z']
     ret = {}
     for uri in uris:
         if fetch.ud[uri].type == 'file':
@@ -409,7 +414,14 @@ def get_recipe_local_files(d, patches=False):
                 if os.path.isabs(subdir):
                     continue
                 fname = os.path.join(subdir, fname)
-            ret[fname] = fetch.localpath(uri)
+            localpath = fetch.localpath(uri)
+            if not archives:
+                # Ignore archives that will be unpacked
+                if localpath.endswith(tuple(archive_exts)):
+                    unpack = fetch.ud[uri].parm.get('unpack', True)
+                    if unpack:
+                        continue
+            ret[fname] = localpath
     return ret
 
 
