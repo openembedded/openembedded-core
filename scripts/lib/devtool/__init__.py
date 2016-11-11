@@ -23,6 +23,7 @@ import sys
 import subprocess
 import logging
 import re
+import codecs
 
 logger = logging.getLogger('devtool')
 
@@ -67,10 +68,10 @@ def exec_watch(cmd, **options):
         cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, **options
     )
 
+    reader = codecs.getreader('utf-8')(process.stdout)
     buf = ''
     while True:
-        out = process.stdout.read(1)
-        out = out.decode('utf-8')
+        out = reader.read(1, 1)
         if out:
             sys.stdout.write(out)
             sys.stdout.flush()
