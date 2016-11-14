@@ -11,12 +11,12 @@ LIC_FILES_CHKSUM = "file://doc/COPYING;md5=c781d70ed2b4d48995b790403217a249 \
 DEPENDS = "attr"
 
 SRC_URI = "${SAVANNAH_GNU_MIRROR}/acl/${BP}.src.tar.gz \
+           file://configure.ac;subdir=${S} \
            file://run-ptest \
            file://acl-fix-the-order-of-expected-output-of-getfacl.patch \
            file://test-fix-insufficient-quoting-of.patch \
            file://test-fixups-on-SELinux-machines-for-root-testcases.patch \
-           file://test-fix-directory-permissions.patch \
-           file://add-missing-configure.ac.patch"
+           file://test-fix-directory-permissions.patch"
 
 SRC_URI[md5sum] = "a61415312426e9c2212bd7dc7929abda"
 SRC_URI[sha256sum] = "179074bb0580c06c4b4137be4c5a92a701583277967acdb5546043c7874e0d23"
