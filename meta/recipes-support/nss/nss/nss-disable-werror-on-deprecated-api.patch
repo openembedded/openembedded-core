@@ -1,0 +1,22 @@
+Disable Werror on deprecated API
+
+nss itself enables Werror if gcc is version 4.8 of greater, which fails
+the build against new glibc (2.24) because of use of readdir_r(), which is
+now deprecated. Let's just disable warnings on deprecated API usage.
+
+Upstream-Status: Inappropriate [Dev branch on newer version w/o this issue]
+
+Signed-off-by: Zeeshan Ali <zeeshan.ali@pelagicore.com>
+===================================================
+diff -u -r a/nss/coreconf/Werror.mk b/nss/coreconf/Werror.mk
+--- a/nss/coreconf/Werror.mk	2015-11-09 06:12:59.000000000 +0100
++++ b/nss/coreconf/Werror.mk	2016-11-11 14:36:36.301062957 +0100
+@@ -60,7 +60,7 @@
+   endif #ndef NSS_ENABLE_WERROR
+ 
+   ifeq ($(NSS_ENABLE_WERROR),1)
+-    WARNING_CFLAGS += -Werror
++    WARNING_CFLAGS += -Werror -Wno-deprecated -Wno-deprecated-declarations
+   else
+     # Old versions of gcc (< 4.8) don't support #pragma diagnostic in functions.
+     # Use this to disable use of that #pragma and the warnings it suppresses.

@@ -22,6 +22,7 @@ SRC_URI = "\
     file://nss-fix-nsinstall-build.patch \
     file://0001-Fix-build-failure-on-opensuse-13.1.patch \
     file://nss-gcc6-fix.patch \
+    file://nss-disable-werror-on-deprecated-api.patch \
     file://nss.pc.in \
     file://signlibs.sh \
 "
