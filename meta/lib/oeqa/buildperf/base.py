@@ -273,6 +273,7 @@ class BuildPerfTestResult(unittest.TextTestResult):
             testcase = ET.SubElement(suite, 'testcase')
             testcase.set('classname', test.__module__ + '.' + test.__class__.__name__)
             testcase.set('name', test.name)
+            testcase.set('description', test.shortDescription())
             testcase.set('timestamp', test.start_time.isoformat())
             testcase.set('time', str(test.elapsed_time.total_seconds()))
             if status in ('ERROR', 'FAILURE', 'EXP_FAILURE'):
@@ -406,6 +407,9 @@ class BuildPerfTestCase(unittest.TestCase):
     @property
     def cmd_log_file(self):
         return os.path.join(self.out_dir, 'commands.log')
+
+    def shortDescription(self):
+        return super(BuildPerfTestCase, self).shortDescription() or ""
 
     def setUp(self):
         """Set-up fixture for each test"""
