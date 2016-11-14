@@ -380,7 +380,10 @@ def check_connectivity(d):
             # pointed to a support mechanism.
             msg = data.getVar('CONNECTIVITY_CHECK_MSG', True) or ""
             if len(msg) == 0:
-                msg = "%s. Please ensure your network is configured correctly.\n" % err
+                msg = "%s.\n" % err
+                msg += "    Please ensure your host's network is configured correctly,\n"
+                msg += "    or set BB_NO_NETWORK = \"1\" to disable network access if\n"
+                msg += "    all required sources are on local disk.\n"
             retval = msg
 
     return retval
