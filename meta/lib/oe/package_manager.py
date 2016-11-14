@@ -2000,7 +2000,10 @@ class DpkgPM(OpkgDpkgPM):
     """
     def run_pre_post_installs(self, package_name=None):
         info_dir = self.target_rootfs + "/var/lib/dpkg/info"
-        suffixes = [(".preinst", "Preinstall"), (".postinst", "Postinstall")]
+        ControlScript = collections.namedtuple("ControlScript", ["suffix", "name", "argument"])
+        control_scripts = [
+                ControlScript(".preinst", "Preinstall", "install"),
+                ControlScript(".postinst", "Postinstall", "configure")]
         status_file = self.target_rootfs + "/var/lib/dpkg/status"
         installed_pkgs = []
 
@@ -2023,16 +2026,18 @@ class DpkgPM(OpkgDpkgPM):
 
         failed_pkgs = []
         for pkg_name in installed_pkgs:
-            for suffix in suffixes:
-                p_full = os.path.join(info_dir, pkg_name + suffix[0])
+            for control_script in control_scripts:
+                p_full = os.path.join(info_dir, pkg_name + control_script.suffix)
                 if os.path.exists(p_full):
                     try:
                         bb.note("Executing %s for package: %s ..." %
-                                 (suffix[1].lower(), pkg_name))
-                        subprocess.check_output(p_full, stderr=subprocess.STDOUT)
+                                 (control_script.name.lower(), pkg_name))
+                        subprocess.check_output([p_full, control_script.argument],
+                                stderr=subprocess.STDOUT)
                     except subprocess.CalledProcessError as e:
                         bb.note("%s for package %s failed with %d:\n%s" %
-                                (suffix[1], pkg_name, e.returncode, e.output.decode("utf-8")))
+                                (control_script.name, pkg_name, e.returncode,
+                                    e.output.decode("utf-8")))
                         failed_pkgs.append(pkg_name)
                         break
 
