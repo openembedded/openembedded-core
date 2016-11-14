@@ -9,8 +9,8 @@ DEPENDS += "python3 python3-setuptools-native"
 
 SRC_URI = "https://files.pythonhosted.org/packages/source/p/${SRCNAME}/${SRCNAME}-${PV}.tar.gz"
 
-SRC_URI[md5sum] = "87083c0b9867963b29f7aba3613e8f4a"
-SRC_URI[sha256sum] = "4d24b03ffa67638a3fa931c09fd9e0273ffa904e95ebebe7d4b1a54c93d7b732"
+SRC_URI[md5sum] = "35f01da33009719497f01a4ba69d63c9"
+SRC_URI[sha256sum] = "09f243e1a7b461f654c26a725fa373211bb7ff17a9300058b205c61658ca940d"
 
 UPSTREAM_CHECK_URI = "https://pypi.python.org/pypi/pip"
 
