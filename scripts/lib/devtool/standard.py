@@ -674,6 +674,29 @@ def _extract_source(srctree, keep_temp, devbranch, sync, d):
 
             shutil.move(srcsubdir, srctree)
 
+            if os.path.abspath(d.getVar('S', True)) == os.path.abspath(d.getVar('WORKDIR', True)):
+                # If recipe extracts to ${WORKDIR}, symlink the files into the srctree
+                # (otherwise the recipe won't build as expected)
+                local_files_dir = os.path.join(srctree, 'oe-local-files')
+                addfiles = []
+                for root, _, files in os.walk(local_files_dir):
+                    relpth = os.path.relpath(root, local_files_dir)
+                    if relpth != '.':
+                        bb.utils.mkdirhier(os.path.join(srctree, relpth))
+                    for fn in files:
+                        if fn == '.gitignore':
+                            continue
+                        destpth = os.path.join(srctree, relpth, fn)
+                        if os.path.exists(destpth):
+                            os.unlink(destpth)
+                        os.symlink('oe-local-files/%s' % fn, destpth)
+                        addfiles.append(os.path.join(relpth, fn))
+                if addfiles:
+                    bb.process.run('git add %s' % ' '.join(addfiles), cwd=srctree)
+                useroptions = []
+                oe.patch.GitApplyTree.gitCommandUserOptions(useroptions, d=d)
+                bb.process.run('git %s commit -a -m "Committing local file symlinks\n\n%s"' % (' '.join(useroptions), oe.patch.GitApplyTree.ignore_commit_prefix), cwd=srctree)
+
         if kconfig:
             logger.info('Copying kernel config to srctree')
             shutil.copy2(kconfig, srctree)

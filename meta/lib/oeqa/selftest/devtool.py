@@ -874,6 +874,8 @@ class DevtoolTests(DevtoolBase):
         result = runCmd('devtool modify %s -x %s' % (testrecipe, tempdir))
         # Check git repo
         self._check_src_repo(tempdir)
+        # Try building just to ensure we haven't broken that
+        bitbake("%s" % testrecipe)
         # Edit / commit local source
         runCmd('echo "/* Foobar */" >> oe-local-files/makedevs.c', cwd=tempdir)
         runCmd('echo "Foo" > oe-local-files/new-local', cwd=tempdir)
