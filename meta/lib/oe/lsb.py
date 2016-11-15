@@ -15,9 +15,6 @@ def release_dict_osr():
             if key == 'VERSION_ID':
                 data['DISTRIB_RELEASE'] = val.strip('"')
 
-    if len(data.keys()) != 2:
-        return None
-
     return data
 
 def release_dict_lsb():
@@ -27,7 +24,7 @@ def release_dict_lsb():
     try:
         output, err = bb.process.run(['lsb_release', '-ir'], stderr=PIPE)
     except bb.process.CmdError as exc:
-        return None
+        return {}
 
     lsb_map = { 'Distributor ID': 'DISTRIB_ID',
                 'Release': 'DISTRIB_RELEASE'}
@@ -51,7 +48,7 @@ def release_dict_lsb():
 
 def release_dict_file():
     """ Try to gather release information manually when other methods fail """
-    data = None
+    data = {}
     try:
         if os.path.exists('/etc/lsb-release'):
             data = {}
@@ -78,7 +75,7 @@ def release_dict_file():
                         break
 
     except IOError:
-        return None
+        return {}
     return data
 
 def distro_identifier(adjust_hook=None):
@@ -96,8 +93,8 @@ def distro_identifier(adjust_hook=None):
     if not distro_data:
         distro_data = release_dict_file()
 
-    distro_id = distro_data['DISTRIB_ID']
-    release = distro_data['DISTRIB_RELEASE']
+    distro_id = distro_data.get('DISTRIB_ID', '')
+    release = distro_data.get('DISTRIB_RELEASE', '')
 
     if adjust_hook:
         distro_id, release = adjust_hook(distro_id, release)
