@@ -234,7 +234,8 @@ class RecipeHandler(object):
         if deps:
             values['DEPENDS'] = ' '.join(deps)
 
-    def genfunction(self, outlines, funcname, content, python=False, forcespace=False):
+    @staticmethod
+    def genfunction(outlines, funcname, content, python=False, forcespace=False):
         if python:
             prefix = 'python '
         else:
@@ -460,8 +461,8 @@ def create_recipe(args):
 
                 if pkgfile:
                     if pkgfile.endswith(('.deb', '.ipk')):
-                        stdout, _ = bb.process.run('ar x %s control.tar.gz' % pkgfile, cwd=tmpfdir)
-                        stdout, _ = bb.process.run('tar xf control.tar.gz ./control', cwd=tmpfdir)
+                        stdout, _ = bb.process.run('ar x %s' % pkgfile, cwd=tmpfdir)
+                        stdout, _ = bb.process.run('tar xf control.tar.gz', cwd=tmpfdir)
                         values = convert_debian(tmpfdir)
                         extravalues.update(values)
                     elif pkgfile.endswith(('.rpm', '.srpm')):
@@ -721,6 +722,15 @@ def create_recipe(args):
             lines_after.append(line)
         if not bbclassextend:
             lines_after.append('BBCLASSEXTEND = "native"')
+
+    postinst = ("postinst", extravalues.pop('postinst', None))
+    postrm = ("postrm", extravalues.pop('postrm', None))
+    preinst = ("preinst", extravalues.pop('preinst', None))
+    prerm = ("prerm", extravalues.pop('prerm', None))
+    funcs = [postinst, postrm, preinst, prerm]
+    for func in funcs:
+        if func[1]:
+            RecipeHandler.genfunction(lines_after, 'pkg_%s_${PN}' % func[0], func[1])
 
     outlines = []
     outlines.extend(lines_before)
@@ -1058,6 +1068,25 @@ def convert_debian(debpath):
                     varname = value_map.get(key, None)
                     if varname:
                         values[varname] = value
+    postinst = os.path.join(debpath, 'postinst')
+    postrm = os.path.join(debpath, 'postrm')
+    preinst = os.path.join(debpath, 'preinst')
+    prerm = os.path.join(debpath, 'prerm')
+    sfiles = [postinst, postrm, preinst, prerm]
+    for sfile in sfiles:
+        if os.path.isfile(sfile):
+            logger.info("Converting %s file to recipe function..." %
+                    os.path.basename(sfile).upper())
+            content = []
+            with open(sfile) as f:
+                for line in f:
+                    if "#!/" in line:
+                        continue
+                    line = line.rstrip("\n")
+                    if line.strip():
+                        content.append(line)
+                if content:
+                    values[os.path.basename(f.name)] = content
 
     #if depends:
     #    values['DEPENDS'] = ' '.join(depends)
