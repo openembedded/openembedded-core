@@ -626,8 +626,9 @@ def multilib_rpmmacros(d):
     localdata.delVar('TOOLCHAIN_OPTIONS')
 
     # Set 'localdata' values to be consistent with 'd' values.
-    localdata.setVar('distromacrodir', d.getVar('distromacrodir', True))
-    localdata.setVar('WORKDIR', d.getVar('WORKDIR', True))
+    distromacrodirVal = d.getVar('distromacrodir', True)
+    workdirVal = d.getVar('WORKDIR', True)
+    dval = d.getVar('D', True)
 
     ret = gen_arch_macro(localdata)
 
@@ -639,6 +640,9 @@ def multilib_rpmmacros(d):
         localdata.setVar("OVERRIDES", overrides)
         localdata.setVar("MLPREFIX", item + "-")
         bb.data.update_data(localdata)
+        localdata.setVar('WORKDIR', workdirVal)
+        localdata.setVar('distromacrodir', distromacrodirVal)
+        localdata.setVar('D', dval)
         ret += gen_arch_macro(localdata)
     return ret
 
