@@ -1,0 +1,29 @@
+From c27013c05d99d92370b57e1a7af1b854eef4e7c1 Mon Sep 17 00:00:00 2001
+From: Daniel Stenberg <daniel@haxx.se>
+Date: Mon, 31 Oct 2016 09:49:50 +0100
+Subject: [PATCH] url: remove unconditional idn2.h include
+
+Mistake brought by 9c91ec778104a [fix to CVE-2016-8625]
+Upstream-Status: Backport
+
+Signed-off-by: Sona Sarmadi <sona.sarmadi@enea.com>
+---
+ lib/url.c | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/lib/url.c b/lib/url.c
+index c90a1c5..b997f41 100644
+--- a/lib/url.c
++++ b/lib/url.c
+@@ -67,8 +67,6 @@
+ bool curl_win32_idn_to_ascii(const char *in, char **out);
+ #endif  /* USE_LIBIDN2 */
+ 
+-#include <idn2.h>
+-
+ #include "urldata.h"
+ #include "netrc.h"
+ 
+-- 
+1.9.1
+
