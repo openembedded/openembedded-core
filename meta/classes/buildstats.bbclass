@@ -80,8 +80,8 @@ def write_task_data(status, logfile, e, d):
     with open(os.path.join(logfile), "a") as f:
         elapsedtime = get_timedata("__timedata_task", d, e.time)
         if elapsedtime:
-            f.write(d.expand("${PF}: %s: Elapsed time: %0.2f seconds \n" %
-                                    (e.task, elapsedtime)))
+            f.write(d.expand("${PF}: %s\n" % e.task))
+            f.write(d.expand("Elapsed time: %0.2f seconds\n" % elapsedtime))
             cpu, iostats, resources, childres = get_process_cputime(os.getpid())
             if cpu:
                 f.write("utime: %s\n" % cpu['utime'])
