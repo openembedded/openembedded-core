@@ -468,6 +468,9 @@ def main():
     sys.path.extend(layer_libdirs)
     imp.reload(oeqa.selftest)
 
+    # act like bitbake and enforce en_US.UTF-8 locale
+    os.environ["LC_ALL"] = "en_US.UTF-8"
+
     if args.run_tests_by and len(args.run_tests_by) >= 2:
         valid_options = ['name', 'class', 'module', 'id', 'tag']
         if args.run_tests_by[0] not in valid_options:
