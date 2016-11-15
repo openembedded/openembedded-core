@@ -6,6 +6,7 @@ PR = "r31"
 
 SRC_URI = "file://xserver-nodm \
            file://Xserver \
+           file://X11 \
            file://gplv2-license.patch \
            file://xserver-nodm.service.in \
            file://xserver-nodm.conf.in \
@@ -29,6 +30,9 @@ do_install() {
     install xserver-nodm.conf.in ${D}${sysconfdir}/default/xserver-nodm
     install -d ${D}${sysconfdir}/xserver-nodm
     install Xserver ${D}${sysconfdir}/xserver-nodm/Xserver
+    install -d ${D}${sysconfdir}/X11/Xsession.d
+    install X11/Xsession.d/* ${D}${sysconfdir}/X11/Xsession.d/
+    install X11/Xsession ${D}${sysconfdir}/X11/
 
     BLANK_ARGS="${@bb.utils.contains('PACKAGECONFIG', 'blank', '', '-s 0 -dpms', d)}"
     if [ "${ROOTLESS_X}" = "1" ] ; then
@@ -59,3 +63,4 @@ INITSCRIPT_NAME = "xserver-nodm"
 INITSCRIPT_PARAMS = "start 9 5 . stop 20 0 1 2 3 6 ."
 SYSTEMD_SERVICE_${PN} = "xserver-nodm.service"
 
+RCONFLICTS_${PN} = "xserver-common (< 1.34-r9) x11-common"
