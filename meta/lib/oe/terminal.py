@@ -11,7 +11,8 @@ class UnsupportedTerminal(Exception):
     pass
 
 class NoSupportedTerminals(Exception):
-    pass
+    def __init__(self, terms):
+        self.terms = terms
 
 
 class Registry(oe.classutils.ClassRegistry):
@@ -209,6 +210,14 @@ class Custom(Terminal):
 def prioritized():
     return Registry.prioritized()
 
+def get_cmd_list():
+    terms = Registry.prioritized()
+    cmds = []
+    for term in terms:
+        if term.command:
+            cmds.append(term.command)
+    return cmds
+
 def spawn_preferred(sh_cmd, title=None, env=None, d=None):
     """Spawn the first supported terminal, by priority"""
     for terminal in prioritized():
@@ -218,7 +227,7 @@ def spawn_preferred(sh_cmd, title=None, env=None, d=None):
         except UnsupportedTerminal:
             continue
     else:
-        raise NoSupportedTerminals()
+        raise NoSupportedTerminals(get_cmd_list())
 
 def spawn(name, sh_cmd, title=None, env=None, d=None):
     """Spawn the specified terminal, by name"""

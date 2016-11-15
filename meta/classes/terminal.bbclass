@@ -88,8 +88,12 @@ def oe_terminal(command, title, d):
 
     try:
         oe.terminal.spawn_preferred(command, title, None, d)
-    except oe.terminal.NoSupportedTerminals:
-        bb.fatal('No valid terminal found, unable to open devshell')
+    except oe.terminal.NoSupportedTerminals as nosup:
+        nosup.terms.remove("false")
+        cmds = '\n\t'.join(nosup.terms).replace("{command}",
+                    "do_terminal").replace("{title}", title)
+        bb.fatal('No valid terminal found, unable to open devshell.\n' +
+                'Tried the following commands:\n\t%s' % cmds)
     except oe.terminal.ExecutionError as exc:
         bb.fatal('Unable to spawn terminal %s: %s' % (terminal, exc))
 
