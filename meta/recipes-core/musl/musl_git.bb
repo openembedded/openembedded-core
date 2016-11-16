@@ -3,7 +3,7 @@
 
 require musl.inc
 
-SRCREV = "39494a273eaa6b714e0fa0c59ce7a1f5fbc80a1e"
+SRCREV = "54991729fd1e3d3a0cb71884d758d86afe6da9e0"
 
 PV = "1.1.15+git${SRCPV}"
 
@@ -11,7 +11,6 @@ PV = "1.1.15+git${SRCPV}"
 
 SRC_URI = "git://git.musl-libc.org/musl \
            file://0001-Make-dynamic-linker-a-relative-symlink-to-libc.patch \
-           file://CVE-2016-8859.patch \
           "
 
 S = "${WORKDIR}/git"
