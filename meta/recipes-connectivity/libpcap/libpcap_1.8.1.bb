@@ -2,6 +2,8 @@ require libpcap.inc
 
 SRC_URI += " \
     file://libpcap-pkgconfig-support.patch \
+    file://0001-Fix-compiler_state_t.ai-usage-when-INET6-is-not-defi.patch \
+    file://0002-Add-missing-compiler_state_t-parameter.patch \
 "
 
 SRC_URI[md5sum] = "3d48f9cd171ff12b0efd9134b52f1447"
