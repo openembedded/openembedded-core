@@ -41,3 +41,5 @@ SRC_URI[md5sum] = "e935c1bb6cc98a4a43cb1da22795493a"
 SRC_URI[sha256sum] = "934b634f4dfd865b6482650b8f522c70ae65c463529de8be907b53c89c3a34a8"
 
 inherit autotools pkgconfig
+
+BBCLASSEXTEND = "native nativesdk"
