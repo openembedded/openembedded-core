@@ -14,8 +14,8 @@ class SStateBase(oeSelfTest):
     def setUpLocal(self):
         self.temp_sstate_location = None
         self.sstate_path = get_bb_var('SSTATE_DIR')
-        self.distro = get_bb_var('NATIVELSBSTRING')
-        self.distro_specific_sstate = os.path.join(self.sstate_path, self.distro)
+        self.hostdistro = get_bb_var('NATIVELSBSTRING')
+        self.distro_specific_sstate = os.path.join(self.sstate_path, self.hostdistro)
 
     # Creates a special sstate configuration with the option to add sstate mirrors
     def config_sstate(self, temp_sstate_location=False, add_local_mirrors=[]):
@@ -27,8 +27,8 @@ class SStateBase(oeSelfTest):
             self.append_config(config_temp_sstate)
             self.track_for_cleanup(temp_sstate_path)
         self.sstate_path = get_bb_var('SSTATE_DIR')
-        self.distro = get_bb_var('NATIVELSBSTRING')
-        self.distro_specific_sstate = os.path.join(self.sstate_path, self.distro)
+        self.hostdistro = get_bb_var('NATIVELSBSTRING')
+        self.distro_specific_sstate = os.path.join(self.sstate_path, self.hostdistro)
 
         if add_local_mirrors:
             config_set_sstate_if_not_set = 'SSTATE_MIRRORS ?= ""'
@@ -42,7 +42,7 @@ class SStateBase(oeSelfTest):
     def search_sstate(self, filename_regex, distro_specific=True, distro_nonspecific=True):
         result = []
         for root, dirs, files in os.walk(self.sstate_path):
-            if distro_specific and re.search("%s/[a-z0-9]{2}$" % self.distro, root):
+            if distro_specific and re.search("%s/[a-z0-9]{2}$" % self.hostdistro, root):
                 for f in files:
                     if re.search(filename_regex, f):
                         result.append(f)
