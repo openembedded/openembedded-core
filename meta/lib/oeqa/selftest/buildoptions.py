@@ -43,6 +43,9 @@ class ImageOptionsTests(oeSelfTest):
 
     @testcase(1435)
     def test_read_only_image(self):
+        distro_features = get_bb_var('DISTRO_FEATURES')
+        if not ('x11' in distro_features and 'opengl' in distro_features):
+            self.skipTest('core-image-sato requires x11 and opengl in distro features')
         self.write_config('IMAGE_FEATURES += "read-only-rootfs"')
         bitbake("core-image-sato")
         # do_image will fail if there are any pending postinsts
