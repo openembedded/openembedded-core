@@ -1,8 +1,6 @@
-From 5b6e113f548bd8a2b100267bc5d54cee861a4b98 Mon Sep 17 00:00:00 2001
-From: =?UTF-8?q?Neal=20Gompa=20=28=E3=83=8B=E3=83=BC=E3=83=AB=E3=83=BB?=
- =?UTF-8?q?=E3=82=B3=E3=82=99=E3=83=B3=E3=83=8F=E3=82=9A=29?=
- <ngompa13@gmail.com>
-Date: Wed, 11 Nov 2015 20:32:17 -0500
+From 0a8e50f7322832efdaf33da87839fbba05a755de Mon Sep 17 00:00:00 2001
+From: "Maxin B. John" <maxin.john@intel.com>
+Date: Mon, 21 Nov 2016 11:46:00 +0200
 Subject: [PATCH] Add fallback fopencookie() implementation
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -12,9 +10,9 @@ In environments where neither fopencookie() nor funopen()
 are implemented, we need to provide a suitable implementation
 of fopencookie() that we can use.
 
-Upstream-Status: Submitted [ https://github.com/openSUSE/libsolv/pull/112 ]
+Upstream-Status: Denied [ https://github.com/openSUSE/libsolv/pull/112 ]
 
-Signed-off-by: Neal Gompa (ニール・ゴンパ) <ngompa13@gmail.com>com>
+Signed-off-by: Neal Gompa (ニール・ゴンパ) <ngompa13@gmail.com>
 Signed-off-by: Maxin B. John <maxin.john@intel.com>
 ---
  ext/CMakeLists.txt                     |   7 ++
@@ -26,7 +24,7 @@ Signed-off-by: Maxin B. John <maxin.john@intel.com>
  create mode 100644 ext/solv_xfopen_fallback_fopencookie.h
 
 diff --git a/ext/CMakeLists.txt b/ext/CMakeLists.txt
-index ad52495..4f282ce 100644
+index 586eda8..477a2ef 100644
 --- a/ext/CMakeLists.txt
 +++ b/ext/CMakeLists.txt
 @@ -4,6 +4,13 @@ SET (libsolvext_SRCS
@@ -40,7 +38,7 @@ index ad52495..4f282ce 100644
 +        solv_xfopen_fallback_fopencookie.h)
 +ENDIF (NOT HAVE_FOPENCOOKIE AND NOT HAVE_FUNOPEN)
 +
- IF (ENABLE_RPMDB)
+ IF (ENABLE_RPMDB OR ENABLE_RPMPKG)
      SET (libsolvext_SRCS ${libsolvext_SRCS}
          pool_fileconflicts.c repo_rpmdb.c)
 diff --git a/ext/solv_xfopen.c b/ext/solv_xfopen.c
