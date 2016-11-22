@@ -906,6 +906,21 @@ class BaseConfig(object):
             raise Exception("Failed to boot, QB_SYSTEM_NAME is NULL!")
 
         qemu_bin = '%s/%s' % (self.get('STAGING_BINDIR_NATIVE'), qemu_system)
+
+        # It is possible to have qemu-native in ASSUME_PROVIDED, and it won't
+        # find QEMU in sysroot, it needs to use host's qemu.
+        if not os.path.exists(qemu_bin):
+            logger.info("QEMU binary not found in %s, trying host's QEMU" % qemu_bin)
+            for path in (os.environ['PATH'] or '').split(':'):
+                qemu_bin_tmp = os.path.join(path, qemu_system)
+                logger.info("Trying: %s" % qemu_bin_tmp)
+                if os.path.exists(qemu_bin_tmp):
+                    qemu_bin = qemu_bin_tmp
+                    if not os.path.isabs(qemu_bin):
+                        qemu_bin = os.path.abspath(qemu_bin)
+                    logger.info("Using host's QEMU: %s" % qemu_bin)
+                    break
+
         if not os.access(qemu_bin, os.X_OK):
             raise OEPathError("No QEMU binary '%s' could be found" % qemu_bin)
 
