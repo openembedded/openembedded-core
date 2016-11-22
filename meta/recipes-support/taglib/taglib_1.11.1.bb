@@ -9,8 +9,8 @@ LIC_FILES_CHKSUM = "file://COPYING.LGPL;md5=4fbd65380cdd255951079008b364516c \
 DEPENDS = "zlib"
 
 SRC_URI = "http://taglib.github.io/releases/${BP}.tar.gz"
-SRC_URI[md5sum] = "be39fa2054df40664cb557126ad7cf7c"
-SRC_URI[sha256sum] = "ed4cabb3d970ff9a30b2620071c2b054c4347f44fc63546dbe06f97980ece288"
+SRC_URI[md5sum] = "cee7be0ccfc892fa433d6c837df9522a"
+SRC_URI[sha256sum] = "b6d1a5a610aae6ff39d93de5efd0fdc787aa9e9dc1e7026fa4c961b26563526b"
 
 UPSTREAM_CHECK_URI = "http://github.com/taglib/taglib/releases/"
 
@@ -21,13 +21,18 @@ inherit cmake pkgconfig binconfig-disabled
 PACKAGES =+ "${PN}-c"
 FILES_${PN}-c = "${libdir}/libtag_c.so.*"
 
-EXTRA_OECMAKE = "-DBUILD_SHARED_LIBS=ON -DLIB_SUFFIX=${@d.getVar('baselib', True).replace('lib', '')}"
+EXTRA_OECMAKE = "-DBUILD_SHARED_LIBS=ON \
+                 -DCMAKE_DISABLE_FIND_PACKAGE_Boost=TRUE \
+                 -DHAVE_BOOST_BYTESWAP=FALSE \
+                 -DCMAKE_CXX_STANDARD=11 \
+                 -DCMAKE_CXX_STANDARD_REQUIRED=OFF \
+                 -DLIB_SUFFIX=${@d.getVar('baselib', True).replace('lib', '')} \
+"
+CXXFLAGS += "-std=c++11"
 
 do_configure_prepend () {
 	rm -f ${S}/admin/ltmain.sh
 	rm -f ${S}/admin/libtool.m4.in
-	# Don't have a floating dependeny on boost
-	sed -i -e "s/atomic.hpp/atomic-not-exist.hpp/" ${S}/ConfigureChecks.cmake ${S}/taglib/toolkit/trefcounter.cpp
 }
 
 # without -fPIC depending packages failed with many error like:
