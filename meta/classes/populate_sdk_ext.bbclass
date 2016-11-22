@@ -114,6 +114,10 @@ def create_filtered_tasklist(d, sdkbasepath, tasklistfile, conf_initpath):
             f.write('SSTATE_MIRRORS_forcevariable = ""\n')
             # Ensure TMPDIR is the default so that clean_esdk_builddir() can delete it
             f.write('TMPDIR_forcevariable = "${TOPDIR}/tmp"\n')
+            # Drop uninative if the build isn't using it (or else NATIVELSBSTRING will
+            # be different and we won't be able to find our native sstate)
+            if not bb.data.inherits_class('uninative', d):
+                f.write('INHERIT_remove = "uninative"\n')
 
         # Unfortunately the default SDKPATH (or even a custom value) may contain characters that bitbake
         # will not allow in its COREBASE path, so we need to rename the directory temporarily
@@ -608,9 +612,6 @@ fakeroot python do_populate_sdk_ext() {
     # currently forces this upon us
     if d.getVar('SDK_ARCH', True) != d.getVar('BUILD_ARCH', True):
         bb.fatal('The extensible SDK can currently only be built for the same architecture as the machine being built on - SDK_ARCH is set to %s (likely via setting SDKMACHINE) which is different from the architecture of the build machine (%s). Unable to continue.' % (d.getVar('SDK_ARCH', True), d.getVar('BUILD_ARCH', True)))
-
-    if not bb.data.inherits_class('uninative', d):
-        bb.fatal('The extensible SDK requires uninative to be enabled. Enabling this is straightforward - just add the following to your configuration:\n\nrequire meta/conf/distro/include/yocto-uninative.inc\nINHERIT += "uninative"\n')
 
     d.setVar('SDK_INSTALL_TARGETS', get_sdk_install_targets(d))
     buildtools_fn = get_current_buildtools(d)
