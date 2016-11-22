@@ -269,19 +269,29 @@ class BaseConfig(object):
             self.kernel =  p
         elif os.path.exists(p) and (not os.path.isdir(p)) and re.search('-image-', os.path.basename(p)):
             self.rootfs = p
-            dirpath = os.path.dirname(p)
-            m = re.search('(.*)\.(.*)$', p)
-            if m:
-                qb = '%s%s' % (re.sub('\.rootfs$', '', m.group(1)), '.qemuboot.conf')
+            # Check filename against self.fstypes can hanlde <file>.cpio.gz,
+            # otherwise, its type would be "gz", which is incorrect.
+            fst = ""
+            for t in self.fstypes:
+                if p.endswith(t):
+                    fst = t
+                    break
+            if not fst:
+                m = re.search('.*\.(.*)$', self.rootfs)
+                if m:
+                    fst =  m.group(1)
+            if fst:
+                self.check_arg_fstype(fst)
+                qb = re.sub('\.' + fst + "$", '', self.rootfs)
+                qb = '%s%s' % (re.sub('\.rootfs$', '', qb), '.qemuboot.conf')
                 if os.path.exists(qb):
                     self.qemuboot = qb
                     self.qbconfload = True
                 else:
                     logger.warn("%s doesn't exist" % qb)
-                fst = m.group(2)
-                self.check_arg_fstype(fst)
             else:
                 raise Exception("Can't find FSTYPE from: %s" % p)
+
         elif os.path.isdir(p) or re.search(':', arg) and re.search('/', arg):
             if self.is_deploy_dir_image(p):
                 logger.info('DEPLOY_DIR_IMAGE: %s' % p)
