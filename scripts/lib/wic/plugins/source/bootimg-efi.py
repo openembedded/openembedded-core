@@ -36,7 +36,7 @@ from wic.utils.oe.misc import exec_cmd, exec_native_cmd, get_bitbake_var, \
 class BootimgEFIPlugin(SourcePlugin):
     """
     Create EFI boot partition.
-    This plugin supports GRUB 2 and gummiboot bootloaders.
+    This plugin supports GRUB 2 and systemd-boot bootloaders.
     """
 
     name = 'bootimg-efi'
@@ -82,7 +82,7 @@ class BootimgEFIPlugin(SourcePlugin):
         cfg.close()
 
     @classmethod
-    def do_configure_gummiboot(cls, hdddir, creator, cr_workdir):
+    def do_configure_systemdboot(cls, hdddir, creator, cr_workdir):
         """
         Create loader-specific systemd-boot/gummiboot config
         """
@@ -98,7 +98,7 @@ class BootimgEFIPlugin(SourcePlugin):
         loader_conf += "default boot\n"
         loader_conf += "timeout %d\n" % bootloader.timeout
 
-        msger.debug("Writing gummiboot config %s/hdd/boot/loader/loader.conf" \
+        msger.debug("Writing systemd-boot config %s/hdd/boot/loader/loader.conf" \
                         % cr_workdir)
         cfg = open("%s/hdd/boot/loader/loader.conf" % cr_workdir, "w")
         cfg.write(loader_conf)
@@ -109,16 +109,16 @@ class BootimgEFIPlugin(SourcePlugin):
         if configfile:
             custom_cfg = get_custom_config(configfile)
             if custom_cfg:
-                # Use a custom configuration for gummiboot
+                # Use a custom configuration for systemd-boot
                 boot_conf = custom_cfg
                 msger.debug("Using custom configuration file "
-                        "%s for gummiboots's boot.conf" % configfile)
+                        "%s for systemd-boots's boot.conf" % configfile)
             else:
                 msger.error("configfile is specified but failed to "
                         "get it from %s." % configfile)
 
         if not custom_cfg:
-            # Create gummiboot configuration using parameters from wks file
+            # Create systemd-boot configuration using parameters from wks file
             kernel = "/bzImage"
 
             boot_conf = ""
@@ -127,7 +127,7 @@ class BootimgEFIPlugin(SourcePlugin):
             boot_conf += "options LABEL=Boot root=%s %s\n" % \
                              (creator.rootdev, bootloader.append)
 
-        msger.debug("Writing gummiboot config %s/hdd/boot/loader/entries/boot.conf" \
+        msger.debug("Writing systemd-boot config %s/hdd/boot/loader/entries/boot.conf" \
                         % cr_workdir)
         cfg = open("%s/hdd/boot/loader/entries/boot.conf" % cr_workdir, "w")
         cfg.write(boot_conf)
@@ -149,9 +149,8 @@ class BootimgEFIPlugin(SourcePlugin):
         try:
             if source_params['loader'] == 'grub-efi':
                 cls.do_configure_grubefi(hdddir, creator, cr_workdir)
-            elif source_params['loader'] == 'gummiboot' \
-                 or source_params['loader'] == 'systemd-boot':
-                cls.do_configure_gummiboot(hdddir, creator, cr_workdir)
+            elif source_params['loader'] == 'systemd-boot':
+                cls.do_configure_systemdboot(hdddir, creator, cr_workdir)
             else:
                 msger.error("unrecognized bootimg-efi loader: %s" % source_params['loader'])
         except KeyError:
@@ -190,8 +189,7 @@ class BootimgEFIPlugin(SourcePlugin):
                 exec_cmd(cp_cmd, True)
                 shutil.move("%s/grub.cfg" % cr_workdir,
                             "%s/hdd/boot/EFI/BOOT/grub.cfg" % cr_workdir)
-            elif source_params['loader'] == 'gummiboot' \
-                 or source_params['loader'] == 'systemd-boot':
+            elif source_params['loader'] == 'systemd-boot':
                 cp_cmd = "cp %s/EFI/BOOT/* %s/EFI/BOOT" % (bootimg_dir, hdddir)
                 exec_cmd(cp_cmd, True)
             else:

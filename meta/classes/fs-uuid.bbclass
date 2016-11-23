@@ -13,7 +13,7 @@ def get_rootfs_uuid(d):
     bb.fatal('Could not determine filesystem UUID of %s' % rootfs)
 
 # Replace the special <<uuid-of-rootfs>> inside a string (like the
-# root= APPEND string in a syslinux.cfg or gummiboot entry) with the
+# root= APPEND string in a syslinux.cfg or systemd-boot entry) with the
 # actual UUID of the rootfs. Does nothing if the special string
 # is not used.
 def replace_rootfs_uuid(d, string):

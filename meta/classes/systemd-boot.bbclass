@@ -4,9 +4,7 @@
 
 # systemd-boot.bbclass - The "systemd-boot" is essentially the gummiboot merged into systemd.
 #                        The original standalone gummiboot project is dead without any more
-#                        maintenance. As a start point, we replace all gummitboot occurrences
-#                        with systemd-boot in gummiboot.bbclass to have a base version of this
-#                        systemd-boot.bbclass.
+#                        maintenance.
 #
 # Set EFI_PROVIDER = "systemd-boot" to use systemd-boot on your live images instead of grub-efi
 # (images built by image-live.bbclass or image-vm.bbclass)

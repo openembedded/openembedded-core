@@ -159,10 +159,10 @@ class MasterImageHardwareTarget(oeqa.targetcontrol.BaseTarget, metaclass=ABCMeta
         self.power_cycle(self.connection)
 
 
-class GummibootTarget(MasterImageHardwareTarget):
+class SystemdbootTarget(MasterImageHardwareTarget):
 
     def __init__(self, d):
-        super(GummibootTarget, self).__init__(d)
+        super(SystemdbootTarget, self).__init__(d)
         # this the value we need to set in the LoaderEntryOneShot EFI variable
         # so the system boots the 'test' bootloader label and not the default
         # The first four bytes are EFI bits, and the rest is an utf-16le string

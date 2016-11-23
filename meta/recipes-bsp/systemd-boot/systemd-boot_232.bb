@@ -15,7 +15,7 @@ EXTRA_OECONF = " --enable-gnuefi \
                  --disable-manpages \
                "
 
-# Imported from gummiboot recipe
+# Imported from the old gummiboot recipe
 TUNE_CCARGS_remove = "-mfpmath=sse"
 COMPATIBLE_HOST = "(x86_64.*|i.86.*)-linux"
 
