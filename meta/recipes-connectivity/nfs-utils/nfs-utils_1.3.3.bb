@@ -73,8 +73,6 @@ PACKAGECONFIG[tcp-wrappers] = "--with-tcp-wrappers,--without-tcp-wrappers,tcp-wr
 PACKAGECONFIG[nfsidmap] = "--enable-nfsidmap,--disable-nfsidmap,keyutils"
 PACKAGECONFIG[ipv6] = "--enable-ipv6,--disable-ipv6,"
 
-INHIBIT_AUTO_STAGE = "1"
-
 PACKAGES =+ "${PN}-client ${PN}-stats"
 
 CONFFILES_${PN}-client += "${localstatedir}/lib/nfs/etab \
