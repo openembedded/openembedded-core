@@ -1,6 +1,6 @@
 require gdb-common.inc
 
-DEPENDS = "expat-native ncurses-native"
+DEPENDS = "expat-native ncurses-native flex-native bison-native"
 
 inherit python3native
 
