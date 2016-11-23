@@ -31,13 +31,11 @@ SRC_URI = "${KERNELORG_MIRROR}/linux/utils/nfs-utils/${PV}/nfs-utils-${PV}.tar.x
            file://proc-fs-nfsd.mount \
            file://nfs-utils-Do-not-pass-CFLAGS-to-gcc-while-building.patch \
            file://nfs-utils-debianize-start-statd.patch \
-           file://0001-nfs-utils-statd-fix-a-segfault-caused-by-improper-us.patch \
            file://bugfix-adjust-statd-service-name.patch \
-           file://fix-protocol-minor-version-fall-back.patch \
 "
 
-SRC_URI[md5sum] = "cd6b568c2e9301cc3bfac09d87fbbc0b"
-SRC_URI[sha256sum] = "700d689c5622c87953c34102e5befafc4d3c811e676852238f0dd79c9c0c084d"
+SRC_URI[md5sum] = "54e4119043ec8507a2a0e054cf2889a4"
+SRC_URI[sha256sum] = "b42a5bc0a8d80d04650030ceb9a11f08f4acfbcb1ee297f657fb94e339c45975"
 
 # Only kernel-module-nfsd is required here (but can be built-in)  - the nfsd module will
 # pull in the remainder of the dependencies.
