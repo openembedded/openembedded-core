@@ -173,18 +173,13 @@ class BuildPerfTestResult(unittest.TextTestResult):
         self.elapsed_time = datetime.utcnow() - self.start_time
 
     def all_results(self):
-        result_map = {'SUCCESS': self.successes,
-                      'FAILURE': self.failures,
-                      'ERROR': self.errors,
-                      'EXPECTED_FAILURE': self.expectedFailures,
-                      'UNEXPECTED_SUCCESS': self.unexpectedSuccesses,
-                      'SKIPPED': self.skipped}
-        for status, tests in result_map.items():
-            for test in tests:
-                if isinstance(test, tuple):
-                    yield (status, test)
-                else:
-                    yield (status, (test, None))
+        compound = [('SUCCESS', t, None) for t in self.successes] + \
+                   [('FAILURE', t, m) for t, m in self.failures] + \
+                   [('ERROR', t, m) for t, m in self.errors] + \
+                   [('EXPECTED_FAILURE', t, m) for t, m in self.expectedFailures] + \
+                   [('UNEXPECTED_SUCCESS', t, None) for t in self.unexpectedSuccesses] + \
+                   [('SKIPPED', t, m) for t, m in self.skipped]
+        return sorted(compound, key=lambda info: info[1].start_time)
 
 
     def update_globalres_file(self, filename):
@@ -205,7 +200,7 @@ class BuildPerfTestResult(unittest.TextTestResult):
             git_tag_rev = self.git_commit
 
         values = ['0'] * 12
-        for status, (test, msg) in self.all_results():
+        for status, test, _ in self.all_results():
             if status in ['ERROR', 'SKIPPED']:
                 continue
             (t_ind, t_len), (s_ind, s_len) = gr_map[test.name]
@@ -233,7 +228,7 @@ class BuildPerfTestResult(unittest.TextTestResult):
                    'elapsed_time': self.elapsed_time}
 
         tests = {}
-        for status, (test, reason) in self.all_results():
+        for status, test, reason in self.all_results():
             tests[test.name] = {'name': test.name,
                                 'description': test.shortDescription(),
                                 'status': status,
@@ -268,7 +263,7 @@ class BuildPerfTestResult(unittest.TextTestResult):
         suite.set('skipped', str(len(self.skipped)))
 
         test_cnt = 0
-        for status, (test, reason) in self.all_results():
+        for status, test, reason in self.all_results():
             test_cnt += 1
             testcase = ET.SubElement(suite, 'testcase')
             testcase.set('classname', test.__module__ + '.' + test.__class__.__name__)
