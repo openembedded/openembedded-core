@@ -80,6 +80,7 @@ EXTRA_OEMAKE = '\
     AR="${AR}" \
     LD="${LD}" \
     EXTRA_CFLAGS="-ldw" \
+    EXTRA_LDFLAGS="${PERF_EXTRA_LDFLAGS}" \
     perfexecdir=${libexecdir} \
     NO_GTK2=1 ${TUI_DEFINES} NO_DWARF=1 ${LIBUNWIND_DEFINES} \
     ${SCRIPTING_DEFINES} ${LIBNUMA_DEFINES} \
@@ -97,6 +98,12 @@ EXTRA_OEMAKE += "\
     'mandir=${@os.path.relpath(mandir, prefix)}' \
     'infodir=${@os.path.relpath(infodir, prefix)}' \
 "
+
+PERF_EXTRA_LDFLAGS = ""
+
+# MIPS N32
+PERF_EXTRA_LDFLAGS_mipsarchn32eb = "-m elf32btsmipn32"
+PERF_EXTRA_LDFLAGS_mipsarchn32el = "-m elf32ltsmipn32"
 
 do_compile() {
 	# Linux kernel build system is expected to do the right thing
