@@ -26,7 +26,7 @@ CONFIGFILESURI_armeb = " \
     file://config.h \
     file://numpyconfig.h \
 "
-CONFIGFILESURI_mipsel = " \
+CONFIGFILESURI_mipsarcho32el = " \
     file://config.h \
     file://numpyconfig.h \
 "
@@ -38,7 +38,7 @@ CONFIGFILESURI_x86-64 = " \
     file://config.h \
     file://_numpyconfig.h \
 "
-CONFIGFILESURI_mips = " \
+CONFIGFILESURI_mipsarcho32eb = " \
     file://config.h \
     file://_numpyconfig.h \
 "
@@ -50,11 +50,19 @@ CONFIGFILESURI_powerpc64 = " \
     file://config.h \
     file://_numpyconfig.h \
 "
-CONFIGFILESURI_mips64 = " \
+CONFIGFILESURI_mipsarchn64eb = " \
     file://config.h \
     file://_numpyconfig.h \
 "
-CONFIGFILESURI_mips64n32 = " \
+CONFIGFILESURI_mipsarchn64el = " \
+    file://config.h \
+    file://_numpyconfig.h \
+"
+CONFIGFILESURI_mipsarchn32eb = " \
+    file://config.h \
+    file://_numpyconfig.h \
+"
+CONFIGFILESURI_mipsarchn32el = " \
     file://config.h \
     file://_numpyconfig.h \
 "
