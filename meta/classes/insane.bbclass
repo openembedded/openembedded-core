@@ -1000,9 +1000,8 @@ def package_qa_check_expanded_d(path,name,d,elf,messages):
     for pak in packages:
     # Go through all variables and check if expanded D is found, warn the user accordingly
         for var in 'FILES','pkg_preinst', 'pkg_postinst', 'pkg_prerm', 'pkg_postrm':
-            bbvar = d.getVar(var + "_" + pak, False)
+            bbvar = d.getVar(var + "_" + pak, True)
             if bbvar:
-                # Bitbake expands ${D} within bbvar during the previous step, so we check for its expanded value
                 if expanded_d in bbvar:
                     if var == 'FILES':
                         package_qa_add_message(messages, "expanded-d", "FILES in %s recipe should not contain the ${D} variable as it references the local build directory not the target filesystem, best solution is to remove the ${D} reference" % pak)
