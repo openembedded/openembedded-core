@@ -12,7 +12,7 @@ def setUpModule():
 
 class PamBasicTest(oeRuntimeTest):
 
-    @testcase(287)
+    @testcase(1543)
     @skipUnlessPassed('test_ssh')
     def test_pam(self):
         (status, output) = self.target.run('login --help')

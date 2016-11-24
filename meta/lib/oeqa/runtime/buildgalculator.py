@@ -7,6 +7,7 @@ def setUpModule():
         skipModule("Image doesn't have tools-sdk in IMAGE_FEATURES")
 
 class GalculatorTest(oeRuntimeTest):
+    @testcase(1526)
     @skipUnlessPassed("test_ssh")
     def test_galculator(self):
         try:
