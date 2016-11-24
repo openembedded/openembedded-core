@@ -2,6 +2,7 @@ from oeqa.selftest.base import oeSelfTest
 from oeqa.utils.commands import runCmd, bitbake, get_bb_var, runqemu
 from oeqa.utils.decorators import testcase
 import os
+import re
 
 class TestExport(oeSelfTest):
 
@@ -103,3 +104,54 @@ class TestImage(oeSelfTest):
         # Build core-image-sato and testimage
         bitbake('core-image-full-cmdline socat')
         bitbake('-c testimage core-image-full-cmdline')
+
+class Postinst(oeSelfTest):
+    @testcase(1540)
+    def test_verify_postinst(self):
+        """
+        Summary: The purpose of this test is to verify the execution order of postinst Bugzilla ID: [5319]
+        Expected :
+        1. Compile a minimal image.
+        2. The compiled image will add the created layer with the recipes postinst[ abdpt]
+        3. Run qemux86
+        4. Validate the task execution order
+        Author: Francisco Pedraza <francisco.j.pedraza.gonzalez@intel.com>
+        """
+        features = 'INHERIT += "testimage"\n'
+        features += 'CORE_IMAGE_EXTRA_INSTALL += "postinst-at-rootfs \
+postinst-delayed-a \
+postinst-delayed-b \
+postinst-delayed-d \
+postinst-delayed-p \
+postinst-delayed-t \
+"\n'
+        self.write_config(features)
+
+        bitbake('core-image-minimal -f ')
+
+        postinst_list = ['100-postinst-at-rootfs',
+                         '101-postinst-delayed-a',
+                         '102-postinst-delayed-b',
+                         '103-postinst-delayed-d',
+                         '104-postinst-delayed-p',
+                         '105-postinst-delayed-t']
+        path_workdir = get_bb_var('WORKDIR','core-image-minimal')
+        workspacedir = 'testimage/qemu_boot_log'
+        workspacedir = os.path.join(path_workdir, workspacedir)
+        rexp = re.compile("^Running postinst .*/(?P<postinst>.*)\.\.\.$")
+        with runqemu('core-image-minimal') as qemu:
+            with open(workspacedir) as f:
+                found = False
+                idx = 0
+                for line in f.readlines():
+                    line = line.strip().replace("^M","")
+                    if not line: # To avoid empty lines
+                        continue
+                    m = rexp.search(line)
+                    if m:
+                        self.assertEqual(postinst_list[idx], m.group('postinst'), "Fail")
+                        idx = idx+1
+                        found = True
+                    elif found:
+                        self.assertEqual(idx, len(postinst_list), "Not found all postinsts")
+                        break
