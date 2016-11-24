@@ -1,61 +1,64 @@
-The OE core recipies customize some ExtUtils-MakeMaker modules,
-which causes their MD5 sum to mismatch the provided table and the
-corresponding tests to fail. Also, we patch several test files with
-a backported patch. Update list of hashes to reflect the patched files.
+From 64df09205b6ccb5a434a4e53e8e0a32377ab634f Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?An=C3=ADbal=20Lim=C3=B3n?= <anibal.limon@linux.intel.com>
+Date: Thu, 24 Nov 2016 10:49:55 -0600
+Subject: [PATCH] The OE core recipies customize some ExtUtils-MakeMaker
+ modules, which causes their MD5 sum to mismatch the provided table and the
+ corresponding tests to fail. Also, we patch several test files with a
+ backported patch. Update list of hashes to reflect the patched files.
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
 Upstream-Status: Inappropriate [embedded specific]
 
 Signed-off-by: Bill Randle <william.c.randle@intel.com>
+Signed-off-by: Aníbal Limón <anibal.limon@linux.intel.com>
+---
+ t/porting/customized.dat | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-Index: perl-5.22.1/t/porting/customized.dat
-===================================================================
---- perl-5.22.1.orig/t/porting/customized.dat	2015-10-31 13:36:16.000000000 +0000
-+++ perl-5.22.1/t/porting/customized.dat	2016-06-02 12:50:10.381030204 -0700
-@@ -1,8 +1,8 @@
- CPAN cpan/CPAN/lib/CPAN.pm ce62c43d72f101c011184dbbc59e21c2790826f0
- ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/lib/ExtUtils/Command/MM.pm 7f4dfd0fe884bd42412bcf04ca80ef97b39c1d54
- ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/lib/ExtUtils/Liblist.pm bef099988b15fb0b2a1f5ac48c01af1f7f36d329
--ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/lib/ExtUtils/Liblist/Kid.pm 8168e18f0e3ce3ece4bb7e7c72d57ec07c67c402
--ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/lib/ExtUtils/MakeMaker.pm 7115e97a53559cb3ec061dd6f7f344e522724c4a
-+ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/lib/ExtUtils/Liblist/Kid.pm 8c22e119b96d674f1f268a9c495bb4aa04e1100b
-+ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/lib/ExtUtils/MakeMaker.pm 3d7abd674b15ed323f743594ef0bd09db76b1aee
- ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/lib/ExtUtils/MakeMaker/Config.pm f8db8d4245bf0684b8210c811f50d7cfb1a27d78
- ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/lib/ExtUtils/MakeMaker/FAQ.pod 757bffb47857521311f8f3bde43ebe165f8d5191
- ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/lib/ExtUtils/MakeMaker/Locale.pm 82be06851deb84c6419ad003ce9b6d1957f395f3
-@@ -14,7 +14,7 @@
- ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/lib/ExtUtils/Mksymlists.pm ab80029ab16d38d4f2e41dc88d2ceb9f3790e477
- ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM.pm 453e0abbc4bb38db4c0820ad5c4846f313b66291
- ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_AIX.pm c1b1babda8f43ae7a2caba1cb4f70f92af5a0e34
--ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Any.pm 6f90d94ad3e7aa0045a3b1a10a1bb18391f89f57
-+ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Any.pm 21bde53290bf1a4da4457290b65bd1b0ca6f1d16
- ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_BeOS.pm cab2b3ce08b71a4ce89aa630f236eb08b852439d
- ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Cygwin.pm 61fced0faf518bf87c265fcb51ed330ba354623f
- ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Darwin.pm ae0ef51a7b6dd0b05aa61c779df7167dda5f5119
-@@ -23,7 +23,7 @@
- ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_NW5.pm 433135eecb85b4b1d90d3027432f329436c78447
- ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_OS2.pm 1fbb5605bfb47feee4083feba8aa85e659628f70
- ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_QNX.pm 5b66d1f485a6034d96fc24ba1665b1bad9e447f1
--ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Unix.pm 8cef99a9bd370ecfd07ddb0efbdcbb4101255e45
-+ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Unix.pm 860d520234d7c9036d91f0b143a1dddf2a5e8cb7
- ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_UWIN.pm 939572fde3d59ba77c2e677fe2df2bed4bed5898
- ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_VMS.pm 09c2049bfd25b735e2a5bcf56a6cff7b4827f9c8
- ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_VOS.pm d65d63f8217a55c36f62e249814988974f593c79
-@@ -31,8 +31,16 @@
- ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Win95.pm 12df38eacceeed73cab94c423236bfaed0fbbfec
- ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/lib/ExtUtils/MY.pm 22fe9596a0237252f45399a36abc83b7813bc328
- ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/lib/ExtUtils/testlib.pm 7fbc42ca2ebc6c677b79ae5fd5647243cf069463
--ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/t/basic.t 6cdc7701b50e586bc9c4cfb1616de8eb0b1baf34
--ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/t/pm_to_blib.t 71ebcee355691ce374fcad251b12d8b2412462b3
-+ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/t/basic.t d78fdec7a4512dc8d2a7abd62b8104530af8ecf9
-+ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/t/echo.t 9427f4adebbb13b57b4a76fef2972adf63c9bd96
-+ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/t/INSTALL_BASE.t ef356c196bb5c3c428ae309d7f989bdd6d79b86d
-+ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/t/INST_PREFIX.t 3e6d4d6eb2eab42e983ac70eb5737a759af0916f
-+ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/t/INST.t e553fa0d53c894c8d36aafb69edd55b38a9355f8
-+ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/t/min_perl_version.t e930ec9217de5a1785d0247c30b159e6f7f5673f
-+ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/t/PL_FILES.t 7e49ab6c4d467826d22023fa03d77b85f935b58e
-+ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/t/pm_to_blib.t a04c96eecfab17e4094604e0fb998dd93cf93b93
-+ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/t/recurs.t 94cce3bff875a878ed27816b3f5df2ca4225c714
-+ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/t/several_authors.t f811d993c0835c66dc501ed55083acb29bf33bf7
- Text::ParseWords cpan/Text-ParseWords/t/ParseWords.t 9bae51c9b944cd5c0bbabe9d397e573976a2be8e
- Win32API::File cpan/Win32API-File/buffers.h 02d230ac9ac7091365128161a0ed671898baefae
- Win32API::File cpan/Win32API-File/cFile.h fca7e383e76979c3ac3adf12d11d1bcd2618e489
+diff --git a/t/porting/customized.dat b/t/porting/customized.dat
+index f871a32..e11d147 100644
+--- a/t/porting/customized.dat
++++ b/t/porting/customized.dat
+@@ -3,8 +3,8 @@ Encode cpan/Encode/encoding.pm 51c19efc9bfe8467d6ae12a4654f6e7f980715bf
+ ExtUtils::Constant cpan/ExtUtils-Constant/t/Constant.t a0369c919e216fb02767a637666bb4577ad79b02
+ ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/lib/ExtUtils/Command/MM.pm 8d772fbc6a57637ab24d12a02794073ee71b489c
+ ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/lib/ExtUtils/Liblist.pm 9be9ac3fee6fd6df702469904e02c8b4c6f2502e
+-ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/lib/ExtUtils/Liblist/Kid.pm bb2443c2314c50f09f7eab4aacc03ade8b9907dd
+-ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/lib/ExtUtils/MakeMaker.pm 830acdc810e2974d7fd4ec408ea1bfa825c75b69
++ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/lib/ExtUtils/Liblist/Kid.pm 224832767ac102e53daf668a4243f9389a753589
++ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/lib/ExtUtils/MakeMaker.pm effd272b3c9224af6fd0f6cae7183f33ec4b1106
+ ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/lib/ExtUtils/MakeMaker/Config.pm 5c41b40e33464c6635258061dff4ece018b46bd9
+ ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/lib/ExtUtils/MakeMaker/FAQ.pod 062e5d14a803fbbec8d61803086a3d7997e8a473
+ ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/lib/ExtUtils/MakeMaker/Tutorial.pod a8a9cab7d67922ed3d6883c864e1fe29aaa6ad89
+@@ -14,7 +14,7 @@ ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/lib/ExtUtils/Mkbootstrap.pm 5d5cd55e
+ ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/lib/ExtUtils/Mksymlists.pm 23a4b33b974e036d59bf55aa02e025506a408048
+ ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM.pm 288df61e9ba7be3505b58b6345091fe1f310a117
+ ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_AIX.pm 8578f2ea4ec9e764a789f6ecf620ea449ddca8c1
+-ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Any.pm 9f1f6c51fb0337726c99332facc52159c0619fe2
++ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Any.pm 0f9eaebf7f93b5de213e60708a0fe257396ee188
+ ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_BeOS.pm a0ec076bedfa0c2e52fc2b735fbc75b4c2706bbf
+ ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Cygwin.pm 976b10ec76d1fe6f7ee9000b5596e8950434880b
+ ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Darwin.pm bc4b33fa5296ab35bcb1be1c18759b93c4de2598
+@@ -23,7 +23,7 @@ ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_MacOS.pm 83601fa89eb
+ ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_NW5.pm 8185a7db6c4d7e0fdc5001aeaa8c2b612a884a5e
+ ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_OS2.pm 2fe66ca8a894d6a2ae340b8bf6f8d69c5e1f7fbe
+ ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_QNX.pm e8a4dbba69a1d551bd581ea6a3f2415bacbc0ae5
+-ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Unix.pm d666ac424618c3e11b8549755c9646d942bd2d57
++ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Unix.pm 211d37e5d841e462cf2d0644c43ef01a1366fbee
+ ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_UWIN.pm f6581a0e75e45bfc26f343f173d3366c43fb1221
+ ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_VMS.pm 1997912b5018970cdeb3dae8fd7e0c24f6e5d567
+ ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_VOS.pm 210a4eda8b081d9986477e3a9762fce6ebea8474
+@@ -32,7 +32,7 @@ ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Win95.pm f73ef46755d
+ ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/lib/ExtUtils/MY.pm 6059d9bb7c4f0c154a61f115aa6b24ba08622b81
+ ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/lib/ExtUtils/testlib.pm 6347934cbe40da977790cea6c81987816b2fe26b
+ ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/t/cd.t 0a71fbd646a7be8358b07b6f64f838243cc0aef4
+-ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/t/echo.t 37aec8f794c52e037540757eb5b2556f79419ff7
++ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/t/echo.t 1a93dd8834e4bb0e5facf08204e782807567b2eb
+ ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/t/lib/MakeMaker/Test/NoXS.pm 371cdff1b2375017907cfbc9c8f4a31f5ad10582
+ ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/t/prereq.t 53bda2c549fd13a6b6c13a070ca6bc79883081c0
+ ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/t/vstrings.t 90035a2bdbf45f15b9c3196d072d7cba7e662871
+-- 
+2.1.4
+

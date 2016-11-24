@@ -11,11 +11,10 @@ SRC_URI += "\
            file://debian/errno_ver.diff \
            file://dynaloaderhack.patch \
            file://perl-PathTools-don-t-filter-out-blib-from-INC.patch \
-           file://perl-remove-nm-from-libswanted.patch \
           "
 
-SRC_URI[md5sum] = "6671e4829cbaf9cecafa9a84f141b0a3"
-SRC_URI[sha256sum] = "9e87317d693ce828095204be0d09af8d60b8785533fadea1a82b6f0e071e5c79"
+SRC_URI[md5sum] = "59456ae4bd4b06cb6e57cb19a3b2d349"
+SRC_URI[sha256sum] = "a9a37c0860380ecd7b23aa06d61c20fc5bc6d95198029f3684c44a9d7e2952f2"
 
 inherit native
 
