@@ -822,6 +822,23 @@ def package_qa_check_staged(path,d):
 
     return sane
 
+# Run all package-wide warnfuncs and errorfuncs
+def package_qa_package(warnfuncs, errorfuncs, skip, package, d):
+    warnings = {}
+    errors = {}
+
+    for func in warnfuncs:
+        func(package, d, warnings)
+    for func in errorfuncs:
+        func(package, d, errors)
+
+    for w in warnings:
+        package_qa_handle_error(w, warnings[w], d)
+    for e in errors:
+        package_qa_handle_error(e, errors[e], d)
+
+    return len(errors) == 0
+
 # Walk over all files in a directory and call func
 def package_qa_walk(warnfuncs, errorfuncs, skip, package, d):
     import oe.qa
@@ -1161,6 +1178,9 @@ python do_package_qa () {
 
         warn_checks, error_checks = parse_test_matrix("QAPATHTEST")
         package_qa_walk(warn_checks, error_checks, skip, package, d)
+
+        warn_checks, error_checks = parse_test_matrix("QAPKGTEST")
+        package_qa_package(warn_checks, error_checks, skip, package, d)
 
         package_qa_check_rdepends(package, pkgdest, skip, taskdeps, packages, d)
         package_qa_check_deps(package, pkgdest, skip, d)
