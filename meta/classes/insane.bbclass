@@ -1116,7 +1116,6 @@ python do_package_qa () {
     if not packages:
         return
 
-    testmatrix = d.getVarFlags("QAPATHTEST")
     import re
     # The package name matches the [a-z0-9.+-]+ regular expression
     pkgname_pattern = re.compile("^[a-z0-9.+-]+$")
@@ -1126,28 +1125,33 @@ python do_package_qa () {
     for dep in taskdepdata:
         taskdeps.add(taskdepdata[dep][0])
 
-    g = globals()
     for package in packages:
+        def parse_test_matrix(matrix_name):
+            testmatrix = d.getVarFlags(matrix_name) or {}
+            g = globals()
+            warnchecks = []
+            for w in (d.getVar("WARN_QA", True) or "").split():
+                if w in skip:
+                   continue
+                if w in testmatrix and testmatrix[w] in g:
+                    warnchecks.append(g[testmatrix[w]])
+                if w == 'unsafe-references-in-binaries':
+                    oe.utils.write_ld_so_conf(d)
+
+            errorchecks = []
+            for e in (d.getVar("ERROR_QA", True) or "").split():
+                if e in skip:
+                   continue
+                if e in testmatrix and testmatrix[e] in g:
+                    errorchecks.append(g[testmatrix[e]])
+                if e == 'unsafe-references-in-binaries':
+                    oe.utils.write_ld_so_conf(d)
+            return warnchecks, errorchecks
+
         skip = (d.getVar('INSANE_SKIP_' + package, True) or "").split()
         if skip:
             bb.note("Package %s skipping QA tests: %s" % (package, str(skip)))
-        warnchecks = []
-        for w in (d.getVar("WARN_QA", True) or "").split():
-            if w in skip:
-               continue
-            if w in testmatrix and testmatrix[w] in g:
-                warnchecks.append(g[testmatrix[w]])
-            if w == 'unsafe-references-in-binaries':
-                oe.utils.write_ld_so_conf(d)
 
-        errorchecks = []
-        for e in (d.getVar("ERROR_QA", True) or "").split():
-            if e in skip:
-               continue
-            if e in testmatrix and testmatrix[e] in g:
-                errorchecks.append(g[testmatrix[e]])
-            if e == 'unsafe-references-in-binaries':
-                oe.utils.write_ld_so_conf(d)
 
         bb.note("Checking Package: %s" % package)
         # Check package name
@@ -1155,8 +1159,8 @@ python do_package_qa () {
             package_qa_handle_error("pkgname",
                     "%s doesn't match the [a-z0-9.+-]+ regex" % package, d)
 
-        path = "%s/%s" % (pkgdest, package)
-        package_qa_walk(warnchecks, errorchecks, skip, package, d)
+        warn_checks, error_checks = parse_test_matrix("QAPATHTEST")
+        package_qa_walk(warn_checks, error_checks, skip, package, d)
 
         package_qa_check_rdepends(package, pkgdest, skip, taskdeps, packages, d)
         package_qa_check_deps(package, pkgdest, skip, d)
