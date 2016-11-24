@@ -42,7 +42,7 @@ QB_DEFAULT_FSTYPE ?= "ext4"
 QB_OPT_APPEND ?= "-show-cursor"
 
 # Create qemuboot.conf
-ROOTFS_POSTPROCESS_COMMAND += "write_qemuboot_conf; "
+addtask do_write_qemuboot_conf after do_rootfs before do_image
 
 def qemuboot_vars(d):
     build_vars = ['MACHINE', 'TUNE_ARCH', 'DEPLOY_DIR_IMAGE',
@@ -51,8 +51,8 @@ def qemuboot_vars(d):
                 'STAGING_DIR_HOST']
     return build_vars + [k for k in d.keys() if k.startswith('QB_')]
 
-write_qemuboot_conf[vardeps] += "${@' '.join(qemuboot_vars(d))}"
-python write_qemuboot_conf() {
+do_write_qemuboot_conf[vardeps] += "${@' '.join(qemuboot_vars(d))}"
+python do_write_qemuboot_conf() {
     import configparser
 
     qemuboot = "%s/%s.qemuboot.conf" % (d.getVar('DEPLOY_DIR_IMAGE', True), d.getVar('IMAGE_NAME', True))
