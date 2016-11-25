@@ -14,6 +14,9 @@ ROOTFS_POSTPROCESS_COMMAND += "rootfs_update_timestamp ; "
 # Tweak the mount options for rootfs in /etc/fstab if read-only-rootfs is enabled
 ROOTFS_POSTPROCESS_COMMAND += '${@bb.utils.contains("IMAGE_FEATURES", "read-only-rootfs", "read_only_rootfs_hook; ", "",d)}'
 
+# Generates test data file with data store variables expanded in json format
+ROOTFS_POSTPROCESS_COMMAND += "write_image_test_data ; "
+
 # Write manifest
 IMAGE_MANIFEST = "${IMGDEPLOYDIR}/${IMAGE_NAME}.rootfs.manifest"
 ROOTFS_POSTUNINSTALL_COMMAND =+ "write_image_manifest ; "
@@ -299,4 +302,19 @@ rootfs_check_host_user_contaminated () {
 # Make any absolute links in a sysroot relative
 rootfs_sysroot_relativelinks () {
 	sysroot-relativelinks.py ${SDK_OUTPUT}/${SDKTARGETSYSROOT}
+}
+
+# Generated test data json file
+python write_image_test_data() {
+    from oe.data import export2json
+
+    testdata = "%s/%s.testdata.json" % (d.getVar('DEPLOY_DIR_IMAGE', True), d.getVar('IMAGE_NAME', True))
+    testdata_link = "%s/%s.testdata.json" % (d.getVar('DEPLOY_DIR_IMAGE', True), d.getVar('IMAGE_LINK_NAME', True))
+
+    bb.utils.mkdirhier(os.path.dirname(testdata))
+    export2json(d, testdata)
+
+    if os.path.lexists(testdata_link):
+       os.remove(testdata_link)
+    os.symlink(os.path.basename(testdata), testdata_link)
 }
