@@ -1,7 +1,7 @@
 require ruby.inc
 
-SRC_URI[md5sum] = "bd8e349d4fb2c75d90817649674f94be"
-SRC_URI[sha256sum] = "30c4b31697a4ca4ea0c8db8ad30cf45e6690a0f09687e5d483c933c03ca335e3"
+SRC_URI[md5sum] = "0d896c2e7fd54f722b399f407e48a4c6"
+SRC_URI[sha256sum] = "b87c738cb2032bf4920fef8e3864dc5cf8eae9d89d8d523ce0236945c5797dcd"
 
 # it's unknown to configure script, but then passed to extconf.rb
 # maybe it's not really needed as we're hardcoding the result with
@@ -14,6 +14,8 @@ PACKAGECONFIG += "${@bb.utils.contains('DISTRO_FEATURES', 'ipv6', 'ipv6', '', d)
 PACKAGECONFIG[valgrind] = "--with-valgrind=yes, --with-valgrind=no, valgrind"
 PACKAGECONFIG[gpm] = "--with-gmp=yes, --with-gmp=no, gmp"
 PACKAGECONFIG[ipv6] = ",--enable-wide-getaddrinfo,"
+
+EXTRA_AUTORECONF += "--exclude=aclocal"
 
 EXTRA_OECONF = "\
     --disable-versioned-paths \
