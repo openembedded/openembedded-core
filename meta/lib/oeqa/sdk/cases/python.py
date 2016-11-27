@@ -1,26 +1,25 @@
-import unittest
 import os
 import shutil
-from oeqa.oetest import oeSDKTest, skipModule
-from oeqa.utils.decorators import *
+import unittest
 
-def setUpModule():
-    if not oeSDKTest.hasHostPackage("nativesdk-python"):
-        skipModule("No python package in the SDK")
+from oeqa.core.utils.path import remove_safe
+from oeqa.sdk.case import OESDKTestCase
 
-
-class PythonTest(oeSDKTest):
-
+class PythonTest(OESDKTestCase):
     @classmethod
     def setUpClass(self):
+        if not self.tc.hasHostPackage("nativesdk-python"):
+            raise unittest.SkipTest("No python package in the SDK")
+
         for f in ['test.py']:
-            shutil.copyfile(os.path.join(self.tc.filesdir, f), self.tc.sdktestdir + f)
+            shutil.copyfile(os.path.join(self.tc.files_dir, f),
+                   os.path.join(self.tc.sdk_dir, f))
 
     def test_python_exists(self):
         self._run('which python')
 
     def test_python_stdout(self):
-        output = self._run('python %s/test.py' % self.tc.sdktestdir)
+        output = self._run('python %s/test.py' % self.tc.sdk_dir)
         self.assertEqual(output.strip(), "the value of a is 0.01", msg="Incorrect output: %s" % output)
 
     def test_python_testfile(self):
@@ -28,5 +27,5 @@ class PythonTest(oeSDKTest):
 
     @classmethod
     def tearDownClass(self):
-        bb.utils.remove("%s/test.py" % self.tc.sdktestdir)
-        bb.utils.remove("/tmp/testfile.python")
+        remove_safe("%s/test.py" % self.tc.sdk_dir)
+        remove_safe("/tmp/testfile.python")

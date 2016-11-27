@@ -1,13 +1,16 @@
-from oeqa.oetest import oeSDKTest, skipModule
-from oeqa.utils.decorators import *
-from oeqa.utils.targetbuild import SDKBuildProject
+from oeqa.sdk.case import OESDKTestCase
+from oeqa.sdk.utils.sdkbuildproject import SDKBuildProject
 
-class BuildCvsTest(oeSDKTest):
+class BuildCvsTest(OESDKTestCase):
+    td_vars = ['TEST_LOG_DIR', 'DATETIME']
 
     @classmethod
     def setUpClass(self):
-        self.project = SDKBuildProject(oeSDKTest.tc.sdktestdir + "/cvs/", oeSDKTest.tc.sdkenv, oeSDKTest.tc.d,
-                        "http://ftp.gnu.org/non-gnu/cvs/source/feature/1.12.13/cvs-1.12.13.tar.bz2")
+        dl_dir = self.td.get('DL_DIR', None)
+
+        self.project = SDKBuildProject(self.tc.sdk_dir + "/cvs/", self.tc.sdk_env,
+                        "http://ftp.gnu.org/non-gnu/cvs/source/feature/1.12.13/cvs-1.12.13.tar.bz2",
+                        self.td['TEST_LOG_DIR'], self.td['DATETIME'], dl_dir=dl_dir)
         self.project.download_archive()
 
     def test_cvs(self):

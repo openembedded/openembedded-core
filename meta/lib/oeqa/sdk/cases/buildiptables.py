@@ -1,14 +1,16 @@
-from oeqa.oetest import oeSDKTest
-from oeqa.utils.decorators import *
-from oeqa.utils.targetbuild import SDKBuildProject
+from oeqa.sdk.case import OESDKTestCase
+from oeqa.sdk.utils.sdkbuildproject import SDKBuildProject
 
-
-class BuildIptablesTest(oeSDKTest):
+class BuildIptablesTest(OESDKTestCase):
+    td_vars = ['TEST_LOG_DIR', 'DATETIME']
 
     @classmethod
     def setUpClass(self):
-        self.project = SDKBuildProject(oeSDKTest.tc.sdktestdir + "/iptables/", oeSDKTest.tc.sdkenv, oeSDKTest.tc.d,
-                        "http://downloads.yoctoproject.org/mirror/sources/iptables-1.4.13.tar.bz2")
+        dl_dir = self.td.get('DL_DIR', None)
+
+        self.project = SDKBuildProject(self.tc.sdk_dir + "/iptables/", self.tc.sdk_env, 
+                        "http://downloads.yoctoproject.org/mirror/sources/iptables-1.4.13.tar.bz2",
+                        self.td['TEST_LOG_DIR'], self.td['DATETIME'], dl_dir=dl_dir)
         self.project.download_archive()
 
     def test_iptables(self):

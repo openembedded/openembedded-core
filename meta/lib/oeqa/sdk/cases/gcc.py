@@ -1,36 +1,43 @@
-import unittest
 import os
 import shutil
-from oeqa.oetest import oeSDKTest, skipModule
-from oeqa.utils.decorators import *
+import unittest
 
-def setUpModule():
-    machine = oeSDKTest.tc.d.getVar("MACHINE")
-    if not oeSDKTest.hasHostPackage("packagegroup-cross-canadian-" + machine):
-        skipModule("SDK doesn't contain a cross-canadian toolchain")
+from oeqa.core.utils.path import remove_safe
+from oeqa.sdk.case import OESDKTestCase
 
-
-class GccCompileTest(oeSDKTest):
+class GccCompileTest(OESDKTestCase):
+    td_vars = ['MACHINE']
 
     @classmethod
     def setUpClass(self):
-        for f in ['test.c', 'test.cpp', 'testsdkmakefile']:
-            shutil.copyfile(os.path.join(self.tc.filesdir, f), self.tc.sdktestdir + f)
+        files = {'test.c' : self.tc.files_dir, 'test.cpp' : self.tc.files_dir,
+                'testsdkmakefile' : self.tc.sdk_files_dir} 
+        for f in files:
+            shutil.copyfile(os.path.join(files[f], f),
+                    os.path.join(self.tc.sdk_dir, f))
+
+    def setUp(self):
+        machine = self.td.get("MACHINE")
+        if not self.tc.hasHostPackage("packagegroup-cross-canadian-%s" % machine):
+            raise unittest.SkipTest("%s class: SDK doesn't contain a cross-canadian toolchain",
+                    self.__name__)
 
     def test_gcc_compile(self):
-        self._run('$CC %s/test.c -o %s/test -lm' % (self.tc.sdktestdir, self.tc.sdktestdir))
+        self._run('$CC %s/test.c -o %s/test -lm' % (self.tc.sdk_dir, self.tc.sdk_dir))
 
     def test_gpp_compile(self):
-        self._run('$CXX %s/test.c -o %s/test -lm' % (self.tc.sdktestdir, self.tc.sdktestdir))
+        self._run('$CXX %s/test.c -o %s/test -lm' % (self.tc.sdk_dir, self.tc.sdk_dir))
 
     def test_gpp2_compile(self):
-        self._run('$CXX %s/test.cpp -o %s/test -lm' % (self.tc.sdktestdir, self.tc.sdktestdir))
+        self._run('$CXX %s/test.cpp -o %s/test -lm' % (self.tc.sdk_dir, self.tc.sdk_dir))
 
     def test_make(self):
-        self._run('cd %s; make -f testsdkmakefile' % self.tc.sdktestdir)
+        self._run('cd %s; make -f testsdkmakefile' % self.tc.sdk_dir)
 
     @classmethod
     def tearDownClass(self):
-        files = [self.tc.sdktestdir + f for f in ['test.c', 'test.cpp', 'test.o', 'test', 'testsdkmakefile']]
+        files = [os.path.join(self.tc.sdk_dir, f) \
+                for f in ['test.c', 'test.cpp', 'test.o', 'test',
+                    'testsdkmakefile']]
         for f in files:
-            bb.utils.remove(f)
+            remove_safe(f)

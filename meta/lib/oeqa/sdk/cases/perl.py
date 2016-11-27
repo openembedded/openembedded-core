@@ -1,28 +1,27 @@
-import unittest
 import os
 import shutil
-from oeqa.oetest import oeSDKTest, skipModule
-from oeqa.utils.decorators import *
+import unittest
 
-def setUpModule():
-    if not oeSDKTest.hasHostPackage("nativesdk-perl"):
-        skipModule("No perl package in the SDK")
+from oeqa.core.utils.path import remove_safe
+from oeqa.sdk.case import OESDKTestCase
 
-
-class PerlTest(oeSDKTest):
-
+class PerlTest(OESDKTestCase):
     @classmethod
     def setUpClass(self):
+        if not self.tc.hasHostPackage("nativesdk-perl"):
+            raise unittest.SkipTest("No perl package in the SDK")
+
         for f in ['test.pl']:
-            shutil.copyfile(os.path.join(self.tc.filesdir, f), self.tc.sdktestdir + f)
-        self.testfile = self.tc.sdktestdir + "test.pl"
+            shutil.copyfile(os.path.join(self.tc.files_dir, f),
+                    os.path.join(self.tc.sdk_dir, f))
+        self.testfile = os.path.join(self.tc.sdk_dir, "test.pl")
 
     def test_perl_exists(self):
         self._run('which perl')
 
     def test_perl_works(self):
-        self._run('perl %s/test.pl' % self.tc.sdktestdir)
+        self._run('perl %s' % self.testfile)
 
     @classmethod
     def tearDownClass(self):
-        bb.utils.remove("%s/test.pl" % self.tc.sdktestdir)
+        remove_safe(self.testfile)

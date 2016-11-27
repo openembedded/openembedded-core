@@ -1,17 +1,25 @@
-from oeqa.oetest import oeSDKTest, skipModule
-from oeqa.utils.decorators import *
-from oeqa.utils.targetbuild import SDKBuildProject
+import unittest
 
-def setUpModule():
-    if not (oeSDKTest.hasPackage("gtk+3") or oeSDKTest.hasPackage("libgtk-3.0")):
-        skipModule("Image doesn't have gtk+3 in manifest")
+from oeqa.sdk.case import OESDKTestCase
+from oeqa.sdk.utils.sdkbuildproject import SDKBuildProject
 
-class GalculatorTest(oeSDKTest):
+class GalculatorTest(OESDKTestCase):
+    td_vars = ['TEST_LOG_DIR', 'DATETIME']
+
+    @classmethod
+    def setUpClass(self):
+        if not (self.tc.hasTargetPackage("gtk+3") or\
+                self.tc.hasTargetPackage("libgtk-3.0")):
+            raise unittest.SkipTest("%s class: SDK don't support gtk+3" % self.__name__)
+
     def test_galculator(self):
+        dl_dir = self.td.get('DL_DIR', None)
+        project = None
         try:
-            project = SDKBuildProject(oeSDKTest.tc.sdktestdir + "/galculator/",
-                                      oeSDKTest.tc.sdkenv, oeSDKTest.tc.d,
-                                      "http://galculator.mnim.org/downloads/galculator-2.1.4.tar.bz2")
+            project = SDKBuildProject(self.tc.sdk_dir + "/galculator/",
+                                      self.tc.sdk_env,
+                                      "http://galculator.mnim.org/downloads/galculator-2.1.4.tar.bz2",
+                                      self.td['TEST_LOG_DIR'], self.td['DATETIME'], dl_dir=dl_dir)
 
             project.download_archive()
 
