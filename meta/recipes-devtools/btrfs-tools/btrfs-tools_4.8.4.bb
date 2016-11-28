@@ -13,7 +13,7 @@ SECTION = "base"
 DEPENDS = "util-linux attr e2fsprogs lzo acl udev"
 RDEPENDS_${PN} = "libgcc"
 
-SRCREV = "08d31c1c7ca5a6bb4e6485fa118c552c938e9efb"
+SRCREV = "3ae37eaad1f1ef3f46838da57d8616126fdaffd8"
 SRC_URI = "git://git.kernel.org/pub/scm/linux/kernel/git/kdave/btrfs-progs.git \
 "
 
