@@ -7,8 +7,8 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
 BPN = "gnome-desktop"
 
 inherit gnome pkgconfig upstream-version-is-even gobject-introspection
-SRC_URI[archive.md5sum] = "bc09d58d7870d6464f20803850cdb90f"
-SRC_URI[archive.sha256sum] = "6458add4fc3a81fbd9a63db90de22a1e3a62644c1bfd1aca042c43836195aab2"
+SRC_URI[archive.md5sum] = "3d7222d5305f3db022eca31d8108e02d"
+SRC_URI[archive.sha256sum] = "51d7ebf7a6c359be14c3dd7a022213e931484653815eb10b0131bef4c8979e1c"
 
 DEPENDS += "intltool-native gnome-common-native gsettings-desktop-schemas gconf virtual/libx11 gtk+3 glib-2.0 startup-notification xkeyboard-config iso-codes udev"
 
