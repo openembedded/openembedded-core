@@ -69,7 +69,22 @@ class ChangeRecord:
                     pkglist.append(k)
             return pkglist
 
+        def detect_renamed_dirs(aitems, bitems):
+            adirs = set(map(os.path.dirname, aitems))
+            bdirs = set(map(os.path.dirname, bitems))
+            files_ab = [(name, sorted(os.path.basename(item) for item in aitems if os.path.dirname(item) == name)) \
+                                for name in adirs - bdirs]
+            files_ba = [(name, sorted(os.path.basename(item) for item in bitems if os.path.dirname(item) == name)) \
+                                for name in bdirs - adirs]
+            renamed_dirs = [(dir1, dir2) for dir1, files1 in files_ab for dir2, files2 in files_ba if files1 == files2]
+            # remove files that belong to renamed dirs from aitems and bitems
+            for dir1, dir2 in renamed_dirs:
+                aitems = [item for item in aitems if os.path.dirname(item) not in (dir1, dir2)]
+                bitems = [item for item in bitems if os.path.dirname(item) not in (dir1, dir2)]
+            return renamed_dirs, aitems, bitems
+
         if self.fieldname in list_fields or self.fieldname in list_order_fields:
+            renamed_dirs = []
             if self.fieldname in ['RPROVIDES', 'RDEPENDS', 'RRECOMMENDS', 'RSUGGESTS', 'RREPLACES', 'RCONFLICTS']:
                 (depvera, depverb) = compare_pkg_lists(self.oldvalue, self.newvalue)
                 aitems = pkglist_combine(depvera)
@@ -77,16 +92,29 @@ class ChangeRecord:
             else:
                 aitems = self.oldvalue.split()
                 bitems = self.newvalue.split()
+                if self.fieldname == 'FILELIST':
+                    renamed_dirs, aitems, bitems = detect_renamed_dirs(aitems, bitems)
+
             removed = list(set(aitems) - set(bitems))
             added = list(set(bitems) - set(aitems))
 
+            lines = []
+            if renamed_dirs:
+                for dfrom, dto in renamed_dirs:
+                    lines.append('directory renamed %s -> %s' % (dfrom, dto))
             if removed or added:
                 if removed and not bitems:
-                    out = '%s: removed all items "%s"' % (self.fieldname, ' '.join(removed))
+                    lines.append('removed all items "%s"' % ' '.join(removed))
                 else:
-                    out = '%s:%s%s' % (self.fieldname, ' removed "%s"' % ' '.join(removed) if removed else '', ' added "%s"' % ' '.join(added) if added else '')
+                    if removed:
+                        lines.append('removed "%s"' % ' '.join(removed))
+                    if added:
+                        lines.append('added "%s"' % ' '.join(added))
             else:
-                out = '%s changed order' % self.fieldname
+                lines.append('changed order')
+
+            out = '%s: %s' % (self.fieldname, ', '.join(lines))
+
         elif self.fieldname in numeric_fields:
             aval = int(self.oldvalue or 0)
             bval = int(self.newvalue or 0)
