@@ -7,20 +7,14 @@ inherit gnomebase gettext systemd
 
 DEPENDS = "glib-2.0"
 
-S = "${WORKDIR}/git"
-SRCREV = "9c6cec9b49766bf77c1713bc5a7c6d651e628068"
-PV = "3.20.0+git${SRCPV}"
-
-SRC_URI = "git://git.gnome.org/sysprof \
+SRC_URI += " \
            file://define-NT_GNU_BUILD_ID.patch \
            file://0001-configure-Add-option-to-enable-disable-polkit.patch \
            file://0001-Disable-check-for-polkit-for-UI.patch \
            file://0001-Avoid-building-docs.patch \
-           file://0001-callgraph-Use-U64_TO_POINTER.patch \
-           file://0001-Forward-port-mips-arm-memory-barrier-patches.patch \
           "
-SRC_URI[archive.md5sum] = "d56e8492033b60e247634731e7f760b9"
-SRC_URI[archive.sha256sum] = "4a338ad41bfffae87ef281f6e75c9660b3e0c6671bf5233be0c3f55a5e5b1ce5"
+SRC_URI[archive.md5sum] = "2634bf35f5592e5e4520ccaba87e909e"
+SRC_URI[archive.sha256sum] = "d57fb19a3e5d4ad37d5fb554dc93d9a03f332779c3bffd9c2aa8f176e85269d7"
 
 AUTOTOOLS_AUXDIR = "${S}/build-aux"
 
