@@ -171,12 +171,18 @@ python do_ar_original() {
             # to be set when using the git fetcher, otherwise SRCREV cannot
             # be set separately for each URL.
             params = bb.fetch2.decodeurl(url)[5]
+            type = bb.fetch2.decodeurl(url)[0]
+            location = bb.fetch2.decodeurl(url)[2]
             name = params.get('name', '')
-            if name in tarball_suffix:
-                if not name:
-                    bb.fatal("Cannot determine archive names for original source because 'name' URL parameter is unset in more than one URL. Add it to at least one of these: %s %s" % (tarball_suffix[name], url))
-                else:
-                    bb.fatal("Cannot determine archive names for original source because 'name=' URL parameter '%s' is used twice. Make it unique in: %s %s" % (tarball_suffix[name], url))
+            if type.lower() == 'file':
+                name_tmp = location.rstrip("*").rstrip("/")
+                name = os.path.basename(name_tmp)
+            else:
+                if name in tarball_suffix:
+                    if not name:
+                        bb.fatal("Cannot determine archive names for original source because 'name' URL parameter is unset in more than one URL. Add it to at least one of these: %s %s" % (tarball_suffix[name], url))
+                    else:
+                        bb.fatal("Cannot determine archive names for original source because 'name=' URL parameter '%s' is used twice. Make it unique in: %s %s" % (tarball_suffix[name], url))
             tarball_suffix[name] = url
             create_tarball(d, tmpdir + '/.', name, ar_outdir)
 
