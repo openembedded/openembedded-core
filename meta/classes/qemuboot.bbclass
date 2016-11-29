@@ -18,11 +18,15 @@
 # QB_AUDIO_OPT: qemu audio option, e.g., "-soundhw ac97,es1370", used
 #               when QB_AUDIO_DRV is set.
 # QB_KERNEL_ROOT: kernel's root, e.g., /dev/vda
+# QB_NETWORK_DEVICE: network device, e.g., "-device virtio-net-pci,netdev=net0,mac=@MAC@",
+#                    it needs work with QB_TAP_OPT and QB_SLIRP_OPT.
+#                    Note, runqemu will replace @MAC@ with a predefined mac, you can set
+#                    a custom one, but that may cause conflicts when multiple qemus are
+#                    running on the same host.
 # QB_TAP_OPT: netowrk option for 'tap' mode, e.g.,
-#             "-netdev tap,id=net0,ifname=@TAP@,script=no,downscript=no -device virtio-net-device,netdev=net0"
+#             "-netdev tap,id=net0,ifname=@TAP@,script=no,downscript=no"
 #              Note, runqemu will replace "@TAP@" with the one which is used, such as tap0, tap1 ...
-# QB_SLIRP_OPT: network option for SLIRP mode, e.g.,
-#             "-netdev user,id=net0 -device virtio-net-device,netdev=net0"
+# QB_SLIRP_OPT: network option for SLIRP mode, e.g., -netdev user,id=net0"
 # QB_ROOTFS_OPT: used as rootfs, e.g.,
 #               "-drive id=disk0,file=@ROOTFS@,if=none,format=raw -device virtio-blk-device,drive=disk0"
 #              Note, runqemu will replace "@ROOTFS@" with the one which is used, such as core-image-minimal-qemuarm64.ext4.
@@ -40,6 +44,7 @@ QB_SERIAL_OPT ?= "-serial mon:stdio -serial null"
 QB_DEFAULT_KERNEL ?= "${KERNEL_IMAGETYPE}"
 QB_DEFAULT_FSTYPE ?= "ext4"
 QB_OPT_APPEND ?= "-show-cursor"
+QB_NETWORK_DEVICE ?= "-device virtio-net-pci,netdev=net0,mac=@MAC@"
 
 # Create qemuboot.conf
 addtask do_write_qemuboot_conf after do_rootfs before do_image

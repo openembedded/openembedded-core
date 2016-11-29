@@ -84,7 +84,7 @@ of the following environment variables (in any order):
 Examples:
   runqemu qemuarm
   runqemu tmp/deploy/images/qemuarm
-  runqemu tmp/deploy/images/qemux86/.qemuboot.conf
+  runqemu tmp/deploy/images/qemux86/<qemuboot.conf>
   runqemu qemux86-64 core-image-sato ext4
   runqemu qemux86-64 wic-image-minimal wic
   runqemu path/to/bzImage-qemux86.bin path/to/nfsrootdir/ serial
@@ -147,6 +147,19 @@ def get_first_file(cmds):
                     return f
     return ''
 
+def check_free_port(host, port):
+    """ Check whether the port is free or not """
+    import socket
+    from contextlib import closing
+
+    with closing(socket.socket(socket.AF_INET, socket.SOCK_STREAM)) as sock:
+        if sock.connect_ex((host, port)) == 0:
+            # Port is open, so not free
+            return False
+        else:
+            # Port is not open, so free
+            return True
+
 class BaseConfig(object):
     def __init__(self):
         # Vars can be merged with .qemuboot.conf, use a dict to manage them.
@@ -186,6 +199,15 @@ class BaseConfig(object):
         self.snapshot = False
         self.fstypes = ('ext2', 'ext3', 'ext4', 'jffs2', 'nfs', 'btrfs', 'cpio.gz', 'cpio', 'ramfs')
         self.vmtypes = ('hddimg', 'hdddirect', 'wic', 'vmdk', 'qcow2', 'vdi', 'iso')
+        self.network_device = "-device e1000,netdev=net0,mac=@MAC@"
+        # Use different mac section for tap and slirp to avoid
+        # conflicts, e.g., when one is running with tap, the other is
+        # running with slirp.
+        # The last section is dynamic, which is for avoiding conflicts,
+        # when multiple qemus are running, e.g., when multiple tap or
+        # slirp qemus are running.
+        self.mac_tap = "52:54:00:12:34:"
+        self.mac_slirp = "52:54:00:12:35:"
 
     def acquire_lock(self):
         logger.info("Acquiring lockfile %s..." % self.lock)
@@ -757,14 +779,39 @@ class BaseConfig(object):
 
         self.nfs_running = True
 
-
     def setup_slirp(self):
         """Setup user networking"""
 
         if self.fstype == 'nfs':
             self.setup_nfs()
         self.kernel_cmdline_script += ' ip=dhcp'
-        self.set('NETWORK_CMD', self.get('QB_SLIRP_OPT'))
+        # Port mapping
+        hostfwd = ",hostfwd=tcp::2222-:22,hostfwd=tcp::2323-:23"
+        qb_slirp_opt_default = "-netdev user,id=net0%s" % hostfwd
+        qb_slirp_opt = self.get('QB_SLIRP_OPT') or qb_slirp_opt_default
+        # Figure out the port
+        ports = re.findall('hostfwd=[^-]*:([0-9]+)-[^,-]*', qb_slirp_opt)
+        ports = [int(i) for i in ports]
+        mac = 2
+        # Find a free port to avoid conflicts
+        for p in ports[:]:
+            p_new = p
+            while not check_free_port('localhost', p_new):
+                p_new += 1
+                mac += 1
+                while p_new in ports:
+                        p_new += 1
+                        mac += 1
+            if p != p_new:
+                ports.append(p_new)
+                qb_slirp_opt = re.sub(':%s-' % p, ':%s-' % p_new, qb_slirp_opt)
+                logger.info("Port forward changed: %s -> %s" % (p, p_new))
+        mac = "%s%02x" % (self.mac_slirp, mac)
+        self.set('NETWORK_CMD', '%s %s' % (self.network_device.replace('@MAC@', mac), qb_slirp_opt))
+        # Print out port foward
+        hostfwd = re.findall('(hostfwd=[^,]*)', qb_slirp_opt)
+        if hostfwd:
+            logger.info('Port forward: %s' % ' '.join(hostfwd))
 
     def setup_tap(self):
         """Setup tap"""
@@ -834,21 +881,22 @@ class BaseConfig(object):
         if self.fstype == 'nfs':
             self.setup_nfs()
         self.kernel_cmdline_script += " ip=192.168.7.%s::192.168.7.%s:255.255.255.0" % (client, gateway)
-        mac = "52:54:00:12:34:%02x" % client
+        mac = "%s%02x" % (self.mac_tap, client)
         qb_tap_opt = self.get('QB_TAP_OPT')
         if qb_tap_opt:
-            qemu_tap_opt = qb_tap_opt.replace('@TAP@', tap).replace('@MAC@', mac)
+            qemu_tap_opt = qb_tap_opt.replace('@TAP@', tap)
         else:
-            qemu_tap_opt = "-device virtio-net-pci,netdev=net0,mac=%s -netdev tap,id=net0,ifname=%s,script=no,downscript=no" % (mac, self.tap)
+            qemu_tap_opt = "-netdev tap,id=net0,ifname=%s,script=no,downscript=no" % (self.tap)
 
         if self.vhost_enabled:
             qemu_tap_opt += ',vhost=on'
 
-        self.set('NETWORK_CMD', qemu_tap_opt)
+        self.set('NETWORK_CMD', '%s %s' % (self.network_device.replace('@MAC@', mac), qemu_tap_opt))
 
     def setup_network(self):
         cmd = "stty -g"
         self.saved_stty = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE).stdout.read().decode('utf-8')
+        self.network_device = self.get('QB_NETWORK_DEVICE') or self.network_device
         if self.slirp_enabled:
             self.setup_slirp()
         else:
