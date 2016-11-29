@@ -58,6 +58,7 @@ x86_common = [
     'failed to setup card detect gpio',
     'amd_nb: Cannot enumerate AMD northbridges',
     'failed to retrieve link info, disabling eDP',
+    'Direct firmware load for iwlwifi',
 ] + common_errors
 
 qemux86_common = [
