@@ -62,7 +62,7 @@ if [ "x$D" = "x" ] && [ -e /proc/consoles ]; then
 		k=`echo ${i} | sed s/^.*\://g`
 		if [ -z "`grep ${j} /proc/consoles`" ]; then
 			if [ -z "${k}" ] || [ -z "`grep ${k} /proc/consoles`" ] || [ ! -e /dev/${j} ]; then
-				sed -i /^.*${j}$/d /etc/inittab
+				sed -i -e /^.*${j}\ /d -e /^.*${j}$/d /etc/inittab
 			fi
 		fi
 	done
