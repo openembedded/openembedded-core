@@ -6,13 +6,11 @@ LICENSE = "BSD"
 LIC_FILES_CHKSUM = "file://COPYING;md5=e4dac5c6ab169aa212feb5028853a579"
 
 SECTION = "net"
-RDEPENDS_${PN} += " \
-               lighttpd-module-access \
-               lighttpd-module-accesslog \
-               lighttpd-module-indexfile \
-               lighttpd-module-dirlisting \
-               lighttpd-module-staticfile \
-"
+RDEPENDS_${PN} = "lighttpd-module-dirlisting \
+                  lighttpd-module-indexfile \
+                  lighttpd-module-staticfile"
+RRECOMMENDS_${PN} = "lighttpd-module-access \
+                     lighttpd-module-accesslog"
 
 SRC_URI = "http://download.lighttpd.net/lighttpd/releases-1.4.x/lighttpd-${PV}.tar.xz \
         file://index.html.lighttpd \
