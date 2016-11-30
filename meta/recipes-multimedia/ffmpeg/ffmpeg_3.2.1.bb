@@ -89,6 +89,7 @@ EXTRA_OECONF = " \
     --libdir=${libdir} \
     --shlibdir=${libdir} \
     --datadir=${datadir}/ffmpeg \
+    ${@bb.utils.contains('AVAILTUNES', 'mips32r2', '', '--disable-mipsdsp --disable-mipsdspr2', d)} \
 "
 
 do_configure() {
