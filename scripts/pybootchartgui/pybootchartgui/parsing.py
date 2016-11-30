@@ -442,6 +442,12 @@ def _parse_proc_stat_log(file):
         # skip the rest of statistics lines
     return samples
 
+def _parse_reduced_log(file, sample_class):
+    samples = []
+    for time, lines in _parse_timed_blocks(file):
+        samples.append(sample_class(time, *[float(x) for x in lines[0].split()]))
+    return samples
+
 def _parse_proc_disk_stat_log(file):
     """
     Parse file for disk stats, but only look at the whole device, eg. sda,
@@ -482,6 +488,25 @@ def _parse_proc_disk_stat_log(file):
         disk_stats.append(DiskSample(sample2.time, readTput, writeTput, util))
 
     return disk_stats
+
+def _parse_reduced_proc_meminfo_log(file):
+    """
+    Parse file for global memory statistics with
+    'MemTotal', 'MemFree', 'Buffers', 'Cached', 'SwapTotal', 'SwapFree' values
+    (in that order) directly stored on one line.
+    """
+    used_values = ('MemTotal', 'MemFree', 'Buffers', 'Cached', 'SwapTotal', 'SwapFree',)
+
+    mem_stats = []
+    for time, lines in _parse_timed_blocks(file):
+        sample = MemSample(time)
+        for name, value in zip(used_values, lines[0].split()):
+            sample.add_value(name, int(value))
+
+        if sample.valid():
+            mem_stats.append(DrawMemSample(sample))
+
+    return mem_stats
 
 def _parse_proc_meminfo_log(file):
     """
@@ -702,10 +727,16 @@ def _do_parse(writer, state, filename, file):
     name = os.path.basename(filename)
     if name == "proc_diskstats.log":
         state.disk_stats = _parse_proc_disk_stat_log(file)
+    elif name == "reduced_proc_diskstats.log":
+        state.disk_stats = _parse_reduced_log(file, DiskSample)
     elif name == "proc_stat.log":
         state.cpu_stats = _parse_proc_stat_log(file)
+    elif name == "reduced_proc_stat.log":
+        state.cpu_stats = _parse_reduced_log(file, CPUSample)
     elif name == "proc_meminfo.log":
         state.mem_stats = _parse_proc_meminfo_log(file)
+    elif name == "reduced_proc_meminfo.log":
+        state.mem_stats = _parse_reduced_proc_meminfo_log(file)
     elif name == "cmdline2.log":
         state.cmdline = _parse_cmdline_log(writer, file)
     elif name == "monitor_disk.log":
