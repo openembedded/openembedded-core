@@ -11,11 +11,20 @@ INITSCRIPT_PARAMS ?= "defaults"
 
 INIT_D_DIR = "${sysconfdir}/init.d"
 
+def use_updatercd(d):
+    # If the distro supports both sysvinit and systemd, and the current recipe
+    # supports systemd, only call update-rc.d on rootfs creation or if systemd
+    # is not running. That's because systemctl enable/disable will already call
+    # update-rc.d if it detects initscripts.
+    if bb.utils.contains('DISTRO_FEATURES', 'systemd', True, False, d) and bb.data.inherits_class('systemd', d):
+        return '[ -n "$D" -o ! -d /run/systemd/system ]'
+    return 'true'
+
 updatercd_preinst() {
-if [ -z "$D" -a -f "${INIT_D_DIR}/${INITSCRIPT_NAME}" ]; then
+if ${@use_updatercd(d)} && [ -z "$D" -a -f "${INIT_D_DIR}/${INITSCRIPT_NAME}" ]; then
 	${INIT_D_DIR}/${INITSCRIPT_NAME} stop || :
 fi
-if type update-rc.d >/dev/null 2>/dev/null; then
+if ${@use_updatercd(d)} && type update-rc.d >/dev/null 2>/dev/null; then
 	if [ -n "$D" ]; then
 		OPT="-f -r $D"
 	else
@@ -26,7 +35,7 @@ fi
 }
 
 updatercd_postinst() {
-if type update-rc.d >/dev/null 2>/dev/null; then
+if ${@use_updatercd(d)} && type update-rc.d >/dev/null 2>/dev/null; then
 	if [ -n "$D" ]; then
 		OPT="-r $D"
 	else
@@ -37,13 +46,13 @@ fi
 }
 
 updatercd_prerm() {
-if [ -z "$D" -a -x "${INIT_D_DIR}/${INITSCRIPT_NAME}" ]; then
+if ${@use_updatercd(d)} && [ -z "$D" -a -x "${INIT_D_DIR}/${INITSCRIPT_NAME}" ]; then
 	${INIT_D_DIR}/${INITSCRIPT_NAME} stop || :
 fi
 }
 
 updatercd_postrm() {
-if type update-rc.d >/dev/null 2>/dev/null; then
+if ${@use_updatercd(d)} && type update-rc.d >/dev/null 2>/dev/null; then
 	if [ -n "$D" ]; then
 		OPT="-f -r $D"
 	else
