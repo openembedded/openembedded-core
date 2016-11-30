@@ -264,6 +264,7 @@ kernel_do_compile() {
 		oe_runmake ${typeformake} CC="${KERNEL_CC}" LD="${KERNEL_LD}" ${KERNEL_EXTRA_ARGS} $use_alternate_initrd
 		for type in ${KERNEL_IMAGETYPES} ; do
 			if test "${typeformake}.gz" = "${type}"; then
+				mkdir -p "${KERNEL_OUTPUT_DIR}"
 				gzip -9c < "${typeformake}" > "${KERNEL_OUTPUT_DIR}/${type}"
 				break;
 			fi
