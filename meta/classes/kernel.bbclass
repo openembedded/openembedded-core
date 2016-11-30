@@ -43,7 +43,7 @@ python __anonymous () {
     typeformake = re.sub(r'\.gz', '', types)
     d.setVar('KERNEL_IMAGETYPE_FOR_MAKE', typeformake)
 
-    for type in typeformake.split():
+    for type in types.split():
         typelower = type.lower()
 
         d.appendVar('PACKAGES', ' ' + 'kernel-image-' + typelower)
