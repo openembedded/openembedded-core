@@ -2,6 +2,7 @@
 Description=NFS Server
 Requires=rpcbind.service nfs-mountd.service
 After=rpcbind.service
+ConditionPathExists=@SYSCONFDIR@/exports
 
 [Service]
 Type=oneshot

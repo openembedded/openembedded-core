@@ -48,9 +48,9 @@ INITSCRIPT_PARAMS_${PN}-client = "defaults 19 21"
 
 inherit autotools-brokensep update-rc.d systemd pkgconfig
 
+SYSTEMD_PACKAGES = "${PN} ${PN}-client"
 SYSTEMD_SERVICE_${PN} = "nfs-server.service nfs-mountd.service"
 SYSTEMD_SERVICE_${PN}-client = "nfs-statd.service"
-SYSTEMD_AUTO_ENABLE = "disable"
 
 # --enable-uuid is need for cross-compiling
 EXTRA_OECONF = "--with-statduser=rpcuser \
