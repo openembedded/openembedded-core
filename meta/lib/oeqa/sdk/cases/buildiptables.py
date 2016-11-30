@@ -2,7 +2,7 @@ from oeqa.sdk.case import OESDKTestCase
 from oeqa.sdk.utils.sdkbuildproject import SDKBuildProject
 
 class BuildIptablesTest(OESDKTestCase):
-    td_vars = ['TEST_LOG_DIR', 'DATETIME']
+    td_vars = ['DATETIME']
 
     @classmethod
     def setUpClass(self):
@@ -10,7 +10,7 @@ class BuildIptablesTest(OESDKTestCase):
 
         self.project = SDKBuildProject(self.tc.sdk_dir + "/iptables/", self.tc.sdk_env, 
                         "http://downloads.yoctoproject.org/mirror/sources/iptables-1.4.13.tar.bz2",
-                        self.td['TEST_LOG_DIR'], self.td['DATETIME'], dl_dir=dl_dir)
+                        self.tc.sdk_dir, self.td['DATETIME'], dl_dir=dl_dir)
         self.project.download_archive()
 
     def test_iptables(self):

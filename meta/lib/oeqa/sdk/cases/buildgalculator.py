@@ -4,7 +4,7 @@ from oeqa.sdk.case import OESDKTestCase
 from oeqa.sdk.utils.sdkbuildproject import SDKBuildProject
 
 class GalculatorTest(OESDKTestCase):
-    td_vars = ['TEST_LOG_DIR', 'DATETIME']
+    td_vars = ['DATETIME']
 
     @classmethod
     def setUpClass(self):
@@ -19,7 +19,7 @@ class GalculatorTest(OESDKTestCase):
             project = SDKBuildProject(self.tc.sdk_dir + "/galculator/",
                                       self.tc.sdk_env,
                                       "http://galculator.mnim.org/downloads/galculator-2.1.4.tar.bz2",
-                                      self.td['TEST_LOG_DIR'], self.td['DATETIME'], dl_dir=dl_dir)
+                                      self.tc.sdk_dir, self.td['DATETIME'], dl_dir=dl_dir)
 
             project.download_archive()
 

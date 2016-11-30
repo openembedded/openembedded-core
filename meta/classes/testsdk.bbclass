@@ -14,7 +14,6 @@
 #
 # where "<image-name>" is an image like core-image-sato.
 
-TEST_LOG_DIR ?= "${WORKDIR}/testimage"
 TESTSDKLOCK = "${TMPDIR}/testsdk.lock"
 
 def run_test_context(CTestContext, d, testdir, tcname, pn, *args):
@@ -65,17 +64,12 @@ def testsdk_main(d):
     # sdk use network for download projects for build
     export_proxies(d)
 
-    test_log_dir = d.getVar("TEST_LOG_DIR", True)
-
-    bb.utils.mkdirhier(test_log_dir)
-
     tcname = d.expand("${SDK_DEPLOY}/${TOOLCHAIN_OUTPUTNAME}.sh")
     if not os.path.exists(tcname):
         bb.fatal("The toolchain %s is not built. Build it before running the tests: 'bitbake <image> -c populate_sdk' ." % tcname)
 
     tdname = d.expand("${SDK_DEPLOY}/${TOOLCHAIN_OUTPUTNAME}.testdata.json")
     test_data = json.load(open(tdname, "r"))
-    test_data['TEST_LOG_DIR'] = test_log_dir
 
     target_pkg_manifest = OESDKTestContextExecutor._load_manifest(
         d.expand("${SDK_DEPLOY}/${TOOLCHAIN_OUTPUTNAME}.target.manifest"))
