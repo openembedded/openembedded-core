@@ -204,11 +204,11 @@ python runqueue_stats () {
     if system_stats:
         # Ensure that we sample at important events.
         done = isinstance(e, bb.event.BuildCompleted)
-        system_stats.sample(force=done)
+        system_stats.sample(e, force=done)
         if done:
             system_stats.close()
             d.delVar('_buildstats_system_stats')
 }
 
 addhandler runqueue_stats
-runqueue_stats[eventmask] = "bb.runqueue.sceneQueueTaskStarted bb.runqueue.runQueueTaskStarted bb.event.HeartbeatEvent bb.event.BuildCompleted"
+runqueue_stats[eventmask] = "bb.runqueue.sceneQueueTaskStarted bb.runqueue.runQueueTaskStarted bb.event.HeartbeatEvent bb.event.BuildCompleted bb.event.MonitorDiskEvent"

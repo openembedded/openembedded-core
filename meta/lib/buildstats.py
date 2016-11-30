@@ -3,6 +3,7 @@
 # like open log files and the time of the last sampling.
 
 import time
+import bb.event
 
 class SystemStats:
     def __init__(self, d):
@@ -19,8 +20,10 @@ class SystemStats:
             # concurrently.
             self.proc_files.append((filename,
                                     open(os.path.join(bsdir, 'proc_%s.log' % filename), 'ab')))
-        # Last time that we sampled data.
-        self.last = 0
+        self.monitor_disk = open(os.path.join(bsdir, 'monitor_disk.log'), 'ab')
+        # Last time that we sampled /proc data resp. recorded disk monitoring data.
+        self.last_proc = 0
+        self.last_disk_monitor = 0
         # Minimum number of seconds between recording a sample. This
         # becames relevant when we get called very often while many
         # short tasks get started. Sampling during quiet periods
@@ -32,9 +35,9 @@ class SystemStats:
         for _, output, _ in self.proc_files:
             output.close()
 
-    def sample(self, force):
+    def sample(self, event, force):
         now = time.time()
-        if (now - self.last > self.min_seconds) or force:
+        if (now - self.last_proc > self.min_seconds) or force:
             for filename, output in self.proc_files:
                 with open(os.path.join('/proc', filename), 'rb') as input:
                     data = input.read()
@@ -44,4 +47,13 @@ class SystemStats:
                              ('%.0f\n' % now).encode('ascii') +
                              data +
                              b'\n')
-            self.last = now
+            self.last_proc = now
+
+        if isinstance(event, bb.event.MonitorDiskEvent) and \
+           ((now - self.last_disk_monitor > self.min_seconds) or force):
+            os.write(self.monitor_disk.fileno(),
+                     ('%.0f\n' % now).encode('ascii') +
+                     ''.join(['%s: %d\n' % (dev, sample.total_bytes - sample.free_bytes)
+                              for dev, sample in event.disk_usage.items()]).encode('ascii') +
+                     b'\n')
+            self.last_disk_monitor = now
