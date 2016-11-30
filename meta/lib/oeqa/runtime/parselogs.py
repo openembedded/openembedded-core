@@ -43,6 +43,7 @@ common_errors = [
     "controller can't do DEVSLP, turning off",
     "stmmac_dvr_probe: warning: cannot get CSR clock",
     "error: couldn\'t mount because of unsupported optional features",
+    "GPT: Use GNU Parted to correct GPT errors",
     ]
 
 video_related = [
@@ -70,7 +71,7 @@ qemux86_common = [
     'tsc: HPET/PMTIMER calibration failed',
 ] + common_errors
 
-ignore_errors = { 
+ignore_errors = {
     'default' : common_errors,
     'qemux86' : [
         'Failed to access perfctr msr (MSR',
@@ -202,7 +203,7 @@ class ParseLogsTest(oeRuntimeTest):
         hwi += "*******************************\n"
         return hwi
 
-    #go through the log locations provided and if it's a folder create a list with all the .log files in it, if it's a file just add 
+    #go through the log locations provided and if it's a folder create a list with all the .log files in it, if it's a file just add
     #it to that list
     def getLogList(self, log_locations):
         logs = []
