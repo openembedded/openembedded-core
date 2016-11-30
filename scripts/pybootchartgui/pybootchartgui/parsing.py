@@ -503,7 +503,7 @@ def _parse_proc_meminfo_log(file):
             sample.add_value(match.group(1), int(match.group(2)))
 
         if sample.valid():
-            mem_stats.append(sample)
+            mem_stats.append(DrawMemSample(sample))
 
     return mem_stats
 
