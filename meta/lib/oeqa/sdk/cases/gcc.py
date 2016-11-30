@@ -19,8 +19,7 @@ class GccCompileTest(OESDKTestCase):
     def setUp(self):
         machine = self.td.get("MACHINE")
         if not self.tc.hasHostPackage("packagegroup-cross-canadian-%s" % machine):
-            raise unittest.SkipTest("%s class: SDK doesn't contain a cross-canadian toolchain",
-                    self.__name__)
+            raise unittest.SkipTest("GccCompileTest class: SDK doesn't contain a cross-canadian toolchain")
 
     def test_gcc_compile(self):
         self._run('$CC %s/test.c -o %s/test -lm' % (self.tc.sdk_dir, self.tc.sdk_dir))
