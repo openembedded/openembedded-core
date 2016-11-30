@@ -125,8 +125,6 @@ do_install_append () {
 		-e 's,@SYSCONFDIR@,${sysconfdir},g' \
 		${D}${systemd_unitdir}/system/*.service
 	if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
-	    install -d ${D}${sysconfdir}/modules-load.d
-	    echo "nfsd" > ${D}${sysconfdir}/modules-load.d/nfsd.conf
 	    install -m 0644 ${WORKDIR}/proc-fs-nfsd.mount ${D}${systemd_unitdir}/system/
 	    install -d ${D}${systemd_unitdir}/system/sysinit.target.wants/
 	    ln -sf ../proc-fs-nfsd.mount ${D}${systemd_unitdir}/system/sysinit.target.wants/proc-fs-nfsd.mount
