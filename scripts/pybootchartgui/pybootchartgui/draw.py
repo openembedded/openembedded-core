@@ -321,6 +321,16 @@ def extents(options, xscale, trace):
 	w = int ((end - start) * sec_w_base * xscale) + 2 * off_x
 	h = proc_h * processes + header_h + 2 * off_y
 
+	if options.charts:
+		if trace.cpu_stats:
+			h += 30 + bar_h
+		if trace.disk_stats:
+			h += 30 + bar_h
+		if trace.monitor_disk:
+			h += 30 + bar_h
+		if trace.mem_stats:
+			h += meminfo_bar_h
+
 	return (w, h)
 
 def clip_visible(clip, rect):
@@ -496,6 +506,9 @@ def render(ctx, options, xscale, trace):
 	w -= 2*off_x
 	curr_y = off_y;
 
+	if options.charts:
+		curr_y = render_charts (ctx, options, clip, trace, curr_y, w, h, sec_w)
+
 	curr_y = render_processes_chart (ctx, options, trace, curr_y, w, h, sec_w)
 
 	return
@@ -512,9 +525,6 @@ def render(ctx, options, xscale, trace):
 		curr_y = draw_header (ctx, trace.headers, duration)
 	else:
 		curr_y = off_y;
-
-	if options.charts:
-		curr_y = render_charts (ctx, options, clip, trace, curr_y, w, h, sec_w)
 
 	# draw process boxes
 	proc_height = h
