@@ -48,6 +48,7 @@ class Trace:
         self.filename = None
         self.parent_map = None
         self.mem_stats = []
+        self.monitor_disk = None
         self.times = [] # Always empty, but expected by draw.py when drawing system charts.
 
         if len(paths):
@@ -506,6 +507,29 @@ def _parse_proc_meminfo_log(file):
 
     return mem_stats
 
+def _parse_monitor_disk_log(file):
+    """
+    Parse file with information about amount of diskspace used.
+    The format of relevant lines should be: ^volume path: number-of-bytes?
+    """
+    disk_stats = []
+    diskinfo_re = re.compile(r'^(.+):\s*(\d+)$')
+
+    for time, lines in _parse_timed_blocks(file):
+        sample = DiskSpaceSample(time)
+
+        for line in lines:
+            match = diskinfo_re.match(line)
+            if not match:
+                raise ParseError("Invalid monitor_disk line \"%s\"" % line)
+            sample.add_value(match.group(1), int(match.group(2)))
+
+        if sample.valid():
+            disk_stats.append(sample)
+
+    return disk_stats
+
+
 # if we boot the kernel with: initcall_debug printk.time=1 we can
 # get all manner of interesting data from the dmesg output
 # We turn this into a pseudo-process tree: each event is
@@ -684,6 +708,8 @@ def _do_parse(writer, state, filename, file):
         state.mem_stats = _parse_proc_meminfo_log(file)
     elif name == "cmdline2.log":
         state.cmdline = _parse_cmdline_log(writer, file)
+    elif name == "monitor_disk.log":
+        state.monitor_disk = _parse_monitor_disk_log(file)
     elif not filename.endswith('.log'):
         _parse_bitbake_buildstats(writer, state, filename, file)
     t2 = clock()

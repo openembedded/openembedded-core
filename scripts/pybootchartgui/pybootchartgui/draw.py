@@ -133,6 +133,16 @@ TASK_COLOR_PACKAGE = (0.0, 1.00, 1.00, 1.0)
 # Package Write RPM/DEB/IPK task color
 TASK_COLOR_PACKAGE_WRITE = (0.0, 0.50, 0.50, 1.0)
 
+# Distinct colors used for different disk volumnes.
+# If we have more volumns, colors get re-used.
+VOLUME_COLORS = [
+	(1.0, 1.0, 0.00, 1.0),
+	(0.0, 1.00, 0.00, 1.0),
+	(1.0, 0.00, 1.00, 1.0),
+	(0.0, 0.00, 1.00, 1.0),
+	(0.0, 1.00, 1.00, 1.0),
+]
+
 # Process states
 STATE_UNDEFINED = 0
 STATE_RUNNING   = 1
@@ -394,6 +404,58 @@ def render_charts(ctx, options, clip, trace, curr_y, w, h, sec_w):
 
 		label = "%dMB/s" % round ((max_sample.tput) / 1024.0)
 		draw_text (ctx, label, DISK_TPUT_COLOR, pos_x + shift_x, curr_y + shift_y)
+
+		curr_y = curr_y + 30 + bar_h
+
+	# render disk space usage
+	#
+	# Draws the amount of disk space used on each volume relative to the
+	# lowest recorded amount. The graphs for each volume are stacked above
+	# each other so that total disk usage is visible.
+	if trace.monitor_disk:
+		ctx.set_font_size(LEGEND_FONT_SIZE)
+		# Determine set of volumes for which we have
+		# information and the minimal amount of used disk
+		# space for each. Currently samples are allowed to
+		# not have a values for all volumes; drawing could be
+		# made more efficient if that wasn't the case.
+		volumes = set()
+		min_used = {}
+		for sample in trace.monitor_disk:
+			for volume, used in sample.records.items():
+				volumes.add(volume)
+				if volume not in min_used or min_used[volume] > used:
+					min_used[volume] = used
+		volumes = sorted(list(volumes))
+		disk_scale = 0
+		for i, volume in enumerate(volumes):
+			volume_scale = max([sample.records[volume] - min_used[volume]
+			                    for sample in trace.monitor_disk
+			                    if volume in sample.records])
+			# Does not take length of volume name into account, but fixed offset
+			# works okay in practice.
+			draw_legend_box(ctx, '%s (max: %u MiB)' % (volume, volume_scale / 1024 / 1024),
+			                VOLUME_COLORS[i % len(VOLUME_COLORS)],
+			                off_x + i * 250, curr_y+20, leg_s)
+			disk_scale += volume_scale
+
+		# render used amount of disk space
+		chart_rect = (off_x, curr_y+30, w, bar_h)
+		if clip_visible (clip, chart_rect):
+			draw_box_ticks (ctx, chart_rect, sec_w)
+			draw_annotations (ctx, proc_tree, trace.times, chart_rect)
+			for i in range(len(volumes), 0, -1):
+				draw_chart (ctx, VOLUME_COLORS[(i - 1) % len(VOLUME_COLORS)], True, chart_rect, \
+				            [(sample.time,
+				              # Sum up used space of all volumes including the current one
+				              # so that the graphs appear as stacked on top of each other.
+				              reduce(lambda x,y: x+y,
+				                     [sample.records[volume] - min_used[volume]
+				                      for volume in volumes[0:i]
+				                      if volume in sample.records],
+				                     0))
+				             for sample in trace.monitor_disk], \
+				            proc_tree, [0, disk_scale])
 
 		curr_y = curr_y + 30 + bar_h
 

@@ -53,6 +53,17 @@ class MemSample:
         # discard incomplete samples
         return [v for v in MemSample.used_values if v not in keys] == []
 
+class DiskSpaceSample:
+    def __init__(self, time):
+        self.time = time
+        self.records = {}
+
+    def add_value(self, name, value):
+        self.records[name] = value
+
+    def valid(self):
+        return bool(self.records)
+
 class ProcessSample:
     def __init__(self, time, state, cpu_sample):
         self.time = time
