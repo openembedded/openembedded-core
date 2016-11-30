@@ -415,7 +415,7 @@ def render_charts(ctx, options, clip, trace, curr_y, w, h, sec_w):
 	return curr_y
 
 def render_processes_chart(ctx, options, trace, curr_y, w, h, sec_w):
-        chart_rect = [off_x, curr_y+header_h, w, h - 2 * off_y - (curr_y+header_h) + proc_h]
+        chart_rect = [off_x, curr_y+header_h, w, h - 2 * off_y - header_h - leg_s + proc_h]
 
 	draw_legend_box (ctx, "Configure", \
 			 TASK_COLOR_CONFIGURE, off_x  , curr_y + 45, leg_s)
