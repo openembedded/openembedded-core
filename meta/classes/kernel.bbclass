@@ -235,12 +235,6 @@ do_bundle_initramfs () {
 				mv -f ${KERNEL_OUTPUT_DIR}/$type.bak ${KERNEL_OUTPUT_DIR}/$type
 			fi
 		done
-		# Update install area
-		for type in ${KERNEL_IMAGETYPES} ; do
-			echo "There is kernel image bundled with initramfs: ${B}/${KERNEL_OUTPUT_DIR}/$type.initramfs"
-			install -m 0644 ${B}/${KERNEL_OUTPUT_DIR}/$type.initramfs ${D}/boot/$type-initramfs-${MACHINE}.bin
-			echo "${B}/${KERNEL_OUTPUT_DIR}/$type.initramfs"
-		done
 	fi
 }
 do_bundle_initramfs[dirs] = "${B}"
