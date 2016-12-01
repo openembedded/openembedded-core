@@ -31,6 +31,7 @@ PACKAGECONFIG_remove_libc-musl = "lttng-ust"
 
 SRC_URI = "git://git.lttng.org/lttng-tools.git;branch=stable-2.8 \
            file://0001-Fix-error.h-common-error.h.patch \
+           file://x32.patch \
            file://run-ptest"
 
 S = "${WORKDIR}/git"
