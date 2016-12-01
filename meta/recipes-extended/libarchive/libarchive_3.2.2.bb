@@ -32,6 +32,7 @@ PACKAGECONFIG[nettle] = "--with-nettle,--without-nettle,nettle,"
 PACKAGECONFIG[lz4] = "--with-lz4,--without-lz4,lz4,"
 
 SRC_URI = "http://libarchive.org/downloads/libarchive-${PV}.tar.gz \
+           file://non-recursive-extract-and-list.patch \
            "
 
 SRC_URI[md5sum] = "1ec00b7dcaf969dd2a5712f85f23c764"
