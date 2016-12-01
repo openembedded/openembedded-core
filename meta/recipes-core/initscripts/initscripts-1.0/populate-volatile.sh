@@ -150,9 +150,9 @@ apply_cfgfile() {
 		return 1
 	}
 
-	cat ${CFGFILE} | grep -v "^#" | \
-		while read LINE; do
-		eval `echo "$LINE" | sed -n "s/\(.*\)\ \(.*\) \(.*\)\ \(.*\)\ \(.*\)\ \(.*\)/TTYPE=\1 ; TUSER=\2; TGROUP=\3; TMODE=\4; TNAME=\5 TLTARGET=\6/p"`
+	cat ${CFGFILE} | sed 's/#.*//' | \
+	while read TTYPE TUSER TGROUP TMODE TNAME TLTARGET; do
+		test -z "${TLTARGET}" && continue
 		TNAME=${ROOT_DIR}${TNAME}
 		[ "${VERBOSE}" != "no" ] && echo "Checking for -${TNAME}-."
 
