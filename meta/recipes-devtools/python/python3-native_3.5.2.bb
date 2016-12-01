@@ -54,6 +54,7 @@ RPROVIDES += " \
     python3-json-native \
     python3-lang-native \
     python3-misc-native \
+    python3-modules-native \
     python3-netclient-native \
     python3-netserver-native \
     python3-numbers-native \
