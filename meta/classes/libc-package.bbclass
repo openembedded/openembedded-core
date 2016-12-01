@@ -9,6 +9,8 @@
 
 GLIBC_INTERNAL_USE_BINARY_LOCALE ?= "ondevice"
 
+GLIBC_SPLIT_LC_PACKAGES ?= "0"
+
 python __anonymous () {
     enabled = d.getVar("ENABLE_BINARY_LOCALE_GENERATION", True)
 
@@ -219,13 +221,12 @@ python package_do_split_gconvs () {
         (locale, encoding, locale))
 
     def output_locale_binary_rdepends(name, pkgname, locale, encoding):
-        m = re.match("(.*)\.(.*)", name)
-        if m:
-            libc_name = "%s.%s" % (m.group(1), m.group(2).lower())
-        else:
-            libc_name = name
-        d.setVar('RDEPENDS_%s' % pkgname, legitimize_package_name('%s-binary-localedata-%s' \
-            % (mlprefix+bpn, libc_name)))
+        dep = legitimize_package_name('%s-binary-localedata-%s' % (bpn, name))
+        lcsplit = d.getVar('GLIBC_SPLIT_LC_PACKAGES', True)
+        if lcsplit and int(lcsplit):
+            d.appendVar('PACKAGES', ' ' + dep)
+            d.setVar('ALLOW_EMPTY_%s' % dep, '1')
+        d.setVar('RDEPENDS_%s' % pkgname, mlprefix + dep)
 
     commands = {}
 
@@ -337,6 +338,11 @@ python package_do_split_gconvs () {
             else:
                 output_locale('%s.%s' % (base, charset), base, charset)
 
+    def metapkg_hook(file, pkg, pattern, format, basename):
+        name = basename.split('/', 1)[0]
+        metapkg = legitimize_package_name('%s-binary-localedata-%s' % (mlprefix+bpn, name))
+        d.appendVar('RDEPENDS_%s' % metapkg, ' ' + pkg)
+
     if use_bin == "compile":
         makefile = base_path_join(d.getVar("WORKDIR", True), "locale-tree", "Makefile")
         m = open(makefile, "w")
@@ -350,13 +356,18 @@ python package_do_split_gconvs () {
         bb.build.exec_func("oe_runmake", d)
         bb.note("collecting binary locales from locale tree")
         bb.build.exec_func("do_collect_bins_from_locale_tree", d)
-        do_split_packages(d, binary_locales_dir, file_regex='(.*)', \
-            output_pattern=bpn+'-binary-localedata-%s', \
-            description='binary locale definition for %s', extra_depends='', allow_dirs=True)
-    elif use_bin == "precompiled":
-        do_split_packages(d, binary_locales_dir, file_regex='(.*)', \
-            output_pattern=bpn+'-binary-localedata-%s', \
-            description='binary locale definition for %s', extra_depends='', allow_dirs=True)
+
+    if use_bin in ('compile', 'precompiled'):
+        lcsplit = d.getVar('GLIBC_SPLIT_LC_PACKAGES', True)
+        if lcsplit and int(lcsplit):
+            do_split_packages(d, binary_locales_dir, file_regex='^(.*/LC_\w+)', \
+                output_pattern=bpn+'-binary-localedata-%s', \
+                description='binary locale definition for %s', recursive=True,
+                hook=metapkg_hook, extra_depends='', allow_dirs=True, match_path=True)
+        else:
+            do_split_packages(d, binary_locales_dir, file_regex='(.*)', \
+                output_pattern=bpn+'-binary-localedata-%s', \
+                description='binary locale definition for %s', extra_depends='', allow_dirs=True)
     else:
         bb.note("generation of binary locales disabled. this may break i18n!")
 
