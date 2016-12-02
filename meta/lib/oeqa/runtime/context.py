@@ -12,10 +12,10 @@ class OERuntimeTestContext(OETestContext):
     runtime_files_dir = os.path.join(
                         os.path.dirname(os.path.abspath(__file__)), "files")
 
-    def __init__(self, td, logger, target, packages_manifest):
+    def __init__(self, td, logger, target, image_packages):
         super(OERuntimeTestContext, self).__init__(td, logger)
         self.target = target
-        self.image_packages = self.readPackagesManifest(packages_manifest)
+        self.image_packages = image_packages
         self._set_target_cmds()
 
     def _set_target_cmds(self):
@@ -24,19 +24,6 @@ class OERuntimeTestContext(OETestContext):
         self.target_cmds['ps'] = 'ps'
         if 'procps' in self.image_packages:
             self.target_cmds['ps'] = self.target_cmds['ps'] + ' -ef'
-
-    def readPackagesManifest(self, manifest):
-        if not os.path.exists(manifest):
-            raise OSError("Couldn't find manifest file: %s" % manifest)
-
-        image_packages = set()
-        with open(manifest, 'r') as f:
-            for line in f.readlines():
-                line = line.strip()
-                if line and not line.startswith("#"):
-                    image_packages.add(line.split()[0])
-
-        return image_packages
 
 class OERuntimeTestContextExecutor(OETestContextExecutor):
     _context_class = OERuntimeTestContext
@@ -74,16 +61,45 @@ class OERuntimeTestContextExecutor(OETestContextExecutor):
         runtime_group.add_argument('--packages-manifest', action='store',
                 help="Package manifest of the image under test")
 
+
+    @staticmethod
+    def getTarget(target_type, target_ip, server_ip):
+        target = None
+
+        if target_type == 'simpleremote':
+            target = OESSHTarget(target_ip)
+        elif target_type == 'qemu':
+            raise NotImplementedError("target_type %s isn't implemented yet" % \
+                    target_type)
+        else:
+            raise TypeError("target_type %s isn't supported" % target_type)
+
+        return target
+
+    @staticmethod
+    def readPackagesManifest(manifest):
+        if not os.path.exists(manifest):
+            raise OSError("Manifest file not exists: %s" % manifest)
+
+        image_packages = set()
+        with open(manifest, 'r') as f:
+            for line in f.readlines():
+                line = line.strip()
+                if line and not line.startswith("#"):
+                    image_packages.add(line.split()[0])
+
+        return image_packages
+
     def _process_args(self, logger, args):
         if not args.packages_manifest:
             raise TypeError('Manifest file not provided')
 
         super(OERuntimeTestContextExecutor, self)._process_args(logger, args)
-        target = OESSHTarget(args.target_ip)
 
-        self.tc_kwargs['init']['target'] = target
-
-        packages_manifest = os.path.join(os.getcwd(), args.packages_manifest)
-        self.tc_kwargs['init']['packages_manifest'] = packages_manifest
+        self.tc_kwargs['init']['target'] = \
+                OERuntimeTestContextExecutor.getTarget(args.target_type)
+        self.tc_kwargs['init']['image_packages'] = \
+                OERuntimeTestContextExecutor.readPackagesManifest(
+                        args.packages_manifest)
 
 _executor_class = OERuntimeTestContextExecutor
