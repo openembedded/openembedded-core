@@ -17,8 +17,8 @@ do_configure_prepend () {
 	done
 }
 
-SRC_URI[md5sum] = "df9ca465f30307cffd03da176a43a5d4"
-SRC_URI[sha256sum] = "db53c025f2ac3d217bcf753dad6dee7b410b33d0948495ff015aaf8b91189ce2"
+SRC_URI[md5sum] = "569354697ff1cfc9a9de3781361015fa"
+SRC_URI[sha256sum] = "dad398ccd5b9faca6b0ab219a036453f62a602a56203ac659b43e889bec35533"
 
 inherit ptest
 
