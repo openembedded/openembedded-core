@@ -44,17 +44,34 @@ class OERuntimeTestContextExecutor(OETestContextExecutor):
     name = 'runtime'
     help = 'runtime test component'
     description = 'executes runtime tests over targets'
+
     default_cases = os.path.join(os.path.abspath(os.path.dirname(__file__)),
             'cases')
+    default_data = None
+
+    default_target_type = 'simpleremote'
+    default_server_ip = '192.168.7.1'
     default_target_ip = '192.168.7.2'
 
     def register_commands(self, logger, subparsers):
         super(OERuntimeTestContextExecutor, self).register_commands(logger, subparsers)
-        self.parser.add_argument('--target-ip', action='store',
+
+        runtime_group = self.parser.add_argument_group('runtime options')
+
+        runtime_group.add_argument('--target-type', action='store',
+                default=self.default_target_type, choices=['simpleremote', 'qemu'],
+                help="Target type of device under test, default: %s" \
+                % self.default_target_type)
+        runtime_group.add_argument('--target-ip', action='store',
                 default=self.default_target_ip,
                 help="IP address of device under test, default: %s" \
                 % self.default_target_ip)
-        self.parser.add_argument('--packages-manifest', action='store',
+        runtime_group.add_argument('--server-ip', action='store',
+                default=self.default_target_ip,
+                help="IP address of device under test, default: %s" \
+                % self.default_server_ip)
+
+        runtime_group.add_argument('--packages-manifest', action='store',
                 help="Package manifest of the image under test")
 
     def _process_args(self, logger, args):
@@ -63,6 +80,7 @@ class OERuntimeTestContextExecutor(OETestContextExecutor):
 
         super(OERuntimeTestContextExecutor, self)._process_args(logger, args)
         target = OESSHTarget(args.target_ip)
+
         self.tc_kwargs['init']['target'] = target
 
         packages_manifest = os.path.join(os.getcwd(), args.packages_manifest)
