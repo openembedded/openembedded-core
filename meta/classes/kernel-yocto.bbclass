@@ -61,7 +61,6 @@ def get_machine_branch(d, default):
     return default
 
 do_kernel_metadata() {
-	set +e
 	cd ${S}
 	export KMETA=${KMETA}
 
