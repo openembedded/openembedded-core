@@ -1,6 +1,6 @@
 from oeqa.oetest import oeRuntimeTest, skipModule
 from oeqa.utils.decorators import *
-from oeqa.utils.targetbuild import TargetBuildProject
+from oeqa.runtime.utils.targetbuildproject import TargetBuildProject
 
 def setUpModule():
     if not oeRuntimeTest.hasFeature("tools-sdk"):
@@ -10,9 +10,10 @@ class BuildCvsTest(oeRuntimeTest):
 
     @classmethod
     def setUpClass(self):
-        self.project = TargetBuildProject(oeRuntimeTest.tc.target, oeRuntimeTest.tc.d,
-                        "http://ftp.gnu.org/non-gnu/cvs/source/feature/1.12.13/cvs-1.12.13.tar.bz2")
-        self.project.download_archive()
+        dl_dir = oeRuntimeTest.tc.d.getVar('DL_DIR', True)
+        self.project = TargetBuildProject(oeRuntimeTest.tc.target,
+                        "http://ftp.gnu.org/non-gnu/cvs/source/feature/1.12.13/cvs-1.12.13.tar.bz2",
+                        dl_dir=dl_dir)
 
     @testcase(205)
     @skipUnlessPassed("test_ssh")

@@ -129,10 +129,14 @@ def testimage_main(d):
     from oeqa.oetest import ImageTestContext
     from oeqa.targetcontrol import get_target_controller
     from oeqa.utils.dump import get_host_dumper
+    from bb.utils import export_proxies
 
     pn = d.getVar("PN")
     bb.utils.mkdirhier(d.getVar("TEST_LOG_DIR"))
     test_create_extract_dirs(d)
+
+    # runtime use network for download projects for build
+    export_proxies(d)
 
     # we need the host dumper in test context
     host_dumper = get_host_dumper(d)

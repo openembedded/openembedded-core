@@ -1,6 +1,6 @@
 from oeqa.oetest import oeRuntimeTest, skipModule
 from oeqa.utils.decorators import *
-from oeqa.utils.targetbuild import TargetBuildProject
+from oeqa.runtime.utils.targetbuildproject import TargetBuildProject
 
 def setUpModule():
     if not oeRuntimeTest.hasFeature("tools-sdk"):
@@ -10,8 +10,10 @@ class BuildIptablesTest(oeRuntimeTest):
 
     @classmethod
     def setUpClass(self):
-        self.project = TargetBuildProject(oeRuntimeTest.tc.target, oeRuntimeTest.tc.d,
-                        "http://downloads.yoctoproject.org/mirror/sources/iptables-1.4.13.tar.bz2")
+        dl_dir = oeRuntimeTest.tc.d.getVar('DL_DIR', True)
+        self.project = TargetBuildProject(oeRuntimeTest.tc.target,
+                        "http://downloads.yoctoproject.org/mirror/sources/iptables-1.4.13.tar.bz2",
+                        dl_dir=dl_dir)
         self.project.download_archive()
 
     @testcase(206)
