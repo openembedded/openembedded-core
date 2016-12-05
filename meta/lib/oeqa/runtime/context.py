@@ -5,6 +5,8 @@ import os
 
 from oeqa.core.context import OETestContext, OETestContextExecutor
 from oeqa.core.target.ssh import OESSHTarget
+from oeqa.utils.dump import HostDumper
+
 from oeqa.runtime.loader import OERuntimeTestLoader
 
 class OERuntimeTestContext(OETestContext):
@@ -12,10 +14,11 @@ class OERuntimeTestContext(OETestContext):
     runtime_files_dir = os.path.join(
                         os.path.dirname(os.path.abspath(__file__)), "files")
 
-    def __init__(self, td, logger, target, image_packages):
+    def __init__(self, td, logger, target, host_dumper, image_packages):
         super(OERuntimeTestContext, self).__init__(td, logger)
         self.target = target
         self.image_packages = image_packages
+        self.host_dumper = host_dumper
         self._set_target_cmds()
 
     def _set_target_cmds(self):
@@ -39,6 +42,7 @@ class OERuntimeTestContextExecutor(OETestContextExecutor):
     default_target_type = 'simpleremote'
     default_server_ip = '192.168.7.1'
     default_target_ip = '192.168.7.2'
+    default_host_dumper_dir = '/tmp/oe-saved-tests'
 
     def register_commands(self, logger, subparsers):
         super(OERuntimeTestContextExecutor, self).register_commands(logger, subparsers)
@@ -57,6 +61,11 @@ class OERuntimeTestContextExecutor(OETestContextExecutor):
                 default=self.default_target_ip,
                 help="IP address of device under test, default: %s" \
                 % self.default_server_ip)
+
+        runtime_group.add_argument('--host-dumper-dir', action='store',
+                default=self.default_host_dumper_dir,
+                help="Directory where host status is dumped, if tests fails, default: %s" \
+                % self.default_host_dumper_dir)
 
         runtime_group.add_argument('--packages-manifest', action='store',
                 help="Package manifest of the image under test")
@@ -90,6 +99,10 @@ class OERuntimeTestContextExecutor(OETestContextExecutor):
 
         return image_packages
 
+    @staticmethod
+    def getHostDumper(cmds, directory):
+        return HostDumper(cmds, directory)
+
     def _process_args(self, logger, args):
         if not args.packages_manifest:
             raise TypeError('Manifest file not provided')
@@ -98,6 +111,9 @@ class OERuntimeTestContextExecutor(OETestContextExecutor):
 
         self.tc_kwargs['init']['target'] = \
                 OERuntimeTestContextExecutor.getTarget(args.target_type)
+        self.tc_kwargs['init']['host_dumper'] = \
+                OERuntimeTestContextExecutor.getHostDumper(None,
+                        args.host_dumper_dir)
         self.tc_kwargs['init']['image_packages'] = \
                 OERuntimeTestContextExecutor.readPackagesManifest(
                         args.packages_manifest)

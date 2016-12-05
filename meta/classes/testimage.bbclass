@@ -128,8 +128,8 @@ def testimage_main(d):
     import signal
     from oeqa.oetest import ImageTestContext
     from oeqa.targetcontrol import get_target_controller
-    from oeqa.utils.dump import get_host_dumper
     from bb.utils import export_proxies
+    from oeqa.utils.dump import HostDumper
 
     pn = d.getVar("PN")
     bb.utils.mkdirhier(d.getVar("TEST_LOG_DIR"))
@@ -139,7 +139,8 @@ def testimage_main(d):
     export_proxies(d)
 
     # we need the host dumper in test context
-    host_dumper = get_host_dumper(d)
+    host_dumper = HostDumper(d.getVar("testimage_dump_host", True),
+        d.getVar("TESTIMAGE_DUMP_DIR", True))
 
     # the robot dance
     target = get_target_controller(d)

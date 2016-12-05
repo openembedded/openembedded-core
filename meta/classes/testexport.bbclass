@@ -163,7 +163,6 @@ def exportTests(d,tc):
 def testexport_main(d):
     from oeqa.oetest import ExportTestContext
     from oeqa.targetcontrol import get_target_controller
-    from oeqa.utils.dump import get_host_dumper
 
     test_create_extract_dirs(d)
     export_dir = d.getVar("TEST_EXPORT_DIR")
