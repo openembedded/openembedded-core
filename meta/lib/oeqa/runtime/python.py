@@ -12,7 +12,7 @@ class PythonTest(oeRuntimeTest):
 
     @classmethod
     def setUpClass(self):
-        oeRuntimeTest.tc.target.copy_to(os.path.join(oeRuntimeTest.tc.filesdir, "test.py"), "/tmp/test.py")
+        oeRuntimeTest.tc.target.copy_to(os.path.join(oeRuntimeTest.tc.corefilesdir, "test.py"), "/tmp/test.py")
 
     @testcase(1145)
     def test_python_exists(self):

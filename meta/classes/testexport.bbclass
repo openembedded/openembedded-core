@@ -87,6 +87,7 @@ def exportTests(d,tc):
     #   - the contents of oeqa/utils and oeqa/runtime/files
     #   - oeqa/oetest.py and oeqa/runexport.py (this will get copied to exportpath not exportpath/oeqa)
     #   - __init__.py files
+    bb.utils.mkdirhier(os.path.join(exportpath, "oeqa/files"))
     bb.utils.mkdirhier(os.path.join(exportpath, "oeqa/runtime/files"))
     bb.utils.mkdirhier(os.path.join(exportpath, "oeqa/utils"))
     # copy test modules, this should cover tests in other layers too
@@ -124,6 +125,10 @@ def exportTests(d,tc):
         for f in files:
             if f.endswith(".py"):
                 shutil.copy2(os.path.join(root, f), os.path.join(exportpath, "oeqa/utils"))
+    # copy oeqa/files/*
+    for root, dirs, files in os.walk(os.path.join(oeqadir, "files")):
+        for f in files:
+            shutil.copy2(os.path.join(root, f), os.path.join(exportpath, "oeqa/files"))
     # copy oeqa/runtime/files/*
     for root, dirs, files in os.walk(os.path.join(oeqadir, "runtime/files")):
         for f in files:

@@ -12,7 +12,7 @@ class PerlTest(oeRuntimeTest):
 
     @classmethod
     def setUpClass(self):
-        oeRuntimeTest.tc.target.copy_to(os.path.join(oeRuntimeTest.tc.filesdir, "test.pl"), "/tmp/test.pl")
+        oeRuntimeTest.tc.target.copy_to(os.path.join(oeRuntimeTest.tc.corefilesdir, "test.pl"), "/tmp/test.pl")
 
     @testcase(1141)
     def test_perl_exists(self):

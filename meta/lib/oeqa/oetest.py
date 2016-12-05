@@ -201,6 +201,7 @@ class TestContext(object):
         self.testsrequired = self._get_test_suites_required()
 
         self.filesdir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "runtime/files")
+        self.corefilesdir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "files")
         self.imagefeatures = d.getVar("IMAGE_FEATURES").split()
         self.distrofeatures = d.getVar("DISTRO_FEATURES").split()
 
