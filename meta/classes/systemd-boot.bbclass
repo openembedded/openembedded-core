@@ -72,6 +72,9 @@ python build_efi_cfg() {
         return
 
     cfile = d.getVar('SYSTEMD_BOOT_CFG')
+    cdir = os.path.dirname(cfile)
+    if not os.path.exists(cdir):
+        os.makedirs(cdir)
     try:
          cfgfile = open(cfile, 'w')
     except OSError:
