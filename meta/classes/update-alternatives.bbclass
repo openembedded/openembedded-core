@@ -143,6 +143,10 @@ python perform_packagecopy_append () {
             if not alt_link:
                 alt_link = "%s/%s" % (d.getVar('bindir'), alt_name)
                 d.setVarFlag('ALTERNATIVE_LINK_NAME', alt_name, alt_link)
+            if alt_link.startswith(os.path.join(d.getVar('sysconfdir', True), 'init.d')):
+                # Managing init scripts does not work (bug #10433), foremost
+                # because of a race with update-rc.d
+                bb.fatal("Using update-alternatives for managing SysV init scripts is not supported")
 
             alt_target   = d.getVarFlag('ALTERNATIVE_TARGET_%s' % pkg, alt_name) or d.getVarFlag('ALTERNATIVE_TARGET', alt_name)
             alt_target   = alt_target or d.getVar('ALTERNATIVE_TARGET_%s' % pkg) or d.getVar('ALTERNATIVE_TARGET') or alt_link
