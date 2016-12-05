@@ -144,6 +144,15 @@ inherit ${IMAGE_TYPE_live}
 IMAGE_TYPE_vm = '${@bb.utils.contains_any("IMAGE_FSTYPES", ["vmdk", "vdi", "qcow2", "hdddirect"], "image-vm", "", d)}'
 inherit ${IMAGE_TYPE_vm}
 
+def build_uboot(d):
+    if 'u-boot' in (d.getVar('IMAGE_FSTYPES', True) or ''):
+        return "image_types_uboot"
+    else:
+        return ""
+
+IMAGE_TYPE_uboot = "${@build_uboot(d)}"
+inherit ${IMAGE_TYPE_uboot}
+
 python () {
     deps = " " + imagetypes_getdepends(d)
     d.appendVarFlag('do_rootfs', 'depends', deps)
