@@ -48,6 +48,9 @@ if [ -z "$pi_dir" ]; then
 	exit 0
 fi
 
+echo "Configuring packages on first boot...."
+echo " (This may take several minutes. Please do not power off the machine.)"
+
 [ -e #SYSCONFDIR#/default/postinst ] && . #SYSCONFDIR#/default/postinst
 
 if [ "$POSTINST_LOGGING" = "1" ]; then
