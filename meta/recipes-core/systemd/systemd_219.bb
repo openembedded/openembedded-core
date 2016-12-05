@@ -50,6 +50,7 @@ SRC_URI = "git://github.com/systemd/systemd-stable;branch=v219-stable;protocol=g
            file://00-create-volatile.conf \
            file://init \
            file://run-ptest \
+           file://udev-re-enable-mount-propagation-for-udevd.patch \
           "
 
 S = "${WORKDIR}/git"
