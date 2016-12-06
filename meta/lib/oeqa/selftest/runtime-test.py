@@ -155,3 +155,64 @@ postinst-delayed-t \
                     elif found:
                         self.assertEqual(idx, len(postinst_list), "Not found all postinsts")
                         break
+
+    @testcase(1545)
+    def test_postinst_roofs_and_boot(self):
+        """
+        Summary:        The purpose of this test case is to verify Post-installation
+                        scripts are called when roofs is created and also test
+                        that script can be delayed to run at first boot.
+        Dependencies:   NA
+        Steps:          1. Add proper configuration to local.conf file
+                        2. Build a "core-image-full-cmdline" image
+                        3. Verify that file created by postinst_rootfs recipe is
+                           present on rootfs dir.
+                        4. Boot the image created on qemu and verify that the file
+                           created by postinst_boot recipe is present on image.
+                        5. Clean the packages and image created to test with
+                           different package managers
+        Expected:       The files are successfully created during rootfs and boot
+                        time for 3 different package managers: rpm,ipk,deb and
+                        for initialization managers: sysvinit and systemd.
+
+        """
+        file_rootfs_name = "this-was-created-at-rootfstime"
+        fileboot_name = "this-was-created-at-first-boot"
+        rootfs_pkg = 'postinst-at-rootfs'
+        boot_pkg = 'postinst-delayed-a'
+        #Step 1
+        features = 'MACHINE = "qemux86"\n'
+        features += 'CORE_IMAGE_EXTRA_INSTALL += "%s %s "\n'% (rootfs_pkg, boot_pkg)
+        for init_manager in ("sysvinit", "systemd"):
+            #for sysvinit no extra configuration is needed,
+            if (init_manager is "systemd"):
+                features += 'DISTRO_FEATURES_append = " systemd"\n'
+                features += 'VIRTUAL-RUNTIME_init_manager = "systemd"\n'
+                features += 'DISTRO_FEATURES_BACKFILL_CONSIDERED = "sysvinit"\n'
+                features += 'VIRTUAL-RUNTIME_initscripts = ""\n'
+            for classes in ("package_rpm package_deb package_ipk",
+                            "package_deb package_rpm package_ipk",
+                            "package_ipk package_deb package_rpm"):
+                features += 'PACKAGE_CLASSES = "%s"\n' % classes
+                self.write_config(features)
+
+                #Step 2
+                bitbake('core-image-full-cmdline')
+
+                #Step 3
+                file_rootfs_created = os.path.join(get_bb_var('IMAGE_ROOTFS',"core-image-full-cmdline"),
+                                                   file_rootfs_name)
+                found = os.path.isfile(file_rootfs_created)
+                self.assertTrue(found, "File %s was not created at rootfs time by %s" % \
+                                (file_rootfs_name, rootfs_pkg))
+
+                #Step 4
+                testcommand = 'ls /etc/'+fileboot_name
+                with runqemu('core-image-full-cmdline') as qemu:
+                    sshargs = '-o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
+                    result = runCmd('ssh %s root@%s %s' % (sshargs, qemu.ip, testcommand))
+                    self.assertEqual(result.status, 0, 'File %s was not created at firts boot'% fileboot_name)
+
+                #Step 5
+                bitbake(' %s %s -c cleanall' % (rootfs_pkg, boot_pkg))
+                bitbake('core-image-full-cmdline -c cleanall')

@@ -24,6 +24,7 @@ RDEPENDS_${PN}-delayed-t = "${PN}-delayed-p"
 # Main recipe post-install
 pkg_postinst_${PN}-at-rootfs () {
     tfile="/etc/postinsta-test"
+    touch "$D"/this-was-created-at-rootfstime
     if test "x$D" != "x" then
         # Need to run on first boot
         exit 1
@@ -42,6 +43,7 @@ pkg_postinst_${PN}-delayed-a () {
       # Need to run on first boot
       exit 1
     else
+      touch /etc/this-was-created-at-first-boot
       if test -e $efile ; then
         echo 'success' > $tfile
       else
