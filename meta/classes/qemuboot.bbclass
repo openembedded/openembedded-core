@@ -3,34 +3,52 @@
 # boot by runqemu:
 #
 # QB_SYSTEM_NAME: qemu name, e.g., "qemu-system-i386"
+#
 # QB_OPT_APPEND: options to append to qemu, e.g., "-show-cursor"
+#
 # QB_DEFAULT_KERNEL: default kernel to boot, e.g., "bzImage"
+#
 # QB_DEFAULT_FSTYPE: default FSTYPE to boot, e.g., "ext4"
+#
 # QB_MEM: memory, e.g., "-m 512"
+#
 # QB_MACHINE: qemu machine, e.g., "-machine virt"
+#
 # QB_CPU: qemu cpu, e.g., "-cpu qemu32"
+#
 # QB_CPU_KVM: the similar to QB_CPU, but used when kvm, e.g., '-cpu kvm64',
 #             set it when support kvm.
+#
 # QB_KERNEL_CMDLINE_APPEND: options to append to kernel's -append
 #                           option, e.g., "console=ttyS0 console=tty"
+#
 # QB_DTB: qemu dtb name
+#
 # QB_AUDIO_DRV: qemu audio driver, e.g., "alsa", set it when support audio
+#
 # QB_AUDIO_OPT: qemu audio option, e.g., "-soundhw ac97,es1370", used
 #               when QB_AUDIO_DRV is set.
+#
 # QB_KERNEL_ROOT: kernel's root, e.g., /dev/vda
+#
 # QB_NETWORK_DEVICE: network device, e.g., "-device virtio-net-pci,netdev=net0,mac=@MAC@",
 #                    it needs work with QB_TAP_OPT and QB_SLIRP_OPT.
 #                    Note, runqemu will replace @MAC@ with a predefined mac, you can set
 #                    a custom one, but that may cause conflicts when multiple qemus are
 #                    running on the same host.
+#
 # QB_TAP_OPT: netowrk option for 'tap' mode, e.g.,
 #             "-netdev tap,id=net0,ifname=@TAP@,script=no,downscript=no"
 #              Note, runqemu will replace "@TAP@" with the one which is used, such as tap0, tap1 ...
+#
 # QB_SLIRP_OPT: network option for SLIRP mode, e.g., -netdev user,id=net0"
+#
 # QB_ROOTFS_OPT: used as rootfs, e.g.,
 #               "-drive id=disk0,file=@ROOTFS@,if=none,format=raw -device virtio-blk-device,drive=disk0"
 #              Note, runqemu will replace "@ROOTFS@" with the one which is used, such as core-image-minimal-qemuarm64.ext4.
+#
 # QB_SERIAL_OPT: serial port, e.g., "-serial mon:stdio"
+#
 # QB_TCPSERIAL_OPT: tcp serial port option, e.g.,
 #                   " -device virtio-serial-device -chardev socket,id=virtcon,port=@PORT@,host=127.0.0.1 -device virtconsole,chardev=virtcon"
 #                   Note, runqemu will replace "@PORT@" with the port number which is used.
