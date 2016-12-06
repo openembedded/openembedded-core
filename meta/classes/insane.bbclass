@@ -138,6 +138,7 @@ def package_qa_get_machine_dict(d):
                         "microblaze":  (189,     0,    0,          False,         32),
                         "microblazeeb":(189,     0,    0,          False,         32),
                         "microblazeel":(189,     0,    0,          True,          32),
+                        "sh4":        (  42,     0,    0,          True,          32),
                       },
             "uclinux-uclibc" : {
                         "bfin":       ( 106,     0,    0,          True,         32),
