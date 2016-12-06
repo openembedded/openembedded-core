@@ -18,23 +18,24 @@ def runstrip(arg):
         newmode = origmode | stat.S_IWRITE | stat.S_IREAD
         os.chmod(file, newmode)
 
-    extraflags = ""
+    stripcmd = [strip]
 
     # kernel module    
     if elftype & 16:
-        extraflags = "--strip-debug --remove-section=.comment --remove-section=.note --preserve-dates"
+        stripcmd.extend(["--strip-debug", "--remove-section=.comment",
+            "--remove-section=.note", "--preserve-dates"])
     # .so and shared library
     elif ".so" in file and elftype & 8:
-        extraflags = "--remove-section=.comment --remove-section=.note --strip-unneeded"
+        stripcmd.extend(["--remove-section=.comment", "--remove-section=.note", "--strip-unneeded"])
     # shared or executable:
     elif elftype & 8 or elftype & 4:
-        extraflags = "--remove-section=.comment --remove-section=.note"
+        stripcmd.extend(["--remove-section=.comment", "--remove-section=.note"])
 
-    stripcmd = "'%s' %s '%s'" % (strip, extraflags, file)
+    stripcmd.append(file)
     bb.debug(1, "runstrip: %s" % stripcmd)
 
     try:
-        output = subprocess.check_output(stripcmd, stderr=subprocess.STDOUT, shell=True)
+        output = subprocess.check_output(stripcmd, stderr=subprocess.STDOUT)
     except subprocess.CalledProcessError as e:
         bb.error("runstrip: '%s' strip command failed with %s (%s)" % (stripcmd, e.returncode, e.output))
 
