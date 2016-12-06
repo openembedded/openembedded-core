@@ -1,0 +1,48 @@
+From 6e24bde1979c2d7149b37d142fb882dfde0e9770 Mon Sep 17 00:00:00 2001
+From: Matt Fleming <matt.fleming@intel.com>
+Date: Fri, 27 Jun 2014 11:12:18 +0100
+Subject: [PATCH] BaseTools: Force tools variables to host toolchain
+
+Signed-off-by: Matt Fleming <matt.fleming@intel.com>
+---
+ BaseTools/Source/C/Makefiles/app.makefile | 7 +++++++
+ BaseTools/Source/C/VfrCompile/GNUmakefile | 5 +++++
+ 2 files changed, 12 insertions(+)
+
+diff --git a/BaseTools/Source/C/Makefiles/app.makefile b/BaseTools/Source/C/Makefiles/app.makefile
+index 19269a1..62aad0f 100644
+--- a/BaseTools/Source/C/Makefiles/app.makefile
++++ b/BaseTools/Source/C/Makefiles/app.makefile
+@@ -16,6 +16,13 @@ include $(MAKEROOT)/Makefiles/header.makefile
+ 
+ APPLICATION = $(MAKEROOT)/bin/$(APPNAME)
+ 
++CC = gcc
++CXX = g++
++AS = gcc
++AR = ar
++LD = ld
++LINKER = $(CC)
++
+ .PHONY:all
+ all: $(MAKEROOT)/bin $(APPLICATION) 
+ 
+diff --git a/BaseTools/Source/C/VfrCompile/GNUmakefile b/BaseTools/Source/C/VfrCompile/GNUmakefile
+index 82005e1..5ac5f7e 100644
+--- a/BaseTools/Source/C/VfrCompile/GNUmakefile
++++ b/BaseTools/Source/C/VfrCompile/GNUmakefile
+@@ -26,6 +26,11 @@ OBJECTS = AParser.o DLexerBase.o ATokenBuffer.o EfiVfrParser.o VfrLexer.o VfrSyn
+ 
+ VFR_CPPFLAGS = -DPCCTS_USE_NAMESPACE_STD $(CPPFLAGS)
+ 
++CC = gcc
++CXX = g++
++AS = gcc
++AR = ar
++LD = ld
+ LINKER = $(BUILD_CXX)
+ 
+ EXTRA_CLEAN_OBJECTS = EfiVfrParser.cpp EfiVfrParser.h VfrParser.dlg VfrTokens.h VfrLexer.cpp VfrLexer.h VfrSyntax.cpp tokens.h
+-- 
+1.9.0
+

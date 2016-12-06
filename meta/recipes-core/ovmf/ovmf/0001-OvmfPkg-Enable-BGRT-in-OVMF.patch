@@ -1,0 +1,110 @@
+From 66a4020c3c2163aeffc9757851f33c346ecfd870 Mon Sep 17 00:00:00 2001
+From: Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>
+Date: Mon, 4 Apr 2016 12:15:12 -0700
+Subject: [PATCH] OvmfPkg: Enable BGRT in OVMF
+
+By default, firmware (OVMF - Open source Virtual Machine Firmware)
+never publishes BGRT (Boot Graphics Resource Table) and in the boot
+process Linux kernel checks for this table and if it fails to find BGRT
+table then corresponding code in Linux kernel is not executed. EDK II
+(EFI Development Kit, thus OVMF) already has BGRT source code packaged
+into it but it is excluded from the build process of OVMF. These changes
+to build system of OVMF enables BGRT in 32-bit and 64-bit OVMF.
+
+There are only two files that need to be modified in order to do this.
+The first one being OvmfPkg*.dsc (this file describes the platform) and
+the second one being OvmfPkg*.fdf (this file describes firmware descriptor
+volume). A *.inf file (here "BootGraphicsResourceTableDxe.inf")
+describes a module (here BGRT). So, include
+"BootGraphicsResourceTableDxe.inf" file in "OvmfPkg*.dsc" so that BGRT
+source code will be compiled and "BootGraphicsResourceTableDxe.efi" file
+is generated and we should also include
+"BootGraphicsResourceTableDxe.inf" file in "OvmfPkg*.fdf" file so that
+"BootGraphicsResourceTableDxe.efi" will be placed in a firmware volume
+and thus gets published.
+
+Signed-off-by: Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>
+---
+ OvmfPkg/OvmfPkgIa32.dsc    | 1 +
+ OvmfPkg/OvmfPkgIa32.fdf    | 1 +
+ OvmfPkg/OvmfPkgIa32X64.dsc | 1 +
+ OvmfPkg/OvmfPkgIa32X64.fdf | 1 +
+ OvmfPkg/OvmfPkgX64.dsc     | 1 +
+ OvmfPkg/OvmfPkgX64.fdf     | 1 +
+ 6 files changed, 6 insertions(+)
+
+diff --git a/OvmfPkg/OvmfPkgIa32.dsc b/OvmfPkg/OvmfPkgIa32.dsc
+index 9e5b477..0582219 100644
+--- a/OvmfPkg/OvmfPkgIa32.dsc
++++ b/OvmfPkg/OvmfPkgIa32.dsc
+@@ -647,6 +647,7 @@
+   OvmfPkg/AcpiS3SaveDxe/AcpiS3SaveDxe.inf
+   MdeModulePkg/Universal/Acpi/S3SaveStateDxe/S3SaveStateDxe.inf
+   MdeModulePkg/Universal/Acpi/BootScriptExecutorDxe/BootScriptExecutorDxe.inf
++  MdeModulePkg/Universal/Acpi/BootGraphicsResourceTableDxe/BootGraphicsResourceTableDxe.inf
+ 
+   #
+   # Network Support
+diff --git a/OvmfPkg/OvmfPkgIa32.fdf b/OvmfPkg/OvmfPkgIa32.fdf
+index fc203f2..f968cb7 100644
+--- a/OvmfPkg/OvmfPkgIa32.fdf
++++ b/OvmfPkg/OvmfPkgIa32.fdf
+@@ -274,6 +274,7 @@ INF  RuleOverride=ACPITABLE OvmfPkg/AcpiTables/AcpiTables.inf
+ INF  OvmfPkg/AcpiS3SaveDxe/AcpiS3SaveDxe.inf
+ INF  MdeModulePkg/Universal/Acpi/S3SaveStateDxe/S3SaveStateDxe.inf
+ INF  MdeModulePkg/Universal/Acpi/BootScriptExecutorDxe/BootScriptExecutorDxe.inf
++INF  MdeModulePkg/Universal/Acpi/BootGraphicsResourceTableDxe/BootGraphicsResourceTableDxe.inf
+ 
+ INF  RuleOverride = BINARY FatBinPkg/EnhancedFatDxe/Fat.inf
+ 
+diff --git a/OvmfPkg/OvmfPkgIa32X64.dsc b/OvmfPkg/OvmfPkgIa32X64.dsc
+index 6e4da4f..8289385 100644
+--- a/OvmfPkg/OvmfPkgIa32X64.dsc
++++ b/OvmfPkg/OvmfPkgIa32X64.dsc
+@@ -656,6 +656,7 @@
+   OvmfPkg/AcpiS3SaveDxe/AcpiS3SaveDxe.inf
+   MdeModulePkg/Universal/Acpi/S3SaveStateDxe/S3SaveStateDxe.inf
+   MdeModulePkg/Universal/Acpi/BootScriptExecutorDxe/BootScriptExecutorDxe.inf
++  MdeModulePkg/Universal/Acpi/BootGraphicsResourceTableDxe/BootGraphicsResourceTableDxe.inf
+ 
+   #
+   # Network Support
+diff --git a/OvmfPkg/OvmfPkgIa32X64.fdf b/OvmfPkg/OvmfPkgIa32X64.fdf
+index d3f46f3..282d40b 100644
+--- a/OvmfPkg/OvmfPkgIa32X64.fdf
++++ b/OvmfPkg/OvmfPkgIa32X64.fdf
+@@ -274,6 +274,7 @@ INF  RuleOverride=ACPITABLE OvmfPkg/AcpiTables/AcpiTables.inf
+ INF  OvmfPkg/AcpiS3SaveDxe/AcpiS3SaveDxe.inf
+ INF  MdeModulePkg/Universal/Acpi/S3SaveStateDxe/S3SaveStateDxe.inf
+ INF  MdeModulePkg/Universal/Acpi/BootScriptExecutorDxe/BootScriptExecutorDxe.inf
++INF  MdeModulePkg/Universal/Acpi/BootGraphicsResourceTableDxe/BootGraphicsResourceTableDxe.inf
+ 
+ INF  RuleOverride = BINARY USE = X64 FatBinPkg/EnhancedFatDxe/Fat.inf
+ 
+diff --git a/OvmfPkg/OvmfPkgX64.dsc b/OvmfPkg/OvmfPkgX64.dsc
+index 3d6d43e..0f956a7 100644
+--- a/OvmfPkg/OvmfPkgX64.dsc
++++ b/OvmfPkg/OvmfPkgX64.dsc
+@@ -654,6 +654,7 @@
+   OvmfPkg/AcpiS3SaveDxe/AcpiS3SaveDxe.inf
+   MdeModulePkg/Universal/Acpi/S3SaveStateDxe/S3SaveStateDxe.inf
+   MdeModulePkg/Universal/Acpi/BootScriptExecutorDxe/BootScriptExecutorDxe.inf
++  MdeModulePkg/Universal/Acpi/BootGraphicsResourceTableDxe/BootGraphicsResourceTableDxe.inf
+ 
+   #
+   # Network Support
+diff --git a/OvmfPkg/OvmfPkgX64.fdf b/OvmfPkg/OvmfPkgX64.fdf
+index 15ef13a..9708fd5 100644
+--- a/OvmfPkg/OvmfPkgX64.fdf
++++ b/OvmfPkg/OvmfPkgX64.fdf
+@@ -274,6 +274,7 @@ INF  RuleOverride=ACPITABLE OvmfPkg/AcpiTables/AcpiTables.inf
+ INF  OvmfPkg/AcpiS3SaveDxe/AcpiS3SaveDxe.inf
+ INF  MdeModulePkg/Universal/Acpi/S3SaveStateDxe/S3SaveStateDxe.inf
+ INF  MdeModulePkg/Universal/Acpi/BootScriptExecutorDxe/BootScriptExecutorDxe.inf
++INF  MdeModulePkg/Universal/Acpi/BootGraphicsResourceTableDxe/BootGraphicsResourceTableDxe.inf
+ 
+ INF  RuleOverride = BINARY FatBinPkg/EnhancedFatDxe/Fat.inf
+ 
+-- 
+2.7.4
+
