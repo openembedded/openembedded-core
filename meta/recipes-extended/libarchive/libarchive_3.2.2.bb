@@ -48,7 +48,7 @@ do_configure_prepend() {
 	cp -R ${STAGING_INCDIR_NATIVE}/ext2fs ${WORKDIR}/extra-includes/
 }
 
-ALTERNATIVE_PRIORITY = "100"
+ALTERNATIVE_PRIORITY = "80"
 
 PACKAGES =+ "bsdtar"
 FILES_bsdtar = "${bindir}/bsdtar"
