@@ -32,7 +32,7 @@ do_configure[noexec] = "1"
 do_compile[noexec] = "1"
 do_install[noexec] = "1"
 
-do_configure[deptask] = ""
+do_prepare_recipe_sysroot[deptask] = ""
 
 WORLD_PKGDATA_EXCLUDE ?= ""
 

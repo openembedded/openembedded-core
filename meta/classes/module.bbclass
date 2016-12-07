@@ -1,6 +1,6 @@
 inherit module-base kernel-module-split
 
-addtask make_scripts after do_patch before do_compile
+addtask make_scripts after do_prepare_recipe_sysroot before do_compile
 do_make_scripts[lockfiles] = "${TMPDIR}/kernel-scripts.lock"
 do_make_scripts[depends] += "virtual/kernel:do_shared_workdir"
 

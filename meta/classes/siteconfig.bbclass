@@ -5,9 +5,9 @@ python siteconfig_do_siteconfig () {
 	if not os.path.isdir(os.path.join(d.getVar('FILE_DIRNAME'), 'site_config')):
 		bb.debug(1, "No site_config directory, skipping do_siteconfig")
 		return
+	sstate_install(shared_state, d)
 	bb.build.exec_func('do_siteconfig_gencache', d)
 	sstate_clean(shared_state, d)
-	sstate_install(shared_state, d)
 }
 
 EXTRASITECONFIG ?= ""

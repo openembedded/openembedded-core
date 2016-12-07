@@ -50,7 +50,10 @@ class LibOE(oeSelfTest):
 
         # ensure we have setfattr available
         bitbake("attr-native")
-        bindir = get_bb_var('STAGING_BINDIR_NATIVE')
+
+        destdir = get_bb_var('SYSROOT_DESTDIR', 'attr-native')
+        bindir = get_bb_var('bindir', 'attr-native')
+        bindir = destdir + bindir
 
         # create a file with xattr and copy it
         open(oe.path.join(src, testfilename), 'w+b').close()

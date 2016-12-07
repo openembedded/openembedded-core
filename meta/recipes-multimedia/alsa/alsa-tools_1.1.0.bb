@@ -34,7 +34,7 @@ AUTOTOOLS_COPYACLOCAL = "1"
 do_compile_prepend () {
     #Automake dir is not correctly detected in cross compilation case
     export AUTOMAKE_DIR="$(automake --print-libdir)"
-    export ACLOCAL_FLAGS="--system-acdir=${ACLOCALDIR}/"
+    export ACLOCAL_FLAGS="--system-acdir=${ACLOCALDIR}/ ${ACLOCALEXTRAPATH}"
 
     cp ${WORKDIR}/gitcompile_hdajacksensetest ${S}/hdajacksensetest/gitcompile
 }

@@ -95,7 +95,7 @@ libdir .= "${NATIVE_PACKAGE_PATH_SUFFIX}"
 libexecdir .= "${NATIVE_PACKAGE_PATH_SUFFIX}"
 
 do_populate_sysroot[sstate-inputdirs] = "${SYSROOT_DESTDIR}/${STAGING_DIR_NATIVE}/"
-do_populate_sysroot[sstate-outputdirs] = "${STAGING_DIR_NATIVE}/"
+do_populate_sysroot[sstate-outputdirs] = "${STAGING_DIR}-components/${PACKAGE_ARCH}/${PN}"
 
 # Since we actually install these into situ there is no staging prefix
 STAGING_DIR_HOST = ""

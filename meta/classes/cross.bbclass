@@ -19,7 +19,7 @@ HOST_AS_ARCH = "${BUILD_AS_ARCH}"
 
 export lt_cv_sys_lib_dlsearch_path_spec = "${libdir} ${base_libdir} /lib /lib64 /usr/lib /usr/lib64"
 
-STAGING_DIR_HOST = "${STAGING_DIR}/${HOST_ARCH}${HOST_VENDOR}-${HOST_OS}"
+STAGING_DIR_HOST = "${RECIPE_SYSROOT_NATIVE}"
 
 PACKAGE_ARCH = "${BUILD_ARCH}"
 

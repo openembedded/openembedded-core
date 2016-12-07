@@ -66,7 +66,7 @@ class Signing(oeSelfTest):
             pf = pkgdata['PN'] + "-" + pkgdata['PKGV'] + '-' + pkgdata['PKGR']
         deploy_dir_rpm = get_bb_var('DEPLOY_DIR_RPM', test_recipe)
         package_arch = get_bb_var('PACKAGE_ARCH', test_recipe).replace('-', '_')
-        staging_bindir_native = get_bb_var('STAGING_BINDIR_NATIVE')
+        staging_bindir_native = get_bb_var('STAGING_BINDIR_NATIVE', test_recipe)
 
         pkg_deploy = os.path.join(deploy_dir_rpm, package_arch, '.'.join((pf, package_arch, 'rpm')))
 

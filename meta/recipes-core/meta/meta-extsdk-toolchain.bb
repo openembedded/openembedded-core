@@ -15,7 +15,7 @@ LOCKED_SIGS_INDIR = "${D}/locked-sigs"
 addtask do_locked_sigs after do_populate_sysroot
 SSTATETASKS += "do_locked_sigs"
 do_locked_sigs[sstate-inputdirs] = "${LOCKED_SIGS_INDIR}"
-do_locked_sigs[sstate-outputdirs] = "${STAGING_DIR_HOST}/locked-sigs"
+do_locked_sigs[sstate-outputdirs] = "${STAGING_DIR}/${PACKAGE_ARCH}/${PN}/locked-sigs"
 
 python do_locked_sigs() {
     import oe.copy_buildsystem

@@ -827,6 +827,7 @@ def package_qa_check_staged(path,d):
     sane = True
     tmpdir = d.getVar('TMPDIR')
     workdir = os.path.join(tmpdir, "work")
+    recipesysroot = d.getVar("RECIPE_SYSROOT")
 
     if bb.data.inherits_class("native", d) or bb.data.inherits_class("cross", d):
         pkgconfigcheck = workdir
@@ -842,12 +843,14 @@ def package_qa_check_staged(path,d):
             if file.endswith(".la"):
                 with open(path) as f:
                     file_content = f.read()
+                    file_content = file_content.replace(recipesysroot, "")
                     if workdir in file_content:
                         error_msg = "%s failed sanity test (workdir) in path %s" % (file,root)
                         sane = package_qa_handle_error("la", error_msg, d)
             elif file.endswith(".pc"):
                 with open(path) as f:
                     file_content = f.read()
+                    file_content = file_content.replace(recipesysroot, "")
                     if pkgconfigcheck in file_content:
                         error_msg = "%s failed sanity test (tmpdir) in path %s" % (file,root)
                         sane = package_qa_handle_error("pkgconfig", error_msg, d)

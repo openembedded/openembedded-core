@@ -13,7 +13,7 @@ inherit gzipnative
 
 LICENSE = "MIT"
 PACKAGES = ""
-DEPENDS += "${MLPREFIX}qemuwrapper-cross ${MLPREFIX}depmodwrapper-cross"
+DEPENDS += "${MLPREFIX}qemuwrapper-cross depmodwrapper-cross"
 RDEPENDS += "${PACKAGE_INSTALL} ${LINGUAS_INSTALL}"
 RRECOMMENDS += "${PACKAGE_INSTALL_ATTEMPTONLY}"
 
@@ -164,7 +164,7 @@ python () {
     deps = ""
     for dep in (d.getVar('EXTRA_IMAGEDEPENDS') or "").split():
         deps += " %s:do_populate_sysroot" % dep
-    d.appendVarFlag('do_build', 'depends', deps)
+    d.appendVarFlag('do_image_complete', 'depends', deps)
 
     #process IMAGE_FEATURES, we must do this before runtime_mapping_rename
     #Check for replaces image features
@@ -274,7 +274,7 @@ fakeroot python do_rootfs () {
 do_rootfs[dirs] = "${TOPDIR}"
 do_rootfs[cleandirs] += "${S} ${IMGDEPLOYDIR}"
 do_rootfs[umask] = "022"
-addtask rootfs before do_build
+addtask rootfs before do_build after do_prepare_recipe_sysroot
 
 fakeroot python do_image () {
     from oe.utils import execute_pre_post_process

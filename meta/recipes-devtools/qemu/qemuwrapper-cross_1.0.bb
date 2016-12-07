@@ -3,6 +3,8 @@ LICENSE = "MIT"
 
 S = "${WORKDIR}"
 
+DEPENDS += "qemu-native"
+
 inherit qemu
 
 do_install () {

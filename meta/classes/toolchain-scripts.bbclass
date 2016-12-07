@@ -108,6 +108,7 @@ EOF
 TOOLCHAIN_CONFIGSITE_NOCACHE = "${@siteinfo_get_files(d)}"
 TOOLCHAIN_CONFIGSITE_SYSROOTCACHE = "${STAGING_DIR}/${MLPREFIX}${MACHINE}/${target_datadir}/${TARGET_SYS}_config_site.d"
 TOOLCHAIN_NEED_CONFIGSITE_CACHE ??= "virtual/${MLPREFIX}libc ncurses"
+DEPENDS += "${TOOLCHAIN_NEED_CONFIGSITE_CACHE}"
 
 #This function create a site config file
 toolchain_create_sdk_siteconfig () {

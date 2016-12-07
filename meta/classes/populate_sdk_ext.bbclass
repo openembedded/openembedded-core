@@ -404,7 +404,7 @@ python copy_buildsystem () {
 
     if sdk_include_toolchain:
         lockedsigs_base = d.getVar('WORKDIR') + '/locked-sigs-base2.inc'
-        lockedsigs_toolchain = d.getVar('STAGING_DIR_HOST') + '/locked-sigs/locked-sigs-extsdk-toolchain.inc'
+        lockedsigs_toolchain = d.expand("${STAGING_DIR}/${TUNE_PKGARCH}/meta-extsdk-toolchain/locked-sigs/locked-sigs-extsdk-toolchain.inc")
         shutil.move(lockedsigs_pruned, lockedsigs_base)
         oe.copy_buildsystem.merge_lockedsigs([],
                                              lockedsigs_base,

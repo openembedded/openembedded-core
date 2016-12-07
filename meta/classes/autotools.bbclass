@@ -131,129 +131,15 @@ EXTRACONFFUNCS ??= ""
 
 EXTRA_OECONF_append = " ${PACKAGECONFIG_CONFARGS}"
 
-do_configure[prefuncs] += "autotools_preconfigure autotools_copy_aclocals ${EXTRACONFFUNCS}"
+do_configure[prefuncs] += "autotools_preconfigure autotools_aclocals ${EXTRACONFFUNCS}"
 do_configure[postfuncs] += "autotools_postconfigure"
 
-ACLOCALDIR = "${WORKDIR}/aclocal-copy"
+ACLOCALDIR = "${STAGING_DATADIR}/aclocal"
+ACLOCALEXTRAPATH = ""
+ACLOCALEXTRAPATH_class-target = " -I ${STAGING_DATADIR_NATIVE}/aclocal/"
+ACLOCALEXTRAPATH_class-nativesdk = " -I ${STAGING_DATADIR_NATIVE}/aclocal/"
 
-python autotools_copy_aclocals () {
-    import copy
-
-    s = d.getVar("AUTOTOOLS_SCRIPT_PATH")
-    if not os.path.exists(s + "/configure.in") and not os.path.exists(s + "/configure.ac"):
-        if not d.getVar("AUTOTOOLS_COPYACLOCAL", False):
-            return
-
-    taskdepdata = d.getVar("BB_TASKDEPDATA", False)
-    #bb.warn(str(taskdepdata))
-    pn = d.getVar("PN")
-    aclocaldir = d.getVar("ACLOCALDIR")
-    oe.path.remove(aclocaldir)
-    bb.utils.mkdirhier(aclocaldir)
-    start = None
-    configuredeps = []
-    # Detect bitbake -b usage
-    # Everything but quilt-native would have dependencies
-    nodeps = (pn != "quilt-native")
-
-    for dep in taskdepdata:
-        data = taskdepdata[dep]
-        if data[1] == "do_configure" and data[0] == pn:
-            start = dep
-        if not nodeps and start:
-            break
-        if nodeps and data[0] != pn:
-            nodeps = False
-    if start is None:
-        bb.fatal("Couldn't find ourself in BB_TASKDEPDATA?")
-
-    # We need to figure out which m4 files we need to expose to this do_configure task.
-    # This needs to match what would get restored from sstate, which is controlled 
-    # ultimately by calls from bitbake to setscene_depvalid().
-    # That function expects a setscene dependency tree. We build a dependency tree 
-    # condensed to do_populate_sysroot -> do_populate_sysroot dependencies, similar to 
-    # that used by setscene tasks. We can then call into setscene_depvalid() and decide
-    # which dependencies we can "see" and should expose the m4 files for.
-    setscenedeps = copy.deepcopy(taskdepdata)
-
-    start = set([start])
-
-    # Create collapsed do_populate_sysroot -> do_populate_sysroot tree
-    for dep in taskdepdata:
-        data = setscenedeps[dep]        
-        if data[1] != "do_populate_sysroot":
-            for dep2 in setscenedeps:
-                data2 = setscenedeps[dep2]
-                if dep in data2[3]:
-                    data2[3].update(setscenedeps[dep][3])
-                    data2[3].remove(dep)
-            if dep in start:
-                start.update(setscenedeps[dep][3])
-                start.remove(dep)
-            del setscenedeps[dep]
-
-    # Remove circular references
-    for dep in setscenedeps:
-        if dep in setscenedeps[dep][3]:
-            setscenedeps[dep][3].remove(dep)
-
-    # Direct dependencies should be present and can be depended upon
-    for dep in start:
-        configuredeps.append(setscenedeps[dep][0])
-
-    # Call into setscene_depvalid for each sub-dependency and only copy m4 files
-    # for ones that would be restored from sstate.
-    done = list(start)
-    next = list(start)
-    while next:
-        new = []
-        for dep in next:
-            data = setscenedeps[dep]
-            for datadep in data[3]:
-                if datadep in done:
-                    continue
-                taskdeps = {}
-                taskdeps[dep] = setscenedeps[dep][:2]
-                taskdeps[datadep] = setscenedeps[datadep][:2]
-                retval = setscene_depvalid(datadep, taskdeps, [], d)
-                if retval:
-                    bb.note("Skipping setscene dependency %s for m4 macro copying" % datadep)
-                    continue
-                done.append(datadep)
-                new.append(datadep)
-                configuredeps.append(setscenedeps[datadep][0])
-        next = new
-
-    cp = []
-    if nodeps:
-        bb.warn("autotools: Unable to find task dependencies, -b being used? Pulling in all m4 files")
-        for l in [d.expand("${STAGING_DATADIR_NATIVE}/aclocal/"), d.expand("${STAGING_DATADIR}/aclocal/")]:
-            cp.extend(os.path.join(l, f) for f in os.listdir(l))
-
-    for c in configuredeps:
-        if c.endswith("-native"):
-            manifest = d.expand("${SSTATE_MANIFESTS}/manifest-${BUILD_ARCH}-%s.populate_sysroot" % c)
-        elif c.startswith("nativesdk-"):
-            manifest = d.expand("${SSTATE_MANIFESTS}/manifest-${SDK_ARCH}_${SDK_OS}-%s.populate_sysroot" % c)
-        elif "-cross-" in c or "-crosssdk" in c:
-            continue
-        else:
-            manifest = d.expand("${SSTATE_MANIFESTS}/manifest-${MACHINE}-%s.populate_sysroot" % c)
-        try:
-            f = open(manifest, "r")
-            for l in f:
-                if "/aclocal/" in l and l.strip().endswith(".m4"):
-                    cp.append(l.strip())
-                elif "config_site.d/" in l:
-                    cp.append(l.strip())
-        except:
-            bb.warn("%s not found" % manifest)
-
-    for c in cp:
-        t = os.path.join(aclocaldir, os.path.basename(c))
-        if not os.path.exists(t):
-            os.symlink(c, t)
-
+python autotools_aclocals () {
     # Refresh variable with cache files
     d.setVar("CONFIG_SITE", siteinfo_get_files(d, aclocalcache=True))
 }
@@ -279,6 +165,7 @@ autotools_do_configure() {
 	if [ -e ${AUTOTOOLS_SCRIPT_PATH}/configure.in -o -e ${AUTOTOOLS_SCRIPT_PATH}/configure.ac ]; then
 		olddir=`pwd`
 		cd ${AUTOTOOLS_SCRIPT_PATH}
+		mkdir -p ${ACLOCALDIR}
 		ACLOCAL="aclocal --system-acdir=${ACLOCALDIR}/"
 		if [ x"${acpaths}" = xdefault ]; then
 			acpaths=
@@ -289,6 +176,7 @@ autotools_do_configure() {
 		else
 			acpaths="${acpaths}"
 		fi
+		acpaths="$acpaths ${ACLOCALEXTRAPATH}"
 		AUTOV=`automake --version | sed -e '1{s/.* //;s/\.[0-9]\+$//};q'`
 		automake --version
 		echo "AUTOV is $AUTOV"

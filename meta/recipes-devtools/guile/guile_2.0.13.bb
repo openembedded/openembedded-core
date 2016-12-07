@@ -108,10 +108,12 @@ guile_cross_config() {
 # auto-compile into the prefix even if it can write there, so touch them here as
 # sysroot is managed.
 SSTATEPOSTINSTFUNCS += "guile_sstate_postinst"
+GUILESSTATEDIR = "${STAGING_DIR}-components/${TUNE_PKGARCH}/${PN}/${libdir}/guile/2.0/ccache"
+GUILESSTATEDIR_class-native = "${STAGING_DIR}-components/${BUILD_ARCH}/${PN}/${libdir_native}/guile/2.0/ccache"
 guile_sstate_postinst() {
 	if [ "${BB_CURRENTTASK}" = "populate_sysroot" -o "${BB_CURRENTTASK}" = "populate_sysroot_setscene" ]
 	then
-                find ${STAGING_DIR_TARGET}/${libdir}/guile/2.0/ccache -type f | xargs touch
+                find ${GUILESSTATEDIR} -type f | xargs touch
 	fi
 }
 

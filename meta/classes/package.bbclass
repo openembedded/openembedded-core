@@ -414,7 +414,8 @@ def copydebugsources(debugsrcdir, d):
         bb.utils.mkdirhier(basepath)
         cpath.updatecache(basepath)
 
-        processdebugsrc =  "LC_ALL=C ; sort -z -u '%s' | egrep -v -z '(<internal>|<built-in>)$' | "
+        # Ignore files from the recipe sysroots (target and native)
+        processdebugsrc =  "LC_ALL=C ; sort -z -u '%s' | egrep -v -z '((<internal>|<built-in>)$|/.*recipe-sysroot.*/)' | "
         # We need to ignore files that are not actually ours
         # we do this by only paying attention to items from this package
         processdebugsrc += "fgrep -zw '%s' | "

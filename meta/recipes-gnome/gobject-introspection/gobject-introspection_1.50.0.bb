@@ -34,7 +34,7 @@ DEPENDS_append = " libffi zlib glib-2.0 python3 flex-native bison-native"
 # (standard ldd doesn't work when cross-compiling).
 DEPENDS_class-target_append = " gobject-introspection-native qemu-native prelink-native"
 
-SSTATE_SCAN_FILES += "g-ir-scanner-qemuwrapper g-ir-scanner-wrapper g-ir-compiler-wrapper g-ir-scanner-lddwrapper Gio-2.0.gir"
+SSTATE_SCAN_FILES += "g-ir-scanner-qemuwrapper g-ir-scanner-wrapper g-ir-compiler-wrapper g-ir-scanner-lddwrapper Gio-2.0.gir postinst-ldsoconf-${PN}"
 
 do_configure_prepend_class-native() {
         # Tweak the native python scripts so that they don't refer to the
@@ -166,8 +166,13 @@ python gobject_introspection_preconfigure () {
     oe.utils.write_ld_so_conf(d)
 }
 
-SSTATEPOSTINSTFUNCS += "gobject_introspection_postinst"
-python gobject_introspection_postinst () {
-    if d.getVar("BB_CURRENTTASK").startswith("populate_sysroot"):
-        oe.utils.write_ld_so_conf(d)
+SYSROOT_PREPROCESS_FUNCS_append = " gi_ldsoconf_sysroot_preprocess"
+gi_ldsoconf_sysroot_preprocess () {
+	mkdir -p ${SYSROOT_DESTDIR}${bindir}
+	dest=${SYSROOT_DESTDIR}${bindir}/postinst-ldsoconf-${PN}
+	echo "#!/bin/sh" > $dest
+	echo "echo mkdir -p ${STAGING_DIR_TARGET}${sysconfdir} > ${STAGING_DIR_TARGET}${sysconfdir}/ld.so.conf" >> $dest
+	echo "echo ${base_libdir} >> ${STAGING_DIR_TARGET}${sysconfdir}/ld.so.conf" >> $dest
+	echo "echo ${libdir} >> ${STAGING_DIR_TARGET}${sysconfdir}/ld.so.conf" >> $dest
+	chmod 755 $dest
 }

@@ -23,8 +23,6 @@ UPSTREAM_CHECK_URI = "${DEBIAN_MIRROR}/main/b/base-passwd/"
 
 inherit autotools
 
-SSTATEPOSTINSTFUNCS += "base_passwd_sstate_postinst"
-
 do_install () {
 	install -d -m 755 ${D}${sbindir}
 	install -o root -g root -p -m 755 ${B}/update-passwd ${D}${sbindir}/
@@ -45,23 +43,16 @@ do_install () {
 	install -p -m 644 ${S}/debian/copyright ${D}${docdir}/${BPN}/
 }
 
-base_passwd_sstate_postinst() {
-	if [ "${BB_CURRENTTASK}" = "populate_sysroot" -o "${BB_CURRENTTASK}" = "populate_sysroot_setscene" ]
-	then
-		# Staging does not copy ${sysconfdir} files into the
-		# target sysroot, so we need to do so manually. We
-		# put these files in the target sysroot so they can
-		# be used by recipes which use custom user/group
-		# permissions.
-		# Install passwd.master and group.master to sysconfdir and mv
-		# them to make sure they are atomically install.
-		install -d -m 755 ${STAGING_DIR_TARGET}${sysconfdir}
-		for i in passwd group; do
-			install -p -m 644 ${STAGING_DIR_TARGET}${datadir}/base-passwd/$i.master \
-				${STAGING_DIR_TARGET}${sysconfdir}/
-			mv ${STAGING_DIR_TARGET}${sysconfdir}/$i.master ${STAGING_DIR_TARGET}${sysconfdir}/$i
-		done
-	fi
+SYSROOT_DIRS += "${sysconfdir}"
+SYSROOT_PREPROCESS_FUNCS += "base_passwd_tweaksysroot"
+
+base_passwd_tweaksysroot () {
+	# Install passwd.master and group.master to sysconfdir
+	install -d -m 755 ${SYSROOT_DESTDIR}${sysconfdir}
+	for i in passwd group; do
+		install -p -m 644 ${SYSROOT_DESTDIR}${datadir}/base-passwd/$i.master \
+			${SYSROOT_DESTDIR}${sysconfdir}/$i
+	done
 }
 
 python populate_packages_prepend() {

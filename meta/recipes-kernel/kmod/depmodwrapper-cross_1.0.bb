@@ -9,6 +9,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 # We need the following for the sstate code to process the wrapper
 SSTATE_SCAN_FILES += "depmodwrapper"
+EXTRA_STAGING_FIXMES = "PKGDATA_DIR"
 
 do_install() {
 	install -d ${D}${bindir_crossscripts}/

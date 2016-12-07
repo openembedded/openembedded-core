@@ -3,7 +3,7 @@ inherit useradd_base
 # base-passwd-cross provides the default passwd and group files in the
 # target sysroot, and shadow -native and -sysroot provide the utilities
 # and support files needed to add and modify user and group accounts
-DEPENDS_append_class-target = " base-files shadow-native shadow-sysroot shadow"
+DEPENDS_append_class-target = " base-files shadow-native shadow-sysroot shadow base-passwd"
 PACKAGE_WRITE_DEPS += "shadow-native"
 
 # This preinstall function can be run in four different contexts:
@@ -97,13 +97,13 @@ fi
 }
 
 useradd_sysroot () {
-	# Pseudo may (do_install) or may not (do_populate_sysroot_setscene) be running 
+	# Pseudo may (do_prepare_recipe_sysroot) or may not (do_populate_sysroot_setscene) be running 
 	# at this point so we're explicit about the environment so pseudo can load if 
 	# not already present.
-	export PSEUDO="${FAKEROOTENV} PSEUDO_LOCALSTATEDIR=${STAGING_DIR_TARGET}${localstatedir}/pseudo ${STAGING_DIR_NATIVE}${bindir_native}/pseudo"
+	export PSEUDO="${FAKEROOTENV} PSEUDO_LOCALSTATEDIR=${STAGING_DIR_TARGET}${localstatedir}/pseudo ${PSEUDO_SYSROOT}${bindir_native}/pseudo"
 
 	# Explicitly set $D since it isn't set to anything
-	# before do_install
+	# before do_prepare_recipe_sysroot
 	D=${STAGING_DIR_TARGET}
 
 	# Add groups and users defined for all recipe packages
@@ -117,17 +117,25 @@ useradd_sysroot () {
 	useradd_preinst
 }
 
-useradd_sysroot_sstate () {
-	if [ "${BB_CURRENTTASK}" = "package_setscene" -o "${BB_CURRENTTASK}" = "populate_sysroot_setscene" ]
-	then
-		useradd_sysroot
-	fi
+python useradd_sysroot_sstate () {
+    task = d.getVar("BB_CURRENTTASK")
+    if task == "package_setscene":
+        bb.build.exec_func("useradd_sysroot", d)
+    elif task == "prepare_recipe_sysroot":
+        scriptfile = d.expand("${RECIPE_SYSROOT}${bindir}/postinst-useradd-${PN}")
+        bb.utils.mkdirhier(os.path.dirname(scriptfile))
+        with open(scriptfile, 'w') as script:
+            script.write("#!/bin/sh\n")
+            bb.data.emit_func("useradd_sysroot", script, d)
+            script.write("useradd_sysroot\n")
+        os.chmod(scriptfile, 0o755)
+        bb.build.exec_func("useradd_sysroot", d)
 }
 
 userdel_sysroot_sstate () {
 if test "x${STAGING_DIR_TARGET}" != "x"; then
     if [ "${BB_CURRENTTASK}" = "clean" ]; then
-        export PSEUDO="${FAKEROOTENV} PSEUDO_LOCALSTATEDIR=${STAGING_DIR_TARGET}${localstatedir}/pseudo ${STAGING_DIR_NATIVE}${bindir_native}/pseudo"
+        export PSEUDO="${FAKEROOTENV} PSEUDO_LOCALSTATEDIR=${STAGING_DIR_TARGET}${localstatedir}/pseudo ${PSEUDO_SYSROOT}${bindir_native}/pseudo"
         OPT="--root ${STAGING_DIR_TARGET}"
 
         # Remove groups and users defined for package
@@ -154,10 +162,10 @@ if test "x${STAGING_DIR_TARGET}" != "x"; then
 fi
 }
 
-SSTATECLEANFUNCS_append_class-target = " userdel_sysroot_sstate"
+#SSTATECLEANFUNCS_append_class-target = " userdel_sysroot_sstate"
 
-do_install[prefuncs] += "${SYSROOTFUNC}"
-SYSROOTFUNC_class-target = "useradd_sysroot"
+do_prepare_recipe_sysroot[postfuncs] += "${SYSROOTFUNC}"
+SYSROOTFUNC_class-target = "useradd_sysroot_sstate"
 SYSROOTFUNC = ""
 
 SSTATEPREINSTFUNCS_append_class-target = " useradd_sysroot_sstate"
