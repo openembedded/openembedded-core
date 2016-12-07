@@ -43,20 +43,17 @@ SRC_URI_append_arm = " file://alignment.sh"
 
 KERNEL_VERSION = ""
 
-inherit update-alternatives
 DEPENDS_append = " update-rc.d-native"
 PACKAGE_WRITE_DEPS_append = " ${@bb.utils.contains('DISTRO_FEATURES','systemd','systemd-systemctl-native','',d)}"
 
 PACKAGES =+ "${PN}-functions ${PN}-sushell"
-RDEPENDS_${PN} = "${PN}-functions \
+RDEPENDS_${PN} = "initd-functions \
                   ${@bb.utils.contains('DISTRO_FEATURES','selinux','${PN}-sushell','',d)} \
 		 "
+RPROVIDES_${PN}-functions = "initd-functions"
+RCONFLICTS_${PN}-functions = "lsbinitscripts"
 FILES_${PN}-functions = "${sysconfdir}/init.d/functions*"
 FILES_${PN}-sushell = "${base_sbindir}/sushell"
-
-ALTERNATIVE_PRIORITY_${PN}-functions = "90"
-ALTERNATIVE_${PN}-functions = "functions"
-ALTERNATIVE_LINK_NAME[functions] = "${sysconfdir}/init.d/functions"
 
 HALTARGS ?= "-d -f"
 
