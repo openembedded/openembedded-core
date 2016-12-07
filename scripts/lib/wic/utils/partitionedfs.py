@@ -201,9 +201,10 @@ class Image():
                 part['num'] = 0
 
             if disk['ptable_format'] == "msdos":
-                if disk['realpart'] > 3:
-                    part['type'] = 'logical'
-                    part['num'] = disk['realpart'] + 1
+                if len(self.partitions) > 4:
+                    if disk['realpart'] > 3:
+                        part['type'] = 'logical'
+                        part['num'] = disk['realpart'] + 1
 
             disk['partitions'].append(num)
             msger.debug("Assigned %s to %s%d, sectors range %d-%d size %d "
