@@ -14,20 +14,23 @@ class TargetBuildProject(BuildProject):
     def download_archive(self):
         self._download_archive()
 
-        (status, output) = self.target.copy_to(self.localarchive, self.targetdir)
-        if status != 0:
-            raise Exception("Failed to copy archive to target, output: %s" % output)
+        status, output = self.target.copyTo(self.localarchive, self.targetdir)
+        if status:
+            raise Exception('Failed to copy archive to target, '
+                            'output: %s' % output)
 
-        (status, output) = self.target.run('tar xf %s%s -C %s' % (self.targetdir, self.archive, self.targetdir))
-        if status != 0:
-            raise Exception("Failed to extract archive, output: %s" % output)
+        cmd = 'tar xf %s%s -C %s' % (self.targetdir,
+                                     self.archive,
+                                     self.targetdir)
+        status, output = self.target.run(cmd)
+        if status:
+            raise Exception('Failed to extract archive, '
+                            'output: %s' % output)
 
-        #Change targetdir to project folder
+        # Change targetdir to project folder
         self.targetdir = self.targetdir + self.fname
 
-    # The timeout parameter of target.run is set to 0 to make the ssh command
-    # run with no timeout.
+    # The timeout parameter of target.run is set to 0
+    # to make the ssh command run with no timeout.
     def _run(self, cmd):
         return self.target.run(cmd, 0)[0]
-
-
