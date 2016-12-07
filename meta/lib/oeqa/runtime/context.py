@@ -9,6 +9,8 @@ from oeqa.runtime.loader import OERuntimeTestLoader
 
 class OERuntimeTestContext(OETestContext):
     loaderClass = OERuntimeTestLoader
+    runtime_files_dir = os.path.join(
+                        os.path.dirname(os.path.abspath(__file__)), "files")
 
     def __init__(self, td, logger, target, packages_manifest):
         super(OERuntimeTestContext, self).__init__(td, logger)
