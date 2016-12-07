@@ -4,7 +4,9 @@ SECTION = "base"
 LICENSE = "GPLv2"
 DEPENDS = "popt glib-2.0"
 
+RPROVIDES_${PN} += "initd-functions"
 RDEPENDS_${PN} += "util-linux"
+RCONFLICTS_${PN} = "initscripts-functions"
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=ebf4e8b49780ab187d51bd26aaa022c6"
 
@@ -16,12 +18,6 @@ SRC_URI = "http://pkgs.fedoraproject.org/repo/pkgs/initscripts/initscripts-${PV}
 
 SRC_URI[md5sum] = "d6c798f40dceb117e12126d94cb25a9a"
 SRC_URI[sha256sum] = "1793677bdd1f7ee4cb00878ce43346196374f848a4c8e4559e086040fc7487db"
-
-inherit update-alternatives
-
-ALTERNATIVE_PRIORITY = "100"
-ALTERNATIVE_${PN} = "functions"
-ALTERNATIVE_LINK_NAME[functions] = "${sysconfdir}/init.d/functions"
 
 # Since we are only taking the patched version of functions, no need to
 # configure or compile anything so do not execute these
