@@ -107,7 +107,7 @@ def wic_create_subcommand(args, usage_str):
     parser.add_option("-n", "--native-sysroot", dest="native_sysroot",
                       help="path to the native sysroot containing the tools "
                            "to use to build the image")
-    parser.add_option("-p", "--skip-build-check", dest="build_check",
+    parser.add_option("-s", "--skip-build-check", dest="build_check",
                       action="store_false", default=True, help="skip the build check")
     parser.add_option("-f", "--build-rootfs", action="store_true", help="build rootfs")
     parser.add_option("-c", "--compress-with", choices=("gzip", "bzip2", "xz"),
