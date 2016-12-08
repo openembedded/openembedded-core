@@ -10,8 +10,8 @@ LIC_FILES_CHKSUM = "file://src/wm.h;endline=21;md5=a7e844465edbcf79c282369f93caa
 SECTION = "x11/wm"
 DEPENDS = "libmatchbox virtual/libx11 libxext libxrender startup-notification expat gconf libxcursor libxfixes"
 
-# SRCREV tagged 1.2.1
-SRCREV = "9fd1806dfa7c8f2202db18b7bc880857a3019f8c"
+# SRCREV tagged 1.2.2
+SRCREV = "27da947e7fbdf9659f7e5bd1e92af92af6c03970"
 SRC_URI = "git://git.yoctoproject.org/matchbox-window-manager \
            file://kbdconfig"
 
