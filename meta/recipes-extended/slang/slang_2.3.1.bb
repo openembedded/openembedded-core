@@ -19,11 +19,11 @@ SRC_URI = "http://www.jedsoft.org/releases/${BPN}/${BP}.tar.bz2 \
            file://rpathfix.patch \
            file://fix-check-pcre.patch \
            file://slang-fix-the-iconv-existence-checking.patch \
-           file://0001-Fix-error-conflicting-types-for-posix_close.patch \
            file://no-x.patch \
           "
-SRC_URI[md5sum] = "3bcc790460d52db1316c20395b7ac2f1"
-SRC_URI[sha256sum] = "f95224060f45e0d8212a5039b339afa5f1a94a1bb0298e796104e5b12e926129"
+
+SRC_URI[md5sum] = "bd46d1dc17a50c72004ad842829d7b1f"
+SRC_URI[sha256sum] = "a810d5da7b0c0c8c335393c6b4f12884be6fa7696d9ca9521ef21316a4e00f9d"
 
 UPSTREAM_CHECK_URI = "http://www.jedsoft.org/releases/slang/"
 PREMIRRORS_append = "\n http://www.jedsoft.org/releases/slang/.* http://www.jedsoft.org/releases/slang/old/ \n"
