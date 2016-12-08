@@ -22,8 +22,15 @@
 #
 
 if [ $# -lt 1 -o "$1" = '--help' -o "$1" = '-h' ] ; then
-    echo "Usage: $0 <native tool> [parameters]"
-    exit 1
+    echo 'oe-run-native: error: the following arguments are required: <native tool>'
+    echo 'Usage: oe-run-native tool [parameters]'
+    echo ''
+    echo 'OpenEmbedded run-native - runs native tools'
+    echo ''
+    echo 'arguments:'
+    echo '  tool                Native tool to run'
+    echo ''
+    exit 2
 fi
 
 SYSROOT_SETUP_SCRIPT=`which oe-find-native-sysroot 2> /dev/null`
