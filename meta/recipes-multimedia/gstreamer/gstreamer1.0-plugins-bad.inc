@@ -42,6 +42,7 @@ PACKAGECONFIG[gtk]             = "--enable-gtk3,--disable-gtk3,gtk+3"
 # ensure OpenSSL is used for HLS AES description instead of nettle
 # (OpenSSL is a shared dependency with dtls)
 PACKAGECONFIG[hls]             = "--enable-hls --with-hls-crypto=openssl,--disable-hls,openssl"
+PACKAGECONFIG[kms]             = "--enable-kms,--disable-kms,libdrm"
 PACKAGECONFIG[libmms]          = "--enable-libmms,--disable-libmms,libmms"
 PACKAGECONFIG[libssh2]         = "--enable-libssh2,--disable-libssh2,libssh2"
 PACKAGECONFIG[modplug]         = "--enable-modplug,--disable-modplug,libmodplug"
