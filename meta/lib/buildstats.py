@@ -18,13 +18,18 @@ class SystemStats:
                 ('meminfo', self._reduce_meminfo),
                 ('stat', self._reduce_stat),
         ):
-            # In practice, this class gets instantiated only once in
-            # the bitbake cooker process.  Therefore 'append' mode is
-            # not strictly necessary, but using it makes the class
-            # more robust should two processes ever write
-            # concurrently.
-            destfile = os.path.join(bsdir, '%sproc_%s.log' % ('reduced_' if handler else '', filename))
-            self.proc_files.append((filename, open(destfile, 'ab'), handler))
+            # The corresponding /proc files might not exist on the host.
+            # For example, /proc/diskstats is not available in virtualized
+            # environments like Linux-VServer. Silently skip collecting
+            # the data.
+            if os.path.exists(os.path.join('/proc', filename)):
+                # In practice, this class gets instantiated only once in
+                # the bitbake cooker process.  Therefore 'append' mode is
+                # not strictly necessary, but using it makes the class
+                # more robust should two processes ever write
+                # concurrently.
+                destfile = os.path.join(bsdir, '%sproc_%s.log' % ('reduced_' if handler else '', filename))
+                self.proc_files.append((filename, open(destfile, 'ab'), handler))
         self.monitor_disk = open(os.path.join(bsdir, 'monitor_disk.log'), 'ab')
         # Last time that we sampled /proc data resp. recorded disk monitoring data.
         self.last_proc = 0
