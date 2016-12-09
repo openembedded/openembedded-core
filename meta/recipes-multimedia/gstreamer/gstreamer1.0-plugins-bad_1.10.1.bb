@@ -14,8 +14,12 @@ SRC_URI = " \
     file://0001-gstreamer-gl.pc.in-don-t-append-GL_CFLAGS-to-CFLAGS.patch \
     file://0009-glimagesink-Downrank-to-marginal.patch \
     file://0001-introspection.m4-prefix-pkgconfig-paths-with-PKG_CON.patch \
+    file://0001-Prepend-PKG_CONFIG_SYSROOT_DIR-to-pkg-config-output.patch \
 "
 SRC_URI[md5sum] = "491d2d5aab55ffc60c66e714d3d664ea"
 SRC_URI[sha256sum] = "133e0ed9fe21011b15d3898e3d3a9d17ab74eed31996da2e353353e688ca921d"
 
 S = "${WORKDIR}/gst-plugins-bad-${PV}"
+
+EXTRA_OECONF += "WAYLAND_PROTOCOLS_SYSROOT_DIR=${STAGING_DIR}/${MACHINE}"
+EXTRA_OECONF[vardepsexclude] = "MACHINE"
