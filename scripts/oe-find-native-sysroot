@@ -30,6 +30,20 @@
 # with this program; if not, write to the Free Software Foundation, Inc.,
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
+if [ "$1" = '--help' -o "$1" = '-h' ] ; then
+    echo 'Usage: oe-find-native-sysroot [-h|--help]'
+    echo ''
+    echo 'OpenEmbedded find-native-sysroot - helper script to set'
+    echo 'environment variables OECORE_NATIVE_SYSROOT and PSEUDO'
+    echo 'to the path of the native sysroot directory and pseudo'
+    echo 'executable binary'
+    echo ''
+    echo 'options:'
+    echo '  -h, --help          show this help message and exit'
+    echo ''
+    exit 2
+fi
+
 if [ "x$OECORE_NATIVE_SYSROOT" = "x" ]; then
     BITBAKE=`which bitbake 2> /dev/null`
     if [ "x$BITBAKE" != "x" ]; then
