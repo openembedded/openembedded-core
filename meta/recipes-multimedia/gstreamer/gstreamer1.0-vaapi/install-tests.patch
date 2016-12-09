@@ -1,0 +1,43 @@
+From 2791dfde0de0abe8100fa833dfe1a9c2e74c2629 Mon Sep 17 00:00:00 2001
+From: Jianxun Zhang <jianxun.zhang@linux.intel.com>
+Date: Thu, 21 Jan 2016 16:25:44 -0800
+Subject: [PATCH] Install tests
+
+This patch is updated for 0.6.1
+
+Upstream-Status: Inappropriate
+
+Signed-off-by: Jianxun Zhang <jianxun.zhang@linux.intel.com>
+---
+ tests/Makefile.am | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/tests/Makefile.am b/tests/Makefile.am
+index 3637d92..7cc6a97 100644
+--- a/tests/Makefile.am
++++ b/tests/Makefile.am
+@@ -1,4 +1,4 @@
+-noinst_PROGRAMS = \
++bin_PROGRAMS = \
+ 	simple-decoder			\
+ 	test-decode			\
+ 	test-display			\
+@@ -9,13 +9,13 @@ noinst_PROGRAMS = \
+ 	$(NULL)
+ 
+ if USE_ENCODERS
+-noinst_PROGRAMS += \
++bin_PROGRAMS += \
+ 	simple-encoder			\
+ 	$(NULL)
+ endif
+ 
+ if USE_GLX
+-noinst_PROGRAMS += \
++bin_PROGRAMS += \
+ 	test-textures			\
+ 	$(NULL)
+ endif
+-- 
+1.9.1
+
