@@ -1,0 +1,50 @@
+From 193ce739b2a5174269a958b00c3a5590de944e0d Mon Sep 17 00:00:00 2001
+From: Huacai Chen <chenhc@lemote.com>
+Date: Thu, 27 Oct 2016 14:45:52 +0800
+Subject: [PATCH] containers/netns_netlink: Avoid segmentation fault
+
+In order to avoid segmentation fault (use NULL as a function pointer),
+this patch modify check_netns() by passing a dummy function pointer to
+do_clone_unshare_test().
+
+Signed-off-by: Huacai Chen <chenhc@lemote.com>
+Signed-off-by: Cyril Hrubis <chrubis@suse.cz>
+
+Upstream-Status: Backport
+
+Signed-off-by: Jackie Huang <jackie.huang@windriver.com>
+---
+ testcases/kernel/containers/netns/netns_helper.h | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
+
+diff --git a/testcases/kernel/containers/netns/netns_helper.h b/testcases/kernel/containers/netns/netns_helper.h
+index 2a331ae..7df6dcb 100644
+--- a/testcases/kernel/containers/netns/netns_helper.h
++++ b/testcases/kernel/containers/netns/netns_helper.h
+@@ -56,6 +56,12 @@ static void check_iproute(unsigned int spe_ipver)
+ 	pclose(ipf);
+ }
+ 
++static int dummy(void *arg)
++{
++	(void) arg;
++	return 0;
++}
++
+ static void check_netns(void)
+ {
+ 	int pid, status;
+@@ -64,8 +70,8 @@ static void check_netns(void)
+ 		tst_brkm(TCONF | TERRNO, NULL, "CLONE_NEWNS (%d) not supported",
+ 			 CLONE_NEWNS);
+ 
+-	pid = do_clone_unshare_test(T_UNSHARE, CLONE_NEWNET | CLONE_NEWNS, NULL,
+-			NULL);
++	pid = do_clone_unshare_test(T_UNSHARE, CLONE_NEWNET | CLONE_NEWNS,
++	                            dummy, NULL);
+ 	if (pid == -1)
+ 		tst_brkm(TCONF | TERRNO, NULL,
+ 				"unshare syscall smoke test failed");
+-- 
+2.7.4
+
