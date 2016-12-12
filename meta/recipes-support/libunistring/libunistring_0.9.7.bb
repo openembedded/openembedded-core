@@ -13,16 +13,18 @@ DESCRIPTION = "Text files are nowadays usually encoded in Unicode, and may\
 
 HOMEPAGE = "http://www.gnu.org/software/libunistring/"
 SECTION = "devel"
-LICENSE = "GPLv3 & LGPLv3"
-LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504 \
-                    file://COPYING.LIB;md5=6a6a8e020838b23406c81b19c1d46df6"
+LICENSE = "LGPLv3+ | GPLv2"
+LIC_FILES_CHKSUM = "file://COPYING.LIB;md5=6a6a8e020838b23406c81b19c1d46df6 \
+                    file://README;beginline=45;endline=65;md5=08287d16ba8d839faed8d2dc14d7d6a5 \
+                    file://doc/libunistring.texi;md5=b86c9fd7acaac623017239640631912c \
+                   "
 
 SRC_URI = "${GNU_MIRROR}/libunistring/libunistring-${PV}.tar.gz \
            file://iconv-m4-remove-the-test-to-convert-euc-jp.patch \
            file://0001-Unset-need_charset_alias-when-building-for-musl.patch \
 "
-SRC_URI[md5sum] = "dfae4ff5583649ed24d8f368f1d0543b"
-SRC_URI[sha256sum] = "9625eec2507f4789ebb6fc48ebda98be0e0168979a2f68aa8b680bf8eeabbd47"
+SRC_URI[md5sum] = "8e663454aa372181ee8e46edaa3ba4c8"
+SRC_URI[sha256sum] = "9ce081cbee1951b55597b30e7030bda9d7b2f034ef901a135ff3a020be5a41e5"
 
 inherit autotools texinfo
 BBCLASSEXTEND = "native nativesdk"
