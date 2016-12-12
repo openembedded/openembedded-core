@@ -10,8 +10,8 @@ DEPENDS += "virtual/libx11 xineramaproto videoproto libpciaccess"
 
 SRC_URI += "file://0002-add-option-for-vmwgfx.patch"
 
-SRC_URI[md5sum] = "0cba22fed4cb639d5c4276f7892c543d"
-SRC_URI[sha256sum] = "3c1d244e4b1b77e92126957965cdc9fb82de4c215c0706a3a8aaff6939e4a0cc"
+SRC_URI[md5sum] = "4c3912e4d8947f6c2fc1ee9e2f211d74"
+SRC_URI[sha256sum] = "e2f7f7101fba7f53b268e7a25908babbf155b3984fb5268b3d244eb6c11bf62b"
 
 COMPATIBLE_HOST = '(i.86.*-linux|x86_64.*-linux)'
 
