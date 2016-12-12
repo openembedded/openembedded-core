@@ -208,6 +208,14 @@ PACKAGE_EXCLUDE[type] = "list"
 fakeroot python do_rootfs () {
     from oe.rootfs import create_rootfs
     from oe.manifest import create_manifest
+    import logging
+
+    logger = d.getVar('BB_TASK_LOGGER', False)
+    if logger:
+        logcatcher = bb.utils.LogCatcher()
+        logger.addHandler(logcatcher)
+    else:
+        logcatcher = None
 
     # NOTE: if you add, remove or significantly refactor the stages of this
     # process then you should recalculate the weightings here. This is quite
@@ -255,7 +263,7 @@ fakeroot python do_rootfs () {
     progress_reporter.next_stage()
 
     # generate rootfs
-    create_rootfs(d, progress_reporter=progress_reporter)
+    create_rootfs(d, progress_reporter=progress_reporter, logcatcher=logcatcher)
 
     progress_reporter.finish()
 }

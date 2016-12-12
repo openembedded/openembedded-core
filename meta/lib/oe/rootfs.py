@@ -15,12 +15,13 @@ class Rootfs(object, metaclass=ABCMeta):
     This is an abstract class. Do not instantiate this directly.
     """
 
-    def __init__(self, d, progress_reporter=None):
+    def __init__(self, d, progress_reporter=None, logcatcher=None):
         self.d = d
         self.pm = None
         self.image_rootfs = self.d.getVar('IMAGE_ROOTFS', True)
         self.deploydir = self.d.getVar('IMGDEPLOYDIR', True)
         self.progress_reporter = progress_reporter
+        self.logcatcher = logcatcher
 
         self.install_order = Manifest.INSTALL_ORDER
 
@@ -53,6 +54,8 @@ class Rootfs(object, metaclass=ABCMeta):
         messages = []
         with open(log_path, 'r') as log:
             for line in log:
+                if self.logcatcher and self.logcatcher.contains(line.rstrip()):
+                    continue
                 for ee in excludes:
                     m = ee.search(line)
                     if m:
@@ -375,8 +378,8 @@ class Rootfs(object, metaclass=ABCMeta):
 
 
 class RpmRootfs(Rootfs):
-    def __init__(self, d, manifest_dir, progress_reporter=None):
-        super(RpmRootfs, self).__init__(d, progress_reporter)
+    def __init__(self, d, manifest_dir, progress_reporter=None, logcatcher=None):
+        super(RpmRootfs, self).__init__(d, progress_reporter, logcatcher)
         self.log_check_regex = '(unpacking of archive failed|Cannot find package'\
                                '|exit 1|ERROR: |Error: |Error |ERROR '\
                                '|Failed |Failed: |Failed$|Failed\(\d+\):)'
@@ -530,8 +533,8 @@ class RpmRootfs(Rootfs):
            bb.utils.remove(self.pm.install_dir_path, True)
 
 class DpkgOpkgRootfs(Rootfs):
-    def __init__(self, d, progress_reporter=None):
-        super(DpkgOpkgRootfs, self).__init__(d, progress_reporter)
+    def __init__(self, d, progress_reporter=None, logcatcher=None):
+        super(DpkgOpkgRootfs, self).__init__(d, progress_reporter, logcatcher)
 
     def _get_pkgs_postinsts(self, status_file):
         def _get_pkg_depends_list(pkg_depends):
@@ -625,8 +628,8 @@ class DpkgOpkgRootfs(Rootfs):
             num += 1
 
 class DpkgRootfs(DpkgOpkgRootfs):
-    def __init__(self, d, manifest_dir, progress_reporter=None):
-        super(DpkgRootfs, self).__init__(d, progress_reporter)
+    def __init__(self, d, manifest_dir, progress_reporter=None, logcatcher=None):
+        super(DpkgRootfs, self).__init__(d, progress_reporter, logcatcher)
         self.log_check_regex = '^E:'
         self.log_check_expected_regexes = \
         [
@@ -717,8 +720,8 @@ class DpkgRootfs(DpkgOpkgRootfs):
 
 
 class OpkgRootfs(DpkgOpkgRootfs):
-    def __init__(self, d, manifest_dir, progress_reporter=None):
-        super(OpkgRootfs, self).__init__(d, progress_reporter)
+    def __init__(self, d, manifest_dir, progress_reporter=None, logcatcher=None):
+        super(OpkgRootfs, self).__init__(d, progress_reporter, logcatcher)
         self.log_check_regex = '(exit 1|Collected errors)'
 
         self.manifest = OpkgManifest(d, manifest_dir)
@@ -994,16 +997,16 @@ def variable_depends(d, manifest_dir=None):
     cls = get_class_for_type(img_type)
     return cls._depends_list()
 
-def create_rootfs(d, manifest_dir=None, progress_reporter=None):
+def create_rootfs(d, manifest_dir=None, progress_reporter=None, logcatcher=None):
     env_bkp = os.environ.copy()
 
     img_type = d.getVar('IMAGE_PKGTYPE', True)
     if img_type == "rpm":
-        RpmRootfs(d, manifest_dir, progress_reporter).create()
+        RpmRootfs(d, manifest_dir, progress_reporter, logcatcher).create()
     elif img_type == "ipk":
-        OpkgRootfs(d, manifest_dir, progress_reporter).create()
+        OpkgRootfs(d, manifest_dir, progress_reporter, logcatcher).create()
     elif img_type == "deb":
-        DpkgRootfs(d, manifest_dir, progress_reporter).create()
+        DpkgRootfs(d, manifest_dir, progress_reporter, logcatcher).create()
 
     os.environ.clear()
     os.environ.update(env_bkp)
