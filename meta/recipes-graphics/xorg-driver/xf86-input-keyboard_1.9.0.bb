@@ -9,5 +9,5 @@ core keyboard."
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=ea2099d24ac9e316a6d4b9f20b3d4e10"
 
-SRC_URI[md5sum] = "96ccc43d389b970afbd3893875dfd678"
-SRC_URI[sha256sum] = "1ac8ff39bf9da7d2fc7fd6c24515726e8138340c0518ab8c606e008cf93ca211"
+SRC_URI[md5sum] = "a3a3f0dd32361dcdbd406e894dafe090"
+SRC_URI[sha256sum] = "f7c900f21752683402992b288d5a2826de7a6c0c0abac2aadd7e8a409e170388"
