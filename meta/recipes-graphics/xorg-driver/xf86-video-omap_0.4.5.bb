@@ -24,8 +24,8 @@ LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=10ce5de3b111315ea652a5f74ec0c602"
 DEPENDS += "virtual/libx11 libdrm xf86driproto"
 
-SRC_URI[md5sum] = "a364e151a537948f75bb8c9b840a31da"
-SRC_URI[sha256sum] = "a7192690b8638f5c8d611a1bae07cc13081e22edd4070f37a2f5c3f8d79e7ebc"
+SRC_URI[md5sum] = "3b8ea5e8fba63355c0dc6681c49d5fe5"
+SRC_URI[sha256sum] = "93e7d42107521e61f61980eaea64fb452e87b7b94272e48938ac8d904ccfab5a"
 
 CFLAGS += " -I${STAGING_INCDIR}/xorg "
 
