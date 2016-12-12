@@ -477,8 +477,6 @@ class RpmRootfs(Rootfs):
 
         execute_pre_post_process(self.d, rpm_post_process_cmds)
 
-        self._log_check()
-
         if self.inc_rpm_image_gen == "1":
             self.pm.backup_packaging_data()
 
