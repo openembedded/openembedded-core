@@ -174,15 +174,16 @@ def read_value(args):
             logger.error("No packages specified")
             sys.exit(1)
 
-    def readvar(pkgdata_file, valuename):
+    def readvar(pkgdata_file, valuename, mappedpkg):
         val = ""
         with open(pkgdata_file, 'r') as f:
             for line in f:
-                if line.startswith(valuename + ":"):
+                if (line.startswith(valuename + ":") or
+                    line.startswith(valuename + "_" + mappedpkg + ":")):
                     val = line.split(': ', 1)[1].rstrip()
         return val
 
-    logger.debug("read-value('%s', '%s' '%s'" % (args.pkgdata_dir, args.valuename, packages))
+    logger.debug("read-value('%s', '%s' '%s')" % (args.pkgdata_dir, args.valuename, packages))
     for package in packages:
         pkg_split = package.split('_')
         pkg_name = pkg_split[0]
@@ -192,18 +193,17 @@ def read_value(args):
         if os.path.exists(revlink):
             mappedpkg = os.path.basename(os.readlink(revlink))
             qvar = args.valuename
+            value = readvar(revlink, qvar, mappedpkg)
             if qvar == "PKGSIZE":
-                # append packagename
-                qvar = "%s_%s" % (args.valuename, mappedpkg)
                 # PKGSIZE is now in bytes, but we we want it in KB
-                pkgsize = (int(readvar(revlink, qvar)) + 1024 // 2) // 1024
+                pkgsize = (int(value) + 1024 // 2) // 1024
                 value = "%d" % pkgsize
-            else:
-                value = readvar(revlink, qvar)
             if args.prefix_name:
                 print('%s %s' % (pkg_name, value))
             else:
                 print(value)
+        else:
+            logger.debug("revlink %s does not exist", revlink)
 
 def lookup_pkglist(pkgs, pkgdata_dir, reverse):
     if reverse:

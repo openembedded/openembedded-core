@@ -41,6 +41,8 @@ class OePkgdataUtilTests(oeSelfTest):
     def test_read_value(self):
         result = runCmd('oe-pkgdata-util read-value PN libz1')
         self.assertEqual(result.output, 'zlib')
+        result = runCmd('oe-pkgdata-util read-value PKG libz1')
+        self.assertEqual(result.output, 'libz1')
         result = runCmd('oe-pkgdata-util read-value PKGSIZE bash')
         pkgsize = int(result.output.strip())
         self.assertGreater(pkgsize, 1, "Size should be greater than 1. %s" % result.output)
