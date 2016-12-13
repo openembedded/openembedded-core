@@ -1,5 +1,5 @@
 import unittest
-from oe.utils import packages_filter_out_system
+from oe.utils import packages_filter_out_system, trim_version
 
 class TestPackagesFilterOutSystem(unittest.TestCase):
     def test_filter(self):

@@ -1,19 +1,7 @@
 import unittest
-from oe.maketype import create, factory
+from oe.maketype import create
 
-class TestTypes(unittest.TestCase):
-    def assertIsInstance(self, obj, cls):
-        return self.assertTrue(isinstance(obj, cls))
-
-    def assertIsNot(self, obj, other):
-        return self.assertFalse(obj is other)
-
-    def assertFactoryCreated(self, value, type, **flags):
-        cls = factory(type)
-        self.assertIsNot(cls, None)
-        self.assertIsInstance(create(value, type, **flags), cls)
-
-class TestBooleanType(TestTypes):
+class TestBooleanType(unittest.TestCase):
     def test_invalid(self):
         self.assertRaises(ValueError, create, '', 'boolean')
         self.assertRaises(ValueError, create, 'foo', 'boolean')
@@ -43,7 +31,7 @@ class TestBooleanType(TestTypes):
         self.assertEqual(create('y', 'boolean'), True)
         self.assertNotEqual(create('y', 'boolean'), False)
 
-class TestList(TestTypes):
+class TestList(unittest.TestCase):
     def assertListEqual(self, value, valid, sep=None):
         obj = create(value, 'list', separator=sep)
         self.assertEqual(obj, valid)
