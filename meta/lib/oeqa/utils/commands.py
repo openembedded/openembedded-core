@@ -222,9 +222,7 @@ def runqemu(pn, ssh=True):
         import oeqa.targetcontrol
         tinfoil.config_data.setVar("TEST_LOG_DIR", "${WORKDIR}/testimage")
         tinfoil.config_data.setVar("TEST_QEMUBOOT_TIMEOUT", "1000")
-        import oe.recipeutils
-        recipefile = oe.recipeutils.pn_to_recipe(tinfoil.cooker, pn)
-        recipedata = oe.recipeutils.parse_recipe(tinfoil.cooker, recipefile, [])
+        recipedata = tinfoil.parse_recipe(pn)
 
         # The QemuRunner log is saved out, but we need to ensure it is at the right
         # log level (and then ensure that since it's a child of the BitBake logger,
