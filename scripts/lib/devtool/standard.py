@@ -442,41 +442,6 @@ class BbTaskExecutor(object):
             self.executed.append(func)
 
 
-class PatchTaskExecutor(BbTaskExecutor):
-    def __init__(self, rdata):
-        import oe.patch
-        self.check_git = False
-        self.useroptions = []
-        oe.patch.GitApplyTree.gitCommandUserOptions(self.useroptions, d=rdata)
-        super(PatchTaskExecutor, self).__init__(rdata)
-
-    def exec_func(self, func, report):
-        from oe.patch import GitApplyTree
-        srcsubdir = self.rdata.getVar('S', True)
-        haspatches = False
-        if func == 'do_patch':
-            patchdir = os.path.join(srcsubdir, 'patches')
-            if os.path.exists(patchdir):
-                if os.listdir(patchdir):
-                    haspatches = True
-                else:
-                    os.rmdir(patchdir)
-
-        super(PatchTaskExecutor, self).exec_func(func, report)
-        if self.check_git and os.path.exists(srcsubdir):
-            if func == 'do_patch':
-                if os.path.exists(patchdir):
-                    shutil.rmtree(patchdir)
-                    if haspatches:
-                        stdout, _ = bb.process.run('git status --porcelain patches', cwd=srcsubdir)
-                        if stdout:
-                            bb.process.run('git checkout patches', cwd=srcsubdir)
-
-            stdout, _ = bb.process.run('git status --porcelain', cwd=srcsubdir)
-            if stdout:
-                bb.process.run('git add .; git %s commit -a -m "Committing changes from %s\n\n%s"' % (' '.join(self.useroptions), func, GitApplyTree.ignore_commit_prefix + ' - from %s' % func), cwd=srcsubdir)
-
-
 def _prep_extract_operation(config, basepath, recipename, tinfoil=None):
     """HACK: Ugly workaround for making sure that requirements are met when
        trying to extract a package. Returns the tinfoil instance to be used."""
@@ -563,7 +528,7 @@ def _extract_source(srctree, keep_temp, devbranch, sync, d):
             # We don't want to move the source to STAGING_KERNEL_DIR here
             crd.setVar('STAGING_KERNEL_DIR', '${S}')
 
-        task_executor = PatchTaskExecutor(crd)
+        task_executor = BbTaskExecutor(crd)
 
         crd.setVar('EXTERNALSRC_forcevariable', '')
 

@@ -10,6 +10,75 @@ PATCH_GIT_USER_EMAIL ?= "oe.patch@oe"
 
 inherit terminal
 
+python () {
+    if d.getVar('PATCHTOOL', True) == 'git' and d.getVar('PATCH_COMMIT_FUNCTIONS', True) == '1':
+        tasks = list(filter(lambda k: d.getVarFlag(k, "task", True), d.keys()))
+        extratasks = []
+        def follow_chain(task, endtask, chain=None):
+            if not chain:
+                chain = []
+            chain.append(task)
+            for othertask in tasks:
+                if othertask == task:
+                    continue
+                if task == endtask:
+                    for ctask in chain:
+                        if ctask not in extratasks:
+                            extratasks.append(ctask)
+                else:
+                    deps = d.getVarFlag(othertask, 'deps', False)
+                    if task in deps:
+                        follow_chain(othertask, endtask, chain)
+            chain.pop()
+        follow_chain('do_unpack', 'do_patch')
+        try:
+            extratasks.remove('do_unpack')
+        except ValueError:
+            # For some recipes do_unpack doesn't exist, ignore it
+            pass
+
+        d.appendVarFlag('do_patch', 'prefuncs', ' patch_task_patch_prefunc')
+        for task in extratasks:
+            d.appendVarFlag(task, 'postfuncs', ' patch_task_postfunc')
+}
+
+python patch_task_patch_prefunc() {
+    # Prefunc for do_patch
+    func = d.getVar('BB_RUNTASK', True)
+    srcsubdir = d.getVar('S', True)
+
+    patchdir = os.path.join(srcsubdir, 'patches')
+    if os.path.exists(patchdir):
+        if os.listdir(patchdir):
+            d.setVar('PATCH_HAS_PATCHES_DIR', '1')
+        else:
+            os.rmdir(patchdir)
+}
+
+python patch_task_postfunc() {
+    # Prefunc for task functions between do_unpack and do_patch
+    import oe.patch
+    import shutil
+    func = d.getVar('BB_RUNTASK', True)
+    srcsubdir = d.getVar('S', True)
+
+    if os.path.exists(srcsubdir):
+        if func == 'do_patch':
+            haspatches = (d.getVar('PATCH_HAS_PATCHES_DIR', True) == '1')
+            patchdir = os.path.join(srcsubdir, 'patches')
+            if os.path.exists(patchdir):
+                shutil.rmtree(patchdir)
+                if haspatches:
+                    stdout, _ = bb.process.run('git status --porcelain patches', cwd=srcsubdir)
+                    if stdout:
+                        bb.process.run('git checkout patches', cwd=srcsubdir)
+        stdout, _ = bb.process.run('git status --porcelain .', cwd=srcsubdir)
+        if stdout:
+            useroptions = []
+            oe.patch.GitApplyTree.gitCommandUserOptions(useroptions, d=d)
+            bb.process.run('git add .; git %s commit -a -m "Committing changes from %s\n\n%s"' % (' '.join(useroptions), func, oe.patch.GitApplyTree.ignore_commit_prefix + ' - from %s' % func), cwd=srcsubdir)
+}
+
 def src_patches(d, all=False, expand=True):
     workdir = d.getVar('WORKDIR', True)
     fetch = bb.fetch2.Fetch([], d)
