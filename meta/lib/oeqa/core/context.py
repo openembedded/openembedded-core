@@ -157,6 +157,7 @@ class OETestContextExecutor(object):
     default_cases = [os.path.join(os.path.abspath(os.path.dirname(__file__)),
             'cases/example')]
     default_test_data = os.path.join(default_cases[0], 'data.json')
+    default_tests = None
 
     def register_commands(self, logger, subparsers):
         self.parser = subparsers.add_parser(self.name, help=self.help,
@@ -167,6 +168,9 @@ class OETestContextExecutor(object):
         self.parser.add_argument('--output-log', action='store',
                 default=self.default_output_log,
                 help="results output log, default: %s" % self.default_output_log)
+        self.parser.add_argument('--run-tests', action='store',
+                default=self.default_tests,
+                help="tests to run in <module>[.<class>[.<name>]] format. Just works for modules now")
 
         if self.default_test_data:
             self.parser.add_argument('--test-data-file', action='store',
@@ -210,6 +214,8 @@ class OETestContextExecutor(object):
                     open(args.test_data_file, "r"))
         else:
             self.tc_kwargs['init']['td'] = {}
+
+        self.tc_kwargs['load']['modules'] = args.run_tests.split()
 
         self.module_paths = args.CASES_PATHS
 
