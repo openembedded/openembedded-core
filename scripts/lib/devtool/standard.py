@@ -497,6 +497,7 @@ def _extract_source(srctree, keep_temp, devbranch, sync, d, tinfoil):
         tinfoil.config_data.setVar('T', os.path.join(tempdir, 'temp'))
         tinfoil.config_data.setVar('BUILDCFG_FUNCS', '')
         tinfoil.config_data.setVar('BUILDCFG_HEADER', '')
+        tinfoil.config_data.setVar('BB_HASH_IGNORE_MISMATCH', '1')
 
         tinfoil.set_event_mask(['bb.event.BuildStarted',
                                 'bb.event.BuildCompleted',
