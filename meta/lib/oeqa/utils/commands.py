@@ -216,7 +216,7 @@ def runqemu(pn, ssh=True):
     import bb.build
 
     tinfoil = bb.tinfoil.Tinfoil()
-    tinfoil.prepare(False)
+    tinfoil.prepare(config_only=False, quiet=True)
     try:
         tinfoil.logger.setLevel(logging.WARNING)
         import oeqa.targetcontrol
