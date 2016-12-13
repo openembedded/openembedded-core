@@ -73,6 +73,7 @@ def main():
         logger.error("Unable to find bitbake by searching parent directory of this script or PATH")
         sys.exit(1)
     logger.debug('Found bitbake path: %s' % bitbakepath)
+    scriptpath.add_oe_lib_path()
 
     scriptutils.logger_setup_color(logger, global_args.color)
 
