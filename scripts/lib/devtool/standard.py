@@ -378,7 +378,7 @@ def extract(args, config, basepath, workspace):
             return 1
 
         srctree = os.path.abspath(args.srctree)
-        initial_rev = _extract_source(srctree, args.keep_temp, args.branch, False, rd)
+        initial_rev = _extract_source(srctree, args.keep_temp, args.branch, False, rd, tinfoil)
         logger.info('Source tree extracted to %s' % srctree)
 
         if initial_rev:
@@ -402,7 +402,7 @@ def sync(args, config, basepath, workspace):
             return 1
 
         srctree = os.path.abspath(args.srctree)
-        initial_rev = _extract_source(srctree, args.keep_temp, args.branch, True, rd)
+        initial_rev = _extract_source(srctree, args.keep_temp, args.branch, True, rd, tinfoil)
         logger.info('Source tree %s synchronized' % srctree)
 
         if initial_rev:
@@ -411,35 +411,6 @@ def sync(args, config, basepath, workspace):
             return 1
     finally:
         tinfoil.shutdown()
-
-class BbTaskExecutor(object):
-    """Class for executing bitbake tasks for a recipe
-
-    FIXME: This is very awkward. Unfortunately it's not currently easy to
-    properly execute tasks outside of bitbake itself, until then this has to
-    suffice if we are to handle e.g. linux-yocto's extra tasks
-    """
-
-    def __init__(self, rdata):
-        self.rdata = rdata
-        self.executed = []
-
-    def exec_func(self, func, report):
-        """Run bitbake task function"""
-        if not func in self.executed:
-            deps = self.rdata.getVarFlag(func, 'deps', False)
-            if deps:
-                for taskdepfunc in deps:
-                    self.exec_func(taskdepfunc, True)
-            if report:
-                logger.info('Executing %s...' % func)
-            fn = self.rdata.getVar('FILE', True)
-            localdata = bb.build._task_data(fn, func, self.rdata)
-            try:
-                bb.build.exec_func(func, localdata)
-            except bb.build.FuncFailed as e:
-                raise DevtoolError(str(e))
-            self.executed.append(func)
 
 
 def _prep_extract_operation(config, basepath, recipename, tinfoil=None):
@@ -464,20 +435,9 @@ def _prep_extract_operation(config, basepath, recipename, tinfoil=None):
     return tinfoil
 
 
-def _extract_source(srctree, keep_temp, devbranch, sync, d):
+def _extract_source(srctree, keep_temp, devbranch, sync, d, tinfoil):
     """Extract sources of a recipe"""
-    import bb.event
     import oe.recipeutils
-
-    def eventfilter(name, handler, event, d):
-        """Bitbake event filter for devtool extract operation"""
-        if name == 'base_eventhandler':
-            return True
-        else:
-            return False
-
-    if hasattr(bb.event, 'set_eventfilter'):
-        bb.event.set_eventfilter(eventfilter)
 
     pn = d.getVar('PN', True)
 
@@ -504,19 +464,15 @@ def _extract_source(srctree, keep_temp, devbranch, sync, d):
         bb.utils.mkdirhier(srctree)
         os.rmdir(srctree)
 
-    # We don't want notes to be printed, they are too verbose
-    origlevel = bb.logger.getEffectiveLevel()
-    if logger.getEffectiveLevel() > logging.DEBUG:
-        bb.logger.setLevel(logging.WARNING)
-
     initial_rev = None
     tempdir = tempfile.mkdtemp(prefix='devtool')
     try:
+        tinfoil.logger.setLevel(logging.WARNING)
+
         crd = d.createCopy()
         # Make a subdir so we guard against WORKDIR==S
         workdir = os.path.join(tempdir, 'workdir')
         crd.setVar('WORKDIR', workdir)
-        crd.setVar('T', os.path.join(tempdir, 'temp'))
         if not crd.getVar('S', True).startswith(workdir):
             # Usually a shared workdir recipe (kernel, gcc)
             # Try to set a reasonable default
@@ -528,21 +484,55 @@ def _extract_source(srctree, keep_temp, devbranch, sync, d):
             # We don't want to move the source to STAGING_KERNEL_DIR here
             crd.setVar('STAGING_KERNEL_DIR', '${S}')
 
-        task_executor = BbTaskExecutor(crd)
+        is_kernel_yocto = bb.data.inherits_class('kernel-yocto', d)
+        if not is_kernel_yocto:
+            crd.setVar('PATCHTOOL', 'git')
+            crd.setVar('PATCH_COMMIT_FUNCTIONS', '1')
 
-        crd.setVar('EXTERNALSRC_forcevariable', '')
+        # Apply our changes to the datastore to the server's datastore
+        for key in crd.localkeys():
+            tinfoil.config_data.setVar('%s_pn-%s' % (key, pn), crd.getVar(key, False))
 
-        logger.info('Fetching %s...' % pn)
-        task_executor.exec_func('do_fetch', False)
-        logger.info('Unpacking...')
-        task_executor.exec_func('do_unpack', False)
+        tinfoil.config_data.setVar('STAMPS_DIR', os.path.join(tempdir, 'stamps'))
+        tinfoil.config_data.setVar('T', os.path.join(tempdir, 'temp'))
+        tinfoil.config_data.setVar('BUILDCFG_FUNCS', '')
+        tinfoil.config_data.setVar('BUILDCFG_HEADER', '')
+
+        tinfoil.set_event_mask(['bb.event.BuildStarted',
+                                'bb.event.BuildCompleted',
+                                'bb.event.TaskStarted',
+                                'logging.LogRecord',
+                                'bb.command.CommandCompleted',
+                                'bb.command.CommandFailed',
+                                'bb.build.TaskStarted',
+                                'bb.build.TaskSucceeded',
+                                'bb.build.TaskFailedSilent'])
+
+        def runtask(target, task):
+            if tinfoil.build_file(target, task):
+                while True:
+                    event = tinfoil.wait_event(0.25)
+                    if event:
+                        if isinstance(event, bb.command.CommandCompleted):
+                            break
+                        elif isinstance(event, bb.command.CommandFailed):
+                            raise DevtoolError('Task do_%s failed: %s' % (task, event.error))
+                        elif isinstance(event, bb.build.TaskStarted):
+                            logger.info('Executing %s...' % event._task)
+                        elif isinstance(event, logging.LogRecord):
+                            if event.levelno <= logging.INFO:
+                                continue
+                            logger.handle(event)
+
+        # we need virtual:native:/path/to/recipe if it's a BBCLASSEXTEND
+        fn = tinfoil.get_recipe_file(pn)
+        runtask(fn, 'unpack')
+
         if bb.data.inherits_class('kernel-yocto', d):
             # Extra step for kernel to populate the source directory
-            logger.info('Doing kernel checkout...')
-            task_executor.exec_func('do_kernel_checkout', False)
-        srcsubdir = crd.getVar('S', True)
+            runtask(fn, 'kernel_checkout')
 
-        task_executor.check_git = True
+        srcsubdir = crd.getVar('S', True)
 
         # Move local source files into separate subdir
         recipe_patches = [os.path.basename(patch) for patch in
@@ -572,7 +562,7 @@ def _extract_source(srctree, keep_temp, devbranch, sync, d):
                          os.path.basename(fname) not in recipe_patches]
             # Force separate S so that patch files can be left out from srctree
             srcsubdir = tempfile.mkdtemp(dir=workdir)
-            crd.setVar('S', srcsubdir)
+            tinfoil.config_data.setVar('S_task-patch', srcsubdir)
             # Move source files to S
             for path in src_files:
                 _move_file(os.path.join(workdir, path),
@@ -595,10 +585,8 @@ def _extract_source(srctree, keep_temp, devbranch, sync, d):
         (stdout, _) = bb.process.run('git rev-parse HEAD', cwd=srcsubdir)
         initial_rev = stdout.rstrip()
 
-        crd.setVar('PATCHTOOL', 'git')
-
         logger.info('Patching...')
-        task_executor.exec_func('do_patch', False)
+        runtask(fn, 'patch')
 
         bb.process.run('git tag -f devtool-patched', cwd=srcsubdir)
 
@@ -606,7 +594,7 @@ def _extract_source(srctree, keep_temp, devbranch, sync, d):
         if bb.data.inherits_class('kernel-yocto', d):
             # Store generate and store kernel config
             logger.info('Generating kernel config')
-            task_executor.exec_func('do_configure', False)
+            runtask(fn, 'configure')
             kconfig = os.path.join(crd.getVar('B', True), '.config')
 
 
@@ -667,8 +655,6 @@ def _extract_source(srctree, keep_temp, devbranch, sync, d):
             shutil.copy2(kconfig, srctree)
 
     finally:
-        bb.logger.setLevel(origlevel)
-
         if keep_temp:
             logger.info('Preserving temporary directory %s' % tempdir)
         else:
@@ -773,7 +759,7 @@ def modify(args, config, basepath, workspace):
         initial_rev = None
         commits = []
         if not args.no_extract:
-            initial_rev = _extract_source(srctree, False, args.branch, False, rd)
+            initial_rev = _extract_source(srctree, False, args.branch, False, rd, tinfoil)
             if not initial_rev:
                 return 1
             logger.info('Source tree extracted to %s' % srctree)
