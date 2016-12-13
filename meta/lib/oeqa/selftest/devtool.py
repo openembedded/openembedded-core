@@ -439,7 +439,15 @@ class DevtoolTests(DevtoolBase):
         # Try building
         bitbake('mdadm')
         # Try making (minor) modifications to the source
-        result = runCmd("sed -i 's!^\.TH.*!.TH MDADM 8 \"\" v9.999-custom!' %s" % os.path.join(tempdir, 'mdadm.8.in'))
+        modfile = os.path.join(tempdir, 'mdadm.8.in')
+        result = runCmd("sed -i 's!^\.TH.*!.TH MDADM 8 \"\" v9.999-custom!' %s" % modfile)
+        sedline = ''
+        with open(modfile, 'r') as f:
+            for line in f:
+                if line.startswith('.TH'):
+                    sedline = line.rstrip()
+                    break
+        self.assertEqual(sedline, '.TH MDADM 8 "" v9.999-custom', 'man .in file not modified (sed failed)')
         bitbake('mdadm -c package')
         pkgd = get_bb_var('PKGD', 'mdadm')
         self.assertTrue(pkgd, 'Could not query PKGD variable')
@@ -447,10 +455,11 @@ class DevtoolTests(DevtoolBase):
         self.assertTrue(mandir, 'Could not query mandir variable')
         if mandir[0] == '/':
             mandir = mandir[1:]
-        with open(os.path.join(pkgd, mandir, 'man8', 'mdadm.8'), 'r') as f:
+        manfile = os.path.join(pkgd, mandir, 'man8', 'mdadm.8')
+        with open(manfile, 'r') as f:
             for line in f:
                 if line.startswith('.TH'):
-                    self.assertEqual(line.rstrip(), '.TH MDADM 8 "" v9.999-custom', 'man file not modified. man searched file path: %s' % os.path.join(pkgd, mandir, 'man8', 'mdadm.8'))
+                    self.assertEqual(line.rstrip(), '.TH MDADM 8 "" v9.999-custom', 'man file not modified. man searched file path: %s' % manfile)
         # Test devtool reset
         stampprefix = get_bb_var('STAMP', 'mdadm')
         result = runCmd('devtool reset mdadm')
