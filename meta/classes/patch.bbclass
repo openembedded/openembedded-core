@@ -80,110 +80,13 @@ python patch_task_postfunc() {
 }
 
 def src_patches(d, all=False, expand=True):
-    workdir = d.getVar('WORKDIR', True)
-    fetch = bb.fetch2.Fetch([], d)
-    patches = []
-    sources = []
-    for url in fetch.urls:
-        local = patch_path(url, fetch, workdir, expand)
-        if not local:
-            if all:
-                local = fetch.localpath(url)
-                sources.append(local)
-            continue
-
-        urldata = fetch.ud[url]
-        parm = urldata.parm
-        patchname = parm.get('pname') or os.path.basename(local)
-
-        apply, reason = should_apply(parm, d)
-        if not apply:
-            if reason:
-                bb.note("Patch %s %s" % (patchname, reason))
-            continue
-
-        patchparm = {'patchname': patchname}
-        if "striplevel" in parm:
-            striplevel = parm["striplevel"]
-        elif "pnum" in parm:
-            #bb.msg.warn(None, "Deprecated usage of 'pnum' url parameter in '%s', please use 'striplevel'" % url)
-            striplevel = parm["pnum"]
-        else:
-            striplevel = '1'
-        patchparm['striplevel'] = striplevel
-
-        patchdir = parm.get('patchdir')
-        if patchdir:
-            patchparm['patchdir'] = patchdir
-
-        localurl = bb.fetch.encodeurl(('file', '', local, '', '', patchparm))
-        patches.append(localurl)
-
-    if all:
-        return sources
-
-    return patches
-
-def patch_path(url, fetch, workdir, expand=True):
-    """Return the local path of a patch, or None if this isn't a patch"""
-
-    local = fetch.localpath(url)
-    base, ext = os.path.splitext(os.path.basename(local))
-    if ext in ('.gz', '.bz2', '.Z'):
-        if expand:
-            local = os.path.join(workdir, base)
-        ext = os.path.splitext(base)[1]
-
-    urldata = fetch.ud[url]
-    if "apply" in urldata.parm:
-        apply = oe.types.boolean(urldata.parm["apply"])
-        if not apply:
-            return
-    elif ext not in (".diff", ".patch"):
-        return
-
-    return local
+    import oe.patch
+    return oe.patch.src_patches(d, all, expand)
 
 def should_apply(parm, d):
     """Determine if we should apply the given patch"""
-
-    if "mindate" in parm or "maxdate" in parm:
-        pn = d.getVar('PN', True)
-        srcdate = d.getVar('SRCDATE_%s' % pn, True)
-        if not srcdate:
-            srcdate = d.getVar('SRCDATE', True)
-
-        if srcdate == "now":
-            srcdate = d.getVar('DATE', True)
-
-        if "maxdate" in parm and parm["maxdate"] < srcdate:
-            return False, 'is outdated'
-
-        if "mindate" in parm and parm["mindate"] > srcdate:
-            return False, 'is predated'
-
-
-    if "minrev" in parm:
-        srcrev = d.getVar('SRCREV', True)
-        if srcrev and srcrev < parm["minrev"]:
-            return False, 'applies to later revisions'
-
-    if "maxrev" in parm:
-        srcrev = d.getVar('SRCREV', True)
-        if srcrev and srcrev > parm["maxrev"]:
-            return False, 'applies to earlier revisions'
-
-    if "rev" in parm:
-        srcrev = d.getVar('SRCREV', True)
-        if srcrev and parm["rev"] not in srcrev:
-            return False, "doesn't apply to revision"
-
-    if "notrev" in parm:
-        srcrev = d.getVar('SRCREV', True)
-        if srcrev and parm["notrev"] in srcrev:
-            return False, "doesn't apply to revision"
-
-    return True, None
+    import oe.patch
+    return oe.patch.should_apply(parm, d)
 
 should_apply[vardepsexclude] = "DATE SRCDATE"
 
