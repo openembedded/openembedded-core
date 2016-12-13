@@ -3,9 +3,9 @@ HOMEPAGE = "http://w1.fi/wpa_supplicant/"
 BUGTRACKER = "http://w1.fi/security/"
 SECTION = "network"
 LICENSE = "BSD"
-LIC_FILES_CHKSUM = "file://COPYING;md5=36b27801447e0662ee0138d17fe93880 \
-                    file://README;beginline=1;endline=56;md5=7f393579f8b109fe91f3b9765d26c7d3 \
-                    file://wpa_supplicant/wpa_supplicant.c;beginline=1;endline=12;md5=3430fda79f2ba1dd545f0b3c4d6e4d24"
+LIC_FILES_CHKSUM = "file://COPYING;md5=292eece3f2ebbaa25608eed8464018a3 \
+                    file://README;beginline=1;endline=56;md5=3f01d778be8f953962388307ee38ed2b \
+                    file://wpa_supplicant/wpa_supplicant.c;beginline=1;endline=12;md5=4061612fc5715696134e3baf933e8aba"
 DEPENDS = "dbus libnl"
 RRECOMMENDS_${PN} = "wpa-supplicant-passphrase wpa-supplicant-cli"
 
@@ -24,14 +24,9 @@ SRC_URI = "http://w1.fi/releases/wpa_supplicant-${PV}.tar.gz  \
            file://wpa_supplicant.conf \
            file://wpa_supplicant.conf-sane \
            file://99_wpa_supplicant \
-           file://0001-WPS-Reject-a-Credential-with-invalid-passphrase.patch \
-           file://0002-Remove-newlines-from-wpa_supplicant-config-network-o.patch \
-           file://0001-Reject-psk-parameter-set-with-invalid-passphrase-cha.patch \
-           file://0002-Reject-SET_CRED-commands-with-newline-characters-in-.patch \
-           file://0003-Reject-SET-commands-with-newline-characters-in-the-s.patch \
           "
-SRC_URI[md5sum] = "96ff75c3a514f1f324560a2376f13110"
-SRC_URI[sha256sum] = "cce55bae483b364eae55c35ba567c279be442ed8bab5b80a3c7fb0d057b9b316"
+SRC_URI[md5sum] = "091569eb4440b7d7f2b4276dbfc03c3c"
+SRC_URI[sha256sum] = "b4936d34c4e6cdd44954beba74296d964bc2c9668ecaa5255e499636fe2b1450"
 
 S = "${WORKDIR}/wpa_supplicant-${PV}"
 
