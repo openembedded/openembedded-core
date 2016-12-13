@@ -29,18 +29,9 @@ meta_vars = ['SUMMARY', 'DESCRIPTION', 'HOMEPAGE', 'BUGTRACKER', 'SECTION']
 
 def pn_to_recipe(cooker, pn, mc=''):
     """Convert a recipe name (PN) to the path to the recipe file"""
-    import bb.providers
 
-    if pn in cooker.recipecaches[mc].pkg_pn:
-        best = bb.providers.findBestProvider(pn, cooker.data, cooker.recipecaches[mc], cooker.recipecaches[mc].pkg_pn)
-        return best[3]
-    elif pn in cooker.recipecaches[mc].providers:
-        filenames = cooker.recipecaches[mc].providers[pn]
-        eligible, foundUnique = bb.providers.filterProviders(filenames, pn, cooker.expanded_data, cooker.recipecaches[mc])
-        filename = eligible[0]
-        return filename
-    else:
-        return None
+    best = cooker.findBestProvider(pn, mc)
+    return best[3]
 
 
 def get_unavailable_reasons(cooker, pn):
