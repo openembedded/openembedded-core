@@ -39,18 +39,6 @@ def tinfoil_init(instance):
     tinfoil = instance
 
 
-def _get_recipe_file(cooker, pn):
-    import oe.recipeutils
-    recipefile = oe.recipeutils.pn_to_recipe(cooker, pn)
-    if not recipefile:
-        skipreasons = oe.recipeutils.get_unavailable_reasons(cooker, pn)
-        if skipreasons:
-            logger.error('\n'.join(skipreasons))
-        else:
-            logger.error("Unable to find any recipe file matching %s" % pn)
-    return recipefile
-
-
 def layer(layerpath):
     if not os.path.exists(os.path.join(layerpath, 'conf', 'layer.conf')):
         raise argparse.ArgumentTypeError('{0!r} must be a path to a valid layer'.format(layerpath))
@@ -60,7 +48,7 @@ def layer(layerpath):
 def newappend(args):
     import oe.recipeutils
 
-    recipe_path = _get_recipe_file(tinfoil.cooker, args.target)
+    recipe_path = tinfoil.get_recipe_file(args.target)
 
     rd = tinfoil.config_data.createCopy()
     rd.setVar('FILE', recipe_path)

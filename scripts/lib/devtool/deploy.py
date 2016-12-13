@@ -156,7 +156,7 @@ def deploy(args, config, basepath, workspace):
     tinfoil = setup_tinfoil(basepath=basepath)
     try:
         try:
-            rd = oe.recipeutils.parse_recipe_simple(tinfoil.cooker, args.recipename, tinfoil.config_data)
+            rd = tinfoil.parse_recipe(args.recipename)
         except Exception as e:
             raise DevtoolError('Exception parsing recipe %s: %s' %
                             (args.recipename, e))

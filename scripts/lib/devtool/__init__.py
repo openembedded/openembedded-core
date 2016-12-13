@@ -120,34 +120,22 @@ def setup_tinfoil(config_only=False, basepath=None, tracking=False):
         os.chdir(orig_cwd)
     return tinfoil
 
-def get_recipe_file(cooker, pn):
-    """Find recipe file corresponding a package name"""
-    import oe.recipeutils
-    recipefile = oe.recipeutils.pn_to_recipe(cooker, pn)
-    if not recipefile:
-        skipreasons = oe.recipeutils.get_unavailable_reasons(cooker, pn)
-        if skipreasons:
-            logger.error('\n'.join(skipreasons))
-        else:
-            logger.error("Unable to find any recipe file matching %s" % pn)
-    return recipefile
-
 def parse_recipe(config, tinfoil, pn, appends, filter_workspace=True):
-    """Parse recipe of a package"""
-    import oe.recipeutils
-    recipefile = get_recipe_file(tinfoil.cooker, pn)
-    if not recipefile:
-        # Error already logged
+    """Parse the specified recipe"""
+    try:
+        recipefile = tinfoil.get_recipe_file(pn)
+    except bb.providers.NoProvider as e:
+        logger.error(str(e))
         return None
     if appends:
-        append_files = tinfoil.cooker.collection.get_file_appends(recipefile)
+        append_files = tinfoil.get_file_appends(recipefile)
         if filter_workspace:
             # Filter out appends from the workspace
             append_files = [path for path in append_files if
                             not path.startswith(config.workspace_path)]
     else:
         append_files = None
-    return oe.recipeutils.parse_recipe(tinfoil.cooker, recipefile, append_files)
+    return tinfoil.parse_recipe_file(recipefile, appends, append_files)
 
 def check_workspace_recipe(workspace, pn, checksrc=True, bbclassextend=False):
     """

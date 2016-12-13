@@ -97,25 +97,12 @@ def find_target_file(targetpath, d, pkglist=None):
                             recipes[targetpath].append('!%s' % pn)
     return recipes
 
-def _get_recipe_file(cooker, pn):
-    import oe.recipeutils
-    recipefile = oe.recipeutils.pn_to_recipe(cooker, pn)
-    if not recipefile:
-        skipreasons = oe.recipeutils.get_unavailable_reasons(cooker, pn)
-        if skipreasons:
-            logger.error('\n'.join(skipreasons))
-        else:
-            logger.error("Unable to find any recipe file matching %s" % pn)
-    return recipefile
-
 def _parse_recipe(pn, tinfoil):
-    import oe.recipeutils
-    recipefile = _get_recipe_file(tinfoil.cooker, pn)
-    if not recipefile:
-        # Error already logged
+    try:
+        rd = tinfoil.parse_recipe(pn)
+    except bb.providers.NoProvider as e:
+        logger.error(str(e))
         return None
-    append_files = tinfoil.cooker.collection.get_file_appends(recipefile)
-    rd = oe.recipeutils.parse_recipe(tinfoil.cooker, recipefile, append_files)
     return rd
 
 def determine_file_source(targetpath, rd):
