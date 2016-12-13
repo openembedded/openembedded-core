@@ -53,6 +53,7 @@ SRC_URI = "http://www.busybox.net/downloads/busybox-${PV}.tar.bz2;name=tarball \
            file://busybox-kbuild-race-fix-commit-d8e61bb.patch \
            file://commit-applet_tables-fix-commit-0dddbc1.patch \
            file://makefile-libbb-race.patch \
+           file://0001-libiproute-handle-table-ids-larger-than-255.patch \
 "
 SRC_URI_append_libc-musl = " file://musl.cfg "
 
