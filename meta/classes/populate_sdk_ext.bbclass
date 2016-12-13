@@ -374,8 +374,9 @@ python copy_buildsystem () {
 
     sstate_out = baseoutpath + '/sstate-cache'
     bb.utils.remove(sstate_out, True)
-    # uninative.bbclass sets NATIVELSBSTRING to 'universal'
-    fixedlsbstring = 'universal'
+
+    # uninative.bbclass sets NATIVELSBSTRING to 'universal%s' % oe.utils.host_gcc_version(d)
+    fixedlsbstring = "universal%s" % oe.utils.host_gcc_version(d)
 
     sdk_include_toolchain = (d.getVar('SDK_INCLUDE_TOOLCHAIN', True) == '1')
     sdk_ext_type = d.getVar('SDK_EXT_TYPE', True)

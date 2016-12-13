@@ -230,6 +230,20 @@ def format_pkg_list(pkg_dict, ret_format=None):
 
     return '\n'.join(output)
 
+def host_gcc_version(d):
+    compiler = d.getVar("BUILD_CC", True)
+    retval, output = getstatusoutput("%s --version" % compiler)
+    if retval:
+        bb.fatal("Error running %s --version: %s" % (compiler, output))
+
+    import re
+    match = re.match(".* (\d\.\d)\.\d.*", output.split('\n')[0])
+    if not match:
+        bb.fatal("Can't get compiler version from %s --version output" % compiler)
+
+    version = match.group(1)
+    return "-%s" % version if version in ("4.8", "4.9") else ""
+
 #
 # Python 2.7 doesn't have threaded pools (just multiprocessing)
 # so implement a version here
