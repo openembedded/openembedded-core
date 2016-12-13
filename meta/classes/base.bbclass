@@ -98,6 +98,9 @@ def get_lic_checksum_file_list(d):
     filelist = []
     lic_files = d.getVar("LIC_FILES_CHKSUM", True) or ''
     tmpdir = d.getVar("TMPDIR", True)
+    s = d.getVar("S", True)
+    b = d.getVar("B", True)
+    workdir = d.getVar("WORKDIR", True)
 
     urls = lic_files.split()
     for url in urls:
@@ -109,7 +112,7 @@ def get_lic_checksum_file_list(d):
                 raise bb.fetch.MalformedUrl(url)
 
             if path[0] == '/':
-                if path.startswith(tmpdir):
+                if path.startswith((tmpdir, s, b, workdir)):
                     continue
                 filelist.append(path + ":" + str(os.path.exists(path)))
         except bb.fetch.MalformedUrl:
