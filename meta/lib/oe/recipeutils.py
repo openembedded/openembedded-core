@@ -52,28 +52,6 @@ def parse_recipe(cooker, fn, appendfiles):
     return envdata
 
 
-def parse_recipe_simple(cooker, pn, d, appends=True):
-    """
-    Parse a recipe and optionally all bbappends that apply to it
-    in the current configuration.
-    """
-    import bb.providers
-
-    recipefile = pn_to_recipe(cooker, pn)
-    if not recipefile:
-        skipreasons = get_unavailable_reasons(cooker, pn)
-        # We may as well re-use bb.providers.NoProvider here
-        if skipreasons:
-            raise bb.providers.NoProvider(skipreasons)
-        else:
-            raise bb.providers.NoProvider('Unable to find any recipe file matching %s' % pn)
-    if appends:
-        appendfiles = cooker.collection.get_file_appends(recipefile)
-    else:
-        appendfiles = None
-    return parse_recipe(cooker, recipefile, appendfiles)
-
-
 def get_var_files(fn, varlist, d):
     """Find the file in which each of a list of variables is set.
     Note: requires variable history to be enabled when parsing.
