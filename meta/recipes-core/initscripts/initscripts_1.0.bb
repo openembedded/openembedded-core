@@ -50,6 +50,8 @@ PACKAGES =+ "${PN}-functions ${PN}-sushell"
 RDEPENDS_${PN} = "initd-functions \
                   ${@bb.utils.contains('DISTRO_FEATURES','selinux','${PN}-sushell','',d)} \
 		 "
+# Recommend pn-functions so that it will be a preferred default provider for initd-functions
+RRECOMMENDS_${PN} = "${PN}-functions"
 RPROVIDES_${PN}-functions = "initd-functions"
 RCONFLICTS_${PN}-functions = "lsbinitscripts"
 FILES_${PN}-functions = "${sysconfdir}/init.d/functions*"
