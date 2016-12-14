@@ -22,6 +22,7 @@ SRC_URI = "\
     file://nss-fix-nsinstall-build.patch \
     file://disable-Wvarargs-with-clang.patch \
     file://pqg.c-ULL_addend.patch \
+    file://Fix-compilation-for-X32.patch \
     file://nss.pc.in \
     file://signlibs.sh \
 "
