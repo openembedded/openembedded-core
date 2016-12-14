@@ -981,6 +981,10 @@ CONFIG_SV_DEFAULT_SERVICE_DIR=""
 # CONFIG_ENVUIDGID is not set
 # CONFIG_ENVDIR is not set
 # CONFIG_SOFTLIMIT is not set
+
+#
+#  SELinux utilities
+#
 # CONFIG_CHCON is not set
 # CONFIG_FEATURE_CHCON_LONG_OPTIONS is not set
 # CONFIG_GETENFORCE is not set
