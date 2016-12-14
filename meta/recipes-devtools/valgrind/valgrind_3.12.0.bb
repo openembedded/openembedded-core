@@ -37,6 +37,9 @@ COMPATIBLE_HOST_armv4 = 'null'
 COMPATIBLE_HOST_armv5 = 'null'
 COMPATIBLE_HOST_armv6 = 'null'
 
+# X32 isn't supported by valgrind at this time
+COMPATIBLE_HOST_linux-gnux32 = 'null'
+
 # Disable for some MIPS variants
 COMPATIBLE_HOST_mipsarcho32 = "${@bb.utils.contains("TARGET_FPU", "soft", "null", ".*-linux", d)}"
 COMPATIBLE_HOST_mipsarchn32 = 'null'
