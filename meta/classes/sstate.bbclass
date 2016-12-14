@@ -125,12 +125,12 @@ def sstate_state_fromvars(d, task = None):
 
     if task.startswith("do_"):
         task = task[3:]
-    inputs = (d.getVarFlag("do_" + task, 'sstate-inputdirs', True) or "").split()
-    outputs = (d.getVarFlag("do_" + task, 'sstate-outputdirs', True) or "").split()
-    plaindirs = (d.getVarFlag("do_" + task, 'sstate-plaindirs', True) or "").split()
-    lockfiles = (d.getVarFlag("do_" + task, 'sstate-lockfile', True) or "").split()
-    lockfilesshared = (d.getVarFlag("do_" + task, 'sstate-lockfile-shared', True) or "").split()
-    interceptfuncs = (d.getVarFlag("do_" + task, 'sstate-interceptfuncs', True) or "").split()
+    inputs = (d.getVarFlag("do_" + task, 'sstate-inputdirs') or "").split()
+    outputs = (d.getVarFlag("do_" + task, 'sstate-outputdirs') or "").split()
+    plaindirs = (d.getVarFlag("do_" + task, 'sstate-plaindirs') or "").split()
+    lockfiles = (d.getVarFlag("do_" + task, 'sstate-lockfile') or "").split()
+    lockfilesshared = (d.getVarFlag("do_" + task, 'sstate-lockfile-shared') or "").split()
+    interceptfuncs = (d.getVarFlag("do_" + task, 'sstate-interceptfuncs') or "").split()
     if not task or len(inputs) != len(outputs):
         bb.fatal("sstate variables not setup correctly?!")
 
@@ -425,7 +425,7 @@ def sstate_clean(ss, d):
 
     d2 = d.createCopy()
     stamp_clean = d.getVar("STAMPCLEAN")
-    extrainf = d.getVarFlag("do_" + ss['task'], 'stamp-extra-info', True)
+    extrainf = d.getVarFlag("do_" + ss['task'], 'stamp-extra-info')
     if extrainf:
         d2.setVar("SSTATE_MANMACH", extrainf)
         wildcard_stfile = "%s.do_%s*.%s" % (stamp_clean, ss['task'], extrainf)

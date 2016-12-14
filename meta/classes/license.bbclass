@@ -249,7 +249,7 @@ def get_boot_dependencies(d):
 
     for task in boot_tasks:
         boot_depends_string = "%s %s" % (boot_depends_string,
-                d.getVarFlag(task, "depends", True) or "")
+                d.getVarFlag(task, "depends") or "")
     boot_depends = [dep.split(":")[0] for dep
                 in boot_depends_string.split()
                 if not dep.split(":")[0].endswith("-native")]
@@ -431,10 +431,10 @@ def find_license_files(d):
         # unless NO_GENERIC_LICENSE is set.
         for lic_dir in license_source_dirs:
             if not os.path.isfile(os.path.join(lic_dir, license_type)):
-                if d.getVarFlag('SPDXLICENSEMAP', license_type, True) != None:
+                if d.getVarFlag('SPDXLICENSEMAP', license_type) != None:
                     # Great, there is an SPDXLICENSEMAP. We can copy!
                     bb.debug(1, "We need to use a SPDXLICENSEMAP for %s" % (license_type))
-                    spdx_generic = d.getVarFlag('SPDXLICENSEMAP', license_type, True)
+                    spdx_generic = d.getVarFlag('SPDXLICENSEMAP', license_type)
                     license_source = lic_dir
                     break
             elif os.path.isfile(os.path.join(lic_dir, license_type)):
@@ -442,7 +442,7 @@ def find_license_files(d):
                 license_source = lic_dir
                 break
 
-        non_generic_lic = d.getVarFlag('NO_GENERIC_LICENSE', license_type, True)
+        non_generic_lic = d.getVarFlag('NO_GENERIC_LICENSE', license_type)
         if spdx_generic and license_source:
             # we really should copy to generic_ + spdx_generic, however, that ends up messing the manifest
             # audit up. This should be fixed in emit_pkgdata (or, we actually got and fix all the recipes)
@@ -451,7 +451,7 @@ def find_license_files(d):
 
             # The user may attempt to use NO_GENERIC_LICENSE for a generic license which doesn't make sense
             # and should not be allowed, warn the user in this case.
-            if d.getVarFlag('NO_GENERIC_LICENSE', license_type, True):
+            if d.getVarFlag('NO_GENERIC_LICENSE', license_type):
                 bb.warn("%s: %s is a generic license, please don't use NO_GENERIC_LICENSE for it." % (pn, license_type))
 
         elif non_generic_lic and non_generic_lic in lic_chksums:
@@ -505,7 +505,7 @@ def return_spdx(d, license):
     """
     This function returns the spdx mapping of a license if it exists.
      """
-    return d.getVarFlag('SPDXLICENSEMAP', license, True)
+    return d.getVarFlag('SPDXLICENSEMAP', license)
 
 def canonical_license(d, license):
     """
@@ -514,7 +514,7 @@ def canonical_license(d, license):
     'X' if availabel and the tailing '+' (so GPLv3+ becomes GPL-3.0+), 
     or the passed license if there is no canonical form.
     """
-    lic = d.getVarFlag('SPDXLICENSEMAP', license, True) or ""
+    lic = d.getVarFlag('SPDXLICENSEMAP', license) or ""
     if not lic and license.endswith('+'):
         lic = d.getVarFlag('SPDXLICENSEMAP', license.rstrip('+'), True)
         if lic:
@@ -531,7 +531,7 @@ def expand_wildcard_licenses(d, wildcard_licenses):
     spdxmapkeys = d.getVarFlags('SPDXLICENSEMAP').keys()
     for wld_lic in wildcard_licenses:
         spdxflags = fnmatch.filter(spdxmapkeys, wld_lic)
-        licenses += [d.getVarFlag('SPDXLICENSEMAP', flag, True) for flag in spdxflags]
+        licenses += [d.getVarFlag('SPDXLICENSEMAP', flag) for flag in spdxflags]
 
     spdx_lics = (d.getVar('SRC_DISTRIBUTE_LICENSES', False) or '').split()
     for wld_lic in wildcard_licenses:

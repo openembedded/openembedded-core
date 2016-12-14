@@ -51,7 +51,7 @@ python() {
 
             d.appendVarFlag('do_build', 'recrdeptask', ' ' + pkgcomparefunc)
 
-            if d.getVarFlag(pkgwritefunc, 'noexec', True) or not d.getVarFlag(pkgwritefunc, 'task', True):
+            if d.getVarFlag(pkgwritefunc, 'noexec') or not d.getVarFlag(pkgwritefunc, 'task'):
                 # Packaging is disabled for this recipe, we shouldn't do anything
                 continue
 

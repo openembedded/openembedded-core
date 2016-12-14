@@ -4,12 +4,12 @@ python do_listtasks() {
     taskdescs = {}
     maxlen = 0
     for e in d.keys():
-        if d.getVarFlag(e, 'task', True):
+        if d.getVarFlag(e, 'task'):
             maxlen = max(maxlen, len(e))
             if e.endswith('_setscene'):
-                desc = "%s (setscene version)" % (d.getVarFlag(e[:-9], 'doc', True) or '')
+                desc = "%s (setscene version)" % (d.getVarFlag(e[:-9], 'doc') or '')
             else:
-                desc = d.getVarFlag(e, 'doc', True) or ''
+                desc = d.getVarFlag(e, 'doc') or ''
             taskdescs[e] = desc
 
     tasks = sorted(taskdescs.keys())

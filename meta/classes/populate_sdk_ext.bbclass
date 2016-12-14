@@ -629,7 +629,7 @@ def get_ext_sdk_depends(d):
     pn = d.getVar('PN')
     deplist = ['%s:%s' % (pn, dep) for dep in deps]
     for task in ['do_image_complete', 'do_rootfs', 'do_build']:
-        deplist.extend((d.getVarFlag(task, 'depends', True) or '').split())
+        deplist.extend((d.getVarFlag(task, 'depends') or '').split())
     return ' '.join(deplist)
 
 python do_sdk_depends() {
@@ -652,7 +652,7 @@ def get_sdk_ext_rdepends(d):
     localdata = d.createCopy()
     localdata.appendVar('OVERRIDES', ':task-populate-sdk-ext')
     bb.data.update_data(localdata)
-    return localdata.getVarFlag('do_populate_sdk', 'rdepends', True)
+    return localdata.getVarFlag('do_populate_sdk', 'rdepends')
 
 do_populate_sdk_ext[dirs] = "${@d.getVarFlag('do_populate_sdk', 'dirs', False)}"
 

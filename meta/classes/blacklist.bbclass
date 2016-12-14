@@ -33,7 +33,7 @@ python blacklist_multilib_eventhandler() {
             continue
         for p in prefixes:
             newpkg = p + "-" + pkg
-            if not e.data.getVarFlag('PNBLACKLIST', newpkg, True):
+            if not e.data.getVarFlag('PNBLACKLIST', newpkg):
                 e.data.setVarFlag('PNBLACKLIST', newpkg, reason)
 }
 

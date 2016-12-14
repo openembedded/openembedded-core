@@ -58,7 +58,7 @@ python do_package_tar () {
 
 python () {
     if d.getVar('PACKAGES') != '':
-        deps = (d.getVarFlag('do_package_write_tar', 'depends', True) or "").split()
+        deps = (d.getVarFlag('do_package_write_tar', 'depends') or "").split()
         deps.append('tar-native:do_populate_sysroot')
         deps.append('virtual/fakeroot-native:do_populate_sysroot')
         d.setVarFlag('do_package_write_tar', 'depends', " ".join(deps))

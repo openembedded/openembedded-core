@@ -73,9 +73,9 @@ python () {
         bb.debug(1, 'archiver: %s is excluded, covered by gcc-source' % pn)
         return
 
-    ar_src = d.getVarFlag('ARCHIVER_MODE', 'src', True)
-    ar_dumpdata = d.getVarFlag('ARCHIVER_MODE', 'dumpdata', True)
-    ar_recipe = d.getVarFlag('ARCHIVER_MODE', 'recipe', True)
+    ar_src = d.getVarFlag('ARCHIVER_MODE', 'src')
+    ar_dumpdata = d.getVarFlag('ARCHIVER_MODE', 'dumpdata')
+    ar_recipe = d.getVarFlag('ARCHIVER_MODE', 'recipe')
 
     if ar_src == "original":
         d.appendVarFlag('do_deploy_archives', 'depends', ' %s:do_ar_original' % pn)
@@ -104,7 +104,7 @@ python () {
         d.appendVarFlag('do_deploy_archives', 'depends', ' %s:do_ar_recipe' % pn)
 
     # Output the srpm package
-    ar_srpm = d.getVarFlag('ARCHIVER_MODE', 'srpm', True)
+    ar_srpm = d.getVarFlag('ARCHIVER_MODE', 'srpm')
     if ar_srpm == "1":
         if d.getVar('PACKAGES') != '' and d.getVar('IMAGE_PKGTYPE') == 'rpm':
             d.appendVarFlag('do_deploy_archives', 'depends', ' %s:do_package_write_rpm' % pn)
@@ -127,7 +127,7 @@ python do_ar_original() {
 
     import shutil, tempfile
 
-    if d.getVarFlag('ARCHIVER_MODE', 'src', True) != "original":
+    if d.getVarFlag('ARCHIVER_MODE', 'src') != "original":
         return
 
     ar_outdir = d.getVar('ARCHIVER_OUTDIR')
@@ -191,7 +191,7 @@ python do_ar_original() {
 
 python do_ar_patched() {
 
-    if d.getVarFlag('ARCHIVER_MODE', 'src', True) != 'patched':
+    if d.getVarFlag('ARCHIVER_MODE', 'src') != 'patched':
         return
 
     # Get the ARCHIVER_OUTDIR before we reset the WORKDIR
@@ -206,7 +206,7 @@ python do_ar_configured() {
     import shutil
 
     ar_outdir = d.getVar('ARCHIVER_OUTDIR')
-    if d.getVarFlag('ARCHIVER_MODE', 'src', True) == 'configured':
+    if d.getVarFlag('ARCHIVER_MODE', 'src') == 'configured':
         bb.note('Archiving the configured source...')
         pn = d.getVar('PN')
         # "gcc-source-${PV}" recipes don't have "do_configure"
@@ -226,12 +226,12 @@ python do_ar_configured() {
                 bb.build.exec_func('do_kernel_configme', d)
             if bb.data.inherits_class('cmake', d):
                 bb.build.exec_func('do_generate_toolchain_file', d)
-            prefuncs = d.getVarFlag('do_configure', 'prefuncs', True)
+            prefuncs = d.getVarFlag('do_configure', 'prefuncs')
             for func in (prefuncs or '').split():
                 if func != "sysroot_cleansstate":
                     bb.build.exec_func(func, d)
             bb.build.exec_func('do_configure', d)
-            postfuncs = d.getVarFlag('do_configure', 'postfuncs', True)
+            postfuncs = d.getVarFlag('do_configure', 'postfuncs')
             for func in (postfuncs or '').split():
                 if func != "do_qa_configure":
                     bb.build.exec_func(func, d)
@@ -279,7 +279,7 @@ def create_diff_gz(d, src_orig, src, ar_outdir):
     # exclude.
     src_patched = src + '.patched'
     oe.path.copyhardlinktree(src, src_patched)
-    for i in d.getVarFlag('ARCHIVER_MODE', 'diff-exclude', True).split():
+    for i in d.getVarFlag('ARCHIVER_MODE', 'diff-exclude').split():
         bb.utils.remove(os.path.join(src_orig, i), recurse=True)
         bb.utils.remove(os.path.join(src_patched, i), recurse=True)
 
@@ -293,9 +293,9 @@ def create_diff_gz(d, src_orig, src, ar_outdir):
 
 # Run do_unpack and do_patch
 python do_unpack_and_patch() {
-    if d.getVarFlag('ARCHIVER_MODE', 'src', True) not in \
+    if d.getVarFlag('ARCHIVER_MODE', 'src') not in \
             [ 'patched', 'configured'] and \
-            d.getVarFlag('ARCHIVER_MODE', 'diff', True) != '1':
+            d.getVarFlag('ARCHIVER_MODE', 'diff') != '1':
         return
     ar_outdir = d.getVar('ARCHIVER_OUTDIR')
     ar_workdir = d.getVar('ARCHIVER_WORKDIR')
@@ -314,7 +314,7 @@ python do_unpack_and_patch() {
         bb.build.exec_func('do_unpack', d)
 
     # Save the original source for creating the patches
-    if d.getVarFlag('ARCHIVER_MODE', 'diff', True) == '1':
+    if d.getVarFlag('ARCHIVER_MODE', 'diff') == '1':
         src = d.getVar('S').rstrip('/')
         src_orig = '%s.orig' % src
         oe.path.copytree(src, src_orig)
@@ -324,7 +324,7 @@ python do_unpack_and_patch() {
         bb.build.exec_func('do_patch', d)
 
     # Create the patches
-    if d.getVarFlag('ARCHIVER_MODE', 'diff', True) == '1':
+    if d.getVarFlag('ARCHIVER_MODE', 'diff') == '1':
         bb.note('Creating diff gz...')
         create_diff_gz(d, src_orig, src, ar_outdir)
         bb.utils.remove(src_orig, recurse=True)

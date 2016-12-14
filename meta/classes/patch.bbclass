@@ -12,7 +12,7 @@ inherit terminal
 
 python () {
     if d.getVar('PATCHTOOL') == 'git' and d.getVar('PATCH_COMMIT_FUNCTIONS') == '1':
-        tasks = list(filter(lambda k: d.getVarFlag(k, "task", True), d.keys()))
+        tasks = list(filter(lambda k: d.getVarFlag(k, "task"), d.keys()))
         extratasks = []
         def follow_chain(task, endtask, chain=None):
             if not chain:
