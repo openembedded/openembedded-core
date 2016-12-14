@@ -92,6 +92,8 @@ EXTRA_OECONF = " \
     ${@bb.utils.contains('AVAILTUNES', 'mips32r2', '', '--disable-mipsdsp --disable-mipsdspr2', d)} \
 "
 
+EXTRA_OECONF_append_linux-gnux32 = " --disable-asm"
+
 do_configure() {
     ${S}/configure ${EXTRA_OECONF}
 }
