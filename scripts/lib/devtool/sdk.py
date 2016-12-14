@@ -132,9 +132,9 @@ def sdk_update(args, config, basepath, workspace):
     # Grab variable values
     tinfoil = setup_tinfoil(config_only=True, basepath=basepath)
     try:
-        stamps_dir = tinfoil.config_data.getVar('STAMPS_DIR', True)
-        sstate_mirrors = tinfoil.config_data.getVar('SSTATE_MIRRORS', True)
-        site_conf_version = tinfoil.config_data.getVar('SITE_CONF_VERSION', True)
+        stamps_dir = tinfoil.config_data.getVar('STAMPS_DIR')
+        sstate_mirrors = tinfoil.config_data.getVar('SSTATE_MIRRORS')
+        site_conf_version = tinfoil.config_data.getVar('SITE_CONF_VERSION')
     finally:
         tinfoil.shutdown()
 
@@ -273,7 +273,7 @@ def sdk_install(args, config, basepath, workspace):
             rd = parse_recipe(config, tinfoil, recipe, True)
             if not rd:
                 return 1
-            stampprefixes[recipe] = '%s.%s' % (rd.getVar('STAMP', True), tasks[0])
+            stampprefixes[recipe] = '%s.%s' % (rd.getVar('STAMP'), tasks[0])
             if checkstamp(recipe):
                 logger.info('%s is already installed' % recipe)
             else:

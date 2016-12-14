@@ -87,13 +87,13 @@ def exec_watch(cmd, **options):
 def exec_fakeroot(d, cmd, **kwargs):
     """Run a command under fakeroot (pseudo, in fact) so that it picks up the appropriate file permissions"""
     # Grab the command and check it actually exists
-    fakerootcmd = d.getVar('FAKEROOTCMD', True)
+    fakerootcmd = d.getVar('FAKEROOTCMD')
     if not os.path.exists(fakerootcmd):
         logger.error('pseudo executable %s could not be found - have you run a build yet? pseudo-native should install this and if you have run any build then that should have been built')
         return 2
     # Set up the appropriate environment
     newenv = dict(os.environ)
-    fakerootenv = d.getVar('FAKEROOTENV', True)
+    fakerootenv = d.getVar('FAKEROOTENV')
     for varvalue in fakerootenv.split():
         if '=' in varvalue:
             splitval = varvalue.split('=', 1)
@@ -179,7 +179,7 @@ def use_external_build(same_dir, no_same_dir, d):
         logger.info('Using source tree as build directory since --same-dir specified')
     elif bb.data.inherits_class('autotools-brokensep', d):
         logger.info('Using source tree as build directory since recipe inherits autotools-brokensep')
-    elif d.getVar('B', True) == os.path.abspath(d.getVar('S', True)):
+    elif d.getVar('B') == os.path.abspath(d.getVar('S')):
         logger.info('Using source tree as build directory since that would be the default for this recipe')
     else:
         b_is_s = False
@@ -256,7 +256,7 @@ def ensure_npm(config, basepath, fixed_setup=False):
     """
     tinfoil = setup_tinfoil(config_only=True, basepath=basepath)
     try:
-        nativepath = tinfoil.config_data.getVar('STAGING_BINDIR_NATIVE', True)
+        nativepath = tinfoil.config_data.getVar('STAGING_BINDIR_NATIVE')
     finally:
         tinfoil.shutdown()
 

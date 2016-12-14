@@ -303,7 +303,7 @@ def _check_compatible_recipe(pn, d):
         raise DevtoolError("The %s recipe is a meta-recipe, and therefore is "
                            "not supported by this tool" % pn, 4)
 
-    if bb.data.inherits_class('externalsrc', d) and d.getVar('EXTERNALSRC', True):
+    if bb.data.inherits_class('externalsrc', d) and d.getVar('EXTERNALSRC'):
         # Not an incompatibility error per se, so we don't pass the error code
         raise DevtoolError("externalsrc is currently enabled for the %s "
                            "recipe. This prevents the normal do_patch task "
@@ -439,7 +439,7 @@ def _extract_source(srctree, keep_temp, devbranch, sync, d, tinfoil):
     """Extract sources of a recipe"""
     import oe.recipeutils
 
-    pn = d.getVar('PN', True)
+    pn = d.getVar('PN')
 
     _check_compatible_recipe(pn, d)
 
@@ -473,13 +473,13 @@ def _extract_source(srctree, keep_temp, devbranch, sync, d, tinfoil):
         # Make a subdir so we guard against WORKDIR==S
         workdir = os.path.join(tempdir, 'workdir')
         crd.setVar('WORKDIR', workdir)
-        if not crd.getVar('S', True).startswith(workdir):
+        if not crd.getVar('S').startswith(workdir):
             # Usually a shared workdir recipe (kernel, gcc)
             # Try to set a reasonable default
             if bb.data.inherits_class('kernel', d):
                 crd.setVar('S', '${WORKDIR}/source')
             else:
-                crd.setVar('S', '${WORKDIR}/%s' % os.path.basename(d.getVar('S', True)))
+                crd.setVar('S', '${WORKDIR}/%s' % os.path.basename(d.getVar('S')))
         if bb.data.inherits_class('kernel', d):
             # We don't want to move the source to STAGING_KERNEL_DIR here
             crd.setVar('STAGING_KERNEL_DIR', '${S}')
@@ -533,7 +533,7 @@ def _extract_source(srctree, keep_temp, devbranch, sync, d, tinfoil):
             # Extra step for kernel to populate the source directory
             runtask(fn, 'kernel_checkout')
 
-        srcsubdir = crd.getVar('S', True)
+        srcsubdir = crd.getVar('S')
 
         # Move local source files into separate subdir
         recipe_patches = [os.path.basename(patch) for patch in
@@ -581,7 +581,7 @@ def _extract_source(srctree, keep_temp, devbranch, sync, d, tinfoil):
                            "doesn't use any source or the correct source "
                            "directory could not be determined" % pn)
 
-        setup_git_repo(srcsubdir, crd.getVar('PV', True), devbranch, d=d)
+        setup_git_repo(srcsubdir, crd.getVar('PV'), devbranch, d=d)
 
         (stdout, _) = bb.process.run('git rev-parse HEAD', cwd=srcsubdir)
         initial_rev = stdout.rstrip()
@@ -596,7 +596,7 @@ def _extract_source(srctree, keep_temp, devbranch, sync, d, tinfoil):
             # Store generate and store kernel config
             logger.info('Generating kernel config')
             runtask(fn, 'configure')
-            kconfig = os.path.join(crd.getVar('B', True), '.config')
+            kconfig = os.path.join(crd.getVar('B'), '.config')
 
 
         tempdir_localdir = os.path.join(tempdir, 'oe-local-files')
@@ -628,7 +628,7 @@ def _extract_source(srctree, keep_temp, devbranch, sync, d, tinfoil):
 
             shutil.move(srcsubdir, srctree)
 
-            if os.path.abspath(d.getVar('S', True)) == os.path.abspath(d.getVar('WORKDIR', True)):
+            if os.path.abspath(d.getVar('S')) == os.path.abspath(d.getVar('WORKDIR')):
                 # If recipe extracts to ${WORKDIR}, symlink the files into the srctree
                 # (otherwise the recipe won't build as expected)
                 local_files_dir = os.path.join(srctree, 'oe-local-files')
@@ -725,7 +725,7 @@ def modify(args, config, basepath, workspace):
         if not rd:
             return 1
 
-        pn = rd.getVar('PN', True)
+        pn = rd.getVar('PN')
         if pn != args.recipename:
             logger.info('Mapping %s to %s' % (args.recipename, pn))
         if pn in workspace:
@@ -747,7 +747,7 @@ def modify(args, config, basepath, workspace):
                 # Error already shown
                 return 1
 
-        recipefile = rd.getVar('FILE', True)
+        recipefile = rd.getVar('FILE')
         appendfile = recipe_to_append(recipefile, config, args.wildcard)
         if os.path.exists(appendfile):
             raise DevtoolError("Another variant of recipe %s is already in your "
@@ -784,8 +784,8 @@ def modify(args, config, basepath, workspace):
                     initial_rev = stdout.rstrip()
 
         # Check that recipe isn't using a shared workdir
-        s = os.path.abspath(rd.getVar('S', True))
-        workdir = os.path.abspath(rd.getVar('WORKDIR', True))
+        s = os.path.abspath(rd.getVar('S'))
+        workdir = os.path.abspath(rd.getVar('WORKDIR'))
         if s.startswith(workdir) and s != workdir and os.path.dirname(s) != workdir:
             # Handle if S is set to a subdirectory of the source
             srcsubdir = os.path.relpath(s, workdir).split(os.sep, 1)[1]
@@ -866,17 +866,17 @@ def rename(args, config, basepath, workspace):
         if not rd:
             return 1
 
-        bp = rd.getVar('BP', True)
-        bpn = rd.getVar('BPN', True)
+        bp = rd.getVar('BP')
+        bpn = rd.getVar('BPN')
         if newname != args.recipename:
             localdata = rd.createCopy()
             localdata.setVar('PN', newname)
-            newbpn = localdata.getVar('BPN', True)
+            newbpn = localdata.getVar('BPN')
         else:
             newbpn = bpn
         s = rd.getVar('S', False)
         src_uri = rd.getVar('SRC_URI', False)
-        pv = rd.getVar('PV', True)
+        pv = rd.getVar('PV')
 
         # Correct variable values that refer to the upstream source - these
         # values must stay the same, so if the name/version are changing then
@@ -1277,8 +1277,8 @@ def _export_local_files(srctree, rd, destdir):
             elif fname != '.gitignore':
                 added[fname] = None
 
-        workdir = rd.getVar('WORKDIR', True)
-        s = rd.getVar('S', True)
+        workdir = rd.getVar('WORKDIR')
+        s = rd.getVar('S')
         if not s.endswith(os.sep):
             s += os.sep
 
@@ -1300,14 +1300,14 @@ def _export_local_files(srctree, rd, destdir):
 
 def _determine_files_dir(rd):
     """Determine the appropriate files directory for a recipe"""
-    recipedir = rd.getVar('FILE_DIRNAME', True)
-    for entry in rd.getVar('FILESPATH', True).split(':'):
+    recipedir = rd.getVar('FILE_DIRNAME')
+    for entry in rd.getVar('FILESPATH').split(':'):
         relpth = os.path.relpath(entry, recipedir)
         if not os.sep in relpth:
             # One (or zero) levels below only, so we don't put anything in machine-specific directories
             if os.path.isdir(entry):
                 return entry
-    return os.path.join(recipedir, rd.getVar('BPN', True))
+    return os.path.join(recipedir, rd.getVar('BPN'))
 
 
 def _update_recipe_srcrev(srctree, rd, appendlayerdir, wildcard_version, no_remove):
@@ -1315,7 +1315,7 @@ def _update_recipe_srcrev(srctree, rd, appendlayerdir, wildcard_version, no_remo
     import bb
     import oe.recipeutils
 
-    recipefile = rd.getVar('FILE', True)
+    recipefile = rd.getVar('FILE')
     logger.info('Updating SRCREV in recipe %s' % os.path.basename(recipefile))
 
     # Get HEAD revision
@@ -1397,7 +1397,7 @@ def _update_recipe_patch(recipename, workspace, srctree, rd, appendlayerdir, wil
     import bb
     import oe.recipeutils
 
-    recipefile = rd.getVar('FILE', True)
+    recipefile = rd.getVar('FILE')
     append = workspace[recipename]['bbappend']
     if not os.path.exists(append):
         raise DevtoolError('unable to find workspace bbappend for recipe %s' %
@@ -1408,7 +1408,7 @@ def _update_recipe_patch(recipename, workspace, srctree, rd, appendlayerdir, wil
         raise DevtoolError('Unable to find initial revision - please specify '
                            'it with --initial-rev')
 
-    dl_dir = rd.getVar('DL_DIR', True)
+    dl_dir = rd.getVar('DL_DIR')
     if not dl_dir.endswith('/'):
         dl_dir += '/'
 
@@ -1567,7 +1567,7 @@ def update_recipe(args, config, basepath, workspace):
         updated = _update_recipe(args.recipename, workspace, rd, args.mode, args.append, args.wildcard_version, args.no_remove, args.initial_rev)
 
         if updated:
-            rf = rd.getVar('FILE', True)
+            rf = rd.getVar('FILE')
             if rf.startswith(config.workspace_path):
                 logger.warn('Recipe file %s has been updated but is inside the workspace - you will need to move it (and any associated files next to it) out to the desired layer before using "devtool reset" in order to keep any changes' % rf)
     finally:
@@ -1671,7 +1671,7 @@ def reset(args, config, basepath, workspace):
 
 def _get_layer(layername, d):
     """Determine the base layer path for the specified layer name/path"""
-    layerdirs = d.getVar('BBLAYERS', True).split()
+    layerdirs = d.getVar('BBLAYERS').split()
     layers = {os.path.basename(p): p for p in layerdirs}
     # Provide some shortcuts
     if layername.lower() in ['oe-core', 'openembedded-core']:
@@ -1697,7 +1697,7 @@ def finish(args, config, basepath, workspace):
             return 1
 
         destlayerdir = _get_layer(args.destination, tinfoil.config_data)
-        origlayerdir = oe.recipeutils.find_layerdir(rd.getVar('FILE', True))
+        origlayerdir = oe.recipeutils.find_layerdir(rd.getVar('FILE'))
 
         if not os.path.isdir(destlayerdir):
             raise DevtoolError('Unable to find layer or directory matching "%s"' % args.destination)
@@ -1728,7 +1728,7 @@ def finish(args, config, basepath, workspace):
             if not destpath:
                 raise DevtoolError("Unable to determine destination layer path - check that %s specifies an actual layer and %s/conf/layer.conf specifies BBFILES. You may also need to specify a more complete path." % (args.destination, destlayerdir))
             # Warn if the layer isn't in bblayers.conf (the code to create a bbappend will do this in other cases)
-            layerdirs = [os.path.abspath(layerdir) for layerdir in rd.getVar('BBLAYERS', True).split()]
+            layerdirs = [os.path.abspath(layerdir) for layerdir in rd.getVar('BBLAYERS').split()]
             if not os.path.abspath(destlayerdir) in layerdirs:
                 bb.warn('Specified destination layer is not currently enabled in bblayers.conf, so the %s recipe will now be unavailable in your current configuration until you add the layer there' % args.recipename)
 
@@ -1758,7 +1758,7 @@ def finish(args, config, basepath, workspace):
             # associated files to the specified layer
             no_clean = True
             logger.info('Moving recipe file to %s' % destpath)
-            recipedir = os.path.dirname(rd.getVar('FILE', True))
+            recipedir = os.path.dirname(rd.getVar('FILE'))
             for root, _, files in os.walk(recipedir):
                 for fn in files:
                     srcpath = os.path.join(root, fn)

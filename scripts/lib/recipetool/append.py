@@ -48,7 +48,7 @@ def find_target_file(targetpath, d, pkglist=None):
     """Find the recipe installing the specified target path, optionally limited to a select list of packages"""
     import json
 
-    pkgdata_dir = d.getVar('PKGDATA_DIR', True)
+    pkgdata_dir = d.getVar('PKGDATA_DIR')
 
     # The mix between /etc and ${sysconfdir} here may look odd, but it is just
     # being consistent with usage elsewhere
@@ -110,8 +110,8 @@ def determine_file_source(targetpath, rd):
     import oe.recipeutils
 
     # See if it's in do_install for the recipe
-    workdir = rd.getVar('WORKDIR', True)
-    src_uri = rd.getVar('SRC_URI', True)
+    workdir = rd.getVar('WORKDIR')
+    src_uri = rd.getVar('SRC_URI')
     srcfile = ''
     modpatches = []
     elements = check_do_install(rd, targetpath)
@@ -190,7 +190,7 @@ def get_source_path(cmdelements):
 
 def get_func_deps(func, d):
     """Find the function dependencies of a shell function"""
-    deps = bb.codeparser.ShellParser(func, logger).parse_shell(d.getVar(func, True))
+    deps = bb.codeparser.ShellParser(func, logger).parse_shell(d.getVar(func))
     deps |= set((d.getVarFlag(func, "vardeps", True) or "").split())
     funcdeps = []
     for dep in deps:
@@ -200,12 +200,12 @@ def get_func_deps(func, d):
 
 def check_do_install(rd, targetpath):
     """Look at do_install for a command that installs/copies the specified target path"""
-    instpath = os.path.abspath(os.path.join(rd.getVar('D', True), targetpath.lstrip('/')))
-    do_install = rd.getVar('do_install', True)
+    instpath = os.path.abspath(os.path.join(rd.getVar('D'), targetpath.lstrip('/')))
+    do_install = rd.getVar('do_install')
     # Handle where do_install calls other functions (somewhat crudely, but good enough for this purpose)
     deps = get_func_deps('do_install', rd)
     for dep in deps:
-        do_install = do_install.replace(dep, rd.getVar(dep, True))
+        do_install = do_install.replace(dep, rd.getVar(dep))
 
     # Look backwards through do_install as we want to catch where a later line (perhaps
     # from a bbappend) is writing over the top
@@ -322,12 +322,12 @@ def appendfile(args):
 def appendsrc(args, files, rd, extralines=None):
     import oe.recipeutils
 
-    srcdir = rd.getVar('S', True)
-    workdir = rd.getVar('WORKDIR', True)
+    srcdir = rd.getVar('S')
+    workdir = rd.getVar('WORKDIR')
 
     import bb.fetch
     simplified = {}
-    src_uri = rd.getVar('SRC_URI', True).split()
+    src_uri = rd.getVar('SRC_URI').split()
     for uri in src_uri:
         if uri.endswith(';'):
             uri = uri[:-1]
@@ -340,7 +340,7 @@ def appendsrc(args, files, rd, extralines=None):
     for newfile, srcfile in files.items():
         src_destdir = os.path.dirname(srcfile)
         if not args.use_workdir:
-            if rd.getVar('S', True) == rd.getVar('STAGING_KERNEL_DIR', True):
+            if rd.getVar('S') == rd.getVar('STAGING_KERNEL_DIR'):
                 srcdir = os.path.join(workdir, 'git')
                 if not bb.data.inherits_class('kernel-yocto', rd):
                     logger.warn('S == STAGING_KERNEL_DIR and non-kernel-yocto, unable to determine path to srcdir, defaulting to ${WORKDIR}/git')

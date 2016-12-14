@@ -49,7 +49,7 @@ class NpmRecipeHandler(RecipeHandler):
 
     def _shrinkwrap(self, srctree, localfilesdir, extravalues, lines_before):
         try:
-            runenv = dict(os.environ, PATH=tinfoil.config_data.getVar('PATH', True))
+            runenv = dict(os.environ, PATH=tinfoil.config_data.getVar('PATH'))
             bb.process.run('npm shrinkwrap', cwd=srctree, stderr=subprocess.STDOUT, env=runenv, shell=True)
         except bb.process.ExecutionError as e:
             logger.warn('npm shrinkwrap failed:\n%s' % e.stdout)
@@ -62,7 +62,7 @@ class NpmRecipeHandler(RecipeHandler):
         lines_before.append('NPM_SHRINKWRAP := "${THISDIR}/${PN}/npm-shrinkwrap.json"')
 
     def _lockdown(self, srctree, localfilesdir, extravalues, lines_before):
-        runenv = dict(os.environ, PATH=tinfoil.config_data.getVar('PATH', True))
+        runenv = dict(os.environ, PATH=tinfoil.config_data.getVar('PATH'))
         if not NpmRecipeHandler.lockdownpath:
             NpmRecipeHandler.lockdownpath = tempfile.mkdtemp('recipetool-npm-lockdown')
             bb.process.run('npm install lockdown --prefix %s' % NpmRecipeHandler.lockdownpath,
@@ -257,7 +257,7 @@ class NpmRecipeHandler(RecipeHandler):
         if version != '*' and not '/' in version:
             pkgfullname += "@'%s'" % version
         logger.debug(2, "Calling getdeps on %s" % pkg)
-        runenv = dict(os.environ, PATH=d.getVar('PATH', True))
+        runenv = dict(os.environ, PATH=d.getVar('PATH'))
         fetchcmd = "npm view %s --json" % pkgfullname
         output, _ = bb.process.run(fetchcmd, stderr=subprocess.STDOUT, env=runenv, shell=True)
         data = self._parse_view(output)

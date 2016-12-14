@@ -570,7 +570,7 @@ def main():
         logger.debug('Found bitbake path: %s' % bitbakepath)
         tinfoil = tinfoil_init()
         try:
-            args.pkgdata_dir = tinfoil.config_data.getVar('PKGDATA_DIR', True)
+            args.pkgdata_dir = tinfoil.config_data.getVar('PKGDATA_DIR')
         finally:
             tinfoil.shutdown()
         logger.debug('Value of PKGDATA_DIR is "%s"' % args.pkgdata_dir)

@@ -79,7 +79,7 @@ def main():
 
     tinfoil = tinfoil_init(False)
     try:
-        for path in (tinfoil.config_data.getVar('BBPATH', True).split(':')
+        for path in (tinfoil.config_data.getVar('BBPATH').split(':')
                      + [scripts_path]):
             pluginpath = os.path.join(path, 'lib', 'recipetool')
             scriptutils.load_plugins(logger, plugins, pluginpath)

@@ -31,8 +31,8 @@ def runqemu(args, config, basepath, workspace):
 
     tinfoil = setup_tinfoil(config_only=True, basepath=basepath)
     try:
-        machine = tinfoil.config_data.getVar('MACHINE', True)
-        bindir_native = tinfoil.config_data.getVar('STAGING_BINDIR_NATIVE', True)
+        machine = tinfoil.config_data.getVar('MACHINE')
+        bindir_native = tinfoil.config_data.getVar('STAGING_BINDIR_NATIVE')
     finally:
         tinfoil.shutdown()
 

@@ -32,7 +32,7 @@ def package(args, config, basepath, workspace):
     try:
         image_pkgtype = config.get('Package', 'image_pkgtype', '')
         if not image_pkgtype:
-            image_pkgtype = tinfoil.config_data.getVar('IMAGE_PKGTYPE', True)
+            image_pkgtype = tinfoil.config_data.getVar('IMAGE_PKGTYPE')
 
         deploy_dir_pkg = tinfoil.config_data.getVar('DEPLOY_DIR_%s' % image_pkgtype.upper(), True)
     finally:

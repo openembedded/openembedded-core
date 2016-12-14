@@ -93,7 +93,7 @@ def fetch_uri(d, uri, destdir, srcrev=None):
         fetcher.download()
         for u in fetcher.ud:
             ud = fetcher.ud[u]
-            if ud.localpath.rstrip(os.sep) == localdata.getVar('DL_DIR', True).rstrip(os.sep):
+            if ud.localpath.rstrip(os.sep) == localdata.getVar('DL_DIR').rstrip(os.sep):
                 raise Exception('Local path is download directory - please check that the URI "%s" is correct' % uri)
         fetcher.unpack(destdir)
         for u in fetcher.ud:
