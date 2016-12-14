@@ -28,10 +28,8 @@ def package(args, config, basepath, workspace):
     """Entry point for the devtool 'package' subcommand"""
     check_workspace_recipe(workspace, args.recipename)
 
-    tinfoil = setup_tinfoil(basepath=basepath)
+    tinfoil = setup_tinfoil(basepath=basepath, config_only=True)
     try:
-        tinfoil.prepare(config_only=True)
-
         image_pkgtype = config.get('Package', 'image_pkgtype', '')
         if not image_pkgtype:
             image_pkgtype = tinfoil.config_data.getVar('IMAGE_PKGTYPE', True)
