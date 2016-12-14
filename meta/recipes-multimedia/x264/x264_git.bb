@@ -10,6 +10,7 @@ DEPENDS = "yasm-native"
 
 SRC_URI = "git://github.com/mirror/x264;branch=stable \
            file://don-t-default-to-cortex-a9-with-neon.patch \
+           file://Fix-X32-build-by-disabling-asm.patch \
            "
 
 SRCREV = "86b71982e131eaa70125f8d0e725fcade9c4c677"
