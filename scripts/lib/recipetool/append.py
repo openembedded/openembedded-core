@@ -121,7 +121,7 @@ def determine_file_source(targetpath, rd):
         logger.debug('source path: %s' % srcpath)
         if not srcpath.startswith('/'):
             # Handle non-absolute path
-            srcpath = os.path.abspath(os.path.join(rd.getVarFlag('do_install', 'dirs', True).split()[-1], srcpath))
+            srcpath = os.path.abspath(os.path.join(rd.getVarFlag('do_install', 'dirs').split()[-1], srcpath))
         if srcpath.startswith(workdir):
             # OK, now we have the source file name, look for it in SRC_URI
             workdirfile = os.path.relpath(srcpath, workdir)
@@ -191,10 +191,10 @@ def get_source_path(cmdelements):
 def get_func_deps(func, d):
     """Find the function dependencies of a shell function"""
     deps = bb.codeparser.ShellParser(func, logger).parse_shell(d.getVar(func))
-    deps |= set((d.getVarFlag(func, "vardeps", True) or "").split())
+    deps |= set((d.getVarFlag(func, "vardeps") or "").split())
     funcdeps = []
     for dep in deps:
-        if d.getVarFlag(dep, 'func', True):
+        if d.getVarFlag(dep, 'func'):
             funcdeps.append(dep)
     return funcdeps
 

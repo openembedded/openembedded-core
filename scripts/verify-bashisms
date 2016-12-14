@@ -97,7 +97,7 @@ if __name__=='__main__':
         result = []
         data = tinfoil.parse_recipe_file(fn)
         for key in data.keys():
-            if data.getVarFlag(key, "func", True) and not data.getVarFlag(key, "python", True):
+            if data.getVarFlag(key, "func") and not data.getVarFlag(key, "python"):
                 script = data.getVar(key, False)
                 if not script: continue
                 #print ("%s:%s" % (fn, key))
