@@ -71,12 +71,12 @@ python systemd_populate_packages() {
     def get_package_var(d, var, pkg):
         val = (d.getVar('%s_%s' % (var, pkg), True) or "").strip()
         if val == "":
-            val = (d.getVar(var, True) or "").strip()
+            val = (d.getVar(var) or "").strip()
         return val
 
     # Check if systemd-packages already included in PACKAGES
     def systemd_check_package(pkg_systemd):
-        packages = d.getVar('PACKAGES', True)
+        packages = d.getVar('PACKAGES')
         if not pkg_systemd in packages.split():
             bb.error('%s does not appear in package list, please add it' % pkg_systemd)
 
@@ -90,23 +90,23 @@ python systemd_populate_packages() {
         localdata.prependVar("OVERRIDES", pkg + ":")
         bb.data.update_data(localdata)
 
-        postinst = d.getVar('pkg_postinst_%s' % pkg, True)
+        postinst = d.getVar('pkg_postinst_%s' % pkg)
         if not postinst:
             postinst = '#!/bin/sh\n'
-        postinst += localdata.getVar('systemd_postinst', True)
+        postinst += localdata.getVar('systemd_postinst')
         d.setVar('pkg_postinst_%s' % pkg, postinst)
 
-        prerm = d.getVar('pkg_prerm_%s' % pkg, True)
+        prerm = d.getVar('pkg_prerm_%s' % pkg)
         if not prerm:
             prerm = '#!/bin/sh\n'
-        prerm += localdata.getVar('systemd_prerm', True)
+        prerm += localdata.getVar('systemd_prerm')
         d.setVar('pkg_prerm_%s' % pkg, prerm)
 
 
     # Add files to FILES_*-systemd if existent and not already done
     def systemd_append_file(pkg_systemd, file_append):
         appended = False
-        if os.path.exists(oe.path.join(d.getVar("D", True), file_append)):
+        if os.path.exists(oe.path.join(d.getVar("D"), file_append)):
             var_name = "FILES_" + pkg_systemd
             files = d.getVar(var_name, False) or ""
             if file_append not in files.split():
@@ -118,7 +118,7 @@ python systemd_populate_packages() {
     def systemd_add_files_and_parse(pkg_systemd, path, service, keys):
         # avoid infinite recursion
         if systemd_append_file(pkg_systemd, oe.path.join(path, service)):
-            fullpath = oe.path.join(d.getVar("D", True), path, service)
+            fullpath = oe.path.join(d.getVar("D"), path, service)
             if service.find('.service') != -1:
                 # for *.service add *@.service
                 service_base = service.replace('.service', '')
@@ -141,9 +141,9 @@ python systemd_populate_packages() {
 
     # Check service-files and call systemd_add_files_and_parse for each entry
     def systemd_check_services():
-        searchpaths = [oe.path.join(d.getVar("sysconfdir", True), "systemd", "system"),]
-        searchpaths.append(d.getVar("systemd_system_unitdir", True))
-        systemd_packages = d.getVar('SYSTEMD_PACKAGES', True)
+        searchpaths = [oe.path.join(d.getVar("sysconfdir"), "systemd", "system"),]
+        searchpaths.append(d.getVar("systemd_system_unitdir"))
+        systemd_packages = d.getVar('SYSTEMD_PACKAGES')
 
         keys = 'Also'
         # scan for all in SYSTEMD_SERVICE[]
@@ -158,11 +158,11 @@ python systemd_populate_packages() {
                     base = re.sub('@[^.]+.', '@.', service)
 
                 for path in searchpaths:
-                    if os.path.exists(oe.path.join(d.getVar("D", True), path, service)):
+                    if os.path.exists(oe.path.join(d.getVar("D"), path, service)):
                         path_found = path
                         break
                     elif base is not None:
-                        if os.path.exists(oe.path.join(d.getVar("D", True), path, base)):
+                        if os.path.exists(oe.path.join(d.getVar("D"), path, base)):
                             path_found = path
                             break
 
@@ -172,10 +172,10 @@ python systemd_populate_packages() {
                     bb.fatal("SYSTEMD_SERVICE_%s value %s does not exist" % (pkg_systemd, service))
 
     # Run all modifications once when creating package
-    if os.path.exists(d.getVar("D", True)):
-        for pkg in d.getVar('SYSTEMD_PACKAGES', True).split():
+    if os.path.exists(d.getVar("D")):
+        for pkg in d.getVar('SYSTEMD_PACKAGES').split():
             systemd_check_package(pkg)
-            if d.getVar('SYSTEMD_SERVICE_' + pkg, True):
+            if d.getVar('SYSTEMD_SERVICE_' + pkg):
                 systemd_generate_package_scripts(pkg)
         systemd_check_services()
 }
@@ -185,7 +185,7 @@ PACKAGESPLITFUNCS_prepend = "systemd_populate_packages "
 python rm_systemd_unitdir (){
     import shutil
     if not bb.utils.contains('DISTRO_FEATURES', 'systemd', True, False, d):
-        systemd_unitdir = oe.path.join(d.getVar("D", True), d.getVar('systemd_unitdir', True))
+        systemd_unitdir = oe.path.join(d.getVar("D"), d.getVar('systemd_unitdir'))
         if os.path.exists(systemd_unitdir):
             shutil.rmtree(systemd_unitdir)
         systemd_libdir = os.path.dirname(systemd_unitdir)
@@ -196,12 +196,12 @@ do_install[postfuncs] += "rm_systemd_unitdir "
 
 python rm_sysvinit_initddir (){
     import shutil
-    sysv_initddir = oe.path.join(d.getVar("D", True), (d.getVar('INIT_D_DIR', True) or "/etc/init.d"))
+    sysv_initddir = oe.path.join(d.getVar("D"), (d.getVar('INIT_D_DIR') or "/etc/init.d"))
 
     if bb.utils.contains('DISTRO_FEATURES', 'systemd', True, False, d) and \
         not bb.utils.contains('DISTRO_FEATURES', 'sysvinit', True, False, d) and \
         os.path.exists(sysv_initddir):
-        systemd_system_unitdir = oe.path.join(d.getVar("D", True), d.getVar('systemd_system_unitdir', True))
+        systemd_system_unitdir = oe.path.join(d.getVar("D"), d.getVar('systemd_system_unitdir'))
 
         # If systemd_system_unitdir contains anything, delete sysv_initddir
         if (os.path.exists(systemd_system_unitdir) and os.listdir(systemd_system_unitdir)):

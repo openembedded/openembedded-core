@@ -172,10 +172,10 @@ python populate_packages_prepend() {
                              shell=True, env=newenv, stdout=subprocess.PIPE)
         stdout, stderr = p.communicate()
         output = stdout.decode("utf-8").split(".")[0]
-        mlprefix = d.getVar('MLPREFIX', True) or ''
+        mlprefix = d.getVar('MLPREFIX') or ''
         return "%sxorg-abi-%s-%s" % (mlprefix, name, output)
 
-    pn = d.getVar("PN", True)
+    pn = d.getVar("PN")
     d.appendVar("RPROVIDES_" + pn, " " + get_abi("input"))
     d.appendVar("RPROVIDES_" + pn, " " + get_abi("video"))
 }

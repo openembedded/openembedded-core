@@ -11,7 +11,7 @@ class ScpTest(oeRuntimeTest):
     @testcase(220)
     @skipUnlessPassed('test_ssh')
     def test_scp_file(self):
-        test_log_dir = oeRuntimeTest.tc.d.getVar("TEST_LOG_DIR", True)
+        test_log_dir = oeRuntimeTest.tc.d.getVar("TEST_LOG_DIR")
         test_file_path = os.path.join(test_log_dir, 'test_scp_file')
         with open(test_file_path, 'w') as test_scp_file:
             test_scp_file.seek(2 ** 22 - 1)

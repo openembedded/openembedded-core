@@ -42,7 +42,7 @@ RRECOMMENDS_packagegroup-core-sdk = "\
 
 #python generate_sdk_pkgs () {
 #    poky_pkgs = read_pkgdata('packagegroup-core', d)['PACKAGES']
-#    pkgs = d.getVar('PACKAGES', True).split()
+#    pkgs = d.getVar('PACKAGES').split()
 #    for pkg in poky_pkgs.split():
 #        newpkg = pkg.replace('packagegroup-core', 'packagegroup-core-sdk')
 #

@@ -19,7 +19,7 @@ from oeqa.controllers.testtargetloader import TestTargetLoader
 from abc import ABCMeta, abstractmethod
 
 def get_target_controller(d):
-    testtarget = d.getVar("TEST_TARGET", True)
+    testtarget = d.getVar("TEST_TARGET")
     # old, simple names
     if testtarget == "qemu":
         return QemuTarget(d)
@@ -33,7 +33,7 @@ def get_target_controller(d):
         except AttributeError:
             # nope, perhaps a layer defined one
             try:
-                bbpath = d.getVar("BBPATH", True).split(':')
+                bbpath = d.getVar("BBPATH").split(':')
                 testtargetloader = TestTargetLoader()
                 controller = testtargetloader.get_controller_module(testtarget, bbpath)
             except ImportError as e:
@@ -51,9 +51,9 @@ class BaseTarget(object, metaclass=ABCMeta):
         self.connection = None
         self.ip = None
         self.server_ip = None
-        self.datetime = d.getVar('DATETIME', True)
-        self.testdir = d.getVar("TEST_LOG_DIR", True)
-        self.pn = d.getVar("PN", True)
+        self.datetime = d.getVar('DATETIME')
+        self.testdir = d.getVar("TEST_LOG_DIR")
+        self.pn = d.getVar("PN")
 
     @abstractmethod
     def deploy(self):
@@ -80,7 +80,7 @@ class BaseTarget(object, metaclass=ABCMeta):
     @classmethod
     def match_image_fstype(self, d, image_fstypes=None):
         if not image_fstypes:
-            image_fstypes = d.getVar('IMAGE_FSTYPES', True).split(' ')
+            image_fstypes = d.getVar('IMAGE_FSTYPES').split(' ')
         possible_image_fstypes = [fstype for fstype in self.supported_image_fstypes if fstype in image_fstypes]
         if possible_image_fstypes:
             return possible_image_fstypes[0]
@@ -119,14 +119,14 @@ class QemuTarget(BaseTarget):
 
         self.image_fstype = self.get_image_fstype(d)
         self.qemulog = os.path.join(self.testdir, "qemu_boot_log.%s" % self.datetime)
-        self.rootfs = os.path.join(d.getVar("DEPLOY_DIR_IMAGE", True),  d.getVar("IMAGE_LINK_NAME", True) + '.' + self.image_fstype)
-        self.kernel = os.path.join(d.getVar("DEPLOY_DIR_IMAGE", True), d.getVar("KERNEL_IMAGETYPE", False) + '-' + d.getVar('MACHINE', False) + '.bin')
-        dump_target_cmds = d.getVar("testimage_dump_target", True)
-        dump_host_cmds = d.getVar("testimage_dump_host", True)
-        dump_dir = d.getVar("TESTIMAGE_DUMP_DIR", True)
+        self.rootfs = os.path.join(d.getVar("DEPLOY_DIR_IMAGE"),  d.getVar("IMAGE_LINK_NAME") + '.' + self.image_fstype)
+        self.kernel = os.path.join(d.getVar("DEPLOY_DIR_IMAGE"), d.getVar("KERNEL_IMAGETYPE", False) + '-' + d.getVar('MACHINE', False) + '.bin')
+        dump_target_cmds = d.getVar("testimage_dump_target")
+        dump_host_cmds = d.getVar("testimage_dump_host")
+        dump_dir = d.getVar("TESTIMAGE_DUMP_DIR")
         if d.getVar("QEMU_USE_KVM", False) is not None \
            and d.getVar("QEMU_USE_KVM", False) == "True" \
-           and "x86" in d.getVar("MACHINE", True):
+           and "x86" in d.getVar("MACHINE"):
             use_kvm = True
         else:
             use_kvm = False
@@ -141,26 +141,26 @@ class QemuTarget(BaseTarget):
         logger.addHandler(loggerhandler)
         oe.path.symlink(os.path.basename(self.qemurunnerlog), os.path.join(self.testdir, 'qemurunner_log'), force=True)
 
-        if d.getVar("DISTRO", True) == "poky-tiny":
-            self.runner = QemuTinyRunner(machine=d.getVar("MACHINE", True),
+        if d.getVar("DISTRO") == "poky-tiny":
+            self.runner = QemuTinyRunner(machine=d.getVar("MACHINE"),
                             rootfs=self.rootfs,
-                            tmpdir = d.getVar("TMPDIR", True),
-                            deploy_dir_image = d.getVar("DEPLOY_DIR_IMAGE", True),
-                            display = d.getVar("BB_ORIGENV", False).getVar("DISPLAY", True),
+                            tmpdir = d.getVar("TMPDIR"),
+                            deploy_dir_image = d.getVar("DEPLOY_DIR_IMAGE"),
+                            display = d.getVar("BB_ORIGENV", False).getVar("DISPLAY"),
                             logfile = self.qemulog,
                             kernel = self.kernel,
-                            boottime = int(d.getVar("TEST_QEMUBOOT_TIMEOUT", True)))
+                            boottime = int(d.getVar("TEST_QEMUBOOT_TIMEOUT")))
         else:
-            self.runner = QemuRunner(machine=d.getVar("MACHINE", True),
+            self.runner = QemuRunner(machine=d.getVar("MACHINE"),
                             rootfs=self.rootfs,
-                            tmpdir = d.getVar("TMPDIR", True),
-                            deploy_dir_image = d.getVar("DEPLOY_DIR_IMAGE", True),
-                            display = d.getVar("BB_ORIGENV", False).getVar("DISPLAY", True),
+                            tmpdir = d.getVar("TMPDIR"),
+                            deploy_dir_image = d.getVar("DEPLOY_DIR_IMAGE"),
+                            display = d.getVar("BB_ORIGENV", False).getVar("DISPLAY"),
                             logfile = self.qemulog,
-                            boottime = int(d.getVar("TEST_QEMUBOOT_TIMEOUT", True)),
+                            boottime = int(d.getVar("TEST_QEMUBOOT_TIMEOUT")),
                             use_kvm = use_kvm,
                             dump_dir = dump_dir,
-                            dump_host_cmds = d.getVar("testimage_dump_host", True))
+                            dump_host_cmds = d.getVar("testimage_dump_host"))
 
         self.target_dumper = TargetDumper(dump_target_cmds, dump_dir, self.runner)
 
@@ -214,14 +214,14 @@ class SimpleRemoteTarget(BaseTarget):
 
     def __init__(self, d):
         super(SimpleRemoteTarget, self).__init__(d)
-        addr = d.getVar("TEST_TARGET_IP", True) or bb.fatal('Please set TEST_TARGET_IP with the IP address of the machine you want to run the tests on.')
+        addr = d.getVar("TEST_TARGET_IP") or bb.fatal('Please set TEST_TARGET_IP with the IP address of the machine you want to run the tests on.')
         self.ip = addr.split(":")[0]
         try:
             self.port = addr.split(":")[1]
         except IndexError:
             self.port = None
         bb.note("Target IP: %s" % self.ip)
-        self.server_ip = d.getVar("TEST_SERVER_IP", True)
+        self.server_ip = d.getVar("TEST_SERVER_IP")
         if not self.server_ip:
             try:
                 self.server_ip = subprocess.check_output(['ip', 'route', 'get', self.ip ]).split("\n")[0].split()[-1]

@@ -11,7 +11,7 @@ LIC_FILES_CHKSUM="\
     "
 
 def binutils_branch_version(d):
-    pvsplit = d.getVar('PV', True).split('.')
+    pvsplit = d.getVar('PV').split('.')
     return pvsplit[0] + "_" + pvsplit[1]
 
 BINUPV = "${@binutils_branch_version(d)}"

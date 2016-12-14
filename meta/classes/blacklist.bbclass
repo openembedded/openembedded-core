@@ -16,7 +16,7 @@
 addhandler blacklist_multilib_eventhandler
 blacklist_multilib_eventhandler[eventmask] = "bb.event.ConfigParsed"
 python blacklist_multilib_eventhandler() {
-    multilibs = e.data.getVar('MULTILIBS', True)
+    multilibs = e.data.getVar('MULTILIBS')
     if not multilibs:
         return
 
@@ -38,7 +38,7 @@ python blacklist_multilib_eventhandler() {
 }
 
 python () {
-    blacklist = d.getVarFlag('PNBLACKLIST', d.getVar('PN', True), True)
+    blacklist = d.getVarFlag('PNBLACKLIST', d.getVar('PN'), True)
 
     if blacklist:
         raise bb.parse.SkipPackage("Recipe is blacklisted: %s" % (blacklist))

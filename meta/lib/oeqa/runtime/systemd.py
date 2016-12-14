@@ -6,7 +6,7 @@ from oeqa.utils.decorators import *
 def setUpModule():
     if not oeRuntimeTest.hasFeature("systemd"):
             skipModule("target doesn't have systemd in DISTRO_FEATURES")
-    if "systemd" != oeRuntimeTest.tc.d.getVar("VIRTUAL-RUNTIME_init_manager", True):
+    if "systemd" != oeRuntimeTest.tc.d.getVar("VIRTUAL-RUNTIME_init_manager"):
             skipModule("systemd is not the init manager for this image")
 
 

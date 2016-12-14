@@ -13,7 +13,7 @@ def setUpModule():
         skipModule("Image doesn't have package management feature")
     if not oeRuntimeTest.hasPackage("smartpm"):
         skipModule("Image doesn't have smart installed")
-    if "package_rpm" != oeRuntimeTest.tc.d.getVar("PACKAGE_CLASSES", True).split()[0]:
+    if "package_rpm" != oeRuntimeTest.tc.d.getVar("PACKAGE_CLASSES").split()[0]:
         skipModule("Rpm is not the primary package manager")
 
 class PtestRunnerTest(oeRuntimeTest):
@@ -57,7 +57,7 @@ class PtestRunnerTest(oeRuntimeTest):
 #        (status, result) = oeRuntimeTest.tc.target.run('smart channel --show | grep "\["', 0)
 #        for x in result.split("\n"):
 #            self.existingchannels.add(x)
-        self.repo_server = HTTPService(oeRuntimeTest.tc.d.getVar('DEPLOY_DIR', True), oeRuntimeTest.tc.target.server_ip)
+        self.repo_server = HTTPService(oeRuntimeTest.tc.d.getVar('DEPLOY_DIR'), oeRuntimeTest.tc.target.server_ip)
         self.repo_server.start()
 
     @classmethod
@@ -70,23 +70,23 @@ class PtestRunnerTest(oeRuntimeTest):
 #                oeRuntimeTest.tc.target.run('smart channel --remove '+x[1:-1]+' -y', 0)
 
     def add_smart_channel(self):
-        image_pkgtype = self.tc.d.getVar('IMAGE_PKGTYPE', True)
+        image_pkgtype = self.tc.d.getVar('IMAGE_PKGTYPE')
         deploy_url = 'http://%s:%s/%s' %(self.target.server_ip, self.repo_server.port, image_pkgtype)
-        pkgarchs = self.tc.d.getVar('PACKAGE_ARCHS', True).replace("-","_").split()
+        pkgarchs = self.tc.d.getVar('PACKAGE_ARCHS').replace("-","_").split()
         for arch in os.listdir('%s/%s' % (self.repo_server.root_dir, image_pkgtype)):
             if arch in pkgarchs:
                 self.target.run('smart channel -y --add {a} type=rpm-md baseurl={u}/{a}'.format(a=arch, u=deploy_url), 0)
         self.target.run('smart update', 0)
 
     def install_complementary(self, globs=None):
-        installed_pkgs_file = os.path.join(oeRuntimeTest.tc.d.getVar('WORKDIR', True),
+        installed_pkgs_file = os.path.join(oeRuntimeTest.tc.d.getVar('WORKDIR'),
                                            "installed_pkgs.txt")
-        self.pkgs_list = RpmPkgsList(oeRuntimeTest.tc.d, oeRuntimeTest.tc.d.getVar('IMAGE_ROOTFS', True), oeRuntimeTest.tc.d.getVar('arch_var', True), oeRuntimeTest.tc.d.getVar('os_var', True))
+        self.pkgs_list = RpmPkgsList(oeRuntimeTest.tc.d, oeRuntimeTest.tc.d.getVar('IMAGE_ROOTFS'), oeRuntimeTest.tc.d.getVar('arch_var'), oeRuntimeTest.tc.d.getVar('os_var'))
         with open(installed_pkgs_file, "w+") as installed_pkgs:
             installed_pkgs.write(self.pkgs_list.list("arch"))
 
         cmd = [bb.utils.which(os.getenv('PATH'), "oe-pkgdata-util"),
-               "-p", oeRuntimeTest.tc.d.getVar('PKGDATA_DIR', True), "glob", installed_pkgs_file,
+               "-p", oeRuntimeTest.tc.d.getVar('PKGDATA_DIR'), "glob", installed_pkgs_file,
                globs]
         try:
             bb.note("Installing complementary packages ...")
@@ -99,7 +99,7 @@ class PtestRunnerTest(oeRuntimeTest):
         return complementary_pkgs.split()
 
     def setUpLocal(self):
-        self.ptest_log = os.path.join(oeRuntimeTest.tc.d.getVar("TEST_LOG_DIR",True), "ptest-%s.log" % oeRuntimeTest.tc.d.getVar('DATETIME', True))
+        self.ptest_log = os.path.join(oeRuntimeTest.tc.d.getVar("TEST_LOG_DIR",True), "ptest-%s.log" % oeRuntimeTest.tc.d.getVar('DATETIME'))
 
     @skipUnlessPassed('test_ssh')
     def test_ptestrunner(self):

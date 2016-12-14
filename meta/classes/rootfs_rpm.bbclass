@@ -25,7 +25,7 @@ do_rootfs[recrdeptask] += "do_package_write_rpm"
 do_rootfs[vardeps] += "PACKAGE_FEED_URIS"
 
 python () {
-    if d.getVar('BUILD_IMAGES_FROM_FEEDS', True):
+    if d.getVar('BUILD_IMAGES_FROM_FEEDS'):
         flags = d.getVarFlag('do_rootfs', 'recrdeptask', True)
         flags = flags.replace("do_package_write_rpm", "")
         flags = flags.replace("do_deploy", "")

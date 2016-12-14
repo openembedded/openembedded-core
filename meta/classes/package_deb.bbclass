@@ -6,14 +6,14 @@ inherit package
 
 IMAGE_PKGTYPE ?= "deb"
 
-DPKG_ARCH ?= "${@debian_arch_map(d.getVar('TARGET_ARCH', True), d.getVar('TUNE_FEATURES', True))}"
+DPKG_ARCH ?= "${@debian_arch_map(d.getVar('TARGET_ARCH'), d.getVar('TUNE_FEATURES'))}"
 DPKG_ARCH[vardepvalue] = "${DPKG_ARCH}"
 
 PKGWRITEDIRDEB = "${WORKDIR}/deploy-debs"
 
 APTCONF_TARGET = "${WORKDIR}"
 
-APT_ARGS = "${@['', '--no-install-recommends'][d.getVar("NO_RECOMMENDATIONS", True) == "1"]}"
+APT_ARGS = "${@['', '--no-install-recommends'][d.getVar("NO_RECOMMENDATIONS") == "1"]}"
 
 def debian_arch_map(arch, tune):
     tune_features = tune.split()
@@ -56,22 +56,22 @@ python do_package_deb () {
 
     oldcwd = os.getcwd()
 
-    workdir = d.getVar('WORKDIR', True)
+    workdir = d.getVar('WORKDIR')
     if not workdir:
         bb.error("WORKDIR not defined, unable to package")
         return
 
-    outdir = d.getVar('PKGWRITEDIRDEB', True)
+    outdir = d.getVar('PKGWRITEDIRDEB')
     if not outdir:
         bb.error("PKGWRITEDIRDEB not defined, unable to package")
         return
 
-    packages = d.getVar('PACKAGES', True)
+    packages = d.getVar('PACKAGES')
     if not packages:
         bb.debug(1, "PACKAGES not defined, nothing to package")
         return
 
-    tmpdir = d.getVar('TMPDIR', True)
+    tmpdir = d.getVar('TMPDIR')
 
     if os.access(os.path.join(tmpdir, "stamps", "DEB_PACKAGE_INDEX_CLEAN"),os.R_OK):
         os.unlink(os.path.join(tmpdir, "stamps", "DEB_PACKAGE_INDEX_CLEAN"))
@@ -80,7 +80,7 @@ python do_package_deb () {
         bb.debug(1, "No packages; nothing to do")
         return
 
-    pkgdest = d.getVar('PKGDEST', True)
+    pkgdest = d.getVar('PKGDEST')
 
     def cleanupcontrol(root):
         for p in ['CONTROL', 'DEBIAN']:
@@ -96,7 +96,7 @@ python do_package_deb () {
 
         localdata.setVar('ROOT', '')
         localdata.setVar('ROOT_%s' % pkg, root)
-        pkgname = localdata.getVar('PKG_%s' % pkg, True)
+        pkgname = localdata.getVar('PKG_%s' % pkg)
         if not pkgname:
             pkgname = pkg
         localdata.setVar('PKG', pkgname)
@@ -106,7 +106,7 @@ python do_package_deb () {
         bb.data.update_data(localdata)
         basedir = os.path.join(os.path.dirname(root))
 
-        pkgoutdir = os.path.join(outdir, localdata.getVar('PACKAGE_ARCH', True))
+        pkgoutdir = os.path.join(outdir, localdata.getVar('PACKAGE_ARCH'))
         bb.utils.mkdirhier(pkgoutdir)
 
         os.chdir(root)
@@ -114,7 +114,7 @@ python do_package_deb () {
         from glob import glob
         g = glob('*')
         if not g and localdata.getVar('ALLOW_EMPTY', False) != "1":
-            bb.note("Not creating empty archive for %s-%s-%s" % (pkg, localdata.getVar('PKGV', True), localdata.getVar('PKGR', True)))
+            bb.note("Not creating empty archive for %s-%s-%s" % (pkg, localdata.getVar('PKGV'), localdata.getVar('PKGR')))
             bb.utils.unlockfile(lf)
             continue
 
@@ -129,7 +129,7 @@ python do_package_deb () {
             bb.fatal("unable to open control file for writing")
 
         fields = []
-        pe = d.getVar('PKGE', True)
+        pe = d.getVar('PKGE')
         if pe and int(pe) > 0:
             fields.append(["Version: %s:%s-%s\n", ['PKGE', 'PKGV', 'PKGR']])
         else:
@@ -141,7 +141,7 @@ python do_package_deb () {
         fields.append(["Architecture: %s\n", ['DPKG_ARCH']])
         fields.append(["OE: %s\n", ['PN']])
         fields.append(["PackageArch: %s\n", ['PACKAGE_ARCH']])
-        if d.getVar('HOMEPAGE', True):
+        if d.getVar('HOMEPAGE'):
             fields.append(["Homepage: %s\n", ['HOMEPAGE']])
 
         # Package, Version, Maintainer, Description - mandatory
@@ -151,10 +151,10 @@ python do_package_deb () {
         def pullData(l, d):
             l2 = []
             for i in l:
-                data = d.getVar(i, True)
+                data = d.getVar(i)
                 if data is None:
                     raise KeyError(f)
-                if i == 'DPKG_ARCH' and d.getVar('PACKAGE_ARCH', True) == 'all':
+                if i == 'DPKG_ARCH' and d.getVar('PACKAGE_ARCH') == 'all':
                     data = 'all'
                 elif i == 'PACKAGE_ARCH' or i == 'DPKG_ARCH':
                    # The params in deb package control don't allow character
@@ -165,7 +165,7 @@ python do_package_deb () {
             return l2
 
         ctrlfile.write("Package: %s\n" % pkgname)
-        if d.getVar('PACKAGE_ARCH', True) == "all":
+        if d.getVar('PACKAGE_ARCH') == "all":
             ctrlfile.write("Multi-Arch: foreign\n")
         # check for required fields
         try:
@@ -175,9 +175,9 @@ python do_package_deb () {
                          raise KeyError(f)
                 # Special behavior for description...
                 if 'DESCRIPTION' in fs:
-                     summary = localdata.getVar('SUMMARY', True) or localdata.getVar('DESCRIPTION', True) or "."
+                     summary = localdata.getVar('SUMMARY') or localdata.getVar('DESCRIPTION') or "."
                      ctrlfile.write('Description: %s\n' % summary)
-                     description = localdata.getVar('DESCRIPTION', True) or "."
+                     description = localdata.getVar('DESCRIPTION') or "."
                      description = textwrap.dedent(description).strip()
                      if '\\n' in description:
                          # Manually indent
@@ -231,7 +231,7 @@ python do_package_deb () {
                     elif (v or "").startswith("> "):
                         var[dep][i] = var[dep][i].replace("> ", ">> ")
 
-        rdepends = bb.utils.explode_dep_versions2(localdata.getVar("RDEPENDS", True) or "")
+        rdepends = bb.utils.explode_dep_versions2(localdata.getVar("RDEPENDS") or "")
         debian_cmp_remap(rdepends)
         for dep in list(rdepends.keys()):
                 if dep == pkg:
@@ -239,20 +239,20 @@ python do_package_deb () {
                         continue
                 if '*' in dep:
                         del rdepends[dep]
-        rrecommends = bb.utils.explode_dep_versions2(localdata.getVar("RRECOMMENDS", True) or "")
+        rrecommends = bb.utils.explode_dep_versions2(localdata.getVar("RRECOMMENDS") or "")
         debian_cmp_remap(rrecommends)
         for dep in list(rrecommends.keys()):
                 if '*' in dep:
                         del rrecommends[dep]
-        rsuggests = bb.utils.explode_dep_versions2(localdata.getVar("RSUGGESTS", True) or "")
+        rsuggests = bb.utils.explode_dep_versions2(localdata.getVar("RSUGGESTS") or "")
         debian_cmp_remap(rsuggests)
         # Deliberately drop version information here, not wanted/supported by deb
-        rprovides = dict.fromkeys(bb.utils.explode_dep_versions2(localdata.getVar("RPROVIDES", True) or ""), [])
+        rprovides = dict.fromkeys(bb.utils.explode_dep_versions2(localdata.getVar("RPROVIDES") or ""), [])
         rprovides = collections.OrderedDict(sorted(rprovides.items(), key=lambda x: x[0]))
         debian_cmp_remap(rprovides)
-        rreplaces = bb.utils.explode_dep_versions2(localdata.getVar("RREPLACES", True) or "")
+        rreplaces = bb.utils.explode_dep_versions2(localdata.getVar("RREPLACES") or "")
         debian_cmp_remap(rreplaces)
-        rconflicts = bb.utils.explode_dep_versions2(localdata.getVar("RCONFLICTS", True) or "")
+        rconflicts = bb.utils.explode_dep_versions2(localdata.getVar("RCONFLICTS") or "")
         debian_cmp_remap(rconflicts)
         if rdepends:
             ctrlfile.write("Depends: %s\n" % bb.utils.join_deps(rdepends))
@@ -269,7 +269,7 @@ python do_package_deb () {
         ctrlfile.close()
 
         for script in ["preinst", "postinst", "prerm", "postrm"]:
-            scriptvar = localdata.getVar('pkg_%s' % script, True)
+            scriptvar = localdata.getVar('pkg_%s' % script)
             if not scriptvar:
                 continue
             scriptvar = scriptvar.strip()
@@ -308,7 +308,7 @@ python do_package_deb () {
             conffiles.close()
 
         os.chdir(basedir)
-        ret = subprocess.call("PATH=\"%s\" dpkg-deb -b %s %s" % (localdata.getVar("PATH", True), root, pkgoutdir), shell=True)
+        ret = subprocess.call("PATH=\"%s\" dpkg-deb -b %s %s" % (localdata.getVar("PATH"), root, pkgoutdir), shell=True)
         if ret != 0:
             bb.utils.unlockfile(lf)
             bb.fatal("dpkg-deb execution failed")
@@ -328,7 +328,7 @@ do_package_write_deb[sstate-inputdirs] = "${PKGWRITEDIRDEB}"
 do_package_write_deb[sstate-outputdirs] = "${DEPLOY_DIR_DEB}"
 
 python do_package_write_deb_setscene () {
-    tmpdir = d.getVar('TMPDIR', True)
+    tmpdir = d.getVar('TMPDIR')
 
     if os.access(os.path.join(tmpdir, "stamps", "DEB_PACKAGE_INDEX_CLEAN"),os.R_OK):
         os.unlink(os.path.join(tmpdir, "stamps", "DEB_PACKAGE_INDEX_CLEAN"))
@@ -338,7 +338,7 @@ python do_package_write_deb_setscene () {
 addtask do_package_write_deb_setscene
 
 python () {
-    if d.getVar('PACKAGES', True) != '':
+    if d.getVar('PACKAGES') != '':
         deps = ' dpkg-native:do_populate_sysroot virtual/fakeroot-native:do_populate_sysroot'
         d.appendVarFlag('do_package_write_deb', 'depends', deps)
         d.setVarFlag('do_package_write_deb', 'fakeroot', "1")

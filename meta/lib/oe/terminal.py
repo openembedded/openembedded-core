@@ -196,7 +196,7 @@ class Custom(Terminal):
     priority = 3
 
     def __init__(self, sh_cmd, title=None, env=None, d=None):
-        self.command = d and d.getVar('OE_TERMINAL_CUSTOMCMD', True)
+        self.command = d and d.getVar('OE_TERMINAL_CUSTOMCMD')
         if self.command:
             if not '{command}' in self.command:
                 self.command += ' {command}'

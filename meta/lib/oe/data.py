@@ -12,6 +12,6 @@ def typed_value(key, d):
         flags = {}
 
     try:
-        return oe.maketype.create(d.getVar(key, True) or '', var_type, **flags)
+        return oe.maketype.create(d.getVar(key) or '', var_type, **flags)
     except (TypeError, ValueError) as exc:
         bb.msg.fatal("Data", "%s: %s" % (key, str(exc)))

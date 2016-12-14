@@ -2,7 +2,7 @@
 DISABLE_STATIC = ""
 
 def get_waf_parallel_make(d):
-    pm = d.getVar('PARALLEL_MAKE', True)
+    pm = d.getVar('PARALLEL_MAKE')
     if pm:
         # look for '-j' and throw other options (e.g. '-l') away
         # because they might have different meaning in bjam

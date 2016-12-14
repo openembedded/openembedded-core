@@ -26,16 +26,16 @@ python do_generate_content() {
     localdata = bb.data.createCopy(d)
 
     # make sure we only use the WORKDIR value from 'd', or it can change
-    localdata.setVar('WORKDIR', d.getVar('WORKDIR', True))
+    localdata.setVar('WORKDIR', d.getVar('WORKDIR'))
 
     # make sure we only use the SDKTARGETSYSROOT value from 'd'
-    localdata.setVar('SDKTARGETSYSROOT', d.getVar('SDKTARGETSYSROOT', True))
+    localdata.setVar('SDKTARGETSYSROOT', d.getVar('SDKTARGETSYSROOT'))
     localdata.setVar('libdir', d.getVar('target_libdir', False))
 
     # Process DEFAULTTUNE
     bb.build.exec_func("create_sdk_files", localdata)
 
-    variants = d.getVar("MULTILIB_VARIANTS", True) or ""
+    variants = d.getVar("MULTILIB_VARIANTS") or ""
     for item in variants.split():
         # Load overrides from 'd' to avoid having to reset the value...
         overrides = d.getVar("OVERRIDES", False) + ":virtclass-multilib-" + item

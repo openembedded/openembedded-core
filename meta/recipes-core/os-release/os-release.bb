@@ -32,8 +32,8 @@ def sanitise_version(ver):
 python do_compile () {
     import shutil
     with open(d.expand('${B}/os-release'), 'w') as f:
-        for field in d.getVar('OS_RELEASE_FIELDS', True).split():
-            value = d.getVar(field, True)
+        for field in d.getVar('OS_RELEASE_FIELDS').split():
+            value = d.getVar(field)
             if value and field == 'VERSION_ID':
                 value = sanitise_version(value)
             if value:

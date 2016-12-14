@@ -28,20 +28,20 @@ fi
 }
 
 python populate_packages_append() {
-    pixbuf_pkgs = d.getVar('PIXBUF_PACKAGES', True).split()
+    pixbuf_pkgs = d.getVar('PIXBUF_PACKAGES').split()
 
     for pkg in pixbuf_pkgs:
         bb.note("adding pixbuf postinst and postrm scripts to %s" % pkg)
-        postinst = d.getVar('pkg_postinst_%s' % pkg, True) or d.getVar('pkg_postinst', True)
+        postinst = d.getVar('pkg_postinst_%s' % pkg) or d.getVar('pkg_postinst')
         if not postinst:
             postinst = '#!/bin/sh\n'
-        postinst += d.getVar('pixbufcache_common', True)
+        postinst += d.getVar('pixbufcache_common')
         d.setVar('pkg_postinst_%s' % pkg, postinst)
 
-        postrm = d.getVar('pkg_postrm_%s' % pkg, True) or d.getVar('pkg_postrm', True)
+        postrm = d.getVar('pkg_postrm_%s' % pkg) or d.getVar('pkg_postrm')
         if not postrm:
             postrm = '#!/bin/sh\n'
-        postrm += d.getVar('pixbufcache_common', True)
+        postrm += d.getVar('pixbufcache_common')
         d.setVar('pkg_postrm_%s' % pkg, postrm)
 }
 

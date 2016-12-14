@@ -22,7 +22,7 @@ def get_binconfig_mangle(d):
         s += " -e 's:-I${WORKDIR}:-I${STAGING_INCDIR}:'"
         s += " -e 's:-L${WORKDIR}:-L${STAGING_LIBDIR}:'"
         if d.getVar("OE_BINCONFIG_EXTRA_MANGLE", False):
-            s += d.getVar("OE_BINCONFIG_EXTRA_MANGLE", True)
+            s += d.getVar("OE_BINCONFIG_EXTRA_MANGLE")
 
     return s
 

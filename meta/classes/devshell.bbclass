@@ -5,14 +5,14 @@ DEVSHELL = "${SHELL}"
 python do_devshell () {
     if d.getVarFlag("do_devshell", "manualfakeroot", True):
        d.prependVar("DEVSHELL", "pseudo ")
-       fakeenv = d.getVar("FAKEROOTENV", True).split()
+       fakeenv = d.getVar("FAKEROOTENV").split()
        for f in fakeenv:
             k = f.split("=")
             d.setVar(k[0], k[1])           
             d.appendVar("OE_TERMINAL_EXPORTS", " " + k[0])
        d.delVarFlag("do_devshell", "fakeroot")
 
-    oe_terminal(d.getVar('DEVSHELL', True), 'OpenEmbedded Developer Shell', d)
+    oe_terminal(d.getVar('DEVSHELL'), 'OpenEmbedded Developer Shell', d)
 }
 
 addtask devshell after do_patch
@@ -82,7 +82,7 @@ def devpyshell(d):
         more = False
 
         i = code.InteractiveInterpreter(locals=_context)
-        print("OE PyShell (PN = %s)\n" % d.getVar("PN", True))
+        print("OE PyShell (PN = %s)\n" % d.getVar("PN"))
 
         def prompt(more):
             if more:

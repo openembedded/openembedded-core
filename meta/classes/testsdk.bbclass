@@ -54,8 +54,8 @@ def testsdk_main(d):
     import subprocess
     from oeqa.oetest import SDKTestContext
 
-    pn = d.getVar("PN", True)
-    bb.utils.mkdirhier(d.getVar("TEST_LOG_DIR", True))
+    pn = d.getVar("PN")
+    bb.utils.mkdirhier(d.getVar("TEST_LOG_DIR"))
 
     tcname = d.expand("${SDK_DEPLOY}/${TOOLCHAIN_OUTPUTNAME}.sh")
     if not os.path.exists(tcname):
@@ -100,12 +100,12 @@ def testsdkext_main(d):
 
     # extensible sdk can be contaminated if native programs are
     # in PATH, i.e. use perl-native instead of eSDK one.
-    paths_to_avoid = [d.getVar('STAGING_DIR', True),
-                      d.getVar('BASE_WORKDIR', True)]
+    paths_to_avoid = [d.getVar('STAGING_DIR'),
+                      d.getVar('BASE_WORKDIR')]
     os.environ['PATH'] = avoid_paths_in_environ(paths_to_avoid)
 
-    pn = d.getVar("PN", True)
-    bb.utils.mkdirhier(d.getVar("TEST_LOG_SDKEXT_DIR", True))
+    pn = d.getVar("PN")
+    bb.utils.mkdirhier(d.getVar("TEST_LOG_SDKEXT_DIR"))
 
     tcname = d.expand("${SDK_DEPLOY}/${TOOLCHAINEXT_OUTPUTNAME}.sh")
     if not os.path.exists(tcname):

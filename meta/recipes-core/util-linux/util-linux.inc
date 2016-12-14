@@ -270,7 +270,7 @@ ALTERNATIVE_LINK_NAME[mountpoint] = "${base_bindir}/mountpoint"
 BBCLASSEXTEND = "native nativesdk"
 
 python do_package_prepend () {
-    if '--enable-su' in d.getVar('EXTRA_OECONF', True).split():
+    if '--enable-su' in d.getVar('EXTRA_OECONF').split():
         d.appendVar(d.expand('ALTERNATIVE_${PN}'), ' su')
         d.appendVar(d.expand('ALTERNATIVE_${PN}-doc'), ' su.1')
 

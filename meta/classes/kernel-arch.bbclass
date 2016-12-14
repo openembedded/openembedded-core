@@ -19,7 +19,7 @@ valid_archs = "alpha cris ia64 \
 def map_kernel_arch(a, d):
     import re
 
-    valid_archs = d.getVar('valid_archs', True).split()
+    valid_archs = d.getVar('valid_archs').split()
 
     if   re.match('(i.86|athlon|x86.64)$', a):  return 'x86'
     elif re.match('armeb$', a):                 return 'arm'
@@ -34,7 +34,7 @@ def map_kernel_arch(a, d):
     else:
         bb.error("cannot map '%s' to a linux kernel architecture" % a)
 
-export ARCH = "${@map_kernel_arch(d.getVar('TARGET_ARCH', True), d)}"
+export ARCH = "${@map_kernel_arch(d.getVar('TARGET_ARCH'), d)}"
 
 def map_uboot_arch(a, d):
     import re
@@ -43,7 +43,7 @@ def map_uboot_arch(a, d):
     elif re.match('i.86$', a): return 'x86'
     return a
 
-export UBOOT_ARCH = "${@map_uboot_arch(d.getVar('ARCH', True), d)}"
+export UBOOT_ARCH = "${@map_uboot_arch(d.getVar('ARCH'), d)}"
 
 # Set TARGET_??_KERNEL_ARCH in the machine .conf to set architecture
 # specific options necessary for building the kernel and modules.

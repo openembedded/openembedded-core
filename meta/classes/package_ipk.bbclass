@@ -11,8 +11,8 @@ PKGWRITEDIRIPK = "${WORKDIR}/deploy-ipks"
 OPKGBUILDCMD ??= "opkg-build"
 
 OPKG_ARGS += "--force_postinstall --prefer-arch-to-version"
-OPKG_ARGS += "${@['', '--no-install-recommends'][d.getVar("NO_RECOMMENDATIONS", True) == "1"]}"
-OPKG_ARGS += "${@['', '--add-exclude ' + ' --add-exclude '.join((d.getVar('PACKAGE_EXCLUDE', True) or "").split())][(d.getVar("PACKAGE_EXCLUDE", True) or "") != ""]}"
+OPKG_ARGS += "${@['', '--no-install-recommends'][d.getVar("NO_RECOMMENDATIONS") == "1"]}"
+OPKG_ARGS += "${@['', '--add-exclude ' + ' --add-exclude '.join((d.getVar('PACKAGE_EXCLUDE') or "").split())][(d.getVar("PACKAGE_EXCLUDE") or "") != ""]}"
 
 OPKGLIBDIR = "${localstatedir}/lib"
 
@@ -24,15 +24,15 @@ python do_package_ipk () {
 
     oldcwd = os.getcwd()
 
-    workdir = d.getVar('WORKDIR', True)
-    outdir = d.getVar('PKGWRITEDIRIPK', True)
-    tmpdir = d.getVar('TMPDIR', True)
-    pkgdest = d.getVar('PKGDEST', True)
+    workdir = d.getVar('WORKDIR')
+    outdir = d.getVar('PKGWRITEDIRIPK')
+    tmpdir = d.getVar('TMPDIR')
+    pkgdest = d.getVar('PKGDEST')
     if not workdir or not outdir or not tmpdir:
         bb.error("Variables incorrectly set, unable to package")
         return
 
-    packages = d.getVar('PACKAGES', True)
+    packages = d.getVar('PACKAGES')
     if not packages or packages == '':
         bb.debug(1, "No packages; nothing to do")
         return
@@ -56,7 +56,7 @@ python do_package_ipk () {
 
         localdata.setVar('ROOT', '')
         localdata.setVar('ROOT_%s' % pkg, root)
-        pkgname = localdata.getVar('PKG_%s' % pkg, True)
+        pkgname = localdata.getVar('PKG_%s' % pkg)
         if not pkgname:
             pkgname = pkg
         localdata.setVar('PKG', pkgname)
@@ -65,7 +65,7 @@ python do_package_ipk () {
 
         bb.data.update_data(localdata)
         basedir = os.path.join(os.path.dirname(root))
-        arch = localdata.getVar('PACKAGE_ARCH', True)
+        arch = localdata.getVar('PACKAGE_ARCH')
 
         if localdata.getVar('IPK_HIERARCHICAL_FEED', False) == "1":
             # Spread packages across subdirectories so each isn't too crowded
@@ -98,7 +98,7 @@ python do_package_ipk () {
         from glob import glob
         g = glob('*')
         if not g and localdata.getVar('ALLOW_EMPTY', False) != "1":
-            bb.note("Not creating empty archive for %s-%s-%s" % (pkg, localdata.getVar('PKGV', True), localdata.getVar('PKGR', True)))
+            bb.note("Not creating empty archive for %s-%s-%s" % (pkg, localdata.getVar('PKGV'), localdata.getVar('PKGR')))
             bb.utils.unlockfile(lf)
             continue
 
@@ -111,7 +111,7 @@ python do_package_ipk () {
             bb.fatal("unable to open control file for writing")
 
         fields = []
-        pe = d.getVar('PKGE', True)
+        pe = d.getVar('PKGE')
         if pe and int(pe) > 0:
             fields.append(["Version: %s:%s-%s\n", ['PKGE', 'PKGV', 'PKGR']])
         else:
@@ -123,13 +123,13 @@ python do_package_ipk () {
         fields.append(["License: %s\n", ['LICENSE']])
         fields.append(["Architecture: %s\n", ['PACKAGE_ARCH']])
         fields.append(["OE: %s\n", ['PN']])
-        if d.getVar('HOMEPAGE', True):
+        if d.getVar('HOMEPAGE'):
             fields.append(["Homepage: %s\n", ['HOMEPAGE']])
 
         def pullData(l, d):
             l2 = []
             for i in l:
-                l2.append(d.getVar(i, True))
+                l2.append(d.getVar(i))
             return l2
 
         ctrlfile.write("Package: %s\n" % pkgname)
@@ -141,9 +141,9 @@ python do_package_ipk () {
                         raise KeyError(f)
                 # Special behavior for description...
                 if 'DESCRIPTION' in fs:
-                    summary = localdata.getVar('SUMMARY', True) or localdata.getVar('DESCRIPTION', True) or "."
+                    summary = localdata.getVar('SUMMARY') or localdata.getVar('DESCRIPTION') or "."
                     ctrlfile.write('Description: %s\n' % summary)
-                    description = localdata.getVar('DESCRIPTION', True) or "."
+                    description = localdata.getVar('DESCRIPTION') or "."
                     description = textwrap.dedent(description).strip()
                     if '\\n' in description:
                         # Manually indent
@@ -185,19 +185,19 @@ python do_package_ipk () {
                     elif (v or "").startswith("> "):
                         var[dep][i] = var[dep][i].replace("> ", ">> ")
 
-        rdepends = bb.utils.explode_dep_versions2(localdata.getVar("RDEPENDS", True) or "")
+        rdepends = bb.utils.explode_dep_versions2(localdata.getVar("RDEPENDS") or "")
         debian_cmp_remap(rdepends)
-        rrecommends = bb.utils.explode_dep_versions2(localdata.getVar("RRECOMMENDS", True) or "")
+        rrecommends = bb.utils.explode_dep_versions2(localdata.getVar("RRECOMMENDS") or "")
         debian_cmp_remap(rrecommends)
-        rsuggests = bb.utils.explode_dep_versions2(localdata.getVar("RSUGGESTS", True) or "")
+        rsuggests = bb.utils.explode_dep_versions2(localdata.getVar("RSUGGESTS") or "")
         debian_cmp_remap(rsuggests)
         # Deliberately drop version information here, not wanted/supported by ipk
-        rprovides = dict.fromkeys(bb.utils.explode_dep_versions2(localdata.getVar("RPROVIDES", True) or ""), [])
+        rprovides = dict.fromkeys(bb.utils.explode_dep_versions2(localdata.getVar("RPROVIDES") or ""), [])
         rprovides = collections.OrderedDict(sorted(rprovides.items(), key=lambda x: x[0]))
         debian_cmp_remap(rprovides)
-        rreplaces = bb.utils.explode_dep_versions2(localdata.getVar("RREPLACES", True) or "")
+        rreplaces = bb.utils.explode_dep_versions2(localdata.getVar("RREPLACES") or "")
         debian_cmp_remap(rreplaces)
-        rconflicts = bb.utils.explode_dep_versions2(localdata.getVar("RCONFLICTS", True) or "")
+        rconflicts = bb.utils.explode_dep_versions2(localdata.getVar("RCONFLICTS") or "")
         debian_cmp_remap(rconflicts)
 
         if rdepends:
@@ -212,14 +212,14 @@ python do_package_ipk () {
             ctrlfile.write("Replaces: %s\n" % bb.utils.join_deps(rreplaces))
         if rconflicts:
             ctrlfile.write("Conflicts: %s\n" % bb.utils.join_deps(rconflicts))
-        src_uri = localdata.getVar("SRC_URI", True).strip() or "None"
+        src_uri = localdata.getVar("SRC_URI").strip() or "None"
         if src_uri:
             src_uri = re.sub("\s+", " ", src_uri)
             ctrlfile.write("Source: %s\n" % " ".join(src_uri.split()))
         ctrlfile.close()
 
         for script in ["preinst", "postinst", "prerm", "postrm"]:
-            scriptvar = localdata.getVar('pkg_%s' % script, True)
+            scriptvar = localdata.getVar('pkg_%s' % script)
             if not scriptvar:
                 continue
             try:
@@ -244,15 +244,15 @@ python do_package_ipk () {
             conffiles.close()
 
         os.chdir(basedir)
-        ret = subprocess.call("PATH=\"%s\" %s %s %s" % (localdata.getVar("PATH", True),
-                                                          d.getVar("OPKGBUILDCMD", True), pkg, pkgoutdir), shell=True)
+        ret = subprocess.call("PATH=\"%s\" %s %s %s" % (localdata.getVar("PATH"),
+                                                          d.getVar("OPKGBUILDCMD"), pkg, pkgoutdir), shell=True)
         if ret != 0:
             bb.utils.unlockfile(lf)
             bb.fatal("opkg-build execution failed")
 
-        if d.getVar('IPK_SIGN_PACKAGES', True) == '1':
-            ipkver = "%s-%s" % (d.getVar('PKGV', True), d.getVar('PKGR', True))
-            ipk_to_sign = "%s/%s_%s_%s.ipk" % (pkgoutdir, pkgname, ipkver, d.getVar('PACKAGE_ARCH', True))
+        if d.getVar('IPK_SIGN_PACKAGES') == '1':
+            ipkver = "%s-%s" % (d.getVar('PKGV'), d.getVar('PKGR'))
+            ipk_to_sign = "%s/%s_%s_%s.ipk" % (pkgoutdir, pkgname, ipkver, d.getVar('PACKAGE_ARCH'))
             sign_ipk(d, ipk_to_sign)
 
         cleanupcontrol(root)
@@ -268,7 +268,7 @@ do_package_write_ipk[sstate-inputdirs] = "${PKGWRITEDIRIPK}"
 do_package_write_ipk[sstate-outputdirs] = "${DEPLOY_DIR_IPK}"
 
 python do_package_write_ipk_setscene () {
-    tmpdir = d.getVar('TMPDIR', True)
+    tmpdir = d.getVar('TMPDIR')
 
     if os.access(os.path.join(tmpdir, "stamps", "IPK_PACKAGE_INDEX_CLEAN"), os.R_OK):
         os.unlink(os.path.join(tmpdir, "stamps", "IPK_PACKAGE_INDEX_CLEAN"))
@@ -278,7 +278,7 @@ python do_package_write_ipk_setscene () {
 addtask do_package_write_ipk_setscene
 
 python () {
-    if d.getVar('PACKAGES', True) != '':
+    if d.getVar('PACKAGES') != '':
         deps = ' opkg-utils-native:do_populate_sysroot virtual/fakeroot-native:do_populate_sysroot'
         d.appendVarFlag('do_package_write_ipk', 'depends', deps)
         d.setVarFlag('do_package_write_ipk', 'fakeroot', "1")

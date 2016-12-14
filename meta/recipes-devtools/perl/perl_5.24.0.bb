@@ -356,7 +356,7 @@ python split_perl_packages () {
     # perl-modules should recommend every perl module, and only the
     # modules. Don't attempt to use the result of do_split_packages() as some
     # modules are manually split (eg. perl-module-unicore).
-    packages = filter(lambda p: 'perl-module-' in p, d.getVar('PACKAGES', True).split())
+    packages = filter(lambda p: 'perl-module-' in p, d.getVar('PACKAGES').split())
     d.setVar(d.expand("RRECOMMENDS_${PN}-modules"), ' '.join(packages))
 }
 

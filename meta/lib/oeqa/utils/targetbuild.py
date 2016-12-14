@@ -25,7 +25,7 @@ class BuildProject(metaclass=ABCMeta):
     # Download self.archive to self.localarchive
     def _download_archive(self):
 
-        dl_dir = self.d.getVar("DL_DIR", True)
+        dl_dir = self.d.getVar("DL_DIR")
         if dl_dir and os.path.exists(os.path.join(dl_dir, self.archive)):
             bb.utils.copyfile(os.path.join(dl_dir, self.archive), self.localarchive)
             return
@@ -40,7 +40,7 @@ class BuildProject(metaclass=ABCMeta):
 
         cmd = ''
         for var in exportvars:
-            val = self.d.getVar(var, True)
+            val = self.d.getVar(var)
             if val:
                 cmd = 'export ' + var + '=\"%s\"; %s' % (val, cmd)
 
@@ -103,8 +103,8 @@ class SDKBuildProject(BuildProject):
         self.testdir = testpath
         self.targetdir = testpath
         bb.utils.mkdirhier(testpath)
-        self.datetime = d.getVar('DATETIME', True)
-        self.testlogdir = d.getVar("TEST_LOG_DIR", True)
+        self.datetime = d.getVar('DATETIME')
+        self.testlogdir = d.getVar("TEST_LOG_DIR")
         bb.utils.mkdirhier(self.testlogdir)
         self.logfile = os.path.join(self.testlogdir, "sdk_target_log.%s" % self.datetime)
         BuildProject.__init__(self, d, uri, foldername, tmpdir=testpath)

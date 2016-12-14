@@ -15,9 +15,9 @@ REQUIRED_DISTRO_FEATURES = "x11"
 # We will skip parsing this packagegeoup for non-glibc systems
 #
 python __anonymous () {
-    if d.getVar('TCLIBC', True) != "glibc":
+    if d.getVar('TCLIBC') != "glibc":
         raise bb.parse.SkipPackage("incompatible with %s C library" %
-                                   d.getVar('TCLIBC', True))
+                                   d.getVar('TCLIBC'))
 }
 
 PACKAGES = "\

@@ -3,7 +3,7 @@ from oeqa.oetest import oeRuntimeTest, skipModule
 from oeqa.utils.decorators import *
 
 def setUpModule():
-    multilibs = oeRuntimeTest.tc.d.getVar("MULTILIBS", True) or ""
+    multilibs = oeRuntimeTest.tc.d.getVar("MULTILIBS") or ""
     if "multilib:lib32" not in multilibs:
         skipModule("this isn't a multilib:lib32 image")
 

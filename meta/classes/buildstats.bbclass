@@ -75,8 +75,8 @@ def get_buildtimedata(var, d):
     return timediff, cpuperc
 
 def write_task_data(status, logfile, e, d):
-    bn = d.getVar('BUILDNAME', True)
-    bsdir = os.path.join(d.getVar('BUILDSTATS_BASE', True), bn)
+    bn = d.getVar('BUILDNAME')
+    bsdir = os.path.join(d.getVar('BUILDSTATS_BASE'), bn)
     with open(os.path.join(logfile), "a") as f:
         elapsedtime = get_timedata("__timedata_task", d, e.time)
         if elapsedtime:
@@ -106,9 +106,9 @@ python run_buildstats () {
     import bb.event
     import time, subprocess, platform
 
-    bn = d.getVar('BUILDNAME', True)
-    bsdir = os.path.join(d.getVar('BUILDSTATS_BASE', True), bn)
-    taskdir = os.path.join(bsdir, d.getVar('PF', True))
+    bn = d.getVar('BUILDNAME')
+    bsdir = os.path.join(d.getVar('BUILDSTATS_BASE'), bn)
+    taskdir = os.path.join(bsdir, d.getVar('PF'))
 
     if isinstance(e, bb.event.BuildStarted):
         ########################################################################
@@ -162,7 +162,7 @@ python run_buildstats () {
         if e.task == "do_rootfs":
             bs = os.path.join(bsdir, "build_stats")
             with open(bs, "a") as f:
-                rootfs = d.getVar('IMAGE_ROOTFS', True)
+                rootfs = d.getVar('IMAGE_ROOTFS')
                 if os.path.isdir(rootfs):
                     try:
                         rootfs_size = subprocess.check_output(["du", "-sh", rootfs],
@@ -197,7 +197,7 @@ python runqueue_stats () {
     # are available that we need to find the output directory.
     # The persistent SystemStats is stored in the datastore and
     # closed when the build is done.
-    system_stats = d.getVar('_buildstats_system_stats', True)
+    system_stats = d.getVar('_buildstats_system_stats')
     if not system_stats and isinstance(e, (bb.runqueue.sceneQueueTaskStarted, bb.runqueue.runQueueTaskStarted)):
         system_stats = buildstats.SystemStats(d)
         d.setVar('_buildstats_system_stats', system_stats)

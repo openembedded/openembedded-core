@@ -3,7 +3,7 @@ require icu.inc
 LIC_FILES_CHKSUM = "file://../LICENSE;md5=1b3b75c1777cd49ad5c6a24cd338cfc9"
 
 def icu_download_version(d):
-    pvsplit = d.getVar('PV', True).split('.')
+    pvsplit = d.getVar('PV').split('.')
     return pvsplit[0] + "_" + pvsplit[1]
 
 ICU_PV = "${@icu_download_version(d)}"

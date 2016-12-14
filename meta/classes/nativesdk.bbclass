@@ -64,17 +64,17 @@ export PKG_CONFIG_DIR = "${STAGING_DIR_HOST}${libdir}/pkgconfig"
 export PKG_CONFIG_SYSROOT_DIR = "${STAGING_DIR_HOST}"
 
 python nativesdk_virtclass_handler () {
-    pn = e.data.getVar("PN", True)
+    pn = e.data.getVar("PN")
     if not (pn.endswith("-nativesdk") or pn.startswith("nativesdk-")):
         return
 
     e.data.setVar("MLPREFIX", "nativesdk-")
-    e.data.setVar("PN", "nativesdk-" + e.data.getVar("PN", True).replace("-nativesdk", "").replace("nativesdk-", ""))
+    e.data.setVar("PN", "nativesdk-" + e.data.getVar("PN").replace("-nativesdk", "").replace("nativesdk-", ""))
     e.data.setVar("OVERRIDES", e.data.getVar("OVERRIDES", False) + ":virtclass-nativesdk")
 }
 
 python () {
-    pn = d.getVar("PN", True)
+    pn = d.getVar("PN")
     if not pn.startswith("nativesdk-"):
         return
 
@@ -82,7 +82,7 @@ python () {
 
     clsextend = oe.classextend.NativesdkClassExtender("nativesdk", d)
     clsextend.rename_packages()
-    clsextend.rename_package_variables((d.getVar("PACKAGEVARS", True) or "").split())
+    clsextend.rename_package_variables((d.getVar("PACKAGEVARS") or "").split())
 
     clsextend.map_depends_variable("DEPENDS")
     clsextend.map_packagevars()

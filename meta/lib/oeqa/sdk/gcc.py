@@ -5,7 +5,7 @@ from oeqa.oetest import oeSDKTest, skipModule
 from oeqa.utils.decorators import *
 
 def setUpModule():
-    machine = oeSDKTest.tc.d.getVar("MACHINE", True)
+    machine = oeSDKTest.tc.d.getVar("MACHINE")
     if not oeSDKTest.hasHostPackage("packagegroup-cross-canadian-" + machine):
         skipModule("SDK doesn't contain a cross-canadian toolchain")
 

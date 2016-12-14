@@ -3,7 +3,7 @@
 # on ext file systems and depends on tune2fs.
 def get_rootfs_uuid(d):
     import subprocess
-    rootfs = d.getVar('ROOTFS', True)
+    rootfs = d.getVar('ROOTFS')
     output = subprocess.check_output(['tune2fs', '-l', rootfs])
     for line in output.split('\n'):
         if line.startswith('Filesystem UUID:'):

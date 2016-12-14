@@ -16,7 +16,7 @@ def perf_feature_enabled(feature, trueval, falseval, d):
       perf-tui: enable support for the perf TUI (via libnewt)
 
     """
-    enabled_features = d.getVar("PERF_FEATURES_ENABLE", True) or ""
+    enabled_features = d.getVar("PERF_FEATURES_ENABLE") or ""
     if feature in enabled_features:
         return trueval
     return falseval

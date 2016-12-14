@@ -32,14 +32,14 @@ python do_clean() {
     bb.note("Removing " + dir)
     oe.path.remove(dir)
 
-    for f in (d.getVar('CLEANFUNCS', True) or '').split():
+    for f in (d.getVar('CLEANFUNCS') or '').split():
         bb.build.exec_func(f, d)
 }
 
 addtask checkuri
 do_checkuri[nostamp] = "1"
 python do_checkuri() {
-    src_uri = (d.getVar('SRC_URI', True) or "").split()
+    src_uri = (d.getVar('SRC_URI') or "").split()
     if len(src_uri) == 0:
         return
 

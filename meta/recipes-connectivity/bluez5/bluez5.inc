@@ -95,13 +95,13 @@ FILES_${PN}-testtools = "${libdir}/bluez/test/*"
 
 def get_noinst_tools_paths (d, bb, tools):
     s = list()
-    bindir = d.getVar("bindir", True)
+    bindir = d.getVar("bindir")
     for bdp in tools.split():
         f = os.path.basename(bdp)
         s.append("%s/%s" % (bindir, f))
     return "\n".join(s)
 
-FILES_${PN}-noinst-tools = "${@get_noinst_tools_paths(d, bb, d.getVar('NOINST_TOOLS', True))}"
+FILES_${PN}-noinst-tools = "${@get_noinst_tools_paths(d, bb, d.getVar('NOINST_TOOLS'))}"
 
 RDEPENDS_${PN}-testtools += "python3 python3-dbus python3-pygobject"
 

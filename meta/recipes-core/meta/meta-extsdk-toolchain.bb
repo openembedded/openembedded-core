@@ -19,7 +19,7 @@ do_locked_sigs[sstate-outputdirs] = "${STAGING_DIR_HOST}/locked-sigs"
 
 python do_locked_sigs() {
     import oe.copy_buildsystem
-    outdir = os.path.join(d.getVar('LOCKED_SIGS_INDIR', True))
+    outdir = os.path.join(d.getVar('LOCKED_SIGS_INDIR'))
     bb.utils.mkdirhier(outdir)
     sigfile = os.path.join(outdir, 'locked-sigs-extsdk-toolchain.inc')
     oe.copy_buildsystem.generate_locked_sigs(sigfile, d)

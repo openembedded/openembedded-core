@@ -58,7 +58,7 @@ INITSCRIPT_PARAMS = "start 05 5 2 3 . stop 22 0 1 6 ."
 
 python __anonymous () {
     systemd_packages = "${PN}"
-    pkgconfig = d.getVar('PACKAGECONFIG', True)
+    pkgconfig = d.getVar('PACKAGECONFIG')
     if ('openvpn' or 'vpnc' or 'l2tp' or 'pptp') in pkgconfig.split():
         systemd_packages += " ${PN}-vpn"
     d.setVar('SYSTEMD_PACKAGES', systemd_packages)
@@ -116,7 +116,7 @@ def add_rdepends(bb, d, file, pkg, depmap, multilib_prefix, add_insane_skip):
 
 python populate_packages_prepend() {
     depmap = dict(pppd="ppp")
-    multilib_prefix = (d.getVar("MLPREFIX", True) or "")
+    multilib_prefix = (d.getVar("MLPREFIX") or "")
 
     hook = lambda file,pkg,x,y,z: \
         add_rdepends(bb, d, file, pkg, depmap, multilib_prefix, False)

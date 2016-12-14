@@ -4,7 +4,7 @@ from oeqa.utils.decorators import *
 
 def setUpModule():
         #check if DEFAULTTUNE is set and it's value is: x86-64-x32
-        defaulttune = oeRuntimeTest.tc.d.getVar("DEFAULTTUNE", True)
+        defaulttune = oeRuntimeTest.tc.d.getVar("DEFAULTTUNE")
         if "x86-64-x32" not in defaulttune:
             skipModule("DEFAULTTUNE is not set to x86-64-x32")
 

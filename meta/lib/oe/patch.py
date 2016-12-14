@@ -281,8 +281,8 @@ class GitApplyTree(PatchTree):
 
     def __init__(self, dir, d):
         PatchTree.__init__(self, dir, d)
-        self.commituser = d.getVar('PATCH_GIT_USER_NAME', True)
-        self.commitemail = d.getVar('PATCH_GIT_USER_EMAIL', True)
+        self.commituser = d.getVar('PATCH_GIT_USER_NAME')
+        self.commitemail = d.getVar('PATCH_GIT_USER_EMAIL')
 
     @staticmethod
     def extractPatchHeader(patchfile):
@@ -371,8 +371,8 @@ class GitApplyTree(PatchTree):
     @staticmethod
     def gitCommandUserOptions(cmd, commituser=None, commitemail=None, d=None):
         if d:
-            commituser = d.getVar('PATCH_GIT_USER_NAME', True)
-            commitemail = d.getVar('PATCH_GIT_USER_EMAIL', True)
+            commituser = d.getVar('PATCH_GIT_USER_NAME')
+            commitemail = d.getVar('PATCH_GIT_USER_EMAIL')
         if commituser:
             cmd += ['-c', 'user.name="%s"' % commituser]
         if commitemail:
@@ -551,7 +551,7 @@ class GitApplyTree(PatchTree):
 
 class QuiltTree(PatchSet):
     def _runcmd(self, args, run = True):
-        quiltrc = self.d.getVar('QUILTRCFILE', True)
+        quiltrc = self.d.getVar('QUILTRCFILE')
         if not run:
             return ["quilt"] + ["--quiltrc"] + [quiltrc] + args
         runcmd(["quilt"] + ["--quiltrc"] + [quiltrc] + args, self.dir)
@@ -727,7 +727,7 @@ class UserResolver(Resolver):
             # Patch application failed
             patchcmd = self.patchset.Push(True, False, False)
 
-            t = self.patchset.d.getVar('T', True)
+            t = self.patchset.d.getVar('T')
             if not t:
                 bb.msg.fatal("Build", "T not set")
             bb.utils.mkdirhier(t)
@@ -792,7 +792,7 @@ def patch_path(url, fetch, workdir, expand=True):
     return local
 
 def src_patches(d, all=False, expand=True):
-    workdir = d.getVar('WORKDIR', True)
+    workdir = d.getVar('WORKDIR')
     fetch = bb.fetch2.Fetch([], d)
     patches = []
     sources = []
@@ -839,13 +839,13 @@ def src_patches(d, all=False, expand=True):
 
 def should_apply(parm, d):
     if "mindate" in parm or "maxdate" in parm:
-        pn = d.getVar('PN', True)
-        srcdate = d.getVar('SRCDATE_%s' % pn, True)
+        pn = d.getVar('PN')
+        srcdate = d.getVar('SRCDATE_%s' % pn)
         if not srcdate:
-            srcdate = d.getVar('SRCDATE', True)
+            srcdate = d.getVar('SRCDATE')
 
         if srcdate == "now":
-            srcdate = d.getVar('DATE', True)
+            srcdate = d.getVar('DATE')
 
         if "maxdate" in parm and parm["maxdate"] < srcdate:
             return False, 'is outdated'
@@ -855,22 +855,22 @@ def should_apply(parm, d):
 
 
     if "minrev" in parm:
-        srcrev = d.getVar('SRCREV', True)
+        srcrev = d.getVar('SRCREV')
         if srcrev and srcrev < parm["minrev"]:
             return False, 'applies to later revisions'
 
     if "maxrev" in parm:
-        srcrev = d.getVar('SRCREV', True)
+        srcrev = d.getVar('SRCREV')
         if srcrev and srcrev > parm["maxrev"]:
             return False, 'applies to earlier revisions'
 
     if "rev" in parm:
-        srcrev = d.getVar('SRCREV', True)
+        srcrev = d.getVar('SRCREV')
         if srcrev and parm["rev"] not in srcrev:
             return False, "doesn't apply to revision"
 
     if "notrev" in parm:
-        srcrev = d.getVar('SRCREV', True)
+        srcrev = d.getVar('SRCREV')
         if srcrev and parm["notrev"] in srcrev:
             return False, "doesn't apply to revision"
 

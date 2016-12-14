@@ -11,7 +11,7 @@ def setUpModule():
         skipModule("Image doesn't have package management feature")
     if not oeRuntimeTest.hasPackage("smartpm"):
         skipModule("Image doesn't have smart installed")
-    if "package_rpm" != oeRuntimeTest.tc.d.getVar("PACKAGE_CLASSES", True).split()[0]:
+    if "package_rpm" != oeRuntimeTest.tc.d.getVar("PACKAGE_CLASSES").split()[0]:
         skipModule("Rpm is not the primary package manager")
 
 class SmartTest(oeRuntimeTest):
@@ -75,16 +75,16 @@ class SmartRepoTest(SmartTest):
         rpm_createrepo = bb.utils.which(os.getenv('PATH'), "createrepo")
         index_cmds = []
         rpm_dirs_found = False
-        archs = (oeRuntimeTest.tc.d.getVar('ALL_MULTILIB_PACKAGE_ARCHS', True) or "").replace('-', '_').split()
+        archs = (oeRuntimeTest.tc.d.getVar('ALL_MULTILIB_PACKAGE_ARCHS') or "").replace('-', '_').split()
         for arch in archs:
-            rpm_dir = os.path.join(oeRuntimeTest.tc.d.getVar('DEPLOY_DIR_RPM', True), arch)
-            idx_path = os.path.join(oeRuntimeTest.tc.d.getVar('WORKDIR', True), 'rpm', arch)
-            db_path = os.path.join(oeRuntimeTest.tc.d.getVar('WORKDIR', True), 'rpmdb', arch)
+            rpm_dir = os.path.join(oeRuntimeTest.tc.d.getVar('DEPLOY_DIR_RPM'), arch)
+            idx_path = os.path.join(oeRuntimeTest.tc.d.getVar('WORKDIR'), 'rpm', arch)
+            db_path = os.path.join(oeRuntimeTest.tc.d.getVar('WORKDIR'), 'rpmdb', arch)
             if not os.path.isdir(rpm_dir):
                 continue
             if os.path.exists(db_path):
                 bb.utils.remove(dbpath, True)
-            lockfilename = oeRuntimeTest.tc.d.getVar('DEPLOY_DIR_RPM', True) + "/rpm.lock"
+            lockfilename = oeRuntimeTest.tc.d.getVar('DEPLOY_DIR_RPM') + "/rpm.lock"
             lf = bb.utils.lockfile(lockfilename, False)
             oe.path.copyhardlinktree(rpm_dir, idx_path)
             # Full indexes overload a 256MB image so reduce the number of rpms
@@ -98,7 +98,7 @@ class SmartRepoTest(SmartTest):
         result = oe.utils.multiprocess_exec(index_cmds, self.create_index)
         if result:
             bb.fatal('%s' % ('\n'.join(result)))
-        self.repo_server = HTTPService(oeRuntimeTest.tc.d.getVar('WORKDIR', True), oeRuntimeTest.tc.target.server_ip)
+        self.repo_server = HTTPService(oeRuntimeTest.tc.d.getVar('WORKDIR'), oeRuntimeTest.tc.target.server_ip)
         self.repo_server.start()
 
     @classmethod
@@ -113,9 +113,9 @@ class SmartRepoTest(SmartTest):
 
     @testcase(719)
     def test_smart_channel_add(self):
-        image_pkgtype = self.tc.d.getVar('IMAGE_PKGTYPE', True)
+        image_pkgtype = self.tc.d.getVar('IMAGE_PKGTYPE')
         deploy_url = 'http://%s:%s/%s' %(self.target.server_ip, self.repo_server.port, image_pkgtype)
-        pkgarchs = self.tc.d.getVar('PACKAGE_ARCHS', True).replace("-","_").split()
+        pkgarchs = self.tc.d.getVar('PACKAGE_ARCHS').replace("-","_").split()
         for arch in os.listdir('%s/%s' % (self.repo_server.root_dir, image_pkgtype)):
             if arch in pkgarchs:
                 self.smart('channel -y --add {a} type=rpm-md baseurl={u}/{a}'.format(a=arch, u=deploy_url))

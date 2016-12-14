@@ -21,8 +21,8 @@ do_install_append_class-native () {
 	if test "${libdir}" = "${base_libdir}" ; then
 		return
 	fi
-	librelpath=${@os.path.relpath(d.getVar('libdir',True), d.getVar('base_libdir', True))}
-	baselibrelpath=${@os.path.relpath(d.getVar('base_libdir',True), d.getVar('libdir', True))}
+	librelpath=${@os.path.relpath(d.getVar('libdir',True), d.getVar('base_libdir'))}
+	baselibrelpath=${@os.path.relpath(d.getVar('base_libdir',True), d.getVar('libdir'))}
 
 	# Remove bad symlinks & create the correct symlinks
 	if test -L ${D}${libdir}/lib${BPN}.so ; then
@@ -45,5 +45,5 @@ FILES_lib${BPN} = "${base_libdir}/lib*${SOLIBS}"
 
 BBCLASSEXTEND = "native"
 # Only append ldflags for target recipe and if USE_NLS is enabled
-LDFLAGS_append_libc-uclibc_class-target = "${@['', ' -lintl '][(d.getVar('USE_NLS', True) == 'yes')]}"
-EXTRA_OECONF_append_libc-uclibc_class-target = "${@['', ' --disable-gettext '][(d.getVar('USE_NLS', True) == 'no')]}"
+LDFLAGS_append_libc-uclibc_class-target = "${@['', ' -lintl '][(d.getVar('USE_NLS') == 'yes')]}"
+EXTRA_OECONF_append_libc-uclibc_class-target = "${@['', ' --disable-gettext '][(d.getVar('USE_NLS') == 'no')]}"

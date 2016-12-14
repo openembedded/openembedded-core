@@ -59,7 +59,7 @@ PACKAGES = "${PN}-dbg ${BOOST_PACKAGES}"
 python __anonymous () {
     packages = []
     extras = []
-    for lib in d.getVar('BOOST_LIBS', True).split( ):
+    for lib in d.getVar('BOOST_LIBS').split( ):
         # BJAM does not know '--with-python3' (only --with-python)
         if lib != "python3":
             extras.append("--with-%s" % lib)
@@ -67,10 +67,10 @@ python __anonymous () {
         packages.append(pkg)
         if lib == "python":
             # special: python*.so matches python3.so !!
-            if not d.getVar("FILES_%s" % pkg, True):
+            if not d.getVar("FILES_%s" % pkg):
                     d.setVar("FILES_%s" % pkg, "${libdir}/libboost_%s.so.*" % lib)
         else:
-            if not d.getVar("FILES_%s" % pkg, True):
+            if not d.getVar("FILES_%s" % pkg):
                     d.setVar("FILES_%s" % pkg, "${libdir}/libboost_%s*.so.*" % lib)
     d.setVar("BOOST_PACKAGES", " ".join(packages))
     d.setVar("BJAM_EXTRA", " ".join(extras))
@@ -145,7 +145,7 @@ BJAM_TOOLS   = "--ignore-site-config \
 # use PARALLEL_MAKE to speed up the build, but limit it by -j 64, greater parallelism causes bjam to segfault or to ignore -j
 # https://svn.boost.org/trac/boost/ticket/7634
 def get_boost_parallel_make(d):
-    pm = d.getVar('PARALLEL_MAKE', True)
+    pm = d.getVar('PARALLEL_MAKE')
     if pm:
         # look for '-j' and throw other options (e.g. '-l') away
         # because they might have different meaning in bjam

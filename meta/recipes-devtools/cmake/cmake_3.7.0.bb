@@ -10,8 +10,8 @@ SRC_URI_append_class-nativesdk = " \
 
 # Strip ${prefix} from ${docdir}, set result into docdir_stripped
 python () {
-    prefix=d.getVar("prefix", True)
-    docdir=d.getVar("docdir", True)
+    prefix=d.getVar("prefix")
+    docdir=d.getVar("docdir")
 
     if not docdir.startswith(prefix):
         bb.fatal('docdir must contain prefix as its prefix')

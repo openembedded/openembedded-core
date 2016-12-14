@@ -19,7 +19,7 @@ do_collect_packagedata[sstate-outputdirs] = "${STAGING_DIR_HOST}/world-pkgdata"
 
 python do_collect_packagedata() {
     import oe.copy_buildsystem
-    outdir = os.path.join(d.getVar('WORLD_PKGDATADIR', True))
+    outdir = os.path.join(d.getVar('WORLD_PKGDATADIR'))
     bb.utils.mkdirhier(outdir)
     sigfile = os.path.join(outdir, 'locked-sigs-pkgdata.inc')
     oe.copy_buildsystem.generate_locked_sigs(sigfile, d)

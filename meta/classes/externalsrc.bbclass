@@ -28,34 +28,34 @@ SRCTREECOVEREDTASKS ?= "do_patch do_unpack do_fetch"
 EXTERNALSRC_SYMLINKS ?= "oe-workdir:${WORKDIR} oe-logs:${T}"
 
 python () {
-    externalsrc = d.getVar('EXTERNALSRC', True)
+    externalsrc = d.getVar('EXTERNALSRC')
 
     # If this is the base recipe and EXTERNALSRC is set for it or any of its
     # derivatives, then enable BB_DONT_CACHE to force the recipe to always be
     # re-parsed so that the file-checksums function for do_compile is run every
     # time.
-    bpn = d.getVar('BPN', True)
-    if bpn == d.getVar('PN', True):
-        classextend = (d.getVar('BBCLASSEXTEND', True) or '').split()
+    bpn = d.getVar('BPN')
+    if bpn == d.getVar('PN'):
+        classextend = (d.getVar('BBCLASSEXTEND') or '').split()
         if (externalsrc or
                 ('native' in classextend and
-                 d.getVar('EXTERNALSRC_pn-%s-native' % bpn, True)) or
+                 d.getVar('EXTERNALSRC_pn-%s-native' % bpn)) or
                 ('nativesdk' in classextend and
-                 d.getVar('EXTERNALSRC_pn-nativesdk-%s' % bpn, True)) or
+                 d.getVar('EXTERNALSRC_pn-nativesdk-%s' % bpn)) or
                 ('cross' in classextend and
-                 d.getVar('EXTERNALSRC_pn-%s-cross' % bpn, True))):
+                 d.getVar('EXTERNALSRC_pn-%s-cross' % bpn))):
             d.setVar('BB_DONT_CACHE', '1')
 
     if externalsrc:
         d.setVar('S', externalsrc)
-        externalsrcbuild = d.getVar('EXTERNALSRC_BUILD', True)
+        externalsrcbuild = d.getVar('EXTERNALSRC_BUILD')
         if externalsrcbuild:
             d.setVar('B', externalsrcbuild)
         else:
             d.setVar('B', '${WORKDIR}/${BPN}-${PV}/')
 
         local_srcuri = []
-        fetch = bb.fetch2.Fetch((d.getVar('SRC_URI', True) or '').split(), d)
+        fetch = bb.fetch2.Fetch((d.getVar('SRC_URI') or '').split(), d)
         for url in fetch.urls:
             url_data = fetch.ud[url]
             parm = url_data.parm
@@ -94,7 +94,7 @@ python () {
         # Note that we cannot use d.appendVarFlag() here because deps is expected to be a list object, not a string
         d.setVarFlag('do_configure', 'deps', (d.getVarFlag('do_configure', 'deps', False) or []) + ['do_unpack'])
 
-        for task in d.getVar("SRCTREECOVEREDTASKS", True).split():
+        for task in d.getVar("SRCTREECOVEREDTASKS").split():
             if local_srcuri and task in fetch_tasks:
                 continue
             bb.build.deltask(task, d)
@@ -106,13 +106,13 @@ python () {
         d.setVarFlag('do_configure', 'file-checksums', '${@srctree_configure_hash_files(d)}')
 
         # We don't want the workdir to go away
-        d.appendVar('RM_WORK_EXCLUDE', ' ' + d.getVar('PN', True))
+        d.appendVar('RM_WORK_EXCLUDE', ' ' + d.getVar('PN'))
 
         # If B=S the same builddir is used even for different architectures.
         # Thus, use a shared CONFIGURESTAMPFILE and STAMP directory so that
         # change of do_configure task hash is correctly detected and stamps are
         # invalidated if e.g. MACHINE changes.
-        if d.getVar('S', True) == d.getVar('B', True):
+        if d.getVar('S') == d.getVar('B'):
             configstamp = '${TMPDIR}/work-shared/${PN}/${EXTENDPE}${PV}-${PR}/configure.sstate'
             d.setVar('CONFIGURESTAMPFILE', configstamp)
             d.setVar('STAMP', '${STAMPS_DIR}/work-shared/${PN}/${EXTENDPE}${PV}-${PR}')
@@ -120,10 +120,10 @@ python () {
 
 python externalsrc_configure_prefunc() {
     # Create desired symlinks
-    symlinks = (d.getVar('EXTERNALSRC_SYMLINKS', True) or '').split()
+    symlinks = (d.getVar('EXTERNALSRC_SYMLINKS') or '').split()
     for symlink in symlinks:
         symsplit = symlink.split(':', 1)
-        lnkfile = os.path.join(d.getVar('S', True), symsplit[0])
+        lnkfile = os.path.join(d.getVar('S'), symsplit[0])
         target = d.expand(symsplit[1])
         if len(symsplit) > 1:
             if os.path.islink(lnkfile):
@@ -139,7 +139,7 @@ python externalsrc_configure_prefunc() {
 
 python externalsrc_compile_prefunc() {
     # Make it obvious that this is happening, since forgetting about it could lead to much confusion
-    bb.plain('NOTE: %s: compiling from external source tree %s' % (d.getVar('PN', True), d.getVar('EXTERNALSRC', True)))
+    bb.plain('NOTE: %s: compiling from external source tree %s' % (d.getVar('PN'), d.getVar('EXTERNALSRC')))
 }
 
 def srctree_hash_files(d):
@@ -147,7 +147,7 @@ def srctree_hash_files(d):
     import subprocess
     import tempfile
 
-    s_dir = d.getVar('EXTERNALSRC', True)
+    s_dir = d.getVar('EXTERNALSRC')
     git_dir = os.path.join(s_dir, '.git')
     oe_hash_file = os.path.join(git_dir, 'oe-devtool-tree-sha1')
 
@@ -165,7 +165,7 @@ def srctree_hash_files(d):
             fobj.write(sha1)
         ret = oe_hash_file + ':True'
     else:
-        ret = d.getVar('EXTERNALSRC', True) + '/*:True'
+        ret = d.getVar('EXTERNALSRC') + '/*:True'
     return ret
 
 def srctree_configure_hash_files(d):
@@ -173,7 +173,7 @@ def srctree_configure_hash_files(d):
     Get the list of files that should trigger do_configure to re-execute,
     based on the value of CONFIGURE_FILES
     """
-    in_files = (d.getVar('CONFIGURE_FILES', True) or '').split()
+    in_files = (d.getVar('CONFIGURE_FILES') or '').split()
     out_items = []
     search_files = []
     for entry in in_files:
@@ -182,7 +182,7 @@ def srctree_configure_hash_files(d):
         else:
             search_files.append(entry)
     if search_files:
-        s_dir = d.getVar('EXTERNALSRC', True)
+        s_dir = d.getVar('EXTERNALSRC')
         for root, _, files in os.walk(s_dir):
             for f in files:
                 if f in search_files:

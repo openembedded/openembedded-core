@@ -61,7 +61,7 @@ python () {
         d.setVarFlag('do_install_ptest_base', 'fakeroot', '1')
 
     # Remove all '*ptest_base' tasks when ptest is not enabled
-    if not(d.getVar('PTEST_ENABLED', True) == "1"):
+    if not(d.getVar('PTEST_ENABLED') == "1"):
         for i in ['do_configure_ptest_base', 'do_compile_ptest_base', 'do_install_ptest_base']:
             bb.build.deltask(i, d)
 }

@@ -19,9 +19,9 @@ def emit_terminal_func(command, envdata, d):
     envdata.setVar(cmd_func, 'exec ' + command)
     envdata.setVarFlag(cmd_func, 'func', '1')
 
-    runfmt = d.getVar('BB_RUNFMT', True) or "run.{func}.{pid}"
+    runfmt = d.getVar('BB_RUNFMT') or "run.{func}.{pid}"
     runfile = runfmt.format(func=cmd_func, task=cmd_func, taskfunc=cmd_func, pid=os.getpid())
-    runfile = os.path.join(d.getVar('T', True), runfile)
+    runfile = os.path.join(d.getVar('T'), runfile)
     bb.utils.mkdirhier(os.path.dirname(runfile))
 
     with open(runfile, 'w') as script:
@@ -44,7 +44,7 @@ def oe_terminal(command, title, d):
         envdata.setVarFlag(v, 'export', '1')
 
     for export in oe.data.typed_value('OE_TERMINAL_EXPORTS', d):
-        value = d.getVar(export, True)
+        value = d.getVar(export)
         if value is not None:
             os.environ[export] = str(value)
             envdata.setVar(export, str(value))
@@ -60,7 +60,7 @@ def oe_terminal(command, title, d):
     for key in origbbenv:
         if key in envdata:
             continue
-        value = origbbenv.getVar(key, True)
+        value = origbbenv.getVar(key)
         if value is not None:
             os.environ[key] = str(value)
             envdata.setVar(key, str(value))

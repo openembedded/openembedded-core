@@ -35,11 +35,11 @@ fi
 }
 
 python populate_packages_append () {
-    packages = d.getVar('PACKAGES', True).split()
-    pkgdest =  d.getVar('PKGDEST', True)
+    packages = d.getVar('PACKAGES').split()
+    pkgdest =  d.getVar('PKGDEST')
     
     for pkg in packages:
-        icon_dir = '%s/%s/%s/icons' % (pkgdest, pkg, d.getVar('datadir', True))
+        icon_dir = '%s/%s/%s/icons' % (pkgdest, pkg, d.getVar('datadir'))
         if not os.path.exists(icon_dir):
             continue
 
@@ -49,16 +49,16 @@ python populate_packages_append () {
     
         bb.note("adding gtk-icon-cache postinst and postrm scripts to %s" % pkg)
         
-        postinst = d.getVar('pkg_postinst_%s' % pkg, True)
+        postinst = d.getVar('pkg_postinst_%s' % pkg)
         if not postinst:
             postinst = '#!/bin/sh\n'
-        postinst += d.getVar('gtk_icon_cache_postinst', True)
+        postinst += d.getVar('gtk_icon_cache_postinst')
         d.setVar('pkg_postinst_%s' % pkg, postinst)
 
-        postrm = d.getVar('pkg_postrm_%s' % pkg, True)
+        postrm = d.getVar('pkg_postrm_%s' % pkg)
         if not postrm:
             postrm = '#!/bin/sh\n'
-        postrm += d.getVar('gtk_icon_cache_postrm', True)
+        postrm += d.getVar('gtk_icon_cache_postrm')
         d.setVar('pkg_postrm_%s' % pkg, postrm)
 }
 

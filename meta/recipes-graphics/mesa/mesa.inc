@@ -114,7 +114,7 @@ do_install_append () {
 # they don't get Debian-renamed (which would remove the -mesa suffix), and
 # RPROVIDEs/RCONFLICTs on the generic libgl name.
 python __anonymous() {
-    pkgconfig = (d.getVar('PACKAGECONFIG', True) or "").split()
+    pkgconfig = (d.getVar('PACKAGECONFIG') or "").split()
     for p in (("egl", "libegl", "libegl1"),
               ("dri", "libgl", "libgl1"),
               ("gles", "libgles1", "libglesv1-cm1"),
@@ -148,7 +148,7 @@ python mesa_populate_packages() {
         d.setVar("RREPLACES_%s" % pkg, pkg.replace("mesa", "mesa-dri", 1))
 
     import re
-    dri_drivers_root = oe.path.join(d.getVar('PKGD', True), d.getVar('libdir', True), "dri")
+    dri_drivers_root = oe.path.join(d.getVar('PKGD'), d.getVar('libdir'), "dri")
     if os.path.isdir(dri_drivers_root):
         dri_pkgs = os.listdir(dri_drivers_root)
         lib_name = d.expand("${MLPREFIX}mesa-megadriver")
@@ -160,7 +160,7 @@ python mesa_populate_packages() {
                 d.appendVar("RCONFLICTS_%s" % lib_name, pkg_name)
                 d.appendVar("RREPLACES_%s" % lib_name, pkg_name)
 
-    pipe_drivers_root = os.path.join(d.getVar('libdir', True), "gallium-pipe")
+    pipe_drivers_root = os.path.join(d.getVar('libdir'), "gallium-pipe")
     do_split_packages(d, pipe_drivers_root, '^pipe_(.*)\.so$', 'mesa-driver-pipe-%s', 'Mesa %s pipe driver', extra_depends='')
 }
 

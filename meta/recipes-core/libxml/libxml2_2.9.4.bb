@@ -56,7 +56,7 @@ EXTRA_OECONF_linuxstdbase = "--with-debug --with-legacy --with-docbook --with-c1
 
 python populate_packages_prepend () {
     # autonamer would call this libxml2-2, but we don't want that
-    if d.getVar('DEBIAN_NAMES', True):
+    if d.getVar('DEBIAN_NAMES'):
         d.setVar('PKG_libxml2', '${MLPREFIX}libxml2')
 }
 

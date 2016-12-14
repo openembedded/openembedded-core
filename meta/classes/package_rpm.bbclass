@@ -13,9 +13,9 @@ MERGEPERFILEDEPS = "1"
 
 # Construct per file dependencies file
 def write_rpm_perfiledata(srcname, d):
-    workdir = d.getVar('WORKDIR', True)
-    packages = d.getVar('PACKAGES', True)
-    pkgd = d.getVar('PKGD', True)
+    workdir = d.getVar('WORKDIR')
+    packages = d.getVar('PACKAGES')
+    pkgd = d.getVar('PKGD')
 
     def dump_filerdeps(varname, outfile, d):
         outfile.write("#!/usr/bin/env python\n\n")
@@ -23,10 +23,10 @@ def write_rpm_perfiledata(srcname, d):
         outfile.write('deps = {\n')
         for pkg in packages.split():
             dependsflist_key = 'FILE' + varname + 'FLIST' + "_" + pkg
-            dependsflist = (d.getVar(dependsflist_key, True) or "")
+            dependsflist = (d.getVar(dependsflist_key) or "")
             for dfile in dependsflist.split():
                 key = "FILE" + varname + "_" + dfile + "_" + pkg
-                depends_dict = bb.utils.explode_dep_versions(d.getVar(key, True) or "")
+                depends_dict = bb.utils.explode_dep_versions(d.getVar(key) or "")
                 file = dfile.replace("@underscore@", "_")
                 file = file.replace("@closebrace@", "]")
                 file = file.replace("@openbrace@", "[")
@@ -87,14 +87,14 @@ python write_specfile () {
     # append information for logs and patches to %prep
     def add_prep(d,spec_files_bottom):
         if d.getVarFlag('ARCHIVER_MODE', 'srpm', True) == '1' and bb.data.inherits_class('archiver', d):
-            spec_files_bottom.append('%%prep -n %s' % d.getVar('PN', True) )
+            spec_files_bottom.append('%%prep -n %s' % d.getVar('PN') )
             spec_files_bottom.append('%s' % "echo \"include logs and patches, Please check them in SOURCES\"")
             spec_files_bottom.append('')
 
     # append the name of tarball to key word 'SOURCE' in xxx.spec.
     def tail_source(d):
         if d.getVarFlag('ARCHIVER_MODE', 'srpm', True) == '1' and bb.data.inherits_class('archiver', d):
-            ar_outdir = d.getVar('ARCHIVER_OUTDIR', True)
+            ar_outdir = d.getVar('ARCHIVER_OUTDIR')
             if not os.path.exists(ar_outdir):
                 return
             source_list = os.listdir(ar_outdir)
@@ -110,7 +110,7 @@ python write_specfile () {
     # We need a simple way to remove the MLPREFIX from the package name,
     # and dependency information...
     def strip_multilib(name, d):
-        multilibs = d.getVar('MULTILIBS', True) or ""
+        multilibs = d.getVar('MULTILIBS') or ""
         for ext in multilibs.split():
             eext = ext.split(':')
             if len(eext) > 1 and eext[0] == 'multilib' and name and name.find(eext[1] + '-') >= 0:
@@ -124,7 +124,7 @@ python write_specfile () {
             newdeps[strip_multilib(dep, d)] = depends[dep]
         return bb.utils.join_deps(newdeps)
 
-#        ml = d.getVar("MLPREFIX", True)
+#        ml = d.getVar("MLPREFIX")
 #        if ml and name and len(ml) != 0 and name.find(ml) == 0:
 #            return ml.join(name.split(ml, 1)[1:])
 #        return name
@@ -144,7 +144,7 @@ python write_specfile () {
     # after renaming we cannot look up the dependencies in the packagedata
     # store.
     def translate_vers(varname, d):
-        depends = d.getVar(varname, True)
+        depends = d.getVar(varname)
         if depends:
             depends_dict = bb.utils.explode_dep_versions2(depends)
             newdeps_dict = {}
@@ -248,10 +248,10 @@ python write_specfile () {
     def get_perfile(varname, pkg, d):
         deps = []
         dependsflist_key = 'FILE' + varname + 'FLIST' + "_" + pkg
-        dependsflist = (d.getVar(dependsflist_key, True) or "")
+        dependsflist = (d.getVar(dependsflist_key) or "")
         for dfile in dependsflist.split():
             key = "FILE" + varname + "_" + dfile + "_" + pkg
-            depends = d.getVar(key, True)
+            depends = d.getVar(key)
             if depends:
                 deps.append(depends)
         return " ".join(deps)
@@ -269,33 +269,33 @@ python write_specfile () {
         else:
             spec_preamble.append('%s' % textwrap.fill(dedent_text, width=75))
 
-    packages = d.getVar('PACKAGES', True)
+    packages = d.getVar('PACKAGES')
     if not packages or packages == '':
         bb.debug(1, "No packages; nothing to do")
         return
 
-    pkgdest = d.getVar('PKGDEST', True)
+    pkgdest = d.getVar('PKGDEST')
     if not pkgdest:
         bb.fatal("No PKGDEST")
 
-    outspecfile = d.getVar('OUTSPECFILE', True)
+    outspecfile = d.getVar('OUTSPECFILE')
     if not outspecfile:
         bb.fatal("No OUTSPECFILE")
 
     # Construct the SPEC file...
-    srcname    = strip_multilib(d.getVar('PN', True), d)
-    srcsummary = (d.getVar('SUMMARY', True) or d.getVar('DESCRIPTION', True) or ".")
-    srcversion = d.getVar('PKGV', True).replace('-', '+')
-    srcrelease = d.getVar('PKGR', True)
-    srcepoch   = (d.getVar('PKGE', True) or "")
-    srclicense = d.getVar('LICENSE', True)
-    srcsection = d.getVar('SECTION', True)
-    srcmaintainer  = d.getVar('MAINTAINER', True)
-    srchomepage    = d.getVar('HOMEPAGE', True)
-    srcdescription = d.getVar('DESCRIPTION', True) or "."
+    srcname    = strip_multilib(d.getVar('PN'), d)
+    srcsummary = (d.getVar('SUMMARY') or d.getVar('DESCRIPTION') or ".")
+    srcversion = d.getVar('PKGV').replace('-', '+')
+    srcrelease = d.getVar('PKGR')
+    srcepoch   = (d.getVar('PKGE') or "")
+    srclicense = d.getVar('LICENSE')
+    srcsection = d.getVar('SECTION')
+    srcmaintainer  = d.getVar('MAINTAINER')
+    srchomepage    = d.getVar('HOMEPAGE')
+    srcdescription = d.getVar('DESCRIPTION') or "."
     srccustomtagschunk = get_package_additional_metadata("rpm", d)
 
-    srcdepends     = strip_multilib_deps(d.getVar('DEPENDS', True), d)
+    srcdepends     = strip_multilib_deps(d.getVar('DEPENDS'), d)
     srcrdepends    = []
     srcrrecommends = []
     srcrsuggests   = []
@@ -318,8 +318,8 @@ python write_specfile () {
     spec_files_top = []
     spec_files_bottom = []
 
-    perfiledeps = (d.getVar("MERGEPERFILEDEPS", True) or "0") == "0"
-    extra_pkgdata = (d.getVar("RPM_EXTRA_PKGDATA", True) or "0") == "1"
+    perfiledeps = (d.getVar("MERGEPERFILEDEPS") or "0") == "0"
+    extra_pkgdata = (d.getVar("RPM_EXTRA_PKGDATA") or "0") == "1"
 
     for pkg in packages.split():
         localdata = bb.data.createCopy(d)
@@ -328,7 +328,7 @@ python write_specfile () {
 
         localdata.setVar('ROOT', '')
         localdata.setVar('ROOT_%s' % pkg, root)
-        pkgname = localdata.getVar('PKG_%s' % pkg, True)
+        pkgname = localdata.getVar('PKG_%s' % pkg)
         if not pkgname:
             pkgname = pkg
         localdata.setVar('PKG', pkgname)
@@ -338,19 +338,19 @@ python write_specfile () {
         bb.data.update_data(localdata)
 
         conffiles = get_conffiles(pkg, d)
-        dirfiles = localdata.getVar('DIRFILES', True)
+        dirfiles = localdata.getVar('DIRFILES')
         if dirfiles is not None:
             dirfiles = dirfiles.split()
 
         splitname    = strip_multilib(pkgname, d)
 
-        splitsummary = (localdata.getVar('SUMMARY', True) or localdata.getVar('DESCRIPTION', True) or ".")
-        splitversion = (localdata.getVar('PKGV', True) or "").replace('-', '+')
-        splitrelease = (localdata.getVar('PKGR', True) or "")
-        splitepoch   = (localdata.getVar('PKGE', True) or "")
-        splitlicense = (localdata.getVar('LICENSE', True) or "")
-        splitsection = (localdata.getVar('SECTION', True) or "")
-        splitdescription = (localdata.getVar('DESCRIPTION', True) or ".")
+        splitsummary = (localdata.getVar('SUMMARY') or localdata.getVar('DESCRIPTION') or ".")
+        splitversion = (localdata.getVar('PKGV') or "").replace('-', '+')
+        splitrelease = (localdata.getVar('PKGR') or "")
+        splitepoch   = (localdata.getVar('PKGE') or "")
+        splitlicense = (localdata.getVar('LICENSE') or "")
+        splitsection = (localdata.getVar('SECTION') or "")
+        splitdescription = (localdata.getVar('DESCRIPTION') or ".")
         splitcustomtagschunk = get_package_additional_metadata("rpm", localdata)
 
         translate_vers('RDEPENDS', localdata)
@@ -363,18 +363,18 @@ python write_specfile () {
         # Map the dependencies into their final form
         mapping_rename_hook(localdata)
 
-        splitrdepends    = strip_multilib_deps(localdata.getVar('RDEPENDS', True), d)
-        splitrrecommends = strip_multilib_deps(localdata.getVar('RRECOMMENDS', True), d)
-        splitrsuggests   = strip_multilib_deps(localdata.getVar('RSUGGESTS', True), d)
-        splitrprovides   = strip_multilib_deps(localdata.getVar('RPROVIDES', True), d)
-        splitrreplaces   = strip_multilib_deps(localdata.getVar('RREPLACES', True), d)
-        splitrconflicts  = strip_multilib_deps(localdata.getVar('RCONFLICTS', True), d)
+        splitrdepends    = strip_multilib_deps(localdata.getVar('RDEPENDS'), d)
+        splitrrecommends = strip_multilib_deps(localdata.getVar('RRECOMMENDS'), d)
+        splitrsuggests   = strip_multilib_deps(localdata.getVar('RSUGGESTS'), d)
+        splitrprovides   = strip_multilib_deps(localdata.getVar('RPROVIDES'), d)
+        splitrreplaces   = strip_multilib_deps(localdata.getVar('RREPLACES'), d)
+        splitrconflicts  = strip_multilib_deps(localdata.getVar('RCONFLICTS'), d)
         splitrobsoletes  = []
 
-        splitrpreinst  = localdata.getVar('pkg_preinst', True)
-        splitrpostinst = localdata.getVar('pkg_postinst', True)
-        splitrprerm    = localdata.getVar('pkg_prerm', True)
-        splitrpostrm   = localdata.getVar('pkg_postrm', True)
+        splitrpreinst  = localdata.getVar('pkg_preinst')
+        splitrpostinst = localdata.getVar('pkg_postinst')
+        splitrprerm    = localdata.getVar('pkg_prerm')
+        splitrpostrm   = localdata.getVar('pkg_postrm')
 
 
         if not perfiledeps:
@@ -621,7 +621,7 @@ python write_specfile () {
 
     # RPMSPEC_PREAMBLE is a way to add arbitrary text to the top
     # of the generated spec file
-    external_preamble = d.getVar("RPMSPEC_PREAMBLE", True)
+    external_preamble = d.getVar("RPMSPEC_PREAMBLE")
     if external_preamble:
         specfile.write(external_preamble + "\n")
 
@@ -652,20 +652,20 @@ python do_package_rpm () {
     # We need a simple way to remove the MLPREFIX from the package name,
     # and dependency information...
     def strip_multilib(name, d):
-        ml = d.getVar("MLPREFIX", True)
+        ml = d.getVar("MLPREFIX")
         if ml and name and len(ml) != 0 and name.find(ml) >= 0:
             return "".join(name.split(ml))
         return name
 
-    workdir = d.getVar('WORKDIR', True)
-    tmpdir = d.getVar('TMPDIR', True)
-    pkgd = d.getVar('PKGD', True)
-    pkgdest = d.getVar('PKGDEST', True)
+    workdir = d.getVar('WORKDIR')
+    tmpdir = d.getVar('TMPDIR')
+    pkgd = d.getVar('PKGD')
+    pkgdest = d.getVar('PKGDEST')
     if not workdir or not pkgd or not tmpdir:
         bb.error("Variables incorrectly set, unable to package")
         return
 
-    packages = d.getVar('PACKAGES', True)
+    packages = d.getVar('PACKAGES')
     if not packages or packages == '':
         bb.debug(1, "No packages; nothing to do")
         return
@@ -674,31 +674,31 @@ python do_package_rpm () {
     # If the spec file already exist, and has not been stored into 
     # pseudo's files.db, it maybe cause rpmbuild src.rpm fail,
     # so remove it before doing rpmbuild src.rpm.
-    srcname    = strip_multilib(d.getVar('PN', True), d)
+    srcname    = strip_multilib(d.getVar('PN'), d)
     outspecfile = workdir + "/" + srcname + ".spec"
     if os.path.isfile(outspecfile):
         os.remove(outspecfile)
     d.setVar('OUTSPECFILE', outspecfile)
     bb.build.exec_func('write_specfile', d)
 
-    perfiledeps = (d.getVar("MERGEPERFILEDEPS", True) or "0") == "0"
+    perfiledeps = (d.getVar("MERGEPERFILEDEPS") or "0") == "0"
     if perfiledeps:
         outdepends, outprovides = write_rpm_perfiledata(srcname, d)
 
     # Setup the rpmbuild arguments...
-    rpmbuild = d.getVar('RPMBUILD', True)
-    targetsys = d.getVar('TARGET_SYS', True)
-    targetvendor = d.getVar('HOST_VENDOR', True)
-    package_arch = (d.getVar('PACKAGE_ARCH', True) or "").replace("-", "_")
-    sdkpkgsuffix = (d.getVar('SDKPKGSUFFIX', True) or "nativesdk").replace("-", "_")
+    rpmbuild = d.getVar('RPMBUILD')
+    targetsys = d.getVar('TARGET_SYS')
+    targetvendor = d.getVar('HOST_VENDOR')
+    package_arch = (d.getVar('PACKAGE_ARCH') or "").replace("-", "_")
+    sdkpkgsuffix = (d.getVar('SDKPKGSUFFIX') or "nativesdk").replace("-", "_")
     if package_arch not in "all any noarch".split() and not package_arch.endswith(sdkpkgsuffix):
-        ml_prefix = (d.getVar('MLPREFIX', True) or "").replace("-", "_")
+        ml_prefix = (d.getVar('MLPREFIX') or "").replace("-", "_")
         d.setVar('PACKAGE_ARCH_EXTEND', ml_prefix + package_arch)
     else:
         d.setVar('PACKAGE_ARCH_EXTEND', package_arch)
     pkgwritedir = d.expand('${PKGWRITEDIRRPM}/${PACKAGE_ARCH_EXTEND}')
     d.setVar('RPM_PKGWRITEDIR', pkgwritedir)
-    bb.debug(1, 'PKGWRITEDIR: %s' % d.getVar('RPM_PKGWRITEDIR', True))
+    bb.debug(1, 'PKGWRITEDIR: %s' % d.getVar('RPM_PKGWRITEDIR'))
     pkgarch = d.expand('${PACKAGE_ARCH_EXTEND}${HOST_VENDOR}-${HOST_OS}')
     magicfile = d.expand('${STAGING_DIR_NATIVE}${datadir_native}/misc/magic.mgc')
     bb.utils.mkdirhier(pkgwritedir)
@@ -707,7 +707,7 @@ python do_package_rpm () {
     cmd = rpmbuild
     cmd = cmd + " --nodeps --short-circuit --target " + pkgarch + " --buildroot " + pkgd
     cmd = cmd + " --define '_topdir " + workdir + "' --define '_rpmdir " + pkgwritedir + "'"
-    cmd = cmd + " --define '_builddir " + d.getVar('S', True) + "'"
+    cmd = cmd + " --define '_builddir " + d.getVar('S') + "'"
     cmd = cmd + " --define '_build_name_fmt %%{NAME}-%%{VERSION}-%%{RELEASE}.%%{ARCH}.rpm'"
     cmd = cmd + " --define '_use_internal_dependency_generator 0'"
     if perfiledeps:
@@ -721,8 +721,8 @@ python do_package_rpm () {
     cmd = cmd + " --define '_rpmfc_magic_path " + magicfile + "'"
     cmd = cmd + " --define '_tmppath " + workdir + "'"
     if d.getVarFlag('ARCHIVER_MODE', 'srpm', True) == '1' and bb.data.inherits_class('archiver', d):
-        cmd = cmd + " --define '_sourcedir " + d.getVar('ARCHIVER_OUTDIR', True) + "'"
-        cmdsrpm = cmd + " --define '_srcrpmdir " + d.getVar('ARCHIVER_OUTDIR', True) + "'"
+        cmd = cmd + " --define '_sourcedir " + d.getVar('ARCHIVER_OUTDIR') + "'"
+        cmdsrpm = cmd + " --define '_srcrpmdir " + d.getVar('ARCHIVER_OUTDIR') + "'"
         cmdsrpm = cmdsrpm + " -bs " + outspecfile
         # Build the .src.rpm
         d.setVar('SBUILDSPEC', cmdsrpm + "\n")
@@ -735,12 +735,12 @@ python do_package_rpm () {
     d.setVarFlag('BUILDSPEC', 'func', '1')
     bb.build.exec_func('BUILDSPEC', d)
 
-    if d.getVar('RPM_SIGN_PACKAGES', True) == '1':
+    if d.getVar('RPM_SIGN_PACKAGES') == '1':
         bb.build.exec_func("sign_rpm", d)
 }
 
 python () {
-    if d.getVar('PACKAGES', True) != '':
+    if d.getVar('PACKAGES') != '':
         deps = ' rpm-native:do_populate_sysroot virtual/fakeroot-native:do_populate_sysroot'
         d.appendVarFlag('do_package_write_rpm', 'depends', deps)
         d.setVarFlag('do_package_write_rpm', 'fakeroot', '1')

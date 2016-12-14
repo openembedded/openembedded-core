@@ -626,13 +626,13 @@ def multilib_rpmmacros(d):
     localdata.delVar('TOOLCHAIN_OPTIONS')
 
     # Set 'localdata' values to be consistent with 'd' values.
-    distromacrodirVal = d.getVar('distromacrodir', True)
-    workdirVal = d.getVar('WORKDIR', True)
-    dval = d.getVar('D', True)
+    distromacrodirVal = d.getVar('distromacrodir')
+    workdirVal = d.getVar('WORKDIR')
+    dval = d.getVar('D')
 
     ret = gen_arch_macro(localdata)
 
-    variants = d.getVar("MULTILIB_VARIANTS", True) or ""
+    variants = d.getVar("MULTILIB_VARIANTS") or ""
     for item in variants.split():
         # Load overrides from 'd' to avoid having to reset the value...
         localdata = d.createCopy()
@@ -656,17 +656,17 @@ def gen_arch_macro(d):
     val += "\n"
     val += "# Toolchain configuration\n"
     val += "%TOOLCHAIN_OPTIONS  %{nil}\n"
-    val += "%__ar               ${@d.getVar('AR', True).replace('$','%')}\n"
-    val += "%__as               ${@d.getVar('AS', True).replace('$','%')}\n"
-    val += "%__cc               ${@d.getVar('CC', True).replace('$','%')}\n"
-    val += "%__cpp              ${@d.getVar('CPP', True).replace('$','%')}\n"
-    val += "%__cxx              ${@d.getVar('CXX', True).replace('$','%')}\n"
-    val += "%__ld               ${@d.getVar('LD', True).replace('$','%')}\n"
-    val += "%__nm               ${@d.getVar('NM', True).replace('$','%')}\n"
-    val += "%__objcopy          ${@d.getVar('OBJCOPY', True).replace('$','%')}\n"
-    val += "%__objdump          ${@d.getVar('OBJDUMP', True).replace('$','%')}\n"
-    val += "%__ranlib           ${@d.getVar('RANLIB', True).replace('$','%')}\n"
-    val += "%__strip            ${@d.getVar('STRIP', True).replace('$','%')}\n"
+    val += "%__ar               ${@d.getVar('AR').replace('$','%')}\n"
+    val += "%__as               ${@d.getVar('AS').replace('$','%')}\n"
+    val += "%__cc               ${@d.getVar('CC').replace('$','%')}\n"
+    val += "%__cpp              ${@d.getVar('CPP').replace('$','%')}\n"
+    val += "%__cxx              ${@d.getVar('CXX').replace('$','%')}\n"
+    val += "%__ld               ${@d.getVar('LD').replace('$','%')}\n"
+    val += "%__nm               ${@d.getVar('NM').replace('$','%')}\n"
+    val += "%__objcopy          ${@d.getVar('OBJCOPY').replace('$','%')}\n"
+    val += "%__objdump          ${@d.getVar('OBJDUMP').replace('$','%')}\n"
+    val += "%__ranlib           ${@d.getVar('RANLIB').replace('$','%')}\n"
+    val += "%__strip            ${@d.getVar('STRIP').replace('$','%')}\n"
     val += "EOF\n"
     val += "\n"
     return d.expand(val)
@@ -674,30 +674,30 @@ def gen_arch_macro(d):
 
 add_native_wrapper() {
         create_wrapper ${D}/${bindir}/rpm \
-		RPM_USRLIBRPM='`dirname $''realpath`'/${@os.path.relpath(d.getVar('libdir', True), d.getVar('bindir', True))}/rpm \
-		RPM_ETCRPM='$'{RPM_ETCRPM-'`dirname $''realpath`'/${@os.path.relpath(d.getVar('sysconfdir', True), d.getVar('bindir', True))}/rpm} \
-		RPM_LOCALEDIRRPM='`dirname $''realpath`'/${@os.path.relpath(d.getVar('datadir', True), d.getVar('bindir', True))}/locale
+		RPM_USRLIBRPM='`dirname $''realpath`'/${@os.path.relpath(d.getVar('libdir'), d.getVar('bindir'))}/rpm \
+		RPM_ETCRPM='$'{RPM_ETCRPM-'`dirname $''realpath`'/${@os.path.relpath(d.getVar('sysconfdir'), d.getVar('bindir'))}/rpm} \
+		RPM_LOCALEDIRRPM='`dirname $''realpath`'/${@os.path.relpath(d.getVar('datadir'), d.getVar('bindir'))}/locale
 
         create_wrapper ${D}/${bindir}/rpm2cpio \
-		RPM_USRLIBRPM='`dirname $''realpath`'/${@os.path.relpath(d.getVar('libdir', True), d.getVar('bindir', True))}/rpm \
-		RPM_ETCRPM='$'{RPM_ETCRPM-'`dirname $''realpath`'/${@os.path.relpath(d.getVar('sysconfdir', True), d.getVar('bindir', True))}/rpm} \
-		RPM_LOCALEDIRRPM='`dirname $''realpath`'/${@os.path.relpath(d.getVar('datadir', True), d.getVar('bindir', True))}/locale
+		RPM_USRLIBRPM='`dirname $''realpath`'/${@os.path.relpath(d.getVar('libdir'), d.getVar('bindir'))}/rpm \
+		RPM_ETCRPM='$'{RPM_ETCRPM-'`dirname $''realpath`'/${@os.path.relpath(d.getVar('sysconfdir'), d.getVar('bindir'))}/rpm} \
+		RPM_LOCALEDIRRPM='`dirname $''realpath`'/${@os.path.relpath(d.getVar('datadir'), d.getVar('bindir'))}/locale
 
         create_wrapper ${D}/${bindir}/rpmbuild \
-		RPM_USRLIBRPM='`dirname $''realpath`'/${@os.path.relpath(d.getVar('libdir', True), d.getVar('bindir', True))}/rpm \
-		RPM_ETCRPM='$'{RPM_ETCRPM-'`dirname $''realpath`'/${@os.path.relpath(d.getVar('sysconfdir', True), d.getVar('bindir', True))}/rpm} \
-		RPM_LOCALEDIRRPM='`dirname $''realpath`'/${@os.path.relpath(d.getVar('datadir', True), d.getVar('bindir', True))}/locale
+		RPM_USRLIBRPM='`dirname $''realpath`'/${@os.path.relpath(d.getVar('libdir'), d.getVar('bindir'))}/rpm \
+		RPM_ETCRPM='$'{RPM_ETCRPM-'`dirname $''realpath`'/${@os.path.relpath(d.getVar('sysconfdir'), d.getVar('bindir'))}/rpm} \
+		RPM_LOCALEDIRRPM='`dirname $''realpath`'/${@os.path.relpath(d.getVar('datadir'), d.getVar('bindir'))}/locale
 
         create_wrapper ${D}/${bindir}/rpmconstant \
-		RPM_USRLIBRPM='`dirname $''realpath`'/${@os.path.relpath(d.getVar('libdir', True), d.getVar('bindir', True))}/rpm \
-		RPM_ETCRPM='$'{RPM_ETCRPM-'`dirname $''realpath`'/${@os.path.relpath(d.getVar('sysconfdir', True), d.getVar('bindir', True))}/rpm} \
-		RPM_LOCALEDIRRPM='`dirname $''realpath`'/${@os.path.relpath(d.getVar('datadir', True), d.getVar('bindir', True))}/locale
+		RPM_USRLIBRPM='`dirname $''realpath`'/${@os.path.relpath(d.getVar('libdir'), d.getVar('bindir'))}/rpm \
+		RPM_ETCRPM='$'{RPM_ETCRPM-'`dirname $''realpath`'/${@os.path.relpath(d.getVar('sysconfdir'), d.getVar('bindir'))}/rpm} \
+		RPM_LOCALEDIRRPM='`dirname $''realpath`'/${@os.path.relpath(d.getVar('datadir'), d.getVar('bindir'))}/locale
 
 	for rpm_binary in ${D}/${libdir}/rpm/bin/rpm* ${D}/${libdir}/rpm/bin/debugedit; do
         	create_wrapper $rpm_binary \
-			RPM_USRLIBRPM='`dirname $''realpath`'/${@os.path.relpath(d.getVar('libdir', True), d.getVar('bindir', True))}/rpm \
-			RPM_ETCRPM='$'{RPM_ETCRPM-'`dirname $''realpath`'/${@os.path.relpath(d.getVar('sysconfdir', True), d.getVar('bindir', True))}/rpm} \
-			RPM_LOCALEDIRRPM='`dirname $''realpath`'/${@os.path.relpath(d.getVar('datadir', True), d.getVar('bindir', True))}/locale
+			RPM_USRLIBRPM='`dirname $''realpath`'/${@os.path.relpath(d.getVar('libdir'), d.getVar('bindir'))}/rpm \
+			RPM_ETCRPM='$'{RPM_ETCRPM-'`dirname $''realpath`'/${@os.path.relpath(d.getVar('sysconfdir'), d.getVar('bindir'))}/rpm} \
+			RPM_LOCALEDIRRPM='`dirname $''realpath`'/${@os.path.relpath(d.getVar('datadir'), d.getVar('bindir'))}/locale
 	done
 }
 

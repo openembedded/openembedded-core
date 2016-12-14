@@ -11,7 +11,7 @@ PATCH_GIT_USER_EMAIL ?= "oe.patch@oe"
 inherit terminal
 
 python () {
-    if d.getVar('PATCHTOOL', True) == 'git' and d.getVar('PATCH_COMMIT_FUNCTIONS', True) == '1':
+    if d.getVar('PATCHTOOL') == 'git' and d.getVar('PATCH_COMMIT_FUNCTIONS') == '1':
         tasks = list(filter(lambda k: d.getVarFlag(k, "task", True), d.keys()))
         extratasks = []
         def follow_chain(task, endtask, chain=None):
@@ -44,8 +44,8 @@ python () {
 
 python patch_task_patch_prefunc() {
     # Prefunc for do_patch
-    func = d.getVar('BB_RUNTASK', True)
-    srcsubdir = d.getVar('S', True)
+    func = d.getVar('BB_RUNTASK')
+    srcsubdir = d.getVar('S')
 
     patchdir = os.path.join(srcsubdir, 'patches')
     if os.path.exists(patchdir):
@@ -59,12 +59,12 @@ python patch_task_postfunc() {
     # Prefunc for task functions between do_unpack and do_patch
     import oe.patch
     import shutil
-    func = d.getVar('BB_RUNTASK', True)
-    srcsubdir = d.getVar('S', True)
+    func = d.getVar('BB_RUNTASK')
+    srcsubdir = d.getVar('S')
 
     if os.path.exists(srcsubdir):
         if func == 'do_patch':
-            haspatches = (d.getVar('PATCH_HAS_PATCHES_DIR', True) == '1')
+            haspatches = (d.getVar('PATCH_HAS_PATCHES_DIR') == '1')
             patchdir = os.path.join(srcsubdir, 'patches')
             if os.path.exists(patchdir):
                 shutil.rmtree(patchdir)
@@ -99,20 +99,20 @@ python patch_do_patch() {
         "git": oe.patch.GitApplyTree,
     }
 
-    cls = patchsetmap[d.getVar('PATCHTOOL', True) or 'quilt']
+    cls = patchsetmap[d.getVar('PATCHTOOL') or 'quilt']
 
     resolvermap = {
         "noop": oe.patch.NOOPResolver,
         "user": oe.patch.UserResolver,
     }
 
-    rcls = resolvermap[d.getVar('PATCHRESOLVE', True) or 'user']
+    rcls = resolvermap[d.getVar('PATCHRESOLVE') or 'user']
 
     classes = {}
 
-    s = d.getVar('S', True)
+    s = d.getVar('S')
 
-    os.putenv('PATH', d.getVar('PATH', True))
+    os.putenv('PATH', d.getVar('PATH'))
 
     # We must use one TMPDIR per process so that the "patch" processes
     # don't generate the same temp file name.

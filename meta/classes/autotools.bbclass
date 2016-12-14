@@ -1,8 +1,8 @@
 def autotools_dep_prepend(d):
-    if d.getVar('INHIBIT_AUTOTOOLS_DEPS', True):
+    if d.getVar('INHIBIT_AUTOTOOLS_DEPS'):
         return ''
 
-    pn = d.getVar('PN', True)
+    pn = d.getVar('PN')
     deps = ''
 
     if pn in ['autoconf-native', 'automake-native', 'help2man-native']:
@@ -14,7 +14,7 @@ def autotools_dep_prepend(d):
         if not bb.data.inherits_class('native', d) \
                         and not bb.data.inherits_class('nativesdk', d) \
                         and not bb.data.inherits_class('cross', d) \
-                        and not d.getVar('INHIBIT_DEFAULT_DEPS', True):
+                        and not d.getVar('INHIBIT_DEFAULT_DEPS'):
             deps += 'libtool-cross '
 
     return deps + 'gnu-config-native '
@@ -139,15 +139,15 @@ ACLOCALDIR = "${WORKDIR}/aclocal-copy"
 python autotools_copy_aclocals () {
     import copy
 
-    s = d.getVar("AUTOTOOLS_SCRIPT_PATH", True)
+    s = d.getVar("AUTOTOOLS_SCRIPT_PATH")
     if not os.path.exists(s + "/configure.in") and not os.path.exists(s + "/configure.ac"):
         if not d.getVar("AUTOTOOLS_COPYACLOCAL", False):
             return
 
     taskdepdata = d.getVar("BB_TASKDEPDATA", False)
     #bb.warn(str(taskdepdata))
-    pn = d.getVar("PN", True)
-    aclocaldir = d.getVar("ACLOCALDIR", True)
+    pn = d.getVar("PN")
+    aclocaldir = d.getVar("ACLOCALDIR")
     oe.path.remove(aclocaldir)
     bb.utils.mkdirhier(aclocaldir)
     start = None

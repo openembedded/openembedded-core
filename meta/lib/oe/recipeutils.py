@@ -328,16 +328,16 @@ def copy_recipe_files(d, tgt_dir, whole_dir=False, download=True):
 
     # FIXME need a warning if the unexpanded SRC_URI value contains variable references
 
-    uris = (d.getVar('SRC_URI', True) or "").split()
+    uris = (d.getVar('SRC_URI') or "").split()
     fetch = bb.fetch2.Fetch(uris, d)
     if download:
         fetch.download()
 
     # Copy local files to target directory and gather any remote files
-    bb_dir = os.path.dirname(d.getVar('FILE', True)) + os.sep
+    bb_dir = os.path.dirname(d.getVar('FILE')) + os.sep
     remotes = []
     copied = []
-    includes = [path for path in d.getVar('BBINCLUDED', True).split() if
+    includes = [path for path in d.getVar('BBINCLUDED').split() if
                 path.startswith(bb_dir) and os.path.exists(path)]
     for path in fetch.localpaths() + includes:
         # Only import files that are under the meta directory
@@ -361,7 +361,7 @@ def copy_recipe_files(d, tgt_dir, whole_dir=False, download=True):
 def get_recipe_local_files(d, patches=False, archives=False):
     """Get a list of local files in SRC_URI within a recipe."""
     import oe.patch
-    uris = (d.getVar('SRC_URI', True) or "").split()
+    uris = (d.getVar('SRC_URI') or "").split()
     fetch = bb.fetch2.Fetch(uris, d)
     # FIXME this list should be factored out somewhere else (such as the
     # fetcher) though note that this only encompasses actual container formats
@@ -421,7 +421,7 @@ def get_recipe_patched_files(d):
     for patch in patches:
         _, _, patchfile, _, _, parm = bb.fetch.decodeurl(patch)
         striplevel = int(parm['striplevel'])
-        patchedfiles[patchfile] = oe.patch.PatchSet.getPatchedFiles(patchfile, striplevel, os.path.join(d.getVar('S', True), parm.get('patchdir', '')))
+        patchedfiles[patchfile] = oe.patch.PatchSet.getPatchedFiles(patchfile, striplevel, os.path.join(d.getVar('S'), parm.get('patchdir', '')))
     return patchedfiles
 
 
@@ -459,9 +459,9 @@ def get_bbfile_path(d, destdir, extrapathhint=None):
     confdata.setVar('LAYERDIR', destlayerdir)
     destlayerconf = os.path.join(destlayerdir, "conf", "layer.conf")
     confdata = bb.cookerdata.parse_config_file(destlayerconf, confdata)
-    pn = d.getVar('PN', True)
+    pn = d.getVar('PN')
 
-    bbfilespecs = (confdata.getVar('BBFILES', True) or '').split()
+    bbfilespecs = (confdata.getVar('BBFILES') or '').split()
     if destdir == destlayerdir:
         for bbfilespec in bbfilespecs:
             if not bbfilespec.endswith('.bbappend'):
@@ -474,8 +474,8 @@ def get_bbfile_path(d, destdir, extrapathhint=None):
 
     # Try to make up a path that matches BBFILES
     # this is a little crude, but better than nothing
-    bpn = d.getVar('BPN', True)
-    recipefn = os.path.basename(d.getVar('FILE', True))
+    bpn = d.getVar('BPN')
+    recipefn = os.path.basename(d.getVar('FILE'))
     pathoptions = [destdir]
     if extrapathhint:
         pathoptions.append(os.path.join(destdir, extrapathhint))
@@ -499,7 +499,7 @@ def get_bbappend_path(d, destlayerdir, wildcardver=False):
     import bb.cookerdata
 
     destlayerdir = os.path.abspath(destlayerdir)
-    recipefile = d.getVar('FILE', True)
+    recipefile = d.getVar('FILE')
     recipefn = os.path.splitext(os.path.basename(recipefile))[0]
     if wildcardver and '_' in recipefn:
         recipefn = recipefn.split('_', 1)[0] + '_%'
@@ -519,7 +519,7 @@ def get_bbappend_path(d, destlayerdir, wildcardver=False):
     appendpath = os.path.join(destlayerdir, os.path.relpath(os.path.dirname(recipefile), origlayerdir), appendfn)
     closepath = ''
     pathok = True
-    for bbfilespec in confdata.getVar('BBFILES', True).split():
+    for bbfilespec in confdata.getVar('BBFILES').split():
         if fnmatch.fnmatchcase(appendpath, bbfilespec):
             # Our append path works, we're done
             break
@@ -592,7 +592,7 @@ def bbappend_recipe(rd, destlayerdir, srcfiles, install=None, wildcardver=False,
 
     # FIXME check if the bbappend doesn't get overridden by a higher priority layer?
 
-    layerdirs = [os.path.abspath(layerdir) for layerdir in rd.getVar('BBLAYERS', True).split()]
+    layerdirs = [os.path.abspath(layerdir) for layerdir in rd.getVar('BBLAYERS').split()]
     if not os.path.abspath(destlayerdir) in layerdirs:
         bb.warn('Specified layer is not currently enabled in bblayers.conf, you will need to add it before this bbappend will be active')
 
@@ -628,7 +628,7 @@ def bbappend_recipe(rd, destlayerdir, srcfiles, install=None, wildcardver=False,
         else:
             bbappendlines.append((varname, op, value))
 
-    destsubdir = rd.getVar('PN', True)
+    destsubdir = rd.getVar('PN')
     if srcfiles:
         bbappendlines.append(('FILESEXTRAPATHS_prepend', ':=', '${THISDIR}/${PN}:'))
 
@@ -647,7 +647,7 @@ def bbappend_recipe(rd, destlayerdir, srcfiles, install=None, wildcardver=False,
                 srcurientry = 'file://%s' % srcfile
                 # Double-check it's not there already
                 # FIXME do we care if the entry is added by another bbappend that might go away?
-                if not srcurientry in rd.getVar('SRC_URI', True).split():
+                if not srcurientry in rd.getVar('SRC_URI').split():
                     if machine:
                         appendline('SRC_URI_append%s' % appendoverride, '=', ' ' + srcurientry)
                     else:
@@ -796,7 +796,7 @@ def replace_dir_vars(path, d):
     # Sort by length so we get the variables we're interested in first
     for var in sorted(list(d.keys()), key=len):
         if var.endswith('dir') and var.lower() == var:
-            value = d.getVar(var, True)
+            value = d.getVar(var)
             if value.startswith('/') and not '\n' in value and value not in dirvars:
                 dirvars[value] = var
     for dirpath in sorted(list(dirvars.keys()), reverse=True):
@@ -850,12 +850,12 @@ def get_recipe_upstream_version(rd):
     ru['type'] = 'U'
     ru['datetime'] = ''
 
-    pv = rd.getVar('PV', True)
+    pv = rd.getVar('PV')
 
     # XXX: If don't have SRC_URI means that don't have upstream sources so
     # returns the current recipe version, so that upstream version check
     # declares a match.
-    src_uris = rd.getVar('SRC_URI', True)
+    src_uris = rd.getVar('SRC_URI')
     if not src_uris:
         ru['version'] = pv
         ru['type'] = 'M'
@@ -866,13 +866,13 @@ def get_recipe_upstream_version(rd):
     src_uri = src_uris.split()[0]
     uri_type, _, _, _, _, _ =  decodeurl(src_uri)
 
-    manual_upstream_version = rd.getVar("RECIPE_UPSTREAM_VERSION", True)
+    manual_upstream_version = rd.getVar("RECIPE_UPSTREAM_VERSION")
     if manual_upstream_version:
         # manual tracking of upstream version.
         ru['version'] = manual_upstream_version
         ru['type'] = 'M'
 
-        manual_upstream_date = rd.getVar("CHECK_DATE", True)
+        manual_upstream_date = rd.getVar("CHECK_DATE")
         if manual_upstream_date:
             date = datetime.strptime(manual_upstream_date, "%b %d, %Y")
         else:

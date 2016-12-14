@@ -5,7 +5,7 @@ SECTION = "libs"
 PE = "3"
 
 def sqlite_download_version(d):
-    pvsplit = d.getVar('PV', True).split('.')
+    pvsplit = d.getVar('PV').split('.')
     if len(pvsplit) < 4:
         pvsplit.append('0')
     return pvsplit[0] + ''.join([part.rjust(2,'0') for part in pvsplit[1:]])

@@ -116,18 +116,18 @@ MACHINEOVERRIDES = ""
 PATH_prepend = "${COREBASE}/scripts/native-intercept:"
 
 python native_virtclass_handler () {
-    classextend = e.data.getVar('BBCLASSEXTEND', True) or ""
+    classextend = e.data.getVar('BBCLASSEXTEND') or ""
     if "native" not in classextend:
         return
 
-    pn = e.data.getVar("PN", True)
+    pn = e.data.getVar("PN")
     if not pn.endswith("-native"):
         return
 
     def map_dependencies(varname, d, suffix = ""):
         if suffix:
             varname = varname + "_" + suffix
-        deps = d.getVar(varname, True)
+        deps = d.getVar(varname)
         if not deps:
             return
         deps = bb.utils.explode_deps(deps)
@@ -146,14 +146,14 @@ python native_virtclass_handler () {
     e.data.setVar("OVERRIDES", e.data.getVar("OVERRIDES", False) + ":virtclass-native")
 
     map_dependencies("DEPENDS", e.data)
-    for pkg in [e.data.getVar("PN", True), "", "${PN}"]:
+    for pkg in [e.data.getVar("PN"), "", "${PN}"]:
         map_dependencies("RDEPENDS", e.data, pkg)
         map_dependencies("RRECOMMENDS", e.data, pkg)
         map_dependencies("RSUGGESTS", e.data, pkg)
         map_dependencies("RPROVIDES", e.data, pkg)
         map_dependencies("RREPLACES", e.data, pkg)
 
-    provides = e.data.getVar("PROVIDES", True)
+    provides = e.data.getVar("PROVIDES")
     nprovides = []
     for prov in provides.split():
         if prov.find(pn) != -1:

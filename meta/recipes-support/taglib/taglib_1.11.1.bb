@@ -26,7 +26,7 @@ EXTRA_OECMAKE = "-DBUILD_SHARED_LIBS=ON \
                  -DHAVE_BOOST_BYTESWAP=FALSE \
                  -DCMAKE_CXX_STANDARD=11 \
                  -DCMAKE_CXX_STANDARD_REQUIRED=OFF \
-                 -DLIB_SUFFIX=${@d.getVar('baselib', True).replace('lib', '')} \
+                 -DLIB_SUFFIX=${@d.getVar('baselib').replace('lib', '')} \
 "
 CXXFLAGS += "-std=c++11"
 

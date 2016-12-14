@@ -104,7 +104,7 @@ def read_shlib_providers(d):
     import re
 
     shlib_provider = {}
-    shlibs_dirs = d.getVar('SHLIBSDIRS', True).split()
+    shlibs_dirs = d.getVar('SHLIBSDIRS').split()
     list_re = re.compile('^(.*)\.list$')
     # Go from least to most specific since the last one found wins
     for dir in reversed(shlibs_dirs):

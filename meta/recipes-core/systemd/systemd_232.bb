@@ -273,7 +273,7 @@ do_install_ptest () {
 }
 
 python populate_packages_prepend (){
-    systemdlibdir = d.getVar("rootlibdir", True)
+    systemdlibdir = d.getVar("rootlibdir")
     do_split_packages(d, systemdlibdir, '^lib(.*)\.so\.*', 'lib%s', 'Systemd %s library', extra_depends='', allow_links=True)
 }
 PACKAGES_DYNAMIC += "^lib(udev|systemd|nss).*"
@@ -591,6 +591,6 @@ python () {
         raise bb.parse.SkipPackage("'systemd' not in DISTRO_FEATURES")
 
     import re
-    if re.match('.*musl*', d.getVar('TARGET_OS', True)) != None:
+    if re.match('.*musl*', d.getVar('TARGET_OS')) != None:
         raise bb.parse.SkipPackage("Not _yet_ supported on musl based targets")
 }

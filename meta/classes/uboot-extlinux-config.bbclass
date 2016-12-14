@@ -58,20 +58,20 @@ UBOOT_EXTLINUX_MENU_DESCRIPTION_linux ??= "${DISTRO_NAME}"
 UBOOT_EXTLINUX_CONFIG = "${B}/extlinux.conf"
 
 python create_extlinux_config() {
-    if d.getVar("UBOOT_EXTLINUX", True) != "1":
+    if d.getVar("UBOOT_EXTLINUX") != "1":
       return
 
-    if not d.getVar('WORKDIR', True):
+    if not d.getVar('WORKDIR'):
         bb.error("WORKDIR not defined, unable to package")
 
-    labels = d.getVar('UBOOT_EXTLINUX_LABELS', True)
+    labels = d.getVar('UBOOT_EXTLINUX_LABELS')
     if not labels:
         bb.fatal("UBOOT_EXTLINUX_LABELS not defined, nothing to do")
 
     if not labels.strip():
         bb.fatal("No labels, nothing to do")
 
-    cfile = d.getVar('UBOOT_EXTLINUX_CONFIG', True)
+    cfile = d.getVar('UBOOT_EXTLINUX_CONFIG')
     if not cfile:
         bb.fatal('Unable to read UBOOT_EXTLINUX_CONFIG')
 
@@ -85,34 +85,34 @@ python create_extlinux_config() {
             for label in labels.split():
                 localdata = bb.data.createCopy(d)
 
-                overrides = localdata.getVar('OVERRIDES', True)
+                overrides = localdata.getVar('OVERRIDES')
                 if not overrides:
                     bb.fatal('OVERRIDES not defined')
 
                 localdata.setVar('OVERRIDES', label + ':' + overrides)
                 bb.data.update_data(localdata)
 
-                extlinux_console = localdata.getVar('UBOOT_EXTLINUX_CONSOLE', True)
+                extlinux_console = localdata.getVar('UBOOT_EXTLINUX_CONSOLE')
 
-                menu_description = localdata.getVar('UBOOT_EXTLINUX_MENU_DESCRIPTION', True)
+                menu_description = localdata.getVar('UBOOT_EXTLINUX_MENU_DESCRIPTION')
                 if not menu_description:
                     menu_description = label
 
-                root = localdata.getVar('UBOOT_EXTLINUX_ROOT', True)
+                root = localdata.getVar('UBOOT_EXTLINUX_ROOT')
                 if not root:
                     bb.fatal('UBOOT_EXTLINUX_ROOT not defined')
 
-                kernel_image = localdata.getVar('UBOOT_EXTLINUX_KERNEL_IMAGE', True)
-                fdtdir = localdata.getVar('UBOOT_EXTLINUX_FDTDIR', True)
+                kernel_image = localdata.getVar('UBOOT_EXTLINUX_KERNEL_IMAGE')
+                fdtdir = localdata.getVar('UBOOT_EXTLINUX_FDTDIR')
                 if fdtdir:
                     cfgfile.write('LABEL %s\n\tKERNEL %s\n\tFDTDIR %s\n' %
                                  (menu_description, kernel_image, fdtdir))
                 else:
                     cfgfile.write('LABEL %s\n\tKERNEL %s\n' % (menu_description, kernel_image))
 
-                kernel_args = localdata.getVar('UBOOT_EXTLINUX_KERNEL_ARGS', True)
+                kernel_args = localdata.getVar('UBOOT_EXTLINUX_KERNEL_ARGS')
 
-                initrd = localdata.getVar('UBOOT_EXTLINUX_INITRD', True)
+                initrd = localdata.getVar('UBOOT_EXTLINUX_INITRD')
                 if initrd:
                     cfgfile.write('\tINITRD %s\n'% initrd)
 

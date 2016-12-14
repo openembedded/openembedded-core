@@ -113,14 +113,14 @@ def siteinfo_data(d):
 
     # Add in any extra user supplied data which may come from a BSP layer, removing the
     # need to always change this class directly
-    extra_siteinfo = (d.getVar("SITEINFO_EXTRA_DATAFUNCS", True) or "").split()
+    extra_siteinfo = (d.getVar("SITEINFO_EXTRA_DATAFUNCS") or "").split()
     for m in extra_siteinfo:
         call = m + "(archinfo, osinfo, targetinfo, d)"
         locs = { "archinfo" : archinfo, "osinfo" : osinfo, "targetinfo" : targetinfo, "d" : d}
         archinfo, osinfo, targetinfo = bb.utils.better_eval(call, locs)
 
-    hostarch = d.getVar("HOST_ARCH", True)
-    hostos = d.getVar("HOST_OS", True)
+    hostarch = d.getVar("HOST_ARCH")
+    hostos = d.getVar("HOST_OS")
     target = "%s-%s" % (hostarch, hostos)
 
     sitedata = []
@@ -144,7 +144,7 @@ python () {
         d.setVar("SITEINFO_ENDIANNESS", "be")
     else:
         bb.error("Unable to determine endianness for architecture '%s'" %
-                 d.getVar("HOST_ARCH", True))
+                 d.getVar("HOST_ARCH"))
         bb.fatal("Please add your architecture to siteinfo.bbclass")
 
     if "bit-32" in sitedata:
@@ -153,14 +153,14 @@ python () {
         d.setVar("SITEINFO_BITS", "64")
     else:
         bb.error("Unable to determine bit size for architecture '%s'" %
-                 d.getVar("HOST_ARCH", True))
+                 d.getVar("HOST_ARCH"))
         bb.fatal("Please add your architecture to siteinfo.bbclass")
 }
 
 def siteinfo_get_files(d, aclocalcache = False):
     sitedata = siteinfo_data(d)
     sitefiles = ""
-    for path in d.getVar("BBPATH", True).split(":"):
+    for path in d.getVar("BBPATH").split(":"):
         for element in sitedata:
             filename = os.path.join(path, "site", element)
             if os.path.exists(filename):
@@ -177,7 +177,7 @@ def siteinfo_get_files(d, aclocalcache = False):
     # issues and the directory being created/removed whilst this code executes. This can happen
     # when a multilib recipe is parsed along with its base variant which may be running at the time
     # causing rare but nasty failures
-    path_siteconfig = d.getVar('ACLOCALDIR', True)
+    path_siteconfig = d.getVar('ACLOCALDIR')
     if path_siteconfig and os.path.isdir(path_siteconfig):
         for i in os.listdir(path_siteconfig):
             if not i.endswith("_config"):

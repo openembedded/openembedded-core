@@ -52,7 +52,7 @@ def make_relative_symlink(path):
 
 def format_display(path, metadata):
     """ Prepare a path for display to the user. """
-    rel = relative(metadata.getVar("TOPDIR", True), path)
+    rel = relative(metadata.getVar("TOPDIR"), path)
     if len(rel) > len(path):
         return path
     else:

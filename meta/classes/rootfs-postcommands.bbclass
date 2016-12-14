@@ -217,9 +217,9 @@ python write_image_manifest () {
     from oe.rootfs import image_list_installed_packages
     from oe.utils import format_pkg_list
 
-    deploy_dir = d.getVar('IMGDEPLOYDIR', True)
-    link_name = d.getVar('IMAGE_LINK_NAME', True)
-    manifest_name = d.getVar('IMAGE_MANIFEST', True)
+    deploy_dir = d.getVar('IMGDEPLOYDIR')
+    link_name = d.getVar('IMAGE_LINK_NAME')
+    manifest_name = d.getVar('IMAGE_MANIFEST')
 
     if not manifest_name:
         return

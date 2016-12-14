@@ -18,7 +18,7 @@ def image_buildinfo_outputvars(vars, listvars, d):
     listvars = listvars.split()
     ret = ""
     for var in vars:
-        value = d.getVar(var, True) or ""
+        value = d.getVar(var) or ""
         if (d.getVarFlag(var, 'type', True) == "list"):
             value = oe.utils.squashspaces(value)
         ret += "%s = %s\n" % (var, value)
@@ -42,7 +42,7 @@ def get_layer_git_status(path):
 
 # Returns layer revisions along with their respective status
 def get_layer_revs(d):
-    layers = (d.getVar("BBLAYERS", True) or "").split()
+    layers = (d.getVar("BBLAYERS") or "").split()
     medadata_revs = ["%-17s = %s:%s %s" % (os.path.basename(i), \
         base_get_metadata_git_branch(i, None).strip(), \
         base_get_metadata_git_revision(i, None), \
@@ -52,11 +52,11 @@ def get_layer_revs(d):
 
 def buildinfo_target(d):
         # Get context
-        if d.getVar('BB_WORKERCONTEXT', True) != '1':
+        if d.getVar('BB_WORKERCONTEXT') != '1':
                 return ""
         # Single and list variables to be read
-        vars = (d.getVar("IMAGE_BUILDINFO_VARS", True) or "")
-        listvars = (d.getVar("IMAGE_BUILDINFO_LVARS", True) or "")
+        vars = (d.getVar("IMAGE_BUILDINFO_VARS") or "")
+        listvars = (d.getVar("IMAGE_BUILDINFO_LVARS") or "")
         return image_buildinfo_outputvars(vars, listvars, d)
 
 # Write build information to target filesystem

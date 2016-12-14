@@ -6,8 +6,8 @@ import itertools
 from .commands import runCmd
 
 def get_host_dumper(d):
-    cmds = d.getVar("testimage_dump_host", True)
-    parent_dir = d.getVar("TESTIMAGE_DUMP_DIR", True)
+    cmds = d.getVar("testimage_dump_host")
+    parent_dir = d.getVar("TESTIMAGE_DUMP_DIR")
     return HostDumper(cmds, parent_dir)
 
 

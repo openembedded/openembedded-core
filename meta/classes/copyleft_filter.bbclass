@@ -49,7 +49,7 @@ def copyleft_should_include(d):
 
     included, motive = False, 'recipe did not match anything'
 
-    recipe_type = d.getVar('COPYLEFT_RECIPE_TYPE', True)
+    recipe_type = d.getVar('COPYLEFT_RECIPE_TYPE')
     if recipe_type not in oe.data.typed_value('COPYLEFT_RECIPE_TYPES', d):
         include, motive = False, 'recipe type "%s" is excluded' % recipe_type
 
@@ -57,9 +57,9 @@ def copyleft_should_include(d):
     exclude = oe.data.typed_value('COPYLEFT_LICENSE_EXCLUDE', d)
 
     try:
-        is_included, reason = oe.license.is_included(d.getVar('LICENSE', True), include, exclude)
+        is_included, reason = oe.license.is_included(d.getVar('LICENSE'), include, exclude)
     except oe.license.LicenseError as exc:
-        bb.fatal('%s: %s' % (d.getVar('PF', True), exc))
+        bb.fatal('%s: %s' % (d.getVar('PF'), exc))
     else:
         if is_included:
             if reason:
@@ -69,10 +69,10 @@ def copyleft_should_include(d):
         else:
             included, motive = False, 'recipe has excluded licenses: %s' % ', '.join(reason)
 
-    if any(fnmatch(d.getVar('PN', True), name) \
+    if any(fnmatch(d.getVar('PN'), name) \
             for name in oe.data.typed_value('COPYLEFT_PN_INCLUDE', d)):
         included, motive =  True, 'recipe included by name'
-    if any(fnmatch(d.getVar('PN', True), name) \
+    if any(fnmatch(d.getVar('PN'), name) \
             for name in oe.data.typed_value('COPYLEFT_PN_EXCLUDE', d)):
         included, motive = False, 'recipe excluded by name'
 

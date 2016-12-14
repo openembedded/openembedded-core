@@ -17,20 +17,20 @@ def imagetypes_getdepends(d):
                 d += ":do_populate_sysroot"
             deps.add(d)
 
-    fstypes = set((d.getVar('IMAGE_FSTYPES', True) or "").split())
-    fstypes |= set((d.getVar('IMAGE_FSTYPES_DEBUGFS', True) or "").split())
+    fstypes = set((d.getVar('IMAGE_FSTYPES') or "").split())
+    fstypes |= set((d.getVar('IMAGE_FSTYPES_DEBUGFS') or "").split())
 
     deps = set()
     for typestring in fstypes:
         types = typestring.split(".")
         basetype, resttypes = types[0], types[1:]
 
-        adddep(d.getVar('IMAGE_DEPENDS_%s' % basetype, True) , deps)
-        for typedepends in (d.getVar("IMAGE_TYPEDEP_%s" % basetype, True) or "").split():
-            adddep(d.getVar('IMAGE_DEPENDS_%s' % typedepends, True) , deps)
+        adddep(d.getVar('IMAGE_DEPENDS_%s' % basetype) , deps)
+        for typedepends in (d.getVar("IMAGE_TYPEDEP_%s" % basetype) or "").split():
+            adddep(d.getVar('IMAGE_DEPENDS_%s' % typedepends) , deps)
         for ctype in resttypes:
-            adddep(d.getVar("CONVERSION_DEPENDS_%s" % ctype, True), deps)
-            adddep(d.getVar("COMPRESS_DEPENDS_%s" % ctype, True), deps)
+            adddep(d.getVar("CONVERSION_DEPENDS_%s" % ctype), deps)
+            adddep(d.getVar("COMPRESS_DEPENDS_%s" % ctype), deps)
 
     # Sort the set so that ordering is consistant
     return " ".join(sorted(deps))
@@ -220,7 +220,7 @@ WKS_FILE_CHECKSUM = "${@'${WKS_FULL_PATH}:%s' % os.path.exists('${WKS_FULL_PATH}
 do_image_wic[file-checksums] += "${WKS_FILE_CHECKSUM}"
 
 python () {
-    if d.getVar('USING_WIC', True) and 'do_bootimg' in d:
+    if d.getVar('USING_WIC') and 'do_bootimg' in d:
         bb.build.addtask('do_image_wic', '', 'do_bootimg', d)
 }
 
@@ -228,7 +228,7 @@ python do_write_wks_template () {
     """Write out expanded template contents to WKS_FULL_PATH."""
     import re
 
-    template_body = d.getVar('_WKS_TEMPLATE', True)
+    template_body = d.getVar('_WKS_TEMPLATE')
 
     # Remove any remnant variable references left behind by the expansion
     # due to undefined variables
@@ -240,18 +240,18 @@ python do_write_wks_template () {
         else:
             template_body = new_body
 
-    wks_file = d.getVar('WKS_FULL_PATH', True)
+    wks_file = d.getVar('WKS_FULL_PATH')
     with open(wks_file, 'w') as f:
         f.write(template_body)
 }
 
 python () {
-    if d.getVar('USING_WIC', True):
+    if d.getVar('USING_WIC'):
         wks_file_u = d.getVar('WKS_FULL_PATH', False)
         wks_file = d.expand(wks_file_u)
         base, ext = os.path.splitext(wks_file)
         if ext == '.in' and os.path.exists(wks_file):
-            wks_out_file = os.path.join(d.getVar('WORKDIR', True), os.path.basename(base))
+            wks_out_file = os.path.join(d.getVar('WORKDIR'), os.path.basename(base))
             d.setVar('WKS_FULL_PATH', wks_out_file)
             d.setVar('WKS_TEMPLATE_PATH', wks_file_u)
             d.setVar('WKS_FILE_CHECKSUM', '${WKS_TEMPLATE_PATH}:True')

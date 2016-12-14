@@ -80,7 +80,7 @@ python toaster_layerinfo_dumpdata() {
         return layer_info
 
 
-    bblayers = e.data.getVar("BBLAYERS", True)
+    bblayers = e.data.getVar("BBLAYERS")
 
     llayerinfo = {}
 
@@ -119,10 +119,10 @@ python toaster_package_dumpdata() {
     """
 
     # No need to try and dumpdata if the recipe isn't generating packages
-    if not d.getVar('PACKAGES', True):
+    if not d.getVar('PACKAGES'):
         return
 
-    pkgdatadir = d.getVar('PKGDESTWORK', True)
+    pkgdatadir = d.getVar('PKGDESTWORK')
     lpkgdata = {}
     datadir = os.path.join(pkgdatadir, 'runtime')
 
@@ -142,7 +142,7 @@ python toaster_artifact_dumpdata() {
     """
 
     event_data = {
-      "TOOLCHAIN_OUTPUTNAME": d.getVar("TOOLCHAIN_OUTPUTNAME", True)
+      "TOOLCHAIN_OUTPUTNAME": d.getVar("TOOLCHAIN_OUTPUTNAME")
     }
 
     bb.event.fire(bb.event.MetadataEvent("SDKArtifactInfo", event_data), d)
@@ -157,9 +157,9 @@ python toaster_collect_task_stats() {
     import bb.utils
     import os
 
-    toaster_statlist_file = os.path.join(e.data.getVar('BUILDSTATS_BASE', True), "toasterstatlist")
+    toaster_statlist_file = os.path.join(e.data.getVar('BUILDSTATS_BASE'), "toasterstatlist")
 
-    if not e.data.getVar('BUILDSTATS_BASE', True):
+    if not e.data.getVar('BUILDSTATS_BASE'):
         return  # if we don't have buildstats, we cannot collect stats
 
     def stat_to_float(value):
@@ -246,7 +246,7 @@ python toaster_buildhistory_dump() {
     import re
     BUILDHISTORY_DIR = e.data.expand("${TOPDIR}/buildhistory")
     BUILDHISTORY_DIR_IMAGE_BASE = e.data.expand("%s/images/${MACHINE_ARCH}/${TCLIBC}/"% BUILDHISTORY_DIR)
-    pkgdata_dir = e.data.getVar("PKGDATA_DIR", True)
+    pkgdata_dir = e.data.getVar("PKGDATA_DIR")
 
 
     # scan the build targets for this build

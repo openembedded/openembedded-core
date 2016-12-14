@@ -13,7 +13,7 @@ class TinfoilTests(oeSelfTest):
     def test_getvar(self):
         with bb.tinfoil.Tinfoil() as tinfoil:
             tinfoil.prepare(True)
-            machine = tinfoil.config_data.getVar('MACHINE', True)
+            machine = tinfoil.config_data.getVar('MACHINE')
             if not machine:
                 self.fail('Unable to get MACHINE value - returned %s' % machine)
 
@@ -41,7 +41,7 @@ class TinfoilTests(oeSelfTest):
             if not best:
                 self.fail('Unable to find recipe providing %s' % testrecipe)
             rd = tinfoil.parse_recipe_file(best[3])
-            self.assertEqual(testrecipe, rd.getVar('PN', True))
+            self.assertEqual(testrecipe, rd.getVar('PN'))
 
     def test_parse_recipe_copy_expand(self):
         with bb.tinfoil.Tinfoil() as tinfoil:
@@ -52,14 +52,14 @@ class TinfoilTests(oeSelfTest):
                 self.fail('Unable to find recipe providing %s' % testrecipe)
             rd = tinfoil.parse_recipe_file(best[3])
             # Check we can get variable values
-            self.assertEqual(testrecipe, rd.getVar('PN', True))
+            self.assertEqual(testrecipe, rd.getVar('PN'))
             # Check that expanding a value that includes a variable reference works
-            self.assertEqual(testrecipe, rd.getVar('BPN', True))
+            self.assertEqual(testrecipe, rd.getVar('BPN'))
             # Now check that changing the referenced variable's value in a copy gives that
             # value when expanding
             localdata = bb.data.createCopy(rd)
             localdata.setVar('PN', 'hello')
-            self.assertEqual('hello', localdata.getVar('BPN', True))
+            self.assertEqual('hello', localdata.getVar('BPN'))
 
     def test_parse_recipe_initial_datastore(self):
         with bb.tinfoil.Tinfoil() as tinfoil:
@@ -72,7 +72,7 @@ class TinfoilTests(oeSelfTest):
             dcopy.setVar('MYVARIABLE', 'somevalue')
             rd = tinfoil.parse_recipe_file(best[3], config_data=dcopy)
             # Check we can get variable values
-            self.assertEqual('somevalue', rd.getVar('MYVARIABLE', True))
+            self.assertEqual('somevalue', rd.getVar('MYVARIABLE'))
 
     def test_list_recipes(self):
         with bb.tinfoil.Tinfoil() as tinfoil:
@@ -127,7 +127,7 @@ class TinfoilTests(oeSelfTest):
         with bb.tinfoil.Tinfoil() as tinfoil:
             tinfoil.prepare(config_only=True)
             tinfoil.run_command('setVariable', 'TESTVAR', 'specialvalue')
-            self.assertEqual(tinfoil.config_data.getVar('TESTVAR', True), 'specialvalue', 'Value set using setVariable is not reflected in client-side getVar()')
+            self.assertEqual(tinfoil.config_data.getVar('TESTVAR'), 'specialvalue', 'Value set using setVariable is not reflected in client-side getVar()')
 
         # Now check that the setVariable's effects are no longer present
         # (this may legitimately break in future if we stop reinitialising
@@ -135,7 +135,7 @@ class TinfoilTests(oeSelfTest):
         # setVariable entirely)
         with bb.tinfoil.Tinfoil() as tinfoil:
             tinfoil.prepare(config_only=True)
-            self.assertNotEqual(tinfoil.config_data.getVar('TESTVAR', True), 'specialvalue', 'Value set using setVariable is still present!')
+            self.assertNotEqual(tinfoil.config_data.getVar('TESTVAR'), 'specialvalue', 'Value set using setVariable is still present!')
 
         # Now check that setVar on the main datastore works (uses setVariable internally)
         with bb.tinfoil.Tinfoil() as tinfoil:

@@ -7,9 +7,9 @@ import oe.utils
 class LocalSigner(object):
     """Class for handling local (on the build host) signing"""
     def __init__(self, d):
-        self.gpg_bin = d.getVar('GPG_BIN', True) or \
+        self.gpg_bin = d.getVar('GPG_BIN') or \
                   bb.utils.which(os.getenv('PATH'), 'gpg')
-        self.gpg_path = d.getVar('GPG_PATH', True)
+        self.gpg_path = d.getVar('GPG_PATH')
         self.rpm_bin = bb.utils.which(os.getenv('PATH'), "rpm")
 
     def export_pubkey(self, output_file, keyid, armor=True):

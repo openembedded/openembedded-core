@@ -89,52 +89,52 @@ python populate_packages_updatercd () {
             return
         statement = "grep -q -w '/etc/init.d/functions' %s" % path
         if subprocess.call(statement, shell=True) == 0:
-            mlprefix = d.getVar('MLPREFIX', True) or ""
+            mlprefix = d.getVar('MLPREFIX') or ""
             d.appendVar('RDEPENDS_' + pkg, ' %sinitscripts-functions' % (mlprefix))
 
     def update_rcd_package(pkg):
         bb.debug(1, 'adding update-rc.d calls to preinst/postinst/prerm/postrm for %s' % pkg)
 
         localdata = bb.data.createCopy(d)
-        overrides = localdata.getVar("OVERRIDES", True)
+        overrides = localdata.getVar("OVERRIDES")
         localdata.setVar("OVERRIDES", "%s:%s" % (pkg, overrides))
         bb.data.update_data(localdata)
 
         update_rcd_auto_depend(pkg)
 
-        preinst = d.getVar('pkg_preinst_%s' % pkg, True)
+        preinst = d.getVar('pkg_preinst_%s' % pkg)
         if not preinst:
             preinst = '#!/bin/sh\n'
-        preinst += localdata.getVar('updatercd_preinst', True)
+        preinst += localdata.getVar('updatercd_preinst')
         d.setVar('pkg_preinst_%s' % pkg, preinst)
 
-        postinst = d.getVar('pkg_postinst_%s' % pkg, True)
+        postinst = d.getVar('pkg_postinst_%s' % pkg)
         if not postinst:
             postinst = '#!/bin/sh\n'
-        postinst += localdata.getVar('updatercd_postinst', True)
+        postinst += localdata.getVar('updatercd_postinst')
         d.setVar('pkg_postinst_%s' % pkg, postinst)
 
-        prerm = d.getVar('pkg_prerm_%s' % pkg, True)
+        prerm = d.getVar('pkg_prerm_%s' % pkg)
         if not prerm:
             prerm = '#!/bin/sh\n'
-        prerm += localdata.getVar('updatercd_prerm', True)
+        prerm += localdata.getVar('updatercd_prerm')
         d.setVar('pkg_prerm_%s' % pkg, prerm)
 
-        postrm = d.getVar('pkg_postrm_%s' % pkg, True)
+        postrm = d.getVar('pkg_postrm_%s' % pkg)
         if not postrm:
                 postrm = '#!/bin/sh\n'
-        postrm += localdata.getVar('updatercd_postrm', True)
+        postrm += localdata.getVar('updatercd_postrm')
         d.setVar('pkg_postrm_%s' % pkg, postrm)
 
         d.appendVar('RRECOMMENDS_' + pkg, " ${MLPREFIX}${UPDATERCD}")
 
     # Check that this class isn't being inhibited (generally, by
     # systemd.bbclass) before doing any work.
-    if not d.getVar("INHIBIT_UPDATERCD_BBCLASS", True):
-        pkgs = d.getVar('INITSCRIPT_PACKAGES', True)
+    if not d.getVar("INHIBIT_UPDATERCD_BBCLASS"):
+        pkgs = d.getVar('INITSCRIPT_PACKAGES')
         if pkgs == None:
-            pkgs = d.getVar('UPDATERCPN', True)
-            packages = (d.getVar('PACKAGES', True) or "").split()
+            pkgs = d.getVar('UPDATERCPN')
+            packages = (d.getVar('PACKAGES') or "").split()
             if not pkgs in packages and packages != []:
                 pkgs = packages[0]
         for pkg in pkgs.split():

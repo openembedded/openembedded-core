@@ -231,7 +231,7 @@ def runqemu(pn, ssh=True):
         logger = logging.getLogger('BitBake.QemuRunner')
         logger.setLevel(logging.DEBUG)
         logger.propagate = False
-        logdir = recipedata.getVar("TEST_LOG_DIR", True)
+        logdir = recipedata.getVar("TEST_LOG_DIR")
 
         qemu = oeqa.targetcontrol.QemuTarget(recipedata)
     finally:

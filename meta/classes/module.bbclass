@@ -9,7 +9,7 @@ EXTRA_OEMAKE += "KERNEL_SRC=${STAGING_KERNEL_DIR}"
 MODULES_INSTALL_TARGET ?= "modules_install"
 
 python __anonymous () {
-    depends = d.getVar('DEPENDS', True)
+    depends = d.getVar('DEPENDS')
     extra_symbols = []
     for dep in depends.split():
         if dep.startswith("kernel-module-"):

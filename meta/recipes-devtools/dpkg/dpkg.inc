@@ -13,7 +13,7 @@ inherit autotools gettext perlnative pkgconfig systemd
 
 python () {
     if not bb.utils.contains('DISTRO_FEATURES', 'sysvinit', True, False, d):
-        pn = d.getVar('PN', True)
+        pn = d.getVar('PN')
         d.setVar('SYSTEMD_SERVICE_%s' % (pn), 'dpkg-configure.service')
 }
 

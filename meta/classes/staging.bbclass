@@ -69,8 +69,8 @@ sysroot_stage_all() {
 python sysroot_strip () {
     import stat, errno
 
-    dvar = d.getVar('SYSROOT_DESTDIR', True)
-    pn = d.getVar('PN', True)
+    dvar = d.getVar('SYSROOT_DESTDIR')
+    pn = d.getVar('PN')
 
     os.chdir(dvar)
 
@@ -103,9 +103,9 @@ python sysroot_strip () {
 
     elffiles = {}
     inodes = {}
-    libdir = os.path.abspath(dvar + os.sep + d.getVar("libdir", True))
-    baselibdir = os.path.abspath(dvar + os.sep + d.getVar("base_libdir", True))
-    if (d.getVar('INHIBIT_SYSROOT_STRIP', True) != '1'):
+    libdir = os.path.abspath(dvar + os.sep + d.getVar("libdir"))
+    baselibdir = os.path.abspath(dvar + os.sep + d.getVar("base_libdir"))
+    if (d.getVar('INHIBIT_SYSROOT_STRIP') != '1'):
         #
         # First lets figure out all of the files we may have to process
         #
@@ -136,7 +136,7 @@ python sysroot_strip () {
                     elf_file = isELF(file)
                     if elf_file & 1:
                         if elf_file & 2:
-                            if 'already-stripped' in (d.getVar('INSANE_SKIP_' + pn, True) or "").split():
+                            if 'already-stripped' in (d.getVar('INSANE_SKIP_' + pn) or "").split():
                                 bb.note("Skipping file %s from %s for already-stripped QA test" % (file[len(dvar):], pn))
                             else:
                                 bb.warn("File '%s' from %s was already stripped, this will prevent future debugging!" % (file[len(dvar):], pn))
@@ -154,7 +154,7 @@ python sysroot_strip () {
         #
         # Now strip them (in parallel)
         #
-        strip = d.getVar("STRIP", True)
+        strip = d.getVar("STRIP")
         sfiles = []
         for file in elffiles:
             elf_file = int(elffiles[file])
@@ -211,13 +211,13 @@ def sysroot_checkhashes(covered, tasknames, fnids, fns, d, invalidtasks = None):
 python do_populate_sysroot () {
     bb.build.exec_func("sysroot_stage_all", d)
     bb.build.exec_func("sysroot_strip", d)
-    for f in (d.getVar('SYSROOT_PREPROCESS_FUNCS', True) or '').split():
+    for f in (d.getVar('SYSROOT_PREPROCESS_FUNCS') or '').split():
         bb.build.exec_func(f, d)
-    pn = d.getVar("PN", True)
-    multiprov = d.getVar("MULTI_PROVIDER_WHITELIST", True).split()
+    pn = d.getVar("PN")
+    multiprov = d.getVar("MULTI_PROVIDER_WHITELIST").split()
     provdir = d.expand("${SYSROOT_DESTDIR}${base_prefix}/sysroot-providers/")
     bb.utils.mkdirhier(provdir)
-    for p in d.getVar("PROVIDES", True).split():
+    for p in d.getVar("PROVIDES").split():
         if p in multiprov:
             continue
         p = p.replace("/", "_")

@@ -168,13 +168,13 @@ USERADDSETSCENEDEPS = ""
 
 # Recipe parse-time sanity checks
 def update_useradd_after_parse(d):
-    useradd_packages = d.getVar('USERADD_PACKAGES', True)
+    useradd_packages = d.getVar('USERADD_PACKAGES')
 
     if not useradd_packages:
         bb.fatal("%s inherits useradd but doesn't set USERADD_PACKAGES" % d.getVar('FILE', False))
 
     for pkg in useradd_packages.split():
-        if not d.getVar('USERADD_PARAM_%s' % pkg, True) and not d.getVar('GROUPADD_PARAM_%s' % pkg, True) and not d.getVar('GROUPMEMS_PARAM_%s' % pkg, True):
+        if not d.getVar('USERADD_PARAM_%s' % pkg) and not d.getVar('GROUPADD_PARAM_%s' % pkg) and not d.getVar('GROUPMEMS_PARAM_%s' % pkg):
             bb.fatal("%s inherits useradd but doesn't set USERADD_PARAM, GROUPADD_PARAM or GROUPMEMS_PARAM for package %s" % (d.getVar('FILE', False), pkg))
 
 python __anonymous() {
@@ -191,9 +191,9 @@ def get_all_cmd_params(d, cmd_type):
     param_type = cmd_type.upper() + "_PARAM_%s"
     params = []
 
-    useradd_packages = d.getVar('USERADD_PACKAGES', True) or ""
+    useradd_packages = d.getVar('USERADD_PACKAGES') or ""
     for pkg in useradd_packages.split():
-        param = d.getVar(param_type % pkg, True)
+        param = d.getVar(param_type % pkg)
         if param:
             params.append(param.rstrip(" ;"))
 
@@ -209,20 +209,20 @@ fakeroot python populate_packages_prepend () {
         required to execute on the target. Not doing so may cause
         useradd preinst to be invoked twice, causing unwanted warnings.
         """
-        preinst = d.getVar('pkg_preinst_%s' % pkg, True) or d.getVar('pkg_preinst', True)
+        preinst = d.getVar('pkg_preinst_%s' % pkg) or d.getVar('pkg_preinst')
         if not preinst:
             preinst = '#!/bin/sh\n'
         preinst += 'bbnote () {\n\techo "NOTE: $*"\n}\n'
         preinst += 'bbwarn () {\n\techo "WARNING: $*"\n}\n'
         preinst += 'bbfatal () {\n\techo "ERROR: $*"\n\texit 1\n}\n'
-        preinst += 'perform_groupadd () {\n%s}\n' % d.getVar('perform_groupadd', True)
-        preinst += 'perform_useradd () {\n%s}\n' % d.getVar('perform_useradd', True)
-        preinst += 'perform_groupmems () {\n%s}\n' % d.getVar('perform_groupmems', True)
-        preinst += d.getVar('useradd_preinst', True)
+        preinst += 'perform_groupadd () {\n%s}\n' % d.getVar('perform_groupadd')
+        preinst += 'perform_useradd () {\n%s}\n' % d.getVar('perform_useradd')
+        preinst += 'perform_groupmems () {\n%s}\n' % d.getVar('perform_groupmems')
+        preinst += d.getVar('useradd_preinst')
         d.setVar('pkg_preinst_%s' % pkg, preinst)
 
         # RDEPENDS setup
-        rdepends = d.getVar("RDEPENDS_%s" % pkg, True) or ""
+        rdepends = d.getVar("RDEPENDS_%s" % pkg) or ""
         rdepends += ' ' + d.getVar('MLPREFIX', False) + 'base-passwd'
         rdepends += ' ' + d.getVar('MLPREFIX', False) + 'shadow'
         # base-files is where the default /etc/skel is packaged
@@ -233,7 +233,7 @@ fakeroot python populate_packages_prepend () {
     # to packages specified by USERADD_PACKAGES
     if not bb.data.inherits_class('nativesdk', d) \
         and not bb.data.inherits_class('native', d):
-        useradd_packages = d.getVar('USERADD_PACKAGES', True) or ""
+        useradd_packages = d.getVar('USERADD_PACKAGES') or ""
         for pkg in useradd_packages.split():
             update_useradd_package(pkg)
 }

@@ -107,16 +107,16 @@ class RpmIndexer(Indexer):
         target_os = collections.OrderedDict()
 
         if arch_var is not None and os_var is not None:
-            package_archs['default'] = self.d.getVar(arch_var, True).split()
+            package_archs['default'] = self.d.getVar(arch_var).split()
             package_archs['default'].reverse()
-            target_os['default'] = self.d.getVar(os_var, True).strip()
+            target_os['default'] = self.d.getVar(os_var).strip()
         else:
-            package_archs['default'] = self.d.getVar("PACKAGE_ARCHS", True).split()
+            package_archs['default'] = self.d.getVar("PACKAGE_ARCHS").split()
             # arch order is reversed.  This ensures the -best- match is
             # listed first!
             package_archs['default'].reverse()
-            target_os['default'] = self.d.getVar("TARGET_OS", True).strip()
-            multilibs = self.d.getVar('MULTILIBS', True) or ""
+            target_os['default'] = self.d.getVar("TARGET_OS").strip()
+            multilibs = self.d.getVar('MULTILIBS') or ""
             for ext in multilibs.split():
                 eext = ext.split(':')
                 if len(eext) > 1 and eext[0] == 'multilib':
@@ -150,8 +150,8 @@ class RpmIndexer(Indexer):
         return (ml_prefix_list, target_os)
 
     def write_index(self):
-        sdk_pkg_archs = (self.d.getVar('SDK_PACKAGE_ARCHS', True) or "").replace('-', '_').split()
-        all_mlb_pkg_archs = (self.d.getVar('ALL_MULTILIB_PACKAGE_ARCHS', True) or "").replace('-', '_').split()
+        sdk_pkg_archs = (self.d.getVar('SDK_PACKAGE_ARCHS') or "").replace('-', '_').split()
+        all_mlb_pkg_archs = (self.d.getVar('ALL_MULTILIB_PACKAGE_ARCHS') or "").replace('-', '_').split()
 
         mlb_prefix_list = self.get_ml_prefix_and_os_list()[0]
 
@@ -165,15 +165,15 @@ class RpmIndexer(Indexer):
         archs = archs.union(set(sdk_pkg_archs))
 
         rpm_createrepo = bb.utils.which(os.getenv('PATH'), "createrepo")
-        if self.d.getVar('PACKAGE_FEED_SIGN', True) == '1':
-            signer = get_signer(self.d, self.d.getVar('PACKAGE_FEED_GPG_BACKEND', True))
+        if self.d.getVar('PACKAGE_FEED_SIGN') == '1':
+            signer = get_signer(self.d, self.d.getVar('PACKAGE_FEED_GPG_BACKEND'))
         else:
             signer = None
         index_cmds = []
         repomd_files = []
         rpm_dirs_found = False
         for arch in archs:
-            dbpath = os.path.join(self.d.getVar('WORKDIR', True), 'rpmdb', arch)
+            dbpath = os.path.join(self.d.getVar('WORKDIR'), 'rpmdb', arch)
             if os.path.exists(dbpath):
                 bb.utils.remove(dbpath, True)
             arch_dir = os.path.join(self.deploy_dir, arch)
@@ -197,11 +197,11 @@ class RpmIndexer(Indexer):
         # Sign repomd
         if signer:
             for repomd in repomd_files:
-                feed_sig_type = self.d.getVar('PACKAGE_FEED_GPG_SIGNATURE_TYPE', True)
+                feed_sig_type = self.d.getVar('PACKAGE_FEED_GPG_SIGNATURE_TYPE')
                 is_ascii_sig = (feed_sig_type.upper() != "BIN")
                 signer.detach_sign(repomd,
-                                   self.d.getVar('PACKAGE_FEED_GPG_NAME', True),
-                                   self.d.getVar('PACKAGE_FEED_GPG_PASSPHRASE_FILE', True),
+                                   self.d.getVar('PACKAGE_FEED_GPG_NAME'),
+                                   self.d.getVar('PACKAGE_FEED_GPG_PASSPHRASE_FILE'),
                                    armor=is_ascii_sig)
 
 
@@ -212,8 +212,8 @@ class OpkgIndexer(Indexer):
                      "MULTILIB_ARCHS"]
 
         opkg_index_cmd = bb.utils.which(os.getenv('PATH'), "opkg-make-index")
-        if self.d.getVar('PACKAGE_FEED_SIGN', True) == '1':
-            signer = get_signer(self.d, self.d.getVar('PACKAGE_FEED_GPG_BACKEND', True))
+        if self.d.getVar('PACKAGE_FEED_SIGN') == '1':
+            signer = get_signer(self.d, self.d.getVar('PACKAGE_FEED_GPG_BACKEND'))
         else:
             signer = None
 
@@ -223,7 +223,7 @@ class OpkgIndexer(Indexer):
         index_cmds = set()
         index_sign_files = set()
         for arch_var in arch_vars:
-            archs = self.d.getVar(arch_var, True)
+            archs = self.d.getVar(arch_var)
             if archs is None:
                 continue
 
@@ -251,12 +251,12 @@ class OpkgIndexer(Indexer):
             bb.fatal('%s' % ('\n'.join(result)))
 
         if signer:
-            feed_sig_type = self.d.getVar('PACKAGE_FEED_GPG_SIGNATURE_TYPE', True)
+            feed_sig_type = self.d.getVar('PACKAGE_FEED_GPG_SIGNATURE_TYPE')
             is_ascii_sig = (feed_sig_type.upper() != "BIN")
             for f in index_sign_files:
                 signer.detach_sign(f,
-                                   self.d.getVar('PACKAGE_FEED_GPG_NAME', True),
-                                   self.d.getVar('PACKAGE_FEED_GPG_PASSPHRASE_FILE', True),
+                                   self.d.getVar('PACKAGE_FEED_GPG_NAME'),
+                                   self.d.getVar('PACKAGE_FEED_GPG_PASSPHRASE_FILE'),
                                    armor=is_ascii_sig)
 
 
@@ -290,16 +290,16 @@ class DpkgIndexer(Indexer):
 
         os.environ['APT_CONFIG'] = self.apt_conf_file
 
-        pkg_archs = self.d.getVar('PACKAGE_ARCHS', True)
+        pkg_archs = self.d.getVar('PACKAGE_ARCHS')
         if pkg_archs is not None:
             arch_list = pkg_archs.split()
-        sdk_pkg_archs = self.d.getVar('SDK_PACKAGE_ARCHS', True)
+        sdk_pkg_archs = self.d.getVar('SDK_PACKAGE_ARCHS')
         if sdk_pkg_archs is not None:
             for a in sdk_pkg_archs.split():
                 if a not in pkg_archs:
                     arch_list.append(a)
 
-        all_mlb_pkg_arch_list = (self.d.getVar('ALL_MULTILIB_PACKAGE_ARCHS', True) or "").split()
+        all_mlb_pkg_arch_list = (self.d.getVar('ALL_MULTILIB_PACKAGE_ARCHS') or "").split()
         arch_list.extend(arch for arch in all_mlb_pkg_arch_list if arch not in arch_list)
 
         apt_ftparchive = bb.utils.which(os.getenv('PATH'), "apt-ftparchive")
@@ -332,7 +332,7 @@ class DpkgIndexer(Indexer):
         result = oe.utils.multiprocess_exec(index_cmds, create_index)
         if result:
             bb.fatal('%s' % ('\n'.join(result)))
-        if self.d.getVar('PACKAGE_FEED_SIGN', True) == '1':
+        if self.d.getVar('PACKAGE_FEED_SIGN') == '1':
             raise NotImplementedError('Package feed signing not implementd for dpkg')
 
 
@@ -386,7 +386,7 @@ class RpmPkgsList(PkgsList):
 
                     # Workaround for bug 3565. Simply look to see if we
                     # know of a package with that name, if not try again!
-                    filename = os.path.join(self.d.getVar('PKGDATA_DIR', True),
+                    filename = os.path.join(self.d.getVar('PKGDATA_DIR'),
                                             'runtime-reverse',
                                             new_pkg)
                     if os.path.exists(filename):
@@ -464,7 +464,7 @@ class OpkgPkgsList(PkgsList):
 
         self.opkg_cmd = bb.utils.which(os.getenv('PATH'), "opkg")
         self.opkg_args = "-f %s -o %s " % (config_file, rootfs_dir)
-        self.opkg_args += self.d.getVar("OPKG_ARGS", True)
+        self.opkg_args += self.d.getVar("OPKG_ARGS")
 
     def list_pkgs(self, format=None):
         cmd = "%s %s status" % (self.opkg_cmd, self.opkg_args)
@@ -512,9 +512,9 @@ class PackageManager(object, metaclass=ABCMeta):
         self.d = d
         self.deploy_dir = None
         self.deploy_lock = None
-        self.feed_uris = self.d.getVar('PACKAGE_FEED_URIS', True) or ""
-        self.feed_base_paths = self.d.getVar('PACKAGE_FEED_BASE_PATHS', True) or ""
-        self.feed_archs = self.d.getVar('PACKAGE_FEED_ARCHS', True)
+        self.feed_uris = self.d.getVar('PACKAGE_FEED_URIS') or ""
+        self.feed_base_paths = self.d.getVar('PACKAGE_FEED_BASE_PATHS') or ""
+        self.feed_archs = self.d.getVar('PACKAGE_FEED_ARCHS')
 
     """
     Update the package manager package database.
@@ -568,7 +568,7 @@ class PackageManager(object, metaclass=ABCMeta):
     def install_complementary(self, globs=None):
         # we need to write the list of installed packages to a file because the
         # oe-pkgdata-util reads it from a file
-        installed_pkgs_file = os.path.join(self.d.getVar('WORKDIR', True),
+        installed_pkgs_file = os.path.join(self.d.getVar('WORKDIR'),
                                            "installed_pkgs.txt")
         with open(installed_pkgs_file, "w+") as installed_pkgs:
             pkgs = self.list_installed()
@@ -576,10 +576,10 @@ class PackageManager(object, metaclass=ABCMeta):
             installed_pkgs.write(output)
 
         if globs is None:
-            globs = self.d.getVar('IMAGE_INSTALL_COMPLEMENTARY', True)
+            globs = self.d.getVar('IMAGE_INSTALL_COMPLEMENTARY')
             split_linguas = set()
 
-            for translation in self.d.getVar('IMAGE_LINGUAS', True).split():
+            for translation in self.d.getVar('IMAGE_LINGUAS').split():
                 split_linguas.add(translation)
                 split_linguas.add(translation.split('-')[0])
 
@@ -592,9 +592,9 @@ class PackageManager(object, metaclass=ABCMeta):
             return
 
         cmd = [bb.utils.which(os.getenv('PATH'), "oe-pkgdata-util"),
-               "-p", self.d.getVar('PKGDATA_DIR', True), "glob", installed_pkgs_file,
+               "-p", self.d.getVar('PKGDATA_DIR'), "glob", installed_pkgs_file,
                globs]
-        exclude = self.d.getVar('PACKAGE_EXCLUDE_COMPLEMENTARY', True)
+        exclude = self.d.getVar('PACKAGE_EXCLUDE_COMPLEMENTARY')
         if exclude:
             cmd.extend(['--exclude=' + '|'.join(exclude.split())])
         try:
@@ -659,7 +659,7 @@ class RpmPM(PackageManager):
         self.task_name = task_name
         self.providename = providename
         self.fullpkglist = list()
-        self.deploy_dir = self.d.getVar('DEPLOY_DIR_RPM', True)
+        self.deploy_dir = self.d.getVar('DEPLOY_DIR_RPM')
         self.etcrpm_dir = os.path.join(self.target_rootfs, "etc/rpm")
         self.install_dir_name = "oe_install"
         self.install_dir_path = os.path.join(self.target_rootfs, self.install_dir_name)
@@ -669,7 +669,7 @@ class RpmPM(PackageManager):
         # 1 = --log-level=info (includes information about executing scriptlets and their output)
         # 2 = --log-level=debug
         # 3 = --log-level=debug plus dumps of scriplet content and command invocation
-        self.debug_level = int(d.getVar('ROOTFS_RPM_DEBUG', True) or "0")
+        self.debug_level = int(d.getVar('ROOTFS_RPM_DEBUG') or "0")
         self.smart_opt = ["--log-level=%s" %
                          ("warning" if self.debug_level == 0 else
                           "info" if self.debug_level == 1 else
@@ -684,7 +684,7 @@ class RpmPM(PackageManager):
         if not os.path.exists(self.d.expand('${T}/saved')):
             bb.utils.mkdirhier(self.d.expand('${T}/saved'))
 
-        packageindex_dir = os.path.join(self.d.getVar('WORKDIR', True), 'rpms')
+        packageindex_dir = os.path.join(self.d.getVar('WORKDIR'), 'rpms')
         self.indexer = RpmIndexer(self.d, packageindex_dir)
         self.pkgs_list = RpmPkgsList(self.d, self.target_rootfs, arch_var, os_var)
 
@@ -702,7 +702,7 @@ class RpmPM(PackageManager):
             # List must be prefered to least preferred order
             default_platform_extra = list()
             platform_extra = list()
-            bbextendvariant = self.d.getVar('BBEXTENDVARIANT', True) or ""
+            bbextendvariant = self.d.getVar('BBEXTENDVARIANT') or ""
             for mlib in self.ml_os_list:
                 for arch in self.ml_prefix_list[mlib]:
                     plt = arch.replace('-', '_') + '-.*-' + self.ml_os_list[mlib]
@@ -750,7 +750,7 @@ class RpmPM(PackageManager):
     Create configs for rpm and smart, and multilib is supported
     '''
     def create_configs(self):
-        target_arch = self.d.getVar('TARGET_ARCH', True)
+        target_arch = self.d.getVar('TARGET_ARCH')
         platform = '%s%s-%s' % (target_arch.replace('-', '_'),
                                 self.target_vendor,
                                 self.ml_os_list['default'])
@@ -758,7 +758,7 @@ class RpmPM(PackageManager):
         # List must be prefered to least preferred order
         default_platform_extra = list()
         platform_extra = list()
-        bbextendvariant = self.d.getVar('BBEXTENDVARIANT', True) or ""
+        bbextendvariant = self.d.getVar('BBEXTENDVARIANT') or ""
         for mlib in self.ml_os_list:
             for arch in self.ml_prefix_list[mlib]:
                 plt = arch.replace('-', '_') + '-.*-' + self.ml_os_list[mlib]
@@ -841,7 +841,7 @@ class RpmPM(PackageManager):
                     if not new_pkg:
                         # Failed to translate, package not found!
                         err_msg = '%s not found in the %s feeds (%s) in %s.' % \
-                                  (pkg, mlib, " ".join(feed_archs), self.d.getVar('DEPLOY_DIR_RPM', True))
+                                  (pkg, mlib, " ".join(feed_archs), self.d.getVar('DEPLOY_DIR_RPM'))
                         if not attempt_only:
                             bb.error(err_msg)
                             bb.fatal("This is often caused by an empty package declared " \
@@ -860,7 +860,7 @@ class RpmPM(PackageManager):
                 new_pkg = self._search_pkg_name_in_feeds(pkg, default_archs)
                 if not new_pkg:
                     err_msg = '%s not found in the feeds (%s) in %s.' % \
-                                  (pkg, " ".join(default_archs), self.d.getVar('DEPLOY_DIR_RPM', True))
+                                  (pkg, " ".join(default_archs), self.d.getVar('DEPLOY_DIR_RPM'))
                     if not attempt_only:
                         bb.error(err_msg)
                         bb.fatal("This is often caused by an empty package declared " \
@@ -887,7 +887,7 @@ class RpmPM(PackageManager):
 
         channel_priority = 5
         platform_dir = os.path.join(self.etcrpm_dir, "platform")
-        sdkos = self.d.getVar("SDK_OS", True)
+        sdkos = self.d.getVar("SDK_OS")
         with open(platform_dir, "w+") as platform_fd:
             platform_fd.write(platform + '\n')
             for pt in platform_extra:
@@ -957,8 +957,8 @@ class RpmPM(PackageManager):
             bb.fatal("Create rpm database failed. Command '%s' "
                      "returned %d:\n%s" % (' '.join(cmd), e.returncode, e.output.decode("utf-8")))
         # Import GPG key to RPM database of the target system
-        if self.d.getVar('RPM_SIGN_PACKAGES', True) == '1':
-            pubkey_path = self.d.getVar('RPM_GPG_PUBKEY', True)
+        if self.d.getVar('RPM_SIGN_PACKAGES') == '1':
+            pubkey_path = self.d.getVar('RPM_GPG_PUBKEY')
             cmd = [self.rpm_cmd, '--root', self.target_rootfs, '--dbpath', '/var/lib/rpm', '--import', pubkey_path]
             try:
                 subprocess.check_output(cmd, stderr=subprocess.STDOUT)
@@ -974,10 +974,10 @@ class RpmPM(PackageManager):
         self._invoke_smart(['config', '--set', 'rpm-root=%s' % self.target_rootfs])
         self._invoke_smart(['config', '--set', 'rpm-dbpath=/var/lib/rpm'])
         self._invoke_smart(['config', '--set', 'rpm-extra-macros._var=%s' %
-                           self.d.getVar('localstatedir', True)])
+                           self.d.getVar('localstatedir')])
         cmd = ["config", "--set", "rpm-extra-macros._tmppath=/%s/tmp" % self.install_dir_name]
 
-        prefer_color = self.d.getVar('RPM_PREFER_ELF_ARCH', True)
+        prefer_color = self.d.getVar('RPM_PREFER_ELF_ARCH')
         if prefer_color:
             if prefer_color not in ['0', '1', '2', '4']:
                 bb.fatal("Invalid RPM_PREFER_ELF_ARCH: %s, it should be one of:\n"
@@ -985,7 +985,7 @@ class RpmPM(PackageManager):
                         "\t2: ELF64 wins\n"
                         "\t4: ELF64 N32 wins (mips64 or mips64el only)" %
                         prefer_color)
-            if prefer_color == "4" and self.d.getVar("TUNE_ARCH", True) not in \
+            if prefer_color == "4" and self.d.getVar("TUNE_ARCH") not in \
                                     ['mips64', 'mips64el']:
                 bb.fatal("RPM_PREFER_ELF_ARCH = \"4\" is for mips64 or mips64el "
                          "only.")
@@ -998,17 +998,17 @@ class RpmPM(PackageManager):
         # Write common configuration for host and target usage
         self._invoke_smart(['config', '--set', 'rpm-nolinktos=1'])
         self._invoke_smart(['config', '--set', 'rpm-noparentdirs=1'])
-        check_signature = self.d.getVar('RPM_CHECK_SIGNATURES', True)
+        check_signature = self.d.getVar('RPM_CHECK_SIGNATURES')
         if check_signature and check_signature.strip() == "0":
             self._invoke_smart(['config', '--set rpm-check-signatures=false'])
-        for i in self.d.getVar('BAD_RECOMMENDATIONS', True).split():
+        for i in self.d.getVar('BAD_RECOMMENDATIONS').split():
             self._invoke_smart(['flag', '--set', 'ignore-recommends', i])
 
         # Do the following configurations here, to avoid them being
         # saved for field upgrade
-        if self.d.getVar('NO_RECOMMENDATIONS', True).strip() == "1":
+        if self.d.getVar('NO_RECOMMENDATIONS').strip() == "1":
             self._invoke_smart(['config', '--set', 'ignore-all-recommends=1'])
-        pkg_exclude = self.d.getVar('PACKAGE_EXCLUDE', True) or ""
+        pkg_exclude = self.d.getVar('PACKAGE_EXCLUDE') or ""
         for i in pkg_exclude.split():
             self._invoke_smart(['flag', '--set', 'exclude-packages', i])
 
@@ -1019,13 +1019,13 @@ class RpmPM(PackageManager):
         ch_already_added = []
         for canonical_arch in platform_extra:
             arch = canonical_arch.split('-')[0]
-            arch_channel = os.path.join(self.d.getVar('WORKDIR', True), 'rpms', arch)
+            arch_channel = os.path.join(self.d.getVar('WORKDIR'), 'rpms', arch)
             oe.path.remove(arch_channel)
             deploy_arch_dir = os.path.join(self.deploy_dir, arch)
             if not os.path.exists(deploy_arch_dir):
                     continue
 
-            lockfilename = self.d.getVar('DEPLOY_DIR_RPM', True) + "/rpm.lock"
+            lockfilename = self.d.getVar('DEPLOY_DIR_RPM') + "/rpm.lock"
             lf = bb.utils.lockfile(lockfilename, False)
             oe.path.copyhardlinktree(deploy_arch_dir, arch_channel)
             bb.utils.unlockfile(lf)
@@ -1096,7 +1096,7 @@ class RpmPM(PackageManager):
             "fi\n"
 
         intercept_dir = self.d.expand('${WORKDIR}/intercept_scripts')
-        native_root = self.d.getVar('STAGING_DIR_NATIVE', True)
+        native_root = self.d.getVar('STAGING_DIR_NATIVE')
         scriptlet_content = SCRIPTLET_FORMAT % (os.environ['PATH'],
                                                 self.target_rootfs,
                                                 intercept_dir,
@@ -1170,7 +1170,7 @@ class RpmPM(PackageManager):
             ml_pkgs = []
             non_ml_pkgs = pkgs[:]
             for pkg in pkgs:
-                for mlib in (self.d.getVar("MULTILIB_VARIANTS", True) or "").split():
+                for mlib in (self.d.getVar("MULTILIB_VARIANTS") or "").split():
                     if pkg.startswith(mlib + '-'):
                         ml_pkgs.append(pkg)
                         non_ml_pkgs.remove(pkg)
@@ -1184,7 +1184,7 @@ class RpmPM(PackageManager):
                 # correctly.
                 pkgs_new = []
                 for pkg in non_ml_pkgs:
-                    for mlib in (self.d.getVar("MULTILIB_VARIANTS", True) or "").split():
+                    for mlib in (self.d.getVar("MULTILIB_VARIANTS") or "").split():
                         mlib_pkg = mlib + "-" + pkg
                         if mlib_pkg in ml_pkgs:
                             pkgs_new.append(pkg)
@@ -1401,7 +1401,7 @@ class RpmPM(PackageManager):
 
         self._invoke_smart(['config', '--set', 'rpm-nolinktos=1'])
         self._invoke_smart(['config', '--set', 'rpm-noparentdirs=1'])
-        for i in self.d.getVar('BAD_RECOMMENDATIONS', True).split():
+        for i in self.d.getVar('BAD_RECOMMENDATIONS').split():
             self._invoke_smart(['flag', '--set', 'ignore-recommends', i])
         self._invoke_smart(['channel', '--add', 'rpmsys', 'type=rpm-sys', '-y'])
 
@@ -1575,13 +1575,13 @@ class OpkgPM(OpkgDpkgPM):
         self.pkg_archs = archs
         self.task_name = task_name
 
-        self.deploy_dir = self.d.getVar("DEPLOY_DIR_IPK", True)
+        self.deploy_dir = self.d.getVar("DEPLOY_DIR_IPK")
         self.deploy_lock_file = os.path.join(self.deploy_dir, "deploy.lock")
         self.opkg_cmd = bb.utils.which(os.getenv('PATH'), "opkg")
         self.opkg_args = "--volatile-cache -f %s -t %s -o %s " % (self.config_file, self.d.expand('${T}/ipktemp/') ,target_rootfs)
-        self.opkg_args += self.d.getVar("OPKG_ARGS", True)
+        self.opkg_args += self.d.getVar("OPKG_ARGS")
 
-        opkg_lib_dir = self.d.getVar('OPKGLIBDIR', True)
+        opkg_lib_dir = self.d.getVar('OPKGLIBDIR')
         if opkg_lib_dir[0] == "/":
             opkg_lib_dir = opkg_lib_dir[1:]
 
@@ -1593,7 +1593,7 @@ class OpkgPM(OpkgDpkgPM):
         if not os.path.exists(self.d.expand('${T}/saved')):
             bb.utils.mkdirhier(self.d.expand('${T}/saved'))
 
-        self.from_feeds = (self.d.getVar('BUILD_IMAGES_FROM_FEEDS', True) or "") == "1"
+        self.from_feeds = (self.d.getVar('BUILD_IMAGES_FROM_FEEDS') or "") == "1"
         if self.from_feeds:
             self._create_custom_config()
         else:
@@ -1638,7 +1638,7 @@ class OpkgPM(OpkgDpkgPM):
                 config_file.write("arch %s %d\n" % (arch, priority))
                 priority += 5
 
-            for line in (self.d.getVar('IPK_FEED_URIS', True) or "").split():
+            for line in (self.d.getVar('IPK_FEED_URIS') or "").split():
                 feed_match = re.match("^[ \t]*(.*)##([^ \t]*)[ \t]*$", line)
 
                 if feed_match is not None:
@@ -1655,17 +1655,17 @@ class OpkgPM(OpkgDpkgPM):
             specified as compatible for the current machine.
             NOTE: Development-helper feature, NOT a full-fledged feed.
             """
-            if (self.d.getVar('FEED_DEPLOYDIR_BASE_URI', True) or "") != "":
+            if (self.d.getVar('FEED_DEPLOYDIR_BASE_URI') or "") != "":
                 for arch in self.pkg_archs.split():
                     cfg_file_name = os.path.join(self.target_rootfs,
-                                                 self.d.getVar("sysconfdir", True),
+                                                 self.d.getVar("sysconfdir"),
                                                  "opkg",
                                                  "local-%s-feed.conf" % arch)
 
                     with open(cfg_file_name, "w+") as cfg_file:
                         cfg_file.write("src/gz local-%s %s/%s" %
                                        (arch,
-                                        self.d.getVar('FEED_DEPLOYDIR_BASE_URI', True),
+                                        self.d.getVar('FEED_DEPLOYDIR_BASE_URI'),
                                         arch))
 
                         if self.opkg_dir != '/var/lib/opkg':
@@ -1674,8 +1674,8 @@ class OpkgPM(OpkgDpkgPM):
                             # the default value of "/var/lib" as defined in opkg:
                             # libopkg/opkg_conf.h:#define OPKG_CONF_DEFAULT_INFO_DIR      "/var/lib/opkg/info"
                             # libopkg/opkg_conf.h:#define OPKG_CONF_DEFAULT_STATUS_FILE   "/var/lib/opkg/status"
-                            cfg_file.write("option info_dir     %s\n" % os.path.join(self.d.getVar('OPKGLIBDIR', True), 'opkg', 'info'))
-                            cfg_file.write("option status_file  %s\n" % os.path.join(self.d.getVar('OPKGLIBDIR', True), 'opkg', 'status'))
+                            cfg_file.write("option info_dir     %s\n" % os.path.join(self.d.getVar('OPKGLIBDIR'), 'opkg', 'info'))
+                            cfg_file.write("option status_file  %s\n" % os.path.join(self.d.getVar('OPKGLIBDIR'), 'opkg', 'status'))
 
 
     def _create_config(self):
@@ -1699,8 +1699,8 @@ class OpkgPM(OpkgDpkgPM):
                 # the default value of "/var/lib" as defined in opkg:
                 # libopkg/opkg_conf.h:#define OPKG_CONF_DEFAULT_INFO_DIR      "/var/lib/opkg/info"
                 # libopkg/opkg_conf.h:#define OPKG_CONF_DEFAULT_STATUS_FILE   "/var/lib/opkg/status"
-                config_file.write("option info_dir     %s\n" % os.path.join(self.d.getVar('OPKGLIBDIR', True), 'opkg', 'info'))
-                config_file.write("option status_file  %s\n" % os.path.join(self.d.getVar('OPKGLIBDIR', True), 'opkg', 'status'))
+                config_file.write("option info_dir     %s\n" % os.path.join(self.d.getVar('OPKGLIBDIR'), 'opkg', 'info'))
+                config_file.write("option status_file  %s\n" % os.path.join(self.d.getVar('OPKGLIBDIR'), 'opkg', 'status'))
 
     def insert_feeds_uris(self):
         if self.feed_uris == "":
@@ -1755,9 +1755,9 @@ class OpkgPM(OpkgDpkgPM):
         os.environ['OFFLINE_ROOT'] = self.target_rootfs
         os.environ['IPKG_OFFLINE_ROOT'] = self.target_rootfs
         os.environ['OPKG_OFFLINE_ROOT'] = self.target_rootfs
-        os.environ['INTERCEPT_DIR'] = os.path.join(self.d.getVar('WORKDIR', True),
+        os.environ['INTERCEPT_DIR'] = os.path.join(self.d.getVar('WORKDIR'),
                                                    "intercept_scripts")
-        os.environ['NATIVE_ROOT'] = self.d.getVar('STAGING_DIR_NATIVE', True)
+        os.environ['NATIVE_ROOT'] = self.d.getVar('STAGING_DIR_NATIVE')
 
         try:
             bb.note("Installing the following packages: %s" % ' '.join(pkgs))
@@ -1808,7 +1808,7 @@ class OpkgPM(OpkgDpkgPM):
         return OpkgPkgsList(self.d, self.target_rootfs, self.config_file).list_pkgs()
 
     def handle_bad_recommendations(self):
-        bad_recommendations = self.d.getVar("BAD_RECOMMENDATIONS", True) or ""
+        bad_recommendations = self.d.getVar("BAD_RECOMMENDATIONS") or ""
         if bad_recommendations.strip() == "":
             return
 
@@ -1859,7 +1859,7 @@ class OpkgPM(OpkgDpkgPM):
         bb.utils.mkdirhier(temp_opkg_dir)
 
         opkg_args = "-f %s -o %s " % (self.config_file, temp_rootfs)
-        opkg_args += self.d.getVar("OPKG_ARGS", True)
+        opkg_args += self.d.getVar("OPKG_ARGS")
 
         cmd = "%s %s update" % (self.opkg_cmd, opkg_args)
         try:
@@ -1935,7 +1935,7 @@ class DpkgPM(OpkgDpkgPM):
     def __init__(self, d, target_rootfs, archs, base_archs, apt_conf_dir=None):
         super(DpkgPM, self).__init__(d)
         self.target_rootfs = target_rootfs
-        self.deploy_dir = self.d.getVar('DEPLOY_DIR_DEB', True)
+        self.deploy_dir = self.d.getVar('DEPLOY_DIR_DEB')
         if apt_conf_dir is None:
             self.apt_conf_dir = self.d.expand("${APTCONF_TARGET}/apt")
         else:
@@ -1944,10 +1944,10 @@ class DpkgPM(OpkgDpkgPM):
         self.apt_get_cmd = bb.utils.which(os.getenv('PATH'), "apt-get")
         self.apt_cache_cmd = bb.utils.which(os.getenv('PATH'), "apt-cache")
 
-        self.apt_args = d.getVar("APT_ARGS", True)
+        self.apt_args = d.getVar("APT_ARGS")
 
         self.all_arch_list = archs.split()
-        all_mlb_pkg_arch_list = (self.d.getVar('ALL_MULTILIB_PACKAGE_ARCHS', True) or "").split()
+        all_mlb_pkg_arch_list = (self.d.getVar('ALL_MULTILIB_PACKAGE_ARCHS') or "").split()
         self.all_arch_list.extend(arch for arch in all_mlb_pkg_arch_list if arch not in self.all_arch_list)
 
         self._create_configs(archs, base_archs)
@@ -2008,9 +2008,9 @@ class DpkgPM(OpkgDpkgPM):
         os.environ['OFFLINE_ROOT'] = self.target_rootfs
         os.environ['IPKG_OFFLINE_ROOT'] = self.target_rootfs
         os.environ['OPKG_OFFLINE_ROOT'] = self.target_rootfs
-        os.environ['INTERCEPT_DIR'] = os.path.join(self.d.getVar('WORKDIR', True),
+        os.environ['INTERCEPT_DIR'] = os.path.join(self.d.getVar('WORKDIR'),
                                                    "intercept_scripts")
-        os.environ['NATIVE_ROOT'] = self.d.getVar('STAGING_DIR_NATIVE', True)
+        os.environ['NATIVE_ROOT'] = self.d.getVar('STAGING_DIR_NATIVE')
 
         failed_pkgs = []
         for pkg_name in installed_pkgs:
@@ -2161,7 +2161,7 @@ class DpkgPM(OpkgDpkgPM):
 
                 priority += 5
 
-            pkg_exclude = self.d.getVar('PACKAGE_EXCLUDE', True) or ""
+            pkg_exclude = self.d.getVar('PACKAGE_EXCLUDE') or ""
             for pkg in pkg_exclude.split():
                 prefs_file.write(
                     "Package: %s\n"
@@ -2176,14 +2176,14 @@ class DpkgPM(OpkgDpkgPM):
                                    os.path.join(self.deploy_dir, arch))
 
         base_arch_list = base_archs.split()
-        multilib_variants = self.d.getVar("MULTILIB_VARIANTS", True);
+        multilib_variants = self.d.getVar("MULTILIB_VARIANTS");
         for variant in multilib_variants.split():
             localdata = bb.data.createCopy(self.d)
             variant_tune = localdata.getVar("DEFAULTTUNE_virtclass-multilib-" + variant, False)
-            orig_arch = localdata.getVar("DPKG_ARCH", True)
+            orig_arch = localdata.getVar("DPKG_ARCH")
             localdata.setVar("DEFAULTTUNE", variant_tune)
             bb.data.update_data(localdata)
-            variant_arch = localdata.getVar("DPKG_ARCH", True)
+            variant_arch = localdata.getVar("DPKG_ARCH")
             if variant_arch not in base_arch_list:
                 base_arch_list.append(variant_arch)
 
@@ -2214,7 +2214,7 @@ class DpkgPM(OpkgDpkgPM):
 
     def remove_packaging_data(self):
         bb.utils.remove(os.path.join(self.target_rootfs,
-                                     self.d.getVar('opkglibdir', True)), True)
+                                     self.d.getVar('opkglibdir')), True)
         bb.utils.remove(self.target_rootfs + "/var/lib/dpkg/", True)
 
     def fix_broken_dependencies(self):
@@ -2262,12 +2262,12 @@ class DpkgPM(OpkgDpkgPM):
         return tmp_dir
 
 def generate_index_files(d):
-    classes = d.getVar('PACKAGE_CLASSES', True).replace("package_", "").split()
+    classes = d.getVar('PACKAGE_CLASSES').replace("package_", "").split()
 
     indexer_map = {
-        "rpm": (RpmIndexer, d.getVar('DEPLOY_DIR_RPM', True)),
-        "ipk": (OpkgIndexer, d.getVar('DEPLOY_DIR_IPK', True)),
-        "deb": (DpkgIndexer, d.getVar('DEPLOY_DIR_DEB', True))
+        "rpm": (RpmIndexer, d.getVar('DEPLOY_DIR_RPM')),
+        "ipk": (OpkgIndexer, d.getVar('DEPLOY_DIR_IPK')),
+        "deb": (DpkgIndexer, d.getVar('DEPLOY_DIR_DEB'))
     }
 
     result = None

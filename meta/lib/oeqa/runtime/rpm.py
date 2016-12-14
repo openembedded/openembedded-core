@@ -7,7 +7,7 @@ from oeqa.utils.decorators import *
 def setUpModule():
     if not oeRuntimeTest.hasFeature("package-management"):
             skipModule("rpm module skipped: target doesn't have package-management in IMAGE_FEATURES")
-    if "package_rpm" != oeRuntimeTest.tc.d.getVar("PACKAGE_CLASSES", True).split()[0]:
+    if "package_rpm" != oeRuntimeTest.tc.d.getVar("PACKAGE_CLASSES").split()[0]:
             skipModule("rpm module skipped: target doesn't have rpm as primary package manager")
 
 
@@ -29,8 +29,8 @@ class RpmInstallRemoveTest(oeRuntimeTest):
 
     @classmethod
     def setUpClass(self):
-        pkgarch = oeRuntimeTest.tc.d.getVar('TUNE_PKGARCH', True).replace("-", "_")
-        rpmdir = os.path.join(oeRuntimeTest.tc.d.getVar('DEPLOY_DIR', True), "rpm", pkgarch)
+        pkgarch = oeRuntimeTest.tc.d.getVar('TUNE_PKGARCH').replace("-", "_")
+        rpmdir = os.path.join(oeRuntimeTest.tc.d.getVar('DEPLOY_DIR'), "rpm", pkgarch)
         # pick rpm-doc as a test file to get installed, because it's small and it will always be built for standard targets
         for f in fnmatch.filter(os.listdir(rpmdir), "rpm-doc-*.%s.rpm" % pkgarch):
             testrpmfile = f

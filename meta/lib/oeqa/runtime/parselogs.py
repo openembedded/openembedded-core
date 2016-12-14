@@ -193,10 +193,10 @@ class ParseLogsTest(oeRuntimeTest):
                 self.ignore_errors[machine] = self.ignore_errors[machine] + video_related
 
     def getMachine(self):
-        return oeRuntimeTest.tc.d.getVar("MACHINE", True)
+        return oeRuntimeTest.tc.d.getVar("MACHINE")
 
     def getWorkdir(self):
-        return oeRuntimeTest.tc.d.getVar("WORKDIR", True)
+        return oeRuntimeTest.tc.d.getVar("WORKDIR")
 
     #get some information on the CPU of the machine to display at the beginning of the output. This info might be useful in some cases.
     def getHardwareInfo(self):

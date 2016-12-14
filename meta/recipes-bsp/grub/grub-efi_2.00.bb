@@ -13,7 +13,7 @@ S = "${WORKDIR}/grub-${PV}"
 # Determine the target arch for the grub modules
 python __anonymous () {
     import re
-    target = d.getVar('TARGET_ARCH', True)
+    target = d.getVar('TARGET_ARCH')
     if target == "x86_64":
         grubtarget = 'x86_64'
         grubimage = "bootx64.efi"

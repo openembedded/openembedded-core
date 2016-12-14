@@ -11,7 +11,7 @@ PROVIDES_append_class-native = " texinfo-replacement-native"
 
 def compress_pkg(d):
     if bb.data.inherits_class('compress_doc', d):
-         compress = d.getVar("DOC_COMPRESS", True)
+         compress = d.getVar("DOC_COMPRESS")
          if compress == "gz":
              return "gzip"
          elif compress == "bz2":

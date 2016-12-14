@@ -168,6 +168,6 @@ python gobject_introspection_preconfigure () {
 
 SSTATEPOSTINSTFUNCS += "gobject_introspection_postinst"
 python gobject_introspection_postinst () {
-    if d.getVar("BB_CURRENTTASK", True).startswith("populate_sysroot"):
+    if d.getVar("BB_CURRENTTASK").startswith("populate_sysroot"):
         oe.utils.write_ld_so_conf(d)
 }

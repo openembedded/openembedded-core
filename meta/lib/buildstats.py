@@ -8,8 +8,8 @@ import bb.event
 
 class SystemStats:
     def __init__(self, d):
-        bn = d.getVar('BUILDNAME', True)
-        bsdir = os.path.join(d.getVar('BUILDSTATS_BASE', True), bn)
+        bn = d.getVar('BUILDNAME')
+        bsdir = os.path.join(d.getVar('BUILDSTATS_BASE'), bn)
         bb.utils.mkdirhier(bsdir)
 
         self.proc_files = []

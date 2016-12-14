@@ -130,8 +130,8 @@ def testimage_main(d):
     from oeqa.targetcontrol import get_target_controller
     from oeqa.utils.dump import get_host_dumper
 
-    pn = d.getVar("PN", True)
-    bb.utils.mkdirhier(d.getVar("TEST_LOG_DIR", True))
+    pn = d.getVar("PN")
+    bb.utils.mkdirhier(d.getVar("TEST_LOG_DIR"))
     test_create_extract_dirs(d)
 
     # we need the host dumper in test context
@@ -176,10 +176,10 @@ def testimage_main(d):
         target.stop()
 
 def test_create_extract_dirs(d):
-    install_path = d.getVar("TEST_INSTALL_TMP_DIR", True)
-    package_path = d.getVar("TEST_PACKAGED_DIR", True)
-    extracted_path = d.getVar("TEST_EXTRACTED_DIR", True)
-    bb.utils.mkdirhier(d.getVar("TEST_LOG_DIR", True))
+    install_path = d.getVar("TEST_INSTALL_TMP_DIR")
+    package_path = d.getVar("TEST_PACKAGED_DIR")
+    extracted_path = d.getVar("TEST_EXTRACTED_DIR")
+    bb.utils.mkdirhier(d.getVar("TEST_LOG_DIR"))
     bb.utils.remove(package_path, recurse=True)
     bb.utils.mkdirhier(install_path)
     bb.utils.mkdirhier(package_path)
