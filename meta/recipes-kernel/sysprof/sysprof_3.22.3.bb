@@ -13,8 +13,8 @@ SRC_URI += " \
            file://0001-Disable-check-for-polkit-for-UI.patch \
            file://0001-Avoid-building-docs.patch \
           "
-SRC_URI[archive.md5sum] = "2634bf35f5592e5e4520ccaba87e909e"
-SRC_URI[archive.sha256sum] = "d57fb19a3e5d4ad37d5fb554dc93d9a03f332779c3bffd9c2aa8f176e85269d7"
+SRC_URI[archive.sha256sum] = "e6dca325b3014440f457a92db18ffe342a35888db3f0756694a99b9652796367"
+SRC_URI[archive.md5sum] = "9514065dc752105240e5567c13708af4"
 
 AUTOTOOLS_AUXDIR = "${S}/build-aux"
 
