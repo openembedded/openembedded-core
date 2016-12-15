@@ -746,6 +746,8 @@ def modify(args, config, basepath, workspace):
             if not tinfoil:
                 # Error already shown
                 return 1
+            # We need to re-parse because tinfoil may have been re-initialised
+            rd = parse_recipe(config, tinfoil, args.recipename, True)
 
         recipefile = rd.getVar('FILE')
         appendfile = recipe_to_append(recipefile, config, args.wildcard)
