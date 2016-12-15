@@ -13,7 +13,7 @@ SRC_URI += "file://acinclude.m4 \
 
 SRC_URI_append_class-native = " file://e2fsprogs-fix-missing-check-for-permission-denied.patch"
 
-SRCREV = "d6adf070b0e85f209c0d7f310188b134b5cb7180"
+SRCREV = "4e52870eeb08ed7532bf4fd3d5cb1538f714bdc8"
 UPSTREAM_CHECK_GITTAGREGEX = "v(?P<pver>\d+\.\d+(\.\d+)*)$"
 
 EXTRA_OECONF += "--libdir=${base_libdir} --sbindir=${base_sbindir} \
