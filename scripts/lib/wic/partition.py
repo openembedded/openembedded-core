@@ -28,7 +28,7 @@ import os
 import tempfile
 
 from wic.utils.oe.misc import msger, parse_sourceparams
-from wic.utils.oe.misc import exec_cmd, exec_native_cmd
+from wic.utils.oe.misc import exec_cmd, exec_native_cmd, get_bitbake_var
 from wic.plugin import pluginmgr
 
 partition_methods = {
@@ -193,6 +193,17 @@ class Partition():
         if not self.fstype:
             msger.error("File system for partition %s not specified in kickstart, " \
                         "use --fstype option" % (self.mountpoint))
+
+        # Get rootfs size from bitbake variable if it's not set in .ks file
+        if not self.size:
+            # Bitbake variable ROOTFS_SIZE is calculated in
+            # Image._get_rootfs_size method from meta/lib/oe/image.py
+            # using IMAGE_ROOTFS_SIZE, IMAGE_ROOTFS_ALIGNMENT,
+            # IMAGE_OVERHEAD_FACTOR and IMAGE_ROOTFS_EXTRA_SPACE
+            rsize_bb = get_bitbake_var('ROOTFS_SIZE')
+            if rsize_bb:
+                msger.warning('overhead-factor was specified, but size was not, so bitbake variables will be used for the size. In this case both IMAGE_OVERHEAD_FACTOR and --overhead-factor will be applied')
+                self.size = int(round(float(rsize_bb)))
 
         for prefix in ("ext", "btrfs", "vfat", "squashfs"):
             if self.fstype.startswith(prefix):
