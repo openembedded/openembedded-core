@@ -13,8 +13,8 @@ DEPENDS = "glib-2.0 pango gtk+3 menu-cache intltool-native libexif libfm-extra g
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/pcmanfm/libfm-${PV}.tar.xz"
 
-SRC_URI[md5sum] = "74997d75e7e87dc73398746fd373bf52"
-SRC_URI[sha256sum] = "7804f6f28cb3d1bc8ffb3151ab7ff0c063b27c5f9b06c682eb903e01cf25502f"
+SRC_URI[md5sum] = "a1ba9ae5e920f38b647dd511edd6c807"
+SRC_URI[sha256sum] = "c706bb1020cf5f2d6f5a9226f692ce1985947134dcf2bde64278bd0420779b5a"
 
 inherit autotools pkgconfig gtk-doc distro_features_check
 ANY_OF_DISTRO_FEATURES = "${GTK3DISTROFEATURES}"
