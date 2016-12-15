@@ -224,7 +224,7 @@ PACKAGES =+ "${PN}-ralink-license ${PN}-ralink \
              ${PN}-marvell-license ${PN}-sd8686 ${PN}-sd8688 ${PN}-sd8787 ${PN}-sd8797 \
              ${PN}-ti-connectivity-license ${PN}-wl12xx ${PN}-wl18xx \
              ${PN}-vt6656-license ${PN}-vt6656 \
-             ${PN}-rtl-license ${PN}-rtl8192cu ${PN}-rtl8192ce ${PN}-rtl8192su \
+             ${PN}-rtl-license ${PN}-rtl8188 ${PN}-rtl8192cu ${PN}-rtl8192ce ${PN}-rtl8192su ${PN}-rtl8723 ${PN}-rtl8821 \
              ${PN}-broadcom-license ${PN}-bcm4329 ${PN}-bcm4330 ${PN}-bcm4334 ${PN}-bcm43340 ${PN}-bcm4339 ${PN}-bcm43430 ${PN}-bcm4354 \
              ${PN}-atheros-license ${PN}-ar9170 ${PN}-carl9170 ${PN}-ath6k ${PN}-ath9k \
              ${PN}-ar3k-license  ${PN}-ar3k  ${PN}-ath10k-license  ${PN}-ath10k  \
@@ -344,13 +344,19 @@ RDEPENDS_${PN}-sd8787 += "${PN}-marvell-license"
 RDEPENDS_${PN}-sd8797 += "${PN}-marvell-license"
 
 # For rtl
+LICENSE_${PN}-rtl8188 = "Firmware-rtlwifi_firmware"
 LICENSE_${PN}-rtl8192cu = "Firmware-rtlwifi_firmware"
 LICENSE_${PN}-rtl8192ce = "Firmware-rtlwifi_firmware"
 LICENSE_${PN}-rtl8192su = "Firmware-rtlwifi_firmware"
+LICENSE_${PN}-rtl8723 = "Firmware-rtlwifi_firmware"
+LICENSE_${PN}-rtl8821 = "Firmware-rtlwifi_firmware"
 LICENSE_${PN}-rtl-license = "Firmware-rtlwifi_firmware"
 
 FILES_${PN}-rtl-license = " \
   /lib/firmware/LICENCE.rtlwifi_firmware.txt \
+"
+FILES_${PN}-rtl8188 = " \
+  /lib/firmware/rtlwifi/rtl8188*.bin \
 "
 FILES_${PN}-rtl8192cu = " \
   /lib/firmware/rtlwifi/rtl8192cufw*.bin \
@@ -361,10 +367,19 @@ FILES_${PN}-rtl8192ce = " \
 FILES_${PN}-rtl8192su = " \
   /lib/firmware/rtlwifi/rtl8712u.bin \
 "
+FILES_${PN}-rtl8723 = " \
+  /lib/firmware/rtlwifi/rtl8723*.bin \
+"
+FILES_${PN}-rtl8821 = " \
+  /lib/firmware/rtlwifi/rtl8821*.bin \
+"
 
+RDEPENDS_${PN}-rtl8188 += "${PN}-rtl-license"
 RDEPENDS_${PN}-rtl8192ce += "${PN}-rtl-license"
 RDEPENDS_${PN}-rtl8192cu += "${PN}-rtl-license"
 RDEPENDS_${PN}-rtl8192su = "${PN}-rtl-license"
+RDEPENDS_${PN}-rtl8723 += "${PN}-rtl-license"
+RDEPENDS_${PN}-rtl8821 += "${PN}-rtl-license"
 
 # For ti-connectivity
 LICENSE_${PN}-wl12xx = "Firmware-ti-connectivity"
