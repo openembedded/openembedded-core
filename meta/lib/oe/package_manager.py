@@ -164,7 +164,11 @@ class RpmIndexer(Indexer):
 
         archs = archs.union(set(sdk_pkg_archs))
 
-        rpm_createrepo = bb.utils.which(os.getenv('PATH'), "createrepo")
+        rpm_createrepo = bb.utils.which(os.environ['PATH'], "createrepo")
+        if not rpm_createrepo:
+            bb.error("Cannot rebuild index as createrepo was not found in %s" % os.environ['PATH'])
+            return
+
         if self.d.getVar('PACKAGE_FEED_SIGN') == '1':
             signer = get_signer(self.d, self.d.getVar('PACKAGE_FEED_GPG_BACKEND'))
         else:
