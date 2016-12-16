@@ -19,8 +19,8 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/pcmanfm/pcmanfm-${PV}.tar.xz \
 	   file://emblem-symbolic-link.png \
 	   file://no-desktop.patch"
 
-SRC_URI[md5sum] = "19764c2f59653724c8713e0064fa6829"
-SRC_URI[sha256sum] = "38cdbb5f01d24483b41b8e6846e4aa66a5751bb3982a8618899e88a853dbe313"
+SRC_URI[md5sum] = "b4d1f8ce08d87e4f27805a246fc51ac2"
+SRC_URI[sha256sum] = "0c86cac028b705ff314c7464d814c2cf7ff604c17491c20aa204b1ef1a80ad67"
 
 UPSTREAM_CHECK_URI = "http://sourceforge.net/projects/pcmanfm/files/PCManFM%20%2B%20Libfm%20%28tarball%20release%29/PCManFM/"
 
