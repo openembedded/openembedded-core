@@ -1,7 +1,7 @@
 require ruby.inc
 
-SRC_URI[md5sum] = "0d896c2e7fd54f722b399f407e48a4c6"
-SRC_URI[sha256sum] = "b87c738cb2032bf4920fef8e3864dc5cf8eae9d89d8d523ce0236945c5797dcd"
+SRC_URI[md5sum] = "e485f3a55649eb24a1e2e1a40bc120df"
+SRC_URI[sha256sum] = "241408c8c555b258846368830a06146e4849a1d58dcaf6b14a3b6a73058115b7"
 
 # it's unknown to configure script, but then passed to extconf.rb
 # maybe it's not really needed as we're hardcoding the result with
