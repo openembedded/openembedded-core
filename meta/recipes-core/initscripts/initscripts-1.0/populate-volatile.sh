@@ -36,7 +36,7 @@ create_file() {
 		[ "${VERBOSE}" != "no" ] && echo "Target already exists. Skipping."
 	} || {
 		if [ -z "$ROOT_DIR" ]; then
-			eval $EXEC &
+			eval $EXEC
 		else
 			# Creating some files at rootfs time may fail and should fail,
 			# but these failures should not be logged to make sure the do_rootfs
@@ -86,7 +86,7 @@ link_file() {
 	test "$VOLATILE_ENABLE_CACHE" = yes && echo "	$EXEC" >> /etc/volatile.cache.build
 
 	if [ -z "$ROOT_DIR" ]; then
-		eval $EXEC &
+		eval $EXEC
 	else
 		# For the same reason with create_file(), failures should
 		# not be logged.
@@ -187,7 +187,7 @@ apply_cfgfile() {
 
 		case "${TTYPE}" in
 			"f")  [ "${VERBOSE}" != "no" ] && echo "Creating file -${TNAME}-."
-				create_file "${TNAME}" &
+				create_file "${TNAME}"
 				;;
 			"d")  [ "${VERBOSE}" != "no" ] && echo "Creating directory -${TNAME}-."
 				mk_dir "${TNAME}"
