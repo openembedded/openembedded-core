@@ -1342,11 +1342,14 @@ python emit_pkgdata() {
         pkgdestpkg = os.path.join(pkgdest, pkg)
         files = {}
         total_size = 0
+        seen = set()
         for f in pkgfiles[pkg]:
             relpth = os.path.relpath(f, pkgdestpkg)
             fstat = os.lstat(f)
-            total_size += fstat.st_size
             files[os.sep + relpth] = fstat.st_size
+            if fstat.st_ino not in seen:
+                seen.add(fstat.st_ino)
+                total_size += fstat.st_size
         d.setVar('FILES_INFO', json.dumps(files))
 
         subdata_file = pkgdatadir + "/runtime/%s" % pkg
