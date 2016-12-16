@@ -174,6 +174,8 @@ def package_qa_get_machine_dict(d):
             "linux-gnun32" :       {
                         "mips64":       ( 8,     0,    0,          False,         32),
                         "mips64el":     ( 8,     0,    0,          True,          32),
+                        "mipsisa64r6":  ( 8,     0,    0,          False,         32),
+                        "mipsisa64r6el":( 8,     0,    0,          True,          32),
                       },
         }
 

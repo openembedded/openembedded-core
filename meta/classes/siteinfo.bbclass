@@ -89,6 +89,8 @@ def siteinfo_data(d):
         "mips64el-linux-musl": "mips64el-linux",
         "mips64-linux-gnun32": "mips-linux bit-32",
         "mips64el-linux-gnun32": "mipsel-linux bit-32",
+        "mipsisa64r6-linux-gnun32": "mipsisa32r6-linux bit-32",
+        "mipsisa64r6el-linux-gnun32": "mipsisa32r6el-linux bit-32",
         "powerpc-linux": "powerpc32-linux",
         "powerpc-linux-musl": "powerpc-linux powerpc32-linux",
         "powerpc-linux-uclibc": "powerpc-linux powerpc32-linux",
