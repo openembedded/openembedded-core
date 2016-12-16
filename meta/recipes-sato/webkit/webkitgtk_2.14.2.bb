@@ -20,6 +20,7 @@ SRC_URI = "http://www.webkitgtk.org/releases/${BPN}-${PV}.tar.xz \
            file://0001-Tweak-gtkdoc-settings-so-that-gtkdoc-generation-work.patch \
            file://0001-WebKitMacros-Append-to-I-and-not-to-isystem.patch \
            file://detect_atomics.patch \
+           file://x32_support.patch \
            "
 
 SRC_URI[md5sum] = "2fe3cadbc546d93ca68a13756c2be015"
@@ -84,6 +85,12 @@ EXTRA_OECMAKE_append_toolchain-clang = " -DUSE_LD_GOLD=OFF "
 
 # JIT not supported on MIPS either
 EXTRA_OECMAKE_append_mipsarch = " -DENABLE_JIT=OFF "
+
+# JIT not supported on X32
+# An attempt was made to upstream JIT support for x32 in
+# https://bugs.webkit.org/show_bug.cgi?id=100450, but this was closed as
+# unresolved due to limited X32 adoption.
+EXTRA_OECMAKE_append_linux-gnux32 = " -DENABLE_JIT=OFF"
 
 SECURITY_CFLAGS_remove_aarch64 = "-fpie"
 SECURITY_CFLAGS_append_aarch64 = " -fPIE"
