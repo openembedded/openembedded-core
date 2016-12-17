@@ -71,45 +71,6 @@ class Wic(oeSelfTest):
         """Test wic list --help"""
         self.assertEqual(0, runCmd('wic list --help').status)
 
-    @testcase(1211)
-    def test_build_image_name(self):
-        """Test wic create directdisk --image-name core-image-minimal"""
-        cmd = "wic create directdisk --image-name core-image-minimal"
-        self.assertEqual(0, runCmd(cmd).status)
-        self.assertEqual(1, len(glob(self.resultdir + "directdisk-*.direct")))
-
-    @testcase(1212)
-    def test_build_artifacts(self):
-        """Test wic create directdisk providing all artifacts."""
-        bbvars = dict((var.lower(), get_bb_var(var, 'core-image-minimal'))
-                      for var in ('STAGING_DATADIR', 'DEPLOY_DIR_IMAGE',
-                                  'STAGING_DIR_NATIVE', 'IMAGE_ROOTFS'))
-        status = runCmd("wic create directdisk "
-                        "-b %(staging_datadir)s "
-                        "-k %(deploy_dir_image)s "
-                        "-n %(staging_dir_native)s "
-                        "-r %(image_rootfs)s" % bbvars).status
-        self.assertEqual(0, status)
-        self.assertEqual(1, len(glob(self.resultdir + "directdisk-*.direct")))
-
-    @testcase(1157)
-    def test_gpt_image(self):
-        """Test creation of core-image-minimal with gpt table and UUID boot"""
-        cmd = "wic create directdisk-gpt --image-name core-image-minimal"
-        self.assertEqual(0, runCmd(cmd).status)
-        self.assertEqual(1, len(glob(self.resultdir + "directdisk-*.direct")))
-
-    @testcase(1213)
-    def test_unsupported_subcommand(self):
-        """Test unsupported subcommand"""
-        self.assertEqual(1, runCmd('wic unsupported',
-                                   ignore_status=True).status)
-
-    @testcase(1214)
-    def test_no_command(self):
-        """Test wic without command"""
-        self.assertEqual(1, runCmd('wic', ignore_status=True).status)
-
     @testcase(1215)
     def test_help_overview(self):
         """Test wic help overview"""
@@ -124,6 +85,96 @@ class Wic(oeSelfTest):
     def test_help_kickstart(self):
         """Test wic help kickstart"""
         self.assertEqual(0, runCmd('wic help kickstart').status)
+
+    @testcase(1213)
+    def test_unsupported_subcommand(self):
+        """Test unsupported subcommand"""
+        self.assertEqual(1, runCmd('wic unsupported',
+                                   ignore_status=True).status)
+
+    @testcase(1214)
+    def test_no_command(self):
+        """Test wic without command"""
+        self.assertEqual(1, runCmd('wic', ignore_status=True).status)
+
+    @testcase(1211)
+    def test_build_image_name(self):
+        """Test wic create directdisk --image-name core-image-minimal"""
+        cmd = "wic create directdisk --image-name core-image-minimal"
+        self.assertEqual(0, runCmd(cmd).status)
+        self.assertEqual(1, len(glob(self.resultdir + "directdisk-*.direct")))
+
+    @testcase(1157)
+    def test_gpt_image(self):
+        """Test creation of core-image-minimal with gpt table and UUID boot"""
+        cmd = "wic create directdisk-gpt --image-name core-image-minimal"
+        self.assertEqual(0, runCmd(cmd).status)
+        self.assertEqual(1, len(glob(self.resultdir + "directdisk-*.direct")))
+
+    @testcase(1346)
+    def test_iso_image(self):
+        """Test creation of hybrid iso image with legacy and EFI boot"""
+        cmd = "wic create mkhybridiso --image-name core-image-minimal"
+        self.assertEqual(0, runCmd(cmd).status)
+        self.assertEqual(1, len(glob(self.resultdir + "HYBRID_ISO_IMG-*.direct")))
+        self.assertEqual(1, len(glob(self.resultdir + "HYBRID_ISO_IMG-*.iso")))
+
+    @testcase(1348)
+    def test_qemux86_directdisk(self):
+        """Test creation of qemux-86-directdisk image"""
+        cmd = "wic create qemux86-directdisk -e core-image-minimal"
+        self.assertEqual(0, runCmd(cmd).status)
+        self.assertEqual(1, len(glob(self.resultdir + "qemux86-directdisk-*direct")))
+
+    @testcase(1349)
+    def test_mkgummidisk(self):
+        """Test creation of mkgummidisk image"""
+        cmd = "wic create mkgummidisk --image-name core-image-minimal"
+        self.assertEqual(0, runCmd(cmd).status)
+        self.assertEqual(1, len(glob(self.resultdir + "mkgummidisk-*direct")))
+
+    @testcase(1350)
+    def test_mkefidisk(self):
+        """Test creation of mkefidisk image"""
+        cmd = "wic create mkefidisk -e core-image-minimal"
+        self.assertEqual(0, runCmd(cmd).status)
+        self.assertEqual(1, len(glob(self.resultdir + "mkefidisk-*direct")))
+
+    @testcase(1385)
+    def test_directdisk_bootloader_config(self):
+        """Test creation of directdisk-bootloader-config image"""
+        cmd = "wic create directdisk-bootloader-config -e core-image-minimal"
+        self.assertEqual(0, runCmd(cmd).status)
+        self.assertEqual(1, len(glob(self.resultdir + "directdisk-bootloader-config-*direct")))
+
+    @testcase(1560)
+    def test_systemd_bootdisk(self):
+        """Test creation of systemd-bootdisk image"""
+        cmd = "wic create systemd-bootdisk -e core-image-minimal"
+        self.assertEqual(0, runCmd(cmd).status)
+        self.assertEqual(1, len(glob(self.resultdir + "systemd-bootdisk-*direct")))
+
+    @testcase(1561)
+    def test_sdimage_bootpart(self):
+        """Test creation of sdimage-bootpart image"""
+        cmd = "wic create sdimage-bootpart -e core-image-minimal"
+        self.write_config('IMAGE_BOOT_FILES = "bzImage"\n')
+        self.assertEqual(0, runCmd(cmd).status)
+        self.assertEqual(1, len(glob(self.resultdir + "sdimage-bootpart-*direct")))
+
+    @testcase(1212)
+    def test_build_artifacts(self):
+        """Test wic create directdisk providing all artifacts."""
+        bbvars = dict((var.lower(), get_bb_var(var, 'core-image-minimal'))
+                      for var in ('STAGING_DATADIR', 'DEPLOY_DIR_IMAGE',
+                                  'STAGING_DIR_NATIVE', 'IMAGE_ROOTFS'))
+        status = runCmd("wic create directdisk "
+                        "-b %(staging_datadir)s "
+                        "-k %(deploy_dir_image)s "
+                        "-n %(staging_dir_native)s "
+                        "-r %(image_rootfs)s" % bbvars).status
+        self.assertEqual(0, status)
+        self.assertEqual(1, len(glob(self.resultdir + "directdisk-*.direct")))
 
     @testcase(1264)
     def test_compress_gzip(self):
@@ -183,13 +234,14 @@ class Wic(oeSelfTest):
         self.assertEqual(0, status)
         self.assertEqual(1, len(glob(self.resultdir + "%(wks)s-*.direct" % bbvars)))
 
-    @testcase(1346)
-    def test_iso_image(self):
-        """Test creation of hybrid iso image with legacy and EFI boot"""
-        cmd = "wic create mkhybridiso --image-name core-image-minimal"
-        self.assertEqual(0, runCmd(cmd).status)
-        self.assertEqual(1, len(glob(self.resultdir + "HYBRID_ISO_IMG-*.direct")))
-        self.assertEqual(1, len(glob(self.resultdir + "HYBRID_ISO_IMG-*.iso")))
+    @testcase(1496)
+    def test_bmap(self):
+        """Test generation of .bmap file"""
+        cmd = "wic create directdisk -e core-image-minimal --bmap"
+        status = runCmd(cmd).status
+        self.assertEqual(0, status)
+        self.assertEqual(1, len(glob(self.resultdir + "directdisk-*direct")))
+        self.assertEqual(1, len(glob(self.resultdir + "directdisk-*direct.bmap")))
 
     @testcase(1347)
     def test_image_env(self):
@@ -230,34 +282,6 @@ class Wic(oeSelfTest):
             self.assertTrue(os.path.islink(path))
             self.assertTrue(os.path.isfile(os.path.realpath(path)))
 
-    @testcase(1348)
-    def test_qemux86_directdisk(self):
-        """Test creation of qemux-86-directdisk image"""
-        cmd = "wic create qemux86-directdisk -e core-image-minimal"
-        self.assertEqual(0, runCmd(cmd).status)
-        self.assertEqual(1, len(glob(self.resultdir + "qemux86-directdisk-*direct")))
-
-    @testcase(1349)
-    def test_mkgummidisk(self):
-        """Test creation of mkgummidisk image"""
-        cmd = "wic create mkgummidisk --image-name core-image-minimal"
-        self.assertEqual(0, runCmd(cmd).status)
-        self.assertEqual(1, len(glob(self.resultdir + "mkgummidisk-*direct")))
-
-    @testcase(1350)
-    def test_mkefidisk(self):
-        """Test creation of mkefidisk image"""
-        cmd = "wic create mkefidisk -e core-image-minimal"
-        self.assertEqual(0, runCmd(cmd).status)
-        self.assertEqual(1, len(glob(self.resultdir + "mkefidisk-*direct")))
-
-    @testcase(1385)
-    def test_directdisk_bootloader_config(self):
-        """Test creation of directdisk-bootloader-config image"""
-        cmd = "wic create directdisk-bootloader-config -e core-image-minimal"
-        self.assertEqual(0, runCmd(cmd).status)
-        self.assertEqual(1, len(glob(self.resultdir + "directdisk-bootloader-config-*direct")))
-
     @testcase(1422)
     def test_qemu(self):
         """Test wic-image-minimal under qemu"""
@@ -268,27 +292,3 @@ class Wic(oeSelfTest):
             status, output = qemu.run_serial(cmd)
             self.assertEqual(1, status, 'Failed to run command "%s": %s' % (cmd, output))
             self.assertEqual(output, '/dev/root /\r\n/dev/vda3 /mnt')
-
-    @testcase(1496)
-    def test_bmap(self):
-        """Test generation of .bmap file"""
-        cmd = "wic create directdisk -e core-image-minimal --bmap"
-        status = runCmd(cmd).status
-        self.assertEqual(0, status)
-        self.assertEqual(1, len(glob(self.resultdir + "directdisk-*direct")))
-        self.assertEqual(1, len(glob(self.resultdir + "directdisk-*direct.bmap")))
-
-    @testcase(1560)
-    def test_systemd_bootdisk(self):
-        """Test creation of systemd-bootdisk image"""
-        cmd = "wic create systemd-bootdisk -e core-image-minimal"
-        self.assertEqual(0, runCmd(cmd).status)
-        self.assertEqual(1, len(glob(self.resultdir + "systemd-bootdisk-*direct")))
-
-    @testcase(1561)
-    def test_sdimage_bootpart(self):
-        """Test creation of sdimage-bootpart image"""
-        cmd = "wic create sdimage-bootpart -e core-image-minimal"
-        self.write_config('IMAGE_BOOT_FILES = "bzImage"\n')
-        self.assertEqual(0, runCmd(cmd).status)
-        self.assertEqual(1, len(glob(self.resultdir + "sdimage-bootpart-*direct")))
