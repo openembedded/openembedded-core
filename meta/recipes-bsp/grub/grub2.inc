@@ -35,6 +35,7 @@ SRC_URI = "ftp://ftp.gnu.org/gnu/grub/grub-${PV}.tar.gz \
            file://0001-Enforce-no-pie-if-the-compiler-supports-it.patch \
            file://0001-grub-core-kern-efi-mm.c-grub_efi_finish_boot_service.patch \
            file://0002-grub-core-kern-efi-mm.c-grub_efi_get_memory_map-Neve.patch \
+           file://0001-build-Use-AC_HEADER_MAJOR-to-find-device-macros.patch \
             "
 
 DEPENDS = "flex-native bison-native autogen-native"
