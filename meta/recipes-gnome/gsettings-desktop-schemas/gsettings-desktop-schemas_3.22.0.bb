@@ -9,5 +9,5 @@ DEPENDS = "glib-2.0 intltool-native"
 
 inherit gnomebase gsettings gettext gobject-introspection upstream-version-is-even
 
-SRC_URI[archive.md5sum] = "c5d87ea480aa9bf66b134ddb5b8ea0f8"
-SRC_URI[archive.sha256sum] = "55a41b533c0ab955e0a36a84d73829451c88b027d8d719955d8f695c35c6d9c1"
+SRC_URI[archive.md5sum] = "5b9056ab6eff42a0117f2912edff5f20"
+SRC_URI[archive.sha256sum] = "0f06c7ba34c3a99e4d58b10889496133c9aaad6698ea2d8405d481c7f1a7eae1"
