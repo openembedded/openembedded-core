@@ -290,7 +290,7 @@ class DirectImageCreator(BaseImageCreator):
                          self.bootimg_dir, self.kernel_dir, self.native_sysroot)
 
 
-            self.__image.add_partition(int(part.size),
+            self.__image.add_partition(part.disk_size,
                                        part.disk,
                                        part.mountpoint,
                                        part.source_file,

@@ -646,6 +646,12 @@ DESCRIPTION
                  not specified, the size is in MB.
                  You do not need this option if you use --source.
 
+         --fixed-size: Exact partition size. Value format is the same
+                       as for --size option. This option cannot be
+                       specified along with --size. If partition data
+                       is larger than --fixed-size and error will be
+                       raised when assembling disk image.
+
          --source: This option is a wic-specific option that names the
                    source of the data that will populate the
                    partition.  The most common value for this option
@@ -719,13 +725,15 @@ DESCRIPTION
                         space after the space filled by the content
                         of the partition. The final size can go
                         beyond the size specified by --size.
-                        By default, 10MB.
+                        By default, 10MB. This option cannot be used
+                        with --fixed-size option.
 
          --overhead-factor: This option is specific to wic. The
                             size of the partition is multiplied by
                             this factor. It has to be greater than or
-                            equal to 1.
-                            The default value is 1.3.
+                            equal to 1. The default value is 1.3.
+                            This option cannot be used with --fixed-size
+                            option.
 
          --part-type: This option is specific to wic. It specifies partition
                       type GUID for GPT partitions.

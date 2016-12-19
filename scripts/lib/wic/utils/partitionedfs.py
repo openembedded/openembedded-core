@@ -210,7 +210,7 @@ class Image():
             msger.debug("Assigned %s to %s%d, sectors range %d-%d size %d "
                         "sectors (%d bytes)." \
                             % (part['mountpoint'], part['disk_name'], part['num'],
-                               part['start'], part['start'] + part['size'] - 1,
+                               part['start'], disk['offset'] - 1,
                                part['size'], part['size'] * self.sector_size))
 
         # Once all the partitions have been layed out, we can calculate the

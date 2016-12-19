@@ -54,6 +54,7 @@ class Partition():
         self.part_type = args.part_type
         self.rootfs_dir = args.rootfs_dir
         self.size = args.size
+        self.fixed_size = args.fixed_size
         self.source = args.source
         self.sourceparams = args.sourceparams
         self.system_id = args.system_id
@@ -87,6 +88,41 @@ class Partition():
         else:
             return 0
 
+    def get_rootfs_size(self, actual_rootfs_size=0):
+        """
+        Calculate the required size of rootfs taking into consideration
+        --size/--fixed-size flags as well as overhead and extra space, as
+        specified in kickstart file. Raises an error if the
+        `actual_rootfs_size` is larger than fixed-size rootfs.
+
+        """
+        if self.fixed_size:
+            rootfs_size = self.fixed_size
+            if actual_rootfs_size > rootfs_size:
+                msger.error("Actual rootfs size (%d kB) is larger than allowed size %d kB" \
+                            %(actual_rootfs_size, rootfs_size))
+        else:
+            extra_blocks = self.get_extra_block_count(actual_rootfs_size)
+            if extra_blocks < self.extra_space:
+                extra_blocks = self.extra_space
+
+            rootfs_size = actual_rootfs_size + extra_blocks
+            rootfs_size *= self.overhead_factor
+
+            msger.debug("Added %d extra blocks to %s to get to %d total blocks" % \
+                        (extra_blocks, self.mountpoint, rootfs_size))
+
+        return rootfs_size
+
+    @property
+    def disk_size(self):
+        """
+        Obtain on-disk size of partition taking into consideration
+        --size/--fixed-size options.
+
+        """
+        return self.fixed_size if self.fixed_size else self.size
+
     def prepare(self, creator, cr_workdir, oe_builddir, rootfs_dir,
                 bootimg_dir, kernel_dir, native_sysroot):
         """
@@ -97,9 +133,9 @@ class Partition():
             self.sourceparams_dict = parse_sourceparams(self.sourceparams)
 
         if not self.source:
-            if not self.size:
-                msger.error("The %s partition has a size of zero.  Please "
-                            "specify a non-zero --size for that partition." % \
+            if not self.size and not self.fixed_size:
+                msger.error("The %s partition has a size of zero. Please "
+                            "specify a non-zero --size/--fixed-size for that partition." % \
                             self.mountpoint)
             if self.fstype and self.fstype == "swap":
                 self.prepare_swap_partition(cr_workdir, oe_builddir,
@@ -146,12 +182,19 @@ class Partition():
                                                      oe_builddir,
                                                      bootimg_dir, kernel_dir, rootfs_dir,
                                                      native_sysroot)
+
         # further processing required Partition.size to be an integer, make
         # sure that it is one
         if type(self.size) is not int:
             msger.error("Partition %s internal size is not an integer. " \
                           "This a bug in source plugin %s and needs to be fixed." \
                           % (self.mountpoint, self.source))
+
+        if self.fixed_size and self.size > self.fixed_size:
+            msger.error("File system image of partition %s is larger (%d kB) than its"\
+                        "allowed size %d kB" % (self.mountpoint,
+                                                self.size, self.fixed_size))
+
 
     def prepare_rootfs_from_fs_image(self, cr_workdir, oe_builddir,
                                      rootfs_dir):
@@ -228,15 +271,7 @@ class Partition():
         out = exec_cmd(du_cmd)
         actual_rootfs_size = int(out.split()[0])
 
-        extra_blocks = self.get_extra_block_count(actual_rootfs_size)
-        if extra_blocks < self.extra_space:
-            extra_blocks = self.extra_space
-
-        rootfs_size = actual_rootfs_size + extra_blocks
-        rootfs_size *= self.overhead_factor
-
-        msger.debug("Added %d extra blocks to %s to get to %d total blocks" % \
-                    (extra_blocks, self.mountpoint, rootfs_size))
+        rootfs_size = self.get_rootfs_size(actual_rootfs_size)
 
         with open(rootfs, 'w') as sparse:
             os.ftruncate(sparse.fileno(), rootfs_size * 1024)
@@ -262,15 +297,7 @@ class Partition():
         out = exec_cmd(du_cmd)
         actual_rootfs_size = int(out.split()[0])
 
-        extra_blocks = self.get_extra_block_count(actual_rootfs_size)
-        if extra_blocks < self.extra_space:
-            extra_blocks = self.extra_space
-
-        rootfs_size = actual_rootfs_size + extra_blocks
-        rootfs_size *= self.overhead_factor
-
-        msger.debug("Added %d extra blocks to %s to get to %d total blocks" % \
-                    (extra_blocks, self.mountpoint, rootfs_size))
+        rootfs_size = self.get_rootfs_size(actual_rootfs_size)
 
         with open(rootfs, 'w') as sparse:
             os.ftruncate(sparse.fileno(), rootfs_size * 1024)
@@ -292,20 +319,13 @@ class Partition():
         out = exec_cmd(du_cmd)
         blocks = int(out.split()[0])
 
-        extra_blocks = self.get_extra_block_count(blocks)
-        if extra_blocks < self.extra_space:
-            extra_blocks = self.extra_space
-
-        blocks += extra_blocks
-
-        msger.debug("Added %d extra blocks to %s to get to %d total blocks" % \
-                    (extra_blocks, self.mountpoint, blocks))
+        rootfs_size = self.get_rootfs_size(blocks)
 
         label_str = "-n boot"
         if self.label:
             label_str = "-n %s" % self.label
 
-        dosfs_cmd = "mkdosfs %s -S 512 -C %s %d" % (label_str, rootfs, blocks)
+        dosfs_cmd = "mkdosfs %s -S 512 -C %s %d" % (label_str, rootfs, rootfs_size)
         exec_native_cmd(dosfs_cmd, native_sysroot)
 
         mcopy_cmd = "mcopy -i %s -s %s/* ::/" % (rootfs, rootfs_dir)
@@ -328,8 +348,9 @@ class Partition():
         """
         Prepare an empty ext2/3/4 partition.
         """
+        size = self.disk_size
         with open(rootfs, 'w') as sparse:
-            os.ftruncate(sparse.fileno(), self.size * 1024)
+            os.ftruncate(sparse.fileno(), size * 1024)
 
         extra_imagecmd = "-i 8192"
 
@@ -346,8 +367,9 @@ class Partition():
         """
         Prepare an empty btrfs partition.
         """
+        size = self.disk_size
         with open(rootfs, 'w') as sparse:
-            os.ftruncate(sparse.fileno(), self.size * 1024)
+            os.ftruncate(sparse.fileno(), size * 1024)
 
         label_str = ""
         if self.label:
@@ -362,7 +384,7 @@ class Partition():
         """
         Prepare an empty vfat partition.
         """
-        blocks = self.size
+        blocks = self.disk_size
 
         label_str = "-n boot"
         if self.label:
