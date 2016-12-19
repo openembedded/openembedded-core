@@ -37,6 +37,7 @@ EXTRA_OECONF = " \
     --enable-local-libopts \
     --enable-openssl-compatibility \
     --with-libpthread-prefix=${STAGING_DIR_HOST}${prefix} \
+    --without-libunistring-prefix \
 "
 
 LDFLAGS_append_libc-musl = " -largp"
