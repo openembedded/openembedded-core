@@ -97,8 +97,15 @@ class Result(object):
     pass
 
 
-def runCmd(command, ignore_status=False, timeout=None, assert_error=True, **options):
+def runCmd(command, ignore_status=False, timeout=None, assert_error=True, native_sysroot=None, **options):
     result = Result()
+
+    if native_sysroot:
+        extra_paths = "%s/sbin:%s/usr/sbin:%s/usr/bin" % \
+                      (native_sysroot, native_sysroot, native_sysroot)
+        nenv = dict(options.get('env', os.environ))
+        nenv['PATH'] = extra_paths + ':' + nenv.get('PATH', '')
+        options['env'] = nenv
 
     cmd = Command(command, timeout=timeout, **options)
     cmd.run()
