@@ -1,9 +1,4 @@
-try:
-    # Python 2
-    import commands as cmdstatus
-except ImportError:
-    # Python 3
-    import subprocess as cmdstatus
+import subprocess
 
 def read_file(filename):
     try:
@@ -144,7 +139,7 @@ def packages_filter_out_system(d):
     return pkgs
 
 def getstatusoutput(cmd):
-    return cmdstatus.getstatusoutput(cmd)
+    return subprocess.getstatusoutput(cmd)
 
 
 def trim_version(version, num_parts=2):
