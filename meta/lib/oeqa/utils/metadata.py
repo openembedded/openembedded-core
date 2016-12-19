@@ -5,7 +5,6 @@
 # Functions to get metadata from the testing host used
 # for analytics of test results.
 
-from git import Repo, InvalidGitRepositoryError, NoSuchPathError
 from collections import OrderedDict
 from collections.abc import MutableMapping
 from xml.dom.minidom import parseString
@@ -46,6 +45,7 @@ def metadata_from_data_store(d):
 
 def get_layers(layers):
     """ Returns layer name, branch, and revision as OrderedDict. """
+    from git import Repo, InvalidGitRepositoryError, NoSuchPathError
 
     layer_dict = OrderedDict()
     for layer in layers.split():

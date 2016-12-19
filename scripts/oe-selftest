@@ -36,7 +36,6 @@ import re
 import fnmatch
 import collections
 import imp
-import git
 
 sys.path.insert(0, os.path.dirname(os.path.realpath(__file__)) + '/lib')
 import scriptpath
@@ -577,6 +576,7 @@ def main():
         log.info("Finished")
 
         if args.repository:
+            import git
             # Commit tests results to repository
             metadata = metadata_from_bb()
             git_dir = os.path.join(os.getcwd(), 'selftest')
