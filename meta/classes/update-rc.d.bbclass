@@ -35,6 +35,7 @@ fi
 }
 
 updatercd_postinst() {
+# Begin section update-rc.d
 if ${@use_updatercd(d)} && type update-rc.d >/dev/null 2>/dev/null; then
 	if [ -n "$D" ]; then
 		OPT="-r $D"
@@ -43,12 +44,15 @@ if ${@use_updatercd(d)} && type update-rc.d >/dev/null 2>/dev/null; then
 	fi
 	update-rc.d $OPT ${INITSCRIPT_NAME} ${INITSCRIPT_PARAMS}
 fi
+# End section update-rc.d
 }
 
 updatercd_prerm() {
+# Begin section update-rc.d
 if ${@use_updatercd(d)} && [ -z "$D" -a -x "${INIT_D_DIR}/${INITSCRIPT_NAME}" ]; then
 	${INIT_D_DIR}/${INITSCRIPT_NAME} stop || :
 fi
+# End section update-rc.d
 }
 
 updatercd_postrm() {
@@ -111,13 +115,25 @@ python populate_packages_updatercd () {
         postinst = d.getVar('pkg_postinst_%s' % pkg)
         if not postinst:
             postinst = '#!/bin/sh\n'
-        postinst += localdata.getVar('updatercd_postinst')
+        postinst = postinst.splitlines(True)
+        try:
+            index = postinst.index('# End section update-alternatives\n')
+            postinst.insert(index + 1, localdata.getVar('updatercd_postinst'))
+        except ValueError:
+            postinst.append(localdata.getVar('updatercd_postinst'))
+        postinst = ''.join(postinst)
         d.setVar('pkg_postinst_%s' % pkg, postinst)
 
         prerm = d.getVar('pkg_prerm_%s' % pkg)
         if not prerm:
             prerm = '#!/bin/sh\n'
-        prerm += localdata.getVar('updatercd_prerm')
+        prerm = prerm.splitlines(True)
+        try:
+            index = prerm.index('# Begin section update-alternatives\n')
+            prerm.insert(index, localdata.getVar('updatercd_prerm'))
+        except ValueError:
+            prerm.append(localdata.getVar('updatercd_prerm'))
+        prerm = ''.join(prerm)
         d.setVar('pkg_prerm_%s' % pkg, prerm)
 
         postrm = d.getVar('pkg_postrm_%s' % pkg)
