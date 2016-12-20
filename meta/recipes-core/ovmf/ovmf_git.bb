@@ -1,7 +1,14 @@
 DESCRIPTION = "OVMF - UEFI firmware for Qemu and KVM"
 HOMEPAGE = "http://sourceforge.net/apps/mediawiki/tianocore/index.php?title=OVMF"
 LICENSE = "BSD"
+LICENSE_class-target = "${@bb.utils.contains('PACKAGECONFIG', 'secureboot', 'BSD & OpenSSL', 'BSD', d)}"
 LIC_FILES_CHKSUM = "file://OvmfPkg/License.txt;md5=343dc88e82ff33d042074f62050c3496"
+
+# Enabling Secure Boot adds a dependency on OpenSSL and implies
+# compiling OVMF twice, so it is disabled by default. Distros
+# may change that default.
+PACKAGECONFIG ??= ""
+PACKAGECONFIG[secureboot] = ",,,"
 
 SRC_URI = "git://github.com/tianocore/edk2.git;branch=master \
 	file://0001-BaseTools-Force-tools-variables-to-host-toolchain.patch \
@@ -10,7 +17,13 @@ SRC_URI = "git://github.com/tianocore/edk2.git;branch=master \
 	file://0003-BaseTools-makefile-adjust-to-build-in-under-bitbake.patch \
         "
 
+SRC_URI_append_class-target = " \
+	${@bb.utils.contains('PACKAGECONFIG', 'secureboot', 'http://www.openssl.org/source/openssl-1.0.2j.tar.gz;name=openssl;subdir=${S}/CryptoPkg/Library/OpensslLib', '', d)} \
+"
+
 SRCREV="4575a602ca6072ee9d04150b38bfb143cbff8588"
+SRC_URI[openssl.md5sum] = "96322138f0b69e61b7212bc53d5e912b"
+SRC_URI[openssl.sha256sum] = "e7aff292be21c259c6af26469c7a9b3ba26e9abaaffd325e3dccc9785256c431"
 
 inherit deploy
 
@@ -31,6 +44,11 @@ BUILD_OPTIMIZATION="-pipe"
 
 # OVMF supports IA only, although it could conceivably support ARM someday.
 COMPATIBLE_HOST='(i.86|x86_64).*'
+
+# Additional build flags for OVMF with Secure Boot.
+# Fedora also uses "-D SMM_REQUIRE -D EXCLUDE_SHELL_FROM_FD".
+OVMF_SECURE_BOOT_EXTRA_FLAGS ??= ""
+OVMF_SECURE_BOOT_FLAGS = "-DSECURE_BOOT_ENABLE=TRUE ${OVMF_SECURE_BOOT_EXTRA_FLAGS}"
 
 do_patch_append_class-native() {
     bb.build.exec_func('do_fix_iasl', d)
@@ -112,10 +130,27 @@ do_compile_class-target() {
     bbnote FIXED_GCCVER is ${FIXED_GCCVER}
     build_dir="${S}/Build/Ovmf$OVMF_DIR_SUFFIX/RELEASE_${FIXED_GCCVER}"
 
+    bbnote "Building without Secure Boot."
+    rm -rf ${S}/Build/Ovmf$OVMF_DIR_SUFFIX
     ${S}/OvmfPkg/build.sh $PARALLEL_JOBS -a $OVMF_ARCH -b RELEASE -t ${FIXED_GCCVER}
     ln ${build_dir}/FV/OVMF.fd ${WORKDIR}/ovmf/ovmf.fd
     ln ${build_dir}/FV/OVMF_CODE.fd ${WORKDIR}/ovmf/ovmf.code.fd
     ln ${build_dir}/FV/OVMF_VARS.fd ${WORKDIR}/ovmf/ovmf.vars.fd
+
+    if ${@bb.utils.contains('PACKAGECONFIG', 'secureboot', 'true', 'false', d)}; then
+        # See CryptoPkg/Library/OpensslLib/Patch-HOWTO.txt and
+        # https://src.fedoraproject.org/cgit/rpms/edk2.git/tree/ for
+        # building with Secure Boot enabled.
+        bbnote "Building with Secure Boot."
+        rm -rf ${S}/Build/Ovmf$OVMF_DIR_SUFFIX
+        if ! [ -f ${S}/CryptoPkg/Library/OpensslLib/openssl-*/edk2-patch-applied ]; then
+            ( cd ${S}/CryptoPkg/Library/OpensslLib/openssl-* && patch -p1 <$(echo ../EDKII_openssl-*.patch) && touch edk2-patch-applied )
+        fi
+        ( cd ${S}/CryptoPkg/Library/OpensslLib/ && ./Install.sh )
+        ${S}/OvmfPkg/build.sh $PARALLEL_JOBS -a $OVMF_ARCH -b RELEASE -t ${FIXED_GCCVER} ${OVMF_SECURE_BOOT_FLAGS}
+        ln ${build_dir}/FV/OVMF.fd ${WORKDIR}/ovmf/ovmf.secboot.fd
+        ln ${build_dir}/FV/OVMF_CODE.fd ${WORKDIR}/ovmf/ovmf.secboot.code.fd
+    fi
 }
 
 do_install_class-native() {
@@ -135,6 +170,7 @@ do_deploy_class-target() {
         ovmf \
         ovmf.code \
         ovmf.vars \
+        ${@bb.utils.contains('PACKAGECONFIG', 'secureboot', 'ovmf.secboot ovmf.secboot.code', '', d)} \
         ; do
         qemu-img convert -f raw -O qcow2 ${WORKDIR}/ovmf/$i.fd ${DEPLOYDIR}/$i.qcow2
     done
