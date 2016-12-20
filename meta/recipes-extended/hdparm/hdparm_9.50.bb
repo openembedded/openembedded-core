@@ -20,12 +20,12 @@ FILES_wiper = "${bindir}/wiper.sh"
 
 RDEPENDS_wiper = "bash gawk stat"
 
-SRC_URI = "${SOURCEFORGE_MIRROR}/hdparm/${BP}.tar.gz "
+SRC_URI = "${SOURCEFORGE_MIRROR}/hdparm/${BP}.tar.gz"
 
-SRC_URI[md5sum] = "213efdbe7471fad3408198918e164354"
-SRC_URI[sha256sum] = "ce97b4a71cb04146f54cf6f69787e7f97ddfda9836dc803b459d3b3df3a4fbee"
+SRC_URI[md5sum] = "d380062ad6c4b40076736efbb640f1f5"
+SRC_URI[sha256sum] = "0892b44bd817c251264a24f6ecbbb010958033e0395d2030f25f1c5608ac780e"
 
-EXTRA_OEMAKE = '-e MAKEFLAGS= STRIP="echo"'
+EXTRA_OEMAKE = 'STRIP="echo" LDFLAGS="${LDFLAGS}"'
 
 inherit update-alternatives
 
