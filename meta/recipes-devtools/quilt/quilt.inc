@@ -5,14 +5,13 @@ LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f"
 
 SRC_URI = "${SAVANNAH_GNU_MIRROR}/quilt/quilt-${PV}.tar.gz \
-        file://install.patch \
         file://run-ptest \
         file://Makefile \
-	file://test.sh \
+        file://test.sh \
 "
 
-SRC_URI[md5sum] = "fc0310db5868a0873d602d4332a76d43"
-SRC_URI[sha256sum] = "c4bfd3282214a288e8d3e921ae4d52e73e24c4fead72b5446752adee99a7affd"
+SRC_URI[md5sum] = "c67ba0228f5b7b8bbe469474661f92d6"
+SRC_URI[sha256sum] = "f6cbc788e5cbbb381a3c6eab5b9efce67c776a8662a7795c7432fd27aa096819"
 
 inherit autotools-brokensep ptest
 
