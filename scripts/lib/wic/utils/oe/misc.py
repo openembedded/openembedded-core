@@ -27,6 +27,7 @@
 """Miscellaneous functions."""
 
 import os
+import re
 from collections import defaultdict
 from distutils import spawn
 
@@ -148,21 +149,18 @@ class BitbakeVars(defaultdict):
         self.default_image = None
         self.vars_dir = None
 
-    def _parse_line(self, line, image):
+    def _parse_line(self, line, image, matcher=re.compile(r"^(\w+)=(.+)")):
         """
         Parse one line from bitbake -e output or from .env file.
         Put result key-value pair into the storage.
         """
         if "=" not in line:
             return
-        try:
-            key, val = line.split("=")
-        except ValueError:
+        match = matcher.match(line)
+        if not match:
             return
-        key = key.strip()
-        val = val.strip()
-        if key.replace('_', '').isalnum():
-            self[image][key] = val.strip('"')
+        key, val = match.groups()
+        self[image][key] = val.strip('"')
 
     def get_var(self, var, image=None):
         """
