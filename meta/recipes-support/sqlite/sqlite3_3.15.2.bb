@@ -8,5 +8,5 @@ SRC_URI = "\
   file://0001-revert-ad601c7962-that-brings-2-increase-of-build-ti.patch \
   "
 
-SRC_URI[md5sum] = "0259d52be88f085d104c6d2aaa8349ac"
-SRC_URI[sha256sum] = "5dfa89b7697ee3c2ac7b44e8e157e7f204bf999c866afcaa8bb1c7ff656ae2c5"
+SRC_URI[md5sum] = "6b4fc0d8f7f02dd56bbde10a7c497a05"
+SRC_URI[sha256sum] = "07b35063b9386865b78226cdaca9a299d938a87aaa8fdc4d73edb0cef30f3149"
