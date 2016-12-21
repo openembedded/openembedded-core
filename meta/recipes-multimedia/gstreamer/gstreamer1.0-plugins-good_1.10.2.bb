@@ -11,7 +11,7 @@ SRC_URI = " \
     file://ensure-valid-sentinel-for-gst_structure_get.patch \
     file://0001-introspection.m4-prefix-pkgconfig-paths-with-PKG_CON.patch \
 "
-SRC_URI[md5sum] = "7d24b1412d49fa7bab763b35f4640abd"
-SRC_URI[sha256sum] = "a7642ea7e7c17fb67e94d0c17e56757b6577fa7ed244ff8c11031841d3556cc2"
+SRC_URI[md5sum] = "65c4ff9d406c3ea9383b4d38a6504349"
+SRC_URI[sha256sum] = "198f325bcce982dce1ebeb36929a5f430b8bf9528e0d519e18df0b29e1d23313"
 
 S = "${WORKDIR}/gst-plugins-good-${PV}"

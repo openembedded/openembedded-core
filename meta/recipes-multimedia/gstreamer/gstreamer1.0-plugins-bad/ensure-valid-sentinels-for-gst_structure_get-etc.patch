@@ -23,42 +23,44 @@ Signed-off-by: Andre McCurdy <armccurdy@gmail.com>
  sys/decklink/gstdecklinkvideosink.cpp |  2 +-
  3 files changed, 7 insertions(+), 7 deletions(-)
 
-Index: gst-plugins-bad-1.10.1/sys/decklink/gstdecklink.cpp
+Index: gst-plugins-bad-1.10.2/sys/decklink/gstdecklink.cpp
 ===================================================================
---- gst-plugins-bad-1.10.1.orig/sys/decklink/gstdecklink.cpp
-+++ gst-plugins-bad-1.10.1/sys/decklink/gstdecklink.cpp
-@@ -476,22 +476,22 @@ gst_decklink_mode_get_structure (GstDeck
+--- gst-plugins-bad-1.10.2.orig/sys/decklink/gstdecklink.cpp
++++ gst-plugins-bad-1.10.2/sys/decklink/gstdecklink.cpp
+@@ -476,7 +476,7 @@ gst_decklink_mode_get_structure (GstDeck
        "pixel-aspect-ratio", GST_TYPE_FRACTION, mode->par_n, mode->par_d,
        "interlace-mode", G_TYPE_STRING,
        mode->interlaced ? "interleaved" : "progressive",
 -      "framerate", GST_TYPE_FRACTION, mode->fps_n, mode->fps_d, NULL);
-+      "framerate", GST_TYPE_FRACTION, mode->fps_n, mode->fps_d, (void *)NULL);
++      "framerate", GST_TYPE_FRACTION, mode->fps_n, mode->fps_d, (void*)NULL);
  
-   switch (f) {
+   if (input && mode->interlaced) {
+     if (mode->tff)
+@@ -489,16 +489,16 @@ gst_decklink_mode_get_structure (GstDeck
      case bmdFormat8BitYUV:     /* '2vuy' */
        gst_structure_set (s, "format", G_TYPE_STRING, "UYVY",
            "colorimetry", G_TYPE_STRING, mode->colorimetry,
 -          "chroma-site", G_TYPE_STRING, "mpeg2", NULL);
-+          "chroma-site", G_TYPE_STRING, "mpeg2", (void *)NULL);
++          "chroma-site", G_TYPE_STRING, "mpeg2", (void*)NULL);
        break;
      case bmdFormat10BitYUV:    /* 'v210' */
 -      gst_structure_set (s, "format", G_TYPE_STRING, "v210", NULL);
-+      gst_structure_set (s, "format", G_TYPE_STRING, "v210", (void *)NULL);
++      gst_structure_set (s, "format", G_TYPE_STRING, "v210", (void*)NULL);
        break;
      case bmdFormat8BitARGB:    /* 'ARGB' */
 -      gst_structure_set (s, "format", G_TYPE_STRING, "ARGB", NULL);
-+      gst_structure_set (s, "format", G_TYPE_STRING, "ARGB", (void *)NULL);
++      gst_structure_set (s, "format", G_TYPE_STRING, "ARGB", (void*)NULL);
        break;
      case bmdFormat8BitBGRA:    /* 'BGRA' */
 -      gst_structure_set (s, "format", G_TYPE_STRING, "BGRA", NULL);
-+      gst_structure_set (s, "format", G_TYPE_STRING, "BGRA", (void *)NULL);
++      gst_structure_set (s, "format", G_TYPE_STRING, "BGRA", (void*)NULL);
        break;
      case bmdFormat10BitRGB:    /* 'r210' Big-endian RGB 10-bit per component with SMPTE video levels (64-960). Packed as 2:10:10:10 */
      case bmdFormat12BitRGB:    /* 'R12B' Big-endian RGB 12-bit per component with full range (0-4095). Packed as 12-bit per component */
-Index: gst-plugins-bad-1.10.1/sys/decklink/gstdecklinkaudiosrc.cpp
+Index: gst-plugins-bad-1.10.2/sys/decklink/gstdecklinkaudiosrc.cpp
 ===================================================================
---- gst-plugins-bad-1.10.1.orig/sys/decklink/gstdecklinkaudiosrc.cpp
-+++ gst-plugins-bad-1.10.1/sys/decklink/gstdecklinkaudiosrc.cpp
+--- gst-plugins-bad-1.10.2.orig/sys/decklink/gstdecklinkaudiosrc.cpp
++++ gst-plugins-bad-1.10.2/sys/decklink/gstdecklinkaudiosrc.cpp
 @@ -322,7 +322,7 @@ gst_decklink_audio_src_set_caps (GstBase
        g_mutex_unlock (&self->input->lock);
  
@@ -68,10 +70,10 @@ Index: gst-plugins-bad-1.10.1/sys/decklink/gstdecklinkaudiosrc.cpp
          gst_object_unref (videosrc);
  
          switch (vconn) {
-Index: gst-plugins-bad-1.10.1/sys/decklink/gstdecklinkvideosink.cpp
+Index: gst-plugins-bad-1.10.2/sys/decklink/gstdecklinkvideosink.cpp
 ===================================================================
---- gst-plugins-bad-1.10.1.orig/sys/decklink/gstdecklinkvideosink.cpp
-+++ gst-plugins-bad-1.10.1/sys/decklink/gstdecklinkvideosink.cpp
+--- gst-plugins-bad-1.10.2.orig/sys/decklink/gstdecklinkvideosink.cpp
++++ gst-plugins-bad-1.10.2/sys/decklink/gstdecklinkvideosink.cpp
 @@ -163,7 +163,7 @@ reset_framerate (GstCapsFeatures * featu
      gpointer user_data)
  {
