@@ -22,11 +22,10 @@ SRC_URI = "${GNU_MIRROR}/guile/guile-${PV}.tar.xz \
            file://arm_aarch64.patch \
            file://workaround-ice-ssa-corruption.patch \
            file://libguile-Makefile.am-hook.patch \
-           file://0002-Recognize-nios2-as-compilation-target.patch \
            "
 
-SRC_URI[md5sum] = "081fdf80cd3a76f260a2a0d87f773d6b"
-SRC_URI[sha256sum] = "de8187736f9b260f2fa776ed39b52cb74dd389ccf7039c042f0606270196b7e9"
+SRC_URI[md5sum] = "d50bbb19672b72aa1e1c96e8f024bf00"
+SRC_URI[sha256sum] = "3744f2addc282a0de627aaef048f062982b44564d54ac31ff5217972529ed88b"
 
 inherit autotools gettext pkgconfig texinfo
 BBCLASSEXTEND = "native"
