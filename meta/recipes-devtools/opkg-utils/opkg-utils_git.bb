@@ -10,7 +10,8 @@ PROVIDES += "${@bb.utils.contains('PACKAGECONFIG', 'update-alternatives', 'virtu
 SRCREV = "3ffece9bf19a844edacc563aa092fd1fbfcffeee"
 PV = "0.3.2+git${SRCPV}"
 
-SRC_URI = "git://git.yoctoproject.org/opkg-utils"
+SRC_URI = "git://git.yoctoproject.org/opkg-utils \
+           file://0001-update-alternatives-warn-when-multiple-providers-hav.patch"
 SRC_URI_append_class-native = " file://tar_ignore_error.patch"
 
 S = "${WORKDIR}/git"
