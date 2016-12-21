@@ -6,12 +6,12 @@ the file /etc/network/interfaces."
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f"
 
-SRC_URI = "git://anonscm.debian.org/git/collab-maint/ifupdown.git;protocol=https \
+SRC_URI = "git://anonscm.debian.org/git/collab-maint/ifupdown.git \
 	   file://defn2-c-man-don-t-rely-on-dpkg-architecture-to-set-a.patch \
 	   file://inet-6-.defn-fix-inverted-checks-for-loopback.patch \
 	   file://99_network \
 	  "
-SRCREV = "05ea2fd4f49bb1201aeef2a42efbcff8f336112f"
+SRCREV = "11b9f99f7ecc7052497e6786156cfed531f11823"
 
 S = "${WORKDIR}/git"
 
