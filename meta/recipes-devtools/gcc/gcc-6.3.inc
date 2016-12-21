@@ -2,13 +2,13 @@ require gcc-common.inc
 
 # Third digit in PV should be incremented after a minor release
 
-PV = "6.2.0"
+PV = "6.3.0"
 
 # BINV should be incremented to a revision after a minor gcc release
 
-BINV = "6.2.0"
+BINV = "6.3.0"
 
-FILESEXTRAPATHS =. "${FILE_DIRNAME}/gcc-6.2:${FILE_DIRNAME}/gcc-6.2/backport:"
+FILESEXTRAPATHS =. "${FILE_DIRNAME}/gcc-6.3:${FILE_DIRNAME}/gcc-6.3/backport:"
 
 DEPENDS =+ "mpfr gmp libmpc zlib"
 NATIVEDEPS = "mpfr-native gmp-native libmpc-native zlib-native"
@@ -83,8 +83,8 @@ SRC_URI = "\
 BACKPORTS = "\
            file://ubsan-fix-check-empty-string.patch \
 "
-SRC_URI[md5sum] = "9768625159663b300ae4de2f4745fcc4"
-SRC_URI[sha256sum] = "9944589fc722d3e66308c0ce5257788ebd7872982a718aa2516123940671b7c5"
+SRC_URI[md5sum] = "677a7623c7ef6ab99881bc4e048debb6"
+SRC_URI[sha256sum] = "f06ae7f3f790fbf0f018f6d40e844451e6bc3b7bc96e128e63b09825c1f8b29f"
 
 S = "${TMPDIR}/work-shared/gcc-${PV}-${PR}/gcc-${PV}"
 #S = "${TMPDIR}/work-shared/gcc-${PV}-${PR}/git"
