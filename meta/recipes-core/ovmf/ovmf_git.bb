@@ -19,6 +19,7 @@ SRC_URI = "git://github.com/tianocore/edk2.git;branch=master \
 
 SRC_URI_append_class-target = " \
 	${@bb.utils.contains('PACKAGECONFIG', 'secureboot', 'http://www.openssl.org/source/openssl-1.0.2j.tar.gz;name=openssl;subdir=${S}/CryptoPkg/Library/OpensslLib', '', d)} \
+	file://0007-OvmfPkg-EnrollDefaultKeys-application-for-enrolling-.patch \
 "
 
 SRCREV="4575a602ca6072ee9d04150b38bfb143cbff8588"
@@ -136,6 +137,7 @@ do_compile_class-target() {
     ln ${build_dir}/FV/OVMF.fd ${WORKDIR}/ovmf/ovmf.fd
     ln ${build_dir}/FV/OVMF_CODE.fd ${WORKDIR}/ovmf/ovmf.code.fd
     ln ${build_dir}/FV/OVMF_VARS.fd ${WORKDIR}/ovmf/ovmf.vars.fd
+    ln ${build_dir}/${OVMF_ARCH}/Shell.efi ${WORKDIR}/ovmf/
 
     if ${@bb.utils.contains('PACKAGECONFIG', 'secureboot', 'true', 'false', d)}; then
         # See CryptoPkg/Library/OpensslLib/Patch-HOWTO.txt and
@@ -150,6 +152,7 @@ do_compile_class-target() {
         ${S}/OvmfPkg/build.sh $PARALLEL_JOBS -a $OVMF_ARCH -b RELEASE -t ${FIXED_GCCVER} ${OVMF_SECURE_BOOT_FLAGS}
         ln ${build_dir}/FV/OVMF.fd ${WORKDIR}/ovmf/ovmf.secboot.fd
         ln ${build_dir}/FV/OVMF_CODE.fd ${WORKDIR}/ovmf/ovmf.secboot.code.fd
+        ln ${build_dir}/${OVMF_ARCH}/EnrollDefaultKeys.efi ${WORKDIR}/ovmf/
     fi
 }
 
@@ -159,7 +162,26 @@ do_install_class-native() {
 }
 
 do_install_class-target() {
+    # Content for UEFI shell iso. We install the EFI shell as
+    # bootx64/ia32.efi because then it can be started even when the
+    # firmware itself does not contain it.
+    install -d ${D}/efi/boot
+    install ${WORKDIR}/ovmf/Shell.efi ${D}/efi/boot/boot${@ "ia32" if "${TARGET_ARCH}" != "x86_64" else "x64"}.efi
+    if ${@bb.utils.contains('PACKAGECONFIG', 'secureboot', 'true', 'false', d)}; then
+        install ${WORKDIR}/ovmf/EnrollDefaultKeys.efi ${D}
+    fi
 }
+
+# This always gets packaged because ovmf-shell-image depends on it.
+# This allows testing that recipe in all configurations because it
+# can always be part of a world build.
+#
+# However, EnrollDefaultKeys.efi is only included when Secure Boot is enabled.
+PACKAGES =+ "ovmf-shell-efi"
+FILES_ovmf-shell-efi = " \
+    EnrollDefaultKeys.efi \
+    efi/ \
+"
 
 do_deploy() {
 }
