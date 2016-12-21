@@ -76,13 +76,13 @@ class OERuntimeTestContextExecutor(OETestContextExecutor):
                 help="Qemu boot configuration, only needed when target_type is QEMU.")
 
     @staticmethod
-    def getTarget(target_type, target_ip, server_ip, **kwargs):
+    def getTarget(target_type, logger, target_ip, server_ip, **kwargs):
         target = None
 
         if target_type == 'simpleremote':
-            target = OESSHTarget(target_ip, server_ip, kwargs)
+            target = OESSHTarget(logger, target_ip, server_ip, **kwargs)
         elif target_type == 'qemu':
-            target = OEQemuTarget(target_ip, server_ip, kwargs)
+            target = OEQemuTarget(logger, target_ip, server_ip, **kwargs)
         else:
             # TODO: Implement custom target module loading
             raise TypeError("target_type %s isn't supported" % target_type)
