@@ -15,6 +15,9 @@ SRC_URI = " \
     file://0009-glimagesink-Downrank-to-marginal.patch \
     file://0001-introspection.m4-prefix-pkgconfig-paths-with-PKG_CON.patch \
     file://0001-Prepend-PKG_CONFIG_SYSROOT_DIR-to-pkg-config-output.patch \
+    file://0001-smoothstreaming-implement-adaptivedemux-s-get_live_s.patch \
+    file://0001-smoothstreaming-use-the-duration-from-the-list-of-fr.patch \
+    file://0001-mssdemux-improved-live-playback-support.patch \
 "
 SRC_URI[md5sum] = "823f4c33fe27c61332c0122273217988"
 SRC_URI[sha256sum] = "0795ca9303a99cc7e44dda0e6e18524de02b39892e4b68eaba488f7b9db53a3a"
