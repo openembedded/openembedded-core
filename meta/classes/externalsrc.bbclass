@@ -143,12 +143,12 @@ python externalsrc_compile_prefunc() {
     bb.plain('NOTE: %s: compiling from external source tree %s' % (d.getVar('PN'), d.getVar('EXTERNALSRC')))
 }
 
-def srctree_hash_files(d):
+def srctree_hash_files(d, srcdir=None):
     import shutil
     import subprocess
     import tempfile
 
-    s_dir = d.getVar('EXTERNALSRC')
+    s_dir = srcdir or d.getVar('EXTERNALSRC')
     git_dir = os.path.join(s_dir, '.git')
     oe_hash_file = os.path.join(git_dir, 'oe-devtool-tree-sha1')
 
@@ -166,7 +166,7 @@ def srctree_hash_files(d):
             fobj.write(sha1)
         ret = oe_hash_file + ':True'
     else:
-        ret = d.getVar('EXTERNALSRC') + '/*:True'
+        ret = s_dir + '/*:True'
     return ret
 
 def srctree_configure_hash_files(d):
