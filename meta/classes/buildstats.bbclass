@@ -197,7 +197,7 @@ python runqueue_stats () {
     # are available that we need to find the output directory.
     # The persistent SystemStats is stored in the datastore and
     # closed when the build is done.
-    system_stats = d.getVar('_buildstats_system_stats')
+    system_stats = d.getVar('_buildstats_system_stats', False)
     if not system_stats and isinstance(e, (bb.runqueue.sceneQueueTaskStarted, bb.runqueue.runQueueTaskStarted)):
         system_stats = buildstats.SystemStats(d)
         d.setVar('_buildstats_system_stats', system_stats)
