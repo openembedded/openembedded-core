@@ -1,4 +1,4 @@
-include glibc-collateral.inc
+require glibc-collateral.inc
 
 SUMMARY = "mtrace utility provided by glibc"
 DESCRIPTION = "mtrace utility provided by glibc"

@@ -1,4 +1,4 @@
-include glibc-collateral.inc
+require glibc-collateral.inc
 
 SUMMARY = "utility scripts provided by glibc"
 DESCRIPTION = "utility scripts provided by glibc"

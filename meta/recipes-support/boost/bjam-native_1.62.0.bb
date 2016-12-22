@@ -1,4 +1,4 @@
-include boost-${PV}.inc
+require boost-${PV}.inc
 
 SUMMARY = "Portable Boost.Jam build tool for boost"
 SECTION = "devel"

@@ -1,5 +1,5 @@
-include boost-${PV}.inc
-include boost.inc
+require boost-${PV}.inc
+require boost.inc
 
 SRC_URI += "\
     file://arm-intrinsics.patch \

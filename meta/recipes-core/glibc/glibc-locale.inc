@@ -1,4 +1,4 @@
-include glibc-collateral.inc
+require glibc-collateral.inc
 
 SUMMARY = "Locale data from glibc"
 
