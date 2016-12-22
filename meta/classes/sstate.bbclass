@@ -213,25 +213,27 @@ def sstate_install(ss, d):
                     break
             if realmatch:
                 match.append(f)
-                sstate_search_cmd = "grep -rlF '%s' %s --exclude=master.list | sed -e 's:^.*/::' -e 's:\.populate-sysroot::'" % (f, d.expand("${SSTATE_MANIFESTS}"))
+                sstate_search_cmd = "grep -rlF '%s' %s --exclude=master.list | sed -e 's:^.*/::'" % (f, d.expand("${SSTATE_MANIFESTS}"))
                 search_output = subprocess.Popen(sstate_search_cmd, shell=True, stdout=subprocess.PIPE).communicate()[0]
-                if search_output != "":
-                    match.append("Matched in %s" % search_output.rstrip())
+                if search_output:
+                    match.append("  (matched in %s)" % search_output.decode('utf-8').rstrip())
+                else:
+                    match.append("  (not matched to any task)")
     if match:
         bb.error("The recipe %s is trying to install files into a shared " \
           "area when those files already exist. Those files and their manifest " \
-          "location are:\n   %s\nPlease verify which recipe should provide the " \
-          "above files.\nThe build has stopped as continuing in this scenario WILL " \
-          "break things, if not now, possibly in the future (we've seen builds fail " \
+          "location are:\n  %s\nPlease verify which recipe should provide the " \
+          "above files.\n\nThe build has stopped, as continuing in this scenario WILL " \
+          "break things - if not now, possibly in the future (we've seen builds fail " \
           "several months later). If the system knew how to recover from this " \
-          "automatically it would however there are several different scenarios " \
+          "automatically it would, however there are several different scenarios " \
           "which can result in this and we don't know which one this is. It may be " \
           "you have switched providers of something like virtual/kernel (e.g. from " \
           "linux-yocto to linux-yocto-dev), in that case you need to execute the " \
           "clean task for both recipes and it will resolve this error. It may be " \
           "you changed DISTRO_FEATURES from systemd to udev or vice versa. Cleaning " \
-          "those recipes should again resolve this error however switching " \
-          "DISTRO_FEATURES on an existing build directory is not supported, you " \
+          "those recipes should again resolve this error, however switching " \
+          "DISTRO_FEATURES on an existing build directory is not supported - you " \
           "should really clean out tmp and rebuild (reusing sstate should be safe). " \
           "It could be the overlapping files detected are harmless in which case " \
           "adding them to SSTATE_DUPWHITELIST may be the correct solution. It could " \
@@ -239,7 +241,7 @@ def sstate_install(ss, d):
           "things (e.g. bluez 4 and bluez 5 and the correct solution for that would " \
           "be to resolve the conflict. If in doubt, please ask on the mailing list, " \
           "sharing the error and filelist above." % \
-          (d.getVar('PN'), "\n ".join(match)))
+          (d.getVar('PN'), "\n  ".join(match)))
         bb.fatal("If the above message is too much, the simpler version is you're advised to wipe out tmp and rebuild (reusing sstate is fine). That will likely fix things in most (but not all) cases.")
 
     # Write out the manifest
