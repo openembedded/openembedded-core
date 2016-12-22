@@ -162,13 +162,6 @@ class Wic(oeSelfTest):
         self.assertEqual(0, runCmd(cmd).status)
         self.assertEqual(1, len(glob(self.resultdir + "qemux86-directdisk-*direct")))
 
-    @testcase(1349)
-    def test_mkgummidisk(self):
-        """Test creation of mkgummidisk image"""
-        cmd = "wic create mkgummidisk --image-name core-image-minimal"
-        self.assertEqual(0, runCmd(cmd).status)
-        self.assertEqual(1, len(glob(self.resultdir + "mkgummidisk-*direct")))
-
     @testcase(1350)
     def test_mkefidisk(self):
         """Test creation of mkefidisk image"""
