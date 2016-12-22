@@ -62,7 +62,8 @@ log_prefix = "oe-selftest-" + t.strftime("%Y%m%d-%H%M%S")
 
 def logger_create():
     log_file = log_prefix + ".log"
-    if os.path.exists("oe-selftest.log"): os.remove("oe-selftest.log")
+    if os.path.lexists("oe-selftest.log"):
+        os.remove("oe-selftest.log")
     os.symlink(log_file, "oe-selftest.log")
 
     log = logging.getLogger("selftest")
