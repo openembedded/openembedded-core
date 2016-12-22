@@ -213,7 +213,7 @@ def sstate_install(ss, d):
                     break
             if realmatch:
                 match.append(f)
-                sstate_search_cmd = "grep -rl '%s' %s --exclude=master.list | sed -e 's:^.*/::' -e 's:\.populate-sysroot::'" % (f, d.expand("${SSTATE_MANIFESTS}"))
+                sstate_search_cmd = "grep -rlF '%s' %s --exclude=master.list | sed -e 's:^.*/::' -e 's:\.populate-sysroot::'" % (f, d.expand("${SSTATE_MANIFESTS}"))
                 search_output = subprocess.Popen(sstate_search_cmd, shell=True, stdout=subprocess.PIPE).communicate()[0]
                 if search_output != "":
                     match.append("Matched in %s" % search_output.rstrip())
@@ -406,7 +406,7 @@ def sstate_clean_manifest(manifest, d):
                 elif os.path.exists(entry) and len(os.listdir(entry)) == 0:
                     os.rmdir(entry[:-1])
             else:
-                oe.path.remove(entry)
+                os.remove(entry)
         except OSError:
             pass
 
