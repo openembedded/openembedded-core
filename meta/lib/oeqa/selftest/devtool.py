@@ -437,17 +437,33 @@ class DevtoolTests(DevtoolBase):
         # Check git repo
         self._check_src_repo(tempdir)
         # Try building
-        bitbake('mdadm')
+        def list_stamps(globsuffix='*'):
+            stampprefix = get_bb_var('STAMP', 'mdadm')
+            self.assertTrue(stampprefix, 'Unable to get STAMP value for recipe mdadm')
+            return glob.glob(stampprefix + globsuffix)
+
+        numstamps = len(list_stamps('.do_compile.*'))
+        self.assertEqual(numstamps, 0, 'do_compile stamps before first build')
+        for x in range(10):
+            bitbake('mdadm')
+            nowstamps = len(list_stamps('.do_compile.*'))
+            if nowstamps == numstamps:
+                break
+            numstamps = nowstamps
+        else:
+            self.fail('build did not stabilize in 10 iterations')
+
         # Try making (minor) modifications to the source
         modfile = os.path.join(tempdir, 'mdadm.8.in')
         result = runCmd("sed -i 's!^\.TH.*!.TH MDADM 8 \"\" v9.999-custom!' %s" % modfile)
-        sedline = ''
-        with open(modfile, 'r') as f:
-            for line in f:
-                if line.startswith('.TH'):
-                    sedline = line.rstrip()
-                    break
-        self.assertEqual(sedline, '.TH MDADM 8 "" v9.999-custom', 'man .in file not modified (sed failed)')
+
+        def check_TH_line(checkfile, expected, message):
+            with open(checkfile, 'r') as f:
+                for line in f:
+                    if line.startswith('.TH'):
+                        self.assertEqual(line.rstrip(), expected, message)
+
+        check_TH_line(modfile, '.TH MDADM 8 "" v9.999-custom', 'man .in file not modified (sed failed)')
         bitbake('mdadm -c package')
         pkgd = get_bb_var('PKGD', 'mdadm')
         self.assertTrue(pkgd, 'Could not query PKGD variable')
@@ -456,18 +472,24 @@ class DevtoolTests(DevtoolBase):
         if mandir[0] == '/':
             mandir = mandir[1:]
         manfile = os.path.join(pkgd, mandir, 'man8', 'mdadm.8')
-        with open(manfile, 'r') as f:
-            for line in f:
-                if line.startswith('.TH'):
-                    self.assertEqual(line.rstrip(), '.TH MDADM 8 "" v9.999-custom', 'man file not modified. man searched file path: %s' % manfile)
+        check_TH_line(manfile, '.TH MDADM 8 "" v9.999-custom', 'man file not modified. man searched file path: %s' % manfile)
+        # Test reverting the change
+        result = runCmd("git -C %s checkout -- %s" % (tempdir, modfile))
+        check_TH_line(modfile, '.TH MDADM 8 "" v3.4', 'man .in file not restored (git failed)')
+        bitbake('mdadm -c package')
+        pkgd = get_bb_var('PKGD', 'mdadm')
+        self.assertTrue(pkgd, 'Could not query PKGD variable')
+        mandir = get_bb_var('mandir', 'mdadm')
+        self.assertTrue(mandir, 'Could not query mandir variable')
+        if mandir[0] == '/':
+            mandir = mandir[1:]
+        manfile = os.path.join(pkgd, mandir, 'man8', 'mdadm.8')
+        check_TH_line(manfile, '.TH MDADM 8 "" v3.4', 'man file not updated. man searched file path: %s' % manfile)
         # Test devtool reset
-        stampprefix = get_bb_var('STAMP', 'mdadm')
         result = runCmd('devtool reset mdadm')
         result = runCmd('devtool status')
         self.assertNotIn('mdadm', result.output)
-        self.assertTrue(stampprefix, 'Unable to get STAMP value for recipe mdadm')
-        matches = glob.glob(stampprefix + '*')
-        self.assertFalse(matches, 'Stamp files exist for recipe mdadm that should have been cleaned')
+        self.assertFalse(list_stamps(), 'Stamp files exist for recipe mdadm that should have been cleaned')
 
     @testcase(1166)
     def test_devtool_modify_invalid(self):
