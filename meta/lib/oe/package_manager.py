@@ -667,11 +667,11 @@ class RpmPM(PackageManager):
         self.install_dir_path = os.path.join(self.target_rootfs, self.install_dir_name)
         self.rpm_cmd = bb.utils.which(os.getenv('PATH'), "rpm")
         self.smart_cmd = bb.utils.which(os.getenv('PATH'), "smart")
-        # 0 = default, only warnings
-        # 1 = --log-level=info (includes information about executing scriptlets and their output)
+        # 0 = --log-level=warning, only warnings
+        # 1 = --log-level=info (includes information about executing scriptlets and their output), default
         # 2 = --log-level=debug
         # 3 = --log-level=debug plus dumps of scriplet content and command invocation
-        self.debug_level = int(d.getVar('ROOTFS_RPM_DEBUG') or "0")
+        self.debug_level = int(d.getVar('ROOTFS_RPM_DEBUG') or "1")
         self.smart_opt = ["--log-level=%s" %
                          ("warning" if self.debug_level == 0 else
                           "info" if self.debug_level == 1 else
@@ -2026,8 +2026,9 @@ class DpkgPM(OpkgDpkgPM):
                     try:
                         bb.note("Executing %s for package: %s ..." %
                                  (control_script.name.lower(), pkg_name))
-                        subprocess.check_output([p_full, control_script.argument],
-                                stderr=subprocess.STDOUT)
+                        output = subprocess.check_output([p_full, control_script.argument],
+                                stderr=subprocess.STDOUT).decode("utf-8")
+                        bb.note(output)
                     except subprocess.CalledProcessError as e:
                         bb.note("%s for package %s failed with %d:\n%s" %
                                 (control_script.name, pkg_name, e.returncode,
