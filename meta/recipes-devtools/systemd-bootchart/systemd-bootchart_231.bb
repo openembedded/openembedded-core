@@ -5,8 +5,8 @@ LIC_FILES_CHKSUM = "file://LICENSE.LGPL2.1;md5=4fbd65380cdd255951079008b364516c 
 SRC_URI = "git://github.com/systemd/systemd-bootchart.git;protocol=https"
 
 # Modify these as desired
-PV = "230+git${SRCPV}"
-SRCREV = "dcb246b46239259ec99b3c6e6ab7d27e1a5a8a84"
+PV = "231+git${SRCPV}"
+SRCREV = "9ee2ffc1dc6c8209725e625954bbd89f96cb7139"
 
 S = "${WORKDIR}/git"
 
