@@ -20,12 +20,13 @@ SRC_URI = "${GNU_MIRROR}/coreutils/${BP}.tar.xz;name=tarball \
            file://0001-Unset-need_charset_alias-when-building-for-musl.patch \
            file://0001-uname-report-processor-and-hardware-correctly.patch \
            file://disable-ls-output-quoting.patch \
+           file://0001-local.mk-fix-cross-compiling-problem.patch \
           "
 
-SRC_URI[tarball.md5sum] = "070e43ba7f618d747414ef56ab248a48"
-SRC_URI[tarball.sha256sum] = "31e67c057a5b32a582f26408c789e11c2e8d676593324849dcf5779296cdce87"
-SRC_URI[manpages.md5sum] = "415cc0552bc4e480b27ce8b2aebfdeb5"
-SRC_URI[manpages.sha256sum] = "2ee31c3a6d2276f49c5515375d4a0c1047580da6ac10536898e0f0de81707f29"
+SRC_URI[tarball.md5sum] = "d5aa2072f662d4118b9f4c63b94601a6"
+SRC_URI[tarball.sha256sum] = "155e94d748f8e2bc327c66e0cbebdb8d6ab265d2f37c3c928f7bf6c3beba9a8e"
+SRC_URI[manpages.md5sum] = "b58107f532f7beffcb2f38e2ac1f2da3"
+SRC_URI[manpages.sha256sum] = "9324ec412ffca3b0431e6299720c33ac98e749e430f72a7c6e65f3635c86aa29"
 
 EXTRA_OECONF_class-native = "--without-gmp"
 EXTRA_OECONF_class-target = "--enable-install-program=arch --libexecdir=${libdir}"
