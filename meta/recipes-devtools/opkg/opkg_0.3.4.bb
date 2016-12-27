@@ -17,8 +17,8 @@ SRC_URI = "http://downloads.yoctoproject.org/releases/${BPN}/${BPN}-${PV}.tar.gz
            file://0001-opkg_conf-create-opkg.lock-in-run-instead-of-var-run.patch \
 "
 
-SRC_URI[md5sum] = "a4613038c8afc7d8d482f5c53f137bdf"
-SRC_URI[sha256sum] = "19db9e73121a5e4c91fa228b0a6a4c55cc3591056130cfb3c66c30aa32f8d00e"
+SRC_URI[md5sum] = "6c52a065499056a196e0b45a27e392de"
+SRC_URI[sha256sum] = "750b900b53b62a9b280b601a196f02da81091eda2f3478c509512aa5a1ec93be"
 
 inherit autotools pkgconfig systemd
 
@@ -36,6 +36,8 @@ PACKAGECONFIG[openssl] = "--enable-openssl,--disable-openssl,openssl"
 PACKAGECONFIG[sha256] = "--enable-sha256,--disable-sha256"
 PACKAGECONFIG[pathfinder] = "--enable-pathfinder,--disable-pathfinder,pathfinder"
 PACKAGECONFIG[libsolv] = "--with-libsolv,--without-libsolv,libsolv"
+
+EXTRA_OECONF_class-native = "--localstatedir=/${@os.path.relpath('${localstatedir}', '${STAGING_DIR_NATIVE}')} --sysconfdir=/${@os.path.relpath('${sysconfdir}', '${STAGING_DIR_NATIVE}')}"
 
 do_install_append () {
 	install -d ${D}${sysconfdir}/opkg
