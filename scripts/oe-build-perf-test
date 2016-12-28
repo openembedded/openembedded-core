@@ -23,7 +23,6 @@ import os
 import re
 import shutil
 import sys
-import unittest
 from datetime import datetime
 
 sys.path.insert(0, os.path.dirname(os.path.realpath(__file__)) + '/lib')

@@ -10,16 +10,13 @@
 # more details.
 #
 """Build performance test base classes and functionality"""
-import glob
 import json
 import logging
 import os
 import re
 import resource
-import shutil
 import socket
 import time
-import traceback
 import unittest
 import xml.etree.ElementTree as ET
 from datetime import datetime, timedelta
@@ -506,5 +503,5 @@ class BuildPerfTestRunner(unittest.TextTestRunner):
         self.out_dir = out_dir
 
     def _makeResult(self):
-       return BuildPerfTestResult(self.out_dir, self.stream, self.descriptions,
-                                  self.verbosity)
+        return BuildPerfTestResult(self.out_dir, self.stream, self.descriptions,
+                                   self.verbosity)
