@@ -17,8 +17,10 @@
 import argparse
 import errno
 import fcntl
+import json
 import logging
 import os
+import re
 import shutil
 import sys
 import unittest
@@ -27,11 +29,13 @@ from datetime import datetime
 sys.path.insert(0, os.path.dirname(os.path.realpath(__file__)) + '/lib')
 import scriptpath
 scriptpath.add_oe_lib_path()
+scriptpath.add_bitbake_lib_path()
 import oeqa.buildperf
 from oeqa.buildperf import (BuildPerfTestLoader, BuildPerfTestResult,
                             BuildPerfTestRunner, KernelDropCaches)
 from oeqa.utils.commands import runCmd
 from oeqa.utils.git import GitRepo, GitError
+from oeqa.utils.metadata import metadata_from_bb, write_metadata_file
 
 
 # Set-up logging
@@ -115,6 +119,100 @@ def archive_build_conf(out_dir):
     shutil.copytree(src_dir, tgt_dir)
 
 
+def git_commit_results(repo_dir, results_dir, branch, tag, metadata):
+    """Commit results into a Git repository"""
+    repo = GitRepo(repo_dir, is_topdir=True)
+    distro_branch = metadata['layers']['meta']['branch']
+    distro_commit = metadata['layers']['meta']['commit']
+    distro_commit_count = metadata['layers']['meta']['commit_count']
+
+    # Replace keywords
+    branch = branch.format(git_branch=distro_branch,
+                           tester_host=metadata['hostname'])
+
+    log.info("Committing test results into %s %s", repo_dir, branch)
+    tmp_index = os.path.join(repo_dir, '.git', 'index.oe-build-perf')
+    try:
+        # Create new commit object from the new results
+        env_update = {'GIT_INDEX_FILE': tmp_index,
+                      'GIT_WORK_TREE': results_dir}
+        repo.run_cmd('add .', env_update)
+        tree = repo.run_cmd('write-tree', env_update)
+        parent = repo.rev_parse(branch)
+        msg = "Results of {}:{}\n".format(distro_branch, distro_commit)
+        git_cmd = ['commit-tree', tree, '-m', msg]
+        if parent:
+            git_cmd += ['-p', parent]
+        commit = repo.run_cmd(git_cmd, env_update)
+
+        # Update branch head
+        git_cmd = ['update-ref', 'refs/heads/' + branch, commit]
+        if parent:
+            git_cmd.append(parent)
+        repo.run_cmd(git_cmd)
+
+        # Update current HEAD, if we're on branch 'branch'
+        if repo.get_current_branch() == branch:
+            log.info("Updating %s HEAD to latest commit", repo_dir)
+            repo.run_cmd('reset --hard')
+
+        # Create (annotated) tag
+        if tag:
+            # Find tags matching the pattern
+            tag_keywords = dict(git_branch=distro_branch,
+                                git_commit=distro_commit,
+                                git_commit_count=distro_commit_count,
+                                tester_host=metadata['hostname'],
+                                tag_num='[0-9]{1,5}')
+            tag_re = re.compile(tag.format(**tag_keywords) + '$')
+            tag_keywords['tag_num'] = 0
+            for existing_tag in repo.run_cmd('tag').splitlines():
+                if tag_re.match(existing_tag):
+                    tag_keywords['tag_num'] += 1
+
+            tag = tag.format(**tag_keywords)
+            msg = "Test run #{} of {}:{}\n".format(tag_keywords['tag_num'],
+                                                   distro_branch,
+                                                   distro_commit)
+            repo.run_cmd(['tag', '-a', '-m', msg, tag, commit])
+
+    finally:
+        if os.path.exists(tmp_index):
+            os.unlink(tmp_index)
+
+
+def update_globalres_file(result_obj, filename, metadata):
+    """Write results to globalres csv file"""
+    # Map test names to time and size columns in globalres
+    # The tuples represent index and length of times and sizes
+    # respectively
+    gr_map = {'test1': ((0, 1), (8, 1)),
+              'test12': ((1, 1), (None, None)),
+              'test13': ((2, 1), (9, 1)),
+              'test2': ((3, 1), (None, None)),
+              'test3': ((4, 3), (None, None)),
+              'test4': ((7, 1), (10, 2))}
+
+    values = ['0'] * 12
+    for status, test, _ in result_obj.all_results():
+        if status in ['ERROR', 'SKIPPED']:
+            continue
+        (t_ind, t_len), (s_ind, s_len) = gr_map[test.name]
+        if t_ind is not None:
+            values[t_ind:t_ind + t_len] = test.times
+        if s_ind is not None:
+            values[s_ind:s_ind + s_len] = test.sizes
+
+    log.debug("Writing globalres log to %s", filename)
+    rev_info = metadata['layers']['meta']
+    with open(filename, 'a') as fobj:
+        fobj.write('{},{}:{},{},'.format(metadata['hostname'],
+                                         rev_info['branch'],
+                                         rev_info['commit'],
+                                         rev_info['commit']))
+        fobj.write(','.join(values) + '\n')
+
+
 def parse_args(argv):
     """Parse command line arguments"""
     parser = argparse.ArgumentParser(
@@ -183,7 +281,19 @@ def main(argv=None):
     else:
         suite = loader.loadTestsFromModule(oeqa.buildperf)
 
+    # Save test metadata
+    metadata = metadata_from_bb()
+    log.info("Testing Git revision branch:commit %s:%s (%s)",
+             metadata['layers']['meta']['branch'],
+             metadata['layers']['meta']['commit'],
+             metadata['layers']['meta']['commit_count'])
+    if args.xml:
+        write_metadata_file(os.path.join(out_dir, 'metadata.xml'), metadata)
+    else:
+        with open(os.path.join(out_dir, 'metadata.json'), 'w') as fobj:
+            json.dump(metadata, fobj, indent=2)
     archive_build_conf(out_dir)
+
     runner = BuildPerfTestRunner(out_dir, verbosity=2)
 
     # Suppress logger output to stderr so that the output from unittest
@@ -201,11 +311,11 @@ def main(argv=None):
     else:
         result.write_results_json()
     if args.globalres_file:
-        result.update_globalres_file(args.globalres_file)
+        update_globalres_file(result, args.globalres_file, metadata)
     if args.commit_results:
-        result.git_commit_results(args.commit_results,
-                                  args.commit_results_branch,
-                                  args.commit_results_tag)
+        git_commit_results(args.commit_results, out_dir,
+                           args.commit_results_branch, args.commit_results_tag,
+                           metadata)
     if result.wasSuccessful():
         return 0
 
