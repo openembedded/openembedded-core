@@ -31,6 +31,7 @@ SRC_URI = "http://ppp.samba.org/ftp/ppp/ppp-${PV}.tar.gz \
            file://ppp@.service \
            file://fix-CVE-2015-3310.patch \
            file://ppp-fix-building-with-linux-4.8.patch \
+           file://0001-ppp-Remove-unneeded-include.patch \
 "
 
 SRC_URI_append_libc-musl = "\
