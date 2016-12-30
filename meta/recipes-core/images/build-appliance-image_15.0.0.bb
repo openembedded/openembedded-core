@@ -1,5 +1,5 @@
 SUMMARY = "An image containing the build system itself"
-DESCRIPTION = "An image containing the build system that you can boot and run using either VMware Player or VMware Workstation."
+DESCRIPTION = "An image containing the build system that you can boot and run using either VirtualBox, VMware Player or VMware Workstation."
 HOMEPAGE = "http://www.yoctoproject.org/documentation/build-appliance"
 
 LICENSE = "MIT"
@@ -7,7 +7,8 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=4d92cd373abda3937c2bc47fbc49d
                     file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
 
 IMAGE_INSTALL = "packagegroup-core-boot packagegroup-core-ssh-openssh packagegroup-self-hosted \
-                 kernel-dev kernel-devsrc connman connman-plugin-ethernet dhcp-client"
+                 kernel-dev kernel-devsrc connman connman-plugin-ethernet dhcp-client \
+                 tzdata python3-pip"
 
 IMAGE_FEATURES += "x11-base package-management splash"
 
@@ -22,11 +23,12 @@ IMAGE_FSTYPES = "vmdk"
 
 inherit core-image module-base
 
-SRCREV ?= "ee6ee913aae5ac55ccb9125e03d07d3a767e4157"
+SRCREV ?= "7c3a47ed8965c3a3eb90a9a4678d5caedbba6337"
 SRC_URI = "git://git.yoctoproject.org/poky;branch=master \
            file://Yocto_Build_Appliance.vmx \
            file://Yocto_Build_Appliance.vmxf \
            file://README_VirtualBox_Guest_Additions.txt \
+           file://README_VirtualBox_Toaster.txt \
           "
 BA_INCLUDE_SOURCES ??= "0"
 
@@ -53,6 +55,9 @@ fakeroot do_populate_poky_src () {
 
 	# Place the README_VirtualBox_Guest_Additions file in builders home folder.
 	cp ${WORKDIR}/README_VirtualBox_Guest_Additions.txt ${IMAGE_ROOTFS}/home/builder/
+
+	# Place the README_VirtualBox_Toaster file in builders home folder.
+	cp ${WORKDIR}/README_VirtualBox_Toaster.txt ${IMAGE_ROOTFS}/home/builder/
 
 	# Create a symlink, needed for out-of-tree kernel modules build
 	lnr ${IMAGE_ROOTFS}${KERNEL_SRC_PATH} ${IMAGE_ROOTFS}/lib/modules/${KERNEL_VERSION}/build
@@ -88,6 +93,13 @@ fakeroot do_populate_poky_src () {
 	# Use Clearlooks GTK+ theme
 	mkdir -p ${IMAGE_ROOTFS}/etc/gtk-2.0
 	echo 'gtk-theme-name = "Clearlooks"' > ${IMAGE_ROOTFS}/etc/gtk-2.0/gtkrc
+
+	# Install modules needed for toaster
+	export HOME=${IMAGE_ROOTFS}/home/builder
+	mkdir -p ${IMAGE_ROOTFS}/home/builder/.cache/pip
+	pip3 install --user -I -U -v -r ${IMAGE_ROOTFS}/home/builder/poky/bitbake/toaster-requirements.txt
+	chown -R builder.builder ${IMAGE_ROOTFS}/home/builder/.local
+	chown -R builder.builder ${IMAGE_ROOTFS}/home/builder/.cache
 }
 
 IMAGE_PREPROCESS_COMMAND += "do_populate_poky_src; "
