@@ -65,19 +65,8 @@ do_configure_prepend_class-native() {
 		"${S}"/Makefile "${S}"/Makefile.target
 }
 
-KVMENABLE = "--enable-kvm"
-KVMENABLE_darwin = "--disable-kvm"
-KVMENABLE_mingw32 = "--disable-kvm"
-
 do_configure() {
-    # Handle distros such as CentOS 5 32-bit that do not have kvm support
-    KVMOPTS="--disable-kvm"
-    if [ "${PN}" != "qemu-native" -a "${PN}" != "nativesdk-qemu" ] \
-       || [ -f /usr/include/linux/kvm.h ] ; then
-       KVMOPTS="${KVMENABLE}"
-    fi
-
-    ${S}/configure ${EXTRA_OECONF} $KVMOPTS
+    ${S}/configure ${EXTRA_OECONF}
     test ! -e ${S}/target-i386/beginend_funcs.sh || chmod a+x ${S}/target-i386/beginend_funcs.sh
 }
 
@@ -115,10 +104,18 @@ do_install_append() {
 
 PACKAGECONFIG ??= " \
 	fdt sdl \
+	fdt sdl kvm \
 	${@bb.utils.filter('DISTRO_FEATURES', 'alsa xen', d)} \
 	"
-PACKAGECONFIG_class-native ??= "fdt alsa uuid"
-PACKAGECONFIG_class-nativesdk ??= "fdt sdl"
+PACKAGECONFIG_class-native ??= "fdt alsa uuid kvm"
+PACKAGECONFIG_class-nativesdk ??= "fdt sdl kvm"
+
+# Handle distros such as CentOS 5 32-bit that do not have kvm support
+PACKAGECONFIG_class-native_remove = "${@'kvm' if not os.path.exists('/usr/include/linux/kvm.h') else ''}"
+
+# Disable kvm on targets that do not support it
+PACKAGECONFIG_remove_darwin = "kvm"
+PACKAGECONFIG_remove_mingw32 = "kvm"
 
 PACKAGECONFIG[sdl] = "--enable-sdl,--disable-sdl,libsdl"
 PACKAGECONFIG[virtfs] = "--enable-virtfs --enable-attr,--disable-virtfs,libcap attr,"
@@ -147,5 +144,6 @@ PACKAGECONFIG[gnutls] = "--enable-gnutls,--disable-gnutls,gnutls"
 PACKAGECONFIG[bzip2] = "--enable-bzip2,--disable-bzip2,bzip2"
 PACKAGECONFIG[bluez] = "--enable-bluez,--disable-bluez,${BLUEZ}"
 PACKAGECONFIG[libiscsi] = "--enable-libiscsi,--disable-libiscsi"
+PACKAGECONFIG[kvm] = "--enable-kvm,--disable-kvm"
 
 INSANE_SKIP_${PN} = "arch"
