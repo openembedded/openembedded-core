@@ -1,166 +1,142 @@
-import unittest
+import os
 import re
-import oe
 import subprocess
-from oeqa.oetest import oeRuntimeTest, skipModule
-from oeqa.utils.decorators import *
 from oeqa.utils.httpserver import HTTPService
 
-def setUpModule():
-    if not oeRuntimeTest.hasFeature("package-management"):
-        skipModule("Image doesn't have package management feature")
-    if not oeRuntimeTest.hasPackage("smartpm"):
-        skipModule("Image doesn't have smart installed")
-    if "package_rpm" != oeRuntimeTest.tc.d.getVar("PACKAGE_CLASSES").split()[0]:
-        skipModule("Rpm is not the primary package manager")
+from oeqa.runtime.case import OERuntimeTestCase
+from oeqa.core.decorator.depends import OETestDepends
+from oeqa.core.decorator.oeid import OETestID
+from oeqa.core.decorator.data import skipIfNotDataVar, skipIfNotFeature
+from oeqa.runtime.decorator.package import OEHasPackage
 
-class SmartTest(oeRuntimeTest):
+class SmartTest(OERuntimeTestCase):
 
-    @skipUnlessPassed('test_smart_help')
     def smart(self, command, expected = 0):
         command = 'smart %s' % command
         status, output = self.target.run(command, 1500)
         message = os.linesep.join([command, output])
         self.assertEqual(status, expected, message)
-        self.assertFalse("Cannot allocate memory" in output, message)
+        self.assertFalse('Cannot allocate memory' in output, message)
         return output
 
 class SmartBasicTest(SmartTest):
 
-    @testcase(716)
-    @skipUnlessPassed('test_ssh')
+    @skipIfNotFeature('package-management',
+                      'Test requires package-management to be in IMAGE_FEATURES')
+    @skipIfNotDataVar('PACKAGE_CLASSES', 'package_rpm',
+                      'RPM is not the primary package manager')
+    @OEHasPackage(['smartpm'])
+    @OETestID(716)
+    @OETestDepends(['ssh.SSHTest.test_ssh'])
     def test_smart_help(self):
         self.smart('--help')
 
-    @testcase(968)
+    @OETestID(968)
+    @OETestDepends(['smart.SmartBasicTest.test_smart_help'])
     def test_smart_version(self):
         self.smart('--version')
 
-    @testcase(721)
+    @OETestID(721)
+    @OETestDepends(['smart.SmartBasicTest.test_smart_help'])
     def test_smart_info(self):
         self.smart('info python-smartpm')
 
-    @testcase(421)
+    @OETestID(421)
+    @OETestDepends(['smart.SmartBasicTest.test_smart_help'])
     def test_smart_query(self):
         self.smart('query python-smartpm')
 
-    @testcase(720)
+    @OETestID(720)
+    @OETestDepends(['smart.SmartBasicTest.test_smart_help'])
     def test_smart_search(self):
         self.smart('search python-smartpm')
 
-    @testcase(722)
+    @OETestID(722)
+    @OETestDepends(['smart.SmartBasicTest.test_smart_help'])
     def test_smart_stats(self):
         self.smart('stats')
 
 class SmartRepoTest(SmartTest):
 
     @classmethod
-    def create_index(self, arg):
-        index_cmd = arg
-        try:
-            bb.note("Executing '%s' ..." % index_cmd)
-            result = subprocess.check_output(index_cmd, stderr=subprocess.STDOUT, shell=True).decode("utf-8")
-        except subprocess.CalledProcessError as e:
-            return("Index creation command '%s' failed with return code %d:\n%s" %
-                    (e.cmd, e.returncode, e.output.decode("utf-8")))
-        if result:
-            bb.note(result)
-        return None
+    def setUpClass(cls):
+        cls.repolist = []
+        cls.repo_server = HTTPService(cls.tc.td['WORKDIR'],
+                                      cls.tc.target.server_ip)
+        cls.repo_server.start()
 
     @classmethod
-    def setUpClass(self):
-        self.repolist = []
+    def tearDownClass(cls):
+        cls.repo_server.stop()
+        for repo in cls.repolist:
+            cls.tc.target.run('smart channel -y --remove %s' % repo)
 
-        # Index RPMs
-        rpm_createrepo = bb.utils.which(os.getenv('PATH'), "createrepo")
-        index_cmds = []
-        rpm_dirs_found = False
-        archs = (oeRuntimeTest.tc.d.getVar('ALL_MULTILIB_PACKAGE_ARCHS') or "").replace('-', '_').split()
-        for arch in archs:
-            rpm_dir = os.path.join(oeRuntimeTest.tc.d.getVar('DEPLOY_DIR_RPM'), arch)
-            idx_path = os.path.join(oeRuntimeTest.tc.d.getVar('WORKDIR'), 'rpm', arch)
-            db_path = os.path.join(oeRuntimeTest.tc.d.getVar('WORKDIR'), 'rpmdb', arch)
-            if not os.path.isdir(rpm_dir):
-                continue
-            if os.path.exists(db_path):
-                bb.utils.remove(dbpath, True)
-            lockfilename = oeRuntimeTest.tc.d.getVar('DEPLOY_DIR_RPM') + "/rpm.lock"
-            lf = bb.utils.lockfile(lockfilename, False)
-            oe.path.copyhardlinktree(rpm_dir, idx_path)
-            # Full indexes overload a 256MB image so reduce the number of rpms
-            # in the feed. Filter to p* since we use the psplash packages and
-            # this leaves some allarch and machine arch packages too.
-            bb.utils.remove(idx_path + "*/[a-oq-z]*.rpm")
-            bb.utils.unlockfile(lf)
-            index_cmds.append("%s --dbpath %s --update -q %s" % (rpm_createrepo, db_path, idx_path))
-            rpm_dirs_found = True
-         # Create repodata¬
-        result = oe.utils.multiprocess_exec(index_cmds, self.create_index)
-        if result:
-            bb.fatal('%s' % ('\n'.join(result)))
-        self.repo_server = HTTPService(oeRuntimeTest.tc.d.getVar('WORKDIR'), oeRuntimeTest.tc.target.server_ip)
-        self.repo_server.start()
-
-    @classmethod
-    def tearDownClass(self):
-        self.repo_server.stop()
-        for i in self.repolist:
-            oeRuntimeTest.tc.target.run('smart channel -y --remove '+str(i))
-
-    @testcase(1143)
+    @OETestID(1143)
+    @OETestDepends(['smart.SmartBasicTest.test_smart_help'])
     def test_smart_channel(self):
         self.smart('channel', 1)
 
-    @testcase(719)
+    @OETestID(719)
+    @OETestDepends(['smart.SmartBasicTest.test_smart_help'])
     def test_smart_channel_add(self):
-        image_pkgtype = self.tc.d.getVar('IMAGE_PKGTYPE')
-        deploy_url = 'http://%s:%s/%s' %(self.target.server_ip, self.repo_server.port, image_pkgtype)
-        pkgarchs = self.tc.d.getVar('PACKAGE_ARCHS').replace("-","_").split()
-        for arch in os.listdir('%s/%s' % (self.repo_server.root_dir, image_pkgtype)):
+        image_pkgtype = self.tc.td['IMAGE_PKGTYPE']
+        deploy_url = 'http://%s:%s/%s' % (self.target.server_ip,
+                                          self.repo_server.port,
+                                          image_pkgtype)
+        pkgarchs = self.tc.td['PACKAGE_ARCHS'].replace("-","_").split()
+        archs = os.listdir(os.path.join(self.repo_server.root_dir,
+                                        image_pkgtype))
+        for arch in archs:
             if arch in pkgarchs:
-                self.smart('channel -y --add {a} type=rpm-md baseurl={u}/{a}'.format(a=arch, u=deploy_url))
+                cmd = ('channel -y --add {a} type=rpm-md '
+                      'baseurl={u}/{a}'.format(a=arch, u=deploy_url))
+                self.smart(cmd)
                 self.repolist.append(arch)
         self.smart('update')
 
-    @testcase(969)
+    @OETestID(969)
+    @OETestDepends(['smart.SmartBasicTest.test_smart_help'])
     def test_smart_channel_help(self):
         self.smart('channel --help')
 
-    @testcase(970)
+    @OETestID(970)
+    @OETestDepends(['smart.SmartBasicTest.test_smart_help'])
     def test_smart_channel_list(self):
         self.smart('channel --list')
 
-    @testcase(971)
+    @OETestID(971)
+    @OETestDepends(['smart.SmartBasicTest.test_smart_help'])
     def test_smart_channel_show(self):
         self.smart('channel --show')
 
-    @testcase(717)
+    @OETestID(717)
+    @OETestDepends(['smart.SmartBasicTest.test_smart_help'])
     def test_smart_channel_rpmsys(self):
         self.smart('channel --show rpmsys')
         self.smart('channel --disable rpmsys')
         self.smart('channel --enable rpmsys')
 
-    @testcase(1144)
-    @skipUnlessPassed('test_smart_channel_add')
+    @OETestID(1144)
+    @OETestDepends(['smart.SmartRepoTest.test_smart_channel_add'])
     def test_smart_install(self):
         self.smart('remove -y psplash-default')
         self.smart('install -y psplash-default')
 
-    @testcase(728)
-    @skipUnlessPassed('test_smart_install')
+    @OETestID(728)
+    @OETestDepends(['smart.SmartRepoTest.test_smart_install'])
     def test_smart_install_dependency(self):
         self.smart('remove -y psplash')
         self.smart('install -y psplash-default')
 
-    @testcase(723)
-    @skipUnlessPassed('test_smart_channel_add')
+    @OETestID(723)
+    @OETestDepends(['smart.SmartRepoTest.test_smart_channel_add'])
     def test_smart_install_from_disk(self):
         self.smart('remove -y psplash-default')
         self.smart('download psplash-default')
         self.smart('install -y ./psplash-default*')
 
-    @testcase(725)
-    @skipUnlessPassed('test_smart_channel_add')
+    @OETestID(725)
+    @OETestDepends(['smart.SmartRepoTest.test_smart_channel_add'])
     def test_smart_install_from_http(self):
         output = self.smart('download --urls psplash-default')
         url = re.search('(http://.*/psplash-default.*\.rpm)', output)
@@ -168,19 +144,20 @@ class SmartRepoTest(SmartTest):
         self.smart('remove -y psplash-default')
         self.smart('install -y %s' % url.group(0))
 
-    @testcase(729)
-    @skipUnlessPassed('test_smart_install')
+    @OETestID(729)
+    @OETestDepends(['smart.SmartRepoTest.test_smart_install'])
     def test_smart_reinstall(self):
         self.smart('reinstall -y psplash-default')
 
-    @testcase(727)
-    @skipUnlessPassed('test_smart_channel_add')
+    @OETestID(727)
+    @OETestDepends(['smart.SmartRepoTest.test_smart_channel_add'])
     def test_smart_remote_repo(self):
         self.smart('update')
         self.smart('install -y psplash')
         self.smart('remove -y psplash')
 
-    @testcase(726)
+    @OETestID(726)
+    @OETestDepends(['smart.SmartBasicTest.test_smart_help'])
     def test_smart_local_dir(self):
         self.target.run('mkdir /tmp/myrpmdir')
         self.smart('channel --add myrpmdir type=rpm-dir path=/tmp/myrpmdir -y')
@@ -198,7 +175,8 @@ class SmartRepoTest(SmartTest):
         self.smart('channel --remove myrpmdir -y')
         self.target.run("rm -rf /tmp/myrpmdir")
 
-    @testcase(718)
+    @OETestID(718)
+    @OETestDepends(['smart.SmartBasicTest.test_smart_help'])
     def test_smart_add_rpmdir(self):
         self.target.run('mkdir /tmp/myrpmdir')
         self.smart('channel --add myrpmdir type=rpm-dir path=/tmp/myrpmdir -y')
@@ -211,8 +189,8 @@ class SmartRepoTest(SmartTest):
         self.smart('channel --remove myrpmdir -y')
         self.target.run("rm -rf /tmp/myrpmdir")
 
-    @testcase(731)
-    @skipUnlessPassed('test_smart_channel_add')
+    @OETestID(731)
+    @OETestDepends(['smart.SmartRepoTest.test_smart_channel_add'])
     def test_smart_remove_package(self):
         self.smart('install -y psplash')
         self.smart('remove -y psplash')

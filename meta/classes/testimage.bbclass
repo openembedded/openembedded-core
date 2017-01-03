@@ -116,6 +116,10 @@ python do_testimage() {
 
     testimage_sanity(d)
 
+    if (d.getVar('IMAGE_PKGTYPE') == 'rpm'
+       and 'smart' in d.getVar('TEST_SUITES')):
+        create_rpm_index(d)
+
     testimage_main(d)
 }
 
@@ -283,6 +287,55 @@ def get_runtime_paths(d):
         if os.path.isdir(path):
             paths.append(path)
     return paths
+
+def create_index(arg):
+    import subprocess
+
+    index_cmd = arg
+    try:
+        bb.note("Executing '%s' ..." % index_cmd)
+        result = subprocess.check_output(index_cmd,
+                                        stderr=subprocess.STDOUT,
+                                        shell=True)
+        result = result.decode('utf-8')
+    except subprocess.CalledProcessError as e:
+        return("Index creation command '%s' failed with return code "
+               '%d:\n%s' % (e.cmd, e.returncode, e.output.decode("utf-8")))
+    if result:
+        bb.note(result)
+    return None
+
+def create_rpm_index(d):
+    # Index RPMs
+    rpm_createrepo = bb.utils.which(os.getenv('PATH'), "createrepo")
+    index_cmds = []
+    archs = (d.getVar('ALL_MULTILIB_PACKAGE_ARCHS') or '').replace('-', '_')
+
+    for arch in archs.split():
+        rpm_dir = os.path.join(d.getVar('DEPLOY_DIR_RPM'), arch)
+        idx_path = os.path.join(d.getVar('WORKDIR'), 'rpm', arch)
+        db_path = os.path.join(d.getVar('WORKDIR'), 'rpmdb', arch)
+
+        if not os.path.isdir(rpm_dir):
+            continue
+        if os.path.exists(db_path):
+            bb.utils.remove(dbpath, True)
+
+        lockfilename = os.path.join(d.getVar('DEPLOY_DIR_RPM'), 'rpm.lock')
+        lf = bb.utils.lockfile(lockfilename, False)
+        oe.path.copyhardlinktree(rpm_dir, idx_path)
+        # Full indexes overload a 256MB image so reduce the number of rpms
+        # in the feed. Filter to p* since we use the psplash packages and
+        # this leaves some allarch and machine arch packages too.
+        bb.utils.remove(idx_path + "*/[a-oq-z]*.rpm")
+        bb.utils.unlockfile(lf)
+        cmd = '%s --dbpath %s --update -q %s' % (rpm_createrepo,
+                                                 db_path, idx_path)
+
+        # Create repodata
+        result = create_index(cmd)
+        if result:
+            bb.fatal('%s' % ('\n'.join(result)))
 
 def test_create_extract_dirs(d):
     install_path = d.getVar("TEST_INSTALL_TMP_DIR")
