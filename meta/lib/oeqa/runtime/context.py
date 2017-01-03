@@ -5,6 +5,7 @@ import os
 
 from oeqa.core.context import OETestContext, OETestContextExecutor
 from oeqa.core.target.ssh import OESSHTarget
+from oeqa.core.target.qemu import OEQemuTarget
 from oeqa.utils.dump import HostDumper
 
 from oeqa.runtime.loader import OERuntimeTestLoader
@@ -16,6 +17,7 @@ class OERuntimeTestContext(OETestContext):
 
     def __init__(self, td, logger, target, host_dumper, image_packages):
         super(OERuntimeTestContext, self).__init__(td, logger)
+
         self.target = target
         self.image_packages = image_packages
         self.host_dumper = host_dumper
@@ -70,17 +72,19 @@ class OERuntimeTestContextExecutor(OETestContextExecutor):
         runtime_group.add_argument('--packages-manifest', action='store',
                 help="Package manifest of the image under test")
 
+        runtime_group.add_argument('--qemu-boot', action='store',
+                help="Qemu boot configuration, only needed when target_type is QEMU.")
 
     @staticmethod
-    def getTarget(target_type, target_ip, server_ip):
+    def getTarget(target_type, target_ip, server_ip, **kwargs):
         target = None
 
         if target_type == 'simpleremote':
-            target = OESSHTarget(target_ip)
+            target = OESSHTarget(target_ip, server_ip, kwargs)
         elif target_type == 'qemu':
-            raise NotImplementedError("target_type %s isn't implemented yet" % \
-                    target_type)
+            target = OEQemuTarget(target_ip, server_ip, kwargs)
         else:
+            # TODO: Implement custom target module loading
             raise TypeError("target_type %s isn't supported" % target_type)
 
         return target
@@ -109,8 +113,12 @@ class OERuntimeTestContextExecutor(OETestContextExecutor):
 
         super(OERuntimeTestContextExecutor, self)._process_args(logger, args)
 
+        target_kwargs = {}
+        target_kwargs['qemuboot'] = args.qemu_boot
+
         self.tc_kwargs['init']['target'] = \
-                OERuntimeTestContextExecutor.getTarget(args.target_type)
+                OERuntimeTestContextExecutor.getTarget(args.target_type,
+                        args.target_ip, args.server_ip, **target_kwargs)
         self.tc_kwargs['init']['host_dumper'] = \
                 OERuntimeTestContextExecutor.getHostDumper(None,
                         args.host_dumper_dir)
