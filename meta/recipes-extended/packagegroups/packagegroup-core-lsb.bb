@@ -11,6 +11,9 @@ inherit packagegroup distro_features_check
 # The libxt, libxtst and others require x11 in DISTRO_FEATURES
 REQUIRED_DISTRO_FEATURES = "x11"
 
+# libglu needs virtual/libgl, which requires opengl in DISTRO_FEATURES
+REQUIRED_DISTRO_FEATURES += "opengl"
+
 #
 # We will skip parsing this packagegeoup for non-glibc systems
 #
