@@ -26,6 +26,12 @@ SRC_URI = "ftp://ftp.alsa-project.org/pub/utils/alsa-utils-${PV}.tar.bz2 \
 SRC_URI[md5sum] = "2bf94d3e3410dcc74bb0dae10d46a979"
 SRC_URI[sha256sum] = "127217a54eea0f9a49700a2f239a2d4f5384aa094d68df04a8eb80132eb6167c"
 
+# On build machines with python-docutils (not python3-docutils !!) installed
+# rst2man (not rst2man.py) is detected and compile fails with
+# | make[1]: *** No rule to make target 'alsaucm.1', needed by 'all-am'.  Stop.
+# Avoid this by disabling expicitly
+EXTRA_OECONF = "--disable-rst2man"
+
 # lazy hack. needs proper fixing in gettext.m4, see
 # http://bugs.openembedded.org/show_bug.cgi?id=2348
 # please close bug and remove this comment when properly fixed
