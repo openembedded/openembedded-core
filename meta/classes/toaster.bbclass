@@ -157,10 +157,10 @@ python toaster_collect_task_stats() {
     import bb.utils
     import os
 
-    toaster_statlist_file = os.path.join(e.data.getVar('BUILDSTATS_BASE'), "toasterstatlist")
-
     if not e.data.getVar('BUILDSTATS_BASE'):
         return  # if we don't have buildstats, we cannot collect stats
+
+    toaster_statlist_file = os.path.join(e.data.getVar('BUILDSTATS_BASE'), "toasterstatlist")
 
     def stat_to_float(value):
         return float(value.strip('% \n\r'))
