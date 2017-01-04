@@ -208,18 +208,18 @@ do_install_append_class-target() {
 
 pkg_postinst_${PN} () {
     if [ -n "$D" ]; then
-        for I in $D/${libdir}/lib*.chk; do
+        for I in $D${libdir}/lib*.chk; do
             DN=`dirname $I`
             BN=`basename $I .chk`
             FN=$DN/$BN.so
             shlibsign -i $FN
-	    if [ $? -ne 0 ]; then
-	       exit 1
-	    fi
+            if [ $? -ne 0 ]; then
+                exit 1
+            fi
         done
-        exit 0
+    else
+        signlibs.sh
     fi
-    signlibs.sh
 }
 
 PACKAGES =+ "${PN}-smime"
