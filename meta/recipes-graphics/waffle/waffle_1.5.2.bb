@@ -20,6 +20,9 @@ PACKAGECONFIG ??= "glx"
 # libx11 requires x11 in DISTRO_FEATURES.
 REQUIRED_DISTRO_FEATURES = "${@bb.utils.contains('PACKAGECONFIG', 'glx', 'x11', '', d)}"
 
+# virtual/libgl requires opengl in DISTRO_FEATURES.
+REQUIRED_DISTRO_FEATURES += "${@bb.utils.contains('DEPENDS', 'virtual/libgl', 'opengl', '', d)}"
+
 # I say virtual/libgl, actually wants gl.pc
 PACKAGECONFIG[glx] = "-Dwaffle_has_glx=1,-Dwaffle_has_glx=0,virtual/libgl libx11"
 
