@@ -22,6 +22,9 @@ inherit cmake python3native distro_features_check bash-completion
 # depends on virtual/libx11
 REQUIRED_DISTRO_FEATURES = "x11"
 
+# depends on virtual/libgl
+REQUIRED_DISTRO_FEATURES += "opengl"
+
 # The built scripts go into the temporary directory according to tempfile
 # (typically /tmp) which can race if multiple builds happen on the same machine,
 # so tell it to use a directory in ${B} to avoid overwriting.
