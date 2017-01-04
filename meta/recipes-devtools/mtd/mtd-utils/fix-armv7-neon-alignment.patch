@@ -8,8 +8,8 @@ Signed-off-by: Yuanjie Huang <Yuanjie.Huang@windriver.com>
 
 diff --git a/mkfs.ubifs/key.h b/mkfs.ubifs/key.h
 index d3a02d4..e7e9218 100644
---- a/mkfs.ubifs/key.h
-+++ b/mkfs.ubifs/key.h
+--- a/ubifs-utils/mkfs.ubifs/key.h
++++ b/ubifs-utils/mkfs.ubifs/key.h
 @@ -141,10 +141,12 @@ static inline void data_key_init(union ubifs_key *key, ino_t inum,
   */
  static inline void key_write(const union ubifs_key *from, void *to)

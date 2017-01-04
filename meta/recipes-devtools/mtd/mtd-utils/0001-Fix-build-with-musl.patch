@@ -14,8 +14,8 @@ Signed-off-by: Khem Raj <raj.khem@gmail.com>
 
 diff --git a/mkfs.jffs2.c b/mkfs.jffs2.c
 index f09c0b2..ed2dc43 100644
---- a/mkfs.jffs2.c
-+++ b/mkfs.jffs2.c
+--- a/jffsX-utils/mkfs.jffs2.c
++++ b/jffsX-utils/mkfs.jffs2.c
 @@ -72,6 +72,7 @@
  #include <byteswap.h>
  #include <crc32.h>
