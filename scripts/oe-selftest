@@ -111,8 +111,12 @@ def get_args_parser():
                         help='Submit test results to a repository')
     return parser
 
+builddir = None
+
 
 def preflight_check():
+
+    global builddir
 
     log.info("Checking that everything is in order before running the tests")
 
@@ -135,7 +139,7 @@ def preflight_check():
     return True
 
 def add_include():
-    builddir = os.environ.get("BUILDDIR")
+    global builddir
     if "#include added by oe-selftest.py" \
         not in ftools.read_file(os.path.join(builddir, "conf/local.conf")):
             log.info("Adding: \"include selftest.inc\" in local.conf")
@@ -149,7 +153,7 @@ def add_include():
                     "\n#include added by oe-selftest.py\ninclude bblayers.inc")
 
 def remove_include():
-    builddir = os.environ.get("BUILDDIR")
+    global builddir
     if builddir is None:
         return
     if "#include added by oe-selftest.py" \
@@ -165,18 +169,21 @@ def remove_include():
                     "\n#include added by oe-selftest.py\ninclude bblayers.inc")
 
 def remove_inc_files():
+    global builddir
+    if builddir is None:
+        return
     try:
-        os.remove(os.path.join(os.environ.get("BUILDDIR"), "conf/selftest.inc"))
+        os.remove(os.path.join(builddir, "conf/selftest.inc"))
         for root, _, files in os.walk(get_test_layer()):
             for f in files:
                 if f == 'test_recipe.inc':
                     os.remove(os.path.join(root, f))
-    except (AttributeError, OSError,) as e:    # AttributeError may happen if BUILDDIR is not set
+    except OSError as e:
         pass
 
     for incl_file in ['conf/bblayers.inc', 'conf/machine.inc']:
         try:
-            os.remove(os.path.join(os.environ.get("BUILDDIR"), incl_file))
+            os.remove(os.path.join(builddir, incl_file))
         except:
             pass
 
@@ -394,7 +401,7 @@ def coverage_setup(coverage_source, coverage_include, coverage_omit):
     """ Set up the coverage measurement for the testcases to be run """
     import datetime
     import subprocess
-    builddir = os.environ.get("BUILDDIR")
+    global builddir
     pokydir = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
     curcommit= subprocess.check_output(["git", "--git-dir", os.path.join(pokydir, ".git"), "rev-parse", "HEAD"]).decode('utf-8')
     coveragerc = "%s/.coveragerc" % builddir
