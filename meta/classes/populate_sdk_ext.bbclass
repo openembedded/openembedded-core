@@ -308,7 +308,10 @@ python copy_buildsystem () {
             f.write('BB_SETSCENE_ENFORCE_WHITELIST = "%:* *:do_shared_workdir *:do_rm_work"\n\n')
 
             # Hide the config information from bitbake output (since it's fixed within the SDK)
-            f.write('BUILDCFG_HEADER = ""\n')
+            f.write('BUILDCFG_HEADER = ""\n\n')
+
+            # Map gcc-dependent uninative sstate cache for installer usage
+            f.write('SSTATE_MIRRORS = "file://universal/(.*) file://universal-4.9/\\1\\nfile://universal-4.9/(.*) file://universal-4.8/\\1"\n\n')
 
             # Allow additional config through sdk-extra.conf
             fn = bb.cookerdata.findConfigFile('sdk-extra.conf', d)
