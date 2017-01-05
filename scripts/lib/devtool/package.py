@@ -34,7 +34,7 @@ def package(args, config, basepath, workspace):
         if not image_pkgtype:
             image_pkgtype = tinfoil.config_data.getVar('IMAGE_PKGTYPE')
 
-        deploy_dir_pkg = tinfoil.config_data.getVar('DEPLOY_DIR_%s' % image_pkgtype.upper(), True)
+        deploy_dir_pkg = tinfoil.config_data.getVar('DEPLOY_DIR_%s' % image_pkgtype.upper())
     finally:
         tinfoil.shutdown()
 

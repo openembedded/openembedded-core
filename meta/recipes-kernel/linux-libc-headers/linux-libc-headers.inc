@@ -33,7 +33,7 @@ LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
 python __anonymous () {
-    major = d.getVar("PV",True).split('.')[0]
+    major = d.getVar("PV").split('.')[0]
     if major == "3":
         d.setVar("HEADER_FETCH_VER", "3.0")
     elif major == "4":

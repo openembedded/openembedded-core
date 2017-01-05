@@ -307,7 +307,7 @@ hardlinkdir () {
 
 def check_app_exists(app, d):
     app = d.expand(app).strip()
-    path = d.getVar('PATH', d, True)
+    path = d.getVar('PATH')
     return bool(bb.utils.which(path, app))
 
 def explode_deps(s):

@@ -117,7 +117,7 @@ python bugzilla_eventhandler() {
         compon  = data.getVar("BUGZILLA_COMPONENT")
         version = data.getVar("BUGZILLA_VERSION")
 
-        proxy   = data.getVar('http_proxy', True )
+        proxy   = data.getVar('http_proxy')
         if (proxy):
             import urllib2
             s, u, p, hostport = urllib2._parse_proxy(proxy)
@@ -140,7 +140,7 @@ python bugzilla_eventhandler() {
                                                            "pv"      : data.getVar("PV"),
                                                            }
         log_file = glob.glob("%s/log.%s.*" % (event.data.getVar('T'), event.task))
-        text     = "The %s step in %s failed at %s for machine %s" % (e.task, data.getVar("PN"), data.getVar('DATETIME'), data.getVar( 'MACHINE', True ) )
+        text     = "The %s step in %s failed at %s for machine %s" % (e.task, data.getVar("PN"), data.getVar('DATETIME'), data.getVar('MACHINE') )
         if len(log_file) != 0:
             print >> debug_file, "Adding log file %s" % log_file[0]
             file = open(log_file[0], 'r')

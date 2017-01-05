@@ -69,7 +69,7 @@ python systemd_populate_packages() {
         return
 
     def get_package_var(d, var, pkg):
-        val = (d.getVar('%s_%s' % (var, pkg), True) or "").strip()
+        val = (d.getVar('%s_%s' % (var, pkg)) or "").strip()
         if val == "":
             val = (d.getVar(var) or "").strip()
         return val

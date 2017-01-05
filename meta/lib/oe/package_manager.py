@@ -129,11 +129,9 @@ class RpmIndexer(Indexer):
                     if default_tune:
                         localdata.setVar("DEFAULTTUNE", default_tune)
                         bb.data.update_data(localdata)
-                        package_archs[eext[1]] = localdata.getVar('PACKAGE_ARCHS',
-                                                                  True).split()
+                        package_archs[eext[1]] = localdata.getVar('PACKAGE_ARCHS').split()
                         package_archs[eext[1]].reverse()
-                        target_os[eext[1]] = localdata.getVar("TARGET_OS",
-                                                              True).strip()
+                        target_os[eext[1]] = localdata.getVar("TARGET_OS").strip()
 
         ml_prefix_list = collections.OrderedDict()
         for mlib in package_archs:

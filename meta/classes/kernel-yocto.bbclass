@@ -286,7 +286,7 @@ python do_kernel_configcheck() {
     # if KMETA isn't set globally by a recipe using this routine, we need to
     # set the default to 'meta'. Otherwise, kconf_check is not passed a valid
     # meta-series for processing
-    kmeta = d.getVar( "KMETA", True ) or "meta"
+    kmeta = d.getVar("KMETA") or "meta"
     if not os.path.exists(kmeta):
         kmeta = "." + kmeta
 
@@ -298,8 +298,8 @@ python do_kernel_configcheck() {
     cmd = d.expand("cd ${S}; kconf_check --report -o ${S}/%s/cfg/ ${B}/.config ${S} %s" % (kmeta,configs))
     ret, result = oe.utils.getstatusoutput("%s%s" % (pathprefix, cmd))
 
-    config_check_visibility = int(d.getVar( "KCONF_AUDIT_LEVEL", True ) or 0)
-    bsp_check_visibility = int(d.getVar( "KCONF_BSP_AUDIT_LEVEL", True ) or 0)
+    config_check_visibility = int(d.getVar("KCONF_AUDIT_LEVEL") or 0)
+    bsp_check_visibility = int(d.getVar("KCONF_BSP_AUDIT_LEVEL") or 0)
 
     # if config check visibility is non-zero, report dropped configuration values
     mismatch_file = d.expand("${S}/%s/cfg/mismatch.txt" % kmeta)

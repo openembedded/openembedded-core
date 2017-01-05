@@ -60,8 +60,8 @@ efi_hddimg_populate() {
 }
 
 python build_efi_cfg() {
-    s = d.getVar("S", True)
-    labels = d.getVar('LABELS', True)
+    s = d.getVar("S")
+    labels = d.getVar('LABELS')
     if not labels:
         bb.debug(1, "LABELS not defined, nothing to do")
         return
@@ -70,7 +70,7 @@ python build_efi_cfg() {
         bb.debug(1, "No labels, nothing to do")
         return
 
-    cfile = d.getVar('GUMMIBOOT_CFG', True)
+    cfile = d.getVar('GUMMIBOOT_CFG')
     try:
          cfgfile = open(cfile, 'w')
     except OSError:
@@ -78,7 +78,7 @@ python build_efi_cfg() {
 
     cfgfile.write('# Automatically created by OE\n')
     cfgfile.write('default %s\n' % (labels.split()[0]))
-    timeout = d.getVar('GUMMIBOOT_TIMEOUT', True)
+    timeout = d.getVar('GUMMIBOOT_TIMEOUT')
     if timeout:
         cfgfile.write('timeout %s\n' % timeout)
     else:
@@ -88,7 +88,7 @@ python build_efi_cfg() {
     for label in labels.split():
         localdata = d.createCopy()
 
-        overrides = localdata.getVar('OVERRIDES', True)
+        overrides = localdata.getVar('OVERRIDES')
         if not overrides:
             bb.fatal('OVERRIDES not defined')
 
@@ -104,8 +104,8 @@ python build_efi_cfg() {
         entrycfg.write('title %s\n' % label)
         entrycfg.write('linux /vmlinuz\n')
 
-        append = localdata.getVar('APPEND', True)
-        initrd = localdata.getVar('INITRD', True)
+        append = localdata.getVar('APPEND')
+        initrd = localdata.getVar('INITRD')
 
         if initrd:
             entrycfg.write('initrd /initrd\n')

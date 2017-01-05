@@ -117,7 +117,7 @@ def _write_append(rc, srctree, same_dir, no_same_dir, rev, copied, workspace, d)
     brf = os.path.basename(os.path.splitext(rc)[0]) # rc basename
 
     srctree = os.path.abspath(srctree)
-    pn = d.getVar('PN',True)
+    pn = d.getVar('PN')
     af = os.path.join(appendpath, '%s.bbappend' % brf)
     with open(af, 'w') as f:
         f.write('FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"\n\n')

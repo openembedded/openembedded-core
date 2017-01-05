@@ -249,7 +249,7 @@ python compress_doc_updatealternatives () {
                     d.setVarFlag('ALTERNATIVE_TARGET', new_name, new_target)
                 elif d.getVar('ALTERNATIVE_TARGET_%s' % pkg):
                     d.setVar('ALTERNATIVE_TARGET_%s' % pkg, new_target)
-                elif d.getVar('ALTERNATIVE_TARGET', old_name, True):
+                elif d.getVar('ALTERNATIVE_TARGET'):
                     d.setVar('ALTERNATIVE_TARGET', new_target)
 
                 new_names.append(new_name)

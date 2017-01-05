@@ -82,7 +82,7 @@ def tinder_format_http_post(d,status,log):
     # we only need on build_status.pl but sending it
     # always does not hurt
     try:
-        f = open(d.getVar('TMPDIR',True)+'/tinder-machine.id', 'r')
+        f = open(d.getVar('TMPDIR')+'/tinder-machine.id', 'r')
         id = f.read()
         variables['machine_id'] = id
     except:
@@ -106,8 +106,8 @@ def tinder_build_start(d):
 
     # get the body and type
     content_type, body = tinder_format_http_post(d,None,None)
-    server = d.getVar('TINDER_HOST', True )
-    url    = d.getVar('TINDER_URL', True )
+    server = d.getVar('TINDER_HOST')
+    url    = d.getVar('TINDER_URL')
 
     selector = url + "/xml/build_start.pl"
 
@@ -163,16 +163,16 @@ def tinder_print_info(d):
     time    = tinder_time_string()
     ops     = os.uname()[0]
     version = os.uname()[2]
-    url     = d.getVar( 'TINDER_URL' , True )
-    tree    = d.getVar( 'TINDER_TREE', True )
-    branch  = d.getVar( 'TINDER_BRANCH', True )
-    srcdate = d.getVar( 'SRCDATE', True )
-    machine = d.getVar( 'MACHINE', True )
-    distro  = d.getVar( 'DISTRO', True )
-    bbfiles = d.getVar( 'BBFILES', True )
-    tarch   = d.getVar( 'TARGET_ARCH', True )
-    fpu     = d.getVar( 'TARGET_FPU', True )
-    oerev   = d.getVar( 'OE_REVISION', True ) or "unknown"
+    url     = d.getVar('TINDER_URL')
+    tree    = d.getVar('TINDER_TREE')
+    branch  = d.getVar('TINDER_BRANCH')
+    srcdate = d.getVar('SRCDATE')
+    machine = d.getVar('MACHINE')
+    distro  = d.getVar('DISTRO')
+    bbfiles = d.getVar('BBFILES')
+    tarch   = d.getVar('TARGET_ARCH')
+    fpu     = d.getVar('TARGET_FPU')
+    oerev   = d.getVar('OE_REVISION') or "unknown"
 
     # there is a bug with tipple quoted strings
     # i will work around but will fix the original
@@ -326,7 +326,7 @@ def tinder_do_tinder_report(event):
         status = 100
         # Check if we have a old status...
         try:
-            h = open(event.data.getVar('TMPDIR',True)+'/tinder-status', 'r')
+            h = open(event.data.getVar('TMPDIR')+'/tinder-status', 'r')
             status = int(h.read())
         except:
             pass

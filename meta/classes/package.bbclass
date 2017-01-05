@@ -1286,11 +1286,11 @@ python emit_pkgdata() {
             c = codecs.getencoder("unicode_escape")
             return c(str)[0].decode("latin1")
 
-        val = d.getVar('%s_%s' % (var, pkg), True)
+        val = d.getVar('%s_%s' % (var, pkg))
         if val:
             f.write('%s_%s: %s\n' % (var, pkg, encode(val)))
             return val
-        val = d.getVar('%s' % (var), True)
+        val = d.getVar('%s' % (var))
         if val:
             f.write('%s: %s\n' % (var, encode(val)))
         return val

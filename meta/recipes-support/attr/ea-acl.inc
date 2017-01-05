@@ -21,8 +21,8 @@ do_install_append_class-native () {
 	if test "${libdir}" = "${base_libdir}" ; then
 		return
 	fi
-	librelpath=${@os.path.relpath(d.getVar('libdir',True), d.getVar('base_libdir'))}
-	baselibrelpath=${@os.path.relpath(d.getVar('base_libdir',True), d.getVar('libdir'))}
+	librelpath=${@os.path.relpath(d.getVar('libdir'), d.getVar('base_libdir'))}
+	baselibrelpath=${@os.path.relpath(d.getVar('base_libdir'), d.getVar('libdir'))}
 
 	# Remove bad symlinks & create the correct symlinks
 	if test -L ${D}${libdir}/lib${BPN}.so ; then

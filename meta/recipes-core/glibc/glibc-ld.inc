@@ -26,7 +26,7 @@ def glibc_dl_info(d):
     ld_append_if_tune_exists(d, infos, ld_info_all)
 
     #DEFAULTTUNE_MULTILIB_ORIGINAL
-    original_tune=d.getVar("DEFAULTTUNE_MULTILIB_ORIGINAL",True)
+    original_tune=d.getVar("DEFAULTTUNE_MULTILIB_ORIGINAL")
     if original_tune:
         localdata = bb.data.createCopy(d)
         localdata.setVar("DEFAULTTUNE", original_tune)

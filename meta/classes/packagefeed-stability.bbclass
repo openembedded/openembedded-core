@@ -84,7 +84,7 @@ def package_compare_impl(pkgtype, d):
     import oe.sstatesig
 
     pn = d.getVar('PN')
-    deploydir = d.getVar('DEPLOY_DIR_%s' % pkgtype.upper(), True)
+    deploydir = d.getVar('DEPLOY_DIR_%s' % pkgtype.upper())
     prepath = deploydir + '-prediff/'
 
     # Find out PKGR values are

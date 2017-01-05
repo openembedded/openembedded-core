@@ -99,7 +99,7 @@ class PtestRunnerTest(oeRuntimeTest):
         return complementary_pkgs.split()
 
     def setUpLocal(self):
-        self.ptest_log = os.path.join(oeRuntimeTest.tc.d.getVar("TEST_LOG_DIR",True), "ptest-%s.log" % oeRuntimeTest.tc.d.getVar('DATETIME'))
+        self.ptest_log = os.path.join(oeRuntimeTest.tc.d.getVar("TEST_LOG_DIR"), "ptest-%s.log" % oeRuntimeTest.tc.d.getVar('DATETIME'))
 
     @skipUnlessPassed('test_ssh')
     def test_ptestrunner(self):

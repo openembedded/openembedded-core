@@ -117,7 +117,7 @@ def write_license_files(d, license_manifest, pkg_dic):
     copy_lic_manifest = d.getVar('COPY_LIC_MANIFEST')
     copy_lic_dirs = d.getVar('COPY_LIC_DIRS')
     if copy_lic_manifest == "1":
-        rootfs_license_dir = os.path.join(d.getVar('IMAGE_ROOTFS', 'True'), 
+        rootfs_license_dir = os.path.join(d.getVar('IMAGE_ROOTFS'), 
                                 'usr', 'share', 'common-licenses')
         bb.utils.mkdirhier(rootfs_license_dir)
         rootfs_license_manifest = os.path.join(rootfs_license_dir,
@@ -516,7 +516,7 @@ def canonical_license(d, license):
     """
     lic = d.getVarFlag('SPDXLICENSEMAP', license) or ""
     if not lic and license.endswith('+'):
-        lic = d.getVarFlag('SPDXLICENSEMAP', license.rstrip('+'), True)
+        lic = d.getVarFlag('SPDXLICENSEMAP', license.rstrip('+'))
         if lic:
             lic += '+'
     return lic or license
