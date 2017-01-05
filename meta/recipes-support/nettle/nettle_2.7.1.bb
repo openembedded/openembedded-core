@@ -13,6 +13,7 @@ SRC_URI[sha256sum] = "bc71ebd43435537d767799e414fce88e521b7278d48c860651216e1fc6
 SRC_URI += "\
             file://CVE-2015-8803_8805.patch \
             file://CVE-2015-8804.patch \
+            file://check-header-files-of-openssl-only-if-enable_.patch \
             "
 
 DISABLE_STATIC = ""
