@@ -55,7 +55,7 @@ class oeSDKExtSelfTest(oeSelfTest):
     @classmethod
     def setUpClass(cls):
         # Start to serve sstate dir
-        sstate_dir = os.path.join(os.environ['BUILDDIR'], 'sstate-cache')
+        sstate_dir = get_bb_var('SSTATE_DIR')
         cls.http_service = HTTPService(sstate_dir)
         cls.http_service.start()
 
