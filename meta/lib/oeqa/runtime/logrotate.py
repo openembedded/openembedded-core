@@ -27,3 +27,4 @@ class LogrotateTest(oeRuntimeTest):
         self.assertEqual(status, 0, msg = "logrotate service could not be reloaded. Status and output: %s and %s" % (status, output))
         output = self.target.run('ls -la $HOME/logrotate_dir/ | wc -l')[1]
         self.assertTrue(int(output)>=3, msg = "new logfile could not be created. List of files within log directory: %s" %(self.target.run('ls -la $HOME/logrotate_dir')[1]))
+        self.target.run('rm -rf $HOME/logrotate_dir')
