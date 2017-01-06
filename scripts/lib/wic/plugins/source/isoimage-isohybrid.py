@@ -194,55 +194,6 @@ class IsoImagePlugin(SourcePlugin):
         return initrd
 
     @classmethod
-    def do_stage_partition(cls, part, source_params, creator, cr_workdir,
-                           oe_builddir, bootimg_dir, kernel_dir,
-                           native_sysroot):
-        """
-        Special content staging called before do_prepare_partition().
-        It cheks if all necessary tools are available, if not
-        tries to instal them.
-        """
-        # Make sure parted is available in native sysroot
-        if not os.path.isfile("%s/usr/sbin/parted" % native_sysroot):
-            msger.info("Building parted-native...\n")
-            exec_cmd("bitbake parted-native")
-
-        # Make sure mkfs.ext2/3/4 is available in native sysroot
-        if not os.path.isfile("%s/sbin/mkfs.ext2" % native_sysroot):
-            msger.info("Building e2fsprogs-native...\n")
-            exec_cmd("bitbake e2fsprogs-native")
-
-        # Make sure syslinux is available in sysroot and in native sysroot
-        syslinux_dir = get_bitbake_var("STAGING_DATADIR")
-        if not syslinux_dir:
-            msger.error("Couldn't find STAGING_DATADIR, exiting.\n")
-        if not os.path.exists("%s/syslinux" % syslinux_dir):
-            msger.info("Building syslinux...\n")
-            exec_cmd("bitbake syslinux")
-        if not os.path.exists("%s/syslinux" % syslinux_dir):
-            msger.error("Please build syslinux first\n")
-
-        # Make sure syslinux is available in native sysroot
-        if not os.path.exists("%s/usr/bin/syslinux" % native_sysroot):
-            msger.info("Building syslinux-native...\n")
-            exec_cmd("bitbake syslinux-native")
-
-        #Make sure mkisofs is available in native sysroot
-        if not os.path.isfile("%s/usr/bin/mkisofs" % native_sysroot):
-            msger.info("Building cdrtools-native...\n")
-            exec_cmd("bitbake cdrtools-native")
-
-        # Make sure mkfs.vfat is available in native sysroot
-        if not os.path.isfile("%s/sbin/mkfs.vfat" % native_sysroot):
-            msger.info("Building dosfstools-native...\n")
-            exec_cmd("bitbake dosfstools-native")
-
-        # Make sure mtools is available in native sysroot
-        if not os.path.isfile("%s/usr/bin/mcopy" % native_sysroot):
-            msger.info("Building mtools-native...\n")
-            exec_cmd("bitbake mtools-native")
-
-    @classmethod
     def do_configure_partition(cls, part, source_params, creator, cr_workdir,
                                oe_builddir, bootimg_dir, kernel_dir,
                                native_sysroot):
