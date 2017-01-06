@@ -688,7 +688,7 @@ class DevtoolTests(DevtoolBase):
         self._check_src_repo(tempdir)
         # Add a couple of commits
         # FIXME: this only tests adding, need to also test update and remove
-        result = runCmd('echo "# Additional line" >> Makefile', cwd=tempdir)
+        result = runCmd('echo "# Additional line" >> Makefile.am', cwd=tempdir)
         result = runCmd('git commit -a -m "Change the Makefile"', cwd=tempdir)
         result = runCmd('echo "A new file" > devtool-new-file', cwd=tempdir)
         result = runCmd('git add devtool-new-file', cwd=tempdir)
@@ -825,7 +825,7 @@ class DevtoolTests(DevtoolBase):
         # Check git repo
         self._check_src_repo(tempsrcdir)
         # Add a commit
-        result = runCmd('echo "# Additional line" >> Makefile', cwd=tempsrcdir)
+        result = runCmd('echo "# Additional line" >> Makefile.am', cwd=tempsrcdir)
         result = runCmd('git commit -a -m "Change the Makefile"', cwd=tempsrcdir)
         self.add_command_to_tearDown('cd %s; rm -f %s/*.patch; git checkout .' % (os.path.dirname(recipefile), testrecipe))
         # Create a temporary layer
