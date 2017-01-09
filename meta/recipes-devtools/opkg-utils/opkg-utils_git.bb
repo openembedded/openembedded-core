@@ -51,3 +51,5 @@ pkg_postrm_update-alternatives-opkg() {
 }
 
 BBCLASSEXTEND = "native nativesdk"
+
+CLEANBROKEN = "1"
