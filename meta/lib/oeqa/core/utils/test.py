@@ -2,6 +2,7 @@
 # Released under the MIT license (see COPYING.MIT)
 
 import os
+import inspect
 import unittest
 
 def getSuiteCases(suite):
@@ -46,6 +47,12 @@ def getSuiteCasesIDs(suite):
     """
     return getSuiteCasesInfo(suite, getCaseID)
 
+def getSuiteCasesFiles(suite):
+    """
+        Returns test case files paths from suite.
+    """
+    return getSuiteCasesInfo(suite, getCaseFile)
+
 def getCaseModule(test_case):
     """
         Returns test case module name.
@@ -63,6 +70,12 @@ def getCaseID(test_case):
         Returns test case complete id.
     """
     return test_case.id()
+
+def getCaseFile(test_case):
+    """
+        Returns test case file path.
+    """
+    return inspect.getsourcefile(test_case.__class__)
 
 def getCaseMethod(test_case):
     """
