@@ -30,6 +30,23 @@ ROOTFS_POSTPROCESS_COMMAND += 'empty_var_volatile;'
 SSH_DISABLE_DNS_LOOKUP ?= " ssh_disable_dns_lookup ; "
 ROOTFS_POSTPROCESS_COMMAND_append_qemuall = "${SSH_DISABLE_DNS_LOOKUP}"
 
+# Sort the user and group entries in /etc by ID in order to make the content
+# deterministic. Package installs are not deterministic, causing the ordering
+# of entries to change between builds. In case that this isn't desired,
+# the command can be overridden.
+#
+# Note that useradd-staticids.bbclass has to be used to ensure that
+# the numeric IDs of dynamically created entries remain stable.
+#
+# We want this to run as late as possible, in particular after
+# systemd_sysusers_create and set_user_group. Using _append is not
+# enough for that, set_user_group is added that way and would end
+# up running after us.
+SORT_PASSWD_POSTPROCESS_COMMAND ??= " sort_passwd; "
+python () {
+    d.appendVar('ROOTFS_POSTPROCESS_COMMAND', '${SORT_PASSWD_POSTPROCESS_COMMAND}')
+}
+
 systemd_create_users () {
 	for conffile in ${IMAGE_ROOTFS}/usr/lib/sysusers.d/systemd.conf ${IMAGE_ROOTFS}/usr/lib/sysusers.d/systemd-remote.conf; do
 		[ -e $conffile ] || continue
@@ -144,6 +161,11 @@ ssh_disable_dns_lookup () {
 	if [ -e ${IMAGE_ROOTFS}${sysconfdir}/ssh/sshd_config ]; then
 		sed -i -e 's:#UseDNS yes:UseDNS no:' ${IMAGE_ROOTFS}${sysconfdir}/ssh/sshd_config
 	fi
+}
+
+python sort_passwd () {
+    import rootfspostcommands
+    rootfspostcommands.sort_passwd(d.expand('${IMAGE_ROOTFS}${sysconfdir}'))
 }
 
 #
