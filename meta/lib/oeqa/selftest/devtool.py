@@ -340,12 +340,11 @@ class DevtoolTests(DevtoolBase):
 
     @testcase(1161)
     def test_devtool_add_fetch_git(self):
-        # Fetch source
         tempdir = tempfile.mkdtemp(prefix='devtoolqa')
         self.track_for_cleanup(tempdir)
-        url = 'git://git.yoctoproject.org/libmatchbox'
-        checkrev = '462f0652055d89c648ddd54fd7b03f175c2c6973'
-        testrecipe = 'libmatchbox2'
+        url = 'gitsm://git.yoctoproject.org/mraa'
+        checkrev = 'ae127b19a50aa54255e4330ccfdd9a5d058e581d'
+        testrecipe = 'mraa'
         srcdir = os.path.join(tempdir, testrecipe)
         # Test devtool add
         self.track_for_cleanup(self.workspacedir)
@@ -353,7 +352,7 @@ class DevtoolTests(DevtoolBase):
         self.add_command_to_tearDown('bitbake-layers remove-layer */workspace')
         result = runCmd('devtool add %s %s -a -f %s' % (testrecipe, srcdir, url))
         self.assertTrue(os.path.exists(os.path.join(self.workspacedir, 'conf', 'layer.conf')), 'Workspace directory not created: %s' % result.output)
-        self.assertTrue(os.path.isfile(os.path.join(srcdir, 'configure.ac')), 'Unable to find configure.ac in source directory')
+        self.assertTrue(os.path.isfile(os.path.join(srcdir, 'imraa', 'imraa.c')), 'Unable to find imraa/imraa.c in source directory')
         # Test devtool status
         result = runCmd('devtool status')
         self.assertIn(testrecipe, result.output)
@@ -363,7 +362,7 @@ class DevtoolTests(DevtoolBase):
         self.assertIn('_git.bb', recipefile, 'Recipe file incorrectly named')
         checkvars = {}
         checkvars['S'] = '${WORKDIR}/git'
-        checkvars['PV'] = '1.12+git${SRCPV}'
+        checkvars['PV'] = '1.0+git${SRCPV}'
         checkvars['SRC_URI'] = url
         checkvars['SRCREV'] = '${AUTOREV}'
         self._test_recipe_contents(recipefile, checkvars, [])
@@ -372,7 +371,7 @@ class DevtoolTests(DevtoolBase):
         shutil.rmtree(srcdir)
         url_rev = '%s;rev=%s' % (url, checkrev)
         result = runCmd('devtool add %s %s -f "%s" -V 1.5' % (testrecipe, srcdir, url_rev))
-        self.assertTrue(os.path.isfile(os.path.join(srcdir, 'configure.ac')), 'Unable to find configure.ac in source directory')
+        self.assertTrue(os.path.isfile(os.path.join(srcdir, 'imraa', 'imraa.c')), 'Unable to find imraa/imraa.c in source directory')
         # Test devtool status
         result = runCmd('devtool status')
         self.assertIn(testrecipe, result.output)
@@ -658,8 +657,8 @@ class DevtoolTests(DevtoolBase):
     @testcase(1378)
     def test_devtool_modify_virtual(self):
         # Try modifying a virtual recipe
-        virtrecipe = 'virtual/libx11'
-        realrecipe = 'libx11'
+        virtrecipe = 'virtual/make'
+        realrecipe = 'make'
         tempdir = tempfile.mkdtemp(prefix='devtoolqa')
         self.track_for_cleanup(tempdir)
         self.track_for_cleanup(self.workspacedir)
@@ -1093,7 +1092,7 @@ class DevtoolTests(DevtoolBase):
         tempdir = tempfile.mkdtemp(prefix='devtoolqa')
         # Try devtool extract
         self.track_for_cleanup(tempdir)
-        result = runCmd('devtool extract virtual/libx11 %s' % tempdir)
+        result = runCmd('devtool extract virtual/make %s' % tempdir)
         self.assertTrue(os.path.exists(os.path.join(tempdir, 'Makefile.am')), 'Extracted source could not be found')
         # devtool extract shouldn't create the workspace
         self.assertFalse(os.path.exists(self.workspacedir))
