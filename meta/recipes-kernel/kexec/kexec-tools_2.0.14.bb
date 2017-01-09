@@ -15,6 +15,7 @@ SRC_URI += "${KERNELORG_MIRROR}/linux/utils/kernel/kexec/kexec-tools-${PV}.tar.g
             file://0007-arm64-kdump-set-up-other-segments.patch \
             file://0008-arm64-kdump-add-DT-properties-to-crash-dump-kernel-s.patch \
             file://0009-arm64-kdump-Add-support-for-binary-image-files.patch \
+            file://0010-kexec-ARM-Fix-add_buffer_phys_virt-align-issue.patch \
          "
 
 SRC_URI[md5sum] = "b2b2c5e6b29d467d6e99d587fb6b7cf5"
