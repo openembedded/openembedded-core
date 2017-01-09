@@ -243,6 +243,8 @@ def testimage_main(d):
     test_modules = d.getVar('TEST_SUITES')
     tc.loadTests(test_paths, modules=test_modules)
 
+    package_extraction(d, tc.suites)
+
     bootparams = None
     if d.getVar('VIRTUAL-RUNTIME_init_manager', '') == 'systemd':
         bootparams = 'systemd.log_level=debug systemd.log_target=console'
@@ -337,12 +339,22 @@ def create_rpm_index(d):
         if result:
             bb.fatal('%s' % ('\n'.join(result)))
 
+def package_extraction(d, test_suites):
+    from oeqa.utils.package_manager import find_packages_to_extract
+    from oeqa.utils.package_manager import extract_packages
+
+    test_create_extract_dirs(d)
+    packages = find_packages_to_extract(test_suites)
+    extract_packages(d, packages)
+
 def test_create_extract_dirs(d):
     install_path = d.getVar("TEST_INSTALL_TMP_DIR")
     package_path = d.getVar("TEST_PACKAGED_DIR")
     extracted_path = d.getVar("TEST_EXTRACTED_DIR")
     bb.utils.mkdirhier(d.getVar("TEST_LOG_DIR"))
+    bb.utils.remove(install_path, recurse=True)
     bb.utils.remove(package_path, recurse=True)
+    bb.utils.remove(extracted_path, recurse=True)
     bb.utils.mkdirhier(install_path)
     bb.utils.mkdirhier(package_path)
     bb.utils.mkdirhier(extracted_path)
