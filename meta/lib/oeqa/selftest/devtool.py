@@ -491,6 +491,52 @@ class DevtoolTests(DevtoolBase):
         self.assertNotIn('mdadm', result.output)
         self.assertFalse(list_stamps(), 'Stamp files exist for recipe mdadm that should have been cleaned')
 
+    def test_devtool_buildclean(self):
+        def assertFile(path, *paths):
+            f = os.path.join(path, *paths)
+            self.assertTrue(os.path.exists(f), "%r does not exist" % f)
+        def assertNoFile(path, *paths):
+            f = os.path.join(path, *paths)
+            self.assertFalse(os.path.exists(os.path.join(f)), "%r exists" % f)
+
+        # Clean up anything in the workdir/sysroot/sstate cache
+        bitbake('mdadm m4 -c cleansstate')
+        # Try modifying a recipe
+        tempdir_mdadm = tempfile.mkdtemp(prefix='devtoolqa')
+        tempdir_m4 = tempfile.mkdtemp(prefix='devtoolqa')
+        builddir_m4 = tempfile.mkdtemp(prefix='devtoolqa')
+        self.track_for_cleanup(tempdir_mdadm)
+        self.track_for_cleanup(tempdir_m4)
+        #self.track_for_cleanup(builddir_m4)
+        self.track_for_cleanup(self.workspacedir)
+        self.add_command_to_tearDown('bitbake-layers remove-layer */workspace')
+        self.add_command_to_tearDown('bitbake -c clean mdadm m4')
+        self.write_recipeinc('m4', 'EXTERNALSRC_BUILD = "%s"\ndo_clean() {\n\t:\n}\n' % builddir_m4)
+        try:
+            runCmd('devtool modify mdadm -x %s' % tempdir_mdadm)
+            runCmd('devtool modify m4 -x %s' % tempdir_m4)
+            assertNoFile(tempdir_mdadm, 'mdadm')
+            assertNoFile(builddir_m4, 'src/m4')
+            result = bitbake('m4 -e')
+            result = bitbake('mdadm m4 -c compile')
+            self.assertEqual(result.status, 0)
+            assertFile(tempdir_mdadm, 'mdadm')
+            assertFile(builddir_m4, 'src/m4')
+            # Check that buildclean task exists and does call make clean
+            bitbake('mdadm m4 -c buildclean')
+            assertNoFile(tempdir_mdadm, 'mdadm')
+            assertNoFile(builddir_m4, 'src/m4')
+            bitbake('mdadm m4 -c compile')
+            assertFile(tempdir_mdadm, 'mdadm')
+            assertFile(builddir_m4, 'src/m4')
+            bitbake('mdadm m4 -c clean')
+            # Check that buildclean task is run before clean for B == S
+            assertNoFile(tempdir_mdadm, 'mdadm')
+            # Check that buildclean task is not run before clean for B != S
+            assertFile(builddir_m4, 'src/m4')
+        finally:
+            self.delete_recipeinc('m4')
+
     @testcase(1166)
     def test_devtool_modify_invalid(self):
         # Try modifying some recipes
