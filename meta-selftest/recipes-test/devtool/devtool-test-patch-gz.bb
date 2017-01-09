@@ -14,3 +14,4 @@ SRC_URI[sha256sum] = "67c2fc94a7ecedbaae0d1837e82e93d1d98f4a6d759828860e552119af
 
 inherit autotools pkgconfig
 
+EXCLUDE_FROM_WORLD = "1"
