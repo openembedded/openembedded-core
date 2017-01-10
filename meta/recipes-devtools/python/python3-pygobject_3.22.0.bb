@@ -18,8 +18,14 @@ SRC_URI[sha256sum] = "08b29cfb08efc80f7a8630a2734dec65a99c1b59f1e5771c671d2e4ed8
 
 S = "${WORKDIR}/${SRCNAME}-${PV}"
 
-BBCLASSEXTEND = "native"
 
-EXTRA_OECONF = "--disable-cairo"
+PACKAGECONFIG ??= "cairo"
+
+# python3-pycairo is checked on configuration -> DEPENDS
+# we don't link against python3-pycairo -> RDEPENDS
+PACKAGECONFIG[cairo] = "--enable-cairo,--disable-cairo,cairo python3-pycairo, python3-pycairo"
 
 RDEPENDS_${PN} += "python3-setuptools python3-importlib"
+
+BBCLASSEXTEND = "native"
+PACKAGECONFIG_class-native = ""
