@@ -235,8 +235,9 @@ INHERIT_remove = \"report-error\"
         self.addCleanup(ftools.remove_from_file, conf ,data)
         result = bitbake('readline', ignore_status=True)
         self.assertEqual(result.status, 0, "Bitbake failed, exit code %s, output %s" % (result.status, result.output))
-        self.assertFalse(os.path.isfile(os.path.join(self.builddir, 'tmp/deploy/licenses/readline/generic_GPLv3')))
-        self.assertTrue(os.path.isfile(os.path.join(self.builddir, 'tmp/deploy/licenses/readline/generic_GPLv2')))
+        lic_dir = get_bb_var('LICENSE_DIRECTORY')
+        self.assertFalse(os.path.isfile(os.path.join(lic_dir, 'readline/generic_GPLv3')))
+        self.assertTrue(os.path.isfile(os.path.join(lic_dir, 'readline/generic_GPLv2')))
 
     @testcase(1422)
     def test_setscene_only(self):
