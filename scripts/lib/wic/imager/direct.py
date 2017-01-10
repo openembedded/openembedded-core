@@ -270,8 +270,8 @@ class DirectImageCreator(BaseImageCreator):
             # get rootfs size from bitbake variable if it's not set in .ks file
             if not part.size:
                 # and if rootfs name is specified for the partition
-                image_name = part.rootfs_dir
-                if image_name:
+                image_name = self.rootfs_dir.get(part.rootfs_dir)
+                if image_name and os.path.sep not in image_name:
                     # Bitbake variable ROOTFS_SIZE is calculated in
                     # Image._get_rootfs_size method from meta/lib/oe/image.py
                     # using IMAGE_ROOTFS_SIZE, IMAGE_ROOTFS_ALIGNMENT,
