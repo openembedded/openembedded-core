@@ -314,7 +314,7 @@ class BaseConfig(object):
             else:
                 raise Exception("Can't find FSTYPE from: %s" % p)
 
-        elif os.path.isdir(p) or re.search(':', arg) and re.search('/', arg):
+        elif os.path.isdir(p) or re.search(':', p) and re.search('/', p):
             if self.is_deploy_dir_image(p):
                 logger.info('DEPLOY_DIR_IMAGE: %s' % p)
                 self.set("DEPLOY_DIR_IMAGE", p)
