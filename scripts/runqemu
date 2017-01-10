@@ -240,7 +240,7 @@ class BaseConfig(object):
             if not re.search('.qemuboot.conf$', '\n'.join(os.listdir(p)), re.M):
                 logger.info("Can't find required *.qemuboot.conf in %s" % p)
                 return False
-            if not re.search('-image-', '\n'.join(os.listdir(p))):
+            if not any(map(lambda name: '-image-' in name, os.listdir(p))):
                 logger.info("Can't find *-image-* in %s" % p)
                 return False
             return True
@@ -289,7 +289,7 @@ class BaseConfig(object):
              re.search('zImage', p) or re.search('vmlinux', p) or \
              re.search('fitImage', p) or re.search('uImage', p):
             self.kernel =  p
-        elif os.path.exists(p) and (not os.path.isdir(p)) and re.search('-image-', os.path.basename(p)):
+        elif os.path.exists(p) and (not os.path.isdir(p)) and '-image-' in os.path.basename(p):
             self.rootfs = p
             # Check filename against self.fstypes can hanlde <file>.cpio.gz,
             # otherwise, its type would be "gz", which is incorrect.
@@ -403,7 +403,7 @@ class BaseConfig(object):
                 self.kernel_cmdline_script += ' %s' % arg[len('bootparams='):]
             elif os.path.exists(arg) or (re.search(':', arg) and re.search('/', arg)):
                 self.check_arg_path(os.path.abspath(arg))
-            elif re.search('-image-', arg):
+            elif re.search(r'-image-|-image$', arg):
                 # Lazy rootfs
                 self.rootfs = arg
             else:
