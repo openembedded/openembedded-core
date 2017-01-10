@@ -70,6 +70,10 @@ def _exec_cmd(cmd_and_args, as_shell=False, catch=3):
     else:
         ret, out = runner.runtool(args, catch)
     out = out.strip()
+    if ret != 0:
+        msger.error("_exec_cmd: %s returned '%s' instead of 0\noutput: %s" % \
+                    (cmd_and_args, ret, out))
+
     msger.debug("_exec_cmd: output for %s (rc = %d): %s" % \
                 (cmd_and_args, ret, out))
 
@@ -83,10 +87,6 @@ def exec_cmd(cmd_and_args, as_shell=False, catch=3):
     Exits if rc non-zero
     """
     ret, out = _exec_cmd(cmd_and_args, as_shell, catch)
-
-    if ret != 0:
-        msger.error("exec_cmd: %s returned '%s' instead of 0" % \
-                    (cmd_and_args, ret))
 
     return out
 
@@ -131,12 +131,6 @@ def exec_native_cmd(cmd_and_args, native_sysroot, catch=3, pseudo=""):
             msg += "Wic failed to find a recipe to build native %s. Please "\
                    "file a bug against wic.\n" % prog
         msger.error(msg)
-    if out:
-        msger.debug('"%s" output: %s' % (args[0], out))
-
-    if ret != 0:
-        msger.error("exec_cmd: '%s' returned '%s' instead of 0" % \
-                    (cmd_and_args, ret))
 
     return ret, out
 
