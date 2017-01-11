@@ -19,8 +19,6 @@ COMPATIBLE_HOST = '(x86_64.*|i.86.*|arm.*|aarch64.*)-(linux.*|freebsd.*)'
 COMPATIBLE_HOST_armv7a = 'null'
 COMPATIBLE_HOST_armv7ve = 'null'
 
-inherit autotools gettext texinfo
-
 # configure.ac has code to set this automagically from the target tuple
 # but the OE freeform one (core2-foo-bar-linux) don't work with that.
 
