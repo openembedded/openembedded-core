@@ -247,8 +247,6 @@ class DevtoolTests(DevtoolBase):
 
     @testcase(1162)
     def test_devtool_add_library(self):
-        # We don't have the ability to pick up this dependency automatically yet...
-        bitbake('libusb1')
         # Fetch source
         tempdir = tempfile.mkdtemp(prefix='devtoolqa')
         self.track_for_cleanup(tempdir)
@@ -277,10 +275,13 @@ class DevtoolTests(DevtoolBase):
         result = runCmd('recipetool setvar %s EXTRA_OECMAKE -- \'-DPYTHON_BINDINGS=OFF -DLIBFTDI_CMAKE_CONFIG_DIR=${datadir}/cmake/Modules\'' % recipefile)
         with open(recipefile, 'a') as f:
             f.write('\nFILES_${PN}-dev += "${datadir}/cmake/Modules"\n')
+            # We don't have the ability to pick up this dependency automatically yet...
+            f.write('\nDEPENDS += "libusb1"\n')
+            f.write('\nTESTLIBOUTPUT = "${STAGING_DIR}-components/${TUNE_PKGARCH}/${PN}/${libdir}"\n')
         # Test devtool build
         result = runCmd('devtool build libftdi')
-        staging_libdir = get_bb_var('STAGING_LIBDIR', 'libftdi')
-        self.assertTrue(staging_libdir, 'Could not query STAGING_LIBDIR variable')
+        staging_libdir = get_bb_var('TESTLIBOUTPUT', 'libftdi')
+        self.assertTrue(staging_libdir, 'Could not query TESTLIBOUTPUT variable')
         self.assertTrue(os.path.isfile(os.path.join(staging_libdir, 'libftdi1.so.2.1.0')), "libftdi binary not found in STAGING_LIBDIR. Output of devtool build libftdi %s" % result.output)
         # Test devtool reset
         stampprefix = get_bb_var('STAMP', 'libftdi')
