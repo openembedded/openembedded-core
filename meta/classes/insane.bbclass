@@ -740,17 +740,21 @@ python populate_lic_qa_checksum() {
 
         if (not beginline) and (not endline):
             md5chksum = bb.utils.md5_file(srclicfile)
+            with open(srclicfile, 'rb') as f:
+                license = f.read()
         else:
             fi = open(srclicfile, 'rb')
             fo = tempfile.NamedTemporaryFile(mode='wb', prefix='poky.', suffix='.tmp', delete=False)
             tmplicfile = fo.name;
             lineno = 0
             linesout = 0
+            license = []
             for line in fi:
                 lineno += 1
                 if (lineno >= beginline):
                     if ((lineno <= endline) or not endline):
                         fo.write(line)
+                        license.append(line)
                         linesout += 1
                     else:
                         break
@@ -758,6 +762,7 @@ python populate_lic_qa_checksum() {
             fo.close()
             fi.close()
             md5chksum = bb.utils.md5_file(tmplicfile)
+            license = b''.join(license)
             os.unlink(tmplicfile)
 
         if recipemd5 == md5chksum:
@@ -766,6 +771,30 @@ python populate_lic_qa_checksum() {
             if recipemd5:
                 msg = pn + ": The LIC_FILES_CHKSUM does not match for " + url
                 msg = msg + "\n" + pn + ": The new md5 checksum is " + md5chksum
+                try:
+                    license_lines = license.decode('utf-8').split('\n')
+                except:
+                    # License text might not be valid UTF-8, in which
+                    # case we don't know how to include it in our output
+                    # and have to skip it.
+                    pass
+                else:
+                    max_lines = int(d.getVar('QA_MAX_LICENSE_LINES') or 20)
+                    if not license_lines or license_lines[-1] != '':
+                        # Ensure that our license text ends with a line break
+                        # (will be added with join() below).
+                        license_lines.append('')
+                    remove = len(license_lines) - max_lines
+                    if remove > 0:
+                        start = max_lines // 2
+                        end = start + remove - 1
+                        del license_lines[start:end]
+                        license_lines.insert(start, '...')
+                    msg = msg + "\n" + pn + ": Here is the selected license text:" + \
+                          "\n" + \
+                          "{:v^70}".format(" beginline=%d " % beginline if beginline else "") + \
+                          "\n" + "\n".join(license_lines) + \
+                          "{:^^70}".format(" endline=%d " % endline if endline else "")
                 if beginline:
                     if endline:
                         srcfiledesc = "%s (lines %d through to %d)" % (srclicfile, beginline, endline)
