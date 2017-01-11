@@ -6,7 +6,7 @@ DEFAULT_PREFERENCE_arm = "1"
 FILESEXTRAPATHS =. "${FILE_DIRNAME}/grub-git:"
 
 PV = "2.00+${SRCPV}"
-SRCREV = "7a5b301e3adb8e054288518a325135a1883c1c6c"
+SRCREV = "ce95549cc54b5d6f494608a7c390dba3aab4fba7"
 SRC_URI = "git://git.savannah.gnu.org/grub.git \
            file://0001-Disable-mfpmath-sse-as-well-when-SSE-is-disabled.patch \
            file://autogen.sh-exclude-pc.patch \
