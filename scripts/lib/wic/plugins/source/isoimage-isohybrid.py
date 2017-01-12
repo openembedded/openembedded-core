@@ -144,7 +144,7 @@ class IsoImagePlugin(SourcePlugin):
         Create path for initramfs image
         """
 
-        initrd = get_bitbake_var("INITRD")
+        initrd = get_bitbake_var("INITRD_LIVE") or get_bitbake_var("INITRD")
         if not initrd:
             initrd_dir = get_bitbake_var("DEPLOY_DIR_IMAGE")
             if not initrd_dir:
