@@ -7,14 +7,19 @@ LIC_FILES_CHKSUM = "file://LICENSES;md5=e9a558e243b36d3209f380deb394b213 \
 
 DEPENDS += "gperf-native"
 
-SRCREV ?= "ea23815a795f72035262953dad5beb03e09c17dd"
+SRCREV ?= "bb440151433f0298e7a6786ccd30cd084812f897"
 
-SRCBRANCH ?= "release/${PV}/master"
+#SRCBRANCH ?= "release/${PV}/master"
+SRCBRANCH ?= "master"
 
 GLIBC_GIT_URI ?= "git://sourceware.org/git/glibc.git"
 UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>\d+\.\d+(\.\d+)*)"
 
 SRC_URI = "${GLIBC_GIT_URI};branch=${SRCBRANCH};name=glibc \
+           file://etc/ld.so.conf \
+           file://generate-supported.mk \
+           \
+           ${NATIVESDKFIXES} \
            file://0005-fsl-e500-e5500-e6500-603e-fsqrt-implementation.patch \
            file://0006-readlib-Add-OECORE_KNOWN_INTERPRETER_NAMES-to-known-.patch \
            file://0007-ppc-sqrt-Fix-undefined-reference-to-__sqrt_finite.patch \
@@ -36,17 +41,13 @@ SRC_URI = "${GLIBC_GIT_URI};branch=${SRCBRANCH};name=glibc \
            file://0023-eglibc-Install-PIC-archives.patch \
            file://0024-eglibc-Forward-port-cross-locale-generation-support.patch \
            file://0025-Define-DUMMY_LOCALE_T-if-not-defined.patch \
-           file://0026-build_local_scope.patch \
-           file://0027-arm-mark-__startcontext-as-.cantunwind-bug-20435.patch \
+           file://0026-elf-dl-deps.c-Make-_dl_build_local_scope-breadth-fir.patch \
+           file://0027-locale-fix-hard-coded-reference-to-gcc-E.patch \
+           file://0028-Revert-Check-IFUNC-definition-in-unrelocated-shared-.patch \
 "
 
-SRC_URI += "\
-           file://etc/ld.so.conf \
-           file://generate-supported.mk \
-           file://0001-locale-fix-hard-coded-reference-to-gcc-E.patch \
-           "
-
-SRC_URI_append_class-nativesdk = "\
+NATIVESDKFIXES ?= ""
+NATIVESDKFIXES_class-nativesdk = "\
            file://0001-nativesdk-glibc-Look-for-host-system-ld.so.cache-as-.patch \
            file://0002-nativesdk-glibc-Fix-buffer-overrun-with-a-relocated-.patch \
            file://0003-nativesdk-glibc-Raise-the-size-of-arrays-containing-.patch \
