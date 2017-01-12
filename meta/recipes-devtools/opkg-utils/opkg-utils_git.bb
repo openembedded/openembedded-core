@@ -46,8 +46,8 @@ RREPLACES_update-alternatives-opkg = "update-alternatives-cworth"
 RCONFLICTS_update-alternatives-opkg = "update-alternatives-cworth"
 
 pkg_postrm_update-alternatives-opkg() {
-	rm -rf $OPKG_OFFLINE_ROOT${nonarch_libdir}/opkg/alternatives
-	rmdir $OPKG_OFFLINE_ROOT${nonarch_libdir}/opkg || true
+	rm -rf $D${nonarch_libdir}/opkg/alternatives
+	rmdir $D${nonarch_libdir}/opkg || true
 }
 
 BBCLASSEXTEND = "native nativesdk"
