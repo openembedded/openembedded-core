@@ -41,7 +41,6 @@ class oeSelfTest(unittest.TestCase):
             self.testinc_path, self.testinc_bblayers_path,
             self.machineinc_path, self.localconf_backup,
             self.local_bblayers_backup]
-        self.distro = get_bb_var('DISTRO')
         super(oeSelfTest, self).__init__(methodName)
 
     def setUp(self):
