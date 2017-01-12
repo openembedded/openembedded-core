@@ -10,6 +10,7 @@ SRC_URI = " \
     file://avoid-including-sys-poll.h-directly.patch \
     file://ensure-valid-sentinel-for-gst_structure_get.patch \
     file://0001-introspection.m4-prefix-pkgconfig-paths-with-PKG_CON.patch \
+    file://qtdemux-free-seqh-after-calling-qtdemux_parse_svq3_s.patch \
 "
 SRC_URI[md5sum] = "65c4ff9d406c3ea9383b4d38a6504349"
 SRC_URI[sha256sum] = "198f325bcce982dce1ebeb36929a5f430b8bf9528e0d519e18df0b29e1d23313"
