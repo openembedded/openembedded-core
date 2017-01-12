@@ -134,6 +134,10 @@ def preflight_check():
         log.error("You don't seem to have the meta-selftest layer in BBLAYERS")
         return False
 
+    if "buildhistory.bbclass" in get_bb_var("BBINCLUDED"):
+        log.error("You have buildhistory enabled already and this isn't recommended for selftest, please disable it first.")
+        return False
+
     log.info("Running bitbake -p")
     runCmd("bitbake -p")
 
