@@ -228,6 +228,10 @@ python do_populate_sysroot () {
 do_populate_sysroot[vardeps] += "${SYSROOT_PREPROCESS_FUNCS}"
 do_populate_sysroot[vardepsexclude] += "MULTI_PROVIDER_WHITELIST"
 
+POPULATESYSROOTDEPS = ""
+POPULATESYSROOTDEPS_class-target = "virtual/${MLPREFIX}${TARGET_PREFIX}binutils:do_populate_sysroot"
+do_populate_sysroot[depends] += "${POPULATESYSROOTDEPS}"
+
 SSTATETASKS += "do_populate_sysroot"
 do_populate_sysroot[cleandirs] = "${SYSROOT_DESTDIR}"
 do_populate_sysroot[sstate-inputdirs] = "${SYSROOT_DESTDIR}"

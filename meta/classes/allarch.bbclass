@@ -32,6 +32,7 @@ python () {
         d.setVar("TARGET_CFLAGS", "none")
         d.setVar("TARGET_CXXFLAGS", "none")
         d.setVar("TARGET_LDFLAGS", "none")
+        d.setVar("POPULATESYSROOTDEPS", "")
 
         # Avoid this being unnecessarily different due to nuances of
         # the target machine that aren't important for "all" arch
