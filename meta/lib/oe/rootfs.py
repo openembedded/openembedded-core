@@ -262,7 +262,12 @@ class Rootfs(object, metaclass=ABCMeta):
             # Remove components that we don't need if it's a read-only rootfs
             unneeded_pkgs = self.d.getVar("ROOTFS_RO_UNNEEDED").split()
             pkgs_installed = image_list_installed_packages(self.d)
-            pkgs_to_remove = [pkg for pkg in pkgs_installed if pkg in unneeded_pkgs]
+            # Make sure update-alternatives is last on the command line, so
+            # that it is removed last. This makes sure that its database is
+            # available while uninstalling packages, allowing alternative
+            # symlinks of packages to be uninstalled to be managed correctly.
+            provider = self.d.getVar("VIRTUAL-RUNTIME_update-alternatives")
+            pkgs_to_remove = sorted([pkg for pkg in pkgs_installed if pkg in unneeded_pkgs], key=lambda x: x == provider)
 
             if len(pkgs_to_remove) > 0:
                 self.pm.remove(pkgs_to_remove, False)
