@@ -68,7 +68,6 @@ class BitbakeLayers(oeSelfTest):
 
     @testcase(1384)
     def test_bitbakelayers_showrecipes(self):
-        distro = get_bb_var('DISTRO')
         result = runCmd('bitbake-layers show-recipes')
         self.assertIn('aspell:', result.output)
         self.assertIn('mtd-utils:', result.output)
