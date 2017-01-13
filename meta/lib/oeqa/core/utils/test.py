@@ -10,11 +10,13 @@ def getSuiteCases(suite):
         Returns individual test from a test suite.
     """
     tests = []
-    for item in suite:
-        if isinstance(item, unittest.suite.TestSuite):
+
+    if isinstance(suite, unittest.TestCase):
+        tests.append(suite)
+    elif isinstance(suite, unittest.suite.TestSuite):
+        for item in suite:
             tests.extend(getSuiteCases(item))
-        elif isinstance(item, unittest.TestCase):
-            tests.append(item)
+
     return tests
 
 def getSuiteModules(suite):

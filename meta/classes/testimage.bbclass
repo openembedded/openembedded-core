@@ -159,7 +159,6 @@ def testimage_main(d):
     pn = d.getVar("PN")
 
     bb.utils.mkdirhier(d.getVar("TEST_LOG_DIR"))
-    #test_create_extract_dirs(d)
 
     image_name = ("%s/%s" % (d.getVar('DEPLOY_DIR_IMAGE'),
                              d.getVar('IMAGE_LINK_NAME')))
@@ -169,6 +168,8 @@ def testimage_main(d):
 
     image_manifest = "%s.manifest" % image_name
     image_packages = OERuntimeTestContextExecutor.readPackagesManifest(image_manifest)
+
+    extract_dir = d.getVar("TEST_EXTRACTED_DIR")
 
     # Get machine
     machine = d.getVar("MACHINE")
@@ -236,7 +237,8 @@ def testimage_main(d):
         d.getVar("TEST_SERVER_IP"), **target_kwargs)
 
     # test context
-    tc = OERuntimeTestContext(td, logger, target, host_dumper, image_packages)
+    tc = OERuntimeTestContext(td, logger, target, host_dumper,
+                              image_packages, extract_dir)
 
     # Load tests before starting the target
     test_paths = get_runtime_paths(d)
@@ -343,22 +345,13 @@ def package_extraction(d, test_suites):
     from oeqa.utils.package_manager import find_packages_to_extract
     from oeqa.utils.package_manager import extract_packages
 
-    test_create_extract_dirs(d)
+    bb.utils.remove(d.getVar("TEST_NEEDED_PACKAGES_DIR"), recurse=True)
     packages = find_packages_to_extract(test_suites)
-    extract_packages(d, packages)
-
-def test_create_extract_dirs(d):
-    install_path = d.getVar("TEST_INSTALL_TMP_DIR")
-    package_path = d.getVar("TEST_PACKAGED_DIR")
-    extracted_path = d.getVar("TEST_EXTRACTED_DIR")
-    bb.utils.mkdirhier(d.getVar("TEST_LOG_DIR"))
-    bb.utils.remove(install_path, recurse=True)
-    bb.utils.remove(package_path, recurse=True)
-    bb.utils.remove(extracted_path, recurse=True)
-    bb.utils.mkdirhier(install_path)
-    bb.utils.mkdirhier(package_path)
-    bb.utils.mkdirhier(extracted_path)
-
+    if packages:
+        bb.utils.mkdirhier(d.getVar("TEST_INSTALL_TMP_DIR"))
+        bb.utils.mkdirhier(d.getVar("TEST_PACKAGED_DIR"))
+        bb.utils.mkdirhier(d.getVar("TEST_EXTRACTED_DIR"))
+        extract_packages(d, packages)
 
 testimage_main[vardepsexclude] += "BB_ORIGENV DATETIME"
 

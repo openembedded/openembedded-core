@@ -15,12 +15,14 @@ class OERuntimeTestContext(OETestContext):
     runtime_files_dir = os.path.join(
                         os.path.dirname(os.path.abspath(__file__)), "files")
 
-    def __init__(self, td, logger, target, host_dumper, image_packages):
+    def __init__(self, td, logger, target,
+                 host_dumper, image_packages, extract_dir):
         super(OERuntimeTestContext, self).__init__(td, logger)
 
         self.target = target
         self.image_packages = image_packages
         self.host_dumper = host_dumper
+        self.extract_dir = extract_dir
         self._set_target_cmds()
 
     def _set_target_cmds(self):
@@ -45,6 +47,7 @@ class OERuntimeTestContextExecutor(OETestContextExecutor):
     default_server_ip = '192.168.7.1'
     default_target_ip = '192.168.7.2'
     default_host_dumper_dir = '/tmp/oe-saved-tests'
+    default_extract_dir = 'extract_dir'
 
     def register_commands(self, logger, subparsers):
         super(OERuntimeTestContextExecutor, self).register_commands(logger, subparsers)
@@ -71,6 +74,9 @@ class OERuntimeTestContextExecutor(OETestContextExecutor):
 
         runtime_group.add_argument('--packages-manifest', action='store',
                 help="Package manifest of the image under test")
+
+        runtime_group.add_argument('--extract-dir', action='store',
+                help='Directory where extracted packages reside')
 
         runtime_group.add_argument('--qemu-boot', action='store',
                 help="Qemu boot configuration, only needed when target_type is QEMU.")
@@ -125,5 +131,9 @@ class OERuntimeTestContextExecutor(OETestContextExecutor):
         self.tc_kwargs['init']['image_packages'] = \
                 OERuntimeTestContextExecutor.readPackagesManifest(
                         args.packages_manifest)
+
+        self.tc_kwargs['init']['extract_dir'] = \
+                OERuntimeTestContextExecutor.readPackagesManifest(
+                        args.extract_dir)
 
 _executor_class = OERuntimeTestContextExecutor

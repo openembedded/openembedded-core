@@ -1,7 +1,8 @@
-import bb
+import os
 import json
 import shutil
 
+from oeqa.core.utils.test import getCaseFile, getCaseMethod
 
 def get_package_manager(d, root_path):
     """
@@ -86,6 +87,7 @@ def extract_packages(d, needed_packages):
     Extract packages that will be needed during runtime.
     """
 
+    import bb
     import oe.path
 
     extracted_path = d.getVar('TEST_EXTRACTED_DIR')
@@ -152,20 +154,38 @@ def _copy_package(d, pkg):
     shutil.copy2(file_path, dst_dir)
     shutil.rmtree(pkg_path)
 
-def install_uninstall_packages(self, test_id, pkg_dir, install):
+def install_package(test_case):
     """
-    Check if the test requires a package and Install/Unistall it in the DUT
+    Installs package in DUT if required.
     """
+    needed_packages = test_needs_package(test_case)
+    if needed_packages:
+        _install_uninstall_packages(needed_packages, test_case, True)
 
-    test = test_id.split('.')[4]
-    module = self.getModulefromID(test_id)
-    json = self._getJsonFile(module)
-    if json:
-        needed_packages = self._getNeededPackages(json, test)
+def uninstall_package(test_case):
+    """
+    Uninstalls package in DUT if required.
+    """
+    needed_packages = test_needs_package(test_case)
+    if needed_packages:
+        _install_uninstall_packages(needed_packages, test_case, False)
+
+def test_needs_package(test_case):
+    """
+    Checks if a test case requires to install/uninstall packages.
+    """
+    test_file = getCaseFile(test_case)
+    json_file = _get_json_file(test_file)
+
+    if json_file:
+        test_method = getCaseMethod(test_case)
+        needed_packages = _get_needed_packages(json_file, test_method)
         if needed_packages:
-            self._install_uninstall_packages(needed_packages, pkg_dir, install)
+            return needed_packages
 
-def _install_uninstall_packages(self, needed_packages, pkg_dir, install=True):
+    return None
+
+def _install_uninstall_packages(needed_packages, test_case, install=True):
     """
     Install/Unistall packages in the DUT without using a package manager
     """
@@ -179,12 +199,12 @@ def _install_uninstall_packages(self, needed_packages, pkg_dir, install=True):
         pkg = package['pkg']
         rm = package.get('rm', False)
         extract = package.get('extract', True)
-        src_dir = os.path.join(pkg_dir, pkg)
+        src_dir = os.path.join(test_case.tc.extract_dir, pkg)
 
         # Install package
         if install and extract:
-            self.target.connection.copy_dir_to(src_dir, '/')
+            test_case.tc.target.copyDirTo(src_dir, '/')
 
         # Unistall package
         elif not install and rm:
-            self.target.connection.delete_dir_structure(src_dir, '/')
+            test_case.tc.target.deleteDirStructure(src_dir, '/')
