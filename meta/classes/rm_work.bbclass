@@ -10,6 +10,14 @@
 #
 # RM_WORK_EXCLUDE += "icu-native icu busybox"
 #
+# Recipes can also configure which entries in their ${WORKDIR}
+# are preserved besides temp, which already gets excluded by default
+# because it contains logs:
+# do_install_append () {
+#     echo "bar" >${WORKDIR}/foo
+# }
+# RM_WORK_EXCLUDE_ITEMS += "foo"
+RM_WORK_EXCLUDE_ITEMS = "temp"
 
 # Use the completion scheduler by default when rm_work is active
 # to try and reduce disk usage
@@ -37,7 +45,7 @@ do_rm_work () {
         # failures of removing pseudo folers on NFS2/3 server.
         if [ $dir = 'pseudo' ]; then
             rm -rf $dir 2> /dev/null || true
-        elif [ $dir != 'temp' ]; then
+        elif ! echo '${RM_WORK_EXCLUDE_ITEMS}' | grep -q -w "$dir"; then
             rm -rf $dir
         fi
     done
