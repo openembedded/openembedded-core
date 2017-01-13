@@ -10,10 +10,21 @@ from collections.abc import MutableMapping
 from xml.dom.minidom import parseString
 from xml.etree.ElementTree import Element, tostring
 
-from oe.lsb import distro_identifier
 from oeqa.utils.commands import runCmd, get_bb_var, get_bb_vars
 
 metadata_vars = ['MACHINE', 'DISTRO', 'DISTRO_VERSION']
+
+def get_os_release():
+    """Get info from /etc/os-release as a dict"""
+    data = OrderedDict()
+    os_release_file = '/etc/os-release'
+    if not os.path.exists(os_release_file):
+        return None
+    with open(os_release_file) as fobj:
+        for line in fobj:
+            key, value = line.split('=', 1)
+            data[key.strip().lower()] = value.strip().strip('"')
+    return data
 
 def metadata_from_bb():
     """ Returns test's metadata as OrderedDict.
@@ -27,10 +38,15 @@ def metadata_from_bb():
     data_dict = get_bb_vars(metadata_vars)
     for var in metadata_vars:
         info_dict[var.lower()] = data_dict[var]
-    host_distro= distro_identifier()
-    host_distro, _, host_distro_release = host_distro.partition('-')
-    info_dict['host_distro'] = host_distro
-    info_dict['host_distro_release'] = host_distro_release
+
+    # Host distro information
+    os_release = get_os_release()
+    if os_release:
+        info_dict['host_distro'] = OrderedDict()
+        for key in ('id', 'version_id', 'pretty_name'):
+            if key in os_release:
+                info_dict['host_distro'][key] = os_release[key]
+
     info_dict['layers'] = get_layers(get_bb_var('BBLAYERS'))
     return info_dict
 
