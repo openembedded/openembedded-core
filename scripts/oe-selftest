@@ -632,8 +632,8 @@ def main():
             for layer, values in metadata['layers'].items():
                 layer_info = '%s%-17s = %s:%s\n' % (layer_info, layer,
                               values['branch'], values['revision'])
-            msg = 'Selftest for build %s of %s %s for machine %s on %s\n\n%s' % (
-                   log_prefix[12:], metadata['distro'], metadata['distro_version'],
+            msg = 'Selftest for build %s of %s for machine %s on %s\n\n%s' % (
+                   log_prefix[12:], metadata['distro']['pretty_name'],
                    metadata['machine'], metadata['hostname'], layer_info)
 
             log.debug('Commiting results to local repository')

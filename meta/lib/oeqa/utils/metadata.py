@@ -10,9 +10,7 @@ from collections.abc import MutableMapping
 from xml.dom.minidom import parseString
 from xml.etree.ElementTree import Element, tostring
 
-from oeqa.utils.commands import runCmd, get_bb_var, get_bb_vars
-
-metadata_vars = ['MACHINE', 'DISTRO', 'DISTRO_VERSION']
+from oeqa.utils.commands import runCmd, get_bb_vars
 
 def get_os_release():
     """Get info from /etc/os-release as a dict"""
@@ -35,9 +33,14 @@ def metadata_from_bb():
     info_dict = OrderedDict()
     hostname = runCmd('hostname')
     info_dict['hostname'] = hostname.output
-    data_dict = get_bb_vars(metadata_vars)
-    for var in metadata_vars:
-        info_dict[var.lower()] = data_dict[var]
+    data_dict = get_bb_vars()
+
+    info_dict['machine'] = data_dict['MACHINE']
+
+    # Distro information
+    info_dict['distro'] = {'id': data_dict['DISTRO'],
+                           'version_id': data_dict['DISTRO_VERSION'],
+                           'pretty_name': '%s %s' % (data_dict['DISTRO'], data_dict['DISTRO_VERSION'])}
 
     # Host distro information
     os_release = get_os_release()
@@ -47,7 +50,7 @@ def metadata_from_bb():
             if key in os_release:
                 info_dict['host_distro'][key] = os_release[key]
 
-    info_dict['layers'] = get_layers(get_bb_var('BBLAYERS'))
+    info_dict['layers'] = get_layers(data_dict['BBLAYERS'])
     return info_dict
 
 def metadata_from_data_store(d):
