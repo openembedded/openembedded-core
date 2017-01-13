@@ -1545,11 +1545,15 @@ class OpkgDpkgPM(PackageManager):
         tmp_dir = tempfile.mkdtemp()
         current_dir = os.getcwd()
         os.chdir(tmp_dir)
+        if self.d.getVar('IMAGE_PKGTYPE') == 'deb':
+            data_tar = 'data.tar.xz'
+        else:
+            data_tar = 'data.tar.gz'
 
         try:
             cmd = [ar_cmd, 'x', pkg_path]
             output = subprocess.check_output(cmd, stderr=subprocess.STDOUT)
-            cmd = [tar_cmd, 'xf', 'data.tar.*']
+            cmd = [tar_cmd, 'xf', data_tar]
             output = subprocess.check_output(cmd, stderr=subprocess.STDOUT)
         except subprocess.CalledProcessError as e:
             bb.utils.remove(tmp_dir, recurse=True)
