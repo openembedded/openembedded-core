@@ -3,7 +3,7 @@ deltask do_compile
 deltask do_install 
 deltask do_populate_sysroot
 deltask do_populate_lic 
-deltask do_rm_work
+RM_WORK_EXCLUDE += "${PN}"
 
 inherit nopackages
 
