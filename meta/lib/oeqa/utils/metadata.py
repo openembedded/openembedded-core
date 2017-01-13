@@ -74,7 +74,7 @@ def get_layers(layers):
             repo = Repo(layer, search_parent_directories=True)
         except (InvalidGitRepositoryError, NoSuchPathError):
             continue
-        layer_dict[layer_name]['revision'] = repo.head.commit.hexsha
+        layer_dict[layer_name]['commit'] = repo.head.commit.hexsha
         try:
             layer_dict[layer_name]['branch'] = repo.active_branch.name
         except TypeError:
