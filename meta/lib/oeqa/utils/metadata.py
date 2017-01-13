@@ -90,12 +90,14 @@ def write_metadata_file(file_path, metadata):
     with open(file_path, 'w') as f:
         f.write(xml_doc.toprettyxml())
 
-def dict_to_XML(tag, dictionary):
+def dict_to_XML(tag, dictionary, **kwargs):
     """ Return XML element converting dicts recursively. """
 
-    elem = Element(tag)
+    elem = Element(tag, **kwargs)
     for key, val in dictionary.items():
-        if isinstance(val, MutableMapping):
+        if tag == 'layers':
+            child = (dict_to_XML('layer', val, name=key))
+        elif isinstance(val, MutableMapping):
             child = (dict_to_XML(key, val))
         else:
             child = Element(key)
