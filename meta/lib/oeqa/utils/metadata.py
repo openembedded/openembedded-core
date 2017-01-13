@@ -72,11 +72,13 @@ def get_layers(layers):
         layer_dict[layer_name] = OrderedDict()
         try:
             repo = Repo(layer, search_parent_directories=True)
-            revision, branch = repo.head.object.name_rev.split()
         except (InvalidGitRepositoryError, NoSuchPathError):
             continue
-        layer_dict[layer_name]['branch'] = branch
-        layer_dict[layer_name]['revision'] = revision
+        layer_dict[layer_name]['revision'] = repo.head.commit.hexsha
+        try:
+            layer_dict[layer_name]['branch'] = repo.active_branch.name
+        except TypeError:
+            layer_dict[layer_name]['branch'] = '(nobranch)'
     return layer_dict
 
 def write_metadata_file(file_path, metadata):
