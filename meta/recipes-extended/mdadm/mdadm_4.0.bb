@@ -9,22 +9,16 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
 
 
 SRC_URI = "${KERNELORG_MIRROR}/linux/utils/raid/mdadm/${BPN}-${PV}.tar.xz \
-           file://mdadm-3.2.2_fix_for_x32.patch \
            file://gcc-4.9.patch \
            file://mdadm-3.3.2_x32_abi_time_t.patch \
-           file://0001-Fix-typo-in-comparision.patch \
            file://mdadm-fix-ptest-build-errors.patch \
-           file://0001-util.c-include-poll.h-instead-of-sys-poll.h.patch \
-           file://0001-mdadm.h-bswap-is-already-defined-in-uclibc.patch \
-           file://0001-Fix-some-type-comparison-problems.patch \
            file://0001-Fix-the-path-of-corosync-and-dlm-header-files-check.patch \
            file://run-ptest \
-           file://0001-raid6check-Fix-if-else-indentation.patch \
            file://0001-mdadm.h-Undefine-dprintf-before-redefining.patch \
            file://0001-include-sys-sysmacros.h-for-major-minor-defintions.patch \
            "
-SRC_URI[md5sum] = "04b8b21f637540350f8517c7e68d3c63"
-SRC_URI[sha256sum] = "27d0be4627d38a12ddcd1c1c3721d649d4e89e1093914497e22b57245cda8808"
+SRC_URI[md5sum] = "2cb4feffea9167ba71b5f346a0c0a40d"
+SRC_URI[sha256sum] = "1d6ae7f24ced3a0fa7b5613b32f4a589bb4881e3946a5a2c3724056254ada3a9"
 
 CFLAGS += "-fno-strict-aliasing"
 inherit autotools-brokensep
