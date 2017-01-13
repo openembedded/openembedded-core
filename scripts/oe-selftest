@@ -604,7 +604,7 @@ def main():
             l_branches = {str(branch) for branch in repo.branches}
             branch = '%s/%s/%s' % (metadata['hostname'],
                                    metadata['layers']['meta'].get('branch', '(nogit)'),
-                                   metadata['machine'])
+                                   metadata['config']['MACHINE'])
 
             if branch in l_branches:
                 log.debug('Found branch in local repository, checking out')
@@ -634,7 +634,7 @@ def main():
                               values.get('branch', '(nogit)'), values.get('commit', '0'*40))
             msg = 'Selftest for build %s of %s for machine %s on %s\n\n%s' % (
                    log_prefix[12:], metadata['distro']['pretty_name'],
-                   metadata['machine'], metadata['hostname'], layer_info)
+                   metadata['config']['MACHINE'], metadata['hostname'], layer_info)
 
             log.debug('Commiting results to local repository')
             repo.index.commit(msg)

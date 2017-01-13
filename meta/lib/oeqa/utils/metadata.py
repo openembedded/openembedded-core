@@ -29,13 +29,12 @@ def metadata_from_bb():
 
         Data will be gathered using bitbake -e thanks to get_bb_vars.
     """
+    metadata_config_vars = ('MACHINE')
 
     info_dict = OrderedDict()
     hostname = runCmd('hostname')
     info_dict['hostname'] = hostname.output
     data_dict = get_bb_vars()
-
-    info_dict['machine'] = data_dict['MACHINE']
 
     # Distro information
     info_dict['distro'] = {'id': data_dict['DISTRO'],
@@ -52,6 +51,10 @@ def metadata_from_bb():
 
     info_dict['layers'] = get_layers(data_dict['BBLAYERS'])
     info_dict['bitbake'] = git_rev_info(os.path.dirname(bb.__file__))
+
+    info_dict['config'] = OrderedDict()
+    for var in sorted(metadata_config_vars):
+        info_dict['config'][var] = data_dict[var]
     return info_dict
 
 def metadata_from_data_store(d):
@@ -106,7 +109,10 @@ def dict_to_XML(tag, dictionary, **kwargs):
         elif isinstance(val, MutableMapping):
             child = (dict_to_XML(key, val))
         else:
-            child = Element(key)
+            if tag == 'config':
+                child = Element('variable', name=key)
+            else:
+                child = Element(key)
             child.text = str(val)
         elem.append(child)
     return elem
