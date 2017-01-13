@@ -73,11 +73,10 @@ def get_layers(layers):
         try:
             repo = Repo(layer, search_parent_directories=True)
             revision, branch = repo.head.object.name_rev.split()
-            layer_dict[layer_name]['branch'] = branch
-            layer_dict[layer_name]['revision'] = revision
         except (InvalidGitRepositoryError, NoSuchPathError):
-            layer_dict[layer_name]['branch'] = 'unknown'
-            layer_dict[layer_name]['revision'] = 'unknown'
+            continue
+        layer_dict[layer_name]['branch'] = branch
+        layer_dict[layer_name]['revision'] = revision
     return layer_dict
 
 def write_metadata_file(file_path, metadata):
