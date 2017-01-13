@@ -171,6 +171,8 @@ def testimage_main(d):
             bb.plain(msg)
         else:
             bb.fatal("%s - FAILED - check the task log and the ssh log" % pn)
+    except BlockingIOError as err:
+        bb.error('runqemu failed, shutting down...')
     finally:
         signal.signal(signal.SIGTERM, tc.origsigtermhandler)
         target.stop()

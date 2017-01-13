@@ -296,6 +296,7 @@ class QemuRunner:
 
     def stop(self):
         self.stop_thread()
+        self.stop_qemu_system()
         if hasattr(self, "origchldhandler"):
             signal.signal(signal.SIGCHLD, self.origchldhandler)
         if self.runqemu:
@@ -319,6 +320,14 @@ class QemuRunner:
             self.server_socket = None
         self.qemupid = None
         self.ip = None
+
+    def stop_qemu_system(self):
+        if self.qemupid:
+            try:
+                # qemu-system behaves well and a SIGTERM is enough
+                os.kill(self.qemupid, signal.SIGTERM)
+            except ProcessLookupError as e:
+                logger.warn('qemu-system ended unexpectedly')
 
     def stop_thread(self):
         if self.thread and self.thread.is_alive():
