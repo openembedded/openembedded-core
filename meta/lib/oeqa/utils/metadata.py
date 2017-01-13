@@ -63,7 +63,7 @@ def metadata_from_data_store(d):
     pass
 
 def get_layers(layers):
-    """ Returns layer name, branch, and revision as OrderedDict. """
+    """Returns layer information in dict format"""
     from git import Repo, InvalidGitRepositoryError, NoSuchPathError
 
     layer_dict = OrderedDict()
@@ -75,6 +75,7 @@ def get_layers(layers):
         except (InvalidGitRepositoryError, NoSuchPathError):
             continue
         layer_dict[layer_name]['commit'] = repo.head.commit.hexsha
+        layer_dict[layer_name]['commit_count'] = repo.head.commit.count()
         try:
             layer_dict[layer_name]['branch'] = repo.active_branch.name
         except TypeError:
