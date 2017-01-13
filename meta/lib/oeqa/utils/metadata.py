@@ -51,6 +51,7 @@ def metadata_from_bb():
                 info_dict['host_distro'][key] = os_release[key]
 
     info_dict['layers'] = get_layers(data_dict['BBLAYERS'])
+    info_dict['bitbake'] = git_rev_info(os.path.dirname(bb.__file__))
     return info_dict
 
 def metadata_from_data_store(d):
@@ -62,24 +63,29 @@ def metadata_from_data_store(d):
     # be useful when running within bitbake.
     pass
 
-def get_layers(layers):
-    """Returns layer information in dict format"""
+def git_rev_info(path):
+    """Get git revision information as a dict"""
     from git import Repo, InvalidGitRepositoryError, NoSuchPathError
 
+    info = OrderedDict()
+    try:
+        repo = Repo(path, search_parent_directories=True)
+    except (InvalidGitRepositoryError, NoSuchPathError):
+        return info
+    info['commit'] = repo.head.commit.hexsha
+    info['commit_count'] = repo.head.commit.count()
+    try:
+        info['branch'] = repo.active_branch.name
+    except TypeError:
+        info['branch'] = '(nobranch)'
+    return info
+
+def get_layers(layers):
+    """Returns layer information in dict format"""
     layer_dict = OrderedDict()
     for layer in layers.split():
         layer_name = os.path.basename(layer)
-        layer_dict[layer_name] = OrderedDict()
-        try:
-            repo = Repo(layer, search_parent_directories=True)
-        except (InvalidGitRepositoryError, NoSuchPathError):
-            continue
-        layer_dict[layer_name]['commit'] = repo.head.commit.hexsha
-        layer_dict[layer_name]['commit_count'] = repo.head.commit.count()
-        try:
-            layer_dict[layer_name]['branch'] = repo.active_branch.name
-        except TypeError:
-            layer_dict[layer_name]['branch'] = '(nobranch)'
+        layer_dict[layer_name] = git_rev_info(layer)
     return layer_dict
 
 def write_metadata_file(file_path, metadata):
