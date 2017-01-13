@@ -12,8 +12,8 @@ SRC_URI = "https://github.com/${BPN}/${BPN}/archive/${PV}.tar.gz"
 
 UPSTREAM_CHECK_URI = "https://github.com/libproxy/libproxy/releases"
 
-SRC_URI[md5sum] = "de293bb311f185a2ffa3492700a694c2"
-SRC_URI[sha256sum] = "d610bc0ef81a18ba418d759c5f4f87bf7102229a9153fb397d7d490987330ffd"
+SRC_URI[md5sum] = "272dc378efcc3335154cef30d171e84a"
+SRC_URI[sha256sum] = "6220a6cab837a8996116a0568324cadfd09a07ec16b930d2a330e16d5c2e1eb6"
 
 inherit cmake pkgconfig
 
