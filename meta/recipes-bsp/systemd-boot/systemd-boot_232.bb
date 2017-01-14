@@ -1,6 +1,6 @@
 require recipes-core/systemd/systemd.inc
 
-DEPENDS = "intltool-native libcap util-linux gnu-efi"
+DEPENDS = "intltool-native libcap util-linux gnu-efi gperf-native"
 
 SRC_URI += "file://0001-use-lnr-wrapper-instead-of-looking-for-relative-opti.patch"
 
