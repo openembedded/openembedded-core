@@ -465,7 +465,21 @@ def _extract_source(srctree, keep_temp, devbranch, sync, d, tinfoil):
         os.rmdir(srctree)
 
     initial_rev = None
-    tempdir = tempfile.mkdtemp(prefix='devtool')
+    # We need to redirect WORKDIR, STAMPS_DIR etc. under a temporary
+    # directory so that:
+    # (a) we pick up all files that get unpacked to the WORKDIR, and
+    # (b) we don't disturb the existing build
+    # However, with recipe-specific sysroots the sysroots for the recipe
+    # will be prepared under WORKDIR, and if we used the system temporary
+    # directory (i.e. usually /tmp) as used by mkdtemp by default, then
+    # our attempts to hardlink files into the recipe-specific sysroots
+    # will fail on systems where /tmp is a different filesystem, and it
+    # would have to fall back to copying the files which is a waste of
+    # time. Put the temp directory under the WORKDIR to prevent that from
+    # being a problem.
+    tempbasedir = d.getVar('WORKDIR')
+    bb.utils.mkdirhier(tempbasedir)
+    tempdir = tempfile.mkdtemp(prefix='devtooltmp-', dir=tempbasedir)
     try:
         tinfoil.logger.setLevel(logging.WARNING)
 
