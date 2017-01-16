@@ -226,7 +226,7 @@ class Partition():
         pseudo += "export PSEUDO_LOCALSTATEDIR=%s;" % p_localstatedir
         pseudo += "export PSEUDO_PASSWD=%s;" % p_passwd
         pseudo += "export PSEUDO_NOSYMLINKEXP=%s;" % p_nosymlinkexp
-        pseudo += "%s/usr/bin/pseudo " % native_sysroot
+        pseudo += "%s " % get_bitbake_var("FAKEROOTCMD")
 
         rootfs = "%s/rootfs_%s.%s.%s" % (cr_workdir, self.label,
                                          self.lineno, self.fstype)
