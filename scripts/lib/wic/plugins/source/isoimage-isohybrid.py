@@ -158,11 +158,11 @@ class IsoImagePlugin(SourcePlugin):
             if not image_type:
                 msger.error("Couldn't find INITRAMFS_FSTYPES, exiting.\n")
 
-            machine_arch = get_bitbake_var("MACHINE_ARCH")
-            if not machine_arch:
-                msger.error("Couldn't find MACHINE_ARCH, exiting.\n")
+            target_arch = get_bitbake_var("TRANSLATED_TARGET_ARCH")
+            if not target_arch:
+                msger.error("Couldn't find TRANSLATED_TARGET_ARCH, exiting.\n")
 
-            initrd = glob.glob('%s/%s*%s.%s' % (initrd_dir, image_name, machine_arch, image_type))[0]
+            initrd = glob.glob('%s/%s*%s.%s' % (initrd_dir, image_name, target_arch, image_type))[0]
 
         if not os.path.exists(initrd):
             # Create initrd from rootfs directory
