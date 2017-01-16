@@ -20,6 +20,7 @@ PACKAGECONFIG[scripting] = ",NO_LIBPERL=1 NO_LIBPYTHON=1,perl python"
 PACKAGECONFIG[tui] = ",NO_NEWT=1,libnewt slang"
 PACKAGECONFIG[libunwind] = ",NO_LIBUNWIND=1 NO_LIBDW_DWARF_UNWIND=1,libunwind"
 PACKAGECONFIG[libnuma] = ",NO_LIBNUMA=1"
+PACKAGECONFIG[systemtap] = ",NO_SDT=1,systemtap"
 
 DEPENDS = " \
     virtual/${MLPREFIX}libc \
