@@ -342,7 +342,7 @@ python do_rootfs_wicenv () {
     if not wicvars:
         return
 
-    stdir = d.getVar('STAGING_DIR_TARGET')
+    stdir = d.getVar('STAGING_DIR')
     outdir = os.path.join(stdir, 'imgdata')
     bb.utils.mkdirhier(outdir)
     basename = d.getVar('IMAGE_BASENAME')

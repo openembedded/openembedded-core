@@ -332,7 +332,7 @@ class Wic(oeSelfTest):
         """Generate and obtain the path to <image>.env"""
         if image not in self.wicenv_cache:
             self.assertEqual(0, bitbake('%s -c do_rootfs_wicenv' % image).status)
-            stdir = get_bb_var('STAGING_DIR_TARGET', image)
+            stdir = get_bb_var('STAGING_DIR', image)
             self.wicenv_cache[image] = os.path.join(stdir, 'imgdata')
         return self.wicenv_cache[image]
 
