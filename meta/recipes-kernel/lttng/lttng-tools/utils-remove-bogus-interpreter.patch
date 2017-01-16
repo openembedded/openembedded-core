@@ -1,0 +1,35 @@
+From 4545eae3bccb0f5a97509d1405a28000029a8d7d Mon Sep 17 00:00:00 2001
+From: Nathan Lynch <nathan_lynch@mentor.com>
+Date: Mon, 9 Jan 2017 16:14:28 -0600
+Subject: [PATCH] lttng-tools: remove bogus interpreter line from utils shell
+ library
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+tests/utils/utils.sh is always sourced, never executed, and
+/src/bin/bash is not a typical path for a shell interpreter.  Just
+delete it.
+
+Signed-off-by: Nathan Lynch <nathan_lynch@mentor.com>
+Signed-off-by: Jérémie Galarneau <jeremie.galarneau@efficios.com>
+---
+
+Upstream-Status: Backport
+
+ tests/utils/utils.sh | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/tests/utils/utils.sh b/tests/utils/utils.sh
+index 05d88650e9f3..9db0640b70f3 100644
+--- a/tests/utils/utils.sh
++++ b/tests/utils/utils.sh
+@@ -1,5 +1,3 @@
+-#!/src/bin/bash
+-#
+ # Copyright (C) - 2012 David Goulet <dgoulet@efficios.com>
+ #
+ # This library is free software; you can redistribute it and/or modify it under
+-- 
+2.7.4
+
