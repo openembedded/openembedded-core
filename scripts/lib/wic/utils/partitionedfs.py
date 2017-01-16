@@ -201,7 +201,8 @@ class Image():
                 part['num'] = 0
 
             if disk['ptable_format'] == "msdos":
-                if len(self.partitions) > 4:
+                # only count the partitions that are in partition table
+                if len([p for p in self.partitions if not p['no_table']]) > 4:
                     if disk['realpart'] > 3:
                         part['type'] = 'logical'
                         part['num'] = disk['realpart'] + 1
