@@ -18,13 +18,13 @@ RPROVIDES_${PN} = "lttng2-ust"
 RREPLACES_${PN} = "lttng2-ust"
 RCONFLICTS_${PN} = "lttng2-ust"
 
-SRCREV = "514a87f3b64181e384399935a5708a8f85b0cc83"
 PE = "2"
-PV = "2.8.1+git${SRCPV}"
 
-SRC_URI = "git://git.lttng.org/lttng-ust.git;branch=stable-2.8 \
+SRC_URI = "https://lttng.org/files/lttng-ust/lttng-ust-${PV}.tar.bz2 \
            file://lttng-ust-doc-examples-disable.patch \
           "
+SRC_URI[md5sum] = "77f3378ba37a36801420bce87b702e9c"
+SRC_URI[sha256sum] = "4d541a863f42dfc685ca05024027a442c70d03594c154a43e62bc109b1ea5daf"
 
 PACKAGECONFIG[manpages] = "--enable-man-pages, --disable-man-pages, asciidoc-native xmlto-native libxslt-native"
 
@@ -32,11 +32,4 @@ do_install_append() {
         # Patch python tools to use Python 3; they should be source compatible, but
         # still refer to Python 2 in the shebang
         sed -i -e '1s,#!.*python.*,#!${bindir}/python3,' ${D}${bindir}/lttng-gen-tp
-}
-
-
-S = "${WORKDIR}/git"
-
-do_configure_prepend () {
-	( cd ${S}; ${S}/bootstrap )
 }
