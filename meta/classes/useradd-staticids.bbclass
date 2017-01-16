@@ -58,7 +58,7 @@ def update_useradd_static_config(d):
             bb.warn("%s - %s: %sname %s does not have a static ID defined." % (d.getVar('PN'), pkg, type, id))
 
     # We parse and rewrite the useradd components
-    def rewrite_useradd(params):
+    def rewrite_useradd(params, is_pkg):
         # The following comes from --help on useradd from shadow
         parser = myArgumentParser(prog='useradd')
         parser.add_argument("-b", "--base-dir", metavar="BASE_DIR", help="base directory for the home directory of the new account")
@@ -162,7 +162,7 @@ def update_useradd_static_config(d):
 
                 uaargs.gid = uaargs.groupid
                 uaargs.user_group = None
-                if newgroup:
+                if newgroup and is_pkg:
                     groupadd = d.getVar("GROUPADD_PARAM_%s" % pkg)
                     if groupadd:
                         d.setVar("GROUPADD_PARAM_%s" % pkg, "%s; %s" % (groupadd, newgroup))
@@ -206,7 +206,7 @@ def update_useradd_static_config(d):
         return ";".join(newparams).strip()
 
     # We parse and rewrite the groupadd components
-    def rewrite_groupadd(params):
+    def rewrite_groupadd(params, is_pkg):
         # The following comes from --help on groupadd from shadow
         parser = myArgumentParser(prog='groupadd')
         parser.add_argument("-f", "--force", help="exit successfully if the group already exists, and cancel -g if the GID is already used", action="store_true")
@@ -298,7 +298,7 @@ def update_useradd_static_config(d):
             bb.parse.mark_dependency(d, bb.utils.which(bbpath, conf_file))
 
     # Load and process the users and groups, rewriting the adduser/addgroup params
-    useradd_packages = d.getVar('USERADD_PACKAGES')
+    useradd_packages = d.getVar('USERADD_PACKAGES') or ""
 
     for pkg in useradd_packages.split():
         # Groupmems doesn't have anything we might want to change, so simply validating
@@ -306,15 +306,40 @@ def update_useradd_static_config(d):
         useradd_param = d.getVar('USERADD_PARAM_%s' % pkg)
         if useradd_param:
             #bb.warn("Before: 'USERADD_PARAM_%s' - '%s'" % (pkg, useradd_param))
-            d.setVar('USERADD_PARAM_%s' % pkg, rewrite_useradd(useradd_param))
+            d.setVar('USERADD_PARAM_%s' % pkg, rewrite_useradd(useradd_param, True))
             #bb.warn("After:  'USERADD_PARAM_%s' - '%s'" % (pkg, d.getVar('USERADD_PARAM_%s' % pkg)))
 
         groupadd_param = d.getVar('GROUPADD_PARAM_%s' % pkg)
         if groupadd_param:
             #bb.warn("Before: 'GROUPADD_PARAM_%s' - '%s'" % (pkg, groupadd_param))
-            d.setVar('GROUPADD_PARAM_%s' % pkg, rewrite_groupadd(groupadd_param))
+            d.setVar('GROUPADD_PARAM_%s' % pkg, rewrite_groupadd(groupadd_param, True))
             #bb.warn("After:  'GROUPADD_PARAM_%s' - '%s'" % (pkg, d.getVar('GROUPADD_PARAM_%s' % pkg)))
 
+    # Load and process extra users and groups, rewriting only adduser/addgroup params
+    pkg = d.getVar('PN')
+    extrausers = d.getVar('EXTRA_USERS_PARAMS') or ""
+
+    #bb.warn("Before:  'EXTRA_USERS_PARAMS' - '%s'" % (d.getVar('EXTRA_USERS_PARAMS')))
+    new_extrausers = []
+    for cmd in re.split('''[ \t]*;[ \t]*(?=(?:[^'"]|'[^']*'|"[^"]*")*$)''', extrausers):
+        cmd = cmd.strip()
+        if not cmd:
+            continue
+
+        if re.match('''useradd (.*)''', cmd):
+            useradd_param = re.match('''useradd (.*)''', cmd).group(1)
+            useradd_param = rewrite_useradd(useradd_param, False)
+            cmd = 'useradd %s' % useradd_param
+        elif re.match('''groupadd (.*)''', cmd):
+            groupadd_param = re.match('''groupadd (.*)''', cmd).group(1)
+            groupadd_param = rewrite_groupadd(groupadd_param, False)
+            cmd = 'groupadd %s' % groupadd_param
+
+        new_extrausers.append(cmd)
+
+    new_extrausers.append('')
+    d.setVar('EXTRA_USERS_PARAMS', ';'.join(new_extrausers))
+    #bb.warn("After:  'EXTRA_USERS_PARAMS' - '%s'" % (d.getVar('EXTRA_USERS_PARAMS')))
 
 
 python __anonymous() {

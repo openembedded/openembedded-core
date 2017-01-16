@@ -63,3 +63,7 @@ set_user_group () {
 		remaining=`echo $remaining | cut -d ';' -f2-`
 	done
 }
+
+USERADDEXTENSION ?= ""
+
+inherit ${USERADDEXTENSION}
