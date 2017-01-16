@@ -210,12 +210,12 @@ class Wic(oeSelfTest):
     def test_build_artifacts(self):
         """Test wic create directdisk providing all artifacts."""
         bbvars = dict((var.lower(), get_bb_var(var, 'core-image-minimal'))
-                      for var in ('STAGING_DATADIR', 'DEPLOY_DIR_IMAGE',
-                                  'STAGING_DIR_NATIVE', 'IMAGE_ROOTFS'))
+                      for var in ('STAGING_DATADIR', 'DEPLOY_DIR_IMAGE', 'IMAGE_ROOTFS'))
+        bbvars['recipe_sysroot_native'] = get_bb_var('RECIPE_SYSROOT_NATIVE', 'wic-tools')
         status = runCmd("wic create directdisk "
                         "-b %(staging_datadir)s "
                         "-k %(deploy_dir_image)s "
-                        "-n %(staging_dir_native)s "
+                        "-n %(recipe_sysroot_native)s "
                         "-r %(image_rootfs)s" % bbvars).status
         self.assertEqual(0, status)
         self.assertEqual(1, len(glob(self.resultdir + "directdisk-*.direct")))
@@ -301,13 +301,13 @@ class Wic(oeSelfTest):
     def test_rootfs_artifacts(self):
         """Test usage of rootfs plugin with rootfs paths"""
         bbvars = dict((var.lower(), get_bb_var(var, 'core-image-minimal'))
-                      for var in ('STAGING_DATADIR', 'DEPLOY_DIR_IMAGE',
-                                  'STAGING_DIR_NATIVE', 'IMAGE_ROOTFS'))
+                      for var in ('STAGING_DATADIR', 'DEPLOY_DIR_IMAGE', 'IMAGE_ROOTFS'))
+        bbvars['recipe_sysroot_native'] = get_bb_var('RECIPE_SYSROOT_NATIVE', 'wic-tools')
         bbvars['wks'] = "directdisk-multi-rootfs"
         status = runCmd("wic create %(wks)s "
                         "--bootimg-dir=%(staging_datadir)s "
                         "--kernel-dir=%(deploy_dir_image)s "
-                        "--native-sysroot=%(staging_dir_native)s "
+                        "--native-sysroot=%(recipe_sysroot_native)s "
                         "--rootfs-dir rootfs1=%(image_rootfs)s "
                         "--rootfs-dir rootfs2=%(image_rootfs)s"
                         % bbvars).status
