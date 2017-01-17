@@ -137,13 +137,11 @@ addhandler multilib_virtclass_handler_vendor
 multilib_virtclass_handler_vendor[eventmask] = "bb.event.ConfigParsed"
 
 python multilib_virtclass_handler_global () {
-    if not e.data:
+    variant = e.data.getVar("BBEXTENDVARIANT")
+    if variant:
         return
 
-    variant = e.data.getVar("BBEXTENDVARIANT")
-
-    if isinstance(e, bb.event.RecipeParsed) and not variant:
-        if bb.data.inherits_class('kernel', e.data) or \
+    if bb.data.inherits_class('kernel', e.data) or \
             bb.data.inherits_class('module-base', e.data) or \
             (bb.data.inherits_class('allarch', e.data) and\
              not bb.data.inherits_class('packagegroup', e.data)):
@@ -177,5 +175,5 @@ python multilib_virtclass_handler_global () {
 }
 
 addhandler multilib_virtclass_handler_global
-multilib_virtclass_handler_global[eventmask] = "bb.event.RecipePreFinalise bb.event.RecipeParsed"
+multilib_virtclass_handler_global[eventmask] = "bb.event.RecipeParsed"
 
