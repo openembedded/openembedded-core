@@ -416,9 +416,8 @@ class DevtoolTests(DevtoolBase):
 
     @testcase(1164)
     def test_devtool_modify(self):
-        # Clean up anything in the workdir/sysroot/sstate cache
-        bitbake('mdadm -c cleansstate')
-        # Try modifying a recipe
+        import oe.path
+
         tempdir = tempfile.mkdtemp(prefix='devtoolqa')
         self.track_for_cleanup(tempdir)
         self.track_for_cleanup(self.workspacedir)
@@ -429,66 +428,48 @@ class DevtoolTests(DevtoolBase):
         self.assertTrue(os.path.exists(os.path.join(self.workspacedir, 'conf', 'layer.conf')), 'Workspace directory not created')
         matches = glob.glob(os.path.join(self.workspacedir, 'appends', 'mdadm_*.bbappend'))
         self.assertTrue(matches, 'bbappend not created %s' % result.output)
+
         # Test devtool status
         result = runCmd('devtool status')
         self.assertIn('mdadm', result.output)
         self.assertIn(tempdir, result.output)
-        # Check git repo
         self._check_src_repo(tempdir)
-        # Try building
-        def list_stamps(globsuffix='*'):
-            stampprefix = get_bb_var('STAMP', 'mdadm')
-            self.assertTrue(stampprefix, 'Unable to get STAMP value for recipe mdadm')
-            return glob.glob(stampprefix + globsuffix)
 
-        numstamps = len(list_stamps('.do_compile.*'))
-        self.assertEqual(numstamps, 0, 'do_compile stamps before first build')
-        for x in range(10):
-            bitbake('mdadm')
-            nowstamps = len(list_stamps('.do_compile.*'))
-            if nowstamps == numstamps:
-                break
-            numstamps = nowstamps
-        else:
-            self.fail('build did not stabilize in 10 iterations')
+        bitbake('mdadm -C unpack')
 
-        # Try making (minor) modifications to the source
-        modfile = os.path.join(tempdir, 'mdadm.8.in')
-        result = runCmd("sed -i 's!^\.TH.*!.TH MDADM 8 \"\" v9.999-custom!' %s" % modfile)
-
-        def check_TH_line(checkfile, expected, message):
+        def check_line(checkfile, expected, message, present=True):
+            # Check for $expected, on a line on its own, in checkfile.
             with open(checkfile, 'r') as f:
-                for line in f:
-                    if line.startswith('.TH'):
-                        self.assertEqual(line.rstrip(), expected, message)
+                if present:
+                    self.assertIn(expected + '\n', f, message)
+                else:
+                    self.assertNotIn(expected + '\n', f, message)
 
-        check_TH_line(modfile, '.TH MDADM 8 "" v9.999-custom', 'man .in file not modified (sed failed)')
-        bitbake('mdadm -c package')
+        modfile = os.path.join(tempdir, 'mdadm.8.in')
         pkgd = get_bb_var('PKGD', 'mdadm')
         self.assertTrue(pkgd, 'Could not query PKGD variable')
         mandir = get_bb_var('mandir', 'mdadm')
         self.assertTrue(mandir, 'Could not query mandir variable')
-        if mandir[0] == '/':
-            mandir = mandir[1:]
-        manfile = os.path.join(pkgd, mandir, 'man8', 'mdadm.8')
-        check_TH_line(manfile, '.TH MDADM 8 "" v9.999-custom', 'man file not modified. man searched file path: %s' % manfile)
-        # Test reverting the change
-        result = runCmd("git -C %s checkout -- %s" % (tempdir, modfile))
-        check_TH_line(modfile, '.TH MDADM 8 "" v3.4', 'man .in file not restored (git failed)')
+        manfile = oe.path.join(pkgd, mandir, 'man8', 'mdadm.8')
+
+        check_line(modfile, 'Linux Software RAID', 'Could not find initial string')
+        check_line(modfile, 'antique pin sardine', 'Unexpectedly found replacement string', present=False)
+
+        result = runCmd("sed -i 's!^Linux Software RAID$!antique pin sardine!' %s" % modfile)
+        check_line(modfile, 'antique pin sardine', 'mdadm.8.in file not modified (sed failed)')
+
         bitbake('mdadm -c package')
-        pkgd = get_bb_var('PKGD', 'mdadm')
-        self.assertTrue(pkgd, 'Could not query PKGD variable')
-        mandir = get_bb_var('mandir', 'mdadm')
-        self.assertTrue(mandir, 'Could not query mandir variable')
-        if mandir[0] == '/':
-            mandir = mandir[1:]
-        manfile = os.path.join(pkgd, mandir, 'man8', 'mdadm.8')
-        check_TH_line(manfile, '.TH MDADM 8 "" v3.4', 'man file not updated. man searched file path: %s' % manfile)
-        # Test devtool reset
+        check_line(manfile, 'antique pin sardine', 'man file not modified. man searched file path: %s' % manfile)
+
+        result = runCmd('git -C %s checkout -- %s' % (tempdir, modfile))
+        check_line(modfile, 'Linux Software RAID', 'man .in file not restored (git failed)')
+
+        bitbake('mdadm -c package')
+        check_line(manfile, 'Linux Software RAID', 'man file not updated. man searched file path: %s' % manfile)
+
         result = runCmd('devtool reset mdadm')
         result = runCmd('devtool status')
         self.assertNotIn('mdadm', result.output)
-        self.assertFalse(list_stamps(), 'Stamp files exist for recipe mdadm that should have been cleaned')
 
     def test_devtool_buildclean(self):
         def assertFile(path, *paths):
