@@ -518,6 +518,7 @@ python sstate_hardcode_path () {
     for fixmevar in extra_staging_fixmes.split():
         fixme_path = d.getVar(fixmevar)
         sstate_sed_cmd += " -e 's:%s:FIXME_%s:g'" % (fixme_path, fixmevar)
+        sstate_grep_cmd += " -e '%s'" % (fixme_path)
 
     fixmefn =  sstate_builddir + "fixmepath"
 
