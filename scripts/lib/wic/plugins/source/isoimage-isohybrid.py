@@ -336,14 +336,11 @@ class IsoImagePlugin(SourcePlugin):
 
                 if not os.path.isfile("%s/EFI/BOOT/%s" \
                                 % (bootimg_dir, grub_image)):
-                    grub_path = get_bitbake_var("STAGING_LIBDIR")
+                    grub_path = get_bitbake_var("STAGING_LIBDIR", "wic-tools")
                     if not grub_path:
                         msger.error("Couldn't find STAGING_LIBDIR, exiting.\n")
 
                     grub_core = "%s/grub/%s" % (grub_path, grub_target)
-                    if not os.path.exists(grub_core):
-                        msger.info("Building grub-efi...\n")
-                        exec_cmd("bitbake grub-efi")
                     if not os.path.exists(grub_core):
                         msger.error("Please build grub-efi first\n")
 

@@ -149,6 +149,10 @@ class Wic(oeSelfTest):
     @testcase(1346)
     def test_iso_image(self):
         """Test creation of hybrid iso image with legacy and EFI boot"""
+        config = 'IMAGE_FSTYPES += " hddimg "\nMACHINE_FEATURES_append = " efi"\n'
+        self.append_config(config)
+        bitbake('core-image-minimal')
+        self.remove_config(config)
         cmd = "wic create mkhybridiso --image-name core-image-minimal"
         self.assertEqual(0, runCmd(cmd).status)
         self.assertEqual(1, len(glob(self.resultdir + "HYBRID_ISO_IMG-*.direct")))
