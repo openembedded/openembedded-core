@@ -51,8 +51,7 @@ class Wic(oeSelfTest):
         # clean up which can result in the native tools built earlier in
         # setUpClass being unavailable.
         if not Wic.image_is_ready:
-            bitbake('syslinux syslinux-native parted-native gptfdisk-native '
-                    'dosfstools-native mtools-native bmap-tools-native')
+            bitbake('wic-tools')
             bitbake('core-image-minimal')
             Wic.image_is_ready = True
 
