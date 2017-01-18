@@ -87,7 +87,10 @@ class Rootfs(object, metaclass=ABCMeta):
     def _insert_feed_uris(self):
         if bb.utils.contains("IMAGE_FEATURES", "package-management",
                          True, False, self.d):
-            self.pm.insert_feeds_uris()
+            self.pm.insert_feeds_uris(self.d.getVar('PACKAGE_FEED_URIS') or "",
+                self.d.getVar('PACKAGE_FEED_BASE_PATHS') or "",
+                self.d.getVar('PACKAGE_FEED_ARCHS'))
+
 
     @abstractmethod
     def _handle_intercept_failure(self, failed_script):

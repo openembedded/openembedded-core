@@ -513,9 +513,6 @@ class PackageManager(object, metaclass=ABCMeta):
         self.d = d
         self.deploy_dir = None
         self.deploy_lock = None
-        self.feed_uris = self.d.getVar('PACKAGE_FEED_URIS') or ""
-        self.feed_base_paths = self.d.getVar('PACKAGE_FEED_BASE_PATHS') or ""
-        self.feed_archs = self.d.getVar('PACKAGE_FEED_ARCHS')
 
     """
     Update the package manager package database.
@@ -555,8 +552,14 @@ class PackageManager(object, metaclass=ABCMeta):
     def list_installed(self):
         pass
 
+    """
+    Add remote package feeds into repository manager configuration. The parameters
+    for the feeds are set by feed_uris, feed_base_paths and feed_archs.
+    See http://www.yoctoproject.org/docs/current/ref-manual/ref-manual.html#var-PACKAGE_FEED_URIS
+    for their description.
+    """
     @abstractmethod
-    def insert_feeds_uris(self):
+    def insert_feeds_uris(self, feed_uris, feed_base_paths, feed_archs):
         pass
 
     """
@@ -691,14 +694,14 @@ class RpmPM(PackageManager):
 
         self.ml_prefix_list, self.ml_os_list = self.indexer.get_ml_prefix_and_os_list(arch_var, os_var)
 
-    def insert_feeds_uris(self):
-        if self.feed_uris == "":
+    def insert_feeds_uris(self, feed_uris, feed_base_paths, feed_archs):
+        if feed_uris == "":
             return
 
         arch_list = []
-        if self.feed_archs is not None:
+        if feed_archs is not None:
             # User define feed architectures
-            arch_list = self.feed_archs.split()
+            arch_list = feed_archs.split()
         else:
             # List must be prefered to least preferred order
             default_platform_extra = list()
@@ -721,7 +724,7 @@ class RpmPM(PackageManager):
                     continue
                 arch_list.append(arch)
 
-        feed_uris = self.construct_uris(self.feed_uris.split(), self.feed_base_paths.split())
+        feed_uris = self.construct_uris(feed_uris.split(), feed_base_paths.split())
 
         uri_iterator = 0
         channel_priority = 10 + 5 * len(feed_uris) * (len(arch_list) if arch_list else 1)
@@ -1707,22 +1710,22 @@ class OpkgPM(OpkgDpkgPM):
                 config_file.write("option info_dir     %s\n" % os.path.join(self.d.getVar('OPKGLIBDIR'), 'opkg', 'info'))
                 config_file.write("option status_file  %s\n" % os.path.join(self.d.getVar('OPKGLIBDIR'), 'opkg', 'status'))
 
-    def insert_feeds_uris(self):
-        if self.feed_uris == "":
+    def insert_feeds_uris(self, feed_uris, feed_base_paths, feed_archs):
+        if feed_uris == "":
             return
 
         rootfs_config = os.path.join('%s/etc/opkg/base-feeds.conf'
                                   % self.target_rootfs)
 
-        feed_uris = self.construct_uris(self.feed_uris.split(), self.feed_base_paths.split())
-        archs = self.pkg_archs.split() if self.feed_archs is None else self.feed_archs.split()
+        feed_uris = self.construct_uris(feed_uris.split(), feed_base_paths.split())
+        archs = self.pkg_archs.split() if feed_archs is None else feed_archs.split()
 
         with open(rootfs_config, "w+") as config_file:
             uri_iterator = 0
             for uri in feed_uris:
                 if archs:
                     for arch in archs:
-                        if (self.feed_archs is None) and (not os.path.exists(os.path.join(self.deploy_dir, arch))):
+                        if (feed_archs is None) and (not os.path.exists(os.path.join(self.deploy_dir, arch))):
                             continue
                         bb.note('Adding opkg feed url-%s-%d (%s)' %
                             (arch, uri_iterator, uri))
@@ -2111,23 +2114,23 @@ class DpkgPM(OpkgDpkgPM):
         if result is not None:
             bb.fatal(result)
 
-    def insert_feeds_uris(self):
-        if self.feed_uris == "":
+    def insert_feeds_uris(self, feed_uris, feed_base_paths, feed_archs):
+        if feed_uris == "":
             return
 
         sources_conf = os.path.join("%s/etc/apt/sources.list"
                                     % self.target_rootfs)
         arch_list = []
 
-        if self.feed_archs is None:
+        if feed_archs is None:
             for arch in self.all_arch_list:
                 if not os.path.exists(os.path.join(self.deploy_dir, arch)):
                     continue
                 arch_list.append(arch)
         else:
-            arch_list = self.feed_archs.split()
+            arch_list = feed_archs.split()
 
-        feed_uris = self.construct_uris(self.feed_uris.split(), self.feed_base_paths.split())
+        feed_uris = self.construct_uris(feed_uris.split(), feed_base_paths.split())
 
         with open(sources_conf, "w+") as sources_file:
             for uri in feed_uris:
