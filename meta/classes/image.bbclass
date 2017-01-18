@@ -142,6 +142,9 @@ inherit ${IMAGE_TYPE_live}
 IMAGE_TYPE_vm = '${@bb.utils.contains_any("IMAGE_FSTYPES", ["vmdk", "vdi", "qcow2", "hdddirect"], "image-vm", "", d)}'
 inherit ${IMAGE_TYPE_vm}
 
+IMAGE_TYPE_container = '${@bb.utils.contains("IMAGE_FSTYPES", "container", "image-container", "", d)}'
+inherit ${IMAGE_TYPE_container}
+
 def build_uboot(d):
     if 'u-boot' in (d.getVar('IMAGE_FSTYPES') or ''):
         return "image_types_uboot"

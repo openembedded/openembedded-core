@@ -1,0 +1,3 @@
+ROOTFS_BOOTSTRAP_INSTALL = ""
+IMAGE_TYPES_MASKED += "container"
+IMAGE_TYPEDEP_container = "tar.bz2"

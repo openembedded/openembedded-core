@@ -242,6 +242,7 @@ IMAGE_TYPES = " \
     hdddirect \
     elf \
     wic wic.gz wic.bz2 wic.lzma \
+    container \
 "
 
 # Compression is a special case of conversion. The old variable
