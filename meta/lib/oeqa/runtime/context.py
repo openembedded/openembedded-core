@@ -42,12 +42,15 @@ class OERuntimeTestContextExecutor(OETestContextExecutor):
     default_cases = os.path.join(os.path.abspath(os.path.dirname(__file__)),
             'cases')
     default_data = None
+    default_test_data = 'data/testdata.json'
+    default_tests = ''
 
     default_target_type = 'simpleremote'
+    default_manifest = 'data/manifest'
     default_server_ip = '192.168.7.1'
     default_target_ip = '192.168.7.2'
     default_host_dumper_dir = '/tmp/oe-saved-tests'
-    default_extract_dir = 'extract_dir'
+    default_extract_dir = 'packages/extracted'
 
     def register_commands(self, logger, subparsers):
         super(OERuntimeTestContextExecutor, self).register_commands(logger, subparsers)
@@ -73,10 +76,14 @@ class OERuntimeTestContextExecutor(OETestContextExecutor):
                 % self.default_host_dumper_dir)
 
         runtime_group.add_argument('--packages-manifest', action='store',
-                help="Package manifest of the image under test")
+                default=self.default_manifest,
+                help="Package manifest of the image under testi, default: %s" \
+                % self.default_manifest)
 
         runtime_group.add_argument('--extract-dir', action='store',
-                help='Directory where extracted packages reside')
+                default=self.default_extract_dir,
+                help='Directory where extracted packages reside, default: %s' \
+                % self.default_extract_dir)
 
         runtime_group.add_argument('--qemu-boot', action='store',
                 help="Qemu boot configuration, only needed when target_type is QEMU.")
@@ -97,7 +104,7 @@ class OERuntimeTestContextExecutor(OETestContextExecutor):
 
     @staticmethod
     def readPackagesManifest(manifest):
-        if not os.path.exists(manifest):
+        if not manifest or not os.path.exists(manifest):
             raise OSError("Manifest file not exists: %s" % manifest)
 
         image_packages = set()
@@ -124,16 +131,13 @@ class OERuntimeTestContextExecutor(OETestContextExecutor):
 
         self.tc_kwargs['init']['target'] = \
                 OERuntimeTestContextExecutor.getTarget(args.target_type,
-                        args.target_ip, args.server_ip, **target_kwargs)
+                        None, args.target_ip, args.server_ip, **target_kwargs)
         self.tc_kwargs['init']['host_dumper'] = \
                 OERuntimeTestContextExecutor.getHostDumper(None,
                         args.host_dumper_dir)
         self.tc_kwargs['init']['image_packages'] = \
                 OERuntimeTestContextExecutor.readPackagesManifest(
                         args.packages_manifest)
-
-        self.tc_kwargs['init']['extract_dir'] = \
-                OERuntimeTestContextExecutor.readPackagesManifest(
-                        args.extract_dir)
+        self.tc_kwargs['init']['extract_dir'] = args.extract_dir
 
 _executor_class = OERuntimeTestContextExecutor
