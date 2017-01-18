@@ -16,8 +16,14 @@ lib_path = scripts_path + '/lib'
 sys.path = sys.path + [lib_path]
 import argparse_oe
 import scriptutils
-import scriptpath
-scriptpath.add_oe_lib_path()
+
+# oe-test is used for testexport and it doesn't have oe lib
+# so we just skip adding these libraries (not used in testexport)
+try:
+    import scriptpath
+    scriptpath.add_oe_lib_path()
+except ImportError:
+    pass
 
 from oeqa.core.context import OETestContextExecutor
 
