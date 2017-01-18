@@ -36,7 +36,7 @@ from wic.utils import runner
 
 # executable -> recipe pairs for exec_native_cmd
 NATIVE_RECIPES = {"bmaptool": "bmap-tools",
-                  "grub-mkimage": "grub-efi-native",
+                  "grub-mkimage": "grub-efi",
                   "isohybrid": "syslinux",
                   "mcopy": "mtools",
                   "mkdosfs": "dosfstools",
