@@ -18,6 +18,7 @@ SRC_URI = "git://github.com/openSUSE/build-compare.git \
            "
 
 SRCREV = "c5352c054c6ef15735da31b76d6d88620f4aff0a"
+PV = "git+${SRCPV}"
 
 S = "${WORKDIR}/git"
 
