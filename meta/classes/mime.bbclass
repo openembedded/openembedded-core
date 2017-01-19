@@ -1,4 +1,5 @@
-DEPENDS += "shared-mime-info-native shared-mime-info"
+DEPENDS += "shared-mime-info"
+PACKAGE_WRITE_DEPS += "shared-mime-info-native"
 
 mime_postinst() {
 if [ "$1" = configure ]; then
