@@ -215,6 +215,9 @@ def main():
     global config
     global context
 
+    if sys.getfilesystemencoding() != "utf-8":
+        sys.exit("Please use a locale setting which supports utf-8.\nPython can't change the filesystem locale after loading so we need a utf-8 when python starts or things won't work.")
+
     context = Context(fixed_setup=False)
 
     # Default basepath
