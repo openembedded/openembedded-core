@@ -7,11 +7,12 @@
 
 # TODO use a trigger so that this runs once per package operation run
 
-DEPENDS += "glib-2.0-native"
 
 RDEPENDS_${PN} += "glib-2.0-utils"
 
 FILES_${PN} += "${datadir}/glib-2.0/schemas"
+
+PACKAGE_WRITE_DEPS += "glib-2.0-native"
 
 gsettings_postinstrm () {
 	glib-compile-schemas $D${datadir}/glib-2.0/schemas
