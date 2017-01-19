@@ -214,7 +214,7 @@ class BuildPerfTestResult(unittest.TextTestResult):
             elif status not in ('SUCCESS', 'UNEXPECTED_SUCCESS'):
                 raise TypeError("BUG: invalid test status '%s'" % status)
 
-            for data in test.measurements:
+            for data in test.measurements.values():
                 measurement = ET.SubElement(testcase, data['type'])
                 measurement.set('name', data['name'])
                 measurement.set('legend', data['legend'])
@@ -255,7 +255,7 @@ class BuildPerfTestCase(unittest.TestCase):
         self.base_dir = None
         self.start_time = None
         self.elapsed_time = None
-        self.measurements = []
+        self.measurements = OrderedDict()
         # self.err is supposed to be a tuple from sys.exc_info()
         self.err = None
         self.bb_vars = get_bb_vars()
@@ -297,6 +297,13 @@ class BuildPerfTestCase(unittest.TestCase):
         except CommandError as err:
             log.error("Command failed: %s", err.retcode)
             raise
+
+    def _append_measurement(self, measurement):
+        """Simple helper for adding measurements results"""
+        if measurement['name'] in self.measurements:
+            raise ValueError('BUG: two measurements with the same name in {}'.format(
+                self.__class__.__name__))
+        self.measurements[measurement['name']] = measurement
 
     def measure_cmd_resources(self, cmd, name, legend, save_bs=False):
         """Measure system resource usage of a command"""
@@ -357,7 +364,7 @@ class BuildPerfTestCase(unittest.TestCase):
             measurement['values']['buildstats_file'] = \
                     os.path.relpath(bs_file, self.base_dir)
 
-        self.measurements.append(measurement)
+        self._append_measurement(measurement)
 
         # Append to 'times' array for globalres log
         e_sec = etime.total_seconds()
@@ -379,7 +386,7 @@ class BuildPerfTestCase(unittest.TestCase):
                                    ('name', name),
                                    ('legend', legend)])
         measurement['values'] = OrderedDict([('size', size)])
-        self.measurements.append(measurement)
+        self._append_measurement(measurement)
         # Append to 'sizes' array for globalres log
         self.sizes.append(str(size))
 
