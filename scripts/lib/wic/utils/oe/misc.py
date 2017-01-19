@@ -160,7 +160,7 @@ class BitbakeVars(defaultdict):
         key, val = match.groups()
         self[image][key] = val.strip('"')
 
-    def get_var(self, var, image=None):
+    def get_var(self, var, image=None, cache=True):
         """
         Get bitbake variable from 'bitbake -e' output or from .env file.
         This is a lazy method, i.e. it runs bitbake or parses file only when
@@ -202,21 +202,26 @@ class BitbakeVars(defaultdict):
                     self._parse_line(line, image)
 
             # Make first image a default set of variables
-            images = [key for key in self if key]
-            if len(images) == 1:
-                self[None] = self[image]
+            if cache:
+                images = [key for key in self if key]
+                if len(images) == 1:
+                    self[None] = self[image]
 
-        return self[image].get(var)
+        result = self[image].get(var)
+        if not cache:
+            self.pop(image, None)
+
+        return result
 
 # Create BB_VARS singleton
 BB_VARS = BitbakeVars()
 
-def get_bitbake_var(var, image=None):
+def get_bitbake_var(var, image=None, cache=True):
     """
     Provide old get_bitbake_var API by wrapping
     get_var method of BB_VARS singleton.
     """
-    return BB_VARS.get_var(var, image)
+    return BB_VARS.get_var(var, image, cache)
 
 def parse_sourceparams(sourceparams):
     """
