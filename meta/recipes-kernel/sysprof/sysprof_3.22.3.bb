@@ -5,7 +5,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504 \
 
 inherit gnomebase gettext systemd
 
-DEPENDS = "glib-2.0 libxml2-native"
+DEPENDS = "glib-2.0 libxml2-native glib-2.0-native"
 
 SRC_URI += " \
            file://define-NT_GNU_BUILD_ID.patch \
