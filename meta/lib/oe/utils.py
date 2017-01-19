@@ -97,6 +97,10 @@ def param_bool(cfg, field, dflt = None):
         return False
     raise ValueError("invalid value for boolean parameter '%s': '%s'" % (field, value))
 
+def build_depends_string(depends, task):
+    """Append a taskname to a string of dependencies as used by the [depends] flag"""
+    return " ".join(dep + ":" + task for dep in depends.split())
+
 def inherits(d, *classes):
     """Return True if the metadata inherits any of the specified classes"""
     return any(bb.data.inherits_class(cls, d) for cls in classes)
