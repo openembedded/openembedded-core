@@ -131,8 +131,16 @@ def preflight_check():
         os.chdir(builddir)
 
     if not "meta-selftest" in get_bb_var("BBLAYERS"):
-        log.error("You don't seem to have the meta-selftest layer in BBLAYERS")
-        return False
+        log.warn("meta-selftest layer not found in BBLAYERS, adding it")
+        meta_selftestdir = os.path.join(
+                get_bb_var("BBLAYERS_FETCH_DIR"),
+                'meta-selftest')
+        if os.path.isdir(meta_selftestdir):
+            runCmd("bitbake-layers add-layer %s" %meta_selftestdir)
+        else:
+            log.error("could not locate meta-selftest in:\n%s"
+                    %meta_selftestdir)
+            return False
 
     if "buildhistory.bbclass" in get_bb_var("BBINCLUDED"):
         log.error("You have buildhistory enabled already and this isn't recommended for selftest, please disable it first.")
