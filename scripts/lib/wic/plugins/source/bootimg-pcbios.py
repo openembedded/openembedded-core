@@ -145,7 +145,7 @@ class BootimgPcbiosPlugin(SourcePlugin):
             return False
 
         if not _has_syslinux(bootimg_dir):
-            bootimg_dir = get_bitbake_var("STAGING_DATADIR")
+            bootimg_dir = get_bitbake_var("STAGING_DATADIR", "wic-tools")
             if not bootimg_dir:
                 msger.error("Couldn't find STAGING_DATADIR, exiting\n")
             if not _has_syslinux(bootimg_dir):
