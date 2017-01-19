@@ -2,7 +2,7 @@
 #
 # Usage: Set GTKIMMODULES_PACKAGES to the packages that needs to update the inputmethod modules
 
-DEPENDS =+ "qemu-native"
+PACKAGE_WRITE_DEPS += "qemu-native"
 
 inherit qemu
 
