@@ -11,6 +11,7 @@ LIC_FILES_CHKSUM = "file://debian/copyright;md5=e7358b9541ccf3029e9705ed8de57968
 DEPENDS = "ca-certificates-native"
 DEPENDS_class-native = "openssl-native"
 DEPENDS_class-nativesdk = "ca-certificates-native openssl-native"
+PACKAGE_WRITE_DEPS += "ca-certificates-native"
 
 SRCREV = "61b70a1007dc269d56881a0d480fc841daacc77c"
 
