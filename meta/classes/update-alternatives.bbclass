@@ -65,6 +65,8 @@ ALTERNATIVE_PRIORITY = "10"
 # and include that vairable in the set.
 UPDALTVARS  = "ALTERNATIVE ALTERNATIVE_LINK_NAME ALTERNATIVE_TARGET ALTERNATIVE_PRIORITY"
 
+PACKAGE_WRITE_DEPS += "virtual/update-alternatives-native"
+
 def gen_updatealternativesvardeps(d):
     pkgs = (d.getVar("PACKAGES") or "").split()
     vars = (d.getVar("UPDALTVARS") or "").split()
