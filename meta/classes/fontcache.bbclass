@@ -3,7 +3,7 @@
 # packages.
 #
 
-DEPENDS += "qemu-native"
+PACKAGE_WRITE_DEPS += "qemu-native"
 inherit qemu
 
 FONT_PACKAGES ??= "${PN}"
