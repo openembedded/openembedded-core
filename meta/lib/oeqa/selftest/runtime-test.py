@@ -6,6 +6,10 @@ import re
 
 class TestExport(oeSelfTest):
 
+    @classmethod
+    def tearDownClass(cls):
+        runCmd("rm -rf /tmp/sdk")
+
     def test_testexport_basic(self):
         """
         Summary: Check basic testexport functionality with only ping test enabled.
@@ -34,15 +38,15 @@ class TestExport(oeSelfTest):
 
         with runqemu('core-image-minimal') as qemu:
             # Attempt to run runexported.py to perform ping test
-            runexported_path = os.path.join(testexport_dir, "runexported.py")
-            testdata_path = os.path.join(testexport_dir, "testdata.json")
-            cmd = "%s -t %s -s %s %s" % (runexported_path, qemu.ip, qemu.server_ip, testdata_path)
+            test_path = os.path.join(testexport_dir, "oe-test")
+            data_file = os.path.join(testexport_dir, 'data', 'testdata.json')
+            manifest = os.path.join(testexport_dir, 'data', 'manifest')
+            cmd = ("%s runtime --test-data-file %s --packages-manifest %s "
+                   "--target-ip %s --server-ip %s --quiet"
+                  % (test_path, data_file, manifest, qemu.ip, qemu.server_ip))
             result = runCmd(cmd)
-            self.assertEqual(0, result.status, 'runexported.py returned a non 0 status')
-
             # Verify ping test was succesful
-            failure = True if 'FAIL' in result.output else False
-            self.assertNotEqual(True, failure, 'ping test failed')
+            self.assertEqual(0, result.status, 'oe-test runtime returned a non 0 status')
 
     def test_testexport_sdk(self):
         """
@@ -61,7 +65,6 @@ class TestExport(oeSelfTest):
         features += 'TEST_SERVER_IP = "192.168.7.1"\n'
         features += 'TEST_TARGET_IP = "192.168.7.1"\n'
         features += 'TEST_SUITES = "ping"\n'
-        features += 'TEST_SUITES_TAGS = "selftest_sdk"\n'
         features += 'TEST_EXPORT_SDK_ENABLED = "1"\n'
         features += 'TEST_EXPORT_SDK_PACKAGES = "nativesdk-tar"\n'
         self.write_config(features)
@@ -75,14 +78,22 @@ class TestExport(oeSelfTest):
         sdk_dir = get_bb_var('TEST_EXPORT_SDK_DIR', 'core-image-minimal')
         tarball_name = "%s.sh" % get_bb_var('TEST_EXPORT_SDK_NAME', 'core-image-minimal')
         tarball_path = os.path.join(testexport_dir, sdk_dir, tarball_name)
-        self.assertEqual(os.path.isfile(tarball_path), True, "Couldn't find SDK tarball: %s" % tarball_path)
+        msg = "Couldn't find SDK tarball: %s" % tarball_path
+        self.assertEqual(os.path.isfile(tarball_path), True, msg)
 
-        # Run runexported.py
-        runexported_path = os.path.join(testexport_dir, "runexported.py")
-        testdata_path = os.path.join(testexport_dir, "testdata.json")
-        cmd = "%s %s" % (runexported_path, testdata_path)
-        result = runCmd(cmd)
-        self.assertEqual(0, result.status, 'runexported.py returned a non 0 status')
+        # Extract SDK and run tar from SDK
+        result = runCmd("%s -y -d /tmp/sdk" % tarball_path)
+        self.assertEqual(0, result.status, "Couldn't extract SDK")
+
+        env_script = result.output.split()[-1]
+        result = runCmd(". %s; which tar" % env_script, shell=True)
+        self.assertEqual(0, result.status, "Couldn't setup SDK environment")
+        is_sdk_tar = True if "/tmp/sdk" in result.output else False
+        self.assertTrue(is_sdk_tar, "Couldn't setup SDK environment")
+
+        tar_sdk = result.output
+        result = runCmd("%s --version" % tar_sdk)
+        self.assertEqual(0, result.status, "Couldn't run tar from SDK")
 
 
 class TestImage(oeSelfTest):
@@ -100,7 +111,6 @@ class TestImage(oeSelfTest):
 
         features = 'INHERIT += "testimage"\n'
         features += 'TEST_SUITES = "ping ssh selftest"\n'
-        features += 'TEST_SUITES_TAGS = "selftest_package_install"\n'
         self.write_config(features)
 
         # Build core-image-sato and testimage
