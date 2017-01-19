@@ -1,4 +1,5 @@
-DEPENDS += "gconf gconf-native"
+DEPENDS += "gconf"
+PACKAGE_WRITE_DEPS += "gconf-native"
 
 # These are for when gconftool is used natively and the prefix isn't necessarily
 # the sysroot.  TODO: replicate the postinst logic for -native packages going
