@@ -267,6 +267,8 @@ FILES_${PN}-ath9k = " \
   /lib/firmware/ar7010*.fw \
   /lib/firmware/htc_9271.fw \
   /lib/firmware/htc_7010.fw \
+  /lib/firmware/ath9k_htc/htc_7010-1.4.0.fw \
+  /lib/firmware/ath9k_htc/htc_9271-1.4.0.fw \
 "
 
 RDEPENDS_${PN}-ar9170 += "${PN}-atheros-license"
