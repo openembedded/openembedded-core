@@ -1,6 +1,6 @@
 UPDATERCPN ?= "${PN}"
 
-DEPENDS_append_class-target = "${@bb.utils.contains('DISTRO_FEATURES', 'sysvinit', ' update-rc.d-native update-rc.d initscripts', '', d)}"
+DEPENDS_append_class-target = "${@bb.utils.contains('DISTRO_FEATURES', 'sysvinit', ' update-rc.d initscripts', '', d)}"
 
 UPDATERCD = "update-rc.d"
 UPDATERCD_class-cross = ""
@@ -33,6 +33,8 @@ if ${@use_updatercd(d)} && type update-rc.d >/dev/null 2>/dev/null; then
 	update-rc.d $OPT ${INITSCRIPT_NAME} remove
 fi
 }
+
+PACKAGE_WRITE_DEPS += "update-rc.d-native"
 
 updatercd_postinst() {
 # Begin section update-rc.d
