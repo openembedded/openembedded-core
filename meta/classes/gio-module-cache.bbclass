@@ -1,4 +1,4 @@
-DEPENDS += "qemu-native"
+PACKAGE_WRITE_DEPS += "qemu-native"
 inherit qemu
 
 GIO_MODULE_PACKAGES ??= "${PN}"
