@@ -87,6 +87,7 @@ python () {
         raise bb.parse.SkipPackage("'systemd' in DISTRO_FEATURES")
 }
 
+PACKAGE_WRITE_DEPS += "qemu-native"
 pkg_postinst_eudev-hwdb () {
     if test -n "$D"; then
         ${@qemu_run_binary(d, '$D', '${bindir}/udevadm')} hwdb --update --root $D
