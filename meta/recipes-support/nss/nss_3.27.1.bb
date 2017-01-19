@@ -207,6 +207,7 @@ do_install_append_class-target() {
     rm ./empty_password
 }
 
+PACKAGE_WRITE_DEPS += "nss-native"
 pkg_postinst_${PN} () {
     if [ -n "$D" ]; then
         for I in $D${libdir}/lib*.chk; do
