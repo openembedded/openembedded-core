@@ -3,9 +3,10 @@ LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=751419260aa954499f7abaabaa882bbe"
 
 DEPENDS = "libsoup-2.4 webkitgtk gtk+3 iso-codes avahi libnotify gcr \
-	   gsettings-desktop-schemas gnome-desktop3 libxml2-native intltool-native"
+	   gsettings-desktop-schemas gnome-desktop3 libxml2-native \
+	   intltool-native glib-2.0 glib-2.0-native"
 
-inherit gnomebase gsettings distro_features_check upstream-version-is-even
+inherit gnomebase gsettings distro_features_check upstream-version-is-even gettext
 REQUIRED_DISTRO_FEATURES = "x11"
 
 SRC_URI += "file://0001-yelp.m4-drop-the-check-for-itstool.patch"
