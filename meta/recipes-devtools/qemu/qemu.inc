@@ -9,8 +9,6 @@ require qemu-targets.inc
 inherit autotools ptest
 BBCLASSEXTEND = "native nativesdk"
 
-PR = "r1"
-
 # QEMU_TARGETS is overridable variable
 QEMU_TARGETS ?= "arm aarch64 i386 mips mipsel mips64 mips64el ppc sh4 x86_64"
 
