@@ -461,7 +461,7 @@ class DevtoolTests(DevtoolBase):
         bitbake('mdadm -c package')
         check_line(manfile, 'antique pin sardine', 'man file not modified. man searched file path: %s' % manfile)
 
-        result = runCmd('git -C %s checkout -- %s' % (tempdir, modfile))
+        result = runCmd('git checkout -- %s' % modfile, cwd=tempdir)
         check_line(modfile, 'Linux Software RAID', 'man .in file not restored (git failed)')
 
         bitbake('mdadm -c package')
