@@ -19,6 +19,10 @@ SDKTARGETSYSROOT = "${SDKPATH}/sysroots/${REAL_MULTIMACH_TARGET_SYS}"
 
 inherit cross-canadian
 
+# Need to ensure we have the virtual mappings and site files for all multtilib 
+# variants
+DEPENDS += "${@all_multilib_tune_values(d, 'TOOLCHAIN_NEED_CONFIGSITE_CACHE')}"
+
 do_generate_content[cleandirs] = "${SDK_OUTPUT}"
 do_generate_content[dirs] = "${SDK_OUTPUT}/${SDKPATH}"
 python do_generate_content() {
