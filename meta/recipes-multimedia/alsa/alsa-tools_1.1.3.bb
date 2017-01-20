@@ -13,11 +13,10 @@ SRC_URI = "ftp://ftp.alsa-project.org/pub/tools/${BP}.tar.bz2 \
            ${@bb.utils.contains('DISTRO_FEATURES', 'x11', '', 'file://makefile_no_gtk.patch', d)} \
            file://gitcompile_hdajacksensetest \
            file://0001-as10k1-Make-output_tram_line-static-inline.patch \
-           file://0001-Cus428Midi-Explicitly-cast-constant-to-char-type.patch \
            "
 
-SRC_URI[md5sum] = "b476a5afaa3ea3230855553ad59d259d"
-SRC_URI[sha256sum] = "7d34558c590a50294b36576d257316a1ac5cd951eb8cd7d330e09f8cc757ab51"
+SRC_URI[md5sum] = "b23eaae687d55410b92587c2053b301f"
+SRC_URI[sha256sum] = "d88f1dcd6872121383eded5fa24e328e68c54e527db4547e1435d5eabc2b6709"
 
 inherit autotools-brokensep pkgconfig
 
