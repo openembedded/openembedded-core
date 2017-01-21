@@ -244,11 +244,8 @@ python do_package_ipk () {
             conffiles.close()
 
         os.chdir(basedir)
-        ret = subprocess.call("PATH=\"%s\" %s %s %s" % (localdata.getVar("PATH"),
+        subprocess.check_output("PATH=\"%s\" %s %s %s" % (localdata.getVar("PATH"),
                                                           d.getVar("OPKGBUILDCMD"), pkg, pkgoutdir), shell=True)
-        if ret != 0:
-            bb.utils.unlockfile(lf)
-            bb.fatal("opkg-build execution failed")
 
         if d.getVar('IPK_SIGN_PACKAGES') == '1':
             ipkver = "%s-%s" % (d.getVar('PKGV'), d.getVar('PKGR'))
