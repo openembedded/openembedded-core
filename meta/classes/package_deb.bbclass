@@ -308,10 +308,7 @@ python do_package_deb () {
             conffiles.close()
 
         os.chdir(basedir)
-        ret = subprocess.call("PATH=\"%s\" dpkg-deb -b %s %s" % (localdata.getVar("PATH"), root, pkgoutdir), shell=True)
-        if ret != 0:
-            bb.utils.unlockfile(lf)
-            bb.fatal("dpkg-deb execution failed")
+        subprocess.check_output("PATH=\"%s\" dpkg-deb -b %s %s" % (localdata.getVar("PATH"), root, pkgoutdir), shell=True)
 
         cleanupcontrol(root)
         bb.utils.unlockfile(lf)
