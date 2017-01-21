@@ -104,11 +104,7 @@ python do_package_ipk () {
 
         controldir = os.path.join(root, 'CONTROL')
         bb.utils.mkdirhier(controldir)
-        try:
-            ctrlfile = open(os.path.join(controldir, 'control'), 'w')
-        except OSError:
-            bb.utils.unlockfile(lf)
-            bb.fatal("unable to open control file for writing")
+        ctrlfile = open(os.path.join(controldir, 'control'), 'w')
 
         fields = []
         pe = d.getVar('PKGE')
@@ -134,35 +130,28 @@ python do_package_ipk () {
 
         ctrlfile.write("Package: %s\n" % pkgname)
         # check for required fields
-        try:
-            for (c, fs) in fields:
-                for f in fs:
-                    if localdata.getVar(f, False) is None:
-                        raise KeyError(f)
-                # Special behavior for description...
-                if 'DESCRIPTION' in fs:
-                    summary = localdata.getVar('SUMMARY') or localdata.getVar('DESCRIPTION') or "."
-                    ctrlfile.write('Description: %s\n' % summary)
-                    description = localdata.getVar('DESCRIPTION') or "."
-                    description = textwrap.dedent(description).strip()
-                    if '\\n' in description:
-                        # Manually indent
-                        for t in description.split('\\n'):
-                            # We don't limit the width when manually indent, but we do
-                            # need the textwrap.fill() to set the initial_indent and
-                            # subsequent_indent, so set a large width
-                            ctrlfile.write('%s\n' % textwrap.fill(t.strip(), width=100000, initial_indent=' ', subsequent_indent=' '))
-                    else:
-                        # Auto indent
-                        ctrlfile.write('%s\n' % textwrap.fill(description, width=74, initial_indent=' ', subsequent_indent=' '))
+        for (c, fs) in fields:
+            for f in fs:
+                if localdata.getVar(f, False) is None:
+                    raise KeyError(f)
+            # Special behavior for description...
+            if 'DESCRIPTION' in fs:
+                summary = localdata.getVar('SUMMARY') or localdata.getVar('DESCRIPTION') or "."
+                ctrlfile.write('Description: %s\n' % summary)
+                description = localdata.getVar('DESCRIPTION') or "."
+                description = textwrap.dedent(description).strip()
+                if '\\n' in description:
+                    # Manually indent
+                    for t in description.split('\\n'):
+                        # We don't limit the width when manually indent, but we do
+                        # need the textwrap.fill() to set the initial_indent and
+                        # subsequent_indent, so set a large width
+                        ctrlfile.write('%s\n' % textwrap.fill(t.strip(), width=100000, initial_indent=' ', subsequent_indent=' '))
                 else:
-                    ctrlfile.write(c % tuple(pullData(fs, localdata)))
-        except KeyError:
-            import sys
-            (type, value, traceback) = sys.exc_info()
-            ctrlfile.close()
-            bb.utils.unlockfile(lf)
-            bb.fatal("Missing field for ipk generation: %s" % value)
+                    # Auto indent
+                    ctrlfile.write('%s\n' % textwrap.fill(description, width=74, initial_indent=' ', subsequent_indent=' '))
+            else:
+                ctrlfile.write(c % tuple(pullData(fs, localdata)))
         # more fields
 
         custom_fields_chunk = get_package_additional_metadata("ipk", localdata)
@@ -222,22 +211,14 @@ python do_package_ipk () {
             scriptvar = localdata.getVar('pkg_%s' % script)
             if not scriptvar:
                 continue
-            try:
-                scriptfile = open(os.path.join(controldir, script), 'w')
-            except OSError:
-                bb.utils.unlockfile(lf)
-                bb.fatal("unable to open %s script file for writing" % script)
+            scriptfile = open(os.path.join(controldir, script), 'w')
             scriptfile.write(scriptvar)
             scriptfile.close()
             os.chmod(os.path.join(controldir, script), 0o755)
 
         conffiles_str = ' '.join(get_conffiles(pkg, d))
         if conffiles_str:
-            try:
-                conffiles = open(os.path.join(controldir, 'conffiles'), 'w')
-            except OSError:
-                bb.utils.unlockfile(lf)
-                bb.fatal("unable to open conffiles for writing")
+            conffiles = open(os.path.join(controldir, 'conffiles'), 'w')
             for f in conffiles_str.split():
                 if os.path.exists(oe.path.join(root, f)):
                     conffiles.write('%s\n' % f)
