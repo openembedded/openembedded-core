@@ -92,16 +92,20 @@ do_install_append () {
 		sed -i -e '1s,#!.*perl,#! ${USRBINPATH}/env perl,' ${D}${bindir}/glib-mkenums
 	fi
 
+        # Make sure gio-querymodules is unique among multilibs
+        if test "x${MLPREFIX}" != "x"; then
+                mv ${D}${libexecdir}/gio-querymodules ${D}${libexecdir}/${MLPREFIX}gio-querymodules
+        fi
+}
+
+do_install_append_class-target () {
+	# Tests are only installed on targets, not native builds.  Separating this out
+	# keeps glib-2.0-native from depending on ${DISTRO_FEATURES}
 	if [ -f ${D}${datadir}/installed-tests/glib/gdbus-serialization.test ]; then
 		if ${@bb.utils.contains("DISTRO_FEATURES", "x11", "false", "true", d)}; then
 			rm ${D}${datadir}/installed-tests/glib/gdbus-serialization.test
 		fi
 	fi
-
-        # Make sure gio-querymodules is unique among multilibs
-        if test "x${MLPREFIX}" != "x"; then
-                mv ${D}${libexecdir}/gio-querymodules ${D}${libexecdir}/${MLPREFIX}gio-querymodules
-        fi
 }
 
 do_install_append_libc-musl () {
