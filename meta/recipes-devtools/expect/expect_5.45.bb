@@ -43,11 +43,16 @@ do_install_append() {
         sed -e 's|$dir|${libdir}|' -i ${D}${libdir}/expect${PV}/pkgIndex.tcl
 }
 
+# Apparently the public Tcl headers are only in /usr/include/tcl8.6
+# when building for the target.
+TCL_INCLUDE_PATH = ""
+TCL_INCLUDE_PATH_class-target = "--with-tclinclude=${STAGING_INCDIR}/tcl8.6"
+
 EXTRA_OECONF += "--with-tcl=${STAGING_LIBDIR} \
-                 --with-tclinclude=${STAGING_INCDIR}/tcl8.6 \
                  --enable-shared \
                  --enable-threads \
                  --disable-rpath \
+                 ${TCL_INCLUDE_PATH} \
                 "
 EXTRA_OEMAKE_install = " 'SCRIPTS=' "
 
@@ -62,3 +67,5 @@ FILES_${PN}-dev = "${libdir_native}/expect${PV}/libexpect*.so \
 FILES_${PN} += "${libdir}/libexpect${PV}.so \
                 ${libdir}/expect${PV}/* \
                "
+
+BBCLASSEXTEND = "native nativesdk"
