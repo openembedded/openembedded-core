@@ -165,7 +165,9 @@ def update_useradd_static_config(d):
                 if newgroup and is_pkg:
                     groupadd = d.getVar("GROUPADD_PARAM_%s" % pkg)
                     if groupadd:
-                        d.setVar("GROUPADD_PARAM_%s" % pkg, "%s; %s" % (groupadd, newgroup))
+                        # Only add the group if not already specified
+                        if not uaargs.groupname in groupadd:
+                            d.setVar("GROUPADD_PARAM_%s" % pkg, "%s; %s" % (groupadd, newgroup))
                     else:
                         d.setVar("GROUPADD_PARAM_%s" % pkg, newgroup)
 
