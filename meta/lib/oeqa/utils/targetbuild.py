@@ -45,7 +45,7 @@ class BuildProject(metaclass=ABCMeta):
                 cmd = 'export ' + var + '=\"%s\"; %s' % (val, cmd)
 
         cmd = cmd + "wget -O %s %s" % (self.localarchive, self.uri)
-        subprocess.check_call(cmd, shell=True)
+        subprocess.check_output(cmd, shell=True)
 
     # This method should provide a way to run a command in the desired environment.
     @abstractmethod
@@ -114,7 +114,7 @@ class SDKBuildProject(BuildProject):
         self._download_archive()
 
         cmd = 'tar xf %s%s -C %s' % (self.targetdir, self.archive, self.targetdir)
-        subprocess.check_call(cmd, shell=True)
+        subprocess.check_output(cmd, shell=True)
 
         #Change targetdir to project folder
         self.targetdir = os.path.join(self.targetdir, self.fname)

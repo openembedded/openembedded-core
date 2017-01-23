@@ -573,14 +573,14 @@ python sstate_hardcode_path () {
     sstate_hardcode_cmd = "%s | xargs %s | %s | xargs %s %s" % (sstate_scan_cmd, sstate_grep_cmd, sstate_filelist_cmd, xargs_no_empty_run_cmd, sstate_sed_cmd)
 
     bb.note("Removing hardcoded paths from sstate package: '%s'" % (sstate_hardcode_cmd))
-    subprocess.check_call(sstate_hardcode_cmd, shell=True, cwd=sstate_builddir)
+    subprocess.check_output(sstate_hardcode_cmd, shell=True, cwd=sstate_builddir)
 
         # If the fixmefn is empty, remove it..
     if os.stat(fixmefn).st_size == 0:
         os.remove(fixmefn)
     else:
         bb.note("Replacing absolute paths in fixmepath file: '%s'" % (sstate_filelist_relative_cmd))
-        subprocess.check_call(sstate_filelist_relative_cmd, shell=True)
+        subprocess.check_output(sstate_filelist_relative_cmd, shell=True)
 }
 
 def sstate_package(ss, d):

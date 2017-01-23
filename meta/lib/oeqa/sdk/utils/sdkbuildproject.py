@@ -24,7 +24,7 @@ class SDKBuildProject(BuildProject):
         self._download_archive()
 
         cmd = 'tar xf %s%s -C %s' % (self.targetdir, self.archive, self.targetdir)
-        subprocess.check_call(cmd, shell=True)
+        subprocess.check_output(cmd, shell=True)
 
         #Change targetdir to project folder
         self.targetdir = os.path.join(self.targetdir, self.fname)

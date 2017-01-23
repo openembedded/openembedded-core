@@ -29,7 +29,7 @@ class BuildProject(metaclass=ABCMeta):
             return
 
         cmd = "wget -O %s %s" % (self.localarchive, self.uri)
-        subprocess.check_call(cmd, shell=True)
+        subprocess.check_output(cmd, shell=True)
 
     # This method should provide a way to run a command in the desired environment.
     @abstractmethod
