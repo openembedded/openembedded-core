@@ -27,7 +27,7 @@ inherit siteinfo
 # results for autoconf tests we cannot run at build time.
 export CONFIG_SITE = "${@siteinfo_get_files(d)}"
 
-acpaths = "default"
+acpaths ?= "default"
 EXTRA_AUTORECONF = "--exclude=autopoint"
 
 export lt_cv_sys_lib_dlsearch_path_spec = "${libdir} ${base_libdir}"
