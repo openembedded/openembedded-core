@@ -29,10 +29,13 @@ EXTRA_OECONF += "ac_cv_have_z_modifier=yes \
         ac_cv_header_bsd_libutil_h=no \
 "
 
-PACKAGECONFIG ??= "tcp-wrappers"
+PACKAGECONFIG_class-target ??= "tcp-wrappers"
+PACKAGECONFIG ??= ""
 PACKAGECONFIG[tcp-wrappers] = "--enable-libwrap,--disable-libwrap,tcp-wrappers"
 
 do_install_prepend () {
     mkdir -p ${D}${bindir}
     install -d ${D}${bindir} ${D}${mandir}/man1
 }
+
+BBCLASSEXTEND = "native nativesdk"
