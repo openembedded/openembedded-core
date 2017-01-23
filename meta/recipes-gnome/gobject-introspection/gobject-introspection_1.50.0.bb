@@ -171,7 +171,7 @@ gi_ldsoconf_sysroot_preprocess () {
 	mkdir -p ${SYSROOT_DESTDIR}${bindir}
 	dest=${SYSROOT_DESTDIR}${bindir}/postinst-ldsoconf-${PN}
 	echo "#!/bin/sh" > $dest
-	echo "echo mkdir -p ${STAGING_DIR_TARGET}${sysconfdir} > ${STAGING_DIR_TARGET}${sysconfdir}/ld.so.conf" >> $dest
+	echo "mkdir -p ${STAGING_DIR_TARGET}${sysconfdir}" >> $dest
 	echo "echo ${base_libdir} >> ${STAGING_DIR_TARGET}${sysconfdir}/ld.so.conf" >> $dest
 	echo "echo ${libdir} >> ${STAGING_DIR_TARGET}${sysconfdir}/ld.so.conf" >> $dest
 	chmod 755 $dest
