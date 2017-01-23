@@ -16,6 +16,7 @@ class SStateBase(oeSelfTest):
         self.sstate_path = get_bb_var('SSTATE_DIR')
         self.hostdistro = get_bb_var('NATIVELSBSTRING')
         self.distro_specific_sstate = os.path.join(self.sstate_path, self.hostdistro)
+        self.tclibc = get_bb_var('TCLIBC')
 
     # Creates a special sstate configuration with the option to add sstate mirrors
     def config_sstate(self, temp_sstate_location=False, add_local_mirrors=[]):
