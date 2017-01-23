@@ -13,10 +13,15 @@ RECIPE_UPSTREAM_VERSION = "20150107"
 RECIPE_UPSTREAM_DATE = "Jan 07, 2015"
 CHECK_DATE = "Aug 12, 2015"
 
-SRC_URI = "svn://svn.xiph.org/trunk;module=Tremor;rev=19427;protocol=http \
+# Only subversion url left in OE-Core, use a mirror tarball instead since
+# this rarely changes.
+# svn://svn.xiph.org/trunk;module=Tremor;rev=19427;protocol=http
+SRC_URI = "http://downloads.yoctoproject.org/mirror/sources/Tremor_svn.xiph.org_.trunk_19427_.tar.gz \
            file://obsolete_automake_macros.patch;striplevel=0 \
            file://tremor-arm-thumb2.patch \
 "
+SRC_URI[md5sum] = "b308f9598176c0b5059c0124ab122afe"
+SRC_URI[sha256sum] = "2196802e1635f9ac4474eeee0fe4da12e6c1ad3942862427a67268de2b65b1d4"
 
 S = "${WORKDIR}/Tremor"
 
