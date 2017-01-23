@@ -2,6 +2,8 @@
 
 SRC_URI += "file://relative-libdir.patch;striplevel=0 \
            "
+# This patch should be applied after '(attr\|acl)-Missing-configure.ac.patch' 
+SRC_URI_append = " file://0001-Added-configure-option-to-enable-disable-static-libr.patch"
 
 inherit autotools-brokensep gettext
 
