@@ -141,6 +141,10 @@ do_compile() {
 	unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS
 	if [ "${BUSYBOX_SPLIT_SUID}" = "1" -a x`grep "CONFIG_FEATURE_INDIVIDUAL=y" .config` = x ]; then
 	# split the .config into two parts, and make two busybox binaries
+		if [ -e .config.orig ]; then
+			# Need to guard again an interrupted do_compile - restore any backup
+			cp .config.orig .config
+		fi
 		cp .config .config.orig
 		oe_runmake busybox.cfg.suid
 		oe_runmake busybox.cfg.nosuid
