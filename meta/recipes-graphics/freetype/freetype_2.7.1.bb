@@ -18,8 +18,8 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/freetype/freetype-${PV}.tar.bz2 \
 UPSTREAM_CHECK_URI = "http://sourceforge.net/projects/freetype/files/freetype2/"
 UPSTREAM_CHECK_REGEX = "(?P<pver>\d+(\.\d+)+)"
 
-SRC_URI[md5sum] = "be4601619827b7935e1d861745923a68"
-SRC_URI[sha256sum] = "d6a451f5b754857d2aa3964fd4473f8bc5c64e879b24516d780fb26bec7f7d48"
+SRC_URI[md5sum] = "b3230110e0cab777e0df7631837ac36e"
+SRC_URI[sha256sum] = "3a3bb2c4e15ffb433f2032f50a5b5a92558206822e22bfe8cbe339af4aa82f88"
 
 inherit autotools pkgconfig binconfig-disabled multilib_header
 
