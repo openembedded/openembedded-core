@@ -185,32 +185,6 @@ class DirectImageCreator:
         # partitions list from kickstart file
         return self.ks.partitions
 
-    def get_disk_names(self):
-        """ Returns a list of physical target disk names (e.g., 'sdb') which
-        will be created. """
-
-        if self._disk_names:
-            return self._disk_names
-
-        #get partition info from ks handler
-        parts = self._get_parts()
-
-        for i in range(len(parts)):
-            if parts[i].disk:
-                disk_name = parts[i].disk
-            else:
-                raise CreatorError("Failed to create disks, no --ondisk "
-                                   "specified in partition line of ks file")
-
-            if parts[i].mountpoint and not parts[i].fstype:
-                raise CreatorError("Failed to create disks, no --fstype "
-                                   "specified for partition with mountpoint "
-                                   "'%s' in the ks file")
-
-            self._disk_names.append(disk_name)
-
-        return self._disk_names
-
     def _full_name(self, name, extention):
         """ Construct full file name for a file we generate. """
         return "%s-%s.%s" % (self.name, name, extention)
