@@ -8,8 +8,8 @@ SRC_URI = "http://ftp.gnome.org/pub/gnome/sources/gtk+/${MAJ_VER}/gtk+-${PV}.tar
            file://0003-Add-disable-opengl-configure-option.patch \
            file://0004-configure.ac-Fix-wayland-protocols-path.patch \
           "
-SRC_URI[md5sum] = "55e0198f100db98f31d1b0f9dc403794"
-SRC_URI[sha256sum] = "693fa0ac643c59ccd51db99cabe476b4e0a41fd4f0c3c8b3e3ef38f94b2e7334"
+SRC_URI[md5sum] = "e05a7e8e9b89a71fd016883b5431e429"
+SRC_URI[sha256sum] = "a3a27564bfb1679ebbc75c37cd2bcd6e727c8bdfbcd3984d29305bf9ee60d432"
 
 S = "${WORKDIR}/gtk+-${PV}"
 
