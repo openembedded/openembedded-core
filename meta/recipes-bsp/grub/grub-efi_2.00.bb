@@ -16,10 +16,10 @@ python __anonymous () {
     target = d.getVar('TARGET_ARCH')
     if target == "x86_64":
         grubtarget = 'x86_64'
-        grubimage = "bootx64.efi"
+        grubimage = "grub-efi-bootx64.efi"
     elif re.match('i.86', target):
         grubtarget = 'i386'
-        grubimage = "bootia32.efi"
+        grubimage = "grub-efi-bootia32.efi"
     else:
         raise bb.parse.SkipPackage("grub-efi is incompatible with target %s" % target)
     d.setVar("GRUB_TARGET", grubtarget)
