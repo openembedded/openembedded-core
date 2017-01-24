@@ -304,7 +304,9 @@ def staging_populate_sysroot_dir(targetsysroot, nativesysroot, native, d):
         pkgarchs = ['${BUILD_ARCH}', '${BUILD_ARCH}_*']
         targetdir = nativesysroot
     else:
-        pkgarchs = ['${MACHINE_ARCH}', '${TUNE_PKGARCH}', 'allarch']
+        pkgarchs = ['${MACHINE_ARCH}']
+        pkgarchs = pkgarchs + list(reversed(d.getVar("PACKAGE_EXTRA_ARCHS").split()))
+        pkgarchs.append('allarch')
         targetdir = targetsysroot
 
     bb.utils.mkdirhier(targetdir)
@@ -528,11 +530,13 @@ python extend_recipe_sysroot() {
             manifest = d2.expand("${SSTATE_MANIFESTS}/manifest-${BUILD_ARCH}_${SDK_ARCH}_${SDK_OS}-%s.populate_sysroot" % c)
             native = True
         else:
-            manifest = d2.expand("${SSTATE_MANIFESTS}/manifest-${MACHINE_ARCH}-%s.populate_sysroot" % c)
-            if not os.path.exists(manifest):
-                manifest = d2.expand("${SSTATE_MANIFESTS}/manifest-${TUNE_PKGARCH}-%s.populate_sysroot" % c)
-            if not os.path.exists(manifest):
-                manifest = d2.expand("${SSTATE_MANIFESTS}/manifest-allarch-%s.populate_sysroot" % c)
+            pkgarchs = ['${MACHINE_ARCH}']
+            pkgarchs = pkgarchs + list(reversed(d2.getVar("PACKAGE_EXTRA_ARCHS").split()))
+            pkgarchs.append('allarch')
+            for pkgarch in pkgarchs:
+                manifest = d2.expand("${SSTATE_MANIFESTS}/manifest-%s-%s.populate_sysroot" % (pkgarch, c))
+                if os.path.exists(manifest):
+                    break
         if not os.path.exists(manifest):
             bb.warn("Manifest %s not found?" % manifest)
         else:
