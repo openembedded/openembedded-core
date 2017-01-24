@@ -88,7 +88,7 @@ def wic_create_subcommand(args, usage_str):
     """
     parser = optparse.OptionParser(usage=usage_str)
 
-    parser.add_option("-o", "--outdir", dest="outdir",
+    parser.add_option("-o", "--outdir", dest="outdir", default='.',
                       help="name of directory to create image in")
     parser.add_option("-e", "--image-name", dest="image_name",
                       help="name of the image to use the artifacts from "
