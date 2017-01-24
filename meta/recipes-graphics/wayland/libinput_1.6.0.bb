@@ -10,8 +10,8 @@ DEPENDS = "libevdev udev mtdev"
 SRC_URI = "http://www.freedesktop.org/software/${BPN}/${BP}.tar.xz \
            file://touchpad-serial-synaptics-need-to-fake-new-touches-on-TRIPLETAP.patch \
 "
-SRC_URI[md5sum] = "26030dae25f1ac584b0e428c90473339"
-SRC_URI[sha256sum] = "5a96559385ecfaa30f9e72ea89eb8ebbc97caf68e458f451f4ed62315311081c"
+SRC_URI[md5sum] = "ed9b435d411462d24d88a87728f6c9d6"
+SRC_URI[sha256sum] = "b7534f518d735c643aedca2fb4694683dfddc8d0600cfb628c87a18e65255832"
 
 inherit autotools pkgconfig
 
