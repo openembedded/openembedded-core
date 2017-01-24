@@ -36,7 +36,6 @@ from oeqa.utils.decorators import testcase
 class Wic(oeSelfTest):
     """Wic test class."""
 
-    alternate_resultdir = "/var/tmp/wic/build/alt/"
     resultdir = "/var/tmp/wic.oe-selftest/"
     image_is_ready = False
     wicenv_cache = {}
@@ -202,20 +201,13 @@ class Wic(oeSelfTest):
         self.assertEqual(1, len(glob(self.resultdir + "sdimage-bootpart-*direct")))
 
     @testcase(1562)
-    def test_alternate_output_dir(self):
-        """Test alternate output directory"""
-        self.assertEqual(0, runCmd("wic create directdisk "
-                                   "-e core-image-minimal "
-                                   "-o %s"
-                                   % self.alternate_resultdir).status)
-        self.assertEqual(1, len(glob(self.alternate_resultdir +
-                                     "build/directdisk-*.direct")))
-        self.assertEqual(0, runCmd("wic create mkefidisk -e "
-                                   "core-image-minimal "
-                                   "--outdir=%s"
-                                   % self.alternate_resultdir).status)
-        self.assertEqual(1, len(glob(self.alternate_resultdir +
-                                     "build/mkefidisk-*direct")))
+    def test_default_output_dir(self):
+        """Test default output location"""
+        for fname in glob("directdisk-*.direct"):
+            os.remove(fname)
+        cmd = "wic create directdisk -e core-image-minimal"
+        self.assertEqual(0, runCmd(cmd).status)
+        self.assertEqual(1, len(glob("directdisk-*.direct")))
 
     @testcase(1212)
     def test_build_artifacts(self):
