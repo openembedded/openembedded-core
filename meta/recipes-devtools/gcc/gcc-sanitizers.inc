@@ -12,11 +12,7 @@ EXTRA_OECONF_PATHS = "\
 "
 
 do_configure () {
-    mtarget=`echo ${TARGET_SYS} | sed -e s#-${SDKPKGSUFFIX}##`
     target=`echo ${TARGET_SYS} | sed -e s#-${SDKPKGSUFFIX}##`
-    if [ -d ${STAGING_INCDIR_NATIVE}/gcc-build-internal-$mtarget ]; then
-        hardlinkdir ${STAGING_INCDIR_NATIVE}/gcc-build-internal-$mtarget ${B}
-    fi
 
     echo "Configuring libsanitizer"
     rm -rf ${B}/$target/libsanitizer/
@@ -31,6 +27,8 @@ do_configure () {
     # Link to the sysroot's libstdc++ instead of one gcc thinks it just built
     sed -i -e '/LIBSTDCXX_RAW_CXX_\(CXXFLAGS\|LDFLAGS\)\s*=/d' ${B}/$target/libsanitizer/*/Makefile
 }
+EXTRACONFFUNCS += "extract_stashed_builddir"
+do_configure[depends] += "${COMPILERDEP}"
 
 do_compile () {
     target=`echo ${TARGET_SYS} | sed -e s#-${SDKPKGSUFFIX}##`

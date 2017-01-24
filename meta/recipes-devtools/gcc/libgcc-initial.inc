@@ -12,6 +12,6 @@ PACKAGES = ""
 
 EXTRA_OECONF += "--disable-shared"
 
-LIBGCCBUILDTREENAME = "gcc-build-internal-initial-"
+COMPILERINITIAL = "-initial"
 
 inherit nopackages

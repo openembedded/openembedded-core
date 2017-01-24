@@ -6,9 +6,7 @@ EXTRA_OECONF_PATHS = "\
 "
 
 do_configure () {
-	mtarget=`echo ${TARGET_SYS} | sed -e s#-${SDKPKGSUFFIX}##`
 	target=`echo ${TARGET_SYS} | sed -e s#-${SDKPKGSUFFIX}##`
-	hardlinkdir ${STAGING_INCDIR_NATIVE}/gcc-build-internal-$mtarget ${B}
 
 	echo "Configuring libgfortran"
 	rm -rf ${B}/$target/libgfortran/
@@ -21,6 +19,8 @@ do_configure () {
 	# broken libtool here
 	sed -i -e 's/hardcode_into_libs=yes/hardcode_into_libs=no/' ${B}/$target/libgfortran/libtool
 }
+EXTRACONFFUNCS += "extract_stashed_builddir"
+do_configure[depends] += "${COMPILERDEP}"
 
 do_compile () {
 	target=`echo ${TARGET_SYS} | sed -e s#-${SDKPKGSUFFIX}##`

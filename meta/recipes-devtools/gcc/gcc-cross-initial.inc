@@ -75,14 +75,6 @@ do_install () {
 	# so we overwirte the generated include-fixed/limits.h for gcc-cross-initial
 	# to get rid references to real limits.h
 	cp gcc/include-fixed/limits.h ${D}${gcclibdir}/${TARGET_SYS}/${BINV}/include/limits.h
-
-	# gcc-runtime installs libgcc into a special location in staging since it breaks doing a standalone build
-	case ${PN} in
-		*gcc-cross-initial-${TARGET_ARCH}|*gcc-crosssdk-initial-${SDK_SYS})
-			dest=${D}/${includedir}/gcc-build-internal-initial-${TARGET_SYS}
-			hardlinkdir . $dest
-		;;
-	esac
 }
 #
 # Override the default sysroot staging copy since this won't look like a target system
@@ -99,3 +91,5 @@ do_populate_sysroot[sstate-inputdirs] = "${SYSROOT_DESTDIR}/${STAGING_DIR_HOST}/
 do_populate_sysroot[sstate-outputdirs] = "${STAGING_DIR}-components/${PACKAGE_ARCH}/${PN}"
 
 inherit nopackages
+
+COMPILERINITIAL = "-initial"

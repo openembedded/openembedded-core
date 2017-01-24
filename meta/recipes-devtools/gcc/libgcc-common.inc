@@ -7,7 +7,6 @@ INHIBIT_DEFAULT_DEPS = "1"
 do_configure () {
 	target=`echo ${TARGET_SYS} | sed -e s#-${SDKPKGSUFFIX}##`
 	install -d ${D}${base_libdir} ${D}${libdir}
-	hardlinkdir ${STAGING_INCDIR_NATIVE}/${LIBGCCBUILDTREENAME}$target/ ${B}
 	mkdir -p ${B}/${BPN}
 	mkdir -p ${B}/$target/${BPN}/
 	cd ${B}/${BPN}
@@ -15,6 +14,8 @@ do_configure () {
 	relpath=${@os.path.relpath("${S}/${BPN}", "${B}/${BPN}")}
 	$relpath/configure ${CONFIGUREOPTS} ${EXTRA_OECONF}
 }
+EXTRACONFFUNCS += "extract_stashed_builddir"
+do_configure[depends] += "${COMPILERDEP}"
 
 do_compile () {
 	target=`echo ${TARGET_SYS} | sed -e s#-${SDKPKGSUFFIX}##`
