@@ -4,8 +4,8 @@ SRC_URI += "file://musl-arm-inb-outb.patch \
             file://0001-configure.ac-Fix-check-for-CLOCK_MONOTONIC.patch \
             file://0002-configure.ac-Fix-wayland-scanner-and-protocols-locat.patch \
             "
-SRC_URI[md5sum] = "6a4d01e4e5047ab8f556960424ba1fa9"
-SRC_URI[sha256sum] = "149a708b50befc2d5a40b98d45ddd2ebe0beec018e6d0c663c43bad6210e4da3"
+SRC_URI[md5sum] = "caa8ee7b2950abbf734347d137529fb6"
+SRC_URI[sha256sum] = "79ae2cf39d3f6c4a91201d8dad549d1d774b3420073c5a70d390040aa965a7fb"
 
 # These extensions are now integrated into the server, so declare the migration
 # path for in-place upgrades.
