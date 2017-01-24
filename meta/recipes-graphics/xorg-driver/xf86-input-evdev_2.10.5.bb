@@ -16,5 +16,6 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=fefe33b1cf0cacba0e72e3b0fa0f0e16"
 
 DEPENDS += "mtdev libevdev"
 
-SRC_URI[md5sum] = "0f209d13b39427c1a6d38d70059b1e8f"
-SRC_URI[sha256sum] = "bbf6a03fbce1a6c0c7d874eef519fd0a854bf01b515c745d41fa551ce6490cc2"
+SRC_URI[md5sum] = "94c2c8354c74ab1cfbbb0a222078b9c6"
+SRC_URI[sha256sum] = "9edaa6205baf6d2922cc4db3d8e54a7e7773b5f733b0ae90f6be7725f983b70d"
+
