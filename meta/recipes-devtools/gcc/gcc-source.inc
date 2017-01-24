@@ -26,6 +26,11 @@ python do_preconfigure () {
     bb.utils.remove(d.expand("${S}/gcc/gengtype-lex.c"))
     cmd = d.expand("sed -i 's/BUILD_INFO=info/BUILD_INFO=/' ${S}/gcc/configure")
     subprocess.check_output(cmd, stderr=subprocess.STDOUT, shell=True)
+
+    # Easiest way to stop bad RPATHs getting into the library since we have a
+    # broken libtool here (breaks cross-canadian and target at least)
+    cmd = d.expand("sed -i -e 's/hardcode_into_libs=yes/hardcode_into_libs=no/' ${S}/libcc1/configure")
+    subprocess.check_output(cmd, stderr=subprocess.STDOUT, shell=True)
 }
 addtask do_preconfigure after do_patch
 do_preconfigure[depends] += "gnu-config-native:do_populate_sysroot autoconf-native:do_populate_sysroot"

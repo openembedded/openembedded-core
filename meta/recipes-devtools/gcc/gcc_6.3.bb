@@ -6,10 +6,4 @@ require gcc-target.inc
 # | gcc-4.8.1-r0/gcc-4.8.1/gcc/cp/decl.c:7442:(.text.unlikely+0x318): additional relocation overflows omitted from the output
 ARM_INSTRUCTION_SET_armv4 = "arm"
 
-do_configure_prepend() {
-	# Easiest way to stop bad RPATHs getting into the library since we have a
-	# broken libtool here
-	sed -i -e 's/hardcode_into_libs=yes/hardcode_into_libs=no/' ${S}/libcc1/configure
-}
-
 BBCLASSEXTEND = "nativesdk"
