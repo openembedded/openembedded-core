@@ -32,7 +32,6 @@ from wic import msger
 from wic.utils.oe.misc import get_bitbake_var
 from wic.utils.partitionedfs import Image
 from wic.utils.errors import CreatorError, ImageError
-from wic.imager.baseimager import BaseImageCreator
 from wic.plugin import pluginmgr
 from wic.utils.oe.misc import exec_cmd, exec_native_cmd
 
@@ -61,7 +60,7 @@ class DiskImage():
 
         self.created = True
 
-class DirectImageCreator(BaseImageCreator):
+class DirectImageCreator:
     """
     Installs a system into a file containing a partitioned disk image.
 
@@ -72,15 +71,23 @@ class DirectImageCreator(BaseImageCreator):
     media and used on actual hardware.
     """
 
-    def __init__(self, oe_builddir, image_output_dir, rootfs_dir, bootimg_dir,
-                 kernel_dir, native_sysroot, compressor, creatoropts=None,
-                 bmap=False):
+    def __init__(self, oe_builddir, image_output_dir, rootfs_dir,
+                 bootimg_dir, kernel_dir, native_sysroot, compressor,
+                 creatoropts, bmap=False):
         """
         Initialize a DirectImageCreator instance.
 
         This method takes the same arguments as ImageCreator.__init__()
         """
-        BaseImageCreator.__init__(self, creatoropts)
+
+        self.name = creatoropts['name']
+        self.ks = creatoropts['ks']
+
+        self.tmpdir = "/var/tmp/wic"
+        self.workdir = "/var/tmp/wic/build"
+
+        if not os.path.exists(self.tmpdir):
+            os.makedirs(self.tmpdir)
 
         self.__image = None
         self.__disks = {}
