@@ -27,6 +27,7 @@
 import os
 import shutil
 import uuid
+import tempfile
 
 from wic import msger
 from wic.utils.oe.misc import get_bitbake_var
@@ -79,15 +80,10 @@ class DirectImageCreator:
 
         This method takes the same arguments as ImageCreator.__init__()
         """
-
         self.name = creatoropts['name']
+        self.outdir = image_output_dir
+        self.workdir = tempfile.mktemp(prefix='wic')
         self.ks = creatoropts['ks']
-
-        self.tmpdir = "/var/tmp/wic"
-        self.workdir = "/var/tmp/wic/build"
-
-        if not os.path.exists(self.tmpdir):
-            os.makedirs(self.tmpdir)
 
         self.__image = None
         self.__disks = {}
@@ -96,8 +92,6 @@ class DirectImageCreator:
         self.ptable_format = self.ks.bootloader.ptable
 
         self.oe_builddir = oe_builddir
-        if image_output_dir:
-            self.tmpdir = image_output_dir
         self.rootfs_dir = rootfs_dir
         self.bootimg_dir = bootimg_dir
         self.kernel_dir = kernel_dir
@@ -270,9 +264,6 @@ class DirectImageCreator:
 
         fstab_path = self._write_fstab(self.rootfs_dir.get("ROOTFS_DIR"))
 
-        shutil.rmtree(self.workdir)
-        os.mkdir(self.workdir)
-
         for part in parts:
             # get rootfs size from bitbake variable if it's not set in .ks file
             if not part.size:
@@ -424,4 +415,16 @@ class DirectImageCreator:
                 self.__image.cleanup()
             except ImageError as err:
                 msger.warning("%s" % err)
+
+        # Move results to the output dir
+        if not os.path.exists(self.outdir):
+            os.makedirs(self.outdir)
+
+        for fname in os.listdir(self.workdir):
+            path = os.path.join(self.workdir, fname)
+            if os.path.isfile(path):
+                shutil.move(path, os.path.join(self.outdir, fname))
+
+        # remove work directory
+        shutil.rmtree(self.workdir, ignore_errors=True)
 
