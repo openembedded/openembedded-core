@@ -26,7 +26,6 @@ SRC_URI += "\
   file://parallel-makeinst-create-bindir.patch \
   file://use_sysroot_ncurses_instead_of_host.patch \
   file://add-CROSSPYTHONPATH-for-PYTHON_FOR_BUILD.patch \
-  file://python-fix-CVE-2016-1000110.patch \
   file://Don-t-use-getentropy-on-Linux.patch \
 "
 

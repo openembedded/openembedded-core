@@ -9,8 +9,8 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=6b60258130e4ed10d3101517eb5b9385"
 
 SRC_URI = "http://www.python.org/ftp/python/${PV}/Python-${PV}.tar.xz"
 
-SRC_URI[md5sum] = "57dffcee9cee8bb2ab5f82af1d8e9a69"
-SRC_URI[sha256sum] = "d7837121dd5652a05fef807c361909d255d173280c4e1a4ded94d73d80a1f978"
+SRC_URI[md5sum] = "53b43534153bb2a0363f08bae8b9d990"
+SRC_URI[sha256sum] = "35d543986882f78261f97787fd3e06274bfa6df29fac9b4a94f73930ff98f731"
 
 # python recipe is actually python 2.x
 # also, exclude pre-releases for both python 2.x and 3.x
