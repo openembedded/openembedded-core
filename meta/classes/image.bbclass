@@ -337,7 +337,7 @@ python do_rootfs_wicenv () {
         return
 
     stdir = d.getVar('STAGING_DIR')
-    outdir = os.path.join(stdir, 'imgdata')
+    outdir = os.path.join(stdir, d.getVar('MACHINE'), 'imgdata')
     bb.utils.mkdirhier(outdir)
     basename = d.getVar('IMAGE_BASENAME')
     with open(os.path.join(outdir, basename) + '.env', 'w') as envf:

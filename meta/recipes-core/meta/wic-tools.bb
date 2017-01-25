@@ -14,7 +14,7 @@ python do_build_sysroot () {
 
     # Write environment variables used by wic
     # to tmp/sysroots/<machine>/imgdata/wictools.env
-    outdir = os.path.join(d.getVar('STAGING_DIR'), 'imgdata')
+    outdir = os.path.join(d.getVar('STAGING_DIR'), d.getVar('MACHINE'), 'imgdata')
     bb.utils.mkdirhier(outdir)
     with open(os.path.join(outdir, "wic-tools.env"), 'w') as envf:
         for var in ('RECIPE_SYSROOT_NATIVE', 'STAGING_DATADIR', 'STAGING_LIBDIR'):

@@ -347,7 +347,8 @@ class Wic(oeSelfTest):
         if image not in self.wicenv_cache:
             self.assertEqual(0, bitbake('%s -c do_rootfs_wicenv' % image).status)
             stdir = get_bb_var('STAGING_DIR', image)
-            self.wicenv_cache[image] = os.path.join(stdir, 'imgdata')
+            machine = get_bb_var('MACHINE', image)
+            self.wicenv_cache[image] = os.path.join(stdir, machine, 'imgdata')
         return self.wicenv_cache[image]
 
     @testcase(1347)
