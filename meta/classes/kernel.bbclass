@@ -528,6 +528,9 @@ do_kernel_link_images() {
 	if [ -f ../../../vmlinuz ]; then
 		ln -sf ../../../vmlinuz
 	fi
+	if [ -f ../../../vmlinuz.bin ]; then
+		ln -sf ../../../vmlinuz.bin
+	fi
 }
 
 do_strip() {
