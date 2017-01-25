@@ -1,3 +1,4 @@
+import unittest
 from oeqa.sdk.case import OESDKTestCase
 from oeqa.sdk.utils.sdkbuildproject import SDKBuildProject
 
@@ -12,6 +13,10 @@ class BuildCvsTest(OESDKTestCase):
                         "http://ftp.gnu.org/non-gnu/cvs/source/feature/1.12.13/cvs-1.12.13.tar.bz2",
                         self.tc.sdk_dir, self.td['DATETIME'], dl_dir=dl_dir)
         self.project.download_archive()
+
+        machine = self.td.get("MACHINE")
+        if not self.tc.hasHostPackage("packagegroup-cross-canadian-%s" % machine):
+            raise unittest.SkipTest("SDK doesn't contain a cross-canadian toolchain")
 
     def test_cvs(self):
         self.assertEqual(self.project.run_configure(), 0,

@@ -1,5 +1,7 @@
+import unittest
 from oeqa.sdk.case import OESDKTestCase
 from oeqa.sdk.utils.sdkbuildproject import SDKBuildProject
+
 
 class BuildIptablesTest(OESDKTestCase):
     td_vars = ['DATETIME']
@@ -12,6 +14,11 @@ class BuildIptablesTest(OESDKTestCase):
                         "http://downloads.yoctoproject.org/mirror/sources/iptables-1.4.13.tar.bz2",
                         self.tc.sdk_dir, self.td['DATETIME'], dl_dir=dl_dir)
         self.project.download_archive()
+
+        machine = self.td.get("MACHINE")
+
+        if not self.tc.hasHostPackage("packagegroup-cross-canadian-%s" % machine):
+            raise unittest.SkipTest("SDK doesn't contain a cross-canadian toolchain")
 
     def test_iptables(self):
         self.assertEqual(self.project.run_configure(), 0,
