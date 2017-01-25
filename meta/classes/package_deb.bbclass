@@ -17,6 +17,8 @@ APT_ARGS = "${@['', '--no-install-recommends'][d.getVar("NO_RECOMMENDATIONS") ==
 
 def debian_arch_map(arch, tune):
     tune_features = tune.split()
+    if arch == "allarch":
+        return "all"
     if arch in ["i586", "i686"]:
         return "i386"
     if arch == "x86_64":
