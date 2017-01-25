@@ -265,6 +265,10 @@ python () {
             d.setVar('WKS_TEMPLATE_PATH', wks_file_u)
             d.setVar('WKS_FILE_CHECKSUM', '${WKS_TEMPLATE_PATH}:True')
 
+            # We need to re-parse each time the file changes, and bitbake
+            # needs to be told about that explicitly.
+            bb.parse.mark_dependency(d, wks_file)
+
             try:
                 with open(wks_file, 'r') as f:
                     body = f.read()
