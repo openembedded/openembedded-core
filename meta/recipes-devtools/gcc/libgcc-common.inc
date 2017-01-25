@@ -5,10 +5,9 @@ require gcc-configure-common.inc
 INHIBIT_DEFAULT_DEPS = "1"
 
 do_configure () {
-	target=`echo ${TARGET_SYS} | sed -e s#-${SDKPKGSUFFIX}##`
 	install -d ${D}${base_libdir} ${D}${libdir}
 	mkdir -p ${B}/${BPN}
-	mkdir -p ${B}/$target/${BPN}/
+	mkdir -p ${B}/${TARGET_SYS}/${BPN}/
 	cd ${B}/${BPN}
 	chmod a+x ${S}/${BPN}/configure
 	relpath=${@os.path.relpath("${S}/${BPN}", "${B}/${BPN}")}
@@ -18,15 +17,13 @@ EXTRACONFFUNCS += "extract_stashed_builddir"
 do_configure[depends] += "${COMPILERDEP}"
 
 do_compile () {
-	target=`echo ${TARGET_SYS} | sed -e s#-${SDKPKGSUFFIX}##`
 	cd ${B}/${BPN}
-	oe_runmake MULTIBUILDTOP=${B}/$target/${BPN}/
+	oe_runmake MULTIBUILDTOP=${B}/${TARGET_SYS}/${BPN}/
 }
 
 do_install () {
-	target=`echo ${TARGET_SYS} | sed -e s#-${SDKPKGSUFFIX}##`
 	cd ${B}/${BPN}
-	oe_runmake 'DESTDIR=${D}' MULTIBUILDTOP=${B}/$target/${BPN}/ install
+	oe_runmake 'DESTDIR=${D}' MULTIBUILDTOP=${B}/${TARGET_SYS}/${BPN}/ install
 
 	# Move libgcc_s into /lib
 	mkdir -p ${D}${base_libdir}
