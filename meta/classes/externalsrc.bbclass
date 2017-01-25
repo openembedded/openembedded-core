@@ -124,11 +124,13 @@ python () {
 }
 
 python externalsrc_configure_prefunc() {
+    s_dir = d.getVar('S')
     # Create desired symlinks
     symlinks = (d.getVar('EXTERNALSRC_SYMLINKS') or '').split()
+    newlinks = []
     for symlink in symlinks:
         symsplit = symlink.split(':', 1)
-        lnkfile = os.path.join(d.getVar('S'), symsplit[0])
+        lnkfile = os.path.join(s_dir, symsplit[0])
         target = d.expand(symsplit[1])
         if len(symsplit) > 1:
             if os.path.islink(lnkfile):
@@ -140,6 +142,19 @@ python externalsrc_configure_prefunc() {
                 # File/dir exists with same name as link, just leave it alone
                 continue
             os.symlink(target, lnkfile)
+            newlinks.append(symsplit[0])
+    # Hide the symlinks from git
+    try:
+        git_exclude_file = os.path.join(s_dir, '.git/info/exclude')
+        if os.path.exists(git_exclude_file):
+            with open(git_exclude_file, 'r+') as efile:
+                elines = efile.readlines()
+                for link in newlinks:
+                    if link in elines or '/'+link in elines:
+                        continue
+                    efile.write('/' + link + '\n')
+    except IOError as ioe:
+        bb.note('Failed to hide EXTERNALSRC_SYMLINKS from git')
 }
 
 python externalsrc_compile_prefunc() {
