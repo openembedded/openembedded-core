@@ -23,6 +23,11 @@ inherit autotools texinfo binconfig pkgconfig gettext lib_package gtk-doc
 
 PACKAGECONFIG ??= "libidn zlib"
 
+# You must also have CONFIG_SECCOMP enabled in the kernel for
+# seccomp to work.
+#
+PACKAGECONFIG[seccomp] = "ac_cv_libseccomp=yes,ac_cv_libseccomp=no,libseccomp"
+
 PACKAGECONFIG[libidn] = "--with-idn,--without-idn,libidn"
 PACKAGECONFIG[libtasn1] = "--with-included-libtasn1=no,--with-included-libtasn1,libtasn1"
 PACKAGECONFIG[p11-kit] = "--with-p11-kit,--without-p11-kit,p11-kit"
