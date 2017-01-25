@@ -392,6 +392,7 @@ python distro_check_eventhandler() {
 
 addtask distro_check
 do_distro_check[nostamp] = "1"
+do_distro_check[vardepsexclude] += "DATETIME"
 python do_distro_check() {
     """checks if the package is present in other public Linux distros"""
     import oe.distro_check as dc
@@ -475,5 +476,3 @@ do_checklicenseall[nostamp] = "1"
 do_checklicenseall() {
         :
 }
-
-
