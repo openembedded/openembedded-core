@@ -35,3 +35,10 @@ def dataStoteToDict(d, variables):
         data[v] = d.getVar(v, True)
 
     return data
+
+def updateTestData(d, td, variables):
+    """
+    Updates variables with values of data store to test data.
+    """
+    for var in variables:
+        td[var] = d.getVar(var)

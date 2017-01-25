@@ -80,11 +80,12 @@ TESTIMAGEDEPENDS += "${@bb.utils.contains('IMAGE_PKGTYPE', 'ipk', 'opkg-utils-na
 TESTIMAGEDEPENDS += "${@bb.utils.contains('IMAGE_PKGTYPE', 'deb', 'apt-native:do_populate_sysroot', '', d)}"
 TESTIMAGEDEPENDS += "${@bb.utils.contains('IMAGE_PKGTYPE', 'rpm', 'python-smartpm-native:do_populate_sysroot', '', d)}"
 
-
 TESTIMAGELOCK = "${TMPDIR}/testimage.lock"
 TESTIMAGELOCK_qemuall = ""
 
 TESTIMAGE_DUMP_DIR ?= "/tmp/oe-saved-tests/"
+
+TESTIMAGE_UPDATE_VARS ?= "WORKDIR DEPLOY_DIR"
 
 testimage_dump_target () {
     top -bn1
@@ -138,13 +139,12 @@ def testimage_sanity(d):
 
 def testimage_main(d):
     import os
-    import signal
     import json
-    import sys
+    import signal
     import logging
-    import time
 
     from bb.utils import export_proxies
+    from oeqa.core.utils.misc import updateTestData
     from oeqa.runtime.context import OERuntimeTestContext
     from oeqa.runtime.context import OERuntimeTestContextExecutor
     from oeqa.core.target.qemu import supported_fstypes
@@ -166,6 +166,9 @@ def testimage_main(d):
 
     tdname = "%s.testdata.json" % image_name
     td = json.load(open(tdname, "r"))
+    # Some variables need to be updates (mostly paths) with the
+    # ones of the current environment because some tests require them.
+    updateTestData(d, td, d.getVar('TESTIMAGE_UPDATE_VARS').split())
 
     image_manifest = "%s.manifest" % image_name
     image_packages = OERuntimeTestContextExecutor.readPackagesManifest(image_manifest)
