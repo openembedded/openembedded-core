@@ -23,7 +23,7 @@ class SmartBasicTest(SmartTest):
 
     @skipIfNotFeature('package-management',
                       'Test requires package-management to be in IMAGE_FEATURES')
-    @skipIfNotDataVar('PACKAGE_CLASSES', 'package_rpm',
+    @skipIfNotDataVar('IMAGE_PKGTYPE', 'rpm',
                       'RPM is not the primary package manager')
     @OEHasPackage(['smartpm'])
     @OETestID(716)
