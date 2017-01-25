@@ -46,7 +46,7 @@ do_patch[noexec] = "1"
 do_configure[noexec] = "1"
 do_compile[noexec] = "1"
 do_install[noexec] = "1"
-do_populate_sysroot[noexec] = "1"
+deltask do_populate_sysroot
 
 python () {
     initman = d.getVar("VIRTUAL-RUNTIME_init_manager", True)
