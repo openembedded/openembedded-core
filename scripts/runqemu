@@ -894,6 +894,8 @@ class BaseConfig(object):
         self.set('NETWORK_CMD', '%s %s' % (self.network_device.replace('@MAC@', mac), qemu_tap_opt))
 
     def setup_network(self):
+        if self.get('QB_NET') == 'none':
+            return
         cmd = "stty -g"
         self.saved_stty = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE).stdout.read().decode('utf-8')
         self.network_device = self.get('QB_NETWORK_DEVICE') or self.network_device
