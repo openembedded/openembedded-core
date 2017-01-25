@@ -96,10 +96,6 @@ LDCONFIGDEPEND_libc-musl = ""
 # don't want this dependency, which is causing dependency loop
 KERNELDEPMODDEPEND ?= "virtual/kernel:do_packagedata"
 
-# POPULATESYSROOTDEPS fails to expand correctly with multilibs since overrides aren't set for image.bbclass
-# we don't need these depends so just clear them
-do_populate_sysroot[depends] = ""
-
 do_rootfs[depends] += " \
     makedevs-native:do_populate_sysroot virtual/fakeroot-native:do_populate_sysroot ${LDCONFIGDEPEND} \
     virtual/update-alternatives-native:do_populate_sysroot update-rc.d-native:do_populate_sysroot \
@@ -625,7 +621,7 @@ do_patch[noexec] = "1"
 do_configure[noexec] = "1"
 do_compile[noexec] = "1"
 do_install[noexec] = "1"
-do_populate_sysroot[noexec] = "1"
+deltask do_populate_sysroot
 do_package[noexec] = "1"
 do_package_qa[noexec] = "1"
 do_packagedata[noexec] = "1"
