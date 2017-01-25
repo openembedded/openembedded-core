@@ -10,6 +10,10 @@ python () {
 
 STAGING_BINDIR_TOOLCHAIN = "${STAGING_DIR_NATIVE}${bindir_native}/${TARGET_ARCH}${TARGET_VENDOR}-${TARGET_OS}"
 
+# This class encodes staging paths into its scripts data so can only be
+# reused if we manipulate the paths.
+SSTATE_SCAN_CMD ?= "${SSTATE_SCAN_CMD_NATIVE}"
+
 TARGET_ARCH = "${SDK_ARCH}"
 TARGET_VENDOR = "${SDK_VENDOR}"
 TARGET_OS = "${SDK_OS}"

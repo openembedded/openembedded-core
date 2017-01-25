@@ -38,6 +38,10 @@ TOOLCHAIN_OPTIONS = ""
 
 DEPENDS_GETTEXT = "gettext-native"
 
+# This class encodes staging paths into its scripts data so can only be
+# reused if we manipulate the paths.
+SSTATE_SCAN_CMD ?= "${SSTATE_SCAN_CMD_NATIVE}"
+
 # Path mangling needed by the cross packaging
 # Note that we use := here to ensure that libdir and includedir are
 # target paths.

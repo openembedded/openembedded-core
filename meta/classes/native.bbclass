@@ -115,6 +115,10 @@ MACHINEOVERRIDES = ""
 
 PATH_prepend = "${COREBASE}/scripts/native-intercept:"
 
+# This class encodes staging paths into its scripts data so can only be
+# reused if we manipulate the paths.
+SSTATE_SCAN_CMD ?= "${SSTATE_SCAN_CMD_NATIVE}"
+
 python native_virtclass_handler () {
     classextend = e.data.getVar('BBCLASSEXTEND') or ""
     if "native" not in classextend:
