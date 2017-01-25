@@ -6,7 +6,7 @@ from oeqa.runtime.decorator.package import OEHasPackage
 class ConnmanTest(OERuntimeTestCase):
 
     def service_status(self, service):
-        if oeRuntimeTest.hasFeature("systemd"):
+        if 'systemd' in self.tc.td['DISTRO_FEATURES']:
             (_, output) = self.target.run('systemctl status -l %s' % service)
             return output
         else:
