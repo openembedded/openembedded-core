@@ -390,6 +390,7 @@ class Wic(oeSelfTest):
         self.assertEqual(0, runCmd("wic create directdisk "
                                    "--image-name=%s -v %s -o %s"
                                    % (image, imgenvdir, self.resultdir)).status)
+        self.assertEqual(1, len(glob(self.resultdir + "directdisk-*direct")))
 
     def test_image_vars_dir_long(self):
         """Test image vars directory selection --vars option"""
@@ -400,6 +401,7 @@ class Wic(oeSelfTest):
                                    "--vars %s "
                                    "--outdir %s"
                                    % (image, imgenvdir, self.resultdir)).status)
+        self.assertEqual(1, len(glob(self.resultdir + "directdisk-*direct")))
 
     @testcase(1351)
     def test_wic_image_type(self):
