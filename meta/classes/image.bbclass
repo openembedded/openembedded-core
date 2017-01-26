@@ -187,6 +187,8 @@ python () {
 IMAGE_CLASSES += "image_types"
 inherit ${IMAGE_CLASSES}
 
+inherit image-wic
+
 IMAGE_POSTPROCESS_COMMAND ?= ""
 
 # some default locales
@@ -326,29 +328,6 @@ fakeroot python do_image_qa () {
         bb.fatal("QA errors found whilst validating image: %s\n%s" % (imgname, qamsg))
 }
 addtask do_image_qa after do_image_complete before do_build
-
-#
-# Write environment variables used by wic
-# to tmp/sysroots/<machine>/imgdata/<image>.env
-#
-python do_rootfs_wicenv () {
-    wicvars = d.getVar('WICVARS')
-    if not wicvars:
-        return
-
-    stdir = d.getVar('STAGING_DIR')
-    outdir = os.path.join(stdir, d.getVar('MACHINE'), 'imgdata')
-    bb.utils.mkdirhier(outdir)
-    basename = d.getVar('IMAGE_BASENAME')
-    with open(os.path.join(outdir, basename) + '.env', 'w') as envf:
-        for var in wicvars.split():
-            value = d.getVar(var)
-            if value:
-                envf.write('%s="%s"\n' % (var, value.strip()))
-}
-addtask do_rootfs_wicenv after do_image before do_image_wic
-do_rootfs_wicenv[vardeps] += "${WICVARS}"
-do_rootfs_wicenv[prefuncs] = 'set_image_size'
 
 def setup_debugfs_variables(d):
     d.appendVar('IMAGE_ROOTFS', '-dbg')

@@ -192,97 +192,6 @@ IMAGE_CMD_ubi () {
 
 IMAGE_CMD_ubifs = "mkfs.ubifs -r ${IMAGE_ROOTFS} -o ${IMGDEPLOYDIR}/${IMAGE_NAME}${IMAGE_NAME_SUFFIX}.ubifs ${MKUBIFS_ARGS}"
 
-WKS_FILE ??= "${IMAGE_BASENAME}.${MACHINE}.wks"
-WKS_FILES ?= "${WKS_FILE} ${IMAGE_BASENAME}.wks"
-WKS_SEARCH_PATH ?= "${THISDIR}:${@':'.join('%s/wic' % p for p in '${BBPATH}'.split(':'))}:${@':'.join('%s/scripts/lib/wic/canned-wks' % l for l in '${BBPATH}:${COREBASE}'.split(':'))}"
-WKS_FULL_PATH = "${@wks_search('${WKS_FILES}'.split(), '${WKS_SEARCH_PATH}') or ''}"
-
-def wks_search(files, search_path):
-    for f in files:
-        if os.path.isabs(f):
-            if os.path.exists(f):
-                return f
-        else:
-            searched = bb.utils.which(search_path, f)
-            if searched:
-                return searched
-
-WIC_CREATE_EXTRA_ARGS ?= ""
-
-IMAGE_CMD_wic () {
-	out="${IMGDEPLOYDIR}/${IMAGE_NAME}"
-	wks="${WKS_FULL_PATH}"
-	if [ -z "$wks" ]; then
-		bbfatal "No kickstart files from WKS_FILES were found: ${WKS_FILES}. Please set WKS_FILE or WKS_FILES appropriately."
-	fi
-
-	BUILDDIR="${TOPDIR}" wic create "$wks" --vars "${STAGING_DIR}/${MACHINE}/imgdata/" -e "${IMAGE_BASENAME}" -o "$out/" ${WIC_CREATE_EXTRA_ARGS}
-	mv "$out/$(basename "${wks%.wks}")"*.direct "$out${IMAGE_NAME_SUFFIX}.wic"
-	rm -rf "$out/"
-}
-IMAGE_CMD_wic[vardepsexclude] = "WKS_FULL_PATH WKS_FILES"
-
-# Rebuild when the wks file or vars in WICVARS change
-USING_WIC = "${@bb.utils.contains_any('IMAGE_FSTYPES', 'wic ' + ' '.join('wic.%s' % c for c in '${CONVERSIONTYPES}'.split()), '1', '', d)}"
-WKS_FILE_CHECKSUM = "${@'${WKS_FULL_PATH}:%s' % os.path.exists('${WKS_FULL_PATH}') if '${USING_WIC}' else ''}"
-do_image_wic[file-checksums] += "${WKS_FILE_CHECKSUM}"
-do_image_wic[depends] += "wic-tools:do_build"
-
-python () {
-    if d.getVar('USING_WIC') and 'do_bootimg' in d:
-        bb.build.addtask('do_image_wic', '', 'do_bootimg', d)
-}
-
-python do_write_wks_template () {
-    """Write out expanded template contents to WKS_FULL_PATH."""
-    import re
-
-    template_body = d.getVar('_WKS_TEMPLATE')
-
-    # Remove any remnant variable references left behind by the expansion
-    # due to undefined variables
-    expand_var_regexp = re.compile(r"\${[^{}@\n\t :]+}")
-    while True:
-        new_body = re.sub(expand_var_regexp, '', template_body)
-        if new_body == template_body:
-            break
-        else:
-            template_body = new_body
-
-    wks_file = d.getVar('WKS_FULL_PATH')
-    with open(wks_file, 'w') as f:
-        f.write(template_body)
-}
-
-python () {
-    if d.getVar('USING_WIC'):
-        wks_file_u = d.getVar('WKS_FULL_PATH', False)
-        wks_file = d.expand(wks_file_u)
-        base, ext = os.path.splitext(wks_file)
-        if ext == '.in' and os.path.exists(wks_file):
-            wks_out_file = os.path.join(d.getVar('WORKDIR'), os.path.basename(base))
-            d.setVar('WKS_FULL_PATH', wks_out_file)
-            d.setVar('WKS_TEMPLATE_PATH', wks_file_u)
-            d.setVar('WKS_FILE_CHECKSUM', '${WKS_TEMPLATE_PATH}:True')
-
-            # We need to re-parse each time the file changes, and bitbake
-            # needs to be told about that explicitly.
-            bb.parse.mark_dependency(d, wks_file)
-
-            try:
-                with open(wks_file, 'r') as f:
-                    body = f.read()
-            except (IOError, OSError) as exc:
-                pass
-            else:
-                # Previously, I used expandWithRefs to get the dependency list
-                # and add it to WICVARS, but there's no point re-parsing the
-                # file in process_wks_template as well, so just put it in
-                # a variable and let the metadata deal with the deps.
-                d.setVar('_WKS_TEMPLATE', body)
-                bb.build.addtask('do_write_wks_template', 'do_image_wic', None, d)
-}
-
 EXTRA_IMAGECMD = ""
 
 inherit siteinfo
@@ -379,7 +288,3 @@ IMAGE_EXTENSION_live = "hddimg iso"
 # The IMAGE_TYPES_MASKED variable will be used to mask out from the IMAGE_FSTYPES,
 # images that will not be built at do_rootfs time: vmdk, vdi, qcow2, hdddirect, hddimg, iso, etc.
 IMAGE_TYPES_MASKED ?= ""
-
-# The WICVARS variable is used to define list of bitbake variables used in wic code
-# variables from this list is written to <image>.env file
-WICVARS ?= "BBLAYERS IMGDEPLOYDIR DEPLOY_DIR_IMAGE FAKEROOTCMD HDDDIR IMAGE_BASENAME IMAGE_BOOT_FILES IMAGE_LINK_NAME IMAGE_ROOTFS INITRAMFS_FSTYPES INITRD ISODIR MACHINE_ARCH RECIPE_SYSROOT_NATIVE ROOTFS_SIZE STAGING_DATADIR STAGING_DIR STAGING_LIBDIR TARGET_SYS"
