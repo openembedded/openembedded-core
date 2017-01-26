@@ -259,12 +259,15 @@ class Wic(oeSelfTest):
                                    "-c wrong", ignore_status=True).status)
 
     @testcase(1558)
-    def test_debug(self):
-        """Test debug"""
+    def test_debug_short(self):
+        """Test -D option"""
         self.assertEqual(0, runCmd("wic create directdisk "
                                    "--image-name=core-image-minimal "
                                    "-D").status)
         self.assertEqual(1, len(glob(self.resultdir + "directdisk-*.direct")))
+
+    def test_debug_long(self):
+        """Test --debug option"""
         self.assertEqual(0, runCmd("wic create directdisk "
                                    "--image-name=core-image-minimal "
                                    "--debug").status)
