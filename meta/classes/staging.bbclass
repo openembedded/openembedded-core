@@ -260,9 +260,11 @@ def staging_copyfile(c, target, fixme, postinsts, stagingdir):
     if os.path.islink(c):
         linkto = os.readlink(c)
         if os.path.lexists(dest):
+            if not os.path.islink(dest):
+                raise OSError(errno.EEXIST, "Link %s already exists as a file" % dest, dest)
             if os.readlink(dest) == linkto:
                 return dest
-            bb.fatal("Link %s already exists to a different location?" % dest)
+            raise OSError(errno.EEXIST, "Link %s already exists to a different location? (%s vs %s)" % (dest, os.readlink(dest), linkto), dest)
         os.symlink(linkto, dest)
         #bb.warn(c)
     else:
@@ -331,7 +333,10 @@ def staging_populate_sysroot_dir(targetsysroot, nativesysroot, native, d):
                     if l.endswith("/"):
                         staging_copydir(l, targetdir, stagingdir)
                         continue
-                    staging_copyfile(l, targetdir, fixme, postinsts, stagingdir)
+                    try:
+                        staging_copyfile(l, targetdir, fixme, postinsts, stagingdir)
+                    except FileExistsError:
+                        continue
 
     staging_processfixme(fixme, targetdir, targetsysroot, nativesysroot, d)
     for p in postinsts:
