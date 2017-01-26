@@ -273,12 +273,15 @@ class Wic(oeSelfTest):
         self.assertEqual(1, len(glob(self.resultdir + "directdisk-*.direct")))
 
     @testcase(1563)
-    def test_skip_build_check(self):
-        """Test skip build check"""
+    def test_skip_build_check_short(self):
+        """Test -s option"""
         self.assertEqual(0, runCmd("wic create directdisk "
                                    "--image-name=core-image-minimal "
                                    "-s -o %s" % self.resultdir).status)
         self.assertEqual(1, len(glob(self.resultdir + "directdisk-*.direct")))
+
+    def test_skip_build_check_long(self):
+        """Test --skip-build-check option"""
         self.assertEqual(0, runCmd("wic create directdisk "
                                    "--image-name=core-image-minimal "
                                    "--skip-build-check "
@@ -286,12 +289,15 @@ class Wic(oeSelfTest):
         self.assertEqual(1, len(glob(self.resultdir + "directdisk-*.direct")))
 
     @testcase(1564)
-    def test_build_rootfs(self):
-        """Test build rootfs"""
+    def test_build_rootfs_short(self):
+        """Test -f option"""
         self.assertEqual(0, runCmd("wic create directdisk "
                                    "--image-name=core-image-minimal "
                                    "-f -o %s" % self.resultdir).status)
         self.assertEqual(1, len(glob(self.resultdir + "directdisk-*.direct")))
+
+    def test_build_rootfs_long(self):
+        """Test --build-rootfs option"""
         self.assertEqual(0, runCmd("wic create directdisk "
                                    "--image-name=core-image-minimal "
                                    "--build-rootfs "
@@ -328,14 +334,16 @@ class Wic(oeSelfTest):
         self.assertEqual(1, len(glob(self.resultdir + "%(wks)s-*.direct" % bbvars)))
 
     @testcase(1496)
-    def test_bmap(self):
-        """Test generation of .bmap file"""
+    def test_bmap_short(self):
+        """Test generation of .bmap file -m option"""
         cmd = "wic create directdisk -e core-image-minimal -m -o %s" % self.resultdir
         status = runCmd(cmd).status
         self.assertEqual(0, status)
         self.assertEqual(1, len(glob(self.resultdir + "directdisk-*direct")))
         self.assertEqual(1, len(glob(self.resultdir + "directdisk-*direct.bmap")))
-        rmtree(self.resultdir)
+
+    def test_bmap_long(self):
+        """Test generation of .bmap file --bmap option"""
         cmd = "wic create directdisk -e core-image-minimal --bmap -o %s" % self.resultdir
         status = runCmd(cmd).status
         self.assertEqual(0, status)
@@ -374,14 +382,19 @@ class Wic(oeSelfTest):
                 self.assertTrue(content[var])
 
     @testcase(1559)
-    def test_image_vars_dir(self):
-        """Test image vars directory selection"""
+    def test_image_vars_dir_short(self):
+        """Test image vars directory selection -v option"""
         image = 'core-image-minimal'
         imgenvdir = self._get_image_env_path(image)
 
         self.assertEqual(0, runCmd("wic create directdisk "
                                    "--image-name=%s -v %s -o %s"
                                    % (image, imgenvdir, self.resultdir)).status)
+
+    def test_image_vars_dir_long(self):
+        """Test image vars directory selection --vars option"""
+        image = 'core-image-minimal'
+        imgenvdir = self._get_image_env_path(image)
         self.assertEqual(0, runCmd("wic create directdisk "
                                    "--image-name=%s "
                                    "--vars %s "
