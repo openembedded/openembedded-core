@@ -47,7 +47,7 @@ inherit autotools texinfo binconfig-disabled pkgconfig ${PYTHON_INHERIT}
 
 export PKG_CONFIG='pkg-config'
 
-BBCLASSEXTEND = "native"
+BBCLASSEXTEND = "native nativesdk"
 
 PACKAGES =+ "${PN}-cpp"
 PACKAGES =. "${@bb.utils.contains('PACKAGECONFIG', 'python2', 'python2-gpg ', '', d)}"

@@ -19,5 +19,5 @@ DEPENDS = "libxml2 expat libcheck"
 EXTRA_OECMAKE = " -DPYTHON_INSTALL_DIR=${PYTHON_SITEPACKAGES_DIR}"
 OECMAKE_SOURCEPATH = "${S}/libcomps"
 
-BBCLASSEXTEND = "native"
+BBCLASSEXTEND = "native nativesdk"
 

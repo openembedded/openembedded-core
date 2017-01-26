@@ -28,7 +28,6 @@ DEPENDS += "python-backports-lzma"
 EXTRA_OECMAKE = " -DWITH_MAN=0 -DPYTHON_INSTALL_DIR=${PYTHON_SITEPACKAGES_DIR}"
 
 BBCLASSEXTEND = "native nativesdk"
-
 RDEPENDS_${PN}_class-target += "python-core python-codecs python-netclient python-email python-threading python-distutils librepo python-shell python-subprocess libcomps libdnf python-sqlite3 python-compression python-pygpgme python-backports-lzma python-rpm python-iniparse python-json python-importlib python-curses python-argparse"
 
 # Direct dnf-native to read rpm configuration from our sysroot, not the one it was compiled in

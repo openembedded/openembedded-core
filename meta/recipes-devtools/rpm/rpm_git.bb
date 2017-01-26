@@ -60,7 +60,7 @@ EXTRA_OECONF_append_libc-musl = " --disable-nls"
 # Also disable plugins, so that rpm doesn't attempt to inhibit shutdown via session dbus
 EXTRA_OECONF_append_class-native = " --sysconfdir=/etc --localstatedir=/var --disable-plugins"
 
-BBCLASSEXTEND = "native"
+BBCLASSEXTEND = "native nativesdk"
 
 # Direct rpm-native to read configuration from our sysroot, not the one it was compiled in
 # libmagic also has sysroot path contamination, so override it

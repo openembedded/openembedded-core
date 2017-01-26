@@ -18,4 +18,4 @@ DEPENDS_append = " xz"
 RDEPENDS_${PN} += "python-core python-io python-pkgutil"
 RDEPENDS_${PN}_class-native += "python-core"
 
-BBCLASSEXTEND = "native"
+BBCLASSEXTEND = "native nativesdk"

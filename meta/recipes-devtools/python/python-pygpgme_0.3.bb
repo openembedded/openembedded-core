@@ -15,4 +15,4 @@ DEPENDS = "gpgme python"
 
 RDEPENDS_${PN} += "python-core"
 
-BBCLASSEXTEND = "native"
+BBCLASSEXTEND = "native nativesdk"

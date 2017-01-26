@@ -12,6 +12,6 @@ inherit distutils
 
 RDEPENDS_${PN} += "python-core"
 
-BBCLASSEXTEND = "native"
+BBCLASSEXTEND = "native nativesdk"
 
 S = "${WORKDIR}/iniparse-${PV}"
