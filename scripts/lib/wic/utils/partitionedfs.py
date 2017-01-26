@@ -316,6 +316,13 @@ class Image():
                                 (part['num'], part['uuid'], disk['disk'].device),
                                 self.native_sysroot)
 
+            if part['label'] and disk['ptable_format'] == "gpt":
+                msger.debug("partition %d: set name to %s" % \
+                            (part['num'], part['label']))
+                exec_native_cmd("parted -s %s name %d %s" % \
+                                (disk['disk'].device, part['num'], part['label']),
+                                self.native_sysroot)
+
             if part['boot']:
                 flag_name = "legacy_boot" if disk['ptable_format'] == 'gpt' else "boot"
                 msger.debug("Set '%s' flag for partition '%s' on disk '%s'" % \
