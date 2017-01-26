@@ -89,7 +89,7 @@ if [ ! -d "$RPM_DIR" ]; then
 	exit 1
 fi
 
-CREATEREPO=$OECORE_NATIVE_SYSROOT/usr/bin/createrepo
+CREATEREPO=$OECORE_NATIVE_SYSROOT/usr/bin/createrepo_c
 if [ ! -e "$CREATEREPO" ]; then
    	echo "Error: can't find createrepo binary"
 	echo "please run bitbake createrepo-native first"
