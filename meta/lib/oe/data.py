@@ -30,7 +30,7 @@ def export2json(d, json_file, expand=True):
             continue
         elif key.startswith("do_"):
             continue
-        elif d.getVarFlag(key, "func", True):
+        elif d.getVarFlag(key, "func"):
             continue
 
         keys2export.append(key)
