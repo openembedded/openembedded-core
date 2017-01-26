@@ -32,7 +32,7 @@ def dataStoteToDict(d, variables):
     data = {}
 
     for v in variables:
-        data[v] = d.getVar(v, True)
+        data[v] = d.getVar(v)
 
     return data
 

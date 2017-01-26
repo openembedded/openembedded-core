@@ -27,7 +27,7 @@ def testsdk_main(d):
     from oeqa.sdk.context import OESDKTestContext, OESDKTestContextExecutor
     from oeqa.utils import make_logger_bitbake_compatible
 
-    pn = d.getVar("PN", True)
+    pn = d.getVar("PN")
     logger = make_logger_bitbake_compatible(logging.getLogger("BitBake"))
 
     # sdk use network for download projects for build
@@ -103,7 +103,7 @@ def testsdkext_main(d):
     from oeqa.utils import avoid_paths_in_environ, make_logger_bitbake_compatible
     from oeqa.sdkext.context import OESDKExtTestContext, OESDKExtTestContextExecutor
 
-    pn = d.getVar("PN", True)
+    pn = d.getVar("PN")
     logger = make_logger_bitbake_compatible(logging.getLogger("BitBake"))
 
     # extensible sdk use network

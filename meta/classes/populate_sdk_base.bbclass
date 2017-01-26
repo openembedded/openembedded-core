@@ -72,7 +72,7 @@ python write_target_sdk_manifest () {
 
 python write_sdk_test_data() {
     from oe.data import export2json
-    testdata = "%s/%s.testdata.json" % (d.getVar('SDKDEPLOYDIR', True), d.getVar('TOOLCHAIN_OUTPUTNAME', True))
+    testdata = "%s/%s.testdata.json" % (d.getVar('SDKDEPLOYDIR'), d.getVar('TOOLCHAIN_OUTPUTNAME'))
     bb.utils.mkdirhier(os.path.dirname(testdata))
     export2json(d, testdata)
 }

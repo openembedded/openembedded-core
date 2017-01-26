@@ -232,7 +232,7 @@ python pfs_cleanpkgs () {
     for pkgclass in (d.getVar('PACKAGE_CLASSES') or '').split():
         if pkgclass.startswith('package_'):
             pkgtype = pkgclass.split('_', 1)[1]
-            deploydir = d.getVar('DEPLOY_DIR_%s' % pkgtype.upper(), True)
+            deploydir = d.getVar('DEPLOY_DIR_%s' % pkgtype.upper())
             prepath = deploydir + '-prediff'
             pcmanifest = os.path.join(prepath, d.expand('pkg-compare-manifest-${MULTIMACH_TARGET_SYS}-${PN}'))
             try:

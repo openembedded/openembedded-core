@@ -57,7 +57,7 @@ BBCLASSEXTEND = "native"
 TUNE_CCARGS_remove = "-mfpmath=sse"
 
 python () {
-    ccargs = d.getVar('TUNE_CCARGS', True).split()
+    ccargs = d.getVar('TUNE_CCARGS').split()
     if '-mx32' in ccargs:
         # use x86_64 EFI ABI
         ccargs.remove('-mx32')
