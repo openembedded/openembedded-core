@@ -18,7 +18,7 @@ UPSTREAM_CHECK_REGEX = "[Pp]ython-(?P<pver>2(\.\d+)+).tar"
 
 PYTHON_MAJMIN = "2.7"
 
-inherit autotools
+inherit autotools pkgconfig
 
 EXTRA_OECONF = "\
   --with-threads \
