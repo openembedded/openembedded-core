@@ -360,6 +360,7 @@ python extend_recipe_sysroot() {
 
     taskdepdata = d.getVar("BB_TASKDEPDATA", False)
     mytaskname = d.getVar("BB_RUNTASK")
+    workdir = d.getVar("WORKDIR")
     #bb.warn(str(taskdepdata))
     pn = d.getVar("PN")
 
@@ -504,7 +505,7 @@ python extend_recipe_sysroot() {
                 continue
             else:
                 bb.note("%s exists in sysroot, but is stale (%s vs. %s), removing." % (c, lnk, c + "." + taskhash))
-                sstate_clean_manifest(depdir + "/" + lnk, d)
+                sstate_clean_manifest(depdir + "/" + lnk, d, workdir)
                 os.unlink(depdir + "/" + c)
         elif os.path.lexists(depdir + "/" + c):
             os.unlink(depdir + "/" + c)
@@ -559,7 +560,7 @@ python extend_recipe_sysroot() {
                     else:
                         dest = staging_copyfile(l, destsysroot, fixme[''], postinsts, stagingdir)
                     if dest:
-                        m.write(dest + "\n")
+                        m.write(dest.replace(workdir + "/", "") + "\n")
 
     for f in fixme:
         if f == '':
