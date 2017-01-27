@@ -38,8 +38,8 @@ class Test1P2(BuildPerfTestCase):
     def test12(self):
         """Build virtual/kernel"""
         # Build and cleans state in order to get all dependencies pre-built
-        self.log_cmd_output(['bitbake', self.build_target])
-        self.log_cmd_output(['bitbake', self.build_target, '-c', 'cleansstate'])
+        self.run_cmd(['bitbake', self.build_target])
+        self.run_cmd(['bitbake', self.build_target, '-c', 'cleansstate'])
 
         self.sync()
         self.measure_cmd_resources(['bitbake', self.build_target], 'build',
@@ -74,7 +74,7 @@ class Test2(BuildPerfTestCase):
     def test2(self):
         """Run core-image-sato do_rootfs with sstate"""
         # Build once in order to populate sstate cache
-        self.log_cmd_output(['bitbake', self.build_target])
+        self.run_cmd(['bitbake', self.build_target])
 
         self.rm_tmp()
         self.rm_cache()
@@ -106,8 +106,8 @@ class Test4(BuildPerfTestCase):
 
     def test4(self):
         """eSDK metrics"""
-        self.log_cmd_output("bitbake {} -c do_populate_sdk_ext".format(
-            self.build_target))
+        self.run_cmd(['bitbake', '-c', 'do_populate_sdk_ext',
+                     self.build_target])
         self.bb_vars = get_bb_vars(None, self.build_target)
         tmp_dir = self.bb_vars['TMPDIR']
         installer = os.path.join(

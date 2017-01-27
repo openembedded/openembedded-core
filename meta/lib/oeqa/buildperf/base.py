@@ -163,8 +163,6 @@ class BuildPerfTestResult(unittest.TextTestResult):
                                        ('status', status),
                                        ('start_time', test.start_time),
                                        ('elapsed_time', test.elapsed_time),
-                                       ('cmd_log_file', os.path.relpath(test.cmd_log_file,
-                                                                        self.out_dir)),
                                        ('measurements', test.measurements)])
             if status in ('ERROR', 'FAILURE', 'EXPECTED_FAILURE'):
                 test_result['message'] = str(test.err[1])
@@ -268,18 +266,13 @@ class BuildPerfTestCase(unittest.TestCase):
     def out_dir(self):
         return os.path.join(self.base_dir, self.name)
 
-    @property
-    def cmd_log_file(self):
-        return os.path.join(self.out_dir, 'commands.log')
-
     def shortDescription(self):
         return super(BuildPerfTestCase, self).shortDescription() or ""
 
     def setUp(self):
         """Set-up fixture for each test"""
         if self.build_target:
-            self.log_cmd_output(['bitbake', self.build_target,
-                                 '-c', 'fetchall'])
+            self.run_cmd(['bitbake', self.build_target, '-c', 'fetchall'])
 
     def run(self, *args, **kwargs):
         """Run test"""
@@ -287,13 +280,12 @@ class BuildPerfTestCase(unittest.TestCase):
         super(BuildPerfTestCase, self).run(*args, **kwargs)
         self.elapsed_time = datetime.now() - self.start_time
 
-    def log_cmd_output(self, cmd):
-        """Run a command and log it's output"""
+    def run_cmd(self, cmd):
+        """Convenience method for running a command"""
         cmd_str = cmd if isinstance(cmd, str) else ' '.join(cmd)
         log.info("Logging command: %s", cmd_str)
         try:
-            with open(self.cmd_log_file, 'a') as fobj:
-                runCmd2(cmd, stdout=fobj)
+            runCmd2(cmd)
         except CommandError as err:
             log.error("Command failed: %s", err.retcode)
             raise
@@ -338,17 +330,14 @@ class BuildPerfTestCase(unittest.TestCase):
         log.info("Timing command: %s", cmd_str)
         data_q = SimpleQueue()
         try:
-            with open(self.cmd_log_file, 'a') as fobj:
-                proc = Process(target=_worker, args=(data_q, cmd,),
-                               kwargs={'stdout': fobj})
-                proc.start()
-                data = data_q.get()
-                proc.join()
+            proc = Process(target=_worker, args=(data_q, cmd,))
+            proc.start()
+            data = data_q.get()
+            proc.join()
             if isinstance(data, Exception):
                 raise data
         except CommandError:
-            log.error("Command '%s' failed, see %s for more details", cmd_str,
-                      self.cmd_log_file)
+            log.error("Command '%s' failed", cmd_str)
             raise
         etime = data['elapsed_time']
 
