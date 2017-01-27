@@ -40,8 +40,7 @@ SRC_URI_append_libc-uclibc = "\
 SRC_URI_append_qemuall = " file://0001-core-device.c-Change-the-default-device-timeout-to-2.patch"
 
 PACKAGECONFIG ??= "xz \
-                   ldconfig \
-                   ${@bb.utils.filter('DISTRO_FEATURES', 'efi pam selinux', d)} \
+                   ${@bb.utils.filter('DISTRO_FEATURES', 'efi pam selinux ldconfig', d)} \
                    ${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'xkbcommon', '', d)} \
                    ${@bb.utils.contains('DISTRO_FEATURES', 'wifi', 'rfkill', '', d)} \
                    binfmt \
