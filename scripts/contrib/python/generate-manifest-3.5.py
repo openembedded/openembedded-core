@@ -388,6 +388,9 @@ if __name__ == "__main__":
     m.addPackage( "${PN}-tkinter", "Python Tcl/Tk bindings", "${PN}-core",
     "lib-dynload/_tkinter.*.so lib-tk tkinter" ) # package
 
+    m.addPackage( "${PN}-typing", "Python typing support", "${PN}-core",
+    "typing.*" )
+
     m.addPackage( "${PN}-unittest", "Python unit testing framework", "${PN}-core ${PN}-stringold ${PN}-lang ${PN}-io ${PN}-difflib ${PN}-pprint ${PN}-shell",
     "unittest/" )
 
