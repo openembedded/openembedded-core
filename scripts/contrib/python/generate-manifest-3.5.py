@@ -276,7 +276,7 @@ if __name__ == "__main__":
     "lib-dynload/fcntl.*.so" )
 
     m.addPackage( "${PN}-html", "Python HTML processing support", "${PN}-core",
-    "formatter.* htmlentitydefs.* htmllib.* markupbase.* sgmllib.* HTMLParser.* " )
+    "formatter.* htmlentitydefs.* html htmllib.* markupbase.* sgmllib.* HTMLParser.* " )
 
     m.addPackage( "${PN}-importlib", "Python import implementation library", "${PN}-core ${PN}-lang",
     "importlib imp.*" )
