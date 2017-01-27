@@ -71,9 +71,9 @@ FILES_${PN}= " \
     ${SDKPATH}/* \
     "
 
-do_fetch[noexec] = "1"
-do_unpack[noexec] = "1"
-do_patch[noexec] = "1"
+deltask do_fetch
+deltask do_unpack
+deltask do_patch
 do_configure[noexec] = "1"
 do_compile[noexec] = "1"
 do_populate_sysroot[noexec] = "1"
