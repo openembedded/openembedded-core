@@ -40,13 +40,15 @@ efi_populate() {
 
 	install -d ${DEST}${EFIDIR}
 
-	GRUB_IMAGE="bootia32.efi"
+	GRUB_IMAGE="grub-efi-bootia32.efi"
+	DEST_IMAGE="bootia32.efi"
 	if [ "${TARGET_ARCH}" = "x86_64" ]; then
-		GRUB_IMAGE="bootx64.efi"
+		GRUB_IMAGE="grub-efi-bootx64.efi"
+		DEST_IMAGE="bootx64.efi"
 	fi
-	install -m 0644 ${DEPLOY_DIR_IMAGE}/${GRUB_IMAGE} ${DEST}${EFIDIR}
+	install -m 0644 ${DEPLOY_DIR_IMAGE}/${GRUB_IMAGE} ${DEST}${EFIDIR}/${DEST_IMAGE}
 	EFIPATH=$(echo "${EFIDIR}" | sed 's/\//\\/g')
-	printf 'fs0:%s\%s\n' "$EFIPATH" "$GRUB_IMAGE" >${DEST}/startup.nsh
+	printf 'fs0:%s\%s\n' "$EFIPATH" "$DEST_IMAGE" >${DEST}/startup.nsh
 
 	install -m 0644 ${GRUB_CFG} ${DEST}${EFIDIR}/grub.cfg
 }
