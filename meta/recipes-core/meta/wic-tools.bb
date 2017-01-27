@@ -3,8 +3,8 @@ SUMMARY = "A meta recipe to build native tools used by wic."
 LICENSE = "MIT"
 
 DEPENDS = "parted-native syslinux-native gptfdisk-native dosfstools-native mtools-native bmap-tools-native grub-efi-native cdrtools-native"
-DEPENDS_append_x86 = " syslinux grub-efi"
-DEPENDS_append_x86-64 = " syslinux grub-efi"
+DEPENDS_append_x86 = " syslinux grub-efi systemd-boot"
+DEPENDS_append_x86-64 = " syslinux grub-efi systemd-boot"
 
 INHIBIT_DEFAULT_DEPS = "1"
 inherit nopackages
