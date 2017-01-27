@@ -490,6 +490,18 @@ python extend_recipe_sysroot() {
     fixme['native'] = []
     postinsts = []
     multilibs = {}
+    manifests = {}
+
+    for f in os.listdir(depdir):
+        if not f.endswith(".complete"):
+            continue
+        f = depdir + "/" + f
+        if os.path.islink(f) and not os.path.exists(f):
+            bb.note("%s no longer exists, removing from sysroot" % f)
+            lnk = os.readlink(f.replace(".complete", ""))
+            sstate_clean_manifest(depdir + "/" + lnk, d, workdir)
+            os.unlink(f)
+            os.unlink(f.replace(".complete", ""))
 
     for dep in configuredeps:
         c = setscenedeps[dep][0]
@@ -547,6 +559,7 @@ python extend_recipe_sysroot() {
             bb.warn("Manifest %s not found?" % manifest)
         else:
             with open(manifest, "r") as f, open(taskmanifest, 'w') as m:
+                manifests[dep] = manifest
                 for l in f:
                     l = l.strip()
                     if l.endswith("/"):
@@ -573,9 +586,9 @@ python extend_recipe_sysroot() {
     for p in postinsts:
         subprocess.check_output(p, shell=True)
 
-    for dep in configuredeps:
+    for dep in manifests:
         c = setscenedeps[dep][0]
-        open(depdir + "/" + c + ".complete", "w").close()
+        os.symlink(manifests[dep], depdir + "/" + c + ".complete")
 
     bb.utils.unlockfile(lock)
 }
