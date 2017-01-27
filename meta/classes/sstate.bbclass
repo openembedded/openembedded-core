@@ -426,7 +426,7 @@ def sstate_clean_cachefiles(d):
         ss = sstate_state_fromvars(ld, task)
         sstate_clean_cachefile(ss, ld)
 
-def sstate_clean_manifest(manifest, d):
+def sstate_clean_manifest(manifest, d, prefix=None):
     import oe.path
 
     mfile = open(manifest)
@@ -435,6 +435,8 @@ def sstate_clean_manifest(manifest, d):
 
     for entry in entries:
         entry = entry.strip()
+        if prefix and not entry.startswith("/"):
+            entry = prefix + "/" + entry
         bb.debug(2, "Removing manifest: %s" % entry)
         # We can race against another package populating directories as we're removing them
         # so we ignore errors here.
