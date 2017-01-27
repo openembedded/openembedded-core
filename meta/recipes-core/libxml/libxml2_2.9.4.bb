@@ -76,4 +76,9 @@ do_install_ptest () {
 	cp -r ${WORKDIR}/xmlconf ${D}${PTEST_PATH}
 }
 
+do_install_append_class-native () {
+	# Docs are not needed in the native case
+	rm ${D}${datadir}/gtk-doc -rf
+}
+
 BBCLASSEXTEND = "native nativesdk"
