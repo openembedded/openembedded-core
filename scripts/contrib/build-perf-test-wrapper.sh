@@ -44,13 +44,13 @@ while getopts "ha:c:C:w:" opt; do
         h)  usage
             exit 0
             ;;
-        a)  archive_dir=`realpath "$OPTARG"`
+        a)  archive_dir=`realpath -s "$OPTARG"`
             ;;
         c)  commitish=$OPTARG
             ;;
         C)  results_repo=`realpath -s "$OPTARG"`
             ;;
-        w)  base_dir=`realpath "$OPTARG"`
+        w)  base_dir=`realpath -s "$OPTARG"`
             ;;
         *)  usage
             exit 1
