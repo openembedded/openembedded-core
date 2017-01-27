@@ -1618,10 +1618,7 @@ python package_do_shlibs() {
     else:
         snap_symlinks = False
 
-    if (d.getVar('USE_LDCONFIG') or "1") == "1":
-        use_ldconfig = True
-    else:
-        use_ldconfig = False
+    use_ldconfig = bb.utils.contains('DISTRO_FEATURES', 'ldconfig', True, False, d)
 
     needed = {}
     shlib_provider = oe.package.read_shlib_providers(d)

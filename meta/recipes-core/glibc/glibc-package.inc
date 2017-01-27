@@ -14,9 +14,6 @@ python __anonymous () {
                                    d.getVar('TARGET_OS'))
 }
 
-# Set this to zero if you don't want ldconfig in the output package
-USE_LDCONFIG ?= "1"
-
 INHIBIT_SYSROOT_STRIP = "1"
 
 PACKAGES = "${PN}-dbg catchsegv sln nscd ldd tzcode ${PN}-utils glibc-thread-db ${PN}-pic libcidn libmemusage libsegfault ${PN}-pcprofile libsotruss ${PN} glibc-extra-nss ${PN}-dev ${PN}-staticdev ${PN}-doc"
@@ -37,7 +34,7 @@ libc_baselibs = "${base_libdir}/libcrypt*.so.* ${base_libdir}/libcrypt-*.so ${ba
 libc_baselibs_append_aarch64 = " /lib/ld-linux-aarch64*.so.1"
 INSANE_SKIP_${PN}_append_aarch64 = " libdir"
 
-FILES_${PN} = "${libc_baselibs} ${libexecdir}/* ${@base_conditional('USE_LDCONFIG', '1', '${base_sbindir}/ldconfig ${sysconfdir}/ld.so.conf', '', d)}"
+FILES_${PN} = "${libc_baselibs} ${libexecdir}/* ${base_sbindir}/ldconfig ${sysconfdir}/ld.so.conf"
 FILES_ldd = "${bindir}/ldd"
 FILES_libsegfault = "${base_libdir}/libSegFault*"
 FILES_libcidn = "${base_libdir}/libcidn-*.so ${base_libdir}/libcidn.so.*"
@@ -96,8 +93,8 @@ do_install_append () {
 		rm -f ${D}${infodir}/dir
 	fi
 
-	if [ "${USE_LDCONFIG}" != "1" ]; then
-		# We won't ship these files (see FILES above) so let's not install them
+	if ! ${@bb.utils.contains('DISTRO_FEATURES', 'ldconfig', 'true', 'false', d)}; then
+		# The distro doesn't want these files so let's not install them
 		rm -f ${D}${sysconfdir}/ld.so.conf
 		rm -f ${D}${base_sbindir}/ldconfig
 		# This directory will be empty now so remove it too.
