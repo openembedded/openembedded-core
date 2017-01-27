@@ -2,10 +2,6 @@
 # This class is used for architecture independent recipes/data files (usually scripts)
 #
 
-# Expand STAGING_DIR_HOST since for cross-canadian/native/nativesdk, this will
-# point elsewhere after these changes.
-STAGING_DIR_HOST := "${STAGING_DIR_HOST}"
-
 PACKAGE_ARCH = "all"
 
 python () {
