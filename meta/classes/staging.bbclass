@@ -230,6 +230,7 @@ do_populate_sysroot[vardepsexclude] += "MULTI_PROVIDER_WHITELIST"
 
 POPULATESYSROOTDEPS = ""
 POPULATESYSROOTDEPS_class-target = "virtual/${MLPREFIX}${TARGET_PREFIX}binutils:do_populate_sysroot"
+POPULATESYSROOTDEPS_class-nativesdk = "virtual/${TARGET_PREFIX}binutils-crosssdk:do_populate_sysroot"
 do_populate_sysroot[depends] += "${POPULATESYSROOTDEPS}"
 
 SSTATETASKS += "do_populate_sysroot"
