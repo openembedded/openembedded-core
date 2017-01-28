@@ -520,6 +520,8 @@ python extend_recipe_sysroot() {
                 bb.note("%s exists in sysroot, but is stale (%s vs. %s), removing." % (c, lnk, c + "." + taskhash))
                 sstate_clean_manifest(depdir + "/" + lnk, d, workdir)
                 os.unlink(depdir + "/" + c)
+                if os.path.lexists(depdir + "/" + c + ".complete"):
+                    os.unlink(depdir + "/" + c + ".complete")
         elif os.path.lexists(depdir + "/" + c):
             os.unlink(depdir + "/" + c)
 
