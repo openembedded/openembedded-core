@@ -72,18 +72,18 @@ class DirectImageCreator:
     media and used on actual hardware.
     """
 
-    def __init__(self, oe_builddir, image_output_dir, rootfs_dir,
-                 bootimg_dir, kernel_dir, native_sysroot, compressor,
-                 creatoropts, bmap=False):
+    def __init__(self, image_name, ksobj, oe_builddir, image_output_dir,
+                 rootfs_dir, bootimg_dir, kernel_dir, native_sysroot,
+                 compressor, bmap=False):
         """
         Initialize a DirectImageCreator instance.
 
         This method takes the same arguments as ImageCreator.__init__()
         """
-        self.name = creatoropts['name']
+        self.name = image_name
         self.outdir = image_output_dir
         self.workdir = tempfile.mktemp(prefix='wic')
-        self.ks = creatoropts['ks']
+        self.ks = ksobj
 
         self.__image = None
         self.__disks = {}

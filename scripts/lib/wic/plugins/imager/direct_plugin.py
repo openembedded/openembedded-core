@@ -24,8 +24,12 @@
 # Tom Zanussi <tom.zanussi (at] linux.intel.com>
 #
 
+from time import strftime
+
+from os.path import basename, splitext
 from wic.utils import errors
-from wic.conf import configmgr
+from wic.ksparser import KickStart, KickStartError
+from wic import msger
 
 import wic.imager.direct as direct
 from wic.pluginbase import ImagerPlugin
@@ -68,27 +72,31 @@ class DirectPlugin(ImagerPlugin):
         bootimg_dir = args[2]
         rootfs_dir = args[3]
 
-        creatoropts = configmgr.create
         ksconf = args[4]
 
         image_output_dir = args[5]
         oe_builddir = args[6]
         compressor = args[7]
 
+        try:
+            ksobj = KickStart(ksconf)
+        except KickStartError as err:
+            msger.error(str(err))
+
+        image_name = "%s-%s" % (splitext(basename(ksconf))[0],
+                          strftime("%Y%m%d%H%M"))
         krootfs_dir = cls.__rootfs_dir_to_dict(rootfs_dir)
 
-        configmgr._ksconf = ksconf
-
-        creator = direct.DirectImageCreator(oe_builddir,
+        creator = direct.DirectImageCreator(image_name,
+                                            ksobj,
+                                            oe_builddir,
                                             image_output_dir,
                                             krootfs_dir,
                                             bootimg_dir,
                                             kernel_dir,
                                             native_sysroot,
                                             compressor,
-                                            creatoropts,
                                             opts.bmap)
-
         try:
             creator.create()
             creator.assemble()
