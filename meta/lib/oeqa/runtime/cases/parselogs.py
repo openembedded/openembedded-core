@@ -48,6 +48,7 @@ common_errors = [
     "stmmac_dvr_probe: warning: cannot get CSR clock",
     "error: couldn\'t mount because of unsupported optional features",
     "GPT: Use GNU Parted to correct GPT errors",
+    "Cannot set xattr user.Librepo.DownloadInProgress",
     ]
 
 video_related = [

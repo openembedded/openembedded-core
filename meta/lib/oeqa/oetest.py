@@ -128,13 +128,6 @@ class oeRuntimeTest(oeTest):
     def tearDownLocal(self):
         pass
 
-    #TODO: use package_manager.py to install packages on any type of image
-    def install_packages(self, packagelist):
-        for package in packagelist:
-            (status, result) = self.target.run("smart install -y "+package)
-            if status != 0:
-                return status
-
 def getmodule(pos=2):
     # stack returns a list of tuples containg frame information
     # First element of the list the is current frame, caller is 1

@@ -102,14 +102,15 @@ class RpmInstallRemoveTest(OERuntimeTestCase):
     @OETestDepends(['rpm.RpmInstallRemoveTest.test_rpm_remove'])
     def test_check_rpm_install_removal_log_file_size(self):
         """
-        Summary:     Check rpm install/removal log file size
-        Expected:    There should be some method to keep rpm log in a small size .
+        Summary:     Check that rpm writes into /var/log/messages
+        Expected:    There should be some RPM prefixed entries in the above file.
         Product:     BSPs
         Author:      Alexandru Georgescu <alexandru.c.georgescu@intel.com>
+        Author:      Alexander Kanavin <alexander.kanavin@intel.com>
         AutomatedBy: Daniel Istrate <daniel.alexandrux.istrate@intel.com>
         """
         db_files_cmd = 'ls /var/lib/rpm/__db.*'
-        get_log_size_cmd = "du /var/lib/rpm/log/log.* | awk '{print $1}'"
+        check_log_cmd = "grep RPM /var/log/messages | wc -l"
 
         # Make sure that some database files are under /var/lib/rpm as '__db.xxx'
         status, output = self.target.run(db_files_cmd)
@@ -129,13 +130,13 @@ class RpmInstallRemoveTest(OERuntimeTestCase):
             msg = 'Failed to remove rpm-doc package. Reason: {}'.format(output)
             self.assertEqual(0, status, msg=msg)
 
-        # Get the size of log file
-        status, output = self.target.run(get_log_size_cmd)
+        # if using systemd this should ensure all entries are flushed to /var
+        status, output = self.target.run("journalctl --sync")
+        # Get the amount of entries in the log file
+        status, output = self.target.run(check_log_cmd)
         msg = 'Failed to get the final size of the log file.'
         self.assertEqual(0, status, msg=msg)
 
-        # Compare each log size
-        for log_file_size in output:
-            msg = ('Log file size is greater that expected (~10MB), '
-                    'found {} bytes'.format(log_file_size))
-            self.assertLessEqual(int(log_file_size), 11264, msg=msg)
+        # Check that there's enough of them
+        self.assertGreaterEqual(int(output), 80,
+                                   'Cound not find sufficient amount of rpm entries in /var/log/messages, found {} entries'.format(output))
