@@ -66,6 +66,12 @@ PACKAGECONFIG[xv] = "--enable-outdev=xv,--disable-outdev=xv,libxv"
 # Check codecs that require --enable-nonfree
 USE_NONFREE = "${@bb.utils.contains_any('PACKAGECONFIG', [ 'openssl' ], 'yes', '', d)}"
 
+def cpu(d):
+    for arg in (d.getVar('TUNE_CCARGS') or '').split():
+        if arg.startswith('-mcpu='):
+            return arg[6:]
+    return 'generic'
+
 EXTRA_OECONF = " \
     --disable-stripping \
     --enable-pic \
@@ -90,6 +96,7 @@ EXTRA_OECONF = " \
     --shlibdir=${libdir} \
     --datadir=${datadir}/ffmpeg \
     ${@bb.utils.contains('AVAILTUNES', 'mips32r2', '', '--disable-mipsdsp --disable-mipsdspr2', d)} \
+    --cpu=${@cpu(d)} \
 "
 
 EXTRA_OECONF_append_linux-gnux32 = " --disable-asm"
