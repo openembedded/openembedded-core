@@ -20,9 +20,7 @@ from optparse import OptionParser, SUPPRESS_HELP
 
 from wic import msger
 from wic.utils import errors
-from wic.conf import configmgr
 from wic.plugin import pluginmgr
-
 
 class Creator():
     """${name}: create an image
@@ -89,23 +87,6 @@ class Creator():
                 os.makedirs(os.path.dirname(logfile_abs_path))
             msger.set_interactive(False)
             msger.set_logfile(logfile_abs_path)
-            configmgr.create['logfile'] = options.logfile
-
-        if options.config:
-            configmgr.reset()
-            configmgr._siteconf = options.config
-
-        if options.outdir is not None:
-            configmgr.create['outdir'] = abspath(options.outdir)
-
-        cdir = 'outdir'
-        if os.path.exists(configmgr.create[cdir]) \
-           and not os.path.isdir(configmgr.create[cdir]):
-            msger.error('Invalid directory specified: %s' \
-                        % configmgr.create[cdir])
-
-        if options.enabletmpfs:
-            configmgr.create['enabletmpfs'] = options.enabletmpfs
 
     def main(self, argv=None):
         if argv is None:
