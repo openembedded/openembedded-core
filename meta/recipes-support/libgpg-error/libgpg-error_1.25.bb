@@ -51,4 +51,4 @@ do_install_append() {
 
 FILES_${PN}-dev += "${bindir}/gpg-error"
 
-BBCLASSEXTEND = "native"
+BBCLASSEXTEND = "native nativesdk"
