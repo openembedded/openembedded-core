@@ -176,7 +176,7 @@ postinst-delayed-t \
                         that script can be delayed to run at first boot.
         Dependencies:   NA
         Steps:          1. Add proper configuration to local.conf file
-                        2. Build a "core-image-full-cmdline" image
+                        2. Build a "core-image-minimal" image
                         3. Verify that file created by postinst_rootfs recipe is
                            present on rootfs dir.
                         4. Boot the image created on qemu and verify that the file
@@ -195,6 +195,7 @@ postinst-delayed-t \
         #Step 1
         features = 'MACHINE = "qemux86"\n'
         features += 'CORE_IMAGE_EXTRA_INSTALL += "%s %s "\n'% (rootfs_pkg, boot_pkg)
+        features += 'IMAGE_FEATURES += "ssh-server-openssh"\n'
         for init_manager in ("sysvinit", "systemd"):
             #for sysvinit no extra configuration is needed,
             if (init_manager is "systemd"):
@@ -209,10 +210,10 @@ postinst-delayed-t \
                 self.write_config(features)
 
                 #Step 2
-                bitbake('core-image-full-cmdline')
+                bitbake('core-image-minimal')
 
                 #Step 3
-                file_rootfs_created = os.path.join(get_bb_var('IMAGE_ROOTFS',"core-image-full-cmdline"),
+                file_rootfs_created = os.path.join(get_bb_var('IMAGE_ROOTFS',"core-image-minimal"),
                                                    file_rootfs_name)
                 found = os.path.isfile(file_rootfs_created)
                 self.assertTrue(found, "File %s was not created at rootfs time by %s" % \
@@ -220,11 +221,11 @@ postinst-delayed-t \
 
                 #Step 4
                 testcommand = 'ls /etc/'+fileboot_name
-                with runqemu('core-image-full-cmdline') as qemu:
+                with runqemu('core-image-minimal') as qemu:
                     sshargs = '-o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
                     result = runCmd('ssh %s root@%s %s' % (sshargs, qemu.ip, testcommand))
                     self.assertEqual(result.status, 0, 'File %s was not created at firts boot'% fileboot_name)
 
                 #Step 5
                 bitbake(' %s %s -c cleanall' % (rootfs_pkg, boot_pkg))
-                bitbake('core-image-full-cmdline -c cleanall')
+                bitbake('core-image-minimal -c cleanall')
