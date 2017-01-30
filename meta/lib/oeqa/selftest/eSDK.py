@@ -15,7 +15,7 @@ class oeSDKExtSelfTest(oeSelfTest):
     """
     # Bugzilla Test Plan: 6033
     # This code is planned to be part of the automation for eSDK containig
-    # Install libraries and headers, image generation binary feeds.
+    # Install libraries and headers, image generation binary feeds, sdk-update.
     """
 
     @staticmethod
@@ -109,14 +109,14 @@ SSTATE_MIRRORS =  "file://.* http://%s/PATH"
         shutil.rmtree(cls.tmpdir_eSDKQA)
         cls.http_service.stop()
 
-    @testcase (1471)
+    @testcase (1602)
     def test_install_libraries_headers(self):
         pn_sstate = 'bc'
         bitbake(pn_sstate)
         cmd = "devtool sdk-install %s " % pn_sstate
         oeSDKExtSelfTest.run_esdk_cmd(self.env_eSDK, self.tmpdir_eSDKQA, cmd)
     
-    @testcase(1472)
+    @testcase(1603)
     def test_image_generation_binary_feeds(self):
         image = 'core-image-minimal'
         cmd = "devtool build-image %s" % image

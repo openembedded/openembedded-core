@@ -50,25 +50,25 @@ class DevtoolTest(OESDKExtTestCase):
         self._run('devtool add myapp %s' % self.myapp_dst)
         self._run('devtool reset myapp')
     
-    @OETestID(1473)
+    @OETestID(1605)
     @OETestDepends(['test_devtool_location'])
     @skipIfNotDataVar('SDK_INCLUDE_TOOLCHAIN', '1', 'SDK does not include toolchain')
     def test_devtool_build_make(self):
         self._test_devtool_build(self.myapp_dst)
     
-    @OETestID(1474)
+    @OETestID(1606)
     @OETestDepends(['test_devtool_location'])
     @skipIfNotDataVar('SDK_INCLUDE_TOOLCHAIN', '1', 'SDK does not include toolchain')
     def test_devtool_build_esdk_package(self):
         self._test_devtool_build_package(self.myapp_dst)
 
-    @OETestID(1479)
+    @OETestID(1607)
     @OETestDepends(['test_devtool_location'])
     @skipIfNotDataVar('SDK_INCLUDE_TOOLCHAIN', '1', 'SDK does not include toolchain')
     def test_devtool_build_cmake(self):
         self._test_devtool_build(self.myapp_cmake_dst)
     
-    @OETestID(1482)
+    @OETestID(1608)
     @OETestDepends(['test_devtool_location'])
     @skipIfNotDataVar('SDK_INCLUDE_TOOLCHAIN', '1', 'SDK does not include toolchain')
     def test_extend_autotools_recipe_creation(self):
@@ -83,7 +83,7 @@ class DevtoolTest(OESDKExtTestCase):
             raise e
         self._run('devtool reset %s' % recipe)
 
-    @OETestID(1484)
+    @OETestID(1609)
     @OETestDepends(['test_devtool_location'])
     @skipIfNotDataVar('SDK_INCLUDE_TOOLCHAIN', '1', 'SDK does not include toolchain')
     def test_devtool_kernelmodule(self):
@@ -98,7 +98,7 @@ class DevtoolTest(OESDKExtTestCase):
             raise e
         self._run('devtool reset %s' % recipe)
 
-    @OETestID(1478)
+    @OETestID(1610)
     @OETestDepends(['test_devtool_location'])
     @skipIfNotDataVar('SDK_INCLUDE_TOOLCHAIN', '1', 'SDK does not include toolchain')
     def test_recipes_for_nodejs(self):
