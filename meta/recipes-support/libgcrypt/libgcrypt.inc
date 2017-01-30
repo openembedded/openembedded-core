@@ -46,4 +46,4 @@ FILES_dumpsexp-dev += "${bindir}/dumpsexp"
 
 ARM_INSTRUCTION_SET = "arm"
 
-BBCLASSEXTEND = "native"
+BBCLASSEXTEND = "native nativesdk"
