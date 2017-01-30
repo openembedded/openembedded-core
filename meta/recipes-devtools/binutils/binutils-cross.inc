@@ -7,9 +7,14 @@ BPN = "binutils"
 INHIBIT_DEFAULT_DEPS = "1"
 INHIBIT_AUTOTOOLS_DEPS = "1"
 
+SRC_URI += "file://no-tooldirpaths.patch"
+
+# Specify lib-path else we use a load of search dirs which we don't use
+# and mean the linker scripts have to be relocated.
 EXTRA_OECONF += "--with-sysroot=${STAGING_DIR_TARGET} \
                 --disable-install-libbfd \
                 --enable-poison-system-directories \
+                --with-lib-path==${target_base_libdir}:=${target_libdir} \
                 "
 do_install () {
 	oe_runmake 'DESTDIR=${D}' install
