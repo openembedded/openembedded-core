@@ -23,6 +23,7 @@ def is_whitelisted(s):
     return False
 
 SCRIPT_LINENO_RE = re.compile(r' line (\d+) ')
+BASHISM_WARNING = re.compile(r'^(possible bashism in.*)$', re.MULTILINE)
 
 def process(filename, function, lineno, script):
     import tempfile
@@ -42,11 +43,18 @@ def process(filename, function, lineno, script):
         # TODO check exit code is 1
 
         # Replace the temporary filename with the function and split it
-        output = e.output.replace(fn.name, function).splitlines()
-        if len(output) % 2 != 0:
-            print("Unexpected output from checkbashism: %s" % str(output))
-            return
+        output = e.output.replace(fn.name, function)
+        if not output or not output.startswith('possible bashism'):
+            # Probably starts with or contains only warnings. Dump verbatim
+            # with one space indention. Can't do the splitting and whitelist
+            # checking below.
+            return '\n'.join([filename,
+                              ' Unexpected output from checkbashisms.pl'] +
+                             [' ' + x for x in output.splitlines()])
 
+        # We know that the first line matches and that therefore the first
+        # list entry will be empty - skip it.
+        output = BASHISM_WARNING.split(output)[1:]
         # Turn the output into a single string like this:
         # /.../foobar.bb
         #  possible bashism in updatercd_postrm line 2 (type):
@@ -60,7 +68,8 @@ def process(filename, function, lineno, script):
                 if lineno is not None:
                     message = SCRIPT_LINENO_RE.sub(lambda m: ' line %d ' % (int(m.group(1)) + int(lineno) - 1),
                                                    message)
-                result.extend([' ' + message, '  ' + source])
+                result.append(' ' + message.strip())
+                result.extend(['  %s' % x for x in source.splitlines()])
         if result:
             result.insert(0, filename)
             return '\n'.join(result)
