@@ -33,7 +33,7 @@ import sys
 
 from wic import msger, creator
 from wic.plugin import pluginmgr
-from wic.utils.oe import misc
+from wic.utils.misc import get_bitbake_var
 
 
 def verify_build_env():
@@ -54,7 +54,7 @@ SCRIPTS_CANNED_IMAGE_DIR = "scripts/" + CANNED_IMAGE_DIR
 WIC_DIR = "wic"
 
 def build_canned_image_list(path):
-    layers_path = misc.get_bitbake_var("BBLAYERS")
+    layers_path = get_bitbake_var("BBLAYERS")
     canned_wks_layer_dirs = []
 
     if layers_path is not None:

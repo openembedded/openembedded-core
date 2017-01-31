@@ -21,7 +21,7 @@
 import os
 from wic import msger
 from wic.utils.errors import ImageError
-from wic.utils.oe.misc import exec_cmd, exec_native_cmd
+from wic.utils.misc import exec_cmd, exec_native_cmd
 from wic.filemap import sparse_copy
 
 # Overhead of the MBR partitioning scheme (just one sector)

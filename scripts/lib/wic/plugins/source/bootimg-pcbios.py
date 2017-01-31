@@ -31,8 +31,8 @@ from wic.engine import get_custom_config
 from wic.utils import runner
 from wic.utils.errors import ImageError
 from wic.pluginbase import SourcePlugin
-from wic.utils.oe.misc import exec_cmd, exec_native_cmd, \
-                              get_bitbake_var, BOOTDD_EXTRA_SPACE
+from wic.utils.misc import (exec_cmd, exec_native_cmd,
+                            get_bitbake_var, BOOTDD_EXTRA_SPACE)
 
 class BootimgPcbiosPlugin(SourcePlugin):
     """

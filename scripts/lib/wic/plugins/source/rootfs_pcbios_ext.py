@@ -22,7 +22,7 @@ import os
 from wic import msger
 from wic.utils import syslinux
 from wic.utils import runner
-from wic.utils.oe import misc
+from wic.utils.misc import get_bitbake_var, exec_cmd, exec_native_cmd
 from wic.utils.errors import ImageError
 from wic.pluginbase import SourcePlugin
 
@@ -58,7 +58,7 @@ class RootfsPlugin(SourcePlugin):
         if os.path.isdir(rootfs_dir):
             return rootfs_dir
 
-        image_rootfs_dir = misc.get_bitbake_var("IMAGE_ROOTFS", rootfs_dir)
+        image_rootfs_dir = get_bitbake_var("IMAGE_ROOTFS", rootfs_dir)
         if not os.path.isdir(image_rootfs_dir):
             msg = "No valid artifact IMAGE_ROOTFS from image named"
             msg += " %s has been found at %s, exiting.\n" % \
@@ -119,7 +119,7 @@ class RootfsPlugin(SourcePlugin):
         native_syslinux_nomtools = os.path.join(native_sysroot, "usr/bin/syslinux-nomtools")
         if not is_exe(native_syslinux_nomtools):
             msger.info("building syslinux-native...")
-            misc.exec_cmd("bitbake syslinux-native")
+            exec_cmd("bitbake syslinux-native")
         if not is_exe(native_syslinux_nomtools):
             msger.error("Couldn't find syslinux-nomtools (%s), exiting\n" %
                         native_syslinux_nomtools)
@@ -145,7 +145,7 @@ class RootfsPlugin(SourcePlugin):
 
         # install syslinux into rootfs partition
         syslinux_cmd = "syslinux-nomtools -d /boot -i %s" % part.source_file
-        misc.exec_native_cmd(syslinux_cmd, native_sysroot)
+        exec_native_cmd(syslinux_cmd, native_sysroot)
 
     @classmethod
     def do_install_disk(cls, disk, disk_name, image_creator, workdir, oe_builddir,

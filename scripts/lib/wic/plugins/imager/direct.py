@@ -37,7 +37,7 @@ from wic.plugin import pluginmgr
 from wic.pluginbase import ImagerPlugin
 from wic.utils import errors
 from wic.utils.errors import CreatorError, ImageError
-from wic.utils.oe.misc import get_bitbake_var, exec_cmd, exec_native_cmd
+from wic.utils.misc import get_bitbake_var, exec_cmd, exec_native_cmd
 from wic.utils.partitionedfs import Image
 
 class DirectPlugin(ImagerPlugin):

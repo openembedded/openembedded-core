@@ -19,7 +19,7 @@ import os
 
 from wic import msger
 from wic.pluginbase import SourcePlugin
-from wic.utils.oe.misc import get_bitbake_var
+from wic.utils.misc import get_bitbake_var
 
 class FSImagePlugin(SourcePlugin):
     """

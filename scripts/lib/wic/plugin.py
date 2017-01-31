@@ -20,7 +20,7 @@ import os, sys
 from wic import msger
 from wic import pluginbase
 from wic.utils import errors
-from wic.utils.oe.misc import get_bitbake_var
+from wic.utils.misc import get_bitbake_var
 
 __ALL__ = ['PluginMgr', 'pluginmgr']
 

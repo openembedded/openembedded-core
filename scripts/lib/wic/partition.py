@@ -27,8 +27,8 @@
 import os
 import tempfile
 
-from wic.utils.oe.misc import msger
-from wic.utils.oe.misc import exec_cmd, exec_native_cmd, get_bitbake_var
+from wic import msger
+from wic.utils.misc import exec_cmd, exec_native_cmd, get_bitbake_var
 from wic.plugin import pluginmgr
 
 class Partition():

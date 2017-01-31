@@ -28,7 +28,7 @@ import re
 
 from wic import msger
 from wic.pluginbase import SourcePlugin
-from wic.utils.oe.misc import exec_cmd, get_bitbake_var
+from wic.utils.misc import exec_cmd, get_bitbake_var
 from glob import glob
 
 class BootimgPartitionPlugin(SourcePlugin):

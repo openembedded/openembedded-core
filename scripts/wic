@@ -51,7 +51,7 @@ if bitbake_exe:
 else:
     bitbake_main = None
 
-from wic.utils.oe.misc import get_bitbake_var, BB_VARS
+from wic.utils.misc import get_bitbake_var, BB_VARS
 from wic.utils.errors import WicError
 from wic import engine
 from wic import help as hlp
