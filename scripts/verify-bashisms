@@ -6,7 +6,7 @@ whitelist = (
     # type is supported by dash
     'if type systemctl >/dev/null 2>/dev/null; then',
     'if type systemd-tmpfiles >/dev/null 2>/dev/null; then',
-    'if type update-rc.d >/dev/null 2>/dev/null; then',
+    'type update-rc.d >/dev/null 2>/dev/null; then',
     'command -v',
     # HOSTNAME is set locally
     'buildhistory_single_commit "$CMDLINE" "$HOSTNAME"',
