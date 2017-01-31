@@ -68,7 +68,7 @@ def get_tinfoil():
 if __name__=='__main__':
     import shutil
     if shutil.which("checkbashisms.pl") is None:
-        print("Cannot find checkbashisms.pl on $PATH")
+        print("Cannot find checkbashisms.pl on $PATH, get it from https://anonscm.debian.org/cgit/collab-maint/devscripts.git/plain/scripts/checkbashisms.pl")
         sys.exit(1)
 
     tinfoil = get_tinfoil()
