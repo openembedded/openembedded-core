@@ -53,21 +53,8 @@ class DirectPlugin(ImagerPlugin):
 
     name = 'direct'
 
-    @classmethod
-    def __rootfs_dir_to_dict(cls, rootfs_dirs):
-        """
-        Gets a string that contain 'connection=dir' splitted by
-        space and return a dict
-        """
-        krootfs_dir = {}
-        for rootfs_dir in rootfs_dirs.split(' '):
-            key, val = rootfs_dir.split('=')
-            krootfs_dir[key] = val
-
-        return krootfs_dir
-
-    @classmethod
-    def do_create(cls, opts, *args):
+    @staticmethod
+    def do_create(opts, *args):
         """
         Create direct image, called from creator as 'direct' cmd
         """
@@ -92,7 +79,9 @@ class DirectPlugin(ImagerPlugin):
 
         image_name = "%s-%s" % (splitext(basename(ksconf))[0],
                           strftime("%Y%m%d%H%M"))
-        krootfs_dir = cls.__rootfs_dir_to_dict(rootfs_dir)
+
+        # parse possible 'rootfs=name' items
+        krootfs_dir = dict(rdir.split('=') for rdir in rootfs_dir.split(' '))
 
         creator = DirectImageCreator(image_name, ksobj, oe_builddir,
                                      image_output_dir, krootfs_dir,
