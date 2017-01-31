@@ -16,6 +16,8 @@ SRC_URI = "${GNU_MIRROR}/libtasn1/libtasn1-${PV}.tar.gz \
            file://0004-tools-eliminated-compiler-warnings.patch \
            "
 
+DEPENDS = "bison-native"
+
 SRC_URI[md5sum] = "3018d0f466a32b66dde41bb122e6cab6"
 SRC_URI[sha256sum] = "4f6f7a8fd691ac2b8307c8ca365bad711db607d4ad5966f6938a9d2ecd65c920"
 
