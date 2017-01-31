@@ -30,8 +30,8 @@ import shlex
 from argparse import ArgumentParser, ArgumentError, ArgumentTypeError
 
 from wic import msger
+from wic.engine import find_canned
 from wic.partition import Partition
-from wic.utils.misc import find_canned
 
 class KickStartError(Exception):
     """Custom exception."""

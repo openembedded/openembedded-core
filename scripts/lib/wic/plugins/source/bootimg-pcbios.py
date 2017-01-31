@@ -26,10 +26,10 @@
 
 import os
 
-from wic.utils.errors import ImageError
 from wic import msger
+from wic.engine import get_custom_config
 from wic.utils import runner
-from wic.utils.misc import get_custom_config
+from wic.utils.errors import ImageError
 from wic.pluginbase import SourcePlugin
 from wic.utils.oe.misc import exec_cmd, exec_native_cmd, \
                               get_bitbake_var, BOOTDD_EXTRA_SPACE

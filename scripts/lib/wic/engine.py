@@ -32,7 +32,6 @@ import os
 import sys
 
 from wic import msger, creator
-from wic.utils import misc
 from wic.plugin import pluginmgr
 from wic.utils.oe import misc
 
@@ -226,3 +225,35 @@ def wic_list(args, scripts_path):
         return True
 
     return False
+
+def find_canned(scripts_path, file_name):
+    """
+    Find a file either by its path or by name in the canned files dir.
+
+    Return None if not found
+    """
+    if os.path.exists(file_name):
+        return file_name
+
+    layers_canned_wks_dir = build_canned_image_list(scripts_path)
+    for canned_wks_dir in layers_canned_wks_dir:
+        for root, dirs, files in os.walk(canned_wks_dir):
+            for fname in files:
+                if fname == file_name:
+                    fullpath = os.path.join(canned_wks_dir, fname)
+                    return fullpath
+
+def get_custom_config(boot_file):
+    """
+    Get the custom configuration to be used for the bootloader.
+
+    Return None if the file can't be found.
+    """
+    # Get the scripts path of poky
+    scripts_path = os.path.abspath("%s/../.." % os.path.dirname(__file__))
+
+    cfg_file = find_canned(scripts_path, boot_file)
+    if cfg_file:
+        with open(cfg_file, "r") as f:
+            config = f.read()
+        return config

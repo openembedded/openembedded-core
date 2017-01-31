@@ -26,8 +26,8 @@ import shutil
 import glob
 
 from wic import msger
+from wic.engine import get_custom_config
 from wic.pluginbase import SourcePlugin
-from wic.utils.misc import get_custom_config
 from wic.utils.oe.misc import exec_cmd, exec_native_cmd, get_bitbake_var
 
 class IsoImagePlugin(SourcePlugin):
