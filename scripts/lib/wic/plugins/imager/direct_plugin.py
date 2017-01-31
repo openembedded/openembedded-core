@@ -27,7 +27,6 @@ import os
 import shutil
 import uuid
 import tempfile
-import time
 
 from time import strftime
 from os.path import basename, splitext
@@ -307,19 +306,13 @@ class DirectImageCreator:
                          self.bootimg_dir, self.kernel_dir, self.native_sysroot)
 
 
-            self._image.add_partition(part.disk_size,
-                                       part.disk,
-                                       part.mountpoint,
-                                       part.source_file,
-                                       part.fstype,
-                                       part.label,
-                                       fsopts=part.fsopts,
-                                       boot=part.active,
-                                       align=part.align,
-                                       no_table=part.no_table,
-                                       part_type=part.part_type,
-                                       uuid=part.uuid,
-                                       system_id=part.system_id)
+            self._image.add_partition(part.disk_size, part.disk,
+                                      part.mountpoint, part.source_file,
+                                      part.fstype, part.label,
+                                      fsopts=part.fsopts, boot=part.active,
+                                      align=part.align, no_table=part.no_table,
+                                      part_type=part.part_type, uuid=part.uuid,
+                                      system_id=part.system_id)
 
         if fstab_path:
             shutil.move(fstab_path + ".orig", fstab_path)
@@ -443,4 +436,3 @@ class DirectImageCreator:
 
         # remove work directory
         shutil.rmtree(self.workdir, ignore_errors=True)
-
