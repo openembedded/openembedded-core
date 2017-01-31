@@ -34,6 +34,15 @@ class SyslogTestConfig(OERuntimeTestCase):
                ' Output: %s ' % output)
         self.assertEqual(status, 0, msg=msg)
 
+    @OETestID(1150)
+    @OETestDepends(['syslog.SyslogTest.test_syslog_running'])
+    def test_syslog_restart(self):
+        if "systemd" != self.tc.td.get("VIRTUAL-RUNTIME_init_manager", ""):
+            (_, _) = self.target.run('/etc/init.d/syslog restart')
+        else:
+            (_, _) = self.target.run('systemctl restart syslog.service')
+
+
     @OETestID(202)
     @OETestDepends(['syslog.SyslogTestConfig.test_syslog_logger'])
     @OEHasPackage(["!sysklogd", "busybox"])

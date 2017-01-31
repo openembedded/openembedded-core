@@ -23,9 +23,9 @@ class MultilibTest(OERuntimeTestCase):
         msg = "%s isn't %s (is %s)" % (binary, arch, theclass)
         self.assertEqual(theclass, arch, msg=msg)
 
+    @OETestID(1593)
     @skipIfNotInDataVar('MULTILIBS', 'multilib:lib32',
                         "This isn't a multilib:lib32 image")
-    @OETestID(201)
     @OETestDepends(['ssh.SSHTest.test_ssh'])
     def test_check_multilib_libc(self):
         """

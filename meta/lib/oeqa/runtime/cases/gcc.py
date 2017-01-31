@@ -11,15 +11,12 @@ class GccCompileTest(OERuntimeTestCase):
     def setUpClass(cls):
         dst = '/tmp/'
         src = os.path.join(cls.tc.files_dir, 'test.c')
-        #dst = '/tmp/test.c'
         cls.tc.target.copyTo(src, dst)
 
         src = os.path.join(cls.tc.runtime_files_dir, 'testmakefile')
-        #dst = '/tmp/testmakefile'
         cls.tc.target.copyTo(src, dst)
 
         src = os.path.join(cls.tc.files_dir, 'test.cpp')
-        #dst = '/tmp/test.cpp'
         cls.tc.target.copyTo(src, dst)
 
     @classmethod
