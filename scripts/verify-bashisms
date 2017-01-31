@@ -71,6 +71,20 @@ if __name__=='__main__':
         print("Cannot find checkbashisms.pl on $PATH, get it from https://anonscm.debian.org/cgit/collab-maint/devscripts.git/plain/scripts/checkbashisms.pl")
         sys.exit(1)
 
+    # The order of defining the worker function,
+    # initializing the pool and connecting to the
+    # bitbake server is crucial, don't change it.
+    def func(item):
+        fn, scripts = item
+        result = []
+        for key, script in scripts:
+            r = process(fn, key, script)
+            if r: result.extend(r)
+        return fn, result
+
+    import multiprocessing
+    pool = multiprocessing.Pool()
+
     tinfoil = get_tinfoil()
 
     # This is only the default configuration and should iterate over
@@ -83,32 +97,24 @@ if __name__=='__main__':
     else:
         initial_pns = sorted(pkg_pn)
 
-    pns = []
-    print("Generating file list...")
+    pns = {}
+    print("Generating scripts...")
     for pn in initial_pns:
         for fn in pkg_pn[pn]:
             # There's no point checking multiple BBCLASSEXTENDed variants of the same recipe
             realfn, _, _ = bb.cache.virtualfn2realfn(fn)
             if realfn not in pns:
-                pns.append(realfn)
-
-
-    def func(fn):
-        result = []
-        data = tinfoil.parse_recipe_file(fn)
-        for key in data.keys():
-            if data.getVarFlag(key, "func") and not data.getVarFlag(key, "python"):
-                script = data.getVar(key, False)
-                if not script: continue
-                #print ("%s:%s" % (fn, key))
-                r = process(fn, key, script)
-                if r: result.extend(r)
-        return fn, result
+                data = tinfoil.parse_recipe_file(realfn)
+                scripts = []
+                for key in data.keys():
+                    if data.getVarFlag(key, "func") and not data.getVarFlag(key, "python"):
+                        script = data.getVar(key, False)
+                        if script:
+                            scripts.append((key, script))
+                pns[realfn] = scripts
 
     print("Scanning scripts...\n")
-    import multiprocessing
-    pool = multiprocessing.Pool()
-    for pn,results in pool.imap(func, pns):
+    for pn, results in pool.imap(func, pns.items()):
         if results:
             print(pn)
             for message,source in results:
