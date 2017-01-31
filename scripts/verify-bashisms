@@ -22,7 +22,9 @@ def is_whitelisted(s):
             return True
     return False
 
-def process(recipe, function, script):
+SCRIPT_LINENO_RE = re.compile(r' line (\d+) ')
+
+def process(filename, function, lineno, script):
     import tempfile
 
     if not script.startswith("#!"):
@@ -45,13 +47,25 @@ def process(recipe, function, script):
             print("Unexpected output from checkbashism: %s" % str(output))
             return
 
-        # Turn the output into a list of (message, source) values
+        # Turn the output into a single string like this:
+        # /.../foobar.bb
+        #  possible bashism in updatercd_postrm line 2 (type):
+        #   if ${@use_updatercd(d)} && type update-rc.d >/dev/null 2>/dev/null; then
+        #  ...
+        #   ...
         result = []
         # Check the results against the whitelist
         for message, source in zip(output[0::2], output[1::2]):
             if not is_whitelisted(source):
-                result.append((message, source))
-        return result
+                if lineno is not None:
+                    message = SCRIPT_LINENO_RE.sub(lambda m: ' line %d ' % (int(m.group(1)) + int(lineno) - 1),
+                                                   message)
+                result.extend([' ' + message, '  ' + source])
+        if result:
+            result.insert(0, filename)
+            return '\n'.join(result)
+        else:
+            return None
 
 def get_tinfoil():
     scripts_path = os.path.dirname(os.path.realpath(__file__))
@@ -75,12 +89,8 @@ if __name__=='__main__':
     # initializing the pool and connecting to the
     # bitbake server is crucial, don't change it.
     def func(item):
-        fn, scripts = item
-        result = []
-        for key, script in scripts:
-            r = process(fn, key, script)
-            if r: result.extend(r)
-        return fn, result
+        (filename, key, lineno), script = item
+        return process(filename, key, lineno, script)
 
     import multiprocessing
     pool = multiprocessing.Pool()
@@ -97,27 +107,33 @@ if __name__=='__main__':
     else:
         initial_pns = sorted(pkg_pn)
 
-    pns = {}
+    pns = set()
+    scripts = {}
     print("Generating scripts...")
     for pn in initial_pns:
         for fn in pkg_pn[pn]:
             # There's no point checking multiple BBCLASSEXTENDed variants of the same recipe
+            # (at least in general - there is some risk that the variants contain different scripts)
             realfn, _, _ = bb.cache.virtualfn2realfn(fn)
             if realfn not in pns:
+                pns.add(realfn)
                 data = tinfoil.parse_recipe_file(realfn)
-                scripts = []
                 for key in data.keys():
                     if data.getVarFlag(key, "func") and not data.getVarFlag(key, "python"):
                         script = data.getVar(key, False)
                         if script:
-                            scripts.append((key, script))
-                pns[realfn] = scripts
+                            filename = data.getVarFlag(key, "filename")
+                            lineno = data.getVarFlag(key, "lineno")
+                            # There's no point in checking a function multiple
+                            # times just because different recipes include it.
+                            # We identify unique scripts by file, name, and (just in case)
+                            # line number.
+                            attributes = (filename or realfn, key, lineno)
+                            scripts.setdefault(attributes, script)
+
 
     print("Scanning scripts...\n")
-    for pn, results in pool.imap(func, pns.items()):
-        if results:
-            print(pn)
-            for message,source in results:
-                print(" %s\n  %s" % (message, source))
-            print()
+    for result in pool.imap(func, scripts.items()):
+        if result:
+            print(result)
     tinfoil.shutdown()
