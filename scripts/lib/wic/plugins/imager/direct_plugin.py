@@ -58,49 +58,32 @@ class DirectPlugin(ImagerPlugin):
         """
         Create direct image, called from creator as 'direct' cmd
         """
-        if len(args) != 8:
-            raise errors.Usage("Extra arguments given")
-
-        native_sysroot = args[0]
-        kernel_dir = args[1]
-        bootimg_dir = args[2]
-        rootfs_dir = args[3]
-
-        ksconf = args[4]
-
-        image_output_dir = args[5]
-        oe_builddir = args[6]
-        compressor = args[7]
+        native_sysroot, kernel_dir, bootimg_dir, rootfs_dir, ksconf, \
+            outdir, oe_builddir, compressor = args
 
         try:
             ksobj = KickStart(ksconf)
         except KickStartError as err:
             msger.error(str(err))
 
-        image_name = "%s-%s" % (splitext(basename(ksconf))[0],
+        name = "%s-%s" % (splitext(basename(ksconf))[0],
                           strftime("%Y%m%d%H%M"))
 
         # parse possible 'rootfs=name' items
         krootfs_dir = dict(rdir.split('=') for rdir in rootfs_dir.split(' '))
 
-        creator = DirectImageCreator(image_name, ksobj, oe_builddir,
-                                     image_output_dir, krootfs_dir,
-                                     bootimg_dir, kernel_dir, native_sysroot,
-                                     compressor, opts.bmap)
+        creator = DirectImageCreator(name, ksobj, oe_builddir, outdir,
+                                     krootfs_dir, bootimg_dir, kernel_dir,
+                                     native_sysroot, compressor, opts.bmap)
         try:
             creator.create()
             creator.assemble()
             creator.finalize()
-            creator.print_outimage_info()
-
+            creator.print_info()
         except errors.CreatorError:
             raise
         finally:
             creator.cleanup()
-
-disk_methods = {
-    "do_install_disk":None,
-}
 
 class DiskImage():
     """
@@ -134,22 +117,22 @@ class DirectImageCreator:
     media and used on actual hardware.
     """
 
-    def __init__(self, image_name, ksobj, oe_builddir, image_output_dir,
-                 rootfs_dir, bootimg_dir, kernel_dir, native_sysroot,
-                 compressor, bmap=False):
+    def __init__(self, name, ksobj, oe_builddir, outdir,
+                 rootfs_dir, bootimg_dir, kernel_dir,
+                 native_sysroot, compressor, bmap=False):
         """
         Initialize a DirectImageCreator instance.
 
         This method takes the same arguments as ImageCreator.__init__()
         """
-        self.name = image_name
-        self.outdir = image_output_dir
+        self.name = name
+        self.outdir = outdir
         self.workdir = tempfile.mktemp(prefix='wic')
         self.ks = ksobj
 
-        self.__image = None
-        self.__disks = {}
-        self.__disk_format = "direct"
+        self._image = None
+        self._disks = {}
+        self._disk_format = "direct"
         self._disk_names = []
         self.ptable_format = self.ks.bootloader.ptable
 
@@ -372,14 +355,13 @@ class DirectImageCreator:
         """
         source_plugin = self.get_default_source_plugin()
         if source_plugin:
-            self._source_methods = pluginmgr.get_source_plugin_methods(source_plugin, disk_methods)
+            name = "do_install_disk"
+            methods = pluginmgr.get_source_plugin_methods(source_plugin,
+                                                          {name: None})
             for disk_name, disk in self._image.disks.items():
-                self._source_methods["do_install_disk"](disk, disk_name, self,
-                                                        self.workdir,
-                                                        self.oe_builddir,
-                                                        self.bootimg_dir,
-                                                        self.kernel_dir,
-                                                        self.native_sysroot)
+                methods["do_install_disk"](disk, disk_name, self, self.workdir,
+                                           self.oe_builddir, self.bootimg_dir,
+                                           self.kernel_dir, self.native_sysroot)
 
         for disk_name, disk in self._image.disks.items():
             full_path = self._full_path(self.workdir, disk_name, "direct")
@@ -393,7 +375,7 @@ class DirectImageCreator:
                 msger.debug("Compressing disk %s with %s" % (disk_name, self.compressor))
                 exec_cmd("%s %s" % (self.compressor, full_path))
 
-    def print_outimage_info(self):
+    def print_info(self):
         """
         Print the image(s) and artifacts used, for the user.
         """
