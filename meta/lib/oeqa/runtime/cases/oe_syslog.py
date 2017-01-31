@@ -18,7 +18,7 @@ class SyslogTest(OERuntimeTestCase):
 class SyslogTestConfig(OERuntimeTestCase):
 
     @OETestID(1149)
-    @OETestDepends(['syslog.SyslogTest.test_syslog_running'])
+    @OETestDepends(['oe_syslog.SyslogTest.test_syslog_running'])
     def test_syslog_logger(self):
         status, output = self.target.run('logger foobar')
         msg = "Can't log into syslog. Output: %s " % output
@@ -35,7 +35,7 @@ class SyslogTestConfig(OERuntimeTestCase):
         self.assertEqual(status, 0, msg=msg)
 
     @OETestID(1150)
-    @OETestDepends(['syslog.SyslogTest.test_syslog_running'])
+    @OETestDepends(['oe_syslog.SyslogTest.test_syslog_running'])
     def test_syslog_restart(self):
         if "systemd" != self.tc.td.get("VIRTUAL-RUNTIME_init_manager", ""):
             (_, _) = self.target.run('/etc/init.d/syslog restart')
@@ -44,7 +44,7 @@ class SyslogTestConfig(OERuntimeTestCase):
 
 
     @OETestID(202)
-    @OETestDepends(['syslog.SyslogTestConfig.test_syslog_logger'])
+    @OETestDepends(['oe_syslog.SyslogTestConfig.test_syslog_logger'])
     @OEHasPackage(["!sysklogd", "busybox"])
     @skipIfDataVar('VIRTUAL-RUNTIME_init_manager', 'systemd',
                    'Not appropiate for systemd image')
