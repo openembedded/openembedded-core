@@ -84,4 +84,3 @@ class RawCopyPlugin(SourcePlugin):
             part.size = filesize
 
         part.source_file = dst
-

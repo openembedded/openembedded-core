@@ -198,7 +198,5 @@ class BootimgPcbiosPlugin(SourcePlugin):
         out = exec_cmd(du_cmd)
         bootimg_size = out.split()[0]
 
-        part.size = int(out.split()[0])
+        part.size = int(bootimg_size)
         part.source_file = bootimg
-
-

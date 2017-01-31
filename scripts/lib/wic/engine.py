@@ -190,7 +190,7 @@ def wic_create(wks_file, rootfs_dir, bootimg_dir, kernel_dir,
     crobj = creator.Creator()
 
     cmdline = ["direct", native_sysroot, kernel_dir, bootimg_dir, rootfs_dir,
-                wks_file, image_output_dir, oe_builddir, compressor or ""]
+               wks_file, image_output_dir, oe_builddir, compressor or ""]
     if bmap:
         cmdline.append('--bmap')
 

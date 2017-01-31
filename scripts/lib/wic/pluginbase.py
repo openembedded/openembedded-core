@@ -17,7 +17,6 @@
 
 __all__ = ['ImagerPlugin', 'SourcePlugin', 'get_plugins']
 
-import sys
 from collections import defaultdict
 
 from wic import msger

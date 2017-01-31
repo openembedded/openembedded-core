@@ -42,7 +42,7 @@ class BootimgEFIPlugin(SourcePlugin):
     name = 'bootimg-efi'
 
     @classmethod
-    def do_configure_grubefi(cls, hdddir, creator, cr_workdir, source_params):
+    def do_configure_grubefi(cls, creator, cr_workdir):
         """
         Create loader-specific (grub-efi) config
         """
@@ -54,10 +54,10 @@ class BootimgEFIPlugin(SourcePlugin):
                 # Use a custom configuration for grub
                 grubefi_conf = custom_cfg
                 msger.debug("Using custom configuration file "
-                        "%s for grub.cfg" % configfile)
+                            "%s for grub.cfg" % configfile)
             else:
                 msger.error("configfile is specified but failed to "
-                        "get it from %s." % configfile)
+                            "get it from %s." % configfile)
 
         if not custom_cfg:
             # Create grub configuration using parameters from wks file
@@ -125,10 +125,10 @@ class BootimgEFIPlugin(SourcePlugin):
                 # Use a custom configuration for systemd-boot
                 boot_conf = custom_cfg
                 msger.debug("Using custom configuration file "
-                        "%s for systemd-boots's boot.conf" % configfile)
+                            "%s for systemd-boots's boot.conf" % configfile)
             else:
                 msger.error("configfile is specified but failed to "
-                        "get it from %s." % configfile)
+                            "get it from %s." % configfile)
 
         if not custom_cfg:
             # Create systemd-boot configuration using parameters from wks file
@@ -164,7 +164,7 @@ class BootimgEFIPlugin(SourcePlugin):
 
         try:
             if source_params['loader'] == 'grub-efi':
-                cls.do_configure_grubefi(hdddir, creator, cr_workdir, source_params)
+                cls.do_configure_grubefi(creator, cr_workdir)
             elif source_params['loader'] == 'systemd-boot':
                 cls.do_configure_systemdboot(hdddir, creator, cr_workdir, source_params)
             else:
@@ -185,7 +185,7 @@ class BootimgEFIPlugin(SourcePlugin):
         if not bootimg_dir:
             bootimg_dir = get_bitbake_var("DEPLOY_DIR_IMAGE")
             if not bootimg_dir:
-                 msger.error("Couldn't find DEPLOY_DIR_IMAGE, exiting\n")
+                msger.error("Couldn't find DEPLOY_DIR_IMAGE, exiting\n")
             # just so the result notes display it
             creator.set_bootimg_dir(bootimg_dir)
 

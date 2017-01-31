@@ -182,7 +182,7 @@ class Partition():
 
         # further processing required Partition.size to be an integer, make
         # sure that it is one
-        if type(self.size) is not int:
+        if not isinstance(self.size, int):
             msger.error("Partition %s internal size is not an integer. " \
                           "This a bug in source plugin %s and needs to be fixed." \
                           % (self.mountpoint, self.source))
@@ -242,7 +242,10 @@ class Partition():
             # IMAGE_OVERHEAD_FACTOR and IMAGE_ROOTFS_EXTRA_SPACE
             rsize_bb = get_bitbake_var('ROOTFS_SIZE')
             if rsize_bb:
-                msger.warning('overhead-factor was specified, but size was not, so bitbake variables will be used for the size. In this case both IMAGE_OVERHEAD_FACTOR and --overhead-factor will be applied')
+                msger.warning('overhead-factor was specified, but size was not,'
+                              ' so bitbake variables will be used for the size.'
+                              ' In this case both IMAGE_OVERHEAD_FACTOR and '
+                              '--overhead-factor will be applied')
                 self.size = int(round(float(rsize_bb)))
 
         for prefix in ("ext", "btrfs", "vfat", "squashfs"):
@@ -402,7 +405,8 @@ class Partition():
                       "Proceeding as requested." % self.mountpoint)
 
         path = "%s/fs_%s.%s" % (cr_workdir, self.label, self.fstype)
-        os.path.isfile(path) and os.remove(path)
+        if os.path.isfile(path):
+            os.remove(path)
 
         # it is not possible to create a squashfs without source data,
         # thus prepare an empty temp dir that is used as source
@@ -436,4 +440,3 @@ class Partition():
             label_str = "-L %s" % self.label
         mkswap_cmd = "mkswap %s -U %s %s" % (label_str, str(uuid.uuid1()), path)
         exec_native_cmd(mkswap_cmd, native_sysroot)
-

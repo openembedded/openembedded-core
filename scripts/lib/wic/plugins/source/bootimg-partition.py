@@ -26,10 +26,11 @@
 import os
 import re
 
+from glob import glob
+
 from wic import msger
 from wic.pluginbase import SourcePlugin
 from wic.utils.misc import exec_cmd, get_bitbake_var
-from glob import glob
 
 class BootimgPartitionPlugin(SourcePlugin):
     """
@@ -137,4 +138,3 @@ class BootimgPartitionPlugin(SourcePlugin):
         msger.debug('Prepare boot partition using rootfs in %s' % (hdddir))
         part.prepare_rootfs(cr_workdir, oe_builddir, hdddir,
                             native_sysroot)
-

@@ -29,7 +29,6 @@ import uuid
 import tempfile
 
 from time import strftime
-from os.path import basename, splitext
 
 from wic import msger
 from wic.ksparser import KickStart, KickStartError
@@ -65,7 +64,7 @@ class DirectPlugin(ImagerPlugin):
         except KickStartError as err:
             msger.error(str(err))
 
-        name = "%s-%s" % (splitext(basename(ksconf))[0],
+        name = "%s-%s" % (os.path.splitext(os.path.basename(ksconf))[0],
                           strftime("%Y%m%d%H%M"))
 
         # parse possible 'rootfs=name' items

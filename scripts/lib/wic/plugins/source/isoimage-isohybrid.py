@@ -100,10 +100,10 @@ class IsoImagePlugin(SourcePlugin):
             grubefi_conf = get_custom_config(configfile)
             if grubefi_conf:
                 msger.debug("Using custom configuration file "
-                        "%s for grub.cfg" % configfile)
+                            "%s for grub.cfg" % configfile)
             else:
                 msger.error("configfile is specified but failed to "
-                        "get it from %s." % configfile)
+                            "get it from %s." % configfile)
         else:
             splash = os.path.join(cr_workdir, "EFI/boot/splash.jpg")
             if os.path.exists(splash):
@@ -285,6 +285,7 @@ class IsoImagePlugin(SourcePlugin):
             if not deploy_dir:
                 msger.error("Couldn't find DEPLOY_DIR_IMAGE, exiting\n")
             cp_cmd = "cp %s/%s %s" % (deploy_dir, initrd, cr_workdir)
+            exec_cmd(cp_cmd)
         else:
             # Prepare initial ramdisk
             initrd = "%s/initrd" % deploy_dir
@@ -293,8 +294,7 @@ class IsoImagePlugin(SourcePlugin):
             if not os.path.isfile(initrd):
                 initrd = cls._build_initramfs_path(rootfs_dir, cr_workdir)
 
-        install_cmd = "install -m 0644 %s %s/initrd" \
-            % (initrd, isodir)
+        install_cmd = "install -m 0644 %s %s/initrd" % (initrd, isodir)
         exec_cmd(install_cmd)
 
         # Remove the temporary file created by _build_initramfs_path function
@@ -303,7 +303,7 @@ class IsoImagePlugin(SourcePlugin):
 
         # Install bzImage
         install_cmd = "install -m 0644 %s/bzImage %s/bzImage" % \
-            (kernel_dir, isodir)
+                      (kernel_dir, isodir)
         exec_cmd(install_cmd)
 
         #Create bootloader for efi boot
@@ -362,7 +362,6 @@ class IsoImagePlugin(SourcePlugin):
                     exec_native_cmd(grub_cmd, native_sysroot)
 
             else:
-                # TODO: insert gummiboot stuff
                 msger.error("unrecognized bootimg-efi loader: %s" \
                             % source_params['loader'])
         except KeyError:

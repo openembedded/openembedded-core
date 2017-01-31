@@ -77,18 +77,15 @@ def _exec_cmd(cmd_and_args, as_shell=False, catch=3):
     msger.debug("_exec_cmd: output for %s (rc = %d): %s" % \
                 (cmd_and_args, ret, out))
 
-    return (ret, out)
+    return ret, out
 
 
 def exec_cmd(cmd_and_args, as_shell=False, catch=3):
     """
-    Execute command, catching stderr, stdout
-
-    Exits if rc non-zero
+    Execute command, return output
     """
-    ret, out = _exec_cmd(cmd_and_args, as_shell, catch)
+    return _exec_cmd(cmd_and_args, as_shell, catch)[1]
 
-    return out
 
 def exec_native_cmd(cmd_and_args, native_sysroot, catch=3, pseudo=""):
     """

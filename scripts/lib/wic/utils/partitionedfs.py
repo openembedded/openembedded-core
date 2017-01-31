@@ -21,7 +21,7 @@
 import os
 from wic import msger
 from wic.utils.errors import ImageError
-from wic.utils.misc import exec_cmd, exec_native_cmd
+from wic.utils.misc import exec_native_cmd
 from wic.filemap import sparse_copy
 
 # Overhead of the MBR partitioning scheme (just one sector)
@@ -350,10 +350,9 @@ class Image():
         if self.disks:
             for dev in self.disks:
                 disk = self.disks[dev]
-                try:
+                if hasattr(disk['disk'], 'cleanup'):
                     disk['disk'].cleanup()
-                except:
-                    pass
+
         # remove partition images
         for image in self.partimages:
             if os.path.isfile(image):
