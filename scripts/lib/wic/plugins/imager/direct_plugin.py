@@ -93,9 +93,6 @@ class DiskImage():
         self.device = device
         self.created = False
 
-    def exists(self):
-        return os.path.exists(self.device)
-
     def create(self):
         if self.created:
             return
@@ -229,26 +226,9 @@ class DirectImageCreator:
         # partitions list from kickstart file
         return self.ks.partitions
 
-    def _full_name(self, name, extention):
-        """ Construct full file name for a file we generate. """
-        return "%s-%s.%s" % (self.name, name, extention)
-
     def _full_path(self, path, name, extention):
         """ Construct full file path to a file we generate. """
-        return os.path.join(path, self._full_name(name, extention))
-
-    def get_default_source_plugin(self):
-        """
-        The default source plugin i.e. the plugin that's consulted for
-        overall image generation tasks outside of any particular
-        partition.  For convenience, we just hang it off the
-        bootloader handler since it's the one non-partition object in
-        any setup.  By default the default plugin is set to the same
-        plugin as the /boot partition; since we hang it off the
-        bootloader object, the default can be explicitly set using the
-        --source bootloader param.
-        """
-        return self.ks.bootloader.source
+        return os.path.join(path, "%s-%s.%s" % (self.name, name, extention))
 
     #
     # Actual implemention
@@ -346,7 +326,7 @@ class DirectImageCreator:
         For example, prepare the image to be bootable by e.g.
         creating and installing a bootloader configuration.
         """
-        source_plugin = self.get_default_source_plugin()
+        source_plugin = self.ks.bootloader.source
         if source_plugin:
             name = "do_install_disk"
             methods = pluginmgr.get_source_plugin_methods(source_plugin,
