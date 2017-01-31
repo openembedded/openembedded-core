@@ -222,26 +222,3 @@ def get_bitbake_var(var, image=None, cache=True):
     get_var method of BB_VARS singleton.
     """
     return BB_VARS.get_var(var, image, cache)
-
-def parse_sourceparams(sourceparams):
-    """
-    Split sourceparams string of the form key1=val1[,key2=val2,...]
-    into a dict.  Also accepts valueless keys i.e. without =.
-
-    Returns dict of param key/val pairs (note that val may be None).
-    """
-    params_dict = {}
-
-    params = sourceparams.split(',')
-    if params:
-        for par in params:
-            if not par:
-                continue
-            if not '=' in par:
-                key = par
-                val = None
-            else:
-                key, val = par.split('=')
-            params_dict[key] = val
-
-    return params_dict

@@ -27,15 +27,9 @@
 import os
 import tempfile
 
-from wic.utils.oe.misc import msger, parse_sourceparams
+from wic.utils.oe.misc import msger
 from wic.utils.oe.misc import exec_cmd, exec_native_cmd, get_bitbake_var
 from wic.plugin import pluginmgr
-
-partition_methods = {
-    "do_stage_partition":None,
-    "do_prepare_partition":None,
-    "do_configure_partition":None,
-}
 
 class Partition():
 
@@ -129,9 +123,6 @@ class Partition():
         Prepare content for individual partitions, depending on
         partition command parameters.
         """
-        if self.sourceparams:
-            self.sourceparams_dict = parse_sourceparams(self.sourceparams)
-
         if not self.source:
             if not self.size and not self.fixed_size:
                 msger.error("The %s partition has a size of zero. Please "
@@ -164,24 +155,30 @@ class Partition():
                         "details on adding a new source plugin." % \
                         (self.source, self.mountpoint))
 
-        self._source_methods = pluginmgr.get_source_plugin_methods(\
-                                   self.source, partition_methods)
-        self._source_methods["do_configure_partition"](self, self.sourceparams_dict,
-                                                       creator, cr_workdir,
-                                                       oe_builddir,
-                                                       bootimg_dir,
-                                                       kernel_dir,
-                                                       native_sysroot)
-        self._source_methods["do_stage_partition"](self, self.sourceparams_dict,
-                                                   creator, cr_workdir,
-                                                   oe_builddir,
-                                                   bootimg_dir, kernel_dir,
-                                                   native_sysroot)
-        self._source_methods["do_prepare_partition"](self, self.sourceparams_dict,
-                                                     creator, cr_workdir,
-                                                     oe_builddir,
-                                                     bootimg_dir, kernel_dir, rootfs_dir,
-                                                     native_sysroot)
+        srcparams_dict = {}
+        if self.sourceparams:
+            # Split sourceparams string of the form key1=val1[,key2=val2,...]
+            # into a dict.  Also accepts valueless keys i.e. without =
+            splitted = self.sourceparams.split(',')
+            srcparams_dict = dict(par.split('=') for par in splitted if par)
+
+        partition_methods = {
+            "do_stage_partition": None,
+            "do_prepare_partition": None,
+            "do_configure_partition": None
+        }
+
+        methods = pluginmgr.get_source_plugin_methods(self.source,
+                                                      partition_methods)
+        methods["do_configure_partition"](self, srcparams_dict, creator,
+                                          cr_workdir, oe_builddir, bootimg_dir,
+                                          kernel_dir, native_sysroot)
+        methods["do_stage_partition"](self, srcparams_dict, creator,
+                                      cr_workdir, oe_builddir, bootimg_dir,
+                                      kernel_dir, native_sysroot)
+        methods["do_prepare_partition"](self, srcparams_dict, creator,
+                                        cr_workdir, oe_builddir, bootimg_dir,
+                                        kernel_dir, rootfs_dir, native_sysroot)
 
         # further processing required Partition.size to be an integer, make
         # sure that it is one
