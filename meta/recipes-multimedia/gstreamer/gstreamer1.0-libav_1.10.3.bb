@@ -14,7 +14,7 @@ SRC_URI = " \
     file://workaround-to-build-gst-libav-for-i586-with-gcc.patch \
     file://mips64_cpu_detection.patch \
 "
-SRC_URI[md5sum] = "420d0a32f47ef02cc615f8cf6da1e94d"
-SRC_URI[sha256sum] = "a3dd7036211f061e1eda04f985b7a9dd1a91b754f767ff2587eb6ec28f44e73c"
+SRC_URI[md5sum] = "ce1ea598f07c8bf728a33c7da39ec308"
+SRC_URI[sha256sum] = "9a6bc165b1862b18b98d9f1755c43806e4839a80f69ec7ea9a2dab61b65752a9"
 
 S = "${WORKDIR}/gst-libav-${PV}"

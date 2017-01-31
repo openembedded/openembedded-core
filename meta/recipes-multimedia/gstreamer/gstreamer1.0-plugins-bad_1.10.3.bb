@@ -19,8 +19,8 @@ SRC_URI = " \
     file://0001-smoothstreaming-use-the-duration-from-the-list-of-fr.patch \
     file://0001-mssdemux-improved-live-playback-support.patch \
 "
-SRC_URI[md5sum] = "823f4c33fe27c61332c0122273217988"
-SRC_URI[sha256sum] = "0795ca9303a99cc7e44dda0e6e18524de02b39892e4b68eaba488f7b9db53a3a"
+SRC_URI[md5sum] = "e59798c86a670041de2e61856ea43d2a"
+SRC_URI[sha256sum] = "24099351fb6984c9e7560de06e072ff2e33d0b2db38b8fcc7afefb536e5094e7"
 
 S = "${WORKDIR}/gst-plugins-bad-${PV}"
 
