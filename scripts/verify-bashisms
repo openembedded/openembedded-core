@@ -41,7 +41,7 @@ def process(recipe, function, script):
 
         # Replace the temporary filename with the function and split it
         output = e.output.replace(fn.name, function).splitlines()
-        if len(results) % 2 != 0:
+        if len(output) % 2 != 0:
             print("Unexpected output from checkbashism: %s" % str(output))
             return
 
