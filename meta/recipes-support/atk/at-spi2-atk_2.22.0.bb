@@ -8,7 +8,7 @@ SRC_URI = "${GNOME_MIRROR}/${BPN}/${MAJ_VER}/${BPN}-${PV}.tar.xz"
 SRC_URI[md5sum] = "aa62aed21b8e03dc44ab81ae49d893ca"
 SRC_URI[sha256sum] = "e8bdedbeb873eb229eb08c88e11d07713ec25ae175251648ad1a9da6c21113c1"
 
-DEPENDS = "dbus glib-2.0 atk at-spi2-core"
+DEPENDS = "dbus glib-2.0 glib-2.0-native atk at-spi2-core"
 
 inherit autotools pkgconfig distro_features_check upstream-version-is-even
 
