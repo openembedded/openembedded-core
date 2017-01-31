@@ -8,7 +8,7 @@ SECTION = "console/utils"
 LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263"
 
-DEPENDS = "glib-2.0"
+DEPENDS = "glib-2.0 pkgconfig-native"
 DEPENDS_class-native = ""
 DEPENDS_class-nativesdk = ""
 
