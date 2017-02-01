@@ -148,7 +148,7 @@ do_kernel_metadata() {
 	# run1: pull all the configuration fragments, no matter where they come from
 	elements="`echo -n ${bsp_definition} ${sccs} ${patches} ${KERNEL_FEATURES}`"
 	if [ -n "${elements}" ]; then
-		scc --force -o ${S}/${meta_dir}:cfg,meta ${includes} ${bsp_definition} ${sccs} ${patches} ${KERNEL_FEATURES}
+		scc --force -o ${S}/${meta_dir}:cfg,merge,meta ${includes} ${bsp_definition} ${sccs} ${patches} ${KERNEL_FEATURES}
 		if [ $? -ne 0 ]; then
 			bbfatal_log "Could not generate configuration queue for ${KMACHINE}."
 		fi
@@ -165,6 +165,7 @@ do_kernel_metadata() {
 }
 
 do_patch() {
+	set +e
 	cd ${S}
 
 	check_git_config
@@ -176,6 +177,19 @@ do_patch() {
 			bberror "Could not apply patches for ${KMACHINE}."
 			bbfatal_log "Patch failures can be resolved in the linux source directory ${S})"
 		fi
+	fi
+
+	if [ -f "${meta_dir}/merge.queue" ]; then
+		# we need to merge all these branches
+		for b in $(cat ${meta_dir}/merge.queue); do
+			git show-ref --verify --quiet refs/heads/${b}
+			if [ $? -eq 0 ]; then
+				bbnote "Merging branch ${b}"
+				git merge -q --no-ff -m "Merge branch ${b}" ${b}
+			else
+				bbfatal "branch ${b} does not exist, cannot merge"
+			fi
+		done
 	fi
 }
 
