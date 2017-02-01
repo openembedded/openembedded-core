@@ -151,6 +151,9 @@ def build_uboot(d):
 IMAGE_TYPE_uboot = "${@build_uboot(d)}"
 inherit ${IMAGE_TYPE_uboot}
 
+IMAGE_TYPE_wic = "image_types_wic"
+inherit ${IMAGE_TYPE_wic}
+
 python () {
     deps = " " + imagetypes_getdepends(d)
     d.appendVarFlag('do_rootfs', 'depends', deps)
@@ -186,8 +189,6 @@ python () {
 
 IMAGE_CLASSES += "image_types"
 inherit ${IMAGE_CLASSES}
-
-inherit image-wic
 
 IMAGE_POSTPROCESS_COMMAND ?= ""
 
