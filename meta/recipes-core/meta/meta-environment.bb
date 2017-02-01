@@ -19,12 +19,10 @@ SDKTARGETSYSROOT = "${SDKPATH}/sysroots/${REAL_MULTIMACH_TARGET_SYS}"
 
 inherit cross-canadian
 
-# Need to ensure we have the virtual mappings and site files for all multtilib 
-# variants
-DEPENDS += "${@all_multilib_tune_values(d, 'TOOLCHAIN_NEED_CONFIGSITE_CACHE')}"
-
 do_generate_content[cleandirs] = "${SDK_OUTPUT}"
 do_generate_content[dirs] = "${SDK_OUTPUT}/${SDKPATH}"
+# Need to ensure we have the virtual mappings and site files for all multtilib variants
+do_generate_content[depends] = "${@oe.utils.build_depends_string(all_multilib_tune_values(d, 'TOOLCHAIN_NEED_CONFIGSITE_CACHE'), 'do_populate_sysroot')}"
 python do_generate_content() {
     # Handle multilibs in the SDK environment, siteconfig, etc files...
     localdata = bb.data.createCopy(d)
@@ -74,6 +72,6 @@ FILES_${PN}= " \
 deltask do_fetch
 deltask do_unpack
 deltask do_patch
-do_configure[noexec] = "1"
-do_compile[noexec] = "1"
-do_populate_sysroot[noexec] = "1"
+deltask do_configure
+deltask do_compile
+deltask do_populate_sysroot
