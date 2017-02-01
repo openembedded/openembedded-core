@@ -441,6 +441,7 @@ python extend_recipe_sysroot() {
     bb.note("Direct dependencies are %s" % str(configuredeps))
     #bb.note(" or %s" % str(start))
 
+    msgbuf = []
     # Call into setscene_depvalid for each sub-dependency and only copy sysroot files
     # for ones that would be restored from sstate.
     done = list(start)
@@ -455,18 +456,20 @@ python extend_recipe_sysroot() {
                 taskdeps = {}
                 taskdeps[dep] = setscenedeps[dep][:2]
                 taskdeps[datadep] = setscenedeps[datadep][:2]
-                retval = setscene_depvalid(datadep, taskdeps, [], d)
+                retval = setscene_depvalid(datadep, taskdeps, [], d, msgbuf)
                 if retval:
-                    bb.note("Skipping setscene dependency %s for installation into the sysroot" % datadep)
+                    msgbuf.append("Skipping setscene dependency %s for installation into the sysroot")
                     continue
                 done.append(datadep)
                 new.append(datadep)
                 if datadep not in configuredeps and setscenedeps[datadep][1] == "do_populate_sysroot":
                     configuredeps.append(datadep)
-                    bb.note("Adding dependency on %s" % setscenedeps[datadep][0])
+                    msgbuf.append("Adding dependency on %s" % setscenedeps[datadep][0])
                 else:
-                    bb.note("Following dependency on %s" % setscenedeps[datadep][0])
+                    msgbuf.append("Following dependency on %s" % setscenedeps[datadep][0])
         next = new
+
+    bb.note("\n".join(msgbuf))
 
     stagingdir = d.getVar("STAGING_DIR")
     recipesysroot = d.getVar("RECIPE_SYSROOT")

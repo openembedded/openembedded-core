@@ -909,13 +909,19 @@ def sstate_checkhashes(sq_fn, sq_task, sq_hash, sq_hashfn, d, siginfo=False):
 
 BB_SETSCENE_DEPVALID = "setscene_depvalid"
 
-def setscene_depvalid(task, taskdependees, notneeded, d):
+def setscene_depvalid(task, taskdependees, notneeded, d, log=None):
     # taskdependees is a dict of tasks which depend on task, each being a 3 item list of [PN, TASKNAME, FILENAME]
     # task is included in taskdependees too
     # Return - False - We need this dependency
     #        - True - We can skip this dependency
 
-    bb.debug(2, "Considering setscene task: %s" % (str(taskdependees[task])))
+    def logit(msg, log):
+        if log is not None:
+            log.append(msg)
+        else:
+            bb.debug(2, msg)
+
+    logit("Considering setscene task: %s" % (str(taskdependees[task])), log)
 
     def isNativeCross(x):
         return x.endswith("-native") or "-cross-" in x or "-crosssdk" in x or x.endswith("-cross")
@@ -933,7 +939,7 @@ def setscene_depvalid(task, taskdependees, notneeded, d):
         return True
 
     for dep in taskdependees:
-        bb.debug(2, "  considering dependency: %s" % (str(taskdependees[dep])))
+        logit("  considering dependency: %s" % (str(taskdependees[dep])), log)
         if task == dep:
             continue
         if dep in notneeded:
@@ -987,7 +993,7 @@ def setscene_depvalid(task, taskdependees, notneeded, d):
 
 
         # Safe fallthrough default
-        bb.debug(2, " Default setscene dependency fall through due to dependency: %s" % (str(taskdependees[dep])))
+        logit(" Default setscene dependency fall through due to dependency: %s" % (str(taskdependees[dep])), log)
         return False
     return True
 
