@@ -244,7 +244,7 @@ python do_populate_sysroot_setscene () {
 }
 addtask do_populate_sysroot_setscene
 
-def staging_copyfile(c, target, fixme, postinsts, stagingdir):
+def staging_copyfile(c, target, fixme, postinsts, stagingdir, seendirs):
     import errno
 
     if c.endswith("/fixmepath"):
@@ -255,7 +255,10 @@ def staging_copyfile(c, target, fixme, postinsts, stagingdir):
     #bb.warn(c)
     dest = c.replace(stagingdir, "")
     dest = target + "/" + "/".join(dest.split("/")[3:])
-    bb.utils.mkdirhier(os.path.dirname(dest))
+    destdir = os.path.dirname(dest)
+    if destdir not in seendirs:
+        bb.utils.mkdirhier(destdir)
+        seendirs.add(destdir)
     if "/usr/bin/postinst-" in c:
         postinsts.append(dest)
     if os.path.islink(c):
@@ -278,10 +281,12 @@ def staging_copyfile(c, target, fixme, postinsts, stagingdir):
                 raise
     return dest
 
-def staging_copydir(c, target, stagingdir):
+def staging_copydir(c, target, stagingdir, seendirs):
     dest = c.replace(stagingdir, "")
     dest = target + "/" + "/".join(dest.split("/")[3:])
-    bb.utils.mkdirhier(dest)
+    if dest not in seendirs:
+        bb.utils.mkdirhier(dest)
+        seendirs.add(dest)
 
 def staging_processfixme(fixme, target, recipesysroot, recipesysrootnative, d):
     import subprocess
@@ -302,6 +307,7 @@ def staging_populate_sysroot_dir(targetsysroot, nativesysroot, native, d):
 
     fixme = []
     postinsts = []
+    seendirs = set()
     stagingdir = d.getVar("STAGING_DIR")
     if native:
         pkgarchs = ['${BUILD_ARCH}', '${BUILD_ARCH}_*']
@@ -332,10 +338,10 @@ def staging_populate_sysroot_dir(targetsysroot, nativesysroot, native, d):
                 for l in f:
                     l = l.strip()
                     if l.endswith("/"):
-                        staging_copydir(l, targetdir, stagingdir)
+                        staging_copydir(l, targetdir, stagingdir, seendirs)
                         continue
                     try:
-                        staging_copyfile(l, targetdir, fixme, postinsts, stagingdir)
+                        staging_copyfile(l, targetdir, fixme, postinsts, stagingdir, seendirs)
                     except FileExistsError:
                         continue
 
@@ -492,6 +498,7 @@ python extend_recipe_sysroot() {
     fixme = {}
     fixme[''] = []
     fixme['native'] = []
+    seendirs = set()
     postinsts = []
     multilibs = {}
     manifests = {}
@@ -570,14 +577,14 @@ python extend_recipe_sysroot() {
                     l = l.strip()
                     if l.endswith("/"):
                         if native:
-                            dest = staging_copydir(l, recipesysrootnative, stagingdir)
+                            dest = staging_copydir(l, recipesysrootnative, stagingdir, seendirs)
                         else:
-                            dest = staging_copydir(l, destsysroot, stagingdir)
+                            dest = staging_copydir(l, destsysroot, stagingdir, seendirs)
                         continue
                     if native:
-                        dest = staging_copyfile(l, recipesysrootnative, fixme['native'], postinsts, stagingdir)
+                        dest = staging_copyfile(l, recipesysrootnative, fixme['native'], postinsts, stagingdir, seendirs)
                     else:
-                        dest = staging_copyfile(l, destsysroot, fixme[''], postinsts, stagingdir)
+                        dest = staging_copyfile(l, destsysroot, fixme[''], postinsts, stagingdir, seendirs)
                     if dest:
                         m.write(dest.replace(workdir + "/", "") + "\n")
 
