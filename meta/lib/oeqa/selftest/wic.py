@@ -151,7 +151,7 @@ class Wic(oeSelfTest):
     @testcase(1346)
     def test_iso_image(self):
         """Test creation of hybrid iso image with legacy and EFI boot"""
-        config = 'IMAGE_FSTYPES += " hddimg "\nMACHINE_FEATURES_append = " efi"\n'
+        config = 'MACHINE_FEATURES_append = " efi"\n'
         self.append_config(config)
         bitbake('core-image-minimal')
         self.remove_config(config)
@@ -184,7 +184,7 @@ class Wic(oeSelfTest):
     @testcase(1560)
     def test_systemd_bootdisk(self):
         """Test creation of systemd-bootdisk image"""
-        config = 'IMAGE_FSTYPES += " hddimg "\nMACHINE_FEATURES_append = " efi"\n'
+        config = 'MACHINE_FEATURES_append = " efi"\n'
         self.append_config(config)
         bitbake('core-image-minimal')
         self.remove_config(config)
@@ -406,7 +406,7 @@ class Wic(oeSelfTest):
     @testcase(1351)
     def test_wic_image_type(self):
         """Test building wic images by bitbake"""
-        config = 'IMAGE_FSTYPES += " hddimg wic"\nWKS_FILE = "wic-image-minimal"\n'\
+        config = 'IMAGE_FSTYPES += "wic"\nWKS_FILE = "wic-image-minimal"\n'\
                  'MACHINE_FEATURES_append = " efi"\n'
         self.append_config(config)
         self.assertEqual(0, bitbake('wic-image-minimal').status)
@@ -425,7 +425,7 @@ class Wic(oeSelfTest):
     @testcase(1422)
     def test_qemu(self):
         """Test wic-image-minimal under qemu"""
-        config = 'IMAGE_FSTYPES += " hddimg wic"\nWKS_FILE = "wic-image-minimal"\n'\
+        config = 'IMAGE_FSTYPES += "wic"\nWKS_FILE = "wic-image-minimal"\n'\
                  'MACHINE_FEATURES_append = " efi"\n'
         self.append_config(config)
         self.assertEqual(0, bitbake('wic-image-minimal').status)
