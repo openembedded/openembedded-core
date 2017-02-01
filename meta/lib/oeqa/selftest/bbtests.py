@@ -229,10 +229,7 @@ INHERIT_remove = \"report-error\"
 
     @testcase(1119)
     def test_non_gplv3(self):
-        data = 'INCOMPATIBLE_LICENSE = "GPLv3"'
-        conf = os.path.join(self.builddir, 'conf/local.conf')
-        ftools.append_file(conf ,data)
-        self.addCleanup(ftools.remove_from_file, conf ,data)
+        self.write_config('INCOMPATIBLE_LICENSE = "GPLv3"')
         result = bitbake('readline', ignore_status=True)
         self.assertEqual(result.status, 0, "Bitbake failed, exit code %s, output %s" % (result.status, result.output))
         lic_dir = get_bb_var('LICENSE_DIRECTORY')
