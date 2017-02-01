@@ -96,7 +96,7 @@ Examples:
 """)
 
 def check_tun():
-    """Check /dev/net/run"""
+    """Check /dev/net/tun"""
     dev_tun = '/dev/net/tun'
     if not os.path.exists(dev_tun):
         raise Exception("TUN control device %s is unavailable; you may need to enable TUN (e.g. sudo modprobe tun)" % dev_tun)
