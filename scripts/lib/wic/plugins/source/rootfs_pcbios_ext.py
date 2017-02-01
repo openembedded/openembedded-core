@@ -19,12 +19,48 @@
 #
 
 import os
+import re
+
 from wic import msger
-from wic.utils import syslinux
 from wic.utils import runner
 from wic.utils.misc import get_bitbake_var, exec_cmd, exec_native_cmd
 from wic.utils.errors import ImageError
 from wic.pluginbase import SourcePlugin
+
+def serial_console_form_kargs(kernel_args):
+    """
+    Create SERIAL... line from kernel parameters
+
+    syslinux needs a line SERIAL port [baudrate [flowcontrol]]
+    in the syslinux.cfg file. The config line is generated based
+    on kernel boot parameters. The the parameters of the first
+    ttyS console are considered for syslinux config.
+    @param kernel_args kernel command line
+    @return line for syslinux config file e.g. "SERIAL 0 115200"
+    """
+    syslinux_conf = ""
+    for param in kernel_args.split():
+        param_match = re.match("console=ttyS([0-9]+),?([0-9]*)([noe]?)([0-9]?)(r?)", param)
+        if param_match:
+            syslinux_conf += "SERIAL " + param_match.group(1)
+            # baudrate
+            if param_match.group(2):
+                syslinux_conf += " " + param_match.group(2)
+            # parity
+            if param_match.group(3) and param_match.group(3) != 'n':
+                msger.warning("syslinux does not support parity for console. {} is ignored."
+                              .format(param_match.group(3)))
+            # number of bits
+            if param_match.group(4) and param_match.group(4) != '8':
+                msger.warning("syslinux supports 8 bit console configuration only. {} is ignored."
+                              .format(param_match.group(4)))
+            # flow control
+            if param_match.group(5) and param_match.group(5) != '':
+                msger.warning("syslinux console flowcontrol configuration. {} is ignored."
+                              .format(param_match.group(5)))
+            break
+
+    return syslinux_conf
 
 
 # pylint: disable=no-init
