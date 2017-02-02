@@ -41,11 +41,6 @@ WKS_FILE_CHECKSUM = "${@'${WKS_FULL_PATH}:%s' % os.path.exists('${WKS_FULL_PATH}
 do_image_wic[file-checksums] += "${WKS_FILE_CHECKSUM}"
 do_image_wic[depends] += "wic-tools:do_build"
 
-python () {
-    if d.getVar('USING_WIC') and 'do_bootimg' in d:
-        bb.build.addtask('do_image_wic', '', 'do_bootimg', d)
-}
-
 python do_write_wks_template () {
     """Write out expanded template contents to WKS_FULL_PATH."""
     import re
