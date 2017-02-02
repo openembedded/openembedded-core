@@ -122,7 +122,7 @@ class DirectImageCreator:
         """
         self.name = name
         self.outdir = outdir
-        self.workdir = tempfile.mktemp(prefix='wic')
+        self.workdir = tempfile.mkdtemp(dir=outdir, prefix='tmp.wic.')
         self.ks = ksobj
 
         self._image = None
