@@ -81,6 +81,7 @@ RDEPENDS_eudev-hwdb += "eudev"
 RRECOMMENDS_${PN} += "udev-cache"
 
 RPROVIDES_${PN} = "hotplug udev"
+RPROVIDES_eudev-hwdb += "udev-hwdb"
 
 python () {
     if bb.utils.contains ('DISTRO_FEATURES', 'systemd', True, False, d):
