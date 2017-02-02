@@ -24,7 +24,8 @@ inherit autotools
 
 PACKAGECONFIG ??= "glib"
 PACKAGECONFIG_class-native = ""
-PACKAGECONFIG_class-native = ""
+PACKAGECONFIG_class-nativesdk = ""
+
 PACKAGECONFIG[glib] = "--without-internal-glib,--with-internal-glib,glib-2.0 pkgconfig-native"
 
 acpaths = "-I ."
