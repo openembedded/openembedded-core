@@ -18,6 +18,10 @@ class GitRepo(object):
     def __init__(self, path, is_topdir=False):
         self.top_dir = self._run_git_cmd_at(['rev-parse', '--show-toplevel'],
                                             path)
+        git_dir = self._run_git_cmd_at(['rev-parse', '--git-dir'], path)
+        git_dir = git_dir if os.path.isabs(git_dir) else os.path.join(path, git_dir)
+        self.git_dir = os.path.realpath(git_dir)
+
         realpath = os.path.realpath(path)
         if is_topdir and realpath != self.top_dir:
             raise GitError("{} is not a Git top directory".format(realpath))
