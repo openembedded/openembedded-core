@@ -203,10 +203,6 @@ def wic_create_subcommand(args, usage_str):
                   "kickstart (.wks) filename)\n" % args[0])
             sys.exit(1)
 
-    image_output_dir = ""
-    if options.outdir:
-        image_output_dir = options.outdir
-
     if not options.image_name:
         rootfs_dir = ''
         if 'ROOTFS_DIR' in options.rootfs_dir:
@@ -254,7 +250,7 @@ def wic_create_subcommand(args, usage_str):
 
     print("Creating image(s)...\n")
     engine.wic_create(wks_file, rootfs_dir, bootimg_dir, kernel_dir,
-                      native_sysroot, scripts_path, image_output_dir,
+                      native_sysroot, scripts_path, options.outdir,
                       options.compressor, options.bmap, options.debug)
 
 
