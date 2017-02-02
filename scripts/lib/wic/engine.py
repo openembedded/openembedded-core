@@ -187,6 +187,9 @@ def wic_create(wks_file, rootfs_dir, bootimg_dir, kernel_dir,
     if debug:
         msger.set_loglevel('debug')
 
+    if not os.path.exists(image_output_dir):
+        os.makedirs(image_output_dir)
+
     crobj = creator.Creator()
 
     cmdline = ["direct", native_sysroot, kernel_dir, bootimg_dir, rootfs_dir,
