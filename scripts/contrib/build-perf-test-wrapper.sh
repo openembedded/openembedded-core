@@ -67,6 +67,17 @@ if [ $# -ne 0 ]; then
     exit 1
 fi
 
+# Open a file descriptor for flock and acquire lock
+LOCK_FILE="/tmp/oe-build-perf-test-wrapper.lock"
+if ! exec 3> "$LOCK_FILE"; then
+    echo "ERROR: Unable to open lock file"
+    exit 1
+fi
+if ! flock -n 3; then
+    echo "ERROR: Another instance of this script is running"
+    exit 1
+fi
+
 echo "Running on `uname -n`"
 if ! git_topdir=$(git rev-parse --show-toplevel); then
         echo "The current working dir doesn't seem to be a git clone. Please cd there before running `basename $0`"
