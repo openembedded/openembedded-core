@@ -121,11 +121,8 @@ python uninative_changeinterp () {
             if not elf.isDynamic():
                 continue
 
-            try:
-                subprocess.check_output(("patchelf-uninative", "--set-interpreter",
-                                         d.getVar("UNINATIVE_LOADER"), f),
-                                        stderr=subprocess.STDOUT)
-            except subprocess.CalledProcessError as e:
-                bb.fatal("'%s' failed with exit code %d and the following output:\n%s" %
-                         (e.cmd, e.returncode, e.output))
+            subprocess.check_output(("patchelf-uninative", "--set-interpreter", d.getVar("UNINATIVE_LOADER"), f), stderr=subprocess.STDOUT)
+            subprocess.check_output(("cp", "--sparse=always", f, f + ".sparse"), stderr=subprocess.STDOUT)
+            os.unlink(f)
+            os.rename(f + ".sparse", f)
 }
