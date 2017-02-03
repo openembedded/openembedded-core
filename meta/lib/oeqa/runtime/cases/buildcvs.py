@@ -25,11 +25,6 @@ class BuildCvsTest(OERuntimeTestCase):
                       'Test requires tools-sdk to be in IMAGE_FEATURES')
     @OETestDepends(['ssh.SSHTest.test_ssh'])
     def test_cvs(self):
-        self.assertEqual(self.project.run_configure(), 0,
-                        msg="Running configure failed")
-
-        self.assertEqual(self.project.run_make(), 0,
-                        msg="Running make failed")
-
-        self.assertEqual(self.project.run_install(), 0,
-                        msg="Running make install failed")
+        self.project.run_configure()
+        self.project.run_make()
+        self.project.run_install()

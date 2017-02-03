@@ -33,4 +33,8 @@ class TargetBuildProject(BuildProject):
     # The timeout parameter of target.run is set to 0
     # to make the ssh command run with no timeout.
     def _run(self, cmd):
-        return self.target.run(cmd, 0)[0]
+        ret = self.target.run(cmd, 0)
+        msg = "Command %s failed with exit code %s: %s" % (cmd, ret[0], ret[1])
+        if ret[0] != 0:
+            raise Exception(msg)
+        return ret[0]
