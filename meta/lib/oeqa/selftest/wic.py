@@ -42,8 +42,7 @@ class Wic(oeSelfTest):
 
     def setUpLocal(self):
         """This code is executed before each test method."""
-        self.write_config('IMAGE_FSTYPES = "iso"\n'
-                          'MACHINE_FEATURES_append = " efi"\n')
+        self.write_config('MACHINE_FEATURES_append = " efi"\n')
 
         # Do this here instead of in setUpClass as the base setUp does some
         # clean up which can result in the native tools built earlier in
@@ -151,7 +150,8 @@ class Wic(oeSelfTest):
     @testcase(1346)
     def test_iso_image(self):
         """Test creation of hybrid iso image with legacy and EFI boot"""
-        config = 'MACHINE_FEATURES_append = " efi"\n'
+        config = 'INITRAMFS_IMAGE = "core-image-minimal-initramfs"\n'\
+                 'MACHINE_FEATURES_append = " efi"\n'
         self.append_config(config)
         bitbake('core-image-minimal')
         self.remove_config(config)
