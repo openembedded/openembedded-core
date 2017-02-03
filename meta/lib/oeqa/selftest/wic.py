@@ -212,9 +212,12 @@ class Wic(oeSelfTest):
     @testcase(1212)
     def test_build_artifacts(self):
         """Test wic create directdisk providing all artifacts."""
-        bbvars = dict((var.lower(), get_bb_var(var, 'core-image-minimal'))
-                      for var in ('STAGING_DATADIR', 'DEPLOY_DIR_IMAGE', 'IMAGE_ROOTFS'))
-        bbvars['recipe_sysroot_native'] = get_bb_var('RECIPE_SYSROOT_NATIVE', 'wic-tools')
+        variables = (('STAGING_DATADIR', 'wic-tools'),
+                     ('RECIPE_SYSROOT_NATIVE', 'wic-tools'),
+                     ('DEPLOY_DIR_IMAGE', 'core-image-minimal'),
+                     ('IMAGE_ROOTFS', 'core-image-minimal'))
+        bbvars = {var.lower(): get_bb_var(var, recipe) \
+                      for var, recipe in variables}
         bbvars['resultdir'] = self.resultdir
         status = runCmd("wic create directdisk "
                         "-b %(staging_datadir)s "
@@ -318,9 +321,12 @@ class Wic(oeSelfTest):
     @testcase(1269)
     def test_rootfs_artifacts(self):
         """Test usage of rootfs plugin with rootfs paths"""
-        bbvars = dict((var.lower(), get_bb_var(var, 'core-image-minimal'))
-                      for var in ('STAGING_DATADIR', 'DEPLOY_DIR_IMAGE', 'IMAGE_ROOTFS'))
-        bbvars['recipe_sysroot_native'] = get_bb_var('RECIPE_SYSROOT_NATIVE', 'wic-tools')
+        variables = (('STAGING_DATADIR', 'wic-tools'),
+                     ('RECIPE_SYSROOT_NATIVE', 'wic-tools'),
+                     ('DEPLOY_DIR_IMAGE', 'core-image-minimal'),
+                     ('IMAGE_ROOTFS', 'core-image-minimal'))
+        bbvars = {var.lower(): get_bb_var(var, recipe) \
+                      for var, recipe in variables}
         bbvars['wks'] = "directdisk-multi-rootfs"
         bbvars['resultdir'] = self.resultdir
         status = runCmd("wic create %(wks)s "
