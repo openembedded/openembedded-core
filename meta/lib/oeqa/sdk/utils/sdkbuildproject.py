@@ -29,7 +29,7 @@ class SDKBuildProject(BuildProject):
         #Change targetdir to project folder
         self.targetdir = os.path.join(self.targetdir, self.fname)
 
-    def run_configure(self, configure_args='', extra_cmds=' gnu-configize; '):
+    def run_configure(self, configure_args='', extra_cmds=''):
         return super(SDKBuildProject, self).run_configure(configure_args=(configure_args or '$CONFIGURE_FLAGS'), extra_cmds=extra_cmds)
 
     def run_install(self, install_args=''):

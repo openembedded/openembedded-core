@@ -39,7 +39,7 @@ class BuildProject(metaclass=ABCMeta):
     # The timeout parameter of target.run is set to 0 to make the ssh command
     # run with no timeout.
     def run_configure(self, configure_args='', extra_cmds=''):
-        return self._run('cd %s; %s ./configure %s' % (self.targetdir, extra_cmds, configure_args))
+        return self._run('cd %s; gnu-configize; %s ./configure %s' % (self.targetdir, extra_cmds, configure_args))
 
     def run_make(self, make_args=''):
         return self._run('cd %s; make %s' % (self.targetdir, make_args))
