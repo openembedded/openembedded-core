@@ -31,7 +31,7 @@
 import os
 import sys
 
-from wic import msger, creator
+from wic import msger
 from wic.plugin import pluginmgr
 from wic.utils.misc import get_bitbake_var
 
@@ -145,10 +145,10 @@ def list_source_plugins():
         print("  %s" % plugin)
 
 
-def wic_create(wks_file, rootfs_dir, bootimg_dir, kernel_dir,
-               native_sysroot, scripts_path, image_output_dir,
-               compressor, bmap, debug):
-    """Create image
+def wic_create(wks_file, rootfs_dir, bootimg_dir, kernel_dir, native_sysroot,
+               scripts_path, options):
+    """
+    Create image
 
     wks_file - user-defined OE kickstart file
     rootfs_dir - absolute path to the build's /rootfs dir
@@ -157,8 +157,7 @@ def wic_create(wks_file, rootfs_dir, bootimg_dir, kernel_dir,
     native_sysroot - absolute path to the build's native sysroots dir
     scripts_path - absolute path to /scripts dir
     image_output_dir - dirname to create for image
-    compressor - compressor utility to compress the image
-    bmap - enable generation of .bmap
+    options - wic command line options (debug, bmap, etc)
 
     Normally, the values for the build artifacts values are determined
     by 'wic -e' from the output of the 'bitbake -e' command given an
@@ -184,20 +183,21 @@ def wic_create(wks_file, rootfs_dir, bootimg_dir, kernel_dir,
         print("BUILDDIR not found, exiting. (Did you forget to source oe-init-build-env?)")
         sys.exit(1)
 
-    if debug:
+    if options.debug:
         msger.set_loglevel('debug')
 
-    if not os.path.exists(image_output_dir):
-        os.makedirs(image_output_dir)
+    if not os.path.exists(options.outdir):
+        os.makedirs(options.outdir)
 
-    crobj = creator.Creator()
+    pname = 'direct'
+    plugin_class = pluginmgr.get_plugins('imager').get(pname)
+    if not plugin_class:
+        msger.error('Unknown plugin: %s' % pname)
 
-    cmdline = ["direct", native_sysroot, kernel_dir, bootimg_dir, rootfs_dir,
-               wks_file, image_output_dir, oe_builddir, compressor or ""]
-    if bmap:
-        cmdline.append('--bmap')
+    plugin = plugin_class(wks_file, rootfs_dir, bootimg_dir, kernel_dir,
+                          native_sysroot, scripts_path, oe_builddir, options)
 
-    crobj.main(cmdline)
+    plugin.do_create()
 
     print("\nThe image(s) were created using OE kickstart file:\n  %s" % wks_file)
 

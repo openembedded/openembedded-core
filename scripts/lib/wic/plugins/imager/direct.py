@@ -39,50 +39,6 @@ from wic.utils.errors import CreatorError, ImageError
 from wic.utils.misc import get_bitbake_var, exec_cmd, exec_native_cmd
 from wic.utils.partitionedfs import Image
 
-class DirectPlugin(ImagerPlugin):
-    """
-    Install a system into a file containing a partitioned disk image.
-
-    An image file is formatted with a partition table, each partition
-    created from a rootfs or other OpenEmbedded build artifact and dd'ed
-    into the virtual disk. The disk image can subsequently be dd'ed onto
-    media and used on actual hardware.
-    """
-
-    name = 'direct'
-
-    @staticmethod
-    def do_create(opts, *args):
-        """
-        Create direct image, called from creator as 'direct' cmd
-        """
-        native_sysroot, kernel_dir, bootimg_dir, rootfs_dir, ksconf, \
-            outdir, oe_builddir, compressor = args
-
-        try:
-            ksobj = KickStart(ksconf)
-        except KickStartError as err:
-            msger.error(str(err))
-
-        name = "%s-%s" % (os.path.splitext(os.path.basename(ksconf))[0],
-                          strftime("%Y%m%d%H%M"))
-
-        # parse possible 'rootfs=name' items
-        krootfs_dir = dict(rdir.split('=') for rdir in rootfs_dir.split(' '))
-
-        creator = DirectImageCreator(name, ksobj, oe_builddir, outdir,
-                                     krootfs_dir, bootimg_dir, kernel_dir,
-                                     native_sysroot, compressor, opts.bmap)
-        try:
-            creator.create()
-            creator.assemble()
-            creator.finalize()
-            creator.print_info()
-        except errors.CreatorError:
-            raise
-        finally:
-            creator.cleanup()
-
 class DiskImage():
     """
     A Disk backed by a file.
@@ -101,43 +57,57 @@ class DiskImage():
 
         self.created = True
 
-class DirectImageCreator:
+class DirectPlugin(ImagerPlugin):
     """
-    Installs a system into a file containing a partitioned disk image.
+    Install a system into a file containing a partitioned disk image.
 
-    DirectImageCreator is an advanced ImageCreator subclass; an image
-    file is formatted with a partition table, each partition created
-    from a rootfs or other OpenEmbedded build artifact and dd'ed into
-    the virtual disk. The disk image can subsequently be dd'ed onto
+    An image file is formatted with a partition table, each partition
+    created from a rootfs or other OpenEmbedded build artifact and dd'ed
+    into the virtual disk. The disk image can subsequently be dd'ed onto
     media and used on actual hardware.
     """
+    name = 'direct'
 
-    def __init__(self, name, ksobj, oe_builddir, outdir,
-                 rootfs_dir, bootimg_dir, kernel_dir,
-                 native_sysroot, compressor, bmap=False):
-        """
-        Initialize a DirectImageCreator instance.
+    def __init__(self, wks_file, rootfs_dir, bootimg_dir, kernel_dir,
+                 native_sysroot, scripts_path, oe_builddir, options):
+        try:
+            self.ks = KickStart(wks_file)
+        except KickStartError as err:
+            msger.error(str(err))
 
-        This method takes the same arguments as ImageCreator.__init__()
-        """
-        self.name = name
-        self.outdir = outdir
-        self.workdir = tempfile.mkdtemp(dir=outdir, prefix='tmp.wic.')
-        self.ks = ksobj
+        # parse possible 'rootfs=name' items
+        self.rootfs_dir = dict(rdir.split('=') for rdir in rootfs_dir.split(' '))
+        self.bootimg_dir = bootimg_dir
+        self.kernel_dir = kernel_dir
+        self.native_sysroot = native_sysroot
+        self.oe_builddir = oe_builddir
 
+        self.outdir = options.outdir
+        self.compressor = options.compressor
+        self.bmap = options.bmap
+
+        self.name = "%s-%s" % (os.path.splitext(os.path.basename(wks_file))[0],
+                               strftime("%Y%m%d%H%M"))
+        self.workdir = tempfile.mkdtemp(dir=self.outdir, prefix='tmp.wic.')
         self._image = None
         self._disks = {}
         self._disk_format = "direct"
         self._disk_names = []
         self.ptable_format = self.ks.bootloader.ptable
 
-        self.oe_builddir = oe_builddir
-        self.rootfs_dir = rootfs_dir
-        self.bootimg_dir = bootimg_dir
-        self.kernel_dir = kernel_dir
-        self.native_sysroot = native_sysroot
-        self.compressor = compressor
-        self.bmap = bmap
+    def do_create(self):
+        """
+        Plugin entry point.
+        """
+        try:
+            self.create()
+            self.assemble()
+            self.finalize()
+            self.print_info()
+        except errors.CreatorError:
+            raise
+        finally:
+            self.cleanup()
 
     def _get_part_num(self, num, parts):
         """calculate the real partition number, accounting for partitions not
@@ -359,7 +329,7 @@ class DirectImageCreator:
             extension = "direct" + {"gzip": ".gz",
                                     "bzip2": ".bz2",
                                     "xz": ".xz",
-                                    "": ""}.get(self.compressor)
+                                    None: ""}.get(self.compressor)
             full_path = self._full_path(self.outdir, disk_name, extension)
             msg += '  %s\n\n' % full_path
 
