@@ -98,4 +98,7 @@ do_install() {
 	for PYTHSCRIPT in `grep -rIl ${bindir}/${PN}/python ${D}${bindir}/${PN}`; do
 		sed -i -e '1s|^#!.*|#!/usr/bin/env python3|' $PYTHSCRIPT
 	done
+
+	# Tests are large and we don't need them in the native sysroot
+	rm ${D}${libdir}/python${PYTHON_MAJMIN}/test -rf
 }
