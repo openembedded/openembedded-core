@@ -55,7 +55,7 @@ def format_str(string, fields):
                                string, err, ', '.join(sorted(fields.keys()))))
 
 
-def init_git_repo(path, no_create):
+def init_git_repo(path, no_create, bare):
     """Initialize local Git repository"""
     path = os.path.abspath(path)
     if os.path.isfile(path):
@@ -72,7 +72,7 @@ def init_git_repo(path, no_create):
                 raise ArchiveError("Failed to mkdir {}: {}".format(path, err))
         if not os.listdir(path):
             log.info("Initializing a new Git repo at %s", path)
-            repo = GitRepo.init(path)
+            repo = GitRepo.init(path, bare)
     try:
         repo = GitRepo(path, is_topdir=True)
     except GitError:
@@ -108,7 +108,7 @@ def git_commit_data(repo, data_dir, branch, message):
         repo.run_cmd(git_cmd)
 
         # Update current HEAD, if we're on branch 'branch'
-        if repo.get_current_branch() == branch:
+        if not repo.bare and repo.get_current_branch() == branch:
             log.info("Updating %s HEAD to latest commit", repo.top_dir)
             repo.run_cmd('reset --hard')
 
@@ -158,6 +158,9 @@ def parse_args(argv):
     parser.add_argument('--no-create', action='store_true',
                         help="If GIT_DIR is not a valid Git repository, do not "
                              "try to create one")
+    parser.add_argument('--bare', action='store_true',
+                        help="Initialize a bare repository when creating a "
+                             "new one")
     parser.add_argument('--push', '-p', nargs='?', default=False, const=True,
                         help="Push to remote")
     parser.add_argument('--branch-name', '-b',
@@ -195,7 +198,7 @@ def main(argv=None):
         if not os.path.isdir(args.data_dir):
             raise ArchiveError("Not a directory: {}".format(args.data_dir))
 
-        data_repo = init_git_repo(args.git_dir, args.no_create)
+        data_repo = init_git_repo(args.git_dir, args.no_create, args.bare)
 
         # Get keywords to be used in tag and branch names and messages
         metadata = metadata_from_bb()
