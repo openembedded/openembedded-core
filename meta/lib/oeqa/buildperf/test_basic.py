@@ -22,7 +22,7 @@ class Test1P1(BuildPerfTestCase):
     build_target = 'core-image-sato'
 
     def test1(self):
-        """Measure wall clock of bitbake core-image-sato and size of tmp dir"""
+        """Build core-image-sato"""
         self.rm_tmp()
         self.rm_sstate()
         self.rm_cache()
@@ -36,7 +36,7 @@ class Test1P2(BuildPerfTestCase):
     build_target = 'virtual/kernel'
 
     def test12(self):
-        """Measure bitbake virtual/kernel"""
+        """Build virtual/kernel"""
         # Build and cleans state in order to get all dependencies pre-built
         self.log_cmd_output(['bitbake', self.build_target])
         self.log_cmd_output(['bitbake', self.build_target, '-c', 'cleansstate'])
@@ -72,7 +72,7 @@ class Test2(BuildPerfTestCase):
     build_target = 'core-image-sato'
 
     def test2(self):
-        """Measure bitbake core-image-sato -c rootfs with sstate"""
+        """Run core-image-sato do_rootfs with sstate"""
         # Build once in order to populate sstate cache
         self.log_cmd_output(['bitbake', self.build_target])
 
@@ -86,7 +86,7 @@ class Test2(BuildPerfTestCase):
 class Test3(BuildPerfTestCase):
 
     def test3(self):
-        """Parsing time metrics (bitbake -p)"""
+        """Bitbake parsing (bitbake -p)"""
         # Drop all caches and parse
         self.rm_cache()
         oe.path.remove(os.path.join(self.bb_vars['TMPDIR'], 'cache'), True)
