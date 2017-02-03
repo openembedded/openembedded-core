@@ -48,8 +48,7 @@ while getopts "ha:c:C:w:" opt; do
             ;;
         c)  commitish=$OPTARG
             ;;
-        C)  results_repo=`realpath "$OPTARG"`
-            commit_results=("--commit-results" "$results_repo")
+        C)  results_repo=`realpath -s "$OPTARG"`
             ;;
         w)  base_dir=`realpath "$OPTARG"`
             ;;
@@ -130,10 +129,17 @@ fi
 # Run actual test script
 oe-build-perf-test --out-dir "$results_dir" \
                    --globalres-file "$globalres_log" \
-                   --lock-file "$base_dir/oe-build-perf.lock" \
-                   "${commit_results[@]}" \
-                   --commit-results-branch "{tester_host}/{git_branch}/$machine" \
-                   --commit-results-tag "{tester_host}/{git_branch}/$machine/{git_commit_count}-g{git_commit}/{tag_num}"
+                   --lock-file "$base_dir/oe-build-perf.lock"
+
+# Commit results to git
+if [ -n "$results_repo" ]; then
+    echo -e "\nArchiving results in $results_repo"
+    oe-git-archive \
+        --git-dir "$results_repo" \
+        --branch-name "{hostname}/{branch}/{machine}" \
+        --tag-name "{hostname}/{branch}/{machine}/{commit_count}-g{commit}/{tag_number}" \
+        "$results_dir"
+fi
 
 case $? in
     1)  echo "ERROR: oe-build-perf-test script failed!"
