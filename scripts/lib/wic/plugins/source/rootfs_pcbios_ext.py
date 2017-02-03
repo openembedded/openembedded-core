@@ -122,7 +122,7 @@ class RootfsPlugin(SourcePlugin):
         syslinux_conf += "ALLOWOPTIONS 1\n"
 
         # Derive SERIAL... line from from kernel boot parameters
-        syslinux_conf += syslinux.serial_console_form_kargs(options) + "\n"
+        syslinux_conf += serial_console_form_kargs(options) + "\n"
 
         syslinux_conf += "DEFAULT linux\n"
         syslinux_conf += "LABEL linux\n"
