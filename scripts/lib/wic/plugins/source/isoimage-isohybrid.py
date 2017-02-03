@@ -410,7 +410,7 @@ class IsoImagePlugin(SourcePlugin):
             exec_cmd(chmod_cmd)
 
         # Prepare files for legacy boot
-        syslinux_dir = get_bitbake_var("STAGING_DATADIR")
+        syslinux_dir = get_bitbake_var("STAGING_DATADIR", "wic-tools")
         if not syslinux_dir:
             msger.error("Couldn't find STAGING_DATADIR, exiting.\n")
 
