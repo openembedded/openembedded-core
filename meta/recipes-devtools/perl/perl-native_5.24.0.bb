@@ -106,6 +106,10 @@ do_install () {
 	for f in `grep -Il '#! *${bindir}/perl' ${D}/${bindir}/*`; do
 		sed -i -e 's|${bindir}/perl|/usr/bin/env nativeperl|' $f
 	done
+
+	# The packlist is large with hardcoded paths meaning it needs relocating
+	# so just remove it.
+	rm ${D}${libdir}/perl/${PV}/.packlist
 }
 
 SYSROOT_PREPROCESS_FUNCS += "perl_sysroot_create_wrapper"
