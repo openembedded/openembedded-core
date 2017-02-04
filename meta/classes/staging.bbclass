@@ -31,6 +31,7 @@ SYSROOT_DIRS_BLACKLIST = " \
     ${datadir}/applications \
     ${datadir}/fonts \
     ${datadir}/pixmaps \
+    ${libdir}/${PN}/ptest \
 "
 
 sysroot_stage_dir() {
