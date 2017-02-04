@@ -5,7 +5,7 @@ DESCRIPTION = "mtrace utility provided by glibc"
 RDEPENDS_${PN} = "perl"
 RPROVIDES_${PN} = "libc-mtrace"
 
-SRC = "${STAGING_INCDIR}/glibc-scripts-internal-${MULTIMACH_TARGET_SYS}"
+SRC = "${STAGING_DIR}-components/${PACKAGE_ARCH}/glibc-stash-locale/scripts"
 
 do_install() {
 	install -d -m 0755 ${D}${bindir}

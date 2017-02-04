@@ -43,16 +43,11 @@ do_install () {
 	fi
 }
 
-do_install_locale() {
+do_stash_locale() {
 	:
 }
 
 do_siteconfig () {
-	:
-}
-
-# We don't install any scripts so there is nothing to evacuate
-do_evacuate_scripts () {
 	:
 }
 
