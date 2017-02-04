@@ -479,6 +479,7 @@ python extend_recipe_sysroot() {
     bb.note("\n".join(msgbuf))
 
     stagingdir = d.getVar("STAGING_DIR")
+    sharedmanifests = stagingdir + "-components/manifests"
     recipesysroot = d.getVar("RECIPE_SYSROOT")
     recipesysrootnative = d.getVar("RECIPE_SYSROOT_NATIVE")
     current_variant = d.getVar("BBEXTENDVARIANT")
@@ -493,6 +494,7 @@ python extend_recipe_sysroot() {
 
     depdir = recipesysrootnative + "/installeddeps"
     bb.utils.mkdirhier(depdir)
+    bb.utils.mkdirhier(sharedmanifests)
 
     lock = bb.utils.lockfile(recipesysroot + "/sysroot.lock")
 
@@ -588,6 +590,27 @@ python extend_recipe_sysroot() {
                         dest = staging_copyfile(l, destsysroot, fixme[''], postinsts, stagingdir, seendirs)
                     if dest:
                         m.write(dest.replace(workdir + "/", "") + "\n")
+            # Having multiple identical manifests in each sysroot eats diskspace so
+            # create a shared pool of them.
+            sharedm = sharedmanifests + "/" + os.path.basename(taskmanifest)
+            if not os.path.exists(sharedm):
+                smlock = bb.utils.lockfile(sharedm + ".lock")
+                # Can race here. You'd think it just means we may not end up with all copies hardlinked to each other
+                # but python can lose file handles so we need to do this under a lock.
+                try:
+                    if not os.path.exists(sharedm):
+                        os.rename(taskmanifest, sharedm)
+                except OSError:
+                   pass
+                bb.utils.unlockfile(smlock)
+            if os.path.exists(sharedm):
+                # If we're crossing mount points we'll not reach here.
+                if os.path.exists(taskmanifest):
+                    if os.path.getsize(sharedm) != os.path.getsize(taskmanifest):
+                        # Order of entries can differ, overall size shouldn't
+                        raise Exception("Manifests %s and %s differ in size and shouldn't?" % (sharedm, taskmanifest))
+                    os.unlink(taskmanifest)
+                os.link(sharedm, taskmanifest)
 
     for f in fixme:
         if f == '':
