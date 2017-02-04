@@ -69,7 +69,7 @@ DESCRIPTION_localedef = "glibc: compile locale definition files"
 FILES_${MLPREFIX}glibc-gconv = "${libdir}/gconv/*"
 FILES_localedef = "${bindir}/localedef"
 
-LOCALETREESRC = "${STAGING_INCDIR}/glibc-locale-internal-${MULTIMACH_TARGET_SYS}"
+LOCALETREESRC = "${STAGING_DIR}-components/${PACKAGE_ARCH}/glibc-stash-locale"
 
 do_install () {
 	mkdir -p ${D}${bindir} ${D}${datadir} ${D}${libdir}

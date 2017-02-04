@@ -145,8 +145,11 @@ do_install_append_aarch64 () {
 	fi
 }
 
-do_install_locale () {
-	dest=${D}/${includedir}/glibc-locale-internal-${MULTIMACH_TARGET_SYS}
+LOCALESTASH = "${WORKDIR}/stashed-locale"
+bashscripts = "mtrace sotruss xtrace"
+
+do_stash_locale () {
+	dest=${LOCALESTASH}
 	install -d ${dest}${base_libdir} ${dest}${bindir} ${dest}${libdir} ${dest}${datadir}
 	if [ "${base_libdir}" != "${libdir}" ]; then
 		cp -fpPR ${D}${base_libdir}/* ${dest}${base_libdir}
@@ -166,14 +169,8 @@ do_install_locale () {
 	cp -fpPR ${D}${datadir}/* ${dest}${datadir}
 	rm -rf ${D}${datadir}/locale/
 	cp -fpPR ${WORKDIR}/SUPPORTED ${dest}
-}
 
-addtask do_install_locale after do_install before do_populate_sysroot do_package
-
-bashscripts = "mtrace sotruss xtrace"
-
-do_evacuate_scripts () {
-	target=${D}${includedir}/glibc-scripts-internal-${MULTIMACH_TARGET_SYS}
+	target=${dest}/scripts
 	mkdir -p $target
 	for i in ${bashscripts}; do
 		if [ -f ${D}${bindir}/$i ]; then
@@ -182,13 +179,22 @@ do_evacuate_scripts () {
 	done
 }
 
-addtask evacuate_scripts after do_install before do_populate_sysroot do_package
+addtask do_stash_locale after do_install before do_populate_sysroot do_package
+do_stash_locale[dirs] = "${B}"
+do_stash_locale[cleandirs] = "${LOCALESTASH}"
+SSTATETASKS += "do_stash_locale"
+do_stash_locale[sstate-inputdirs] = "${LOCALESTASH}"
+do_stash_locale[sstate-outputdirs] = "${STAGING_DIR}-components/${PACKAGE_ARCH}/glibc-stash-locale"
+do_stash_locale[sstate-fixmedir] = "${STAGING_DIR}-components/${PACKAGE_ARCH}/glibc-stash-locale"
+
+python do_stash_locale_setscene () {
+    sstate_setscene(d)
+}
+addtask do_stash_locale_setscene
 
 PACKAGE_PREPROCESS_FUNCS += "glibc_package_preprocess"
 
 glibc_package_preprocess () {
-	rm -rf ${PKGD}/${includedir}/glibc-locale-internal-${MULTIMACH_TARGET_SYS}
-	rm -rf ${PKGD}/${includedir}/glibc-scripts-internal-${MULTIMACH_TARGET_SYS}
 	for i in ${bashscripts}; do
 	    rm -f ${PKGD}${bindir}/$i
 	done

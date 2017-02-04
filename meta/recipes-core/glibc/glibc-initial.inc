@@ -48,7 +48,7 @@ do_install () {
 	done
 }
 
-do_install_locale() {
+do_stash_locale() {
 	:
 }
 
