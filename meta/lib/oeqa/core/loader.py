@@ -174,7 +174,7 @@ class OETestLoader(unittest.TestLoader):
                                 " Maybe you meant to derive from TestCase?")
         if not issubclass(testCaseClass, self.caseClass):
             raise TypeError("Test cases need to be derived from %s" % \
-                    caseClass.__name__)
+                    self.caseClass.__name__)
 
 
         testCaseNames = self.getTestCaseNames(testCaseClass)
