@@ -4,6 +4,8 @@ HOMEPAGE = "http://www.latencytop.org/"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://latencytop.c;endline=23;md5=ee9ea9b1415356e5734adad4a87dc7fa"
 
+inherit pkgconfig
+
 DEPENDS = "virtual/libintl ncurses glib-2.0"
 
 PR = "r3"
