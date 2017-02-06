@@ -16,7 +16,7 @@ class OePkgdataUtilTests(oeSelfTest):
         # Ensure we have the right data in pkgdata
         logger = logging.getLogger("selftest")
         logger.info('Running bitbake to generate pkgdata')
-        bitbake('glibc busybox zlib bash')
+        bitbake('glibc busybox zlib m4')
 
     @testcase(1203)
     def test_lookup_pkg(self):
@@ -43,7 +43,7 @@ class OePkgdataUtilTests(oeSelfTest):
         self.assertEqual(result.output, 'zlib')
         result = runCmd('oe-pkgdata-util read-value PKG libz1')
         self.assertEqual(result.output, 'libz1')
-        result = runCmd('oe-pkgdata-util read-value PKGSIZE bash')
+        result = runCmd('oe-pkgdata-util read-value PKGSIZE m4')
         pkgsize = int(result.output.strip())
         self.assertGreater(pkgsize, 1, "Size should be greater than 1. %s" % result.output)
 
@@ -51,8 +51,8 @@ class OePkgdataUtilTests(oeSelfTest):
     def test_find_path(self):
         result = runCmd('oe-pkgdata-util find-path /lib/libc.so.6')
         self.assertEqual(result.output, 'glibc: /lib/libc.so.6')
-        result = runCmd('oe-pkgdata-util find-path /bin/bash')
-        self.assertEqual(result.output, 'bash: /bin/bash')
+        result = runCmd('oe-pkgdata-util find-path /usr/bin/m4')
+        self.assertEqual(result.output, 'm4: /usr/bin/m4')
         result = runCmd('oe-pkgdata-util find-path /not/exist', ignore_status=True)
         self.assertEqual(result.status, 1, "Status different than 1. output: %s" % result.output)
         self.assertEqual(result.output, 'ERROR: Unable to find any package producing path /not/exist')
