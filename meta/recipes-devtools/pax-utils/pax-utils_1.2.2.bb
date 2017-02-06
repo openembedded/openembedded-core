@@ -10,10 +10,12 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=eb723b61539feef013de476e68b5c50a"
 SRC_URI = "http://gentoo.osuosl.org/distfiles/pax-utils-${PV}.tar.xz \
 "
 
-SRC_URI[md5sum] = "96f56a5a10ed50f2448c5ccebd27764f"
-SRC_URI[sha256sum] = "f5436c517bea40f7035ec29a6f34034c739b943f2e3a080d76df5dfd7fd41b12"
+SRC_URI[md5sum] = "a580468318f0ff42edf4a8cd314cc942"
+SRC_URI[sha256sum] = "7f4a7f8db6b4743adde7582fa48992ad01776796fcde030683732f56221337d9"
 
 RDEPENDS_${PN} += "bash"
+
+export GNULIB_OVERRIDES_WINT_T = "0"
 
 do_configure_prepend() {
     touch ${S}/NEWS ${S}/AUTHORS ${S}/ChangeLog ${S}/README
