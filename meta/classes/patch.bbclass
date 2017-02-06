@@ -12,25 +12,7 @@ inherit terminal
 
 python () {
     if d.getVar('PATCHTOOL') == 'git' and d.getVar('PATCH_COMMIT_FUNCTIONS') == '1':
-        tasks = list(filter(lambda k: d.getVarFlag(k, "task"), d.keys()))
-        extratasks = []
-        def follow_chain(task, endtask, chain=None):
-            if not chain:
-                chain = []
-            chain.append(task)
-            for othertask in tasks:
-                if othertask == task:
-                    continue
-                if task == endtask:
-                    for ctask in chain:
-                        if ctask not in extratasks:
-                            extratasks.append(ctask)
-                else:
-                    deps = d.getVarFlag(othertask, 'deps', False)
-                    if task in deps:
-                        follow_chain(othertask, endtask, chain)
-            chain.pop()
-        follow_chain('do_unpack', 'do_patch')
+        extratasks = bb.build.tasksbetween('do_unpack', 'do_patch', d)
         try:
             extratasks.remove('do_unpack')
         except ValueError:
