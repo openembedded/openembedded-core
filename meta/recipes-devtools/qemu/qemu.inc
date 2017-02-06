@@ -6,7 +6,7 @@ RDEPENDS_${PN}_class-target += "bash"
 RDEPENDS_${PN}-ptest = "bash make"
 
 require qemu-targets.inc
-inherit autotools ptest
+inherit autotools pkgconfig ptest
 BBCLASSEXTEND = "native nativesdk"
 
 # QEMU_TARGETS is overridable variable
