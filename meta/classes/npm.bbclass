@@ -32,6 +32,9 @@ npm_do_compile() {
 }
 
 npm_do_install() {
+	# changing the home directory to the working directory, the .npmrc will
+	# be created in this directory
+	export HOME=${WORKDIR}
 	mkdir -p ${NPM_INSTALLDIR}/
 	npm install --prefix ${D}${prefix} -g --arch=${NPM_ARCH} --target_arch=${NPM_ARCH} --production --no-registry
 	if [ -d ${D}${prefix}/etc ] ; then
