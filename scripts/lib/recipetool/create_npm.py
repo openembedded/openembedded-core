@@ -83,7 +83,7 @@ class NpmRecipeHandler(RecipeHandler):
         extravalues['extrafiles']['lockdown.json'] = tmpfile
         lines_before.append('NPM_LOCKDOWN := "${THISDIR}/${PN}/lockdown.json"')
 
-    def _handle_dependencies(self, d, deps, lines_before, srctree):
+    def _handle_dependencies(self, d, deps, optdeps, lines_before, srctree):
         import scriptutils
         # If this isn't a single module we need to get the dependencies
         # and add them to SRC_URI
@@ -92,8 +92,17 @@ class NpmRecipeHandler(RecipeHandler):
                 if not origvalue.startswith('npm://'):
                     src_uri = origvalue.split()
                     changed = False
-                    for dep, depdata in deps.items():
-                        version = self.get_node_version(dep, depdata, d)
+                    deplist = {}
+                    for dep, depver in optdeps.items():
+                        depdata = self.get_npm_data(dep, depver, d)
+                        if self.check_npm_optional_dependency(depdata):
+                            deplist[dep] = depdata
+                    for dep, depver in deps.items():
+                        depdata = self.get_npm_data(dep, depver, d)
+                        deplist[dep] = depdata
+
+                    for dep, depdata in deplist.items():
+                        version = depdata.get('version', None)
                         if version:
                             url = 'npm://registry.npmjs.org;name=%s;version=%s;subdir=node_modules/%s' % (dep, version, dep)
                             scriptutils.fetch_uri(d, url, srctree)
@@ -170,8 +179,8 @@ class NpmRecipeHandler(RecipeHandler):
                 if 'homepage' in data:
                     extravalues['HOMEPAGE'] = data['homepage']
 
-                deps = data.get('dependencies', {})
-                updated = self._handle_dependencies(tinfoil.config_data, deps, lines_before, srctree)
+                deps, optdeps = self.get_npm_package_dependencies(data)
+                updated = self._handle_dependencies(tinfoil.config_data, deps, optdeps, lines_before, srctree)
                 if updated:
                     # We need to redo the license stuff
                     self._replace_license_vars(srctree, lines_before, handled, extravalues, tinfoil.config_data)
@@ -251,7 +260,7 @@ class NpmRecipeHandler(RecipeHandler):
 
     # FIXME this is effectively duplicated from lib/bb/fetch2/npm.py
     # (split out from _getdependencies())
-    def get_node_version(self, pkg, version, d):
+    def get_npm_data(self, pkg, version, d):
         import bb.fetch2
         pkgfullname = pkg
         if version != '*' and not '/' in version:
@@ -261,7 +270,40 @@ class NpmRecipeHandler(RecipeHandler):
         fetchcmd = "npm view %s --json" % pkgfullname
         output, _ = bb.process.run(fetchcmd, stderr=subprocess.STDOUT, env=runenv, shell=True)
         data = self._parse_view(output)
-        return data.get('version', None)
+        return data
+
+    # FIXME this is effectively duplicated from lib/bb/fetch2/npm.py
+    # (split out from _getdependencies())
+    def get_npm_package_dependencies(self, pdata):
+        dependencies = pdata.get('dependencies', {})
+        optionalDependencies = pdata.get('optionalDependencies', {})
+        dependencies.update(optionalDependencies)
+        depsfound = {}
+        optdepsfound = {}
+        for dep in dependencies:
+            if dep in optionalDependencies:
+                optdepsfound[dep] = dependencies[dep]
+            else:
+                depsfound[dep] = dependencies[dep]
+        return depsfound, optdepsfound
+
+    # FIXME this is effectively duplicated from lib/bb/fetch2/npm.py
+    # (split out from _getdependencies())
+    def check_npm_optional_dependency(self, pdata):
+        pkg_os = pdata.get('os', None)
+        if pkg_os:
+            if not isinstance(pkg_os, list):
+                pkg_os = [pkg_os]
+            blacklist = False
+            for item in pkg_os:
+                if item.startswith('!'):
+                    blacklist = True
+                    break
+            if (not blacklist and 'linux' not in pkg_os) or '!linux' in pkg_os:
+                logger.debug(2, "Skipping %s since it's incompatible with Linux" % pkg)
+                return False
+        return True
+
 
 def register_recipe_handlers(handlers):
     handlers.append((NpmRecipeHandler(), 60))
