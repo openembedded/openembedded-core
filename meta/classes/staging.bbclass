@@ -464,7 +464,7 @@ python extend_recipe_sysroot() {
                 taskdeps[datadep] = setscenedeps[datadep][:2]
                 retval = setscene_depvalid(datadep, taskdeps, [], d, msgbuf)
                 if retval:
-                    msgbuf.append("Skipping setscene dependency %s for installation into the sysroot")
+                    msgbuf.append("Skipping setscene dependency %s for installation into the sysroot" % datadep)
                     continue
                 done.append(datadep)
                 new.append(datadep)
