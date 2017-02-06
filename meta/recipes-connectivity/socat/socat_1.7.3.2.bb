@@ -18,8 +18,8 @@ SRC_URI = "http://www.dest-unreach.org/socat/download/socat-${PV}.tar.bz2 \
            file://0001-Access-c_ispeed-and-c_ospeed-via-APIs.patch \
 "
 
-SRC_URI[md5sum] = "334e46924f2b386299c9db2ac22bcd36"
-SRC_URI[sha256sum] = "d2da659540c38139f388e9437bfaae16bb458d174d056cb3228432a8f489fbaa"
+SRC_URI[md5sum] = "607a24c15bd2cb54e9328bfbbd3a1ae9"
+SRC_URI[sha256sum] = "e3561f808739383eb10fada1e5d4f26883f0311b34fd0af7837d0c95ef379251"
 
 inherit autotools
 
