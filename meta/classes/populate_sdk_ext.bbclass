@@ -45,8 +45,10 @@ def get_sdk_install_targets(d, images_only=False):
         sdk_install_targets = d.getVar('SDK_TARGETS')
 
         depd = d.getVar('BB_TASKDEPDATA', False)
+        tasklist = bb.build.tasksbetween('do_image_complete', 'do_build', d)
+        tasklist.remove('do_build')
         for v in depd.values():
-            if v[1] == 'do_image_complete':
+            if v[1] in tasklist:
                 if v[0] not in sdk_install_targets:
                     sdk_install_targets += ' {}'.format(v[0])
 
@@ -630,7 +632,9 @@ def get_ext_sdk_depends(d):
     deps = d.getVarFlag('do_image_complete', 'deps', False)
     pn = d.getVar('PN')
     deplist = ['%s:%s' % (pn, dep) for dep in deps]
-    for task in ['do_image_complete', 'do_rootfs', 'do_build']:
+    tasklist = bb.build.tasksbetween('do_image_complete', 'do_build', d)
+    tasklist.append('do_rootfs')
+    for task in tasklist:
         deplist.extend((d.getVarFlag(task, 'depends') or '').split())
     return ' '.join(deplist)
 
