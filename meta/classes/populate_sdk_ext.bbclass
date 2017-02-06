@@ -11,8 +11,6 @@ TOOLCHAIN_HOST_TASK_task-populate-sdk-ext = " \
 
 TOOLCHAIN_TARGET_TASK_task-populate-sdk-ext = ""
 
-SDK_RDEPENDS_append_task-populate-sdk-ext = " ${SDK_TARGETS}"
-
 SDK_RELOCATE_AFTER_INSTALL_task-populate-sdk-ext = "0"
 
 SDK_EXT = ""
