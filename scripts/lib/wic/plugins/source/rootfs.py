@@ -26,10 +26,13 @@
 #
 
 import os
+import shutil
+
+from oe.path import copyhardlinktree
 
 from wic import msger
 from wic.pluginbase import SourcePlugin
-from wic.utils.misc import get_bitbake_var
+from wic.utils.misc import get_bitbake_var, exec_cmd
 
 class RootfsPlugin(SourcePlugin):
     """
@@ -77,6 +80,44 @@ class RootfsPlugin(SourcePlugin):
                 msger.error(msg % part.rootfs_dir)
 
         real_rootfs_dir = cls.__get_rootfs_dir(rootfs_dir)
+
+        # Handle excluded paths.
+        if part.exclude_path is not None:
+            # We need a new rootfs directory we can delete files from. Copy to
+            # workdir.
+            new_rootfs = os.path.realpath(os.path.join(cr_workdir, "rootfs"))
+
+            if os.path.lexists(new_rootfs):
+                shutil.rmtree(os.path.join(new_rootfs))
+
+            copyhardlinktree(real_rootfs_dir, new_rootfs)
+
+            real_rootfs_dir = new_rootfs
+
+            for orig_path in part.exclude_path:
+                path = orig_path
+                if os.path.isabs(path):
+                    msger.error("Must be relative: --exclude-path=%s" % orig_path)
+
+                full_path = os.path.realpath(os.path.join(new_rootfs, path))
+
+                # Disallow climbing outside of parent directory using '..',
+                # because doing so could be quite disastrous (we will delete the
+                # directory).
+                if not full_path.startswith(new_rootfs):
+                    msger.error("'%s' points to a path outside the rootfs" % orig_path)
+
+                if path.endswith(os.sep):
+                    # Delete content only.
+                    for entry in os.listdir(full_path):
+                        full_entry = os.path.join(full_path, entry)
+                        if os.path.isdir(full_entry) and not os.path.islink(full_entry):
+                            shutil.rmtree(full_entry)
+                        else:
+                            os.remove(full_entry)
+                else:
+                    # Delete whole directory.
+                    shutil.rmtree(full_path)
 
         part.rootfs_dir = real_rootfs_dir
         part.prepare_rootfs(cr_workdir, oe_builddir,

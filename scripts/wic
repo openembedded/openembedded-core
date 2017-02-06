@@ -41,6 +41,8 @@ from distutils import spawn
 scripts_path = os.path.abspath(os.path.dirname(__file__))
 lib_path = scripts_path + '/lib'
 sys.path.insert(0, lib_path)
+oe_lib_path = os.path.join(os.path.dirname(scripts_path), 'meta', 'lib')
+sys.path.insert(0, oe_lib_path)
 
 bitbake_exe = spawn.find_executable('bitbake')
 if bitbake_exe:
