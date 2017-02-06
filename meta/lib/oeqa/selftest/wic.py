@@ -339,6 +339,110 @@ class Wic(oeSelfTest):
         self.assertEqual(0, status)
         self.assertEqual(1, len(glob(self.resultdir + "%(wks)s-*.direct" % bbvars)))
 
+    def test_exclude_path(self):
+        """Test --exclude-path wks option."""
+
+        oldpath = os.environ['PATH']
+        os.environ['PATH'] = get_bb_var("PATH", "wic-tools")
+
+        try:
+            wks_file = 'temp.wks'
+            with open(wks_file, 'w') as wks:
+                rootfs_dir = get_bb_var('IMAGE_ROOTFS', 'core-image-minimal')
+                wks.write("""part / --source rootfs --ondisk mmcblk0 --fstype=ext4 --exclude-path usr
+part /usr --source rootfs --ondisk mmcblk0 --fstype=ext4 --rootfs-dir %s/usr
+part /etc --source rootfs --ondisk mmcblk0 --fstype=ext4 --exclude-path bin/ --rootfs-dir %s/usr"""
+                          % (rootfs_dir, rootfs_dir))
+            self.assertEqual(0, runCmd("wic create %s -e core-image-minimal -o %s" \
+                                       % (wks_file, self.resultdir)).status)
+
+            os.remove(wks_file)
+            wicout = glob(self.resultdir + "%s-*direct" % 'temp')
+            self.assertEqual(1, len(wicout))
+
+            wicimg = wicout[0]
+
+            # verify partition size with wic
+            res = runCmd("parted -m %s unit b p 2>/dev/null" % wicimg)
+            self.assertEqual(0, res.status)
+
+            # parse parted output which looks like this:
+            # BYT;\n
+            # /var/tmp/wic/build/tmpfwvjjkf_-201611101222-hda.direct:200MiB:file:512:512:msdos::;\n
+            # 1:0.00MiB:200MiB:200MiB:ext4::;\n
+            partlns = res.output.splitlines()[2:]
+
+            self.assertEqual(3, len(partlns))
+
+            for part in [1, 2, 3]:
+                part_file = os.path.join(self.resultdir, "selftest_img.part%d" % part)
+                partln = partlns[part-1].split(":")
+                self.assertEqual(7, len(partln))
+                start = int(partln[1].rstrip("B")) / 512
+                length = int(partln[3].rstrip("B")) / 512
+                self.assertEqual(0, runCmd("dd if=%s of=%s skip=%d count=%d" %
+                                           (wicimg, part_file, start, length)).status)
+
+            # Test partition 1, should contain the normal root directories, except
+            # /usr.
+            res = runCmd("debugfs -R 'ls -p' %s 2>/dev/null" % os.path.join(self.resultdir, "selftest_img.part1"))
+            self.assertEqual(0, res.status)
+            files = [line.split('/')[5] for line in res.output.split('\n')]
+            self.assertIn("etc", files)
+            self.assertNotIn("usr", files)
+
+            # Partition 2, should contain common directories for /usr, not root
+            # directories.
+            res = runCmd("debugfs -R 'ls -p' %s 2>/dev/null" % os.path.join(self.resultdir, "selftest_img.part2"))
+            self.assertEqual(0, res.status)
+            files = [line.split('/')[5] for line in res.output.split('\n')]
+            self.assertNotIn("etc", files)
+            self.assertNotIn("usr", files)
+            self.assertIn("share", files)
+
+            # Partition 3, should contain the same as partition 2, including the bin
+            # directory, but not the files inside it.
+            res = runCmd("debugfs -R 'ls -p' %s 2>/dev/null" % os.path.join(self.resultdir, "selftest_img.part3"))
+            self.assertEqual(0, res.status)
+            files = [line.split('/')[5] for line in res.output.split('\n')]
+            self.assertNotIn("etc", files)
+            self.assertNotIn("usr", files)
+            self.assertIn("share", files)
+            self.assertIn("bin", files)
+            res = runCmd("debugfs -R 'ls -p bin' %s 2>/dev/null" % os.path.join(self.resultdir, "selftest_img.part3"))
+            self.assertEqual(0, res.status)
+            files = [line.split('/')[5] for line in res.output.split('\n')]
+            self.assertIn(".", files)
+            self.assertIn("..", files)
+            self.assertEqual(2, len(files))
+
+            for part in [1, 2, 3]:
+                part_file = os.path.join(self.resultdir, "selftest_img.part%d" % part)
+                os.remove(part_file)
+
+        finally:
+            os.environ['PATH'] = oldpath
+
+    def test_exclude_path_errors(self):
+        """Test --exclude-path wks option error handling."""
+        wks_file = 'temp.wks'
+
+        rootfs_dir = get_bb_var('IMAGE_ROOTFS', 'core-image-minimal')
+
+        # Absolute argument.
+        with open(wks_file, 'w') as wks:
+            wks.write("part / --source rootfs --ondisk mmcblk0 --fstype=ext4 --exclude-path /usr")
+        self.assertNotEqual(0, runCmd("wic create %s -e core-image-minimal -o %s" \
+                                      % (wks_file, self.resultdir), ignore_status=True).status)
+        os.remove(wks_file)
+
+        # Argument pointing to parent directory.
+        with open(wks_file, 'w') as wks:
+            wks.write("part / --source rootfs --ondisk mmcblk0 --fstype=ext4 --exclude-path ././..")
+        self.assertNotEqual(0, runCmd("wic create %s -e core-image-minimal -o %s" \
+                                      % (wks_file, self.resultdir), ignore_status=True).status)
+        os.remove(wks_file)
+
     @testcase(1496)
     def test_bmap_short(self):
         """Test generation of .bmap file -m option"""
