@@ -245,17 +245,9 @@ python do_populate_sysroot_setscene () {
 }
 addtask do_populate_sysroot_setscene
 
-def staging_copyfile(c, target, fixme, postinsts, stagingdir, seendirs):
+def staging_copyfile(c, target, dest, postinsts, seendirs):
     import errno
 
-    if c.endswith("/fixmepath"):
-        fixme.append(c)
-        return None
-    if c.endswith("/fixmepath.cmd"):
-        return None
-    #bb.warn(c)
-    dest = c.replace(stagingdir, "")
-    dest = target + "/" + "/".join(dest.split("/")[3:])
     destdir = os.path.dirname(dest)
     if destdir not in seendirs:
         bb.utils.mkdirhier(destdir)
@@ -282,9 +274,7 @@ def staging_copyfile(c, target, fixme, postinsts, stagingdir, seendirs):
                 raise
     return dest
 
-def staging_copydir(c, target, stagingdir, seendirs):
-    dest = c.replace(stagingdir, "")
-    dest = target + "/" + "/".join(dest.split("/")[3:])
+def staging_copydir(c, target, dest, seendirs):
     if dest not in seendirs:
         bb.utils.mkdirhier(dest)
         seendirs.add(dest)
@@ -338,11 +328,18 @@ def staging_populate_sysroot_dir(targetsysroot, nativesysroot, native, d):
             with open(manifest, "r") as f:
                 for l in f:
                     l = l.strip()
+                    if l.endswith("/fixmepath"):
+                        fixme.append(l)
+                        continue
+                    if l.endswith("/fixmepath.cmd"):
+                        continue
+                    dest = l.replace(stagingdir, "")
+                    dest = targetdir + "/" + "/".join(dest.split("/")[3:])
                     if l.endswith("/"):
-                        staging_copydir(l, targetdir, stagingdir, seendirs)
+                        staging_copydir(l, targetdir, dest, seendirs)
                         continue
                     try:
-                        staging_copyfile(l, targetdir, fixme, postinsts, stagingdir, seendirs)
+                        staging_copyfile(l, targetdir, dest, postinsts, seendirs)
                     except FileExistsError:
                         continue
 
@@ -365,6 +362,8 @@ def staging_populate_sysroot_dir(targetsysroot, nativesysroot, native, d):
 python extend_recipe_sysroot() {
     import copy
     import subprocess
+    import errno
+    import collections
 
     taskdepdata = d.getVar("BB_TASKDEPDATA", False)
     mytaskname = d.getVar("BB_RUNTASK")
@@ -574,43 +573,54 @@ python extend_recipe_sysroot() {
         if not os.path.exists(manifest):
             bb.warn("Manifest %s not found?" % manifest)
         else:
-            with open(manifest, "r") as f, open(taskmanifest, 'w') as m:
+            newmanifest = collections.OrderedDict()
+            if native:
+                fm = fixme['native']
+                targetdir = recipesysrootnative
+            else:
+                fm = fixme['']
+                targetdir = destsysroot
+            with open(manifest, "r") as f:
                 manifests[dep] = manifest
                 for l in f:
                     l = l.strip()
-                    if l.endswith("/"):
-                        if native:
-                            dest = staging_copydir(l, recipesysrootnative, stagingdir, seendirs)
-                        else:
-                            dest = staging_copydir(l, destsysroot, stagingdir, seendirs)
+                    if l.endswith("/fixmepath"):
+                        fm.append(l)
                         continue
-                    if native:
-                        dest = staging_copyfile(l, recipesysrootnative, fixme['native'], postinsts, stagingdir, seendirs)
-                    else:
-                        dest = staging_copyfile(l, destsysroot, fixme[''], postinsts, stagingdir, seendirs)
-                    if dest:
-                        m.write(dest.replace(workdir + "/", "") + "\n")
+                    if l.endswith("/fixmepath.cmd"):
+                        continue
+                    dest = l.replace(stagingdir, "")
+                    dest = targetdir + "/" + "/".join(dest.split("/")[3:])
+                    newmanifest[l] = dest
             # Having multiple identical manifests in each sysroot eats diskspace so
-            # create a shared pool of them.
+            # create a shared pool of them and hardlink if we can.
+            # We create the manifest in advance so that if something fails during installation,
+            # or the build is interrupted, subsequent exeuction can cleanup.
             sharedm = sharedmanifests + "/" + os.path.basename(taskmanifest)
             if not os.path.exists(sharedm):
                 smlock = bb.utils.lockfile(sharedm + ".lock")
                 # Can race here. You'd think it just means we may not end up with all copies hardlinked to each other
                 # but python can lose file handles so we need to do this under a lock.
-                try:
-                    if not os.path.exists(sharedm):
-                        os.rename(taskmanifest, sharedm)
-                except OSError:
-                   pass
+                if not os.path.exists(sharedm):
+                    with open(sharedm, 'w') as m:
+                       for l in newmanifest:
+                           dest = newmanifest[l]
+                           m.write(dest.replace(workdir + "/", "") + "\n")
                 bb.utils.unlockfile(smlock)
-            if os.path.exists(sharedm):
-                # If we're crossing mount points we'll not reach here.
-                if os.path.exists(taskmanifest):
-                    if os.path.getsize(sharedm) != os.path.getsize(taskmanifest):
-                        # Order of entries can differ, overall size shouldn't
-                        raise Exception("Manifests %s and %s differ in size and shouldn't?" % (sharedm, taskmanifest))
-                    os.unlink(taskmanifest)
+            try:
                 os.link(sharedm, taskmanifest)
+            except OSError as err:
+                if err.errno == errno.EXDEV:
+                    bb.utils.copyfile(sharedm, taskmanifest)
+                else:
+                    raise
+            # Finally actually install the files
+            for l in newmanifest:
+                    dest = newmanifest[l]
+                    if l.endswith("/"):
+                        staging_copydir(l, targetdir, dest, seendirs)
+                        continue
+                    staging_copyfile(l, targetdir, dest, postinsts, seendirs)
 
     for f in fixme:
         if f == '':
