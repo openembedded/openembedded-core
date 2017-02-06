@@ -224,8 +224,17 @@ def add(args, config, basepath, workspace):
 
     tinfoil = setup_tinfoil(config_only=True, basepath=basepath)
     try:
-        rd = tinfoil.parse_recipe_file(recipefile, False)
+        try:
+            rd = tinfoil.parse_recipe_file(recipefile, False)
+        except Exception as e:
+            logger.error(str(e))
+            rd = None
         if not rd:
+            # Parsing failed. We just created this recipe and we shouldn't
+            # leave it in the workdir or it'll prevent bitbake from starting
+            movefn = '%s.parsefailed' % recipefile
+            logger.error('Parsing newly created recipe failed, moving recipe to %s for reference. If this looks to be caused by the recipe itself, please report this error.' % movefn)
+            shutil.move(recipefile, movefn)
             return 1
 
         if args.fetchuri and not args.no_git:

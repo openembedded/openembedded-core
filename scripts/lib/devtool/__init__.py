@@ -135,7 +135,12 @@ def parse_recipe(config, tinfoil, pn, appends, filter_workspace=True):
                             not path.startswith(config.workspace_path)]
     else:
         append_files = None
-    return tinfoil.parse_recipe_file(recipefile, appends, append_files)
+    try:
+        rd = tinfoil.parse_recipe_file(recipefile, appends, append_files)
+    except Exception as e:
+        logger.error(str(e))
+        return None
+    return rd
 
 def check_workspace_recipe(workspace, pn, checksrc=True, bbclassextend=False):
     """
