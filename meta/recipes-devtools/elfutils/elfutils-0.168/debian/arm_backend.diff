@@ -1,7 +1,10 @@
-Index: elfutils-0.164/backends/arm_init.c
+Upstream-Status: Backport [from debian]
+Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
+
+Index: b/backends/arm_init.c
 ===================================================================
---- elfutils-0.164.orig/backends/arm_init.c
-+++ elfutils-0.164/backends/arm_init.c
+--- a/backends/arm_init.c
++++ b/backends/arm_init.c
 @@ -35,20 +35,31 @@
  #define RELOC_PREFIX	R_ARM_
  #include "libebl_CPU.h"
@@ -47,10 +50,10 @@ Index: elfutils-0.164/backends/arm_init.c
    HOOK (eh, abi_cfi);
    HOOK (eh, check_reloc_target_type);
    HOOK (eh, symbol_type_name);
-Index: elfutils-0.164/backends/arm_regs.c
+Index: b/backends/arm_regs.c
 ===================================================================
---- elfutils-0.164.orig/backends/arm_regs.c
-+++ elfutils-0.164/backends/arm_regs.c
+--- a/backends/arm_regs.c
++++ b/backends/arm_regs.c
 @@ -31,6 +31,7 @@
  #endif
  
@@ -209,10 +212,10 @@ Index: elfutils-0.164/backends/arm_regs.c
        *setname = "VFP";
        *type = DW_ATE_float;
        *bits = 64;
-Index: elfutils-0.164/backends/arm_retval.c
+Index: b/backends/arm_retval.c
 ===================================================================
---- elfutils-0.164.orig/backends/arm_retval.c
-+++ elfutils-0.164/backends/arm_retval.c
+--- a/backends/arm_retval.c
++++ b/backends/arm_retval.c
 @@ -48,6 +48,13 @@ static const Dwarf_Op loc_intreg[] =
  #define nloc_intreg	1
  #define nloc_intregs(n)	(2 * (n))
@@ -288,11 +291,11 @@ Index: elfutils-0.164/backends/arm_retval.c
 +   return arm_return_value_location_ (functypedie, locp, 0);
 +}
 +
-Index: elfutils-0.164/libelf/elf.h
+Index: b/libelf/elf.h
 ===================================================================
---- elfutils-0.164.orig/libelf/elf.h
-+++ elfutils-0.164/libelf/elf.h
-@@ -2450,6 +2450,9 @@ enum
+--- a/libelf/elf.h
++++ b/libelf/elf.h
+@@ -2593,6 +2593,9 @@ enum
  #define EF_ARM_EABI_VER4	0x04000000
  #define EF_ARM_EABI_VER5	0x05000000
  
@@ -302,7 +305,7 @@ Index: elfutils-0.164/libelf/elf.h
  /* Additional symbol types for Thumb.  */
  #define STT_ARM_TFUNC		STT_LOPROC /* A Thumb function.  */
  #define STT_ARM_16BIT		STT_HIPROC /* A Thumb label.  */
-@@ -2467,12 +2470,19 @@ enum
+@@ -2610,12 +2613,19 @@ enum
  
  /* Processor specific values for the Phdr p_type field.  */
  #define PT_ARM_EXIDX		(PT_LOPROC + 1)	/* ARM unwind segment.  */
@@ -322,7 +325,7 @@ Index: elfutils-0.164/libelf/elf.h
  
  /* AArch64 relocs.  */
  
-@@ -2765,6 +2775,7 @@ enum
+@@ -2908,6 +2918,7 @@ enum
  					   TLS block (LDR, STR).  */
  #define R_ARM_TLS_IE12GP	111	/* 12 bit GOT entry relative
  					   to GOT origin (LDR).  */
@@ -330,10 +333,10 @@ Index: elfutils-0.164/libelf/elf.h
  #define R_ARM_ME_TOO		128	/* Obsolete.  */
  #define R_ARM_THM_TLS_DESCSEQ	129
  #define R_ARM_THM_TLS_DESCSEQ16	129
-Index: elfutils-0.164/backends/libebl_arm.h
+Index: b/backends/libebl_arm.h
 ===================================================================
 --- /dev/null
-+++ elfutils-0.164/backends/libebl_arm.h
++++ b/backends/libebl_arm.h
 @@ -0,0 +1,9 @@
 +#ifndef _LIBEBL_ARM_H
 +#define _LIBEBL_ARM_H 1
@@ -344,10 +347,10 @@ Index: elfutils-0.164/backends/libebl_arm.h
 +extern int arm_return_value_location_hard(Dwarf_Die *, const Dwarf_Op **locp);
 +
 +#endif
-Index: elfutils-0.164/tests/run-allregs.sh
+Index: b/tests/run-allregs.sh
 ===================================================================
---- elfutils-0.164.orig/tests/run-allregs.sh
-+++ elfutils-0.164/tests/run-allregs.sh
+--- a/tests/run-allregs.sh
++++ b/tests/run-allregs.sh
 @@ -2672,7 +2672,28 @@ integer registers:
  	 13: sp (sp), address 32 bits
  	 14: lr (lr), address 32 bits
@@ -465,10 +468,10 @@ Index: elfutils-0.164/tests/run-allregs.sh
  EOF
  
  # See run-readelf-mixed-corenote.sh for instructions to regenerate
-Index: elfutils-0.164/tests/run-readelf-mixed-corenote.sh
+Index: b/tests/run-readelf-mixed-corenote.sh
 ===================================================================
---- elfutils-0.164.orig/tests/run-readelf-mixed-corenote.sh
-+++ elfutils-0.164/tests/run-readelf-mixed-corenote.sh
+--- a/tests/run-readelf-mixed-corenote.sh
++++ b/tests/run-readelf-mixed-corenote.sh
 @@ -31,12 +31,11 @@ Note segment of 892 bytes at offset 0x27
      pid: 11087, ppid: 11063, pgrp: 11087, sid: 11063
      utime: 0.000000, stime: 0.010000, cutime: 0.000000, cstime: 0.000000
@@ -487,10 +490,10 @@ Index: elfutils-0.164/tests/run-readelf-mixed-corenote.sh
    CORE                 124  PRPSINFO
      state: 0, sname: R, zomb: 0, nice: 0, flag: 0x00400500
      uid: 0, gid: 0, pid: 11087, ppid: 11063, pgrp: 11087, sid: 11063
-Index: elfutils-0.164/tests/run-addrcfi.sh
+Index: b/tests/run-addrcfi.sh
 ===================================================================
---- elfutils-0.164.orig/tests/run-addrcfi.sh
-+++ elfutils-0.164/tests/run-addrcfi.sh
+--- a/tests/run-addrcfi.sh
++++ b/tests/run-addrcfi.sh
 @@ -3554,6 +3554,38 @@ dwarf_cfi_addrframe (.eh_frame): no matc
  	FPA reg21 (f5): undefined
  	FPA reg22 (f6): undefined

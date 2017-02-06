@@ -7,8 +7,8 @@ DEPENDS = "libtool bzip2 zlib virtual/libintl"
 DEPENDS_append_libc-musl = " argp-standalone fts "
 
 SRC_URI = "https://fedorahosted.org/releases/e/l/elfutils/${PV}/${BP}.tar.bz2"
-SRC_URI[md5sum] = "d4e462b7891915dc5326bccefa2024ff"
-SRC_URI[sha256sum] = "3c056914c8a438b210be0d790463b960fc79d234c3f05ce707cbff80e94cba30"
+SRC_URI[md5sum] = "52adfa40758d0d39e5d5c57689bf38d6"
+SRC_URI[sha256sum] = "b88d07893ba1373c7dd69a7855974706d05377766568a7d9002706d5de72c276"
 
 SRC_URI += "\
         file://dso-link-change.patch \
@@ -22,20 +22,19 @@ SRC_URI += "\
 "
 
 # pick the patch from debian
-# http://ftp.de.debian.org/debian/pool/main/e/elfutils/elfutils_0.164-1.debian.tar.xz
+# http://ftp.de.debian.org/debian/pool/main/e/elfutils/elfutils_0.168-0.2.debian.tar.xz
 SRC_URI += "\
-        file://hppa_backend.diff \
-        file://arm_backend.diff \
-        file://mips_backend.diff \
-        file://m68k_backend.diff \
-        file://testsuite-ignore-elflint.diff \
-        file://mips_readelf_w.patch \
-        file://kfreebsd_path.patch \
-        file://0001-Ignore-differences-between-mips-machine-identifiers.patch \
-        file://0002-Add-support-for-mips64-abis-in-mips_retval.c.patch \
-        file://0003-Add-mips-n64-relocation-format-hack.patch \
-        file://uclibc-support.patch \
-        file://elfcmp-fix-self-comparision.patch \
+        file://debian/hppa_backend.diff \
+        file://debian/arm_backend.diff \
+        file://debian/mips_backend.diff \
+        file://debian/testsuite-ignore-elflint.diff \
+        file://debian/mips_readelf_w.patch \
+        file://debian/kfreebsd_path.patch \
+        file://debian/0001-Ignore-differences-between-mips-machine-identifiers.patch \
+        file://debian/0002-Add-support-for-mips64-abis-in-mips_retval.c.patch \
+        file://debian/0003-Add-mips-n64-relocation-format-hack.patch \
+        file://debian/hurd_path.patch \
+        file://debian/ignore_strmerge.diff \
 "
 SRC_URI_append_libc-musl = " file://0001-build-Provide-alternatives-for-glibc-assumptions-hel.patch "
 

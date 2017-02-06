@@ -1,7 +1,10 @@
-Index: elfutils-0.164/backends/mips_init.c
+Upstream-Status: Backport [from debian]
+Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
+
+Index: b/backends/mips_init.c
 ===================================================================
 --- /dev/null
-+++ elfutils-0.164/backends/mips_init.c
++++ b/backends/mips_init.c
 @@ -0,0 +1,59 @@
 +/* Initialization of mips specific backend library.
 +   Copyright (C) 2006 Red Hat, Inc.
@@ -62,10 +65,10 @@ Index: elfutils-0.164/backends/mips_init.c
 +
 +  return MODVERSION;
 +}
-Index: elfutils-0.164/backends/mips_regs.c
+Index: b/backends/mips_regs.c
 ===================================================================
 --- /dev/null
-+++ elfutils-0.164/backends/mips_regs.c
++++ b/backends/mips_regs.c
 @@ -0,0 +1,104 @@
 +/* Register names and numbers for MIPS DWARF.
 +   Copyright (C) 2006 Red Hat, Inc.
@@ -171,10 +174,10 @@ Index: elfutils-0.164/backends/mips_regs.c
 +  name[namelen++] = '\0';
 +  return namelen;
 +}
-Index: elfutils-0.164/backends/mips_reloc.def
+Index: b/backends/mips_reloc.def
 ===================================================================
 --- /dev/null
-+++ elfutils-0.164/backends/mips_reloc.def
++++ b/backends/mips_reloc.def
 @@ -0,0 +1,79 @@
 +/* List the relocation types for mips.  -*- C -*-
 +   Copyright (C) 2006 Red Hat, Inc.
@@ -255,10 +258,10 @@ Index: elfutils-0.164/backends/mips_reloc.def
 +
 +#define NO_COPY_RELOC 1
 +#define NO_RELATIVE_RELOC 1
-Index: elfutils-0.164/backends/mips_retval.c
+Index: b/backends/mips_retval.c
 ===================================================================
 --- /dev/null
-+++ elfutils-0.164/backends/mips_retval.c
++++ b/backends/mips_retval.c
 @@ -0,0 +1,321 @@
 +/* Function return value location for Linux/mips ABI.
 +   Copyright (C) 2005 Red Hat, Inc.
@@ -581,10 +584,10 @@ Index: elfutils-0.164/backends/mips_retval.c
 +     DWARF and might be valid.  */
 +  return -2;
 +}
-Index: elfutils-0.164/backends/mips_symbol.c
+Index: b/backends/mips_symbol.c
 ===================================================================
 --- /dev/null
-+++ elfutils-0.164/backends/mips_symbol.c
++++ b/backends/mips_symbol.c
 @@ -0,0 +1,52 @@
 +/* MIPS specific symbolic name handling.
 +   Copyright (C) 2002, 2003, 2005 Red Hat, Inc.
@@ -638,10 +641,10 @@ Index: elfutils-0.164/backends/mips_symbol.c
 +      return ELF_T_NUM;
 +    }
 +}
-Index: elfutils-0.164/libebl/eblopenbackend.c
+Index: b/libebl/eblopenbackend.c
 ===================================================================
---- elfutils-0.164.orig/libebl/eblopenbackend.c
-+++ elfutils-0.164/libebl/eblopenbackend.c
+--- a/libebl/eblopenbackend.c
++++ b/libebl/eblopenbackend.c
 @@ -71,6 +71,8 @@ static const struct
    { "sparc", "elf_sparc", "sparc", 5, EM_SPARC, 0, 0 },
    { "sparc", "elf_sparcv8plus", "sparc", 5, EM_SPARC32PLUS, 0, 0 },
@@ -650,55 +653,27 @@ Index: elfutils-0.164/libebl/eblopenbackend.c
 +  { "mips", "elf_mipsel", "mipsel", 4, EM_MIPS_RS3_LE, 0, 0 },
  
    { "m32", "elf_m32", "m32", 3, EM_M32, 0, 0 },
-   { "m68k", "elf_m68k", "m68k", 4, EM_68K, 0, 0 },
-Index: elfutils-0.164/backends/common-reloc.c
+   { "m68k", "elf_m68k", "m68k", 4, EM_68K, ELFCLASS32, ELFDATA2MSB },
+Index: b/backends/Makefile.am
 ===================================================================
---- elfutils-0.164.orig/backends/common-reloc.c
-+++ elfutils-0.164/backends/common-reloc.c
-@@ -125,11 +125,13 @@ EBLHOOK(reloc_valid_use) (Elf *elf, int
- }
- 
- 
-+#ifndef NO_COPY_RELOC
- bool
- EBLHOOK(copy_reloc_p) (int reloc)
- {
-   return reloc == R_TYPE (COPY);
- }
-+#endif
- 
- bool
- EBLHOOK(none_reloc_p) (int reloc)
-@@ -151,7 +153,9 @@ EBLHOOK(init_reloc) (Ebl *ebl)
-   ebl->reloc_type_name = EBLHOOK(reloc_type_name);
-   ebl->reloc_type_check = EBLHOOK(reloc_type_check);
-   ebl->reloc_valid_use = EBLHOOK(reloc_valid_use);
-+#ifndef NO_COPY_RELOC
-   ebl->copy_reloc_p = EBLHOOK(copy_reloc_p);
-+#endif
-   ebl->none_reloc_p = EBLHOOK(none_reloc_p);
- #ifndef NO_RELATIVE_RELOC
-   ebl->relative_reloc_p = EBLHOOK(relative_reloc_p);
-Index: elfutils-0.164/backends/Makefile.am
-===================================================================
---- elfutils-0.164.orig/backends/Makefile.am
-+++ elfutils-0.164/backends/Makefile.am
+--- a/backends/Makefile.am
++++ b/backends/Makefile.am
 @@ -33,12 +33,12 @@ AM_CPPFLAGS += -I$(top_srcdir)/libebl -I
  
  
  modules = i386 sh x86_64 ia64 alpha arm aarch64 sparc ppc ppc64 s390 \
--	  tilegx parisc
-+	  tilegx parisc mips
+-	  tilegx m68k bpf parisc
++	  tilegx m68k bpf parisc mips
  libebl_pic = libebl_i386_pic.a libebl_sh_pic.a libebl_x86_64_pic.a    \
  	     libebl_ia64_pic.a libebl_alpha_pic.a libebl_arm_pic.a    \
  	     libebl_aarch64_pic.a libebl_sparc_pic.a libebl_ppc_pic.a \
  	     libebl_ppc64_pic.a libebl_s390_pic.a libebl_tilegx_pic.a \
--	     libebl_parisc_pic.a
-+	     libebl_parisc_pic.a libebl_mips_pic.a
+-	     libebl_m68k_pic.a libebl_bpf_pic.a libebl_parisc_pic.a
++	     libebl_m68k_pic.a libebl_bpf_pic.a libebl_parisc_pic.a libebl_mips_pic.a
  noinst_LIBRARIES = $(libebl_pic)
  noinst_DATA = $(libebl_pic:_pic.a=.so)
  
-@@ -116,6 +116,10 @@ parisc_SRCS = parisc_init.c parisc_symbo
+@@ -132,6 +132,10 @@ parisc_SRCS = parisc_init.c parisc_symbo
  libebl_parisc_pic_a_SOURCES = $(parisc_SRCS)
  am_libebl_parisc_pic_a_OBJECTS = $(parisc_SRCS:.c=.os)
  

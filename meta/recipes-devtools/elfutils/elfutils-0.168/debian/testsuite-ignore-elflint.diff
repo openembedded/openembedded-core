@@ -4,21 +4,24 @@ binutils don't pass elflint. However elfutils shouldn't FTBFS because of this.
 So we run the tests on all archs to see what breaks, but if it breaks we ignore
 the result (exitcode 77 means: this test was skipped).
 
-Index: elfutils-0.156/tests/run-elflint-self.sh
+Upstream-Status: Backport [from debian]
+Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
+
+Index: b/tests/run-elflint-self.sh
 ===================================================================
---- elfutils-0.156.orig/tests/run-elflint-self.sh	2013-07-28 14:35:36.000000000 +0200
-+++ elfutils-0.156/tests/run-elflint-self.sh	2013-07-28 14:36:10.000000000 +0200
+--- a/tests/run-elflint-self.sh
++++ b/tests/run-elflint-self.sh
 @@ -18,4 +18,4 @@
  
  . $srcdir/test-subr.sh
  
 -testrun_on_self ${abs_top_builddir}/src/elflint --quiet --gnu-ld
 +testrun_on_self_skip ${abs_top_builddir}/src/elflint --quiet --gnu-ld
-Index: elfutils-0.156/tests/test-subr.sh
+Index: b/tests/test-subr.sh
 ===================================================================
---- elfutils-0.156.orig/tests/test-subr.sh	2013-07-28 14:35:36.000000000 +0200
-+++ elfutils-0.156/tests/test-subr.sh	2013-07-28 14:35:36.000000000 +0200
-@@ -149,3 +149,18 @@
+--- a/tests/test-subr.sh
++++ b/tests/test-subr.sh
+@@ -152,3 +152,18 @@ testrun_on_self_quiet()
    # Only exit if something failed
    if test $exit_status != 0; then exit $exit_status; fi
  }

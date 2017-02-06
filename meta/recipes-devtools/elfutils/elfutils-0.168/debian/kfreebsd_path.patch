@@ -1,6 +1,11 @@
---- elfutils/tests/run-native-test.sh.orig
-+++ elfutils/tests/run-native-test.sh
-@@ -78,6 +78,12 @@
+Upstream-Status: Backport [from debian]
+Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
+
+Index: b/tests/run-native-test.sh
+===================================================================
+--- a/tests/run-native-test.sh
++++ b/tests/run-native-test.sh
+@@ -77,6 +77,12 @@ native_test()
    test $native -eq 0 || testrun "$@" -p $native > /dev/null
  }
  
