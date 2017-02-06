@@ -336,7 +336,7 @@ def determine_from_url(srcuri):
                 pn = res.group(1).strip().replace('_', '-')
                 pv = res.group(2).strip().replace('_', '.')
 
-        if not pn and not pv:
+        if not pn and not pv and parseres.scheme not in ['git', 'gitsm', 'svn', 'hg']:
             srcfile = os.path.basename(parseres.path.rstrip('/'))
             pn, pv = determine_from_filename(srcfile)
 
@@ -566,7 +566,6 @@ def create_recipe(args):
             pn = name_pn
         if name_pv and not realpv:
             realpv = name_pv
-
 
     if not srcuri:
         lines_before.append('# No information for SRC_URI yet (only an external source tree was specified)')
