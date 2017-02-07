@@ -6,27 +6,29 @@ BUGTRACKER = "https://bugs.g10code.com/gnupg/index"
 LICENSE = "GPLv2+ & LGPLv2.1+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f \
                     file://COPYING.LESSER;md5=bbb461211a33b134d42ed5ee802b37ff \
-                    file://src/gpgme.h.in;endline=23;md5=5027eec93a996272a9a0a6a86cf35775 \
+                    file://src/gpgme.h.in;endline=23;md5=0f7059665c4b7897f4f4d0cb93aa9f98 \
                     file://src/engine.h;endline=22;md5=4b6d8ba313d9b564cc4d4cfb1640af9d"
 
 UPSTREAM_CHECK_URI = "https://gnupg.org/download/index.html"
 SRC_URI = "${GNUPG_MIRROR}/gpgme/${BP}.tar.bz2 \
-           file://gpgme.pc \
            file://pkgconfig.patch \
           "
 
-SRC_URI[md5sum] = "60d730d22e8065fd5de309e8b98e304b"
-SRC_URI[sha256sum] = "b09de4197ac280b102080e09eaec6211d081efff1963bf7821cf8f4f9916099d"
+SRC_URI[md5sum] = "722a4153904b9b5dc15485a22d29263b"
+SRC_URI[sha256sum] = "596097257c2ce22e747741f8ff3d7e24f6e26231fa198a41b2a072e62d1e5d33"
 
 DEPENDS = "libgpg-error libassuan"
+RDEPENDS_${PN}-cpp += "libstdc++"
 
 BINCONFIG = "${bindir}/gpgme-config"
 
 inherit autotools texinfo binconfig-disabled pkgconfig
 
-PACKAGES =+ "${PN}-pthread"
-FILES_${PN}-pthread = "${libdir}/libgpgme-pthread.so.*"
-FILES_${PN}-dev += "${datadir}/common-lisp/source/gpgme/*"
+PACKAGES =+ "${PN}-cpp"
+FILES_${PN}-cpp = "${libdir}/libgpgmepp.so.*"
+FILES_${PN}-dev += "${datadir}/common-lisp/source/gpgme/* \
+                    ${libdir}/cmake/* \
+"
 
 CFLAGS_append_libc-musl = " -D__error_t_defined "
 do_configure_prepend () {
@@ -35,7 +37,3 @@ do_configure_prepend () {
 	rm -f ${S}/m4/libassuan.m4
 }
 
-do_install_append () {
-        install -d ${D}${libdir}/pkgconfig
-        install -m 0644 ${WORKDIR}/gpgme.pc ${D}${libdir}/pkgconfig/
-}
