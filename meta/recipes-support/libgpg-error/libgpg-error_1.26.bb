@@ -16,8 +16,8 @@ SRC_URI = "${GNUPG_MIRROR}/libgpg-error/libgpg-error-${PV}.tar.bz2 \
            file://pkgconfig.patch \
 	  "
 
-SRC_URI[md5sum] = "d9fa545922a5060cbfbd87464bc31686"
-SRC_URI[sha256sum] = "f628f75843433b38b05af248121beb7db5bd54bb2106f384edac39934261320c"
+SRC_URI[md5sum] = "97456709dbbcbb69354317ffe3e347cd"
+SRC_URI[sha256sum] = "4c4bcbc90116932e3acd37b37812d8653b1b189c1904985898e860af818aee69"
 
 BINCONFIG = "${bindir}/gpg-error-config"
 
@@ -50,5 +50,6 @@ do_install_append() {
 }
 
 FILES_${PN}-dev += "${bindir}/gpg-error"
+FILES_${PN}-doc += "${datadir}/libgpg-error/errorref.txt"
 
 BBCLASSEXTEND = "native nativesdk"
