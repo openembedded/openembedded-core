@@ -12,23 +12,20 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=b46486e4c4a416602693a711bb5bfa39 \
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/rpcbind/rpcbind-${PV}.tar.bz2 \
            file://init.d \
-           file://0001-Avoid-use-of-glibc-sys-cdefs.h-header.patch \
            file://remove-sys-queue.patch \
-           file://0001-handle_reply-Don-t-use-the-xp_auth-pointer-directly.patch \
            ${UCLIBCPATCHES} \
            ${MUSLPATCHES} \
            file://rpcbind.conf \
            file://rpcbind.socket \
            file://rpcbind.service \
-           file://cve-2015-7236.patch \
           "
 MUSLPATCHES_libc-musl = "file://musl-sunrpc.patch"
 
 UCLIBCPATCHES ?= ""
 MUSLPATCHES ?= ""
 
-SRC_URI[md5sum] = "c8875246b2688a1adfbd6ad43480278d"
-SRC_URI[sha256sum] = "9897823a9d820ea011d9ea02054d5ab99469b9ca5346265fee380713c8fed27b"
+SRC_URI[md5sum] = "cf10cd41ed8228fc54c316191c1f07fe"
+SRC_URI[sha256sum] = "074a9a530dc7c11e0d905aa59bcb0847c009313f02e98d3d798aa9568f414c66"
 
 inherit autotools update-rc.d systemd pkgconfig
 
