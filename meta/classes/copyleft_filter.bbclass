@@ -6,7 +6,7 @@
 #
 # vi:sts=4:sw=4:et
 
-COPYLEFT_LICENSE_INCLUDE ?= 'GPL* LGPL*'
+COPYLEFT_LICENSE_INCLUDE ?= 'GPL* LGPL* AGPL*'
 COPYLEFT_LICENSE_INCLUDE[type] = 'list'
 COPYLEFT_LICENSE_INCLUDE[doc] = 'Space separated list of globs which include licenses'
 
