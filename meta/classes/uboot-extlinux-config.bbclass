@@ -16,6 +16,10 @@
 #                                    concatenate and use as an initrd (optional).
 # UBOOT_EXTLINUX_MENU_DESCRIPTION  - Name to use as description.
 # UBOOT_EXTLINUX_ROOT              - Root kernel cmdline.
+# UBOOT_EXTLINUX_TIMEOUT           - Timeout before DEFAULT selection is made.
+#                                    Measured in 1/10 of a second.
+# UBOOT_EXTLINUX_DEFAULT_LABEL     - Target to be selected by default after
+#                                    the timeout period
 #
 # If there's only one label system will boot automatically and menu won't be
 # created. If you want to use more than one labels, e.g linux and alternate,
@@ -24,6 +28,9 @@
 # Ex:
 #
 # UBOOT_EXTLINUX_LABELS ??= "default fallback"
+#
+# UBOOT_EXTLINUX_DEFAULT_LABEL ??= "Linux Default"
+# UBOOT_EXTLINUX_TIMEOUT ??= "30"
 #
 # UBOOT_EXTLINUX_KERNEL_IMAGE_default ??= "../zImage"
 # UBOOT_EXTLINUX_MENU_DESCRIPTION_default ??= "Linux Default"
@@ -34,6 +41,8 @@
 # Results:
 #
 # menu title Select the boot mode
+# TIMEOUT 30
+# DEFAULT Linux Default
 # LABEL Linux Default
 #   KERNEL ../zImage
 #   FDTDIR ../
@@ -82,6 +91,15 @@ python create_extlinux_config() {
             if len(labels.split()) > 1:
                 cfgfile.write('menu title Select the boot mode\n')
 
+            timeout =  localdata.getVar('UBOOT_EXTLINUX_TIMEOUT')
+            if timeout:
+                cfgfile.write('TIMEOUT %s\n' % (timeout))
+
+            if len(labels.split()) > 1:
+                default = localdata.getVar('UBOOT_EXTLINUX_DEFAULT_LABEL')
+                if default:
+                    cfgfile.write('DEFAULT %s\n' % (default))
+                    
             for label in labels.split():
                 localdata = bb.data.createCopy(d)
 
