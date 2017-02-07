@@ -1,8 +1,8 @@
 SUMMARY = "GNU Privacy Guard - encryption and signing tools (2.x)"
 HOMEPAGE = "http://www.gnupg.org/"
 LICENSE = "GPLv3 & LGPLv3"
-LIC_FILES_CHKSUM = "file://COPYING;md5=f27defe1e96c2e1ecd4e0c9be8967949 \
-                    file://COPYING.LIB;md5=6a6a8e020838b23406c81b19c1d46df6"
+LIC_FILES_CHKSUM = "file://COPYING;md5=189af8afca6d6075ba6c9e0aa8077626 \
+                    file://COPYING.LIB;md5=a2b6bf2cb38ee52619e60f30a1fc7257"
 
 DEPENDS = "npth libassuan libksba zlib bzip2 readline libgcrypt"
 
@@ -16,8 +16,8 @@ SRC_URI = "${GNUPG_MIRROR}/${BPN}/${BPN}-${PV}.tar.bz2 \
            file://autogen.sh-fix-find-version-for-beta-checking.patch \
           "
 
-SRC_URI[md5sum] = "46cf0a42ffad6c2615cafd633580b2de"
-SRC_URI[sha256sum] = "9450dee9693b6a12bf0c374dae77b66c30f69ff8f35fc9266ab8dd76998eba42"
+SRC_URI[md5sum] = "c67f908b0b35c7ebc62144f362757e1e"
+SRC_URI[sha256sum] = "d04c6fab7e5562ce4b915b22020e34d4c1a256847690cf149842264fc7cef994"
 
 EXTRA_OECONF = "--disable-ldap \
 		--disable-ccid-driver \
