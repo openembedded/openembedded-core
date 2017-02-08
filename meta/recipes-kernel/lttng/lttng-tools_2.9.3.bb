@@ -50,11 +50,6 @@ FILES_${PN}-dev += "${PYTHON_SITEPACKAGES_DIR}/*.la"
 INSANE_SKIP_${PN} = "libexec dev-so"
 INSANE_SKIP_${PN}-dbg = "libexec"
 
-do_configure_prepend () {
-    # Delete a shipped m4 file that overrides our patched one
-    rm -f ${S}/m4/libxml.m4
-}
-
 do_install_ptest () {
     for f in Makefile tests/Makefile tests/utils/utils.sh ; do
         install -D "${B}/$f" "${D}${PTEST_PATH}/$f"
