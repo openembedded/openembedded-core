@@ -94,6 +94,7 @@ class DirectPlugin(ImagerPlugin):
         self._disk_format = "direct"
         self._disk_names = []
         self.ptable_format = self.ks.bootloader.ptable
+        self.parts = self.ks.partitions
 
     def do_create(self):
         """
@@ -140,7 +141,7 @@ class DirectPlugin(ImagerPlugin):
         with open(fstab_path) as fstab:
             fstab_lines = fstab.readlines()
 
-        if self._update_fstab(fstab_lines, self._get_parts()):
+        if self._update_fstab(fstab_lines, self.parts):
             shutil.copyfile(fstab_path, fstab_path + ".orig")
 
             with open(fstab_path, "w") as fstab:
@@ -179,22 +180,6 @@ class DirectPlugin(ImagerPlugin):
         """
         self.bootimg_dir = bootimg_dir
 
-    def _get_parts(self):
-        if not self.ks:
-            raise CreatorError("Failed to get partition info, "
-                               "please check your kickstart setting.")
-
-        # Set a default partition if no partition is given out
-        if not self.ks.partitions:
-            partstr = "part / --size 1900 --ondisk sda --fstype=ext3"
-            args = partstr.split()
-            part = self.ks.parse(args[1:])
-            if part not in self.ks.partitions:
-                self.ks.partitions.append(part)
-
-        # partitions list from kickstart file
-        return self.ks.partitions
-
     def _full_path(self, path, name, extention):
         """ Construct full file path to a file we generate. """
         return os.path.join(path, "%s-%s.%s" % (self.name, name, extention))
@@ -208,12 +193,10 @@ class DirectPlugin(ImagerPlugin):
         filesystems from the artifacts directly and combine them into
         a partitioned image.
         """
-        parts = self._get_parts()
-
         self._image = Image(self.native_sysroot)
 
         disk_ids = {}
-        for num, part in enumerate(parts, 1):
+        for num, part in enumerate(self.parts, 1):
             # as a convenience, set source to the boot partition source
             # instead of forcing it to be set via bootloader --source
             if not self.ks.bootloader.source and part.mountpoint == "/boot":
@@ -227,11 +210,11 @@ class DirectPlugin(ImagerPlugin):
                     if part.disk not in disk_ids:
                         disk_ids[part.disk] = int.from_bytes(os.urandom(4), 'little')
                     disk_id = disk_ids[part.disk]
-                    part.uuid = '%0x-%02d' % (disk_id, self._get_part_num(num, parts))
+                    part.uuid = '%0x-%02d' % (disk_id, self._get_part_num(num, self.parts))
 
         fstab_path = self._write_fstab(self.rootfs_dir.get("ROOTFS_DIR"))
 
-        for part in parts:
+        for part in self.parts:
             # get rootfs size from bitbake variable if it's not set in .ks file
             if not part.size:
                 # and if rootfs name is specified for the partition
@@ -323,8 +306,6 @@ class DirectPlugin(ImagerPlugin):
         """
         msg = "The new image(s) can be found here:\n"
 
-        parts = self._get_parts()
-
         for disk_name in self._image.disks:
             extension = "direct" + {"gzip": ".gz",
                                     "bzip2": ".bz2",
@@ -334,7 +315,7 @@ class DirectPlugin(ImagerPlugin):
             msg += '  %s\n\n' % full_path
 
         msg += 'The following build artifacts were used to create the image(s):\n'
-        for part in parts:
+        for part in self.parts:
             if part.rootfs_dir is None:
                 continue
             if part.mountpoint == '/':
@@ -357,14 +338,13 @@ class DirectPlugin(ImagerPlugin):
 
         Assume partition order same as in wks
         """
-        parts = self._get_parts()
-        for num, part in enumerate(parts, 1):
+        for num, part in enumerate(self.parts, 1):
             if part.mountpoint == "/":
                 if part.uuid:
                     return "PARTUUID=%s" % part.uuid
                 else:
                     suffix = 'p' if part.disk.startswith('mmcblk') else ''
-                    pnum = self._get_part_num(num, parts)
+                    pnum = self._get_part_num(num, self.parts)
                     return "/dev/%s%s%-d" % (part.disk, suffix, pnum)
 
     def cleanup(self):
