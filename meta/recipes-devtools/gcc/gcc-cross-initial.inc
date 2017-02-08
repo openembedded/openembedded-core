@@ -24,7 +24,7 @@ EXTRA_OECONF = "\
     --enable-languages=c \
     --program-prefix=${TARGET_PREFIX} \
     --with-sysroot=/not/exist \
-    --with-build-sysroot=${GCCCROSS_BUILDSYSROOT} \
+    --with-build-sysroot=${STAGING_DIR_TARGET} \
     ${EXTRA_OECONF_INITIAL} \
     ${@bb.utils.contains('DISTRO_FEATURES', 'ld-is-gold', '--with-ld=${STAGING_BINDIR_TOOLCHAIN}/${TARGET_PREFIX}ld.bfd', '', d)} \
     ${EXTRA_OECONF_GCC_FLOAT} \
@@ -32,17 +32,6 @@ EXTRA_OECONF = "\
 "
 
 EXTRA_OECONF += "--with-native-system-header-dir=${SYSTEMHEADERS}"
-
-GCCCROSS_BUILDSYSROOT = "${B}/tmpsysroot"
-
-do_configure_prepend () {
-	sysr=${GCCCROSS_BUILDSYSROOT}${target_includedir}
-	mkdir -p $sysr
-	for t in linux asm asm-generic; do
-		rm -f $sysr/$t
-		ln -s ${STAGING_DIR_TARGET}${target_includedir}/$t $sysr/
-	done
-}
 
 do_compile () {
     oe_runmake all-gcc configure-target-libgcc
