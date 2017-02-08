@@ -46,7 +46,6 @@ class Image():
         self.partimages = []
         # Size of a sector used in calculations
         self.sector_size = SECTOR_SIZE
-        self._partitions_layed_out = False
         self.native_sysroot = native_sysroot
 
     def _add_disk(self, disk_name):
@@ -57,8 +56,6 @@ class Image():
         if disk_name in self.disks:
             # We already have this disk
             return
-
-        assert not self._partitions_layed_out
 
         self.disks[disk_name] = \
                 {'disk': None,     # Disk object
@@ -90,8 +87,6 @@ class Image():
         # Converting kB to sectors for parted
         part.size_sec = part.disk_size * 1024 // self.sector_size
 
-        assert not self._partitions_layed_out
-
         self.partitions.append(part)
         self._add_disk(part.disk)
 
@@ -101,11 +96,6 @@ class Image():
         partition table format and may be "msdos". """
 
         msger.debug("Assigning %s partitions to disks" % ptable_format)
-
-        if self._partitions_layed_out:
-            return
-
-        self._partitions_layed_out = True
 
         # Go through partitions in the order they are added in .ks file
         for num in range(len(self.partitions)):
@@ -218,8 +208,6 @@ class Image():
         for dev in self.disks:
             disk = self.disks[dev]
             disk['disk'].create()
-
-        self.layout_partitions()
 
         for dev in self.disks:
             disk = self.disks[dev]
