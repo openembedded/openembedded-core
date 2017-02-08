@@ -90,9 +90,6 @@ class DirectPlugin(ImagerPlugin):
                                strftime("%Y%m%d%H%M"))
         self.workdir = tempfile.mkdtemp(dir=self.outdir, prefix='tmp.wic.')
         self._image = None
-        self._disks = {}
-        self._disk_format = "direct"
-        self._disk_names = []
         self.ptable_format = self.ks.bootloader.ptable
         self.parts = self.ks.partitions
 
@@ -249,7 +246,6 @@ class DirectPlugin(ImagerPlugin):
             msger.debug("Adding disk %s as %s with size %s bytes" \
                         % (disk_name, full_path, disk['min_size']))
             disk_obj = DiskImage(full_path, disk['min_size'])
-            #self._disks[disk_name] = disk_obj
             self._image.add_disk(disk_name, disk_obj, disk_ids.get(disk_name))
 
         self._image.create()
