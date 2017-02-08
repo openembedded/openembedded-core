@@ -68,7 +68,7 @@ class DirectPlugin(ImagerPlugin):
     name = 'direct'
 
     def __init__(self, wks_file, rootfs_dir, bootimg_dir, kernel_dir,
-                 native_sysroot, scripts_path, oe_builddir, options):
+                 native_sysroot, oe_builddir, options):
         try:
             self.ks = KickStart(wks_file)
         except KickStartError as err:

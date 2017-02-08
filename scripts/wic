@@ -250,7 +250,7 @@ def wic_create_subcommand(args, usage_str):
 
     print("Creating image(s)...\n")
     engine.wic_create(wks_file, rootfs_dir, bootimg_dir, kernel_dir,
-                      native_sysroot, scripts_path, options)
+                      native_sysroot, options)
 
 
 def wic_list_subcommand(args, usage_str):
