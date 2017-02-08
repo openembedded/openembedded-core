@@ -34,7 +34,6 @@ from wic import msger
 from wic.ksparser import KickStart, KickStartError
 from wic.plugin import pluginmgr
 from wic.pluginbase import ImagerPlugin
-from wic.utils import errors
 from wic.utils.errors import CreatorError, ImageError
 from wic.utils.misc import get_bitbake_var, exec_cmd, exec_native_cmd
 from wic.utils.partitionedfs import Image
@@ -102,7 +101,7 @@ class DirectPlugin(ImagerPlugin):
             self.assemble()
             self.finalize()
             self.print_info()
-        except errors.CreatorError:
+        except CreatorError:
             raise
         finally:
             self.cleanup()
