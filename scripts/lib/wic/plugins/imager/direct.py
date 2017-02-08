@@ -237,14 +237,7 @@ class DirectPlugin(ImagerPlugin):
             part.prepare(self, self.workdir, self.oe_builddir, self.rootfs_dir,
                          self.bootimg_dir, self.kernel_dir, self.native_sysroot)
 
-
-            self._image.add_partition(part.disk_size, part.disk,
-                                      part.mountpoint, part.source_file,
-                                      part.fstype, part.label,
-                                      fsopts=part.fsopts, boot=part.active,
-                                      align=part.align, no_table=part.no_table,
-                                      part_type=part.part_type, uuid=part.uuid,
-                                      system_id=part.system_id)
+            self._image.add_partition(part)
 
         if fstab_path:
             shutil.move(fstab_path + ".orig", fstab_path)

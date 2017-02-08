@@ -38,12 +38,14 @@ class Partition():
         self.active = args.active
         self.align = args.align
         self.disk = args.disk
+        self.device = None
         self.extra_space = args.extra_space
         self.fsopts = args.fsopts
         self.fstype = args.fstype
         self.label = args.label
         self.mountpoint = args.mountpoint
         self.no_table = args.no_table
+        self.num = None
         self.overhead_factor = args.overhead_factor
         self.part_type = args.part_type
         self.rootfs_dir = args.rootfs_dir
