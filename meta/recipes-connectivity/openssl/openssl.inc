@@ -30,7 +30,7 @@ export EX_LIBS = "-lgcc -ldl"
 export AS = "${CC} -c"
 EXTRA_OEMAKE = "-e MAKEFLAGS="
 
-inherit pkgconfig siteinfo multilib_header ptest
+inherit pkgconfig siteinfo multilib_header ptest relative_symlinks
 
 PACKAGES =+ "libcrypto libssl ${PN}-misc openssl-conf"
 FILES_libcrypto = "${libdir}/libcrypto${SOLIBS}"
