@@ -50,6 +50,27 @@ def make_relative_symlink(path):
     os.remove(path)
     os.symlink(base, path)
 
+def replace_absolute_symlinks(basedir, d):
+    """
+    Walk basedir looking for absolute symlinks and replacing them with relative ones.
+    The absolute links are assumed to be relative to basedir
+    (compared to make_relative_symlink above which tries to compute common ancestors
+    using pattern matching instead)
+    """
+    for walkroot, dirs, files in os.walk(basedir):
+        for file in files + dirs:
+            path = os.path.join(walkroot, file)
+            if not os.path.islink(path):
+                continue
+            link = os.readlink(path)
+            if not os.path.isabs(link):
+                continue
+            walkdir = os.path.dirname(path.rpartition(basedir)[2])
+            base = os.path.relpath(link, walkdir)
+            bb.debug(2, "Replacing absolute path %s with relative path %s" % (link, base))
+            os.remove(path)
+            os.symlink(base, path)
+
 def format_display(path, metadata):
     """ Prepare a path for display to the user. """
     rel = relative(metadata.getVar("TOPDIR"), path)
