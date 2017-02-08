@@ -80,15 +80,6 @@ class Image():
         self.disks[disk_name]['disk'] = disk_obj
         self.disks[disk_name]['identifier'] = identifier
 
-    def __add_partition(self, part):
-        """ This is a helper function for 'add_partition()' which adds a
-        partition to the internal list of partitions. """
-
-        assert not self._partitions_layed_out
-
-        self.partitions.append(part)
-        self.__add_disk(part['disk_name'])
-
     def add_partition(self, size, disk_name, mountpoint, source_file=None, fstype=None,
                       label=None, fsopts=None, boot=False, align=None, no_table=False,
                       part_type=None, uuid=None, system_id=None):
@@ -117,7 +108,10 @@ class Image():
                 'uuid': uuid, # Partition UUID
                 'system_id': system_id} # Partition system id
 
-        self.__add_partition(part)
+        assert not self._partitions_layed_out
+
+        self.partitions.append(part)
+        self._add_disk(part['disk_name'])
 
     def layout_partitions(self, ptable_format="msdos"):
         """ Layout the partitions, meaning calculate the position of every
