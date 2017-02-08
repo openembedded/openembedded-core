@@ -107,6 +107,7 @@ do_compile() {
         OS_TEST=${OS_TEST} \
         RPATH="${RPATH}"
 }
+do_compile[vardepsexclude] += "SITEINFO_BITS"
 
 
 do_install_prepend_class-nativesdk() {
@@ -180,6 +181,7 @@ do_install() {
         install -m 755 -t ${D}/${bindir} $binary
     done
 }
+do_install[vardepsexclude] += "SITEINFO_BITS"
 
 do_install_append() {
     # Create empty .chk files for the NSS libraries at build time. They could
