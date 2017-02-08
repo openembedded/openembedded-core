@@ -49,7 +49,7 @@ class Image():
         self._partitions_layed_out = False
         self.native_sysroot = native_sysroot
 
-    def __add_disk(self, disk_name):
+    def _add_disk(self, disk_name):
         """ Add a disk 'disk_name' to the internal list of disks. Note,
         'disk_name' is the name of the disk in the target system
         (e.g., sdb). """
@@ -76,7 +76,7 @@ class Image():
         can be added. In case of multiple disks, disk partitions have to be
         added for each disk separately with 'add_partition()". """
 
-        self.__add_disk(disk_name)
+        self._add_disk(disk_name)
         self.disks[disk_name]['disk'] = disk_obj
         self.disks[disk_name]['identifier'] = identifier
 
@@ -217,7 +217,7 @@ class Image():
 
             disk['min_size'] *= self.sector_size
 
-    def __create_partition(self, device, parttype, fstype, start, size):
+    def _create_partition(self, device, parttype, fstype, start, size):
         """ Create a partition on an image described by the 'device' object. """
 
         # Start is included to the size so we need to substract one from the end.
@@ -272,9 +272,9 @@ class Image():
                 # starts a sector before the first logical partition,
                 # add a sector at the back, so that there is enough
                 # room for all logical partitions.
-                self.__create_partition(disk['disk'].device, "extended",
-                                        None, part['start'] - 1,
-                                        disk['offset'] - part['start'] + 1)
+                self._create_partition(disk['disk'].device, "extended",
+                                       None, part['start'] - 1,
+                                       disk['offset'] - part['start'] + 1)
 
             if part['fstype'] == "swap":
                 parted_fs_type = "linux-swap"
@@ -297,8 +297,8 @@ class Image():
                             part['mountpoint'])
                 part['size'] -= 1
 
-            self.__create_partition(disk['disk'].device, part['type'],
-                                    parted_fs_type, part['start'], part['size'])
+            self._create_partition(disk['disk'].device, part['type'],
+                                   parted_fs_type, part['start'], part['size'])
 
             if part['part_type']:
                 msger.debug("partition %d: set type UID to %s" % \
