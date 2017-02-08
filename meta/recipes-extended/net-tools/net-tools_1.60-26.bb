@@ -93,6 +93,17 @@ do_install() {
 	unset CFLAGS
 	unset LDFLAGS
 	oe_runmake 'BASEDIR=${D}' install
+
+	if [ "${base_bindir}" != "/bin" ]; then
+		mkdir -p ${D}/${base_bindir}
+		mv ${D}/bin/* ${D}/${base_bindir}/
+		rmdir ${D}/bin
+	fi
+	if [ "${base_sbindir}" != "/sbin" ]; then
+		mkdir ${D}/${base_sbindir}
+		mv ${D}/sbin/* ${D}/${base_sbindir}/
+		rmdir ${D}/sbin
+	fi
 }
 
 inherit update-alternatives
