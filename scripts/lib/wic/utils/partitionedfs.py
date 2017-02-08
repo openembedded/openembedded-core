@@ -238,7 +238,11 @@ class Image():
 
         return exec_native_cmd(cmd, self.native_sysroot)
 
-    def __format_disks(self):
+    def create(self):
+        for dev in self.disks:
+            disk = self.disks[dev]
+            disk['disk'].create()
+
         self.layout_partitions()
 
         for dev in self.disks:
@@ -375,12 +379,3 @@ class Image():
                 partimage = image_file + '.p%d' % part['num']
                 os.rename(source, partimage)
                 self.partimages.append(partimage)
-
-    def create(self):
-        for dev in self.disks:
-            disk = self.disks[dev]
-            disk['disk'].create()
-
-        self.__format_disks()
-
-        return
