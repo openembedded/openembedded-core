@@ -3,7 +3,7 @@
 #
 
 SANITY_REQUIRED_UTILITIES ?= "patch diffstat makeinfo git bzip2 tar \
-    gzip gawk chrpath wget cpio perl file"
+    gzip gawk chrpath wget cpio perl file which"
 
 def bblayers_conf_file(d):
     return os.path.join(d.getVar('TOPDIR'), 'conf/bblayers.conf')
