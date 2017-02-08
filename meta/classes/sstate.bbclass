@@ -583,29 +583,6 @@ python sstate_hardcode_path () {
 def sstate_package(ss, d):
     import oe.path
 
-    def make_relative_symlink(path, outputpath, d):
-        # Replace out absolute TMPDIR paths in symlinks with relative ones
-        if not os.path.islink(path):
-            return
-        link = os.readlink(path)
-        if not os.path.isabs(link):
-            return
-        if not link.startswith(tmpdir):
-            return
-
-        #base = os.path.relpath(link, os.path.dirname(path))
-
-        depth = outputpath.rpartition(tmpdir)[2].count('/')
-        base = link.partition(tmpdir)[2].strip()
-        while depth > 1:
-            base = "/.." + base
-            depth -= 1
-        base = "." + base
-
-        bb.debug(2, "Replacing absolute path %s with relative path %s for %s" % (link, base, outputpath))
-        os.remove(path)
-        os.symlink(base, path)
-
     tmpdir = d.getVar('TMPDIR')
 
     sstatebuild = d.expand("${WORKDIR}/sstate-build-%s/" % ss['task'])
@@ -619,15 +596,20 @@ def sstate_package(ss, d):
         if d.getVar('SSTATE_SKIP_CREATION') == '1':
             continue
         srcbase = state[0].rstrip("/").rsplit('/', 1)[0]
+        # Find and error for absolute symlinks. We could attempt to relocate but its not
+        # clear where the symlink is relative to in this context. We could add that markup
+        # to sstate tasks but there aren't many of these so better just avoid them entirely.
         for walkroot, dirs, files in os.walk(state[1]):
-            for file in files:
+            for file in files + dirs:
                 srcpath = os.path.join(walkroot, file)
-                dstpath = srcpath.replace(state[1], state[2])
-                make_relative_symlink(srcpath, dstpath, d)
-            for dir in dirs:
-                srcpath = os.path.join(walkroot, dir)
-                dstpath = srcpath.replace(state[1], state[2])
-                make_relative_symlink(srcpath, dstpath, d)
+                if not os.path.islink(srcpath):
+                    continue
+                link = os.readlink(srcpath)
+                if not os.path.isabs(link):
+                    continue
+                if not link.startswith(tmpdir):
+                    continue
+                bb.error("sstate found an absolute path symlink %s pointing at %s. Please replace this with a relative link." % (srcpath, link))
         bb.debug(2, "Preparing tree %s for packaging at %s" % (state[1], sstatebuild + state[0]))
         os.rename(state[1], sstatebuild + state[0])
 
