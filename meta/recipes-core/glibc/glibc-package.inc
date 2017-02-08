@@ -192,18 +192,23 @@ python do_stash_locale_setscene () {
 }
 addtask do_stash_locale_setscene
 
-PACKAGE_PREPROCESS_FUNCS += "glibc_package_preprocess"
-
-glibc_package_preprocess () {
+do_poststash_install_cleanup () {
+	# Remove all files which do_stash_locale would remove (mv)
+	# since that task could have come from sstate and not get run.
 	for i in ${bashscripts}; do
-	    rm -f ${PKGD}${bindir}/$i
+	    rm -f ${D}${bindir}/$i
 	done
-	rm -rf ${PKGD}/${localedir}
+	rm -f ${D}${bindir}/localedef
+	rm -rf ${D}${datadir}/i18n
+	rm -rf ${D}${libdir}/gconv
+	rm -rf ${D}/${localedir}
+	rm -rf ${D}${datadir}/locale
 	if [ "${libdir}" != "${exec_prefix}/lib" ]; then
 		# This dir only exists to hold locales
-		rm -rf ${PKGD}${exec_prefix}/lib
+		rm -rf ${D}${exec_prefix}/lib
 	fi
 }
+addtask do_poststash_install_cleanup after do_stash_locale do_install before do_populate_sysroot do_package
 
 pkg_postinst_nscd () {
 	if [ -z "$D" ]; then
