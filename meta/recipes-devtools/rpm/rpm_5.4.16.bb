@@ -639,7 +639,6 @@ def multilib_rpmmacros(d):
         overrides = d.getVar("OVERRIDES", False) + ":virtclass-multilib-" + item
         localdata.setVar("OVERRIDES", overrides)
         localdata.setVar("MLPREFIX", item + "-")
-        bb.data.update_data(localdata)
         localdata.setVar('WORKDIR', workdirVal)
         localdata.setVar('distromacrodir', distromacrodirVal)
         localdata.setVar('D', dval)

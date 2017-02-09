@@ -43,7 +43,6 @@ python do_generate_content() {
         overrides = d.getVar("OVERRIDES", False) + ":virtclass-multilib-" + item
         localdata.setVar("OVERRIDES", overrides)
         localdata.setVar("MLPREFIX", item + "-")
-        bb.data.update_data(localdata)
         bb.build.exec_func("create_sdk_files", localdata)
 }
 addtask generate_content before do_install after do_compile

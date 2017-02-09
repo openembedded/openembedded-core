@@ -163,7 +163,6 @@ python build_syslinux_cfg () {
             bb.fatal('OVERRIDES not defined')
 
         localdata.setVar('OVERRIDES', label + ':' + overrides)
-        bb.data.update_data(localdata)
     
         btypes = [ [ "", syslinux_default_console ] ]
         if menu and syslinux_serial:

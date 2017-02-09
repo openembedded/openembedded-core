@@ -29,7 +29,6 @@ def preferred_ml_updates(d):
                 localdata = bb.data.createCopy(d)
                 override = ":virtclass-multilib-" + p
                 localdata.setVar("OVERRIDES", localdata.getVar("OVERRIDES", False) + override)
-                bb.data.update_data(localdata)
                 if "-canadian-" in pkg:
                     newname = localdata.expand(v)
                 else:
@@ -57,7 +56,6 @@ def preferred_ml_updates(d):
                 localdata = bb.data.createCopy(d)
                 override = ":virtclass-multilib-" + p
                 localdata.setVar("OVERRIDES", localdata.getVar("OVERRIDES", False) + override)
-                bb.data.update_data(localdata)
                 newname = localdata.expand(prov)
                 if newname != prov:
                     newval = localdata.expand(val)
@@ -80,7 +78,6 @@ def preferred_ml_updates(d):
             localdata = bb.data.createCopy(d)
             override = ":virtclass-multilib-" + p
             localdata.setVar("OVERRIDES", localdata.getVar("OVERRIDES", False) + override)
-            bb.data.update_data(localdata)
             newname = localdata.expand(prov)
             if newname != prov and not d.getVar(newname, False):
                 d.setVar(newname, localdata.expand(newval))

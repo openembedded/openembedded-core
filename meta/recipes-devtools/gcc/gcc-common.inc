@@ -71,7 +71,6 @@ def get_tune_parameters(tune, d):
     localdata = bb.data.createCopy(d)
     override = ':tune-' + tune
     localdata.setVar('OVERRIDES', localdata.getVar('OVERRIDES', False) + override)
-    bb.data.update_data(localdata)
 
     retdict = {}
     retdict['tune'] = tune

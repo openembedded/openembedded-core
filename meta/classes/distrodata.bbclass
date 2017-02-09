@@ -38,32 +38,27 @@ python do_distrodata_np() {
             pnstripped = pn.split("-native")
             bb.note("Native Split: %s" % pnstripped)
             localdata.setVar('OVERRIDES', "pn-" + pnstripped[0] + ":" + d.getVar('OVERRIDES'))
-            bb.data.update_data(localdata)
 
         if pn.find("-cross") != -1:
             pnstripped = pn.split("-cross")
             bb.note("cross Split: %s" % pnstripped)
             localdata.setVar('OVERRIDES', "pn-" + pnstripped[0] + ":" + d.getVar('OVERRIDES'))
-            bb.data.update_data(localdata)
 
         if pn.find("-crosssdk") != -1:
             pnstripped = pn.split("-crosssdk")
             bb.note("cross Split: %s" % pnstripped)
             localdata.setVar('OVERRIDES', "pn-" + pnstripped[0] + ":" + d.getVar('OVERRIDES'))
-            bb.data.update_data(localdata)
 
         if pn.startswith("nativesdk-"):
             pnstripped = pn.replace("nativesdk-", "")
             bb.note("NativeSDK Split: %s" % pnstripped)
             localdata.setVar('OVERRIDES', "pn-" + pnstripped + ":" + d.getVar('OVERRIDES'))
-            bb.data.update_data(localdata)
 
 
         if pn.find("-initial") != -1:
             pnstripped = pn.split("-initial")
             bb.note("initial Split: %s" % pnstripped)
             localdata.setVar('OVERRIDES', "pn-" + pnstripped[0] + ":" + d.getVar('OVERRIDES'))
-            bb.data.update_data(localdata)
 
         """generate package information from .bb file"""
         pname = localdata.getVar('PN')
@@ -127,31 +122,26 @@ python do_distrodata() {
             pnstripped = pn.split("-native")
             bb.note("Native Split: %s" % pnstripped)
             localdata.setVar('OVERRIDES', "pn-" + pnstripped[0] + ":" + d.getVar('OVERRIDES'))
-            bb.data.update_data(localdata)
 
         if pn.startswith("nativesdk-"):
             pnstripped = pn.replace("nativesdk-", "")
             bb.note("NativeSDK Split: %s" % pnstripped)
             localdata.setVar('OVERRIDES', "pn-" + pnstripped + ":" + d.getVar('OVERRIDES'))
-            bb.data.update_data(localdata)
 
         if pn.find("-cross") != -1:
             pnstripped = pn.split("-cross")
             bb.note("cross Split: %s" % pnstripped)
             localdata.setVar('OVERRIDES', "pn-" + pnstripped[0] + ":" + d.getVar('OVERRIDES'))
-            bb.data.update_data(localdata)
 
         if pn.find("-crosssdk") != -1:
             pnstripped = pn.split("-crosssdk")
             bb.note("cross Split: %s" % pnstripped)
             localdata.setVar('OVERRIDES', "pn-" + pnstripped[0] + ":" + d.getVar('OVERRIDES'))
-            bb.data.update_data(localdata)
 
         if pn.find("-initial") != -1:
             pnstripped = pn.split("-initial")
             bb.note("initial Split: %s" % pnstripped)
             localdata.setVar('OVERRIDES', "pn-" + pnstripped[0] + ":" + d.getVar('OVERRIDES'))
-            bb.data.update_data(localdata)
 
         """generate package information from .bb file"""
         pname = localdata.getVar('PN')
@@ -292,7 +282,6 @@ python do_checkpkg() {
             pnstripped = pname.split("-native")
             bb.note("Native Split: %s" % pnstripped)
             localdata.setVar('OVERRIDES', "pn-" + pnstripped[0] + ":" + d.getVar('OVERRIDES'))
-            bb.data.update_data(localdata)
 
         if pname.startswith("nativesdk-"):
             if d.getVar('BBCLASSEXTEND'):
@@ -300,19 +289,16 @@ python do_checkpkg() {
             pnstripped = pname.replace("nativesdk-", "")
             bb.note("NativeSDK Split: %s" % pnstripped)
             localdata.setVar('OVERRIDES', "pn-" + pnstripped + ":" + d.getVar('OVERRIDES'))
-            bb.data.update_data(localdata)
 
         if pname.find("-cross") != -1:
             pnstripped = pname.split("-cross")
             bb.note("cross Split: %s" % pnstripped)
             localdata.setVar('OVERRIDES', "pn-" + pnstripped[0] + ":" + d.getVar('OVERRIDES'))
-            bb.data.update_data(localdata)
 
         if pname.find("-initial") != -1:
             pnstripped = pname.split("-initial")
             bb.note("initial Split: %s" % pnstripped)
             localdata.setVar('OVERRIDES', "pn-" + pnstripped[0] + ":" + d.getVar('OVERRIDES'))
-            bb.data.update_data(localdata)
 
         pdesc = localdata.getVar('DESCRIPTION')
         pgrp = localdata.getVar('SECTION')
@@ -401,7 +387,6 @@ python do_distro_check() {
         return
 
     localdata = bb.data.createCopy(d)
-    bb.data.update_data(localdata)
     tmpdir = d.getVar('TMPDIR')
     distro_check_dir = os.path.join(tmpdir, "distro_check")
     logpath = d.getVar('LOG_DIR')

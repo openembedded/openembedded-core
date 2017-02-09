@@ -89,7 +89,6 @@ python systemd_populate_packages() {
         # variable.
         localdata = d.createCopy()
         localdata.prependVar("OVERRIDES", pkg + ":")
-        bb.data.update_data(localdata)
 
         postinst = d.getVar('pkg_postinst_%s' % pkg)
         if not postinst:

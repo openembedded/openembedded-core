@@ -368,7 +368,6 @@ def get_multilib_datastore(variant, d):
     overrides = localdata.getVar("OVERRIDES", False) + ":virtclass-multilib-" + variant
     localdata.setVar("OVERRIDES", overrides)
     localdata.setVar("MLPREFIX", variant + "-")
-    bb.data.update_data(localdata)
     return localdata
 
 def all_multilib_tune_values(d, var, unique = True, need_split = True, delim = ' '):
@@ -423,7 +422,6 @@ def all_multilib_tune_list(vars, d):
     origdefault = localdata.getVar("DEFAULTTUNE_MULTILIB_ORIGINAL")
     if origdefault:
         localdata.setVar("DEFAULTTUNE", origdefault)
-    bb.data.update_data(localdata)
     values['ml'] = ['']
     for v in vars:
         values[v].append(localdata.getVar(v))

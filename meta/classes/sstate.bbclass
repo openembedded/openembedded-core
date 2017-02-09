@@ -645,7 +645,6 @@ def pstaging_fetch(sstatefetch, sstatepkg, d):
 
     # Copy the data object and override DL_DIR and SRC_URI
     localdata = bb.data.createCopy(d)
-    bb.data.update_data(localdata)
 
     dldir = localdata.expand("${SSTATE_DIR}")
     bb.utils.mkdirhier(dldir)
@@ -802,7 +801,6 @@ def sstate_checkhashes(sq_fn, sq_task, sq_hash, sq_hashfn, d, siginfo=False):
     if mirrors:
         # Copy the data object and override DL_DIR and SRC_URI
         localdata = bb.data.createCopy(d)
-        bb.data.update_data(localdata)
 
         dldir = localdata.expand("${SSTATE_DIR}")
         localdata.delVar('MIRRORS')

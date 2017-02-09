@@ -133,7 +133,6 @@ python build_efi_cfg() {
 
         for btype in btypes:
             localdata.setVar('OVERRIDES', label + ':' + overrides)
-            bb.data.update_data(localdata)
 
             cfgfile.write('\nmenuentry \'%s%s\'{\n' % (label, btype[0]))
             lb = label

@@ -90,7 +90,6 @@ python create_extlinux_config() {
                     bb.fatal('OVERRIDES not defined')
 
                 localdata.setVar('OVERRIDES', label + ':' + overrides)
-                bb.data.update_data(localdata)
 
                 extlinux_console = localdata.getVar('UBOOT_EXTLINUX_CONSOLE')
 

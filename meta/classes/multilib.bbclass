@@ -36,7 +36,6 @@ python multilib_virtclass_handler () {
         e.data.setVar("MLPREFIX", variant + "-")
         override = ":virtclass-multilib-" + variant
         e.data.setVar("OVERRIDES", e.data.getVar("OVERRIDES", False) + override)
-        bb.data.update_data(e.data)
         return
 
     if bb.data.inherits_class('native', e.data):

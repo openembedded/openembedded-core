@@ -128,7 +128,6 @@ class RpmIndexer(Indexer):
                         default_tune = localdata.getVar(default_tune_key, False)
                     if default_tune:
                         localdata.setVar("DEFAULTTUNE", default_tune)
-                        bb.data.update_data(localdata)
                         package_archs[eext[1]] = localdata.getVar('PACKAGE_ARCHS').split()
                         package_archs[eext[1]].reverse()
                         target_os[eext[1]] = localdata.getVar("TARGET_OS").strip()
@@ -2189,7 +2188,6 @@ class DpkgPM(OpkgDpkgPM):
             variant_tune = localdata.getVar("DEFAULTTUNE_virtclass-multilib-" + variant, False)
             orig_arch = localdata.getVar("DPKG_ARCH")
             localdata.setVar("DEFAULTTUNE", variant_tune)
-            bb.data.update_data(localdata)
             variant_arch = localdata.getVar("DPKG_ARCH")
             if variant_arch not in base_arch_list:
                 base_arch_list.append(variant_arch)

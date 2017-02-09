@@ -38,7 +38,6 @@ python do_package_tar () {
 
         overrides = localdata.getVar('OVERRIDES', False)
         localdata.setVar('OVERRIDES', '%s:%s' % (overrides, pkg))
-        bb.data.update_data(localdata)
 
         bb.utils.mkdirhier(root)
         basedir = os.path.dirname(root)

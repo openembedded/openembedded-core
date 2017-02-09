@@ -37,7 +37,6 @@ def glibc_dl_info(d):
         localdata = bb.data.createCopy(d)
         overrides = localdata.getVar("OVERRIDES", False) + ":virtclass-multilib-" + item
         localdata.setVar("OVERRIDES", overrides)
-        bb.data.update_data(localdata)
         ld_append_if_tune_exists(localdata, infos, ld_info_all)
     infos['ldconfig'] = ','.join(infos['ldconfig'])
     infos['lddrewrite'] = ' '.join(infos['lddrewrite'])

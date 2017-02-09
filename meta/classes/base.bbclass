@@ -222,7 +222,6 @@ python base_eventhandler() {
 
     if isinstance(e, bb.event.BuildStarted):
         localdata = bb.data.createCopy(e.data)
-        bb.data.update_data(localdata)
         statuslines = []
         for func in oe.data.typed_value('BUILDCFG_FUNCS', localdata):
             g = globals()
@@ -355,7 +354,6 @@ def set_packagetriplet(d):
         localdata = bb.data.createCopy(d)
         overrides = localdata.getVar("OVERRIDES", False) + ":virtclass-multilib-" + item
         localdata.setVar("OVERRIDES", overrides)
-        bb.data.update_data(localdata)
 
         archs.append(localdata.getVar("PACKAGE_ARCHS").split())
         tos.append(localdata.getVar("TARGET_OS"))

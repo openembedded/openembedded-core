@@ -226,7 +226,6 @@ def check_toolchain_tune(data, tune, multilib):
         # Apply the overrides so we can look at the details.
         overrides = localdata.getVar("OVERRIDES", False) + ":virtclass-multilib-" + multilib
         localdata.setVar("OVERRIDES", overrides)
-    bb.data.update_data(localdata)
     bb.debug(2, "Sanity-checking tuning '%s' (%s) features:" % (tune, multilib))
     features = (localdata.getVar("TUNE_FEATURES_tune-%s" % tune) or "").split()
     if not features:

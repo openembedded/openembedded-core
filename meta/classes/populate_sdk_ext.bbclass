@@ -657,7 +657,6 @@ do_sdk_depends[rdepends] = "${@get_sdk_ext_rdepends(d)}"
 def get_sdk_ext_rdepends(d):
     localdata = d.createCopy()
     localdata.appendVar('OVERRIDES', ':task-populate-sdk-ext')
-    bb.data.update_data(localdata)
     return localdata.getVarFlag('do_populate_sdk', 'rdepends')
 
 do_populate_sdk_ext[dirs] = "${@d.getVarFlag('do_populate_sdk', 'dirs', False)}"

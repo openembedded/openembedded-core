@@ -594,7 +594,6 @@ def buildhistory_get_build_id(d):
     if d.getVar('BB_WORKERCONTEXT') != '1':
         return ""
     localdata = bb.data.createCopy(d)
-    bb.data.update_data(localdata)
     statuslines = []
     for func in oe.data.typed_value('BUILDCFG_FUNCS', localdata):
         g = globals()

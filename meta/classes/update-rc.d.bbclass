@@ -104,7 +104,6 @@ python populate_packages_updatercd () {
         localdata = bb.data.createCopy(d)
         overrides = localdata.getVar("OVERRIDES")
         localdata.setVar("OVERRIDES", "%s:%s" % (pkg, overrides))
-        bb.data.update_data(localdata)
 
         update_rcd_auto_depend(pkg)
 

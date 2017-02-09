@@ -348,7 +348,6 @@ def supports_srcrev(uri):
     # This is a bit sad, but if you don't have this set there can be some
     # odd interactions with the urldata cache which lead to errors
     localdata.setVar('SRCREV', '${AUTOREV}')
-    bb.data.update_data(localdata)
     try:
         fetcher = bb.fetch2.Fetch([uri], localdata)
         urldata = fetcher.ud

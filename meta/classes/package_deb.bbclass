@@ -106,7 +106,6 @@ python do_package_deb () {
 
         localdata.setVar('OVERRIDES', d.getVar("OVERRIDES", False) + ":" + pkg)
 
-        bb.data.update_data(localdata)
         basedir = os.path.join(os.path.dirname(root))
 
         pkgoutdir = os.path.join(outdir, localdata.getVar('PACKAGE_ARCH'))

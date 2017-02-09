@@ -428,7 +428,6 @@ python () {
             debug = "setup_debugfs "
             realt = t[8:]
         localdata.setVar('OVERRIDES', '%s:%s' % (realt, old_overrides))
-        bb.data.update_data(localdata)
         localdata.setVar('type', realt)
         # Delete DATETIME so we don't expand any references to it now
         # This means the task's hash can be stable rather than having hardcoded

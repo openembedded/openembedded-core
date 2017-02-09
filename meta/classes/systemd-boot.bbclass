@@ -103,7 +103,6 @@ python build_efi_cfg() {
         except OSError:
             bb.fatal('Unable to open %s' % entryfile)
         localdata.setVar('OVERRIDES', label + ':' + overrides)
-        bb.data.update_data(localdata)
 
         entrycfg.write('title %s\n' % label)
         entrycfg.write('linux /vmlinuz\n')
