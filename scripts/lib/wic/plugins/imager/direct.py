@@ -149,15 +149,6 @@ class DirectPlugin(ImagerPlugin):
 
         return updated
 
-    def set_bootimg_dir(self, bootimg_dir):
-        """
-        Accessor for bootimg_dir, the actual location used for the source
-        of the bootimg.  Should be set by source plugins (only if they
-        change the default bootimg source) so the correct info gets
-        displayed for print_outimage_info().
-        """
-        self.bootimg_dir = bootimg_dir
-
     def _full_path(self, path, name, extention):
         """ Construct full file path to a file we generate. """
         return os.path.join(path, "%s-%s.%s" % (self.name, name, extention))

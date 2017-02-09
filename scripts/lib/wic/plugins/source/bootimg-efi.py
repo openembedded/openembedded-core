@@ -187,7 +187,7 @@ class BootimgEFIPlugin(SourcePlugin):
             if not bootimg_dir:
                 msger.error("Couldn't find DEPLOY_DIR_IMAGE, exiting\n")
             # just so the result notes display it
-            creator.set_bootimg_dir(bootimg_dir)
+            creator.bootimg_dir = bootimg_dir
 
         staging_kernel_dir = kernel_dir
 

@@ -151,7 +151,7 @@ class BootimgPcbiosPlugin(SourcePlugin):
             if not _has_syslinux(bootimg_dir):
                 msger.error("Please build syslinux first\n")
             # just so the result notes display it
-            creator.set_bootimg_dir(bootimg_dir)
+            creator.bootimg_dir = bootimg_dir
 
         staging_kernel_dir = kernel_dir
 
