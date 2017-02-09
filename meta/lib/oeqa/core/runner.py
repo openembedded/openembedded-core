@@ -23,7 +23,7 @@ class OEStreamLogger(object):
         self.buffer = ""
 
     def write(self, msg):
-        if msg[-1] != '\n':
+        if len(msg) > 1 and msg[0] != '\n':
             self.buffer += msg
         else:
             self.logger.log(logging.INFO, self.buffer.rstrip("\n"))
