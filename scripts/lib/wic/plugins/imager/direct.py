@@ -290,10 +290,7 @@ class DirectPlugin(ImagerPlugin):
 
     def cleanup(self):
         if self._image:
-            try:
-                self._image.cleanup()
-            except ImageError as err:
-                msger.warning("%s" % err)
+            self._image.cleanup()
 
         # Move results to the output dir
         if not os.path.exists(self.outdir):
