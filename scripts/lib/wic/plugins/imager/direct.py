@@ -35,7 +35,7 @@ from wic.filemap import sparse_copy
 from wic.ksparser import KickStart, KickStartError
 from wic.plugin import pluginmgr
 from wic.pluginbase import ImagerPlugin
-from wic.utils.errors import CreatorError, ImageError
+from wic.utils.errors import ImageError
 from wic.utils.misc import get_bitbake_var, exec_cmd, exec_native_cmd
 
 class DirectPlugin(ImagerPlugin):
@@ -83,8 +83,6 @@ class DirectPlugin(ImagerPlugin):
             self.assemble()
             self.finalize()
             self.print_info()
-        except CreatorError:
-            raise
         finally:
             self.cleanup()
 
