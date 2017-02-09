@@ -473,13 +473,12 @@ class IsoImagePlugin(SourcePlugin):
         utility for booting via BIOS from disk storage devices.
         """
 
+        iso_img = "%s.p1" % disk.path
         full_path = creator._full_path(workdir, disk_name, "direct")
-        iso_img = "%s.p1" % full_path
         full_path_iso = creator._full_path(workdir, disk_name, "iso")
 
         isohybrid_cmd = "isohybrid -u %s" % iso_img
-        msger.debug("running command: %s" % \
-                    isohybrid_cmd)
+        msger.debug("running command: %s" % isohybrid_cmd)
         exec_native_cmd(isohybrid_cmd, native_sysroot)
 
         # Replace the image created by direct plugin with the one created by
@@ -487,9 +486,6 @@ class IsoImagePlugin(SourcePlugin):
         # mkisofs has a very specific MBR is system area of the ISO image, and
         # direct plugin adds and configures an another MBR.
         msger.debug("Replaceing the image created by direct plugin\n")
-        os.remove(full_path)
+        os.remove(disk.path)
         shutil.copy2(iso_img, full_path_iso)
         shutil.copy2(full_path_iso, full_path)
-
-        # Remove temporary ISO file
-        os.remove(iso_img)

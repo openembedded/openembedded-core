@@ -36,25 +36,8 @@ from wic.plugin import pluginmgr
 from wic.pluginbase import ImagerPlugin
 from wic.utils.errors import CreatorError, ImageError
 from wic.utils.misc import get_bitbake_var, exec_cmd, exec_native_cmd
-from wic.utils.partitionedfs import Image
+from wic.utils.partitionedfs import PartitionedImage
 
-class DiskImage():
-    """
-    A Disk backed by a file.
-    """
-    def __init__(self, device, size):
-        self.size = size
-        self.device = device
-        self.created = False
-
-    def create(self):
-        if self.created:
-            return
-        # create sparse disk image
-        with open(self.device, 'w') as sparse:
-            os.ftruncate(sparse.fileno(), self.size)
-
-        self.created = True
 
 class DirectPlugin(ImagerPlugin):
     """
@@ -189,9 +172,10 @@ class DirectPlugin(ImagerPlugin):
         filesystems from the artifacts directly and combine them into
         a partitioned image.
         """
-        self._image = Image(self.native_sysroot)
+        image_path = self._full_path(self.workdir, self.parts[0].disk, "direct")
+        self._image = PartitionedImage(image_path, self.ptable_format,
+                                       self.native_sysroot)
 
-        disk_ids = {}
         for num, part in enumerate(self.parts, 1):
             # as a convenience, set source to the boot partition source
             # instead of forcing it to be set via bootloader --source
@@ -203,10 +187,8 @@ class DirectPlugin(ImagerPlugin):
                 if self.ptable_format == 'gpt':
                     part.uuid = str(uuid.uuid4())
                 else: # msdos partition table
-                    if part.disk not in disk_ids:
-                        disk_ids[part.disk] = int.from_bytes(os.urandom(4), 'little')
-                    disk_id = disk_ids[part.disk]
-                    part.uuid = '%0x-%02d' % (disk_id, self._get_part_num(num, self.parts))
+                    part.uuid = '%0x-%02d' % (self._image.identifier,
+                                              self._get_part_num(num, self.parts))
 
         fstab_path = self._write_fstab(self.rootfs_dir.get("ROOTFS_DIR"))
 
@@ -225,11 +207,6 @@ class DirectPlugin(ImagerPlugin):
                         part.size = int(round(float(rsize_bb)))
             # need to create the filesystems in order to get their
             # sizes before we can add them and do the layout.
-            # Image.create() actually calls __format_disks() to create
-            # the disk images and carve out the partitions, then
-            # self.assemble() calls Image.assemble() which calls
-            # __write_partitition() for each partition to dd the fs
-            # into the partitions.
             part.prepare(self, self.workdir, self.oe_builddir, self.rootfs_dir,
                          self.bootimg_dir, self.kernel_dir, self.native_sysroot)
 
@@ -238,26 +215,14 @@ class DirectPlugin(ImagerPlugin):
         if fstab_path:
             shutil.move(fstab_path + ".orig", fstab_path)
 
-        self._image.layout_partitions(self.ptable_format)
-
-        for disk_name, disk in self._image.disks.items():
-            full_path = self._full_path(self.workdir, disk_name, "direct")
-            msger.debug("Adding disk %s as %s with size %s bytes" \
-                        % (disk_name, full_path, disk['min_size']))
-            disk_obj = DiskImage(full_path, disk['min_size'])
-            self._image.add_disk(disk_name, disk_obj, disk_ids.get(disk_name))
-
+        self._image.layout_partitions()
         self._image.create()
 
     def assemble(self):
         """
-        Assemble partitions into disk image(s)
+        Assemble partitions into disk image
         """
-        for disk_name, disk in self._image.disks.items():
-            full_path = self._full_path(self.workdir, disk_name, "direct")
-            msger.debug("Assembling disk %s as %s with size %s bytes" \
-                        % (disk_name, full_path, disk['min_size']))
-            self._image.assemble(full_path)
+        self._image.assemble()
 
     def finalize(self):
         """
@@ -267,26 +232,25 @@ class DirectPlugin(ImagerPlugin):
         creating and installing a bootloader configuration.
         """
         source_plugin = self.ks.bootloader.source
+        disk_name = self.parts[0].disk
         if source_plugin:
             name = "do_install_disk"
             methods = pluginmgr.get_source_plugin_methods(source_plugin,
                                                           {name: None})
-            for disk_name, disk in self._image.disks.items():
-                methods["do_install_disk"](disk, disk_name, self, self.workdir,
-                                           self.oe_builddir, self.bootimg_dir,
-                                           self.kernel_dir, self.native_sysroot)
+            methods["do_install_disk"](self._image, disk_name, self, self.workdir,
+                                       self.oe_builddir, self.bootimg_dir,
+                                       self.kernel_dir, self.native_sysroot)
 
-        for disk_name, disk in self._image.disks.items():
-            full_path = self._full_path(self.workdir, disk_name, "direct")
-            # Generate .bmap
-            if self.bmap:
-                msger.debug("Generating bmap file for %s" % disk_name)
-                exec_native_cmd("bmaptool create %s -o %s.bmap" % (full_path, full_path),
-                                self.native_sysroot)
-            # Compress the image
-            if self.compressor:
-                msger.debug("Compressing disk %s with %s" % (disk_name, self.compressor))
-                exec_cmd("%s %s" % (self.compressor, full_path))
+        full_path = self._image.path
+        # Generate .bmap
+        if self.bmap:
+            msger.debug("Generating bmap file for %s" % disk_name)
+            exec_native_cmd("bmaptool create %s -o %s.bmap" % (full_path, full_path),
+                            self.native_sysroot)
+        # Compress the image
+        if self.compressor:
+            msger.debug("Compressing disk %s with %s" % (disk_name, self.compressor))
+            exec_cmd("%s %s" % (self.compressor, full_path))
 
     def print_info(self):
         """
@@ -294,13 +258,12 @@ class DirectPlugin(ImagerPlugin):
         """
         msg = "The new image(s) can be found here:\n"
 
-        for disk_name in self._image.disks:
-            extension = "direct" + {"gzip": ".gz",
-                                    "bzip2": ".bz2",
-                                    "xz": ".xz",
-                                    None: ""}.get(self.compressor)
-            full_path = self._full_path(self.outdir, disk_name, extension)
-            msg += '  %s\n\n' % full_path
+        extension = "direct" + {"gzip": ".gz",
+                                "bzip2": ".bz2",
+                                "xz": ".xz",
+                                None: ""}.get(self.compressor)
+        full_path = self._full_path(self.outdir, self.parts[0].disk, extension)
+        msg += '  %s\n\n' % full_path
 
         msg += 'The following build artifacts were used to create the image(s):\n'
         for part in self.parts:

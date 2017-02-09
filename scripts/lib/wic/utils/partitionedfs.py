@@ -19,6 +19,7 @@
 # Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 import os
+
 from wic import msger
 from wic.utils.errors import ImageError
 from wic.utils.misc import exec_native_cmd
@@ -33,49 +34,27 @@ GPT_OVERHEAD = 34
 # Size of a sector in bytes
 SECTOR_SIZE = 512
 
-class Image():
+class PartitionedImage():
     """
-    Generic base object for an image.
+    Partitioned image in a file.
+    """
 
-    An Image is a container for a set of DiskImages and associated
-    partitions.
-    """
-    def __init__(self, native_sysroot=None):
-        self.disks = {}
+    def __init__(self, path, ptable_format, native_sysroot=None):
+        self.path = path  # Path to the image file
+        self.numpart = 0  # Number of allocated partitions
+        self.realpart = 0 # Number of partitions in the partition table
+        self.offset = 0   # Offset of next partition (in sectors)
+        self.min_size = 0 # Minimum required disk size to fit
+                          # all partitions (in bytes)
+        self.ptable_format = ptable_format  # Partition table format
+        # Disk system identifier
+        self.identifier = int.from_bytes(os.urandom(4), 'little')
+
         self.partitions = []
         self.partimages = []
         # Size of a sector used in calculations
         self.sector_size = SECTOR_SIZE
         self.native_sysroot = native_sysroot
-
-    def _add_disk(self, disk_name):
-        """ Add a disk 'disk_name' to the internal list of disks. Note,
-        'disk_name' is the name of the disk in the target system
-        (e.g., sdb). """
-
-        if disk_name in self.disks:
-            # We already have this disk
-            return
-
-        self.disks[disk_name] = \
-                {'disk': None,     # Disk object
-                 'numpart': 0,     # Number of allocate partitions
-                 'realpart': 0,    # Number of partitions in the partition table
-                 'partitions': [], # Indexes to self.partitions
-                 'offset': 0,      # Offset of next partition (in sectors)
-                 # Minimum required disk size to fit all partitions (in bytes)
-                 'min_size': 0,
-                 'ptable_format': "msdos", # Partition table format
-                 'identifier': None} # Disk system identifier
-
-    def add_disk(self, name, disk_obj, identifier):
-        """ Add a disk object which have to be partitioned. More than one disk
-        can be added. In case of multiple disks, disk partitions have to be
-        added for each disk separately with 'add_partition()". """
-
-        self._add_disk(name)
-        self.disks[name]['disk'] = disk_obj
-        self.disks[name]['identifier'] = identifier
 
     def add_partition(self, part):
         """
@@ -88,24 +67,19 @@ class Image():
         part.size_sec = part.disk_size * 1024 // self.sector_size
 
         self.partitions.append(part)
-        self._add_disk(part.disk)
 
-    def layout_partitions(self, ptable_format="msdos"):
+    def layout_partitions(self):
         """ Layout the partitions, meaning calculate the position of every
         partition on the disk. The 'ptable_format' parameter defines the
         partition table format and may be "msdos". """
 
-        msger.debug("Assigning %s partitions to disks" % ptable_format)
+        msger.debug("Assigning %s partitions to disks" % self.ptable_format)
 
         # Go through partitions in the order they are added in .ks file
         for num in range(len(self.partitions)):
             part = self.partitions[num]
 
-            if part.disk not in self.disks:
-                raise ImageError("No disk %s for partition %s" \
-                                 % (part.disk, part.mountpoint))
-
-            if ptable_format == 'msdos' and part.part_type:
+            if self.ptable_format == 'msdos' and part.part_type:
                 # The --part-type can also be implemented for MBR partitions,
                 # in which case it would map to the 1-byte "partition type"
                 # filed at offset 3 of the partition entry.
@@ -113,27 +87,24 @@ class Image():
                                  "implemented for msdos partitions")
 
             # Get the disk where the partition is located
-            disk = self.disks[part.disk]
-            disk['numpart'] += 1
+            self.numpart += 1
             if not part.no_table:
-                disk['realpart'] += 1
-            disk['ptable_format'] = ptable_format
+                self.realpart += 1
 
-            if disk['numpart'] == 1:
-                if ptable_format == "msdos":
+            if self.numpart == 1:
+                if self.ptable_format == "msdos":
                     overhead = MBR_OVERHEAD
-                elif ptable_format == "gpt":
+                elif self.ptable_format == "gpt":
                     overhead = GPT_OVERHEAD
 
                 # Skip one sector required for the partitioning scheme overhead
-                disk['offset'] += overhead
+                self.offset += overhead
 
-            if disk['realpart'] > 3:
+            if self.realpart > 3:
                 # Reserve a sector for EBR for every logical partition
                 # before alignment is performed.
-                if ptable_format == "msdos":
-                    disk['offset'] += 1
-
+                if self.ptable_format == "msdos":
+                    self.offset += 1
 
             if part.align:
                 # If not first partition and we do have alignment set we need
@@ -142,7 +113,7 @@ class Image():
                 # gaps we could enlargea the previous partition?
 
                 # Calc how much the alignment is off.
-                align_sectors = disk['offset'] % (part.align * 1024 // self.sector_size)
+                align_sectors = self.offset % (part.align * 1024 // self.sector_size)
 
                 if align_sectors:
                     # If partition is not aligned as required, we need
@@ -151,43 +122,41 @@ class Image():
 
                     msger.debug("Realignment for %s%s with %s sectors, original"
                                 " offset %s, target alignment is %sK." %
-                                (part.disk, disk['numpart'], align_sectors,
-                                 disk['offset'], part.align))
+                                (part.disk, self.numpart, align_sectors,
+                                 self.offset, part.align))
 
                     # increase the offset so we actually start the partition on right alignment
-                    disk['offset'] += align_sectors
+                    self.offset += align_sectors
 
-            part.start = disk['offset']
-            disk['offset'] += part.size_sec
+            part.start = self.offset
+            self.offset += part.size_sec
 
             part.type = 'primary'
             if not part.no_table:
-                part.num = disk['realpart']
+                part.num = self.realpart
             else:
                 part.num = 0
 
-            if disk['ptable_format'] == "msdos":
+            if self.ptable_format == "msdos":
                 # only count the partitions that are in partition table
                 if len([p for p in self.partitions if not p.no_table]) > 4:
-                    if disk['realpart'] > 3:
+                    if self.realpart > 3:
                         part.type = 'logical'
-                        part.num = disk['realpart'] + 1
+                        part.num = self.realpart + 1
 
-            disk['partitions'].append(num)
             msger.debug("Assigned %s to %s%d, sectors range %d-%d size %d "
                         "sectors (%d bytes)." \
                             % (part.mountpoint, part.disk, part.num,
-                               part.start, disk['offset'] - 1,
+                               part.start, self.offset - 1,
                                part.size_sec, part.size_sec * self.sector_size))
 
         # Once all the partitions have been layed out, we can calculate the
-        # minumim disk sizes.
-        for disk in self.disks.values():
-            disk['min_size'] = disk['offset']
-            if disk['ptable_format'] == "gpt":
-                disk['min_size'] += GPT_OVERHEAD
+        # minumim disk size
+        self.min_size = self.offset
+        if self.ptable_format == "gpt":
+            self.min_size += GPT_OVERHEAD
 
-            disk['min_size'] *= self.sector_size
+        self.min_size *= self.sector_size
 
     def _create_partition(self, device, parttype, fstype, start, size):
         """ Create a partition on an image described by the 'device' object. """
@@ -205,23 +174,18 @@ class Image():
         return exec_native_cmd(cmd, self.native_sysroot)
 
     def create(self):
-        for dev in self.disks:
-            disk = self.disks[dev]
-            disk['disk'].create()
+        msger.debug("Creating sparse file %s" % self.path)
+        with open(self.path, 'w') as sparse:
+            os.ftruncate(sparse.fileno(), self.min_size)
 
-        for dev in self.disks:
-            disk = self.disks[dev]
-            msger.debug("Initializing partition table for %s" % \
-                        (disk['disk'].device))
-            exec_native_cmd("parted -s %s mklabel %s" % \
-                            (disk['disk'].device, disk['ptable_format']),
-                            self.native_sysroot)
+        msger.debug("Initializing partition table for %s" % self.path)
+        exec_native_cmd("parted -s %s mklabel %s" %
+                        (self.path, self.ptable_format), self.native_sysroot)
 
-            if disk['identifier']:
-                msger.debug("Set disk identifier %x" % disk['identifier'])
-                with open(disk['disk'].device, 'r+b') as img:
-                    img.seek(0x1B8)
-                    img.write(disk['identifier'].to_bytes(4, 'little'))
+        msger.debug("Set disk identifier %x" % self.identifier)
+        with open(self.path, 'r+b') as img:
+            img.seek(0x1B8)
+            img.write(self.identifier.to_bytes(4, 'little'))
 
         msger.debug("Creating partitions")
 
@@ -229,8 +193,7 @@ class Image():
             if part.num == 0:
                 continue
 
-            disk = self.disks[part.disk]
-            if disk['ptable_format'] == "msdos" and part.num == 5:
+            if self.ptable_format == "msdos" and part.num == 5:
                 # Create an extended partition (note: extended
                 # partition is described in MBR and contains all
                 # logical partitions). The logical partitions save a
@@ -242,9 +205,9 @@ class Image():
                 # starts a sector before the first logical partition,
                 # add a sector at the back, so that there is enough
                 # room for all logical partitions.
-                self._create_partition(disk['disk'].device, "extended",
+                self._create_partition(self.path, "extended",
                                        None, part.start - 1,
-                                       disk['offset'] - part.start + 1)
+                                       self.offset - part.start + 1)
 
             if part.fstype == "swap":
                 parted_fs_type = "linux-swap"
@@ -267,7 +230,7 @@ class Image():
                             part.mountpoint)
                 part.size_sec -= 1
 
-            self._create_partition(disk['disk'].device, part.type,
+            self._create_partition(self.path, part.type,
                                    parted_fs_type, part.start, part.size_sec)
 
             if part.part_type:
@@ -275,71 +238,64 @@ class Image():
                             (part.num, part.part_type))
                 exec_native_cmd("sgdisk --typecode=%d:%s %s" % \
                                          (part.num, part.part_type,
-                                          disk['disk'].device), self.native_sysroot)
+                                          self.path), self.native_sysroot)
 
-            if part.uuid and disk['ptable_format'] == "gpt":
+            if part.uuid and self.ptable_format == "gpt":
                 msger.debug("partition %d: set UUID to %s" % \
                             (part.num, part.uuid))
                 exec_native_cmd("sgdisk --partition-guid=%d:%s %s" % \
-                                (part.num, part.uuid, disk['disk'].device),
+                                (part.num, part.uuid, self.path),
                                 self.native_sysroot)
 
-            if part.label and disk['ptable_format'] == "gpt":
+            if part.label and self.ptable_format == "gpt":
                 msger.debug("partition %d: set name to %s" % \
                             (part.num, part.label))
                 exec_native_cmd("parted -s %s name %d %s" % \
-                                (disk['disk'].device, part.num, part.label),
+                                (self.path, part.num, part.label),
                                 self.native_sysroot)
 
             if part.active:
-                flag_name = "legacy_boot" if disk['ptable_format'] == 'gpt' else "boot"
+                flag_name = "legacy_boot" if self.ptable_format == 'gpt' else "boot"
                 msger.debug("Set '%s' flag for partition '%s' on disk '%s'" % \
-                            (flag_name, part.num, disk['disk'].device))
+                            (flag_name, part.num, self.path))
                 exec_native_cmd("parted -s %s set %d %s on" % \
-                                (disk['disk'].device, part.num, flag_name),
+                                (self.path, part.num, flag_name),
                                 self.native_sysroot)
             if part.system_id:
                 exec_native_cmd("sfdisk --part-type %s %s %s" % \
-                                (disk['disk'].device, part.num, part.system_id),
+                                (self.path, part.num, part.system_id),
                                 self.native_sysroot)
 
             # Parted defaults to enabling the lba flag for fat16 partitions,
             # which causes compatibility issues with some firmware (and really
             # isn't necessary).
             if parted_fs_type == "fat16":
-                if disk['ptable_format'] == 'msdos':
+                if self.ptable_format == 'msdos':
                     msger.debug("Disable 'lba' flag for partition '%s' on disk '%s'" % \
-                                (part.num, disk['disk'].device))
+                                (part.num, self.path))
                     exec_native_cmd("parted -s %s set %d lba off" % \
-                                    (disk['disk'].device, part.num),
+                                    (self.path, part.num),
                                     self.native_sysroot)
 
     def cleanup(self):
-        if self.disks:
-            for dev in self.disks:
-                disk = self.disks[dev]
-                if hasattr(disk['disk'], 'cleanup'):
-                    disk['disk'].cleanup()
-
         # remove partition images
         for image in self.partimages:
-            if os.path.isfile(image):
-                os.remove(image)
+            os.remove(image)
 
-    def assemble(self, image_file):
+    def assemble(self):
         msger.debug("Installing partitions")
 
         for part in self.partitions:
             source = part.source_file
             if source:
                 # install source_file contents into a partition
-                sparse_copy(source, image_file, part.start * self.sector_size)
+                sparse_copy(source, self.path, part.start * self.sector_size)
 
                 msger.debug("Installed %s in partition %d, sectors %d-%d, "
                             "size %d sectors" % \
                             (source, part.num, part.start,
                              part.start + part.size_sec - 1, part.size_sec))
 
-                partimage = image_file + '.p%d' % part.num
+                partimage = self.path + '.p%d' % part.num
                 os.rename(source, partimage)
                 self.partimages.append(partimage)

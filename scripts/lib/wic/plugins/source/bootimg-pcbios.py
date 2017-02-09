@@ -63,7 +63,7 @@ class BootimgPcbiosPlugin(SourcePlugin):
 
         full_path = creator._full_path(workdir, disk_name, "direct")
         msger.debug("Installing MBR on disk %s as %s with size %s bytes" \
-                    % (disk_name, full_path, disk['min_size']))
+                    % (disk_name, full_path, disk.min_size))
 
         rcode = runner.show(['dd', 'if=%s' % mbrfile,
                              'of=%s' % full_path, 'conv=notrunc'])
