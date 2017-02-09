@@ -136,7 +136,7 @@ class KickStart():
         part.add_argument('--fstype')
         part.add_argument('--label')
         part.add_argument('--no-table', action='store_true')
-        part.add_argument('--ondisk', '--ondrive', dest='disk')
+        part.add_argument('--ondisk', '--ondrive', dest='disk', default='sda')
         part.add_argument("--overhead-factor", type=overheadtype)
         part.add_argument('--part-type')
         part.add_argument('--rootfs-dir')
