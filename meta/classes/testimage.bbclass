@@ -149,6 +149,7 @@ def testimage_main(d):
     from oeqa.runtime.context import OERuntimeTestContext
     from oeqa.runtime.context import OERuntimeTestContextExecutor
     from oeqa.core.target.qemu import supported_fstypes
+    from oeqa.core.utils.test import getSuiteCases
     from oeqa.utils import make_logger_bitbake_compatible
 
     def sigterm_exception(signum, stackframe):
@@ -249,6 +250,9 @@ def testimage_main(d):
     test_paths = get_runtime_paths(d)
     test_modules = d.getVar('TEST_SUITES')
     tc.loadTests(test_paths, modules=test_modules)
+
+    if not getSuiteCases(tc.suites):
+        bb.fatal('Empty test suite, please verify TEST_SUITES variable')
 
     package_extraction(d, tc.suites)
 
