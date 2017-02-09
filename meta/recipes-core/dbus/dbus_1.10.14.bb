@@ -123,7 +123,6 @@ do_install() {
 		for i in dbus.target.wants sockets.target.wants multi-user.target.wants; do \
 			install -d ${D}${systemd_system_unitdir}/$i; done
 		install -m 0644 ${B}/bus/dbus.service ${B}/bus/dbus.socket ${D}${systemd_system_unitdir}/
-		cd ${D}${systemd_system_unitdir}/dbus.target.wants/
 		ln -fs ../dbus.socket ${D}${systemd_system_unitdir}/dbus.target.wants/dbus.socket
 		ln -fs ../dbus.socket ${D}${systemd_system_unitdir}/sockets.target.wants/dbus.socket
 		ln -fs ../dbus.service ${D}${systemd_system_unitdir}/multi-user.target.wants/dbus.service
