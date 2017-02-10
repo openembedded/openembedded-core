@@ -81,6 +81,10 @@ class DirectPlugin(ImagerPlugin):
                 self.ks.bootloader.source = part.source
                 break
 
+        image_path = self._full_path(self.workdir, self.parts[0].disk, "direct")
+        self._image = PartitionedImage(image_path, self.ptable_format,
+                                       self.parts, self.native_sysroot)
+
     def do_create(self):
         """
         Plugin entry point.
@@ -150,10 +154,6 @@ class DirectPlugin(ImagerPlugin):
         filesystems from the artifacts directly and combine them into
         a partitioned image.
         """
-        image_path = self._full_path(self.workdir, self.parts[0].disk, "direct")
-        self._image = PartitionedImage(image_path, self.ptable_format,
-                                       self.parts, self.native_sysroot)
-
         fstab_path = self._write_fstab(self.rootfs_dir.get("ROOTFS_DIR"))
 
         for part in self.parts:
