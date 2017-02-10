@@ -236,6 +236,10 @@ python do_package_deb () {
         debian_cmp_remap(rsuggests)
         # Deliberately drop version information here, not wanted/supported by deb
         rprovides = dict.fromkeys(bb.utils.explode_dep_versions2(localdata.getVar("RPROVIDES") or ""), [])
+        # Remove file paths if any from rprovides, debian does not support custom providers
+        for key in list(rprovides.keys()):
+            if key.startswith('/'):
+                del rprovides[key]
         rprovides = collections.OrderedDict(sorted(rprovides.items(), key=lambda x: x[0]))
         debian_cmp_remap(rprovides)
         rreplaces = bb.utils.explode_dep_versions2(localdata.getVar("RREPLACES") or "")
