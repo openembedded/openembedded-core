@@ -74,6 +74,19 @@ class DirectPlugin(ImagerPlugin):
         self.ptable_format = self.ks.bootloader.ptable
         self.parts = self.ks.partitions
 
+        # calculate the real partition number, accounting for partitions not
+        # in the partition table and logical partitions
+        realnum = 0
+        for part in self.parts:
+            if part.no_table:
+                part.realnum = 0
+            else:
+                realnum += 1
+                if self.ptable_format == 'msdos' and realnum > 3:
+                    part.realnum = realnum + 1
+                    continue
+                part.realnum = realnum
+
     def do_create(self):
         """
         Plugin entry point.
@@ -85,22 +98,6 @@ class DirectPlugin(ImagerPlugin):
             self.print_info()
         finally:
             self.cleanup()
-
-    def _get_part_num(self, num, parts):
-        """calculate the real partition number, accounting for partitions not
-        in the partition table and logical partitions
-        """
-        realnum = 0
-        for pnum, part in enumerate(parts, 1):
-            if not part.no_table:
-                realnum += 1
-            if pnum == num:
-                if  part.no_table:
-                    return 0
-                if self.ptable_format == 'msdos' and realnum > 3:
-                    # account for logical partition numbering, ex. sda5..
-                    return realnum + 1
-                return realnum
 
     def _write_fstab(self, image_rootfs):
         """overriden to generate fstab (temporarily) in rootfs. This is called
@@ -128,15 +125,14 @@ class DirectPlugin(ImagerPlugin):
     def _update_fstab(self, fstab_lines, parts):
         """Assume partition order same as in wks"""
         updated = False
-        for num, part in enumerate(parts, 1):
-            pnum = self._get_part_num(num, parts)
-            if not pnum or not part.mountpoint \
+        for part in parts:
+            if not part.realnum or not part.mountpoint \
                or part.mountpoint in ("/", "/boot"):
                 continue
 
             # mmc device partitions are named mmcblk0p1, mmcblk0p2..
             prefix = 'p' if  part.disk.startswith('mmcblk') else ''
-            device_name = "/dev/%s%s%d" % (part.disk, prefix, pnum)
+            device_name = "/dev/%s%s%d" % (part.disk, prefix, part.realnum)
 
             opts = part.fsopts if part.fsopts else "defaults"
             line = "\t".join([device_name, part.mountpoint, part.fstype,
@@ -164,7 +160,7 @@ class DirectPlugin(ImagerPlugin):
         self._image = PartitionedImage(image_path, self.ptable_format,
                                        self.native_sysroot)
 
-        for num, part in enumerate(self.parts, 1):
+        for part in self.parts:
             # as a convenience, set source to the boot partition source
             # instead of forcing it to be set via bootloader --source
             if not self.ks.bootloader.source and part.mountpoint == "/boot":
@@ -175,8 +171,7 @@ class DirectPlugin(ImagerPlugin):
                 if self.ptable_format == 'gpt':
                     part.uuid = str(uuid.uuid4())
                 else: # msdos partition table
-                    part.uuid = '%0x-%02d' % (self._image.identifier,
-                                              self._get_part_num(num, self.parts))
+                    part.uuid = '%0x-%02d' % (self._image.identifier, part.realnum)
 
         fstab_path = self._write_fstab(self.rootfs_dir.get("ROOTFS_DIR"))
 
@@ -277,14 +272,13 @@ class DirectPlugin(ImagerPlugin):
 
         Assume partition order same as in wks
         """
-        for num, part in enumerate(self.parts, 1):
+        for part in self.parts:
             if part.mountpoint == "/":
                 if part.uuid:
                     return "PARTUUID=%s" % part.uuid
                 else:
                     suffix = 'p' if part.disk.startswith('mmcblk') else ''
-                    pnum = self._get_part_num(num, self.parts)
-                    return "/dev/%s%s%-d" % (part.disk, suffix, pnum)
+                    return "/dev/%s%s%-d" % (part.disk, suffix, part.realnum)
 
     def cleanup(self):
         if self._image:
