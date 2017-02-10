@@ -22,8 +22,8 @@ RDEPENDS_wiper = "bash gawk stat"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/hdparm/${BP}.tar.gz"
 
-SRC_URI[md5sum] = "d380062ad6c4b40076736efbb640f1f5"
-SRC_URI[sha256sum] = "0892b44bd817c251264a24f6ecbbb010958033e0395d2030f25f1c5608ac780e"
+SRC_URI[md5sum] = "8fe0a71db02f7ffc602d14a69f766cff"
+SRC_URI[sha256sum] = "1afad8891ecbe644c283f7d725157660ebf8bd5b4d9d67232afd45f83d2d5d91"
 
 EXTRA_OEMAKE = 'STRIP="echo" LDFLAGS="${LDFLAGS}"'
 
