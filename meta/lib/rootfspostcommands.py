@@ -29,16 +29,28 @@ def sort_file(filename, mapping):
         f.write(b''.join(lines))
     return new_mapping
 
+def remove_backup(filename):
+    """
+    Removes the backup file for files like /etc/passwd.
+    """
+    backup_filename = filename + '-'
+    if os.path.exists(backup_filename):
+        os.unlink(backup_filename)
+
 def sort_passwd(sysconfdir):
     """
     Sorts passwd and group files in a rootfs /etc directory by ID.
+    Backup files are sometimes are inconsistent and then cannot be
+    sorted (YOCTO #11043), and more importantly, are not needed in
+    the initial rootfs, so they get deleted.
     """
-    for suffix in '', '-':
-        for main, shadow in (('passwd', 'shadow'),
-                             ('group', 'gshadow')):
-            filename = os.path.join(sysconfdir, main + suffix)
+    for main, shadow in (('passwd', 'shadow'),
+                         ('group', 'gshadow')):
+        filename = os.path.join(sysconfdir, main)
+        remove_backup(filename)
+        if os.path.exists(filename):
+            mapping = sort_file(filename, None)
+            filename = os.path.join(sysconfdir, shadow)
+            remove_backup(filename)
             if os.path.exists(filename):
-                mapping = sort_file(filename, None)
-                filename = os.path.join(sysconfdir, shadow + suffix)
-                if os.path.exists(filename):
-                    sort_file(filename, mapping)
+                 sort_file(filename, mapping)
