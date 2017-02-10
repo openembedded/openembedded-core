@@ -14,5 +14,6 @@ SRC_URI += "file://ac_config_links.patch \
 SRC_URI_append_class-target = "\
            file://0001-Unset-need_charset_alias-when-building-for-musl.patch \
 	   "
-SRC_URI[md5sum] = "a5e9954b1dae036762f7b13673a2cf76"
-SRC_URI[sha256sum] = "3ce725133ee552b8b4baca7837fb772940b25e81b2a9dc92537aeaf733538c9e"
+
+SRC_URI[md5sum] = "a077779db287adf4e12a035029002d28"
+SRC_URI[sha256sum] = "ab2633921a5cd38e48797bf5521ad259bdc4b979078034a3b790d7fec5493fab"
