@@ -158,20 +158,13 @@ class DirectPlugin(ImagerPlugin):
         """
         image_path = self._full_path(self.workdir, self.parts[0].disk, "direct")
         self._image = PartitionedImage(image_path, self.ptable_format,
-                                       self.native_sysroot)
+                                       self.parts, self.native_sysroot)
 
         for part in self.parts:
             # as a convenience, set source to the boot partition source
             # instead of forcing it to be set via bootloader --source
             if not self.ks.bootloader.source and part.mountpoint == "/boot":
                 self.ks.bootloader.source = part.source
-
-            # generate parition UUIDs
-            if not part.uuid and part.use_uuid:
-                if self.ptable_format == 'gpt':
-                    part.uuid = str(uuid.uuid4())
-                else: # msdos partition table
-                    part.uuid = '%0x-%02d' % (self._image.identifier, part.realnum)
 
         fstab_path = self._write_fstab(self.rootfs_dir.get("ROOTFS_DIR"))
 
@@ -310,7 +303,7 @@ class PartitionedImage():
     Partitioned image in a file.
     """
 
-    def __init__(self, path, ptable_format, native_sysroot=None):
+    def __init__(self, path, ptable_format, partitions, native_sysroot=None):
         self.path = path  # Path to the image file
         self.numpart = 0  # Number of allocated partitions
         self.realpart = 0 # Number of partitions in the partition table
@@ -321,11 +314,19 @@ class PartitionedImage():
         # Disk system identifier
         self.identifier = int.from_bytes(os.urandom(4), 'little')
 
-        self.partitions = []
+        self.partitions = partitions
         self.partimages = []
         # Size of a sector used in calculations
         self.sector_size = SECTOR_SIZE
         self.native_sysroot = native_sysroot
+
+        # generate parition UUIDs
+        for part in self.partitions:
+            if not part.uuid and part.use_uuid:
+                if self.ptable_format == 'gpt':
+                    part.uuid = str(uuid.uuid4())
+                else: # msdos partition table
+                    part.uuid = '%0x-%02d' % (self.identifier, part.realnum)
 
     def add_partition(self, part):
         """
@@ -336,8 +337,6 @@ class PartitionedImage():
 
         # Converting kB to sectors for parted
         part.size_sec = part.disk_size * 1024 // self.sector_size
-
-        self.partitions.append(part)
 
     def layout_partitions(self):
         """ Layout the partitions, meaning calculate the position of every
