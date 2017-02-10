@@ -1,7 +1,5 @@
 require e2fsprogs.inc
 
-PR = "r1"
-
 SRC_URI += "file://acinclude.m4 \
             file://remove.ldconfig.call.patch \
             file://quiet-debugfs.patch \
@@ -13,7 +11,7 @@ SRC_URI += "file://acinclude.m4 \
 
 SRC_URI_append_class-native = " file://e2fsprogs-fix-missing-check-for-permission-denied.patch"
 
-SRCREV = "4e52870eeb08ed7532bf4fd3d5cb1538f714bdc8"
+SRCREV = "3d66c4b20f09f923078c1e6eb9b549865b549674"
 UPSTREAM_CHECK_GITTAGREGEX = "v(?P<pver>\d+\.\d+(\.\d+)*)$"
 
 EXTRA_OECONF += "--libdir=${base_libdir} --sbindir=${base_sbindir} \
@@ -60,7 +58,7 @@ do_install () {
 
 # Need to find the right mke2fs.conf file
 e2fsprogs_conf_fixup () {
-	for i in mke2fs mkfs.ext2 mkfs.ext3 mkfs.ext4 mkfs.ext4dev; do
+	for i in mke2fs mkfs.ext2 mkfs.ext3 mkfs.ext4; do
 		create_wrapper ${D}${base_sbindir}/$i MKE2FS_CONFIG=${sysconfdir}/mke2fs.conf
 	done
 }
