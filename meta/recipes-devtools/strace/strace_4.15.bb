@@ -13,6 +13,7 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/strace/strace-${PV}.tar.xz \
            file://run-ptest \
            file://0001-Fix-build-when-using-non-glibc-libc-implementation-o.patch \
            file://mips-SIGEMT.patch \
+           file://0001-caps-abbrev.awk-fix-gawk-s-path.patch \
            "
 
 SRC_URI[md5sum] = "1ff96209fec19914c920608ed0791864"
