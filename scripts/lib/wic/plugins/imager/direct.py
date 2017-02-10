@@ -182,12 +182,8 @@ class DirectPlugin(ImagerPlugin):
                     rsize_bb = get_bitbake_var('ROOTFS_SIZE', image_name)
                     if rsize_bb:
                         part.size = int(round(float(rsize_bb)))
-            # need to create the filesystems in order to get their
-            # sizes before we can add them and do the layout.
-            part.prepare(self, self.workdir, self.oe_builddir, self.rootfs_dir,
-                         self.bootimg_dir, self.kernel_dir, self.native_sysroot)
 
-            self._image.add_partition(part)
+        self._image.prepare(self)
 
         if fstab_path:
             shutil.move(fstab_path + ".orig", fstab_path)
@@ -329,15 +325,17 @@ class PartitionedImage():
                 else: # msdos partition table
                     part.uuid = '%0x-%02d' % (self.identifier, part.realnum)
 
-    def add_partition(self, part):
-        """
-        Add the next partition. Partitions have to be added in the
-        first-to-last order.
-        """
-        part.ks_pnum = len(self.partitions)
+    def prepare(self, imager):
+        """Prepare an image. Call prepare method of all image partitions."""
+        for part in self.partitions:
+            # need to create the filesystems in order to get their
+            # sizes before we can add them and do the layout.
+            part.prepare(imager, imager.workdir, imager.oe_builddir,
+                         imager.rootfs_dir, imager.bootimg_dir,
+                         imager.kernel_dir, imager.native_sysroot)
 
-        # Converting kB to sectors for parted
-        part.size_sec = part.disk_size * 1024 // self.sector_size
+            # Converting kB to sectors for parted
+            part.size_sec = part.disk_size * 1024 // self.sector_size
 
     def layout_partitions(self):
         """ Layout the partitions, meaning calculate the position of every
