@@ -74,19 +74,6 @@ class DirectPlugin(ImagerPlugin):
         self.ptable_format = self.ks.bootloader.ptable
         self.parts = self.ks.partitions
 
-        # calculate the real partition number, accounting for partitions not
-        # in the partition table and logical partitions
-        realnum = 0
-        for part in self.parts:
-            if part.no_table:
-                part.realnum = 0
-            else:
-                realnum += 1
-                if self.ptable_format == 'msdos' and realnum > 3:
-                    part.realnum = realnum + 1
-                    continue
-                part.realnum = realnum
-
         # as a convenience, set source to the boot partition source
         # instead of forcing it to be set via bootloader --source
         for part in self.parts:
@@ -316,6 +303,19 @@ class PartitionedImage():
         # Size of a sector used in calculations
         self.sector_size = SECTOR_SIZE
         self.native_sysroot = native_sysroot
+
+        # calculate the real partition number, accounting for partitions not
+        # in the partition table and logical partitions
+        realnum = 0
+        for part in self.partitions:
+            if part.no_table:
+                part.realnum = 0
+            else:
+                realnum += 1
+                if self.ptable_format == 'msdos' and realnum > 3:
+                    part.realnum = realnum + 1
+                    continue
+                part.realnum = realnum
 
         # generate parition UUIDs
         for part in self.partitions:
