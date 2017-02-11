@@ -1,6 +1,6 @@
 require ${BPN}.inc
 
-SRC_URI = "ftp://ftp.freedesktop.org/pub/mesa/${PV}/mesa-${PV}.tar.xz \
+SRC_URI = "ftp://ftp.freedesktop.org/pub/mesa/older-versions/11.x/${PV}/mesa-${PV}.tar.xz \
            file://replace_glibc_check_with_linux.patch \
 "
 
