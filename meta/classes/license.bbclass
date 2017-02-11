@@ -345,7 +345,7 @@ def copy_license_files(lic_files_paths, destdir):
     import errno
 
     bb.utils.mkdirhier(destdir)
-    for (basename, path) in lic_files_paths:
+    for (basename, path, beginline, endline) in lic_files_paths:
         try:
             src = path
             dst = os.path.join(destdir, basename)
@@ -353,7 +353,7 @@ def copy_license_files(lic_files_paths, destdir):
                 os.remove(dst)
             if os.path.islink(src):
                 src = os.path.realpath(src)
-            canlink = os.access(src, os.W_OK) and (os.stat(src).st_dev == os.stat(destdir).st_dev)
+            canlink = os.access(src, os.W_OK) and (os.stat(src).st_dev == os.stat(destdir).st_dev) and beginline is None and endline is None
             if canlink:
                 try:
                     os.link(src, dst)
@@ -377,7 +377,15 @@ def copy_license_files(lic_files_paths, destdir):
                     else:
                         raise
             if not canlink:
-                shutil.copyfile(src, dst)
+                begin_idx = int(beginline)-1 if beginline is not None else None
+                end_idx = int(endline) if endline is not None else None
+                if begin_idx is None and end_idx is None:
+                    shutil.copyfile(src, dst)
+                else:
+                    with open(src, 'r') as src_f:
+                        with open(dst, 'w') as dst_f:
+                            dst_f.write(''.join(src_f.readlines()[begin_idx:end_idx]))
+
         except Exception as e:
             bb.warn("Could not copy license file %s to %s: %s" % (src, dst, e))
 
@@ -447,7 +455,8 @@ def find_license_files(d):
             # we really should copy to generic_ + spdx_generic, however, that ends up messing the manifest
             # audit up. This should be fixed in emit_pkgdata (or, we actually got and fix all the recipes)
 
-            lic_files_paths.append(("generic_" + license_type, os.path.join(license_source, spdx_generic)))
+            lic_files_paths.append(("generic_" + license_type, os.path.join(license_source, spdx_generic),
+                                    None, None))
 
             # The user may attempt to use NO_GENERIC_LICENSE for a generic license which doesn't make sense
             # and should not be allowed, warn the user in this case.
@@ -458,7 +467,7 @@ def find_license_files(d):
             # if NO_GENERIC_LICENSE is set, we copy the license files from the fetched source
             # of the package rather than the license_source_dirs.
             lic_files_paths.append(("generic_" + license_type,
-                                    os.path.join(srcdir, non_generic_lic)))
+                                    os.path.join(srcdir, non_generic_lic), None, None))
         else:
             # Add explicity avoid of CLOSED license because this isn't generic
             if license_type != 'CLOSED':
@@ -476,7 +485,9 @@ def find_license_files(d):
             bb.fatal("%s: LIC_FILES_CHKSUM contains an invalid URL:  %s" % (d.getVar('PF'), url))
         # We want the license filename and path
         chksum = parm['md5'] if 'md5' in parm else parm['sha256']
-        lic_chksums[path] = chksum
+        beginline = parm.get('beginline')
+        endline = parm.get('endline')
+        lic_chksums[path] = (chksum, beginline, endline)
 
     v = FindVisitor()
     try:
@@ -488,16 +499,17 @@ def find_license_files(d):
 
     # Add files from LIC_FILES_CHKSUM to list of license files
     lic_chksum_paths = defaultdict(OrderedDict)
-    for path, chksum in lic_chksums.items():
-        lic_chksum_paths[os.path.basename(path)][chksum] = os.path.join(srcdir, path)
+    for path, data in lic_chksums.items():
+        lic_chksum_paths[os.path.basename(path)][data] = (os.path.join(srcdir, path), data[1], data[2])
     for basename, files in lic_chksum_paths.items():
         if len(files) == 1:
-            lic_files_paths.append((basename, list(files.values())[0]))
+            data = list(files.values())[0]
+            lic_files_paths.append(tuple([basename] + list(data)))
         else:
             # If there are multiple different license files with identical
             # basenames we rename them to <file>.0, <file>.1, ...
-            for i, path in enumerate(files.values()):
-                lic_files_paths.append(("%s.%d" % (basename, i), path))
+            for i, data in enumerate(files.values()):
+                lic_files_paths.append(tuple(["%s.%d" % (basename, i)] + list(data)))
 
     return lic_files_paths
 
