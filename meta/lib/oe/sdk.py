@@ -130,7 +130,6 @@ class RpmSdk(Sdk):
 
         pm.create_configs()
         pm.write_index()
-        pm.dump_all_available_pkgs()
         pm.update()
 
         pkgs = []
@@ -188,7 +187,9 @@ class RpmSdk(Sdk):
                                                         True).strip('/'),
                                           )
         self.mkdirhier(native_sysconf_dir)
-        for f in glob.glob(os.path.join(self.sdk_output, "etc", "*")):
+        for f in glob.glob(os.path.join(self.sdk_output, "etc", "rpm*")):
+            self.movefile(f, native_sysconf_dir)
+        for f in glob.glob(os.path.join(self.sdk_output, "etc", "dnf", "*")):
             self.movefile(f, native_sysconf_dir)
         self.remove(os.path.join(self.sdk_output, "etc"), True)
 
@@ -350,7 +351,7 @@ def sdk_list_installed_packages(d, target, rootfs_dir=None):
     if img_type == "rpm":
         arch_var = ["SDK_PACKAGE_ARCHS", None][target is True]
         os_var = ["SDK_OS", None][target is True]
-        return RpmPkgsList(d, rootfs_dir, arch_var, os_var).list_pkgs()
+        return RpmPkgsList(d, rootfs_dir).list_pkgs()
     elif img_type == "ipk":
         conf_file_var = ["IPKGCONF_SDK", "IPKGCONF_TARGET"][target is True]
         return OpkgPkgsList(d, rootfs_dir, d.getVar(conf_file_var)).list_pkgs()

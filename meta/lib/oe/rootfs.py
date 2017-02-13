@@ -431,6 +431,8 @@ class RpmRootfs(Rootfs):
                 bb.note('incremental removed: %s' % ' '.join(pkg_to_remove))
                 self.pm.remove(pkg_to_remove)
 
+            self.pm.autoremove()
+
     def _create(self):
         pkgs_to_install = self.manifest.parse_initial_manifest()
         rpm_pre_process_cmds = self.d.getVar('RPM_PREPROCESS_COMMANDS')
@@ -443,8 +445,6 @@ class RpmRootfs(Rootfs):
 
         if self.progress_reporter:
             self.progress_reporter.next_stage()
-
-        self.pm.dump_all_available_pkgs()
 
         if self.inc_rpm_image_gen == "1":
             self._create_incremental(pkgs_to_install)
@@ -480,14 +480,12 @@ class RpmRootfs(Rootfs):
         if self.progress_reporter:
             self.progress_reporter.next_stage()
 
-        self._setup_dbg_rootfs(['/etc/rpm', '/var/lib/rpm', '/var/lib/smart'])
+        self._setup_dbg_rootfs(['/etc', '/var/lib/rpm', '/var/cache/dnf', '/var/lib/dnf'])
 
         execute_pre_post_process(self.d, rpm_post_process_cmds)
 
         if self.inc_rpm_image_gen == "1":
             self.pm.backup_packaging_data()
-
-        self.pm.rpm_setup_smart_target_config()
 
         if self.progress_reporter:
             self.progress_reporter.next_stage()
@@ -526,15 +524,7 @@ class RpmRootfs(Rootfs):
             self.pm.save_rpmpostinst(pkg)
 
     def _cleanup(self):
-        # during the execution of postprocess commands, rpm is called several
-        # times to get the files installed, dependencies, etc. This creates the
-        # __db.00* (Berkeley DB files that hold locks, rpm specific environment
-        # settings, etc.), that should not get into the final rootfs
-        self.pm.unlock_rpm_db()
-        if os.path.isdir(self.pm.install_dir_path + "/tmp") and not os.listdir(self.pm.install_dir_path + "/tmp"):
-           bb.utils.remove(self.pm.install_dir_path + "/tmp", True)
-        if os.path.isdir(self.pm.install_dir_path) and not os.listdir(self.pm.install_dir_path):
-           bb.utils.remove(self.pm.install_dir_path, True)
+        pass
 
 class DpkgOpkgRootfs(Rootfs):
     def __init__(self, d, progress_reporter=None, logcatcher=None):
