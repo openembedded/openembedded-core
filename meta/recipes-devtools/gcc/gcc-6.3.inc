@@ -79,6 +79,7 @@ SRC_URI = "\
            file://0046-Link-libgcc-using-LDFLAGS-not-just-SHLIB_LDFLAGS.patch \
            file://0047-libgcc_s-Use-alias-for-__cpu_indicator_init-instead-.patch \
            file://0048-sync-gcc-stddef.h-with-musl.patch \
+           file://0054_all_nopie-all-flags.patch \
            ${BACKPORTS} \
 "
 BACKPORTS = "\
