@@ -15,8 +15,7 @@ SRC_URI = "http://ftp.gnu.org/gnu/gdb/gdb-${PV}.tar.xz \
            file://0008-Use-exorted-definitions-of-SIGRTMIN.patch \
            file://0009-Change-order-of-CFLAGS.patch \
            file://0010-resolve-restrict-keyword-conflict.patch \
-	   file://cb93dc7f262978bafe36397a41a56e409a302042.patch \
 "
-SRC_URI[md5sum] = "a0a3a00f7499b0c5278ba8676745d180"
-SRC_URI[sha256sum] = "834ff3c5948b30718343ea57b11cbc3235d7995c6a4f3a5cecec8c8114164f94"
+SRC_URI[md5sum] = "193453347ddced7acb6b1cd2ee8f2e4b"
+SRC_URI[sha256sum] = "4607680b973d3ec92c30ad029f1b7dbde3876869e6b3a117d8a7e90081113186"
 
