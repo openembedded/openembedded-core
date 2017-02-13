@@ -8,7 +8,7 @@ class Selftest(OERuntimeTestCase):
         """
         Summary: Check basic package installation functionality.
         Expected: 1. Before the test socat must be installed using scp.
-                  2. After the test socat must be unistalled using ssh.
+                  2. After the test socat must be uninstalled using ssh.
                      This can't be checked in this test.
         Product: oe-core
         Author: Mariano Lopez <mariano.lopez@intel.com>
@@ -18,10 +18,10 @@ class Selftest(OERuntimeTestCase):
         self.assertEqual(status, 0, msg="socat is not installed")
 
     @OETestDepends(['selftest.Selftest.test_install_package'])
-    def test_verify_unistall(self):
+    def test_verify_uninstall(self):
         """
         Summary: Check basic package installation functionality.
-        Expected: 1. test_install_package must unistall socat.
+        Expected: 1. test_install_package must uninstall socat.
                      This test is just to verify that.
         Product: oe-core
         Author: Mariano Lopez <mariano.lopez@intel.com>

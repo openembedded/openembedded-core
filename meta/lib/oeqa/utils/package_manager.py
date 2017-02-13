@@ -187,7 +187,7 @@ def test_needs_package(test_case):
 
 def _install_uninstall_packages(needed_packages, test_case, install=True):
     """
-    Install/Unistall packages in the DUT without using a package manager
+    Install/Uninstall packages in the DUT without using a package manager
     """
 
     if isinstance(needed_packages, dict):
@@ -205,6 +205,6 @@ def _install_uninstall_packages(needed_packages, test_case, install=True):
         if install and extract:
             test_case.tc.target.copyDirTo(src_dir, '/')
 
-        # Unistall package
+        # Uninstall package
         elif not install and rm:
             test_case.tc.target.deleteDirStructure(src_dir, '/')

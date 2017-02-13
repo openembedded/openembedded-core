@@ -106,7 +106,7 @@ class oeRuntimeTest(oeTest):
         pass
 
     def tearDown(self):
-        # Unistall packages in the DUT
+        # Uninstall packages in the DUT
         self.tc.install_uninstall_packages(self.id(), False)
 
         res = getResults()
@@ -546,7 +546,7 @@ class RuntimeTestContext(TestContext):
 
     def install_uninstall_packages(self, test_id, pkg_dir, install):
         """
-        Check if the test requires a package and Install/Unistall it in the DUT
+        Check if the test requires a package and Install/Uninstall it in the DUT
         """
 
         test = test_id.split(".")[4]
@@ -559,7 +559,7 @@ class RuntimeTestContext(TestContext):
 
     def _install_uninstall_packages(self, needed_packages, pkg_dir, install=True):
         """
-        Install/Unistall packages in the DUT without using a package manager
+        Install/Uninstall packages in the DUT without using a package manager
         """
 
         if isinstance(needed_packages, dict):
@@ -577,7 +577,7 @@ class RuntimeTestContext(TestContext):
             if install and extract:
                 self.target.connection.copy_dir_to(src_dir, "/")
 
-            # Unistall package
+            # Uninstall package
             elif not install and rm:
                 self.target.connection.delete_dir_structure(src_dir, "/")
 
@@ -600,7 +600,7 @@ class ImageTestContext(RuntimeTestContext):
 
     def install_uninstall_packages(self, test_id, install=True):
         """
-        Check if the test requires a package and Install/Unistall it in the DUT
+        Check if the test requires a package and Install/Uninstall it in the DUT
         """
 
         pkg_dir = self.d.getVar("TEST_EXTRACTED_DIR")
@@ -623,7 +623,7 @@ class ExportTestContext(RuntimeTestContext):
 
     def install_uninstall_packages(self, test_id, install=True):
         """
-        Check if the test requires a package and Install/Unistall it in the DUT
+        Check if the test requires a package and Install/Uninstall it in the DUT
         """
 
         export_dir = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))

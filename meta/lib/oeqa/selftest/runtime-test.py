@@ -102,7 +102,7 @@ class TestImage(oeSelfTest):
         """
         Summary: Check install packages functionality for testimage/testexport.
         Expected: 1. Import tests from a directory other than meta.
-                  2. Check install/unistall of socat.
+                  2. Check install/uninstall of socat.
         Product: oe-core
         Author: Mariano Lopez <mariano.lopez@intel.com>
         """
