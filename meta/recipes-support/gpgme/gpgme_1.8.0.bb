@@ -24,6 +24,8 @@ BINCONFIG = "${bindir}/gpgme-config"
 
 inherit autotools texinfo binconfig-disabled pkgconfig
 
+BBCLASSEXTEND = "native"
+
 PACKAGES =+ "${PN}-cpp"
 FILES_${PN}-cpp = "${libdir}/libgpgmepp.so.*"
 FILES_${PN}-dev += "${datadir}/common-lisp/source/gpgme/* \
