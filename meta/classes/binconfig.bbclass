@@ -13,14 +13,14 @@ def get_binconfig_mangle(d):
         s += " -e 's:=%s${exec_prefix}/:=\\1OEEXECPREFIX/:'" % optional_quote
         s += " -e 's:-L${libdir}:-LOELIBDIR:;'"
         s += " -e 's:-I${includedir}:-IOEINCDIR:;'"
+        s += " -e 's:-L${WORKDIR}:-LOELIBDIR:'"
+        s += " -e 's:-I${WORKDIR}:-I-IOEINCDIR:'"
         s += " -e 's:OEBASELIBDIR:${STAGING_BASELIBDIR}:;'"
         s += " -e 's:OELIBDIR:${STAGING_LIBDIR}:;'"
         s += " -e 's:OEINCDIR:${STAGING_INCDIR}:;'"
         s += " -e 's:OEDATADIR:${STAGING_DATADIR}:'"
         s += " -e 's:OEPREFIX:${STAGING_DIR_HOST}${prefix}:'"
         s += " -e 's:OEEXECPREFIX:${STAGING_DIR_HOST}${exec_prefix}:'"
-        s += " -e 's:-I${WORKDIR}:-I${STAGING_INCDIR}:'"
-        s += " -e 's:-L${WORKDIR}:-L${STAGING_LIBDIR}:'"
         if d.getVar("OE_BINCONFIG_EXTRA_MANGLE", False):
             s += d.getVar("OE_BINCONFIG_EXTRA_MANGLE")
 
