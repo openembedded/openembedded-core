@@ -33,7 +33,7 @@ import re
 from collections import defaultdict
 from distutils import spawn
 
-from wic.errors import WicError
+from wic import WicError
 from wic.utils import runner
 
 logger = logging.getLogger('wic')

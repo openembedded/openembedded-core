@@ -28,7 +28,7 @@ import logging
 import os
 import tempfile
 
-from wic.errors import WicError
+from wic import WicError
 from wic.utils.misc import exec_cmd, exec_native_cmd, get_bitbake_var
 from wic.plugin import pluginmgr
 

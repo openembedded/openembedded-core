@@ -28,7 +28,7 @@ import logging
 import os
 import shutil
 
-from wic.errors import WicError
+from wic import WicError
 from wic.engine import get_custom_config
 from wic.pluginbase import SourcePlugin
 from wic.utils.misc import (exec_cmd, exec_native_cmd, get_bitbake_var,

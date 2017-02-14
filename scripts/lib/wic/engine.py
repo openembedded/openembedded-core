@@ -31,7 +31,7 @@
 import logging
 import os
 
-from wic.errors import WicError
+from wic import WicError
 from wic.plugin import pluginmgr
 from wic.utils.misc import get_bitbake_var
 

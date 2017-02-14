@@ -19,8 +19,7 @@ import os
 import sys
 import logging
 
-from wic.errors import WicError
-from wic import pluginbase
+from wic import pluginbase, WicError
 from wic.utils.misc import get_bitbake_var
 
 __ALL__ = ['PluginMgr', 'pluginmgr']

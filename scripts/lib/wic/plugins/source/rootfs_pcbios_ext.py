@@ -22,7 +22,7 @@ import logging
 import os
 import re
 
-from wic.errors import WicError
+from wic import WicError
 from wic.utils import runner
 from wic.utils.misc import get_bitbake_var, exec_cmd, exec_native_cmd
 from wic.pluginbase import SourcePlugin

@@ -31,7 +31,7 @@ import shutil
 
 from oe.path import copyhardlinktree
 
-from wic.errors import WicError
+from wic import WicError
 from wic.pluginbase import SourcePlugin
 from wic.utils.misc import get_bitbake_var, exec_cmd
 

@@ -19,7 +19,7 @@ import logging
 import os
 import subprocess
 
-from wic.errors import WicError
+from wic import WicError
 
 logger = logging.getLogger('wic')
 

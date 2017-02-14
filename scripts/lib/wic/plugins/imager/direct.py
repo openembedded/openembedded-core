@@ -32,7 +32,7 @@ import uuid
 
 from time import strftime
 
-from wic.errors import WicError
+from wic import WicError
 from wic.filemap import sparse_copy
 from wic.ksparser import KickStart, KickStartError
 from wic.plugin import pluginmgr

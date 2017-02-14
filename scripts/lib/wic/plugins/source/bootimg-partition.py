@@ -29,7 +29,7 @@ import re
 
 from glob import glob
 
-from wic.errors import WicError
+from wic import WicError
 from wic.pluginbase import SourcePlugin
 from wic.utils.misc import exec_cmd, get_bitbake_var
 

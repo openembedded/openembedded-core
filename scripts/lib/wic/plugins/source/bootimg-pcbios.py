@@ -27,8 +27,8 @@
 import logging
 import os
 
+from wic import WicError
 from wic.engine import get_custom_config
-from wic.errors import WicError
 from wic.utils import runner
 from wic.pluginbase import SourcePlugin
 from wic.utils.misc import (exec_cmd, exec_native_cmd,
