@@ -15,10 +15,12 @@
 # with this program; if not, write to the Free Software Foundation, Inc., 59
 # Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
+import logging
 import os
 import subprocess
+import sys
 
-from wic import msger
+logger = logging.getLogger('wic')
 
 def runtool(cmdln_or_args, catch=1):
     """ wrapper for most of the subprocess calls
@@ -70,7 +72,8 @@ def runtool(cmdln_or_args, catch=1):
     except OSError as err:
         if err.errno == 2:
             # [Errno 2] No such file or directory
-            msger.error('Cannot run command: %s, lost dependency?' % cmd)
+            logger.error('Cannot run command: %s, lost dependency?', cmd)
+            sys.exit(1)
         else:
             raise # relay
     finally:
@@ -80,7 +83,7 @@ def runtool(cmdln_or_args, catch=1):
     return (process.returncode, out)
 
 def show(cmdln_or_args):
-    # show all the message using msger.verbose
+    """Show all messages using logger.debug."""
 
     rcode, out = runtool(cmdln_or_args, catch=3)
 
@@ -99,7 +102,8 @@ def show(cmdln_or_args):
             msg += '\n  | %s' % line
         msg += '\n  +----------------'
 
-    msger.verbose(msg)
+    logger.debug(msg)
+
     return rcode
 
 def outs(cmdln_or_args, catch=1):

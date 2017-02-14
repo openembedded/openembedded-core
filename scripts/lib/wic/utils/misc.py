@@ -26,13 +26,16 @@
 #
 """Miscellaneous functions."""
 
+import logging
 import os
 import re
+
 from collections import defaultdict
 from distutils import spawn
 
-from wic import msger
 from wic.utils import runner
+
+logger = logging.getLogger('wic')
 
 # executable -> recipe pairs for exec_native_cmd
 NATIVE_RECIPES = {"bmaptool": "bmap-tools",
@@ -61,9 +64,9 @@ def _exec_cmd(cmd_and_args, as_shell=False, catch=3):
 
     Need to execute as_shell if the command uses wildcards
     """
-    msger.debug("_exec_cmd: %s" % cmd_and_args)
+    logger.debug("_exec_cmd: %s", cmd_and_args)
     args = cmd_and_args.split()
-    msger.debug(args)
+    logger.debug(args)
 
     if as_shell:
         ret, out = runner.runtool(cmd_and_args, catch)
@@ -71,11 +74,12 @@ def _exec_cmd(cmd_and_args, as_shell=False, catch=3):
         ret, out = runner.runtool(args, catch)
     out = out.strip()
     if ret != 0:
-        msger.error("_exec_cmd: %s returned '%s' instead of 0\noutput: %s" % \
+        logger.error("_exec_cmd: %s returned '%s' instead of 0\noutput: %s" % \
                     (cmd_and_args, ret, out))
+        sys.exit(1)
 
-    msger.debug("_exec_cmd: output for %s (rc = %d): %s" % \
-                (cmd_and_args, ret, out))
+    logger.debug("_exec_cmd: output for %s (rc = %d): %s",
+                 cmd_and_args, ret, out)
 
     return ret, out
 
@@ -97,7 +101,7 @@ def exec_native_cmd(cmd_and_args, native_sysroot, catch=3, pseudo=""):
     """
     # The reason -1 is used is because there may be "export" commands.
     args = cmd_and_args.split(';')[-1].split()
-    msger.debug(args)
+    logger.debug(args)
 
     if pseudo:
         cmd_and_args = pseudo + cmd_and_args
@@ -106,7 +110,7 @@ def exec_native_cmd(cmd_and_args, native_sysroot, catch=3, pseudo=""):
         (native_sysroot, native_sysroot, native_sysroot)
     native_cmd_and_args = "export PATH=%s:$PATH;%s" % \
                            (native_paths, cmd_and_args)
-    msger.debug("exec_native_cmd: %s" % cmd_and_args)
+    logger.debug("exec_native_cmd: %s", cmd_and_args)
 
     # If the command isn't in the native sysroot say we failed.
     if spawn.find_executable(args[0], native_paths):
@@ -127,7 +131,7 @@ def exec_native_cmd(cmd_and_args, native_sysroot, catch=3, pseudo=""):
         else:
             msg += "Wic failed to find a recipe to build native %s. Please "\
                    "file a bug against wic.\n" % prog
-        msger.error(msg)
+        logger.error(msg)
 
     return ret, out
 
@@ -184,14 +188,14 @@ class BitbakeVars(defaultdict):
                 if image:
                     cmd += " %s" % image
 
-                log_level = msger.get_loglevel()
-                msger.set_loglevel('normal')
+                log_level = logger.getEffectiveLevel()
+                logger.setLevel(logging.INFO)
                 ret, lines = _exec_cmd(cmd)
-                msger.set_loglevel(log_level)
+                logger.setLevel(log_level)
 
                 if ret:
-                    print("Couldn't get '%s' output." % cmd)
-                    print("Bitbake failed with error:\n%s\n" % lines)
+                    logger.error("Couldn't get '%s' output.", cmd)
+                    logger.error("Bitbake failed with error:\n%s\n", lines)
                     return
 
                 # Parse bitbake -e output

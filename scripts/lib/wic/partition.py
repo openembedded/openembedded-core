@@ -24,12 +24,15 @@
 # Tom Zanussi <tom.zanussi (at] linux.intel.com>
 # Ed Bartosh <ed.bartosh> (at] linux.intel.com>
 
+import logging
 import os
+import sys
 import tempfile
 
-from wic import msger
 from wic.utils.misc import exec_cmd, exec_native_cmd, get_bitbake_var
 from wic.plugin import pluginmgr
+
+logger = logging.getLogger('wic')
 
 class Partition():
 
@@ -69,16 +72,16 @@ class Partition():
         number of (1k) blocks we need to add to get to --size, 0 if
         we're already there or beyond.
         """
-        msger.debug("Requested partition size for %s: %d" % \
-                    (self.mountpoint, self.size))
+        logger.debug("Requested partition size for %s: %d",
+                     self.mountpoint, self.size)
 
         if not self.size:
             return 0
 
         requested_blocks = self.size
 
-        msger.debug("Requested blocks %d, current_blocks %d" % \
-                    (requested_blocks, current_blocks))
+        logger.debug("Requested blocks %d, current_blocks %d",
+                     requested_blocks, current_blocks)
 
         if requested_blocks > current_blocks:
             return requested_blocks - current_blocks
@@ -96,8 +99,9 @@ class Partition():
         if self.fixed_size:
             rootfs_size = self.fixed_size
             if actual_rootfs_size > rootfs_size:
-                msger.error("Actual rootfs size (%d kB) is larger than allowed size %d kB" \
-                            %(actual_rootfs_size, rootfs_size))
+                logger.error("Actual rootfs size (%d kB) is larger than allowed size %d kB",
+                             actual_rootfs_size, rootfs_size)
+                sys.exit(1)
         else:
             extra_blocks = self.get_extra_block_count(actual_rootfs_size)
             if extra_blocks < self.extra_space:
@@ -106,8 +110,8 @@ class Partition():
             rootfs_size = actual_rootfs_size + extra_blocks
             rootfs_size *= self.overhead_factor
 
-            msger.debug("Added %d extra blocks to %s to get to %d total blocks" % \
-                        (extra_blocks, self.mountpoint, rootfs_size))
+            logger.debug("Added %d extra blocks to %s to get to %d total blocks",
+                         extra_blocks, self.mountpoint, rootfs_size)
 
         return rootfs_size
 
@@ -128,9 +132,10 @@ class Partition():
         """
         if not self.source:
             if not self.size and not self.fixed_size:
-                msger.error("The %s partition has a size of zero. Please "
-                            "specify a non-zero --size/--fixed-size for that partition." % \
-                            self.mountpoint)
+                logger.error("The %s partition has a size of zero. Please "
+                             "specify a non-zero --size/--fixed-size for that "
+                             "partition.", self.mountpoint)
+                sys.exit(1)
             if self.fstype and self.fstype == "swap":
                 self.prepare_swap_partition(cr_workdir, oe_builddir,
                                             native_sysroot)
@@ -152,11 +157,12 @@ class Partition():
         plugins = pluginmgr.get_source_plugins()
 
         if self.source not in plugins:
-            msger.error("The '%s' --source specified for %s doesn't exist.\n\t"
-                        "See 'wic list source-plugins' for a list of available"
-                        " --sources.\n\tSee 'wic help source-plugins' for "
-                        "details on adding a new source plugin." % \
-                        (self.source, self.mountpoint))
+            logger.error("The '%s' --source specified for %s doesn't exist.\n\t"
+                         "See 'wic list source-plugins' for a list of available"
+                         " --sources.\n\tSee 'wic help source-plugins' for "
+                         "details on adding a new source plugin.",
+                         self.source, self.mountpoint)
+            sys.exit(1)
 
         srcparams_dict = {}
         if self.sourceparams:
@@ -186,15 +192,16 @@ class Partition():
         # further processing required Partition.size to be an integer, make
         # sure that it is one
         if not isinstance(self.size, int):
-            msger.error("Partition %s internal size is not an integer. " \
-                          "This a bug in source plugin %s and needs to be fixed." \
-                          % (self.mountpoint, self.source))
+            logger.error("Partition %s internal size is not an integer. "
+                         "This a bug in source plugin %s and needs to be fixed.",
+                         self.mountpoint, self.source)
+            sys.exit(1)
 
         if self.fixed_size and self.size > self.fixed_size:
-            msger.error("File system image of partition %s is larger (%d kB) than its"\
-                        "allowed size %d kB" % (self.mountpoint,
-                                                self.size, self.fixed_size))
-
+            logger.error("File system image of partition %s is larger (%d kB) "
+                         "than its allowed size %d kB",
+                          self.mountpoint, self.size, self.fixed_size)
+            sys.exit(1)
 
     def prepare_rootfs_from_fs_image(self, cr_workdir, oe_builddir,
                                      rootfs_dir):
@@ -234,8 +241,9 @@ class Partition():
             os.remove(rootfs)
 
         if not self.fstype:
-            msger.error("File system for partition %s not specified in kickstart, " \
-                        "use --fstype option" % (self.mountpoint))
+            logger.error("File system for partition %s not specified in kickstart, "
+                         "use --fstype option", self.mountpoint)
+            sys.exit(1)
 
         # Get rootfs size from bitbake variable if it's not set in .ks file
         if not self.size:
@@ -245,10 +253,10 @@ class Partition():
             # IMAGE_OVERHEAD_FACTOR and IMAGE_ROOTFS_EXTRA_SPACE
             rsize_bb = get_bitbake_var('ROOTFS_SIZE')
             if rsize_bb:
-                msger.warning('overhead-factor was specified, but size was not,'
-                              ' so bitbake variables will be used for the size.'
-                              ' In this case both IMAGE_OVERHEAD_FACTOR and '
-                              '--overhead-factor will be applied')
+                logger.warning('overhead-factor was specified, but size was not,'
+                               ' so bitbake variables will be used for the size.'
+                               ' In this case both IMAGE_OVERHEAD_FACTOR and '
+                               '--overhead-factor will be applied')
                 self.size = int(round(float(rsize_bb)))
 
         for prefix in ("ext", "btrfs", "vfat", "squashfs"):
@@ -404,8 +412,8 @@ class Partition():
         """
         Prepare an empty squashfs partition.
         """
-        msger.warning("Creating of an empty squashfs %s partition was attempted. " \
-                      "Proceeding as requested." % self.mountpoint)
+        logger.warning("Creating of an empty squashfs %s partition was attempted. "
+                       "Proceeding as requested.", self.mountpoint)
 
         path = "%s/fs_%s.%s" % (cr_workdir, self.label, self.fstype)
         if os.path.isfile(path):

@@ -28,6 +28,7 @@
 # Tom Zanussi <tom.zanussi (at] linux.intel.com>
 #
 
+import logging
 import os
 import sys
 
@@ -35,6 +36,7 @@ from wic import msger
 from wic.plugin import pluginmgr
 from wic.utils.misc import get_bitbake_var
 
+logger = logging.getLogger('wic')
 
 def verify_build_env():
     """
@@ -43,7 +45,7 @@ def verify_build_env():
     Returns True if it is, false otherwise
     """
     if not os.environ.get("BUILDDIR"):
-        print("BUILDDIR not found, exiting. (Did you forget to source oe-init-build-env?)")
+        logger.error("BUILDDIR not found, exiting. (Did you forget to source oe-init-build-env?)")
         sys.exit(1)
 
     return True
@@ -179,7 +181,7 @@ def wic_create(wks_file, rootfs_dir, bootimg_dir, kernel_dir,
     try:
         oe_builddir = os.environ["BUILDDIR"]
     except KeyError:
-        print("BUILDDIR not found, exiting. (Did you forget to source oe-init-build-env?)")
+        logger.error("BUILDDIR not found, exiting. (Did you forget to source oe-init-build-env?)")
         sys.exit(1)
 
     if options.debug:
@@ -191,14 +193,15 @@ def wic_create(wks_file, rootfs_dir, bootimg_dir, kernel_dir,
     pname = 'direct'
     plugin_class = pluginmgr.get_plugins('imager').get(pname)
     if not plugin_class:
-        msger.error('Unknown plugin: %s' % pname)
+        logger.error('Unknown plugin: %s', pname)
+        sys.exit(1)
 
     plugin = plugin_class(wks_file, rootfs_dir, bootimg_dir, kernel_dir,
                           native_sysroot, oe_builddir, options)
 
     plugin.do_create()
 
-    print("\nThe image(s) were created using OE kickstart file:\n  %s" % wks_file)
+    logger.info("The image(s) were created using OE kickstart file:\n  %s", wks_file)
 
 
 def wic_list(args, scripts_path):
@@ -218,10 +221,10 @@ def wic_list(args, scripts_path):
         wks_file = args[0]
         fullpath = find_canned_image(scripts_path, wks_file)
         if not fullpath:
-            print("No image named %s found, exiting. "\
-                  "(Use 'wic list images' to list available images, or "\
-                  "specify a fully-qualified OE kickstart (.wks) "\
-                  "filename)\n" % wks_file)
+            logger.error("No image named %s found, exiting. "
+                         "(Use 'wic list images' to list available images, or "
+                         "specify a fully-qualified OE kickstart (.wks) "
+                         "filename)\n", wks_file)
             sys.exit(1)
         list_canned_image_help(scripts_path, fullpath)
         return True

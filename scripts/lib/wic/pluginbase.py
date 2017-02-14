@@ -17,9 +17,11 @@
 
 __all__ = ['ImagerPlugin', 'SourcePlugin', 'get_plugins']
 
+import logging
+
 from collections import defaultdict
 
-from wic import msger
+logger = logging.getLogger('wic')
 
 class PluginMeta(type):
     plugins = defaultdict(dict)
@@ -49,7 +51,7 @@ class SourcePlugin(PluginMeta("Plugin", (), {})):
         disk image.  This provides a hook to allow finalization of a
         disk image e.g. to write an MBR to it.
         """
-        msger.debug("SourcePlugin: do_install_disk: disk: %s" % disk_name)
+        logger.debug("SourcePlugin: do_install_disk: disk: %s", disk_name)
 
     @classmethod
     def do_stage_partition(cls, part, source_params, creator, cr_workdir,
@@ -66,7 +68,7 @@ class SourcePlugin(PluginMeta("Plugin", (), {})):
         Not that get_bitbake_var() allows you to acces non-standard
         variables that you might want to use for this.
         """
-        msger.debug("SourcePlugin: do_stage_partition: part: %s" % part)
+        logger.debug("SourcePlugin: do_stage_partition: part: %s", part)
 
     @classmethod
     def do_configure_partition(cls, part, source_params, creator, cr_workdir,
@@ -77,7 +79,7 @@ class SourcePlugin(PluginMeta("Plugin", (), {})):
         custom configuration files for a partition, for example
         syslinux or grub config files.
         """
-        msger.debug("SourcePlugin: do_configure_partition: part: %s" % part)
+        logger.debug("SourcePlugin: do_configure_partition: part: %s", part)
 
     @classmethod
     def do_prepare_partition(cls, part, source_params, creator, cr_workdir,
@@ -87,7 +89,7 @@ class SourcePlugin(PluginMeta("Plugin", (), {})):
         Called to do the actual content population for a partition i.e. it
         'prepares' the partition to be incorporated into the image.
         """
-        msger.debug("SourcePlugin: do_prepare_partition: part: %s" % part)
+        logger.debug("SourcePlugin: do_prepare_partition: part: %s", part)
 
 def get_plugins(typen):
     return PluginMeta.plugins.get(typen)

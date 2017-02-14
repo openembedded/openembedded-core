@@ -30,8 +30,10 @@ import logging
 
 from wic.plugin import pluginmgr, PLUGIN_TYPES
 
+logger = logging.getLogger('wic')
+
 def subcommand_error(args):
-    logging.info("invalid subcommand %s", args[0])
+    logger.info("invalid subcommand %s", args[0])
 
 
 def display_help(subcommand, subcommands):
@@ -81,13 +83,13 @@ def invoke_subcommand(args, parser, main_command_usage, subcommands):
     Should use argparse, but has to work in 2.6.
     """
     if not args:
-        logging.error("No subcommand specified, exiting")
+        logger.error("No subcommand specified, exiting")
         parser.print_help()
         return 1
     elif args[0] == "help":
         wic_help(args, main_command_usage, subcommands)
     elif args[0] not in subcommands:
-        logging.error("Unsupported subcommand %s, exiting\n", args[0])
+        logger.error("Unsupported subcommand %s, exiting\n", args[0])
         parser.print_help()
         return 1
     else:

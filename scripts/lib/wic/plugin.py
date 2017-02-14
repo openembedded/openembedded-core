@@ -17,8 +17,8 @@
 
 import os
 import sys
+import logging
 
-from wic import msger
 from wic import pluginbase
 from wic.utils import errors
 from wic.utils.misc import get_bitbake_var
@@ -29,6 +29,8 @@ PLUGIN_TYPES = ["imager", "source"]
 
 PLUGIN_DIR = "/lib/wic/plugins" # relative to scripts
 SCRIPTS_PLUGIN_DIR = "scripts" + PLUGIN_DIR
+
+logger = logging.getLogger('wic')
 
 class PluginMgr():
     plugin_dirs = {}
@@ -91,17 +93,16 @@ class PluginMgr():
                 if mod and mod != '__init__':
                     if mod in sys.modules:
                         #self.plugin_dirs[pdir] = True
-                        msger.warning("Module %s already exists, skip" % mod)
+                        logger.warning("Module %s already exists, skip", mod)
                     else:
                         try:
                             pymod = __import__(mod)
                             self.plugin_dirs[pdir] = True
-                            msger.debug("Plugin module %s:%s imported"\
-                                        % (mod, pymod.__file__))
+                            logger.debug("Plugin module %s:%s imported",
+                                         mod, pymod.__file__)
                         except ImportError as err:
-                            msg = 'Failed to load plugin %s/%s: %s' \
-                                % (os.path.basename(pdir), mod, err)
-                            msger.warning(msg)
+                            logger.warning('Failed to load plugin %s/%s: %s',
+                                           os.path.basename(pdir), mod, err)
 
             del sys.path[0]
 
@@ -140,8 +141,8 @@ class PluginMgr():
             if _source_name == source_name:
                 for _method_name in methods:
                     if not hasattr(klass, _method_name):
-                        msger.warning("Unimplemented %s source interface for: %s"\
-                                      % (_method_name, _source_name))
+                        logger.warning("Unimplemented %s source interface for: %s",
+                                       _method_name, _source_name)
                         return None
                     func = getattr(klass, _method_name)
                     methods[_method_name] = func

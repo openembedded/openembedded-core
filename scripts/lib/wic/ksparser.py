@@ -27,11 +27,14 @@
 
 import os
 import shlex
+import logging
+
 from argparse import ArgumentParser, ArgumentError, ArgumentTypeError
 
-from wic import msger
 from wic.engine import find_canned
 from wic.partition import Partition
+
+logger = logging.getLogger('wic')
 
 class KickStartError(Exception):
     """Custom exception."""
@@ -168,7 +171,7 @@ class KickStart():
 
         self._parse(parser, confpath)
         if not self.bootloader:
-            msger.warning('bootloader config not specified, using defaults')
+            logger.warning('bootloader config not specified, using defaults\n')
             self.bootloader = bootloader.parse_args([])
 
     def _parse(self, parser, confpath):
