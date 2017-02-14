@@ -10,7 +10,7 @@ KMETA = "kernel-meta"
 KCONF_BSP_AUDIT_LEVEL = "2"
 
 SRCREV_machine ?= "c85c54f5bf53b98afe8105e91bffcdb6c60afe8f"
-SRCREV_meta ?= "8d1042fc4b23d184688b0e6931dd4e7ff4807273"
+SRCREV_meta ?= "f9cb76e24e3a73b8eda70ea9bd91ba5a52711521"
 
 PV = "${LINUX_VERSION}+git${SRCPV}"
 
