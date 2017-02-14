@@ -142,13 +142,11 @@ def wic_create_subcommand(args, usage_str):
     (options, args) = parser.parse_args(args)
 
     if len(args) != 1:
-        logger.error("Wrong number of arguments, exiting\n")
         parser.print_help()
-        sys.exit(1)
+        raise WicError("Wrong number of arguments, exiting")
 
     if options.build_rootfs and not bitbake_main:
-        logger.error("Can't build roofs as bitbake is not in the $PATH")
-        sys.exit(1)
+        raise WicError("Can't build roofs as bitbake is not in the $PATH")
 
     if not options.image_name:
         missed = []
@@ -159,9 +157,8 @@ def wic_create_subcommand(args, usage_str):
             if not val:
                 missed.append(opt)
         if missed:
-            logger.error("The following build artifacts are not specified: %s",
-                         ", ".join(missed))
-            sys.exit(1)
+            raise WicError("The following build artifacts are not specified: %s" %
+                           ", ".join(missed))
 
     if options.image_name:
         BB_VARS.default_image = options.image_name
@@ -172,8 +169,7 @@ def wic_create_subcommand(args, usage_str):
         BB_VARS.vars_dir = options.vars_dir
 
     if options.build_check and not engine.verify_build_env():
-        logger.error("Couldn't verify build environment, exiting\n")
-        sys.exit(1)
+        raise WicError("Couldn't verify build environment, exiting")
 
     bootimg_dir = ""
 
@@ -189,7 +185,7 @@ def wic_create_subcommand(args, usage_str):
             logger.info("Building rootfs...\n")
             if bitbake_main(BitBakeConfigParameters(argv),
                             cookerdata.CookerConfiguration()):
-                sys.exit(1)
+                raise WicError("bitbake exited with error")
 
         rootfs_dir = get_bitbake_var("IMAGE_ROOTFS", options.image_name)
         kernel_dir = get_bitbake_var("DEPLOY_DIR_IMAGE", options.image_name)
@@ -197,29 +193,28 @@ def wic_create_subcommand(args, usage_str):
                                          "wic-tools", cache=False)
     else:
         if options.build_rootfs:
-            logger.error("Image name is not specified, exiting. (Use -e/--image-name to specify it)\n")
-            sys.exit(1)
+            raise WicError("Image name is not specified, exiting. "
+                           "(Use -e/--image-name to specify it)")
         native_sysroot = options.native_sysroot
 
     if not native_sysroot or not os.path.isdir(native_sysroot):
         logger.info("Building wic-tools...\n")
         if bitbake_main(BitBakeConfigParameters("bitbake wic-tools".split()),
                         cookerdata.CookerConfiguration()):
-            sys.exit(1)
+            raise WicError("bitbake wic-tools failed")
         native_sysroot = get_bitbake_var("RECIPE_SYSROOT_NATIVE", "wic-tools")
         if not native_sysroot:
-            logger.info("Unable to find the location of the native tools sysroot to use\n")
-            sys.exit(1)
+            raise WicError("Unable to find the location of the native "
+                           "tools sysroot to use")
 
     wks_file = args[0]
 
     if not wks_file.endswith(".wks"):
         wks_file = engine.find_canned_image(scripts_path, wks_file)
         if not wks_file:
-            logger.error("No image named %s found, exiting.  (Use 'wic list images' "\
-                  "to list available images, or specify a fully-qualified OE "\
-                  "kickstart (.wks) filename)\n" % args[0])
-            sys.exit(1)
+            raise WicError("No image named %s found, exiting.  (Use 'wic list images' "
+                           "to list available images, or specify a fully-qualified OE "
+                           "kickstart (.wks) filename)" % args[0])
 
     if not options.image_name:
         rootfs_dir = ''
@@ -229,17 +224,13 @@ def wic_create_subcommand(args, usage_str):
         kernel_dir = options.kernel_dir
         native_sysroot = options.native_sysroot
         if rootfs_dir and not os.path.isdir(rootfs_dir):
-            logger.error("--roofs-dir (-r) not found, exiting\n")
-            sys.exit(1)
+            raise WicError("--roofs-dir (-r) not found, exiting")
         if not os.path.isdir(bootimg_dir):
-            logger.error("--bootimg-dir (-b) not found, exiting\n")
-            sys.exit(1)
+            raise WicError("--bootimg-dir (-b) not found, exiting")
         if not os.path.isdir(kernel_dir):
-            logger.error("--kernel-dir (-k) not found, exiting\n")
-            sys.exit(1)
+            raise WicError("--kernel-dir (-k) not found, exiting")
         if not os.path.isdir(native_sysroot):
-            logger.error("--native-sysroot (-n) not found, exiting\n")
-            sys.exit(1)
+            raise WicError("--native-sysroot (-n) not found, exiting")
     else:
         not_found = not_found_dir = ""
         if not os.path.isdir(rootfs_dir):
@@ -251,12 +242,11 @@ def wic_create_subcommand(args, usage_str):
         if not_found:
             if not not_found_dir:
                 not_found_dir = "Completely missing artifact - wrong image (.wks) used?"
-            logger.error("Build artifacts not found, exiting.")
+            logger.info("Build artifacts not found, exiting.")
             logger.info("  (Please check that the build artifacts for the machine")
             logger.info("   selected in local.conf actually exist and that they")
             logger.info("   are the correct artifacts for the image (.wks file)).\n")
-            logger.info("The artifact that couldn't be found was %s:\n  %s", not_found, not_found_dir)
-            sys.exit(1)
+            raise WicError("The artifact that couldn't be found was %s:\n  %s", not_found, not_found_dir)
 
     krootfs_dir = options.rootfs_dir
     if krootfs_dir is None:
@@ -279,9 +269,8 @@ def wic_list_subcommand(args, usage_str):
     args = parser.parse_args(args)[1]
 
     if not engine.wic_list(args, scripts_path):
-        logger.error("Bad list arguments, exiting\n")
         parser.print_help()
-        sys.exit(1)
+        raise WicError("Bad list arguments, exiting")
 
 
 def wic_help_topic_subcommand(args, usage_str):
@@ -328,7 +317,7 @@ def main(argv):
         if args[0] == "help":
             if len(args) == 1:
                 parser.print_help()
-                sys.exit(1)
+                raise WicError("help command requires parameter")
 
     return hlp.invoke_subcommand(args, parser, hlp.wic_help_usage, subcommands)
 
@@ -337,5 +326,6 @@ if __name__ == "__main__":
     try:
         sys.exit(main(sys.argv[1:]))
     except WicError as err:
+        print()
         logger.error(err)
         sys.exit(1)
