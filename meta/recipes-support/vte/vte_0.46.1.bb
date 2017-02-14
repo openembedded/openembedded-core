@@ -1,7 +1,7 @@
 SUMMARY = "Virtual terminal emulator GTK+ widget library"
 BUGTRACKER = "https://bugzilla.gnome.org/buglist.cgi?product=vte"
 LICENSE = "LGPLv2.1+"
-DEPENDS = "glib-2.0 gtk+3 intltool-native libxml2-native"
+DEPENDS = "glib-2.0 gtk+3 libpcre2 intltool-native libxml2-native"
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=4fbd65380cdd255951079008b364516c"
 
@@ -11,8 +11,8 @@ inherit gnomebase gtk-doc distro_features_check upstream-version-is-even gobject
 SRC_URI += "file://0001-Don-t-enable-stack-protection-by-default.patch \
             ${@bb.utils.contains('PACKAGECONFIG', 'vala', '', 'file://0001-Add-m4-vapigen.m4.patch', d) } \
             "
-SRC_URI[archive.md5sum] = "eca8f8a9d9f9bb8e9d592d0acfeec015"
-SRC_URI[archive.sha256sum] = "a1ea594814bb136a3a9a6c7656b46240571f6a198825c1111007fe99194b0949"
+SRC_URI[archive.md5sum] = "e8f4393b9f1ec2e2f3cdb3fd4f5a16de"
+SRC_URI[archive.sha256sum] = "8800cf8bc259704a12ad1853fb0eb43bfe3857af15242e6fb9f2c3fd95b3f5c6"
 
 ANY_OF_DISTRO_FEATURES = "${GTK3DISTROFEATURES}"
 
@@ -27,7 +27,7 @@ export XDG_DATA_DIRS = "${STAGING_DATADIR}"
 # Package additional files
 FILES_${PN}-dev += "${datadir}/vala/vapi/*"
 
-PACKAGECONFIG ??= ""
+PACKAGECONFIG ??= "gnutls"
 PACKAGECONFIG[vala] = "--enable-vala,--disable-vala,vala-native vala"
 PACKAGECONFIG[gnutls] = "--with-gnutls,--without-gnutls,gnutls"
 
