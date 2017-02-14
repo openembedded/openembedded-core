@@ -17,8 +17,8 @@ SRC_URI = "https://cmake.org/files/v${CMAKE_MAJOR_VERSION}/cmake-${PV}.tar.gz \
            file://avoid-gcc-warnings-with-Wstrict-prototypes.patch \
            "
 
-SRC_URI[md5sum] = "d031d5a06e9f1c5367cdfc56fbd2a1c8"
-SRC_URI[sha256sum] = "449a5bce64dbd4d5b9517ebd1a1248ed197add6ad27934478976fd5f1f9330e1"
+SRC_URI[md5sum] = "79bd7e65cd81ea3aa2619484ad6ff25a"
+SRC_URI[sha256sum] = "dc1246c4e6d168ea4d6e042cfba577c1acd65feea27e56f5ff37df920c30cae0"
 
 UPSTREAM_CHECK_REGEX = "cmake-(?P<pver>\d+(\.\d+)+)\.tar"
 
