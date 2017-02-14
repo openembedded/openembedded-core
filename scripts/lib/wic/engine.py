@@ -32,7 +32,6 @@ import logging
 import os
 import sys
 
-from wic import msger
 from wic.plugin import pluginmgr
 from wic.utils.misc import get_bitbake_var
 
@@ -183,9 +182,6 @@ def wic_create(wks_file, rootfs_dir, bootimg_dir, kernel_dir,
     except KeyError:
         logger.error("BUILDDIR not found, exiting. (Did you forget to source oe-init-build-env?)")
         sys.exit(1)
-
-    if options.debug:
-        msger.set_loglevel('debug')
 
     if not os.path.exists(options.outdir):
         os.makedirs(options.outdir)
