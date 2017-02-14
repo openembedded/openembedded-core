@@ -27,7 +27,7 @@ S="${WORKDIR}/docbook-xml-4.5.c31424"
 inherit allarch
 BBCLASSEXTEND = "native"
 
-do_configre (){
+do_configure (){
     :
 }
 
