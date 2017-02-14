@@ -20,15 +20,18 @@
 # AUTHORS
 # Mihaly Varga <mihaly.varga (at] ni.com>
 
+import glob
+import logging
 import os
 import re
 import shutil
-import glob
+import sys
 
-from wic import msger
 from wic.engine import get_custom_config
 from wic.pluginbase import SourcePlugin
 from wic.utils.misc import exec_cmd, exec_native_cmd, get_bitbake_var
+
+logger = logging.getLogger('wic')
 
 class IsoImagePlugin(SourcePlugin):
     """
@@ -85,8 +88,9 @@ class IsoImagePlugin(SourcePlugin):
         syslinux_conf += "APPEND initrd=/initrd LABEL=boot %s\n" \
                              % bootloader.append
 
-        msger.debug("Writing syslinux config %s/ISO/isolinux/isolinux.cfg" \
-                    % cr_workdir)
+        logger.debug("Writing syslinux config %s/ISO/isolinux/isolinux.cfg",
+                     cr_workdir)
+
         with open("%s/ISO/isolinux/isolinux.cfg" % cr_workdir, "w") as cfg:
             cfg.write(syslinux_conf)
 
@@ -99,11 +103,12 @@ class IsoImagePlugin(SourcePlugin):
         if configfile:
             grubefi_conf = get_custom_config(configfile)
             if grubefi_conf:
-                msger.debug("Using custom configuration file "
-                            "%s for grub.cfg" % configfile)
+                logger.debug("Using custom configuration file %s for grub.cfg",
+                             configfile)
             else:
-                msger.error("configfile is specified but failed to "
-                            "get it from %s." % configfile)
+                logger.error("configfile is specified "
+                             "but failed to get it from %s", configfile)
+                sys.exit(1)
         else:
             splash = os.path.join(cr_workdir, "EFI/boot/splash.jpg")
             if os.path.exists(splash):
@@ -133,8 +138,8 @@ class IsoImagePlugin(SourcePlugin):
             if splashline:
                 grubefi_conf += "%s\n" % splashline
 
-        msger.debug("Writing grubefi config %s/EFI/BOOT/grub.cfg" \
-                        % cr_workdir)
+        logger.debug("Writing grubefi config %s/EFI/BOOT/grub.cfg", cr_workdir)
+
         with open("%s/EFI/BOOT/grub.cfg" % cr_workdir, "w") as cfg:
             cfg.write(grubefi_conf)
 
@@ -148,19 +153,23 @@ class IsoImagePlugin(SourcePlugin):
         if not initrd:
             initrd_dir = get_bitbake_var("DEPLOY_DIR_IMAGE")
             if not initrd_dir:
-                msger.error("Couldn't find DEPLOY_DIR_IMAGE, exiting.\n")
+                logger.error("Couldn't find DEPLOY_DIR_IMAGE, exiting.\n")
+                sys.exit(1)
 
             image_name = get_bitbake_var("IMAGE_BASENAME")
             if not image_name:
-                msger.error("Couldn't find IMAGE_BASENAME, exiting.\n")
+                logger.error("Couldn't find IMAGE_BASENAME, exiting.\n")
+                sys.exit(1)
 
             image_type = get_bitbake_var("INITRAMFS_FSTYPES")
             if not image_type:
-                msger.error("Couldn't find INITRAMFS_FSTYPES, exiting.\n")
+                logger.error("Couldn't find INITRAMFS_FSTYPES, exiting.\n")
+                sys.exit(1)
 
             target_arch = get_bitbake_var("TRANSLATED_TARGET_ARCH")
             if not target_arch:
-                msger.error("Couldn't find TRANSLATED_TARGET_ARCH, exiting.\n")
+                logger.error("Couldn't find TRANSLATED_TARGET_ARCH, exiting.\n")
+                sys.exit(1)
 
             initrd = glob.glob('%s/%s*%s.%s' % (initrd_dir, image_name, target_arch, image_type))[0]
 
@@ -183,7 +192,8 @@ class IsoImagePlugin(SourcePlugin):
                 os.symlink(os.readlink("%s/sbin/init" % rootfs_dir), \
                             "%s/init" % initrd_dir)
             else:
-                msger.error("Couldn't find or build initrd, exiting.\n")
+                logger.error("Couldn't find or build initrd, exiting.\n")
+                sys.exit(1)
 
             exec_cmd("cd %s && find . | cpio -o -H newc -R +0:+0 >./initrd.cpio " \
                     % initrd_dir, as_shell=True)
@@ -209,11 +219,11 @@ class IsoImagePlugin(SourcePlugin):
         exec_cmd(install_cmd)
 
         # Overwrite the name of the created image
-        msger.debug("%s" % source_params)
+        logger.debug(source_params)
         if 'image_name' in source_params and \
                     source_params['image_name'].strip():
             creator.name = source_params['image_name'].strip()
-            msger.debug("The name of the image is: %s" % creator.name)
+            logger.debug("The name of the image is: %s", creator.name)
 
     @classmethod
     def do_prepare_partition(cls, part, source_params, creator, cr_workdir,
@@ -229,7 +239,8 @@ class IsoImagePlugin(SourcePlugin):
 
         if part.rootfs_dir is None:
             if not 'ROOTFS_DIR' in rootfs_dir:
-                msger.error("Couldn't find --rootfs-dir, exiting.\n")
+                logger.error("Couldn't find --rootfs-dir, exiting.\n")
+                sys.exit(1)
             rootfs_dir = rootfs_dir['ROOTFS_DIR']
         else:
             if part.rootfs_dir in rootfs_dir:
@@ -237,14 +248,16 @@ class IsoImagePlugin(SourcePlugin):
             elif part.rootfs_dir:
                 rootfs_dir = part.rootfs_dir
             else:
-                msg = "Couldn't find --rootfs-dir=%s connection "
-                msg += "or it is not a valid path, exiting.\n"
-                msger.error(msg % part.rootfs_dir)
+                logger.error("Couldn't find --rootfs-dir=%s connection "
+                             "or it is not a valid path, exiting.\n",
+                             part.rootfs_dir)
+                sys.exit(1)
 
         if not os.path.isdir(rootfs_dir):
             rootfs_dir = get_bitbake_var("IMAGE_ROOTFS")
         if not os.path.isdir(rootfs_dir):
-            msger.error("Couldn't find IMAGE_ROOTFS, exiting.\n")
+            logger.error("Couldn't find IMAGE_ROOTFS, exiting.\n")
+            sys.exit(1)
 
         part.rootfs_dir = rootfs_dir
 
@@ -283,7 +296,8 @@ class IsoImagePlugin(SourcePlugin):
         if source_params.get('initrd'):
             initrd = source_params['initrd']
             if not deploy_dir:
-                msger.error("Couldn't find DEPLOY_DIR_IMAGE, exiting\n")
+                logger.error("Couldn't find DEPLOY_DIR_IMAGE, exiting\n")
+                sys.exit(1)
             cp_cmd = "cp %s/%s %s" % (deploy_dir, initrd, cr_workdir)
             exec_cmd(cp_cmd)
         else:
@@ -326,7 +340,8 @@ class IsoImagePlugin(SourcePlugin):
                 # didn't contains it
                 target_arch = get_bitbake_var("TARGET_SYS")
                 if not target_arch:
-                    msger.error("Coludn't find target architecture\n")
+                    logger.error("Coludn't find target architecture\n")
+                    sys.exit(1)
 
                 if re.match("x86_64", target_arch):
                     grub_target = 'x86_64-efi'
@@ -335,18 +350,21 @@ class IsoImagePlugin(SourcePlugin):
                     grub_target = 'i386-efi'
                     grub_image = "bootia32.efi"
                 else:
-                    msger.error("grub-efi is incompatible with target %s\n" \
-                                % target_arch)
+                    logger.error("grub-efi is incompatible with target %s\n",
+                                 target_arch)
+                    sys.exit(1)
 
                 if not os.path.isfile("%s/EFI/BOOT/%s" \
                                 % (bootimg_dir, grub_image)):
                     grub_path = get_bitbake_var("STAGING_LIBDIR", "wic-tools")
                     if not grub_path:
-                        msger.error("Couldn't find STAGING_LIBDIR, exiting.\n")
+                        logger.error("Couldn't find STAGING_LIBDIR, exiting.\n")
+                        sys.exit(1)
 
                     grub_core = "%s/grub/%s" % (grub_path, grub_target)
                     if not os.path.exists(grub_core):
-                        msger.error("Please build grub-efi first\n")
+                        logger.error("Please build grub-efi first\n")
+                        sys.exit(1)
 
                     grub_cmd = "grub-mkimage -p '/EFI/BOOT' "
                     grub_cmd += "-d %s "  % grub_core
@@ -362,10 +380,12 @@ class IsoImagePlugin(SourcePlugin):
                     exec_native_cmd(grub_cmd, native_sysroot)
 
             else:
-                msger.error("unrecognized bootimg-efi loader: %s" \
-                            % source_params['loader'])
+                logger.error("unrecognized bootimg-efi loader: %s",
+                             source_params['loader'])
+                sys.exit(1)
         except KeyError:
-            msger.error("bootimg-efi requires a loader, none specified")
+            logger.error("bootimg-efi requires a loader, none specified")
+            sys.exit(1)
 
         if os.path.exists("%s/EFI/BOOT" % isodir):
             shutil.rmtree("%s/EFI/BOOT" % isodir)
@@ -388,9 +408,8 @@ class IsoImagePlugin(SourcePlugin):
             blocks = int(out.split()[0])
             # Add some extra space for file system overhead
             blocks += 100
-            msg = "Added 100 extra blocks to %s to get to %d total blocks" \
-                    % (part.mountpoint, blocks)
-            msger.debug(msg)
+            logger.debug("Added 100 extra blocks to %s to get to %d "
+                         "total blocks", part.mountpoint, blocks)
 
             # dosfs image for EFI boot
             bootimg = "%s/efi.img" % isodir
@@ -412,7 +431,8 @@ class IsoImagePlugin(SourcePlugin):
         # Prepare files for legacy boot
         syslinux_dir = get_bitbake_var("STAGING_DATADIR", "wic-tools")
         if not syslinux_dir:
-            msger.error("Couldn't find STAGING_DATADIR, exiting.\n")
+            logger.error("Couldn't find STAGING_DATADIR, exiting.\n")
+            sys.exit(1)
 
         if os.path.exists("%s/isolinux" % isodir):
             shutil.rmtree("%s/isolinux" % isodir)
@@ -452,7 +472,7 @@ class IsoImagePlugin(SourcePlugin):
         mkisofs_cmd += "-eltorito-platform 0xEF -eltorito-boot %s " % efi_img
         mkisofs_cmd += "-no-emul-boot %s " % isodir
 
-        msger.debug("running command: %s" % mkisofs_cmd)
+        logger.debug("running command: %s", mkisofs_cmd)
         exec_native_cmd(mkisofs_cmd, native_sysroot)
 
         shutil.rmtree(isodir)
@@ -478,14 +498,14 @@ class IsoImagePlugin(SourcePlugin):
         full_path_iso = creator._full_path(workdir, disk_name, "iso")
 
         isohybrid_cmd = "isohybrid -u %s" % iso_img
-        msger.debug("running command: %s" % isohybrid_cmd)
+        logger.debug("running command: %s", isohybrid_cmd)
         exec_native_cmd(isohybrid_cmd, native_sysroot)
 
         # Replace the image created by direct plugin with the one created by
         # mkisofs command. This is necessary because the iso image created by
         # mkisofs has a very specific MBR is system area of the ISO image, and
         # direct plugin adds and configures an another MBR.
-        msger.debug("Replaceing the image created by direct plugin\n")
+        logger.debug("Replaceing the image created by direct plugin\n")
         os.remove(disk.path)
         shutil.copy2(iso_img, full_path_iso)
         shutil.copy2(full_path_iso, full_path)

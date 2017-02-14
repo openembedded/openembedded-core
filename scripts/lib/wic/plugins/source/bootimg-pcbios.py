@@ -24,15 +24,18 @@
 # Tom Zanussi <tom.zanussi (at] linux.intel.com>
 #
 
+import logging
 import os
+import sys
 
-from wic import msger
 from wic.engine import get_custom_config
 from wic.utils import runner
 from wic.utils.errors import ImageError
 from wic.pluginbase import SourcePlugin
 from wic.utils.misc import (exec_cmd, exec_native_cmd,
                             get_bitbake_var, BOOTDD_EXTRA_SPACE)
+
+logger = logging.getLogger('wic')
 
 class BootimgPcbiosPlugin(SourcePlugin):
     """
@@ -54,16 +57,18 @@ class BootimgPcbiosPlugin(SourcePlugin):
         elif creator.ptable_format == 'gpt':
             mbrfile += "gptmbr.bin"
         else:
-            msger.error("Unsupported partition table: %s" % creator.ptable_format)
+            logger.error("Unsupported partition table: %s", creator.ptable_format)
+            sys.exit(1)
 
         if not os.path.exists(mbrfile):
-            msger.error("Couldn't find %s.  If using the -e option, do you "
-                        "have the right MACHINE set in local.conf?  If not, "
-                        "is the bootimg_dir path correct?" % mbrfile)
+            logger.error("Couldn't find %s.  If using the -e option, do you "
+                         "have the right MACHINE set in local.conf?  If not, "
+                         "is the bootimg_dir path correct?", mbrfile)
+            sys.exit(1)
 
         full_path = creator._full_path(workdir, disk_name, "direct")
-        msger.debug("Installing MBR on disk %s as %s with size %s bytes" \
-                    % (disk_name, full_path, disk.min_size))
+        logger.debug("Installing MBR on disk %s as %s with size %s bytes",
+                     disk_name, full_path, disk.min_size)
 
         rcode = runner.show(['dd', 'if=%s' % mbrfile,
                              'of=%s' % full_path, 'conv=notrunc'])
@@ -90,11 +95,11 @@ class BootimgPcbiosPlugin(SourcePlugin):
             if custom_cfg:
                 # Use a custom configuration for grub
                 syslinux_conf = custom_cfg
-                msger.debug("Using custom configuration file "
-                            "%s for syslinux.cfg" % bootloader.configfile)
+                logger.debug("Using custom configuration file %s "
+                             "for syslinux.cfg", bootloader.configfile)
             else:
-                msger.error("configfile is specified but failed to "
-                            "get it from %s." % bootloader.configfile)
+                logger.error("configfile is specified but failed to "
+                             "get it from %s.", bootloader.configfile)
 
         if not custom_cfg:
             # Create syslinux configuration using parameters from wks file
@@ -122,8 +127,8 @@ class BootimgPcbiosPlugin(SourcePlugin):
             syslinux_conf += "APPEND label=boot root=%s %s\n" % \
                              (creator.rootdev, bootloader.append)
 
-        msger.debug("Writing syslinux config %s/hdd/boot/syslinux.cfg" \
-                    % cr_workdir)
+        logger.debug("Writing syslinux config %s/hdd/boot/syslinux.cfg",
+                     cr_workdir)
         cfg = open("%s/hdd/boot/syslinux.cfg" % cr_workdir, "w")
         cfg.write(syslinux_conf)
         cfg.close()
@@ -147,9 +152,11 @@ class BootimgPcbiosPlugin(SourcePlugin):
         if not _has_syslinux(bootimg_dir):
             bootimg_dir = get_bitbake_var("STAGING_DATADIR", "wic-tools")
             if not bootimg_dir:
-                msger.error("Couldn't find STAGING_DATADIR, exiting\n")
+                logger.error("Couldn't find STAGING_DATADIR, exiting\n")
+                sys.exit(1)
             if not _has_syslinux(bootimg_dir):
-                msger.error("Please build syslinux first\n")
+                logger.error("Please build syslinux first\n")
+                sys.exit(1)
             # just so the result notes display it
             creator.bootimg_dir = bootimg_dir
 
@@ -176,8 +183,8 @@ class BootimgPcbiosPlugin(SourcePlugin):
 
         blocks += extra_blocks
 
-        msger.debug("Added %d extra blocks to %s to get to %d total blocks" % \
-                    (extra_blocks, part.mountpoint, blocks))
+        logger.debug("Added %d extra blocks to %s to get to %d total blocks",
+                     extra_blocks, part.mountpoint, blocks)
 
         # dosfs image, created by mkdosfs
         bootimg = "%s/boot.img" % cr_workdir

@@ -23,14 +23,17 @@
 # Maciej Borzecki <maciej.borzecki (at] open-rnd.pl>
 #
 
+import logging
 import os
 import re
+import sys
 
 from glob import glob
 
-from wic import msger
 from wic.pluginbase import SourcePlugin
 from wic.utils.misc import exec_cmd, get_bitbake_var
+
+logger = logging.getLogger('wic')
 
 class BootimgPartitionPlugin(SourcePlugin):
     """
@@ -78,16 +81,18 @@ class BootimgPartitionPlugin(SourcePlugin):
         if not bootimg_dir:
             bootimg_dir = get_bitbake_var("DEPLOY_DIR_IMAGE")
             if not bootimg_dir:
-                msger.error("Couldn't find DEPLOY_DIR_IMAGE, exiting\n")
+                logger.error("Couldn't find DEPLOY_DIR_IMAGE, exiting\n")
+                sys.exit(1)
 
-        msger.debug('Bootimg dir: %s' % bootimg_dir)
+        logger.debug('Bootimg dir: %s', bootimg_dir)
 
         boot_files = get_bitbake_var("IMAGE_BOOT_FILES")
 
         if not boot_files:
-            msger.error('No boot files defined, IMAGE_BOOT_FILES unset')
+            logger.error('No boot files defined, IMAGE_BOOT_FILES unset')
+            sys.exit(1)
 
-        msger.debug('Boot files: %s' % boot_files)
+        logger.debug('Boot files: %s', boot_files)
 
         # list of tuples (src_name, dst_name)
         deploy_files = []
@@ -95,11 +100,12 @@ class BootimgPartitionPlugin(SourcePlugin):
             if ';' in src_entry:
                 dst_entry = tuple(src_entry.split(';'))
                 if not dst_entry[0] or not dst_entry[1]:
-                    msger.error('Malformed boot file entry: %s' % (src_entry))
+                    logger.error('Malformed boot file entry: %s', src_entry)
+                    sys.exit(1)
             else:
                 dst_entry = (src_entry, src_entry)
 
-            msger.debug('Destination entry: %r' % (dst_entry,))
+            logger.debug('Destination entry: %r', dst_entry)
             deploy_files.append(dst_entry)
 
         for deploy_entry in deploy_files:
@@ -117,7 +123,7 @@ class BootimgPartitionPlugin(SourcePlugin):
 
                 srcs = glob(os.path.join(bootimg_dir, src))
 
-                msger.debug('Globbed sources: %s' % (', '.join(srcs)))
+                logger.debug('Globbed sources: %s', ', '.join(srcs))
                 for entry in srcs:
                     entry_dst_name = entry_name_fn(entry)
                     install_task.append((entry,
@@ -129,12 +135,12 @@ class BootimgPartitionPlugin(SourcePlugin):
 
             for task in install_task:
                 src_path, dst_path = task
-                msger.debug('Install %s as %s' % (os.path.basename(src_path),
-                                                  dst_path))
+                logger.debug('Install %s as %s',
+                             os.path.basename(src_path), dst_path)
                 install_cmd = "install -m 0644 -D %s %s" \
                               % (src_path, dst_path)
                 exec_cmd(install_cmd)
 
-        msger.debug('Prepare boot partition using rootfs in %s' % (hdddir))
+        logger.debug('Prepare boot partition using rootfs in %s', hdddir)
         part.prepare_rootfs(cr_workdir, oe_builddir, hdddir,
                             native_sysroot)

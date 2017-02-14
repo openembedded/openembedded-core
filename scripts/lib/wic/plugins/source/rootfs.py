@@ -25,14 +25,17 @@
 # Joao Henrique Ferreira de Freitas <joaohf (at] gmail.com>
 #
 
+import logging
 import os
 import shutil
+import sys
 
 from oe.path import copyhardlinktree
 
-from wic import msger
 from wic.pluginbase import SourcePlugin
 from wic.utils.misc import get_bitbake_var, exec_cmd
+
+logger = logging.getLogger('wic')
 
 class RootfsPlugin(SourcePlugin):
     """
@@ -48,10 +51,10 @@ class RootfsPlugin(SourcePlugin):
 
         image_rootfs_dir = get_bitbake_var("IMAGE_ROOTFS", rootfs_dir)
         if not os.path.isdir(image_rootfs_dir):
-            msg = "No valid artifact IMAGE_ROOTFS from image named"
-            msg += " %s has been found at %s, exiting.\n" % \
-                (rootfs_dir, image_rootfs_dir)
-            msger.error(msg)
+            logger.error("No valid artifact IMAGE_ROOTFS from image named %s "
+                         "has been found at %s, exiting.\n",
+                         rootfs_dir, image_rootfs_dir)
+            sys.exit(1)
 
         return image_rootfs_dir
 
@@ -66,8 +69,9 @@ class RootfsPlugin(SourcePlugin):
         """
         if part.rootfs_dir is None:
             if not 'ROOTFS_DIR' in krootfs_dir:
-                msg = "Couldn't find --rootfs-dir, exiting"
-                msger.error(msg)
+                logger.error("Couldn't find --rootfs-dir, exiting")
+                sys.exit(1)
+
             rootfs_dir = krootfs_dir['ROOTFS_DIR']
         else:
             if part.rootfs_dir in krootfs_dir:
@@ -75,9 +79,9 @@ class RootfsPlugin(SourcePlugin):
             elif part.rootfs_dir:
                 rootfs_dir = part.rootfs_dir
             else:
-                msg = "Couldn't find --rootfs-dir=%s connection"
-                msg += " or it is not a valid path, exiting"
-                msger.error(msg % part.rootfs_dir)
+                logger.error("Couldn't find --rootfs-dir=%s connection or "
+                             "it is not a valid path, exiting", part.rootfs_dir)
+                sys.exit(1)
 
         real_rootfs_dir = cls.__get_rootfs_dir(rootfs_dir)
 

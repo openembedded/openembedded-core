@@ -24,14 +24,17 @@
 # Tom Zanussi <tom.zanussi (at] linux.intel.com>
 #
 
+import logging
 import os
 import shutil
+import sys
 
-from wic import msger
 from wic.engine import get_custom_config
 from wic.pluginbase import SourcePlugin
 from wic.utils.misc import (exec_cmd, exec_native_cmd, get_bitbake_var,
                             BOOTDD_EXTRA_SPACE)
+
+logger = logging.getLogger('wic')
 
 class BootimgEFIPlugin(SourcePlugin):
     """
@@ -53,11 +56,12 @@ class BootimgEFIPlugin(SourcePlugin):
             if custom_cfg:
                 # Use a custom configuration for grub
                 grubefi_conf = custom_cfg
-                msger.debug("Using custom configuration file "
-                            "%s for grub.cfg" % configfile)
+                logger.debug("Using custom configuration file "
+                             "%s for grub.cfg", configfile)
             else:
-                msger.error("configfile is specified but failed to "
-                            "get it from %s." % configfile)
+                logger.error("configfile is specified but failed to "
+                             "get it from %s.", configfile)
+                sys.exit(1)
 
         if not custom_cfg:
             # Create grub configuration using parameters from wks file
@@ -75,8 +79,8 @@ class BootimgEFIPlugin(SourcePlugin):
                 % (kernel, creator.rootdev, bootloader.append)
             grubefi_conf += "}\n"
 
-        msger.debug("Writing grubefi config %s/hdd/boot/EFI/BOOT/grub.cfg" \
-                        % cr_workdir)
+        logger.debug("Writing grubefi config %s/hdd/boot/EFI/BOOT/grub.cfg",
+                     cr_workdir)
         cfg = open("%s/hdd/boot/EFI/BOOT/grub.cfg" % cr_workdir, "w")
         cfg.write(grubefi_conf)
         cfg.close()
@@ -104,15 +108,16 @@ class BootimgEFIPlugin(SourcePlugin):
             # obviously we need to have a common common deploy var
             bootimg_dir = get_bitbake_var("DEPLOY_DIR_IMAGE")
             if not bootimg_dir:
-                msger.error("Couldn't find DEPLOY_DIR_IMAGE, exiting\n")
+                logger.error("Couldn't find DEPLOY_DIR_IMAGE, exiting\n")
+                sys.exit(1)
 
             cp_cmd = "cp %s/%s %s" % (bootimg_dir, initrd, hdddir)
             exec_cmd(cp_cmd, True)
         else:
-            msger.debug("Ignoring missing initrd")
+            logger.debug("Ignoring missing initrd")
 
-        msger.debug("Writing systemd-boot config %s/hdd/boot/loader/loader.conf" \
-                        % cr_workdir)
+        logger.debug("Writing systemd-boot config "
+                     "%s/hdd/boot/loader/loader.conf", cr_workdir)
         cfg = open("%s/hdd/boot/loader/loader.conf" % cr_workdir, "w")
         cfg.write(loader_conf)
         cfg.close()
@@ -124,11 +129,12 @@ class BootimgEFIPlugin(SourcePlugin):
             if custom_cfg:
                 # Use a custom configuration for systemd-boot
                 boot_conf = custom_cfg
-                msger.debug("Using custom configuration file "
-                            "%s for systemd-boots's boot.conf" % configfile)
+                logger.debug("Using custom configuration file "
+                             "%s for systemd-boots's boot.conf", configfile)
             else:
-                msger.error("configfile is specified but failed to "
-                            "get it from %s." % configfile)
+                logger.error("configfile is specified but failed to "
+                             "get it from %s.", configfile)
+                sys.exit(1)
 
         if not custom_cfg:
             # Create systemd-boot configuration using parameters from wks file
@@ -143,8 +149,8 @@ class BootimgEFIPlugin(SourcePlugin):
             if initrd:
                 boot_conf += "initrd /%s\n" % initrd
 
-        msger.debug("Writing systemd-boot config %s/hdd/boot/loader/entries/boot.conf" \
-                        % cr_workdir)
+        logger.debug("Writing systemd-boot config "
+                     "%s/hdd/boot/loader/entries/boot.conf", cr_workdir)
         cfg = open("%s/hdd/boot/loader/entries/boot.conf" % cr_workdir, "w")
         cfg.write(boot_conf)
         cfg.close()
@@ -168,9 +174,11 @@ class BootimgEFIPlugin(SourcePlugin):
             elif source_params['loader'] == 'systemd-boot':
                 cls.do_configure_systemdboot(hdddir, creator, cr_workdir, source_params)
             else:
-                msger.error("unrecognized bootimg-efi loader: %s" % source_params['loader'])
+                logger.error("unrecognized bootimg-efi loader: %s", source_params['loader'])
+                sys.exit(1)
         except KeyError:
-            msger.error("bootimg-efi requires a loader, none specified")
+            logger.error("bootimg-efi requires a loader, none specified")
+            sys.exit(1)
 
 
     @classmethod
@@ -185,7 +193,8 @@ class BootimgEFIPlugin(SourcePlugin):
         if not bootimg_dir:
             bootimg_dir = get_bitbake_var("DEPLOY_DIR_IMAGE")
             if not bootimg_dir:
-                msger.error("Couldn't find DEPLOY_DIR_IMAGE, exiting\n")
+                logger.error("Couldn't find DEPLOY_DIR_IMAGE, exiting\n")
+                sys.exit(1)
             # just so the result notes display it
             creator.bootimg_dir = bootimg_dir
 
@@ -212,9 +221,12 @@ class BootimgEFIPlugin(SourcePlugin):
                     cp_cmd = "cp %s/%s %s/EFI/BOOT/%s" % (bootimg_dir, mod, hdddir, mod[8:])
                     exec_cmd(cp_cmd, True)
             else:
-                msger.error("unrecognized bootimg-efi loader: %s" % source_params['loader'])
+                logger.error("unrecognized bootimg-efi loader: %s",
+                             source_params['loader'])
+                sys.exit(1)
         except KeyError:
-            msger.error("bootimg-efi requires a loader, none specified")
+            logger.error("bootimg-efi requires a loader, none specified")
+            sys.exit(1)
 
         startup = os.path.join(bootimg_dir, "startup.nsh")
         if os.path.exists(startup):
@@ -232,8 +244,8 @@ class BootimgEFIPlugin(SourcePlugin):
 
         blocks += extra_blocks
 
-        msger.debug("Added %d extra blocks to %s to get to %d total blocks" % \
-                    (extra_blocks, part.mountpoint, blocks))
+        logger.debug("Added %d extra blocks to %s to get to %d total blocks",
+                     extra_blocks, part.mountpoint, blocks)
 
         # dosfs image, created by mkdosfs
         bootimg = "%s/boot.img" % cr_workdir

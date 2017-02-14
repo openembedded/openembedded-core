@@ -15,11 +15,14 @@
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #
 
+import logging
 import os
+import sys
 
-from wic import msger
 from wic.pluginbase import SourcePlugin
 from wic.utils.misc import get_bitbake_var
+
+logger = logging.getLogger('wic')
 
 class FSImagePlugin(SourcePlugin):
     """
@@ -58,16 +61,17 @@ class FSImagePlugin(SourcePlugin):
         if not bootimg_dir:
             bootimg_dir = get_bitbake_var("DEPLOY_DIR_IMAGE")
             if not bootimg_dir:
-                msger.error("Couldn't find DEPLOY_DIR_IMAGE, exiting\n")
+                logger.error("Couldn't find DEPLOY_DIR_IMAGE, exiting\n")
+                sys.exit(1)
 
-        msger.debug('Bootimg dir: %s' % bootimg_dir)
+        logger.debug('Bootimg dir: %s', bootimg_dir)
 
         if 'file' not in source_params:
-            msger.error("No file specified\n")
-            return
+            logger.error("No file specified\n")
+            sys.exit(1)
 
         src = os.path.join(bootimg_dir, source_params['file'])
 
 
-        msger.debug('Preparing partition using image %s' % (src))
+        logger.debug('Preparing partition using image %s', src)
         part.prepare_rootfs_from_fs_image(cr_workdir, src, "")
