@@ -33,6 +33,7 @@ import re
 from collections import defaultdict
 from distutils import spawn
 
+from wic.errors import WicError
 from wic.utils import runner
 
 logger = logging.getLogger('wic')
@@ -74,9 +75,8 @@ def _exec_cmd(cmd_and_args, as_shell=False, catch=3):
         ret, out = runner.runtool(args, catch)
     out = out.strip()
     if ret != 0:
-        logger.error("_exec_cmd: %s returned '%s' instead of 0\noutput: %s" % \
-                    (cmd_and_args, ret, out))
-        sys.exit(1)
+        raise WicError("_exec_cmd: %s returned '%s' instead of 0\noutput: %s" % \
+                       (cmd_and_args, ret, out))
 
     logger.debug("_exec_cmd: output for %s (rc = %d): %s",
                  cmd_and_args, ret, out)

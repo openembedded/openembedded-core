@@ -18,7 +18,8 @@
 import logging
 import os
 import subprocess
-import sys
+
+from wic.errors import WicError
 
 logger = logging.getLogger('wic')
 
@@ -72,8 +73,7 @@ def runtool(cmdln_or_args, catch=1):
     except OSError as err:
         if err.errno == 2:
             # [Errno 2] No such file or directory
-            logger.error('Cannot run command: %s, lost dependency?', cmd)
-            sys.exit(1)
+            raise WicError('Cannot run command: %s, lost dependency?' % cmd)
         else:
             raise # relay
     finally:

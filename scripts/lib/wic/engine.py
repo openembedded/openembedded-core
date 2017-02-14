@@ -30,8 +30,8 @@
 
 import logging
 import os
-import sys
 
+from wic.errors import WicError
 from wic.plugin import pluginmgr
 from wic.utils.misc import get_bitbake_var
 
@@ -44,8 +44,7 @@ def verify_build_env():
     Returns True if it is, false otherwise
     """
     if not os.environ.get("BUILDDIR"):
-        logger.error("BUILDDIR not found, exiting. (Did you forget to source oe-init-build-env?)")
-        sys.exit(1)
+        raise WicError("BUILDDIR not found, exiting. (Did you forget to source oe-init-build-env?)")
 
     return True
 
@@ -180,8 +179,7 @@ def wic_create(wks_file, rootfs_dir, bootimg_dir, kernel_dir,
     try:
         oe_builddir = os.environ["BUILDDIR"]
     except KeyError:
-        logger.error("BUILDDIR not found, exiting. (Did you forget to source oe-init-build-env?)")
-        sys.exit(1)
+        raise WicError("BUILDDIR not found, exiting. (Did you forget to source oe-init-build-env?)")
 
     if not os.path.exists(options.outdir):
         os.makedirs(options.outdir)
@@ -189,8 +187,7 @@ def wic_create(wks_file, rootfs_dir, bootimg_dir, kernel_dir,
     pname = 'direct'
     plugin_class = pluginmgr.get_plugins('imager').get(pname)
     if not plugin_class:
-        logger.error('Unknown plugin: %s', pname)
-        sys.exit(1)
+        raise WicError('Unknown plugin: %s' % pname)
 
     plugin = plugin_class(wks_file, rootfs_dir, bootimg_dir, kernel_dir,
                           native_sysroot, oe_builddir, options)
@@ -217,11 +214,11 @@ def wic_list(args, scripts_path):
         wks_file = args[0]
         fullpath = find_canned_image(scripts_path, wks_file)
         if not fullpath:
-            logger.error("No image named %s found, exiting. "
-                         "(Use 'wic list images' to list available images, or "
-                         "specify a fully-qualified OE kickstart (.wks) "
-                         "filename)\n", wks_file)
-            sys.exit(1)
+            raise WicError("No image named %s found, exiting. "
+                           "(Use 'wic list images' to list available images, "
+                           "or specify a fully-qualified OE kickstart (.wks) "
+                           "filename)" % wks_file)
+
         list_canned_image_help(scripts_path, fullpath)
         return True
 

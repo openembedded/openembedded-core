@@ -26,9 +26,9 @@
 
 import logging
 import os
-import sys
 import tempfile
 
+from wic.errors import WicError
 from wic.utils.misc import exec_cmd, exec_native_cmd, get_bitbake_var
 from wic.plugin import pluginmgr
 
@@ -99,9 +99,9 @@ class Partition():
         if self.fixed_size:
             rootfs_size = self.fixed_size
             if actual_rootfs_size > rootfs_size:
-                logger.error("Actual rootfs size (%d kB) is larger than allowed size %d kB",
-                             actual_rootfs_size, rootfs_size)
-                sys.exit(1)
+                raise WicError("Actual rootfs size (%d kB) is larger than "
+                               "allowed size %d kB" %
+                               (actual_rootfs_size, rootfs_size))
         else:
             extra_blocks = self.get_extra_block_count(actual_rootfs_size)
             if extra_blocks < self.extra_space:
@@ -132,10 +132,10 @@ class Partition():
         """
         if not self.source:
             if not self.size and not self.fixed_size:
-                logger.error("The %s partition has a size of zero. Please "
-                             "specify a non-zero --size/--fixed-size for that "
-                             "partition.", self.mountpoint)
-                sys.exit(1)
+                raise WicError("The %s partition has a size of zero. Please "
+                               "specify a non-zero --size/--fixed-size for that "
+                               "partition." % self.mountpoint)
+
             if self.fstype and self.fstype == "swap":
                 self.prepare_swap_partition(cr_workdir, oe_builddir,
                                             native_sysroot)
@@ -157,12 +157,11 @@ class Partition():
         plugins = pluginmgr.get_source_plugins()
 
         if self.source not in plugins:
-            logger.error("The '%s' --source specified for %s doesn't exist.\n\t"
-                         "See 'wic list source-plugins' for a list of available"
-                         " --sources.\n\tSee 'wic help source-plugins' for "
-                         "details on adding a new source plugin.",
-                         self.source, self.mountpoint)
-            sys.exit(1)
+            raise WicError("The '%s' --source specified for %s doesn't exist.\n\t"
+                           "See 'wic list source-plugins' for a list of available"
+                           " --sources.\n\tSee 'wic help source-plugins' for "
+                           "details on adding a new source plugin." %
+                           (self.source, self.mountpoint))
 
         srcparams_dict = {}
         if self.sourceparams:
@@ -192,16 +191,14 @@ class Partition():
         # further processing required Partition.size to be an integer, make
         # sure that it is one
         if not isinstance(self.size, int):
-            logger.error("Partition %s internal size is not an integer. "
-                         "This a bug in source plugin %s and needs to be fixed.",
-                         self.mountpoint, self.source)
-            sys.exit(1)
+            raise WicError("Partition %s internal size is not an integer. "
+                           "This a bug in source plugin %s and needs to be fixed." %
+                           (self.mountpoint, self.source))
 
         if self.fixed_size and self.size > self.fixed_size:
-            logger.error("File system image of partition %s is larger (%d kB) "
-                         "than its allowed size %d kB",
-                          self.mountpoint, self.size, self.fixed_size)
-            sys.exit(1)
+            raise WicError("File system image of partition %s is "
+                           "larger (%d kB) than its allowed size %d kB" %
+                           (self.mountpoint, self.size, self.fixed_size))
 
     def prepare_rootfs_from_fs_image(self, cr_workdir, oe_builddir,
                                      rootfs_dir):
@@ -241,9 +238,8 @@ class Partition():
             os.remove(rootfs)
 
         if not self.fstype:
-            logger.error("File system for partition %s not specified in kickstart, "
-                         "use --fstype option", self.mountpoint)
-            sys.exit(1)
+            raise WicError("File system for partition %s not specified in "
+                           "kickstart, use --fstype option" % self.mountpoint)
 
         # Get rootfs size from bitbake variable if it's not set in .ks file
         if not self.size:
