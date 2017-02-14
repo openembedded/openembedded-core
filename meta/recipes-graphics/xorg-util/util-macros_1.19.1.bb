@@ -9,8 +9,8 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=1970511fddd439b07a6ba789d28ff662"
 
 PE = "1"
 
-SRC_URI[md5sum] = "40e1caa49a71a26e0aa68ddd00203717"
-SRC_URI[sha256sum] = "0d4df51b29023daf2f63aebf3ebc638ea88efedfd560ab5866741ab3f92acaa1"
+SRC_URI[md5sum] = "3f8a8e6100556f7f28e469809805dee8"
+SRC_URI[sha256sum] = "472ad0e41d1e0abf5ecafd29460bf1b8d47e53d4b7d3abf1f66d02dc576547b8"
 
 # ${PN} is empty so we need to tweak -dev and -dbg package dependencies
 RDEPENDS_${PN}-dev = ""
