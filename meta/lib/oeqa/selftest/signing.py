@@ -27,7 +27,7 @@ class Signing(oeSelfTest):
         cls.pub_key_path = os.path.join(cls.testlayer_path, 'files', 'signing', "key.pub")
         cls.secret_key_path = os.path.join(cls.testlayer_path, 'files', 'signing', "key.secret")
 
-        runCmd('gpg --homedir %s --import %s %s' % (cls.gpg_dir, cls.pub_key_path, cls.secret_key_path))
+        runCmd('gpg --batch --homedir %s --import %s %s' % (cls.gpg_dir, cls.pub_key_path, cls.secret_key_path))
 
     @testcase(1362)
     def test_signing_packages(self):
@@ -76,13 +76,13 @@ class Signing(oeSelfTest):
         # Use a temporary rpmdb
         rpmdb = tempfile.mkdtemp(prefix='oeqa-rpmdb')
 
-        runCmd('%s/rpm --define "_dbpath %s" --import %s' %
+        runCmd('%s/rpmkeys --define "_dbpath %s" --import %s' %
                (staging_bindir_native, rpmdb, self.pub_key_path))
 
-        ret = runCmd('%s/rpm --define "_dbpath %s" --checksig %s' %
+        ret = runCmd('%s/rpmkeys --define "_dbpath %s" --checksig %s' %
                      (staging_bindir_native, rpmdb, pkg_deploy))
         # tmp/deploy/rpm/i586/ed-1.9-r0.i586.rpm: rsa sha1 md5 OK
-        self.assertIn('rsa sha1 md5 OK', ret.output, 'Package signed incorrectly.')
+        self.assertIn('rsa sha1 (md5) pgp md5 OK', ret.output, 'Package signed incorrectly.')
         shutil.rmtree(rpmdb)
 
     @testcase(1382)
