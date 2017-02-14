@@ -32,7 +32,7 @@ import uuid
 
 from time import strftime
 
-from wic.errors import ImageError, WicError
+from wic.errors import WicError
 from wic.filemap import sparse_copy
 from wic.ksparser import KickStart, KickStartError
 from wic.plugin import pluginmgr
@@ -355,8 +355,8 @@ class PartitionedImage():
                 # The --part-type can also be implemented for MBR partitions,
                 # in which case it would map to the 1-byte "partition type"
                 # filed at offset 3 of the partition entry.
-                raise ImageError("setting custom partition type is not " \
-                                 "implemented for msdos partitions")
+                raise WicError("setting custom partition type is not " \
+                               "implemented for msdos partitions")
 
             # Get the disk where the partition is located
             self.numpart += 1

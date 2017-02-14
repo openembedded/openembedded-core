@@ -28,7 +28,7 @@ import logging
 import os
 
 from wic.engine import get_custom_config
-from wic.errors import ImageError, WicError
+from wic.errors import WicError
 from wic.utils import runner
 from wic.pluginbase import SourcePlugin
 from wic.utils.misc import (exec_cmd, exec_native_cmd,
@@ -71,7 +71,7 @@ class BootimgPcbiosPlugin(SourcePlugin):
         rcode = runner.show(['dd', 'if=%s' % mbrfile,
                              'of=%s' % full_path, 'conv=notrunc'])
         if rcode != 0:
-            raise ImageError("Unable to set MBR to %s" % full_path)
+            raise WicError("Unable to set MBR to %s" % full_path)
 
     @classmethod
     def do_configure_partition(cls, part, source_params, creator, cr_workdir,

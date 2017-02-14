@@ -22,7 +22,7 @@ import logging
 import os
 import re
 
-from wic.errors import ImageError, WicError
+from wic.errors import WicError
 from wic.utils import runner
 from wic.utils.misc import get_bitbake_var, exec_cmd, exec_native_cmd
 from wic.pluginbase import SourcePlugin
@@ -210,4 +210,4 @@ class RootfsPlugin(SourcePlugin):
 
         ret_code = runner.show(['dd', 'if=%s' % mbrfile, 'of=%s' % full_path, 'conv=notrunc'])
         if ret_code != 0:
-            raise ImageError("Unable to set MBR to %s" % full_path)
+            raise WicError("Unable to set MBR to %s" % full_path)
