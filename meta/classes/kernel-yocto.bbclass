@@ -365,6 +365,10 @@ do_validate_branches() {
 			current_branch=`git rev-parse --abbrev-ref HEAD`
 			git branch "$current_branch-orig"
 			git reset --hard ${force_srcrev}
+			# We've checked out HEAD, make sure we cleanup kgit-s2q fence post check
+			# so the patches are applied as expected otherwise no patching
+			# would be done in some corner cases.
+			kgit-s2q --clean
 		fi
 	fi
 }
