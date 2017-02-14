@@ -19,8 +19,8 @@ import os
 import sys
 import logging
 
+from wic.errors import CreatorError
 from wic import pluginbase
-from wic.utils import errors
 from wic.utils.misc import get_bitbake_var
 
 __ALL__ = ['PluginMgr', 'pluginmgr']
@@ -110,7 +110,7 @@ class PluginMgr():
         """ the return value is dict of name:class pairs """
 
         if ptype not in PLUGIN_TYPES:
-            raise errors.CreatorError('%s is not valid plugin type' % ptype)
+            raise CreatorError('%s is not valid plugin type' % ptype)
 
         plugins_dir = self._build_plugin_dir_list(self.plugin_dir, ptype)
 

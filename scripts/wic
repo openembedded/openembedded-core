@@ -53,8 +53,8 @@ if bitbake_exe:
 else:
     bitbake_main = None
 
+from wic.errors import WicError
 from wic.utils.misc import get_bitbake_var, BB_VARS
-from wic.utils.errors import WicError
 from wic import engine
 from wic import help as hlp
 
@@ -339,4 +339,3 @@ if __name__ == "__main__":
     except WicError as err:
         logger.error(err)
         sys.exit(1)
-

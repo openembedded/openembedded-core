@@ -23,9 +23,9 @@ import os
 import re
 import sys
 
+from wic.errors import ImageError
 from wic.utils import runner
 from wic.utils.misc import get_bitbake_var, exec_cmd, exec_native_cmd
-from wic.utils.errors import ImageError
 from wic.pluginbase import SourcePlugin
 
 logger = logging.getLogger('wic')
