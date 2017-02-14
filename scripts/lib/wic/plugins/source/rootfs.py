@@ -28,10 +28,10 @@
 import logging
 import os
 import shutil
-import sys
 
 from oe.path import copyhardlinktree
 
+from wic.errors import WicError
 from wic.pluginbase import SourcePlugin
 from wic.utils.misc import get_bitbake_var, exec_cmd
 
@@ -51,10 +51,9 @@ class RootfsPlugin(SourcePlugin):
 
         image_rootfs_dir = get_bitbake_var("IMAGE_ROOTFS", rootfs_dir)
         if not os.path.isdir(image_rootfs_dir):
-            logger.error("No valid artifact IMAGE_ROOTFS from image named %s "
-                         "has been found at %s, exiting.\n",
-                         rootfs_dir, image_rootfs_dir)
-            sys.exit(1)
+            raise WicError("No valid artifact IMAGE_ROOTFS from image "
+                           "named %s has been found at %s, exiting." %
+                           (rootfs_dir, image_rootfs_dir))
 
         return image_rootfs_dir
 
@@ -69,8 +68,7 @@ class RootfsPlugin(SourcePlugin):
         """
         if part.rootfs_dir is None:
             if not 'ROOTFS_DIR' in krootfs_dir:
-                logger.error("Couldn't find --rootfs-dir, exiting")
-                sys.exit(1)
+                raise WicError("Couldn't find --rootfs-dir, exiting")
 
             rootfs_dir = krootfs_dir['ROOTFS_DIR']
         else:
@@ -79,9 +77,8 @@ class RootfsPlugin(SourcePlugin):
             elif part.rootfs_dir:
                 rootfs_dir = part.rootfs_dir
             else:
-                logger.error("Couldn't find --rootfs-dir=%s connection or "
-                             "it is not a valid path, exiting", part.rootfs_dir)
-                sys.exit(1)
+                raise WicError("Couldn't find --rootfs-dir=%s connection or "
+                               "it is not a valid path, exiting" % part.rootfs_dir)
 
         real_rootfs_dir = cls.__get_rootfs_dir(rootfs_dir)
 

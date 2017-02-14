@@ -26,10 +26,10 @@
 import logging
 import os
 import re
-import sys
 
 from glob import glob
 
+from wic.errors import WicError
 from wic.pluginbase import SourcePlugin
 from wic.utils.misc import exec_cmd, get_bitbake_var
 
@@ -81,16 +81,14 @@ class BootimgPartitionPlugin(SourcePlugin):
         if not bootimg_dir:
             bootimg_dir = get_bitbake_var("DEPLOY_DIR_IMAGE")
             if not bootimg_dir:
-                logger.error("Couldn't find DEPLOY_DIR_IMAGE, exiting\n")
-                sys.exit(1)
+                raise WicError("Couldn't find DEPLOY_DIR_IMAGE, exiting")
 
         logger.debug('Bootimg dir: %s', bootimg_dir)
 
         boot_files = get_bitbake_var("IMAGE_BOOT_FILES")
 
         if not boot_files:
-            logger.error('No boot files defined, IMAGE_BOOT_FILES unset')
-            sys.exit(1)
+            raise WicError('No boot files defined, IMAGE_BOOT_FILES unset')
 
         logger.debug('Boot files: %s', boot_files)
 
@@ -100,8 +98,7 @@ class BootimgPartitionPlugin(SourcePlugin):
             if ';' in src_entry:
                 dst_entry = tuple(src_entry.split(';'))
                 if not dst_entry[0] or not dst_entry[1]:
-                    logger.error('Malformed boot file entry: %s', src_entry)
-                    sys.exit(1)
+                    raise WicError('Malformed boot file entry: %s' % src_entry)
             else:
                 dst_entry = (src_entry, src_entry)
 

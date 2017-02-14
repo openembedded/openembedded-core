@@ -25,8 +25,8 @@ import logging
 import os
 import re
 import shutil
-import sys
 
+from wic.errors import WicError
 from wic.engine import get_custom_config
 from wic.pluginbase import SourcePlugin
 from wic.utils.misc import exec_cmd, exec_native_cmd, get_bitbake_var
@@ -106,9 +106,8 @@ class IsoImagePlugin(SourcePlugin):
                 logger.debug("Using custom configuration file %s for grub.cfg",
                              configfile)
             else:
-                logger.error("configfile is specified "
-                             "but failed to get it from %s", configfile)
-                sys.exit(1)
+                raise WicError("configfile is specified "
+                               "but failed to get it from %s", configfile)
         else:
             splash = os.path.join(cr_workdir, "EFI/boot/splash.jpg")
             if os.path.exists(splash):
@@ -153,23 +152,19 @@ class IsoImagePlugin(SourcePlugin):
         if not initrd:
             initrd_dir = get_bitbake_var("DEPLOY_DIR_IMAGE")
             if not initrd_dir:
-                logger.error("Couldn't find DEPLOY_DIR_IMAGE, exiting.\n")
-                sys.exit(1)
+                raise WicError("Couldn't find DEPLOY_DIR_IMAGE, exiting.")
 
             image_name = get_bitbake_var("IMAGE_BASENAME")
             if not image_name:
-                logger.error("Couldn't find IMAGE_BASENAME, exiting.\n")
-                sys.exit(1)
+                raise WicError("Couldn't find IMAGE_BASENAME, exiting.")
 
             image_type = get_bitbake_var("INITRAMFS_FSTYPES")
             if not image_type:
-                logger.error("Couldn't find INITRAMFS_FSTYPES, exiting.\n")
-                sys.exit(1)
+                raise WicError("Couldn't find INITRAMFS_FSTYPES, exiting.")
 
             target_arch = get_bitbake_var("TRANSLATED_TARGET_ARCH")
             if not target_arch:
-                logger.error("Couldn't find TRANSLATED_TARGET_ARCH, exiting.\n")
-                sys.exit(1)
+                raise WicError("Couldn't find TRANSLATED_TARGET_ARCH, exiting.")
 
             initrd = glob.glob('%s/%s*%s.%s' % (initrd_dir, image_name, target_arch, image_type))[0]
 
@@ -192,8 +187,7 @@ class IsoImagePlugin(SourcePlugin):
                 os.symlink(os.readlink("%s/sbin/init" % rootfs_dir), \
                             "%s/init" % initrd_dir)
             else:
-                logger.error("Couldn't find or build initrd, exiting.\n")
-                sys.exit(1)
+                raise WicError("Couldn't find or build initrd, exiting.")
 
             exec_cmd("cd %s && find . | cpio -o -H newc -R +0:+0 >./initrd.cpio " \
                     % initrd_dir, as_shell=True)
@@ -239,8 +233,7 @@ class IsoImagePlugin(SourcePlugin):
 
         if part.rootfs_dir is None:
             if not 'ROOTFS_DIR' in rootfs_dir:
-                logger.error("Couldn't find --rootfs-dir, exiting.\n")
-                sys.exit(1)
+                raise WicError("Couldn't find --rootfs-dir, exiting.")
             rootfs_dir = rootfs_dir['ROOTFS_DIR']
         else:
             if part.rootfs_dir in rootfs_dir:
@@ -248,16 +241,14 @@ class IsoImagePlugin(SourcePlugin):
             elif part.rootfs_dir:
                 rootfs_dir = part.rootfs_dir
             else:
-                logger.error("Couldn't find --rootfs-dir=%s connection "
-                             "or it is not a valid path, exiting.\n",
-                             part.rootfs_dir)
-                sys.exit(1)
+                raise WicError("Couldn't find --rootfs-dir=%s connection "
+                               "or it is not a valid path, exiting." %
+                               part.rootfs_dir)
 
         if not os.path.isdir(rootfs_dir):
             rootfs_dir = get_bitbake_var("IMAGE_ROOTFS")
         if not os.path.isdir(rootfs_dir):
-            logger.error("Couldn't find IMAGE_ROOTFS, exiting.\n")
-            sys.exit(1)
+            raise WicError("Couldn't find IMAGE_ROOTFS, exiting.")
 
         part.rootfs_dir = rootfs_dir
 
@@ -296,8 +287,7 @@ class IsoImagePlugin(SourcePlugin):
         if source_params.get('initrd'):
             initrd = source_params['initrd']
             if not deploy_dir:
-                logger.error("Couldn't find DEPLOY_DIR_IMAGE, exiting\n")
-                sys.exit(1)
+                raise WicError("Couldn't find DEPLOY_DIR_IMAGE, exiting")
             cp_cmd = "cp %s/%s %s" % (deploy_dir, initrd, cr_workdir)
             exec_cmd(cp_cmd)
         else:
@@ -340,8 +330,7 @@ class IsoImagePlugin(SourcePlugin):
                 # didn't contains it
                 target_arch = get_bitbake_var("TARGET_SYS")
                 if not target_arch:
-                    logger.error("Coludn't find target architecture\n")
-                    sys.exit(1)
+                    raise WicError("Coludn't find target architecture")
 
                 if re.match("x86_64", target_arch):
                     grub_target = 'x86_64-efi'
@@ -350,21 +339,18 @@ class IsoImagePlugin(SourcePlugin):
                     grub_target = 'i386-efi'
                     grub_image = "bootia32.efi"
                 else:
-                    logger.error("grub-efi is incompatible with target %s\n",
-                                 target_arch)
-                    sys.exit(1)
+                    raise WicError("grub-efi is incompatible with target %s" %
+                                   target_arch)
 
                 if not os.path.isfile("%s/EFI/BOOT/%s" \
                                 % (bootimg_dir, grub_image)):
                     grub_path = get_bitbake_var("STAGING_LIBDIR", "wic-tools")
                     if not grub_path:
-                        logger.error("Couldn't find STAGING_LIBDIR, exiting.\n")
-                        sys.exit(1)
+                        raise WicError("Couldn't find STAGING_LIBDIR, exiting.")
 
                     grub_core = "%s/grub/%s" % (grub_path, grub_target)
                     if not os.path.exists(grub_core):
-                        logger.error("Please build grub-efi first\n")
-                        sys.exit(1)
+                        raise WicError("Please build grub-efi first")
 
                     grub_cmd = "grub-mkimage -p '/EFI/BOOT' "
                     grub_cmd += "-d %s "  % grub_core
@@ -380,12 +366,10 @@ class IsoImagePlugin(SourcePlugin):
                     exec_native_cmd(grub_cmd, native_sysroot)
 
             else:
-                logger.error("unrecognized bootimg-efi loader: %s",
-                             source_params['loader'])
-                sys.exit(1)
+                raise WicError("unrecognized bootimg-efi loader: %s" %
+                               source_params['loader'])
         except KeyError:
-            logger.error("bootimg-efi requires a loader, none specified")
-            sys.exit(1)
+            raise WicError("bootimg-efi requires a loader, none specified")
 
         if os.path.exists("%s/EFI/BOOT" % isodir):
             shutil.rmtree("%s/EFI/BOOT" % isodir)
@@ -431,8 +415,7 @@ class IsoImagePlugin(SourcePlugin):
         # Prepare files for legacy boot
         syslinux_dir = get_bitbake_var("STAGING_DATADIR", "wic-tools")
         if not syslinux_dir:
-            logger.error("Couldn't find STAGING_DATADIR, exiting.\n")
-            sys.exit(1)
+            raise WicError("Couldn't find STAGING_DATADIR, exiting.")
 
         if os.path.exists("%s/isolinux" % isodir):
             shutil.rmtree("%s/isolinux" % isodir)

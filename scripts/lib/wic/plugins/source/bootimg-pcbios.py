@@ -26,10 +26,9 @@
 
 import logging
 import os
-import sys
 
 from wic.engine import get_custom_config
-from wic.errors import ImageError
+from wic.errors import ImageError, WicError
 from wic.utils import runner
 from wic.pluginbase import SourcePlugin
 from wic.utils.misc import (exec_cmd, exec_native_cmd,
@@ -57,14 +56,13 @@ class BootimgPcbiosPlugin(SourcePlugin):
         elif creator.ptable_format == 'gpt':
             mbrfile += "gptmbr.bin"
         else:
-            logger.error("Unsupported partition table: %s", creator.ptable_format)
-            sys.exit(1)
+            raise WicError("Unsupported partition table: %s" %
+                           creator.ptable_format)
 
         if not os.path.exists(mbrfile):
-            logger.error("Couldn't find %s.  If using the -e option, do you "
-                         "have the right MACHINE set in local.conf?  If not, "
-                         "is the bootimg_dir path correct?", mbrfile)
-            sys.exit(1)
+            raise WicError("Couldn't find %s.  If using the -e option, do you "
+                           "have the right MACHINE set in local.conf?  If not, "
+                           "is the bootimg_dir path correct?" % mbrfile)
 
         full_path = creator._full_path(workdir, disk_name, "direct")
         logger.debug("Installing MBR on disk %s as %s with size %s bytes",
@@ -152,11 +150,9 @@ class BootimgPcbiosPlugin(SourcePlugin):
         if not _has_syslinux(bootimg_dir):
             bootimg_dir = get_bitbake_var("STAGING_DATADIR", "wic-tools")
             if not bootimg_dir:
-                logger.error("Couldn't find STAGING_DATADIR, exiting\n")
-                sys.exit(1)
+                raise WicError("Couldn't find STAGING_DATADIR, exiting")
             if not _has_syslinux(bootimg_dir):
-                logger.error("Please build syslinux first\n")
-                sys.exit(1)
+                raise WicError("Please build syslinux first")
             # just so the result notes display it
             creator.bootimg_dir = bootimg_dir
 

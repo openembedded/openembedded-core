@@ -27,13 +27,12 @@
 import logging
 import os
 import shutil
-import sys
 import tempfile
 import uuid
 
 from time import strftime
 
-from wic.errors import ImageError
+from wic.errors import ImageError, WicError
 from wic.filemap import sparse_copy
 from wic.ksparser import KickStart, KickStartError
 from wic.plugin import pluginmgr
@@ -58,8 +57,7 @@ class DirectPlugin(ImagerPlugin):
         try:
             self.ks = KickStart(wks_file)
         except KickStartError as err:
-            logger.error(str(err))
-            sys.exit(1)
+            raise WicError(str(err))
 
         # parse possible 'rootfs=name' items
         self.rootfs_dir = dict(rdir.split('=') for rdir in rootfs_dir.split(' '))

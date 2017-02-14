@@ -17,8 +17,8 @@
 
 import logging
 import os
-import sys
 
+from wic.errors import WicError
 from wic.pluginbase import SourcePlugin
 from wic.utils.misc import exec_cmd, get_bitbake_var
 from wic.filemap import sparse_copy
@@ -62,14 +62,12 @@ class RawCopyPlugin(SourcePlugin):
         if not bootimg_dir:
             bootimg_dir = get_bitbake_var("DEPLOY_DIR_IMAGE")
             if not bootimg_dir:
-                logger.error("Couldn't find DEPLOY_DIR_IMAGE, exiting\n")
-                sys.exit(1)
+                raise WicError("Couldn't find DEPLOY_DIR_IMAGE, exiting")
 
         logger.debug('Bootimg dir: %s', bootimg_dir)
 
         if 'file' not in source_params:
-            logger.error("No file specified\n")
-            sys.exit(1)
+            raise WicError("No file specified")
 
         src = os.path.join(bootimg_dir, source_params['file'])
         dst = os.path.join(cr_workdir, "%s.%s" % (source_params['file'], part.lineno))

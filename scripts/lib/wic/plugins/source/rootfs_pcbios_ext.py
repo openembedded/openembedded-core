@@ -21,9 +21,8 @@
 import logging
 import os
 import re
-import sys
 
-from wic.errors import ImageError
+from wic.errors import ImageError, WicError
 from wic.utils import runner
 from wic.utils.misc import get_bitbake_var, exec_cmd, exec_native_cmd
 from wic.pluginbase import SourcePlugin
@@ -99,10 +98,9 @@ class RootfsPlugin(SourcePlugin):
 
         image_rootfs_dir = get_bitbake_var("IMAGE_ROOTFS", rootfs_dir)
         if not os.path.isdir(image_rootfs_dir):
-            logger.error("No valid artifact IMAGE_ROOTFS from image named %s "
-                         "has been found at %s, exiting.\n",
-                         rootfs_dir, image_rootfs_dir)
-            sys.exit(1)
+            raise WicError("No valid artifact IMAGE_ROOTFS from image named %s "
+                           "has been found at %s, exiting." %
+                           (rootfs_dir, image_rootfs_dir))
 
         return image_rootfs_dir
 
@@ -160,14 +158,12 @@ class RootfsPlugin(SourcePlugin):
             logger.info("building syslinux-native...")
             exec_cmd("bitbake syslinux-native")
         if not is_exe(native_syslinux_nomtools):
-            logger.error("Couldn't find syslinux-nomtools (%s), exiting\n",
-                         native_syslinux_nomtools)
-            sys.exit(1)
+            raise WicError("Couldn't find syslinux-nomtools (%s), exiting" %
+                           native_syslinux_nomtools)
 
         if part.rootfs is None:
             if 'ROOTFS_DIR' not in krootfs_dir:
-                logger.error("Couldn't find --rootfs-dir, exiting")
-                sys.exit(1)
+                raise WicError("Couldn't find --rootfs-dir, exiting")
             rootfs_dir = krootfs_dir['ROOTFS_DIR']
         else:
             if part.rootfs in krootfs_dir:
@@ -175,9 +171,8 @@ class RootfsPlugin(SourcePlugin):
             elif part.rootfs:
                 rootfs_dir = part.rootfs
             else:
-                logger.error("Couldn't find --rootfs-dir=%s connection or "
-                             "it is not a valid path, exiting", part.rootfs)
-                sys.exit(1)
+                raise WicError("Couldn't find --rootfs-dir=%s connection or "
+                               "it is not a valid path, exiting" % part.rootfs)
 
         real_rootfs_dir = cls._get_rootfs_dir(rootfs_dir)
 
@@ -203,15 +198,12 @@ class RootfsPlugin(SourcePlugin):
         elif image_creator.ptable_format == 'gpt':
             mbrfile += "gptmbr.bin"
         else:
-            logger.error("Unsupported partition table: %s",
-                         image_creator.ptable_format)
-            sys.exit(1)
+            raise WicError("Unsupported partition table: %s" %
+                           image_creator.ptable_format)
 
         if not os.path.exists(mbrfile):
-            logger.error("Couldn't find %s. Has syslinux-native been baked?",
-                         mbrfile)
-            sys.exit(1)
-
+            raise WicError("Couldn't find %s. Has syslinux-native been baked?",
+                           mbrfile)
         full_path = disk.path
         logger.debug("Installing MBR on disk %s as %s with size %s bytes",
                      disk_name, full_path, disk.min_size)
