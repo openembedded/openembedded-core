@@ -607,8 +607,6 @@ kernel_do_deploy() {
 		ln -sf ${base_name}.bin ${DEPLOYDIR}/${type}
 	done
 
-	cp ${COREBASE}/meta/files/deploydir_readme.txt ${DEPLOYDIR}/README_-_DO_NOT_DELETE_FILES_IN_THIS_DIRECTORY.txt
-
 	cd ${B}
 	# Update deploy directory
 	for type in ${KERNEL_IMAGETYPES} ; do

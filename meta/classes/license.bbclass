@@ -279,7 +279,7 @@ def get_deployed_files(man_file):
     """
 
     dep_files = []
-    excluded_files = ["README_-_DO_NOT_DELETE_FILES_IN_THIS_DIRECTORY.txt"]
+    excluded_files = []
     with open(man_file, "r") as manifest:
         all_files = manifest.read()
     for f in all_files.splitlines():

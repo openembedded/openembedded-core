@@ -186,10 +186,6 @@ class Rootfs(object, metaclass=ABCMeta):
 
         shutil.copytree(postinst_intercepts_dir, intercepts_dir)
 
-        shutil.copy(self.d.expand("${COREBASE}/meta/files/deploydir_readme.txt"),
-                    self.deploydir +
-                    "/README_-_DO_NOT_DELETE_FILES_IN_THIS_DIRECTORY.txt")
-
         execute_pre_post_process(self.d, pre_process_cmds)
 
         if self.progress_reporter:
