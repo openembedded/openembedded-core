@@ -25,7 +25,14 @@ FILESEXTRAPATHS =. "${FILE_DIRNAME}/${PN}:"
 
 inherit native
 
-RPROVIDES += "python-distutils-native python-compression-native python-textutils-native python-codecs-native python-core-native python-unittest-native"
+RPROVIDES += "python-distutils-native \
+    python-compression-native \
+    python-textutils-native \
+    python-codecs-native \
+    python-core-native \
+    python-unittest-native \
+    python-io-native \
+"
 
 EXTRA_OECONF_append = " --bindir=${bindir}/${PN} --with-system-expat=${STAGING_DIR_HOST}"
 
