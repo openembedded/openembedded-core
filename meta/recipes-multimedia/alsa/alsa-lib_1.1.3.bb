@@ -25,18 +25,12 @@ EXTRA_OECONF += "--disable-python"
 
 EXTRA_OECONF_append_libc-uclibc = " --with-versioned=no "
 
-PACKAGES =+ "alsa-server libasound alsa-conf-base alsa-conf alsa-doc"
+PACKAGES =+ "alsa-server libasound alsa-conf alsa-doc"
 FILES_libasound = "${libdir}/libasound.so.*"
 FILES_alsa-server = "${bindir}/*"
 FILES_alsa-conf = "${datadir}/alsa/"
-FILES_alsa-conf-base = "\
-${datadir}/alsa/alsa.conf \
-${datadir}/alsa/cards/aliases.conf \
-${datadir}/alsa/pcm/default.conf \
-${datadir}/alsa/pcm/dmix.conf \
-${datadir}/alsa/pcm/dsnoop.conf"
 
-RDEPENDS_libasound = "alsa-conf-base alsa-conf"
+RDEPENDS_libasound = "alsa-conf"
 
 # alsa-lib gets automatically added to alsa-lib-dev dependencies, but the
 # alsa-lib package doesn't exist. libasound is the real library package.
@@ -46,3 +40,7 @@ RDEPENDS_${PN}-dev = "libasound"
 RPROVIDES_${PN}-dev = "alsa-dev"
 RREPLACES_${PN}-dev = "alsa-dev"
 RCONFLICTS_${PN}-dev = "alsa-dev"
+
+RPROVIDES_alsa-conf = "alsa-conf-base"
+RREPLACES_alsa-conf = "alsa-conf-base"
+RCONFLICTS_alsa-conf = "alsa-conf-base"
