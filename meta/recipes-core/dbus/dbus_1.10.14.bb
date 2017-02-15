@@ -97,6 +97,7 @@ EXTRA_OECONF = "--disable-tests \
                 --disable-libaudit \
                 "
 
+EXTRA_OECONF_append_class-target = " SYSTEMCTL=${base_bindir}/systemctl"
 EXTRA_OECONF_append_class-native = " --disable-selinux"
 
 PACKAGECONFIG ??= "${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'systemd', '', d)} \
