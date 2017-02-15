@@ -62,20 +62,3 @@ class PluginMgr:
                 cls._loaded.append(ppath)
 
         return pluginbase.get_plugins(ptype)
-
-    @classmethod
-    def get_plugin_methods(cls, ptype, pname, methods):
-        """
-        The methods param is a dict with the method names to find.  On
-        return, the dict values will be filled in with pointers to the
-        corresponding methods.  If one or more methods are not found,
-        None is returned.
-        """
-        result = {}
-        plugin = cls.get_plugins(ptype).get(pname)
-        for method in methods:
-            if not hasattr(plugin, method):
-                raise WicError("Unimplemented %s plugin interface for: %s" %
-                               (method, pname))
-            result[method] = getattr(plugin, method)
-        return result

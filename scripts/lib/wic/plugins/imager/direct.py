@@ -197,12 +197,10 @@ class DirectPlugin(ImagerPlugin):
         source_plugin = self.ks.bootloader.source
         disk_name = self.parts[0].disk
         if source_plugin:
-            name = "do_install_disk"
-            method = PluginMgr.get_plugin_methods('source', source_plugin,
-                                                   [name])[name]
-            method(self._image, disk_name, self, self.workdir,
-                   self.oe_builddir, self.bootimg_dir,
-                   self.kernel_dir, self.native_sysroot)
+            plugin = PluginMgr.get_plugins('source')[source_plugin]
+            plugin.do_install_disk(self._image, disk_name, self, self.workdir,
+                                   self.oe_builddir, self.bootimg_dir,
+                                   self.kernel_dir, self.native_sysroot)
 
         full_path = self._image.path
         # Generate .bmap

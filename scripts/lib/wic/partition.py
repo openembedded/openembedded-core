@@ -170,20 +170,16 @@ class Partition():
             splitted = self.sourceparams.split(',')
             srcparams_dict = dict(par.split('=') for par in splitted if par)
 
-        partition_methods = ["do_configure_partition", "do_stage_partition",
-                             "do_prepare_partition"]
-
-        methods = PluginMgr.get_plugin_methods('source', self.source,
-                                               partition_methods)
-        methods["do_configure_partition"](self, srcparams_dict, creator,
-                                          cr_workdir, oe_builddir, bootimg_dir,
-                                          kernel_dir, native_sysroot)
-        methods["do_stage_partition"](self, srcparams_dict, creator,
+        plugin = PluginMgr.get_plugins('source')[self.source]
+        plugin.do_configure_partition(self, srcparams_dict, creator,
                                       cr_workdir, oe_builddir, bootimg_dir,
                                       kernel_dir, native_sysroot)
-        methods["do_prepare_partition"](self, srcparams_dict, creator,
-                                        cr_workdir, oe_builddir, bootimg_dir,
-                                        kernel_dir, rootfs_dir, native_sysroot)
+        plugin.do_stage_partition(self, srcparams_dict, creator,
+                                  cr_workdir, oe_builddir, bootimg_dir,
+                                  kernel_dir, native_sysroot)
+        plugin.do_prepare_partition(self, srcparams_dict, creator,
+                                    cr_workdir, oe_builddir, bootimg_dir,
+                                    kernel_dir, rootfs_dir, native_sysroot)
 
         # further processing required Partition.size to be an integer, make
         # sure that it is one
