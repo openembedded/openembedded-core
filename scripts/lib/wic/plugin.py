@@ -16,95 +16,50 @@
 # Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 import os
-import sys
 import logging
+
+from importlib.machinery import SourceFileLoader
 
 from wic import pluginbase, WicError
 from wic.utils.misc import get_bitbake_var
 
 PLUGIN_TYPES = ["imager", "source"]
 
-PLUGIN_DIR = "/lib/wic/plugins" # relative to scripts
-SCRIPTS_PLUGIN_DIR = "scripts" + PLUGIN_DIR
+SCRIPTS_PLUGIN_DIR = "scripts/lib/wic/plugins"
 
 logger = logging.getLogger('wic')
 
 class PluginMgr:
-    plugin_dirs = {}
-    wic_path = os.path.dirname(__file__)
-    eos = wic_path.rfind('scripts') + len('scripts')
-    scripts_path = wic_path[:eos]
-    plugin_dir = scripts_path + PLUGIN_DIR
-    layers_path = None
-
-    @classmethod
-    def _build_plugin_dir_list(cls, plugin_dir, ptype):
-        if cls.layers_path is None:
-            cls.layers_path = get_bitbake_var("BBLAYERS")
-        layer_dirs = []
-
-        if cls.layers_path is not None:
-            for layer_path in cls.layers_path.split():
-                path = os.path.join(layer_path, SCRIPTS_PLUGIN_DIR, ptype)
-                layer_dirs.append(path)
-
-        path = os.path.join(plugin_dir, ptype)
-        layer_dirs.append(path)
-
-        return layer_dirs
-
-    @classmethod
-    def append_dirs(cls, dirs):
-        for path in dirs:
-            cls._add_plugindir(path)
-
-        # load all the plugins AGAIN
-        cls._load_all()
-
-    @classmethod
-    def _add_plugindir(cls, path):
-        path = os.path.abspath(os.path.expanduser(path))
-
-        if not os.path.isdir(path):
-            return
-
-        if path not in cls.plugin_dirs:
-            cls.plugin_dirs[path] = False
-            # the value True/False means "loaded"
-
-    @classmethod
-    def _load_all(cls):
-        for (pdir, loaded) in cls.plugin_dirs.items():
-            if loaded:
-                continue
-
-            sys.path.insert(0, pdir)
-            for mod in [x[:-3] for x in os.listdir(pdir) if x.endswith(".py")]:
-                if mod and mod != '__init__':
-                    if mod in sys.modules:
-                        logger.warning("Module %s already exists, skip", mod)
-                    else:
-                        try:
-                            pymod = __import__(mod)
-                            cls.plugin_dirs[pdir] = True
-                            logger.debug("Plugin module %s:%s imported",
-                                         mod, pymod.__file__)
-                        except ImportError as err:
-                            logger.warning('Failed to load plugin %s/%s: %s',
-                                           os.path.basename(pdir), mod, err)
-
-            del sys.path[0]
+    _plugin_dirs = []
+    _loaded = []
 
     @classmethod
     def get_plugins(cls, ptype):
-        """ the return value is dict of name:class pairs """
-
+        """Get dictionary of <plugin_name>:<class> pairs."""
         if ptype not in PLUGIN_TYPES:
             raise WicError('%s is not valid plugin type' % ptype)
 
-        plugins_dir = cls._build_plugin_dir_list(cls.plugin_dir, ptype)
+        # collect plugin directories
+        if not cls._plugin_dirs:
+            cls._plugin_dirs = [os.path.join(os.path.dirname(__file__), 'plugins')]
+            layers = get_bitbake_var("BBLAYERS") or ''
+            for layer_path in layers.split():
+                path = os.path.join(layer_path, SCRIPTS_PLUGIN_DIR)
+                path = os.path.abspath(os.path.expanduser(path))
+                if path not in cls._plugin_dirs and os.path.isdir(path):
+                    cls._plugin_dirs.insert(0, path)
 
-        cls.append_dirs(plugins_dir)
+        # load plugins
+        for pdir in cls._plugin_dirs:
+            ppath = os.path.join(pdir, ptype)
+            if ppath not in cls._loaded:
+                if os.path.isdir(ppath):
+                    for fname in os.listdir(ppath):
+                        if fname.endswith('.py'):
+                            mname = fname[:-3]
+                            mpath = os.path.join(ppath, fname)
+                            SourceFileLoader(mname, mpath).load_module()
+                cls._loaded.append(ppath)
 
         return pluginbase.get_plugins(ptype)
 
