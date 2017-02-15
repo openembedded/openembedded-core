@@ -301,7 +301,7 @@ def print_ver_diff(bs1, bs2):
         print("\nEPOCH CHANGED:")
         print("--------------")
         for pkg in sorted(echanged):
-            field1 = "{} -> {}".format(pkg, bs1[pkg]['epoch'], bs2[pkg]['epoch'])
+            field1 = "{} -> {}".format(bs1[pkg]['epoch'], bs2[pkg]['epoch'])
             field2 = "{} -> {}".format(bs1[pkg]['nevr'], bs2[pkg]['nevr'])
             print(fmt_str.format(pkg, field1, field2, maxlen=maxlen))
 
