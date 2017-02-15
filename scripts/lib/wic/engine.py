@@ -139,7 +139,7 @@ def list_source_plugins():
     """
     List the available source plugins i.e. plugins available for --source.
     """
-    plugins = PluginMgr.get_source_plugins()
+    plugins = PluginMgr.get_plugins('source')
 
     for plugin in plugins:
         print("  %s" % plugin)

@@ -109,18 +109,6 @@ class PluginMgr:
         return pluginbase.get_plugins(ptype)
 
     @classmethod
-    def get_source_plugins(cls):
-        """
-        Return list of available source plugins.
-        """
-        plugins_dir = cls._build_plugin_dir_list(cls.plugin_dir, 'source')
-
-        cls.append_dirs(plugins_dir)
-
-        return cls.get_plugins('source')
-
-
-    @classmethod
     def get_source_plugin_methods(cls, source_name, methods):
         """
         The methods param is a dict with the method names to find.  On

@@ -154,7 +154,7 @@ class Partition():
                         break
             return
 
-        plugins = PluginMgr.get_source_plugins()
+        plugins = PluginMgr.get_plugins('source')
 
         if self.source not in plugins:
             raise WicError("The '%s' --source specified for %s doesn't exist.\n\t"
