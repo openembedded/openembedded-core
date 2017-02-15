@@ -374,7 +374,7 @@ DESCRIPTION
     This scheme is extensible - adding more hooks is a simple matter
     of adding more plugin methods to SourcePlugin and derived classes.
     The code that then needs to call the plugin methods uses
-    plugin.get_source_plugin_methods() to find the method(s) needed by
+    plugin.get_plugin_methods() to find the method(s) needed by
     the call; this is done by filling up a dict with keys containing
     the method names of interest - on success, these will be filled in
     with the actual methods. Please see the implementation for

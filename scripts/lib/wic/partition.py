@@ -170,14 +170,11 @@ class Partition():
             splitted = self.sourceparams.split(',')
             srcparams_dict = dict(par.split('=') for par in splitted if par)
 
-        partition_methods = {
-            "do_stage_partition": None,
-            "do_prepare_partition": None,
-            "do_configure_partition": None
-        }
+        partition_methods = ["do_configure_partition", "do_stage_partition",
+                             "do_prepare_partition"]
 
-        methods = PluginMgr.get_source_plugin_methods(self.source,
-                                                      partition_methods)
+        methods = PluginMgr.get_plugin_methods('source', self.source,
+                                               partition_methods)
         methods["do_configure_partition"](self, srcparams_dict, creator,
                                           cr_workdir, oe_builddir, bootimg_dir,
                                           kernel_dir, native_sysroot)

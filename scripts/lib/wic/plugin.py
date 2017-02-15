@@ -109,22 +109,18 @@ class PluginMgr:
         return pluginbase.get_plugins(ptype)
 
     @classmethod
-    def get_source_plugin_methods(cls, source_name, methods):
+    def get_plugin_methods(cls, ptype, pname, methods):
         """
         The methods param is a dict with the method names to find.  On
         return, the dict values will be filled in with pointers to the
         corresponding methods.  If one or more methods are not found,
         None is returned.
         """
-        return_methods = None
-        for _source_name, klass in cls.get_plugins('source').items():
-            if _source_name == source_name:
-                for _method_name in methods:
-                    if not hasattr(klass, _method_name):
-                        logger.warning("Unimplemented %s source interface for: %s",
-                                       _method_name, _source_name)
-                        return None
-                    func = getattr(klass, _method_name)
-                    methods[_method_name] = func
-                    return_methods = methods
-        return return_methods
+        result = {}
+        plugin = cls.get_plugins(ptype).get(pname)
+        for method in methods:
+            if not hasattr(plugin, method):
+                raise WicError("Unimplemented %s plugin interface for: %s" %
+                               (method, pname))
+            result[method] = getattr(plugin, method)
+        return result
