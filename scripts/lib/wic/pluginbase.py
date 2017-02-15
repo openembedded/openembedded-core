@@ -21,6 +21,8 @@ import logging
 
 from collections import defaultdict
 
+from wic import WicError
+
 logger = logging.getLogger('wic')
 
 class PluginMeta(type):
@@ -34,6 +36,10 @@ class PluginMeta(type):
 
 class ImagerPlugin(metaclass=PluginMeta):
     wic_plugin_type = "imager"
+
+    def do_create(self):
+        raise WicError("Method %s.do_create is not implemented" %
+                       self.__class__.__name__)
 
 class SourcePlugin(metaclass=PluginMeta):
     wic_plugin_type = "source"
