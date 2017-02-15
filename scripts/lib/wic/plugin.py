@@ -31,13 +31,16 @@ logger = logging.getLogger('wic')
 
 class PluginMgr:
     _plugin_dirs = []
-    _loaded = []
+    _plugins = {}
 
     @classmethod
     def get_plugins(cls, ptype):
         """Get dictionary of <plugin_name>:<class> pairs."""
         if ptype not in PLUGIN_TYPES:
             raise WicError('%s is not valid plugin type' % ptype)
+
+        if ptype in cls._plugins:
+            return cls._plugins[ptype]
 
         # collect plugin directories
         if not cls._plugin_dirs:
@@ -52,13 +55,12 @@ class PluginMgr:
         # load plugins
         for pdir in cls._plugin_dirs:
             ppath = os.path.join(pdir, ptype)
-            if ppath not in cls._loaded:
-                if os.path.isdir(ppath):
-                    for fname in os.listdir(ppath):
-                        if fname.endswith('.py'):
-                            mname = fname[:-3]
-                            mpath = os.path.join(ppath, fname)
-                            SourceFileLoader(mname, mpath).load_module()
-                cls._loaded.append(ppath)
+            if os.path.isdir(ppath):
+                for fname in os.listdir(ppath):
+                    if fname.endswith('.py'):
+                        mname = fname[:-3]
+                        mpath = os.path.join(ppath, fname)
+                        SourceFileLoader(mname, mpath).load_module()
 
-        return pluginbase.get_plugins(ptype)
+        cls._plugins[ptype] = pluginbase.get_plugins(ptype)
+        return cls._plugins[ptype]
