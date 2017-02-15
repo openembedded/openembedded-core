@@ -83,6 +83,7 @@ SRC_URI = "\
            ${BACKPORTS} \
 "
 BACKPORTS = "\
+           file://CVE-2016-6131.patch \
            file://ubsan-fix-check-empty-string.patch \
 "
 SRC_URI[md5sum] = "677a7623c7ef6ab99881bc4e048debb6"
