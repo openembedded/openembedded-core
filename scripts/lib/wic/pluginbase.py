@@ -32,10 +32,10 @@ class PluginMeta(type):
 
         return class_type
 
-class ImagerPlugin(PluginMeta("Plugin", (), {})):
+class ImagerPlugin(metaclass=PluginMeta):
     wic_plugin_type = "imager"
 
-class SourcePlugin(PluginMeta("Plugin", (), {})):
+class SourcePlugin(metaclass=PluginMeta):
     wic_plugin_type = "source"
     """
     The methods that can be implemented by --source plugins.
