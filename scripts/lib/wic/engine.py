@@ -32,7 +32,7 @@ import logging
 import os
 
 from wic import WicError
-from wic.plugin import pluginmgr
+from wic.plugin import PluginMgr
 from wic.utils.misc import get_bitbake_var
 
 logger = logging.getLogger('wic')
@@ -139,7 +139,7 @@ def list_source_plugins():
     """
     List the available source plugins i.e. plugins available for --source.
     """
-    plugins = pluginmgr.get_source_plugins()
+    plugins = PluginMgr.get_source_plugins()
 
     for plugin in plugins:
         print("  %s" % plugin)
@@ -185,7 +185,7 @@ def wic_create(wks_file, rootfs_dir, bootimg_dir, kernel_dir,
         os.makedirs(options.outdir)
 
     pname = 'direct'
-    plugin_class = pluginmgr.get_plugins('imager').get(pname)
+    plugin_class = PluginMgr.get_plugins('imager').get(pname)
     if not plugin_class:
         raise WicError('Unknown plugin: %s' % pname)
 

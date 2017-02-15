@@ -35,7 +35,7 @@ from time import strftime
 from wic import WicError
 from wic.filemap import sparse_copy
 from wic.ksparser import KickStart, KickStartError
-from wic.plugin import pluginmgr
+from wic.plugin import PluginMgr
 from wic.pluginbase import ImagerPlugin
 from wic.utils.misc import get_bitbake_var, exec_cmd, exec_native_cmd
 
@@ -198,7 +198,7 @@ class DirectPlugin(ImagerPlugin):
         disk_name = self.parts[0].disk
         if source_plugin:
             name = "do_install_disk"
-            methods = pluginmgr.get_source_plugin_methods(source_plugin,
+            methods = PluginMgr.get_source_plugin_methods(source_plugin,
                                                           {name: None})
             methods["do_install_disk"](self._image, disk_name, self, self.workdir,
                                        self.oe_builddir, self.bootimg_dir,

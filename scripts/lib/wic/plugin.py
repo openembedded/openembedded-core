@@ -22,8 +22,6 @@ import logging
 from wic import pluginbase, WicError
 from wic.utils.misc import get_bitbake_var
 
-__ALL__ = ['PluginMgr', 'pluginmgr']
-
 PLUGIN_TYPES = ["imager", "source"]
 
 PLUGIN_DIR = "/lib/wic/plugins" # relative to scripts
@@ -31,32 +29,22 @@ SCRIPTS_PLUGIN_DIR = "scripts" + PLUGIN_DIR
 
 logger = logging.getLogger('wic')
 
-class PluginMgr():
+class PluginMgr:
     plugin_dirs = {}
+    wic_path = os.path.dirname(__file__)
+    eos = wic_path.rfind('scripts') + len('scripts')
+    scripts_path = wic_path[:eos]
+    plugin_dir = scripts_path + PLUGIN_DIR
+    layers_path = None
 
-    # make the manager class as singleton
-    _instance = None
-    def __new__(cls, *args, **kwargs):
-        if not cls._instance:
-            cls._instance = super(PluginMgr, cls).__new__(cls, *args, **kwargs)
-
-        return cls._instance
-
-    def __init__(self):
-        wic_path = os.path.dirname(__file__)
-        eos = wic_path.rfind('scripts') + len('scripts')
-        scripts_path = wic_path[:eos]
-        self.scripts_path = scripts_path
-        self.plugin_dir = scripts_path + PLUGIN_DIR
-        self.layers_path = None
-
-    def _build_plugin_dir_list(self, plugin_dir, ptype):
-        if self.layers_path is None:
-            self.layers_path = get_bitbake_var("BBLAYERS")
+    @classmethod
+    def _build_plugin_dir_list(cls, plugin_dir, ptype):
+        if cls.layers_path is None:
+            cls.layers_path = get_bitbake_var("BBLAYERS")
         layer_dirs = []
 
-        if self.layers_path is not None:
-            for layer_path in self.layers_path.split():
+        if cls.layers_path is not None:
+            for layer_path in cls.layers_path.split():
                 path = os.path.join(layer_path, SCRIPTS_PLUGIN_DIR, ptype)
                 layer_dirs.append(path)
 
@@ -65,25 +53,28 @@ class PluginMgr():
 
         return layer_dirs
 
-    def append_dirs(self, dirs):
+    @classmethod
+    def append_dirs(cls, dirs):
         for path in dirs:
-            self._add_plugindir(path)
+            cls._add_plugindir(path)
 
         # load all the plugins AGAIN
-        self._load_all()
+        cls._load_all()
 
-    def _add_plugindir(self, path):
+    @classmethod
+    def _add_plugindir(cls, path):
         path = os.path.abspath(os.path.expanduser(path))
 
         if not os.path.isdir(path):
             return
 
-        if path not in self.plugin_dirs:
-            self.plugin_dirs[path] = False
+        if path not in cls.plugin_dirs:
+            cls.plugin_dirs[path] = False
             # the value True/False means "loaded"
 
-    def _load_all(self):
-        for (pdir, loaded) in self.plugin_dirs.items():
+    @classmethod
+    def _load_all(cls):
+        for (pdir, loaded) in cls.plugin_dirs.items():
             if loaded:
                 continue
 
@@ -91,12 +82,11 @@ class PluginMgr():
             for mod in [x[:-3] for x in os.listdir(pdir) if x.endswith(".py")]:
                 if mod and mod != '__init__':
                     if mod in sys.modules:
-                        #self.plugin_dirs[pdir] = True
                         logger.warning("Module %s already exists, skip", mod)
                     else:
                         try:
                             pymod = __import__(mod)
-                            self.plugin_dirs[pdir] = True
+                            cls.plugin_dirs[pdir] = True
                             logger.debug("Plugin module %s:%s imported",
                                          mod, pymod.__file__)
                         except ImportError as err:
@@ -105,30 +95,33 @@ class PluginMgr():
 
             del sys.path[0]
 
-    def get_plugins(self, ptype):
+    @classmethod
+    def get_plugins(cls, ptype):
         """ the return value is dict of name:class pairs """
 
         if ptype not in PLUGIN_TYPES:
             raise WicError('%s is not valid plugin type' % ptype)
 
-        plugins_dir = self._build_plugin_dir_list(self.plugin_dir, ptype)
+        plugins_dir = cls._build_plugin_dir_list(cls.plugin_dir, ptype)
 
-        self.append_dirs(plugins_dir)
+        cls.append_dirs(plugins_dir)
 
         return pluginbase.get_plugins(ptype)
 
-    def get_source_plugins(self):
+    @classmethod
+    def get_source_plugins(cls):
         """
         Return list of available source plugins.
         """
-        plugins_dir = self._build_plugin_dir_list(self.plugin_dir, 'source')
+        plugins_dir = cls._build_plugin_dir_list(cls.plugin_dir, 'source')
 
-        self.append_dirs(plugins_dir)
+        cls.append_dirs(plugins_dir)
 
-        return self.get_plugins('source')
+        return cls.get_plugins('source')
 
 
-    def get_source_plugin_methods(self, source_name, methods):
+    @classmethod
+    def get_source_plugin_methods(cls, source_name, methods):
         """
         The methods param is a dict with the method names to find.  On
         return, the dict values will be filled in with pointers to the
@@ -136,7 +129,7 @@ class PluginMgr():
         None is returned.
         """
         return_methods = None
-        for _source_name, klass in self.get_plugins('source').items():
+        for _source_name, klass in cls.get_plugins('source').items():
             if _source_name == source_name:
                 for _method_name in methods:
                     if not hasattr(klass, _method_name):
@@ -147,5 +140,3 @@ class PluginMgr():
                     methods[_method_name] = func
                     return_methods = methods
         return return_methods
-
-pluginmgr = PluginMgr()

@@ -28,7 +28,7 @@
 import subprocess
 import logging
 
-from wic.plugin import pluginmgr, PLUGIN_TYPES
+from wic.plugin import PluginMgr, PLUGIN_TYPES
 
 logger = logging.getLogger('wic')
 
@@ -68,7 +68,7 @@ def get_wic_plugins_help():
     result = wic_plugins_help
     for plugin_type in PLUGIN_TYPES:
         result += '\n\n%s PLUGINS\n\n' % plugin_type.upper()
-        for name, plugin in pluginmgr.get_plugins(plugin_type).items():
+        for name, plugin in PluginMgr.get_plugins(plugin_type).items():
             result += "\n %s plugin:\n" % name
             if plugin.__doc__:
                 result += plugin.__doc__

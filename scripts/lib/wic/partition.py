@@ -30,7 +30,7 @@ import tempfile
 
 from wic import WicError
 from wic.utils.misc import exec_cmd, exec_native_cmd, get_bitbake_var
-from wic.plugin import pluginmgr
+from wic.plugin import PluginMgr
 
 logger = logging.getLogger('wic')
 
@@ -154,7 +154,7 @@ class Partition():
                         break
             return
 
-        plugins = pluginmgr.get_source_plugins()
+        plugins = PluginMgr.get_source_plugins()
 
         if self.source not in plugins:
             raise WicError("The '%s' --source specified for %s doesn't exist.\n\t"
@@ -176,7 +176,7 @@ class Partition():
             "do_configure_partition": None
         }
 
-        methods = pluginmgr.get_source_plugin_methods(self.source,
+        methods = PluginMgr.get_source_plugin_methods(self.source,
                                                       partition_methods)
         methods["do_configure_partition"](self, srcparams_dict, creator,
                                           cr_workdir, oe_builddir, bootimg_dir,
