@@ -776,7 +776,7 @@ def patch_path(url, fetch, workdir, expand=True):
 
     local = fetch.localpath(url)
     base, ext = os.path.splitext(os.path.basename(local))
-    if ext in ('.gz', '.bz2', '.Z'):
+    if ext in ('.gz', '.bz2', '.xz', '.Z'):
         if expand:
             local = os.path.join(workdir, base)
         ext = os.path.splitext(base)[1]
