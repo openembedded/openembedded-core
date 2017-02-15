@@ -32,7 +32,7 @@ import logging
 import os
 
 from wic import WicError
-from wic.plugin import PluginMgr
+from wic.pluginbase import PluginMgr
 from wic.utils.misc import get_bitbake_var
 
 logger = logging.getLogger('wic')

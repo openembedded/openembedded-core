@@ -28,7 +28,7 @@
 import subprocess
 import logging
 
-from wic.plugin import PluginMgr, PLUGIN_TYPES
+from wic.pluginbase import PluginMgr, PLUGIN_TYPES
 
 logger = logging.getLogger('wic')
 

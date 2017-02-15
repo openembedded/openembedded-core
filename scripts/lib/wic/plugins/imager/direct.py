@@ -35,8 +35,7 @@ from time import strftime
 from wic import WicError
 from wic.filemap import sparse_copy
 from wic.ksparser import KickStart, KickStartError
-from wic.plugin import PluginMgr
-from wic.pluginbase import ImagerPlugin
+from wic.pluginbase import PluginMgr, ImagerPlugin
 from wic.utils.misc import get_bitbake_var, exec_cmd, exec_native_cmd
 
 logger = logging.getLogger('wic')

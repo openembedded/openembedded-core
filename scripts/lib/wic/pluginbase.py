@@ -15,15 +15,58 @@
 # with this program; if not, write to the Free Software Foundation, Inc., 59
 # Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
-__all__ = ['ImagerPlugin', 'SourcePlugin', 'get_plugins']
+__all__ = ['ImagerPlugin', 'SourcePlugin']
 
+import os
 import logging
 
 from collections import defaultdict
+from importlib.machinery import SourceFileLoader
 
 from wic import WicError
+from wic.utils.misc import get_bitbake_var
+
+PLUGIN_TYPES = ["imager", "source"]
+
+SCRIPTS_PLUGIN_DIR = "scripts/lib/wic/plugins"
 
 logger = logging.getLogger('wic')
+
+class PluginMgr:
+    _plugin_dirs = []
+    _plugins = {}
+
+    @classmethod
+    def get_plugins(cls, ptype):
+        """Get dictionary of <plugin_name>:<class> pairs."""
+        if ptype not in PLUGIN_TYPES:
+            raise WicError('%s is not valid plugin type' % ptype)
+
+        if ptype in cls._plugins:
+            return cls._plugins[ptype]
+
+        # collect plugin directories
+        if not cls._plugin_dirs:
+            cls._plugin_dirs = [os.path.join(os.path.dirname(__file__), 'plugins')]
+            layers = get_bitbake_var("BBLAYERS") or ''
+            for layer_path in layers.split():
+                path = os.path.join(layer_path, SCRIPTS_PLUGIN_DIR)
+                path = os.path.abspath(os.path.expanduser(path))
+                if path not in cls._plugin_dirs and os.path.isdir(path):
+                    cls._plugin_dirs.insert(0, path)
+
+        # load plugins
+        for pdir in cls._plugin_dirs:
+            ppath = os.path.join(pdir, ptype)
+            if os.path.isdir(ppath):
+                for fname in os.listdir(ppath):
+                    if fname.endswith('.py'):
+                        mname = fname[:-3]
+                        mpath = os.path.join(ppath, fname)
+                        SourceFileLoader(mname, mpath).load_module()
+
+        cls._plugins[ptype] = PluginMeta.plugins.get(ptype)
+        return cls._plugins[ptype]
 
 class PluginMeta(type):
     plugins = defaultdict(dict)
@@ -97,5 +140,3 @@ class SourcePlugin(metaclass=PluginMeta):
         """
         logger.debug("SourcePlugin: do_prepare_partition: part: %s", part)
 
-def get_plugins(typen):
-    return PluginMeta.plugins.get(typen)
