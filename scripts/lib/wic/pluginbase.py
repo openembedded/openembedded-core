@@ -32,18 +32,16 @@ SCRIPTS_PLUGIN_DIR = "scripts/lib/wic/plugins"
 
 logger = logging.getLogger('wic')
 
+PLUGINS = defaultdict(dict)
+
 class PluginMgr:
     _plugin_dirs = []
-    _plugins = {}
 
     @classmethod
     def get_plugins(cls, ptype):
         """Get dictionary of <plugin_name>:<class> pairs."""
         if ptype not in PLUGIN_TYPES:
             raise WicError('%s is not valid plugin type' % ptype)
-
-        if ptype in cls._plugins:
-            return cls._plugins[ptype]
 
         # collect plugin directories
         if not cls._plugin_dirs:
@@ -55,25 +53,25 @@ class PluginMgr:
                 if path not in cls._plugin_dirs and os.path.isdir(path):
                     cls._plugin_dirs.insert(0, path)
 
-        # load plugins
-        for pdir in cls._plugin_dirs:
-            ppath = os.path.join(pdir, ptype)
-            if os.path.isdir(ppath):
-                for fname in os.listdir(ppath):
-                    if fname.endswith('.py'):
-                        mname = fname[:-3]
-                        mpath = os.path.join(ppath, fname)
-                        SourceFileLoader(mname, mpath).load_module()
+        if ptype not in PLUGINS:
+            # load all ptype plugins
+            for pdir in cls._plugin_dirs:
+                ppath = os.path.join(pdir, ptype)
+                if os.path.isdir(ppath):
+                    for fname in os.listdir(ppath):
+                        if fname.endswith('.py'):
+                            mname = fname[:-3]
+                            mpath = os.path.join(ppath, fname)
+                            logger.debug("loading plugin module %s", mpath)
+                            SourceFileLoader(mname, mpath).load_module()
 
-        cls._plugins[ptype] = PluginMeta.plugins.get(ptype)
-        return cls._plugins[ptype]
+        return PLUGINS.get(ptype)
 
 class PluginMeta(type):
-    plugins = defaultdict(dict)
     def __new__(cls, name, bases, attrs):
         class_type = type.__new__(cls, name, bases, attrs)
         if 'name' in attrs:
-            cls.plugins[class_type.wic_plugin_type][attrs['name']] = class_type
+            PLUGINS[class_type.wic_plugin_type][attrs['name']] = class_type
 
         return class_type
 
