@@ -221,7 +221,7 @@ do_install() {
 
 PACKAGES =+ "${PN}-ralink-license ${PN}-ralink \
              ${PN}-radeon-license ${PN}-radeon \
-             ${PN}-marvell-license ${PN}-sd8686 ${PN}-sd8688 ${PN}-sd8787 ${PN}-sd8797 \
+             ${PN}-marvell-license ${PN}-sd8686 ${PN}-sd8688 ${PN}-sd8787 ${PN}-sd8797 ${PN}-sd8801 ${PN}-sd8887 ${PN}-sd8897 \
              ${PN}-ti-connectivity-license ${PN}-wl12xx ${PN}-wl18xx \
              ${PN}-vt6656-license ${PN}-vt6656 \
              ${PN}-rtl-license ${PN}-rtl8188 ${PN}-rtl8192cu ${PN}-rtl8192ce ${PN}-rtl8192su ${PN}-rtl8723 ${PN}-rtl8821 \
@@ -322,6 +322,9 @@ LICENSE_${PN}-sd8686 = "Firmware-Marvell"
 LICENSE_${PN}-sd8688 = "Firmware-Marvell"
 LICENSE_${PN}-sd8787 = "Firmware-Marvell"
 LICENSE_${PN}-sd8797 = "Firmware-Marvell"
+LICENSE_${PN}-sd8801 = "Firmware-Marvell"
+LICENSE_${PN}-sd8887 = "Firmware-Marvell"
+LICENSE_${PN}-sd8897 = "Firmware-Marvell"
 LICENSE_${PN}-marvell-license = "Firmware-Marvell"
 
 FILES_${PN}-marvell-license = "/lib/firmware/LICENCE.Marvell"
@@ -339,11 +342,23 @@ FILES_${PN}-sd8787 = " \
 FILES_${PN}-sd8797 = " \
   /lib/firmware/mrvl/sd8797_uapsta.bin \
 "
+FILES_${PN}-sd8801 = " \
+  /lib/firmware/mrvl/sd8801_uapsta.bin \
+"
+FILES_${PN}-sd8887 = " \
+  /lib/firmware/mrvl/sd8887_uapsta.bin \
+"
+FILES_${PN}-sd8897 = " \
+  /lib/firmware/mrvl/sd8897_uapsta.bin \
+"
 
 RDEPENDS_${PN}-sd8686 += "${PN}-marvell-license"
 RDEPENDS_${PN}-sd8688 += "${PN}-marvell-license"
 RDEPENDS_${PN}-sd8787 += "${PN}-marvell-license"
 RDEPENDS_${PN}-sd8797 += "${PN}-marvell-license"
+RDEPENDS_${PN}-sd8801 += "${PN}-marvell-license"
+RDEPENDS_${PN}-sd8887 += "${PN}-marvell-license"
+RDEPENDS_${PN}-sd8897 += "${PN}-marvell-license"
 
 # For rtl
 LICENSE_${PN}-rtl8188 = "Firmware-rtlwifi_firmware"
