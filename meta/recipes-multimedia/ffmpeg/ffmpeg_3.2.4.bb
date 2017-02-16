@@ -115,7 +115,25 @@ do_configure() {
     ${S}/configure ${EXTRA_OECONF}
 }
 
-PACKAGES_DYNAMIC += "^lib(av(codec|device|filter|format|util|resample)|swscale|swresample|postproc).*"
+PACKAGES =+ "libavcodec \
+             libavdevice \
+             libavfilter \
+             libavformat \
+             libavresample \
+             libavutil \
+             libpostproc \
+             libswresample \
+             libswscale"
+
+FILES_libavcodec = "${libdir}/libavcodec${SOLIBS}"
+FILES_libavdevice = "${libdir}/libavdevice${SOLIBS}"
+FILES_libavfilter = "${libdir}/libavfilter${SOLIBS}"
+FILES_libavformat = "${libdir}/libavformat${SOLIBS}"
+FILES_libavresample = "${libdir}/libavresample${SOLIBS}"
+FILES_libavutil = "${libdir}/libavutil${SOLIBS}"
+FILES_libpostproc = "${libdir}/libpostproc${SOLIBS}"
+FILES_libswresample = "${libdir}/libswresample${SOLIBS}"
+FILES_libswscale = "${libdir}/libswscale${SOLIBS}"
 
 # ffmpeg disables PIC on some platforms (e.g. x86-32)
 INSANE_SKIP_${MLPREFIX}libavcodec = "textrel"
@@ -127,36 +145,3 @@ INSANE_SKIP_${MLPREFIX}libavresample = "textrel"
 INSANE_SKIP_${MLPREFIX}libswscale = "textrel"
 INSANE_SKIP_${MLPREFIX}libswresample = "textrel"
 INSANE_SKIP_${MLPREFIX}libpostproc = "textrel"
-
-python populate_packages_prepend() {
-    av_libdir = d.expand('${libdir}')
-    av_pkgconfig = d.expand('${libdir}/pkgconfig')
-
-    # Runtime package
-    do_split_packages(d, av_libdir, '^lib(.*)\.so\..*',
-                      output_pattern='lib%s',
-                      description='libav %s library',
-                      extra_depends='',
-                      prepend=True,
-                      allow_links=True)
-
-    # Development packages (-dev, -staticdev)
-    do_split_packages(d, av_libdir, '^lib(.*)\.so$',
-                      output_pattern='lib%s-dev',
-                      description='libav %s development package',
-                      extra_depends='${PN}-dev',
-                      prepend=True,
-                      allow_links=True)
-    do_split_packages(d, av_pkgconfig, '^lib(.*)\.pc$',
-                      output_pattern='lib%s-dev',
-                      description='libav %s development package',
-                      extra_depends='${PN}-dev',
-                      prepend=True)
-    do_split_packages(d, av_libdir, '^lib(.*)\.a$',
-                      output_pattern='lib%s-staticdev',
-                      description='libav %s development package - static library',
-                      extra_depends='${PN}-dev',
-                      prepend=True,
-                      allow_links=True)
-
-}
