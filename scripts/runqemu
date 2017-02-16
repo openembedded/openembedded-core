@@ -1078,6 +1078,17 @@ class BaseConfig(object):
             elif serial_num == 1:
                 self.qemu_opt += " %s" % self.get("QB_SERIAL_OPT")
 
+        # We always wants ttyS0 and ttyS1 in qemu machines (see SERIAL_CONSOLES),
+        # if not serial or serialtcp options was specified only ttyS0 is created
+        # and sysvinit shows an error trying to enable ttyS1:
+        #     INIT: Id "S1" respawning too fast: disabled for 5 minutes
+        serial_num = len(re.findall("-serial", self.qemu_opt))
+        if serial_num == 0:
+            if re.search("-nographic", self.qemu_opt):
+                self.qemu_opt += " -serial mon:stdio -serial null"
+            else:
+                self.qemu_opt += " -serial mon:vc -serial null"
+
     def start_qemu(self):
         if self.kernel:
             kernel_opts = "-kernel %s -append '%s %s %s'" % (self.kernel, self.kernel_cmdline, self.kernel_cmdline_script, self.get('QB_KERNEL_CMDLINE_APPEND'))
