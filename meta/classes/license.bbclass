@@ -406,6 +406,8 @@ def find_license_files(d):
     generic_directory = d.getVar('COMMON_LICENSE_DIR')
     # List of basename, path tuples
     lic_files_paths = []
+    # hash for keep track generic lics mappings
+    non_generic_lics = {}
     # Entries from LIC_FILES_CHKSUM
     lic_chksums = {}
     license_source_dirs = []
@@ -468,6 +470,7 @@ def find_license_files(d):
             # of the package rather than the license_source_dirs.
             lic_files_paths.append(("generic_" + license_type,
                                     os.path.join(srcdir, non_generic_lic), None, None))
+            non_generic_lics[non_generic_lic] = license_type
         else:
             # Add explicity avoid of CLOSED license because this isn't generic
             if license_type != 'CLOSED':
@@ -503,6 +506,9 @@ def find_license_files(d):
         lic_chksum_paths[os.path.basename(path)][data] = (os.path.join(srcdir, path), data[1], data[2])
     for basename, files in lic_chksum_paths.items():
         if len(files) == 1:
+            # Don't copy again a LICENSE already handled as non-generic
+            if basename in non_generic_lics:
+                continue
             data = list(files.values())[0]
             lic_files_paths.append(tuple([basename] + list(data)))
         else:
