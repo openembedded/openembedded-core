@@ -131,6 +131,10 @@ def write_license_files(d, license_manifest, pkg_dic):
                 bb.utils.mkdirhier(pkg_rootfs_license_dir)
                 pkg_license_dir = os.path.join(d.getVar('LICENSE_DIRECTORY'),
                                             pkg_dic[pkg]["PN"]) 
+
+                pkg_manifest_licenses = [canonical_license(d, lic) \
+                        for lic in pkg_dic[pkg]["LICENSES"]]
+
                 licenses = os.listdir(pkg_license_dir)
                 for lic in licenses:
                     rootfs_license = os.path.join(rootfs_license_dir, lic)
@@ -138,9 +142,18 @@ def write_license_files(d, license_manifest, pkg_dic):
                     pkg_rootfs_license = os.path.join(pkg_rootfs_license_dir, lic)
 
                     if re.match("^generic_.*$", lic):
-                        generic_lic = re.search("^generic_(.*)$", lic).group(1)
-                        if oe.license.license_ok(canonical_license(d,
-                            generic_lic), bad_licenses) == False:
+                        generic_lic = canonical_license(d,
+                                re.search("^generic_(.*)$", lic).group(1))
+
+                        # Do not copy generic license into package if isn't
+                        # declared into LICENSES of the package.
+                        if not re.sub('\+$', '', generic_lic) in \
+                                [re.sub('\+', '', lic) for lic in \
+                                 pkg_manifest_licenses]:
+                            continue
+
+                        if oe.license.license_ok(generic_lic,
+                                bad_licenses) == False:
                             continue
 
                         if not os.path.exists(rootfs_license):
@@ -499,7 +512,6 @@ def find_license_files(d):
         bb.fatal('%s: %s' % (d.getVar('PF'), exc))
     except SyntaxError:
         bb.warn("%s: Failed to parse it's LICENSE field." % (d.getVar('PF')))
-
     # Add files from LIC_FILES_CHKSUM to list of license files
     lic_chksum_paths = defaultdict(OrderedDict)
     for path, data in lic_chksums.items():
