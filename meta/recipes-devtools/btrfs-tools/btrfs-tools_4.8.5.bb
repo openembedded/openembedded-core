@@ -14,17 +14,17 @@ DEPENDS = "util-linux attr e2fsprogs lzo acl udev"
 RDEPENDS_${PN} = "libgcc"
 
 SRCREV = "144a19145e248513c7a676defad59836830535c6"
-SRC_URI = "git://git.kernel.org/pub/scm/linux/kernel/git/kdave/btrfs-progs.git \
-"
+SRC_URI = "git://git.kernel.org/pub/scm/linux/kernel/git/kdave/btrfs-progs.git"
 
 inherit autotools-brokensep pkgconfig manpages
 
 PACKAGECONFIG[manpages] = "--enable-documentation, --disable-documentation, asciidoc-native xmlto-native"
 EXTRA_OECONF_append_libc-musl = " --disable-backtrace "
 
-
 do_configure_prepend() {
-      sh autogen.sh
+	# Upstream doesn't ship this and autoreconf won't install it as automake isn't used.
+	mkdir -p ${S}/config
+	cp -f $(automake --print-libdir)/install-sh ${S}/config/
 }
 
 S = "${WORKDIR}/git"
