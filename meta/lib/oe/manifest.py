@@ -104,7 +104,7 @@ class Manifest(object, metaclass=ABCMeta):
             pkg_list['lgp'] = \
                 "locale-base-en-us locale-base-en-gb"
         elif image_rootfs.find("core-image-minimal") > 0:
-            pkg_list[self.PKG_TYPE_MUST_INSTALL] = "run-postinsts packagegroup-core-boot"
+            pkg_list[self.PKG_TYPE_MUST_INSTALL] = "packagegroup-core-boot"
 
         with open(self.initial_manifest, "w+") as manifest:
             manifest.write(self.initial_manifest_file_header)

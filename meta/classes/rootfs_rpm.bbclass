@@ -3,7 +3,6 @@
 #
 
 ROOTFS_PKGMANAGE = "rpm dnf"
-ROOTFS_PKGMANAGE_BOOTSTRAP = "run-postinsts"
 
 # dnf is using our custom distutils, and so will fail without these
 export STAGING_INCDIR
