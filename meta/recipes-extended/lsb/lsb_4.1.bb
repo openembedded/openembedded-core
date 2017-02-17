@@ -15,6 +15,7 @@ RDEPENDS_${PN} += "${VIRTUAL-RUNTIME_getopt} lsbinitscripts"
 LIC_FILES_CHKSUM = "file://README;md5=12da544b1a3a5a1795a21160b49471cf"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/project/lsb/lsb_release/1.4/lsb-release-1.4.tar.gz \
+           file://0001-fix-lsb_release-to-work-with-busybox-head-and-find.patch \
            file://init-functions \
            file://lsb_killproc \
            file://lsb_log_message \
