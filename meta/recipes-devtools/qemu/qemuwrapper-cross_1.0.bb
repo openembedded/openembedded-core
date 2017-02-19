@@ -7,6 +7,8 @@ DEPENDS += "qemu-native"
 
 inherit qemu
 
+do_populate_sysroot[depends] = ""
+
 do_install () {
 	install -d ${D}${bindir_crossscripts}/
 

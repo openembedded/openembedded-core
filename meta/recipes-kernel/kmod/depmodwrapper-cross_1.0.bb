@@ -11,6 +11,8 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 SSTATE_SCAN_FILES += "depmodwrapper"
 EXTRA_STAGING_FIXMES = "PKGDATA_DIR"
 
+do_populate_sysroot[depends] = ""
+
 do_install() {
 	install -d ${D}${bindir_crossscripts}/
 
