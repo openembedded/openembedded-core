@@ -184,7 +184,7 @@ def update_useradd_static_config(d):
             newparam += ['', ' --base-dir %s' % uaargs.base_dir][uaargs.base_dir != None]
             newparam += ['', ' --comment %s' % uaargs.comment][uaargs.comment != None]
             newparam += ['', ' --home-dir %s' % uaargs.home_dir][uaargs.home_dir != None]
-            newparam += ['', ' --expiredata %s' % uaargs.expiredate][uaargs.expiredate != None]
+            newparam += ['', ' --expiredate %s' % uaargs.expiredate][uaargs.expiredate != None]
             newparam += ['', ' --inactive %s' % uaargs.inactive][uaargs.inactive != None]
             newparam += ['', ' --gid %s' % uaargs.gid][uaargs.gid != None]
             newparam += ['', ' --groups %s' % uaargs.groups][uaargs.groups != None]
