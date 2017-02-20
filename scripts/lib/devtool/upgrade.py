@@ -27,6 +27,10 @@ import argparse
 import scriptutils
 import errno
 import bb
+
+devtool_path = os.path.dirname(os.path.realpath(__file__)) + '/../../../meta/lib'
+sys.path = sys.path + [devtool_path]
+
 import oe.recipeutils
 from devtool import standard
 from devtool import exec_build_env_command, setup_tinfoil, DevtoolError, parse_recipe, use_external_build
