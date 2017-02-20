@@ -7,7 +7,7 @@ DEPENDS = "glib-2.0 glib-2.0-native gperf-native kmod libxslt-native util-linux"
 
 PROVIDES = "udev"
 
-SRC_URI = "https://github.com/gentoo/${BPN}/archive/v${PV}.tar.gz \
+SRC_URI = "https://github.com/gentoo/${BPN}/archive/v${PV}.tar.gz;downloadfilename=${BP}.tar.gz \
            file://devfs-udev.rules \
            file://init \
            file://links.conf \
