@@ -16,7 +16,7 @@ SRC_URI = "https://gstreamer.freedesktop.org/src/${REALPN}/${REALPN}-${PV}.tar.x
 
 S = "${WORKDIR}/${REALPN}-${PV}"
 
-inherit autotools pkgconfig gtk-doc distro_features_check
+inherit autotools pkgconfig gtk-doc distro_features_check upstream-version-is-even
 
 REQUIRED_DISTRO_FEATURES ?= "opengl"
 
