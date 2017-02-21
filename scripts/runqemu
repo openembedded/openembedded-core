@@ -167,6 +167,7 @@ class BaseConfig(object):
         self.kernel = ''
         self.kernel_cmdline = ''
         self.kernel_cmdline_script = ''
+        self.bootparams = ''
         self.dtb = ''
         self.fstype = ''
         self.kvm_enabled = False
@@ -368,7 +369,7 @@ class BaseConfig(object):
             elif arg.startswith('qemuparams='):
                 self.qemu_opt_script += ' %s' % arg[len('qemuparams='):]
             elif arg.startswith('bootparams='):
-                self.kernel_cmdline_script += ' %s' % arg[len('bootparams='):]
+                self.bootparams = arg[len('bootparams='):]
             elif os.path.exists(arg) or (re.search(':', arg) and re.search('/', arg)):
                 self.check_arg_path(os.path.abspath(arg))
             elif re.search('-image-', arg):
@@ -954,7 +955,9 @@ class BaseConfig(object):
 
     def start_qemu(self):
         if self.kernel:
-            kernel_opts = "-kernel %s -append '%s %s %s'" % (self.kernel, self.kernel_cmdline, self.kernel_cmdline_script, self.get('QB_KERNEL_CMDLINE_APPEND'))
+            kernel_opts = "-kernel %s -append '%s %s %s %s'" % (self.kernel, self.kernel_cmdline,
+                                                                self.kernel_cmdline_script, self.get('QB_KERNEL_CMDLINE_APPEND'),
+                                                                self.bootparams)
             if self.dtb:
                 kernel_opts += " -dtb %s" % self.dtb
         else:
