@@ -96,6 +96,10 @@ python __anonymous() {
        bb.data.inherits_class('cross-canadian', d):
         return
 
+    # Disable when targeting mingw32 (no target support)
+    if d.getVar("TARGET_OS") == "mingw32":
+        return
+
     # compute special vardeps
     gen_updatealternativesvardeps(d)
 
