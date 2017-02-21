@@ -37,7 +37,6 @@ class BitbakeTests(oeSelfTest):
 
     @testcase(103)
     def test_local_sstate(self):
-        bitbake('m4-native -ccleansstate')
         bitbake('m4-native')
         bitbake('m4-native -cclean')
         result = bitbake('m4-native')
@@ -83,8 +82,8 @@ class BitbakeTests(oeSelfTest):
         pkgsplit_dir = get_bb_var('PKGDEST', test_recipe)
         man_dir = get_bb_var('mandir', test_recipe)
 
-        bitbake('-c cleansstate %s' % test_recipe)
-        bitbake(test_recipe)
+        bitbake('-c clean %s' % test_recipe)
+        bitbake('-c package -f %s' % test_recipe)
         self.add_command_to_tearDown('bitbake -c clean %s' % test_recipe)
 
         man_file = os.path.join(image_dir + man_dir, 'man3/zlib.3')
@@ -103,7 +102,6 @@ class BitbakeTests(oeSelfTest):
         # test 2 from bug 5875
         test_recipe = 'zlib'
 
-        bitbake('-c cleansstate %s' % test_recipe)
         bitbake(test_recipe)
         self.add_command_to_tearDown('bitbake -c clean %s' % test_recipe)
 
