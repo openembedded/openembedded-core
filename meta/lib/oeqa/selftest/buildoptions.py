@@ -36,9 +36,8 @@ class ImageOptionsTests(oeSelfTest):
         p = get_bb_var('SYSROOT_DESTDIR', 'ccache-native') + get_bb_var('bindir', 'ccache-native') + "/" + "ccache"
         self.assertTrue(os.path.isfile(p), msg = "No ccache found (%s)" % p)
         self.write_config('INHERIT += "ccache"')
-        bitbake("m4 -c cleansstate")
-        bitbake("m4 -c compile")
-        self.addCleanup(bitbake, 'ccache-native -ccleansstate')
+        self.add_command_to_tearDown('bitbake -c clean m4')
+        bitbake("m4 -f -c compile")
         res = runCmd("grep ccache %s" % (os.path.join(get_bb_var("WORKDIR","m4"),"temp/log.do_compile")), ignore_status=True)
         self.assertEqual(0, res.status, msg="No match for ccache in m4 log.do_compile. For further details: %s" % os.path.join(get_bb_var("WORKDIR","m4"),"temp/log.do_compile"))
 
@@ -75,14 +74,14 @@ class SanityOptionsTest(oeSelfTest):
 
     @testcase(927)
     def test_options_warnqa_errorqa_switch(self):
-        bitbake("xcursor-transparent-theme -ccleansstate")
 
         self.write_config("INHERIT_remove = \"report-error\"")
         if "packages-list" not in get_bb_var("ERROR_QA"):
             self.append_config("ERROR_QA_append = \" packages-list\"")
 
         self.write_recipeinc('xcursor-transparent-theme', 'PACKAGES += \"${PN}-dbg\"')
-        res = bitbake("xcursor-transparent-theme", ignore_status=True)
+        self.add_command_to_tearDown('bitbake -c clean xcursor-transparent-theme')
+        res = bitbake("xcursor-transparent-theme -f -c package", ignore_status=True)
         self.delete_recipeinc('xcursor-transparent-theme')
         line = self.getline(res, "QA Issue: xcursor-transparent-theme-dbg is listed in PACKAGES multiple times, this leads to packaging errors.")
         self.assertTrue(line and line.startswith("ERROR:"), msg=res.output)
@@ -90,8 +89,7 @@ class SanityOptionsTest(oeSelfTest):
         self.write_recipeinc('xcursor-transparent-theme', 'PACKAGES += \"${PN}-dbg\"')
         self.append_config('ERROR_QA_remove = "packages-list"')
         self.append_config('WARN_QA_append = " packages-list"')
-        bitbake("xcursor-transparent-theme -ccleansstate")
-        res = bitbake("xcursor-transparent-theme")
+        res = bitbake("xcursor-transparent-theme -f -c package")
         self.delete_recipeinc('xcursor-transparent-theme')
         line = self.getline(res, "QA Issue: xcursor-transparent-theme-dbg is listed in PACKAGES multiple times, this leads to packaging errors.")
         self.assertTrue(line and line.startswith("WARNING:"), msg=res.output)
@@ -100,8 +98,8 @@ class SanityOptionsTest(oeSelfTest):
     def test_sanity_unsafe_script_references(self):
         self.write_config('WARN_QA_append = " unsafe-references-in-scripts"')
 
-        bitbake("-ccleansstate gzip")
-        res = bitbake("gzip")
+        self.add_command_to_tearDown('bitbake -c clean gzip')
+        res = bitbake("gzip -f -c package_qa")
         line = self.getline(res, "QA Issue: gzip")
         self.assertFalse(line, "WARNING: QA Issue: gzip message is present in bitbake's output and shouldn't be: %s" % res.output)
 
@@ -110,7 +108,7 @@ do_install_append_pn-gzip () {
 	echo "\n${bindir}/test" >> ${D}${bindir}/zcat
 }
 """)
-        res = bitbake("gzip")
+        res = bitbake("gzip -f -c package_qa")
         line = self.getline(res, "QA Issue: gzip")
         self.assertTrue(line and line.startswith("WARNING:"), "WARNING: QA Issue: gzip message is not present in bitbake's output: %s" % res.output)
 
@@ -118,7 +116,6 @@ do_install_append_pn-gzip () {
     def test_sanity_unsafe_binary_references(self):
         self.write_config('WARN_QA_append = " unsafe-references-in-binaries"')
 
-        bitbake("-ccleansstate nfs-utils")
         #res = bitbake("nfs-utils")
         # FIXME when nfs-utils passes this test
         #line = self.getline(res, "QA Issue: nfs-utils")
@@ -129,7 +126,8 @@ do_install_append_pn-gzip () {
 #	echo "\n${bindir}/test" >> ${D}${base_sbindir}/osd_login
 #}
 #""")
-        res = bitbake("nfs-utils")
+        self.add_command_to_tearDown('bitbake -c clean nfs-utils')
+        res = bitbake("nfs-utils -f -c package_qa")
         line = self.getline(res, "QA Issue: nfs-utils")
         self.assertTrue(line and line.startswith("WARNING:"), "WARNING: QA Issue: nfs-utils message is not present in bitbake's output: %s" % res.output)
 

@@ -72,11 +72,6 @@ class RecipetoolTests(RecipetoolBase):
         logger.info('Running bitbake to generate pkgdata')
         bitbake('-c packagedata base-files coreutils busybox selftest-recipetool-appendfile')
 
-    @classmethod
-    def tearDownClass(cls):
-        # Shouldn't leave any traces of this artificial recipe behind
-        bitbake('-c cleansstate selftest-recipetool-appendfile')
-
     def _try_recipetool_appendfile(self, testrecipe, destfile, newfile, options, expectedlines, expectedfiles):
         cmd = 'recipetool appendfile %s %s %s %s' % (self.templayerdir, destfile, newfile, options)
         return self._try_recipetool_appendcmd(cmd, testrecipe, expectedfiles, expectedlines)
