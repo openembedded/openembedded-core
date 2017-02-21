@@ -12,8 +12,8 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/libusb/libusb-${PV}.tar.bz2 \
            file://no-dll.patch \
           "
 
-SRC_URI[md5sum] = "1d4eb194eaaa2bcfbba28102768c7dbf"
-SRC_URI[sha256sum] = "cb057190ba0a961768224e4dc6883104c6f945b2bf2ef90d7da39e7c1834f7ff"
+SRC_URI[md5sum] = "1da9ea3c27b3858fa85c5f4466003e44"
+SRC_URI[sha256sum] = "7dce9cce9a81194b7065ee912bcd55eeffebab694ea403ffb91b67db66b1824b"
 
 S = "${WORKDIR}/libusb-${PV}"
 
