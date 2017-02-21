@@ -121,6 +121,7 @@ def exec_native_cmd(cmd_and_args, native_sysroot, catch=3, pseudo=""):
         ret, out = _exec_cmd(native_cmd_and_args, True, catch)
     else:
         ret = 127
+        out = "can't find native executable %s in %s" % (args[0], native_paths)
 
     prog = args[0]
     # shell command-not-found
