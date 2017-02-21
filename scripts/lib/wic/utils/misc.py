@@ -136,7 +136,7 @@ def exec_native_cmd(cmd_and_args, native_sysroot, catch=3, pseudo=""):
         else:
             msg += "Wic failed to find a recipe to build native %s. Please "\
                    "file a bug against wic.\n" % prog
-        logger.error(msg)
+        raise WicError(msg)
 
     return ret, out
 

@@ -96,8 +96,8 @@ class BootimgPcbiosPlugin(SourcePlugin):
                 logger.debug("Using custom configuration file %s "
                              "for syslinux.cfg", bootloader.configfile)
             else:
-                logger.error("configfile is specified but failed to "
-                             "get it from %s.", bootloader.configfile)
+                raise WicError("configfile is specified but failed to "
+                               "get it from %s." % bootloader.configfile)
 
         if not custom_cfg:
             # Create syslinux configuration using parameters from wks file
