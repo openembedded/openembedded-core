@@ -33,8 +33,8 @@ def imagetypes_getdepends(d):
 
         for typedepends in (d.getVar("IMAGE_TYPEDEP_%s" % basetype, True) or "").split():
             base, rest = split_types(typedepends)
+            adddep(d.getVar('IMAGE_DEPENDS_%s' % base, True) , deps)
             resttypes += rest
-            adddep(d.getVar('IMAGE_DEPENDS_%s' % typedepends, True) , deps)
 
         for ctype in resttypes:
             adddep(d.getVar("CONVERSION_DEPENDS_%s" % ctype, True), deps)
