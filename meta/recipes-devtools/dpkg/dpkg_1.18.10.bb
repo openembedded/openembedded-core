@@ -1,7 +1,7 @@
 require dpkg.inc
 LIC_FILES_CHKSUM = "file://COPYING;md5=751419260aa954499f7abaabaa882bbe"
 
-SRC_URI = "http://snapshot.debian.org/archive/debian/20160509T100042Z/pool/main/d/${BPN}/${BPN}_${PV}.tar.xz \
+SRC_URI = "http://snapshot.debian.org/archive/debian/20160731T221931Z/pool/main/d/${BPN}/${BPN}_${PV}.tar.xz \
            file://noman.patch \
            file://remove-tar-no-timestamp.patch \
            file://arch_pm.patch \
@@ -12,8 +12,9 @@ SRC_URI = "http://snapshot.debian.org/archive/debian/20160509T100042Z/pool/main/
            file://0004-The-lutimes-function-doesn-t-work-properly-for-all-s.patch \
            file://0005-dpkg-compiler.m4-remove-Wvla.patch \
            file://0006-add-musleabi-to-known-target-tripets.patch \
+           file://0007-dpkg-deb-build.c-Remove-usage-of-clamp-mtime-in-tar.patch \
            "
 SRC_URI_append_class-native = " file://glibc2.5-sync_file_range.patch "
 
-SRC_URI[md5sum] = "073dbf2129a54b0fc627464bf8af4a1b"
-SRC_URI[sha256sum] = "ace36d3a6dc750a42baf797f9e75ec580a21f92bb9ff96b482100755d6d9b87b"
+SRC_URI[md5sum] = "ccff17730c0964428fc186ded2f2f401"
+SRC_URI[sha256sum] = "025524da41ba18b183ff11e388eb8686f7cc58ee835ed7d48bd159c46a8b6dc5"

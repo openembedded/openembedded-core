@@ -26,10 +26,10 @@ PERL_LIBDIR_class-native = "${libdir}/perl-native/perl"
 EXTRA_OECONF = "\
 		--disable-dselect \
 		--enable-start-stop-daemon \
-		--with-zlib \
-		--with-bz2 \
+		--with-libz \
+		--with-libbz2 \
 		--without-liblzma \
-		--without-selinux \
+		--without-libselinux \
 		"
 
 EXTRA_OECONF += "TAR=tar"
