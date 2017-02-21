@@ -65,8 +65,6 @@ SRC_URI += " \
         file://perl-errno-generation-gcc5.patch \
         file://perl-fix-conflict-between-skip_all-and-END.patch \
         file://perl-test-customized.patch \
-        file://perl-fix-CVE-2016-6185.patch \
-        file://perl-fix-CVE-2016-1238.patch \
 "
 
 # Fix test case issues
@@ -75,8 +73,8 @@ SRC_URI_append_class-target = " \
             file://test/ext-DynaLoader-t-DynaLoader.t-fix-calling-dl_findfil.patch \
            "
 
-SRC_URI[md5sum] = "59456ae4bd4b06cb6e57cb19a3b2d349"
-SRC_URI[sha256sum] = "a9a37c0860380ecd7b23aa06d61c20fc5bc6d95198029f3684c44a9d7e2952f2"
+SRC_URI[md5sum] = "af6a84c7c3e2b8b269c105a5db2f6d53"
+SRC_URI[sha256sum] = "03a77bac4505c270f1890ece75afc7d4b555090b41aa41ea478747e23b2afb3f"
 
 inherit perlnative siteinfo
 
