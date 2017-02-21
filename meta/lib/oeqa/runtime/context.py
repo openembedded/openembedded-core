@@ -89,7 +89,7 @@ class OERuntimeTestContextExecutor(OETestContextExecutor):
                 help="Qemu boot configuration, only needed when target_type is QEMU.")
 
     @staticmethod
-    def getTarget(target_type, target_modules_path, logger, target_ip, server_ip, **kwargs):
+    def getTarget(target_type, logger, target_ip, server_ip, **kwargs):
         target = None
 
         if target_type == 'simpleremote':
@@ -97,8 +97,17 @@ class OERuntimeTestContextExecutor(OETestContextExecutor):
         elif target_type == 'qemu':
             target = OEQemuTarget(logger, target_ip, server_ip, **kwargs)
         else:
+            # XXX: This code uses the old naming convention for controllers and
+            # targets, the idea it is to leave just targets as the controller
+            # most of the time was just a wrapper.
+            # XXX: This code tries to import modules from lib/oeqa/controllers
+            # directory and treat them as controllers, it will less error prone
+            # to use introspection to load such modules.
+            # XXX: Don't base your targets on this code it will be refactored
+            # in the near future.
             # Custom target module loading
             try:
+                target_modules_path = kwargs.get('target_modules_path', '')
                 controller = OERuntimeTestContextExecutor.getControllerModule(target_type, target_modules_path)
                 target = controller(logger, target_ip, server_ip, **kwargs)
             except ImportError as e:

@@ -229,6 +229,10 @@ def testimage_main(d):
                       'kvm'         : kvm,
                     }
 
+    # TODO: Currently BBPATH is needed for custom loading of targets.
+    # It would be better to find these modules using instrospection.
+    target_kwargs['target_modules_path'] = d.getVar('BBPATH')
+
     # runtime use network for download projects for build
     export_proxies(d)
 
@@ -239,7 +243,7 @@ def testimage_main(d):
 
     # the robot dance
     target = OERuntimeTestContextExecutor.getTarget(
-        d.getVar("TEST_TARGET"), d.getVar("BBPATH"), None, d.getVar("TEST_TARGET_IP"),
+        d.getVar("TEST_TARGET"), None, d.getVar("TEST_TARGET_IP"),
         d.getVar("TEST_SERVER_IP"), **target_kwargs)
 
     # test context

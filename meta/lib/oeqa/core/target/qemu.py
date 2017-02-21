@@ -15,7 +15,7 @@ class OEQemuTarget(OESSHTarget):
     def __init__(self, logger, ip, server_ip, timeout=300, user='root',
             port=None, machine='', rootfs='', kernel='', kvm=False,
             dump_dir='', dump_host_cmds='', display='', bootlog='',
-            tmpdir='', dir_image='', boottime=60):
+            tmpdir='', dir_image='', boottime=60, **kwargs):
 
         super(OEQemuTarget, self).__init__(logger, ip, server_ip, timeout,
                 user, port)
