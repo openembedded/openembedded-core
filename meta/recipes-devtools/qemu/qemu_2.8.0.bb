@@ -9,6 +9,7 @@ SRC_URI += "file://configure-fix-Darwin-target-detection.patch \
             file://pathlimit.patch \
             file://qemu-2.5.0-cflags.patch \
             file://target-ppc-fix-user-mode.patch \
+            file://glibc-2.25.patch \
 "
 
 SRC_URI += " \
