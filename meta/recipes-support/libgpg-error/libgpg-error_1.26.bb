@@ -26,7 +26,10 @@ inherit autotools binconfig-disabled pkgconfig gettext
 CPPFLAGS += "-P"
 do_compile_prepend() {
 	TARGET_FILE=linux-gnu
-	if [ ${TARGET_OS} != "linux" ]; then
+	if [ ${TARGET_OS} = "mingw32" ]; then
+		# There are no arch specific syscfg files for mingw32
+		TARGET_FILE=
+	elif [ ${TARGET_OS} != "linux" ]; then
 		TARGET_FILE=${TARGET_OS}
 	fi
 
@@ -42,8 +45,10 @@ do_compile_prepend() {
 	  *)          TUPLE=${TARGET_ARCH}-unknown-linux-gnu ;; 
 	esac
 
-	cp ${S}/src/syscfg/lock-obj-pub.$TUPLE.h \
-	  ${S}/src/syscfg/lock-obj-pub.$TARGET_FILE.h
+	if [ -n "$TARGET_FILE" ]; then
+		cp ${S}/src/syscfg/lock-obj-pub.$TUPLE.h \
+			${S}/src/syscfg/lock-obj-pub.$TARGET_FILE.h
+	fi
 }
 
 do_install_append() {
