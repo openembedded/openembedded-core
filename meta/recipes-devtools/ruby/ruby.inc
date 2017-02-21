@@ -8,10 +8,10 @@ HOMEPAGE = "http://www.ruby-lang.org/"
 SECTION = "devel/ruby"
 LICENSE = "Ruby | BSD | GPLv2"
 LIC_FILES_CHKSUM = "\
-    file://COPYING;md5=837b32593517ae48b9c3b5c87a5d288c \
+    file://COPYING;md5=8a960b08d972f43f91ae84a6f00dcbfb \
     file://BSDL;md5=19aaf65c88a40b508d17ae4be539c4b5\
     file://GPL;md5=b234ee4d69f5fce4486a80fdaf4a4263\
-    file://LEGAL;md5=78e8a29b8cc93e042990dbbb5572b1e1\
+    file://LEGAL;md5=daf349ad59dd19bd8c919171bff3c5d6 \
 "
 
 DEPENDS = "ruby-native zlib openssl tcl libyaml db gdbm readline"
