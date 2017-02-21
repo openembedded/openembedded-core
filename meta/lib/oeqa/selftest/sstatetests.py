@@ -41,13 +41,11 @@ class SStateTests(SStateBase):
 
     @testcase(975)
     def test_sstate_creation_distro_specific_pass(self):
-        targetarch = get_bb_var('TUNE_ARCH')
-        self.run_test_sstate_creation(['binutils-cross-'+ targetarch, 'binutils-native'], distro_specific=True, distro_nonspecific=False, temp_sstate_location=True)
+        self.run_test_sstate_creation(['binutils-cross-'+ self.tune_arch, 'binutils-native'], distro_specific=True, distro_nonspecific=False, temp_sstate_location=True)
 
     @testcase(1374)
     def test_sstate_creation_distro_specific_fail(self):
-        targetarch = get_bb_var('TUNE_ARCH')
-        self.run_test_sstate_creation(['binutils-cross-'+ targetarch, 'binutils-native'], distro_specific=False, distro_nonspecific=True, temp_sstate_location=True, should_pass=False)
+        self.run_test_sstate_creation(['binutils-cross-'+ self.tune_arch, 'binutils-native'], distro_specific=False, distro_nonspecific=True, temp_sstate_location=True, should_pass=False)
 
     @testcase(976)
     def test_sstate_creation_distro_nonspecific_pass(self):
@@ -80,8 +78,7 @@ class SStateTests(SStateBase):
 
     @testcase(977)
     def test_cleansstate_task_distro_specific_nonspecific(self):
-        targetarch = get_bb_var('TUNE_ARCH')
-        targets = ['binutils-cross-'+ targetarch, 'binutils-native']
+        targets = ['binutils-cross-'+ self.tune_arch, 'binutils-native']
         # glibc-initial is intended only for the glibc C library
         if self.tclibc == 'glibc':
             targets.append('glibc-initial')
@@ -95,8 +92,7 @@ class SStateTests(SStateBase):
 
     @testcase(1377)
     def test_cleansstate_task_distro_specific(self):
-        targetarch = get_bb_var('TUNE_ARCH')
-        targets = ['binutils-cross-'+ targetarch, 'binutils-native']
+        targets = ['binutils-cross-'+ self.tune_arch, 'binutils-native']
         # glibc-initial is intended only for the glibc C library
         if self.tclibc == 'glibc':
             targets.append('glibc-initial')
@@ -137,13 +133,11 @@ class SStateTests(SStateBase):
 
     @testcase(175)
     def test_rebuild_distro_specific_sstate_cross_native_targets(self):
-        targetarch = get_bb_var('TUNE_ARCH')
-        self.run_test_rebuild_distro_specific_sstate(['binutils-cross-' + targetarch, 'binutils-native'], temp_sstate_location=True)
+        self.run_test_rebuild_distro_specific_sstate(['binutils-cross-' + self.tune_arch, 'binutils-native'], temp_sstate_location=True)
 
     @testcase(1372)
     def test_rebuild_distro_specific_sstate_cross_target(self):
-        targetarch = get_bb_var('TUNE_ARCH')
-        self.run_test_rebuild_distro_specific_sstate(['binutils-cross-' + targetarch], temp_sstate_location=True)
+        self.run_test_rebuild_distro_specific_sstate(['binutils-cross-' + self.tune_arch], temp_sstate_location=True)
 
     @testcase(1373)
     def test_rebuild_distro_specific_sstate_native_target(self):
@@ -158,10 +152,9 @@ class SStateTests(SStateBase):
         self.assertTrue(len(global_config) == len(target_config), msg='Lists global_config and target_config should have the same number of elements')
         self.config_sstate(temp_sstate_location=True, add_local_mirrors=[self.sstate_path])
 
-        # If buildhistory is enabled, we need to disable version-going-backwards QA checks for this test. It may report errors otherwise.
-        if ('buildhistory' in get_bb_var('USER_CLASSES')) or ('buildhistory' in get_bb_var('INHERIT')):
-            remove_errors_config = 'ERROR_QA_remove = "version-going-backwards"'
-            self.append_config(remove_errors_config)
+        # If buildhistory is enabled, we need to disable version-going-backwards
+        # QA checks for this test. It may report errors otherwise.
+        self.append_config('ERROR_QA_remove = "version-going-backwards"')
 
         # For not this only checks if random sstate tasks are handled correctly as a group.
         # In the future we should add control over what tasks we check for.
@@ -242,8 +235,6 @@ class SStateTests(SStateBase):
         manually and check using bitbake -S.
         """
 
-        topdir = get_bb_var('TOPDIR')
-        targetvendor = get_bb_var('TARGET_VENDOR')
         self.write_config("""
 MACHINE = "qemux86"
 TMPDIR = "${TOPDIR}/tmp-sstatesamehash"
@@ -252,7 +243,7 @@ BUILD_OS = "linux"
 SDKMACHINE = "x86_64"
 PACKAGE_CLASSES = "package_rpm package_ipk package_deb"
 """)
-        self.track_for_cleanup(topdir + "/tmp-sstatesamehash")
+        self.track_for_cleanup(self.topdir + "/tmp-sstatesamehash")
         bitbake("core-image-sato -S none")
         self.write_config("""
 MACHINE = "qemux86"
@@ -262,7 +253,7 @@ BUILD_OS = "linux"
 SDKMACHINE = "i686"
 PACKAGE_CLASSES = "package_rpm package_ipk package_deb"
 """)
-        self.track_for_cleanup(topdir + "/tmp-sstatesamehash2")
+        self.track_for_cleanup(self.topdir + "/tmp-sstatesamehash2")
         bitbake("core-image-sato -S none")
 
         def get_files(d):
@@ -275,9 +266,9 @@ PACKAGE_CLASSES = "package_rpm package_ipk package_deb"
                     continue
                 f.extend(os.path.join(root, name) for name in files)
             return f
-        files1 = get_files(topdir + "/tmp-sstatesamehash/stamps/")
-        files2 = get_files(topdir + "/tmp-sstatesamehash2/stamps/")
-        files2 = [x.replace("tmp-sstatesamehash2", "tmp-sstatesamehash").replace("i686-linux", "x86_64-linux").replace("i686" + targetvendor + "-linux", "x86_64" + targetvendor + "-linux", ) for x in files2]
+        files1 = get_files(self.topdir + "/tmp-sstatesamehash/stamps/")
+        files2 = get_files(self.topdir + "/tmp-sstatesamehash2/stamps/")
+        files2 = [x.replace("tmp-sstatesamehash2", "tmp-sstatesamehash").replace("i686-linux", "x86_64-linux").replace("i686" + self.target_vendor + "-linux", "x86_64" + self.target_vendor + "-linux", ) for x in files2]
         self.maxDiff = None
         self.assertCountEqual(files1, files2)
 
@@ -290,18 +281,17 @@ PACKAGE_CLASSES = "package_rpm package_ipk package_deb"
         builds, override the variables manually and check using bitbake -S.
         """
 
-        topdir = get_bb_var('TOPDIR')
         self.write_config("""
 TMPDIR = \"${TOPDIR}/tmp-sstatesamehash\"
 NATIVELSBSTRING = \"DistroA\"
 """)
-        self.track_for_cleanup(topdir + "/tmp-sstatesamehash")
+        self.track_for_cleanup(self.topdir + "/tmp-sstatesamehash")
         bitbake("core-image-sato -S none")
         self.write_config("""
 TMPDIR = \"${TOPDIR}/tmp-sstatesamehash2\"
 NATIVELSBSTRING = \"DistroB\"
 """)
-        self.track_for_cleanup(topdir + "/tmp-sstatesamehash2")
+        self.track_for_cleanup(self.topdir + "/tmp-sstatesamehash2")
         bitbake("core-image-sato -S none")
 
         def get_files(d):
@@ -309,8 +299,8 @@ NATIVELSBSTRING = \"DistroB\"
             for root, dirs, files in os.walk(d):
                 f.extend(os.path.join(root, name) for name in files)
             return f
-        files1 = get_files(topdir + "/tmp-sstatesamehash/stamps/")
-        files2 = get_files(topdir + "/tmp-sstatesamehash2/stamps/")
+        files1 = get_files(self.topdir + "/tmp-sstatesamehash/stamps/")
+        files2 = get_files(self.topdir + "/tmp-sstatesamehash2/stamps/")
         files2 = [x.replace("tmp-sstatesamehash2", "tmp-sstatesamehash") for x in files2]
         self.maxDiff = None
         self.assertCountEqual(files1, files2)
@@ -359,14 +349,11 @@ MULTILIBS = \"\"
 
     def sstate_allarch_samesigs(self, configA, configB):
 
-        topdir = get_bb_var('TOPDIR')
-        targetos = get_bb_var('TARGET_OS')
-        targetvendor = get_bb_var('TARGET_VENDOR')
         self.write_config(configA)
-        self.track_for_cleanup(topdir + "/tmp-sstatesamehash")
+        self.track_for_cleanup(self.topdir + "/tmp-sstatesamehash")
         bitbake("world meta-toolchain -S none")
         self.write_config(configB)
-        self.track_for_cleanup(topdir + "/tmp-sstatesamehash2")
+        self.track_for_cleanup(self.topdir + "/tmp-sstatesamehash2")
         bitbake("world meta-toolchain -S none")
 
         def get_files(d):
@@ -380,15 +367,15 @@ MULTILIBS = \"\"
                         (_, task, _, shash) = name.rsplit(".", 3)
                         f[os.path.join(os.path.basename(root), task)] = shash
             return f
-        files1 = get_files(topdir + "/tmp-sstatesamehash/stamps/all" + targetvendor + "-" + targetos)
-        files2 = get_files(topdir + "/tmp-sstatesamehash2/stamps/all" + targetvendor + "-" + targetos)
+        files1 = get_files(self.topdir + "/tmp-sstatesamehash/stamps/all" + self.target_vendor + "-" + self.target_os)
+        files2 = get_files(self.topdir + "/tmp-sstatesamehash2/stamps/all" + self.target_vendor + "-" + self.target_os)
         self.maxDiff = None
         self.assertEqual(files1, files2)
 
-        nativesdkdir = os.path.basename(glob.glob(topdir + "/tmp-sstatesamehash/stamps/*-nativesdk*-linux")[0])
+        nativesdkdir = os.path.basename(glob.glob(self.topdir + "/tmp-sstatesamehash/stamps/*-nativesdk*-linux")[0])
 
-        files1 = get_files(topdir + "/tmp-sstatesamehash/stamps/" + nativesdkdir)
-        files2 = get_files(topdir + "/tmp-sstatesamehash2/stamps/" + nativesdkdir)
+        files1 = get_files(self.topdir + "/tmp-sstatesamehash/stamps/" + nativesdkdir)
+        files2 = get_files(self.topdir + "/tmp-sstatesamehash2/stamps/" + nativesdkdir)
         self.maxDiff = None
         self.assertEqual(files1, files2)
 
@@ -400,9 +387,6 @@ MULTILIBS = \"\"
         qemux86copy machine to test this. Also include multilibs in the test.
         """
 
-        topdir = get_bb_var('TOPDIR')
-        targetos = get_bb_var('TARGET_OS')
-        targetvendor = get_bb_var('TARGET_VENDOR')
         self.write_config("""
 TMPDIR = \"${TOPDIR}/tmp-sstatesamehash\"
 MACHINE = \"qemux86\"
@@ -410,7 +394,7 @@ require conf/multilib.conf
 MULTILIBS = "multilib:lib32"
 DEFAULTTUNE_virtclass-multilib-lib32 = "x86"
 """)
-        self.track_for_cleanup(topdir + "/tmp-sstatesamehash")
+        self.track_for_cleanup(self.topdir + "/tmp-sstatesamehash")
         bitbake("world meta-toolchain -S none")
         self.write_config("""
 TMPDIR = \"${TOPDIR}/tmp-sstatesamehash2\"
@@ -419,7 +403,7 @@ require conf/multilib.conf
 MULTILIBS = "multilib:lib32"
 DEFAULTTUNE_virtclass-multilib-lib32 = "x86"
 """)
-        self.track_for_cleanup(topdir + "/tmp-sstatesamehash2")
+        self.track_for_cleanup(self.topdir + "/tmp-sstatesamehash2")
         bitbake("world meta-toolchain -S none")
 
         def get_files(d):
@@ -433,8 +417,8 @@ DEFAULTTUNE_virtclass-multilib-lib32 = "x86"
                     if "do_build" not in name and "do_populate_sdk" not in name:
                         f.append(os.path.join(root, name))
             return f
-        files1 = get_files(topdir + "/tmp-sstatesamehash/stamps")
-        files2 = get_files(topdir + "/tmp-sstatesamehash2/stamps")
+        files1 = get_files(self.topdir + "/tmp-sstatesamehash/stamps")
+        files2 = get_files(self.topdir + "/tmp-sstatesamehash2/stamps")
         files2 = [x.replace("tmp-sstatesamehash2", "tmp-sstatesamehash") for x in files2]
         self.maxDiff = None
         self.assertCountEqual(files1, files2)
@@ -446,8 +430,6 @@ DEFAULTTUNE_virtclass-multilib-lib32 = "x86"
         classes inherits should be the same.
         """
 
-        topdir = get_bb_var('TOPDIR')
-        targetvendor = get_bb_var('TARGET_VENDOR')
         self.write_config("""
 TMPDIR = "${TOPDIR}/tmp-sstatesamehash"
 BB_NUMBER_THREADS = "1"
@@ -458,8 +440,8 @@ DATE = "20161111"
 INHERIT_remove = "buildstats-summary buildhistory uninative"
 http_proxy = ""
 """)
-        self.track_for_cleanup(topdir + "/tmp-sstatesamehash")
-        self.track_for_cleanup(topdir + "/download1")
+        self.track_for_cleanup(self.topdir + "/tmp-sstatesamehash")
+        self.track_for_cleanup(self.topdir + "/download1")
         bitbake("world meta-toolchain -S none")
         self.write_config("""
 TMPDIR = "${TOPDIR}/tmp-sstatesamehash2"
@@ -473,8 +455,8 @@ INHERIT_remove = "uninative"
 INHERIT += "buildstats-summary buildhistory"
 http_proxy = "http://example.com/"
 """)
-        self.track_for_cleanup(topdir + "/tmp-sstatesamehash2")
-        self.track_for_cleanup(topdir + "/download2")
+        self.track_for_cleanup(self.topdir + "/tmp-sstatesamehash2")
+        self.track_for_cleanup(self.topdir + "/download2")
         bitbake("world meta-toolchain -S none")
 
         def get_files(d):
@@ -486,8 +468,8 @@ http_proxy = "http://example.com/"
                     base = os.sep.join(root.rsplit(os.sep, 2)[-2:] + [name])
                     f[base] = shash
             return f
-        files1 = get_files(topdir + "/tmp-sstatesamehash/stamps/")
-        files2 = get_files(topdir + "/tmp-sstatesamehash2/stamps/")
+        files1 = get_files(self.topdir + "/tmp-sstatesamehash/stamps/")
+        files2 = get_files(self.topdir + "/tmp-sstatesamehash2/stamps/")
         # Remove items that are identical in both sets
         for k,v in files1.items() & files2.items():
             del files1[k]
@@ -500,8 +482,8 @@ http_proxy = "http://example.com/"
             if k in files1 and k in files2:
                 print("%s differs:" % k)
                 print(subprocess.check_output(("bitbake-diffsigs",
-                                               topdir + "/tmp-sstatesamehash/stamps/" + k + "." + files1[k],
-                                               topdir + "/tmp-sstatesamehash2/stamps/" + k + "." + files2[k])))
+                                               self.topdir + "/tmp-sstatesamehash/stamps/" + k + "." + files1[k],
+                                               self.topdir + "/tmp-sstatesamehash2/stamps/" + k + "." + files2[k])))
             elif k in files1 and k not in files2:
                 print("%s in files1" % k)
             elif k not in files1 and k in files2:

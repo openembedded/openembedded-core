@@ -1,5 +1,5 @@
 from oeqa.selftest.base import oeSelfTest
-from oeqa.utils.commands import bitbake, get_bb_var
+from oeqa.utils.commands import bitbake, get_bb_vars
 from oeqa.utils.decorators import testcase
 import glob
 import os
@@ -28,10 +28,11 @@ class Archiver(oeSelfTest):
         features += 'COPYLEFT_PN_EXCLUDE = "%s"\n' % exclude_recipe
         self.write_config(features)
 
-        shutil.rmtree(get_bb_var('TMPDIR'))
+        bitbake('-c clean %s %s' % (include_recipe, exclude_recipe))
         bitbake("%s %s" % (include_recipe, exclude_recipe))
 
-        src_path = os.path.join(get_bb_var('DEPLOY_DIR_SRC'), get_bb_var('TARGET_SYS'))
+        bb_vars = get_bb_vars(['DEPLOY_DIR_SRC', 'TARGET_SYS'])
+        src_path = os.path.join(bb_vars['DEPLOY_DIR_SRC'], bb_vars['TARGET_SYS'])
 
         # Check that include_recipe was included
         included_present = len(glob.glob(src_path + '/%s-*' % include_recipe))

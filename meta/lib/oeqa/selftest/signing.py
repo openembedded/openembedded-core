@@ -1,5 +1,5 @@
 from oeqa.selftest.base import oeSelfTest
-from oeqa.utils.commands import runCmd, bitbake, get_bb_var
+from oeqa.utils.commands import runCmd, bitbake, get_bb_var, get_bb_vars
 import os
 import glob
 import re
@@ -59,15 +59,17 @@ class Signing(oeSelfTest):
 
         self.add_command_to_tearDown('bitbake -c clean %s' % test_recipe)
 
-        pkgdatadir = get_bb_var('PKGDATA_DIR', test_recipe)
+        needed_vars = ['PKGDATA_DIR', 'DEPLOY_DIR_RPM', 'PACKAGE_ARCH', 'STAGING_BINDIR_NATIVE']
+        bb_vars = get_bb_vars(needed_vars, test_recipe)
+        pkgdatadir = bb_vars['PKGDATA_DIR']
         pkgdata = oe.packagedata.read_pkgdatafile(pkgdatadir + "/runtime/ed")
         if 'PKGE' in pkgdata:
             pf = pkgdata['PN'] + "-" + pkgdata['PKGE'] + pkgdata['PKGV'] + '-' + pkgdata['PKGR']
         else:
             pf = pkgdata['PN'] + "-" + pkgdata['PKGV'] + '-' + pkgdata['PKGR']
-        deploy_dir_rpm = get_bb_var('DEPLOY_DIR_RPM', test_recipe)
-        package_arch = get_bb_var('PACKAGE_ARCH', test_recipe).replace('-', '_')
-        staging_bindir_native = get_bb_var('STAGING_BINDIR_NATIVE', test_recipe)
+        deploy_dir_rpm = bb_vars['DEPLOY_DIR_RPM']
+        package_arch = bb_vars['PACKAGE_ARCH'].replace('-', '_')
+        staging_bindir_native = bb_vars['STAGING_BINDIR_NATIVE']
 
         pkg_deploy = os.path.join(deploy_dir_rpm, package_arch, '.'.join((pf, package_arch, 'rpm')))
 

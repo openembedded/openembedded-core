@@ -29,7 +29,7 @@ from glob import glob
 from shutil import rmtree
 
 from oeqa.selftest.base import oeSelfTest
-from oeqa.utils.commands import runCmd, bitbake, get_bb_var, runqemu
+from oeqa.utils.commands import runCmd, bitbake, get_bb_var, get_bb_vars, runqemu
 from oeqa.utils.decorators import testcase
 
 
@@ -212,12 +212,11 @@ class Wic(oeSelfTest):
     @testcase(1212)
     def test_build_artifacts(self):
         """Test wic create directdisk providing all artifacts."""
-        variables = (('STAGING_DATADIR', 'wic-tools'),
-                     ('RECIPE_SYSROOT_NATIVE', 'wic-tools'),
-                     ('DEPLOY_DIR_IMAGE', 'core-image-minimal'),
-                     ('IMAGE_ROOTFS', 'core-image-minimal'))
-        bbvars = {var.lower(): get_bb_var(var, recipe) \
-                      for var, recipe in variables}
+        bb_vars = get_bb_vars(['STAGING_DATADIR', 'RECIPE_SYSROOT_NATIVE'],
+                               'wic-tools')
+        bb_vars.update(get_bb_vars(['DEPLOY_DIR_IMAGE', 'IMAGE_ROOTFS'],
+                                 'core-image-minimal'))
+        bbvars = {key.lower(): value for key, value in bb_vars.items()}
         bbvars['resultdir'] = self.resultdir
         status = runCmd("wic create directdisk "
                         "-b %(staging_datadir)s "
@@ -321,12 +320,11 @@ class Wic(oeSelfTest):
     @testcase(1269)
     def test_rootfs_artifacts(self):
         """Test usage of rootfs plugin with rootfs paths"""
-        variables = (('STAGING_DATADIR', 'wic-tools'),
-                     ('RECIPE_SYSROOT_NATIVE', 'wic-tools'),
-                     ('DEPLOY_DIR_IMAGE', 'core-image-minimal'),
-                     ('IMAGE_ROOTFS', 'core-image-minimal'))
-        bbvars = {var.lower(): get_bb_var(var, recipe) \
-                      for var, recipe in variables}
+        bb_vars = get_bb_vars(['STAGING_DATADIR', 'RECIPE_SYSROOT_NATIVE'],
+                               'wic-tools')
+        bb_vars.update(get_bb_vars(['DEPLOY_DIR_IMAGE', 'IMAGE_ROOTFS'],
+                                 'core-image-minimal'))
+        bbvars = {key.lower(): value for key, value in bb_vars.items()}
         bbvars['wks'] = "directdisk-multi-rootfs"
         bbvars['resultdir'] = self.resultdir
         status = runCmd("wic create %(wks)s "
@@ -464,8 +462,9 @@ part /etc --source rootfs --ondisk mmcblk0 --fstype=ext4 --exclude-path bin/ --r
         """Generate and obtain the path to <image>.env"""
         if image not in self.wicenv_cache:
             self.assertEqual(0, bitbake('%s -c do_rootfs_wicenv' % image).status)
-            stdir = get_bb_var('STAGING_DIR', image)
-            machine = get_bb_var('MACHINE', image)
+            bb_vars = get_bb_vars(['STAGING_DIR', 'MACHINE'], image)
+            stdir = bb_vars['STAGING_DIR']
+            machine = bb_vars['MACHINE']
             self.wicenv_cache[image] = os.path.join(stdir, machine, 'imgdata')
         return self.wicenv_cache[image]
 
@@ -475,12 +474,13 @@ part /etc --source rootfs --ondisk mmcblk0 --fstype=ext4 --exclude-path bin/ --r
         image = 'core-image-minimal'
         imgdatadir = self._get_image_env_path(image)
 
-        basename = get_bb_var('IMAGE_BASENAME', image)
+        bb_vars = get_bb_vars(['IMAGE_BASENAME', 'WICVARS'], image)
+        basename = bb_vars['IMAGE_BASENAME']
         self.assertEqual(basename, image)
         path = os.path.join(imgdatadir, basename) + '.env'
         self.assertTrue(os.path.isfile(path))
 
-        wicvars = set(get_bb_var('WICVARS', image).split())
+        wicvars = set(bb_vars['WICVARS'].split())
         # filter out optional variables
         wicvars = wicvars.difference(('DEPLOY_DIR_IMAGE', 'IMAGE_BOOT_FILES',
                                       'INITRD', 'INITRD_LIVE', 'ISODIR'))
@@ -522,8 +522,9 @@ part /etc --source rootfs --ondisk mmcblk0 --fstype=ext4 --exclude-path bin/ --r
         self.assertEqual(0, bitbake('wic-image-minimal').status)
         self.remove_config(config)
 
-        deploy_dir = get_bb_var('DEPLOY_DIR_IMAGE')
-        machine = get_bb_var('MACHINE')
+        bb_vars = get_bb_vars(['DEPLOY_DIR_IMAGE', 'MACHINE'])
+        deploy_dir = bb_vars['DEPLOY_DIR_IMAGE']
+        machine = bb_vars['MACHINE']
         prefix = os.path.join(deploy_dir, 'wic-image-minimal-%s.' % machine)
         # check if we have result image and manifests symlinks
         # pointing to existing files

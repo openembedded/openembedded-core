@@ -4,7 +4,7 @@ import re
 import bb.tinfoil
 
 from oeqa.selftest.base import oeSelfTest
-from oeqa.utils.commands import runCmd, get_bb_var
+from oeqa.utils.commands import runCmd
 from oeqa.utils.decorators import testcase
 
 class TinfoilTests(oeSelfTest):

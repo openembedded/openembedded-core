@@ -213,9 +213,10 @@ class DevtoolTests(DevtoolBase):
         bitbake('pv -c cleansstate')
         # Test devtool build
         result = runCmd('devtool build pv')
-        installdir = get_bb_var('D', 'pv')
+        bb_vars = get_bb_vars(['D', 'bindir'], 'pv')
+        installdir = bb_vars['D']
         self.assertTrue(installdir, 'Could not query installdir variable')
-        bindir = get_bb_var('bindir', 'pv')
+        bindir = bb_vars['bindir']
         self.assertTrue(bindir, 'Could not query bindir variable')
         if bindir[0] == '/':
             bindir = bindir[1:]
@@ -296,11 +297,12 @@ class DevtoolTests(DevtoolBase):
             f.write('\nTESTLIBOUTPUT = "${STAGING_DIR}-components/${TUNE_PKGARCH}/${PN}/${libdir}"\n')
         # Test devtool build
         result = runCmd('devtool build libftdi')
-        staging_libdir = get_bb_var('TESTLIBOUTPUT', 'libftdi')
+        bb_vars = get_bb_vars(['TESTLIBOUTPUT', 'STAMP'], 'libftdi')
+        staging_libdir = bb_vars['TESTLIBOUTPUT']
         self.assertTrue(staging_libdir, 'Could not query TESTLIBOUTPUT variable')
         self.assertTrue(os.path.isfile(os.path.join(staging_libdir, 'libftdi1.so.2.1.0')), "libftdi binary not found in STAGING_LIBDIR. Output of devtool build libftdi %s" % result.output)
         # Test devtool reset
-        stampprefix = get_bb_var('STAMP', 'libftdi')
+        stampprefix = bb_vars['STAMP']
         result = runCmd('devtool reset libftdi')
         result = runCmd('devtool status')
         self.assertNotIn('libftdi', result.output)
@@ -463,9 +465,10 @@ class DevtoolTests(DevtoolBase):
                     self.assertNotIn(expected + '\n', f, message)
 
         modfile = os.path.join(tempdir, 'mdadm.8.in')
-        pkgd = get_bb_var('PKGD', 'mdadm')
+        bb_vars = get_bb_vars(['PKGD', 'mandir'], 'mdadm')
+        pkgd = bb_vars['PKGD']
         self.assertTrue(pkgd, 'Could not query PKGD variable')
-        mandir = get_bb_var('mandir', 'mdadm')
+        mandir = bb_vars['mandir']
         self.assertTrue(mandir, 'Could not query mandir variable')
         manfile = oe.path.join(pkgd, mandir, 'man8', 'mdadm.8')
 
@@ -679,8 +682,9 @@ class DevtoolTests(DevtoolBase):
     def test_devtool_update_recipe(self):
         # Check preconditions
         testrecipe = 'minicom'
-        recipefile = get_bb_var('FILE', testrecipe)
-        src_uri = get_bb_var('SRC_URI', testrecipe)
+        bb_vars = get_bb_vars(['FILE', 'SRC_URI'], testrecipe)
+        recipefile = bb_vars['FILE']
+        src_uri = bb_vars['SRC_URI']
         self.assertNotIn('git://', src_uri, 'This test expects the %s recipe to NOT be a git recipe' % testrecipe)
         self._check_repo_status(os.path.dirname(recipefile), [])
         # First, modify a recipe
@@ -711,8 +715,9 @@ class DevtoolTests(DevtoolBase):
     def test_devtool_update_recipe_git(self):
         # Check preconditions
         testrecipe = 'mtd-utils'
-        recipefile = get_bb_var('FILE', testrecipe)
-        src_uri = get_bb_var('SRC_URI', testrecipe)
+        bb_vars = get_bb_vars(['FILE', 'SRC_URI'], testrecipe)
+        recipefile = bb_vars['FILE']
+        src_uri = bb_vars['SRC_URI']
         self.assertIn('git://', src_uri, 'This test expects the %s recipe to be a git recipe' % testrecipe)
         patches = []
         for entry in src_uri.split():
@@ -780,8 +785,9 @@ class DevtoolTests(DevtoolBase):
     def test_devtool_update_recipe_append(self):
         # Check preconditions
         testrecipe = 'mdadm'
-        recipefile = get_bb_var('FILE', testrecipe)
-        src_uri = get_bb_var('SRC_URI', testrecipe)
+        bb_vars = get_bb_vars(['FILE', 'SRC_URI'], testrecipe)
+        recipefile = bb_vars['FILE']
+        src_uri = bb_vars['SRC_URI']
         self.assertNotIn('git://', src_uri, 'This test expects the %s recipe to NOT be a git recipe' % testrecipe)
         self._check_repo_status(os.path.dirname(recipefile), [])
         # First, modify a recipe
@@ -848,8 +854,9 @@ class DevtoolTests(DevtoolBase):
     def test_devtool_update_recipe_append_git(self):
         # Check preconditions
         testrecipe = 'mtd-utils'
-        recipefile = get_bb_var('FILE', testrecipe)
-        src_uri = get_bb_var('SRC_URI', testrecipe)
+        bb_vars = get_bb_vars(['FILE', 'SRC_URI'], testrecipe)
+        recipefile = bb_vars['FILE']
+        src_uri = bb_vars['SRC_URI']
         self.assertIn('git://', src_uri, 'This test expects the %s recipe to be a git recipe' % testrecipe)
         for entry in src_uri.split():
             if entry.startswith('git://'):
@@ -1009,8 +1016,9 @@ class DevtoolTests(DevtoolBase):
     def test_devtool_update_recipe_local_files_3(self):
         # First, modify the recipe
         testrecipe = 'devtool-test-localonly'
-        recipefile = get_bb_var('FILE', testrecipe)
-        src_uri = get_bb_var('SRC_URI', testrecipe)
+        bb_vars = get_bb_vars(['FILE', 'SRC_URI'], testrecipe)
+        recipefile = bb_vars['FILE']
+        src_uri = bb_vars['SRC_URI']
         tempdir = tempfile.mkdtemp(prefix='devtoolqa')
         self.track_for_cleanup(tempdir)
         self.track_for_cleanup(self.workspacedir)
@@ -1027,8 +1035,9 @@ class DevtoolTests(DevtoolBase):
     def test_devtool_update_recipe_local_patch_gz(self):
         # First, modify the recipe
         testrecipe = 'devtool-test-patch-gz'
-        recipefile = get_bb_var('FILE', testrecipe)
-        src_uri = get_bb_var('SRC_URI', testrecipe)
+        bb_vars = get_bb_vars(['FILE', 'SRC_URI'], testrecipe)
+        recipefile = bb_vars['FILE']
+        src_uri = bb_vars['SRC_URI']
         tempdir = tempfile.mkdtemp(prefix='devtoolqa')
         self.track_for_cleanup(tempdir)
         self.track_for_cleanup(self.workspacedir)
@@ -1054,8 +1063,9 @@ class DevtoolTests(DevtoolBase):
         # was also in SRC_URI
         # First, modify the recipe
         testrecipe = 'devtool-test-subdir'
-        recipefile = get_bb_var('FILE', testrecipe)
-        src_uri = get_bb_var('SRC_URI', testrecipe)
+        bb_vars = get_bb_vars(['FILE', 'SRC_URI'], testrecipe)
+        recipefile = bb_vars['FILE']
+        src_uri = bb_vars['SRC_URI']
         tempdir = tempfile.mkdtemp(prefix='devtoolqa')
         self.track_for_cleanup(tempdir)
         self.track_for_cleanup(self.workspacedir)
@@ -1184,9 +1194,10 @@ class DevtoolTests(DevtoolBase):
             result = runCmd('ssh %s root@%s %s' % (sshargs, qemu.ip, testcommand))
             # Check if it deployed all of the files with the right ownership/perms
             # First look on the host - need to do this under pseudo to get the correct ownership/perms
-            installdir = get_bb_var('D', testrecipe)
-            fakerootenv = get_bb_var('FAKEROOTENV', testrecipe)
-            fakerootcmd = get_bb_var('FAKEROOTCMD', testrecipe)
+            bb_vars = get_bb_vars(['D', 'FAKEROOTENV', 'FAKEROOTCMD'], testrecipe)
+            installdir = bb_vars['D']
+            fakerootenv = bb_vars['FAKEROOTENV']
+            fakerootcmd = bb_vars['FAKEROOTCMD']
             result = runCmd('%s %s find . -type f -exec ls -l {} \;' % (fakerootenv, fakerootcmd), cwd=installdir)
             filelist1 = self._process_ls_output(result.output)
 

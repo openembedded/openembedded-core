@@ -1,5 +1,5 @@
 from oeqa.selftest.base import oeSelfTest
-from oeqa.utils.commands import runCmd, bitbake, get_bb_var, runqemu
+from oeqa.utils.commands import runCmd, bitbake, get_bb_var, get_bb_vars, runqemu
 from oeqa.utils.decorators import testcase
 import os
 import re
@@ -31,8 +31,9 @@ class TestExport(oeSelfTest):
         bitbake('core-image-minimal')
         bitbake('-c testexport core-image-minimal')
 
-        # Verify if TEST_EXPORT_DIR was created
         testexport_dir = get_bb_var('TEST_EXPORT_DIR', 'core-image-minimal')
+
+        # Verify if TEST_EXPORT_DIR was created
         isdir = os.path.isdir(testexport_dir)
         self.assertEqual(True, isdir, 'Failed to create testexport dir: %s' % testexport_dir)
 
@@ -73,10 +74,14 @@ class TestExport(oeSelfTest):
         bitbake('core-image-minimal')
         bitbake('-c testexport core-image-minimal')
 
+        needed_vars = ['TEST_EXPORT_DIR', 'TEST_EXPORT_SDK_DIR', 'TEST_EXPORT_SDK_NAME']
+        bb_vars = get_bb_vars(needed_vars, 'core-image-minimal')
+        testexport_dir = bb_vars['TEST_EXPORT_DIR']
+        sdk_dir = bb_vars['TEST_EXPORT_SDK_DIR']
+        sdk_name = bb_vars['TEST_EXPORT_SDK_NAME']
+
         # Check for SDK
-        testexport_dir = get_bb_var('TEST_EXPORT_DIR', 'core-image-minimal')
-        sdk_dir = get_bb_var('TEST_EXPORT_SDK_DIR', 'core-image-minimal')
-        tarball_name = "%s.sh" % get_bb_var('TEST_EXPORT_SDK_NAME', 'core-image-minimal')
+        tarball_name = "%s.sh" % sdk_name
         tarball_path = os.path.join(testexport_dir, sdk_dir, tarball_name)
         msg = "Couldn't find SDK tarball: %s" % tarball_path
         self.assertEqual(os.path.isfile(tarball_path), True, msg)

@@ -3,7 +3,7 @@ import re
 
 import oeqa.utils.ftools as ftools
 from oeqa.selftest.base import oeSelfTest
-from oeqa.utils.commands import runCmd, bitbake, get_bb_var
+from oeqa.utils.commands import runCmd, bitbake, get_bb_var, get_bb_vars
 from oeqa.utils.decorators import testcase
 
 class BitbakeTests(oeSelfTest):
@@ -78,9 +78,10 @@ class BitbakeTests(oeSelfTest):
         # test 1 from bug 5875
         test_recipe = 'zlib'
         test_data = "Microsoft Made No Profit From Anyone's Zunes Yo"
-        image_dir = get_bb_var('D', test_recipe)
-        pkgsplit_dir = get_bb_var('PKGDEST', test_recipe)
-        man_dir = get_bb_var('mandir', test_recipe)
+        bb_vars = get_bb_vars(['D', 'PKGDEST', 'mandir'], test_recipe)
+        image_dir = bb_vars['D']
+        pkgsplit_dir = bb_vars['PKGDEST']
+        man_dir = bb_vars['mandir']
 
         bitbake('-c clean %s' % test_recipe)
         bitbake('-c package -f %s' % test_recipe)
@@ -121,8 +122,9 @@ class BitbakeTests(oeSelfTest):
     @testcase(899)
     def test_image_manifest(self):
         bitbake('core-image-minimal')
-        deploydir = get_bb_var("DEPLOY_DIR_IMAGE", target="core-image-minimal")
-        imagename = get_bb_var("IMAGE_LINK_NAME", target="core-image-minimal")
+        bb_vars = get_bb_vars(["DEPLOY_DIR_IMAGE", "IMAGE_LINK_NAME"], "core-image-minimal")
+        deploydir = bb_vars["DEPLOY_DIR_IMAGE"]
+        imagename = bb_vars["IMAGE_LINK_NAME"]
         manifest = os.path.join(deploydir, imagename + ".manifest")
         self.assertTrue(os.path.islink(manifest), msg="No manifest file created for image. It should have been created in %s" % manifest)
 
@@ -160,8 +162,9 @@ SSTATE_DIR = \"${TOPDIR}/download-selftest\"
         result = bitbake('-c fetch aspell', ignore_status=True)
         self.delete_recipeinc('aspell')
         self.assertEqual(result.status, 0, msg = "Couldn't fetch aspell. %s" % result.output)
-        self.assertTrue(os.path.isfile(os.path.join(get_bb_var("DL_DIR"), 'test-aspell.tar.gz')), msg = "File rename failed. No corresponding test-aspell.tar.gz file found under %s" % str(get_bb_var("DL_DIR")))
-        self.assertTrue(os.path.isfile(os.path.join(get_bb_var("DL_DIR"), 'test-aspell.tar.gz.done')), "File rename failed. No corresponding test-aspell.tar.gz.done file found under %s" % str(get_bb_var("DL_DIR")))
+        dl_dir = get_bb_var("DL_DIR")
+        self.assertTrue(os.path.isfile(os.path.join(dl_dir, 'test-aspell.tar.gz')), msg = "File rename failed. No corresponding test-aspell.tar.gz file found under %s" % dl_dir)
+        self.assertTrue(os.path.isfile(os.path.join(dl_dir, 'test-aspell.tar.gz.done')), "File rename failed. No corresponding test-aspell.tar.gz.done file found under %s" % dl_dir)
 
     @testcase(1028)
     def test_environment(self):
@@ -253,8 +256,9 @@ INHERIT_remove = \"report-error\"
     def test_bbappend_order(self):
         """ Bitbake should bbappend to recipe in a predictable order """
         test_recipe = 'ed'
-        test_recipe_summary_before = get_bb_var('SUMMARY', test_recipe)
-        test_recipe_pv = get_bb_var('PV', test_recipe)
+        bb_vars = get_bb_vars(['SUMMARY', 'PV'], test_recipe)
+        test_recipe_summary_before = bb_vars['SUMMARY']
+        test_recipe_pv = bb_vars['PV']
         recipe_append_file = test_recipe + '_' + test_recipe_pv + '.bbappend'
         expected_recipe_summary = test_recipe_summary_before
 

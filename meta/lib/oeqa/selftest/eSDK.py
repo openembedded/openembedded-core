@@ -6,9 +6,9 @@ import glob
 import logging
 import subprocess
 import oeqa.utils.ftools as ftools
-from oeqa.utils.decorators import testcase 
+from oeqa.utils.decorators import testcase
 from oeqa.selftest.base import oeSelfTest
-from oeqa.utils.commands import runCmd, bitbake, get_bb_var
+from oeqa.utils.commands import runCmd, bitbake, get_bb_var, get_bb_vars
 from oeqa.utils.httpserver import HTTPService
 
 class oeSDKExtSelfTest(oeSelfTest):
@@ -24,7 +24,7 @@ class oeSDKExtSelfTest(oeSelfTest):
         # what environment load oe-selftest, i586, x86_64
         pattern = os.path.join(tmpdir_eSDKQA, 'environment-setup-*')
         return glob.glob(pattern)[0]
-    
+
     @staticmethod
     def run_esdk_cmd(env_eSDK, tmpdir_eSDKQA, cmd, postconfig=None, **options):
         if postconfig:
@@ -47,10 +47,11 @@ class oeSDKExtSelfTest(oeSelfTest):
     def get_eSDK_toolchain(image):
         pn_task = '%s -c populate_sdk_ext' % image
 
-        sdk_deploy = get_bb_var('SDK_DEPLOY', pn_task)
-        toolchain_name = get_bb_var('TOOLCHAINEXT_OUTPUTNAME', pn_task)
+        bb_vars = get_bb_vars(['SDK_DEPLOY', 'TOOLCHAINEXT_OUTPUTNAME'], pn_task)
+        sdk_deploy = bb_vars['SDK_DEPLOY']
+        toolchain_name = bb_vars['TOOLCHAINEXT_OUTPUTNAME']
         return os.path.join(sdk_deploy, toolchain_name + '.sh')
-    
+
     @staticmethod
     def update_configuration(cls, image, tmpdir_eSDKQA, env_eSDK, ext_sdk_path):
         sstate_dir = os.path.join(os.environ['BUILDDIR'], 'sstate-cache')
@@ -119,7 +120,7 @@ SSTATE_MIRRORS =  "file://.* http://%s/PATH"
         bitbake(pn_sstate)
         cmd = "devtool sdk-install %s " % pn_sstate
         oeSDKExtSelfTest.run_esdk_cmd(self.env_eSDK, self.tmpdir_eSDKQA, cmd)
-    
+
     @testcase(1603)
     def test_image_generation_binary_feeds(self):
         image = 'core-image-minimal'

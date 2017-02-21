@@ -6,7 +6,7 @@ import fnmatch
 
 import oeqa.utils.ftools as ftools
 from oeqa.selftest.base import oeSelfTest
-from oeqa.utils.commands import runCmd, bitbake, get_bb_var
+from oeqa.utils.commands import runCmd, bitbake, get_bb_var, get_bb_vars
 from oeqa.utils.decorators import testcase
 
 class OePkgdataUtilTests(oeSelfTest):
@@ -126,10 +126,11 @@ class OePkgdataUtilTests(oeSelfTest):
                     curpkg = line.split(':')[0]
                     files[curpkg] = []
             return files
-        base_libdir = get_bb_var('base_libdir')
-        libdir = get_bb_var('libdir')
-        includedir = get_bb_var('includedir')
-        mandir = get_bb_var('mandir')
+        bb_vars = get_bb_vars(['base_libdir', 'libdir', 'includedir', 'mandir'])
+        base_libdir = bb_vars['base_libdir']
+        libdir = bb_vars['libdir']
+        includedir = bb_vars['includedir']
+        mandir = bb_vars['mandir']
         # Test recipe-space package name
         result = runCmd('oe-pkgdata-util list-pkg-files zlib-dev zlib-doc')
         files = splitoutput(result.output)
