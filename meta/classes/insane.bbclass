@@ -1221,6 +1221,9 @@ python do_package_qa () {
     bb.note("DONE with PACKAGE QA")
 }
 
+# binutils is used for most checks, so need to set as dependency
+# POPULATESYSROOTDEPS is defined in staging class.
+do_package_qa[depends] += "${POPULATESYSROOTDEPS}"
 do_package_qa[vardepsexclude] = "BB_TASKDEPDATA"
 do_package_qa[rdeptask] = "do_packagedata"
 addtask do_package_qa after do_packagedata do_package before do_build
