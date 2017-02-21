@@ -1613,6 +1613,25 @@ python package_do_shlibs() {
                 if name and name not in needed[pkg]:
                      needed[pkg].append((name, file, []))
 
+    def mingw_dll(file, needed, sonames, renames, pkgver):
+        if not os.path.exists(file):
+            return
+
+        if file.endswith(".dll"):
+            # assume all dlls are shared objects provided by the package
+            sonames.append((os.path.basename(file), os.path.dirname(file).replace(pkgdest + "/" + pkg, ''), pkgver))
+
+        if (file.endswith(".dll") or file.endswith(".exe")):
+            # use objdump to search for "DLL Name: .*\.dll"
+            p = sub.Popen([d.expand("${HOST_PREFIX}objdump"), "-p", file], stdout = sub.PIPE, stderr= sub.PIPE)
+            out, err = p.communicate()
+            # process the output, grabbing all .dll names
+            if p.returncode == 0:
+                for m in re.finditer("DLL Name: (.*?\.dll)$", out.decode(), re.MULTILINE | re.IGNORECASE):
+                    dllname = m.group(1)
+                    if dllname:
+                        needed[pkg].append((dllname, file, []))
+
     if d.getVar('PACKAGE_SNAP_LIB_SYMLINKS') == "1":
         snap_symlinks = True
     else:
@@ -1644,6 +1663,8 @@ python package_do_shlibs() {
                     continue
                 if targetos == "darwin" or targetos == "darwin8":
                     darwin_so(file, needed, sonames, renames, pkgver)
+                elif targetos.startswith("mingw"):
+                    mingw_dll(file, needed, sonames, renames, pkgver)
                 elif os.access(file, os.X_OK) or lib_re.match(file):
                     ldconfig = linux_so(file, needed, sonames, renames, pkgver)
                     needs_ldconfig = needs_ldconfig or ldconfig
