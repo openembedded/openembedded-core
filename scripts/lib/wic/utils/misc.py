@@ -105,9 +105,13 @@ def exec_native_cmd(cmd_and_args, native_sysroot, catch=3, pseudo=""):
 
     if pseudo:
         cmd_and_args = pseudo + cmd_and_args
+
+    wtools_sysroot = get_bitbake_var("RECIPE_SYSROOT_NATIVE", "wic-tools")
+
     native_paths = \
-        "%s/sbin:%s/usr/sbin:%s/usr/bin" % \
-        (native_sysroot, native_sysroot, native_sysroot)
+            "%s/sbin:%s/usr/sbin:%s/usr/bin:%s/sbin:%s/usr/sbin:%s/usr/bin" % \
+            (wtools_sysroot, wtools_sysroot, wtools_sysroot,
+             native_sysroot, native_sysroot, native_sysroot)
     native_cmd_and_args = "export PATH=%s:$PATH;%s" % \
                            (native_paths, cmd_and_args)
     logger.debug("exec_native_cmd: %s", cmd_and_args)
