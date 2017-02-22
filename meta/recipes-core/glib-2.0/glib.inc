@@ -91,6 +91,10 @@ do_install_append () {
 	if [ -f ${D}${bindir}/glib-mkenums ]; then
 		sed -i -e '1s,#!.*perl,#! ${USRBINPATH}/env perl,' ${D}${bindir}/glib-mkenums
 	fi
+
+	if [ -e ${D}${libdir}/charset.alias ]; then
+		rm -f ${D}${libdir}/charset.alias
+	fi
 }
 
 do_install_append_class-target () {
@@ -106,10 +110,6 @@ do_install_append_class-target () {
 	if test "x${MLPREFIX}" != "x"; then
 		mv ${D}${libexecdir}/gio-querymodules ${D}${libexecdir}/${MLPREFIX}gio-querymodules
 	fi
-}
-
-do_install_append_libc-musl () {
-	rm -f ${D}${libdir}/charset.alias
 }
 
 RDEPENDS_${PN}-ptest += "\
