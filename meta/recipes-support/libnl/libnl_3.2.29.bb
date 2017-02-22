@@ -12,14 +12,11 @@ DEPENDS = "flex-native bison-native"
 SRC_URI = "https://github.com/thom311/${BPN}/releases/download/${BPN}${@d.getVar('PV').replace('.','_')}/${BP}.tar.gz \
            file://fix-pktloc_syntax_h-race.patch \
            file://fix-pc-file.patch \
-           file://0001-lib-add-utility-function-nl_strerror_l.patch \
-           file://0002-lib-switch-to-using-strerror_l-instead-of-strerror_r.patch \
-           file://0003-src-switch-to-using-strerror_l-instead-of-strerror_r.patch \
 "
 UPSTREAM_CHECK_URI = "https://github.com/thom311/${BPN}/releases"
 
-SRC_URI[md5sum] = "bab12db1eb94a42129f712a44be91a67"
-SRC_URI[sha256sum] = "cd608992c656e8f6e3ab6c1391b162a5a51c49336b9219f7f390e61fc5437c41"
+SRC_URI[md5sum] = "a8ba62a5c4f883f4e493a46d1f3733fe"
+SRC_URI[sha256sum] = "0beb593dc6abfffa18a5c787b27884979c1b7e7f1fd468c801e3cc938a685922"
 
 inherit autotools pkgconfig
 
