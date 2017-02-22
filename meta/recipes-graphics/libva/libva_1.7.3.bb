@@ -21,6 +21,7 @@ SRC_URI = "git://github.com/01org/libva.git;protocol=http;branch=v1.7-branch \
            file://0001-configure.ac-Use-wayland-scanner-in-PATH.patch \
            file://0001-wayland-Don-t-commit-and-ship-generated-files.patch"
 SRCREV = "dbf9f7e33349c3cee8d131e93a6a4f91255635cb"
+UPSTREAM_CHECK_GITTAGREGEX = "libva-(?P<pver>(\d+(\.\d+)+))"
 
 S = "${WORKDIR}/git"
 
