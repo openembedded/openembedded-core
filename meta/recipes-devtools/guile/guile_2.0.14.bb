@@ -24,8 +24,8 @@ SRC_URI = "${GNU_MIRROR}/guile/guile-${PV}.tar.xz \
            file://libguile-Makefile.am-hook.patch \
            "
 
-SRC_URI[md5sum] = "d50bbb19672b72aa1e1c96e8f024bf00"
-SRC_URI[sha256sum] = "3744f2addc282a0de627aaef048f062982b44564d54ac31ff5217972529ed88b"
+SRC_URI[md5sum] = "c64977c775effd19393364b3018fd8cd"
+SRC_URI[sha256sum] = "e8442566256e1be14e51fc18839cd799b966bc5b16c6a1d7a7c35155a8619d82"
 
 inherit autotools gettext pkgconfig texinfo
 BBCLASSEXTEND = "native"
