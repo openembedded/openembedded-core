@@ -73,7 +73,7 @@ class DevtoolTest(OESDKExtTestCase):
     @skipIfNotDataVar('SDK_INCLUDE_TOOLCHAIN', '1', 'SDK does not include toolchain')
     def test_extend_autotools_recipe_creation(self):
         req = 'https://github.com/rdfa/librdfa'
-        recipe = "bbexample"
+        recipe = "librdfa"
         self._run('devtool add %s %s' % (recipe, req) )
         try:
             self._run('devtool build %s' % recipe)
