@@ -10,9 +10,9 @@ Signed-off-by: Khem Raj <raj.khem@gmail.com>
 ---
 Upstream-Status: Submitted
 
- configure.ac        |    2 ++
- src/weston-error.h  |   20 ++++++++++++++++++++
- src/weston-launch.c |    2 +-
+ configure.ac              |    2 ++
+ libweston/weston-error.h  |   20 ++++++++++++++++++++
+ libweston/weston-launch.c |    2 +-
  3 files changed, 23 insertions(+), 1 deletion(-)
  create mode 100644 src/weston-error.h
 
@@ -28,7 +28,7 @@ Upstream-Status: Submitted
  
  COMPOSITOR_MODULES="wayland-server >= $WAYLAND_PREREQ_VERSION pixman-1 >= 0.25.2"
 --- /dev/null
-+++ b/src/weston-error.h
++++ b/libweston/weston-error.h
 @@ -0,0 +1,20 @@
 +#ifndef _WESTON_ERROR_H
 +#define _WESTON_ERROR_H
@@ -50,8 +50,8 @@ Upstream-Status: Submitted
 +
 +#endif
 +
---- a/src/weston-launch.c
-+++ b/src/weston-launch.c
+--- a/libweston/weston-launch.c
++++ b/libweston/weston-launch.c
 @@ -33,7 +33,6 @@
  #include <poll.h>
  #include <errno.h>
