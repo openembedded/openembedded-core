@@ -2,19 +2,19 @@ SUMMARY = "Line-oriented text editor"
 HOMEPAGE = "http://www.gnu.org/software/ed/"
 
 LICENSE = "GPLv3+"
-LIC_FILES_CHKSUM = "file://COPYING;md5=f27defe1e96c2e1ecd4e0c9be8967949 \
-                    file://ed.h;endline=20;md5=375a20cc2545ac1115eeb7b323c60ae3 \
-                    file://main.c;endline=17;md5=14dbb325c1f2d4daf50e0aa5c5038e96"
+LIC_FILES_CHKSUM = "file://COPYING;md5=0c7051aef9219dc7237f206c5c4179a7 \
+                    file://ed.h;endline=20;md5=4e36b7a40e137f42aee718165590d125 \
+                    file://main.c;endline=17;md5=c5b8f78f115df187af76868a2aead16a"
 
 SECTION = "base"
 
 # LSB states that ed should be in /bin/
 bindir = "${base_bindir}"
 
-SRC_URI = "http://downloads.yoctoproject.org/mirror/sources/${BP}.tar.gz"
+SRC_URI = "${GNU_MIRROR}/ed/ed-${PV}.tar.lz"
 
-SRC_URI[md5sum] = "565b6d1d5a9a8816b9b304fc4ed9405d"
-SRC_URI[sha256sum] = "d5b372cfadf073001823772272fceac2cfa87552c5cd5a8efc1c8aae61f45a88"
+SRC_URI[md5sum] = "7f4a54fa7f366479f03654b8af645fd0"
+SRC_URI[sha256sum] = "ffb97eb8f2a2b5a71a9b97e3872adce953aa1b8958e04c5b7bf11d556f32552a"
 
 EXTRA_OEMAKE = "-e MAKEFLAGS="
 
