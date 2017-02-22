@@ -12,6 +12,7 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/libpng/${BPN}/${PV}/${BPN}-${PV}.tar.xz \
            file://ldflags-tests.patch \
            file://run-ptest \
            "
+UPSTREAM_CHECK_URI = "http://zlib.net/"
 
 SRC_URI[md5sum] = "28f1205d8dd2001f26fec1e8c2cebe37"
 SRC_URI[sha256sum] = "831df043236df8e9a7667b9e3bb37e1fcb1220a0f163b6de2626774b9590d057"
