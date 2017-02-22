@@ -9,8 +9,8 @@ SECTION = "console/utils"
 
 SRC_URI = "https://github.com/scop/bash-completion/releases/download/${PV}/${BPN}-${PV}.tar.xz"
 
-SRC_URI[md5sum] = "1ea94864fb2b2446fbbdf82f10bd25df"
-SRC_URI[sha256sum] = "c0f76b5202fec9ef8ffba82f5605025ca003f27cfd7a85115f838ba5136890f6"
+SRC_URI[md5sum] = "15300010bd4034de12c3fc4f171692e3"
+SRC_URI[sha256sum] = "b0b9540c65532825eca030f1241731383f89b2b65e80f3492c5dd2f0438c95cf"
 UPSTREAM_CHECK_REGEX = "bash-completion-(?P<pver>(?!2008).+)\.tar"
 UPSTREAM_CHECK_URI = "https://github.com/scop/bash-completion/releases"
 
