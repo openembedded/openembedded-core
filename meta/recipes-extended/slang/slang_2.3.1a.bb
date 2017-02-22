@@ -19,8 +19,8 @@ SRC_URI = "http://www.jedsoft.org/releases/${BPN}/${BP}.tar.bz2 \
            file://dont-link-to-host.patch \
           "
 
-SRC_URI[md5sum] = "bd46d1dc17a50c72004ad842829d7b1f"
-SRC_URI[sha256sum] = "a810d5da7b0c0c8c335393c6b4f12884be6fa7696d9ca9521ef21316a4e00f9d"
+SRC_URI[md5sum] = "c5235313042ed0e71ec708f7b85ec241"
+SRC_URI[sha256sum] = "54f0c3007fde918039c058965dffdfd6c5aec0bad0f4227192cc486021f08c36"
 
 UPSTREAM_CHECK_URI = "http://www.jedsoft.org/releases/slang/"
 PREMIRRORS_append = "\n http://www.jedsoft.org/releases/slang/.* http://www.jedsoft.org/releases/slang/old/ \n"
