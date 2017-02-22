@@ -32,8 +32,9 @@ INHIBIT_DEFAULT_DEPS = "1"
 docdir_append = "/${P}"
 dirs1777 = "/tmp ${localstatedir}/volatile/tmp"
 dirs2775 = ""
-dirs755 = "/bin /boot /dev ${sysconfdir} ${sysconfdir}/default \
-           ${sysconfdir}/skel /lib /mnt /proc ${ROOT_HOME} /run /sbin \
+dirs755 = "/boot /dev ${base_bindir} ${base_sbindir} ${base_libdir} \
+           ${sysconfdir} ${sysconfdir}/default \
+           ${sysconfdir}/skel ${nonarch_base_libdir} /mnt /proc ${ROOT_HOME} /run \
            ${prefix} ${bindir} ${docdir} /usr/games ${includedir} \
            ${libdir} ${sbindir} ${datadir} \
            ${datadir}/common-licenses ${datadir}/dict ${infodir} \
