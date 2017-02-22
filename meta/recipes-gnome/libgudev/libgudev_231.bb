@@ -1,9 +1,11 @@
 SUMMARY = "GObject wrapper for libudev"
 
-SRC_URI[archive.md5sum] = "e4dee8f3f349e9372213d33887819a4d"
-SRC_URI[archive.sha256sum] = "a2e77faced0c66d7498403adefcc0707105e03db71a2b2abd620025b86347c18"
+SRC_URI[archive.md5sum] = "916c10c51ec61131e244c3936bbb2e0c"
+SRC_URI[archive.sha256sum] = "3b1ef99d4a8984c35044103d8ddfc3cc52c80035c36abab2bcc5e3532e063f96"
 
 DEPENDS = "glib-2.0 udev"
+
+EXTRA_OECONF = "--disable-umockdev"
 
 RCONFLICTS_${PN} = "systemd (<= 220)"
 
