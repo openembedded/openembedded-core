@@ -10,8 +10,8 @@ DEPENDS = "glib-2.0 libfm-extra"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/lxde/menu-cache-${PV}.tar.xz"
 
-SRC_URI[md5sum] = "a856ba860b16fdc8c69ee784bc4ade36"
-SRC_URI[sha256sum] = "0ac72649919946070258320aafc320467dd040bcef7b3a225e2ab7241ddffd59"
+SRC_URI[md5sum] = "8dde7a3f5bd9798d0129d1979a5d7640"
+SRC_URI[sha256sum] = "6f83edf2de34f83e701dcb52145d755250a5677580cd413476cc4d7f2d2012d5"
 
 UPSTREAM_CHECK_URI = "http://sourceforge.net/projects/lxde/files/menu-cache/1.0/"
 
