@@ -49,7 +49,7 @@ do_install() {
 	oe_runmake install DESTDIR='${D}'
 
 	install -d ${D}${bindir}
-	ln -s ../../${libdir}/libc.so ${D}${bindir}/ldd
+	lnr ${D}${libdir}/libc.so ${D}${bindir}/ldd
 	for l in crypt dl m pthread resolv rt util xnet
 	do
 		ln -s libc.so ${D}${libdir}/lib$l.so
