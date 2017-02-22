@@ -377,18 +377,9 @@ def copy_license_files(lic_files_paths, destdir):
                         canlink = False
                     else:
                         raise
-                try:
-                    if canlink:
-                        os.chown(dst,0,0)
-                except OSError as err:
-                    if err.errno in (errno.EPERM, errno.EINVAL):
-                        # Suppress "Operation not permitted" error, as
-                        # sometimes this function is not executed under pseudo.
-                        # Also ignore "Invalid argument" errors that happen in
-                        # some (unprivileged) container environments (no root).
-                        pass
-                    else:
-                        raise
+                # Only chown if we did hardling, and, we're running under pseudo
+                if canlink and os.environ.get('PSEUDO_DISABLED') == '0':
+                    os.chown(dst,0,0)
             if not canlink:
                 begin_idx = int(beginline)-1 if beginline is not None else None
                 end_idx = int(endline) if endline is not None else None
