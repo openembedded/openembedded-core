@@ -8,7 +8,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=3bf50002aefd002f49e7bb854063f7e7 \
 
 SECTION = "libs"
 
-DEPENDS = "glib-2.0"
+DEPENDS = "glib-2.0 gdk-pixbuf-native"
 
 MAJ_VER = "${@oe.utils.trim_version("${PV}", 2)}"
 
@@ -17,10 +17,10 @@ SRC_URI = "${GNOME_MIRROR}/${BPN}/${MAJ_VER}/${BPN}-${PV}.tar.xz \
            file://extending-libinstall-dependencies.patch \
            file://run-ptest \
            file://fatal-loader.patch \
+           file://0001-Work-around-thumbnailer-cross-compile-failure.patch \
            "
-
-SRC_URI[md5sum] = "fe30b0420e013f2c4590ae6226d895d4"
-SRC_URI[sha256sum] = "9d5ba72070460c1b5b74115d395a3e33daeb7b7b67fb256cdccc9d7187c42a38"
+SRC_URI[md5sum] = "0173fd5c11a5d2030d09201090636477"
+SRC_URI[sha256sum] = "7ace06170291a1f21771552768bace072ecdea9bd4a02f7658939b9a314c40fc"
 
 inherit autotools pkgconfig gettext pixbufcache ptest-gnome upstream-version-is-even gobject-introspection gtk-doc lib_package
 
@@ -53,6 +53,7 @@ FILES_${PN}-bin += "${datadir}/thumbnailers/gdk-pixbuf-thumbnailer.thumbnailer"
 FILES_${PN}-dev += " \
 	${bindir}/gdk-pixbuf-csource \
 	${bindir}/gdk-pixbuf-pixdata \
+        ${bindir}/gdk-pixbuf-print-mime-types \
 	${includedir}/* \
 	${libdir}/gdk-pixbuf-2.0/${LIBV}/loaders/*.la \
 "
@@ -86,6 +87,9 @@ do_install_append_class-native() {
 		GDK_PIXBUF_MODULE_FILE=${STAGING_LIBDIR_NATIVE}/gdk-pixbuf-2.0/${LIBV}/loaders.cache
 
 	create_wrapper ${D}/${bindir}/gdk-pixbuf-pixdata \
+		GDK_PIXBUF_MODULE_FILE=${STAGING_LIBDIR_NATIVE}/gdk-pixbuf-2.0/${LIBV}/loaders.cache
+
+	create_wrapper ${D}/${bindir}/gdk-pixbuf-print-mime-types \
 		GDK_PIXBUF_MODULE_FILE=${STAGING_LIBDIR_NATIVE}/gdk-pixbuf-2.0/${LIBV}/loaders.cache
 
 	create_wrapper ${D}/${libdir}/gdk-pixbuf-2.0/gdk-pixbuf-query-loaders \
