@@ -64,7 +64,7 @@ class oeSDKExtSelfTest(oeSelfTest):
         runCmd("%s -y -d \"%s\"" % (cls.ext_sdk_path, cls.tmpdir_eSDKQA))
 
         cls.env_eSDK = oeSDKExtSelfTest.get_esdk_environment('', cls.tmpdir_eSDKQA)
-       
+
         sstate_config="""
 SDK_LOCAL_CONF_WHITELIST = "SSTATE_MIRRORS"
 SSTATE_MIRRORS =  "file://.* http://%s/PATH"
@@ -73,37 +73,41 @@ CORE_IMAGE_EXTRA_INSTALL = "perl"
 
         with open(os.path.join(cls.tmpdir_eSDKQA, 'conf', 'local.conf'), 'a+') as f:
             f.write(sstate_config)
-    
 
     @classmethod
     def setUpClass(cls):
-        # Start to serve sstate dir
-        sstate_dir = get_bb_var('SSTATE_DIR')
-        cls.http_service = HTTPService(sstate_dir)
-        cls.http_service.start()
+        # If there is an exception in setUpClass it will not run tearDownClass
+        # method and it leaves HTTP server running forever, so we need to be
+        # sure tearDownClass is run.
+        try:
+            cls.tmpdir_eSDKQA = tempfile.mkdtemp(prefix='eSDKQA')
 
-        cls.http_url = "http://127.0.0.1:%d" % cls.http_service.port
- 
-        cls.image = 'core-image-minimal'
+            # Start to serve sstate dir
+            sstate_dir = get_bb_var('SSTATE_DIR')
+            cls.http_service = HTTPService(sstate_dir)
+            cls.http_url = "http://127.0.0.1:%d" % cls.http_service.port
+            cls.http_service.start()
 
-        cls.tmpdir_eSDKQA = tempfile.mkdtemp(prefix='eSDKQA')
-        oeSDKExtSelfTest.generate_eSDK(cls.image)
+            cls.image = 'core-image-minimal'
+            oeSDKExtSelfTest.generate_eSDK(cls.image)
 
-        # Install eSDK
-        cls.ext_sdk_path = oeSDKExtSelfTest.get_eSDK_toolchain(cls.image)
-        runCmd("%s -y -d \"%s\"" % (cls.ext_sdk_path, cls.tmpdir_eSDKQA))
+            # Install eSDK
+            cls.ext_sdk_path = oeSDKExtSelfTest.get_eSDK_toolchain(cls.image)
+            runCmd("%s -y -d \"%s\"" % (cls.ext_sdk_path, cls.tmpdir_eSDKQA))
 
-        cls.env_eSDK = oeSDKExtSelfTest.get_esdk_environment('', cls.tmpdir_eSDKQA)
+            cls.env_eSDK = oeSDKExtSelfTest.get_esdk_environment('', cls.tmpdir_eSDKQA)
 
-        # Configure eSDK to use sstate mirror from poky
-        sstate_config="""
+            # Configure eSDK to use sstate mirror from poky
+            sstate_config="""
 SDK_LOCAL_CONF_WHITELIST = "SSTATE_MIRRORS"
 SSTATE_MIRRORS =  "file://.* http://%s/PATH"
-        """ % cls.http_url
-        with open(os.path.join(cls.tmpdir_eSDKQA, 'conf', 'local.conf'), 'a+') as f:
-            f.write(sstate_config)
+            """ % cls.http_url
+            with open(os.path.join(cls.tmpdir_eSDKQA, 'conf', 'local.conf'), 'a+') as f:
+                f.write(sstate_config)
+        except:
+            cls.tearDownClass()
+            raise
 
-      
     @classmethod
     def tearDownClass(cls):
         shutil.rmtree(cls.tmpdir_eSDKQA)
