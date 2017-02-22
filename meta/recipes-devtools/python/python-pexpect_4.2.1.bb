@@ -25,4 +25,4 @@ RDEPENDS_${PN} = "\
     python-ptyprocess \
 "
 
-BBCLASSEXTEND = "nativesdk"
+BBCLASSEXTEND = "native nativesdk"
