@@ -1,28 +1,29 @@
-From 9590d073d3abe02fe0783ef8c530aef2e873ba9b Mon Sep 17 00:00:00 2001
-From: Christopher Larson <chris_larson@mentor.com>
-Date: Tue, 13 Dec 2016 12:48:29 -0700
-Subject: [PATCH] fcntl: fix the time() def to use time_t
+From 7bce3d223494803cb32897cabe66119076e53d89 Mon Sep 17 00:00:00 2001
+From: Dengke Du <dengke.du@windriver.com>
+Date: Wed, 8 Feb 2017 16:23:51 +0800
+Subject: [PATCH 5/5] fcntl: fix the time() def to use time_t
 
 This fixes the build on X32, where long is 32-bit rather than 64-bit.
 
 Signed-off-by: Christopher Larson <chris_larson@mentor.com>
+Signed-off-by: Dengke Du <dengke.du@windriver.com>
 ---
  testcases/kernel/syscalls/fcntl/fcntl14.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/testcases/kernel/syscalls/fcntl/fcntl14.c b/testcases/kernel/syscalls/fcntl/fcntl14.c
-index 3b36572..65ac8fa 100644
+index c61eb24..99e3867 100644
 --- a/testcases/kernel/syscalls/fcntl/fcntl14.c
 +++ b/testcases/kernel/syscalls/fcntl/fcntl14.c
-@@ -789,7 +789,7 @@ void dochild(void)
+@@ -775,7 +775,7 @@ void dochild(void)
  
  void run_test(int file_flag, int file_mode, int seek, int start, int end)
  {
 -	extern long time();
 +	extern time_t time();
  
- 	/* reset fail to 0 for each run_test call */
  	fail = 0;
+ 
 -- 
-2.8.0
+2.7.4
 
