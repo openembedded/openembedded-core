@@ -160,13 +160,19 @@ class BootimgPcbiosPlugin(SourcePlugin):
 
         hdddir = "%s/hdd/boot" % cr_workdir
 
-        install_cmd = "install -m 0644 %s/bzImage %s/vmlinuz" \
-            % (staging_kernel_dir, hdddir)
-        exec_cmd(install_cmd)
+        cmds = ("install -m 0644 %s/bzImage %s/vmlinuz" %
+                (staging_kernel_dir, hdddir),
+                "install -m 444 %s/syslinux/ldlinux.sys %s/ldlinux.sys" %
+                (bootimg_dir, hdddir),
+                "install -m 0644 %s/syslinux/vesamenu.c32 %s/vesamenu.c32" %
+                (bootimg_dir, hdddir),
+                "install -m 444 %s/syslinux/libcom32.c32 %s/libcom32.c32" %
+                (bootimg_dir, hdddir),
+                "install -m 444 %s/syslinux/libutil.c32 %s/libutil.c32" %
+                (bootimg_dir, hdddir))
 
-        install_cmd = "install -m 444 %s/syslinux/ldlinux.sys %s/ldlinux.sys" \
-            % (bootimg_dir, hdddir)
-        exec_cmd(install_cmd)
+        for install_cmd in cmds:
+            exec_cmd(install_cmd)
 
         du_cmd = "du -bks %s" % hdddir
         out = exec_cmd(du_cmd)
