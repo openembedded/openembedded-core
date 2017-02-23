@@ -2,7 +2,7 @@ SUMMARY_${PN}-ptest ?= "${SUMMARY} - Package test files"
 DESCRIPTION_${PN}-ptest ?= "${DESCRIPTION}  \
 This package contains a test directory ${PTEST_PATH} for package test purposes."
 
-PTEST_PATH ?= "${libdir}/${PN}/ptest"
+PTEST_PATH ?= "${libdir}/${BPN}/ptest"
 FILES_${PN}-ptest = "${PTEST_PATH}"
 SECTION_${PN}-ptest = "devel"
 ALLOW_EMPTY_${PN}-ptest = "1"
