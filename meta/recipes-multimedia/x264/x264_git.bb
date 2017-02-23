@@ -13,9 +13,9 @@ SRC_URI = "git://github.com/mirror/x264;branch=stable \
            file://Fix-X32-build-by-disabling-asm.patch \
            "
 
-SRCREV = "86b71982e131eaa70125f8d0e725fcade9c4c677"
+SRCREV = "2b741f81e51f92d053d87a49f59ff1026553a0f6"
 
-PV = "r2491+git${SRCPV}"
+PV = "r2731+git${SRCPV}"
 
 S = "${WORKDIR}/git"
 
