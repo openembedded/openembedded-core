@@ -10,6 +10,7 @@ class LocalSigner(object):
         self.gpg_bin = d.getVar('GPG_BIN') or \
                   bb.utils.which(os.getenv('PATH'), 'gpg')
         self.gpg_path = d.getVar('GPG_PATH')
+        self.gpg_version = self.get_gpg_version()
         self.rpm_bin = bb.utils.which(os.getenv('PATH'), "rpm")
 
     def export_pubkey(self, output_file, keyid, armor=True):
@@ -59,9 +60,7 @@ class LocalSigner(object):
 
         #gpg > 2.1 supports password pipes only through the loopback interface
         #gpg < 2.1 errors out if given unknown parameters
-        dots = self.get_gpg_version().split('.')
-        assert len(dots) >= 2
-        if int(dots[0]) >= 2 and int(dots[1]) >= 1:
+        if self.gpg_version > (2,1,):
             cmd += ['--pinentry-mode', 'loopback']
 
         cmd += [input_file]
@@ -88,10 +87,11 @@ class LocalSigner(object):
 
 
     def get_gpg_version(self):
-        """Return the gpg version"""
+        """Return the gpg version as a tuple of ints"""
         import subprocess
         try:
-            return subprocess.check_output((self.gpg_bin, "--version")).split()[2].decode("utf-8")
+            ver_str = subprocess.check_output((self.gpg_bin, "--version")).split()[2].decode("utf-8")
+            return tuple([int(i) for i in ver_str.split('.')])
         except subprocess.CalledProcessError as e:
             raise bb.build.FuncFailed("Could not get gpg version: %s" % e)
 
