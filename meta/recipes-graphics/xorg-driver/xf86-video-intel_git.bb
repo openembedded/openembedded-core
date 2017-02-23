@@ -9,7 +9,7 @@ Infrastructure (DRI)."
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=8730ad58d11c7bbad9a7066d69f7808e"
 
-SRCREV = "8f33f80100096f7790c7b819ce37a3ed8ce8b5fa"
+SRCREV = "e4fe79cf0d9a05ee3f3a027148ef0aeb2b1b34e1"
 PV = "2.99.917+git${SRCPV}"
 S = "${WORKDIR}/git"
 
