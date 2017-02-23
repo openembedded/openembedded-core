@@ -33,13 +33,15 @@ Optional arguments:
   -C GIT_REPO       commit results into Git
   -w WORK_DIR       work dir for this script
                     (default: GIT_TOP_DIR/build-perf-test)
+  -x                create xml report (instead of json)
 EOF
 }
 
 
 # Parse command line arguments
 commitish=""
-while getopts "ha:c:C:w:" opt; do
+oe_build_perf_test_extra_opts=()
+while getopts "ha:c:C:w:x" opt; do
     case $opt in
         h)  usage
             exit 0
@@ -51,6 +53,8 @@ while getopts "ha:c:C:w:" opt; do
         C)  results_repo=`realpath -s "$OPTARG"`
             ;;
         w)  base_dir=`realpath -s "$OPTARG"`
+            ;;
+        x)  oe_build_perf_test_extra_opts+=("--xml")
             ;;
         *)  usage
             exit 1
@@ -129,6 +133,7 @@ fi
 # Run actual test script
 oe-build-perf-test --out-dir "$results_dir" \
                    --globalres-file "$globalres_log" \
+                   "${oe_build_perf_test_extra_opts[@]}" \
                    --lock-file "$base_dir/oe-build-perf.lock"
 
 # Commit results to git
