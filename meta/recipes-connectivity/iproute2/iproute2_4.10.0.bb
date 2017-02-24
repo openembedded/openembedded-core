@@ -3,11 +3,11 @@ require iproute2.inc
 SRC_URI = "${KERNELORG_MIRROR}/linux/utils/net/${BPN}/${BP}.tar.xz \
            file://configure-cross.patch \
            file://0001-iproute2-de-bash-scripts.patch \
-           file://iproute2-4.9.0-musl.patch \
+           file://0001-libc-compat.h-add-musl-workaround.patch \
           "
 
-SRC_URI[md5sum] = "44a8371a4b2c40e48e4c9f98cbd41391"
-SRC_URI[sha256sum] = "c0f30f043f7767cc1b2cd2197b08d4e9b2392c95823fabe30bbce308c30116c4"
+SRC_URI[md5sum] = "b94a2b0edefaeac124dc8f5d006931b9"
+SRC_URI[sha256sum] = "22b1e1c1fc704ad35837e5a66103739727b8b48ac90b48c13f79b7367ff0a9a8"
 
 # CFLAGS are computed in Makefile and reference CCOPTS
 #
