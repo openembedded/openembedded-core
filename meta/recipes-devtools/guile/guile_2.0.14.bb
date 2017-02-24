@@ -90,7 +90,7 @@ guile_cross_config() {
 	then
 	        # Create guile-config returning target values instead of native values
 	        install -d ${SYSROOT_DESTDIR}${STAGING_BINDIR_CROSS}
-        	echo '#!'`which ${BUILD_SYS}-guile`$' \\\n--no-auto-compile -e main -s\n!#\n(define %guile-build-info '\'\( \
+        	printf '#!%s \\\n--no-auto-compile -e main -s\n!#\n(define %%guile-build-info %s(\n' $(which ${BUILD_SYS}-guile) "'" \
 			> ${B}/guile-config.cross
 	        sed -n -e 's:^[ \t]*{[ \t]*":  (:' \
 			-e 's:",[ \t]*": . ":' \
