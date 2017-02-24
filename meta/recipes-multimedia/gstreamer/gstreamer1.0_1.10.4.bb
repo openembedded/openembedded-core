@@ -7,7 +7,7 @@ SRC_URI = " \
     http://gstreamer.freedesktop.org/src/gstreamer/gstreamer-${PV}.tar.xz \
     file://deterministic-unwind.patch \
 "
-SRC_URI[md5sum] = "8c1806916107f79e88bc6ab5f6f7754e"
-SRC_URI[sha256sum] = "85b9dc1b2991f224fa90d534ec57014896c479e061dc9fa1bc16ae17cbebb63d"
+SRC_URI[md5sum] = "7c91a97e4a2dc81eafd59d0a2f8b0d6e"
+SRC_URI[sha256sum] = "50c2f5af50a6cc6c0a3f3ed43bdd8b5e2bff00bacfb766d4be139ec06d8b5218"
 
 S = "${WORKDIR}/gstreamer-${PV}"
