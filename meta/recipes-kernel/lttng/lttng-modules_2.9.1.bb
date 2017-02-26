@@ -13,8 +13,8 @@ COMPATIBLE_HOST = '(x86_64|i.86|powerpc|aarch64|mips|nios2|arm).*-linux'
 SRC_URI = "https://lttng.org/files/${BPN}/${BPN}-${PV}.tar.bz2 \
            file://Makefile-Do-not-fail-if-CONFIG_TRACEPOINTS-is-not-en.patch"
 
-SRC_URI[md5sum] = "717df375ccb6f32bb297cc2f2e692bbf"
-SRC_URI[sha256sum] = "af914e5954081cfb6bd4c6dcf9390474e0c13fe056b12b3dfc86d1b88b8340a0"
+SRC_URI[md5sum] = "5a16bca52233cc2bdff572b1120a88f6"
+SRC_URI[sha256sum] = "62078fe3254ca65969db4b72e59042cd797dbf2740848f8f82384877ae460d54"
 
 export INSTALL_MOD_DIR="kernel/lttng-modules"
 
