@@ -13,9 +13,13 @@
 # 2014 Khem Raj <raj.khem@gmail.com>
 # Added python3 support
 #
+# February 26, 2017 -- Ming Liu <peter.x.liu@external.atlascopco.com>
+# * Updated to support generating manifest for native python3
+
 import os
 import sys
 import time
+import argparse
 
 VERSION = "3.5.0"
 
@@ -24,16 +28,17 @@ __version__ = "20140131"
 
 class MakefileMaker:
 
-    def __init__( self, outfile ):
+    def __init__( self, outfile, isNative ):
         """initialize"""
         self.packages = {}
         self.targetPrefix = "${libdir}/python%s/" % VERSION[:3]
+        self.isNative = isNative
         self.output = outfile
         self.out( """
 # WARNING: This file is AUTO GENERATED: Manual edits will be lost next time I regenerate the file.
-# Generator: '%s' Version %s (C) 2002-2010 Michael 'Mickey' Lauer <mlauer@vanille-media.de>
+# Generator: '%s%s' Version %s (C) 2002-2010 Michael 'Mickey' Lauer <mlauer@vanille-media.de>
 # Visit the Python for Embedded Systems Site => http://www.Vanille.de/projects/python.spy
-""" % ( sys.argv[0], __version__ ) )
+""" % ( sys.argv[0], ' --native' if isNative else '', __version__ ) )
 
     #
     # helper functions
@@ -77,6 +82,20 @@ class MakefileMaker:
         """generate body of Makefile"""
 
         global VERSION
+
+        #
+        # generate rprovides line for native
+        #
+
+        if self.isNative:
+            rprovideLine = 'RPROVIDES+="'
+            for name in sorted(self.packages):
+                rprovideLine += "%s-native " % name.replace( '${PN}', 'python3' )
+            rprovideLine += '"'
+
+            self.out( rprovideLine )
+            self.out( "" )
+            return
 
         #
         # generate provides line
@@ -160,17 +179,21 @@ class MakefileMaker:
         self.doEpilog()
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser( description='generate python3 manifest' )
+    parser.add_argument( '-n', '--native', help='generate manifest for native python3', action='store_true' )
+    parser.add_argument( 'outfile', metavar='OUTPUT_FILE', nargs='?', default='', help='Output file (defaults to stdout)' )
+    args = parser.parse_args()
 
-    if len( sys.argv ) > 1:
+    if args.outfile:
         try:
-            os.unlink(sys.argv[1])
+            os.unlink( args.outfile )
         except Exception:
             sys.exc_clear()
-        outfile = open( sys.argv[1], "w" )
+        outfile = open( args.outfile, "w" )
     else:
         outfile = sys.stdout
 
-    m = MakefileMaker( outfile )
+    m = MakefileMaker( outfile, args.native )
 
     # Add packages here. Only specify dlopen-style library dependencies here, no ldd-style dependencies!
     # Parameters: revision, name, description, dependencies, filenames
