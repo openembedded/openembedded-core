@@ -28,11 +28,11 @@ PACKAGECONFIG_remove_libc-musl = "lttng-ust"
 
 SRC_URI = "https://lttng.org/files/lttng-tools/lttng-tools-${PV}.tar.bz2 \
            file://x32.patch \
-           file://utils-remove-bogus-interpreter.patch \
-           file://run-ptest"
+           file://run-ptest \
+           "
 
-SRC_URI[md5sum] = "19fdcc5e9c307ef66581a2743a08a541"
-SRC_URI[sha256sum] = "a6e6baaaa977dcbc9bce6b675881eec664599b86f0d905a7b0b508539407b24e"
+SRC_URI[md5sum] = "10f47abfa214b167580358388428770d"
+SRC_URI[sha256sum] = "3c72456bceef961fad1d0861f07478db16b7659efa69099ba36645da89ca2cc5"
 
 inherit autotools ptest pkgconfig useradd python3-dir manpages
 
