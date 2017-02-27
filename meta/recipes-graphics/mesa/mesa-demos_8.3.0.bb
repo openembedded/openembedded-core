@@ -30,7 +30,7 @@ PACKAGECONFIG ?= "drm osmesa freetype2 gbm egl gles1 gles2 \
                   x11 glew glu glx"
 
 # The Wayland code doesn't work with Wayland 1.0, so disable it for now
-#${@bb.utils.contains('DISTRO_FEATURES', 'wayland', 'wayland', '', d)}"
+#${@bb.utils.filter('DISTRO_FEATURES', 'wayland', d)}"
 
 EXTRA_OECONF = "--with-system-data-files"
 

@@ -32,8 +32,7 @@ inherit autotools pkgconfig
 
 EXTRA_OECONF = "--with-kernel=${STAGING_INCDIR} \
                "
-PACKAGECONFIG ?= "${@bb.utils.contains('DISTRO_FEATURES', 'ipv6', 'ipv6', '', d)} \
-                 "
+PACKAGECONFIG ?= "${@bb.utils.filter('DISTRO_FEATURES', 'ipv6', d)}"
 
 PACKAGECONFIG[ipv6] = "--enable-ipv6,--disable-ipv6,"
 

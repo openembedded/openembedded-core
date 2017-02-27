@@ -24,7 +24,7 @@ SRC_URI[md5sum] = "a128e1eda76899ce3fd115efae5fe631"
 SRC_URI[sha256sum] = "1c97225deea33eefba6d4158c2cef27913d47553263516bbe9d2e2760fc43a3f"
 
 PACKAGECONFIG ??= "openssl pcre zlib \
-    ${@bb.utils.contains('DISTRO_FEATURES', 'ipv6', 'ipv6', '', d)} \
+    ${@bb.utils.filter('DISTRO_FEATURES', 'ipv6', d)} \
     ${@bb.utils.contains('DISTRO_FEATURES', 'largefile', 'lfs', '', d)} \
     ${@bb.utils.contains('DISTRO_FEATURES', 'xattr', 'attr', '', d)} \
 "

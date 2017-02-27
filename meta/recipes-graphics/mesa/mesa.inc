@@ -25,8 +25,7 @@ REQUIRED_DISTRO_FEATURES = "opengl"
 EXTRA_OECONF = "--enable-shared-glapi"
 
 PACKAGECONFIG ??= "gbm egl gles dri ${MESA_CRYPTO} \
-		${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'x11', '', d)}\
-		${@bb.utils.contains('DISTRO_FEATURES', 'wayland', 'wayland', '', d)}\
+		${@bb.utils.filter('DISTRO_FEATURES', 'wayland x11', d)} \
 		"
 
 PACKAGECONFIG[gbm] = "--enable-gbm,--disable-gbm"

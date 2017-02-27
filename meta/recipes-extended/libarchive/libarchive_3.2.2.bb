@@ -11,9 +11,7 @@ PACKAGECONFIG ?= "zlib bz2"
 
 PACKAGECONFIG_append_class-target = "\
 	libxml2 \
-	${@bb.utils.contains('DISTRO_FEATURES', 'acl', 'acl', '', d)} \
-	${@bb.utils.contains('DISTRO_FEATURES', 'xattr', 'xattr', '', d)} \
-	${@bb.utils.contains('DISTRO_FEATURES', 'largefile', 'largefile', '', d)} \
+	${@bb.utils.filter('DISTRO_FEATURES', 'acl largefile xattr', d)} \
 "
 
 PACKAGECONFIG_append_class-nativesdk = " largefile"

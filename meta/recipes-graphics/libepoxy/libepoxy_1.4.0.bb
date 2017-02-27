@@ -16,4 +16,4 @@ REQUIRED_DISTRO_FEATURES = "opengl"
 DEPENDS = "util-macros virtual/egl"
 
 PACKAGECONFIG[x11] = "--enable-glx, --disable-glx, virtual/libx11"
-PACKAGECONFIG ??= "${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'x11', '', d)}"
+PACKAGECONFIG ??= "${@bb.utils.filter('DISTRO_FEATURES', 'x11', d)}"

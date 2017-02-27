@@ -29,7 +29,7 @@ BBCLASSEXTEND = "native"
 
 inherit autotools pkgconfig
 
-PACKAGECONFIG ??= "${@bb.utils.contains('DISTRO_FEATURES', 'largefile', 'largefile', '', d)} \
+PACKAGECONFIG ??= "${@bb.utils.filter('DISTRO_FEATURES', 'largefile', d)} \
 "
 PACKAGECONFIG[libcap] = "--with-caps, --without-caps, libcap"
 PACKAGECONFIG[libseccomp] = "--with-seccomp, --without-seccomp, libseccomp"

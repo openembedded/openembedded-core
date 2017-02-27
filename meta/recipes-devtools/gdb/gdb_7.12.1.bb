@@ -10,7 +10,7 @@ EXTRA_OEMAKE_append_libc-musl = "\
                                 "
 
 do_configure_prepend() {
-	if [ -n "${@bb.utils.contains('PACKAGECONFIG', 'python', 'python', '', d)}" ]; then
+	if [ "${@bb.utils.filter('PACKAGECONFIG', 'python', d)}" ]; then
 		cat > ${WORKDIR}/python << EOF
 #!/bin/sh
 case "\$2" in

@@ -81,12 +81,12 @@ do_install_append() {
    # Disable zypper channel support
    rm -f ${D}${PYTHON_SITEPACKAGES_DIR}/smart/plugins/zyppchannelsync.py*
 
-   if [ -z "${@bb.utils.contains('PACKAGECONFIG', 'rpm', 'rpm', '', d)}" ]; then
+   if [ -z "${@bb.utils.filter('PACKAGECONFIG', 'rpm', d)}" ]; then
       rm -f ${D}${PYTHON_SITEPACKAGES_DIR}/smart/plugins/rpmdir.py*
       rm -rf ${D}${PYTHON_SITEPACKAGES_DIR}/smart/backends/rpm
    fi
 
-   if [ -z "${@bb.utils.contains('PACKAGECONFIG', 'qt4', 'qt4', '', d)}" ]; then
+   if [ -z "${@bb.utils.filter('PACKAGECONFIG', 'qt4', d)}" ]; then
       rm -rf ${D}${PYTHON_SITEPACKAGES_DIR}/smart/interfaces/qt4
    fi
 

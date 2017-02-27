@@ -41,11 +41,9 @@ SRC_URI_append_qemuall = " file://0001-core-device.c-Change-the-default-device-t
 
 PACKAGECONFIG ??= "xz \
                    ldconfig \
-                   ${@bb.utils.contains('DISTRO_FEATURES', 'pam', 'pam', '', d)} \
+                   ${@bb.utils.filter('DISTRO_FEATURES', 'efi pam selinux', d)} \
                    ${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'xkbcommon', '', d)} \
-                   ${@bb.utils.contains('DISTRO_FEATURES', 'selinux', 'selinux', '', d)} \
                    ${@bb.utils.contains('DISTRO_FEATURES', 'wifi', 'rfkill', '', d)} \
-                   ${@bb.utils.contains('MACHINE_FEATURES', 'efi', 'efi', '', d)} \
                    binfmt \
                    randomseed \
                    machined \

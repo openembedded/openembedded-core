@@ -36,7 +36,7 @@ EXTRA_OECONF += "ac_cv_func_getgroups_works=yes \
 
 # acl is not a default feature
 #
-PACKAGECONFIG ??= "${@bb.utils.contains('DISTRO_FEATURES', 'acl', 'acl', '', d)}"
+PACKAGECONFIG ??= "${@bb.utils.filter('DISTRO_FEATURES', 'acl', d)}"
 
 # with, without, depends, rdepends
 #

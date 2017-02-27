@@ -100,8 +100,7 @@ do_install_append() {
 
 PACKAGECONFIG ??= " \
 	fdt sdl \
-	${@bb.utils.contains('DISTRO_FEATURES', 'alsa', 'alsa', '', d)} \
-	${@bb.utils.contains('DISTRO_FEATURES', 'xen', 'xen', '', d)} \
+	${@bb.utils.filter('DISTRO_FEATURES', 'alsa xen', d)} \
 	"
 PACKAGECONFIG_class-native ??= "fdt alsa uuid"
 PACKAGECONFIG_class-nativesdk ??= "fdt sdl"

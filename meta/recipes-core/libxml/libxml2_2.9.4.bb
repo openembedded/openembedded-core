@@ -43,7 +43,7 @@ RDEPENDS_${PN}-ptest_append_libc-glibc = " glibc-gconv-ebcdic-us glibc-gconv-ibm
 export PYTHON_SITE_PACKAGES="${PYTHON_SITEPACKAGES_DIR}"
 
 PACKAGECONFIG ??= "python \
-    ${@bb.utils.contains('DISTRO_FEATURES', 'ipv6', 'ipv6', '', d)} \
+    ${@bb.utils.filter('DISTRO_FEATURES', 'ipv6', d)} \
 "
 PACKAGECONFIG[python] = "--with-python=${PYTHON},--without-python,python"
 PACKAGECONFIG[ipv6] = "--enable-ipv6,--disable-ipv6,"

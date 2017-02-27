@@ -35,8 +35,7 @@ EXTRA_OECONF_class-nativesdk = "--enable-install-program=arch"
 # acl and xattr are not default features
 #
 PACKAGECONFIG_class-target ??= "\
-    ${@bb.utils.contains('DISTRO_FEATURES', 'acl', 'acl', '', d)} \
-    ${@bb.utils.contains('DISTRO_FEATURES', 'xattr', 'xattr', '', d)} \
+    ${@bb.utils.filter('DISTRO_FEATURES', 'acl xattr', d)} \
 "
 
 # The lib/oe/path.py requires xattr

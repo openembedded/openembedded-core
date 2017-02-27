@@ -45,9 +45,9 @@ PACKAGECONFIG[mpi] = ",,mpich"
 PACKAGECONFIG[python] = ",,python python3"
 
 BOOST_LIBS += "\
-    ${@bb.utils.contains('PACKAGECONFIG', 'locale', 'locale', '', d)} \
+    ${@bb.utils.filter('PACKAGECONFIG', 'locale', d)} \
     ${@bb.utils.contains('PACKAGECONFIG', 'graph_parallel', 'graph_parallel mpi', \
-                         bb.utils.contains('PACKAGECONFIG', 'mpi', 'mpi', '', d), d)} \
+                         bb.utils.filter('PACKAGECONFIG', 'mpi', d), d)} \
     ${@bb.utils.contains('PACKAGECONFIG', 'python', 'python python3', '', d)} \
 "
 

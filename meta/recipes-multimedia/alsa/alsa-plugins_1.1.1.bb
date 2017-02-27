@@ -31,7 +31,7 @@ inherit autotools pkgconfig
 PACKAGECONFIG ??= "\
         samplerate \
         speexdsp \
-        ${@bb.utils.contains('DISTRO_FEATURES', 'pulseaudio', 'pulseaudio', '', d)} \
+        ${@bb.utils.filter('DISTRO_FEATURES', 'pulseaudio', d)} \
 "
 PACKAGECONFIG[avcodec] = "--enable-avcodec,--disable-avcodec,libav"
 PACKAGECONFIG[jack] = "--enable-jack,--disable-jack,jack"

@@ -23,9 +23,8 @@ REQUIRED_DISTRO_FEATURES ?= "opengl"
 PACKAGES =+ "${PN}-tests"
 
 PACKAGECONFIG ??= "drm \
-                   ${@bb.utils.contains("DISTRO_FEATURES", "opengl x11", "glx", "", d)} \
-                   ${@bb.utils.contains("DISTRO_FEATURES", "wayland", "wayland", "", d)} \
-                   ${@bb.utils.contains("DISTRO_FEATURES", "x11", "x11", "", d)}"
+                   ${@bb.utils.contains('DISTRO_FEATURES', 'opengl x11', 'glx', '', d)} \
+                   ${@bb.utils.filter('DISTRO_FEATURES', 'wayland x11', d)}"
 
 PACKAGECONFIG[drm] = "--enable-drm,--disable-drm,udev libdrm"
 PACKAGECONFIG[glx] = "--enable-glx,--disable-glx,virtual/mesa"

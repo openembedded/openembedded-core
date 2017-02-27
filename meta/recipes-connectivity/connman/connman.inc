@@ -31,10 +31,8 @@ EXTRA_OECONF += "\
 "
 
 PACKAGECONFIG ??= "wispr \
-                   ${@bb.utils.contains('DISTRO_FEATURES', 'systemd','systemd', '', d)} \
-                   ${@bb.utils.contains('DISTRO_FEATURES', 'wifi','wifi', '', d)} \
+                   ${@bb.utils.filter('DISTRO_FEATURES', '3g systemd wifi', d)} \
                    ${@bb.utils.contains('DISTRO_FEATURES', 'bluetooth', 'bluez', '', d)} \
-                   ${@bb.utils.contains('DISTRO_FEATURES', '3g','3g', '', d)} \
 "
 
 # If you want ConnMan to support VPN, add following statement into
