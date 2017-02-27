@@ -216,6 +216,13 @@ class OETestLoader(unittest.TestLoader):
     # use_load_tests deprecation via *args and **kws.  See issue 16662.
     if sys.version_info >= (3,5):
         def loadTestsFromModule(self, module, *args, pattern=None, **kws):
+            """
+                Returns a suite of all tests cases contained in module.
+            """
+            if module.__name__ in sys.builtin_module_names:
+                msg = 'Tried to import %s test module but is a built-in'
+                raise ImportError(msg % module.__name__)
+
             if not self.modules or "all" in self.modules or \
                     module.__name__ in self.modules:
                 return super(OETestLoader, self).loadTestsFromModule(
@@ -227,6 +234,10 @@ class OETestLoader(unittest.TestLoader):
             """
                 Returns a suite of all tests cases contained in module.
             """
+            if module.__name__ in sys.builtin_module_names:
+                msg = 'Tried to import %s test module but is a built-in'
+                raise ImportError(msg % module.__name__)
+
             if not self.modules or "all" in self.modules or \
                     module.__name__ in self.modules:
                 return super(OETestLoader, self).loadTestsFromModule(
