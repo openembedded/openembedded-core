@@ -171,11 +171,11 @@ class OETestLoader(unittest.TestLoader):
         """
         if issubclass(testCaseClass, unittest.suite.TestSuite):
             raise TypeError("Test cases should not be derived from TestSuite." \
-                                " Maybe you meant to derive from TestCase?")
+                                " Maybe you meant to derive %s from TestCase?" \
+                                % testCaseClass.__name__)
         if not issubclass(testCaseClass, self.caseClass):
-            raise TypeError("Test cases need to be derived from %s" % \
-                    self.caseClass.__name__)
-
+            raise TypeError("Test %s is not derived from %s" % \
+                    (testCaseClass.__name__, self.caseClass.__name__))
 
         testCaseNames = self.getTestCaseNames(testCaseClass)
         if not testCaseNames and hasattr(testCaseClass, 'runTest'):
