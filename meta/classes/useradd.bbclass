@@ -132,38 +132,6 @@ python useradd_sysroot_sstate () {
         bb.build.exec_func("useradd_sysroot", d)
 }
 
-userdel_sysroot_sstate () {
-if test "x${STAGING_DIR_TARGET}" != "x"; then
-    if [ "${BB_CURRENTTASK}" = "clean" ]; then
-        export PSEUDO="${FAKEROOTENV} PSEUDO_LOCALSTATEDIR=${STAGING_DIR_TARGET}${localstatedir}/pseudo ${PSEUDO_SYSROOT}${bindir_native}/pseudo"
-        OPT="--root ${STAGING_DIR_TARGET}"
-
-        # Remove groups and users defined for package
-        GROUPADD_PARAM="${@get_all_cmd_params(d, 'groupadd')}"
-        USERADD_PARAM="${@get_all_cmd_params(d, 'useradd')}"
-
-        user=`echo "$USERADD_PARAM" | cut -d ';' -f 1 | awk '{ print $NF }'`
-        remaining=`echo "$USERADD_PARAM" | cut -d ';' -f 2- -s | sed -e 's#[ \t]*$##'`
-        while test "x$user" != "x"; do
-            perform_userdel "${STAGING_DIR_TARGET}" "$OPT $user"
-            user=`echo "$remaining" | cut -d ';' -f 1 | awk '{ print $NF }'`
-            remaining=`echo "$remaining" | cut -d ';' -f 2- -s | sed -e 's#[ \t]*$##'`
-        done
-
-        user=`echo "$GROUPADD_PARAM" | cut -d ';' -f 1 | awk '{ print $NF }'`
-        remaining=`echo "$GROUPADD_PARAM" | cut -d ';' -f 2- -s | sed -e 's#[ \t]*$##'`
-        while test "x$user" != "x"; do
-            perform_groupdel "${STAGING_DIR_TARGET}" "$OPT $user"
-            user=`echo "$remaining" | cut -d ';' -f 1 | awk '{ print $NF }'`
-            remaining=`echo "$remaining" | cut -d ';' -f 2- -s | sed -e 's#[ \t]*$##'`
-        done
-
-    fi
-fi
-}
-
-#SSTATECLEANFUNCS_append_class-target = " userdel_sysroot_sstate"
-
 do_prepare_recipe_sysroot[postfuncs] += "${SYSROOTFUNC}"
 SYSROOTFUNC_class-target = "useradd_sysroot_sstate"
 SYSROOTFUNC = ""
