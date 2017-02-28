@@ -42,7 +42,7 @@ python __anonymous () {
         d.setVar("HEADER_FETCH_VER", "2.6")
 }
 
-inherit kernel-arch
+inherit kernel-arch pkgconfig
 
 KORG_ARCHIVE_COMPRESSION ?= "xz"
 
