@@ -32,4 +32,4 @@ DISABLE_STATIC_pn-libusb1-native = ""
 
 EXTRA_OECONF_append = "${DISABLE_STATIC}"
 
-EXTRA_OECMAKE_append_pn-libical = "-DSHARED_ONLY=True"
+EXTRA_OECMAKE_append_pn-libical = " -DSHARED_ONLY=True"
