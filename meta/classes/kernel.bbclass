@@ -327,6 +327,10 @@ do_install[prefuncs] += "package_get_auto_pr"
 
 # Must be ran no earlier than after do_kernel_checkout or else Makefile won't be in ${S}/Makefile
 do_kernel_version_sanity_check() {
+	if [ "x${KERNEL_VERSION_SANITY_SKIP}" = "x1" ]; then
+		exit 0
+	fi
+
 	# The Makefile determines the kernel version shown at runtime
 	# Don't use KERNEL_VERSION because the headers it grabs the version from aren't generated until do_compile
 	VERSION=$(grep "^VERSION =" ${S}/Makefile | sed s/.*=\ *//)
@@ -350,7 +354,7 @@ do_kernel_version_sanity_check() {
 	reg="${reg}${EXTRAVERSION}"
 
 	if [ -z `echo ${PV} | grep -E "${reg}"` ]; then
-		bbfatal "Package Version (${PV}) does not match of kernel being built (${vers}). Please update the PV variable to match the kernel source."
+		bbfatal "Package Version (${PV}) does not match of kernel being built (${vers}). Please update the PV variable to match the kernel source or set KERNEL_VERSION_SANITY_SKIP=\"1\" in your recipe."
 	fi
 	exit 0
 }
