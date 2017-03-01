@@ -46,6 +46,19 @@ class NpmRecipeHandler(RecipeHandler):
             if isinstance(license, dict):
                 license = license.get('type', None)
             if license:
+                if 'OR' in license:
+                    license = license.replace('OR', '|')
+                    license = license.replace('AND', '&')
+                    license = license.replace(' ', '_')
+                    if not license[0] == '(':
+                        license = '(' + license + ')'
+                    print('LICENSE: {}'.format(license))
+                else:
+                    license = license.replace('AND', '&')
+                    if license[0] == '(':
+                        license = license[1:]
+                    if license[-1] == ')':
+                        license = license[:-1]
                 license = license.replace('MIT/X11', 'MIT')
                 license = license.replace('SEE LICENSE IN EULA',
                                           'SEE-LICENSE-IN-EULA')
@@ -220,7 +233,8 @@ class NpmRecipeHandler(RecipeHandler):
                     packages = OrderedDict((x,y[0]) for x,y in npmpackages.items())
                     packages['${PN}'] = ''
                     pkglicenses = split_pkg_licenses(licvalues, packages, lines_after, licenses)
-                    all_licenses = list(set([item for pkglicense in pkglicenses.values() for item in pkglicense]))
+                    all_licenses = list(set([item.replace('_', ' ') for pkglicense in pkglicenses.values() for item in pkglicense]))
+                    all_licenses.remove('&')
                     # Go back and update the LICENSE value since we have a bit more
                     # information than when that was written out (and we know all apply
                     # vs. there being a choice, so we can join them with &)
