@@ -14,8 +14,8 @@ class OESDKExtTestContextExecutor(OESDKTestContextExecutor):
     help = 'esdk test component'
     description = 'executes esdk tests'
 
-    default_cases = [OESDKTestContextExecutor.default_cases[0],
-            os.path.join(os.path.abspath(os.path.dirname(__file__)), 'cases')]
+    default_cases = OESDKTestContextExecutor.default_cases + \
+            [os.path.join(os.path.abspath(os.path.dirname(__file__)), 'cases')]
     default_test_data = None
 
 _executor_class = OESDKExtTestContextExecutor
