@@ -135,15 +135,6 @@ class oeRuntimeTest(oeTest):
             if status != 0:
                 return status
 
-class OETestCalledProcessError(subprocess.CalledProcessError):
-    def __str__(self):
-        if hasattr(self, "stderr"):
-            return "Command '%s' returned non-zero exit status %d with output %s and stderr %s" % (self.cmd, self.returncode, self.output, self.stderr)
-        else:
-            return "Command '%s' returned non-zero exit status %d with output %s" % (self.cmd, self.returncode, self.output)
-
-subprocess.CalledProcessError = OETestCalledProcessError
-
 def getmodule(pos=2):
     # stack returns a list of tuples containg frame information
     # First element of the list the is current frame, caller is 1
