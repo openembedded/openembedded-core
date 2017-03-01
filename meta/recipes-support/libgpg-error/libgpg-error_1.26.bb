@@ -18,6 +18,7 @@ SRC_URI = "${GNUPG_MIRROR}/libgpg-error/libgpg-error-${PV}.tar.bz2 \
 
 SRC_URI[md5sum] = "97456709dbbcbb69354317ffe3e347cd"
 SRC_URI[sha256sum] = "4c4bcbc90116932e3acd37b37812d8653b1b189c1904985898e860af818aee69"
+PR = "r1"
 
 BINCONFIG = "${bindir}/gpg-error-config"
 
@@ -34,6 +35,7 @@ do_compile_prepend() {
 	  arm)	      TUPLE=arm-unknown-linux-gnueabi ;;
 	  armeb)      TUPLE=arm-unknown-linux-gnueabi ;;
 	  i586|i686)  TUPLE=i686-pc-linux-gnu ;;
+	  mips64*)    TUPLE=mips64el-unknown-linux-gnuabi64 ;;
 	  mips*el)    TUPLE=mipsel-unknown-linux-gnu ;;
 	  mips*)      TUPLE=mips-unknown-linux-gnu ;;
 	  x86_64)     TUPLE=x86_64-pc-linux-gnu ;;

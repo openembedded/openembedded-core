@@ -18,8 +18,3 @@ ARM_INSTRUCTION_SET = "arm"
 do_configure_prepend() {
     rm -f ${S}/build/m4/vapigen.m4
 }
-
-# Secret-1: poky/build-mips64/tmp/work/mips64-poky-linux/libgpg-error/1.19-r0/libgpg-error-1.19/src/posix-lock.c:119: get_lock_object: Assertion `!"sizeof lock obj"' failed.
-# qemu: uncaught target signal 6 (Aborted) - core dumped
-EXTRA_OECONF_append_mips64 = " --disable-introspection --disable-gtk-doc"
-

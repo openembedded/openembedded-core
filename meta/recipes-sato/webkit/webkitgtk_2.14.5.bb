@@ -111,8 +111,3 @@ ARM_INSTRUCTION_SET_armv6 = "arm"
 ARM_INSTRUCTION_SET_armv7a = "thumb"
 ARM_INSTRUCTION_SET_armv7r = "thumb"
 ARM_INSTRUCTION_SET_armv7ve = "thumb"
-
-# WebKit2-4.0: ../../libgpg-error-1.21/src/posix-lock.c:119: get_lock_object: Assertion `!"sizeof lock obj"' failed.
-# qemu: uncaught target signal 6 (Aborted) - core dumped
-EXTRA_OECMAKE_append_mipsarchn32 = " -DENABLE_INTROSPECTION=OFF -DENABLE_GTKDOC=OFF"
-EXTRA_OECMAKE_append_mipsarchn64 = " -DENABLE_INTROSPECTION=OFF -DENABLE_GTKDOC=OFF"
