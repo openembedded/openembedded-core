@@ -29,38 +29,32 @@ class DevtoolTest(OESDKExtTestCase):
         self._run('devtool add myapp %s' % directory)
         try:
             self._run('devtool build myapp')
-        except Exception as e:
-            print(e.output)
+        finally:
             self._run('devtool reset myapp')
-            raise e
-        self._run('devtool reset myapp')
 
     def _test_devtool_build_package(self, directory):
         self._run('devtool add myapp %s' % directory)
         try:
             self._run('devtool package myapp')
-        except Exception as e:
-            print(e.output)
+        finally:
             self._run('devtool reset myapp')
-            raise e
-        self._run('devtool reset myapp')
 
     def test_devtool_location(self):
         output = self._run('which devtool')
         self.assertEqual(output.startswith(self.tc.sdk_dir), True, \
             msg="Seems that devtool isn't the eSDK one: %s" % output)
-    
+
     @OETestDepends(['test_devtool_location'])
     def test_devtool_add_reset(self):
         self._run('devtool add myapp %s' % self.myapp_dst)
         self._run('devtool reset myapp')
-    
+
     @OETestID(1605)
     @OETestDepends(['test_devtool_location'])
     @skipIfNotDataVar('SDK_INCLUDE_TOOLCHAIN', '1', 'SDK does not include toolchain')
     def test_devtool_build_make(self):
         self._test_devtool_build(self.myapp_dst)
-    
+
     @OETestID(1606)
     @OETestDepends(['test_devtool_location'])
     @skipIfNotDataVar('SDK_INCLUDE_TOOLCHAIN', '1', 'SDK does not include toolchain')
@@ -72,7 +66,7 @@ class DevtoolTest(OESDKExtTestCase):
     @skipIfNotDataVar('SDK_INCLUDE_TOOLCHAIN', '1', 'SDK does not include toolchain')
     def test_devtool_build_cmake(self):
         self._test_devtool_build(self.myapp_cmake_dst)
-    
+
     @OETestID(1608)
     @OETestDepends(['test_devtool_location'])
     @skipIfNotDataVar('SDK_INCLUDE_TOOLCHAIN', '1', 'SDK does not include toolchain')
@@ -82,11 +76,8 @@ class DevtoolTest(OESDKExtTestCase):
         self._run('devtool add %s %s' % (recipe, req) )
         try:
             self._run('devtool build %s' % recipe)
-        except Exception as e:
-            print(e.output)
+        finally:
             self._run('devtool reset %s' % recipe)
-            raise e
-        self._run('devtool reset %s' % recipe)
 
     @OETestID(1609)
     @OETestDepends(['test_devtool_location'])
@@ -97,11 +88,8 @@ class DevtoolTest(OESDKExtTestCase):
         self._run('devtool add %s %s' % (recipe, docfile) )
         try:
             self._run('devtool build %s' % recipe)
-        except Exception as e:
-            print(e.output)
+        finally:
             self._run('devtool reset %s' % recipe)
-            raise e
-        self._run('devtool reset %s' % recipe)
 
     @OETestID(1610)
     @OETestDepends(['test_devtool_location'])
@@ -111,8 +99,5 @@ class DevtoolTest(OESDKExtTestCase):
         self._run('devtool add %s ' % package_nodejs)
         try:
             self._run('devtool build %s ' % package_nodejs)
-        except Exception as e:
-            print(e.output)
-            self._run('devtool reset %s' % package_nodejs)
-            raise e
-        self._run('devtool reset %s '% package_nodejs)
+        finally:
+            self._run('devtool reset %s '% package_nodejs)

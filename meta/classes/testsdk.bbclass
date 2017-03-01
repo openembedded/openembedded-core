@@ -100,7 +100,7 @@ def testsdkext_main(d):
     import logging
 
     from bb.utils import export_proxies
-    from oeqa.utils import avoid_paths_in_environ, make_logger_bitbake_compatible
+    from oeqa.utils import avoid_paths_in_environ, make_logger_bitbake_compatible, subprocesstweak
     from oeqa.sdkext.context import OESDKExtTestContext, OESDKExtTestContextExecutor
 
     pn = d.getVar("PN")
@@ -108,6 +108,8 @@ def testsdkext_main(d):
 
     # extensible sdk use network
     export_proxies(d)
+
+    subprocesstweak.errors_have_output()
 
     # extensible sdk can be contaminated if native programs are
     # in PATH, i.e. use perl-native instead of eSDK one.
