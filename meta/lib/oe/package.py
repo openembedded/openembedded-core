@@ -150,6 +150,7 @@ def npm_split_package_dirs(pkgdir):
                         continue
                     pkgitems.append(pathitem)
                 pkgname = '-'.join(pkgitems).replace('_', '-')
+                pkgname = pkgname.replace('@', '')
                 pkgfile = os.path.join(root, dn, 'package.json')
                 data = None
                 if os.path.exists(pkgfile):
