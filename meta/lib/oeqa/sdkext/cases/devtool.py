@@ -11,14 +11,19 @@ from oeqa.core.decorator.data import skipIfNotDataVar
 
 class DevtoolTest(OESDKExtTestCase):
     @classmethod
-    def setUpClass(self):
-        self.myapp_src = os.path.join(self.tc.esdk_files_dir, "myapp")
-        self.myapp_dst = os.path.join(self.tc.sdk_dir, "myapp")
-        shutil.copytree(self.myapp_src, self.myapp_dst)
+    def setUpClass(cls):
+        myapp_src = os.path.join(cls.tc.esdk_files_dir, "myapp")
+        cls.myapp_dst = os.path.join(cls.tc.sdk_dir, "myapp")
+        shutil.copytree(myapp_src, cls.myapp_dst)
 
-        self.myapp_cmake_src = os.path.join(self.tc.esdk_files_dir, "myapp_cmake")
-        self.myapp_cmake_dst = os.path.join(self.tc.sdk_dir, "myapp_cmake")
-        shutil.copytree(self.myapp_cmake_src, self.myapp_cmake_dst)
+        myapp_cmake_src = os.path.join(cls.tc.esdk_files_dir, "myapp_cmake")
+        cls.myapp_cmake_dst = os.path.join(cls.tc.sdk_dir, "myapp_cmake")
+        shutil.copytree(myapp_cmake_src, cls.myapp_cmake_dst)
+
+    @classmethod
+    def tearDownClass(cls):
+        shutil.rmtree(cls.myapp_dst)
+        shutil.rmtree(cls.myapp_cmake_dst)
 
     def _test_devtool_build(self, directory):
         self._run('devtool add myapp %s' % directory)
@@ -111,8 +116,3 @@ class DevtoolTest(OESDKExtTestCase):
             self._run('devtool reset %s' % package_nodejs)
             raise e
         self._run('devtool reset %s '% package_nodejs)
-
-    @classmethod
-    def tearDownClass(self):
-        shutil.rmtree(self.myapp_dst)
-        shutil.rmtree(self.myapp_cmake_dst)
