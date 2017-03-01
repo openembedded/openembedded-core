@@ -149,6 +149,17 @@ def testsdkext_main(d):
         bb.plain("Extensible SDK testing environment: %s" % s)
 
         sdk_env = sdk_envs[s]
+
+        # Use our own SSTATE_DIR and DL_DIR so that updates to the eSDK come from our sstate cache
+        # and we don't spend hours downloading kernels for the kernel module test
+        with open(os.path.join(sdk_dir, 'conf', 'local.conf'), 'a+') as f:
+            f.write('SSTATE_MIRRORS = "file://.* file://%s/PATH"\n' % test_data.get('SSTATE_DIR'))
+            f.write('SOURCE_MIRROR_URL = "file://%s"\n' % test_data.get('DL_DIR'))
+            f.write('INHERIT += "own-mirrors"')
+
+        # We need to do this in case we have a minimal SDK
+        subprocess.check_output(". %s > /dev/null; devtool sdk-install meta-extsdk-toolchain" % sdk_env, cwd=sdk_dir, shell=True)
+
         tc = OESDKExtTestContext(td=test_data, logger=logger, sdk_dir=sdk_dir,
             sdk_env=sdk_env, target_pkg_manifest=target_pkg_manifest,
             host_pkg_manifest=host_pkg_manifest)
