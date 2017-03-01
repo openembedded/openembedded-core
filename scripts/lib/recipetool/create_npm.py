@@ -45,8 +45,10 @@ class NpmRecipeHandler(RecipeHandler):
             license = data['license']
             if isinstance(license, dict):
                 license = license.get('type', None)
-            if 'MIT/X11' in license:
-                license = 'MIT'
+            if license:
+                license = license.replace('MIT/X11', 'MIT')
+                license = license.replace('SEE LICENSE IN EULA',
+                                          'SEE-LICENSE-IN-EULA')
         return license
 
     def _shrinkwrap(self, srctree, localfilesdir, extravalues, lines_before):
