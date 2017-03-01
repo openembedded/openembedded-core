@@ -9,4 +9,4 @@ class OESDKTestCase(OETestCase):
     def _run(self, cmd):
         return subprocess.check_output(". %s > /dev/null; %s;" % \
                 (self.tc.sdk_env, cmd), shell=True,
-                stderr=subprocess.STDOUT).decode("utf-8")
+                stderr=subprocess.STDOUT, universal_newlines=True)

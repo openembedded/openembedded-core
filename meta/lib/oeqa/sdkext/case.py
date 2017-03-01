@@ -18,4 +18,4 @@ class OESDKExtTestCase(OESDKTestCase):
 
         return subprocess.check_output(". %s > /dev/null;"\
             " %s;" % (self.tc.sdk_env, cmd), stderr=subprocess.STDOUT,
-            shell=True, env=env).decode("utf-8")
+            shell=True, env=env, universal_newlines=True)
