@@ -9,10 +9,10 @@ SRC_URI =" http://www.iana.org/time-zones/repository/releases/tzcode${PV}.tar.gz
            http://www.iana.org/time-zones/repository/releases/tzdata${PV}.tar.gz;name=tzdata"
 UPSTREAM_CHECK_URI = "http://www.iana.org/time-zones"
 
-SRC_URI[tzcode.md5sum] = "0684b98eb184fab250b6ca946862078d"
-SRC_URI[tzcode.sha256sum] = "b9effc4fb4051df4a356cbe5857bf99e2fa32e00d8340f2e8a4d58f0c9ccb0b7"
-SRC_URI[tzdata.md5sum] = "db361d005ac8b30a2d18c5ca38d3e8ab"
-SRC_URI[tzdata.sha256sum] = "f5ee4e0f115f6c2faee1c4b16193a97338cbd1b503f2cea6c5a768c82ff39dc8"
+SRC_URI[tzcode.md5sum] = "eef0bfac7a52dce6989a7d8b40d86fe0"
+SRC_URI[tzcode.sha256sum] = "02f2c6b58b99edd0d47f0cad34075b359fd1a4dab71850f493b0404ded3b38ac"
+SRC_URI[tzdata.md5sum] = "cb8274cd175f8a4d9d1b89895df876dc"
+SRC_URI[tzdata.sha256sum] = "df3a5c4d0a2cf0cde0b3f35796ccf6c9acfd598b8e70f8dece5404cd7626bbd6"
 
 S = "${WORKDIR}"
 
