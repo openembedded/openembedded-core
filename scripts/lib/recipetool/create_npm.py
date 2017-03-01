@@ -60,6 +60,7 @@ class NpmRecipeHandler(RecipeHandler):
                     if license[-1] == ')':
                         license = license[:-1]
                 license = license.replace('MIT/X11', 'MIT')
+                license = license.replace('Public Domain', 'PD')
                 license = license.replace('SEE LICENSE IN EULA',
                                           'SEE-LICENSE-IN-EULA')
         return license
