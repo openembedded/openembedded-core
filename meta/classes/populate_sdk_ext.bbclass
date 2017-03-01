@@ -649,7 +649,7 @@ python do_sdk_depends() {
 addtask sdk_depends
 
 do_sdk_depends[dirs] = "${WORKDIR}"
-do_sdk_depends[depends] = "${@get_ext_sdk_depends(d)}"
+do_sdk_depends[depends] = "${@get_ext_sdk_depends(d)} meta-extsdk-toolchain:do_populate_sysroot"
 do_sdk_depends[recrdeptask] = "${@d.getVarFlag('do_populate_sdk', 'recrdeptask', False)}"
 do_sdk_depends[recrdeptask] += "do_populate_lic do_package_qa do_populate_sysroot do_deploy ${SDK_RECRDEP_TASKS}"
 do_sdk_depends[rdepends] = "${@get_sdk_ext_rdepends(d)}"
