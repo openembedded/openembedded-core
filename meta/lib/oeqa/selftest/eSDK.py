@@ -9,7 +9,6 @@ import oeqa.utils.ftools as ftools
 from oeqa.utils.decorators import testcase 
 from oeqa.selftest.base import oeSelfTest
 from oeqa.utils.commands import runCmd, bitbake, get_bb_var
-from oeqa.utils.httpserver import HTTPService
 
 class oeSDKExtSelfTest(oeSelfTest):
     """
@@ -54,9 +53,6 @@ class oeSDKExtSelfTest(oeSelfTest):
     @staticmethod
     def update_configuration(cls, image, tmpdir_eSDKQA, env_eSDK, ext_sdk_path):
         sstate_dir = os.path.join(os.environ['BUILDDIR'], 'sstate-cache')
-        cls.http_service = HTTPService(sstate_dir)
-        cls.http_service.start()
-        cls.http_url = "http://127.0.0.1:%d" % cls.http_service.port
 
         oeSDKExtSelfTest.generate_eSDK(cls.image)
 
@@ -67,51 +63,39 @@ class oeSDKExtSelfTest(oeSelfTest):
 
         sstate_config="""
 SDK_LOCAL_CONF_WHITELIST = "SSTATE_MIRRORS"
-SSTATE_MIRRORS =  "file://.* http://%s/PATH"
+SSTATE_MIRRORS =  "file://.* file://%s/PATH"
 CORE_IMAGE_EXTRA_INSTALL = "perl"
-        """ % cls.http_url
+        """ % sstate_dir
 
         with open(os.path.join(cls.tmpdir_eSDKQA, 'conf', 'local.conf'), 'a+') as f:
             f.write(sstate_config)
 
     @classmethod
     def setUpClass(cls):
-        # If there is an exception in setUpClass it will not run tearDownClass
-        # method and it leaves HTTP server running forever, so we need to be
-        # sure tearDownClass is run.
-        try:
-            cls.tmpdir_eSDKQA = tempfile.mkdtemp(prefix='eSDKQA')
+        cls.tmpdir_eSDKQA = tempfile.mkdtemp(prefix='eSDKQA')
 
-            # Start to serve sstate dir
-            sstate_dir = get_bb_var('SSTATE_DIR')
-            cls.http_service = HTTPService(sstate_dir)
-            cls.http_url = "http://127.0.0.1:%d" % cls.http_service.port
-            cls.http_service.start()
+        sstate_dir = get_bb_var('SSTATE_DIR')
 
-            cls.image = 'core-image-minimal'
-            oeSDKExtSelfTest.generate_eSDK(cls.image)
+        cls.image = 'core-image-minimal'
+        oeSDKExtSelfTest.generate_eSDK(cls.image)
 
-            # Install eSDK
-            cls.ext_sdk_path = oeSDKExtSelfTest.get_eSDK_toolchain(cls.image)
-            runCmd("%s -y -d \"%s\"" % (cls.ext_sdk_path, cls.tmpdir_eSDKQA))
+        # Install eSDK
+        cls.ext_sdk_path = oeSDKExtSelfTest.get_eSDK_toolchain(cls.image)
+        runCmd("%s -y -d \"%s\"" % (cls.ext_sdk_path, cls.tmpdir_eSDKQA))
 
-            cls.env_eSDK = oeSDKExtSelfTest.get_esdk_environment('', cls.tmpdir_eSDKQA)
+        cls.env_eSDK = oeSDKExtSelfTest.get_esdk_environment('', cls.tmpdir_eSDKQA)
 
-            # Configure eSDK to use sstate mirror from poky
-            sstate_config="""
+        # Configure eSDK to use sstate mirror from poky
+        sstate_config="""
 SDK_LOCAL_CONF_WHITELIST = "SSTATE_MIRRORS"
-SSTATE_MIRRORS =  "file://.* http://%s/PATH"
-            """ % cls.http_url
-            with open(os.path.join(cls.tmpdir_eSDKQA, 'conf', 'local.conf'), 'a+') as f:
-                f.write(sstate_config)
-        except:
-            cls.tearDownClass()
-            raise
+SSTATE_MIRRORS =  "file://.* file://%s/PATH"
+            """ % sstate_dir
+        with open(os.path.join(cls.tmpdir_eSDKQA, 'conf', 'local.conf'), 'a+') as f:
+            f.write(sstate_config)
 
     @classmethod
     def tearDownClass(cls):
         shutil.rmtree(cls.tmpdir_eSDKQA)
-        cls.http_service.stop()
 
     @testcase (1471)
     def test_install_libraries_headers(self):
@@ -125,13 +109,6 @@ SSTATE_MIRRORS =  "file://.* http://%s/PATH"
         image = 'core-image-minimal'
         cmd = "devtool build-image %s" % image
         oeSDKExtSelfTest.run_esdk_cmd(self.env_eSDK, self.tmpdir_eSDKQA, cmd)
-
-    @testcase(1567)
-    def test_sdk_update_http(self):
-        cmd = "devtool sdk-update %s" % self.http_url
-        oeSDKExtSelfTest.update_configuration(self, self.image, self.tmpdir_eSDKQA, self.env_eSDK, self.ext_sdk_path)
-        oeSDKExtSelfTest.run_esdk_cmd(self.env_eSDK, self.tmpdir_eSDKQA, cmd)
-        self.http_service.stop()
 
 if __name__ == '__main__':
     unittest.main()
