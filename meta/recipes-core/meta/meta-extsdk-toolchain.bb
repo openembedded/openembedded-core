@@ -10,7 +10,7 @@ do_populate_sysroot[deptask] = "do_populate_sysroot"
 # within sstate.bbclass, so if you copy or rename this and expect the same
 # functionality you'll need to modify that as well.
 
-LOCKED_SIGS_INDIR = "${D}/locked-sigs"
+LOCKED_SIGS_INDIR = "${WORKDIR}/locked-sigs"
 
 addtask do_locked_sigs after do_populate_sysroot
 SSTATETASKS += "do_locked_sigs"
