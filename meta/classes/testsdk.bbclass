@@ -154,8 +154,9 @@ def testsdkext_main(d):
 
         # Use our own SSTATE_DIR and DL_DIR so that updates to the eSDK come from our sstate cache
         # and we don't spend hours downloading kernels for the kernel module test
-        with open(os.path.join(sdk_dir, 'conf', 'local.conf'), 'a+') as f:
-            f.write('SSTATE_MIRRORS = "file://.* file://%s/PATH"\n' % test_data.get('SSTATE_DIR'))
+        # Abuse auto.conf since local.conf would be overwritten by the SDK
+        with open(os.path.join(sdk_dir, 'conf', 'auto.conf'), 'a+') as f:
+            f.write('SSTATE_MIRRORS += " \\n file://.* file://%s/PATH"\n' % test_data.get('SSTATE_DIR'))
             f.write('SOURCE_MIRROR_URL = "file://%s"\n' % test_data.get('DL_DIR'))
             f.write('INHERIT += "own-mirrors"')
 
