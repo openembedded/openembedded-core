@@ -52,7 +52,7 @@ BASE_LIB_tune-mipsisa64r6-nf-n32 = "lib32"
 MIPSPKGSFX_VARIANT_tune-mipsisa64r6-nf-n32 = "${TUNE_ARCH}"
 PACKAGE_EXTRA_ARCHS_tune-mipsisa64r6-nf-n32 = "mipsisa64r6-nf-n32"
 
-TUNE_FEATURES_tune-mipsisa64r6el-nf-n32 = "bigendian r6 n32 mipsisa64r6"
+TUNE_FEATURES_tune-mipsisa64r6el-nf-n32 = "r6 n32 mipsisa64r6"
 BASE_LIB_tune-mipsisa64r6el-nf-n32 = "lib32"
 MIPSPKGSFX_VARIANT_tune-mipsisa64r6el-nf-n32 = "${TUNE_ARCH}"
 PACKAGE_EXTRA_ARCHS_tune-mipsisa64r6el-nf-n32 = "mipsisa64r6el-nf-n32"
