@@ -143,7 +143,6 @@ python autotools_aclocals () {
     # Refresh variable with cache files
     d.setVar("CONFIG_SITE", siteinfo_get_files(d, aclocalcache=True))
 }
-autotools_copy_aclocals[vardepsexclude] += "MACHINE SDK_ARCH BUILD_ARCH SDK_OS BB_TASKDEPDATA"
 
 CONFIGURE_FILES = "${S}/configure.in ${S}/configure.ac ${S}/config.h.in ${S}/acinclude.m4 Makefile.am"
 
