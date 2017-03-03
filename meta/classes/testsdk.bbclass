@@ -14,8 +14,6 @@
 #
 # where "<image-name>" is an image like core-image-sato.
 
-TESTSDKLOCK = "${TMPDIR}/testsdk.lock"
-
 def testsdk_main(d):
     import os
     import subprocess
@@ -194,4 +192,4 @@ python do_testsdkext() {
 }
 addtask testsdkext
 do_testsdkext[nostamp] = "1"
-do_testsdkext[lockfiles] += "${TESTSDKEXTLOCK}"
+
