@@ -87,9 +87,6 @@ python do_testsdk() {
 }
 addtask testsdk
 do_testsdk[nostamp] = "1"
-do_testsdk[lockfiles] += "${TESTSDKLOCK}"
-
-TESTSDKEXTLOCK = "${TMPDIR}/testsdkext.lock"
 
 def testsdkext_main(d):
     import os
