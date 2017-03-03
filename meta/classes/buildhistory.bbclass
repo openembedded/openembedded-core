@@ -550,7 +550,9 @@ END
 python buildhistory_get_extra_sdkinfo() {
     import operator
     import math
-    if d.getVar('BB_CURRENTTASK') == 'populate_sdk_ext':
+
+    if d.getVar('BB_CURRENTTASK') == 'populate_sdk_ext' and \
+            "sdk" in (d.getVar('BUILDHISTORY_FEATURES') or "").split():
         tasksizes = {}
         filesizes = {}
         for root, _, files in os.walk(d.expand('${SDK_OUTPUT}/${SDKPATH}/sstate-cache')):
