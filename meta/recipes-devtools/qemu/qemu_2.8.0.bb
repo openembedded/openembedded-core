@@ -29,6 +29,7 @@ SRC_URI += " \
             file://0003-Introduce-condition-in-TPM-backend-for-notification.patch \
             file://0004-Add-support-for-VM-suspend-resume-for-TPM-TIS.patch \
             file://CVE-2016-9908.patch \
+            file://CVE-2016-9912.patch \
 "
 
 SRC_URI_append_class-native = " \
