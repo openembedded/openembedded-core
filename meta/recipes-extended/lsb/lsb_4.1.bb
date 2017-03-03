@@ -34,14 +34,13 @@ S = "${WORKDIR}/lsb-release-1.4"
 CLEANBROKEN = "1"
 
 do_install(){
-	oe_runmake install prefix=${D}  mandir=${D}/${datadir}/man/ DESTDIR=${D}
+	oe_runmake install prefix=${D}/${base_prefix}  mandir=${D}/${datadir}/man/ DESTDIR=${D}
 
 	# this 2 dirs are needed by package lsb-dist-checker
 	mkdir -p ${D}${sysconfdir}/opt
 	mkdir -p ${D}${localstatedir}/opt
 
-	mkdir -p ${D}${base_bindir}
-	mkdir -p ${D}/${baselib}
+	mkdir -p ${D}${base_libdir}
 	mkdir -p ${D}${sysconfdir}/lsb-release.d
 	printf "LSB_VERSION=\"core-4.1-noarch:" > ${D}${sysconfdir}/lsb-release
 
@@ -87,47 +86,46 @@ do_install_append(){
            install -m 0755 ${WORKDIR}/${i} ${D}${sysconfdir}/core-lsb
        done
 
-       install -d ${D}/lib/lsb
-       install -m 0755 ${WORKDIR}/init-functions ${D}/lib/lsb
+       install -d ${D}/${nonarch_base_libdir}/lsb
+       install -m 0755 ${WORKDIR}/init-functions ${D}/${nonarch_base_libdir}/lsb
 
        # creat links for LSB test
-       install -d ${D}/usr/lib/lsb
-       ln -sf ${sbindir}/chkconfig ${D}/usr/lib/lsb/install_initd
-       ln -sf ${sbindir}/chkconfig ${D}/usr/lib/lsb/remove_initd
+       if [ "${nonarch_base_libdir}" != "${nonarch_libdir}" ] ; then
+               install -d ${D}/${nonarch_libdir}/lsb
+       fi
+       ln -sf ${sbindir}/chkconfig ${D}/${nonarch_libdir}/lsb/install_initd
+       ln -sf ${sbindir}/chkconfig ${D}/${nonarch_libdir}/lsb/remove_initd
 
        if [ "${TARGET_ARCH}" = "x86_64" ];then
-	       cd ${D}
                if [ "${baselib}" != "lib64" ]; then
-                   ln -sf ${baselib} lib64
+                   lnr ${D}${base_libdir} ${D}/lib64
                fi
-	       cd ${D}/${baselib}
+	       cd ${D}/${base_libdir}
                ln -sf ld-linux-x86-64.so.2 ld-lsb-x86-64.so.2
                ln -sf ld-linux-x86-64.so.2 ld-lsb-x86-64.so.3
        fi
        if [ "${TARGET_ARCH}" = "i586" ] || [ "${TARGET_ARCH}" = "i686" ];then
-	       cd ${D}/${baselib}
+	       cd ${D}/${base_libdir}
                ln -sf ld-linux.so.2 ld-lsb.so.2
                ln -sf ld-linux.so.2 ld-lsb.so.3
        fi
 
        if [ "${TARGET_ARCH}" = "powerpc64" ];then
-               cd ${D}
                if [ "${baselib}" != "lib64" ]; then
-                   ln -sf ${baselib} lib64
+                   lnr  ${D}${base_libdir} ${D}/lib64
                fi
-               cd ${D}/${baselib}
+               cd ${D}/${base_libdir}
                ln -sf ld64.so.1 ld-lsb-ppc64.so.2
                ln -sf ld64.so.1 ld-lsb-ppc64.so.3
        fi
        if [ "${TARGET_ARCH}" = "powerpc" ];then
-	       cd ${D}/${baselib}
+	       cd ${D}/${base_libdir}
                ln -sf ld.so.1 ld-lsb-ppc32.so.2
                ln -sf ld.so.1 ld-lsb-ppc32.so.3
        fi
 }
-FILES_${PN} += "/lib64 \
+FILES_${PN} += "${@'/lib64' if d.getVar('TARGET_ARCH')  == ('x86_64' or 'powerpc64') and '${baselib}' != 'lib64' else ''} \
                 ${base_libdir} \
-                /usr/lib/lsb \
-                ${base_libdir}/lsb/* \
-                /lib/lsb/* \
-               "
+                ${nonarch_libdir}/lsb \
+                ${nonarch_base_libdir}/lsb/* \
+                "
