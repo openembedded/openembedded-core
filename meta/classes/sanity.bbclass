@@ -876,18 +876,16 @@ def check_sanity_everybuild(status, d):
                  'git', 'gitsm', 'hg', 'osc', 'p4', 'svn', \
                  'bzr', 'cvs', 'npm', 'sftp', 'ssh']
     for mirror_var in mirror_vars:
-        mirrors = (d.getVar(mirror_var) or '').replace('\\n', '\n').split('\n')
-        for mirror_entry in mirrors:
-            mirror_entry = mirror_entry.strip()
-            if not mirror_entry:
-                # ignore blank lines
-                continue
+        mirrors = (d.getVar(mirror_var) or '').replace('\\n', ' ').split()
 
-            try:
-                pattern, mirror = mirror_entry.split()
-            except ValueError:
-                bb.warn('Invalid %s: %s, should be 2 members.' % (mirror_var, mirror_entry.strip()))
-                continue
+        # Split into pairs
+        if len(mirrors) % 2 != 0:
+            bb.warn('Invalid mirror variable value for %s: %s, should contain paired members.' % (mirror_var, mirrors.strip()))
+            continue
+        mirrors = list(zip(*[iter(mirrors)]*2))
+
+        for mirror_entry in mirrors:
+            pattern, mirror = mirror_entry
 
             decoded = bb.fetch2.decodeurl(pattern)
             try:
