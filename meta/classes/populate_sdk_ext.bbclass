@@ -253,6 +253,8 @@ python copy_buildsystem () {
 
     # Create local.conf
     builddir = d.getVar('TOPDIR')
+    if derivative and os.path.exists(builddir + '/conf/auto.conf'):
+        shutil.copyfile(builddir + '/conf/auto.conf', baseoutpath + '/conf/auto.conf')
     if derivative:
         shutil.copyfile(builddir + '/conf/local.conf', baseoutpath + '/conf/local.conf')
     else:
@@ -267,8 +269,12 @@ python copy_buildsystem () {
                     env_whitelist_values[varname] = origvalue
                 return origvalue, op, 0, True
         varlist = ['[^#=+ ]*']
+        oldlines = []
+        if os.path.exists(builddir + '/conf/auto.conf'):
+            with open(builddir + '/conf/auto.conf', 'r') as f:
+                oldlines += f.readlines()
         with open(builddir + '/conf/local.conf', 'r') as f:
-            oldlines = f.readlines()
+            oldlines += f.readlines()
         (updated, newlines) = bb.utils.edit_metadata(oldlines, varlist, handle_var)
 
         with open(baseoutpath + '/conf/local.conf', 'w') as f:
@@ -331,22 +337,6 @@ python copy_buildsystem () {
 
             f.write('require conf/locked-sigs.inc\n')
             f.write('require conf/unlocked-sigs.inc\n')
-
-    if os.path.exists(builddir + '/conf/auto.conf'):
-        if derivative:
-            shutil.copyfile(builddir + '/conf/auto.conf', baseoutpath + '/conf/auto.conf')
-        else:
-            with open(builddir + '/conf/auto.conf', 'r') as f:
-                oldlines = f.readlines()
-            (updated, newlines) = bb.utils.edit_metadata(oldlines, varlist, handle_var)
-            with open(baseoutpath + '/conf/auto.conf', 'w') as f:
-                f.write('# WARNING: this configuration has been automatically generated and in\n')
-                f.write('# most cases should not be edited. If you need more flexibility than\n')
-                f.write('# this configuration provides, it is strongly suggested that you set\n')
-                f.write('# up a proper instance of the full build system and use that instead.\n\n')
-                for line in newlines:
-                    if line.strip() and not line.startswith('#'):
-                        f.write(line)
 
     # Write a templateconf.cfg
     with open(baseoutpath + '/conf/templateconf.cfg', 'w') as f:
