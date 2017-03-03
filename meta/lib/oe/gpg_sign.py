@@ -35,11 +35,12 @@ class LocalSigner(object):
             cmd += "--define '%%__gpg %s' " % self.gpg_bin
         if self.gpg_path:
             cmd += "--define '_gpg_path %s' " % self.gpg_path
-        cmd += ' '.join(files)
 
-        status, output = oe.utils.getstatusoutput(cmd)
-        if status:
-            raise bb.build.FuncFailed("Failed to sign RPM packages: %s" % output)
+        # Sign in chunks of 100 packages
+        for i in range(0, len(files), 100):
+            status, output = oe.utils.getstatusoutput(cmd + ' '.join(files[i:i+100]))
+            if status:
+                raise bb.build.FuncFailed("Failed to sign RPM packages: %s" % output)
 
     def detach_sign(self, input_file, keyid, passphrase_file, passphrase=None, armor=True):
         """Create a detached signature of a file"""
