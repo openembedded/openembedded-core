@@ -5,6 +5,9 @@ DEPENDS += " go-native libgcc"
 INHIBIT_PACKAGE_STRIP = "1"
 INHIBIT_SYSROOT_STRIP = "1"
 
+# Incompatible with musl, at least for now
+COMPATIBLE_HOST_libc-musl_class-target = "null"
+
 export GOHOSTOS = "${BUILD_GOOS}"
 export GOHOSTARCH = "${BUILD_GOARCH}"
 export GOOS = "${TARGET_GOOS}"

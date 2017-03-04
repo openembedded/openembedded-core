@@ -1,5 +1,8 @@
 inherit goarch
 
+# Incompatible with musl, at least for now
+COMPATIBLE_HOST_libc-musl_class-target = "null"
+
 GOROOT_class-native = "${STAGING_LIBDIR_NATIVE}/go"
 GOROOT = "${STAGING_LIBDIR_NATIVE}/${TARGET_SYS}/go"
 GOBIN_FINAL_class-native = "${GOROOT_FINAL}/bin"
