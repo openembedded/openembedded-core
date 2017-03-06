@@ -218,7 +218,7 @@ def create_temp_layer(templayerdir, templayername, priority=999, recipepathspec=
 
 
 @contextlib.contextmanager
-def runqemu(pn, ssh=True, runqemuparams=''):
+def runqemu(pn, ssh=True, runqemuparams='', image_fstype=None):
 
     import bb.tinfoil
     import bb.build
@@ -240,7 +240,7 @@ def runqemu(pn, ssh=True, runqemuparams=''):
         logger.propagate = False
         logdir = recipedata.getVar("TEST_LOG_DIR")
 
-        qemu = oeqa.targetcontrol.QemuTarget(recipedata)
+        qemu = oeqa.targetcontrol.QemuTarget(recipedata, image_fstype)
     finally:
         # We need to shut down tinfoil early here in case we actually want
         # to run tinfoil-using utilities with the running QEMU instance.
