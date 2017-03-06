@@ -218,7 +218,7 @@ def create_temp_layer(templayerdir, templayername, priority=999, recipepathspec=
 
 
 @contextlib.contextmanager
-def runqemu(pn, ssh=True):
+def runqemu(pn, ssh=True, runqemuparams=''):
 
     import bb.tinfoil
     import bb.build
@@ -260,7 +260,7 @@ def runqemu(pn, ssh=True):
     try:
         qemu.deploy()
         try:
-            qemu.start(ssh=ssh)
+            qemu.start(ssh=ssh, runqemuparams=runqemuparams)
         except bb.build.FuncFailed:
             raise Exception('Failed to start QEMU - see the logs in %s' % logdir)
 
