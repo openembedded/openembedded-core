@@ -74,7 +74,7 @@ class QemuRunner:
         if self.logfile:
             # It is needed to sanitize the data received from qemu
             # because is possible to have control characters
-            msg = msg.decode("utf-8")
+            msg = msg.decode("utf-8", errors='ignore')
             msg = re_control_char.sub('', msg)
             with codecs.open(self.logfile, "a", encoding="utf-8") as f:
                 f.write("%s" % msg)
