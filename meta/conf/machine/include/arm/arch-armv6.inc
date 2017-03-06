@@ -1,4 +1,4 @@
-DEFAULTTUNE ?= "armv6"
+DEFAULTTUNE ?= "armv6hf"
 
 TUNEVALID[armv6] = "Enable instructions for ARMv6"
 TUNECONFLICTS[armv6] = "armv4 armv5"
