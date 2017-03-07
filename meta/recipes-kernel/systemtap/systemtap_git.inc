@@ -11,6 +11,7 @@ SRC_URI = "git://sourceware.org/git/systemtap.git \
            file://no-msgfmt-check.patch \
            file://0001-Do-not-let-configure-write-a-python-location-into-th.patch \
            file://0001-Install-python-modules-to-correct-library-dir.patch \
+           file://0001-buildrun-remove-quotes-around-I-include-line.patch \
           "
 
 # systemtap doesn't support mips
