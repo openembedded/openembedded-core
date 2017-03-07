@@ -7,7 +7,7 @@ BPN = "binutils"
 INHIBIT_DEFAULT_DEPS = "1"
 INHIBIT_AUTOTOOLS_DEPS = "1"
 
-SRC_URI += "file://no-tooldirpaths.patch"
+SRC_URI += "file://0002-binutils-cross-Do-not-generate-linker-script-directo.patch"
 
 # Specify lib-path else we use a load of search dirs which we don't use
 # and mean the linker scripts have to be relocated.
