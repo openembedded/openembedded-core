@@ -12,6 +12,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f \
 UPSTREAM_CHECK_URI = "https://gnupg.org/download/index.html"
 SRC_URI = "${GNUPG_MIRROR}/gpgme/${BP}.tar.bz2 \
            file://pkgconfig.patch \
+           file://python-lang-config.patch \
           "
 
 SRC_URI[md5sum] = "722a4153904b9b5dc15485a22d29263b"
@@ -22,12 +23,37 @@ RDEPENDS_${PN}-cpp += "libstdc++"
 
 BINCONFIG = "${bindir}/gpgme-config"
 
-inherit autotools texinfo binconfig-disabled pkgconfig
+# Note select python2 or python3, but you can't select both at the same time
+PACKAGECONFIG ??= "python3"
+PACKAGECONFIG[python2] = ",,python swig-native,"
+PACKAGECONFIG[python3] = ",,python3 swig-native,"
+
+# Default in configure.ac: "cl cpp python qt"
+# Supported: "cl cpp python python2 python3 qt"
+# python says 'search and find python2 or python3'
+
+LANGUAGES ?= "cpp"
+LANGUAGES .= "${@bb.utils.contains('PACKAGECONFIG', 'python2', ' python2', '', d)}"
+LANGUAGES .= "${@bb.utils.contains('PACKAGECONFIG', 'python3', ' python3', '', d)}"
+
+PYTHON_INHERIT = "${@bb.utils.contains('PACKAGECONFIG', 'python2', 'pythonnative', '', d)}"
+PYTHON_INHERIT .= "${@bb.utils.contains('PACKAGECONFIG', 'python3', 'python3native', '', d)}"
+
+EXTRA_OECONF += '--enable-languages="${LANGUAGES}"'
+
+inherit autotools texinfo binconfig-disabled pkgconfig ${PYTHON_INHERIT}
+
+export PKG_CONFIG='pkg-config'
 
 BBCLASSEXTEND = "native"
 
 PACKAGES =+ "${PN}-cpp"
+PACKAGES =. "${@bb.utils.contains('PACKAGECONFIG', 'python2', 'python2-gpg ', '', d)}"
+PACKAGES =. "${@bb.utils.contains('PACKAGECONFIG', 'python3', 'python3-gpg ', '', d)}"
+
 FILES_${PN}-cpp = "${libdir}/libgpgmepp.so.*"
+FILES_python2-gpg = "${PYTHON_SITEPACKAGES_DIR}/*"
+FILES_python3-gpg = "${PYTHON_SITEPACKAGES_DIR}/*"
 FILES_${PN}-dev += "${datadir}/common-lisp/source/gpgme/* \
                     ${libdir}/cmake/* \
 "
