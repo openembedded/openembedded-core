@@ -30,7 +30,7 @@ EXTRA_OECMAKE=" \
     -DCMAKE_USE_SYSTEM_LIBRARY_LIBUV=0 \
     -DKWSYS_CHAR_IS_SIGNED=1 \
     -DBUILD_CursesDialog=0 \
-    ${@bb.utils.contains('DISTRO_FEATURES', 'largefile', '-DKWSYS_LFS_WORKS=1', '-DKWSYS_LFS_DISABLE=1', d)} \
+    -DKWSYS_LFS_WORKS=1 \
 "
 
 do_install_append_class-nativesdk() {

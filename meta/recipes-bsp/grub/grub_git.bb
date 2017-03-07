@@ -27,9 +27,9 @@ GRUBPLATFORM_aarch64 = "efi"
 GRUBPLATFORM ??= "pc"
 
 EXTRA_OECONF = "--with-platform=${GRUBPLATFORM} --disable-grub-mkfont --program-prefix="" \
-                --enable-liblzma=no --enable-device-mapper=no --enable-libzfs=no"
-
-EXTRA_OECONF += "${@bb.utils.contains('DISTRO_FEATURES', 'largefile', '--enable-largefile', '--disable-largefile', d)}"
+                --enable-liblzma=no --enable-device-mapper=no --enable-libzfs=no \
+                --enable-largefile \
+"
 
 do_install_append () {
     install -d ${D}${sysconfdir}/grub.d

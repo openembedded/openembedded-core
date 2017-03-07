@@ -29,9 +29,10 @@ BBCLASSEXTEND = "native"
 
 inherit autotools pkgconfig
 
-PACKAGECONFIG ??= "${@bb.utils.filter('DISTRO_FEATURES', 'largefile', d)} \
-"
+PACKAGECONFIG ??= ""
+
 PACKAGECONFIG[libcap] = "--with-caps, --without-caps, libcap"
 PACKAGECONFIG[libseccomp] = "--with-seccomp, --without-seccomp, libseccomp"
-PACKAGECONFIG[largefile] = "--enable-largefile,--disable-largefile,,"
 PACKAGECONFIG[pyelftools] = "--with-python, --without-python,, pyelftools"
+
+EXTRA_OECONF += "--enable-largefile"

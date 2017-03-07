@@ -25,10 +25,9 @@ SRC_URI[sha256sum] = "1c97225deea33eefba6d4158c2cef27913d47553263516bbe9d2e2760f
 
 PACKAGECONFIG ??= "openssl pcre zlib \
     ${@bb.utils.filter('DISTRO_FEATURES', 'ipv6', d)} \
-    ${@bb.utils.contains('DISTRO_FEATURES', 'largefile', 'lfs', '', d)} \
     ${@bb.utils.contains('DISTRO_FEATURES', 'xattr', 'attr', '', d)} \
 "
-PACKAGECONFIG[lfs] = "--enable-lfs,--disable-lfs"
+
 PACKAGECONFIG[ipv6] = "--enable-ipv6,--disable-ipv6"
 PACKAGECONFIG[mmap] = "--enable-mmap,--disable-mmap"
 PACKAGECONFIG[libev] = "--with-libev,--without-libev,libev"
@@ -47,6 +46,8 @@ PACKAGECONFIG[webdav-locks] = "--with-webdav-locks,--without-webdav-locks,util-l
 PACKAGECONFIG[gdbm] = "--with-gdbm,--without-gdbm,gdbm"
 PACKAGECONFIG[memcache] = "--with-memcached,--without-memcached,libmemcached"
 PACKAGECONFIG[lua] = "--with-lua,--without-lua,lua5.1"
+
+EXTRA_OECONF += "--enable-lfs"
 
 inherit autotools pkgconfig update-rc.d gettext systemd
 
