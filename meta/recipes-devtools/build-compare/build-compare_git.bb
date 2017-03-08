@@ -22,7 +22,7 @@ PV = "git+${SRCPV}"
 
 S = "${WORKDIR}/git"
 
-BBCLASSEXTEND += "native nativesdk"
+BBCLASSEXTEND = "native nativesdk"
 
 do_install() {
     install -d ${D}/${bindir}

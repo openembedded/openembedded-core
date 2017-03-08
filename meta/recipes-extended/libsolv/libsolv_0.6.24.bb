@@ -27,4 +27,4 @@ FILES_${PN}-dev += "${datadir}/cmake/Modules/FindLibSolv.cmake"
 FILES_${PN}-tools = "${bindir}/*"
 FILES_${PN}ext = "${libdir}/${PN}ext.so.*"
 
-BBCLASSEXTEND =+ "native nativesdk"
+BBCLASSEXTEND = "native nativesdk"

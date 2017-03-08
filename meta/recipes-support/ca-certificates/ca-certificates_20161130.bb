@@ -80,4 +80,4 @@ do_install_append_class-native () {
 
 RDEPENDS_${PN} += "openssl"
 
-BBCLASSEXTEND += "native nativesdk"
+BBCLASSEXTEND = "native nativesdk"
