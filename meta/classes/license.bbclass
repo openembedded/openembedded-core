@@ -386,9 +386,9 @@ def copy_license_files(lic_files_paths, destdir):
                 if begin_idx is None and end_idx is None:
                     shutil.copyfile(src, dst)
                 else:
-                    with open(src, 'r') as src_f:
-                        with open(dst, 'w') as dst_f:
-                            dst_f.write(''.join(src_f.readlines()[begin_idx:end_idx]))
+                    with open(src, 'rb') as src_f:
+                        with open(dst, 'wb') as dst_f:
+                            dst_f.write(b''.join(src_f.readlines()[begin_idx:end_idx]))
 
         except Exception as e:
             bb.warn("Could not copy license file %s to %s: %s" % (src, dst, e))
