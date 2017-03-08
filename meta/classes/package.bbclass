@@ -479,9 +479,6 @@ def get_package_additional_metadata (pkg_type, d):
 def runtime_mapping_rename (varname, pkg, d):
     #bb.note("%s before: %s" % (varname, d.getVar(varname)))
 
-    if bb.data.inherits_class('packagegroup', d):
-        return
-
     new_depends = {}
     deps = bb.utils.explode_dep_versions2(d.getVar(varname) or "")
     for depend in deps:
