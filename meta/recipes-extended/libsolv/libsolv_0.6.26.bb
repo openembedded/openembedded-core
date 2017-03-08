@@ -8,11 +8,10 @@ LIC_FILES_CHKSUM = "file://LICENSE.BSD;md5=62272bd11c97396d4aaf1c41bc11f7d8"
 DEPENDS = "expat zlib"
 
 SRC_URI = "git://github.com/openSUSE/libsolv.git \
-           file://0001-Split-libsolvext-into-it-s-own-pkg-config-file.patch \
           "
 SRC_URI_append_libc-musl = " file://0001-Add-fallback-fopencookie-implementation.patch"
 
-SRCREV = "4049d57b026d3a67c8c164ed20db85ff62b87728"
+SRCREV = "ba32f8286d3deec6faaabc79762a4760e9af0a07"
 UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>\d+(\.\d+)+)"
 
 S = "${WORKDIR}/git"
