@@ -14,10 +14,10 @@ class TestScripts(oeSelfTest):
 
     @testcase(300)
     def test_cleanup_workdir(self):
-        path = os.path.dirname(get_bb_var('WORKDIR', 'gzip'))
-        old_version_recipe = os.path.join(get_bb_var('COREBASE'), 'meta/recipes-extended/gzip/gzip_1.3.12.bb')
-        old_version = '1.3.12'
-        bitbake("-c clean gzip")
+        path = os.path.dirname(get_bb_var('WORKDIR', 'selftest-ed'))
+        old_version_recipe = os.path.join(get_bb_var('COREBASE'), 'meta-selftest/recipes-test/selftest-ed/selftest-ed_0.5.bb')
+        old_version = '0.5'
+        bitbake("-c clean selftest-ed")
         bitbake("-c clean -b %s" % old_version_recipe)
 
         if os.path.exists(path):
@@ -25,7 +25,7 @@ class TestScripts(oeSelfTest):
         else:
             initial_contents = []
 
-        bitbake('gzip')
+        bitbake('selftest-ed')
         intermediary_contents = os.listdir(path)
         bitbake("-b %s" % old_version_recipe)
         runCmd('cleanup-workdir')
