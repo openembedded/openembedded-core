@@ -25,6 +25,7 @@ RUNTIMETARGET = "libssp libstdc++-v3 libgomp libatomic ${RUNTIMELIBITM} \
     ${@bb.utils.contains_any('FORTRAN', [',fortran',',f77'], 'libquadmath', '', d)} \
 "
 RUNTIMETARGET_append_x86 = " libmpx"
+RUNTIMETARGET_append_x86-64 = " libmpx"
 RUNTIMETARGET_remove_libc-musl = "libmpx"
 
 # libiberty
@@ -141,6 +142,12 @@ PACKAGES = "\
     libitm-staticdev \
 "
 PACKAGES_append_x86 = "\
+    libmpx \
+    libmpx-dev \
+    libmpx-staticdev \
+"
+
+PACKAGES_append_x86-64 = "\
     libmpx \
     libmpx-dev \
     libmpx-staticdev \
