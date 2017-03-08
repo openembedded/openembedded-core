@@ -254,6 +254,7 @@ FILES_libmpx = "${libdir}/libmpx.so.* ${libdir}/libmpxwrappers.so.*"
 SUMMARY_libmpx = "Intel Memory Protection Extension library"
 FILES_libmpx-dev = "\
     ${libdir}/libmpxwrappers.so \
+    ${libdir}/libmpxwrappers.la \
     ${libdir}/libmpx.so \
     ${libdir}/libmpx.la \
     ${libdir}/libmpx.spec \
