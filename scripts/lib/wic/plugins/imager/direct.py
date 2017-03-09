@@ -547,7 +547,7 @@ class PartitionedImage():
 
     def cleanup(self):
         # remove partition images
-        for image in self.partimages:
+        for image in set(self.partimages):
             os.remove(image)
 
     def assemble(self):
