@@ -119,6 +119,25 @@ def get_lic_checksum_file_list(d):
             bb.fatal(d.getVar('PN') + ": LIC_FILES_CHKSUM contains an invalid URL: " + url)
     return " ".join(filelist)
 
+def setup_hosttools_dir(dest, toolsvar, d, fatal=True):
+    tools = d.getVar(toolsvar).split()
+    origbbenv = d.getVar("BB_ORIGENV", False)
+    path = origbbenv.getVar("PATH")
+    bb.utils.mkdirhier(dest)
+    notfound = []
+    for tool in tools:
+        desttool = os.path.join(dest, tool)
+        if not os.path.exists(desttool):
+            srctool = bb.utils.which(path, tool)
+            if "ccache" in srctool:
+                srctool = bb.utils.which(path, tool, direction=1)
+            if srctool:
+                os.symlink(srctool, desttool)
+            else:
+                notfound.append(tool)
+    if notfound and fatal:
+        bb.fatal("These tools appear to be unavailable in PATH, please install them in order to proceed:\n%s" % " ".join(notfound))
+
 addtask fetch
 do_fetch[dirs] = "${DL_DIR}"
 do_fetch[file-checksums] = "${@bb.fetch.get_checksum_file_list(d)}"
@@ -219,6 +238,9 @@ python base_eventhandler() {
         pkgarch_mapping(e.data)
         oe.utils.features_backfill("DISTRO_FEATURES", e.data)
         oe.utils.features_backfill("MACHINE_FEATURES", e.data)
+        # Works with the line in layer.conf which changes PATH to point here
+        setup_hosttools_dir(d.expand('${TMPDIR}/hosttools'), 'HOSTTOOLS', d)
+        setup_hosttools_dir(d.expand('${TMPDIR}/hosttools'), 'HOSTTOOLS_NONFATAL', d, fatal=False)
 
     if isinstance(e, bb.event.BuildStarted):
         localdata = bb.data.createCopy(e.data)
