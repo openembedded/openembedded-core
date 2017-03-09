@@ -35,6 +35,11 @@ EXTRA_OE_MAKE_ARGS ?= "BUILD_ROOT=${D}"
 
 CACHED_CONFIGUREVARS += "ac_cv_path_BASH=/bin/bash"
 
+# Don't setup symlinks to host utilities, we don't need them
+do_configure_append () {
+	sed -e 's,^COMPAT_SYMLINKS.*:=.*,COMPAT_SYMLINKS	:=,' -i ${S}/Makefile
+}
+
 # quilt ignores DESTDIR
 do_install () {
 	oe_runmake ${EXTRA_OE_MAKE_ARGS} install
