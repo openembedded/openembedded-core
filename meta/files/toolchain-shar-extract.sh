@@ -8,6 +8,20 @@
 [ -f /etc/environment ] && . /etc/environment
 export PATH=`echo "$PATH" | sed -e 's/:\.//' -e 's/::/:/'`
 
+tweakpath () {
+    case ":${PATH}:" in
+        *:"$1":*)
+            ;;
+        *)
+            PATH=$PATH:$1
+    esac
+}
+
+# Some systems don't have /usr/sbin or /sbin in the cleaned environment PATH but we make need it 
+# for the system's host tooling checks
+tweakpath /usr/sbin
+tweakpath /sbin
+
 INST_ARCH=$(uname -m | sed -e "s/i[3-6]86/ix86/" -e "s/x86[-_]64/x86_64/")
 SDK_ARCH=$(echo @SDK_ARCH@ | sed -e "s/i[3-6]86/ix86/" -e "s/x86[-_]64/x86_64/")
 
