@@ -24,13 +24,13 @@ inherit autotools binconfig pkgconfig
 do_install_append() {
 	# The follow link files link to corresponding png12*.h and libpng12* files
 	# They conflict with higher verison, so drop them
-	unlink ${D}/${includedir}/png.h
-	unlink ${D}/${includedir}/pngconf.h
+	rm ${D}/${includedir}/png.h
+	rm ${D}/${includedir}/pngconf.h
 
-	unlink ${D}/${libdir}/libpng.la
-	unlink ${D}/${libdir}/libpng.so
-	unlink ${D}/${libdir}/libpng.a || true
-	unlink ${D}/${libdir}/pkgconfig/libpng.pc
+	rm ${D}/${libdir}/libpng.la
+	rm ${D}/${libdir}/libpng.so
+	rm ${D}/${libdir}/libpng.a || true
+	rm ${D}/${libdir}/pkgconfig/libpng.pc
 
-	unlink ${D}/${bindir}/libpng-config
+	rm ${D}/${bindir}/libpng-config
 }
