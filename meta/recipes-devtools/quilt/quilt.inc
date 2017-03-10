@@ -33,6 +33,8 @@ RDEPENDS_${PN} = "bash"
 EXTRA_OE_MAKE_ARGS_darwin ?= ""
 EXTRA_OE_MAKE_ARGS ?= "BUILD_ROOT=${D}"
 
+EXTRA_OECONF = "--with-perl=perl"
+
 CACHED_CONFIGUREVARS += "ac_cv_path_BASH=/bin/bash"
 
 # Don't setup symlinks to host utilities, we don't need them

@@ -6,6 +6,7 @@ inherit native
 
 PATCHTOOL = "patch"
 EXTRA_OECONF = "--disable-nls"
+EXTRA_OECONF_append_class-target = "--with-perl=perl"
 
 do_configure () {
 	oe_runconf
