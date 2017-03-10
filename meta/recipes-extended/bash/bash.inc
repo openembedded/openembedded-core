@@ -65,3 +65,7 @@ pkg_postinst_${PN} () {
 pkg_postrm_${PN} () {
 	printf "$(grep -v "^${base_bindir}/bash$" $D${sysconfdir}/shells)\n" > $D${sysconfdir}/shells
 }
+
+PACKAGES += "${PN}-bashbug"
+FILES_${PN} = "${bindir}/bash ${base_bindir}/bash.bash"
+FILES_${PN}-bashbug = "${bindir}/bashbug"
