@@ -7,11 +7,10 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f \
                     file://opkg.py;beginline=1;endline=18;md5=15917491ad6bf7acc666ca5f7cc1e083"
 PROVIDES += "${@bb.utils.contains('PACKAGECONFIG', 'update-alternatives', 'virtual/update-alternatives', '', d)}"
 
-SRCREV = "9228b38a81c94bd95ada3a6334404923d67bea66"
+SRCREV = "1a708fd73d10c2b7677dd4cc4e017746ebbb9166"
 PV = "0.3.4+git${SRCPV}"
 
 SRC_URI = "git://git.yoctoproject.org/opkg-utils \
-           file://0001-Makefile-use-defined-bindir-and-mandir-as-installati.patch \
 "
 SRC_URI_append_class-native = " file://tar_ignore_error.patch"
 
