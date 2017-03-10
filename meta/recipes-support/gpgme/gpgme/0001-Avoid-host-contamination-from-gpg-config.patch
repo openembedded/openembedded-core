@@ -1,0 +1,30 @@
+From 96cfc76def123141d0cecaab857da3880396d5ef Mon Sep 17 00:00:00 2001
+From: Alexander Kanavin <alex.kanavin@gmail.com>
+Date: Thu, 9 Mar 2017 22:11:00 +0200
+Subject: [PATCH] Avoid host contamination from gpg-config
+
+getconfig is calling gpgme-config (from the source tree) and it
+gives -L{libdir} (i.e. -L/usr/lib) as the first item for linking.
+
+Upstream-Status: Inappropriate [oe-core specific]
+Signed-off-by: Alexander Kanavin <alex.kanavin@gmail.com>
+---
+ lang/python/setup.py.in | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/lang/python/setup.py.in b/lang/python/setup.py.in
+index 213fe33..22629e2 100755
+--- a/lang/python/setup.py.in
++++ b/lang/python/setup.py.in
+@@ -86,7 +86,7 @@ subprocess.check_call([sys.executable, "gpgme-h-clean.py", gpg_error_h],
+                       stdout=open("errors.i", "w"))
+ 
+ define_macros = []
+-libs = getconfig('libs')
++libs = getconfig('libs')[1:]
+ 
+ # Define extra_macros for both the SWIG and C code
+ for k, v in extra_macros.items():
+-- 
+2.11.0
+

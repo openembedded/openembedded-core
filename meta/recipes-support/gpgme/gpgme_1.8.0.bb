@@ -13,6 +13,8 @@ UPSTREAM_CHECK_URI = "https://gnupg.org/download/index.html"
 SRC_URI = "${GNUPG_MIRROR}/gpgme/${BP}.tar.bz2 \
            file://pkgconfig.patch \
            file://python-lang-config.patch \
+           file://0001-Correctly-install-python-modules.patch \
+           file://0001-Avoid-host-contamination-from-gpg-config.patch \
           "
 
 SRC_URI[md5sum] = "722a4153904b9b5dc15485a22d29263b"
