@@ -22,6 +22,11 @@ S = "${WORKDIR}/git"
 
 inherit autotools
 
+# Because of a faulty test, the current auto mode always evaluates to no,
+# so just continue that behaviour.
+#
+EXTRA_OECONF += "--disable-indirect-deps"
+
 PACKAGECONFIG ??= "glib"
 PACKAGECONFIG_class-native = ""
 PACKAGECONFIG_class-nativesdk = ""
