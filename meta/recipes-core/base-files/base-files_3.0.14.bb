@@ -145,8 +145,9 @@ do_install_basefilesissue () {
 		printf "${DISTRO_NAME} " >> ${D}${sysconfdir}/issue
 		printf "${DISTRO_NAME} " >> ${D}${sysconfdir}/issue.net
 		if [ -n "${DISTRO_VERSION}" ]; then
-			printf "${DISTRO_VERSION} " >> ${D}${sysconfdir}/issue
-			printf "${DISTRO_VERSION} " >> ${D}${sysconfdir}/issue.net
+			distro_version_nodate=${@'${DISTRO_VERSION}'.replace('snapshot-${DATE}','snapshot').replace('${DATE}','')}
+			printf "%s " $distro_version_nodate >> ${D}${sysconfdir}/issue
+			printf "%s " $distro_version_nodate >> ${D}${sysconfdir}/issue.net
 		fi
 		printf "\\\n \\\l\n" >> ${D}${sysconfdir}/issue
 		echo >> ${D}${sysconfdir}/issue
@@ -154,6 +155,7 @@ do_install_basefilesissue () {
 		echo >> ${D}${sysconfdir}/issue.net
  	fi
 }
+do_install_basefilesissue[vardepsexclude] += "DATE"
 
 do_install_append_linuxstdbase() {
 	for d in ${dirs755-lsb}; do
