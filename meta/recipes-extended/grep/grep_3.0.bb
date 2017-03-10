@@ -9,8 +9,8 @@ SRC_URI = "${GNU_MIRROR}/grep/grep-${PV}.tar.xz \
            file://0001-Unset-need_charset_alias-when-building-for-musl.patch \
           "
 
-SRC_URI[md5sum] = "6138dd227c39d4a25f81eea76a44d4cb"
-SRC_URI[sha256sum] = "ad4cc44d23074a1c3a8baae8fbafff2a8c60f38a9a6108f985eef6fbee6dcaeb"
+SRC_URI[md5sum] = "fa07c1616adeb9c3262be5177d10ad4a"
+SRC_URI[sha256sum] = "e2c81db5056e3e8c5995f0bb5d0d0e1cad1f6f45c3b2fc77b6e81435aed48ab5"
 
 inherit autotools gettext texinfo pkgconfig
 
