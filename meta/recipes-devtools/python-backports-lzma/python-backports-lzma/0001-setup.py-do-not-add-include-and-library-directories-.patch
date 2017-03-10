@@ -1,0 +1,32 @@
+From e5e3196cf69172b625c8c6ccca991c02fd18137c Mon Sep 17 00:00:00 2001
+From: Alexander Kanavin <alex.kanavin@gmail.com>
+Date: Fri, 30 Dec 2016 18:02:12 +0200
+Subject: [PATCH] setup.py: do not add include and library directories from the
+ host
+
+This avoids host contamination.
+
+Upstream-Status: Inappropriate [oe-core specific]
+Signed-off-by: Alexander Kanavin <alex.kanavin@gmail.com>
+---
+ setup.py | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
+
+diff --git a/setup.py b/setup.py
+index 7886cf7..9a0356a 100644
+--- a/setup.py
++++ b/setup.py
+@@ -31,9 +31,7 @@ packages = ["backports", "backports.lzma"]
+ home = os.path.expanduser("~")
+ extens = [Extension('backports/lzma/_lzma',
+                     ['backports/lzma/_lzmamodule.c'],
+-                    libraries = ['lzma'],
+-                    include_dirs = [os.path.join(home, 'include'), '/opt/local/include', '/usr/local/include'],
+-                    library_dirs = [os.path.join(home, 'lib'), '/opt/local/lib', '/usr/local/lib']
++                    libraries = ['lzma']
+                     )]
+ 
+ descr = "Backport of Python 3.3's 'lzma' module for XZ/LZMA compressed files."
+-- 
+2.11.0
+
