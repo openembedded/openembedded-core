@@ -122,7 +122,4 @@ python uninative_changeinterp () {
                 continue
 
             subprocess.check_output(("patchelf-uninative", "--set-interpreter", d.getVar("UNINATIVE_LOADER"), f), stderr=subprocess.STDOUT)
-            subprocess.check_output(("cp", "--sparse=always", f, f + ".sparse"), stderr=subprocess.STDOUT)
-            os.unlink(f)
-            os.rename(f + ".sparse", f)
 }
