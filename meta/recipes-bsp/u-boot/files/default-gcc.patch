@@ -1,0 +1,25 @@
+OE needs to be able to change the default compiler. If we pass in HOSTCC
+through the make command, it overwrites not only this setting but also the 
+setting in tools/Makefile wrapped in ifneq ($(CROSS_BUILD_TOOLS),) which 
+breaks the build.
+
+We therefore add a way of changing the default in the top level Makefile 
+without interfering with the other setting.
+
+Upstream-Status: Submitted [emailed to Masahiro Yamada for discussion]
+RP 2017/3/11
+
+Index: git/Makefile
+===================================================================
+--- git.orig/Makefile
++++ git/Makefile
+@@ -254,7 +254,8 @@ CONFIG_SHELL := $(shell if [ -x "$$BASH"
+ 	  else if [ -x /bin/bash ]; then echo /bin/bash; \
+ 	  else echo sh; fi ; fi)
+ 
+-HOSTCC       = cc
++DEFAULTHOSTCC = cc
++HOSTCC       = $(DEFAULTHOSTCC)
+ HOSTCXX      = c++
+ HOSTCFLAGS   = -Wall -Wstrict-prototypes -O2 -fomit-frame-pointer \
+ 		$(if $(CONFIG_TOOLS_DEBUG),-g)
