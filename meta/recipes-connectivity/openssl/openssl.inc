@@ -17,7 +17,6 @@ S = "${WORKDIR}/openssl-${PV}"
 
 PACKAGECONFIG[perl] = ",,,"
 
-AR_append = " r"
 TERMIO_libc-musl = "-DTERMIOS"
 TERMIO ?= "-DTERMIO"
 # Avoid binaries being marked as requiring an executable stack since it 
@@ -28,7 +27,6 @@ CFLAG = "${@base_conditional('SITEINFO_ENDIANNESS', 'le', '-DL_ENDIAN', '-DB_END
 export DIRS = "crypto ssl apps"
 export EX_LIBS = "-lgcc -ldl"
 export AS = "${CC} -c"
-EXTRA_OEMAKE = "-e MAKEFLAGS="
 
 inherit pkgconfig siteinfo multilib_header ptest relative_symlinks
 
