@@ -265,8 +265,7 @@ python toaster_buildhistory_dump() {
             with open("%s/installed-package-sizes.txt" % installed_img_path, "r") as fin:
                 for line in fin:
                     line = line.rstrip(";")
-                    psize, px = line.split("\t")
-                    punit, pname = px.split(" ")
+                    psize, punit, pname = line.split()
                     # this size is "installed-size" as it measures how much space it takes on disk
                     images[target][pname.strip()] = {'size':int(psize)*1024, 'depends' : []}
 
