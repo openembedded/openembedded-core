@@ -3,23 +3,37 @@ through the make command, it overwrites not only this setting but also the
 setting in tools/Makefile wrapped in ifneq ($(CROSS_BUILD_TOOLS),) which 
 breaks the build.
 
-We therefore add a way of changing the default in the top level Makefile 
-without interfering with the other setting.
+We therefore use override to ensure the value of HOSTCC is overwritten when
+needed.
+
+RP: Updated the patch to the version being submitted to upstream u-boot
 
 Upstream-Status: Submitted [emailed to Masahiro Yamada for discussion]
 RP 2017/3/11
 
-Index: git/Makefile
+Index: git/tools/Makefile
 ===================================================================
---- git.orig/Makefile
-+++ git/Makefile
-@@ -254,7 +254,8 @@ CONFIG_SHELL := $(shell if [ -x "$$BASH"
- 	  else if [ -x /bin/bash ]; then echo /bin/bash; \
- 	  else echo sh; fi ; fi)
+--- git.orig/tools/Makefile
++++ git/tools/Makefile
+@@ -262,7 +262,7 @@ $(LICENSE_H): $(obj)/bin2header $(srctre
+ subdir- += env
  
--HOSTCC       = cc
-+DEFAULTHOSTCC = cc
-+HOSTCC       = $(DEFAULTHOSTCC)
- HOSTCXX      = c++
- HOSTCFLAGS   = -Wall -Wstrict-prototypes -O2 -fomit-frame-pointer \
- 		$(if $(CONFIG_TOOLS_DEBUG),-g)
+ ifneq ($(CROSS_BUILD_TOOLS),)
+-HOSTCC = $(CC)
++override HOSTCC = $(CC)
+ 
+ quiet_cmd_crosstools_strip = STRIP   $^
+       cmd_crosstools_strip = $(STRIP) $^; touch $@
+Index: git/tools/env/Makefile
+===================================================================
+--- git.orig/tools/env/Makefile
++++ git/tools/env/Makefile
+@@ -8,7 +8,7 @@
+ # fw_printenv is supposed to run on the target system, which means it should be
+ # built with cross tools. Although it may look weird, we only replace "HOSTCC"
+ # with "CC" here for the maximum code reuse of scripts/Makefile.host.
+-HOSTCC = $(CC)
++override HOSTCC = $(CC)
+ 
+ # Compile for a hosted environment on the target
+ HOST_EXTRACFLAGS  = $(patsubst -I%,-idirafter%, $(filter -I%, $(UBOOTINCLUDE))) \
