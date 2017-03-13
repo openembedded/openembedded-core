@@ -66,6 +66,11 @@ def oe_terminal(command, title, d):
             envdata.setVar(key, str(value))
             envdata.setVarFlag(key, 'export', '1')
 
+    # Use original PATH as a fallback
+    path = d.getVar('PATH') + ":" + origbbenv.getVar('PATH')
+    os.environ['PATH'] = path
+    envdata.setVar('PATH', path)
+
     # A complex PS1 might need more escaping of chars.
     # Lets not export PS1 instead.
     envdata.delVar("PS1")
