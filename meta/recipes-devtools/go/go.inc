@@ -5,8 +5,6 @@ DEPENDS += " go-native libgcc"
 INHIBIT_PACKAGE_STRIP = "1"
 INHIBIT_SYSROOT_STRIP = "1"
 
-# Incompatible with musl, at least for now
-COMPATIBLE_HOST_libc-musl_class-target = "null"
 # x32 ABI is not supported on go compiler so far
 COMPATIBLE_HOST_linux-gnux32 = "null"
 # ppc32 is not supported in go compilers

@@ -1,7 +1,5 @@
 inherit goarch
 
-# Incompatible with musl, at least for now
-COMPATIBLE_HOST_libc-musl_class-target = "null"
 # x32 ABI is not supported on go compiler so far
 COMPATIBLE_HOST_linux-gnux32 = "null"
 # ppc32 is not supported in go compilers
