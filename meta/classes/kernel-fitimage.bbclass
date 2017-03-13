@@ -24,7 +24,7 @@ python __anonymous () {
             d.appendVarFlag('do_assemble_fitimage_initramfs', 'depends', ' ${INITRAMFS_IMAGE}:do_image_complete')
 
         # Verified boot will sign the fitImage and append the public key to
-        # U-boot dtb. We ensure the U-Boot dtb is deployed before assembling
+        # U-Boot dtb. We ensure the U-Boot dtb is deployed before assembling
         # the fitImage:
         if d.getVar('UBOOT_SIGN_ENABLE') == "1":
             uboot_pn = d.getVar('PREFERRED_PROVIDER_u-boot') or 'u-boot'

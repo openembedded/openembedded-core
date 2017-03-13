@@ -25,7 +25,7 @@
 #   u-boot:do_concat_dtb
 #   u-boot:do_install
 #
-# For more details on signature process, please refer to U-boot documentation.
+# For more details on signature process, please refer to U-Boot documentation.
 
 # Signature activation.
 UBOOT_SIGN_ENABLE ?= "0"
