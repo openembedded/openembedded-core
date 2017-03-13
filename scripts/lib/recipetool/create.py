@@ -599,6 +599,11 @@ def create_recipe(args):
         lines_after.append('INSANE_SKIP_${PN} += "already-stripped"')
         lines_after.append('')
 
+    if args.fetch_dev:
+        extravalues['fetchdev'] = True
+    else:
+        extravalues['fetchdev'] = None
+
     # Find all plugins that want to register handlers
     logger.debug('Loading recipe handlers')
     raw_handlers = []
@@ -1134,6 +1139,7 @@ def register_commands(subparsers):
     parser_create.add_argument('--src-subdir', help='Specify subdirectory within source tree to use', metavar='SUBDIR')
     parser_create.add_argument('-a', '--autorev', help='When fetching from a git repository, set SRCREV in the recipe to a floating revision instead of fixed', action="store_true")
     parser_create.add_argument('--keep-temp', action="store_true", help='Keep temporary directory (for debugging)')
+    parser_create.add_argument('--fetch-dev', action="store_true", help='For npm, also fetch devDependencies')
     parser_create.add_argument('--devtool', action="store_true", help=argparse.SUPPRESS)
     parser_create.set_defaults(func=create_recipe)
 

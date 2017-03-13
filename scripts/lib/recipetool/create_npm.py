@@ -101,7 +101,7 @@ class NpmRecipeHandler(RecipeHandler):
         extravalues['extrafiles']['lockdown.json'] = tmpfile
         lines_before.append('NPM_LOCKDOWN := "${THISDIR}/${PN}/lockdown.json"')
 
-    def _handle_dependencies(self, d, deps, optdeps, lines_before, srctree):
+    def _handle_dependencies(self, d, deps, optdeps, devdeps, lines_before, srctree):
         import scriptutils
         # If this isn't a single module we need to get the dependencies
         # and add them to SRC_URI
@@ -112,6 +112,10 @@ class NpmRecipeHandler(RecipeHandler):
                     changed = False
                     deplist = {}
                     for dep, depver in optdeps.items():
+                        depdata = self.get_npm_data(dep, depver, d)
+                        if self.check_npm_optional_dependency(depdata):
+                            deplist[dep] = depdata
+                    for dep, depver in devdeps.items():
                         depdata = self.get_npm_data(dep, depver, d)
                         if self.check_npm_optional_dependency(depdata):
                             deplist[dep] = depdata
@@ -197,8 +201,9 @@ class NpmRecipeHandler(RecipeHandler):
                 if 'homepage' in data:
                     extravalues['HOMEPAGE'] = data['homepage']
 
-                deps, optdeps = self.get_npm_package_dependencies(data)
-                updated = self._handle_dependencies(tinfoil.config_data, deps, optdeps, lines_before, srctree)
+                fetchdev = extravalues['fetchdev'] or None
+                deps, optdeps, devdeps = self.get_npm_package_dependencies(data, fetchdev)
+                updated = self._handle_dependencies(tinfoil.config_data, deps, optdeps, devdeps, lines_before, srctree)
                 if updated:
                     # We need to redo the license stuff
                     self._replace_license_vars(srctree, lines_before, handled, extravalues, tinfoil.config_data)
@@ -293,18 +298,26 @@ class NpmRecipeHandler(RecipeHandler):
 
     # FIXME this is effectively duplicated from lib/bb/fetch2/npm.py
     # (split out from _getdependencies())
-    def get_npm_package_dependencies(self, pdata):
+    def get_npm_package_dependencies(self, pdata, fetchdev):
         dependencies = pdata.get('dependencies', {})
         optionalDependencies = pdata.get('optionalDependencies', {})
         dependencies.update(optionalDependencies)
+        if fetchdev:
+            devDependencies = pdata.get('devDependencies', {})
+            dependencies.update(devDependencies)
+        else:
+            devDependencies = {}
         depsfound = {}
         optdepsfound = {}
+        devdepsfound = {}
         for dep in dependencies:
             if dep in optionalDependencies:
                 optdepsfound[dep] = dependencies[dep]
+            elif dep in devDependencies:
+                devdepsfound[dep] = dependencies[dep]
             else:
                 depsfound[dep] = dependencies[dep]
-        return depsfound, optdepsfound
+        return depsfound, optdepsfound, devdepsfound
 
     # FIXME this is effectively duplicated from lib/bb/fetch2/npm.py
     # (split out from _getdependencies())
