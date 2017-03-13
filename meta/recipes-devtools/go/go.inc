@@ -1,6 +1,6 @@
 inherit goarch
 # libgcc is required for the target specific libraries to build properly
-DEPENDS += " go-native libgcc"
+DEPENDS += "go-bootstrap-native libgcc"
 # Prevent runstrip from running because you get errors when the host arch != target arch
 INHIBIT_PACKAGE_STRIP = "1"
 INHIBIT_SYSROOT_STRIP = "1"
@@ -15,7 +15,7 @@ export GOHOSTARCH = "${BUILD_GOARCH}"
 export GOOS = "${TARGET_GOOS}"
 export GOARCH = "${TARGET_GOARCH}"
 export GOARM = "${TARGET_GOARM}"
-export GOROOT_BOOTSTRAP = "${STAGING_LIBDIR_NATIVE}/go"
+export GOROOT_BOOTSTRAP = "${STAGING_LIBDIR_NATIVE}/go1.4"
 export GOROOT_FINAL = "${libdir}/go"
 export CGO_ENABLED = "1"
 export CC_FOR_TARGET = "${CC}"

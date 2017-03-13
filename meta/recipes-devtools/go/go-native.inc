@@ -1,8 +1,10 @@
 inherit native
 
+BOOTSTRAP ?= ""
 export GOOS = "${BUILD_GOOS}"
 export GOARCH = "${BUILD_GOARCH}"
-export GOROOT_FINAL = "${STAGING_LIBDIR_NATIVE}/go"
+export GOROOT_FINAL = "${STAGING_LIBDIR_NATIVE}/go${BOOTSTRAP}"
+export GOROOT_BOOTSTRAP = "${STAGING_LIBDIR_NATIVE}/go1.4"
 export CGO_ENABLED = "1"
 
 do_configure[noexec] = "1"
@@ -31,18 +33,18 @@ END
 }
 
 do_install() {
-	install -d ${D}${libdir}/go
-	cp -a ${B}/pkg ${D}${libdir}/go/
-	install -d ${D}${libdir}/go/src
+	install -d ${D}${libdir}/go${BOOTSTRAP}
+	cp -a ${B}/pkg ${D}${libdir}/go${BOOTSTRAP}/
+	install -d ${D}${libdir}/go${BOOTSTRAP}/src
 	(cd ${S}/src; for d in *; do \
-		[ -d $d ] && cp -a ${S}/src/$d ${D}${libdir}/go/src/; \
+		[ -d $d ] && cp -a ${S}/src/$d ${D}${libdir}/go${BOOTSTRAP}/src/; \
 	done)
 
-	install -d ${D}${bindir} ${D}${libdir}/go/bin
+	install -d ${D}${bindir} ${D}${libdir}/go${BOOTSTRAP}/bin
 	for f in ${B}/bin/*
 	do
 		base=`basename $f`
-		install -m755 $f ${D}${libdir}/go/bin
+		install -m755 $f ${D}${libdir}/go${BOOTSTRAP}/bin
 		make_wrapper $base $base
 	done
 }
