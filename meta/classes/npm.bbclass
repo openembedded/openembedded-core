@@ -14,6 +14,7 @@ def npm_oe_arch_map(target_arch, d):
     return target_arch
 
 NPM_ARCH ?= "${@npm_oe_arch_map(d.getVar('TARGET_ARCH'), d)}"
+NPM_INSTALL_DEV = "0"
 
 npm_do_compile() {
 	# Copy in any additionally fetched modules
@@ -23,12 +24,20 @@ npm_do_compile() {
 	# changing the home directory to the working directory, the .npmrc will
 	# be created in this directory
 	export HOME=${WORKDIR}
-	npm config set dev false
+	if [  "${NPM_INSTALL_DEV}" = "1" ]; then
+		npm config set dev true
+	else
+		npm config set dev false
+	fi
 	npm set cache ${WORKDIR}/npm_cache
 	# clear cache before every build
 	npm cache clear
 	# Install pkg into ${S} without going to the registry
-	npm --arch=${NPM_ARCH} --target_arch=${NPM_ARCH} --production --no-registry install
+	if [  "${NPM_INSTALL_DEV}" = "1" ]; then
+		npm --arch=${NPM_ARCH} --target_arch=${NPM_ARCH} --no-registry install
+	else
+		npm --arch=${NPM_ARCH} --target_arch=${NPM_ARCH} --production --no-registry install
+	fi
 }
 
 npm_do_install() {
