@@ -12,6 +12,7 @@ SRC_URI = "${GNU_MIRROR}/autogen/rel${PV}/autogen-${PV}.tar.gz \
            file://increase-timeout-limit.patch \
            file://mk-tpl-config.sh-force-exit-value-to-be-0-in-subproc.patch \
            file://fix-script-err-when-processing-libguile.patch \
+           file://0001-config-libopts.m4-regenerate-it-from-config-libopts..patch \
 "
 
 SRC_URI[md5sum] = "551d15ccbf5b5fc5658da375d5003389"
