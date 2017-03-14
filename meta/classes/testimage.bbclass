@@ -261,7 +261,8 @@ def testimage_main(d):
 
     bootparams = None
     if d.getVar('VIRTUAL-RUNTIME_init_manager', '') == 'systemd':
-        bootparams = 'systemd.log_level=debug systemd.log_target=console'
+        # Add systemd.log_level=debug to enable systemd debug logging
+        bootparams = 'systemd.log_target=console'
 
     results = None
     orig_sigterm_handler = signal.signal(signal.SIGTERM, sigterm_exception)
