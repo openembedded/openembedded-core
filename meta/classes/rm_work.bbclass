@@ -102,6 +102,12 @@ do_rm_work () {
         rm -f $i
     done
 }
+do_rm_work_all () {
+    :
+}
+do_rm_work_all[recrdeptask] = "do_rm_work"
+do_rm_work_all[noexec] = "1"
+addtask rm_work_all after before do_build
 
 do_populate_sdk[postfuncs] += "rm_work_populatesdk"
 rm_work_populatesdk () {
@@ -138,9 +144,8 @@ python inject_rm_work() {
         # do_build inherits additional runtime dependencies on
         # other recipes and thus will typically run much later than completion of
         # work in the recipe itself.
-        deps = bb.build.preceedtask('do_build', True, d)
-        if 'do_build' in deps:
-            deps.remove('do_build')
+        deps = set(bb.build.preceedtask('do_build', True, d))
+        deps.difference_update(('do_build', 'do_rm_work_all'))
         # In practice, addtask() here merely updates the dependencies.
         bb.build.addtask('do_rm_work', 'do_build', ' '.join(deps), d)
 }
