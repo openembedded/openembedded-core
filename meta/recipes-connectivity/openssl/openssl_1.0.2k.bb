@@ -41,6 +41,7 @@ SRC_URI += "file://find.pl;subdir=${BP}/util/ \
             file://configure-musl-target.patch \
             file://parallel.patch \
             file://openssl-util-perlpath.pl-cwd.patch \
+            file://Use-SHA256-not-MD5-as-default-digest.patch \
            "
 SRC_URI[md5sum] = "f965fc0bf01bf882b31314b61391ae65"
 SRC_URI[sha256sum] = "6b3977c61f2aedf0f96367dcfb5c6e578cf37e7b8d913b4ecb6643c3cb88d8c0"
