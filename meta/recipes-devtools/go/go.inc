@@ -74,12 +74,6 @@ do_install_class-cross() {
 		install -m755 $f ${D}${bindir}
 	done
 }
+do_package_qa[noexec] = "1"
 
-INSANE_SKIP_${PN} += "staticdev"
 RDEPENDS_${PN} += "perl"
-
-do_package[noexec] = "1"
-do_packagedata[noexec] = "1"
-do_package_write_ipk[noexec] = "1"
-do_package_write_deb[noexec] = "1"
-do_package_write_rpm[noexec] = "1"
