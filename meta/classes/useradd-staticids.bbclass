@@ -123,8 +123,7 @@ def update_useradd_static_config(d):
                 users = merge_files(get_passwd_list(d), 7)
 
             if uaargs.LOGIN not in users:
-                if not uaargs.uid or not uaargs.uid.isdigit() or not uaargs.gid:
-                    handle_missing_id(uaargs.LOGIN, 'user', pkg)
+                handle_missing_id(uaargs.LOGIN, 'user', pkg)
                 newparams.append(param)
                 continue
 
@@ -259,8 +258,7 @@ def update_useradd_static_config(d):
                 groups = merge_files(get_group_list(d), 4)
 
             if gaargs.GROUP not in groups:
-                if not gaargs.gid or not gaargs.gid.isdigit():
-                    handle_missing_id(gaargs.GROUP, 'group', pkg)
+                handle_missing_id(gaargs.GROUP, 'group', pkg)
                 newparams.append(param)
                 continue
 
