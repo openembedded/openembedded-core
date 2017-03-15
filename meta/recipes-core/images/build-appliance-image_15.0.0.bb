@@ -60,6 +60,7 @@ fakeroot do_populate_poky_src () {
 	cp ${WORKDIR}/README_VirtualBox_Toaster.txt ${IMAGE_ROOTFS}/home/builder/
 
 	# Create a symlink, needed for out-of-tree kernel modules build
+	rm -f  ${IMAGE_ROOTFS}/lib/modules/${KERNEL_VERSION}/build
 	lnr ${IMAGE_ROOTFS}${KERNEL_SRC_PATH} ${IMAGE_ROOTFS}/lib/modules/${KERNEL_VERSION}/build
 
 	echo "INHERIT += \"rm_work\"" >> ${IMAGE_ROOTFS}/home/builder/poky/build/conf/auto.conf
@@ -87,6 +88,7 @@ fakeroot do_populate_poky_src () {
 	echo "builder ALL=(ALL) NOPASSWD: ALL" >> ${IMAGE_ROOTFS}/etc/sudoers
 
 	# Load tap/tun at startup
+	rm -f ${IMAGE_ROOTFS}/sbin/iptables
 	lnr ${IMAGE_ROOTFS}/usr/sbin/iptables ${IMAGE_ROOTFS}/sbin/iptables
 	echo "tun" >> ${IMAGE_ROOTFS}/etc/modules
 
