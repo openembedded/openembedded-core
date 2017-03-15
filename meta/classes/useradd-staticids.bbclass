@@ -125,6 +125,7 @@ def update_useradd_static_config(d):
             if uaargs.LOGIN not in users:
                 if not uaargs.uid or not uaargs.uid.isdigit() or not uaargs.gid:
                     handle_missing_id(uaargs.LOGIN, 'user', pkg)
+                newparams.append(param)
                 continue
 
             field = users[uaargs.LOGIN]
@@ -260,6 +261,7 @@ def update_useradd_static_config(d):
             if gaargs.GROUP not in groups:
                 if not gaargs.gid or not gaargs.gid.isdigit():
                     handle_missing_id(gaargs.GROUP, 'group', pkg)
+                newparams.append(param)
                 continue
 
             field = groups[gaargs.GROUP]
