@@ -18,10 +18,10 @@ IMAGE_ROOTFS_EXTRA_SPACE = "41943040"
 # Do a quiet boot with limited console messages
 APPEND += "rootfstype=ext4 quiet"
 
-DEPENDS = "zip-native"
+DEPENDS = "zip-native python3-pip-native"
 IMAGE_FSTYPES = "vmdk"
 
-inherit core-image module-base
+inherit core-image module-base setuptools3
 
 SRCREV ?= "8343ed93c4278715aa1582d3cadedf8f197b4089"
 SRC_URI = "git://git.yoctoproject.org/poky;branch=master \
@@ -95,6 +95,8 @@ fakeroot do_populate_poky_src () {
 	echo 'gtk-theme-name = "Clearlooks"' > ${IMAGE_ROOTFS}/etc/gtk-2.0/gtkrc
 
 	# Install modules needed for toaster
+	export STAGING_LIBDIR=${STAGING_LIBDIR_NATIVE}
+	export STAGING_INCDIR=${STAGING_INCDIR_NATIVE}
 	export HOME=${IMAGE_ROOTFS}/home/builder
 	mkdir -p ${IMAGE_ROOTFS}/home/builder/.cache/pip
 	pip3 install --user -I -U -v -r ${IMAGE_ROOTFS}/home/builder/poky/bitbake/toaster-requirements.txt
