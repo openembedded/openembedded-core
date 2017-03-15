@@ -935,6 +935,9 @@ class BaseConfig(object):
         else:
             self.setup_tap()
 
+    def setup_rootfs(self):
+        if self.get('QB_ROOTFS') == 'none':
+            return
         rootfs_format = self.fstype if self.fstype in ('vmdk', 'qcow2', 'vdi') else 'raw'
 
         qb_rootfs_opt = self.get('QB_ROOTFS_OPT')
@@ -1167,6 +1170,7 @@ def main():
     config.print_config()
     try:
         config.setup_network()
+        config.setup_rootfs()
         config.setup_final()
         config.start_qemu()
     finally:
