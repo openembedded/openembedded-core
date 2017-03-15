@@ -108,6 +108,8 @@ class Signing(oeSelfTest):
         feature += 'SSTATE_VERIFY_SIG ?= "1"\n'
         feature += 'GPG_PATH = "%s"\n' % self.gpg_dir
         feature += 'SSTATE_DIR = "%s"\n' % sstatedir
+        # Any mirror might have partial sstate without .sig files, triggering failures
+        feature += 'SSTATE_MIRRORS_forcevariable = ""\n'
 
         self.write_config(feature)
 
