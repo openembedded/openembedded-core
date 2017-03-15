@@ -135,17 +135,15 @@ def get_signatures(builddir, failsafe=False):
 
     sigs = {}
 
-    try:
-        cmd = 'bitbake '
-        if failsafe:
-            cmd += '-k '
-        cmd += '-S none world'
-        output = subprocess.check_output(cmd, shell=True,
-                stderr=subprocess.PIPE)
-    except subprocess.CalledProcessError as e:
-        import traceback
-        exc = traceback.format_exc()
-        msg = '%s\n%s\n' % (exc, e.output.decode('utf-8'))
+    cmd = 'bitbake '
+    if failsafe:
+        cmd += '-k '
+    cmd += '-S none world'
+    p = subprocess.Popen(cmd, shell=True,
+                         stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    output, _ = p.communicate()
+    if p.returncode:
+        msg = "Generating signatures failed. This might be due to some parse error and/or general layer incompatibilities.\nCommand: %s\nOutput:\n%s" % (cmd, output.decode('utf-8'))
         raise RuntimeError(msg)
     sigs_file = os.path.join(builddir, 'locked-sigs.inc')
 
