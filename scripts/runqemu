@@ -80,7 +80,7 @@ of the following environment variables (in any order):
   biosfilename=<filename> - specify bios filename
   qemuparams=<xyz> - specify custom parameters to QEMU
   bootparams=<xyz> - specify custom kernel parameters during boot
-  help: print this text
+  help, -h, --help: print this text
 
 Examples:
   runqemu qemuarm
@@ -1161,7 +1161,8 @@ class BaseConfig(object):
             logger.warn("Couldn't run 'bitbake -e' to gather environment information:\n%s" % err.output.decode('utf-8'))
 
 def main():
-    if len(sys.argv) == 1 or "help" in sys.argv:
+    if len(sys.argv) == 1 or "help" in sys.argv or \
+            '-h' in sys.argv or '--help' in sys.argv:
         print_usage()
         return 0
     config = BaseConfig()
