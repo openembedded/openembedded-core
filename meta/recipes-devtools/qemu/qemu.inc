@@ -79,7 +79,7 @@ PACKAGECONFIG ??= " \
 	fdt sdl kvm \
 	${@bb.utils.filter('DISTRO_FEATURES', 'alsa xen', d)} \
 	"
-PACKAGECONFIG_class-native ??= "fdt alsa uuid kvm"
+PACKAGECONFIG_class-native ??= "fdt alsa kvm"
 PACKAGECONFIG_class-nativesdk ??= "fdt sdl kvm"
 
 # Handle distros such as CentOS 5 32-bit that do not have kvm support
@@ -99,7 +99,6 @@ PACKAGECONFIG[vnc-jpeg] = "--enable-vnc --enable-vnc-jpeg,--disable-vnc-jpeg,jpe
 PACKAGECONFIG[vnc-png] = "--enable-vnc --enable-vnc-png,--disable-vnc-png,libpng,"
 PACKAGECONFIG[libcurl] = "--enable-curl,--disable-curl,libcurl,"
 PACKAGECONFIG[nss] = "--enable-smartcard,--disable-smartcard,nss,"
-PACKAGECONFIG[uuid] = "--enable-uuid,--disable-uuid,util-linux,"
 PACKAGECONFIG[curses] = "--enable-curses,--disable-curses,ncurses,"
 PACKAGECONFIG[gtk+] = "--enable-gtk --with-gtkabi=3.0 --enable-vte,--disable-gtk --disable-vte,gtk+3 vte"
 PACKAGECONFIG[libcap-ng] = "--enable-cap-ng,--disable-cap-ng,libcap-ng,"
