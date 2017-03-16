@@ -660,7 +660,15 @@ class BaseConfig(object):
                 logger.info('Running %s...' % cmd)
                 qbs = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE).stdout.read().decode('utf-8')
                 if qbs:
-                    self.qemuboot = qbs.split()[0]
+                    for qb in qbs.split():
+                        # Don't use initramfs when other choices unless fstype is ramfs
+                        if '-initramfs-' in os.path.basename(qb) and self.fstype != 'cpio.gz':
+                                continue
+                        self.qemuboot = qb
+                        break
+                    if not self.qemuboot:
+                        # Use the first one when no choice
+                        self.qemuboot = qbs.split()[0]
                     self.qbconfload = True
 
         if not self.qemuboot:
