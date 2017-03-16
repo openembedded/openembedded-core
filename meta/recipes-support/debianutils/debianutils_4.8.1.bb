@@ -40,6 +40,9 @@ ALTERNATIVE_PRIORITY="30"
 ALTERNATIVE_${PN} = "add-shell installkernel remove-shell savelog tempfile which"
 ALTERNATIVE_${PN}-run-parts = "run-parts"
 
+ALTERNATIVE_${PN}-doc = "which.1"
+ALTERNATIVE_LINK_NAME[which.1] = "${mandir}/man1/which.1"
+
 ALTERNATIVE_LINK_NAME[add-shell]="${sbindir}/add-shell"
 ALTERNATIVE_LINK_NAME[installkernel]="${sbindir}/installkernel"
 ALTERNATIVE_LINK_NAME[remove-shell]="${sbindir}/remove-shell"
