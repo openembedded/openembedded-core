@@ -136,7 +136,7 @@ def setup_hosttools_dir(dest, toolsvar, d, fatal=True):
             else:
                 notfound.append(tool)
     if notfound and fatal:
-        bb.fatal("These tools appear to be unavailable in PATH, please install them in order to proceed:\n%s" % " ".join(notfound))
+        bb.fatal("The following required tools (as specified by HOSTTOOLS) appear to be unavailable in PATH, please install them in order to proceed:\n  %s" % " ".join(notfound))
 
 addtask fetch
 do_fetch[dirs] = "${DL_DIR}"
