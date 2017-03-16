@@ -47,11 +47,12 @@ do_configure () {
 }
 
 # we don't want gdb to provide bfd/iberty/opcodes, which instead will override the
-# right bits installed by binutils.
+# right bits installed by binutils.  Same for bfd.info -- also from binutils.
 do_install_append() {
 	rm -rf ${D}${libdir}
 	rm -rf ${D}${includedir}
 	rm -rf ${D}${datadir}/locale
+	rm -f ${D}${infodir}/bfd.info
 }
 
 RRECOMMENDS_gdb_append_linux = " glibc-thread-db "
