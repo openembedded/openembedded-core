@@ -443,6 +443,12 @@ class BaseConfig(object):
                         self.set("DEPLOY_DIR_IMAGE", p)
             self.check_arg_machine(unknown_arg)
 
+        if not (self.get('MACHINE') or self.get('DEPLOY_DIR_IMAGE')):
+            self.load_bitbake_env()
+            s = re.search('^DEPLOY_DIR_IMAGE="(.*)"', self.bitbake_e, re.M)
+            if s:
+                self.set("DEPLOY_DIR_IMAGE", s.group(1))
+
     def check_kvm(self):
         """Check kvm and kvm-host"""
         if not (self.kvm_enabled or self.vhost_enabled):
