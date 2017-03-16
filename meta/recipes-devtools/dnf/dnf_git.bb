@@ -30,9 +30,17 @@ EXTRA_OECMAKE = " -DWITH_MAN=0 -DPYTHON_INSTALL_DIR=${PYTHON_SITEPACKAGES_DIR}"
 BBCLASSEXTEND = "native nativesdk"
 RDEPENDS_${PN}_class-target += "python-core python-codecs python-netclient python-email python-threading python-distutils librepo python-shell python-subprocess libcomps libdnf python-sqlite3 python-compression python-pygpgme python-backports-lzma python-rpm python-iniparse python-json python-importlib python-curses python-argparse"
 
+# Create a symlink called 'dnf' as 'make install' does not do it, but
+# .spec file in dnf source tree does (and then Fedora and dnf documentation
+# says that dnf binary is plain 'dnf').
+do_install_append() {
+        ln -s -r ${D}/${bindir}/dnf-2 ${D}/${bindir}/dnf
+        ln -s -r ${D}/${bindir}/dnf-automatic-2 ${D}/${bindir}/dnf-automatic
+}
+
 # Direct dnf-native to read rpm configuration from our sysroot, not the one it was compiled in
 do_install_append_class-native() {
-        create_wrapper ${D}/${bindir}/dnf-2 \
+        create_wrapper ${D}/${bindir}/dnf \
                 RPM_CONFIGDIR=${STAGING_LIBDIR_NATIVE}/rpm \
                 RPM_NO_CHROOT_FOR_SCRIPTS=1
 }
