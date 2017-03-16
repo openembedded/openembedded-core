@@ -108,14 +108,21 @@ class TestImage(oeSelfTest):
         Summary: Check install packages functionality for testimage/testexport.
         Expected: 1. Import tests from a directory other than meta.
                   2. Check install/uninstall of socat.
+                  3. Check that remote package feeds can be accessed
         Product: oe-core
         Author: Mariano Lopez <mariano.lopez@intel.com>
+        Author: Alexander Kanavin <alexander.kanavin@intel.com>
         """
         if get_bb_var('DISTRO') == 'poky-tiny':
             self.skipTest('core-image-full-cmdline not buildable for poky-tiny')
 
         features = 'INHERIT += "testimage"\n'
         features += 'TEST_SUITES = "ping ssh selftest"\n'
+        # We don't yet know what the server ip and port will be - they will be patched
+        # in at the start of the on-image test
+        features += 'PACKAGE_FEED_URIS = "http://bogus_ip:bogus_port"\n'
+        features += 'EXTRA_IMAGE_FEATURES += "package-management"\n'
+        features += 'PACKAGE_CLASSES = "package_rpm"'
         self.write_config(features)
 
         # Build core-image-sato and testimage
