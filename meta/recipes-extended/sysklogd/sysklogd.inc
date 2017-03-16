@@ -64,6 +64,9 @@ ALTERNATIVE_PRIORITY = "${@bb.utils.contains('DISTRO_FEATURES','systemd','10','1
 ALTERNATIVE_${PN} = "syslogd klogd syslog-conf \
     ${@bb.utils.contains('DISTRO_FEATURES','sysvinit','syslog-init','',d)}"
 
+ALTERNATIVE_${PN}-doc = "syslogd.8"
+ALTERNATIVE_LINK_NAME[syslogd.8] = "${mandir}/man8/syslogd.8"
+
 ALTERNATIVE_LINK_NAME[syslogd] = "${base_sbindir}/syslogd"
 ALTERNATIVE_LINK_NAME[klogd] = "${base_sbindir}/klogd"
 ALTERNATIVE_LINK_NAME[syslog-init] = "${sysconfdir}/init.d/syslog"
