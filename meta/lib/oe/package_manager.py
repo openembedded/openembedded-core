@@ -572,7 +572,7 @@ class RpmPM(PackageManager):
 
         bad_recommendations = self.d.getVar('BAD_RECOMMENDATIONS')
         package_exclude = self.d.getVar('PACKAGE_EXCLUDE')
-        exclude_pkgs = (bad_recommendations.split() if bad_recommendations else []) + (package_exlcude.split() if package_exclude else [])
+        exclude_pkgs = (bad_recommendations.split() if bad_recommendations else []) + (package_exclude.split() if package_exclude else [])
 
         output = self._invoke_dnf((["--skip-broken"] if attempt_only else []) +
                          (["-x", ",".join(exclude_pkgs)] if len(exclude_pkgs) > 0 else []) +
