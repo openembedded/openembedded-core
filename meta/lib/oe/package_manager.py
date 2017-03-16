@@ -520,7 +520,14 @@ class RpmPM(PackageManager):
             open(platformconfdir + "macros", 'a').write("%_prefer_color 7")
 
         if self.d.getVar('RPM_SIGN_PACKAGES') == '1':
-            raise NotImplementedError("Signature verification with rpm not yet supported.")
+            pubkey_path = self.d.getVar('RPM_GPG_PUBKEY')
+            rpm_bin = bb.utils.which(os.getenv('PATH'), "rpmkeys")
+            cmd = [rpm_bin, '--root=%s' % self.target_rootfs, '--import', pubkey_path]
+            try:
+                subprocess.check_output(cmd, stderr=subprocess.STDOUT)
+            except subprocess.CalledProcessError as e:
+                bb.fatal("Importing GPG key failed. Command '%s' "
+                        "returned %d:\n%s" % (' '.join(cmd), e.returncode, e.output.decode("utf-8")))
 
     def create_configs(self):
         self._configure_dnf()
@@ -570,7 +577,8 @@ class RpmPM(PackageManager):
         output = self._invoke_dnf((["--skip-broken"] if attempt_only else []) +
                          (["-x", ",".join(exclude_pkgs)] if len(exclude_pkgs) > 0 else []) +
                          (["--setopt=install_weak_deps=False"] if self.d.getVar('NO_RECOMMENDATIONS') == 1 else []) +
-                         ["--nogpgcheck", "install"] +
+                         (["--nogpgcheck"] if self.d.getVar('RPM_SIGN_PACKAGES') != '1' else ["--setopt=gpgcheck=True"]) +
+                         ["install"] +
                          pkgs)
 
         failed_scriptlets_pkgnames = collections.OrderedDict()
