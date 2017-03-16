@@ -101,8 +101,9 @@ base_sbindir_progs = "arp ifconfig ipmaddr iptunnel mii-tool nameif plipconfig r
 base_bindir_progs  = "dnsdomainname domainname hostname netstat nisdomainname ypdomainname"
 
 ALTERNATIVE_${PN} = "${base_sbindir_progs} ${base_bindir_progs}"
-ALTERNATIVE_${PN}-doc += "hostname.1"
+ALTERNATIVE_${PN}-doc += "hostname.1 dnsdomainname.1"
 ALTERNATIVE_LINK_NAME[hostname.1] = "${mandir}/man1/hostname.1"
+ALTERNATIVE_LINK_NAME[dnsdomainname.1] = "${mandir}/man1/dnsdomainname.1"
 ALTERNATIVE_PRIORITY[hostname.1] = "10"
 
 python __anonymous() {
