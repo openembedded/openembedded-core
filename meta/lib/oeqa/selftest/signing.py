@@ -34,8 +34,10 @@ class Signing(oeSelfTest):
         """
         Summary:     Test that packages can be signed in the package feed
         Expected:    Package should be signed with the correct key
+        Expected:    Images can be created from signed packages
         Product:     oe-core
         Author:      Daniel Istrate <daniel.alexandrux.istrate@intel.com>
+        Author:      Alexander Kanavin <alexander.kanavin@intel.com>
         AutomatedBy: Daniel Istrate <daniel.alexandrux.istrate@intel.com>
         """
         import oe.packagedata
@@ -84,6 +86,12 @@ class Signing(oeSelfTest):
         # tmp/deploy/rpm/i586/ed-1.9-r0.i586.rpm: rsa sha1 md5 OK
         self.assertIn('rsa sha1 (md5) pgp md5 OK', ret.output, 'Package signed incorrectly.')
         shutil.rmtree(rpmdb)
+
+        #Check that an image can be built from signed packages
+        self.add_command_to_tearDown('bitbake -c clean core-image-minimal')
+        bitbake('-c clean core-image-minimal')
+        bitbake('core-image-minimal')
+
 
     @testcase(1382)
     def test_signing_sstate_archive(self):
