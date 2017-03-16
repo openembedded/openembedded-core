@@ -225,6 +225,8 @@ def get_libqt4(d):
                 'libraries. Its intended use is for passing LSB tests as Qt4 is ' \
                 'a requirement for LSB.')
     return ''
+# We don't want this to rebuild every time you change your layer config
+get_libqt4[vardepsexclude] += "BBFILE_COLLECTIONS"
 
 SUMMARY_packagegroup-core-lsb-desktop = "LSB Desktop"
 DESCRIPTION_packagegroup-core-lsb-desktop = "Packages required to support libraries \
