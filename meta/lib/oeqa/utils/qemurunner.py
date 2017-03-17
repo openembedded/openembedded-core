@@ -37,10 +37,12 @@ class QemuRunner:
         self.runqemu = None
         # pid of the qemu process that runqemu will start
         self.qemupid = None
-        # target ip - from the command line
+        # target ip - from the command line or runqemu output
         self.ip = None
         # host ip - where qemu is running
         self.server_ip = None
+        # target ip netmask
+        self.netmask = None
 
         self.machine = machine
         self.rootfs = rootfs
@@ -192,6 +194,7 @@ class QemuRunner:
                     return False
             time.sleep(1)
 
+        out = self.getOutput(output)
         if self.is_alive():
             logger.info("qemu started - qemu procces pid is %s" % self.qemupid)
             if get_ip:
@@ -203,17 +206,23 @@ class QemuRunner:
                     cmdline = re_control_char.sub('', cmdline)
                 try:
                     ips = re.findall("((?:[0-9]{1,3}\.){3}[0-9]{1,3})", cmdline.split("ip=")[1])
-                    if not ips or len(ips) != 3:
-                        raise ValueError
-                    else:
-                        self.ip = ips[0]
-                        self.server_ip = ips[1]
+                    self.ip = ips[0]
+                    self.server_ip = ips[1]
+                    logger.info("qemu cmdline used:\n{}".format(cmdline))
                 except (IndexError, ValueError):
-                    logger.info("Couldn't get ip from qemu process arguments! Here is the qemu command line used:\n%s\nand output from runqemu:\n%s" % (cmdline, self.getOutput(output)))
-                    self._dump_host()
-                    self.stop()
-                    return False
-                logger.info("qemu cmdline used:\n{}".format(cmdline))
+                    # Try to get network configuration from runqemu output
+                    match = re.match('.*Network configuration: ([0-9.]+)::([0-9.]+):([0-9.]+)$.*',
+                                     out, re.MULTILINE|re.DOTALL)
+                    if match:
+                        self.ip, self.server_ip, self.netmask = match.groups()
+                    else:
+                        logger.error("Couldn't get ip from qemu command line and runqemu output! "
+                                     "Here is the qemu command line used:\n%s\n"
+                                     "and output from runqemu:\n%s" % (cmdline, out))
+                        self._dump_host()
+                        self.stop()
+                        return False
+
                 logger.info("Target IP: %s" % self.ip)
                 logger.info("Server IP: %s" % self.server_ip)
 
@@ -222,12 +231,11 @@ class QemuRunner:
             if not self.thread.connection_established.wait(self.boottime):
                 logger.error("Didn't receive a console connection from qemu. "
                              "Here is the qemu command line used:\n%s\nand "
-                             "output from runqemu:\n%s" % (cmdline,
-                                                           self.getOutput(output)))
+                             "output from runqemu:\n%s" % (cmdline, out))
                 self.stop_thread()
                 return False
 
-            logger.info("Output from runqemu:\n%s", self.getOutput(output))
+            logger.info("Output from runqemu:\n%s", out)
             logger.info("Waiting at most %d seconds for login banner" % self.boottime)
             endtime = time.time() + self.boottime
             socklist = [self.server_socket]
