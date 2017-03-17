@@ -229,9 +229,10 @@ EOF
 #
 # $1 ... .its filename
 # $2 ... Linux kernel ID
-# $3 ... DTB image ID
+# $3 ... DTB image name
 # $4 ... ramdisk ID
 # $5 ... config ID
+# $6 ... default flag
 fitimage_emit_section_config() {
 
 	conf_csum="sha1"
@@ -244,6 +245,8 @@ fitimage_emit_section_config() {
 	kernel_line="kernel = \"kernel@${2}\";"
 	fdt_line=""
 	ramdisk_line=""
+	setup_line=""
+	default_line=""
 
 	if [ -n "${3}" ]; then
 		conf_desc="${conf_desc}, FDT blob"
@@ -260,10 +263,14 @@ fitimage_emit_section_config() {
 		setup_line="setup = \"setup@${5}\";"
 	fi
 
+	if [ "${6}" = "1" ]; then
+		default_line="default = \"conf@${3}\";"
+	fi
+
 	cat << EOF >> ${1}
-                default = "conf@1";
-                conf@1 {
-                        description = "${conf_desc}";
+                ${default_line}
+                conf@${3} {
+			description = "${6} ${conf_desc}";
 			${kernel_line}
 			${fdt_line}
 			${ramdisk_line}
@@ -314,6 +321,7 @@ EOF
 fitimage_assemble() {
 	kernelcount=1
 	dtbcount=""
+	DTBS=""
 	ramdiskcount=${3}
 	setupcount=""
 	rm -f ${1} arch/${ARCH}/boot/${2}
@@ -343,8 +351,8 @@ fitimage_assemble() {
 				DTB_PATH="arch/${ARCH}/boot/${DTB}"
 			fi
 
-			fitimage_emit_section_dtb ${1} ${dtbcount} ${DTB_PATH}
-			dtbcount=`expr ${dtbcount} + 1`
+			DTBS="${DTBS} ${DTB}"
+			fitimage_emit_section_dtb ${1} ${DTB} ${DTB_PATH}
 		done
 	fi
 
@@ -384,7 +392,13 @@ fitimage_assemble() {
 	#
 	fitimage_emit_section_maint ${1} confstart
 
-	fitimage_emit_section_config ${1} "${kernelcount}" "${dtbcount}" "${ramdiskcount}" "${setupcount}"
+	if test -n "${DTBS}"; then
+		i=1
+		for DTB in ${DTBS}; do
+			fitimage_emit_section_config ${1} "${kernelcount}" "${DTB}" "${ramdiskcount}" "${setupcount}" "`expr ${i} = ${dtbcount}`"
+			i=`expr ${i} + 1`
+		done
+	fi
 
 	fitimage_emit_section_maint ${1} sectend
 
