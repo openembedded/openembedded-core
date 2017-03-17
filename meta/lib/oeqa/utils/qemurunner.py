@@ -195,6 +195,7 @@ class QemuRunner:
             time.sleep(1)
 
         out = self.getOutput(output)
+        netconf = False # network configuration is not required by default
         if self.is_alive():
             logger.info("qemu started - qemu procces pid is %s" % self.qemupid)
             if get_ip:
@@ -215,6 +216,10 @@ class QemuRunner:
                                      out, re.MULTILINE|re.DOTALL)
                     if match:
                         self.ip, self.server_ip, self.netmask = match.groups()
+                        # network configuration is required as we couldn't get it
+                        # from the runqemu command line, so qemu doesn't run kernel
+                        # and guest networking is not configured
+                        netconf = True
                     else:
                         logger.error("Couldn't get ip from qemu command line and runqemu output! "
                                      "Here is the qemu command line used:\n%s\n"
@@ -287,6 +292,14 @@ class QemuRunner:
                 if re.search("root@[a-zA-Z0-9\-]+:~#", output):
                     self.logged = True
                     logger.info("Logged as root in serial console")
+                    if netconf:
+                        # configure guest networking
+                        cmd = "ifconfig eth0 %s netmask %s up\n" % (self.ip, self.netmask)
+                        output = self.run_serial(cmd, raw=True)[1]
+                        if re.search("root@[a-zA-Z0-9\-]+:~#", output):
+                            logger.info("configured ip address %s", self.ip)
+                        else:
+                            logger.info("Couldn't configure guest networking")
                 else:
                     logger.info("Couldn't login into serial console"
                             " as root using blank password")
