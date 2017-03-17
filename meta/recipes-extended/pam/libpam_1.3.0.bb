@@ -116,7 +116,7 @@ python populate_packages_prepend () {
         d.setVar('RPROVIDES_' + pkg, provides)
 
     mlprefix = d.getVar('MLPREFIX') or ''
-    dvar = bb.data.expand('${WORKDIR}/package', d, True)
+    dvar = d.expand('${WORKDIR}/package')
     pam_libdir = d.expand('${base_libdir}/security')
     pam_sbindir = d.expand('${sbindir}')
     pam_filterdir = d.expand('${base_libdir}/security/pam_filter')

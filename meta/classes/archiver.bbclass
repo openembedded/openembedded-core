@@ -365,7 +365,7 @@ python do_ar_recipe () {
         elif include_re.match(line):
             incfile = include_re.match(line).group(1)
         if incfile:
-            incfile = bb.data.expand(incfile, d)
+            incfile = d.expand(incfile)
             incfile = bb.utils.which(bbpath, incfile)
             if incfile:
                 shutil.copy(incfile, outdir)

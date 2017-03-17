@@ -778,7 +778,7 @@ python fixup_perms () {
         dir = d.getVar(path) or ""
         if dir == "":
             continue
-        fs_perms_table[dir] = fs_perms_entry(bb.data.expand("%s 0755 root root false - - -" % (dir), d))
+        fs_perms_table[dir] = fs_perms_entry(d.expand("%s 0755 root root false - - -" % (dir)))
 
     # Now we actually load from the configuration files
     for conf in get_fs_perms_list(d).split():
@@ -1801,7 +1801,7 @@ python package_do_pkgconfig () {
                         m = field_re.match(l)
                         if m:
                             hdr = m.group(1)
-                            exp = bb.data.expand(m.group(2), pd)
+                            exp = pd.expand(m.group(2))
                             if hdr == 'Requires':
                                 pkgconfig_needed[pkg] += exp.replace(',', ' ').split()
 

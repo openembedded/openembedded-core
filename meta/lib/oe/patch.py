@@ -81,7 +81,7 @@ class PatchSet(object):
                 patch[param] = PatchSet.defaults[param]
 
         if patch.get("remote"):
-            patch["file"] = bb.data.expand(bb.fetch2.localpath(patch["remote"], self.d), self.d)
+            patch["file"] = self.d.expand(bb.fetch2.localpath(patch["remote"], self.d))
 
         patch["filemd5"] = bb.utils.md5_file(patch["file"])
 
