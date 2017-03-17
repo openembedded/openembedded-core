@@ -925,7 +925,9 @@ class BaseConfig(object):
         client = gateway + 1
         if self.fstype == 'nfs':
             self.setup_nfs()
-        self.kernel_cmdline_script += " ip=192.168.7.%s::192.168.7.%s:255.255.255.0" % (client, gateway)
+        netconf = "192.168.7.%s::192.168.7.%s:255.255.255.0" % (client, gateway)
+        logger.info("Network configuration: %s", netconf)
+        self.kernel_cmdline_script += " ip=%s" % netconf
         mac = "%s%02x" % (self.mac_tap, client)
         qb_tap_opt = self.get('QB_TAP_OPT')
         if qb_tap_opt:
