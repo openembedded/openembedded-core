@@ -22,9 +22,9 @@ import glob
 import argparse
 import subprocess
 
-def logger_create(name):
+def logger_create(name, stream=None):
     logger = logging.getLogger(name)
-    loggerhandler = logging.StreamHandler()
+    loggerhandler = logging.StreamHandler(stream=stream)
     loggerhandler.setFormatter(logging.Formatter("%(levelname)s: %(message)s"))
     logger.addHandler(loggerhandler)
     logger.setLevel(logging.INFO)
