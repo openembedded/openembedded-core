@@ -116,6 +116,7 @@ def main():
     td['sigs'] = get_signatures(td['builddir'])
     logger.info('')
 
+    layers_tested = 0
     for layer in layers:
         if layer['type'] == LayerType.ERROR_NO_LAYER_CONF or \
                 layer['type'] == LayerType.ERROR_BSP_DISTRO:
@@ -123,16 +124,20 @@ def main():
 
         shutil.copyfile(bblayersconf + '.backup', bblayersconf)
 
-        add_layer(bblayersconf, layer)
+        if not add_layer(bblayersconf, layer, layers, logger):
+            continue
+
         result = test_layer_compatibility(td, layer)
         results[layer['name']] = result
+        layers_tested = layers_tested + 1
 
-    logger.info('')
-    logger.info('Summary of results:')
-    logger.info('')
-    for layer_name in results:
-        logger.info('%s ... %s' % (layer_name, 'PASS' if \
-                results[layer_name].wasSuccessful() else 'FAIL'))
+    if layers_tested:
+        logger.info('')
+        logger.info('Summary of results:')
+        logger.info('')
+        for layer_name in results:
+            logger.info('%s ... %s' % (layer_name, 'PASS' if \
+                    results[layer_name].wasSuccessful() else 'FAIL'))
 
     cleanup_bblayers(None, None)
 

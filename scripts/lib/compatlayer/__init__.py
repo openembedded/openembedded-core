@@ -132,9 +132,36 @@ def detect_layers(layer_directories, no_auto):
 
     return layers
 
-def add_layer(bblayersconf, layer):
+def _find_layer_depends(depend, layers):
+    for layer in layers:
+        for collection in layer['collections']:
+            if depend == collection:
+                return layer
+    return None
+
+def add_layer(bblayersconf, layer, layers, logger):
+    logger.info('Adding layer %s' % layer['name'])
+
+    for collection in layer['collections']:
+        for depend in layer['collections'][collection]['depends'].split():
+            # core (oe-core) is suppose to be provided
+            if depend == 'core':
+                continue
+
+            layer_depend = _find_layer_depends(depend, layers)
+            if not layer_depend:
+                logger.error('Layer %s depends on %s and isn\'t found.' % \
+                        (layer['name'], depend))
+                return False
+
+            logger.info('Adding layer dependency %s' % layer_depend['name'])
+            with open(bblayersconf, 'a+') as f:
+                f.write("\nBBLAYERS += \"%s\"\n" % layer_depend['path'])
+
     with open(bblayersconf, 'a+') as f:
         f.write("\nBBLAYERS += \"%s\"\n" % layer['path'])
+
+    return True
 
 def get_signatures(builddir, failsafe=False):
     import subprocess
