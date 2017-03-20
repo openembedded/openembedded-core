@@ -133,6 +133,11 @@ def get_signatures(builddir, failsafe=False):
     import subprocess
     import re
 
+    # some recipes needs to be excluded like meta-world-pkgdata
+    # because a layer can add recipes to a world build so signature
+    # will be change
+    exclude_recipes = ('meta-world-pkgdata',)
+
     sigs = {}
 
     cmd = 'bitbake '
@@ -153,6 +158,15 @@ def get_signatures(builddir, failsafe=False):
             line = line.strip()
             s = sig_regex.match(line)
             if s:
+                exclude = False
+                for er in exclude_recipes:
+                    (recipe, task) = s.group('task').split(':')
+                    if er == recipe:
+                        exclude = True
+                        break
+                if exclude:
+                    continue
+
                 sigs[s.group('task')] = s.group('hash')
 
     if not sigs:
