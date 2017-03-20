@@ -34,7 +34,11 @@ PACKAGECONFIG[python3] = ",,python3 swig-native,"
 # Supported: "cl cpp python python2 python3 qt"
 # python says 'search and find python2 or python3'
 
-LANGUAGES ?= "cpp"
+# Building the C++ bindings for native requires a C++ compiler with C++11
+# support. Since these bindings are currently not needed, we can disable them.
+DEFAULT_LANGUAGES = ""
+DEFAULT_LANGUAGES_class-target = "cpp"
+LANGUAGES ?= "${DEFAULT_LANGUAGES}"
 LANGUAGES .= "${@bb.utils.contains('PACKAGECONFIG', 'python2', ' python2', '', d)}"
 LANGUAGES .= "${@bb.utils.contains('PACKAGECONFIG', 'python3', ' python3', '', d)}"
 
