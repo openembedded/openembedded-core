@@ -31,7 +31,7 @@ DEFAULT_OUTPUT_LOG = '%s-%s.log' % (PROGNAME,
 OUTPUT_LOG_LINK = "%s.log" % PROGNAME
 CASES_PATHS = [os.path.join(os.path.abspath(os.path.dirname(__file__)),
                 'lib', 'compatlayer', 'cases')]
-logger = scriptutils.logger_create(PROGNAME)
+logger = scriptutils.logger_create(PROGNAME, stream=sys.stdout)
 
 def test_layer_compatibility(td, layer):
     from compatlayer.context import CompatLayerTestContext
