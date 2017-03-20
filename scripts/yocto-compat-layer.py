@@ -47,6 +47,8 @@ def main():
             help='Layer to test compatibility with Yocto Project')
     parser.add_argument('-o', '--output-log',
             help='File to output log (optional)', action='store')
+    parser.add_argument('-n', '--no-auto', help='Disable auto layer discovery',
+            action='store_true')
     parser.add_argument('-d', '--debug', help='Enable debug output',
             action='store_true')
     parser.add_argument('-q', '--quiet', help='Print only errors',
@@ -74,7 +76,7 @@ def main():
     builddir = os.environ['BUILDDIR']
     bblayersconf = os.path.join(builddir, 'conf', 'bblayers.conf')
 
-    layers = detect_layers(args.layers)
+    layers = detect_layers(args.layers, args.no_auto)
     if not layers:
         logger.error("Fail to detect layers")
         return 1

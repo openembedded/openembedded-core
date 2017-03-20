@@ -108,20 +108,27 @@ def _detect_layer(layer_path):
 
     return layer
 
-def detect_layers(layer_directories):
+def detect_layers(layer_directories, no_auto):
     layers = []
 
     for directory in layer_directories:
         if directory[-1] == '/':
             directory = directory[0:-1]
 
-        for root, dirs, files in os.walk(directory):
-            dir_name = os.path.basename(root)
-            conf_dir = os.path.join(root, 'conf')
+        if no_auto:
+            conf_dir = os.path.join(directory, 'conf')
             if os.path.isdir(conf_dir):
-                layer = _detect_layer(root)
+                layer = _detect_layer(directory)
                 if layer:
                     layers.append(layer)
+        else:
+            for root, dirs, files in os.walk(directory):
+                dir_name = os.path.basename(root)
+                conf_dir = os.path.join(root, 'conf')
+                if os.path.isdir(conf_dir):
+                    layer = _detect_layer(root)
+                    if layer:
+                        layers.append(layer)
 
     return layers
 
