@@ -114,25 +114,6 @@ do_install_append_pn-gzip () {
         line = self.getline(res, "QA Issue: gzip")
         self.assertTrue(line and line.startswith("WARNING:"), "WARNING: QA Issue: gzip message is not present in bitbake's output: %s" % res.output)
 
-    @testcase(1434)
-    def test_sanity_unsafe_binary_references(self):
-        self.write_config('WARN_QA_append = " unsafe-references-in-binaries"')
-
-        #res = bitbake("nfs-utils")
-        # FIXME when nfs-utils passes this test
-        #line = self.getline(res, "QA Issue: nfs-utils")
-        #self.assertFalse(line, "WARNING: QA Issue: nfs-utils message is present in bitbake's output and shouldn't be: %s" % res.output)
-
-#        self.append_config("""
-#do_install_append_pn-nfs-utils () {
-#	echo "\n${bindir}/test" >> ${D}${base_sbindir}/osd_login
-#}
-#""")
-        self.add_command_to_tearDown('bitbake -c clean nfs-utils')
-        res = bitbake("nfs-utils -f -c package_qa")
-        line = self.getline(res, "QA Issue: nfs-utils")
-        self.assertTrue(line and line.startswith("WARNING:"), "WARNING: QA Issue: nfs-utils message is not present in bitbake's output: %s" % res.output)
-
     @testcase(1421)
     def test_layer_without_git_dir(self):
         """
