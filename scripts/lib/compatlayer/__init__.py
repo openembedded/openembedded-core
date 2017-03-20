@@ -118,7 +118,7 @@ def detect_layers(layer_directories):
         for root, dirs, files in os.walk(directory):
             dir_name = os.path.basename(root)
             conf_dir = os.path.join(root, 'conf')
-            if dir_name.startswith('meta-') and os.path.isdir(conf_dir):
+            if os.path.isdir(conf_dir):
                 layer = _detect_layer(root)
                 if layer:
                     layers.append(layer)
