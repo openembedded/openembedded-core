@@ -114,8 +114,15 @@ def setup_tinfoil(config_only=False, basepath=None, tracking=False):
 
         import bb.tinfoil
         tinfoil = bb.tinfoil.Tinfoil(tracking=tracking)
-        tinfoil.prepare(config_only)
-        tinfoil.logger.setLevel(logger.getEffectiveLevel())
+        try:
+            tinfoil.prepare(config_only)
+            tinfoil.logger.setLevel(logger.getEffectiveLevel())
+        except bb.tinfoil.TinfoilUIException:
+            tinfoil.shutdown()
+            raise DevtoolError('Failed to start bitbake environment')
+        except:
+            tinfoil.shutdown()
+            raise
     finally:
         os.chdir(orig_cwd)
     return tinfoil
