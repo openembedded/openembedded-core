@@ -12,6 +12,9 @@
 # Desired variables to display 
 IMAGE_BUILDINFO_VARS ?= "DISTRO DISTRO_VERSION"
 
+# Desired location of the output file in the image.
+IMAGE_BUILDINFO_FILE ??= "${sysconfdir}/build"
+
 # From buildhistory.bbclass
 def image_buildinfo_outputvars(vars, listvars, d): 
     vars = vars.split()
@@ -61,7 +64,7 @@ def buildinfo_target(d):
 
 # Write build information to target filesystem
 python buildinfo () {
-    with open(d.expand('${IMAGE_ROOTFS}${sysconfdir}/build'), 'w') as build:
+    with open(d.expand('${IMAGE_ROOTFS}${IMAGE_BUILDINFO_FILE}'), 'w') as build:
         build.writelines((
             '''-----------------------
 Build Configuration:  |
