@@ -22,14 +22,14 @@ do_compile() {
 }
 
 make_wrapper() {
-	rm -f ${D}${bindir}/$2
-	cat <<END >${D}${bindir}/$2
+	rm -f ${D}${bindir}/$2$3
+	cat <<END >${D}${bindir}/$2$3
 #!/bin/bash
 here=\`dirname \$0\`
-export GOROOT="${GOROOT:-\`readlink -f \$here/../lib/go\`}"
-\$here/../lib/go/bin/$1 "\$@"
+export GOROOT="${GOROOT:-\`readlink -f \$here/../lib/go$3\`}"
+\$here/../lib/go$3/bin/$1 "\$@"
 END
-	chmod +x ${D}${bindir}/$2
+	chmod +x ${D}${bindir}/$2$3
 }
 
 do_install() {
@@ -45,7 +45,7 @@ do_install() {
 	do
 		base=`basename $f`
 		install -m755 $f ${D}${libdir}/go${BOOTSTRAP}/bin
-		make_wrapper $base $base
+		make_wrapper $base $base ${BOOTSTRAP}
 	done
 }
 
