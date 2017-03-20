@@ -26,9 +26,6 @@ from compatlayer import LayerType, detect_layers, add_layer, get_signatures
 from oeqa.utils.commands import get_bb_vars
 
 PROGNAME = 'yocto-compat-layer'
-DEFAULT_OUTPUT_LOG = '%s-%s.log' % (PROGNAME,
-        time.strftime("%Y%m%d%H%M%S"))
-OUTPUT_LOG_LINK = "%s.log" % PROGNAME
 CASES_PATHS = [os.path.join(os.path.abspath(os.path.dirname(__file__)),
                 'lib', 'compatlayer', 'cases')]
 logger = scriptutils.logger_create(PROGNAME, stream=sys.stdout)
@@ -49,9 +46,7 @@ def main():
     parser.add_argument('layers', metavar='LAYER_DIR', nargs='+',
             help='Layer to test compatibility with Yocto Project')
     parser.add_argument('-o', '--output-log',
-            help='Output log default: %s' % DEFAULT_OUTPUT_LOG,
-            action='store', default=DEFAULT_OUTPUT_LOG)
-
+            help='File to output log (optional)', action='store')
     parser.add_argument('-d', '--debug', help='Enable debug output',
             action='store_true')
     parser.add_argument('-q', '--quiet', help='Print only errors',
@@ -63,16 +58,14 @@ def main():
 
     args = parser.parse_args()
 
-    fh = logging.FileHandler(args.output_log)
-    fh.setFormatter(logging.Formatter("%(levelname)s: %(message)s"))
-    logger.addHandler(fh)
+    if args.output_log:
+        fh = logging.FileHandler(args.output_log)
+        fh.setFormatter(logging.Formatter("%(levelname)s: %(message)s"))
+        logger.addHandler(fh)
     if args.debug:
         logger.setLevel(logging.DEBUG)
     elif args.quiet:
         logger.setLevel(logging.ERROR)
-    if os.path.exists(OUTPUT_LOG_LINK):
-        os.unlink(OUTPUT_LOG_LINK)
-    os.symlink(args.output_log, OUTPUT_LOG_LINK)
 
     if not 'BUILDDIR' in os.environ:
         logger.error("You must source the environment before run this script.")
