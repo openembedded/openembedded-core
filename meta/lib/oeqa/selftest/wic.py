@@ -24,13 +24,39 @@
 """Test cases for wic."""
 
 import os
+import unittest
 
 from glob import glob
 from shutil import rmtree
+from functools import wraps, lru_cache
 
 from oeqa.selftest.base import oeSelfTest
 from oeqa.utils.commands import runCmd, bitbake, get_bb_var, get_bb_vars, runqemu
 from oeqa.utils.decorators import testcase
+
+
+@lru_cache(maxsize=32)
+def get_host_arch(recipe):
+    """A cached call to get_bb_var('HOST_ARCH', <recipe>)"""
+    return get_bb_var('HOST_ARCH', recipe)
+
+
+def only_for_arch(archs, image='core-image-minimal'):
+    """Decorator for wrapping test cases that can be run only for specific target
+    architectures. A list of compatible architectures is passed in `archs`.
+    Current architecture will be determined by parsing bitbake output for
+    `image` recipe.
+    """
+    def wrapper(func):
+        @wraps(func)
+        def wrapped_f(*args, **kwargs):
+            arch = get_host_arch(image)
+            if archs and arch not in archs:
+                raise unittest.SkipTest("Testcase arch dependency not met: %s" % arch)
+            return func(*args, **kwargs)
+        wrapped_f.__name__ = func.__name__
+        return wrapped_f
+    return wrapper
 
 
 class Wic(oeSelfTest):
@@ -42,13 +68,13 @@ class Wic(oeSelfTest):
 
     def setUpLocal(self):
         """This code is executed before each test method."""
-        self.write_config('MACHINE_FEATURES_append = " efi"\n')
 
         # Do this here instead of in setUpClass as the base setUp does some
         # clean up which can result in the native tools built earlier in
         # setUpClass being unavailable.
         if not Wic.image_is_ready:
             bitbake('wic-tools')
+
             bitbake('core-image-minimal')
             Wic.image_is_ready = True
 
@@ -141,6 +167,7 @@ class Wic(oeSelfTest):
         self.assertEqual(1, len(glob(self.resultdir + "wictestdisk-*.direct")))
 
     @testcase(1157)
+    @only_for_arch(['i586', 'i686', 'x86_64'])
     def test_gpt_image(self):
         """Test creation of core-image-minimal with gpt table and UUID boot"""
         cmd = "wic create directdisk-gpt --image-name core-image-minimal -o %s" % self.resultdir
@@ -148,6 +175,7 @@ class Wic(oeSelfTest):
         self.assertEqual(1, len(glob(self.resultdir + "directdisk-*.direct")))
 
     @testcase(1346)
+    @only_for_arch(['i586', 'i686', 'x86_64'])
     def test_iso_image(self):
         """Test creation of hybrid iso image with legacy and EFI boot"""
         config = 'INITRAMFS_IMAGE = "core-image-minimal-initramfs"\n'\
@@ -161,6 +189,7 @@ class Wic(oeSelfTest):
         self.assertEqual(1, len(glob(self.resultdir + "HYBRID_ISO_IMG-*.iso")))
 
     @testcase(1348)
+    @only_for_arch(['i586', 'i686', 'x86_64'])
     def test_qemux86_directdisk(self):
         """Test creation of qemux-86-directdisk image"""
         cmd = "wic create qemux86-directdisk -e core-image-minimal -o %s" % self.resultdir
@@ -168,6 +197,7 @@ class Wic(oeSelfTest):
         self.assertEqual(1, len(glob(self.resultdir + "qemux86-directdisk-*direct")))
 
     @testcase(1350)
+    @only_for_arch(['i586', 'i686', 'x86_64'])
     def test_mkefidisk(self):
         """Test creation of mkefidisk image"""
         cmd = "wic create mkefidisk -e core-image-minimal -o %s" % self.resultdir
@@ -175,6 +205,7 @@ class Wic(oeSelfTest):
         self.assertEqual(1, len(glob(self.resultdir + "mkefidisk-*direct")))
 
     @testcase(1385)
+    @only_for_arch(['i586', 'i686', 'x86_64'])
     def test_directdisk_bootloader_config(self):
         """Test creation of directdisk-bootloader-config image"""
         cmd = "wic create directdisk-bootloader-config -e core-image-minimal -o %s" % self.resultdir
@@ -182,6 +213,7 @@ class Wic(oeSelfTest):
         self.assertEqual(1, len(glob(self.resultdir + "directdisk-bootloader-config-*direct")))
 
     @testcase(1560)
+    @only_for_arch(['i586', 'i686', 'x86_64'])
     def test_systemd_bootdisk(self):
         """Test creation of systemd-bootdisk image"""
         config = 'MACHINE_FEATURES_append = " efi"\n'
@@ -201,6 +233,7 @@ class Wic(oeSelfTest):
         self.assertEqual(1, len(glob(self.resultdir + "sdimage-bootpart-*direct")))
 
     @testcase(1562)
+    @only_for_arch(['i586', 'i686', 'x86_64'])
     def test_default_output_dir(self):
         """Test default output location"""
         for fname in glob("directdisk-*.direct"):
@@ -210,6 +243,7 @@ class Wic(oeSelfTest):
         self.assertEqual(1, len(glob("directdisk-*.direct")))
 
     @testcase(1212)
+    @only_for_arch(['i586', 'i686', 'x86_64'])
     def test_build_artifacts(self):
         """Test wic create directdisk providing all artifacts."""
         bb_vars = get_bb_vars(['STAGING_DATADIR', 'RECIPE_SYSROOT_NATIVE'],
@@ -307,6 +341,7 @@ class Wic(oeSelfTest):
         self.assertEqual(1, len(glob(self.resultdir + "wictestdisk-*.direct")))
 
     @testcase(1268)
+    @only_for_arch(['i586', 'i686', 'x86_64'])
     def test_rootfs_indirect_recipes(self):
         """Test usage of rootfs plugin with rootfs recipes"""
         status = runCmd("wic create directdisk-multi-rootfs "
@@ -318,6 +353,7 @@ class Wic(oeSelfTest):
         self.assertEqual(1, len(glob(self.resultdir + "directdisk-multi-rootfs*.direct")))
 
     @testcase(1269)
+    @only_for_arch(['i586', 'i686', 'x86_64'])
     def test_rootfs_artifacts(self):
         """Test usage of rootfs plugin with rootfs paths"""
         bb_vars = get_bb_vars(['STAGING_DATADIR', 'RECIPE_SYSROOT_NATIVE'],
@@ -531,6 +567,7 @@ part /etc --source rootfs --ondisk mmcblk0 --fstype=ext4 --exclude-path bin/ --r
         self.assertEqual(1, len(glob(self.resultdir + "wictestdisk-*direct")))
 
     @testcase(1351)
+    @only_for_arch(['i586', 'i686', 'x86_64'])
     def test_wic_image_type(self):
         """Test building wic images by bitbake"""
         config = 'IMAGE_FSTYPES += "wic"\nWKS_FILE = "wic-image-minimal"\n'\
@@ -551,6 +588,7 @@ part /etc --source rootfs --ondisk mmcblk0 --fstype=ext4 --exclude-path bin/ --r
             self.assertTrue(os.path.isfile(os.path.realpath(path)))
 
     @testcase(1422)
+    @only_for_arch(['i586', 'i686', 'x86_64'])
     def test_qemu(self):
         """Test wic-image-minimal under qemu"""
         config = 'IMAGE_FSTYPES += "wic"\nWKS_FILE = "wic-image-minimal"\n'\
@@ -565,6 +603,7 @@ part /etc --source rootfs --ondisk mmcblk0 --fstype=ext4 --exclude-path bin/ --r
             self.assertEqual(1, status, 'Failed to run command "%s": %s' % (cmd, output))
             self.assertEqual(output, '/dev/root /\r\n/dev/vda3 /mnt')
 
+    @only_for_arch(['i586', 'i686', 'x86_64'])
     def test_qemu_efi(self):
         """Test core-image-minimal efi image under qemu"""
         config = 'IMAGE_FSTYPES = "wic"\nWKS_FILE = "mkefidisk.wks"\n'
