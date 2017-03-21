@@ -86,6 +86,7 @@ python buildhistory_emit_pkghistory() {
             self.depends = ""
             self.packages = ""
             self.srcrev = ""
+            self.layer = ""
 
 
     class PackageInfo:
@@ -186,6 +187,7 @@ python buildhistory_emit_pkghistory() {
     pe = d.getVar('PE') or "0"
     pv = d.getVar('PV')
     pr = d.getVar('PR')
+    layer = bb.utils.get_file_layer(d.getVar('FILE', True), d)
 
     pkgdata_dir = d.getVar('PKGDATA_DIR')
     packages = ""
@@ -225,6 +227,7 @@ python buildhistory_emit_pkghistory() {
     rcpinfo.pr = pr
     rcpinfo.depends = sortlist(oe.utils.squashspaces(d.getVar('DEPENDS') or ""))
     rcpinfo.packages = packages
+    rcpinfo.layer = layer
     write_recipehistory(rcpinfo, d)
 
     pkgdest = d.getVar('PKGDEST')
@@ -303,6 +306,7 @@ def write_recipehistory(rcpinfo, d):
         f.write(u"PR = %s\n" %  rcpinfo.pr)
         f.write(u"DEPENDS = %s\n" %  rcpinfo.depends)
         f.write(u"PACKAGES = %s\n" %  rcpinfo.packages)
+        f.write(u"LAYER = %s\n" %  rcpinfo.layer)
 
 
 def write_pkghistory(pkginfo, d):
