@@ -11,7 +11,6 @@ PACKAGECONFIG ??= ""
 PACKAGECONFIG[secureboot] = ",,,"
 
 SRC_URI = "git://github.com/tianocore/edk2.git;branch=master \
-	file://0001-BaseTools-Force-tools-variables-to-host-toolchain.patch \
 	file://0002-ovmf-update-path-to-native-BaseTools.patch \
 	file://0003-BaseTools-makefile-adjust-to-build-in-under-bitbake.patch \
 	file://VfrCompile-increase-path-length-limit.patch \
@@ -51,31 +50,54 @@ COMPATIBLE_HOST='(i.86|x86_64).*'
 OVMF_SECURE_BOOT_EXTRA_FLAGS ??= ""
 OVMF_SECURE_BOOT_FLAGS = "-DSECURE_BOOT_ENABLE=TRUE ${OVMF_SECURE_BOOT_EXTRA_FLAGS}"
 
-do_patch_append_class-native() {
-    bb.build.exec_func('do_fix_iasl', d)
-    bb.build.exec_func('do_fix_toolchain', d)
+do_patch[postfuncs] += "fix_basetools_location"
+fix_basetools_location () {
 }
-
-do_fix_basetools_location() {
+fix_basetools_location_class-target() {
+    # Replaces the fake path inserted by 0002-ovmf-update-path-to-native-BaseTools.patch.
+    # Necessary for finding the actual BaseTools from ovmf-native.
     sed -i -e 's#BBAKE_EDK_TOOLS_PATH#${STAGING_BINDIR_NATIVE}/${EDK_TOOLS_DIR}#' ${S}/OvmfPkg/build.sh
 }
 
-do_patch_append_class-target() {
-    bb.build.exec_func('do_fix_basetools_location', d)
+do_patch[postfuncs] += "fix_iasl"
+fix_iasl() {
 }
-
-
-do_fix_iasl() {
+fix_iasl_class-native() {
+    # iasl is not installed under /usr/bin when building with OE.
     sed -i -e 's#/usr/bin/iasl#${STAGING_BINDIR_NATIVE}/iasl#' ${S}/BaseTools/Conf/tools_def.template
 }
 
-do_fix_toolchain(){
-    sed -i -e 's#DEF(ELFGCC_BIN)/#${TARGET_PREFIX}#' ${S}/BaseTools/Conf/tools_def.template
-    sed -i -e 's#DEF(GCC.*PREFIX)#${TARGET_PREFIX}#' ${S}/BaseTools/Conf/tools_def.template
-    sed -i -e "s#^LINKER\(.*\)#LINKER\1\nLFLAGS += ${BUILD_LDFLAGS}#" ${S}/BaseTools/Source/C/Makefiles/app.makefile
-    sed -i -e "s#^LINKER\(.*\)#LINKER\1\nCFLAGS += ${BUILD_CFLAGS}#" ${S}/BaseTools/Source/C/Makefiles/app.makefile
-    sed -i -e "s#^LINKER\(.*\)#LINKER\1\nLFLAGS += ${BUILD_LDFLAGS}#" ${S}/BaseTools/Source/C/VfrCompile/GNUmakefile
-    sed -i -e "s#^LINKER\(.*\)#LINKER\1\nCFLAGS += ${BUILD_CFLAGS}#" ${S}/BaseTools/Source/C/VfrCompile/GNUmakefile
+# Inject CC and friends into the build. LINKER already is in GNUmakefile.
+# Must be idempotent and thus remove old assignments that were inserted
+# earlier.
+do_patch[postfuncs] += "fix_toolchain"
+fix_toolchain() {
+    sed -i \
+        -e '/^\(CC\|CXX\|AS\|AR\|LD\|LINKER\) =/d' \
+        -e '/^APPLICATION/a CC = ${CC}\nCXX = ${CXX}\nAS = ${AS}\nAR = ${AR}\nLD = ${LD}\nLINKER = $(CC)' \
+        ${S}/BaseTools/Source/C/Makefiles/app.makefile
+    sed -i \
+        -e '/^\(CC\|CXX\|AS\|AR\|LD\)/d' \
+        -e '/^VFR_CPPFLAGS/a CC = ${CC}\nCXX = ${CXX}\nAS = ${AS}\nAR = ${AR}\nLD = ${LD}' \
+        ${S}/BaseTools/Source/C/VfrCompile/GNUmakefile
+}
+fix_toolchain_append_class-native() {
+    # This tools_def.template is going to be used by the target ovmf and
+    # defines which compilers to use. For the GCC toolchain definitions,
+    # that will be ${HOST_PREFIX}gcc. However, "make" doesn't need that
+    # prefix.
+    #
+    # Injecting ENV(HOST_PREFIX) matches exporting that value as env
+    # variable in do_compile_class-target.
+    sed -i \
+        -e 's#\(ENV\|DEF\)(GCC.*_PREFIX)#ENV(HOST_PREFIX)#' \
+        -e 's#ENV(HOST_PREFIX)make#make#' \
+        ${S}/BaseTools/Conf/tools_def.template
+    sed -i \
+        -e '/^\(LFLAGS\|CFLAGS\) +=/d' \
+        -e '/^LINKER/a LFLAGS += ${BUILD_LDFLAGS}\nCFLAGS += ${BUILD_CFLAGS}' \
+        ${S}/BaseTools/Source/C/Makefiles/app.makefile \
+        ${S}/BaseTools/Source/C/VfrCompile/GNUmakefile
 }
 
 GCC_VER="$(${CC} -v 2>&1 | tail -n1 | awk '{print $3}')"
@@ -118,6 +140,16 @@ do_compile_class-target() {
     if [ "${TARGET_ARCH}" != "x86_64" ] ; then
         OVMF_ARCH="IA32"
     fi
+
+    # The build for the target uses BaseTools/Conf/tools_def.template
+    # from ovmf-native to find the compiler, which depends on
+    # exporting HOST_PREFIX.
+    export HOST_PREFIX="${HOST_PREFIX}"
+
+    # BaseTools/Conf gets copied to Conf, but only if that does not
+    # exist yet. To ensure that an updated template gets used during
+    # incremental builds, we need to remove the copy before we start.
+    rm -f `ls ${S}/Conf/*.txt | grep -v ReadMe.txt`
 
     # ${WORKDIR}/ovmf is a well-known location where do_install and
     # do_deploy will be able to find the files.
