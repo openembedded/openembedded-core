@@ -507,7 +507,7 @@ class DevtoolTests(DevtoolBase):
         builddir_m4 = tempfile.mkdtemp(prefix='devtoolqa')
         self.track_for_cleanup(tempdir_mdadm)
         self.track_for_cleanup(tempdir_m4)
-        #self.track_for_cleanup(builddir_m4)
+        self.track_for_cleanup(builddir_m4)
         self.track_for_cleanup(self.workspacedir)
         self.add_command_to_tearDown('bitbake-layers remove-layer */workspace')
         self.add_command_to_tearDown('bitbake -c clean mdadm m4')
