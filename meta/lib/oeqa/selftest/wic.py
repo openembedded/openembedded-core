@@ -681,3 +681,19 @@ part /etc --source rootfs --ondisk mmcblk0 --fstype=ext4 --exclude-path bin/ --r
         os.remove(wkspath)
         wicout = glob(self.resultdir + "%s-*direct" % wksname)
         self.assertEqual(0, len(wicout))
+
+    @only_for_arch(['i586', 'i686', 'x86_64'])
+    def test_rawcopy_plugin_qemu(self):
+        """Test rawcopy plugin in qemu"""
+        # build ext4 and wic images
+        for fstype in ("ext4", "wic"):
+            config = 'IMAGE_FSTYPES = "%s"\nWKS_FILE = "test_rawcopy_plugin.wks.in"\n' % fstype
+            self.append_config(config)
+            self.assertEqual(0, bitbake('core-image-minimal').status)
+            self.remove_config(config)
+
+        with runqemu('core-image-minimal', ssh=False, image_fstype='wic') as qemu:
+            cmd = "grep vda. /proc/partitions  |wc -l"
+            status, output = qemu.run_serial(cmd)
+            self.assertEqual(1, status, 'Failed to run command "%s": %s' % (cmd, output))
+            self.assertEqual(output, '2')
