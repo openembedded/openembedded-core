@@ -32,25 +32,6 @@ class FSImagePlugin(SourcePlugin):
     name = 'fsimage'
 
     @classmethod
-    def do_install_disk(cls, disk, disk_name, cr, workdir, oe_builddir,
-                        bootimg_dir, kernel_dir, native_sysroot):
-        """
-        Called after all partitions have been prepared and assembled into a
-        disk image. Do nothing.
-        """
-        pass
-
-    @classmethod
-    def do_configure_partition(cls, part, source_params, cr, cr_workdir,
-                               oe_builddir, bootimg_dir, kernel_dir,
-                               native_sysroot):
-        """
-        Called before do_prepare_partition(). Possibly prepare
-        configuration files of some sort.
-        """
-        pass
-
-    @classmethod
     def do_prepare_partition(cls, part, source_params, cr, cr_workdir,
                              oe_builddir, bootimg_dir, kernel_dir,
                              rootfs_dir, native_sysroot):
