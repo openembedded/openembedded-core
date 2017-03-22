@@ -44,17 +44,32 @@ class BootimgPcbiosPlugin(SourcePlugin):
     name = 'bootimg-pcbios'
 
     @classmethod
+    def _get_syslinux_dir(cls, bootimg_dir):
+        """
+        Get path to syslinux from either default bootimg_dir
+        or wic-tools STAGING_DIR.
+        """
+        for path in (bootimg_dir, get_bitbake_var("STAGING_DATADIR", "wic-tools")):
+            if not path:
+                continue
+            syslinux_dir = os.path.join(path, 'syslinux')
+            if os.path.exists(syslinux_dir):
+                return syslinux_dir
+
+        raise WicError("Couldn't find syslinux directory, exiting")
+
+    @classmethod
     def do_install_disk(cls, disk, disk_name, creator, workdir, oe_builddir,
                         bootimg_dir, kernel_dir, native_sysroot):
         """
         Called after all partitions have been prepared and assembled into a
         disk image.  In this case, we install the MBR.
         """
-        mbrfile = "%s/syslinux/" % bootimg_dir
+        syslinux_dir = cls._get_syslinux_dir(bootimg_dir)
         if creator.ptable_format == 'msdos':
-            mbrfile += "mbr.bin"
+            mbrfile = os.path.join(syslinux_dir, "mbr.bin")
         elif creator.ptable_format == 'gpt':
-            mbrfile += "gptmbr.bin"
+            mbrfile = os.path.join(syslinux_dir, "gptmbr.bin")
         else:
             raise WicError("Unsupported partition table: %s" %
                            creator.ptable_format)
@@ -140,19 +155,7 @@ class BootimgPcbiosPlugin(SourcePlugin):
         'prepares' the partition to be incorporated into the image.
         In this case, prepare content for legacy bios boot partition.
         """
-        def _has_syslinux(dirname):
-            if dirname:
-                syslinux = "%s/syslinux" % dirname
-                if os.path.exists(syslinux):
-                    return True
-            return False
-
-        if not _has_syslinux(bootimg_dir):
-            bootimg_dir = get_bitbake_var("STAGING_DATADIR", "wic-tools")
-            if not bootimg_dir:
-                raise WicError("Couldn't find STAGING_DATADIR, exiting")
-            if not _has_syslinux(bootimg_dir):
-                raise WicError("Please build syslinux first")
+        syslinux_dir = cls._get_syslinux_dir(bootimg_dir)
 
         staging_kernel_dir = kernel_dir
 
@@ -160,14 +163,14 @@ class BootimgPcbiosPlugin(SourcePlugin):
 
         cmds = ("install -m 0644 %s/bzImage %s/vmlinuz" %
                 (staging_kernel_dir, hdddir),
-                "install -m 444 %s/syslinux/ldlinux.sys %s/ldlinux.sys" %
-                (bootimg_dir, hdddir),
-                "install -m 0644 %s/syslinux/vesamenu.c32 %s/vesamenu.c32" %
-                (bootimg_dir, hdddir),
-                "install -m 444 %s/syslinux/libcom32.c32 %s/libcom32.c32" %
-                (bootimg_dir, hdddir),
-                "install -m 444 %s/syslinux/libutil.c32 %s/libutil.c32" %
-                (bootimg_dir, hdddir))
+                "install -m 444 %s/ldlinux.sys %s/ldlinux.sys" %
+                (syslinux_dir, hdddir),
+                "install -m 0644 %s/vesamenu.c32 %s/vesamenu.c32" %
+                (syslinux_dir, hdddir),
+                "install -m 444 %s/libcom32.c32 %s/libcom32.c32" %
+                (syslinux_dir, hdddir),
+                "install -m 444 %s/libutil.c32 %s/libutil.c32" %
+                (syslinux_dir, hdddir))
 
         for install_cmd in cmds:
             exec_cmd(install_cmd)
