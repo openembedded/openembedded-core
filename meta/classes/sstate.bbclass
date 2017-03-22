@@ -313,6 +313,11 @@ def sstate_installpkg(ss, d):
         if not signer.verify(sstatepkg + '.sig'):
             bb.warn("Cannot verify signature on sstate package %s" % sstatepkg)
 
+    # Empty sstateinst directory, ensure its clean
+    if os.path.exists(sstateinst):
+        oe.path.remove(sstateinst)
+    bb.utils.mkdirhier(sstateinst)
+
     sstateinst = d.getVar("SSTATE_INSTDIR")
     d.setVar('SSTATE_FIXMEDIR', ss['fixmedir'])
 
