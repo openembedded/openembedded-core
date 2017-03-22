@@ -112,6 +112,7 @@ PKG_CONFIG_SYSTEM_INCLUDE_PATH[unexport] = "1"
 LIBCOVERRIDE = ""
 CLASSOVERRIDE = "class-native"
 MACHINEOVERRIDES = ""
+MACHINE_FEATURES = ""
 
 PATH_prepend = "${COREBASE}/scripts/native-intercept:"
 
