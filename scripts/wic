@@ -171,8 +171,6 @@ def wic_create_subcommand(args, usage_str):
     if options.build_check and not engine.verify_build_env():
         raise WicError("Couldn't verify build environment, exiting")
 
-    bootimg_dir = ""
-
     if options.debug:
         logger.setLevel(logging.DEBUG)
 
@@ -189,6 +187,7 @@ def wic_create_subcommand(args, usage_str):
 
         rootfs_dir = get_bitbake_var("IMAGE_ROOTFS", options.image_name)
         kernel_dir = get_bitbake_var("DEPLOY_DIR_IMAGE", options.image_name)
+        bootimg_dir = get_bitbake_var("STAGING_DATADIR", options.image_name)
         native_sysroot = get_bitbake_var("RECIPE_SYSROOT_NATIVE",
                                          options.image_name) #, cache=False)
     else:
