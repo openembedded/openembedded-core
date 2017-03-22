@@ -78,12 +78,12 @@ class BootimgPartitionPlugin(SourcePlugin):
         install_cmd = "install -d %s" % hdddir
         exec_cmd(install_cmd)
 
-        if not bootimg_dir:
-            bootimg_dir = get_bitbake_var("DEPLOY_DIR_IMAGE")
-            if not bootimg_dir:
+        if not kernel_dir:
+            kernel_dir = get_bitbake_var("DEPLOY_DIR_IMAGE")
+            if not kernel_dir:
                 raise WicError("Couldn't find DEPLOY_DIR_IMAGE, exiting")
 
-        logger.debug('Bootimg dir: %s', bootimg_dir)
+        logger.debug('Kernel dir: %s', bootimg_dir)
 
         boot_files = get_bitbake_var("IMAGE_BOOT_FILES")
 
@@ -118,7 +118,7 @@ class BootimgPartitionPlugin(SourcePlugin):
                                     os.path.join(dst,
                                                  os.path.basename(name))
 
-                srcs = glob(os.path.join(bootimg_dir, src))
+                srcs = glob(os.path.join(kernel_dir, src))
 
                 logger.debug('Globbed sources: %s', ', '.join(srcs))
                 for entry in srcs:
@@ -127,7 +127,7 @@ class BootimgPartitionPlugin(SourcePlugin):
                                          os.path.join(hdddir,
                                                       entry_dst_name)))
             else:
-                install_task = [(os.path.join(bootimg_dir, src),
+                install_task = [(os.path.join(kernel_dir, src),
                                  os.path.join(hdddir, dst))]
 
             for task in install_task:

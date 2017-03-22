@@ -59,17 +59,17 @@ class RawCopyPlugin(SourcePlugin):
         Called to do the actual content population for a partition i.e. it
         'prepares' the partition to be incorporated into the image.
         """
-        if not bootimg_dir:
-            bootimg_dir = get_bitbake_var("DEPLOY_DIR_IMAGE")
-            if not bootimg_dir:
+        if not kernel_dir:
+            kernel_dir = get_bitbake_var("DEPLOY_DIR_IMAGE")
+            if not kernel_dir:
                 raise WicError("Couldn't find DEPLOY_DIR_IMAGE, exiting")
 
-        logger.debug('Bootimg dir: %s', bootimg_dir)
+        logger.debug('Kernel dir: %s', kernel_dir)
 
         if 'file' not in source_params:
             raise WicError("No file specified")
 
-        src = os.path.join(bootimg_dir, source_params['file'])
+        src = os.path.join(kernel_dir, source_params['file'])
         dst = os.path.join(cr_workdir, "%s.%s" % (source_params['file'], part.lineno))
 
         if 'skip' in source_params:
