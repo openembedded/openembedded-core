@@ -153,8 +153,6 @@ class BootimgPcbiosPlugin(SourcePlugin):
                 raise WicError("Couldn't find STAGING_DATADIR, exiting")
             if not _has_syslinux(bootimg_dir):
                 raise WicError("Please build syslinux first")
-            # just so the result notes display it
-            creator.bootimg_dir = bootimg_dir
 
         staging_kernel_dir = kernel_dir
 

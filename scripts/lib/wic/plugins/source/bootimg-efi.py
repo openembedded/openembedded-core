@@ -189,8 +189,6 @@ class BootimgEFIPlugin(SourcePlugin):
             bootimg_dir = get_bitbake_var("DEPLOY_DIR_IMAGE")
             if not bootimg_dir:
                 raise WicError("Couldn't find DEPLOY_DIR_IMAGE, exiting")
-            # just so the result notes display it
-            creator.bootimg_dir = bootimg_dir
 
         staging_kernel_dir = kernel_dir
 
