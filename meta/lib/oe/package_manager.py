@@ -520,7 +520,9 @@ class RpmPM(PackageManager):
             open(platformconfdir + "macros", 'a').write("%_prefer_color 7")
 
         if self.d.getVar('RPM_SIGN_PACKAGES') == '1':
-            pubkey_path = self.d.getVar('RPM_GPG_PUBKEY')
+            signer = get_signer(self.d, self.d.getVar('RPM_GPG_BACKEND'))
+            pubkey_path = oe.path.join(self.d.getVar('B'), 'rpm-key')
+            signer.export_pubkey(pubkey_path, self.d.getVar('RPM_GPG_NAME'))
             rpm_bin = bb.utils.which(os.getenv('PATH'), "rpmkeys")
             cmd = [rpm_bin, '--root=%s' % self.target_rootfs, '--import', pubkey_path]
             try:

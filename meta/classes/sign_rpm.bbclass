@@ -28,13 +28,6 @@ python () {
     for var in ('RPM_GPG_NAME', 'RPM_GPG_PASSPHRASE'):
         if not d.getVar(var):
             raise_sanity_error("You need to define %s in the config" % var, d)
-
-    # Set the expected location of the public key
-    d.setVar('RPM_GPG_PUBKEY', os.path.join(d.getVar('STAGING_DIR_TARGET', False),
-                                            d.getVar('sysconfdir', False),
-                                            'pki',
-                                            'rpm-gpg',
-                                            'RPM-GPG-KEY-${DISTRO_VERSION}'))
 }
 
 python sign_rpm () {
