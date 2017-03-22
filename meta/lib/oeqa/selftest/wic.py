@@ -701,3 +701,19 @@ part /etc --source rootfs --ondisk mmcblk0 --fstype=ext4 --exclude-path bin/ --r
             status, output = qemu.run_serial(cmd)
             self.assertEqual(1, status, 'Failed to run command "%s": %s' % (cmd, output))
             self.assertEqual(output, '2')
+
+    def test_rawcopy_plugin(self):
+        """Test rawcopy plugin"""
+        img = 'core-image-minimal'
+        machine = get_bb_var('MACHINE', img)
+        with NamedTemporaryFile("w", suffix=".wks") as wks:
+            wks.writelines(['part /boot --active --source bootimg-pcbios\n',
+                            'part / --source rawcopy --sourceparams="file=%s-%s.ext4" --use-uuid\n'\
+                             % (img, machine),
+                            'bootloader --timeout=0 --append="console=ttyS0,115200n8"\n'])
+            wks.flush()
+            cmd = "wic create %s -e %s -o %s" % (wks.name, img, self.resultdir)
+            self.assertEqual(0, runCmd(cmd).status)
+            wksname = os.path.splitext(os.path.basename(wks.name))[0]
+            out = glob(self.resultdir + "%s-*direct" % wksname)
+            self.assertEqual(1, len(out))
