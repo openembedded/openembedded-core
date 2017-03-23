@@ -173,14 +173,6 @@ addtask populate_sysroot after do_install
 SYSROOT_PREPROCESS_FUNCS ?= ""
 SYSROOT_DESTDIR = "${WORKDIR}/sysroot-destdir"
 
-# We clean out any existing sstate from the sysroot if we rerun configure
-python sysroot_cleansstate () {
-    ss = sstate_state_fromvars(d, "populate_sysroot")
-    sstate_clean(ss, d)
-}
-do_configure[prefuncs] += "sysroot_cleansstate"
-
-
 BB_SETSCENE_VERIFY_FUNCTION2 = "sysroot_checkhashes2"
 
 def sysroot_checkhashes2(covered, tasknames, fns, d, invalidtasks):
