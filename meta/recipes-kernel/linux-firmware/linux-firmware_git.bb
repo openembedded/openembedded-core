@@ -343,13 +343,13 @@ FILES_${PN}-sd8797 = " \
   ${nonarch_base_libdir}/firmware/mrvl/sd8797_uapsta.bin \
 "
 FILES_${PN}-sd8801 = " \
-  /lib/firmware/mrvl/sd8801_uapsta.bin \
+  ${nonarch_base_libdir}/firmware/mrvl/sd8801_uapsta.bin \
 "
 FILES_${PN}-sd8887 = " \
-  /lib/firmware/mrvl/sd8887_uapsta.bin \
+  ${nonarch_base_libdir}/firmware/mrvl/sd8887_uapsta.bin \
 "
 FILES_${PN}-sd8897 = " \
-  /lib/firmware/mrvl/sd8897_uapsta.bin \
+  ${nonarch_base_libdir}/firmware/mrvl/sd8897_uapsta.bin \
 "
 
 RDEPENDS_${PN}-sd8686 += "${PN}-marvell-license"
