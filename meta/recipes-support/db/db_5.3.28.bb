@@ -21,6 +21,7 @@ PE = "1"
 SRC_URI = "http://download.oracle.com/berkeley-db/db-${PV}.tar.gz"
 SRC_URI += "file://arm-thumb-mutex_db5.patch \
             file://fix-parallel-build.patch \
+            file://0001-atomic-Rename-local-__atomic_compare_exchange-to-avo.patch \
            "
 
 SRC_URI[md5sum] = "b99454564d5b4479750567031d66fe24"
