@@ -5,10 +5,13 @@ TOOLCHAIN_TARGET_TASK = ""
 
 # ibm850 - mcopy from mtools
 # iso8859-1 - guile
+# utf-16, cp1252 - binutils-windres
 TOOLCHAIN_HOST_TASK = "\
     nativesdk-glibc \
     nativesdk-glibc-gconv-ibm850 \
     nativesdk-glibc-gconv-iso8859-1 \
+    nativesdk-glibc-gconv-utf-16 \
+    nativesdk-glibc-gconv-cp1252 \
     nativesdk-patchelf \
     "
 
