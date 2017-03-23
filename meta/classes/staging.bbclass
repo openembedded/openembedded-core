@@ -194,21 +194,6 @@ def sysroot_checkhashes2(covered, tasknames, fns, d, invalidtasks):
             problems.add(tid)
     return problems
 
-BB_SETSCENE_VERIFY_FUNCTION = "sysroot_checkhashes"
-
-def sysroot_checkhashes(covered, tasknames, fnids, fns, d, invalidtasks = None):
-    problems = set()
-    configurefnids = set()
-    if not invalidtasks:
-        invalidtasks = range(len(tasknames))
-    for task in invalidtasks:
-        if tasknames[task] == "do_configure" and task not in covered:
-            configurefnids.add(fnids[task])
-    for task in covered:
-        if tasknames[task] == "do_populate_sysroot" and fnids[task] in configurefnids:
-            problems.add(task)
-    return problems
-
 python do_populate_sysroot () {
     bb.build.exec_func("sysroot_stage_all", d)
     bb.build.exec_func("sysroot_strip", d)
