@@ -173,19 +173,6 @@ addtask populate_sysroot after do_install
 SYSROOT_PREPROCESS_FUNCS ?= ""
 SYSROOT_DESTDIR = "${WORKDIR}/sysroot-destdir"
 
-BB_SETSCENE_VERIFY_FUNCTION2 = "sysroot_checkhashes2"
-
-def sysroot_checkhashes2(covered, tasknames, fns, d, invalidtasks):
-    problems = set()
-    configurefns = set()
-    for tid in invalidtasks:
-        if tasknames[tid] == "do_configure" and tid not in covered:
-            configurefns.add(fns[tid])
-    for tid in covered:
-        if tasknames[tid] == "do_populate_sysroot" and fns[tid] in configurefns:
-            problems.add(tid)
-    return problems
-
 python do_populate_sysroot () {
     bb.build.exec_func("sysroot_stage_all", d)
     bb.build.exec_func("sysroot_strip", d)
