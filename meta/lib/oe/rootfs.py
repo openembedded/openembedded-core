@@ -946,7 +946,9 @@ class OpkgRootfs(DpkgOpkgRootfs):
         if self.progress_reporter:
             self.progress_reporter.next_stage()
 
-        self._setup_dbg_rootfs(['/var/lib/opkg'])
+        opkg_lib_dir = self.d.getVar('OPKGLIBDIR')
+        opkg_dir = os.path.join(opkg_lib_dir, 'opkg')
+        self._setup_dbg_rootfs([opkg_dir])
 
         execute_pre_post_process(self.d, opkg_post_process_cmds)
 
