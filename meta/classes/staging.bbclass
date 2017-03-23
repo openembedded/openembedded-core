@@ -469,6 +469,8 @@ python extend_recipe_sysroot() {
     multilibs = {}
     manifests = {}
 
+    installed = []
+
     for f in os.listdir(depdir):
         if not f.endswith(".complete"):
             continue
@@ -487,6 +489,9 @@ python extend_recipe_sysroot() {
         if mytaskname in ["do_sdk_depends", "do_populate_sdk_ext"] and c.endswith("-initial"):
             bb.note("Skipping initial setscene dependency %s for installation into the sysroot" % c)
             continue
+
+        installed.append(c)
+
         if os.path.exists(depdir + "/" + c):
             lnk = os.readlink(depdir + "/" + c)
             if lnk == c + "." + taskhash and os.path.exists(depdir + "/" + c + ".complete"):
@@ -600,6 +605,29 @@ python extend_recipe_sysroot() {
     for dep in manifests:
         c = setscenedeps[dep][0]
         os.symlink(manifests[dep], depdir + "/" + c + ".complete")
+
+    # We want to remove anything which this task previously installed but is no longer a dependency
+    # This could potentially race against another task which also installed it but still requires it
+    # but the alternative is not doing anything at all and that race window should be small enough
+    # to be insignificant
+    taskindex = depdir + "/" + "index." + mytaskname
+    if os.path.exists(taskindex):
+        with open(taskindex, "r") as f:
+            for l in f:
+                l = l.strip()
+                if l not in installed:
+                    l = depdir + "/" + l
+                    if not os.path.exists(l):
+                        # Was likely already uninstalled
+                        continue
+                    bb.note("Task %s no longer depends on %s, removing from sysroot" % (mytaskname, l))
+                    lnk = os.readlink(l)
+                    sstate_clean_manifest(depdir + "/" + lnk, d, workdir)
+                    os.unlink(l)
+                    os.unlink(l + ".complete")
+    with open(taskindex, "w") as f:
+        for l in sorted(installed):
+            f.write(l + "\n")
 
     bb.utils.unlockfile(lock)
 }
