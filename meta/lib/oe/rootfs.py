@@ -949,7 +949,9 @@ class OpkgRootfs(DpkgOpkgRootfs):
         if self.progress_reporter:
             self.progress_reporter.next_stage()
 
-        self._setup_dbg_rootfs(['/etc', '/var/lib/opkg', '/usr/lib/ssl'])
+        opkg_lib_dir = self.d.getVar('OPKGLIBDIR', True)
+        opkg_dir = os.path.join(opkg_lib_dir, 'opkg')
+        self._setup_dbg_rootfs(['/etc', opkg_dir, '/usr/lib/ssl'])
 
         execute_pre_post_process(self.d, opkg_post_process_cmds)
 
