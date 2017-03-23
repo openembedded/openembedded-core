@@ -28,8 +28,8 @@ usage() {
 	echo "Where <gid> is the numeric group id the tap devices will be owned by"
 	echo "<num> is the number of tap devices to create (0 to remove all)"
 	echo "<native-sysroot-basedir> is the path to the build system's native sysroot"
-	echo "e.g. $ bitbake qemu-helper-native -c addto_recipe_sysroot"
-	echo "$ sudo $0 1000 1000 4 tmp/work/x86_64-linux/qemu-helper-native/*/recipe-sysroot-native/"
+	echo "e.g. $ bitbake qemu-helper-native"
+	echo "$ sudo $0 1000 1000 4 tmp/sysroots-components/x86_64/qemu-helper-native/"
 	exit 1
 }
 
