@@ -29,18 +29,14 @@ diff --git a/crypto/modes/asm/ghash-armv4.pl b/crypto/modes/asm/ghash-armv4.pl
 index 8ccc963ef..442fed4da 100644
 --- a/crypto/modes/asm/ghash-armv4.pl
 +++ b/crypto/modes/asm/ghash-armv4.pl
-@@ -124,7 +124,14 @@ $code=<<___;
+@@ -124,7 +124,10 @@ $code=<<___;
  #include "arm_arch.h"
  
  .text
 +#if defined(__thumb2__) || defined(__clang__)
 +.syntax	unified
 +#endif
-+#if defined(__thumb2__)
-+.thumb
-+#else
  .code	32
-+#endif
  
  #ifdef __clang__
  #define ldrplb	ldrbpl
