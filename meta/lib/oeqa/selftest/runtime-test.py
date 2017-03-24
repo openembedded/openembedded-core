@@ -181,10 +181,10 @@ postinst-delayed-t \
                         break
 
     @testcase(1545)
-    def test_postinst_roofs_and_boot(self):
+    def test_postinst_rootfs_and_boot(self):
         """
         Summary:        The purpose of this test case is to verify Post-installation
-                        scripts are called when roofs is created and also test
+                        scripts are called when rootfs is created and also test
                         that script can be delayed to run at first boot.
         Dependencies:   NA
         Steps:          1. Add proper configuration to local.conf file
