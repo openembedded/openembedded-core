@@ -218,7 +218,10 @@ def create_temp_layer(templayerdir, templayername, priority=999, recipepathspec=
 
 
 @contextlib.contextmanager
-def runqemu(pn, ssh=True, runqemuparams='', image_fstype=None):
+def runqemu(pn, ssh=True, runqemuparams='', image_fstype=None, launch_cmd=None):
+    """
+    launch_cmd means directly run the command, don't need set rootfs or env vars.
+    """
 
     import bb.tinfoil
     import bb.build
@@ -230,6 +233,12 @@ def runqemu(pn, ssh=True, runqemuparams='', image_fstype=None):
         import oeqa.targetcontrol
         tinfoil.config_data.setVar("TEST_LOG_DIR", "${WORKDIR}/testimage")
         tinfoil.config_data.setVar("TEST_QEMUBOOT_TIMEOUT", "1000")
+        # Tell QemuTarget() whether need find rootfs/kernel or not
+        if launch_cmd:
+            tinfoil.config_data.setVar("FIND_ROOTFS", '0')
+        else:
+            tinfoil.config_data.setVar("FIND_ROOTFS", '1')
+
         recipedata = tinfoil.parse_recipe(pn)
 
         # The QemuRunner log is saved out, but we need to ensure it is at the right
@@ -260,7 +269,7 @@ def runqemu(pn, ssh=True, runqemuparams='', image_fstype=None):
     try:
         qemu.deploy()
         try:
-            qemu.start(ssh=ssh, runqemuparams=runqemuparams)
+            qemu.start(ssh=ssh, runqemuparams=runqemuparams, launch_cmd=launch_cmd)
         except bb.build.FuncFailed:
             raise Exception('Failed to start QEMU - see the logs in %s' % logdir)
 

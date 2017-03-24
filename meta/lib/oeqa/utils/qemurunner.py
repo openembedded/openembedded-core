@@ -97,7 +97,7 @@ class QemuRunner:
                 self._dump_host()
                 raise SystemExit
 
-    def start(self, qemuparams = None, get_ip = True, extra_bootparams = None, runqemuparams=''):
+    def start(self, qemuparams = None, get_ip = True, extra_bootparams = None, runqemuparams='', launch_cmd=None):
         if self.display:
             os.environ["DISPLAY"] = self.display
             # Set this flag so that Qemu doesn't do any grabs as SDL grabs
@@ -117,6 +117,20 @@ class QemuRunner:
         else:
             os.environ["DEPLOY_DIR_IMAGE"] = self.deploy_dir_image
 
+        if not launch_cmd:
+            launch_cmd = 'runqemu snapshot'
+            if self.use_kvm:
+                logger.info('Using kvm for runqemu')
+                launch_cmd += ' kvm'
+            else:
+                logger.info('Not using kvm for runqemu')
+            if not self.display:
+                launch_cmd += ' nographic'
+            launch_cmd += ' %s %s' % (self.machine, self.rootfs)
+
+        return self.launch(launch_cmd, qemuparams=qemuparams, get_ip=get_ip, extra_bootparams=extra_bootparams, runqemuparams=runqemuparams)
+
+    def launch(self, launch_cmd, get_ip = True, qemuparams = None, extra_bootparams = None, runqemuparams=''):
         try:
             threadsock, threadport = self.create_socket()
             self.server_socket, self.serverport = self.create_socket()
@@ -124,27 +138,19 @@ class QemuRunner:
             logger.error("Failed to create listening socket: %s" % msg[1])
             return False
 
-
         bootparams = 'console=tty1 console=ttyS0,115200n8 printk.time=1'
         if extra_bootparams:
             bootparams = bootparams + ' ' + extra_bootparams
 
         self.qemuparams = 'bootparams="{0}" qemuparams="-serial tcp:127.0.0.1:{1}"'.format(bootparams, threadport)
-        if not self.display:
-            self.qemuparams = 'nographic ' + self.qemuparams
         if qemuparams:
             self.qemuparams = self.qemuparams[:-1] + " " + qemuparams + " " + '\"'
+
+        launch_cmd += ' tcpserial=%s %s' % (self.serverport, self.qemuparams)
 
         self.origchldhandler = signal.getsignal(signal.SIGCHLD)
         signal.signal(signal.SIGCHLD, self.handleSIGCHLD)
 
-        launch_cmd = 'runqemu snapshot %s ' % runqemuparams
-        if self.use_kvm:
-            logger.info('Using kvm for runqemu')
-            launch_cmd += 'kvm '
-        else:
-            logger.info('Not using kvm for runqemu')
-        launch_cmd += 'tcpserial=%s %s %s %s' % (self.serverport, self.machine, self.rootfs, self.qemuparams)
         logger.info('launchcmd=%s'%(launch_cmd))
 
         # FIXME: We pass in stdin=subprocess.PIPE here to work around stty

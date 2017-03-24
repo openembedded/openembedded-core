@@ -117,10 +117,15 @@ class QemuTarget(BaseTarget):
 
         super(QemuTarget, self).__init__(d)
 
-        self.image_fstype = image_fstype or self.get_image_fstype(d)
+        self.rootfs = ''
+        self.kernel = ''
+        self.image_fstype = ''
+
+        if d.getVar('FIND_ROOTFS') == '1':
+            self.image_fstype = image_fstype or self.get_image_fstype(d)
+            self.rootfs = os.path.join(d.getVar("DEPLOY_DIR_IMAGE"),  d.getVar("IMAGE_LINK_NAME") + '.' + self.image_fstype)
+            self.kernel = os.path.join(d.getVar("DEPLOY_DIR_IMAGE"), d.getVar("KERNEL_IMAGETYPE", False) + '-' + d.getVar('MACHINE', False) + '.bin')
         self.qemulog = os.path.join(self.testdir, "qemu_boot_log.%s" % self.datetime)
-        self.rootfs = os.path.join(d.getVar("DEPLOY_DIR_IMAGE"),  d.getVar("IMAGE_LINK_NAME") + '.' + self.image_fstype)
-        self.kernel = os.path.join(d.getVar("DEPLOY_DIR_IMAGE"), d.getVar("KERNEL_IMAGETYPE", False) + '-' + d.getVar('MACHINE', False) + '.bin')
         dump_target_cmds = d.getVar("testimage_dump_target")
         dump_host_cmds = d.getVar("testimage_dump_host")
         dump_dir = d.getVar("TESTIMAGE_DUMP_DIR")
@@ -176,8 +181,13 @@ class QemuTarget(BaseTarget):
         bb.note("Qemu log file: %s" % self.qemulog)
         super(QemuTarget, self).deploy()
 
-    def start(self, params=None, ssh=True, extra_bootparams=None, runqemuparams=''):
-        if self.runner.start(params, get_ip=ssh, extra_bootparams=extra_bootparams, runqemuparams=runqemuparams):
+    def start(self, params=None, ssh=True, extra_bootparams='', runqemuparams='', launch_cmd=''):
+        if launch_cmd:
+            start = self.runner.launch(get_ip=ssh, launch_cmd=launch_cmd)
+        else:
+            start = self.runner.start(params, get_ip=ssh, extra_bootparams=extra_bootparams, runqemuparams=runqemuparams)
+
+        if start:
             if ssh:
                 self.ip = self.runner.ip
                 self.server_ip = self.runner.server_ip
