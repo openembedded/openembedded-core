@@ -411,9 +411,9 @@ class BuildPerfTestCase(unittest.TestCase):
 
         def bs_to_json(filename):
             """Convert (task) buildstats file into json format"""
-            bs_json = {'iostat': {},
-                       'rusage': {},
-                       'child_rusage': {}}
+            bs_json = OrderedDict()
+            iostat = OrderedDict()
+            rusage = OrderedDict()
             with open(filename) as fobj:
                 for line in fobj.readlines():
                     key, val = line.split(':', 1)
@@ -425,7 +425,7 @@ class BuildPerfTestCase(unittest.TestCase):
                         end_time = datetime.utcfromtimestamp(float(val))
                     elif key.startswith('IO '):
                         split = key.split()
-                        bs_json['iostat'][split[1]] = int(val)
+                        iostat[split[1]] = int(val)
                     elif key.find('rusage') >= 0:
                         split = key.split()
                         ru_key = split[-1]
@@ -433,12 +433,12 @@ class BuildPerfTestCase(unittest.TestCase):
                             val = float(val)
                         else:
                             val = int(val)
-                        ru_type = 'rusage' if split[0] == 'rusage' else \
-                                                          'child_rusage'
-                        bs_json[ru_type][ru_key] = val
+                        rusage[ru_key] = rusage.get(ru_key, 0) + val
                     elif key == 'Status':
                         bs_json['status'] = val
             bs_json['elapsed_time'] = end_time - start_time
+            bs_json['rusage'] = rusage
+            bs_json['iostat'] = iostat
             return bs_json
 
         log.info('Saving buildstats in JSON format')
@@ -454,11 +454,11 @@ class BuildPerfTestCase(unittest.TestCase):
             if not os.path.isdir(recipe_dir):
                 continue
             name, epoch, version, revision = split_nevr(fname)
-            recipe_bs = {'name': name,
-                         'epoch': epoch,
-                         'version': version,
-                         'revision': revision,
-                         'tasks': {}}
+            recipe_bs = OrderedDict((('name', name),
+                                     ('epoch', epoch),
+                                     ('version', version),
+                                     ('revision', revision),
+                                     ('tasks', OrderedDict())))
             for task in os.listdir(recipe_dir):
                 recipe_bs['tasks'][task] = bs_to_json(os.path.join(recipe_dir,
                                                                    task))
