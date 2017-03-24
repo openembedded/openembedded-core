@@ -143,6 +143,8 @@ if [ -n "$results_repo" ]; then
         --git-dir "$results_repo" \
         --branch-name "{hostname}/{branch}/{machine}" \
         --tag-name "{hostname}/{branch}/{machine}/{commit_count}-g{commit}/{tag_number}" \
+        --exclude "buildstats.json" \
+        --notes "buildstats/{branch_name}" "$results_dir/buildstats.json" \
         "$results_dir"
 fi
 
