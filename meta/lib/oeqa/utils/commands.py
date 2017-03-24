@@ -97,7 +97,8 @@ class Result(object):
     pass
 
 
-def runCmd(command, ignore_status=False, timeout=None, assert_error=True, native_sysroot=None, **options):
+def runCmd(command, ignore_status=False, timeout=None, assert_error=True,
+          native_sysroot=None, limit_exc_output=0, **options):
     result = Result()
 
     if native_sysroot:
@@ -117,10 +118,16 @@ def runCmd(command, ignore_status=False, timeout=None, assert_error=True, native
     result.pid = cmd.process.pid
 
     if result.status and not ignore_status:
+        exc_output = result.output
+        if limit_exc_output > 0:
+            split = result.output.splitlines()
+            if len(split) > limit_exc_output:
+                exc_output = "\n... (last %d lines of output)\n" % limit_exc_output + \
+                             '\n'.join(split[-limit_exc_output:])
         if assert_error:
-            raise AssertionError("Command '%s' returned non-zero exit status %d:\n%s" % (command, result.status, result.output))
+            raise AssertionError("Command '%s' returned non-zero exit status %d:\n%s" % (command, result.status, exc_output))
         else:
-            raise CommandError(result.status, command, result.output)
+            raise CommandError(result.status, command, exc_output)
 
     return result
 
