@@ -118,7 +118,7 @@ class QemuRunner:
             os.environ["DEPLOY_DIR_IMAGE"] = self.deploy_dir_image
 
         if not launch_cmd:
-            launch_cmd = 'runqemu snapshot'
+            launch_cmd = 'runqemu snapshot %s' % runqemuparams
             if self.use_kvm:
                 logger.info('Using kvm for runqemu')
                 launch_cmd += ' kvm'
@@ -128,9 +128,9 @@ class QemuRunner:
                 launch_cmd += ' nographic'
             launch_cmd += ' %s %s' % (self.machine, self.rootfs)
 
-        return self.launch(launch_cmd, qemuparams=qemuparams, get_ip=get_ip, extra_bootparams=extra_bootparams, runqemuparams=runqemuparams)
+        return self.launch(launch_cmd, qemuparams=qemuparams, get_ip=get_ip, extra_bootparams=extra_bootparams)
 
-    def launch(self, launch_cmd, get_ip = True, qemuparams = None, extra_bootparams = None, runqemuparams=''):
+    def launch(self, launch_cmd, get_ip = True, qemuparams = None, extra_bootparams = None):
         try:
             threadsock, threadport = self.create_socket()
             self.server_socket, self.serverport = self.create_socket()
