@@ -18,6 +18,8 @@ from oeqa.utils.dump import TargetDumper
 from oeqa.controllers.testtargetloader import TestTargetLoader
 from abc import ABCMeta, abstractmethod
 
+logger = logging.getLogger('BitBake.QemuRunner')
+
 def get_target_controller(d):
     testtarget = d.getVar("TEST_TARGET")
     # old, simple names
@@ -63,7 +65,7 @@ class BaseTarget(object, metaclass=ABCMeta):
         if os.path.islink(sshloglink):
             os.unlink(sshloglink)
         os.symlink(self.sshlog, sshloglink)
-        bb.note("SSH log file: %s" %  self.sshlog)
+        logger.info("SSH log file: %s" %  self.sshlog)
 
     @abstractmethod
     def start(self, params=None, ssh=True, extra_bootparams=None):
@@ -140,7 +142,6 @@ class QemuTarget(BaseTarget):
         import oe.path
         bb.utils.mkdirhier(self.testdir)
         self.qemurunnerlog = os.path.join(self.testdir, 'qemurunner_log.%s' % self.datetime)
-        logger = logging.getLogger('BitBake.QemuRunner')
         loggerhandler = logging.FileHandler(self.qemurunnerlog)
         loggerhandler.setFormatter(logging.Formatter("%(levelname)s: %(message)s"))
         logger.addHandler(loggerhandler)
@@ -177,8 +178,8 @@ class QemuTarget(BaseTarget):
             os.unlink(qemuloglink)
         os.symlink(self.qemulog, qemuloglink)
 
-        bb.note("rootfs file: %s" %  self.rootfs)
-        bb.note("Qemu log file: %s" % self.qemulog)
+        logger.info("rootfs file: %s" %  self.rootfs)
+        logger.info("Qemu log file: %s" % self.qemulog)
         super(QemuTarget, self).deploy()
 
     def start(self, params=None, ssh=True, extra_bootparams='', runqemuparams='', launch_cmd=''):
@@ -230,14 +231,14 @@ class SimpleRemoteTarget(BaseTarget):
             self.port = addr.split(":")[1]
         except IndexError:
             self.port = None
-        bb.note("Target IP: %s" % self.ip)
+        logger.info("Target IP: %s" % self.ip)
         self.server_ip = d.getVar("TEST_SERVER_IP")
         if not self.server_ip:
             try:
                 self.server_ip = subprocess.check_output(['ip', 'route', 'get', self.ip ]).split("\n")[0].split()[-1]
             except Exception as e:
                 bb.fatal("Failed to determine the host IP address (alternatively you can set TEST_SERVER_IP with the IP address of this machine): %s" % e)
-        bb.note("Server IP: %s" % self.server_ip)
+        logger.info("Server IP: %s" % self.server_ip)
 
     def deploy(self):
         super(SimpleRemoteTarget, self).deploy()

@@ -21,6 +21,10 @@ class RunqemuTests(oeSelfTest):
         self.fstypes = "ext4 iso hddimg vmdk qcow2 vdi"
         self.cmd_common = "runqemu nographic"
 
+        # Avoid emit the same record multiple times.
+        mainlogger = logging.getLogger("BitBake.Main")
+        mainlogger.propagate = False
+
         self.write_config(
 """
 MACHINE = "%s"
