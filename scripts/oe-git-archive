@@ -231,9 +231,10 @@ def main(argv=None):
         # Push data to remote
         if args.push:
             cmd = ['push', '--tags']
+            # If no remote is given we push with the default settings from
+            # gitconfig
             if args.push is not True:
-                cmd.extend(['--repo', args.push])
-                cmd.append(branch_name)
+                cmd.extend([args.push, branch_name])
             log.info("Pushing data to remote")
             data_repo.run_cmd(cmd)
 
