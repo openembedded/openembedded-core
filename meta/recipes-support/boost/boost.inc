@@ -42,16 +42,15 @@ PACKAGECONFIG ??= "locale"
 PACKAGECONFIG[locale] = ",,icu"
 PACKAGECONFIG[graph_parallel] = ",,,boost-mpi mpich"
 PACKAGECONFIG[mpi] = ",,mpich"
-PACKAGECONFIG[python] = ",,python python3"
+PACKAGECONFIG[python] = ",,python3"
 
 BOOST_LIBS += "\
-    ${@bb.utils.filter('PACKAGECONFIG', 'locale', d)} \
+    ${@bb.utils.filter('PACKAGECONFIG', 'locale python', d)} \
     ${@bb.utils.contains('PACKAGECONFIG', 'graph_parallel', 'graph_parallel mpi', \
                          bb.utils.filter('PACKAGECONFIG', 'mpi', d), d)} \
-    ${@bb.utils.contains('PACKAGECONFIG', 'python', 'python python3', '', d)} \
 "
 
-inherit python-dir
+inherit python3-dir
 PYTHON_ROOT = "${STAGING_DIR_HOST}/${prefix}"
 
 # Make a package for each library, plus -dev
@@ -59,19 +58,12 @@ PACKAGES = "${PN}-dbg ${BOOST_PACKAGES}"
 python __anonymous () {
     packages = []
     extras = []
-    for lib in d.getVar('BOOST_LIBS').split( ):
-        # BJAM does not know '--with-python3' (only --with-python)
-        if lib != "python3":
-            extras.append("--with-%s" % lib)
+    for lib in d.getVar('BOOST_LIBS').split():
+        extras.append("--with-%s" % lib)
         pkg = "boost-%s" % lib.replace("_", "-")
         packages.append(pkg)
-        if lib == "python":
-            # special: python*.so matches python3.so !!
-            if not d.getVar("FILES_%s" % pkg):
-                    d.setVar("FILES_%s" % pkg, "${libdir}/libboost_%s.so.*" % lib)
-        else:
-            if not d.getVar("FILES_%s" % pkg):
-                    d.setVar("FILES_%s" % pkg, "${libdir}/libboost_%s*.so.*" % lib)
+        if not d.getVar("FILES_%s" % pkg):
+                d.setVar("FILES_%s" % pkg, "${libdir}/libboost_%s*.so.*" % lib)
     d.setVar("BOOST_PACKAGES", " ".join(packages))
     d.setVar("BJAM_EXTRA", " ".join(extras))
 }
@@ -186,15 +178,21 @@ do_configure() {
 	# D2194:Fixing the failure of "error: duplicate initialization of gcc with the following parameters" during compilation.
 	rm -f ${WORKDIR}/user-config.jam
 	echo 'using gcc : 4.3.1 : ${CXX} : <cflags>"${CFLAGS}" <cxxflags>"${CXXFLAGS}" <linkflags>"${LDFLAGS}" ;' >> ${WORKDIR}/user-config.jam
-	echo "using python : ${PYTHON_BASEVERSION} : : ${STAGING_INCDIR}/python${PYTHON_BASEVERSION} ;" >> ${WORKDIR}/user-config.jam
-	echo "using python : 3.5 : : ${STAGING_INCDIR}/python3.5m ;" >> ${WORKDIR}/user-config.jam
+
+	# If we want Python then we need to tell Boost *exactly* where to find it
+	if ${@bb.utils.contains('BOOST_LIBS', 'python', 'true', 'false', d)}; then
+		echo "using python : ${PYTHON_BASEVERSION} : ${STAGING_DIR_HOST}${bindir}/python3 : ${STAGING_DIR_HOST}${includedir}/${PYTHON_DIR}${PYTHON_ABI} : ${STAGING_DIR_HOST}${libdir}/${PYTHON_DIR} ;" >> ${WORKDIR}/user-config.jam
+	fi
 
 	if ${@bb.utils.contains('BOOST_LIBS', 'mpi', 'true', 'false', d)}; then
 		echo "using mpi : : <find-shared-library>mpi ;" >> ${WORKDIR}/user-config.jam
 	fi
 
-	CC="${BUILD_CC}" CFLAGS="${BUILD_CFLAGS}" ./bootstrap.sh --with-bjam=bjam --with-toolset=gcc --with-python-root=${PYTHON_ROOT}
-	sed -i '/^using python/d' ${S}/project-config.jam
+	CC="${BUILD_CC}" CFLAGS="${BUILD_CFLAGS}" ./bootstrap.sh --with-bjam=bjam --with-toolset=gcc
+
+	# Boost can't be trusted to find Python on it's own, so remove any mention
+	# of it from the boost configuration
+	sed -i '/using python/d' ${S}/project-config.jam
 }
 
 do_compile() {
