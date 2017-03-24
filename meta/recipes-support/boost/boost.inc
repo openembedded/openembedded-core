@@ -69,7 +69,6 @@ python __anonymous () {
 }
 
 # Override the contents of specific packages
-FILES_${PN}-graph = "${libdir}/libboost_graph.so.*"
 FILES_${PN}-graph_parallel = "${libdir}/libboost_graph_parallel.so.*"
 FILES_${PN}-locale = "${libdir}/libboost_locale.so.*"
 FILES_${PN}-mpi = "${libdir}/mpi.so ${libdir}/libboost_mpi*.so.*"
@@ -80,15 +79,15 @@ FILES_boost-test = "${libdir}/libboost_prg_exec_monitor*.so.* \
 
 # -dev last to pick up the remaining stuff
 PACKAGES += "${PN}-dev ${PN}-staticdev"
-FILES_${PN} = ""
 FILES_${PN}-dev = "${includedir} ${libdir}/libboost_*.so"
 FILES_${PN}-staticdev = "${libdir}/libboost_*.a"
 
 # "boost" is a metapackage which pulls in all boost librabries
 PACKAGES += "${PN}"
+FILES_${PN} = ""
+ALLOW_EMPTY_${PN} = "1"
 RRECOMMENDS_${PN} += "${BOOST_PACKAGES}"
 RRECOMMENDS_${PN}_class-native = ""
-ALLOW_EMPTY_${PN} = "1"
 
 # to avoid GNU_HASH QA errors added LDFLAGS to ARCH; a little bit dirty but at least it works
 TARGET_CC_ARCH += "${LDFLAGS}"
@@ -196,16 +195,15 @@ do_configure() {
 }
 
 do_compile() {
-	set -ex
 	rm -rf ${S}/${TARGET_SYS}
 	bjam ${BJAM_OPTS} --prefix=${prefix} \
 		--exec-prefix=${exec_prefix} \
 		--libdir=${libdir} \
-		--includedir=${includedir}
+		--includedir=${includedir} \
+		--debug-configuration
 }
 
 do_install() {
-	set -ex
 	bjam ${BJAM_OPTS} \
 		--libdir=${D}${libdir} \
 		--includedir=${D}${includedir} \
