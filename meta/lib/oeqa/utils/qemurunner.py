@@ -416,7 +416,7 @@ class QemuRunner:
             if "qemu-system" in basecmd and "-serial tcp" in commands[p]:
                 return [int(p),commands[p]]
 
-    def run_serial(self, command, raw=False):
+    def run_serial(self, command, raw=False, timeout=5):
         # We assume target system have echo to get command status
         if not raw:
             command = "%s; echo $?\n" % command
@@ -424,20 +424,23 @@ class QemuRunner:
         data = ''
         status = 0
         self.server_socket.sendall(command.encode('utf-8'))
-        keepreading = True
-        while keepreading:
-            sread, _, _ = select.select([self.server_socket],[],[],5)
+        start = time.time()
+        end = start + timeout
+        while True:
+            now = time.time()
+            if now >= end:
+                data += "<<< run_serial(): command timed out after %d seconds without output >>>\r\n\r\n" % timeout
+                break
+            sread, _, _ = select.select([self.server_socket],[],[], end - now)
             if sread:
                 answer = self.server_socket.recv(1024)
                 if answer:
                     data += answer.decode('utf-8')
                     # Search the prompt to stop
                     if re.search("[a-zA-Z0-9]+@[a-zA-Z0-9\-]+:~#", data):
-                        keepreading = False
+                        break
                 else:
                     raise Exception("No data on serial console socket")
-            else:
-                keepreading = False
 
         if data:
             if raw:

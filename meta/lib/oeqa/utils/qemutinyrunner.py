@@ -107,14 +107,14 @@ class QemuTinyRunner(QemuRunner):
 
         return self.is_alive()
 
-    def run_serial(self, command):
+    def run_serial(self, command, timeout=5):
         self.server_socket.sendall(command+'\n')
         data = ''
         status = 0
         stopread = False
-        endtime = time.time()+5
+        endtime = time.time()+timeout
         while time.time()<endtime and not stopread:
-                sread, _, _ = select.select([self.server_socket],[],[],5)
+                sread, _, _ = select.select([self.server_socket],[],[],1)
                 for sock in sread:
                         answer = sock.recv(1024)
                         if answer:
@@ -124,6 +124,8 @@ class QemuTinyRunner(QemuRunner):
                                 stopread = True
         if not data:
             status = 1
+        if not stopread:
+            data += "<<< run_serial(): command timed out after %d seconds without output >>>\r\n\r\n" % timeout
         return (status, str(data))
 
     def find_child(self,parent_pid):
