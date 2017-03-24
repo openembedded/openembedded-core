@@ -83,7 +83,7 @@ def init_git_repo(path, no_create, bare):
     return repo
 
 
-def git_commit_data(repo, data_dir, branch, message, exclude):
+def git_commit_data(repo, data_dir, branch, message, exclude, notes):
     """Commit data into a Git repository"""
     log.info("Committing data into to branch %s", branch)
     tmp_index = os.path.join(repo.git_dir, 'index.oe-git-archive')
@@ -105,6 +105,12 @@ def git_commit_data(repo, data_dir, branch, message, exclude):
         if parent:
             git_cmd += ['-p', parent]
         commit = repo.run_cmd(git_cmd, env_update)
+
+        # Create git notes
+        for ref, filename in notes:
+            ref = ref.format(branch_name=branch)
+            repo.run_cmd(['notes', '--ref', ref, 'add',
+                          '-F', os.path.abspath(filename), commit])
 
         # Update branch head
         git_cmd = ['update-ref', 'refs/heads/' + branch, commit]
@@ -191,6 +197,13 @@ def parse_args(argv):
     parser.add_argument('--exclude', action='append', default=[],
                         help="Glob to exclude files from the commit. Relative "
                              "to DATA_DIR. May be specified multiple times")
+    parser.add_argument('--notes', nargs=2, action='append', default=[],
+                        metavar=('GIT_REF', 'FILE'),
+                        help="Add a file as a note under refs/notes/GIT_REF. "
+                             "{branch_name} in GIT_REF will be expanded to the "
+                             "actual target branch name (specified by "
+                             "--branch-name). This option may be specified "
+                             "multiple times.")
     parser.add_argument('data_dir', metavar='DATA_DIR',
                         help="Data to commit")
     return parser.parse_args(argv)
@@ -229,7 +242,7 @@ def main(argv=None):
 
         # Commit data
         commit = git_commit_data(data_repo, args.data_dir, branch_name,
-                                 commit_msg, args.exclude)
+                                 commit_msg, args.exclude, args.notes)
 
         # Create tag
         if tag_name:
@@ -242,7 +255,9 @@ def main(argv=None):
             # If no remote is given we push with the default settings from
             # gitconfig
             if args.push is not True:
-                cmd.extend([args.push, branch_name])
+                notes_refs = ['refs/notes/' + ref.format(branch_name=branch_name)
+                                for ref, _ in args.notes]
+                cmd.extend([args.push, branch_name] + notes_refs)
             log.info("Pushing data to remote")
             data_repo.run_cmd(cmd)
 
