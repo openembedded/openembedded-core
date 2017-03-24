@@ -36,7 +36,7 @@ log = logging.getLogger('build-perf')
 
 # Our own version of runCmd which does not raise AssertErrors which would cause
 # errors to interpreted as failures
-runCmd2 = partial(runCmd, assert_error=False)
+runCmd2 = partial(runCmd, assert_error=False, limit_exc_output=40)
 
 
 class KernelDropCaches(object):
