@@ -146,7 +146,7 @@ def wic_create_subcommand(args, usage_str):
         raise WicError("Wrong number of arguments, exiting")
 
     if options.build_rootfs and not bitbake_main:
-        raise WicError("Can't build roofs as bitbake is not in the $PATH")
+        raise WicError("Can't build rootfs as bitbake is not in the $PATH")
 
     if not options.image_name:
         missed = []
@@ -223,7 +223,7 @@ def wic_create_subcommand(args, usage_str):
         kernel_dir = options.kernel_dir
         native_sysroot = options.native_sysroot
         if rootfs_dir and not os.path.isdir(rootfs_dir):
-            raise WicError("--roofs-dir (-r) not found, exiting")
+            raise WicError("--rootfs-dir (-r) not found, exiting")
         if not os.path.isdir(bootimg_dir):
             raise WicError("--bootimg-dir (-b) not found, exiting")
         if not os.path.isdir(kernel_dir):
