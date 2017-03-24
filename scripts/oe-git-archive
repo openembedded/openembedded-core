@@ -83,7 +83,7 @@ def init_git_repo(path, no_create, bare):
     return repo
 
 
-def git_commit_data(repo, data_dir, branch, message):
+def git_commit_data(repo, data_dir, branch, message, exclude):
     """Commit data into a Git repository"""
     log.info("Committing data into to branch %s", branch)
     tmp_index = os.path.join(repo.git_dir, 'index.oe-git-archive')
@@ -92,6 +92,11 @@ def git_commit_data(repo, data_dir, branch, message):
         env_update = {'GIT_INDEX_FILE': tmp_index,
                       'GIT_WORK_TREE': os.path.abspath(data_dir)}
         repo.run_cmd('add .', env_update)
+
+        # Remove files that are excluded
+        if exclude:
+            repo.run_cmd(['rm', '--cached'] + [f for f in exclude], env_update)
+
         tree = repo.run_cmd('write-tree', env_update)
 
         # Create new commit object from the tree
@@ -183,6 +188,9 @@ def parse_args(argv):
     parser.add_argument('--tag-msg-body',
                         default='',
                         help="Tag message body (pattern)")
+    parser.add_argument('--exclude', action='append', default=[],
+                        help="Glob to exclude files from the commit. Relative "
+                             "to DATA_DIR. May be specified multiple times")
     parser.add_argument('data_dir', metavar='DATA_DIR',
                         help="Data to commit")
     return parser.parse_args(argv)
@@ -221,7 +229,7 @@ def main(argv=None):
 
         # Commit data
         commit = git_commit_data(data_repo, args.data_dir, branch_name,
-                                 commit_msg)
+                                 commit_msg, args.exclude)
 
         # Create tag
         if tag_name:
