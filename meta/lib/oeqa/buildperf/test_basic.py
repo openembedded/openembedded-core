@@ -51,21 +51,19 @@ class Test1P3(BuildPerfTestCase):
 
     def test13(self):
         """Build core-image-sato with rm_work enabled"""
-        postfile = os.path.join(self.out_dir, 'postfile.conf')
+        postfile = os.path.join(self.tmp_dir, 'postfile.conf')
         with open(postfile, 'w') as fobj:
             fobj.write('INHERIT += "rm_work"\n')
-        try:
-            self.rm_tmp()
-            self.rm_sstate()
-            self.rm_cache()
-            self.sync()
-            cmd = ['bitbake', '-R', postfile, self.build_target]
-            self.measure_cmd_resources(cmd, 'build',
-                                       'bitbake' + self.build_target,
-                                       save_bs=True)
-            self.measure_disk_usage(self.bb_vars['TMPDIR'], 'tmpdir', 'tmpdir')
-        finally:
-            os.unlink(postfile)
+
+        self.rm_tmp()
+        self.rm_sstate()
+        self.rm_cache()
+        self.sync()
+        cmd = ['bitbake', '-R', postfile, self.build_target]
+        self.measure_cmd_resources(cmd, 'build',
+                                   'bitbake' + self.build_target,
+                                   save_bs=True)
+        self.measure_disk_usage(self.bb_vars['TMPDIR'], 'tmpdir', 'tmpdir')
 
 
 class Test2(BuildPerfTestCase):

@@ -209,6 +209,7 @@ def main(argv=None):
         result.write_results_xml()
     else:
         result.write_results_json()
+    result.write_buildstats_json()
     if args.globalres_file:
         update_globalres_file(result, args.globalres_file, metadata)
     if result.wasSuccessful():

@@ -16,6 +16,7 @@ import os
 import re
 import resource
 import socket
+import shutil
 import time
 import unittest
 import xml.etree.ElementTree as ET
@@ -127,7 +128,6 @@ class BuildPerfTestResult(unittest.TextTestResult):
     def startTest(self, test):
         """Pre-test hook"""
         test.base_dir = self.out_dir
-        os.mkdir(test.out_dir)
         log.info("Executing test %s: %s", test.name, test.shortDescription())
         self.stream.write(datetime.now().strftime("[%Y-%m-%d %H:%M:%S] "))
         super(BuildPerfTestResult, self).startTest(test)
@@ -148,6 +148,16 @@ class BuildPerfTestResult(unittest.TextTestResult):
                    [('UNEXPECTED_SUCCESS', t, None) for t in self.unexpectedSuccesses] + \
                    [('SKIPPED', t, m) for t, m in self.skipped]
         return sorted(compound, key=lambda info: info[1].start_time)
+
+
+    def write_buildstats_json(self):
+        """Write buildstats file"""
+        buildstats = OrderedDict()
+        for _, test, _ in self.all_results():
+            for key, val in test.buildstats.items():
+                buildstats[test.name + '.' + key] = val
+        with open(os.path.join(self.out_dir, 'buildstats.json'), 'w') as fobj:
+            json.dump(buildstats, fobj, cls=ResultsJsonEncoder)
 
 
     def write_results_json(self):
@@ -221,8 +231,6 @@ class BuildPerfTestResult(unittest.TextTestResult):
                     ET.SubElement(measurement, 'time',
                                   timestamp=vals['start_time'].isoformat()).text = \
                         str(vals['elapsed_time'].total_seconds())
-                    if 'buildstats_file' in vals:
-                        ET.SubElement(measurement, 'buildstats_file').text = vals['buildstats_file']
                     attrib = dict((k, str(v)) for k, v in vals['iostat'].items())
                     ET.SubElement(measurement, 'iostat', attrib=attrib)
                     attrib = dict((k, str(v)) for k, v in vals['rusage'].items())
@@ -238,7 +246,6 @@ class BuildPerfTestResult(unittest.TextTestResult):
         dom_doc = minidom.parseString(ET.tostring(top, 'utf-8'))
         with open(os.path.join(self.out_dir, 'results.xml'), 'w') as fobj:
             dom_doc.writexml(fobj, addindent='  ', newl='\n', encoding='utf-8')
-        return
 
 
 class BuildPerfTestCase(unittest.TestCase):
@@ -254,6 +261,7 @@ class BuildPerfTestCase(unittest.TestCase):
         self.start_time = None
         self.elapsed_time = None
         self.measurements = OrderedDict()
+        self.buildstats = OrderedDict()
         # self.err is supposed to be a tuple from sys.exc_info()
         self.err = None
         self.bb_vars = get_bb_vars()
@@ -263,16 +271,23 @@ class BuildPerfTestCase(unittest.TestCase):
         self.sizes = []
 
     @property
-    def out_dir(self):
-        return os.path.join(self.base_dir, self.name)
+    def tmp_dir(self):
+        return os.path.join(self.base_dir, self.name + '.tmp')
 
     def shortDescription(self):
         return super(BuildPerfTestCase, self).shortDescription() or ""
 
     def setUp(self):
         """Set-up fixture for each test"""
+        if not os.path.isdir(self.tmp_dir):
+            os.mkdir(self.tmp_dir)
         if self.build_target:
             self.run_cmd(['bitbake', self.build_target, '-c', 'fetchall'])
+
+    def tearDown(self):
+        """Tear-down fixture for each test"""
+        if os.path.isdir(self.tmp_dir):
+            shutil.rmtree(self.tmp_dir)
 
     def run(self, *args, **kwargs):
         """Run test"""
@@ -349,9 +364,7 @@ class BuildPerfTestCase(unittest.TestCase):
                                              ('rusage', data['rusage']),
                                              ('iostat', data['iostat'])])
         if save_bs:
-            bs_file = self.save_buildstats(legend)
-            measurement['values']['buildstats_file'] = \
-                    os.path.relpath(bs_file, self.base_dir)
+            self.save_buildstats(name)
 
         self._append_measurement(measurement)
 
@@ -379,7 +392,7 @@ class BuildPerfTestCase(unittest.TestCase):
         # Append to 'sizes' array for globalres log
         self.sizes.append(str(size))
 
-    def save_buildstats(self, label=None):
+    def save_buildstats(self, measurement_name):
         """Save buildstats"""
         def split_nevr(nevr):
             """Split name and version information from recipe "nevr" string"""
@@ -451,14 +464,7 @@ class BuildPerfTestCase(unittest.TestCase):
                                                                    task))
             buildstats.append(recipe_bs)
 
-        # Write buildstats into json file
-        postfix = '.' + str_to_fn(label) if label else ''
-        postfix += '.json'
-        outfile = os.path.join(self.out_dir, 'buildstats' + postfix)
-        with open(outfile, 'w') as fobj:
-            json.dump(buildstats, fobj, indent=4, sort_keys=True,
-                      cls=ResultsJsonEncoder)
-        return outfile
+        self.buildstats[measurement_name] = buildstats
 
     def rm_tmp(self):
         """Cleanup temporary/intermediate files and directories"""
