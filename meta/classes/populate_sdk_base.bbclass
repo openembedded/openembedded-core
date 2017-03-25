@@ -246,8 +246,7 @@ populate_sdk_log_check() {
 
 		echo "log_check: Using $lf_path as logfile"
 
-		if test -e "$lf_path"
-		then
+		if [ -e "$lf_path" ]; then
 			${IMAGE_PKGTYPE}_log_check $target $lf_path
 		else
 			echo "Cannot find logfile [$lf_path]"

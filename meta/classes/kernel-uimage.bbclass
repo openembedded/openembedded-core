@@ -23,7 +23,7 @@ do_uboot_mkimage() {
 			uboot_prep_kimage
 
 			ENTRYPOINT=${UBOOT_ENTRYPOINT}
-			if test -n "${UBOOT_ENTRYSYMBOL}"; then
+			if [ -n "${UBOOT_ENTRYSYMBOL}" ]; then
 				ENTRYPOINT=`${HOST_PREFIX}nm ${S}/vmlinux | \
 					awk '$3=="${UBOOT_ENTRYSYMBOL}" {print $1}'`
 			fi

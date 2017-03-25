@@ -96,7 +96,7 @@ fitimage_emit_section_kernel() {
 	kernel_csum="sha1"
 
 	ENTRYPOINT=${UBOOT_ENTRYPOINT}
-	if test -n "${UBOOT_ENTRYSYMBOL}"; then
+	if [ -n "${UBOOT_ENTRYSYMBOL}" ]; then
 		ENTRYPOINT=`${HOST_PREFIX}nm ${S}/vmlinux | \
 			awk '$4=="${UBOOT_ENTRYSYMBOL}" {print $2}'`
 	fi
@@ -339,7 +339,7 @@ fitimage_assemble() {
 	#
 	# Step 2: Prepare a DTB image section
 	#
-	if test -n "${KERNEL_DEVICETREE}"; then
+	if [ -n "${KERNEL_DEVICETREE}" ]; then
 		dtbcount=1
 		for DTB in ${KERNEL_DEVICETREE}; do
 			if echo ${DTB} | grep -q '/dts/'; then
@@ -359,7 +359,7 @@ fitimage_assemble() {
 	#
 	# Step 3: Prepare a setup section. (For x86)
 	#
-	if test -e arch/${ARCH}/boot/setup.bin ; then
+	if [ -e arch/${ARCH}/boot/setup.bin ]; then
 		setupcount=1
 		fitimage_emit_section_setup ${1} "${setupcount}" arch/${ARCH}/boot/setup.bin
 	fi
@@ -383,7 +383,7 @@ fitimage_assemble() {
 
 	# Force the first Kernel and DTB in the default config
 	kernelcount=1
-	if test -n "${dtbcount}"; then
+	if [ -n "${dtbcount}" ]; then
 		dtbcount=1
 	fi
 
@@ -392,7 +392,7 @@ fitimage_assemble() {
 	#
 	fitimage_emit_section_maint ${1} confstart
 
-	if test -n "${DTBS}"; then
+	if [ -n "${DTBS}" ]; then
 		i=1
 		for DTB in ${DTBS}; do
 			fitimage_emit_section_config ${1} "${kernelcount}" "${DTB}" "${ramdiskcount}" "${setupcount}" "`expr ${i} = ${dtbcount}`"

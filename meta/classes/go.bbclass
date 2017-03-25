@@ -36,7 +36,7 @@ GO_INSTALL ?= "${GO_IMPORT}/..."
 
 do_go_compile() {
 	GOPATH=${S}:${STAGING_LIBDIR}/${TARGET_SYS}/go go env
-	if test -n "${GO_INSTALL}" ; then
+	if [ -n "${GO_INSTALL}" ]; then
 		GOPATH=${S}:${STAGING_LIBDIR}/${TARGET_SYS}/go go install -v ${GO_INSTALL}
 	fi
 }
@@ -61,7 +61,7 @@ do_go_install() {
 
 	chown -R root:root "${D}${GOROOT_FINAL}"
 
-	if test -e "${D}${GOBIN_FINAL}" ; then
+	if [ -e "${D}${GOBIN_FINAL}" ]; then
 		install -d -m 0755 "${D}${bindir}"
 		find "${D}${GOBIN_FINAL}" ! -type d -print0 | xargs -r0 mv --target-directory="${D}${bindir}"
 		rmdir -p "${D}${GOBIN_FINAL}" || true
