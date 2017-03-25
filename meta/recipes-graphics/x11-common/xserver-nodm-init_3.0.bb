@@ -24,6 +24,7 @@ REQUIRED_DISTRO_FEATURES = "x11"
 PACKAGECONFIG ??= "blank"
 # dpms and screen saver will be on only if 'blank' is in PACKAGECONFIG
 PACKAGECONFIG[blank] = ""
+PACKAGECONFIG[nocursor] = ""
 
 do_install() {
     install -d ${D}${sysconfdir}/default
@@ -35,6 +36,7 @@ do_install() {
     install X11/Xsession ${D}${sysconfdir}/X11/
 
     BLANK_ARGS="${@bb.utils.contains('PACKAGECONFIG', 'blank', '', '-s 0 -dpms', d)}"
+    NO_CURSOR_ARG="${@bb.utils.contains('PACKAGECONFIG', 'nocursor', '-nocursor', '', d)}"
     if [ "${ROOTLESS_X}" = "1" ] ; then
         XUSER_HOME="/home/xuser"
         XUSER="xuser"
@@ -44,6 +46,7 @@ do_install() {
     fi
     sed -i "s:@HOME@:${XUSER_HOME}:; s:@USER@:${XUSER}:; s:@BLANK_ARGS@:${BLANK_ARGS}:" \
         ${D}${sysconfdir}/default/xserver-nodm
+    sed -i "s:@NO_CURSOR_ARG@:${NO_CURSOR_ARG}:" ${D}${sysconfdir}/default/xserver-nodm
 
     if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
         install -d ${D}${systemd_unitdir}/system
