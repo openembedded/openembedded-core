@@ -717,3 +717,22 @@ part /etc --source rootfs --ondisk mmcblk0 --fstype=ext4 --exclude-path bin/ --r
             wksname = os.path.splitext(os.path.basename(wks.name))[0]
             out = glob(self.resultdir + "%s-*direct" % wksname)
             self.assertEqual(1, len(out))
+
+    def test_fs_types(self):
+        """Test filesystem types for empty and not empty partitions"""
+        img = 'core-image-minimal'
+        with NamedTemporaryFile("w", suffix=".wks") as wks:
+            wks.writelines(['part ext2   --fstype ext2     --source rootfs\n',
+                            'part btrfs  --fstype btrfs    --source rootfs --size 40M\n',
+                            'part squash --fstype squashfs --source rootfs\n',
+                            'part swap   --fstype swap --size 1M\n',
+                            'part emptyvfat   --fstype vfat   --size 1M\n',
+                            'part emptyext2   --fstype ext2   --size 1M\n',
+                            'part emptybtrfs  --fstype btrfs  --size 100M\n',
+                            'part emptysquash --fstype squash --size 1M\n'])
+            wks.flush()
+            cmd = "wic create %s -e %s -o %s" % (wks.name, img, self.resultdir)
+            self.assertEqual(0, runCmd(cmd).status)
+            wksname = os.path.splitext(os.path.basename(wks.name))[0]
+            out = glob(self.resultdir + "%s-*direct" % wksname)
+            self.assertEqual(1, len(out))
