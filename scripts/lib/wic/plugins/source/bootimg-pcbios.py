@@ -44,19 +44,16 @@ class BootimgPcbiosPlugin(SourcePlugin):
     name = 'bootimg-pcbios'
 
     @classmethod
-    def _get_syslinux_dir(cls, bootimg_dir):
+    def _get_bootimg_dir(cls, bootimg_dir, dirname):
         """
-        Get path to syslinux from either default bootimg_dir
-        or wic-tools STAGING_DIR.
+        Check if dirname exists in default bootimg_dir or
+        in wic-tools STAGING_DIR.
         """
-        for path in (bootimg_dir, get_bitbake_var("STAGING_DATADIR", "wic-tools")):
-            if not path:
-                continue
-            syslinux_dir = os.path.join(path, 'syslinux')
-            if os.path.exists(syslinux_dir):
-                return syslinux_dir
+        for result in (bootimg_dir, get_bitbake_var("STAGING_DATADIR", "wic-tools")):
+            if os.path.exists("%s/%s" % (result, dirname)):
+                return result
 
-        raise WicError("Couldn't find syslinux directory, exiting")
+        raise WicError("Couldn't find correct bootimg_dir, exiting")
 
     @classmethod
     def do_install_disk(cls, disk, disk_name, creator, workdir, oe_builddir,
@@ -65,11 +62,12 @@ class BootimgPcbiosPlugin(SourcePlugin):
         Called after all partitions have been prepared and assembled into a
         disk image.  In this case, we install the MBR.
         """
-        syslinux_dir = cls._get_syslinux_dir(bootimg_dir)
+        bootimg_dir = cls._get_bootimg_dir(bootimg_dir, 'syslinux')
+        mbrfile = "%s/syslinux/" % bootimg_dir
         if creator.ptable_format == 'msdos':
-            mbrfile = os.path.join(syslinux_dir, "mbr.bin")
+            mbrfile += "mbr.bin"
         elif creator.ptable_format == 'gpt':
-            mbrfile = os.path.join(syslinux_dir, "gptmbr.bin")
+            mbrfile += "gptmbr.bin"
         else:
             raise WicError("Unsupported partition table: %s" %
                            creator.ptable_format)
@@ -155,7 +153,7 @@ class BootimgPcbiosPlugin(SourcePlugin):
         'prepares' the partition to be incorporated into the image.
         In this case, prepare content for legacy bios boot partition.
         """
-        syslinux_dir = cls._get_syslinux_dir(bootimg_dir)
+        bootimg_dir = cls._get_bootimg_dir(bootimg_dir, 'syslinux')
 
         staging_kernel_dir = kernel_dir
 
@@ -163,14 +161,14 @@ class BootimgPcbiosPlugin(SourcePlugin):
 
         cmds = ("install -m 0644 %s/bzImage %s/vmlinuz" %
                 (staging_kernel_dir, hdddir),
-                "install -m 444 %s/ldlinux.sys %s/ldlinux.sys" %
-                (syslinux_dir, hdddir),
-                "install -m 0644 %s/vesamenu.c32 %s/vesamenu.c32" %
-                (syslinux_dir, hdddir),
-                "install -m 444 %s/libcom32.c32 %s/libcom32.c32" %
-                (syslinux_dir, hdddir),
-                "install -m 444 %s/libutil.c32 %s/libutil.c32" %
-                (syslinux_dir, hdddir))
+                "install -m 444 %s/syslinux/ldlinux.sys %s/ldlinux.sys" %
+                (bootimg_dir, hdddir),
+                "install -m 0644 %s/syslinux/vesamenu.c32 %s/vesamenu.c32" %
+                (bootimg_dir, hdddir),
+                "install -m 444 %s/syslinux/libcom32.c32 %s/libcom32.c32" %
+                (bootimg_dir, hdddir),
+                "install -m 444 %s/syslinux/libutil.c32 %s/libutil.c32" %
+                (bootimg_dir, hdddir))
 
         for install_cmd in cmds:
             exec_cmd(install_cmd)
