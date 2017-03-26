@@ -748,3 +748,13 @@ part /etc --source rootfs --ondisk mmcblk0 --fstype=ext4 --exclude-path bin/ --r
             wksname = os.path.splitext(os.path.basename(wks.name))[0]
             out = glob(self.resultdir + "%s-*direct" % wksname)
             self.assertEqual(1, len(out))
+
+    def test_image_bootpart_globbed(self):
+        """Test globbed sources with image-bootpart plugin"""
+        img = "core-image-minimal"
+        cmd = "wic create sdimage-bootpart -e %s -o %s" % (img, self.resultdir)
+        config = 'IMAGE_BOOT_FILES = "%s*"' % get_bb_var('KERNEL_IMAGETYPE', img)
+        self.append_config(config)
+        self.assertEqual(0, runCmd(cmd).status)
+        self.remove_config(config)
+        self.assertEqual(1, len(glob(self.resultdir + "sdimage-bootpart-*direct")))
