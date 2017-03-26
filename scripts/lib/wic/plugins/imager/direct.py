@@ -323,7 +323,7 @@ class PartitionedImage():
                 if self.ptable_format == 'gpt':
                     part.uuid = str(uuid.uuid4())
                 else: # msdos partition table
-                    part.uuid = '%0x-%02d' % (self.identifier, part.realnum)
+                    part.uuid = '%08x-%02d' % (self.identifier, part.realnum)
 
     def prepare(self, imager):
         """Prepare an image. Call prepare method of all image partitions."""
