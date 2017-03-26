@@ -736,3 +736,15 @@ part /etc --source rootfs --ondisk mmcblk0 --fstype=ext4 --exclude-path bin/ --r
             wksname = os.path.splitext(os.path.basename(wks.name))[0]
             out = glob(self.resultdir + "%s-*direct" % wksname)
             self.assertEqual(1, len(out))
+
+    def test_kickstart_parser(self):
+        """Test wks parser options"""
+        with NamedTemporaryFile("w", suffix=".wks") as wks:
+            wks.writelines(['part / --fstype ext3 --source rootfs --system-id 0xFF '\
+                            '--overhead-factor 1.2 --size 100k\n'])
+            wks.flush()
+            cmd = "wic create %s -e core-image-minimal -o %s" % (wks.name, self.resultdir)
+            self.assertEqual(0, runCmd(cmd).status)
+            wksname = os.path.splitext(os.path.basename(wks.name))[0]
+            out = glob(self.resultdir + "%s-*direct" % wksname)
+            self.assertEqual(1, len(out))
