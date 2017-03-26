@@ -193,19 +193,6 @@ class Partition():
                            "larger (%d kB) than its allowed size %d kB" %
                            (self.mountpoint, self.size, self.fixed_size))
 
-    def prepare_rootfs_from_fs_image(self, cr_workdir, oe_builddir,
-                                     rootfs_dir):
-        """
-        Handle an already-created partition e.g. xxx.ext3
-        """
-        rootfs = oe_builddir
-        du_cmd = "du -Lbks %s" % rootfs
-        out = exec_cmd(du_cmd)
-        rootfs_size = out.split()[0]
-
-        self.size = int(rootfs_size)
-        self.source_file = rootfs
-
     def prepare_rootfs(self, cr_workdir, oe_builddir, rootfs_dir,
                        native_sysroot):
         """
