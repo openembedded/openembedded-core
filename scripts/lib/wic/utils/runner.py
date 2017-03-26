@@ -82,30 +82,6 @@ def runtool(cmdln_or_args, catch=1):
 
     return (process.returncode, out)
 
-def show(cmdln_or_args):
-    """Show all messages using logger.debug."""
-
-    rcode, out = runtool(cmdln_or_args, catch=3)
-
-    if isinstance(cmdln_or_args, list):
-        cmd = ' '.join(cmdln_or_args)
-    else:
-        cmd = cmdln_or_args
-
-    msg = 'running command: "%s"' % cmd
-    if out:
-        out = out.strip()
-    if out:
-        msg += ', with output::'
-        msg += '\n  +----------------'
-        for line in out.splitlines():
-            msg += '\n  | %s' % line
-        msg += '\n  +----------------'
-
-    logger.debug(msg)
-
-    return rcode
-
 def outs(cmdln_or_args, catch=1):
     # get the outputs of tools
     return runtool(cmdln_or_args, catch)[1].strip()
