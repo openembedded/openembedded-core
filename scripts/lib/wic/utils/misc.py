@@ -59,7 +59,7 @@ NATIVE_RECIPES = {"bmaptool": "bmap-tools",
                   "syslinux": "syslinux"
                  }
 
-def _exec_cmd(cmd_and_args, as_shell=False, catch=3):
+def _exec_cmd(cmd_and_args, as_shell=False):
     """
     Execute command, catching stderr, stdout
 
@@ -70,9 +70,9 @@ def _exec_cmd(cmd_and_args, as_shell=False, catch=3):
     logger.debug(args)
 
     if as_shell:
-        ret, out = runner.runtool(cmd_and_args, catch)
+        ret, out = runner.runtool(cmd_and_args)
     else:
-        ret, out = runner.runtool(args, catch)
+        ret, out = runner.runtool(args)
     out = out.strip()
     if ret != 0:
         raise WicError("_exec_cmd: %s returned '%s' instead of 0\noutput: %s" % \
@@ -84,14 +84,14 @@ def _exec_cmd(cmd_and_args, as_shell=False, catch=3):
     return ret, out
 
 
-def exec_cmd(cmd_and_args, as_shell=False, catch=3):
+def exec_cmd(cmd_and_args, as_shell=False):
     """
     Execute command, return output
     """
-    return _exec_cmd(cmd_and_args, as_shell, catch)[1]
+    return _exec_cmd(cmd_and_args, as_shell)[1]
 
 
-def exec_native_cmd(cmd_and_args, native_sysroot, catch=3, pseudo=""):
+def exec_native_cmd(cmd_and_args, native_sysroot, pseudo=""):
     """
     Execute native command, catching stderr, stdout
 
@@ -118,7 +118,7 @@ def exec_native_cmd(cmd_and_args, native_sysroot, catch=3, pseudo=""):
 
     # If the command isn't in the native sysroot say we failed.
     if spawn.find_executable(args[0], native_paths):
-        ret, out = _exec_cmd(native_cmd_and_args, True, catch)
+        ret, out = _exec_cmd(native_cmd_and_args, True)
     else:
         ret = 127
         out = "can't find native executable %s in %s" % (args[0], native_paths)
