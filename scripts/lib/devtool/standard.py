@@ -1223,7 +1223,7 @@ def _create_kconfig_diff(srctree, rd, outfile):
         stdout, stderr = pipe.communicate()
         if pipe.returncode == 1:
             logger.info("Updating config fragment %s" % outfile)
-            with open(outfile, 'w') as fobj:
+            with open(outfile, 'wb') as fobj:
                 fobj.write(stdout)
         elif pipe.returncode == 0:
             logger.info("Would remove config fragment %s" % outfile)
