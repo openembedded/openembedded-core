@@ -19,7 +19,7 @@ index 5b06aa26..9f6f703e 100755
 +++ b/bin/dnf-automatic.in
 @@ -1,4 +1,4 @@
 -#!@PYTHON_EXECUTABLE@
-+#!/usr/bin/env python
++#!/usr/bin/env python3
  # dnf-automatic executable.
  #
  # Copyright (C) 2014-2016 Red Hat, Inc.
@@ -29,7 +29,7 @@ index 645d0f06..ab141abd 100755
 +++ b/bin/dnf.in
 @@ -1,4 +1,4 @@
 -#!@PYTHON_EXECUTABLE@
-+#!/usr/bin/env python
++#!/usr/bin/env python3
  # The dnf executable script.
  #
  # Copyright (C) 2012-2016 Red Hat, Inc.
@@ -39,7 +39,7 @@ index f1fee071..013dc8c5 100755
 +++ b/bin/yum.in
 @@ -1,4 +1,4 @@
 -#!@PYTHON_EXECUTABLE@
-+#!/usr/bin/env python
++#!/usr/bin/env python3
  # The dnf executable script.
  #
  # Copyright (C) 2016 Red Hat, Inc.

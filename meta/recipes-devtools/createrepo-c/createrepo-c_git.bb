@@ -17,9 +17,9 @@ S = "${WORKDIR}/git"
 DEPENDS = "expat curl glib-2.0 libxml2 openssl bzip2 zlib file sqlite3 xz rpm"
 DEPENDS_append_class-native = " file-replacement-native"
 
-inherit cmake pkgconfig bash-completion distutils-base
+inherit cmake pkgconfig bash-completion distutils3-base
 
-EXTRA_OECMAKE = " -DPYTHON_INSTALL_DIR=${PYTHON_SITEPACKAGES_DIR}"
+EXTRA_OECMAKE = " -DPYTHON_INSTALL_DIR=${PYTHON_SITEPACKAGES_DIR} -DPYTHON_DESIRED=3"
 
 BBCLASSEXTEND = "native"
 

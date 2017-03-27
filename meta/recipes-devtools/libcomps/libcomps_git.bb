@@ -13,11 +13,11 @@ SRCREV = "01a4759894cccff64d2561614a58281adf5ce859"
 
 S = "${WORKDIR}/git"
 
-inherit cmake distutils-base
+inherit cmake distutils3-base
 
-DEPENDS = "libxml2 expat libcheck"
+DEPENDS += "libxml2 expat libcheck"
 
-EXTRA_OECMAKE = " -DPYTHON_INSTALL_DIR=${PYTHON_SITEPACKAGES_DIR}"
+EXTRA_OECMAKE = " -DPYTHON_INSTALL_DIR=${PYTHON_SITEPACKAGES_DIR} -DPYTHON_DESIRED=3"
 OECMAKE_SOURCEPATH = "${S}/libcomps"
 
 BBCLASSEXTEND = "native nativesdk"

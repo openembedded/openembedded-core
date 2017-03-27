@@ -13,8 +13,8 @@ simplify the process of creating graphical package managers or any \
 other tools that need an intimate knowledge of RPM packages in order \
 to function."
 
-SUMMARY_python-rpm = "Python bindings for apps which will manupulate RPM packages"
-DESCRIPTION_python-rpm = "The rpm-python package contains a module that permits applications \
+SUMMARY_python3-rpm = "Python bindings for apps which will manupulate RPM packages"
+DESCRIPTION_python3-rpm = "The python3-rpm package contains a module that permits applications \
 written in the Python programming language to use the interface \
 supplied by the RPM Package Manager libraries."
 
@@ -34,6 +34,7 @@ SRC_URI = "git://github.com/rpm-software-management/rpm \
            file://0001-Do-not-hardcode-lib-rpm-as-the-installation-path-for.patch \
            file://0001-Fix-build-with-musl-C-library.patch \
            file://0001-Add-a-color-setting-for-mips64_n32-binaries.patch \
+           file://0001-Add-PYTHON_ABI-when-searching-for-python-libraries.patch \
            "
 
 PV = "4.13.90+git${SRCPV}"
@@ -42,10 +43,11 @@ SRCREV = "a8e51b3bb05c6acb1d9b2e3d34f859ddda1677be"
 
 S = "${WORKDIR}/git"
 
-DEPENDS = "nss libarchive db file popt xz dbus elfutils python"
+DEPENDS = "nss libarchive db file popt xz dbus elfutils python3"
 DEPENDS_append_class-native = " file-replacement-native"
 
-inherit autotools gettext pkgconfig pythonnative
+inherit autotools gettext pkgconfig python3native
+export PYTHON_ABI
 
 # OE-core patches autoreconf to additionally run gnu-configize, which fails with this recipe
 EXTRA_AUTORECONF_append = " --exclude=gnu-configize"
@@ -102,9 +104,9 @@ FILES_${PN} += "${libdir}/rpm-plugins/*.so \
 FILES_${PN}-dev += "${libdir}/rpm-plugins/*.la \
                     "
 
-PACKAGES += "python-rpm"
-PROVIDES += "python-rpm"
-FILES_python-rpm = "${PYTHON_SITEPACKAGES_DIR}/rpm/*"
+PACKAGES += "python3-rpm"
+PROVIDES += "python3-rpm"
+FILES_python3-rpm = "${PYTHON_SITEPACKAGES_DIR}/rpm/*"
 
 # rpm 5.x was packaging the rpm build tools separately
 RPROVIDES_${PN} += "rpm-build"

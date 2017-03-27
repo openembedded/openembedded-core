@@ -16,9 +16,9 @@ S = "${WORKDIR}/git"
 
 DEPENDS = "curl expat glib-2.0 openssl attr libcheck gpgme"
 
-inherit cmake distutils-base pkgconfig
+inherit cmake distutils3-base pkgconfig
 
-EXTRA_OECMAKE = " -DPYTHON_INSTALL_DIR=${PYTHON_SITEPACKAGES_DIR}"
+EXTRA_OECMAKE = " -DPYTHON_INSTALL_DIR=${PYTHON_SITEPACKAGES_DIR} -DPYTHON_DESIRED=3"
 
 BBCLASSEXTEND = "native nativesdk"
 

@@ -9,10 +9,10 @@ SRC_URI[sha256sum] = "5fd887c407015296a8fd3f4b867fe0fcca3179de97ccde90449853a3df
 
 S = "${WORKDIR}/pygpgme-${PV}"
 
-inherit distutils
+inherit distutils3
 
-DEPENDS = "gpgme python"
+DEPENDS = "gpgme python3"
 
-RDEPENDS_${PN} += "python-core"
+RDEPENDS_${PN} += "python3-core"
 
 BBCLASSEXTEND = "native nativesdk"

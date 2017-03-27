@@ -11,8 +11,8 @@ export STAGING_LIBDIR
 # Add 100Meg of extra space for dnf
 IMAGE_ROOTFS_EXTRA_SPACE_append = "${@bb.utils.contains("PACKAGE_INSTALL", "dnf", " + 102400", "" ,d)}"
 
-# Dnf is python based, so be sure python-native is available to us.
-EXTRANATIVEPATH += "python-native"
+# Dnf is python based, so be sure python3-native is available to us.
+EXTRANATIVEPATH += "python3-native"
 
 # opkg is needed for update-alternatives
 RPMROOTFSDEPENDS = "rpm-native:do_populate_sysroot \
