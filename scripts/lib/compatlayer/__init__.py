@@ -143,7 +143,11 @@ def add_layer(bblayersconf, layer, layers, logger):
     logger.info('Adding layer %s' % layer['name'])
 
     for collection in layer['collections']:
-        for depend in layer['collections'][collection]['depends'].split():
+        depends = layer['collections'][collection]['depends']
+        if not depends:
+            continue
+
+        for depend in depends.split():
             # core (oe-core) is suppose to be provided
             if depend == 'core':
                 continue
