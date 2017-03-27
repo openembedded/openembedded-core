@@ -131,9 +131,10 @@ class QemuTarget(BaseTarget):
         dump_target_cmds = d.getVar("testimage_dump_target")
         dump_host_cmds = d.getVar("testimage_dump_host")
         dump_dir = d.getVar("TESTIMAGE_DUMP_DIR")
-        if d.getVar("QEMU_USE_KVM", False) is not None \
-           and d.getVar("QEMU_USE_KVM", False) == "True" \
-           and "x86" in d.getVar("MACHINE"):
+        qemu_use_kvm = d.getVar("QEMU_USE_KVM")
+        if qemu_use_kvm and \
+           (qemu_use_kvm == "True" and "x86" in d.getVar("MACHINE") or \
+            d.getVar("MACHINE") in qemu_use_kvm.split()):
             use_kvm = True
         else:
             use_kvm = False
