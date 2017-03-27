@@ -223,8 +223,21 @@ class OETestLoader(unittest.TestLoader):
                 msg = 'Tried to import %s test module but is a built-in'
                 raise ImportError(msg % module.__name__)
 
-            if not self.modules or "all" in self.modules or \
-                    module.__name__ in self.modules:
+            # Normal test modules are loaded if no modules were specified,
+            # if module is in the specified module list or if 'all' is in
+            # module list.
+            # Underscore modules are loaded only if specified in module list.
+            load_module = True if not module.__name__.startswith('_') \
+                                  and (not self.modules \
+                                       or module.__name__ in self.modules \
+                                       or 'all' in self.modules) \
+                               else False
+
+            load_underscore = True if module.__name__.startswith('_') \
+                                      and module.__name__ in self.modules \
+                                   else False
+
+            if load_module or load_underscore:
                 return super(OETestLoader, self).loadTestsFromModule(
                         module, *args, pattern=pattern, **kws)
             else:
@@ -238,8 +251,21 @@ class OETestLoader(unittest.TestLoader):
                 msg = 'Tried to import %s test module but is a built-in'
                 raise ImportError(msg % module.__name__)
 
-            if not self.modules or "all" in self.modules or \
-                    module.__name__ in self.modules:
+            # Normal test modules are loaded if no modules were specified,
+            # if module is in the specified module list or if 'all' is in
+            # module list.
+            # Underscore modules are loaded only if specified in module list.
+            load_module = True if not module.__name__.startswith('_') \
+                                  and (not self.modules \
+                                       or module.__name__ in self.modules \
+                                       or 'all' in self.modules) \
+                               else False
+
+            load_underscore = True if module.__name__.startswith('_') \
+                                      and module.__name__ in self.modules \
+                                   else False
+
+            if load_module or load_underscore:
                 return super(OETestLoader, self).loadTestsFromModule(
                         module, use_load_tests)
             else:
