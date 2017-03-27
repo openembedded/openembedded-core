@@ -16,7 +16,7 @@ SRCREV = "11b9f99f7ecc7052497e6786156cfed531f11823"
 S = "${WORKDIR}/git"
 
 
-inherit update-rc.d update-alternatives
+inherit update-alternatives
 
 do_compile () {
 	chmod a+rx *.pl *.sh
@@ -44,6 +44,3 @@ ALTERNATIVE_${PN} = "ifup ifdown"
 
 ALTERNATIVE_LINK_NAME[ifup] = "${base_sbindir}/ifup"
 ALTERNATIVE_LINK_NAME[ifdown] = "${base_sbindir}/ifdown"
-
-INITSCRIPT_NAME = "ifup"
-INITSCRIPT_PARAMS = "start 39 S . stop 39 0 6 1 ."
