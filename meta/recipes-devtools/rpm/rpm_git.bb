@@ -107,4 +107,4 @@ PROVIDES += "python-rpm"
 FILES_python-rpm = "${PYTHON_SITEPACKAGES_DIR}/rpm/*"
 
 # rpm 5.x was packaging the rpm build tools separately
-PROVIDES += "rpm-build"
+RPROVIDES_${PN} += "rpm-build"
