@@ -142,6 +142,7 @@ ignore_errors = {
         'Failed to load firmware i915',
         'Failed to fetch GuC',
         'Failed to initialize GuC',
+        'Failed to load DMC firmware',
         'The driver is built-in, so to load the firmware you need to',
         ] + x86_common,
     'edgerouter' : [
