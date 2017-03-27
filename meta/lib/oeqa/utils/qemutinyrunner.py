@@ -114,7 +114,10 @@ class QemuTinyRunner(QemuRunner):
         stopread = False
         endtime = time.time()+timeout
         while time.time()<endtime and not stopread:
-                sread, _, _ = select.select([self.server_socket],[],[],1)
+                try:
+                        sread, _, _ = select.select([self.server_socket],[],[],1)
+                except InterruptedError:
+                        continue
                 for sock in sread:
                         answer = sock.recv(1024)
                         if answer:

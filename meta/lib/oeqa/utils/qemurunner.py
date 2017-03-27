@@ -256,7 +256,10 @@ class QemuRunner:
             bootlog = ''
             data = b''
             while time.time() < endtime and not stopread:
-                sread, swrite, serror = select.select(socklist, [], [], 5)
+                try:
+                    sread, swrite, serror = select.select(socklist, [], [], 5)
+                except InterruptedError:
+                    continue
                 for sock in sread:
                     if sock is self.server_socket:
                         qemusock, addr = self.server_socket.accept()
@@ -437,7 +440,10 @@ class QemuRunner:
             if now >= end:
                 data += "<<< run_serial(): command timed out after %d seconds without output >>>\r\n\r\n" % timeout
                 break
-            sread, _, _ = select.select([self.server_socket],[],[], end - now)
+            try:
+                sread, _, _ = select.select([self.server_socket],[],[], end - now)
+            except InterruptedError:
+                continue
             if sread:
                 answer = self.server_socket.recv(1024)
                 if answer:
