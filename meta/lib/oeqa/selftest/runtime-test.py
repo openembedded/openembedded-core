@@ -193,8 +193,6 @@ postinst-delayed-t \
                            present on rootfs dir.
                         4. Boot the image created on qemu and verify that the file
                            created by postinst_boot recipe is present on image.
-                        5. Clean the packages and image created to test with
-                           different package managers
         Expected:       The files are successfully created during rootfs and boot
                         time for 3 different package managers: rpm,ipk,deb and
                         for initialization managers: sysvinit and systemd.
@@ -237,7 +235,3 @@ postinst-delayed-t \
                     sshargs = '-o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
                     result = runCmd('ssh %s root@%s %s' % (sshargs, qemu.ip, testcommand))
                     self.assertEqual(result.status, 0, 'File %s was not created at firts boot'% fileboot_name)
-
-                #Step 5
-                bitbake(' %s %s -c cleanall' % (rootfs_pkg, boot_pkg))
-                bitbake('core-image-minimal -c cleanall')

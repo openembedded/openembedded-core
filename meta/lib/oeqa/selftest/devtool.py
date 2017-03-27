@@ -1654,7 +1654,7 @@ class DevtoolTests(DevtoolBase):
 
         tmpconfig = os.path.join(buildir, '.config')
         #Step 3
-        bitbake('linux-yocto -c cleanall')
+        bitbake('linux-yocto -c clean')
         #Step 4.1
         runCmd('devtool modify virtual/kernel -x %s' % tempdir)
         self.assertTrue(os.path.exists(os.path.join(tempdir, 'Makefile')),
