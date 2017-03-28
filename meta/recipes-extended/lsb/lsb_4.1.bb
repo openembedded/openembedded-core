@@ -97,8 +97,8 @@ do_install_append() {
        ln -sf ${sbindir}/chkconfig ${D}${nonarch_libdir}/lsb/remove_initd
 
        if [ "${TARGET_ARCH}" = "x86_64" ]; then
-               if [ "${baselib}" != "lib64" ]; then
-                   lnr ${D}${base_libdir} ${D}/lib64
+               if [ "${base_libdir}" != "${base_prefix}/lib64" ]; then
+                   lnr ${D}${base_libdir} ${D}${base_prefix}/lib64
                fi
 	       cd ${D}${base_libdir}
                ln -sf ld-linux-x86-64.so.2 ld-lsb-x86-64.so.2
@@ -111,8 +111,8 @@ do_install_append() {
        fi
 
        if [ "${TARGET_ARCH}" = "powerpc64" ]; then
-               if [ "${baselib}" != "lib64" ]; then
-                   lnr  ${D}${base_libdir} ${D}/lib64
+               if [ "${base_libdir}" != "${base_prefix}/lib64" ]; then
+                   lnr ${D}${base_libdir} ${D}${base_prefix}/lib64
                fi
                cd ${D}${base_libdir}
                ln -sf ld64.so.1 ld-lsb-ppc64.so.2
@@ -125,7 +125,7 @@ do_install_append() {
        fi
 }
 
-FILES_${PN} += "${@'/lib64' if d.getVar('TARGET_ARCH')  == ('x86_64' or 'powerpc64') and '${baselib}' != 'lib64' else ''} \
+FILES_${PN} += "${@'${base_prefix}/lib64' if d.getVar('TARGET_ARCH') == ('x86_64' or 'powerpc64') and '${base_libdir}' != '${base_prefix}/lib64' else ''} \
                 ${base_libdir} \
                 ${nonarch_libdir}/lsb \
                 ${nonarch_base_libdir}/lsb/* \
