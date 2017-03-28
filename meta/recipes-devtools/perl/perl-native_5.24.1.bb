@@ -1,5 +1,9 @@
 require perl.inc
 
+# We need gnugrep (for -I)
+DEPENDS = "virtual/db-native grep-native"
+DEPENDS += "gdbm-native zlib-native"
+
 EXTRA_OEMAKE = "-e MAKEFLAGS="
 
 SRC_URI += "\
