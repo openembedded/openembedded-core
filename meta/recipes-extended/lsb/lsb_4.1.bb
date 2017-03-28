@@ -33,10 +33,10 @@ S = "${WORKDIR}/lsb-release-1.4"
 
 CLEANBROKEN = "1"
 
-do_install(){
-	oe_runmake install prefix=${D}/${base_prefix}  mandir=${D}/${datadir}/man/ DESTDIR=${D}
+do_install() {
+	oe_runmake install prefix=${D}${base_prefix} mandir=${D}${datadir}/man/ DESTDIR=${D}
 
-	# this 2 dirs are needed by package lsb-dist-checker
+	# these two dirs are needed by package lsb-dist-checker
 	mkdir -p ${D}${sysconfdir}/opt
 	mkdir -p ${D}${localstatedir}/opt
 
@@ -44,7 +44,7 @@ do_install(){
 	mkdir -p ${D}${sysconfdir}/lsb-release.d
 	printf "LSB_VERSION=\"core-4.1-noarch:" > ${D}${sysconfdir}/lsb-release
 
-	if [ "${TARGET_ARCH}" = "i586" ] || [ "${TARGET_ARCH}" = "i686" ];then
+	if [ "${TARGET_ARCH}" = "i586" ] || [ "${TARGET_ARCH}" = "i686" ]; then
 		printf "core-4.1-ia32" >>  ${D}${sysconfdir}/lsb-release
 	else
 		printf "core-4.1-${TARGET_ARCH}" >>  ${D}${sysconfdir}/lsb-release
@@ -57,73 +57,74 @@ do_install(){
 	fi
 	echo "DISTRIB_DESCRIPTION=\"${DISTRO_NAME} ${DISTRO_VERSION}\"" >> ${D}${sysconfdir}/lsb-release
 
-	if [ "${TARGET_ARCH}" = "i586" ] || [ "${TARGET_ARCH}" = "i686" ];then
+	if [ "${TARGET_ARCH}" = "i586" ] || [ "${TARGET_ARCH}" = "i686" ]; then
 		mkdir -p ${D}${sysconfdir}/lsb-release.d
 		touch ${D}${sysconfdir}/lsb-release.d/graphics-${PV}-noarch
 		touch ${D}${sysconfdir}/lsb-release.d/desktop-${PV}-noarch
 		touch ${D}${sysconfdir}/lsb-release.d/graphics-${PV}-ia32
 		touch ${D}${sysconfdir}/lsb-release.d/desktop-${PV}-ia32
-	elif [ "${TARGET_ARCH}" = "x86_64" ];then
+	elif [ "${TARGET_ARCH}" = "x86_64" ]; then
 		touch ${D}${sysconfdir}/lsb-release.d/graphics-${PV}-noarch
 		touch ${D}${sysconfdir}/lsb-release.d/graphics-${PV}-amd64
 		touch ${D}${sysconfdir}/lsb-release.d/desktop-${PV}-amd64
 	fi
-	if [ "${TARGET_ARCH}" = "powerpc" ];then
+	if [ "${TARGET_ARCH}" = "powerpc" ]; then
 		touch ${D}${sysconfdir}/lsb-release.d/graphics-${PV}-noarch
 		touch ${D}${sysconfdir}/lsb-release.d/graphics-${PV}-ppc32
 		touch ${D}${sysconfdir}/lsb-release.d/desktop-${PV}-ppc32
-	elif [ "${TARGET_ARCH}" = "powerpc64" ];then
+	elif [ "${TARGET_ARCH}" = "powerpc64" ]; then
 		touch ${D}${sysconfdir}/lsb-release.d/graphics-${PV}-noarch
 		touch ${D}${sysconfdir}/lsb-release.d/graphics-${PV}-ppc64
 		touch ${D}${sysconfdir}/lsb-release.d/desktop-${PV}-ppc64
 	fi
 }
 
-do_install_append(){
+do_install_append() {
        install -d ${D}${sysconfdir}/core-lsb
        for i in lsb_killproc lsb_log_message lsb_pidofproc lsb_start_daemon
        do
-           install -m 0755 ${WORKDIR}/${i} ${D}${sysconfdir}/core-lsb
+           install -m 0755 ${WORKDIR}/$i ${D}${sysconfdir}/core-lsb
        done
 
-       install -d ${D}/${nonarch_base_libdir}/lsb
-       install -m 0755 ${WORKDIR}/init-functions ${D}/${nonarch_base_libdir}/lsb
+       install -d ${D}${nonarch_base_libdir}/lsb
+       install -m 0755 ${WORKDIR}/init-functions ${D}${nonarch_base_libdir}/lsb
 
-       # creat links for LSB test
+       # create links for LSB test
        if [ "${nonarch_base_libdir}" != "${nonarch_libdir}" ] ; then
-               install -d ${D}/${nonarch_libdir}/lsb
+               install -d ${D}${nonarch_libdir}/lsb
        fi
-       ln -sf ${sbindir}/chkconfig ${D}/${nonarch_libdir}/lsb/install_initd
-       ln -sf ${sbindir}/chkconfig ${D}/${nonarch_libdir}/lsb/remove_initd
+       ln -sf ${sbindir}/chkconfig ${D}${nonarch_libdir}/lsb/install_initd
+       ln -sf ${sbindir}/chkconfig ${D}${nonarch_libdir}/lsb/remove_initd
 
-       if [ "${TARGET_ARCH}" = "x86_64" ];then
+       if [ "${TARGET_ARCH}" = "x86_64" ]; then
                if [ "${baselib}" != "lib64" ]; then
                    lnr ${D}${base_libdir} ${D}/lib64
                fi
-	       cd ${D}/${base_libdir}
+	       cd ${D}${base_libdir}
                ln -sf ld-linux-x86-64.so.2 ld-lsb-x86-64.so.2
                ln -sf ld-linux-x86-64.so.2 ld-lsb-x86-64.so.3
        fi
-       if [ "${TARGET_ARCH}" = "i586" ] || [ "${TARGET_ARCH}" = "i686" ];then
-	       cd ${D}/${base_libdir}
+       if [ "${TARGET_ARCH}" = "i586" ] || [ "${TARGET_ARCH}" = "i686" ]; then
+	       cd ${D}${base_libdir}
                ln -sf ld-linux.so.2 ld-lsb.so.2
                ln -sf ld-linux.so.2 ld-lsb.so.3
        fi
 
-       if [ "${TARGET_ARCH}" = "powerpc64" ];then
+       if [ "${TARGET_ARCH}" = "powerpc64" ]; then
                if [ "${baselib}" != "lib64" ]; then
                    lnr  ${D}${base_libdir} ${D}/lib64
                fi
-               cd ${D}/${base_libdir}
+               cd ${D}${base_libdir}
                ln -sf ld64.so.1 ld-lsb-ppc64.so.2
                ln -sf ld64.so.1 ld-lsb-ppc64.so.3
        fi
-       if [ "${TARGET_ARCH}" = "powerpc" ];then
-	       cd ${D}/${base_libdir}
+       if [ "${TARGET_ARCH}" = "powerpc" ]; then
+	       cd ${D}${base_libdir}
                ln -sf ld.so.1 ld-lsb-ppc32.so.2
                ln -sf ld.so.1 ld-lsb-ppc32.so.3
        fi
 }
+
 FILES_${PN} += "${@'/lib64' if d.getVar('TARGET_ARCH')  == ('x86_64' or 'powerpc64') and '${baselib}' != 'lib64' else ''} \
                 ${base_libdir} \
                 ${nonarch_libdir}/lsb \
