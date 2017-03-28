@@ -42,6 +42,12 @@ do_install_append_class-native() {
                 RPM_NO_CHROOT_FOR_SCRIPTS=1
 }
 
+# If the distro uses systemd then these won't be deleted by systemd.bbclass
+do_install_append_class-nativesdk() {
+    rm -rf ${D}/${systemd_unitdir}
+    rmdir --ignore-fail-on-non-empty ${D}${nonarch_base_libdir}
+}
+
 SYSTEMD_SERVICE_${PN} = "dnf-makecache.service dnf-makecache.timer \
                          dnf-automatic-download.service dnf-automatic-download.timer \
                          dnf-automatic-install.service dnf-automatic-install.timer \
