@@ -47,6 +47,7 @@ PACKAGECONFIG ??= "xz \
                    randomseed \
                    machined \
                    backlight \
+                   vconsole \
                    quotacheck \
                    hostnamed \
                    ${@bb.utils.contains('TCLIBC', 'glibc', 'myhostname sysusers', '', d)} \
@@ -79,6 +80,7 @@ PACKAGECONFIG[resolved] = "--enable-resolved,--disable-resolved"
 PACKAGECONFIG[networkd] = "--enable-networkd,--disable-networkd"
 PACKAGECONFIG[machined] = "--enable-machined,--disable-machined"
 PACKAGECONFIG[backlight] = "--enable-backlight,--disable-backlight"
+PACKAGECONFIG[vconsole] = "--enable-vconsole,--disable-vconsole,,${PN}-vconsole-setup"
 PACKAGECONFIG[quotacheck] = "--enable-quotacheck,--disable-quotacheck"
 PACKAGECONFIG[hostnamed] = "--enable-hostnamed,--disable-hostnamed"
 PACKAGECONFIG[myhostname] = "--enable-myhostname,--disable-myhostname"
@@ -475,7 +477,6 @@ RDEPENDS_${PN} += "kmod dbus util-linux-mount udev (= ${EXTENDPKGV})"
 RDEPENDS_${PN} += "volatile-binds update-rc.d"
 
 RRECOMMENDS_${PN} += "${@bb.utils.contains('PACKAGECONFIG', 'serial-getty-generator', '', 'systemd-serialgetty', d)} \
-                      systemd-vconsole-setup \
                       systemd-extra-utils \
                       systemd-compat-units udev-hwdb \
                       util-linux-agetty  util-linux-fsck e2fsprogs-e2fsck \
