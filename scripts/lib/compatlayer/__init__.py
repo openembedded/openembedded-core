@@ -112,6 +112,7 @@ def detect_layers(layer_directories, no_auto):
     layers = []
 
     for directory in layer_directories:
+        directory = os.path.realpath(directory)
         if directory[-1] == '/':
             directory = directory[0:-1]
 
