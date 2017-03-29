@@ -31,8 +31,8 @@ RDEPENDS_${PN}_class-target += "python3-core python3-codecs python3-netclient py
 # .spec file in dnf source tree does (and then Fedora and dnf documentation
 # says that dnf binary is plain 'dnf').
 do_install_append() {
-        ln -s -r ${D}/${bindir}/dnf-3 ${D}/${bindir}/dnf
-        ln -s -r ${D}/${bindir}/dnf-automatic-3 ${D}/${bindir}/dnf-automatic
+        lnr ${D}/${bindir}/dnf-3 ${D}/${bindir}/dnf
+        lnr ${D}/${bindir}/dnf-automatic-3 ${D}/${bindir}/dnf-automatic
 }
 
 # Direct dnf-native to read rpm configuration from our sysroot, not the one it was compiled in
