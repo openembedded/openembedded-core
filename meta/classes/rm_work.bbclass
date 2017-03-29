@@ -121,10 +121,24 @@ rm_work_rootfs () {
 }
 rm_work_rootfs[cleandirs] = "${WORKDIR}/rootfs"
 
-# We have to add the do_rmwork task already now, because all tasks are
+# This task can be used instead of do_build to trigger building
+# without also invoking do_rm_work. It only exists when rm_work.bbclass
+# is active, otherwise do_build needs to be used.
+#
+# The intended usage is
+# ${@ d.getVar('RM_WORK_BUILD_WITHOUT') or 'do_build'}
+# in places that previously used just 'do_build'.
+RM_WORK_BUILD_WITHOUT = "do_build_without_rm_work"
+do_build_without_rm_work () {
+    :
+}
+do_build_without_rm_work[noexec] = "1"
+
+# We have to add these tasks already now, because all tasks are
 # meant to be defined before the RecipeTaskPreProcess event triggers.
 # The inject_rm_work event handler then merely changes task dependencies.
 addtask do_rm_work
+addtask do_build_without_rm_work
 addhandler inject_rm_work
 inject_rm_work[eventmask] = "bb.event.RecipeTaskPreProcess"
 python inject_rm_work() {
@@ -133,6 +147,12 @@ python inject_rm_work() {
     # If the recipe name is in the RM_WORK_EXCLUDE, skip the recipe.
     excludes = (d.getVar("RM_WORK_EXCLUDE") or "").split()
     pn = d.getVar("PN")
+
+    # Determine what do_build depends upon, without including do_build
+    # itself or our own special do_rm_work_all.
+    deps = set(bb.build.preceedtask('do_build', True, d))
+    deps.difference_update(('do_build', 'do_rm_work_all'))
+
     if pn in excludes:
         d.delVarFlag('rm_work_rootfs', 'cleandirs')
         d.delVarFlag('rm_work_populatesdk', 'cleandirs')
@@ -144,8 +164,9 @@ python inject_rm_work() {
         # do_build inherits additional runtime dependencies on
         # other recipes and thus will typically run much later than completion of
         # work in the recipe itself.
-        deps = set(bb.build.preceedtask('do_build', True, d))
-        deps.difference_update(('do_build', 'do_rm_work_all'))
         # In practice, addtask() here merely updates the dependencies.
         bb.build.addtask('do_rm_work', 'do_build', ' '.join(deps), d)
+
+    # Always update do_build_without_rm_work dependencies.
+    bb.build.addtask('do_build_without_rm_work', '', ' '.join(deps), d)
 }
