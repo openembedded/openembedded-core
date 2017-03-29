@@ -656,7 +656,12 @@ do_populate_sdk_ext[depends] = "${@d.getVarFlag('do_populate_sdk', 'depends', Fa
                                 ${@'meta-world-pkgdata:do_collect_packagedata' if d.getVar('SDK_INCLUDE_PKGDATA') == '1' else ''} \
                                 ${@'meta-extsdk-toolchain:do_locked_sigs' if d.getVar('SDK_INCLUDE_TOOLCHAIN') == '1' else ''}"
 
-do_populate_sdk_ext[rdepends] += "${@' '.join([x + ':do_build' for x in d.getVar('SDK_TARGETS').split()])}"
+# We must avoid depending on do_build here if rm_work.bbclass is active,
+# because otherwise do_rm_work may run before do_populate_sdk_ext itself.
+# We can't mark do_populate_sdk_ext and do_sdk_depends as having to
+# run before do_rm_work, because then they would also run as part
+# of normal builds.
+do_populate_sdk_ext[rdepends] += "${@' '.join([x + ':' + (d.getVar('RM_WORK_BUILD_WITHOUT') or 'do_build') for x in d.getVar('SDK_TARGETS').split()])}"
 
 # Make sure code changes can result in rebuild
 do_populate_sdk_ext[vardeps] += "copy_buildsystem \
