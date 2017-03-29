@@ -98,6 +98,14 @@ fix_toolchain_append_class-native() {
         -e '/^LINKER/a LFLAGS += ${BUILD_LDFLAGS}\nCFLAGS += ${BUILD_CFLAGS}' \
         ${S}/BaseTools/Source/C/Makefiles/app.makefile \
         ${S}/BaseTools/Source/C/VfrCompile/GNUmakefile
+    # Linking with gold fails:
+    # internal error in do_layout, at ../../gold/object.cc:1821
+    # make: *** [.../OUTPUT/Facs.acpi] Error 1
+    # We intentionally hard-code the use of ld.bfd regardless of DISTRO_FEATURES
+    # to make ovmf-native reusable across distros.
+    sed -i \
+        -e 's#^\(DEFINE GCC.*DLINK.*FLAGS  *=\)#\1 -fuse-ld=bfd#' \
+        ${S}/BaseTools/Conf/tools_def.template
 }
 
 GCC_VER="$(${CC} -v 2>&1 | tail -n1 | awk '{print $3}')"
