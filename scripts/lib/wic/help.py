@@ -687,6 +687,8 @@ DESCRIPTION
            apply to partitions created using '--source rootfs' (see
            --source above).  Valid values are:
 
+             vfat
+             msdos
              ext2
              ext3
              ext4
