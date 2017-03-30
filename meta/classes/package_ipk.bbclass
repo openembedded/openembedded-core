@@ -17,6 +17,8 @@ OPKG_ARGS += "${@['', '--add-exclude ' + ' --add-exclude '.join((d.getVar('PACKA
 OPKGLIBDIR = "${localstatedir}/lib"
 
 python do_package_ipk () {
+    from multiprocessing import Process
+
     oldcwd = os.getcwd()
 
     workdir = d.getVar('WORKDIR')
@@ -37,11 +39,25 @@ python do_package_ipk () {
     if os.access(os.path.join(tmpdir, "stamps", "IPK_PACKAGE_INDEX_CLEAN"), os.R_OK):
         os.unlink(os.path.join(tmpdir, "stamps", "IPK_PACKAGE_INDEX_CLEAN"))
 
-    for pkg in packages.split():
-        ipk_write_pkg(pkg, d)
+    max_process = int(d.getVar("BB_NUMBER_THREADS") or os.cpu_count() or 1)
+    launched = []
+    pkgs = packages.split()
+    while pkgs:
+        if len(launched) < max_process:
+            p = Process(target=ipk_write_pkg, args=(pkgs.pop(), d))
+            p.start()
+            launched.append(p)
+        for q in launched:
+            # The finished processes are joined when calling is_alive()
+            if not q.is_alive():
+                launched.remove(q)
+    for p in launched:
+        p.join()
 
     os.chdir(oldcwd)
 }
+do_package_ipk[vardeps] += "ipk_write_pkg"
+do_package_ipk[vardepsexclude] = "BB_NUMBER_THREADS"
 
 def ipk_write_pkg(pkg, d):
     import re, copy
