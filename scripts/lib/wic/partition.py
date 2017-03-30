@@ -141,6 +141,10 @@ class Partition():
                                             native_sysroot)
                 self.source_file = "%s/fs.%s" % (cr_workdir, self.fstype)
             else:
+                if self.fstype == 'squashfs':
+                    raise WicError("It's not possible to create empty squashfs "
+                                   "partition '%s'" % (self.mountpoint))
+
                 rootfs = "%s/fs_%s.%s.%s" % (cr_workdir, self.label,
                                              self.lineno, self.fstype)
                 if os.path.isfile(rootfs):
@@ -389,35 +393,6 @@ class Partition():
         exec_cmd(chmod_cmd)
 
     prepare_empty_partition_vfat = prepare_empty_partition_msdos
-
-    def prepare_empty_partition_squashfs(self, cr_workdir, oe_builddir,
-                                         native_sysroot):
-        """
-        Prepare an empty squashfs partition.
-        """
-        logger.warning("Creating of an empty squashfs %s partition was attempted. "
-                       "Proceeding as requested.", self.mountpoint)
-
-        path = "%s/fs_%s.%s" % (cr_workdir, self.label, self.fstype)
-        if os.path.isfile(path):
-            os.remove(path)
-
-        # it is not possible to create a squashfs without source data,
-        # thus prepare an empty temp dir that is used as source
-        tmpdir = tempfile.mkdtemp()
-
-        squashfs_cmd = "mksquashfs %s %s -noappend" % \
-                       (tmpdir, path)
-        exec_native_cmd(squashfs_cmd, native_sysroot)
-
-        os.rmdir(tmpdir)
-
-        # get the rootfs size in the right units for kickstart (kB)
-        du_cmd = "du -Lbks %s" % path
-        out = exec_cmd(du_cmd)
-        fs_size = out.split()[0]
-
-        self.size = int(fs_size)
 
     def prepare_swap_partition(self, cr_workdir, oe_builddir, native_sysroot):
         """
