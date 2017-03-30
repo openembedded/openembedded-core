@@ -136,11 +136,11 @@ class Partition():
                                "specify a non-zero --size/--fixed-size for that "
                                "partition." % self.mountpoint)
 
-            if self.fstype and self.fstype == "swap":
+            if self.fstype == "swap":
                 self.prepare_swap_partition(cr_workdir, oe_builddir,
                                             native_sysroot)
                 self.source_file = "%s/fs.%s" % (cr_workdir, self.fstype)
-            elif self.fstype:
+            else:
                 rootfs = "%s/fs_%s.%s.%s" % (cr_workdir, self.label,
                                              self.lineno, self.fstype)
                 if os.path.isfile(rootfs):
@@ -216,10 +216,6 @@ class Partition():
                                          self.lineno, self.fstype)
         if os.path.isfile(rootfs):
             os.remove(rootfs)
-
-        if not self.fstype:
-            raise WicError("File system for partition %s not specified in "
-                           "kickstart, use --fstype option" % self.mountpoint)
 
         # Get rootfs size from bitbake variable if it's not set in .ks file
         if not self.size:
