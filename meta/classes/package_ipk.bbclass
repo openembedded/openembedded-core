@@ -17,11 +17,6 @@ OPKG_ARGS += "${@['', '--add-exclude ' + ' --add-exclude '.join((d.getVar('PACKA
 OPKGLIBDIR = "${localstatedir}/lib"
 
 python do_package_ipk () {
-    import re, copy
-    import textwrap
-    import subprocess
-    import collections
-
     oldcwd = os.getcwd()
 
     workdir = d.getVar('WORKDIR')
@@ -42,13 +37,27 @@ python do_package_ipk () {
     if os.access(os.path.join(tmpdir, "stamps", "IPK_PACKAGE_INDEX_CLEAN"), os.R_OK):
         os.unlink(os.path.join(tmpdir, "stamps", "IPK_PACKAGE_INDEX_CLEAN"))
 
-    def cleanupcontrol(root):
-        for p in ['CONTROL', 'DEBIAN']:
-            p = os.path.join(root, p)
-            if os.path.exists(p):
-                bb.utils.prunedir(p)
-
     for pkg in packages.split():
+        ipk_write_pkg(pkg, d)
+
+    os.chdir(oldcwd)
+}
+
+def ipk_write_pkg(pkg, d):
+        import re, copy
+        import subprocess
+        import textwrap
+        import collections
+
+        def cleanupcontrol(root):
+            for p in ['CONTROL', 'DEBIAN']:
+                p = os.path.join(root, p)
+                if os.path.exists(p):
+                    bb.utils.prunedir(p)
+
+        outdir = d.getVar('PKGWRITEDIRIPK')
+        pkgdest = d.getVar('PKGDEST')
+
         localdata = bb.data.createCopy(d)
         root = "%s/%s" % (pkgdest, pkg)
 
@@ -99,7 +108,7 @@ python do_package_ipk () {
         if not g and localdata.getVar('ALLOW_EMPTY', False) != "1":
             bb.note("Not creating empty archive for %s-%s-%s" % (pkg, localdata.getVar('PKGV'), localdata.getVar('PKGR')))
             bb.utils.unlockfile(lf)
-            continue
+            return
 
         controldir = os.path.join(root, 'CONTROL')
         bb.utils.mkdirhier(controldir)
@@ -239,10 +248,9 @@ python do_package_ipk () {
         cleanupcontrol(root)
         bb.utils.unlockfile(lf)
 
-    os.chdir(oldcwd)
-}
 # Otherwise allarch packages may change depending on override configuration
-do_package_ipk[vardepsexclude] = "OVERRIDES"
+ipk_write_pkg[vardepsexclude] = "OVERRIDES"
+
 
 SSTATETASKS += "do_package_write_ipk"
 do_package_write_ipk[sstate-inputdirs] = "${PKGWRITEDIRIPK}"
