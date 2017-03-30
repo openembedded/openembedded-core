@@ -83,7 +83,6 @@ do_install_armmultilib () {
 
 BBCLASSEXTEND = "nativesdk"
 
-#DEPENDS = "cross-linkage"
 RDEPENDS_${PN}-dev = ""
 RRECOMMENDS_${PN}-dbg = "${PN}-dev (= ${EXTENDPKGV})"
 
