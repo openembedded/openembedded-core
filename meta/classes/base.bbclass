@@ -128,9 +128,9 @@ def setup_hosttools_dir(dest, toolsvar, d, fatal=True):
     for tool in tools:
         desttool = os.path.join(dest, tool)
         if not os.path.exists(desttool):
-            srctool = bb.utils.which(path, tool)
+            srctool = bb.utils.which(path, tool, executable=True)
             if "ccache" in srctool:
-                srctool = bb.utils.which(path, tool, direction=1)
+                srctool = bb.utils.which(path, tool, executable=True, direction=1)
             if srctool:
                 os.symlink(srctool, desttool)
             else:
