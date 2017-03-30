@@ -1,9 +1,8 @@
-import unittest
-from oeqa.oetest import oeRuntimeTest
-from oeqa.utils.qemutinyrunner import *
+from oeqa.runtime.case import OERuntimeTestCase
 
-class QemuTinyTest(oeRuntimeTest):
+class QemuTinyTest(OERuntimeTestCase):
 
     def test_boot_tiny(self):
-        (status, output) = self.target.run_serial('uname -a')
-        self.assertTrue("yocto-tiny" in output, msg="Cannot detect poky tiny boot!")
+        status, output = self.target.run_serial('uname -a')
+        msg = "Cannot detect poky tiny boot!"
+        self.assertTrue("yocto-tiny" in output, msg)
