@@ -42,7 +42,7 @@ python __anonymous () {
         d.setVar("HEADER_FETCH_VER", "2.6")
 }
 
-inherit kernel-arch pkgconfig
+inherit kernel-arch pkgconfig multilib_header
 
 KORG_ARCHIVE_COMPRESSION ?= "xz"
 
@@ -66,6 +66,19 @@ do_install() {
 
 	# The ..install.cmd conflicts between various configure runs
 	find ${D}${includedir} -name ..install.cmd | xargs rm -f
+}
+
+do_install_append_aarch64 () {
+        do_install_armmultilib
+}
+
+do_install_append_arm () {
+	do_install_armmultilib
+}
+
+do_install_armmultilib () {
+	oe_multilib_header asm/auxvec.h asm/bitsperlong.h asm/byteorder.h asm/fcntl.h asm/hwcap.h asm/ioctls.h asm/kvm.h asm/mman.h asm/param.h asm/perf_regs.h
+	oe_multilib_header asm/posix_types.h asm/ptrace.h  asm/setup.h  asm/sigcontext.h asm/siginfo.h asm/signal.h asm/stat.h  asm/statfs.h asm/swab.h  asm/types.h asm/unistd.h
 }
 
 BBCLASSEXTEND = "nativesdk"
