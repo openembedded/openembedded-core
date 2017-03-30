@@ -131,7 +131,7 @@ def exec_native_cmd(cmd_and_args, native_sysroot, pseudo=""):
               "was not found (see details above).\n\n" % prog
         recipe = NATIVE_RECIPES.get(prog)
         if recipe:
-            msg += "Please bake it with 'bitbake %s-native' "\
+            msg += "Please make sure wic-tools have %s-native in its DEPENDS, bake it with 'bitbake wic-tools' "\
                    "and try again.\n" % recipe
         else:
             msg += "Wic failed to find a recipe to build native %s. Please "\
