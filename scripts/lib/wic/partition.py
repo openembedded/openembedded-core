@@ -290,10 +290,10 @@ class Partition():
             (self.fstype, rootfs_size * 1024, rootfs_dir, label_str, rootfs)
         exec_native_cmd(mkfs_cmd, native_sysroot, pseudo=pseudo)
 
-    def prepare_rootfs_vfat(self, rootfs, oe_builddir, rootfs_dir,
-                            native_sysroot, pseudo):
+    def prepare_rootfs_msdos(self, rootfs, oe_builddir, rootfs_dir,
+                             native_sysroot, pseudo):
         """
-        Prepare content for a vfat rootfs partition.
+        Prepare content for a msdos/vfat rootfs partition.
         """
         du_cmd = "du -bks %s" % rootfs_dir
         out = exec_cmd(du_cmd)
@@ -313,6 +313,8 @@ class Partition():
 
         chmod_cmd = "chmod 644 %s" % rootfs
         exec_cmd(chmod_cmd)
+
+    prepare_rootfs_vfat = prepare_rootfs_msdos
 
     def prepare_rootfs_squashfs(self, rootfs, oe_builddir, rootfs_dir,
                                 native_sysroot, pseudo):
@@ -359,8 +361,8 @@ class Partition():
             (self.fstype, self.size * 1024, label_str, rootfs)
         exec_native_cmd(mkfs_cmd, native_sysroot)
 
-    def prepare_empty_partition_vfat(self, rootfs, oe_builddir,
-                                     native_sysroot):
+    def prepare_empty_partition_msdos(self, rootfs, oe_builddir,
+                                      native_sysroot):
         """
         Prepare an empty vfat partition.
         """
@@ -375,6 +377,8 @@ class Partition():
 
         chmod_cmd = "chmod 644 %s" % rootfs
         exec_cmd(chmod_cmd)
+
+    prepare_empty_partition_vfat = prepare_empty_partition_msdos
 
     def prepare_empty_partition_squashfs(self, cr_workdir, oe_builddir,
                                          native_sysroot):
