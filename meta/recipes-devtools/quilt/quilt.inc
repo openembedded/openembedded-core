@@ -8,6 +8,7 @@ SRC_URI = "${SAVANNAH_GNU_MIRROR}/quilt/quilt-${PV}.tar.gz \
         file://run-ptest \
         file://Makefile \
         file://test.sh \
+        file://0001-tests-Allow-different-output-from-mv.patch \
 "
 
 SRC_URI[md5sum] = "c67ba0228f5b7b8bbe469474661f92d6"
@@ -33,9 +34,15 @@ RDEPENDS_${PN} = "bash"
 EXTRA_OE_MAKE_ARGS_darwin ?= ""
 EXTRA_OE_MAKE_ARGS ?= "BUILD_ROOT=${D}"
 
-EXTRA_OECONF = "--with-perl=perl"
+EXTRA_OECONF = "--with-perl='${USRBINPATH}/env perl' --with-patch=patch"
 
 CACHED_CONFIGUREVARS += "ac_cv_path_BASH=/bin/bash"
+
+# Make sure we don't have "-w" in shebang lines: it breaks using
+# "/usr/bin/env perl" as parser
+do_configure_prepend () {
+	find ${S} -name "*.in" -exec sed -i -e "1s,^#\!.*@PERL@ -w$,#\! @PERL@\nuse warnings;," {} \;
+}
 
 # Don't setup symlinks to host utilities, we don't need them
 do_configure_append () {

@@ -5,8 +5,7 @@ INHIBIT_AUTOTOOLS_DEPS = "1"
 inherit native
 
 PATCHTOOL = "patch"
-EXTRA_OECONF = "--disable-nls"
-EXTRA_OECONF_append_class-target = "--with-perl=perl"
+EXTRA_OECONF_append = " --disable-nls"
 
 do_configure () {
 	oe_runconf
