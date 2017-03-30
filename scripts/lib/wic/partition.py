@@ -145,13 +145,11 @@ class Partition():
                                              self.lineno, self.fstype)
                 if os.path.isfile(rootfs):
                     os.remove(rootfs)
-                for prefix in ("ext", "btrfs", "vfat", "squashfs"):
-                    if self.fstype.startswith(prefix):
-                        method = getattr(self,
-                                         "prepare_empty_partition_" + prefix)
-                        method(rootfs, oe_builddir, native_sysroot)
-                        self.source_file = rootfs
-                        break
+
+                prefix = "ext" if self.fstype.startswith("ext") else self.fstype
+                method = getattr(self, "prepare_empty_partition_" + prefix)
+                method(rootfs, oe_builddir, native_sysroot)
+                self.source_file = rootfs
             return
 
         plugins = PluginMgr.get_plugins('source')
@@ -231,19 +229,15 @@ class Partition():
                                '--overhead-factor will be applied')
                 self.size = int(round(float(rsize_bb)))
 
-        for prefix in ("ext", "btrfs", "vfat", "squashfs"):
-            if self.fstype.startswith(prefix):
-                method = getattr(self, "prepare_rootfs_" + prefix)
-                method(rootfs, oe_builddir, rootfs_dir, native_sysroot, pseudo)
+        prefix = "ext" if self.fstype.startswith("ext") else self.fstype
+        method = getattr(self, "prepare_rootfs_" + prefix)
+        method(rootfs, oe_builddir, rootfs_dir, native_sysroot, pseudo)
+        self.source_file = rootfs
 
-                self.source_file = rootfs
-
-                # get the rootfs size in the right units for kickstart (kB)
-                du_cmd = "du -Lbks %s" % rootfs
-                out = exec_cmd(du_cmd)
-                self.size = int(out.split()[0])
-
-                break
+        # get the rootfs size in the right units for kickstart (kB)
+        du_cmd = "du -Lbks %s" % rootfs
+        out = exec_cmd(du_cmd)
+        self.size = int(out.split()[0])
 
     def prepare_rootfs_ext(self, rootfs, oe_builddir, rootfs_dir,
                            native_sysroot, pseudo):
