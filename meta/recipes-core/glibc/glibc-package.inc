@@ -140,7 +140,24 @@ do_install_append_aarch64 () {
 				${D}/lib/ld-linux-aarch64_be.so.1
 		fi
 	fi
+	do_install_armmultilib
 }
+
+do_install_append_arm () {
+	do_install_armmultilib
+}
+
+do_install_armmultilib () {
+
+	oe_multilib_header bits/endian.h bits/fcntl.h bits/fenv.h bits/fp-fast.h bits/hwcap.h bits/ipc.h bits/link.h bits/wordsize.h
+	oe_multilib_header bits/local_lim.h bits/mman.h bits/msq.h bits/pthreadtypes.h  bits/sem.h  bits/semaphore.h bits/setjmp.h
+	oe_multilib_header bits/shm.h bits/sigstack.h bits/stat.h bits/statfs.h bits/string.h bits/typesizes.h
+
+	oe_multilib_header fpu_control.h gnu/lib-names.h gnu/stubs.h ieee754.h
+
+	oe_multilib_header sys/elf.h sys/procfs.h sys/ptrace.h sys/ucontext.h sys/user.h
+}
+
 
 LOCALESTASH = "${WORKDIR}/stashed-locale"
 bashscripts = "mtrace sotruss xtrace"
