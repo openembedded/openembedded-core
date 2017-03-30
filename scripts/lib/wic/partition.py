@@ -305,7 +305,12 @@ class Partition():
         if self.label:
             label_str = "-n %s" % self.label
 
-        dosfs_cmd = "mkdosfs %s -S 512 -C %s %d" % (label_str, rootfs, rootfs_size)
+        size_str = ""
+        if self.fstype == 'msdos':
+            size_str = "-F 16" # FAT 16
+
+        dosfs_cmd = "mkdosfs %s -S 512 %s -C %s %d" % (label_str, size_str,
+                                                       rootfs, rootfs_size)
         exec_native_cmd(dosfs_cmd, native_sysroot)
 
         mcopy_cmd = "mcopy -i %s -s %s/* ::/" % (rootfs, rootfs_dir)
@@ -372,7 +377,12 @@ class Partition():
         if self.label:
             label_str = "-n %s" % self.label
 
-        dosfs_cmd = "mkdosfs %s -S 512 -C %s %d" % (label_str, rootfs, blocks)
+        size_str = ""
+        if self.fstype == 'msdos':
+            size_str = "-F 16" # FAT 16
+
+        dosfs_cmd = "mkdosfs %s -S 512 %s -C %s %d" % (label_str, size_str,
+                                                       rootfs, blocks)
         exec_native_cmd(dosfs_cmd, native_sysroot)
 
         chmod_cmd = "chmod 644 %s" % rootfs
