@@ -140,9 +140,7 @@ def _find_layer_depends(depend, layers):
                 return layer
     return None
 
-def add_layer(bblayersconf, layer, layers, logger):
-    logger.info('Adding layer %s' % layer['name'])
-
+def add_layer_dependencies(bblayersconf, layer, layers, logger):
     def recurse_dependencies(depends, layer, layers, logger, ret = []):
         logger.debug('Processing dependencies %s for layer %s.' % \
                     (depends, layer['name']))
@@ -192,7 +190,10 @@ def add_layer(bblayersconf, layer, layers, logger):
             logger.info('Adding layer dependency %s' % layer_depend['name'])
             with open(bblayersconf, 'a+') as f:
                 f.write("\nBBLAYERS += \"%s\"\n" % layer_depend['path'])
+    return True
 
+def add_layer(bblayersconf, layer, layers, logger):
+    logger.info('Adding layer %s' % layer['name'])
     with open(bblayersconf, 'a+') as f:
         f.write("\nBBLAYERS += \"%s\"\n" % layer['path'])
 

@@ -22,7 +22,7 @@ import scriptpath
 scriptpath.add_oe_lib_path()
 scriptpath.add_bitbake_lib_path()
 
-from compatlayer import LayerType, detect_layers, add_layer, get_signatures
+from compatlayer import LayerType, detect_layers, add_layer, add_layer_dependencies, get_signatures
 from oeqa.utils.commands import get_bb_vars
 
 PROGNAME = 'yocto-compat-layer'
@@ -116,26 +116,35 @@ def main():
     results = collections.OrderedDict()
     results_status = collections.OrderedDict()
 
-    logger.info('')
-    logger.info('Getting initial bitbake variables ...')
-    td['bbvars'] = get_bb_vars()
-    logger.info('Getting initial signatures ...')
-    td['builddir'] = builddir
-    td['sigs'] = get_signatures(td['builddir'])
-    logger.info('')
-
     layers_tested = 0
     for layer in layers:
         if layer['type'] == LayerType.ERROR_NO_LAYER_CONF or \
                 layer['type'] == LayerType.ERROR_BSP_DISTRO:
             continue
 
+        logger.info('')
+        logger.info("Setting up for %s(%s), %s" % (layer['name'], layer['type'],
+            layer['path']))
+
         shutil.copyfile(bblayersconf + '.backup', bblayersconf)
 
-        if not add_layer(bblayersconf, layer, dep_layers, logger):
+        if not add_layer_dependencies(bblayersconf, layer, dep_layers, logger):
             logger.info('Skipping %s due to missing dependencies.' % layer['name'])
             results[layer['name']] = None
             results_status[layer['name']] = 'SKIPPED (Missing dependencies)'
+            layers_tested = layers_tested + 1
+            continue
+
+        logger.info('Getting initial bitbake variables ...')
+        td['bbvars'] = get_bb_vars()
+        logger.info('Getting initial signatures ...')
+        td['builddir'] = builddir
+        td['sigs'] = get_signatures(td['builddir'])
+
+        if not add_layer(bblayersconf, layer, dep_layers, logger):
+            logger.info('Skipping %s ???.' % layer['name'])
+            results[layer['name']] = None
+            results_status[layer['name']] = 'SKIPPED (Unknown)'
             layers_tested = layers_tested + 1
             continue
 
