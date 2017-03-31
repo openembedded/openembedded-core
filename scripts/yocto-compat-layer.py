@@ -47,6 +47,8 @@ def main():
             help='Layer to test compatibility with Yocto Project')
     parser.add_argument('-o', '--output-log',
             help='File to output log (optional)', action='store')
+    parser.add_argument('--dependency', nargs="+",
+            help='Layers to process for dependencies', action='store')
     parser.add_argument('-n', '--no-auto', help='Disable auto layer discovery',
             action='store_true')
     parser.add_argument('-d', '--debug', help='Enable debug output',
@@ -80,6 +82,11 @@ def main():
     if not layers:
         logger.error("Fail to detect layers")
         return 1
+    if args.dependency:
+        dep_layers = detect_layers(args.dependency, args.no_auto)
+        dep_layers = dep_layers + layers
+    else:
+        dep_layers = layers
 
     logger.info("Detected layers:")
     for layer in layers:
@@ -125,7 +132,8 @@ def main():
 
         shutil.copyfile(bblayersconf + '.backup', bblayersconf)
 
-        if not add_layer(bblayersconf, layer, layers, logger):
+        if not add_layer(bblayersconf, layer, dep_layers, logger):
+            logger.info('Skipping %s due to missing dependencies.' % layer['name'])
             results[layer['name']] = None
             results_status[layer['name']] = 'SKIPPED (Missing dependencies)'
             layers_tested = layers_tested + 1
