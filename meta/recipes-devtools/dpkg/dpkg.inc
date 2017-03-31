@@ -4,8 +4,8 @@ SECTION = "base"
 
 DEPENDS = "zlib bzip2 perl ncurses"
 DEPENDS_class-native = "bzip2-replacement-native zlib-native virtual/update-alternatives-native gettext-native perl-native"
-RDEPENDS_${PN} = "${VIRTUAL-RUNTIME_update-alternatives} xz perl"
-RDEPENDS_${PN}_class-native = "xz-native"
+RDEPENDS_${PN} = "${VIRTUAL-RUNTIME_update-alternatives} perl"
+RDEPENDS_${PN}_class-native = ""
 
 UPSTREAM_CHECK_URI = "${DEBIAN_MIRROR}/main/d/dpkg/"
 
@@ -28,9 +28,11 @@ EXTRA_OECONF = "\
 		--enable-start-stop-daemon \
 		--with-libz \
 		--with-libbz2 \
-		--without-liblzma \
 		--without-libselinux \
 		"
+
+PACKAGECONFIG = "liblzma"
+PACKAGECONFIG[liblzma] = "--with-liblzma,--without-liblzma, xz"
 
 EXTRA_OECONF += "TAR=tar"
 EXTRA_OECONF_append_class-target = " DEB_HOST_ARCH=${DPKG_ARCH}"
