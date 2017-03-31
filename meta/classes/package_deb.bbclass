@@ -51,6 +51,8 @@ def debian_arch_map(arch, tune):
 # INSTALL_TASK_DEB - task name
 
 python do_package_deb () {
+    from multiprocessing import Process
+
     oldcwd = os.getcwd()
 
     packages = d.getVar('PACKAGES')
@@ -62,11 +64,25 @@ python do_package_deb () {
     if os.access(os.path.join(tmpdir, "stamps", "DEB_PACKAGE_INDEX_CLEAN"),os.R_OK):
         os.unlink(os.path.join(tmpdir, "stamps", "DEB_PACKAGE_INDEX_CLEAN"))
 
-    for pkg in packages.split():
-        deb_write_pkg(pkg, d)
+    max_process = int(d.getVar("BB_NUMBER_THREADS") or os.cpu_count() or 1)
+    launched = []
+    pkgs = packages.split()
+    while pkgs:
+        if len(launched) < max_process:
+            p = Process(target=deb_write_pkg, args=(pkgs.pop(), d))
+            p.start()
+            launched.append(p)
+        for q in launched:
+            # The finished processes are joined when calling is_alive()
+            if not q.is_alive():
+                launched.remove(q)
+    for p in launched:
+        p.join()
 
     os.chdir(oldcwd)
 }
+do_package_deb[vardeps] += "deb_write_pkg"
+do_package_deb[vardepsexclude] = "BB_NUMBER_THREADS"
 
 def deb_write_pkg(pkg, d):
     import re, copy
