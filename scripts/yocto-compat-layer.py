@@ -107,6 +107,7 @@ def main():
 
     td = {}
     results = collections.OrderedDict()
+    results_status = collections.OrderedDict()
 
     logger.info('')
     logger.info('Getting initial bitbake variables ...')
@@ -125,19 +126,22 @@ def main():
         shutil.copyfile(bblayersconf + '.backup', bblayersconf)
 
         if not add_layer(bblayersconf, layer, layers, logger):
+            results[layer['name']] = None
+            results_status[layer['name']] = 'SKIPPED (Missing dependencies)'
+            layers_tested = layers_tested + 1
             continue
 
         result = test_layer_compatibility(td, layer)
         results[layer['name']] = result
+        results_status[layer['name']] = 'PASS' if results[layer['name']].wasSuccessful() else 'FAIL'
         layers_tested = layers_tested + 1
 
     if layers_tested:
         logger.info('')
         logger.info('Summary of results:')
         logger.info('')
-        for layer_name in results:
-            logger.info('%s ... %s' % (layer_name, 'PASS' if \
-                    results[layer_name].wasSuccessful() else 'FAIL'))
+        for layer_name in results_status:
+            logger.info('%s ... %s' % (layer_name, results_status[layer_name]))
 
     cleanup_bblayers(None, None)
 
