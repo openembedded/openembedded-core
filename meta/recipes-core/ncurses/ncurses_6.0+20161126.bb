@@ -3,6 +3,7 @@ require ncurses.inc
 SRC_URI += "file://tic-hang.patch \
             file://fix-cflags-mangle.patch \
             file://config.cache \
+            file://configure-reproducible.patch \
 "
 # commit id corresponds to the revision in package version
 SRCREV = "3db0bd19cb50e3d9b4f2cf15b7a102fe11302068"
