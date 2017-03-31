@@ -51,23 +51,7 @@ def debian_arch_map(arch, tune):
 # INSTALL_TASK_DEB - task name
 
 python do_package_deb () {
-    import re, copy
-    import textwrap
-    import subprocess
-    import collections
-    import codecs
-
     oldcwd = os.getcwd()
-
-    workdir = d.getVar('WORKDIR')
-    if not workdir:
-        bb.error("WORKDIR not defined, unable to package")
-        return
-
-    outdir = d.getVar('PKGWRITEDIRDEB')
-    if not outdir:
-        bb.error("PKGWRITEDIRDEB not defined, unable to package")
-        return
 
     packages = d.getVar('PACKAGES')
     if not packages:
@@ -75,23 +59,31 @@ python do_package_deb () {
         return
 
     tmpdir = d.getVar('TMPDIR')
-
     if os.access(os.path.join(tmpdir, "stamps", "DEB_PACKAGE_INDEX_CLEAN"),os.R_OK):
         os.unlink(os.path.join(tmpdir, "stamps", "DEB_PACKAGE_INDEX_CLEAN"))
 
-    if packages == []:
-        bb.debug(1, "No packages; nothing to do")
-        return
-
-    pkgdest = d.getVar('PKGDEST')
-
-    def cleanupcontrol(root):
-        for p in ['CONTROL', 'DEBIAN']:
-            p = os.path.join(root, p)
-            if os.path.exists(p):
-                bb.utils.prunedir(p)
-
     for pkg in packages.split():
+        deb_write_pkg(pkg, d)
+
+    os.chdir(oldcwd)
+}
+
+def deb_write_pkg(pkg, d):
+        import re, copy
+        import textwrap
+        import subprocess
+        import collections
+        import codecs
+
+        outdir = d.getVar('PKGWRITEDIRDEB')
+        pkgdest = d.getVar('PKGDEST')
+
+        def cleanupcontrol(root):
+            for p in ['CONTROL', 'DEBIAN']:
+                p = os.path.join(root, p)
+                if os.path.exists(p):
+                    bb.utils.prunedir(p)
+
         localdata = bb.data.createCopy(d)
         root = "%s/%s" % (pkgdest, pkg)
 
@@ -118,7 +110,7 @@ python do_package_deb () {
         if not g and localdata.getVar('ALLOW_EMPTY', False) != "1":
             bb.note("Not creating empty archive for %s-%s-%s" % (pkg, localdata.getVar('PKGV'), localdata.getVar('PKGR')))
             bb.utils.unlockfile(lf)
-            continue
+            return
 
         controldir = os.path.join(root, 'DEBIAN')
         bb.utils.mkdirhier(controldir)
@@ -293,13 +285,12 @@ python do_package_deb () {
 
         cleanupcontrol(root)
         bb.utils.unlockfile(lf)
-    os.chdir(oldcwd)
-}
+
+# Otherwise allarch packages may change depending on override configuration
+deb_write_pkg[vardepsexclude] = "OVERRIDES"
+
 # Indirect references to these vars
 do_package_write_deb[vardeps] += "PKGV PKGR PKGV DESCRIPTION SECTION PRIORITY MAINTAINER DPKG_ARCH PN HOMEPAGE"
-# Otherwise allarch packages may change depending on override configuration
-do_package_deb[vardepsexclude] = "OVERRIDES"
-
 
 SSTATETASKS += "do_package_write_deb"
 do_package_write_deb[sstate-inputdirs] = "${PKGWRITEDIRDEB}"
