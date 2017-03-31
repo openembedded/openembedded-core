@@ -44,25 +44,25 @@ python do_package_ipk () {
 }
 
 def ipk_write_pkg(pkg, d):
-        import re, copy
-        import subprocess
-        import textwrap
-        import collections
+    import re, copy
+    import subprocess
+    import textwrap
+    import collections
 
-        def cleanupcontrol(root):
-            for p in ['CONTROL', 'DEBIAN']:
-                p = os.path.join(root, p)
-                if os.path.exists(p):
-                    bb.utils.prunedir(p)
+    def cleanupcontrol(root):
+        for p in ['CONTROL', 'DEBIAN']:
+            p = os.path.join(root, p)
+            if os.path.exists(p):
+                bb.utils.prunedir(p)
 
-        outdir = d.getVar('PKGWRITEDIRIPK')
-        pkgdest = d.getVar('PKGDEST')
+    outdir = d.getVar('PKGWRITEDIRIPK')
+    pkgdest = d.getVar('PKGDEST')
 
-        localdata = bb.data.createCopy(d)
-        root = "%s/%s" % (pkgdest, pkg)
+    localdata = bb.data.createCopy(d)
+    root = "%s/%s" % (pkgdest, pkg)
 
-        lf = bb.utils.lockfile(root + ".lock")
-
+    lf = bb.utils.lockfile(root + ".lock")
+    try:
         localdata.setVar('ROOT', '')
         localdata.setVar('ROOT_%s' % pkg, root)
         pkgname = localdata.getVar('PKG_%s' % pkg)
@@ -107,7 +107,6 @@ def ipk_write_pkg(pkg, d):
         g = glob('*')
         if not g and localdata.getVar('ALLOW_EMPTY', False) != "1":
             bb.note("Not creating empty archive for %s-%s-%s" % (pkg, localdata.getVar('PKGV'), localdata.getVar('PKGR')))
-            bb.utils.unlockfile(lf)
             return
 
         controldir = os.path.join(root, 'CONTROL')
@@ -245,6 +244,7 @@ def ipk_write_pkg(pkg, d):
             ipk_to_sign = "%s/%s_%s_%s.ipk" % (pkgoutdir, pkgname, ipkver, d.getVar('PACKAGE_ARCH'))
             sign_ipk(d, ipk_to_sign)
 
+    finally:
         cleanupcontrol(root)
         bb.utils.unlockfile(lf)
 

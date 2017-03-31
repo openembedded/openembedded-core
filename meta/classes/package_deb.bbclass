@@ -69,25 +69,26 @@ python do_package_deb () {
 }
 
 def deb_write_pkg(pkg, d):
-        import re, copy
-        import textwrap
-        import subprocess
-        import collections
-        import codecs
+    import re, copy
+    import textwrap
+    import subprocess
+    import collections
+    import codecs
 
-        outdir = d.getVar('PKGWRITEDIRDEB')
-        pkgdest = d.getVar('PKGDEST')
+    outdir = d.getVar('PKGWRITEDIRDEB')
+    pkgdest = d.getVar('PKGDEST')
 
-        def cleanupcontrol(root):
-            for p in ['CONTROL', 'DEBIAN']:
-                p = os.path.join(root, p)
-                if os.path.exists(p):
-                    bb.utils.prunedir(p)
+    def cleanupcontrol(root):
+        for p in ['CONTROL', 'DEBIAN']:
+            p = os.path.join(root, p)
+            if os.path.exists(p):
+                bb.utils.prunedir(p)
 
-        localdata = bb.data.createCopy(d)
-        root = "%s/%s" % (pkgdest, pkg)
+    localdata = bb.data.createCopy(d)
+    root = "%s/%s" % (pkgdest, pkg)
 
-        lf = bb.utils.lockfile(root + ".lock")
+    lf = bb.utils.lockfile(root + ".lock")
+    try:
 
         localdata.setVar('ROOT', '')
         localdata.setVar('ROOT_%s' % pkg, root)
@@ -109,7 +110,6 @@ def deb_write_pkg(pkg, d):
         g = glob('*')
         if not g and localdata.getVar('ALLOW_EMPTY', False) != "1":
             bb.note("Not creating empty archive for %s-%s-%s" % (pkg, localdata.getVar('PKGV'), localdata.getVar('PKGR')))
-            bb.utils.unlockfile(lf)
             return
 
         controldir = os.path.join(root, 'DEBIAN')
@@ -283,6 +283,7 @@ def deb_write_pkg(pkg, d):
         os.chdir(basedir)
         subprocess.check_output("PATH=\"%s\" dpkg-deb -b %s %s" % (localdata.getVar("PATH"), root, pkgoutdir), shell=True)
 
+    finally:
         cleanupcontrol(root)
         bb.utils.unlockfile(lf)
 
