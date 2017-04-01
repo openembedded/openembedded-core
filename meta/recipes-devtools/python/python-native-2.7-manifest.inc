@@ -1,7 +1,6 @@
 
 # WARNING: This file is AUTO GENERATED: Manual edits will be lost next time I regenerate the file.
 # Generator: '../../../scripts/contrib/python/generate-manifest-2.7.py --native' Version 20110222.2 (C) 2002-2010 Michael 'Mickey' Lauer <mlauer@vanille-media.de>
-# Visit the Python for Embedded Systems Site => http://www.Vanille.de/projects/python.spy
 
  
 

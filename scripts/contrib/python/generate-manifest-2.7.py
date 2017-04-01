@@ -34,7 +34,6 @@ class MakefileMaker:
         self.out( """
 # WARNING: This file is AUTO GENERATED: Manual edits will be lost next time I regenerate the file.
 # Generator: '%s%s' Version %s (C) 2002-2010 Michael 'Mickey' Lauer <mlauer@vanille-media.de>
-# Visit the Python for Embedded Systems Site => http://www.Vanille.de/projects/python.spy
 """ % ( sys.argv[0], ' --native' if isNative else '', __version__ ) )
 
     #
