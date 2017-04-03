@@ -32,6 +32,7 @@ Optional arguments:
   -c COMMITISH      test (checkout) this commit, <branch>:<commit> can be
                     specified to test specific commit of certain branch
   -C GIT_REPO       commit results into Git
+  -P GIT_REMOTE     push results to a remote Git repository
   -w WORK_DIR       work dir for this script
                     (default: GIT_TOP_DIR/build-perf-test)
   -x                create xml report (instead of json)
@@ -42,7 +43,8 @@ EOF
 # Parse command line arguments
 commitish=""
 oe_build_perf_test_extra_opts=()
-while getopts "ha:c:C:w:x" opt; do
+oe_git_archive_extra_opts=()
+while getopts "ha:c:C:P:w:x" opt; do
     case $opt in
         h)  usage
             exit 0
@@ -52,6 +54,8 @@ while getopts "ha:c:C:w:x" opt; do
         c)  commitish=$OPTARG
             ;;
         C)  results_repo=`realpath -s "$OPTARG"`
+            ;;
+        P)  oe_git_archive_extra_opts+=("--push" "$OPTARG")
             ;;
         w)  base_dir=`realpath -s "$OPTARG"`
             ;;
@@ -172,6 +176,7 @@ if [ -n "$results_repo" ]; then
         --tag-name "{hostname}/{branch}/{machine}/{commit_count}-g{commit}/{tag_number}" \
         --exclude "buildstats.json" \
         --notes "buildstats/{branch_name}" "$results_dir/buildstats.json" \
+        "${oe_git_archive_extra_opts[@]}" \
         "$results_dir"
 fi
 
