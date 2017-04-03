@@ -22,12 +22,12 @@ if [ -d /etc/profile.d ]; then
 	unset i
 fi
 
-if [ -x /usr/bin/resize ] && termpath="`tty`"; then
+if command -v resize >/dev/null && command -v tty >/dev/null; then
 	# Make sure we are on a serial console (i.e. the device used starts with
 	# /dev/tty[A-z]), otherwise we confuse e.g. the eclipse launcher which
 	# tries do use ssh
-	case "$termpath" in
-		/dev/tty[A-z]*) resize >/dev/null
+	case $(tty) in
+		/dev/tty[A-z]*) resize >/dev/null;;
 	esac
 fi
 
