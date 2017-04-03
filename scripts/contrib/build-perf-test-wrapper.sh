@@ -29,7 +29,8 @@ Optional arguments:
   -h                show this help and exit.
   -a ARCHIVE_DIR    archive results tarball here, give an empty string to
                     disable tarball archiving (default: $archive_dir)
-  -c COMMITISH      test (checkout) this commit
+  -c COMMITISH      test (checkout) this commit, <branch>:<commit> can be
+                    specified to test specific commit of certain branch
   -C GIT_REPO       commit results into Git
   -w WORK_DIR       work dir for this script
                     (default: GIT_TOP_DIR/build-perf-test)
@@ -90,15 +91,33 @@ fi
 cd "$git_topdir"
 
 if [ -n "$commitish" ]; then
-    # Checkout correct revision
-    echo "Checking out $commitish"
+    echo "Running git fetch"
     git fetch &> /dev/null
     git checkout HEAD^0 &> /dev/null
-    git branch -D $commitish &> /dev/null
-    if ! git checkout -f $commitish &> /dev/null; then
-        echo "Git checkout failed"
+
+    # Handle <branch>:<commit> format
+    if echo "$commitish" | grep -q ":"; then
+        commit=`echo "$commitish" | cut -d":" -f2`
+        branch=`echo "$commitish" | cut -d":" -f1`
+    else
+        commit="$commitish"
+        branch="$commitish"
+    fi
+
+    echo "Checking out $commitish"
+    git branch -D $branch &> /dev/null
+    if ! git checkout -f $branch &> /dev/null; then
+        echo "ERROR: Git checkout failed"
         exit 1
     fi
+
+    # Check that the specified branch really contains the commit
+    commit_hash=`git rev-parse --revs-only $commit --`
+    if [ -z "$commit_hash" -o "`git merge-base $branch $commit`" != "$commit_hash" ]; then
+        echo "ERROR: branch $branch does not contain commit $commit"
+        exit 1
+    fi
+    git reset --hard $commit > /dev/null
 fi
 
 # Setup build environment
