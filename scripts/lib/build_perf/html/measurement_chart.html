@@ -1,4 +1,5 @@
 <script type="text/javascript">
+  chartsDrawing += 1;
   google.charts.setOnLoadCallback(drawChart_{{ chart_elem_id }});
   function drawChart_{{ chart_elem_id }}() {
     var data = new google.visualization.DataTable();
@@ -39,10 +40,9 @@
       png_div = document.getElementById('{{ chart_elem_id }}_png');
       png_div.outerHTML = '<a id="{{ chart_elem_id }}_png" href="' + chart.getImageURI() + '">PNG</a>';
       console.log("CHART READY: {{ chart_elem_id }}");
-      {% if last_chart == true %}
+      chartsDrawing -= 1;
+      if (chartsDrawing == 0)
         console.log("ALL CHARTS READY");
-      {% endif %}
-      //console.log(chart_div.innerHTML);
     });
     chart.draw(data, options);
 }

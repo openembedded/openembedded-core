@@ -6,17 +6,14 @@
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <script type="text/javascript">
 google.charts.load('current', {'packages':['corechart']});
+var chartsDrawing = 0;
 </script>
 
 {# Render measurement result charts #}
 {% for test in test_data %}
-  {% set test_loop = loop %}
   {% if test.status == 'SUCCESS' %}
     {% for measurement in test.measurements %}
       {% set chart_elem_id = test.name + '_' + measurement.name + '_chart' %}
-      {% if test_loop.last and loop.last %}
-        {% set last_chart = true %}
-      {% endif %}
       {% include 'measurement_chart.html' %}
     {% endfor %}
   {% endif %}
