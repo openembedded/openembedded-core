@@ -234,7 +234,7 @@ def print_diff_report(metadata_l, data_l, metadata_r, data_r):
     meta_diff = metadata_diff(metadata_l, metadata_r)
     rows = []
     row_fmt = ['{:{wid}} ', '{:<{wid}}   ', '{:<{wid}}']
-    rows = [['', 'CURRENT COMMIT', 'OOMPARING WITH']]
+    rows = [['', 'CURRENT COMMIT', 'COMPARING WITH']]
     for key, val in meta_diff.items():
         # Shorten commit hashes
         if key == 'commit':
