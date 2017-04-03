@@ -155,6 +155,14 @@ oe-build-perf-test --out-dir "$results_dir" \
                    "${oe_build_perf_test_extra_opts[@]}" \
                    --lock-file "$base_dir/oe-build-perf.lock"
 
+case $? in
+    1)  echo "ERROR: oe-build-perf-test script failed!"
+        exit 1
+        ;;
+    2)  echo "NOTE: some tests failed!"
+        ;;
+esac
+
 # Commit results to git
 if [ -n "$results_repo" ]; then
     echo -e "\nArchiving results in $results_repo"
@@ -166,14 +174,6 @@ if [ -n "$results_repo" ]; then
         --notes "buildstats/{branch_name}" "$results_dir/buildstats.json" \
         "$results_dir"
 fi
-
-case $? in
-    1)  echo "ERROR: oe-build-perf-test script failed!"
-        exit 1
-        ;;
-    2)  echo "NOTE: some tests failed!"
-        ;;
-esac
 
 echo -ne "\n\n-----------------\n"
 echo "Global results file:"
