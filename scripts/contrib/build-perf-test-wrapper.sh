@@ -19,6 +19,7 @@
 # oe-build-perf-test and archives the results.
 
 script=`basename $0`
+script_dir=$(realpath $(dirname $0))
 archive_dir=~/perf-results/archives
 
 usage () {
@@ -32,6 +33,7 @@ Optional arguments:
   -c COMMITISH      test (checkout) this commit, <branch>:<commit> can be
                     specified to test specific commit of certain branch
   -C GIT_REPO       commit results into Git
+  -E EMAIL_ADDR     send email report
   -P GIT_REMOTE     push results to a remote Git repository
   -w WORK_DIR       work dir for this script
                     (default: GIT_TOP_DIR/build-perf-test)
@@ -39,12 +41,16 @@ Optional arguments:
 EOF
 }
 
+get_os_release_var () {
+    ( source /etc/os-release; eval echo '$'$1 )
+}
+
 
 # Parse command line arguments
 commitish=""
 oe_build_perf_test_extra_opts=()
 oe_git_archive_extra_opts=()
-while getopts "ha:c:C:P:w:x" opt; do
+while getopts "ha:c:C:E:P:w:x" opt; do
     case $opt in
         h)  usage
             exit 0
@@ -54,6 +60,8 @@ while getopts "ha:c:C:P:w:x" opt; do
         c)  commitish=$OPTARG
             ;;
         C)  results_repo=`realpath -s "$OPTARG"`
+            ;;
+        E)  email_to="$OPTARG"
             ;;
         P)  oe_git_archive_extra_opts+=("--push" "$OPTARG")
             ;;
@@ -178,7 +186,17 @@ if [ -n "$results_repo" ]; then
         --notes "buildstats/{branch_name}" "$results_dir/buildstats.json" \
         "${oe_git_archive_extra_opts[@]}" \
         "$results_dir"
+
+    # Send email report
+    if [ -n "$email_to" ]; then
+        echo -e "\nEmailing test report"
+        os_name=`get_os_release_var PRETTY_NAME`
+        oe-build-perf-report -r "$results_repo" > report.txt
+        oe-build-perf-report -r "$results_repo" --html > report.html
+        "$script_dir"/oe-build-perf-report-email.py --to "$email_to" --subject "Build Perf Test Report for $os_name" --text report.txt --html report.html
+    fi
 fi
+
 
 echo -ne "\n\n-----------------\n"
 echo "Global results file:"
