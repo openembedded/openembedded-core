@@ -1,4 +1,4 @@
 require u-boot-common_${PV}.inc
 require u-boot.inc
 
-DEPENDS += "dtc-native"
+DEPENDS += "bc-native dtc-native"
