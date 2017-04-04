@@ -26,22 +26,27 @@ class DnfBasicTest(DnfTest):
                       'RPM is not the primary package manager')
     @OEHasPackage(['dnf'])
     @OETestDepends(['ssh.SSHTest.test_ssh'])
+    @OETestID(1735)
     def test_dnf_help(self):
         self.dnf('--help')
 
     @OETestDepends(['dnf.DnfBasicTest.test_dnf_help'])
+    @OETestID(1739)
     def test_dnf_version(self):
         self.dnf('--version')
 
     @OETestDepends(['dnf.DnfBasicTest.test_dnf_help'])
+    @OETestID(1737)
     def test_dnf_info(self):
         self.dnf('info dnf')
 
     @OETestDepends(['dnf.DnfBasicTest.test_dnf_help'])
+    @OETestID(1738)
     def test_dnf_search(self):
         self.dnf('search dnf')
 
     @OETestDepends(['dnf.DnfBasicTest.test_dnf_help'])
+    @OETestID(1736)
     def test_dnf_history(self):
         self.dnf('history')
 
@@ -65,6 +70,7 @@ class DnfRepoTest(DnfTest):
         self.dnf(" ".join(cmdlinerepoopts) + " --nogpgcheck " + command)
 
     @OETestDepends(['dnf.DnfBasicTest.test_dnf_help'])
+    @OETestID(1744)
     def test_dnf_makecache(self):
         self.dnf_with_repo('makecache')
 
@@ -75,19 +81,23 @@ class DnfRepoTest(DnfTest):
 #        self.dnf_with_repo('repolist')
 
     @OETestDepends(['dnf.DnfRepoTest.test_dnf_makecache'])
+    @OETestID(1746)
     def test_dnf_repoinfo(self):
         self.dnf_with_repo('repoinfo')
 
     @OETestDepends(['dnf.DnfRepoTest.test_dnf_makecache'])
+    @OETestID(1740)
     def test_dnf_install(self):
         self.dnf_with_repo('install -y run-postinsts-dev')
 
     @OETestDepends(['dnf.DnfRepoTest.test_dnf_install'])
+    @OETestID(1741)
     def test_dnf_install_dependency(self):
         self.dnf_with_repo('remove -y run-postinsts')
         self.dnf_with_repo('install -y run-postinsts-dev')
 
     @OETestDepends(['dnf.DnfRepoTest.test_dnf_install_dependency'])
+    @OETestID(1742)
     def test_dnf_install_from_disk(self):
         self.dnf_with_repo('remove -y run-postinsts-dev')
         self.dnf_with_repo('install -y --downloadonly run-postinsts-dev')
@@ -96,6 +106,7 @@ class DnfRepoTest(DnfTest):
         self.dnf_with_repo('install -y %s' % output)
 
     @OETestDepends(['dnf.DnfRepoTest.test_dnf_install_from_disk'])
+    @OETestID(1743)
     def test_dnf_install_from_http(self):
         output = subprocess.check_output('%s %s -name run-postinsts-dev*' % (bb.utils.which(os.getenv('PATH'), "find"),
                                                                            os.path.join(self.tc.td['WORKDIR'], 'oe-testimage-repo')), shell=True).decode("utf-8")
@@ -105,6 +116,7 @@ class DnfRepoTest(DnfTest):
         self.dnf_with_repo('install -y %s' % url)
 
     @OETestDepends(['dnf.DnfRepoTest.test_dnf_install'])
+    @OETestID(1745)
     def test_dnf_reinstall(self):
         self.dnf_with_repo('reinstall -y run-postinsts-dev')
 
