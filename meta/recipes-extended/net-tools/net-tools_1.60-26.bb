@@ -70,21 +70,15 @@ python do_patch() {
     bb.build.exec_func('patch_do_patch', d)
 }
 
-# i18n only enabled for the target, doesn't build for native
-# and isn't needed there.
-disable_i18n() {
-	sed -i -e 's/^I18N=1/# I18N=1/' ${S}/config.make
-}
-disable_i18n_class-target () {
-	:
-}
-
 do_configure() {
 	# net-tools has its own config mechanism requiring "make config"
 	# we pre-generate desired options and copy to source directory instead
 	cp ${WORKDIR}/net-tools-config.h    ${S}/config.h
 	cp ${WORKDIR}/net-tools-config.make ${S}/config.make
-	disable_i18n
+
+	if [ "${USE_NLS}" = "no" ]; then
+		sed -i -e 's/^I18N=1/# I18N=1/' ${S}/config.make
+	fi
 }
 
 do_compile() {
