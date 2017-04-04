@@ -32,21 +32,23 @@ SRC_URI[testtar.sha256sum] = "96151685cec997e1f9f3387e3626d61e6284d4d6e66e0e440c
 
 BINCONFIG = "${bindir}/xml2-config"
 
-inherit autotools pkgconfig binconfig-disabled pythonnative ptest
-
-RDEPENDS_${PN}-ptest += "python-core"
-
-RDEPENDS_${PN}-python += "python-core"
-
-RDEPENDS_${PN}-ptest_append_libc-glibc = " glibc-gconv-ebcdic-us glibc-gconv-ibm1141"
-
-export PYTHON_SITE_PACKAGES="${PYTHON_SITEPACKAGES_DIR}"
-
 PACKAGECONFIG ??= "python \
     ${@bb.utils.filter('DISTRO_FEATURES', 'ipv6', d)} \
 "
 PACKAGECONFIG[python] = "--with-python=${PYTHON},--without-python,python"
 PACKAGECONFIG[ipv6] = "--enable-ipv6,--disable-ipv6,"
+
+inherit autotools pkgconfig binconfig-disabled ptest
+
+inherit ${@bb.utils.contains('PACKAGECONFIG', 'python', 'pythonnative', '', d)}
+
+RDEPENDS_${PN}-ptest += "make ${@bb.utils.contains('PACKAGECONFIG', 'python', 'python-core', '', d)}"
+
+RDEPENDS_${PN}-python += "${@bb.utils.contains('PACKAGECONFIG', 'python', 'python-core', '', d)}"
+
+RDEPENDS_${PN}-ptest_append_libc-glibc = " glibc-gconv-ebcdic-us glibc-gconv-ibm1141"
+
+export PYTHON_SITE_PACKAGES="${PYTHON_SITEPACKAGES_DIR}"
 
 # WARNING: zlib is require for RPM use
 EXTRA_OECONF = "--without-debug --without-legacy --with-catalog --without-docbook --with-c14n --without-lzma --with-fexceptions"
