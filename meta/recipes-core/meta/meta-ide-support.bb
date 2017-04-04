@@ -4,6 +4,7 @@ LICENSE = "MIT"
 
 DEPENDS = "virtual/libc gdb-cross-${TARGET_ARCH} qemu-native qemu-helper-native unfs3-native"
 PR = "r3"
+RM_WORK_EXCLUDE += "${PN}"
 
 inherit meta toolchain-scripts nopackages
 
