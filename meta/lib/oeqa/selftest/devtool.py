@@ -1634,18 +1634,19 @@ class DevtoolTests(DevtoolBase):
         #verify the modification.
         features = 'MACHINE = "qemux86"\n'
         self.write_config(features)
+        kernel_provider = get_bb_var('PREFERRED_PROVIDER_virtual/kernel')
         # Clean up the enviroment
-        bitbake('linux-yocto -c cleansstate')
+        bitbake('%s -c cleansstate' % kernel_provider)
         tempdir = tempfile.mkdtemp(prefix='devtoolqa')
         self.track_for_cleanup(tempdir)
         self.track_for_cleanup(self.workspacedir)
         self.add_command_to_tearDown('bitbake-layers remove-layer */workspace')
-        self.add_command_to_tearDown('bitbake -c clean linux-yocto')
+        self.add_command_to_tearDown('bitbake -c clean %s' % kernel_provider)
         #Step 1
         #Here is just generated the config file instead of all the kernel to optimize the
         #time of executing this test case.
-        bitbake('linux-yocto -c configure')
-        bbconfig = os.path.join(get_bb_var('B',"linux-yocto"),'.config')
+        bitbake('%s -c configure' % kernel_provider)
+        bbconfig = os.path.join(get_bb_var('B', kernel_provider),'.config')
         buildir= get_bb_var('TOPDIR')
         #Step 2
         runCmd('cp %s %s' % (bbconfig, buildir))
@@ -1654,7 +1655,7 @@ class DevtoolTests(DevtoolBase):
 
         tmpconfig = os.path.join(buildir, '.config')
         #Step 3
-        bitbake('linux-yocto -c clean')
+        bitbake('%s -c clean' % kernel_provider)
         #Step 4.1
         runCmd('devtool modify virtual/kernel -x %s' % tempdir)
         self.assertTrue(os.path.exists(os.path.join(tempdir, 'Makefile')),
@@ -1664,10 +1665,10 @@ class DevtoolTests(DevtoolBase):
         diff = runCmd('diff %s %s' % (tmpconfig, configfile))
         self.assertEqual(0,diff.status,'Kernel .config file is not the same using bitbake and devtool')
         #Step 4.3
-        #NOTE: virtual/kernel is mapped to linux-yocto
-        result = runCmd('devtool build linux-yocto')
+        #NOTE: virtual/kernel is mapped to kernel_provider
+        result = runCmd('devtool build %s' % kernel_provider)
         self.assertEqual(0,result.status,'Cannot build kernel using `devtool build`')
-        kernelfile = os.path.join(get_bb_var('KBUILD_OUTPUT',"linux-yocto"), 'vmlinux')
+        kernelfile = os.path.join(get_bb_var('KBUILD_OUTPUT', kernel_provider), 'vmlinux')
         self.assertTrue(os.path.exists(kernelfile),'Kernel was not build correctly')
 
         #Modify the kernel source, this is specific for qemux86
@@ -1681,11 +1682,11 @@ class DevtoolTests(DevtoolBase):
         modconf = runCmd("sed -i 's/CONFIG_SG_POOL=y/%s/' %s" % (modconfopt, codeconfigfile))
         self.assertEqual(0,modconf.status,'Modification to %s failed' % codeconfigfile)
         #Build again kernel with devtool
-        rebuild = runCmd('devtool build linux-yocto')
+        rebuild = runCmd('devtool build %s' % kernel_provider)
         self.assertEqual(0,rebuild.status,'Fail to build kernel after modification of source and config')
         #Step 4.4
-        bzimagename = 'bzImage-' + get_bb_var('KERNEL_VERSION_NAME',"linux-yocto")
-        bzimagefile = os.path.join(get_bb_var('D',"linux-yocto"),'boot', bzimagename)
+        bzimagename = 'bzImage-' + get_bb_var('KERNEL_VERSION_NAME', kernel_provider)
+        bzimagefile = os.path.join(get_bb_var('D', kernel_provider),'boot', bzimagename)
         checkmodcode = runCmd("grep '%s' %s" % (modstring, bzimagefile))
         self.assertEqual(0,checkmodcode.status,'Modification on kernel source failed')
         #Step 4.5
