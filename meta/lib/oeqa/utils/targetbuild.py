@@ -8,14 +8,19 @@ import os
 import re
 import bb.utils
 import subprocess
+import tempfile
 from abc import ABCMeta, abstractmethod
 
 class BuildProject(metaclass=ABCMeta):
 
-    def __init__(self, d, uri, foldername=None, tmpdir="/tmp/"):
+    def __init__(self, d, uri, foldername=None, tmpdir=None):
         self.d = d
         self.uri = uri
         self.archive = os.path.basename(uri)
+        if not tmpdir:
+            tmpdir = self.d.getVar('WORKDIR')
+            if not tmpdir:
+                tmpdir = tempfile.mkdtemp(prefix='buildproject')
         self.localarchive = os.path.join(tmpdir,self.archive)
         if foldername:
             self.fname = foldername
@@ -24,7 +29,6 @@ class BuildProject(metaclass=ABCMeta):
 
     # Download self.archive to self.localarchive
     def _download_archive(self):
-
         dl_dir = self.d.getVar("DL_DIR")
         if dl_dir and os.path.exists(os.path.join(dl_dir, self.archive)):
             bb.utils.copyfile(os.path.join(dl_dir, self.archive), self.localarchive)
@@ -73,7 +77,7 @@ class TargetBuildProject(BuildProject):
     def __init__(self, target, d, uri, foldername=None):
         self.target = target
         self.targetdir = "~/"
-        BuildProject.__init__(self, d, uri, foldername, tmpdir="/tmp")
+        BuildProject.__init__(self, d, uri, foldername)
 
     def download_archive(self):
 
