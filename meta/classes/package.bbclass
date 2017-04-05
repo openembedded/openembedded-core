@@ -1380,6 +1380,7 @@ python emit_pkgdata() {
         write_if_exists(sf, pkg, 'PKG')
         write_if_exists(sf, pkg, 'ALLOW_EMPTY')
         write_if_exists(sf, pkg, 'FILES')
+        write_if_exists(sf, pkg, 'CONFFILES')
         write_if_exists(sf, pkg, 'pkg_postinst')
         write_if_exists(sf, pkg, 'pkg_postrm')
         write_if_exists(sf, pkg, 'pkg_preinst')
