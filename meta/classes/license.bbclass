@@ -505,7 +505,7 @@ def find_license_files(d):
         bb.warn("%s: Failed to parse it's LICENSE field." % (d.getVar('PF')))
     # Add files from LIC_FILES_CHKSUM to list of license files
     lic_chksum_paths = defaultdict(OrderedDict)
-    for path, data in lic_chksums.items():
+    for path, data in sorted(lic_chksums.items()):
         lic_chksum_paths[os.path.basename(path)][data] = (os.path.join(srcdir, path), data[1], data[2])
     for basename, files in lic_chksum_paths.items():
         if len(files) == 1:
