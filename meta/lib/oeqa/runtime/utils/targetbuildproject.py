@@ -8,8 +8,7 @@ class TargetBuildProject(BuildProject):
     def __init__(self, target, uri, foldername=None, dl_dir=None):
         self.target = target
         self.targetdir = "~/"
-        BuildProject.__init__(self, uri, foldername, tmpdir="/tmp",
-                dl_dir=dl_dir)
+        BuildProject.__init__(self, uri, foldername, dl_dir=dl_dir)
 
     def download_archive(self):
         self._download_archive()
