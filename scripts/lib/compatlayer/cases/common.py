@@ -2,9 +2,8 @@
 # Released under the MIT license (see COPYING.MIT)
 
 import os
-import subprocess
 import unittest
-from compatlayer import get_signatures, LayerType
+from compatlayer import get_signatures, LayerType, check_command
 from compatlayer.case import OECompatLayerTestCase
 
 class CommonCompatLayer(OECompatLayerTestCase):
@@ -20,26 +19,12 @@ class CommonCompatLayer(OECompatLayerTestCase):
                 msg="Layer contains README file but is empty.")
 
     def test_parse(self):
-        try:
-            output = subprocess.check_output('bitbake -p', shell=True,
-                    stderr=subprocess.PIPE)
-        except subprocess.CalledProcessError as e:
-            import traceback
-            exc = traceback.format_exc()
-            msg = 'Layer %s failed to parse.\n%s\n%s\n' % (self.tc.layer['name'],
-                    exc, e.output.decode('utf-8'))
-            raise RuntimeError(msg)
+        check_command('Layer %s failed to parse.' % self.tc.layer['name'],
+                      'bitbake -p')
 
     def test_show_environment(self):
-        try:
-            output = subprocess.check_output('bitbake -e', shell=True,
-                    stderr=subprocess.PIPE)
-        except subprocess.CalledProcessError as e:
-            import traceback
-            exc = traceback.format_exc()
-            msg = 'Layer %s failed to show environment.\n%s\n%s\n' % \
-                    (self.tc.layer['name'], exc, e.output.decode('utf-8'))
-            raise RuntimeError(msg)
+        check_command('Layer %s failed to show environment.' % self.tc.layer['name'],
+                      'bitbake -e')
 
     def test_signatures(self):
         if self.tc.layer['type'] == LayerType.SOFTWARE:

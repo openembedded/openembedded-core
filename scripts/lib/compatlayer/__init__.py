@@ -4,6 +4,7 @@
 # Released under the MIT license (see COPYING.MIT)
 
 import os
+import subprocess
 from enum import Enum
 
 class LayerType(Enum):
@@ -199,8 +200,20 @@ def add_layer(bblayersconf, layer, layers, logger):
 
     return True
 
+def check_command(error_msg, cmd):
+    '''
+    Run a command under a shell, capture stdout and stderr in a single stream,
+    throw an error when command returns non-zero exit code. Returns the output.
+    '''
+
+    p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    output, _ = p.communicate()
+    if p.returncode:
+        msg = "%s\nCommand: %s\nOutput:\n%s" % (error_msg, cmd, output.decode('utf-8'))
+        raise RuntimeError(msg)
+    return output
+
 def get_signatures(builddir, failsafe=False):
-    import subprocess
     import re
 
     # some recipes needs to be excluded like meta-world-pkgdata
@@ -214,12 +227,8 @@ def get_signatures(builddir, failsafe=False):
     if failsafe:
         cmd += '-k '
     cmd += '-S none world'
-    p = subprocess.Popen(cmd, shell=True,
-                         stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-    output, _ = p.communicate()
-    if p.returncode:
-        msg = "Generating signatures failed. This might be due to some parse error and/or general layer incompatibilities.\nCommand: %s\nOutput:\n%s" % (cmd, output.decode('utf-8'))
-        raise RuntimeError(msg)
+    check_command('Generating signatures failed. This might be due to some parse error and/or general layer incompatibilities.',
+                  cmd)
     sigs_file = os.path.join(builddir, 'locked-sigs.inc')
 
     sig_regex = re.compile("^(?P<task>.*:.*):(?P<hash>.*) .$")
