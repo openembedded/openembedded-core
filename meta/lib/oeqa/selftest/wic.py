@@ -77,7 +77,10 @@ class Wic(oeSelfTest):
         # clean up which can result in the native tools built earlier in
         # setUpClass being unavailable.
         if not Wic.image_is_ready:
-            bitbake('wic-tools')
+            if get_bb_var('USE_NLS') == 'yes':
+                bitbake('wic-tools')
+            else:
+                self.skipTest('wic-tools cannot be built due its (intltool|gettext)-native dependency and NLS disable')
 
             bitbake('core-image-minimal')
             Wic.image_is_ready = True
