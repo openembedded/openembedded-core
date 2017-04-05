@@ -3,7 +3,7 @@
 
 import os
 import unittest
-from compatlayer import get_signatures, LayerType, check_command
+from compatlayer import get_signatures, LayerType, check_command, get_depgraph
 from compatlayer.case import OECompatLayerTestCase
 
 class CommonCompatLayer(OECompatLayerTestCase):
@@ -31,21 +31,49 @@ class CommonCompatLayer(OECompatLayerTestCase):
             raise unittest.SkipTest("Layer %s isn't BSP or DISTRO one." \
                      % self.tc.layer['name'])
 
+        # task -> (old signature, new signature)
         sig_diff = {}
-
         curr_sigs = get_signatures(self.td['builddir'], failsafe=True)
         for task in self.td['sigs']:
-            if task not in curr_sigs:
-                continue
+            if task in curr_sigs and \
+               self.td['sigs'][task] != curr_sigs[task]:
+                sig_diff[task] = (self.td['sigs'][task], curr_sigs[task])
 
-            if self.td['sigs'][task] != curr_sigs[task]:
-                sig_diff[task] = '%s -> %s' % \
-                        (self.td['sigs'][task], curr_sigs[task])
-
-        detail = ''
         if sig_diff:
-            for task in sig_diff:
-                detail += "%s changed %s\n" % (task, sig_diff[task])
-        self.assertFalse(bool(sig_diff), "Layer %s changed signatures.\n%s" % \
-                (self.tc.layer['name'], detail))
+            # Beware, depgraph uses task=<pn>.<taskname> whereas get_signatures()
+            # uses <pn>:<taskname>. Need to convert sometimes. The output follows
+            # the convention from get_signatures() because that seems closer to
+            # normal bitbake output.
+            def sig2graph(task):
+                pn, taskname = task.rsplit(':', 1)
+                return pn + '.' + taskname
+            def graph2sig(task):
+                pn, taskname = task.rsplit('.', 1)
+                return pn + ':' + taskname
+            depgraph = get_depgraph()
+            depends = depgraph['tdepends']
 
+            # If a task A has a changed signature, but none of its
+            # dependencies, then we need to report it because it is
+            # the one which introduces a change. Any task depending on
+            # A (directly or indirectly) will also have a changed
+            # signature, but we don't need to report it. It might have
+            # its own changes, which will become apparent once the
+            # issues that we do report are fixed and the test gets run
+            # again.
+            sig_diff_filtered = []
+            for task, (old_sig, new_sig) in sig_diff.items():
+                deps_tainted = False
+                for dep in depends.get(sig2graph(task), ()):
+                    if graph2sig(dep) in sig_diff:
+                        deps_tainted = True
+                        break
+                if not deps_tainted:
+                    sig_diff_filtered.append((task, old_sig, new_sig))
+
+            msg = []
+            msg.append('Layer %s changed %d signatures, initial differences (first hash without, second with layer):' %
+                       (self.tc.layer['name'], len(sig_diff)))
+            for diff in sorted(sig_diff_filtered):
+                msg.append('   %s: %s -> %s' % diff)
+            self.assertTrue(False, '\n'.join(msg))

@@ -7,6 +7,8 @@ import os
 import subprocess
 from enum import Enum
 
+import bb.tinfoil
+
 class LayerType(Enum):
     BSP = 0
     DISTRO = 1
@@ -252,3 +254,33 @@ def get_signatures(builddir, failsafe=False):
         raise RuntimeError('Can\'t load signatures from %s' % sigs_file)
 
     return sigs
+
+def get_depgraph(targets=['world']):
+    '''
+    Returns the dependency graph for the given target(s).
+    The dependency graph is taken directly from DepTreeEvent.
+    '''
+    depgraph = None
+    with bb.tinfoil.Tinfoil() as tinfoil:
+        tinfoil.prepare(config_only=False)
+        tinfoil.set_event_mask(['bb.event.NoProvider', 'bb.event.DepTreeGenerated', 'bb.command.CommandCompleted'])
+        if not tinfoil.run_command('generateDepTreeEvent', targets, 'do_build'):
+            raise RuntimeError('starting generateDepTreeEvent failed')
+        while True:
+            event = tinfoil.wait_event(timeout=1000)
+            if event:
+                if isinstance(event, bb.command.CommandFailed):
+                    raise RuntimeError('Generating dependency information failed: %s' % event.error)
+                elif isinstance(event, bb.command.CommandCompleted):
+                    break
+                elif isinstance(event, bb.event.NoProvider):
+                    if event._reasons:
+                        raise RuntimeError('Nothing provides %s: %s' % (event._item, event._reasons))
+                    else:
+                        raise RuntimeError('Nothing provides %s.' % (event._item))
+                elif isinstance(event, bb.event.DepTreeGenerated):
+                    depgraph = event._depgraph
+
+    if depgraph is None:
+        raise RuntimeError('Could not retrieve the depgraph.')
+    return depgraph
