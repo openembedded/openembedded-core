@@ -82,3 +82,7 @@ do_populate_sysroot[sstate-outputdirs] = "${STAGING_DIR}-components/${PACKAGE_AR
 inherit nopackages
 
 COMPILERINITIAL = "-initial"
+
+
+# We really only want this built by things that need it, not any recrdeptask
+deltask do_build

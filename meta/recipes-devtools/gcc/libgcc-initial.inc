@@ -15,3 +15,6 @@ EXTRA_OECONF += "--disable-shared"
 COMPILERINITIAL = "-initial"
 
 inherit nopackages
+
+# We really only want this built by things that need it, not any recrdeptask
+deltask do_build
