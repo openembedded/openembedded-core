@@ -56,6 +56,7 @@ SRC_URI = "http://www.busybox.net/downloads/busybox-${PV}.tar.bz2;name=tarball \
            file://makefile-libbb-race.patch \
            file://0001-libiproute-handle-table-ids-larger-than-255.patch \
            file://ifupdown-pass-interface-device-name-for-ipv6-route-c.patch \
+           file://BUG9071_buffer_overflow_arp.patch \
 "
 SRC_URI_append_libc-musl = " file://musl.cfg "
 
