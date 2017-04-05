@@ -8,14 +8,17 @@ import os
 import re
 import subprocess
 import shutil
+import tempfile
 
 from abc import ABCMeta, abstractmethod
 
 class BuildProject(metaclass=ABCMeta):
-    def __init__(self, uri, foldername=None, tmpdir="/tmp/", dl_dir=None):
+    def __init__(self, uri, foldername=None, tmpdir=None, dl_dir=None):
         self.uri = uri
         self.archive = os.path.basename(uri)
-        self.localarchive = os.path.join(tmpdir,self.archive)
+        if not tmpdir:
+            tmpdir = tempfile.mkdtemp(prefix='buildproject')
+        self.localarchive = os.path.join(tmpdir, self.archive)
         self.dl_dir = dl_dir
         if foldername:
             self.fname = foldername
