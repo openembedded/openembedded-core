@@ -70,22 +70,6 @@ def can_delete_FILESPATH(cfgdata, d):
             return False
     return expected != unexpanded
 
-def can_delete_FILESDIR(cfgdata, d):
-    expected = cfgdata.get("FILESDIR")
-    #expected = "${@bb.utils.which(d.getVar('FILESPATH'), '.')}"
-    unexpanded = d.getVar("FILESDIR", False)
-    if unexpanded is None:
-        return False
-
-    expanded = os.path.normpath(d.getVar("FILESDIR"))
-    filespath = d.getVar("FILESPATH").split(":")
-    filespath = [os.path.normpath(f) for f in filespath if os.path.exists(f)]
-
-    return unexpanded != expected and \
-           os.path.exists(expanded) and \
-           (expanded in filespath or
-            expanded == d.expand(expected))
-
 def can_delete_others(p, cfgdata, d):
     for k in ["S", "PV", "PN", "DESCRIPTION", "DEPENDS",
               "SECTION", "PACKAGES", "EXTRA_OECONF", "EXTRA_OEMAKE"]:
@@ -112,7 +96,6 @@ python do_recipe_sanity () {
     p = "%s %s %s" % (d.getVar("PN"), d.getVar("PV"), d.getVar("PR"))
 
     sanitychecks = [
-        (can_delete_FILESDIR, "candidate for removal of FILESDIR"),
         (can_delete_FILESPATH, "candidate for removal of FILESPATH"),
         #(can_use_autotools_base, "candidate for use of autotools_base"),
         (incorrect_nonempty_PACKAGES, "native or cross recipe with non-empty PACKAGES"),
