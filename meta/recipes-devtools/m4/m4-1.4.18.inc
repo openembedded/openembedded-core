@@ -15,5 +15,8 @@ SRC_URI_append_class-target = "\
            file://0001-Unset-need_charset_alias-when-building-for-musl.patch \
 	   "
 
+# Fix "Argument list too long" error when len(TMPDIR) = 410
+acpaths = "-I ./m4"
+
 SRC_URI[md5sum] = "a077779db287adf4e12a035029002d28"
 SRC_URI[sha256sum] = "ab2633921a5cd38e48797bf5521ad259bdc4b979078034a3b790d7fec5493fab"
