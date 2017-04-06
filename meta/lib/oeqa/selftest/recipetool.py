@@ -382,6 +382,8 @@ class RecipetoolTests(RecipetoolBase):
 
     @testcase(1194)
     def test_recipetool_create_git(self):
+        if 'x11' not in get_bb_var('DISTRO_FEATURES'):
+            self.skipTest('Test requires x11 as distro feature')
         # Ensure we have the right data in shlibs/pkgdata
         bitbake('libpng pango libx11 libxext jpeg libcheck')
         # Try adding a recipe
