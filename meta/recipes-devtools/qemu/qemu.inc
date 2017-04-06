@@ -29,7 +29,7 @@ EXTRA_OECONF = " \
     --with-system-pixman \
     --extra-cflags='${CFLAGS}' \
     "
-EXTRA_OECONF_append_class-native = " --python=${USRBINPATH}/python2"
+EXTRA_OECONF_append_class-native = " --python=${USRBINPATH}/python2.7"
 
 EXTRA_OEMAKE_append_class-native = " LD='${LD}' AR='${AR}' OBJCOPY='${OBJCOPY}' LDFLAGS='${LDFLAGS}'"
 
