@@ -693,8 +693,8 @@ class BaseConfig(object):
         # artefacts are relative to that file, rather than in whatever
         # directory DEPLOY_DIR_IMAGE in the conf file points to.
         if self.qbconfload:
-            imgdir = os.path.dirname(self.qemuboot)
-            if imgdir != self.get('DEPLOY_DIR_IMAGE'):
+            imgdir = os.path.realpath(os.path.dirname(self.qemuboot))
+            if imgdir != os.path.realpath(self.get('DEPLOY_DIR_IMAGE')):
                 logger.info('Setting DEPLOY_DIR_IMAGE to folder containing %s (%s)' % (self.qemuboot, imgdir))
                 self.set('DEPLOY_DIR_IMAGE', imgdir)
 
