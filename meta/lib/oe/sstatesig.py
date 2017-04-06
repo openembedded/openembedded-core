@@ -254,9 +254,6 @@ def find_siginfo(pn, taskname, taskhashlist, d):
     import fnmatch
     import glob
 
-    if taskhashlist:
-        hashfiles = {}
-
     if not taskname:
         # We have to derive pn and taskname
         key = pn
@@ -266,7 +263,14 @@ def find_siginfo(pn, taskname, taskhashlist, d):
         if key.startswith('virtual:native:'):
             pn = pn + '-native'
 
+    hashfiles = {}
     filedates = {}
+
+    def get_hashval(siginfo):
+        if siginfo.endswith('.siginfo'):
+            return siginfo.rpartition(':')[2].partition('_')[0]
+        else:
+            return siginfo.rpartition('.')[2]
 
     # First search in stamps dir
     localdata = d.createCopy()
@@ -297,6 +301,8 @@ def find_siginfo(pn, taskname, taskhashlist, d):
                 filedates[fullpath] = os.stat(fullpath).st_mtime
             except OSError:
                 continue
+            hashval = get_hashval(fullpath)
+            hashfiles[hashval] = fullpath
 
     if not taskhashlist or (len(filedates) < 2 and not foundall):
         # That didn't work, look in sstate-cache
@@ -320,9 +326,11 @@ def find_siginfo(pn, taskname, taskhashlist, d):
 
             matchedfiles = glob.glob(filespec)
             for fullpath in matchedfiles:
-                if taskhashlist:
-                    hashfiles[hashval] = fullpath
-                else:
+                actual_hashval = get_hashval(fullpath)
+                if actual_hashval in hashfiles:
+                    continue
+                hashfiles[hashval] = fullpath
+                if not taskhashlist:
                     try:
                         filedates[fullpath] = os.stat(fullpath).st_mtime
                     except:
