@@ -24,6 +24,7 @@
 """Test cases for wic."""
 
 import os
+import sys
 import unittest
 
 from glob import glob
@@ -761,3 +762,31 @@ part /etc --source rootfs --ondisk mmcblk0 --fstype=ext4 --exclude-path bin/ --r
         self.assertEqual(0, runCmd(cmd).status)
         self.remove_config(config)
         self.assertEqual(1, len(glob(self.resultdir + "sdimage-bootpart-*direct")))
+
+    def test_sparse_copy(self):
+        """Test sparse_copy with FIEMAP and SEEK_HOLE filemap APIs"""
+        libpath = os.path.join(get_bb_var('COREBASE'), 'scripts', 'lib', 'wic')
+        sys.path.insert(0, libpath)
+        from  filemap import FilemapFiemap, FilemapSeek, sparse_copy, ErrorNotSupp
+        with NamedTemporaryFile("w", suffix=".wic-sparse") as sparse:
+            src_name = sparse.name
+            src_size = 1024 * 10
+            sparse.truncate(src_size)
+            # write one byte to the file
+            with open(src_name, 'r+b') as sfile:
+                sfile.seek(1024 * 4)
+                sfile.write(b'\x00')
+            dest = sparse.name + '.out'
+            # copy src file to dest using different filemap APIs
+            for api in (FilemapFiemap, FilemapSeek, None):
+                if os.path.exists(dest):
+                    os.unlink(dest)
+                try:
+                    sparse_copy(sparse.name, dest, api=api)
+                except ErrorNotSupp:
+                    continue # skip unsupported API
+                dest_stat = os.stat(dest)
+                self.assertEqual(dest_stat.st_size, src_size)
+                # 8 blocks is 4K (physical sector size)
+                self.assertEqual(dest_stat.st_blocks, 8)
+            os.unlink(dest)
