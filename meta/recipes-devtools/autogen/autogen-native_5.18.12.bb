@@ -13,6 +13,7 @@ SRC_URI = "${GNU_MIRROR}/autogen/rel${PV}/autogen-${PV}.tar.gz \
            file://mk-tpl-config.sh-force-exit-value-to-be-0-in-subproc.patch \
            file://fix-script-err-when-processing-libguile.patch \
            file://0001-config-libopts.m4-regenerate-it-from-config-libopts..patch \
+           file://0002-autoopts-mk-tpl-config.sh-fix-perl-path.patch \
 "
 
 SRC_URI[md5sum] = "551d15ccbf5b5fc5658da375d5003389"
@@ -29,6 +30,8 @@ inherit autotools texinfo native pkgconfig
 # these environment variables ensure there isn't a relocation issue
 export GUILE_LOAD_PATH = "${STAGING_DATADIR_NATIVE}/guile/2.0"
 export GUILE_LOAD_COMPILED_PATH = "${STAGING_LIBDIR_NATIVE}/guile/2.0/ccache"
+
+export POSIX_SHELL = "/usr/bin/env sh"
 
 do_install_append () {
 	create_wrapper ${D}/${bindir}/autogen \
