@@ -243,7 +243,7 @@ def main(argv=None):
         html_report = None
         if args.html:
             scrape_html_report(args.html, outdir, args.phantomjs_args)
-            html_report = os.path.join(outdir, args.html)
+            html_report = os.path.join(outdir, os.path.basename(args.html))
 
         if args.to:
             log.info("Sending email to %s", ', '.join(args.to))
