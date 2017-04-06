@@ -421,7 +421,7 @@ class BaseConfig(object):
             elif arg.startswith('ovmf'):
                 self.ovmf_bios.append(arg)
             else:
-                # At last, assume is it the MACHINE
+                # At last, assume it is the MACHINE
                 if (not unknown_arg) or unknown_arg == arg:
                     unknown_arg = arg
                 else:
@@ -677,7 +677,7 @@ class BaseConfig(object):
             return
 
         if not os.path.exists(self.qemuboot):
-            raise Exception("Failed to find <image>.qemuboot.conf = %s (wrong image name or BSP does not support running under qemu?)." % self.qemuboot)
+            raise Exception("Failed to find %s (wrong image name or BSP does not support running under qemu?)." % self.qemuboot)
 
         logger.info('CONFFILE: %s' % self.qemuboot)
 
