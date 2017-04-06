@@ -318,22 +318,15 @@ def find_siginfo(pn, taskname, taskhashlist, d):
             sstatename = taskname[3:]
             filespec = '%s_%s.*.siginfo' % (localdata.getVar('SSTATE_PKG'), sstatename)
 
-            if hashval != '*':
-                sstatedir = "%s/%s" % (d.getVar('SSTATE_DIR'), hashval[:2])
-            else:
-                sstatedir = d.getVar('SSTATE_DIR')
-
-            for root, dirs, files in os.walk(sstatedir):
-                for fn in files:
-                    fullpath = os.path.join(root, fn)
-                    if fnmatch.fnmatch(fullpath, filespec):
-                        if taskhashlist:
-                            hashfiles[hashval] = fullpath
-                        else:
-                            try:
-                                filedates[fullpath] = os.stat(fullpath).st_mtime
-                            except:
-                                continue
+            matchedfiles = glob.glob(filespec)
+            for fullpath in matchedfiles:
+                if taskhashlist:
+                    hashfiles[hashval] = fullpath
+                else:
+                    try:
+                        filedates[fullpath] = os.stat(fullpath).st_mtime
+                    except:
+                        continue
 
     if taskhashlist:
         return hashfiles
