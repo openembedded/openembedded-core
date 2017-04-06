@@ -84,6 +84,7 @@ SRC_URI = "\
 "
 BACKPORTS = "\
            file://CVE-2016-6131.patch \
+           file://ubsan-fix-check-empty-string.patch \
 "
 SRC_URI[md5sum] = "677a7623c7ef6ab99881bc4e048debb6"
 SRC_URI[sha256sum] = "f06ae7f3f790fbf0f018f6d40e844451e6bc3b7bc96e128e63b09825c1f8b29f"
