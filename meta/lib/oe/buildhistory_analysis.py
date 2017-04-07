@@ -1,6 +1,6 @@
 # Report significant differences in the buildhistory repository since a specific revision
 #
-# Copyright (C) 2012 Intel Corporation
+# Copyright (C) 2012-2013, 2016-2017 Intel Corporation
 # Author: Paul Eggleton <paul.eggleton@linux.intel.com>
 #
 # Note: requires GitPython 0.3.1+
@@ -410,13 +410,58 @@ def compare_dict_blobs(path, ablob, bblob, report_all, report_ver):
     return changes
 
 
-def process_changes(repopath, revision1, revision2='HEAD', report_all=False, report_ver=False):
+def compare_siglists(a_blob, b_blob):
+    # FIXME collapse down a recipe's tasks?
+    alines = a_blob.data_stream.read().decode('utf-8').splitlines()
+    blines = b_blob.data_stream.read().decode('utf-8').splitlines()
+    keys = []
+    pnmap = {}
+    def readsigs(lines):
+        sigs = {}
+        for line in lines:
+            linesplit = line.split()
+            if len(linesplit) > 2:
+                sigs[linesplit[0]] = linesplit[2]
+                if not linesplit[0] in keys:
+                    keys.append(linesplit[0])
+                pnmap[linesplit[1]] = linesplit[0].rsplit('.', 1)[0]
+        return sigs
+    adict = readsigs(alines)
+    bdict = readsigs(blines)
+    out = []
+    changecount = 0
+    addcount = 0
+    removecount = 0
+    for key in keys:
+        siga = adict.get(key, None)
+        sigb = bdict.get(key, None)
+        if siga is not None and sigb is not None and siga != sigb:
+            out.append('%s changed from %s to %s' % (key, siga, sigb))
+            changecount += 1
+        elif siga is None:
+            out.append('%s was added' % key)
+            addcount += 1
+        elif sigb is None:
+            removecount += 1
+            out.append('%s was removed' % key)
+    out.append('Summary: %d tasks added, %d tasks removed, %d tasks modified (%.1f%%)' % (addcount, removecount, changecount, (changecount / float(len(bdict)) * 100)))
+    return '\n'.join(out)
+
+
+def process_changes(repopath, revision1, revision2='HEAD', report_all=False, report_ver=False, sigs=False):
     repo = git.Repo(repopath)
     assert repo.bare == False
     commit = repo.commit(revision1)
     diff = commit.diff(revision2)
 
     changes = []
+
+    if sigs:
+        for d in diff.iter_change_type('M'):
+            if d.a_blob.path == 'siglist.txt':
+                changes.append(compare_siglists(d.a_blob, d.b_blob))
+        return changes
+
     for d in diff.iter_change_type('M'):
         path = os.path.dirname(d.a_blob.path)
         if path.startswith('packages/'):

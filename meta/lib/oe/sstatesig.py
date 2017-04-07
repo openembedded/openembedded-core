@@ -217,9 +217,9 @@ class SignatureGeneratorOEBasicHash(bb.siggen.SignatureGeneratorBasicHash):
             for taskitem in self.taskhash:
                 (fn, task) = taskitem.rsplit(".", 1)
                 pn = self.lockedpnmap[fn]
-                tasks.append((pn, task, self.taskhash[taskitem]))
-            for (pn, task, taskhash) in sorted(tasks):
-                f.write('%s.%s %s\n' % (pn, task, taskhash))
+                tasks.append((pn, task, fn, self.taskhash[taskitem]))
+            for (pn, task, fn, taskhash) in sorted(tasks):
+                f.write('%s.%s %s %s\n' % (pn, task, fn, taskhash))
 
     def checkhashes(self, missed, ret, sq_fn, sq_task, sq_hash, sq_hashfn, d):
         warn_msgs = []
