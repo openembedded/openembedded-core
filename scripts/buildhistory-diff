@@ -46,6 +46,11 @@ def main():
         sys.exit(1)
 
     if not os.path.exists(options.buildhistory_dir):
+        if options.buildhistory_dir == 'buildhistory/':
+            cwd = os.getcwd()
+            if os.path.basename(cwd) == 'buildhistory':
+                options.buildhistory_dir = cwd
+    if not os.path.exists(options.buildhistory_dir):
         sys.stderr.write('Buildhistory directory "%s" does not exist\n\n' % options.buildhistory_dir)
         parser.print_help()
         sys.exit(1)
