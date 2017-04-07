@@ -193,7 +193,7 @@ if [ -n "$results_repo" ]; then
         os_name=`get_os_release_var PRETTY_NAME`
         oe-build-perf-report -r "$results_repo" > report.txt
         oe-build-perf-report -r "$results_repo" --html > report.html
-        "$script_dir"/oe-build-perf-report-email.py --to "$email_to" --subject "Build Perf Test Report for $os_name" --text report.txt --html report.html
+        "$script_dir"/oe-build-perf-report-email.py --to "$email_to" --subject "Build Perf Test Report for $os_name" --text report.txt --html report.html "${OE_BUILD_PERF_REPORT_EMAIL_EXTRA_ARGS[@]}"
     fi
 fi
 
