@@ -380,7 +380,7 @@ def auto_args(repo, args):
     """Guess arguments, if not defined by the user"""
     # Get the latest commit in the repo
     log.debug("Guessing arguments from the latest commit")
-    msg = repo.run_cmd(['log', '-1', '--branches', '--format=%b'])
+    msg = repo.run_cmd(['log', '-1', '--branches', '--remotes', '--format=%b'])
     for line in msg.splitlines():
         split = line.split(':', 1)
         if len(split) != 2:
