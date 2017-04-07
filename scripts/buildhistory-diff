@@ -34,8 +34,11 @@ def main():
             help = "Report all changes, not just the default significant ones",
             action="store_true", dest="report_all", default=False)
     parser.add_option("-s", "--signatures",
-            help = "Report on signature differences instead of output",
+            help = "Report list of signatures differing instead of output",
             action="store_true", dest="sigs", default=False)
+    parser.add_option("-S", "--signatures-with-diff",
+            help = "Report on actual signature differences instead of output (requires signature data to have been generated, either by running the actual tasks or using bitbake -S)",
+            action="store_true", dest="sigsdiff", default=False)
 
     options, args = parser.parse_args(sys.argv)
 
@@ -89,7 +92,7 @@ def main():
 
     import gitdb
     try:
-        changes = oe.buildhistory_analysis.process_changes(options.buildhistory_dir, fromrev, torev, options.report_all, options.report_ver, options.sigs)
+        changes = oe.buildhistory_analysis.process_changes(options.buildhistory_dir, fromrev, torev, options.report_all, options.report_ver, options.sigs, options.sigsdiff)
     except gitdb.exc.BadObject as e:
         if len(args) == 1:
             sys.stderr.write("Unable to find previous build revision in buildhistory repository\n\n")

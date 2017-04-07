@@ -13,7 +13,10 @@ import os.path
 import difflib
 import git
 import re
+import hashlib
+import collections
 import bb.utils
+import bb.tinfoil
 
 
 # How to display fields
@@ -410,7 +413,7 @@ def compare_dict_blobs(path, ablob, bblob, report_all, report_ver):
     return changes
 
 
-def compare_siglists(a_blob, b_blob):
+def compare_siglists(a_blob, b_blob, taskdiff=False):
     # FIXME collapse down a recipe's tasks?
     alines = a_blob.data_stream.read().decode('utf-8').splitlines()
     blines = b_blob.data_stream.read().decode('utf-8').splitlines()
@@ -429,26 +432,83 @@ def compare_siglists(a_blob, b_blob):
     adict = readsigs(alines)
     bdict = readsigs(blines)
     out = []
+
     changecount = 0
     addcount = 0
     removecount = 0
-    for key in keys:
-        siga = adict.get(key, None)
-        sigb = bdict.get(key, None)
-        if siga is not None and sigb is not None and siga != sigb:
-            out.append('%s changed from %s to %s' % (key, siga, sigb))
-            changecount += 1
-        elif siga is None:
-            out.append('%s was added' % key)
-            addcount += 1
-        elif sigb is None:
-            removecount += 1
-            out.append('%s was removed' % key)
+    if taskdiff:
+        with bb.tinfoil.Tinfoil() as tinfoil:
+            tinfoil.prepare(config_only=True)
+
+            changes = collections.OrderedDict()
+
+            def compare_hashfiles(pn, taskname, hash1, hash2):
+                hashes = [hash1, hash2]
+                hashfiles = bb.siggen.find_siginfo(pn, taskname, hashes, tinfoil.config_data)
+
+                if not taskname:
+                    (pn, taskname) = pn.rsplit('.', 1)
+                    pn = pnmap.get(pn, pn)
+                desc = '%s.%s' % (pn, taskname)
+
+                if len(hashfiles) == 0:
+                    out.append("Unable to find matching sigdata for %s with hashes %s or %s" % (desc, hash1, hash2))
+                elif not hash1 in hashfiles:
+                    out.append("Unable to find matching sigdata for %s with hash %s" % (desc, hash1))
+                elif not hash2 in hashfiles:
+                    out.append("Unable to find matching sigdata for %s with hash %s" % (desc, hash2))
+                else:
+                    out2 = bb.siggen.compare_sigfiles(hashfiles[hash1], hashfiles[hash2], recursecb, collapsed=True)
+                    for line in out2:
+                        m = hashlib.sha256()
+                        m.update(line.encode('utf-8'))
+                        entry = changes.get(m.hexdigest(), (line, []))
+                        if desc not in entry[1]:
+                            changes[m.hexdigest()] = (line, entry[1] + [desc])
+
+            # Define recursion callback
+            def recursecb(key, hash1, hash2):
+                compare_hashfiles(key, None, hash1, hash2)
+                return []
+
+            for key in keys:
+                siga = adict.get(key, None)
+                sigb = bdict.get(key, None)
+                if siga is not None and sigb is not None and siga != sigb:
+                    changecount += 1
+                    (pn, taskname) = key.rsplit('.', 1)
+                    compare_hashfiles(pn, taskname, siga, sigb)
+                elif siga is None:
+                    addcount += 1
+                elif sigb is None:
+                    removecount += 1
+        for key, item in changes.items():
+            line, tasks = item
+            if len(tasks) == 1:
+                desc = tasks[0]
+            elif len(tasks) == 2:
+                desc = '%s and %s' % (tasks[0], tasks[1])
+            else:
+                desc = '%s and %d others' % (tasks[-1], len(tasks)-1)
+            out.append('%s: %s' % (desc, line))
+    else:
+        for key in keys:
+            siga = adict.get(key, None)
+            sigb = bdict.get(key, None)
+            if siga is not None and sigb is not None and siga != sigb:
+                out.append('%s changed from %s to %s' % (key, siga, sigb))
+                changecount += 1
+            elif siga is None:
+                out.append('%s was added' % key)
+                addcount += 1
+            elif sigb is None:
+                out.append('%s was removed' % key)
+                removecount += 1
     out.append('Summary: %d tasks added, %d tasks removed, %d tasks modified (%.1f%%)' % (addcount, removecount, changecount, (changecount / float(len(bdict)) * 100)))
     return '\n'.join(out)
 
 
-def process_changes(repopath, revision1, revision2='HEAD', report_all=False, report_ver=False, sigs=False):
+def process_changes(repopath, revision1, revision2='HEAD', report_all=False, report_ver=False, sigs=False, sigsdiff=False):
     repo = git.Repo(repopath)
     assert repo.bare == False
     commit = repo.commit(revision1)
@@ -456,10 +516,10 @@ def process_changes(repopath, revision1, revision2='HEAD', report_all=False, rep
 
     changes = []
 
-    if sigs:
+    if sigs or sigsdiff:
         for d in diff.iter_change_type('M'):
             if d.a_blob.path == 'siglist.txt':
-                changes.append(compare_siglists(d.a_blob, d.b_blob))
+                changes.append(compare_siglists(d.a_blob, d.b_blob, taskdiff=sigsdiff))
         return changes
 
     for d in diff.iter_change_type('M'):
