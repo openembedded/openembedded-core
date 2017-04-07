@@ -211,6 +211,16 @@ class SignatureGeneratorOEBasicHash(bb.siggen.SignatureGeneratorBasicHash):
                 f.write('    "\n')
             f.write('SIGGEN_LOCKEDSIGS_TYPES_%s = "%s"' % (self.machine, " ".join(l)))
 
+    def dump_siglist(self, sigfile):
+        with open(sigfile, "w") as f:
+            tasks = []
+            for taskitem in self.taskhash:
+                (fn, task) = taskitem.rsplit(".", 1)
+                pn = self.lockedpnmap[fn]
+                tasks.append((pn, task, self.taskhash[taskitem]))
+            for (pn, task, taskhash) in sorted(tasks):
+                f.write('%s.%s %s\n' % (pn, task, taskhash))
+
     def checkhashes(self, missed, ret, sq_fn, sq_task, sq_hash, sq_hashfn, d):
         warn_msgs = []
         error_msgs = []

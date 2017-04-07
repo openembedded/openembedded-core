@@ -600,6 +600,17 @@ POPULATE_SDK_POST_HOST_COMMAND[vardepvalueexclude] .= "| buildhistory_list_insta
 SDK_POSTPROCESS_COMMAND_append = " buildhistory_get_sdkinfo ; buildhistory_get_extra_sdkinfo; "
 SDK_POSTPROCESS_COMMAND[vardepvalueexclude] .= "| buildhistory_get_sdkinfo ; buildhistory_get_extra_sdkinfo; "
 
+python buildhistory_write_sigs() {
+    if not "task" in (d.getVar('BUILDHISTORY_FEATURES') or "").split():
+        return
+
+    # Create sigs file
+    if hasattr(bb.parse.siggen, 'dump_siglist'):
+        taskoutdir = os.path.join(d.getVar('BUILDHISTORY_DIR'), 'task')
+        bb.utils.mkdirhier(taskoutdir)
+        bb.parse.siggen.dump_siglist(os.path.join(taskoutdir, 'tasksigs.txt'))
+}
+
 def buildhistory_get_build_id(d):
     if d.getVar('BB_WORKERCONTEXT') != '1':
         return ""
@@ -765,6 +776,7 @@ python buildhistory_eventhandler() {
                 shutil.rmtree(olddir)
             if e.data.getVar("BUILDHISTORY_COMMIT") == "1":
                 bb.note("Writing buildhistory")
+                bb.build.exec_func("buildhistory_write_sigs", d)
                 localdata = bb.data.createCopy(e.data)
                 localdata.setVar('BUILDHISTORY_BUILD_FAILURES', str(e._failures))
                 interrupted = getattr(e, '_interrupted', 0)
