@@ -49,15 +49,11 @@ class SStateTests(SStateBase):
 
     @testcase(976)
     def test_sstate_creation_distro_nonspecific_pass(self):
-        # glibc-initial is intended only for the glibc C library
-        if self.tclibc == 'glibc':
-            self.run_test_sstate_creation(['glibc-initial'], distro_specific=False, distro_nonspecific=True, temp_sstate_location=True)
+        self.run_test_sstate_creation(['linux-libc-headers'], distro_specific=False, distro_nonspecific=True, temp_sstate_location=True)
 
     @testcase(1375)
     def test_sstate_creation_distro_nonspecific_fail(self):
-        # glibc-initial is intended only for the glibc C library
-        if self.tclibc == 'glibc':
-            self.run_test_sstate_creation(['glibc-initial'], distro_specific=True, distro_nonspecific=False, temp_sstate_location=True, should_pass=False)
+        self.run_test_sstate_creation(['linux-libc-headers'], distro_specific=True, distro_nonspecific=False, temp_sstate_location=True, should_pass=False)
 
     # Test the sstate files deletion part of the do_cleansstate task
     def run_test_cleansstate_task(self, targets, distro_specific=True, distro_nonspecific=True, temp_sstate_location=True):
@@ -79,23 +75,17 @@ class SStateTests(SStateBase):
     @testcase(977)
     def test_cleansstate_task_distro_specific_nonspecific(self):
         targets = ['binutils-cross-'+ self.tune_arch, 'binutils-native']
-        # glibc-initial is intended only for the glibc C library
-        if self.tclibc == 'glibc':
-            targets.append('glibc-initial')
+        targets.append('linux-libc-headers')
         self.run_test_cleansstate_task(targets, distro_specific=True, distro_nonspecific=True, temp_sstate_location=True)
 
     @testcase(1376)
     def test_cleansstate_task_distro_nonspecific(self):
-        # glibc-initial is intended only for the glibc C library
-        if self.tclibc == 'glibc':
-            self.run_test_cleansstate_task(['glibc-initial'], distro_specific=False, distro_nonspecific=True, temp_sstate_location=True)
+        self.run_test_cleansstate_task(['linux-libc-headers'], distro_specific=False, distro_nonspecific=True, temp_sstate_location=True)
 
     @testcase(1377)
     def test_cleansstate_task_distro_specific(self):
         targets = ['binutils-cross-'+ self.tune_arch, 'binutils-native']
-        # glibc-initial is intended only for the glibc C library
-        if self.tclibc == 'glibc':
-            targets.append('glibc-initial')
+        targets.append('linux-libc-headers')
         self.run_test_cleansstate_task(targets, distro_specific=True, distro_nonspecific=False, temp_sstate_location=True)
 
 
