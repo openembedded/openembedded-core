@@ -10,7 +10,7 @@ class BuildCpioTest(OESDKTestCase):
         dl_dir = self.td.get('DL_DIR', None)
 
         self.project = SDKBuildProject(self.tc.sdk_dir + "/cpio/", self.tc.sdk_env,
-                        "https://ftp.gnu.org/gnu/cpio/cpio-2.12.tar.bz2",
+                        "https://ftp.gnu.org/gnu/cpio/cpio-2.12.tar.gz",
                         self.tc.sdk_dir, self.td['DATETIME'], dl_dir=dl_dir)
         self.project.download_archive()
 
