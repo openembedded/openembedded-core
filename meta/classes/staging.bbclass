@@ -647,11 +647,6 @@ python staging_taskhandler() {
         deps = d.getVarFlag(task, "depends")
         if deps and "populate_sysroot" in deps:
             d.appendVarFlag(task, "prefuncs", " extend_recipe_sysroot")
-        # If this is do_fetch, we need to move the cleandirs above to the extend_recipe_sysroot task
-        # else we'd wipe out the sysroot we just created.
-        if task == "do_fetch":
-            d.setVarFlag("extend_recipe_sysroot", "cleandirs", d.getVarFlag(task, "cleandirs"))
-            d.delVarFlag(task, "cleandirs")
 }
 staging_taskhandler[eventmask] = "bb.event.RecipeTaskPreProcess"
 addhandler staging_taskhandler
