@@ -206,7 +206,7 @@ if __name__ == "__main__":
     "UserDict.* UserList.* UserString.* " +
     "lib-dynload/binascii.*.so lib-dynload/_struct.*.so lib-dynload/time.*.so " +
     "lib-dynload/xreadlines.*.so types.* platform.* ${bindir}/python* "  + 
-    "_weakrefset.* sysconfig.* _sysconfigdata.* config/Makefile " +
+    "_weakrefset.* sysconfig.* _sysconfigdata.* " +
     "${includedir}/python${PYTHON_BINABI}/pyconfig*.h " +
     "${libdir}/python${PYTHON_MAJMIN}/collections " +
     "${libdir}/python${PYTHON_MAJMIN}/_collections_abc.* " +
@@ -223,7 +223,8 @@ if __name__ == "__main__":
     "${base_libdir}/*.a " +
     "${base_libdir}/*.o " +
     "${datadir}/aclocal " +
-    "${datadir}/pkgconfig " )
+    "${datadir}/pkgconfig " +
+    "config/Makefile ")
 
     m.addPackage( "${PN}-2to3", "Python automated Python 2 to 3 code translator", "${PN}-core",
     "lib2to3" ) # package
