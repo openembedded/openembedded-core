@@ -41,7 +41,6 @@ class BuildhistoryDiffTests(BuildhistoryBase):
 
     @testcase(295)
     def test_buildhistory_diff(self):
-        self.add_command_to_tearDown('cleanup-workdir')
         target = 'xcursor-transparent-theme'
         self.run_buildhistory_operation(target, target_config="PR = \"r1\"", change_bh_location=True)
         self.run_buildhistory_operation(target, target_config="PR = \"r0\"", change_bh_location=False, expect_error=True)
