@@ -112,7 +112,7 @@ LIC_FILES_CHKSUM = "\
     file://LICENCE.xc4000;md5=0ff51d2dc49fce04814c9155081092f0 \
     file://LICENCE.xc5000;md5=1e170c13175323c32c7f4d0998d53f66 \
     file://LICENCE.xc5000c;md5=12b02efa3049db65d524aeb418dd87ca \
-    file://WHENCE;md5=4c56371b1c0d9e75f7620563c652b566 \
+    file://WHENCE;md5=ad12d0618287e8c10ae3da05fa0edcfb \
 "
 
 # These are not common licenses, set NO_GENERIC_LICENSE for them
@@ -172,7 +172,7 @@ NO_GENERIC_LICENSE[Firmware-xc5000] = "LICENCE.xc5000"
 NO_GENERIC_LICENSE[Firmware-xc5000c] = "LICENCE.xc5000c"
 NO_GENERIC_LICENSE[WHENCE] = "WHENCE"
 
-SRCREV = "a4dde74b504522d239e8521617b53b03f393ed6a"
+SRCREV = "b14134583c2a15d4404695f72cb523daedb877ab"
 PE = "1"
 PV = "0.0+git${SRCPV}"
 
@@ -216,6 +216,9 @@ do_install() {
 
         # Copy the iwlwifi ucode
         cp ${WORKDIR}/iwlwifi-8000C-19.ucode ${D}${nonarch_base_libdir}/firmware/
+
+	# TODO: Remove netronome firmware until RPM packaging issue is resolved
+	rm -r ${D}${nonarch_base_libdir}/firmware/netronome/
 }
 
 
