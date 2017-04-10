@@ -552,7 +552,7 @@ class RpmPM(PackageManager):
         for uri in remote_uris:
             repo_name = "oe-remote-repo" + "-".join(urlparse(uri).path.split("/"))
             if feed_archs is not None:
-                repo_uris = [uri + "/" + arch for arch in feed_archs]
+                repo_uris = [uri + "/" + arch for arch in feed_archs.split()]
             else:
                 repo_uris = [uri]
             open(oe.path.join(self.target_rootfs, "etc", "yum.repos.d", repo_name + ".repo"), 'w').write("[%s]\nbaseurl=%s\n" % (repo_name, " ".join(repo_uris)))
