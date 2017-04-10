@@ -639,7 +639,12 @@ python do_prepare_recipe_sysroot () {
 addtask do_prepare_recipe_sysroot before do_configure after do_fetch
 
 # Clean out the recipe specific sysroots before do_fetch
-do_fetch[cleandirs] += "${RECIPE_SYSROOT} ${RECIPE_SYSROOT_NATIVE}"
+# (use a prefunc so we can order before extend_recipe_sysroot if it gets added)
+python clean_recipe_sysroot() {
+    return
+}
+clean_recipe_sysroot[cleandirs] += "${RECIPE_SYSROOT} ${RECIPE_SYSROOT_NATIVE}"
+do_fetch[prefuncs] += "clean_recipe_sysroot"
 
 python staging_taskhandler() {
     bbtasks = e.tasklist
