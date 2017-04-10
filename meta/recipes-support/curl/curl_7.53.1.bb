@@ -9,6 +9,8 @@ SRC_URI = "http://curl.haxx.se/download/curl-${PV}.tar.bz2 \
            file://0001-replace-krb5-config-with-pkg-config.patch \
 "
 
+DEPENDS = "ca-certificates"
+
 # curl likes to set -g0 in CFLAGS, so we stop it
 # from mucking around with debug options
 #
