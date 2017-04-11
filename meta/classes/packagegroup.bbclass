@@ -49,6 +49,8 @@ deltask do_install
 deltask do_populate_sysroot
 
 python () {
+    if bb.data.inherits_class('nativesdk', d):
+        return
     initman = d.getVar("VIRTUAL-RUNTIME_init_manager")
     if initman and initman in ['sysvinit', 'systemd'] and not bb.utils.contains('DISTRO_FEATURES', initman, True, False, d):
         bb.fatal("Please ensure that your setting of VIRTUAL-RUNTIME_init_manager (%s) matches the entries enabled in DISTRO_FEATURES" % initman)

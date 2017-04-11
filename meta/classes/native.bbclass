@@ -121,12 +121,18 @@ PATH_prepend = "${COREBASE}/scripts/native-intercept:"
 SSTATE_SCAN_CMD ?= "${SSTATE_SCAN_CMD_NATIVE}"
 
 python native_virtclass_handler () {
-    classextend = e.data.getVar('BBCLASSEXTEND') or ""
-    if "native" not in classextend:
-        return
-
     pn = e.data.getVar("PN")
     if not pn.endswith("-native"):
+        return
+
+    # Set features here to prevent appends and distro features backfill
+    # from modifying native distro features
+    features = set(d.getVar("DISTRO_FEATURES_NATIVE").split())
+    filtered = set(bb.utils.filter("DISTRO_FEATURES", d.getVar("DISTRO_FEATURES_FILTER_NATIVE"), d).split())
+    d.setVar("DISTRO_FEATURES", " ".join(features | filtered))
+
+    classextend = e.data.getVar('BBCLASSEXTEND') or ""
+    if "native" not in classextend:
         return
 
     def map_dependencies(varname, d, suffix = ""):
