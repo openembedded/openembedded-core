@@ -83,6 +83,7 @@ of the following environment variables (in any order):
   help, -h, --help: print this text
 
 Examples:
+  runqemu
   runqemu qemuarm
   runqemu tmp/deploy/images/qemuarm
   runqemu tmp/deploy/images/qemux86/<qemuboot.conf>
@@ -1184,8 +1185,7 @@ class BaseConfig(object):
             logger.warn("Couldn't run 'bitbake -e' to gather environment information:\n%s" % err.output.decode('utf-8'))
 
 def main():
-    if len(sys.argv) == 1 or "help" in sys.argv or \
-            '-h' in sys.argv or '--help' in sys.argv:
+    if "help" in sys.argv or '-h' in sys.argv or '--help' in sys.argv:
         print_usage()
         return 0
     config = BaseConfig()
