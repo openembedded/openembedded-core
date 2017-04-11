@@ -10,10 +10,6 @@ WKS_FILE_DEPENDS = "syslinux syslinux-native dosfstools-native mtools-native gpt
 
 LIC_FILES_CHKSUM = "file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
 
-# core-image-minimal is referenced in .wks, so we need its rootfs
-# to be ready before our rootfs
-do_rootfs[depends] += "core-image-minimal:do_image core-image-minimal:do_rootfs_wicenv"
-
 IMAGE_ROOTFS_EXTRA_SPACE = "2000"
 
 inherit image
