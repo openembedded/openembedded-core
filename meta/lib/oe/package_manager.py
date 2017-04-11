@@ -555,7 +555,7 @@ class RpmPM(PackageManager):
                 repo_uris = [uri + "/" + arch for arch in feed_archs.split()]
             else:
                 repo_uris = [uri]
-            open(oe.path.join(self.target_rootfs, "etc", "yum.repos.d", repo_name + ".repo"), 'w').write("[%s]\nbaseurl=%s\n" % (repo_name, " ".join(repo_uris)))
+            open(oe.path.join(self.target_rootfs, "etc", "yum.repos.d", repo_name + ".repo"), 'w').write("[%s]\nname=%s\nbaseurl=%s\n" % (repo_name, repo_name, " ".join(repo_uris)))
 
     def _prepare_pkg_transaction(self):
         os.environ['D'] = self.target_rootfs
