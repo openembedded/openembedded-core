@@ -35,6 +35,8 @@ SRC_URI = "\
      file://0014-fix-the-incorrect-assembling-for-ppc-wait-mnemonic.patch \
      file://0015-sync-with-OE-libtool-changes.patch \
      file://0016-Detect-64-bit-MIPS-targets.patch \
+     file://CVE-2017-6965.patch \
+     file://CVE-2017-6966.patch \
 "
 S  = "${WORKDIR}/git"
 
