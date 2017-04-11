@@ -49,6 +49,8 @@ def main():
             help='File to output log (optional)', action='store')
     parser.add_argument('--dependency', nargs="+",
             help='Layers to process for dependencies', action='store')
+    parser.add_argument('--additional-layers', nargs="+",
+            help='List of additional layers to add during testing', action='store')
     parser.add_argument('-n', '--no-auto', help='Disable auto layer discovery',
             action='store_true')
     parser.add_argument('-d', '--debug', help='Enable debug output',
@@ -82,6 +84,10 @@ def main():
     if not layers:
         logger.error("Fail to detect layers")
         return 1
+    if args.additional_layers:
+        additional_layers = detect_layers(args.additional_layers, args.no_auto)
+    else:
+        additional_layers = []
     if args.dependency:
         dep_layers = detect_layers(args.dependency, args.no_auto)
         dep_layers = dep_layers + layers
@@ -128,10 +134,26 @@ def main():
 
         shutil.copyfile(bblayersconf + '.backup', bblayersconf)
 
-        if not add_layer_dependencies(bblayersconf, layer, dep_layers, logger):
+        missing_dependencies = not add_layer_dependencies(bblayersconf, layer, dep_layers, logger)
+        if not missing_dependencies:
+            for additional_layer in additional_layers:
+                if not add_layer_dependencies(bblayersconf, additional_layer, dep_layers, logger):
+                    missing_dependencies = True
+                    break
+        if not add_layer_dependencies(bblayersconf, layer, dep_layers, logger) or \
+           any(map(lambda additional_layer: not add_layer_dependencies(bblayersconf, additional_layer, dep_layers, logger),
+                   additional_layers)):
             logger.info('Skipping %s due to missing dependencies.' % layer['name'])
             results[layer['name']] = None
             results_status[layer['name']] = 'SKIPPED (Missing dependencies)'
+            layers_tested = layers_tested + 1
+            continue
+
+        if any(map(lambda additional_layer: not add_layer(bblayersconf, additional_layer, dep_layers, logger),
+                   additional_layers)):
+            logger.info('Skipping %s due to missing additional layers.' % layer['name'])
+            results[layer['name']] = None
+            results_status[layer['name']] = 'SKIPPED (Missing additional layers)'
             layers_tested = layers_tested + 1
             continue
 
