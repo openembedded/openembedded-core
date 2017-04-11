@@ -224,6 +224,7 @@ def get_signatures(builddir, failsafe=False):
     exclude_recipes = ('meta-world-pkgdata',)
 
     sigs = {}
+    tune2tasks = {}
 
     cmd = 'bitbake '
     if failsafe:
@@ -234,9 +235,14 @@ def get_signatures(builddir, failsafe=False):
     sigs_file = os.path.join(builddir, 'locked-sigs.inc')
 
     sig_regex = re.compile("^(?P<task>.*:.*):(?P<hash>.*) .$")
+    tune_regex = re.compile("(^|\s)SIGGEN_LOCKEDSIGS_t-(?P<tune>\S*)\s*=\s*")
+    current_tune = None
     with open(sigs_file, 'r') as f:
         for line in f.readlines():
             line = line.strip()
+            t = tune_regex.search(line)
+            if t:
+                current_tune = t.group('tune')
             s = sig_regex.match(line)
             if s:
                 exclude = False
@@ -249,11 +255,12 @@ def get_signatures(builddir, failsafe=False):
                     continue
 
                 sigs[s.group('task')] = s.group('hash')
+                tune2tasks.setdefault(current_tune, []).append(s.group('task'))
 
     if not sigs:
         raise RuntimeError('Can\'t load signatures from %s' % sigs_file)
 
-    return sigs
+    return (sigs, tune2tasks)
 
 def get_depgraph(targets=['world']):
     '''

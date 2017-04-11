@@ -139,7 +139,7 @@ def main():
         td['bbvars'] = get_bb_vars()
         logger.info('Getting initial signatures ...')
         td['builddir'] = builddir
-        td['sigs'] = get_signatures(td['builddir'])
+        td['sigs'], td['tunetasks'] = get_signatures(td['builddir'])
 
         if not add_layer(bblayersconf, layer, dep_layers, logger):
             logger.info('Skipping %s ???.' % layer['name'])

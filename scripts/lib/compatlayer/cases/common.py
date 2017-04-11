@@ -33,7 +33,7 @@ class CommonCompatLayer(OECompatLayerTestCase):
 
         # task -> (old signature, new signature)
         sig_diff = {}
-        curr_sigs = get_signatures(self.td['builddir'], failsafe=True)
+        curr_sigs, _ = get_signatures(self.td['builddir'], failsafe=True)
         for task in self.td['sigs']:
             if task in curr_sigs and \
                self.td['sigs'][task] != curr_sigs[task]:
