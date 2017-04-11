@@ -24,4 +24,4 @@ BPN = "gdb"
 inherit cross
 inherit gettext
 
-datadir .= "/gdb-${TUNE_PKGARCH}${TARGET_VENDOR}-${TARGET_OS}"
+datadir .= "/gdb-${TARGET_SYS}${TARGET_VENDOR}-${TARGET_OS}"
