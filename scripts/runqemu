@@ -980,23 +980,26 @@ class BaseConfig(object):
             self.kernel_cmdline = 'root=/dev/ram0 rw debugshell'
             self.rootfs_options = '-initrd %s' % self.rootfs
         else:
+            vm_drive = ''
             if self.fstype in self.vmtypes:
                 if self.fstype == 'iso':
                     vm_drive = '-cdrom %s' % self.rootfs
-                else:
-                    cmd1 = "grep -q 'root=/dev/sd' %s" % self.rootfs
-                    cmd2 = "grep -q 'root=/dev/hd' %s" % self.rootfs
-                    if subprocess.call(cmd1, shell=True) == 0:
+                elif self.get('QB_DRIVE_TYPE'):
+                    drive_type = self.get('QB_DRIVE_TYPE')
+                    if drive_type.startswith("/dev/sd"):
                         logger.info('Using scsi drive')
                         vm_drive = '-drive if=none,id=hd,file=%s,format=%s -device virtio-scsi-pci,id=scsi -device scsi-hd,drive=hd' \
                                        % (self.rootfs, rootfs_format)
-                    elif subprocess.call(cmd2, shell=True) == 0:
+                    elif drive_type.startswith("/dev/hd"):
                         logger.info('Using ide drive')
                         vm_drive = "%s,format=%s" % (self.rootfs, rootfs_format)
                     else:
-                        logger.warn("Can't detect drive type %s" % self.rootfs)
-                        logger.warn('Trying to use virtio block drive')
-                        vm_drive = '-drive if=virtio,file=%s,format=%s' % (self.rootfs, rootfs_format)
+                        logger.warn("Unknown QB_DRIVE_TYPE: %s" % drive_type)
+
+                if not vm_drive:
+                    logger.warn("Failed to figure out drive type, consider define or fix QB_DRIVE_TYPE")
+                    logger.warn('Trying to use virtio block drive')
+                    vm_drive = '-drive if=virtio,file=%s,format=%s' % (self.rootfs, rootfs_format)
                 self.rootfs_options = '%s -no-reboot' % vm_drive
             self.kernel_cmdline = 'root=%s rw highres=off' % (self.get('QB_KERNEL_ROOT'))
 
