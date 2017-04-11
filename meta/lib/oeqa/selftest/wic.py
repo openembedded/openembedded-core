@@ -614,7 +614,7 @@ part /etc --source rootfs --ondisk mmcblk0 --fstype=ext4 --exclude-path bin/ --r
             cmd = "mount |grep '^/dev/' | cut -f1,3 -d ' '"
             status, output = qemu.run_serial(cmd)
             self.assertEqual(1, status, 'Failed to run command "%s": %s' % (cmd, output))
-            self.assertEqual(output, '/dev/root /\r\n/dev/vda3 /mnt')
+            self.assertEqual(output, '/dev/root /\r\n/dev/sda3 /mnt')
 
     @only_for_arch(['i586', 'i686', 'x86_64'])
     def test_qemu_efi(self):
@@ -626,7 +626,7 @@ part /etc --source rootfs --ondisk mmcblk0 --fstype=ext4 --exclude-path bin/ --r
 
         with runqemu('core-image-minimal', ssh=False,
                      runqemuparams='ovmf', image_fstype='wic') as qemu:
-            cmd = "grep vda. /proc/partitions  |wc -l"
+            cmd = "grep sda. /proc/partitions  |wc -l"
             status, output = qemu.run_serial(cmd)
             self.assertEqual(1, status, 'Failed to run command "%s": %s' % (cmd, output))
             self.assertEqual(output, '3')
@@ -701,7 +701,7 @@ part /etc --source rootfs --ondisk mmcblk0 --fstype=ext4 --exclude-path bin/ --r
             self.remove_config(config)
 
         with runqemu('core-image-minimal', ssh=False, image_fstype='wic') as qemu:
-            cmd = "grep vda. /proc/partitions  |wc -l"
+            cmd = "grep sda. /proc/partitions  |wc -l"
             status, output = qemu.run_serial(cmd)
             self.assertEqual(1, status, 'Failed to run command "%s": %s' % (cmd, output))
             self.assertEqual(output, '2')
