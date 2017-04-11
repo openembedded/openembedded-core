@@ -11,6 +11,9 @@ python () {
 
 PN = "gcc-cross-${TARGET_ARCH}"
 
+# Ignore how TARGET_ARCH is computed.
+TARGET_ARCH[vardepvalue] = "${TARGET_ARCH}"
+
 require gcc-configure-common.inc
 
 # While we want the 'gnu' hash style, we explicitly set it to sysv here to

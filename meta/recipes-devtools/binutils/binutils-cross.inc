@@ -4,6 +4,9 @@ PROVIDES = "virtual/${TARGET_PREFIX}binutils"
 PN = "binutils-cross-${TARGET_ARCH}"
 BPN = "binutils"
 
+# Ignore how TARGET_ARCH is computed.
+TARGET_ARCH[vardepvalue] = "${TARGET_ARCH}"
+
 INHIBIT_DEFAULT_DEPS = "1"
 INHIBIT_AUTOTOOLS_DEPS = "1"
 

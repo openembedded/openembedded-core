@@ -4,6 +4,9 @@ DEPENDS += "gcc-cross-${TARGET_ARCH}"
 
 PN = "go-cross-${TARGET_ARCH}"
 
+# Ignore how TARGET_ARCH is computed.
+TARGET_ARCH[vardepvalue] = "${TARGET_ARCH}"
+
 FILESEXTRAPATHS =. "${FILE_DIRNAME}/go-cross:"
 
 GOROOT_FINAL = "${libdir}/go"

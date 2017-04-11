@@ -21,6 +21,9 @@ GDBPROPREFIX = ""
 PN = "gdb-cross-${TARGET_ARCH}"
 BPN = "gdb"
 
+# Ignore how TARGET_ARCH is computed.
+TARGET_ARCH[vardepvalue] = "${TARGET_ARCH}"
+
 inherit cross
 inherit gettext
 
