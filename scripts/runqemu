@@ -179,7 +179,6 @@ class BaseConfig(object):
 
         self.qemu_opt = ''
         self.qemu_opt_script = ''
-        self.nfs_dir = ''
         self.clean_nfs_dir = False
         self.nfs_server = ''
         self.rootfs = ''
@@ -285,12 +284,11 @@ class BaseConfig(object):
 
     def check_arg_nfs(self, p):
         if os.path.isdir(p):
-            self.nfs_dir = p
+            self.rootfs = p
         else:
             m = re.match('(.*):(.*)', p)
             self.nfs_server = m.group(1)
-            self.nfs_dir = m.group(2)
-        self.rootfs = ""
+            self.rootfs = m.group(2)
         self.check_arg_fstype('nfs')
 
     def check_arg_path(self, p):
@@ -760,7 +758,7 @@ class BaseConfig(object):
         print('MACHINE: [%s]' % self.get('MACHINE'))
         print('FSTYPE: [%s]' % self.fstype)
         if self.fstype  == 'nfs':
-            print('NFS_DIR: [%s]' % self.nfs_dir)
+            print('NFS_DIR: [%s]' % self.rootfs)
         else:
             print('ROOTFS: [%s]' % self.rootfs)
         if self.ovmf_bios:
@@ -805,13 +803,13 @@ class BaseConfig(object):
 
         self.unfs_opts="nfsvers=3,port=%s,mountprog=%s,nfsprog=%s,udp,mountport=%s" % (nfsd_port, mountd_rpcport, nfsd_rpcport, mountd_port)
 
-        # Extract .tar.bz2 or .tar.bz if no self.nfs_dir
-        if not self.nfs_dir:
+        # Extract .tar.bz2 or .tar.bz if no nfs dir
+        if not (self.rootfs and os.path.isdir(self.rootfs)):
             src_prefix = '%s/%s' % (self.get('DEPLOY_DIR_IMAGE'), self.get('IMAGE_LINK_NAME'))
             dest = "%s-nfsroot" % src_prefix
             if os.path.exists('%s.pseudo_state' % dest):
                 logger.info('Use %s as NFS_DIR' % dest)
-                self.nfs_dir = dest
+                self.rootfs = dest
             else:
                 src = ""
                 src1 = '%s.tar.bz2' % src_prefix
@@ -828,10 +826,10 @@ class BaseConfig(object):
                 if subprocess.call(cmd, shell=True) != 0:
                     raise Exception('Failed to run %s' % cmd)
                 self.clean_nfs_dir = True
-                self.nfs_dir = dest
+                self.rootfs = dest
 
         # Start the userspace NFS server
-        cmd = 'runqemu-export-rootfs start %s' % self.nfs_dir
+        cmd = 'runqemu-export-rootfs start %s' % self.rootfs
         logger.info('Running %s...' % cmd)
         if subprocess.call(cmd, shell=True) != 0:
             raise Exception('Failed to run %s' % cmd)
@@ -1005,7 +1003,7 @@ class BaseConfig(object):
 
         if self.fstype == 'nfs':
             self.rootfs_options = ''
-            k_root = '/dev/nfs nfsroot=%s:%s,%s' % (self.nfs_server, self.nfs_dir, self.unfs_opts)
+            k_root = '/dev/nfs nfsroot=%s:%s,%s' % (self.nfs_server, self.rootfs, self.unfs_opts)
             self.kernel_cmdline = 'root=%s rw highres=off' % k_root
 
         if self.fstype == 'none':
@@ -1151,7 +1149,7 @@ class BaseConfig(object):
 
         if self.nfs_running:
             logger.info("Shutting down the userspace NFS server...")
-            cmd = "runqemu-export-rootfs stop %s" % self.nfs_dir
+            cmd = "runqemu-export-rootfs stop %s" % self.rootfs
             logger.info('Running %s' % cmd)
             subprocess.call(cmd, shell=True)
 
@@ -1160,9 +1158,9 @@ class BaseConfig(object):
             subprocess.call(cmd, shell=True)
 
         if self.clean_nfs_dir:
-            logger.info('Removing %s' % self.nfs_dir)
-            shutil.rmtree(self.nfs_dir)
-            shutil.rmtree('%s.pseudo_state' % self.nfs_dir)
+            logger.info('Removing %s' % self.rootfs)
+            shutil.rmtree(self.rootfs)
+            shutil.rmtree('%s.pseudo_state' % self.rootfs)
 
     def load_bitbake_env(self, mach=None):
         if self.bitbake_e:
