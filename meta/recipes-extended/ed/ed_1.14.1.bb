@@ -11,7 +11,9 @@ SECTION = "base"
 # LSB states that ed should be in /bin/
 bindir = "${base_bindir}"
 
-SRC_URI = "${GNU_MIRROR}/ed/ed-${PV}.tar.lz"
+# Upstream regularly removes previous releases from https://ftp.gnu.org/gnu/ed/
+SRC_URI = "http://downloads.yoctoproject.org/mirror/sources/${BP}.tar.lz"
+UPSTREAM_CHECK_URI = "${GNU_MIRROR}/ed/"
 
 SRC_URI[md5sum] = "7f4a54fa7f366479f03654b8af645fd0"
 SRC_URI[sha256sum] = "ffb97eb8f2a2b5a71a9b97e3872adce953aa1b8958e04c5b7bf11d556f32552a"
