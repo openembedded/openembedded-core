@@ -1,6 +1,13 @@
 inherit goarch
-# libgcc is required for the target specific libraries to build properly
-DEPENDS += "go-bootstrap-native libgcc"
+DEPENDS += "go-bootstrap-native"
+
+# libgcc is required for the target specific libraries to build
+# properly, but apparently not for go-cross and, more importantly,
+# also can't be used there because go-cross cannot depend on
+# the tune-specific libgcc. Otherwise go-cross also would have
+# to be tune-specific.
+DEPENDS += "${@ 'libgcc' if not oe.utils.inherits(d, 'cross') else ''}"
+
 # Prevent runstrip from running because you get errors when the host arch != target arch
 INHIBIT_PACKAGE_STRIP = "1"
 INHIBIT_SYSROOT_STRIP = "1"
