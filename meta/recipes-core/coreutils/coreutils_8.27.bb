@@ -23,10 +23,10 @@ SRC_URI = "${GNU_MIRROR}/coreutils/${BP}.tar.xz;name=tarball \
            file://0001-local.mk-fix-cross-compiling-problem.patch \
           "
 
-SRC_URI[tarball.md5sum] = "d5aa2072f662d4118b9f4c63b94601a6"
-SRC_URI[tarball.sha256sum] = "155e94d748f8e2bc327c66e0cbebdb8d6ab265d2f37c3c928f7bf6c3beba9a8e"
-SRC_URI[manpages.md5sum] = "b58107f532f7beffcb2f38e2ac1f2da3"
-SRC_URI[manpages.sha256sum] = "9324ec412ffca3b0431e6299720c33ac98e749e430f72a7c6e65f3635c86aa29"
+SRC_URI[tarball.md5sum] = "502795792c212932365e077946d353ae"
+SRC_URI[tarball.sha256sum] = "8891d349ee87b9ff7870f52b6d9312a9db672d2439d289bc57084771ca21656b"
+SRC_URI[manpages.md5sum] = "1b31a688d06764e0e94aa20b7ea08222"
+SRC_URI[manpages.sha256sum] = "1f615819e9167646c731636b6c5ecbe79837e82a18666bacc82c3fb1dfcfaea3"
 
 EXTRA_OECONF_class-native = "--without-gmp"
 EXTRA_OECONF_class-target = "--enable-install-program=arch --libexecdir=${libdir}"
