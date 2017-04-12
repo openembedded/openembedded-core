@@ -165,7 +165,7 @@ def add(args, config, basepath, workspace):
                     # inside recipetool since recipetool keeps tinfoil active
                     # with references to it throughout the code, so we have
                     # to exit out and come back here to do it.
-                    ensure_npm(config, basepath, args.fixed_setup)
+                    ensure_npm(config, basepath, args.fixed_setup, check_exists=False)
                     logger.info('Re-running recipe creation process after building nodejs')
                     continue
                 elif e.exitcode == 15:

@@ -65,9 +65,9 @@ class NpmRecipeHandler(RecipeHandler):
                                           'SEE-LICENSE-IN-EULA')
         return license
 
-    def _shrinkwrap(self, srctree, localfilesdir, extravalues, lines_before):
+    def _shrinkwrap(self, srctree, localfilesdir, extravalues, lines_before, d):
         try:
-            runenv = dict(os.environ, PATH=tinfoil.config_data.getVar('PATH'))
+            runenv = dict(os.environ, PATH=d.getVar('PATH'))
             bb.process.run('npm shrinkwrap', cwd=srctree, stderr=subprocess.STDOUT, env=runenv, shell=True)
         except bb.process.ExecutionError as e:
             logger.warn('npm shrinkwrap failed:\n%s' % e.stdout)
@@ -79,8 +79,8 @@ class NpmRecipeHandler(RecipeHandler):
         extravalues['extrafiles']['npm-shrinkwrap.json'] = tmpfile
         lines_before.append('NPM_SHRINKWRAP := "${THISDIR}/${PN}/npm-shrinkwrap.json"')
 
-    def _lockdown(self, srctree, localfilesdir, extravalues, lines_before):
-        runenv = dict(os.environ, PATH=tinfoil.config_data.getVar('PATH'))
+    def _lockdown(self, srctree, localfilesdir, extravalues, lines_before, d):
+        runenv = dict(os.environ, PATH=d.getVar('PATH'))
         if not NpmRecipeHandler.lockdownpath:
             NpmRecipeHandler.lockdownpath = tempfile.mkdtemp('recipetool-npm-lockdown')
             bb.process.run('npm install lockdown --prefix %s' % NpmRecipeHandler.lockdownpath,
@@ -188,7 +188,9 @@ class NpmRecipeHandler(RecipeHandler):
 
         files = RecipeHandler.checkfiles(srctree, ['package.json'])
         if files:
-            check_npm(tinfoil.config_data)
+            d = bb.data.createCopy(tinfoil.config_data)
+            npm_bindir = check_npm(tinfoil)
+            d.prependVar('PATH', '%s:' % npm_bindir)
 
             data = read_package_json(files[0])
             if 'name' in data and 'version' in data:
@@ -203,17 +205,17 @@ class NpmRecipeHandler(RecipeHandler):
 
                 fetchdev = extravalues['fetchdev'] or None
                 deps, optdeps, devdeps = self.get_npm_package_dependencies(data, fetchdev)
-                updated = self._handle_dependencies(tinfoil.config_data, deps, optdeps, devdeps, lines_before, srctree)
+                updated = self._handle_dependencies(d, deps, optdeps, devdeps, lines_before, srctree)
                 if updated:
                     # We need to redo the license stuff
-                    self._replace_license_vars(srctree, lines_before, handled, extravalues, tinfoil.config_data)
+                    self._replace_license_vars(srctree, lines_before, handled, extravalues, d)
 
                 # Shrinkwrap
                 localfilesdir = tempfile.mkdtemp(prefix='recipetool-npm')
-                self._shrinkwrap(srctree, localfilesdir, extravalues, lines_before)
+                self._shrinkwrap(srctree, localfilesdir, extravalues, lines_before, d)
 
                 # Lockdown
-                self._lockdown(srctree, localfilesdir, extravalues, lines_before)
+                self._lockdown(srctree, localfilesdir, extravalues, lines_before, d)
 
                 # Split each npm module out to is own package
                 npmpackages = oe.package.npm_split_package_dirs(srctree)

@@ -261,23 +261,28 @@ def get_bbclassextend_targets(recipefile, pn):
                 targets.append('%s-%s' % (pn, variant))
     return targets
 
-def ensure_npm(config, basepath, fixed_setup=False):
+def ensure_npm(config, basepath, fixed_setup=False, check_exists=True):
     """
     Ensure that npm is available and either build it or show a
     reasonable error message
     """
-    tinfoil = setup_tinfoil(config_only=True, basepath=basepath)
-    try:
-        nativepath = tinfoil.config_data.getVar('STAGING_BINDIR_NATIVE')
-    finally:
-        tinfoil.shutdown()
+    if check_exists:
+        tinfoil = setup_tinfoil(config_only=False, basepath=basepath)
+        try:
+            rd = tinfoil.parse_recipe('nodejs-native')
+            nativepath = rd.getVar('STAGING_BINDIR_NATIVE')
+        finally:
+            tinfoil.shutdown()
+        npmpath = os.path.join(nativepath, 'npm')
+        build_npm = not os.path.exists(npmpath)
+    else:
+        build_npm = True
 
-    npmpath = os.path.join(nativepath, 'npm')
-    if not os.path.exists(npmpath):
+    if build_npm:
         logger.info('Building nodejs-native')
         try:
             exec_build_env_command(config.init_path, basepath,
-                                'bitbake -q nodejs-native', watch=True)
+                                'bitbake -q nodejs-native -c addto_recipe_sysroot', watch=True)
         except bb.process.ExecutionError as e:
             if "Nothing PROVIDES 'nodejs-native'" in e.stdout:
                 if fixed_setup:
@@ -287,5 +292,3 @@ def ensure_npm(config, basepath, fixed_setup=False):
                 raise DevtoolError(msg)
             else:
                 raise
-        if not os.path.exists(npmpath):
-            raise DevtoolError('Built nodejs-native but npm binary still could not be found at %s' % npmpath)
