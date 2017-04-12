@@ -215,7 +215,7 @@ def check_command(error_msg, cmd):
         raise RuntimeError(msg)
     return output
 
-def get_signatures(builddir, failsafe=False):
+def get_signatures(builddir, failsafe=False, machine=None):
     import re
 
     # some recipes needs to be excluded like meta-world-pkgdata
@@ -226,7 +226,10 @@ def get_signatures(builddir, failsafe=False):
     sigs = {}
     tune2tasks = {}
 
-    cmd = 'bitbake '
+    cmd = ''
+    if machine:
+        cmd += 'MACHINE=%s ' % machine
+    cmd += 'bitbake '
     if failsafe:
         cmd += '-k '
     cmd += '-S none world'

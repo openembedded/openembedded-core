@@ -49,6 +49,8 @@ def main():
             help='File to output log (optional)', action='store')
     parser.add_argument('--dependency', nargs="+",
             help='Layers to process for dependencies', action='store')
+    parser.add_argument('--machines', nargs="+",
+            help='List of MACHINEs to be used during testing', action='store')
     parser.add_argument('--additional-layers', nargs="+",
             help='List of additional layers to add during testing', action='store')
     parser.add_argument('-n', '--no-auto', help='Disable auto layer discovery',
@@ -162,6 +164,7 @@ def main():
         logger.info('Getting initial signatures ...')
         td['builddir'] = builddir
         td['sigs'], td['tunetasks'] = get_signatures(td['builddir'])
+        td['machines'] = args.machines
 
         if not add_layer(bblayersconf, layer, dep_layers, logger):
             logger.info('Skipping %s ???.' % layer['name'])
