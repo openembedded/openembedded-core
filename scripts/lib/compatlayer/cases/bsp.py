@@ -25,6 +25,32 @@ class BSPCompatLayer(OECompatLayerTestCase):
                 msg="Layer %s modified machine %s -> %s" % \
                     (self.tc.layer['name'], self.td['bbvars']['MACHINE'], machine))
 
+
+    def test_machine_world(self):
+        '''
+        "bitbake world" is expected to work regardless which machine is selected.
+        BSP layers sometimes break that by enabling a recipe for a certain machine
+        without checking whether that recipe actually can be built in the current
+        distro configuration (for example, OpenGL might not enabled).
+
+        This test iterates over all machines. It would be nicer to instantiate
+        it once per machine. It merely checks for errors during parse
+        time. It does not actually attempt to build anything.
+        '''
+
+        if not self.td['machines']:
+            self.skipTest('No machines set with --machines.')
+        msg = []
+        for machine in self.td['machines']:
+            # In contrast to test_machine_signatures() below, errors are fatal here.
+            try:
+                get_signatures(self.td['builddir'], failsafe=False, machine=machine)
+            except RuntimeError as ex:
+                msg.append(str(ex))
+        if msg:
+            msg.insert(0, 'The following machines broke a world build:')
+            self.fail('\n'.join(msg))
+
     def test_machine_signatures(self):
         '''
         Selecting a machine may only affect the signature of tasks that are specific

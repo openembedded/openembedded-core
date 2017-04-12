@@ -233,9 +233,21 @@ def get_signatures(builddir, failsafe=False, machine=None):
     if failsafe:
         cmd += '-k '
     cmd += '-S none world'
-    check_command('Generating signatures failed. This might be due to some parse error and/or general layer incompatibilities.',
-                  cmd)
     sigs_file = os.path.join(builddir, 'locked-sigs.inc')
+    if os.path.exists(sigs_file):
+        os.unlink(sigs_file)
+    try:
+        check_command('Generating signatures failed. This might be due to some parse error and/or general layer incompatibilities.',
+                      cmd)
+    except RuntimeError as ex:
+        if failsafe and os.path.exists(sigs_file):
+            # Ignore the error here. Most likely some recipes active
+            # in a world build lack some dependencies. There is a
+            # separate test_machine_world_build which exposes the
+            # failure.
+            pass
+        else:
+            raise
 
     sig_regex = re.compile("^(?P<task>.*:.*):(?P<hash>.*) .$")
     tune_regex = re.compile("(^|\s)SIGGEN_LOCKEDSIGS_t-(?P<tune>\S*)\s*=\s*")
