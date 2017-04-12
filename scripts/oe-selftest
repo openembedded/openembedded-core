@@ -146,6 +146,14 @@ def preflight_check():
         log.error("You have buildhistory enabled already and this isn't recommended for selftest, please disable it first.")
         return False
 
+    if get_bb_var("PRSERV_HOST"):
+        log.error("Please unset PRSERV_HOST in order to run oe-selftest")
+        return False
+
+    if get_bb_var("SANITY_TESTED_DISTROS"):
+        log.error("Please unset SANITY_TESTED_DISTROS in order to run oe-selftest")
+        return False
+
     log.info("Running bitbake -p")
     runCmd("bitbake -p")
 
