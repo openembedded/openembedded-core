@@ -155,11 +155,14 @@ def add(args, config, basepath, workspace):
 
     tempdir = tempfile.mkdtemp(prefix='devtool')
     try:
+        builtnpm = False
         while True:
             try:
                 stdout, _ = exec_build_env_command(config.init_path, basepath, 'recipetool --color=%s create --devtool -o %s \'%s\' %s' % (color, tempdir, source, extracmdopts), watch=True)
             except bb.process.ExecutionError as e:
                 if e.exitcode == 14:
+                    if builtnpm:
+                        raise DevtoolError('Re-running recipetool still failed to find npm')
                     # FIXME this is a horrible hack that is unfortunately
                     # necessary due to the fact that we can't run bitbake from
                     # inside recipetool since recipetool keeps tinfoil active
@@ -167,6 +170,7 @@ def add(args, config, basepath, workspace):
                     # to exit out and come back here to do it.
                     ensure_npm(config, basepath, args.fixed_setup, check_exists=False)
                     logger.info('Re-running recipe creation process after building nodejs')
+                    builtnpm = True
                     continue
                 elif e.exitcode == 15:
                     raise DevtoolError('Could not auto-determine recipe name, please specify it on the command line')
