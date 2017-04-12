@@ -2,7 +2,7 @@
 #
 # Find a native sysroot to use - either from an in-tree OE build or
 # from a toolchain installation. It then ensures the variable
-# $OECORE_NATIVE_SYSROOT is set to the sysroot's base directory, and sets 
+# $OECORE_NATIVE_SYSROOT is set to the sysroot's base directory, and sets
 # $PSEUDO to the path of the pseudo binary.
 #
 # This script is intended to be run within other scripts by source'ing
@@ -48,7 +48,6 @@ fi
 # Global vars
 BITBAKE_E=""
 OECORE_NATIVE_SYSROOT=""
-
 set_oe_native_sysroot(){
     echo "Running bitbake -e $1"
     BITBAKE_E="`bitbake -e $1`"
@@ -93,7 +92,11 @@ if [ ! -e "$OECORE_NATIVE_SYSROOT/" ]; then
     echo "Error: $OECORE_NATIVE_SYSROOT doesn't exist."
 
     if [ "x$OECORE_DISTRO_VERSION" = "x" ]; then
-        echo "Have you run 'bitbake $1 -caddto_recipe_sysroot'?"
+        if [[ $1 =~ .*native.* ]]; then
+            echo "Have you run 'bitbake $1 -caddto_recipe_sysroot'?"
+        else
+            echo "Have you run 'bitbake $1 '?"
+        fi
     else
         echo "This shouldn't happen - something is wrong with your toolchain installation"
     fi
