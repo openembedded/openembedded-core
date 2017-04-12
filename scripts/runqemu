@@ -1056,7 +1056,18 @@ class BaseConfig(object):
         if not qemu_system:
             raise Exception("Failed to boot, QB_SYSTEM_NAME is NULL!")
 
-        qemu_bin = '%s/%s' % (self.get('STAGING_BINDIR_NATIVE'), qemu_system)
+        cmd = 'bitbake qemu-helper-native -e'
+        logger.info('Running %s...' % cmd)
+        out = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
+        out = out.stdout.read().decode('utf-8')
+
+        match = re.search('^STAGING_BINDIR_NATIVE="(.*)"', out, re.M)
+        if match:
+            bindir_native  = match.group(1)
+        else:
+            raise Exception("Can't find STAGING_BINDIR_NATIVE in '%s' output" % cmd)
+
+        qemu_bin = '%s/%s' % (bindir_native, qemu_system)
 
         # It is possible to have qemu-native in ASSUME_PROVIDED, and it won't
         # find QEMU in sysroot, it needs to use host's qemu.
