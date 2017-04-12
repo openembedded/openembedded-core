@@ -52,7 +52,7 @@ class OETestRunner(_TestRunner):
         if xmlEnabled:
             if not kwargs.get('output'):
                 kwargs['output'] = os.path.join(os.getcwd(),
-                        'TestResults_%s' % time.strftime("%Y%m%d%H%M%S"))
+                        'TestResults_%s_%s' % (time.strftime("%Y%m%d%H%M%S"), os.getpid()))
 
         super(OETestRunner, self).__init__(*args, **kwargs)
         self.tc = tc
