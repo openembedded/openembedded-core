@@ -43,16 +43,32 @@ do_install () {
 	install -p -m 644 ${S}/debian/copyright ${D}${docdir}/${BPN}/
 }
 
+basepasswd_sysroot_postinst() {
+#!/bin/sh
+
+# Install passwd.master and group.master to sysconfdir
+install -d -m 755 ${STAGING_DIR_TARGET}${sysconfdir}
+for i in passwd group; do
+	install -p -m 644 ${STAGING_DIR_TARGET}${datadir}/base-passwd/\$i.master \
+		${STAGING_DIR_TARGET}${sysconfdir}/\$i
+done
+
+# Run any useradd postinsts
+for script in ${STAGING_DIR_TARGET}${bindir}/postinst-useradd-*; do
+	if [ -f \$script ]; then
+		\$script
+	fi
+done
+}
+
 SYSROOT_DIRS += "${sysconfdir}"
 SYSROOT_PREPROCESS_FUNCS += "base_passwd_tweaksysroot"
 
 base_passwd_tweaksysroot () {
-	# Install passwd.master and group.master to sysconfdir
-	install -d -m 755 ${SYSROOT_DESTDIR}${sysconfdir}
-	for i in passwd group; do
-		install -p -m 644 ${SYSROOT_DESTDIR}${datadir}/base-passwd/$i.master \
-			${SYSROOT_DESTDIR}${sysconfdir}/$i
-	done
+	mkdir -p ${SYSROOT_DESTDIR}${bindir}
+	dest=${SYSROOT_DESTDIR}${bindir}/postinst-${PN}
+	echo "${basepasswd_sysroot_postinst}" > $dest
+	chmod 0755 $dest
 }
 
 python populate_packages_prepend() {
