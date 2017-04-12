@@ -910,6 +910,7 @@ class BaseConfig(object):
             # running at the same time.
             try:
                 os.mkdir(lockdir)
+                os.chmod(lockdir, 0o777)
             except FileExistsError:
                 pass
 
