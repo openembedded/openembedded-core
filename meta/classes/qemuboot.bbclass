@@ -87,7 +87,14 @@ python do_write_qemuboot_conf() {
     cf = configparser.ConfigParser()
     cf.add_section('config_bsp')
     for k in qemuboot_vars(d):
-        cf.set('config_bsp', k, '%s' % d.getVar(k))
+        # qemu-helper-native sysroot is not removed by rm_work and
+        # contains all tools required by runqemu
+        if k == 'STAGING_BINDIR_NATIVE':
+            val = os.path.join(d.getVar('BASE_WORKDIR'), d.getVar('BUILD_SYS'),
+                               'qemu-helper-native/1.0-r1/recipe-sysroot-native/usr/bin/')
+        else:
+            val = d.getVar(k)
+        cf.set('config_bsp', k, '%s' % val)
 
     # QB_DEFAULT_KERNEL's value of KERNEL_IMAGETYPE is the name of a symlink
     # to the kernel file, which hinders relocatability of the qb conf.
