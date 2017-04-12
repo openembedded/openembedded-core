@@ -240,7 +240,8 @@ class NpmRecipeHandler(RecipeHandler):
                     packages['${PN}'] = ''
                     pkglicenses = split_pkg_licenses(licvalues, packages, lines_after, licenses)
                     all_licenses = list(set([item.replace('_', ' ') for pkglicense in pkglicenses.values() for item in pkglicense]))
-                    all_licenses.remove('&')
+                    if '&' in all_licenses:
+                        all_licenses.remove('&')
                     # Go back and update the LICENSE value since we have a bit more
                     # information than when that was written out (and we know all apply
                     # vs. there being a choice, so we can join them with &)
