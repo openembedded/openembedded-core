@@ -721,7 +721,7 @@ class BaseConfig(object):
                 self.load_bitbake_env()
 
             if self.bitbake_e:
-                native_vars = ['STAGING_DIR_NATIVE', 'STAGING_BINDIR_NATIVE']
+                native_vars = ['STAGING_DIR_NATIVE']
                 for nv in native_vars:
                     s = re.search('^%s="(.*)"' % nv, self.bitbake_e, re.M)
                     if s and s.group(1) != self.get(nv):
@@ -1056,18 +1056,7 @@ class BaseConfig(object):
         if not qemu_system:
             raise Exception("Failed to boot, QB_SYSTEM_NAME is NULL!")
 
-        cmd = 'bitbake qemu-helper-native -e'
-        logger.info('Running %s...' % cmd)
-        out = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
-        out = out.stdout.read().decode('utf-8')
-
-        match = re.search('^STAGING_BINDIR_NATIVE="(.*)"', out, re.M)
-        if match:
-            bindir_native  = match.group(1)
-        else:
-            raise Exception("Can't find STAGING_BINDIR_NATIVE in '%s' output" % cmd)
-
-        qemu_bin = '%s/%s' % (bindir_native, qemu_system)
+        qemu_bin = '%s/%s' % (self.bindir_native, qemu_system)
 
         # It is possible to have qemu-native in ASSUME_PROVIDED, and it won't
         # find QEMU in sysroot, it needs to use host's qemu.
@@ -1195,6 +1184,28 @@ class BaseConfig(object):
         except subprocess.CalledProcessError as err:
             self.bitbake_e = ''
             logger.warn("Couldn't run 'bitbake -e' to gather environment information:\n%s" % err.output.decode('utf-8'))
+
+    @property
+    def bindir_native(self):
+        result = self.get('STAGING_BINDIR_NATIVE')
+        if result and os.path.exists(result):
+            return result
+
+        cmd = 'bitbake qemu-helper-native -e'
+        logger.info('Running %s...' % cmd)
+        out = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
+        out = out.stdout.read().decode('utf-8')
+
+        match = re.search('^STAGING_BINDIR_NATIVE="(.*)"', out, re.M)
+        if match:
+            result = match.group(1)
+            if os.path.exists(result):
+                self.set('STAGING_BINDIR_NATIVE', result)
+                return result
+            raise Exception("Native sysroot directory %s doesn't exist" % result)
+        else:
+            raise Exception("Can't find STAGING_BINDIR_NATIVE in '%s' output" % cmd)
+
 
 def main():
     if "help" in sys.argv or '-h' in sys.argv or '--help' in sys.argv:
