@@ -22,34 +22,39 @@
 #
 
 if [ $# -lt 1 -o "$1" = '--help' -o "$1" = '-h' ] ; then
-    echo 'oe-run-native: error: the following arguments are required: <native tool>'
-    echo 'Usage: oe-run-native tool [parameters]'
+    echo 'oe-run-native: error: the following arguments are required: <native recipe> <native tool>'
+    echo 'Usage: oe-run-native native-recipe tool [parameters]'
     echo ''
     echo 'OpenEmbedded run-native - runs native tools'
     echo ''
     echo 'arguments:'
+    echo '  native-recipe       The recipe which provoides tool'
     echo '  tool                Native tool to run'
     echo ''
     exit 2
 fi
+
+native_recipe="$1"
+tool="$2"
+shift
 
 SYSROOT_SETUP_SCRIPT=`which oe-find-native-sysroot 2> /dev/null`
 if [ -z "$SYSROOT_SETUP_SCRIPT" ]; then
         echo "Error: Unable to find oe-find-native-sysroot script"
         exit 1
 fi
-. $SYSROOT_SETUP_SCRIPT
+. $SYSROOT_SETUP_SCRIPT $native_recipe
 
 OLD_PATH=$PATH
 
 # look for a tool only in native sysroot
 PATH=$OECORE_NATIVE_SYSROOT/usr/bin:$OECORE_NATIVE_SYSROOT/bin:$OECORE_NATIVE_SYSROOT/usr/sbin:$OECORE_NATIVE_SYSROOT/sbin
-tool=`/usr/bin/which $1 2>/dev/null`
+tool=`/usr/bin/which $tool 2>/dev/null`
 
 if [ -n "$tool" ] ; then
     # add old path to allow usage of host tools
     PATH=$PATH:$OLD_PATH $@
 else
-    echo "Error: Unable to find '$1' in native sysroot"
+    echo "Error: Unable to find '$tool' in $PATH"
     exit 1
 fi
