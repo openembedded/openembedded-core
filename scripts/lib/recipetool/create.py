@@ -59,6 +59,9 @@ class RecipeHandler(object):
     recipecmakefilemap = {}
     recipebinmap = {}
 
+    def __init__(self):
+        self._devtool = False
+
     @staticmethod
     def load_libmap(d):
         '''Load library->recipe mapping'''
@@ -622,6 +625,7 @@ def create_recipe(args):
     handlers.sort(key=lambda item: (item[1], -item[2]), reverse=True)
     for handler, priority, _ in handlers:
         logger.debug('Handler: %s (priority %d)' % (handler.__class__.__name__, priority))
+        setattr(handler, '_devtool', args.devtool)
     handlers = [item[0] for item in handlers]
 
     # Apply the handlers

@@ -189,7 +189,7 @@ class NpmRecipeHandler(RecipeHandler):
         files = RecipeHandler.checkfiles(srctree, ['package.json'])
         if files:
             d = bb.data.createCopy(tinfoil.config_data)
-            npm_bindir = check_npm(tinfoil)
+            npm_bindir = check_npm(tinfoil, self._devtool)
             d.prependVar('PATH', '%s:' % npm_bindir)
 
             data = read_package_json(files[0])
