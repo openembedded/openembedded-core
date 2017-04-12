@@ -211,9 +211,10 @@ def send_email(text_fn, html_fn, subject, recipients):
     else:
         raise ReportError("Neither plain text nor html body specified")
 
-    full_name = pwd.getpwuid(os.getuid()).pw_gecos.split(',')[0]
+    pw_data = pwd.getpwuid(os.getuid())
+    full_name = pw_data.pw_gecos.split(',')[0]
     email = os.environ.get('EMAIL',
-                           '{}@{}'.format(os.getlogin(), socket.getfqdn()))
+                           '{}@{}'.format(pw_data.pw_name, socket.getfqdn()))
     msg['From'] = "{} <{}>".format(full_name, email)
     msg['To'] = ', '.join(recipients)
     msg['Subject'] = subject
