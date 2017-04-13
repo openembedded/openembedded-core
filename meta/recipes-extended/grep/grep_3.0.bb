@@ -16,6 +16,9 @@ inherit autotools gettext texinfo pkgconfig
 
 EXTRA_OECONF = "--disable-perl-regexp"
 
+# Fix "Argument list too long" error when len(TMPDIR) = 410
+acpaths = "-I ./m4"
+
 do_configure_prepend () {
 	rm -f ${S}/m4/init.m4
 }
