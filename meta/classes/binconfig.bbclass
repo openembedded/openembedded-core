@@ -14,7 +14,7 @@ def get_binconfig_mangle(d):
         s += " -e 's:-L${libdir}:-LOELIBDIR:;'"
         s += " -e 's:-I${includedir}:-IOEINCDIR:;'"
         s += " -e 's:-L${WORKDIR}:-LOELIBDIR:'"
-        s += " -e 's:-I${WORKDIR}:-I-IOEINCDIR:'"
+        s += " -e 's:-I${WORKDIR}:-IOEINCDIR:'"
         s += " -e 's:OEBASELIBDIR:${STAGING_BASELIBDIR}:;'"
         s += " -e 's:OELIBDIR:${STAGING_LIBDIR}:;'"
         s += " -e 's:OEINCDIR:${STAGING_INCDIR}:;'"
