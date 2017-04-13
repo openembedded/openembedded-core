@@ -114,6 +114,7 @@ def create_filtered_tasklist(d, sdkbasepath, tasklistfile, conf_initpath):
             f.write('SSTATE_MIRRORS_forcevariable = ""\n')
             # Ensure TMPDIR is the default so that clean_esdk_builddir() can delete it
             f.write('TMPDIR_forcevariable = "${TOPDIR}/tmp"\n')
+            f.write('TCLIBCAPPEND_forcevariable = ""\n')
             # Drop uninative if the build isn't using it (or else NATIVELSBSTRING will
             # be different and we won't be able to find our native sstate)
             if not bb.data.inherits_class('uninative', d):
@@ -289,6 +290,7 @@ python copy_buildsystem () {
             f.write('\n')
 
             f.write('TMPDIR = "${TOPDIR}/tmp"\n')
+            f.write('TCLIBCAPPEND = ""\n')
             f.write('DL_DIR = "${TOPDIR}/downloads"\n')
 
             f.write('INHERIT += "%s"\n' % 'uninative')
