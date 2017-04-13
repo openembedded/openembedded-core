@@ -24,6 +24,9 @@ SRC_URI[sha256sum] = "596097257c2ce22e747741f8ff3d7e24f6e26231fa198a41b2a072e62d
 DEPENDS = "libgpg-error libassuan"
 RDEPENDS_${PN}-cpp += "libstdc++"
 
+RDEPENDS_python2-gpg += "python-unixadmin"
+RDEPENDS_python3-gpg += "python3-unixadmin"
+
 BINCONFIG = "${bindir}/gpgme-config"
 
 # Note select python2 or python3, but you can't select both at the same time
