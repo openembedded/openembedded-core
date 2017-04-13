@@ -992,12 +992,15 @@ class BaseConfig(object):
                         logger.info('Using ide drive')
                         vm_drive = "%s,format=%s" % (self.rootfs, rootfs_format)
                     else:
-                        logger.warn("Unknown QB_DRIVE_TYPE: %s" % drive_type)
+                        # virtio might have been selected explicitly (just use it), or
+                        # is used as fallback (then warn about that).
+                        if not drive_type.startswith("/dev/vd"):
+                            logger.warn("Unknown QB_DRIVE_TYPE: %s" % drive_type)
+                            logger.warn("Failed to figure out drive type, consider define or fix QB_DRIVE_TYPE")
+                            logger.warn('Trying to use virtio block drive')
+                        vm_drive = '-drive if=virtio,file=%s,format=%s' % (self.rootfs, rootfs_format)
 
-                if not vm_drive:
-                    logger.warn("Failed to figure out drive type, consider define or fix QB_DRIVE_TYPE")
-                    logger.warn('Trying to use virtio block drive')
-                    vm_drive = '-drive if=virtio,file=%s,format=%s' % (self.rootfs, rootfs_format)
+                # All branches above set vm_drive.
                 self.rootfs_options = '%s -no-reboot' % vm_drive
             self.kernel_cmdline = 'root=%s rw highres=off' % (self.get('QB_KERNEL_ROOT'))
 
