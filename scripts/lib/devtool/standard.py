@@ -536,6 +536,7 @@ def _extract_source(srctree, keep_temp, devbranch, sync, d, tinfoil):
                                 'bb.command.CommandFailed',
                                 'bb.build.TaskStarted',
                                 'bb.build.TaskSucceeded',
+                                'bb.build.TaskFailed',
                                 'bb.build.TaskFailedSilent'])
 
         def runtask(target, task):
@@ -547,6 +548,8 @@ def _extract_source(srctree, keep_temp, devbranch, sync, d, tinfoil):
                             break
                         elif isinstance(event, bb.command.CommandFailed):
                             raise DevtoolError('Task do_%s failed: %s' % (task, event.error))
+                        elif isinstance(event, bb.build.TaskFailed):
+                            raise DevtoolError('Task do_%s failed' % task)
                         elif isinstance(event, bb.build.TaskStarted):
                             logger.info('Executing %s...' % event._task)
                         elif isinstance(event, logging.LogRecord):
