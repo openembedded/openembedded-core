@@ -530,7 +530,6 @@ def _extract_source(srctree, keep_temp, devbranch, sync, d, tinfoil):
 
         tinfoil.set_event_mask(['bb.event.BuildStarted',
                                 'bb.event.BuildCompleted',
-                                'bb.event.TaskStarted',
                                 'logging.LogRecord',
                                 'bb.command.CommandCompleted',
                                 'bb.command.CommandFailed',
