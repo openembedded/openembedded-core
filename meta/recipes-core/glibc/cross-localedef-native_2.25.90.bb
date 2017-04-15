@@ -17,25 +17,25 @@ inherit autotools
 
 FILESEXTRAPATHS =. "${FILE_DIRNAME}/${PN}:${FILE_DIRNAME}/glibc:"
 
-SRCBRANCH ?= "release/${PV}/master"
+#SRCBRANCH ?= "release/${PV}/master"
+SRCBRANCH ?= "master"
 GLIBC_GIT_URI ?= "git://sourceware.org/git/glibc.git"
 UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>\d+\.\d+(\.\d+)*)"
 
-SRCREV_glibc ?= "db0242e3023436757bbc7c488a779e6e3343db04"
-SRCREV_localedef ?= "29869b6dc11427c5bab839bdb155c85a7c644c71"
+SRCREV_glibc ?= "43a9f537fc121a867981ca31ea9d79f33ce0fd24"
+SRCREV_localedef ?= "dfb4afe551c6c6e94f9cc85417bd1f582168c843"
 
 SRC_URI = "${GLIBC_GIT_URI};branch=${SRCBRANCH};name=glibc \
            git://github.com/kraj/localedef;branch=master;name=localedef;destsuffix=git/localedef \
-           file://0016-timezone-re-written-tzselect-as-posix-sh.patch \
-           file://0017-Remove-bash-dependency-for-nscd-init-script.patch \
-           file://0018-eglibc-Cross-building-and-testing-instructions.patch \
-           file://0019-eglibc-Help-bootstrap-cross-toolchain.patch \
-           file://0020-eglibc-cherry-picked-from.patch \
-           file://0021-eglibc-Clear-cache-lines-on-ppc8xx.patch \
-           file://0022-eglibc-Resolve-__fpscr_values-on-SH4.patch \
-           file://0023-eglibc-Install-PIC-archives.patch \
-           file://0024-eglibc-Forward-port-cross-locale-generation-support.patch \
-           file://0025-Define-DUMMY_LOCALE_T-if-not-defined.patch \
+           file://0015-timezone-re-written-tzselect-as-posix-sh.patch \
+           file://0016-Remove-bash-dependency-for-nscd-init-script.patch \
+           file://0017-eglibc-Cross-building-and-testing-instructions.patch \
+           file://0018-eglibc-Help-bootstrap-cross-toolchain.patch \
+           file://0019-eglibc-Clear-cache-lines-on-ppc8xx.patch \
+           file://0020-eglibc-Resolve-__fpscr_values-on-SH4.patch \
+           file://0021-eglibc-Install-PIC-archives.patch \
+           file://0022-eglibc-Forward-port-cross-locale-generation-support.patch \
+           file://0023-Define-DUMMY_LOCALE_T-if-not-defined.patch \
 "
 # Makes for a rather long rev (22 characters), but...
 #

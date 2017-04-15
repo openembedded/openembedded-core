@@ -1,7 +1,7 @@
-From df96d6b61bb60f13cd3d4989d1afc56d705f4a33 Mon Sep 17 00:00:00 2001
+From cdc88dffa226815e3a218604655459e33dc86483 Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Wed, 18 Mar 2015 00:42:58 +0000
-Subject: [PATCH 18/26] eglibc: Cross building and testing instructions
+Subject: [PATCH 17/25] eglibc: Cross building and testing instructions
 
 Ported from eglibc
 Upstream-Status: Pending
@@ -16,7 +16,7 @@ Signed-off-by: Khem Raj <raj.khem@gmail.com>
 
 diff --git a/GLIBC.cross-building b/GLIBC.cross-building
 new file mode 100644
-index 0000000..e6e0da1
+index 0000000000..e6e0da1aaf
 --- /dev/null
 +++ b/GLIBC.cross-building
 @@ -0,0 +1,383 @@
@@ -405,7 +405,7 @@ index 0000000..e6e0da1
 +    Hello, C++ world!
 diff --git a/GLIBC.cross-testing b/GLIBC.cross-testing
 new file mode 100644
-index 0000000..b67b468
+index 0000000000..b67b468466
 --- /dev/null
 +++ b/GLIBC.cross-testing
 @@ -0,0 +1,205 @@
@@ -615,5 +615,5 @@ index 0000000..b67b468
 +  simply place copies of these libraries in the top GLIBC build
 +  directory.
 -- 
-2.10.2
+2.13.2
 

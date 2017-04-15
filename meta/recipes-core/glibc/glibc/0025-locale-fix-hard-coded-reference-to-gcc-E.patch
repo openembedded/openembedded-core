@@ -1,7 +1,7 @@
-From a2fc86cb8d0366171f100ebd033aeb9609fa40de Mon Sep 17 00:00:00 2001
+From f3a670496c8fe6d4acf045f5b167a19cf41b044e Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?J=C3=A9r=C3=A9my=20Rosen?= <jeremy.rosen@smile.fr>
 Date: Mon, 22 Aug 2016 16:09:25 +0200
-Subject: [PATCH 27/27] locale: fix hard-coded reference to gcc -E
+Subject: [PATCH 25/25] locale: fix hard-coded reference to gcc -E
 
 When new version of compilers are published, they may not be compatible with
 older versions of software. This is particularly common when software is built
@@ -17,13 +17,13 @@ environment.
 This patch replaces the hard-coded reference to the gcc binary with the proper
 environment variable, thus allowing a user to override it.
 
-Upstream-Status: Submitted [https://sourceware.org/ml/libc-alpha/2016-08/msg00746.html]
+Upstream-Status : Submitted [https://sourceware.org/ml/libc-alpha/2016-08/msg00746.html]
 ---
  locale/gen-translit.pl | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/locale/gen-translit.pl b/locale/gen-translit.pl
-index 30d3f2f..e976530 100644
+index 30d3f2f195..e97653017c 100644
 --- a/locale/gen-translit.pl
 +++ b/locale/gen-translit.pl
 @@ -1,5 +1,5 @@
@@ -34,5 +34,5 @@ index 30d3f2f..e976530 100644
  
  sub cstrlen {
 -- 
-2.10.2
+2.13.2
 

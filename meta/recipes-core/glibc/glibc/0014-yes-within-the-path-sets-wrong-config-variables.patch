@@ -1,7 +1,7 @@
-From 18d64951cbb68d8d75e8ef347cbd0e0a5c14604b Mon Sep 17 00:00:00 2001
+From 3b904bee81a1cfe81e3f437b5f3296efd54a51ac Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Wed, 18 Mar 2015 00:31:06 +0000
-Subject: [PATCH 15/26] 'yes' within the path sets wrong config variables
+Subject: [PATCH 14/25] 'yes' within the path sets wrong config variables
 
 It seems that the 'AC_EGREP_CPP(yes...' example is quite popular
 but being such a short word to grep it is likely to produce
@@ -29,7 +29,7 @@ Signed-off-by: Khem Raj <raj.khem@gmail.com>
  12 files changed, 28 insertions(+), 28 deletions(-)
 
 diff --git a/sysdeps/aarch64/configure b/sysdeps/aarch64/configure
-index 5bd355a..3bc5537 100644
+index 5bd355a691..3bc5537bc0 100644
 --- a/sysdeps/aarch64/configure
 +++ b/sysdeps/aarch64/configure
 @@ -148,12 +148,12 @@ else
@@ -48,7 +48,7 @@ index 5bd355a..3bc5537 100644
  else
    libc_cv_aarch64_be=no
 diff --git a/sysdeps/aarch64/configure.ac b/sysdeps/aarch64/configure.ac
-index 7851dd4..6e92381 100644
+index 7851dd4dac..6e9238171f 100644
 --- a/sysdeps/aarch64/configure.ac
 +++ b/sysdeps/aarch64/configure.ac
 @@ -10,8 +10,8 @@ GLIBC_PROVIDES dnl See aclocal.m4 in the top level source directory.
@@ -63,7 +63,7 @@ index 7851dd4..6e92381 100644
    ], libc_cv_aarch64_be=yes, libc_cv_aarch64_be=no)])
  if test $libc_cv_aarch64_be = yes; then
 diff --git a/sysdeps/arm/configure b/sysdeps/arm/configure
-index 431e843..e152461 100644
+index 431e843b2b..e152461138 100644
 --- a/sysdeps/arm/configure
 +++ b/sysdeps/arm/configure
 @@ -151,12 +151,12 @@ else
@@ -82,7 +82,7 @@ index 431e843..e152461 100644
  else
    libc_cv_arm_pcs_vfp=no
 diff --git a/sysdeps/arm/configure.ac b/sysdeps/arm/configure.ac
-index 90cdd69..05a262b 100644
+index 90cdd69c75..05a262ba00 100644
 --- a/sysdeps/arm/configure.ac
 +++ b/sysdeps/arm/configure.ac
 @@ -15,8 +15,8 @@ AC_DEFINE(PI_STATIC_AND_HIDDEN)
@@ -97,7 +97,7 @@ index 90cdd69..05a262b 100644
    ], libc_cv_arm_pcs_vfp=yes, libc_cv_arm_pcs_vfp=no)])
  if test $libc_cv_arm_pcs_vfp = yes; then
 diff --git a/sysdeps/mips/configure b/sysdeps/mips/configure
-index 4e13248..f14af95 100644
+index 4e13248c03..f14af952d0 100644
 --- a/sysdeps/mips/configure
 +++ b/sysdeps/mips/configure
 @@ -143,11 +143,11 @@ else
@@ -115,7 +115,7 @@ index 4e13248..f14af95 100644
  else
    libc_cv_mips_nan2008=no
 diff --git a/sysdeps/mips/configure.ac b/sysdeps/mips/configure.ac
-index bcbdaff..ad3057f 100644
+index bcbdaffd9f..ad3057f4cc 100644
 --- a/sysdeps/mips/configure.ac
 +++ b/sysdeps/mips/configure.ac
 @@ -6,9 +6,9 @@ dnl position independent way.
@@ -131,7 +131,7 @@ index bcbdaff..ad3057f 100644
  if test x$libc_cv_mips_nan2008 = xyes; then
    AC_DEFINE(HAVE_MIPS_NAN2008)
 diff --git a/sysdeps/nios2/configure b/sysdeps/nios2/configure
-index 14c8a3a..dde3814 100644
+index 14c8a3a014..dde3814ef2 100644
 --- a/sysdeps/nios2/configure
 +++ b/sysdeps/nios2/configure
 @@ -142,12 +142,12 @@ else
@@ -150,7 +150,7 @@ index 14c8a3a..dde3814 100644
  else
    libc_cv_nios2_be=no
 diff --git a/sysdeps/nios2/configure.ac b/sysdeps/nios2/configure.ac
-index f05f438..dc86399 100644
+index f05f43802b..dc8639902d 100644
 --- a/sysdeps/nios2/configure.ac
 +++ b/sysdeps/nios2/configure.ac
 @@ -4,8 +4,8 @@ GLIBC_PROVIDES dnl See aclocal.m4 in the top level source directory.
@@ -165,7 +165,7 @@ index f05f438..dc86399 100644
    ], libc_cv_nios2_be=yes, libc_cv_nios2_be=no)])
  if test $libc_cv_nios2_be = yes; then
 diff --git a/sysdeps/unix/sysv/linux/mips/configure b/sysdeps/unix/sysv/linux/mips/configure
-index a5513fa..283b293 100644
+index a5513fad48..283b293ff3 100644
 --- a/sysdeps/unix/sysv/linux/mips/configure
 +++ b/sysdeps/unix/sysv/linux/mips/configure
 @@ -414,11 +414,11 @@ else
@@ -183,7 +183,7 @@ index a5513fa..283b293 100644
  else
    libc_cv_mips_nan2008=no
 diff --git a/sysdeps/unix/sysv/linux/mips/configure.ac b/sysdeps/unix/sysv/linux/mips/configure.ac
-index 9147aa4..7898e24 100644
+index 9147aa4582..7898e24738 100644
 --- a/sysdeps/unix/sysv/linux/mips/configure.ac
 +++ b/sysdeps/unix/sysv/linux/mips/configure.ac
 @@ -105,9 +105,9 @@ AC_COMPILE_IFELSE(
@@ -199,7 +199,7 @@ index 9147aa4..7898e24 100644
  
  libc_mips_nan=
 diff --git a/sysdeps/unix/sysv/linux/powerpc/powerpc64/configure b/sysdeps/unix/sysv/linux/powerpc/powerpc64/configure
-index af06970..27b8c1b 100644
+index 4e7fcf1d97..44a9cb3791 100644
 --- a/sysdeps/unix/sysv/linux/powerpc/powerpc64/configure
 +++ b/sysdeps/unix/sysv/linux/powerpc/powerpc64/configure
 @@ -155,12 +155,12 @@ else
@@ -233,7 +233,7 @@ index af06970..27b8c1b 100644
  else
    libc_cv_ppc64_def_call_elf=no
 diff --git a/sysdeps/unix/sysv/linux/powerpc/powerpc64/configure.ac b/sysdeps/unix/sysv/linux/powerpc/powerpc64/configure.ac
-index 0822915..9a32fdd 100644
+index f9cba6e15d..b21f72f1e4 100644
 --- a/sysdeps/unix/sysv/linux/powerpc/powerpc64/configure.ac
 +++ b/sysdeps/unix/sysv/linux/powerpc/powerpc64/configure.ac
 @@ -6,8 +6,8 @@ LIBC_SLIBDIR_RTLDDIR([lib64], [lib64])
@@ -259,5 +259,5 @@ index 0822915..9a32fdd 100644
      ], libc_cv_ppc64_def_call_elf=yes, libc_cv_ppc64_def_call_elf=no)])
    if test $libc_cv_ppc64_def_call_elf = no; then
 -- 
-2.10.2
+2.13.2
 
