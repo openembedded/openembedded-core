@@ -57,6 +57,7 @@ do_compile () {
 	export LDFLAGS_FOR_TARGET="${TARGET_LDFLAGS}"
 
 	oe_runmake all-host configure-target-libgcc
+	(cd ${B}/${TARGET_SYS}/libgcc; oe_runmake enable-execute-stack.c unwind.h md-unwind-support.h sfp-machine.h gthr-default.h)
 	# now generate script to drive testing
 	echo "#!/usr/bin/env sh" >${B}/${TARGET_PREFIX}testgcc
 	set >> ${B}/${TARGET_PREFIX}testgcc
@@ -155,7 +156,7 @@ INHIBIT_PACKAGE_STRIP = "1"
 BINRELPATH = "${@os.path.relpath(d.expand("${STAGING_DIR_NATIVE}${prefix_native}/bin/${TARGET_SYS}"), d.expand("${libexecdir}/gcc/${TARGET_SYS}/${BINV}"))}"
 
 do_install () {
-	( cd ${B}/${TARGET_SYS}/libgcc; oe_runmake 'DESTDIR=${D}' install-unwind_h )
+	( cd ${B}/${TARGET_SYS}/libgcc; oe_runmake 'DESTDIR=${D}' install-unwind_h-forbuild install-unwind_h )
 	oe_runmake 'DESTDIR=${D}' install-host
 
 	install -d ${D}${target_base_libdir}
