@@ -5,8 +5,11 @@ require diffutils.inc
 
 SRC_URI = "${GNU_MIRROR}/diffutils/diffutils-${PV}.tar.xz \
            file://0001-Unset-need_charset_alias-when-building-for-musl.patch \
+           file://diffutils-3.5-gcc7.patch \
            file://run-ptest \
 "
+SRC_URI[md5sum] = "569354697ff1cfc9a9de3781361015fa"
+SRC_URI[sha256sum] = "dad398ccd5b9faca6b0ab219a036453f62a602a56203ac659b43e889bec35533"
 
 EXTRA_OECONF += "--without-libsigsegv-prefix"
 
@@ -19,9 +22,6 @@ do_configure_prepend () {
 		rm -f ${S}/m4/$i
 	done
 }
-
-SRC_URI[md5sum] = "569354697ff1cfc9a9de3781361015fa"
-SRC_URI[sha256sum] = "dad398ccd5b9faca6b0ab219a036453f62a602a56203ac659b43e889bec35533"
 
 inherit ptest
 
