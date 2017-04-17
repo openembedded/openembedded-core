@@ -19,7 +19,7 @@ S = "${WORKDIR}/${BPN}-r3-9-1"
 
 UPSTREAM_CHECK_URI = "https://github.com/${BPN}/${BPN}/releases"
 
-SRC_URI = "https://github.com/${BPN}/${BPN}/archive/r3-9-1.tar.gz \
+SRC_URI = "https://github.com/${BPN}/${BPN}/archive/r3-9-1.tar.gz;downloadfilename=${BP}.tar.gz\
            file://act-as-mv-when-rotate.patch \
            file://update-the-manual.patch \
            file://disable-check-different-filesystems.patch \
