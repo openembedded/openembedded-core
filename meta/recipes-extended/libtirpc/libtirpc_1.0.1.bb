@@ -14,12 +14,13 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/${BPN}/${BP}.tar.bz2;name=libtirpc \
            file://libtirpc-1.0.2-rc3.patch \
            file://libtirpc-0.2.1-fortify.patch \
            file://export_key_secretkey_is_set.patch \
-          "
+           file://0001-replace-__bzero-with-memset-API.patch \
+           "
 
 SRC_URI_append_libc-uclibc = " file://remove-des-functionality.patch \
                              "
 
-SRC_URI_append_libc-musl = " file://remove-des-functionality.patch \
+SRC_URI_append_libc-musl = " \
                              file://Use-netbsd-queue.h.patch \
                            "
 
