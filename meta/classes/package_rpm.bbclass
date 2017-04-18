@@ -433,19 +433,6 @@ python write_specfile () {
         print_deps(splitrsuggests,  "Suggests", spec_preamble_bottom, d)
         print_deps(splitrprovides,  "Provides", spec_preamble_bottom, d)
         print_deps(splitrobsoletes, "Obsoletes", spec_preamble_bottom, d)
-
-        # conflicts can not be in a provide!  We will need to filter it.
-        if splitrconflicts:
-            depends_dict = bb.utils.explode_dep_versions2(splitrconflicts)
-            newdeps_dict = {}
-            for dep in depends_dict:
-                if dep not in splitrprovides:
-                    newdeps_dict[dep] = depends_dict[dep]
-            if newdeps_dict:
-                splitrconflicts = bb.utils.join_deps(newdeps_dict)
-            else:
-                splitrconflicts = ""
-
         print_deps(splitrconflicts,  "Conflicts", spec_preamble_bottom, d)
 
         spec_preamble_bottom.append('')
@@ -541,19 +528,6 @@ python write_specfile () {
     print_deps(srcrsuggests, "Suggests", spec_preamble_top, d)
     print_deps(srcrprovides + (" /bin/sh" if srcname.startswith("nativesdk-") else ""), "Provides", spec_preamble_top, d)
     print_deps(srcrobsoletes, "Obsoletes", spec_preamble_top, d)
-    
-    # conflicts can not be in a provide!  We will need to filter it.
-    if srcrconflicts:
-        depends_dict = bb.utils.explode_dep_versions2(srcrconflicts)
-        newdeps_dict = {}
-        for dep in depends_dict:
-            if dep not in srcrprovides:
-                newdeps_dict[dep] = depends_dict[dep]
-        if newdeps_dict:
-            srcrconflicts = bb.utils.join_deps(newdeps_dict)
-        else:
-            srcrconflicts = ""
-
     print_deps(srcrconflicts, "Conflicts", spec_preamble_top, d)
 
     spec_preamble_top.append('')
