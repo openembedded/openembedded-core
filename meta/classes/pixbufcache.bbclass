@@ -57,7 +57,7 @@ SYSROOT_PREPROCESS_FUNCS_append_class-native = " pixbufcache_sstate_postinst"
 # See base.bbclass for the other half of this
 pixbufcache_sstate_postinst() {
 	mkdir -p ${SYSROOT_DESTDIR}${bindir}
-	dest=${SYSROOT_DESTDIR}${bindir}/postinst-useradd-${PN}
+	dest=${SYSROOT_DESTDIR}${bindir}/postinst-${PN}
         echo '#!/bin/sh' > $dest
 	echo "${gdkpixbuf_complete}" >> $dest
 	chmod 0755 $dest
