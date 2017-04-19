@@ -4,7 +4,7 @@
 
 LIBCEXTENSION = "-musl"
 
-# Add uclibc overrides to the overrides.
+# Add musl libc overrides to the overrides.
 LIBCOVERRIDE = ":libc-musl"
 OVERRIDES .= "${LIBCOVERRIDE}"
 
