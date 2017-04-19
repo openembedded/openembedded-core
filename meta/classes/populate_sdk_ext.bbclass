@@ -577,6 +577,8 @@ sdk_ext_postinst() {
 
 	# Allow bitbake environment setup to be ran as part of this sdk.
 	echo "export OE_SKIP_SDK_CHECK=1" >> $env_setup_script
+	# Work around runqemu not knowing how to get this information within the eSDK
+	echo "export DEPLOY_DIR_IMAGE=$target_sdk_dir/tmp/${@os.path.relpath(d.getVar('DEPLOY_DIR_IMAGE'), d.getVar('TMPDIR'))}" >> $env_setup_script
 
 	# A bit of another hack, but we need this in the path only for devtool
 	# so put it at the end of $PATH.
