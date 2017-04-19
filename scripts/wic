@@ -342,6 +342,8 @@ def wic_init_parser_create(subparser):
                       dest='compressor',
                       help="compress image with specified compressor")
     subparser.add_argument("-m", "--bmap", action="store_true", help="generate .bmap")
+    subparser.add_argument("--no-fstab-update" ,action="store_true",
+                      help="Do not change fstab file.")
     subparser.add_argument("-v", "--vars", dest='vars_dir',
                       help="directory with <image>.env files that store "
                            "bitbake variables")

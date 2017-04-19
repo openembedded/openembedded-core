@@ -155,7 +155,7 @@ SYNOPSIS
         [-e | --image-name] [-s, --skip-build-check] [-D, --debug]
         [-r, --rootfs-dir] [-b, --bootimg-dir]
         [-k, --kernel-dir] [-n, --native-sysroot] [-f, --build-rootfs]
-        [-c, --compress-with] [-m, --bmap]
+        [-c, --compress-with] [-m, --bmap] [--no-fstab-update]
 
 DESCRIPTION
     This command creates an OpenEmbedded image based on the 'OE
@@ -227,6 +227,11 @@ DESCRIPTION
 
     The -m option is used to produce .bmap file for the image. This file
     can be used to flash image using bmaptool utility.
+
+    The --no-fstab-update option is used to doesn't change fstab file. When
+    using this option the final fstab file will be same that in rootfs and
+    wic doesn't update file, e.g adding a new mount point. User can control
+    the fstab file content in base-files recipe.
 """
 
 wic_list_usage = """

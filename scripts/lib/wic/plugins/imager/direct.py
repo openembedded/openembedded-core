@@ -71,6 +71,7 @@ class DirectPlugin(ImagerPlugin):
         self.outdir = options.outdir
         self.compressor = options.compressor
         self.bmap = options.bmap
+        self.no_fstab_update = options.no_fstab_update
 
         self.name = "%s-%s" % (os.path.splitext(os.path.basename(wks_file))[0],
                                strftime("%Y%m%d%H%M"))
@@ -165,7 +166,10 @@ class DirectPlugin(ImagerPlugin):
         filesystems from the artifacts directly and combine them into
         a partitioned image.
         """
-        new_rootfs = self._write_fstab(self.rootfs_dir.get("ROOTFS_DIR"))
+        if self.no_fstab_update:
+            new_rootfs = None
+        else:
+            new_rootfs = self._write_fstab(self.rootfs_dir.get("ROOTFS_DIR"))
         if new_rootfs:
             # rootfs was copied to update fstab
             self.rootfs_dir['ROOTFS_DIR'] = new_rootfs
