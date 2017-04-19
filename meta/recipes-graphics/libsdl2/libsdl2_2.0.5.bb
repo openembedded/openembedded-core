@@ -19,6 +19,7 @@ SRC_URI = " \
     file://linkage.patch \
     file://0001-prepend-our-sysroot-path-so-that-make-finds-our-wayl.patch \
     file://0002-Avoid-finding-build-host-s-wayland-scanner.patch \
+    file://fix-build-failure-on-ppc.patch \
 "
 
 S = "${WORKDIR}/SDL2-${PV}"
