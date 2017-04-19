@@ -489,7 +489,7 @@ class RpmPM(PackageManager):
 
     def _configure_dnf(self):
         # libsolv handles 'noarch' internally, we don't need to specify it explicitly
-        archs = [i for i in self.archs.split() if i not in ["any", "all", "noarch"]]
+        archs = [i for i in reversed(self.archs.split()) if i not in ["any", "all", "noarch"]]
         # This prevents accidental matching against libsolv's built-in policies
         if len(archs) <= 1:
             archs = archs + ["bogusarch"]
