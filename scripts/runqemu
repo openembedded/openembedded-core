@@ -732,8 +732,8 @@ class BaseConfig(object):
                 # be able to call `bitbake -e`, then try:
                 # - get OE_TMPDIR from environment and guess paths based on it
                 # - get OECORE_NATIVE_SYSROOT from environment (for sdk)
-                tmpdir = self.get('OE_TMPDIR', None)
-                oecore_native_sysroot = self.get('OECORE_NATIVE_SYSROOT', None)
+                tmpdir = self.get('OE_TMPDIR')
+                oecore_native_sysroot = self.get('OECORE_NATIVE_SYSROOT')
                 if tmpdir:
                     logger.info('Setting STAGING_DIR_NATIVE and STAGING_BINDIR_NATIVE relative to OE_TMPDIR (%s)' % tmpdir)
                     hostos, _, _, _, machine = os.uname()
