@@ -84,6 +84,7 @@ python do_write_qemuboot_conf() {
 
     qemuboot = "%s/%s.qemuboot.conf" % (d.getVar('IMGDEPLOYDIR'), d.getVar('IMAGE_NAME'))
     qemuboot_link = "%s/%s.qemuboot.conf" % (d.getVar('IMGDEPLOYDIR'), d.getVar('IMAGE_LINK_NAME'))
+    topdir="%s/"%(d.getVar('TOPDIR')).replace("//","/")
     cf = configparser.ConfigParser()
     cf.add_section('config_bsp')
     for k in qemuboot_vars(d):
@@ -94,6 +95,9 @@ python do_write_qemuboot_conf() {
                                'qemu-helper-native/1.0-r1/recipe-sysroot-native/usr/bin/')
         else:
             val = d.getVar(k)
+        # we only want to write out relative paths so that we can relocate images
+        # and still run them
+        val=val.replace(topdir,"")
         cf.set('config_bsp', k, '%s' % val)
 
     # QB_DEFAULT_KERNEL's value of KERNEL_IMAGETYPE is the name of a symlink
@@ -101,6 +105,9 @@ python do_write_qemuboot_conf() {
     # Read the link and replace it with the full filename of the target.
     kernel_link = os.path.join(d.getVar('DEPLOY_DIR_IMAGE'), d.getVar('QB_DEFAULT_KERNEL'))
     kernel = os.path.realpath(kernel_link)
+    # we only want to write out relative paths so that we can relocate images
+    # and still run them
+    kernel=kernel.replace(topdir,"")
     cf.set('config_bsp', 'QB_DEFAULT_KERNEL', kernel)
 
     bb.utils.mkdirhier(os.path.dirname(qemuboot))
