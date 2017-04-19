@@ -54,7 +54,7 @@ def main():
 
         ret = run_command_interruptible('BB_SETSCENE_ENFORCE=1 bitbake --quiet %s' % ' '.join(sdk_targets))
         if not ret:
-            ret = run_command_interruptible('bitbake build-sysroots')
+            ret = run_command_interruptible('bitbake --quiet build-sysroots')
         lastlog = get_last_consolelog()
         if lastlog:
             with open(lastlog, 'r') as f:
