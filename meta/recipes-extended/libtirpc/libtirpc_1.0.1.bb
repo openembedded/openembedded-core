@@ -11,8 +11,8 @@ PROVIDES = "virtual/librpc"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/${BPN}/${BP}.tar.bz2;name=libtirpc \
            ${GENTOO_MIRROR}/${BPN}-glibc-nfs.tar.xz;name=glibc-nfs \
+           file://libtirpc-1.0.2-rc3.patch \
            file://libtirpc-0.2.1-fortify.patch \
-           file://0001-Add-missing-rwlock_unlocks-in-xprt_register.patch \
           "
 
 SRC_URI_append_libc-uclibc = " file://remove-des-functionality.patch \
@@ -32,7 +32,7 @@ inherit autotools pkgconfig
 EXTRA_OECONF = "--disable-gssapi"
 
 do_configure_prepend () {
-        cp -r ${S}/../tirpc ${S}
+        cp -r ${WORKDIR}/tirpc ${S}
 }
 
 do_install_append() {
