@@ -17,7 +17,8 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/${BPN}/${BP}.tar.bz2 \
            file://lib-Makefile-fix-parallel-issue.patch \
            file://gcc46-compatibility.patch \
            file://aarch64-initplat.c-fix-const-qualifier.patch \
-          "
+           file://0001-Mark-our-explicit-fall-through-so-Wextra-will-work-i.patch \
+           "
 
 SRC_URI[md5sum] = "612e0f327f31c4b8468ef55f4eeb9649"
 SRC_URI[sha256sum] = "51a00428c3ccb96db24089ed8394843c4f83cf8f42c6a4dfddb4b7c23f2bf8af"
