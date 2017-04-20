@@ -14,20 +14,20 @@ LIC_FILES_CHKSUM = "file://nss/COPYING;md5=3b1e88e1b9c0b5a4b2881d46cce06a18 \
                     file://nss/lib/freebl/mpi/doc/LICENSE;md5=491f158d09d948466afce85d6f1fe18f \
                     file://nss/lib/freebl/mpi/doc/LICENSE-MPL;md5=5d425c8f3157dbf212db2ec53d9e5132"
 
-SRC_URI = "\
-    http://ftp.mozilla.org/pub/mozilla.org/security/nss/releases/NSS_3_28_1_RTM/src/${BP}.tar.gz \
-    file://0001-nss-fix-support-cross-compiling.patch \
-    file://nss-no-rpath-for-cross-compiling.patch \
-    file://nss-fix-incorrect-shebang-of-perl.patch \
-    file://nss-fix-nsinstall-build.patch \
-    file://disable-Wvarargs-with-clang.patch \
-    file://pqg.c-ULL_addend.patch \
-    file://Fix-compilation-for-X32.patch \
-    file://nss.pc.in \
-    file://signlibs.sh \
-"
-SRC_URI[md5sum] = "e98d48435cee5792f97ef7fc35a602c3"
-SRC_URI[sha256sum] = "58cc0c05c0ed9523e6d820bea74f513538f48c87aac931876e3d3775de1a82ad"
+SRC_URI = "http://ftp.mozilla.org/pub/mozilla.org/security/nss/releases/NSS_3_29_1_RTM/src/${BP}.tar.gz \
+           file://nss.pc.in \
+           file://signlibs.sh \
+           file://0001-nss-fix-support-cross-compiling.patch \
+           file://nss-no-rpath-for-cross-compiling.patch \
+           file://nss-fix-incorrect-shebang-of-perl.patch \
+           file://nss-fix-nsinstall-build.patch \
+           file://disable-Wvarargs-with-clang.patch \
+           file://pqg.c-ULL_addend.patch \
+           file://Fix-compilation-for-X32.patch \
+           file://0001-Fix-warnings-found-with-gcc7.patch \
+           "
+SRC_URI[md5sum] = "0525d1a45931892daa0f368d379d4aa4"
+SRC_URI[sha256sum] = "47259bc5c4439d8228d7c577ea652ed140588f27eae8ebb39cc91057aea37366"
 
 UPSTREAM_CHECK_URI = "https://developer.mozilla.org/en-US/docs/Mozilla/Projects/NSS/NSS_Releases"
 UPSTREAM_CHECK_REGEX = "NSS_(?P<pver>.+)_release_notes"
