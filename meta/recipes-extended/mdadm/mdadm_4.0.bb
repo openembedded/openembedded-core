@@ -16,6 +16,11 @@ SRC_URI = "${KERNELORG_MIRROR}/linux/utils/raid/mdadm/${BPN}-${PV}.tar.xz \
            file://run-ptest \
            file://0001-mdadm.h-Undefine-dprintf-before-redefining.patch \
            file://0001-include-sys-sysmacros.h-for-major-minor-defintions.patch \
+           file://0001-mdadm-Add-Wimplicit-fallthrough-0-in-Makefile.patch \
+           file://0002-mdadm-Specify-enough-length-when-write-to-buffer.patch \
+           file://0003-Replace-snprintf-with-strncpy-at-some-places-to-avoi.patch \
+           file://0004-mdadm-Forced-type-conversion-to-avoid-truncation.patch \
+           file://0005-Add-a-comment-to-indicate-valid-fallthrough.patch \
            "
 SRC_URI[md5sum] = "2cb4feffea9167ba71b5f346a0c0a40d"
 SRC_URI[sha256sum] = "1d6ae7f24ced3a0fa7b5613b32f4a589bb4881e3946a5a2c3724056254ada3a9"
