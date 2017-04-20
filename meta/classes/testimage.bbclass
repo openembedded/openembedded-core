@@ -71,7 +71,7 @@ TEST_QEMUBOOT_TIMEOUT ?= "1000"
 TEST_TARGET ?= "qemu"
 
 TESTIMAGEDEPENDS = ""
-TESTIMAGEDEPENDS_qemuall = "qemu-native:do_populate_sysroot qemu-helper-native:do_populate_sysroot"
+TESTIMAGEDEPENDS_qemuall = "qemu-native:do_populate_sysroot qemu-helper-native:do_populate_sysroot qemu-helper-native:do_addto_recipe_sysroot"
 TESTIMAGEDEPENDS += "${@bb.utils.contains('IMAGE_PKGTYPE', 'rpm', 'cpio-native:do_populate_sysroot', '', d)}"
 TESTIMAGEDEPENDS_qemuall += "${@bb.utils.contains('IMAGE_PKGTYPE', 'rpm', 'cpio-native:do_populate_sysroot', '', d)}"
 TESTIMAGEDEPENDS_qemuall += "${@bb.utils.contains('IMAGE_PKGTYPE', 'rpm', 'createrepo-c-native:do_populate_sysroot', '', d)}"
@@ -166,7 +166,11 @@ def testimage_main(d):
                              d.getVar('IMAGE_LINK_NAME')))
 
     tdname = "%s.testdata.json" % image_name
-    td = json.load(open(tdname, "r"))
+    try:
+        td = json.load(open(tdname, "r"))
+    except (FileNotFoundError) as err:
+         bb.fatal('File %s Not Found. Have you built the image with INHERIT+="testimage" in the conf/local.conf?' % tdname)
+
     # Some variables need to be updates (mostly paths) with the
     # ones of the current environment because some tests require them.
     updateTestData(d, td, d.getVar('TESTIMAGE_UPDATE_VARS').split())
