@@ -30,6 +30,7 @@ SRC_URI += "file://find.pl;subdir=${BP}/util/ \
             file://debian/no-symbolic.patch \
             file://debian/pic.patch \
             file://debian1.0.2/version-script.patch \
+            file://debian1.0.2/soname.patch \
             file://openssl_fix_for_x32.patch \
             file://fix-cipher-des-ede3-cfb1.patch \
             file://openssl-avoid-NULL-pointer-dereference-in-EVP_DigestInit_ex.patch \
