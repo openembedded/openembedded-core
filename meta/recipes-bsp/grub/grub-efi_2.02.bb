@@ -1,8 +1,9 @@
 require grub2.inc
 
+GRUBPLATFORM = "efi"
+
 DEPENDS_class-target = "grub-efi-native"
 RDEPENDS_${PN}_class-target = "diffutils freetype"
-PR = "r3"
 
 SRC_URI += " \
            file://cfg \
@@ -29,11 +30,7 @@ python __anonymous () {
 inherit deploy
 
 CACHED_CONFIGUREVARS += "ac_cv_path_HELP2MAN="
-EXTRA_OECONF = "--with-platform=efi --disable-grub-mkfont \
-                --enable-efiemu=no --program-prefix='' \
-                --enable-liblzma=no --enable-device-mapper=no --enable-libzfs=no \
-                --enable-largefile \
-"
+EXTRA_OECONF += "--enable-efiemu=no"
 
 # ldm.c:114:7: error: trampoline generated for nested function 'hook' [-Werror=trampolines]
 # and many other places in the grub code when compiled with some native gcc compilers (specifically, gentoo)
