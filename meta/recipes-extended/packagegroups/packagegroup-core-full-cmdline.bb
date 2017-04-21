@@ -109,7 +109,6 @@ RDEPENDS_packagegroup-core-full-cmdline-extended = "\
     "
 
 RDEPENDS_packagegroup-core-full-cmdline-dev-utils = "\
-    byacc \
     diffutils \
     m4 \
     make \
