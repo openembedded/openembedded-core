@@ -1,0 +1,23 @@
+Imported from
+https://src.fedoraproject.org/cgit/rpms/webkitgtk4.git/plain/gcc7.patch
+
+Add to CXX flags since webkitgtk uses c++ compiler by default
+Fixes
+Source/JavaScriptCore/runtime/JSGenericTypedArrayView.h:119:67: error: no matching function for call to 'JSC::JSGenericTypedArrayView<Adaptor>::vector() const'
+|          return bitwise_cast<const typename Adaptor::Type*>(vector());
+
+Signed-off-by: Khem Raj <raj.khem@gmail.com
+Upstream-Status: Pending
+
+diff -up webkitgtk-2.15.90/Source/cmake/OptionsCommon.cmake.gcc7 webkitgtk-2.15.90/Source/cmake/OptionsCommon.cmake
+--- webkitgtk-2.15.90/Source/cmake/OptionsCommon.cmake.gcc7	2017-02-21 09:57:13.168916004 +0100
++++ webkitgtk-2.15.90/Source/cmake/OptionsCommon.cmake	2017-02-21 09:58:12.811563156 +0100
+@@ -41,6 +41,8 @@ if (COMPILER_IS_GCC_OR_CLANG)
+     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fno-exceptions -fno-strict-aliasing")
+     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-exceptions -fno-strict-aliasing -fno-rtti")
+     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++1y")
++    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-expansion-to-defined")
++    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-expansion-to-defined")
+ endif ()
+ 
+ if (COMPILER_IS_CLANG AND CMAKE_GENERATOR STREQUAL "Ninja")
