@@ -14,6 +14,7 @@ SRC_URI = "git://github.com/tianocore/edk2.git;branch=master \
 	file://0002-ovmf-update-path-to-native-BaseTools.patch \
 	file://0003-BaseTools-makefile-adjust-to-build-in-under-bitbake.patch \
 	file://VfrCompile-increase-path-length-limit.patch \
+        file://0001-MdeModulePkg-UefiHiiLib-Fix-incorrect-comparison-exp.patch \
         "
 
 SRC_URI_append_class-target = " \
