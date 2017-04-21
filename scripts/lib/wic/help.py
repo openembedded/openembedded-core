@@ -131,10 +131,10 @@ wic_create_usage = """
  Create a new OpenEmbedded image
 
  usage: wic create <wks file or image name> [-o <DIRNAME> | --outdir <DIRNAME>]
-            [-i <JSON PROPERTY FILE> | --infile <JSON PROPERTY_FILE>]
             [-e | --image-name] [-s, --skip-build-check] [-D, --debug]
             [-r, --rootfs-dir] [-b, --bootimg-dir]
             [-k, --kernel-dir] [-n, --native-sysroot] [-f, --build-rootfs]
+            [-c, --compress-with] [-m, --bmap]
 
  This command creates an OpenEmbedded image based on the 'OE kickstart
  commands' found in the <wks file>.
