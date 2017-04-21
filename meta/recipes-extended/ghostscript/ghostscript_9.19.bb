@@ -31,6 +31,9 @@ SRC_URI = "${SRC_URI_BASE} \
            file://objarch.h \
            file://cups-no-gcrypt.patch \
            file://CVE-2017-7207.patch \
+           file://CVE-2016-10219.patch \
+           file://CVE-2016-10220.patch \
+           file://CVE-2017-5951.patch \
            "
 
 SRC_URI_class-native = "${SRC_URI_BASE} \
