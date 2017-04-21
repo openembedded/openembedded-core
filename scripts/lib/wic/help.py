@@ -56,7 +56,7 @@ def wic_help(args, usage_str, subcommands):
     """
     Subcommand help dispatcher.
     """
-    if len(args) == 1 or not display_help(args[1], subcommands):
+    if args.help_topic == None or not display_help(args.help_topic, subcommands):
         print(usage_str)
 
 
@@ -82,19 +82,20 @@ def invoke_subcommand(args, parser, main_command_usage, subcommands):
     Dispatch to subcommand handler borrowed from combo-layer.
     Should use argparse, but has to work in 2.6.
     """
-    if not args:
+    if not args.command:
         logger.error("No subcommand specified, exiting")
         parser.print_help()
         return 1
-    elif args[0] == "help":
+    elif args.command == "help":
         wic_help(args, main_command_usage, subcommands)
-    elif args[0] not in subcommands:
-        logger.error("Unsupported subcommand %s, exiting\n", args[0])
+    elif args.command not in subcommands:
+        logger.error("Unsupported subcommand %s, exiting\n", args.command)
         parser.print_help()
         return 1
     else:
-        usage = subcommands.get(args[0], subcommand_error)[1]
-        subcommands.get(args[0], subcommand_error)[0](args[1:], usage)
+        subcmd = subcommands.get(args.command, subcommand_error)
+        usage = subcmd[1]
+        subcmd[0](args, usage)
 
 
 ##
@@ -794,4 +795,12 @@ DESCRIPTION
       specified wic will try to find file in the directories with canned
       .wks files.
 
+"""
+
+wic_help_help = """
+NAME
+    wic help - display a help topic
+
+DESCRIPTION
+    Specify a help topic to display it. Topics are shown above.
 """

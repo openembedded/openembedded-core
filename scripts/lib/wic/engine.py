@@ -201,17 +201,18 @@ def wic_list(args, scripts_path):
     """
     Print the list of images or source plugins.
     """
-    if len(args) < 1:
+    if args.list_type is None:
         return False
 
-    if args == ["images"]:
+    if args.list_type == "images":
+
         list_canned_images(scripts_path)
         return True
-    elif args == ["source-plugins"]:
+    elif args.list_type == "source-plugins":
         list_source_plugins()
         return True
-    elif len(args) == 2 and args[1] == "help":
-        wks_file = args[0]
+    elif len(args.help_for) == 1 and args.help_for[0] == 'help':
+        wks_file = args.list_type
         fullpath = find_canned_image(scripts_path, wks_file)
         if not fullpath:
             raise WicError("No image named %s found, exiting. "
