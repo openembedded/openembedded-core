@@ -1,10 +1,9 @@
 require libunwind.inc
 
-PV = "1.1+git${SRCPV}"
+SRC_URI[md5sum] = "eefcb5d7f78fdc8f1ed172a26ea4202f"
+SRC_URI[sha256sum] = "1de38ffbdc88bd694d10081865871cd2bfbb02ad8ef9e1606aee18d65532b992"
 
-SRCREV = "bc8698fd7ed13a629a8ec3cb2a89bd74f9d8b5c0"
-
-SRC_URI = "git://git.sv.gnu.org/libunwind.git \
+SRC_URI = "http://download.savannah.nongnu.org/releases/libunwind/libunwind-${PV}.tar.gz \
            file://Add-AO_REQUIRE_CAS-to-fix-build-on-ARM-v6.patch \
            file://0001-backtrace-Use-only-with-glibc-and-uclibc.patch \
            file://0001-x86-Stub-out-x86_local_resume.patch \
@@ -24,7 +23,5 @@ ARM_INSTRUCTION_SET_armv5 = "arm"
 # see https://sourceware.org/bugzilla/show_bug.cgi?id=19987
 SECURITY_CFLAGS_remove_aarch64 = "-fpie"
 SECURITY_CFLAGS_append_aarch64 = " -fPIE"
-
-S = "${WORKDIR}/git"
 
 LDFLAGS += "-Wl,-z,relro,-z,now ${@bb.utils.contains('DISTRO_FEATURES', 'ld-is-gold', ' -fuse-ld=bfd ', '', d)}"
