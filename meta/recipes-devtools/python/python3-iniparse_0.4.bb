@@ -8,6 +8,7 @@ SRC_URI = "https://files.pythonhosted.org/packages/source/i/iniparse/iniparse-${
            file://0001-Add-python-3-compatibility.patch "
 SRC_URI[md5sum] = "5e573e9e9733d97623881ce9bbe5eca6"
 SRC_URI[sha256sum] = "abc1ee12d2cfb2506109072d6c21e40b6c75a3fe90a9c924327d80bc0d99c054"
+UPSTREAM_CHECK_URI = "https://pypi.python.org/pypi/iniparse/"
 
 inherit distutils3
 
