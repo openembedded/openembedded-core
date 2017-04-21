@@ -10,22 +10,23 @@ SRC_URI = "git://github.com/rpm-software-management/dnf.git \
            file://0001-Do-not-prepend-installroot-to-logdir.patch \
            file://0001-Do-not-hardcode-etc-and-systemd-unit-directories.patch \
            file://0001-Corretly-install-tmpfiles.d-configuration.patch \
+           file://0001-Revert-proper-check-of-releasever-when-using-install.patch \
            "
 
-PV = "2.0.0+git${SRCPV}"
-SRCREV = "f0093d672d3069cfee8447973ae70ef615fd8886"
+PV = "2.3.0"
+SRCREV = "242079563b54b4714c889fd4ee32e8dd9960f3b8"
 
 S = "${WORKDIR}/git"
 
 inherit cmake gettext bash-completion distutils3-base systemd
 
-DEPENDS += "libdnf librepo libcomps python3-pygpgme python3-iniparse"
+DEPENDS += "libdnf librepo libcomps python3-iniparse"
 
 # manpages generation requires http://www.sphinx-doc.org/
 EXTRA_OECMAKE = " -DWITH_MAN=0 -DPYTHON_INSTALL_DIR=${PYTHON_SITEPACKAGES_DIR} -DPYTHON_DESIRED=3"
 
 BBCLASSEXTEND = "native nativesdk"
-RDEPENDS_${PN}_class-target += "python3-core python3-codecs python3-netclient python3-email python3-threading python3-distutils librepo python3-shell python3-subprocess libcomps libdnf python3-sqlite3 python3-compression python3-pygpgme python3-rpm python3-iniparse python3-json python3-importlib python3-curses python3-argparse python3-misc"
+RDEPENDS_${PN}_class-target += "python3-core python3-codecs python3-netclient python3-email python3-threading python3-distutils librepo python3-shell python3-subprocess libcomps libdnf python3-sqlite3 python3-compression python3-rpm python3-iniparse python3-json python3-importlib python3-curses python3-argparse python3-misc python3-gpg"
 
 # Create a symlink called 'dnf' as 'make install' does not do it, but
 # .spec file in dnf source tree does (and then Fedora and dnf documentation
