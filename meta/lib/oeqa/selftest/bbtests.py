@@ -151,15 +151,16 @@ doesn't exist, yet fetcher didn't report any error. bitbake output: %s" % result
 
     @testcase(171)
     def test_rename_downloaded_file(self):
+        # TODO unique dldir instead of using cleanall
+        # TODO: need to set sstatedir?
         self.write_config("""DL_DIR = \"${TOPDIR}/download-selftest\"
 SSTATE_DIR = \"${TOPDIR}/download-selftest\"
 """)
         self.track_for_cleanup(os.path.join(self.builddir, "download-selftest"))
 
-        data = 'SRC_URI_append = ";downloadfilename=test-aspell.tar.gz"'
+        data = 'SRC_URI = "${GNU_MIRROR}/aspell/aspell-${PV}.tar.gz;downloadfilename=test-aspell.tar.gz"'
         self.write_recipeinc('aspell', data)
-        bitbake('-ccleanall aspell')
-        result = bitbake('-c fetch aspell', ignore_status=True)
+        result = bitbake('-f -c fetch aspell', ignore_status=True)
         self.delete_recipeinc('aspell')
         self.assertEqual(result.status, 0, msg = "Couldn't fetch aspell. %s" % result.output)
         dl_dir = get_bb_var("DL_DIR")
