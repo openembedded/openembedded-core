@@ -21,7 +21,7 @@ PACKAGECONFIG[acl] = "--enable-acl,--disable-acl,acl,"
 PACKAGECONFIG[xattr] = "--enable-xattr,--disable-xattr,attr,"
 PACKAGECONFIG[zlib] = "--with-zlib,--without-zlib,zlib,"
 PACKAGECONFIG[bz2] = "--with-bz2lib,--without-bz2lib,${DEPENDS_BZIP2},"
-PACKAGECONFIG[xz] = "--with-lzmadec --with-lzma,--without-lzmadec --without-lzma,xz,"
+PACKAGECONFIG[xz] = "--with-lzmadec --with-lzma,--without-lzma,xz,"
 PACKAGECONFIG[openssl] = "--with-openssl,--without-openssl,openssl,"
 PACKAGECONFIG[libxml2] = "--with-xml2,--without-xml2,libxml2,"
 PACKAGECONFIG[expat] = "--with-expat,--without-expat,expat,"
@@ -32,13 +32,10 @@ PACKAGECONFIG[lz4] = "--with-lz4,--without-lz4,lz4,"
 EXTRA_OECONF += "--enable-largefile"
 
 SRC_URI = "http://libarchive.org/downloads/libarchive-${PV}.tar.gz \
-           file://non-recursive-extract-and-list.patch \
-	   file://0001-archive_write_disk_posix.c-make-_fsobj-functions-mor.patch \
-	   file://0002-Fix-extracting-hardlinks-over-symlinks.patch \
-           "
+          "
 
-SRC_URI[md5sum] = "1ec00b7dcaf969dd2a5712f85f23c764"
-SRC_URI[sha256sum] = "691c194ee132d1f0f7a42541f091db811bc2e56f7107e9121be2bc8c04f1060f"
+SRC_URI[md5sum] = "d2af45480aa5b0db5b5f3919cd0ea65e"
+SRC_URI[sha256sum] = "29ca5bd1624ca5a007aa57e16080262ab4379dbf8797f5c52f7ea74a3b0424e7"
 
 inherit autotools update-alternatives pkgconfig
 
