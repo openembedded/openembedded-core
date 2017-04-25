@@ -1,18 +1,19 @@
 SUMMARY = "An asynchronous event notification library"
 HOMEPAGE = "http://libevent.org/"
-BUGTRACKER = "http://sourceforge.net/tracker/?group_id=50884&atid=461322"
+BUGTRACKER = "https://github.com/libevent/libevent/issues"
 SECTION = "libs"
 
-LICENSE = "BSD"
-LIC_FILES_CHKSUM = "file://LICENSE;md5=45c5316ff684bcfe2f9f86d8b1279559"
+LICENSE = "BSD & MIT"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=17f20574c0b154d12236d5fbe964f549"
 
 SRC_URI = " \
-    ${SOURCEFORGE_MIRROR}/levent/${BP}-stable.tar.gz \
+    https://github.com/libevent/libevent/releases/download/release-${PV}-stable/${BP}-stable.tar.gz \
+    file://Makefile-missing-test-dir.patch \
     file://run-ptest \
 "
 
-SRC_URI[md5sum] = "c4c56f986aa985677ca1db89630a2e11"
-SRC_URI[sha256sum] = "71c2c49f0adadacfdbe6332a372c38cf9c8b7895bb73dabeaa53cdcc1d4e1fa3"
+SRC_URI[md5sum] = "f3eeaed018542963b7d2416ef1135ecc"
+SRC_URI[sha256sum] = "965cc5a8bb46ce4199a47e9b2c9e1cae3b137e8356ffdad6d94d3b9069b71dc2"
 
 UPSTREAM_CHECK_URI = "http://libevent.org/"
 
@@ -24,7 +25,7 @@ PACKAGECONFIG[openssl] = "--enable-openssl,--disable-openssl,openssl"
 inherit autotools
 
 # Needed for Debian packaging
-LEAD_SONAME = "libevent-2.0.so"
+LEAD_SONAME = "libevent-2.1.so"
 
 inherit ptest
 
