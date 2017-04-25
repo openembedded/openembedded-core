@@ -47,7 +47,6 @@ fi
 
 # Global vars
 BITBAKE_E=""
-OECORE_NATIVE_SYSROOT=""
 set_oe_native_sysroot(){
     echo "Running bitbake -e $1"
     BITBAKE_E="`bitbake -e $1`"
