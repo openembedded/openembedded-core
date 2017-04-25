@@ -1,0 +1,36 @@
+This fix is also needed for GCC7.
+
+Upstream-Status: Backport
+Signed-off-by: Ross Burton <ross.burton@intel.com>
+
+From b29089d8b43abc8fba073da7e6dccaeba56b2b70 Mon Sep 17 00:00:00 2001
+From: Bruno Haible <bruno@clisp.org>
+Date: Sat, 19 Nov 2016 17:13:56 +0100
+Subject: [PATCH] Fix link error when compiling with gcc -O0.
+
+---
+ ChangeLog   | 7 +++++++
+ lib/iconv.c | 6 +++++-
+ 2 files changed, 12 insertions(+), 1 deletion(-)
+
+diff --git a/lib/iconv.c b/lib/iconv.c
+index 5a1a325..31853a7 100644
+--- a/lib/iconv.c
++++ b/lib/iconv.c
+@@ -178,8 +178,12 @@ static const struct alias sysdep_aliases[] = {
+ };
+ #ifdef __GNUC__
+ __inline
++#else
++#ifdef __cplusplus
++inline
++#endif
+ #endif
+-const struct alias *
++static const struct alias *
+ aliases2_lookup (register const char *str)
+ {
+   const struct alias * ptr;
+-- 
+2.8.1
+

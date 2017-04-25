@@ -13,6 +13,7 @@ LIC_FILES_CHKSUM = "file://COPYING.LIB;md5=9f604d8a4f8e74f4f5140845a21b6674 \
 SRC_URI = "${GNU_MIRROR}/${BPN}/${BPN}-${PV}.tar.gz \
            file://autoconf.patch \
            file://add-relocatable-module.patch \
+           file://0001-Fix-link-error-when-compiling-with-gcc-O0.patch \
           "
 
 SRC_URI[md5sum] = "e34509b1623cec449dfeb73d7ce9c6c6"
