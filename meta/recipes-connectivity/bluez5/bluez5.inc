@@ -14,8 +14,8 @@ RCONFLICTS_${PN} = "bluez4"
 
 PACKAGECONFIG ??= "obex-profiles readline"
 PACKAGECONFIG[obex-profiles] = "--enable-obex,--disable-obex,libical"
-PACKAGECONFIG[experimental] = "--enable-experimental,--disable-experimental,"
 PACKAGECONFIG[readline] = "--enable-client,--disable-client,readline,"
+PACKAGECONFIG[testing] = "--enable-testing,--disable-testing"
 
 SRC_URI = "\
     ${KERNELORG_MIRROR}/linux/bluetooth/bluez-${PV}.tar.xz \
@@ -31,6 +31,7 @@ inherit autotools pkgconfig systemd update-rc.d distro_features_check ptest
 
 EXTRA_OECONF = "\
   --enable-tools \
+  --enable-deprecated \
   --disable-cups \
   --enable-test \
   --enable-datafiles \
@@ -41,10 +42,12 @@ EXTRA_OECONF = "\
 # bluez5 builds a large number of useful utilities but does not
 # install them.  Specify which ones we want put into ${PN}-noinst-tools.
 NOINST_TOOLS_READLINE ??= ""
-NOINST_TOOLS_EXPERIMENTAL ??= ""
+NOINST_TOOLS_TESTING ??= ""
+NOINST_TOOLS_BT ??= ""
 NOINST_TOOLS = " \
     ${@bb.utils.contains('PACKAGECONFIG', 'readline', '${NOINST_TOOLS_READLINE}', '', d)} \
-    ${@bb.utils.contains('PACKAGECONFIG', 'experimental', '${NOINST_TOOLS_EXPERIMENTAL}', '', d)} \
+    ${@bb.utils.contains('PACKAGECONFIG', 'testing', '${NOINST_TOOLS_TESTING}', '', d)} \
+    ${NOINST_TOOLS_BT} \
 "
 
 do_install_append() {
