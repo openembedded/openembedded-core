@@ -57,24 +57,24 @@ do_install_append() {
 
 	install -d ${D}${sysconfdir}/bluetooth/
 	if [ -f ${S}/profiles/network/network.conf ]; then
-	    install -m 0644 ${S}/profiles/network/network.conf ${D}/${sysconfdir}/bluetooth/
+		install -m 0644 ${S}/profiles/network/network.conf ${D}/${sysconfdir}/bluetooth/
 	fi
 	if [ -f ${S}/profiles/input/input.conf ]; then
-	    install -m 0644 ${S}/profiles/input/input.conf ${D}/${sysconfdir}/bluetooth/
+		install -m 0644 ${S}/profiles/input/input.conf ${D}/${sysconfdir}/bluetooth/
 	fi
 
-  if [ -f ${D}/${sysconfdir}/init.d/bluetooth ]; then
-    sed -i -e 's#@LIBEXECDIR@#${libexecdir}#g' ${D}/${sysconfdir}/init.d/bluetooth
-  fi
+	if [ -f ${D}/${sysconfdir}/init.d/bluetooth ]; then
+		sed -i -e 's#@LIBEXECDIR@#${libexecdir}#g' ${D}/${sysconfdir}/init.d/bluetooth
+	fi
 
 	# Install desired tools that upstream leaves in build area
-        for f in ${NOINST_TOOLS} ; do
-	    install -m 755 ${B}/$f ${D}/${bindir}
+	for f in ${NOINST_TOOLS} ; do
+		install -m 755 ${B}/$f ${D}/${bindir}
 	done
 
-        # Patch python tools to use Python 3; they should be source compatible, but
-        # still refer to Python 2 in the shebang
-        sed -i -e '1s,#!.*python.*,#!${bindir}/python3,' ${D}${libdir}/bluez/test/*
+	# Patch python tools to use Python 3; they should be source compatible, but
+	# still refer to Python 2 in the shebang
+	sed -i -e '1s,#!.*python.*,#!${bindir}/python3,' ${D}${libdir}/bluez/test/*
 }
 
 PACKAGES =+ "${PN}-testtools ${PN}-obex ${PN}-noinst-tools"
@@ -84,8 +84,8 @@ FILES_${PN} += " \
     ${systemd_unitdir}/ ${datadir}/dbus-1 \
     ${libdir}/cups \
 "
-FILES_${PN}-dev += "\
-  ${libdir}/bluetooth/plugins/*.la \
+FILES_${PN}-dev += " \
+    ${libdir}/bluetooth/plugins/*.la \
 "
 
 FILES_${PN}-obex = "${libexecdir}/bluetooth/obexd \
@@ -115,10 +115,10 @@ INITSCRIPT_NAME_${PN} = "bluetooth"
 EXCLUDE_FROM_WORLD = "1"
 
 do_compile_ptest() {
-        oe_runmake buildtests
+	oe_runmake buildtests
 }
 
 do_install_ptest() {
-        cp -r ${B}/unit/ ${D}${PTEST_PATH}
-        rm -f ${D}${PTEST_PATH}/unit/*.o
+	cp -r ${B}/unit/ ${D}${PTEST_PATH}
+	rm -f ${D}${PTEST_PATH}/unit/*.o
 }
