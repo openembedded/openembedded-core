@@ -11,7 +11,8 @@ inherit module
 COMPATIBLE_HOST = '(x86_64|i.86|powerpc|aarch64|mips|nios2|arm).*-linux'
 
 SRC_URI = "https://lttng.org/files/${BPN}/${BPN}-${PV}.tar.bz2 \
-           file://Makefile-Do-not-fail-if-CONFIG_TRACEPOINTS-is-not-en.patch"
+           file://Makefile-Do-not-fail-if-CONFIG_TRACEPOINTS-is-not-en.patch \
+           file://BUILD_RUNTIME_BUG_ON-vs-gcc7.patch"
 
 SRC_URI[md5sum] = "5a16bca52233cc2bdff572b1120a88f6"
 SRC_URI[sha256sum] = "62078fe3254ca65969db4b72e59042cd797dbf2740848f8f82384877ae460d54"
