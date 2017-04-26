@@ -35,11 +35,16 @@ MAKE_OS = "`echo ${TARGET_OS} | sed s,^linux.*,GNU/Linux,`"
 
 EXTRA_OEMAKE = "MACHINE=${MAKE_ARCH} OPSYS=${MAKE_OS} 'CC=${CC}' 'AR=${AR}'"
 
-# They don't build on ARM and we don't need them actually.
-CFLAGS += "-DSERVICE_RunControl=0 -DSERVICE_Breakpoints=0 \
+# These features don't compile on mips and libc-musl
+CFLAGS_mips_append = "-DSERVICE_RunControl=0 -DSERVICE_Breakpoints=0 \
     -DSERVICE_Memory=0 -DSERVICE_Registers=0 -DSERVICE_MemoryMap=0 \
-    -DSERVICE_StackTrace=0 -DSERVICE_Symbols=0 -DSERVICE_LineNumbers=0 \
-    -DSERVICE_Expressions=0"
+    -DSERVICE_StackTrace=0 -DSERVICE_Expressions=0"
+CFLAGS_mips64_append = "-DSERVICE_RunControl=0 -DSERVICE_Breakpoints=0 \
+    -DSERVICE_Memory=0 -DSERVICE_Registers=0 -DSERVICE_MemoryMap=0 \
+    -DSERVICE_StackTrace=0 -DSERVICE_Expressions=0"
+CFLAGS_append_libc-musl = "-DSERVICE_RunControl=0 -DSERVICE_Breakpoints=0 \
+    -DSERVICE_Memory=0 -DSERVICE_Registers=0 -DSERVICE_MemoryMap=0 \
+    -DSERVICE_StackTrace=0 -DSERVICE_Expressions=0"
 
 do_install() {
 	oe_runmake install INSTALLROOT=${D}
