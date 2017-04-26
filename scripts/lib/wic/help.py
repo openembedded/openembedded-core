@@ -721,7 +721,7 @@ DESCRIPTION
                      bootloaders.
 
          --exclude-path: This option is specific to wic. It excludes the given
-                         absolute path from the resulting image. If the path
+                         relative path from the resulting image. If the path
                          ends with a slash, only the content of the directory
                          is omitted, not the directory itself. This option only
                          has an effect with the rootfs source plugin.
