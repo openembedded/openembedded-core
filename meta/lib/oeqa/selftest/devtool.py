@@ -1638,7 +1638,7 @@ class DevtoolTests(DevtoolBase):
         self.write_config(features)
         kernel_provider = get_bb_var('PREFERRED_PROVIDER_virtual/kernel')
         # Clean up the enviroment
-        bitbake('%s -c cleansstate' % kernel_provider)
+        bitbake('%s -c clean' % kernel_provider)
         tempdir = tempfile.mkdtemp(prefix='devtoolqa')
         self.track_for_cleanup(tempdir)
         self.track_for_cleanup(self.workspacedir)
