@@ -77,6 +77,7 @@ def update_useradd_static_config(d):
         parser.add_argument("-N", "--no-user-group", dest="user_group", help="do not create a group with the same name as the user", action="store_const", const=False)
         parser.add_argument("-o", "--non-unique", help="allow to create users with duplicate (non-unique UID)", action="store_true")
         parser.add_argument("-p", "--password", metavar="PASSWORD", help="encrypted password of the new account")
+        parser.add_argument("-P", "--clear-password", metavar="CLEAR_PASSWORD", help="use this clear password for the new account")
         parser.add_argument("-R", "--root", metavar="CHROOT_DIR", help="directory to chroot into")
         parser.add_argument("-r", "--system", help="create a system account", action="store_true")
         parser.add_argument("-s", "--shell", metavar="SHELL", help="login shell of the new account")
@@ -195,7 +196,10 @@ def update_useradd_static_config(d):
             newparam += ['', ' --no-create-home'][uaargs.create_home is False]
             newparam += ['', ' --no-user-group'][uaargs.user_group is False]
             newparam += ['', ' --non-unique'][uaargs.non_unique]
-            newparam += ['', ' --password %s' % uaargs.password][uaargs.password != None]
+            if uaargs.password != None:
+                newparam += ['', ' --password %s' % uaargs.password][uaargs.password != None]
+            elif uaargs.clear_password:
+                newparam += ['', ' --clear-password %s' % uaargs.clear_password][uaargs.clear_password != None]
             newparam += ['', ' --root %s' % uaargs.root][uaargs.root != None]
             newparam += ['', ' --system'][uaargs.system]
             newparam += ['', ' --shell %s' % uaargs.shell][uaargs.shell != None]
@@ -216,6 +220,7 @@ def update_useradd_static_config(d):
         parser.add_argument("-K", "--key", metavar="KEY=VALUE", help="override /etc/login.defs defaults")
         parser.add_argument("-o", "--non-unique", help="allow to create groups with duplicate (non-unique) GID", action="store_true")
         parser.add_argument("-p", "--password", metavar="PASSWORD", help="use this encrypted password for the new group")
+        parser.add_argument("-P", "--clear-password", metavar="CLEAR_PASSWORD", help="use this clear password for the new group")
         parser.add_argument("-R", "--root", metavar="CHROOT_DIR", help="directory to chroot into")
         parser.add_argument("-r", "--system", help="create a system account", action="store_true")
         parser.add_argument("GROUP", help="Group name of the new group")
@@ -277,7 +282,10 @@ def update_useradd_static_config(d):
             newparam += ['', ' --gid %s' % gaargs.gid][gaargs.gid != None]
             newparam += ['', ' --key %s' % gaargs.key][gaargs.key != None]
             newparam += ['', ' --non-unique'][gaargs.non_unique]
-            newparam += ['', ' --password %s' % gaargs.password][gaargs.password != None]
+            if gaargs.password != None:
+                newparam += ['', ' --password %s' % gaargs.password][gaargs.password != None]
+            elif gaargs.clear_password:
+                newparam += ['', ' --clear-password %s' % gaargs.clear_password][gaargs.clear_password != None]
             newparam += ['', ' --root %s' % gaargs.root][gaargs.root != None]
             newparam += ['', ' --system'][gaargs.system]
             newparam += ' %s' % gaargs.GROUP
