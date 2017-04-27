@@ -14,6 +14,7 @@ SRC_URI = "${GNU_MIRROR}/parted/parted-${PV}.tar.xz \
            file://0001-Include-fcntl.h-in-platform_defs.h.patch \
            file://0001-Unset-need_charset_alias-when-building-for-musl.patch \
            file://0002-libparted_fs_resize-link-against-libuuid-explicitly-.patch \
+           file://0001-Move-python-helper-scripts-used-only-in-tests-to-Pyt.patch \
 	   file://parted-3.2-sysmacros.patch \
            file://run-ptest \
            file://Makefile \
@@ -46,4 +47,4 @@ do_install_ptest() {
 	sed -e 's| ../parted||' -i $t/tests/*.sh
 }
 
-RDEPENDS_${PN}-ptest = "bash coreutils perl util-linux-losetup python"
+RDEPENDS_${PN}-ptest = "bash coreutils perl util-linux-losetup python3"
