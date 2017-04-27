@@ -4,14 +4,15 @@ bmap. Bmaptool is a generic tool for creating the block map (bmap) for a file, \
 and copying files using the block map. The idea is that large file containing \
 unused blocks, like raw system image files, can be copied or flashed a lot \
 faster with bmaptool than with traditional tools like "dd" or "cp"."
-HOMEPAGE = "http://git.infradead.org/users/dedekind/bmap-tools.git"
+HOMEPAGE = "https://github.com/01org/bmap-tools"
 SECTION = "console/utils"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263"
 
-SRC_URI = "ftp://ftp.infradead.org/pub/${BPN}/${BPN}-${PV}.tgz"
-SRC_URI[md5sum] = "92cdad1cb4dfa0cca7176c8e22752616"
-SRC_URI[sha256sum] = "cc6c7f7dc0a37e2a32deb127308e24e6c4b80bfb54f3803c308efab02bf2d434"
+SRC_URI = "git://github.com/01org/bmap-tools.git"
+SRCREV = "96702a869220ab20830db916ec4ac595e1d97f92"
+
+S = "${WORKDIR}/git"
 
 RDEPENDS_${PN} = "python-core python-compression"
 
