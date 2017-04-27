@@ -9,8 +9,8 @@ DEPENDS = "libogg speexdsp"
 
 SRC_URI = "http://downloads.us.xiph.org/releases/speex/speex-${PV}.tar.gz"
 
-SRC_URI[md5sum] = "6ae7db3bab01e1d4b86bacfa8ca33e81"
-SRC_URI[sha256sum] = "caa27c7247ff15c8521c2ae0ea21987c9e9710a8f2d3448e8b79da9806bce891"
+SRC_URI[md5sum] = "8ab7bb2589110dfaf0ed7fa7757dc49c"
+SRC_URI[sha256sum] = "eaae8af0ac742dc7d542c9439ac72f1f385ce838392dc849cae4536af9210094"
 
 inherit autotools pkgconfig lib_package
 
