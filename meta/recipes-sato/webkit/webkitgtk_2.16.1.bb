@@ -26,11 +26,6 @@ SRC_URI[sha256sum] = "eb92383232328ce655b703c64370ed3795662479719ad1b4a869ed4676
 
 inherit cmake pkgconfig gobject-introspection perlnative distro_features_check upstream-version-is-even gtk-doc
 
-# We cannot inherit pythonnative because that would conflict with inheriting python3native
-# (which is done by gobject-introspection). But webkit only needs the path to native Python 2.x binary
-# so we simply set it explicitly here.
-EXTRANATIVEPATH += "python-native"
-
 # depends on libxt
 REQUIRED_DISTRO_FEATURES = "x11"
 
@@ -39,7 +34,6 @@ DEPENDS = "zlib libsoup-2.4 curl libxml2 cairo libxslt libxt libidn gnutls \
 	   pango icu bison-native gawk intltool-native libwebp \
 	   atk udev harfbuzz jpeg libpng pulseaudio librsvg libtheora libvorbis libxcomposite libxtst \
 	   ruby-native libnotify gstreamer1.0-plugins-bad \
-	   python-native \
           "
 
 PACKAGECONFIG ??= "${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'x11', 'wayland' ,d)} \
@@ -65,6 +59,7 @@ EXTRA_OECMAKE = " \
 		${@bb.utils.contains('GI_DATA_ENABLED', 'True', '-DENABLE_INTROSPECTION=ON', '-DENABLE_INTROSPECTION=OFF', d)} \
 		${@bb.utils.contains('GTKDOC_ENABLED', 'True', '-DENABLE_GTKDOC=ON', '-DENABLE_GTKDOC=OFF', d)} \
 		-DENABLE_MINIBROWSER=ON \
+                -DPYTHON_EXECUTABLE=`which python` \
 		"
 
 # Javascript JIT is not supported on powerpc
