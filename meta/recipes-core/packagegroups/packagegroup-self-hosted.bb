@@ -42,7 +42,6 @@ RDEPENDS_packagegroup-self-hosted-host-tools = "\
     mc-fish \
     mc-helpers \
     mc-helpers-perl \
-    mc-helpers-python \
     parted \
     ${PSEUDO} \
     screen \

@@ -66,7 +66,6 @@ RDEPENDS_packagegroup-core-sys-extended = "\
     mc-fish \
     mc-helpers \
     mc-helpers-perl \
-    mc-helpers-python \
     mdadm \
     minicom \
     neon \
