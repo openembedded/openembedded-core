@@ -1,5 +1,5 @@
 # Path to the CMake file to process.
-OECMAKE_SOURCEPATH ?= "${S}"
+OECMAKE_SOURCEPATH ??= "${S}"
 
 DEPENDS_prepend = "cmake-native "
 B = "${WORKDIR}/build"
