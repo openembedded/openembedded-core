@@ -12,10 +12,12 @@ LICENSE = "GPL-2.0"
 LIC_FILES_CHKSUM = "file://COPYING;md5=9b8cf60ff39767ff04b671fca8302408"
 SECTION = "devel"
 DEPENDS += "ncurses flex bison gperf-native"
-RDEPENDS_${PN} += "python bash"
-SRC_URI = "git://ymorin.is-a-geek.org/kconfig-frontends"
+RDEPENDS_${PN} += "python3 bash"
+SRC_URI = "git://ymorin.is-a-geek.org/kconfig-frontends;branch=4.10.x \
+           file://0001-Fix-installation-of-.pc-files.patch \
+           file://0001-Switch-utils-kconfig-diff-to-use-Python-3.patch"
 
-SRCREV = "75d35b172fc0f7b6620dd659af41f2ce04edc4e6"
+SRCREV = "f8ffe5e1c6f183cb7d5d515aa9381b7557de654e"
 
 S = "${WORKDIR}/git"
 
