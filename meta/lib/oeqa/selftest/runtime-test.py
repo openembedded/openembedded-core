@@ -203,11 +203,12 @@ postinst-delayed-t \
         rootfs_pkg = 'postinst-at-rootfs'
         boot_pkg = 'postinst-delayed-a'
         #Step 1
-        features = 'MACHINE = "qemux86"\n'
-        features += 'CORE_IMAGE_EXTRA_INSTALL += "%s %s "\n'% (rootfs_pkg, boot_pkg)
-        features += 'IMAGE_FEATURES += "ssh-server-openssh"\n'
+        common_features = 'MACHINE = "qemux86"\n'
+        common_features += 'CORE_IMAGE_EXTRA_INSTALL += "%s %s "\n'% (rootfs_pkg, boot_pkg)
+        common_features += 'IMAGE_FEATURES += "ssh-server-openssh"\n'
         for init_manager in ("sysvinit", "systemd"):
             #for sysvinit no extra configuration is needed,
+            features = ''
             if (init_manager is "systemd"):
                 features += 'DISTRO_FEATURES_append = " systemd"\n'
                 features += 'VIRTUAL-RUNTIME_init_manager = "systemd"\n'
@@ -217,7 +218,7 @@ postinst-delayed-t \
                             "package_deb package_rpm package_ipk",
                             "package_ipk package_deb package_rpm"):
                 features += 'PACKAGE_CLASSES = "%s"\n' % classes
-                self.write_config(features)
+                self.write_config(common_features + features)
 
                 #Step 2
                 bitbake('core-image-minimal')
