@@ -187,7 +187,7 @@ python do_package_deb () {
         # more fields
 
         custom_fields_chunk = get_package_additional_metadata("deb", localdata)
-        if custom_fields_chunk is not None:
+        if custom_fields_chunk:
             ctrlfile.write(custom_fields_chunk)
             ctrlfile.write("\n")
 
