@@ -239,8 +239,8 @@ python base_eventhandler() {
         oe.utils.features_backfill("DISTRO_FEATURES", e.data)
         oe.utils.features_backfill("MACHINE_FEATURES", e.data)
         # Works with the line in layer.conf which changes PATH to point here
-        setup_hosttools_dir(d.expand('${TMPDIR}/hosttools'), 'HOSTTOOLS', d)
-        setup_hosttools_dir(d.expand('${TMPDIR}/hosttools'), 'HOSTTOOLS_NONFATAL', d, fatal=False)
+        setup_hosttools_dir(d.getVar('HOSTTOOLS_DIR'), 'HOSTTOOLS', d)
+        setup_hosttools_dir(d.getVar('HOSTTOOLS_DIR'), 'HOSTTOOLS_NONFATAL', d, fatal=False)
 
     if isinstance(e, bb.event.BuildStarted):
         localdata = bb.data.createCopy(e.data)
