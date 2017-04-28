@@ -54,7 +54,7 @@ SSTATEPOSTCREATEFUNCS = ""
 SSTATEPREINSTFUNCS = ""
 SSTATEPOSTUNPACKFUNCS = "sstate_hardcode_path_unpack"
 SSTATEPOSTINSTFUNCS = ""
-EXTRA_STAGING_FIXMES ?= ""
+EXTRA_STAGING_FIXMES ?= "HOSTTOOLS_DIR"
 SSTATECLEANFUNCS = ""
 
 # Check whether sstate exists for tasks that support sstate and are in the
