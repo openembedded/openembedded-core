@@ -398,6 +398,9 @@ pkg_postinst_${PN} () {
 			fi
 		done
 	fi
+	if grep -q "^${base_bindir}/bash$" $D${sysconfdir}/busybox.links*; then
+		grep -q "^${base_bindir}/bash$" $D${sysconfdir}/shells || echo ${base_bindir}/bash >> $D${sysconfdir}/shells
+	fi
 }
 
 pkg_prerm_${PN} () {
@@ -420,6 +423,12 @@ pkg_prerm_${PN} () {
 	ln -s ${base_bindir}/busybox $tmpdir/grep
 	ln -s ${base_bindir}/busybox $tmpdir/tail
 	export PATH=$PATH:$tmpdir
+}
+
+pkg_postrm_${PN} () {
+	if grep -q "^${base_bindir}/bash$" $D${sysconfdir}/busybox.links* && [ ! -e $D${base_bindir}/bash ]; then
+		printf "$(grep -v "^${base_bindir}/bash$" $D${sysconfdir}/shells)\n" > $D${sysconfdir}/shells
+	fi
 }
 
 pkg_prerm_${PN}-syslog () {
