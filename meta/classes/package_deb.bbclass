@@ -176,10 +176,7 @@ python do_package_deb () {
                  if '\\n' in description:
                      # Manually indent
                      for t in description.split('\\n'):
-                         # We don't limit the width when manually indent, but we do
-                         # need the textwrap.fill() to set the initial_indent and
-                         # subsequent_indent, so set a large width
-                         ctrlfile.write('%s\n' % textwrap.fill(t, width=100000, initial_indent=' ', subsequent_indent=' '))
+                         ctrlfile.write(' %s\n' % (t.strip() or '.'))
                  else:
                      # Auto indent
                      ctrlfile.write('%s\n' % textwrap.fill(description.strip(), width=74, initial_indent=' ', subsequent_indent=' '))
