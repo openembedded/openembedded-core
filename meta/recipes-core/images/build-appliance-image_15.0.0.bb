@@ -23,7 +23,7 @@ IMAGE_FSTYPES = "vmdk"
 
 inherit core-image module-base setuptools3
 
-SRCREV ?= "470995c3c62be9f89064244df8a3fcc1c3761645"
+SRCREV ?= "22f57cfbb15b3883dfcab7651fb6fe4ddc76b27b"
 SRC_URI = "git://git.yoctoproject.org/poky;branch=master \
            file://Yocto_Build_Appliance.vmx \
            file://Yocto_Build_Appliance.vmxf \
