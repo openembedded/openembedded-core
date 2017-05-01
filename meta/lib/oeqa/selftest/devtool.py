@@ -1635,7 +1635,7 @@ class DevtoolTests(DevtoolBase):
         #Set machine to qemxu86 to be able to modify the kernel and
         #verify the modification.
         features = 'MACHINE = "qemux86"\n'
-        self.write_config(features)
+        self.append_config(features)
         kernel_provider = get_bb_var('PREFERRED_PROVIDER_virtual/kernel')
         # Clean up the enviroment
         bitbake('%s -c clean' % kernel_provider)
