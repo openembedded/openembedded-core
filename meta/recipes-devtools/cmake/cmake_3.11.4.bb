@@ -6,7 +6,9 @@ DEPENDS += "curl expat zlib libarchive xz ncurses bzip2"
 
 SRC_URI_append_class-nativesdk = " \
     file://OEToolchainConfig.cmake \
-    file://environment.d-cmake.sh"
+    file://environment.d-cmake.sh \
+    file://0001-CMakeDetermineSystem-use-oe-environment-vars-to-load.patch \
+"
 
 # Strip ${prefix} from ${docdir}, set result into docdir_stripped
 python () {
