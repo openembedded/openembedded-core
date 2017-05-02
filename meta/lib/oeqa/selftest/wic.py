@@ -159,8 +159,7 @@ class Wic(oeSelfTest):
     @testcase(1213)
     def test_unsupported_subcommand(self):
         """Test unsupported subcommand"""
-        self.assertEqual(1, runCmd('wic unsupported',
-                                   ignore_status=True).status)
+        self.assertNotEqual(0, runCmd('wic unsupported', ignore_status=True).status)
 
     @testcase(1214)
     def test_no_command(self):
