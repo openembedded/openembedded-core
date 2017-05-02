@@ -4,5 +4,5 @@ SRC_URI += " file://0001-git-version-gen-don-t-append-dirty-if-we-re-not-in-g.pa
              file://0001-vapigen.m4-use-PKG_CONFIG_SYSROOT_DIR.patch \
 "
 
-SRC_URI[md5sum] = "a856989d749fc5e472a3592b96f9ca48"
-SRC_URI[sha256sum] = "6b17bd339414563ebc51f64b0b837919ea7552d8a8ffa71cdc837d25c9696b83"
+SRC_URI[md5sum] = "481774eb4f0f5aa6987e5ea30a0aea31"
+SRC_URI[sha256sum] = "863dbfb399d59289dfc34379c0cd34d94e505a49787497550588810310cdf689"
