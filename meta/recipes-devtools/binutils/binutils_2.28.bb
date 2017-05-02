@@ -42,4 +42,8 @@ do_install_class-native () {
 	rmdir ${D}/${libdir}64 || :
 }
 
+# Split out libbfd-*.so so including perf doesn't include extra stuff
+PACKAGE_BEFORE_PN += "libbfd"
+FILES_libbfd = "${libdir}/libbfd-*.so"
+
 BBCLASSEXTEND = "native nativesdk"
