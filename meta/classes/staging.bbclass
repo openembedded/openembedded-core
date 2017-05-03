@@ -201,8 +201,8 @@ do_populate_sysroot[depends] += "${POPULATESYSROOTDEPS}"
 SSTATETASKS += "do_populate_sysroot"
 do_populate_sysroot[cleandirs] = "${SYSROOT_DESTDIR}"
 do_populate_sysroot[sstate-inputdirs] = "${SYSROOT_DESTDIR}"
-do_populate_sysroot[sstate-outputdirs] = "${STAGING_DIR}-components/${PACKAGE_ARCH}/${PN}"
-do_populate_sysroot[sstate-fixmedir] = "${STAGING_DIR}-components/${PACKAGE_ARCH}/${PN}"
+do_populate_sysroot[sstate-outputdirs] = "${COMPONENTS_DIR}/${PACKAGE_ARCH}/${PN}"
+do_populate_sysroot[sstate-fixmedir] = "${COMPONENTS_DIR}/${PACKAGE_ARCH}/${PN}"
 
 python do_populate_sysroot_setscene () {
     sstate_setscene(d)
@@ -442,7 +442,7 @@ python extend_recipe_sysroot() {
     bb.note("\n".join(msgbuf))
 
     stagingdir = d.getVar("STAGING_DIR")
-    sharedmanifests = stagingdir + "-components/manifests"
+    sharedmanifests = d.getVar("COMPONENTS_DIR") + "/manifests"
     recipesysroot = d.getVar("RECIPE_SYSROOT")
     recipesysrootnative = d.getVar("RECIPE_SYSROOT_NATIVE")
     current_variant = d.getVar("BBEXTENDVARIANT")

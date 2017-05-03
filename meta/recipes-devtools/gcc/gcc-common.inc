@@ -13,7 +13,7 @@ COMPILERDEP = "virtual/${MLPREFIX}${TARGET_PREFIX}gcc${COMPILERINITIAL}:do_gcc_s
 COMPILERDEP_class-nativesdk = "virtual/${TARGET_PREFIX}gcc${COMPILERINITIAL}-crosssdk:do_gcc_stash_builddir"
 
 python extract_stashed_builddir () {
-    src = d.expand("${STAGING_DIR}-components/${BUILD_ARCH}/gcc-stashed-builddir${COMPILERINITIAL}-${TARGET_SYS}")
+    src = d.expand("${COMPONENTS_DIR}/${BUILD_ARCH}/gcc-stashed-builddir${COMPILERINITIAL}-${TARGET_SYS}")
     dest = d.getVar("B")
     oe.path.copyhardlinktree(src, dest)
     staging_processfixme([src + "/fixmepath"], dest, dest, dest, d)

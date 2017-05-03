@@ -4,7 +4,7 @@ SUMMARY = "utility scripts provided by glibc"
 DESCRIPTION = "utility scripts provided by glibc"
 RDEPENDS_${PN} = "bash glibc-mtrace"
 
-SRC = "${STAGING_DIR}-components/${PACKAGE_ARCH}/glibc-stash-locale/scripts"
+SRC = "${COMPONENTS_DIR}/${PACKAGE_ARCH}/glibc-stash-locale/scripts"
 
 bashscripts = "sotruss xtrace"
 

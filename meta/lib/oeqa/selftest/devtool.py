@@ -294,7 +294,7 @@ class DevtoolTests(DevtoolBase):
             f.write('\nFILES_${PN}-dev += "${datadir}/cmake/Modules"\n')
             # We don't have the ability to pick up this dependency automatically yet...
             f.write('\nDEPENDS += "libusb1"\n')
-            f.write('\nTESTLIBOUTPUT = "${STAGING_DIR}-components/${TUNE_PKGARCH}/${PN}/${libdir}"\n')
+            f.write('\nTESTLIBOUTPUT = "${COMPONENTS_DIR}/${TUNE_PKGARCH}/${PN}/${libdir}"\n')
         # Test devtool build
         result = runCmd('devtool build libftdi')
         bb_vars = get_bb_vars(['TESTLIBOUTPUT', 'STAMP'], 'libftdi')

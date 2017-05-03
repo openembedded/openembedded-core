@@ -198,8 +198,8 @@ do_stash_locale[dirs] = "${B}"
 do_stash_locale[cleandirs] = "${LOCALESTASH}"
 SSTATETASKS += "do_stash_locale"
 do_stash_locale[sstate-inputdirs] = "${LOCALESTASH}"
-do_stash_locale[sstate-outputdirs] = "${STAGING_DIR}-components/${PACKAGE_ARCH}/glibc-stash-locale"
-do_stash_locale[sstate-fixmedir] = "${STAGING_DIR}-components/${PACKAGE_ARCH}/glibc-stash-locale"
+do_stash_locale[sstate-outputdirs] = "${COMPONENTS_DIR}/${PACKAGE_ARCH}/glibc-stash-locale"
+do_stash_locale[sstate-fixmedir] = "${COMPONENTS_DIR}/${PACKAGE_ARCH}/glibc-stash-locale"
 
 python do_stash_locale_setscene () {
     sstate_setscene(d)
