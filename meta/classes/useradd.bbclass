@@ -132,6 +132,11 @@ useradd_sysroot () {
 	useradd_preinst
 }
 
+# The export of PSEUDO in useradd_sysroot() above contains references to
+# ${COMPONENTS_DIR}. These need to be handled when restoring
+# postinst-useradd-${PN} from the sstate cache.
+EXTRA_STAGING_FIXMES += "COMPONENTS_DIR"
+
 python useradd_sysroot_sstate () {
     task = d.getVar("BB_CURRENTTASK")
     if task == "package_setscene":
