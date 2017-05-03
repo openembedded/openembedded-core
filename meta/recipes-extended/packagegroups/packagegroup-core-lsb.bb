@@ -153,7 +153,6 @@ RDEPENDS_packagegroup-core-lsb-core = "\
     localedef \
     lsb \
     m4 \
-    mailx \
     make \
     man \
     man-pages \
