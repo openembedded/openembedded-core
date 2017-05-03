@@ -239,10 +239,4 @@ RDEPENDS_packagegroup-core-lsb-runtime-add = "\
     glibc-localedata-posix \
     glibc-extra-nss \
     glibc-pcprofile \
-    libclass-isa-perl \
-    libenv-perl \
-    libdumpvalue-perl \
-    libfile-checktree-perl \
-    libi18n-collate-perl \
-    libpod-plainer-perl \
 "
