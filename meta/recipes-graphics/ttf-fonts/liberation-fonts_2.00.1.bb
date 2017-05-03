@@ -5,23 +5,22 @@ Arial, Times New Roman, Courier New."
 HOMEPAGE = "https://releases.pagure.org/liberation-fonts/"
 BUGTRACKER = "https://bugzilla.redhat.com/"
 
-RECIPE_NO_UPDATE_REASON = "2.x depends on fontforge package, which is not yet provided in oe-core"
-
 SECTION = "x11/fonts"
-LICENSE = "GPLv2"
-LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f"
-PR = "r4"
+LICENSE = "OFL-1.1"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=f96db970a9a46c5369142b99f530366b"
 PE = "1"
 
 inherit allarch fontcache
 
 FONT_PACKAGES = "${PN}"
 
-SRC_URI = "https://releases.pagure.org/liberation-fonts/liberation-fonts-${PV}.tar.gz \
+SRC_URI = "https://releases.pagure.org/liberation-fonts/liberation-fonts-ttf-${PV}.tar.gz \
            file://30-liberation-aliases.conf"
 
-SRC_URI[md5sum] = "4846797ef0fc70b0cbaede2514677c58"
-SRC_URI[sha256sum] = "0e0d0957c85b758561a3d4aef4ebcd2c39959e5328429d96ae106249d83531a1"
+S = "${WORKDIR}/liberation-fonts-ttf-${PV}"
+
+SRC_URI[md5sum] = "5c781723a0d9ed6188960defba8e91cf"
+SRC_URI[sha256sum] = "7890278a6cd17873c57d9cd785c2d230d9abdea837e96516019c5885dd271504"
 
 do_install () {
 	install -d ${D}${datadir}/fonts/ttf/
@@ -33,7 +32,7 @@ do_install () {
 	install -m 0644 ${WORKDIR}/30-liberation-aliases.conf ${D}${sysconfdir}/fonts/conf.d/
 
 	install -d ${D}${prefix}/share/doc/${BPN}/
-	install -m 0644 License.txt ${D}${datadir}/doc/${BPN}/
+	install -m 0644 LICENSE ${D}${datadir}/doc/${BPN}/
 }
 
 PACKAGES = "${PN}"
