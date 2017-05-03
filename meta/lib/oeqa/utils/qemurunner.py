@@ -98,11 +98,12 @@ class QemuRunner:
                 raise SystemExit
 
     def start(self, qemuparams = None, get_ip = True, extra_bootparams = None, runqemuparams='', launch_cmd=None, discard_writes=True):
+        env = os.environ.copy()
         if self.display:
-            os.environ["DISPLAY"] = self.display
+            env["DISPLAY"] = self.display
             # Set this flag so that Qemu doesn't do any grabs as SDL grabs
             # interact badly with screensavers.
-            os.environ["QEMU_DONT_GRAB"] = "1"
+            env["QEMU_DONT_GRAB"] = "1"
         if not os.path.exists(self.rootfs):
             logger.error("Invalid rootfs %s" % self.rootfs)
             return False
@@ -110,12 +111,12 @@ class QemuRunner:
             logger.error("Invalid TMPDIR path %s" % self.tmpdir)
             return False
         else:
-            os.environ["OE_TMPDIR"] = self.tmpdir
+            env["OE_TMPDIR"] = self.tmpdir
         if not os.path.exists(self.deploy_dir_image):
             logger.error("Invalid DEPLOY_DIR_IMAGE path %s" % self.deploy_dir_image)
             return False
         else:
-            os.environ["DEPLOY_DIR_IMAGE"] = self.deploy_dir_image
+            env["DEPLOY_DIR_IMAGE"] = self.deploy_dir_image
 
         if not launch_cmd:
             launch_cmd = 'runqemu %s %s ' % ('snapshot' if discard_writes else '', runqemuparams)
@@ -128,9 +129,9 @@ class QemuRunner:
                 launch_cmd += ' nographic'
             launch_cmd += ' %s %s' % (self.machine, self.rootfs)
 
-        return self.launch(launch_cmd, qemuparams=qemuparams, get_ip=get_ip, extra_bootparams=extra_bootparams)
+        return self.launch(launch_cmd, qemuparams=qemuparams, get_ip=get_ip, extra_bootparams=extra_bootparams, env=env)
 
-    def launch(self, launch_cmd, get_ip = True, qemuparams = None, extra_bootparams = None):
+    def launch(self, launch_cmd, get_ip = True, qemuparams = None, extra_bootparams = None, env = None):
         try:
             threadsock, threadport = self.create_socket()
             self.server_socket, self.serverport = self.create_socket()
@@ -157,7 +158,7 @@ class QemuRunner:
         # blocking at the end of the runqemu script when using this within
         # oe-selftest (this makes stty error out immediately). There ought
         # to be a proper fix but this will suffice for now.
-        self.runqemu = subprocess.Popen(launch_cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, stdin=subprocess.PIPE, preexec_fn=os.setpgrp)
+        self.runqemu = subprocess.Popen(launch_cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, stdin=subprocess.PIPE, preexec_fn=os.setpgrp, env=env)
         output = self.runqemu.stdout
 
         #
