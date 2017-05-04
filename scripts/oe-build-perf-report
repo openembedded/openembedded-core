@@ -62,11 +62,13 @@ def get_test_runs(repo, tag_name, **kwargs):
     log.debug("Found %d tags matching pattern '%s'", len(tags), tag_pattern)
 
     # Parse undefined fields from tag names
-    str_fields = dict([(f, r'(?P<{}>[\w\-.]+)'.format(f)) for f in field_names])
+    str_fields = dict([(f, r'(?P<{}>[\w\-.()]+)'.format(f)) for f in field_names])
     str_fields['commit'] = '(?P<commit>[0-9a-f]{7,40})'
     str_fields['commit_number'] = '(?P<commit_number>[0-9]{1,7})'
     str_fields['tag_number'] = '(?P<tag_number>[0-9]{1,5})'
-    str_fields.update(kwargs)
+    # escape parenthesis in fields in order to not messa up the regexp
+    fixed_fields = dict([(k, v.replace('(', r'\(').replace(')', r'\)')) for k, v in kwargs.items()])
+    str_fields.update(fixed_fields)
     tag_re = re.compile(tag_name.format(**str_fields))
 
     # Parse fields from tags
