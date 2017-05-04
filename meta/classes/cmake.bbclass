@@ -135,12 +135,10 @@ cmake_do_configure() {
 
 do_compile[progress] = "percent"
 cmake_do_compile()  {
-	cd ${B}
 	base_do_compile VERBOSE=1
 }
 
 cmake_do_install() {
-	cd ${B}
 	oe_runmake 'DESTDIR=${D}' install
 }
 
