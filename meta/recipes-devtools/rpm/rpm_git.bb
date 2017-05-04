@@ -128,6 +128,10 @@ do_install_append_class-target() {
     rm -rf ${D}/var
 }
 
+do_install_append () {
+	sed -i -e 's:${HOSTTOOLS_DIR}/::g' ${D}/${libdir}/rpm/macros
+}
+
 FILES_${PN} += "${libdir}/rpm-plugins/*.so \
                "
 
