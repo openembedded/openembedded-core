@@ -330,6 +330,19 @@ python do_unpack_and_patch() {
         bb.utils.remove(src_orig, recurse=True)
 }
 
+# BBINCLUDED is special (excluded from basehash signature
+# calculation). Using it in a task signature can cause "basehash
+# changed" errors.
+#
+# Depending on BBINCLUDED also causes do_ar_recipe to run again
+# for unrelated changes, like adding or removing buildhistory.bbclass.
+#
+# For these reasons we ignore the dependency completely. The versioning
+# of the output file ensures that we create it each time the recipe
+# gets rebuilt, at least as long as a PR server is used. We also rely
+# on that mechanism to catch changes in the file content, because the
+# file content is not part of of the task signature either.
+do_ar_recipe[vardepsexclude] += "BBINCLUDED"
 python do_ar_recipe () {
     """
     archive the recipe, including .bb and .inc.
