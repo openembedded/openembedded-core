@@ -18,6 +18,26 @@ python __anonymous () {
     d.setVar('KBUILD_EXTRA_SYMBOLS', " ".join(extra_symbols))
 }
 
+python do_devshell_prepend () {
+    os.environ['CFLAGS'] = ''
+    os.environ['CPPFLAGS'] = ''
+    os.environ['CXXFLAGS'] = ''
+    os.environ['LDFLAGS'] = ''
+
+    os.environ['KERNEL_PATH'] = d.getVar('STAGING_KERNEL_DIR')
+    os.environ['KERNEL_SRC'] = d.getVar('STAGING_KERNEL_DIR')
+    os.environ['KERNEL_VERSION'] = d.getVar('KERNEL_VERSION')
+    os.environ['CC'] = d.getVar('KERNEL_CC')
+    os.environ['LD'] = d.getVar('KERNEL_LD')
+    os.environ['AR'] = d.getVar('KERNEL_AR')
+    os.environ['O'] = d.getVar('STAGING_KERNEL_BUILDDIR')
+    kbuild_extra_symbols = d.getVar('KBUILD_EXTRA_SYMBOLS')
+    if kbuild_extra_symbols:
+        os.environ['KBUILD_EXTRA_SYMBOLS'] = kbuild_extra_symbols
+    else:
+        os.environ['KBUILD_EXTRA_SYMBOLS'] = ''
+}
+
 module_do_compile() {
 	unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS
 	oe_runmake KERNEL_PATH=${STAGING_KERNEL_DIR}   \
