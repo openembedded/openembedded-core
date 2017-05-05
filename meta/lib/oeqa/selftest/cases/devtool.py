@@ -1632,10 +1632,6 @@ class DevtoolTests(DevtoolBase):
                          and modification to the source and configurations are reflected
                          when building the kernel.
          """
-        #Set machine to qemxu86 to be able to modify the kernel and
-        #verify the modification.
-        features = 'MACHINE = "qemux86"\n'
-        self.append_config(features)
         kernel_provider = get_bb_var('PREFERRED_PROVIDER_virtual/kernel')
         # Clean up the enviroment
         bitbake('%s -c clean' % kernel_provider)
@@ -1673,10 +1669,10 @@ class DevtoolTests(DevtoolBase):
         kernelfile = os.path.join(get_bb_var('KBUILD_OUTPUT', kernel_provider), 'vmlinux')
         self.assertTrue(os.path.exists(kernelfile),'Kernel was not build correctly')
 
-        #Modify the kernel source, this is specific for qemux86
+        #Modify the kernel source
         modfile = os.path.join(tempdir,'arch/x86/boot/header.S')
-        modstring = "use a boot loader - Devtool kernel testing"
-        modapplied = runCmd("sed -i 's/boot loader/%s/' %s" % (modstring, modfile))
+        modstring = "Use a boot loader. Devtool testing."
+        modapplied = runCmd("sed -i 's/Use a boot loader./%s/' %s" % (modstring, modfile))
         self.assertEqual(0,modapplied.status,'Modification to %s on kernel source failed' % modfile)
         #Modify the configuration
         codeconfigfile = os.path.join(tempdir,'.config.new')
