@@ -226,7 +226,7 @@ PACKAGES =+ "${PN}-ralink-license ${PN}-ralink \
              ${PN}-broadcom-license ${PN}-bcm4329 ${PN}-bcm4330 ${PN}-bcm4334 ${PN}-bcm43340 ${PN}-bcm4339 ${PN}-bcm43430 ${PN}-bcm4354 \
              ${PN}-atheros-license ${PN}-ar9170 ${PN}-ath6k ${PN}-ath9k \
              ${PN}-gplv2-license ${PN}-carl9170 \
-             ${PN}-ar3k-license  ${PN}-ar3k  ${PN}-ath10k-license  ${PN}-ath10k  \
+             ${PN}-ar3k-license ${PN}-ar3k ${PN}-ath10k-license ${PN}-ath10k ${PN}-qca \
              \
              ${PN}-iwlwifi-license ${PN}-iwlwifi \
              ${PN}-iwlwifi-135-6 \
@@ -288,6 +288,7 @@ LICENSE_${PN}-ar3k = "Firmware-qualcommAthos_ar3k"
 LICENSE_${PN}-ar3k-license = "Firmware-qualcommAthos_ar3k"
 LICENSE_${PN}-ath10k = "Firmware-qualcommAthos_ath10k"
 LICENSE_${PN}-ath10k-license = "Firmware-qualcommAthos_ath10k"
+LICENSE_${PN}-qca = "Firmware-qualcommAthos_ath10k"
 
 FILES_${PN}-ar3k-license = "${nonarch_base_libdir}/firmware/LICENSE.QualcommAtheros_ar3k"
 FILES_${PN}-ar3k = " \
@@ -299,8 +300,13 @@ FILES_${PN}-ath10k = " \
   ${nonarch_base_libdir}/firmware/ath10k \
 "
 
+FILES_${PN}-qca = " \
+  ${nonarch_base_libdir}/firmware/qca \
+"
+
 RDEPENDS_${PN}-ar3k += "${PN}-ar3k-license"
 RDEPENDS_${PN}-ath10k += "${PN}-ath10k-license"
+RDEPENDS_${PN}-qca += "${PN}-ath10k-license"
 
 # For ralink
 LICENSE_${PN}-ralink = "Firmware-ralink-firmware"
