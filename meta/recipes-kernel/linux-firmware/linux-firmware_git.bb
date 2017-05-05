@@ -31,6 +31,7 @@ LICENSE = "\
     & Firmware-Marvell \
     & Firmware-moxa \
     & Firmware-myri10ge_firmware \
+    & Firmware-netronome \
     & Firmware-nvidia \
     & Firmware-OLPC \
     & Firmware-ath9k-htc \
@@ -88,6 +89,7 @@ LIC_FILES_CHKSUM = "\
     file://LICENCE.Marvell;md5=9ddea1734a4baf3c78d845151f42a37a \
     file://LICENCE.moxa;md5=1086614767d8ccf744a923289d3d4261 \
     file://LICENCE.myri10ge_firmware;md5=42e32fb89f6b959ca222e25ac8df8fed \
+    file://LICENCE.Netronome;md5=cd2a3e6effe3cdf42731575b8e9477ed \
     file://LICENCE.nvidia;md5=4428a922ed3ba2ceec95f076a488ce07 \
     file://LICENCE.OLPC;md5=5b917f9d8c061991be4f6f5f108719cd \
     file://LICENCE.open-ath9k-htc-firmware;md5=1b33c9f4d17bc4d457bdb23727046837 \
@@ -146,6 +148,7 @@ NO_GENERIC_LICENSE[Firmware-kaweth] = "LICENCE.kaweth"
 NO_GENERIC_LICENSE[Firmware-Marvell] = "LICENCE.Marvell"
 NO_GENERIC_LICENSE[Firmware-moxa] = "LICENCE.moxa"
 NO_GENERIC_LICENSE[Firmware-myri10ge_firmware] = "LICENCE.myri10ge_firmware"
+NO_GENERIC_LICENSE[Firmware-netronome] = "LICENCE.Netronome"
 NO_GENERIC_LICENSE[Firmware-nvidia] = "LICENCE.nvidia"
 NO_GENERIC_LICENSE[Firmware-OLPC] = "LICENCE.OLPC"
 NO_GENERIC_LICENSE[Firmware-ath9k-htc] = "LICENCE.open-ath9k-htc-firmware"
@@ -211,8 +214,6 @@ do_install() {
 	# fixup wl12xx location, after 2.6.37 the kernel searches a different location for it
 	( cd ${D}${nonarch_base_libdir}/firmware ; ln -sf ti-connectivity/* . )
 
-	# TODO: Remove netronome firmware until RPM packaging issue is resolved
-	rm -r ${D}${nonarch_base_libdir}/firmware/netronome/
 }
 
 
@@ -240,6 +241,7 @@ PACKAGES =+ "${PN}-ralink-license ${PN}-ralink \
              ${PN}-i915-license ${PN}-i915 \
              ${PN}-adsp-sst-license ${PN}-adsp-sst \
              ${PN}-bnx2-mips \
+             ${PN}-netronome-license ${PN}-netronome \
              ${PN}-whence-license \
              ${PN}-license \
              "
@@ -364,6 +366,21 @@ RDEPENDS_${PN}-sd8797 += "${PN}-marvell-license"
 RDEPENDS_${PN}-sd8801 += "${PN}-marvell-license"
 RDEPENDS_${PN}-sd8887 += "${PN}-marvell-license"
 RDEPENDS_${PN}-sd8897 += "${PN}-marvell-license"
+
+# For netronome
+LICENSE_${PN}-netronome = "Firmware-netronome"
+
+FILES_${PN}-netronome-license = " \
+  ${nonarch_base_libdir}/firmware/LICENCE.Netronome \
+"
+FILES_${PN}-netronome = " \
+  ${nonarch_base_libdir}/firmware/netronome/nic_AMDA0081*.nffw \
+  ${nonarch_base_libdir}/firmware/netronome/nic_AMDA0096*.nffw \
+  ${nonarch_base_libdir}/firmware/netronome/nic_AMDA0097*.nffw \
+  ${nonarch_base_libdir}/firmware/netronome/nic_AMDA0099*.nffw \
+"
+
+RDEPENDS_${PN}-netronome += "${PN}-netronome-license"
 
 # For rtl
 LICENSE_${PN}-rtl8188 = "Firmware-rtlwifi_firmware"
@@ -640,3 +657,6 @@ python populate_packages_prepend () {
     iwlwifi_pkgs = filter(lambda x: x.find('-iwlwifi-') != -1, firmware_pkgs)
     d.appendVar('RDEPENDS_linux-firmware-iwlwifi', ' ' + ' '.join(iwlwifi_pkgs))
 }
+
+# Netronome binaries has ELF headers and therefore triggers an arch-specific error.
+INSANE_SKIP_${PN}-netronome = "arch"
