@@ -202,31 +202,6 @@ RDEPENDS_packagegroup-core-lsb-python = "\
     python-misc \
 "
 
-QT4PKGS = " \
-    libqtcore4 \
-    libqtgui4 \
-    libqtsql4 \
-    libqtsvg4 \
-    libqtxml4 \
-    libqtnetwork4 \
-    qt4-plugin-sqldriver-sqlite \
-    ${@bb.utils.contains("DISTRO_FEATURES", "opengl", "libqtopengl4", "", d)} \
-    "
-QT4PKGS_mips64 = ""
-QT4PKGS_mips64n32 = ""
-
-def get_libqt4(d):
-    if 'linuxstdbase' in d.getVar('DISTROOVERRIDES', False) or "":
-        if 'qt4' in d.getVar('BBFILE_COLLECTIONS', False) or "":
-            return d.getVar('QT4PKGS', False)
-
-        bb.warn('The meta-qt4 layer should be added, this layer provides Qt 4.x ' \
-                'libraries. Its intended use is for passing LSB tests as Qt4 is ' \
-                'a requirement for LSB.')
-    return ''
-# We don't want this to rebuild every time you change your layer config
-get_libqt4[vardepsexclude] += "BBFILE_COLLECTIONS"
-
 SUMMARY_packagegroup-core-lsb-desktop = "LSB Desktop"
 DESCRIPTION_packagegroup-core-lsb-desktop = "Packages required to support libraries \
     specified in the LSB Desktop specification"
@@ -247,7 +222,6 @@ RDEPENDS_packagegroup-core-lsb-desktop = "\
     gtk+ \
     atk \
     libasound \
-    ${@get_libqt4(d)} \
 "
 
 RDEPENDS_packagegroup-core-lsb-runtime-add = "\
