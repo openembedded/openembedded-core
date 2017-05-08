@@ -6,5 +6,5 @@ LIC_FILES_CHKSUM = "file://sqlite3.h;endline=11;md5=65f0a57ca6928710b418c094b357
 SRC_URI = "\
   http://www.sqlite.org/2017/sqlite-autoconf-${SQLITE_PV}.tar.gz \
   "
-SRC_URI[md5sum] = "450a95a7bde697c9fe4de9ae2fffdcca"
-SRC_URI[sha256sum] = "a4e485ad3a16e054765baf6371826b5000beed07e626510896069c0bf013874c"
+SRC_URI[md5sum] = "a6687a8ae1f66abc8df739aeadecfd0c"
+SRC_URI[sha256sum] = "3757612463976e7d08c5e9f0af3021613fc24bbcfe1c51197d6776b9ece9ac5c"
