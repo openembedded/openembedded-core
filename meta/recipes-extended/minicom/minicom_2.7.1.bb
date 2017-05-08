@@ -12,8 +12,8 @@ SRC_URI = "https://alioth.debian.org/frs/download.php/latestfile/3/${BP}.tar.gz 
            file://0001-Fix-build-issus-surfaced-due-to-musl.patch \
           "
 
-SRC_URI[md5sum] = "7044ca3e291268c33294f171d426dc2d"
-SRC_URI[sha256sum] = "9ac3a663b82f4f5df64114b4792b9926b536c85f59de0f2d2b321c7626a904f4"
+SRC_URI[md5sum] = "9021cb8c5445f6e6e74b2acc39962d62"
+SRC_URI[sha256sum] = "532f836b7a677eb0cb1dca8d70302b73729c3d30df26d58368d712e5cca041f1"
 
 UPSTREAM_CHECK_URI = "https://alioth.debian.org/frs/?group_id=30018"
 
