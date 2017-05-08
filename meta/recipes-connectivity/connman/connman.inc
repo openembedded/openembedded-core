@@ -15,7 +15,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=12f884d2ae1ff87c09e5b7ccc2c4ca7e \
 
 inherit autotools pkgconfig systemd update-rc.d bluetooth
 
-DEPENDS  = "dbus glib-2.0 ppp iptables readline"
+DEPENDS  = "dbus glib-2.0 ppp readline"
 
 INC_PR = "r20"
 
@@ -33,6 +33,7 @@ EXTRA_OECONF += "\
 PACKAGECONFIG ??= "wispr \
                    ${@bb.utils.filter('DISTRO_FEATURES', '3g systemd wifi', d)} \
                    ${@bb.utils.contains('DISTRO_FEATURES', 'bluetooth', 'bluez', '', d)} \
+                   iptables \
 "
 
 # If you want ConnMan to support VPN, add following statement into
@@ -50,6 +51,8 @@ PACKAGECONFIG[l2tp] = "--enable-l2tp --with-l2tp=${sbindir}/xl2tpd,--disable-l2t
 PACKAGECONFIG[pptp] = "--enable-pptp --with-pptp=${sbindir}/pptp,--disable-pptp,,pptp-linux"
 # WISPr support for logging into hotspots, requires TLS
 PACKAGECONFIG[wispr] = "--enable-wispr,--disable-wispr,gnutls,"
+PACKAGECONFIG[nftables] = "--with-firewall=nftables ,,nftables,nftables"
+PACKAGECONFIG[iptables] = "--with-firewall=iptables ,,iptables,iptables"
 
 INITSCRIPT_NAME = "connman"
 INITSCRIPT_PARAMS = "start 05 5 2 3 . stop 22 0 1 6 ."
