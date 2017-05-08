@@ -16,8 +16,8 @@ SRC_URI = "${GNUPG_MIRROR}/${BPN}/${BPN}-${PV}.tar.bz2 \
            file://autogen.sh-fix-find-version-for-beta-checking.patch \
           "
 
-SRC_URI[md5sum] = "c67f908b0b35c7ebc62144f362757e1e"
-SRC_URI[sha256sum] = "d04c6fab7e5562ce4b915b22020e34d4c1a256847690cf149842264fc7cef994"
+SRC_URI[md5sum] = "f6bc7e0b82893dfafe09109d86ff6e9b"
+SRC_URI[sha256sum] = "24cf9a69369be64a9f6f8cc11a1be33ab7780ad77a6a1b93719438f49f69960d"
 
 EXTRA_OECONF = "--disable-ldap \
 		--disable-ccid-driver \
