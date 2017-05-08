@@ -331,12 +331,26 @@ python extend_recipe_sysroot() {
 
     taskdepdata = d.getVar("BB_TASKDEPDATA", False)
     mytaskname = d.getVar("BB_RUNTASK")
+    if mytaskname.endswith("_setscene"):
+        mytaskname = mytaskname.replace("_setscene", "")
     workdir = d.getVar("WORKDIR")
     #bb.warn(str(taskdepdata))
     pn = d.getVar("PN")
 
-    if mytaskname.endswith("_setscene"):
-        mytaskname = mytaskname.replace("_setscene", "")
+    stagingdir = d.getVar("STAGING_DIR")
+    sharedmanifests = d.getVar("COMPONENTS_DIR") + "/manifests"
+    recipesysroot = d.getVar("RECIPE_SYSROOT")
+    recipesysrootnative = d.getVar("RECIPE_SYSROOT_NATIVE")
+    current_variant = d.getVar("BBEXTENDVARIANT")
+
+    # Detect bitbake -b usage
+    nodeps = d.getVar("BB_LIMITEDDEPS") or False
+    if nodeps:
+        lock = bb.utils.lockfile(recipesysroot + "/sysroot.lock")
+        staging_populate_sysroot_dir(recipesysroot, recipesysrootnative, True, d)
+        staging_populate_sysroot_dir(recipesysroot, recipesysrootnative, False, d)
+        bb.utils.unlockfile(lock)
+        return
 
     start = None
     configuredeps = []
@@ -440,20 +454,6 @@ python extend_recipe_sysroot() {
         next = new
 
     bb.note("\n".join(msgbuf))
-
-    stagingdir = d.getVar("STAGING_DIR")
-    sharedmanifests = d.getVar("COMPONENTS_DIR") + "/manifests"
-    recipesysroot = d.getVar("RECIPE_SYSROOT")
-    recipesysrootnative = d.getVar("RECIPE_SYSROOT_NATIVE")
-    current_variant = d.getVar("BBEXTENDVARIANT")
-
-    # Detect bitbake -b usage
-    nodeps = d.getVar("BB_LIMITEDDEPS") or False
-    if nodeps:
-        lock = bb.utils.lockfile(recipesysroot + "/sysroot.lock")
-        staging_populate_sysroot_dir(recipesysroot, recipesysrootnative, True, d)
-        staging_populate_sysroot_dir(recipesysroot, recipesysrootnative, False, d)
-        bb.utils.unlockfile(lock)
 
     depdir = recipesysrootnative + "/installeddeps"
     bb.utils.mkdirhier(depdir)
