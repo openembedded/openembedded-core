@@ -110,3 +110,6 @@ do_install_class-native () {
 }
 
 BBCLASSEXTEND = "native"
+
+# ghostscript does not supports "arc"
+COMPATIBLE_HOST = "^(?!arc).*"
