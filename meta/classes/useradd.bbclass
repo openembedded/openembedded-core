@@ -32,7 +32,7 @@ if test "x$D" != "x"; then
 	fi
 
 	# user/group lookups should match useradd/groupadd --root
-	export PSEUDO_PASSWD="$SYSROOT:${STAGING_DIR_NATIVE}"
+	export PSEUDO_PASSWD="$SYSROOT"
 fi
 
 # If we're not doing a special SSTATE/SYSROOT install
