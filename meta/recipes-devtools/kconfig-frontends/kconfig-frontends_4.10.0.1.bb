@@ -15,7 +15,8 @@ DEPENDS += "ncurses flex bison gperf-native"
 RDEPENDS_${PN} += "python3 bash"
 SRC_URI = "git://ymorin.is-a-geek.org/kconfig-frontends;branch=4.10.x \
            file://0001-Fix-installation-of-.pc-files.patch \
-           file://0001-Switch-utils-kconfig-diff-to-use-Python-3.patch"
+           file://0001-Switch-utils-kconfig-diff-to-use-Python-3.patch \
+           file://missing-mkdir.patch"
 
 SRCREV = "f8ffe5e1c6f183cb7d5d515aa9381b7557de654e"
 

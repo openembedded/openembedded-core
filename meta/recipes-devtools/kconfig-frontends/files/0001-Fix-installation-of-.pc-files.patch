@@ -5,7 +5,7 @@ Subject: [PATCH] Fix installation of .pc files
 
 They go to prefix/pkgconfig/, not prefix/pkg-config.
 
-Upstream-Status: Pending
+Upstream-Status: Submitted
 Signed-off-by: Alexander Kanavin <alex.kanavin@gmail.com>
 ---
  Makefile.am | 2 +-
@@ -26,4 +26,3 @@ index 058690a..f9e9b7b 100644
  EXTRA_DIST += libs/parser/kconfig-parser.pc.in
 -- 
 2.11.0
-
