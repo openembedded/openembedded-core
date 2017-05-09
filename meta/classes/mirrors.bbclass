@@ -19,7 +19,7 @@ ${DEBIAN_MIRROR}	http://ftp.si.debian.org/debian/pool \n \
 ${DEBIAN_MIRROR}	http://ftp.es.debian.org/debian/pool \n \
 ${DEBIAN_MIRROR}	http://ftp.se.debian.org/debian/pool \n \
 ${DEBIAN_MIRROR}	http://ftp.tr.debian.org/debian/pool \n \
-${GNU_MIRROR}	ftp://mirrors.kernel.org/gnu \n \
+${GNU_MIRROR}	https://mirrors.kernel.org/gnu \n \
 ${KERNELORG_MIRROR}	http://www.kernel.org/pub \n \
 ${GNUPG_MIRROR}	ftp://ftp.gnupg.org/gcrypt \n \
 ${GNUPG_MIRROR}	ftp://ftp.franken.de/pub/crypt/mirror/ftp.gnupg.org/gcrypt \n \
