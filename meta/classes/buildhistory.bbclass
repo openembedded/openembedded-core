@@ -301,6 +301,8 @@ python buildhistory_emit_outputsigs() {
     if not "task" in (d.getVar('BUILDHISTORY_FEATURES') or "").split():
         return
 
+    import hashlib
+
     taskoutdir = os.path.join(d.getVar('BUILDHISTORY_DIR'), 'task', 'output')
     bb.utils.mkdirhier(taskoutdir)
     currenttask = d.getVar('BB_CURRENTTASK')
@@ -314,7 +316,17 @@ python buildhistory_emit_outputsigs() {
             if fname == 'fixmepath':
                 continue
             fullpath = os.path.join(root, fname)
-            filesigs[os.path.relpath(fullpath, cwd)] = bb.utils.sha256_file(fullpath)
+            try:
+                if os.path.islink(fullpath):
+                    sha256 = hashlib.sha256(os.readlink(fullpath).encode('utf-8')).hexdigest()
+                elif os.path.isfile(fullpath):
+                    sha256 = bb.utils.sha256_file(fullpath)
+                else:
+                    continue
+            except OSError:
+                bb.warn('buildhistory: unable to read %s to get output signature' % fullpath)
+                continue
+            filesigs[os.path.relpath(fullpath, cwd)] = sha256
     with open(taskfile, 'w') as f:
         for fpath, fsig in sorted(filesigs.items(), key=lambda item: item[0]):
             f.write('%s %s\n' % (fpath, fsig))
