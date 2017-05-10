@@ -1,27 +1,32 @@
+From 624c029abcc73c724020ccea9a2b4b5b5c00f2a6 Mon Sep 17 00:00:00 2001
+From: Alexander Kanavin <alex.kanavin@gmail.com>
+Date: Fri, 31 Mar 2017 15:42:46 +0300
+Subject: [PATCH] cross-compile support
+
 We cross compile python. This patch uses tools from host/native
 python instead of in-tree tools
 
 -Khem
 
 Upstream-Status: Inappropriate[Configuration Specific]
-
+Signed-off-by: Alexander Kanavin <alex.kanavin@gmail.com>
 ---
- Makefile.pre.in |   25 +++++++++++++------------
- 1 file changed, 13 insertions(+), 12 deletions(-)
+ Makefile.pre.in | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
 
-Index: Python-3.5.2/Makefile.pre.in
-===================================================================
---- Python-3.5.2.orig/Makefile.pre.in
-+++ Python-3.5.2/Makefile.pre.in
-@@ -220,6 +220,7 @@ LIBOBJS=	@LIBOBJS@
+diff --git a/Makefile.pre.in b/Makefile.pre.in
+index a88b7d5..7cb8bb3 100644
+--- a/Makefile.pre.in
++++ b/Makefile.pre.in
+@@ -221,6 +221,7 @@ LIBOBJS=	@LIBOBJS@
  
  PYTHON=		python$(EXE)
  BUILDPYTHON=	python$(BUILDEXE)
-+HOSTPYTHON=	$(BUILDPYTHON)
++HOSTPYTHON=    $(BUILDPYTHON)
  
- cross_compiling=@cross_compiling@
+ PYTHON_FOR_GEN=@PYTHON_FOR_GEN@
  PYTHON_FOR_BUILD=@PYTHON_FOR_BUILD@
-@@ -279,6 +280,7 @@ LIBFFI_INCLUDEDIR=	@LIBFFI_INCLUDEDIR@
+@@ -280,6 +281,7 @@ LIBFFI_INCLUDEDIR=	@LIBFFI_INCLUDEDIR@
  ##########################################################################
  # Parser
  PGEN=		Parser/pgen$(EXE)
@@ -29,7 +34,7 @@ Index: Python-3.5.2/Makefile.pre.in
  
  PSRCS=		\
  		Parser/acceler.c \
-@@ -509,7 +511,7 @@ build_all_generate_profile:
+@@ -510,7 +512,7 @@ build_all_generate_profile:
  
  run_profile_task:
  	: # FIXME: can't run for a cross build
@@ -38,16 +43,16 @@ Index: Python-3.5.2/Makefile.pre.in
  
  build_all_merge_profile:
  	$(LLVM_PROF_MERGER)
-@@ -792,7 +794,7 @@ $(GRAMMAR_H): $(GRAMMAR_INPUT) $(PGEN)
+@@ -787,7 +789,7 @@ $(IO_OBJS): $(IO_H)
+ 
+ $(GRAMMAR_H): @GENERATED_COMMENT@ $(GRAMMAR_INPUT) $(PGEN)
  	@$(MKDIR_P) Include
- 	# Avoid copying the file onto itself for an in-tree build
- 	if test "$(cross_compiling)" != "yes"; then \
--		$(PGEN) $(GRAMMAR_INPUT) $(GRAMMAR_H) $(GRAMMAR_C); \
-+		$(HOSTPGEN) $(GRAMMAR_INPUT) $(GRAMMAR_H) $(GRAMMAR_C); \
- 	else \
- 		cp $(srcdir)/Include/graminit.h $(GRAMMAR_H).tmp; \
- 		mv $(GRAMMAR_H).tmp $(GRAMMAR_H); \
-@@ -990,7 +992,7 @@ $(LIBRARY_OBJS) $(MODOBJS) Programs/pyth
+-	$(PGEN) $(GRAMMAR_INPUT) $(GRAMMAR_H) $(GRAMMAR_C)
++	$(HOSTPGEN) $(GRAMMAR_INPUT) $(GRAMMAR_H) $(GRAMMAR_C)
+ $(GRAMMAR_C): @GENERATED_COMMENT@ $(GRAMMAR_H)
+ 	touch $(GRAMMAR_C)
+ 
+@@ -976,7 +978,7 @@ $(LIBRARY_OBJS) $(MODOBJS) Programs/python.o: $(PYTHON_HEADERS)
  ######################################################################
  
  TESTOPTS=	$(EXTRATESTOPTS)
@@ -56,7 +61,7 @@ Index: Python-3.5.2/Makefile.pre.in
  TESTRUNNER=	$(TESTPYTHON) $(srcdir)/Tools/scripts/run_tests.py
  TESTTIMEOUT=	3600
  
-@@ -1481,7 +1483,7 @@ frameworkinstallstructure:	$(LDLIBRARY)
+@@ -1468,7 +1470,7 @@ frameworkinstallstructure:	$(LDLIBRARY)
  		fi; \
  	done
  	$(LN) -fsn include/python$(LDVERSION) $(DESTDIR)$(prefix)/Headers
@@ -65,7 +70,7 @@ Index: Python-3.5.2/Makefile.pre.in
  	$(LN) -fsn $(VERSION) $(DESTDIR)$(PYTHONFRAMEWORKINSTALLDIR)/Versions/Current
  	$(LN) -fsn Versions/Current/$(PYTHONFRAMEWORK) $(DESTDIR)$(PYTHONFRAMEWORKINSTALLDIR)/$(PYTHONFRAMEWORK)
  	$(LN) -fsn Versions/Current/Headers $(DESTDIR)$(PYTHONFRAMEWORKINSTALLDIR)/Headers
-@@ -1547,7 +1549,7 @@ config.status:	$(srcdir)/configure
+@@ -1534,7 +1536,7 @@ config.status:	$(srcdir)/configure
  
  # Run reindent on the library
  reindent:
@@ -74,7 +79,7 @@ Index: Python-3.5.2/Makefile.pre.in
  
  # Rerun configure with the same options as it was run last time,
  # provided the config.status script exists
-@@ -1683,7 +1685,7 @@ funny:
+@@ -1674,7 +1676,7 @@ funny:
  
  # Perform some verification checks on any modified files.
  patchcheck: all
@@ -83,3 +88,6 @@ Index: Python-3.5.2/Makefile.pre.in
  
  # Dependencies
  
+-- 
+2.11.0
+
