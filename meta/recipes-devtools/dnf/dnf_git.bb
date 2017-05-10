@@ -15,6 +15,7 @@ SRC_URI = "git://github.com/rpm-software-management/dnf.git \
 
 PV = "2.3.0"
 SRCREV = "242079563b54b4714c889fd4ee32e8dd9960f3b8"
+UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>\d+(\.\d+)+)"
 
 S = "${WORKDIR}/git"
 
