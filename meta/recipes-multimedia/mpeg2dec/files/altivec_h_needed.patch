@@ -24,10 +24,10 @@ Upstream-Status: Pending
 
 Signed-off-by: Dongxiao Xu <dongxiao.xu@intel.com>
 
-diff -ruN mpeg2dec-0.4.1-orig/configure.in mpeg2dec-0.4.1/configure.in
---- mpeg2dec-0.4.1-orig/configure.in	2010-09-14 20:55:42.399687663 +0800
-+++ mpeg2dec-0.4.1/configure.in	2010-09-14 20:56:43.403204648 +0800
-@@ -75,11 +75,11 @@
+diff -ruN a/configure.in b/configure.in
+--- a/configure.ac	2010-09-14 20:55:42.399687663 +0800
++++ b/configure.ac	2010-09-14 20:56:43.403204648 +0800
+@@ -79,11 +79,11 @@
  		 CFLAGS="$OPT_CFLAGS $TRY_CFLAGS $CFLAGS"
  		 AC_MSG_CHECKING([if <altivec.h> is needed])
  		 AC_TRY_COMPILE([],
