@@ -15,6 +15,7 @@ SRC_URI = "git://github.com/KhronosGroup/Vulkan-LoaderAndValidationLayers.git;br
            file://0001-Use-getenv-if-secure_getenv-does-not-exist.patch \
 "
 SRCREV = "9c21ed0fb275589c3af6118aec9ef4f1d1544dc1"
+UPSTREAM_CHECK_GITTAGREGEX = "sdk-(?P<pver>\d+(\.\d+)+)"
 
 S = "${WORKDIR}/git"
 
