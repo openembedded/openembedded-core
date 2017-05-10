@@ -13,12 +13,16 @@ SRC_URI += " \
            file://0001-Disable-check-for-polkit-for-UI.patch \
            file://0001-Avoid-building-docs.patch \
           "
-SRC_URI[archive.sha256sum] = "e6dca325b3014440f457a92db18ffe342a35888db3f0756694a99b9652796367"
-SRC_URI[archive.md5sum] = "9514065dc752105240e5567c13708af4"
+SRC_URI[archive.md5sum] = "2b44ae1d8cd899417294a9c4509d7870"
+SRC_URI[archive.sha256sum] = "054eebe2afb6fe3c06ac8c46bc045c42f675d4fd64e6f16cbc602d5c7ce27bec"
 
 AUTOTOOLS_AUXDIR = "${S}/build-aux"
 
 EXTRA_OECONF = "--enable-compile-warnings"
+
+# This properly relocates msgfmt, which otherwise fails to find its data files. 
+# Tips on how to get rid of hardcoded version welcome.
+export GETTEXTDATADIR = "${STAGING_DATADIR_NATIVE}/gettext-0.19.8/"
 
 PACKAGECONFIG ?= "${@bb.utils.contains_any('DISTRO_FEATURES', '${GTK3DISTROFEATURES}', 'gtk', '', d)}"
 PACKAGECONFIG[gtk] = "--enable-gtk,--disable-gtk,gtk+3"
@@ -26,7 +30,7 @@ PACKAGECONFIG[polkit] = "--enable-polkit,--disable-polkit,polkit dbus"
 
 SOLIBS = ".so"
 FILES_SOLIBSDEV = ""
-FILES_${PN} += "${datadir}/icons/"
+FILES_${PN} += "${datadir}/icons/ ${datadir}/appdata"
 
 SYSTEMD_SERVICE_${PN} = "${@bb.utils.contains('PACKAGECONFIG', 'polkit', 'sysprof2.service', '', d)}"
 
