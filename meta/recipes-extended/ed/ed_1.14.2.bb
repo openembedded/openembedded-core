@@ -12,11 +12,11 @@ SECTION = "base"
 bindir = "${base_bindir}"
 
 # Upstream regularly removes previous releases from https://ftp.gnu.org/gnu/ed/
-SRC_URI = "http://downloads.yoctoproject.org/mirror/sources/${BP}.tar.lz"
+SRC_URI = "${GNU_MIRROR}/ed/${BP}.tar.lz"
 UPSTREAM_CHECK_URI = "${GNU_MIRROR}/ed/"
 
-SRC_URI[md5sum] = "7f4a54fa7f366479f03654b8af645fd0"
-SRC_URI[sha256sum] = "ffb97eb8f2a2b5a71a9b97e3872adce953aa1b8958e04c5b7bf11d556f32552a"
+SRC_URI[md5sum] = "273d04778b2a51f7c3cbfcd2001876bf"
+SRC_URI[sha256sum] = "f57962ba930d70d02fc71d6be5c5f2346b16992a455ab9c43be7061dec9810db"
 
 EXTRA_OEMAKE = "-e MAKEFLAGS="
 
