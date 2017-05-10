@@ -13,6 +13,7 @@ SRC_URI = "${APACHE_MIRROR}/apr/${BPN}-${PV}.tar.gz \
            file://configfix.patch \
            file://configure_fixes.patch \
            file://run-ptest \
+           file://openssl-1.1.patch \
 "
 
 SRC_URI[md5sum] = "866825c04da827c6e5f53daff5569f42"
