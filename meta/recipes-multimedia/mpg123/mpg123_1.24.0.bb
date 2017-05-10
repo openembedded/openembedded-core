@@ -12,8 +12,8 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=1e86753638d3cf2512528b99079bc4f3"
 
 SRC_URI = "https://www.mpg123.de/download/${BP}.tar.bz2"
 
-SRC_URI[md5sum] = "4dde045123a2ad1e385a0a82c0ef9268"
-SRC_URI[sha256sum] = "de2303c8ecb65593e39815c0a2f2f2d91f708c43b85a55fdd1934c82e677cf8e"
+SRC_URI[md5sum] = "75d62ac0cb713a7bac5af4ded4af2bb4"
+SRC_URI[sha256sum] = "55fb169a7711938f5df0497d1ffe28419fbef50011dc01d00b216379e6a2256c"
 
 inherit autotools pkgconfig
 
@@ -39,7 +39,6 @@ AUDIOMODS += "${@bb.utils.contains('PACKAGECONFIG', 'pulseaudio', 'pulse', '', d
 EXTRA_OECONF = " \
     --enable-shared \
     --with-audio='${AUDIOMODS}' \
-    --with-module-suffix=.so \
     ${@bb.utils.contains('TUNE_FEATURES', 'neon', '--with-cpu=neon', '', d)} \
     ${@bb.utils.contains('TUNE_FEATURES', 'altivec', '--with-cpu=altivec', '', d)} \
 "
