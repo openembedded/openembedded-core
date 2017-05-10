@@ -67,6 +67,12 @@ python () {
     else:
         bb.debug(1, 'archiver: %s is included: %s' % (pn, reason))
 
+
+    # glibc-locale: do_fetch, do_unpack and do_patch tasks have been deleted,
+    # so avoid archiving source here.
+    if pn.startswith('glibc-locale'):
+        return
+
     # We just archive gcc-source for all the gcc related recipes
     if d.getVar('BPN') in ['gcc', 'libgcc'] \
             and not pn.startswith('gcc-source'):
