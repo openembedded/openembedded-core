@@ -31,6 +31,9 @@ SRC_URI = "ftp://ftp.isc.org/isc/bind9/${PV}/${BPN}-${PV}.tar.gz \
            file://CVE-2016-6170.patch \
            "
 
+UPSTREAM_CHECK_URI = "ftp://ftp.isc.org/isc/bind9/"
+UPSTREAM_CHECK_REGEX = "(?P<pver>9(\.\d+)+(-P\d+)*)/"
+
 SRC_URI[md5sum] = "bcf7e772b616f7259420a3edc5df350a"
 SRC_URI[sha256sum] = "690810d1fbb72afa629e74638d19cd44e28d2b2e5eb63f55c705ad85d1a4cb83"
 
