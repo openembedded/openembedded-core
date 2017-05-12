@@ -19,7 +19,6 @@ SRC_URI += " \
             file://no-valgrind.patch \
             file://pathlimit.patch \
             file://qemu-2.5.0-cflags.patch \
-            file://target-ppc-fix-user-mode.patch \
             file://glibc-2.25.patch \
 "
 
@@ -39,8 +38,8 @@ SRC_URI_append_class-native = " \
 
 SRC_URI =+ "http://wiki.qemu-project.org/download/${BP}.tar.bz2"
 
-SRC_URI[md5sum] = "17940dce063b6ce450a12e719a6c9c43"
-SRC_URI[sha256sum] = "dafd5d7f649907b6b617b822692f4c82e60cf29bc0fc58bc2036219b591e5e62"
+SRC_URI[md5sum] = "a6a23a0c59fd0f8ec564b0fb89a79954"
+SRC_URI[sha256sum] = "f62ab18a1fb9ff5b4c81ed44becc945b11581eff777618141bdb787da55d3638"
 
 COMPATIBLE_HOST_mipsarchn32 = "null"
 COMPATIBLE_HOST_mipsarchn64 = "null"
