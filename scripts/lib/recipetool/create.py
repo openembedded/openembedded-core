@@ -339,9 +339,14 @@ def determine_from_url(srcuri):
                 pn = res.group(1).strip().replace('_', '-')
                 pv = res.group(2).strip().replace('_', '.')
 
-        if not pn and not pv and parseres.scheme not in ['git', 'gitsm', 'svn', 'hg']:
-            srcfile = os.path.basename(parseres.path.rstrip('/'))
-            pn, pv = determine_from_filename(srcfile)
+        if not pn and not pv:
+            if parseres.scheme not in ['git', 'gitsm', 'svn', 'hg']:
+                srcfile = os.path.basename(parseres.path.rstrip('/'))
+                pn, pv = determine_from_filename(srcfile)
+            elif parseres.scheme in ['git', 'gitsm']:
+                pn = os.path.basename(parseres.path.rstrip('/')).lower().replace('_', '-')
+                if pn.endswith('.git'):
+                    pn = pn[:-4]
 
     logger.debug('Determined from source URL: name = "%s", version = "%s"' % (pn, pv))
     return (pn, pv)
