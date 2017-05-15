@@ -52,8 +52,12 @@ class BSTask(dict):
     @property
     def cputime(self):
         """Sum of user and system time taken by the task"""
-        return self['rusage']['ru_stime'] + self['rusage']['ru_utime'] + \
-               self['child_rusage']['ru_stime'] + self['child_rusage']['ru_utime']
+        rusage = self['rusage']['ru_stime'] + self['rusage']['ru_utime']
+        if self['child_rusage']:
+            # Child rusage may have been optimized out
+            return rusage + self['child_rusage']['ru_stime'] + self['child_rusage']['ru_utime']
+        else:
+            return rusage
 
     @property
     def walltime(self):
@@ -73,12 +77,20 @@ class BSTask(dict):
     @property
     def read_ops(self):
         """Number of read operations on the block layer"""
-        return self['rusage']['ru_inblock'] + self['child_rusage']['ru_inblock']
+        if self['child_rusage']:
+            # Child rusage may have been optimized out
+            return self['rusage']['ru_inblock'] + self['child_rusage']['ru_inblock']
+        else:
+            return self['rusage']['ru_inblock']
 
     @property
     def write_ops(self):
         """Number of write operations on the block layer"""
-        return self['rusage']['ru_oublock'] + self['child_rusage']['ru_oublock']
+        if self['child_rusage']:
+            # Child rusage may have been optimized out
+            return self['rusage']['ru_oublock'] + self['child_rusage']['ru_oublock']
+        else:
+            return self['rusage']['ru_oublock']
 
 
 def read_buildstats_file(buildstat_file):
