@@ -25,8 +25,8 @@ SRC_URI = "https://releases.pagure.org/newt/newt-${PV}.tar.gz \
            file://0001-detect-gold-as-GNU-linker-too.patch \
 "
 
-SRC_URI[md5sum] = "e4aa0f7943edd39c52481a87f68f412a"
-SRC_URI[sha256sum] = "08c0db56c21996af6a7cbab99491b774c6c09cef91cd9b03903c84634bff2e80"
+SRC_URI[md5sum] = "70b288f821234593a8e7920e435b259b"
+SRC_URI[sha256sum] = "8d66ba6beffc3f786d4ccfee9d2b43d93484680ef8db9397a4fb70b5adbb6dbc"
 
 S = "${WORKDIR}/newt-${PV}"
 
