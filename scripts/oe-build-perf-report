@@ -34,7 +34,7 @@ from build_perf import html
 
 scriptpath.add_oe_lib_path()
 
-from oeqa.utils.git import GitRepo
+from oeqa.utils.git import GitRepo, GitError
 
 
 # Setup logging
@@ -400,6 +400,43 @@ def print_html_report(data, id_comp):
     print(html.template.render(metadata=metadata, test_data=tests, chart_opts=chart_opts))
 
 
+def dump_buildstats(repo, outdir, notes_ref, revs):
+    """Dump buildstats of test results"""
+    full_ref = 'refs/notes/' + notes_ref
+    if not repo.rev_parse(full_ref):
+        log.error("No buildstats found, please try running "
+                  "'git fetch origin %s:%s' to fetch them from the remote",
+                  full_ref, full_ref)
+        return
+
+    missing = False
+    log.info("Writing out buildstats from 'refs/notes/%s' into '%s'",
+              notes_ref, outdir)
+    for rev in revs:
+        log.debug('Dumping buildstats for %s (%s)', rev.commit_number,
+                  rev.commit)
+        for tag in rev.tags:
+            log.debug('    %s', tag)
+            try:
+                bs_all = json.loads(repo.run_cmd(['notes', '--ref', notes_ref,
+                                                  'show', tag + '^0']))
+            except GitError:
+                log.warning("Buildstats not found for %s", tag)
+                missing = True
+            for measurement, buildstats in bs_all.items():
+                tag_base, run_id = tag.rsplit('/', 1)
+                tag_base = tag_base.replace('/', '_')
+                bs_dir = os.path.join(outdir, measurement, tag_base)
+                if not os.path.exists(bs_dir):
+                    os.makedirs(bs_dir)
+                with open(os.path.join(bs_dir, run_id + '.json'), 'w') as f:
+                    json.dump(buildstats, f, indent=2)
+    if missing:
+        log.info("Buildstats were missing for some test runs, please "
+                 "run 'git fetch origin %s:%s' and try again",
+                 full_ref, full_ref)
+
+
 def auto_args(repo, args):
     """Guess arguments, if not defined by the user"""
     # Get the latest commit in the repo
@@ -455,6 +492,8 @@ Examine build performance test results from a Git repository"""
     group.add_argument('--commit-number2',
                        help="Revision number to compare with, redundant if "
                             "--commit2 is specified")
+    parser.add_argument('--dump-buildstats', nargs='?', const='.',
+                        help="Dump buildstats of the tests")
 
     return parser.parse_args(argv)
 
@@ -548,6 +587,14 @@ def main(argv=None):
                           data[index_r][0], data[index_r][1])
     else:
         print_html_report(data, index_l)
+
+    # Dump buildstats
+    if args.dump_buildstats:
+        notes_ref = 'buildstats/{}/{}/{}'.format(args.hostname, args.branch,
+                                                 args.machine)
+        dump_buildstats(repo, 'oe-build-perf-buildstats', notes_ref,
+                        [rev_l, rev_r])
+                        #revs_l.tags + revs_r.tags)
 
     return 0
 
