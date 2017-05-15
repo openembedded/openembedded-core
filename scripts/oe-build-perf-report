@@ -373,7 +373,7 @@ def print_html_report(data, id_comp):
 
     # Chart options
     chart_opts = {'haxis': {'min': get_data_item(data[0][0], 'layers.meta.commit_count'),
-                            'max': get_data_item(data[0][0], 'layers.meta.commit_count')}
+                            'max': get_data_item(data[-1][0], 'layers.meta.commit_count')}
                  }
 
     print(html.template.render(metadata=metadata, test_data=tests, chart_opts=chart_opts))
