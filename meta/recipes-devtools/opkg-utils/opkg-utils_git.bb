@@ -39,6 +39,10 @@ do_install_append_class-target() {
 	fi
 }
 
+# These are empty and will pull python3-dev into images where it wouldn't
+# have been otherwise, so don't generate them.
+PACKAGES_remove = "${PN}-dev ${PN}-staticdev"
+
 PACKAGES =+ "update-alternatives-opkg"
 FILES_update-alternatives-opkg = "${bindir}/update-alternatives"
 RPROVIDES_update-alternatives-opkg = "update-alternatives update-alternatives-cworth"
