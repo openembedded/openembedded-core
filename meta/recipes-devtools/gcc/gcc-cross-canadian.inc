@@ -80,7 +80,7 @@ FILES_${PN} = "\
     ${includedir}/c++/${BINV} \
     ${prefix}/${TARGET_SYS}/bin/* \
     ${prefix}/${TARGET_SYS}/lib/* \
-    ${prefix}/${TARGET_SYS}/usr/include/* \
+    ${prefix}/${TARGET_SYS}${target_includedir}/* \
 "
 INSANE_SKIP_${PN} += "dev-so"
 
@@ -153,7 +153,7 @@ ELFUTILS = "nativesdk-elfutils"
 DEPENDS += "nativesdk-gmp nativesdk-mpfr nativesdk-libmpc ${ELFUTILS} nativesdk-zlib"
 RDEPENDS_${PN} += "nativesdk-mpfr nativesdk-libmpc ${ELFUTILS}"
 
-SYSTEMHEADERS = "/usr/include"
+SYSTEMHEADERS = "${target_includedir}/"
 SYSTEMLIBS = "${target_base_libdir}/"
 SYSTEMLIBS1 = "${target_libdir}/"
 
