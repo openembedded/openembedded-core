@@ -162,11 +162,9 @@ class IsoImagePlugin(SourcePlugin):
             if not image_type:
                 raise WicError("Couldn't find INITRAMFS_FSTYPES, exiting.")
 
-            target_arch = get_bitbake_var("TRANSLATED_TARGET_ARCH")
-            if not target_arch:
-                raise WicError("Couldn't find TRANSLATED_TARGET_ARCH, exiting.")
+            machine = os.path.basename(initrd_dir)
 
-            initrd = glob.glob('%s/%s*%s.%s' % (initrd_dir, image_name, target_arch, image_type))[0]
+            initrd = glob.glob('%s/%s*%s.%s' % (initrd_dir, image_name, machine, image_type))[0]
 
         if not os.path.exists(initrd):
             # Create initrd from rootfs directory
