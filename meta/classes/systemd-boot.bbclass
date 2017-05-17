@@ -99,6 +99,8 @@ python build_efi_cfg() {
             bb.fatal('OVERRIDES not defined')
 
         entryfile = "%s/%s.conf" % (s, label)
+        if not os.path.exists(s):
+            os.makedirs(s)
         d.appendVar("SYSTEMD_BOOT_ENTRIES", " " + entryfile)
         try:
             entrycfg = open(entryfile, "w")
