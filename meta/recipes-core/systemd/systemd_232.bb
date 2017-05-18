@@ -33,6 +33,7 @@ SRC_URI += " \
            file://0018-check-for-uchar.h-in-configure.patch \
            file://0019-socket-util-don-t-fail-if-libc-doesn-t-support-IDN.patch \
            file://0020-back-port-233-don-t-use-the-unified-hierarchy-for-the-systemd.patch \
+           file://0021-build-sys-check-for-lz4-in-the-old-and-new-numbering.patch \
 "
 SRC_URI_append_libc-uclibc = "\
            file://0002-units-Prefer-getty-to-agetty-in-console-setup-system.patch \
