@@ -20,6 +20,7 @@ SRC_URI = "http://www.webkitgtk.org/releases/${BPN}-${PV}.tar.xz \
            file://x32_support.patch \
            file://cross-compile.patch \
            file://gcc7.patch \
+           file://detect-atomics-during-configure.patch \
            "
 SRC_URI[md5sum] = "d3bcf995a667fd9febb9ab991acf0ca7"
 SRC_URI[sha256sum] = "eb92383232328ce655b703c64370ed3795662479719ad1b4a869ed46769d2945"
