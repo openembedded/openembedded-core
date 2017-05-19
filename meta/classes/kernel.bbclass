@@ -130,6 +130,8 @@ PACKAGES_DYNAMIC += "^kernel-firmware-.*"
 
 export OS = "${TARGET_OS}"
 export CROSS_COMPILE = "${TARGET_PREFIX}"
+export KBUILD_BUILD_USER = "oe-user"
+export KBUILD_BUILD_HOST = "oe-host"
 
 KERNEL_PRIORITY ?= "${@int(d.getVar('PV').split('-')[0].split('+')[0].split('.')[0]) * 10000 + \
                        int(d.getVar('PV').split('-')[0].split('+')[0].split('.')[1]) * 100 + \
