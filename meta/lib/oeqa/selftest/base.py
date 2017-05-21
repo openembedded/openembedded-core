@@ -18,6 +18,7 @@ from oeqa.utils.commands import runCmd, bitbake, get_bb_var, get_test_layer
 from oeqa.utils.decorators import LogResults
 from random import choice
 import glob
+from unittest.util import safe_repr
 
 @LogResults
 class oeSelfTest(unittest.TestCase):
@@ -213,6 +214,18 @@ be re-executed from a clean environment to ensure accurate results.")
     def set_machine_config(self, data):
         self.log.debug("Writing to: %s\n%s\n" % (self.machineinc_path, data))
         ftools.write_file(self.machineinc_path, data)
+
+    # check does path exist    
+    def assertExists(self, expr, msg=None):
+        if not os.path.exists(expr):
+            msg = self._formatMessage(msg, "%s does not exist" % safe_repr(expr))
+            raise self.failureException(msg)
+    
+    # check does path not exist 
+    def assertNotExists(self, expr, msg=None):
+        if os.path.exists(expr):
+            msg = self._formatMessage(msg, "%s exists when it should not" % safe_repr(expr))
+            raise self.failureException(msg)
 
 
 def get_available_machines():
