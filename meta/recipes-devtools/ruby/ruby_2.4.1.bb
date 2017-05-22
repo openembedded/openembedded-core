@@ -9,8 +9,8 @@ SRC_URI += " \
            file://CVE-2017-14064.patch \
            "
 
-SRC_URI[md5sum] = "7e9485dcdb86ff52662728de2003e625"
-SRC_URI[sha256sum] = "152fd0bd15a90b4a18213448f485d4b53e9f7662e1508190aa5b702446b29e3d"
+SRC_URI[md5sum] = "782bca562e474dd25956dd0017d92677"
+SRC_URI[sha256sum] = "a330e10d5cb5e53b3a0078326c5731888bb55e32c4abfeb27d9e7f8e5d000250"
 
 # it's unknown to configure script, but then passed to extconf.rb
 # maybe it's not really needed as we're hardcoding the result with
