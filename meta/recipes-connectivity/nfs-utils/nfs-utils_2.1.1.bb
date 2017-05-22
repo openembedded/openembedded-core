@@ -33,8 +33,8 @@ SRC_URI = "${KERNELORG_MIRROR}/linux/utils/nfs-utils/${PV}/nfs-utils-${PV}.tar.x
            file://bugfix-adjust-statd-service-name.patch \
 "
 
-SRC_URI[md5sum] = "54e4119043ec8507a2a0e054cf2889a4"
-SRC_URI[sha256sum] = "b42a5bc0a8d80d04650030ceb9a11f08f4acfbcb1ee297f657fb94e339c45975"
+SRC_URI[md5sum] = "59dfcb2e6254b129f901f40c86086b13"
+SRC_URI[sha256sum] = "0faeb54c70b84e6bd3b9b6901544b1f6add8d246f35c1683e402daf4e0c719ef"
 
 # Only kernel-module-nfsd is required here (but can be built-in)  - the nfsd module will
 # pull in the remainder of the dependencies.
