@@ -47,6 +47,4 @@ PACKAGES =+ "dumpsexp-dev"
 FILES_${PN}-dev += "${bindir}/hmac256"
 FILES_dumpsexp-dev += "${bindir}/dumpsexp"
 
-ARM_INSTRUCTION_SET = "arm"
-
 BBCLASSEXTEND = "native nativesdk"
