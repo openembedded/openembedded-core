@@ -4,6 +4,7 @@ SRC_URI = "${KERNELORG_MIRROR}/linux/utils/net/${BPN}/${BP}.tar.xz \
            file://configure-cross.patch \
            file://0001-iproute2-de-bash-scripts.patch \
            file://0001-libc-compat.h-add-musl-workaround.patch \
+           file://0001-include-stdint.h-explicitly-for-UINT16_MAX.patch \
           "
 
 SRC_URI[md5sum] = "b94a2b0edefaeac124dc8f5d006931b9"
