@@ -65,6 +65,7 @@ class OETestContext(object):
 
 class OETestContextExecutor(object):
     _context_class = OETestContext
+    _script_executor = 'oe-test'
 
     name = 'core'
     help = 'core test component example'
