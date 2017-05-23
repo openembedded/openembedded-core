@@ -17,7 +17,7 @@ SRC_URI[md5sum] = "1f68886339116ae3877052204c9b9b88"
 SRC_URI[sha256sum] = "d1bfc72553c4e3ef1cd6f13eec0488cf940498b612ab8a0b362e7090c94bc134"
 
 SECTION = "x11/libs"
-DEPENDS = "intltool-native virtual/gettext util-macros libxslt-native"
+DEPENDS = "intltool-native util-macros libxslt-native"
 
 EXTRA_OECONF = "--with-xkb-rules-symlink=xorg --disable-runtime-deps"
 
