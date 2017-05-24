@@ -6,8 +6,8 @@ SRC_URI = "ftp://ftp.freedesktop.org/pub/mesa/mesa-${PV}.tar.xz \
            file://0001-Use-wayland-scanner-in-the-path.patch \
 "
 
-SRC_URI[md5sum] = "4a16cfc1c6d034cc17314b866eada628"
-SRC_URI[sha256sum] = "1269dc8545a193932a0779b2db5bce9be4a5f6813b98c38b93b372be8362a346"
+SRC_URI[md5sum] = "77ea38dc0ab899864b06ea2941ac31a4"
+SRC_URI[sha256sum] = "89ecf3bcd0f18dcca5aaa42bf36bb52a2df33be89889f94aaaad91f7a504a69d"
 
 #because we cannot rely on the fact that all apps will use pkgconfig,
 #make eglplatform.h independent of MESA_EGL_NO_X11_HEADER
