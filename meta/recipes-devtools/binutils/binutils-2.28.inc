@@ -39,6 +39,8 @@ SRC_URI = "\
      file://CVE-2017-6966.patch \
      file://0017-bfd-Improve-lookup-of-file-line-information-for-erro.patch \
      file://0018-PR-21409-segfault-in-_bfd_dwarf2_find_nearest_line.patch \
+     file://CVE-2017-6969.patch \
+     file://CVE-2017-6969_2.patch \
 "
 S  = "${WORKDIR}/git"
 
