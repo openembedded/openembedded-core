@@ -18,6 +18,7 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/rpcbind/rpcbind-${PV}.tar.bz2 \
            file://rpcbind.conf \
            file://rpcbind.socket \
            file://rpcbind.service \
+           file://0001-rpcbind-pair-all-svc_getargs-calls-with-svc_freeargs.patch \
           "
 MUSLPATCHES_libc-musl = "file://musl-sunrpc.patch"
 
