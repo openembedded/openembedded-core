@@ -1,7 +1,5 @@
 require u-boot-common_${PV}.inc
 
-SRC_URI += "file://default-gcc.patch"
-
 SUMMARY = "U-Boot bootloader image creation tool"
 DEPENDS = "openssl"
 

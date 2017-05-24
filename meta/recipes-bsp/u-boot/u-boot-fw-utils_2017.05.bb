@@ -1,7 +1,5 @@
 require u-boot-common_${PV}.inc
 
-SRC_URI += "file://default-gcc.patch"
-
 SUMMARY = "U-Boot bootloader fw_printenv/setenv utilities"
 DEPENDS = "mtd-utils"
 
