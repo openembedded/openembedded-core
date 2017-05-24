@@ -37,6 +37,8 @@ SRC_URI = "\
      file://0016-Detect-64-bit-MIPS-targets.patch \
      file://CVE-2017-6965.patch \
      file://CVE-2017-6966.patch \
+     file://0017-bfd-Improve-lookup-of-file-line-information-for-erro.patch \
+     file://0018-PR-21409-segfault-in-_bfd_dwarf2_find_nearest_line.patch \
 "
 S  = "${WORKDIR}/git"
 
