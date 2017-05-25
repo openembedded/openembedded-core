@@ -6,7 +6,6 @@ import os
 import shutil
 import glob
 import errno
-from random import choice
 from unittest.util import safe_repr
 
 import oeqa.utils.ftools as ftools
@@ -135,16 +134,9 @@ to ensure accurate results.")
                 if e.errno != errno.ENOENT:
                     raise
 
-        # Get CUSTOMMACHINE from env (set by --machine argument to oe-selftest)
-        custommachine = os.getenv('CUSTOMMACHINE')
-        if custommachine:
-            if custommachine == 'random':
-                machine = get_random_machine()
-            else:
-                machine = custommachine
-            machine_conf = 'MACHINE ??= "%s"\n' % machine
+        if self.tc.custommachine:
+            machine_conf = 'MACHINE ??= "%s"\n' % self.tc.custommachine
             self.set_machine_config(machine_conf)
-            print('MACHINE: %s' % machine)
 
         # tests might need their own setup
         # but if they overwrite this one they have to call
@@ -196,8 +188,7 @@ to ensure accurate results.")
         self.logger.debug("Writing to: %s\n%s\n" % (self.testinc_path, data))
         ftools.write_file(self.testinc_path, data)
 
-        custommachine = os.getenv('CUSTOMMACHINE')
-        if custommachine and 'MACHINE' in data:
+        if self.tc.custommachine and 'MACHINE' in data:
             machine = get_bb_var('MACHINE')
             self.logger.warning('MACHINE overridden: %s' % machine)
 
@@ -206,8 +197,7 @@ to ensure accurate results.")
         self.logger.debug("Appending to: %s\n%s\n" % (self.testinc_path, data))
         ftools.append_file(self.testinc_path, data)
 
-        custommachine = os.getenv('CUSTOMMACHINE')
-        if custommachine and 'MACHINE' in data:
+        if self.tc.custommachine and 'MACHINE' in data:
             machine = get_bb_var('MACHINE')
             self.logger.warning('MACHINE overridden: %s' % machine)
 
@@ -274,22 +264,3 @@ to ensure accurate results.")
         if os.path.exists(expr):
             msg = self._formatMessage(msg, "%s exists when it should not" % safe_repr(expr))
             raise self.failureException(msg)
-
-def get_available_machines():
-    # Get a list of all available machines
-    bbpath = get_bb_var('BBPATH').split(':')
-    machines = []
-
-    for path in bbpath:
-        found_machines = glob.glob(os.path.join(path, 'conf', 'machine', '*.conf'))
-        if found_machines:
-            for i in found_machines:
-            # eg: '/home/<user>/poky/meta-intel/conf/machine/intel-core2-32.conf'
-                machines.append(os.path.splitext(os.path.basename(i))[0])
-
-    return machines
-
-
-def get_random_machine():
-    # Get a random machine
-    return choice(get_available_machines())
