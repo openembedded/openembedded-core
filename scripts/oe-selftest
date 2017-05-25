@@ -159,56 +159,6 @@ def preflight_check():
 
     return True
 
-def add_include():
-    global builddir
-    if "#include added by oe-selftest.py" \
-        not in ftools.read_file(os.path.join(builddir, "conf/local.conf")):
-            log.info("Adding: \"include selftest.inc\" in local.conf")
-            ftools.append_file(os.path.join(builddir, "conf/local.conf"), \
-                    "\n#include added by oe-selftest.py\ninclude machine.inc\ninclude selftest.inc")
-
-    if "#include added by oe-selftest.py" \
-        not in ftools.read_file(os.path.join(builddir, "conf/bblayers.conf")):
-            log.info("Adding: \"include bblayers.inc\" in bblayers.conf")
-            ftools.append_file(os.path.join(builddir, "conf/bblayers.conf"), \
-                    "\n#include added by oe-selftest.py\ninclude bblayers.inc")
-
-def remove_include():
-    global builddir
-    if builddir is None:
-        return
-    if "#include added by oe-selftest.py" \
-        in ftools.read_file(os.path.join(builddir, "conf/local.conf")):
-            log.info("Removing the include from local.conf")
-            ftools.remove_from_file(os.path.join(builddir, "conf/local.conf"), \
-                    "\n#include added by oe-selftest.py\ninclude machine.inc\ninclude selftest.inc")
-
-    if "#include added by oe-selftest.py" \
-        in ftools.read_file(os.path.join(builddir, "conf/bblayers.conf")):
-            log.info("Removing the include from bblayers.conf")
-            ftools.remove_from_file(os.path.join(builddir, "conf/bblayers.conf"), \
-                    "\n#include added by oe-selftest.py\ninclude bblayers.inc")
-
-def remove_inc_files():
-    global builddir
-    if builddir is None:
-        return
-    try:
-        os.remove(os.path.join(builddir, "conf/selftest.inc"))
-        for root, _, files in os.walk(get_test_layer()):
-            for f in files:
-                if f == 'test_recipe.inc':
-                    os.remove(os.path.join(root, f))
-    except OSError as e:
-        pass
-
-    for incl_file in ['conf/bblayers.inc', 'conf/machine.inc']:
-        try:
-            os.remove(os.path.join(builddir, incl_file))
-        except:
-            pass
-
-
 def get_tests_modules(include_hidden=False):
     modules_list = list()
     for modules_path in oeqa.selftest.__path__:
@@ -583,7 +533,6 @@ def main():
                 log.error("Failed to import %s" % test)
                 log.error(e)
                 return 1
-        add_include()
 
         if args.machine:
             # Custom machine sets only weak default values (??=) for MACHINE in machine.inc
@@ -808,7 +757,4 @@ if __name__ == "__main__":
         ret = 1
         import traceback
         traceback.print_exc()
-    finally:
-        remove_include()
-        remove_inc_files()
     sys.exit(ret)

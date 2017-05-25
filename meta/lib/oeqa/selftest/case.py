@@ -14,17 +14,17 @@ from oeqa.utils.commands import runCmd, bitbake, get_bb_var, get_test_layer
 from oeqa.core.case import OETestCase
 
 class OESelftestTestCase(OETestCase):
+    builddir = os.environ.get("BUILDDIR") or ""
+    localconf_path = os.path.join(builddir, "conf/local.conf")
+    localconf_backup = os.path.join(builddir, "conf/local.bk")
+    testinc_path = os.path.join(builddir, "conf/selftest.inc")
+    local_bblayers_path = os.path.join(builddir, "conf/bblayers.conf")
+    local_bblayers_backup = os.path.join(builddir, "conf/bblayers.bk")
+    testinc_bblayers_path = os.path.join(builddir, "conf/bblayers.inc")
+    machineinc_path = os.path.join(builddir, "conf/machine.inc")
+    testlayer_path = get_test_layer()
+
     def __init__(self, methodName="runTest"):
-        self.builddir = os.environ.get("BUILDDIR")
-        self.localconf_path = os.path.join(self.builddir, "conf/local.conf")
-        self.localconf_backup = os.path.join(self.builddir, "conf/local.bk")
-        self.testinc_path = os.path.join(self.builddir, "conf/selftest.inc")
-        self.local_bblayers_path = os.path.join(self.builddir, "conf/bblayers.conf")
-        self.local_bblayers_backup = os.path.join(self.builddir,
-                                                  "conf/bblayers.bk")
-        self.testinc_bblayers_path = os.path.join(self.builddir, "conf/bblayers.inc")
-        self.machineinc_path = os.path.join(self.builddir, "conf/machine.inc")
-        self.testlayer_path = get_test_layer()
         self._extra_tear_down_commands = []
         self._track_for_cleanup = [
             self.testinc_path, self.testinc_bblayers_path,
@@ -32,6 +32,62 @@ class OESelftestTestCase(OETestCase):
             self.local_bblayers_backup]
 
         super(OESelftestTestCase, self).__init__(methodName)
+
+    @classmethod
+    def setUpClass(cls):
+        super(OESelftestTestCase, cls).setUpClass()
+        cls.add_include()
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.remove_include()
+        cls.remove_inc_files()
+        super(OESelftestTestCase, cls).tearDownClass()
+
+    @classmethod
+    def add_include(cls):
+        if "#include added by oe-selftest" \
+            not in ftools.read_file(os.path.join(cls.builddir, "conf/local.conf")):
+                cls.logger.info("Adding: \"include selftest.inc\" in %s" % os.path.join(cls.builddir, "conf/local.conf"))
+                ftools.append_file(os.path.join(cls.builddir, "conf/local.conf"), \
+                        "\n#include added by oe-selftest\ninclude machine.inc\ninclude selftest.inc")
+
+        if "#include added by oe-selftest" \
+            not in ftools.read_file(os.path.join(cls.builddir, "conf/bblayers.conf")):
+                cls.logger.info("Adding: \"include bblayers.inc\" in bblayers.conf")
+                ftools.append_file(os.path.join(cls.builddir, "conf/bblayers.conf"), \
+                        "\n#include added by oe-selftest\ninclude bblayers.inc")
+
+    @classmethod
+    def remove_include(cls):
+        if "#include added by oe-selftest.py" \
+            in ftools.read_file(os.path.join(cls.builddir, "conf/local.conf")):
+                cls.logger.info("Removing the include from local.conf")
+                ftools.remove_from_file(os.path.join(cls.builddir, "conf/local.conf"), \
+                        "\n#include added by oe-selftest.py\ninclude machine.inc\ninclude selftest.inc")
+
+        if "#include added by oe-selftest.py" \
+            in ftools.read_file(os.path.join(cls.builddir, "conf/bblayers.conf")):
+                cls.logger.info("Removing the include from bblayers.conf")
+                ftools.remove_from_file(os.path.join(cls.builddir, "conf/bblayers.conf"), \
+                        "\n#include added by oe-selftest.py\ninclude bblayers.inc")
+
+    @classmethod
+    def remove_inc_files(cls):
+        try:
+            os.remove(os.path.join(cls.builddir, "conf/selftest.inc"))
+            for root, _, files in os.walk(get_test_layer()):
+                for f in files:
+                    if f == 'test_recipe.inc':
+                        os.remove(os.path.join(root, f))
+        except OSError as e:
+            pass
+
+        for incl_file in ['conf/bblayers.inc', 'conf/machine.inc']:
+            try:
+                os.remove(os.path.join(cls.builddir, incl_file))
+            except:
+                pass
 
     def setUp(self):
         super(OESelftestTestCase, self).setUp()
