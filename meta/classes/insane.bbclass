@@ -405,47 +405,6 @@ def package_qa_check_perm(path,name,d, elf, messages):
     """
     return
 
-QAPATHTEST[unsafe-references-in-binaries] = "package_qa_check_unsafe_references_in_binaries"
-def package_qa_check_unsafe_references_in_binaries(path, name, d, elf, messages):
-    """
-    Ensure binaries in base_[bindir|sbindir|libdir] do not link to files under exec_prefix
-    """
-    if unsafe_references_skippable(path, name, d):
-        return
-
-    if elf:
-        import subprocess as sub
-        pn = d.getVar('PN', True)
-
-        exec_prefix = d.getVar('exec_prefix', True)
-        sysroot_path = d.getVar('STAGING_DIR_TARGET', True)
-        sysroot_path_usr = sysroot_path + exec_prefix
-
-        try:
-            ldd_output = bb.process.Popen(["prelink-rtld", "--root", sysroot_path, path], stdout=sub.PIPE).stdout.read().decode("utf-8")
-        except bb.process.CmdError:
-            error_msg = pn + ": prelink-rtld aborted when processing %s" % path
-            package_qa_handle_error("unsafe-references-in-binaries", error_msg, d)
-            return False
-
-        if sysroot_path_usr in ldd_output:
-            ldd_output = ldd_output.replace(sysroot_path, "")
-
-            pkgdest = d.getVar('PKGDEST', True)
-            packages = d.getVar('PACKAGES', True)
-
-            for package in packages.split():
-                short_path = path.replace('%s/%s' % (pkgdest, package), "", 1)
-                if (short_path != path):
-                    break
-
-            base_err = pn + ": %s, installed in the base_prefix, requires a shared library under exec_prefix (%s)" % (short_path, exec_prefix)
-            for line in ldd_output.split('\n'):
-                if exec_prefix in line:
-                    error_msg = "%s: %s" % (base_err, line.strip())
-                    package_qa_handle_error("unsafe-references-in-binaries", error_msg, d)
-
-            return False
 
 QAPATHTEST[unsafe-references-in-scripts] = "package_qa_check_unsafe_references_in_scripts"
 def package_qa_check_unsafe_references_in_scripts(path, name, d, elf, messages):
