@@ -6,9 +6,10 @@ import sys
 import glob
 import re
 
-from oeqa.core.context import OETestContext, OETestContextExecutor
+from oeqa.core.context import OETestContextExecutor
+from oeqa.core.threaded import OETestContextThreaded
 
-class OESDKTestContext(OETestContext):
+class OESDKTestContext(OETestContextThreaded):
     sdk_files_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "files")
 
     def __init__(self, td=None, logger=None, sdk_dir=None, sdk_env=None,
