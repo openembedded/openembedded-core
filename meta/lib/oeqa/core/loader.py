@@ -29,6 +29,51 @@ def _find_duplicated_modules(suite, directory):
         if path:
             raise ImportError("Duplicated %s module found in %s" % (module, path))
 
+def _built_modules_dict(modules):
+    modules_dict = {}
+
+    if modules == None:
+        return modules_dict
+
+    for m in modules:
+        ms = m.split('.')
+
+        if len(ms) == 1:
+            module_name = ms[0]
+            if not module_name in modules_dict:
+                modules_dict[module_name] = {}
+        elif len(ms) == 2:
+            module_name = ms[0]
+            class_name = ms[1]
+            if not module_name in modules_dict:
+                modules_dict[module_name] = {}
+            if not class_name in modules_dict[module_name]:
+                modules_dict[module_name][class_name] = []
+        elif len(ms) == 3:
+            module_name = ms[0]
+            class_name = ms[1]
+            test_name = ms[2]
+
+            if not module_name in modules_dict:
+                modules_dict[module_name] = {}
+            if not class_name in modules_dict[module_name]:
+                modules_dict[module_name][class_name] = []
+            if not test_name in modules_dict[module_name][class_name]:
+                modules_dict[module_name][class_name].append(test_name)
+        elif len(ms) >= 4:
+            module_name = '.'.join(ms[0:-2])
+            class_name = ms[-2]
+            test_name = ms[-1]
+
+            if not module_name in modules_dict:
+                modules_dict[module_name] = {}
+            if not class_name in modules_dict[module_name]:
+                modules_dict[module_name][class_name] = []
+            if not test_name in modules_dict[module_name][class_name]:
+                modules_dict[module_name][class_name].append(test_name)
+
+    return modules_dict
+
 class OETestLoader(unittest.TestLoader):
     caseClass = OETestCase
 
@@ -39,7 +84,8 @@ class OETestLoader(unittest.TestLoader):
             filters, *args, **kwargs):
         self.tc = tc
 
-        self.modules = modules
+        self.modules = _built_modules_dict(modules)
+
         self.tests = tests
         self.modules_required = modules_required
 
@@ -116,6 +162,24 @@ class OETestLoader(unittest.TestLoader):
         """
             Returns True if test case must be filtered, False otherwise.
         """
+        # Filters by module.class.name
+        module_name = case.__module__
+        class_name = case.__class__.__name__
+        test_name = case._testMethodName
+
+        if self.modules:
+            if not module_name in self.modules:
+                return True
+
+            if self.modules[module_name]:
+                if not class_name in self.modules[module_name]:
+                    return True
+
+                if self.modules[module_name][class_name]:
+                    if test_name not in self.modules[module_name][class_name]:
+                        return True
+
+        # Decorator filters
         if self.filters:
             filters = self.filters.copy()
             case_decorators = [cd for cd in case.decorators

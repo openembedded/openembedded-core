@@ -85,9 +85,9 @@ class OETestContextExecutor(object):
                 help="results output log, default: %s" % self.default_output_log)
 
         group = self.parser.add_mutually_exclusive_group()
-        group.add_argument('--run-tests', action='store',
+        group.add_argument('--run-tests', action='store', nargs='+',
                 default=self.default_tests,
-                help="tests to run in <module>[.<class>[.<name>]] format. Just works for modules now")
+                help="tests to run in <module>[.<class>[.<name>]]")
         group.add_argument('--list-tests', action='store',
                 choices=('module', 'class', 'name'),
                 help="lists available tests")
@@ -136,7 +136,7 @@ class OETestContextExecutor(object):
             self.tc_kwargs['init']['td'] = {}
 
         if args.run_tests:
-            self.tc_kwargs['load']['modules'] = args.run_tests.split()
+            self.tc_kwargs['load']['modules'] = args.run_tests
         else:
             self.tc_kwargs['load']['modules'] = None
 
