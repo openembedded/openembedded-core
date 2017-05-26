@@ -143,6 +143,9 @@ class OETestContextExecutor(object):
 
         self.module_paths = args.CASES_PATHS
 
+    def _pre_run(self):
+        pass
+
     def run(self, logger, args):
         self._process_args(logger, args)
 
@@ -152,6 +155,7 @@ class OETestContextExecutor(object):
         if args.list_tests:
             rc = self.tc.listTests(args.list_tests, **self.tc_kwargs['run'])
         else:
+            self._pre_run()
             rc = self.tc.runTests(**self.tc_kwargs['run'])
             rc.logSummary(self.name)
             rc.logDetails()

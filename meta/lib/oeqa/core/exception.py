@@ -15,3 +15,6 @@ class OEQADependency(OEQAException):
 
 class OEQAMissingManifest(OEQAException):
     pass
+
+class OEQAPreRun(OEQAException):
+    pass

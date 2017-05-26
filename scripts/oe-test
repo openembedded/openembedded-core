@@ -26,6 +26,7 @@ except ImportError:
     pass
 
 from oeqa.core.context import OETestContextExecutor
+from oeqa.core.exception import OEQAPreRun
 
 logger = scriptutils.logger_create('oe-test')
 
@@ -92,6 +93,8 @@ def main():
         ret = err.code
     except argparse_oe.ArgumentUsageError as ae:
         parser.error_subcommand(ae.message, ae.subcommand)
+    except OEQAPreRun as pr:
+        ret = 1
 
     return ret
 
