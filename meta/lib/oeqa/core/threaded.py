@@ -1,10 +1,13 @@
 # Copyright (C) 2017 Intel Corporation
 # Released under the MIT license (see COPYING.MIT)
 
+import threading
 import multiprocessing
 
 from unittest.suite import TestSuite
+
 from oeqa.core.loader import OETestLoader
+from oeqa.core.runner import OEStreamLogger
 
 class OETestLoaderThreaded(OETestLoader):
     def __init__(self, tc, module_paths, modules, tests, modules_required,
@@ -89,3 +92,25 @@ class OETestLoaderThreaded(OETestLoader):
 
         return suites
 
+class OEStreamLoggerThreaded(OEStreamLogger):
+    _lock = threading.Lock()
+    buffers = {}
+
+    def write(self, msg):
+        tid = threading.get_ident()
+
+        if not tid in self.buffers:
+            self.buffers[tid] = ""
+
+        if msg:
+            self.buffers[tid] += msg
+
+    def finish(self):
+        tid = threading.get_ident()
+        
+        self._lock.acquire()
+        self.logger.info('THREAD: %d' % tid)
+        self.logger.info('-' * 70)
+        for line in self.buffers[tid].split('\n'):
+            self.logger.info(line)
+        self._lock.release()
