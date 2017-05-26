@@ -44,8 +44,6 @@ class OESDKTestContextExecutor(OETestContextExecutor):
     default_test_data = None
 
     def register_commands(self, logger, subparsers):
-        import argparse_oe
-
         super(OESDKTestContextExecutor, self).register_commands(logger, subparsers)
 
         sdk_group = self.parser.add_argument_group('sdk options')
@@ -109,6 +107,8 @@ class OESDKTestContextExecutor(OETestContextExecutor):
             log(env)
 
     def run(self, logger, args):
+        import argparse_oe
+
         if not args.sdk_dir:
             raise argparse_oe.ArgumentUsageError("No SDK directory "\
                    "specified please do, --sdk-dir SDK_DIR", self.name)
