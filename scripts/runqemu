@@ -1137,9 +1137,10 @@ class BaseConfig(object):
         else:
             kernel_opts = ""
         cmd = "%s %s" % (self.qemu_opt, kernel_opts)
-        logger.info('Running %s' % cmd)
-        if subprocess.call(cmd, shell=True) != 0:
-            raise Exception('Failed to run %s' % cmd)
+        logger.info('Running %s\n' % cmd)
+        process = subprocess.Popen(cmd, shell=True, stderr=subprocess.PIPE)
+        if process.wait():
+            logger.error("Failed to run qemu: %s", process.stderr.read().decode())
 
     def cleanup(self):
         if self.cleantap:
