@@ -44,9 +44,6 @@ class OETestResult(_TestResult):
         self.tc._results['skipped'] = self.skipped
         self.tc._results['expectedFailures'] = self.expectedFailures
 
-    def startTest(self, test):
-        super(OETestResult, self).startTest(test)
-
 class OETestRunner(_TestRunner):
     streamLoggerClass = OEStreamLogger
 
