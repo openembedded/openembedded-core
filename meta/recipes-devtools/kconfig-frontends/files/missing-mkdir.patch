@@ -21,6 +21,10 @@ diff --git a/Makefile.am b/Makefile.am
 index c8e96ef..1baa110 100644
 --- a/Makefile.am
 +++ b/Makefile.am
+@@ -173,2 +173,3 @@ bin_SCRIPTS += frontends/kconfig
+ frontends/kconfig: frontends/kconfig.in
++	$(MKDIR_P) $(@D)
+ 	$(AM_V_GEN)$(SED) -e 's/@KCFG_LIST@/$(kcfg_list)/g' \
 @@ -348,6 +348,7 @@ EXTRA_DIST += \
  	utils/kconfig-tweak.in.patch
  
