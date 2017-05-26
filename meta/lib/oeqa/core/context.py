@@ -51,7 +51,7 @@ class OETestContext(object):
         self.suites = self.loader.discover()
 
     def runTests(self):
-        self.runner = self.runnerClass(self, verbosity=2)
+        self.runner = self.runnerClass(self, descriptions=False, verbosity=2)
 
         self._run_start_time = time.time()
         result = self.runner.run(self.suites)
