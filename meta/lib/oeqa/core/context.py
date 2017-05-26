@@ -10,6 +10,7 @@ import collections
 
 from oeqa.core.loader import OETestLoader
 from oeqa.core.runner import OETestRunner
+from oeqa.core.exception import OEQAMissingManifest
 
 class OETestContext(object):
     loaderClass = OETestLoader
@@ -30,7 +31,7 @@ class OETestContext(object):
 
     def _read_modules_from_manifest(self, manifest):
         if not os.path.exists(manifest):
-            raise
+            raise OEQAMissingManifest("Manifest does not exist on %s" % manifest)
 
         modules = []
         for line in open(manifest).readlines():
