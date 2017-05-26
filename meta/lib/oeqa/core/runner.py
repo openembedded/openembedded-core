@@ -134,6 +134,10 @@ class OETestResult(_TestResult):
                 self.tc.logger.info("RESULTS - %s - Testcase %s: %s" % (case.id(),
                     oeid, 'PASSED'))
 
+class OEListTestsResult(object):
+    def wasSuccessful(self):
+        return True
+
 class OETestRunner(_TestRunner):
     streamLoggerClass = OEStreamLogger
 
@@ -164,3 +168,97 @@ class OETestRunner(_TestRunner):
         def _makeResult(self):
             return self.resultclass(self.tc, self.stream, self.descriptions,
                     self.verbosity)
+
+
+    def _walk_suite(self, suite, func):
+        for obj in suite:
+            if isinstance(obj, unittest.suite.TestSuite):
+                if len(obj._tests):
+                    self._walk_suite(obj, func)
+            elif isinstance(obj, unittest.case.TestCase):
+                func(self.tc.logger, obj)
+                self._walked_cases = self._walked_cases + 1
+
+    def _list_tests_name(self, suite):
+        from oeqa.core.decorator.oeid import OETestID
+        from oeqa.core.decorator.oetag import OETestTag
+
+        self._walked_cases = 0
+
+        def _list_cases_without_id(logger, case):
+
+            found_id = False
+            for d in case.decorators:
+                if isinstance(d, OETestID):
+                    found_id = True
+
+            if not found_id:
+                logger.info('oeid missing for %s' % case.id())
+
+        def _list_cases(logger, case):
+            oeid = None
+            oetag = None
+
+            for d in case.decorators:
+                if isinstance(d, OETestID):
+                    oeid = d.oeid
+                elif isinstance(d, OETestTag):
+                    oetag = d.oetag
+
+            logger.info("%s\t%s\t\t%s" % (oeid, oetag, case.id()))
+
+        self.tc.logger.info("Listing test cases that don't have oeid ...")
+        self._walk_suite(suite, _list_cases_without_id)
+        self.tc.logger.info("-" * 80)
+
+        self.tc.logger.info("Listing all available tests:")
+        self._walked_cases = 0
+        self.tc.logger.info("id\ttag\t\ttest")
+        self.tc.logger.info("-" * 80)
+        self._walk_suite(suite, _list_cases)
+        self.tc.logger.info("-" * 80)
+        self.tc.logger.info("Total found:\t%s" % self._walked_cases)
+
+    def _list_tests_class(self, suite):
+        self._walked_cases = 0
+
+        curr = {}
+        def _list_classes(logger, case):
+            if not 'module' in curr or curr['module'] != case.__module__:
+                curr['module'] = case.__module__
+                logger.info(curr['module'])
+
+            if not 'class' in curr  or curr['class'] != \
+                    case.__class__.__name__:
+                curr['class'] = case.__class__.__name__
+                logger.info(" -- %s" % curr['class'])
+
+            logger.info(" -- -- %s" % case._testMethodName)
+
+        self.tc.logger.info("Listing all available test classes:")
+        self._walk_suite(suite, _list_classes)
+
+    def _list_tests_module(self, suite):
+        self._walked_cases = 0
+
+        listed = []
+        def _list_modules(logger, case):
+            if not case.__module__ in listed:
+                if case.__module__.startswith('_'):
+                    logger.info("%s (hidden)" % case.__module__)
+                else:
+                    logger.info(case.__module__)
+                listed.append(case.__module__)
+
+        self.tc.logger.info("Listing all available test modules:")
+        self._walk_suite(suite, _list_modules)
+
+    def list_tests(self, suite, display_type):
+        if display_type == 'name':
+            self._list_tests_name(suite)
+        elif display_type == 'class':
+            self._list_tests_class(suite)
+        elif display_type == 'module':
+            self._list_tests_module(suite)
+
+        return OEListTestsResult()

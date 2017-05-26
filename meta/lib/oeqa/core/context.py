@@ -58,6 +58,10 @@ class OETestContext(object):
 
         return result
 
+    def listTests(self, display_type):
+        self.runner = self.runnerClass(self, verbosity=2)
+        return self.runner.list_tests(self.suites, display_type)
+
 class OETestContextExecutor(object):
     _context_class = OETestContext
 
@@ -79,9 +83,14 @@ class OETestContextExecutor(object):
         self.parser.add_argument('--output-log', action='store',
                 default=self.default_output_log,
                 help="results output log, default: %s" % self.default_output_log)
-        self.parser.add_argument('--run-tests', action='store',
+
+        group = self.parser.add_mutually_exclusive_group()
+        group.add_argument('--run-tests', action='store',
                 default=self.default_tests,
                 help="tests to run in <module>[.<class>[.<name>]] format. Just works for modules now")
+        group.add_argument('--list-tests', action='store',
+                choices=('module', 'class', 'name'),
+                help="lists available tests")
 
         if self.default_test_data:
             self.parser.add_argument('--test-data-file', action='store',
@@ -126,7 +135,6 @@ class OETestContextExecutor(object):
         else:
             self.tc_kwargs['init']['td'] = {}
 
-
         if args.run_tests:
             self.tc_kwargs['load']['modules'] = args.run_tests.split()
         else:
@@ -139,9 +147,13 @@ class OETestContextExecutor(object):
 
         self.tc = self._context_class(**self.tc_kwargs['init'])
         self.tc.loadTests(self.module_paths, **self.tc_kwargs['load'])
-        rc = self.tc.runTests(**self.tc_kwargs['run'])
-        rc.logSummary(self.name)
-        rc.logDetails()
+
+        if args.list_tests:
+            rc = self.tc.listTests(args.list_tests, **self.tc_kwargs['run'])
+        else:
+            rc = self.tc.runTests(**self.tc_kwargs['run'])
+            rc.logSummary(self.name)
+            rc.logDetails()
 
         output_link = os.path.join(os.path.dirname(args.output_log),
                 "%s-results.log" % self.name)
