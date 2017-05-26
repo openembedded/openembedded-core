@@ -10,6 +10,7 @@ from unittest.suite import TestSuite
 
 from oeqa.core.loader import OETestLoader
 from oeqa.core.runner import OEStreamLogger, OETestResult, OETestRunner
+from oeqa.core.context import OETestContext
 
 class OETestLoaderThreaded(OETestLoader):
     def __init__(self, tc, module_paths, modules, tests, modules_required,
@@ -258,3 +259,16 @@ class OETestRunnerThreaded(OETestRunner):
         result._fill_tc_results()
 
         return result
+
+class OETestContextThreaded(OETestContext):
+    loaderClass = OETestLoaderThreaded
+    runnerClass = OETestRunnerThreaded
+
+    def loadTests(self, module_paths, modules=[], tests=[],
+            modules_manifest="", modules_required=[], filters={}, process_num=0):
+        if modules_manifest:
+            modules = self._read_modules_from_manifest(modules_manifest)
+
+        self.loader = self.loaderClass(self, module_paths, modules, tests,
+                modules_required, filters, process_num)
+        self.suites = self.loader.discover()
