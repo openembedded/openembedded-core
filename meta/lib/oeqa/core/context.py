@@ -139,7 +139,7 @@ class OETestContextExecutor(object):
         if args.run_tests:
             self.tc_kwargs['load']['modules'] = args.run_tests
         else:
-            self.tc_kwargs['load']['modules'] = None
+            self.tc_kwargs['load']['modules'] = []
 
         self.module_paths = args.CASES_PATHS
 
