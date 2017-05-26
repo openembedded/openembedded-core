@@ -39,7 +39,9 @@ class OETestResult(_TestResult):
         super(OETestResult, self).__init__(*args, **kwargs)
 
         self.tc = tc
+        self._tc_map_results()
 
+    def _tc_map_results(self):
         self.tc._results['failures'] = self.failures
         self.tc._results['errors'] = self.errors
         self.tc._results['skipped'] = self.skipped
