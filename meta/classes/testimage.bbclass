@@ -257,7 +257,7 @@ def testimage_main(d):
 
     # Load tests before starting the target
     test_paths = get_runtime_paths(d)
-    test_modules = d.getVar('TEST_SUITES')
+    test_modules = d.getVar('TEST_SUITES').split()
     tc.loadTests(test_paths, modules=test_modules)
 
     if not getSuiteCases(tc.suites):
