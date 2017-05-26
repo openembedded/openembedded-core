@@ -48,12 +48,15 @@ class OETestResult(_TestResult):
         super(OETestResult, self).startTest(test)
 
 class OETestRunner(_TestRunner):
+    streamLoggerClass = OEStreamLogger
+
     def __init__(self, tc, *args, **kwargs):
         if xmlEnabled:
             if not kwargs.get('output'):
                 kwargs['output'] = os.path.join(os.getcwd(),
                         'TestResults_%s_%s' % (time.strftime("%Y%m%d%H%M%S"), os.getpid()))
 
+        kwargs['stream'] = self.streamLoggerClass(tc.logger)
         super(OETestRunner, self).__init__(*args, **kwargs)
         self.tc = tc
         self.resultclass = OETestResult

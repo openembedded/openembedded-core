@@ -10,12 +10,11 @@ import collections
 import re
 
 from oeqa.core.loader import OETestLoader
-from oeqa.core.runner import OETestRunner, OEStreamLogger, xmlEnabled
+from oeqa.core.runner import OETestRunner, xmlEnabled
 
 class OETestContext(object):
     loaderClass = OETestLoader
     runnerClass = OETestRunner
-    streamLoggerClass = OEStreamLogger
 
     files_dir = os.path.abspath(os.path.join(os.path.dirname(
         os.path.abspath(__file__)), "../files"))
@@ -52,8 +51,7 @@ class OETestContext(object):
         self.suites = self.loader.discover()
 
     def runTests(self):
-        streamLogger = self.streamLoggerClass(self.logger)
-        self.runner = self.runnerClass(self, stream=streamLogger, verbosity=2)
+        self.runner = self.runnerClass(self, verbosity=2)
 
         self._run_start_time = time.time()
         result = self.runner.run(self.suites)
