@@ -9,7 +9,7 @@ import errno
 from unittest.util import safe_repr
 
 import oeqa.utils.ftools as ftools
-from oeqa.utils.commands import runCmd, bitbake, get_bb_var, get_test_layer
+from oeqa.utils.commands import runCmd, bitbake, get_bb_var
 from oeqa.core.case import OETestCase
 
 class OESelftestTestCase(OETestCase):
@@ -21,7 +21,6 @@ class OESelftestTestCase(OETestCase):
     local_bblayers_backup = os.path.join(builddir, "conf/bblayers.bk")
     testinc_bblayers_path = os.path.join(builddir, "conf/bblayers.inc")
     machineinc_path = os.path.join(builddir, "conf/machine.inc")
-    testlayer_path = get_test_layer()
 
     def __init__(self, methodName="runTest"):
         self._extra_tear_down_commands = []
@@ -35,6 +34,7 @@ class OESelftestTestCase(OETestCase):
     @classmethod
     def setUpClass(cls):
         super(OESelftestTestCase, cls).setUpClass()
+        cls.testlayer_path = cls.tc.testlayer_path
         cls.add_include()
 
     @classmethod
@@ -75,7 +75,7 @@ class OESelftestTestCase(OETestCase):
     def remove_inc_files(cls):
         try:
             os.remove(os.path.join(cls.builddir, "conf/selftest.inc"))
-            for root, _, files in os.walk(get_test_layer()):
+            for root, _, files in os.walk(cls.testlayer_path):
                 for f in files:
                     if f == 'test_recipe.inc':
                         os.remove(os.path.join(root, f))
