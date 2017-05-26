@@ -21,7 +21,6 @@ def testsdk_main(d):
     import logging
 
     from bb.utils import export_proxies
-    from oeqa.core.runner import OEStreamLogger
     from oeqa.sdk.context import OESDKTestContext, OESDKTestContextExecutor
     from oeqa.utils import make_logger_bitbake_compatible
 
