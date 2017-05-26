@@ -292,8 +292,8 @@ def testimage_main(d):
     # Show results (if we have them)
     if not results:
         bb.fatal('%s - FAILED - tests were interrupted during execution' % pn)
-    tc.logSummary(results, pn)
-    tc.logDetails()
+    results.logSummary(pn)
+    results.logDetails()
     if not results.wasSuccessful():
         bb.fatal('%s - FAILED - check the task log and the ssh log' % pn)
 
