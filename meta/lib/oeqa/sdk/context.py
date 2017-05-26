@@ -128,6 +128,6 @@ class OESDKTestContextExecutor(OETestContextExecutor):
                    "environment (%s) specified" % args.sdk_env, self.name)
 
         self.sdk_env = sdk_envs[args.sdk_env]
-        super(OESDKTestContextExecutor, self).run(logger, args)
+        return super(OESDKTestContextExecutor, self).run(logger, args)
 
 _executor_class = OESDKTestContextExecutor
