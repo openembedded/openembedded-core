@@ -224,7 +224,7 @@ if __name__ == "__main__":
     "${base_libdir}/*.o " +
     "${datadir}/aclocal " +
     "${datadir}/pkgconfig " +
-    "config/Makefile ")
+    "config*/Makefile ")
 
     m.addPackage( "${PN}-2to3", "Python automated Python 2 to 3 code translator", "${PN}-core",
     "lib2to3" ) # package
