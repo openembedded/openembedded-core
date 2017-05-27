@@ -53,6 +53,6 @@ do_compile () {
 
 do_install () {
 	install -d ${D}${sbindir} ${D}${mandir}/man8
-	install -m 4755 lsof ${D}${sbindir}/lsof
+	install -m 0755 lsof ${D}${sbindir}/lsof
 	install -m 0644 lsof.8 ${D}${mandir}/man8/lsof.8
 }
