@@ -8,7 +8,7 @@ python do_devshell () {
        fakeenv = d.getVar("FAKEROOTENV").split()
        for f in fakeenv:
             k = f.split("=")
-            d.setVar(k[0], k[1])           
+            d.setVar(k[0], k[1])
             d.appendVar("OE_TERMINAL_EXPORTS", " " + k[0])
        d.delVarFlag("do_devshell", "fakeroot")
 
@@ -49,7 +49,7 @@ def devpyshell(d):
         old[3] = old[3] &~ termios.ECHO &~ termios.ICANON
         # &~ termios.ISIG
         termios.tcsetattr(fd, termios.TCSADRAIN, old)
-    
+
     # No echo or buffering over the pty
     noechoicanon(s)
 
@@ -145,7 +145,7 @@ python do_devpyshell() {
     try:
         devpyshell(d)
     except SystemExit:
-        # Stop the SIGTERM above causing an error exit code    
+        # Stop the SIGTERM above causing an error exit code
         return
     finally:
         return
