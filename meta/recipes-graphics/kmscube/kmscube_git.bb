@@ -6,7 +6,7 @@ DEPENDS = "virtual/libgles2 virtual/egl libdrm gstreamer1.0 gstreamer1.0-plugins
 
 LIC_FILES_CHKSUM = "file://kmscube.c;beginline=1;endline=23;md5=8b309d4ee67b7315ff7381270dd631fb"
 
-SRCREV = "e56980c28766ffb0bf8edee96b529a5b47f97137"
+SRCREV = "0d8de4ce3a03f36af1817f9b0586d132ad2c5d2e"
 SRC_URI = "git://anongit.freedesktop.org/mesa/kmscube;branch=master;protocol=git"
 
 S = "${WORKDIR}/git"
