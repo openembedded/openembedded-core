@@ -148,16 +148,9 @@ def ipk_write_pkg(pkg, d):
                 description = localdata.getVar('DESCRIPTION') or "."
                 description = textwrap.dedent(description).strip()
                 if '\\n' in description:
-                    # Manually indent
+                    # Manually indent: multiline description includes a leading space
                     for t in description.split('\\n'):
-                        # We don't limit the width when manually indent, but we do
-                        # need the textwrap.fill() to set the initial_indent and
-                        # subsequent_indent, so set a large width
-                        line = textwrap.fill(t.strip(),
-                                             width=100000,
-                                             initial_indent=' ',
-                                             subsequent_indent=' ') or '.'
-                        ctrlfile.write('%s\n' % line)
+                        ctrlfile.write(' %s\n' % (t.strip() or ' .'))
                 else:
                     # Auto indent
                     ctrlfile.write('%s\n' % textwrap.fill(description, width=74, initial_indent=' ', subsequent_indent=' '))
