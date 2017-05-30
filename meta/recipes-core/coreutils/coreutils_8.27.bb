@@ -99,7 +99,7 @@ do_install_append() {
 	install -t ${D}/${mandir}/man1 ${S}/man/*.1
 	# prebuilt man pages don't do a separate man page for [ vs test.
 	# see comment above r.e. sed and update-alternatives
-	cp -a ${D}${mandir}/man1/test.1 ${D}${mandir}/man1/lbracket.1.${BPN}
+	cp -R --no-dereference --preserve=mode,links -v ${D}${mandir}/man1/test.1 ${D}${mandir}/man1/lbracket.1.${BPN}
 }
 
 inherit update-alternatives
