@@ -451,7 +451,7 @@ class RecipetoolTests(RecipetoolBase):
         result = runCmd('recipetool create -o %s %s' % (temprecipe, srcuri))
         self.assertTrue(os.path.isfile(recipefile))
         checkvars = {}
-        checkvars['LICENSE'] = set(['Apache-2.0'])
+        checkvars['LICENSE'] = set(['Apache-2.0', 'Unknown'])
         checkvars['SRC_URI'] = 'git://github.com/mesonbuild/meson;protocol=https'
         inherits = ['setuptools']
         self._test_recipe_contents(recipefile, checkvars, inherits)
