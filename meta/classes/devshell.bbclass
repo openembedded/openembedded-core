@@ -15,7 +15,7 @@ python do_devshell () {
     oe_terminal(d.getVar('DEVSHELL'), 'OpenEmbedded Developer Shell', d)
 }
 
-addtask devshell after do_patch
+addtask devshell after do_patch do_prepare_recipe_sysroot
 
 # The directory that the terminal starts in
 DEVSHELL_STARTDIR ?= "${S}"
