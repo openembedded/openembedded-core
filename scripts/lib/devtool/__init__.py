@@ -191,7 +191,7 @@ def use_external_build(same_dir, no_same_dir, d):
         logger.info('Using source tree as build directory since --same-dir specified')
     elif bb.data.inherits_class('autotools-brokensep', d):
         logger.info('Using source tree as build directory since recipe inherits autotools-brokensep')
-    elif d.getVar('B') == os.path.abspath(d.getVar('S')):
+    elif os.path.abspath(d.getVar('B')) == os.path.abspath(d.getVar('S')):
         logger.info('Using source tree as build directory since that would be the default for this recipe')
     else:
         b_is_s = False
