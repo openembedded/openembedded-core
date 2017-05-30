@@ -28,6 +28,7 @@
 import logging
 import os
 import shutil
+import sys
 
 from oe.path import copyhardlinktree
 
@@ -98,7 +99,8 @@ class RootfsPlugin(SourcePlugin):
             for orig_path in part.exclude_path:
                 path = orig_path
                 if os.path.isabs(path):
-                    msger.error("Must be relative: --exclude-path=%s" % orig_path)
+                    logger.error("Must be relative: --exclude-path=%s" % orig_path)
+                    sys.exit(1)
 
                 full_path = os.path.realpath(os.path.join(new_rootfs, path))
 
@@ -106,7 +108,8 @@ class RootfsPlugin(SourcePlugin):
                 # because doing so could be quite disastrous (we will delete the
                 # directory).
                 if not full_path.startswith(new_rootfs):
-                    msger.error("'%s' points to a path outside the rootfs" % orig_path)
+                    logger.error("'%s' points to a path outside the rootfs" % orig_path)
+                    sys.exit(1)
 
                 if path.endswith(os.sep):
                     # Delete content only.
