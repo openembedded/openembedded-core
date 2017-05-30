@@ -64,7 +64,7 @@ def _prepare_remote_script(deploy, verbose=False, dryrun=False, undeployall=Fals
         lines.append('                rmdir $file > /dev/null 2>&1 || true')
         lines.append('            fi')
         lines.append('        else')
-        lines.append('            rm $file')
+        lines.append('            rm -f $file')
         lines.append('        fi')
     lines.append('    done')
     if not dryrun:
