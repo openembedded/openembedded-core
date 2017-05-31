@@ -10,8 +10,8 @@ MAJ_VER = "${@oe.utils.trim_version("${PV}", 2)}"
 
 SRC_URI = "http://ftp.gnome.org/pub/gnome/sources/gtk+/${MAJ_VER}/gtk+-${PV}.tar.xz \
           file://Remove-Gdk-dependency-from-gtk-encode-symbolic-svg.patch"
-SRC_URI[md5sum] = "b4fb39a829e4425b3fa05adbe7f52fef"
-SRC_URI[sha256sum] = "c7254a88df5c17e9609cee9e848c3d0104512707edad4c3b4f256b131f8d3af1"
+SRC_URI[md5sum] = "9a1177854c4c5609293e017c53bc8950"
+SRC_URI[sha256sum] = "c8a012c2a99132629ab043f764a2b7cb6388483a015cd15c7a4288bec3590fdb"
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=5f30f0716dfdd0d91eb439ebec522ec2 \
                     file://gtk/gtk.h;endline=25;md5=1d8dc0fccdbfa26287a271dce88af737 \
