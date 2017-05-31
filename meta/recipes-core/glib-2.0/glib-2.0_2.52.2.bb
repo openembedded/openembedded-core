@@ -6,7 +6,6 @@ SHRT_VER = "${@oe.utils.trim_version("${PV}", 2)}"
 
 SRC_URI = "${GNOME_MIRROR}/glib/${SHRT_VER}/glib-${PV}.tar.xz \
            file://configure-libtool.patch \
-           file://fix-conflicting-rand.patch \
            file://run-ptest \
            file://ptest-paths.patch \
            file://uclibc_musl_translation.patch \
@@ -18,8 +17,7 @@ SRC_URI = "${GNOME_MIRROR}/glib/${SHRT_VER}/glib-${PV}.tar.xz \
            file://0001-Test-for-pthread_getname_np-before-using-it.patch \
            "
 
-SRC_URI_append_class-native = " file://glib-gettextize-dir.patch \
-                                file://relocate-modules.patch"
+SRC_URI_append_class-native = " file://relocate-modules.patch"
 
-SRC_URI[md5sum] = "381ab22934f296750d036aa55a397ded"
-SRC_URI[sha256sum] = "82ee94bf4c01459b6b00cb9db0545c2237921e3060c0b74cff13fbc020cfd999"
+SRC_URI[md5sum] = "ec099bce26ce6a85104ed1d89bb45856"
+SRC_URI[sha256sum] = "f00e5d9e2a2948b1da25fcba734a6b7a40f556de8bc9f528a53f6569969ac5d0"
