@@ -11,10 +11,11 @@ inherit allarch autotools pkgconfig gettext gtk-icon-cache upstream-version-is-e
 
 MAJ_VER = "${@oe.utils.trim_version("${PV}", 2)}"
 SRC_URI = "${GNOME_MIRROR}/${BPN}/${MAJ_VER}/${BPN}-${PV}.tar.xz \
+           file://0001-Don-t-use-AC_CANONICAL_HOST.patch \
           "
 
-SRC_URI[md5sum] = "cde51d7dfcbcfa3b8cdc3e5f0df8c799"
-SRC_URI[sha256sum] = "c18bf6e26087d9819a962c77288b291efab25d0419b73d909dd771716a45dcb7"
+SRC_URI[md5sum] = "3ccac0d600ffc936d2adfb80e9245bc5"
+SRC_URI[sha256sum] = "ccf79ff3bd340254737ce4d28b87f0ccee4b3358cd3cd5cd11dc7b42f41b272a"
 
 do_install_append() {
 	# Build uses gtk-encode-symbolic-svg to create png versions:
