@@ -14,8 +14,8 @@ inherit autotools pkgconfig gnomebase gtk-doc pixbufcache upstream-version-is-ev
 
 SRC_URI += "file://gtk-option.patch"
 
-SRC_URI[archive.md5sum] = "f474fe37177a2bf8050787df2046095c"
-SRC_URI[archive.sha256sum] = "d48bcf6b03fa98f07df10332fb49d8c010786ddca6ab34cbba217684f533ff2e"
+SRC_URI[archive.md5sum] = "d6fcedf86c5c271abb36da5acc7eb987"
+SRC_URI[archive.sha256sum] = "e6f6c5cbecc405bb945c7cd15061276035ae3173bbb3bb25e8a916779c7f69cc"
 
 CACHED_CONFIGUREVARS = "ac_cv_path_GDK_PIXBUF_QUERYLOADERS=${STAGING_LIBDIR_NATIVE}/gdk-pixbuf-2.0/gdk-pixbuf-query-loaders"
 
@@ -38,6 +38,7 @@ PACKAGES =+ "librsvg-gtk rsvg"
 FILES_rsvg = "${bindir}/rsvg* \
 	      ${datadir}/pixmaps/svg-viewer.svg \
 	      ${datadir}/themes"
-FILES_librsvg-gtk = "${libdir}/gdk-pixbuf-2.0/*/*/*.so"
+FILES_librsvg-gtk = "${libdir}/gdk-pixbuf-2.0/*/*/*.so \
+                     ${datadir}/thumbnailers/librsvg.thumbnailer"
 
 PIXBUF_PACKAGES = "librsvg-gtk"
