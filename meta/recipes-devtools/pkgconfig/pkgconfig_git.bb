@@ -8,13 +8,12 @@ SECTION = "console/utils"
 LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263"
 
-SRCREV = "87152c05be88ca8be71a3a563f275b3686d32c28"
-PV = "0.29.1+git${SRCPV}"
+SRCREV = "edf8e6f0ea77ede073f07bff0d2ae1fc7a38103b"
+PV = "0.29.2+git${SRCPV}"
 
 SRC_URI = "git://anongit.freedesktop.org/pkg-config \
            file://pkg-config-native.in \
            file://fix-glib-configure-libtool-usage.patch \
-           file://0001-gdate-Move-warning-pragma-outside-of-function.patch \
            file://0001-glib-gettext.m4-Update-AM_GLIB_GNU_GETTEXT-to-match-.patch \
            "
 
