@@ -6,8 +6,8 @@ LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://COPYING;md5=58ef4c80d401e07bd9ee8b6b58cf464b"
 
 SRC_URI = "https://github.com/anholt/${BPN}/releases/download/${PV}/${BP}.tar.xz"
-SRC_URI[md5sum] = "a0dc66910009a99c47c5def50b042d77"
-SRC_URI[sha256sum] = "88c6abf5522fc29bab7d6c555fd51a855cbd9253c4315f8ea44e832baef21aa6"
+SRC_URI[md5sum] = "632fcfd7ae9d21f5a634326d753a89c4"
+SRC_URI[sha256sum] = "bea6fdec3d10939954495da898d872ee836b75c35699074cbf02a64fcb80d5b3"
 UPSTREAM_CHECK_URI = "https://github.com/anholt/libepoxy/releases"
 
 inherit autotools pkgconfig distro_features_check
