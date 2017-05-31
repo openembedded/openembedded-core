@@ -41,6 +41,8 @@ SRC_URI = "\
      file://0001-ppc-apuinfo-for-spe-parsed-incorrectly.patch \
      file://CVE-2017-6965.patch \
      file://CVE-2017-6966.patch \
+     file://CVE-2017-6969.patch \
+     file://CVE-2017-6969_2.patch \
 "
 S  = "${WORKDIR}/git"
 
