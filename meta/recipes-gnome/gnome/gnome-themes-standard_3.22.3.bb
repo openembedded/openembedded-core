@@ -16,8 +16,8 @@ MAJ_VER = "${@oe.utils.trim_version("${PV}", 2)}"
 SRC_URI = "${GNOME_MIRROR}/${BPN}/${MAJ_VER}/${BPN}-${PV}.tar.xz \
           "
 
-SRC_URI[md5sum] = "84624dbcecab7add32672abae030314d"
-SRC_URI[sha256sum] = "b34516cd59b873c187c1897c25bac3b9ce2d30a472f1fd7ae9d7105d93e17da5"
+SRC_URI[md5sum] = "b51c362b157b6407303d44f93c31ee11"
+SRC_URI[sha256sum] = "61dc87c52261cfd5b94d65e8ffd923ddeb5d3944562f84942eeeb197ab8ab56a"
 
 EXTRA_OECONF = "--disable-gtk3-engine"
 
