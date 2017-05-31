@@ -153,7 +153,7 @@ python () {
         bb.fatal("Please add your architecture to siteinfo.bbclass")
 }
 
-def siteinfo_get_files(d, aclocalcache = False):
+def siteinfo_get_files(d, sysrootcache = False):
     sitedata = siteinfo_data(d)
     sitefiles = ""
     for path in d.getVar("BBPATH").split(":"):
@@ -162,18 +162,11 @@ def siteinfo_get_files(d, aclocalcache = False):
             if os.path.exists(filename):
                 sitefiles += filename + " "
 
-    if not aclocalcache:
+    if not sysrootcache:
         return sitefiles
 
-    # Now check for siteconfig cache files in the directory setup by autotools.bbclass to
-    # avoid races.
-    #
-    # ACLOCALDIR may or may not exist so cache should only be set to True from autotools.bbclass
-    # after files have been copied into this location. To do otherwise risks parsing/signature
-    # issues and the directory being created/removed whilst this code executes. This can happen
-    # when a multilib recipe is parsed along with its base variant which may be running at the time
-    # causing rare but nasty failures
-    path_siteconfig = d.getVar('ACLOCALDIR')
+    # Now check for siteconfig cache files in sysroots
+    path_siteconfig = d.getVar('SITECONFIG_SYSROOTCACHE')
     if path_siteconfig and os.path.isdir(path_siteconfig):
         for i in os.listdir(path_siteconfig):
             if not i.endswith("_config"):
