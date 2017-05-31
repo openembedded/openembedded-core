@@ -119,7 +119,11 @@ def _prepare_remote_script(deploy, verbose=False, dryrun=False, undeployall=Fals
         # Put any preserved files back
         lines.append('if [ -d $preservedir ] ; then')
         lines.append('    cd $preservedir')
-        lines.append('    find . -type f -exec mv {} /{} \;')
+        # find from busybox might not have -exec, so we don't use that
+        lines.append('    find . -type f | while read file')
+        lines.append('    do')
+        lines.append('        mv $file /$file')
+        lines.append('    done')
         lines.append('    cd /')
         lines.append('    rm -rf $preservedir')
         lines.append('fi')
