@@ -1098,7 +1098,7 @@ class BaseConfig(object):
         if self.serialstdio:
             logger.info("Interrupt character is '^]'")
             cmd = "stty intr ^]"
-            subprocess.call(cmd, shell=True)
+            subprocess.check_call(cmd, shell=True)
 
             first_serial = ""
             if not re.search("-nographic", self.qemu_opt):
@@ -1146,7 +1146,7 @@ class BaseConfig(object):
         if self.cleantap:
             cmd = 'sudo %s %s %s' % (self.qemuifdown, self.tap, self.bindir_native)
             logger.info('Running %s' % cmd)
-            subprocess.call(cmd, shell=True)
+            subprocess.check_call(cmd, shell=True)
         if self.lock_descriptor:
             logger.info("Releasing lockfile for tap device '%s'" % self.tap)
             self.release_lock()
@@ -1155,11 +1155,11 @@ class BaseConfig(object):
             logger.info("Shutting down the userspace NFS server...")
             cmd = "runqemu-export-rootfs stop %s" % self.rootfs
             logger.info('Running %s' % cmd)
-            subprocess.call(cmd, shell=True)
+            subprocess.check_call(cmd, shell=True)
 
         if self.saved_stty:
             cmd = "stty %s" % self.saved_stty
-            subprocess.call(cmd, shell=True)
+            subprocess.check_call(cmd, shell=True)
 
         if self.clean_nfs_dir:
             logger.info('Removing %s' % self.rootfs)
