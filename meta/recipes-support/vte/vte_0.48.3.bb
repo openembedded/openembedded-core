@@ -1,7 +1,7 @@
 SUMMARY = "Virtual terminal emulator GTK+ widget library"
 BUGTRACKER = "https://bugzilla.gnome.org/buglist.cgi?product=vte"
 LICENSE = "LGPLv2.1+"
-DEPENDS = "glib-2.0 gtk+3 libpcre2 intltool-native libxml2-native"
+DEPENDS = "glib-2.0 gtk+3 libpcre2 intltool-native libxml2-native gperf-native"
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=4fbd65380cdd255951079008b364516c"
 
@@ -11,8 +11,8 @@ inherit gnomebase gtk-doc distro_features_check upstream-version-is-even gobject
 SRC_URI += "file://0001-Don-t-enable-stack-protection-by-default.patch \
             ${@bb.utils.contains('PACKAGECONFIG', 'vala', '', 'file://0001-Add-m4-vapigen.m4.patch', d) } \
             "
-SRC_URI[archive.md5sum] = "e8f4393b9f1ec2e2f3cdb3fd4f5a16de"
-SRC_URI[archive.sha256sum] = "8800cf8bc259704a12ad1853fb0eb43bfe3857af15242e6fb9f2c3fd95b3f5c6"
+SRC_URI[archive.md5sum] = "b300675ac5f269aa6eb48fe89a0d726d"
+SRC_URI[archive.sha256sum] = "a3a9fb182740b392a45cd3f46fa61a985f68bb6b1817b52daec22034c46158c3"
 
 ANY_OF_DISTRO_FEATURES = "${GTK3DISTROFEATURES}"
 
@@ -23,6 +23,11 @@ ANY_OF_DISTRO_FEATURES = "${GTK3DISTROFEATURES}"
 export STAGING_DATADIR
 # Upstream Vala >= 0.11 looks in XDG_DATA_DIRS for .vapi files
 export XDG_DATA_DIRS = "${STAGING_DATADIR}"
+
+# Help g-ir-scanner find the .so for linking
+do_compile_prepend() {
+        export GIR_EXTRA_LIBS_PATH="${B}/src/.libs"
+}
 
 # Package additional files
 FILES_${PN}-dev += "${datadir}/vala/vapi/*"
