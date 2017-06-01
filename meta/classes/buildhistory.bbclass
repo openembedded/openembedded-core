@@ -706,10 +706,10 @@ def buildhistory_get_cmdline(d):
 buildhistory_single_commit() {
 	if [ "$3" = "" ] ; then
 		commitopts="${BUILDHISTORY_DIR}/ --allow-empty"
-		item="No changes"
+		shortlogprefix="No changes: "
 	else
-		commitopts="$3 metadata-revs"
-		item="$3"
+		commitopts=""
+		shortlogprefix=""
 	fi
 	if [ "${BUILDHISTORY_BUILD_FAILURES}" = "0" ] ; then
 		result="succeeded"
@@ -726,7 +726,7 @@ buildhistory_single_commit() {
 	esac
 	commitmsgfile=`mktemp`
 	cat > $commitmsgfile << END
-$item: Build ${BUILDNAME} of ${DISTRO} ${DISTRO_VERSION} for machine ${MACHINE} on $2
+${shortlogprefix}Build ${BUILDNAME} of ${DISTRO} ${DISTRO_VERSION} for machine ${MACHINE} on $2
 
 cmd: $1
 
@@ -770,9 +770,7 @@ END
 			git add -A .
 			# porcelain output looks like "?? packages/foo/bar"
 			# Ensure we commit metadata-revs with the first commit
-			for entry in `echo "$repostatus" | awk '{print $2}' | awk -F/ '{print $1}' | sort | uniq` ; do
-				buildhistory_single_commit "$CMDLINE" "$HOSTNAME" "$entry"
-			done
+			buildhistory_single_commit "$CMDLINE" "$HOSTNAME" dummy
 			git gc --auto --quiet
 		else
 			buildhistory_single_commit "$CMDLINE" "$HOSTNAME"
