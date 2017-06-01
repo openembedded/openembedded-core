@@ -8,7 +8,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=75aae0d38feea6fda97ca381cb9132eb \
 
 SRC_URI = "http://www.freedesktop.org/software/libevdev/${BP}.tar.xz"
 
-SRC_URI[md5sum] = "d4ce9f061f8f954bea7adba0cb768a53"
-SRC_URI[sha256sum] = "ecec7e9d66b1d3692f10b3b20aa97fb25e874a784c5552a7b1698091fef5a688"
+SRC_URI[md5sum] = "4f1cfaee8d75ea3fbbfeb99a98730952"
+SRC_URI[sha256sum] = "a1e59e37a2f0d397ffd7e83b73af0e638db83b8dd08902ef0f651a21cc1dd422"
 
 inherit autotools pkgconfig
