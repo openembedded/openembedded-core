@@ -87,13 +87,11 @@ class MakefileMaker:
         #
 
         if self.isNative:
-            rprovideLine = 'RPROVIDES+="'
-            for name in sorted(self.packages):
-                rprovideLine += "%s-native " % name.replace( '${PN}', 'python3' )
-            rprovideLine += '"'
+            pkglist = []
+            for name in ['${PN}-modules'] + sorted(self.packages):
+                pkglist.append('%s-native' % name.replace('${PN}', 'python3'))
 
-            self.out( rprovideLine )
-            self.out( "" )
+            self.out('RPROVIDES += "%s"' % " ".join(pkglist))
             return
 
         #
