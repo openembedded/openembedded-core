@@ -218,6 +218,7 @@ do_install() {
 
 
 PACKAGES =+ "${PN}-ralink-license ${PN}-ralink \
+             ${PN}-mt7601u-license ${PN}-mt7601u \
              ${PN}-radeon-license ${PN}-radeon \
              ${PN}-marvell-license ${PN}-sd8686 ${PN}-sd8688 ${PN}-sd8787 ${PN}-sd8797 ${PN}-sd8801 ${PN}-sd8887 ${PN}-sd8897 \
              ${PN}-ti-connectivity-license ${PN}-wl12xx ${PN}-wl18xx \
@@ -318,6 +319,17 @@ FILES_${PN}-ralink = " \
 "
 
 RDEPENDS_${PN}-ralink += "${PN}-ralink-license"
+
+# For mediatek MT7601U
+LICENSE_${PN}-mt7601u = "Firmware-ralink_a_mediatek_company_firmware"
+LICENSE_${PN}-mt7601u-license = "Firmware-ralink_a_mediatek_company_firmware"
+
+FILES_${PN}-mt7601u-license = "${nonarch_base_libdir}/firmware/LICENCE.ralink_a_mediatek_company_firmware"
+FILES_${PN}-mt7601u = " \
+  ${nonarch_base_libdir}/firmware/mt7601u.bin \
+"
+
+RDEPENDS_${PN}-mt7601u += "${PN}-mt7601u-license"
 
 # For radeon
 LICENSE_${PN}-radeon = "Firmware-radeon"
