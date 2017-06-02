@@ -11,3 +11,5 @@ FILES_${PN}-dev += "\
   ${libdir}/pkgconfig \
   ${PYTHON_SITEPACKAGES_DIR}/*.la \
 "
+
+SECURITY_CFLAGS = "${SECURITY_NO_PIE_CFLAGS}"
