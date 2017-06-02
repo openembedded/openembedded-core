@@ -7,8 +7,8 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=76d6e300ffd8fb9d18bd9b136a9bba13 \
 
 SRC_URI = "${SAVANNAH_GNU_MIRROR}/lzip/lzip-${PV}.tar.gz"
 
-SRC_URI[md5sum] = "3838567460ce4a10143de4bccc64fe1c"
-SRC_URI[sha256sum] = "47f9882a104ab05532f467a7b8f4ddbb898fa2f1e8d9d468556d6c2d04db14dd"
+SRC_URI[md5sum] = "4dd8790d7528440d034fc713a8680bd3"
+SRC_URI[sha256sum] = "ffadc4f56be1bc0d3ae155ec4527bd003133bdc703a753b2cc683f610e646ba9"
 
 CONFIGUREOPTS = "\
     '--srcdir=${S}' \
