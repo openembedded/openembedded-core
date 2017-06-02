@@ -1,8 +1,8 @@
 require go-common.inc
 
-GOMINOR = ""
+GOMINOR = "3"
 GO_BASEVERSION = "1.8"
-PV .= "${GOMINOR}"
+PV .= ".${GOMINOR}"
 FILESEXTRAPATHS_prepend := "${FILE_DIRNAME}/go-${GO_BASEVERSION}:"
 
 LIC_FILES_CHKSUM = "file://LICENSE;md5=5d4950ecb7b26d2c5e4e7b4e0dd74707"
@@ -15,5 +15,5 @@ SRC_URI += "\
        file://split-host-and-target-build.patch \
        file://gotooldir.patch \
 "
-SRC_URI[md5sum] = "7743960c968760437b6e39093cfe6f67"
-SRC_URI[sha256sum] = "406865f587b44be7092f206d73fc1de252600b79b3cacc587b74b5ef5c623596"
+SRC_URI[md5sum] = "64e9380e07bba907e26a00cf5fcbe77e"
+SRC_URI[sha256sum] = "5f5dea2447e7dcfdc50fa6b94c512e58bfba5673c039259fd843f68829d99fa6"
