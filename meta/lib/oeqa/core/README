@@ -2,34 +2,34 @@
 
 == Introduction ==
 
-This is the new (version 2) OEQA framework. Base clases are located inside the
-'oeqa/core' folder and subsequent components needs to extend from these.
+This is version 2 of the OEQA framework. Base clases are located in the
+'oeqa/core' directory and subsequent components must extend from these.
 
-The main design consideration was to implement the needed functionality
-on top of Python unittest framework. To archive the latter, the following
-modules are present:
+The main design consideration was to implement the needed functionality on
+top of the Python unittest framework. To achieve this goal, the following
+modules are used:
 
     * oeqa/core/runner.py: Provides OETestResult and OETestRunner base
-      classes extending the unittest ones. This class has the support for
-      export results to different formats currently RAW and XML.
+      classes extending the unittest class. These classes support exporting
+      results to different formats; currently RAW and XML support exist.
 
-    * oeqa/core/loader.py: Provides OETestLoader extending unittest ones,
-      also implements unified way for decorator support and for filtering test
-      cases.
+    * oeqa/core/loader.py: Provides OETestLoader extending the unittest class.
+      It also features a unified implementation of decorator support and
+      filtering test cases.
 
     * oeqa/core/case.py: Provides OETestCase base class extending
       unittest.TestCase and provides access to the Test data (td), Test context
       and Logger functionality.
 
-    * oeqa/core/decorator: Provides OETestDecorator a new class to implement
+    * oeqa/core/decorator: Provides OETestDecorator, a new class to implement
       decorators for Test cases.
 
-    * oeqa/core/context: Provides OETestContext a high-level API for
+    * oeqa/core/context: Provides OETestContext, a high-level API for
       loadTests and runTests of certain Test component and
       OETestContextExecutor a base class to enable oe-test to discover/use
       the Test component.
 
-In the other hand, a new 'oe-test' runner is located under 'scripts', allowing scans for components
+Also, a new 'oe-test' runner is located under 'scripts', allowing scans for components
 that supports OETestContextExecutor (see below).
 
 == Terminology ==
@@ -39,15 +39,14 @@ that supports OETestContextExecutor (see below).
     * Test data: Data associated with the Test component. Currently we use bitbake datastore as
       a Test data input.
 
-    * Test context: A context of what tests needs to be run and how to do it, additionally provides
-      access to the Test data and could have custom methods, attrs.
+    * Test context: A context of what tests needs to be run and how to do it; this additionally
+      provides access to the Test data and could have custom methods and/or attrs.
 
 == oe-test ==
 
-The new tool oe-test (located at scripts) has the ability to scan the code base for test
-components and provide a unified way to run test cases. Internally it scans folders inside
-oeqa module in order to find specific classes that
-implements a test component.
+The new tool, oe-test, has the ability to scan the code base for test components and provide
+a unified way to run test cases. Internally it scans folders inside oeqa module in order to find
+specific classes that implement a test component.
 
 == Usage ==
 

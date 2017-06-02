@@ -14,11 +14,11 @@ from oeqa.core.decorator import decoratorClasses, OETestDecorator, \
 
 def _make_failed_test(classname, methodname, exception, suiteClass):
     """
-        When loading tests unittest framework stores the exception in a new
-        class created for be displayed into run().
+        When loading tests, the unittest framework stores any exceptions and
+        displays them only when the 'run' method is called.
 
-        For our purposes will be better to raise the exception in loading 
-        step instead of wait to run the test suite.
+        For our purposes, it is better to raise the exceptions in the loading
+        step rather than waiting to run the test suite.
     """
     raise exception
 unittest.loader._make_failed_test = _make_failed_test
