@@ -7,13 +7,13 @@ where the original uses plain Perl or SAX parsers."
 HOMEPAGE = "http://search.cpan.org/~markov/XML-LibXML-Simple-0.93/lib/XML/LibXML/Simple.pod"
 SECTION = "libs"
 LICENSE = "Artistic-1.0 | GPL-1.0+"
-LIC_FILES_CHKSUM = "file://LICENSE;md5=fa1187fceda00eee10b62961407ea7be"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=23477e18a0d04392cdf44ae70e49b495"
 DEPENDS += "libxml-parser-perl"
 
 SRC_URI = "http://www.cpan.org/modules/by-module/XML/XML-Simple-${PV}.tar.gz"
 
-SRC_URI[md5sum] = "0914abddfce749453ed89b54029f2643"
-SRC_URI[sha256sum] = "b9450ef22ea9644ae5d6ada086dc4300fa105be050a2030ebd4efd28c198eb49"
+SRC_URI[md5sum] = "1cd2e8e3421160c42277523d5b2f4dd2"
+SRC_URI[sha256sum] = "9a14819fd17c75fbb90adcec0446ceab356cab0ccaff870f2e1659205dc2424f"
 
 S = "${WORKDIR}/XML-Simple-${PV}"
 
