@@ -13,13 +13,29 @@ if [ -z "$BUILDDIR" ]; then
 	exit 2
 fi
 
+# since we are using a temp directory, use the realpath for output
+# log option
+output_log=''
+while getopts o: name
+do
+	case $name in
+	o) output_log=$(realpath "$OPTARG")
+	esac
+done
+shift $(($OPTIND - 1))
+
+# generate a temp directory to run compat layer script
 base_dir=$(realpath $BUILDDIR/../)
 cd $base_dir
 
 build_dir=$(mktemp -p $base_dir -d -t build-XXXX)
 
 source oe-init-build-env $build_dir
-yocto-compat-layer.py "$@"
+if [[ $output_log != '' ]]; then
+	yocto-compat-layer.py -o "$output_log" "$*"
+else
+	yocto-compat-layer.py "$@"
+fi
 retcode=$?
 
 rm -rf $build_dir
