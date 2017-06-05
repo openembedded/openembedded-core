@@ -11,4 +11,6 @@ SRC_URI = "git://anongit.freedesktop.org/mesa/kmscube;branch=master;protocol=git
 
 S = "${WORKDIR}/git"
 
-inherit autotools pkgconfig
+inherit autotools pkgconfig distro_features_check
+
+REQUIRED_DISTRO_FEATURES = "opengl"
