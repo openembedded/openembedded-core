@@ -178,16 +178,19 @@ def main():
         results_status[layer['name']] = 'PASS' if results[layer['name']].wasSuccessful() else 'FAIL'
         layers_tested = layers_tested + 1
 
+    ret = 0
     if layers_tested:
         logger.info('')
         logger.info('Summary of results:')
         logger.info('')
         for layer_name in results_status:
             logger.info('%s ... %s' % (layer_name, results_status[layer_name]))
+            if not results[layer_name].wasSuccessful():
+                ret = 2 # ret = 1 used for initialization errors
 
     cleanup_bblayers(None, None)
 
-    return 0
+    return ret
 
 if __name__ == '__main__':
     try:
