@@ -23,6 +23,7 @@ SRC_URI = "https://github.com/${BPN}/${BPN}/archive/r3-9-1.tar.gz \
            file://act-as-mv-when-rotate.patch \
            file://update-the-manual.patch \
            file://disable-check-different-filesystems.patch \
+           file://0001-Support-system-dates-back-to-the-year-1970.patch \
             "
 
 SRC_URI[md5sum] = "8572b7c2cf9ade09a8a8e10098500fb3"
