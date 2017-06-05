@@ -1,12 +1,12 @@
 SUMMARY = "Utilities and libraries for handling compiled object files"
-HOMEPAGE = "https://fedorahosted.org/elfutils"
+HOMEPAGE = "https://sourceware.org/elfutils"
 SECTION = "base"
 LICENSE = "(GPLv3 & Elfutils-Exception)"
 LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 DEPENDS = "libtool bzip2 zlib virtual/libintl"
 DEPENDS_append_libc-musl = " argp-standalone fts "
 
-SRC_URI = "https://fedorahosted.org/releases/e/l/elfutils/${PV}/${BP}.tar.bz2"
+SRC_URI = "ftp://sourceware.org/pub/elfutils/${PV}/${BP}.tar.bz2"
 SRC_URI[md5sum] = "d4e462b7891915dc5326bccefa2024ff"
 SRC_URI[sha256sum] = "3c056914c8a438b210be0d790463b960fc79d234c3f05ce707cbff80e94cba30"
 
