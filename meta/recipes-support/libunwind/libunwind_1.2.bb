@@ -11,6 +11,7 @@ SRC_URI = "http://download.savannah.nongnu.org/releases/libunwind/libunwind-${PV
            file://0001-add-knobs-to-disable-enable-tests.patch \
            file://0001-ppc32-Consider-ucontext-mismatches-between-glibc-and.patch \
            file://libunwind-1.1-x32.patch \
+           file://fix-mips.patch \
            "
 
 SRC_URI_append_libc-musl = " file://musl-header-conflict.patch"
