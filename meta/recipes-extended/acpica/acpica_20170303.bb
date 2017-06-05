@@ -19,10 +19,10 @@ DEPENDS = "bison flex"
 SRC_URI = "https://acpica.org/sites/acpica/files/acpica-unix2-${PV}.tar.gz \
     file://no-werror.patch \
     file://rename-yy_scan_string-manually.patch \
-    file://manipulate-fds-instead-of-FILE.patch \
+    file://manipulate-fds-instead-of-FILE.patch;striplevel=2 \
     "
-SRC_URI[md5sum] = "2bc4a7ccc82de9df9fa964f784ecb29c"
-SRC_URI[sha256sum] = "61204ec56d71bc9bfa2ee2ade4c66f7e8541772ac72ef8ccc20b3f339cc96374"
+SRC_URI[md5sum] = "48ef4314fb4ffdd0c96f14dcf20544e1"
+SRC_URI[sha256sum] = "b2d81e84107ac9a02be86ea43cbea7afa8fd4b4150270bc88c2d4c9fea0b8aad"
 UPSTREAM_CHECK_URI = "https://acpica.org/downloads"
 
 S = "${WORKDIR}/acpica-unix2-${PV}"
