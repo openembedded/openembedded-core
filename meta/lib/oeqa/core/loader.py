@@ -109,6 +109,8 @@ class OETestLoader(unittest.TestLoader):
 
         self._patchCaseClass(self.caseClass)
 
+        super(OETestLoader, self).__init__()
+
     def _patchCaseClass(self, testCaseClass):
         # Adds custom attributes to the OETestCase class
         setattr(testCaseClass, 'tc', self.tc)
