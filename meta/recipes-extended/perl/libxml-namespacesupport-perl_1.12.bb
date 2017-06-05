@@ -7,11 +7,11 @@ SECTION = "libs"
 LICENSE = "Artistic-1.0 | GPL-1.0+"
 PR = "r3"
 
-LIC_FILES_CHKSUM = "file://META.yml;beginline=22;endline=22;md5=3b2b564dae8b9af9e8896e85c07dcbe5"
+LIC_FILES_CHKSUM = "file://META.yml;beginline=22;endline=22;md5=9ca1a4a941496e7feedac72c4fb8b137"
 
 SRC_URI = "http://search.cpan.org/CPAN/authors/id/P/PE/PERIGRIN/XML-NamespaceSupport-${PV}.tar.gz"
-SRC_URI[md5sum] = "222cca76161cd956d724286d36b607da"
-SRC_URI[sha256sum] = "6d8151f0a3f102313d76b64bfd1c2d9ed46bfe63a16f038e7d860fda287b74ea"
+SRC_URI[md5sum] = "a8916c6d095bcf073e1108af02e78c97"
+SRC_URI[sha256sum] = "47e995859f8dd0413aa3f22d350c4a62da652e854267aa0586ae544ae2bae5ef"
 
 
 S = "${WORKDIR}/XML-NamespaceSupport-${PV}"
