@@ -27,7 +27,7 @@ except ImportError:
 from oeqa.utils import load_test_components
 from oeqa.core.exception import OEQAPreRun
 
-logger = scriptutils.logger_create('oe-test')
+logger = scriptutils.logger_create('oe-test', stream=sys.stdout)
 
 def main():
     parser = argparse_oe.ArgumentParser(description="OpenEmbedded test tool",
