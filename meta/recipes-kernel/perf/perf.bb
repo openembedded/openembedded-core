@@ -12,7 +12,7 @@ PR = "r9"
 
 BUILDPERF_libc-uclibc = "no"
 
-PACKAGECONFIG ??= "scripting tui"
+PACKAGECONFIG ??= "scripting tui libunwind"
 PACKAGECONFIG[scripting] = ",NO_LIBPERL=1 NO_LIBPYTHON=1,perl python"
 # gui support was added with kernel 3.6.35
 # since 3.10 libnewt was replaced by slang
