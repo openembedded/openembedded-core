@@ -16,8 +16,8 @@ SRC_URI += "file://configure-sbindir.patch \
             file://avoid_parallel_tests.patch \
             file://uuid-test-error-api.patch \
 "
-SRC_URI[md5sum] = "0cbb6d16ab9c5736e5649ef1264bee6e"
-SRC_URI[sha256sum] = "0ce40600b934ec2fecfa6bfc4efe6982d051ba96c2832b05201347aec582f54f"
+SRC_URI[md5sum] = "63c40c2068fcbb7e1d5c1d281115d973"
+SRC_URI[sha256sum] = "accea4d678209f97f634f40a93b7e9fcad5915d1f4749f6c47bee6bf110fe8e3"
 
 CACHED_CONFIGUREVARS += "scanf_cv_alloc_modifier=ms"
 
