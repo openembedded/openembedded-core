@@ -222,6 +222,10 @@ python do_ar_patched() {
 python do_ar_configured() {
     import shutil
 
+    # Forcibly expand the sysroot paths as we're about to change WORKDIR
+    d.setVar('RECIPE_SYSROOT', d.getVar('RECIPE_SYSROOT'))
+    d.setVar('RECIPE_SYSROOT_NATIVE', d.getVar('RECIPE_SYSROOT_NATIVE'))
+
     ar_outdir = d.getVar('ARCHIVER_OUTDIR')
     if d.getVarFlag('ARCHIVER_MODE', 'src') == 'configured':
         bb.note('Archiving the configured source...')
