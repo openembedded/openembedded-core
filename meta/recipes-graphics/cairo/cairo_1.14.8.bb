@@ -2,7 +2,9 @@ require cairo.inc
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=e73e999e0c72b5ac9012424fa157ad77"
 
-SRC_URI = "http://cairographics.org/releases/cairo-${PV}.tar.xz"
+SRC_URI = "http://cairographics.org/releases/cairo-${PV}.tar.xz \
+           file://cairo-get_bitmap_surface-bsc1036789-CVE-2017-7475.diff \ 
+          "
 
 SRC_URI[md5sum] = "4ef0db2eacb271c74f8a3fd87822aa98"
 SRC_URI[sha256sum] = "d1f2d98ae9a4111564f6de4e013d639cf77155baf2556582295a0f00a9bc5e20"
