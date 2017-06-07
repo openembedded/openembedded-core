@@ -1,9 +1,7 @@
 import os
 from oeqa.selftest.case import OESelftestTestCase
 import tempfile
-from git import Repo
 from oeqa.utils.commands import get_bb_var
-from oe.buildhistory_analysis import blob_to_dict, compare_dict_blobs
 
 class TestBlobParsing(OESelftestTestCase):
 
@@ -12,7 +10,12 @@ class TestBlobParsing(OESelftestTestCase):
         self.repo_path = tempfile.mkdtemp(prefix='selftest-buildhistory',
             dir=get_bb_var('TOPDIR'))
 
-        self.repo = Repo.init(self.repo_path)
+        try:
+            from git import Repo
+            self.repo = Repo.init(self.repo_path)
+        except ImportError:
+            self.skipTest('Python module GitPython is not present')
+
         self.test_file = "test"
         self.var_map = {}
 
@@ -40,6 +43,7 @@ class TestBlobParsing(OESelftestTestCase):
         """
         Test convertion of git blobs to dictionary
         """
+        from oe.buildhistory_analysis import blob_to_dict
         valuesmap = { "foo" : "1", "bar" : "2" }
         self.commit_vars(to_add = valuesmap)
 
@@ -51,6 +55,8 @@ class TestBlobParsing(OESelftestTestCase):
         """
         Test comparisson of dictionaries extracted from git blobs
         """
+        from oe.buildhistory_analysis import compare_dict_blobs
+
         changesmap = { "foo-2" : ("2", "8"), "bar" : ("","4"), "bar-2" : ("","5")}
 
         self.commit_vars(to_add = { "foo" : "1", "foo-2" : "2", "foo-3" : "3" })
@@ -69,6 +75,7 @@ class TestBlobParsing(OESelftestTestCase):
         """
         Test default values for comparisson of git blob dictionaries
         """
+        from oe.buildhistory_analysis import compare_dict_blobs
         defaultmap = { x : ("default", "1")  for x in ["PKG", "PKGE", "PKGV", "PKGR"]}
 
         self.commit_vars(to_add = { "foo" : "1" })
