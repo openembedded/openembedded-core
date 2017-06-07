@@ -16,6 +16,6 @@ SRC_URI = "http://ftp.gnu.org/gnu/gdb/gdb-${PV}.tar.xz \
            file://0009-Change-order-of-CFLAGS.patch \
            file://0010-resolve-restrict-keyword-conflict.patch \
 "
-SRC_URI[md5sum] = "193453347ddced7acb6b1cd2ee8f2e4b"
-SRC_URI[sha256sum] = "4607680b973d3ec92c30ad029f1b7dbde3876869e6b3a117d8a7e90081113186"
+SRC_URI[md5sum] = "c3d35cd949084be53b92cc1e03485f88"
+SRC_URI[sha256sum] = "f6a24ffe4917e67014ef9273eb8b547cb96a13e5ca74895b06d683b391f3f4ee"
 
