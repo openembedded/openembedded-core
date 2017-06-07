@@ -9,6 +9,8 @@ PE = "1"
 # repo during parse
 SRCREV = "64c4ffa9fa223f7ae8640f9c8f3044bfa0e3bfda"
 
-SRC_URI = "git://git.denx.de/u-boot.git"
+SRC_URI = "git://git.denx.de/u-boot.git \
+    file://MPC8315ERDB-enable-DHCP.patch \
+"
 
 S = "${WORKDIR}/git"
