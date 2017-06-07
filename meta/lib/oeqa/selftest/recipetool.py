@@ -448,10 +448,10 @@ class RecipetoolTests(RecipetoolBase):
         os.makedirs(temprecipe)
         recipefile = os.path.join(temprecipe, 'meson_git.bb')
         srcuri = 'https://github.com/mesonbuild/meson;rev=0.32.0'
-        result = runCmd(['recipetool', 'create', '-o', temprecipe, srcuri])
+        result = runCmd(['recipetool', 'create', '-o', recipefile, srcuri])
         self.assertTrue(os.path.isfile(recipefile))
         checkvars = {}
-        checkvars['LICENSE'] = set(['Apache-2.0', 'Unknown'])
+        checkvars['LICENSE'] = set(['Apache-2.0'])
         checkvars['SRC_URI'] = 'git://github.com/mesonbuild/meson;protocol=https'
         inherits = ['setuptools']
         self._test_recipe_contents(recipefile, checkvars, inherits)
