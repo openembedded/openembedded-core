@@ -72,8 +72,8 @@ def testsdk_main(d):
         component = "%s %s" % (pn, OESDKTestContextExecutor.name)
         context_msg = "%s:%s" % (os.path.basename(tcname), os.path.basename(sdk_env))
 
-        result.logSummary(component, context_msg)
         result.logDetails()
+        result.logSummary(component, context_msg)
 
         if not result.wasSuccessful():
             fail = True
@@ -176,8 +176,8 @@ def testsdkext_main(d):
         component = "%s %s" % (pn, OESDKExtTestContextExecutor.name)
         context_msg = "%s:%s" % (os.path.basename(tcname), os.path.basename(sdk_env))
 
-        result.logSummary(component, context_msg)
         result.logDetails()
+        result.logSummary(component, context_msg)
 
         if not result.wasSuccessful():
             fail = True

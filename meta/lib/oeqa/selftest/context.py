@@ -179,8 +179,8 @@ class OESelftestTestContextExecutor(OETestContextExecutor):
         else:
             self._pre_run()
             rc = self.tc.runTests(**self.tc_kwargs['run'])
-            rc.logSummary(self.name)
             rc.logDetails()
+            rc.logSummary(self.name)
 
         return rc
     
