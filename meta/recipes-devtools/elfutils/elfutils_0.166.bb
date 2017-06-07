@@ -18,7 +18,10 @@ SRC_URI += "\
         file://0001-remove-the-unneed-checking.patch \
         file://0001-fix-a-stack-usage-warning.patch \
         file://aarch64_uio.patch \
+        file://Fix_one_GCC7_warning.patch \
+        file://0001-Add-GCC7-Wimplicit-fallthrough-support-fixes.patch \
         file://shadow.patch \
+        file://0001-ar-Fix-GCC7-Wformat-length-issues.patch \
 "
 
 # pick the patch from debian
@@ -37,6 +40,8 @@ SRC_URI += "\
         file://uclibc-support.patch \
         file://elfcmp-fix-self-comparision.patch \
 "
+# Fix the patches from Debian with GCC7
+SRC_URI += "file://fallthrough.patch"
 SRC_URI_append_libc-musl = " file://0001-build-Provide-alternatives-for-glibc-assumptions-hel.patch "
 
 # The buildsystem wants to generate 2 .h files from source using a binary it just built,
