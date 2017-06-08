@@ -121,9 +121,10 @@ class OETestResult(_TestResult):
                     break
 
             oeid = -1
-            for d in case.decorators:
-                if hasattr(d, 'oeid'):
-                    oeid = d.oeid
+            if hasattr(case, 'decorators'):
+                for d in case.decorators:
+                    if hasattr(d, 'oeid'):
+                        oeid = d.oeid
 
             if fail:
                 self.tc.logger.info("RESULTS - %s - Testcase %s: %s" % (case.id(),
@@ -188,9 +189,10 @@ class OETestRunner(_TestRunner):
         def _list_cases_without_id(logger, case):
 
             found_id = False
-            for d in case.decorators:
-                if isinstance(d, OETestID):
-                    found_id = True
+            if hasattr(case, 'decorators'):
+                for d in case.decorators:
+                    if isinstance(d, OETestID):
+                        found_id = True
 
             if not found_id:
                 logger.info('oeid missing for %s' % case.id())
@@ -199,11 +201,12 @@ class OETestRunner(_TestRunner):
             oeid = None
             oetag = None
 
-            for d in case.decorators:
-                if isinstance(d, OETestID):
-                    oeid = d.oeid
-                elif isinstance(d, OETestTag):
-                    oetag = d.oetag
+            if hasattr(case, 'decorators'):
+                for d in case.decorators:
+                    if isinstance(d, OETestID):
+                        oeid = d.oeid
+                    elif isinstance(d, OETestTag):
+                        oetag = d.oetag
 
             logger.info("%s\t%s\t\t%s" % (oeid, oetag, case.id()))
 

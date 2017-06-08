@@ -185,7 +185,7 @@ class OETestLoader(unittest.TestLoader):
                         return True
 
         # Decorator filters
-        if self.filters:
+        if self.filters and isinstance(case, OETestCase):
             filters = self.filters.copy()
             case_decorators = [cd for cd in case.decorators
                                if cd.__class__ in self.used_filters]
@@ -203,7 +203,8 @@ class OETestLoader(unittest.TestLoader):
         return False
 
     def _getTestCase(self, testCaseClass, tcName):
-        if not hasattr(testCaseClass, '__oeqa_loader'):
+        if not hasattr(testCaseClass, '__oeqa_loader') and \
+                issubclass(testCaseClass, OETestCase):
             # In order to support data_vars validation
             # monkey patch the default setUp/tearDown{Class} to use
             # the ones provided by OETestCase
@@ -230,7 +231,8 @@ class OETestLoader(unittest.TestLoader):
             setattr(testCaseClass, '__oeqa_loader', True)
 
         case = testCaseClass(tcName)
-        setattr(case, 'decorators', [])
+        if isinstance(case, OETestCase):
+            setattr(case, 'decorators', [])
 
         return case
 
@@ -242,9 +244,9 @@ class OETestLoader(unittest.TestLoader):
             raise TypeError("Test cases should not be derived from TestSuite." \
                                 " Maybe you meant to derive %s from TestCase?" \
                                 % testCaseClass.__name__)
-        if not issubclass(testCaseClass, self.caseClass):
+        if not issubclass(testCaseClass, unittest.case.TestCase):
             raise TypeError("Test %s is not derived from %s" % \
-                    (testCaseClass.__name__, self.caseClass.__name__))
+                    (testCaseClass.__name__, unittest.case.TestCase.__name__))
 
         testCaseNames = self.getTestCaseNames(testCaseClass)
         if not testCaseNames and hasattr(testCaseClass, 'runTest'):
