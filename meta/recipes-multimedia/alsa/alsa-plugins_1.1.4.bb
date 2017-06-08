@@ -21,8 +21,8 @@ LIC_FILES_CHKSUM = "\
 "
 
 SRC_URI = "ftp://ftp.alsa-project.org/pub/plugins/${BP}.tar.bz2"
-SRC_URI[md5sum] = "69f9f3e2de3c97fc71d496e91e271fe5"
-SRC_URI[sha256sum] = "8ea4d1e082c36528a896a2581e5eb62d4dc2683238e353050d0d624e65f901f1"
+SRC_URI[md5sum] = "de51130a7444b79b2dd3c25e28420754"
+SRC_URI[sha256sum] = "530d1c3bdaeb058f2a03607a33b9e16ee5369bfd30a96bc09bd2c69b4ddd1a8a"
 
 DEPENDS += "alsa-lib"
 
