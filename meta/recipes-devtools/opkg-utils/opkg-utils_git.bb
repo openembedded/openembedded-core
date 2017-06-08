@@ -19,6 +19,7 @@ S = "${WORKDIR}/git"
 
 TARGET_CC_ARCH += "${LDFLAGS}"
 
+# For native builds we use the host Python
 PYTHONRDEPS = "python3 python3-shell python3-io python3-math python3-crypt python3-logging python3-fcntl python3-subprocess python3-pickle python3-compression python3-textutils python3-stringold"
 PYTHONRDEPS_class-native = ""
 
@@ -31,6 +32,10 @@ do_install() {
 	if ! ${@bb.utils.contains('PACKAGECONFIG', 'update-alternatives', 'true', 'false', d)}; then
 		rm -f "${D}${bindir}/update-alternatives"
 	fi
+
+    if ! ${@bb.utils.contains('PACKAGECONFIG', 'python', 'true', 'false', d)}; then
+        grep -lZ "/usr/bin/env.*python" ${D}${bindir}/* | xargs -0 rm
+    fi
 }
 
 do_install_append_class-target() {
