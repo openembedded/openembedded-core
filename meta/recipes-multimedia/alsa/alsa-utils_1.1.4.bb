@@ -23,8 +23,8 @@ SRC_URI = "ftp://ftp.alsa-project.org/pub/utils/alsa-utils-${PV}.tar.bz2 \
            file://0001-alsactl-don-t-let-systemd-unit-restore-the-volume-wh.patch \
           "
 
-SRC_URI[md5sum] = "2bf94d3e3410dcc74bb0dae10d46a979"
-SRC_URI[sha256sum] = "127217a54eea0f9a49700a2f239a2d4f5384aa094d68df04a8eb80132eb6167c"
+SRC_URI[md5sum] = "01e3934ca5bd22a80c27289d1b0adcdc"
+SRC_URI[sha256sum] = "a7831044de92c5bf33bf3365a3f36e49397f4191e934df460ae1ca15138c9d9d"
 
 # On build machines with python-docutils (not python3-docutils !!) installed
 # rst2man (not rst2man.py) is detected and compile fails with
