@@ -11,10 +11,9 @@ BBCLASSEXTEND = "native nativesdk"
 SRC_URI = "ftp://ftp.alsa-project.org/pub/lib/${BP}.tar.bz2 \
            file://Check-if-wordexp-function-is-supported.patch \
            file://avoid-including-sys-poll.h-directly.patch \
-           file://0001-ucm-parser-needs-limits.h.patch \
 "
-SRC_URI[md5sum] = "eefe5992567ba00d6110a540657aaf5c"
-SRC_URI[sha256sum] = "71282502184c592c1a008e256c22ed0ba5728ca65e05273ceb480c70f515969c"
+SRC_URI[md5sum] = "29fa3e69122d3cf3e8f0e01a0cb1d183"
+SRC_URI[sha256sum] = "91bb870c14d1c7c269213285eeed874fa3d28112077db061a3af8010d0885b76"
 
 inherit autotools pkgconfig
 
