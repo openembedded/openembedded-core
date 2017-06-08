@@ -436,6 +436,7 @@ def _prep_extract_operation(config, basepath, recipename, tinfoil=None):
 
     rd = parse_recipe(config, tinfoil, recipename, True)
     if not rd:
+        tinfoil.shutdown()
         return None
 
     if bb.data.inherits_class('kernel-yocto', rd):
