@@ -1,7 +1,7 @@
-from oeqa.selftest.case import OESelftestTestCase
+from unittest.case import TestCase
 import oe.qa
 
-class TestElf(OESelftestTestCase):
+class TestElf(TestCase):
     def test_machine_name(self):
         """
         Test elf_machine_to_string()

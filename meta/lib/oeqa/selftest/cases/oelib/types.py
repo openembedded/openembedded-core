@@ -1,7 +1,7 @@
-from oeqa.selftest.case import OESelftestTestCase
+from unittest.case import TestCase
 from oe.maketype import create
 
-class TestBooleanType(OESelftestTestCase):
+class TestBooleanType(TestCase):
     def test_invalid(self):
         self.assertRaises(ValueError, create, '', 'boolean')
         self.assertRaises(ValueError, create, 'foo', 'boolean')
@@ -31,7 +31,7 @@ class TestBooleanType(OESelftestTestCase):
         self.assertEqual(create('y', 'boolean'), True)
         self.assertNotEqual(create('y', 'boolean'), False)
 
-class TestList(OESelftestTestCase):
+class TestList(TestCase):
     def assertListEqual(self, value, valid, sep=None):
         obj = create(value, 'list', separator=sep)
         self.assertEqual(obj, valid)

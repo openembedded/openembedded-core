@@ -1,4 +1,4 @@
-from oeqa.selftest.case import OESelftestTestCase
+from unittest.case import TestCase
 import oe.license
 
 class SeenVisitor(oe.license.LicenseVisitor):
@@ -9,7 +9,7 @@ class SeenVisitor(oe.license.LicenseVisitor):
     def visit_Str(self, node):
         self.seen.append(node.s)
 
-class TestSingleLicense(OESelftestTestCase):
+class TestSingleLicense(TestCase):
     licenses = [
         "GPLv2",
         "LGPL-2.0",
@@ -37,7 +37,7 @@ class TestSingleLicense(OESelftestTestCase):
                 self.parse(license)
             self.assertEqual(cm.exception.license, license)
 
-class TestSimpleCombinations(OESelftestTestCase):
+class TestSimpleCombinations(TestCase):
     tests = {
         "FOO&BAR": ["FOO", "BAR"],
         "BAZ & MOO": ["BAZ", "MOO"],
