@@ -912,8 +912,9 @@ def package_qa_check_rdepends(pkg, pkgdest, skip, taskdeps, packages, d):
             rdep_data = oe.packagedata.read_subpkgdata(pkg, d)
             for key in rdep_data:
                 if key.startswith("FILERDEPENDS_"):
-                    for subkey in rdep_data[key].split():
-                        if subkey not in ignored_file_rdeps:
+                    for subkey in bb.utils.explode_deps(rdep_data[key]):
+                        if subkey not in ignored_file_rdeps and \
+                                not subkey.startswith('perl('):
                             # We already know it starts with FILERDEPENDS_
                             filerdepends[subkey] = key[13:]
 
@@ -928,11 +929,10 @@ def package_qa_check_rdepends(pkg, pkgdest, skip, taskdeps, packages, d):
                         sub_rdeps = rdep_data.get("RDEPENDS_" + rdep)
                         if not sub_rdeps:
                             continue
-                        for sub_rdep in sub_rdeps.split():
+                        for sub_rdep in bb.utils.explode_deps(sub_rdeps):
                             if sub_rdep in done:
                                 continue
-                            if not sub_rdep.startswith('(') and \
-                                    oe.packagedata.has_subpkgdata(sub_rdep, d):
+                            if oe.packagedata.has_subpkgdata(sub_rdep, d):
                                 # It's a new rdep
                                 done.append(sub_rdep)
                                 new.append(sub_rdep)
@@ -950,11 +950,15 @@ def package_qa_check_rdepends(pkg, pkgdest, skip, taskdeps, packages, d):
                         filerdepends.pop("/usr/bin/python",None)
                         done.remove(py)
                 for rdep in done:
+                    # The file dependencies may contain package names, e.g.,
+                    # perl
+                    filerdepends.pop(rdep,None)
+
                     # For Saving the FILERPROVIDES, RPROVIDES and FILES_INFO
                     rdep_data = oe.packagedata.read_subpkgdata(rdep, d)
                     for key in rdep_data:
                         if key.startswith("FILERPROVIDES_") or key.startswith("RPROVIDES_"):
-                            for subkey in rdep_data[key].split():
+                            for subkey in bb.utils.explode_deps(rdep_data[key]):
                                 filerdepends.pop(subkey,None)
                         # Add the files list to the rprovides
                         if key == "FILES_INFO":
