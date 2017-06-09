@@ -7,6 +7,7 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/gkernel/${BP}.tar.gz \
            file://0002-Add-argument-to-control-the-libargp-dependency.patch \
            file://underquote.patch \
            file://uclibc-libuargp-configure.patch \
+           file://rng-tools-5-fix-textrels-on-PIC-x86.patch \
            file://init \
            file://default"
 
