@@ -279,6 +279,14 @@ python toaster_buildhistory_dump() {
                     dependsname = m.group('dep')
                     deptype = 'recommends' if m.group('rec') else 'depends'
 
+                    # If RPM is used for packaging, then there may be
+                    # dependencies such as "/bin/sh", which will confuse
+                    # _toaster_load_pkgdatafile() later on. While at it, ignore
+                    # any dependencies that contain parentheses, e.g.,
+                    # "libc.so.6(GLIBC_2.7)".
+                    if dependsname.startswith('/') or '(' in dependsname:
+                        continue
+
                     if not pname in images[target]:
                         images[target][pname] = {'size': 0, 'depends' : []}
                     if not dependsname in images[target]:
