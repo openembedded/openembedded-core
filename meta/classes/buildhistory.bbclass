@@ -696,11 +696,14 @@ def buildhistory_get_sdkvars(d):
 
 
 def buildhistory_get_cmdline(d):
-    if sys.argv[0].endswith('bin/bitbake'):
-        bincmd = 'bitbake'
-    else:
-        bincmd = sys.argv[0]
-    return '%s %s' % (bincmd, ' '.join(sys.argv[1:]))
+    argv = d.getVar('BB_CMDLINE', False)
+    if argv:
+        if argv[0].endswith('bin/bitbake'):
+            bincmd = 'bitbake'
+        else:
+            bincmd = argv[0]
+        return '%s %s' % (bincmd, ' '.join(argv[1:]))
+    return ''
 
 
 buildhistory_single_commit() {
