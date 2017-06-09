@@ -11,7 +11,7 @@ SRC_URI = "${GNU_MIRROR}/diffutils/diffutils-${PV}.tar.xz \
 SRC_URI[md5sum] = "569354697ff1cfc9a9de3781361015fa"
 SRC_URI[sha256sum] = "dad398ccd5b9faca6b0ab219a036453f62a602a56203ac659b43e889bec35533"
 
-EXTRA_OECONF += "--without-libsigsegv-prefix"
+EXTRA_OECONF += "ac_cv_path_PR_PROGRAM=${bindir}/pr --without-libsigsegv-prefix"
 
 # Fix "Argument list too long" error when len(TMPDIR) = 410
 acpaths = "-I ./m4"
