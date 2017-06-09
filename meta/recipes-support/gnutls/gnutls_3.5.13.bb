@@ -5,7 +5,7 @@ SRC_URI += "file://correct_rpl_gettimeofday_signature.patch \
             file://use-pkg-config-to-locate-zlib.patch \
             file://arm_eabi.patch \
            "
-SRC_URI[md5sum] = "0ab25eb6a1509345dd085bc21a387951"
-SRC_URI[sha256sum] = "82b10f0c4ef18f4e64ad8cef5dbaf14be732f5095a41cf366b4ecb4050382951"
+SRC_URI[md5sum] = "4fd41ad86572933c2379b4cc321a0959"
+SRC_URI[sha256sum] = "79f5480ad198dad5bc78e075f4a40c4a315a1b2072666919d2d05a08aec13096"
 
 BBCLASSEXTEND = "native nativesdk"
