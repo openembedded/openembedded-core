@@ -83,6 +83,39 @@ TOOLCHAIN_OUTPUTNAME_task-populate-sdk-ext = "${TOOLCHAINEXT_OUTPUTNAME}"
 SDK_EXT_TARGET_MANIFEST = "${SDK_DEPLOY}/${TOOLCHAINEXT_OUTPUTNAME}.target.manifest"
 SDK_EXT_HOST_MANIFEST = "${SDK_DEPLOY}/${TOOLCHAINEXT_OUTPUTNAME}.host.manifest"
 
+python write_target_sdk_ext_manifest () {
+    from oe.sdk import get_extra_sdkinfo
+    sstate_dir = d.expand('${SDK_OUTPUT}/${SDKPATH}/sstate-cache')
+    extra_info = get_extra_sdkinfo(sstate_dir)
+
+    target = d.getVar('TARGET_SYS')
+    target_multimach = d.getVar('MULTIMACH_TARGET_SYS')
+    real_target_multimach = d.getVar('REAL_MULTIMACH_TARGET_SYS')
+
+    pkgs = {}
+    with open(d.getVar('SDK_EXT_TARGET_MANIFEST'), 'w') as f:
+        for fn in extra_info['filesizes']:
+            info = fn.split(':')
+            if info[2] in (target, target_multimach, real_target_multimach) \
+                    or info[5] == 'allarch':
+                if not info[1] in pkgs:
+                    f.write("%s %s %s\n" % (info[1], info[2], info[3]))
+                    pkgs[info[1]] = {}
+}
+python write_host_sdk_ext_manifest () {
+    from oe.sdk import get_extra_sdkinfo
+    sstate_dir = d.expand('${SDK_OUTPUT}/${SDKPATH}/sstate-cache')
+    extra_info = get_extra_sdkinfo(sstate_dir)
+    host = d.getVar('BUILD_SYS')
+    with open(d.getVar('SDK_EXT_HOST_MANIFEST'), 'w') as f:
+        for fn in extra_info['filesizes']:
+            info = fn.split(':')
+            if info[2] == host:
+                f.write("%s %s %s\n" % (info[1], info[2], info[3]))
+}
+
+SDK_POSTPROCESS_COMMAND_append_task-populate-sdk-ext = "write_target_sdk_ext_manifest; write_host_sdk_ext_manifest; "    
+
 SDK_TITLE_task-populate-sdk-ext = "${@d.getVar('DISTRO_NAME') or d.getVar('DISTRO')} Extensible SDK"
 
 def clean_esdk_builddir(d, sdkbasepath):

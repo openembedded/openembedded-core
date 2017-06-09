@@ -589,7 +589,6 @@ END
 
 python buildhistory_get_extra_sdkinfo() {
     import operator
-    import math
     from oe.sdk import get_extra_sdkinfo
 
     sstate_dir = d.expand('${SDK_OUTPUT}/${SDKPATH}/sstate-cache')
