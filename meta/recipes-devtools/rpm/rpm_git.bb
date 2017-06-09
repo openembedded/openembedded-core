@@ -77,6 +77,7 @@ do_install_append_class-native() {
                 ${bindir}/rpmkeys \
                 ${bindir}/rpmsign \
                 ${bindir}/rpmspec \
+                ${libdir}/rpm/rpmdeps \
         "
 
         for tool in $tools; do
