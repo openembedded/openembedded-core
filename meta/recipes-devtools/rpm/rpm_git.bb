@@ -37,6 +37,7 @@ SRC_URI = "git://github.com/rpm-software-management/rpm \
            file://0001-Add-PYTHON_ABI-when-searching-for-python-libraries.patch \
            file://0011-Do-not-require-that-ELF-binaries-are-executable-to-b.patch \
            file://0012-Use-conditional-to-access-_docdir-in-macros.in.patch \
+           file://0013-Add-a-new-option-alldeps-to-rpmdeps.patch \
            "
 
 PV = "4.13.90+git${SRCPV}"
