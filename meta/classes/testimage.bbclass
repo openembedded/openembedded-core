@@ -13,7 +13,7 @@
 
 # You can set (or append to) TEST_SUITES in local.conf to select the tests
 # which you want to run for your target.
-# The test names are the module names in meta/lib/oeqa/runtime.
+# The test names are the module names in meta/lib/oeqa/runtime/cases.
 # Each name in TEST_SUITES represents a required test for the image. (no skipping allowed)
 # Appending "auto" means that it will try to run all tests that are suitable for the image (each test decides that on it's own).
 # Note that order in TEST_SUITES is relevant: tests are run in an order such that
