@@ -14,7 +14,8 @@ SRC_URI = "git://github.com/tianocore/edk2.git;branch=master \
 	file://0002-ovmf-update-path-to-native-BaseTools.patch \
 	file://0003-BaseTools-makefile-adjust-to-build-in-under-bitbake.patch \
 	file://VfrCompile-increase-path-length-limit.patch \
-        file://0001-MdeModulePkg-UefiHiiLib-Fix-incorrect-comparison-exp.patch \
+	file://0001-ia32-Dont-use-pie.patch \
+	file://no-stack-protector-all-archs.patch \
         "
 
 SRC_URI_append_class-target = " \
@@ -22,7 +23,7 @@ SRC_URI_append_class-target = " \
 	file://0007-OvmfPkg-EnrollDefaultKeys-application-for-enrolling-.patch \
 "
 
-SRCREV="4575a602ca6072ee9d04150b38bfb143cbff8588"
+SRCREV="ec4910cd3336565fdb61dafdd9ec4ae7a6160ba3"
 SRC_URI[openssl.md5sum] = "96322138f0b69e61b7212bc53d5e912b"
 SRC_URI[openssl.sha256sum] = "e7aff292be21c259c6af26469c7a9b3ba26e9abaaffd325e3dccc9785256c431"
 
@@ -241,3 +242,4 @@ do_deploy_class-target() {
 addtask do_deploy after do_compile before do_build
 
 BBCLASSEXTEND = "native"
+TOOLCHAIN = "gcc"
