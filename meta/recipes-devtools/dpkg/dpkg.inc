@@ -9,7 +9,7 @@ RDEPENDS_${PN}_class-native = ""
 
 UPSTREAM_CHECK_URI = "${DEBIAN_MIRROR}/main/d/dpkg/"
 
-inherit autotools gettext perlnative pkgconfig systemd
+inherit autotools gettext perlnative pkgconfig systemd perl-version
 
 python () {
     if not bb.utils.contains('DISTRO_FEATURES', 'sysvinit', True, False, d):
@@ -20,8 +20,8 @@ python () {
 export PERL = "${bindir}/perl"
 PERL_class-native = "${STAGING_BINDIR_NATIVE}/perl-native/perl"
 
-export PERL_LIBDIR = "${libdir}/perl"
-PERL_LIBDIR_class-native = "${libdir}/perl-native/perl"
+export PERL_LIBDIR = "${libdir}/perl/${@get_perl_version(d)}"
+PERL_LIBDIR_class-native = "${libdir}/perl-native/perl/${@get_perl_version(d)}"
 
 EXTRA_OECONF = "\
 		--disable-dselect \
@@ -36,12 +36,6 @@ PACKAGECONFIG[liblzma] = "--with-liblzma,--without-liblzma, xz"
 
 EXTRA_OECONF += "TAR=tar"
 EXTRA_OECONF_append_class-target = " DEB_HOST_ARCH=${DPKG_ARCH}"
-
-do_configure () {
-    echo >> ${S}/m4/compiler.m4
-    sed -i -e 's#PERL_LIBDIR=.*$#PERL_LIBDIR="${libdir}/perl"#' ${S}/configure
-    autotools_do_configure
-}
 
 do_install_append () {
 	if [ "${PN}" = "dpkg-native" ]; then
@@ -73,7 +67,7 @@ FILES_update-alternatives-dpkg = "${bindir}/update-alternatives ${localstatedir}
 RPROVIDES_update-alternatives-dpkg += "update-alternatives"
 
 PACKAGES += "${PN}-perl"
-FILES_${PN}-perl = "${libdir}/perl"
+FILES_${PN}-perl = "${libdir}/perl/${@get_perl_version(d)}"
 
 # Split out start-stop-daemon to its own package.  Note that it
 # is installed in a different directory than the one used for
