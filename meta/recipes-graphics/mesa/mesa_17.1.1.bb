@@ -5,6 +5,7 @@ SRC_URI = "ftp://ftp.freedesktop.org/pub/mesa/mesa-${PV}.tar.xz \
            file://disable-asm-on-non-gcc.patch \
            file://0001-Use-wayland-scanner-in-the-path.patch \
            file://0001-util-rand_xor-add-missing-include-statements.patch \
+           file://0002-hardware-gloat.patch \
 "
 
 SRC_URI[md5sum] = "a4844bc6052578574f9629458bcbb749"
