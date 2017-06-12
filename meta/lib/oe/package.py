@@ -57,51 +57,44 @@ def file_translate(file):
 def filedeprunner(arg):
     import re, subprocess, shlex
 
-    (pkg, pkgfiles, rpmdeps, pkgdest) = arg
+    (pkg, pkgfiles, rpmdeps, pkgdest, magic) = arg
     provides = {}
     requires = {}
 
-    file_re = re.compile(r'\s+\d+\s(.*)')
-    dep_re = re.compile(r'\s+(\S)\s+(.*)')
-    r = re.compile(r'[<>=]+\s+\S*')
+    r = re.compile(r'[<>=]+ +[^ ]*')
 
     def process_deps(pipe, pkg, pkgdest, provides, requires):
-        file = None
         for line in pipe:
-            line = line.decode("utf-8")
+            f = line.decode("utf-8").split(" ", 1)[0].strip()
+            line = line.decode("utf-8").split(" ", 1)[1].strip()
 
-            m = file_re.match(line)
-            if m:
-                file = m.group(1)
-                file = file.replace(pkgdest + "/" + pkg, "")
-                file = file_translate(file)
-                continue
-
-            m = dep_re.match(line)
-            if not m or not file:
-                continue
-
-            type, dep = m.groups()
-
-            if type == 'R':
+            if line.startswith("Requires:"):
                 i = requires
-            elif type == 'P':
+            elif line.startswith("Provides:"):
                 i = provides
             else:
-               continue
-
-            if dep.startswith("python("):
                 continue
-            dep = r.sub(r'(\g<0>)',dep)
 
+            file = f.replace(pkgdest + "/" + pkg, "")
+            file = file_translate(file)
+            value = line.split(":", 1)[1].strip()
+            value = r.sub(r'(\g<0>)', value)
+
+            if value.startswith("rpmlib("):
+                continue
+            if value == "python":
+                continue
             if file not in i:
                 i[file] = []
-            i[file].append(dep)
+            i[file].append(value)
 
         return provides, requires
 
+    env = os.environ.copy()
+    env["MAGIC"] = magic
+
     try:
-        dep_popen = subprocess.Popen(shlex.split(rpmdeps) + pkgfiles, stdout=subprocess.PIPE)
+        dep_popen = subprocess.Popen(shlex.split(rpmdeps) + pkgfiles, stdout=subprocess.PIPE, env=env)
         provides, requires = process_deps(dep_popen.stdout, pkg, pkgdest, provides, requires)
     except OSError as e:
         bb.error("rpmdeps: '%s' command failed, '%s'" % (shlex.split(rpmdeps) + pkgfiles, e))
