@@ -129,7 +129,7 @@ python native_virtclass_handler () {
     # from modifying native distro features
     features = set(d.getVar("DISTRO_FEATURES_NATIVE").split())
     filtered = set(bb.utils.filter("DISTRO_FEATURES", d.getVar("DISTRO_FEATURES_FILTER_NATIVE"), d).split())
-    d.setVar("DISTRO_FEATURES", " ".join(features | filtered))
+    d.setVar("DISTRO_FEATURES", " ".join(sorted(features | filtered)))
 
     classextend = e.data.getVar('BBCLASSEXTEND') or ""
     if "native" not in classextend:
