@@ -18,7 +18,7 @@ BINUPV = "${@binutils_branch_version(d)}"
 
 UPSTREAM_CHECK_GITTAGREGEX = "binutils-(?P<pver>\d+_(\d_?)*)"
 
-SRCREV = "354199c7692c1bed53a2a15f0e4d531457e95f17"
+SRCREV = "cb44d42ce6ef0c7a4eed7e2a3c272ac102166850"
 SRC_URI = "\
      git://sourceware.org/git/binutils-gdb.git;branch=binutils-${BINUPV}-branch;protocol=git \
      file://0003-gprof-add-uclibc-support-to-configure.patch \
