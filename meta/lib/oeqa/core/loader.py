@@ -167,21 +167,28 @@ class OETestLoader(unittest.TestLoader):
         # XXX; If the module has more than one namespace only use
         # the first to support run the whole module specifying the
         # <module_name>.[test_class].[test_name]
-        module_name = case.__module__.split('.')[0]
+        module_name_small = case.__module__.split('.')[0]
+        module_name = case.__module__
 
         class_name = case.__class__.__name__
         test_name = case._testMethodName
 
         if self.modules:
-            if not module_name in self.modules:
-                return True
-
-            if self.modules[module_name]:
-                if not class_name in self.modules[module_name]:
+            module = None
+            try:
+                module = self.modules[module_name_small]
+            except KeyError:
+                try:
+                    module = self.modules[module_name]
+                except KeyError:
                     return True
 
-                if self.modules[module_name][class_name]:
-                    if test_name not in self.modules[module_name][class_name]:
+            if module:
+                if not class_name in module:
+                    return True
+
+                if module[class_name]:
+                    if test_name not in module[class_name]:
                         return True
 
         # Decorator filters
@@ -291,7 +298,8 @@ class OETestLoader(unittest.TestLoader):
         # XXX; If the module has more than one namespace only use
         # the first to support run the whole module specifying the
         # <module_name>.[test_class].[test_name]
-        module_name = module.__name__.split('.')[0]
+        module_name_small = module.__name__.split('.')[0]
+        module_name = module.__name__
 
         # Normal test modules are loaded if no modules were specified,
         # if module is in the specified module list or if 'all' is in
@@ -300,11 +308,13 @@ class OETestLoader(unittest.TestLoader):
         load_module = True if not module_name.startswith('_') \
                               and (not self.modules \
                                    or module_name in self.modules \
+                                   or module_name_small in self.modules \
                                    or 'all' in self.modules) \
                            else False
 
         load_underscore = True if module_name.startswith('_') \
-                                  and module_name in self.modules \
+                                  and (module_name in self.modules or \
+                                  module_name_small in self.modules) \
                                else False
 
         return (load_module, load_underscore)
