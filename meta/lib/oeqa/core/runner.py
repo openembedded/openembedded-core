@@ -129,8 +129,6 @@ class OETestResult(_TestResult):
             if fail:
                 self.tc.logger.info("RESULTS - %s - Testcase %s: %s" % (case.id(),
                     oeid, desc))
-                if msg:
-                    self.tc.logger.info(msg)
             else:
                 self.tc.logger.info("RESULTS - %s - Testcase %s: %s" % (case.id(),
                     oeid, 'PASSED'))
