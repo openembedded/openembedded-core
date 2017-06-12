@@ -1,0 +1,34 @@
+From 1b30d8dac1a37dc0abbb3b545db2824d6489e23f Mon Sep 17 00:00:00 2001
+From: Khem Raj <raj.khem@gmail.com>
+Date: Fri, 9 Jun 2017 09:32:13 -0700
+Subject: [PATCH] dirtyc0w: Include stdint.h
+
+uintptr_t is defined in stdint.h
+
+Fixes
+| dirtyc0w_child.c:76:15: error: 'uintptr_t' undeclared (first use in this function); did you mean 'intptr_t'?
+|    lseek(mfd, (uintptr_t) map, SEEK_SET);
+|                ^~~~~~~~~
+
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+---
+Upstream-Status: Submitted
+
+ testcases/kernel/security/dirtyc0w/dirtyc0w_child.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/testcases/kernel/security/dirtyc0w/dirtyc0w_child.c b/testcases/kernel/security/dirtyc0w/dirtyc0w_child.c
+index 5328a9bc4..49abdd6ba 100644
+--- a/testcases/kernel/security/dirtyc0w/dirtyc0w_child.c
++++ b/testcases/kernel/security/dirtyc0w/dirtyc0w_child.c
+@@ -23,6 +23,7 @@
+ #include <sys/stat.h>
+ #include <string.h>
+ #include <stdlib.h>
++#include <stdint.h>
+ #include <pwd.h>
+ 
+ #include "tst_safe_pthread.h"
+-- 
+2.13.1
+
