@@ -50,8 +50,8 @@ SRCREV = "a8e51b3bb05c6acb1d9b2e3d34f859ddda1677be"
 
 S = "${WORKDIR}/git"
 
-DEPENDS = "nss libarchive db file popt xz dbus elfutils python3"
-DEPENDS_append_class-native = " file-replacement-native"
+DEPENDS = "nss libarchive db file popt xz bzip2 dbus elfutils python3"
+DEPENDS_append_class-native = " file-replacement-native bzip2-replacement-native"
 
 inherit autotools gettext pkgconfig python3native
 export PYTHON_ABI
