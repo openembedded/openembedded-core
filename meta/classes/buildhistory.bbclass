@@ -336,6 +336,7 @@ def write_recipehistory(rcpinfo, d):
         f.write(u"PACKAGES = %s\n" %  rcpinfo.packages)
         f.write(u"LAYER = %s\n" %  rcpinfo.layer)
 
+    write_latest_srcrev(d, pkghistdir)
 
 def write_pkghistory(pkginfo, d):
     bb.debug(2, "Writing package history for package %s" % pkginfo.name)
@@ -856,7 +857,10 @@ def _get_srcrev_values(d):
 do_fetch[postfuncs] += "write_srcrev"
 do_fetch[vardepsexclude] += "write_srcrev"
 python write_srcrev() {
-    pkghistdir = d.getVar('BUILDHISTORY_DIR_PACKAGE')
+    write_latest_srcrev(d, d.getVar('BUILDHISTORY_DIR_PACKAGE'))
+}
+
+def write_latest_srcrev(d, pkghistdir):
     srcrevfile = os.path.join(pkghistdir, 'latest_srcrev')
 
     srcrevs, tag_srcrevs = _get_srcrev_values(d)
@@ -894,4 +898,3 @@ python write_srcrev() {
     else:
         if os.path.exists(srcrevfile):
             os.remove(srcrevfile)
-}
