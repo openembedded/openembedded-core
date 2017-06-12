@@ -13,7 +13,7 @@ LICENSE  = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=12f884d2ae1ff87c09e5b7ccc2c4ca7e \
                     file://src/main.c;beginline=1;endline=20;md5=486a279a6ab0c8d152bcda3a5b5edc36"
 
-inherit autotools pkgconfig systemd update-rc.d bluetooth
+inherit autotools pkgconfig systemd update-rc.d bluetooth update-alternatives
 
 DEPENDS  = "dbus glib-2.0 ppp readline"
 
@@ -69,6 +69,11 @@ SYSTEMD_SERVICE_${PN} = "connman.service"
 SYSTEMD_SERVICE_${PN}-vpn = "connman-vpn.service"
 SYSTEMD_SERVICE_${PN}-wait-online = "connman-wait-online.service"
 
+ALTERNATIVE_PRIORITY = "100"
+ALTERNATIVE_${PN} ="resolv-conf"
+ALTERNATIVE_TARGET[resolv-conf] = "${sysconfdir}/resolv-conf.connman"
+ALTERNATIVE_LINK_NAME[resolv-conf] = "${sysconfdir}/resolv.conf"
+
 do_install_append() {
 	if ${@bb.utils.contains('DISTRO_FEATURES','sysvinit','true','false',d)}; then
 		install -d ${D}${sysconfdir}/init.d
@@ -89,6 +94,14 @@ do_install_append() {
 	# Automake 1.12 won't install empty directories, but we need the
 	# plugins directory to be present for ownership
 	mkdir -p ${D}${libdir}/connman/plugins
+
+    # For read-only filesystem, do not create links during bootup
+    if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
+        if ${@bb.utils.contains('IMAGE_FEATURES','read-only-rootfs','true','false',d)}; then
+            echo "d    /var/run/connman    - - - -" > ${D}${sysconfdir}/tmpfiles.d/connman_resolvconf.conf
+        fi
+        ln -sf ../run/connman/resolv.conf ${D}${sysconfdir}/resolv-conf.connman
+    fi
 }
 
 # These used to be plugins, but now they are core
