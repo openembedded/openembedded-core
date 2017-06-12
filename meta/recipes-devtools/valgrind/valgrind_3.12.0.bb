@@ -24,6 +24,13 @@ SRC_URI = "http://www.valgrind.org/downloads/valgrind-${PV}.tar.bz2 \
            file://avoid-neon-for-targets-which-don-t-support-it.patch \
            file://valgrind-make-ld-XXX.so-strlen-intercept-optional.patch \
            file://0001-makefiles-Drop-setting-mcpu-to-cortex-a8-on-arm-arch.patch \
+           file://0001-str_tester.c-Limit-rawmemchr-test-to-glibc.patch \
+           file://0001-sigqueue-Rename-_sifields-to-__si_fields-on-musl.patch \
+           file://0002-context-APIs-are-not-available-on-musl.patch \
+           file://0003-correct-include-directive-path-for-config.h.patch \
+           file://0004-pth_atfork1.c-Define-error-API-for-musl.patch \
+           file://0005-tc20_verifywrap.c-Fake-__GLIBC_PREREQ-with-musl.patch \
+           file://0006-pth_detached3.c-Dereference-pthread_t-before-adding-.patch \
            "
 SRC_URI_append_libc-musl = "\
            file://0001-fix-build-for-musl-targets.patch \
@@ -67,6 +74,7 @@ CACHED_CONFIGUREVARS += "ac_cv_path_PERL='/usr/bin/env perl'"
 SELECTED_OPTIMIZATION = "${DEBUG_FLAGS}"
 
 CFLAGS_append_libc-uclibc = " -D__UCLIBC__ "
+CFLAGS += "-no-pie"
 
 def get_mcpu(d):
     for arg in (d.getVar('TUNE_CCARGS') or '').split():
@@ -75,6 +83,10 @@ def get_mcpu(d):
         else:
             continue
     return ""
+
+do_configure_prepend () {
+    rm -rf ${S}/config.h
+}
 
 do_install_append () {
     install -m 644 ${B}/default.supp ${D}/${libdir}/valgrind/
