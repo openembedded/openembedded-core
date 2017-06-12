@@ -38,6 +38,10 @@ SRC_URI = "git://github.com/rpm-software-management/rpm \
            file://0011-Do-not-require-that-ELF-binaries-are-executable-to-b.patch \
            file://0012-Use-conditional-to-access-_docdir-in-macros.in.patch \
            file://0013-Add-a-new-option-alldeps-to-rpmdeps.patch \
+           file://0001-Split-binary-package-building-into-a-separate-functi.patch \
+           file://0002-Run-binary-package-creation-via-thread-pools.patch \
+           file://0003-rpmstrpool.c-make-operations-over-string-pools-threa.patch \
+           file://0004-build-pack.c-remove-static-local-variables-from-buil.patch \
            "
 
 PV = "4.13.90+git${SRCPV}"
