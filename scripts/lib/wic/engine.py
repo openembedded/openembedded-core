@@ -225,6 +225,10 @@ def wic_list(args, scripts_path):
 
     return False
 
+def wic_ls(args, native_sysroot):
+    """List contents of partitioned image or vfat partition."""
+    pass
+
 def find_canned(scripts_path, file_name):
     """
     Find a file either by its path or by name in the canned files dir.

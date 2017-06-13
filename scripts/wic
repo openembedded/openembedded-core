@@ -234,6 +234,14 @@ def wic_list_subcommand(args, usage_str):
         raise WicError("Bad list arguments, exiting")
 
 
+def wic_ls_subcommand(args, usage_str):
+    """
+    Command-line handling for list content of images.
+    The real work is done by engine.wic_ls()
+    """
+    engine.wic_ls(args, args.native_sysroot)
+
+
 def wic_help_subcommand(args, usage_str):
     """
     Command-line handling for help subcommand to keep the current
@@ -266,6 +274,9 @@ helptopics = {
     "create":    [wic_help_topic_subcommand,
                   wic_help_topic_usage,
                   hlp.wic_create_help],
+    "ls":        [wic_help_topic_subcommand,
+                  wic_help_topic_usage,
+                  hlp.wic_ls_help],
     "list":      [wic_help_topic_subcommand,
                   wic_help_topic_usage,
                   hlp.wic_list_help]
@@ -359,6 +370,10 @@ subcommands = {
                   hlp.wic_list_usage,
                   hlp.wic_list_help,
                   wic_init_parser_list],
+    "ls":        [wic_ls_subcommand,
+                  hlp.wic_ls_usage,
+                  hlp.wic_ls_help,
+                  wic_init_parser_ls],
     "help":      [wic_help_subcommand,
                   wic_help_topic_usage,
                   hlp.wic_help_help,
