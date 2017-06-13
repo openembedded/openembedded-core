@@ -955,8 +955,8 @@ class BaseConfig(object):
     def setup_network(self):
         if self.get('QB_NET') == 'none':
             return
-        cmd = "stty -g"
-        self.saved_stty = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE).stdout.read().decode('utf-8')
+        if sys.stdin.isatty():
+            self.saved_stty = subprocess.check_output("stty -g", shell=True).decode('utf-8')
         self.network_device = self.get('QB_NETWORK_DEVICE') or self.network_device
         if self.slirp_enabled:
             self.setup_slirp()
@@ -1096,9 +1096,9 @@ class BaseConfig(object):
             self.qemu_opt += " -snapshot"
 
         if self.serialstdio:
-            logger.info("Interrupt character is '^]'")
-            cmd = "stty intr ^]"
-            subprocess.check_call(cmd, shell=True)
+            if sys.stdin.isatty():
+                subprocess.check_call("stty intr ^]", shell=True)
+                logger.info("Interrupt character is '^]'")
 
             first_serial = ""
             if not re.search("-nographic", self.qemu_opt):
