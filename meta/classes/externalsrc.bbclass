@@ -29,6 +29,12 @@ EXTERNALSRC_SYMLINKS ?= "oe-workdir:${WORKDIR} oe-logs:${T}"
 
 python () {
     externalsrc = d.getVar('EXTERNALSRC')
+    externalsrcbuild = d.getVar('EXTERNALSRC_BUILD')
+
+    if externalsrc and not externalsrc.startswith("/"):
+        bb.error("EXTERNALSRC must be an absolute path")
+    if externalsrcbuild and not externalsrcbuild.startswith("/"):
+        bb.error("EXTERNALSRC_BUILD must be an absolute path")
 
     # If this is the base recipe and EXTERNALSRC is set for it or any of its
     # derivatives, then enable BB_DONT_CACHE to force the recipe to always be
@@ -48,7 +54,6 @@ python () {
 
     if externalsrc:
         d.setVar('S', externalsrc)
-        externalsrcbuild = d.getVar('EXTERNALSRC_BUILD')
         if externalsrcbuild:
             d.setVar('B', externalsrcbuild)
         else:
