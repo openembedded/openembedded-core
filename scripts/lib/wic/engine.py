@@ -267,13 +267,18 @@ class Disk:
 
         return self._partitions
 
+    def _prop(self, name):
+        """Get path to the executable in a lazy way."""
+        aname = "_%s" % name
+        if getattr(self, aname) is None:
+            setattr(self, aname, find_executable(name, self.paths))
+            if not getattr(self, aname):
+                raise WicError("Can't find executable {}".format(name))
+        return getattr(self, aname)
+
     @property
     def mdir(self):
-        if self._mdir is None:
-            self._mdir = find_executable("mdir", self.paths)
-            if not self._mdir:
-                raise WicError("Can't find executable mdir")
-        return self._mdir
+        return self._prop('mdir')
 
     def _get_part_image(self, pnum):
         if pnum not in self.partitions:
