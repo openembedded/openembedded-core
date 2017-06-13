@@ -309,6 +309,13 @@ def wic_ls(args, native_sysroot):
         path = args.path.path or '/'
         print(disk.dir(args.path.part, path))
 
+def wic_cp(args, native_sysroot):
+    """
+    Copy local file or directory to the vfat partition of
+    partitioned image.
+    """
+    pass
+
 def find_canned(scripts_path, file_name):
     """
     Find a file either by its path or by name in the canned files dir.
