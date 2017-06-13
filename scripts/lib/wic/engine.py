@@ -300,6 +300,11 @@ class Disk:
 
         return self._partimages[pnum]
 
+    def _put_part_image(self, pnum):
+        """Put partition image into partitioned image."""
+        sparse_copy(self._partimages[pnum], self.imagepath,
+                    seek=self.partitions[pnum].start)
+
     def dir(self, pnum, path):
         return exec_cmd("{} -i {} ::{}".format(self.mdir,
                                                self._get_part_image(pnum),
