@@ -281,7 +281,8 @@ do_kernel_configme() {
 
 	meta_dir=$(kgit --meta)
 	configs="$(scc --configs -o ${meta_dir})"
-	if [ -z "${configs}" ]; then
+	if [ $? -ne 0 ]; then
+		bberror "${configs}"
 		bbfatal_log "Could not find configuration queue (${meta_dir}/config.queue)"
 	fi
 
