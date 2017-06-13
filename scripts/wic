@@ -248,6 +248,13 @@ def wic_cp_subcommand(args, usage_str):
     """
     engine.wic_cp(args, args.native_sysroot)
 
+def wic_rm_subcommand(args, usage_str):
+    """
+    Command-line handling for removing files/dirs from images.
+    The real work is done by engine.wic_rm()
+    """
+    engine.wic_rm(args, args.native_sysroot)
+
 def wic_help_subcommand(args, usage_str):
     """
     Command-line handling for help subcommand to keep the current
@@ -286,6 +293,9 @@ helptopics = {
     "cp":        [wic_help_topic_subcommand,
                   wic_help_topic_usage,
                   hlp.wic_cp_help],
+    "rm":        [wic_help_topic_subcommand,
+                  wic_help_topic_usage,
+                  hlp.wic_rm_help],
     "list":      [wic_help_topic_subcommand,
                   wic_help_topic_usage,
                   hlp.wic_list_help]
@@ -409,6 +419,10 @@ subcommands = {
                   hlp.wic_cp_usage,
                   hlp.wic_cp_help,
                   wic_init_parser_cp],
+    "rm":        [wic_rm_subcommand,
+                  hlp.wic_rm_usage,
+                  hlp.wic_rm_help,
+                  wic_init_parser_rm],
     "help":      [wic_help_subcommand,
                   wic_help_topic_usage,
                   hlp.wic_help_help,

@@ -340,6 +340,13 @@ def wic_cp(args, native_sysroot):
     disk = Disk(args.dest.image, native_sysroot)
     disk.copy(args.src, args.dest.part, args.dest.path)
 
+def wic_rm(args, native_sysroot):
+    """
+    Remove files or directories from the vfat partition of
+    partitioned image.
+    """
+    pass
+
 def find_canned(scripts_path, file_name):
     """
     Find a file either by its path or by name in the canned files dir.
