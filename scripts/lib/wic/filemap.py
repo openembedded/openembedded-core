@@ -545,11 +545,14 @@ def sparse_copy(src_fname, dst_fname, offset=0, skip=0, api=None):
         start = first * fmap.block_size
         end = (last + 1) * fmap.block_size
 
+        if skip >= end:
+            continue
+
         if start < skip < end:
-            fmap._f_image.seek(skip, os.SEEK_SET)
-        else:
-            fmap._f_image.seek(start, os.SEEK_SET)
-        dst_file.seek(offset + start, os.SEEK_SET)
+            start = skip
+
+        fmap._f_image.seek(start, os.SEEK_SET)
+        dst_file.seek(offset + start - skip, os.SEEK_SET)
 
         chunk_size = 1024 * 1024
         to_read = end - start
