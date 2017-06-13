@@ -395,7 +395,7 @@ DESCRIPTION
     The second form of the command copies file or directory to the specified directory
     on the vfat partition:
        $ wic cp test tmp/deploy/images/qemux86-64/core-image-minimal-qemux86-64.wic:1/efi/
-       $ wic ls tmp/deploy/images/qemux86-64/core-image-minimal-qemux86-64.wic:1/eti/
+       $ wic ls tmp/deploy/images/qemux86-64/core-image-minimal-qemux86-64.wic:1/efi/
        Volume in drive : is boot
         Volume Serial Number is DB4C-FD4C
        Directory for ::/efi
@@ -406,6 +406,63 @@ DESCRIPTION
        test         <DIR>     2017-05-24  21:27
                4 files                   0 bytes
                                 15 675 392 bytes free
+
+    The -n option is used to specify the path to the native sysroot
+    containing the tools(parted and mtools) to use.
+"""
+
+wic_rm_usage = """
+
+ Remove files or directories from the vfat partitions
+
+ usage: wic rm <image>:<vfat partition><path> [--native-sysroot <path>]
+
+ This command  removes files or directories from the vfat partitions of partitioned
+ image.
+
+ See 'wic help rm' for more detailed instructions.
+
+"""
+
+wic_rm_help = """
+
+NAME
+    wic rm - remove files or directories from the vfat partitions
+
+SYNOPSIS
+    wic rm <src> <image>:<vfat partition><path>
+    wic rm <src> <image>:<vfat partition><path> --native-sysroot <path>
+
+DESCRIPTION
+    This command removes files or directories from the vfat partition of the
+    wic image:
+
+        $ wic ls ./tmp/deploy/images/qemux86-64/core-image-minimal-qemux86-64.wic:1
+        Volume in drive : is boot
+         Volume Serial Number is 11D0-DE21
+        Directory for ::/
+
+        libcom32 c32    186500 2017-06-02  15:15
+        libutil  c32     24148 2017-06-02  15:15
+        syslinux cfg       209 2017-06-02  15:15
+        vesamenu c32     27104 2017-06-02  15:15
+        vmlinuz        6926384 2017-06-02  15:15
+                5 files           7 164 345 bytes
+                                 16 582 656 bytes free
+
+        $ wic rm ./tmp/deploy/images/qemux86-64/core-image-minimal-qemux86-64.wic:1/libutil.c32
+
+        $ wic ls ./tmp/deploy/images/qemux86-64/core-image-minimal-qemux86-64.wic:1
+        Volume in drive : is boot
+         Volume Serial Number is 11D0-DE21
+        Directory for ::/
+
+        libcom32 c32    186500 2017-06-02  15:15
+        syslinux cfg       209 2017-06-02  15:15
+        vesamenu c32     27104 2017-06-02  15:15
+        vmlinuz        6926384 2017-06-02  15:15
+                4 files           7 140 197 bytes
+                                 16 607 232 bytes free
 
     The -n option is used to specify the path to the native sysroot
     containing the tools(parted and mtools) to use.
