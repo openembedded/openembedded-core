@@ -304,7 +304,7 @@ do_install_ptest() {
     cp ${S}/tests/run.sh ${D}${PTEST_PATH}/tests/
     cp -pR ${S}/tests/expected ${D}${PTEST_PATH}/tests/expected
 
-    list="bitops build-sys cal col colrm column dmesg fsck hexdump hwclock ipcs isosize login look md5 misc more namei paths schedutils script swapon tailf"
+    list="bitops build-sys cal col colrm column dmesg fsck hexdump hwclock ipcs isosize login look md5 misc more namei paths schedutils script swapon"
     # The following tests are not installed  yet:
     # blkid scsi_debug module dependent
     # cramfs gcc dependent
