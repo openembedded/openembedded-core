@@ -239,6 +239,7 @@ class Disk:
         self._mdir = None
         self._mcopy = None
         self._mdel = None
+        self._mdeltree = None
         self._partimages = {}
 
         # find parted
@@ -290,6 +291,10 @@ class Disk:
     def mdel(self):
         return self._prop("mdel")
 
+    @property
+    def mdeltree(self):
+        return self._prop("mdeltree")
+
     def _get_part_image(self, pnum):
         if pnum not in self.partitions:
             raise WicError("Partition %s is not in the image")
@@ -325,10 +330,19 @@ class Disk:
 
     def remove(self, pnum, path):
         """Remove files/dirs from the partition."""
-        cmd = "{} -i {} ::{}".format(self.mdel,
-                                     self._get_part_image(pnum),
-                                     path)
-        exec_cmd(cmd)
+        partimg = self._get_part_image(pnum)
+        cmd = "{} -i {} ::{}".format(self.mdel, partimg, path)
+        try:
+            exec_cmd(cmd)
+        except WicError as err:
+            if "not found" in str(err) or "non empty" in str(err):
+                # mdel outputs 'File ... not found' or 'directory .. non empty"
+                # try to use mdeltree as path could be a directory
+                cmd = "{} -i {} ::{}".format(self.mdeltree,
+                                             partimg, path)
+                exec_cmd(cmd)
+            else:
+                raise err
         self._put_part_image(pnum)
 
 def wic_ls(args, native_sysroot):
