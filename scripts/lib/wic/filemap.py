@@ -549,7 +549,11 @@ def sparse_copy(src_fname, dst_fname, skip=0, seek=0,
         dst_file = open(dst_fname, 'r+b')
     except IOError:
         dst_file = open(dst_fname, 'wb')
-        dst_file.truncate(os.path.getsize(src_fname))
+        if length:
+            dst_size = length + seek
+        else:
+            dst_size = os.path.getsize(src_fname) + seek - skip
+        dst_file.truncate(dst_size)
 
     written = 0
     for first, last in fmap.get_mapped_ranges(0, fmap.blocks_cnt):
