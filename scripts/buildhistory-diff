@@ -39,6 +39,8 @@ def main():
     parser.add_option("-S", "--signatures-with-diff",
             help = "Report on actual signature differences instead of output (requires signature data to have been generated, either by running the actual tasks or using bitbake -S)",
             action="store_true", dest="sigsdiff", default=False)
+    parser.add_option("-e", "--exclude-path", action="append",
+            help = "exclude path from the output")
 
     options, args = parser.parse_args(sys.argv)
 
@@ -75,7 +77,7 @@ def main():
         sys.stderr.write("Unable to find bitbake by searching parent directory of this script or PATH\n")
         sys.exit(1)
 
-    import oe.buildhistory_analysis
+    from oe.buildhistory_analysis import process_changes
 
     fromrev = 'build-minus-1'
     torev = 'HEAD'
@@ -92,7 +94,9 @@ def main():
 
     import gitdb
     try:
-        changes = oe.buildhistory_analysis.process_changes(options.buildhistory_dir, fromrev, torev, options.report_all, options.report_ver, options.sigs, options.sigsdiff)
+        changes = process_changes(options.buildhistory_dir, fromrev, torev,
+                                  options.report_all, options.report_ver, options.sigs,
+                                  options.sigsdiff, options.exclude_path)
     except gitdb.exc.BadObject as e:
         if len(args) == 1:
             sys.stderr.write("Unable to find previous build revision in buildhistory repository\n\n")
@@ -102,7 +106,9 @@ def main():
         sys.exit(1)
 
     for chg in changes:
-        print('%s' % chg)
+        out = str(chg)
+        if out:
+            print(out)
 
     sys.exit(0)
 
