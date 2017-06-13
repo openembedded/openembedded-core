@@ -8,7 +8,7 @@ SRC_URI[sha256sum] = "4cacb00703a6bc149cb09502257d321597d43952374a16f3558766ffa8
 # noinst programs in Makefile.tools that are conditional on READLINE
 # support
 NOINST_TOOLS_READLINE ?= " \
-    attrib/gatttool \
+    ${@bb.utils.contains('PACKAGECONFIG', 'deprecated', 'attrib/gatttool', '', d)} \
     tools/obex-client-tool \
     tools/obex-server-tool \
     tools/bluetooth-player \

@@ -12,13 +12,35 @@ RPROVIDES_${PN} += "bluez-hcidump"
 
 RCONFLICTS_${PN} = "bluez4"
 
-PACKAGECONFIG ??= "obex-profiles readline ${@bb.utils.filter('DISTRO_FEATURES', 'systemd', d)}"
+PACKAGECONFIG ??= "obex-profiles \
+    readline \
+    ${@bb.utils.filter('DISTRO_FEATURES', 'systemd', d)} \
+    a2dp-profiles \
+    avrcp-profiles \
+    network-profiles \
+    hid-profiles \
+    hog-profiles \
+    tools \
+    deprecated \
+"
 PACKAGECONFIG[obex-profiles] = "--enable-obex,--disable-obex,libical"
 PACKAGECONFIG[readline] = "--enable-client,--disable-client,readline,"
 PACKAGECONFIG[testing] = "--enable-testing,--disable-testing"
 PACKAGECONFIG[midi] = "--enable-midi,--disable-midi,alsa-lib"
 PACKAGECONFIG[systemd] = "--enable-systemd,--disable-systemd"
 PACKAGECONFIG[cups] = "--enable-cups,--disable-cups,,cups"
+PACKAGECONFIG[nfc] = "--enable-nfc,--disable-nfc"
+PACKAGECONFIG[sap-profiles] = "--enable-sap,--disable-sap"
+PACKAGECONFIG[a2dp-profiles] = "--enable-a2dp,--disable-a2dp"
+PACKAGECONFIG[avrcp-profiles] = "--enable-avrcp,--disable-avrcp"
+PACKAGECONFIG[network-profiles] = "--enable-network,--disable-network"
+PACKAGECONFIG[hid-profiles] = "--enable-hid,--disable-hid"
+PACKAGECONFIG[hog-profiles] = "--enable-hog,--disable-hog"
+PACKAGECONFIG[health-profiles] = "--enable-health,--disable-health"
+PACKAGECONFIG[sixaxis] = "--enable-sixaxis,--disable-sixaxis"
+PACKAGECONFIG[tools] = "--enable-tools,--disable-tools"
+PACKAGECONFIG[threads] = "--enable-threads,--disable-threads"
+PACKAGECONFIG[deprecated] = "--enable-deprecated,--disable-deprecated"
 
 SRC_URI = "\
     ${KERNELORG_MIRROR}/linux/bluetooth/bluez-${PV}.tar.xz \
@@ -33,8 +55,6 @@ S = "${WORKDIR}/bluez-${PV}"
 inherit autotools pkgconfig systemd update-rc.d distro_features_check ptest
 
 EXTRA_OECONF = "\
-  --enable-tools \
-  --enable-deprecated \
   --enable-test \
   --enable-datafiles \
   --enable-library \
@@ -48,7 +68,7 @@ NOINST_TOOLS_BT ??= ""
 NOINST_TOOLS = " \
     ${@bb.utils.contains('PACKAGECONFIG', 'readline', '${NOINST_TOOLS_READLINE}', '', d)} \
     ${@bb.utils.contains('PACKAGECONFIG', 'testing', '${NOINST_TOOLS_TESTING}', '', d)} \
-    ${NOINST_TOOLS_BT} \
+    ${@bb.utils.contains('PACKAGECONFIG', 'tools', '${NOINST_TOOLS_BT}', '', d)} \
 "
 
 do_install_append() {
