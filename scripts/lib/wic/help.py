@@ -284,6 +284,71 @@ DESCRIPTION
     details.
 """
 
+wic_ls_usage = """
+
+ List content of a partitioned image
+
+ usage: wic ls <image>[:<vfat partition>[<path>]] [--native-sysroot <path>]
+
+ This command  outputs either list of image partitions or directory contents
+ of vfat partitions.
+
+ See 'wic help ls' for more detailed instructions.
+
+"""
+
+wic_ls_help = """
+
+NAME
+    wic ls - List contents of partitioned image or vfat partitions
+
+SYNOPSIS
+    wic ls <image>
+    wic ls <image>:<vfat partition>
+    wic ls <image>:<vfat partition><path>
+    wic ls <image>:<vfat partition><path> --native-sysroot <path>
+
+DESCRIPTION
+    This command lists either partitions of the image or directory contents
+    of vfat partitions.
+
+    The first form it lists partitions of the image.
+    For example:
+        $ wic ls tmp/deploy/images/qemux86-64/core-image-minimal-qemux86-64.wic
+        Num     Start        End          Size      Fstype
+        1        1048576     24438783     23390208  fat16
+        2       25165824     50315263     25149440  ext4
+
+    Second and third form list directory content of vfat partition:
+        $ wic ls tmp/deploy/images/qemux86-64/core-image-minimal-qemux86-64.wic:1
+        Volume in drive : is boot
+         Volume Serial Number is 2DF2-5F02
+        Directory for ::/
+
+        efi          <DIR>     2017-05-11  10:54
+        startup  nsh        26 2017-05-11  10:54
+        vmlinuz        6922288 2017-05-11  10:54
+                3 files           6 922 314 bytes
+                                 15 818 752 bytes free
+
+
+        $ wic ls tmp/deploy/images/qemux86-64/core-image-minimal-qemux86-64.wic:1/EFI/boot/
+        Volume in drive : is boot
+         Volume Serial Number is 2DF2-5F02
+        Directory for ::/EFI/boot
+
+        .            <DIR>     2017-05-11  10:54
+        ..           <DIR>     2017-05-11  10:54
+        grub     cfg       679 2017-05-11  10:54
+        bootx64  efi    571392 2017-05-11  10:54
+                4 files             572 071 bytes
+                                 15 818 752 bytes free
+
+    The -n option is used to specify the path to the native sysroot
+    containing the tools(parted and mtools) to use.
+
+"""
+
 wic_plugins_help = """
 
 NAME
