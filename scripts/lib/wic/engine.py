@@ -237,6 +237,7 @@ class Disk:
         self.native_sysroot = native_sysroot
         self._partitions = None
         self._mdir = None
+        self._mcopy = None
         self._partimages = {}
 
         # find parted
@@ -279,6 +280,10 @@ class Disk:
     @property
     def mdir(self):
         return self._prop('mdir')
+
+    @property
+    def mcopy(self):
+        return self._prop("mcopy")
 
     def _get_part_image(self, pnum):
         if pnum not in self.partitions:
