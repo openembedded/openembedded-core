@@ -530,9 +530,18 @@ def filemap(image, log=None):
     except ErrorNotSupp:
         return FilemapSeek(image, log)
 
-def sparse_copy(src_fname, dst_fname, offset=0, skip=0,
+def sparse_copy(src_fname, dst_fname, skip=0, seek=0,
                 length=0, api=None):
-    """Efficiently copy sparse file to or into another file."""
+    """
+    Efficiently copy sparse file to or into another file.
+
+    src_fname: path to source file
+    dst_fname: path to destination file
+    skip: skip N bytes at thestart of src
+    seek: seek N bytes from the start of dst
+    length: read N bytes from src and write them to dst
+    api: FilemapFiemap or FilemapSeek object
+    """
     if not api:
         api = filemap
     fmap = api(src_fname)
@@ -554,7 +563,7 @@ def sparse_copy(src_fname, dst_fname, offset=0, skip=0,
             start = skip
 
         fmap._f_image.seek(start, os.SEEK_SET)
-        dst_file.seek(offset + start - skip, os.SEEK_SET)
+        dst_file.seek(seek + start - skip, os.SEEK_SET)
 
         chunk_size = 1024 * 1024
         to_read = end - start
