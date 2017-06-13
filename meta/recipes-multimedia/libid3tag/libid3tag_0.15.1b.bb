@@ -9,7 +9,7 @@ SECTION = "libs"
 DEPENDS = "zlib gperf-native"
 PR = "r7"
 
-SRC_URI = "ftp://ftp.mars.org/pub/mpeg/libid3tag-${PV}.tar.gz \
+SRC_URI = "${SOURCEFORGE_MIRROR}/mad/libid3tag-${PV}.tar.gz \
            file://addpkgconfig.patch \
            file://obsolete_automake_macros.patch \
 "
