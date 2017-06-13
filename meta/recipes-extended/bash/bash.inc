@@ -69,3 +69,5 @@ pkg_postrm_${PN} () {
 PACKAGES += "${PN}-bashbug"
 FILES_${PN} = "${bindir}/bash ${base_bindir}/bash.bash"
 FILES_${PN}-bashbug = "${bindir}/bashbug"
+
+RPROVIDES_${PN} += "${@bb.utils.contains('DISTRO_FEATURES', 'usrmerge', '/bin/sh /bin/bash', '', d)}"
