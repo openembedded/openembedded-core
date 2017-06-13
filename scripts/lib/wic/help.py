@@ -349,6 +349,68 @@ DESCRIPTION
 
 """
 
+wic_cp_usage = """
+
+ Copy files and directories to the vfat partitions
+
+ usage: wic cp <src> <image>:<vfat partition>[<path>] [--native-sysroot <path>]
+
+ This command  copies local files or directories to the vfat partitions of partitioned
+ image.
+
+ See 'wic help cp' for more detailed instructions.
+
+"""
+
+wic_cp_help = """
+
+NAME
+    wic cp - copy files and directories to the vfat partitions
+
+SYNOPSIS
+    wic cp <src> <image>:<vfat partition>
+    wic cp <src> <image>:<vfat partition><path>
+    wic cp <src> <image>:<vfat partition><path> --native-sysroot <path>
+
+DESCRIPTION
+    This command copies files and directories to the vfat partition of the
+    wic image.
+
+    The first form of it copies file or directory to the root directory of
+    the vfat partition:
+        $ wic cp test.wks tmp/deploy/images/qemux86-64/core-image-minimal-qemux86-64.wic:1
+        $ wic ls tmp/deploy/images/qemux86-64/core-image-minimal-qemux86-64.wic:1
+        Volume in drive : is boot
+         Volume Serial Number is DB4C-FD4C
+        Directory for ::/
+
+        efi          <DIR>     2017-05-24  18:15
+        loader       <DIR>     2017-05-24  18:15
+        startup  nsh        26 2017-05-24  18:15
+        vmlinuz        6926384 2017-05-24  18:15
+        test     wks       628 2017-05-24  21:22
+                5 files           6 927 038 bytes
+                                 15 677 440 bytes free
+
+    The second form of the command copies file or directory to the specified directory
+    on the vfat partition:
+       $ wic cp test tmp/deploy/images/qemux86-64/core-image-minimal-qemux86-64.wic:1/efi/
+       $ wic ls tmp/deploy/images/qemux86-64/core-image-minimal-qemux86-64.wic:1/eti/
+       Volume in drive : is boot
+        Volume Serial Number is DB4C-FD4C
+       Directory for ::/efi
+
+       .            <DIR>     2017-05-24  18:15
+       ..           <DIR>     2017-05-24  18:15
+       boot         <DIR>     2017-05-24  18:15
+       test         <DIR>     2017-05-24  21:27
+               4 files                   0 bytes
+                                15 675 392 bytes free
+
+    The -n option is used to specify the path to the native sysroot
+    containing the tools(parted and mtools) to use.
+"""
+
 wic_plugins_help = """
 
 NAME
