@@ -11,6 +11,7 @@ inherit allarch autotools pkgconfig gettext gtk-icon-cache upstream-version-is-e
 
 MAJ_VER = "${@oe.utils.trim_version("${PV}", 2)}"
 SRC_URI = "${GNOME_MIRROR}/${BPN}/${MAJ_VER}/${BPN}-${PV}.tar.xz \
+           file://0001-Run-installation-commands-as-shell-jobs.patch \
           "
 
 SRC_URI[md5sum] = "411be2bd68dd8b0a3c86aca2eb351ce4"
