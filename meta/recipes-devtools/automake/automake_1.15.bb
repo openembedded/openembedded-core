@@ -24,6 +24,7 @@ SRC_URI += "file://python-libdir.patch \
             file://performance.patch \
             file://new_rt_path_for_test-driver.patch \
             file://automake-replace-w-option-in-shebangs-with-modern-use-warnings.patch \
+            file://0001-automake-port-to-Perl-5.22-and-later.patch \
             "
 
 SRC_URI[md5sum] = "716946a105ca228ab545fc37a70df3a3"
