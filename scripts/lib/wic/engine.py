@@ -238,6 +238,7 @@ class Disk:
         self._partitions = None
         self._mdir = None
         self._mcopy = None
+        self._mdel = None
         self._partimages = {}
 
         # find parted
@@ -285,6 +286,10 @@ class Disk:
     def mcopy(self):
         return self._prop("mcopy")
 
+    @property
+    def mdel(self):
+        return self._prop("mdel")
+
     def _get_part_image(self, pnum):
         if pnum not in self.partitions:
             raise WicError("Partition %s is not in the image")
@@ -318,6 +323,14 @@ class Disk:
         exec_cmd(cmd)
         self._put_part_image(pnum)
 
+    def remove(self, pnum, path):
+        """Remove files/dirs from the partition."""
+        cmd = "{} -i {} ::{}".format(self.mdel,
+                                     self._get_part_image(pnum),
+                                     path)
+        exec_cmd(cmd)
+        self._put_part_image(pnum)
+
 def wic_ls(args, native_sysroot):
     """List contents of partitioned image or vfat partition."""
     disk = Disk(args.path.image, native_sysroot)
@@ -345,7 +358,8 @@ def wic_rm(args, native_sysroot):
     Remove files or directories from the vfat partition of
     partitioned image.
     """
-    pass
+    disk = Disk(args.path.image, native_sysroot)
+    disk.remove(args.path.part, args.path.path)
 
 def find_canned(scripts_path, file_name):
     """
