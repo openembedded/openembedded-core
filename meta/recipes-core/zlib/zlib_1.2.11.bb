@@ -17,20 +17,22 @@ UPSTREAM_CHECK_URI = "http://zlib.net/"
 SRC_URI[md5sum] = "85adef240c5f370b308da8c938951a68"
 SRC_URI[sha256sum] = "4ff941449631ace0d4d203e3483be9dbc9da454084111f97ea0a2114e19bf066"
 
+CFLAGS += "-D_REENTRANT"
+
 RDEPENDS_${PN}-ptest += "make"
 
 inherit ptest
 
-do_configure (){
-	./configure --prefix=${prefix} --shared --libdir=${libdir}
+do_configure() {
+	uname=GNU ./configure --prefix=${prefix} --shared --libdir=${libdir}
 }
 
-do_compile (){
-	oe_runmake
+do_compile() {
+	oe_runmake shared
 }
 
 do_compile_ptest() {
-	oe_runmake static shared
+	oe_runmake test
 }
 
 do_install() {
