@@ -855,3 +855,33 @@ part /etc --source rootfs --ondisk mmcblk0 --fstype=ext4 --exclude-path bin/ --r
             self.assertEqual(0, result.status)
             self.assertEqual(8, len(result.output.split('\n')))
             self.assertTrue(os.path.basename(testdir) in result.output)
+
+    def test_wic_rm(self):
+        """Test removing files and directories from the the wic image."""
+        self.assertEqual(0, runCmd("wic create mkefidisk "
+                                   "--image-name=core-image-minimal "
+                                   "-D -o %s" % self.resultdir).status)
+        images = glob(self.resultdir + "mkefidisk-*.direct")
+        self.assertEqual(1, len(images))
+
+        sysroot = get_bb_var('RECIPE_SYSROOT_NATIVE', 'wic-tools')
+
+        # list directory content of the first partition
+        result = runCmd("wic ls %s:1 -n %s" % (images[0], sysroot))
+        self.assertEqual(0, result.status)
+        self.assertIn('\nBZIMAGE        ', result.output)
+        self.assertIn('\nEFI          <DIR>     ', result.output)
+
+        # remove file
+        result = runCmd("wic rm %s:1/bzimage -n %s" % (images[0], sysroot))
+        self.assertEqual(0, result.status)
+
+        # remove directory
+        result = runCmd("wic rm %s:1/efi -n %s" % (images[0], sysroot))
+        self.assertEqual(0, result.status)
+
+        # check if they're removed
+        result = runCmd("wic ls %s:1 -n %s" % (images[0], sysroot))
+        self.assertEqual(0, result.status)
+        self.assertNotIn('\nBZIMAGE        ', result.output)
+        self.assertNotIn('\nEFI          <DIR>     ', result.output)
