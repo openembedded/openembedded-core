@@ -310,6 +310,14 @@ class Disk:
                                                self._get_part_image(pnum),
                                                path))
 
+    def copy(self, src, pnum, path):
+        """Copy partition image into wic image."""
+        cmd = "{} -i {} -snop {} ::{}".format(self.mcopy,
+                                              self._get_part_image(pnum),
+                                              src, path)
+        exec_cmd(cmd)
+        self._put_part_image(pnum)
+
 def wic_ls(args, native_sysroot):
     """List contents of partitioned image or vfat partition."""
     disk = Disk(args.path.image, native_sysroot)
@@ -329,7 +337,8 @@ def wic_cp(args, native_sysroot):
     Copy local file or directory to the vfat partition of
     partitioned image.
     """
-    pass
+    disk = Disk(args.dest.image, native_sysroot)
+    disk.copy(args.src, args.dest.part, args.dest.path)
 
 def find_canned(scripts_path, file_name):
     """
