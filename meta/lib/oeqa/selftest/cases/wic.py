@@ -28,7 +28,7 @@ import sys
 import unittest
 
 from glob import glob
-from shutil import rmtree
+from shutil import rmtree, copy
 from functools import wraps, lru_cache
 from tempfile import NamedTemporaryFile
 
@@ -811,3 +811,47 @@ part /etc --source rootfs --ondisk mmcblk0 --fstype=ext4 --exclude-path bin/ --r
         result = runCmd("wic ls %s:1/ -n %s" % (images[0], sysroot))
         self.assertEqual(0, result.status)
         self.assertEqual(6, len(result.output.split('\n')))
+
+    def test_wic_cp(self):
+        """Test copy files and directories to the the wic image."""
+        self.assertEqual(0, runCmd("wic create wictestdisk "
+                                   "--image-name=core-image-minimal "
+                                   "-D -o %s" % self.resultdir).status)
+        images = glob(self.resultdir + "wictestdisk-*.direct")
+        self.assertEqual(1, len(images))
+
+        sysroot = get_bb_var('RECIPE_SYSROOT_NATIVE', 'wic-tools')
+
+        # list directory content of the first partition
+        result = runCmd("wic ls %s:1/ -n %s" % (images[0], sysroot))
+        self.assertEqual(0, result.status)
+        self.assertEqual(6, len(result.output.split('\n')))
+
+        with NamedTemporaryFile("w", suffix=".wic-cp") as testfile:
+            testfile.write("test")
+
+            # copy file to the partition
+            result = runCmd("wic cp %s %s:1/ -n %s" % (testfile.name, images[0], sysroot))
+            self.assertEqual(0, result.status)
+
+            # check if file is there
+            result = runCmd("wic ls %s:1/ -n %s" % (images[0], sysroot))
+            self.assertEqual(0, result.status)
+            self.assertEqual(7, len(result.output.split('\n')))
+            self.assertTrue(os.path.basename(testfile.name) in result.output)
+
+            # prepare directory
+            testdir = os.path.join(self.resultdir, 'wic-test-cp-dir')
+            testsubdir = os.path.join(testdir, 'subdir')
+            os.makedirs(os.path.join(testsubdir))
+            copy(testfile.name, testdir)
+
+            # copy directory to the partition
+            result = runCmd("wic cp %s %s:1/ -n %s" % (testdir, images[0], sysroot))
+            self.assertEqual(0, result.status)
+
+            # check if directory is there
+            result = runCmd("wic ls %s:1/ -n %s" % (images[0], sysroot))
+            self.assertEqual(0, result.status)
+            self.assertEqual(8, len(result.output.split('\n')))
+            self.assertTrue(os.path.basename(testdir) in result.output)
