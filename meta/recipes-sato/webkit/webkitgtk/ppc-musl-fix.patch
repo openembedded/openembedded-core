@@ -11,16 +11,16 @@ Upstream-Status: Pending
 
 Signed-off-by: Khem Raj <raj.khem@gmail.com>
 
-Index: webkitgtk-2.12.3/Source/JavaScriptCore/heap/MachineStackMarker.cpp
+Index: webkitgtk-2.16.3/Source/JavaScriptCore/heap/MachineStackMarker.cpp
 ===================================================================
---- webkitgtk-2.12.3.orig/Source/JavaScriptCore/heap/MachineStackMarker.cpp
-+++ webkitgtk-2.12.3/Source/JavaScriptCore/heap/MachineStackMarker.cpp
-@@ -86,7 +86,7 @@ static void pthreadSignalHandlerSuspendR
+--- webkitgtk-2.16.3.orig/Source/JavaScriptCore/heap/MachineStackMarker.cpp
++++ webkitgtk-2.16.3/Source/JavaScriptCore/heap/MachineStackMarker.cpp
+@@ -88,7 +88,7 @@ static void pthreadSignalHandlerSuspendR
      }
  
      ucontext_t* userContext = static_cast<ucontext_t*>(ucontext);
 -#if CPU(PPC)
 +#if CPU(PPC) && defined(__GLIBC__)
-     thread->suspendedMachineContext = *userContext->uc_mcontext.uc_regs;
+     threadData->suspendedMachineContext = *userContext->uc_mcontext.uc_regs;
  #else
-     thread->suspendedMachineContext = userContext->uc_mcontext;
+     threadData->suspendedMachineContext = userContext->uc_mcontext;
