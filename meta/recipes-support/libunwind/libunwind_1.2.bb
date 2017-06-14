@@ -21,8 +21,4 @@ EXTRA_OECONF_append_libc-musl = " --disable-documentation --disable-tests "
 ARM_INSTRUCTION_SET_armv4 = "arm"
 ARM_INSTRUCTION_SET_armv5 = "arm"
 
-# see https://sourceware.org/bugzilla/show_bug.cgi?id=19987
-SECURITY_CFLAGS_remove_aarch64 = "-fpie"
-SECURITY_CFLAGS_append_aarch64 = " -fPIE"
-
 LDFLAGS += "-Wl,-z,relro,-z,now ${@bb.utils.contains('DISTRO_FEATURES', 'ld-is-gold', ' -fuse-ld=bfd ', '', d)}"
