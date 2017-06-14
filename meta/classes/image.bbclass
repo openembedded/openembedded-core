@@ -491,19 +491,19 @@ python () {
         for dep in typedeps[t]:
             after += ' do_image_%s' % dep.replace("-", "_").replace(".", "_")
 
-        t = t.replace("-", "_").replace(".", "_")
+        task = "do_image_%s" % t.replace("-", "_").replace(".", "_")
 
-        d.setVar('do_image_%s' % t, '\n'.join(cmds))
-        d.setVarFlag('do_image_%s' % t, 'func', '1')
-        d.setVarFlag('do_image_%s' % t, 'fakeroot', '1')
-        d.setVarFlag('do_image_%s' % t, 'prefuncs', debug + 'set_image_size')
-        d.setVarFlag('do_image_%s' % t, 'postfuncs', 'create_symlinks')
-        d.setVarFlag('do_image_%s' % t, 'subimages', ' '.join(subimages))
-        d.appendVarFlag('do_image_%s' % t, 'vardeps', ' '.join(vardeps))
-        d.appendVarFlag('do_image_%s' % t, 'vardepsexclude', 'DATETIME')
+        d.setVar(task, '\n'.join(cmds))
+        d.setVarFlag(task, 'func', '1')
+        d.setVarFlag(task, 'fakeroot', '1')
+        d.setVarFlag(task, 'prefuncs', debug + 'set_image_size')
+        d.setVarFlag(task, 'postfuncs', 'create_symlinks')
+        d.setVarFlag(task, 'subimages', ' '.join(subimages))
+        d.appendVarFlag(task, 'vardeps', ' '.join(vardeps))
+        d.appendVarFlag(task, 'vardepsexclude', 'DATETIME')
 
-        bb.debug(2, "Adding type %s before %s, after %s" % (t, 'do_image_complete', after))
-        bb.build.addtask('do_image_%s' % t, 'do_image_complete', after, d)
+        bb.debug(2, "Adding task %s before %s, after %s" % (task, 'do_image_complete', after))
+        bb.build.addtask(task, 'do_image_complete', after, d)
 }
 
 #
