@@ -87,7 +87,7 @@ python sysroot_strip () {
         ret, result = oe.utils.getstatusoutput("file \"%s\"" % path.replace("\"", "\\\""))
 
         if ret:
-            bb.error("split_and_strip_files: 'file %s' failed" % path)
+            bb.error("sysroot_strip: 'file %s' failed" % path)
             return type
 
         # Not stripped
