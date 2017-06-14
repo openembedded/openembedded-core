@@ -145,6 +145,8 @@ class RpmSdk(Sdk):
         pm.install(pkgs_attempt, True)
 
     def _populate(self):
+        execute_pre_post_process(self.d, self.d.getVar("POPULATE_SDK_PRE_TARGET_COMMAND"))
+
         bb.note("Installing TARGET packages")
         self._populate_sysroot(self.target_pm, self.target_manifest)
 
@@ -226,6 +228,8 @@ class OpkgSdk(Sdk):
                            [False, True][pkg_type == Manifest.PKG_TYPE_ATTEMPT_ONLY])
 
     def _populate(self):
+        execute_pre_post_process(self.d, self.d.getVar("POPULATE_SDK_PRE_TARGET_COMMAND"))
+
         bb.note("Installing TARGET packages")
         self._populate_sysroot(self.target_pm, self.target_manifest)
 
@@ -308,6 +312,8 @@ class DpkgSdk(Sdk):
                            [False, True][pkg_type == Manifest.PKG_TYPE_ATTEMPT_ONLY])
 
     def _populate(self):
+        execute_pre_post_process(self.d, self.d.getVar("POPULATE_SDK_PRE_TARGET_COMMAND"))
+
         bb.note("Installing TARGET packages")
         self._populate_sysroot(self.target_pm, self.target_manifest)
 
