@@ -431,7 +431,7 @@ http_proxy = ""
         bitbake("world meta-toolchain -S none")
         self.write_config("""
 TMPDIR = "${TOPDIR}/tmp-sstatesamehash2"
-BB_NUMBER_THREADS = "${@oe.utils.cpu_count()-1}"
+BB_NUMBER_THREADS = "${@oe.utils.cpu_count()+1}"
 PARALLEL_MAKE = "-j 2"
 DL_DIR = "${TOPDIR}/download2"
 TIME = "222222"
