@@ -74,8 +74,6 @@ CACHED_CONFIGUREVARS += "ac_cv_path_PERL='/usr/bin/env perl'"
 # which fixes build path issue in DWARF.
 SELECTED_OPTIMIZATION = "${DEBUG_FLAGS}"
 
-CFLAGS += "-no-pie"
-
 def get_mcpu(d):
     for arg in (d.getVar('TUNE_CCARGS') or '').split():
         if arg.startswith('-mcpu='):
