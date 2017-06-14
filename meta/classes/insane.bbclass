@@ -40,6 +40,9 @@ ERROR_QA ?= "dev-so debug-deps dev-deps debug-files arch pkgconfig la \
             version-going-backwards expanded-d invalid-chars \
             license-checksum dev-elf file-rdeps \
             "
+# Add usrmerge QA check based on distro feature
+ERROR_QA_append = "${@bb.utils.contains('DISTRO_FEATURES', 'usrmerge', ' usrmerge', '', d)}"
+
 FAKEROOT_QA = "host-user-contaminated"
 FAKEROOT_QA[doc] = "QA tests which need to run under fakeroot. If any \
 enabled tests are listed here, the do_package_qa task will run under fakeroot."
@@ -991,6 +994,18 @@ def package_qa_check_deps(pkg, pkgdest, skip, d):
     check_valid_deps('RREPLACES')
     check_valid_deps('RCONFLICTS')
 
+QAPKGTEST[usrmerge] = "package_qa_check_usrmerge"
+def package_qa_check_usrmerge(pkg, d, messages):
+    pkgdest = d.getVar('PKGDEST')
+    pkg_dir = pkgdest + os.sep + pkg + os.sep
+    merged_dirs = ['bin', 'sbin', 'lib'] + d.getVar('MULTILIB_VARIANTS').split()
+    for f in merged_dirs:
+        if os.path.exists(pkg_dir + f) and not os.path.islink(pkg_dir + f):
+            msg = "%s package is not obeying usrmerge distro feature. /%s should be relocated to /usr." % (pkg, f)
+            package_qa_add_message(messages, "usrmerge", msg)
+            return False
+    return True
+
 QAPKGTEST[expanded-d] = "package_qa_check_expanded_d"
 def package_qa_check_expanded_d(package, d, messages):
     """
@@ -1063,6 +1078,7 @@ def package_qa_check_host_user(path, name, d, elf, messages):
             package_qa_add_message(messages, "host-user-contaminated", "%s: %s is owned by gid %d, which is the same as the user running bitbake. This may be due to host contamination" % (pn, rootfs_path, check_gid))
             return False
     return True
+
 
 # The PACKAGE FUNC to scan each package
 python do_package_qa () {
