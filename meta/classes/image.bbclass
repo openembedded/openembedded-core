@@ -496,9 +496,10 @@ python () {
         d.setVar(task, '\n'.join(cmds))
         d.setVarFlag(task, 'func', '1')
         d.setVarFlag(task, 'fakeroot', '1')
-        d.setVarFlag(task, 'prefuncs', debug + 'set_image_size')
-        d.setVarFlag(task, 'postfuncs', 'create_symlinks')
-        d.setVarFlag(task, 'subimages', ' '.join(subimages))
+
+        d.appendVarFlag(task, 'prefuncs', ' ' + debug + ' set_image_size')
+        d.appendVarFlag(task, 'postfuncs', ' create_symlinks')
+        d.appendVarFlag(task, 'subimages', ' ' + ' '.join(subimages))
         d.appendVarFlag(task, 'vardeps', ' '.join(vardeps))
         d.appendVarFlag(task, 'vardepsexclude', 'DATETIME')
 
