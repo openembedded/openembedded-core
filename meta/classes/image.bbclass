@@ -500,7 +500,7 @@ python () {
         d.appendVarFlag(task, 'prefuncs', ' ' + debug + ' set_image_size')
         d.appendVarFlag(task, 'postfuncs', ' create_symlinks')
         d.appendVarFlag(task, 'subimages', ' ' + ' '.join(subimages))
-        d.appendVarFlag(task, 'vardeps', ' '.join(vardeps))
+        d.appendVarFlag(task, 'vardeps', ' ' + ' '.join(vardeps))
         d.appendVarFlag(task, 'vardepsexclude', 'DATETIME')
 
         bb.debug(2, "Adding task %s before %s, after %s" % (task, 'do_image_complete', after))
