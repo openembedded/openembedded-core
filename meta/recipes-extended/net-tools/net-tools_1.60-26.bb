@@ -39,8 +39,6 @@ inherit gettext
 
 do_patch[depends] = "quilt-native:do_populate_sysroot"
 
-LDFLAGS_append_libc-uclibc = " -lintl "
-
 # The Makefile is lame, no parallel build
 PARALLEL_MAKE = ""
 

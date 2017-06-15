@@ -43,7 +43,6 @@ PRINTF_darwin = "--enable-included-printf=yes"
 PRINTF_mingw32 = "--enable-included-printf=yes"
 EXTRA_OECONF = "${PRINTF} ${CORECONF}"
 EXTRA_OECONF_class-native = "${CORECONF} --disable-selinux"
-EXTRA_OECONF_append_libc-uclibc = " --with-libiconv=gnu"
 
 # Tell configure that we'll have dbus-daemon on the target for the tests
 EXTRA_OECONF_class-target_append = " ${@bb.utils.contains('PTEST_ENABLED', '1', ' ac_cv_prog_DBUS_DAEMON=dbus-daemon', '', d)}"

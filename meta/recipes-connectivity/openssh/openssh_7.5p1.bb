@@ -69,12 +69,6 @@ CACHED_CONFIGUREVARS += "ac_cv_path_PATH_PASSWD_PROG=${bindir}/passwd"
 # We don't want to depend on libblockfile
 CACHED_CONFIGUREVARS += "ac_cv_header_maillock_h=no"
 
-# This is a workaround for uclibc because including stdio.h
-# pulls in pthreads.h and causes conflicts in function prototypes.
-# This results in compilation failure, so unless this is fixed,
-# disable pam for uclibc.
-EXTRA_OECONF_append_libc-uclibc=" --without-pam"
-
 do_configure_prepend () {
 	export LD="${CC}"
 	install -m 0644 ${WORKDIR}/sshd_config ${B}/

@@ -19,5 +19,3 @@ SRCREV = "a1e2ef7ec912902d8142e7cb5830cbfb47dba86c"
 SRC_URI = "git://github.com/systemd/systemd.git;protocol=git"
 
 S = "${WORKDIR}/git"
-
-LDFLAGS_append_libc-uclibc = " -lrt -lssp_nonshared -lssp "

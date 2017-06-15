@@ -22,9 +22,8 @@ EXTRA_OECONF = "--enable-shared --disable-static \
 
 # Disable PolicyKit by default
 PACKAGECONFIG ??= ""
-# We really don't want PolicyKit for native or uclibc
+# We really don't want PolicyKit for native
 PACKAGECONFIG_class-native = ""
-PACKAGECONFIG_libc-uclibc = ""
 
 PACKAGECONFIG[policykit] = "--enable-defaults-service,--disable-defaults-service,polkit"
 PACKAGECONFIG[debug] = "--enable-debug=yes, --enable-debug=minimum"

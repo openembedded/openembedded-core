@@ -32,12 +32,6 @@ SRC_URI[sha256sum] = "a7831044de92c5bf33bf3365a3f36e49397f4191e934df460ae1ca1513
 # Avoid this by disabling expicitly
 EXTRA_OECONF = "--disable-rst2man"
 
-# lazy hack. needs proper fixing in gettext.m4, see
-# http://bugs.openembedded.org/show_bug.cgi?id=2348
-# please close bug and remove this comment when properly fixed
-#
-EXTRA_OECONF_append_libc-uclibc = " --disable-nls"
-
 inherit autotools gettext pkgconfig manpages
 
 # This are all packages that we need to make. Also, the now empty alsa-utils

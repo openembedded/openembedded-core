@@ -15,5 +15,4 @@ SRC_URI[md5sum] = "920970e35a1a2066c8353eabfeab8730"
 SRC_URI[sha256sum] = "1bce32e6a6c967fef6d37adaadf33df19878d69673f9ef9d3f2470e0c6ed4006"
 
 S = "${WORKDIR}/userspace-rcu-${PV}"
-CFLAGS_append_libc-uclibc = " -D_GNU_SOURCE"
 inherit autotools

@@ -67,7 +67,6 @@ GLIBC_BROKEN_LOCALES = ""
 # this helps in easing out parsing for non-glibc system libraries
 #
 COMPATIBLE_HOST_libc-musl_class-target = "null"
-COMPATIBLE_HOST_libc-uclibc_class-target = "null"
 
 EXTRA_OECONF = "--enable-kernel=${OLDEST_KERNEL} \
                 --without-cvs --disable-profile \

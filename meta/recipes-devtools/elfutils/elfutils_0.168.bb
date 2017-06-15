@@ -48,7 +48,6 @@ inherit autotools gettext
 
 EXTRA_OECONF = "--program-prefix=eu- --without-lzma"
 EXTRA_OECONF_append_class-native = " --without-bzlib"
-EXTRA_OECONF_append_libc-uclibc = " --enable-uclibc"
 
 do_install_append() {
 	if [ "${TARGET_ARCH}" != "x86_64" ] && [ -z `echo "${TARGET_ARCH}"|grep 'i.86'` ];then
@@ -56,11 +55,6 @@ do_install_append() {
 	fi
 }
 
-# we can not build complete elfutils when using uclibc
-# but some recipes e.g. gcc 4.5 depends on libelf so we
-# build only libelf for uclibc case
-
-EXTRA_OEMAKE_libc-uclibc = "-C libelf"
 EXTRA_OEMAKE_class-native = ""
 EXTRA_OEMAKE_class-nativesdk = ""
 

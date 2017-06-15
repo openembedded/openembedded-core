@@ -71,7 +71,7 @@ def features_to_busybox_settings(d):
 	busybox_cfg(bb.utils.contains('DISTRO_FEATURES', 'bluetooth', True, False, d), 'CONFIG_RFKILL', cnf, rem)
 	return "\n".join(cnf), "\n".join(rem)
 
-# X, Y = ${@features_to_uclibc_settings(d)}
+# X, Y = ${@features_to_busybox_settings(d)}
 # unfortunately doesn't seem to work with bitbake, workaround:
 def features_to_busybox_conf(d):
 	cnf, rem = features_to_busybox_settings(d)

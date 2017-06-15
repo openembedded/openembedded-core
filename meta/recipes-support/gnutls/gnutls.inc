@@ -46,7 +46,6 @@ EXTRA_OECONF = " \
 "
 
 LDFLAGS_append_libc-musl = " -largp"
-LDFLAGS_append_libc-uclibc = " -luargp -pthread"
 
 do_configure_prepend() {
 	for dir in . lib; do

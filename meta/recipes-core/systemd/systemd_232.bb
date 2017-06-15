@@ -35,9 +35,6 @@ SRC_URI += " \
            file://0020-back-port-233-don-t-use-the-unified-hierarchy-for-the-systemd.patch \
            file://0021-build-sys-check-for-lz4-in-the-old-and-new-numbering.patch \
 "
-SRC_URI_append_libc-uclibc = "\
-           file://0002-units-Prefer-getty-to-agetty-in-console-setup-system.patch \
-"
 SRC_URI_append_qemuall = " file://0001-core-device.c-Change-the-default-device-timeout-to-2.patch"
 
 PACKAGECONFIG ??= "xz \

@@ -27,7 +27,6 @@ SDKGCCVERSION ?= "${GCCVERSION}"
 BINUVERSION ?= "2.28%"
 GDBVERSION ?= "8.0%"
 GLIBCVERSION ?= "2.25"
-UCLIBCVERSION ?= "1.0%"
 LINUXLIBCVERSION ?= "4.10%"
 
 PREFERRED_VERSION_gcc ?= "${GCCVERSION}"
@@ -64,8 +63,6 @@ PREFERRED_VERSION_nativesdk-glibc          ?= "${GLIBCVERSION}"
 PREFERRED_VERSION_glibc-initial            ?= "${GLIBCVERSION}"
 PREFERRED_VERSION_nativesdk-glibc-initial  ?= "${GLIBCVERSION}"
 PREFERRED_VERSION_cross-localedef-native   ?= "${GLIBCVERSION}"
-PREFERRED_VERSION_uclibc                   ?= "${UCLIBCVERSION}"
-PREFERRED_VERSION_uclibc-initial           ?= "${UCLIBCVERSION}"
 # don't use version earlier than 1.4 for gzip-native, as it's necessary for
 # some packages using an archive format incompatible with earlier gzip
 PREFERRED_VERSION_gzip-native ?= "1.8"

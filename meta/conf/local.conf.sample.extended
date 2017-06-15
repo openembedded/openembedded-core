@@ -94,10 +94,7 @@
 # PACKAGE_DEBUG_SPLIT_STYLE = 'debug-file-directory'
 
 # Uncomment these to build a package such that you can use gprof to profile it.
-# NOTE: This will only work with 'linux' targets, not
-# 'linux-uclibc', as uClibc doesn't provide the necessary
-# object files.  Also, don't build glibc itself with these
-# flags, or it'll fail to build.
+# NOTE: Don't build glibc itself with these flags, or it'll fail to build.
 #
 # PROFILE_OPTIMIZATION = "-pg"
 # SELECTED_OPTIMIZATION = "${PROFILE_OPTIMIZATION}"

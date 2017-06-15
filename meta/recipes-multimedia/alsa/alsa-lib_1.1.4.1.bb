@@ -22,8 +22,6 @@ EXTRA_OECONF += "${@get_alsa_fpu_setting(bb, d)} "
 
 EXTRA_OECONF += "--disable-python"
 
-EXTRA_OECONF_append_libc-uclibc = " --with-versioned=no "
-
 PACKAGES =+ "alsa-server libasound alsa-conf alsa-doc"
 FILES_libasound = "${libdir}/libasound.so.*"
 FILES_alsa-server = "${bindir}/*"

@@ -24,7 +24,6 @@ SRC_URI[md5sum] = "0247b6a7b314f8edeb618159fa95f9cb"
 SRC_URI[sha256sum] = "858b589c22297cacdf437f3baff6f04b333087521ab274f7ab677cb8c6bb78e4"
 
 EXTRA_OECONF = "--disable-device-mapper"
-LDFLAGS_append_libc-uclibc = " -liconv "
 
 inherit autotools pkgconfig gettext texinfo ptest
 

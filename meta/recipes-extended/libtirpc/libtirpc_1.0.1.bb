@@ -19,9 +19,6 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/${BPN}/${BP}.tar.bz2;name=libtirpc \
            file://0001-Fix-for-CVE-2017-8779.patch \
            "
 
-SRC_URI_append_libc-uclibc = " file://remove-des-functionality.patch \
-                             "
-
 SRC_URI_append_libc-musl = " \
                              file://Use-netbsd-queue.h.patch \
                            "
