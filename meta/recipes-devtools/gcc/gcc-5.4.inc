@@ -31,12 +31,6 @@ SRC_URI = "\
            ${BASEURI} \
            ${BACKPORTS} \
            file://0001-gcc-4.3.1-ARCH_FLAGS_FOR_TARGET.patch \
-           file://0002-uclibc-conf.patch \
-           file://0003-gcc-uclibc-locale-ctype_touplow_t.patch \
-           file://0004-uclibc-locale.patch \
-           file://0005-uclibc-locale-no__x.patch \
-           file://0006-uclibc-locale-wchar_fix.patch \
-           file://0007-uclibc-locale-update.patch \
            file://0008-missing-execinfo_h.patch \
            file://0009-c99-snprintf.patch \
            file://0010-gcc-poison-system-directories.patch \
@@ -137,8 +131,6 @@ EXTRA_OECONF_INITIAL = "\
     --without-isl \
     gcc_cv_libc_provides_ssp=yes \
 "
-
-EXTRA_OECONF_append_libc-uclibc = " --disable-decimal-float "
 
 EXTRA_OECONF_PATHS = "\
     --with-gxx-include-dir=/not/exist{target_includedir}/c++/${BINV} \

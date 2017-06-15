@@ -53,9 +53,7 @@ export gcc_cv_collect2_libs = 'none required'
 # in the config.log files (which might not get generated until do_compile
 # hence being missed by the insane do_configure check).
 
-# Build uclibc compilers without cxa_atexit support
 EXTRA_OECONF_append_linux = " --enable-__cxa_atexit"
-EXTRA_OECONF_append_libc-uclibc = " --enable-__cxa_atexit"
 
 EXTRA_OECONF_append_mips64 = " --with-abi=64 --with-arch-64=mips64 --with-tune-64=mips64"
 EXTRA_OECONF_append_mips64el = " --with-abi=64 --with-arch-64=mips64 --with-tune-64=mips64"

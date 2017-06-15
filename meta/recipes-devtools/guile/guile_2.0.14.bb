@@ -48,7 +48,6 @@ EXTRA_OECONF += "${@['--without-libltdl-prefix --without-libgmp-prefix --without
 EXTRA_OECONF_append_class-target = " --with-libunistring-prefix=${STAGING_LIBDIR} \
                                      --with-libgmp-prefix=${STAGING_LIBDIR} \
                                      --with-libltdl-prefix=${STAGING_LIBDIR}"
-EXTRA_OECONF_append_libc-uclibc = " guile_cv_use_csqrt=no "
 
 CFLAGS_append_libc-musl = " -DHAVE_GC_SET_FINALIZER_NOTIFIER \
 	                    -DHAVE_GC_GET_HEAP_USAGE_SAFE \

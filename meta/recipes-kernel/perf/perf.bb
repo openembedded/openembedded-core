@@ -10,8 +10,6 @@ LICENSE = "GPLv2"
 
 PR = "r9"
 
-BUILDPERF_libc-uclibc = "no"
-
 PACKAGECONFIG ??= "scripting tui libunwind"
 PACKAGECONFIG[scripting] = ",NO_LIBPERL=1 NO_LIBPYTHON=1,perl python"
 # gui support was added with kernel 3.6.35
