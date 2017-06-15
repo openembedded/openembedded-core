@@ -18,10 +18,7 @@ SRC_URI += " \
            file://0003-define-exp10-if-missing.patch \
            file://0004-Use-getenv-when-secure-versions-are-not-available.patch \
            file://0005-binfmt-Don-t-install-dependency-links-at-install-tim.patch \
-           file://0006-configure-Check-for-additional-features-that-uclibc-.patch \
            file://0007-use-lnr-wrapper-instead-of-looking-for-relative-opti.patch \
-           file://0008-nspawn-Use-execvpe-only-when-libc-supports-it.patch \
-           file://0009-util-bypass-unimplemented-_SC_PHYS_PAGES-system-conf.patch \
            file://0010-implment-systemd-sysv-install-for-OE.patch \
            file://0011-nss-mymachines-Build-conditionally-when-HAVE_MYHOSTN.patch \
            file://0012-rules-whitelist-hd-devices.patch \

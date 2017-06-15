@@ -80,21 +80,11 @@ diff -r af2b10cc3c14 lib/configure
  fi
  [ -n "$RELEASE" ] && rel="${RELEASE}"
  # CAVEAT: tr on Solaris is a bit weird and the extra [] is otherwise harmless.
-@@ -49,6 +53,21 @@
+@@ -49,6 +53,11 @@
  sys=`echo $host | sed 's/^\([^-]*\)-\([^-]*\)-\(.*\)$/\3/'`
  echo " $host $rel $cpu $sys"
  
 +if [ "$host" = "linux--gnueabi" ]
-+then
-+	sys=linux
-+fi
-+
-+if [ "$host" = "linux--uclibc" ]
-+then
-+	sys=linux
-+fi
-+
-+if [ "$host" = "linux--uclibceabi" ]
 +then
 +	sys=linux
 +fi

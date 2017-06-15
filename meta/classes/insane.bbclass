@@ -103,23 +103,6 @@ def package_qa_get_machine_dict(d):
                         "microblazeeb":(189,   0,    0,          False,         32),
                         "microblazeel":(189,   0,    0,          True,          32),
                       },
-            "linux-uclibc" : { 
-                        "arm" :       (  40,    97,    0,          True,          32),
-                        "armeb":      (  40,    97,    0,          False,         32),
-                        "powerpc":    (  20,     0,    0,          False,         32),
-                        "i386":       (   3,     0,    0,          True,          32),
-                        "i486":       (   3,     0,    0,          True,          32),
-                        "i586":       (   3,     0,    0,          True,          32),
-                        "i686":       (   3,     0,    0,          True,          32),
-                        "x86_64":     (  62,     0,    0,          True,          64),
-                        "mips":       (   8,     0,    0,          False,         32),
-                        "mipsel":     (   8,     0,    0,          True,          32),
-                        "mips64":     (   8,     0,    0,          False,         64),
-                        "mips64el":   (   8,     0,    0,          True,          64),
-                        "avr32":      (6317,     0,    0,          False,         32),
-                        "sh4":        (42,       0,    0,          True,          32),
-
-                      },
             "linux-musl" : { 
                         "aarch64" :   (183,    0,    0,            True,          64),
                         "aarch64_be" :(183,    0,    0,            False,         64),
@@ -151,17 +134,10 @@ def package_qa_get_machine_dict(d):
                         "arm" :       (40,     0,    0,          True,          32),
                         "armeb" :     (40,     0,    0,          False,         32),
                       },
-            "linux-uclibceabi" : {
-                        "arm" :       (40,     0,    0,          True,          32),
-                        "armeb" :     (40,     0,    0,          False,         32),
-                      },
             "linux-gnuspe" : {
                         "powerpc":    (20,     0,    0,          False,         32),
                       },
             "linux-muslspe" : {
-                        "powerpc":    (20,     0,    0,          False,         32),
-                      },
-            "linux-uclibcspe" : {
                         "powerpc":    (20,     0,    0,          False,         32),
                       },
             "linux-gnu" :       {

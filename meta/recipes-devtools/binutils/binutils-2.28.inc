@@ -21,10 +21,8 @@ UPSTREAM_CHECK_GITTAGREGEX = "binutils-(?P<pver>\d+_(\d_?)*)"
 SRCREV = "cb44d42ce6ef0c7a4eed7e2a3c272ac102166850"
 SRC_URI = "\
      git://sourceware.org/git/binutils-gdb.git;branch=binutils-${BINUPV}-branch;protocol=git \
-     file://0003-gprof-add-uclibc-support-to-configure.patch \
      file://0004-Point-scripts-location-to-libdir.patch \
      file://0005-Only-generate-an-RPATH-entry-if-LD_RUN_PATH-is-not-e.patch \
-     file://0006-Explicitly-link-with-libm-on-uclibc.patch \
      file://0007-Use-libtool-2.4.patch \
      file://0008-Add-the-armv5e-architecture-to-binutils.patch \
      file://0009-don-t-let-the-distro-compiler-point-to-the-wrong-ins.patch \

@@ -1,7 +1,6 @@
 require gnutls.inc
 
-SRC_URI += "file://correct_rpl_gettimeofday_signature.patch \
-            file://0001-configure.ac-fix-sed-command.patch \
+SRC_URI += "file://0001-configure.ac-fix-sed-command.patch \
             file://use-pkg-config-to-locate-zlib.patch \
             file://arm_eabi.patch \
            "

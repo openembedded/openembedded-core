@@ -15,7 +15,7 @@ STAGING_BINDIR_TOOLCHAIN = "${STAGING_DIR_NATIVE}${bindir_native}/${SDK_ARCH}${S
 # Update BASE_PACKAGE_ARCH and PACKAGE_ARCHS
 #
 PACKAGE_ARCH = "${SDK_ARCH}-${SDKPKGSUFFIX}"
-BASECANADIANEXTRAOS ?= "linux-uclibc linux-musl"
+BASECANADIANEXTRAOS ?= "linux-musl"
 CANADIANEXTRAOS = "${BASECANADIANEXTRAOS}"
 CANADIANEXTRAVENDOR = ""
 MODIFYTOS ??= "1"
@@ -36,8 +36,6 @@ python () {
     tos = d.getVar("TARGET_OS")
     whitelist = []
     extralibcs = [""]
-    if "uclibc" in d.getVar("BASECANADIANEXTRAOS"):
-        extralibcs.append("uclibc")
     if "musl" in d.getVar("BASECANADIANEXTRAOS"):
         extralibcs.append("musl")
     for variant in ["", "spe", "x32", "eabi", "n32"]:
@@ -80,7 +78,7 @@ python () {
         for extraos in d.getVar("BASECANADIANEXTRAOS").split():
             d.appendVar("CANADIANEXTRAOS", " " + extraos + "n32")
     if tarch == "arm" or tarch == "armeb":
-        d.appendVar("CANADIANEXTRAOS", " linux-gnueabi linux-musleabi linux-uclibceabi")
+        d.appendVar("CANADIANEXTRAOS", " linux-gnueabi linux-musleabi")
         d.setVar("TARGET_OS", "linux-gnueabi")
     else:
         d.setVar("TARGET_OS", "linux")
