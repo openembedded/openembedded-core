@@ -131,6 +131,7 @@ class OESelftestTestContextExecutor(OETestContextExecutor):
                     runCmd("bitbake-layers add-layer %s" %meta_selftestdir)
                     # reload data is needed because a meta-selftest layer was add
                     self.tc.td = get_bb_vars()
+                    self.tc.testlayer_path = get_test_layer()
                 else:
                     self.tc.logger.error("could not locate meta-selftest in:\n%s" % meta_selftestdir)
                     raise OEQAPreRun
