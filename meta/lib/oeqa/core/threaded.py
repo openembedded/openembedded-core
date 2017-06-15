@@ -185,9 +185,10 @@ class OETestResultThreaded(object):
         self.tc.logger.info(msg)
 
     def logDetails(self):
-        tid = list(self._results)[0]
-        result = self._results[tid]['result']
-        result.logDetails()
+        if list(self._results):
+            tid = list(self._results)[0]
+            result = self._results[tid]['result']
+            result.logDetails()
 
 class _Worker(threading.Thread):
     """Thread executing tasks from a given tasks queue"""
