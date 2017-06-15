@@ -118,6 +118,6 @@ FILES_${PN}-tk = " \
 
 PACKAGES =+ "gitweb"
 FILES_gitweb = "${datadir}/gitweb/"
-
+RDEPENDS_gitweb = "perl"
 
 BBCLASSEXTEND = "native nativesdk"
