@@ -48,7 +48,21 @@ SRC_URI_class-native = "${SRC_URI_BASE} \
 SRC_URI[md5sum] = "5f213281761d2750fcf27476c404d17f"
 SRC_URI[sha256sum] = "02bceadbc4dddeb6f2eec9c8b1623d945d355ca11b8b4df035332b217d58ce85"
 
-EXTRA_OECONF = "--without-x --with-system-libtiff --without-jbig2dec \
+# Put something like
+#
+#   PACKAGECONFIG_append_pn-ghostscript = " x11"
+#
+# in local.conf to enable building with X11.  Be careful.  The order
+# of the overrides matters!
+#
+#PACKAGECONFIG ??= "${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'x11', '', d)}"
+PACKAGECONFIG_class-native = ""
+
+PACKAGECONFIG[x11] = "--with-x --x-includes=${STAGING_INCDIR} --x-libraries=${STAGING_LIBDIR}, \
+                      --without-x, virtual/libx11 libxext libxt gtk+3\
+                      "
+
+EXTRA_OECONF = "--with-system-libtiff --without-jbig2dec \
                 --with-fontpath=${datadir}/fonts \
                 --without-libidn --with-cups-serverbin=${exec_prefix}/lib/cups \
                 --with-cups-datadir=${datadir}/cups \
