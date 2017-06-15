@@ -19,42 +19,40 @@ DEPENDS_class-native = "libpng-native"
 UPSTREAM_CHECK_URI = "https://github.com/ArtifexSoftware/ghostpdl-downloads/releases"
 UPSTREAM_CHECK_REGEX = "(?P<pver>\d+(\.\d+)+)\.tar"
 
-SRC_URI_BASE = "https://github.com/ArtifexSoftware/ghostpdl-downloads/releases/download/gs920/${BPN}-${PV}.tar.gz \
+SRC_URI_BASE = "https://github.com/ArtifexSoftware/ghostpdl-downloads/releases/download/gs921/${BPN}-${PV}.tar.gz \
                 file://ghostscript-9.15-parallel-make.patch \
                 file://ghostscript-9.16-Werror-return-type.patch \
                 file://png_mak.patch \
                 file://do-not-check-local-libpng-source.patch \
+                file://avoid-host-contamination.patch \
+                file://mkdir-p.patch \
 "
 
 SRC_URI = "${SRC_URI_BASE} \
-           file://ghostscript-9.02-prevent_recompiling.patch \
+           file://ghostscript-9.21-prevent_recompiling.patch \
            file://ghostscript-9.02-genarch.patch \
            file://objarch.h \
            file://cups-no-gcrypt.patch \
-           file://CVE-2017-7207.patch \
-           file://CVE-2016-10219.patch \
-           file://CVE-2016-10220.patch \
-           file://CVE-2017-5951.patch \
-           file://CVE-2016-8602.patch \
-           file://CVE-2017-7975.patch \
            file://CVE-2016-7977.patch \
-           file://CVE-2016-7978.patch \
-           file://CVE-2016-7979.patch \
+           file://CVE-2017-7207.patch \
+           file://CVE-2017-5951.patch \
+           file://CVE-2017-7975.patch \
            file://CVE-2017-9216.patch \
            "
 
 SRC_URI_class-native = "${SRC_URI_BASE} \
-                        file://ghostscript-native-fix-disable-system-libtiff.patch \
+                        file://ghostscript-9.21-native-fix-disable-system-libtiff.patch \
                         file://base-genht.c-add-a-preprocessor-define-to-allow-fope.patch \
                         "
 
-SRC_URI[md5sum] = "93c5987cd3ab341108be1ebbaadc24fe"
-SRC_URI[sha256sum] = "949b64b46ecf8906db54a94ecf83ab97534ebf946f770d3c3f283cb469cb6e14"
+SRC_URI[md5sum] = "5f213281761d2750fcf27476c404d17f"
+SRC_URI[sha256sum] = "02bceadbc4dddeb6f2eec9c8b1623d945d355ca11b8b4df035332b217d58ce85"
 
 EXTRA_OECONF = "--without-x --with-system-libtiff --without-jbig2dec \
                 --with-fontpath=${datadir}/fonts \
                 --without-libidn --with-cups-serverbin=${exec_prefix}/lib/cups \
                 --with-cups-datadir=${datadir}/cups \
+                CUPSCONFIG="${STAGING_BINDIR_CROSS}/cups-config" \
                 "
 
 EXTRA_OECONF_append_mipsarcho32 = " --with-large_color_index=0"

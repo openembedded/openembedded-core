@@ -5,23 +5,26 @@ ghostscrip could work while system-libtiff is
 disabled.
 
 Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
-Upstream-Status: Pending
----
- configure.ac | 5 +++++
- 1 file changed, 5 insertions(+)
 
-diff --git a/configure.ac b/configure.ac
+Updated to apply to ghostscript 9.21.
+
+Signed-off-by: Joe Slater <joe.slater@windriver.com>
+
+Upstream-Status: Pending
+
+
+
 --- a/configure.ac
 +++ b/configure.ac
-@@ -1055,6 +1055,7 @@ Disabling tiff output devices.])
+@@ -1259,6 +1259,7 @@ case "x$with_system_libtiff" in
  esac
  
- if test $SHARE_LIBTIFF -eq 0; then
+ if test x"$SHARE_LIBTIFF" = x"0" ; then
 +    if test -e $LIBTIFFDIR/configure; then
-       echo
        echo "Running libtiff configure script..."
        olddir=`pwd`
-@@ -1069,6 +1070,10 @@ if test $SHARE_LIBTIFF -eq 0; then
+       if ! test -d "$LIBTIFFCONFDIR" ; then
+@@ -1272,6 +1273,10 @@ if test x"$SHARE_LIBTIFF" = x"0" ; then
        cd "$olddir"
        echo
        echo "Continuing with Ghostscript configuration..."
@@ -32,6 +35,3 @@ diff --git a/configure.ac b/configure.ac
  fi
  
  AC_SUBST(SHARE_LIBTIFF)
--- 
-1.8.1.2
-
