@@ -491,6 +491,7 @@ class DevtoolTests(DevtoolBase):
         result = runCmd('devtool status')
         self.assertNotIn('mdadm', result.output)
 
+    @OETestID(1620)
     def test_devtool_buildclean(self):
         def assertFile(path, *paths):
             f = os.path.join(path, *paths)
@@ -1013,6 +1014,7 @@ class DevtoolTests(DevtoolBase):
                            ('??', '.*/0001-Add-new-file.patch$')]
         self._check_repo_status(os.path.dirname(recipefile), expected_status)
 
+    @OETestID(1627)
     def test_devtool_update_recipe_local_files_3(self):
         # First, modify the recipe
         testrecipe = 'devtool-test-localonly'
@@ -1032,6 +1034,7 @@ class DevtoolTests(DevtoolBase):
         expected_status = [(' M', '.*/%s/file2$' % testrecipe)]
         self._check_repo_status(os.path.dirname(recipefile), expected_status)
 
+    @OETestID(1629)
     def test_devtool_update_recipe_local_patch_gz(self):
         # First, modify the recipe
         testrecipe = 'devtool-test-patch-gz'
@@ -1059,6 +1062,7 @@ class DevtoolTests(DevtoolBase):
         if 'gzip compressed data' not in result.output:
             self.fail('New patch file is not gzipped - file reports:\n%s' % result.output)
 
+    @OETestID(1628)
     def test_devtool_update_recipe_local_files_subdir(self):
         # Try devtool extract on a recipe that has a file with subdir= set in
         # SRC_URI such that it overwrites a file that was in an archive that
@@ -1363,6 +1367,7 @@ class DevtoolTests(DevtoolBase):
             shutil.copy(srcfile, dstfile)
             self.track_for_cleanup(dstfile)
 
+    @OETestID(1625)
     def test_devtool_load_plugin(self):
         """Test that devtool loads only the first found plugin in BBPATH."""
 
@@ -1430,6 +1435,7 @@ class DevtoolTests(DevtoolBase):
         self.assertExists(os.path.join(olddir, patchfn), 'Original patch file does not exist')
         return recipe, oldrecipefile, recipedir, olddir, newversion, patchfn
 
+    @OETestID(1623)
     def test_devtool_finish_upgrade_origlayer(self):
         recipe, oldrecipefile, recipedir, olddir, newversion, patchfn = self._setup_test_devtool_finish_upgrade()
         # Ensure the recipe is where we think it should be (so that cleanup doesn't trash things)
@@ -1448,6 +1454,7 @@ class DevtoolTests(DevtoolBase):
         self.assertExists(os.path.join(newdir, patchfn), 'Patch file should have been copied into new directory but wasn\'t')
         self.assertExists(os.path.join(newdir, '0002-Add-a-comment-to-the-code.patch'), 'New patch file should have been created but wasn\'t')
 
+    @OETestID(1624)
     def test_devtool_finish_upgrade_otherlayer(self):
         recipe, oldrecipefile, recipedir, olddir, newversion, patchfn = self._setup_test_devtool_finish_upgrade()
         # Ensure the recipe is where we think it should be (so that cleanup doesn't trash things)
@@ -1503,6 +1510,7 @@ class DevtoolTests(DevtoolBase):
             self.fail('Unable to find recipe files directory for %s' % recipe)
         return recipe, oldrecipefile, recipedir, filesdir
 
+    @OETestID(1621)
     def test_devtool_finish_modify_origlayer(self):
         recipe, oldrecipefile, recipedir, filesdir = self._setup_test_devtool_finish_modify()
         # Ensure the recipe is where we think it should be (so that cleanup doesn't trash things)
@@ -1517,6 +1525,7 @@ class DevtoolTests(DevtoolBase):
                            ('??', '.*/.*-Add-a-comment-to-the-code.patch$')]
         self._check_repo_status(recipedir, expected_status)
 
+    @OETestID(1622)
     def test_devtool_finish_modify_otherlayer(self):
         recipe, oldrecipefile, recipedir, filesdir = self._setup_test_devtool_finish_modify()
         # Ensure the recipe is where we think it should be (so that cleanup doesn't trash things)
@@ -1549,6 +1558,7 @@ class DevtoolTests(DevtoolBase):
         if files:
             self.fail('Unexpected file(s) copied next to bbappend: %s' % ', '.join(files))
 
+    @OETestID(1626)
     def test_devtool_rename(self):
         # Check preconditions
         self.assertTrue(not os.path.exists(self.workspacedir), 'This test cannot be run with a workspace directory under the build directory')

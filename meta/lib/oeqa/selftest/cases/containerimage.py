@@ -2,6 +2,7 @@ import os
 
 from oeqa.selftest.case import OESelftestTestCase
 from oeqa.utils.commands import bitbake, get_bb_vars, runCmd
+from oeqa.core.decorator.oeid import OETestID
 
 # This test builds an image with using the "container" IMAGE_FSTYPE, and
 # ensures that then files in the image are only the ones expected.
@@ -20,6 +21,7 @@ class ContainerImageTests(OESelftestTestCase):
 
     # Verify that when specifying a IMAGE_TYPEDEP_ of the form "foo.bar" that
     # the conversion type bar gets added as a dep as well
+    @OETestID(1619)
     def test_expected_files(self):
 
         def get_each_path_part(path):

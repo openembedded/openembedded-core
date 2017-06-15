@@ -443,6 +443,7 @@ class RecipetoolTests(RecipetoolBase):
         inherits = ['cmake', 'python-dir', 'gettext', 'pkgconfig']
         self._test_recipe_contents(recipefile, checkvars, inherits)
 
+    @OETestID(1638)
     def test_recipetool_create_github(self):
         # Basic test to see if github URL mangling works
         temprecipe = os.path.join(self.tempdir, 'recipe')
@@ -457,6 +458,7 @@ class RecipetoolTests(RecipetoolBase):
         inherits = ['setuptools']
         self._test_recipe_contents(recipefile, checkvars, inherits)
 
+    @OETestID(1639)
     def test_recipetool_create_github_tarball(self):
         # Basic test to ensure github URL mangling doesn't apply to release tarballs
         temprecipe = os.path.join(self.tempdir, 'recipe')
@@ -472,6 +474,7 @@ class RecipetoolTests(RecipetoolBase):
         inherits = ['setuptools']
         self._test_recipe_contents(recipefile, checkvars, inherits)
 
+    @OETestID(1637)
     def test_recipetool_create_git_http(self):
         # Basic test to check http git URL mangling works
         temprecipe = os.path.join(self.tempdir, 'recipe')
@@ -499,6 +502,7 @@ class RecipetoolTests(RecipetoolBase):
             shutil.copy(srcfile, dstfile)
             self.track_for_cleanup(dstfile)
 
+    @OETestID(1640)
     def test_recipetool_load_plugin(self):
         """Test that recipetool loads only the first found plugin in BBPATH."""
 

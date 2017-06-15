@@ -311,6 +311,7 @@ class Wic(OESelftestTestCase):
                                    "-D -o %s" % self.resultdir).status)
         self.assertEqual(1, len(glob(self.resultdir + "wictestdisk-*.direct")))
 
+    @OETestID(1658)
     def test_debug_long(self):
         """Test --debug option"""
         self.assertEqual(0, runCmd("wic create wictestdisk "
@@ -326,6 +327,7 @@ class Wic(OESelftestTestCase):
                                    "-s -o %s" % self.resultdir).status)
         self.assertEqual(1, len(glob(self.resultdir + "wictestdisk-*.direct")))
 
+    @OETestID(1671)
     def test_skip_build_check_long(self):
         """Test --skip-build-check option"""
         self.assertEqual(0, runCmd("wic create wictestdisk "
@@ -342,6 +344,7 @@ class Wic(OESelftestTestCase):
                                    "-f -o %s" % self.resultdir).status)
         self.assertEqual(1, len(glob(self.resultdir + "wictestdisk-*.direct")))
 
+    @OETestID(1656)
     def test_build_rootfs_long(self):
         """Test --build-rootfs option"""
         self.assertEqual(0, runCmd("wic create wictestdisk "
@@ -383,6 +386,7 @@ class Wic(OESelftestTestCase):
         self.assertEqual(0, status)
         self.assertEqual(1, len(glob(self.resultdir + "%(wks)s-*.direct" % bbvars)))
 
+    @OETestID(1661)
     def test_exclude_path(self):
         """Test --exclude-path wks option."""
 
@@ -490,6 +494,7 @@ part /etc --source rootfs --ondisk mmcblk0 --fstype=ext4 --exclude-path bin/ --r
         finally:
             os.environ['PATH'] = oldpath
 
+    @OETestID(1662)
     def test_exclude_path_errors(self):
         """Test --exclude-path wks option error handling."""
         wks_file = 'temp.wks'
@@ -517,6 +522,7 @@ part /etc --source rootfs --ondisk mmcblk0 --fstype=ext4 --exclude-path bin/ --r
         self.assertEqual(1, len(glob(self.resultdir + "wictestdisk-*direct")))
         self.assertEqual(1, len(glob(self.resultdir + "wictestdisk-*direct.bmap")))
 
+    @OETestID(1655)
     def test_bmap_long(self):
         """Test generation of .bmap file --bmap option"""
         cmd = "wic create wictestdisk -e core-image-minimal --bmap -o %s" % self.resultdir
@@ -569,6 +575,7 @@ part /etc --source rootfs --ondisk mmcblk0 --fstype=ext4 --exclude-path bin/ --r
                                    % (image, imgenvdir, self.resultdir)).status)
         self.assertEqual(1, len(glob(self.resultdir + "wictestdisk-*direct")))
 
+    @OETestID(1665)
     def test_image_vars_dir_long(self):
         """Test image vars directory selection --vars option"""
         image = 'core-image-minimal'
@@ -618,6 +625,7 @@ part /etc --source rootfs --ondisk mmcblk0 --fstype=ext4 --exclude-path bin/ --r
             self.assertEqual(output, '/dev/root /\r\n/dev/sda3 /mnt')
 
     @only_for_arch(['i586', 'i686', 'x86_64'])
+    @OETestID(1852)
     def test_qemu_efi(self):
         """Test core-image-minimal efi image under qemu"""
         config = 'IMAGE_FSTYPES = "wic"\nWKS_FILE = "mkefidisk.wks"\n'
@@ -647,6 +655,7 @@ part /etc --source rootfs --ondisk mmcblk0 --fstype=ext4 --exclude-path bin/ --r
 
         return wkspath, wksname
 
+    @OETestID(1847)
     def test_fixed_size(self):
         """
         Test creation of a simple image with partition size controlled through
@@ -677,6 +686,7 @@ part /etc --source rootfs --ondisk mmcblk0 --fstype=ext4 --exclude-path bin/ --r
         self.assertEqual(1, len(partlns))
         self.assertEqual("1:0.00MiB:200MiB:200MiB:ext4::;", partlns[0])
 
+    @OETestID(1848)
     def test_fixed_size_error(self):
         """
         Test creation of a simple image with partition size controlled through
@@ -692,6 +702,7 @@ part /etc --source rootfs --ondisk mmcblk0 --fstype=ext4 --exclude-path bin/ --r
         self.assertEqual(0, len(wicout))
 
     @only_for_arch(['i586', 'i686', 'x86_64'])
+    @OETestID(1854)
     def test_rawcopy_plugin_qemu(self):
         """Test rawcopy plugin in qemu"""
         # build ext4 and wic images
@@ -707,6 +718,7 @@ part /etc --source rootfs --ondisk mmcblk0 --fstype=ext4 --exclude-path bin/ --r
             self.assertEqual(1, status, 'Failed to run command "%s": %s' % (cmd, output))
             self.assertEqual(output, '2')
 
+    @OETestID(1853)
     def test_rawcopy_plugin(self):
         """Test rawcopy plugin"""
         img = 'core-image-minimal'
@@ -723,6 +735,7 @@ part /etc --source rootfs --ondisk mmcblk0 --fstype=ext4 --exclude-path bin/ --r
             out = glob(self.resultdir + "%s-*direct" % wksname)
             self.assertEqual(1, len(out))
 
+    @OETestID(1849)
     def test_fs_types(self):
         """Test filesystem types for empty and not empty partitions"""
         img = 'core-image-minimal'
@@ -742,6 +755,7 @@ part /etc --source rootfs --ondisk mmcblk0 --fstype=ext4 --exclude-path bin/ --r
             out = glob(self.resultdir + "%s-*direct" % wksname)
             self.assertEqual(1, len(out))
 
+    @OETestID(1851)
     def test_kickstart_parser(self):
         """Test wks parser options"""
         with NamedTemporaryFile("w", suffix=".wks") as wks:
@@ -754,6 +768,7 @@ part /etc --source rootfs --ondisk mmcblk0 --fstype=ext4 --exclude-path bin/ --r
             out = glob(self.resultdir + "%s-*direct" % wksname)
             self.assertEqual(1, len(out))
 
+    @OETestID(1850)
     def test_image_bootpart_globbed(self):
         """Test globbed sources with image-bootpart plugin"""
         img = "core-image-minimal"
@@ -764,6 +779,7 @@ part /etc --source rootfs --ondisk mmcblk0 --fstype=ext4 --exclude-path bin/ --r
         self.remove_config(config)
         self.assertEqual(1, len(glob(self.resultdir + "sdimage-bootpart-*direct")))
 
+    @OETestID(1855)
     def test_sparse_copy(self):
         """Test sparse_copy with FIEMAP and SEEK_HOLE filemap APIs"""
         libpath = os.path.join(get_bb_var('COREBASE'), 'scripts', 'lib', 'wic')
@@ -792,6 +808,7 @@ part /etc --source rootfs --ondisk mmcblk0 --fstype=ext4 --exclude-path bin/ --r
                 self.assertEqual(dest_stat.st_blocks, 8)
             os.unlink(dest)
 
+    @OETestID(1857)
     def test_wic_ls(self):
         """Test listing image content using 'wic ls'"""
         self.assertEqual(0, runCmd("wic create wictestdisk "
@@ -812,6 +829,7 @@ part /etc --source rootfs --ondisk mmcblk0 --fstype=ext4 --exclude-path bin/ --r
         self.assertEqual(0, result.status)
         self.assertEqual(6, len(result.output.split('\n')))
 
+    @OETestID(1856)
     def test_wic_cp(self):
         """Test copy files and directories to the the wic image."""
         self.assertEqual(0, runCmd("wic create wictestdisk "
@@ -856,6 +874,7 @@ part /etc --source rootfs --ondisk mmcblk0 --fstype=ext4 --exclude-path bin/ --r
             self.assertEqual(8, len(result.output.split('\n')))
             self.assertTrue(os.path.basename(testdir) in result.output)
 
+    @OETestID(1858)
     def test_wic_rm(self):
         """Test removing files and directories from the the wic image."""
         self.assertEqual(0, runCmd("wic create mkefidisk "

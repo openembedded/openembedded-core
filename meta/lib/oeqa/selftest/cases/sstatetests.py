@@ -310,6 +310,7 @@ MACHINE = \"qemuarm\"
 """
         self.sstate_allarch_samesigs(configA, configB)
 
+    @OETestID(1645)
     def test_sstate_allarch_samesigs_multilib(self):
         """
         The sstate checksums of allarch multilib packages should be independent of whichever
@@ -410,6 +411,7 @@ DEFAULTTUNE_virtclass-multilib-lib32 = "x86"
         self.assertCountEqual(files1, files2)
 
 
+    @OETestID(1498)
     def test_sstate_noop_samesigs(self):
         """
         The sstate checksums of two builds with these variables changed or

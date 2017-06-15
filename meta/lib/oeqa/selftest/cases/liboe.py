@@ -1,4 +1,5 @@
 from oeqa.selftest.case import OESelftestTestCase
+from oeqa.core.decorator.oeid import OETestID
 from oeqa.utils.commands import get_bb_var, get_bb_vars, bitbake, runCmd
 import oe.path
 import os
@@ -10,6 +11,7 @@ class LibOE(OESelftestTestCase):
         super(LibOE, cls).setUpClass()
         cls.tmp_dir = get_bb_var('TMPDIR')
 
+    @OETestID(1635)
     def test_copy_tree_special(self):
         """
         Summary:    oe.path.copytree() should copy files with special character
@@ -35,6 +37,7 @@ class LibOE(OESelftestTestCase):
 
         oe.path.remove(testloc)
 
+    @OETestID(1636)
     def test_copy_tree_xattr(self):
         """
         Summary:    oe.path.copytree() should preserve xattr on copied files
@@ -69,6 +72,7 @@ class LibOE(OESelftestTestCase):
 
         oe.path.remove(testloc)
 
+    @OETestID(1634)
     def test_copy_hardlink_tree_count(self):
         """
         Summary:    oe.path.copyhardlinktree() shouldn't miss out files

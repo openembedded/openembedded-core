@@ -152,6 +152,7 @@ class TinfoilTests(OESelftestTestCase):
             value = tinfoil.run_command('getVariable', 'TESTVAR')
             self.assertEqual(value, 'specialvalue', 'Value set using config_data.setVar() is not reflected in config_data.getVar()')
 
+    @OETestID(1884)
     def test_datastore_operations(self):
         with bb.tinfoil.Tinfoil() as tinfoil:
             tinfoil.prepare(config_only=True)

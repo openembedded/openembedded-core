@@ -96,6 +96,7 @@ class ImageFeatures(OESelftestTestCase):
         # Build a core-image-weston
         bitbake('core-image-weston')
 
+    @OETestID(1497)
     def test_bmap(self):
         """
         Summary:     Check bmap support
