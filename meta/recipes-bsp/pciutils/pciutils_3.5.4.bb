@@ -9,9 +9,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=751419260aa954499f7abaabaa882bbe"
 DEPENDS = "zlib kmod"
 
 SRC_URI = "${KERNELORG_MIRROR}/software/utils/pciutils/pciutils-${PV}.tar.xz \
-           file://configure.patch \
-           file://guess-fix.patch \
-           file://makefile.patch"
+           file://configure.patch"
 
 SRC_URI[md5sum] = "e82537cd2194111c45fa7e684b52252e"
 SRC_URI[sha256sum] = "64293c6ab9318c40ef262b76d87bd9097531759752bac556e50979b1e63cfe66"
@@ -21,7 +19,7 @@ inherit multilib_header
 PACKAGECONFIG ??= "${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'hwdb', '', d)}"
 PACKAGECONFIG[hwdb] = "HWDB=yes,HWDB=no,udev"
 
-PCI_CONF_FLAG = "ZLIB=yes DNS=yes SHARED=yes"
+PCI_CONF_FLAG = "ZLIB=yes DNS=yes SHARED=yes STRIP= LIBDIR=${libdir}"
 
 # see configure.patch
 do_configure () {
