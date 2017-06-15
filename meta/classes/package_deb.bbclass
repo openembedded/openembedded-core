@@ -39,16 +39,6 @@ def debian_arch_map(arch, tune):
     if arch == "arm":
         return arch + ["el", "hf"]["callconvention-hard" in tune_features]
     return arch
-#
-# install a bunch of packages using apt
-# the following shell variables needs to be set before calling this func:
-# INSTALL_ROOTFS_DEB - install root dir
-# INSTALL_BASEARCH_DEB - install base architecutre
-# INSTALL_ARCHS_DEB - list of available archs
-# INSTALL_PACKAGES_NORMAL_DEB - packages to be installed
-# INSTALL_PACKAGES_ATTEMPTONLY_DEB - packages attempted to be installed only
-# INSTALL_PACKAGES_LINGUAS_DEB - additional packages for uclibc
-# INSTALL_TASK_DEB - task name
 
 python do_package_deb () {
     from multiprocessing import Process
