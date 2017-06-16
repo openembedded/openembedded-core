@@ -31,8 +31,8 @@ SRC_URI = "https://lttng.org/files/lttng-tools/lttng-tools-${PV}.tar.bz2 \
            file://run-ptest \
            "
 
-SRC_URI[md5sum] = "10f47abfa214b167580358388428770d"
-SRC_URI[sha256sum] = "3c72456bceef961fad1d0861f07478db16b7659efa69099ba36645da89ca2cc5"
+SRC_URI[md5sum] = "051224eb991aee07f8721ff1877d0b96"
+SRC_URI[sha256sum] = "77839eb6fc6c652125f08acfd9369701c2516eb05cc2084160e7efc7a3fb731c"
 
 inherit autotools ptest pkgconfig useradd python3-dir manpages
 
