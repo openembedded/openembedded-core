@@ -172,10 +172,11 @@ class DirectPlugin(ImagerPlugin):
                     if rsize_bb:
                         part.size = int(round(float(rsize_bb)))
 
-        self._image.prepare(self)
-
-        if fstab_path:
-            shutil.move(fstab_path + ".orig", fstab_path)
+        try:
+            self._image.prepare(self)
+        finally:
+            if fstab_path:
+                shutil.move(fstab_path + ".orig", fstab_path)
 
         self._image.layout_partitions()
         self._image.create()
