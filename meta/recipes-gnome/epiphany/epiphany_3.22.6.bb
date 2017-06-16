@@ -19,5 +19,5 @@ do_configure_prepend() {
     sed -i -e s:help::g ${S}/Makefile.am
 }
 
-FILES_${PN} += "${datadir}/appdata ${datadir}/dbus-1 ${datadir}/gnome-shell/search-providers"
+FILES_${PN} += "${datadir}/dbus-1 ${datadir}/gnome-shell/search-providers"
 RDEPENDS_${PN} = "iso-codes adwaita-icon-theme"

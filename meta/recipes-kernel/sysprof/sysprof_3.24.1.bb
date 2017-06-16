@@ -30,7 +30,6 @@ PACKAGECONFIG[polkit] = "--enable-polkit,--disable-polkit,polkit dbus"
 
 SOLIBS = ".so"
 FILES_SOLIBSDEV = ""
-FILES_${PN} += "${datadir}/icons/ ${datadir}/appdata"
 
 SYSTEMD_SERVICE_${PN} = "${@bb.utils.contains('PACKAGECONFIG', 'polkit', 'sysprof2.service', '', d)}"
 
