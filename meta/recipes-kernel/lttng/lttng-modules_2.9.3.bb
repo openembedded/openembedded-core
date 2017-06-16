@@ -14,8 +14,8 @@ SRC_URI = "https://lttng.org/files/${BPN}/${BPN}-${PV}.tar.bz2 \
            file://Makefile-Do-not-fail-if-CONFIG_TRACEPOINTS-is-not-en.patch \
            file://BUILD_RUNTIME_BUG_ON-vs-gcc7.patch"
 
-SRC_URI[md5sum] = "6c02645c77fd4d6475a4f83bda1d75ff"
-SRC_URI[sha256sum] = "9d70d54becd8c34c21eb0d5c1ffe6adadb6be5bec80b6667044c47dfd428dc66"
+SRC_URI[md5sum] = "9abf694dddcc197988189ef65b496f4c"
+SRC_URI[sha256sum] = "f911bca81b02a787474f3d100390dad7447f952525e6d041f50991940246bafe"
 
 export INSTALL_MOD_DIR="kernel/lttng-modules"
 
