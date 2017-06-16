@@ -111,6 +111,10 @@ do_install_append_class-native () {
 	rm ${D}${datadir}/gettext/config.rpath
 	rm ${D}${datadir}/gettext/po/Makefile.in.in
 	rm ${D}${datadir}/gettext/po/remove-potcdate.sin
+
+        create_wrapper ${D}${bindir}/msgfmt \
+                GETTEXTDATADIR="${STAGING_DATADIR_NATIVE}/gettext-0.19.8/"
+
 }
 
 BBCLASSEXTEND = "native nativesdk"

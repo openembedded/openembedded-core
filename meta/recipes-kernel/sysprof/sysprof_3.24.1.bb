@@ -20,10 +20,6 @@ AUTOTOOLS_AUXDIR = "${S}/build-aux"
 
 EXTRA_OECONF = "--enable-compile-warnings"
 
-# This properly relocates msgfmt, which otherwise fails to find its data files. 
-# Tips on how to get rid of hardcoded version welcome.
-export GETTEXTDATADIR = "${STAGING_DATADIR_NATIVE}/gettext-0.19.8/"
-
 PACKAGECONFIG ?= "${@bb.utils.contains_any('DISTRO_FEATURES', '${GTK3DISTROFEATURES}', 'gtk', '', d)}"
 PACKAGECONFIG[gtk] = "--enable-gtk,--disable-gtk,gtk+3"
 PACKAGECONFIG[polkit] = "--enable-polkit,--disable-polkit,polkit dbus"
