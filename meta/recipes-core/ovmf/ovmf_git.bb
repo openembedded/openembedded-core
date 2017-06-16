@@ -18,14 +18,16 @@ SRC_URI = "git://github.com/tianocore/edk2.git;branch=master \
 	file://no-stack-protector-all-archs.patch \
         "
 
+OPENSSL_RELEASE = "openssl-1.1.0e"
+
 SRC_URI_append_class-target = " \
-	${@bb.utils.contains('PACKAGECONFIG', 'secureboot', 'http://www.openssl.org/source/openssl-1.0.2j.tar.gz;name=openssl;subdir=${S}/CryptoPkg/Library/OpensslLib', '', d)} \
+	${@bb.utils.contains('PACKAGECONFIG', 'secureboot', 'http://www.openssl.org/source/${OPENSSL_RELEASE}.tar.gz;name=openssl;subdir=${S}/CryptoPkg/Library/OpensslLib', '', d)} \
 	file://0007-OvmfPkg-EnrollDefaultKeys-application-for-enrolling-.patch \
 "
 
 SRCREV="ec4910cd3336565fdb61dafdd9ec4ae7a6160ba3"
-SRC_URI[openssl.md5sum] = "96322138f0b69e61b7212bc53d5e912b"
-SRC_URI[openssl.sha256sum] = "e7aff292be21c259c6af26469c7a9b3ba26e9abaaffd325e3dccc9785256c431"
+SRC_URI[openssl.md5sum] = "51c42d152122e474754aea96f66928c6"
+SRC_URI[openssl.sha256sum] = "57be8618979d80c910728cfc99369bf97b2a1abd8f366ab6ebdee8975ad3874c"
 
 inherit deploy
 
@@ -187,10 +189,7 @@ do_compile_class-target() {
         # building with Secure Boot enabled.
         bbnote "Building with Secure Boot."
         rm -rf ${S}/Build/Ovmf$OVMF_DIR_SUFFIX
-        if ! [ -f ${S}/CryptoPkg/Library/OpensslLib/openssl-*/edk2-patch-applied ]; then
-            ( cd ${S}/CryptoPkg/Library/OpensslLib/openssl-* && patch -p1 <$(echo ../EDKII_openssl-*.patch) && touch edk2-patch-applied )
-        fi
-        ( cd ${S}/CryptoPkg/Library/OpensslLib/ && ./Install.sh )
+        ln -sf ${OPENSSL_RELEASE} ${S}/CryptoPkg/Library/OpensslLib/openssl
         ${S}/OvmfPkg/build.sh $PARALLEL_JOBS -a $OVMF_ARCH -b RELEASE -t ${FIXED_GCCVER} ${OVMF_SECURE_BOOT_FLAGS}
         ln ${build_dir}/FV/OVMF.fd ${WORKDIR}/ovmf/ovmf.secboot.fd
         ln ${build_dir}/FV/OVMF_CODE.fd ${WORKDIR}/ovmf/ovmf.secboot.code.fd
