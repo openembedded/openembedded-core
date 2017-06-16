@@ -31,7 +31,7 @@ from glob import glob
 
 from wic import WicError
 from wic.pluginbase import SourcePlugin
-from wic.utils.misc import exec_cmd, get_bitbake_var
+from wic.misc import exec_cmd, get_bitbake_var
 
 logger = logging.getLogger('wic')
 

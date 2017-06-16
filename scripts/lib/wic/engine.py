@@ -38,7 +38,7 @@ from distutils.spawn import find_executable
 from wic import WicError
 from wic.filemap import sparse_copy
 from wic.pluginbase import PluginMgr
-from wic.utils.misc import get_bitbake_var, exec_cmd
+from wic.misc import get_bitbake_var, exec_cmd
 
 logger = logging.getLogger('wic')
 

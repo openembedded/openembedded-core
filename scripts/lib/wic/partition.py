@@ -29,7 +29,7 @@ import os
 import tempfile
 
 from wic import WicError
-from wic.utils.misc import exec_cmd, exec_native_cmd, get_bitbake_var
+from wic.misc import exec_cmd, exec_native_cmd, get_bitbake_var
 from wic.pluginbase import PluginMgr
 
 logger = logging.getLogger('wic')

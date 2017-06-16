@@ -24,7 +24,7 @@ from collections import defaultdict
 from importlib.machinery import SourceFileLoader
 
 from wic import WicError
-from wic.utils.misc import get_bitbake_var
+from wic.misc import get_bitbake_var
 
 PLUGIN_TYPES = ["imager", "source"]
 
