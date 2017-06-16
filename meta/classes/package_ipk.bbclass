@@ -57,6 +57,7 @@ def ipk_write_pkg(pkg, d):
 
     outdir = d.getVar('PKGWRITEDIRIPK')
     pkgdest = d.getVar('PKGDEST')
+    recipesource = os.path.basename(d.getVar('FILE'))
 
     localdata = bb.data.createCopy(d)
     root = "%s/%s" % (pkgdest, pkg)
@@ -205,10 +206,7 @@ def ipk_write_pkg(pkg, d):
             ctrlfile.write("Replaces: %s\n" % bb.utils.join_deps(rreplaces))
         if rconflicts:
             ctrlfile.write("Conflicts: %s\n" % bb.utils.join_deps(rconflicts))
-        src_uri = localdata.getVar("SRC_URI").strip() or "None"
-        if src_uri:
-            src_uri = re.sub("\s+", " ", src_uri)
-            ctrlfile.write("Source: %s\n" % " ".join(src_uri.split()))
+        ctrlfile.write("Source: %s\n" % recipesource)
         ctrlfile.close()
 
         for script in ["preinst", "postinst", "prerm", "postrm"]:
