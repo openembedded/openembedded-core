@@ -137,4 +137,3 @@ class SourcePlugin(metaclass=PluginMeta):
         'prepares' the partition to be incorporated into the image.
         """
         logger.debug("SourcePlugin: do_prepare_partition: part: %s", part)
-

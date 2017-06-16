@@ -34,13 +34,9 @@ def get_block_size(file_obj):
     Returns block size for file object 'file_obj'. Errors are indicated by the
     'IOError' exception.
     """
-
-    from fcntl import ioctl
-    import struct
-
     # Get the block size of the host file-system for the image file by calling
     # the FIGETBSZ ioctl (number 2).
-    binary_data = ioctl(file_obj, 2, struct.pack('I', 0))
+    binary_data = fcntl.ioctl(file_obj, 2, struct.pack('I', 0))
     return struct.unpack('I', binary_data)[0]
 
 class ErrorNotSupp(Exception):
@@ -228,7 +224,7 @@ class FilemapSeek(_FilemapBase):
         try:
             tmp_obj = tempfile.TemporaryFile("w+", dir=directory)
         except IOError as err:
-            raise ErrorNotSupp("cannot create a temporary in \"%s\": %s"
+            raise ErrorNotSupp("cannot create a temporary in \"%s\": %s" \
                               % (directory, err))
 
         try:
