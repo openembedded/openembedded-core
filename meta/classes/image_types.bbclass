@@ -26,19 +26,30 @@ def imagetypes_getdepends(d):
     fstypes = set((d.getVar('IMAGE_FSTYPES') or "").split())
     fstypes |= set((d.getVar('IMAGE_FSTYPES_DEBUGFS') or "").split())
 
+    deprecated = set()
     deps = set()
     for typestring in fstypes:
         basetype, resttypes = split_types(typestring)
-        adddep(d.getVar('IMAGE_DEPENDS_%s' % basetype) , deps)
+
+        var = "IMAGE_DEPENDS_%s" % basetype
+        if d.getVar(var) is not None:
+            deprecated.add(var)
 
         for typedepends in (d.getVar("IMAGE_TYPEDEP_%s" % basetype) or "").split():
             base, rest = split_types(typedepends)
-            adddep(d.getVar('IMAGE_DEPENDS_%s' % base) , deps)
             resttypes += rest
+
+            var = "IMAGE_DEPENDS_%s" % base
+            if d.getVar(var) is not None:
+                deprecated.add(var)
 
         for ctype in resttypes:
             adddep(d.getVar("CONVERSION_DEPENDS_%s" % ctype), deps)
             adddep(d.getVar("COMPRESS_DEPENDS_%s" % ctype), deps)
+
+    if deprecated:
+        bb.fatal('Deprecated variable(s) found: "%s". '
+                 'Use do_image_<type>[depends] += "<recipe>:<task>" instead' % ', '.join(deprecated))
 
     # Sort the set so that ordering is consistant
     return " ".join(sorted(deps))
@@ -101,7 +112,7 @@ IMAGE_CMD_squashfs-lzo = "mksquashfs ${IMAGE_ROOTFS} ${IMGDEPLOYDIR}/${IMAGE_NAM
 # you need special parameters (like --xattrs) which are only supported
 # by GNU tar upstream >= 1.27, then override that default:
 # IMAGE_CMD_TAR = "tar --xattrs --xattrs-include=*"
-# IMAGE_DEPENDS_tar_append = " tar-replacement-native"
+# do_image_tar[depends] += "tar-replacement-native:do_populate_sysroot"
 # EXTRANATIVEPATH += "tar-native"
 #
 # The GNU documentation does not specify whether --xattrs-include is necessary.
@@ -215,21 +226,19 @@ EXTRA_IMAGECMD_ext4 ?= "-i 4096"
 EXTRA_IMAGECMD_btrfs ?= "-n 4096"
 EXTRA_IMAGECMD_elf ?= ""
 
-IMAGE_DEPENDS = ""
-IMAGE_DEPENDS_jffs2 = "mtd-utils-native"
-IMAGE_DEPENDS_cramfs = "util-linux-native"
-IMAGE_DEPENDS_ext2 = "e2fsprogs-native"
-IMAGE_DEPENDS_ext3 = "e2fsprogs-native"
-IMAGE_DEPENDS_ext4 = "e2fsprogs-native"
-IMAGE_DEPENDS_btrfs = "btrfs-tools-native"
-IMAGE_DEPENDS_squashfs = "squashfs-tools-native"
-IMAGE_DEPENDS_squashfs-xz = "squashfs-tools-native"
-IMAGE_DEPENDS_squashfs-lzo = "squashfs-tools-native"
-IMAGE_DEPENDS_elf = "virtual/kernel mkelfimage-native"
-IMAGE_DEPENDS_ubi = "mtd-utils-native"
-IMAGE_DEPENDS_ubifs = "mtd-utils-native"
-IMAGE_DEPENDS_multiubi = "mtd-utils-native"
-IMAGE_DEPENDS_wic = "parted-native"
+do_image_jffs2[depends] += "mtd-utils-native:do_populate_sysroot"
+do_image_cramfs[depends] += "util-linux-native:do_populate_sysroot"
+do_image_ext2[depends] += "e2fsprogs-native:do_populate_sysroot"
+do_image_ext3[depends] += "e2fsprogs-native:do_populate_sysroot"
+do_image_ext4[depends] += "e2fsprogs-native:do_populate_sysroot"
+do_image_btrfs[depends] += "btrfs-tools-native:do_populate_sysroot"
+do_image_squashfs[depends] += "squashfs-tools-native:do_populate_sysroot"
+do_image_squashfs-xz[depends] += "squashfs-tools-native:do_populate_sysroot"
+do_image_squashfs-lzo[depends] += "squashfs-tools-native:do_populate_sysroot"
+do_image_elf[depends] += "virtual/kernel-native:do_populate_sysroot mkelfimage-native:do_populate_sysroot"
+do_image_ubi[depends] += "mtd-utils-native:do_populate_sysroot"
+do_image_ubifs[depends] += "mtd-utils-native:do_populate_sysroot"
+do_image_multiubi[depends] += "mtd-utils-native:do_populate_sysroot"
 
 # This variable is available to request which values are suitable for IMAGE_FSTYPES
 IMAGE_TYPES = " \
