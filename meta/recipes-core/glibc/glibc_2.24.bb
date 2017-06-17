@@ -38,6 +38,7 @@ SRC_URI = "${GLIBC_GIT_URI};branch=${SRCBRANCH};name=glibc \
            file://0025-Define-DUMMY_LOCALE_T-if-not-defined.patch \
            file://0026-build_local_scope.patch \
            file://0028-Bug-20116-Fix-use-after-free-in-pthread_create.patch \
+           file://CVE-2016-6323.patch \
 "
 
 SRC_URI += "\
