@@ -236,6 +236,11 @@ do_install_ptest () {
 	# modified again later when stripping them, but that's okay.
 	touch ${D}${PTEST_PATH}
 	find ${D}${PTEST_PATH} -type f -print0 | xargs --verbose -0 touch -r ${D}${PTEST_PATH}
+
+	# exclude binary files or the package won't install
+	for d in ssltest_old v3ext x509aux; do
+		rm -rf ${D}${libdir}/${BPN}/ptest/test/$d
+	done
 }
 
 do_install_append_class-native() {
