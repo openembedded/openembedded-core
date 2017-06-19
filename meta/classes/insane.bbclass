@@ -1060,7 +1060,7 @@ python do_package_qa () {
     package_qa_check_encoding(['DESCRIPTION', 'SUMMARY', 'LICENSE', 'SECTION'], 'utf-8', d)
 
     logdir = d.getVar('T')
-    pkg = d.getVar('PN')
+    pn = d.getVar('PN')
 
     # Check the compile log for host contamination
     compilelog = os.path.join(logdir,"log.do_compile")
@@ -1069,7 +1069,7 @@ python do_package_qa () {
         statement = "grep -e 'CROSS COMPILE Badness:' -e 'is unsafe for cross-compilation' %s > /dev/null" % compilelog
         if subprocess.call(statement, shell=True) == 0:
             msg = "%s: The compile log indicates that host include and/or library paths were used.\n \
-        Please check the log '%s' for more information." % (pkg, compilelog)
+        Please check the log '%s' for more information." % (pn, compilelog)
             package_qa_handle_error("compile-host-path", msg, d)
 
     # Check the install log for host contamination
@@ -1079,7 +1079,7 @@ python do_package_qa () {
         statement = "grep -e 'CROSS COMPILE Badness:' -e 'is unsafe for cross-compilation' %s > /dev/null" % installlog
         if subprocess.call(statement, shell=True) == 0:
             msg = "%s: The install log indicates that host include and/or library paths were used.\n \
-        Please check the log '%s' for more information." % (pkg, installlog)
+        Please check the log '%s' for more information." % (pn, installlog)
             package_qa_handle_error("install-host-path", msg, d)
 
     # Scan the packages...
