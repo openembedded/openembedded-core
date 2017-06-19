@@ -808,6 +808,23 @@ def package_qa_package(warnfuncs, errorfuncs, skip, package, d):
 
     return len(errors) == 0
 
+# Run all recipe-wide warnfuncs and errorfuncs
+def package_qa_recipe(warnfuncs, errorfuncs, skip, pn, d):
+    warnings = {}
+    errors = {}
+
+    for func in warnfuncs:
+        func(pn, d, warnings)
+    for func in errorfuncs:
+        func(pn, d, errors)
+
+    for w in warnings:
+        package_qa_handle_error(w, warnings[w], d)
+    for e in errors:
+        package_qa_handle_error(e, errors[e], d)
+
+    return len(errors) == 0
+
 # Walk over all files in a directory and call func
 def package_qa_walk(warnfuncs, errorfuncs, skip, package, d):
     import oe.qa
@@ -1108,33 +1125,32 @@ python do_package_qa () {
     for dep in taskdepdata:
         taskdeps.add(taskdepdata[dep][0])
 
+    def parse_test_matrix(matrix_name):
+        testmatrix = d.getVarFlags(matrix_name) or {}
+        g = globals()
+        warnchecks = []
+        for w in (d.getVar("WARN_QA") or "").split():
+            if w in skip:
+               continue
+            if w in testmatrix and testmatrix[w] in g:
+                warnchecks.append(g[testmatrix[w]])
+            if w == 'unsafe-references-in-binaries':
+                oe.utils.write_ld_so_conf(d)
+
+        errorchecks = []
+        for e in (d.getVar("ERROR_QA") or "").split():
+            if e in skip:
+               continue
+            if e in testmatrix and testmatrix[e] in g:
+                errorchecks.append(g[testmatrix[e]])
+            if e == 'unsafe-references-in-binaries':
+                oe.utils.write_ld_so_conf(d)
+        return warnchecks, errorchecks
+
     for package in packages:
-        def parse_test_matrix(matrix_name):
-            testmatrix = d.getVarFlags(matrix_name) or {}
-            g = globals()
-            warnchecks = []
-            for w in (d.getVar("WARN_QA") or "").split():
-                if w in skip:
-                   continue
-                if w in testmatrix and testmatrix[w] in g:
-                    warnchecks.append(g[testmatrix[w]])
-                if w == 'unsafe-references-in-binaries':
-                    oe.utils.write_ld_so_conf(d)
-
-            errorchecks = []
-            for e in (d.getVar("ERROR_QA") or "").split():
-                if e in skip:
-                   continue
-                if e in testmatrix and testmatrix[e] in g:
-                    errorchecks.append(g[testmatrix[e]])
-                if e == 'unsafe-references-in-binaries':
-                    oe.utils.write_ld_so_conf(d)
-            return warnchecks, errorchecks
-
         skip = (d.getVar('INSANE_SKIP_' + package) or "").split()
         if skip:
             bb.note("Package %s skipping QA tests: %s" % (package, str(skip)))
-
 
         bb.note("Checking Package: %s" % package)
         # Check package name
@@ -1150,6 +1166,9 @@ python do_package_qa () {
 
         package_qa_check_rdepends(package, pkgdest, skip, taskdeps, packages, d)
         package_qa_check_deps(package, pkgdest, skip, d)
+
+    warn_checks, error_checks = parse_test_matrix("QARECIPETEST")
+    package_qa_recipe(warn_checks, error_checks, skip, pn, d)
 
     if 'libdir' in d.getVar("ALL_QA").split():
         package_qa_check_libdir(d)
