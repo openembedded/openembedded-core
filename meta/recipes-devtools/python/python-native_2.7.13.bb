@@ -1,5 +1,4 @@
 require python.inc
-
 EXTRANATIVEPATH += "bzip2-native"
 DEPENDS = "openssl-native bzip2-replacement-native zlib-native readline-native sqlite3-native expat-native"
 PR = "${INC_PR}.1"
@@ -24,8 +23,6 @@ S = "${WORKDIR}/Python-${PV}"
 FILESEXTRAPATHS =. "${FILE_DIRNAME}/${PN}:"
 
 inherit native
-
-require python-native-${PYTHON_MAJMIN}-manifest.inc
 
 EXTRA_OECONF_append = " --bindir=${bindir}/${PN} --with-system-expat=${STAGING_DIR_HOST}"
 
@@ -58,4 +55,25 @@ do_install() {
 	# We don't want modules in ~/.local being used in preference to those
 	# installed in the native sysroot, so disable user site support.
 	sed -i -e 's,^\(ENABLE_USER_SITE = \).*,\1False,' ${D}${libdir}/python${PYTHON_MAJMIN}/site.py
+}
+
+python(){
+
+    # Read JSON manifest
+    import json
+    pythondir = d.getVar('THISDIR',True)
+    with open(pythondir+'/python/python2-manifest.json') as manifest_file:
+        python_manifest=json.load(manifest_file)
+
+    rprovides = d.getVar('RPROVIDES').split()
+
+    # Hardcoded since it cant be python-native-foo, should be python-foo-native
+    pn = 'python'
+
+    for key in python_manifest:
+        pypackage = pn + '-' + key + '-native'
+        if pypackage not in rprovides:
+              rprovides.append(pypackage)
+
+    d.setVar('RPROVIDES', ' '.join(rprovides))
 }
