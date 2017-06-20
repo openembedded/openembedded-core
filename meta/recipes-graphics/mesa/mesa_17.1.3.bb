@@ -4,12 +4,11 @@ SRC_URI = "https://mesa.freedesktop.org/archive/mesa-${PV}.tar.xz \
            file://replace_glibc_check_with_linux.patch \
            file://disable-asm-on-non-gcc.patch \
            file://0001-Use-wayland-scanner-in-the-path.patch \
-           file://0001-util-rand_xor-add-missing-include-statements.patch \
            file://0002-hardware-gloat.patch \
 "
 
-SRC_URI[md5sum] = "a4844bc6052578574f9629458bcbb749"
-SRC_URI[sha256sum] = "aed503f94c0c1630a162a3e276f4ee12a86764cee4cb92338ea2dea99a04e7ef"
+SRC_URI[md5sum] = "1946a93d543bc219427e2bebe2ac4752"
+SRC_URI[sha256sum] = "5f1ee9a8aea2880f887884df2dea0c16dd1b13eb42fd2e52265db0dc1b380e8c"
 
 #because we cannot rely on the fact that all apps will use pkgconfig,
 #make eglplatform.h independent of MESA_EGL_NO_X11_HEADER
