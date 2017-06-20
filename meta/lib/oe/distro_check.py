@@ -83,13 +83,6 @@ def get_latest_released_opensuse_source_package_list(d):
     package_names |= get_source_package_list_from_url("http://download.opensuse.org/update/leap/%s/oss/src/" % latest, "updates", d)
     return latest, package_names
 
-def get_latest_released_mandriva_source_package_list(d):
-    "Returns list of all the name os packages in the latest mandriva distro"
-    latest = find_latest_numeric_release("http://distrib-coffee.ipsl.jussieu.fr/pub/linux/MandrivaLinux/official/", d)
-    package_names = get_source_package_list_from_url("http://distrib-coffee.ipsl.jussieu.fr/pub/linux/MandrivaLinux/official/%s/SRPMS/main/release/" % latest, "main", d)
-    package_names |= get_source_package_list_from_url("http://distrib-coffee.ipsl.jussieu.fr/pub/linux/MandrivaLinux/official/%s/SRPMS/main/updates/" % latest, "updates", d)
-    return latest, package_names
-
 def get_latest_released_clear_source_package_list(d):
     latest = find_latest_numeric_release("https://download.clearlinux.org/releases/", d)
     package_names = get_source_package_list_from_url("https://download.clearlinux.org/releases/%s/clear/source/SRPMS/" % latest, "main", d)
@@ -162,7 +155,6 @@ def create_distro_packages_list(distro_check_dir, d):
                             ("Ubuntu", get_latest_released_ubuntu_source_package_list),
                             ("Fedora", get_latest_released_fedora_source_package_list),
                             ("openSUSE", get_latest_released_opensuse_source_package_list),
-                            ("Mandriva", get_latest_released_mandriva_source_package_list),
                             ("Clear", get_latest_released_clear_source_package_list),
                            )
 
