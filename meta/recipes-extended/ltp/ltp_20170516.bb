@@ -35,7 +35,6 @@ SRC_URI = "git://github.com/linux-test-project/ltp.git \
            file://0009-fix-redefinition-of-struct-msgbuf-error-building-wit.patch \
            file://0010-replace-__BEGIN_DECLS-and-__END_DECLS.patch \
            file://0011-Rename-sigset-variable-to-sigset1.patch \
-           file://0012-fix-faccessat01.c-build-fails-with-security-flags.patch \
            file://0018-guard-mallocopt-with-__GLIBC__.patch \
            file://0020-getdents-define-getdents-getdents64-only-for-glibc.patch \
            file://0021-Define-_GNU_SOURCE-for-MREMAP_MAYMOVE-definition.patch \
@@ -51,6 +50,7 @@ SRC_URI = "git://github.com/linux-test-project/ltp.git \
            file://0035-fix-test_proc_kill-hang.patch \
            file://0036-testcases-network-nfsv4-acl-acl1.c-Security-fix-on-s.patch \
            file://0001-dirtyc0w-Include-stdint.h.patch \
+           file://0037-faccessat-and-fchmodat-Fix-build-warnings.patch \
            "
 
 S = "${WORKDIR}/git"
