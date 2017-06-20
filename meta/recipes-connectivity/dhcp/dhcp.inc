@@ -84,7 +84,7 @@ do_install_append () {
 
 PACKAGES += "dhcp-libs dhcp-server dhcp-server-config dhcp-client dhcp-relay dhcp-omshell"
 
-FILES_${PN} = ""
+PACKAGES_remove = "${PN}"
 RDEPENDS_${PN}-dev = ""
 RDEPENDS_${PN}-staticdev = ""
 
