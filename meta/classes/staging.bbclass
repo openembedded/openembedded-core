@@ -68,101 +68,19 @@ sysroot_stage_all() {
 }
 
 python sysroot_strip () {
-    import stat, errno
+    inhibit_sysroot = d.getVar('INHIBIT_SYSROOT_STRIP', True)
+    if inhibit_sysroot and oe.types.boolean(inhibit_sysroot):
+        return 0
 
-    dvar = d.getVar('SYSROOT_DESTDIR')
-    pn = d.getVar('PN')
+    dstdir = d.getVar('SYSROOT_DESTDIR', True)
+    pn = d.getVar('PN', True)
+    libdir = os.path.abspath(dstdir + os.sep + d.getVar("libdir", True))
+    base_libdir = os.path.abspath(dstdir + os.sep + d.getVar("base_libdir", True))
+    qa_already_stripped = 'already-stripped' in (d.getVar('INSANE_SKIP_' + pn, True) or "").split()
+    strip_cmd = d.getVar("STRIP", True)
 
-    os.chdir(dvar)
-
-    # Return type (bits):
-    # 0 - not elf
-    # 1 - ELF
-    # 2 - stripped
-    # 4 - executable
-    # 8 - shared library
-    # 16 - kernel module
-    def isELF(path):
-        type = 0
-        ret, result = oe.utils.getstatusoutput("file \"%s\"" % path.replace("\"", "\\\""))
-
-        if ret:
-            bb.error("sysroot_strip: 'file %s' failed" % path)
-            return type
-
-        # Not stripped
-        if "ELF" in result:
-            type |= 1
-            if "not stripped" not in result:
-                type |= 2
-            if "executable" in result:
-                type |= 4
-            if "shared" in result:
-                type |= 8
-        return type
-
-
-    elffiles = {}
-    inodes = {}
-    libdir = os.path.abspath(dvar + os.sep + d.getVar("libdir"))
-    baselibdir = os.path.abspath(dvar + os.sep + d.getVar("base_libdir"))
-    if (d.getVar('INHIBIT_SYSROOT_STRIP') != '1'):
-        #
-        # First lets figure out all of the files we may have to process
-        #
-        for root, dirs, files in os.walk(dvar):
-            for f in files:
-                file = os.path.join(root, f)
-
-                try:
-                    ltarget = oe.path.realpath(file, dvar, False)
-                    s = os.lstat(ltarget)
-                except OSError as e:
-                    (err, strerror) = e.args
-                    if err != errno.ENOENT:
-                        raise
-                    # Skip broken symlinks
-                    continue
-                if not s:
-                    continue
-                # Check its an excutable
-                if (s[stat.ST_MODE] & stat.S_IXUSR) or (s[stat.ST_MODE] & stat.S_IXGRP) or (s[stat.ST_MODE] & stat.S_IXOTH) \
-                        or ((file.startswith(libdir) or file.startswith(baselibdir)) and ".so" in f):
-                    # If it's a symlink, and points to an ELF file, we capture the readlink target
-                    if os.path.islink(file):
-                        continue
-
-                    # It's a file (or hardlink), not a link
-                    # ...but is it ELF, and is it already stripped?
-                    elf_file = isELF(file)
-                    if elf_file & 1:
-                        if elf_file & 2:
-                            if 'already-stripped' in (d.getVar('INSANE_SKIP_' + pn) or "").split():
-                                bb.note("Skipping file %s from %s for already-stripped QA test" % (file[len(dvar):], pn))
-                            else:
-                                bb.warn("File '%s' from %s was already stripped, this will prevent future debugging!" % (file[len(dvar):], pn))
-                            continue
-
-                        if s.st_ino in inodes:
-                            os.unlink(file)
-                            os.link(inodes[s.st_ino], file)
-                        else:
-                            inodes[s.st_ino] = file
-                            # break hardlink
-                            bb.utils.copyfile(file, file)
-                            elffiles[file] = elf_file
-
-        #
-        # Now strip them (in parallel)
-        #
-        strip = d.getVar("STRIP")
-        sfiles = []
-        for file in elffiles:
-            elf_file = int(elffiles[file])
-            #bb.note("Strip %s" % file)
-            sfiles.append((file, elf_file, strip))
-
-        oe.utils.multiprocess_exec(sfiles, oe.package.runstrip)
+    oe.package.strip_execs(pn, dstdir, strip_cmd, libdir, base_libdir,
+                           qa_already_stripped=qa_already_stripped)
 }
 
 do_populate_sysroot[dirs] = "${SYSROOT_DESTDIR}"
