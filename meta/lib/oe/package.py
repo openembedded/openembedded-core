@@ -45,6 +45,111 @@ def runstrip(arg):
     return
 
 
+def strip_execs(pn, dstdir, strip_cmd, libdir, base_libdir, qa_already_stripped=False):
+    """
+    Strip executable code (like executables, shared libraries) _in_place_
+    - Based on sysroot_strip in staging.bbclass
+    :param dstdir: directory in which to strip files
+    :param strip_cmd: Strip command (usually ${STRIP})
+    :param libdir: ${libdir} - strip .so files in this directory
+    :param base_libdir: ${base_libdir} - strip .so files in this directory
+    :param qa_already_stripped: Set to True if already-stripped' in ${INSANE_SKIP}
+    This is for proper logging and messages only.
+    """
+    import stat, errno, oe.path, oe.utils
+
+    os.chdir(dstdir)
+
+    # Return type (bits):
+    # 0 - not elf
+    # 1 - ELF
+    # 2 - stripped
+    # 4 - executable
+    # 8 - shared library
+    # 16 - kernel module
+    def isELF(path):
+        type = 0
+        ret, result = oe.utils.getstatusoutput("file \"%s\"" % path.replace("\"", "\\\""))
+
+        if ret:
+            bb.error("split_and_strip_files: 'file %s' failed" % path)
+            return type
+
+        # Not stripped
+        if "ELF" in result:
+            type |= 1
+            if "not stripped" not in result:
+                type |= 2
+            if "executable" in result:
+                type |= 4
+            if "shared" in result:
+                type |= 8
+        return type
+
+
+    elffiles = {}
+    inodes = {}
+    libdir = os.path.abspath(dstdir + os.sep + libdir)
+    base_libdir = os.path.abspath(dstdir + os.sep + base_libdir)
+
+    #
+    # First lets figure out all of the files we may have to process
+    #
+    for root, dirs, files in os.walk(dstdir):
+        for f in files:
+            file = os.path.join(root, f)
+
+            try:
+                ltarget = oe.path.realpath(file, dstdir, False)
+                s = os.lstat(ltarget)
+            except OSError as e:
+                (err, strerror) = e.args
+                if err != errno.ENOENT:
+                    raise
+                # Skip broken symlinks
+                continue
+            if not s:
+                continue
+            # Check its an excutable
+            if (s[stat.ST_MODE] & stat.S_IXUSR) or (s[stat.ST_MODE] & stat.S_IXGRP) or (s[stat.ST_MODE] & stat.S_IXOTH) \
+                    or ((file.startswith(libdir) or file.startswith(base_libdir)) and ".so" in f):
+                # If it's a symlink, and points to an ELF file, we capture the readlink target
+                if os.path.islink(file):
+                    continue
+
+                # It's a file (or hardlink), not a link
+                # ...but is it ELF, and is it already stripped?
+                elf_file = isELF(file)
+                if elf_file & 1:
+                    if elf_file & 2:
+                        if qa_already_stripped:
+                            bb.note("Skipping file %s from %s for already-stripped QA test" % (file[len(dstdir):], pn))
+                        else:
+                            bb.warn("File '%s' from %s was already stripped, this will prevent future debugging!" % (file[len(dstdir):], pn))
+                        continue
+
+                    if s.st_ino in inodes:
+                        os.unlink(file)
+                        os.link(inodes[s.st_ino], file)
+                    else:
+                        inodes[s.st_ino] = file
+                        # break hardlink
+                        bb.utils.copyfile(file, file)
+                        elffiles[file] = elf_file
+
+    #
+    # Now strip them (in parallel)
+    #
+    sfiles = []
+    for file in elffiles:
+        elf_file = int(elffiles[file])
+        #bb.note("Strip %s" % file)
+        sfiles.append((file, elf_file, strip_cmd))
+
+    oe.utils.multiprocess_exec(sfiles, runstrip)
+
+
+
 def file_translate(file):
     ft = file.replace("@", "@at@")
     ft = ft.replace(" ", "@space@")
