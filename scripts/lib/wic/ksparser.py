@@ -114,7 +114,7 @@ def systemidtype(arg):
     return arg
 
 class KickStart():
-    """"Kickstart parser implementation."""
+    """Kickstart parser implementation."""
 
     DEFAULT_EXTRA_SPACE = 10*1024
     DEFAULT_OVERHEAD_FACTOR = 1.3
