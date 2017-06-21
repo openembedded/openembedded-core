@@ -494,9 +494,11 @@ class RpmPM(PackageManager):
         # This prevents accidental matching against libsolv's built-in policies
         if len(archs) <= 1:
             archs = archs + ["bogusarch"]
-        archconfdir = "%s/%s" %(self.target_rootfs, "etc/dnf/vars/")
-        bb.utils.mkdirhier(archconfdir)
-        open(archconfdir + "arch", 'w').write(":".join(archs))
+        confdir = "%s/%s" %(self.target_rootfs, "etc/dnf/vars/")
+        bb.utils.mkdirhier(confdir)
+        open(confdir + "arch", 'w').write(":".join(archs))
+        distro_codename = self.d.getVar('DISTRO_CODENAME')
+        open(confdir + "releasever", 'w').write(distro_codename if distro_codename is not None else '')
 
         open(oe.path.join(self.target_rootfs, "etc/dnf/dnf.conf"), 'w').write("")
 
