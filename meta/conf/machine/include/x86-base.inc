@@ -10,7 +10,7 @@ MACHINE_FEATURES += "screen keyboard pci usbhost ext2 ext3 x86 \
 
 MACHINE_EXTRA_RRECOMMENDS += "kernel-modules"
 
-IMAGE_FSTYPES += "live"
+IMAGE_FSTYPES ?= "live"
 
 KERNEL_IMAGETYPE ?= "bzImage"
 
