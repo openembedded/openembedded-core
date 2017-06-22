@@ -16,5 +16,5 @@ BINCONFIG = "${bindir}/croco-0.6-config"
 
 inherit autotools pkgconfig gnomebase gtk-doc binconfig-disabled
 
-SRC_URI[archive.md5sum] = "dabc1911dfbfa85f8e6859ca47863168"
-SRC_URI[archive.sha256sum] = "132b528a948586b0dfa05d7e9e059901bca5a3be675b6071a90a90b81ae5a056"
+SRC_URI[archive.md5sum] = "bc0984fce078ba2ce29f9500c6b9ddce"
+SRC_URI[archive.sha256sum] = "ddc4b5546c9fb4280a5017e2707fbd4839034ed1aba5b7d4372212f34f84f860"
