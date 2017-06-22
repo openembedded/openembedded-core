@@ -145,6 +145,12 @@ UBI_VOLNAME ?= "${MACHINE}-rootfs"
 multiubi_mkfs() {
 	local mkubifs_args="$1"
 	local ubinize_args="$2"
+    
+        # Added prompt error message for ubi and ubifs image creation.
+        if [ -z "$mkubifs_args"] || [ -z "$ubinize_args" ]; then
+            bbfatal "MKUBIFS_ARGS and UBINIZE_ARGS have to be set, see http://www.linux-mtd.infradead.org/faq/ubifs.html for details"
+        fi
+    
 	if [ -z "$3" ]; then
 		local vname=""
 	else
