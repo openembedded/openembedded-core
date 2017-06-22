@@ -63,7 +63,7 @@ python do_diffconfig() {
 
     if isdiff:
         statement = 'diff --unchanged-line-format= --old-line-format= --new-line-format="%L" ' + configorig + ' ' + config + '>' + fragment
-        subprocess.call(statement, shell=True)
+        subprocess.check_call(statement, shell=True)
 
         shutil.copy(configorig, config)
 

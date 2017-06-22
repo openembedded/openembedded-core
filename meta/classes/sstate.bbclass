@@ -404,7 +404,7 @@ python sstate_hardcode_path_unpack () {
             return
 
         bb.note("Replacing fixme paths in sstate package: %s" % (sstate_hardcode_cmd))
-        subprocess.call(sstate_hardcode_cmd, shell=True)
+        subprocess.check_call(sstate_hardcode_cmd, shell=True)
 
         # Need to remove this or we'd copy it into the target directory and may 
         # conflict with another writer
@@ -453,7 +453,7 @@ def sstate_clean_manifest(manifest, d, prefix=None):
     if os.path.exists(manifest + ".postrm"):
         import subprocess
         os.chmod(postrm, 0o755)
-        subprocess.call(postrm, shell=True)
+        subprocess.check_call(postrm, shell=True)
         oe.path.remove(postrm)
 
     oe.path.remove(manifest)
