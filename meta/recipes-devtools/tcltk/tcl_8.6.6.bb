@@ -35,23 +35,15 @@ VER = "${PV}"
 
 inherit autotools ptest binconfig
 
-DEPENDS_class-native = "zlib-native"
-
 EXTRA_OECONF = "--enable-threads --disable-rpath --libdir=${libdir}"
-
-do_configure() {
-	cd ${S}
-	gnu-configize
-	cd ${B}
-	oe_runconf
-}
 
 do_compile_prepend() {
 	echo > ${S}/../compat/fixstrtod.c
 }
 
 do_install() {
-	autotools_do_install install-private-headers
+	autotools_do_install
+	oe_runmake 'DESTDIR=${D}' install-private-headers
 	ln -sf ./tclsh${VER} ${D}${bindir}/tclsh
 	ln -sf tclsh8.6 ${D}${bindir}/tclsh${VER}
 	sed -i "s;-L${B};-L${STAGING_LIBDIR};g" tclConfig.sh
@@ -59,7 +51,6 @@ do_install() {
 	install -d ${D}${bindir_crossscripts}
 	install -m 0755 tclConfig.sh ${D}${bindir_crossscripts}
 	install -m 0755 tclConfig.sh ${D}${libdir}
-	cd ..
 	for dir in compat generic unix; do
 		install -d ${D}${includedir}/${BPN}${VER}/$dir
 		install -m 0644 ${S}/../$dir/*.h ${D}${includedir}/${BPN}${VER}/$dir/
