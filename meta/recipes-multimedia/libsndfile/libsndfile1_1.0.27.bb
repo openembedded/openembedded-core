@@ -5,7 +5,9 @@ DEPENDS = "flac libogg libvorbis sqlite3"
 SECTION = "libs/multimedia"
 LICENSE = "LGPLv2.1"
 
-SRC_URI = "http://www.mega-nerd.com/libsndfile/files/libsndfile-${PV}.tar.gz"
+SRC_URI = "http://www.mega-nerd.com/libsndfile/files/libsndfile-${PV}.tar.gz \
+           file://CVE-2017-6892.patch \
+          "
 
 SRC_URI[md5sum] = "fd1d97c6077f03b5d984d7956ffedb7a"
 SRC_URI[sha256sum] = "a391952f27f4a92ceb2b4c06493ac107896ed6c76be9a613a4731f076d30fac0"
