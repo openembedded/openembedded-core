@@ -784,16 +784,12 @@ class BaseConfig(object):
             all_instances.sort(key=int)
             self.nfs_instance = int(all_instances.pop()) + 1
 
-        mountd_rpcport = 21111 + self.nfs_instance
-        nfsd_rpcport = 11111 + self.nfs_instance
         nfsd_port = 3049 + 2 * self.nfs_instance
         mountd_port = 3048 + 2 * self.nfs_instance
 
         # Export vars for runqemu-export-rootfs
         export_dict = {
             'NFS_INSTANCE': self.nfs_instance,
-            'MOUNTD_RPCPORT': mountd_rpcport,
-            'NFSD_RPCPORT': nfsd_rpcport,
             'NFSD_PORT': nfsd_port,
             'MOUNTD_PORT': mountd_port,
         }
@@ -801,7 +797,7 @@ class BaseConfig(object):
             # Use '%s' since they are integers
             os.putenv(k, '%s' % v)
 
-        self.unfs_opts="nfsvers=3,port=%s,mountprog=%s,nfsprog=%s,udp,mountport=%s" % (nfsd_port, mountd_rpcport, nfsd_rpcport, mountd_port)
+        self.unfs_opts="nfsvers=3,port=%s,udp,mountport=%s" % (nfsd_port, mountd_port)
 
         # Extract .tar.bz2 or .tar.bz if no nfs dir
         if not (self.rootfs and os.path.isdir(self.rootfs)):
@@ -1006,7 +1002,7 @@ class BaseConfig(object):
 
         if self.fstype == 'nfs':
             self.rootfs_options = ''
-            k_root = '/dev/nfs nfsroot=%s:%s,%s' % (self.nfs_server, self.rootfs, self.unfs_opts)
+            k_root = '/dev/nfs nfsroot=%s:%s,%s' % (self.nfs_server, os.path.abspath(self.rootfs), self.unfs_opts)
             self.kernel_cmdline = 'root=%s rw highres=off' % k_root
 
         if self.fstype == 'none':
