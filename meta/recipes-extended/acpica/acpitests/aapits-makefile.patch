@@ -3,7 +3,7 @@ Date: Mon, 7 Apr 2014 19:09:37 +0000
 Subject: [PATCH 1/2] Fixup aapits build
 
 From http://git.linaro.org/people/al.stone/acpica-tools.git
-Upstream-status: Unknown
+Upstream-Status: Pending
 
 diff -urN acpica-unix2-20140325/tests/aapits/Makefile acpica-unix2-20140325/tests/aapits/Makefile
 --- acpica-unix2-20140325/tests/aapits/Makefile	2014-04-05 14:23:14.683636794 -0600

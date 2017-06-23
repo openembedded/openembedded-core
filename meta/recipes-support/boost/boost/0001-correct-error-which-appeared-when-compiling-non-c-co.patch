@@ -4,7 +4,7 @@ Date: Wed, 1 Feb 2017 16:43:59 -0800
 Subject: [PATCH] correct error which appeared when compiling non c++ compliant
  code for arrays
 
-Upstream-Status: Backported [expected to be released in v1.65]
+Upstream-Status: Backport [expected to be released in v1.65]
 
 ---
  boost/serialization/array.hpp | 2 ++
