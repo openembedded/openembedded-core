@@ -6,6 +6,8 @@ import time
 import glob
 import sys
 import imp
+import signal
+from shutil import copyfile
 from random import choice
 
 import oeqa
@@ -16,13 +18,12 @@ from oeqa.core.exception import OEQAPreRun
 from oeqa.utils.commands import runCmd, get_bb_vars, get_test_layer
 
 class OESelftestTestContext(OETestContext):
-    def __init__(self, td=None, logger=None, machines=None, testlayer_path=None):
+    def __init__(self, td=None, logger=None, machines=None, config_paths=None):
         super(OESelftestTestContext, self).__init__(td, logger)
 
         self.machines = machines
         self.custommachine = None
-
-        self.testlayer_path = testlayer_path
+        self.config_paths = config_paths
 
     def runTests(self, machine=None):
         if machine:
@@ -108,7 +109,29 @@ class OESelftestTestContextExecutor(OETestContextExecutor):
 
         self.tc_kwargs['init']['td'] = get_bb_vars()
         self.tc_kwargs['init']['machines'] = self._get_available_machines()
-        self.tc_kwargs['init']['testlayer_path'] = get_test_layer()
+
+        builddir = os.environ.get("BUILDDIR")
+        self.tc_kwargs['init']['config_paths'] = {}
+        self.tc_kwargs['init']['config_paths']['testlayer_path'] = \
+                get_test_layer()
+        self.tc_kwargs['init']['config_paths']['builddir'] = builddir
+        self.tc_kwargs['init']['config_paths']['localconf'] = \
+                os.path.join(builddir, "conf/local.conf")
+        self.tc_kwargs['init']['config_paths']['localconf_backup'] = \
+                os.path.join(builddir, "conf/local.conf.orig")
+        self.tc_kwargs['init']['config_paths']['localconf_class_backup'] = \
+                os.path.join(builddir, "conf/local.conf.bk")
+        self.tc_kwargs['init']['config_paths']['bblayers'] = \
+                os.path.join(builddir, "conf/bblayers.conf")
+        self.tc_kwargs['init']['config_paths']['bblayers_backup'] = \
+                os.path.join(builddir, "conf/bblayers.conf.orig")
+        self.tc_kwargs['init']['config_paths']['bblayers_class_backup'] = \
+                os.path.join(builddir, "conf/bblayers.conf.bk")
+
+        copyfile(self.tc_kwargs['init']['config_paths']['localconf'],
+                self.tc_kwargs['init']['config_paths']['localconf_backup'])
+        copyfile(self.tc_kwargs['init']['config_paths']['bblayers'], 
+                self.tc_kwargs['init']['config_paths']['bblayers_backup'])
 
     def _pre_run(self):
         def _check_required_env_variables(vars):
@@ -131,7 +154,7 @@ class OESelftestTestContextExecutor(OETestContextExecutor):
                     runCmd("bitbake-layers add-layer %s" %meta_selftestdir)
                     # reload data is needed because a meta-selftest layer was add
                     self.tc.td = get_bb_vars()
-                    self.tc.testlayer_path = get_test_layer()
+                    self.tc.config_paths['testlayer_path'] = get_test_layer()
                 else:
                     self.tc.logger.error("could not locate meta-selftest in:\n%s" % meta_selftestdir)
                     raise OEQAPreRun
@@ -184,41 +207,63 @@ class OESelftestTestContextExecutor(OETestContextExecutor):
             rc.logSummary(self.name)
 
         return rc
+
+    def _signal_clean_handler(self, signum, frame):
+        sys.exit(1)
     
     def run(self, logger, args):
         self._process_args(logger, args)
+
+        signal.signal(signal.SIGTERM, self._signal_clean_handler)
+
         rc = None
+        try:
+            if args.machine:
+                logger.info('Custom machine mode enabled. MACHINE set to %s' %
+                        args.machine)
 
-        if args.machine:
-            logger.info('Custom machine mode enabled. MACHINE set to %s' %
-                    args.machine)
+                if args.machine == 'all':
+                    results = []
+                    for m in self.tc_kwargs['init']['machines']:
+                        self.tc_kwargs['run']['machine'] = m
+                        results.append(self._internal_run(logger, args))
 
-            if args.machine == 'all':
-                results = []
-                for m in self.tc_kwargs['init']['machines']:
-                    self.tc_kwargs['run']['machine'] = m
-                    results.append(self._internal_run(logger, args))
+                        # XXX: the oe-selftest script only needs to know if one
+                        # machine run fails
+                        for r in results:
+                            rc = r
+                            if not r.wasSuccessful():
+                                break
 
-                    # XXX: the oe-selftest script only needs to know if one
-                    # machine run fails
-                    for r in results:
-                        rc = r
-                        if not r.wasSuccessful():
-                            break
+                else:
+                    self.tc_kwargs['run']['machine'] = args.machine
+                    return self._internal_run(logger, args)
 
             else:
                 self.tc_kwargs['run']['machine'] = args.machine
-                return self._internal_run(logger, args)
+                rc = self._internal_run(logger, args)
+        finally:
+            config_paths = self.tc_kwargs['init']['config_paths']
+            if os.path.exists(config_paths['localconf_backup']):
+                copyfile(config_paths['localconf_backup'],
+                        config_paths['localconf'])
+                os.remove(config_paths['localconf_backup'])
 
-        else:
-            self.tc_kwargs['run']['machine'] = args.machine
-            rc = self._internal_run(logger, args)
+            if os.path.exists(config_paths['bblayers_backup']):
+                copyfile(config_paths['bblayers_backup'], 
+                        config_paths['bblayers'])
+                os.remove(config_paths['bblayers_backup'])
 
-        output_link = os.path.join(os.path.dirname(args.output_log),
-                "%s-results.log" % self.name)
-        if os.path.exists(output_link):
-            os.remove(output_link)
-        os.symlink(args.output_log, output_link)
+            if os.path.exists(config_paths['localconf_class_backup']):
+                os.remove(config_paths['localconf_class_backup'])
+            if os.path.exists(config_paths['bblayers_class_backup']):
+                os.remove(config_paths['bblayers_class_backup'])
+
+            output_link = os.path.join(os.path.dirname(args.output_log),
+                    "%s-results.log" % self.name)
+            if os.path.exists(output_link):
+                os.remove(output_link)
+            os.symlink(args.output_log, output_link)
 
         return rc
 

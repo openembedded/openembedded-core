@@ -13,28 +13,34 @@ from oeqa.utils.commands import runCmd, bitbake, get_bb_var
 from oeqa.core.case import OETestCase
 
 class OESelftestTestCase(OETestCase):
-    builddir = os.environ.get("BUILDDIR") or ""
-    localconf_path = os.path.join(builddir, "conf/local.conf")
-    localconf_backup = os.path.join(builddir, "conf/local.bk")
-    testinc_path = os.path.join(builddir, "conf/selftest.inc")
-    local_bblayers_path = os.path.join(builddir, "conf/bblayers.conf")
-    local_bblayers_backup = os.path.join(builddir, "conf/bblayers.bk")
-    testinc_bblayers_path = os.path.join(builddir, "conf/bblayers.inc")
-    machineinc_path = os.path.join(builddir, "conf/machine.inc")
-
     def __init__(self, methodName="runTest"):
         self._extra_tear_down_commands = []
-        self._track_for_cleanup = [
-            self.testinc_path, self.testinc_bblayers_path,
-            self.machineinc_path, self.localconf_backup,
-            self.local_bblayers_backup]
-
         super(OESelftestTestCase, self).__init__(methodName)
 
     @classmethod
     def setUpClass(cls):
         super(OESelftestTestCase, cls).setUpClass()
-        cls.testlayer_path = cls.tc.testlayer_path
+
+        cls.testlayer_path = cls.tc.config_paths['testlayer_path']
+        cls.builddir = cls.tc.config_paths['builddir']
+
+        cls.localconf_path = cls.tc.config_paths['localconf']
+        cls.localconf_backup = cls.tc.config_paths['localconf_class_backup']
+        cls.local_bblayers_path = cls.tc.config_paths['bblayers']
+        cls.local_bblayers_backup = cls.tc.config_paths['bblayers_class_backup']
+
+        cls.testinc_path = os.path.join(cls.tc.config_paths['builddir'],
+                "conf/selftest.inc")
+        cls.testinc_bblayers_path = os.path.join(cls.tc.config_paths['builddir'],
+                "conf/bblayers.inc")
+        cls.machineinc_path = os.path.join(cls.tc.config_paths['builddir'],
+                "conf/machine.inc")
+
+        cls._track_for_cleanup = [
+            cls.testinc_path, cls.testinc_bblayers_path,
+            cls.machineinc_path, cls.localconf_backup,
+            cls.local_bblayers_backup]
+
         cls.add_include()
 
     @classmethod
