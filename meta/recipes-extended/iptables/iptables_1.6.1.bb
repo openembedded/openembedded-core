@@ -22,8 +22,8 @@ SRC_URI = "http://netfilter.org/projects/iptables/files/iptables-${PV}.tar.bz2 \
            file://types.h-add-defines-that-are-required-for-if_packet.patch \
            file://0001-configure-Add-option-to-enable-disable-libnfnetlink.patch \
            file://0002-configure.ac-only-check-conntrack-when-libnfnetlink-enabled.patch \
-          "
-SRC_URI_append_libc-musl = " file://0001-fix-build-with-musl.patch"
+           file://0001-fix-build-with-musl.patch \
+"
 
 SRC_URI[md5sum] = "ab38a33806b6182c6f53d6afb4619add"
 SRC_URI[sha256sum] = "0fc2d7bd5d7be11311726466789d4c65fb4c8e096c9182b56ce97440864f0cf5"
