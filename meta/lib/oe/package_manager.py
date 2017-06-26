@@ -399,6 +399,7 @@ class PackageManager(object, metaclass=ABCMeta):
             pkgs = self.list_installed()
             output = oe.utils.format_pkg_list(pkgs, "arch")
             installed_pkgs.write(output)
+            installed_pkgs.flush()
 
             cmd = [bb.utils.which(os.getenv('PATH'), "oe-pkgdata-util"),
                    "-p", self.d.getVar('PKGDATA_DIR'), "glob", installed_pkgs.name,
