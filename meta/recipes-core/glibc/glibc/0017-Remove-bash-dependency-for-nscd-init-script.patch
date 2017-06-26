@@ -8,6 +8,7 @@ The nscd init script uses #! /bin/bash but only really uses one bashism
 
 Signed-off-by: Ross Burton <ross.burton@intel.com>
 Signed-off-by: Khem Raj <raj.khem@gmail.com>
+Upstream-Status: Inappropriate
 ---
  nscd/nscd.init | 14 +++++++-------
  1 file changed, 7 insertions(+), 7 deletions(-)

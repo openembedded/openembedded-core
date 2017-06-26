@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate
+
 Index: openssl-1.0.2~beta1.obsolete.0.0498436515490575/Configure
 ===================================================================
 --- openssl-1.0.2~beta1.obsolete.0.0498436515490575.orig/Configure	2014-02-24 21:02:30.000000000 +0100

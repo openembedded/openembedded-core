@@ -25,6 +25,8 @@ Too many things don't get along with the unified hierarchy yet:
 So revert the default to the legacy hierarchy for now. Developers of the above
 software can opt into the unified hierarchy with
 "systemd.legacy_systemd_cgroup_controller=0".
+
+Upstream-Status: Backport
 ---
  src/basic/cgroup-util.c | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)

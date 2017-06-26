@@ -7,6 +7,7 @@ Prepend the build flags with those of bitbake. This is to build
 using the bitbake native sysroot include and library directories.
 
 Signed-off-by: Ricardo Neri <ricardo.neri@linux.intel.com>
+Upstream-Status: Pending
 ---
  BaseTools/Source/C/Makefiles/header.makefile | 8 ++++----
  1 file changed, 4 insertions(+), 4 deletions(-)

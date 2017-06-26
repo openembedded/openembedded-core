@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate
+
 diff --git a/tests/Makefile.in b/tests/Makefile.in
 index 60cf655..ce220f1 100644
 --- a/tests/Makefile.in

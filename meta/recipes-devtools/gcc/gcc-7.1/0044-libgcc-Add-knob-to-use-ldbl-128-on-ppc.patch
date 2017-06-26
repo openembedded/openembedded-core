@@ -11,6 +11,7 @@ default behaviour is to assume ldbl128 it does not
 change the defaults
 
 Signed-off-by: Khem Raj <raj.khem@gmail.com>
+Upstream-Status: Pending
 ---
  libgcc/Makefile.in           |  1 +
  libgcc/config/rs6000/t-linux |  5 ++++-

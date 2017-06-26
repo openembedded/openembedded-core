@@ -11,6 +11,7 @@ These EXT symbols are guaranteed to exist since they require
 EGL_EXT_platform_base.
 
 Signed-off-by: Daniel Díaz <daniel.diaz@linaro.org>
+Upstream-Status: Pending
 ---
  .../egl_mesa_platform_surfaceless.c                | 23 ++++++++++++++++++++--
  1 file changed, 21 insertions(+), 2 deletions(-)

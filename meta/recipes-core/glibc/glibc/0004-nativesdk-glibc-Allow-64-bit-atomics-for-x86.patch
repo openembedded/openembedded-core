@@ -10,6 +10,7 @@ It also makes the synchronization more efficient.
 Signed-off-by: Juro Bystricky <juro.bystricky@intel.com>
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 Signed-off-by: Khem Raj <raj.khem@gmail.com>
+Upstream-Status: Pending
 ---
  sysdeps/i386/atomic-machine.h | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)

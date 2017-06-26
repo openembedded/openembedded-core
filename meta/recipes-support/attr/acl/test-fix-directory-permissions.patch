@@ -10,6 +10,8 @@ Date:   Wed May 11 15:16:06 2016 -0500
 
     Signed-off-by: Peter Seebach <peter.seebach@windriver.com>
 
+Upstream-Status: Pending
+
 diff --git a/test/root/permissions.test b/test/root/permissions.test
 index 42615f5..098b52a 100644
 --- a/test/root/permissions.test

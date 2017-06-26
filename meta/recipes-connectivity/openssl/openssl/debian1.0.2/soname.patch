@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate
+
 Index: openssl-1.0.2d/crypto/opensslv.h
 ===================================================================
 --- openssl-1.0.2d.orig/crypto/opensslv.h

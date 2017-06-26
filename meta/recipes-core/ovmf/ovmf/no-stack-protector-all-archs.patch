@@ -4,6 +4,7 @@ Description: pass -fno-stack-protector to all GCC toolchains
  when building for i386 and amd64.  Add this essential argument to the
  generic rules for gcc 4.4 and later.
 Last-Updated: 2016-04-12
+Upstream-Status: Pending
 Index: git/BaseTools/Conf/tools_def.template
 ===================================================================
 --- git.orig/BaseTools/Conf/tools_def.template

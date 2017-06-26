@@ -9,6 +9,7 @@ Signed-off-by: Saul Wold <sgw@linux.intel.com>
 Rebase on 9.72
 
 Signed-off-by: Fan Xin <fan.xin@jp.fujitsu.com>
+Upstream-Status: Pending
 ---
  initscripts-9.72/rc.d/init.d/functions | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)

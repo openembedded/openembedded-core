@@ -7,7 +7,7 @@ glibc includes this header indirectly but not musl
 
 Signed-off-by: Khem Raj <raj.khem@gmail.com>
 ---
-Upstream_status: Pending
+Upstream-Status: Pending
 
  src/rpcsvc/nis.h    | 1 +
  src/rpcsvc/nislib.h | 1 +
