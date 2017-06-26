@@ -11,6 +11,7 @@ PE = "1"
 SRCREV = "7bb64ff2b69a9f8367de9ab483cdadf42b4c1b65"
 
 SRC_URI = "git://github.com/lz4/lz4.git \
+           file://0001-tests-Makefile-don-t-use-LIBDIR-as-variable.patch \
            file://run-ptest \
 "
 
