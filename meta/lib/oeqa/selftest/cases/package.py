@@ -17,6 +17,8 @@ class VersionOrdering(OESelftestTestCase):
 
     @classmethod
     def setUpClass(cls):
+        super().setUpClass()
+
         # Build the tools we need and populate a sysroot
         bitbake("dpkg-native opkg-native rpm-native python3-native")
         bitbake("build-sysroots -c build_native_sysroot")
