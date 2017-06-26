@@ -79,13 +79,6 @@ do_install () {
 	fi
 }
 
-python do_package_append() {
-    import subprocess
-    # Change permissions back the way they were, they probably had a reason...
-    workdir = d.getVar('WORKDIR')
-    subprocess.call('chmod 0511 %s/install/cups/var/run/cups/certs' % workdir, shell=True)
-}
-
 PACKAGES =+ "${PN}-lib ${PN}-libimage"
 
 RDEPENDS_${PN} += "${@bb.utils.contains('DISTRO_FEATURES', 'sysvinit', 'procps', '', d)}"
