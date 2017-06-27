@@ -1,6 +1,7 @@
 # Copyright (C) 2017 Intel Corporation
 # Released under the MIT license (see COPYING.MIT)
 
+import glob
 import os
 import unittest
 from compatlayer import get_signatures, LayerType, check_command, get_depgraph
@@ -8,15 +9,20 @@ from compatlayer.case import OECompatLayerTestCase
 
 class CommonCompatLayer(OECompatLayerTestCase):
     def test_readme(self):
-        readme_file = os.path.join(self.tc.layer['path'], 'README')
-        self.assertTrue(os.path.isfile(readme_file),
-                msg="Layer doesn't contains README file.")
+        # The top-level README file may have a suffix (like README.rst or README.txt).
+        readme_files = glob.glob(os.path.join(self.tc.layer['path'], 'README*'))
+        self.assertTrue(len(readme_files) > 0,
+                        msg="Layer doesn't contains README file.")
 
+        # There might be more than one file matching the file pattern above
+        # (for example, README.rst and README-COPYING.rst). The one with the shortest
+        # name is considered the "main" one.
+        readme_file = sorted(readme_files)[0]
         data = ''
         with open(readme_file, 'r') as f:
             data = f.read()
         self.assertTrue(data,
-                msg="Layer contains README file but is empty.")
+                msg="Layer contains a README file but it is empty.")
 
     def test_parse(self):
         check_command('Layer %s failed to parse.' % self.tc.layer['name'],
