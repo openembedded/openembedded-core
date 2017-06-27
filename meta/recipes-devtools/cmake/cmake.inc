@@ -14,6 +14,7 @@ CMAKE_MAJOR_VERSION = "${@'.'.join(d.getVar('PV').split('.')[0:2])}"
 SRC_URI = "https://cmake.org/files/v${CMAKE_MAJOR_VERSION}/cmake-${PV}.tar.gz \
            file://support-oe-qt4-tools-names.patch \
            file://qt4-fail-silent.patch \
+           file://0001-FindCUDA-Use-find_program-if-find_host_program-is-no.patch \
            "
 
 SRC_URI[md5sum] = "b5dff61f6a7f1305271ab3f6ae261419"
