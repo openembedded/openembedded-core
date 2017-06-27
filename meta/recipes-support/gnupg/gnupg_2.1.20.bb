@@ -40,7 +40,6 @@ do_install_append() {
 	ln -sf gpgv2 ${D}${bindir}/gpgv
 }
 
-RDEPENDS_${PN} = "gnutls"
-
-PACKAGECONFIG ??= ""
+PACKAGECONFIG ??= "gnutls"
+PACKAGECONFIG[gnutls] = "--enable-gnutls, --disable-gnutls, gnutls"
 PACKAGECONFIG[sqlite3] = "--enable-sqlite, --disable-sqlite, sqlite3"
