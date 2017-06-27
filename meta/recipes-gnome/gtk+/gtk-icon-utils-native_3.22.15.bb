@@ -20,7 +20,10 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=5f30f0716dfdd0d91eb439ebec522ec2 \
 
 S = "${WORKDIR}/gtk+-${PV}"
 
-inherit pkgconfig native upstream-version-is-even
+inherit pkgconfig native
+
+# versions >= 3.90 are development versions, otherwise like upstream-version-is-even
+UPSTREAM_CHECK_REGEX = "[^\d\.](?P<pver>3\.([1-8]?[02468])+(\.\d+)+)\.tar"
 
 PKG_CONFIG_FOR_BUILD = "${STAGING_BINDIR_NATIVE}/pkg-config-native"
 
