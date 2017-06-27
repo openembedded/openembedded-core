@@ -26,6 +26,15 @@ class CommonCompatLayer(OECompatLayerTestCase):
         check_command('Layer %s failed to show environment.' % self.tc.layer['name'],
                       'bitbake -e')
 
+    def test_world(self):
+        '''
+        "bitbake world" is expected to work. test_signatures does not cover that
+        because it is more lenient and ignores recipes in a world build that
+        are not actually buildable, so here we fail when "bitbake -S none world"
+        fails.
+        '''
+        get_signatures(self.td['builddir'], failsafe=False)
+
     def test_signatures(self):
         if self.tc.layer['type'] == LayerType.SOFTWARE and \
            not self.tc.test_software_layer_signatures:
