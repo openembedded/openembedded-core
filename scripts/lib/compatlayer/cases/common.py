@@ -50,7 +50,7 @@ class CommonCompatLayer(OECompatLayerTestCase):
             def graph2sig(task):
                 pn, taskname = task.rsplit('.', 1)
                 return pn + ':' + taskname
-            depgraph = get_depgraph()
+            depgraph = get_depgraph(failsafe=True)
             depends = depgraph['tdepends']
 
             # If a task A has a changed signature, but none of its
