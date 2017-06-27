@@ -290,7 +290,7 @@ def get_signatures(builddir, failsafe=False, machine=None):
 
     return (sigs, tune2tasks)
 
-def get_depgraph(targets=['world']):
+def get_depgraph(targets=['world'], failsafe=False):
     '''
     Returns the dependency graph for the given target(s).
     The dependency graph is taken directly from DepTreeEvent.
@@ -309,6 +309,11 @@ def get_depgraph(targets=['world']):
                 elif isinstance(event, bb.command.CommandCompleted):
                     break
                 elif isinstance(event, bb.event.NoProvider):
+                    if failsafe:
+                        # The event is informational, we will get information about the
+                        # remaining dependencies eventually and thus can ignore this
+                        # here like we do in get_signatures(), if desired.
+                        continue
                     if event._reasons:
                         raise RuntimeError('Nothing provides %s: %s' % (event._item, event._reasons))
                     else:
