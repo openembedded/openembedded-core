@@ -324,3 +324,69 @@ def get_depgraph(targets=['world'], failsafe=False):
     if depgraph is None:
         raise RuntimeError('Could not retrieve the depgraph.')
     return depgraph
+
+def compare_signatures(old_sigs, curr_sigs):
+    '''
+    Compares the result of two get_signatures() calls. Returns None if no
+    problems found, otherwise a string that can be used as additional
+    explanation in self.fail().
+    '''
+    # task -> (old signature, new signature)
+    sig_diff = {}
+    for task in old_sigs:
+        if task in curr_sigs and \
+           old_sigs[task] != curr_sigs[task]:
+            sig_diff[task] = (old_sigs[task], curr_sigs[task])
+
+    if not sig_diff:
+        return None
+
+    # Beware, depgraph uses task=<pn>.<taskname> whereas get_signatures()
+    # uses <pn>:<taskname>. Need to convert sometimes. The output follows
+    # the convention from get_signatures() because that seems closer to
+    # normal bitbake output.
+    def sig2graph(task):
+        pn, taskname = task.rsplit(':', 1)
+        return pn + '.' + taskname
+    def graph2sig(task):
+        pn, taskname = task.rsplit('.', 1)
+        return pn + ':' + taskname
+    depgraph = get_depgraph(failsafe=True)
+    depends = depgraph['tdepends']
+
+    # If a task A has a changed signature, but none of its
+    # dependencies, then we need to report it because it is
+    # the one which introduces a change. Any task depending on
+    # A (directly or indirectly) will also have a changed
+    # signature, but we don't need to report it. It might have
+    # its own changes, which will become apparent once the
+    # issues that we do report are fixed and the test gets run
+    # again.
+    sig_diff_filtered = []
+    for task, (old_sig, new_sig) in sig_diff.items():
+        deps_tainted = False
+        for dep in depends.get(sig2graph(task), ()):
+            if graph2sig(dep) in sig_diff:
+                deps_tainted = True
+                break
+        if not deps_tainted:
+            sig_diff_filtered.append((task, old_sig, new_sig))
+
+    msg = []
+    msg.append('%d signatures changed, initial differences (first hash before, second after):' %
+               len(sig_diff))
+    for diff in sorted(sig_diff_filtered):
+        recipe, taskname = diff[0].rsplit(':', 1)
+        cmd = 'bitbake-diffsigs --task %s %s --signature %s %s' % \
+              (recipe, taskname, diff[1], diff[2])
+        msg.append('   %s: %s -> %s' % diff)
+        msg.append('      %s' % cmd)
+        try:
+            output = check_command('Determining signature difference failed.',
+                                   cmd).decode('utf-8')
+        except RuntimeError as error:
+            output = str(error)
+        if output:
+            msg.extend(['      ' + line for line in output.splitlines()])
+            msg.append('')
+    return '\n'.join(msg)
