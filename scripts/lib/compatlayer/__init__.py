@@ -4,6 +4,7 @@
 # Released under the MIT license (see COPYING.MIT)
 
 import os
+import re
 import subprocess
 from enum import Enum
 
@@ -189,10 +190,22 @@ def add_layer_dependencies(bblayersconf, layer, layers, logger):
     if layer_depends is None:
         return False
     else:
+        # Don't add a layer that is already present.
+        added = set()
+        output = check_command('Getting existing layers failed.', 'bitbake-layers show-layers').decode('utf-8')
+        for layer, path, pri in re.findall(r'^(\S+) +([^\n]*?) +(\d+)$', output, re.MULTILINE):
+            added.add(path)
+
         for layer_depend in layer_depends:
-            logger.info('Adding layer dependency %s' % layer_depend['name'])
+            name = layer_depend['name']
+            path = layer_depend['path']
+            if path in added:
+                continue
+            else:
+                added.add(path)
+            logger.info('Adding layer dependency %s' % name)
             with open(bblayersconf, 'a+') as f:
-                f.write("\nBBLAYERS += \"%s\"\n" % layer_depend['path'])
+                f.write("\nBBLAYERS += \"%s\"\n" % path)
     return True
 
 def add_layer(bblayersconf, layer, layers, logger):
