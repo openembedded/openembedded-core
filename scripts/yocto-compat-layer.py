@@ -30,12 +30,12 @@ CASES_PATHS = [os.path.join(os.path.abspath(os.path.dirname(__file__)),
                 'lib', 'compatlayer', 'cases')]
 logger = scriptutils.logger_create(PROGNAME, stream=sys.stdout)
 
-def test_layer_compatibility(td, layer):
+def test_layer_compatibility(td, layer, test_software_layer_signatures):
     from compatlayer.context import CompatLayerTestContext
     logger.info("Starting to analyze: %s" % layer['name'])
     logger.info("----------------------------------------------------------------------")
 
-    tc = CompatLayerTestContext(td=td, logger=logger, layer=layer)
+    tc = CompatLayerTestContext(td=td, logger=logger, layer=layer, test_software_layer_signatures=test_software_layer_signatures)
     tc.loadTests(CASES_PATHS)
     return tc.runTests()
 
@@ -53,6 +53,12 @@ def main():
             help='List of MACHINEs to be used during testing', action='store')
     parser.add_argument('--additional-layers', nargs="+",
             help='List of additional layers to add during testing', action='store')
+    group = parser.add_mutually_exclusive_group()
+    group.add_argument('--with-software-layer-signature-check', action='store_true', dest='test_software_layer_signatures',
+                       default=True,
+                       help='check that software layers do not change signatures (on by default)')
+    group.add_argument('--without-software-layer-signature-check', action='store_false', dest='test_software_layer_signatures',
+                       help='disable signature checking for software layers')
     parser.add_argument('-n', '--no-auto', help='Disable auto layer discovery',
             action='store_true')
     parser.add_argument('-d', '--debug', help='Enable debug output',
@@ -173,7 +179,7 @@ def main():
             layers_tested = layers_tested + 1
             continue
 
-        result = test_layer_compatibility(td, layer)
+        result = test_layer_compatibility(td, layer, args.test_software_layer_signatures)
         results[layer['name']] = result
         results_status[layer['name']] = 'PASS' if results[layer['name']].wasSuccessful() else 'FAIL'
         layers_tested = layers_tested + 1

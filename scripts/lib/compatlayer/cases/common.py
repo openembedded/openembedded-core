@@ -27,8 +27,9 @@ class CommonCompatLayer(OECompatLayerTestCase):
                       'bitbake -e')
 
     def test_signatures(self):
-        if self.tc.layer['type'] == LayerType.SOFTWARE:
-            raise unittest.SkipTest("Layer %s isn't BSP or DISTRO one." \
+        if self.tc.layer['type'] == LayerType.SOFTWARE and \
+           not self.tc.test_software_layer_signatures:
+            raise unittest.SkipTest("Not testing for signature changes in a software layer %s." \
                      % self.tc.layer['name'])
 
         # task -> (old signature, new signature)
