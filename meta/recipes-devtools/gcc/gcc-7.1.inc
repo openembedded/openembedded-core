@@ -74,6 +74,7 @@ SRC_URI = "\
            file://0047-sync-gcc-stddef.h-with-musl.patch \
            file://0048-gcc-Enable-static-PIE.patch \
            file://0049-libsanitizer-Use-stack_t-instead-of-struct-sigaltsta.patch \
+           file://0050-replace-struct-ucontext-with-ucontext_t.patch \
            ${BACKPORTS} \
 "
 BACKPORTS = "\
