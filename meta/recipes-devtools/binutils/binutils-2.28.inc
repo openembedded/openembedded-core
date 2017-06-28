@@ -18,7 +18,7 @@ BINUPV = "${@binutils_branch_version(d)}"
 
 UPSTREAM_CHECK_GITTAGREGEX = "binutils-(?P<pver>\d+_(\d_?)*)"
 
-SRCREV = "cb44d42ce6ef0c7a4eed7e2a3c272ac102166850"
+SRCREV = "7ea1464297eadebe62aae92ad9bebb33f92c2454"
 SRC_URI = "\
      git://sourceware.org/git/binutils-gdb.git;branch=binutils-${BINUPV}-branch;protocol=git \
      file://0004-Point-scripts-location-to-libdir.patch \
