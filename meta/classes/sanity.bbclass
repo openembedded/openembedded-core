@@ -448,45 +448,6 @@ def check_sanity_validmachine(sanity_data):
 
     return messages
 
-# Checks if necessary to add option march to host gcc
-def check_gcc_march(sanity_data):
-    result = True
-    message = ""
-
-    # Check if -march not in BUILD_CFLAGS
-    if sanity_data.getVar("BUILD_CFLAGS").find("-march") < 0:
-        result = False
-
-        # Construct a test file
-        f = open("gcc_test.c", "w")
-        f.write("int main (){ volatile int atomic = 2; __sync_bool_compare_and_swap (&atomic, 2, 3); return 0; }\n")
-        f.close()
-
-        # Check if GCC could work without march
-        if not result:
-            status,res = oe.utils.getstatusoutput(sanity_data.expand("${BUILD_CC} gcc_test.c -o gcc_test"))
-            if status == 0:
-                result = True;
-
-        if not result:
-            status,res = oe.utils.getstatusoutput(sanity_data.expand("${BUILD_CC} -march=native gcc_test.c -o gcc_test"))
-            if status == 0:
-                message = "BUILD_CFLAGS_append = \" -march=native\""
-                result = True;
-
-        if not result:
-            build_arch = sanity_data.getVar('BUILD_ARCH')
-            status,res = oe.utils.getstatusoutput(sanity_data.expand("${BUILD_CC} -march=%s gcc_test.c -o gcc_test" % build_arch))
-            if status == 0:
-                message = "BUILD_CFLAGS_append = \" -march=%s\"" % build_arch
-                result = True;
-
-        os.remove("gcc_test.c")
-        if os.path.exists("gcc_test"):
-            os.remove("gcc_test")
-
-    return (result, message)
-
 # Unpatched versions of make 3.82 are known to be broken.  See GNU Savannah Bug 30612.
 # Use a modified reproducer from http://savannah.gnu.org/bugs/?30612 to validate.
 def check_make_version(sanity_data):
@@ -612,7 +573,7 @@ def check_sanity_sstate_dir_change(sstate_dir, data):
         except IndexError:
             pass
     return testmsg
-       
+
 def check_sanity_version_change(status, d):
     # Sanity checks to be done when SANITY_VERSION or NATIVELSBSTRING changes
     # In other words, these tests run once in a given build directory and then 
@@ -656,15 +617,6 @@ def check_sanity_version_change(status, d):
     # Check user doesn't have ASSUME_PROVIDED = instead of += in local.conf
     if "diffstat-native" not in assume_provided:
         status.addresult('Please use ASSUME_PROVIDED +=, not ASSUME_PROVIDED = in your local.conf\n')
-
-    (result, message) = check_gcc_march(d)
-    if result and message:
-        status.addresult("Your gcc version is older than 4.5, please add the following param to local.conf\n \
-        %s\n" % message)
-    if not result:
-        status.addresult("Your gcc version is older than 4.5 or is not working properly.  Please verify you can build")
-        status.addresult(" and link something that uses atomic operations, such as: \n")
-        status.addresult("        __sync_bool_compare_and_swap (&atomic, 2, 3);\n")
 
     # Check that TMPDIR isn't on a filesystem with limited filename length (eg. eCryptFS)
     tmpdir = d.getVar('TMPDIR')
