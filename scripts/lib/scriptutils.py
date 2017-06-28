@@ -216,8 +216,8 @@ def run_editor(fn):
     editor = os.getenv('VISUAL', os.getenv('EDITOR', 'vi'))
     try:
         return subprocess.check_call('%s %s' % (editor, params), shell=True)
-    except OSError as exc:
-        logger.error("Execution of editor '%s' failed: %s", editor, exc)
+    except subprocess.CalledProcessError as exc:
+        logger.error("Execution of '%s' failed: %s" % (editor, exc))
         return 1
 
 def is_src_url(param):
