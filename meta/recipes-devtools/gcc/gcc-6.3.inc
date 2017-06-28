@@ -65,7 +65,7 @@ SRC_URI = "\
            file://0038-Search-target-sysroot-gcc-version-specific-dirs-with.patch \
            file://0039-Fix-various-_FOR_BUILD-and-related-variables.patch \
            file://0040-nios2-Define-MUSL_DYNAMIC_LINKER.patch \
-           file://0041-ssp_nonshared.patch \
+           file://0041-Add-ssp_nonshared-to-link-commandline-for-musl-targe.patch \
            file://0042-gcc-libcpp-support-ffile-prefix-map-old-new.patch \
            file://0043-Reuse-fdebug-prefix-map-to-replace-ffile-prefix-map.patch \
            file://0044-gcc-final.c-fdebug-prefix-map-support-to-remap-sourc.patch \
