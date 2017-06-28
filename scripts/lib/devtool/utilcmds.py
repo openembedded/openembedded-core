@@ -49,7 +49,7 @@ def edit_recipe(args, config, basepath, workspace):
             raise DevtoolError("Recipe file for %s is not under the workspace" %
                                args.recipename)
 
-    return scriptutils.run_editor(recipefile)
+    return scriptutils.run_editor(recipefile, logger)
 
 
 def configure_help(args, config, basepath, workspace):

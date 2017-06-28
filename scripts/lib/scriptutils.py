@@ -205,7 +205,7 @@ def fetch_url(tinfoil, srcuri, srcrev, destdir, logger, preserve_tmp=False):
     return checksums, tmpdir
 
 
-def run_editor(fn):
+def run_editor(fn, logger=None):
     if isinstance(fn, str):
         params = '"%s"' % fn
     else:
