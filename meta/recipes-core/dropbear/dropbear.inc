@@ -19,6 +19,7 @@ SRC_URI = "http://matt.ucc.asn.au/dropbear/releases/dropbear-${PV}.tar.bz2 \
            file://dropbearkey.service \
            file://dropbear@.service \
            file://dropbear.socket \
+           file://dropbear.default \
            ${@bb.utils.contains('DISTRO_FEATURES', 'pam', '${PAM_SRC_URI}', '', d)} "
 
 PAM_SRC_URI = "file://0005-dropbear-enable-pam.patch \
@@ -61,6 +62,8 @@ do_install() {
 		${D}${bindir} \
 		${D}${sbindir} \
 		${D}${localstatedir}
+
+	install -m 0644 ${WORKDIR}/dropbear.default ${D}${sysconfdir}/default/dropbear
 
 	install -m 0755 dropbearmulti ${D}${sbindir}/
 	ln -s ${sbindir}/dropbearmulti ${D}${bindir}/dbclient
