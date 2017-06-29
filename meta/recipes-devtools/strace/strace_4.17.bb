@@ -13,10 +13,11 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/strace/strace-${PV}.tar.xz \
            file://0001-Fix-build-when-using-non-glibc-libc-implementation-o.patch \
            file://mips-SIGEMT.patch \
            file://0001-caps-abbrev.awk-fix-gawk-s-path.patch \
+           file://0008-replace-struct-ucontext-with-ucontext_t.patch \
            "
 
-SRC_URI[md5sum] = "2873366cac98770efcbed6e748d5ef23"
-SRC_URI[sha256sum] = "98487cb5178ec1259986cc9f6e2a844f50e5d1208c112cc22431a1e4d9adf0ef"
+SRC_URI[md5sum] = "8d7eb10eba68bad83a269197e634b626"
+SRC_URI[sha256sum] = "81f35b085fbb3cfa806eb521a8522ac3406deaccfe121ce35064bad268237419"
 
 inherit autotools ptest bluetooth
 
