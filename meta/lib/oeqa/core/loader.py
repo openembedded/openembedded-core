@@ -4,6 +4,7 @@
 import os
 import sys
 import unittest
+import inspect
 
 from oeqa.core.utils.path import findFile
 from oeqa.core.utils.test import getSuiteModules, getCaseID
@@ -12,19 +13,17 @@ from oeqa.core.case import OETestCase
 from oeqa.core.decorator import decoratorClasses, OETestDecorator, \
         OETestFilter, OETestDiscover
 
-if sys.version_info >= (3,4,4):
-    def _make_failed_test(classname, methodname, exception, suiteClass):
-        """
-            When loading tests, the unittest framework stores any exceptions and
-            displays them only when the 'run' method is called.
-
-            For our purposes, it is better to raise the exceptions in the loading
-            step rather than waiting to run the test suite.
-        """
-        raise exception
-else:
-    def _make_failed_test(classname, exception, suiteClass):
-        raise exception
+# When loading tests, the unittest framework stores any exceptions and
+# displays them only when the run method is called.
+#
+# For our purposes, it is better to raise the exceptions in the loading
+# step rather than waiting to run the test suite.
+#
+# Generate the function definition because this differ across python versions
+# Python >= 3.4.4 uses tree parameters instead four but for example Python 3.5.3
+# ueses four parameters so isn't incremental.
+_failed_test_args = inspect.getargspec(unittest.loader._make_failed_test).args
+exec("""def _make_failed_test(%s): raise exception""" % ', '.join(_failed_test_args))
 unittest.loader._make_failed_test = _make_failed_test
 
 def _find_duplicated_modules(suite, directory):
