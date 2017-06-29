@@ -9,11 +9,13 @@ DEPENDS = "libsoup-2.4 webkitgtk gtk+3 iso-codes avahi libnotify gcr \
 inherit gnomebase gsettings distro_features_check upstream-version-is-even gettext
 REQUIRED_DISTRO_FEATURES = "x11"
 
-SRC_URI += "file://0001-yelp.m4-drop-the-check-for-itstool.patch"
+SRC_URI += "file://0001-yelp.m4-drop-the-check-for-itstool.patch \
+            file://0001-bookmarks-Check-for-return-value-of-fread.patch \
+           "
 SRC_URI[archive.md5sum] = "e035dc6f64f0c1909de823e03f16b2f3"
 SRC_URI[archive.sha256sum] = "5abc0d0c60591df5236ac9b8979dc9f7d9acbb8ad0902b4772d2b7beea81c58d"
 
-EXTRA_OECONF += " --with-distributor-name=${DISTRO}"
+EXTRA_OECONF += " --with-distributor-name=${DISTRO} --enable-debug=no"
 
 do_configure_prepend() {
     sed -i -e s:help::g ${S}/Makefile.am
