@@ -63,15 +63,14 @@ SDK_EXT_TARGET_MANIFEST = "${SDK_DEPLOY}/${TOOLCHAINEXT_OUTPUTNAME}.target.manif
 SDK_EXT_HOST_MANIFEST = "${SDK_DEPLOY}/${TOOLCHAINEXT_OUTPUTNAME}.host.manifest"
 
 python write_target_sdk_manifest () {
-    if d.getVar('BB_CURRENTTASK') == 'populate_sdk':
-        from oe.sdk import sdk_list_installed_packages
-        from oe.utils import format_pkg_list
-        sdkmanifestdir = os.path.dirname(d.getVar("SDK_TARGET_MANIFEST"))
-        pkgs = sdk_list_installed_packages(d, True)
-        if not os.path.exists(sdkmanifestdir):
-            bb.utils.mkdirhier(sdkmanifestdir)
-        with open(d.getVar('SDK_TARGET_MANIFEST'), 'w') as output:
-            output.write(format_pkg_list(pkgs, 'ver'))
+    from oe.sdk import sdk_list_installed_packages
+    from oe.utils import format_pkg_list
+    sdkmanifestdir = os.path.dirname(d.getVar("SDK_TARGET_MANIFEST"))
+    pkgs = sdk_list_installed_packages(d, True)
+    if not os.path.exists(sdkmanifestdir):
+        bb.utils.mkdirhier(sdkmanifestdir)
+    with open(d.getVar('SDK_TARGET_MANIFEST'), 'w') as output:
+        output.write(format_pkg_list(pkgs, 'ver'))
 }
 
 python write_sdk_test_data() {
@@ -82,22 +81,21 @@ python write_sdk_test_data() {
 }
 
 python write_host_sdk_manifest () {
-    if d.getVar('BB_CURRENTTASK') == 'populate_sdk':
-        from oe.sdk import sdk_list_installed_packages
-        from oe.utils import format_pkg_list
-        sdkmanifestdir = os.path.dirname(d.getVar("SDK_HOST_MANIFEST"))
-        pkgs = sdk_list_installed_packages(d, False)
-        if not os.path.exists(sdkmanifestdir):
-            bb.utils.mkdirhier(sdkmanifestdir)
-        with open(d.getVar('SDK_HOST_MANIFEST'), 'w') as output:
-            output.write(format_pkg_list(pkgs, 'ver'))
+    from oe.sdk import sdk_list_installed_packages
+    from oe.utils import format_pkg_list
+    sdkmanifestdir = os.path.dirname(d.getVar("SDK_HOST_MANIFEST"))
+    pkgs = sdk_list_installed_packages(d, False)
+    if not os.path.exists(sdkmanifestdir):
+        bb.utils.mkdirhier(sdkmanifestdir)
+    with open(d.getVar('SDK_HOST_MANIFEST'), 'w') as output:
+        output.write(format_pkg_list(pkgs, 'ver'))
 }
 
 POPULATE_SDK_POST_TARGET_COMMAND_append = " write_sdk_test_data ; "
 POPULATE_SDK_POST_TARGET_COMMAND_append_task-populate-sdk  = " write_target_sdk_manifest ; "
 POPULATE_SDK_POST_HOST_COMMAND_append_task-populate-sdk = " write_host_sdk_manifest; "
 SDK_PACKAGING_COMMAND = "${@'${SDK_PACKAGING_FUNC};' if '${SDK_PACKAGING_FUNC}' else ''}"
-SDK_POSTPROCESS_COMMAND = " create_sdk_files; check_sdk_sysroots; tar_sdk; write_target_sdk_manifest; write_host_sdk_manifest; ${SDK_PACKAGING_COMMAND} "
+SDK_POSTPROCESS_COMMAND = " create_sdk_files; check_sdk_sysroots; tar_sdk; ${SDK_PACKAGING_COMMAND} "
 
 def populate_sdk_common(d):
     from oe.sdk import populate_sdk
