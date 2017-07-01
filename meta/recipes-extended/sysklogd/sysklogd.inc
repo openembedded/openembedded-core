@@ -16,6 +16,8 @@ inherit update-rc.d update-alternatives systemd
 SRC_URI = "http://www.infodrom.org/projects/sysklogd/download/sysklogd-${PV}.tar.gz \
            file://no-strip-install.patch \
            file://0001-Fix-build-with-musl.patch \
+           file://0001-fix-problems-that-causes-a-segmentation-fault-under-.patch \
+           file://0002-Make-way-for-respecting-flags-from-environment.patch \
            file://sysklogd \
            file://syslog.conf \
            file://syslogd.service \
@@ -32,9 +34,7 @@ SYSTEMD_AUTO_ENABLE = "enable"
 INITSCRIPT_NAME = "syslog"
 CONFFILES_${PN} = "${sysconfdir}/syslog.conf.${BPN}"
 
-EXTRA_OEMAKE = "-e MAKEFLAGS="
-
-CFLAGS_append = " -DSYSV"
+CFLAGS += "-DSYSV -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE"
 
 do_install () {
 	install -d ${D}${mandir}/man8 \
