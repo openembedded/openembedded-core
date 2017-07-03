@@ -3,15 +3,15 @@ from oeqa.sdk.case import OESDKTestCase
 from oeqa.sdk.utils.sdkbuildproject import SDKBuildProject
 
 
-class BuildIptablesTest(OESDKTestCase):
+class BuildLzipTest(OESDKTestCase):
     td_vars = ['DATETIME']
 
     @classmethod
     def setUpClass(self):
         dl_dir = self.td.get('DL_DIR', None)
 
-        self.project = SDKBuildProject(self.tc.sdk_dir + "/iptables/", self.tc.sdk_env, 
-                        "http://downloads.yoctoproject.org/mirror/sources/iptables-1.4.13.tar.bz2",
+        self.project = SDKBuildProject(self.tc.sdk_dir + "/lzip/", self.tc.sdk_env,
+                        "http://downloads.yoctoproject.org/mirror/sources/lzip-1.19.tar.gz",
                         self.tc.sdk_dir, self.td['DATETIME'], dl_dir=dl_dir)
         self.project.download_archive()
 
@@ -21,7 +21,7 @@ class BuildIptablesTest(OESDKTestCase):
                 self.tc.hasTargetPackage("gcc")):
             raise unittest.SkipTest("SDK doesn't contain a cross-canadian toolchain")
 
-    def test_iptables(self):
+    def test_lzip(self):
         self.assertEqual(self.project.run_configure(), 0,
                         msg="Running configure failed")
 
