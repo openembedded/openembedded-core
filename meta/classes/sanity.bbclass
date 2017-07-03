@@ -783,7 +783,7 @@ def check_sanity_everybuild(status, d):
 
         # Split into pairs
         if len(mirrors) % 2 != 0:
-            bb.warn('Invalid mirror variable value for %s: %s, should contain paired members.' % (mirror_var, mirrors.strip()))
+            bb.warn('Invalid mirror variable value for %s: %s, should contain paired members.' % (mirror_var, str(mirrors)))
             continue
         mirrors = list(zip(*[iter(mirrors)]*2))
 
