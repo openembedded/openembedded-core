@@ -51,6 +51,7 @@ SRC_URI = "git://github.com/linux-test-project/ltp.git \
            file://0036-testcases-network-nfsv4-acl-acl1.c-Security-fix-on-s.patch \
            file://0001-dirtyc0w-Include-stdint.h.patch \
            file://0037-faccessat-and-fchmodat-Fix-build-warnings.patch \
+           file://0038-syscalls-add_key02-update-to-test-fix-for-nonempty-N.patch \
            "
 
 S = "${WORKDIR}/git"
