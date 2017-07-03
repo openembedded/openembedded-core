@@ -54,6 +54,7 @@ FILES_${PN}-dev = "\
     ${libdir}/libgfortran.la \
     ${libdir}/gcc/${TARGET_SYS}/${BINV}/libgfortranbegin.* \
     ${libdir}/gcc/${TARGET_SYS}/${BINV}/libcaf_single* \
+    ${libdir}/gcc/${TARGET_SYS}/${BINV}/finclude/ \
 "
 FILES_${PN}-staticdev = "${libdir}/libgfortran.a"
 
