@@ -7,8 +7,8 @@ SRC_URI = "https://mesa.freedesktop.org/archive/mesa-${PV}.tar.xz \
            file://0002-hardware-gloat.patch \
 "
 
-SRC_URI[md5sum] = "1946a93d543bc219427e2bebe2ac4752"
-SRC_URI[sha256sum] = "5f1ee9a8aea2880f887884df2dea0c16dd1b13eb42fd2e52265db0dc1b380e8c"
+SRC_URI[md5sum] = "be2ef7c9edec23b07f74f6512a6a6fa5"
+SRC_URI[sha256sum] = "06f3b0e6a28f0d20b7f3391cf67fe89ae98ecd0a686cd545da76557b6cec9cad"
 
 #because we cannot rely on the fact that all apps will use pkgconfig,
 #make eglplatform.h independent of MESA_EGL_NO_X11_HEADER
