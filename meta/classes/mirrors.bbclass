@@ -45,6 +45,9 @@ ${APACHE_MIRROR}  http://archive.apache.org/dist \n \
 http://downloads.sourceforge.net/watchdog/ http://fossies.org/linux/misc/ \n \
 ${SAVANNAH_GNU_MIRROR} http://download-mirror.savannah.gnu.org/releases \n \
 ${SAVANNAH_NONGNU_MIRROR} http://download-mirror.savannah.nongnu.org/releases \n \
+ftp://sourceware.org/pub http://mirrors.kernel.org/sourceware \n \
+ftp://sourceware.org/pub http://gd.tuwien.ac.at/gnu/sourceware \n \
+ftp://sourceware.org/pub http://ftp.gwdg.de/pub/linux/sources.redhat.com/sourceware \n \
 cvs://.*/.*     http://downloads.yoctoproject.org/mirror/sources/ \n \
 svn://.*/.*     http://downloads.yoctoproject.org/mirror/sources/ \n \
 git://.*/.*     http://downloads.yoctoproject.org/mirror/sources/ \n \
