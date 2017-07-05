@@ -125,7 +125,7 @@ do_configure() {
         done
 
         # Fixups for musl
-        if [ "${TARGET_OS}" = "linux-musl" -o "${TARGET_OS}" = "linux-musleabi" ]; then
+        if [ "${TARGET_OS}" = "linux-musl" -o "${TARGET_OS}" = "linux-musleabi" -o "${TARGET_OS}" = "linux-muslx32" ]; then
                 sed -i -e "s,\(d_libm_lib_version=\)'define',\1'undef',g" \
                        -e "s,\(d_stdio_ptr_lval=\)'define',\1'undef',g" \
                        -e "s,\(d_stdio_ptr_lval_sets_cnt=\)'define',\1'undef',g" \
