@@ -53,6 +53,7 @@ FILES_${PN} += "${libdir}/*.lds"
 
 # 64-bit binaries are expected for EFI when targeting X32
 INSANE_SKIP_${PN}-dev_append_linux-gnux32 = " arch"
+INSANE_SKIP_${PN}-dev_append_linux-muslx32 = " arch"
 
 BBCLASSEXTEND = "native"
 
