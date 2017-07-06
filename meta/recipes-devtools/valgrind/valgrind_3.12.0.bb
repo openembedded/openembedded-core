@@ -32,6 +32,9 @@ SRC_URI = "http://www.valgrind.org/downloads/valgrind-${PV}.tar.bz2 \
            file://0005-tc20_verifywrap.c-Fake-__GLIBC_PREREQ-with-musl.patch \
            file://0006-pth_detached3.c-Dereference-pthread_t-before-adding-.patch \
            file://0001-memcheck-tests-Use-ucontext_t-instead-of-struct-ucon.patch \
+           file://0001-memcheck-arm64-Define-__THROW-if-not-already-defined.patch \
+           file://0002-memcheck-x86-Define-__THROW-if-not-defined.patch \
+           file://0003-tests-seg_override-Replace-__modify_ldt-with-syscall.patch \
            "
 SRC_URI_append_libc-musl = "\
            file://0001-fix-build-for-musl-targets.patch \
