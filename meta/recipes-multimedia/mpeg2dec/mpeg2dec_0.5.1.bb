@@ -7,7 +7,10 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f \
                     file://include/mpeg2.h;beginline=1;endline=22;md5=7766f4fcb58f0f8413c49a746f2ab89b"
 
 SRC_URI = "http://libmpeg2.sourceforge.net/files/libmpeg2-${PV}.tar.gz \
-           file://altivec_h_needed.patch"
+           file://altivec_h_needed.patch \
+           file://0001-check-for-available-arm-optimizations.patch \
+           file://0002-Set-visibility-of-global-symbols-used-in-ARM-specifi.patch \
+           "
 
 S = "${WORKDIR}/libmpeg2-${PV}"
 
