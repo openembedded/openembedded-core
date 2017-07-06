@@ -66,6 +66,7 @@ PACKAGECONFIG[srtp]            = "--enable-srtp,--disable-srtp,libsrtp"
 PACKAGECONFIG[uvch264]         = "--enable-uvch264,--disable-uvch264,libusb1 libgudev"
 PACKAGECONFIG[voaacenc]        = "--enable-voaacenc,--disable-voaacenc,vo-aacenc"
 PACKAGECONFIG[voamrwbenc]      = "--enable-voamrwbenc,--disable-voamrwbenc,vo-amrwbenc"
+PACKAGECONFIG[vulkan]          = "--enable-vulkan,--disable-vulkan,vulkan"
 PACKAGECONFIG[wayland]         = "--enable-wayland,--disable-wayland,wayland-native wayland wayland-protocols"
 PACKAGECONFIG[webp]            = "--enable-webp,--disable-webp,libwebp"
 
@@ -78,7 +79,7 @@ PACKAGECONFIG[webp]            = "--enable-webp,--disable-webp,libwebp"
 #   openni2 winks direct3d directsound winscreencap acm apple_media
 #   android_media avc bs2b chromaprint daala dts fdkaac gme gsm kate ladspa libde265
 #   lv2 mimic mpeg2enc mplex musepack nvenc ofa openh264 opensles pvr soundtouch spandsp
-#   spc teletextdec tinyalsa vdpau vulkan wasapi x265 zbar
+#   spc teletextdec tinyalsa vdpau wasapi x265 zbar
 
 # qt5 support is disabled, because it is not present in OE core, and requires more work than
 # just adding a packageconfig (it requires access to moc, uic, rcc, and qmake paths).
@@ -136,7 +137,6 @@ EXTRA_OECONF += " \
     --disable-timidity \
     --disable-tinyalsa \
     --disable-vdpau \
-    --disable-vulkan \
     --disable-wasapi \
     --disable-wildmidi \
     --disable-wininet \
