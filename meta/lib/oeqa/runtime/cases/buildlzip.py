@@ -5,12 +5,12 @@ from oeqa.core.decorator.data import skipIfNotFeature
 
 from oeqa.runtime.utils.targetbuildproject import TargetBuildProject
 
-class BuildIptablesTest(OERuntimeTestCase):
+class BuildLzipTest(OERuntimeTestCase):
 
     @classmethod
     def setUpClass(cls):
         uri = 'http://downloads.yoctoproject.org/mirror/sources'
-        uri = '%s/iptables-1.4.13.tar.bz2' % uri
+        uri = '%s/lzip-1.19.tar.gz' % uri
         cls.project = TargetBuildProject(cls.tc.target,
                                          uri,
                                          dl_dir = cls.tc.td['DL_DIR'])
@@ -24,7 +24,7 @@ class BuildIptablesTest(OERuntimeTestCase):
     @skipIfNotFeature('tools-sdk',
                       'Test requires tools-sdk to be in IMAGE_FEATURES')
     @OETestDepends(['ssh.SSHTest.test_ssh'])
-    def test_iptables(self):
+    def test_lzip(self):
         self.project.run_configure()
         self.project.run_make()
         self.project.run_install()
