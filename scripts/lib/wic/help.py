@@ -943,6 +943,12 @@ DESCRIPTION
                       for the harware that requires non-default partition system ids. The parameter
                       in one byte long hex number either with 0x prefix or without it.
 
+         --mkfs-extraopts: This option specifies extra options to pass to mkfs utility.
+                           NOTE, that wic uses default options for some filesystems, for example
+                           '-S 512' for mkfs.fat or '-F -i 8192' for mkfs.ext. Those options will
+                           not take effect when --mkfs-extraopts is used. This should be taken into
+                           account when using --mkfs-extraopts.
+
     * bootloader
 
       This command allows the user to specify various bootloader
