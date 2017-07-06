@@ -1,8 +1,10 @@
 SUMMARY = "LiSt Open Files tool"
 DESCRIPTION = "Lsof is a Unix-specific diagnostic tool. \
 Its name stands for LiSt Open Files, and it does just that."
+HOMEPAGE = "http://people.freebsd.org/~abe/"
 SECTION = "devel"
 LICENSE = "BSD"
+LIC_FILES_CHKSUM = "file://00README;beginline=645;endline=679;md5=964df275d26429ba3b39dbb9f205172a"
 
 SRC_URI = "ftp://lsof.itap.purdue.edu/pub/tools/unix/lsof/lsof_${PV}.tar.bz2"
 
@@ -12,9 +14,8 @@ SRC_URI[sha256sum] = "81ac2fc5fdc944793baf41a14002b6deb5a29096b387744e28f8c30a36
 UPSTREAM_CHECK_URI = "http://www.mirrorservice.org/sites/lsof.itap.purdue.edu/pub/tools/unix/lsof"
 
 LOCALSRC = "file://${WORKDIR}/lsof_${PV}/lsof_${PV}_src.tar"
-S = "${WORKDIR}/lsof_${PV}_src"
 
-LIC_FILES_CHKSUM = "file://${S}/00README;beginline=645;endline=679;md5=964df275d26429ba3b39dbb9f205172a"
+S = "${WORKDIR}/lsof_${PV}_src"
 
 python do_unpack () {
     # temporarily change S for unpack
@@ -36,11 +37,11 @@ export LSOF_INCLUDE = "${STAGING_INCDIR}"
 do_configure () {
 	export LSOF_AR="${AR} cr"
 	export LSOF_RANLIB="${RANLIB}"
-        if [ "x${GLIBCVERSION}" != "x" ];then
-                LINUX_CLIB=`echo ${GLIBCVERSION} |sed -e 's,\.,,g'`
-                LINUX_CLIB="-DGLIBCV=${LINUX_CLIB}"
-                export LINUX_CLIB
-        fi
+	if [ "x${GLIBCVERSION}" != "x" ]; then
+		LINUX_CLIB=`echo ${GLIBCVERSION} |sed -e 's,\.,,g'`
+		LINUX_CLIB="-DGLIBCV=${LINUX_CLIB}"
+		export LINUX_CLIB
+	fi
 	yes | ./Configure linux
 }
 
