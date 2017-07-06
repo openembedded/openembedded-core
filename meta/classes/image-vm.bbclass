@@ -68,7 +68,7 @@ build_boot_dd() {
 
 	# Remove it since mkdosfs would fail when it exists
 	rm -f $HDDIMG
-	mkdosfs -n ${BOOTDD_VOLUME_ID} -S 512 -C $HDDIMG $BLOCKS 
+	mkdosfs -n ${BOOTDD_VOLUME_ID} ${MKDOSFS_EXTRAOPTS} -C $HDDIMG $BLOCKS
 	mcopy -i $HDDIMG -s $HDDDIR/* ::/
 
 	if [ "${PCBIOS}" = "1" ]; then

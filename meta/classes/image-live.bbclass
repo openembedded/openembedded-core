@@ -217,10 +217,10 @@ build_fat_img() {
 	fi
 
 	if [ -z "${HDDIMG_ID}" ]; then
-		mkdosfs ${FATSIZE} -n ${BOOTIMG_VOLUME_ID} -S 512 -C ${FATIMG} \
+		mkdosfs ${FATSIZE} -n ${BOOTIMG_VOLUME_ID} ${MKDOSFS_EXTRAOPTS} -C ${FATIMG} \
 			${BLOCKS}
 	else
-		mkdosfs ${FATSIZE} -n ${BOOTIMG_VOLUME_ID} -S 512 -C ${FATIMG} \
+		mkdosfs ${FATSIZE} -n ${BOOTIMG_VOLUME_ID} ${MKDOSFS_EXTRAOPTS} -C ${FATIMG} \
 		${BLOCKS} -i ${HDDIMG_ID}
 	fi
 
