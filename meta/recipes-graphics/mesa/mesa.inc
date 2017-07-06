@@ -25,7 +25,8 @@ REQUIRED_DISTRO_FEATURES = "opengl"
 EXTRA_OECONF = "--enable-shared-glapi --with-llvm-prefix=${STAGING_BINDIR_NATIVE}"
 
 PACKAGECONFIG ??= "gbm egl gles dri \
-		${@bb.utils.filter('DISTRO_FEATURES', 'wayland x11', d)} \
+		${@bb.utils.filter('DISTRO_FEATURES', 'wayland x11 vulkan', d)} \
+		${@bb.utils.contains('DISTRO_FEATURES', 'x11 vulkan', 'dri3', '', d)} \
 		"
 PACKAGECONFIG[gbm] = "--enable-gbm,--disable-gbm"
 
