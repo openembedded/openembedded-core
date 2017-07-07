@@ -1,5 +1,6 @@
 import os
 import re
+import time
 import bb.tinfoil
 
 from oeqa.selftest.case import OESelftestTestCase
@@ -102,21 +103,26 @@ class TinfoilTests(OESelftestTestCase):
     def test_wait_event(self):
         with bb.tinfoil.Tinfoil() as tinfoil:
             tinfoil.prepare(config_only=True)
-            # Need to drain events otherwise events that will be masked will still be in the queue
-            while tinfoil.wait_event(0.25):
-                pass
+
             tinfoil.set_event_mask(['bb.event.FilesMatchingFound', 'bb.command.CommandCompleted'])
+
+            # Need to drain events otherwise events that were masked may still be in the queue
+            while tinfoil.wait_event():
+                pass
+
             pattern = 'conf'
             res = tinfoil.run_command('findFilesMatchingInDir', pattern, 'conf/machine')
             self.assertTrue(res)
 
             eventreceived = False
-            waitcount = 5
-            while waitcount > 0:
+            commandcomplete = False
+            start = time.time()
+            # Wait for 5s in total so we'd detect spurious heartbeat events for example
+            while time.time() - start < 5:
                 event = tinfoil.wait_event(1)
                 if event:
                     if isinstance(event, bb.command.CommandCompleted):
-                        break
+                        commandcomplete = True
                     elif isinstance(event, bb.event.FilesMatchingFound):
                         self.assertEqual(pattern, event._pattern)
                         self.assertIn('qemuarm.conf', event._matches)
@@ -124,9 +130,7 @@ class TinfoilTests(OESelftestTestCase):
                     else:
                         self.fail('Unexpected event: %s' % event)
 
-                waitcount = waitcount - 1
-
-            self.assertNotEqual(waitcount, 0, 'Timed out waiting for CommandCompleted event from bitbake server')
+            self.assertTrue(commandcomplete, 'Timed out waiting for CommandCompleted event from bitbake server')
             self.assertTrue(eventreceived, 'Did not receive FilesMatchingFound event from bitbake server')
 
     @OETestID(1576)
