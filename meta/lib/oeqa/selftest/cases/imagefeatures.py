@@ -124,3 +124,31 @@ class ImageFeatures(OESelftestTestCase):
         # check if result image is sparse
         image_stat = os.stat(image_path)
         self.assertTrue(image_stat.st_size > image_stat.st_blocks * 512)
+
+    def test_image_fstypes(self):
+        """
+        Summary:     Check if image of supported image fstypes can be built
+        Expected:    core-image-minimal can be built for various image types
+        Product:     oe-core
+        Author:      Ed Bartosh <ed.bartosh@linux.intel.com>
+        """
+        image_name = 'core-image-minimal'
+
+        img_types = [itype for itype in get_bb_var("IMAGE_TYPES", image_name).split() \
+                         if itype not in ('container', 'elf', 'multiubi')]
+
+        config = 'IMAGE_FSTYPES += "%s"\n'\
+                 'MKUBIFS_ARGS ?= "-m 2048 -e 129024 -c 2047"\n'\
+                 'UBINIZE_ARGS ?= "-m 2048 -p 128KiB -s 512"' % ' '.join(img_types)
+
+        self.write_config(config)
+
+        bitbake(image_name)
+
+        deploy_dir_image = get_bb_var('DEPLOY_DIR_IMAGE')
+        link_name = get_bb_var('IMAGE_LINK_NAME', image_name)
+        for itype in img_types:
+            image_path = os.path.join(deploy_dir_image, "%s.%s" % (link_name, itype))
+            # check if result image is in deploy directory
+            self.assertTrue(os.path.exists(image_path),
+                            "%s image %s doesn't exist" % (itype, image_path))
