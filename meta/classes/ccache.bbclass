@@ -9,6 +9,3 @@ export CCACHE_NOHASHDIR ?= "1"
 
 DEPENDS_append_class-target = " ccache-native"
 DEPENDS[vardepvalueexclude] = " ccache-native"
-
-do_configure[dirs] =+ "${CCACHE_DIR}"
-do_kernel_configme[dirs] =+ "${CCACHE_DIR}"
