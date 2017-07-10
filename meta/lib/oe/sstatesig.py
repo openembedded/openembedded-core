@@ -29,7 +29,7 @@ def sstate_rundepfilter(siggen, fn, recipename, task, dep, depname, dataCache):
         return True
 
     # Quilt (patch application) changing isn't likely to affect anything
-    excludelist = ['quilt-native', 'subversion-native', 'git-native']
+    excludelist = ['quilt-native', 'subversion-native', 'git-native', 'ccache-native']
     if depname in excludelist and recipename != depname:
         return False
 
