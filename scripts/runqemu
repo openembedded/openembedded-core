@@ -676,7 +676,10 @@ class BaseConfig(object):
             else:
                 cmd = 'ls -t %s/*.qemuboot.conf' %  deploy_dir_image
                 logger.info('Running %s...' % cmd)
-                qbs = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE).stdout.read().decode('utf-8')
+                try:
+                    qbs = subprocess.check_output(cmd, shell=True).decode('utf-8')
+                except subprocess.CalledProcessError as err:
+                    raise RunQemuError(err)
                 if qbs:
                     for qb in qbs.split():
                         # Don't use initramfs when other choices unless fstype is ramfs
