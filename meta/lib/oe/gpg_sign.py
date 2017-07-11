@@ -36,7 +36,7 @@ class LocalSigner(object):
             gpg_args += ' --pinentry-mode=loopback'
         cmd += "--define '_gpg_sign_cmd_extra_args %s' " % gpg_args
         if self.gpg_bin:
-            cmd += "--define '%%__gpg %s' " % self.gpg_bin
+            cmd += "--define '__gpg %s' " % self.gpg_bin
         if self.gpg_path:
             cmd += "--define '_gpg_path %s' " % self.gpg_path
 
