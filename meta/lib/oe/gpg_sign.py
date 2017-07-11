@@ -27,7 +27,7 @@ class LocalSigner(object):
             raise bb.build.FuncFailed('Failed to export gpg public key (%s): %s' %
                                       (keyid, output))
 
-    def sign_rpms(self, files, keyid, passphrase):
+    def sign_rpms(self, files, keyid, passphrase, digest, fsk=None, fsk_password=None):
         """Sign RPM files"""
 
         cmd = self.rpm_bin + " --addsign --define '_gpg_name %s'  " % keyid
@@ -35,10 +35,15 @@ class LocalSigner(object):
         if self.gpg_version > (2,1,):
             gpg_args += ' --pinentry-mode=loopback'
         cmd += "--define '_gpg_sign_cmd_extra_args %s' " % gpg_args
+        cmd += "--define '_binary_filedigest_algorithm %s' " % digest
         if self.gpg_bin:
             cmd += "--define '__gpg %s' " % self.gpg_bin
         if self.gpg_path:
             cmd += "--define '_gpg_path %s' " % self.gpg_path
+        if fsk:
+            cmd += "--signfiles --fskpath %s " % fsk
+            if fsk_password:
+                cmd += "--define '_file_signing_key_password %s' " % fsk_password
 
         # Sign in chunks of 100 packages
         for i in range(0, len(files), 100):
