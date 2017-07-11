@@ -30,7 +30,7 @@ HOMEPAGE = "http://libbsd.freedesktop.org/wiki/"
 # License: public-domain
 # License: public-domain-Colin-Plumb
 LICENSE = "BSD-4-Clause & ISC & PD"
-LIC_FILES_CHKSUM = "file://COPYING;md5=0b9c89d861915b86655b96e5e32fa2aa"
+LIC_FILES_CHKSUM = "file://COPYING;md5=08fc4e66be4526715dab09c5fba5e9e8"
 SECTION = "libs"
 
 SRC_URI = " \
@@ -40,11 +40,10 @@ SRC_URI = " \
 SRC_URI_append_libc-musl  = " \
     file://0001-Replace-__BEGIN_DECLS-and-__END_DECLS.patch \
     file://0002-Remove-funopen.patch \
-    file://0003-Fix-build-breaks-due-to-missing-a.out.h.patch \
 "
 
-SRC_URI[md5sum] = "e935c1bb6cc98a4a43cb1da22795493a"
-SRC_URI[sha256sum] = "934b634f4dfd865b6482650b8f522c70ae65c463529de8be907b53c89c3a34a8"
+SRC_URI[md5sum] = "f1a0dc285f5d21ea40ef5bfc9b647346"
+SRC_URI[sha256sum] = "7647d024f41389305272c263da933a6f2a978213c1801592f47e68d83ac05b28"
 
 inherit autotools pkgconfig
 
