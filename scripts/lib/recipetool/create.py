@@ -26,7 +26,7 @@ import logging
 import scriptutils
 from urllib.parse import urlparse, urldefrag, urlsplit
 import hashlib
-
+import bb.fetch2
 logger = logging.getLogger('recipetool')
 
 tinfoil = None
@@ -368,14 +368,31 @@ def reformat_git_uri(uri):
     '''Convert any http[s]://....git URI into git://...;protocol=http[s]'''
     checkuri = uri.split(';', 1)[0]
     if checkuri.endswith('.git') or '/git/' in checkuri or re.match('https?://github.com/[^/]+/[^/]+/?$', checkuri):
-        res = re.match('(http|https|ssh)://([^;]+(\.git)?)(;.*)?$', uri)
-        if res:
-            # Need to switch the URI around so that the git fetcher is used
-            return 'git://%s;protocol=%s%s' % (res.group(2), res.group(1), res.group(4) or '')
-        elif '@' in checkuri:
-            # Catch e.g. git@git.example.com:repo.git
-            return 'git://%s;protocol=ssh' % checkuri.replace(':', '/', 1)
-    return uri
+        # Appends scheme if the scheme is missing
+        if not '://' in uri:
+            uri = 'git://' + uri
+        scheme, host, path, user, pswd, parms = bb.fetch2.decodeurl(uri)
+        # Detection mechanism, this is required due to certain URL are formatter with ":" rather than "/"
+        # which causes decodeurl to fail getting the right host and path
+        if len(host.split(':')) > 1:
+            splitslash = host.split(':')
+            host = splitslash[0]
+            path = '/' + splitslash[1] + path
+        #Algorithm:
+        # if user is defined, append protocol=ssh or if a protocol is defined, then honor the user-defined protocol
+        # if no user & password is defined, check for scheme type and append the protocol with the scheme type
+        # finally if protocols or if the url is well-formed, do nothing and rejoin everything back to normal
+        # Need to repackage the arguments for encodeurl, the format is: (scheme, host, path, user, password, OrderedDict([('key', 'value')]))
+        if user:
+            if not 'protocol' in parms:
+                parms.update({('protocol', 'ssh')})
+        elif (scheme == "http" or scheme == 'https' or scheme == 'ssh') and not ('protocol' in parms):
+            parms.update({('protocol', scheme)})
+        # Always append 'git://'
+        fUrl = bb.fetch2.encodeurl(('git', host, path, user, pswd, parms))
+        return fUrl
+    else:
+        return uri
 
 def is_package(url):
     '''Check if a URL points to a package'''
