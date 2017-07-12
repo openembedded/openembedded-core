@@ -10,6 +10,7 @@ SRC_URI += "file://dhcp-3.0.3-dhclient-dbus.patch;striplevel=0 \
             file://tweak-to-support-external-bind.patch \
             file://remove-dhclient-script-bash-dependency.patch \
             file://build-shared-libs.patch \
+            file://Moved-the-call-to-isc_app_ctxstart-to-not-get-signal.patch \
            "
 
 SRC_URI[md5sum] = "2b5e5b2fa31c2e27e487039d86f83d3f"
