@@ -3,14 +3,13 @@ HOMEPAGE = "http://www.isc.org/sw/bind/"
 SECTION = "console/network"
 
 LICENSE = "ISC & BSD"
-LIC_FILES_CHKSUM = "file://COPYRIGHT;md5=0a95f52a0ab6c5f52dedc9a45e7abb3f"
+LIC_FILES_CHKSUM = "file://COPYRIGHT;md5=dba46507446198119bcde32a4feaab43"
 
 DEPENDS = "openssl libcap"
 
 SRC_URI = "ftp://ftp.isc.org/isc/bind9/${PV}/${BPN}-${PV}.tar.gz \
            file://conf.patch \
            file://make-etc-initd-bind-stop-work.patch \
-           file://mips1-not-support-opcode.diff \
            file://dont-test-on-host.patch \
            file://generate-rndc-key.sh \
            file://named.service \
@@ -21,21 +20,14 @@ SRC_URI = "ftp://ftp.isc.org/isc/bind9/${PV}/${BPN}-${PV}.tar.gz \
            file://bind-ensure-searching-for-json-headers-searches-sysr.patch \
            file://0001-gen.c-extend-DIRNAMESIZE-from-256-to-512.patch \
            file://0001-lib-dns-gen.c-fix-too-long-error.patch \
-           file://CVE-2016-1285.patch \
-           file://CVE-2016-1286_1.patch \
-           file://CVE-2016-1286_2.patch \
-           file://CVE-2016-2088.patch \
-           file://CVE-2016-2775.patch \
-           file://CVE-2016-2776.patch \
-           file://CVE-2016-8864.patch \
-           file://CVE-2016-6170.patch \
+           file://use-python3-and-fix-install-lib-path.patch \
            "
 
 UPSTREAM_CHECK_URI = "ftp://ftp.isc.org/isc/bind9/"
 UPSTREAM_CHECK_REGEX = "(?P<pver>9(\.\d+)+(-P\d+)*)/"
 
-SRC_URI[md5sum] = "bcf7e772b616f7259420a3edc5df350a"
-SRC_URI[sha256sum] = "690810d1fbb72afa629e74638d19cd44e28d2b2e5eb63f55c705ad85d1a4cb83"
+SRC_URI[md5sum] = "d79cafbd9ac76239ee532dd89d05cc83"
+SRC_URI[sha256sum] = "8d7e96b5b0bbac7b900d4c4bbb82e0956b4e509433c5fa392bb72a929b96606a"
 
 ENABLE_IPV6 = "--enable-ipv6=${@bb.utils.contains('DISTRO_FEATURES', 'ipv6', 'yes', 'no', d)}"
 EXTRA_OECONF = " ${ENABLE_IPV6} --with-libtool --enable-threads \
@@ -44,7 +36,10 @@ EXTRA_OECONF = " ${ENABLE_IPV6} --with-libtool --enable-threads \
                  --sysconfdir=${sysconfdir}/bind \
                  --with-openssl=${STAGING_LIBDIR}/.. \
                "
-inherit autotools update-rc.d systemd useradd pkgconfig
+
+inherit autotools update-rc.d systemd useradd pkgconfig python3-dir
+
+export PYTHON_SITEPACKAGES_DIR
 
 # PACKAGECONFIGs readline and libedit should NOT be set at same time
 PACKAGECONFIG ?= "readline"
@@ -70,7 +65,7 @@ RDEPENDS_${PN}-dev = ""
 PACKAGE_BEFORE_PN += "${PN}-utils"
 FILES_${PN}-utils = "${bindir}/host ${bindir}/dig"
 FILES_${PN}-dev += "${bindir}/isc-config.h"
-FILES_${PN} += "${sbindir}/generate-rndc-key.sh"
+FILES_${PN} += "${sbindir}/generate-rndc-key.sh ${PYTHON_SITEPACKAGES_DIR}"
 
 do_install_prepend() {
 	# clean host path in isc-config.sh before the hardlink created
@@ -107,6 +102,8 @@ do_install_append() {
 		install -d ${D}${sysconfdir}/tmpfiles.d
 		echo "d /run/named 0755 bind bind - -" > ${D}${sysconfdir}/tmpfiles.d/bind.conf
 	fi
+
+    rm -f ${D}${PYTHON_SITEPACKAGES_DIR}/isc/*.pyc
 }
 
 CONFFILES_${PN} = " \
