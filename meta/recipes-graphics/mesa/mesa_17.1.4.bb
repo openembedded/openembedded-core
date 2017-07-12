@@ -7,6 +7,7 @@ SRC_URI = "https://mesa.freedesktop.org/archive/mesa-${PV}.tar.xz \
            file://0001-Use-wayland-scanner-in-the-path.patch \
            file://0002-hardware-gloat.patch \
            file://0001-mapi-Only-install-khrplatform.h-with-EGL-or-GLES.patch \
+           file://vulkan-mkdir.patch \
 "
 
 SRC_URI[md5sum] = "be2ef7c9edec23b07f74f6512a6a6fa5"
