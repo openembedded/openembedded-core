@@ -18,8 +18,8 @@
 # of these overrides should be limited to .bb and .bbappend files,
 # because then DISTRO_FEATURES is final.
 
-DISTRO_FEATURE_OVERRIDES ?= ""
-DISTRO_FEATURE_OVERRIDES[doc] = "A space-separated list of <feature> entries. \
+DISTRO_FEATURES_OVERRIDES ?= ""
+DISTRO_FEATURES_OVERRIDES[doc] = "A space-separated list of <feature> entries. \
 Each entry is added to OVERRIDES as df-<feature> if <feature> is in DISTRO_FEATURES."
 
 DISTRO_FEATURES_FILTER_NATIVE_append = " ${DISTRO_FEATURES_OVERRIDES}"
