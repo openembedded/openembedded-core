@@ -86,7 +86,6 @@ PERLTOOLS = " \
     ${libexecdir}/git-core/git-cvsserver \
     ${bindir}/git-cvsserver \
     ${libexecdir}/git-core/git-difftool \
-    ${libexecdir}/git-core/git-relink \
     ${libexecdir}/git-core/git-send-email \
     ${libexecdir}/git-core/git-svn \
     ${libexecdir}/git-core/git-instaweb \
