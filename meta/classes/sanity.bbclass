@@ -350,6 +350,14 @@ def check_not_nfs(path, name):
         return "The %s: %s can't be located on nfs.\n" % (name, path)
     return ""
 
+# Check that the path is on a case-sensitive file system
+def check_case_sensitive(path, name):
+    import tempfile
+    with tempfile.NamedTemporaryFile(prefix='TmP', dir=path) as tmp_file:
+        if os.path.exists(tmp_file.name.lower()):
+            return "The %s (%s) can't be on a case-insensitive file system.\n" % (name, path)
+        return ""
+
 # Check that path isn't a broken symlink
 def check_symlink(lnk, data):
     if os.path.islink(lnk) and not os.path.exists(lnk):
@@ -671,6 +679,10 @@ def check_sanity_version_change(status, d):
 
     # Check that TMPDIR isn't located on nfs
     status.addresult(check_not_nfs(tmpdir, "TMPDIR"))
+
+    # Check for case-insensitive file systems (such as Linux in Docker on
+    # macOS with default HFS+ file system)
+    status.addresult(check_case_sensitive(tmpdir, "TMPDIR"))
 
 def sanity_check_locale(d):
     """
