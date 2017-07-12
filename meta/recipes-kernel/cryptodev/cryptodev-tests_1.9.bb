@@ -18,4 +18,4 @@ do_install() {
 	oe_runmake install_tests
 }
 
-FILES_${PN} = "${bindir}/tests_cryptodev/*"
+FILES_${PN} = "${bindir}/*"
