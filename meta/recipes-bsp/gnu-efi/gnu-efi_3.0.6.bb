@@ -16,11 +16,10 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/${BPN}/${BP}.tar.bz2 \
            file://parallel-make-archives.patch \
            file://lib-Makefile-fix-parallel-issue.patch \
            file://gcc46-compatibility.patch \
-           file://0001-Mark-our-explicit-fall-through-so-Wextra-will-work-i.patch \
            "
 
-SRC_URI[md5sum] = "1f719c9c135778aa6b087b89a1cc2423"
-SRC_URI[sha256sum] = "bd8fcd5914f18fc0e4ba948ab03b00013e528504f529c60739b748f6ef130b22"
+SRC_URI[md5sum] = "46f633758a8a37db9fd6909fe270c26b"
+SRC_URI[sha256sum] = "21515902d80fbea23328a61d70d3d51a47204abd1507ebfa27550a7b9bf22c91"
 
 COMPATIBLE_HOST = "(x86_64.*|i.86.*|aarch64.*|arm.*)-linux"
 COMPATIBLE_HOST_armv4 = 'null'
