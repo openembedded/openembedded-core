@@ -466,7 +466,7 @@ class BaseConfig(object):
 
             self.check_arg_machine(unknown_arg)
 
-        if not self.get('DEPLOY_DIR_IMAGE'):
+        if not (self.get('DEPLOY_DIR_IMAGE') or self.qbconfload):
             self.load_bitbake_env()
             s = re.search('^DEPLOY_DIR_IMAGE="(.*)"', self.bitbake_e, re.M)
             if s:
