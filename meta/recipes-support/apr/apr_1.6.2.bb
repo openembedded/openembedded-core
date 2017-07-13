@@ -21,8 +21,8 @@ SRC_URI = "${APACHE_MIRROR}/apr/${BPN}-${PV}.tar.bz2 \
            file://0002-explicitly-link-libapr-against-phtread-to-make-gold-.patch \
 "
 
-SRC_URI[md5sum] = "4e9769f3349fe11fc0a5e1b224c236aa"
-SRC_URI[sha256sum] = "7d03ed29c22a7152be45b8e50431063736df9e1daa1ddf93f6a547ba7a28f67a"
+SRC_URI[md5sum] = "e81a851967c79b5ce9bfbc909e4bf735"
+SRC_URI[sha256sum] = "09109cea377bab0028bba19a92b5b0e89603df9eab05c0f7dbd4dd83d48dcebd"
 
 inherit autotools-brokensep lib_package binconfig multilib_header ptest
 
