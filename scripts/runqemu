@@ -218,7 +218,8 @@ class BaseConfig(object):
         self.lock_descriptor = ''
         self.bitbake_e = ''
         self.snapshot = False
-        self.fstypes = ('ext2', 'ext3', 'ext4', 'jffs2', 'nfs', 'btrfs', 'cpio.gz', 'cpio', 'ramfs')
+        self.fstypes = ('ext2', 'ext3', 'ext4', 'jffs2', 'nfs', 'btrfs',
+                        'cpio.gz', 'cpio', 'ramfs', 'tar.bz2', 'tar.gz')
         self.vmtypes = ('hddimg', 'hdddirect', 'wic', 'vmdk', 'qcow2', 'vdi', 'iso')
         self.network_device = "-device e1000,netdev=net0,mac=@MAC@"
         # Use different mac section for tap and slirp to avoid
@@ -277,6 +278,8 @@ class BaseConfig(object):
         if not self.fstype or self.fstype == fst:
             if fst == 'ramfs':
                 fst = 'cpio.gz'
+            if fst in ('tar.bz2', 'tar.gz'):
+                fst = 'nfs'
             self.fstype = fst
         else:
             raise RunQemuError("Conflicting: FSTYPE %s and %s" % (self.fstype, fst))
