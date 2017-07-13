@@ -1209,6 +1209,10 @@ class BaseConfig(object):
             self.bitbake_e = ''
             logger.warn("Couldn't run 'bitbake -e' to gather environment information:\n%s" % err.output.decode('utf-8'))
 
+    def validate_combos(self):
+        if (self.fstype in self.vmtypes) and self.kernel:
+            raise RunQemuError("%s doesn't need kernel %s!" % (self.fstype, self.kernel))
+
     @property
     def bindir_native(self):
         result = self.get('STAGING_BINDIR_NATIVE')
@@ -1240,6 +1244,8 @@ def main():
         config.check_args()
         config.read_qemuboot()
         config.check_and_set()
+        # Check whether the combos is valid or not
+        config.validate_combos()
         config.print_config()
         config.setup_network()
         config.setup_rootfs()
