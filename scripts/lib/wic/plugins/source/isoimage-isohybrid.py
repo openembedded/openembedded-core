@@ -164,9 +164,12 @@ class IsoImagePlugin(SourcePlugin):
 
             machine = os.path.basename(initrd_dir)
 
-            initrd = glob.glob('%s/%s*%s.%s' % (initrd_dir, image_name, machine, image_type))[0]
+            pattern = '%s/%s*%s.%s' % (initrd_dir, image_name, machine, image_type)
+            files = glob.glob(pattern)
+            if files:
+                initrd = files[0]
 
-        if not os.path.exists(initrd):
+        if not initrd or not os.path.exists(initrd):
             # Create initrd from rootfs directory
             initrd = "%s/initrd.cpio.gz" % cr_workdir
             initrd_dir = "%s/INITRD" % cr_workdir
