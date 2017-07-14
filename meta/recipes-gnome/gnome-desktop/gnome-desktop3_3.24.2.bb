@@ -10,9 +10,11 @@ inherit gnome pkgconfig upstream-version-is-even gobject-introspection
 SRC_URI[archive.md5sum] = "af7c6a243df7a335a010bdc05b34ca93"
 SRC_URI[archive.sha256sum] = "8fa1de66a6a75963bffc79b01a60434c71237d44c51beca09c0f714a032d785e"
 
-SRC_URI += "file://gnome-desktop-thumbnail-don-t-convert-time_t-to-long.patch"
+SRC_URI += "file://gnome-desktop-thumbnail-don-t-convert-time_t-to-long.patch \
+            file://0001-configure.ac-Remove-gnome-common-macro-calls.patch \
+"
 
-DEPENDS += "intltool-native gnome-common-native gsettings-desktop-schemas gconf virtual/libx11 gtk+3 glib-2.0 startup-notification xkeyboard-config iso-codes udev"
+DEPENDS += "intltool-native gsettings-desktop-schemas gconf virtual/libx11 gtk+3 glib-2.0 startup-notification xkeyboard-config iso-codes udev"
 
 inherit distro_features_check gtk-doc
 REQUIRED_DISTRO_FEATURES = "x11"
