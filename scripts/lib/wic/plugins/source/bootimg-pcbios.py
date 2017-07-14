@@ -45,10 +45,9 @@ class BootimgPcbiosPlugin(SourcePlugin):
     @classmethod
     def _get_bootimg_dir(cls, bootimg_dir, dirname):
         """
-        Check if dirname exists in default bootimg_dir or
-        in wic-tools STAGING_DIR.
+        Check if dirname exists in default bootimg_dir or in STAGING_DIR.
         """
-        for result in (bootimg_dir, get_bitbake_var("STAGING_DATADIR", "wic-tools")):
+        for result in (bootimg_dir, get_bitbake_var("STAGING_DATADIR")):
             if os.path.exists("%s/%s" % (result, dirname)):
                 return result
 

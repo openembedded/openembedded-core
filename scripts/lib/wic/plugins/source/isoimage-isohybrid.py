@@ -342,7 +342,7 @@ class IsoImagePlugin(SourcePlugin):
 
                 if not os.path.isfile("%s/EFI/BOOT/%s" \
                                 % (bootimg_dir, grub_image)):
-                    grub_path = get_bitbake_var("STAGING_LIBDIR", "wic-tools")
+                    grub_path = get_bitbake_var("STAGING_LIBDIR")
                     if not grub_path:
                         raise WicError("Couldn't find STAGING_LIBDIR, exiting.")
 
@@ -411,7 +411,7 @@ class IsoImagePlugin(SourcePlugin):
             exec_cmd(chmod_cmd)
 
         # Prepare files for legacy boot
-        syslinux_dir = get_bitbake_var("STAGING_DATADIR", "wic-tools")
+        syslinux_dir = get_bitbake_var("STAGING_DATADIR")
         if not syslinux_dir:
             raise WicError("Couldn't find STAGING_DATADIR, exiting.")
 

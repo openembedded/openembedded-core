@@ -154,8 +154,10 @@ def wic_create_subcommand(options, usage_str):
         rootfs_dir = get_bitbake_var("IMAGE_ROOTFS", options.image_name)
         kernel_dir = get_bitbake_var("DEPLOY_DIR_IMAGE", options.image_name)
         bootimg_dir = get_bitbake_var("STAGING_DATADIR", options.image_name)
-        native_sysroot = get_bitbake_var("RECIPE_SYSROOT_NATIVE",
-                                         options.image_name) #, cache=False)
+
+        native_sysroot = options.native_sysroot
+        if options.vars_dir and not native_sysroot:
+            native_sysroot = get_bitbake_var("RECIPE_SYSROOT_NATIVE", options.image_name)
     else:
         if options.build_rootfs:
             raise WicError("Image name is not specified, exiting. "
