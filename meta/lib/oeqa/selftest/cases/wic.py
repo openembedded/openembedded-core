@@ -188,7 +188,8 @@ class Wic(OESelftestTestCase):
     def test_iso_image(self):
         """Test creation of hybrid iso image with legacy and EFI boot"""
         config = 'INITRAMFS_IMAGE = "core-image-minimal-initramfs"\n'\
-                 'MACHINE_FEATURES_append = " efi"\n'
+                 'MACHINE_FEATURES_append = " efi"\n'\
+                 'DEPENDS_pn-core-image-minimal += "syslinux"\n'
         self.append_config(config)
         bitbake('core-image-minimal')
         self.remove_config(config)
@@ -217,6 +218,10 @@ class Wic(OESelftestTestCase):
     @only_for_arch(['i586', 'i686', 'x86_64'])
     def test_bootloader_config(self):
         """Test creation of directdisk-bootloader-config image"""
+        config = 'DEPENDS_pn-core-image-minimal += "syslinux"\n'
+        self.append_config(config)
+        bitbake('core-image-minimal')
+        self.remove_config(config)
         cmd = "wic create directdisk-bootloader-config -e core-image-minimal -o %s" % self.resultdir
         self.assertEqual(0, runCmd(cmd).status)
         self.assertEqual(1, len(glob(self.resultdir + "directdisk-bootloader-config-*direct")))
@@ -248,6 +253,10 @@ class Wic(OESelftestTestCase):
         """Test default output location"""
         for fname in glob("directdisk-*.direct"):
             os.remove(fname)
+        config = 'DEPENDS_pn-core-image-minimal += "syslinux"\n'
+        self.append_config(config)
+        bitbake('core-image-minimal')
+        self.remove_config(config)
         cmd = "wic create directdisk -e core-image-minimal"
         self.assertEqual(0, runCmd(cmd).status)
         self.assertEqual(1, len(glob("directdisk-*.direct")))
@@ -569,10 +578,12 @@ part /etc --source rootfs --ondisk mmcblk0 --fstype=ext4 --exclude-path bin/ --r
         """Test image vars directory selection -v option"""
         image = 'core-image-minimal'
         imgenvdir = self._get_image_env_path(image)
+        native_sysroot = get_bb_var("RECIPE_SYSROOT_NATIVE", "wic-tools")
 
         self.assertEqual(0, runCmd("wic create wictestdisk "
-                                   "--image-name=%s -v %s -o %s"
-                                   % (image, imgenvdir, self.resultdir)).status)
+                                   "--image-name=%s -v %s -n %s -o %s"
+                                   % (image, imgenvdir, native_sysroot,
+                                      self.resultdir)).status)
         self.assertEqual(1, len(glob(self.resultdir + "wictestdisk-*direct")))
 
     @OETestID(1665)
@@ -580,11 +591,15 @@ part /etc --source rootfs --ondisk mmcblk0 --fstype=ext4 --exclude-path bin/ --r
         """Test image vars directory selection --vars option"""
         image = 'core-image-minimal'
         imgenvdir = self._get_image_env_path(image)
+        native_sysroot = get_bb_var("RECIPE_SYSROOT_NATIVE", "wic-tools")
+
         self.assertEqual(0, runCmd("wic create wictestdisk "
                                    "--image-name=%s "
                                    "--vars %s "
+                                   "--native-sysroot %s "
                                    "--outdir %s"
-                                   % (image, imgenvdir, self.resultdir)).status)
+                                   % (image, imgenvdir, native_sysroot,
+                                      self.resultdir)).status)
         self.assertEqual(1, len(glob(self.resultdir + "wictestdisk-*direct")))
 
     @OETestID(1351)
