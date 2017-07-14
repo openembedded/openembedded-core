@@ -204,8 +204,8 @@ class IsoImagePlugin(SourcePlugin):
         """
         isodir = "%s/ISO/" % cr_workdir
 
-        if os.path.exists(cr_workdir):
-            shutil.rmtree(cr_workdir)
+        if os.path.exists(isodir):
+            shutil.rmtree(isodir)
 
         install_cmd = "install -d %s " % isodir
         exec_cmd(install_cmd)
