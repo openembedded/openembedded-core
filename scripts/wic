@@ -164,15 +164,15 @@ def wic_create_subcommand(options, usage_str):
                            "(Use -e/--image-name to specify it)")
         native_sysroot = options.native_sysroot
 
-    if not native_sysroot or not os.path.isdir(native_sysroot):
+    if not options.vars_dir and (not native_sysroot or not os.path.isdir(native_sysroot)):
         logger.info("Building wic-tools...\n")
         if bitbake_main(BitBakeConfigParameters("bitbake wic-tools".split()),
                         cookerdata.CookerConfiguration()):
             raise WicError("bitbake wic-tools failed")
         native_sysroot = get_bitbake_var("RECIPE_SYSROOT_NATIVE", "wic-tools")
-        if not native_sysroot:
-            raise WicError("Unable to find the location of the native "
-                           "tools sysroot to use")
+
+    if not native_sysroot:
+        raise WicError("Unable to find the location of the native tools sysroot")
 
     wks_file = options.wks_file
 
