@@ -7,11 +7,11 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f \
                     file://src/desktop.c;endline=20;md5=36c9bf295e6007f3423095f405af5a2d \
                     file://src/main.c;endline=19;md5=2044244f97a195c25b7dc602ac7e9a00"
 
-DEPENDS = "gnome-common-native gtk+3 startup-notification dbus"
+DEPENDS = "gtk+3 startup-notification dbus"
 SECTION = "x11/wm"
 
-# SRCREV tagged 2.1
-SRCREV = "c8473519a0f37488b8b3e839e275b000cdde0b80"
+# SRCREV tagged 2.2
+SRCREV = "6bc67d09da4147e5552fe30011a05a2c59d2f777"
 SRC_URI = "git://git.yoctoproject.org/${BPN}-2 \
            file://vfolders/* \
            "
