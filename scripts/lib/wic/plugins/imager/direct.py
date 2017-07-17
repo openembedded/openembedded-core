@@ -313,7 +313,7 @@ class PartitionedImage():
                 part.realnum = 0
             else:
                 realnum += 1
-                if self.ptable_format == 'msdos' and realnum > 3:
+                if self.ptable_format == 'msdos' and realnum > 3 and len(partitions) > 4:
                     part.realnum = realnum + 1
                     continue
                 part.realnum = realnum
