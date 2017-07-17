@@ -351,6 +351,9 @@ python copy_buildsystem () {
             # Hide the config information from bitbake output (since it's fixed within the SDK)
             f.write('BUILDCFG_HEADER = ""\n\n')
 
+            f.write('# Provide a flag to indicate we are in the EXT_SDK Context\n')
+            f.write('WITHIN_EXT_SDK = "1"\n\n')
+
             # Map gcc-dependent uninative sstate cache for installer usage
             f.write('SSTATE_MIRRORS += " file://universal/(.*) file://universal-4.9/\\1 file://universal-4.9/(.*) file://universal-4.8/\\1"\n\n')
 
