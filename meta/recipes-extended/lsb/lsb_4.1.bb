@@ -90,11 +90,13 @@ do_install_append() {
        install -m 0755 ${WORKDIR}/init-functions ${D}${nonarch_base_libdir}/lsb
 
        # create links for LSB test
-       if [ "${nonarch_base_libdir}" != "${nonarch_libdir}" ] ; then
-               install -d ${D}${nonarch_libdir}/lsb
+       if [ -e ${sbindir}/chkconfig ]; then
+               if [ "${nonarch_base_libdir}" != "${nonarch_libdir}" ] ; then
+                       install -d ${D}${nonarch_libdir}/lsb
+               fi
+               ln -sf ${sbindir}/chkconfig ${D}${nonarch_libdir}/lsb/install_initd
+               ln -sf ${sbindir}/chkconfig ${D}${nonarch_libdir}/lsb/remove_initd
        fi
-       ln -sf ${sbindir}/chkconfig ${D}${nonarch_libdir}/lsb/install_initd
-       ln -sf ${sbindir}/chkconfig ${D}${nonarch_libdir}/lsb/remove_initd
 
        if [ "${TARGET_ARCH}" = "x86_64" ]; then
                if [ "${base_libdir}" != "${base_prefix}/lib64" ]; then
