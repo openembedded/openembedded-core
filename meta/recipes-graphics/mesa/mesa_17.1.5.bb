@@ -3,15 +3,13 @@ require ${BPN}.inc
 SRC_URI = "https://mesa.freedesktop.org/archive/mesa-${PV}.tar.xz \
            file://replace_glibc_check_with_linux.patch \
            file://disable-asm-on-non-gcc.patch \
-           file://etnaviv_fix-shader-miscompilation.patch \
            file://0001-Use-wayland-scanner-in-the-path.patch \
            file://0002-hardware-gloat.patch \
            file://0001-mapi-Only-install-khrplatform.h-with-EGL-or-GLES.patch \
            file://vulkan-mkdir.patch \
 "
-
-SRC_URI[md5sum] = "be2ef7c9edec23b07f74f6512a6a6fa5"
-SRC_URI[sha256sum] = "06f3b0e6a28f0d20b7f3391cf67fe89ae98ecd0a686cd545da76557b6cec9cad"
+SRC_URI[md5sum] = "6cf936fbcaadd98924298a7009e8265d"
+SRC_URI[sha256sum] = "378516b171712687aace4c7ea8b37c85895231d7a6d61e1e27362cf6034fded9"
 
 #because we cannot rely on the fact that all apps will use pkgconfig,
 #make eglplatform.h independent of MESA_EGL_NO_X11_HEADER
