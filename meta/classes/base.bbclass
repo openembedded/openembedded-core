@@ -628,7 +628,7 @@ python () {
             d.appendVarFlag('do_unpack', 'depends', ' xz-native:do_populate_sysroot')
 
         # .zip should DEPEND on unzip-native for unpacking
-        elif path.endswith('.zip'):
+        elif path.endswith('.zip') or path.endswith('.jar'):
             d.appendVarFlag('do_unpack', 'depends', ' unzip-native:do_populate_sysroot')
 
         # file is needed by rpm2cpio.sh
