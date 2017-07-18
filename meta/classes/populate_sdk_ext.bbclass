@@ -69,7 +69,6 @@ OE_INIT_ENV_SCRIPT ?= "oe-init-build-env"
 # COREBASE be preserved as well as untracked files.
 COREBASE_FILES ?= " \
     oe-init-build-env \
-    oe-init-build-env-memres \
     scripts \
     LICENSE \
     .templateconf \
