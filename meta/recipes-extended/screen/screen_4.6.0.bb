@@ -26,8 +26,8 @@ SRC_URI = "${GNU_MIRROR}/screen/screen-${PV}.tar.gz \
            file://0001-fix-for-multijob-build.patch \
           "
 
-SRC_URI[md5sum] = "a8c5da2f42f8a18fa4dada2419d1549b"
-SRC_URI[sha256sum] = "97db2114dd963b016cd4ded34831955dcbe3251e5eee45ac2606e67e9f097b2d"
+SRC_URI[md5sum] = "af60f716c4ec134712b923ef6cd93848"
+SRC_URI[sha256sum] = "9433706b653e941cc4c745f28e252e57be2a141eded923e61cc2c4a09768fed4"
 
 inherit autotools texinfo
 
