@@ -17,8 +17,8 @@ SRC_URI = "${APACHE_MIRROR}/${BPN}/${BPN}-${PV}.tar.bz2 \
            file://serfmacro.patch \
            "
 
-SRC_URI[md5sum] = "9fcbae352a5efe73d46a88c97c6bba14"
-SRC_URI[sha256sum] = "8a4fc68aff1d18dcb4dd9e460648d24d9e98657fbed496c582929c6b3ce555e5"
+SRC_URI[md5sum] = "f27e00338d4a9f7f9aec9d4a3f8b418b"
+SRC_URI[sha256sum] = "dbcbc51fb634082f009121f2cb64350ce32146612787ffb0f7ced351aacaae19"
 
 LIC_FILES_CHKSUM = "file://LICENSE;md5=af81ae49ba359e70626c05e9bf313709"
 
