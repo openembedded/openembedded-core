@@ -32,6 +32,7 @@ SRC_URI += " \
            file://0020-back-port-233-don-t-use-the-unified-hierarchy-for-the-systemd.patch \
            file://0021-build-sys-check-for-lz4-in-the-old-and-new-numbering.patch \
            file://0022-parse-util-Do-not-include-unneeded-xlocale.h.patch \
+           file://0001-core-load-fragment-refuse-units-with-errors-in-certa.patch \
            "
 SRC_URI_append_qemuall = " file://0001-core-device.c-Change-the-default-device-timeout-to-2.patch"
 
