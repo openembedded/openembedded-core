@@ -24,6 +24,8 @@ do_install_append () {
        ${D}${datadir}/vulkan-demos/models/vulkanscene* \
        ${D}${datadir}/vulkan-demos/models/plants.dae \
        ${D}${datadir}/vulkan-demos/textures/texturearray_plants*
+
+    mv ${D}${bindir}/screenshot ${D}${bindir}/vulkan-screenshot
 }
 
 EXTRA_OECMAKE = "-DRESOURCE_INSTALL_DIR=${datadir}/vulkan-demos"
