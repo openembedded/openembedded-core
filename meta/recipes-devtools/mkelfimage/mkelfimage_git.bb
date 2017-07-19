@@ -29,6 +29,7 @@ CACHED_CONFIGUREVARS += "\
     HOST_CFLAGS='${BUILD_CFLAGS}' \
     HOST_CPPFLAGS='${BUILD_CPPFLAGS}' \
 "
+EXTRA_OECONF_append_x86-64 = " --with-i386=${HOST_SYS}"
 
 inherit autotools-brokensep
 
