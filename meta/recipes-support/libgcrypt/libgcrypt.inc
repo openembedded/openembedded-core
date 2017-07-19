@@ -18,6 +18,7 @@ SRC_URI = "ftp://ftp.gnupg.org/gcrypt/libgcrypt/libgcrypt-${PV}.tar.gz \
            file://add-pkgconfig-support.patch \
            file://libgcrypt-fix-building-error-with-O2-in-sysroot-path.patch \
            file://fix-ICE-failure-on-mips-with-option-O-and-g.patch \
+           file://0001-ecc-Store-EdDSA-session-key-in-secure-memory.patch \
            file://CVE-2017-7526.patch \
 "
 
