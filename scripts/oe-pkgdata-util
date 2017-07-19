@@ -40,9 +40,8 @@ def tinfoil_init():
     import bb.tinfoil
     import logging
     tinfoil = bb.tinfoil.Tinfoil()
-    tinfoil.prepare(True)
-
     tinfoil.logger.setLevel(logging.WARNING)
+    tinfoil.prepare(True)
     return tinfoil
 
 
