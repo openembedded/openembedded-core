@@ -21,8 +21,8 @@ SRC_URI = "${GNUPG_MIRROR}/libgcrypt/libgcrypt-${PV}.tar.gz \
            file://fix-ICE-failure-on-mips-with-option-O-and-g.patch \
            file://fix-undefined-reference-to-pthread.patch \
 "
-SRC_URI[md5sum] = "36ace8f8dc4b1a82793ae759bbfc806f"
-SRC_URI[sha256sum] = "0e72e91290d553c303095a50ea660279d8f11b76c6c86e826f470442fcdf1edd"
+SRC_URI[md5sum] = "5588b89b75b1353e2454b04c7b8368f3"
+SRC_URI[sha256sum] = "cb076b2efc7ba752f3d4c663c9ee0589a98b1d614fe90878b1facd607a45fd43"
 
 BINCONFIG = "${bindir}/libgcrypt-config"
 
