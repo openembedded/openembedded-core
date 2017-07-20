@@ -2,8 +2,8 @@ require bluez5.inc
 
 REQUIRED_DISTRO_FEATURES = "bluez5"
 
-SRC_URI[md5sum] = "20d936917afc7e1ffa091f5213081c55"
-SRC_URI[sha256sum] = "4cacb00703a6bc149cb09502257d321597d43952374a16f3558766ffa85364e9"
+SRC_URI[md5sum] = "913f35d6fa4ca5772c53adb936bf1947"
+SRC_URI[sha256sum] = "ddab3d3837c1afb8ae228a94ba17709a4650bd4db24211b6771ab735c8908e28"
 
 # noinst programs in Makefile.tools that are conditional on READLINE
 # support
@@ -54,6 +54,7 @@ NOINST_TOOLS_BT ?= " \
     tools/mcaptest \
     tools/cltest \
     tools/oobtest \
+    tools/advtest \
     tools/seq2bseq \
     tools/nokfw \
     tools/create-image \
