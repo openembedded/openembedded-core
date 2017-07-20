@@ -632,8 +632,8 @@ python () {
             d.appendVarFlag('do_unpack', 'depends', ' unzip-native:do_populate_sysroot')
 
         # file is needed by rpm2cpio.sh
-        elif path.endswith('.src.rpm'):
-            d.appendVarFlag('do_unpack', 'depends', ' file-native:do_populate_sysroot')
+        elif path.endswith('.rpm'):
+            d.appendVarFlag('do_unpack', 'depends', ' xz-native:do_populate_sysroot')
 
     if needsrcrev:
         d.setVar("SRCPV", "${@bb.fetch2.get_srcrev(d)}")
