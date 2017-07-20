@@ -26,6 +26,8 @@ SRC_URI = "https://lttng.org/files/lttng-ust/lttng-ust-${PV}.tar.bz2 \
 SRC_URI[md5sum] = "5a5636fc3d9aa370f65b25a802a79e6e"
 SRC_URI[sha256sum] = "b891d267cdbbbd11cf34751f66c21c4a7fdc0eec3c1b53be2c40dca073b7daa4"
 
+CVE_PRODUCT = "ust"
+
 PACKAGECONFIG[manpages] = "--enable-man-pages, --disable-man-pages, asciidoc-native xmlto-native libxslt-native"
 
 do_install_append() {
