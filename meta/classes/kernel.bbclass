@@ -6,6 +6,8 @@ PACKAGE_WRITE_DEPS += "depmodwrapper-cross virtual/update-alternatives-native"
 
 do_deploy[depends] += "depmodwrapper-cross:do_populate_sysroot"
 
+CVE_PRODUCT ?= "linux_kernel"
+
 S = "${STAGING_KERNEL_DIR}"
 B = "${WORKDIR}/build"
 KBUILD_OUTPUT = "${B}"
