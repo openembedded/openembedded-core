@@ -478,20 +478,11 @@ def create_recipe(args):
             bb.process.run('git submodule update --init --recursive', cwd=srctree)
 
         if is_package(fetchuri):
-            tmpfdir = tempfile.mkdtemp(prefix='recipetool-')
-            try:
-                pkgfile = None
+            localdata = bb.data.createCopy(tinfoil.config_data)
+            pkgfile = bb.fetch2.localpath(fetchuri, localdata)
+            if pkgfile:
+                tmpfdir = tempfile.mkdtemp(prefix='recipetool-')
                 try:
-                    fileuri = fetchuri + ';unpack=0'
-                    scriptutils.fetch_uri(tinfoil.config_data, fileuri, tmpfdir, srcrev)
-                    for root, _, files in os.walk(tmpfdir):
-                        for f in files:
-                            pkgfile = os.path.join(root, f)
-                            break
-                except bb.fetch2.BBFetchException as e:
-                    logger.warn('Second fetch to get metadata failed: %s' % str(e).rstrip())
-
-                if pkgfile:
                     if pkgfile.endswith(('.deb', '.ipk')):
                         stdout, _ = bb.process.run('ar x %s' % pkgfile, cwd=tmpfdir)
                         stdout, _ = bb.process.run('tar xf control.tar.gz', cwd=tmpfdir)
@@ -501,8 +492,8 @@ def create_recipe(args):
                         stdout, _ = bb.process.run('rpm -qp --xml %s > pkginfo.xml' % pkgfile, cwd=tmpfdir)
                         values = convert_rpm_xml(os.path.join(tmpfdir, 'pkginfo.xml'))
                         extravalues.update(values)
-            finally:
-                shutil.rmtree(tmpfdir)
+                finally:
+                    shutil.rmtree(tmpfdir)
     else:
         # Assume we're pointing to an existing source tree
         if args.extract_to:
