@@ -207,9 +207,15 @@ def _extract_new_source(newpv, srctree, no_patch, srcrev, branch, keep_temp, tin
 
         tmpdir = tempfile.mkdtemp(prefix='devtool')
         try:
-            md5, sha256 = scriptutils.fetch_uri(tinfoil.config_data, uri, tmpdir, rev)
-        except bb.fetch2.FetchError as e:
+            checksums, ftmpdir = scriptutils.fetch_url(tinfoil, uri, rev, tmpdir, logger, preserve_tmp=keep_temp)
+        except scriptutils.FetchUrlFailure as e:
             raise DevtoolError(e)
+
+        if ftmpdir and keep_temp:
+            logger.info('Fetch temp directory is %s' % ftmpdir)
+
+        md5 = checksums['md5sum']
+        sha256 = checksums['sha256sum']
 
         tmpsrctree = _get_srctree(tmpdir)
         srctree = os.path.abspath(srctree)

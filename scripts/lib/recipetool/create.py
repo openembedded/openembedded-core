@@ -417,7 +417,7 @@ def create_recipe(args):
         pkgarch = "${MACHINE_ARCH}"
 
     extravalues = {}
-    checksums = (None, None)
+    checksums = {}
     tempsrc = ''
     source = args.source
     srcsubdir = ''
@@ -439,22 +439,25 @@ def create_recipe(args):
         if res:
             srcrev = res.group(1)
             srcuri = rev_re.sub('', srcuri)
-        tempsrc = tempfile.mkdtemp(prefix='recipetool-')
-        srctree = tempsrc
-        d = bb.data.createCopy(tinfoil.config_data)
-        if fetchuri.startswith('npm://'):
-            # Check if npm is available
-            npm_bindir = check_npm(tinfoil, args.devtool)
-            d.prependVar('PATH', '%s:' % npm_bindir)
-        logger.info('Fetching %s...' % srcuri)
+
+        tmpparent = tinfoil.config_data.getVar('BASE_WORKDIR')
+        bb.utils.mkdirhier(tmpparent)
+        tempsrc = tempfile.mkdtemp(prefix='recipetool-', dir=tmpparent)
+        srctree = os.path.join(tempsrc, 'source')
+
         try:
-            checksums = scriptutils.fetch_uri(d, fetchuri, srctree, srcrev)
-        except bb.fetch2.BBFetchException as e:
-            logger.error(str(e).rstrip())
+            checksums, ftmpdir = scriptutils.fetch_url(tinfoil, srcuri, srcrev, srctree, logger, preserve_tmp=args.keep_temp)
+        except scriptutils.FetchUrlFailure as e:
+            logger.error(str(e))
             sys.exit(1)
+
+        if ftmpdir and args.keep_temp:
+            logger.info('Fetch temp directory is %s' % ftmpdir)
+
         dirlist = os.listdir(srctree)
-        if 'git.indirectionsymlink' in dirlist:
-            dirlist.remove('git.indirectionsymlink')
+        filterout = ['git.indirectionsymlink']
+        dirlist = [x for x in dirlist if x not in filterout]
+        logger.debug('Directory listing (excluding filtered out):\n  %s' % '\n  '.join(dirlist))
         if len(dirlist) == 1:
             singleitem = os.path.join(srctree, dirlist[0])
             if os.path.isdir(singleitem):
@@ -465,7 +468,7 @@ def create_recipe(args):
                 check_single_file(dirlist[0], fetchuri)
         elif len(dirlist) == 0:
             if '/' in fetchuri:
-                fn = os.path.join(d.getVar('DL_DIR'), fetchuri.split('/')[-1])
+                fn = os.path.join(tinfoil.config_data.getVar('DL_DIR'), fetchuri.split('/')[-1])
                 if os.path.isfile(fn):
                     check_single_file(fn, fetchuri)
             # If we've got to here then there's no source so we might as well give up
@@ -593,11 +596,8 @@ def create_recipe(args):
     if not srcuri:
         lines_before.append('# No information for SRC_URI yet (only an external source tree was specified)')
     lines_before.append('SRC_URI = "%s"' % srcuri)
-    (md5value, sha256value) = checksums
-    if md5value:
-        lines_before.append('SRC_URI[md5sum] = "%s"' % md5value)
-    if sha256value:
-        lines_before.append('SRC_URI[sha256sum] = "%s"' % sha256value)
+    for key, value in sorted(checksums.items()):
+        lines_before.append('SRC_URI[%s] = "%s"' % (key, value))
     if srcuri and supports_srcrev(srcuri):
         lines_before.append('')
         lines_before.append('# Modify these as desired')

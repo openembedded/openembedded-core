@@ -109,7 +109,6 @@ class NpmRecipeHandler(RecipeHandler):
             if varname == 'SRC_URI':
                 if not origvalue.startswith('npm://'):
                     src_uri = origvalue.split()
-                    changed = False
                     deplist = {}
                     for dep, depver in optdeps.items():
                         depdata = self.get_npm_data(dep, depver, d)
@@ -123,14 +122,15 @@ class NpmRecipeHandler(RecipeHandler):
                         depdata = self.get_npm_data(dep, depver, d)
                         deplist[dep] = depdata
 
+                    extra_urls = []
                     for dep, depdata in deplist.items():
                         version = depdata.get('version', None)
                         if version:
                             url = 'npm://registry.npmjs.org;name=%s;version=%s;subdir=node_modules/%s' % (dep, version, dep)
-                            scriptutils.fetch_uri(d, url, srctree)
-                            src_uri.append(url)
-                            changed = True
-                    if changed:
+                            extra_urls.append(url)
+                    if extra_urls:
+                        scriptutils.fetch_url(tinfoil, ' '.join(extra_urls), None, srctree, logger)
+                        src_uri.extend(extra_urls)
                         return src_uri, None, -1, True
             return origvalue, None, 0, True
         updated, newlines = bb.utils.edit_metadata(lines_before, ['SRC_URI'], varfunc)
