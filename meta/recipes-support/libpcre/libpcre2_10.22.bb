@@ -17,6 +17,8 @@ SRC_URI = "https://ftp.pcre.org/pub/pcre/pcre2-${PV}.tar.bz2 \
 SRC_URI[md5sum] = "c0c02517938ee2b0d350d53edf450664"
 SRC_URI[sha256sum] = "b2b44619f4ac6c50ad74c2865fd56807571392496fae1c9ad7a70993d018f416"
 
+CVE_PRODUCT = "pcre2"
+
 S = "${WORKDIR}/pcre2-${PV}"
 
 PROVIDES += "pcre2"
