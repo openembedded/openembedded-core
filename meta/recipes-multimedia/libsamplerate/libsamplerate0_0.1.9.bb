@@ -14,6 +14,8 @@ SRC_URI = "http://www.mega-nerd.com/SRC/libsamplerate-${PV}.tar.gz \
 SRC_URI[md5sum] = "2b78ae9fe63b36b9fbb6267fad93f259"
 SRC_URI[sha256sum] = "0a7eb168e2f21353fb6d84da152e4512126f7dc48ccb0be80578c565413444c1"
 
+CVE_PRODUCT = "libsamplerate"
+
 UPSTREAM_CHECK_URI = "http://www.mega-nerd.com/SRC/download.html"
 
 S = "${WORKDIR}/libsamplerate-${PV}"
