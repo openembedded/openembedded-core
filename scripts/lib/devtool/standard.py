@@ -383,7 +383,7 @@ def extract(args, config, basepath, workspace):
     """Entry point for the devtool 'extract' subcommand"""
     import bb
 
-    tinfoil = _prep_extract_operation(config, basepath, args.recipename)
+    tinfoil = setup_tinfoil(basepath=basepath)
     if not tinfoil:
         # Error already shown
         return 1
@@ -407,7 +407,7 @@ def sync(args, config, basepath, workspace):
     """Entry point for the devtool 'sync' subcommand"""
     import bb
 
-    tinfoil = _prep_extract_operation(config, basepath, args.recipename)
+    tinfoil = setup_tinfoil(basepath=basepath)
     if not tinfoil:
         # Error already shown
         return 1
@@ -426,29 +426,6 @@ def sync(args, config, basepath, workspace):
             return 1
     finally:
         tinfoil.shutdown()
-
-
-def _prep_extract_operation(config, basepath, recipename, tinfoil=None):
-    """HACK: Ugly workaround for making sure that requirements are met when
-       trying to extract a package. Returns the tinfoil instance to be used."""
-    if not tinfoil:
-        tinfoil = setup_tinfoil(basepath=basepath)
-
-    rd = parse_recipe(config, tinfoil, recipename, True)
-    if not rd:
-        tinfoil.shutdown()
-        return None
-
-    if bb.data.inherits_class('kernel-yocto', rd):
-        tinfoil.shutdown()
-        try:
-            stdout, _ = exec_build_env_command(config.init_path, basepath,
-                                               'bitbake kern-tools-native')
-            tinfoil = setup_tinfoil(basepath=basepath)
-        except bb.process.ExecutionError as err:
-            raise DevtoolError("Failed to build kern-tools-native:\n%s" %
-                               err.stdout)
-    return tinfoil
 
 
 def _extract_source(srctree, keep_temp, devbranch, sync, d, tinfoil):
@@ -474,6 +451,9 @@ def _extract_source(srctree, keep_temp, devbranch, sync, d, tinfoil):
         if 'noexec' in (d.getVarFlags('do_unpack', False) or []):
             raise DevtoolError("The %s recipe has do_unpack disabled, unable to "
                                "extract source" % pn, 4)
+
+    if bb.data.inherits_class('kernel-yocto', d):
+        tinfoil.build_targets('kern-tools-native')
 
     if not sync:
         # Prepare for shutil.move later on
@@ -773,13 +753,6 @@ def modify(args, config, basepath, workspace):
             raise DevtoolError("--no-extract specified and source path %s does "
                             "not exist or is not a directory" %
                             srctree)
-        if not args.no_extract:
-            tinfoil = _prep_extract_operation(config, basepath, pn, tinfoil)
-            if not tinfoil:
-                # Error already shown
-                return 1
-            # We need to re-parse because tinfoil may have been re-initialised
-            rd = parse_recipe(config, tinfoil, args.recipename, True)
 
         recipefile = rd.getVar('FILE')
         appendfile = recipe_to_append(recipefile, config, args.wildcard)
