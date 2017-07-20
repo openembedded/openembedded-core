@@ -462,10 +462,16 @@ def create_recipe(args):
                 srcsubdir = dirlist[0]
                 srctree = os.path.join(srctree, srcsubdir)
             else:
-                with open(singleitem, 'r', errors='surrogateescape') as f:
-                    if '<html' in f.read(100).lower():
-                        logger.error('Fetching "%s" returned a single HTML page - check the URL is correct and functional' % fetchuri)
-                        sys.exit(1)
+                check_single_file(dirlist[0], fetchuri)
+        elif len(dirlist) == 0:
+            if '/' in fetchuri:
+                fn = os.path.join(d.getVar('DL_DIR'), fetchuri.split('/')[-1])
+                if os.path.isfile(fn):
+                    check_single_file(fn, fetchuri)
+            # If we've got to here then there's no source so we might as well give up
+            logger.error('URL %s resulted in an empty source tree' % fetchuri)
+            sys.exit(1)
+
         if os.path.exists(os.path.join(srctree, '.gitmodules')) and srcuri.startswith('git://'):
             srcuri = 'gitsm://' + srcuri[6:]
             logger.info('Fetching submodules...')
@@ -811,6 +817,14 @@ def create_recipe(args):
             shutil.rmtree(tempsrc)
 
     return 0
+
+def check_single_file(fn, fetchuri):
+    """Determine if a single downloaded file is something we can't handle"""
+    with open(fn, 'r', errors='surrogateescape') as f:
+        if '<html' in f.read(100).lower():
+            logger.error('Fetching "%s" returned a single HTML page - check the URL is correct and functional' % fetchuri)
+            sys.exit(1)
+
 
 def handle_license_vars(srctree, lines_before, handled, extravalues, d):
     licvalues = guess_license(srctree, d)
