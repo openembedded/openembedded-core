@@ -6,7 +6,7 @@ Subject: [PATCH] Move releasever check after the etc/dnf/vars substitutions.
 The substitutions may actually set the releasever correctly,
 and so the check is premature.
 
-Upstream-Status: Pending
+Upstream-Status: Submitted [https://github.com/rpm-software-management/dnf/pull/868]
 Signed-off-by: Alexander Kanavin <alex.kanavin@gmail.com>
 ---
  dnf/cli/cli.py | 6 +++---
