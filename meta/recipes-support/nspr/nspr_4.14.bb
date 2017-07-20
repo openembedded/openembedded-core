@@ -25,6 +25,8 @@ UPSTREAM_CHECK_REGEX = "v(?P<pver>\d+(\.\d+)+)/"
 SRC_URI[md5sum] = "743f6b7888a614da9927400874054d8c"
 SRC_URI[sha256sum] = "64fc18826257403a9132240aa3c45193d577a84b08e96f7e7770a97c074d17d5"
 
+CVE_PRODUCT = "netscape_portable_runtime"
+
 S = "${WORKDIR}/nspr-${PV}/nspr"
 
 RDEPENDS_${PN}-dev += "perl"
