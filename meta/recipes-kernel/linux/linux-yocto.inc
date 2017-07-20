@@ -33,7 +33,8 @@ KERNEL_FEATURES_append_qemuall=" features/debug/printk.scc"
 # and it can be specific to the machine or shared
 # KMACHINE = "UNDEFINED"
 
-LINUX_KERNEL_TYPE ?= "standard"
+# The distro or local.conf should set this, but if nobody cares...
+LINUX_KERNEL_TYPE ??= "standard"
 
 # KMETA ?= ""
 KBRANCH ?= "master"
