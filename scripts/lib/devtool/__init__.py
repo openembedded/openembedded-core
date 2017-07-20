@@ -261,34 +261,3 @@ def get_bbclassextend_targets(recipefile, pn):
                 targets.append('%s-%s' % (pn, variant))
     return targets
 
-def ensure_npm(config, basepath, fixed_setup=False, check_exists=True):
-    """
-    Ensure that npm is available and either build it or show a
-    reasonable error message
-    """
-    if check_exists:
-        tinfoil = setup_tinfoil(config_only=False, basepath=basepath)
-        try:
-            rd = tinfoil.parse_recipe('nodejs-native')
-            nativepath = rd.getVar('STAGING_BINDIR_NATIVE')
-        finally:
-            tinfoil.shutdown()
-        npmpath = os.path.join(nativepath, 'npm')
-        build_npm = not os.path.exists(npmpath)
-    else:
-        build_npm = True
-
-    if build_npm:
-        logger.info('Building nodejs-native')
-        try:
-            exec_build_env_command(config.init_path, basepath,
-                                'bitbake -q nodejs-native -c addto_recipe_sysroot', watch=True)
-        except bb.process.ExecutionError as e:
-            if "Nothing PROVIDES 'nodejs-native'" in e.stdout:
-                if fixed_setup:
-                    msg = 'nodejs-native is required for npm but is not available within this SDK'
-                else:
-                    msg = 'nodejs-native is required for npm but is not available - you will likely need to add a layer that provides nodejs'
-                raise DevtoolError(msg)
-            else:
-                raise
