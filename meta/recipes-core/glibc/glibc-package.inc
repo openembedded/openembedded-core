@@ -131,6 +131,10 @@ do_install_append_arm () {
 	do_install_armmultilib
 }
 
+do_install_append_armeb () {
+	do_install_armmultilib
+}
+
 do_install_armmultilib () {
 
 	oe_multilib_header bits/endian.h bits/fcntl.h bits/fenv.h bits/fp-fast.h bits/hwcap.h bits/ipc.h bits/link.h bits/wordsize.h
