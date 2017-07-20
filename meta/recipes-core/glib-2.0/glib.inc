@@ -15,6 +15,8 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=3bf50002aefd002f49e7bb854063f7e7 \
 BUGTRACKER = "http://bugzilla.gnome.org"
 SECTION = "libs"
 
+CVE_PRODUCT = "glib"
+
 BBCLASSEXTEND = "native nativesdk"
 
 DEPENDS = "virtual/libiconv libffi zlib glib-2.0-native"
