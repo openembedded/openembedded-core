@@ -93,7 +93,7 @@ SSTATE_MIRRORS =  "file://.* file://%s/PATH"
 
     @classmethod
     def tearDownClass(cls):
-        shutil.rmtree(cls.tmpdir_eSDKQA)
+        shutil.rmtree(cls.tmpdir_eSDKQA, ignore_errors=True)
         super(oeSDKExtSelfTest, cls).tearDownClass()
 
     @OETestID(1602)
