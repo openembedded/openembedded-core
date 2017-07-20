@@ -170,7 +170,7 @@ def staging_processfixme(fixme, target, recipesysroot, recipesysrootnative, d):
     for fixmevar in ['COMPONENTS_DIR', 'HOSTTOOLS_DIR', 'PKGDATA_DIR']:
         fixme_path = d.getVar(fixmevar)
         cmd += " -e 's:FIXME_%s:%s:g'" % (fixmevar, fixme_path)
-    bb.note(cmd)
+    bb.debug(2, cmd)
     subprocess.check_output(cmd, shell=True)
 
 
