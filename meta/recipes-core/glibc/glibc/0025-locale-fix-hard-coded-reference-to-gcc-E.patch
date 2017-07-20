@@ -17,7 +17,7 @@ environment.
 This patch replaces the hard-coded reference to the gcc binary with the proper
 environment variable, thus allowing a user to override it.
 
-Upstream-Status : Submitted [https://sourceware.org/ml/libc-alpha/2016-08/msg00746.html]
+Upstream-Status: Submitted [https://sourceware.org/ml/libc-alpha/2016-08/msg00746.html]
 ---
  locale/gen-translit.pl | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
