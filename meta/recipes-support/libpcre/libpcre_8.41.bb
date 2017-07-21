@@ -14,8 +14,8 @@ SRC_URI = "https://ftp.pcre.org/pub/pcre/pcre-${PV}.tar.bz2 \
            file://Makefile \
 "
 
-SRC_URI[md5sum] = "41a842bf7dcecd6634219336e2167d1d"
-SRC_URI[sha256sum] = "00e27a29ead4267e3de8111fcaa59b132d0533cdfdbdddf4b0604279acbcf4f4"
+SRC_URI[md5sum] = "c160d22723b1670447341b08c58981c1"
+SRC_URI[sha256sum] = "e62c7eac5ae7c0e7286db61ff82912e1c0b7a0c13706616e94a7dd729321b530"
 
 CVE_PRODUCT = "pcre"
 
