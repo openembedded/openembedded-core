@@ -13,7 +13,8 @@ SRC_URI = "file://init \
            file://mdev \
            file://udev \
            file://e2fs \
-           file://debug"
+           file://debug \
+           file://setup-live"
 
 S = "${WORKDIR}"
 
@@ -24,6 +25,9 @@ do_install() {
     install -m 0755 ${WORKDIR}/init ${D}/init
     install -m 0755 ${WORKDIR}/rootfs ${D}/init.d/90-rootfs
     install -m 0755 ${WORKDIR}/finish ${D}/init.d/99-finish
+
+    # setup-live
+    install -m 0755 ${WORKDIR}/setup-live ${D}/init.d/80-setup-live
 
     # mdev
     install -m 0755 ${WORKDIR}/mdev ${D}/init.d/01-mdev
@@ -48,7 +52,8 @@ PACKAGES = "${PN}-base \
             initramfs-module-udev \
             initramfs-module-e2fs \
             initramfs-module-rootfs \
-            initramfs-module-debug"
+            initramfs-module-debug \
+            initramfs-module-setup-live"
 
 FILES_${PN}-base = "/init /init.d/99-finish /dev"
 
@@ -67,6 +72,10 @@ FILES_initramfs-module-mdev = "/init.d/01-mdev"
 SUMMARY_initramfs-module-udev = "initramfs support for udev"
 RDEPENDS_initramfs-module-udev = "${PN}-base udev"
 FILES_initramfs-module-udev = "/init.d/01-udev"
+
+SUMMARY_initramfs-module-setup-live = "initramfs support for setup live"
+RDEPENDS_initramfs-module-setup-live = "${PN}-base udev-extraconf"
+FILES_initramfs-module-setup-live = "/init.d/80-setup-live"
 
 SUMMARY_initramfs-module-e2fs = "initramfs support for ext4/ext3/ext2 filesystems"
 RDEPENDS_initramfs-module-e2fs = "${PN}-base"
