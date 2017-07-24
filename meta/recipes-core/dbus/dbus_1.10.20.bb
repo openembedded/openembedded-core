@@ -20,8 +20,8 @@ SRC_URI = "http://dbus.freedesktop.org/releases/dbus/dbus-${PV}.tar.gz \
            file://0001-configure.ac-explicitely-check-stdint.h.patch \
 "
 
-SRC_URI[md5sum] = "1209c455598165a0c5263d4201894179"
-SRC_URI[sha256sum] = "6049ddd5f3f3e2618f615f1faeda0a115104423a7996b7aa73e2f36e38cc514a"
+SRC_URI[md5sum] = "94c991e763d4f9f13690416b2dcd9411"
+SRC_URI[sha256sum] = "e574b9780b5425fde4d973bb596e7ea0f09e00fe2edd662da9016e976c460b48"
 
 inherit useradd autotools pkgconfig gettext update-rc.d upstream-version-is-even
 
