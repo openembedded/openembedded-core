@@ -189,9 +189,9 @@ def srctree_hash_files(d, srcdir=None):
 
     ret = " "
     if os.path.exists(git_dir):
-        with tempfile.NamedTemporaryFile(dir=git_dir, prefix='oe-devtool-index') as tmp_index:
+        with tempfile.NamedTemporaryFile(prefix='oe-devtool-index') as tmp_index:
             # Clone index
-            shutil.copy2(os.path.join(git_dir, 'index'), tmp_index.name)
+            shutil.copyfile(os.path.join(git_dir, 'index'), tmp_index.name)
             # Update our custom index
             env = os.environ.copy()
             env['GIT_INDEX_FILE'] = tmp_index.name
