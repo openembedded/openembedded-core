@@ -26,6 +26,8 @@ SRC_URI += "${KERNELORG_MIRROR}/linux/utils/kernel/kexec/kexec-tools-${PV}.tar.g
 SRC_URI[md5sum] = "b2b2c5e6b29d467d6e99d587fb6b7cf5"
 SRC_URI[sha256sum] = "b3e69519d2acced256843b1e8f1ecfa00d9b54fa07449ed78f05b9193f239370"
 
+SECURITY_PIE_CFLAGS_remove = "-fPIE -pie"
+
 PACKAGES =+ "kexec kdump vmcore-dmesg"
 
 ALLOW_EMPTY_${PN} = "1"
