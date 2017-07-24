@@ -6,10 +6,14 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=67d8837410863f9821bbd606536f0329 \
                     file://png.h;endline=144;md5=abfa0497feb393b5842d3d82c1009520"
 DEPENDS = "zlib"
 
-SRC_URI = "${GENTOO_MIRROR}/libpng-${PV}.tar.xz \
-          "
+LIBV = "16"
+
+SRC_URI = "${SOURCEFORGE_MIRROR}/project/${BPN}/${BPN}${LIBV}/${PV}/${BP}.tar.xz"
+
 SRC_URI[md5sum] = "425354f86c392318d31aedca71019372"
 SRC_URI[sha256sum] = "d8d3ec9de6b5db740fefac702c37ffcf96ae46cb17c18c1544635a3852f78f7a"
+
+MIRRORS += "${SOURCEFORGE_MIRROR}/project/${BPN}/${BPN}${LIBV}/older-releases/${PV}"
 
 BINCONFIG = "${bindir}/libpng-config ${bindir}/libpng16-config"
 
