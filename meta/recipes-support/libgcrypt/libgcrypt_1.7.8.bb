@@ -29,6 +29,7 @@ BINCONFIG = "${bindir}/libgcrypt-config"
 inherit autotools texinfo binconfig-disabled pkgconfig
 
 EXTRA_OECONF = "--disable-asm"
+EXTRA_OEMAKE_class-target = "LIBTOOLFLAGS='--tag=CC'"
 
 PACKAGECONFIG ??= "capabilities"
 PACKAGECONFIG[capabilities] = "--with-capabilities,--without-capabilities,libcap"

@@ -20,7 +20,7 @@ SRC_URI[md5sum] = "83b89587607e3eb65c70d361f13bab43"
 SRC_URI[sha256sum] = "d06ebb8e1d9a22d19e38d63fdb83954253f39bedc5d46232a05645685722ca37"
 
 EXTRA_OECONF += "--disable-builddir"
-
+EXTRA_OEMAKE_class-target = "LIBTOOLFLAGS='--tag=CC'"
 inherit autotools texinfo
 
 FILES_${PN}-dev += "${libdir}/libffi-${PV}"
@@ -30,3 +30,4 @@ FILES_${PN}-dev += "${libdir}/libffi-${PV}"
 MIPS_INSTRUCTION_SET = "mips"
 
 BBCLASSEXTEND = "native nativesdk"
+
