@@ -12,8 +12,8 @@ REQUIRED_DISTRO_FEATURES = "x11"
 SRC_URI += "file://0001-yelp.m4-drop-the-check-for-itstool.patch \
             file://0001-bookmarks-Check-for-return-value-of-fread.patch \
            "
-SRC_URI[archive.md5sum] = "e035dc6f64f0c1909de823e03f16b2f3"
-SRC_URI[archive.sha256sum] = "5abc0d0c60591df5236ac9b8979dc9f7d9acbb8ad0902b4772d2b7beea81c58d"
+SRC_URI[archive.md5sum] = "c0221aec6a08935e6854eaa9de9451ef"
+SRC_URI[archive.sha256sum] = "fef51676310d9f37e18c9b2d778254232eb17cccd988c2d1ecf42c7b2963a154"
 
 EXTRA_OECONF += " --with-distributor-name=${DISTRO} --enable-debug=no"
 
