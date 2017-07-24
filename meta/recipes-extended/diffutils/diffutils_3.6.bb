@@ -5,23 +5,17 @@ require diffutils.inc
 
 SRC_URI = "${GNU_MIRROR}/diffutils/diffutils-${PV}.tar.xz \
            file://0001-Unset-need_charset_alias-when-building-for-musl.patch \
-           file://diffutils-3.5-gcc7.patch \
            file://run-ptest \
 "
-SRC_URI[md5sum] = "569354697ff1cfc9a9de3781361015fa"
-SRC_URI[sha256sum] = "dad398ccd5b9faca6b0ab219a036453f62a602a56203ac659b43e889bec35533"
+SRC_URI_append_libc-glibc = " file://0001-explicitly-disable-replacing-getopt.patch"
+
+SRC_URI[md5sum] = "07cf286672ced26fba54cd0313bdc071"
+SRC_URI[sha256sum] = "d621e8bdd4b573918c8145f7ae61817d1be9deb4c8d2328a65cea8e11d783bd6"
 
 EXTRA_OECONF += "ac_cv_path_PR_PROGRAM=${bindir}/pr --without-libsigsegv-prefix"
 
 # Fix "Argument list too long" error when len(TMPDIR) = 410
 acpaths = "-I ./m4"
-
-do_configure_prepend () {
-	# Need to remove gettext macros with weird mix of versions
-	for i in codeset.m4 gettext_gl.m4 intlmacosx.m4 inttypes-pri.m4 lib-ld_gl.m4 lib-prefix_gl.m4 po_gl.m4 ssize_t.m4 wchar_t.m4 wint_t.m4; do
-		rm -f ${S}/m4/$i
-	done
-}
 
 inherit ptest
 
