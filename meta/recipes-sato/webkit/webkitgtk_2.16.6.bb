@@ -23,8 +23,8 @@ SRC_URI = "http://www.webkitgtk.org/releases/${BPN}-${PV}.tar.xz \
            file://detect-atomics-during-configure.patch \
            "
 
-SRC_URI[md5sum] = "fce72dc89cd310a663d9eb97133861fe"
-SRC_URI[sha256sum] = "8e0396f3428e757898c5856e642eed4fcd5a20ae03d96d3eaa03b76634be7dd4"
+SRC_URI[md5sum] = "0e2d142a586e4ff79cf0324f4fdbf20c"
+SRC_URI[sha256sum] = "fc23650df953123c59b9c0edf3855e7bd55bd107820997fc72375811e1ea4b21"
 
 inherit cmake pkgconfig gobject-introspection perlnative distro_features_check upstream-version-is-even gtk-doc
 
