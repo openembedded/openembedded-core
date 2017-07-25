@@ -37,6 +37,8 @@ RDEPENDS_${PN} += "${PN}-run-parts"
 
 ALTERNATIVE_PRIORITY="30"
 ALTERNATIVE_${PN} = "add-shell installkernel remove-shell savelog tempfile which"
+
+ALTERNATIVE_PRIORITY_${PN}-run-parts = "60"
 ALTERNATIVE_${PN}-run-parts = "run-parts"
 
 ALTERNATIVE_${PN}-doc = "which.1"
