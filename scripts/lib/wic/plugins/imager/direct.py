@@ -32,6 +32,8 @@ import uuid
 
 from time import strftime
 
+from oe.path import copyhardlinktree
+
 from wic import WicError
 from wic.filemap import sparse_copy
 from wic.ksparser import KickStart, KickStartError
@@ -115,12 +117,18 @@ class DirectPlugin(ImagerPlugin):
             fstab_lines = fstab.readlines()
 
         if self._update_fstab(fstab_lines, self.parts):
-            shutil.copyfile(fstab_path, fstab_path + ".orig")
+            # copy rootfs dir to workdir to update fstab
+            # as rootfs can be used by other tasks and can't be modified
+            new_rootfs = os.path.realpath(os.path.join(self.workdir, "rootfs_copy"))
+            copyhardlinktree(image_rootfs, new_rootfs)
+            fstab_path = os.path.join(new_rootfs, 'etc/fstab')
+
+            os.unlink(fstab_path)
 
             with open(fstab_path, "w") as fstab:
                 fstab.writelines(fstab_lines)
 
-            return fstab_path
+            return new_rootfs
 
     def _update_fstab(self, fstab_lines, parts):
         """Assume partition order same as in wks"""
@@ -156,7 +164,10 @@ class DirectPlugin(ImagerPlugin):
         filesystems from the artifacts directly and combine them into
         a partitioned image.
         """
-        fstab_path = self._write_fstab(self.rootfs_dir.get("ROOTFS_DIR"))
+        new_rootfs = self._write_fstab(self.rootfs_dir.get("ROOTFS_DIR"))
+        if new_rootfs:
+            # rootfs was copied to update fstab
+            self.rootfs_dir['ROOTFS_DIR'] = new_rootfs
 
         for part in self.parts:
             # get rootfs size from bitbake variable if it's not set in .ks file
@@ -172,12 +183,7 @@ class DirectPlugin(ImagerPlugin):
                     if rsize_bb:
                         part.size = int(round(float(rsize_bb)))
 
-        try:
-            self._image.prepare(self)
-        finally:
-            if fstab_path:
-                shutil.move(fstab_path + ".orig", fstab_path)
-
+        self._image.prepare(self)
         self._image.layout_partitions()
         self._image.create()
 
