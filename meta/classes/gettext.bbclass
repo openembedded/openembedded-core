@@ -17,3 +17,8 @@ DEPENDS_GETTEXT ??= "virtual/gettext gettext-native"
 
 BASEDEPENDS_append = " ${@gettext_dependencies(d)}"
 EXTRA_OECONF_append = " ${@gettext_oeconf(d)}"
+
+# Without this, msgfmt from gettext-native will not find ITS files
+# provided by target recipes (for example, polkit.its).
+GETTEXTDATADIRS_append_class-target = ":${STAGING_DATADIR}/gettext"
+export GETTEXTDATADIRS
