@@ -879,6 +879,11 @@ python split_and_strip_files () {
         debugdir = "/.debug"
         debuglibdir = ""
         debugsrcdir = ""
+    elif d.getVar('PACKAGE_DEBUG_SPLIT_STYLE') == 'debug-with-srcpkg':
+        debugappend = ""
+        debugdir = "/.debug"
+        debuglibdir = ""
+        debugsrcdir = "/usr/src/debug"
     else:
         # Original OE-core, a.k.a. ".debug", style debug info
         debugappend = ""
@@ -1092,6 +1097,15 @@ python populate_packages () {
     
     autodebug = not (d.getVar("NOAUTOPACKAGEDEBUG") or False)
 
+    split_source_package = (d.getVar('PACKAGE_DEBUG_SPLIT_STYLE') == 'debug-with-srcpkg')
+
+    # If debug-with-srcpkg mode is enabled then the src package is added
+    # into the package list and the source directory as its main content
+    if split_source_package:
+        src_package_name = ('%s-src' % d.getVar('PN'))
+        packages += (' ' + src_package_name)
+        d.setVar('FILES_%s' % src_package_name, '/usr/src/debug')
+
     # Sanity check PACKAGES for duplicates
     # Sanity should be moved to sanity.bbclass once we have the infrastucture
     package_list = []
@@ -1100,7 +1114,12 @@ python populate_packages () {
         if pkg in package_list:
             msg = "%s is listed in PACKAGES multiple times, this leads to packaging errors." % pkg
             package_qa_handle_error("packages-list", msg, d)
-        elif autodebug and pkg.endswith("-dbg"):
+        # If debug-with-srcpkg mode is enabled then the src package will have
+        # priority over dbg package when assigning the files.
+        # This allows src package to include source files and remove them from dbg.
+        elif split_source_package and pkg.endswith("-src"):
+            package_list.insert(0, pkg)
+        elif autodebug and pkg.endswith("-dbg") and not split_source_package:
             package_list.insert(0, pkg)
         else:
             package_list.append(pkg)
@@ -1460,7 +1479,7 @@ python package_do_filedeps() {
     for pkg in packages.split():
         if d.getVar('SKIP_FILEDEPS_' + pkg) == '1':
             continue
-        if pkg.endswith('-dbg') or pkg.endswith('-doc') or pkg.find('-locale-') != -1 or pkg.find('-localedata-') != -1 or pkg.find('-gconv-') != -1 or pkg.find('-charmap-') != -1 or pkg.startswith('kernel-module-'):
+        if pkg.endswith('-dbg') or pkg.endswith('-doc') or pkg.find('-locale-') != -1 or pkg.find('-localedata-') != -1 or pkg.find('-gconv-') != -1 or pkg.find('-charmap-') != -1 or pkg.startswith('kernel-module-') or pkg.endswith('-src'):
             continue
         for files in chunks(pkgfiles[pkg], 100):
             pkglist.append((pkg, files, rpmdeps, pkgdest, magic))
@@ -1578,7 +1597,7 @@ python package_do_shlibs() {
                 combos.append("-".join(options[0:i]))
             return combos
 
-        if (file.endswith('.dylib') or file.endswith('.so')) and not pkg.endswith('-dev') and not pkg.endswith('-dbg'):
+        if (file.endswith('.dylib') or file.endswith('.so')) and not pkg.endswith('-dev') and not pkg.endswith('-dbg') and not pkg.endswith('-src'):
             # Drop suffix
             name = os.path.basename(file).rsplit(".",1)[0]
             # Find all combinations
