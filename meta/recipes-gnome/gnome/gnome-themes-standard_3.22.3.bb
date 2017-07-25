@@ -30,16 +30,11 @@ do_install_append() {
 # There could be gnome-theme-highcontrast as well but that requires
 # gtk+3 and includes lots of icons (is also broken with B != S).
 PACKAGES += "gnome-theme-adwaita \
-             gnome-theme-adwaita-dbg \
-             gnome-theme-adwaita-dev \
              gnome-theme-adwaita-dark \
              "
 
 FILES_gnome-theme-adwaita = "${prefix}/share/themes/Adwaita \
                               ${libdir}/gtk-2.0/2.10.0/engines/libadwaita.so"
-FILES_gnome-theme-adwaita-dev = "${libdir}/gtk-2.0/2.10.0/engines/libadwaita.la"
-FILES_gnome-theme-adwaita-dbg = "${libdir}/gtk-2.0/2.10.0/engines/.debug/libadwaita.so"
 
 FILES_gnome-theme-adwaita-dark = "${prefix}/share/themes/Adwaita-dark"
 RDEPENDS_gnome-theme-adwaita-dark = "gnome-theme-adwaita"
-
