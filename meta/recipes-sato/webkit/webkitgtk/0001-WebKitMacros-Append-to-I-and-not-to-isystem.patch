@@ -1,0 +1,170 @@
+From 53a00058184cd710c6f4375f4daab49d7e885a30 Mon Sep 17 00:00:00 2001
+From: Khem Raj <raj.khem@gmail.com>
+Date: Sun, 17 Apr 2016 12:35:41 -0700
+Subject: [PATCH] WebKitMacros: Append to -I and not to -isystem
+
+gcc-6 has now introduced stdlib.h in libstdc++ for better
+compliance and its including the C library stdlib.h using
+include_next which is sensitive to order of system header
+include paths. Its infact better to not tinker with the
+system header include paths at all. Since adding /usr/include
+to -system is redundant and compiler knows about it moreover
+now with gcc6 it interferes with compiler's functioning
+and ends up with compile errors e.g.
+
+/usr/include/c++/6.0.0/cstdlib:75:25: fatal error: stdlib.h: No such file or directory
+
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+---
+Upstream-Status: Pending
+
+ Source/cmake/WebKitMacros.cmake | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+Index: webkitgtk-2.16.5/Tools/DumpRenderTree/TestNetscapePlugIn/CMakeLists.txt
+===================================================================
+--- webkitgtk-2.16.5.orig/Tools/DumpRenderTree/TestNetscapePlugIn/CMakeLists.txt
++++ webkitgtk-2.16.5/Tools/DumpRenderTree/TestNetscapePlugIn/CMakeLists.txt
+@@ -42,7 +42,7 @@ set(WebKitTestNetscapePlugIn_SYSTEM_INCL
+ )
+ 
+ include_directories(${WebKitTestNetscapePlugIn_INCLUDE_DIRECTORIES})
+-include_directories(SYSTEM ${WebKitTestNetscapePlugIn_SYSTEM_INCLUDE_DIRECTORIES})
++include_directories(${WebKitTestNetscapePlugIn_SYSTEM_INCLUDE_DIRECTORIES})
+ 
+ set(WebKitTestNetscapePlugIn_LIBRARIES
+     ${X11_LIBRARIES}
+Index: webkitgtk-2.16.5/Tools/ImageDiff/CMakeLists.txt
+===================================================================
+--- webkitgtk-2.16.5.orig/Tools/ImageDiff/CMakeLists.txt
++++ webkitgtk-2.16.5/Tools/ImageDiff/CMakeLists.txt
+@@ -9,6 +9,6 @@ set(IMAGE_DIFF_LIBRARIES
+ WEBKIT_INCLUDE_CONFIG_FILES_IF_EXISTS()
+ 
+ include_directories(${IMAGE_DIFF_INCLUDE_DIRECTORIES})
+-include_directories(SYSTEM ${IMAGE_DIFF_SYSTEM_INCLUDE_DIRECTORIES})
++include_directories(${IMAGE_DIFF_SYSTEM_INCLUDE_DIRECTORIES})
+ add_executable(ImageDiff ${IMAGE_DIFF_SOURCES})
+ target_link_libraries(ImageDiff ${IMAGE_DIFF_LIBRARIES})
+Index: webkitgtk-2.16.5/Tools/MiniBrowser/gtk/CMakeLists.txt
+===================================================================
+--- webkitgtk-2.16.5.orig/Tools/MiniBrowser/gtk/CMakeLists.txt
++++ webkitgtk-2.16.5/Tools/MiniBrowser/gtk/CMakeLists.txt
+@@ -57,7 +57,7 @@ endif ()
+ add_definitions(-DGDK_VERSION_MIN_REQUIRED=GDK_VERSION_3_6)
+ 
+ include_directories(${MiniBrowser_INCLUDE_DIRECTORIES})
+-include_directories(SYSTEM ${MiniBrowser_SYSTEM_INCLUDE_DIRECTORIES})
++include_directories(${MiniBrowser_SYSTEM_INCLUDE_DIRECTORIES})
+ add_executable(MiniBrowser ${MiniBrowser_SOURCES})
+ target_link_libraries(MiniBrowser ${MiniBrowser_LIBRARIES})
+ 
+Index: webkitgtk-2.16.5/Tools/WebKitTestRunner/CMakeLists.txt
+===================================================================
+--- webkitgtk-2.16.5.orig/Tools/WebKitTestRunner/CMakeLists.txt
++++ webkitgtk-2.16.5/Tools/WebKitTestRunner/CMakeLists.txt
+@@ -106,7 +106,7 @@ GENERATE_BINDINGS(WebKitTestRunnerBindin
+ WEBKIT_INCLUDE_CONFIG_FILES_IF_EXISTS()
+ 
+ include_directories(${WebKitTestRunner_INCLUDE_DIRECTORIES})
+-include_directories(SYSTEM ${WebKitTestRunner_SYSTEM_INCLUDE_DIRECTORIES})
++include_directories(${WebKitTestRunner_SYSTEM_INCLUDE_DIRECTORIES})
+ 
+ add_library(TestRunnerInjectedBundle SHARED ${WebKitTestRunnerInjectedBundle_SOURCES})
+ target_link_libraries(TestRunnerInjectedBundle ${WebKitTestRunner_LIBRARIES})
+Index: webkitgtk-2.16.5/Source/WebCore/PlatformGTK.cmake
+===================================================================
+--- webkitgtk-2.16.5.orig/Source/WebCore/PlatformGTK.cmake
++++ webkitgtk-2.16.5/Source/WebCore/PlatformGTK.cmake
+@@ -321,7 +321,7 @@ if (ENABLE_PLUGIN_PROCESS_GTK2)
+         ${GTK2_INCLUDE_DIRS}
+         ${GDK2_INCLUDE_DIRS}
+     )
+-    target_include_directories(WebCorePlatformGTK2 SYSTEM PRIVATE
++    target_include_directories(WebCorePlatformGTK2 PRIVATE
+         ${WebCore_SYSTEM_INCLUDE_DIRECTORIES}
+     )
+     target_link_libraries(WebCorePlatformGTK2
+@@ -346,7 +346,7 @@ WEBKIT_SET_EXTRA_COMPILER_FLAGS(WebCoreP
+ target_include_directories(WebCorePlatformGTK PRIVATE
+     ${WebCore_INCLUDE_DIRECTORIES}
+ )
+-target_include_directories(WebCorePlatformGTK SYSTEM PRIVATE
++target_include_directories(WebCorePlatformGTK PRIVATE
+     ${WebCore_SYSTEM_INCLUDE_DIRECTORIES}
+     ${GTK_INCLUDE_DIRS}
+     ${GDK_INCLUDE_DIRS}
+@@ -362,7 +362,7 @@ include_directories(
+     "${WEBCORE_DIR}/bindings/gobject/"
+ )
+ 
+-include_directories(SYSTEM
++include_directories(
+     ${WebCore_SYSTEM_INCLUDE_DIRECTORIES}
+ )
+ 
+Index: webkitgtk-2.16.5/Tools/TestWebKitAPI/PlatformGTK.cmake
+===================================================================
+--- webkitgtk-2.16.5.orig/Tools/TestWebKitAPI/PlatformGTK.cmake
++++ webkitgtk-2.16.5/Tools/TestWebKitAPI/PlatformGTK.cmake
+@@ -20,7 +20,7 @@ include_directories(
+     ${WEBKIT2_DIR}/UIProcess/API/gtk
+ )
+ 
+-include_directories(SYSTEM
++include_directories(
+     ${GDK3_INCLUDE_DIRS}
+     ${GLIB_INCLUDE_DIRS}
+     ${GTK3_INCLUDE_DIRS}
+Index: webkitgtk-2.16.5/Tools/TestWebKitAPI/Tests/WebKit2Gtk/CMakeLists.txt
+===================================================================
+--- webkitgtk-2.16.5.orig/Tools/TestWebKitAPI/Tests/WebKit2Gtk/CMakeLists.txt
++++ webkitgtk-2.16.5/Tools/TestWebKitAPI/Tests/WebKit2Gtk/CMakeLists.txt
+@@ -21,7 +21,7 @@ include_directories(
+     ${TOOLS_DIR}/TestWebKitAPI/gtk/WebKit2Gtk
+ )
+ 
+-include_directories(SYSTEM
++include_directories(
+     ${ATSPI_INCLUDE_DIRS}
+     ${GLIB_INCLUDE_DIRS}
+     ${GSTREAMER_INCLUDE_DIRS}
+Index: webkitgtk-2.16.5/Source/WebKit2/PlatformGTK.cmake
+===================================================================
+--- webkitgtk-2.16.5.orig/Source/WebKit2/PlatformGTK.cmake
++++ webkitgtk-2.16.5/Source/WebKit2/PlatformGTK.cmake
+@@ -1156,7 +1156,7 @@ if (ENABLE_PLUGIN_PROCESS_GTK2)
+     target_include_directories(WebKitPluginProcess2 PRIVATE
+         ${WebKit2CommonIncludeDirectories}
+     )
+-    target_include_directories(WebKitPluginProcess2 SYSTEM PRIVATE
++    target_include_directories(WebKitPluginProcess2 PRIVATE
+          ${WebKit2CommonSystemIncludeDirectories}
+          ${GTK2_INCLUDE_DIRS}
+          ${GDK2_INCLUDE_DIRS}
+Index: webkitgtk-2.16.5/Source/JavaScriptCore/shell/CMakeLists.txt
+===================================================================
+--- webkitgtk-2.16.5.orig/Source/JavaScriptCore/shell/CMakeLists.txt
++++ webkitgtk-2.16.5/Source/JavaScriptCore/shell/CMakeLists.txt
+@@ -20,7 +20,7 @@ WEBKIT_INCLUDE_CONFIG_FILES_IF_EXISTS()
+ 
+ WEBKIT_WRAP_SOURCELIST(${JSC_SOURCES})
+ include_directories(./ ${JavaScriptCore_INCLUDE_DIRECTORIES})
+-include_directories(SYSTEM ${JavaScriptCore_SYSTEM_INCLUDE_DIRECTORIES})
++include_directories(${JavaScriptCore_SYSTEM_INCLUDE_DIRECTORIES})
+ add_executable(jsc ${JSC_SOURCES})
+ target_link_libraries(jsc ${JSC_LIBRARIES})
+ 
+Index: webkitgtk-2.16.5/Source/cmake/WebKitMacros.cmake
+===================================================================
+--- webkitgtk-2.16.5.orig/Source/cmake/WebKitMacros.cmake
++++ webkitgtk-2.16.5/Source/cmake/WebKitMacros.cmake
+@@ -277,7 +277,7 @@ macro(WEBKIT_WRAP_SOURCELIST)
+ endmacro()
+ 
+ macro(WEBKIT_FRAMEWORK _target)
+-    include_directories(SYSTEM ${${_target}_SYSTEM_INCLUDE_DIRECTORIES})
++    include_directories(${${_target}_SYSTEM_INCLUDE_DIRECTORIES})
+     add_library(${_target} ${${_target}_LIBRARY_TYPE}
+         ${${_target}_HEADERS}
+         ${${_target}_SOURCES}
