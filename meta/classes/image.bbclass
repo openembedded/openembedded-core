@@ -487,7 +487,7 @@ python () {
         # Clean up after applying all conversion commands. Some of them might
         # use the same input, therefore we cannot delete sooner without applying
         # some complex dependency analysis.
-        for image in rm_tmp_images:
+        for image in sorted(rm_tmp_images):
             cmds.append("\trm " + image)
 
         after = 'do_image'
