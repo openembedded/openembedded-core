@@ -11,6 +11,12 @@ TARGET_GOARM = "${@go_map_arm(d.getVar('TARGET_ARCH', True), d.getVar('TUNE_FEAT
 TARGET_GOTUPLE = "${TARGET_GOOS}_${TARGET_GOARCH}"
 GO_BUILD_BINDIR = "${@['bin/${HOST_GOTUPLE}','bin'][d.getVar('BUILD_GOTUPLE',True) == d.getVar('HOST_GOTUPLE',True)]}"
 
+# define here because everybody inherits this class
+#
+COMPATIBLE_HOST_linux-gnux32 = "null"
+COMPATIBLE_HOST_powerpc = "null"
+COMPATIBLE_HOST_powerpc64 = "null"
+
 def go_map_arch(a, d):
     import re
     if re.match('i.86', a):

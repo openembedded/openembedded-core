@@ -1,10 +1,5 @@
 inherit goarch
 
-# x32 ABI is not supported on go compiler so far
-COMPATIBLE_HOST_linux-gnux32 = "null"
-# ppc32 is not supported in go compilers
-COMPATIBLE_HOST_powerpc = "null"
-
 GOROOT_class-native = "${STAGING_LIBDIR_NATIVE}/go"
 GOROOT = "${STAGING_LIBDIR_NATIVE}/${TARGET_SYS}/go"
 GOBIN_FINAL_class-native = "${GOROOT_FINAL}/bin"

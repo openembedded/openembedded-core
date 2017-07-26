@@ -12,12 +12,6 @@ DEPENDS += "${@ 'libgcc' if not oe.utils.inherits(d, 'cross') else ''}"
 INHIBIT_PACKAGE_STRIP = "1"
 INHIBIT_SYSROOT_STRIP = "1"
 
-# x32 ABI is not supported on go compiler so far
-COMPATIBLE_HOST_linux-gnux32 = "null"
-# ppc is not supported in go compilers
-COMPATIBLE_HOST_powerpc = "null"
-COMPATIBLE_HOST_powerpc64 = "null"
-
 export GOHOSTOS = "${BUILD_GOOS}"
 export GOHOSTARCH = "${BUILD_GOARCH}"
 export GOOS = "${TARGET_GOOS}"
