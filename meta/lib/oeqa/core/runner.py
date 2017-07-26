@@ -25,10 +25,14 @@ class OEStreamLogger(object):
 
     def write(self, msg):
         if len(msg) > 1 and msg[0] != '\n':
-            self.buffer += msg
-        else:
-            self.logger.log(logging.INFO, self.buffer.rstrip("\n"))
-            self.buffer = ""
+            if '...' in msg:
+                self.buffer += msg
+            elif self.buffer:
+                self.buffer += msg
+                self.logger.log(logging.INFO, self.buffer)
+                self.buffer = ""
+            else:
+                self.logger.log(logging.INFO, msg)
 
     def flush(self):
         for handler in self.logger.handlers:
