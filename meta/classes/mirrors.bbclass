@@ -62,3 +62,14 @@ npm://.*/.*     http://sources.openembedded.org/ \n \
 ${CPAN_MIRROR}  http://cpan.metacpan.org/ \n \
 ${CPAN_MIRROR}  http://search.cpan.org/CPAN/ \n \
 "
+
+# Use MIRRORS to provide git repo fallbacks using the https protocol, for cases
+# where git native protocol fetches may fail due to local firewall rules, etc.
+
+MIRRORS += "\
+git://anonscm.debian.org/.*   git://anonscm.debian.org/git/PATH;protocol=https \n \
+git://git.gnome.org/.*        git://git.gnome.org/browse/PATH;protocol=https \n \
+git://git.savannah.gnu.org/.* git://git.savannah.gnu.org/git/PATH;protocol=https \n \
+git://git.yoctoproject.org/.* git://git.yoctoproject.org/git/PATH;protocol=https \n \
+git://.*/.*                   git://HOST/PATH;protocol=https \n \
+"
