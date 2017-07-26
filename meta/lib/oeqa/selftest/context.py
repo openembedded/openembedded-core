@@ -13,7 +13,7 @@ from random import choice
 import oeqa
 
 from oeqa.core.context import OETestContext, OETestContextExecutor
-from oeqa.core.exception import OEQAPreRun
+from oeqa.core.exception import OEQAPreRun, OEQATestNotFound
 
 from oeqa.utils.commands import runCmd, get_bb_vars, get_test_layer
 
@@ -196,7 +196,11 @@ class OESelftestTestContextExecutor(OETestContextExecutor):
                 self.tc_kwargs['init']['td']['BBPATH'].split(':'))
 
         self.tc = self._context_class(**self.tc_kwargs['init'])
-        self.tc.loadTests(self.module_paths, **self.tc_kwargs['load'])
+        try:
+            self.tc.loadTests(self.module_paths, **self.tc_kwargs['load'])
+        except OEQATestNotFound as ex:
+            logger.error(ex)
+            sys.exit(1)
 
         if args.list_tests:
             rc = self.tc.listTests(args.list_tests, **self.tc_kwargs['run'])

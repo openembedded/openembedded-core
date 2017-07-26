@@ -10,7 +10,7 @@ import collections
 
 from oeqa.core.loader import OETestLoader
 from oeqa.core.runner import OETestRunner
-from oeqa.core.exception import OEQAMissingManifest
+from oeqa.core.exception import OEQAMissingManifest, OEQATestNotFound
 
 class OETestContext(object):
     loaderClass = OETestLoader
@@ -139,6 +139,7 @@ class OETestContextExecutor(object):
 
         if args.run_tests:
             self.tc_kwargs['load']['modules'] = args.run_tests
+            self.tc_kwargs['load']['modules_required'] = args.run_tests
         else:
             self.tc_kwargs['load']['modules'] = []
 
@@ -151,7 +152,11 @@ class OETestContextExecutor(object):
         self._process_args(logger, args)
 
         self.tc = self._context_class(**self.tc_kwargs['init'])
-        self.tc.loadTests(self.module_paths, **self.tc_kwargs['load'])
+        try:
+            self.tc.loadTests(self.module_paths, **self.tc_kwargs['load'])
+        except OEQATestNotFound as ex:
+            logger.error(ex)
+            sys.exit(1)
 
         if args.list_tests:
             rc = self.tc.listTests(args.list_tests, **self.tc_kwargs['run'])

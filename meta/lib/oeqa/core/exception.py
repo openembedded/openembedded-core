@@ -18,3 +18,6 @@ class OEQAMissingManifest(OEQAException):
 
 class OEQAPreRun(OEQAException):
     pass
+
+class OEQATestNotFound(OEQAException):
+    pass

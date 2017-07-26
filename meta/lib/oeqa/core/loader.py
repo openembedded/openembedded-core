@@ -9,6 +9,7 @@ import inspect
 from oeqa.core.utils.path import findFile
 from oeqa.core.utils.test import getSuiteModules, getCaseID
 
+from oeqa.core.exception import OEQATestNotFound
 from oeqa.core.case import OETestCase
 from oeqa.core.decorator import decoratorClasses, OETestDecorator, \
         OETestFilter, OETestDiscover
@@ -277,6 +278,28 @@ class OETestLoader(unittest.TestLoader):
 
         return self.suiteClass(suite)
 
+    def _required_modules_validation(self):
+        """
+            Search in Test context registry if a required
+            test is found, raise an exception when not found.
+        """
+
+        for module in self.modules_required:
+            found = False
+
+            # The module name is splitted to only compare the
+            # first part of a test case id.
+            comp_len = len(module.split('.'))
+            for case in self.tc._registry['cases']:
+                case_comp = '.'.join(case.split('.')[0:comp_len])
+                if module == case_comp:
+                    found = True
+                    break
+
+            if not found:
+                raise OEQATestNotFound("Not found %s in loaded test cases" % \
+                        module)
+
     def discover(self):
         big_suite = self.suiteClass()
         for path in self.module_paths:
@@ -290,6 +313,9 @@ class OETestLoader(unittest.TestLoader):
                             if issubclass(clss, OETestDiscover)]
         for clss in discover_classes:
             cases = clss.discover(self.tc._registry)
+
+        if self.modules_required:
+            self._required_modules_validation()
 
         return self.suiteClass(cases) if cases else big_suite
 
