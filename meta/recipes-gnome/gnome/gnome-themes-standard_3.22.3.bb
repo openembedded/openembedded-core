@@ -38,3 +38,6 @@ FILES_gnome-theme-adwaita = "${prefix}/share/themes/Adwaita \
 
 FILES_gnome-theme-adwaita-dark = "${prefix}/share/themes/Adwaita-dark"
 RDEPENDS_gnome-theme-adwaita-dark = "gnome-theme-adwaita"
+
+# gnome-themes-standard is empty and doesn't exist
+RDEPENDS_${PN}-dev = ""
