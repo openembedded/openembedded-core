@@ -48,7 +48,7 @@ class RootfsPlugin(SourcePlugin):
     @staticmethod
     def __get_rootfs_dir(rootfs_dir):
         if os.path.isdir(rootfs_dir):
-            return rootfs_dir
+            return os.path.realpath(rootfs_dir)
 
         image_rootfs_dir = get_bitbake_var("IMAGE_ROOTFS", rootfs_dir)
         if not os.path.isdir(image_rootfs_dir):
@@ -56,7 +56,7 @@ class RootfsPlugin(SourcePlugin):
                            "named %s has been found at %s, exiting." %
                            (rootfs_dir, image_rootfs_dir))
 
-        return image_rootfs_dir
+        return os.path.realpath(image_rootfs_dir)
 
     @classmethod
     def do_prepare_partition(cls, part, source_params, cr, cr_workdir,
