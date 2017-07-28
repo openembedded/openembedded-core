@@ -49,8 +49,6 @@ shelltimeout=30
 		done
 		# The existing rootfs module has no support for rootfs images. Assign the rootfs image.
 		bootparam_root="/run/media/$ROOT_DISK/$ISOLINUX/$ROOT_IMAGE"
-	else
-		break
 	fi
 
 	if [ "$bootparam_LABEL" != "boot" -a -f /init.d/$bootparam_LABEL.sh ] ; then
