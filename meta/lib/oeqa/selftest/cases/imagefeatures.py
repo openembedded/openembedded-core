@@ -106,7 +106,7 @@ class ImageFeatures(OESelftestTestCase):
         Author:      Ed Bartosh <ed.bartosh@linux.intel.com>
         """
 
-        features = 'IMAGE_FSTYPES += " ext4 ext4.bmap"'
+        features = 'IMAGE_FSTYPES += " ext4 ext4.bmap ext4.bmap.gz"'
         self.write_config(features)
 
         image_name = 'core-image-minimal'
@@ -116,14 +116,20 @@ class ImageFeatures(OESelftestTestCase):
         link_name = get_bb_var('IMAGE_LINK_NAME', image_name)
         image_path = os.path.join(deploy_dir_image, "%s.ext4" % link_name)
         bmap_path = "%s.bmap" % image_path
+        gzip_path = "%s.gz" % bmap_path
 
-        # check if result image and bmap file are in deploy directory
+        # check if result image, bmap and bmap.gz files are in deploy directory
         self.assertTrue(os.path.exists(image_path))
         self.assertTrue(os.path.exists(bmap_path))
+        self.assertTrue(os.path.exists(gzip_path))
 
         # check if result image is sparse
         image_stat = os.stat(image_path)
         self.assertTrue(image_stat.st_size > image_stat.st_blocks * 512)
+
+        # check if the resulting gzip is valid
+        self.assertTrue(runCmd('gzip -t %s' % gzip_path))
+
 
     def test_image_fstypes(self):
         """
