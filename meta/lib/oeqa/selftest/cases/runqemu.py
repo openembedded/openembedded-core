@@ -19,7 +19,7 @@ class RunqemuTests(OESelftestTestCase):
         super(RunqemuTests, self).setUpLocal()
         self.recipe = 'core-image-minimal'
         self.machine =  'qemux86-64'
-        self.fstypes = "ext4 iso hddimg vmdk qcow2 vdi"
+        self.fstypes = "ext4 iso hddimg wic.vmdk wic.qcow2 wic.vdi"
         self.cmd_common = "runqemu nographic"
 
         # Avoid emit the same record multiple times.
@@ -74,7 +74,7 @@ SYSLINUX_TIMEOUT = "10"
     @OETestID(2005)
     def test_boot_recipe_image_vmdk(self):
         """Test runqemu recipe-image vmdk"""
-        cmd = "%s %s vmdk" % (self.cmd_common, self.recipe)
+        cmd = "%s %s wic.vmdk" % (self.cmd_common, self.recipe)
         with runqemu(self.recipe, ssh=False, launch_cmd=cmd) as qemu:
             with open(qemu.qemurunnerlog) as f:
                 self.assertTrue('format=vmdk' in f.read(), "Failed: %s" % cmd)
@@ -82,7 +82,7 @@ SYSLINUX_TIMEOUT = "10"
     @OETestID(2006)
     def test_boot_recipe_image_vdi(self):
         """Test runqemu recipe-image vdi"""
-        cmd = "%s %s vdi" % (self.cmd_common, self.recipe)
+        cmd = "%s %s wic.vdi" % (self.cmd_common, self.recipe)
         with runqemu(self.recipe, ssh=False, launch_cmd=cmd) as qemu:
             with open(qemu.qemurunnerlog) as f:
                 self.assertTrue('format=vdi' in f.read(), "Failed: %s" % cmd)
@@ -113,7 +113,7 @@ SYSLINUX_TIMEOUT = "10"
     @OETestID(2009)
     def test_boot_machine_slirp_qcow2(self):
         """Test runqemu machine slirp qcow2"""
-        cmd = "%s slirp qcow2 %s" % (self.cmd_common, self.machine)
+        cmd = "%s slirp wic.qcow2 %s" % (self.cmd_common, self.machine)
         with runqemu(self.recipe, ssh=False, launch_cmd=cmd) as qemu:
             with open(qemu.qemurunnerlog) as f:
                 self.assertTrue('format=qcow2' in f.read(), "Failed: %s" % cmd)
