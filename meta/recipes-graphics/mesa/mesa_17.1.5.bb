@@ -7,6 +7,9 @@ SRC_URI = "https://mesa.freedesktop.org/archive/mesa-${PV}.tar.xz \
            file://0002-hardware-gloat.patch \
            file://0001-mapi-Only-install-khrplatform.h-with-EGL-or-GLES.patch \
            file://vulkan-mkdir.patch \
+           file://llvm-config-version.patch \
+           file://0001-ac-fix-build-after-LLVM-5.0-SVN-r300718.patch \
+           file://0002-gallivm-Fix-build-against-LLVM-SVN-r302589.patch \
 "
 SRC_URI[md5sum] = "6cf936fbcaadd98924298a7009e8265d"
 SRC_URI[sha256sum] = "378516b171712687aace4c7ea8b37c85895231d7a6d61e1e27362cf6034fded9"
