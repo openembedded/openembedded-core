@@ -130,6 +130,36 @@ class ImageFeatures(OESelftestTestCase):
         # check if the resulting gzip is valid
         self.assertTrue(runCmd('gzip -t %s' % gzip_path))
 
+    def test_long_chain_conversion(self):
+        """
+        Summary:     Check for chaining many CONVERSION_CMDs together
+        Expected:    1. core-image-minimal can be built with
+                        ext4.bmap.gz.bz2.lzo.xz.u-boot and also create a
+                        sha256sum
+                     2. The above image has a valid sha256sum
+        Product:     oe-core
+        Author:      Tom Rini <trini@konsulko.com>
+        """
+
+        conv = "ext4.bmap.gz.bz2.lzo.xz.u-boot"
+        features = 'IMAGE_FSTYPES += "%s %s.sha256sum"' % (conv, conv)
+        self.write_config(features)
+
+        image_name = 'core-image-minimal'
+        bitbake(image_name)
+
+        deploy_dir_image = get_bb_var('DEPLOY_DIR_IMAGE')
+        link_name = get_bb_var('IMAGE_LINK_NAME', image_name)
+        image_path = os.path.join(deploy_dir_image, "%s.%s" %
+                                  (link_name, conv))
+
+        # check if resulting image is in the deploy directory
+        self.assertTrue(os.path.exists(image_path))
+        self.assertTrue(os.path.exists(image_path + ".sha256sum"))
+
+        # check if the resulting sha256sum agrees
+        self.assertTrue(runCmd('cd %s;sha256sum -c %s.%s.sha256sum' %
+                               (deploy_dir_image, link_name, conv)))
 
     def test_image_fstypes(self):
         """
