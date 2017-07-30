@@ -35,21 +35,11 @@ do_rm_work () {
         fi
     done
 
-    cd ${WORKDIR}
-    for dir in *
-    do
-        # Retain only logs and other files in temp, safely ignore
-        # failures of removing pseudo folers on NFS2/3 server.
-        if [ $dir = 'pseudo' ]; then
-            rm -rf $dir 2> /dev/null || true
-        elif ! echo '${RM_WORK_EXCLUDE_ITEMS}' | grep -q -w "$dir"; then
-            rm -rf $dir
-        fi
-    done
-
     # Need to add pseudo back or subsqeuent work in this workdir
     # might fail since setscene may not rerun to recreate it
     mkdir -p ${WORKDIR}/pseudo/
+
+    excludes='${RM_WORK_EXCLUDE_ITEMS}'
 
     # Change normal stamps into setscene stamps as they better reflect the
     # fact WORKDIR is now empty
@@ -79,6 +69,12 @@ do_rm_work () {
                 i=dummy
                 break
                 ;;
+            *do_addto_recipe_sysroot*)
+                # Preserve recipe-sysroot-native if do_addto_recipe_sysroot has been used
+                excludes="$excludes recipe-sysroot-native"
+                i=dummy
+                break
+                ;;
             # We remove do_package entirely, including any
             # sstate version since otherwise we'd need to leave 'plaindirs' around
             # such as 'packages' and 'packages-split' and these can be large. No end
@@ -100,6 +96,18 @@ do_rm_work () {
             esac
         done
         rm -f $i
+    done
+
+    cd ${WORKDIR}
+    for dir in *
+    do
+        # Retain only logs and other files in temp, safely ignore
+        # failures of removing pseudo folers on NFS2/3 server.
+        if [ $dir = 'pseudo' ]; then
+            rm -rf $dir 2> /dev/null || true
+        elif ! echo "$excludes" | grep -q -w "$dir"; then
+            rm -rf $dir
+        fi
     done
 }
 do_rm_work_all () {
