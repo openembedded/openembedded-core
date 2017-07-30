@@ -346,8 +346,6 @@ def sstate_installpkgdir(ss, d):
         oe.path.remove(dir)
 
     for state in ss['dirs']:
-        if d.getVar('SSTATE_SKIP_CREATION') == '1':
-            continue
         prepdir(state[1])
         os.rename(sstateinst + state[0], state[1])
     sstate_install(ss, d)
@@ -596,8 +594,6 @@ def sstate_package(ss, d):
     for state in ss['dirs']:
         if not os.path.exists(state[1]):
             continue
-        if d.getVar('SSTATE_SKIP_CREATION') == '1':
-            continue
         srcbase = state[0].rstrip("/").rsplit('/', 1)[0]
         # Find and error for absolute symlinks. We could attempt to relocate but its not
         # clear where the symlink is relative to in this context. We could add that markup
@@ -625,6 +621,10 @@ def sstate_package(ss, d):
 
     d.setVar('SSTATE_BUILDDIR', sstatebuild)
     d.setVar('SSTATE_PKG', sstatepkg)
+    d.setVar('SSTATE_INSTDIR', sstatebuild)
+
+    if d.getVar('SSTATE_SKIP_CREATION') == '1':
+        return
 
     for f in (d.getVar('SSTATECREATEFUNCS') or '').split() + \
              ['sstate_create_package', 'sstate_sign_package'] + \
@@ -633,8 +633,6 @@ def sstate_package(ss, d):
         bb.build.exec_func(f, d, (sstatebuild,))
 
     bb.siggen.dump_this_task(sstatepkg + ".siginfo", d)
-
-    d.setVar('SSTATE_INSTDIR', sstatebuild)
 
     return
 
