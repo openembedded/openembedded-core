@@ -66,7 +66,7 @@ do_rm_work () {
                 i=dummy
                 break
                 ;;
-            *do_rootfs*|*do_image*|*do_bootimg*|*do_bootdirectdisk*|*do_vmimg*|*do_write_qemuboot_conf*)
+            *do_rootfs*|*do_image*|*do_bootimg*|*do_write_qemuboot_conf*)
                 i=dummy
                 break
                 ;;
