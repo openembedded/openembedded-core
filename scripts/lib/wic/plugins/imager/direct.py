@@ -26,6 +26,7 @@
 
 import logging
 import os
+import random
 import shutil
 import tempfile
 import uuid
@@ -303,7 +304,7 @@ class PartitionedImage():
                           # all partitions (in bytes)
         self.ptable_format = ptable_format  # Partition table format
         # Disk system identifier
-        self.identifier = int.from_bytes(os.urandom(4), 'little') or 0xffffffff
+        self.identifier = random.SystemRandom().randint(1, 0xffffffff)
 
         self.partitions = partitions
         self.partimages = []
