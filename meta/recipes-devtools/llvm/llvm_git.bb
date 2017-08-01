@@ -67,12 +67,12 @@ EXTRA_OECMAKE += "-DLLVM_ENABLE_ASSERTIONS=OFF \
 
 EXTRA_OECMAKE_append_class-target = "\
                   -DCMAKE_CROSSCOMPILING:BOOL=ON \
-                  -DLLVM_TABLEGEN=${STAGING_BINDIR_NATIVE}/llvm-tblgen \
+                  -DLLVM_TABLEGEN=${STAGING_BINDIR_NATIVE}/llvm-tblgen${PV} \
                  "
 
 EXTRA_OECMAKE_append_class-nativesdk = "\
                   -DCMAKE_CROSSCOMPILING:BOOL=ON \
-                  -DLLVM_TABLEGEN=${STAGING_BINDIR_NATIVE}/llvm-tblgen \
+                  -DLLVM_TABLEGEN=${STAGING_BINDIR_NATIVE}/llvm-tblgen${PV} \
                  "
 
 do_configure_prepend() {
@@ -87,12 +87,12 @@ do_compile() {
 }
 
 do_compile_class-native() {
-	NINJA_STATUS="[%p] " ninja -v ${PARALLEL_MAKE} llvm-tblgen
+	NINJA_STATUS="[%p] " ninja -v ${PARALLEL_MAKE} llvm-config llvm-tblgen
 }
 
 do_install() {
 	NINJA_STATUS="[%p] " DESTDIR=${LLVM_INSTALL_DIR} ninja -v install
-	install -D -m 0755 ${B}/NATIVE/bin/llvm-config ${D}${libdir}/${LLVM_DIR}/llvm-config-host
+	install -D -m 0755 ${B}/bin/llvm-config ${D}${libdir}/${LLVM_DIR}/llvm-config
 
 	install -d ${D}${bindir}/${LLVM_DIR}
 	cp -r ${LLVM_INSTALL_DIR}${bindir}/* ${D}${bindir}/${LLVM_DIR}/
@@ -121,7 +121,9 @@ do_install() {
 	rm -rf ${D}${libdir}/${LLVM_DIR}/libLTO.so
 }
 do_install_class-native() {
-	install -D -m 0755 ${B}/bin/llvm-tblgen ${D}${bindir}/llvm-tblgen
+	install -D -m 0755 ${B}/bin/llvm-tblgen ${D}${bindir}/llvm-tblgen${PV}
+	install -D -m 0755 ${B}/bin/llvm-config ${D}${bindir}/llvm-config${PV}
+	install -D -m 0755 ${B}/lib/libLLVM-${PV}.so ${D}${libdir}/libLLVM-${PV}.so
 }
 
 PACKAGES += "${PN}-bugpointpasses ${PN}-llvmhello"
@@ -134,14 +136,14 @@ FILES_${PN}-dbg = " \
     ${libdir}/${LLVM_DIR}/.debug/BugpointPasses.so \
     ${libdir}/${LLVM_DIR}/.debug/LLVMHello.so \
     ${libdir}/${LLVM_DIR}/.debug/libLTO.so* \
-    ${libdir}/${LLVM_DIR}/.debug/llvm-config-host \
+    ${libdir}/${LLVM_DIR}/.debug/llvm-config \
     /usr/src/debug \
 "
 
 FILES_${PN}-dev = " \
     ${bindir}/${LLVM_DIR} \
     ${includedir}/${LLVM_DIR} \
-    ${libdir}/${LLVM_DIR}/llvm-config-host \
+    ${libdir}/${LLVM_DIR}/llvm-config \
 "
 
 RRECOMMENDS_${PN}-dev += "${PN}-bugpointpasses ${PN}-llvmhello"
