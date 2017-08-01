@@ -18,6 +18,7 @@ SRC_URI = "http://www.jedsoft.org/releases/${BPN}/${BP}.tar.bz2 \
            file://no-x.patch \
            file://dont-link-to-host.patch \
            file://test-add-output-in-the-format-result-testname.patch \
+           file://terminfo_fixes.patch \
            file://run-ptest \
           "
 
