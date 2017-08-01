@@ -31,6 +31,7 @@ class MakefileMaker:
     def __init__( self, outfile, isNative ):
         """initialize"""
         self.packages = {}
+        self.excluded_pkgs = []
         self.targetPrefix = "${libdir}/python%s/" % VERSION[:3]
         self.isNative = isNative
         self.output = outfile
@@ -55,7 +56,7 @@ class MakefileMaker:
         self.out( """ """ )
         self.out( "" )
 
-    def addPackage( self, name, description, dependencies, filenames ):
+    def addPackage( self, name, description, dependencies, filenames, mod_exclude = False ):
         """add a package to the Makefile"""
         if type( filenames ) == type( "" ):
             filenames = filenames.split()
@@ -67,6 +68,8 @@ class MakefileMaker:
                                                  self.pycachePath( filename ) ) )
             else:
                 fullFilenames.append( filename )
+        if mod_exclude:
+            self.excluded_pkgs.append( name )
         self.packages[name] = description, dependencies, fullFilenames
 
     def pycachePath( self, filename ):
@@ -160,7 +163,7 @@ class MakefileMaker:
         line = 'RDEPENDS_${PN}-modules="'
 
         for name, data in sorted(self.packages.items()):
-            if name not in ['${PN}-dev', '${PN}-distutils-staticdev']:
+            if name not in ['${PN}-dev', '${PN}-distutils-staticdev'] and name not in self.excluded_pkgs:
                 line += "%s " % name
 
         self.out( "%s \"" % line )
@@ -401,7 +404,7 @@ if __name__ == "__main__":
     "pty.* tty.*" )
 
     m.addPackage( "${PN}-tests", "Python tests", "${PN}-core ${PN}-compression",
-    "test" ) # package
+    "test", True ) # package
 
     m.addPackage( "${PN}-threading", "Python threading & synchronization support", "${PN}-core ${PN}-lang",
     "_threading_local.* dummy_thread.* dummy_threading.* mutex.* threading.* queue.*" )
