@@ -42,8 +42,7 @@ def get_llvm_arch(bb, d, arch_var):
     elif re.match('mips(isa|)(32|64|)(r6|)(el|)$', a): return 'Mips'
     elif re.match('p(pc|owerpc)(|64)', a):             return 'PowerPC'
     else:
-        bb.error("cannot map '%s' to a supported llvm architecture" % a)
-    return ""
+        raise bb.parse.SkipRecipe("Cannot map '%s' to a supported LLVM architecture" % a)
 
 def get_llvm_target_arch(bb, d):
     return get_llvm_arch(bb, d, 'TARGET_ARCH')
