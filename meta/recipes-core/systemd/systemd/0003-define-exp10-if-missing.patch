@@ -1,7 +1,7 @@
-From b383c286f58184575216b2bf6f185ba2ad648956 Mon Sep 17 00:00:00 2001
+From 96baee0e1962e559f4ea025024ebc337cb5d50c5 Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Wed, 9 Nov 2016 19:25:45 -0800
-Subject: [PATCH 03/19] define exp10 if missing
+Subject: [PATCH 01/14] define exp10 if missing
 
 Inspired by: http://peter.korsgaard.com/patches/alsa-utils/alsamixer-fix-build-on-uClibc-exp10.patch
 
@@ -11,16 +11,17 @@ Upstream-Status: Pending
 
 Signed-off-by: Samuel Martin <s.martin49@gmail.com>
 Signed-off-by: Khem Raj <raj.khem@gmail.com>
+
 ---
  src/basic/missing.h | 5 +++++
  1 file changed, 5 insertions(+)
 
 diff --git a/src/basic/missing.h b/src/basic/missing.h
-index 4c013be..4a3fd9c 100644
+index 7830a4f41..177c0eb8a 100644
 --- a/src/basic/missing.h
 +++ b/src/basic/missing.h
-@@ -1078,4 +1078,9 @@ typedef int32_t key_serial_t;
- 
+@@ -1227,4 +1227,9 @@ struct ethtool_link_settings {
+ #define AF_VSOCK 40
  #endif
  
 +#ifdef __UCLIBC__
@@ -30,5 +31,5 @@ index 4c013be..4a3fd9c 100644
 +
  #include "missing_syscall.h"
 -- 
-2.10.2
+2.13.2
 

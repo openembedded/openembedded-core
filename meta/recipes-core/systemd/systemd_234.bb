@@ -25,14 +25,9 @@ SRC_URI += " \
            file://0013-Make-root-s-home-directory-configurable.patch \
            file://0014-Revert-rules-remove-firmware-loading-rules.patch \
            file://0015-Revert-udev-remove-userspace-firmware-loading-suppor.patch \
-           file://0016-make-test-dir-configurable.patch \
            file://0017-remove-duplicate-include-uchar.h.patch \
            file://0018-check-for-uchar.h-in-configure.patch \
            file://0019-socket-util-don-t-fail-if-libc-doesn-t-support-IDN.patch \
-           file://0020-back-port-233-don-t-use-the-unified-hierarchy-for-the-systemd.patch \
-           file://0021-build-sys-check-for-lz4-in-the-old-and-new-numbering.patch \
-           file://0022-parse-util-Do-not-include-unneeded-xlocale.h.patch \
-           file://0001-core-load-fragment-refuse-units-with-errors-in-certa.patch \
            "
 SRC_URI_append_qemuall = " file://0001-core-device.c-Change-the-default-device-timeout-to-2.patch"
 
@@ -151,7 +146,6 @@ EXTRA_OECONF = " --with-rootprefix=${rootprefix} \
                  --without-python \
                  --with-sysvrcnd-path=${sysconfdir} \
                  --with-firmware-path=${nonarch_base_libdir}/firmware \
-                 --with-testdir=${PTEST_PATH} \
                "
 # per the systemd README, define VALGRIND=1 to run under valgrind
 CFLAGS .= "${@bb.utils.contains('PACKAGECONFIG', 'valgrind', ' -DVALGRIND=1', '', d)}"
@@ -471,11 +465,20 @@ FILES_${PN} = " ${base_bindir}/* \
                 ${exec_prefix}/lib/modules-load.d \
                 ${exec_prefix}/lib/sysctl.d \
                 ${exec_prefix}/lib/sysusers.d \
+                ${exec_prefix}/lib/environment.d \
                 ${localstatedir} \
                 ${nonarch_base_libdir}/udev/rules.d/70-uaccess.rules \
                 ${nonarch_base_libdir}/udev/rules.d/71-seat.rules \
                 ${nonarch_base_libdir}/udev/rules.d/73-seat-late.rules \
                 ${nonarch_base_libdir}/udev/rules.d/99-systemd.rules \
+                ${datadir}/dbus-1/system.d/org.freedesktop.timedate1.conf \
+                ${datadir}/dbus-1/system.d/org.freedesktop.locale1.conf \
+                ${datadir}/dbus-1/system.d/org.freedesktop.network1.conf \
+                ${datadir}/dbus-1/system.d/org.freedesktop.resolve1.conf \
+                ${datadir}/dbus-1/system.d/org.freedesktop.systemd1.conf \
+                ${datadir}/dbus-1/system.d/org.freedesktop.machine1.conf \
+                ${datadir}/dbus-1/system.d/org.freedesktop.hostname1.conf \
+                ${datadir}/dbus-1/system.d/org.freedesktop.login1.conf \
                "
 
 FILES_${PN}-dev += "${base_libdir}/security/*.la ${datadir}/dbus-1/interfaces/ ${sysconfdir}/rpm/macros.systemd"
