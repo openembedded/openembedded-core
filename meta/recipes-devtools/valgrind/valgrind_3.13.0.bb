@@ -53,9 +53,7 @@ COMPATIBLE_HOST_armv6 = 'null'
 COMPATIBLE_HOST_linux-gnux32 = 'null'
 
 # Disable for some MIPS variants
-COMPATIBLE_HOST_mipsarcho32 = "${@bb.utils.contains("TARGET_FPU", "soft", "null", ".*-linux", d)}"
 COMPATIBLE_HOST_mipsarchn32 = 'null'
-COMPATIBLE_HOST_mipsarchn64 = "${@bb.utils.contains("TARGET_FPU", "soft", "null", ".*-linux", d)}"
 COMPATIBLE_HOST_mipsarchr6 = 'null'
 
 inherit autotools ptest
