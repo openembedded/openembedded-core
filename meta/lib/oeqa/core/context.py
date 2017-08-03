@@ -41,6 +41,14 @@ class OETestContext(object):
 
         return modules
 
+    def skipTests(self, skips):
+        if not skips:
+            return
+        for test in self.suites:
+            for skip in skips:
+                if test.id().startswith(skip):
+                    setattr(test, 'setUp', lambda: test.skipTest('Skip by the command line argument "%s"' % skip))
+
     def loadTests(self, module_paths, modules=[], tests=[],
             modules_manifest="", modules_required=[], filters={}):
         if modules_manifest:
@@ -50,8 +58,11 @@ class OETestContext(object):
                 modules_required, filters)
         self.suites = self.loader.discover()
 
-    def runTests(self):
+    def runTests(self, skips=[]):
         self.runner = self.runnerClass(self, descriptions=False, verbosity=2)
+
+        # Dinamically skip those tests specified though arguments
+        self.skipTests(skips)
 
         self._run_start_time = time.time()
         result = self.runner.run(self.suites)
@@ -128,7 +139,8 @@ class OETestContextExecutor(object):
         self.tc_kwargs = {}
         self.tc_kwargs['init'] = {}
         self.tc_kwargs['load'] = {}
-        self.tc_kwargs['run'] = {}
+        self.tc_kwargs['list'] = {}
+        self.tc_kwargs['run']  = {}
 
         self.tc_kwargs['init']['logger'] = self._setup_logger(logger, args)
         if args.test_data_file:
@@ -142,6 +154,8 @@ class OETestContextExecutor(object):
             self.tc_kwargs['load']['modules_required'] = args.run_tests
         else:
             self.tc_kwargs['load']['modules'] = []
+
+        self.tc_kwargs['run']['skips'] = []
 
         self.module_paths = args.CASES_PATHS
 
@@ -159,7 +173,7 @@ class OETestContextExecutor(object):
             sys.exit(1)
 
         if args.list_tests:
-            rc = self.tc.listTests(args.list_tests, **self.tc_kwargs['run'])
+            rc = self.tc.listTests(args.list_tests, **self.tc_kwargs['list'])
         else:
             self._pre_run()
             rc = self.tc.runTests(**self.tc_kwargs['run'])
