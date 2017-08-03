@@ -10,8 +10,6 @@ LIC_FILES_CHKSUM = "file://LICENSE.TXT;md5=e825e017edc35cfd58e26116e5251771"
 
 DEPENDS = "libffi libxml2-native zlib ninja-native llvm-native"
 
-DEPENDS_remove_toolchain-clang = "llvm-native"
-
 RDEPENDS_${PN}_append_class-target = " ncurses-terminfo"
 
 inherit perlnative pythonnative cmake pkgconfig
