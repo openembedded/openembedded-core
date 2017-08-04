@@ -102,11 +102,9 @@ RDEPENDS_${PN} = "python3-unittest \
                   python3-pydoc \
                   python3-pkgutil \
                   python3-email \
-                  python3-subprocess \
                   python3-compression \
                   python3-ctypes \
                   python3-threading \
-                  python3-textutils \
 "
 
 RDEPENDS_${PN}_class-native = ""

@@ -18,5 +18,4 @@ RDEPENDS_${PN} = "\
   python-subprocess \
   python-shell \
   python-pprint \
-  python-importlib \
   "

@@ -13,7 +13,6 @@ SRC_URI[md5sum] = "d7932d5ace206bf4ae15198cf36fb6ab"
 SRC_URI[sha256sum] = "0e2b62b497bd5f0afebc002eda4d90df9d209c30ef257e8673c90a6b5c119d62"
 
 RDEPENDS_${PN} += "${PYTHON_PN}-codecs \
-                   ${PYTHON_PN}-lang \
                    ${PYTHON_PN}-mmap \
 "
 BBCLASSEXTEND = "nativesdk"

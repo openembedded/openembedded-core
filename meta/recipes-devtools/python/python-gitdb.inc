@@ -17,7 +17,6 @@ RDEPENDS_${PN} += "${PYTHON_PN}-async \
                    ${PYTHON_PN}-compression \
                    ${PYTHON_PN}-crypt \
                    ${PYTHON_PN}-io \
-                   ${PYTHON_PN}-lang \
                    ${PYTHON_PN}-mmap \
                    ${PYTHON_PN}-shell \
                    ${PYTHON_PN}-smmap \

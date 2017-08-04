@@ -37,7 +37,6 @@ do_install_append() {
 RDEPENDS_${PN} = "\
   python3-compile \
   python3-io \
-  python3-enum \
   python3-html \
   python3-json \
   python3-netserver \

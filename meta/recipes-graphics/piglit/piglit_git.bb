@@ -44,9 +44,9 @@ do_configure_prepend() {
 OECMAKE_TARGET_INSTALL = "install/strip"
 
 RDEPENDS_${PN} = "waffle python3 python3-mako python3-json \
-	python3-subprocess python3-misc python3-importlib \
+	python3-misc \
 	python3-unixadmin python3-xml python3-multiprocessing \
-	python3-six python3-shell python3-io python3-argparse \
+	python3-six python3-shell python3-io \
 	python3-netserver mesa-demos bash \
 	"
 

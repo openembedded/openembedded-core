@@ -17,19 +17,14 @@ SRC_URI[sha256sum] = "ad61bc25deadb535b047684d06f3654c001d9415e1971e51c9c20f5b51
 
 DEPENDS = "${PYTHON_PN}-gitdb"
 
-RDEPENDS_${PN} += "${PYTHON_PN}-argparse \
+RDEPENDS_${PN} += " \
                    ${PYTHON_PN}-datetime \
-                   ${PYTHON_PN}-enum \
                    ${PYTHON_PN}-gitdb \
                    ${PYTHON_PN}-io \
-                   ${PYTHON_PN}-lang \
                    ${PYTHON_PN}-logging \
                    ${PYTHON_PN}-math \
                    ${PYTHON_PN}-netclient \
-                   ${PYTHON_PN}-re \
-                   ${PYTHON_PN}-shell \
                    ${PYTHON_PN}-stringold \
-                   ${PYTHON_PN}-subprocess \
                    ${PYTHON_PN}-unittest \
                    ${PYTHON_PN}-unixadmin \
                    git \

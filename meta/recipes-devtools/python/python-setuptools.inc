@@ -30,15 +30,12 @@ RDEPENDS_${PN} = "\
   ${PYTHON_PN}-distutils \
   ${PYTHON_PN}-email \
   ${PYTHON_PN}-html \
-  ${PYTHON_PN}-importlib \
   ${PYTHON_PN}-netserver \
   ${PYTHON_PN}-numbers \
   ${PYTHON_PN}-pkgutil \
   ${PYTHON_PN}-plistlib \
   ${PYTHON_PN}-shell \
-  ${PYTHON_PN}-subprocess \
   ${PYTHON_PN}-stringold \
-  ${PYTHON_PN}-textutils \
   ${PYTHON_PN}-threading \
   ${PYTHON_PN}-unittest \
   ${PYTHON_PN}-xml \

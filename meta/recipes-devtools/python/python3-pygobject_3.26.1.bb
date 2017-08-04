@@ -24,7 +24,7 @@ PACKAGECONFIG ??= "${@bb.utils.contains_any('DISTRO_FEATURES', [ 'directfb', 'wa
 # we don't link against python3-pycairo -> RDEPENDS
 PACKAGECONFIG[cairo] = "--enable-cairo,--disable-cairo,cairo python3-pycairo, python3-pycairo"
 
-RDEPENDS_${PN} += "python3-setuptools python3-importlib"
+RDEPENDS_${PN} += "python3-setuptools"
 
 BBCLASSEXTEND = "native"
 PACKAGECONFIG_class-native = ""
