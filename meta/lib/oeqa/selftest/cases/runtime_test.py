@@ -223,37 +223,31 @@ postinst-delayed-t \
         fileboot_name = "this-was-created-at-first-boot"
         rootfs_pkg = 'postinst-at-rootfs'
         boot_pkg = 'postinst-delayed-a'
-        #Step 1
-        common_features = 'MACHINE = "qemux86"\n'
-        common_features += 'CORE_IMAGE_EXTRA_INSTALL += "%s %s "\n'% (rootfs_pkg, boot_pkg)
-        common_features += 'IMAGE_FEATURES += "ssh-server-openssh"\n'
+
         for init_manager in ("sysvinit", "systemd"):
-            #for sysvinit no extra configuration is needed,
-            features = ''
-            if (init_manager is "systemd"):
-                features += 'DISTRO_FEATURES_append = " systemd"\n'
-                features += 'VIRTUAL-RUNTIME_init_manager = "systemd"\n'
-                features += 'DISTRO_FEATURES_BACKFILL_CONSIDERED = "sysvinit"\n'
-                features += 'VIRTUAL-RUNTIME_initscripts = ""\n'
-            for classes in ("package_rpm package_deb package_ipk",
-                            "package_deb package_rpm package_ipk",
-                            "package_ipk package_deb package_rpm"):
-                features += 'PACKAGE_CLASSES = "%s"\n' % classes
-                self.write_config(common_features + features)
+            for classes in ("package_rpm", "package_deb", "package_ipk"):
+                with self.subTest(init_manager=init_manager, package_class=classes):
+                    features = 'MACHINE = "qemux86"\n'
+                    features += 'CORE_IMAGE_EXTRA_INSTALL += "%s %s "\n'% (rootfs_pkg, boot_pkg)
+                    features += 'IMAGE_FEATURES += "ssh-server-openssh"\n'
+                    features += 'PACKAGE_CLASSES = "%s"\n' % classes
+                    if init_manager == "systemd":
+                        features += 'DISTRO_FEATURES_append = " systemd"\n'
+                        features += 'VIRTUAL-RUNTIME_init_manager = "systemd"\n'
+                        features += 'DISTRO_FEATURES_BACKFILL_CONSIDERED = "sysvinit"\n'
+                        features += 'VIRTUAL-RUNTIME_initscripts = ""\n'
+                    self.write_config(features)
 
-                #Step 2
-                bitbake('core-image-minimal')
+                    bitbake('core-image-minimal')
 
-                #Step 3
-                file_rootfs_created = os.path.join(get_bb_var('IMAGE_ROOTFS',"core-image-minimal"),
-                                                   file_rootfs_name)
-                found = os.path.isfile(file_rootfs_created)
-                self.assertTrue(found, "File %s was not created at rootfs time by %s" % \
-                                (file_rootfs_name, rootfs_pkg))
+                    file_rootfs_created = os.path.join(get_bb_var('IMAGE_ROOTFS', "core-image-minimal"),
+                                                       file_rootfs_name)
+                    found = os.path.isfile(file_rootfs_created)
+                    self.assertTrue(found, "File %s was not created at rootfs time by %s" % \
+                                    (file_rootfs_name, rootfs_pkg))
 
-                #Step 4
-                testcommand = 'ls /etc/'+fileboot_name
-                with runqemu('core-image-minimal') as qemu:
-                    sshargs = '-o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
-                    result = runCmd('ssh %s root@%s %s' % (sshargs, qemu.ip, testcommand))
-                    self.assertEqual(result.status, 0, 'File %s was not created at firts boot'% fileboot_name)
+                    testcommand = 'ls /etc/' + fileboot_name
+                    with runqemu('core-image-minimal') as qemu:
+                        sshargs = '-o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
+                        result = runCmd('ssh %s root@%s %s' % (sshargs, qemu.ip, testcommand))
+                        self.assertEqual(result.status, 0, 'File %s was not created at firts boot'% fileboot_name)
