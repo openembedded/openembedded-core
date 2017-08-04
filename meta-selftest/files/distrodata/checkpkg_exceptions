@@ -8,6 +8,7 @@ gst-player
 kmscube
 libxcalibrate
 linux-firmware
+llvm
 lsb
 mmc-utils
 ovmf
