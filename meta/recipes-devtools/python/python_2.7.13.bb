@@ -27,6 +27,7 @@ SRC_URI += "\
   file://use_sysroot_ncurses_instead_of_host.patch \
   file://add-CROSSPYTHONPATH-for-PYTHON_FOR_BUILD.patch \
   file://Don-t-use-getentropy-on-Linux.patch \
+  file://pass-missing-libraries-to-Extension-for-mul.patch \
 "
 
 S = "${WORKDIR}/Python-${PV}"
