@@ -1,6 +1,7 @@
 require recipes-devtools/python/python.inc
 
 DEPENDS = "python3-native libffi bzip2 gdbm openssl readline sqlite3 zlib virtual/libintl xz"
+
 PR = "${INC_PR}.0"
 PYTHON_MAJMIN = "3.5"
 PYTHON_BINABI= "${PYTHON_MAJMIN}m"
@@ -196,11 +197,8 @@ py_package_preprocess () {
 		${PKGD}/${libdir}/python${PYTHON_MAJMIN}/_sysconfigdata.py
 }
 
-require python-${PYTHON_MAJMIN}-manifest.inc
-
 # manual dependency additions
 RPROVIDES_${PN}-modules = "${PN}"
-RRECOMMENDS_${PN}-core = "${PN}-readline"
 RRECOMMENDS_${PN}-crypt = "openssl"
 RRECOMMENDS_${PN}-crypt_class-nativesdk = "nativesdk-openssl"
 
@@ -219,7 +217,7 @@ INSANE_SKIP_${PN}-dev += "dev-elf"
 
 # catch all the rest (unsorted)
 PACKAGES += "${PN}-misc"
-RDEPENDS_${PN}-misc += "${PN}-core ${PN}-email ${PN}-codecs ${PN}-textutils ${PN}-argparse"
+RDEPENDS_${PN}-misc += "${PN}-core ${PN}-email ${PN}-codecs"
 RDEPENDS_${PN}-modules += "${PN}-misc"
 FILES_${PN}-misc = "${libdir}/python${PYTHON_MAJMIN}"
 
@@ -228,3 +226,88 @@ PACKAGES += "${PN}-man"
 FILES_${PN}-man = "${datadir}/man"
 
 BBCLASSEXTEND = "nativesdk"
+
+RPROVIDES_${PN} += "${PN}-modules"
+    
+# We want bytecode precompiled .py files (.pyc's) by default
+# but the user may set it on their own conf
+            
+INCLUDE_PYCS ?= "1"
+
+python(){
+
+    pythondir = d.getVar('THISDIR',True)
+
+    # Read JSON manifest
+    import json
+    with open(pythondir+'/python3/python3-manifest.json') as manifest_file:
+        python_manifest=json.load(manifest_file)
+        
+    include_pycs = d.getVar('INCLUDE_PYCS')
+
+    packages = d.getVar('PACKAGES').split()
+    pn = d.getVar('PN')
+
+    newpackages=[]
+    for key in python_manifest:
+        pypackage= pn + '-' + key
+
+        if pypackage not in packages:
+            # We need to prepend, otherwise python-misc gets everything
+            # so we use a new variable
+            newpackages.append(pypackage)
+
+        # "Build" python's manifest FILES, RDEPENDS and SUMMARY
+        d.setVar('FILES_' + pypackage, '')
+        for value in python_manifest[key]['files']:
+            d.appendVar('FILES_' + pypackage, ' ' + value)
+
+    	# Add cached files
+        if include_pycs == '1':
+            for value in python_manifest[key]['cached']:
+                    d.appendVar('FILES_' + pypackage, ' ' + value)
+
+        d.setVar('RDEPENDS_' + pypackage, '')
+        for value in python_manifest[key]['rdepends']:
+            # Make it work with or without $PN
+            if '${PN}' in value:
+                value=value.split('-')[1]
+            d.appendVar('RDEPENDS_' + pypackage, ' ' + pn + '-' + value)
+        d.setVar('SUMMARY_' + pypackage, python_manifest[key]['summary'])
+
+    # We need to ensure staticdev packages match for files first so we sort in reverse
+    newpackages.sort(reverse=True)
+    # Prepending so to avoid python-misc getting everything
+    packages = newpackages + packages
+    d.setVar('PACKAGES', ' '.join(packages))
+    d.setVar('ALLOW_EMPTY_${PN}-modules', '1')
+}
+do_split_packages[file-checksums] += "${THISDIR}/python/python3-manifest.json:True"
+
+
+
+# Files needed to create a new manifest
+SRC_URI += "file://create_manifest3.py file://get_module_deps3.py file://python3-manifest.json"
+
+do_create_manifest() {
+
+# This task should be run with every new release of Python.
+# We must ensure that PACKAGECONFIG enables everything when creating
+# a new manifest, this is to base our new manifest on a complete
+# native python build, containing all dependencies, otherwise the task
+# wont be able to find the required files.
+# e.g. BerkeleyDB is an optional build dependency so it may or may not
+# be present, we must ensure it is.
+
+cd ${WORKDIR}
+# This needs to be executed by python-native and NOT by HOST's python
+nativepython3 create_manifest3.py
+cp python3-manifest.json.new ${THISDIR}/python3/python3-manifest.json
+}                   
+
+# bitbake python -c create_manifest
+addtask do_create_manifest
+
+# Make sure we have native python ready when we create a new manifest
+do_create_manifest[depends] += "python3:do_prepare_recipe_sysroot"
+do_create_manifest[depends] += "python3:do_patch"

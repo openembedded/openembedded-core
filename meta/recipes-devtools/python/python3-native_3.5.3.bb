@@ -42,8 +42,6 @@ DEPENDS = "openssl-native bzip2-replacement-native zlib-native readline-native s
 
 inherit native
 
-require python-native-${PYTHON_MAJMIN}-manifest.inc
-
 # uninative may be used on pre glibc 2.25 systems which don't have getentropy
 EXTRA_OECONF_append = " --bindir=${bindir}/${PN} --without-ensurepip ac_cv_func_getentropy=no"
 
@@ -77,8 +75,30 @@ do_install() {
 		sed -i -e '1s|^#!.*|#!/usr/bin/env python3|' $PYTHSCRIPT
 	done
 
-	# Tests are large and we don't need them in the native sysroot
-	rm ${D}${libdir}/python${PYTHON_MAJMIN}/test -rf
+        # Add a symlink to the native Python so that scripts can just invoke
+        # "nativepython" and get the right one without needing absolute paths
+        # (these often end up too long for the #! parser in the kernel as the
+        # buffer is 128 bytes long).
+        ln -s python3-native/python3 ${D}${bindir}/nativepython3
 }
 
-RPROVIDES += "python3-misc-native"
+python(){
+
+    # Read JSON manifest
+    import json
+    pythondir = d.getVar('THISDIR',True)
+    with open(pythondir+'/python3/python3-manifest.json') as manifest_file:
+        python_manifest=json.load(manifest_file)
+
+    rprovides = d.getVar('RPROVIDES').split()
+
+    # Hardcoded since it cant be python3-native-foo, should be python3-foo-native
+    pn = 'python3'
+
+    for key in python_manifest:
+        pypackage = pn + '-' + key + '-native'
+        if pypackage not in rprovides:
+              rprovides.append(pypackage)
+
+    d.setVar('RPROVIDES', ' '.join(rprovides))
+}
