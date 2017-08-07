@@ -15,5 +15,5 @@ SRC_URI = "http://www.efficios.com/files/babeltrace/babeltrace-${PV}.tar.bz2 \
 
 EXTRA_OECONF = "--disable-debug-info"
 
-SRC_URI[md5sum] = "1176e7f69e128112d5f29fefec39c6ce"
-SRC_URI[sha256sum] = "696ee46e5750ab57a258663e73915d2901b7cd4fc53b06eb3f7a0d7b1012fa56"
+SRC_URI[md5sum] = "0cec2745ac316649791c43f416d71ea1"
+SRC_URI[sha256sum] = "2249fee5beba657731f5d6a84c5296c6517f544bfbe7571bd1fd7af23726137c"
