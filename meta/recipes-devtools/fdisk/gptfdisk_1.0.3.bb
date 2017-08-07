@@ -7,8 +7,8 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=59530bdf33659b29e73d4adb9f9f6552"
 DEPENDS = "util-linux popt ncurses"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/${BPN}/${PV}/${BP}.tar.gz"
-SRC_URI[md5sum] = "d7f3d306b083123bcc6f5941efade586"
-SRC_URI[sha256sum] = "864c8aee2efdda50346804d7e6230407d5f42a8ae754df70404dd8b2fdfaeac7"
+SRC_URI[md5sum] = "07b625a583b66c8c5840be5923f3e3fe"
+SRC_URI[sha256sum] = "89fd5aec35c409d610a36cb49c65b442058565ed84042f767bba614b8fc91b5c"
 
 UPSTREAM_CHECK_URI = "http://sourceforge.net/projects/gptfdisk/files/gptfdisk/"
 UPSTREAM_CHECK_REGEX = "/gptfdisk/(?P<pver>(\d+[\.\-_]*)+)/"
