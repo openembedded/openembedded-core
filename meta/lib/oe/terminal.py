@@ -62,28 +62,7 @@ class Gnome(XTerminal):
         # Once fixed on the gnome-terminal project, this should be removed.
         if os.getenv('LC_ALL'): os.putenv('LC_ALL','')
 
-        # We need to know when the command completes but gnome-terminal gives us no way 
-        # to do this. We therefore write the pid to a file using a "phonehome" wrapper
-        # script, then monitor the pid until it exits. Thanks gnome!
-        import tempfile
-        pidfile = tempfile.NamedTemporaryFile(delete = False).name
-        try:
-            sh_cmd = "oe-gnome-terminal-phonehome " + pidfile + " " + sh_cmd
-            XTerminal.__init__(self, sh_cmd, title, env, d)
-            while os.stat(pidfile).st_size <= 0:
-                continue
-            with open(pidfile, "r") as f:
-                pid = int(f.readline())
-        finally:
-            os.unlink(pidfile)
-
-        import time
-        while True:
-            try:
-                os.kill(pid, 0)
-                time.sleep(0.1)
-            except OSError:
-               return
+        XTerminal.__init__(self, sh_cmd, title, env, d)
 
 class Mate(XTerminal):
     command = 'mate-terminal -t "{title}" -x {command}'
@@ -237,12 +216,35 @@ def spawn(name, sh_cmd, title=None, env=None, d=None):
     except KeyError:
         raise UnsupportedTerminal(name)
 
-    pipe = terminal(sh_cmd, title, env, d)
-    output = pipe.communicate()[0]
-    if output:
-        output = output.decode("utf-8")
-    if pipe.returncode != 0:
-        raise ExecutionError(sh_cmd, pipe.returncode, output)
+    # We need to know when the command completes but some terminals (at least
+    # gnome and tmux) gives us no way to do this. We therefore write the pid
+    # to a file using a "phonehome" wrapper script, then monitor the pid
+    # until it exits.
+    import tempfile
+    pidfile = tempfile.NamedTemporaryFile(delete = False).name
+    try:
+        sh_cmd = "oe-gnome-terminal-phonehome " + pidfile + " " + sh_cmd
+        pipe = terminal(sh_cmd, title, env, d)
+        output = pipe.communicate()[0]
+        if output:
+            output = output.decode("utf-8")
+        if pipe.returncode != 0:
+            raise ExecutionError(sh_cmd, pipe.returncode, output)
+
+        while os.stat(pidfile).st_size <= 0:
+            continue
+        with open(pidfile, "r") as f:
+            pid = int(f.readline())
+    finally:
+        os.unlink(pidfile)
+
+    import time
+    while True:
+        try:
+            os.kill(pid, 0)
+            time.sleep(0.1)
+        except OSError:
+           return
 
 def check_tmux_pane_size(tmux):
     import subprocess as sub
