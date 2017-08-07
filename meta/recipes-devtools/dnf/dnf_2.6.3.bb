@@ -5,7 +5,6 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
                    "
 
 SRC_URI = "git://github.com/rpm-software-management/dnf.git \
-           file://0001-Move-releasever-check-after-the-etc-dnf-vars-substit.patch \
            file://0029-Do-not-set-PYTHON_INSTALL_DIR-by-running-python.patch \
            file://0030-Run-python-scripts-using-env.patch \
            file://0001-Do-not-prepend-installroot-to-logdir.patch \
@@ -13,7 +12,7 @@ SRC_URI = "git://github.com/rpm-software-management/dnf.git \
            file://0001-Corretly-install-tmpfiles.d-configuration.patch \
            "
 
-SRCREV = "32e6ffdc8902b868cd8f98f9c399c98c9de0c7b8"
+SRCREV = "be2585183ec4485ee4d5e121f242d8669296f065"
 UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>\d+(\.\d+)+)"
 
 S = "${WORKDIR}/git"
