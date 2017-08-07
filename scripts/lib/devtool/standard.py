@@ -498,17 +498,23 @@ def _extract_source(srctree, keep_temp, devbranch, sync, d, tinfoil):
                                 'logging.LogRecord',
                                 'bb.command.CommandCompleted',
                                 'bb.command.CommandFailed',
+                                'bb.cooker.CookerExit',
                                 'bb.build.TaskStarted',
                                 'bb.build.TaskSucceeded',
                                 'bb.build.TaskFailed',
                                 'bb.build.TaskFailedSilent'])
 
         def runtask(target, task):
+            error = False
             if tinfoil.build_file(target, task):
                 while True:
                     event = tinfoil.wait_event(0.25)
                     if event:
                         if isinstance(event, bb.command.CommandCompleted):
+                            break
+                        elif isinstance(event, bb.cooker.CookerExit):
+                            # The server is going away, so drop the connection
+                            tinfoil.server_connection = None
                             break
                         elif isinstance(event, bb.command.CommandFailed):
                             raise DevtoolError('Task do_%s failed: %s' % (task, event.error))
@@ -519,7 +525,11 @@ def _extract_source(srctree, keep_temp, devbranch, sync, d, tinfoil):
                         elif isinstance(event, logging.LogRecord):
                             if event.levelno <= logging.INFO:
                                 continue
+                            if event.levelno >= logging.ERROR:
+                                error = True
                             logger.handle(event)
+                if error:
+                    raise DevtoolError('An error occurred during do_%s, exiting' % task)
 
         # we need virtual:native:/path/to/recipe if it's a BBCLASSEXTEND
         fn = tinfoil.get_recipe_file(pn)
