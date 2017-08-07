@@ -8,6 +8,8 @@ from oeqa.utils.commands import runCmd, bitbake, get_bb_var, get_test_layer
 from oeqa.selftest.cases.sstate import SStateBase
 from oeqa.core.decorator.oeid import OETestID
 
+import bb.siggen
+
 class SStateTests(SStateBase):
 
     # Test sstate files creation and their location
@@ -469,9 +471,11 @@ http_proxy = "http://example.com/"
         for k in files1.keys() | files2.keys():
             if k in files1 and k in files2:
                 print("%s differs:" % k)
-                print(subprocess.check_output(("bitbake-diffsigs",
-                                               self.topdir + "/tmp-sstatesamehash/stamps/" + k + "." + files1[k],
-                                               self.topdir + "/tmp-sstatesamehash2/stamps/" + k + "." + files2[k])))
+                sigdatafile1 = self.topdir + "/tmp-sstatesamehash/stamps/" + k + "." + files1[k]
+                sigdatafile2 = self.topdir + "/tmp-sstatesamehash2/stamps/" + k + "." + files2[k]
+                output = bb.siggen.compare_sigfiles(sigdatafile1, sigdatafile2)
+                if output:
+                    print('\n'.join(output))
             elif k in files1 and k not in files2:
                 print("%s in files1" % k)
             elif k not in files1 and k in files2:
