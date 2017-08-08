@@ -18,11 +18,6 @@
 #   files under exec_prefix
 
 
-# unsafe-references-in-binaries requires prelink-rtld from
-# prelink-native, but we don't want this DEPENDS for -native builds
-QADEPENDS = "prelink-native"
-QADEPENDS_class-native = ""
-QADEPENDS_class-nativesdk = ""
 QA_SANE = "True"
 
 # Elect whether a given type of error is a warning or error, they may
@@ -1088,8 +1083,6 @@ python do_package_qa () {
                continue
             if w in testmatrix and testmatrix[w] in g:
                 warnchecks.append(g[testmatrix[w]])
-            if w == 'unsafe-references-in-binaries':
-                oe.utils.write_ld_so_conf(d)
 
         errorchecks = []
         for e in (d.getVar("ERROR_QA") or "").split():
@@ -1097,8 +1090,6 @@ python do_package_qa () {
                continue
             if e in testmatrix and testmatrix[e] in g:
                 errorchecks.append(g[testmatrix[e]])
-            if e == 'unsafe-references-in-binaries':
-                oe.utils.write_ld_so_conf(d)
         return warnchecks, errorchecks
 
     for package in packages:
