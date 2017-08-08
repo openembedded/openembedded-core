@@ -2,7 +2,7 @@ require cryptodev.inc
 
 SUMMARY = "A test suite for /dev/crypto device driver"
 
-DEPENDS += "openssl"
+DEPENDS += "openssl10"
 
 SRC_URI += " \
 file://0001-Add-the-compile-and-install-rules-for-cryptodev-test.patch \
