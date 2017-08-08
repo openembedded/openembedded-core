@@ -8,7 +8,8 @@ SECTION = "console/network"
 LICENSE = "BSD"
 LIC_FILES_CHKSUM = "file://LICENCE;md5=e326045657e842541d3f35aada442507"
 
-DEPENDS = "zlib openssl"
+# openssl 1.1 patches are proposed at https://github.com/openssh/openssh-portable/pull/48
+DEPENDS = "zlib openssl10"
 DEPENDS += "${@bb.utils.contains('DISTRO_FEATURES', 'pam', 'libpam', '', d)}"
 
 SRC_URI = "http://ftp.openbsd.org/pub/OpenBSD/OpenSSH/portable/openssh-${PV}.tar.gz \
