@@ -13,7 +13,8 @@ DEPENDS_class-native = "openssl-native"
 DEPENDS_class-nativesdk = "ca-certificates-native openssl-native"
 PACKAGE_WRITE_DEPS += "ca-certificates-native"
 
-SRCREV = "61b70a1007dc269d56881a0d480fc841daacc77c"
+SRCREV = "adc13592b55ef00450412d61a2145d162a4afb19"
+PR = "r20170717"
 
 SRC_URI = "git://anonscm.debian.org/collab-maint/ca-certificates.git \
            file://0002-update-ca-certificates-use-SYSROOT.patch \
