@@ -96,24 +96,6 @@ class SanityOptionsTest(OESelftestTestCase):
         line = self.getline(res, "QA Issue: xcursor-transparent-theme-dbg is listed in PACKAGES multiple times, this leads to packaging errors.")
         self.assertTrue(line and line.startswith("WARNING:"), msg=res.output)
 
-    @OETestID(278)
-    def test_sanity_unsafe_script_references(self):
-        self.write_config('WARN_QA_append = " unsafe-references-in-scripts"')
-
-        self.add_command_to_tearDown('bitbake -c clean gzip')
-        res = bitbake("gzip -f -c package_qa")
-        line = self.getline(res, "QA Issue: gzip")
-        self.assertFalse(line, "WARNING: QA Issue: gzip message is present in bitbake's output and shouldn't be: %s" % res.output)
-
-        self.append_config("""
-do_install_append_pn-gzip () {
-	echo "\n${bindir}/test" >> ${D}${bindir}/zcat
-}
-""")
-        res = bitbake("gzip -f -c package_qa")
-        line = self.getline(res, "QA Issue: gzip")
-        self.assertTrue(line and line.startswith("WARNING:"), "WARNING: QA Issue: gzip message is not present in bitbake's output: %s" % res.output)
-
     @OETestID(1421)
     def test_layer_without_git_dir(self):
         """
