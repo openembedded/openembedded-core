@@ -27,6 +27,7 @@ SRC_URI = "http://wiki.qemu-project.org/download/${BP}.tar.bz2 \
            file://CVE-2016-9908.patch \
            file://CVE-2016-9912.patch \
            file://0001-replace-struct-ucontext-with-ucontext_t-type.patch \
+           file://apic-fixup-fallthrough-to-PIC.patch \
            "
 
 SRC_URI_append_class-native = " \
