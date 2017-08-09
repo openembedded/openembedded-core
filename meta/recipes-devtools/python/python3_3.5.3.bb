@@ -16,6 +16,7 @@ file://130-readline-setup.patch \
 file://150-fix-setupterm.patch \
 file://0001-h2py-Fix-issue-13032-where-it-fails-with-UnicodeDeco.patch \
 file://tweak-MULTIARCH-for-powerpc-linux-gnuspe.patch \
+file://support_SOURCE_DATE_EPOCH_in_py_compile.patch \
 ${DISTRO_SRC_URI} \
 "
 
