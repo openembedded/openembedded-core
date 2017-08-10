@@ -32,10 +32,16 @@ do_install() {
 	autotools_do_install
 
 	# don't install /var/log/sa when populating rootfs. Do it through volatile
-
 	rm -rf ${D}/var
-	install -d ${D}/etc/default/volatiles
-	install -m 0644 ${WORKDIR}/99_sysstat ${D}/etc/default/volatiles
+	if ${@bb.utils.contains('DISTRO_FEATURES', 'sysvinit', 'true', 'false', d)}; then
+	        install -d ${D}/etc/default/volatiles
+		install -m 0644 ${WORKDIR}/99_sysstat ${D}/etc/default/volatiles
+	fi
+	if ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'true', 'false', d)}; then
+	        install -d ${D}${sysconfdir}/tmpfiles.d
+	        echo "d ${localstatedir}/log/sa - - - -" \
+		     > ${D}${sysconfdir}/tmpfiles.d/sysstat.conf
+	fi
 
 	install -d ${D}${systemd_unitdir}/system
 	install -m 0644 ${WORKDIR}/sysstat.service ${D}${systemd_unitdir}/system
