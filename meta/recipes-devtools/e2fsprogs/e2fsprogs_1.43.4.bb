@@ -10,6 +10,7 @@ SRC_URI += "file://acinclude.m4 \
             file://e2fsprogs-1.43-sysmacros.patch \
             file://mkdir_p.patch \
             file://0001-e2fsck-exit-with-exit-status-0-if-no-errors-were-fix.patch \
+            file://reproducible-doc.patch \
 "
 
 SRC_URI_append_class-native = " file://e2fsprogs-fix-missing-check-for-permission-denied.patch"
