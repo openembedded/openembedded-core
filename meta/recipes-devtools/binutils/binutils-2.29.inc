@@ -18,29 +18,22 @@ BINUPV = "${@binutils_branch_version(d)}"
 
 UPSTREAM_CHECK_GITTAGREGEX = "binutils-(?P<pver>\d+_(\d_?)*)"
 
-SRCREV = "7ea1464297eadebe62aae92ad9bebb33f92c2454"
+SRCREV = "dd241688aee3712803a917315df089f4c714b5ef"
 SRC_URI = "\
      git://sourceware.org/git/binutils-gdb.git;branch=binutils-${BINUPV}-branch;protocol=git \
+     file://0003-configure-widen-the-regexp-for-SH-architectures.patch \
      file://0004-Point-scripts-location-to-libdir.patch \
      file://0005-Only-generate-an-RPATH-entry-if-LD_RUN_PATH-is-not-e.patch \
-     file://0007-Use-libtool-2.4.patch \
-     file://0008-Add-the-armv5e-architecture-to-binutils.patch \
-     file://0009-don-t-let-the-distro-compiler-point-to-the-wrong-ins.patch \
-     file://0010-warn-for-uses-of-system-directories-when-cross-linki.patch \
-     file://0011-Fix-rpath-in-libtool-when-sysroot-is-enabled.patch \
-     file://0012-Change-default-emulation-for-mips64-linux.patch \
-     file://0013-Add-support-for-Netlogic-XLP.patch \
-     file://0014-fix-the-incorrect-assembling-for-ppc-wait-mnemonic.patch \
+     file://0006-Use-libtool-2.4.patch \
+     file://0007-Add-the-armv5e-architecture-to-binutils.patch \
+     file://0008-don-t-let-the-distro-compiler-point-to-the-wrong-ins.patch \
+     file://0009-warn-for-uses-of-system-directories-when-cross-linki.patch \
+     file://0010-Fix-rpath-in-libtool-when-sysroot-is-enabled.patch \
+     file://0011-Change-default-emulation-for-mips64-linux.patch \
+     file://0012-Add-support-for-Netlogic-XLP.patch \
+     file://0013-fix-the-incorrect-assembling-for-ppc-wait-mnemonic.patch \
+     file://0014-Detect-64-bit-MIPS-targets.patch \
      file://0015-sync-with-OE-libtool-changes.patch \
-     file://0016-Detect-64-bit-MIPS-targets.patch \
-     file://CVE-2017-6965.patch \
-     file://CVE-2017-6966.patch \
-     file://0017-bfd-Improve-lookup-of-file-line-information-for-erro.patch \
-     file://0018-PR-21409-segfault-in-_bfd_dwarf2_find_nearest_line.patch \
-     file://CVE-2017-6969.patch \
-     file://CVE-2017-6969_2.patch \
-     file://CVE-2017-7209.patch \
-     file://CVE-2017-7210.patch \
 "
 S  = "${WORKDIR}/git"
 
