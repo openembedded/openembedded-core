@@ -21,7 +21,7 @@ DEPENDS_append_libc-musl = " fts "
 EXTRA_OEMAKE_append_libc-musl = " LIBC=musl "
 CFLAGS_append_powerpc64 = " -D__SANE_USERSPACE_TYPES__"
 CFLAGS_append_mipsarchn64 = " -D__SANE_USERSPACE_TYPES__"
-SRCREV = "6c6c6ca40afb3611e52486f670085762ff451e91"
+SRCREV = "18916a2e6d8c997b7b29dcfa9550d5a15b22ed22"
 
 SRC_URI = "git://github.com/linux-test-project/ltp.git \
            file://0001-add-_GNU_SOURCE-to-pec_listener.c.patch \
@@ -29,7 +29,6 @@ SRC_URI = "git://github.com/linux-test-project/ltp.git \
            file://0003-Add-knob-to-control-tirpc-support.patch \
            file://0004-build-Add-option-to-select-libc-implementation.patch \
            file://0005-kernel-controllers-Link-with-libfts-explicitly-on-mu.patch \
-           file://0006-fix-PATH_MAX-undeclared-when-building-with-musl.patch \
            file://0007-fix-__WORDSIZE-undeclared-when-building-with-musl.patch \
            file://0008-Check-if-__GLIBC_PREREQ-is-defined-before-using-it.patch \
            file://0009-fix-redefinition-of-struct-msgbuf-error-building-wit.patch \
@@ -49,9 +48,7 @@ SRC_URI = "git://github.com/linux-test-project/ltp.git \
            file://0034-periodic_output.patch \
            file://0035-fix-test_proc_kill-hang.patch \
            file://0036-testcases-network-nfsv4-acl-acl1.c-Security-fix-on-s.patch \
-           file://0001-dirtyc0w-Include-stdint.h.patch \
-           file://0037-faccessat-and-fchmodat-Fix-build-warnings.patch \
-           file://0038-syscalls-add_key02-update-to-test-fix-for-nonempty-N.patch \
+           file://0037-ltp-fix-PAGE_SIZE-redefinition-and-O_CREAT-undeclear.patch \
            "
 
 S = "${WORKDIR}/git"
@@ -69,14 +66,6 @@ EXTRA_OECONF = " --with-power-management-testsuite --with-realtime-testsuite "
 # ltp network/rpc test cases ftbfs when libtirpc is found
 EXTRA_OECONF += " --without-tirpc "
 
-# The makefiles make excessive use of make -C and several include testcases.mk
-# which triggers a build of the syscall header. To reproduce, build ltp,
-# then delete the header, then "make -j XX" and watch regen.sh run multiple
-# times. Its easier to generate this once here instead.
-do_compile_prepend () {
-	( make -C ${B}/testcases/kernel include/linux_syscall_numbers.h )
-}
-
 do_install(){
     install -d ${D}/opt/ltp/
     oe_runmake DESTDIR=${D} SKIP_IDCHECK=1 install
@@ -89,9 +78,6 @@ do_install(){
     # OSDL's Scaleable Test Platform, but now http://khack.osdl.org unaccessible
     rm -rf ${D}/opt/ltp/bin/STPfailure_report.pl
 
-    # In oe-core, we doesn't support ksh and csh now, so remove in.csh and in.ksh.
-    rm ${D}/opt/ltp/testcases/data/file01/in.csh
-    rm ${D}/opt/ltp/testcases/data/file01/in.ksh
     # Copy POSIX test suite into ${D}/opt/ltp/testcases by manual
     cp -r testcases/open_posix_testsuite ${D}/opt/ltp/testcases
 }
