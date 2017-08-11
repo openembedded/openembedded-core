@@ -9,6 +9,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=2119edef0916b0bd511cb3c731076271"
 DEPENDS = "zlib"
 
 SRC_URI = "git://github.com/assimp/assimp.git"
+UPSTREAM_CHECK_GITTAGREGEX = "v(?P<pver>(\d+(\.\d+)+))"
 
 SRCREV = "52c8d06f5d6498afd66df983da348a6b112f1314"
 
