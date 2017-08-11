@@ -6,6 +6,7 @@ SRC_URI = "git://anongit.freedesktop.org/piglit \
            file://0001-cmake-install-bash-completions-in-the-right-place.patch \
            file://0001-tests-Use-FE_UPWARD-only-if-its-defined-in-fenv.h.patch \
            "
+UPSTREAM_VERSION_UNKNOWN = "1"
 
 # From 2017-07-03
 SRCREV = "c8f4fd9eeb298a2ef0855927f22634f794ef3eff"

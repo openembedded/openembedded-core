@@ -17,6 +17,7 @@ SRC_URI = "git://github.com/tianocore/edk2.git;branch=master \
 	file://0001-ia32-Dont-use-pie.patch \
 	file://no-stack-protector-all-archs.patch \
         "
+UPSTREAM_VERSION_UNKNOWN = "1"
 
 OPENSSL_RELEASE = "openssl-1.1.0e"
 

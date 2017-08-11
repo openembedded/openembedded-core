@@ -13,6 +13,7 @@ SRC_URI = "git://github.com/sdroege/gst-player.git \
 
 SRCREV = "ee3c226c82767a089743e4e06058743e67f73cdb"
 PV = "0.0.1+git${SRCPV}"
+UPSTREAM_VERSION_UNKNOWN = "1"
 
 S = "${WORKDIR}/git"
 

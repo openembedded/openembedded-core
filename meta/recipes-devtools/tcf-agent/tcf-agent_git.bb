@@ -16,6 +16,7 @@ SRC_URI = "git://git.eclipse.org/gitroot/tcf/org.eclipse.tcf.agent;branch=1.4_ne
            file://tcf-agent.init \
            file://tcf-agent.service \
           "
+UPSTREAM_VERSION_UNKNOWN = "1"
 
 DEPENDS = "util-linux openssl"
 RDEPENDS_${PN} = "bash"

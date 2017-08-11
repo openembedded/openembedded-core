@@ -43,6 +43,7 @@ SRC_URI = "git://github.com/rpm-software-management/rpm \
            file://0003-rpmstrpool.c-make-operations-over-string-pools-threa.patch \
            file://0004-build-pack.c-remove-static-local-variables-from-buil.patch \
            "
+UPSTREAM_VERSION_UNKNOWN = "1"
 
 PV = "4.13.90+git${SRCPV}"
 PE = "1"
