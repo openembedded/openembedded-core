@@ -28,6 +28,8 @@ export CROSS_COMPILE="${TARGET_PREFIX}"
 
 LDFLAGS += "-Wl,-soname,libc.so"
 
+ARM_INSTRUCTION_SET_toolchain-clang = "arm"
+
 CONFIGUREOPTS = " \
     --prefix=${prefix} \
     --exec-prefix=${exec_prefix} \
