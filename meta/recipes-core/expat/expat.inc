@@ -6,6 +6,7 @@ LICENSE = "MIT"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/expat/expat-${PV}.tar.bz2 \
            file://autotools.patch \
+           file://libtool-tag.patch \
 	  "
 inherit autotools lib_package
 
