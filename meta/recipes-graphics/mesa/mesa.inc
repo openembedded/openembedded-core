@@ -22,7 +22,8 @@ inherit autotools pkgconfig pythonnative gettext distro_features_check
 
 REQUIRED_DISTRO_FEATURES = "opengl"
 
-EXTRA_OECONF = "--enable-shared-glapi --with-llvm-prefix=${STAGING_BINDIR_NATIVE}"
+export LLVM_CONFIG = "${STAGING_BINDIR_CROSS}/llvm-config"
+EXTRA_OECONF = "--enable-shared-glapi"
 
 PACKAGECONFIG ??= "gbm egl gles dri \
 		${@bb.utils.filter('DISTRO_FEATURES', 'wayland x11', d)} \
