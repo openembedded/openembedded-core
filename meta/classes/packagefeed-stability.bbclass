@@ -189,7 +189,7 @@ def package_compare_impl(pkgtype, d):
 
     # Remove all the old files and copy again if docopy
     if docopy:
-        bb.plain('Copying packages for recipe %s' % pn)
+        bb.note('Copying packages for recipe %s' % pn)
         pcmanifest = os.path.join(prepath, d.expand('pkg-compare-manifest-${MULTIMACH_TARGET_SYS}-${PN}'))
         try:
             with open(pcmanifest, 'r') as f:
