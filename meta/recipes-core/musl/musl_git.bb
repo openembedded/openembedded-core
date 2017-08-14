@@ -3,7 +3,7 @@
 
 require musl.inc
 
-SRCREV = "a08910fc2cc739f631b75b2d09b8d72a0d64d285"
+SRCREV = "1698fe6cdcdeaad03aa19a85433d5396ecfc51ef"
 
 PV = "1.1.16+git${SRCPV}"
 
@@ -37,7 +37,6 @@ CONFIGUREOPTS = " \
     --libdir=${libdir} \
     --includedir=${includedir} \
     --syslibdir=${base_libdir} \
-    --disable-visibility \
 "
 
 do_configure() {
