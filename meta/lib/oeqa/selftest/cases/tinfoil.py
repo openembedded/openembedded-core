@@ -1,6 +1,7 @@
 import os
 import re
 import time
+import logging
 import bb.tinfoil
 
 from oeqa.selftest.case import OESelftestTestCase
@@ -127,6 +128,8 @@ class TinfoilTests(OESelftestTestCase):
                         self.assertEqual(pattern, event._pattern)
                         self.assertIn('qemuarm.conf', event._matches)
                         eventreceived = True
+                    elif isinstance(event, logging.LogRecord):
+                        continue
                     else:
                         self.fail('Unexpected event: %s' % event)
 
