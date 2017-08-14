@@ -17,10 +17,8 @@ SECTION = "x11"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://COPYING;md5=2e48940f94acb0af582e5ef03537800f"
 
-SRC_URI = "git://github.com/01org/libva.git;protocol=http;branch=v1.7-branch \
-           file://0001-configure.ac-Use-wayland-scanner-in-PATH.patch \
-           file://0001-wayland-Don-t-commit-and-ship-generated-files.patch"
-SRCREV = "dbf9f7e33349c3cee8d131e93a6a4f91255635cb"
+SRC_URI = "git://github.com/01org/libva.git;protocol=http;branch=v1.8-branch "
+SRCREV = "457470987cc9df5976ce8c72ffd4bfbd9baaf0f9"
 UPSTREAM_CHECK_GITTAGREGEX = "libva-(?P<pver>(\d+(\.\d+)+))"
 
 S = "${WORKDIR}/git"
@@ -31,7 +29,7 @@ inherit autotools pkgconfig distro_features_check
 
 REQUIRED_DISTRO_FEATURES = "opengl"
 
-EXTRA_OECONF = "--disable-dummy-driver"
+EXTRA_OECONF = "ac_cv_prog_WAYLAND_SCANNER=wayland-scanner"
 
 PACKAGECONFIG ??= "${@bb.utils.filter('DISTRO_FEATURES', 'wayland x11', d)}"
 PACKAGECONFIG[x11] = "--enable-x11,--disable-x11,virtual/libx11 libxext libxfixes"
