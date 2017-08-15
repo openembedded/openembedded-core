@@ -45,9 +45,9 @@ class LocalSigner(object):
             if fsk_password:
                 cmd += "--define '_file_signing_key_password %s' " % fsk_password
 
-        # Sign in chunks of 100 packages
-        for i in range(0, len(files), 100):
-            status, output = oe.utils.getstatusoutput(cmd + ' '.join(files[i:i+100]))
+        # Sign packages
+        for f in files:
+            status, output = oe.utils.getstatusoutput(cmd + ' ' + f)
             if status:
                 raise bb.build.FuncFailed("Failed to sign RPM packages: %s" % output)
 
