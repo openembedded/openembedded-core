@@ -14,18 +14,22 @@ BUGTRACKER = "https://bugs.freedesktop.org/enter_bug.cgi?product=fontconfig"
 LICENSE = "MIT-style & MIT & PD"
 LIC_FILES_CHKSUM = "file://COPYING;md5=7a0449e9bc5370402a94c00204beca3d \
                     file://src/fcfreetype.c;endline=45;md5=5d9513e3196a1fbfdfa94051c09dfc84 \
-                    file://src/fccache.c;beginline=1360;endline=1375;md5=0326cfeb4a7333dd4dd25fbbc4b9f27f"
+                    file://src/fccache.c;beginline=1367;endline=1382;md5=0326cfeb4a7333dd4dd25fbbc4b9f27f"
 
 SECTION = "libs"
 
-DEPENDS = "expat freetype zlib"
+DEPENDS = "expat freetype zlib gperf-native"
 
 SRC_URI = "http://fontconfig.org/release/fontconfig-${PV}.tar.gz \
            file://revert-static-pkgconfig.patch \
-           file://0001-Avoid-conflicts-with-integer-width-macros-from-TS-18.patch \
            "
-SRC_URI[md5sum] = "ce55e525c37147eee14cc2de6cc09f6c"
-SRC_URI[sha256sum] = "a9f42d03949f948a3a4f762287dbc16e53a927c91a07ee64207ebd90a9e5e292"
+SRC_URI[md5sum] = "4fb01fc3f41760c41c69e37cc784b658"
+SRC_URI[sha256sum] = "fd5a6a663f4c4a00e196523902626654dd0c4a78686cbc6e472f338e50fdf806"
+
+do_configure_prepend() {
+    # work around https://bugs.freedesktop.org/show_bug.cgi?id=101280
+    rm -f ${S}/src/fcobjshash.h ${S}/src/fcobjshash.gperf
+}
 
 PACKAGES =+ "fontconfig-utils"
 FILES_${PN} =+ "${datadir}/xml/*"
