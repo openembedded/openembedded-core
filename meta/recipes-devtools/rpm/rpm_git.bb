@@ -42,6 +42,7 @@ SRC_URI = "git://github.com/rpm-software-management/rpm \
            file://0002-Run-binary-package-creation-via-thread-pools.patch \
            file://0003-rpmstrpool.c-make-operations-over-string-pools-threa.patch \
            file://0004-build-pack.c-remove-static-local-variables-from-buil.patch \
+           file://0001-perl-disable-auto-reqs.patch \
            "
 UPSTREAM_VERSION_UNKNOWN = "1"
 
