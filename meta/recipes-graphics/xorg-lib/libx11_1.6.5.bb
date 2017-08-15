@@ -4,6 +4,7 @@ inherit gettext
 BBCLASSEXTEND = "native nativesdk"
 
 SRC_URI += "file://disable_tests.patch \
+            file://Fix-hanging-issue-in-_XReply.patch \
            "
 do_configure_append () {
     sed -i -e "/X11_CFLAGS/d" ${B}/src/util/Makefile
