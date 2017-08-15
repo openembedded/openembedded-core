@@ -140,12 +140,15 @@ RDEPENDS_packagegroup-self-hosted-extended = "\
     nfs-utils \
     nfs-utils-client \
     openssl \
+    openssh-scp \
     openssh-sftp-server \
+    openssh-ssh \
     opkg \
     opkg-utils \
     patch \
     perl \
     perl-dev \
+    perl-misc \
     perl-modules \
     perl-pod \
     python \
