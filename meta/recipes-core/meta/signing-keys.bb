@@ -71,3 +71,11 @@ do_deploy[cleandirs] = "${DEPLOYDIR}"
 # clear stamp-extra-info since MACHINE is normally put there by deploy.bbclass
 do_deploy[stamp-extra-info] = ""
 addtask deploy after do_get_public_keys
+
+# Delete unnecessary tasks. In particular, "do_unpack" _must_ be deleted because
+# it cleans ${B} and will wipe any keys exported by do_get_public_keys.
+deltask do_fetch
+deltask do_unpack
+deltask do_patch
+deltask do_configure
+deltask do_compile
