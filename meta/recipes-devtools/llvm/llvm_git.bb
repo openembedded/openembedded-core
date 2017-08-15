@@ -52,6 +52,9 @@ LLVM_TARGETS ?= "${@get_llvm_target_arch(bb, d)}"
 LLVM_TARGETS_prepend_x86 = "AMDGPU;"
 LLVM_TARGETS_prepend_x86-64 = "AMDGPU;"
 
+ARM_INSTRUCTION_SET_armv5 = "arm"
+ARM_INSTRUCTION_SET_armv4t = "arm"
+
 EXTRA_OECMAKE += "-DLLVM_ENABLE_ASSERTIONS=OFF \
                   -DLLVM_ENABLE_EXPENSIVE_CHECKS=OFF \
                   -DLLVM_ENABLE_PIC=ON \
