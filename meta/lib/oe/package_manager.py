@@ -104,12 +104,24 @@ class Indexer(object, metaclass=ABCMeta):
 class RpmIndexer(Indexer):
     def write_index(self):
         if self.d.getVar('PACKAGE_FEED_SIGN') == '1':
-            raise NotImplementedError('Package feed signing not yet implementd for rpm')
+            signer = get_signer(self.d, self.d.getVar('PACKAGE_FEED_GPG_BACKEND'))
+        else:
+            signer = None
 
         createrepo_c = bb.utils.which(os.environ['PATH'], "createrepo_c")
         result = create_index("%s --update -q %s" % (createrepo_c, self.deploy_dir))
         if result:
             bb.fatal(result)
+
+        # Sign repomd
+        if signer:
+            sig_type = self.d.getVar('PACKAGE_FEED_GPG_SIGNATURE_TYPE')
+            is_ascii_sig = (sig_type.upper() != "BIN")
+            signer.detach_sign(os.path.join(self.deploy_dir, 'repodata', 'repomd.xml'),
+                               self.d.getVar('PACKAGE_FEED_GPG_NAME'),
+                               self.d.getVar('PACKAGE_FEED_GPG_PASSPHRASE_FILE'),
+                               armor=is_ascii_sig)
+
 
 class OpkgIndexer(Indexer):
     def write_index(self):
