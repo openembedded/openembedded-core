@@ -3,6 +3,7 @@ from oeqa.utils.commands import runCmd, bitbake, get_bb_var, get_bb_vars, runqem
 from oeqa.core.decorator.oeid import OETestID
 import os
 import re
+import tempfile
 
 class TestExport(OESelftestTestCase):
 
@@ -143,7 +144,16 @@ class TestImage(OESelftestTestCase):
         # in at the start of the on-image test
         features += 'PACKAGE_FEED_URIS = "http://bogus_ip:bogus_port"\n'
         features += 'EXTRA_IMAGE_FEATURES += "package-management"\n'
-        features += 'PACKAGE_CLASSES = "package_rpm"'
+        features += 'PACKAGE_CLASSES = "package_rpm"\n'
+
+        # Enable package feed signing
+        self.gpg_home = tempfile.TemporaryDirectory(prefix="oeqa-feed-sign-")
+        signing_key_dir = os.path.join(self.testlayer_path, 'files', 'signing')
+        runCmd('gpg --batch --homedir %s --import %s' % (self.gpg_home.name, os.path.join(signing_key_dir, 'key.secret')))
+        features += 'INHERIT += "sign_package_feed"\n'
+        features += 'PACKAGE_FEED_GPG_NAME = "testuser"\n'
+        features += 'PACKAGE_FEED_GPG_PASSPHRASE_FILE = "%s"\n' % os.path.join(signing_key_dir, 'key.passphrase')
+        features += 'GPG_PATH = "%s"\n' % self.gpg_home.name
         self.write_config(features)
 
         # Build core-image-sato and testimage

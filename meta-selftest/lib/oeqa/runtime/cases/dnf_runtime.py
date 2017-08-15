@@ -36,7 +36,9 @@ class DnfSelftest(DnfTest):
         self.tc.target.copyTo(temp_file, "/etc/yum.repos.d/oe-remote-repo.repo")
 
         import re
-        output_makecache = self.dnf('makecache')
+        # Use '-y' for non-interactive mode: automatically import the feed signing key
+        output_makecache = self.dnf('-y makecache')
+        self.assertTrue(re.match(r".*Failed to synchronize cache", output_makecache, re.DOTALL) is None, msg = "dnf makecache failed to synchronize repo: %s" %(output_makecache))
         self.assertTrue(re.match(r".*Metadata cache created", output_makecache, re.DOTALL) is not None, msg = "dnf makecache failed: %s" %(output_makecache))
 
         output_repoinfo = self.dnf('repoinfo')
