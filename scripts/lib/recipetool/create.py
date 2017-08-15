@@ -446,7 +446,7 @@ def create_recipe(args):
         srctree = os.path.join(tempsrc, 'source')
 
         try:
-            checksums, ftmpdir = scriptutils.fetch_url(tinfoil, srcuri, srcrev, srctree, logger, preserve_tmp=args.keep_temp)
+            checksums, ftmpdir = scriptutils.fetch_url(tinfoil, fetchuri, srcrev, srctree, logger, preserve_tmp=args.keep_temp)
         except scriptutils.FetchUrlFailure as e:
             logger.error(str(e))
             sys.exit(1)
