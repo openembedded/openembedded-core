@@ -2,13 +2,13 @@ require gcc-common.inc
 
 # Third digit in PV should be incremented after a minor release
 
-PV = "7.1.0"
+PV = "7.2.0"
 
 # BINV should be incremented to a revision after a minor gcc release
 
-BINV = "7.1.0"
+BINV = "7.2.0"
 
-FILESEXTRAPATHS =. "${FILE_DIRNAME}/gcc-7.1:${FILE_DIRNAME}/gcc-7.1/backport:"
+FILESEXTRAPATHS =. "${FILE_DIRNAME}/gcc-7.2:${FILE_DIRNAME}/gcc-7.2/backport:"
 
 DEPENDS =+ "mpfr gmp libmpc zlib"
 NATIVEDEPS = "mpfr-native gmp-native libmpc-native zlib-native"
@@ -24,7 +24,7 @@ LIC_FILES_CHKSUM = "\
 "
 
 #RELEASE = "7-20170504"
-BASEURI ?= "${GNU_MIRROR}/gcc/gcc-${PV}/gcc-${PV}.tar.bz2"
+BASEURI ?= "${GNU_MIRROR}/gcc/gcc-${PV}/gcc-${PV}.tar.xz"
 #SRCREV = "f7cf798b73fd1a07098f9a490deec1e2a36e0bed"
 #BASEURI ?= "git://github.com/gcc-mirror/gcc;branch=gcc-6-branch;protocol=git"
 #BASEURI ?= "http://mirrors.concertpass.com/gcc/snapshots/${RELEASE}/gcc-${RELEASE}.tar.bz2"
@@ -73,15 +73,13 @@ SRC_URI = "\
            file://0046-libgcc_s-Use-alias-for-__cpu_indicator_init-instead-.patch \
            file://0047-sync-gcc-stddef.h-with-musl.patch \
            file://0048-gcc-Enable-static-PIE.patch \
-           file://0049-libsanitizer-Use-stack_t-instead-of-struct-sigaltsta.patch \
-           file://0050-replace-struct-ucontext-with-ucontext_t.patch \
            file://fix-segmentation-fault-precompiled-hdr.patch \
            ${BACKPORTS} \
 "
 BACKPORTS = "\
 "
-SRC_URI[md5sum] = "6bf56a2bca9dac9dbbf8e8d1036964a8"
-SRC_URI[sha256sum] = "8a8136c235f64c6fef69cac0d73a46a1a09bb250776a050aec8f9fc880bebc17"
+SRC_URI[md5sum] = "ff370482573133a7fcdd96cd2f552292"
+SRC_URI[sha256sum] = "1cf7adf8ff4b5aa49041c8734bbcf1ad18cc4c94d0029aae0f4e48841088479a"
 
 S = "${TMPDIR}/work-shared/gcc-${PV}-${PR}/gcc-${PV}"
 #S = "${TMPDIR}/work-shared/gcc-${PV}-${PR}/git"
