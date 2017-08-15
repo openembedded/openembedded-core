@@ -6,6 +6,8 @@ class DnfSelftest(DnfTest):
 
     @classmethod
     def setUpClass(cls):
+        import tempfile
+        cls.temp_dir = tempfile.TemporaryDirectory(prefix="oeqa-remotefeeds-")
         cls.repo_server = HTTPService(os.path.join(cls.tc.td['WORKDIR'], 'oe-rootfs-repo'),
                                       cls.tc.target.server_ip)
         cls.repo_server.start()
@@ -13,6 +15,7 @@ class DnfSelftest(DnfTest):
     @classmethod
     def tearDownClass(cls):
         cls.repo_server.stop()
+        cls.temp_dir.cleanup()
 
     @OETestDepends(['dnf.DnfBasicTest.test_dnf_help'])
     def test_verify_package_feeds(self):
@@ -25,11 +28,11 @@ class DnfSelftest(DnfTest):
         """
         # When we created an image, we had to supply fake ip and port
         # for the feeds. Now we can patch the real ones into the config file.
-        import tempfile
-        temp_file = tempfile.TemporaryDirectory(prefix="oeqa-remotefeeds-").name
+        temp_file = os.path.join(self.temp_dir.name, 'tmp.repo')
         self.tc.target.copyFrom("/etc/yum.repos.d/oe-remote-repo.repo", temp_file)
         fixed_config = open(temp_file, "r").read().replace("bogus_ip", self.tc.target.server_ip).replace("bogus_port", str(self.repo_server.port))
-        open(temp_file, "w").write(fixed_config)
+        with open(temp_file, "w") as f:
+            f.write(fixed_config)
         self.tc.target.copyTo(temp_file, "/etc/yum.repos.d/oe-remote-repo.repo")
 
         import re
