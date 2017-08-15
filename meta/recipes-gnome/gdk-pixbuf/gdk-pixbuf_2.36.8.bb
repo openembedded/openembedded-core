@@ -8,7 +8,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=3bf50002aefd002f49e7bb854063f7e7 \
 
 SECTION = "libs"
 
-DEPENDS = "glib-2.0 gdk-pixbuf-native"
+DEPENDS = "glib-2.0 gdk-pixbuf-native shared-mime-info"
 
 MAJ_VER = "${@oe.utils.trim_version("${PV}", 2)}"
 
@@ -21,8 +21,8 @@ SRC_URI = "${GNOME_MIRROR}/${BPN}/${MAJ_VER}/${BPN}-${PV}.tar.xz \
            file://0001-queryloaders-Make-output-more-reproducible.patch \
            "
 
-SRC_URI[md5sum] = "5dd53760750670d27c194ff6ace7eb51"
-SRC_URI[sha256sum] = "455eb90c09ed1b71f95f3ebfe1c904c206727e0eeb34fc94e5aaf944663a820c"
+SRC_URI[md5sum] = "e0aaa0061eb12667b32b27472230b962"
+SRC_URI[sha256sum] = "5d68e5283cdc0bf9bda99c3e6a1d52ad07a03364fa186b6c26cfc86fcd396a19"
 
 inherit autotools pkgconfig gettext pixbufcache ptest-gnome upstream-version-is-even gobject-introspection gtk-doc lib_package
 
@@ -39,11 +39,12 @@ PACKAGECONFIG[jpeg] = "--with-libjpeg,--without-libjpeg,jpeg"
 PACKAGECONFIG[tiff] = "--with-libtiff,--without-libtiff,tiff"
 PACKAGECONFIG[jpeg2000] = "--with-libjasper,--without-libjasper,jasper"
 
-# Use GIO to sniff image format instead of trying all loaders
-PACKAGECONFIG[gio-sniff] = "--enable-gio-sniffing,--disable-gio-sniffing,,shared-mime-info"
 PACKAGECONFIG[x11] = "--with-x11,--without-x11,virtual/libx11"
 
 PACKAGES =+ "${PN}-xlib"
+
+# For GIO image type sniffing
+RDEPENDS_${PN} = "shared-mime-info"
 
 FILES_${PN}-xlib = "${libdir}/*pixbuf_xlib*${SOLIBS}"
 ALLOW_EMPTY_${PN}-xlib = "1"
