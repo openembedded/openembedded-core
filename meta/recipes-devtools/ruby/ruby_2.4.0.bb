@@ -1,5 +1,9 @@
 require ruby.inc
 
+SRC_URI += " \
+           file://ruby-CVE-2017-9224.patch \
+           "
+
 SRC_URI[md5sum] = "7e9485dcdb86ff52662728de2003e625"
 SRC_URI[sha256sum] = "152fd0bd15a90b4a18213448f485d4b53e9f7662e1508190aa5b702446b29e3d"
 
