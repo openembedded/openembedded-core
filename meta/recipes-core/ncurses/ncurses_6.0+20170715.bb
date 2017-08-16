@@ -1,12 +1,11 @@
 require ncurses.inc
 
-SRC_URI += "file://tic-hang.patch \
-            file://fix-cflags-mangle.patch \
+SRC_URI += "file://0001-tic-hang.patch \
+            file://0002-configure-reproducible.patch \
             file://config.cache \
-            file://configure-reproducible.patch \
 "
 # commit id corresponds to the revision in package version
-SRCREV = "3db0bd19cb50e3d9b4f2cf15b7a102fe11302068"
+SRCREV = "52681a6a1a18b4d6eb1a716512d0dd827bd71c87"
 S = "${WORKDIR}/git"
 EXTRA_OECONF += "--with-abi-version=5"
 UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>\d+(\.\d+)+(\+\d+)*)"
