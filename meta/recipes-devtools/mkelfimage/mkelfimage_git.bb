@@ -23,11 +23,12 @@ CLEANBROKEN = "1"
 
 S = "${WORKDIR}/git/util/mkelfImage"
 
-CFLAGS += "-fno-stack-protector"
 CACHED_CONFIGUREVARS += "\
     HOST_CC='${BUILD_CC}' \
     HOST_CFLAGS='${BUILD_CFLAGS}' \
     HOST_CPPFLAGS='${BUILD_CPPFLAGS}' \
+    I386_CFLAGS='-fno-stack-protector' \
+    IA64_CFLAGS='-fno-stack-protector' \
 "
 EXTRA_OECONF_append_x86-64 = " --with-i386=${HOST_SYS}"
 
