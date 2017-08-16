@@ -6,20 +6,20 @@ BUGTRACKER = "https://bugs.g10code.com/gnupg/index"
 LICENSE = "GPLv2+ & LGPLv2.1+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f \
                     file://COPYING.LESSER;md5=bbb461211a33b134d42ed5ee802b37ff \
-                    file://src/gpgme.h.in;endline=23;md5=0f7059665c4b7897f4f4d0cb93aa9f98 \
+                    file://src/gpgme.h.in;endline=23;md5=9d157d08a69059344e6f82abd2d25781 \
                     file://src/engine.h;endline=22;md5=4b6d8ba313d9b564cc4d4cfb1640af9d"
 
 UPSTREAM_CHECK_URI = "https://gnupg.org/download/index.html"
 SRC_URI = "${GNUPG_MIRROR}/gpgme/${BP}.tar.bz2 \
-           file://pkgconfig.patch \
-           file://python-lang-config.patch \
-           file://0001-Correctly-install-python-modules.patch \
-           file://python-import.patch \
-           file://0001-gpgme-config-skip-all-lib-or-usr-lib-directories-in-.patch \
+           file://0001-pkgconfig.patch \
+           file://0002-gpgme-lang-python-gpg-error-config-should-not-be-use.patch \
+           file://0003-Correctly-install-python-modules.patch \
+           file://0004-python-import.patch \
+           file://0005-gpgme-config-skip-all-lib-or-usr-lib-directories-in-.patch \
           "
 
-SRC_URI[md5sum] = "722a4153904b9b5dc15485a22d29263b"
-SRC_URI[sha256sum] = "596097257c2ce22e747741f8ff3d7e24f6e26231fa198a41b2a072e62d1e5d33"
+SRC_URI[md5sum] = "1e00bb8ef04d1d05d5a0f19e143854c3"
+SRC_URI[sha256sum] = "1b29fedb8bfad775e70eafac5b0590621683b2d9869db994568e6401f4034ceb"
 
 DEPENDS = "libgpg-error libassuan"
 RDEPENDS_${PN}-cpp += "libstdc++"

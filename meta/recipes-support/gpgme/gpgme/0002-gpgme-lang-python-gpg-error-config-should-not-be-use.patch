@@ -1,4 +1,7 @@
-gpgme/lang/python: gpg-error-config should not be used.
+From fb165c9bd96aca8c9ee3e4509c9b6e35d238ad2e Mon Sep 17 00:00:00 2001
+From: Mark Hatle <mark.hatle@windriver.com>
+Date: Wed, 16 Aug 2017 02:02:47 -0400
+Subject: [PATCH 2/5] gpgme/lang/python: gpg-error-config should not be used.
 
 gpg-error-config was modified by OE to always return an error.  So we want
 to find an alternative way to retrieve whatever it is we need.  It turns
@@ -9,10 +12,17 @@ Upstream-Status: Inappropriate [changes are specific to OE]
 
 Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
 
-Index: gpgme-1.8.0/lang/python/setup.py.in
-===================================================================
---- gpgme-1.8.0.orig/lang/python/setup.py.in
-+++ gpgme-1.8.0/lang/python/setup.py.in
+Rebase to 1.9.0
+
+Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
+---
+ lang/python/setup.py.in | 15 ++-------------
+ 1 file changed, 2 insertions(+), 13 deletions(-)
+
+diff --git a/lang/python/setup.py.in b/lang/python/setup.py.in
+index bf4efa3..7c34487 100755
+--- a/lang/python/setup.py.in
++++ b/lang/python/setup.py.in
 @@ -24,7 +24,6 @@ import glob
  import subprocess
  
@@ -35,7 +45,7 @@ Index: gpgme-1.8.0/lang/python/setup.py.in
      subprocess.check_call(gpgme_config + ['--version'],
                            stdout=devnull)
  except:
-@@ -81,12 +73,9 @@ if not (major > 1 or (major == 1 and min
+@@ -81,12 +73,9 @@ if not (major > 1 or (major == 1 and minor >= 7)):
  if not gpgme_h:
      gpgme_h = os.path.join(getconfig("prefix")[0], "include", "gpgme.h")
  
@@ -50,3 +60,6 @@ Index: gpgme-1.8.0/lang/python/setup.py.in
  
  print("Building python gpg module using {} and {}.".format(gpgme_h, gpg_error_h))
  
+-- 
+2.8.1
+

@@ -1,26 +1,30 @@
-From 4d714c097e497b63d2e8b22a834c671045e215e9 Mon Sep 17 00:00:00 2001
+From 62332eec752dd790f4dd071dfb0dbe86be377203 Mon Sep 17 00:00:00 2001
 From: Alexander Kanavin <alex.kanavin@gmail.com>
-Date: Thu, 9 Mar 2017 21:34:55 +0200
-Subject: [PATCH] Correctly install python modules
+Date: Wed, 16 Aug 2017 02:05:34 -0400
+Subject: [PATCH 3/5] Correctly install python modules
 
 Upstream-Status: Inappropriate [oe-core specific]
 Signed-off-by: Alexander Kanavin <alex.kanavin@gmail.com>
+
+Rebase to 1.9.0
+
+Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
 ---
  lang/python/Makefile.am | 1 +
  1 file changed, 1 insertion(+)
 
 diff --git a/lang/python/Makefile.am b/lang/python/Makefile.am
-index e32fd12..5ecf6fb 100644
+index d91ead9..67f7cdc 100644
 --- a/lang/python/Makefile.am
 +++ b/lang/python/Makefile.am
-@@ -102,6 +102,7 @@ install-exec-local:
- 	for PYTHON in $(PYTHONS); do \
+@@ -106,6 +106,7 @@ install-exec-local:
+ 	  cd python$${VERSION}-gpg ; \
  	  $$PYTHON setup.py install \
  	  --prefix $(DESTDIR)$(prefix) \
-+          --install-lib=$(DESTDIR)${pythondir} \
++	  --install-lib=$(DESTDIR)${pythondir} \
  	  --record files.txt \
  	  --verbose ; \
- 	  cat files.txt >> install_files.txt ; \
+ 	  cat files.txt >> ../install_files.txt ; \
 -- 
-2.11.0
+2.8.1
 
