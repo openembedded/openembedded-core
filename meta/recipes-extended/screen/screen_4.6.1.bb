@@ -16,7 +16,6 @@ DEPENDS = "ncurses \
 RDEPENDS_${PN} = "base-files"
 
 SRC_URI = "${GNU_MIRROR}/screen/screen-${PV}.tar.gz \
-           file://fix-parallel-make.patch \
            ${@bb.utils.contains('DISTRO_FEATURES', 'pam', 'file://screen.pam', '', d)} \
            file://Remove-redundant-compiler-sanity-checks.patch \
            file://Provide-cross-compile-alternatives-for-AC_TRY_RUN.patch \
@@ -26,8 +25,8 @@ SRC_URI = "${GNU_MIRROR}/screen/screen-${PV}.tar.gz \
            file://0001-fix-for-multijob-build.patch \
           "
 
-SRC_URI[md5sum] = "af60f716c4ec134712b923ef6cd93848"
-SRC_URI[sha256sum] = "9433706b653e941cc4c745f28e252e57be2a141eded923e61cc2c4a09768fed4"
+SRC_URI[md5sum] = "132c893aabfaf2020074790215c8cacd"
+SRC_URI[sha256sum] = "aba9af66cb626155d6abce4703f45cce0e30a5114a368bd6387c966cbbbb7c64"
 
 inherit autotools texinfo
 
