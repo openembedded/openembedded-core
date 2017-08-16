@@ -1,4 +1,7 @@
-Disable the test to convert euc-jp
+From bb7ed11950101798aae82f7fda8b3dcb05f755c5 Mon Sep 17 00:00:00 2001
+From: Hongxu Jia <hongxu.jia@windriver.com>
+Date: Tue, 15 Aug 2017 17:24:06 +0800
+Subject: [PATCH 4/7] Disable the test to convert euc-jp
 
 Remove the test "Test against HP-UX 11.11 bug:
 No converter from EUC-JP to UTF-8 is provided"
@@ -9,6 +12,9 @@ iconv support and will cause guild-native building fail.
 Upstream-Status: Inappropriate [OE specific]
 
 Signed-off-by: Roy Li <rongqing.li@windriver.com>
+
+Rebase to 0.170
+Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
 ---
  m4/iconv.m4 | 2 ++
  1 file changed, 2 insertions(+)
@@ -34,5 +40,5 @@ index a503646..299f1eb 100644
  }]])],
          [am_cv_func_iconv_works=yes],
 -- 
-2.0.1
+1.8.3.1
 
