@@ -224,7 +224,7 @@ def package_compare_impl(pkgtype, d):
                     shutil.copyfile(srcpath, destpath)
                 f.write('%s\n' % destpath)
     else:
-        bb.plain('Not copying packages for recipe %s' % pn)
+        bb.note('Not copying packages for recipe %s' % pn)
 
 do_cleansstate[postfuncs] += "pfs_cleanpkgs"
 python pfs_cleanpkgs () {
