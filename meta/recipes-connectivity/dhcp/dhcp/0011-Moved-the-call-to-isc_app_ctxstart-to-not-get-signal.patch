@@ -1,8 +1,8 @@
-From e8c30bac53f8baeb80f87b445f42259cc8984fb5 Mon Sep 17 00:00:00 2001
+From 37725f3e22edb50e0ca2d1fff971321a5a4d5112 Mon Sep 17 00:00:00 2001
 From: Hongxu Jia <hongxu.jia@windriver.com>
 Date: Wed, 12 Jul 2017 03:05:13 -0400
-Subject: [PATCH] Moved the call to isc_app_ctxstart() to not get signal block
- by all threads
+Subject: [PATCH 11/11] Moved the call to isc_app_ctxstart() to not get signal
+ block by all threads
 
 Signed-off-by: Francis Dupont <fdupont@isc.org>
 
@@ -34,7 +34,7 @@ Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
  1 file changed, 15 insertions(+), 10 deletions(-)
 
 diff --git a/omapip/isclib.c b/omapip/isclib.c
-index 13f0d3e..4af04b6 100644
+index ce86490..6a04345 100644
 --- a/omapip/isclib.c
 +++ b/omapip/isclib.c
 @@ -185,16 +185,6 @@ dhcp_context_create(int flags,
@@ -77,5 +77,5 @@ index 13f0d3e..4af04b6 100644
  
  #if defined (NSUPDATE)
 -- 
-2.8.1
+1.8.3.1
 

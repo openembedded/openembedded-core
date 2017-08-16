@@ -1,9 +1,28 @@
+From 76c370a929e5ab5dbc81c2fbcf4e50f4fbc08ce9 Mon Sep 17 00:00:00 2001
+From: Kai Kang <kai.kang@windriver.com>
+Date: Tue, 15 Aug 2017 15:53:37 +0800
+Subject: [PATCH 10/11] build shared libs
+
 Upstream-Status: Pending
 
 Port patches from Fedora to build shared libs rather than static libs.
 
 Signed-off-by: Kai Kang <kai.kang@windriver.com>
+
+Rebase to 4.3.6
+
+Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
 ---
+ client/Makefile.am       |  4 ++--
+ common/tests/Makefile.am | 13 +++++--------
+ configure.ac             | 12 ++----------
+ dhcpctl/Makefile.am      | 14 ++++++--------
+ omapip/Makefile.am       |  7 +++----
+ relay/Makefile.am        |  5 ++---
+ server/Makefile.am       |  7 +++----
+ server/tests/Makefile.am |  7 +++----
+ 8 files changed, 26 insertions(+), 43 deletions(-)
+
 diff --git a/client/Makefile.am b/client/Makefile.am
 index 84d8131..e776bf0 100644
 --- a/client/Makefile.am
@@ -19,7 +38,7 @@ index 84d8131..e776bf0 100644
  man_MANS = dhclient.8 dhclient-script.8 dhclient.conf.5 dhclient.leases.5
  EXTRA_DIST = $(man_MANS)
 diff --git a/common/tests/Makefile.am b/common/tests/Makefile.am
-index 05cd9c1..ab7a5a3 100644
+index 2f98d22..8745e88 100644
 --- a/common/tests/Makefile.am
 +++ b/common/tests/Makefile.am
 @@ -15,26 +15,23 @@ ATF_TESTS += alloc_unittest dns_unittest misc_unittest ns_name_unittest
@@ -53,9 +72,9 @@ index 05cd9c1..ab7a5a3 100644
 +	-ldns -lisccfg -lisc
  
  check: $(ATF_TESTS)
- 	-cp -n $(top_srcdir)/common/tests/Atffile Atffile
+ 	@if test $(top_srcdir) != ${top_builddir}; then \
 diff --git a/configure.ac b/configure.ac
-index 1684df1..dadc3f1 100644
+index 8e9f509..bfe988a 100644
 --- a/configure.ac
 +++ b/configure.ac
 @@ -47,16 +47,8 @@ AM_CONDITIONAL(CROSS_COMPILING, test "$cross_compiling" = "yes")
@@ -167,7 +186,7 @@ index b5d8c2d..d7f876d 100644
  man_MANS = dhcpd.8 dhcpd.conf.5 dhcpd.leases.5
  EXTRA_DIST = $(man_MANS)
 diff --git a/server/tests/Makefile.am b/server/tests/Makefile.am
-index 2892309..056978b 100644
+index 9821081..de95872 100644
 --- a/server/tests/Makefile.am
 +++ b/server/tests/Makefile.am
 @@ -19,10 +19,9 @@ DHCPSRC = ../dhcp.c ../bootp.c ../confpars.c ../db.c ../class.c      \
@@ -184,3 +203,6 @@ index 2892309..056978b 100644
  
  ATF_TESTS =
  if HAVE_ATF
+-- 
+1.8.3.1
+

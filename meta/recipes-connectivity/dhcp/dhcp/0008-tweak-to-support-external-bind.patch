@@ -1,7 +1,7 @@
-From ad7bb401f47714fc30c408853b796ce0f1c7e65f Mon Sep 17 00:00:00 2001
+From 92875f5cc44914515e50c11c503a09cec90497b2 Mon Sep 17 00:00:00 2001
 From: Hongxu Jia <hongxu.jia@windriver.com>
 Date: Sat, 11 Jun 2016 22:51:44 -0400
-Subject: [PATCH] tweak to support external bind
+Subject: [PATCH 08/11] tweak to support external bind
 
 Tweak the external bind to oe-core's sysroot rather than
 external bind source build.
@@ -34,7 +34,7 @@ index 4730bb3..84d8131 100644
  AM_CPPFLAGS = -DCLIENT_PATH='"PATH=$(sbindir):/sbin:/bin:/usr/sbin:/usr/bin"' \
  	      -DLOCALSTATEDIR='"$(localstatedir)"' -I$(top_srcdir)/includes
 diff --git a/client/tests/Makefile.am b/client/tests/Makefile.am
-index da69ea9..fe35e57 100644
+index 5031d0c..a8dfd26 100644
 --- a/client/tests/Makefile.am
 +++ b/client/tests/Makefile.am
 @@ -1,6 +1,6 @@
@@ -46,7 +46,7 @@ index da69ea9..fe35e57 100644
  AM_CPPFLAGS = $(ATF_CFLAGS) -DUNIT_TEST -I$(top_srcdir)/includes
  AM_CPPFLAGS += -I@BINDDIR@/include -I$(top_srcdir)
 diff --git a/common/tests/Makefile.am b/common/tests/Makefile.am
-index f8d6b0e..05cd9c1 100644
+index f6a43e4..2f98d22 100644
 --- a/common/tests/Makefile.am
 +++ b/common/tests/Makefile.am
 @@ -1,6 +1,6 @@
@@ -101,7 +101,7 @@ index 3990b9c..b5d8c2d 100644
  AM_CPPFLAGS = -I$(top_srcdir) -DLOCALSTATEDIR='"@localstatedir@"' -I$(top_srcdir)/includes
  
 diff --git a/server/tests/Makefile.am b/server/tests/Makefile.am
-index 65a9f74..2892309 100644
+index a87c5e7..9821081 100644
 --- a/server/tests/Makefile.am
 +++ b/server/tests/Makefile.am
 @@ -1,6 +1,6 @@
@@ -113,5 +113,5 @@ index 65a9f74..2892309 100644
  AM_CPPFLAGS = $(ATF_CFLAGS) -DUNIT_TEST -I$(top_srcdir)/includes
  AM_CPPFLAGS += -I@BINDDIR@/include -I$(top_srcdir)
 -- 
-2.8.1
+1.8.3.1
 
