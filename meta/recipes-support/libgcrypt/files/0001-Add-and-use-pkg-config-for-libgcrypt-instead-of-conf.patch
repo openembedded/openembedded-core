@@ -1,10 +1,16 @@
-Add and use pkg-config for libgcrypt instead of -config scripts.
+From 72b9e9040d58c15f0302bd8abda28179f04e1c5f Mon Sep 17 00:00:00 2001
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+Date: Wed, 16 Aug 2017 10:43:18 +0800
+Subject: [PATCH 1/4] Add and use pkg-config for libgcrypt instead of -config
+ scripts.
 
-Upstream-Status: Denied [upstream have indicated they don't want a pkg-config dependency]
+Upstream-Status: Denied [upstream have indicated they don't want a
+pkg-config dependency]
 
 RP 2014/5/22
 
-Rebase to 1.7.0
+Rebase to 1.8.0
+
 Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
 ---
  configure.ac        |  1 +
@@ -14,10 +20,10 @@ Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
  create mode 100644 src/libgcrypt.pc.in
 
 diff --git a/configure.ac b/configure.ac
-index f683e21..566e1c8 100644
+index bbe8104..3d2de73 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -2314,6 +2314,7 @@ random/Makefile
+@@ -2607,6 +2607,7 @@ random/Makefile
  doc/Makefile
  src/Makefile
  src/gcrypt.h
@@ -173,5 +179,5 @@ index 0000000..2fc8f53
 +Libs.private: -L${libdir} -lgpg-error
 +Cflags: -I${includedir} 
 -- 
-2.8.1
+1.8.3.1
 
