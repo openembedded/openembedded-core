@@ -146,7 +146,7 @@ do_install_ptest() {
         sed -i 's/$target{shared_extension_simple}/".so.ptest"/' ${D}${PTEST_PATH}/test/recipes/90-test_shlibload.t
 }
 
-RDEPENDS_${PN}-ptest += "perl-module-file-spec-functions"
+RDEPENDS_${PN}-ptest += "perl-module-file-spec-functions bash python"
 
 FILES_${PN} =+ " ${libdir}/ssl-1.1/*"
 
