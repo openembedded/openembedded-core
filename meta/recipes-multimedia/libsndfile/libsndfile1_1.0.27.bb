@@ -8,6 +8,7 @@ LICENSE = "LGPLv2.1"
 SRC_URI = "http://www.mega-nerd.com/libsndfile/files/libsndfile-${PV}.tar.gz \
            file://CVE-2017-6892.patch \
            file://CVE-2017-8361-8365.patch \
+           file://CVE-2017-8362.patch \
           "
 
 SRC_URI[md5sum] = "fd1d97c6077f03b5d984d7956ffedb7a"
