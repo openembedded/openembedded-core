@@ -27,7 +27,7 @@ class LocalSigner(object):
             raise bb.build.FuncFailed('Failed to export gpg public key (%s): %s' %
                                       (keyid, output))
 
-    def sign_rpms(self, files, keyid, passphrase, digest, fsk=None, fsk_password=None):
+    def sign_rpms(self, files, keyid, passphrase, digest, sign_chunk, fsk=None, fsk_password=None):
         """Sign RPM files"""
 
         cmd = self.rpm_bin + " --addsign --define '_gpg_name %s'  " % keyid
@@ -45,9 +45,9 @@ class LocalSigner(object):
             if fsk_password:
                 cmd += "--define '_file_signing_key_password %s' " % fsk_password
 
-        # Sign packages
-        for f in files:
-            status, output = oe.utils.getstatusoutput(cmd + ' ' + f)
+        # Sign in chunks
+        for i in range(0, len(files), sign_chunk):
+            status, output = oe.utils.getstatusoutput(cmd + ' '.join(files[i:i+sign_chunk]))
             if status:
                 raise bb.build.FuncFailed("Failed to sign RPM packages: %s" % output)
 

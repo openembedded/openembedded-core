@@ -19,9 +19,12 @@
 # GPG_BIN
 #           Optional variable for specifying the gpg binary/wrapper to use for
 #           signing.
+# RPM_GPG_SIGN_CHUNK
+#           Optional variable indicating the number of packages used per gpg
+#           invocation
 # GPG_PATH
 #           Optional variable for specifying the gnupg "home" directory:
-#
+
 inherit sanity
 
 RPM_SIGN_PACKAGES='1'
@@ -29,6 +32,7 @@ RPM_SIGN_FILES ?= '0'
 RPM_GPG_BACKEND ?= 'local'
 # SHA-256 is used by default
 RPM_FILE_CHECKSUM_DIGEST ?= '8'
+RPM_GPG_SIGN_CHUNK ?= "${BB_NUMBER_THREADS}"
 
 
 python () {
@@ -56,6 +60,7 @@ python sign_rpm () {
                      d.getVar('RPM_GPG_NAME'),
                      d.getVar('RPM_GPG_PASSPHRASE'),
                      d.getVar('RPM_FILE_CHECKSUM_DIGEST'),
+                     int(d.getVar('RPM_GPG_SIGN_CHUNK')),
                      d.getVar('RPM_FSK_PATH'),
                      d.getVar('RPM_FSK_PASSWORD'))
 }
