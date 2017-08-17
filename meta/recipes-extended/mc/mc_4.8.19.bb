@@ -8,6 +8,7 @@ RDEPENDS_${PN} = "ncurses-terminfo"
 
 SRC_URI = "http://www.midnight-commander.org/downloads/${BPN}-${PV}.tar.bz2 \
            file://0001-mc-replace-perl-w-with-use-warnings.patch \
+           file://0002-Ticket-3697-tty_init-unify-curses-initialization.patch \
            "
 SRC_URI[md5sum] = "ef423f5b6f80a1a5a5fc53b8324cab70"
 SRC_URI[sha256sum] = "d0dddfae7149fac903f74ef55cfcb2a198e0f7004346c7bded43669d61ba436f"
