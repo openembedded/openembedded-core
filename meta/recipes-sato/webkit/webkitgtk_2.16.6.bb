@@ -98,7 +98,7 @@ SECURITY_CFLAGS_append_aarch64 = " -fPIE"
 
 FILES_${PN} += "${libdir}/webkit2gtk-4.0/injected-bundle/libwebkit2gtkinjectedbundle.so"
 
-RRECOMMENDS_${PN} += "ca-certificates"
+RRECOMMENDS_${PN} += "ca-certificates shared-mime-info"
 
 # http://errors.yoctoproject.org/Errors/Details/20370/
 ARM_INSTRUCTION_SET_armv4 = "arm"
