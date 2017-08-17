@@ -12,7 +12,7 @@ ISOLINUX=""
 ROOT_DISK=""
 shelltimeout=30
 
-	if [ -z $bootparam_root ]; then
+	if [ -z $bootparam_root -o $bootparam_root = "/dev/ram0" ]; then
 		echo "Waiting for removable media..."
 		C=0
 		while true
