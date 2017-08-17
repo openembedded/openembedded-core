@@ -300,7 +300,8 @@ python write_image_test_data() {
     searchString = "%s/"%(d.getVar("TOPDIR")).replace("//","/")
     export2json(d, testdata,searchString=searchString,replaceString="")
 
-    if os.path.lexists(testdata_link):
-       os.remove(testdata_link)
-    os.symlink(os.path.basename(testdata), testdata_link)
+    if testdata_link != testdata:
+        if os.path.lexists(testdata_link):
+           os.remove(testdata_link)
+        os.symlink(os.path.basename(testdata), testdata_link)
 }
