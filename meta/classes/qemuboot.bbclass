@@ -114,7 +114,8 @@ python do_write_qemuboot_conf() {
     with open(qemuboot, 'w') as f:
         cf.write(f)
 
-    if os.path.lexists(qemuboot_link):
-       os.remove(qemuboot_link)
-    os.symlink(os.path.basename(qemuboot), qemuboot_link)
+    if qemuboot_link != qemuboot:
+        if os.path.lexists(qemuboot_link):
+           os.remove(qemuboot_link)
+        os.symlink(os.path.basename(qemuboot), qemuboot_link)
 }
