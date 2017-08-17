@@ -71,6 +71,11 @@ class BuildSystem(object):
             layerdestpath = destdir
             if corebase == os.path.dirname(layer):
                 layerdestpath += '/' + os.path.basename(corebase)
+            else:
+                layer_relative = os.path.basename(corebase) + '/' + os.path.relpath(layer, corebase)
+                if os.path.dirname(layer_relative) != layernewname:
+                    layerdestpath += '/' + os.path.dirname(layer_relative)
+
             layerdestpath += '/' + layernewname
 
             layer_relative = os.path.relpath(layerdestpath,
