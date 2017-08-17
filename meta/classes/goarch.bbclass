@@ -14,6 +14,7 @@ GO_BUILD_BINDIR = "${@['bin/${HOST_GOTUPLE}','bin'][d.getVar('BUILD_GOTUPLE',Tru
 # define here because everybody inherits this class
 #
 COMPATIBLE_HOST_linux-gnux32 = "null"
+COMPATIBLE_HOST_linux-muslx32 = "null"
 COMPATIBLE_HOST_powerpc = "null"
 COMPATIBLE_HOST_powerpc64 = "null"
 
