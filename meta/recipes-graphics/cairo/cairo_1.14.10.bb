@@ -4,6 +4,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=e73e999e0c72b5ac9012424fa157ad77"
 
 SRC_URI = "http://cairographics.org/releases/cairo-${PV}.tar.xz \
            file://cairo-get_bitmap_surface-bsc1036789-CVE-2017-7475.diff \ 
+           file://0001-cairo-Fix-CVE-2017-9814.patch \
           "
 
 SRC_URI[md5sum] = "146f5f4d0b4439fc3792fd3452b7b12a"
