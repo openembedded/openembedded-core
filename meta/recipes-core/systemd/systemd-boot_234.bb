@@ -1,12 +1,14 @@
-require recipes-core/systemd/systemd.inc
+require systemd.inc
+FILESEXTRAPATHS =. "${FILE_DIRNAME}/systemd:"
 
 DEPENDS = "intltool-native libcap util-linux gnu-efi gperf-native"
 
-SRC_URI += "file://0001-use-lnr-wrapper-instead-of-looking-for-relative-opti.patch"
+SRC_URI += "file://0007-use-lnr-wrapper-instead-of-looking-for-relative-opti.patch"
 
 inherit autotools pkgconfig gettext
 inherit deploy
 
+export EFI_CC="${CC}"
 # Man pages are packaged through the main systemd recipe
 EXTRA_OECONF = " --enable-gnuefi \
                  --with-efi-includedir=${STAGING_INCDIR} \
