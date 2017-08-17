@@ -156,7 +156,10 @@ ssh_allow_empty_password () {
 	fi
 
 	if [ -d ${IMAGE_ROOTFS}${sysconfdir}/pam.d ] ; then
-		sed -i 's/nullok_secure/nullok/' ${IMAGE_ROOTFS}${sysconfdir}/pam.d/*
+		for f in `find ${IMAGE_ROOTFS}${sysconfdir}/pam.d/* -type f -exec test -e {} \; -print`
+		do
+			sed -i 's/nullok_secure/nullok/' $f
+		done
 	fi
 }
 
