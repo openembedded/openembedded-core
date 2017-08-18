@@ -150,13 +150,15 @@ do_install_append () {
 	install -m 0644 ${WORKDIR}/macros.prelink ${D}${sysconfdir}/rpm/macros.prelink
 }
 
-# If we're using image-prelink, we want to skip this on the host side
-# but still do it if the package is installed on the target...
+# If we ae doing a cross install, we want to avoid prelinking.
+# Prelinking during a cross install should be handled by the image-prelink
+# bbclass.  If the user desires this to run on the target at first boot
+# they will need to create a custom boot script.
 pkg_postinst_prelink() {
 #!/bin/sh
 
 if [ "x$D" != "x" ]; then
-  ${@bb.utils.contains('USER_CLASSES', 'image-prelink', 'exit 0', 'exit 1', d)}
+  exit 0
 fi
 
 prelink -a
