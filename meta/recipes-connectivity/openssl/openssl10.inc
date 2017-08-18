@@ -11,6 +11,8 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=f9a8f968107345e0b75aa8c2ecaa7ec8"
 DEPENDS = "makedepend-native hostperl-runtime-native"
 DEPENDS_append_class-target = " openssl-native"
 
+PROVIDES += "openssl10"
+
 SRC_URI = "http://www.openssl.org/source/openssl-${PV}.tar.gz \
           "
 S = "${WORKDIR}/openssl-${PV}"
@@ -265,14 +267,3 @@ do_install_append_class-native() {
 
 BBCLASSEXTEND = "native nativesdk"
 
-PACKAGE_PREPROCESS_FUNCS += "openssl_package_preprocess"
-
-openssl_package_preprocess () {
-        for file in `find ${PKGD} -name *.h -o -name *.pc -o -name *.so`; do
-                rm $file
-        done
-        rm ${PKGD}/usr/bin/openssl
-        rm ${PKGD}/usr/bin/c_rehash
-        rmdir ${PKGD}/usr/bin
-
-}
