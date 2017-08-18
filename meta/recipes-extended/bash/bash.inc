@@ -28,6 +28,8 @@ RDEPENDS_${PN}-ptest += "make"
 USERADD_PACKAGES = "${PN}-ptest"
 USERADD_PARAM_${PN}-ptest = "--create-home --user-group test"
 
+CACHED_CONFIGUREVARS += "headersdir=${includedir}/${PN}"
+
 do_configure_prepend () {
 	if [ ! -e ${S}/acinclude.m4 ]; then
 		cat ${S}/aclocal.m4 > ${S}/acinclude.m4
@@ -69,5 +71,9 @@ pkg_postrm_${PN} () {
 PACKAGES += "${PN}-bashbug"
 FILES_${PN} = "${bindir}/bash ${base_bindir}/bash.bash"
 FILES_${PN}-bashbug = "${bindir}/bashbug"
+
+PACKAGE_BEFORE_PN += "${PN}-loadable"
+RDEPENDS_${PN}-loadable += "${PN}"
+FILES_${PN}-loadable += "${libdir}/bash/*"
 
 RPROVIDES_${PN} += "${@bb.utils.contains('DISTRO_FEATURES', 'usrmerge', '/bin/sh /bin/bash', '', d)}"
