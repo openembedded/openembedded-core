@@ -56,8 +56,8 @@ OS_NAME = "Linux"
 inherit autotools systemd
 
 SYSTEMD_SERVICE_${PN} = "\
-    ${PN}.service \
-    ${PN}.timer \
+    ${BPN}.service \
+    ${BPN}.timer \
 "
 
 LOGROTATE_SYSTEMD_TIMER_BASIS ?= "daily"
