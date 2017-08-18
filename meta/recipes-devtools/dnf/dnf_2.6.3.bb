@@ -10,6 +10,7 @@ SRC_URI = "git://github.com/rpm-software-management/dnf.git \
            file://0001-Do-not-prepend-installroot-to-logdir.patch \
            file://0001-Do-not-hardcode-etc-and-systemd-unit-directories.patch \
            file://0001-Corretly-install-tmpfiles.d-configuration.patch \
+           file://0001-Check-conf.releasever-instead-of-releasever.patch \
            "
 
 SRCREV = "be2585183ec4485ee4d5e121f242d8669296f065"
