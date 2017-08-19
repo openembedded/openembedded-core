@@ -241,6 +241,8 @@ PACKAGES =+ "${PN}-ralink-license ${PN}-ralink \
              ${PN}-iwlwifi-7265 \
              ${PN}-iwlwifi-7265d ${PN}-iwlwifi-8265 \
              ${PN}-iwlwifi-misc \
+             ${PN}-ibt-license ${PN}-ibt ${PN}-ibt-misc \
+             ${PN}-ibt-11-5 ${PN}-ibt-12-16 ${PN}-ibt-hw-37-7 ${PN}-ibt-hw-37-8 \
              ${PN}-i915-license ${PN}-i915 \
              ${PN}-adsp-sst-license ${PN}-adsp-sst \
              ${PN}-bnx2-mips \
@@ -618,6 +620,30 @@ RPROVIDES_${PN}-iwlwifi-7260 = "${PN}-iwlwifi-7260-7 ${PN}-iwlwifi-7260-8 ${PN}-
 RREPLACES_${PN}-iwlwifi-7260 = "${PN}-iwlwifi-7260-7 ${PN}-iwlwifi-7260-8 ${PN}-iwlwifi-7260-9"
 RCONFLICTS_${PN}-iwlwifi-7260 = "${PN}-iwlwifi-7260-7 ${PN}-iwlwifi-7260-8 ${PN}-iwlwifi-7260-9"
 
+# For ibt
+LICENSE_${PN}-ibt-license = "Firmware-ibt_firmware"
+LICENSE_${PN}-ibt-hw-37-7 = "Firmware-ibt_firmware"
+LICENSE_${PN}-ibt-hw-37-8 = "Firmware-ibt_firmware"
+LICENSE_${PN}-ibt-11-5    = "Firmware-ibt_firmware"
+LICENSE_${PN}-ibt-12-16   = "Firmware-ibt_firmware"
+LICENSE_${PN}-ibt-misc    = "Firmware-ibt_firmware"
+
+FILES_${PN}-ibt-license = "${nonarch_base_libdir}/firmware/LICENCE.ibt_firmware"
+FILES_${PN}-ibt-hw-37-7 = "${nonarch_base_libdir}/firmware/intel/ibt-hw-37.7*.bseq"
+FILES_${PN}-ibt-hw-37-8 = "${nonarch_base_libdir}/firmware/intel/ibt-hw-37.8*.bseq"
+FILES_${PN}-ibt-11-5    = "${nonarch_base_libdir}/firmware/intel/ibt-11-5.sfi /lib/firmware/intel/ibt-11-5.ddc"
+FILES_${PN}-ibt-12-16   = "${nonarch_base_libdir}/firmware/intel/ibt-12-16.sfi /lib/firmware/intel/ibt-12-16.ddc"
+FILES_${PN}-ibt-misc    = "${nonarch_base_libdir}/firmware/ibt-*"
+
+RDEPENDS_${PN}-ibt-hw-37-7 = "${PN}-ibt-license"
+RDEPENDS_${PN}-ibt-hw-37.8 = "${PN}-ibt-license"
+RDEPENDS_${PN}-ibt-11-5    = "${PN}-ibt-license"
+RDEPENDS_${PN}-ibt-12-16   = "${PN}-ibt-license"
+RDEPENDS_${PN}-ibt-misc    = "${PN}-ibt-license"
+
+ALLOW_EMPTY_${PN}-ibt= "1"
+ALLOW_EMPTY_${PN}-ibt-misc = "1"
+
 LICENSE_${PN}-i915       = "Firmware-i915"
 LICENSE_${PN}-i915-license = "Firmware-i915"
 FILES_${PN}-i915-license = "${nonarch_base_libdir}/firmware/LICENSE.i915"
@@ -685,12 +711,16 @@ RDEPENDS_${PN} += "${PN}-whence-license"
 
 # Make linux-firmware depend on all of the split-out packages.
 # Make linux-firmware-iwlwifi depend on all of the split-out iwlwifi packages.
+# Make linux-firmware-ibt depend on all of the split-out ibt packages.
 python populate_packages_prepend () {
     firmware_pkgs = oe.utils.packages_filter_out_system(d)
     d.appendVar('RDEPENDS_linux-firmware', ' ' + ' '.join(firmware_pkgs))
 
     iwlwifi_pkgs = filter(lambda x: x.find('-iwlwifi-') != -1, firmware_pkgs)
     d.appendVar('RDEPENDS_linux-firmware-iwlwifi', ' ' + ' '.join(iwlwifi_pkgs))
+
+    ibt_pkgs = filter(lambda x: x.find('-ibt-') != -1, firmware_pkgs)
+    d.appendVar('RDEPENDS_linux-firmware-ibt', ' ' + ' '.join(ibt_pkgs))
 }
 
 # Netronome binaries has ELF headers and therefore triggers an arch-specific error.
