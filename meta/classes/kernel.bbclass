@@ -259,12 +259,9 @@ get_cc_option () {
 		# Check if KERNEL_CC supports the option "file-prefix-map".
 		# This option allows us to build images with __FILE__ values that do not
 		# contain the host build path.
-		cc_option_supported=`${KERNEL_CC} -Q --help=joined | grep ffile-prefix-map`
-		cc_extra=""
-		if [ $cc_option_supported = "-ffile-prefix-map=<old=new>" ]; then
-			cc_extra=-ffile-prefix-map=${S}=/kernel-source/
+		if ${KERNEL_CC} -Q --help=joined | grep -q "\-ffile-prefix-map=<old=new>"; then
+			echo "-ffile-prefix-map=${S}=/kernel-source/"
 		fi
-		echo $cc_extra
 }
 
 kernel_do_compile() {
