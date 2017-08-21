@@ -261,3 +261,39 @@ def get_bbclassextend_targets(recipefile, pn):
                 targets.append('%s-%s' % (pn, variant))
     return targets
 
+def replace_from_file(path, old, new):
+    """Replace strings on a file"""
+
+    def read_file(path):
+        data = None
+        with open(path) as f:
+            data = f.read()
+        return data
+
+    def write_file(path, data):
+        if data is None:
+            return
+        wdata = data.rstrip() + "\n"
+        with open(path, "w") as f:
+            f.write(wdata)
+
+    # In case old is None, return immediately
+    if old is None:
+        return
+    try:
+        rdata = read_file(path)
+    except IOError as e:
+        # if file does not exit, just quit, otherwise raise an exception
+        if e.errno == errno.ENOENT:
+            return
+        else:
+            raise
+
+    old_contents = rdata.splitlines()
+    new_contents = []
+    for old_content in old_contents:
+        try:
+            new_contents.append(old_content.replace(old, new))
+        except ValueError:
+            pass
+    write_file(path, "\n".join(new_contents))
