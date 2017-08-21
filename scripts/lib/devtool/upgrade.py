@@ -180,7 +180,7 @@ def _get_uri(rd):
             srcuri = rev_re.sub('', srcuri)
     return srcuri, srcrev
 
-def _extract_new_source(newpv, srctree, no_patch, srcrev, branch, keep_temp, tinfoil, rd):
+def _extract_new_source(newpv, srctree, no_patch, srcrev, srcbranch, branch, keep_temp, tinfoil, rd):
     """Extract sources of a recipe with a new version"""
 
     def __run(cmd):
@@ -202,6 +202,23 @@ def _extract_new_source(newpv, srctree, no_patch, srcrev, branch, keep_temp, tin
         __run('git tag -f devtool-base-new')
         md5 = None
         sha256 = None
+        if not srcbranch:
+            check_branch, check_branch_err = __run('git branch -r --contains %s' % srcrev)
+            get_branch = [x.strip() for x in check_branch.splitlines()]
+            # Remove HEAD reference point and drop remote prefix
+            get_branch = [x.split('/', 1)[1] for x in get_branch if not x.startswith('origin/HEAD')]
+            if 'master' in get_branch:
+                # If it is master, we do not need to append 'branch=master' as this is default.
+                # Even with the case where get_branch has multiple objects, if 'master' is one
+                # of them, we should default take from 'master'
+                srcbranch = ''
+            elif len(get_branch) == 1:
+                # If 'master' isn't in get_branch and get_branch contains only ONE object, then store result into 'srcbranch'
+                srcbranch = get_branch[0]
+            else:
+                # If get_branch contains more than one objects, then display error and exit.
+                mbrch = '\n  ' + '\n  '.join(get_branch)
+                raise DevtoolError('Revision %s was found on multiple branches: %s\nPlease provide the correct branch in the devtool command with "--srcbranch" or "-B" option.' % (srcrev, mbrch))
     else:
         __run('git checkout devtool-base -b devtool-%s' % newpv)
 
@@ -275,7 +292,7 @@ def _extract_new_source(newpv, srctree, no_patch, srcrev, branch, keep_temp, tin
         else:
             shutil.rmtree(tmpsrctree)
 
-    return (rev, md5, sha256)
+    return (rev, md5, sha256, srcbranch)
 
 def _create_new_recipe(newpv, md5, sha256, srcrev, srcbranch, workspace, tinfoil, rd):
     """Creates the new recipe under workspace"""
@@ -374,10 +391,10 @@ def upgrade(args, config, basepath, workspace):
         rf = None
         try:
             rev1 = standard._extract_source(srctree, False, 'devtool-orig', False, rd, tinfoil)
-            rev2, md5, sha256 = _extract_new_source(args.version, srctree, args.no_patch,
-                                                    args.srcrev, args.branch, args.keep_temp,
+            rev2, md5, sha256, srcbranch = _extract_new_source(args.version, srctree, args.no_patch,
+                                                    args.srcrev, args.srcbranch, args.branch, args.keep_temp,
                                                     tinfoil, rd)
-            rf, copied = _create_new_recipe(args.version, md5, sha256, args.srcrev, args.srcbranch, config.workspace_path, tinfoil, rd)
+            rf, copied = _create_new_recipe(args.version, md5, sha256, args.srcrev, srcbranch, config.workspace_path, tinfoil, rd)
         except bb.process.CmdError as e:
             _upgrade_error(e, rf, srctree)
         except DevtoolError as e:
