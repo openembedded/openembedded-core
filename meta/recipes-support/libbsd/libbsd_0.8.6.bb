@@ -42,8 +42,8 @@ SRC_URI_append_libc-musl  = " \
     file://0002-Remove-funopen.patch \
 "
 
-SRC_URI[md5sum] = "f1a0dc285f5d21ea40ef5bfc9b647346"
-SRC_URI[sha256sum] = "7647d024f41389305272c263da933a6f2a978213c1801592f47e68d83ac05b28"
+SRC_URI[md5sum] = "4ab7bec639af17d0aacb50222b479110"
+SRC_URI[sha256sum] = "467fbf9df1f49af11f7f686691057c8c0a7613ae5a870577bef9155de39f9687"
 
 inherit autotools pkgconfig
 
