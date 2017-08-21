@@ -102,7 +102,7 @@ class FetchUrlFailure(Exception):
     def __str__(self):
         return "Failed to fetch URL %s" % self.url
 
-def fetch_url(tinfoil, srcuri, srcrev, destdir, logger, preserve_tmp=False):
+def fetch_url(tinfoil, srcuri, srcrev, destdir, logger, preserve_tmp=False, mirrors=False):
     """
     Fetch the specified URL using normal do_fetch and do_unpack tasks, i.e.
     any dependencies that need to be satisfied in order to support the fetch
@@ -150,6 +150,13 @@ def fetch_url(tinfoil, srcuri, srcrev, destdir, logger, preserve_tmp=False):
                 f.write('WORKDIR = "%s"\n' % tmpworkdir)
                 # Set S out of the way so it doesn't get created under the workdir
                 f.write('S = "%s"\n' % os.path.join(tmpdir, 'emptysrc'))
+                if not mirrors:
+                    # We do not need PREMIRRORS since we are almost certainly
+                    # fetching new source rather than something that has already
+                    # been fetched. Hence, we disable them by default.
+                    # However, we provide an option for users to enable it.
+                    f.write('PREMIRRORS = ""\n')
+                    f.write('MIRRORS = ""\n')
 
             logger.info('Fetching %s...' % srcuri)
 
