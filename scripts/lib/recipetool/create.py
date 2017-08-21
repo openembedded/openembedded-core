@@ -423,6 +423,7 @@ def create_recipe(args):
     srcsubdir = ''
     srcrev = '${AUTOREV}'
     srcbranch = ''
+    storeTagName = ''
 
     if os.path.isfile(source):
         source = 'file://%s' % os.path.abspath(source)
@@ -446,13 +447,21 @@ def create_recipe(args):
         scheme, network, path, user, passwd, params = bb.fetch2.decodeurl(fetchuri)
         srcbranch = params.get('branch')
         nobranch = params.get('nobranch')
+        tag = params.get('tag')
         if not srcbranch and not nobranch and srcrev != '${AUTOREV}':
             # Append nobranch=1 in the following conditions:
             # 1. User did not set 'branch=' in srcuri, and
             # 2. User did not set 'nobranch=1' in srcuri, and
             # 3. Source revision is not '${AUTOREV}'
             params['nobranch'] = '1'
-            fetchuri = bb.fetch2.encodeurl((scheme, network, path, user, passwd, params))
+        if tag:
+            # Keep a copy of tag and append nobranch=1 then remove tag from URL.
+            # Bitbake fetcher unable to fetch when {AUTOREV} and tag is set at the same time.
+            # We will re-introduce tag argument after bitbake fetcher process is complete.
+            storeTagName = params['tag']
+            params['nobranch'] = '1'
+            del params['tag']
+        fetchuri = bb.fetch2.encodeurl((scheme, network, path, user, passwd, params))
 
         tmpparent = tinfoil.config_data.getVar('BASE_WORKDIR')
         bb.utils.mkdirhier(tmpparent)
@@ -522,6 +531,18 @@ def create_recipe(args):
             scheme, network, path, user, passwd, params = bb.fetch2.decodeurl(srcuri)
             params['branch'] = srcbranch
             srcuri = bb.fetch2.encodeurl((scheme, network, path, user, passwd, params))
+
+        if storeTagName:
+            # Re-introduced tag variable from storeTagName
+            # Check srcrev using tag and check validity of the tag
+            cmd = ('git rev-parse --verify %s' % (storeTagName))
+            try:
+                check_tag, check_tag_err = bb.process.run('%s' % cmd, cwd=srctree)
+                srcrev = check_tag.split()[0]
+            except bb.process.ExecutionError as err:
+                logger.error(str(err))
+                logger.error("Possibly wrong tag name is provided")
+                sys.exit(1)
 
         if os.path.exists(os.path.join(srctree, '.gitmodules')) and srcuri.startswith('git://'):
             srcuri = 'gitsm://' + srcuri[6:]
