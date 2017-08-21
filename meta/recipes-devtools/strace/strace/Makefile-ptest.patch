@@ -51,7 +51,7 @@ index 5aa7f89..a55a355 100644
 +		install $(srcdir)/$$file $(DESTDIR)/$(TESTDIR); \
 +		sed -i -e 's/$${srcdir=.}/./g' $(DESTDIR)/$(TESTDIR)/$$file; \
 +	done
-+	for i in net net-fd scm_rights-fd sigaction; do sed -i -e 's/$$srcdir/./g' $(DESTDIR)/$(TESTDIR)/$$i.test; done
++	for i in net scm_rights-fd rt_sigaction; do sed -i -e 's/$$srcdir/./g' $(DESTDIR)/$(TESTDIR)/$$i.test; done
 -- 
 2.13.2
 

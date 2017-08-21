@@ -2,7 +2,7 @@ SUMMARY = "System call tracing tool"
 HOMEPAGE = "http://strace.sourceforge.net"
 SECTION = "console/utils"
 LICENSE = "BSD"
-LIC_FILES_CHKSUM = "file://COPYING;md5=488acb3aaaf5d14a2e1a852d13668a70"
+LIC_FILES_CHKSUM = "file://COPYING;md5=f132b4d2adfccc63da4139a609367711"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/strace/strace-${PV}.tar.xz \
            file://disable-git-version-gen.patch \
@@ -13,11 +13,10 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/strace/strace-${PV}.tar.xz \
            file://0001-Fix-build-when-using-non-glibc-libc-implementation-o.patch \
            file://mips-SIGEMT.patch \
            file://0001-caps-abbrev.awk-fix-gawk-s-path.patch \
-           file://0008-replace-struct-ucontext-with-ucontext_t.patch \
            "
 
-SRC_URI[md5sum] = "8d7eb10eba68bad83a269197e634b626"
-SRC_URI[sha256sum] = "81f35b085fbb3cfa806eb521a8522ac3406deaccfe121ce35064bad268237419"
+SRC_URI[md5sum] = "3579b3266bb096cebaefbe2cdb1a3a78"
+SRC_URI[sha256sum] = "89ad887c1e6226bdbca8da31d589cadea4be0744b142eb47b768086c937fca08"
 
 inherit autotools ptest bluetooth
 
