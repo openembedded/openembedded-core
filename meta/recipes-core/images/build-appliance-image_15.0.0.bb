@@ -100,7 +100,11 @@ fakeroot do_populate_poky_src () {
 	export STAGING_INCDIR=${STAGING_INCDIR_NATIVE}
 	export HOME=${IMAGE_ROOTFS}/home/builder
 	mkdir -p ${IMAGE_ROOTFS}/home/builder/.cache/pip
-	pip3 install --user -I -U -v -r ${IMAGE_ROOTFS}/home/builder/poky/bitbake/toaster-requirements.txt
+	pip3_install_params="--user -I -U -v -r ${IMAGE_ROOTFS}/home/builder/poky/bitbake/toaster-requirements.txt"
+	if [ -n "${http_proxy}" ]; then
+	   pip3_install_params="${pip3_install_params} --proxy ${http_proxy}"
+	fi
+	pip3 install ${pip3_install_params}
 	chown -R builder.builder ${IMAGE_ROOTFS}/home/builder/.local
 	chown -R builder.builder ${IMAGE_ROOTFS}/home/builder/.cache
 }
