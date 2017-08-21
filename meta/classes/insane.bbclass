@@ -184,12 +184,13 @@ def package_qa_write_error(type, error, d):
             f.write("%s: %s [%s]\n" % (p, error, type))
 
 def package_qa_handle_error(error_class, error_msg, d):
-    package_qa_write_error(error_class, error_msg, d)
     if error_class in (d.getVar("ERROR_QA") or "").split():
+        package_qa_write_error(error_class, error_msg, d)
         bb.error("QA Issue: %s [%s]" % (error_msg, error_class))
         d.setVar("QA_SANE", False)
         return False
     elif error_class in (d.getVar("WARN_QA") or "").split():
+        package_qa_write_error(error_class, error_msg, d)
         bb.warn("QA Issue: %s [%s]" % (error_msg, error_class))
     else:
         bb.note("QA Issue: %s [%s]" % (error_msg, error_class))
