@@ -424,6 +424,7 @@ def create_recipe(args):
     srcrev = '${AUTOREV}'
     srcbranch = ''
     storeTagName = ''
+    pv_srcpv = False
 
     if os.path.isfile(source):
         source = 'file://%s' % os.path.abspath(source)
@@ -671,6 +672,7 @@ def create_recipe(args):
         lines_before.append('')
         lines_before.append('# Modify these as desired')
         lines_before.append('PV = "%s+git${SRCPV}"' % (realpv or '1.0'))
+        pv_srcpv = True
         if not args.autorev and srcrev == '${AUTOREV}':
             if os.path.exists(os.path.join(srctree, '.git')):
                 (stdout, _) = bb.process.run('git rev-parse HEAD', cwd=srctree)
@@ -797,7 +799,7 @@ def create_recipe(args):
                 skipblank = True
                 continue
         elif line.startswith('SRC_URI = '):
-            if realpv:
+            if realpv and not pv_srcpv:
                 line = line.replace(realpv, '${PV}')
         elif line.startswith('PV = '):
             if realpv:
