@@ -164,37 +164,6 @@ class NpmRecipeHandler(RecipeHandler):
                 lines_before.append(line)
         return updated
 
-    def _replace_license_vars(self, srctree, lines_before, handled, extravalues, d):
-        for item in handled:
-            if isinstance(item, tuple):
-                if item[0] == 'license':
-                    del item
-                    break
-
-        calledvars = []
-        def varfunc(varname, origvalue, op, newlines):
-            if varname in ['LICENSE', 'LIC_FILES_CHKSUM']:
-                for i, e in enumerate(reversed(newlines)):
-                    if not e.startswith('#'):
-                        stop = i
-                        while stop > 0:
-                            newlines.pop()
-                            stop -= 1
-                        break
-                calledvars.append(varname)
-                if len(calledvars) > 1:
-                    # The second time around, put the new license text in
-                    insertpos = len(newlines)
-                    handle_license_vars(srctree, newlines, handled, extravalues, d)
-                return None, None, 0, True
-            return origvalue, None, 0, True
-        updated, newlines = bb.utils.edit_metadata(lines_before, ['LICENSE', 'LIC_FILES_CHKSUM'], varfunc)
-        if updated:
-            del lines_before[:]
-            lines_before.extend(newlines)
-        else:
-            raise Exception('Did not find license variables')
-
     def process(self, srctree, classes, lines_before, lines_after, handled, extravalues):
         import bb.utils
         import oe
@@ -228,10 +197,7 @@ class NpmRecipeHandler(RecipeHandler):
 
                 fetchdev = extravalues['fetchdev'] or None
                 deps, optdeps, devdeps = self.get_npm_package_dependencies(data, fetchdev)
-                updated = self._handle_dependencies(d, deps, optdeps, devdeps, lines_before, srctree)
-                if updated:
-                    # We need to redo the license stuff
-                    self._replace_license_vars(srctree, lines_before, handled, extravalues, d)
+                self._handle_dependencies(d, deps, optdeps, devdeps, lines_before, srctree)
 
                 # Shrinkwrap
                 localfilesdir = tempfile.mkdtemp(prefix='recipetool-npm')
@@ -267,13 +233,7 @@ class NpmRecipeHandler(RecipeHandler):
                     all_licenses = list(set([item.replace('_', ' ') for pkglicense in pkglicenses.values() for item in pkglicense]))
                     if '&' in all_licenses:
                         all_licenses.remove('&')
-                    # Go back and update the LICENSE value since we have a bit more
-                    # information than when that was written out (and we know all apply
-                    # vs. there being a choice, so we can join them with &)
-                    for i, line in enumerate(lines_before):
-                        if line.startswith('LICENSE = '):
-                            lines_before[i] = 'LICENSE = "%s"' % ' & '.join(all_licenses)
-                            break
+                    extravalues['LICENSE'] = ' & '.join(all_licenses)
 
                 # Need to move S setting after inherit npm
                 for i, line in enumerate(lines_before):

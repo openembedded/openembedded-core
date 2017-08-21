@@ -618,9 +618,10 @@ def create_recipe(args):
     # We need a blank line here so that patch_recipe_lines can rewind before the LICENSE comments
     lines_before.append('')
 
-    handled = []
-    licvalues = handle_license_vars(srctree_use, lines_before, handled, extravalues, tinfoil.config_data)
+    # We'll come back and replace this later in handle_license_vars()
+    lines_before.append('##LICENSE_PLACEHOLDER##')
 
+    handled = []
     classes = []
 
     # FIXME This is kind of a hack, we probably ought to be using bitbake to do this
@@ -751,6 +752,8 @@ def create_recipe(args):
         if name_pv and not realpv:
             realpv = name_pv
 
+    licvalues = handle_license_vars(srctree_use, lines_before, handled, extravalues, tinfoil.config_data)
+
     if not outfile:
         if not pn:
             log_error_cond('Unable to determine short program name from source tree - please specify name with -N/--name or output file name with -o/--outfile', args.devtool)
@@ -843,9 +846,6 @@ def create_recipe(args):
     outlines.extend(lines_after)
 
     if extravalues:
-        if 'LICENSE' in extravalues and not licvalues:
-            # Don't blow away 'CLOSED' value that comments say we set
-            del extravalues['LICENSE']
         _, outlines = oe.recipeutils.patch_recipe_lines(outlines, extravalues, trailing_newline=False)
 
     if args.extract_to:
@@ -889,55 +889,94 @@ def check_single_file(fn, fetchuri):
             logger.error('Fetching "%s" returned a single HTML page - check the URL is correct and functional' % fetchuri)
             sys.exit(1)
 
+def split_value(value):
+    if isinstance(value, str):
+        return value.split()
+    else:
+        return value
 
 def handle_license_vars(srctree, lines_before, handled, extravalues, d):
+    lichandled = [x for x in handled if x[0] == 'license']
+    if lichandled:
+        # Someone else has already handled the license vars, just return their value
+        return lichandled[0][1]
+
     licvalues = guess_license(srctree, d)
+    licenses = []
     lic_files_chksum = []
     lic_unknown = []
+    lines = []
     if licvalues:
-        licenses = []
         for licvalue in licvalues:
             if not licvalue[0] in licenses:
                 licenses.append(licvalue[0])
             lic_files_chksum.append('file://%s;md5=%s' % (licvalue[1], licvalue[2]))
             if licvalue[0] == 'Unknown':
                 lic_unknown.append(licvalue[1])
-        lines_before.append('# WARNING: the following LICENSE and LIC_FILES_CHKSUM values are best guesses - it is')
-        lines_before.append('# your responsibility to verify that the values are complete and correct.')
-        if len(licvalues) > 1:
-            lines_before.append('#')
-            lines_before.append('# NOTE: multiple licenses have been detected; they have been separated with &')
-            lines_before.append('# in the LICENSE value for now since it is a reasonable assumption that all')
-            lines_before.append('# of the licenses apply. If instead there is a choice between the multiple')
-            lines_before.append('# licenses then you should change the value to separate the licenses with |')
-            lines_before.append('# instead of &. If there is any doubt, check the accompanying documentation')
-            lines_before.append('# to determine which situation is applicable.')
         if lic_unknown:
-            lines_before.append('#')
-            lines_before.append('# The following license files were not able to be identified and are')
-            lines_before.append('# represented as "Unknown" below, you will need to check them yourself:')
+            lines.append('#')
+            lines.append('# The following license files were not able to be identified and are')
+            lines.append('# represented as "Unknown" below, you will need to check them yourself:')
             for licfile in lic_unknown:
-                lines_before.append('#   %s' % licfile)
-            lines_before.append('#')
-    else:
-        lines_before.append('# Unable to find any files that looked like license statements. Check the accompanying')
-        lines_before.append('# documentation and source headers and set LICENSE and LIC_FILES_CHKSUM accordingly.')
-        lines_before.append('#')
-        lines_before.append('# NOTE: LICENSE is being set to "CLOSED" to allow you to at least start building - if')
-        lines_before.append('# this is not accurate with respect to the licensing of the software being built (it')
-        lines_before.append('# will not be in most cases) you must specify the correct value before using this')
-        lines_before.append('# recipe for anything other than initial testing/development!')
-        licenses = ['CLOSED']
-    pkg_license = extravalues.pop('LICENSE', None)
-    if pkg_license:
+                lines.append('#   %s' % licfile)
+
+    extra_license = split_value(extravalues.pop('LICENSE', []))
+    if '&' in extra_license:
+        extra_license.remove('&')
+    if extra_license:
         if licenses == ['Unknown']:
-            lines_before.append('# NOTE: The following LICENSE value was determined from the original package metadata')
-            licenses = [pkg_license]
+            licenses = extra_license
         else:
-            lines_before.append('# NOTE: Original package metadata indicates license is: %s' % pkg_license)
-    lines_before.append('LICENSE = "%s"' % ' & '.join(licenses))
-    lines_before.append('LIC_FILES_CHKSUM = "%s"' % ' \\\n                    '.join(lic_files_chksum))
-    lines_before.append('')
+            for item in extra_license:
+                if item not in licenses:
+                    licenses.append(item)
+    extra_lic_files_chksum = split_value(extravalues.pop('LIC_FILES_CHKSUM', []))
+    for item in extra_lic_files_chksum:
+        if item not in lic_files_chksum:
+            lic_files_chksum.append(item)
+
+    if lic_files_chksum:
+        # We are going to set the vars, so prepend the standard disclaimer
+        lines.insert(0, '# WARNING: the following LICENSE and LIC_FILES_CHKSUM values are best guesses - it is')
+        lines.insert(1, '# your responsibility to verify that the values are complete and correct.')
+    else:
+        # Without LIC_FILES_CHKSUM we set LICENSE = "CLOSED" to allow the
+        # user to get started easily
+        lines.append('# Unable to find any files that looked like license statements. Check the accompanying')
+        lines.append('# documentation and source headers and set LICENSE and LIC_FILES_CHKSUM accordingly.')
+        lines.append('#')
+        lines.append('# NOTE: LICENSE is being set to "CLOSED" to allow you to at least start building - if')
+        lines.append('# this is not accurate with respect to the licensing of the software being built (it')
+        lines.append('# will not be in most cases) you must specify the correct value before using this')
+        lines.append('# recipe for anything other than initial testing/development!')
+        licenses = ['CLOSED']
+
+    if extra_license and sorted(licenses) != sorted(extra_license):
+        lines.append('# NOTE: Original package / source metadata indicates license is: %s' % ' & '.join(extra_license))
+
+    if len(licenses) > 1:
+        lines.append('#')
+        lines.append('# NOTE: multiple licenses have been detected; they have been separated with &')
+        lines.append('# in the LICENSE value for now since it is a reasonable assumption that all')
+        lines.append('# of the licenses apply. If instead there is a choice between the multiple')
+        lines.append('# licenses then you should change the value to separate the licenses with |')
+        lines.append('# instead of &. If there is any doubt, check the accompanying documentation')
+        lines.append('# to determine which situation is applicable.')
+
+    lines.append('LICENSE = "%s"' % ' & '.join(licenses))
+    lines.append('LIC_FILES_CHKSUM = "%s"' % ' \\\n                    '.join(lic_files_chksum))
+    lines.append('')
+
+    # Replace the placeholder so we get the values in the right place in the recipe file
+    try:
+        pos = lines_before.index('##LICENSE_PLACEHOLDER##')
+    except ValueError:
+        pos = -1
+    if pos == -1:
+        lines_before.extend(lines)
+    else:
+        lines_before[pos:pos+1] = lines
+
     handled.append(('license', licvalues))
     return licvalues
 
