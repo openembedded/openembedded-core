@@ -7,15 +7,13 @@ SRC_URI += "file://acinclude.m4 \
             file://ptest.patch \
             file://mkdir.patch \
             file://Revert-mke2fs-enable-the-metadata_csum-and-64bit-fea.patch \
-            file://e2fsprogs-1.43-sysmacros.patch \
             file://mkdir_p.patch \
-            file://0001-e2fsck-exit-with-exit-status-0-if-no-errors-were-fix.patch \
             file://reproducible-doc.patch \
 "
 
 SRC_URI_append_class-native = " file://e2fsprogs-fix-missing-check-for-permission-denied.patch"
 
-SRCREV = "3d66c4b20f09f923078c1e6eb9b549865b549674"
+SRCREV = "2a13c84b513aa094d1cda727e92d35a89dd777da"
 UPSTREAM_CHECK_GITTAGREGEX = "v(?P<pver>\d+\.\d+(\.\d+)*)$"
 
 EXTRA_OECONF += "--libdir=${base_libdir} --sbindir=${base_sbindir} \
