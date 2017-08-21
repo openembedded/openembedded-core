@@ -656,13 +656,6 @@ def create_recipe(args):
     else:
         realpv = None
 
-    if srcuri and not realpv or not pn:
-        name_pn, name_pv = determine_from_url(srcuri)
-        if name_pn and not pn:
-            pn = name_pn
-        if name_pv and not realpv:
-            realpv = name_pv
-
     if not srcuri:
         lines_before.append('# No information for SRC_URI yet (only an external source tree was specified)')
     lines_before.append('SRC_URI = "%s"' % srcuri)
@@ -671,6 +664,7 @@ def create_recipe(args):
     if srcuri and supports_srcrev(srcuri):
         lines_before.append('')
         lines_before.append('# Modify these as desired')
+        # Note: we have code to replace realpv further down if it gets set to some other value
         lines_before.append('PV = "%s+git${SRCPV}"' % (realpv or '1.0'))
         pv_srcpv = True
         if not args.autorev and srcrev == '${AUTOREV}':
@@ -750,6 +744,13 @@ def create_recipe(args):
             if '_' in pn:
                 pn = pn.replace('_', '-')
 
+    if srcuri and not realpv or not pn:
+        name_pn, name_pv = determine_from_url(srcuri)
+        if name_pn and not pn:
+            pn = name_pn
+        if name_pv and not realpv:
+            realpv = name_pv
+
     if not outfile:
         if not pn:
             log_error_cond('Unable to determine short program name from source tree - please specify name with -N/--name or output file name with -o/--outfile', args.devtool)
@@ -803,6 +804,7 @@ def create_recipe(args):
                 line = line.replace(realpv, '${PV}')
         elif line.startswith('PV = '):
             if realpv:
+                # Replace the first part of the PV value
                 line = re.sub('"[^+]*\+', '"%s+' % realpv, line)
         lines_before.append(line)
 
