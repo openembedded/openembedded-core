@@ -2,7 +2,7 @@ SUMMARY = "GNU Privacy Guard - encryption and signing tools (2.x)"
 HOMEPAGE = "http://www.gnupg.org/"
 LICENSE = "GPLv3 & LGPLv3"
 LIC_FILES_CHKSUM = "file://COPYING;md5=189af8afca6d6075ba6c9e0aa8077626 \
-                    file://COPYING.LIB;md5=a2b6bf2cb38ee52619e60f30a1fc7257"
+                    file://COPYING.LGPL3;md5=a2b6bf2cb38ee52619e60f30a1fc7257"
 
 DEPENDS = "npth libassuan libksba zlib bzip2 readline libgcrypt"
 
@@ -10,20 +10,21 @@ inherit autotools gettext texinfo pkgconfig
 
 UPSTREAM_CHECK_URI = "https://gnupg.org/download/index.html"
 SRC_URI = "${GNUPG_MIRROR}/${BPN}/${BPN}-${PV}.tar.bz2 \
-           file://pkgconfig.patch \
-           file://use-pkgconfig-instead-of-npth-config.patch \
-           file://dirmngr-uses-libgpg-error.patch \
-           file://autogen.sh-fix-find-version-for-beta-checking.patch \
+           file://0001-Use-pkg-config-to-find-pth-instead-of-pth-config.patch \
+           file://0002-use-pkgconfig-instead-of-npth-config.patch \
+           file://0003-dirmngr-uses-libgpg-error.patch \
+           file://0004-autogen.sh-fix-find-version-for-beta-checking.patch \
           "
 
-SRC_URI[md5sum] = "f6bc7e0b82893dfafe09109d86ff6e9b"
-SRC_URI[sha256sum] = "24cf9a69369be64a9f6f8cc11a1be33ab7780ad77a6a1b93719438f49f69960d"
+SRC_URI[md5sum] = "86c2304ead54b74a422e76c3f1bc7a91"
+SRC_URI[sha256sum] = "a94476391595e9351f219188767a9d6ea128e83be5ed3226a7890f49aa2d0d77"
 
 EXTRA_OECONF = "--disable-ldap \
 		--disable-ccid-driver \
 		--with-zlib=${STAGING_LIBDIR}/.. \
 		--with-bzip2=${STAGING_LIBDIR}/.. \
-                --with-readline=${STAGING_LIBDIR}/.. \
+		--with-readline=${STAGING_LIBDIR}/.. \
+		--enable-gpg-is-gpg2 \
                "
 RRECOMMENDS_${PN} = "pinentry"
 

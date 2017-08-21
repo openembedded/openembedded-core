@@ -1,12 +1,22 @@
+From 53c2aec2e13f4e2d09be7148869c862f07dfdd4d Mon Sep 17 00:00:00 2001
+From: Saul Wold <sgw@linux.intel.com>
+Date: Wed, 16 Aug 2017 11:16:30 +0800
+Subject: [PATCH 2/4] use pkgconfig instead of npth config
+
 Upstream-Status: Inappropriate [openembedded specific]
 
 Signed-off-by: Saul Wold <sgw@linux.intel.com>
 
+Rebase to 2.1.23
+Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
+---
+ m4/npth.m4 | 34 ++++++++--------------------------
+ 1 file changed, 8 insertions(+), 26 deletions(-)
 
-Index: gnupg-2.1.0/m4/npth.m4
-===================================================================
---- gnupg-2.1.0.orig/m4/npth.m4
-+++ gnupg-2.1.0/m4/npth.m4
+diff --git a/m4/npth.m4 b/m4/npth.m4
+index 17c2644..15a931b 100644
+--- a/m4/npth.m4
++++ b/m4/npth.m4
 @@ -17,10 +17,10 @@ AC_DEFUN([_AM_PATH_NPTH_CONFIG],
    if test "x$npth_config_prefix" != x ; then
        NPTH_CONFIG="$npth_config_prefix/bin/npth-config"
@@ -70,3 +80,6 @@ Index: gnupg-2.1.0/m4/npth.m4
      NPTH_CFLAGS=""
      NPTH_LIBS=""
      ifelse([$3], , :, [$3])
+-- 
+1.8.3.1
+

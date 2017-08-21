@@ -1,15 +1,27 @@
-Use pkg-config to find pth instead of pth-config.
+From 59a3c76d4016ffc615f1c45184f4c6820061d69c Mon Sep 17 00:00:00 2001
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+Date: Wed, 16 Aug 2017 11:14:12 +0800
+Subject: [PATCH 1/4] Use pkg-config to find pth instead of pth-config.
 
 Upstream-Status: Denied
-[not submitted but they've been clear they don't want a pkg-config dependency]
+[not submitted but they've been clear they don't want a pkg-config
+dependency]
 
 RP 2014/5/22
 
-Index: gnupg-2.1.0/m4/gnupg-pth.m4
-===================================================================
---- gnupg-2.1.0.orig/m4/gnupg-pth.m4
-+++ gnupg-2.1.0/m4/gnupg-pth.m4
-@@ -17,33 +17,9 @@ dnl implied warranty of MERCHANTABILITY
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+
+Rebase to 2.1.23
+Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
+---
+ m4/gnupg-pth.m4 | 53 ++++++++---------------------------------------------
+ 1 file changed, 8 insertions(+), 45 deletions(-)
+
+diff --git a/m4/gnupg-pth.m4 b/m4/gnupg-pth.m4
+index 6dc9e0e..5892531 100644
+--- a/m4/gnupg-pth.m4
++++ b/m4/gnupg-pth.m4
+@@ -17,33 +17,9 @@ dnl implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  # Taken and modified from the m4 macros which come with Pth.
  AC_DEFUN([GNUPG_PTH_VERSION_CHECK],
    [
@@ -88,3 +100,6 @@ Index: gnupg-2.1.0/m4/gnupg-pth.m4
    AC_SUBST(PTH_LIBS)
  ])
 -
+-- 
+1.8.3.1
+
