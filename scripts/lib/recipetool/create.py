@@ -422,6 +422,7 @@ def create_recipe(args):
     source = args.source
     srcsubdir = ''
     srcrev = '${AUTOREV}'
+    srcbranch = ''
 
     if os.path.isfile(source):
         source = 'file://%s' % os.path.abspath(source)
@@ -439,6 +440,19 @@ def create_recipe(args):
         if res:
             srcrev = res.group(1)
             srcuri = rev_re.sub('', srcuri)
+
+        # Check whether users provides any branch info in fetchuri.
+        # If true, we will skip all branch checking process to honor all user's input.
+        scheme, network, path, user, passwd, params = bb.fetch2.decodeurl(fetchuri)
+        srcbranch = params.get('branch')
+        nobranch = params.get('nobranch')
+        if not srcbranch and not nobranch and srcrev != '${AUTOREV}':
+            # Append nobranch=1 in the following conditions:
+            # 1. User did not set 'branch=' in srcuri, and
+            # 2. User did not set 'nobranch=1' in srcuri, and
+            # 3. Source revision is not '${AUTOREV}'
+            params['nobranch'] = '1'
+            fetchuri = bb.fetch2.encodeurl((scheme, network, path, user, passwd, params))
 
         tmpparent = tinfoil.config_data.getVar('BASE_WORKDIR')
         bb.utils.mkdirhier(tmpparent)
@@ -474,6 +488,40 @@ def create_recipe(args):
             # If we've got to here then there's no source so we might as well give up
             logger.error('URL %s resulted in an empty source tree' % fetchuri)
             sys.exit(1)
+
+        # We need this checking mechanism to improve the recipe created by recipetool and devtool
+        # is able to parse and build by bitbake.
+        # If there is no input for branch name, then check for branch name with SRCREV provided.
+        if not srcbranch and not nobranch and srcrev and (srcrev != '${AUTOREV}'):
+            try:
+                cmd = 'git branch -r --contains'
+                check_branch, check_branch_err = bb.process.run('%s %s' % (cmd, srcrev), cwd=srctree)
+            except bb.process.ExecutionError as err:
+                logger.error(str(err))
+                sys.exit(1)
+            get_branch = [x.strip() for x in check_branch.splitlines()]
+            # Remove HEAD reference point and drop remote prefix
+            get_branch = [x.split('/', 1)[1] for x in get_branch if not x.startswith('origin/HEAD')]
+            if 'master' in get_branch:
+                # If it is master, we do not need to append 'branch=master' as this is default.
+                # Even with the case where get_branch has multiple objects, if 'master' is one
+                # of them, we should default take from 'master'
+                srcbranch = ''
+            elif len(get_branch) == 1:
+                # If 'master' isn't in get_branch and get_branch contains only ONE object, then store result into 'srcbranch'
+                srcbranch = get_branch[0]
+            else:
+                # If get_branch contains more than one objects, then display error and exit.
+                mbrch = '\n  ' + '\n  '.join(get_branch)
+                logger.error('Revision %s was found on multiple branches: %s\nPlease provide the correct branch in the source URL with ;branch=<branch> (and ensure you use quotes around the URL to avoid the shell interpreting the ";")' % (srcrev, mbrch))
+                sys.exit(1)
+
+        # Since we might have a value in srcbranch, we need to
+        # recontruct the srcuri to include 'branch' in params.
+        if srcbranch:
+            scheme, network, path, user, passwd, params = bb.fetch2.decodeurl(srcuri)
+            params['branch'] = srcbranch
+            srcuri = bb.fetch2.encodeurl((scheme, network, path, user, passwd, params))
 
         if os.path.exists(os.path.join(srctree, '.gitmodules')) and srcuri.startswith('git://'):
             srcuri = 'gitsm://' + srcuri[6:]
