@@ -86,9 +86,11 @@ ignore_errors = {
     'qemumips' : [
         'Failed to load module "glx"',
         'pci 0000:00:00.0: [Firmware Bug]: reg 0x..: invalid BAR (can\'t size)',
+        'cacheinfo: Failed to find cpu0 device node',
         ] + common_errors,
     'qemumips64' : [
         'pci 0000:00:00.0: [Firmware Bug]: reg 0x..: invalid BAR (can\'t size)',
+        'cacheinfo: Failed to find cpu0 device node',
          ] + common_errors,
     'qemuppc' : [
         'PCI 0000:00 Cannot reserve Legacy IO [io  0x0000-0x0fff]',
