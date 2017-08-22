@@ -7,8 +7,8 @@
 # Most of the tests are commands run on target image over ssh.
 # To use it add testimage to global inherit and call your target image with -c testimage
 # You can try it out like this:
-# - first build a qemu core-image-sato
-# - add IMAGE_CLASSES += "testimage" in local.conf
+# - first add IMAGE_CLASSES += "testimage" in local.conf
+# - build a qemu core-image-sato
 # - then bitbake core-image-sato -c testimage. That will run a standard suite of tests.
 
 # You can set (or append to) TEST_SUITES in local.conf to select the tests
