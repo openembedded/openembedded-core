@@ -109,7 +109,7 @@ class Result(object):
             prefix = ''
             for x in test_status:
                 prefix +=x+'.'
-            if (section != ''):
+            if section:
                 prefix += section
             section_file = os.path.join(target_dir, prefix)
             # purge the file contents if it exists
