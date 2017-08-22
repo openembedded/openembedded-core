@@ -211,7 +211,7 @@ def SSHCall(command, logger, timeout=None, **opts):
                             process.stdout.close()
                             eof = True
                         else:
-                            data = data.decode("utf-8")
+                            data = data.decode("utf-8", errors='replace')
                             output += data
                             logger.debug('Partial data from SSH call: %s' % data)
                             endtime = time.time() + timeout
@@ -233,7 +233,7 @@ def SSHCall(command, logger, timeout=None, **opts):
                 output += lastline
 
         else:
-            output = process.communicate()[0].decode("utf-8")
+            output = process.communicate()[0].decode("utf-8", errors='replace')
             logger.debug('Data from SSH call: %s' % output.rstrip())
 
     options = {
