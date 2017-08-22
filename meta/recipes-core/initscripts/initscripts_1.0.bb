@@ -46,11 +46,12 @@ inherit update-alternatives
 DEPENDS_append = " update-rc.d-native"
 PACKAGE_WRITE_DEPS_append = " ${@bb.utils.contains('DISTRO_FEATURES','systemd','systemd-systemctl-native','',d)}"
 
-PACKAGES =+ "${PN}-functions"
+PACKAGES =+ "${PN}-functions ${PN}-sushell"
 RDEPENDS_${PN} = "${PN}-functions \
-                  ${@bb.utils.contains('DISTRO_FEATURES','selinux','bash','',d)} \
+                  ${@bb.utils.contains('DISTRO_FEATURES','selinux','${PN}-sushell','',d)} \
 		 "
 FILES_${PN}-functions = "${sysconfdir}/init.d/functions*"
+FILES_${PN}-sushell = "${base_sbindir}/sushell"
 
 ALTERNATIVE_PRIORITY_${PN}-functions = "90"
 ALTERNATIVE_${PN}-functions = "functions"
