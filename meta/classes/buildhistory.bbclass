@@ -824,6 +824,8 @@ python buildhistory_eventhandler() {
                 interrupted = getattr(e, '_interrupted', 0)
                 localdata.setVar('BUILDHISTORY_BUILD_INTERRUPTED', str(interrupted))
                 bb.build.exec_func("buildhistory_commit", localdata)
+            else:
+                bb.note("No commit since BUILDHISTORY_COMMIT != '1'")
 }
 
 addhandler buildhistory_eventhandler
