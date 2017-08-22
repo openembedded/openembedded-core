@@ -1005,7 +1005,7 @@ class BaseConfig(object):
             vm_drive = ''
             if self.fstype in self.vmtypes:
                 if self.fstype == 'iso':
-                    vm_drive = '-cdrom %s' % self.rootfs
+                    vm_drive = '-drive file=%s,if=virtio,media=cdrom' % self.rootfs
                 elif self.get('QB_DRIVE_TYPE'):
                     drive_type = self.get('QB_DRIVE_TYPE')
                     if drive_type.startswith("/dev/sd"):

@@ -62,7 +62,7 @@ SYSLINUX_TIMEOUT = "10"
         cmd = "%s %s iso" % (self.cmd_common, self.machine)
         with runqemu(self.recipe, ssh=False, launch_cmd=cmd) as qemu:
             with open(qemu.qemurunnerlog) as f:
-                self.assertTrue(' -cdrom ' in f.read(), "Failed: %s" % cmd)
+                self.assertTrue('media=cdrom' in f.read(), "Failed: %s" % cmd)
 
     @OETestID(2004)
     def test_boot_recipe_image(self):
