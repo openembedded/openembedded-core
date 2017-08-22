@@ -912,3 +912,33 @@ def write_latest_srcrev(d, pkghistdir):
     else:
         if os.path.exists(srcrevfile):
             os.remove(srcrevfile)
+
+do_testimage[postfuncs] += "write_ptest_result"
+do_testimage[vardepsexclude] += "write_ptest_result"
+
+python write_ptest_result() {
+    write_latest_ptest_result(d, d.getVar('BUILDHISTORY_DIR'))
+}
+
+def write_latest_ptest_result(d, histdir):
+    import glob
+    import subprocess
+    test_log_dir = d.getVar('TEST_LOG_DIR')
+    input_ptest = os.path.join(test_log_dir, 'ptest_log')
+    output_ptest = os.path.join(histdir, 'ptest')
+    if os.path.exists(input_ptest):
+        try:
+            # Lock it avoid race issue
+            lock = bb.utils.lockfile(output_ptest + "/ptest.lock")
+            bb.utils.mkdirhier(output_ptest)
+            oe.path.copytree(input_ptest, output_ptest)
+            # Sort test result
+            for result in glob.glob('%s/pass.fail.*' % output_ptest):
+                bb.debug(1, 'Processing %s' % result)
+                cmd = ['sort', result, '-o', result]
+                bb.debug(1, 'Running %s' % cmd)
+                ret = subprocess.call(cmd)
+                if ret != 0:
+                    bb.error('Failed to run %s!' % cmd)
+        finally:
+            bb.utils.unlockfile(lock)
