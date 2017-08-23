@@ -14,7 +14,7 @@ SRCREV = "96702a869220ab20830db916ec4ac595e1d97f92"
 
 S = "${WORKDIR}/git"
 
-RDEPENDS_${PN} = "python-core python-compression"
+RDEPENDS_${PN} = "python-core python-compression python-mmap"
 
 inherit setuptools
 
