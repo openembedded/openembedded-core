@@ -25,6 +25,9 @@ DEPENDS = "libva"
 
 inherit autotools pkgconfig distro_features_check
 
+# depends on libva which requires opengl
+REQUIRED_DISTRO_FEATURES = "opengl"
+
 PACKAGECONFIG ??= "${@bb.utils.filter('DISTRO_FEATURES', 'wayland x11', d)}"
 PACKAGECONFIG[x11] = "--enable-x11,--disable-x11,virtual/libx11 libxext libxfixes"
 PACKAGECONFIG[wayland] = "--enable-wayland,--disable-wayland,wayland-native wayland"
