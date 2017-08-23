@@ -28,6 +28,7 @@ SRC_URI = "ftp://xmlsoft.org/libxml2/libxml2-${PV}.tar.gz;name=libtar \
            file://libxml2-CVE-2017-9049_CVE-2017-9050.patch \
            file://libxml2-CVE-2017-5969.patch \
            file://libxml2-CVE-2017-0663.patch \
+           file://libxml2-CVE-2017-8872.patch \
            file://0001-Make-ptest-run-the-python-tests-if-python-is-enabled.patch \
            "
 
