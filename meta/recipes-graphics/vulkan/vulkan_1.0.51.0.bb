@@ -18,6 +18,7 @@ UPSTREAM_CHECK_GITTAGREGEX = "sdk-(?P<pver>\d+(\.\d+)+)"
 
 S = "${WORKDIR}/git"
 
+REQUIRED_DISTRO_FEATURES = "vulkan"
 
 inherit cmake python3native lib_package distro_features_check
 ANY_OF_DISTRO_FEATURES = "x11 wayland"
@@ -32,4 +33,5 @@ PACKAGECONFIG ??= "${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'x11', '' ,d)}
 PACKAGECONFIG[x11] = "-DBUILD_WSI_XLIB_SUPPORT=ON -DBUILD_WSI_XCB_SUPPORT=ON -DDEMOS_WSI_SELECTION=XCB, -DBUILD_WSI_XLIB_SUPPORT=OFF -DBUILD_WSI_XCB_SUPPORT=OFF -DDEMOS_WSI_SELECTION=WAYLAND, libxcb libx11 libxrandr"
 PACKAGECONFIG[wayland] = "-DBUILD_WSI_WAYLAND_SUPPORT=ON, -DBUILD_WSI_WAYLAND_SUPPORT=OFF, wayland"
 
-RRECOMMENDS_${PN} = "mesa-vulkan-drivers"
+# mesa requires opengl
+RRECOMMENDS_${PN} = "${@bb.utils.contains('DISTRO_FEATURES', 'opengl', 'mesa-vulkan-drivers', '', d)}"

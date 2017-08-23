@@ -15,6 +15,8 @@ SRCREV = "18df00c7b4677b0889486e16977857aa987947e2"
 UPSTREAM_CHECK_GITTAGREGEX = "These are not the releases you're looking for"
 S = "${WORKDIR}/git"
 
+REQUIRED_DISTRO_FEATURES = 'vulkan'
+
 inherit cmake distro_features_check
 DEPENDS = "vulkan assimp"
 
