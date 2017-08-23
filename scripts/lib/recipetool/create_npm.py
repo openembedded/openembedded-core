@@ -166,7 +166,7 @@ class NpmRecipeHandler(RecipeHandler):
 
     def process(self, srctree, classes, lines_before, lines_after, handled, extravalues):
         import bb.utils
-        import oe
+        import oe.package
         from collections import OrderedDict
 
         if 'buildsystem' in handled:
