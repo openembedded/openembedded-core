@@ -143,8 +143,11 @@ do_kernel_metadata() {
 
 	# expand kernel features into their full path equivalents
 	bsp_definition=$(spp ${includes} --find -DKMACHINE=${KMACHINE} -DKTYPE=${LINUX_KERNEL_TYPE})
-	if [ $? -ne 0 ] || [ -z "${bsp_definition}" ]; then
-		bbfatal_log "Could not locate BSP definiton for ${KMACHINE}/${LINUX_KERNEL_TYPE}."
+	if [ -z "$bsp_definition" ]; then
+		echo "$sccs" | grep -q defconfig
+		if [ $? -ne 0 ]; then
+			bberror "Could not locate BSP definition for ${KMACHINE}/${LINUX_KERNEL_TYPE} and no defconfig was provided"
+		fi
 	fi
 	meta_dir=$(kgit --meta)
 
