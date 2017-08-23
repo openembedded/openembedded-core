@@ -177,6 +177,7 @@ def staging_processfixme(fixme, target, recipesysroot, recipesysrootnative, d):
 def staging_populate_sysroot_dir(targetsysroot, nativesysroot, native, d):
     import glob
     import subprocess
+    import errno
 
     fixme = []
     postinsts = []
