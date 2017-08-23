@@ -208,11 +208,14 @@ class NpmRecipeHandler(RecipeHandler):
 
                 # Split each npm module out to is own package
                 npmpackages = oe.package.npm_split_package_dirs(srctree)
+                licvalues = None
                 for item in handled:
                     if isinstance(item, tuple):
                         if item[0] == 'license':
                             licvalues = item[1]
                             break
+                if not licvalues:
+                    licvalues = handle_license_vars(srctree, lines_before, handled, extravalues, d)
                 if licvalues:
                     # Augment the license list with information we have in the packages
                     licenses = {}
