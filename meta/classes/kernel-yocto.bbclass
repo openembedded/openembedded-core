@@ -113,7 +113,7 @@ do_kernel_metadata() {
 				sccs="${WORKDIR}/defconfig"
 			fi
 		else
-			bbfatal "A KBUILD_DECONFIG '${KBUILD_DEFCONFIG}' was specified, but not present in the source tree"
+			bbfatal "A KBUILD_DEFCONFIG '${KBUILD_DEFCONFIG}' was specified, but not present in the source tree"
 		fi
 	fi
 
