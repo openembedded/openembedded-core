@@ -33,6 +33,7 @@ SDK_LOCAL_CONF_BLACKLIST ?= "CONF_VERSION \
                              DL_DIR \
                              SSTATE_DIR \
                              TMPDIR \
+                             BB_SERVER_TIMEOUT \
                             "
 SDK_INHERIT_BLACKLIST ?= "buildhistory icecc"
 SDK_UPDATE_URL ?= ""
