@@ -8,7 +8,6 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=2184aef38ff137ed33ce9a63b9d1eb8f"
 DEPENDS = "libevdev udev mtdev"
 
 SRC_URI = "http://www.freedesktop.org/software/${BPN}/${BP}.tar.xz \
-           file://touchpad-serial-synaptics-need-to-fake-new-touches-on-TRIPLETAP.patch \
            file://0001-tools-Fix-race-in-autotools-install.patch \
 "
 
