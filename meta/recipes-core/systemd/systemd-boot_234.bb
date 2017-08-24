@@ -8,13 +8,14 @@ SRC_URI += "file://0007-use-lnr-wrapper-instead-of-looking-for-relative-opti.pat
 inherit autotools pkgconfig gettext
 inherit deploy
 
-export EFI_CC="${CC}"
+EFI_CC ?= "${CC}"
 # Man pages are packaged through the main systemd recipe
 EXTRA_OECONF = " --enable-gnuefi \
                  --with-efi-includedir=${STAGING_INCDIR} \
                  --with-efi-ldsdir=${STAGING_LIBDIR} \
                  --with-efi-libdir=${STAGING_LIBDIR} \
                  --disable-manpages \
+                 EFI_CC='${EFI_CC}' \
                "
 
 # Imported from the old gummiboot recipe
