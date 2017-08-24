@@ -6,6 +6,7 @@ import time
 import select
 import logging
 import subprocess
+import codecs
 
 from . import OETarget
 
@@ -206,12 +207,12 @@ def SSHCall(command, logger, timeout=None, **opts):
                 logger.debug('time: %s, endtime: %s' % (time.time(), endtime))
                 try:
                     if select.select([process.stdout], [], [], 5)[0] != []:
-                        data = os.read(process.stdout.fileno(), 1024)
+                        reader = codecs.getreader('utf-8')(process.stdout)
+                        data = reader.read(1024, 1024)
                         if not data:
                             process.stdout.close()
                             eof = True
                         else:
-                            data = data.decode("utf-8", errors='replace')
                             output += data
                             logger.debug('Partial data from SSH call: %s' % data)
                             endtime = time.time() + timeout
