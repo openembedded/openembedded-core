@@ -27,6 +27,8 @@ SRC_URI = "http://wiki.qemu-project.org/download/${BP}.tar.bz2 \
            file://0001-osdep-Add-runtime-OFD-lock-detection.patch \
            file://0002-file-posix-Do-runtime-check-for-ofd-lock-API.patch \
            "
+UPSTREAM_CHECK_REGEX = "qemu-(?P<pver>\d+\..*)\.tar"
+
 
 SRC_URI_append_class-native = " \
             file://fix-libcap-header-issue-on-some-distro.patch \
