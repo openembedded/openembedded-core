@@ -237,6 +237,9 @@ class Disk:
         self.native_sysroot = native_sysroot
         self._partitions = None
         self._partimages = {}
+        self._lsector_size = None
+        self._psector_size = None
+        self._ptable_format = None
 
         # find parted
         self.paths = "/bin:/usr/bin:/usr/sbin:/sbin/"
@@ -258,7 +261,11 @@ class Disk:
             self._partitions = OrderedDict()
             out = exec_cmd("%s -sm %s unit B print" % (self.parted, self.imagepath))
             parttype = namedtuple("Part", "pnum start end size fstype")
-            for line in out.splitlines()[2:]:
+            splitted = out.splitlines()
+            lsector_size, psector_size, self._ptable_format = splitted[1].split(":")[3:6]
+            self._lsector_size = int(lsector_size)
+            self._psector_size = int(psector_size)
+            for line in splitted[2:]:
                 pnum, start, end, size, fstype = line.split(':')[:5]
                 partition = parttype(pnum, int(start[:-1]), int(end[:-1]),
                                      int(size[:-1]), fstype)
