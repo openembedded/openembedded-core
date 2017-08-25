@@ -221,6 +221,7 @@ def spawn(name, sh_cmd, title=None, env=None, d=None):
     # to a file using a "phonehome" wrapper script, then monitor the pid
     # until it exits.
     import tempfile
+    import time
     pidfile = tempfile.NamedTemporaryFile(delete = False).name
     try:
         sh_cmd = "oe-gnome-terminal-phonehome " + pidfile + " " + sh_cmd
@@ -232,13 +233,13 @@ def spawn(name, sh_cmd, title=None, env=None, d=None):
             raise ExecutionError(sh_cmd, pipe.returncode, output)
 
         while os.stat(pidfile).st_size <= 0:
+            time.sleep(0.01)
             continue
         with open(pidfile, "r") as f:
             pid = int(f.readline())
     finally:
         os.unlink(pidfile)
 
-    import time
     while True:
         try:
             os.kill(pid, 0)
