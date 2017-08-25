@@ -236,10 +236,6 @@ class Disk:
         self.imagepath = imagepath
         self.native_sysroot = native_sysroot
         self._partitions = None
-        self._mdir = None
-        self._mcopy = None
-        self._mdel = None
-        self._mdeltree = None
         self._partimages = {}
 
         # find parted
@@ -270,30 +266,16 @@ class Disk:
 
         return self._partitions
 
-    def _prop(self, name):
+    def __getattr__(self, name):
         """Get path to the executable in a lazy way."""
-        aname = "_%s" % name
-        if getattr(self, aname) is None:
-            setattr(self, aname, find_executable(name, self.paths))
-            if not getattr(self, aname):
-                raise WicError("Can't find executable {}".format(name))
-        return getattr(self, aname)
-
-    @property
-    def mdir(self):
-        return self._prop('mdir')
-
-    @property
-    def mcopy(self):
-        return self._prop("mcopy")
-
-    @property
-    def mdel(self):
-        return self._prop("mdel")
-
-    @property
-    def mdeltree(self):
-        return self._prop("mdeltree")
+        if name in ("mdir", "mcopy", "mdel", "mdeltree"):
+            aname = "_%s" % name
+            if aname not in self.__dict__:
+                setattr(self, aname, find_executable(name, self.paths))
+                if aname not in self.__dict__:
+                    raise WicError("Can't find executable {}".format(name))
+            return self.__dict__[aname]
+        return self.__dict__[name]
 
     def _get_part_image(self, pnum):
         if pnum not in self.partitions:
