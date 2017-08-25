@@ -254,12 +254,13 @@ class Disk:
         if not self.parted:
             raise WicError("Can't find executable parted")
 
+        self.partitions = self.get_partitions()
+
     def __del__(self):
         for path in self._partimages.values():
             os.unlink(path)
 
-    @property
-    def partitions(self):
+    def get_partitions(self):
         if self._partitions is None:
             self._partitions = OrderedDict()
             out = exec_cmd("%s -sm %s unit B print" % (self.parted, self.imagepath))
