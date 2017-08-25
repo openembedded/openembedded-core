@@ -267,7 +267,7 @@ class Disk:
             self._psector_size = int(psector_size)
             for line in splitted[2:]:
                 pnum, start, end, size, fstype = line.split(':')[:5]
-                partition = parttype(pnum, int(start[:-1]), int(end[:-1]),
+                partition = parttype(int(pnum), int(start[:-1]), int(end[:-1]),
                                      int(size[:-1]), fstype)
                 self._partitions[pnum] = partition
 
@@ -341,7 +341,7 @@ def wic_ls(args, native_sysroot):
         if disk.partitions:
             print('Num     Start        End          Size      Fstype')
             for part in disk.partitions.values():
-                print("{:2s}  {:12d} {:12d} {:12d}  {}".format(\
+                print("{:2d}  {:12d} {:12d} {:12d}  {}".format(\
                           part.pnum, part.start, part.end,
                           part.size, part.fstype))
     else:
