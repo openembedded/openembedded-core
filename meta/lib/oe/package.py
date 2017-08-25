@@ -67,24 +67,23 @@ def strip_execs(pn, dstdir, strip_cmd, libdir, base_libdir, qa_already_stripped=
     # 4 - executable
     # 8 - shared library
     # 16 - kernel module
-    def isELF(path):
-        type = 0
+    def is_elf(path):
+        exec_type = 0
         ret, result = oe.utils.getstatusoutput("file \"%s\"" % path.replace("\"", "\\\""))
 
         if ret:
             bb.error("split_and_strip_files: 'file %s' failed" % path)
-            return type
+            return exec_type
 
-        # Not stripped
         if "ELF" in result:
-            type |= 1
+            exec_type |= 1
             if "not stripped" not in result:
-                type |= 2
+                exec_type |= 2
             if "executable" in result:
-                type |= 4
+                exec_type |= 4
             if "shared" in result:
-                type |= 8
-        return type
+                exec_type |= 8
+        return exec_type
 
 
     elffiles = {}
@@ -119,7 +118,7 @@ def strip_execs(pn, dstdir, strip_cmd, libdir, base_libdir, qa_already_stripped=
 
                 # It's a file (or hardlink), not a link
                 # ...but is it ELF, and is it already stripped?
-                elf_file = isELF(file)
+                elf_file = is_elf(file)
                 if elf_file & 1:
                     if elf_file & 2:
                         if qa_already_stripped:
