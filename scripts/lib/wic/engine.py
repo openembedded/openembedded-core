@@ -232,9 +232,10 @@ def wic_list(args, scripts_path):
 
 
 class Disk:
-    def __init__(self, imagepath, native_sysroot):
+    def __init__(self, imagepath, native_sysroot, fstypes=('fat',)):
         self.imagepath = imagepath
         self.native_sysroot = native_sysroot
+        self.fstypes = fstypes
         self._partitions = None
         self._partimages = {}
         self._lsector_size = None
@@ -288,7 +289,11 @@ class Disk:
         if pnum not in self.partitions:
             raise WicError("Partition %s is not in the image")
         part = self.partitions[pnum]
-        if not part.fstype.startswith("fat"):
+        # check if fstype is supported
+        for fstype in self.fstypes:
+            if part.fstype.startswith(fstype):
+                break
+        else:
             raise WicError("Not supported fstype: {}".format(part.fstype))
         if pnum not in self._partimages:
             tmpf = tempfile.NamedTemporaryFile(prefix="wic-part")
