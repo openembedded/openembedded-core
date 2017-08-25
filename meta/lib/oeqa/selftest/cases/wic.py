@@ -938,3 +938,56 @@ part /etc --source rootfs --ondisk mmcblk0 --fstype=ext4 --exclude-path bin/ --r
             wksname = os.path.splitext(os.path.basename(wks.name))[0]
             out = glob(self.resultdir + "%s-*direct" % wksname)
             self.assertEqual(1, len(out))
+
+    def test_expand_mbr_image(self):
+        """Test wic write --expand command for mbr image"""
+        # build an image
+        config = 'IMAGE_FSTYPES = "wic"\nWKS_FILE = "directdisk.wks"\n'
+        self.append_config(config)
+        self.assertEqual(0, bitbake('core-image-minimal').status)
+
+        # get path to the image
+        bb_vars = get_bb_vars(['DEPLOY_DIR_IMAGE', 'MACHINE'])
+        deploy_dir = bb_vars['DEPLOY_DIR_IMAGE']
+        machine = bb_vars['MACHINE']
+        image_path = os.path.join(deploy_dir, 'core-image-minimal-%s.wic' % machine)
+
+        self.remove_config(config)
+
+        try:
+            # expand image to 1G
+            new_image_path = None
+            with NamedTemporaryFile(mode='wb', suffix='.wic.exp',
+                                    dir=deploy_dir, delete=False) as sparse:
+                sparse.truncate(1024 ** 3)
+                new_image_path = sparse.name
+
+            sysroot = get_bb_var('RECIPE_SYSROOT_NATIVE', 'wic-tools')
+            cmd = "wic write -n %s --expand 1:0 %s %s" % (sysroot, image_path, new_image_path)
+            self.assertEqual(0, runCmd(cmd).status)
+
+            # check if partitions are expanded
+            orig = runCmd("wic ls %s -n %s" % (image_path, sysroot))
+            exp = runCmd("wic ls %s -n %s" % (new_image_path, sysroot))
+            orig_sizes = [int(line.split()[3]) for line in orig.output.split('\n')[1:]]
+            exp_sizes = [int(line.split()[3]) for line in exp.output.split('\n')[1:]]
+            self.assertEqual(orig_sizes[0], exp_sizes[0]) # first partition is not resized
+            self.assertTrue(orig_sizes[1] < exp_sizes[1])
+
+            # Check if all free space is partitioned
+            result = runCmd("%s/usr/sbin/sfdisk -F %s" % (sysroot, new_image_path))
+            self.assertTrue("0 B, 0 bytes, 0 sectors" in result.output)
+
+            os.rename(image_path, image_path + '.bak')
+            os.rename(new_image_path, image_path)
+
+            # Check if it boots in qemu
+            with runqemu('core-image-minimal', ssh=False) as qemu:
+                cmd = "ls /etc/"
+                status, output = qemu.run_serial('true')
+                self.assertEqual(1, status, 'Failed to run command "%s": %s' % (cmd, output))
+        finally:
+            if os.path.exists(new_image_path):
+                os.unlink(new_image_path)
+            if os.path.exists(image_path + '.bak'):
+                os.rename(image_path + '.bak', image_path)
