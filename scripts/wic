@@ -257,6 +257,13 @@ def wic_rm_subcommand(args, usage_str):
     """
     engine.wic_rm(args, args.native_sysroot)
 
+def wic_write_subcommand(args, usage_str):
+    """
+    Command-line handling for writing images.
+    The real work is done by engine.wic_write()
+    """
+    engine.wic_write(args, args.native_sysroot)
+
 def wic_help_subcommand(args, usage_str):
     """
     Command-line handling for help subcommand to keep the current
@@ -298,6 +305,9 @@ helptopics = {
     "rm":        [wic_help_topic_subcommand,
                   wic_help_topic_usage,
                   hlp.wic_rm_help],
+    "write":     [wic_help_topic_subcommand,
+                  wic_help_topic_usage,
+                  hlp.wic_write_help],
     "list":      [wic_help_topic_subcommand,
                   wic_help_topic_usage,
                   hlp.wic_list_help]
@@ -397,6 +407,47 @@ def wic_init_parser_rm(subparser):
     subparser.add_argument("-n", "--native-sysroot",
                         help="path to the native sysroot containing the tools")
 
+def expandtype(rules):
+    """
+    Custom type for ArgumentParser
+    Converts expand rules to the dictionary {<partition>: size}
+    """
+    if rules == 'auto':
+        return {}
+    result = {}
+    for rule in rules.split('-'):
+        try:
+            part, size = rule.split(':')
+        except ValueError:
+            raise argparse.ArgumentTypeError("Incorrect rule format: %s" % rule)
+
+        if not part.isdigit():
+            raise argparse.ArgumentTypeError("Rule '%s': partition number must be integer" % rule)
+
+        # validate size
+        multiplier = 1
+        for suffix, mult in [('K', 1024), ('M', 1024 * 1024), ('G', 1024 * 1024 * 1024)]:
+            if size.upper().endswith(suffix):
+                multiplier = mult
+                size = size[:-1]
+                break
+        if not size.isdigit():
+            raise argparse.ArgumentTypeError("Rule '%s': size must be integer" % rule)
+
+        result[int(part)] = int(size) * multiplier
+
+    return result
+
+def wic_init_parser_write(subparser):
+    subparser.add_argument("image",
+                        help="path to the wic image")
+    subparser.add_argument("target",
+                        help="target file or device")
+    subparser.add_argument("-e", "--expand", type=expandtype,
+                        help="expand rules: auto or <partition>:<size>[,<partition>:<size>]")
+    subparser.add_argument("-n", "--native-sysroot",
+                        help="path to the native sysroot containing the tools")
+
 def wic_init_parser_help(subparser):
     helpparsers = subparser.add_subparsers(dest='help_topic', help=hlp.wic_usage)
     for helptopic in helptopics:
@@ -425,6 +476,10 @@ subcommands = {
                   hlp.wic_rm_usage,
                   hlp.wic_rm_help,
                   wic_init_parser_rm],
+    "write":     [wic_write_subcommand,
+                  hlp.wic_write_usage,
+                  hlp.wic_write_help,
+                  wic_init_parser_write],
     "help":      [wic_help_subcommand,
                   wic_help_topic_usage,
                   hlp.wic_help_help,

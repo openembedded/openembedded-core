@@ -468,6 +468,46 @@ DESCRIPTION
     containing the tools(parted and mtools) to use.
 """
 
+wic_write_usage = """
+
+ Write image to a device
+
+ usage: wic write <image> <target device> [--expand [rules]] [--native-sysroot <path>]
+
+ This command writes wic image to a target device (USB stick, SD card etc).
+
+ See 'wic help write' for more detailed instructions.
+
+"""
+
+wic_write_help = """
+
+NAME
+    wic write - write wic image to a device
+
+SYNOPSIS
+    wic write <image> <target>
+    wic write <image> <target> --expand auto
+    wic write <image> <target> --expand 1:100M-2:300M
+    wic write <image> <target> --native-sysroot <path>
+
+DESCRIPTION
+    This command writes wic image to a target device (USB stick, SD card etc)
+
+        $ wic write ./tmp/deploy/images/qemux86-64/core-image-minimal-qemux86-64.wic /dev/sdb
+
+    The --expand option is used to resize image partitions.
+    --expand auto expands partitions to occupy all free space available on the target device.
+    It's also possible to specify expansion rules in a format
+    <partition>:<size>[-<partition>:<size>...] for one or more partitions.
+    Specifying size 0 will keep partition unmodified.
+    Note: Resizing boot partition can result in non-bootable image for non-EFI images. It is
+    recommended to use size 0 for boot partition to keep image bootable.
+
+    The --native-sysroot option is used to specify the path to the native sysroot
+    containing the tools(parted, resize2fs) to use.
+"""
+
 wic_plugins_help = """
 
 NAME
