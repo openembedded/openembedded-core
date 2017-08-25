@@ -56,9 +56,12 @@ def strip_execs(pn, dstdir, strip_cmd, libdir, base_libdir, qa_already_stripped=
     :param qa_already_stripped: Set to True if already-stripped' in ${INSANE_SKIP}
     This is for proper logging and messages only.
     """
-    import stat, errno, oe.path, oe.utils
+    import stat, errno, oe.path, oe.utils, mmap
 
-    os.chdir(dstdir)
+    # Detect .ko module by searching for "vermagic=" string
+    def is_kernel_module(path):
+        with open(path) as f:
+            return mmap.mmap(f.fileno(), 0, prot=mmap.PROT_READ).find(b"vermagic=") >= 0
 
     # Return type (bits):
     # 0 - not elf
@@ -69,7 +72,8 @@ def strip_execs(pn, dstdir, strip_cmd, libdir, base_libdir, qa_already_stripped=
     # 16 - kernel module
     def is_elf(path):
         exec_type = 0
-        ret, result = oe.utils.getstatusoutput("file \"%s\"" % path.replace("\"", "\\\""))
+        ret, result = oe.utils.getstatusoutput(
+            "file \"%s\"" % path.replace("\"", "\\\""))
 
         if ret:
             bb.error("split_and_strip_files: 'file %s' failed" % path)
@@ -83,14 +87,15 @@ def strip_execs(pn, dstdir, strip_cmd, libdir, base_libdir, qa_already_stripped=
                 exec_type |= 4
             if "shared" in result:
                 exec_type |= 8
+            if "relocatable" in result and is_kernel_module(path):
+                exec_type |= 16
         return exec_type
-
 
     elffiles = {}
     inodes = {}
     libdir = os.path.abspath(dstdir + os.sep + libdir)
     base_libdir = os.path.abspath(dstdir + os.sep + base_libdir)
-
+    exec_mask = stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH
     #
     # First lets figure out all of the files we may have to process
     #
@@ -110,8 +115,9 @@ def strip_execs(pn, dstdir, strip_cmd, libdir, base_libdir, qa_already_stripped=
             if not s:
                 continue
             # Check its an excutable
-            if (s[stat.ST_MODE] & stat.S_IXUSR) or (s[stat.ST_MODE] & stat.S_IXGRP) or (s[stat.ST_MODE] & stat.S_IXOTH) \
-                    or ((file.startswith(libdir) or file.startswith(base_libdir)) and ".so" in f):
+            if s[stat.ST_MODE] & exec_mask \
+                    or ((file.startswith(libdir) or file.startswith(base_libdir)) and ".so" in f) \
+                    or file.endswith('.ko'):
                 # If it's a symlink, and points to an ELF file, we capture the readlink target
                 if os.path.islink(file):
                     continue
@@ -131,8 +137,8 @@ def strip_execs(pn, dstdir, strip_cmd, libdir, base_libdir, qa_already_stripped=
                         os.unlink(file)
                         os.link(inodes[s.st_ino], file)
                     else:
+                        # break hardlinks so that we do not strip the original.
                         inodes[s.st_ino] = file
-                        # break hardlink
                         bb.utils.copyfile(file, file)
                         elffiles[file] = elf_file
 
@@ -142,7 +148,6 @@ def strip_execs(pn, dstdir, strip_cmd, libdir, base_libdir, qa_already_stripped=
     sfiles = []
     for file in elffiles:
         elf_file = int(elffiles[file])
-        #bb.note("Strip %s" % file)
         sfiles.append((file, elf_file, strip_cmd))
 
     oe.utils.multiprocess_exec(sfiles, runstrip)
