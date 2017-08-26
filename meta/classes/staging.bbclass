@@ -328,6 +328,7 @@ python extend_recipe_sysroot() {
     import subprocess
     import errno
     import collections
+    import glob
 
     taskdepdata = d.getVar("BB_TASKDEPDATA", False)
     mytaskname = d.getVar("BB_RUNTASK")
@@ -612,6 +613,7 @@ python extend_recipe_sysroot() {
     # to be insignificant
     taskindex = depdir + "/" + "index." + mytaskname
     if os.path.exists(taskindex):
+        potential = []
         with open(taskindex, "r") as f:
             for l in f:
                 l = l.strip()
@@ -620,11 +622,24 @@ python extend_recipe_sysroot() {
                     if not os.path.exists(l):
                         # Was likely already uninstalled
                         continue
-                    bb.note("Task %s no longer depends on %s, removing from sysroot" % (mytaskname, l))
-                    lnk = os.readlink(l)
-                    sstate_clean_manifest(depdir + "/" + lnk, d, workdir)
-                    os.unlink(l)
-                    os.unlink(l + ".complete")
+                    potential.append(l)
+        # We need to ensure not other task needs this dependency. We hold the sysroot
+        # lock so we ca search the indexes to check
+        if potential:
+            for i in glob.glob(depdir + "/index.*"):
+                if i.endswith("." + mytaskname):
+                    continue
+                with open(i, "r") as f:
+                    for l in f:
+                        l = l.strip()
+                        if l in potential:
+                            potential.remove(l)
+        for l in potential:
+            bb.note("Task %s no longer depends on %s, removing from sysroot" % (mytaskname, l))
+            lnk = os.readlink(l)
+            sstate_clean_manifest(depdir + "/" + lnk, d, workdir)
+            os.unlink(l)
+            os.unlink(l + ".complete")
     with open(taskindex, "w") as f:
         for l in sorted(installed):
             f.write(l + "\n")
