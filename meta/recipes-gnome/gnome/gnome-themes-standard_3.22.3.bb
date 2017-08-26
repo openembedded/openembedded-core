@@ -25,6 +25,9 @@ do_install_append() {
         # Only building Adwaita, remove highcontrast files
         rm -rf ${D}${prefix}/share/themes/HighContrast \
                ${D}${prefix}/share/icons
+
+	# The libtool archive file is unneeded with shared libs on modern Linux
+	rm -rf ${D}${libdir}/gtk-2.0/2.10.0/engines/libadwaita.la
 }
 
 # There could be gnome-theme-highcontrast as well but that requires
