@@ -232,7 +232,7 @@ class DpkgIndexer(Indexer):
 
             cmd = "cd %s; PSEUDO_UNLOAD=1 %s packages . > Packages;" % (arch_dir, apt_ftparchive)
 
-            cmd += "%s -fc Packages > Packages.gz;" % gzip
+            cmd += "%s -fcn Packages > Packages.gz;" % gzip
 
             with open(os.path.join(arch_dir, "Release"), "w+") as release:
                 release.write("Label: %s\n" % arch)
