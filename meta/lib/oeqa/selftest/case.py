@@ -212,27 +212,33 @@ to ensure accurate results.")
         self.logger.debug("Removing from: %s\n%s\n" % (self.testinc_path, data))
         ftools.remove_from_file(self.testinc_path, data)
 
+    def recipeinc(self, recipe):
+        """Return absolute path of meta-sefltest/recipes-test/<recipe>/test_recipe.inc"""
+        return os.path.join(self.testlayer_path, 'recipes-test', recipe, 'test_recipe.inc')
+
     def write_recipeinc(self, recipe, data):
         """Write to meta-sefltest/recipes-test/<recipe>/test_recipe.inc"""
-        inc_file = os.path.join(self.testlayer_path, 'recipes-test', recipe, 'test_recipe.inc')
+        inc_file = self.recipeinc(recipe)
         self.logger.debug("Writing to: %s\n%s\n" % (inc_file, data))
         ftools.write_file(inc_file, data)
+        return inc_file
 
     def append_recipeinc(self, recipe, data):
         """Append data to meta-sefltest/recipes-test/<recipe>/test_recipe.inc"""
-        inc_file = os.path.join(self.testlayer_path, 'recipes-test', recipe, 'test_recipe.inc')
+        inc_file = self.recipeinc(recipe)
         self.logger.debug("Appending to: %s\n%s\n" % (inc_file, data))
         ftools.append_file(inc_file, data)
+        return inc_file
 
     def remove_recipeinc(self, recipe, data):
         """Remove data from meta-sefltest/recipes-test/<recipe>/test_recipe.inc"""
-        inc_file = os.path.join(self.testlayer_path, 'recipes-test', recipe, 'test_recipe.inc')
+        inc_file = self.recipeinc(recipe)
         self.logger.debug("Removing from: %s\n%s\n" % (inc_file, data))
         ftools.remove_from_file(inc_file, data)
 
     def delete_recipeinc(self, recipe):
         """Delete meta-sefltest/recipes-test/<recipe>/test_recipe.inc file"""
-        inc_file = os.path.join(self.testlayer_path, 'recipes-test', recipe, 'test_recipe.inc')
+        inc_file = self.recipeinc(recipe)
         self.logger.debug("Deleting file: %s" % inc_file)
         try:
             os.remove(inc_file)
@@ -259,13 +265,13 @@ to ensure accurate results.")
         self.logger.debug("Writing to: %s\n%s\n" % (self.machineinc_path, data))
         ftools.write_file(self.machineinc_path, data)
 
-    # check does path exist    
+    # check does path exist
     def assertExists(self, expr, msg=None):
         if not os.path.exists(expr):
             msg = self._formatMessage(msg, "%s does not exist" % safe_repr(expr))
             raise self.failureException(msg)
-    
-    # check does path not exist 
+
+    # check does path not exist
     def assertNotExists(self, expr, msg=None):
         if os.path.exists(expr):
             msg = self._formatMessage(msg, "%s exists when it should not" % safe_repr(expr))
