@@ -54,6 +54,10 @@ PACKAGECONFIG[directfb] = "--enable-video-directfb, --disable-video-directfb, di
 PACKAGECONFIG[opengl] = "--enable-video-opengl, --disable-video-opengl, virtual/libgl libglu"
 PACKAGECONFIG[x11] = "--enable-video-x11 --disable-x11-shared, --disable-video-x11, virtual/libx11 libxext libxrandr libxrender"
 
+# The following two options should only enabled with mingw support
+PACKAGECONFIG[stdio-redirect] = "--enable-stdio-redirect,--disable-stdio-redirect"
+PACKAGECONFIG[directx] = "--enable-directx,--disable-directx"
+
 EXTRA_AUTORECONF += "--include=acinclude --exclude=autoheader"
 
 do_configure_prepend() {
