@@ -24,7 +24,12 @@ do_install_ptest() {
 	install -D ${S}/build-aux/test-driver $t/build-aux/test-driver
 	cp -r ${S}/tests $t/
 	install ${B}/tests/Makefile $t/tests/
-	sed -e 's|^Makefile:|_Makefile:|' \
+	sed -e 's,--sysroot=${STAGING_DIR_TARGET},,g' \
+	    -e 's|${DEBUG_PREFIX_MAP}||g' \
+	    -e 's:${HOSTTOOLS_DIR}/::g' \
+	    -e 's:${RECIPE_SYSROOT_NATIVE}::g' \
+	    -e 's:${BASE_WORKDIR}/${MULTIMACH_TARGET_SYS}::g' \
+	    -e 's|^Makefile:|_Makefile:|' \
 	    -e 's|bash|sh|' \
 	    -e 's|^top_srcdir = \(.*\)|top_srcdir = ..\/|' \
 	    -e 's|^srcdir = \(.*\)|srcdir = .|' \
