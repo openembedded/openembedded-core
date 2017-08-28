@@ -50,6 +50,12 @@ do_install_append() {
 	rm -f ${D}${base_libdir}/udev/hid2hci
 }
 
+do_install_prepend_class-target () {
+	# Remove references to buildmachine
+	sed -i -e 's:${RECIPE_SYSROOT_NATIVE}::g' \
+		${B}/src/udev/keyboard-keys-from-name.h
+}
+
 INITSCRIPT_NAME = "udev"
 INITSCRIPT_PARAMS = "start 04 S ."
 
