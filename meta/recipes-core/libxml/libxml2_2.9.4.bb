@@ -29,7 +29,8 @@ SRC_URI = "ftp://xmlsoft.org/libxml2/libxml2-${PV}.tar.gz;name=libtar \
            file://libxml2-CVE-2017-5969.patch \
            file://libxml2-CVE-2017-0663.patch \
            file://CVE-2016-9318.patch \
-          "
+           file://0001-Make-ptest-run-the-python-tests-if-python-is-enabled.patch \
+           "
 
 SRC_URI[libtar.md5sum] = "ae249165c173b1ff386ee8ad676815f5"
 SRC_URI[libtar.sha256sum] = "ffb911191e509b966deb55de705387f14156e1a56b21824357cdf0053233633c"
@@ -48,7 +49,7 @@ inherit autotools pkgconfig binconfig-disabled ptest
 
 inherit ${@bb.utils.contains('PACKAGECONFIG', 'python', 'python3native', '', d)}
 
-RDEPENDS_${PN}-ptest += "make ${@bb.utils.contains('PACKAGECONFIG', 'python', 'python3-core', '', d)}"
+RDEPENDS_${PN}-ptest += "make ${@bb.utils.contains('PACKAGECONFIG', 'python', 'libgcc python3-core python3-argparse python3-logging python3-shell python3-signal python3-stringold python3-threading python3-unittest ${PN}-python', '', d)}"
 
 RDEPENDS_${PN}-python += "${@bb.utils.contains('PACKAGECONFIG', 'python', 'python3-core', '', d)}"
 
@@ -82,6 +83,12 @@ do_configure_prepend () {
 
 do_install_ptest () {
 	cp -r ${WORKDIR}/xmlconf ${D}${PTEST_PATH}
+	if [ "${@bb.utils.filter('PACKAGECONFIG', 'python', d)}" ]; then
+		sed -i -e 's|^\(PYTHON = \).*|\1${USRBINPATH}/${PYTHON_PN}|' \
+		    ${D}${PTEST_PATH}/python/tests/Makefile
+		grep -lrZ '#!/usr/bin/python' ${D}${PTEST_PATH}/python |
+			xargs -0 sed -i -e 's|/usr/bin/python|${USRBINPATH}/${PYTHON_PN}|'
+	fi
 }
 
 do_install_append_class-native () {
