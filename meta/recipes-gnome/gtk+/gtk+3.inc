@@ -38,7 +38,6 @@ EXTRA_OECONF += " \
                  WAYLAND_PROTOCOLS_SYSROOT_DIR=${RECIPE_SYSROOT} \
                  ${@bb.utils.contains("DISTRO_FEATURES", "x11", "", "--disable-gtk-doc", d)} \
                  "
-EXTRA_OECONF[vardepsexclude] = "MACHINE"
 
 do_compile_prepend() {
         export GIR_EXTRA_LIBS_PATH="${B}/gdk/.libs"
