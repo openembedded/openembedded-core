@@ -3,13 +3,9 @@ LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
 RDEPENDS_${PN} += "${VIRTUAL-RUNTIME_base-utils}"
 
-PR = "r2"
+PR = "r3"
 
-# While the packages maybe an allarch due to it being a
-# simple script, reality is that it is Host specific based
-# on the COMPATIBLE_HOST below, which needs to take precedence
-#inherit allarch
-INHIBIT_DEFAULT_DEPS = "1"
+inherit allarch
 
 SRC_URI = "file://init \
            file://rootfs \
