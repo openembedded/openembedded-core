@@ -437,6 +437,7 @@ python () {
         # date/time values. It will get expanded at execution time.
         # Similarly TMPDIR since otherwise we see QA stamp comparision problems
         localdata.delVar('DATETIME')
+        localdata.delVar('DATE')
         localdata.delVar('TMPDIR')
 
         image_cmd = localdata.getVar("IMAGE_CMD")
@@ -501,7 +502,7 @@ python () {
         d.prependVarFlag(task, 'postfuncs', ' create_symlinks')
         d.appendVarFlag(task, 'subimages', ' ' + ' '.join(subimages))
         d.appendVarFlag(task, 'vardeps', ' ' + ' '.join(vardeps))
-        d.appendVarFlag(task, 'vardepsexclude', 'DATETIME')
+        d.appendVarFlag(task, 'vardepsexclude', 'DATETIME DATE')
 
         bb.debug(2, "Adding task %s before %s, after %s" % (task, 'do_image_complete', after))
         bb.build.addtask(task, 'do_image_complete', after, d)
