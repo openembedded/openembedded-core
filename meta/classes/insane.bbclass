@@ -1178,12 +1178,10 @@ Rerun configure task after fixing this.""")
     cnf = d.getVar('EXTRA_OECONF') or ""
     if "gettext" not in d.getVar('P') and "gcc-runtime" not in d.getVar('P') and "--disable-nls" not in cnf:
         ml = d.getVar("MLPREFIX") or ""
-        if bb.data.inherits_class('native', d) or bb.data.inherits_class('cross', d) or bb.data.inherits_class('crosssdk', d) or bb.data.inherits_class('nativesdk', d):
-            gt = "gettext-native"
-        elif bb.data.inherits_class('cross-canadian', d):
+        if bb.data.inherits_class('cross-canadian', d):
             gt = "nativesdk-gettext"
         else:
-            gt = "virtual/" + ml + "gettext"
+            gt = "gettext-native"
         deps = bb.utils.explode_deps(d.getVar('DEPENDS') or "")
         if gt not in deps:
             for config in configs:
