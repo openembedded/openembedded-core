@@ -232,13 +232,17 @@ class BaseConfig(object):
         self.mac_tap = "52:54:00:12:34:"
         self.mac_slirp = "52:54:00:12:35:"
 
-    def acquire_lock(self):
+    def acquire_lock(self, error=True):
         logger.debug("Acquiring lockfile %s..." % self.lock)
         try:
             self.lock_descriptor = open(self.lock, 'w')
             fcntl.flock(self.lock_descriptor, fcntl.LOCK_EX|fcntl.LOCK_NB)
         except Exception as e:
-            logger.error("Acquiring lockfile %s failed: %s" % (self.lock, e))
+            msg = "Acquiring lockfile %s failed: %s" % (self.lock, e)
+            if error:
+                logger.error(msg)
+            else:
+                logger.info(msg)
             if self.lock_descriptor:
                 self.lock_descriptor.close()
             return False
@@ -927,7 +931,7 @@ class BaseConfig(object):
                 logger.info('Found %s.skip, skipping %s' % (lockfile, p))
                 continue
             self.lock = lockfile + '.lock'
-            if self.acquire_lock():
+            if self.acquire_lock(error=False):
                 tap = p
                 logger.info("Using preconfigured tap device %s" % tap)
                 logger.info("If this is not intended, touch %s.skip to make runqemu skip %s." %(lockfile, tap))
