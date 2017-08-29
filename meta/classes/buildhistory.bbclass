@@ -446,13 +446,20 @@ buildhistory_get_installed() {
 
 	# Produce dependency graph
 	# First, quote each name to handle characters that cause issues for dot
-	sed 's:\([^| ]*\):"\1":g' ${WORKDIR}/bh_installed_pkgs_deps.txt > $1/depends.tmp && \
+	sed 's:\([^| ]*\):"\1":g' ${WORKDIR}/bh_installed_pkgs_deps.txt > $1/depends.tmp &&
 		rm ${WORKDIR}/bh_installed_pkgs_deps.txt
-	# Change delimiter from pipe to -> and set style for recommend lines
-	sed -i -e 's:|: -> :' -e 's:"\[REC\]":[style=dotted]:' -e 's:$:;:' $1/depends.tmp
+	# Remove lines with rpmlib(...) and config(...) dependencies, change the
+	# delimiter from pipe to "->", set the style for recommend lines and
+	# turn versioned dependencies into edge labels.
+	sed -i -e '/rpmlib(/d' \
+	       -e '/config(/d' \
+	       -e 's:|: -> :' \
+	       -e 's:"\[REC\]":[style=dotted]:' \
+	       -e 's:"\([<>=]\+\)" "\([^"]*\)":[label="\1 \2"]:' \
+		$1/depends.tmp
 	# Add header, sorted and de-duped contents and footer and then delete the temp file
 	printf "digraph depends {\n    node [shape=plaintext]\n" > $1/depends.dot
-	cat $1/depends.tmp | sort | uniq >> $1/depends.dot
+	cat $1/depends.tmp | sort -u >> $1/depends.dot
 	echo "}" >>  $1/depends.dot
 	rm $1/depends.tmp
 
