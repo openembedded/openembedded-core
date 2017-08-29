@@ -561,7 +561,7 @@ class RpmPM(PackageManager):
 
         if self.d.getVar('PACKAGE_FEED_SIGN') == '1':
             gpg_opts = 'repo_gpgcheck=1\n'
-            gpg_opts += 'gpgkey=file://%s/pki/packagefeed-gpg/PACKAGEFEED-GPG-KEY-%s\n' % (self.d.getVar('sysconfdir'), self.d.getVar('DISTRO_VERSION'))
+            gpg_opts += 'gpgkey=file://%s/pki/packagefeed-gpg/PACKAGEFEED-GPG-KEY-%s-%s\n' % (self.d.getVar('sysconfdir'), self.d.getVar('DISTRO'), self.d.getVar('DISTRO_CODENAME'))
         else:
             gpg_opts = ''
 
