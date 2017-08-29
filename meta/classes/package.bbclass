@@ -1434,7 +1434,13 @@ if [ x"$D" = "x" ]; then
 fi
 }
 
-RPMDEPS = "${STAGING_LIBDIR_NATIVE}/rpm/rpmdeps --rcfile ${STAGING_LIBDIR_NATIVE}/rpm/rpmrc  --macros ${STAGING_LIBDIR_NATIVE}/rpm/macros --define '_rpmconfigdir ${STAGING_LIBDIR_NATIVE}/rpm/'"
+# In Morty and earlier releases, and on master (Rocko), the RPM file
+# dependencies are always enabled. However, since they were broken with the
+# release of Pyro and enabling them may cause build problems for some packages,
+# they are not enabled by default in Pyro. Setting ENABLE_RPM_FILEDEPS_FOR_PYRO
+# to "1" will enable them again.
+ENABLE_RPM_FILEDEPS_FOR_PYRO ??= "0"
+RPMDEPS = "${STAGING_LIBDIR_NATIVE}/rpm/rpmdeps${@' --alldeps' if d.getVar('ENABLE_RPM_FILEDEPS_FOR_PYRO') == '1' else ''}"
 
 # Collect perfile run-time dependency metadata
 # Output:
@@ -1451,7 +1457,6 @@ python package_do_filedeps() {
     pkgdest = d.getVar('PKGDEST')
     packages = d.getVar('PACKAGES')
     rpmdeps = d.getVar('RPMDEPS')
-    magic = d.expand("${STAGING_DIR_NATIVE}${datadir_native}/misc/magic.mgc")
 
     def chunks(files, n):
         return [files[i:i+n] for i in range(0, len(files), n)]
@@ -1463,7 +1468,7 @@ python package_do_filedeps() {
         if pkg.endswith('-dbg') or pkg.endswith('-doc') or pkg.find('-locale-') != -1 or pkg.find('-localedata-') != -1 or pkg.find('-gconv-') != -1 or pkg.find('-charmap-') != -1 or pkg.startswith('kernel-module-'):
             continue
         for files in chunks(pkgfiles[pkg], 100):
-            pkglist.append((pkg, files, rpmdeps, pkgdest, magic))
+            pkglist.append((pkg, files, rpmdeps, pkgdest))
 
     processed = oe.utils.multiprocess_exec( pkglist, oe.package.filedeprunner)
 
