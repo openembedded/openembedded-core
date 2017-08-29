@@ -39,3 +39,7 @@ python populate_packages_prepend() {
 }
 
 RDEPENDS_${PN}-ptest += "${PN}-modules ${PN}-doc ${PN}-misc sed libssp"
+
+# The perl-ptest package contains Perl internal modules and generating file
+# dependencies for it causes problems.
+SKIP_FILEDEPS_${PN}-ptest = '1'
