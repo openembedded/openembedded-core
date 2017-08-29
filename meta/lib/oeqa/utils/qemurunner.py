@@ -55,7 +55,7 @@ class QemuRunner:
         self.thread = None
         self.use_kvm = use_kvm
 
-        self.runqemutime = 60
+        self.runqemutime = 120
         self.host_dumper = HostDumper(dump_host_cmds, dump_dir)
 
     def create_socket(self):
@@ -204,7 +204,7 @@ class QemuRunner:
         out = self.getOutput(output)
         netconf = False # network configuration is not required by default
         if self.is_alive():
-            logger.info("qemu started - qemu procces pid is %s" % self.qemupid)
+            logger.info("qemu started in %s seconds - qemu procces pid is %s" % (time.time() - (endtime - self.runqemutime), self.qemupid))
             if get_ip:
                 cmdline = ''
                 with open('/proc/%s/cmdline' % self.qemupid) as p:
@@ -317,10 +317,14 @@ class QemuRunner:
                 logger.info("Serial console failed while trying to login")
 
         else:
-            logger.info("Qemu pid didn't appeared in %s seconds" % self.runqemutime)
+            logger.error("Qemu pid didn't appear in %s seconds" % self.runqemutime)
             self._dump_host()
             self.stop()
-            logger.info("Output from runqemu:\n%s" % self.getOutput(output))
+            op = self.getOutput(output)
+            if op:
+                logger.error("Output from runqemu:\n%s" % op)
+            else:
+                logger.error("No output from runqemu.\n")
             return False
 
         return self.is_alive()
