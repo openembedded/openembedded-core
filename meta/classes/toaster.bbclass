@@ -270,22 +270,20 @@ python toaster_buildhistory_dump() {
                     images[target][pname.strip()] = {'size':int(psize)*1024, 'depends' : []}
 
             with open("%s/depends.dot" % installed_img_path, "r") as fin:
-                p = re.compile(r' -> ')
-                dot = re.compile(r'.*style=dotted')
+                p = re.compile(r'\s*"(?P<name>[^"]+)"\s*->\s*"(?P<dep>[^"]+)"(?P<rec>.*?\[style=dotted\])?')
                 for line in fin:
-                    line = line.rstrip(';')
-                    linesplit = p.split(line)
-                    if len(linesplit) == 2:
-                        pname = linesplit[0].rstrip('"').strip('"')
-                        dependsname = linesplit[1].split(" ")[0].strip().strip(";").strip('"').rstrip('"')
-                        deptype = "depends"
-                        if dot.match(line):
-                            deptype = "recommends"
-                        if not pname in images[target]:
-                            images[target][pname] = {'size': 0, 'depends' : []}
-                        if not dependsname in images[target]:
-                            images[target][dependsname] = {'size': 0, 'depends' : []}
-                        images[target][pname]['depends'].append((dependsname, deptype))
+                    m = p.match(line)
+                    if not m:
+                        continue
+                    pname = m.group('name')
+                    dependsname = m.group('dep')
+                    deptype = 'recommends' if m.group('rec') else 'depends'
+
+                    if not pname in images[target]:
+                        images[target][pname] = {'size': 0, 'depends' : []}
+                    if not dependsname in images[target]:
+                        images[target][dependsname] = {'size': 0, 'depends' : []}
+                    images[target][pname]['depends'].append((dependsname, deptype))
 
             # files-in-image.txt is only generated if an image file is created,
             # so the file entries ('syms', 'dirs', 'files') for a target will be
