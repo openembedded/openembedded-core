@@ -35,6 +35,7 @@ SRC_URI = "git://github.com/rpm-software-management/rpm \
            file://0001-Fix-build-with-musl-C-library.patch \
            file://0001-Add-a-color-setting-for-mips64_n32-binaries.patch \
            file://0001-Add-PYTHON_ABI-when-searching-for-python-libraries.patch \
+           file://0011-Do-not-require-that-ELF-binaries-are-executable-to-b.patch \
            "
 
 PV = "4.13.90+git${SRCPV}"
