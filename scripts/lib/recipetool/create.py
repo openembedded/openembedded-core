@@ -1099,6 +1099,10 @@ def crunch_license(licfile):
     crunched_md5sums['1daebd9491d1e8426900b4fa5a422814'] = 'LGPLv2.1'
     # https://github.com/FFmpeg/FFmpeg/blob/master/COPYING.LGPLv3
     crunched_md5sums['2ebfb3bb49b9a48a075cc1425e7f4129'] = 'LGPLv3'
+    # https://raw.githubusercontent.com/eclipse/mosquitto/v1.4.14/epl-v10
+    crunched_md5sums['efe2cb9a35826992b9df68224e3c2628'] = 'EPL-1.0'
+    # https://raw.githubusercontent.com/eclipse/mosquitto/v1.4.14/edl-v10
+    crunched_md5sums['0a9c78c0a398d1bbce4a166757d60387'] = 'EDL-1.0'
     lictext = []
     with open(licfile, 'r', errors='surrogateescape') as f:
         for line in f:
@@ -1131,7 +1135,7 @@ def guess_license(srctree, d):
     md5sums = get_license_md5sums(d)
 
     licenses = []
-    licspecs = ['*LICEN[CS]E*', 'COPYING*', '*[Ll]icense*', 'LEGAL*', '[Ll]egal*', '*GPL*', 'README.lic*', 'COPYRIGHT*', '[Cc]opyright*']
+    licspecs = ['*LICEN[CS]E*', 'COPYING*', '*[Ll]icense*', 'LEGAL*', '[Ll]egal*', '*GPL*', 'README.lic*', 'COPYRIGHT*', '[Cc]opyright*', 'e[dp]l-v10']
     licfiles = []
     for root, dirs, files in os.walk(srctree):
         for fn in files:
