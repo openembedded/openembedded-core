@@ -518,7 +518,7 @@ def create_recipe(args):
         # We need this checking mechanism to improve the recipe created by recipetool and devtool
         # is able to parse and build by bitbake.
         # If there is no input for branch name, then check for branch name with SRCREV provided.
-        if not srcbranch and not nobranch and srcrev and (srcrev != '${AUTOREV}'):
+        if not srcbranch and not nobranch and srcrev and (srcrev != '${AUTOREV}') and scheme in ['git', 'gitsm']:
             try:
                 cmd = 'git branch -r --contains'
                 check_branch, check_branch_err = bb.process.run('%s %s' % (cmd, srcrev), cwd=srctree)
@@ -549,7 +549,7 @@ def create_recipe(args):
             params['branch'] = srcbranch
             srcuri = bb.fetch2.encodeurl((scheme, network, path, user, passwd, params))
 
-        if storeTagName:
+        if storeTagName and scheme in ['git', 'gitsm']:
             # Re-introduced tag variable from storeTagName
             # Check srcrev using tag and check validity of the tag
             cmd = ('git rev-parse --verify %s' % (storeTagName))
