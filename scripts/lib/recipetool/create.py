@@ -423,6 +423,7 @@ def create_recipe(args):
     srcsubdir = ''
     srcrev = '${AUTOREV}'
     srcbranch = ''
+    scheme = ''
     storeTagName = ''
     pv_srcpv = False
 
@@ -682,7 +683,14 @@ def create_recipe(args):
         lines_before.append('')
         lines_before.append('# Modify these as desired')
         # Note: we have code to replace realpv further down if it gets set to some other value
-        lines_before.append('PV = "%s+git${SRCPV}"' % (realpv or '1.0'))
+        scheme, _, _, _, _, _ = bb.fetch2.decodeurl(srcuri)
+        if scheme in ['git', 'gitsm']:
+            srcpvprefix = 'git'
+        elif scheme == 'svn':
+            srcpvprefix = 'svnr'
+        else:
+            srcpvprefix = scheme
+        lines_before.append('PV = "%s+%s${SRCPV}"' % (realpv or '1.0', srcpvprefix))
         pv_srcpv = True
         if not args.autorev and srcrev == '${AUTOREV}':
             if os.path.exists(os.path.join(srctree, '.git')):
