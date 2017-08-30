@@ -334,11 +334,13 @@ def copy_recipe_files(d, tgt_dir, whole_dir=False, download=True):
         fetch.download()
 
     # Copy local files to target directory and gather any remote files
-    bb_dir = os.path.dirname(d.getVar('FILE')) + os.sep
+    bb_dir = os.path.abspath(os.path.dirname(d.getVar('FILE'))) + os.sep
     remotes = []
     copied = []
-    includes = [path for path in d.getVar('BBINCLUDED').split() if
-                path.startswith(bb_dir) and os.path.exists(path)]
+    # Need to do this in two steps since we want to check against the absolute path
+    includes = [os.path.abspath(path) for path in d.getVar('BBINCLUDED').split() if os.path.exists(path)]
+    # We also check this below, but we don't want any items in this list being considered remotes
+    includes = [path for path in includes if path.startswith(bb_dir)]
     for path in fetch.localpaths() + includes:
         # Only import files that are under the meta directory
         if path.startswith(bb_dir):

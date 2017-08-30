@@ -301,6 +301,9 @@ def _create_new_recipe(newpv, md5, sha256, srcrev, srcbranch, workspace, tinfoil
     path = os.path.join(workspace, 'recipes', bpn)
     bb.utils.mkdirhier(path)
     copied, _ = oe.recipeutils.copy_recipe_files(rd, path)
+    if not copied:
+        raise DevtoolError('Internal error - no files were copied for recipe %s' % bpn)
+    logger.debug('Copied %s to %s' % (copied, path))
 
     oldpv = rd.getVar('PV')
     if not newpv:
