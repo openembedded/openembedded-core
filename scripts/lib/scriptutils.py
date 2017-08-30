@@ -134,7 +134,7 @@ def fetch_url(tinfoil, srcuri, srcrev, destdir, logger, preserve_tmp=False, mirr
             # for do_fetch and do_unpack
             # I'd use tempfile functions here but underscores can be produced by that and those
             # aren't allowed in recipe file names except to separate the version
-            rndstring = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(8))
+            rndstring = ''.join(random.choice(string.ascii_lowercase + string.digits) for _ in range(8))
             fetchrecipe = os.path.join(fetchrecipedir, 'tmp-recipetool-%s.bb' % rndstring)
             fetchrecipepn = os.path.splitext(os.path.basename(fetchrecipe))[0]
             logger.debug('Generating initial recipe %s for fetching' % fetchrecipe)
