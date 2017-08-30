@@ -2,7 +2,7 @@
 #
 # Some code borrowed from the OE layer index
 #
-# Copyright (C) 2013-2016 Intel Corporation
+# Copyright (C) 2013-2017 Intel Corporation
 #
 
 import sys
@@ -320,7 +320,7 @@ def patch_recipe(d, fn, varvalues, patch=False, relpath=''):
 
 
 
-def copy_recipe_files(d, tgt_dir, whole_dir=False, download=True):
+def copy_recipe_files(d, tgt_dir, whole_dir=False, download=True, all_variants=False):
     """Copy (local) recipe files, including both files included via include/require,
     and files referred to in the SRC_URI variable."""
     import bb.fetch2
@@ -328,10 +328,31 @@ def copy_recipe_files(d, tgt_dir, whole_dir=False, download=True):
 
     # FIXME need a warning if the unexpanded SRC_URI value contains variable references
 
-    uris = (d.getVar('SRC_URI') or "").split()
-    fetch = bb.fetch2.Fetch(uris, d)
-    if download:
-        fetch.download()
+    uri_values = []
+    localpaths = []
+    def fetch_urls(rdata):
+        # Collect the local paths from SRC_URI
+        srcuri = rdata.getVar('SRC_URI') or ""
+        if srcuri not in uri_values:
+            fetch = bb.fetch2.Fetch(srcuri.split(), rdata)
+            if download:
+                fetch.download()
+            for pth in fetch.localpaths():
+                if pth not in localpaths:
+                    localpaths.append(pth)
+            uri_values.append(srcuri)
+
+    fetch_urls(d)
+    if all_variants:
+        # Get files for other variants e.g. in the case of a SRC_URI_append
+        localdata = bb.data.createCopy(d)
+        variants = (localdata.getVar('BBCLASSEXTEND') or '').split()
+        if variants:
+            # Ensure we handle class-target if we're dealing with one of the variants
+            variants.append('target')
+            for variant in variants:
+                localdata.setVar('CLASSOVERRIDE', 'class-%s' % variant)
+                fetch_urls(localdata)
 
     # Copy local files to target directory and gather any remote files
     bb_dir = os.path.abspath(os.path.dirname(d.getVar('FILE'))) + os.sep
@@ -341,7 +362,7 @@ def copy_recipe_files(d, tgt_dir, whole_dir=False, download=True):
     includes = [os.path.abspath(path) for path in d.getVar('BBINCLUDED').split() if os.path.exists(path)]
     # We also check this below, but we don't want any items in this list being considered remotes
     includes = [path for path in includes if path.startswith(bb_dir)]
-    for path in fetch.localpaths() + includes:
+    for path in localpaths + includes:
         # Only import files that are under the meta directory
         if path.startswith(bb_dir):
             if not whole_dir:
