@@ -1,6 +1,6 @@
 # Recipe creation tool - create command plugin
 #
-# Copyright (C) 2014-2016 Intel Corporation
+# Copyright (C) 2014-2017 Intel Corporation
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License version 2 as
@@ -440,14 +440,30 @@ def create_recipe(args):
         rev_re = re.compile(';rev=([^;]+)')
         res = rev_re.search(srcuri)
         if res:
+            if args.srcrev:
+                logger.error('rev= parameter and -S/--srcrev option cannot both be specified - use one or the other')
+                sys.exit(1)
+            if args.autorev:
+                logger.error('rev= parameter and -a/--autorev option cannot both be specified - use one or the other')
+                sys.exit(1)
             srcrev = res.group(1)
             srcuri = rev_re.sub('', srcuri)
+        elif args.srcrev:
+            srcrev = args.srcrev
 
         # Check whether users provides any branch info in fetchuri.
         # If true, we will skip all branch checking process to honor all user's input.
         scheme, network, path, user, passwd, params = bb.fetch2.decodeurl(fetchuri)
         srcbranch = params.get('branch')
+        if args.srcbranch:
+            if srcbranch:
+                logger.error('branch= parameter and -B/--srcbranch option cannot both be specified - use one or the other')
+                sys.exit(1)
+            srcbranch = args.srcbranch
         nobranch = params.get('nobranch')
+        if nobranch and srcbranch:
+            logger.error('nobranch= cannot be used if you specify a branch')
+            sys.exit(1)
         tag = params.get('tag')
         if not srcbranch and not nobranch and srcrev != '${AUTOREV}':
             # Append nobranch=1 in the following conditions:
@@ -523,7 +539,7 @@ def create_recipe(args):
             else:
                 # If get_branch contains more than one objects, then display error and exit.
                 mbrch = '\n  ' + '\n  '.join(get_branch)
-                logger.error('Revision %s was found on multiple branches: %s\nPlease provide the correct branch in the source URL with ;branch=<branch> (and ensure you use quotes around the URL to avoid the shell interpreting the ";")' % (srcrev, mbrch))
+                logger.error('Revision %s was found on multiple branches: %s\nPlease provide the correct branch with -B/--srcbranch' % (srcrev, mbrch))
                 sys.exit(1)
 
         # Since we might have a value in srcbranch, we need to
@@ -1277,7 +1293,10 @@ def register_commands(subparsers):
     parser_create.add_argument('-b', '--binary', help='Treat the source tree as something that should be installed verbatim (no compilation, same directory structure)', action='store_true')
     parser_create.add_argument('--also-native', help='Also add native variant (i.e. support building recipe for the build host as well as the target machine)', action='store_true')
     parser_create.add_argument('--src-subdir', help='Specify subdirectory within source tree to use', metavar='SUBDIR')
-    parser_create.add_argument('-a', '--autorev', help='When fetching from a git repository, set SRCREV in the recipe to a floating revision instead of fixed', action="store_true")
+    group = parser_create.add_mutually_exclusive_group()
+    group.add_argument('-a', '--autorev', help='When fetching from a git repository, set SRCREV in the recipe to a floating revision instead of fixed', action="store_true")
+    group.add_argument('-S', '--srcrev', help='Source revision to fetch if fetching from an SCM such as git (default latest)')
+    parser_create.add_argument('-B', '--srcbranch', help='Branch in source repository if fetching from an SCM such as git (default master)')
     parser_create.add_argument('--keep-temp', action="store_true", help='Keep temporary directory (for debugging)')
     parser_create.add_argument('--fetch-dev', action="store_true", help='For npm, also fetch devDependencies')
     parser_create.add_argument('--devtool', action="store_true", help=argparse.SUPPRESS)

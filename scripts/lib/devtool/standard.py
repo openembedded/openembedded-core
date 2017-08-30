@@ -1,6 +1,6 @@
 # Development tool - standard commands plugin
 #
-# Copyright (C) 2014-2016 Intel Corporation
+# Copyright (C) 2014-2017 Intel Corporation
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License version 2 as
@@ -65,6 +65,12 @@ def add(args, config, basepath, workspace):
             args.recipename = None
         elif os.path.isdir(args.recipename):
             logger.warn('Ambiguous argument "%s" - assuming you mean it to be the recipe name' % args.recipename)
+
+    if not args.fetchuri:
+        if args.srcrev:
+            raise DevtoolError('The -S/--srcrev option is only valid when fetching from an SCM repository')
+        if args.srcbranch:
+            raise DevtoolError('The -B/--srcbranch option is only valid when fetching from an SCM repository')
 
     if args.srctree and os.path.isfile(args.srctree):
         args.fetchuri = 'file://' + os.path.abspath(args.srctree)
@@ -151,6 +157,10 @@ def add(args, config, basepath, workspace):
         extracmdopts += ' --fetch-dev'
     if args.mirrors:
         extracmdopts += ' --mirrors'
+    if args.srcrev:
+        extracmdopts += ' --srcrev %s' % args.srcrev
+    if args.srcbranch:
+        extracmdopts += ' --srcbranch %s' % args.srcbranch
 
     tempdir = tempfile.mkdtemp(prefix='devtool')
     try:
@@ -1809,7 +1819,10 @@ def register_commands(subparsers, context):
     parser_add.add_argument('--fetch-dev', help='For npm, also fetch devDependencies', action="store_true")
     parser_add.add_argument('--version', '-V', help='Version to use within recipe (PV)')
     parser_add.add_argument('--no-git', '-g', help='If fetching source, do not set up source tree as a git repository', action="store_true")
-    parser_add.add_argument('--autorev', '-a', help='When fetching from a git repository, set SRCREV in the recipe to a floating revision instead of fixed', action="store_true")
+    group = parser_add.add_mutually_exclusive_group()
+    group.add_argument('--srcrev', '-S', help='Source revision to fetch if fetching from an SCM such as git (default latest)')
+    group.add_argument('--autorev', '-a', help='When fetching from a git repository, set SRCREV in the recipe to a floating revision instead of fixed', action="store_true")
+    parser_add.add_argument('--srcbranch', '-B', help='Branch in source repository if fetching from an SCM such as git (default master)')
     parser_add.add_argument('--binary', '-b', help='Treat the source tree as something that should be installed verbatim (no compilation, same directory structure). Useful with binary packages e.g. RPMs.', action='store_true')
     parser_add.add_argument('--also-native', help='Also add native variant (i.e. support building recipe for the build host as well as the target machine)', action='store_true')
     parser_add.add_argument('--src-subdir', help='Specify subdirectory within source tree to use', metavar='SUBDIR')
