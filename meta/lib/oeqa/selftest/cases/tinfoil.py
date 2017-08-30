@@ -195,3 +195,37 @@ class TinfoilTests(OESelftestTestCase):
             tinfoil.config_data.appendVar('OVERRIDES', ':overrideone')
             value = tinfoil.config_data.getVar('TESTVAR')
             self.assertEqual(value, 'one', 'Variable overrides not functioning correctly')
+
+    def test_variable_history(self):
+        # Basic test to ensure that variable history works when tracking=True
+        with bb.tinfoil.Tinfoil(tracking=True) as tinfoil:
+            tinfoil.prepare(config_only=False, quiet=2)
+            # Note that _tracking for any datastore we get will be
+            # false here, that's currently expected - so we can't check
+            # for that
+            history = tinfoil.config_data.varhistory.variable('DL_DIR')
+            for entry in history:
+                if entry['file'].endswith('/bitbake.conf'):
+                    if entry['op'] in ['set', 'set?']:
+                        break
+            else:
+                self.fail('Did not find history entry setting DL_DIR in bitbake.conf. History: %s' % history)
+            # Check it works for recipes as well
+            testrecipe = 'zlib'
+            rd = tinfoil.parse_recipe(testrecipe)
+            history = rd.varhistory.variable('LICENSE')
+            bbfound = -1
+            recipefound = -1
+            for i, entry in enumerate(history):
+                if entry['file'].endswith('/bitbake.conf'):
+                    if entry['detail'] == 'INVALID' and entry['op'] in ['set', 'set?']:
+                        bbfound = i
+                elif entry['file'].endswith('.bb'):
+                    if entry['op'] == 'set':
+                        recipefound = i
+            if bbfound == -1:
+                self.fail('Did not find history entry setting LICENSE in bitbake.conf parsing %s recipe. History: %s' % (testrecipe, history))
+            if recipefound == -1:
+                self.fail('Did not find history entry setting LICENSE in %s recipe. History: %s' % (testrecipe, history))
+            if bbfound > recipefound:
+                self.fail('History entry setting LICENSE in %s recipe and in bitbake.conf in wrong order. History: %s' % (testrecipe, history))
