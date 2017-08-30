@@ -1,6 +1,6 @@
 # Development tool - upgrade command plugin
 #
-# Copyright (C) 2014-2015 Intel Corporation
+# Copyright (C) 2014-2017 Intel Corporation
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License version 2 as
@@ -355,6 +355,29 @@ def _create_new_recipe(newpv, md5, sha256, srcrev, srcbranch, workspace, tinfoil
 
     return fullpath, copied
 
+
+def _check_git_config():
+    def getconfig(name):
+        try:
+            value = bb.process.run('git config --global %s' % name)[0].strip()
+        except bb.process.ExecutionError as e:
+            if e.exitcode == 1:
+                value = None
+            else:
+                raise
+        return value
+
+    username = getconfig('user.name')
+    useremail = getconfig('user.email')
+    configerr = []
+    if not username:
+        configerr.append('Please set your name using:\n  git config --global user.name')
+    if not useremail:
+        configerr.append('Please set your email using:\n  git config --global user.email')
+    if configerr:
+        raise DevtoolError('Your git configuration is incomplete which will prevent rebases from working:\n' + '\n'.join(configerr))
+
+
 def upgrade(args, config, basepath, workspace):
     """Entry point for the devtool 'upgrade' subcommand"""
 
@@ -364,6 +387,8 @@ def upgrade(args, config, basepath, workspace):
         raise DevtoolError("You must provide a version using the --version/-V option, or for recipes that fetch from an SCM such as git, the --srcrev/-S option")
     if args.srcbranch and not args.srcrev:
         raise DevtoolError("If you specify --srcbranch/-B then you must use --srcrev/-S to specify the revision" % args.recipename)
+
+    _check_git_config()
 
     tinfoil = setup_tinfoil(basepath=basepath, tracking=True)
     try:
