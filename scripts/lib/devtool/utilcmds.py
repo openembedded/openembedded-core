@@ -30,14 +30,13 @@ from devtool import parse_recipe
 
 logger = logging.getLogger('devtool')
 
-def find_recipe(args, config, basepath, workspace):
-    """Entry point for the devtool 'find-recipe' subcommand"""
+def _find_recipe_path(args, config, basepath, workspace):
     if args.any_recipe:
         tinfoil = setup_tinfoil(config_only=False, basepath=basepath)
         try:
             rd = parse_recipe(config, tinfoil, args.recipename, True)
             if not rd:
-                return 1
+                raise DevtoolError("Failed to find specified recipe")
             recipefile = rd.getVar('FILE')
         finally:
             tinfoil.shutdown()
@@ -47,11 +46,19 @@ def find_recipe(args, config, basepath, workspace):
         if not recipefile:
             raise DevtoolError("Recipe file for %s is not under the workspace" %
                                args.recipename)
+    return recipefile
+
+
+def find_recipe(args, config, basepath, workspace):
+    """Entry point for the devtool 'find-recipe' subcommand"""
+    recipefile = _find_recipe_path(args, config, basepath, workspace)
+    print(recipefile)
+    return 0
 
 
 def edit_recipe(args, config, basepath, workspace):
     """Entry point for the devtool 'edit-recipe' subcommand"""
-    return scriptutils.run_editor(find_recipe(args, config, basepath, workspace), logger)
+    return scriptutils.run_editor(_find_recipe_path(args, config, basepath, workspace), logger)
 
 
 def configure_help(args, config, basepath, workspace):
