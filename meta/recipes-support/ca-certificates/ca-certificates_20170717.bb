@@ -14,8 +14,7 @@ DEPENDS_class-nativesdk = "openssl-native"
 # Need c_rehash from openssl and run-parts from debianutils
 PACKAGE_WRITE_DEPS += "openssl-native debianutils-native"
 
-SRCREV = "adc13592b55ef00450412d61a2145d162a4afb19"
-PR = "r20170717"
+SRCREV = "34b8e19e541b8af4076616b2e170c7a70cdaded0"
 
 SRC_URI = "git://anonscm.debian.org/collab-maint/ca-certificates.git \
            file://0002-update-ca-certificates-use-SYSROOT.patch \
