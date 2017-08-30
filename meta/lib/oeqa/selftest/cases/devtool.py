@@ -194,26 +194,35 @@ class DevtoolTests(DevtoolBase):
         # Fetch source
         tempdir = tempfile.mkdtemp(prefix='devtoolqa')
         self.track_for_cleanup(tempdir)
+        pn = 'pv'
+        pv = '1.5.3'
         url = 'http://www.ivarch.com/programs/sources/pv-1.5.3.tar.bz2'
         result = runCmd('wget %s' % url, cwd=tempdir)
-        result = runCmd('tar xfv pv-1.5.3.tar.bz2', cwd=tempdir)
-        srcdir = os.path.join(tempdir, 'pv-1.5.3')
+        result = runCmd('tar xfv %s' % os.path.basename(url), cwd=tempdir)
+        srcdir = os.path.join(tempdir, '%s-%s' % (pn, pv))
         self.assertTrue(os.path.isfile(os.path.join(srcdir, 'configure')), 'Unable to find configure script in source directory')
         # Test devtool add
         self.track_for_cleanup(self.workspacedir)
-        self.add_command_to_tearDown('bitbake -c cleansstate pv')
+        self.add_command_to_tearDown('bitbake -c cleansstate %s' % pn)
         self.add_command_to_tearDown('bitbake-layers remove-layer */workspace')
-        result = runCmd('devtool add pv %s' % srcdir)
+        result = runCmd('devtool add %s %s' % (pn, srcdir))
         self.assertExists(os.path.join(self.workspacedir, 'conf', 'layer.conf'), 'Workspace directory not created')
         # Test devtool status
         result = runCmd('devtool status')
-        self.assertIn('pv', result.output)
+        recipepath = '%s/recipes/%s/%s_%s.bb' % (self.workspacedir, pn, pn, pv)
+        self.assertIn(recipepath, result.output)
         self.assertIn(srcdir, result.output)
+        # Test devtool find-recipe
+        result = runCmd('devtool -q find-recipe %s' % pn)
+        self.assertEqual(recipepath, result.output.strip())
+        # Test devtool edit-recipe
+        result = runCmd('EDITOR="echo 123" devtool -q edit-recipe %s' % pn)
+        self.assertEqual('123 %s' % recipepath, result.output.strip())
         # Clean up anything in the workdir/sysroot/sstate cache (have to do this *after* devtool add since the recipe only exists then)
-        bitbake('pv -c cleansstate')
+        bitbake('%s -c cleansstate' % pn)
         # Test devtool build
-        result = runCmd('devtool build pv')
-        bb_vars = get_bb_vars(['D', 'bindir'], 'pv')
+        result = runCmd('devtool build %s' % pn)
+        bb_vars = get_bb_vars(['D', 'bindir'], pn)
         installdir = bb_vars['D']
         self.assertTrue(installdir, 'Could not query installdir variable')
         bindir = bb_vars['bindir']
