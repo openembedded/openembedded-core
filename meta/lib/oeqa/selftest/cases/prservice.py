@@ -42,7 +42,6 @@ class BitbakePrTests(OESelftestTestCase):
         res = bitbake(package_name, ignore_status=True)
         self.delete_recipeinc(package_name)
         self.assertEqual(res.status, 0, msg=res.output)
-        self.assertTrue("NOTE: Started PRServer with DBfile" in res.output, msg=res.output)
 
     def config_pr_tests(self, package_name, package_type='rpm', pr_socket='localhost:0'):
         config_package_data = 'PACKAGE_CLASSES = "package_%s"' % package_type
@@ -73,6 +72,7 @@ class BitbakePrTests(OESelftestTestCase):
         exported_db_path = os.path.join(self.builddir, 'export.inc')
         export_result = runCmd("bitbake-prserv-tool export %s" % exported_db_path, ignore_status=True)
         self.assertEqual(export_result.status, 0, msg="PR Service database export failed: %s" % export_result.output)
+        self.assertTrue(os.path.exists(exported_db_path))
 
         if replace_current_db:
             current_db_path = os.path.join(get_bb_var('PERSISTENT_DIR'), 'prserv.sqlite3')
