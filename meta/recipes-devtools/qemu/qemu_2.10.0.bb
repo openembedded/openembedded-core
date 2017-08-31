@@ -12,7 +12,7 @@ SRC_URI = "http://wiki.qemu-project.org/download/${BP}.tar.bz2 \
            file://disable-grabs.patch \
            file://exclude-some-arm-EABI-obsolete-syscalls.patch \
            file://wacom.patch \
-           file://add-ptest-in-makefile.patch \
+           file://add-ptest-in-makefile-v10.patch \
            file://run-ptest \
            file://qemu-enlarge-env-entry-size.patch \
            file://no-valgrind.patch \
@@ -24,8 +24,6 @@ SRC_URI = "http://wiki.qemu-project.org/download/${BP}.tar.bz2 \
            file://0003-Introduce-condition-in-TPM-backend-for-notification.patch \
            file://0004-Add-support-for-VM-suspend-resume-for-TPM-TIS-v2.9.patch \
            file://apic-fixup-fallthrough-to-PIC.patch \
-           file://0001-osdep-Add-runtime-OFD-lock-detection.patch \
-           file://0002-file-posix-Do-runtime-check-for-ofd-lock-API.patch \
            "
 UPSTREAM_CHECK_REGEX = "qemu-(?P<pver>\d+\..*)\.tar"
 
@@ -34,8 +32,9 @@ SRC_URI_append_class-native = " \
             file://fix-libcap-header-issue-on-some-distro.patch \
             file://cpus.c-qemu_cpu_kick_thread_debugging.patch \
             "
-SRC_URI[md5sum] = "634c498476e4b5643cf7a89e7416d0ae"
-SRC_URI[sha256sum] = "9f8aaa2839634a2226a49d0f305ef922a7b0bc850d343aaee41948fd6f45700a"
+
+SRC_URI[md5sum] = "ca73441de73a9b52c6c49c97190d2185"
+SRC_URI[sha256sum] = "7e9f39e1306e6dcc595494e91c1464d4b03f55ddd2053183e0e1b69f7f776d48"
 
 COMPATIBLE_HOST_mipsarchn32 = "null"
 COMPATIBLE_HOST_mipsarchn64 = "null"
