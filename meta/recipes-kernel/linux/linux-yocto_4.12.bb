@@ -11,20 +11,20 @@ KBRANCH_qemux86  ?= "standard/base"
 KBRANCH_qemux86-64 ?= "standard/base"
 KBRANCH_qemumips64 ?= "standard/mti-malta64"
 
-SRCREV_machine_qemuarm ?= "a5227887cfadd94068717e8166879bf88d00ef73"
-SRCREV_machine_qemuarm64 ?= "084d8ae2f349a7621e1e51c81b4494b123f3c09a"
-SRCREV_machine_qemumips ?= "a6983bac4e93ba7e892f666ad8c58b32c2d10945"
-SRCREV_machine_qemuppc ?= "084d8ae2f349a7621e1e51c81b4494b123f3c09a"
-SRCREV_machine_qemux86 ?= "084d8ae2f349a7621e1e51c81b4494b123f3c09a"
-SRCREV_machine_qemux86-64 ?= "084d8ae2f349a7621e1e51c81b4494b123f3c09a"
-SRCREV_machine_qemumips64 ?= "b344c1888b03e40683ba109bb45b44e9cf4d1eb4"
-SRCREV_machine ?= "084d8ae2f349a7621e1e51c81b4494b123f3c09a"
-SRCREV_meta ?= "09bc15990cc56fefe4111b8c64530cf0c4755817"
+SRCREV_machine_qemuarm ?= "fd1626821467303bd084dc28d41f9093d60c3f31"
+SRCREV_machine_qemuarm64 ?= "b5c8cfda2dfe296410d51e131289fb09c69e1e7d"
+SRCREV_machine_qemumips ?= "0d351d8eb3feeb121e859cb77c16dd0f46007a15"
+SRCREV_machine_qemuppc ?= "b5c8cfda2dfe296410d51e131289fb09c69e1e7d"
+SRCREV_machine_qemux86 ?= "b5c8cfda2dfe296410d51e131289fb09c69e1e7d"
+SRCREV_machine_qemux86-64 ?= "b5c8cfda2dfe296410d51e131289fb09c69e1e7d"
+SRCREV_machine_qemumips64 ?= "ec95c3aebd1d653a409e844779d2a34666627f59"
+SRCREV_machine ?= "b5c8cfda2dfe296410d51e131289fb09c69e1e7d"
+SRCREV_meta ?= "42965d664ffcac13ff4dffddcd4959ab08f19508"
 
 SRC_URI = "git://git.yoctoproject.org/linux-yocto-4.12.git;name=machine;branch=${KBRANCH}; \
            git://git.yoctoproject.org/yocto-kernel-cache;type=kmeta;name=meta;branch=yocto-4.12;destsuffix=${KMETA}"
 
-LINUX_VERSION ?= "4.12.7"
+LINUX_VERSION ?= "4.12.10"
 
 PV = "${LINUX_VERSION}+git${SRCPV}"
 
