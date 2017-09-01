@@ -497,8 +497,8 @@ python extend_recipe_sysroot() {
             for l in f:
                 l = l.strip()
                 if l not in installed:
-                    l = depdir + "/" + l
-                    if not os.path.exists(l):
+                    fl = depdir + "/" + l
+                    if not os.path.exists(fl):
                         # Was likely already uninstalled
                         continue
                     potential.append(l)
@@ -514,11 +514,12 @@ python extend_recipe_sysroot() {
                         if l in potential:
                             potential.remove(l)
         for l in potential:
+            fl = depdir + "/" + l
             bb.note("Task %s no longer depends on %s, removing from sysroot" % (mytaskname, l))
-            lnk = os.readlink(l)
+            lnk = os.readlink(fl)
             sstate_clean_manifest(depdir + "/" + lnk, d, workdir)
-            os.unlink(l)
-            os.unlink(l + ".complete")
+            os.unlink(fl)
+            os.unlink(fl + ".complete")
 
     for dep in configuredeps:
         c = setscenedeps[dep][0]
