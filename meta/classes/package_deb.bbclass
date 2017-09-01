@@ -192,8 +192,8 @@ def deb_write_pkg(pkg, d):
         mapping_rename_hook(localdata)
 
         def debian_cmp_remap(var):
-            # dpkg does not allow for '(' or ')' in a dependency name
-            # replace these instances with '__' and '__'
+            # dpkg does not allow for '(', ')' or ':' in a dependency name
+            # Replace any instances of them with '__'
             #
             # In debian '>' and '<' do not mean what it appears they mean
             #   '<' = less or equal
@@ -202,8 +202,7 @@ def deb_write_pkg(pkg, d):
             #
             for dep in var:
                 if '(' in dep:
-                    newdep = dep.replace('(', '__')
-                    newdep = newdep.replace(')', '__')
+                    newdep = re.sub(r'[(:)]', '__', dep)
                     if newdep != dep:
                         var[newdep] = var[dep]
                         del var[dep]
