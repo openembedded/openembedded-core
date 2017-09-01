@@ -40,7 +40,7 @@ class Archiver(OESelftestTestCase):
         excluded_present = len(glob.glob(src_path + '/%s-*' % exclude_recipe))
         self.assertFalse(excluded_present, 'Recipe %s was not excluded.' % exclude_recipe)
 
-
+    @OETestID(1900)
     def test_archiver_filters_by_type(self):
         """
         Summary:     The archiver is documented to filter on the recipe type.
@@ -73,6 +73,7 @@ class Archiver(OESelftestTestCase):
         excluded_present = len(glob.glob(src_path_native + '/%s-*' % native_recipe))
         self.assertFalse(excluded_present, 'Recipe %s was not excluded.' % native_recipe)
 
+    @OETestID(1901)
     def test_archiver_filters_by_type_and_name(self):
         """
         Summary:     Test that the archiver archives by recipe type, taking the

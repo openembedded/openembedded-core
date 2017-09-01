@@ -131,6 +131,7 @@ class ImageFeatures(OESelftestTestCase):
         # check if the resulting gzip is valid
         self.assertTrue(runCmd('gzip -t %s' % gzip_path))
 
+    @OETestID(1903)
     def test_hypervisor_fmts(self):
         """
         Summary:     Check various hypervisor formats
@@ -165,6 +166,7 @@ class ImageFeatures(OESelftestTestCase):
                             native_sysroot=sysroot)
             self.assertTrue(json.loads(result.output).get('format') == itype)
 
+    @OETestID(1905)
     def test_long_chain_conversion(self):
         """
         Summary:     Check for chaining many CONVERSION_CMDs together
@@ -196,6 +198,7 @@ class ImageFeatures(OESelftestTestCase):
         self.assertTrue(runCmd('cd %s;sha256sum -c %s.%s.sha256sum' %
                                (deploy_dir_image, link_name, conv)))
 
+    @OETestID(1904)
     def test_image_fstypes(self):
         """
         Summary:     Check if image of supported image fstypes can be built

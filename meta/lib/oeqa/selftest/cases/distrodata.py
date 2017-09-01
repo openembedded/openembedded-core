@@ -2,6 +2,7 @@ from oeqa.selftest.case import OESelftestTestCase
 from oeqa.utils.commands import runCmd, bitbake, get_bb_var, get_bb_vars
 from oeqa.utils.decorators import testcase
 from oeqa.utils.ftools import write_file
+from oeqa.core.decorator.oeid import OETestID
 
 class Distrodata(OESelftestTestCase):
 
@@ -9,6 +10,7 @@ class Distrodata(OESelftestTestCase):
     def setUpClass(cls):
         super(Distrodata, cls).setUpClass()
 
+    @OETestID(1902)
     def test_checkpkg(self):
         """
         Summary:     Test that upstream version checks do not regress
