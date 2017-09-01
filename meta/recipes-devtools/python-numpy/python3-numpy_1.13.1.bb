@@ -9,6 +9,7 @@ SRC_URI = "https://github.com/${SRCNAME}/${SRCNAME}/releases/download/v${PV}/${S
            file://0001-Don-t-search-usr-and-so-on-for-libraries-by-default-.patch \
            file://remove-build-path-in-comments.patch \
            file://fix_shebang_f2py.patch \
+           file://0001-BUG-fix-infinite-loop-when-creating-np.pad-on-an-emp.patch \
            ${CONFIGFILESURI} "
 SRC_URI[md5sum] = "6d459e4a24f5035f720dda3c57716a92"
 SRC_URI[sha256sum] = "de020ec06f1e9ce1115a50161a38bf8d4c2525379900f9cb478cc613a1e7cd93"
