@@ -176,8 +176,7 @@ def filedeprunner(arg):
 
     def process_deps(pipe, pkg, pkgdest, provides, requires):
         file = None
-        for line in pipe:
-            line = line.decode("utf-8")
+        for line in pipe.split("\n"):
 
             m = file_re.match(line)
             if m:
@@ -226,12 +225,8 @@ def filedeprunner(arg):
 
         return provides, requires
 
-    try:
-        dep_popen = subprocess.Popen(shlex.split(rpmdeps) + pkgfiles, stdout=subprocess.PIPE)
-        provides, requires = process_deps(dep_popen.stdout, pkg, pkgdest, provides, requires)
-    except OSError as e:
-        bb.error("rpmdeps: '%s' command failed, '%s'" % (shlex.split(rpmdeps) + pkgfiles, e))
-        raise e
+    output = subprocess.check_output(shlex.split(rpmdeps) + pkgfiles, stderr=subprocess.STDOUT).decode("utf-8")
+    provides, requires = process_deps(output, pkg, pkgdest, provides, requires)
 
     return (pkg, provides, requires)
 
