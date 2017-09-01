@@ -589,7 +589,7 @@ python populate_lic_qa_checksum() {
         sane = package_qa_handle_error("license-checksum", pn + ": Recipe file fetches files and does not have license file information (LIC_FILES_CHKSUM)", d)
 
     srcdir = d.getVar('S')
-
+    corebase_licensefile = d.getVar('COREBASE') + "/LICENSE"
     for url in lic_files.split():
         try:
             (type, host, path, user, pswd, parm) = bb.fetch.decodeurl(url)
@@ -600,6 +600,9 @@ python populate_lic_qa_checksum() {
         if not os.path.isfile(srclicfile):
             package_qa_handle_error("license-checksum", pn + ": LIC_FILES_CHKSUM points to an invalid file: " + srclicfile, d)
             continue
+
+        if (srclicfile == corebase_licensefile):
+            bb.warn("${COREBASE}/LICENSE is not a valid license file, please use '${COMMON_LICENSE_DIR}/MIT' for a MIT License file in LIC_FILES_CHKSUM. This will become an error in the future")
 
         recipemd5 = parm.get('md5', '')
         beginline, endline = 0, 0
