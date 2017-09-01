@@ -27,6 +27,11 @@ UPSTREAM_CHECK_URI = "https://acpica.org/downloads"
 
 S = "${WORKDIR}/acpica-unix2-${PV}"
 
+inherit update-alternatives
+
+ALTERNATIVE_PRIORITY = "100"
+ALTERNATIVE_${PN} = "acpixtract"
+
 EXTRA_OEMAKE = "CC='${CC}' 'OPT_CFLAGS=-Wall'"
 
 do_install() {
