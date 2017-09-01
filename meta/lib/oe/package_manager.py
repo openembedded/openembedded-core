@@ -17,17 +17,10 @@ from oe.gpg_sign import get_signer
 def create_index(arg):
     index_cmd = arg
 
-    try:
-        bb.note("Executing '%s' ..." % index_cmd)
-        result = subprocess.check_output(index_cmd, stderr=subprocess.STDOUT, shell=True).decode("utf-8")
-    except subprocess.CalledProcessError as e:
-        return("Index creation command '%s' failed with return code %d:\n%s" %
-               (e.cmd, e.returncode, e.output.decode("utf-8")))
-
+    bb.note("Executing '%s' ..." % index_cmd)
+    result = subprocess.check_output(index_cmd, stderr=subprocess.STDOUT, shell=True).decode("utf-8")
     if result:
         bb.note(result)
-
-    return None
 
 """
 This method parse the output from the package managerand return
@@ -164,9 +157,7 @@ class OpkgIndexer(Indexer):
             bb.note("There are no packages in %s!" % self.deploy_dir)
             return
 
-        result = oe.utils.multiprocess_exec(index_cmds, create_index)
-        if result:
-            bb.fatal('%s' % ('\n'.join(result)))
+        oe.utils.multiprocess_exec(index_cmds, create_index)
 
         if signer:
             feed_sig_type = self.d.getVar('PACKAGE_FEED_GPG_SIGNATURE_TYPE')
@@ -247,9 +238,7 @@ class DpkgIndexer(Indexer):
             bb.note("There are no packages in %s" % self.deploy_dir)
             return
 
-        result = oe.utils.multiprocess_exec(index_cmds, create_index)
-        if result:
-            bb.fatal('%s' % ('\n'.join(result)))
+        oe.utils.multiprocess_exec(index_cmds, create_index)
         if self.d.getVar('PACKAGE_FEED_SIGN') == '1':
             raise NotImplementedError('Package feed signing not implementd for dpkg')
 
