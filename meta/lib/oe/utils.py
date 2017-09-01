@@ -224,24 +224,29 @@ def multiprocess_exec(commands, function):
     def init_worker():
         signal.signal(signal.SIGINT, signal.SIG_IGN)
 
+    fails = []
+
+    def failures(res):
+        fails.append(res)
+
     nproc = min(multiprocessing.cpu_count(), len(commands))
     pool = bb.utils.multiprocessingpool(nproc, init_worker)
-    imap = pool.imap(function, commands)
 
     try:
-        res = list(imap)
+        mapresult = pool.map_async(function, commands, error_callback=failures)
+
         pool.close()
         pool.join()
-        results = []
-        for result in res:
-            if result is not None:
-                results.append(result)
-        return results
-
+        results = mapresult.get()
     except KeyboardInterrupt:
         pool.terminate()
         pool.join()
         raise
+
+    if fails:
+        raise fails[0]
+
+    return results
 
 def squashspaces(string):
     import re
