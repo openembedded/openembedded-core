@@ -103,7 +103,7 @@ do_install() {
 
 	if ${@bb.utils.contains('PACKAGECONFIG', 'udev', 'false', 'true', d)}; then
 		# This is where alsa-utils will install its rules if we don't tell it anything else.
-		rm -rf ${D}/lib/udev
-		rmdir --ignore-fail-on-non-empty ${D}/lib
+		rm -rf ${D}${nonarch_base_libdir}/udev
+		rmdir --ignore-fail-on-non-empty ${D}${nonarch_base_libdir}
 	fi
 }
