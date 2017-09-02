@@ -40,7 +40,7 @@ sysroot_stage_all_append() {
     append2 = """
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
-SRC_URI_append += "file://appendtest.txt"
+SRC_URI_append = " file://appendtest.txt"
 """
     layerappend = ''
 
