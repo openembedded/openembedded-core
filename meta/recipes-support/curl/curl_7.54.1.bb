@@ -7,6 +7,9 @@ LIC_FILES_CHKSUM = "file://COPYING;beginline=8;md5=3a34942f4ae3fbf1a303160714e66
 
 SRC_URI = "http://curl.haxx.se/download/curl-${PV}.tar.bz2 \
            file://0001-replace-krb5-config-with-pkg-config.patch \
+           file://CVE-2017-1000099.patch \
+           file://CVE-2017-1000100.patch \
+           file://CVE-2017-1000101.patch \
 "
 
 # curl likes to set -g0 in CFLAGS, so we stop it
