@@ -1597,7 +1597,7 @@ def update_recipe(args, config, basepath, workspace):
 def status(args, config, basepath, workspace):
     """Entry point for the devtool 'status' subcommand"""
     if workspace:
-        for recipe, value in workspace.items():
+        for recipe, value in sorted(workspace.items()):
             recipefile = value['recipefile']
             if recipefile:
                 recipestr = ' (%s)' % recipefile
