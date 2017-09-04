@@ -5,6 +5,7 @@ performance analysis. It covers hardware level \
 (CPU/PMU, Performance Monitoring Unit) features \
 and software features (software counters, tracepoints) \
 as well."
+HOMEPAGE = "https://perf.wiki.kernel.org/index.php/Main_Page"
 
 LICENSE = "GPLv2"
 
