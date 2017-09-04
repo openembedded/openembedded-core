@@ -244,7 +244,9 @@ def ipk_write_pkg(pkg, d):
 
         os.chdir(basedir)
         subprocess.check_output("PATH=\"%s\" %s %s %s" % (localdata.getVar("PATH"),
-                                                          d.getVar("OPKGBUILDCMD"), pkg, pkgoutdir), shell=True)
+                                                          d.getVar("OPKGBUILDCMD"), pkg, pkgoutdir),
+                                stderr=subprocess.STDOUT,
+                                shell=True)
 
         if d.getVar('IPK_SIGN_PACKAGES') == '1':
             ipkver = "%s-%s" % (d.getVar('PKGV'), d.getVar('PKGR'))
