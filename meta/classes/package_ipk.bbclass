@@ -17,7 +17,29 @@ OPKG_ARGS += "${@['', '--add-exclude ' + ' --add-exclude '.join((d.getVar('PACKA
 OPKGLIBDIR = "${localstatedir}/lib"
 
 python do_package_ipk () {
-    from multiprocessing import Process
+    import multiprocessing
+    import traceback
+
+    class IPKWritePkgProcess(multiprocessing.Process):
+        def __init__(self, *args, **kwargs):
+            multiprocessing.Process.__init__(self, *args, **kwargs)
+            self._pconn, self._cconn = multiprocessing.Pipe()
+            self._exception = None
+
+        def run(self):
+            try:
+                multiprocessing.Process.run(self)
+                self._cconn.send(None)
+            except Exception as e:
+                tb = traceback.format_exc()
+                self._cconn.send((e, tb))
+
+        @property
+        def exception(self):
+            if self._pconn.poll():
+                self._exception = self._pconn.recv()
+            return self._exception
+
 
     oldcwd = os.getcwd()
 
@@ -41,20 +63,28 @@ python do_package_ipk () {
 
     max_process = int(d.getVar("BB_NUMBER_THREADS") or os.cpu_count() or 1)
     launched = []
+    error = None
     pkgs = packages.split()
-    while pkgs:
+    while not error and pkgs:
         if len(launched) < max_process:
-            p = Process(target=ipk_write_pkg, args=(pkgs.pop(), d))
+            p = IPKWritePkgProcess(target=ipk_write_pkg, args=(pkgs.pop(), d))
             p.start()
             launched.append(p)
         for q in launched:
             # The finished processes are joined when calling is_alive()
             if not q.is_alive():
                 launched.remove(q)
+            if q.exception:
+                error, traceback = q.exception
+                break
+
     for p in launched:
         p.join()
 
     os.chdir(oldcwd)
+
+    if error:
+        raise error
 }
 do_package_ipk[vardeps] += "ipk_write_pkg"
 do_package_ipk[vardepsexclude] = "BB_NUMBER_THREADS"
