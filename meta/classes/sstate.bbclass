@@ -1015,6 +1015,11 @@ python sstate_eventhandler2() {
     d = e.data
     stamps = e.stamps.values()
     removeworkdir = (d.getVar("SSTATE_PRUNE_OBSOLETEWORKDIR", False) == "1")
+    preservestampfile = d.expand('${SSTATE_MANIFESTS}/preserve-stamps')
+    preservestamps = []
+    if os.path.exists(preservestampfile):
+        with open(preservestampfile, 'r') as f:
+            preservestamps = f.readlines()
     seen = []
     for a in d.getVar("SSTATE_ARCHS").split():
         toremove = []
@@ -1025,7 +1030,7 @@ python sstate_eventhandler2() {
             lines = f.readlines()
             for l in lines:
                 (stamp, manifest, workdir) = l.split()
-                if stamp not in stamps:
+                if stamp not in stamps and stamp not in preservestamps:
                     toremove.append(l)
                     if stamp not in seen:
                         bb.debug(2, "Stamp %s is not reachable, removing related manifests" % stamp)
@@ -1047,4 +1052,6 @@ python sstate_eventhandler2() {
         with open(i, "w") as f:
             for l in lines:
                 f.write(l)
+    if preservestamps:
+        os.remove(preservestampfile)
 }

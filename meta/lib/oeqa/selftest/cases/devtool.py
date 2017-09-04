@@ -1073,7 +1073,7 @@ class DevtoolTests(DevtoolBase):
 
     @OETestID(1628)
     def test_devtool_update_recipe_local_files_subdir(self):
-        # Try devtool extract on a recipe that has a file with subdir= set in
+        # Try devtool update-recipe on a recipe that has a file with subdir= set in
         # SRC_URI such that it overwrites a file that was in an archive that
         # was also in SRC_URI
         # First, modify the recipe
@@ -1103,10 +1103,10 @@ class DevtoolTests(DevtoolBase):
         tempdir = tempfile.mkdtemp(prefix='devtoolqa')
         # Try devtool extract
         self.track_for_cleanup(tempdir)
+        self.track_for_cleanup(self.workspacedir)
+        self.add_command_to_tearDown('bitbake-layers remove-layer */workspace')
         result = runCmd('devtool extract matchbox-terminal %s' % tempdir)
         self.assertExists(os.path.join(tempdir, 'Makefile.am'), 'Extracted source could not be found')
-        # devtool extract shouldn't create the workspace
-        self.assertNotExists(self.workspacedir)
         self._check_src_repo(tempdir)
 
     @OETestID(1379)
@@ -1114,10 +1114,10 @@ class DevtoolTests(DevtoolBase):
         tempdir = tempfile.mkdtemp(prefix='devtoolqa')
         # Try devtool extract
         self.track_for_cleanup(tempdir)
+        self.track_for_cleanup(self.workspacedir)
+        self.add_command_to_tearDown('bitbake-layers remove-layer */workspace')
         result = runCmd('devtool extract virtual/make %s' % tempdir)
         self.assertExists(os.path.join(tempdir, 'Makefile.am'), 'Extracted source could not be found')
-        # devtool extract shouldn't create the workspace
-        self.assertNotExists(self.workspacedir)
         self._check_src_repo(tempdir)
 
     @OETestID(1168)
