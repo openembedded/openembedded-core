@@ -339,18 +339,23 @@ class Disk:
     def remove(self, pnum, path):
         """Remove files/dirs from the partition."""
         partimg = self._get_part_image(pnum)
-        cmd = "{} -i {} ::{}".format(self.mdel, partimg, path)
-        try:
-            exec_cmd(cmd)
-        except WicError as err:
-            if "not found" in str(err) or "non empty" in str(err):
-                # mdel outputs 'File ... not found' or 'directory .. non empty"
-                # try to use mdeltree as path could be a directory
-                cmd = "{} -i {} ::{}".format(self.mdeltree,
-                                             partimg, path)
+        if self.partitions[pnum].fstype.startswith('ext'):
+            exec_cmd("{} {} -wR 'rm {}'".format(self.debugfs,
+                                                self._get_part_image(pnum),
+                                                path), as_shell=True)
+        else: # fat
+            cmd = "{} -i {} ::{}".format(self.mdel, partimg, path)
+            try:
                 exec_cmd(cmd)
-            else:
-                raise err
+            except WicError as err:
+                if "not found" in str(err) or "non empty" in str(err):
+                    # mdel outputs 'File ... not found' or 'directory .. non empty"
+                    # try to use mdeltree as path could be a directory
+                    cmd = "{} -i {} ::{}".format(self.mdeltree,
+                                                 partimg, path)
+                    exec_cmd(cmd)
+                else:
+                    raise err
         self._put_part_image(pnum)
 
     def write(self, target, expand):
