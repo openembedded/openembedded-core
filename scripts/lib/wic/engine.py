@@ -325,10 +325,15 @@ class Disk:
 
     def copy(self, src, pnum, path):
         """Copy partition image into wic image."""
-        cmd = "{} -i {} -snop {} ::{}".format(self.mcopy,
-                                              self._get_part_image(pnum),
-                                              src, path)
-        exec_cmd(cmd)
+        if self.partitions[pnum].fstype.startswith('ext'):
+            cmd = "echo -e 'cd {}\nwrite {} {}' | {} -w {}".\
+                      format(path, src, os.path.basename(src),
+                             self.debugfs, self._get_part_image(pnum))
+        else: # fat
+            cmd = "{} -i {} -snop {} ::{}".format(self.mcopy,
+                                                  self._get_part_image(pnum),
+                                                  src, path)
+        exec_cmd(cmd, as_shell=True)
         self._put_part_image(pnum)
 
     def remove(self, pnum, path):
