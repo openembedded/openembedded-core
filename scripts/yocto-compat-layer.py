@@ -191,7 +191,7 @@ def main():
         logger.info('')
         for layer_name in results_status:
             logger.info('%s ... %s' % (layer_name, results_status[layer_name]))
-            if not results[layer_name].wasSuccessful():
+            if not results[layer_name] or not results[layer_name].wasSuccessful():
                 ret = 2 # ret = 1 used for initialization errors
 
     cleanup_bblayers(None, None)
