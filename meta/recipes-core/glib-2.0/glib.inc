@@ -73,6 +73,8 @@ FILES_${PN}-codegen = "${datadir}/glib-2.0/codegen/*.py \
                        ${bindir}/gdbus-codegen"
 FILES_${PN}-utils = "${bindir}/*"
 
+RRECOMMENDS_${PN} += "shared-mime-info"
+
 ARM_INSTRUCTION_SET_armv4 = "arm"
 ARM_INSTRUCTION_SET_armv5 = "arm"
 # Valgrind runtime detection works using hand-written assembly, which
