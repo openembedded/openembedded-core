@@ -992,3 +992,19 @@ part /etc --source rootfs --ondisk mmcblk0 --fstype=ext4 --exclude-path bin/ --r
                 os.unlink(new_image_path)
             if os.path.exists(image_path + '.bak'):
                 os.rename(image_path + '.bak', image_path)
+
+    def test_wic_ls_ext(self):
+        """Test listing content of the ext partition using 'wic ls'"""
+        self.assertEqual(0, runCmd("wic create wictestdisk "
+                                   "--image-name=core-image-minimal "
+                                   "-D -o %s" % self.resultdir).status)
+        images = glob(self.resultdir + "wictestdisk-*.direct")
+        self.assertEqual(1, len(images))
+
+        sysroot = get_bb_var('RECIPE_SYSROOT_NATIVE', 'wic-tools')
+
+        # list directory content of the second ext4 partition
+        result = runCmd("wic ls %s:2/ -n %s" % (images[0], sysroot))
+        self.assertEqual(0, result.status)
+        self.assertTrue(set(['bin', 'home', 'proc', 'usr', 'var', 'dev', 'lib', 'sbin']).issubset(
+                            set(line.split()[-1] for line in result.output.split('\n') if line)))
