@@ -1008,3 +1008,33 @@ part /etc --source rootfs --ondisk mmcblk0 --fstype=ext4 --exclude-path bin/ --r
         self.assertEqual(0, result.status)
         self.assertTrue(set(['bin', 'home', 'proc', 'usr', 'var', 'dev', 'lib', 'sbin']).issubset(
                             set(line.split()[-1] for line in result.output.split('\n') if line)))
+
+    def test_wic_cp_ext(self):
+        """Test copy files and directories to the ext partition."""
+        self.assertEqual(0, runCmd("wic create wictestdisk "
+                                   "--image-name=core-image-minimal "
+                                   "-D -o %s" % self.resultdir).status)
+        images = glob(self.resultdir + "wictestdisk-*.direct")
+        self.assertEqual(1, len(images))
+
+        sysroot = get_bb_var('RECIPE_SYSROOT_NATIVE', 'wic-tools')
+
+        # list directory content of the ext4 partition
+        result = runCmd("wic ls %s:2/ -n %s" % (images[0], sysroot))
+        self.assertEqual(0, result.status)
+        dirs = set(line.split()[-1] for line in result.output.split('\n') if line)
+        self.assertTrue(set(['bin', 'home', 'proc', 'usr', 'var', 'dev', 'lib', 'sbin']).issubset(dirs))
+
+        with NamedTemporaryFile("w", suffix=".wic-cp") as testfile:
+            testfile.write("test")
+
+            # copy file to the partition
+            result = runCmd("wic cp %s %s:2/ -n %s" % (testfile.name, images[0], sysroot))
+            self.assertEqual(0, result.status)
+
+            # check if file is there
+            result = runCmd("wic ls %s:2/ -n %s" % (images[0], sysroot))
+            self.assertEqual(0, result.status)
+            newdirs = set(line.split()[-1] for line in result.output.split('\n') if line)
+            self.assertEqual(newdirs.difference(dirs), set([os.path.basename(testfile.name)]))
+
