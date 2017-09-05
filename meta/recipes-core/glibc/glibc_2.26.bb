@@ -41,6 +41,8 @@ SRC_URI = "${GLIBC_GIT_URI};branch=${SRCBRANCH};name=glibc \
            file://0024-elf-dl-deps.c-Make-_dl_build_local_scope-breadth-fir.patch \
            file://0025-locale-fix-hard-coded-reference-to-gcc-E.patch \
            file://0026-assert-Suppress-pedantic-warning-caused-by-statement.patch \
+           file://0027-glibc-reset-dl-load-write-lock-after-forking.patch \
+           file://0028-Bug-4578-add-ld.so-lock-while-fork.patch \
 "
 
 NATIVESDKFIXES ?= ""
