@@ -17,8 +17,10 @@ DEPENDS += "base-passwd"
 # autotools-brokensep as this package doesn't use automake
 inherit autotools-brokensep gettext systemd
 
-EXTRA_OECONF += "--disable-sensors"
-EXTRA_OEMAKE += 'LFLAGS=""'
+PACKAGECONFIG ??= ""
+PACKAGECONFIG[lm-sensors] = "--enable-sensors,--disable-sensors,lmsensors,lmsensors-libsensors"
+
+EXTRA_OECONF += "--disable-stripping"
 
 SYSTEMD_PACKAGES = "${PN}"
 SYSTEMD_SERVICE_${PN} = "sysstat.service"
