@@ -234,7 +234,7 @@ def wic_list(args, scripts_path):
 
 
 class Disk:
-    def __init__(self, imagepath, native_sysroot, fstypes=('fat',)):
+    def __init__(self, imagepath, native_sysroot, fstypes=('fat', 'ext')):
         self.imagepath = imagepath
         self.native_sysroot = native_sysroot
         self.fstypes = fstypes
@@ -280,7 +280,7 @@ class Disk:
     def __getattr__(self, name):
         """Get path to the executable in a lazy way."""
         if name in ("mdir", "mcopy", "mdel", "mdeltree", "sfdisk", "e2fsck",
-                    "resize2fs", "mkswap", "mkdosfs"):
+                    "resize2fs", "mkswap", "mkdosfs", "debugfs"):
             aname = "_%s" % name
             if aname not in self.__dict__:
                 setattr(self, aname, find_executable(name, self.paths))
@@ -314,9 +314,14 @@ class Disk:
                     seek=self.partitions[pnum].start)
 
     def dir(self, pnum, path):
-        return exec_cmd("{} -i {} ::{}".format(self.mdir,
-                                               self._get_part_image(pnum),
-                                               path))
+        if self.partitions[pnum].fstype.startswith('ext'):
+            return exec_cmd("{} {} -R 'ls -l {}'".format(self.debugfs,
+                                                         self._get_part_image(pnum),
+                                                         path), as_shell=True)
+        else: # fat
+            return exec_cmd("{} -i {} ::{}".format(self.mdir,
+                                                   self._get_part_image(pnum),
+                                                   path))
 
     def copy(self, src, pnum, path):
         """Copy partition image into wic image."""
