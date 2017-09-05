@@ -1038,3 +1038,26 @@ part /etc --source rootfs --ondisk mmcblk0 --fstype=ext4 --exclude-path bin/ --r
             newdirs = set(line.split()[-1] for line in result.output.split('\n') if line)
             self.assertEqual(newdirs.difference(dirs), set([os.path.basename(testfile.name)]))
 
+    def test_wic_rm_ext(self):
+        """Test removing files from the ext partition."""
+        self.assertEqual(0, runCmd("wic create mkefidisk "
+                                   "--image-name=core-image-minimal "
+                                   "-D -o %s" % self.resultdir).status)
+        images = glob(self.resultdir + "mkefidisk-*.direct")
+        self.assertEqual(1, len(images))
+
+        sysroot = get_bb_var('RECIPE_SYSROOT_NATIVE', 'wic-tools')
+
+        # list directory content of the /etc directory on ext4 partition
+        result = runCmd("wic ls %s:2/etc/ -n %s" % (images[0], sysroot))
+        self.assertEqual(0, result.status)
+        self.assertTrue('fstab' in [line.split()[-1] for line in result.output.split('\n') if line])
+
+        # remove file
+        result = runCmd("wic rm %s:2/etc/fstab -n %s" % (images[0], sysroot))
+        self.assertEqual(0, result.status)
+
+        # check if it's removed
+        result = runCmd("wic ls %s:2/etc/ -n %s" % (images[0], sysroot))
+        self.assertEqual(0, result.status)
+        self.assertTrue('fstab' not in [line.split()[-1] for line in result.output.split('\n') if line])
