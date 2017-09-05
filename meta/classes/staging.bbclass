@@ -388,6 +388,8 @@ python extend_recipe_sysroot() {
     postinsts = []
     multilibs = {}
     manifests = {}
+    # All files that we're going to be installing, to find conflicts.
+    fileset = {}
 
     for f in os.listdir(depdir):
         if not f.endswith(".complete"):
@@ -514,8 +516,19 @@ python extend_recipe_sysroot() {
                     if l.endswith("/fixmepath.cmd"):
                         continue
                     dest = l.replace(stagingdir, "")
-                    dest = targetdir + "/" + "/".join(dest.split("/")[3:])
-                    newmanifest[l] = dest
+                    dest = "/" + "/".join(dest.split("/")[3:])
+                    newmanifest[l] = targetdir + dest
+
+                    # Check if files have already been installed by another
+                    # recipe and abort if they have, explaining what recipes are
+                    # conflicting.
+                    hashname = targetdir + dest
+                    if not hashname.endswith("/"):
+                        if hashname in fileset:
+                            bb.fatal("The file %s is installed by both %s and %s, aborting" % (dest, c, fileset[hashname]))
+                        else:
+                            fileset[hashname] = c
+
             # Having multiple identical manifests in each sysroot eats diskspace so
             # create a shared pool of them and hardlink if we can.
             # We create the manifest in advance so that if something fails during installation,
@@ -594,4 +607,3 @@ python staging_taskhandler() {
 }
 staging_taskhandler[eventmask] = "bb.event.RecipeTaskPreProcess"
 addhandler staging_taskhandler
-
