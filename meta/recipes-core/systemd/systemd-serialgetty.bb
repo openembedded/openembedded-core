@@ -39,8 +39,6 @@ do_install() {
 	fi
 }
 
-RDEPENDS_${PN} = "systemd"
-
 # This is a machine specific file
 FILES_${PN} = "${systemd_unitdir}/system/*.service ${sysconfdir}"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
