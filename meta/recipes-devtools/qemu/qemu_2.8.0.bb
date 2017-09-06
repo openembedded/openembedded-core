@@ -21,6 +21,7 @@ SRC_URI += " \
             file://qemu-2.5.0-cflags.patch \
             file://target-ppc-fix-user-mode.patch \
             file://glibc-2.25.patch \
+            file://04b33e21866412689f18b7ad6daf0a54d8f959a7.patch \
 "
 
 SRC_URI += " \
