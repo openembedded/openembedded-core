@@ -297,3 +297,43 @@ def replace_from_file(path, old, new):
         except ValueError:
             pass
     write_file(path, "\n".join(new_contents))
+
+
+def update_unlockedsigs(basepath, workspace, fixed_setup, extra=None):
+    """ This function will make unlocked-sigs.inc match the recipes in the
+    workspace plus any extras we want unlocked. """
+
+    if not fixed_setup:
+        # Only need to write this out within the eSDK
+        return
+
+    if not extra:
+        extra = []
+
+    confdir = os.path.join(basepath, 'conf')
+    unlockedsigs = os.path.join(confdir, 'unlocked-sigs.inc')
+
+    # Get current unlocked list if any
+    values = {}
+    def get_unlockedsigs_varfunc(varname, origvalue, op, newlines):
+        values[varname] = origvalue
+        return origvalue, None, 0, True
+    if os.path.exists(unlockedsigs):
+        with open(unlockedsigs, 'r') as f:
+            bb.utils.edit_metadata(f, ['SIGGEN_UNLOCKED_RECIPES'], get_unlockedsigs_varfunc)
+    unlocked = sorted(values.get('SIGGEN_UNLOCKED_RECIPES', []))
+
+    # If the new list is different to the current list, write it out
+    newunlocked = sorted(list(workspace.keys()) + extra)
+    if unlocked != newunlocked:
+        bb.utils.mkdirhier(confdir)
+        with open(unlockedsigs, 'w') as f:
+            f.write("# DO NOT MODIFY! YOUR CHANGES WILL BE LOST.\n" +
+                    "# This layer was created by the OpenEmbedded devtool" +
+                    " utility in order to\n" +
+                    "# contain recipes that are unlocked.\n")
+
+            f.write('SIGGEN_UNLOCKED_RECIPES += "\\\n')
+            for pn in newunlocked:
+                f.write('    ' + pn)
+            f.write('"')

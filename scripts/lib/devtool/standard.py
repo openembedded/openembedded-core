@@ -30,7 +30,7 @@ import errno
 import glob
 import filecmp
 from collections import OrderedDict
-from devtool import exec_build_env_command, setup_tinfoil, check_workspace_recipe, use_external_build, setup_git_repo, recipe_to_append, get_bbclassextend_targets, DevtoolError
+from devtool import exec_build_env_command, setup_tinfoil, check_workspace_recipe, use_external_build, setup_git_repo, recipe_to_append, get_bbclassextend_targets, update_unlockedsigs, DevtoolError
 from devtool import parse_recipe
 
 logger = logging.getLogger('devtool')
@@ -407,7 +407,7 @@ def extract(args, config, basepath, workspace):
             return 1
 
         srctree = os.path.abspath(args.srctree)
-        initial_rev = _extract_source(srctree, args.keep_temp, args.branch, False, config, rd, tinfoil)
+        initial_rev = _extract_source(srctree, args.keep_temp, args.branch, False, config, basepath, workspace, args.fixed_setup, rd, tinfoil)
         logger.info('Source tree extracted to %s' % srctree)
 
         if initial_rev:
@@ -431,7 +431,7 @@ def sync(args, config, basepath, workspace):
             return 1
 
         srctree = os.path.abspath(args.srctree)
-        initial_rev = _extract_source(srctree, args.keep_temp, args.branch, True, config, rd, tinfoil)
+        initial_rev = _extract_source(srctree, args.keep_temp, args.branch, True, config, basepath, workspace, args.fixed_setup, rd, tinfoil)
         logger.info('Source tree %s synchronized' % srctree)
 
         if initial_rev:
@@ -442,7 +442,7 @@ def sync(args, config, basepath, workspace):
         tinfoil.shutdown()
 
 
-def _extract_source(srctree, keep_temp, devbranch, sync, config, d, tinfoil):
+def _extract_source(srctree, keep_temp, devbranch, sync, config, basepath, workspace, fixed_setup, d, tinfoil):
     """Extract sources of a recipe"""
     import oe.recipeutils
     import oe.patch
@@ -711,7 +711,7 @@ def modify(args, config, basepath, workspace):
         initial_rev = None
         commits = []
         if not args.no_extract:
-            initial_rev = _extract_source(srctree, args.keep_temp, args.branch, False, config, rd, tinfoil)
+            initial_rev = _extract_source(srctree, args.keep_temp, args.branch, False, config, basepath, workspace, args.fixed_setup, rd, tinfoil)
             if not initial_rev:
                 return 1
             logger.info('Source tree extracted to %s' % srctree)
@@ -772,6 +772,8 @@ def modify(args, config, basepath, workspace):
                 f.write('\n# initial_rev: %s\n' % initial_rev)
                 for commit in commits:
                     f.write('# commit: %s\n' % commit)
+
+        update_unlockedsigs(basepath, workspace, args.fixed_setup, [pn])
 
         _add_md5(config, pn, appendfile)
 
@@ -1802,7 +1804,7 @@ def register_commands(subparsers, context):
     group.add_argument('--no-same-dir', help='Force build in a separate build directory', action="store_true")
     parser_modify.add_argument('--branch', '-b', default="devtool", help='Name for development branch to checkout (when not using -n/--no-extract) (default "%(default)s")')
     parser_modify.add_argument('--keep-temp', help='Keep temporary directory (for debugging)', action="store_true")
-    parser_modify.set_defaults(func=modify)
+    parser_modify.set_defaults(func=modify, fixed_setup=context.fixed_setup)
 
     parser_extract = subparsers.add_parser('extract', help='Extract the source for an existing recipe',
                                        description='Extracts the source for an existing recipe',
@@ -1811,7 +1813,7 @@ def register_commands(subparsers, context):
     parser_extract.add_argument('srctree', help='Path to where to extract the source tree')
     parser_extract.add_argument('--branch', '-b', default="devtool", help='Name for development branch to checkout (default "%(default)s")')
     parser_extract.add_argument('--keep-temp', action="store_true", help='Keep temporary directory (for debugging)')
-    parser_extract.set_defaults(func=extract)
+    parser_extract.set_defaults(func=extract, fixed_setup=context.fixed_setup)
 
     parser_sync = subparsers.add_parser('sync', help='Synchronize the source tree for an existing recipe',
                                        description='Synchronize the previously extracted source tree for an existing recipe',
@@ -1821,7 +1823,7 @@ def register_commands(subparsers, context):
     parser_sync.add_argument('srctree', help='Path to the source tree')
     parser_sync.add_argument('--branch', '-b', default="devtool", help='Name for development branch to checkout')
     parser_sync.add_argument('--keep-temp', action="store_true", help='Keep temporary directory (for debugging)')
-    parser_sync.set_defaults(func=sync)
+    parser_sync.set_defaults(func=sync, fixed_setup=context.fixed_setup)
 
     parser_rename = subparsers.add_parser('rename', help='Rename a recipe file in the workspace',
                                        description='Renames the recipe file for a recipe in the workspace, changing the name or version part or both, ensuring that all references within the workspace are updated at the same time. Only works when the recipe file itself is in the workspace, e.g. after devtool add. Particularly useful when devtool add did not automatically determine the correct name.',

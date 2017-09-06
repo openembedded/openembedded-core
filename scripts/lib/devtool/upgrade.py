@@ -33,7 +33,7 @@ sys.path = sys.path + [devtool_path]
 
 import oe.recipeutils
 from devtool import standard
-from devtool import exec_build_env_command, setup_tinfoil, DevtoolError, parse_recipe, use_external_build
+from devtool import exec_build_env_command, setup_tinfoil, DevtoolError, parse_recipe, use_external_build, update_unlockedsigs
 
 logger = logging.getLogger('devtool')
 
@@ -418,7 +418,7 @@ def upgrade(args, config, basepath, workspace):
 
         rf = None
         try:
-            rev1 = standard._extract_source(srctree, False, 'devtool-orig', False, config, rd, tinfoil)
+            rev1 = standard._extract_source(srctree, False, 'devtool-orig', False, config, basepath, workspace, args.fixed_setup, rd, tinfoil)
             rev2, md5, sha256, srcbranch = _extract_new_source(args.version, srctree, args.no_patch,
                                                     args.srcrev, args.srcbranch, args.branch, args.keep_temp,
                                                     tinfoil, rd)
@@ -432,6 +432,9 @@ def upgrade(args, config, basepath, workspace):
         af = _write_append(rf, srctree, args.same_dir, args.no_same_dir, rev2,
                         copied, config.workspace_path, rd)
         standard._add_md5(config, pn, af)
+
+        update_unlockedsigs(basepath, workspace, [pn], args.fixed_setup)
+
         logger.info('Upgraded source extracted to %s' % srctree)
         logger.info('New recipe is %s' % rf)
     finally:
@@ -457,4 +460,4 @@ def register_commands(subparsers, context):
     group.add_argument('--same-dir', '-s', help='Build in same directory as source', action="store_true")
     group.add_argument('--no-same-dir', help='Force build in a separate build directory', action="store_true")
     parser_upgrade.add_argument('--keep-temp', action="store_true", help='Keep temporary directory (for debugging)')
-    parser_upgrade.set_defaults(func=upgrade)
+    parser_upgrade.set_defaults(func=upgrade, fixed_setup=context.fixed_setup)
