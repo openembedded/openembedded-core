@@ -19,21 +19,11 @@ SRC_URI = "http://www.xmlsoft.org/sources/libxml2-${PV}.tar.gz;name=libtar \
            file://run-ptest \
            file://python-sitepackages-dir.patch \
            file://libxml-m4-use-pkgconfig.patch \
-           file://libxml2-fix_node_comparison.patch \
-           file://libxml2-CVE-2016-5131.patch \
-           file://libxml2-CVE-2016-4658.patch \
-           file://libxml2-fix_NULL_pointer_derefs.patch \
-           file://libxml2-fix_and_simplify_xmlParseStartTag2.patch \
-           file://libxml2-CVE-2017-9047_CVE-2017-9048.patch \
-           file://libxml2-CVE-2017-9049_CVE-2017-9050.patch \
-           file://libxml2-CVE-2017-5969.patch \
-           file://libxml2-CVE-2017-0663.patch \
-           file://libxml2-CVE-2017-8872.patch \
            file://0001-Make-ptest-run-the-python-tests-if-python-is-enabled.patch \
            "
 
-SRC_URI[libtar.md5sum] = "ae249165c173b1ff386ee8ad676815f5"
-SRC_URI[libtar.sha256sum] = "ffb911191e509b966deb55de705387f14156e1a56b21824357cdf0053233633c"
+SRC_URI[libtar.md5sum] = "5ce0da9bdaa267b40c4ca36d35363b8b"
+SRC_URI[libtar.sha256sum] = "4031c1ecee9ce7ba4f313e91ef6284164885cdb69937a123f6a83bb6a72dcd38"
 SRC_URI[testtar.md5sum] = "ae3d1ebe000a3972afa104ca7f0e1b4a"
 SRC_URI[testtar.sha256sum] = "96151685cec997e1f9f3387e3626d61e6284d4d6e66e0e440c209286c03e9cc7"
 
@@ -79,6 +69,10 @@ FILES_${PN}-python += "${PYTHON_SITEPACKAGES_DIR}"
 do_configure_prepend () {
 	# executables take longer to package: these should not be executable
 	find ${WORKDIR}/xmlconf/ -type f -exec chmod -x {} \+
+}
+
+do_compile_ptest() {
+	oe_runmake check-am
 }
 
 do_install_ptest () {
