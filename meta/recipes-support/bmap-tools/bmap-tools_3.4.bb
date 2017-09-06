@@ -16,10 +16,7 @@ S = "${WORKDIR}/git"
 
 RDEPENDS_${PN} = "python-core python-compression python-mmap"
 
-inherit setuptools
+inherit python3native
+inherit setuptools3
 
 BBCLASSEXTEND = "native"
-
-do_install_append_class-native() {
-    sed -i -e 's|^#!.*/usr/bin/python-native/python|#! /usr/bin/env nativepython|' ${D}${bindir}/bmaptool
-}
