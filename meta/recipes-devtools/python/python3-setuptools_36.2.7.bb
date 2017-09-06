@@ -2,6 +2,7 @@ require python-setuptools.inc
 
 DEPENDS += "python3"
 DEPENDS_class-native += "python3-native"
+DEPENDS_class-nativesdk += "nativesdk-python3"
 
 inherit distutils3
 
@@ -14,11 +15,11 @@ do_install_append() {
     echo "./${SRCNAME}-${PV}-py${PYTHON_BASEVERSION}.egg" > ${D}${PYTHON_SITEPACKAGES_DIR}/setuptools.pth
 }
 
-RDEPENDS_${PN} = "\
+RDEPENDS_${PN}_class-native = "\
   python3-distutils \
   python3-compression \
 "
-RDEPENDS_${PN}_class-target = "\
+RDEPENDS_${PN} = "\
   python3-ctypes \
   python3-distutils \
   python3-email \
@@ -34,4 +35,4 @@ RDEPENDS_${PN}_class-target = "\
   python3-unittest \
   python3-xml \
 "
-BBCLASSEXTEND = "native"
+BBCLASSEXTEND = "native nativesdk"
