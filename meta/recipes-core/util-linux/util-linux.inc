@@ -1,4 +1,5 @@
 SUMMARY = "A suite of basic system administration utilities"
+HOMEPAGE = "http://userweb.kernel.org/~kzak/util-linux/"
 DESCRIPTION = "Util-linux includes a suite of basic system administration utilities \
 commonly found on most Linux systems.  Some of the more important utilities include \
 disk partitioning, kernel message management, filesystem creation, and system login."
