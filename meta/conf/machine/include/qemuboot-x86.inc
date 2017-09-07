@@ -14,7 +14,4 @@ QB_KERNEL_CMDLINE_APPEND = "vga=0 uvesafb.mode_option=${UVESA_MODE} oprofile.tim
 # Add the 'virtio-rng-pci' device otherwise the guest may run out of entropy
 QB_OPT_APPEND = "-vga vmware -show-cursor -usb -device usb-tablet -device virtio-rng-pci"
 
-KERNEL_MODULE_AUTOLOAD += "uvesafb"
-KERNEL_MODULE_PROBECONF += "uvesafb"
 UVESA_MODE ?= "640x480-32"
-module_conf_uvesafb = "options uvesafb mode_option=${UVESA_MODE}"
