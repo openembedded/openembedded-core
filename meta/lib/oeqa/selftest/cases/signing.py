@@ -22,13 +22,16 @@ class Signing(OESelftestTestCase):
         if not shutil.which("gpg"):
             raise AssertionError("This test needs GnuPG")
 
-        cls.gpg_home_dir = tempfile.TemporaryDirectory(prefix="oeqa-signing-")
-        cls.gpg_dir = cls.gpg_home_dir.name
+        cls.gpg_dir = tempfile.mkdtemp(prefix="oeqa-signing-")
 
         cls.pub_key_path = os.path.join(cls.testlayer_path, 'files', 'signing', "key.pub")
         cls.secret_key_path = os.path.join(cls.testlayer_path, 'files', 'signing', "key.secret")
 
         runCmd('gpg --batch --homedir %s --import %s %s' % (cls.gpg_dir, cls.pub_key_path, cls.secret_key_path))
+
+    @classmethod
+    def tearDownClass(cls):
+        shutil.rmtree(cls.gpg_dir, ignore_errors=True)
 
     @OETestID(1362)
     def test_signing_packages(self):
