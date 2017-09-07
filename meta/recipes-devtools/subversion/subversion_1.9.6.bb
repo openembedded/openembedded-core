@@ -15,6 +15,7 @@ SRC_URI = "${APACHE_MIRROR}/${BPN}/${BPN}-${PV}.tar.bz2 \
            file://serf.m4-Regex-modified-to-allow-D-in-paths.patch \
            file://0001-Fix-libtool-name-in-configure.ac.patch \
            file://serfmacro.patch \
+           file://CVE-2017-9800.patch;striplevel=0 \
            "
 
 SRC_URI[md5sum] = "f27e00338d4a9f7f9aec9d4a3f8b418b"
