@@ -51,14 +51,14 @@ FILES_${PN}-staticdev += "${GOPKG_FINAL}/${GO_IMPORT}*"
 
 GO_INSTALL ?= "${GO_IMPORT}/..."
 
-do_go_compile() {
+go_do_compile() {
 	GOPATH=${S}:${STAGING_LIBDIR}/${TARGET_SYS}/go go env
 	if [ -n "${GO_INSTALL}" ]; then
 		GOPATH=${S}:${STAGING_LIBDIR}/${TARGET_SYS}/go go install ${GOBUILDFLAGS} ${GO_INSTALL}
 	fi
 }
 
-do_go_install() {
+go_do_install() {
 	rm -rf ${WORKDIR}/staging
 	install -d ${WORKDIR}/staging${GOROOT_FINAL} ${D}${GOROOT_FINAL}
 	tar -C ${S} -cf - . | tar -C ${WORKDIR}/staging${GOROOT_FINAL} -xpvf -
@@ -84,11 +84,7 @@ do_go_install() {
 		rmdir -p "${D}${GOBIN_FINAL}" || true
 	fi
 }
+do_install[dirs] =+ "${WORKDIR}/staging"
+do_install[cleandirs] += "${WORKDIR}/staging"
 
-do_compile() {
-	do_go_compile
-}
-
-do_install() {
-	do_go_install
-}
+EXPORT_FUNCTIONS do_compile do_install
