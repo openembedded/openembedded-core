@@ -161,6 +161,8 @@ def add(args, config, basepath, workspace):
         extracmdopts += ' --srcrev %s' % args.srcrev
     if args.srcbranch:
         extracmdopts += ' --srcbranch %s' % args.srcbranch
+    if args.provides:
+        extracmdopts += ' --provides %s' % args.provides
 
     tempdir = tempfile.mkdtemp(prefix='devtool')
     try:
@@ -275,6 +277,24 @@ def add(args, config, basepath, workspace):
                 f.write('        rm -f ${NPM_INSTALLDIR}/${symlink%%:*}\n')
                 f.write('    done\n')
                 f.write('}\n')
+
+        # Check if the new layer provides recipes whose priorities have been
+        # overriden by PREFERRED_PROVIDER.
+        recipe_name = rd.getVar('PN')
+        provides = rd.getVar('PROVIDES')
+        # Search every item defined in PROVIDES
+        for recipe_provided in provides.split():
+            preferred_provider = 'PREFERRED_PROVIDER_' + recipe_provided
+            current_pprovider = rd.getVar(preferred_provider)
+            if current_pprovider and current_pprovider != recipe_name:
+                if args.fixed_setup:
+                    #if we are inside the eSDK add the new PREFERRED_PROVIDER in the workspace layer.conf
+                    layerconf_file = os.path.join(config.workspace_path, "conf", "layer.conf")
+                    with open(layerconf_file, 'a') as f:
+                        f.write('%s = "%s"\n' % (preferred_provider, recipe_name))
+                else:
+                    logger.warn('Set \'%s\' in order to use the recipe' % preferred_provider)
+                break
 
         _add_md5(config, recipename, appendfile)
 
@@ -1612,6 +1632,26 @@ def status(args, config, basepath, workspace):
 def _reset(recipes, no_clean, config, basepath, workspace):
     """Reset one or more recipes"""
 
+    def clean_preferred_provider(pn, layerconf_path):
+        """Remove PREFERRED_PROVIDER from layer.conf'"""
+        import re
+        layerconf_file = os.path.join(layerconf_path, 'conf', 'layer.conf')
+        new_layerconf_file = os.path.join(layerconf_path, 'conf', '.layer.conf')
+        pprovider_found = False
+        with open(layerconf_file, 'r') as f:
+            lines = f.readlines()
+            with open(new_layerconf_file, 'a') as nf:
+                for line in lines:
+                    pprovider_exp = r'^PREFERRED_PROVIDER_.*? = "' + pn + r'"$'
+                    if not re.match(pprovider_exp, line):
+                        nf.write(line)
+                    else:
+                        pprovider_found = True
+        if pprovider_found:
+            shutil.move(new_layerconf_file, layerconf_file)
+        else:
+            os.remove(new_layerconf_file)
+
     if recipes and not no_clean:
         if len(recipes) == 1:
             logger.info('Cleaning sysroot for recipe %s...' % recipes[0])
@@ -1664,6 +1704,7 @@ def _reset(recipes, no_clean, config, basepath, workspace):
                 # This is unlikely, but if it's empty we can just remove it
                 os.rmdir(srctree)
 
+        clean_preferred_provider(pn, config.workspace_path)
 
 def reset(args, config, basepath, workspace):
     """Entry point for the devtool 'reset' subcommand"""
@@ -1827,6 +1868,7 @@ def register_commands(subparsers, context):
     parser_add.add_argument('--also-native', help='Also add native variant (i.e. support building recipe for the build host as well as the target machine)', action='store_true')
     parser_add.add_argument('--src-subdir', help='Specify subdirectory within source tree to use', metavar='SUBDIR')
     parser_add.add_argument('--mirrors', help='Enable PREMIRRORS and MIRRORS for source tree fetching (disable by default).', action="store_true")
+    parser_add.add_argument('--provides', '-p', help='Specify an alias for the item provided by the recipe. E.g. virtual/libgl')
     parser_add.set_defaults(func=add, fixed_setup=context.fixed_setup)
 
     parser_modify = subparsers.add_parser('modify', help='Modify the source for an existing recipe',

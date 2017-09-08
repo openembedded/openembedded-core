@@ -699,6 +699,8 @@ def create_recipe(args):
                 (stdout, _) = bb.process.run('git rev-parse HEAD', cwd=srctree)
             srcrev = stdout.rstrip()
         lines_before.append('SRCREV = "%s"' % srcrev)
+    if args.provides:
+        lines_before.append('PROVIDES = "%s"' % args.provides)
     lines_before.append('')
 
     if srcsubdir and not args.binary:
@@ -1300,6 +1302,7 @@ def register_commands(subparsers):
                                           description='Creates a new recipe from a source tree')
     parser_create.add_argument('source', help='Path or URL to source')
     parser_create.add_argument('-o', '--outfile', help='Specify filename for recipe to create')
+    parser_create.add_argument('-p', '--provides', help='Specify an alias for the item provided by the recipe')
     parser_create.add_argument('-m', '--machine', help='Make recipe machine-specific as opposed to architecture-specific', action='store_true')
     parser_create.add_argument('-x', '--extract-to', metavar='EXTRACTPATH', help='Assuming source is a URL, fetch it and extract it to the directory specified as %(metavar)s')
     parser_create.add_argument('-N', '--name', help='Name to use within recipe (PN)')
