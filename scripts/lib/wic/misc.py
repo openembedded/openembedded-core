@@ -183,7 +183,7 @@ class BitbakeVars(defaultdict):
         self.default_image = None
         self.vars_dir = None
 
-    def _parse_line(self, line, image, matcher=re.compile(r"^(\w+)=(.+)")):
+    def _parse_line(self, line, image, matcher=re.compile(r"^([a-zA-Z0-9\-_+./~]+)=(.*)")):
         """
         Parse one line from bitbake -e output or from .env file.
         Put result key-value pair into the storage.
