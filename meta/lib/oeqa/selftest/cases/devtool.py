@@ -1654,7 +1654,9 @@ class DevtoolTests(DevtoolBase):
         # Clean up the enviroment
         bitbake('%s -c clean' % kernel_provider)
         tempdir = tempfile.mkdtemp(prefix='devtoolqa')
+        tempdir_cfg = tempfile.mkdtemp(prefix='config_qa')
         self.track_for_cleanup(tempdir)
+        self.track_for_cleanup(tempdir_cfg)
         self.track_for_cleanup(self.workspacedir)
         self.add_command_to_tearDown('bitbake-layers remove-layer */workspace')
         self.add_command_to_tearDown('bitbake -c clean %s' % kernel_provider)
@@ -1663,12 +1665,11 @@ class DevtoolTests(DevtoolBase):
         #time of executing this test case.
         bitbake('%s -c configure' % kernel_provider)
         bbconfig = os.path.join(get_bb_var('B', kernel_provider),'.config')
-        buildir= get_bb_var('TOPDIR')
         #Step 2
-        runCmd('cp %s %s' % (bbconfig, buildir))
-        self.assertExists(os.path.join(buildir, '.config'), 'Could not copy .config file from kernel')
+        runCmd('cp %s %s' % (bbconfig, tempdir_cfg))
+        self.assertExists(os.path.join(tempdir_cfg, '.config'), 'Could not copy .config file from kernel')
 
-        tmpconfig = os.path.join(buildir, '.config')
+        tmpconfig = os.path.join(tempdir_cfg, '.config')
         #Step 3
         bitbake('%s -c clean' % kernel_provider)
         #Step 4.1
