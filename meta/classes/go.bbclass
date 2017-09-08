@@ -55,6 +55,24 @@ GO_INSTALL ?= "${GO_IMPORT}/..."
 
 B = "${WORKDIR}/build"
 
+python go_do_unpack() {
+    src_uri = (d.getVar('SRC_URI') or "").split()
+    if len(src_uri) == 0:
+        return
+
+    try:
+        fetcher = bb.fetch2.Fetch(src_uri, d)
+        for url in fetcher.urls:
+            if fetcher.ud[url].type == 'git':
+                if fetcher.ud[url].parm.get('destsuffix') is None:
+                    s_dirname = os.path.basename(d.getVar('S'))
+                    fetcher.ud[url].parm['destsuffix'] = os.path.join(s_dirname, 'src',
+                                                                      d.getVar('GO_IMPORT')) + '/'
+        fetcher.unpack(d.getVar('WORKDIR'))
+    except bb.fetch2.BBFetchException as e:
+        raise bb.build.FuncFailed(e)
+}
+
 go_do_configure() {
 	ln -snf ${S}/src ${B}/
 }
@@ -79,4 +97,4 @@ go_do_install() {
 	fi
 }
 
-EXPORT_FUNCTIONS do_configure do_compile do_install
+EXPORT_FUNCTIONS do_unpack do_configure do_compile do_install
