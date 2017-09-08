@@ -6,7 +6,7 @@ LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://debian/copyright;md5=3dd6192d306f582dee7687da3d8748ab"
 PE = "1"
 
-SRC_URI = "${DEBIAN_MIRROR}/main/n/netbase/netbase_${PV}.tar.gz \
+SRC_URI = "http://downloads.yoctoproject.org/mirror/sources/netbase_${PV}.tar.gz \
            file://hosts"
 
 SRC_URI[md5sum] = "3a01bfce6a28e1743412198abd241262"
