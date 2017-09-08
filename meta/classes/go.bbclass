@@ -52,6 +52,7 @@ FILES_${PN}-staticdev += "${GOSRC_FINAL}/${GO_IMPORT}"
 FILES_${PN}-staticdev += "${GOPKG_FINAL}/${GO_IMPORT}*"
 
 GO_INSTALL ?= "${GO_IMPORT}/..."
+GO_INSTALL_FILTEROUT ?= "${GO_IMPORT}/vendor/"
 
 B = "${WORKDIR}/build"
 
@@ -73,6 +74,11 @@ python go_do_unpack() {
         raise bb.build.FuncFailed(e)
 }
 
+go_list_packages() {
+	GOPATH=${B}:${STAGING_LIBDIR}/${TARGET_SYS}/go go list -f '{{.ImportPath}}' ${GOBUILDFLAGS} ${GO_INSTALL} | \
+		egrep -v '${GO_INSTALL_FILTEROUT}'
+}
+
 go_do_configure() {
 	ln -snf ${S}/src ${B}/
 }
@@ -80,7 +86,7 @@ go_do_configure() {
 go_do_compile() {
 	GOPATH=${B}:${STAGING_LIBDIR}/${TARGET_SYS}/go go env
 	if [ -n "${GO_INSTALL}" ]; then
-		GOPATH=${B}:${STAGING_LIBDIR}/${TARGET_SYS}/go go install ${GOBUILDFLAGS} ${GO_INSTALL}
+		GOPATH=${B}:${STAGING_LIBDIR}/${TARGET_SYS}/go go install ${GOBUILDFLAGS} `go_list_packages`
 	fi
 }
 do_compile[cleandirs] = "${B}/bin ${B}/pkg"
