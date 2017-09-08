@@ -7,7 +7,7 @@ HOMEPAGE = "http://zlib.net/pigz/"
 SECTION = "console/utils"
 LICENSE = "Zlib"
 
-SRC_URI = "http://zlib.net/pigz/pigz-${PV}.tar.gz"
+SRC_URI = "http://downloads.yoctoproject.org/mirror/sources/${BP}.tar.gz"
 
 PROVIDES_class-native += "gzip-native"
 
