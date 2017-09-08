@@ -50,6 +50,8 @@ def go_map_arm(a, f, d):
             return '7'
         elif 'armv6' in f:
             return '6'
+        elif 'armv5' in f:
+            return '5'
     return ''
 
 def go_map_os(o, d):
