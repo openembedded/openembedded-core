@@ -8,7 +8,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=4fbd65380cdd255951079008b364516c \
 
 DEPENDS = "gconf glib-2.0"
 
-SRC_URI = "http://libproxy.googlecode.com/files/libproxy-${PV}.zip \
+SRC_URI = "http://downloads.yoctoproject.org/mirror/sources/libproxy-${PV}.zip \
           "
 
 SRC_URI[md5sum] = "06be230b8b612e64997f8f15af6373aa"
