@@ -53,40 +53,30 @@ FILES_${PN}-staticdev += "${GOPKG_FINAL}/${GO_IMPORT}*"
 
 GO_INSTALL ?= "${GO_IMPORT}/..."
 
+B = "${WORKDIR}/build"
+
+go_do_configure() {
+	ln -snf ${S}/src ${B}/
+}
+
 go_do_compile() {
-	GOPATH=${S}:${STAGING_LIBDIR}/${TARGET_SYS}/go go env
+	GOPATH=${B}:${STAGING_LIBDIR}/${TARGET_SYS}/go go env
 	if [ -n "${GO_INSTALL}" ]; then
-		GOPATH=${S}:${STAGING_LIBDIR}/${TARGET_SYS}/go go install ${GOBUILDFLAGS} ${GO_INSTALL}
+		GOPATH=${B}:${STAGING_LIBDIR}/${TARGET_SYS}/go go install ${GOBUILDFLAGS} ${GO_INSTALL}
 	fi
 }
+do_compile[cleandirs] = "${B}/bin ${B}/pkg"
 
 go_do_install() {
-	rm -rf ${WORKDIR}/staging
-	install -d ${WORKDIR}/staging${GOROOT_FINAL} ${D}${GOROOT_FINAL}
-	tar -C ${S} -cf - . | tar -C ${WORKDIR}/staging${GOROOT_FINAL} -xpvf -
+	install -d ${D}${GOROOT_FINAL}/src/${GO_IMPORT}
+	tar -C ${S}/src/${GO_IMPORT} -cf - --exclude-vcs . | \
+		tar -C ${D}${GOROOT_FINAL}/src/${GO_IMPORT} --no-same-owner -xf -
+	tar -C ${B} -cf - pkg | tar -C ${D}${GOROOT_FINAL} --no-same-owner -xf -
 
-	find ${WORKDIR}/staging${GOROOT_FINAL} \( \
-		-name \*.indirectionsymlink -o \
-		-name .git\* -o                \
-		-name .hg -o                   \
-		-name .svn -o                  \
-		-name .pc\* -o                 \
-		-name patches\*                \
-		\) -print0 | \
-	xargs -r0 rm -rf
-
-	tar -C ${WORKDIR}/staging${GOROOT_FINAL} -cf - . | \
-	tar -C ${D}${GOROOT_FINAL} -xpvf -
-
-	chown -R root:root "${D}${GOROOT_FINAL}"
-
-	if [ -e "${D}${GOBIN_FINAL}" ]; then
-		install -d -m 0755 "${D}${bindir}"
-		find "${D}${GOBIN_FINAL}" ! -type d -print0 | xargs -r0 mv --target-directory="${D}${bindir}"
-		rmdir -p "${D}${GOBIN_FINAL}" || true
+	if [ -n "`ls ${B}/${GO_BUILD_BINDIR}/`" ]; then
+		install -d ${D}${bindir}
+		install -m 0755 ${B}/${GO_BUILD_BINDIR}/* ${D}${bindir}/
 	fi
 }
-do_install[dirs] =+ "${WORKDIR}/staging"
-do_install[cleandirs] += "${WORKDIR}/staging"
 
-EXPORT_FUNCTIONS do_compile do_install
+EXPORT_FUNCTIONS do_configure do_compile do_install
