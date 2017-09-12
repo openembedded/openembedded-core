@@ -394,9 +394,10 @@ class QemuRunner:
             f = open(self.qemu_pidfile, 'r')
             qemu_pid = f.read()
             f.close()
-            #logger.info("qemu_pid: %s" % qemu_pid)
-            self.qemupid = int(qemu_pid)
-            return True
+            qemupid = int(qemu_pid)
+            if os.path.exists("/proc/" + str(qemupid)):
+                self.qemupid = qemupid
+                return True
         return False
 
     def run_serial(self, command, raw=False, timeout=5):
