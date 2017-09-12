@@ -1,5 +1,5 @@
 inherit goarch
-DEPENDS += "go-bootstrap-native"
+DEPENDS += "go-native"
 
 # libgcc is required for the target specific libraries to build
 # properly, but apparently not for go-cross and, more importantly,
@@ -17,7 +17,7 @@ export GOHOSTARCH = "${BUILD_GOARCH}"
 export GOOS = "${TARGET_GOOS}"
 export GOARCH = "${TARGET_GOARCH}"
 export GOARM = "${TARGET_GOARM}"
-export GOROOT_BOOTSTRAP = "${STAGING_LIBDIR_NATIVE}/go1.4"
+export GOROOT_BOOTSTRAP = "${STAGING_LIBDIR_NATIVE}/go"
 export GOROOT_FINAL = "${libdir}/go"
 export CGO_ENABLED = "1"
 export CC_FOR_TARGET = "${CC}"
