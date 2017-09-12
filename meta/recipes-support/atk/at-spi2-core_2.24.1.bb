@@ -1,4 +1,5 @@
 SUMMARY = "Assistive Technology Service Provider Interface (dbus core)"
+HOMEPAGE = "https://wiki.linuxfoundation.org/accessibility/d-bus"
 LICENSE = "LGPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=e9f288ba982d60518f375b5898283886"
 
