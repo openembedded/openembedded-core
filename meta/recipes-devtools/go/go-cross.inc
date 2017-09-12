@@ -36,7 +36,7 @@ make_wrapper() {
 here=\`dirname \$0\`
 export GOARCH="${TARGET_GOARCH}"
 export GOOS="${TARGET_GOOS}"
-export GOARM="${TARGET_GOARM}"
+export GOARM="\${GOARM:-${TARGET_GOARM}}"
 \$here/../../lib/${CROSS_TARGET_SYS_DIR}/go/bin/$1 "\$@"
 END
     chmod +x ${D}${bindir}/$2
