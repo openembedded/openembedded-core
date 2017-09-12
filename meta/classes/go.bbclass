@@ -20,11 +20,11 @@ def get_go_parallel_make(d):
 GO_PARALLEL_BUILD ?= "${@get_go_parallel_make(d)}"
 
 GOROOT_class-native = "${STAGING_LIBDIR_NATIVE}/go"
-GOROOT = "${STAGING_LIBDIR_NATIVE}/${TARGET_SYS}/go"
+GOROOT = "${STAGING_LIBDIR}/go"
 GOBIN_FINAL_class-native = "${GOROOT_FINAL}/bin"
 GOBIN_FINAL = "${GOROOT_FINAL}/${GO_BUILD_BINDIR}"
 
-DEPENDS_GOLANG_class-target = "go-cross-${TARGET_ARCH}"
+DEPENDS_GOLANG_class-target = "virtual/${TARGET_PREFIX}go virtual/${TARGET_PREFIX}go-runtime"
 DEPENDS_GOLANG_class-native = "go-native"
 
 DEPENDS_append = " ${DEPENDS_GOLANG}"
@@ -32,14 +32,15 @@ DEPENDS_append = " ${DEPENDS_GOLANG}"
 export GOBUILDFLAGS ?= "-v"
 GOBUILDFLAGS_prepend_task-compile = "${GO_PARALLEL_BUILD} "
 
-export GOOS = "${TARGET_GOOS}"
-export GOARCH = "${TARGET_GOARCH}"
-export GOARM = "${TARGET_GOARM}"
+export GO = "${HOST_PREFIX}go"
+GOTOOLDIR = "${STAGING_LIBDIR_NATIVE}/${TARGET_SYS}/go/pkg/tool/${BUILD_GOTUPLE}"
+GOTOOLDIR_class-native = "${STAGING_LIBDIR_NATIVE}/go/pkg/tool/${BUILD_GOTUPLE}"
+export GOTOOLDIR
 export CGO_ENABLED = "1"
 export GOROOT
-export GOROOT_FINAL = "${libdir}/${TARGET_SYS}/go"
+export GOROOT_FINAL = "${libdir}/go"
 export GOBIN_FINAL
-export GOPKG_FINAL = "${GOROOT_FINAL}/pkg/${GOOS}_${GOARCH}"
+export GOPKG_FINAL = "${GOROOT_FINAL}/pkg/${TARGET_GOTUPLE}"
 export GOSRC_FINAL = "${GOROOT_FINAL}/src"
 export GO_GCFLAGS = "${TARGET_CFLAGS}"
 export GO_LDFLAGS = "${TARGET_LDFLAGS}"
@@ -55,6 +56,7 @@ GO_INSTALL ?= "${GO_IMPORT}/..."
 GO_INSTALL_FILTEROUT ?= "${GO_IMPORT}/vendor/"
 
 B = "${WORKDIR}/build"
+export GOPATH = "${B}"
 
 python go_do_unpack() {
     src_uri = (d.getVar('SRC_URI') or "").split()
@@ -75,7 +77,7 @@ python go_do_unpack() {
 }
 
 go_list_packages() {
-	GOPATH=${B}:${STAGING_LIBDIR}/${TARGET_SYS}/go go list -f '{{.ImportPath}}' ${GOBUILDFLAGS} ${GO_INSTALL} | \
+	${GO} list -f '{{.ImportPath}}' ${GOBUILDFLAGS} ${GO_INSTALL} | \
 		egrep -v '${GO_INSTALL_FILTEROUT}'
 }
 
@@ -84,9 +86,9 @@ go_do_configure() {
 }
 
 go_do_compile() {
-	GOPATH=${B}:${STAGING_LIBDIR}/${TARGET_SYS}/go go env
+	${GO} env
 	if [ -n "${GO_INSTALL}" ]; then
-		GOPATH=${B}:${STAGING_LIBDIR}/${TARGET_SYS}/go go install ${GOBUILDFLAGS} `go_list_packages`
+		${GO} install ${GOBUILDFLAGS} `go_list_packages`
 	fi
 }
 do_compile[cleandirs] = "${B}/bin ${B}/pkg"

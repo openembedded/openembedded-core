@@ -14,6 +14,7 @@ SRC_URI += "\
        file://fix-cc-handling.patch \
        file://split-host-and-target-build.patch \
        file://gotooldir.patch \
+       file://make-goroot-precious.patch \
 "
 SRC_URI[main.md5sum] = "64e9380e07bba907e26a00cf5fcbe77e"
 SRC_URI[main.sha256sum] = "5f5dea2447e7dcfdc50fa6b94c512e58bfba5673c039259fd843f68829d99fa6"

@@ -1,16 +1,5 @@
 inherit goarch
-DEPENDS += "go-native"
-
-# libgcc is required for the target specific libraries to build
-# properly, but apparently not for go-cross and, more importantly,
-# also can't be used there because go-cross cannot depend on
-# the tune-specific libgcc. Otherwise go-cross also would have
-# to be tune-specific.
-DEPENDS += "${@ 'libgcc' if not oe.utils.inherits(d, 'cross') else ''}"
-
-# Prevent runstrip from running because you get errors when the host arch != target arch
-INHIBIT_PACKAGE_STRIP = "1"
-INHIBIT_SYSROOT_STRIP = "1"
+DEPENDS = "virtual/${TARGET_PREFIX}go go-native"
 
 export GOHOSTOS = "${BUILD_GOOS}"
 export GOHOSTARCH = "${BUILD_GOARCH}"
@@ -22,12 +11,10 @@ export GOROOT_FINAL = "${libdir}/go"
 export CGO_ENABLED = "1"
 export CC_FOR_TARGET = "${CC}"
 export CXX_FOR_TARGET = "${CXX}"
+export GO_TARGET_INSTALL = "cmd"
+export GO_FLAGS = "-a"
 
 do_configure[noexec] = "1"
-
-do_compile_prepend_class-cross() {
-	export CGO_ENABLED=0
-}
 
 do_compile() {
 	export GOBIN="${B}/bin"
@@ -39,43 +26,26 @@ do_compile() {
 	mkdir -p ${WORKDIR}/build-tmp
 
 	cd src
-	./make.bash --host-only
-	# Ensure cgo.a is built with the target toolchain
-	export GOBIN="${B}/target/bin"
-	rm -rf ${GOBIN}
-	mkdir -p ${GOBIN}
-	GO_FLAGS="-a" ./make.bash
+	./make.bash
+	cd ${B}
 }
 
-do_install_class-target() {
-	install -d ${D}${libdir}/go
-	cp -a ${B}/pkg ${D}${libdir}/go/
+do_install() {
+	install -d ${D}${libdir}/go/pkg/tool
+	cp --preserve=mode,timestamps -R ${B}/pkg/tool/${TARGET_GOTUPLE} ${D}${libdir}/go/pkg/tool/
 	install -d ${D}${libdir}/go/src
-	(cd ${S}/src; for d in *; do \
-		[ -d $d ] && cp -a ${S}/src/$d ${D}${libdir}/go/src/; \
-	done)
+	cp --preserve=mode,timestamps -R ${S}/src/cmd ${D}${libdir}/go/src/
+	install -d ${D}${libdir}/go/bin
 	install -d ${D}${bindir}
-	if [ -d ${B}/bin/${GOOS}_${GOARCH} ]
-	then
-		install -m 0755 ${B}/bin/${GOOS}_${GOARCH}/* ${D}${bindir}
-	else
-		install -m 0755 ${B}/bin/* ${D}${bindir}
-	fi
-}
-
-do_install_class-cross() {
-	install -d ${D}${libdir}/go
-	cp -a ${B}/pkg ${D}${libdir}/go/
-	install -d ${D}${libdir}/go/src
-	(cd ${S}/src; for d in *; do \
-		[ -d $d ] && cp -a ${S}/src/$d ${D}${libdir}/go/src/; \
-	done)
-	install -d ${D}${bindir}
-	for f in ${B}/bin/go*
-	do
-		install -m755 $f ${D}${bindir}
+	for f in ${B}/${GO_BUILD_BINDIR}/*; do
+		name=`basename $f`
+		install -m 0755 $f ${D}${libdir}/go/bin/
+		ln -sf ../${BASELIB}/go/bin/$name ${D}${bindir}/
 	done
 }
-do_package_qa[noexec] = "1"
 
-RDEPENDS_${PN} += "perl"
+PACKAGES = "${PN} ${PN}-dev"
+FILES_${PN} = "${libdir}/go/bin ${libdir}/go/pkg/tool/${TARGET_GOTUPLE} ${bindir}"
+FILES_${PN}-dev = "${libdir}/go"
+RDEPENDS_${PN}-dev = "perl bash"
+INSANE_SKIP_${PN} = "ldflags"
