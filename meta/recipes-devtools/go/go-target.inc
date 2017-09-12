@@ -1,5 +1,6 @@
 inherit goarch
 DEPENDS = "virtual/${TARGET_PREFIX}go go-native"
+DEPENDS_class-nativesdk = "virtual/${TARGET_PREFIX}go-crosssdk go-native"
 
 export GOHOSTOS = "${BUILD_GOOS}"
 export GOHOSTARCH = "${BUILD_GOARCH}"
@@ -49,3 +50,5 @@ FILES_${PN} = "${libdir}/go/bin ${libdir}/go/pkg/tool/${TARGET_GOTUPLE} ${bindir
 FILES_${PN}-dev = "${libdir}/go"
 RDEPENDS_${PN}-dev = "perl bash"
 INSANE_SKIP_${PN} = "ldflags"
+
+BBCLASSEXTEND = "nativesdk"
