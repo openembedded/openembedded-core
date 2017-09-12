@@ -1,0 +1,22 @@
+Set GOTOOLDIR during bootstrap 
+
+Signed-off-by: Matt Madison <matt@madison.systems>
+Upstream-Status: Pending
+
+Index: go/src/make.bash
+===================================================================
+--- go.orig/src/make.bash
++++ go/src/make.bash
+@@ -172,10 +172,11 @@ if [ "$do_host_build" = "yes" ]; then
+ 	mv cmd/dist/dist "$GOTOOLDIR"/dist
+ 	echo
+ 
++	GOTOOLDIR_BOOTSTRAP="${GOTOOLDIR_BOOTSTRAP:-$GOTOOLDIR}"
+ 	echo "##### Building packages and commands for host, $GOHOSTOS/$GOHOSTARCH."
+ 	# CC_FOR_TARGET is recorded as the default compiler for the go tool. When building for the host, however,
+ 	# use the host compiler, CC, from `cmd/dist/dist env` instead.
+-	CC=$CC GOOS=$GOHOSTOS GOARCH=$GOHOSTARCH \
++	CC=$CC GOOS=$GOHOSTOS GOARCH=$GOHOSTARCH GOTOOLDIR="$GOTOOLDIR_BOOTSTRAP" \
+ 		"$GOTOOLDIR"/go_bootstrap install -gcflags "$GO_GCFLAGS" -ldflags "$GO_LDFLAGS" -v std cmd
+ 	echo
+ fi
