@@ -1118,7 +1118,8 @@ python do_package_qa () {
                     oe.utils.write_ld_so_conf(d)
             return warnchecks, errorchecks
 
-        skip = (d.getVar('INSANE_SKIP_' + package, True) or "").split()
+        skip = set((d.getVar('INSANE_SKIP', True) or "").split() +
+                   (d.getVar('INSANE_SKIP_' + package, True) or "").split())
         if skip:
             bb.note("Package %s skipping QA tests: %s" % (package, str(skip)))
 
