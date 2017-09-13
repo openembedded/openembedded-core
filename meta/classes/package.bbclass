@@ -737,9 +737,7 @@ python fixup_perms () {
     def get_fs_perms_list(d):
         str = ""
         bbpath = d.getVar('BBPATH')
-        fs_perms_tables = d.getVar('FILESYSTEM_PERMS_TABLES')
-        if not fs_perms_tables:
-            fs_perms_tables = 'files/fs-perms.txt' if oe.types.boolean(d.getVar('VOLATILE_LOG_DIR', True)) else 'files/fs-perms-persistent-log.txt'
+        fs_perms_tables = d.getVar('FILESYSTEM_PERMS_TABLES') or ""
         for conf_file in fs_perms_tables.split():
             str += " %s" % bb.utils.which(bbpath, conf_file)
         return str
