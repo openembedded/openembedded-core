@@ -27,6 +27,7 @@ COMPATIBLE_HOST_linux-gnux32 = "null"
 COMPATIBLE_HOST_linux-muslx32 = "null"
 COMPATIBLE_HOST_powerpc = "null"
 COMPATIBLE_HOST_powerpc64 = "null"
+ARM_INSTRUCTION_SET = "arm"
 
 def go_map_arch(a, d):
     import re
