@@ -1097,7 +1097,8 @@ python do_package_qa () {
         return warnchecks, errorchecks
 
     for package in packages:
-        skip = (d.getVar('INSANE_SKIP_' + package) or "").split()
+        skip = set((d.getVar('INSANE_SKIP') or "").split() +
+                   (d.getVar('INSANE_SKIP_' + package) or "").split())
         if skip:
             bb.note("Package %s skipping QA tests: %s" % (package, str(skip)))
 
