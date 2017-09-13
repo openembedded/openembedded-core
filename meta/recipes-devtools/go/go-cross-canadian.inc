@@ -52,6 +52,7 @@ do_install() {
 	(cd ${S}/src; for d in *; do \
 		[ -d $d ] && cp --preserve=mode,timestamps -R ${S}/src/$d ${D}${libdir}/go/src/; \
 	done)
+	rm -rf ${D}${libdir}/go/src/runtime/pprof/testdata
 	install -d ${D}${bindir} ${D}${libdir}/go/bin
 	for f in ${B}/bin/*
 	do
