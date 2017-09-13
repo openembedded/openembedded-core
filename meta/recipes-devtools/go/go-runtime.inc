@@ -1,4 +1,5 @@
 DEPENDS = "virtual/${TARGET_PREFIX}go go-native"
+DEPENDS_class-nativesdk = "virtual/${TARGET_PREFIX}go-crosssdk"
 PROVIDES = "virtual/${TARGET_PREFIX}go-runtime"
 
 export GOHOSTOS = "${BUILD_GOOS}"
@@ -56,3 +57,5 @@ INSANE_SKIP_${PN}-dev = "staticdev ldflags file-rdeps arch"
 
 INHIBIT_PACKAGE_STRIP = "1"
 INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
+
+BBCLASSEXTEND = "nativesdk"
