@@ -216,7 +216,7 @@ class DevtoolTests(DevtoolBase):
         result = runCmd('devtool -q find-recipe %s' % pn)
         self.assertEqual(recipepath, result.output.strip())
         # Test devtool edit-recipe
-        result = runCmd('EDITOR="echo 123" devtool -q edit-recipe %s' % pn)
+        result = runCmd('VISUAL="echo 123" devtool -q edit-recipe %s' % pn)
         self.assertEqual('123 %s' % recipepath, result.output.strip())
         # Clean up anything in the workdir/sysroot/sstate cache (have to do this *after* devtool add since the recipe only exists then)
         bitbake('%s -c cleansstate' % pn)
