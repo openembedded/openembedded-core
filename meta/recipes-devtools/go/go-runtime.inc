@@ -24,6 +24,9 @@ do_compile() {
 	mkdir ${GOBIN}
 	cd src
 	GO_FLAGS="" ./make.bash
+	if [ -n "${GO_DYNLINK}" ]; then
+		GO_FLAGS="-buildmode=shared" GO_LDFLAGS="-extldflags \"${LDFLAGS}\"" ./make.bash
+	fi
 	cd ${B}
 }
 
@@ -49,8 +52,25 @@ sysroot_stage_all_append() {
 }
 
 ALLOW_EMPTY_${PN} = "1"
-FILES_${PN}-dev = "${libdir}/go/src ${libdir}/go/pkg/include"
-FILES_${PN}-staticdev = "${libdir}/go/pkg/${TARGET_GOTUPLE} ${libdir}/go/pkg/${TARGET_GOTUPLE}"
+FILES_${PN} = "${libdir}/go/pkg/${TARGET_GOTUPLE}_dynlink/*${SOLIBSDEV}"
+FILES_${PN}-dev = "${libdir}/go/src ${libdir}/go/pkg/include \
+                   ${libdir}/go/pkg/${TARGET_GOTUPLE}_dynlink/*.shlibname \
+                   ${libdir}/go/pkg/${TARGET_GOTUPLE}_dynlink/*/*.shlibname \
+                   ${libdir}/go/pkg/${TARGET_GOTUPLE}_dynlink/*/*/*.shlibname \
+                   ${libdir}/go/pkg/${TARGET_GOTUPLE}_dynlink/*/*/*/*.shlibname \
+                   ${libdir}/go/pkg/${TARGET_GOTUPLE}_dynlink/*/*/*/*/*.shlibname \
+                   ${libdir}/go/pkg/${TARGET_GOTUPLE}_dynlink/*/*/*/*/*/*.shlibname \
+                   ${libdir}/go/pkg/${TARGET_GOTUPLE}_dynlink/*/*/*/*/*/*/*.shlibname \
+"
+FILES_${PN}-staticdev = "${libdir}/go/pkg/${TARGET_GOTUPLE} \
+                   ${libdir}/go/pkg/${TARGET_GOTUPLE}_dynlink/*.a \
+                   ${libdir}/go/pkg/${TARGET_GOTUPLE}_dynlink/*/*.a \
+                   ${libdir}/go/pkg/${TARGET_GOTUPLE}_dynlink/*/*/*.a \
+                   ${libdir}/go/pkg/${TARGET_GOTUPLE}_dynlink/*/*/*/*.a \
+                   ${libdir}/go/pkg/${TARGET_GOTUPLE}_dynlink/*/*/*/*/*.a \
+                   ${libdir}/go/pkg/${TARGET_GOTUPLE}_dynlink/*/*/*/*/*/*.a \
+                   ${libdir}/go/pkg/${TARGET_GOTUPLE}_dynlink/*/*/*/*/*/*/*.a \
+"
 # The testdata directories in the source tree include some binaries for various
 # architectures, scripts, and .a files
 INSANE_SKIP_${PN}-dev = "staticdev ldflags file-rdeps arch"
