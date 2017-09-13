@@ -13,6 +13,4 @@ inherit go
 
 GO_INSTALL = "${GO_IMPORT}/cmd/dep"
 
-INSANE_SKIP_${PN} += "ldflags"
-
 RDEPENDS_${PN}-dev += "bash"

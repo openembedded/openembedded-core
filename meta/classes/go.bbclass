@@ -109,3 +109,5 @@ EXPORT_FUNCTIONS do_unpack do_configure do_compile do_install
 
 FILES_${PN}-dev = "${libdir}/go/src"
 FILES_${PN}-staticdev = "${libdir}/go/pkg"
+
+INSANE_SKIP_${PN} += "ldflags"
