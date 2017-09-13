@@ -16,6 +16,7 @@ SRC_URI += "\
        file://gotooldir.patch \
        file://make-goroot-precious.patch \
        file://set-gotooldir-during-bootstrap.patch \
+       file://0006-linker-add-soname-to-shareable-objects.patch \
 "
 SRC_URI[main.md5sum] = "64e9380e07bba907e26a00cf5fcbe77e"
 SRC_URI[main.sha256sum] = "5f5dea2447e7dcfdc50fa6b94c512e58bfba5673c039259fd843f68829d99fa6"
