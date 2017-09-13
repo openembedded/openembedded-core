@@ -1,4 +1,4 @@
-inherit goarch
+inherit goarch ptest
 
 def get_go_parallel_make(d):
     pm = (d.getVar('PARALLEL_MAKE') or '').split()
@@ -39,6 +39,8 @@ GO_RPATH_LINK_class-native = "${@'-Wl,-rpath-link=${STAGING_LIBDIR_NATIVE}/go/pk
 GO_EXTLDFLAGS ?= "${HOST_CC_ARCH}${TOOLCHAIN_OPTIONS} ${GO_RPATH_LINK} ${LDFLAGS}"
 GO_LDFLAGS ?= '-ldflags="${GO_RPATH} -extldflags '${GO_EXTLDFLAGS}'"'
 export GOBUILDFLAGS ?= "-v ${GO_LDFLAGS}"
+export GOPTESTBUILDFLAGS ?= "${GOBUILDFLAGS} -c"
+export GOPTESTFLAGS ?= "-test.v"
 GOBUILDFLAGS_prepend_task-compile = "${GO_PARALLEL_BUILD} "
 
 export GO = "${HOST_PREFIX}go"
@@ -81,6 +83,13 @@ go_list_packages() {
 		egrep -v '${GO_INSTALL_FILTEROUT}'
 }
 
+go_list_package_tests() {
+    ${GO} list -f '{{.ImportPath}} {{.TestGoFiles}}' ${GOBUILDFLAGS} ${GO_INSTALL} | \
+		grep -v '\[\]$' | \
+		egrep -v '${GO_INSTALL_FILTEROUT}' | \
+		awk '{ print $1 }'
+}
+
 go_do_configure() {
 	ln -snf ${S}/src ${B}/
 }
@@ -93,9 +102,19 @@ go_do_compile() {
 }
 do_compile[cleandirs] = "${B}/bin ${B}/pkg"
 
+do_compile_ptest() {
+    rm -f ${B}/.go_compiled_tests.list
+	go_list_package_tests | while read pkg; do
+		cd ${B}/src/$pkg
+		${GO} test ${GOPTESTBUILDFLAGS} $pkg
+		find . -mindepth 1 -maxdepth 1 -type f -name '*.test' -exec echo $pkg/{} \; | \
+			sed -e's,/\./,/,'>> ${B}/.go_compiled_tests.list
+	done
+}
+
 go_do_install() {
 	install -d ${D}${libdir}/go/src/${GO_IMPORT}
-	tar -C ${S}/src/${GO_IMPORT} -cf - --exclude-vcs . | \
+	tar -C ${S}/src/${GO_IMPORT} -cf - --exclude-vcs --exclude '*.test' . | \
 		tar -C ${D}${libdir}/go/src/${GO_IMPORT} --no-same-owner -xf -
 	tar -C ${B} -cf - pkg | tar -C ${D}${libdir}/go --no-same-owner -xf -
 
@@ -105,9 +124,48 @@ go_do_install() {
 	fi
 }
 
+do_install_ptest_base() {
+set -x
+    test -f "${B}/.go_compiled_tests.list" || exit 0
+    tests=""
+    while read test; do
+        tests="$tests${tests:+ }${test%.test}"
+        testdir=`dirname $test`
+        install -d ${D}${PTEST_PATH}/$testdir
+        install -m 0755 ${B}/src/$test ${D}${PTEST_PATH}/$test
+        if [ -d "${B}/src/$testdir/testdata" ]; then
+            cp --preserve=mode,timestamps -R "${B}/src/$testdir/testdata" ${D}${PTEST_PATH}/$testdir
+        fi
+    done < ${B}/.go_compiled_tests.list
+    if [ -n "$tests" ]; then
+        install -d ${D}${PTEST_PATH}
+        cat >${D}${PTEST_PATH}/run-ptest <<EOF
+#!/bin/sh
+ANYFAILED=0
+for t in $tests; do
+    testdir=\`dirname \$t.test\`
+    if ( cd "${PTEST_PATH}/\$testdir"; "${PTEST_PATH}/\$t.test" ${GOPTESTFLAGS} | tee /dev/fd/9 | grep -q "^FAIL" ) 9>&1; then
+        ANYFAILED=1
+    fi
+done
+if [ \$ANYFAILED -ne 0 ]; then
+    echo "FAIL: ${PN}"
+    exit 1
+fi
+echo "PASS: ${PN}"
+exit 0
+EOF
+        chmod +x ${D}${PTEST_PATH}/run-ptest
+    else
+        rm -rf ${D}${PTEST_PATH}
+    fi
+set +x
+}
+
 EXPORT_FUNCTIONS do_unpack do_configure do_compile do_install
 
 FILES_${PN}-dev = "${libdir}/go/src"
 FILES_${PN}-staticdev = "${libdir}/go/pkg"
 
 INSANE_SKIP_${PN} += "ldflags"
+INSANE_SKIP_${PN}-ptest += "ldflags"
