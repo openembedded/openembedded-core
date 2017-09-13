@@ -98,7 +98,7 @@ LIC_FILES_CHKSUM = "\
     file://LICENCE.qla1280;md5=d6895732e622d950609093223a2c4f5d \
     file://LICENCE.qla2xxx;md5=505855e921b75f1be4a437ad9b79dff0 \
     file://LICENSE.QualcommAtheros_ar3k;md5=b5fe244fb2b532311de1472a3bc06da5 \
-    file://LICENSE.QualcommAtheros_ath10k;md5=b5fe244fb2b532311de1472a3bc06da5 \
+    file://LICENSE.QualcommAtheros_ath10k;md5=cb42b686ee5f5cb890275e4321db60a8 \
     file://LICENCE.r8a779x_usb3;md5=4c1671656153025d7076105a5da7e498 \
     file://LICENSE.radeon;md5=68ec28bacb3613200bca44f404c69b16 \
     file://LICENCE.ralink_a_mediatek_company_firmware;md5=728f1a85fd53fd67fa8d7afb080bc435 \
@@ -114,7 +114,7 @@ LIC_FILES_CHKSUM = "\
     file://LICENCE.xc4000;md5=0ff51d2dc49fce04814c9155081092f0 \
     file://LICENCE.xc5000;md5=1e170c13175323c32c7f4d0998d53f66 \
     file://LICENCE.xc5000c;md5=12b02efa3049db65d524aeb418dd87ca \
-    file://WHENCE;md5=ad12d0618287e8c10ae3da05fa0edcfb \
+    file://WHENCE;md5=08f6d4371353cac5f6fc271d5407c63e \
 "
 
 # These are not common licenses, set NO_GENERIC_LICENSE for them
@@ -175,7 +175,7 @@ NO_GENERIC_LICENSE[Firmware-xc5000] = "LICENCE.xc5000"
 NO_GENERIC_LICENSE[Firmware-xc5000c] = "LICENCE.xc5000c"
 NO_GENERIC_LICENSE[WHENCE] = "WHENCE"
 
-SRCREV = "b14134583c2a15d4404695f72cb523daedb877ab"
+SRCREV = "a61ac5cf8374edbfe692d12f805a1b194f7fead2"
 PE = "1"
 PV = "0.0+git${SRCPV}"
 
@@ -734,5 +734,6 @@ python populate_packages_prepend () {
     d.appendVar('RDEPENDS_linux-firmware-ibt', ' ' + ' '.join(ibt_pkgs))
 }
 
-# Netronome binaries has ELF headers and therefore triggers an arch-specific error.
-INSANE_SKIP_${PN}-netronome = "arch"
+# Firmware files are generally not ran on the CPU, so they can be
+# allarch despite being architecture specific
+INSANE_SKIP = "arch"
