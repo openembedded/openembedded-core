@@ -732,7 +732,7 @@ def package_qa_check_staged(path,d):
     return sane
 
 # Run all package-wide warnfuncs and errorfuncs
-def package_qa_package(warnfuncs, errorfuncs, skip, package, d):
+def package_qa_package(warnfuncs, errorfuncs, package, d):
     warnings = {}
     errors = {}
 
@@ -749,7 +749,7 @@ def package_qa_package(warnfuncs, errorfuncs, skip, package, d):
     return len(errors) == 0
 
 # Run all recipe-wide warnfuncs and errorfuncs
-def package_qa_recipe(warnfuncs, errorfuncs, skip, pn, d):
+def package_qa_recipe(warnfuncs, errorfuncs, pn, d):
     warnings = {}
     errors = {}
 
@@ -766,7 +766,7 @@ def package_qa_recipe(warnfuncs, errorfuncs, skip, pn, d):
     return len(errors) == 0
 
 # Walk over all files in a directory and call func
-def package_qa_walk(warnfuncs, errorfuncs, skip, package, d):
+def package_qa_walk(warnfuncs, errorfuncs, package, d):
     import oe.qa
 
     #if this will throw an exception, then fix the dict above
@@ -908,7 +908,7 @@ def package_qa_check_rdepends(pkg, pkgdest, skip, taskdeps, packages, d):
                     package_qa_handle_error("file-rdeps", error_msg, d)
 package_qa_check_rdepends[vardepsexclude] = "OVERRIDES"
 
-def package_qa_check_deps(pkg, pkgdest, skip, d):
+def package_qa_check_deps(pkg, pkgdest, d):
 
     localdata = bb.data.createCopy(d)
     localdata.setVar('OVERRIDES', pkg)
@@ -1108,16 +1108,16 @@ python do_package_qa () {
                     "%s doesn't match the [a-z0-9.+-]+ regex" % package, d)
 
         warn_checks, error_checks = parse_test_matrix("QAPATHTEST")
-        package_qa_walk(warn_checks, error_checks, skip, package, d)
+        package_qa_walk(warn_checks, error_checks, package, d)
 
         warn_checks, error_checks = parse_test_matrix("QAPKGTEST")
-        package_qa_package(warn_checks, error_checks, skip, package, d)
+        package_qa_package(warn_checks, error_checks, package, d)
 
         package_qa_check_rdepends(package, pkgdest, skip, taskdeps, packages, d)
-        package_qa_check_deps(package, pkgdest, skip, d)
+        package_qa_check_deps(package, pkgdest, d)
 
     warn_checks, error_checks = parse_test_matrix("QARECIPETEST")
-    package_qa_recipe(warn_checks, error_checks, skip, pn, d)
+    package_qa_recipe(warn_checks, error_checks, pn, d)
 
     if 'libdir' in d.getVar("ALL_QA").split():
         package_qa_check_libdir(d)
