@@ -11,8 +11,9 @@ export GOARCH = "${TARGET_GOARCH}"
 export GOROOT_BOOTSTRAP = "${STAGING_LIBDIR_NATIVE}/go"
 export GOROOT_FINAL = "${libdir}/go"
 export CGO_ENABLED = "1"
-export CC_FOR_TARGET="${TARGET_PREFIX}gcc ${TARGET_CC_ARCH} --sysroot=${STAGING_DIR_TARGET}"
-export CXX_FOR_TARGET="${TARGET_PREFIX}g++ ${TARGET_CC_ARCH} --sysroot=${STAGING_DIR_TARGET}"
+export CC_FOR_TARGET="${TARGET_PREFIX}gcc ${TARGET_CC_ARCH} --sysroot=${STAGING_DIR_TARGET}${SDKPATHNATIVE}"
+export CXX_FOR_TARGET="${TARGET_PREFIX}g++ ${TARGET_CC_ARCH} --sysroot=${STAGING_DIR_TARGET}${SDKPATHNATIVE}"
+export GO_INSTALL = "cmd"
 CC = "${@d.getVar('BUILD_CC', True).strip()}"
 
 do_configure[noexec] = "1"
@@ -43,13 +44,11 @@ do_install() {
 	install -d ${D}${libdir}/go/bin
 	install -d ${D}${libdir}/go/pkg/tool
 	install -d ${D}${bindir}
-	cp --preserve=mode,timestamps -R ${S}/pkg/tool/${TARGET_GOTUPLE} ${D}${libdir}/go/pkg/tool/
-	for f in ${B}/${GO_BUILD_BINDIR}/*
+	cp --preserve=mode,timestamps -R ${S}/pkg/tool/${BUILD_GOTUPLE} ${D}${libdir}/go/pkg/tool/
+	for f in ${B}/bin/*
 	do
 		base=`basename $f`
 		install -m755 $f ${D}${libdir}/go/bin
 		make_wrapper $base ${TARGET_PREFIX}$base
 	done
 }
-
-FILES_${PN}-staticdev = "${libdir}/go/pkg"
