@@ -14,6 +14,9 @@ export CC_FOR_TARGET = "${CC}"
 export CXX_FOR_TARGET = "${CXX}"
 export GO_TARGET_INSTALL = "cmd"
 export GO_FLAGS = "-a"
+GO_LDFLAGS = ""
+GO_LDFLAGS_class-nativesdk = "-linkmode external"
+export GO_LDFLAGS
 
 do_configure[noexec] = "1"
 

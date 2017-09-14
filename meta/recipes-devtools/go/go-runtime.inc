@@ -45,6 +45,11 @@ do_install() {
 	done
 }
 
+# Remove test binaries that cannot be relocated
+do_install_append_class-nativesdk() {
+	rm -rf ${D}${libdir}/go/src/runtime/pprof/testdata
+}
+
 # These testdata directories aren't needed for builds and contain binaries
 # that can cause errors in sysroot_strip(), so just remove them.
 sysroot_stage_all_append() {
