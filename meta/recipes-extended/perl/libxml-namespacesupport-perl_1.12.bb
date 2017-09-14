@@ -1,4 +1,5 @@
 SUMMARY = "Perl module for supporting simple generic namespaces"
+HOMEPAGE = "http://veillard.com/XML/"
 DESCRIPTION = "XML::NamespaceSupport offers a simple way to process namespace-based XML names. \
                 It also helps maintain a prefix-to-namespace URI map, and provides a number of \
                 basic checks. "
