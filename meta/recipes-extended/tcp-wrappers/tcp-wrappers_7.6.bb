@@ -1,4 +1,5 @@
 SUMMARY = "Security tool that is a wrapper for TCP daemons"
+HOMEPAGE = "http://www.softpanorama.org/Net/Network_security/TCP_wrappers/"
 DESCRIPTION = "Tools for monitoring and filtering incoming requests for tcp \
                services."
 SECTION = "console/network"
