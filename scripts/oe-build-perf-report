@@ -29,7 +29,8 @@ sys.path.append(os.path.join(scripts_path, 'lib'))
 import scriptpath
 from build_perf import print_table
 from build_perf.report import (metadata_xml_to_json, results_xml_to_json,
-                               aggregate_data, aggregate_metadata, measurement_stats)
+                               aggregate_data, aggregate_metadata, measurement_stats,
+                               AggregateTestData)
 from build_perf import html
 
 scriptpath.add_oe_lib_path()
@@ -337,13 +338,13 @@ def print_html_report(data, id_comp):
                 'hostname': {'title': 'Hostname', 'value': 'foobar'},
                 'commit': {'title': 'Commit', 'value': '1234'}
                }
-    metadata = metadata_diff(data[id_comp][0], data[-1][0])
+    metadata = metadata_diff(data[id_comp].metadata, data[-1].metadata)
 
 
     # Generate list of tests
     tests = []
-    for test in data[-1][1]['tests'].keys():
-        test_r = data[-1][1]['tests'][test]
+    for test in data[-1].results['tests'].keys():
+        test_r = data[-1].results['tests'][test]
         new_test = {'name': test_r['name'],
                     'description': test_r['description'],
                     'status': test_r['status'],
@@ -576,7 +577,8 @@ def main(argv=None):
 
     data = []
     for raw_m, raw_d in raw_data:
-        data.append((aggregate_metadata(raw_m), aggregate_data(raw_d)))
+        data.append(AggregateTestData(aggregate_metadata(raw_m),
+                                      aggregate_data(raw_d)))
 
     # Re-map list indexes to the new table starting from index 0
     index_r = index_r - index_0
@@ -584,8 +586,8 @@ def main(argv=None):
 
     # Print report
     if not args.html:
-        print_diff_report(data[index_l][0], data[index_l][1],
-                          data[index_r][0], data[index_r][1])
+        print_diff_report(data[index_l].metadata, data[index_l].results,
+                          data[index_r].metadata, data[index_r].results)
     else:
         print_html_report(data, index_l)
 
