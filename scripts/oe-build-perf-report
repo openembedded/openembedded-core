@@ -336,10 +336,6 @@ def print_diff_report(metadata_l, data_l, metadata_r, data_r):
 def print_html_report(data, id_comp):
     """Print report in html format"""
     # Handle metadata
-    metadata = {'branch': {'title': 'Branch', 'value': 'master'},
-                'hostname': {'title': 'Hostname', 'value': 'foobar'},
-                'commit': {'title': 'Commit', 'value': '1234'}
-               }
     metadata = metadata_diff(data[id_comp].metadata, data[-1].metadata)
 
 
