@@ -180,6 +180,14 @@ class BSRecipe(object):
 class BuildStats(dict):
     """Class representing buildstats of one build"""
 
+    @property
+    def num_tasks(self):
+        """Get number of tasks"""
+        num = 0
+        for recipe in self.values():
+            num += len(recipe.tasks)
+        return num
+
     @classmethod
     def from_json(cls, bs_json):
         """Create new BuildStats object from JSON object"""

@@ -32,6 +32,7 @@ from build_perf.report import (metadata_xml_to_json, results_xml_to_json,
                                aggregate_data, aggregate_metadata, measurement_stats,
                                AggregateTestData)
 from build_perf import html
+from buildstats import BuildStats, diff_buildstats
 
 scriptpath.add_oe_lib_path()
 
@@ -333,11 +334,30 @@ def print_diff_report(metadata_l, data_l, metadata_r, data_r):
     print()
 
 
-def print_html_report(data, id_comp):
+class BSSummary(object):
+    def __init__(self, bs1, bs2):
+        self.tasks = {'count': bs2.num_tasks,
+                      'change': '{:+d}'.format(bs2.num_tasks - bs1.num_tasks)}
+        self.top_consumer = None
+        self.top_decrease = None
+        self.top_increase = None
+
+        tasks_diff = diff_buildstats(bs1, bs2, 'cputime')
+
+        # Get top consumers of resources
+        tasks_diff = sorted(tasks_diff, key=attrgetter('value2'))
+        self.top_consumer = tasks_diff[-5:]
+
+        # Get biggest increase and decrease in resource usage
+        tasks_diff = sorted(tasks_diff, key=attrgetter('absdiff'))
+        self.top_decrease = tasks_diff[0:5]
+        self.top_increase = tasks_diff[-5:]
+
+
+def print_html_report(data, id_comp, buildstats):
     """Print report in html format"""
     # Handle metadata
     metadata = metadata_diff(data[id_comp].metadata, data[-1].metadata)
-
 
     # Generate list of tests
     tests = []
@@ -388,6 +408,16 @@ def print_html_report(data, id_comp):
             new_meas['value'] = samples[-1]
             new_meas['value_type'] = samples[-1]['val_cls']
 
+            # Compare buildstats
+            bs_key = test + '.' + meas
+            rev = metadata['commit_num']['value']
+            comp_rev = metadata['commit_num']['value_old']
+            if (rev in buildstats and bs_key in buildstats[rev] and
+                    comp_rev in buildstats and bs_key in buildstats[comp_rev]):
+                new_meas['buildstats'] = BSSummary(buildstats[comp_rev][bs_key],
+                                                   buildstats[rev][bs_key])
+
+
             new_test['measurements'].append(new_meas)
         tests.append(new_test)
 
@@ -401,8 +431,8 @@ def print_html_report(data, id_comp):
                                chart_opts=chart_opts))
 
 
-def dump_buildstats(repo, outdir, notes_ref, revs):
-    """Dump buildstats of test results"""
+def get_buildstats(repo, notes_ref, revs, outdir=None):
+    """Get the buildstats from git notes"""
     full_ref = 'refs/notes/' + notes_ref
     if not repo.rev_parse(full_ref):
         log.error("No buildstats found, please try running "
@@ -411,9 +441,10 @@ def dump_buildstats(repo, outdir, notes_ref, revs):
         return
 
     missing = False
-    log.info("Writing out buildstats from 'refs/notes/%s' into '%s'",
-              notes_ref, outdir)
+    buildstats = {}
+    log.info("Parsing buildstats from 'refs/notes/%s'", notes_ref)
     for rev in revs:
+        buildstats[rev.commit_number] = {}
         log.debug('Dumping buildstats for %s (%s)', rev.commit_number,
                   rev.commit)
         for tag in rev.tags:
@@ -425,18 +456,31 @@ def dump_buildstats(repo, outdir, notes_ref, revs):
                 log.warning("Buildstats not found for %s", tag)
                 bs_all = {}
                 missing = True
-            for measurement, buildstats in bs_all.items():
-                tag_base, run_id = tag.rsplit('/', 1)
-                tag_base = tag_base.replace('/', '_')
-                bs_dir = os.path.join(outdir, measurement, tag_base)
-                if not os.path.exists(bs_dir):
-                    os.makedirs(bs_dir)
-                with open(os.path.join(bs_dir, run_id + '.json'), 'w') as f:
-                    json.dump(buildstats, f, indent=2)
+
+            for measurement, bs in bs_all.items():
+                # Write out onto disk
+                if outdir:
+                    tag_base, run_id = tag.rsplit('/', 1)
+                    tag_base = tag_base.replace('/', '_')
+                    bs_dir = os.path.join(outdir, measurement, tag_base)
+                    if not os.path.exists(bs_dir):
+                        os.makedirs(bs_dir)
+                    with open(os.path.join(bs_dir, run_id + '.json'), 'w') as f:
+                        json.dump(bs, f, indent=2)
+
+                # Read buildstats into a dict
+                _bs = BuildStats.from_json(bs)
+                if measurement not in buildstats[rev.commit_number]:
+                    buildstats[rev.commit_number][measurement] = _bs
+                else:
+                    buildstats[rev.commit_number][measurement].aggregate(_bs)
+
     if missing:
         log.info("Buildstats were missing for some test runs, please "
                  "run 'git fetch origin %s:%s' and try again",
                  full_ref, full_ref)
+
+    return buildstats
 
 
 def auto_args(repo, args):
@@ -584,20 +628,20 @@ def main(argv=None):
     index_r = index_r - index_0
     index_l = index_l - index_0
 
+    # Read buildstats only when needed
+    buildstats = None
+    if args.dump_buildstats or args.html:
+        outdir = 'oe-build-perf-buildstats' if args.dump_buildstats else None
+        notes_ref = 'buildstats/{}/{}/{}'.format(args.hostname, args.branch,
+                                                 args.machine)
+        buildstats = get_buildstats(repo, notes_ref, [rev_l, rev_r], outdir)
+
     # Print report
     if not args.html:
         print_diff_report(data[index_l].metadata, data[index_l].results,
                           data[index_r].metadata, data[index_r].results)
     else:
-        print_html_report(data, index_l)
-
-    # Dump buildstats
-    if args.dump_buildstats:
-        notes_ref = 'buildstats/{}/{}/{}'.format(args.hostname, args.branch,
-                                                 args.machine)
-        dump_buildstats(repo, 'oe-build-perf-buildstats', notes_ref,
-                        [rev_l, rev_r])
-                        #revs_l.tags + revs_r.tags)
+        print_html_report(data, index_l, buildstats)
 
     return 0
 

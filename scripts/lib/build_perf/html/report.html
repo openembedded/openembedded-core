@@ -53,8 +53,10 @@ summary th, .meta-table td {
   border-collapse: collapse;
 }
 .details th {
-  font-weight: normal;
   padding-right: 8px;
+}
+.details.plain th {
+  font-weight: normal;
 }
 .preformatted {
   font-family: monospace;
@@ -168,6 +170,7 @@ h3 {
             {{ measurement.absdiff_str }} ({{measurement.reldiff}})
             </span></span>
           </div>
+          {# Table for trendchart and the statistics #}
           <table style="width: 100%">
             <tr>
               <td style="width: 75%">
@@ -176,7 +179,7 @@ h3 {
               </td>
               <td>
                 {# Measurement statistics #}
-                <table class="details">
+                <table class="details plain">
                   <tr>
                     <th>Test runs</th><td>{{ measurement.value.sample_cnt }}</td>
                   </tr><tr>
@@ -195,6 +198,59 @@ h3 {
               </td>
             </tr>
           </table>
+
+          {# Task and recipe summary from buildstats #}
+          {% if 'buildstats' in measurement %}
+            Task resource usage
+            <table class="details" style="width:100%">
+              <tr>
+                <th>Number of tasks</th>
+                <th>Top consumers of cputime</th>
+              </tr>
+              <tr>
+                <td style="vertical-align: top">{{ measurement.buildstats.tasks.count }} ({{ measurement.buildstats.tasks.change }})</td>
+                {# Table of most resource-hungry tasks #}
+                <td>
+                  <table class="details plain">
+                    {% for diff in measurement.buildstats.top_consumer|reverse %}
+                    <tr>
+                      <th>{{ diff.pkg }}.{{ diff.task }}</th>
+                      <td>{{ '%0.0f' % diff.value2 }} s</td>
+                    </tr>
+                    {% endfor %}
+                  </table>
+                </td>
+              </tr>
+              <tr>
+                <th>Biggest increase in cputime</th>
+                <th>Biggest decrease in cputime</th>
+              </tr>
+              <tr>
+                {# Table biggest increase in resource usage #}
+                <td>
+                  <table class="details plain">
+                    {% for diff in measurement.buildstats.top_increase|reverse %}
+                    <tr>
+                      <th>{{ diff.pkg }}.{{ diff.task }}</th>
+                      <td>{{ '%+0.0f' % diff.absdiff }} s</td>
+                    </tr>
+                    {% endfor %}
+                  </table>
+                </td>
+                {# Table biggest decrease in resource usage #}
+                <td>
+                  <table class="details plain">
+                    {% for diff in measurement.buildstats.top_decrease %}
+                    <tr>
+                      <th>{{ diff.pkg }}.{{ diff.task }}</th>
+                      <td>{{ '%+0.0f' % diff.absdiff }} s</td>
+                    </tr>
+                    {% endfor %}
+                  </table>
+                </td>
+              </tr>
+            </table>
+          {% endif %}
         </div>
       {% endfor %}
     {# Unsuccessful test #}
