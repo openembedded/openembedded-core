@@ -8,21 +8,26 @@
 ####################################################################################
 
 # Get active serial filename.
-active_serial=$(grep "serial" /proc/tty/drivers | grep -oh "^\s*\S*")
+active_serial=$(grep "serial" /proc/tty/drivers | cut -d/ -f1 | sed "s/ *$//")
 
 # Re-phrase input parameter from ttyS target index (ttyS1, ttyS2, ttyAMA0, etc).
 runtime_tty=$(echo $2 | grep -oh '[0-9]')
 
+# Backup $IFS.
+DEFAULT_IFS=$IFS
+# Customize Internal Field Separator.
+IFS="$(printf '\n\t')"
+
 for line in $active_serial; do
 	# File is availability, file content current active serial target index.
-	if [ -e /proc/tty/driver/$line ]
+	if [ -e "/proc/tty/driver/$line" ]
         then
 		# File content a lot of unknown serial. We use -v to remove all unmatch and get left off.
 		# Tail use to avoid 1st line included into the filter because 1st line is file description.
-		activetty=$(grep -v "unknown" /proc/tty/driver/$line | tail -n +2 | grep -oh "^\s*\S*[0-9]")
+		activetty=$(grep -v "unknown" "/proc/tty/driver/$line" | tail -n +2 | grep -oh "^\s*\S*[0-9]")
 		for active in $activetty; do
 			# Check if both index is match then proceed to enable the serial console.
-			if [ $active -eq $runtime_tty ] 
+			if [ $active -eq $runtime_tty ]
 			then
 				if [ -c /dev/$2 ]
 				then
@@ -33,3 +38,6 @@ for line in $active_serial; do
 		done
 	fi
 done
+
+# Restore $IFS.
+IFS=$DEFAULT_IFS
