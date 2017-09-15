@@ -6,6 +6,7 @@ SRC_URI += " \
            file://ruby-CVE-2017-9227.patch \
            file://ruby-CVE-2017-9228.patch \
            file://ruby-CVE-2017-9229.patch \
+           file://ruby-CVE-2017-14064.patch \
            "
 
 SRC_URI[md5sum] = "782bca562e474dd25956dd0017d92677"
