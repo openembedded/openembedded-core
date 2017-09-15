@@ -563,7 +563,7 @@ def main(argv=None):
     xml = is_xml_format(repo, revs[index_r].tags[-1])
 
     if args.html:
-        index_0 = max(0, index_r - args.history_length)
+        index_0 = max(0, min(index_l, index_r - args.history_length))
         rev_range = range(index_0, index_r + 1)
     else:
         # We do not need range of commits for text report (no graphs)
