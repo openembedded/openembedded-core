@@ -24,7 +24,7 @@ from operator import attrgetter
 # Import oe libs
 scripts_path = os.path.dirname(os.path.realpath(__file__))
 sys.path.append(os.path.join(scripts_path, 'lib'))
-from buildstats import BuildStats, diff_buildstats, taskdiff_fields
+from buildstats import BuildStats, diff_buildstats, taskdiff_fields, BSVerDiff
 
 
 # Setup logging
@@ -76,72 +76,48 @@ def read_buildstats(path, multi):
 
 def print_ver_diff(bs1, bs2):
     """Print package version differences"""
-    pkgs1 = set(bs1.keys())
-    pkgs2 = set(bs2.keys())
-    new_pkgs = pkgs2 - pkgs1
-    deleted_pkgs = pkgs1 - pkgs2
 
-    echanged = []
-    vchanged = []
-    rchanged = []
-    unchanged = []
-    common_pkgs = pkgs2.intersection(pkgs1)
-    if common_pkgs:
-        for pkg in common_pkgs:
-            if bs1[pkg].epoch != bs2[pkg].epoch:
-                echanged.append(pkg)
-            elif bs1[pkg].version != bs2[pkg].version:
-                vchanged.append(pkg)
-            elif bs1[pkg].revision != bs2[pkg].revision:
-                rchanged.append(pkg)
-            else:
-                unchanged.append(pkg)
+    diff = BSVerDiff(bs1, bs2)
 
-    maxlen = max([len(pkg) for pkg in pkgs1.union(pkgs2)])
+    maxlen = max([len(r) for r in set(bs1.keys()).union(set(bs2.keys()))])
     fmt_str = "  {:{maxlen}} ({})"
-#    if unchanged:
-#        print("\nUNCHANGED PACKAGES:")
-#        print("-------------------")
-#        maxlen = max([len(pkg) for pkg in unchanged])
-#        for pkg in sorted(unchanged):
-#            print(fmt_str.format(pkg, bs2[pkg]['nevr'], maxlen=maxlen))
 
-    if new_pkgs:
-        print("\nNEW PACKAGES:")
-        print("-------------")
-        for pkg in sorted(new_pkgs):
-            print(fmt_str.format(pkg, bs2[pkg].nevr, maxlen=maxlen))
+    if diff.new:
+        print("\nNEW RECIPES:")
+        print("------------")
+        for name, val in sorted(diff.new.items()):
+            print(fmt_str.format(name, val.nevr, maxlen=maxlen))
 
-    if deleted_pkgs:
-        print("\nDELETED PACKAGES:")
-        print("-----------------")
-        for pkg in sorted(deleted_pkgs):
-            print(fmt_str.format(pkg, bs1[pkg].nevr, maxlen=maxlen))
+    if diff.dropped:
+        print("\nDROPPED RECIPES:")
+        print("----------------")
+        for name, val in sorted(diff.dropped.items()):
+            print(fmt_str.format(name, val.nevr, maxlen=maxlen))
 
     fmt_str = "  {0:{maxlen}} {1:<20}    ({2})"
-    if rchanged:
+    if diff.rchanged:
         print("\nREVISION CHANGED:")
         print("-----------------")
-        for pkg in sorted(rchanged):
-            field1 = "{} -> {}".format(pkg, bs1[pkg].revision, bs2[pkg].revision)
-            field2 = "{} -> {}".format(bs1[pkg].nevr, bs2[pkg].nevr)
-            print(fmt_str.format(pkg, field1, field2, maxlen=maxlen))
+        for name, val in sorted(diff.rchanged.items()):
+            field1 = "{} -> {}".format(val.left.revision, val.right.revision)
+            field2 = "{} -> {}".format(val.left.nevr, val.right.nevr)
+            print(fmt_str.format(name, field1, field2, maxlen=maxlen))
 
-    if vchanged:
+    if diff.vchanged:
         print("\nVERSION CHANGED:")
         print("----------------")
-        for pkg in sorted(vchanged):
-            field1 = "{} -> {}".format(bs1[pkg].version, bs2[pkg].version)
-            field2 = "{} -> {}".format(bs1[pkg].nevr, bs2[pkg].nevr)
-            print(fmt_str.format(pkg, field1, field2, maxlen=maxlen))
+        for name, val in sorted(diff.vchanged.items()):
+            field1 = "{} -> {}".format(val.left.version, val.right.version)
+            field2 = "{} -> {}".format(val.left.nevr, val.right.nevr)
+            print(fmt_str.format(name, field1, field2, maxlen=maxlen))
 
-    if echanged:
+    if diff.echanged:
         print("\nEPOCH CHANGED:")
         print("--------------")
-        for pkg in sorted(echanged):
-            field1 = "{} -> {}".format(bs1[pkg].epoch, bs2[pkg].epoch)
-            field2 = "{} -> {}".format(bs1[pkg].nevr, bs2[pkg].nevr)
-            print(fmt_str.format(pkg, field1, field2, maxlen=maxlen))
+        for name, val in sorted(diff.echanged.items()):
+            field1 = "{} -> {}".format(val.left.epoch, val.right.epoch)
+            field2 = "{} -> {}".format(val.left.nevr, val.right.nevr)
+            print(fmt_str.format(name, field1, field2, maxlen=maxlen))
 
 
 def print_task_diff(bs1, bs2, val_type, min_val=0, min_absdiff=0, sort_by=('absdiff',)):

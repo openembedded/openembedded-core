@@ -15,7 +15,7 @@ import json
 import logging
 import os
 import re
-from collections import namedtuple
+from collections import namedtuple,OrderedDict
 from statistics import mean
 
 
@@ -307,3 +307,32 @@ def diff_buildstats(bs1, bs2, stat_attr, min_val=None, min_absdiff=None):
             tasks_diff.append(TaskDiff(pkg, pkg_op, task, task_op, val1, val2,
                                        val2-val1, reldiff))
     return tasks_diff
+
+
+class BSVerDiff(object):
+    """Class representing recipe version differences between two buildstats"""
+    def __init__(self, bs1, bs2):
+        RecipeVerDiff = namedtuple('RecipeVerDiff', 'left right')
+
+        recipes1 = set(bs1.keys())
+        recipes2 = set(bs2.keys())
+
+        self.new = dict([(r, bs2[r]) for r in sorted(recipes2 - recipes1)])
+        self.dropped = dict([(r, bs1[r]) for r in sorted(recipes1 - recipes2)])
+        self.echanged = {}
+        self.vchanged = {}
+        self.rchanged = {}
+        self.unchanged = {}
+
+        common = recipes2.intersection(recipes1)
+        if common:
+            for recipe in common:
+                rdiff = RecipeVerDiff(bs1[recipe], bs2[recipe])
+                if bs1[recipe].epoch != bs2[recipe].epoch:
+                    self.echanged[recipe] = rdiff
+                elif bs1[recipe].version != bs2[recipe].version:
+                    self.vchanged[recipe] = rdiff
+                elif bs1[recipe].revision != bs2[recipe].revision:
+                    self.rchanged[recipe] = rdiff
+                else:
+                    self.unchanged[recipe] = rdiff
