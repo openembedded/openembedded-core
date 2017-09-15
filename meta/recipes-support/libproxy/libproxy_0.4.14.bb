@@ -8,13 +8,12 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=4fbd65380cdd255951079008b364516c \
 
 DEPENDS = "glib-2.0"
 
-SRC_URI = "https://github.com/${BPN}/${BPN}/archive/${PV}.tar.gz"
+SRC_URI = "https://github.com/${BPN}/${BPN}/releases/download/${PV}/${BP}.tar.xz"
+SRC_URI[md5sum] = "e7514f78f5432210e17a01b6b618dde2"
+SRC_URI[sha256sum] = "e25d046850346a505c0617646f1e68b660092efadf665548a89c280900262ea6"
 
 UPSTREAM_CHECK_URI = "https://github.com/libproxy/libproxy/releases"
 UPSTREAM_CHECK_REGEX = "libproxy-(?P<pver>.*)\.tar"
-
-SRC_URI[md5sum] = "272dc378efcc3335154cef30d171e84a"
-SRC_URI[sha256sum] = "6220a6cab837a8996116a0568324cadfd09a07ec16b930d2a330e16d5c2e1eb6"
 
 inherit cmake pkgconfig
 
