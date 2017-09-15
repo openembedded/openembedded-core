@@ -396,7 +396,9 @@ def print_html_report(data, id_comp):
                             'max': get_data_item(data[-1][0], 'layers.meta.commit_count')}
                  }
 
-    print(html.template.render(metadata=metadata, test_data=tests, chart_opts=chart_opts))
+    print(html.template.render(title="Build Perf Test Report",
+                               metadata=metadata, test_data=tests,
+                               chart_opts=chart_opts))
 
 
 def dump_buildstats(repo, outdir, notes_ref, revs):
