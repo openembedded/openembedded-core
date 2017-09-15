@@ -157,9 +157,9 @@ class BSRecipe(object):
         self.version = version
         self.revision = revision
         if epoch is None:
-            self.nevr = "{}-{}-{}".format(name, version, revision)
+            self.evr = "{}-{}".format(version, revision)
         else:
-            self.nevr = "{}-{}_{}-{}".format(name, epoch, version, revision)
+            self.evr = "{}_{}-{}".format(epoch, version, revision)
         self.tasks = {}
 
     def aggregate(self, bsrecipe):
@@ -175,6 +175,10 @@ class BSRecipe(object):
             if not isinstance(self.tasks[taskname], BSTaskAggregate):
                 self.tasks[taskname] = BSTaskAggregate([self.tasks[taskname]])
             self.tasks[taskname].append(taskdata)
+
+    @property
+    def nevr(self):
+        return self.name + '-' + self.evr
 
 
 class BuildStats(dict):
@@ -323,6 +327,7 @@ class BSVerDiff(object):
         self.vchanged = {}
         self.rchanged = {}
         self.unchanged = {}
+        self.empty_diff = False
 
         common = recipes2.intersection(recipes1)
         if common:
@@ -336,3 +341,9 @@ class BSVerDiff(object):
                     self.rchanged[recipe] = rdiff
                 else:
                     self.unchanged[recipe] = rdiff
+
+        if len(recipes1) == len(recipes2) == len(self.unchanged):
+            self.empty_diff = True
+
+    def __bool__(self):
+        return not self.empty_diff

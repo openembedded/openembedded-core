@@ -32,7 +32,7 @@ from build_perf.report import (metadata_xml_to_json, results_xml_to_json,
                                aggregate_data, aggregate_metadata, measurement_stats,
                                AggregateTestData)
 from build_perf import html
-from buildstats import BuildStats, diff_buildstats
+from buildstats import BuildStats, diff_buildstats, BSVerDiff
 
 scriptpath.add_oe_lib_path()
 
@@ -341,6 +341,7 @@ class BSSummary(object):
         self.top_consumer = None
         self.top_decrease = None
         self.top_increase = None
+        self.ver_diff = OrderedDict()
 
         tasks_diff = diff_buildstats(bs1, bs2, 'cputime')
 
@@ -352,6 +353,20 @@ class BSSummary(object):
         tasks_diff = sorted(tasks_diff, key=attrgetter('absdiff'))
         self.top_decrease = tasks_diff[0:5]
         self.top_increase = tasks_diff[-5:]
+
+        # Compare recipe versions and prepare data for display
+        ver_diff = BSVerDiff(bs1, bs2)
+        if ver_diff:
+            if ver_diff.new:
+                self.ver_diff['New recipes'] = [(n, r.evr) for n, r in ver_diff.new.items()]
+            if ver_diff.dropped:
+                self.ver_diff['Dropped recipes'] = [(n, r.evr) for n, r in ver_diff.dropped.items()]
+            if ver_diff.echanged:
+                self.ver_diff['Epoch changed'] = [(n, "{} &rarr; {}".format(r.left.evr, r.right.evr)) for n, r in ver_diff.echanged.items()]
+            if ver_diff.vchanged:
+                self.ver_diff['Version changed'] = [(n, "{} &rarr; {}".format(r.left.version, r.right.version)) for n, r in ver_diff.vchanged.items()]
+            if ver_diff.rchanged:
+                self.ver_diff['Revision changed'] = [(n, "{} &rarr; {}".format(r.left.evr, r.right.evr)) for n, r in ver_diff.rchanged.items()]
 
 
 def print_html_report(data, id_comp, buildstats):

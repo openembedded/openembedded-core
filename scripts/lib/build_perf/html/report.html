@@ -250,6 +250,26 @@ h3 {
                 </td>
               </tr>
             </table>
+
+            {# Recipe version differences #}
+            {% if measurement.buildstats.ver_diff %}
+              <div style="margin-top: 16px">Recipe version changes</div>
+              <table class="details">
+                {% for head, recipes in measurement.buildstats.ver_diff.items() %}
+                  <tr>
+                    <th colspan="2">{{ head }}</th>
+                  </tr>
+                  {% for name, info in recipes|sort %}
+                    <tr>
+                      <td>{{ name }}</td>
+                      <td>{{ info }}</td>
+                    </tr>
+                  {% endfor %}
+                {% endfor %}
+              </table>
+            {% else %}
+              <div style="margin-top: 16px">No recipe version changes detected</div>
+            {% endif %}
           {% endif %}
         </div>
       {% endfor %}
