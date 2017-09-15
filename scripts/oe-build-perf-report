@@ -422,6 +422,7 @@ def dump_buildstats(repo, outdir, notes_ref, revs):
                                                   'show', tag + '^0']))
             except GitError:
                 log.warning("Buildstats not found for %s", tag)
+                bs_all = {}
                 missing = True
             for measurement, buildstats in bs_all.items():
                 tag_base, run_id = tag.rsplit('/', 1)
