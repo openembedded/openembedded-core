@@ -132,7 +132,7 @@ FILES_${PN}-noinst-tools = "${@get_noinst_tools_paths(d, bb, d.getVar('NOINST_TO
 
 RDEPENDS_${PN}-testtools += "python3 python3-dbus python3-pygobject"
 
-SYSTEMD_SERVICE_${PN} = "bluetooth.service"
+SYSTEMD_SERVICE_${PN} = "${@bb.utils.contains('PACKAGECONFIG', 'systemd', 'bluetooth.service', '', d)}"
 INITSCRIPT_PACKAGES = "${PN}"
 INITSCRIPT_NAME_${PN} = "bluetooth"
 
