@@ -1,4 +1,5 @@
 SUMMARY = "Base class SAX Drivers and Filters"
+HOMEPAGE = "http://search.cpan.org/dist/XML-SAX-Base/"
 DESCRIPTION = "This module has a very simple task - to be a base class for \
 PerlSAX drivers and filters. It's default behaviour is to pass \
 the input directly to the output unchanged. It can be useful to \
