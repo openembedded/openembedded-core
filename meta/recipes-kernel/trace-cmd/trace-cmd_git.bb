@@ -1,4 +1,5 @@
 SUMMARY = "User interface to Ftrace"
+HOMEPAGE = "http://git.kernel.org/"
 LICENSE = "GPLv2 & LGPLv2.1"
 
 require trace-cmd.inc
