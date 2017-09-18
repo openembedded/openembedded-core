@@ -1,4 +1,5 @@
 SUMMARY = "SysV init scripts"
+HOMEPAGE = "https://github.com/fedora-sysv/initscripts"
 DESCRIPTION = "Initscripts provide the basic system startup initialization scripts for the system.  These scripts include actions such as filesystem mounting, fsck, RTC manipulation and other actions routinely performed at system startup.  In addition, the scripts are also used during system shutdown to reverse the actions performed at startup."
 SECTION = "base"
 LICENSE = "GPLv2"
