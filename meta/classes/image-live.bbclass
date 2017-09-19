@@ -34,7 +34,7 @@ do_bootimg[depends] += "dosfstools-native:do_populate_sysroot \
                         ${MLPREFIX}syslinux:do_populate_sysroot \
                         syslinux-native:do_populate_sysroot \
                         ${@oe.utils.ifelse(d.getVar('COMPRESSISO', False),'zisofs-tools-native:do_populate_sysroot','')} \
-                        ${PN}:do_image_${LIVE_ROOTFS_TYPE} \
+                        ${PN}:do_image_${@d.getVar('LIVE_ROOTFS_TYPE').replace('-', '_')} \
                         "
 
 
