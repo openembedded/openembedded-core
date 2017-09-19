@@ -1,4 +1,4 @@
-# Yocto Project compatibility layer tool
+# Yocto Project layer check tool
 #
 # Copyright (C) 2017 Intel Corporation
 # Released under the MIT license (see COPYING.MIT)

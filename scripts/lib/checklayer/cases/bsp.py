@@ -3,14 +3,14 @@
 
 import unittest
 
-from compatlayer import LayerType, get_signatures, check_command, get_depgraph
-from compatlayer.case import OECompatLayerTestCase
+from checklayer import LayerType, get_signatures, check_command, get_depgraph
+from checklayer.case import OECheckLayerTestCase
 
-class BSPCompatLayer(OECompatLayerTestCase):
+class BSPCheckLayer(OECheckLayerTestCase):
     @classmethod
     def setUpClass(self):
         if self.tc.layer['type'] != LayerType.BSP:
-            raise unittest.SkipTest("BSPCompatLayer: Layer %s isn't BSP one." %\
+            raise unittest.SkipTest("BSPCheckLayer: Layer %s isn't BSP one." %\
                 self.tc.layer['name'])
 
     def test_bsp_defines_machines(self):
@@ -62,7 +62,7 @@ class BSPCompatLayer(OECompatLayerTestCase):
         This criteria can only be tested by testing different machines in combination,
         i.e. one main layer, potentially several additional BSP layers and an explicit
         choice of machines:
-        yocto-compat-layer --additional-layers .../meta-intel --machines intel-corei7-64 imx6slevk -- .../meta-freescale
+        yocto-check-layer --additional-layers .../meta-intel --machines intel-corei7-64 imx6slevk -- .../meta-freescale
         '''
 
         if not self.td['machines']:

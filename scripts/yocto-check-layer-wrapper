@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-# Yocto Project compatibility layer tool wrapper
+# Yocto Project layer check tool wrapper
 #
-# Creates a temprary build directory to run Yocto Project Compatible
+# Creates a temporary build directory to run the yocto-check-layer
 # script to avoid a contaminated environment.
 #
 # Copyright (C) 2017 Intel Corporation
@@ -24,7 +24,7 @@ do
 done
 shift $(($OPTIND - 1))
 
-# generate a temp directory to run compat layer script
+# generate a temp directory to run check layer script
 base_dir=$(realpath $BUILDDIR/../)
 cd $base_dir
 
@@ -32,9 +32,9 @@ build_dir=$(mktemp -p $base_dir -d -t build-XXXX)
 
 source oe-init-build-env $build_dir
 if [[ $output_log != '' ]]; then
-	yocto-compat-layer.py -o "$output_log" "$*"
+	yocto-check-layer -o "$output_log" "$*"
 else
-	yocto-compat-layer.py "$@"
+	yocto-check-layer "$@"
 fi
 retcode=$?
 

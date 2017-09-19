@@ -4,10 +4,10 @@
 import glob
 import os
 import unittest
-from compatlayer import get_signatures, LayerType, check_command, get_depgraph, compare_signatures
-from compatlayer.case import OECompatLayerTestCase
+from checklayer import get_signatures, LayerType, check_command, get_depgraph, compare_signatures
+from checklayer.case import OECheckLayerTestCase
 
-class CommonCompatLayer(OECompatLayerTestCase):
+class CommonCheckLayer(OECheckLayerTestCase):
     def test_readme(self):
         # The top-level README file may have a suffix (like README.rst or README.txt).
         readme_files = glob.glob(os.path.join(self.tc.layer['path'], 'README*'))

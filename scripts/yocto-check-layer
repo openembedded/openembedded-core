@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-# Yocto Project compatibility layer tool
+# Yocto Project layer checking tool
 #
 # Copyright (C) 2017 Intel Corporation
 # Released under the MIT license (see COPYING.MIT)
@@ -22,29 +22,29 @@ import scriptpath
 scriptpath.add_oe_lib_path()
 scriptpath.add_bitbake_lib_path()
 
-from compatlayer import LayerType, detect_layers, add_layer, add_layer_dependencies, get_signatures
+from checklayer import LayerType, detect_layers, add_layer, add_layer_dependencies, get_signatures
 from oeqa.utils.commands import get_bb_vars
 
-PROGNAME = 'yocto-compat-layer'
+PROGNAME = 'yocto-check-layer'
 CASES_PATHS = [os.path.join(os.path.abspath(os.path.dirname(__file__)),
-                'lib', 'compatlayer', 'cases')]
+                'lib', 'checklayer', 'cases')]
 logger = scriptutils.logger_create(PROGNAME, stream=sys.stdout)
 
-def test_layer_compatibility(td, layer, test_software_layer_signatures):
-    from compatlayer.context import CompatLayerTestContext
+def test_layer(td, layer, test_software_layer_signatures):
+    from checklayer.context import CheckLayerTestContext
     logger.info("Starting to analyze: %s" % layer['name'])
     logger.info("----------------------------------------------------------------------")
 
-    tc = CompatLayerTestContext(td=td, logger=logger, layer=layer, test_software_layer_signatures=test_software_layer_signatures)
+    tc = CheckLayerTestContext(td=td, logger=logger, layer=layer, test_software_layer_signatures=test_software_layer_signatures)
     tc.loadTests(CASES_PATHS)
     return tc.runTests()
 
 def main():
     parser = argparse.ArgumentParser(
-            description="Yocto Project compatibility layer tool",
+            description="Yocto Project layer checking tool",
             add_help=False)
     parser.add_argument('layers', metavar='LAYER_DIR', nargs='+',
-            help='Layer to test compatibility with Yocto Project')
+            help='Layer to check')
     parser.add_argument('-o', '--output-log',
             help='File to output log (optional)', action='store')
     parser.add_argument('--dependency', nargs="+",
@@ -179,7 +179,7 @@ def main():
             layers_tested = layers_tested + 1
             continue
 
-        result = test_layer_compatibility(td, layer, args.test_software_layer_signatures)
+        result = test_layer(td, layer, args.test_software_layer_signatures)
         results[layer['name']] = result
         results_status[layer['name']] = 'PASS' if results[layer['name']].wasSuccessful() else 'FAIL'
         layers_tested = layers_tested + 1

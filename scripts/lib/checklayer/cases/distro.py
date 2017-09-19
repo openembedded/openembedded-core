@@ -3,14 +3,14 @@
 
 import unittest
 
-from compatlayer import LayerType
-from compatlayer.case import OECompatLayerTestCase
+from checklayer import LayerType
+from checklayer.case import OECheckLayerTestCase
 
-class DistroCompatLayer(OECompatLayerTestCase):
+class DistroCheckLayer(OECheckLayerTestCase):
     @classmethod
     def setUpClass(self):
         if self.tc.layer['type'] != LayerType.DISTRO:
-            raise unittest.SkipTest("DistroCompatLayer: Layer %s isn't Distro one." %\
+            raise unittest.SkipTest("DistroCheckLayer: Layer %s isn't Distro one." %\
                 self.tc.layer['name'])
 
     def test_distro_defines_distros(self):

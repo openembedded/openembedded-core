@@ -3,5 +3,5 @@
 
 from oeqa.core.case import OETestCase
 
-class OECompatLayerTestCase(OETestCase):
+class OECheckLayerTestCase(OETestCase):
     pass
