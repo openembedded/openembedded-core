@@ -297,8 +297,11 @@ addtask do_image_complete_setscene
 # IMAGE_QA_COMMANDS += " \
 #     image_check_everything_ok \
 # "
-# This task runs all functions in IMAGE_QA_COMMANDS after the image
+# This task runs all functions in IMAGE_QA_COMMANDS after the rootfs
 # construction has completed in order to validate the resulting image.
+#
+# The functions should use ${IMAGE_ROOTFS} to find the unpacked rootfs
+# directory, which if QA passes will be the basis for the images.
 fakeroot python do_image_qa () {
     from oe.utils import ImageQAFailed
 
@@ -320,7 +323,7 @@ fakeroot python do_image_qa () {
         imgname = d.getVar('IMAGE_NAME')
         bb.fatal("QA errors found whilst validating image: %s\n%s" % (imgname, qamsg))
 }
-addtask do_image_qa after do_image_complete before do_build
+addtask do_image_qa after do_rootfs before do_image
 
 SSTATETASKS += "do_image_qa"
 SSTATE_SKIP_CREATION_task-image-qa = '1'
