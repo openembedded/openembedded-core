@@ -11,6 +11,7 @@ SRC_URI = "http://ftp.mozilla.org/pub/nspr/releases/v${PV}/src/nspr-${PV}.tar.gz
            file://remove-srcdir-from-configure-in.patch \
            file://0002-Add-nios2-support.patch \
            file://0001-include-stdint.h-for-SSIZE_MAX-and-SIZE_MAX-definiti.patch \
+           file://0001-md-Fix-build-with-musl.patch \
            file://nspr.pc.in \
 "
 
