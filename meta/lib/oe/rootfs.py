@@ -525,7 +525,8 @@ class RpmRootfs(Rootfs):
             self.pm.save_rpmpostinst(pkg)
 
     def _cleanup(self):
-        pass
+        self.pm._invoke_dnf(["clean", "all"])
+
 
 class DpkgOpkgRootfs(Rootfs):
     def __init__(self, d, progress_reporter=None, logcatcher=None):
