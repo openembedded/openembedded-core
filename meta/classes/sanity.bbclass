@@ -726,6 +726,11 @@ def check_sanity_everybuild(status, d):
         if not ( check_conf_exists("conf/distro/${DISTRO}.conf", d) or check_conf_exists("conf/distro/include/${DISTRO}.inc", d) ):
             status.addresult("DISTRO '%s' not found. Please set a valid DISTRO in your local.conf\n" % d.getVar("DISTRO"))
 
+    # Check that these variables don't use tilde-expansion as we don't do that
+    for v in ("TMPDIR", "DL_DIR", "SSTATE_DIR"):
+        if d.getVar(v).startswith("~"):
+            status.addresult("%s uses ~ but Bitbake will not expand this, use an absolute path or variables." % v)
+
     # Check that DL_DIR is set, exists and is writable. In theory, we should never even hit the check if DL_DIR isn't 
     # set, since so much relies on it being set.
     dldir = d.getVar('DL_DIR')
