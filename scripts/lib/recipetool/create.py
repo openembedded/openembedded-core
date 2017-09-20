@@ -613,9 +613,9 @@ def create_recipe(args):
 
     if args.src_subdir:
         srcsubdir = os.path.join(srcsubdir, args.src_subdir)
-        srctree_use = os.path.join(srctree, args.src_subdir)
+        srctree_use = os.path.abspath(os.path.join(srctree, args.src_subdir))
     else:
-        srctree_use = srctree
+        srctree_use = os.path.abspath(srctree)
 
     if args.outfile and os.path.isdir(args.outfile):
         outfile = None
