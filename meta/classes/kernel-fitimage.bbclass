@@ -7,7 +7,9 @@ python __anonymous () {
         depends = "%s u-boot-mkimage-native dtc-native" % depends
         d.setVar("DEPENDS", depends)
 
-        if d.getVar("UBOOT_ARCH") == "x86":
+        if d.getVar("UBOOT_ARCH") == "mips":
+            replacementtype = "vmlinuz.bin"
+        elif d.getVar("UBOOT_ARCH") == "x86":
             replacementtype = "bzImage"
         else:
             replacementtype = "zImage"
