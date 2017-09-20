@@ -27,6 +27,10 @@ do_install_ptest() {
             -e 's/^AWK = ..*/AWK = awk/'                \
             -e 's/^srcdir = ..*/srcdir = \./'           \
             -e 's/^Makefile: ..*/Makefile: /'           \
+            -e 's,--sysroot=${STAGING_DIR_TARGET},,g'   \
+            -e 's|${DEBUG_PREFIX_MAP}||g' \
+            -e 's:${HOSTTOOLS_DIR}/::g'                 \
+            -e 's:${BASE_WORKDIR}/${MULTIMACH_TARGET_SYS}::g' \
             ${B}/tests/Makefile > ${D}${PTEST_PATH}/src/tests/Makefile
 }
 
