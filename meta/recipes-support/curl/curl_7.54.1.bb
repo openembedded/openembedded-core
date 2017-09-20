@@ -27,6 +27,8 @@ PACKAGECONFIG ??= "${@bb.utils.filter('DISTRO_FEATURES', 'ipv6', d)} gnutls prox
 PACKAGECONFIG_class-native = "ipv6 proxy ssl threaded-resolver zlib"
 PACKAGECONFIG_class-nativesdk = "ipv6 proxy ssl threaded-resolver zlib"
 
+# 'ares' and 'threaded-resolver' are mutually exclusive
+PACKAGECONFIG[ares] = "--enable-ares,--disable-ares,c-ares"
 PACKAGECONFIG[dict] = "--enable-dict,--disable-dict,"
 PACKAGECONFIG[gnutls] = "--with-gnutls,--without-gnutls,gnutls"
 PACKAGECONFIG[gopher] = "--enable-gopher,--disable-gopher,"
