@@ -39,3 +39,5 @@ python tinyinitrd () {
 }
 
 IMAGE_PREPROCESS_COMMAND += "tinyinitrd;"
+
+QB_KERNEL_CMDLINE_APPEND += "debugshell=3 init=/bin/busybox sh init"
