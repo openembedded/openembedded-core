@@ -71,6 +71,10 @@ def parse_args(argv):
                         help="Only print errors")
     parser.add_argument('--to', action='append',
                         help="Recipients of the email")
+    parser.add_argument('--cc', action='append',
+                        help="Carbon copy recipients of the email")
+    parser.add_argument('--bcc', action='append',
+                        help="Blind carbon copy recipients of the email")
     parser.add_argument('--subject', default="Yocto build perf test report",
                         help="Email subject")
     parser.add_argument('--outdir', '-o',
@@ -188,7 +192,7 @@ def scrape_html_report(report, outdir, phantomjs_extra_args=None):
     finally:
         shutil.rmtree(tmpdir)
 
-def send_email(text_fn, html_fn, subject, recipients):
+def send_email(text_fn, html_fn, subject, recipients, copy=[], blind_copy=[]):
     """Send email"""
     # Generate email message
     text_msg = html_msg = None
@@ -217,6 +221,10 @@ def send_email(text_fn, html_fn, subject, recipients):
                            '{}@{}'.format(pw_data.pw_name, socket.getfqdn()))
     msg['From'] = "{} <{}>".format(full_name, email)
     msg['To'] = ', '.join(recipients)
+    if copy:
+        msg['Cc'] = ', '.join(copy)
+    if blind_copy:
+        msg['Bcc'] = ', '.join(blind_copy)
     msg['Subject'] = subject
 
     # Send email
@@ -250,7 +258,12 @@ def main(argv=None):
 
         if args.to:
             log.info("Sending email to %s", ', '.join(args.to))
-            send_email(args.text, html_report, args.subject, args.to)
+            if args.cc:
+                log.info("Copying to %s", ', '.join(args.cc))
+            if args.bcc:
+                log.info("Blind copying to %s", ', '.join(args.bcc))
+            send_email(args.text, html_report, args.subject,
+                       args.to, args.cc, args.bcc)
     except subprocess.CalledProcessError as err:
         log.error("%s, with output:\n%s", str(err), err.output.decode())
         return 1
