@@ -373,7 +373,8 @@ python extend_recipe_sysroot() {
                     msgbuf.append("Following dependency on %s" % setscenedeps[datadep][0])
         next = new
 
-    bb.note("\n".join(msgbuf))
+    # This logging is too verbose for day to day use sadly
+    #bb.debug(2, "\n".join(msgbuf))
 
     depdir = recipesysrootnative + "/installeddeps"
     bb.utils.mkdirhier(depdir)
@@ -442,6 +443,8 @@ python extend_recipe_sysroot() {
             os.unlink(fl)
             os.unlink(fl + ".complete")
 
+    msg_exists = []
+    msg_adding = []
     for dep in configuredeps:
         c = setscenedeps[dep][0]
         if c not in installed:
@@ -452,7 +455,7 @@ python extend_recipe_sysroot() {
         if os.path.exists(depdir + "/" + c):
             lnk = os.readlink(depdir + "/" + c)
             if lnk == c + "." + taskhash and os.path.exists(depdir + "/" + c + ".complete"):
-                bb.note("%s exists in sysroot, skipping" % c)
+                msg_exists.append(c)
                 continue
             else:
                 bb.note("%s exists in sysroot, but is stale (%s vs. %s), removing." % (c, lnk, c + "." + taskhash))
@@ -462,6 +465,8 @@ python extend_recipe_sysroot() {
                     os.unlink(depdir + "/" + c + ".complete")
         elif os.path.lexists(depdir + "/" + c):
             os.unlink(depdir + "/" + c)
+
+        msg_adding.append(c)
 
         os.symlink(c + "." + taskhash, depdir + "/" + c)
 
@@ -558,6 +563,9 @@ python extend_recipe_sysroot() {
                         staging_copydir(l, targetdir, dest, seendirs)
                         continue
                     staging_copyfile(l, targetdir, dest, postinsts, seendirs)
+
+    bb.note("Installed into sysroot: %s" % str(msg_adding))
+    bb.note("Skipping as already exists in sysroot: %s" % str(msg_exists))
 
     for f in fixme:
         if f == '':
