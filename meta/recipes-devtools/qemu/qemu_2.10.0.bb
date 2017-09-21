@@ -24,6 +24,10 @@ SRC_URI = "http://wiki.qemu-project.org/download/${BP}.tar.bz2 \
            file://0003-Introduce-condition-in-TPM-backend-for-notification.patch \
            file://0004-Add-support-for-VM-suspend-resume-for-TPM-TIS-v2.9.patch \
            file://apic-fixup-fallthrough-to-PIC.patch \
+           file://CVE-2017-13711.patch \
+           file://CVE-2017-13673.patch \
+           file://CVE-2017-13672.patch \
+           file://CVE-2017-14167.patch \
            "
 UPSTREAM_CHECK_REGEX = "qemu-(?P<pver>\d+\..*)\.tar"
 
