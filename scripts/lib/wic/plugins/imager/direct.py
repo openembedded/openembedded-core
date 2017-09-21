@@ -140,9 +140,12 @@ class DirectPlugin(ImagerPlugin):
                or part.mountpoint == "/":
                 continue
 
-            # mmc device partitions are named mmcblk0p1, mmcblk0p2..
-            prefix = 'p' if  part.disk.startswith('mmcblk') else ''
-            device_name = "/dev/%s%s%d" % (part.disk, prefix, part.realnum)
+            if part.use_uuid:
+                device_name = "PARTUUID=%s" % part.uuid
+            else:
+                # mmc device partitions are named mmcblk0p1, mmcblk0p2..
+                prefix = 'p' if  part.disk.startswith('mmcblk') else ''
+                device_name = "/dev/%s%s%d" % (part.disk, prefix, part.realnum)
 
             opts = part.fsopts if part.fsopts else "defaults"
             line = "\t".join([device_name, part.mountpoint, part.fstype,
