@@ -13,6 +13,7 @@ SRC_URI = "http://gstreamer.freedesktop.org/src/gst-libav/gst-libav-${PV}.tar.xz
            file://workaround-to-build-gst-libav-for-i586-with-gcc.patch \
            file://mips64_cpu_detection.patch \
            file://0001-configure-check-for-armv7ve-variant.patch \
+           file://0001-hevcpred_msa.c-Fix-build-by-Including-libavcodec-hev.patch \
            "
 SRC_URI[md5sum] = "8788aecc032a287227b4bd239d1b998a"
 SRC_URI[sha256sum] = "5bb735b9bb218b652ae4071ea6f6be8eaae55e9d3233aec2f36b882a27542db3"
