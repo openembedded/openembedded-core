@@ -1,4 +1,5 @@
 SUMMARY = "Utility for viewing/manipulating IDE disk drive/driver parameters"
+HOMEPAGE = "http://sourceforge.net/projects/hdparm/"
 DESCRIPTION = "hdparm is a Linux shell utility for viewing \
 and manipulating various IDE drive and driver parameters."
 SECTION = "console/utils"
