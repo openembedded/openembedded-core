@@ -102,9 +102,13 @@ def update_useradd_static_config(d):
             # So if the implicit username-group creation is on, then the implicit groupname (LOGIN)
             # is used, and we disable the user_group option.
             #
-            user_group = uaargs.user_group is None or uaargs.user_group is True
-            uaargs.groupname = uaargs.LOGIN if user_group else uaargs.gid
-            uaargs.groupid = field[3] or uaargs.gid or uaargs.groupname
+            if uaargs.gid:
+                uaargs.groupname = uaargs.gid
+            elif uaargs.user_group is not False:
+                uaargs.groupname = uaargs.LOGIN
+            else:
+                uaargs.groupname = 'users'
+            uaargs.groupid = field[3] or uaargs.groupname
 
             if uaargs.groupid and uaargs.gid != uaargs.groupid:
                 newgroup = None
