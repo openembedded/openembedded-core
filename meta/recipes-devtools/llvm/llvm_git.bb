@@ -19,9 +19,9 @@ PROVIDES += "llvm${PV}"
 LLVM_RELEASE = "${PV}"
 LLVM_DIR = "llvm${LLVM_RELEASE}"
 
-SRCREV = "9a5c333388cbb54a0ce3a67c4f539f5e590a089b"
+SRCREV = "81029f142231bde8e119becda112a2173f1459c9"
 PV = "5.0"
-PATCH_VERSION = "0"
+PATCH_VERSION = "1"
 SRC_URI = "git://github.com/llvm-mirror/llvm.git;branch=release_50;protocol=http \
            file://0001-llvm-TargetLibraryInfo-Undefine-libc-functions-if-th.patch \
            file://0002-llvm-allow-env-override-of-exe-path.patch \
