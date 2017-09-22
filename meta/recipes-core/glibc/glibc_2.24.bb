@@ -56,6 +56,7 @@ SRC_URI += "\
            file://etc/ld.so.conf \
            file://generate-supported.mk \
            file://0001-locale-fix-hard-coded-reference-to-gcc-E.patch \
+           file://CVE-2017-8804.patch \
            "
 
 SRC_URI_append_class-nativesdk = "\
