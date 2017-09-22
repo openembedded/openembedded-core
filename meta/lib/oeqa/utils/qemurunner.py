@@ -51,6 +51,7 @@ class QemuRunner:
         self.logged = False
         self.thread = None
         self.use_kvm = use_kvm
+        self.msg = ''
 
         self.runqemutime = 120
         self.qemu_pidfile = 'pidfile_'+str(os.getpid())
@@ -79,6 +80,7 @@ class QemuRunner:
             # because is possible to have control characters
             msg = msg.decode("utf-8", errors='ignore')
             msg = re_control_char.sub('', msg)
+            self.msg += msg
             with codecs.open(self.logfile, "a", encoding="utf-8") as f:
                 f.write("%s" % msg)
 
@@ -307,9 +309,12 @@ class QemuRunner:
                         sock.close()
                         stopread = True
 
+
         if not reachedlogin:
             self.logger.info("Target didn't reached login boot in %d seconds" % self.boottime)
-            lines = "\n".join(bootlog.splitlines()[-25:])
+            tail = lambda l: "\n".join(l.splitlines()[-25:])
+            # in case bootlog is empty, use tail qemu log store at self.msg
+            lines = tail(bootlog if bootlog else self.msg)
             self.logger.info("Last 25 lines of text:\n%s" % lines)
             self.logger.info("Check full boot log: %s" % self.logfile)
             self._dump_host()
