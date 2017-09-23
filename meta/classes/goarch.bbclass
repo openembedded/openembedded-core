@@ -43,10 +43,14 @@ def go_map_arch(a, d):
         return 'mips64le'
     elif re.match('mips64*', a):
         return 'mips64'
-    elif re.match('mipsel*', a):
-        return 'mipsle'
-    elif re.match('mips*', a):
-        return 'mips'
+    elif re.match('mips.*', a):
+        tf = d.getVar('TUNE_FEATURES').split()
+        if 'fpu-hard' in tf and 'n32' not in tf:
+            if 'mips32r2' in tf:
+                newtf = [t for t in tf if t != 'mips32r2']
+                newtf.append('mips32')
+                d.setVar('TUNE_FEATURES', ' '.join(newtf))
+            return 'mips' if 'bigendian' in tf else 'mipsle'
     elif re.match('p(pc|owerpc)(64)', a):
         return 'ppc64'
     elif re.match('p(pc|owerpc)(64el)', a):
