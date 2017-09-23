@@ -388,6 +388,7 @@ FILES_${PN}-container = "${sysconfdir}/dbus-1/system.d/org.freedesktop.import1.c
                          ${libdir}/libnss_mymachines.so.2 \
                          ${datadir}/dbus-1/system-services/org.freedesktop.import1.service \
                          ${datadir}/dbus-1/system-services/org.freedesktop.machine1.service \
+                         ${datadir}/dbus-1/system.d/org.freedesktop.machine1.conf \
                          ${datadir}/polkit-1/actions/org.freedesktop.import1.policy \
                          ${datadir}/polkit-1/actions/org.freedesktop.machine1.policy \
                         "
@@ -485,7 +486,6 @@ FILES_${PN} = " ${base_bindir}/* \
                 ${datadir}/dbus-1/system.d/org.freedesktop.network1.conf \
                 ${datadir}/dbus-1/system.d/org.freedesktop.resolve1.conf \
                 ${datadir}/dbus-1/system.d/org.freedesktop.systemd1.conf \
-                ${datadir}/dbus-1/system.d/org.freedesktop.machine1.conf \
                 ${datadir}/dbus-1/system.d/org.freedesktop.hostname1.conf \
                 ${datadir}/dbus-1/system.d/org.freedesktop.login1.conf \
                "
