@@ -46,16 +46,16 @@ def _get_layer_collections(layer_path, lconf=None, data=None):
         raise LayerError(exc)
     ldata.expandVarref('LAYERDIR')
 
-    collections = (ldata.getVar('BBFILE_COLLECTIONS', True) or '').split()
+    collections = (ldata.getVar('BBFILE_COLLECTIONS') or '').split()
     if not collections:
         name = os.path.basename(layer_path)
         collections = [name]
 
     collections = {c: {} for c in collections}
     for name in collections:
-        priority = ldata.getVar('BBFILE_PRIORITY_%s' % name, True)
-        pattern = ldata.getVar('BBFILE_PATTERN_%s' % name, True)
-        depends = ldata.getVar('LAYERDEPENDS_%s' % name, True)
+        priority = ldata.getVar('BBFILE_PRIORITY_%s' % name)
+        pattern = ldata.getVar('BBFILE_PATTERN_%s' % name)
+        depends = ldata.getVar('LAYERDEPENDS_%s' % name)
         collections[name]['priority'] = priority
         collections[name]['pattern'] = pattern
         collections[name]['depends'] = depends
