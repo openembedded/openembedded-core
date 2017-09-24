@@ -192,7 +192,7 @@ python buildhistory_emit_pkghistory() {
     pe = d.getVar('PE') or "0"
     pv = d.getVar('PV')
     pr = d.getVar('PR')
-    layer = bb.utils.get_file_layer(d.getVar('FILE', True), d)
+    layer = bb.utils.get_file_layer(d.getVar('FILE'), d)
 
     pkgdata_dir = d.getVar('PKGDATA_DIR')
     packages = ""

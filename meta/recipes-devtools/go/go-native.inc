@@ -10,7 +10,7 @@ SRC_URI[bootstrap.sha256sum] = "9947fc705b0b841b5938c48b22dc33e9647ec0752bae66e5
 
 export GOOS = "${BUILD_GOOS}"
 export GOARCH = "${BUILD_GOARCH}"
-CC = "${@d.getVar('BUILD_CC', True).strip()}"
+CC = "${@d.getVar('BUILD_CC').strip()}"
 
 export CGO_ENABLED = "1"
 

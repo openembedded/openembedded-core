@@ -1151,7 +1151,7 @@ class OpkgPM(OpkgDpkgPM):
 
         # Create an temp dir as opkg root for dummy installation
         temp_rootfs = self.d.expand('${T}/opkg')
-        opkg_lib_dir = self.d.getVar('OPKGLIBDIR', True)
+        opkg_lib_dir = self.d.getVar('OPKGLIBDIR')
         if opkg_lib_dir[0] == "/":
             opkg_lib_dir = opkg_lib_dir[1:]
         temp_opkg_dir = os.path.join(temp_rootfs, opkg_lib_dir, 'opkg')

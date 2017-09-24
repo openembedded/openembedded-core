@@ -25,7 +25,7 @@ do_configure[noexec] = "1"
 
 do_compile() {
 	export GOBIN="${B}/bin"
-	export CC="${@d.getVar('BUILD_CC', True).strip()}"
+	export CC="${@d.getVar('BUILD_CC').strip()}"
 	rm -rf ${GOBIN} ${B}/pkg
 	mkdir ${GOBIN}
 

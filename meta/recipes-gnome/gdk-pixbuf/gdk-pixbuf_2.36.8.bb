@@ -74,7 +74,7 @@ python populate_packages_prepend () {
 
     # The test suite exercises all the loaders, so ensure they are all
     # dependencies of the ptest package.
-    d.appendVar("RDEPENDS_%s-ptest" % d.getVar('PN', True), " " + packages)
+    d.appendVar("RDEPENDS_%s-ptest" % d.getVar('PN'), " " + packages)
 }
 
 do_install_append() {

@@ -318,5 +318,5 @@ python rootfs_log_check_recommends() {
                 continue
 
             if 'unsatisfied recommendation for' in line:
-                bb.warn('[log_check] %s: %s' % (d.getVar('PN', True), line))
+                bb.warn('[log_check] %s: %s' % (d.getVar('PN'), line))
 }

@@ -32,7 +32,7 @@ S = "${WORKDIR}/git"
 LLVM_INSTALL_DIR = "${WORKDIR}/llvm-install"
 def get_llvm_arch(bb, d, arch_var):
     import re
-    a = d.getVar(arch_var, True)
+    a = d.getVar(arch_var)
     if   re.match('(i.86|athlon|x86.64)$', a):         return 'X86'
     elif re.match('arm$', a):                          return 'ARM'
     elif re.match('armeb$', a):                        return 'ARM'
@@ -174,7 +174,7 @@ python llvm_populate_packages() {
     split_packages = do_split_packages(d, libdir, '^lib(.*)\.so$', 'libllvm${LLVM_RELEASE}-%s', 'Split package for %s', allow_dirs=True, allow_links=True, recursive=True)
     split_staticdev_packages = do_split_packages(d, libllvm_libdir, '^lib(.*)\.a$', 'libllvm${LLVM_RELEASE}-%s-staticdev', 'Split staticdev package for %s', allow_dirs=True)
     if split_packages:
-        pn = d.getVar('PN', True)
+        pn = d.getVar('PN')
         d.appendVar('RDEPENDS_' + pn, ' '+' '.join(split_packages))
         d.appendVar('RDEPENDS_' + pn + '-dbg', ' '+' '.join(split_dbg_packages))
         d.appendVar('RDEPENDS_' + pn + '-staticdev', ' '+' '.join(split_staticdev_packages))

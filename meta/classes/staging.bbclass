@@ -68,16 +68,16 @@ sysroot_stage_all() {
 }
 
 python sysroot_strip () {
-    inhibit_sysroot = d.getVar('INHIBIT_SYSROOT_STRIP', True)
+    inhibit_sysroot = d.getVar('INHIBIT_SYSROOT_STRIP')
     if inhibit_sysroot and oe.types.boolean(inhibit_sysroot):
         return 0
 
-    dstdir = d.getVar('SYSROOT_DESTDIR', True)
-    pn = d.getVar('PN', True)
-    libdir = os.path.abspath(dstdir + os.sep + d.getVar("libdir", True))
-    base_libdir = os.path.abspath(dstdir + os.sep + d.getVar("base_libdir", True))
-    qa_already_stripped = 'already-stripped' in (d.getVar('INSANE_SKIP_' + pn, True) or "").split()
-    strip_cmd = d.getVar("STRIP", True)
+    dstdir = d.getVar('SYSROOT_DESTDIR')
+    pn = d.getVar('PN')
+    libdir = os.path.abspath(dstdir + os.sep + d.getVar("libdir"))
+    base_libdir = os.path.abspath(dstdir + os.sep + d.getVar("base_libdir"))
+    qa_already_stripped = 'already-stripped' in (d.getVar('INSANE_SKIP_' + pn) or "").split()
+    strip_cmd = d.getVar("STRIP")
 
     oe.package.strip_execs(pn, dstdir, strip_cmd, libdir, base_libdir,
                            qa_already_stripped=qa_already_stripped)
