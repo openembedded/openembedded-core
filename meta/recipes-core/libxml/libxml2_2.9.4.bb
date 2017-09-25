@@ -89,6 +89,17 @@ do_install_ptest () {
 		grep -lrZ '#!/usr/bin/python' ${D}${PTEST_PATH}/python |
 			xargs -0 sed -i -e 's|/usr/bin/python|${USRBINPATH}/${PYTHON_PN}|'
 	fi
+	#Remove build host references from various Makefiles
+	find "${D}${PTEST_PATH}" -name Makefile -type f -exec \
+	    sed -i \
+	    -e 's,--sysroot=${STAGING_DIR_TARGET},,g' \
+	    -e 's|${DEBUG_PREFIX_MAP}||g' \
+	    -e 's:${HOSTTOOLS_DIR}/::g' \
+	    -e 's:${RECIPE_SYSROOT_NATIVE}::g' \
+	    -e 's:${RECIPE_SYSROOT}::g' \
+	    -e 's:${BASE_WORKDIR}/${MULTIMACH_TARGET_SYS}::g' \
+	    -e '/^RELDATE/d' \
+	    {} +
 }
 
 do_install_append_class-native () {
