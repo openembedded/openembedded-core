@@ -74,6 +74,8 @@ FILES_${PN}-codegen = "${datadir}/glib-2.0/codegen/*.py \
 FILES_${PN}-utils = "${bindir}/*"
 
 RRECOMMENDS_${PN} += "shared-mime-info"
+# When cross compiling for Windows we don't want to include this
+RRECOMMENDS_${PN}_remove_mingw32 = "shared-mime-info"
 
 ARM_INSTRUCTION_SET_armv4 = "arm"
 ARM_INSTRUCTION_SET_armv5 = "arm"
