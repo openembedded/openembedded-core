@@ -307,6 +307,7 @@ python write_image_test_data() {
            os.remove(testdata_link)
         os.symlink(os.path.basename(testdata), testdata_link)
 }
+write_image_test_data[vardepsexclude] += "TOPDIR"
 
 # Check for unsatisfied recommendations (RRECOMMENDS)
 python rootfs_log_check_recommends() {
