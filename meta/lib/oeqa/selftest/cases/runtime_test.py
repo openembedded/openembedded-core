@@ -4,6 +4,7 @@ from oeqa.core.decorator.oeid import OETestID
 import os
 import re
 import tempfile
+import shutil
 
 class TestExport(OESelftestTestCase):
 
@@ -147,18 +148,21 @@ class TestImage(OESelftestTestCase):
         features += 'PACKAGE_CLASSES = "package_rpm"\n'
 
         # Enable package feed signing
-        self.gpg_home = tempfile.TemporaryDirectory(prefix="oeqa-feed-sign-")
+        self.gpg_home = tempfile.mkdtemp(prefix="oeqa-feed-sign-")
         signing_key_dir = os.path.join(self.testlayer_path, 'files', 'signing')
-        runCmd('gpg --batch --homedir %s --import %s' % (self.gpg_home.name, os.path.join(signing_key_dir, 'key.secret')))
+        runCmd('gpg --batch --homedir %s --import %s' % (self.gpg_home, os.path.join(signing_key_dir, 'key.secret')))
         features += 'INHERIT += "sign_package_feed"\n'
         features += 'PACKAGE_FEED_GPG_NAME = "testuser"\n'
         features += 'PACKAGE_FEED_GPG_PASSPHRASE_FILE = "%s"\n' % os.path.join(signing_key_dir, 'key.passphrase')
-        features += 'GPG_PATH = "%s"\n' % self.gpg_home.name
+        features += 'GPG_PATH = "%s"\n' % self.gpg_home
         self.write_config(features)
 
         # Build core-image-sato and testimage
         bitbake('core-image-full-cmdline socat')
         bitbake('-c testimage core-image-full-cmdline')
+
+        # remove the oeqa-feed-sign temporal directory
+        shutil.rmtree(self.gpg_home, ignore_errors=True)
 
 class Postinst(OESelftestTestCase):
     @OETestID(1540)
