@@ -68,6 +68,9 @@ FILES_${PN}-utils = "${bindir}/host ${bindir}/dig"
 FILES_${PN}-dev += "${bindir}/isc-config.h"
 FILES_${PN} += "${sbindir}/generate-rndc-key.sh ${PYTHON_SITEPACKAGES_DIR}"
 
+PACKAGE_BEFORE_PN += "${PN}-libs"
+FILES_${PN}-libs = "${libdir}/*.so*"
+
 do_install_prepend() {
 	# clean host path in isc-config.sh before the hardlink created
 	# by "make install":
