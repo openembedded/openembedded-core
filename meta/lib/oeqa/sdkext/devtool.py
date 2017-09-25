@@ -45,22 +45,22 @@ class DevtoolTest(oeSDKExtTest):
         self._run('devtool add myapp %s' % self.myapp_dst)
         self._run('devtool reset myapp')
     
-    @testcase(1473)
+    @testcase(1605)
     @skipUnlessPassed('test_devtool_location')
     def test_devtool_build_make(self):
         self._test_devtool_build(self.myapp_dst)
     
-    @testcase(1474)
+    @testcase(1606)
     @skipUnlessPassed('test_devtool_location')
     def test_devtool_build_esdk_package(self):
         self._test_devtool_build_package(self.myapp_dst)
 
-    @testcase(1479)
+    @testcase(1607)
     @skipUnlessPassed('test_devtool_location')
     def test_devtool_build_cmake(self):
         self._test_devtool_build(self.myapp_cmake_dst)
     
-    @testcase(1482)
+    @testcase(1608)
     @skipUnlessPassed('test_devtool_location')
     def test_extend_autotools_recipe_creation(self):
         req = 'https://github.com/rdfa/librdfa'
@@ -74,7 +74,7 @@ class DevtoolTest(oeSDKExtTest):
             raise e
         self._run('devtool reset %s' % recipe)
 
-    @testcase(1484)
+    @testcase(1609)
     @skipUnlessPassed('test_devtool_location')
     def test_devtool_kernelmodule(self):
         docfile = 'https://github.com/umlaeute/v4l2loopback.git'
@@ -88,7 +88,7 @@ class DevtoolTest(oeSDKExtTest):
             raise e
         self._run('devtool reset %s' % recipe)
 
-    @testcase(1478)
+    @testcase(1610)
     @skipUnlessPassed('test_devtool_location')
     def test_recipes_for_nodejs(self):
         package_nodejs = "npm://registry.npmjs.org;name=winston;version=2.2.0"
