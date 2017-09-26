@@ -40,10 +40,14 @@ def update_useradd_static_config(d):
 
     def handle_missing_id(id, type, pkg):
         # For backwards compatibility we accept "1" in addition to "error"
-        if d.getVar('USERADD_ERROR_DYNAMIC') == 'error' or d.getVar('USERADD_ERROR_DYNAMIC') == '1':
-            raise NotImplementedError("%s - %s: %sname %s does not have a static ID defined. Skipping it." % (d.getVar('PN'), pkg, type, id))
-        elif d.getVar('USERADD_ERROR_DYNAMIC') == 'warn':
-            bb.warn("%s - %s: %sname %s does not have a static ID defined." % (d.getVar('PN'), pkg, type, id))
+        error_dynamic = d.getVar('USERADD_ERROR_DYNAMIC')
+        msg = "%s - %s: %sname %s does not have a static ID defined." % (d.getVar('PN'), pkg, type, id)
+        if error_dynamic == 'error' or error_dynamic == '1':
+            raise NotImplementedError(msg)
+        elif error_dynamic == 'warn':
+            bb.warn(msg)
+        elif error_dynamic == 'skip':
+            raise bb.parse.SkipRecipe(msg)
 
     # We parse and rewrite the useradd components
     def rewrite_useradd(params, is_pkg):
