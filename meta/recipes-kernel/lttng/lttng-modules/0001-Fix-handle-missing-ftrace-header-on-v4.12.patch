@@ -1,0 +1,96 @@
+From fea65d0c097a42cf163bf7035985a6da330b9a1f Mon Sep 17 00:00:00 2001
+From: Michael Jeanson <mjeanson@efficios.com>
+Date: Fri, 23 Jun 2017 14:29:42 -0400
+Subject: [PATCH 1/8] Fix: handle missing ftrace header on v4.12
+Organization: O.S. Systems Software LTDA.
+
+Properly handle the case where we build against the distro headers of a
+kernel >= 4.12 and ftrace is enabled but the private header is
+unavailable.
+
+Upstream-Status: Backport [2.9.4]
+
+Signed-off-by: Michael Jeanson <mjeanson@efficios.com>
+Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+---
+ Makefile.ABI.workarounds | 21 +++++++++++++++++++++
+ lttng-events.h           |  2 +-
+ probes/Kbuild            | 19 ++++---------------
+ 3 files changed, 26 insertions(+), 16 deletions(-)
+
+diff --git a/Makefile.ABI.workarounds b/Makefile.ABI.workarounds
+index c3717f8..2e6c4aa 100644
+--- a/Makefile.ABI.workarounds
++++ b/Makefile.ABI.workarounds
+@@ -27,3 +27,24 @@ RT_PATCH_VERSION:=$(shell $(TOP_LTTNG_MODULES_DIR)/rt-patch-version.sh $(CURDIR)
+ ifneq ($(RT_PATCH_VERSION), 0)
+   ccflags-y += -DRT_PATCH_VERSION=$(RT_PATCH_VERSION)
+ endif
++
++# Starting with kernel 4.12, the ftrace header was moved to private headers
++# and as such is not available when building against distro headers instead
++# of the full kernel sources. In the situation, define LTTNG_FTRACE_MISSING_HEADER
++# so we can enable the compat code even if CONFIG_DYNAMIC_FTRACE is enabled.
++ifneq ($(CONFIG_DYNAMIC_FTRACE),)
++  ftrace_dep = $(srctree)/kernel/trace/trace.h
++  ftrace_dep_check = $(wildcard $(ftrace_dep))
++  have_ftrace_header = $(shell \
++    if [ $(VERSION) -ge 5 -o \( $(VERSION) -eq 4 -a $(PATCHLEVEL) -ge 12 \) ] ; then \
++      if [ -z "$(ftrace_dep_check)" ] ; then \
++        echo "no" ; \
++        exit ; \
++      fi; \
++    fi; \
++    echo "yes" ; \
++    )
++  ifeq ($(have_ftrace_header), no)
++    ccflags-y += -DLTTNG_FTRACE_MISSING_HEADER
++  endif
++endif
+diff --git a/lttng-events.h b/lttng-events.h
+index 173f369..5a96bf3 100644
+--- a/lttng-events.h
++++ b/lttng-events.h
+@@ -810,7 +810,7 @@ int lttng_kretprobes_event_enable_state(struct lttng_event *event,
+ }
+ #endif
+ 
+-#ifdef CONFIG_DYNAMIC_FTRACE
++#if defined(CONFIG_DYNAMIC_FTRACE) && !defined(LTTNG_FTRACE_MISSING_HEADER)
+ int lttng_ftrace_register(const char *name,
+ 			  const char *symbol_name,
+ 			  struct lttng_event *event);
+diff --git a/probes/Kbuild b/probes/Kbuild
+index 78bf3fb..cc1c065 100644
+--- a/probes/Kbuild
++++ b/probes/Kbuild
+@@ -259,22 +259,11 @@ ifneq ($(CONFIG_KRETPROBES),)
+ endif # CONFIG_KRETPROBES
+ 
+ ifneq ($(CONFIG_DYNAMIC_FTRACE),)
+-  ftrace_dep = $(srctree)/kernel/trace/trace.h
+-  ftrace_dep_check = $(wildcard $(ftrace_dep))
+-  ftrace = $(shell \
+-    if [ $(VERSION) -ge 5 -o \( $(VERSION) -eq 4 -a $(PATCHLEVEL) -ge 12 \) ] ; then \
+-      if [ -z "$(ftrace_dep_check)" ] ; then \
+-        echo "warn" ; \
+-        exit ; \
+-      fi; \
+-    fi; \
+-    echo "lttng-ftrace.o" ; \
+-    )
+-  ifeq ($(ftrace),warn)
++  ifeq ($(have_ftrace_header),yes)
++    obj-$(CONFIG_LTTNG) += lttng-ftrace.o
++  else
+     $(warning Files $(ftrace_dep) not found. Probe "ftrace" is disabled. Use full kernel source tree to enable it.)
+-    ftrace =
+-  endif # $(ftrace),warn
+-  obj-$(CONFIG_LTTNG) += $(ftrace)
++  endif
+ endif # CONFIG_DYNAMIC_FTRACE
+ 
+ # vim:syntax=make
+-- 
+2.14.1
+

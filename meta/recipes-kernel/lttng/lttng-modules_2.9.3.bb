@@ -12,7 +12,15 @@ COMPATIBLE_HOST = '(x86_64|i.86|powerpc|aarch64|mips|nios2|arm).*-linux'
 
 SRC_URI = "https://lttng.org/files/${BPN}/${BPN}-${PV}.tar.bz2 \
            file://Makefile-Do-not-fail-if-CONFIG_TRACEPOINTS-is-not-en.patch \
-           file://BUILD_RUNTIME_BUG_ON-vs-gcc7.patch"
+           file://BUILD_RUNTIME_BUG_ON-vs-gcc7.patch \
+           file://0001-Fix-handle-missing-ftrace-header-on-v4.12.patch \
+           file://0002-Fix-sched-for-v4.11.5-rt1.patch \
+           file://0003-Fix-Sleeping-function-called-from-invalid-context.patch \
+           file://0004-Fix-update-ext4-instrumentation-for-kernel-4.13.patch \
+           file://0005-Fix-mmap-caches-aliased-on-virtual-addresses.patch \
+           file://0006-Add-kmalloc-failover-to-vmalloc.patch \
+           file://0007-Fix-vmalloc-wrapper-on-kernel-4.12.patch \
+           file://0008-Fix-vmalloc-wrapper-on-kernel-2.6.38.patch"
 
 SRC_URI[md5sum] = "9abf694dddcc197988189ef65b496f4c"
 SRC_URI[sha256sum] = "f911bca81b02a787474f3d100390dad7447f952525e6d041f50991940246bafe"

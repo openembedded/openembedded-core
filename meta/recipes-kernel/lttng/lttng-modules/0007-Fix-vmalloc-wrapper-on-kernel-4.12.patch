@@ -1,0 +1,37 @@
+From ecda9325cd5ad6b69600fd4d88c46095d22f95e1 Mon Sep 17 00:00:00 2001
+From: Michael Jeanson <mjeanson@efficios.com>
+Date: Tue, 26 Sep 2017 13:46:30 -0400
+Subject: [PATCH 7/8] Fix: vmalloc wrapper on kernel >= 4.12
+Organization: O.S. Systems Software LTDA.
+
+Upstream-Status: Backport [2.9.4]
+
+Signed-off-by: Michael Jeanson <mjeanson@efficios.com>
+Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+---
+ wrapper/vmalloc.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/wrapper/vmalloc.h b/wrapper/vmalloc.h
+index 2dd06cb..e117584 100644
+--- a/wrapper/vmalloc.h
++++ b/wrapper/vmalloc.h
+@@ -27,6 +27,7 @@
+ 
+ #include <linux/version.h>
+ #include <linux/vmalloc.h>
++#include <linux/mm.h>
+ 
+ #ifdef CONFIG_KALLSYMS
+ 
+@@ -105,7 +106,6 @@ void lttng_kvfree(const void *addr)
+ #else
+ 
+ #include <linux/slab.h>
+-#include <linux/mm.h>
+ 
+ /*
+  * kallsyms wrapper of __vmalloc_node with a fallback to kmalloc_node.
+-- 
+2.14.1
+

@@ -1,0 +1,519 @@
+From df57c35ddc8772652d8daa1e53da07f4c7819d8d Mon Sep 17 00:00:00 2001
+From: Michael Jeanson <mjeanson@efficios.com>
+Date: Mon, 25 Sep 2017 10:56:20 -0400
+Subject: [PATCH 6/8] Add kmalloc failover to vmalloc
+Organization: O.S. Systems Software LTDA.
+
+This patch is based on the kvmalloc helpers introduced in kernel 4.12.
+
+It will gracefully failover memory allocations of more than one page to
+vmalloc for systems under high memory pressure or fragmentation.
+
+See Linux kernel commit:
+  commit a7c3e901a46ff54c016d040847eda598a9e3e653
+  Author: Michal Hocko <mhocko@suse.com>
+  Date:   Mon May 8 15:57:09 2017 -0700
+
+    mm: introduce kv[mz]alloc helpers
+
+    Patch series "kvmalloc", v5.
+
+    There are many open coded kmalloc with vmalloc fallback instances in the
+    tree.  Most of them are not careful enough or simply do not care about
+    the underlying semantic of the kmalloc/page allocator which means that
+    a) some vmalloc fallbacks are basically unreachable because the kmalloc
+    part will keep retrying until it succeeds b) the page allocator can
+    invoke a really disruptive steps like the OOM killer to move forward
+    which doesn't sound appropriate when we consider that the vmalloc
+    fallback is available.
+
+    As it can be seen implementing kvmalloc requires quite an intimate
+    knowledge if the page allocator and the memory reclaim internals which
+    strongly suggests that a helper should be implemented in the memory
+    subsystem proper.
+
+    Most callers, I could find, have been converted to use the helper
+    instead.  This is patch 6.  There are some more relying on __GFP_REPEAT
+    in the networking stack which I have converted as well and Eric Dumazet
+    was not opposed [2] to convert them as well.
+
+    [1] http://lkml.kernel.org/r/20170130094940.13546-1-mhocko@kernel.org
+    [2] http://lkml.kernel.org/r/1485273626.16328.301.camel@edumazet-glaptop3.roam.corp.google.com
+
+    This patch (of 9):
+
+    Using kmalloc with the vmalloc fallback for larger allocations is a
+    common pattern in the kernel code.  Yet we do not have any common helper
+    for that and so users have invented their own helpers.  Some of them are
+    really creative when doing so.  Let's just add kv[mz]alloc and make sure
+    it is implemented properly.  This implementation makes sure to not make
+    a large memory pressure for > PAGE_SZE requests (__GFP_NORETRY) and also
+    to not warn about allocation failures.  This also rules out the OOM
+    killer as the vmalloc is a more approapriate fallback than a disruptive
+    user visible action.
+
+Upstream-Status: Backport [2.9.4]
+
+Signed-off-by: Michael Jeanson <mjeanson@efficios.com>
+Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+---
+ lib/prio_heap/lttng_prio_heap.c       |   7 +-
+ lib/ringbuffer/ring_buffer_backend.c  |  22 ++---
+ lib/ringbuffer/ring_buffer_frontend.c |  13 +--
+ lttng-context-perf-counters.c         |   6 +-
+ lttng-context.c                       |   6 +-
+ lttng-events.c                        |   6 +-
+ wrapper/vmalloc.h                     | 169 +++++++++++++++++++++++++++++++++-
+ 7 files changed, 198 insertions(+), 31 deletions(-)
+
+diff --git a/lib/prio_heap/lttng_prio_heap.c b/lib/prio_heap/lttng_prio_heap.c
+index 6db7f52..01ed69f 100644
+--- a/lib/prio_heap/lttng_prio_heap.c
++++ b/lib/prio_heap/lttng_prio_heap.c
+@@ -26,6 +26,7 @@
+ 
+ #include <linux/slab.h>
+ #include <lib/prio_heap/lttng_prio_heap.h>
++#include <wrapper/vmalloc.h>
+ 
+ #ifdef DEBUG_HEAP
+ void lttng_check_heap(const struct lttng_ptr_heap *heap)
+@@ -70,12 +71,12 @@ int heap_grow(struct lttng_ptr_heap *heap, size_t new_len)
+ 		return 0;
+ 
+ 	heap->alloc_len = max_t(size_t, new_len, heap->alloc_len << 1);
+-	new_ptrs = kmalloc(heap->alloc_len * sizeof(void *), heap->gfpmask);
++	new_ptrs = lttng_kvmalloc(heap->alloc_len * sizeof(void *), heap->gfpmask);
+ 	if (!new_ptrs)
+ 		return -ENOMEM;
+ 	if (heap->ptrs)
+ 		memcpy(new_ptrs, heap->ptrs, heap->len * sizeof(void *));
+-	kfree(heap->ptrs);
++	lttng_kvfree(heap->ptrs);
+ 	heap->ptrs = new_ptrs;
+ 	return 0;
+ }
+@@ -109,7 +110,7 @@ int lttng_heap_init(struct lttng_ptr_heap *heap, size_t alloc_len,
+ 
+ void lttng_heap_free(struct lttng_ptr_heap *heap)
+ {
+-	kfree(heap->ptrs);
++	lttng_kvfree(heap->ptrs);
+ }
+ 
+ static void heapify(struct lttng_ptr_heap *heap, size_t i)
+diff --git a/lib/ringbuffer/ring_buffer_backend.c b/lib/ringbuffer/ring_buffer_backend.c
+index f760836..3efa1d1 100644
+--- a/lib/ringbuffer/ring_buffer_backend.c
++++ b/lib/ringbuffer/ring_buffer_backend.c
+@@ -71,7 +71,7 @@ int lib_ring_buffer_backend_allocate(const struct lib_ring_buffer_config *config
+ 	if (unlikely(!pages))
+ 		goto pages_error;
+ 
+-	bufb->array = kmalloc_node(ALIGN(sizeof(*bufb->array)
++	bufb->array = lttng_kvmalloc_node(ALIGN(sizeof(*bufb->array)
+ 					 * num_subbuf_alloc,
+ 				  1 << INTERNODE_CACHE_SHIFT),
+ 			GFP_KERNEL | __GFP_NOWARN,
+@@ -90,7 +90,7 @@ int lib_ring_buffer_backend_allocate(const struct lib_ring_buffer_config *config
+ 	/* Allocate backend pages array elements */
+ 	for (i = 0; i < num_subbuf_alloc; i++) {
+ 		bufb->array[i] =
+-			kzalloc_node(ALIGN(
++			lttng_kvzalloc_node(ALIGN(
+ 				sizeof(struct lib_ring_buffer_backend_pages) +
+ 				sizeof(struct lib_ring_buffer_backend_page)
+ 				* num_pages_per_subbuf,
+@@ -102,7 +102,7 @@ int lib_ring_buffer_backend_allocate(const struct lib_ring_buffer_config *config
+ 	}
+ 
+ 	/* Allocate write-side subbuffer table */
+-	bufb->buf_wsb = kzalloc_node(ALIGN(
++	bufb->buf_wsb = lttng_kvzalloc_node(ALIGN(
+ 				sizeof(struct lib_ring_buffer_backend_subbuffer)
+ 				* num_subbuf,
+ 				1 << INTERNODE_CACHE_SHIFT),
+@@ -122,7 +122,7 @@ int lib_ring_buffer_backend_allocate(const struct lib_ring_buffer_config *config
+ 		bufb->buf_rsb.id = subbuffer_id(config, 0, 1, 0);
+ 
+ 	/* Allocate subbuffer packet counter table */
+-	bufb->buf_cnt = kzalloc_node(ALIGN(
++	bufb->buf_cnt = lttng_kvzalloc_node(ALIGN(
+ 				sizeof(struct lib_ring_buffer_backend_counts)
+ 				* num_subbuf,
+ 				1 << INTERNODE_CACHE_SHIFT),
+@@ -154,15 +154,15 @@ int lib_ring_buffer_backend_allocate(const struct lib_ring_buffer_config *config
+ 	return 0;
+ 
+ free_wsb:
+-	kfree(bufb->buf_wsb);
++	lttng_kvfree(bufb->buf_wsb);
+ free_array:
+ 	for (i = 0; (i < num_subbuf_alloc && bufb->array[i]); i++)
+-		kfree(bufb->array[i]);
++		lttng_kvfree(bufb->array[i]);
+ depopulate:
+ 	/* Free all allocated pages */
+ 	for (i = 0; (i < num_pages && pages[i]); i++)
+ 		__free_page(pages[i]);
+-	kfree(bufb->array);
++	lttng_kvfree(bufb->array);
+ array_error:
+ 	vfree(pages);
+ pages_error:
+@@ -191,14 +191,14 @@ void lib_ring_buffer_backend_free(struct lib_ring_buffer_backend *bufb)
+ 	if (chanb->extra_reader_sb)
+ 		num_subbuf_alloc++;
+ 
+-	kfree(bufb->buf_wsb);
+-	kfree(bufb->buf_cnt);
++	lttng_kvfree(bufb->buf_wsb);
++	lttng_kvfree(bufb->buf_cnt);
+ 	for (i = 0; i < num_subbuf_alloc; i++) {
+ 		for (j = 0; j < bufb->num_pages_per_subbuf; j++)
+ 			__free_page(pfn_to_page(bufb->array[i]->p[j].pfn));
+-		kfree(bufb->array[i]);
++		lttng_kvfree(bufb->array[i]);
+ 	}
+-	kfree(bufb->array);
++	lttng_kvfree(bufb->array);
+ 	bufb->allocated = 0;
+ }
+ 
+diff --git a/lib/ringbuffer/ring_buffer_frontend.c b/lib/ringbuffer/ring_buffer_frontend.c
+index e77d789..1e43980 100644
+--- a/lib/ringbuffer/ring_buffer_frontend.c
++++ b/lib/ringbuffer/ring_buffer_frontend.c
+@@ -65,6 +65,7 @@
+ #include <wrapper/kref.h>
+ #include <wrapper/percpu-defs.h>
+ #include <wrapper/timer.h>
++#include <wrapper/vmalloc.h>
+ 
+ /*
+  * Internal structure representing offsets to use at a sub-buffer switch.
+@@ -147,8 +148,8 @@ void lib_ring_buffer_free(struct lib_ring_buffer *buf)
+ 	struct channel *chan = buf->backend.chan;
+ 
+ 	lib_ring_buffer_print_errors(chan, buf, buf->backend.cpu);
+-	kfree(buf->commit_hot);
+-	kfree(buf->commit_cold);
++	lttng_kvfree(buf->commit_hot);
++	lttng_kvfree(buf->commit_cold);
+ 
+ 	lib_ring_buffer_backend_free(&buf->backend);
+ }
+@@ -245,7 +246,7 @@ int lib_ring_buffer_create(struct lib_ring_buffer *buf,
+ 		return ret;
+ 
+ 	buf->commit_hot =
+-		kzalloc_node(ALIGN(sizeof(*buf->commit_hot)
++		lttng_kvzalloc_node(ALIGN(sizeof(*buf->commit_hot)
+ 				   * chan->backend.num_subbuf,
+ 				   1 << INTERNODE_CACHE_SHIFT),
+ 			GFP_KERNEL | __GFP_NOWARN,
+@@ -256,7 +257,7 @@ int lib_ring_buffer_create(struct lib_ring_buffer *buf,
+ 	}
+ 
+ 	buf->commit_cold =
+-		kzalloc_node(ALIGN(sizeof(*buf->commit_cold)
++		lttng_kvzalloc_node(ALIGN(sizeof(*buf->commit_cold)
+ 				   * chan->backend.num_subbuf,
+ 				   1 << INTERNODE_CACHE_SHIFT),
+ 			GFP_KERNEL | __GFP_NOWARN,
+@@ -305,9 +306,9 @@ int lib_ring_buffer_create(struct lib_ring_buffer *buf,
+ 
+ 	/* Error handling */
+ free_init:
+-	kfree(buf->commit_cold);
++	lttng_kvfree(buf->commit_cold);
+ free_commit:
+-	kfree(buf->commit_hot);
++	lttng_kvfree(buf->commit_hot);
+ free_chanbuf:
+ 	lib_ring_buffer_backend_free(&buf->backend);
+ 	return ret;
+diff --git a/lttng-context-perf-counters.c b/lttng-context-perf-counters.c
+index 8afc11f..260e5d0 100644
+--- a/lttng-context-perf-counters.c
++++ b/lttng-context-perf-counters.c
+@@ -119,7 +119,7 @@ void lttng_destroy_perf_counter_field(struct lttng_ctx_field *field)
+ #endif /* #else #if (LINUX_VERSION_CODE >= KERNEL_VERSION(4,10,0)) */
+ 	kfree(field->event_field.name);
+ 	kfree(field->u.perf_counter->attr);
+-	kfree(events);
++	lttng_kvfree(events);
+ 	kfree(field->u.perf_counter);
+ }
+ 
+@@ -237,7 +237,7 @@ int lttng_add_perf_counter_to_ctx(uint32_t type,
+ 	int ret;
+ 	char *name_alloc;
+ 
+-	events = kzalloc(num_possible_cpus() * sizeof(*events), GFP_KERNEL);
++	events = lttng_kvzalloc(num_possible_cpus() * sizeof(*events), GFP_KERNEL);
+ 	if (!events)
+ 		return -ENOMEM;
+ 
+@@ -372,6 +372,6 @@ name_alloc_error:
+ error_alloc_perf_field:
+ 	kfree(attr);
+ error_attr:
+-	kfree(events);
++	lttng_kvfree(events);
+ 	return ret;
+ }
+diff --git a/lttng-context.c b/lttng-context.c
+index 406f479..544e95f 100644
+--- a/lttng-context.c
++++ b/lttng-context.c
+@@ -95,12 +95,12 @@ struct lttng_ctx_field *lttng_append_context(struct lttng_ctx **ctx_p)
+ 		struct lttng_ctx_field *new_fields;
+ 
+ 		ctx->allocated_fields = max_t(size_t, 1, 2 * ctx->allocated_fields);
+-		new_fields = kzalloc(ctx->allocated_fields * sizeof(struct lttng_ctx_field), GFP_KERNEL);
++		new_fields = lttng_kvzalloc(ctx->allocated_fields * sizeof(struct lttng_ctx_field), GFP_KERNEL);
+ 		if (!new_fields)
+ 			return NULL;
+ 		if (ctx->fields)
+ 			memcpy(new_fields, ctx->fields, sizeof(*ctx->fields) * ctx->nr_fields);
+-		kfree(ctx->fields);
++		lttng_kvfree(ctx->fields);
+ 		ctx->fields = new_fields;
+ 	}
+ 	field = &ctx->fields[ctx->nr_fields];
+@@ -240,7 +240,7 @@ void lttng_destroy_context(struct lttng_ctx *ctx)
+ 		if (ctx->fields[i].destroy)
+ 			ctx->fields[i].destroy(&ctx->fields[i]);
+ 	}
+-	kfree(ctx->fields);
++	lttng_kvfree(ctx->fields);
+ 	kfree(ctx);
+ }
+ 
+diff --git a/lttng-events.c b/lttng-events.c
+index c86a756..7132485 100644
+--- a/lttng-events.c
++++ b/lttng-events.c
+@@ -130,7 +130,7 @@ struct lttng_session *lttng_session_create(void)
+ 	int i;
+ 
+ 	mutex_lock(&sessions_mutex);
+-	session = kzalloc(sizeof(struct lttng_session), GFP_KERNEL);
++	session = lttng_kvzalloc(sizeof(struct lttng_session), GFP_KERNEL);
+ 	if (!session)
+ 		goto err;
+ 	INIT_LIST_HEAD(&session->chan);
+@@ -161,7 +161,7 @@ struct lttng_session *lttng_session_create(void)
+ err_free_cache:
+ 	kfree(metadata_cache);
+ err_free_session:
+-	kfree(session);
++	lttng_kvfree(session);
+ err:
+ 	mutex_unlock(&sessions_mutex);
+ 	return NULL;
+@@ -210,7 +210,7 @@ void lttng_session_destroy(struct lttng_session *session)
+ 	kref_put(&session->metadata_cache->refcount, metadata_cache_destroy);
+ 	list_del(&session->list);
+ 	mutex_unlock(&sessions_mutex);
+-	kfree(session);
++	lttng_kvfree(session);
+ }
+ 
+ int lttng_session_statedump(struct lttng_session *session)
+diff --git a/wrapper/vmalloc.h b/wrapper/vmalloc.h
+index 2332439..2dd06cb 100644
+--- a/wrapper/vmalloc.h
++++ b/wrapper/vmalloc.h
+@@ -25,6 +25,9 @@
+  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+  */
+ 
++#include <linux/version.h>
++#include <linux/vmalloc.h>
++
+ #ifdef CONFIG_KALLSYMS
+ 
+ #include <linux/kallsyms.h>
+@@ -51,8 +54,6 @@ void wrapper_vmalloc_sync_all(void)
+ }
+ #else
+ 
+-#include <linux/vmalloc.h>
+-
+ static inline
+ void wrapper_vmalloc_sync_all(void)
+ {
+@@ -60,4 +61,168 @@ void wrapper_vmalloc_sync_all(void)
+ }
+ #endif
+ 
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(4,12,0))
++static inline
++void *lttng_kvmalloc_node(unsigned long size, gfp_t flags, int node)
++{
++	void *ret;
++
++	ret = kvmalloc_node(size, flags, node);
++	if (is_vmalloc_addr(ret)) {
++		/*
++		 * Make sure we don't trigger recursive page faults in the
++		 * tracing fast path.
++		 */
++		wrapper_vmalloc_sync_all();
++	}
++	return ret;
++}
++
++static inline
++void *lttng_kvzalloc_node(unsigned long size, gfp_t flags, int node)
++{
++	return lttng_kvmalloc_node(size, flags | __GFP_ZERO, node);
++}
++
++static inline
++void *lttng_kvmalloc(unsigned long size, gfp_t flags)
++{
++	return lttng_kvmalloc_node(size, flags, NUMA_NO_NODE);
++}
++
++static inline
++void *lttng_kvzalloc(unsigned long size, gfp_t flags)
++{
++	return lttng_kvzalloc_node(size, flags, NUMA_NO_NODE);
++}
++
++static inline
++void lttng_kvfree(const void *addr)
++{
++	kvfree(addr);
++}
++
++#else
++
++#include <linux/slab.h>
++#include <linux/mm.h>
++
++/*
++ * kallsyms wrapper of __vmalloc_node with a fallback to kmalloc_node.
++ */
++static inline
++void *__lttng_vmalloc_node_fallback(unsigned long size, unsigned long align,
++                         gfp_t gfp_mask, pgprot_t prot, int node, void *caller)
++{
++	void *ret;
++
++#ifdef CONFIG_KALLSYMS
++	/*
++	 * If we have KALLSYMS, get * __vmalloc_node which is not exported.
++	 */
++	void *(*lttng__vmalloc_node)(unsigned long size, unsigned long align,
++			gfp_t gfp_mask, pgprot_t prot, int node, void *caller);
++
++	lttng__vmalloc_node = (void *) kallsyms_lookup_funcptr("__vmalloc_node");
++	ret = lttng__vmalloc_node(size, align, gfp_mask, prot, node, caller);
++#else
++	/*
++	 * If we don't have KALLSYMS, fallback to kmalloc_node.
++	 */
++	ret = kmalloc_node(size, flags, node);
++#endif
++
++	return ret;
++}
++
++/**
++ * lttng_kvmalloc_node - attempt to allocate physically contiguous memory, but upon
++ * failure, fall back to non-contiguous (vmalloc) allocation.
++ * @size: size of the request.
++ * @flags: gfp mask for the allocation - must be compatible with GFP_KERNEL.
++ *
++ * Uses kmalloc to get the memory but if the allocation fails then falls back
++ * to the vmalloc allocator. Use lttng_kvfree to free the memory.
++ *
++ * Reclaim modifiers - __GFP_NORETRY, __GFP_REPEAT and __GFP_NOFAIL are not supported
++ */
++static inline
++void *lttng_kvmalloc_node(unsigned long size, gfp_t flags, int node)
++{
++	void *ret;
++
++	/*
++	 * vmalloc uses GFP_KERNEL for some internal allocations (e.g page tables)
++	 * so the given set of flags has to be compatible.
++	 */
++	WARN_ON_ONCE((flags & GFP_KERNEL) != GFP_KERNEL);
++
++	/*
++	 * If the allocation fits in a single page, do not fallback.
++	 */
++	if (size <= PAGE_SIZE) {
++		return kmalloc_node(size, flags, node);
++	}
++
++	/*
++	 * Make sure that larger requests are not too disruptive - no OOM
++	 * killer and no allocation failure warnings as we have a fallback
++	 */
++	ret = kmalloc_node(size, flags | __GFP_NOWARN | __GFP_NORETRY, node);
++	if (!ret) {
++		if (node == NUMA_NO_NODE) {
++			/*
++			 * If no node was specified, use __vmalloc which is
++			 * always exported.
++			 */
++			ret = __vmalloc(size, flags | __GFP_HIGHMEM, PAGE_KERNEL);
++		} else {
++			/*
++			 * Otherwise, we need to select a node but __vmalloc_node
++			 * is not exported, use this fallback wrapper which uses
++			 * kallsyms if available or falls back to kmalloc_node.
++			 */
++			ret = __lttng_vmalloc_node_fallback(size, 1,
++					flags | __GFP_HIGHMEM, PAGE_KERNEL, node,
++					__builtin_return_address(0));
++		}
++
++		/*
++		 * Make sure we don't trigger recursive page faults in the
++		 * tracing fast path.
++		 */
++		wrapper_vmalloc_sync_all();
++	}
++	return ret;
++}
++
++static inline
++void *lttng_kvzalloc_node(unsigned long size, gfp_t flags, int node)
++{
++	return lttng_kvmalloc_node(size, flags | __GFP_ZERO, node);
++}
++
++static inline
++void *lttng_kvmalloc(unsigned long size, gfp_t flags)
++{
++	return lttng_kvmalloc_node(size, flags, NUMA_NO_NODE);
++}
++
++static inline
++void *lttng_kvzalloc(unsigned long size, gfp_t flags)
++{
++	return lttng_kvzalloc_node(size, flags, NUMA_NO_NODE);
++}
++
++static inline
++void lttng_kvfree(const void *addr)
++{
++	if (is_vmalloc_addr(addr)) {
++		vfree(addr);
++	} else {
++		kfree(addr);
++	}
++}
++#endif
++
+ #endif /* _LTTNG_WRAPPER_VMALLOC_H */
+-- 
+2.14.1
+

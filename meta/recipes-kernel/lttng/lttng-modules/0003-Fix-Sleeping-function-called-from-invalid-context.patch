@@ -1,0 +1,133 @@
+From c1af5643e0df56b92481f7a7bc4110a58e4e5abb Mon Sep 17 00:00:00 2001
+From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Date: Fri, 21 Jul 2017 08:22:04 -0400
+Subject: [PATCH 3/8] Fix: Sleeping function called from invalid context
+Organization: O.S. Systems Software LTDA.
+
+It affects system call instrumentation for accept, accept4 and connect,
+only on the x86-64 architecture.
+
+We need to use the LTTng accessing functions to touch user-space memory,
+which take care of disabling the page fault handler, so we don't preempt
+while in preempt-off context (tracepoints disable preemption).
+
+Fixes #1111
+
+Upstream-Status: Backport [2.9.4]
+
+Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+---
+ .../x86-64-syscalls-3.10.0-rc7_pointers_override.h | 47 ++++++++++++++--------
+ 1 file changed, 31 insertions(+), 16 deletions(-)
+
+diff --git a/instrumentation/syscalls/headers/x86-64-syscalls-3.10.0-rc7_pointers_override.h b/instrumentation/syscalls/headers/x86-64-syscalls-3.10.0-rc7_pointers_override.h
+index 5e91004..6bf5291 100644
+--- a/instrumentation/syscalls/headers/x86-64-syscalls-3.10.0-rc7_pointers_override.h
++++ b/instrumentation/syscalls/headers/x86-64-syscalls-3.10.0-rc7_pointers_override.h
+@@ -2,7 +2,7 @@
+ 
+ #define OVERRIDE_64_connect
+ SC_LTTNG_TRACEPOINT_EVENT_CODE(connect,
+-	TP_PROTO(sc_exit(long ret,) int fd, struct sockaddr * uservaddr, int addrlen),
++	TP_PROTO(sc_exit(long ret,) int fd, struct sockaddr __user * uservaddr, int addrlen),
+ 	TP_ARGS(sc_exit(ret,) fd, uservaddr, addrlen),
+ 	TP_locvar(
+ 		__typeof__(uservaddr->sa_family) sa_family;
+@@ -16,21 +16,28 @@ SC_LTTNG_TRACEPOINT_EVENT_CODE(connect,
+ 			memset(tp_locvar, 0, sizeof(*tp_locvar));
+ 			if (addrlen < sizeof(tp_locvar->sa_family))
+ 				goto skip_code;
+-			(void) get_user(tp_locvar->sa_family, &uservaddr->sa_family);
++			(void) lib_ring_buffer_copy_from_user_check_nofault(&tp_locvar->sa_family,
++					&uservaddr->sa_family, sizeof(tp_locvar->sa_family));
+ 			switch (tp_locvar->sa_family) {
+ 			case AF_INET:
+ 				if (addrlen < sizeof(struct sockaddr_in))
+ 					goto skip_code;
+-				(void) get_user(tp_locvar->dport, &((struct sockaddr_in *) uservaddr)->sin_port);
+-				(void) get_user(tp_locvar->v4addr, &((struct sockaddr_in *) uservaddr)->sin_addr.s_addr);
++				(void) lib_ring_buffer_copy_from_user_check_nofault(&tp_locvar->dport,
++						&((struct sockaddr_in __user *) uservaddr)->sin_port,
++						sizeof(tp_locvar->dport));
++				(void) lib_ring_buffer_copy_from_user_check_nofault(&tp_locvar->v4addr,
++						&((struct sockaddr_in __user *) uservaddr)->sin_addr.s_addr,
++						sizeof(tp_locvar->v4addr));
+ 				tp_locvar->v4addr_len = 4;
+ 				break;
+ 			case AF_INET6:
+ 				if (addrlen < sizeof(struct sockaddr_in6))
+ 					goto skip_code;
+-				(void) get_user(tp_locvar->dport, &((struct sockaddr_in6 *) uservaddr)->sin6_port);
+-				if (copy_from_user(tp_locvar->v6addr,
+-						&((struct sockaddr_in6 *) uservaddr)->sin6_addr.in6_u.u6_addr8,
++				(void) lib_ring_buffer_copy_from_user_check_nofault(&tp_locvar->dport,
++						&((struct sockaddr_in6 __user *) uservaddr)->sin6_port,
++						sizeof(tp_locvar->dport));
++				if (lib_ring_buffer_copy_from_user_check_nofault(tp_locvar->v6addr,
++						&((struct sockaddr_in6 __user *) uservaddr)->sin6_addr.in6_u.u6_addr8,
+ 						sizeof(tp_locvar->v6addr)))
+ 					memset(tp_locvar->v6addr, 0, sizeof(tp_locvar->v6addr));
+ 				tp_locvar->v6addr_len = 8;
+@@ -63,26 +70,34 @@ SC_LTTNG_TRACEPOINT_EVENT_CODE(connect,
+ #define LTTNG_SYSCALL_ACCEPT_code_pre											\
+ 	sc_inout(													\
+ 		memset(tp_locvar, 0, sizeof(*tp_locvar));								\
+-		(void) get_user(tp_locvar->uaddr_len, upeer_addrlen);							\
++		(void) lib_ring_buffer_copy_from_user_check_nofault(&tp_locvar->uaddr_len,				\
++				upeer_addrlen, sizeof(tp_locvar->uaddr_len));						\
+ 	)														\
+ 	sc_out(														\
+ 		if (tp_locvar->uaddr_len < sizeof(tp_locvar->sa_family))						\
+ 			goto skip_code;											\
+-		(void) get_user(tp_locvar->sa_family, &upeer_sockaddr->sa_family);					\
++		(void) lib_ring_buffer_copy_from_user_check_nofault(&tp_locvar->sa_family,				\
++				&upeer_sockaddr->sa_family, sizeof(tp_locvar->sa_family));				\
+ 		switch (tp_locvar->sa_family) {										\
+ 		case AF_INET:												\
+ 			if (tp_locvar->uaddr_len < sizeof(struct sockaddr_in))						\
+ 				goto skip_code;										\
+-			(void) get_user(tp_locvar->sport, &((struct sockaddr_in *) upeer_sockaddr)->sin_port);		\
+-			(void) get_user(tp_locvar->v4addr, &((struct sockaddr_in *) upeer_sockaddr)->sin_addr.s_addr);	\
++			(void) lib_ring_buffer_copy_from_user_check_nofault(&tp_locvar->sport,				\
++					&((struct sockaddr_in __user *) upeer_sockaddr)->sin_port,			\
++					sizeof(tp_locvar->sport));							\
++			(void) lib_ring_buffer_copy_from_user_check_nofault(&tp_locvar->v4addr,				\
++					&((struct sockaddr_in __user *) upeer_sockaddr)->sin_addr.s_addr,		\
++					sizeof(tp_locvar->v4addr));							\
+ 			tp_locvar->v4addr_len = 4;									\
+ 			break;												\
+ 		case AF_INET6:												\
+ 			if (tp_locvar->uaddr_len < sizeof(struct sockaddr_in6))						\
+ 				goto skip_code;										\
+-			(void) get_user(tp_locvar->sport, &((struct sockaddr_in6 *) upeer_sockaddr)->sin6_port);	\
+-			if (copy_from_user(tp_locvar->v6addr,								\
+-					&((struct sockaddr_in6 *) upeer_sockaddr)->sin6_addr.in6_u.u6_addr8,		\
++			(void) lib_ring_buffer_copy_from_user_check_nofault(&tp_locvar->sport,				\
++					&((struct sockaddr_in6 __user *) upeer_sockaddr)->sin6_port,			\
++					sizeof(tp_locvar->sport));							\
++			if (lib_ring_buffer_copy_from_user_check_nofault(tp_locvar->v6addr,				\
++					&((struct sockaddr_in6 __user *) upeer_sockaddr)->sin6_addr.in6_u.u6_addr8,	\
+ 					sizeof(tp_locvar->v6addr)))							\
+ 				memset(tp_locvar->v6addr, 0, sizeof(tp_locvar->v6addr));				\
+ 			tp_locvar->v6addr_len = 8;									\
+@@ -93,7 +108,7 @@ SC_LTTNG_TRACEPOINT_EVENT_CODE(connect,
+ 
+ #define OVERRIDE_64_accept
+ SC_LTTNG_TRACEPOINT_EVENT_CODE(accept,
+-	TP_PROTO(sc_exit(long ret,) int fd, struct sockaddr * upeer_sockaddr, int * upeer_addrlen),
++	TP_PROTO(sc_exit(long ret,) int fd, struct sockaddr __user * upeer_sockaddr, int __user * upeer_addrlen),
+ 	TP_ARGS(sc_exit(ret,) fd, upeer_sockaddr, upeer_addrlen),
+ 	TP_locvar(
+ 		LTTNG_SYSCALL_ACCEPT_locvar
+@@ -116,7 +131,7 @@ SC_LTTNG_TRACEPOINT_EVENT_CODE(accept,
+ 
+ #define OVERRIDE_64_accept4
+ SC_LTTNG_TRACEPOINT_EVENT_CODE(accept4,
+-	TP_PROTO(sc_exit(long ret,) int fd, struct sockaddr * upeer_sockaddr, int * upeer_addrlen, int flags),
++	TP_PROTO(sc_exit(long ret,) int fd, struct sockaddr __user * upeer_sockaddr, int __user * upeer_addrlen, int flags),
+ 	TP_ARGS(sc_exit(ret,) fd, upeer_sockaddr, upeer_addrlen, flags),
+ 	TP_locvar(
+ 		LTTNG_SYSCALL_ACCEPT_locvar
+-- 
+2.14.1
+

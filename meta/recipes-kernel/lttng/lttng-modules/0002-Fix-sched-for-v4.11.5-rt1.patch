@@ -1,0 +1,31 @@
+From 8db274f8dda050c4f2ee3dbd0f36a5ad8f8bd993 Mon Sep 17 00:00:00 2001
+From: Michael Jeanson <mjeanson@efficios.com>
+Date: Mon, 10 Jul 2017 18:13:11 -0400
+Subject: [PATCH 2/8] Fix: sched for v4.11.5-rt1
+Organization: O.S. Systems Software LTDA.
+
+Upstream-Status: Backport [2.9.4]
+
+Signed-off-by: Michael Jeanson <mjeanson@efficios.com>
+Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+---
+ instrumentation/events/lttng-module/sched.h | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/instrumentation/events/lttng-module/sched.h b/instrumentation/events/lttng-module/sched.h
+index e6f36b1..cb5b5b2 100644
+--- a/instrumentation/events/lttng-module/sched.h
++++ b/instrumentation/events/lttng-module/sched.h
+@@ -541,7 +541,8 @@ LTTNG_TRACEPOINT_EVENT(sched_stat_runtime,
+ #endif
+ 
+ #if (LINUX_VERSION_CODE >= KERNEL_VERSION(4,12,0) || \
+-	LTTNG_RT_KERNEL_RANGE(4,9,27,18, 4,10,0,0))
++	LTTNG_RT_KERNEL_RANGE(4,9,27,18, 4,10,0,0) || \
++	LTTNG_RT_KERNEL_RANGE(4,11,5,1, 4,12,0,0))
+ /*
+  * Tracepoint for showing priority inheritance modifying a tasks
+  * priority.
+-- 
+2.14.1
+

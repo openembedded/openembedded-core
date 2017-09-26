@@ -1,0 +1,100 @@
+From 90715ba61e3fa66c1bb438138c8716c6e72356f9 Mon Sep 17 00:00:00 2001
+From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Date: Tue, 19 Sep 2017 12:16:58 -0400
+Subject: [PATCH 5/8] Fix: mmap: caches aliased on virtual addresses
+Organization: O.S. Systems Software LTDA.
+
+Some architectures (e.g. implementations of arm64) implement their
+caches based on the virtual addresses (rather than physical address).
+It has the upside of making the cache access faster (no TLB lookup
+required to access the cache line), but the downside of requiring
+virtual mappings (e.g. kernel vs user-space) to be aligned on the number
+of bits used for cache aliasing.
+
+Perform dcache flushing for the entire sub-buffer in the get_subbuf
+operation on those architectures, thus ensuring we don't end up with
+cache aliasing issues.
+
+An alternative approach we could eventually take would be to create a
+kernel mapping for the ring buffer that is aligned with the user-space
+mapping.
+
+Upstream-Status: Backport [2.9.4]
+
+Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+---
+ lib/ringbuffer/ring_buffer_frontend.c | 44 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 44 insertions(+)
+
+diff --git a/lib/ringbuffer/ring_buffer_frontend.c b/lib/ringbuffer/ring_buffer_frontend.c
+index dc1ee45..e77d789 100644
+--- a/lib/ringbuffer/ring_buffer_frontend.c
++++ b/lib/ringbuffer/ring_buffer_frontend.c
+@@ -54,6 +54,7 @@
+ #include <linux/delay.h>
+ #include <linux/module.h>
+ #include <linux/percpu.h>
++#include <asm/cacheflush.h>
+ 
+ #include <wrapper/ringbuffer/config.h>
+ #include <wrapper/ringbuffer/backend.h>
+@@ -1149,6 +1150,47 @@ void lib_ring_buffer_move_consumer(struct lib_ring_buffer *buf,
+ }
+ EXPORT_SYMBOL_GPL(lib_ring_buffer_move_consumer);
+ 
++#if ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE
++static void lib_ring_buffer_flush_read_subbuf_dcache(
++		const struct lib_ring_buffer_config *config,
++		struct channel *chan,
++		struct lib_ring_buffer *buf)
++{
++	struct lib_ring_buffer_backend_pages *pages;
++	unsigned long sb_bindex, id, i, nr_pages;
++
++	if (config->output != RING_BUFFER_MMAP)
++		return;
++
++	/*
++	 * Architectures with caches aliased on virtual addresses may
++	 * use different cache lines for the linear mapping vs
++	 * user-space memory mapping. Given that the ring buffer is
++	 * based on the kernel linear mapping, aligning it with the
++	 * user-space mapping is not straightforward, and would require
++	 * extra TLB entries. Therefore, simply flush the dcache for the
++	 * entire sub-buffer before reading it.
++	 */
++	id = buf->backend.buf_rsb.id;
++	sb_bindex = subbuffer_id_get_index(config, id);
++	pages = buf->backend.array[sb_bindex];
++	nr_pages = buf->backend.num_pages_per_subbuf;
++	for (i = 0; i < nr_pages; i++) {
++		struct lib_ring_buffer_backend_page *backend_page;
++
++		backend_page = &pages->p[i];
++		flush_dcache_page(pfn_to_page(backend_page->pfn));
++	}
++}
++#else
++static void lib_ring_buffer_flush_read_subbuf_dcache(
++		const struct lib_ring_buffer_config *config,
++		struct channel *chan,
++		struct lib_ring_buffer *buf)
++{
++}
++#endif
++
+ /**
+  * lib_ring_buffer_get_subbuf - get exclusive access to subbuffer for reading
+  * @buf: ring buffer
+@@ -1291,6 +1333,8 @@ retry:
+ 	buf->get_subbuf_consumed = consumed;
+ 	buf->get_subbuf = 1;
+ 
++	lib_ring_buffer_flush_read_subbuf_dcache(config, chan, buf);
++
+ 	return 0;
+ 
+ nodata:
+-- 
+2.14.1
+

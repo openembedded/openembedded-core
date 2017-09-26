@@ -1,0 +1,34 @@
+From a919317a3e3352038c8285a41055b370adc79478 Mon Sep 17 00:00:00 2001
+From: Michael Jeanson <mjeanson@efficios.com>
+Date: Tue, 26 Sep 2017 14:16:47 -0400
+Subject: [PATCH 8/8] Fix: vmalloc wrapper on kernel < 2.6.38
+Organization: O.S. Systems Software LTDA.
+
+Ensure that all probes end up including the vmalloc wrapper through the
+lttng-tracer.h header so the trace_*() static inlines are generated
+through inclusion of include/trace/events/kmem.h before we define
+CREATE_TRACE_POINTS.
+
+Upstream-Status: Backport [2.9.4]
+
+Signed-off-by: Michael Jeanson <mjeanson@efficios.com>
+Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+---
+ lttng-tracer.h | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/lttng-tracer.h b/lttng-tracer.h
+index 58a7a26..5da882b 100644
+--- a/lttng-tracer.h
++++ b/lttng-tracer.h
+@@ -36,6 +36,7 @@
+ 
+ #include <wrapper/trace-clock.h>
+ #include <wrapper/compiler.h>
++#include <wrapper/vmalloc.h>
+ #include <lttng-tracer-core.h>
+ #include <lttng-events.h>
+ 
+-- 
+2.14.1
+
