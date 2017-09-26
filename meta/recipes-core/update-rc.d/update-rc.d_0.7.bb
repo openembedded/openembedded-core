@@ -1,4 +1,5 @@
 SUMMARY = "manage symlinks in /etc/rcN.d"
+HOMEPAGE = "http://github.com/philb/update-rc.d/"
 DESCRIPTION = "update-rc.d is a utility that allows the management of symlinks to the initscripts in the /etc/rcN.d directory structure."
 SECTION = "base"
 
