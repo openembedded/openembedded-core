@@ -31,6 +31,12 @@ SRC_URI += " \
            "
 SRC_URI_append_qemuall = " file://0001-core-device.c-Change-the-default-device-timeout-to-2.patch"
 
+PAM_PLUGINS = " \
+    pam-plugin-unix \
+    pam-plugin-loginuid \
+    pam-plugin-keyinit \
+"
+
 PACKAGECONFIG ??= "xz \
                    ${@bb.utils.filter('DISTRO_FEATURES', 'efi pam selinux ldconfig usrmerge', d)} \
                    ${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'xkbcommon', '', d)} \
@@ -100,7 +106,7 @@ PACKAGECONFIG[importd] = "--enable-importd,--disable-importd"
 PACKAGECONFIG[libidn] = "--enable-libidn,--disable-libidn,libidn"
 PACKAGECONFIG[audit] = "--enable-audit,--disable-audit,audit"
 PACKAGECONFIG[manpages] = "--enable-manpages,--disable-manpages,libxslt-native xmlto-native docbook-xml-dtd4-native docbook-xsl-stylesheets-native"
-PACKAGECONFIG[pam] = "--enable-pam,--disable-pam,libpam"
+PACKAGECONFIG[pam] = "--enable-pam,--disable-pam,libpam,${PAM_PLUGINS}"
 # Verify keymaps on locale change
 PACKAGECONFIG[xkbcommon] = "--enable-xkbcommon,--disable-xkbcommon,libxkbcommon"
 # Update NAT firewall rules
@@ -295,7 +301,6 @@ PACKAGES =+ "\
     ${PN}-kernel-install \
     ${PN}-rpm-macros \
     ${PN}-binfmt \
-    ${PN}-pam \
     ${PN}-zsh-completion \
     ${PN}-xorg-xinitrc \
     ${PN}-container \
