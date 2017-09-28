@@ -251,8 +251,15 @@ def _extract_new_source(newpv, srctree, no_patch, srcrev, srcbranch, branch, kee
         _copy_source_code(tmpsrctree, srctree)
 
         (stdout,_) = __run('git ls-files --modified --others --exclude-standard')
-        for f in stdout.splitlines():
-            __run('git add -A "%s"' % f)
+        filelist = stdout.splitlines()
+        pbar = bb.ui.knotty.BBProgress('Adding changed files', len(filelist))
+        pbar.start()
+        batchsize = 100
+        for i in range(0, len(filelist), batchsize):
+            batch = filelist[i:i+batchsize]
+            __run('git add -A %s' % ' '.join(['"%s"' % item for item in batch]))
+            pbar.update(i)
+        pbar.finish()
 
         useroptions = []
         oe.patch.GitApplyTree.gitCommandUserOptions(useroptions, d=rd)
