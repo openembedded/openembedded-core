@@ -337,3 +337,16 @@ def update_unlockedsigs(basepath, workspace, fixed_setup, extra=None):
             for pn in newunlocked:
                 f.write('    ' + pn)
             f.write('"')
+
+def check_prerelease_version(ver, operation):
+    if 'pre' in ver or 'rc' in ver:
+        logger.warning('Version "%s" looks like a pre-release version. '
+                       'If that is the case, in order to ensure that the '
+                       'version doesn\'t appear to go backwards when you '
+                       'later upgrade to the final release version, it is '
+                       'recommmended that instead you use '
+                       '<current version>+<pre-release version> e.g. if '
+                       'upgrading from 1.9 to 2.0-rc2 use "1.9+2.0-rc2". '
+                       'If you prefer not to reset and re-try, you can change '
+                       'the version after %s succeeds using "devtool rename" '
+                       'with -V/--version.' % (ver, operation))

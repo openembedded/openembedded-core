@@ -30,7 +30,7 @@ import errno
 import glob
 import filecmp
 from collections import OrderedDict
-from devtool import exec_build_env_command, setup_tinfoil, check_workspace_recipe, use_external_build, setup_git_repo, recipe_to_append, get_bbclassextend_targets, update_unlockedsigs, DevtoolError
+from devtool import exec_build_env_command, setup_tinfoil, check_workspace_recipe, use_external_build, setup_git_repo, recipe_to_append, get_bbclassextend_targets, update_unlockedsigs, check_prerelease_version, DevtoolError
 from devtool import parse_recipe
 
 logger = logging.getLogger('devtool')
@@ -297,6 +297,8 @@ def add(args, config, basepath, workspace):
                 break
 
         _add_md5(config, recipename, appendfile)
+
+        check_prerelease_version(rd.getVar('PV'), 'devtool add')
 
         logger.info('Recipe %s has been automatically created; further editing may be required to make it fully functional' % recipefile)
 

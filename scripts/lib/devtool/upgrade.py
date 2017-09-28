@@ -33,7 +33,7 @@ sys.path = sys.path + [devtool_path]
 
 import oe.recipeutils
 from devtool import standard
-from devtool import exec_build_env_command, setup_tinfoil, DevtoolError, parse_recipe, use_external_build, update_unlockedsigs
+from devtool import exec_build_env_command, setup_tinfoil, DevtoolError, parse_recipe, use_external_build, update_unlockedsigs, check_prerelease_version
 
 logger = logging.getLogger('devtool')
 
@@ -420,8 +420,13 @@ def upgrade(args, config, basepath, workspace):
             old_srcrev = None
         if old_srcrev and not args.srcrev:
             raise DevtoolError("Recipe specifies a SRCREV value; you must specify a new one when upgrading")
-        if rd.getVar('PV') == args.version and old_srcrev == args.srcrev:
+        old_ver = rd.getVar('PV')
+        if old_ver == args.version and old_srcrev == args.srcrev:
             raise DevtoolError("Current and upgrade versions are the same version")
+        if args.version:
+            if bb.utils.vercmp_string(args.version, old_ver) < 0:
+                logger.warning('Upgrade version %s compares as less than the current version %s. If you are using a package feed for on-target upgrades or providing this recipe for general consumption, then you should increment PE in the recipe (or if there is no current PE value set, set it to "1")' % (args.version, old_ver))
+            check_prerelease_version(args.version, 'devtool upgrade')
 
         rf = None
         try:
