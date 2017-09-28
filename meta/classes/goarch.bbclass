@@ -28,6 +28,7 @@ COMPATIBLE_HOST_linux-muslx32 = "null"
 COMPATIBLE_HOST_powerpc = "null"
 COMPATIBLE_HOST_powerpc64 = "null"
 ARM_INSTRUCTION_SET = "arm"
+TUNE_CCARGS_remove = "-march=mips32r2"
 
 def go_map_arch(a, d):
     import re
@@ -39,18 +40,14 @@ def go_map_arch(a, d):
         return 'arm'
     elif re.match('aarch64.*', a):
         return 'arm64'
-    elif re.match('mips64el*', a):
+    elif re.match('mips64el.*', a):
         return 'mips64le'
-    elif re.match('mips64*', a):
+    elif re.match('mips64.*', a):
         return 'mips64'
-    elif re.match('mips.*', a):
-        tf = d.getVar('TUNE_FEATURES').split()
-        if 'fpu-hard' in tf and 'n32' not in tf:
-            if 'mips32r2' in tf:
-                newtf = [t for t in tf if t != 'mips32r2']
-                newtf.append('mips32')
-                d.setVar('TUNE_FEATURES', ' '.join(newtf))
-            return 'mips' if 'bigendian' in tf else 'mipsle'
+    elif a == 'mips':
+        return 'mips'
+    elif a == 'mipsel':
+        return 'mipsle'
     elif re.match('p(pc|owerpc)(64)', a):
         return 'ppc64'
     elif re.match('p(pc|owerpc)(64el)', a):
