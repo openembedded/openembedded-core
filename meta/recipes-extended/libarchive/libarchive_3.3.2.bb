@@ -34,6 +34,7 @@ EXTRA_OECONF += "--enable-largefile"
 SRC_URI = "http://libarchive.org/downloads/libarchive-${PV}.tar.gz \
            file://bug929.patch \
            file://CVE-2017-14166.patch \
+           file://CVE-2017-14502.patch \
           "
 
 SRC_URI[md5sum] = "4583bd6b2ebf7e0e8963d90879eb1b27"
