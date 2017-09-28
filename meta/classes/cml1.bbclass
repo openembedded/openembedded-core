@@ -63,8 +63,9 @@ python do_diffconfig() {
 
     if isdiff:
         statement = 'diff --unchanged-line-format= --old-line-format= --new-line-format="%L" ' + configorig + ' ' + config + '>' + fragment
-        subprocess.check_call(statement, shell=True)
-
+        subprocess.call(statement, shell=True)
+        # No need to check the exit code as we know it's going to be
+        # non-zero, but that's what we expect.
         shutil.copy(configorig, config)
 
         bb.plain("Config fragment has been dumped into:\n %s" % fragment)
