@@ -66,3 +66,34 @@ class TestComplexCombinations(TestSimpleCombinations):
         "(GPL-2.0|Proprietary)&BSD-4-clause&MIT": ["GPL-2.0", "BSD-4-clause", "MIT"],
     }
     preferred = ["BAR", "OMEGA", "BETA", "GPL-2.0"]
+
+class TestIsIncluded(TestCase):
+    tests = {
+        ("FOO | BAR", None, None):
+            [True, ["FOO"]],
+        ("FOO | BAR", None, "FOO"):
+            [True, ["BAR"]],
+        ("FOO | BAR", "BAR", None):
+            [True, ["BAR"]],
+        ("FOO | BAR & FOOBAR", "*BAR", None):
+            [True, ["BAR", "FOOBAR"]],
+        ("FOO | BAR & FOOBAR", None, "FOO*"):
+            [False, ["FOOBAR"]],
+        ("(FOO | BAR) & FOOBAR | BARFOO", None, "FOO"):
+            [True, ["BAR", "FOOBAR"]],
+        ("(FOO | BAR) & FOOBAR | BAZ & MOO & BARFOO", None, "FOO"):
+            [True, ["BAZ", "MOO", "BARFOO"]],
+        ("GPL-3.0 & GPL-2.0 & LGPL-2.1 | Proprietary", None, None):
+            [True, ["GPL-3.0", "GPL-2.0", "LGPL-2.1"]],
+        ("GPL-3.0 & GPL-2.0 & LGPL-2.1 | Proprietary", None, "GPL-3.0"):
+            [True, ["Proprietary"]],
+        ("GPL-3.0 & GPL-2.0 & LGPL-2.1 | Proprietary", None, "GPL-3.0 Proprietary"):
+            [False, ["GPL-3.0"]]
+    }
+
+    def test_tests(self):
+        for args, expected in self.tests.items():
+            is_included, licenses = oe.license.is_included(
+                args[0], (args[1] or '').split(), (args[2] or '').split())
+            self.assertEqual(is_included, expected[0])
+            self.assertListEqual(licenses, expected[1])
