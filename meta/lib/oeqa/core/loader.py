@@ -2,6 +2,7 @@
 # Released under the MIT license (see COPYING.MIT)
 
 import os
+import re
 import sys
 import unittest
 import inspect
@@ -39,42 +40,19 @@ def _built_modules_dict(modules):
     if modules == None:
         return modules_dict
 
-    for m in modules:
-        ms = m.split('.')
+    for module in modules:
+        # Assumption: package and module names do not contain upper case
+        # characters, whereas class names do
+        m = re.match(r'^([^A-Z]+)(?:\.([A-Z][^.]*)(?:\.([^.]+))?)?$', module)
 
-        if len(ms) == 1:
-            module_name = ms[0]
-            if not module_name in modules_dict:
-                modules_dict[module_name] = {}
-        elif len(ms) == 2:
-            module_name = ms[0]
-            class_name = ms[1]
-            if not module_name in modules_dict:
-                modules_dict[module_name] = {}
-            if not class_name in modules_dict[module_name]:
-                modules_dict[module_name][class_name] = []
-        elif len(ms) == 3:
-            module_name = ms[0]
-            class_name = ms[1]
-            test_name = ms[2]
+        module_name, class_name, test_name = m.groups()
 
-            if not module_name in modules_dict:
-                modules_dict[module_name] = {}
-            if not class_name in modules_dict[module_name]:
-                modules_dict[module_name][class_name] = []
-            if not test_name in modules_dict[module_name][class_name]:
-                modules_dict[module_name][class_name].append(test_name)
-        elif len(ms) >= 4:
-            module_name = '.'.join(ms[0:-2])
-            class_name = ms[-2]
-            test_name = ms[-1]
-
-            if not module_name in modules_dict:
-                modules_dict[module_name] = {}
-            if not class_name in modules_dict[module_name]:
-                modules_dict[module_name][class_name] = []
-            if not test_name in modules_dict[module_name][class_name]:
-                modules_dict[module_name][class_name].append(test_name)
+        if module_name and module_name not in modules_dict:
+            modules_dict[module_name] = {}
+        if class_name and class_name not in modules_dict[module_name]:
+            modules_dict[module_name][class_name] = []
+        if test_name and test_name not in modules_dict[module_name][class_name]:
+            modules_dict[module_name][class_name].append(test_name)
 
     return modules_dict
 
