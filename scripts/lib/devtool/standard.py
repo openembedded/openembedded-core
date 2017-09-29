@@ -734,6 +734,9 @@ def modify(args, config, basepath, workspace):
                     (stdout, _) = bb.process.run('git rev-parse HEAD', cwd=srctree)
                     initial_rev = stdout.rstrip()
 
+        # Need to grab this here in case the source is within a subdirectory
+        srctreebase = srctree
+
         # Check that recipe isn't using a shared workdir
         s = os.path.abspath(rd.getVar('S'))
         workdir = os.path.abspath(rd.getVar('WORKDIR'))
@@ -748,7 +751,8 @@ def modify(args, config, basepath, workspace):
             # Local files can be modified/tracked in separate subdir under srctree
             # Mostly useful for packages with S != WORKDIR
             f.write('FILESPATH_prepend := "%s:"\n' %
-                    os.path.join(srctree, 'oe-local-files'))
+                    os.path.join(srctreebase, 'oe-local-files'))
+            f.write('# srctreebase: %s\n' % srctreebase)
 
             f.write('\ninherit externalsrc\n')
             f.write('# NOTE: We use pn- overrides here to avoid affecting multiple variants in the case where the recipe uses BBCLASSEXTEND\n')
@@ -1166,7 +1170,7 @@ def _create_kconfig_diff(srctree, rd, outfile):
     return False
 
 
-def _export_local_files(srctree, rd, destdir):
+def _export_local_files(srctree, rd, destdir, srctreebase):
     """Copy local files from srctree to given location.
        Returns three-tuple of dicts:
          1. updated - files that already exist in SRCURI
@@ -1186,7 +1190,7 @@ def _export_local_files(srctree, rd, destdir):
     updated = OrderedDict()
     added = OrderedDict()
     removed = OrderedDict()
-    local_files_dir = os.path.join(srctree, 'oe-local-files')
+    local_files_dir = os.path.join(srctreebase, 'oe-local-files')
     git_files = _git_ls_tree(srctree)
     if 'oe-local-files' in git_files:
         # If tracked by Git, take the files from srctree HEAD. First get
@@ -1199,9 +1203,9 @@ def _export_local_files(srctree, rd, destdir):
         new_set = list(_git_ls_tree(srctree, tree, True).keys())
     elif os.path.isdir(local_files_dir):
         # If not tracked by Git, just copy from working copy
-        new_set = _ls_tree(os.path.join(srctree, 'oe-local-files'))
+        new_set = _ls_tree(local_files_dir)
         bb.process.run(['cp', '-ax',
-                        os.path.join(srctree, 'oe-local-files', '.'), destdir])
+                        os.path.join(local_files_dir, '.'), destdir])
     else:
         new_set = []
 
@@ -1266,7 +1270,7 @@ def _determine_files_dir(rd):
     return os.path.join(recipedir, rd.getVar('BPN'))
 
 
-def _update_recipe_srcrev(srctree, rd, appendlayerdir, wildcard_version, no_remove):
+def _update_recipe_srcrev(recipename, workspace, srctree, rd, appendlayerdir, wildcard_version, no_remove):
     """Implement the 'srcrev' mode of update-recipe"""
     import bb
     import oe.recipeutils
@@ -1294,7 +1298,8 @@ def _update_recipe_srcrev(srctree, rd, appendlayerdir, wildcard_version, no_remo
     update_srcuri = False
     try:
         local_files_dir = tempfile.mkdtemp(dir=tempdir)
-        upd_f, new_f, del_f = _export_local_files(srctree, rd, local_files_dir)
+        srctreebase = workspace[recipename]['srctreebase']
+        upd_f, new_f, del_f = _export_local_files(srctree, rd, local_files_dir, srctreebase)
         if not no_remove:
             # Find list of existing patches in recipe file
             patches_dir = tempfile.mkdtemp(dir=tempdir)
@@ -1372,7 +1377,8 @@ def _update_recipe_patch(recipename, workspace, srctree, rd, appendlayerdir, wil
     tempdir = tempfile.mkdtemp(prefix='devtool')
     try:
         local_files_dir = tempfile.mkdtemp(dir=tempdir)
-        upd_f, new_f, del_f = _export_local_files(srctree, rd, local_files_dir)
+        srctreebase = workspace[recipename]['srctreebase']
+        upd_f, new_f, del_f = _export_local_files(srctree, rd, local_files_dir, srctreebase)
 
         remove_files = []
         if not no_remove:
@@ -1495,7 +1501,7 @@ def _update_recipe(recipename, workspace, rd, mode, appendlayerdir, wildcard_ver
         mode = _guess_recipe_update_mode(srctree, rd)
 
     if mode == 'srcrev':
-        updated = _update_recipe_srcrev(srctree, rd, appendlayerdir, wildcard_version, no_remove)
+        updated = _update_recipe_srcrev(recipename, workspace, srctree, rd, appendlayerdir, wildcard_version, no_remove)
     elif mode == 'patch':
         updated = _update_recipe_patch(recipename, workspace, srctree, rd, appendlayerdir, wildcard_version, no_remove, initial_rev)
     else:
