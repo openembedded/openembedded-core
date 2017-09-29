@@ -350,3 +350,20 @@ def check_prerelease_version(ver, operation):
                        'If you prefer not to reset and re-try, you can change '
                        'the version after %s succeeds using "devtool rename" '
                        'with -V/--version.' % (ver, operation))
+
+def check_git_repo_dirty(repodir):
+    """Check if a git repository is clean or not"""
+    stdout, _ = bb.process.run('git status --porcelain', cwd=repodir)
+    return stdout
+
+def check_git_repo_op(srctree, ignoredirs=None):
+    """Check if a git repository is in the middle of a rebase"""
+    stdout, _ = bb.process.run('git rev-parse --show-toplevel', cwd=srctree)
+    topleveldir = stdout.strip()
+    if ignoredirs and topleveldir in ignoredirs:
+        return
+    gitdir = os.path.join(topleveldir, '.git')
+    if os.path.exists(os.path.join(gitdir, 'rebase-merge')):
+        raise DevtoolError("Source tree %s appears to be in the middle of a rebase - please resolve this first" % srctree)
+    if os.path.exists(os.path.join(gitdir, 'rebase-apply')):
+        raise DevtoolError("Source tree %s appears to be in the middle of 'git am' or 'git apply' - please resolve this first" % srctree)

@@ -30,7 +30,7 @@ import errno
 import glob
 import filecmp
 from collections import OrderedDict
-from devtool import exec_build_env_command, setup_tinfoil, check_workspace_recipe, use_external_build, setup_git_repo, recipe_to_append, get_bbclassextend_targets, update_unlockedsigs, check_prerelease_version, DevtoolError
+from devtool import exec_build_env_command, setup_tinfoil, check_workspace_recipe, use_external_build, setup_git_repo, recipe_to_append, get_bbclassextend_targets, update_unlockedsigs, check_prerelease_version, check_git_repo_dirty, check_git_repo_op, DevtoolError
 from devtool import parse_recipe
 
 logger = logging.getLogger('devtool')
@@ -1675,6 +1675,18 @@ def finish(args, config, basepath, workspace):
 
     check_workspace_recipe(workspace, args.recipename)
 
+    # Grab the equivalent of COREBASE without having to initialise tinfoil
+    corebasedir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..'))
+
+    srctree = workspace[args.recipename]['srctree']
+    check_git_repo_op(srctree, [corebasedir])
+    dirty = check_git_repo_dirty(srctree)
+    if dirty:
+        if args.force:
+            logger.warning('Source tree is not clean, continuing as requested by -f/--force')
+        else:
+            raise DevtoolError('Source tree is not clean:\n\n%s\nEnsure you have committed your changes or use -f/--force if you are sure there\'s nothing that needs to be committed' % dirty)
+
     no_clean = False
     tinfoil = setup_tinfoil(basepath=basepath, tracking=True)
     try:
@@ -1867,10 +1879,11 @@ def register_commands(subparsers, context):
     parser_reset.set_defaults(func=reset)
 
     parser_finish = subparsers.add_parser('finish', help='Finish working on a recipe in your workspace',
-                                         description='Pushes any committed changes to the specified recipe to the specified layer and removes it from your workspace. Roughly equivalent to an update-recipe followed by reset, except the update-recipe step will do the "right thing" depending on the recipe and the destination layer specified.',
+                                         description='Pushes any committed changes to the specified recipe to the specified layer and removes it from your workspace. Roughly equivalent to an update-recipe followed by reset, except the update-recipe step will do the "right thing" depending on the recipe and the destination layer specified. Note that your changes must have been committed to the git repository in order to be recognised.',
                                          group='working', order=-100)
     parser_finish.add_argument('recipename', help='Recipe to finish')
     parser_finish.add_argument('destination', help='Layer/path to put recipe into. Can be the name of a layer configured in your bblayers.conf, the path to the base of a layer, or a partial path inside a layer. %(prog)s will attempt to complete the path based on the layer\'s structure.')
     parser_finish.add_argument('--mode', '-m', choices=['patch', 'srcrev', 'auto'], default='auto', help='Update mode (where %(metavar)s is %(choices)s; default is %(default)s)', metavar='MODE')
     parser_finish.add_argument('--initial-rev', help='Override starting revision for patches')
+    parser_finish.add_argument('--force', '-f', action="store_true", help='Force continuing even if there are uncommitted changes in the source tree repository')
     parser_finish.set_defaults(func=finish)
