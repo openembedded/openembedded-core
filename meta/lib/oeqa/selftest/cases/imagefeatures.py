@@ -226,3 +226,13 @@ class ImageFeatures(OESelftestTestCase):
             # check if result image is in deploy directory
             self.assertTrue(os.path.exists(image_path),
                             "%s image %s doesn't exist" % (itype, image_path))
+
+    def test_useradd_static(self):
+        config = """
+USERADDEXTENSION = "useradd-staticids"
+USERADD_ERROR_DYNAMIC = "skip"
+USERADD_UID_TABLES += "files/static-passwd"
+USERADD_GID_TABLES += "files/static-group"
+"""
+        self.write_config(config)
+        bitbake("core-image-base")
