@@ -1620,16 +1620,16 @@ def _reset(recipes, no_clean, config, basepath, workspace):
         # We don't automatically create this dir next to appends, but the user can
         preservedir(os.path.join(config.workspace_path, 'appends', pn))
 
-        srctree = workspace[pn]['srctree']
-        if os.path.isdir(srctree):
-            if os.listdir(srctree):
+        srctreebase = workspace[pn]['srctreebase']
+        if os.path.isdir(srctreebase):
+            if os.listdir(srctreebase):
                 # We don't want to risk wiping out any work in progress
                 logger.info('Leaving source tree %s as-is; if you no '
                             'longer need it then please delete it manually'
-                            % srctree)
+                            % srctreebase)
             else:
                 # This is unlikely, but if it's empty we can just remove it
-                os.rmdir(srctree)
+                os.rmdir(srctreebase)
 
         clean_preferred_provider(pn, config.workspace_path)
 
