@@ -26,18 +26,6 @@ LIC_FILES_CHKSUM = "file://COPYING.GPLv2;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
 SRC_URI = "https://www.ffmpeg.org/releases/${BP}.tar.xz \
            file://mips64_cpu_detection.patch \
            file://0001-build-fix-for-mips.patch \
-           file://CVE-2017-14054.patch \
-           file://CVE-2017-14055.patch \
-           file://CVE-2017-14056.patch \
-           file://CVE-2017-14057.patch \
-           file://CVE-2017-14058.patch \
-           file://CVE-2017-14059.patch \
-           file://CVE-2017-14169.patch \
-           file://CVE-2017-14170.patch \
-           file://CVE-2017-14171.patch \
-           file://CVE-2017-14222.patch \
-           file://CVE-2017-14223.patch \
-           file://CVE-2017-14225.patch \
           "
 SRC_URI[md5sum] = "e14a0200c78ce5c918427e57cd406a0d"
 SRC_URI[sha256sum] = "98b97e1b908dfeb6aeb6d407e5a5eacdfc253a40c2d195f5867ed2d1d46ea957"
