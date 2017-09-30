@@ -39,8 +39,8 @@ SRC_URI = "https://www.ffmpeg.org/releases/${BP}.tar.xz \
            file://CVE-2017-14223.patch \
            file://CVE-2017-14225.patch \
           "
-SRC_URI[md5sum] = "743dc66ebe67180283b92d029f690d0f"
-SRC_URI[sha256sum] = "d2a9002cdc6b533b59728827186c044ad02ba64841f1b7cd6c21779875453a1e"
+SRC_URI[md5sum] = "e14a0200c78ce5c918427e57cd406a0d"
+SRC_URI[sha256sum] = "98b97e1b908dfeb6aeb6d407e5a5eacdfc253a40c2d195f5867ed2d1d46ea957"
 
 # Build fails when thumb is enabled: https://bugzilla.yoctoproject.org/show_bug.cgi?id=7717
 ARM_INSTRUCTION_SET = "arm"
