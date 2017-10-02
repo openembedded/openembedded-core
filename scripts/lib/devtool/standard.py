@@ -1714,6 +1714,8 @@ def finish(args, config, basepath, workspace):
                 elif line.startswith('# original_files:'):
                     origfilelist = line.split(':')[1].split()
 
+        destlayerbasedir = oe.recipeutils.find_layerdir(destlayerdir)
+
         if origlayerdir == config.workspace_path:
             # Recipe file itself is in workspace, update it there first
             appendlayerdir = None
@@ -1727,7 +1729,7 @@ def finish(args, config, basepath, workspace):
                 raise DevtoolError("Unable to determine destination layer path - check that %s specifies an actual layer and %s/conf/layer.conf specifies BBFILES. You may also need to specify a more complete path." % (args.destination, destlayerdir))
             # Warn if the layer isn't in bblayers.conf (the code to create a bbappend will do this in other cases)
             layerdirs = [os.path.abspath(layerdir) for layerdir in rd.getVar('BBLAYERS').split()]
-            if not os.path.abspath(destlayerdir) in layerdirs:
+            if not os.path.abspath(destlayerbasedir) in layerdirs:
                 bb.warn('Specified destination layer is not currently enabled in bblayers.conf, so the %s recipe will now be unavailable in your current configuration until you add the layer there' % args.recipename)
 
         elif destlayerdir == origlayerdir:
@@ -1740,7 +1742,7 @@ def finish(args, config, basepath, workspace):
             destpath = None
 
         # Remove any old files in the case of an upgrade
-        if origpath and origfilelist and oe.recipeutils.find_layerdir(origpath) == oe.recipeutils.find_layerdir(destlayerdir):
+        if origpath and origfilelist and oe.recipeutils.find_layerdir(origpath) == destlayerbasedir:
             for fn in origfilelist:
                 fnp = os.path.join(origpath, fn)
                 try:
