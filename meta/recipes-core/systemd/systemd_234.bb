@@ -15,7 +15,6 @@ SRC_URI += " \
            file://00-create-volatile.conf \
            file://init \
            file://run-ptest \
-           file://0003-define-exp10-if-missing.patch \
            file://0004-Use-getenv-when-secure-versions-are-not-available.patch \
            file://0005-binfmt-Don-t-install-dependency-links-at-install-tim.patch \
            file://0007-use-lnr-wrapper-instead-of-looking-for-relative-opti.patch \
