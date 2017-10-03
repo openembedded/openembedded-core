@@ -55,17 +55,6 @@ def _copy_source_code(orig, dest):
         dest_path = os.path.join(dest, path)
         shutil.move(os.path.join(orig, path), dest_path)
 
-def _get_checksums(rf):
-    import re
-    checksums = {}
-    with open(rf) as f:
-        for line in f:
-            for cs in ['md5sum', 'sha256sum']:
-                m = re.match("^SRC_URI\[%s\].*=.*\"(.*)\"" % cs, line)
-                if m:
-                    checksums[cs] = m.group(1)
-    return checksums
-
 def _remove_patch_dirs(recipefolder):
     for root, dirs, files in os.walk(recipefolder):
         for d in dirs:
@@ -353,9 +342,47 @@ def _create_new_recipe(newpv, md5, sha256, srcrev, srcbranch, workspace, tinfoil
 
     newvalues['PR'] = None
 
+    # Work out which SRC_URI entries have changed in case the entry uses a name
+    crd = rd.createCopy()
+    crd.setVar('PV', newpv)
+    for var, value in newvalues.items():
+        crd.setVar(var, value)
+    old_src_uri = (rd.getVar('SRC_URI') or '').split()
+    new_src_uri = (crd.getVar('SRC_URI') or '').split()
+    newnames = []
+    addnames = []
+    for newentry in new_src_uri:
+        _, _, _, _, _, params = bb.fetch2.decodeurl(newentry)
+        if 'name' in params:
+            newnames.append(params['name'])
+            if newentry not in old_src_uri:
+                addnames.append(params['name'])
+    # Find what's been set in the original recipe
+    oldnames = []
+    noname = False
+    for varflag in rd.getVarFlags('SRC_URI'):
+        if varflag.endswith(('.md5sum', '.sha256sum')):
+            name = varflag.rsplit('.', 1)[0]
+            if name not in oldnames:
+                oldnames.append(name)
+        elif varflag in ['md5sum', 'sha256sum']:
+            noname = True
+    # Even if SRC_URI has named entries it doesn't have to actually use the name
+    if noname and addnames and addnames[0] not in oldnames:
+        addnames = []
+    # Drop any old names (the name actually might include ${PV})
+    for name in oldnames:
+        if name not in newnames:
+            newvalues['SRC_URI[%s.md5sum]' % name] = None
+            newvalues['SRC_URI[%s.sha256sum]' % name] = None
+
     if md5 and sha256:
-        newvalues['SRC_URI[md5sum]'] = md5
-        newvalues['SRC_URI[sha256sum]'] = sha256
+        if addnames:
+            nameprefix = '%s.' % addnames[0]
+        else:
+            nameprefix = ''
+        newvalues['SRC_URI[%smd5sum]' % nameprefix] = md5
+        newvalues['SRC_URI[%ssha256sum]' % nameprefix] = sha256
 
     rd = tinfoil.parse_recipe_file(fullpath, False)
     oe.recipeutils.patch_recipe(rd, fullpath, newvalues)

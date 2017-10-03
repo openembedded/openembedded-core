@@ -22,7 +22,7 @@ from collections import OrderedDict, defaultdict
 # Help us to find places to insert values
 recipe_progression = ['SUMMARY', 'DESCRIPTION', 'HOMEPAGE', 'BUGTRACKER', 'SECTION', 'LICENSE', 'LICENSE_FLAGS', 'LIC_FILES_CHKSUM', 'PROVIDES', 'DEPENDS', 'PR', 'PV', 'SRCREV', 'SRCPV', 'SRC_URI', 'S', 'do_fetch()', 'do_unpack()', 'do_patch()', 'EXTRA_OECONF', 'EXTRA_OECMAKE', 'EXTRA_OESCONS', 'do_configure()', 'EXTRA_OEMAKE', 'do_compile()', 'do_install()', 'do_populate_sysroot()', 'INITSCRIPT', 'USERADD', 'GROUPADD', 'PACKAGES', 'FILES', 'RDEPENDS', 'RRECOMMENDS', 'RSUGGESTS', 'RPROVIDES', 'RREPLACES', 'RCONFLICTS', 'ALLOW_EMPTY', 'populate_packages()', 'do_package()', 'do_deploy()']
 # Variables that sometimes are a bit long but shouldn't be wrapped
-nowrap_vars = ['SUMMARY', 'HOMEPAGE', 'BUGTRACKER', 'SRC_URI[md5sum]', 'SRC_URI[sha256sum]']
+nowrap_vars = ['SUMMARY', 'HOMEPAGE', 'BUGTRACKER', 'SRC_URI\[(.+\.)?md5sum\]', 'SRC_URI\[(.+\.)?sha256sum\]']
 list_vars = ['SRC_URI', 'LIC_FILES_CHKSUM']
 meta_vars = ['SUMMARY', 'DESCRIPTION', 'HOMEPAGE', 'BUGTRACKER', 'SECTION']
 
@@ -142,6 +142,10 @@ def patch_recipe_lines(fromlines, values, trailing_newline=True):
     else:
         newline = ''
 
+    nowrap_vars_res = []
+    for item in nowrap_vars:
+        nowrap_vars_res.append(re.compile('^%s$' % item))
+
     recipe_progression_res = []
     recipe_progression_restrs = []
     for item in recipe_progression:
@@ -174,7 +178,12 @@ def patch_recipe_lines(fromlines, values, trailing_newline=True):
             return
         rawtext = '%s = "%s"%s' % (name, values[name], newline)
         addlines = []
-        if name in nowrap_vars:
+        nowrap = False
+        for nowrap_re in nowrap_vars_res:
+            if nowrap_re.match(name):
+                nowrap = True
+                break
+        if nowrap:
             addlines.append(rawtext)
         elif name in list_vars:
             splitvalue = split_var_value(values[name], assignment=False)
