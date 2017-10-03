@@ -26,6 +26,7 @@ SRC_URI = "${GNU_MIRROR}/coreutils/${BP}.tar.bz2 \
            file://coreutils-fix-texinfo.patch \
            file://fix_for_manpage_building.patch \
            file://loadavg.patch \
+           file://no-man.patch \
            "
 
 SRC_URI[md5sum] = "c9607d8495f16e98906e7ed2d9751a06"
