@@ -73,7 +73,6 @@ class NpmRecipeHandler(RecipeHandler):
                     license = license.replace(' ', '_')
                     if not license[0] == '(':
                         license = '(' + license + ')'
-                    print('LICENSE: {}'.format(license))
                 else:
                     license = license.replace('AND', '&')
                     if license[0] == '(':
