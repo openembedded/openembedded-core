@@ -42,6 +42,7 @@ SRC_URI = "http://www.busybox.net/downloads/busybox-${PV}.tar.bz2;name=tarball \
            file://rcK \
            file://runlevel \
            file://makefile-libbb-race.patch \
+           file://CVE-2011-5325.patch \
 "
 SRC_URI_append_libc-musl = " file://musl.cfg "
 
