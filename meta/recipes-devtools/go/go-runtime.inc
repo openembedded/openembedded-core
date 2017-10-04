@@ -15,7 +15,13 @@ export CC_FOR_TARGET="${CC}"
 export CXX_FOR_TARGET="${CXX}"
 export GOROOT_OVERRIDE = "1"
 
-do_configure[noexec] = "1"
+do_configure() {
+	:
+}
+
+do_configure_libc-musl() {
+	rm -f ${S}/src/runtime/race/*.syso
+}
 
 do_compile() {
 	export GOBIN="${B}/bin"
@@ -23,9 +29,13 @@ do_compile() {
 	rm -rf ${GOBIN} ${B}/pkg
 	mkdir ${GOBIN}
 	cd src
-	GO_FLAGS="" ./make.bash
+	./make.bash --host-only
+	cp ${B}/pkg/tool/${BUILD_GOTUPLE}/go_bootstrap ${B}
+	rm -rf ${B}/pkg/${TARGET_GOTUPLE}
+	./make.bash --target-only
 	if [ -n "${GO_DYNLINK}" ]; then
-		GO_FLAGS="-buildmode=shared" GO_LDFLAGS="-extldflags \"${LDFLAGS}\"" ./make.bash
+		cp ${B}/go_bootstrap ${B}/pkg/tool/${BUILD_GOTUPLE}
+		GO_FLAGS="-buildmode=shared" GO_LDFLAGS="-extldflags \"${LDFLAGS}\"" ./make.bash --target-only
 	fi
 	cd ${B}
 }
@@ -41,8 +51,9 @@ do_install() {
 	rm -rf ${D}${libdir}/go/pkg/obj
 	rm -rf ${D}${libdir}/go/pkg/bootstrap
 	find src -mindepth 1 -maxdepth 1 -type d | while read srcdir; do
-		[ "$srcdir" = "./cmd" ] || cp --preserve=mode,timestamps -R $srcdir ${D}${libdir}/go/src/
+		cp --preserve=mode,timestamps -R $srcdir ${D}${libdir}/go/src/
 	done
+	rm -f ${D}${libdir}/go/src/cmd/dist/dist
 }
 
 # Remove test binaries that cannot be relocated
