@@ -5,15 +5,14 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
                    "
 
 SRC_URI = "git://github.com/rpm-software-management/dnf.git \
+           file://0001-Corretly-install-tmpfiles.d-configuration.patch \
+           file://0001-Do-not-hardcode-etc-and-systemd-unit-directories.patch \
+           file://0005-Do-not-prepend-installroot-to-logdir.patch \
            file://0029-Do-not-set-PYTHON_INSTALL_DIR-by-running-python.patch \
            file://0030-Run-python-scripts-using-env.patch \
-           file://0001-Do-not-prepend-installroot-to-logdir.patch \
-           file://0001-Do-not-hardcode-etc-and-systemd-unit-directories.patch \
-           file://0001-Corretly-install-tmpfiles.d-configuration.patch \
-           file://0001-Check-conf.releasever-instead-of-releasever.patch \
            "
 
-SRCREV = "be2585183ec4485ee4d5e121f242d8669296f065"
+SRCREV = "564c44667c7014843fa6f1732621093114ec59b2"
 UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>\d+(\.\d+)+)"
 
 S = "${WORKDIR}/git"
@@ -46,6 +45,7 @@ do_install_append_class-native() {
 }
 
 SYSTEMD_SERVICE_${PN} = "dnf-makecache.service dnf-makecache.timer \
+                         dnf-automatic.service dnf-automatic.timer \
                          dnf-automatic-download.service dnf-automatic-download.timer \
                          dnf-automatic-install.service dnf-automatic-install.timer \
                          dnf-automatic-notifyonly.service dnf-automatic-notifyonly.timer \
