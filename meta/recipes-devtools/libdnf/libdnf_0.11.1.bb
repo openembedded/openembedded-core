@@ -10,7 +10,7 @@ SRC_URI = "git://github.com/rpm-software-management/libdnf \
            file://0001-Get-parameters-for-both-libsolv-and-libsolvext-libdn.patch \
            "
 
-SRCREV = "1b19950e82d88eec28d01b4e7c1da712c941201d"
+SRCREV = "60f979bd8db651229c559c1412f1eb880257127d"
 
 S = "${WORKDIR}/git"
 
