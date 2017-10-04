@@ -10,13 +10,10 @@ DEPENDS = "libxml2"
 
 SRC_URI = "ftp://xmlsoft.org/libxslt/libxslt-${PV}.tar.gz \
            file://pkgconfig_fix.patch \
-           file://0001-Use-pkg-config-to-find-gcrypt-and-libxml2.patch \
-           file://0001-Link-libraries-with-libm.patch \
-           file://0001-Check-for-integer-overflow-in-xsltAddTextString.patch \
            "
 
-SRC_URI[md5sum] = "a129d3c44c022de3b9dcf6d6f288d72e"
-SRC_URI[sha256sum] = "b5976e3857837e7617b29f2249ebb5eeac34e249208d31f1fbf7a6ba7a4090ce"
+SRC_URI[md5sum] = "14e9842a70fda476065f2eefcbc29af0"
+SRC_URI[sha256sum] = "db25e96b6b801144277e67c05b10560ac09dfff82ccd53a154ce86e43622f3ab"
 
 UPSTREAM_CHECK_REGEX = "libxslt-(?P<pver>\d+(\.\d+)+)\.tar"
 
@@ -28,7 +25,7 @@ inherit autotools pkgconfig binconfig-disabled lib_package
 
 # We don't DEPEND on binutils for ansidecl.h so ensure we don't use the header
 do_configure_prepend () {
-	sed -i -e 's/ansidecl.h//' ${S}/configure.in
+	sed -i -e 's/ansidecl.h//' ${S}/configure.ac
 
 	# The timestamps in the 1.1.28 tarball are messed up causing this file to
 	# appear out of date.  Touch it so that we don't try to regenerate it.
