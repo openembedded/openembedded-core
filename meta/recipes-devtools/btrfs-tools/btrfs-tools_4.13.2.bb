@@ -14,9 +14,10 @@ DEPENDS = "util-linux attr e2fsprogs lzo acl"
 DEPENDS_append_class-target = " udev"
 RDEPENDS_${PN} = "libgcc"
 
-SRCREV = "0607132c3200bcead1426e6dc685432008de95de"
+SRCREV = "37f1faef159ebcf91846e7126879b1a413cb29a5"
 SRC_URI = "git://git.kernel.org/pub/scm/linux/kernel/git/kdave/btrfs-progs.git \
            file://0001-Makefile-build-mktables-using-native-gcc.patch \
+           file://0001-Fix-build-with-musl-missing-header-include-for-dev_t.patch \
            "
 
 inherit autotools-brokensep pkgconfig manpages
