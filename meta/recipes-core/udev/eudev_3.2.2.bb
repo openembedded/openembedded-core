@@ -19,7 +19,6 @@ SRC_URI = "http://dev.gentoo.org/~blueness/${BPN}/${BP}.tar.gz \
            file://run.rules \
            file://udev.rules \
 "
-UPSTREAM_CHECK_URI = "https://github.com/gentoo/eudev/releases"
 
 SRC_URI[md5sum] = "41e19b70462692fefd072a3f38818b6e"
 SRC_URI[sha256sum] = "3e4c56ec2fc1854afd0a31f3affa48f922c62d40ee12a0c1a4b4f152ef5b0f63"
