@@ -4,7 +4,6 @@ require boost.inc
 SRC_URI += "\
     file://arm-intrinsics.patch \
     file://boost-CVE-2012-2677.patch \
-    file://0001-boost-asio-detail-socket_types.hpp-fix-poll.h-includ.patch \
     file://boost-math-disable-pch-for-gcc.patch \
     file://0001-Apply-boost-1.62.0-no-forced-flags.patch.patch \
     file://0003-Don-t-set-up-arch-instruction-set-flags-we-do-that-o.patch \
