@@ -14,7 +14,7 @@ SRC_URI_append_libc-musl = " file://0001-Add-fallback-fopencookie-implementation
                              file://0002-Fixes-to-internal-fopencookie-implementation.patch \
                            "
 
-SRCREV = "b8a9ddd88eb4e0ab351eb55a53186b5dc5ac0825"
+SRCREV = "765be095eaeaef1b1d2a84f6a0e00d5abf677ae9"
 UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>\d+(\.\d+)+)"
 
 S = "${WORKDIR}/git"
