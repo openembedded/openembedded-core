@@ -12,7 +12,7 @@ BINUTILSDEP = "virtual/${MLPREFIX}${TARGET_PREFIX}binutils:do_populate_sysroot"
 BINUTILSDEP_class-nativesdk = "virtual/${TARGET_PREFIX}binutils-crosssdk:do_populate_sysroot"
 do_package[depends] += "${BINUTILSDEP}"
 
-# localedef links with libc.so and glibc-collateral.incinhibits all default deps
+# localedef links with libc.so and glibc-collateral.inc inhibits all default deps
 # cannot add virtual/libc to DEPENDS, because it would conflict with libc-initial in RSS
 RDEPENDS_localedef += "glibc"
 
