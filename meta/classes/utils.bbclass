@@ -320,7 +320,7 @@ hardlinkdir () {
 
 
 def check_app_exists(app, d):
-    app = d.expand(app).strip()
+    app = d.expand(app).split()[0].strip()
     path = d.getVar('PATH')
     return bool(bb.utils.which(path, app))
 
