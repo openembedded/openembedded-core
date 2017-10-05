@@ -66,8 +66,8 @@ do_compile_prepend_class-native() {
 
 do_compile() {
     export CROSS_COMPILE=1
-    export NATIVE_CC="gcc"
-    export NATIVE_FLAGS="${HOST_CFLAGS}"
+    export NATIVE_CC="${BUILD_CC}"
+    export NATIVE_FLAGS="${BUILD_CFLAGS}"
     export BUILD_OPT=1
 
     export FREEBL_NO_DEPEND=1
@@ -118,7 +118,7 @@ do_install_prepend_class-nativesdk() {
 
 do_install() {
     export CROSS_COMPILE=1
-    export NATIVE_CC="gcc"
+    export NATIVE_CC="${BUILD_CC}"
     export BUILD_OPT=1
 
     export FREEBL_NO_DEPEND=1
