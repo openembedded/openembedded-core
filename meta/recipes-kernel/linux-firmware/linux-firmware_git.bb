@@ -46,6 +46,7 @@ LICENSE = "\
     & Firmware-ralink_a_mediatek_company_firmware \
     & Firmware-ralink-firmware \
     & Firmware-rtlwifi_firmware \
+    & Firmware-imx-sdma_firmware \
     & Firmware-siano \
     & Firmware-tda7706-firmware \
     & Firmware-ti-connectivity \
@@ -104,6 +105,7 @@ LIC_FILES_CHKSUM = "\
     file://LICENCE.ralink_a_mediatek_company_firmware;md5=728f1a85fd53fd67fa8d7afb080bc435 \
     file://LICENCE.ralink-firmware.txt;md5=ab2c269277c45476fb449673911a2dfd \
     file://LICENCE.rtlwifi_firmware.txt;md5=00d06cfd3eddd5a2698948ead2ad54a5 \
+    file://LICENSE.sdma_firmware;md5=51e8c19ecc2270f4b8ea30341ad63ce9 \
     file://LICENCE.siano;md5=4556c1bf830067f12ca151ad953ec2a5 \
     file://LICENCE.tda7706-firmware.txt;md5=835997cf5e3c131d0dddd695c7d9103e \
     file://LICENCE.ti-connectivity;md5=c5e02be633f1499c109d1652514d85ec \
@@ -164,6 +166,7 @@ NO_GENERIC_LICENSE[Firmware-ralink_a_mediatek_company_firmware] = "LICENCE.ralin
 NO_GENERIC_LICENSE[Firmware-ralink-firmware] = "LICENCE.ralink-firmware.txt"
 NO_GENERIC_LICENSE[Firmware-rtlwifi_firmware] = "LICENCE.rtlwifi_firmware.txt"
 NO_GENERIC_LICENSE[Firmware-siano] = "LICENCE.siano"
+NO_GENERIC_LICENSE[Firmware-imx-sdma_firmware] = "LICENSE.sdma_firmware"
 NO_GENERIC_LICENSE[Firmware-tda7706-firmware] = "LICENCE.tda7706-firmware.txt"
 NO_GENERIC_LICENSE[Firmware-ti-connectivity] = "LICENCE.ti-connectivity"
 NO_GENERIC_LICENSE[Firmware-ti-keystone] = "LICENCE.ti-keystone"
@@ -231,6 +234,8 @@ PACKAGES =+ "${PN}-ralink-license ${PN}-ralink \
              ${PN}-atheros-license ${PN}-ar9170 ${PN}-ath6k ${PN}-ath9k \
              ${PN}-gplv2-license ${PN}-carl9170 \
              ${PN}-ar3k-license ${PN}-ar3k ${PN}-ath10k-license ${PN}-ath10k ${PN}-qca \
+             \
+             ${PN}-imx-sdma-license ${PN}-imx-sdma-imx6q ${PN}-imx-sdma-imx7d \
              \
              ${PN}-iwlwifi-license ${PN}-iwlwifi \
              ${PN}-iwlwifi-135-6 \
@@ -548,6 +553,17 @@ FILES_${PN}-whence-license = "${nonarch_base_libdir}/firmware/WHENCE"
 
 RDEPENDS_${PN}-bnx2-mips += "${PN}-whence-license"
 
+# For imx-sdma
+LICENSE_${PN}-imx-sdma          = "Firmware-imx-sdma_firmware"
+
+FILES_${PN}-imx-sdma-imx6q = "${nonarch_base_libdir}/firmware/imx/sdma/sdma-imx6q.bin"
+
+RPROVIDES_${PN}-imx-sdma-imx6q = "firmware-imx-sdma-imx6q"
+RREPLACES_${PN}-imx-sdma-imx6q = "firmware-imx-sdma-imx6q"
+RCONFLICTS_${PN}-imx-sdma-imx6q = "firmware-imx-sdma-imx6q"
+
+FILES_${PN}-imx-sdma-imx7d = "${nonarch_base_libdir}/firmware/imx/sdma/sdma-imx7d.bin"
+
 # For iwlwifi
 LICENSE_${PN}-iwlwifi           = "Firmware-iwlwifi_firmware"
 LICENSE_${PN}-iwlwifi-135-6     = "Firmware-iwlwifi_firmware"
@@ -710,6 +726,7 @@ LICENSE_${PN} = "\
     & Firmware-radeon \
     & Firmware-ralink_a_mediatek_company_firmware \
     & Firmware-ralink-firmware \
+    & Firmware-imx-sdma_firmware \
     & Firmware-siano \
     & Firmware-tda7706-firmware \
     & Firmware-ti-connectivity \
