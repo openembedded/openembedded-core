@@ -154,7 +154,7 @@ FILES_lib${BPN}2 = "${libdir}/libpython*.so.*"
 PACKAGES += "${PN}-misc"
 FILES_${PN}-misc = "${libdir}/python${PYTHON_MAJMIN}"
 RDEPENDS_${PN}-modules += "${PN}-misc"
-RDEPENDS_${PN}-ptest = "${PN}-modules"
+RDEPENDS_${PN}-ptest = "${PN}-modules ${PN}-tests"
 #inherit ptest after "require python-${PYTHON_MAJMIN}-manifest.inc" so PACKAGES doesn't get overwritten
 inherit ptest
 
@@ -164,6 +164,16 @@ do_install_ptest() {
 	sed -e s:LIBDIR/python/ptest:${PTEST_PATH}:g \
 	 -e s:LIBDIR:${libdir}:g \
 	 -i ${D}${PTEST_PATH}/run-ptest
+
+	#Remove build host references
+	sed -i \
+		-e 's:--with-libtool-sysroot=${STAGING_DIR_TARGET}'::g \
+	    -e 's:--sysroot=${STAGING_DIR_TARGET}::g' \
+	    -e 's|${DEBUG_PREFIX_MAP}||g' \
+	    -e 's:${HOSTTOOLS_DIR}/::g' \
+	    -e 's:${RECIPE_SYSROOT}::g' \
+	    -e 's:${BASE_WORKDIR}/${MULTIMACH_TARGET_SYS}::g' \
+	${D}/${PTEST_PATH}/Makefile
 }
 
 # catch manpage
