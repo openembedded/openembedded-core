@@ -97,8 +97,8 @@ fitimage_emit_section_kernel() {
 
 	ENTRYPOINT=${UBOOT_ENTRYPOINT}
 	if [ -n "${UBOOT_ENTRYSYMBOL}" ]; then
-		ENTRYPOINT=`${HOST_PREFIX}nm ${S}/vmlinux | \
-			awk '$4=="${UBOOT_ENTRYSYMBOL}" {print $2}'`
+		ENTRYPOINT=`${HOST_PREFIX}nm vmlinux | \
+			awk '$3=="${UBOOT_ENTRYSYMBOL}" {print "0x"$1;exit}'`
 	fi
 
 	cat << EOF >> ${1}
