@@ -17,6 +17,7 @@ SRC_URI += "\
         file://0005-fix-a-stack-usage-warning.patch \
         file://0006-Fix-build-on-aarch64-musl.patch \
         file://0007-Fix-control-path-where-we-have-str-as-uninitialized-.patch \
+        file://0001-libasm-may-link-with-libbz2-if-found.patch \
 "
 SRC_URI_append_libc-musl = " file://0008-build-Provide-alternatives-for-glibc-assumptions-hel.patch"
 
