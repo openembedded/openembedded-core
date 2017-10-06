@@ -94,6 +94,8 @@ def package_qa_get_machine_dict(d):
                         "mipsisa64r6":   ( 8,  0,    0,          False,         64),
                         "mipsisa64r6el": ( 8,  0,    0,          True,          64),
                         "nios2":      (113,    0,    0,          True,          32),
+                        "riscv":      (243,    0,    0,          True,          32),
+                        "riscv64":    (243,    0,    0,          True,          64),
                         "s390":       (22,     0,    0,          False,         32),
                         "sh4":        (42,     0,    0,          True,          32),
                         "sparc":      ( 2,     0,    0,          False,         32),
@@ -119,6 +121,8 @@ def package_qa_get_machine_dict(d):
                         "microblaze":  (189,     0,    0,          False,         32),
                         "microblazeeb":(189,     0,    0,          False,         32),
                         "microblazeel":(189,     0,    0,          True,          32),
+                        "riscv":      (243,      0,    0,          True,          32),
+                        "riscv64":    (243,      0,    0,          True,          64),
                         "sh4":        (  42,     0,    0,          True,          32),
                       },
             "uclinux-uclibc" : {
