@@ -29,7 +29,7 @@ class Archiver(oeSelfTest):
         self.write_config(features)
 
         bitbake('-c clean %s %s' % (include_recipe, exclude_recipe))
-        bitbake("%s %s" % (include_recipe, exclude_recipe))
+        bitbake("-c deploy_archives %s %s" % (include_recipe, exclude_recipe))
 
         bb_vars = get_bb_vars(['DEPLOY_DIR_SRC', 'TARGET_SYS'])
         src_path = os.path.join(bb_vars['DEPLOY_DIR_SRC'], bb_vars['TARGET_SYS'])
