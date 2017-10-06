@@ -95,6 +95,12 @@ do_configure () {
 	linux-powerpc64)
 		target=linux-ppc64
 		;;
+	linux-riscv64)
+		target=linux-generic64
+		;;
+	linux-riscv32)
+		target=linux-generic32
+		;;
 	linux-supersparc)
 		target=linux-sparcv9
 		;;
