@@ -34,7 +34,7 @@ PACKAGES =+ "${PN}-run-parts"
 FILES_${PN}-run-parts = "${base_bindir}/run-parts.debianutils"
 
 RDEPENDS_${PN} += "${PN}-run-parts"
-
+RDEPENDS_${PN}_class-native = ""
 
 ALTERNATIVE_PRIORITY="30"
 ALTERNATIVE_${PN} = "add-shell installkernel remove-shell savelog tempfile which"
@@ -50,3 +50,5 @@ ALTERNATIVE_LINK_NAME[run-parts]="${base_bindir}/run-parts"
 ALTERNATIVE_LINK_NAME[savelog]="${bindir}/savelog"
 ALTERNATIVE_LINK_NAME[tempfile]="${base_bindir}/tempfile"
 ALTERNATIVE_LINK_NAME[which]="${bindir}/which"
+
+BBCLASSEXTEND = "native"
