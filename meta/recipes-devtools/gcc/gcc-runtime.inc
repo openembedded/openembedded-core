@@ -27,6 +27,8 @@ RUNTIMELIBITM_mipsisa64r6 = ""
 RUNTIMELIBITM_mipsisa64r6el = ""
 RUNTIMELIBITM_nios2 = ""
 RUNTIMELIBITM_microblaze = ""
+RUNTIMELIBITM_riscv32 = ""
+RUNTIMELIBITM_riscv64 = ""
 
 RUNTIMETARGET = "libssp libstdc++-v3 libgomp libatomic ${RUNTIMELIBITM} \
     ${@bb.utils.contains_any('FORTRAN', [',fortran',',f77'], 'libquadmath', '', d)} \
