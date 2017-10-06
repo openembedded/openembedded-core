@@ -8,10 +8,11 @@ LICENSE = "GPL-2.0+ & MPL-2.0"
 LIC_FILES_CHKSUM = "file://debian/copyright;md5=e7358b9541ccf3029e9705ed8de57968"
 
 # This is needed to ensure we can run the postinst at image creation time
-DEPENDS = "ca-certificates-native"
+DEPENDS = ""
 DEPENDS_class-native = "openssl-native"
-DEPENDS_class-nativesdk = "ca-certificates-native openssl-native"
-PACKAGE_WRITE_DEPS += "ca-certificates-native"
+DEPENDS_class-nativesdk = "openssl-native"
+# Need c_rehash from openssl and run-parts from debianutils
+PACKAGE_WRITE_DEPS += "openssl-native debianutils-native"
 
 SRCREV = "61b70a1007dc269d56881a0d480fc841daacc77c"
 
@@ -63,7 +64,7 @@ do_install_append_class-target () {
 }
 
 pkg_postinst_${PN} () {
-    SYSROOT="$D" update-ca-certificates
+    SYSROOT="$D" $D${sbindir}/update-ca-certificates
 }
 
 CONFFILES_${PN} += "${sysconfdir}/ca-certificates.conf"
@@ -71,7 +72,7 @@ CONFFILES_${PN} += "${sysconfdir}/ca-certificates.conf"
 # Postinsts don't seem to be run for nativesdk packages when populating SDKs.
 CONFFILES_${PN}_append_class-nativesdk = " ${sysconfdir}/ssl/certs/ca-certificates.crt"
 do_install_append_class-nativesdk () {
-    SYSROOT="${D}${SDKPATHNATIVE}" update-ca-certificates
+    SYSROOT="${D}${SDKPATHNATIVE}" ${D}${sbindir}/update-ca-certificates
 }
 
 do_install_append_class-native () {
