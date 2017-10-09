@@ -18,11 +18,11 @@ SRC_URI = "${GNOME_MIRROR}/${BPN}/${MAJ_VER}/${BPN}-${PV}.tar.xz \
            file://run-ptest \
            file://fatal-loader.patch \
            file://0001-Work-around-thumbnailer-cross-compile-failure.patch \
-           file://0001-queryloaders-Make-output-more-reproducible.patch \
+           file://0001-Fix-without-libtiff-not-having-an-effect.patch \
            "
 
-SRC_URI[md5sum] = "e0aaa0061eb12667b32b27472230b962"
-SRC_URI[sha256sum] = "5d68e5283cdc0bf9bda99c3e6a1d52ad07a03364fa186b6c26cfc86fcd396a19"
+SRC_URI[md5sum] = "6e84e5485c17ce7c25df77fe76eb2d6a"
+SRC_URI[sha256sum] = "ae62ab87250413156ed72ef756347b10208c00e76b222d82d9ed361ed9dde2f3"
 
 inherit autotools pkgconfig gettext pixbufcache ptest-gnome upstream-version-is-even gobject-introspection gtk-doc lib_package
 
