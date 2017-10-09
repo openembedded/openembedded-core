@@ -11,7 +11,7 @@ DEPENDS = "zlib"
 SRC_URI = "git://github.com/assimp/assimp.git"
 UPSTREAM_CHECK_GITTAGREGEX = "v(?P<pver>(\d+(\.\d+)+))"
 
-SRCREV = "52c8d06f5d6498afd66df983da348a6b112f1314"
+SRCREV = "eb8639d7c8a056d1c1b1cd42598c84ba3974c41b"
 
 S = "${WORKDIR}/git"
 
