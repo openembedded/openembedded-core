@@ -554,7 +554,9 @@ FILES_${PN}-whence-license = "${nonarch_base_libdir}/firmware/WHENCE"
 RDEPENDS_${PN}-bnx2-mips += "${PN}-whence-license"
 
 # For imx-sdma
-LICENSE_${PN}-imx-sdma          = "Firmware-imx-sdma_firmware"
+LICENSE_${PN}-imx-sdma-imx6q       = "Firmware-imx-sdma_firmware"
+LICENSE_${PN}-imx-sdma-imx7d       = "Firmware-imx-sdma_firmware"
+LICENSE_${PN}-imx-sdma-license       = "Firmware-imx-sdma_firmware"
 
 FILES_${PN}-imx-sdma-imx6q = "${nonarch_base_libdir}/firmware/imx/sdma/sdma-imx6q.bin"
 
@@ -563,6 +565,11 @@ RREPLACES_${PN}-imx-sdma-imx6q = "firmware-imx-sdma-imx6q"
 RCONFLICTS_${PN}-imx-sdma-imx6q = "firmware-imx-sdma-imx6q"
 
 FILES_${PN}-imx-sdma-imx7d = "${nonarch_base_libdir}/firmware/imx/sdma/sdma-imx7d.bin"
+
+FILES_${PN}-imx-sdma-license = "${nonarch_base_libdir}/firmware/LICENSE.sdma_firmware"
+
+RDEPENDS_${PN}-imx-sdma-imx6q += "${PN}-imx-sdma-license"
+RDEPENDS_${PN}-imx-sdma-imx7d += "${PN}-imx-sdma-license"
 
 # For iwlwifi
 LICENSE_${PN}-iwlwifi           = "Firmware-iwlwifi_firmware"
