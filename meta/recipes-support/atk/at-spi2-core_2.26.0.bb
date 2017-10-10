@@ -6,12 +6,11 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=e9f288ba982d60518f375b5898283886"
 MAJ_VER = "${@oe.utils.trim_version("${PV}", 2)}"
 
 SRC_URI = "${GNOME_MIRROR}/${BPN}/${MAJ_VER}/${BPN}-${PV}.tar.xz \
-           file://0001-nls.m4-Take-it-from-gettext-0.15.patch \
            file://0001-build-Add-with-systemduserunitdir.patch \
-          "
+           "
 
-SRC_URI[md5sum] = "61d0a471e693292934a73f288ebff35c"
-SRC_URI[sha256sum] = "1e90d064b937aacfe79a96232ac7e63d28d716e85bd9ff4333f865305a959b5b"
+SRC_URI[md5sum] = "ef3de25da46da8f650915205eb7e1a33"
+SRC_URI[sha256sum] = "511568a65fda11fdd5ba5d4adfd48d5d76810d0e6ba4f7460f1b2ec0dbbbc337"
 
 DEPENDS = "dbus glib-2.0 virtual/libx11 libxi libxtst intltool-native"
 
@@ -19,7 +18,7 @@ inherit autotools gtk-doc gettext systemd pkgconfig distro_features_check upstre
 # depends on virtual/libx11
 REQUIRED_DISTRO_FEATURES = "x11"
 
-EXTRA_OECONF = "--disable-xevie \
+EXTRA_OECONF = " \
                 --with-systemduserunitdir=${systemd_user_unitdir} \
                 --with-dbus-daemondir=${bindir}"
 
