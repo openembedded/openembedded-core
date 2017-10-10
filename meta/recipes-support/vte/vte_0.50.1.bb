@@ -11,8 +11,8 @@ inherit gnomebase gtk-doc distro_features_check upstream-version-is-even gobject
 SRC_URI += "file://0001-Don-t-enable-stack-protection-by-default.patch \
             ${@bb.utils.contains('PACKAGECONFIG', 'vala', '', 'file://0001-Add-m4-vapigen.m4.patch', d) } \
             "
-SRC_URI[archive.md5sum] = "b300675ac5f269aa6eb48fe89a0d726d"
-SRC_URI[archive.sha256sum] = "a3a9fb182740b392a45cd3f46fa61a985f68bb6b1817b52daec22034c46158c3"
+SRC_URI[archive.md5sum] = "a6f8fec3787e3cb72b3b31a8be6751a4"
+SRC_URI[archive.sha256sum] = "cf1708e3e573160e1db107014b3ef70888fefe6b668373fed70e8d1cac45a8c2"
 
 ANY_OF_DISTRO_FEATURES = "${GTK3DISTROFEATURES}"
 
