@@ -1298,7 +1298,7 @@ def _update_recipe_srcrev(srctree, rd, appendlayerdir, wildcard_version, no_remo
         if not no_remove:
             # Find list of existing patches in recipe file
             patches_dir = tempfile.mkdtemp(dir=tempdir)
-            old_srcrev = (rd.getVar('SRCREV', False) or '')
+            old_srcrev = rd.getVar('SRCREV') or ''
             upd_p, new_p, del_p = _export_patches(srctree, rd, old_srcrev,
                                                   patches_dir)
             logger.debug('Patches: update %s, new %s, delete %s' % (dict(upd_p), dict(new_p), dict(del_p)))
