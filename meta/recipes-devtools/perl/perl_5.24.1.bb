@@ -223,6 +223,7 @@ PACKAGE_PREPROCESS_FUNCS += "perl_package_preprocess"
 perl_package_preprocess () {
         # Fix up installed configuration
         sed -i -e "s,${D},,g" \
+               -e "s,${DEBUG_PREFIX_MAP},,g" \
                -e "s,--sysroot=${STAGING_DIR_HOST},,g" \
                -e "s,-isystem${STAGING_INCDIR} ,,g" \
                -e "s,${STAGING_LIBDIR},${libdir},g" \
