@@ -171,7 +171,7 @@ def staging_processfixme(fixme, target, recipesysroot, recipesysrootnative, d):
         fixme_path = d.getVar(fixmevar)
         cmd += " -e 's:FIXME_%s:%s:g'" % (fixmevar, fixme_path)
     bb.debug(2, cmd)
-    subprocess.check_output(cmd, shell=True)
+    subprocess.check_output(cmd, shell=True, stderr=subprocess.STDOUT)
 
 
 def staging_populate_sysroot_dir(targetsysroot, nativesysroot, native, d):
@@ -228,7 +228,7 @@ def staging_populate_sysroot_dir(targetsysroot, nativesysroot, native, d):
 
     staging_processfixme(fixme, targetdir, targetsysroot, nativesysroot, d)
     for p in postinsts:
-        subprocess.check_output(p, shell=True)
+        subprocess.check_output(p, shell=True, stderr=subprocess.STDOUT)
 
 #
 # Manifests here are complicated. The main sysroot area has the unpacked sstate
@@ -576,7 +576,7 @@ python extend_recipe_sysroot() {
             staging_processfixme(fixme[f], multilibs[f].getVar("RECIPE_SYSROOT"), recipesysroot, recipesysrootnative, d)
 
     for p in postinsts:
-        subprocess.check_output(p, shell=True)
+        subprocess.check_output(p, shell=True, stderr=subprocess.STDOUT)
 
     for dep in manifests:
         c = setscenedeps[dep][0]

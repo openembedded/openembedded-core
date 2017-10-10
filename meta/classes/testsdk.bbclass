@@ -159,7 +159,8 @@ def testsdkext_main(d):
             f.write('INHERIT += "own-mirrors"')
 
         # We need to do this in case we have a minimal SDK
-        subprocess.check_output(". %s > /dev/null; devtool sdk-install meta-extsdk-toolchain" % sdk_env, cwd=sdk_dir, shell=True)
+        subprocess.check_output(". %s > /dev/null; devtool sdk-install meta-extsdk-toolchain" % \
+                sdk_env, cwd=sdk_dir, shell=True, stderr=subprocess.STDOUT)
 
         tc = OESDKExtTestContext(td=test_data, logger=logger, sdk_dir=sdk_dir,
             sdk_env=sdk_env, target_pkg_manifest=target_pkg_manifest,
