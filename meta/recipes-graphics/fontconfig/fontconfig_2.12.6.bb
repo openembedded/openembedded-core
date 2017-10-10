@@ -22,9 +22,12 @@ DEPENDS = "expat freetype zlib gperf-native"
 
 SRC_URI = "http://fontconfig.org/release/fontconfig-${PV}.tar.gz \
            file://revert-static-pkgconfig.patch \
+           file://0001-src-fcxml.c-avoid-double-free-of-filename.patch \
            "
-SRC_URI[md5sum] = "4fb01fc3f41760c41c69e37cc784b658"
-SRC_URI[sha256sum] = "fd5a6a663f4c4a00e196523902626654dd0c4a78686cbc6e472f338e50fdf806"
+
+SRC_URI[md5sum] = "00e748c67fad11e7057a71ed385e8bdb"
+SRC_URI[sha256sum] = "064b9ebf060c9e77011733ac9dc0e2ce92870b574cca2405e11f5353a683c334"
+
 
 do_configure_prepend() {
     # work around https://bugs.freedesktop.org/show_bug.cgi?id=101280
