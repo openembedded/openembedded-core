@@ -11,8 +11,8 @@ SRC_URI = "https://github.com/${SRCNAME}/${SRCNAME}/releases/download/v${PV}/${S
            file://fix_shebang_f2py.patch \
            file://0001-BUG-fix-infinite-loop-when-creating-np.pad-on-an-emp.patch \
            ${CONFIGFILESURI} "
-SRC_URI[md5sum] = "6d459e4a24f5035f720dda3c57716a92"
-SRC_URI[sha256sum] = "de020ec06f1e9ce1115a50161a38bf8d4c2525379900f9cb478cc613a1e7cd93"
+SRC_URI[md5sum] = "c1d433e5973e548809e80c9118474b73"
+SRC_URI[sha256sum] = "4c6b4eef790528bebb7ec9590d74cc193868940fe68e4109a91c196df72d8094"
 
 UPSTREAM_CHECK_URI = "https://github.com/numpy/numpy/releases"
 
