@@ -86,3 +86,16 @@ BINCONFIG_GLOB = "*Config.sh"
 
 # Fix the path in sstate
 SSTATE_SCAN_FILES += "*Config.sh"
+
+# Cleanup host path from ${libdir}/tclConfig.sh and remove the
+# ${bindir_crossscripts}/tclConfig.sh from target
+PACKAGE_PREPROCESS_FUNCS += "tcl_package_preprocess"
+tcl_package_preprocess() {
+	sed -i -e "s;${DEBUG_PREFIX_MAP};;g" \
+	       -e "s;-L${STAGING_LIBDIR};-L${libdir};g" \
+	       -e "s;${STAGING_INCDIR};${includedir};g" \
+	       -e "s;--sysroot=${RECIPE_SYSROOT};;g" \
+	       ${PKGD}${libdir}/tclConfig.sh
+
+	rm -f ${PKGD}${bindir_crossscripts}/tclConfig.sh
+}
