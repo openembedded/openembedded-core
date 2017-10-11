@@ -10,12 +10,10 @@ DEPENDS += "python3 glib-2.0"
 SRCNAME="pygobject"
 SRC_URI = " \
     http://ftp.gnome.org/pub/GNOME/sources/${SRCNAME}/${@gnome_verdir("${PV}")}/${SRCNAME}-${PV}.tar.xz \
-    file://0001-configure.ac-add-sysroot-path-to-GI_DATADIR-don-t-se.patch \
-    file://0001-configure.ac-Don-t-use-gnome-common-macros.patch \
 "
 
-SRC_URI[md5sum] = "69a843311d0f0385dff376e11a2d83d2"
-SRC_URI[sha256sum] = "a628a95aa0909e13fb08230b1b98fc48adef10b220932f76d62f6821b3fdbffd"
+SRC_URI[md5sum] = "1c1719b1798cc8bf1cb97777c41c83d1"
+SRC_URI[sha256sum] = "7411acd600c8cb6f00d2125afa23303f2104e59b83e0a4963288dbecc3b029fa"
 
 S = "${WORKDIR}/${SRCNAME}-${PV}"
 
