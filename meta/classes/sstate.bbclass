@@ -967,7 +967,8 @@ def setscene_depvalid(task, taskdependees, notneeded, d, log=None):
             if isNativeCross(taskdependees[dep][0]):
                 return False
             # Native/cross tools depended upon by target sysroot are not needed
-            if isNativeCross(taskdependees[task][0]):
+            # Add an exception for shadow-native as required by useradd.bbclass
+            if isNativeCross(taskdependees[task][0]) and taskdependees[task][0] != 'shadow-native':
                 continue
             # Target populate_sysroot need their dependencies
             return False
