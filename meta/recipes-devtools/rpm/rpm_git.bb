@@ -107,7 +107,8 @@ do_install_append_class-target() {
 }
 
 do_install_append () {
-	sed -i -e 's:${HOSTTOOLS_DIR}/::g' ${D}/${libdir}/rpm/macros
+	sed -i -e 's:${HOSTTOOLS_DIR}/::g' \
+	    ${D}/${libdir}/rpm/macros
 
 	sed -i -e 's|/usr/bin/python|${USRBINPATH}/env ${PYTHON_PN}|' \
 	    ${D}${libdir}/rpm/pythondistdeps.py
@@ -127,3 +128,11 @@ FILES_python3-rpm = "${PYTHON_SITEPACKAGES_DIR}/rpm/*"
 RPROVIDES_${PN} += "rpm-build"
 
 RDEPENDS_${PN} = "bash perl python3-core"
+
+PACKAGE_PREPROCESS_FUNCS += "rpm_package_preprocess"
+
+# Do not specify a sysroot when compiling on a target.
+rpm_package_preprocess () {
+	sed -i -e 's:--sysroot[^ ]*::g' \
+	    ${PKGD}/${libdir}/rpm/macros
+}
