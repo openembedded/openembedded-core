@@ -6,16 +6,18 @@ DEPENDS = "ncurses libnl pciutils"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=12f884d2ae1ff87c09e5b7ccc2c4ca7e"
 
-SRC_URI = "http://01.org/sites/default/files/downloads/powertop/powertop-${PV}.tar.gz \
-           file://0001-include-rquired-headers-for-typedefs.patch \
+SRC_URI = "http://01.org/sites/default/files/downloads/powertop/powertop-v${PV}.tar.gz \
 "
 
-SRC_URI[md5sum] = "c55fedb69203e480801b18bd7b886241"
-SRC_URI[sha256sum] = "a87b563f73106babfa3e74dcf92f252938c061e309ace20a361358bbfa579c5a"
+SRC_URI[md5sum] = "583518c5c4434c6e9b9c58c3920950b6"
+SRC_URI[sha256sum] = "aa7fb7d8e9a00f05e7d8a7a2866d85929741e0d03a5bf40cab22d2021c959250"
 
 UPSTREAM_CHECK_URI = "https://01.org/powertop/downloads"
+UPSTREAM_CHECK_REGEX = "powertop-[v]?(?P<pver>\d+(\.\d+)+)\.tar"
 
 inherit autotools gettext pkgconfig
+
+S = "${WORKDIR}/${BPN}-v${PV}"
 
 # we do not want libncursesw if we can
 do_configure_prepend() {
