@@ -189,7 +189,11 @@ def _enable_workspace_layer(workspacedir, config, basepath):
     if not os.path.exists(bblayers_conf):
         logger.error('Unable to find bblayers.conf')
         return
-    _, added = bb.utils.edit_bblayers_conf(bblayers_conf, workspacedir, config.workspace_path)
+    if os.path.abspath(workspacedir) != os.path.abspath(config.workspace_path):
+        removedir = config.workspace_path
+    else:
+        removedir = None
+    _, added = bb.utils.edit_bblayers_conf(bblayers_conf, workspacedir, removedir)
     if added:
         logger.info('Enabling workspace layer in bblayers.conf')
     if config.workspace_path != workspacedir:
