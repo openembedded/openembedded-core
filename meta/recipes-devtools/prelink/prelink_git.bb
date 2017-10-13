@@ -32,6 +32,8 @@ SRC_URI = "git://git.yoctoproject.org/prelink-cross.git;branch=cross_prelink \
            file://prelink.cron.daily \
            file://prelink.default \
 	   file://macros.prelink"
+UPSTREAM_CHECK_GITTAGREGEX = "upstream has no usable tags"
+UPSTREAM_VERSION_UNKNOWN = "1"
 
 TARGET_OS_ORIG := "${TARGET_OS}"
 OVERRIDES_append = ":${TARGET_OS_ORIG}"
