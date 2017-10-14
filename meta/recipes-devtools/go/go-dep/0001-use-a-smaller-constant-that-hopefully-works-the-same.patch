@@ -1,0 +1,33 @@
+From 73e8dd479420bb90a46cf9d99ca62289fab3677e Mon Sep 17 00:00:00 2001
+From: Khem Raj <raj.khem@gmail.com>
+Date: Sat, 23 Sep 2017 08:43:58 -0700
+Subject: [PATCH] use a smaller constant that hopefully works the same.
+
+This test uses a constant that is too big for 32bit systems.
+
+Backported from
+https://github.com/boltdb/bolt/issues/645
+
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+---
+Upstream-Status: Submitted
+
+ vendor/github.com/boltdb/bolt/db_test.go | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/vendor/github.com/boltdb/bolt/db_test.go b/vendor/github.com/boltdb/bolt/db_test.go
+index 3034d4f4..035f5a5f 100644
+--- a/vendor/github.com/boltdb/bolt/db_test.go
++++ b/vendor/github.com/boltdb/bolt/db_test.go
+@@ -370,7 +370,7 @@ func TestDB_Open_InitialMmapSize(t *testing.T) {
+ 	path := tempfile()
+ 	defer os.Remove(path)
+ 
+-	initMmapSize := 1 << 31  // 2GB
++	initMmapSize := 1 << 29  // 512MB
+ 	testWriteSize := 1 << 27 // 134MB
+ 
+ 	db, err := bolt.Open(path, 0666, &bolt.Options{InitialMmapSize: initMmapSize})
+-- 
+2.14.1
+
