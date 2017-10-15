@@ -162,18 +162,16 @@ def create_filtered_tasklist(d, sdkbasepath, tasklistfile, conf_initpath):
         except FileNotFoundError:
             pass
         os.rename(sdkbasepath, temp_sdkbasepath)
+        cmdprefix = '. %s .; ' % conf_initpath
+        logfile = d.getVar('WORKDIR') + '/tasklist_bb_log.txt'
         try:
-            cmdprefix = '. %s .; ' % conf_initpath
-            logfile = d.getVar('WORKDIR') + '/tasklist_bb_log.txt'
-            try:
-                oe.copy_buildsystem.check_sstate_task_list(d, get_sdk_install_targets(d), tasklistfile, cmdprefix=cmdprefix, cwd=temp_sdkbasepath, logfile=logfile)
-            except bb.process.ExecutionError as e:
-                msg = 'Failed to generate filtered task list for extensible SDK:\n%s' %  e.stdout.rstrip()
-                if 'attempted to execute unexpectedly and should have been setscened' in e.stdout:
-                    msg += '\n----------\n\nNOTE: "attempted to execute unexpectedly and should have been setscened" errors indicate this may be caused by missing sstate artifacts that were likely produced in earlier builds, but have been subsequently deleted for some reason.\n'
-                bb.fatal(msg)
-        finally:
-            os.rename(temp_sdkbasepath, sdkbasepath)
+            oe.copy_buildsystem.check_sstate_task_list(d, get_sdk_install_targets(d), tasklistfile, cmdprefix=cmdprefix, cwd=temp_sdkbasepath, logfile=logfile)
+        except bb.process.ExecutionError as e:
+            msg = 'Failed to generate filtered task list for extensible SDK:\n%s' %  e.stdout.rstrip()
+            if 'attempted to execute unexpectedly and should have been setscened' in e.stdout:
+                msg += '\n----------\n\nNOTE: "attempted to execute unexpectedly and should have been setscened" errors indicate this may be caused by missing sstate artifacts that were likely produced in earlier builds, but have been subsequently deleted for some reason.\n'
+            bb.fatal(msg)
+        os.rename(temp_sdkbasepath, sdkbasepath)
         # Clean out residue of running bitbake, which check_sstate_task_list()
         # will effectively do
         clean_esdk_builddir(d, sdkbasepath)
