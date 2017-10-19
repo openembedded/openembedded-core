@@ -1,0 +1,36 @@
+From 8eb3e111ae1b89e5afb249cf984d657f94da2385 Mon Sep 17 00:00:00 2001
+From: Dengke Du <dengke.du@windriver.com>
+Date: Tue, 17 Oct 2017 05:42:47 -0400
+Subject: [PATCH] ltp: fix format security error
+
+When enable option: -Werror=format-security, the error like:
+
+    | fcntl36.c: In function 'test_fn':
+    | fcntl36.c:303:2: error: format not a string literal and no format arguments [-Werror=format-security]
+    |   tst_res(TINFO, msg);
+    |   ^~~~~~~
+    | cc1: some warnings being treated as errors
+
+Upstream-Status: Pending
+
+Signed-off-by: Dengke Du <dengke.du@windriver.com>
+---
+ testcases/kernel/syscalls/fcntl/fcntl36.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/testcases/kernel/syscalls/fcntl/fcntl36.c b/testcases/kernel/syscalls/fcntl/fcntl36.c
+index 6f2eb6b..3246d13 100644
+--- a/testcases/kernel/syscalls/fcntl/fcntl36.c
++++ b/testcases/kernel/syscalls/fcntl/fcntl36.c
+@@ -300,7 +300,7 @@ static void test_fn(void *f0(void *), void *f1(void *),
+ 	struct param p2[thread_cnt];
+ 	unsigned char buf[write_size];
+ 
+-	tst_res(TINFO, msg);
++	tst_res(TINFO, "%s", msg);
+ 
+ 	if (tst_fill_file(fname, 1, write_size, thread_cnt + 1))
+ 		tst_brk(TBROK, "Failed to create tst file");
+-- 
+2.8.1
+
