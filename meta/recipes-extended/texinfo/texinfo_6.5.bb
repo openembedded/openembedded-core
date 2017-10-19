@@ -37,12 +37,14 @@ SRC_URI = "${GNU_MIRROR}/texinfo/${BP}.tar.gz \
            ${TARGET_PATCH} \
           "
 
-SRC_URI[md5sum] = "9b08daca9bf8eccae9b0f884aba41f9e"
-SRC_URI[sha256sum] = "300a6ba4958c2dd4a6d5ce60f0a335daf7e379f5374f276f6ba31a221f02f606"
+SRC_URI[md5sum] = "94e8f7149876793030e5518dd8d6e956"
+SRC_URI[sha256sum] = "d34272e4042c46186ddcd66bd5d980c0ca14ff734444686ccf8131f6ec8b1427"
 
 tex_texinfo = "texmf/tex/texinfo"
 
 inherit gettext autotools
+
+EXTRA_AUTORECONF += "-I ${S}/gnulib/m4"
 
 do_configure_prepend () {
 	# autotools_do_configure updates po/Makefile.in.in, we also need
