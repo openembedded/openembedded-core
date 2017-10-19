@@ -24,10 +24,6 @@ SRC_URI = "http://wiki.qemu-project.org/download/${BP}.tar.bz2 \
            file://0003-Introduce-condition-in-TPM-backend-for-notification.patch \
            file://0004-Add-support-for-VM-suspend-resume-for-TPM-TIS-v2.9.patch \
            file://apic-fixup-fallthrough-to-PIC.patch \
-           file://CVE-2017-13711.patch \
-           file://CVE-2017-13673.patch \
-           file://CVE-2017-13672.patch \
-           file://CVE-2017-14167.patch \
            "
 UPSTREAM_CHECK_REGEX = "qemu-(?P<pver>\d+\..*)\.tar"
 
@@ -37,8 +33,8 @@ SRC_URI_append_class-native = " \
             file://cpus.c-qemu_cpu_kick_thread_debugging.patch \
             "
 
-SRC_URI[md5sum] = "ca73441de73a9b52c6c49c97190d2185"
-SRC_URI[sha256sum] = "7e9f39e1306e6dcc595494e91c1464d4b03f55ddd2053183e0e1b69f7f776d48"
+SRC_URI[md5sum] = "b375373f688bea0cd8865b966dad15e3"
+SRC_URI[sha256sum] = "8e040bc7556401ebb3a347a8f7878e9d4028cf71b2744b1a1699f4e741966ba8"
 
 COMPATIBLE_HOST_mipsarchn32 = "null"
 COMPATIBLE_HOST_mipsarchn64 = "null"

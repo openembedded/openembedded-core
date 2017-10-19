@@ -72,17 +72,3 @@ diff -uNr qemu-2.8.0.orig/configure qemu-2.8.0/configure
  # Hold two types of flag:
  #   CONFIG_THREAD_SETNAME_BYTHREAD  - we've got a way of setting the name on
  #                                     a thread we have a handle to
-diff -uNr qemu-2.8.0.orig/include/sysemu/os-posix.h qemu-2.8.0/include/sysemu/os-posix.h
---- qemu-2.8.0.orig/include/sysemu/os-posix.h	2016-12-20 21:16:48.000000000 +0100
-+++ qemu-2.8.0/include/sysemu/os-posix.h	2017-02-21 19:07:18.009090381 +0100
-@@ -34,6 +34,10 @@
- #include <netdb.h>
- #include <sys/un.h>
- 
-+#ifdef CONFIG_SYSMACROS
-+#include <sys/sysmacros.h>
-+#endif
-+
- void os_set_line_buffering(void);
- void os_set_proc_name(const char *s);
- void os_setup_signal_handling(void);
