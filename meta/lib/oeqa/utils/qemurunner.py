@@ -335,9 +335,9 @@ class QemuRunner:
                         self.logger.info("configured ip address %s", self.ip)
                     else:
                         self.logger.info("Couldn't configure guest networking")
-                else:
-                    self.logger.info("Couldn't login into serial console"
-                                " as root using blank password")
+            else:
+                self.logger.info("Couldn't login into serial console"
+                            " as root using blank password")
         except:
             self.logger.info("Serial console failed while trying to login")
         return True
