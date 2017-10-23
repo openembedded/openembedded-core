@@ -118,6 +118,7 @@ useradd_sysroot () {
 	# useradd/groupadd tools are unavailable. If there is no dependency, we assume we don't want to
 	# create users in the sysroot
 	if ! command -v useradd; then
+		bbwarn "command useradd not found!"
 		exit 0
 	fi
 
