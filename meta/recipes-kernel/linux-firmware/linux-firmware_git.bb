@@ -264,6 +264,7 @@ PACKAGES =+ "${PN}-ralink-license ${PN}-ralink \
              ${PN}-adsp-sst-license ${PN}-adsp-sst \
              ${PN}-bnx2-mips \
              ${PN}-netronome-license ${PN}-netronome \
+             ${PN}-qat ${PN}-qat-license \
              ${PN}-whence-license \
              ${PN}-license \
              "
@@ -706,6 +707,13 @@ LICENSE_${PN}-adsp-sst            = "Firmware-adsp_sst"
 LICENSE_${PN}-adsp-sst-license    = "Firmware-adsp_sst"
 FILES_${PN}-adsp-sst              = "${nonarch_base_libdir}/firmware/intel/dsp_fw*"
 RDEPENDS_${PN}-adsp-sst           = "${PN}-adsp-sst-license"
+
+# For QAT
+LICENSE_${PN}-qat         = "Firmware-qat"
+LICENSE_${PN}-qat-license = "Firmware-qat"
+FILES_${PN}-qat-license   = "${nonarch_base_libdir}/firmware/LICENCE.qat_firmware"
+FILES_${PN}-qat           = "${nonarch_base_libdir}/firmware/qat*.bin"
+RDEPENDS_${PN}-qat        = "${PN}-qat-license"
 
 # For other firmwares
 # Maybe split out to separate packages when needed.
