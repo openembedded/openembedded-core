@@ -177,3 +177,12 @@ gi_ldsoconf_sysroot_preprocess () {
 	echo "echo ${libdir} >> ${STAGING_DIR_TARGET}${sysconfdir}/ld.so.conf" >> $dest
 	chmod 755 $dest
 }
+
+# Remove wrapper files from the package, only used for cross-compiling
+PACKAGE_PREPROCESS_FUNCS += "gi_package_preprocess"
+gi_package_preprocess() {
+	rm -f ${PKGD}${bindir}/g-ir-scanner-qemuwrapper
+	rm -f ${PKGD}${bindir}/g-ir-scanner-wrapper
+	rm -f ${PKGD}${bindir}/g-ir-compiler-wrapper
+	rm -f ${PKGD}${bindir}/g-ir-scanner-lddwrapper
+}
