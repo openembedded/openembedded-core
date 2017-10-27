@@ -1,0 +1,32 @@
+Fix marshaling with gcc7. Based on upstream revision 57410:
+https://svn.ruby-lang.org/cgi-bin/viewvc.cgi?view=revision&revision=57410
+https://github.com/ruby/ruby/commit/7c1b30a602ab109d8d5388d7dfb3c5b180ba24e1
+https://bugs.ruby-lang.org/issues/13150
+
+with the upstream patches intent ported to Ruby 2.2.5
+
+Upstream-Status: Backport
+
+Signed-off-by: Joshua Lock <joshua.g.lock@intel.com>
+
+Index: ruby-2.2.5/marshal.c
+===================================================================
+--- ruby-2.2.5.orig/marshal.c
++++ ruby-2.2.5/marshal.c
+@@ -17,7 +17,6 @@
+ #include "ruby/io.h"
+ #include "ruby/st.h"
+ #include "ruby/util.h"
+-
+ #include <math.h>
+ #ifdef HAVE_FLOAT_H
+ #include <float.h>
+@@ -985,7 +984,7 @@ marshal_dump(int argc, VALUE *argv)
+     VALUE obj, port, a1, a2;
+     int limit = -1;
+     struct dump_arg *arg;
+-    VALUE wrapper; /* used to avoid memory leak in case of exception */
++    volatile VALUE wrapper; /* used to avoid memory leak in case of exception */
+ 
+     port = Qnil;
+     rb_scan_args(argc, argv, "12", &obj, &a1, &a2);
