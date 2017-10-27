@@ -10,7 +10,7 @@ SECTION = "base/shell"
 
 inherit useradd pkgconfig autotools perlnative update-rc.d update-alternatives qemu systemd ptest gettext bash-completion manpages
 
-SRC_URI += " \
+SRC_URI = "git://github.com/systemd/systemd.git;protocol=git \
            file://touchscreen.rules \
            file://00-create-volatile.conf \
            file://init \
@@ -27,6 +27,19 @@ SRC_URI += " \
            file://0017-remove-duplicate-include-uchar.h.patch \
            file://0018-check-for-uchar.h-in-configure.patch \
            file://0019-socket-util-don-t-fail-if-libc-doesn-t-support-IDN.patch \
+           file://0001-add-fallback-parse_printf_format-implementation.patch \
+           file://0002-src-basic-missing.h-check-for-missing-strndupa.patch \
+           file://0003-don-t-fail-if-GLOB_BRACE-and-GLOB_ALTDIRFUNC-is-not-.patch \
+           file://0004-src-basic-missing.h-check-for-missing-__compar_fn_t-.patch \
+           file://0006-Include-netinet-if_ether.h.patch \
+           file://0007-check-for-missing-canonicalize_file_name.patch \
+           file://0008-Do-not-enable-nss-tests.patch \
+           file://0009-test-hexdecoct.c-Include-missing.h-form-strndupa.patch \
+           file://0010-test-sizeof.c-Disable-tests-for-missing-typedefs-in-.patch \
+           file://0011-don-t-use-glibc-specific-qsort_r.patch \
+           file://0012-don-t-pass-AT_SYMLINK_NOFOLLOW-flag-to-faccessat.patch \
+           file://0013-comparison_fn_t-is-glibc-specific-use-raw-signature-.patch \
+           file://0001-Define-_PATH_WTMPX-and-_PATH_UTMPX-if-not-defined.patch \
            "
 SRC_URI_append_qemuall = " file://0001-core-device.c-Change-the-default-device-timeout-to-2.patch"
 
@@ -47,7 +60,8 @@ PACKAGECONFIG ??= "xz \
                    vconsole \
                    quotacheck \
                    hostnamed \
-                   ${@bb.utils.contains('TCLIBC', 'glibc', 'myhostname sysusers', '', d)} \
+                   ${@bb.utils.contains('TCLIBC', 'glibc', 'myhostname sysusers utmp', '', d)} \
+                   nss \
                    hibernate \
                    timedated \
                    timesyncd \
@@ -56,13 +70,16 @@ PACKAGECONFIG ??= "xz \
                    smack \
                    logind \
                    firstboot \
-                   utmp \
                    polkit \
                    resolved \
                    networkd \
 "
 PACKAGECONFIG_remove_libc-musl = "selinux"
 PACKAGECONFIG_remove_libc-musl = "smack"
+PACKAGECONFIG_remove_libc-musl = "resolved"
+PACKAGECONFIG_remove_libc-musl = "nss"
+PACKAGECONFIG_remove_libc-musl = "localed"
+PACKAGECONFIG_remove_libc-musl = "ldconfig"
 
 # Use the upstream systemd serial-getty@.service and rely on
 # systemd-getty-generator instead of using the OE-core specific
@@ -83,6 +100,7 @@ PACKAGECONFIG[vconsole] = "--enable-vconsole,--disable-vconsole,,${PN}-vconsole-
 PACKAGECONFIG[quotacheck] = "--enable-quotacheck,--disable-quotacheck"
 PACKAGECONFIG[hostnamed] = "--enable-hostnamed,--disable-hostnamed"
 PACKAGECONFIG[myhostname] = "--enable-myhostname,--disable-myhostname"
+PACKAGECONFIG[nss] = "--enable-nss-systemd,--disable-nss-systemd"
 PACKAGECONFIG[rfkill] = "--enable-rfkill,--disable-rfkill"
 PACKAGECONFIG[hibernate] = "--enable-hibernate,--disable-hibernate"
 PACKAGECONFIG[timedated] = "--enable-timedated,--disable-timedated"
@@ -612,8 +630,4 @@ pkg_prerm_udev-hwdb () {
 python () {
     if not bb.utils.contains ('DISTRO_FEATURES', 'systemd', True, False, d):
         raise bb.parse.SkipPackage("'systemd' not in DISTRO_FEATURES")
-
-    import re
-    if re.match('.*musl*', d.getVar('TARGET_OS')) != None:
-        raise bb.parse.SkipPackage("Not _yet_ supported on musl based targets")
 }
