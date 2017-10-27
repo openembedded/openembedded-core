@@ -1,0 +1,35 @@
+This patch comes from https://gcc.gnu.org/bugzilla/show_bug.cgi?id=81803
+
+Author: mpf <mpf@138bc75d-0d04-0410-961f-82ee72b054a4>
+
+This patch hasn't been merged into gcc. But it does solve the problem of
+strange behaviour of `systemd status <xxx>' on qemumips64.
+
+Upstream-Status: Pending [Taken from gcc bugzilla's attachment]
+
+Signed-off-by: Chen Qi <Qi.Chen@windriver.com>
+---
+ gcc/lra-constraints.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/gcc/lra-constraints.c b/gcc/lra-constraints.c
+index c8bc9b9a66f..6d319662b09 100644
+--- a/gcc/lra-constraints.c
++++ b/gcc/lra-constraints.c
+@@ -4235,7 +4235,12 @@ curr_insn_transform (bool check_only_p)
+ 			  && (goal_alt[i] == NO_REGS
+ 			      || (simplify_subreg_regno
+ 				  (ira_class_hard_regs[goal_alt[i]][0],
+-				   GET_MODE (reg), byte, mode) >= 0)))))
++				   GET_MODE (reg), byte, mode) >= 0))))
++		      || (type != OP_IN
++			  && GET_MODE_PRECISION (mode)
++			  < GET_MODE_PRECISION (GET_MODE (reg))
++			  && GET_MODE_SIZE (GET_MODE (reg)) <= UNITS_PER_WORD
++			  && WORD_REGISTER_OPERATIONS))
+ 		{
+ 		  /* An OP_INOUT is required when reloading a subreg of a
+ 		     mode wider than a word to ensure that data beyond the
+-- 
+2.13.0
+
