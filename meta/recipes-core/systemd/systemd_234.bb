@@ -40,6 +40,7 @@ SRC_URI = "git://github.com/systemd/systemd.git;protocol=git \
            file://0012-don-t-pass-AT_SYMLINK_NOFOLLOW-flag-to-faccessat.patch \
            file://0013-comparison_fn_t-is-glibc-specific-use-raw-signature-.patch \
            file://0001-Define-_PATH_WTMPX-and-_PATH_UTMPX-if-not-defined.patch \
+           file://0001-Use-uintmax_t-for-handling-rlim_t.patch \
            "
 SRC_URI_append_qemuall = " file://0001-core-device.c-Change-the-default-device-timeout-to-2.patch"
 
