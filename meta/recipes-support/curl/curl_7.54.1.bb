@@ -13,6 +13,10 @@ SRC_URI = "http://curl.haxx.se/download/curl-${PV}.tar.bz2 \
            file://CVE-2017-1000254.patch \
 "
 
+SRC_URI_append_class-target = " \
+           file://reproducible-mkhelp.patch \
+"
+
 # curl likes to set -g0 in CFLAGS, so we stop it
 # from mucking around with debug options
 #
@@ -66,7 +70,11 @@ do_install_append() {
 
 do_install_append_class-target() {
 	# cleanup buildpaths from curl-config
-	sed -i -e 's,${STAGING_DIR_HOST},,g' ${D}${bindir}/curl-config
+	sed -i \
+	    -e 's,--sysroot=${STAGING_DIR_TARGET},,g' \
+	    -e 's,--with-libtool-sysroot=${STAGING_DIR_TARGET},,g' \
+	    -e 's|${DEBUG_PREFIX_MAP}||g' \
+	    ${D}${bindir}/curl-config
 }
 
 PACKAGES =+ "lib${BPN}"
