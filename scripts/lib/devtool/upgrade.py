@@ -433,7 +433,7 @@ def upgrade(args, config, basepath, workspace):
                         copied, config.workspace_path, rd)
         standard._add_md5(config, pn, af)
 
-        update_unlockedsigs(basepath, workspace, [pn], args.fixed_setup)
+        update_unlockedsigs(basepath, workspace, args.fixed_setup, [pn])
 
         logger.info('Upgraded source extracted to %s' % srctree)
         logger.info('New recipe is %s' % rf)
