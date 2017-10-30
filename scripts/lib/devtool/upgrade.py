@@ -191,6 +191,8 @@ def _extract_new_source(newpv, srctree, no_patch, srcrev, srcbranch, branch, kee
         __run('git tag -f devtool-base-new')
         md5 = None
         sha256 = None
+        _, _, _, _, _, params = bb.fetch2.decodeurl(uri)
+        srcsubdir_rel = params.get('destsuffix', 'git')
         if not srcbranch:
             check_branch, check_branch_err = __run('git branch -r --contains %s' % srcrev)
             get_branch = [x.strip() for x in check_branch.splitlines()]
@@ -225,6 +227,7 @@ def _extract_new_source(newpv, srctree, no_patch, srcrev, srcbranch, branch, kee
 
         tmpsrctree = _get_srctree(tmpdir)
         srctree = os.path.abspath(srctree)
+        srcsubdir_rel = os.path.relpath(tmpsrctree, tmpdir)
 
         # Delete all sources so we ensure no stray files are left over
         for item in os.listdir(srctree):
@@ -288,9 +291,9 @@ def _extract_new_source(newpv, srctree, no_patch, srcrev, srcbranch, branch, kee
         else:
             shutil.rmtree(tmpsrctree)
 
-    return (rev, md5, sha256, srcbranch)
+    return (rev, md5, sha256, srcbranch, srcsubdir_rel)
 
-def _create_new_recipe(newpv, md5, sha256, srcrev, srcbranch, workspace, tinfoil, rd):
+def _create_new_recipe(newpv, md5, sha256, srcrev, srcbranch, srcsubdir_old, srcsubdir_new, workspace, tinfoil, rd):
     """Creates the new recipe under workspace"""
 
     bpn = rd.getVar('BPN')
@@ -384,6 +387,21 @@ def _create_new_recipe(newpv, md5, sha256, srcrev, srcbranch, workspace, tinfoil
         newvalues['SRC_URI[%smd5sum]' % nameprefix] = md5
         newvalues['SRC_URI[%ssha256sum]' % nameprefix] = sha256
 
+    if srcsubdir_new != srcsubdir_old:
+        s_subdir_old = os.path.relpath(os.path.abspath(rd.getVar('S')), rd.getVar('WORKDIR'))
+        s_subdir_new = os.path.relpath(os.path.abspath(crd.getVar('S')), crd.getVar('WORKDIR'))
+        if srcsubdir_old == s_subdir_old and srcsubdir_new != s_subdir_new:
+            # Subdir for old extracted source matches what S points to (it should!)
+            # but subdir for new extracted source doesn't match what S will be
+            newvalues['S'] = '${WORKDIR}/%s' % srcsubdir_new.replace(newpv, '${PV}')
+            if crd.expand(newvalues['S']) == crd.expand('${WORKDIR}/${BP}'):
+                # It's the default, drop it
+                # FIXME what if S is being set in a .inc?
+                newvalues['S'] = None
+                logger.info('Source subdirectory has changed, dropping S value since it now matches the default ("${WORKDIR}/${BP}")')
+            else:
+                logger.info('Source subdirectory has changed, updating S value')
+
     rd = tinfoil.parse_recipe_file(fullpath, False)
     oe.recipeutils.patch_recipe(rd, fullpath, newvalues)
 
@@ -458,12 +476,12 @@ def upgrade(args, config, basepath, workspace):
         rf = None
         try:
             logger.info('Extracting current version source...')
-            rev1 = standard._extract_source(srctree, False, 'devtool-orig', False, config, basepath, workspace, args.fixed_setup, rd, tinfoil)
+            rev1, srcsubdir1 = standard._extract_source(srctree, False, 'devtool-orig', False, config, basepath, workspace, args.fixed_setup, rd, tinfoil)
             logger.info('Extracting upgraded version source...')
-            rev2, md5, sha256, srcbranch = _extract_new_source(args.version, srctree, args.no_patch,
+            rev2, md5, sha256, srcbranch, srcsubdir2 = _extract_new_source(args.version, srctree, args.no_patch,
                                                     args.srcrev, args.srcbranch, args.branch, args.keep_temp,
                                                     tinfoil, rd)
-            rf, copied = _create_new_recipe(args.version, md5, sha256, args.srcrev, srcbranch, config.workspace_path, tinfoil, rd)
+            rf, copied = _create_new_recipe(args.version, md5, sha256, args.srcrev, srcbranch, srcsubdir1, srcsubdir2, config.workspace_path, tinfoil, rd)
         except bb.process.CmdError as e:
             _upgrade_error(e, rf, srctree)
         except DevtoolError as e:
