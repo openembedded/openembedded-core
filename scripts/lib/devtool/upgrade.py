@@ -457,7 +457,9 @@ def upgrade(args, config, basepath, workspace):
 
         rf = None
         try:
+            logger.info('Extracting current version source...')
             rev1 = standard._extract_source(srctree, False, 'devtool-orig', False, config, basepath, workspace, args.fixed_setup, rd, tinfoil)
+            logger.info('Extracting upgraded version source...')
             rev2, md5, sha256, srcbranch = _extract_new_source(args.version, srctree, args.no_patch,
                                                     args.srcrev, args.srcbranch, args.branch, args.keep_temp,
                                                     tinfoil, rd)
