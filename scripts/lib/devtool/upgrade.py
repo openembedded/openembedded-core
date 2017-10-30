@@ -263,10 +263,8 @@ def _extract_new_source(newpv, srctree, no_patch, srcrev, srcbranch, branch, kee
 
     if no_patch:
         patches = oe.recipeutils.get_recipe_patches(crd)
-        if len(patches):
-            logger.warn('By user choice, the following patches will NOT be applied')
-            for patch in patches:
-                logger.warn("%s" % os.path.basename(patch))
+        if patches:
+            logger.warn('By user choice, the following patches will NOT be applied to the new source tree:\n  %s' % '\n  '.join([os.path.basename(patch) for patch in patches]))
     else:
         __run('git checkout devtool-patched -b %s' % branch)
         skiptag = False
