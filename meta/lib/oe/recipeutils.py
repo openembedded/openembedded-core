@@ -251,7 +251,7 @@ def patch_recipe_lines(fromlines, values, trailing_newline=True):
     return changed, tolines
 
 
-def patch_recipe_file(fn, values, patch=False, relpath=''):
+def patch_recipe_file(fn, values, patch=False, relpath='', redirect_output=None):
     """Update or insert variable values into a recipe file (assuming you
        have already identified the exact file you want to update.)
        Note that some manual inspection/intervention may be required
@@ -263,7 +263,11 @@ def patch_recipe_file(fn, values, patch=False, relpath=''):
 
     _, tolines = patch_recipe_lines(fromlines, values)
 
-    if patch:
+    if redirect_output:
+        with open(os.path.join(redirect_output, os.path.basename(fn)), 'w') as f:
+            f.writelines(tolines)
+        return None
+    elif patch:
         relfn = os.path.relpath(fn, relpath)
         diff = difflib.unified_diff(fromlines, tolines, 'a/%s' % relfn, 'b/%s' % relfn)
         return diff
@@ -313,7 +317,7 @@ def localise_file_vars(fn, varfiles, varlist):
 
     return filevars
 
-def patch_recipe(d, fn, varvalues, patch=False, relpath=''):
+def patch_recipe(d, fn, varvalues, patch=False, relpath='', redirect_output=None):
     """Modify a list of variable values in the specified recipe. Handles inc files if
     used by the recipe.
     """
@@ -323,7 +327,7 @@ def patch_recipe(d, fn, varvalues, patch=False, relpath=''):
     patches = []
     for f,v in locs.items():
         vals = {k: varvalues[k] for k in v}
-        patchdata = patch_recipe_file(f, vals, patch, relpath)
+        patchdata = patch_recipe_file(f, vals, patch, relpath, redirect_output)
         if patch:
             patches.append(patchdata)
 
@@ -584,7 +588,7 @@ def get_bbappend_path(d, destlayerdir, wildcardver=False):
     return (appendpath, pathok)
 
 
-def bbappend_recipe(rd, destlayerdir, srcfiles, install=None, wildcardver=False, machine=None, extralines=None, removevalues=None):
+def bbappend_recipe(rd, destlayerdir, srcfiles, install=None, wildcardver=False, machine=None, extralines=None, removevalues=None, redirect_output=None):
     """
     Writes a bbappend file for a recipe
     Parameters:
@@ -611,6 +615,9 @@ def bbappend_recipe(rd, destlayerdir, srcfiles, install=None, wildcardver=False,
             value pairs, or simply a list of the lines.
         removevalues:
             Variable values to remove - a dict of names/values.
+        redirect_output:
+            If specified, redirects writing the output file to the
+            specified directory (for dry-run purposes)
     """
 
     if not removevalues:
@@ -625,7 +632,8 @@ def bbappend_recipe(rd, destlayerdir, srcfiles, install=None, wildcardver=False,
         bb.warn('Unable to determine correct subdirectory path for bbappend file - check that what %s adds to BBFILES also matches .bbappend files. Using %s for now, but until you fix this the bbappend will not be applied.' % (os.path.join(destlayerdir, 'conf', 'layer.conf'), os.path.dirname(appendpath)))
 
     appenddir = os.path.dirname(appendpath)
-    bb.utils.mkdirhier(appenddir)
+    if not redirect_output:
+        bb.utils.mkdirhier(appenddir)
 
     # FIXME check if the bbappend doesn't get overridden by a higher priority layer?
 
@@ -702,9 +710,18 @@ def bbappend_recipe(rd, destlayerdir, srcfiles, install=None, wildcardver=False,
         if instfunclines:
             bbappendlines.append(('do_install_append%s()' % appendoverride, '', instfunclines))
 
-    bb.note('Writing append file %s' % appendpath)
+    if redirect_output:
+        bb.note('Writing append file %s (dry-run)' % appendpath)
+        outfile = os.path.join(redirect_output, os.path.basename(appendpath))
+        # Only take a copy if the file isn't already there (this function may be called
+        # multiple times per operation when we're handling overrides)
+        if os.path.exists(appendpath) and not os.path.exists(outfile):
+            shutil.copy2(appendpath, outfile)
+    else:
+        bb.note('Writing append file %s' % appendpath)
+        outfile = appendpath
 
-    if os.path.exists(appendpath):
+    if os.path.exists(outfile):
         # Work around lack of nonlocal in python 2
         extvars = {'destsubdir': destsubdir}
 
@@ -776,7 +793,7 @@ def bbappend_recipe(rd, destlayerdir, srcfiles, install=None, wildcardver=False,
         if removevalues:
             varnames.extend(list(removevalues.keys()))
 
-        with open(appendpath, 'r') as f:
+        with open(outfile, 'r') as f:
             (updated, newlines) = bb.utils.edit_metadata(f, varnames, appendfile_varfunc)
 
         destsubdir = extvars['destsubdir']
@@ -793,20 +810,27 @@ def bbappend_recipe(rd, destlayerdir, srcfiles, install=None, wildcardver=False,
         updated = True
 
     if updated:
-        with open(appendpath, 'w') as f:
+        with open(outfile, 'w') as f:
             f.writelines(newlines)
 
     if copyfiles:
         if machine:
             destsubdir = os.path.join(destsubdir, machine)
+        if redirect_output:
+            outdir = redirect_output
+        else:
+            outdir = appenddir
         for newfile, srcfile in copyfiles.items():
-            filedest = os.path.join(appenddir, destsubdir, os.path.basename(srcfile))
+            filedest = os.path.join(outdir, destsubdir, os.path.basename(srcfile))
             if os.path.abspath(newfile) != os.path.abspath(filedest):
                 if newfile.startswith(tempfile.gettempdir()):
                     newfiledisp = os.path.basename(newfile)
                 else:
                     newfiledisp = newfile
-                bb.note('Copying %s to %s' % (newfiledisp, filedest))
+                if redirect_output:
+                    bb.note('Copying %s to %s (dry-run)' % (newfiledisp, os.path.join(appenddir, destsubdir, os.path.basename(srcfile))))
+                else:
+                    bb.note('Copying %s to %s' % (newfiledisp, filedest))
                 bb.utils.mkdirhier(os.path.dirname(filedest))
                 shutil.copyfile(newfile, filedest)
 
