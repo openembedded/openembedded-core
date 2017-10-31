@@ -188,7 +188,7 @@ python multilib_virtclass_handler_global () {
             if rprovs.strip():
                 e.data.setVar("RPROVIDES", rprovs)
 
-	    # Process RPROVIDES_${PN}...
+            # Process RPROVIDES_${PN}...
             for pkg in (e.data.getVar("PACKAGES") or "").split():
                 origrprovs = rprovs = e.data.getVar("RPROVIDES_%s" % pkg) or ""
                 for clsextend in clsextends:
