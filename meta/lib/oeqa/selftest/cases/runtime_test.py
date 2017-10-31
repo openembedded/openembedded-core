@@ -1,5 +1,6 @@
 from oeqa.selftest.case import OESelftestTestCase
 from oeqa.utils.commands import runCmd, bitbake, get_bb_var, get_bb_vars, runqemu
+from oeqa.utils.sshcontrol import SSHControl
 from oeqa.core.decorator.oeid import OETestID
 import os
 import re
@@ -243,7 +244,7 @@ postinst-delayed-t \
                 with self.subTest(init_manager=init_manager, package_class=classes):
                     features = 'MACHINE = "qemux86"\n'
                     features += 'CORE_IMAGE_EXTRA_INSTALL += "%s %s "\n'% (rootfs_pkg, boot_pkg)
-                    features += 'IMAGE_FEATURES += "ssh-server-openssh"\n'
+                    features += 'IMAGE_FEATURES += "empty-root-password ssh-server-openssh"\n'
                     features += 'PACKAGE_CLASSES = "%s"\n' % classes
                     if init_manager == "systemd":
                         features += 'DISTRO_FEATURES_append = " systemd"\n'
@@ -262,6 +263,6 @@ postinst-delayed-t \
 
                     testcommand = 'ls /etc/' + fileboot_name
                     with runqemu('core-image-minimal') as qemu:
-                        sshargs = '-o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
-                        result = runCmd('ssh %s root@%s %s' % (sshargs, qemu.ip, testcommand))
-                        self.assertEqual(result.status, 0, 'File %s was not created at firts boot'% fileboot_name)
+                        ssh = SSHControl(ip=qemu.ip, logfile=qemu.sshlog)
+                        status, output = ssh.run(testcommand)
+                        self.assertEqual(status, 0, 'File %s was not created at first boot (%s)' % (fileboot_name, output))
