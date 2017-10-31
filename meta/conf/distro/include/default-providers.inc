@@ -1,8 +1,6 @@
 #
 # Default virtual providers
 #
-PREFERRED_PROVIDER_virtual/db ?= "db"
-PREFERRED_PROVIDER_virtual/db-native ?= "db-native"
 PREFERRED_PROVIDER_virtual/xserver ?= "xserver-xorg"
 PREFERRED_PROVIDER_virtual/xserver-xf86 ?= "xserver-xorg"
 PREFERRED_PROVIDER_virtual/egl ?= "mesa"
