@@ -1,8 +1,7 @@
 require perl.inc
 
 # We need gnugrep (for -I)
-DEPENDS = "virtual/db grep-native"
-DEPENDS += "gdbm zlib"
+DEPENDS = "db grep-native gdbm zlib"
 
 # Pick up patches from debian
 # http://ftp.de.debian.org/debian/pool/main/p/perl/perl_5.22.0-1.debian.tar.xz
