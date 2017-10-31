@@ -99,8 +99,6 @@ python __anonymous () {
         d.setVar("LINGUAS_INSTALL", "")
         # FIXME, we need to map this to something, not delete it!
         d.setVar("PACKAGE_INSTALL_ATTEMPTONLY", "")
-
-    if bb.data.inherits_class('image', d):
         return
 
     clsextend.map_depends_variable("DEPENDS")
