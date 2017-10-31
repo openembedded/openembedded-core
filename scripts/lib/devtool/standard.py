@@ -544,11 +544,14 @@ def _extract_source(srctree, keep_temp, devbranch, sync, config, basepath, works
         if not res:
             raise DevtoolError('Extracting source for %s failed' % pn)
 
-        with open(os.path.join(tempdir, 'initial_rev'), 'r') as f:
-            initial_rev = f.read()
+        try:
+            with open(os.path.join(tempdir, 'initial_rev'), 'r') as f:
+                initial_rev = f.read()
 
-        with open(os.path.join(tempdir, 'srcsubdir'), 'r') as f:
-            srcsubdir = f.read()
+            with open(os.path.join(tempdir, 'srcsubdir'), 'r') as f:
+                srcsubdir = f.read()
+        except FileNotFoundError as e:
+            raise DevtoolError('Something went wrong with source extraction - the devtool-source class was not active or did not function correctly:\n%s' % str(e))
         srcsubdir_rel = os.path.relpath(srcsubdir, os.path.join(tempdir, 'workdir'))
 
         tempdir_localdir = os.path.join(tempdir, 'oe-local-files')
