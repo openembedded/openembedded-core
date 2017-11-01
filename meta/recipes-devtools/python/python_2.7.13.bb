@@ -1,5 +1,5 @@
 require python.inc
-DEPENDS = "python-native libffi bzip2 db gdbm openssl readline sqlite3 zlib"
+DEPENDS = "python-native libffi bzip2 gdbm openssl readline sqlite3 zlib"
 PR = "${INC_PR}"
 
 DISTRO_SRC_URI ?= "file://sitecustomize.py"
@@ -38,6 +38,9 @@ inherit autotools multilib_header python-dir pythonnative
 CONFIGUREOPTS += " --with-system-ffi "
 
 EXTRA_OECONF += "ac_cv_file__dev_ptmx=yes ac_cv_file__dev_ptc=no"
+
+PACKAGECONFIG ??= "bdb"
+PACKAGECONFIG[bdb] = ",,db"
 
 do_configure_append() {
 	rm -f ${S}/Makefile.orig
@@ -118,6 +121,10 @@ do_install() {
 	fi
 
 	oe_multilib_header python${PYTHON_MAJMIN}/pyconfig.h
+
+    if [ -z "${@bb.utils.filter('PACKAGECONFIG', 'bdb', d)}" ]; then
+        rm -rf ${D}/${libdir}/python${PYTHON_MAJMIN}/bsddb
+    fi
 }
 
 do_install_append_class-nativesdk () {
@@ -154,6 +161,8 @@ FILES_lib${BPN}2 = "${libdir}/libpython*.so.*"
 PACKAGES += "${PN}-misc"
 FILES_${PN}-misc = "${libdir}/python${PYTHON_MAJMIN}"
 RDEPENDS_${PN}-modules += "${PN}-misc"
+
+# ptest
 RDEPENDS_${PN}-ptest = "${PN}-modules ${PN}-tests"
 #inherit ptest after "require python-${PYTHON_MAJMIN}-manifest.inc" so PACKAGES doesn't get overwritten
 inherit ptest
@@ -179,5 +188,8 @@ do_install_ptest() {
 # catch manpage
 PACKAGES += "${PN}-man"
 FILES_${PN}-man = "${datadir}/man"
+
+# Nasty but if bdb isn't enabled the package won't be generated
+RDEPENDS_${PN}-modules_remove = "${@bb.utils.contains('PACKAGECONFIG', 'bdb', '', '${PN}-bsddb', d)}"
 
 BBCLASSEXTEND = "nativesdk"
