@@ -14,7 +14,7 @@ LIC_FILES_CHKSUM = "\
     file://LEGAL;md5=daf349ad59dd19bd8c919171bff3c5d6 \
 "
 
-DEPENDS = "ruby-native zlib openssl tcl libyaml db gdbm readline"
+DEPENDS = "ruby-native zlib openssl tcl libyaml gdbm readline"
 DEPENDS_class-native = "openssl-native libyaml-native"
 
 SHRT_VER = "${@oe.utils.trim_version("${PV}", 2)}"
