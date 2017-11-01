@@ -188,6 +188,11 @@ def patch_recipe_lines(fromlines, values, trailing_newline=True):
             for wrapline in wrapped[:-1]:
                 addlines.append('%s \\%s' % (wrapline, newline))
             addlines.append('%s%s' % (wrapped[-1], newline))
+
+        # Split on newlines - this isn't strictly necessary if you are only
+        # going to write the output to disk, but if you want to compare it
+        # (as patch_recipe_file() will do if patch=True) then it's important.
+        addlines = [line for l in addlines for line in l.splitlines(True)]
         if rewindcomments:
             # Ensure we insert the lines before any leading comments
             # (that we'd want to ensure remain leading the next value)
