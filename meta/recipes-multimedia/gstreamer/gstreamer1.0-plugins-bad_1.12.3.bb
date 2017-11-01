@@ -22,5 +22,4 @@ SRC_URI[sha256sum] = "36d059761852bed0f1a7fcd3ef64a8aeecab95d2bca53cd6aa0f08054b
 
 S = "${WORKDIR}/gst-plugins-bad-${PV}"
 
-EXTRA_OECONF += "WAYLAND_PROTOCOLS_SYSROOT_DIR=${RECIPE_SYSROOT}"
 

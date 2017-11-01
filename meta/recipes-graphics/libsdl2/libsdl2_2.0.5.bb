@@ -17,8 +17,6 @@ DEPENDS_class-nativesdk = "${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'virtu
 SRC_URI = " \
     http://www.libsdl.org/release/SDL2-${PV}.tar.gz \
     file://linkage.patch \
-    file://0001-prepend-our-sysroot-path-so-that-make-finds-our-wayl.patch \
-    file://0002-Avoid-finding-build-host-s-wayland-scanner.patch \
     file://fix-build-failure-on-ppc.patch \
 "
 
@@ -35,7 +33,7 @@ EXTRA_OECONF = "--disable-oss --disable-esd --disable-arts \
                 --enable-pthreads \
                 --enable-sdl-dlopen \
                 --disable-rpath \
-                WAYLAND_PROTOCOLS_SYSROOT_DIR=${RECIPE_SYSROOT}"
+                "
 
 # opengl packageconfig factored out to make it easy for distros
 # and BSP layers to pick either (desktop) opengl, gles2, or no GL
