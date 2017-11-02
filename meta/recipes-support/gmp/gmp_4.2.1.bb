@@ -11,6 +11,7 @@ SRC_URI = "https://gmplib.org/download/${BPN}/archive/${BP}.tar.bz2 \
            file://Use-__gnu_inline__-attribute.patch \
            file://gmp_fix_for_automake-1.12.patch \
            file://avoid-h-asm-constraint-for-MIPS.patch \
+           file://prevent-calls-to-mpn_add_nc-if-HAVE_NATIVE_mpn_sub_n.patch \
 "
 
 SRC_URI[md5sum] = "091c56e0e1cca6b09b17b69d47ef18e3"
