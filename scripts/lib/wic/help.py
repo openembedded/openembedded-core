@@ -970,6 +970,8 @@ DESCRIPTION
                             This option cannot be used with --fixed-size
                             option.
 
+         --part-name: This option is specific to wic. It specifies name for GPT partitions.
+
          --part-type: This option is specific to wic. It specifies partition
                       type GUID for GPT partitions.
                       List of partition type GUIDS can be found here:
