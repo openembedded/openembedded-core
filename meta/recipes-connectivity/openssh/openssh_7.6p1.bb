@@ -6,7 +6,7 @@ and for executing commands on a remote machine."
 HOMEPAGE = "http://www.openssh.com/"
 SECTION = "console/network"
 LICENSE = "BSD"
-LIC_FILES_CHKSUM = "file://LICENCE;md5=e326045657e842541d3f35aada442507"
+LIC_FILES_CHKSUM = "file://LICENCE;md5=429658c6612f3a9b1293782366ab29d8"
 
 # openssl 1.1 patches are proposed at https://github.com/openssh/openssh-portable/pull/48
 DEPENDS = "zlib openssl10"
@@ -21,19 +21,16 @@ SRC_URI = "http://ftp.openbsd.org/pub/OpenBSD/OpenSSH/portable/openssh-${PV}.tar
            file://sshd@.service \
            file://sshdgenkeys.service \
            file://volatiles.99_sshd \
-           file://add-test-support-for-busybox.patch \
            file://run-ptest \
-           file://openssh-7.1p1-conditional-compile-des-in-cipher.patch \
-           file://openssh-7.1p1-conditional-compile-des-in-pkcs11.patch \
            file://fix-potential-signed-overflow-in-pointer-arithmatic.patch \
-           file://0001-openssh-Fix-syntax-error-on-x32.patch \
            file://sshd_check_keys \
+           file://add-test-support-for-busybox.patch \
            "
 
 PAM_SRC_URI = "file://sshd"
 
-SRC_URI[md5sum] = "652fdc7d8392f112bef11cacf7e69e23"
-SRC_URI[sha256sum] = "9846e3c5fab9f0547400b4d2c017992f914222b3fd1f8eee6c7dc6bc5e59f9f0"
+SRC_URI[md5sum] = "06a88699018e5fef13d4655abfed1f63"
+SRC_URI[sha256sum] = "a323caeeddfe145baaa0db16e98d784b1fbc7dd436a6bf1f479dfd5cd1d21723"
 
 inherit useradd update-rc.d update-alternatives systemd
 
