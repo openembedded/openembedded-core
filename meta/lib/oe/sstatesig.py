@@ -320,7 +320,7 @@ def find_siginfo(pn, taskname, taskhashlist, d):
 
     if not taskhashlist or (len(filedates) < 2 and not foundall):
         # That didn't work, look in sstate-cache
-        hashes = taskhashlist or ['*']
+        hashes = taskhashlist or ['?' * 32]
         localdata = bb.data.createCopy(d)
         for hashval in hashes:
             localdata.setVar('PACKAGE_ARCH', '*')
