@@ -8,16 +8,14 @@ SUMMARY = "Perl Compatible Regular Expressions version 2"
 HOMEPAGE = "http://www.pcre.org"
 SECTION = "devel"
 LICENSE = "BSD"
-LIC_FILES_CHKSUM = "file://LICENCE;md5=3de34df49e1fe3c3b59a08dff214488b"
+LIC_FILES_CHKSUM = "file://LICENCE;md5=12d55e15a0c6da5c645ba40382bd3293"
 
 SRC_URI = "https://ftp.pcre.org/pub/pcre/pcre2-${PV}.tar.bz2 \
            file://pcre-cross.patch \
-           file://libpcre2-CVE-2017-8786.patch \
-           file://libpcre2-CVE-2017-7186.patch \
 "
 
-SRC_URI[md5sum] = "b2cd00ca7e24049040099b0a46bb3649"
-SRC_URI[sha256sum] = "dfc79b918771f02d33968bd34a749ad7487fa1014aeb787fad29dd392b78c56e"
+SRC_URI[md5sum] = "d3adf4b130eed854a530390f00020a65"
+SRC_URI[sha256sum] = "90bd41c605d30e3745771eb81928d779f158081a51b2f314bbcc1f73de5773db"
 
 CVE_PRODUCT = "pcre2"
 
