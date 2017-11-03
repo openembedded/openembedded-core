@@ -15,8 +15,8 @@ XORG_PN = "libXfont2"
 
 BBCLASSEXTEND = "native"
 
-SRC_URI[md5sum] = "0d9f6dd9c23bf4bcbfb00504b566baf5"
-SRC_URI[sha256sum] = "e9fbbb475ddd171b3a6a54b989cbade1f6f874fc35d505ebc5be426bc6e4db7e"
+SRC_URI[md5sum] = "d39e6446e46f939486d1a8b856e8b67b"
+SRC_URI[sha256sum] = "94088d3b87f7d42c7116d9adaad155859e93330c6e47f5989f2de600b9a6c111"
 
 PACKAGECONFIG ??= "${@bb.utils.filter('DISTRO_FEATURES', 'ipv6', d)}"
 PACKAGECONFIG[ipv6] = "--enable-ipv6,--disable-ipv6,"
