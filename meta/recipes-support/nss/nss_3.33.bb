@@ -28,8 +28,8 @@ SRC_URI = "http://ftp.mozilla.org/pub/mozilla.org/security/nss/releases/${VERSIO
            file://Fix-compilation-for-X32.patch \
            "
 
-SRC_URI[md5sum] = "ebb44f1394250d2cf6ec3c2e3d71fa20"
-SRC_URI[sha256sum] = "933439214dc03ee60e86d1419c19e1568998b0776dde987f41fa70ced6cd08dc"
+SRC_URI[md5sum] = "43663c850e2b2ed48ecb8910b055f5a9"
+SRC_URI[sha256sum] = "98f0dabd36408e83dd3a11727336cc3cdfee4cbdd9aede2b2831eb2389c284e4"
 
 UPSTREAM_CHECK_URI = "https://developer.mozilla.org/en-US/docs/Mozilla/Projects/NSS/NSS_Releases"
 UPSTREAM_CHECK_REGEX = "NSS_(?P<pver>.+)_release_notes"
