@@ -10,6 +10,7 @@ SRC_URI += "file://prevent-gc.patch \
             file://CVE-2017-9226.patch \
             file://CVE-2017-9229.patch \
             file://CVE-2017-14033.patch \
+            file://CVE-2017-14064.patch \
 "
 
 # it's unknown to configure script, but then passed to extconf.rb
