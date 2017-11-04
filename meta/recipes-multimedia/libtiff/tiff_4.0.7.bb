@@ -18,7 +18,8 @@ SRC_URI = "http://download.osgeo.org/libtiff/tiff-${PV}.tar.gz \
            file://CVE-2016-10267.patch \
            file://CVE-2016-10269.patch \
            file://CVE-2016-10270.patch \
-          "
+           file://CVE-2017-7592.patch \
+        "
 
 SRC_URI[md5sum] = "77ae928d2c6b7fb46a21c3a29325157b"
 SRC_URI[sha256sum] = "9f43a2cfb9589e5cecaa66e16bf87f814c945f22df7ba600d63aac4632c4f019"
