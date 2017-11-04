@@ -21,6 +21,7 @@ SRC_URI += " file://configure_ac.patch \
              file://CVE-2016-8623.patch \
              file://CVE-2016-8617.patch \
              file://CVE-2016-8624.patch \
+             file://CVE-2016-9586.patch \
            "
 
 SRC_URI[md5sum] = "015f6a0217ca6f2c5442ca406476920b"
