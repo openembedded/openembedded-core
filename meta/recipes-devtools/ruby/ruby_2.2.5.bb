@@ -5,6 +5,7 @@ SRC_URI[sha256sum] = "30c4b31697a4ca4ea0c8db8ad30cf45e6690a0f09687e5d483c933c03c
 
 SRC_URI += "file://prevent-gc.patch \
             file://CVE-2016-7798.patch \
+            file://CVE-2017-9227.patch \
 "
 
 # it's unknown to configure script, but then passed to extconf.rb
