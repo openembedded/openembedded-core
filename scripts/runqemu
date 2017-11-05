@@ -1018,7 +1018,7 @@ class BaseConfig(object):
                                        % (self.rootfs, rootfs_format)
                     elif drive_type.startswith("/dev/hd"):
                         logger.info('Using ide drive')
-                        vm_drive = "%s,format=%s" % (self.rootfs, rootfs_format)
+                        vm_drive = "-drive file=%s,format=%s" % (self.rootfs, rootfs_format)
                     else:
                         # virtio might have been selected explicitly (just use it), or
                         # is used as fallback (then warn about that).
