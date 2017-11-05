@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://COPYRIGHT;md5=dba46507446198119bcde32a4feaab43"
 
 DEPENDS = "openssl libcap"
 
-SRC_URI = "ftp://ftp.isc.org/isc/bind9/${PV}/${BPN}-${PV}.tar.gz \
+SRC_URI = "https://ftp.isc.org/isc/bind9/${PV}/${BPN}-${PV}.tar.gz \
            file://conf.patch \
            file://make-etc-initd-bind-stop-work.patch \
            file://dont-test-on-host.patch \
@@ -23,7 +23,7 @@ SRC_URI = "ftp://ftp.isc.org/isc/bind9/${PV}/${BPN}-${PV}.tar.gz \
            file://use-python3-and-fix-install-lib-path.patch \
            "
 
-UPSTREAM_CHECK_URI = "ftp://ftp.isc.org/isc/bind9/"
+UPSTREAM_CHECK_URI = "https://ftp.isc.org/isc/bind9/"
 UPSTREAM_CHECK_REGEX = "(?P<pver>9(\.\d+)+(-P\d+)*)/"
 
 SRC_URI[md5sum] = "d79cafbd9ac76239ee532dd89d05cc83"
