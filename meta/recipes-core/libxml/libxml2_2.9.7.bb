@@ -22,8 +22,8 @@ SRC_URI = "http://www.xmlsoft.org/sources/libxml2-${PV}.tar.gz;name=libtar \
            file://0001-Make-ptest-run-the-python-tests-if-python-is-enabled.patch \
            "
 
-SRC_URI[libtar.md5sum] = "5ce0da9bdaa267b40c4ca36d35363b8b"
-SRC_URI[libtar.sha256sum] = "4031c1ecee9ce7ba4f313e91ef6284164885cdb69937a123f6a83bb6a72dcd38"
+SRC_URI[libtar.md5sum] = "896608641a08b465098a40ddf51cefba"
+SRC_URI[libtar.sha256sum] = "f63c5e7d30362ed28b38bfa1ac6313f9a80230720b7fb6c80575eeab3ff5900c"
 SRC_URI[testtar.md5sum] = "ae3d1ebe000a3972afa104ca7f0e1b4a"
 SRC_URI[testtar.sha256sum] = "96151685cec997e1f9f3387e3626d61e6284d4d6e66e0e440c209286c03e9cc7"
 
