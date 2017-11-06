@@ -25,7 +25,7 @@ do_install_append() {
 
 	# Delete files already provided by util-linux
 	local i
-	for i in mount umount; do
+	for i in mount umount rfkill; do
 		rm ${D}${datadir}/${BPN}/completions/$i
 	done
 }
