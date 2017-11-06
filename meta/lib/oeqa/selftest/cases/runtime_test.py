@@ -244,7 +244,7 @@ postinst-delayed-t \
                 with self.subTest(init_manager=init_manager, package_class=classes):
                     features = 'MACHINE = "qemux86"\n'
                     features += 'CORE_IMAGE_EXTRA_INSTALL += "%s %s "\n'% (rootfs_pkg, boot_pkg)
-                    features += 'IMAGE_FEATURES += "empty-root-password ssh-server-openssh"\n'
+                    features += 'IMAGE_FEATURES += "package-management empty-root-password"\n'
                     features += 'PACKAGE_CLASSES = "%s"\n' % classes
                     if init_manager == "systemd":
                         features += 'DISTRO_FEATURES_append = " systemd"\n'
