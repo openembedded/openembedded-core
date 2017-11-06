@@ -263,6 +263,5 @@ postinst-delayed-t \
 
                     testcommand = 'ls /etc/' + fileboot_name
                     with runqemu('core-image-minimal') as qemu:
-                        ssh = SSHControl(ip=qemu.ip, logfile=qemu.sshlog)
-                        status, output = ssh.run(testcommand)
+                        status, output = qemu.run_serial("-f /etc/" + fileboot_name)
                         self.assertEqual(status, 0, 'File %s was not created at first boot (%s)' % (fileboot_name, output))
