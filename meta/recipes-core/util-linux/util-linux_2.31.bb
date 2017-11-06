@@ -1,4 +1,4 @@
-MAJOR_VERSION = "2.30"
+MAJOR_VERSION = "2.31"
 require util-linux.inc
 
 # To support older hosts, we need to patch and/or revert
@@ -16,8 +16,8 @@ SRC_URI += "file://configure-sbindir.patch \
             file://avoid_parallel_tests.patch \
 "
 SRC_URI_append_class-native = " file://no_getrandom.patch"
-SRC_URI[md5sum] = "eaa3429150268027908a1b8ae6ee9a62"
-SRC_URI[sha256sum] = "c208a4ff6906cb7f57940aa5bc3a6eed146e50a7cc0a092f52ef2ab65057a08d"
+SRC_URI[md5sum] = "5b6821c403c3cc6e7775f74df1882a20"
+SRC_URI[sha256sum] = "f9be7cdcf4fc5c5064a226599acdda6bdf3d86c640152ba01ea642d91108dc8a"
 
 CACHED_CONFIGUREVARS += "scanf_cv_alloc_modifier=ms"
 
