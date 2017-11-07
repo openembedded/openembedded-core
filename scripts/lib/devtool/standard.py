@@ -1054,7 +1054,7 @@ def _replace_srcuri_entry(srcuri, filename, newentry):
             srcuri.insert(i, newentry)
             break
 
-def _remove_source_files(append, files, destpath):
+def _remove_source_files(append, files, destpath, no_report_remove=False):
     """Unlink existing patch files"""
     for path in files:
         if append:
@@ -1063,7 +1063,8 @@ def _remove_source_files(append, files, destpath):
             path = os.path.join(destpath, os.path.basename(path))
 
         if os.path.exists(path):
-            logger.info('Removing file %s' % path)
+            if not no_report_remove:
+                logger.info('Removing file %s' % path)
             # FIXME "git rm" here would be nice if the file in question is
             #       tracked
             # FIXME there's a chance that this file is referred to by
@@ -1276,7 +1277,7 @@ def _determine_files_dir(rd):
     return os.path.join(recipedir, rd.getVar('BPN'))
 
 
-def _update_recipe_srcrev(recipename, workspace, srctree, rd, appendlayerdir, wildcard_version, no_remove):
+def _update_recipe_srcrev(recipename, workspace, srctree, rd, appendlayerdir, wildcard_version, no_remove, no_report_remove):
     """Implement the 'srcrev' mode of update-recipe"""
     import bb
     import oe.recipeutils
@@ -1357,10 +1358,10 @@ def _update_recipe_srcrev(recipename, workspace, srctree, rd, appendlayerdir, wi
                     'point to a git repository where you have pushed your '
                     'changes')
 
-    _remove_source_files(appendlayerdir, remove_files, destpath)
+    _remove_source_files(appendlayerdir, remove_files, destpath, no_report_remove)
     return True
 
-def _update_recipe_patch(recipename, workspace, srctree, rd, appendlayerdir, wildcard_version, no_remove, initial_rev):
+def _update_recipe_patch(recipename, workspace, srctree, rd, appendlayerdir, wildcard_version, no_remove, no_report_remove, initial_rev):
     """Implement the 'patch' mode of update-recipe"""
     import bb
     import oe.recipeutils
@@ -1476,7 +1477,7 @@ def _update_recipe_patch(recipename, workspace, srctree, rd, appendlayerdir, wil
     finally:
         shutil.rmtree(tempdir)
 
-    _remove_source_files(appendlayerdir, remove_files, destpath)
+    _remove_source_files(appendlayerdir, remove_files, destpath, no_report_remove)
     return True
 
 def _guess_recipe_update_mode(srctree, rdata):
@@ -1501,15 +1502,15 @@ def _guess_recipe_update_mode(srctree, rdata):
 
     return 'patch'
 
-def _update_recipe(recipename, workspace, rd, mode, appendlayerdir, wildcard_version, no_remove, initial_rev):
+def _update_recipe(recipename, workspace, rd, mode, appendlayerdir, wildcard_version, no_remove, initial_rev, no_report_remove=False):
     srctree = workspace[recipename]['srctree']
     if mode == 'auto':
         mode = _guess_recipe_update_mode(srctree, rd)
 
     if mode == 'srcrev':
-        updated = _update_recipe_srcrev(recipename, workspace, srctree, rd, appendlayerdir, wildcard_version, no_remove)
+        updated = _update_recipe_srcrev(recipename, workspace, srctree, rd, appendlayerdir, wildcard_version, no_remove, no_report_remove)
     elif mode == 'patch':
-        updated = _update_recipe_patch(recipename, workspace, srctree, rd, appendlayerdir, wildcard_version, no_remove, initial_rev)
+        updated = _update_recipe_patch(recipename, workspace, srctree, rd, appendlayerdir, wildcard_version, no_remove, no_report_remove, initial_rev)
     else:
         raise DevtoolError('update_recipe: invalid mode %s' % mode)
     return updated
@@ -1745,24 +1746,27 @@ def finish(args, config, basepath, workspace):
             appendlayerdir = destlayerdir
             destpath = None
 
+        # Actually update the recipe / bbappend
+        removing_original = (origpath and origfilelist and oe.recipeutils.find_layerdir(origpath) == destlayerbasedir)
+        _update_recipe(args.recipename, workspace, rd, args.mode, appendlayerdir, wildcard_version=True, no_remove=False, initial_rev=args.initial_rev, no_report_remove=removing_original)
+
         # Remove any old files in the case of an upgrade
-        if origpath and origfilelist and oe.recipeutils.find_layerdir(origpath) == destlayerbasedir:
+        recipedir = os.path.dirname(rd.getVar('FILE'))
+        if removing_original:
             for fn in origfilelist:
                 fnp = os.path.join(origpath, fn)
+                if not os.path.exists(os.path.join(recipedir, fn)):
+                    logger.info('Removing file %s' % fnp)
                 try:
                     os.remove(fnp)
                 except FileNotFoundError:
                     pass
-
-        # Actually update the recipe / bbappend
-        _update_recipe(args.recipename, workspace, rd, args.mode, appendlayerdir, wildcard_version=True, no_remove=False, initial_rev=args.initial_rev)
 
         if origlayerdir == config.workspace_path and destpath:
             # Recipe file itself is in the workspace - need to move it and any
             # associated files to the specified layer
             no_clean = True
             logger.info('Moving recipe file to %s' % destpath)
-            recipedir = os.path.dirname(rd.getVar('FILE'))
             for root, _, files in os.walk(recipedir):
                 for fn in files:
                     srcpath = os.path.join(root, fn)
