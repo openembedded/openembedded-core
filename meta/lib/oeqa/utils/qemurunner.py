@@ -58,7 +58,8 @@ class QemuRunner:
         self.host_dumper = HostDumper(dump_host_cmds, dump_dir)
 
         self.logger = logging.getLogger("BitBake.QemuRunner")
-        self.logger.addHandler(logging.StreamHandler(sys.stdout))
+        self.handler = logging.StreamHandler(sys.stdout)
+        self.logger.addHandler(self.handler)
 
     def create_socket(self):
         try:
@@ -370,6 +371,7 @@ class QemuRunner:
         self.ip = None
         if os.path.exists(self.qemu_pidfile):
             os.remove(self.qemu_pidfile)
+        self.logger.removeHandler(self.handler)
 
     def stop_qemu_system(self):
         if self.qemupid:
