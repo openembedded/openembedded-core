@@ -252,7 +252,7 @@ def _extract_new_source(newpv, srctree, no_patch, srcrev, srcbranch, branch, kee
 
         (stdout,_) = __run('git ls-files --modified --others --exclude-standard')
         for f in stdout.splitlines():
-            __run('git add "%s"' % f)
+            __run('git add -A "%s"' % f)
 
         useroptions = []
         oe.patch.GitApplyTree.gitCommandUserOptions(useroptions, d=rd)
