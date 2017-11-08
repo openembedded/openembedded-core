@@ -45,6 +45,14 @@ class OETestResult(_TestResult):
         self.tc = tc
         self._tc_map_results()
 
+    def startTest(self, test):
+        # Allow us to trigger the testcase buffer mode on a per test basis
+        # so stdout/stderr are only printed upon failure. Enables debugging
+        # but clean output
+        if hasattr(test, "buffer"):
+            self.buffer = True
+        super(OETestResult, self).startTest(test)
+
     def _tc_map_results(self):
         self.tc._results['failures'] = self.failures
         self.tc._results['errors'] = self.errors
