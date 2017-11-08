@@ -296,6 +296,12 @@ def runqemu(pn, ssh=True, runqemuparams='', image_fstype=None, launch_cmd=None, 
     import bb.tinfoil
     import bb.build
 
+    # Need a non-'BitBake' logger to capture the runner output
+    targetlogger = logging.getLogger('TargetRunner')
+    targetlogger.setLevel(logging.DEBUG)
+    handler = logging.StreamHandler(sys.stdout)
+    targetlogger.addHandler(handler)
+
     tinfoil = bb.tinfoil.Tinfoil()
     tinfoil.prepare(config_only=False, quiet=True)
     try:
@@ -313,30 +319,14 @@ def runqemu(pn, ssh=True, runqemuparams='', image_fstype=None, launch_cmd=None, 
         for key, value in overrides.items():
             recipedata.setVar(key, value)
 
-        # The QemuRunner log is saved out, but we need to ensure it is at the right
-        # log level (and then ensure that since it's a child of the BitBake logger,
-        # we disable propagation so we don't then see the log events on the console)
-        logger = logging.getLogger('BitBake.QemuRunner')
-        logger.setLevel(logging.DEBUG)
-        logger.propagate = False
         logdir = recipedata.getVar("TEST_LOG_DIR")
 
-        qemu = oeqa.targetcontrol.QemuTarget(recipedata, image_fstype)
+        qemu = oeqa.targetcontrol.QemuTarget(recipedata, targetlogger, image_fstype)
     finally:
         # We need to shut down tinfoil early here in case we actually want
         # to run tinfoil-using utilities with the running QEMU instance.
         # Luckily QemuTarget doesn't need it after the constructor.
         tinfoil.shutdown()
-
-    # Setup bitbake logger as console handler is removed by tinfoil.shutdown
-    bblogger = logging.getLogger('BitBake')
-    bblogger.setLevel(logging.INFO)
-    console = logging.StreamHandler(sys.stdout)
-    bbformat = bb.msg.BBLogFormatter("%(levelname)s: %(message)s")
-    if sys.stdout.isatty():
-        bbformat.enable_color()
-    console.setFormatter(bbformat)
-    bblogger.addHandler(console)
 
     try:
         qemu.deploy()
@@ -352,6 +342,7 @@ def runqemu(pn, ssh=True, runqemuparams='', image_fstype=None, launch_cmd=None, 
             qemu.stop()
         except:
             pass
+    targetlogger.removeHandler(handler)
 
 def updateEnv(env_file):
     """

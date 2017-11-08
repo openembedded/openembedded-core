@@ -28,7 +28,7 @@ re_control_char = re.compile('[%s]' % re.escape("".join(control_chars)))
 
 class QemuRunner:
 
-    def __init__(self, machine, rootfs, display, tmpdir, deploy_dir_image, logfile, boottime, dump_dir, dump_host_cmds, use_kvm):
+    def __init__(self, machine, rootfs, display, tmpdir, deploy_dir_image, logfile, boottime, dump_dir, dump_host_cmds, use_kvm, logger):
 
         # Popen object for runqemu
         self.runqemu = None
@@ -57,9 +57,7 @@ class QemuRunner:
         self.qemu_pidfile = 'pidfile_'+str(os.getpid())
         self.host_dumper = HostDumper(dump_host_cmds, dump_dir)
 
-        self.logger = logging.getLogger("BitBake.QemuRunner")
-        self.handler = logging.StreamHandler(sys.stdout)
-        self.logger.addHandler(self.handler)
+        self.logger = logger
 
     def create_socket(self):
         try:
@@ -371,7 +369,6 @@ class QemuRunner:
         self.ip = None
         if os.path.exists(self.qemu_pidfile):
             os.remove(self.qemu_pidfile)
-        self.logger.removeHandler(self.handler)
 
     def stop_qemu_system(self):
         if self.qemupid:
