@@ -51,6 +51,7 @@ class Partition():
         self.no_table = args.no_table
         self.num = None
         self.overhead_factor = args.overhead_factor
+        self.part_name = args.part_name
         self.part_type = args.part_type
         self.rootfs_dir = args.rootfs_dir
         self.size = args.size

@@ -366,6 +366,10 @@ class PartitionedImage():
         for num in range(len(self.partitions)):
             part = self.partitions[num]
 
+            if self.ptable_format == 'msdos' and part.part_name:
+                raise WicError("setting custom partition name is not " \
+                               "implemented for msdos partitions")
+
             if self.ptable_format == 'msdos' and part.part_type:
                 # The --part-type can also be implemented for MBR partitions,
                 # in which case it would map to the 1-byte "partition type"
@@ -518,6 +522,13 @@ class PartitionedImage():
 
             self._create_partition(self.path, part.type,
                                    parted_fs_type, part.start, part.size_sec)
+
+            if part.part_name:
+                logger.debug("partition %d: set name to %s",
+                             part.num, part.part_name)
+                exec_native_cmd("sgdisk --change-name=%d:%s %s" % \
+                                         (part.num, part.part_name,
+                                          self.path), self.native_sysroot)
 
             if part.part_type:
                 logger.debug("partition %d: set type UID to %s",
