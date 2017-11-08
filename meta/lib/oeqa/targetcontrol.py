@@ -20,31 +20,6 @@ from abc import ABCMeta, abstractmethod
 
 logger = logging.getLogger('BitBake.QemuRunner')
 
-def get_target_controller(d):
-    testtarget = d.getVar("TEST_TARGET")
-    # old, simple names
-    if testtarget == "qemu":
-        return QemuTarget(d)
-    elif testtarget == "simpleremote":
-        return SimpleRemoteTarget(d)
-    else:
-        # use the class name
-        try:
-            # is it a core class defined here?
-            controller = getattr(sys.modules[__name__], testtarget)
-        except AttributeError:
-            # nope, perhaps a layer defined one
-            try:
-                bbpath = d.getVar("BBPATH").split(':')
-                testtargetloader = TestTargetLoader()
-                controller = testtargetloader.get_controller_module(testtarget, bbpath)
-            except ImportError as e:
-                bb.fatal("Failed to import {0} from available controller modules:\n{1}".format(testtarget,traceback.format_exc()))
-            except AttributeError as e:
-                bb.fatal("Invalid TEST_TARGET - " + str(e))
-        return controller(d)
-
-
 class BaseTarget(object, metaclass=ABCMeta):
 
     supported_image_fstypes = []
@@ -115,9 +90,9 @@ class QemuTarget(BaseTarget):
 
     supported_image_fstypes = ['ext3', 'ext4', 'cpio.gz', 'wic']
 
-    def __init__(self, d, image_fstype=None):
+    def __init__(self, d, image_fstype=None, logger=None):
 
-        super(QemuTarget, self).__init__(d)
+        super(QemuTarget, self).__init__(d, logger)
 
         self.rootfs = ''
         self.kernel = ''
