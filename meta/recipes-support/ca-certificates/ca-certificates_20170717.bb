@@ -24,6 +24,7 @@ SRC_URI = "git://anonscm.debian.org/collab-maint/ca-certificates.git \
            file://sbindir.patch"
 
 S = "${WORKDIR}/git"
+SYSROOT_DIRS_class-native += "/etc"
 
 inherit allarch
 
