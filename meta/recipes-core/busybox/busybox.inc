@@ -173,7 +173,7 @@ do_compile() {
 			done > .config.app.$s
 
 			# workaround for suid bug 10346
-			if [ "$s" == "suid" ] ; then
+			if [ "$s" = "suid" ] ; then
 				sed "s/.*CONFIG_SH_IS_NONE.*$/CONFIG_SH_IS_NONE=y/" -i .config.app.suid
 			fi
 
