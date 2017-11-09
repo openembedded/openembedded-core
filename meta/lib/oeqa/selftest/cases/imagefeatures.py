@@ -10,6 +10,8 @@ class ImageFeatures(OESelftestTestCase):
     test_user = 'tester'
     root_user = 'root'
 
+    buffer = True
+
     @OETestID(1107)
     def test_non_root_user_can_connect_via_ssh_without_password(self):
         """
