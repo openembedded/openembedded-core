@@ -83,7 +83,7 @@ class OESSHTarget(OETarget):
             processTimeout = self.timeout
 
         status, output = self._run(sshCmd, processTimeout, True)
-        self.logger.info('\nCommand: %s\nOutput:  %s\n' % (command, output))
+        self.logger.debug('Command: %s\nOutput:  %s\n' % (command, output))
         return (status, output)
 
     def copyTo(self, localSrc, remoteDst):
