@@ -17,11 +17,10 @@ PACKAGECONFIG[mpfr] = "--with-mpfr,--without-mpfr, mpfr"
 
 SRC_URI = "${GNU_MIRROR}/gawk/gawk-${PV}.tar.gz \
            file://run-ptest \
-           file://test-arrayind1-Remove-hashbang-line.patch \
 "
 
-SRC_URI[md5sum] = "f20c94ca51b6ebfc9bffb90f95c8ffbb"
-SRC_URI[sha256sum] = "8c03080e2b5a56263e8783f6f1f306398d4591be18254041f3f547efef944d35"
+SRC_URI[md5sum] = "0b598c31bc703d66082bd958d4189980"
+SRC_URI[sha256sum] = "c88046c6e8396ee548bcb941e16def809b7b55b60a1044b5dd254094f347c7d9"
 
 inherit autotools gettext texinfo update-alternatives
 
