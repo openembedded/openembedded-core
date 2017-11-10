@@ -14,3 +14,6 @@ SRC_URI[md5sum] = "2d8b7841f2c11ab287718d562f2b981c"
 SRC_URI[sha256sum] = "e61022cf576f14190241e7071753fdacdce5d1dea89ffd704110fc50be689309"
 
 inherit autotools pkgconfig
+
+PACKAGES =+ "${PN}-examples"
+FILES_${PN}-examples += "${bindir}/*"
