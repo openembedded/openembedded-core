@@ -184,11 +184,6 @@ PV = "0.0+git${SRCPV}"
 
 SRC_URI = "git://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git"
 
-# Some devices need a specific version, not the latest
-SRC_URI += "https://git.kernel.org/cgit/linux/kernel/git/iwlwifi/linux-firmware.git/plain/iwlwifi-8000C-19.ucode;name=iwlwifi-19"
-
-SRC_URI[iwlwifi-19.md5sum] = "132fbaee36beec5e98714f0bd66f7a1d"
-SRC_URI[iwlwifi-19.sha256sum] = "2034470df64d323b827c4f2d4d0d55be2846b7360179b5574aa28ff77b6c9471"
 UPSTREAM_VERSION_UNKNOWN = "1"
 
 S = "${WORKDIR}/git"
@@ -223,9 +218,6 @@ do_install() {
 
 	# fixup wl12xx location, after 2.6.37 the kernel searches a different location for it
 	( cd ${D}${nonarch_base_libdir}/firmware ; ln -sf ti-connectivity/* . )
-
-        # Copy the iwlwifi ucode
-        cp ${WORKDIR}/iwlwifi-8000C-19.ucode ${D}${nonarch_base_libdir}/firmware/
 }
 
 
