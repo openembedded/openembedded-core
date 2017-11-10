@@ -291,11 +291,11 @@ def testimage_main(d):
 
     # Show results (if we have them)
     if not results:
-        bb.fatal('%s - FAILED - tests were interrupted during execution' % pn)
+        bb.fatal('%s - FAILED - tests were interrupted during execution' % pn, forcelog=True)
     results.logDetails()
     results.logSummary(pn)
     if not results.wasSuccessful():
-        bb.fatal('%s - FAILED - check the task log and the ssh log' % pn)
+        bb.fatal('%s - FAILED - check the task log and the ssh log' % pn, forcelog=True)
 
 def get_runtime_paths(d):
     """
