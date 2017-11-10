@@ -11,8 +11,8 @@ SHRT_VER = "${@d.getVar('PV').split('.')[0]}.${@d.getVar('PV').split('.')[1]}"
 
 SRC_URI = "${GNOME_MIRROR}/libsoup/${SHRT_VER}/libsoup-${PV}.tar.xz"
 
-SRC_URI[md5sum] = "4b3fb98f742d81f1850c0846a40470e2"
-SRC_URI[sha256sum] = "023930032b20e6b14764feb847ea80d9e170622dee7370215d6feb9967b6aa9d"
+SRC_URI[md5sum] = "9c49831b62c4bf18cdb81c86ac6516fd"
+SRC_URI[sha256sum] = "7263cfe18872e2e652c196f5667e514616d9c97c861dfca82a65a55f45f0da01"
 
 S = "${WORKDIR}/libsoup-${PV}"
 
