@@ -52,7 +52,8 @@ LOCALE_SECTION ?= ''
 ALL_MULTILIB_PACKAGE_ARCHS = "${@all_multilib_tune_values(d, 'PACKAGE_ARCHS')}"
 
 # rpm is used for the per-file dependency identification
-PACKAGE_DEPENDS += "rpm-native"
+# dwarfsrcfiles is used to determine the list of debug source files
+PACKAGE_DEPENDS += "rpm-native dwarfsrcfiles-native"
 
 
 # If your postinstall can execute at rootfs creation time rather than on
@@ -334,6 +335,16 @@ def checkbuildpath(file, d):
 
     return False
 
+def parse_debugsources_from_dwarfsrcfiles_output(dwarfsrcfiles_output):
+    debugfiles = {}
+
+    for line in dwarfsrcfiles_output.splitlines():
+        if line.startswith("\t"):
+            debugfiles[os.path.normpath(line.split()[0])] = ""
+
+    return debugfiles.keys()
+
+
 def splitdebuginfo(file, debugfile, debugsrcdir, sourcefile, d):
     # Function to split a single file into two components, one is the stripped
     # target system binary, the other contains any debugging information. The
@@ -345,7 +356,6 @@ def splitdebuginfo(file, debugfile, debugsrcdir, sourcefile, d):
 
     dvar = d.getVar('PKGD')
     objcopy = d.getVar("OBJCOPY")
-    debugedit = d.expand("${STAGING_LIBDIR_NATIVE}/rpm/debugedit")
 
     # We ignore kernel modules, we don't generate debug info files.
     if file.find("/lib/modules/") != -1 and file.endswith(".ko"):
@@ -359,10 +369,18 @@ def splitdebuginfo(file, debugfile, debugsrcdir, sourcefile, d):
 
     # We need to extract the debug src information here...
     if debugsrcdir:
-        cmd = "'%s' -i -l '%s' '%s'" % (debugedit, sourcefile, file)
+        cmd = "'dwarfsrcfiles' '%s'" % (file)
         (retval, output) = oe.utils.getstatusoutput(cmd)
-        if retval:
-            bb.fatal("debugedit failed with exit code %s (cmd was %s)%s" % (retval, cmd, ":\n%s" % output if output else ""))
+        # 255 means a specific file wasn't fully parsed to get the debug file list, which is not a fatal failure
+        if retval != 0 and retval != 255:
+            bb.fatal("dwarfsrcfiles failed with exit code %s (cmd was %s)%s" % (retval, cmd, ":\n%s" % output if output else ""))
+
+        debugsources = parse_debugsources_from_dwarfsrcfiles_output(output)
+        # filenames are null-separated - this is an artefact of the previous use
+        # of rpm's debugedit, which was writing them out that way, and the code elsewhere
+        # is still assuming that.
+        debuglistoutput = '\0'.join(debugsources) + '\0'
+        open(sourcefile, 'a').write(debuglistoutput)
 
     bb.utils.mkdirhier(os.path.dirname(debugfile))
 
@@ -393,7 +411,6 @@ def copydebugsources(debugsrcdir, d):
         dvar = d.getVar('PKGD')
         strip = d.getVar("STRIP")
         objcopy = d.getVar("OBJCOPY")
-        debugedit = d.expand("${STAGING_LIBDIR_NATIVE}/rpm/bin/debugedit")
         workdir = d.getVar("WORKDIR")
         workparentdir = os.path.dirname(os.path.dirname(workdir))
         workbasedir = os.path.basename(os.path.dirname(workdir)) + "/" + os.path.basename(workdir)
