@@ -8,19 +8,13 @@ LIC_FILES_CHKSUM = "file://quota.c;beginline=1;endline=33;md5=331c7d77744bfe0ad2
                     file://svc_socket.c;beginline=1;endline=17;md5=24d5a8792da45910786eeac750be8ceb"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/project/linuxquota/quota-tools/${PV}/quota-${PV}.tar.gz \
-           file://0001-Fix-build-with-disabled-ldap.patch \
-           file://0001-Do-not-accidentaly-override-commandline-passed-CFLAG.patch \
            file://fcntl.patch \
            file://remove_non_posix_types.patch \
-           file://0001-Use-NGROUPS_MAX-instead-of-NGROUPS.patch \
-           file://0002-Allow-building-on-systems-that-do-not-have-rpc-heade.patch \
-           file://0003-Don-t-build-rpc.rquotad-when-disable-rpc-was-request.patch \
-           file://0004-Fix-warnings-due-to-missing-stdlib.h.patch \
           "
 SRC_URI_append_libc-musl = " file://replace_getrpcbynumber_r.patch"
 
-SRC_URI[md5sum] = "6b09f9c93515c25a528be5754cdfb6f5"
-SRC_URI[sha256sum] = "9c6c4d9ae7bf30506dd2aa3d8056c4ff2f8d087930d7c721616f5c093bdc674b"
+SRC_URI[md5sum] = "f46f3b0b5141f032f25684005dac49d3"
+SRC_URI[sha256sum] = "735be1887e7f51f54165e778ae43fc859c04e44d88834ecb2f470e91d4ef8edf"
 
 CVE_PRODUCT = "linux_diskquota"
 
