@@ -912,6 +912,9 @@ class BaseConfig(object):
         lockdir = "/tmp/qemu-tap-locks"
 
         if not (self.qemuifup and self.qemuifdown and ip):
+            logger.error("runqemu-ifup: %s" % self.qemuifup)
+            logger.error("runqemu-ifdown: %s" % self.qemuifdown)
+            logger.error("ip: %s" % ip)
             raise OEPathError("runqemu-ifup, runqemu-ifdown or ip not found")
 
         if not os.path.exists(lockdir):
