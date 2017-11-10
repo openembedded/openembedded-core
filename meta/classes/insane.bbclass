@@ -68,6 +68,9 @@ def package_qa_get_machine_dict(d):
                         "epiphany":   (4643,   0,    0,          True,          32),
                         "mips":       ( 8,     0,    0,          False,         32),
                         "mipsel":     ( 8,     0,    0,          True,          32),
+                        "microblaze":  (189,   0,    0,          False,         32),
+                        "microblazeeb":(189,   0,    0,          False,         32),
+                        "microblazeel":(189,   0,    0,          True,          32),
                       },
             "linux" : { 
                         "aarch64" :   (183,    0,    0,          True,          64),
