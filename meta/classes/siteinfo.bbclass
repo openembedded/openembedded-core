@@ -60,6 +60,7 @@ def siteinfo_data(d):
         "darwin9": "common-darwin",
         "linux": "common-linux common-glibc",
         "linux-gnu": "common-linux common-glibc",
+        "linux-gnu_ilp32": "common-linux common-glibc",
         "linux-gnux32": "common-linux common-glibc",
         "linux-gnun32": "common-linux common-glibc",
         "linux-gnueabi": "common-linux common-glibc",
@@ -75,6 +76,8 @@ def siteinfo_data(d):
     targetinfo = {
         "aarch64-linux-gnu": "aarch64-linux",
         "aarch64_be-linux-gnu": "aarch64_be-linux",
+        "aarch64-linux-gnu_ilp32": "bit-32 aarch64_be-linux arm-32",
+        "aarch64_be-linux-gnu_ilp32": "bit-32 aarch64_be-linux arm-32",
         "aarch64-linux-musl": "aarch64-linux",
         "aarch64_be-linux-musl": "aarch64_be-linux",
         "arm-linux-gnueabi": "arm-linux",
