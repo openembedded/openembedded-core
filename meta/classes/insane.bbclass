@@ -149,6 +149,9 @@ def package_qa_get_machine_dict(d):
                         "powerpc":    (20,     0,    0,          False,         32),
                         "sh4":        (42,     0,    0,          True,          32),
                       },
+            "linux-gnu_ilp32" :     {
+                        "aarch64" :   (183,    0,    0,          True,          32),
+                      },
             "linux-gnux32" :       {
                         "x86_64":     (62,     0,    0,          True,          32),
                       },
@@ -429,7 +432,7 @@ def package_qa_check_arch(path,name,d, elf, messages):
 
     # Check the architecture and endiannes of the binary
     is_32 = (("virtual/kernel" in provides) or bb.data.inherits_class("module", d)) and \
-            (target_os == "linux-gnux32" or target_os == "linux-muslx32"  or re.match('mips64.*32', d.getVar('DEFAULTTUNE')))
+            (target_os == "linux-gnux32" or target_os == "linux-muslx32" or target_os == "linux-gnu_ilp32" or re.match('mips64.*32', d.getVar('DEFAULTTUNE')))
     if not ((machine == elf.machine()) or is_32):
         package_qa_add_message(messages, "arch", "Architecture did not match (%s, expected %s) on %s" % \
                  (oe.qa.elf_machine_to_string(elf.machine()), oe.qa.elf_machine_to_string(machine), package_qa_clean_path(path,d)))
