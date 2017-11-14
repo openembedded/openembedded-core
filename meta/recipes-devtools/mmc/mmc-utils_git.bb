@@ -9,7 +9,7 @@ SRCREV = "37c86e60c0442fef570b75cd81aeb1db4d0cbafd"
 PV = "0.1"
 
 SRC_URI = "git://git.kernel.org/pub/scm/linux/kernel/git/cjb/mmc-utils.git;branch=${SRCBRANCH}"
-UPSTREAM_VERSION_UNKNOWN = "1"
+UPSTREAM_CHECK_COMMITS = "1"
 
 S = "${WORKDIR}/git"
 

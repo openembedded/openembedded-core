@@ -8,7 +8,7 @@ LIC_FILES_CHKSUM = "file://kmscube.c;beginline=1;endline=23;md5=8b309d4ee67b7315
 
 SRCREV = "0d8de4ce3a03f36af1817f9b0586d132ad2c5d2e"
 SRC_URI = "git://anongit.freedesktop.org/mesa/kmscube;branch=master;protocol=git"
-UPSTREAM_VERSION_UNKNOWN = "1"
+UPSTREAM_CHECK_COMMITS = "1"
 
 S = "${WORKDIR}/git"
 
