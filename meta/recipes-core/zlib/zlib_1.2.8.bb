@@ -10,6 +10,7 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/libpng/${BPN}/${PV}/${BPN}-${PV}.tar.xz \
            file://remove.ldconfig.call.patch \
            file://Makefile-runtests.patch \
            file://ldflags-tests.patch \
+           file://CVE-2016-9840.patch \
            file://run-ptest \
            "
 
