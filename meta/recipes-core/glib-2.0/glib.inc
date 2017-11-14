@@ -4,11 +4,11 @@ HOMEPAGE = "https://developer.gnome.org/glib/"
 
 # pcre is under BSD;
 # docs/reference/COPYING is with a 'public domai'-like license!
-LICENSE = "LGPLv2+ & BSD & PD"
-LIC_FILES_CHKSUM = "file://COPYING;md5=3bf50002aefd002f49e7bb854063f7e7 \
-                    file://glib/glib.h;beginline=4;endline=17;md5=b4f0f4a399c19e5ebb20c31b79d6bc32 \
-                    file://gmodule/COPYING;md5=3bf50002aefd002f49e7bb854063f7e7 \
-                    file://gmodule/gmodule.h;beginline=4;endline=17;md5=b4f0f4a399c19e5ebb20c31b79d6bc32 \
+LICENSE = "LGPLv2.1+ & BSD & PD"
+LIC_FILES_CHKSUM = "file://COPYING;md5=4fbd65380cdd255951079008b364516c \
+                    file://glib/glib.h;beginline=4;endline=17;md5=b88abb7f3ad09607e71cb9d530155906 \
+                    file://gmodule/COPYING;md5=4fbd65380cdd255951079008b364516c \
+                    file://gmodule/gmodule.h;beginline=4;endline=17;md5=b88abb7f3ad09607e71cb9d530155906 \
                     file://glib/pcre/COPYING;md5=266ebc3ff74ee9ce6fad65577667c0f4 \
                     file://glib/pcre/pcre.h;beginline=11;endline=35;md5=de27f2bf633d20a2b7af0b1983423283 \
                     file://docs/reference/COPYING;md5=f51a5100c17af6bae00735cd791e1fcc"
@@ -94,12 +94,6 @@ do_install_append () {
 	rm -rf ${D}${datadir}/glib-2.0/codegen/__pycache__
 	rm -f ${D}${datadir}/glib-2.0/codegen/*.pyc
 	rm -f ${D}${datadir}/glib-2.0/codegen/*.pyo
-
-	# Some distros have both /bin/perl and /usr/bin/perl, but we set perl location
-	# for target as /usr/bin/perl, so fix it to /usr/bin/perl.
-	if [ -f ${D}${bindir}/glib-mkenums ]; then
-		sed -i -e '1s,#!.*perl,#! ${USRBINPATH}/env perl,' ${D}${bindir}/glib-mkenums
-	fi
 
 	if [ -e ${D}${libdir}/charset.alias ]; then
 		rm -f ${D}${libdir}/charset.alias
