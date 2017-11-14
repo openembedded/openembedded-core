@@ -11,6 +11,7 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/libpng/${BPN}/${PV}/${BPN}-${PV}.tar.xz \
            file://Makefile-runtests.patch \
            file://ldflags-tests.patch \
            file://CVE-2016-9840.patch \
+           file://CVE-2016-9841.patch \
            file://run-ptest \
            "
 
