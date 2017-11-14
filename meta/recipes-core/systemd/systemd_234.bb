@@ -149,11 +149,18 @@ PACKAGECONFIG[xkbcommon] = "--enable-xkbcommon,--disable-xkbcommon,libxkbcommon"
 PACKAGECONFIG[xz] = "--enable-xz,--disable-xz,xz"
 PACKAGECONFIG[zlib] = "--enable-zlib,--disable-zlib,zlib"
 
-CACHED_CONFIGUREVARS += "ac_cv_path_KILL=${base_bindir}/kill"
-CACHED_CONFIGUREVARS += "ac_cv_path_KMOD=${base_bindir}/kmod"
-CACHED_CONFIGUREVARS += "ac_cv_path_QUOTACHECK=${sbindir}/quotacheck"
-CACHED_CONFIGUREVARS += "ac_cv_path_QUOTAON=${sbindir}/quotaon"
-CACHED_CONFIGUREVARS += "ac_cv_path_SULOGIN=${base_sbindir}/sulogin"
+# Hardcode target binary paths to avoid AC_PROG_PATH in the systemd
+# configure script detecting and setting paths from sysroot or host.
+CACHED_CONFIGUREVARS_class-target = " \
+    ac_cv_path_KEXEC=${sbindir}/kexec \
+    ac_cv_path_KILL=${base_bindir}/kill \
+    ac_cv_path_KMOD=${base_bindir}/kmod \
+    ac_cv_path_MOUNT_PATH=${base_bindir}/mount \
+    ac_cv_path_QUOTACHECK=${sbindir}/quotacheck \
+    ac_cv_path_QUOTAON=${sbindir}/quotaon \
+    ac_cv_path_SULOGIN=${base_sbindir}/sulogin \
+    ac_cv_path_UMOUNT_PATH=${base_bindir}/umount \
+"
 
 # Helper variables to clarify locations.  This mirrors the logic in systemd's
 # build system.
@@ -161,24 +168,15 @@ rootprefix ?= "${root_prefix}"
 rootlibdir ?= "${base_libdir}"
 rootlibexecdir = "${rootprefix}/lib"
 
-CACHED_CONFIGUREVARS_class-target = "\
-                         ac_cv_path_MOUNT_PATH=${base_bindir}/mount \
-                         ac_cv_path_UMOUNT_PATH=${base_bindir}/umount \
-                         ac_cv_path_KMOD=${base_bindir}/kmod \
-                         ac_cv_path_KILL=${base_bindir}/kill \
-                         ac_cv_path_SULOGIN=${base_sbindir}/sulogin \
-                         ac_cv_path_KEXEC=${sbindir}/kexec \
-                         ac_cv_path_QUOTACHECK=${sbindir}/quotacheck \
-                         ac_cv_path_QUOTAON=${sbindir}/quotaon \
-			 "
+EXTRA_OECONF = " \
+    --without-python \
+    --with-roothomedir=${ROOT_HOME} \
+    --with-rootlibdir=${rootlibdir} \
+    --with-rootprefix=${rootprefix} \
+    --with-sysvrcnd-path=${sysconfdir} \
+    --with-firmware-path=${nonarch_base_libdir}/firmware \
+"
 
-EXTRA_OECONF = " --with-rootprefix=${rootprefix} \
-                 --with-rootlibdir=${rootlibdir} \
-                 --with-roothomedir=${ROOT_HOME} \
-                 --without-python \
-                 --with-sysvrcnd-path=${sysconfdir} \
-                 --with-firmware-path=${nonarch_base_libdir}/firmware \
-               "
 # per the systemd README, define VALGRIND=1 to run under valgrind
 CFLAGS .= "${@bb.utils.contains('PACKAGECONFIG', 'valgrind', ' -DVALGRIND=1', '', d)}"
 
