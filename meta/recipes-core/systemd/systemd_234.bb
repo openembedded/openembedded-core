@@ -50,36 +50,45 @@ PAM_PLUGINS = " \
     pam-plugin-keyinit \
 "
 
-PACKAGECONFIG ??= "xz \
-                   ${@bb.utils.filter('DISTRO_FEATURES', 'efi pam selinux ldconfig usrmerge', d)} \
-                   ${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'xkbcommon', '', d)} \
-                   ${@bb.utils.contains('DISTRO_FEATURES', 'wifi', 'rfkill', '', d)} \
-                   binfmt \
-                   randomseed \
-                   machined \
-                   backlight \
-                   vconsole \
-                   quotacheck \
-                   hostnamed \
-                   ${@bb.utils.contains('TCLIBC', 'glibc', 'myhostname sysusers utmp', '', d)} \
-                   nss \
-                   hibernate \
-                   timedated \
-                   timesyncd \
-                   localed \
-                   ima \
-                   smack \
-                   logind \
-                   firstboot \
-                   polkit \
-                   resolved \
-                   networkd \
+PACKAGECONFIG ??= " \
+    ${@bb.utils.filter('DISTRO_FEATURES', 'efi ldconfig pam selinux usrmerge', d)} \
+    ${@bb.utils.contains('DISTRO_FEATURES', 'wifi', 'rfkill', '', d)} \
+    ${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'xkbcommon', '', d)} \
+    backlight \
+    binfmt \
+    firstboot \
+    hibernate \
+    hostnamed \
+    ima \
+    localed \
+    logind \
+    machined \
+    myhostname \
+    networkd \
+    nss \
+    polkit \
+    quotacheck \
+    randomseed \
+    resolved \
+    smack \
+    sysusers \
+    timedated \
+    timesyncd \
+    utmp \
+    vconsole \
+    xz \
 "
-PACKAGECONFIG_remove_libc-musl = "selinux"
-PACKAGECONFIG_remove_libc-musl = "smack"
-PACKAGECONFIG_remove_libc-musl = "resolved"
-PACKAGECONFIG_remove_libc-musl = "nss"
-PACKAGECONFIG_remove_libc-musl = "localed"
+
+PACKAGECONFIG_remove_libc-musl = " \
+    localed \
+    myhostname \
+    nss \
+    resolved \
+    selinux \
+    smack \
+    sysusers \
+    utmp \
+"
 
 # Use the upstream systemd serial-getty@.service and rely on
 # systemd-getty-generator instead of using the OE-core specific
