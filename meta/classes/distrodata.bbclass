@@ -272,24 +272,15 @@ python do_checkpkg() {
             if upstream_check_unreliable == "1":
                 return "N/A", "CHECK_IS_UNRELIABLE"
 
-            try:
-                uv = oe.recipeutils.get_recipe_upstream_version(localdata)
-                pupver = uv['version'] if uv['version'] else "N/A"
-            except Exception as e:
-                pupver = "N/A"
+            uv = oe.recipeutils.get_recipe_upstream_version(localdata)
+            pupver = uv['version'] if uv['version'] else "N/A"
+            pversion = uv['current_version']
+            revision = uv['revision'] if uv['revision'] else "N/A"
 
             if pupver == "N/A":
                 pstatus = "UNKNOWN" if upstream_version_unknown else "UNKNOWN_BROKEN"
             else:
-                src_uri = (localdata.getVar('SRC_URI') or '').split()
-                if src_uri:
-                    uri_type, _, _, _, _, _ = decodeurl(src_uri[0])
-                else:
-                    uri_type = "none"
-                pv, _, _ = oe.recipeutils.get_recipe_pv_without_srcpv(pversion, uri_type)
-                upv, _, _ = oe.recipeutils.get_recipe_pv_without_srcpv(pupver, uri_type)
-
-                cmp = vercmp_string(pv, upv)
+                cmp = vercmp_string(pversion, pupver)
                 if cmp == -1:
                     pstatus = "UPDATE" if not upstream_version_unknown else "KNOWN_BROKEN"
                 elif cmp == 0:
@@ -297,7 +288,7 @@ python do_checkpkg() {
                 else:
                     pstatus = "UNKNOWN" if upstream_version_unknown else "UNKNOWN_BROKEN"
 
-            return pupver, pstatus
+            return pversion, pupver, pstatus, revision
 
 
         """initialize log files."""
@@ -334,7 +325,6 @@ python do_checkpkg() {
 
         pdesc = localdata.getVar('DESCRIPTION')
         pgrp = localdata.getVar('SECTION')
-        pversion = localdata.getVar('PV')
         plicense = localdata.getVar('LICENSE')
         psection = localdata.getVar('SECTION')
         phome = localdata.getVar('HOMEPAGE')
@@ -345,7 +335,7 @@ python do_checkpkg() {
         psrcuri = localdata.getVar('SRC_URI')
         maintainer = localdata.getVar('RECIPE_MAINTAINER')
 
-        pupver, pstatus = get_upstream_version_and_status()
+        pversion, pupver, pstatus, prevision = get_upstream_version_and_status()
 
         if psrcuri:
             psrcuri = psrcuri.split()[0]
@@ -358,7 +348,7 @@ python do_checkpkg() {
         with open(logfile, "a") as f:
             writer = csv.writer(f, delimiter='\t')
             writer.writerow([pname, pversion, pupver, plicense, psection, phome, 
-                prelease, pdepends, pbugtracker, ppe, pdesc, pstatus, pupver,
+                prelease, pdepends, pbugtracker, ppe, pdesc, pstatus, prevision,
                 psrcuri, maintainer, no_upgr_reason])
             f.close()
         bb.utils.unlockfile(lf)

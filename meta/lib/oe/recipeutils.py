@@ -900,25 +900,25 @@ def get_recipe_upstream_version(rd):
             FetchError when don't have network access or upstream site don't response.
             NoMethodError when uri latest_versionstring method isn't implemented.
 
-        Returns a dictonary with version, type and datetime.
+        Returns a dictonary with version, repository revision, current_version, type and datetime.
         Type can be A for Automatic, M for Manual and U for Unknown.
     """
     from bb.fetch2 import decodeurl
     from datetime import datetime
 
     ru = {}
+    ru['current_version'] = rd.getVar('PV')
     ru['version'] = ''
     ru['type'] = 'U'
     ru['datetime'] = ''
-
-    pv = rd.getVar('PV')
+    ru['revision'] = ''
 
     # XXX: If don't have SRC_URI means that don't have upstream sources so
     # returns the current recipe version, so that upstream version check
     # declares a match.
     src_uris = rd.getVar('SRC_URI')
     if not src_uris:
-        ru['version'] = pv
+        ru['version'] = ru['current_version']
         ru['type'] = 'M'
         ru['datetime'] = datetime.now()
         return ru
@@ -926,6 +926,9 @@ def get_recipe_upstream_version(rd):
     # XXX: we suppose that the first entry points to the upstream sources
     src_uri = src_uris.split()[0]
     uri_type, _, _, _, _, _ =  decodeurl(src_uri)
+
+    (pv, pfx, sfx) = get_recipe_pv_without_srcpv(rd.getVar('PV'), uri_type)
+    ru['current_version'] = pv
 
     manual_upstream_version = rd.getVar("RECIPE_UPSTREAM_VERSION")
     if manual_upstream_version:
@@ -947,32 +950,21 @@ def get_recipe_upstream_version(rd):
         ru['datetime'] = datetime.now()
     else:
         ud = bb.fetch2.FetchData(src_uri, rd)
-        pupver = ud.method.latest_versionstring(ud, rd)
-        (upversion, revision) = pupver
-
-        # format git version version+gitAUTOINC+HASH
-        if uri_type == 'git':
-            (pv, pfx, sfx) = get_recipe_pv_without_srcpv(pv, uri_type)
-
-            # if contains revision but not upversion use current pv
-            if upversion == '' and revision:
-                upversion = pv
-
-            if upversion:
-                tmp = upversion
-                upversion = ''
-
-                if pfx:
-                    upversion = pfx + tmp
-                else:
-                    upversion = tmp
-
-                if sfx:
-                    upversion = upversion + sfx + revision[:10]
+        if rd.getVar("UPSTREAM_CHECK_COMMITS") == "1":
+            revision = ud.method.latest_revision(ud, rd, 'default')
+            upversion = pv
+            if revision != rd.getVar("SRCREV"):
+                upversion = upversion + "-new-commits-available" 
+        else:
+            pupver = ud.method.latest_versionstring(ud, rd)
+            (upversion, revision) = pupver
 
         if upversion:
             ru['version'] = upversion
             ru['type'] = 'A'
+
+        if revision:
+            ru['revision'] = revision
 
         ru['datetime'] = datetime.now()
 
