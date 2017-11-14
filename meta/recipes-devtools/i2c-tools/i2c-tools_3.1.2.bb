@@ -7,6 +7,8 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=751419260aa954499f7abaabaa882bbe"
 SRC_URI = "http://downloads.yoctoproject.org/mirror/sources/${BP}.tar.bz2 \
            file://Module.mk \
 "
+UPSTREAM_CHECK_URI = "${DEBIAN_MIRROR}/main/i/i2c-tools/"
+UPSTREAM_CHECK_REGEX = "i2c-tools_(?P<pver>.+)\.orig"
 SRC_URI[md5sum] = "7104a1043d11a5e2c7b131614eb1b962"
 SRC_URI[sha256sum] = "db5e69f2e2a6e3aa2ecdfe6a5f490b149c504468770f58921c8c5b8a7860a441"
 
