@@ -12,8 +12,8 @@ SRC_URI = "ftp://xmlsoft.org/libxslt/libxslt-${PV}.tar.gz \
            file://pkgconfig_fix.patch \
            "
 
-SRC_URI[md5sum] = "14e9842a70fda476065f2eefcbc29af0"
-SRC_URI[sha256sum] = "db25e96b6b801144277e67c05b10560ac09dfff82ccd53a154ce86e43622f3ab"
+SRC_URI[md5sum] = "1fc72f98e98bf4443f1651165f3aa146"
+SRC_URI[sha256sum] = "526ecd0abaf4a7789041622c3950c0e7f2c4c8835471515fd77eec684a355460"
 
 UPSTREAM_CHECK_REGEX = "libxslt-(?P<pver>\d+(\.\d+)+)\.tar"
 
