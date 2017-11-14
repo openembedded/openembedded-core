@@ -219,7 +219,6 @@ do_install() {
 	# 20:12 < mezcalero> koen: you have three options: a) run systemd-machine-id-setup at install time, b) have / read-only and an empty file there (for stateless) and c) boot with / writable
 	touch ${D}${sysconfdir}/machine-id
 
-
 	install -d ${D}${sysconfdir}/udev/rules.d/
 	install -d ${D}${sysconfdir}/tmpfiles.d
 	install -m 0644 ${WORKDIR}/*.rules ${D}${sysconfdir}/udev/rules.d/
@@ -275,39 +274,39 @@ do_install() {
 	fi
 	install -Dm 0755 ${S}/src/systemctl/systemd-sysv-install.SKELETON ${D}${systemd_unitdir}/systemd-sysv-install
 
-       # If polkit is setup fixup permissions and ownership
-       if [ "${@bb.utils.contains('PACKAGECONFIG', 'polkit', 'polkit', '', d)}" = "polkit" ] ; then
-           if [ -d ${D}${datadir}/polkit-1/rules.d ] ; then
-               chmod 700 ${D}${datadir}/polkit-1/rules.d
-               chown polkitd:root ${D}${datadir}/polkit-1/rules.d
-           fi
-       fi
+	# If polkit is setup fixup permissions and ownership
+	if ${@bb.utils.contains('PACKAGECONFIG', 'polkit', 'true', 'false', d)}; then
+		if [ -d ${D}${datadir}/polkit-1/rules.d ]; then
+			chmod 700 ${D}${datadir}/polkit-1/rules.d
+			chown polkitd:root ${D}${datadir}/polkit-1/rules.d
+		fi
+	fi
 }
 
 do_install_ptest () {
-       # install data files needed for tests
-       install -d ${D}${PTEST_PATH}/tests/test
-       cp -rfL ${S}/test/* ${D}${PTEST_PATH}/tests/test
-       # python is disabled for systemd, thus removing these python testing scripts
-       rm ${D}${PTEST_PATH}/tests/test/*.py
-       sed -i 's/"tree"/"ls"/' ${D}${PTEST_PATH}/tests/test/udev-test.pl
+	# install data files needed for tests
+	install -d ${D}${PTEST_PATH}/tests/test
+	cp -rfL ${S}/test/* ${D}${PTEST_PATH}/tests/test
+	# python is disabled for systemd, thus removing these python testing scripts
+	rm ${D}${PTEST_PATH}/tests/test/*.py
+	sed -i 's/"tree"/"ls"/' ${D}${PTEST_PATH}/tests/test/udev-test.pl
 
-       install -d ${D}${PTEST_PATH}/tests/catalog
-       install ${S}/catalog/* ${D}${PTEST_PATH}/tests/catalog/
+	install -d ${D}${PTEST_PATH}/tests/catalog
+	install ${S}/catalog/* ${D}${PTEST_PATH}/tests/catalog/
 
-       install -D ${S}/build-aux/test-driver ${D}${PTEST_PATH}/tests/build-aux/test-driver
+	install -D ${S}/build-aux/test-driver ${D}${PTEST_PATH}/tests/build-aux/test-driver
 
-       install -d ${D}${PTEST_PATH}/tests/rules
-       install ${B}/rules/* ${D}${PTEST_PATH}/tests/rules/
+	install -d ${D}${PTEST_PATH}/tests/rules
+	install ${B}/rules/* ${D}${PTEST_PATH}/tests/rules/
 
-       # This directory needs to be there for udev-test.pl to work.
-       install -d ${D}${libdir}/udev/rules.d
+	# This directory needs to be there for udev-test.pl to work.
+	install -d ${D}${libdir}/udev/rules.d
 
-       # install actual test binaries
-       install -m 0755 ${B}/test-* ${D}${PTEST_PATH}/tests/
-       install -m 0755 ${B}/.libs/test-* ${D}${PTEST_PATH}/tests/
+	# install actual test binaries
+	install -m 0755 ${B}/test-* ${D}${PTEST_PATH}/tests/
+	install -m 0755 ${B}/.libs/test-* ${D}${PTEST_PATH}/tests/
 
-       install ${B}/Makefile ${D}${PTEST_PATH}/tests/
+	install ${B}/Makefile ${D}${PTEST_PATH}/tests/
 }
 
 python populate_packages_prepend (){
