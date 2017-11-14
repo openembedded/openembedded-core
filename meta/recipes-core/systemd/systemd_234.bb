@@ -80,7 +80,6 @@ PACKAGECONFIG_remove_libc-musl = "smack"
 PACKAGECONFIG_remove_libc-musl = "resolved"
 PACKAGECONFIG_remove_libc-musl = "nss"
 PACKAGECONFIG_remove_libc-musl = "localed"
-PACKAGECONFIG_remove_libc-musl = "ldconfig"
 
 # Use the upstream systemd serial-getty@.service and rely on
 # systemd-getty-generator instead of using the OE-core specific
