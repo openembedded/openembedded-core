@@ -10,7 +10,8 @@ SRC_URI = "https://files.pythonhosted.org/packages/source/s/${SRCNAME}/${SRCNAME
 SRC_URI[md5sum] = "7ca558edaaa1942fe38f3105ca2400fb"
 SRC_URI[sha256sum] = "aa5afb33c2bbd33c311e47e912412195739e9ffb2e933534a31f85fba8f3470e"
 
-UPSTREAM_CHECK_URI = "https://pypi.python.org/pypi/SCons/"
+UPSTREAM_CHECK_URI = "http://scons.org/pages/download.html"
+UPSTREAM_CHECK_REGEX = "(?P<pver>\d+(\.\d+)+)\.tar"
 
 S = "${WORKDIR}/${SRCNAME}-${PV}"
 
