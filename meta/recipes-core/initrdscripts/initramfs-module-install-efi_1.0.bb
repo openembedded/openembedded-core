@@ -7,14 +7,14 @@ PR = "r4"
 
 inherit allarch
 
-FILESEXTRAPATHS_prepend := "${THISDIR}/initramfs-framework:"
-SRC_URI = "file://install-efi.sh"
+FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
+SRC_URI = "file://init-install-efi.sh"
 
 S = "${WORKDIR}"
 
 do_install() {
     install -d ${D}/init.d
-    install -m 0755 ${WORKDIR}/install-efi.sh ${D}/init.d/install-efi.sh
+    install -m 0755 ${WORKDIR}/init-install-efi.sh ${D}/init.d/install-efi.sh
 }
 
 FILES_${PN} = "/init.d/install-efi.sh"
