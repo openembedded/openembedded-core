@@ -18,8 +18,6 @@ RDEPENDS_${PN} = "tcl"
 
 inherit autotools update-alternatives
 
-PR = "r1"
-
 SRC_URI = "${SOURCEFORGE_MIRROR}/expect/Expect/${PV}/${BPN}${PV}.tar.gz \
            file://0001-configure.in.patch \
            file://0002-tcl.m4.patch \
@@ -28,8 +26,8 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/expect/Expect/${PV}/${BPN}${PV}.tar.gz \
            file://0001-Resolve-string-formatting-issues.patch \
            file://0001-expect-Fix-segfaults-if-Tcl-is-built-with-stubs-and-.patch \
           "
-SRC_URI[md5sum] = "44e1a4f4c877e9ddc5a542dfa7ecc92b"
-SRC_URI[sha256sum] = "b28dca90428a3b30e650525cdc16255d76bb6ccd65d448be53e620d95d5cc040"
+SRC_URI[md5sum] = "a8855cd41c1ef004b9794db9e2a57a9d"
+SRC_URI[sha256sum] = "c520717b7195944a69ce1492ec82ca0ac3f3baf060804e6c5ee6d505ea512be9"
 
 UPSTREAM_CHECK_URI = "http://sourceforge.net/projects/expect/files/Expect/"
 UPSTREAM_CHECK_REGEX = "/Expect/(?P<pver>(\d+[\.\-_]*)+)/"
