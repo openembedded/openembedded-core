@@ -11,6 +11,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=f2e071ab72978431b294a0d696327421 \
 DEPENDS = "cairo"
 
 SRC_URI = "https://github.com/pygobject/pycairo/releases/download/v${PV}/pycairo-${PV}.tar.gz"
+UPSTREAM_CHECK_URI = "https://github.com/pygobject/pycairo/releases/"
 
 SRC_URI[md5sum] = "7390cd413271fe5569f6eef73d72bf7a"
 SRC_URI[sha256sum] = "8642e36cef66acbfc02760d2b40c716f5f183d073fb063ba28fd29a14044719d"
