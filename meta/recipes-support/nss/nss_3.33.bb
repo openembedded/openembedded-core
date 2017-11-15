@@ -104,7 +104,12 @@ do_compile() {
     # We can modify CC in the environment, but if we set it via an
     # argument to make, nsinstall, a host program, will also build with it!
     #
-    export CC="${CC} -g"
+    # nss pretty much does its own thing with CFLAGS, so we put them into CC.
+    # Optimization will get clobbered, but most of the stuff will survive.
+    # The motivation for this is to point to the correct place for debug
+    # source files and CFLAGS does that.  Nothing uses CCC.
+    #
+    export CC="${CC} ${CFLAGS}"
     make -C ./nss CCC="${CXX} -g" \
         OS_TEST=${OS_TEST} \
         RPATH="${RPATH}"
