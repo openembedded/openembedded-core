@@ -9,8 +9,8 @@ DEPENDS = "libevdev udev mtdev"
 
 SRC_URI = "http://www.freedesktop.org/software/${BPN}/${BP}.tar.xz"
 
-SRC_URI[md5sum] = "5265244853ad7cf41232b0d3ee805ab9"
-SRC_URI[sha256sum] = "2fe2e2f52f0971a9c43541b8f26582ca8df6ed4bb9050e85eb40d4ff6b13142d"
+SRC_URI[md5sum] = "aeeb79bfe1b1cb64c939098468d350b3"
+SRC_URI[sha256sum] = "5ad95c8db75d59f1662199df748f912b150c3294d33cd4dd592aeb1908fe9d7f"
 
 inherit autotools pkgconfig lib_package
 
