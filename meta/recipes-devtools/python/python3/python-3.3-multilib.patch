@@ -138,6 +138,15 @@ Index: Python-3.5.2/Modules/getpath.c
  
  /* Get file status. Encode the path to the locale encoding. */
  
+@@ -494,7 +502,7 @@ calculate_path(void)
+     _pythonpath = Py_DecodeLocale(PYTHONPATH, NULL);
+     _prefix = Py_DecodeLocale(PREFIX, NULL);
+     _exec_prefix = Py_DecodeLocale(EXEC_PREFIX, NULL);
+-    lib_python = Py_DecodeLocale("lib/python" VERSION, NULL);
++    lib_python = Py_DecodeLocale(LIB_PYTHON, NULL);
+ 
+     if (!_pythonpath || !_prefix || !_exec_prefix || !lib_python) {
+         Py_FatalError(
 Index: Python-3.5.2/Python/getplatform.c
 ===================================================================
 --- Python-3.5.2.orig/Python/getplatform.c
@@ -185,7 +194,7 @@ Index: Python-3.5.2/setup.py
 ===================================================================
 --- Python-3.5.2.orig/setup.py
 +++ Python-3.5.2/setup.py
-@@ -492,7 +492,7 @@ class PyBuildExt(build_ext):
+@@ -495,7 +495,7 @@ class PyBuildExt(build_ext):
          # directories (i.e. '.' and 'Include') must be first.  See issue
          # 10520.
          if not cross_compiling:
@@ -194,7 +203,7 @@ Index: Python-3.5.2/setup.py
              add_dir_to_list(self.compiler.include_dirs, '/usr/local/include')
          # only change this for cross builds for 3.3, issues on Mageia
          if cross_compiling:
-@@ -550,8 +550,7 @@ class PyBuildExt(build_ext):
+@@ -553,8 +553,7 @@ class PyBuildExt(build_ext):
          # be assumed that no additional -I,-L directives are needed.
          if not cross_compiling:
              lib_dirs = self.compiler.library_dirs + [
@@ -204,7 +213,7 @@ Index: Python-3.5.2/setup.py
                  ]
              inc_dirs = self.compiler.include_dirs + ['/usr/include']
          else:
-@@ -743,11 +742,11 @@ class PyBuildExt(build_ext):
+@@ -746,11 +745,11 @@ class PyBuildExt(build_ext):
              elif curses_library:
                  readline_libs.append(curses_library)
              elif self.compiler.find_library_file(lib_dirs +
@@ -268,7 +277,7 @@ Index: Python-3.5.2/configure.ac
 ===================================================================
 --- Python-3.5.2.orig/configure.ac
 +++ Python-3.5.2/configure.ac
-@@ -876,6 +876,41 @@ PLATDIR=plat-$MACHDEP
+@@ -883,6 +883,41 @@ PLATDIR=plat-$MACHDEP
  AC_SUBST(PLATDIR)
  AC_SUBST(PLATFORM_TRIPLET)
  
