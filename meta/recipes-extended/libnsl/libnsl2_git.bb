@@ -34,3 +34,4 @@ do_install_append() {
 
 FILES_${PN} += "${libdir}/nsl/*.so.*"
 FILES_${PN}-dev += "${includedir}/nsl ${libdir}/nsl/*.so"
+FILES_${PN}-staticdev += "${libdir}/nsl/*.a"
