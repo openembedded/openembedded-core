@@ -41,6 +41,16 @@ do_install_class-native() {
 	install -m 755 grub-mkimage ${D}${bindir}
 }
 
+do_install_append_class-target() {
+    # Remove build host references...
+    find "${D}" -name modinfo.sh -type f -exec \
+        sed -i \
+        -e 's,--sysroot=${STAGING_DIR_TARGET},,g' \
+        -e 's|${DEBUG_PREFIX_MAP}||g' \
+        -e 's:${RECIPE_SYSROOT_NATIVE}::g' \
+        {} +
+}
+
 GRUB_BUILDIN ?= "boot linux ext2 fat serial part_msdos part_gpt normal efi_gop iso9660 search"
 
 do_deploy() {
