@@ -27,6 +27,12 @@ EXTRA_OECONF_append_libc-musl = " --disable-hardening "
 
 # mksigname/mksiglist are used on build host to generate source files
 do_compile_prepend () {
+	# Remove build host references from sudo_usage.h
+	sed -i  \
+	    -e 's,--with-libtool-sysroot=${STAGING_DIR_TARGET},,g' \
+	    -e 's,--build=${BUILD_SYS},,g' \
+	    -e 's,--host=${HOST_SYS},,g' \
+	    ${B}/src/sudo_usage.h
 	oe_runmake SSP_CFLAGS="" SSP_LDFLAGS="" CC="$BUILD_CC" CFLAGS="$BUILD_CFLAGS" CPPFLAGS="$BUILD_CPPFLAGS -I${S}/include -I${S} -I${B}"  -C lib/util mksigname mksiglist
 }
 
