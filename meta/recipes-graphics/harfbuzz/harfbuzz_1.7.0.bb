@@ -12,8 +12,8 @@ DEPENDS = "glib-2.0 cairo fontconfig freetype"
 
 SRC_URI = "http://www.freedesktop.org/software/harfbuzz/release/${BP}.tar.bz2"
 
-SRC_URI[md5sum] = "032281c42a5df6d16b69ca6ec3b09bd4"
-SRC_URI[sha256sum] = "e31eb367beb61a9399d2c78b51c225ab2b1cbd46f364f2d80d97bb422b44101a"
+SRC_URI[md5sum] = "7e70e68ade0ed79719932b38c2130f0a"
+SRC_URI[sha256sum] = "042742d6ec67bc6719b69cf38a3fba24fbd120e207e3fdc18530dc730fb6a029"
 
 inherit autotools pkgconfig lib_package gtk-doc
 
