@@ -20,7 +20,8 @@ undefined reference to `XML_GetCurrentLineNumber'
 
 explictly add EXPAT_LIBS to intel's VULKAN_LIB_DEPS
 
-Upstream-Status: Submitted [mesa-dev@lists.freedesktop.org]
+Upstream-Status: Accepted
+https://cgit.freedesktop.org/mesa/mesa/commit/?id=05fc62d89f59ce19a18bfd4e63a09624910d6caf
 
 Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
 ---
