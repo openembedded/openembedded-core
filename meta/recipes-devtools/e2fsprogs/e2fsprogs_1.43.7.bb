@@ -1,11 +1,9 @@
 require e2fsprogs.inc
 
-SRC_URI += "file://acinclude.m4 \
-            file://remove.ldconfig.call.patch \
+SRC_URI += "file://remove.ldconfig.call.patch \
             file://quiet-debugfs.patch \
             file://run-ptest \
             file://ptest.patch \
-            file://mkdir.patch \
             file://Revert-mke2fs-enable-the-metadata_csum-and-64bit-fea.patch \
             file://mkdir_p.patch \
             file://0001-misc-create_inode.c-set-dir-s-mode-correctly.patch \
@@ -25,9 +23,6 @@ EXTRA_OECONF_darwin = "--libdir=${base_libdir} --sbindir=${base_sbindir} --enabl
 PACKAGECONFIG ??= ""
 PACKAGECONFIG[fuse] = '--enable-fuse2fs,--disable-fuse2fs,fuse'
 
-do_configure_prepend () {
-	cp ${WORKDIR}/acinclude.m4 ${S}/
-}
 
 do_install () {
 	oe_runmake 'DESTDIR=${D}' install
