@@ -27,6 +27,7 @@ SRC_URI = "git://github.com/systemd/systemd.git;protocol=git \
            file://0017-remove-duplicate-include-uchar.h.patch \
            file://0018-check-for-uchar.h-in-configure.patch \
            file://0019-socket-util-don-t-fail-if-libc-doesn-t-support-IDN.patch \
+           file://0020-rules-watch-metadata-changes-in-ide-devices.patch \
            file://0001-add-fallback-parse_printf_format-implementation.patch \
            file://0002-src-basic-missing.h-check-for-missing-strndupa.patch \
            file://0003-don-t-fail-if-GLOB_BRACE-and-GLOB_ALTDIRFUNC-is-not-.patch \
