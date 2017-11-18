@@ -5,17 +5,47 @@ LICENSE = "MIT"
 
 LIC_FILES_CHKSUM = "file://LICENSE;beginline=1;endline=19;md5=9a33897f1bca1160d7aad3835152e158"
 
-SRCNAME = "setuptools"
+PYPI_PACKAGE_EXT = "zip"
 
-SRC_URI = "https://files.pythonhosted.org/packages/source/s/${SRCNAME}/${SRCNAME}-${PV}.zip"
+inherit pypi
 
-SRC_URI[md5sum] = "704f500dd55f4bd0be905444f3ba892c"
-SRC_URI[sha256sum] = "ce2007c1cea3359870b80657d634253a0765b0c7dc5a988d77ba803fc86f2c64"
+SRC_URI[md5sum] = "e8e05d4f8162c9341e1089c80f742f64"
+SRC_URI[sha256sum] = "9c671a6291a5b1171fb9da81665eb4f9625c7dbddc613d82abdc6002a4bce896"
 
-UPSTREAM_CHECK_URI = "https://pypi.python.org/pypi/setuptools"
+DEPENDS += "${PYTHON_PN}"
+DEPENDS_class-native += "${PYTHON_PN}-native"
+DEPENDS_class-nativesdk += "nativesdk-${PYTHON_PN}"
 
-S = "${WORKDIR}/${SRCNAME}-${PV}"
+DISTUTILS_INSTALL_ARGS += "--install-lib=${D}${PYTHON_SITEPACKAGES_DIR} \
+                           --script-dir=${bindir}"
+
+RDEPENDS_${PN}_class-native = "\
+  ${PYTHON_PN}-distutils \
+  ${PYTHON_PN}-compression \
+"
+RDEPENDS_${PN} = "\
+  ${PYTHON_PN}-compile \
+  ${PYTHON_PN}-compression \
+  ${PYTHON_PN}-ctypes \
+  ${PYTHON_PN}-distutils \
+  ${PYTHON_PN}-email \
+  ${PYTHON_PN}-html \
+  ${PYTHON_PN}-importlib \
+  ${PYTHON_PN}-netserver \
+  ${PYTHON_PN}-numbers \
+  ${PYTHON_PN}-pkgutil \
+  ${PYTHON_PN}-plistlib \
+  ${PYTHON_PN}-shell \
+  ${PYTHON_PN}-subprocess \
+  ${PYTHON_PN}-stringold \
+  ${PYTHON_PN}-textutils \
+  ${PYTHON_PN}-threading \
+  ${PYTHON_PN}-unittest \
+  ${PYTHON_PN}-xml \
+"
 
 do_install_prepend() {
     install -d ${D}${PYTHON_SITEPACKAGES_DIR}
 }
+
+BBCLASSEXTEND = "native nativesdk"
