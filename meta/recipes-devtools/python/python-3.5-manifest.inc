@@ -46,6 +46,7 @@ PROVIDES+="\
   ${PN}-numbers \
   ${PN}-pickle \
   ${PN}-pkgutil \
+  ${PN}-plistlib \
   ${PN}-pprint \
   ${PN}-profile \
   ${PN}-pydoc \
@@ -53,6 +54,7 @@ PROVIDES+="\
   ${PN}-readline \
   ${PN}-reprlib \
   ${PN}-resource \
+  ${PN}-runpy \
   ${PN}-selectors \
   ${PN}-shell \
   ${PN}-signal \
@@ -117,6 +119,7 @@ ${PN}-distutils \
   ${PN}-numbers \
   ${PN}-pickle \
   ${PN}-pkgutil \
+  ${PN}-plistlib \
   ${PN}-pprint \
   ${PN}-profile \
   ${PN}-pydoc \
@@ -124,6 +127,7 @@ ${PN}-distutils \
   ${PN}-readline \
   ${PN}-reprlib \
   ${PN}-resource \
+  ${PN}-runpy \
   ${PN}-selectors \
   ${PN}-shell \
   ${PN}-signal \
@@ -310,6 +314,7 @@ FILES_${PN}-core="\
   ${includedir}/python${PYTHON_BINABI}/pyconfig*.h \
   ${libdir}/python${PYTHON_MAJMIN}/collections \
   ${libdir}/python${PYTHON_MAJMIN}/_collections_abc.* \
+  ${libdir}/python${PYTHON_MAJMIN}/_markupbase.* \
   ${libdir}/python${PYTHON_MAJMIN}/_sitebuiltins.* \
   ${libdir}/python${PYTHON_MAJMIN}/sitecustomize.py \
 "
@@ -768,6 +773,13 @@ FILES_${PN}-pkgutil="\
   ${libdir}/python3.5/__pycache__/pkgutil.* \
 "
 
+SUMMARY_${PN}-plistlib="Generate and parse Mac OS X .plist files"
+RDEPENDS_${PN}-plistlib="${PN}-core ${PN}-datetime ${PN}-io"
+FILES_${PN}-plistlib="\
+  ${libdir}/python3.5/plistlib.* \
+  ${libdir}/python3.5/__pycache__/plistlib.* \
+"
+
 SUMMARY_${PN}-pprint="Python pretty-print support"
 RDEPENDS_${PN}-pprint="${PN}-core ${PN}-io"
 FILES_${PN}-pprint="\
@@ -834,6 +846,13 @@ RDEPENDS_${PN}-resource="${PN}-core"
 FILES_${PN}-resource="\
   ${libdir}/python3.5/lib-dynload/resource.*.so \
   ${libdir}/python3.5/lib-dynload/__pycache__/resource.*.so \
+"
+
+SUMMARY_${PN}-runpy="Python script for locating/executing scripts in module namespace"
+RDEPENDS_${PN}-runpy="${PN}-core ${PN}-pkgutil"
+FILES_${PN}-runpy="\
+  ${libdir}/python3.5/runpy.* \
+  ${libdir}/python3.5/__pycache__/runpy.* \
 "
 
 SUMMARY_${PN}-selectors="Python High-level I/O multiplexing"
@@ -1077,6 +1096,7 @@ RDEPENDS_${PN}-modules=" \
   ${PN}-numbers \
   ${PN}-pickle \
   ${PN}-pkgutil \
+  ${PN}-plistlib \
   ${PN}-pprint \
   ${PN}-profile \
   ${PN}-pydoc \
@@ -1084,6 +1104,7 @@ RDEPENDS_${PN}-modules=" \
   ${PN}-readline \
   ${PN}-reprlib \
   ${PN}-resource \
+  ${PN}-runpy \
   ${PN}-selectors \
   ${PN}-shell \
   ${PN}-signal \

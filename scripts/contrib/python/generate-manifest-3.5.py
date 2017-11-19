@@ -213,6 +213,7 @@ if __name__ == "__main__":
     "${includedir}/python${PYTHON_BINABI}/pyconfig*.h " +
     "${libdir}/python${PYTHON_MAJMIN}/collections " +
     "${libdir}/python${PYTHON_MAJMIN}/_collections_abc.* " +
+    "${libdir}/python${PYTHON_MAJMIN}/_markupbase.* " +
     "${libdir}/python${PYTHON_MAJMIN}/_sitebuiltins.* " +
     "${libdir}/python${PYTHON_MAJMIN}/sitecustomize.py ")
 
@@ -360,6 +361,9 @@ if __name__ == "__main__":
     m.addPackage( "${PN}-pkgutil", "Python package extension utility support", "${PN}-core",
     "pkgutil.*")
 
+    m.addPackage( "${PN}-plistlib", "Generate and parse Mac OS X .plist files", "${PN}-core ${PN}-datetime ${PN}-io",
+    "plistlib.*")
+
     m.addPackage( "${PN}-pprint", "Python pretty-print support", "${PN}-core ${PN}-io",
     "pprint.*" )
 
@@ -377,6 +381,9 @@ if __name__ == "__main__":
 
     m.addPackage( "${PN}-resource", "Python resource control interface", "${PN}-core",
     "lib-dynload/resource.*.so" )
+
+    m.addPackage( "${PN}-runpy", "Python script for locating/executing scripts in module namespace", "${PN}-core ${PN}-pkgutil",
+    "runpy.*" )
 
     m.addPackage( "${PN}-selectors", "Python High-level I/O multiplexing", "${PN}-core",
     "selectors.*" )

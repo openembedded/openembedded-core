@@ -368,6 +368,9 @@ if __name__ == "__main__":
     m.addPackage( "${PN}-robotparser", "Python robots.txt parser", "${PN}-core ${PN}-netclient",
     "robotparser.*")
 
+    m.addPackage( "${PN}-runpy", "Python script for locating/executing scripts in module namespace", "${PN}-core ${PN}-pkgutil",
+    "runpy.*")
+
     m.addPackage( "${PN}-subprocess", "Python subprocess support", "${PN}-core ${PN}-io ${PN}-re ${PN}-fcntl ${PN}-pickle",
     "subprocess.*" )
 

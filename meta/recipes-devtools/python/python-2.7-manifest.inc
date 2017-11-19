@@ -56,6 +56,7 @@ PROVIDES+=" \
   ${PN}-readline \
   ${PN}-resource \
   ${PN}-robotparser \
+  ${PN}-runpy \
   ${PN}-shell \
   ${PN}-smtpd \
   ${PN}-sqlite3 \
@@ -127,6 +128,7 @@ PACKAGES=" \
   ${PN}-readline \
   ${PN}-resource \
   ${PN}-robotparser \
+  ${PN}-runpy \
   ${PN}-shell \
   ${PN}-smtpd \
   ${PN}-sqlite3 \
@@ -625,6 +627,12 @@ FILES_${PN}-robotparser=" \
     ${libdir}/python2.7/robotparser.* \
 "
 
+SUMMARY_${PN}-runpy="Python script for locating/executing scripts in module namespace"
+RDEPENDS_${PN}-runpy="${PN}-core ${PN}-pkgutil"
+FILES_${PN}-runpy=" \
+    ${libdir}/python2.7/runpy.* \
+"
+
 SUMMARY_${PN}-shell="Python shell-like functionality"
 RDEPENDS_${PN}-shell="${PN}-core ${PN}-re"
 FILES_${PN}-shell=" \
@@ -809,6 +817,7 @@ RDEPENDS_${PN}-modules=" \
   ${PN}-readline \
   ${PN}-resource \
   ${PN}-robotparser \
+  ${PN}-runpy \
   ${PN}-shell \
   ${PN}-smtpd \
   ${PN}-sqlite3 \
