@@ -923,7 +923,7 @@ class BaseConfig(object):
         logger.debug('Running %s...' % cmd)
         ip_link = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE).stdout.read().decode('utf-8')
         # Matches line like: 6: tap0: <foo>
-        possibles = re.findall('^[1-9]+: +(tap[0-9]+): <.*', ip_link, re.M)
+        possibles = re.findall('^[0-9]+: +(tap[0-9]+): <.*', ip_link, re.M)
         tap = ""
         for p in possibles:
             lockfile = os.path.join(lockdir, p)
