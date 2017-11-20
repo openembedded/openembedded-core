@@ -224,7 +224,7 @@ def spawn(name, sh_cmd, title=None, env=None, d=None):
     import time
     pidfile = tempfile.NamedTemporaryFile(delete = False).name
     try:
-        sh_cmd = "oe-gnome-terminal-phonehome " + pidfile + " " + sh_cmd
+        sh_cmd = bb.utils.which(os.getenv('PATH'), "oe-gnome-terminal-phonehome") + " " + pidfile + " " + sh_cmd
         pipe = terminal(sh_cmd, title, env, d)
         output = pipe.communicate()[0]
         if output:
