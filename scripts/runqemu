@@ -726,6 +726,8 @@ class BaseConfig(object):
         cf.read(self.qemuboot)
         for k, v in cf.items('config_bsp'):
             k_upper = k.upper()
+            if v.startswith("../"):
+                v = os.path.abspath(os.path.dirname(self.qemuboot) + "/" + v)
             self.set(k_upper, v)
 
     def validate_paths(self):
