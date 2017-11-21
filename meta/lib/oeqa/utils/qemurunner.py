@@ -274,7 +274,7 @@ class QemuRunner:
         reachedlogin = False
         stopread = False
         qemusock = None
-        bootlog = ''
+        bootlog = b''
         data = b''
         while time.time() < endtime and not stopread:
             try:
@@ -291,17 +291,13 @@ class QemuRunner:
                 else:
                     data = data + sock.recv(1024)
                     if data:
-                        try:
-                            data = data.decode("utf-8", errors="surrogateescape")
-                            bootlog += data
-                            data = b''
-                            if re.search(".* login:", bootlog):
-                                self.server_socket = qemusock
-                                stopread = True
-                                reachedlogin = True
-                                self.logger.debug("Reached login banner")
-                        except UnicodeDecodeError:
-                            continue
+                        bootlog += data
+                        data = b''
+                        if b' login:' in bootlog:
+                            self.server_socket = qemusock
+                            stopread = True
+                            reachedlogin = True
+                            self.logger.debug("Reached login banner")
                     else:
                         socklist.remove(sock)
                         sock.close()
