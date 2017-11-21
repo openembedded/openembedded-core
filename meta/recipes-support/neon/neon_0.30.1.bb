@@ -5,7 +5,7 @@ LICENSE = "LGPLv2+"
 LIC_FILES_CHKSUM = "file://src/COPYING.LIB;md5=f30a9716ef3762e3467a2f62bf790f0a \
                     file://src/ne_utils.h;beginline=1;endline=20;md5=2caca609538eddaa6f6adf120a218037"
 
-SRC_URI = "http://www.webdav.org/${BPN}/${BPN}-${PV}.tar.gz \
+SRC_URI = "https://ftp.osuosl.org/pub/blfs/conglomeration/${BPN}/${BPN}-${PV}.tar.gz \
            file://pkgconfig.patch \
            file://gnutls_4.3_fixup.patch"
 
