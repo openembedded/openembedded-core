@@ -10,29 +10,27 @@ building for nettle.
 
 Upstream-Status: Pending
 Signed-off-by: Haiqing Bai <Haiqing.Bai@windriver.com>
----
- configure.ac | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/configure.ac b/configure.ac
-index 4ead52c..982760f 100644
---- a/configure.ac
-+++ b/configure.ac
+refactored for 3.4. pending not in as of 3.4
+
+Signed-off-by: Armin Kuster <akuster@mvista.com>
+
+Index: nettle-3.4/configure.ac
+===================================================================
+--- nettle-3.4.orig/configure.ac
++++ nettle-3.4/configure.ac
 @@ -185,9 +185,11 @@ AC_HEADER_TIME
  AC_CHECK_SIZEOF(long)
  AC_CHECK_SIZEOF(size_t)
  
--AC_CHECK_HEADERS([openssl/blowfish.h openssl/des.h openssl/cast.h openssl/aes.h openssl/ecdsa.h],,
+-AC_CHECK_HEADERS([openssl/evp.h openssl/ecdsa.h],,
 -[enable_openssl=no
 - break])
 +if test "x$enable_openssl" = "xyes"; then
-+  AC_CHECK_HEADERS([openssl/blowfish.h openssl/des.h openssl/cast.h openssl/aes.h openssl/ecdsa.h],,
++  AC_CHECK_HEADERS([openssl/evp.h openssl/ecdsa.h],,
 +  [enable_openssl=no
-+  break])
++   break])
 +fi
  
+ # For use by the testsuite
  AC_CHECK_HEADERS([valgrind/memcheck.h])
- 
--- 
-1.9.1
-
