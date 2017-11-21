@@ -728,6 +728,8 @@ class BaseConfig(object):
             k_upper = k.upper()
             if v.startswith("../"):
                 v = os.path.abspath(os.path.dirname(self.qemuboot) + "/" + v)
+            elif v == ".":
+                v = os.path.dirname(self.qemuboot)
             self.set(k_upper, v)
 
     def validate_paths(self):
