@@ -46,6 +46,10 @@ SRC_URI = "${GLIBC_GIT_URI};branch=${SRCBRANCH};name=glibc \
            file://0005-Remove-__ASSUME_REQUEUE_PI.patch \
            file://0006-Fix-atomic_fetch_xor_release.patch \
            file://0001-CVE-2015-5180-resolv-Fix-crash-with-internal-QTYPE-B.patch \
+           file://0001-CVE-2017-1000366-Ignore-LD_LIBRARY_PATH-for-AT_SECUR.patch \
+           file://0002-ld.so-Reject-overly-long-LD_PRELOAD-path-elements.patch \
+           file://0003-ld.so-Reject-overly-long-LD_AUDIT-path-elements.patch \
+           file://0004-i686-Add-missing-IS_IN-libc-guards-to-vectorized-str.patch \
 "
 
 SRC_URI += "\
