@@ -92,3 +92,8 @@ export STRIP = "${BUILD_STRIP}"
 export NM = "${BUILD_NM}"
 
 inherit nopackages
+
+python do_addto_recipe_sysroot () {
+    bb.build.exec_func("extend_recipe_sysroot", d)
+}
+addtask addto_recipe_sysroot after do_populate_sysroot
