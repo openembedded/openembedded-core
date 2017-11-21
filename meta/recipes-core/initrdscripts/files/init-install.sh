@@ -132,7 +132,7 @@ fi
 
 disk_size=$(parted ${device} unit mb print | grep '^Disk .*: .*MB' | cut -d" " -f 3 | sed -e "s/MB//")
 
-grub_version=$(grub-install -v|sed 's/.* \([0-9]\).*/\1/')
+grub_version=$(grub-install -V|sed 's/.* \([0-9]\).*/\1/')
 
 if [ $grub_version -eq 0 ] ; then
     bios_boot_size=0
