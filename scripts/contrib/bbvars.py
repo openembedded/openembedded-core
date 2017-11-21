@@ -32,47 +32,11 @@ scriptpath.add_bitbake_lib_path()
 import bb.tinfoil
 
 def usage():
-    print('Usage: %s -d FILENAME [-d FILENAME]* -m METADIR [-m MATADIR]*' % os.path.basename(sys.argv[0]))
+    print('Usage: %s -d FILENAME [-d FILENAME]*' % os.path.basename(sys.argv[0]))
     print('  -d FILENAME         documentation file to search')
     print('  -h, --help          display this help and exit')
-    print('  -m METADIR          meta directory to search for recipes')
     print('  -t FILENAME         documentation config file (for doc tags)')
     print('  -T                  Only display variables with doc tags (requires -t)')
-
-def recipe_bbvars(recipe):
-    ''' Return a unique set of every bbvar encountered in the recipe '''
-    prog = re.compile("[A-Z_]+")
-    vset = set()
-    try:
-        r = open(recipe)
-    except IOError as err:
-        print('WARNING: Failed to open recipe ', recipe)
-        print(err.args[1])
-
-    for line in r:
-        # Strip any comments from the line
-        line = line.rsplit('#')[0]
-        vset = vset.union(set(prog.findall(line)))
-    r.close()
-
-    bbvars = {}
-    for v in vset:
-        bbvars[v] = 1
-
-    return bbvars
-
-def collect_bbvars(metadir):
-    ''' Walk the metadir and collect the bbvars from each recipe found '''
-    bbvars = {}
-    for root,dirs,files in os.walk(metadir):
-        for name in files:
-            if name.find(".bb") >= 0:
-                for key in recipe_bbvars(os.path.join(root,name)).keys():
-                    if key in bbvars:
-                        bbvars[key] = bbvars[key] + 1
-                    else:
-                        bbvars[key] = 1
-    return bbvars
 
 def bbvar_is_documented(var, documented_vars):
     ''' Check if variable (var) is in the list of documented variables(documented_vars) '''
@@ -112,7 +76,6 @@ def bbvar_doctag(var, docconf):
 
 def main():
     docfiles = []
-    metadirs = []
     bbvars = set()
     undocumented = []
     docconf = ""
@@ -136,12 +99,6 @@ def main():
             else:
                 print('ERROR: documentation file %s is not a regular file' % a)
                 sys.exit(3)
-        elif o == '-m':
-            if os.path.isdir(a):
-                metadirs.append(a)
-            else:
-                print('ERROR: meta directory %s is not a directory' % a)
-                sys.exit(4)
         elif o == "-t":
             if os.path.isfile(a):
                 docconf = a
@@ -154,11 +111,6 @@ def main():
         print('ERROR: no docfile specified')
         usage()
         sys.exit(5)
-
-    if len(metadirs) == 0:
-        print('ERROR: no metadir specified')
-        usage()
-        sys.exit(6)
 
     if onlydoctags and docconf == "":
         print('ERROR: no docconf specified')
@@ -196,7 +148,7 @@ def main():
             bbvars_update(data)
 
         # Collect variables from all recipes
-        for recipe in tinfoil.all_recipe_files():
+        for recipe in tinfoil.all_recipe_files(variants=False):
             print("Checking %s" % recipe)
             for data in tinfoil.parse_recipe_file(recipe):
                 bbvars_update(data)
