@@ -36,7 +36,7 @@ if [ x\${PYTHON} = "x"  ]; then
 	echo "SDK could not be relocated.  No python found."
 	exit 1
 fi
-\${PYTHON} ${env_setup_script%/*}/relocate_sdk.py $target_sdk_dir $dl_path $executable_files
+\${PYTHON} ${env_setup_script%/*}/relocate_sdk.py $DEFAULT_INSTALL_DIR $target_sdk_dir $dl_path $executable_files
 EOF
 
 $SUDO_EXEC mv $tdir/relocate_sdk.sh ${env_setup_script%/*}/relocate_sdk.sh
