@@ -1,0 +1,20 @@
+Do not generate timestamps in gzipped file headers.
+The timestamps prevent reproducible build.
+
+Upstream-Status: Submitted [https://github.com/linux-test-project/ltp/pull/233]
+
+Signed-off-by: Juro Bystricky <juro.bystricky@intel.com>
+
+diff --git a/testcases/network/generate.sh b/testcases/network/generate.sh
+index 00216a6..939f792 100755
+--- a/testcases/network/generate.sh
++++ b/testcases/network/generate.sh
+@@ -55,7 +55,7 @@ fi
+ if [ ! -e "bin.sm" ] ; then
+ 	cnt=0
+ 	while [ $cnt -lt 5 ] ; do
+-		gzip -1 -c ascii.sm >> "bin.sm"
++		gzip -1 -c -n ascii.sm >> "bin.sm"
+ 		cnt=$(($cnt + 1))
+ 	done
+ fi
