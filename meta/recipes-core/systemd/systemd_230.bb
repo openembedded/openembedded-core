@@ -37,6 +37,7 @@ SRC_URI += " \
            file://udev-re-enable-mount-propagation-for-udevd.patch \
            file://CVE-2016-7795.patch \
            file://validate-user.patch \
+           file://Ensure-kdbus-isn-t-used-3501.patch \
 "
 SRC_URI_append_libc-uclibc = "\
            file://0002-units-Prefer-getty-to-agetty-in-console-setup-system.patch \
@@ -61,7 +62,6 @@ PACKAGECONFIG ??= "xz \
                    timedated \
                    timesyncd \
                    localed \
-                   kdbus \
                    ima \
                    smack \
                    logind \
@@ -96,7 +96,6 @@ PACKAGECONFIG[timedated] = "--enable-timedated,--disable-timedated"
 PACKAGECONFIG[timesyncd] = "--enable-timesyncd,--disable-timesyncd"
 PACKAGECONFIG[localed] = "--enable-localed,--disable-localed"
 PACKAGECONFIG[efi] = "--enable-efi,--disable-efi"
-PACKAGECONFIG[kdbus] = "--enable-kdbus,--disable-kdbus"
 PACKAGECONFIG[ima] = "--enable-ima,--disable-ima"
 PACKAGECONFIG[smack] = "--enable-smack,--disable-smack"
 # libseccomp is found in meta-security
