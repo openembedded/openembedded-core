@@ -11,6 +11,8 @@ SRC_URI = "http://git.yoctoproject.org/cgit/cgit.cgi/${BPN}/snapshot/${BPN}-${PV
            file://0001-Switch-all-scripts-to-use-Python-3.x.patch \
 "
 SRC_URI_append_class-native = " file://tar_ignore_error.patch"
+UPSTREAM_CHECK_URI = "http://git.yoctoproject.org/cgit/cgit.cgi/opkg-utils/refs/"
+
 
 SRC_URI[md5sum] = "a19e09c79bf1152aac62e8a120d679ff"
 SRC_URI[sha256sum] = "7f4b08912e26a3f4f6f423f3b4e7157a73b1f3a7483fc59b216d1a80b50b0c38"
