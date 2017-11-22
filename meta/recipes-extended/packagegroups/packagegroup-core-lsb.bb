@@ -68,7 +68,6 @@ RDEPENDS_packagegroup-core-sys-extended = "\
     mc-helpers-perl \
     mdadm \
     minicom \
-    neon \
     parted \
     quota \
     screen \
