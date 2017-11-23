@@ -498,6 +498,26 @@ def upgrade(args, config, basepath, workspace):
         tinfoil.shutdown()
     return 0
 
+def latest_version(args, config, basepath, workspace):
+    """Entry point for the devtool 'latest_version' subcommand"""
+    tinfoil = setup_tinfoil(basepath=basepath, tracking=True)
+    try:
+        rd = parse_recipe(config, tinfoil, args.recipename, True)
+        if not rd:
+            return 1
+        version_info = oe.recipeutils.get_recipe_upstream_version(rd)
+        # "new-commits-available" is an indication that upstream never issues version tags
+        if not version_info['version'].endswith("new-commits-available"):
+            logger.info("Current version: {}".format(version_info['current_version']))
+            logger.info("Latest version: {}".format(version_info['version']))
+            if version_info['revision']:
+                logger.info("Latest version's commit: {}".format(version_info['revision']))
+        else:
+            logger.info("Latest commit: {}".format(version_info['revision']))
+    finally:
+        tinfoil.shutdown()
+    return 0
+
 def register_commands(subparsers, context):
     """Register devtool subcommands from this plugin"""
 
@@ -519,3 +539,9 @@ def register_commands(subparsers, context):
     group.add_argument('--no-same-dir', help='Force build in a separate build directory', action="store_true")
     parser_upgrade.add_argument('--keep-temp', action="store_true", help='Keep temporary directory (for debugging)')
     parser_upgrade.set_defaults(func=upgrade, fixed_setup=context.fixed_setup)
+
+    parser_latest_version = subparsers.add_parser('latest-version', help='Report the latest version of an existing recipe',
+                                                  description='Queries the upstream server for what the latest upstream release is (for git, tags are checked, for tarballs, a list of them is obtained, and one with the highest version number is reported)',
+                                                  group='info')
+    parser_latest_version.add_argument('recipename', help='Name of recipe to query (just name - no version, path or extension)')
+    parser_latest_version.set_defaults(func=latest_version)
