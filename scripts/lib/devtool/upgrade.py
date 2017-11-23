@@ -433,8 +433,6 @@ def upgrade(args, config, basepath, workspace):
 
     if args.recipename in workspace:
         raise DevtoolError("recipe %s is already in your workspace" % args.recipename)
-    if not args.version and not args.srcrev:
-        raise DevtoolError("You must provide a version using the --version/-V option, or for recipes that fetch from an SCM such as git, the --srcrev/-S option")
     if args.srcbranch and not args.srcrev:
         raise DevtoolError("If you specify --srcbranch/-B then you must use --srcrev/-S to specify the revision" % args.recipename)
 
@@ -456,6 +454,16 @@ def upgrade(args, config, basepath, workspace):
             srctree = os.path.abspath(args.srctree)
         else:
             srctree = standard.get_default_srctree(config, pn)
+
+        # try to automatically discover latest version and revision if not provided on command line
+        if not args.version and not args.srcrev:
+            version_info = oe.recipeutils.get_recipe_upstream_version(rd)
+            if version_info['version'] and not version_info['version'].endswith("new-commits-available"):
+                args.version = version_info['version']
+            if version_info['revision']:
+                args.srcrev = version_info['revision']
+        if not args.version and not args.srcrev:
+            raise DevtoolError("Automatic discovery of latest version/revision failed - you must provide a version using the --version/-V option, or for recipes that fetch from an SCM such as git, the --srcrev/-S option.")
 
         standard._check_compatible_recipe(pn, rd)
         old_srcrev = rd.getVar('SRCREV')
@@ -528,8 +536,8 @@ def register_commands(subparsers, context):
                                            group='starting')
     parser_upgrade.add_argument('recipename', help='Name of recipe to upgrade (just name - no version, path or extension)')
     parser_upgrade.add_argument('srctree',  nargs='?', help='Path to where to extract the source tree. If not specified, a subdirectory of %s will be used.' % defsrctree)
-    parser_upgrade.add_argument('--version', '-V', help='Version to upgrade to (PV)')
-    parser_upgrade.add_argument('--srcrev', '-S', help='Source revision to upgrade to (required if fetching from an SCM such as git)')
+    parser_upgrade.add_argument('--version', '-V', help='Version to upgrade to (PV). If omitted, latest upstream version will be determined and used, if possible.')
+    parser_upgrade.add_argument('--srcrev', '-S', help='Source revision to upgrade to (useful when fetching from an SCM such as git)')
     parser_upgrade.add_argument('--srcbranch', '-B', help='Branch in source repository containing the revision to use (if fetching from an SCM such as git)')
     parser_upgrade.add_argument('--branch', '-b', default="devtool", help='Name for new development branch to checkout (default "%(default)s")')
     parser_upgrade.add_argument('--no-patch', action="store_true", help='Do not apply patches from the recipe to the new source code')
