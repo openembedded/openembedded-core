@@ -269,7 +269,7 @@ ALTERNATIVE_util-linux-blkid = "blkid"
 ALTERNATIVE_LINK_NAME[blkid] = "${base_sbindir}/blkid"
 
 ALTERNATIVE_util-linux-rfkill = "rfkill"
-ALTERNATIVE_LINK_NAME[rfkill] = "${bindir}/rfkill"
+ALTERNATIVE_LINK_NAME[rfkill] = "${sbindir}/rfkill"
 ALTERNATIVE_TARGET[rfkill] = "${base_bindir}/rfkill"
 
 ALTERNATIVE_util-linux-getopt = "getopt"
