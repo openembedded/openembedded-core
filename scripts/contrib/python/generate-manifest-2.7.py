@@ -88,9 +88,9 @@ class MakefileMaker:
         # generate provides line
         #
 
-        provideLine = 'PROVIDES+="'
+        provideLine = 'PROVIDES+=" \\\n'
         for name in sorted(self.packages):
-            provideLine += "%s " % name
+            provideLine += "  %s \\\n" % name
         provideLine += '"'
 
         self.out( provideLine )
@@ -100,14 +100,15 @@ class MakefileMaker:
         # generate package line
         #
 
-        packageLine = 'PACKAGES="${PN}-dbg '
+        packageLine = 'PACKAGES=" \\\n'
+        packageLine += '  ${PN}-dbg \\\n'
         for name in sorted(self.packages):
             if name.startswith("${PN}-distutils"):
                 if name == "${PN}-distutils":
-                    packageLine += "%s-staticdev %s " % (name, name)
+                    packageLine += "  %s-staticdev %s \\\n" % (name, name)
             elif name != '${PN}-dbg':
-                packageLine += "%s " % name
-        packageLine += '${PN}-modules"'
+                packageLine += "  %s \\\n" % name
+        packageLine += '  ${PN}-modules\\\n"'
 
         self.out( packageLine )
         self.out( "" )
@@ -125,7 +126,7 @@ class MakefileMaker:
             self.out( 'SUMMARY_%s="%s"' % ( name, desc ) )
             self.out( 'RDEPENDS_%s="%s"' % ( name, deps ) )
 
-            line = 'FILES_%s="' % name
+            line = 'FILES_%s=" \\\n' % name
 
             #
             # check which directories to make in the temporary directory
@@ -140,20 +141,21 @@ class MakefileMaker:
             #
 
             for target in files:
-                line += "%s " % target
+                line += "    %s \\\n" % target
 
             line += '"'
             self.out( line )
             self.out( "" )
 
         self.out( 'SUMMARY_${PN}-modules="All Python modules"' )
-        line = 'RDEPENDS_${PN}-modules="'
+        line = 'RDEPENDS_${PN}-modules=" \\\n'
 
         for name, data in sorted(self.packages.items()):
             if name not in ['${PN}-dev', '${PN}-distutils-staticdev'] and name not in self.excluded_pkgs:
-                line += "%s " % name
+                line += "  %s \\\n" % name
 
-        self.out( "%s \"" % line )
+        line += '"'
+        self.out( line )
         self.out( 'ALLOW_EMPTY_${PN}-modules = "1"' )
 
     def doEpilog( self ):
