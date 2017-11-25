@@ -597,6 +597,7 @@
             "re",
             "resource",
             "robotparser",
+            "runpy",
             "shell",
             "smtpd",
             "sqlite3",
@@ -814,6 +815,16 @@
             "textutils"
         ],
         "summary": "Python robots.txt parser"
+    },
+    "runpy": {
+        "files": [
+            "${libdir}/python2.7/runpy.py"
+        ],
+        "rdepends": [
+            "core",
+            "pkgutil"
+        ],
+        "summary": "Python helper for locating/executing scripts in module namespace"
     },
     "shell": {
         "files": [

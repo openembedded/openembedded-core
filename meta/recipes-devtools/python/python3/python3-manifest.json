@@ -56,13 +56,10 @@
     },
     "codecs": {
         "cached": [
-            "${libdir}/python3.5/__pycache__/stringprep.*.pyc",
             "${libdir}/python3.5/__pycache__/xdrlib.*.pyc"
         ],
         "files": [
             "${libdir}/python3.5/lib-dynload/_multibytecodec.*.so",
-            "${libdir}/python3.5/lib-dynload/unicodedata.*.so",
-            "${libdir}/python3.5/stringprep.py",
             "${libdir}/python3.5/xdrlib.py"
         ],
         "rdepends": [
@@ -128,6 +125,7 @@
             "${libdir}/python3.5/__pycache__/__future__.*.pyc",
             "${libdir}/python3.5/__pycache__/_bootlocale.*.pyc",
             "${libdir}/python3.5/__pycache__/_collections_abc.*.pyc",
+            "${libdir}/python3.5/__pycache__/_markupbase.*.pyc",
             "${libdir}/python3.5/__pycache__/_sitebuiltins.*.pyc",
             "${libdir}/python3.5/__pycache__/_sysconfigdata.*.pyc",
             "${libdir}/python3.5/__pycache__/_weakrefset.*.pyc",
@@ -172,6 +170,7 @@
             "${libdir}/python3.5/__pycache__/sre_constants.*.pyc",
             "${libdir}/python3.5/__pycache__/sre_parse.*.pyc",
             "${libdir}/python3.5/__pycache__/stat.*.pyc",
+            "${libdir}/python3.5/__pycache__/stringprep.*.pyc",
             "${libdir}/python3.5/__pycache__/struct.*.pyc",
             "${libdir}/python3.5/__pycache__/subprocess.*.pyc",
             "${libdir}/python3.5/__pycache__/symbol.*.pyc",
@@ -209,6 +208,7 @@
             "${libdir}/python3.5/_abcoll.py",
             "${libdir}/python3.5/_bootlocale.py",
             "${libdir}/python3.5/_collections_abc.py",
+            "${libdir}/python3.5/_markupbase.py",
             "${libdir}/python3.5/_sitebuiltins.py",
             "${libdir}/python3.5/_sysconfigdata.py",
             "${libdir}/python3.5/_weakrefset.py",
@@ -264,6 +264,7 @@
             "${libdir}/python3.5/lib-dynload/readline.*.so",
             "${libdir}/python3.5/lib-dynload/select.*.so",
             "${libdir}/python3.5/lib-dynload/time.*.so",
+            "${libdir}/python3.5/lib-dynload/unicodedata.*.so",
             "${libdir}/python3.5/lib-dynload/xreadlines.*.so",
             "${libdir}/python3.5/linecache.py",
             "${libdir}/python3.5/locale.py",
@@ -284,6 +285,7 @@
             "${libdir}/python3.5/sre_constants.py",
             "${libdir}/python3.5/sre_parse.py",
             "${libdir}/python3.5/stat.py",
+            "${libdir}/python3.5/stringprep.py",
             "${libdir}/python3.5/struct.py",
             "${libdir}/python3.5/subprocess.py",
             "${libdir}/python3.5/symbol.py",
@@ -680,10 +682,12 @@
             "numbers",
             "pickle",
             "pkgutil",
+            "plistlib",
             "pprint",
             "profile",
             "pydoc",
             "resource",
+            "runpy",
             "shell",
             "smtpd",
             "sqlite3",
@@ -727,6 +731,8 @@
             "${libdir}/python3.5/base64.py",
             "${libdir}/python3.5/ftplib.py",
             "${libdir}/python3.5/hmac.py",
+            "${libdir}/python3.5/http",
+            "${libdir}/python3.5/http/__pycache__",
             "${libdir}/python3.5/mimetypes.py",
             "${libdir}/python3.5/nntplib.py",
             "${libdir}/python3.5/poplib.py",
@@ -826,6 +832,20 @@
         ],
         "summary": "Python package extension utility support"
     },
+    "plistlib": {
+        "cached": [
+            "${libdir}/python3.5/__pycache__/plistlib.*.pyc"
+        ],
+        "files": [
+            "${libdir}/python3.5/plistlib.py"
+        ],
+        "rdepends": [
+            "core",
+            "datetime",
+            "xml"
+        ],
+        "summary": "Generate and parse Mac OS X .plist files"
+    },
     "pprint": {
         "cached": [
             "${libdir}/python3.5/__pycache__/pprint.*.pyc"
@@ -835,7 +855,7 @@
         ],
         "rdepends": [
             "core"
-       ], 
+        ],
         "summary": "Python pretty-print support"
     },
     "profile": {
@@ -880,6 +900,19 @@
             "core"
         ],
         "summary": "Python resource control interface"
+    },
+    "runpy": {
+        "cached": [
+            "${libdir}/python3.5/__pycache__/runpy.*.pyc"
+        ],
+        "files": [
+            "${libdir}/python3.5/runpy.py"
+        ],
+        "rdepends": [
+            "core",
+            "pkgutil"
+        ],
+        "summary": "Python helper for locating/executing scripts in module namespace"
     },
     "shell": {
         "cached": [
