@@ -3,11 +3,10 @@ require pulseaudio.inc
 SRC_URI = "http://freedesktop.org/software/pulseaudio/releases/${BP}.tar.xz \
            file://0001-padsp-Make-it-compile-on-musl.patch \
            file://0001-client-conf-Add-allow-autospawn-for-root.patch \
-           file://pulseaudio-discuss-iochannel-don-t-use-variable-length-array-in-union.patch \
            file://volatiles.04_pulse \
 "
-SRC_URI[md5sum] = "4950d2799bf55ab91f6b7f990b7f0971"
-SRC_URI[sha256sum] = "a3186824de9f0d2095ded5d0d0db0405dc73133983c2fbb37291547e37462f57"
+SRC_URI[md5sum] = "390de38231d5cdd6b43ada8939eb74f1"
+SRC_URI[sha256sum] = "f2521c525a77166189e3cb9169f75c2ee2b82fa3fcf9476024fbc2c3a6c9cd9e"
 
 do_compile_prepend() {
     mkdir -p ${S}/libltdl
