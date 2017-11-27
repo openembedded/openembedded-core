@@ -12,11 +12,10 @@ SRC_URI = "ftp://ftp.alsa-project.org/pub/tools/${BP}.tar.bz2 \
            file://autotools.patch \
            ${@bb.utils.contains('DISTRO_FEATURES', 'x11', '', 'file://makefile_no_gtk.patch', d)} \
            file://gitcompile_hdajacksensetest \
-           file://0001-as10k1-Make-output_tram_line-static-inline.patch \
            "
 
-SRC_URI[md5sum] = "b23eaae687d55410b92587c2053b301f"
-SRC_URI[sha256sum] = "d88f1dcd6872121383eded5fa24e328e68c54e527db4547e1435d5eabc2b6709"
+SRC_URI[md5sum] = "3afb92eb1b4f2edc8691498e57c3ec78"
+SRC_URI[sha256sum] = "bc3c6567de835223ee7d69487b8c22fb395a2e8c613341b0c96e6a5f6a2bd534"
 
 inherit autotools-brokensep pkgconfig
 
