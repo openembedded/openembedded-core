@@ -57,6 +57,7 @@ SRC_URI = "\
      file://CVE-2017-9742.patch \
      file://CVE-2017-9744.patch \
      file://CVE-2017-9745.patch \
+     file://CVE-2017-9746.patch \
 "
 S  = "${WORKDIR}/git"
 
