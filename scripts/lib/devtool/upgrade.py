@@ -291,7 +291,26 @@ def _extract_new_source(newpv, srctree, no_patch, srcrev, srcbranch, branch, kee
 
     return (rev, md5, sha256, srcbranch, srcsubdir_rel)
 
-def _create_new_recipe(newpv, md5, sha256, srcrev, srcbranch, srcsubdir_old, srcsubdir_new, workspace, tinfoil, rd):
+def _add_license_diff_to_recipe(path, diff):
+    notice_text = """# FIXME: the LIC_FILES_CHKSUM values have been updated by 'devtool upgrade'.
+# The following is the difference between the old and the new license text.
+# Please update the LICENSE value if needed, and summarize the changes in
+# the commit message via 'License-checksum-change:' tag.
+# (example: 'License-checksum-change: copyright years updated.')
+#
+# The changes:
+#
+"""
+    commented_diff = "\n".join(["# {}".format(l) for l in diff.split('\n')])
+    with open(path, 'rb') as f:
+        orig_content = f.read()
+    with open(path, 'wb') as f:
+        f.write(notice_text.encode())
+        f.write(commented_diff.encode())
+        f.write("\n#\n\n".encode())
+        f.write(orig_content)
+
+def _create_new_recipe(newpv, md5, sha256, srcrev, srcbranch, srcsubdir_old, srcsubdir_new, workspace, tinfoil, rd, license_diff, new_licenses):
     """Creates the new recipe under workspace"""
 
     bpn = rd.getVar('BPN')
@@ -400,6 +419,11 @@ def _create_new_recipe(newpv, md5, sha256, srcrev, srcbranch, srcsubdir_old, src
             else:
                 logger.info('Source subdirectory has changed, updating S value')
 
+    if license_diff:
+        newlicchksum = " ".join(["file://{};md5={}".format(l["path"], l["actual_md5"]) + (";beginline={}".format(l["beginline"]) if l["beginline"] else "") + (";endline={}".format(l["endline"]) if l["endline"] else "") for l in new_licenses])
+        newvalues["LIC_FILES_CHKSUM"] = newlicchksum
+        _add_license_diff_to_recipe(fullpath, license_diff)
+
     rd = tinfoil.parse_recipe_file(fullpath, False)
     oe.recipeutils.patch_recipe(rd, fullpath, newvalues)
 
@@ -427,6 +451,47 @@ def _check_git_config():
     if configerr:
         raise DevtoolError('Your git configuration is incomplete which will prevent rebases from working:\n' + '\n'.join(configerr))
 
+def _extract_licenses(srcpath, recipe_licenses):
+    licenses = []
+    for url in recipe_licenses.split():
+        license = {}
+        (type, host, path, user, pswd, parm) = bb.fetch.decodeurl(url)
+        license['path'] = path
+        license['md5'] = parm.get('md5', '')
+        license['beginline'], license['endline'] = 0, 0
+        if 'beginline' in parm:
+            license['beginline'] = int(parm['beginline'])
+        if 'endline' in parm:
+            license['endline'] = int(parm['endline'])
+        license['text'] = []
+        with open(os.path.join(srcpath, path), 'rb') as f:
+            import hashlib
+            actual_md5 = hashlib.md5()
+            lineno = 0
+            for line in f:
+                lineno += 1
+                if (lineno >= license['beginline']) and ((lineno <= license['endline']) or not license['endline']):
+                    license['text'].append(line.decode(errors='ignore'))
+                    actual_md5.update(line)
+        license['actual_md5'] = actual_md5.hexdigest()
+        licenses.append(license)
+    return licenses
+
+def _generate_license_diff(old_licenses, new_licenses):
+    need_diff = False
+    for l in new_licenses:
+        if l['md5'] != l['actual_md5']:
+            need_diff = True
+            break
+    if need_diff == False:
+        return None
+
+    import difflib
+    diff = ''
+    for old, new in zip(old_licenses, new_licenses):
+        for line in difflib.unified_diff(old['text'], new['text'], old['path'], new['path']):
+            diff = diff + line
+    return diff
 
 def upgrade(args, config, basepath, workspace):
     """Entry point for the devtool 'upgrade' subcommand"""
@@ -480,14 +545,18 @@ def upgrade(args, config, basepath, workspace):
             check_prerelease_version(args.version, 'devtool upgrade')
 
         rf = None
+        license_diff = None
         try:
             logger.info('Extracting current version source...')
             rev1, srcsubdir1 = standard._extract_source(srctree, False, 'devtool-orig', False, config, basepath, workspace, args.fixed_setup, rd, tinfoil, no_overrides=args.no_overrides)
+            old_licenses = _extract_licenses(srctree, rd.getVar('LIC_FILES_CHKSUM'))
             logger.info('Extracting upgraded version source...')
             rev2, md5, sha256, srcbranch, srcsubdir2 = _extract_new_source(args.version, srctree, args.no_patch,
                                                     args.srcrev, args.srcbranch, args.branch, args.keep_temp,
                                                     tinfoil, rd)
-            rf, copied = _create_new_recipe(args.version, md5, sha256, args.srcrev, srcbranch, srcsubdir1, srcsubdir2, config.workspace_path, tinfoil, rd)
+            new_licenses = _extract_licenses(srctree, rd.getVar('LIC_FILES_CHKSUM'))
+            license_diff = _generate_license_diff(old_licenses, new_licenses)
+            rf, copied = _create_new_recipe(args.version, md5, sha256, args.srcrev, srcbranch, srcsubdir1, srcsubdir2, config.workspace_path, tinfoil, rd, license_diff, new_licenses)
         except bb.process.CmdError as e:
             _upgrade_error(e, rf, srctree)
         except DevtoolError as e:
@@ -502,6 +571,8 @@ def upgrade(args, config, basepath, workspace):
 
         logger.info('Upgraded source extracted to %s' % srctree)
         logger.info('New recipe is %s' % rf)
+        if license_diff:
+            logger.info('License checksums have been updated in the new recipe; please refer to it for the difference between the old and the new license texts.')
     finally:
         tinfoil.shutdown()
     return 0
