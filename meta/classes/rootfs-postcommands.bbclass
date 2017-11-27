@@ -14,6 +14,14 @@ ROOTFS_POSTPROCESS_COMMAND += "rootfs_update_timestamp ; "
 # Tweak the mount options for rootfs in /etc/fstab if read-only-rootfs is enabled
 ROOTFS_POSTPROCESS_COMMAND += '${@bb.utils.contains("IMAGE_FEATURES", "read-only-rootfs", "read_only_rootfs_hook; ", "",d)}'
 
+# We also need to do the same for the kernel boot parameters,
+# otherwise kernel or initramfs end up mounting the rootfs read/write
+# (the default) if supported by the underlying storage.
+#
+# We do this with _append because the default value might get set later with ?=
+# and we don't want to disable such a default that by setting a value here.
+APPEND_append = '${@bb.utils.contains("IMAGE_FEATURES", "read-only-rootfs", " ro", "", d)}'
+
 # Generates test data file with data store variables expanded in json format
 ROOTFS_POSTPROCESS_COMMAND += "write_image_test_data ; "
 
