@@ -8,12 +8,9 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=7fbc338309ac38fefcd64b04bb903e34 \
 
 BBCLASSEXTEND = "native nativesdk"
 
-SRC_URI = "ftp://ftp.alsa-project.org/pub/lib/${BP}.tar.bz2 \
-           file://Check-if-wordexp-function-is-supported.patch \
-           file://avoid-including-sys-poll.h-directly.patch \
-"
-SRC_URI[md5sum] = "29fa3e69122d3cf3e8f0e01a0cb1d183"
-SRC_URI[sha256sum] = "91bb870c14d1c7c269213285eeed874fa3d28112077db061a3af8010d0885b76"
+SRC_URI = "ftp://ftp.alsa-project.org/pub/lib/${BP}.tar.bz2"
+SRC_URI[md5sum] = "a2b465c3a5265d8a57f3ff39c6c4fc29"
+SRC_URI[sha256sum] = "f4f68ad3c6da36b0b5241ac3c798a7a71e0e97d51f972e9f723b3f20a9650ae6"
 
 inherit autotools pkgconfig
 
