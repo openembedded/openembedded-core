@@ -55,5 +55,8 @@ do_install_ptest() {
 	find ${D}${PTEST_PATH}/tests -type f -name "*.[Sshcod]" | xargs -i rm -rf {}
 
 	cp ${S}/tests/Makefile.include ${D}${PTEST_PATH}/tests
+	# Don't check the file genreated by configure
+	sed -i -e '/wildcard config-host.mak/d' \
+	       -e '$ {/endif/d}' ${D}${PTEST_PATH}/tests/Makefile.include
 }
 
