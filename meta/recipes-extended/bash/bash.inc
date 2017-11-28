@@ -6,7 +6,7 @@ DEPENDS = "ncurses bison-native virtual/libiconv"
 
 inherit autotools gettext texinfo update-alternatives ptest
 
-EXTRA_AUTORECONF += "--exclude=autoheader"
+EXTRA_AUTORECONF += "--exclude=autoheader --exclude=aclocal"
 EXTRA_OECONF = "--enable-job-control --without-bash-malloc"
 
 # If NON_INTERACTIVE_LOGIN_SHELLS is defined, all login shells read the
@@ -32,12 +32,6 @@ USERADD_PACKAGES = "${PN}-ptest"
 USERADD_PARAM_${PN}-ptest = "--create-home --user-group test"
 
 CACHED_CONFIGUREVARS += "headersdir=${includedir}/${PN}"
-
-do_configure_prepend () {
-	if [ ! -e ${S}/acinclude.m4 ]; then
-		cat ${S}/aclocal.m4 > ${S}/acinclude.m4
-	fi
-}
 
 do_compile_ptest () {
 	oe_runmake buildtest
