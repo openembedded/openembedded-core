@@ -1,7 +1,7 @@
 SUMMARY = "System and process monitoring utilities"
 DESCRIPTION = "Procps contains a set of system utilities that provide system information about processes using \
 the /proc filesystem. The package includes the programs ps, top, vmstat, w, kill, and skill."
-HOMEPAGE = "https://gitorious.org/procps"
+HOMEPAGE = "https://gitlab.com/procps-ng/procps"
 SECTION = "base"
 LICENSE = "GPLv2+ & LGPLv2+"
 LIC_FILES_CHKSUM="file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
@@ -22,8 +22,6 @@ SRC_URI[sha256sum] = "6ed65ab86318f37904e8f9014415a098bec5bc53653e5d9ab404f95ca5
 S = "${WORKDIR}/procps-ng-${PV}"
 
 EXTRA_OECONF = "--enable-skill --disable-modern-top"
-
-CPPFLAGS += "-I${S}"
 
 do_install_append () {
 	install -d ${D}${base_bindir}
