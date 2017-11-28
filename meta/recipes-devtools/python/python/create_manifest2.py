@@ -274,4 +274,4 @@ for key in new_manifest:
 
 # Create the manifest from the data structure that was built
 with open('python2-manifest.json.new','w') as outfile:
-    json.dump(new_manifest,outfile,sort_keys=True, indent=4)
+    json.dump(new_manifest,outfile,sort_keys=True, indent=4, separators=(',', ': '))
