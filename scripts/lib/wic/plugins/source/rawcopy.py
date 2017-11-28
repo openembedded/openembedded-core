@@ -32,6 +32,25 @@ class RawCopyPlugin(SourcePlugin):
 
     name = 'rawcopy'
 
+    @staticmethod
+    def do_image_label(fstype, dst, label):
+        if fstype.startswith('ext'):
+            cmd = 'tune2fs -L %s %s' % (label, dst)
+        elif fstype in ('msdos', 'vfat'):
+            cmd = 'dosfslabel %s %s' % (dst, label)
+        elif fstype == 'btrfs':
+            cmd = 'btrfs filesystem label %s %s' % (dst, label)
+        elif fstype == 'swap':
+            cmd = 'mkswap -L %s %s' % (label, dst)
+        elif fstype == 'squashfs':
+            raise WicError("It's not possible to update a squashfs "
+                           "filesystem label '%s'" % (label))
+        else:
+            raise WicError("Cannot update filesystem label: "
+                           "Unknown fstype: '%s'" % (fstype))
+
+        exec_cmd(cmd)
+
     @classmethod
     def do_prepare_partition(cls, part, source_params, cr, cr_workdir,
                              oe_builddir, bootimg_dir, kernel_dir,
@@ -65,5 +84,8 @@ class RawCopyPlugin(SourcePlugin):
 
         if filesize > part.size:
             part.size = filesize
+
+        if part.label:
+            RawCopyPlugin.do_image_label(part.fstype, dst, part.label)
 
         part.source_file = dst
