@@ -27,13 +27,9 @@ UPSTREAM_CHECK_REGEX = "nettle-(?P<pver>\d+(\.\d+)+)\.tar"
 
 inherit autotools ptest
 
-EXTRA_OECONF = "--disable-openssl"
+EXTRA_AUTORECONF += "--exclude=aclocal"
 
-do_configure_prepend() {
-       if [ ! -e ${S}/acinclude.m4 -a -e ${S}/aclocal.m4 ]; then
-               cp ${S}/aclocal.m4 ${S}/acinclude.m4
-       fi
-}
+EXTRA_OECONF = "--disable-openssl"
 
 do_compile_ptest() {
         oe_runmake buildtest
