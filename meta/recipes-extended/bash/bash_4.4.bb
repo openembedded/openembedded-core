@@ -26,6 +26,7 @@ SRC_URI = "${GNU_MIRROR}/bash/${BP}.tar.gz;name=tarball \
            file://fix-run-builtins.patch \
            file://0001-help-fix-printf-format-security-warning.patch \
            file://bash-memleak-bug-fix-for-builtin-command-read.patch \
+           file://pathexp-dep.patch \
            "
 
 SRC_URI[tarball.md5sum] = "148888a7c95ac23705559b6f477dfe25"
