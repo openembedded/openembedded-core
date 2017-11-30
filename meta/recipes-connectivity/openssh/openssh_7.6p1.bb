@@ -48,6 +48,8 @@ inherit autotools-brokensep ptest
 # LFS support:
 CFLAGS += "-D__FILE_OFFSET_BITS=64"
 
+EXTRA_AUTORECONF += "--exclude=aclocal"
+
 # login path is hardcoded in sshd
 EXTRA_OECONF = "'LOGIN_PROGRAM=${base_bindir}/login' \
                 ${@bb.utils.contains('DISTRO_FEATURES', 'pam', '--with-pam', '--without-pam', d)} \
@@ -73,9 +75,6 @@ do_configure_prepend () {
 	export LD="${CC}"
 	install -m 0644 ${WORKDIR}/sshd_config ${B}/
 	install -m 0644 ${WORKDIR}/ssh_config ${B}/
-	if [ ! -e acinclude.m4 -a -e aclocal.m4 ]; then
-		cp aclocal.m4 acinclude.m4
-	fi
 }
 
 do_compile_ptest() {
@@ -162,4 +161,3 @@ CONFFILES_${PN}-ssh = "${sysconfdir}/ssh/ssh_config"
 ALTERNATIVE_PRIORITY = "90"
 ALTERNATIVE_${PN}-scp = "scp"
 ALTERNATIVE_${PN}-ssh = "ssh"
-
