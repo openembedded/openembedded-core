@@ -11,14 +11,8 @@ SRC_URI[sha256sum] = "588546b945bba4b70b6a3a616e80b4ab466e3f33024a352fc2198112cd
 
 inherit autotools
 
-# autoreconf couldn't find acinclude.m4 when stepping into subdirectory. Instead of
-# duplicating acinclude.m4 in every subdirectory, use absolute include path to aclocal
-EXTRA_AUTORECONF += " -I ${S}"
-
-do_configure_prepend() {
-        if [ ! -e ${S}/acinclude.m4 ]; then
-                cat ${S}/aclocal.m4 > ${S}/acinclude.m4
-        fi
-}
+# The nested configures don't find the parent aclocal.m4 out of the box, so tell
+# it where to look explicitly (mirroring the behaviour of upstream's Makefile.devel).
+EXTRA_AUTORECONF += " -I ${S} --exclude=aclocal"
 
 BBCLASSEXTEND = "native"
