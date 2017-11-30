@@ -86,17 +86,6 @@ def str_filter_out(f, str, d):
     from re import match
     return " ".join([x for x in str.split() if not match(f, x, 0)])
 
-def param_bool(cfg, field, dflt = None):
-    """Lookup <field> in <cfg> map and convert it to a boolean; take
-    <dflt> when this <field> does not exist"""
-    value = cfg.get(field, dflt)
-    strvalue = str(value).lower()
-    if strvalue in ('yes', 'y', 'true', 't', '1'):
-        return True
-    elif strvalue in ('no', 'n', 'false', 'f', '0'):
-        return False
-    raise ValueError("invalid value for boolean parameter '%s': '%s'" % (field, value))
-
 def build_depends_string(depends, task):
     """Append a taskname to a string of dependencies as used by the [depends] flag"""
     return " ".join(dep + ":" + task for dep in depends.split())
