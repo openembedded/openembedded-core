@@ -331,6 +331,7 @@ def create_index(arg):
     return None
 
 def create_rpm_index(d):
+    import glob
     # Index RPMs
     rpm_createrepo = bb.utils.which(os.getenv('PATH'), "createrepo_c")
     index_cmds = []
@@ -347,9 +348,13 @@ def create_rpm_index(d):
         lf = bb.utils.lockfile(lockfilename, False)
         oe.path.copyhardlinktree(rpm_dir, idx_path)
         # Full indexes overload a 256MB image so reduce the number of rpms
-        # in the feed. Filter to r* since we use the run-postinst packages and
-        # this leaves some allarch and machine arch packages too.
-        bb.utils.remove(idx_path + "*/[a-qs-z]*.rpm")
+        # in the feed by filtering to specific packages needed by the tests.
+        package_list = glob.glob(idx_path + "*/*.rpm")
+
+        for pkg in package_list:
+            if not os.path.basename(pkg).startswith(("rpm", "run-postinsts", "busybox", "bash", "update-alternatives", "libc6", "curl", "musl")):
+                bb.utils.remove(pkg)
+
         bb.utils.unlockfile(lf)
         cmd = '%s --update -q %s' % (rpm_createrepo, idx_path)
 
