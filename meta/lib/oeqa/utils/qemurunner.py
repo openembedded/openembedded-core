@@ -307,14 +307,18 @@ class QemuRunner:
                                               (time.time() - (endtime - self.boottime),
                                               time.strftime("%D %H:%M:%S")))
                     else:
+                        # no need to check if reachedlogin unless we support multiple connections
+                        self.logger.debug("QEMU socket disconnected before login banner reached. (%s)" %
+                                          time.strftime("%D %H:%M:%S"))
                         socklist.remove(sock)
                         sock.close()
                         stopread = True
 
 
         if not reachedlogin:
-            self.logger.debug("Target didn't reached login boot in %d seconds (%s)" %
-                              (self.boottime, time.strftime("%D %H:%M:%S")))
+            if time.time() >= endtime:
+                self.logger.debug("Target didn't reached login boot in %d seconds (%s)" %
+                                  (self.boottime, time.strftime("%D %H:%M:%S")))
             tail = lambda l: "\n".join(l.splitlines()[-25:])
             # in case bootlog is empty, use tail qemu log store at self.msg
             lines = tail(bootlog if bootlog else self.msg)
