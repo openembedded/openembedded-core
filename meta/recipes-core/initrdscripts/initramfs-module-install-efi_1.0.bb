@@ -5,9 +5,6 @@ RDEPENDS_${PN} = "initramfs-framework-base parted e2fsprogs-mke2fs dosfstools ut
 
 PR = "r4"
 
-inherit allarch
-
-FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
 SRC_URI = "file://init-install-efi.sh"
 
 S = "${WORKDIR}"
