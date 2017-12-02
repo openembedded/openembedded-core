@@ -1,0 +1,35 @@
+From f26c3979ab0325edb2e410d287bc501cf00e0ac0 Mon Sep 17 00:00:00 2001
+From: Nikos Mavrogiannopoulos <nmav@redhat.com>
+Date: Mon, 22 Aug 2016 16:32:34 +0200
+Subject: [PATCH] rnd-linux: added check for SYS_getrandom being defined
+
+This allows to compile the getrandom() code in old Linux systems
+which do not have the system call defined.
+---
+
+Upstream-Status: Backport
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+
+ lib/nettle/rnd-linux.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/lib/nettle/rnd-linux.c b/lib/nettle/rnd-linux.c
+index d7f07a6..7a24d05 100644
+--- a/lib/nettle/rnd-linux.c
++++ b/lib/nettle/rnd-linux.c
+@@ -56,7 +56,11 @@ static dev_t _gnutls_urandom_fd_rdev = 0;
+ # else
+ #  include <sys/syscall.h>
+ #  undef getrandom
+-#  define getrandom(dst,s,flags) syscall(SYS_getrandom, (void*)dst, (size_t)s, (unsigned int)flags)
++#  if defined(SYS_getrandom)
++#   define getrandom(dst,s,flags) syscall(SYS_getrandom, (void*)dst, (size_t)s, (unsigned int)flags)
++#  else
++#   define getrandom(dst,s,flags) -1
++#  endif
+ # endif
+ 
+ static unsigned have_getrandom(void)
+--
+libgit2 0.24.0
+
