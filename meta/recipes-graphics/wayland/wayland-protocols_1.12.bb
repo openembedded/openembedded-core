@@ -11,8 +11,8 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=c7b12b6702da38ca028ace54aae3d484 \
 
 SRC_URI = "https://wayland.freedesktop.org/releases/${BPN}-${PV}.tar.xz \
            "
-SRC_URI[md5sum] = "8d0338556d77ad86d7fca84ff086af88"
-SRC_URI[sha256sum] = "3afcee1d51c5b1d70b59da790c9830b354236324b19b2b7af9683bd3b7be6804"
+SRC_URI[md5sum] = "ac83c4704003323b6bd5a1b91fb1be53"
+SRC_URI[sha256sum] = "3b19e8a9e1e19474756a7069db23b90ca9b8ebb438448c6063b4a7fc89b7c8b2"
 
 inherit allarch autotools pkgconfig
 
