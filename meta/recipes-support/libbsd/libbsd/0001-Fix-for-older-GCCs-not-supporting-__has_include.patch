@@ -1,0 +1,31 @@
+From 2fbf47ce9b64f4e07be223bc2870348a68f19d86 Mon Sep 17 00:00:00 2001
+From: Adam Lackorzynski <adam@l4re.org>
+Date: Sat, 21 Oct 2017 23:08:31 +0200
+Subject: [PATCH] Fix for older GCCs not supporting __has_include*
+
+Upstream-Status: Submitted [https://bugs.freedesktop.org/show_bug.cgi?id=103396]
+Signed-off-by: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
+---
+ include/bsd/sys/cdefs.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/include/bsd/sys/cdefs.h b/include/bsd/sys/cdefs.h
+index 044f221..b4c8f30 100644
+--- a/include/bsd/sys/cdefs.h
++++ b/include/bsd/sys/cdefs.h
+@@ -25,10 +25,10 @@
+  */
+ 
+ #ifndef __has_include
+-#define __has_include 1
++#define __has_include(x) 1
+ #endif
+ #ifndef __has_include_next
+-#define __has_include_next 1
++#define __has_include_next(x) 1
+ #endif
+ 
+ #ifdef LIBBSD_OVERLAY
+-- 
+2.12.0
+
