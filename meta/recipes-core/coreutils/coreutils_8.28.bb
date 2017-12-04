@@ -46,6 +46,7 @@ PACKAGECONFIG_class-native ??= "xattr"
 #
 PACKAGECONFIG[acl] = "--enable-acl,--disable-acl,acl,"
 PACKAGECONFIG[xattr] = "--enable-xattr,--disable-xattr,attr,"
+PACKAGECONFIG[single-binary] = "--enable-single-binary,--disable-single-binary,,"
 
 # [ df mktemp base64 gets a special treatment and is not included in this
 bindir_progs = "arch basename chcon cksum comm csplit cut dir dircolors dirname du \
