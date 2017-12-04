@@ -146,7 +146,7 @@ do_kernel_metadata() {
 	if [ -z "$bsp_definition" ]; then
 		echo "$sccs" | grep -q defconfig
 		if [ $? -ne 0 ]; then
-			bberror "Could not locate BSP definition for ${KMACHINE}/${LINUX_KERNEL_TYPE} and no defconfig was provided"
+			bbfatal_log "Could not locate BSP definition for ${KMACHINE}/${LINUX_KERNEL_TYPE} and no defconfig was provided"
 		fi
 	fi
 	meta_dir=$(kgit --meta)
