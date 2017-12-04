@@ -107,6 +107,8 @@ do_kernel_metadata() {
 				cmp "${WORKDIR}/defconfig" "${S}/arch/${ARCH}/configs/${KBUILD_DEFCONFIG}"
 				if [ $? -ne 0 ]; then
 					bbwarn "defconfig detected in WORKDIR. ${KBUILD_DEFCONFIG} skipped"
+				else
+					cp -f ${S}/arch/${ARCH}/configs/${KBUILD_DEFCONFIG} ${WORKDIR}/defconfig
 				fi
 			else
 				cp -f ${S}/arch/${ARCH}/configs/${KBUILD_DEFCONFIG} ${WORKDIR}/defconfig
@@ -117,9 +119,18 @@ do_kernel_metadata() {
 		fi
 	fi
 
-	sccs="$sccs ${@" ".join(find_sccs(d))}"
+	sccs_from_src_uri="${@" ".join(find_sccs(d))}"
 	patches="${@" ".join(find_patches(d))}"
 	feat_dirs="${@" ".join(find_kernel_feature_dirs(d))}"
+
+	# a quick check to make sure we don't have duplicate defconfigs
+	# If there's a defconfig in the SRC_URI, did we also have one from
+	# the KBUILD_DEFCONFIG processing above ?
+	if [ -n "$sccs" ]; then
+	    # we did have a defconfig from above. remove any that might be in the src_uri
+	    sccs_from_src_uri=$(echo $sccs_from_src_uri | sed 's/defconfig//g')
+	fi
+	sccs="$sccs $sccs_from_src_uri"
 
 	# check for feature directories/repos/branches that were part of the
 	# SRC_URI. If they were supplied, we convert them into include directives
