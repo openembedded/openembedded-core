@@ -11,8 +11,8 @@ DEPENDS = "zlib kmod"
 SRC_URI = "${KERNELORG_MIRROR}/software/utils/pciutils/pciutils-${PV}.tar.xz \
            file://configure.patch"
 
-SRC_URI[md5sum] = "238d9969cc0de8b9105d972007d9d546"
-SRC_URI[sha256sum] = "1d62f8fa192f90e61c35a6fc15ff3cb9a7a792f782407acc42ef67817c5939f5"
+SRC_URI[md5sum] = "8e52278399b7b35fcfc031bc05da80a8"
+SRC_URI[sha256sum] = "f346eeb90cce0910c05b877fe49eadc760fa084c0455fd313e39d4b2c2d4bb21"
 
 inherit multilib_header pkgconfig
 
