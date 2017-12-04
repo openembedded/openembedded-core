@@ -48,7 +48,6 @@ do_install() {
 PROVIDES = "iasl"
 RPROVIDES_${PN} += "iasl"
 RREPLACES_${PN} += "iasl"
-RCONFLIGHTS_${PN} += "iasl"
+RCONFLICTS_${PN} += "iasl"
 
-NATIVE_INSTALL_WORKS = "1"
 BBCLASSEXTEND = "native"
