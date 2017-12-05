@@ -26,7 +26,6 @@ python () {
 
 python patch_task_patch_prefunc() {
     # Prefunc for do_patch
-    func = d.getVar('BB_RUNTASK')
     srcsubdir = d.getVar('S')
 
     patchdir = os.path.join(srcsubdir, 'patches')
