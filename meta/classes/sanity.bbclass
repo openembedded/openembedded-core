@@ -456,6 +456,22 @@ def check_sanity_validmachine(sanity_data):
 
     return messages
 
+# Patch before 2.7 can't handle all the features in git-style diffs.  Some
+# patches may incorrectly apply, and others won't apply at all.
+def check_patch_version(sanity_data):
+    from distutils.version import LooseVersion
+    import re, subprocess
+
+    try:
+        result = subprocess.check_output(["patch", "--version"], stderr=subprocess.STDOUT, universal_newlines=True)
+        version = re.search(r"[0-9.]+", result.splitlines()[0]).group()
+        if LooseVersion(version) < LooseVersion("2.7"):
+            return "Your version of patch is older than 2.7 and has bugs which will break builds. Please install a newer version of patch.\n"
+        else:
+            return None
+    except subprocess.CalledProcessError as e:
+        return "Unable to execute patch --version, exit code %d:\n%s\n" % (e.returncode, e.output)
+
 # Unpatched versions of make 3.82 are known to be broken.  See GNU Savannah Bug 30612.
 # Use a modified reproducer from http://savannah.gnu.org/bugs/?30612 to validate.
 def check_make_version(sanity_data):
@@ -596,6 +612,7 @@ def check_sanity_version_change(status, d):
     import stat
 
     status.addresult(check_make_version(d))
+    status.addresult(check_patch_version(d))
     status.addresult(check_tar_version(d))
     status.addresult(check_git_version(d))
     status.addresult(check_perl_modules(d))
