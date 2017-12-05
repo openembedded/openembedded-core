@@ -17,6 +17,8 @@ STAGING_ICU_DIR_NATIVE = "${STAGING_DATADIR_NATIVE}/${BPN}/${PV}"
 
 BINCONFIG = "${bindir}/icu-config"
 
+ICU_MAJOR_VER = "${@d.getVar('PV').split('.')[0]}"
+
 inherit autotools pkgconfig binconfig
 
 # ICU needs the native build directory as an argument to its --with-cross-build option when
@@ -26,6 +28,8 @@ EXTRA_OECONF = "--with-cross-build=${STAGING_ICU_DIR_NATIVE}"
 EXTRA_OECONF_class-native = ""
 EXTRA_OECONF_class-nativesdk = "--with-cross-build=${STAGING_ICU_DIR_NATIVE}"
 
+EXTRA_OECONF_append_class-target = "${@base_conditional('SITEINFO_ENDIANNESS', 'be', ' --with-data-packaging=archive', '', d)}"
+TARGET_CXXFLAGS_append = "${@base_conditional('SITEINFO_ENDIANNESS', 'be', ' -DICU_DATA_DIR=\\""${datadir}/${BPN}/${PV}\\""', '', d)}"
 
 # strtod_l() is not supported by musl; also xlocale.h is missing
 # It is not possible to disable its use via configure switches or env vars
@@ -42,6 +46,15 @@ do_install_append_class-native() {
 	cp -r ${B}/lib ${D}/${STAGING_ICU_DIR_NATIVE}
 	cp -r ${B}/bin ${D}/${STAGING_ICU_DIR_NATIVE}
 	cp -r ${B}/tools ${D}/${STAGING_ICU_DIR_NATIVE}
+}
+
+do_install_append_class-target() {
+    # The native pkgdata can not generate the correct data file.
+    # Use icupkg to re-generate it.
+    if [ "${SITEINFO_ENDIANNESS}" = "be" ] ; then
+        rm -f ${D}/${datadir}/${BPN}/${PV}/icudt${ICU_MAJOR_VER}b.dat
+        icupkg -tb ${S}/data/in/icudt${ICU_MAJOR_VER}l.dat ${D}/${datadir}/${BPN}/${PV}/icudt${ICU_MAJOR_VER}b.dat
+    fi
 }
 
 PACKAGES =+ "libicudata libicuuc libicui18n libicutu libicuio"
