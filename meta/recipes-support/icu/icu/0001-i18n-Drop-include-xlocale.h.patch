@@ -5,6 +5,7 @@ Subject: [PATCH 3/4] i18n: Drop include <xlocale.h>
 
 glibc 2.26 drops this header
 
+Upstream-Status: Pending
 Signed-off-by: Khem Raj <raj.khem@gmail.com>
 
 ---
