@@ -5,8 +5,8 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=1400bd9d09e8af56b9ec982b3d85797e"
 
 SRC_URI = "http://gstreamer.freedesktop.org/src/orc/orc-${PV}.tar.xz"
 
-SRC_URI[md5sum] = "5837dc20dacb5b668935bbded10cbb61"
-SRC_URI[sha256sum] = "51e53e58fc8158e5986a1f1a49a6d970c5b16493841cf7b9de2c2bde7ce36b93"
+SRC_URI[md5sum] = "6b582ec4b3275c5efd51e3ae6406d445"
+SRC_URI[sha256sum] = "bfcd7c6563b05672386c4eedfc4c0d4a0a12b4b4775b74ec6deb88fc2bcd83ce"
 
 inherit autotools pkgconfig gtk-doc
 
