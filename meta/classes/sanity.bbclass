@@ -462,7 +462,7 @@ def check_make_version(sanity_data):
     from distutils.version import LooseVersion
     status, result = oe.utils.getstatusoutput("make --version")
     if status != 0:
-        return "Unable to execute make --version, exit code %s\n" % status
+        return "Unable to execute make --version, exit code %d\n" % status
     version = result.split()[2]
     if LooseVersion(version) == LooseVersion("3.82"):
         # Construct a test file
@@ -498,7 +498,7 @@ def check_tar_version(sanity_data):
     from distutils.version import LooseVersion
     status, result = oe.utils.getstatusoutput("tar --version")
     if status != 0:
-        return "Unable to execute tar --version, exit code %s\n" % status
+        return "Unable to execute tar --version, exit code %d\n" % status
     version = result.split()[3]
     if LooseVersion(version) < LooseVersion("1.24"):
         return "Your version of tar is older than 1.24 and has bugs which will break builds. Please install a newer version of tar.\n"
@@ -511,7 +511,7 @@ def check_git_version(sanity_data):
     from distutils.version import LooseVersion
     status, result = oe.utils.getstatusoutput("git --version 2> /dev/null")
     if status != 0:
-        return "Unable to execute git --version, exit code %s\n" % status
+        return "Unable to execute git --version, exit code %d\n" % status
     version = result.split()[2]
     if LooseVersion(version) < LooseVersion("1.8.3.1"):
         return "Your version of git is older than 1.8.3.1 and has bugs which will break builds. Please install a newer version of git.\n"
