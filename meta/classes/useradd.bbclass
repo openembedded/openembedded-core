@@ -133,9 +133,10 @@ useradd_sysroot () {
 }
 
 # The export of PSEUDO in useradd_sysroot() above contains references to
-# ${COMPONENTS_DIR}. These need to be handled when restoring
+# ${COMPONENTS_DIR} and ${PSEUDO_LOCALSTATEDIR}. Additionally, the logging
+# shell functions use ${LOGFIFO}. These need to be handled when restoring
 # postinst-useradd-${PN} from the sstate cache.
-EXTRA_STAGING_FIXMES += "COMPONENTS_DIR"
+EXTRA_STAGING_FIXMES += "COMPONENTS_DIR PSEUDO_LOCALSTATEDIR LOGFIFO"
 
 python useradd_sysroot_sstate () {
     task = d.getVar("BB_CURRENTTASK")
