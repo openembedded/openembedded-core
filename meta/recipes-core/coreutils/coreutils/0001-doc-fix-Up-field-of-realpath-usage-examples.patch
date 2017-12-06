@@ -1,0 +1,40 @@
+From e83f10c48309b722570dc53a22deb355433f8cbc Mon Sep 17 00:00:00 2001
+From: Bernhard Voelker <mail@bernhard-voelker.de>
+Date: Tue, 5 Sep 2017 00:20:01 +0200
+Subject: [PATCH] doc: fix "Up" field of realpath usage examples
+
+Older versions of 'makeinfo' choke on a missing reference:
+
+  ./doc/coreutils.texi:14177: `Realpath usage examples' has no Up field\
+  (perhaps incorrect sectioning?).
+  makeinfo: Removing output file `doc/coreutils.info' due to errors; \
+  use --force to preserve.
+
+* doc/coreutils.texi (realpath invocation): Add a menu referencing
+the usage examples - introduced in v8.27-91-g7449f0d.
+
+Upstream-Status: Backport
+
+Signed-off-by: Chen Qi <Qi.Chen@windriver.com>
+---
+ doc/coreutils.texi | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/doc/coreutils.texi b/doc/coreutils.texi
+index 70e2b76..d374b4a 100644
+--- a/doc/coreutils.texi
++++ b/doc/coreutils.texi
+@@ -14175,6 +14175,10 @@ Exit status:
+ 1 otherwise.
+ @end display
+ 
++@menu
++* Realpath usage examples::              Realpath usage examples.
++@end menu
++
+ 
+ @node Realpath usage examples
+ @subsection Realpath usage examples
+-- 
+2.1.0
+

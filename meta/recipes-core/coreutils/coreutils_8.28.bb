@@ -21,12 +21,13 @@ SRC_URI = "${GNU_MIRROR}/coreutils/${BP}.tar.xz;name=tarball \
            file://0001-uname-report-processor-and-hardware-correctly.patch \
            file://disable-ls-output-quoting.patch \
            file://0001-local.mk-fix-cross-compiling-problem.patch \
+           file://0001-doc-fix-Up-field-of-realpath-usage-examples.patch \
           "
 
-SRC_URI[tarball.md5sum] = "502795792c212932365e077946d353ae"
-SRC_URI[tarball.sha256sum] = "8891d349ee87b9ff7870f52b6d9312a9db672d2439d289bc57084771ca21656b"
-SRC_URI[manpages.md5sum] = "1b31a688d06764e0e94aa20b7ea08222"
-SRC_URI[manpages.sha256sum] = "1f615819e9167646c731636b6c5ecbe79837e82a18666bacc82c3fb1dfcfaea3"
+SRC_URI[tarball.md5sum] = "e7cb20d0572cc40d9f47ede6454406d1"
+SRC_URI[tarball.sha256sum] = "1117b1a16039ddd84d51a9923948307cfa28c2cea03d1a2438742253df0a0c65"
+SRC_URI[manpages.md5sum] = "3a7c626aad1c9077f254e5c2553a2f60"
+SRC_URI[manpages.sha256sum] = "d72c3fa79ae328a4fd1107102e8946755aa2e908044e1efcf1e71ef206dca042"
 
 EXTRA_OECONF_class-native = "--without-gmp"
 EXTRA_OECONF_class-target = "--enable-install-program=arch --libexecdir=${libdir}"
