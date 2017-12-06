@@ -1,0 +1,43 @@
+From 22429d175911af2e57617a30e0ac097af74f2791 Mon Sep 17 00:00:00 2001
+From: Amarnath Valluri <amarnath.valluri@intel.com>
+Date: Fri, 29 Sep 2017 12:57:33 +0300
+Subject: [PATCH 11/12] tpm: Move tpm_cleanup() to right place
+
+As Emulator TPM backend uses chardev, tpm cleanup should happen before chardev
+similar to other vhost-users.
+
+Signed-off-by: Amarnath Valluri <amarnath.valluri@intel.com>
+
+Upstream-Status: Backport [c37cacabf2285b0731b44c1f667781fdd4f2b658]
+---
+ tpm.c | 1 -
+ vl.c  | 1 +
+ 2 files changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tpm.c b/tpm.c
+index cac400ef3e..4a9d3d739e 100644
+--- a/tpm.c
++++ b/tpm.c
+@@ -173,7 +173,6 @@ int tpm_init(void)
+         return -1;
+     }
+ 
+-    atexit(tpm_cleanup);
+     return 0;
+ }
+ 
+diff --git a/vl.c b/vl.c
+index 8e247cc2a2..5df0b7f205 100644
+--- a/vl.c
++++ b/vl.c
+@@ -4797,6 +4797,7 @@ int main(int argc, char **argv, char **envp)
+     res_free();
+ 
+     /* vhost-user must be cleaned up before chardevs.  */
++    tpm_cleanup();
+     net_cleanup();
+     audio_cleanup();
+     monitor_cleanup();
+-- 
+2.11.0
+

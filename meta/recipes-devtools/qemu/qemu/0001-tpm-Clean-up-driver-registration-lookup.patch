@@ -1,0 +1,154 @@
+From a0f8d150794164f41cd7288c9ed059bbf21c95ec Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Marc-Andr=C3=A9=20Lureau?= <marcandre.lureau@redhat.com>
+Date: Thu, 24 Aug 2017 10:45:58 +0200
+Subject: [PATCH 01/12] tpm: Clean up driver registration & lookup
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+We have a strict separation between enum TpmType and be_drivers[]:
+
+* TpmType may have any number of members.  It just happens to have one.
+
+* tpm_register_driver() uses the first empty slot in be_drivers[].
+
+  If you register more than tpm_models[] has space,
+  tpm_register_driver() fails.  Its caller silently ignores the
+  failure.
+
+  If you register more than one with a given TpmType,
+  tpm_display_backend_drivers() will shows all of them, but
+  tpm_driver_find_by_type() and tpm_get_backend_driver() will find
+  only the one one that registered first.
+
+Since we only ever register one driver, and be_drivers[] has space for
+just that one, this contraption even works.
+
+Turn be_drivers[] into a straight map from enum TpmType to driver.
+Much simpler, and has a decent chance to actually work should we ever
+acquire additional drivers.
+
+While there, use qapi_enum_parse() in tpm_get_backend_driver().
+
+Signed-off-by: Marc-André Lureau <marcandre.lureau@redhat.com>
+Message-Id: <20170822132255.23945-8-marcandre.lureau@redhat.com>
+Reviewed-by: Markus Armbruster <armbru@redhat.com>
+[Rebased, superfluous initializer dropped, commit message rewritten]
+Cc: Stefan Berger <stefanb@us.ibm.com>
+Signed-off-by: Markus Armbruster <armbru@redhat.com>
+Message-Id: <1503564371-26090-4-git-send-email-armbru@redhat.com>
+
+Upstream-Status: Backport
+---
+ include/sysemu/tpm_backend.h |  2 +-
+ tpm.c                        | 45 +++++++++++++-------------------------------
+ 2 files changed, 14 insertions(+), 33 deletions(-)
+
+diff --git a/include/sysemu/tpm_backend.h b/include/sysemu/tpm_backend.h
+index b58f52d39f..1d21c6b19b 100644
+--- a/include/sysemu/tpm_backend.h
++++ b/include/sysemu/tpm_backend.h
+@@ -227,6 +227,6 @@ TPMBackend *qemu_find_tpm(const char *id);
+ 
+ const TPMDriverOps *tpm_get_backend_driver(const char *type);
+ int tpm_register_model(enum TpmModel model);
+-int tpm_register_driver(const TPMDriverOps *tdo);
++void tpm_register_driver(const TPMDriverOps *tdo);
+ 
+ #endif
+diff --git a/tpm.c b/tpm.c
+index 9a7c7114d3..bb45d0c08e 100644
+--- a/tpm.c
++++ b/tpm.c
+@@ -14,6 +14,7 @@
+ #include "qemu/osdep.h"
+ 
+ #include "qapi/qmp/qerror.h"
++#include "qapi/util.h"
+ #include "sysemu/tpm_backend.h"
+ #include "sysemu/tpm.h"
+ #include "qemu/config-file.h"
+@@ -25,11 +26,8 @@ static QLIST_HEAD(, TPMBackend) tpm_backends =
+ 
+ 
+ #define TPM_MAX_MODELS      1
+-#define TPM_MAX_DRIVERS     1
+ 
+-static TPMDriverOps const *be_drivers[TPM_MAX_DRIVERS] = {
+-    NULL,
+-};
++static TPMDriverOps const *be_drivers[TPM_TYPE__MAX];
+ 
+ static enum TpmModel tpm_models[TPM_MAX_MODELS] = {
+     TPM_MODEL__MAX,
+@@ -63,31 +61,18 @@ static bool tpm_model_is_registered(enum TpmModel model)
+ 
+ const TPMDriverOps *tpm_get_backend_driver(const char *type)
+ {
+-    int i;
+-
+-    for (i = 0; i < TPM_MAX_DRIVERS && be_drivers[i] != NULL; i++) {
+-        if (!strcmp(TpmType_lookup[be_drivers[i]->type], type)) {
+-            return be_drivers[i];
+-        }
+-    }
++    int i = qapi_enum_parse(TpmType_lookup, type, TPM_TYPE__MAX, -1, NULL);
+ 
+-    return NULL;
++    return i >= 0 ? be_drivers[i] : NULL;
+ }
+ 
+ #ifdef CONFIG_TPM
+ 
+-int tpm_register_driver(const TPMDriverOps *tdo)
++void tpm_register_driver(const TPMDriverOps *tdo)
+ {
+-    int i;
++    assert(!be_drivers[tdo->type]);
+ 
+-    for (i = 0; i < TPM_MAX_DRIVERS; i++) {
+-        if (!be_drivers[i]) {
+-            be_drivers[i] = tdo;
+-            return 0;
+-        }
+-    }
+-    error_report("Could not register TPM driver");
+-    return 1;
++    be_drivers[tdo->type] = tdo;
+ }
+ 
+ /*
+@@ -100,9 +85,12 @@ static void tpm_display_backend_drivers(void)
+ 
+     fprintf(stderr, "Supported TPM types (choose only one):\n");
+ 
+-    for (i = 0; i < TPM_MAX_DRIVERS && be_drivers[i] != NULL; i++) {
++    for (i = 0; i < TPM_TYPE__MAX; i++) {
++        if (be_drivers[i] == NULL) {
++            continue;
++        }
+         fprintf(stderr, "%12s   %s\n",
+-                TpmType_lookup[be_drivers[i]->type], be_drivers[i]->desc());
++                TpmType_lookup[i], be_drivers[i]->desc());
+     }
+     fprintf(stderr, "\n");
+ }
+@@ -239,14 +227,7 @@ int tpm_config_parse(QemuOptsList *opts_list, const char *optarg)
+ 
+ static const TPMDriverOps *tpm_driver_find_by_type(enum TpmType type)
+ {
+-    int i;
+-
+-    for (i = 0; i < TPM_MAX_DRIVERS && be_drivers[i] != NULL; i++) {
+-        if (be_drivers[i]->type == type) {
+-            return be_drivers[i];
+-        }
+-    }
+-    return NULL;
++    return be_drivers[type];
+ }
+ 
+ static TPMInfo *qmp_query_tpm_inst(TPMBackend *drv)
+-- 
+2.11.0
+

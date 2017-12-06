@@ -1,0 +1,67 @@
+From c559d599c6880caf7aa0f0a60c6c023584e1b8ad Mon Sep 17 00:00:00 2001
+From: Stefan Berger <stefanb@linux.vnet.ibm.com>
+Date: Wed, 11 Oct 2017 08:52:43 -0400
+Subject: [PATCH 12/12] tpm: Use EMSGSIZE instead of EBADMSG to compile on
+ OpenBSD
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+EBADMSG was only added to OpenBSD very recently. To make QEMU compilable
+on older OpenBSD versions use EMSGSIZE instead when a mismatch between
+number of received bytes and message size indicated in the header was
+found.
+
+Return -EMSGSIZE and convert all other errnos in the same functions to
+return the negative errno.
+
+Signed-off-by: Stefan Berger <stefanb@linux.vnet.ibm.com>
+Reviewed-by: Marc-André Lureau <marcandre.lureau@redhat.com>
+
+Upstream-Status: Backport [98979cdca44ba0e21055ee7736694aa5ebb54347]
+---
+ hw/tpm/tpm_util.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/hw/tpm/tpm_util.c b/hw/tpm/tpm_util.c
+index fb929f6e92..73d77965fd 100644
+--- a/hw/tpm/tpm_util.c
++++ b/hw/tpm/tpm_util.c
+@@ -68,10 +68,10 @@ static int tpm_util_test(int fd,
+ 
+     n = write(fd, request, requestlen);
+     if (n < 0) {
+-        return errno;
++        return -errno;
+     }
+     if (n != requestlen) {
+-        return EFAULT;
++        return -EFAULT;
+     }
+ 
+     FD_ZERO(&readfds);
+@@ -80,18 +80,18 @@ static int tpm_util_test(int fd,
+     /* wait for a second */
+     n = select(fd + 1, &readfds, NULL, NULL, &tv);
+     if (n != 1) {
+-        return errno;
++        return -errno;
+     }
+ 
+     n = read(fd, &buf, sizeof(buf));
+     if (n < sizeof(struct tpm_resp_hdr)) {
+-        return EFAULT;
++        return -EFAULT;
+     }
+ 
+     resp = (struct tpm_resp_hdr *)buf;
+     /* check the header */
+     if (be32_to_cpu(resp->len) != n) {
+-        return EBADMSG;
++        return -EMSGSIZE;
+     }
+ 
+     *return_tag = be16_to_cpu(resp->tag);
+-- 
+2.11.0
+
