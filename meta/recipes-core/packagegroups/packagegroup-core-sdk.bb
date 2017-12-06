@@ -28,6 +28,7 @@ RDEPENDS_packagegroup-core-sdk = "\
 
 SANITIZERS = "libasan-dev libubsan-dev"
 SANITIZERS_aarch64 = ""
+SANITIZERS_microblaze = ""
 SANITIZERS_mipsarch = ""
 SANITIZERS_nios2 = ""
 SANITIZERS_powerpc64 = ""
