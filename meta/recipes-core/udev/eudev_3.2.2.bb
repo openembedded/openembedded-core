@@ -11,9 +11,6 @@ PROVIDES = "udev"
 SRC_URI = "http://dev.gentoo.org/~blueness/${BPN}/${BP}.tar.gz \
            file://0014-Revert-rules-remove-firmware-loading-rules.patch \
            file://Revert-udev-remove-userspace-firmware-loading-suppor.patch \
-           file://0001-rules-whitelist-hd-devices.patch \
-           file://0002-rules-update.patch \
-           file://0003-rules-watch-metadata-changes-in-ide-devices.patch \
            file://devfs-udev.rules \
            file://init \
            file://links.conf \
