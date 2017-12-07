@@ -534,21 +534,29 @@ def get_rootfs_size(d):
     output = subprocess.check_output(['du', '-ks',
                                       d.getVar('IMAGE_ROOTFS')])
     size_kb = int(output.split()[0])
-    base_size = size_kb * overhead_factor
-    base_size = max(base_size, rootfs_req_size) + rootfs_extra_space
 
+    base_size = size_kb * overhead_factor
+    bb.debug(1, '%f = %d * %f' % (base_size, size_kb, overhead_factor))
+    base_size2 = max(base_size, rootfs_req_size) + rootfs_extra_space
+    bb.debug(1, '%f = max(%f, %d)[%f] + %d' % (base_size2, base_size, rootfs_req_size, max(base_size, rootfs_req_size), overhead_factor))
+
+    base_size = base_size2
     if base_size != int(base_size):
         base_size = int(base_size + 1)
     else:
         base_size = int(base_size)
+    bb.debug(1, '%f = int(%f)' % (base_size, base_size2))
 
+    base_size_saved = base_size
     base_size += rootfs_alignment - 1
     base_size -= base_size % rootfs_alignment
+    bb.debug(1, '%d = aligned(%d)' % (base_size, base_size_saved))
 
     # Do not check image size of the debugfs image. This is not supposed
     # to be deployed, etc. so it doesn't make sense to limit the size
     # of the debug.
     if (d.getVar('IMAGE_BUILDING_DEBUGFS') or "") == "true":
+        bb.debug(1, 'returning debugfs size %d' % (base_size))
         return base_size
 
     # Check the rootfs size against IMAGE_ROOTFS_MAXSIZE (if set)
@@ -566,6 +574,8 @@ def get_rootfs_size(d):
                 (base_size, initramfs_maxsize_int))
             bb.error("You can set INITRAMFS_MAXSIZE a larger value. Usually, it should")
             bb.fatal("be less than 1/2 of ram size, or you may fail to boot it.\n")
+
+    bb.debug(1, 'returning %d' % (base_size))
     return base_size
 
 python set_image_size () {
