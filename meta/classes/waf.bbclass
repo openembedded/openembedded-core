@@ -44,6 +44,7 @@ waf_do_configure() {
 	${S}/waf configure --prefix=${prefix} ${WAF_EXTRA_CONF} ${EXTRA_OECONF}
 }
 
+do_compile[progress] = "outof:^\[\s*(\d+)/\s*(\d+)\]\s+"
 waf_do_compile()  {
 	${S}/waf build ${@get_waf_parallel_make(d)}
 }
