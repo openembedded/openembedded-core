@@ -845,7 +845,7 @@ def sstate_checkhashes(sq_fn, sq_task, sq_hash, sq_hashfn, d, siginfo=False):
                 missed.append(task)
                 bb.debug(2, "SState: Unsuccessful fetch test for %s" % srcuri)
                 pass
-            bb.event.fire(bb.event.ProcessProgress("Checking sstate mirror object availability", len(tasklist) - thread_worker.tasks.qsize()), d)
+            bb.event.fire(bb.event.ProcessProgress(msg, len(tasklist) - thread_worker.tasks.qsize()), d)
 
         tasklist = []
         for task in range(len(sq_fn)):
@@ -856,7 +856,8 @@ def sstate_checkhashes(sq_fn, sq_task, sq_hash, sq_hashfn, d, siginfo=False):
             tasklist.append((task, sstatefile))
 
         if tasklist:
-            bb.event.fire(bb.event.ProcessStarted("Checking sstate mirror object availability", len(tasklist)), d)
+            msg = "Checking sstate mirror object availability"
+            bb.event.fire(bb.event.ProcessStarted(msg, len(tasklist)), d)
 
             import multiprocessing
             nproc = min(multiprocessing.cpu_count(), len(tasklist))
@@ -870,7 +871,7 @@ def sstate_checkhashes(sq_fn, sq_task, sq_hash, sq_hashfn, d, siginfo=False):
             pool.wait_completion()
             bb.event.disable_threadlock()
 
-            bb.event.fire(bb.event.ProcessFinished("Checking sstate mirror object availability"), d)
+            bb.event.fire(bb.event.ProcessFinished(msg), d)
 
     inheritlist = d.getVar("INHERIT")
     if "toaster" in inheritlist:
@@ -1038,18 +1039,25 @@ python sstate_eventhandler2() {
                         seen.append(stamp)
 
         if toremove:
-            bb.note("There are %d recipes to be removed from sysroot %s, removing..." % (len(toremove), a))
+            msg = "Removing %d recipes from the %s sysroot" % (len(toremove), a)
+            bb.event.fire(bb.event.ProcessStarted(msg, len(toremove)), d)
 
-        for r in toremove:
-            (stamp, manifest, workdir) = r.split()
-            for m in glob.glob(manifest + ".*"):
-                if m.endswith(".postrm"):
-                    continue
-                sstate_clean_manifest(m, d)
-            bb.utils.remove(stamp + "*")
-            if removeworkdir:
-                bb.utils.remove(workdir, recurse = True)
-            lines.remove(r)
+            removed = 0
+            for r in toremove:
+                (stamp, manifest, workdir) = r.split()
+                for m in glob.glob(manifest + ".*"):
+                    if m.endswith(".postrm"):
+                        continue
+                    sstate_clean_manifest(m, d)
+                bb.utils.remove(stamp + "*")
+                if removeworkdir:
+                    bb.utils.remove(workdir, recurse = True)
+                lines.remove(r)
+                removed = removed + 1
+                bb.event.fire(bb.event.ProcessProgress(msg, removed), d)
+
+            bb.event.fire(bb.event.ProcessFinished(msg), d)
+
         with open(i, "w") as f:
             for l in lines:
                 f.write(l)
