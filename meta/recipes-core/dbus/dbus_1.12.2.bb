@@ -5,7 +5,7 @@ SECTION = "base"
 LICENSE = "AFL-2 | GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=10dded3b58148f3f1fd804b26354af3e \
                     file://dbus/dbus.h;beginline=6;endline=20;md5=7755c9d7abccd5dbd25a6a974538bb3c"
-DEPENDS = "expat virtual/libintl"
+DEPENDS = "expat virtual/libintl autoconf-archive"
 RDEPENDS_dbus_class-native = ""
 RDEPENDS_dbus_class-nativesdk = ""
 PACKAGES += "${@bb.utils.contains('DISTRO_FEATURES', 'ptest', '${PN}-ptest', '', d)}"
@@ -15,13 +15,12 @@ RDEPENDS_dbus-ptest_class-target = "dbus-test-ptest"
 SRC_URI = "http://dbus.freedesktop.org/releases/dbus/dbus-${PV}.tar.gz \
            file://tmpdir.patch \
            file://dbus-1.init \
-           file://os-test.patch \
            file://clear-guid_from_server-if-send_negotiate_unix_f.patch \
            file://0001-configure.ac-explicitely-check-stdint.h.patch \
 "
 
-SRC_URI[md5sum] = "94c991e763d4f9f13690416b2dcd9411"
-SRC_URI[sha256sum] = "e574b9780b5425fde4d973bb596e7ea0f09e00fe2edd662da9016e976c460b48"
+SRC_URI[md5sum] = "3361456cadb99aa6601bed5b48964254"
+SRC_URI[sha256sum] = "272bb5091770b047c8188b926d5e6038fa4fe6745488b2add96b23e2d9a83d88"
 
 inherit useradd autotools pkgconfig gettext update-rc.d upstream-version-is-even
 
@@ -69,12 +68,15 @@ FILES_${PN} = "${bindir}/dbus-daemon* \
                ${datadir}/dbus-1/session.conf \
                ${datadir}/dbus-1/system.d \
                ${datadir}/dbus-1/system.conf \
+               ${datadir}/xml/dbus-1 \
                ${systemd_system_unitdir} \
                ${systemd_user_unitdir} \
+               ${nonarch_libdir}/sysusers.d/dbus.conf \
+               ${nonarch_libdir}/tmpfiles.d/dbus.conf \
 "
 FILES_${PN}-lib = "${libdir}/lib*.so.*"
 RRECOMMENDS_${PN}-lib = "${PN}"
-FILES_${PN}-dev += "${libdir}/dbus-1.0/include ${bindir}/dbus-test-tool"
+FILES_${PN}-dev += "${libdir}/dbus-1.0/include ${libdir}/cmake/DBus1 ${bindir}/dbus-test-tool"
 
 PACKAGE_WRITE_DEPS += "${@bb.utils.contains('DISTRO_FEATURES','systemd sysvinit','systemd-systemctl-native','',d)}"
 pkg_postinst_dbus() {
