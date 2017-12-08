@@ -595,19 +595,27 @@ do_strip[dirs] = "${B}"
 addtask strip before do_sizecheck after do_kernel_link_images
 
 # Support checking the kernel size since some kernels need to reside in partitions
-# with a fixed length or there is a limit in transferring the kernel to memory
+# with a fixed length or there is a limit in transferring the kernel to memory.
+# If more than one image type is enabled, warn on any that don't fit but only fail
+# if none fit.
 do_sizecheck() {
 	if [ ! -z "${KERNEL_IMAGE_MAXSIZE}" ]; then
 		invalid=`echo ${KERNEL_IMAGE_MAXSIZE} | sed 's/[0-9]//g'`
 		if [ -n "$invalid" ]; then
-			die "Invalid KERNEL_IMAGE_MAXSIZE: ${KERNEL_IMAGE_MAXSIZE}, should be an integerx (The unit is Kbytes)"
+			die "Invalid KERNEL_IMAGE_MAXSIZE: ${KERNEL_IMAGE_MAXSIZE}, should be an integer (The unit is Kbytes)"
 		fi
+		at_least_one_fits=
 		for type in ${KERNEL_IMAGETYPES} ; do
 			size=`du -ks ${B}/${KERNEL_OUTPUT_DIR}/$type | awk '{print $1}'`
 			if [ $size -ge ${KERNEL_IMAGE_MAXSIZE} ]; then
-				warn "This kernel $type (size=$size(K) > ${KERNEL_IMAGE_MAXSIZE}(K)) is too big for your device. Please reduce the size of the kernel by making more of it modular."
+				bbwarn "This kernel $type (size=$size(K) > ${KERNEL_IMAGE_MAXSIZE}(K)) is too big for your device."
+			else
+				at_least_one_fits=y
 			fi
 		done
+		if [ -z "$at_least_one_fits" ]; then
+			die "All kernel images are too big for your device. Please reduce the size of the kernel by making more of it modular."
+		fi
 	fi
 }
 do_sizecheck[dirs] = "${B}"
