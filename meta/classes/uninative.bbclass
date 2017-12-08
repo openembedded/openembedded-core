@@ -91,6 +91,7 @@ def enable_uninative(d):
         bb.debug(2, "Enabling uninative")
         d.setVar("NATIVELSBSTRING", "universal%s" % oe.utils.host_gcc_version(d))
         d.appendVar("SSTATEPOSTUNPACKFUNCS", " uninative_changeinterp")
+        d.setVar("EXTRAINSTALLFUNCS_class-native", "uninative_relocate")
         d.prependVar("PATH", "${UNINATIVE_STAGING_DIR}-uninative/${BUILD_ARCH}-linux${bindir_native}:")
 
 python uninative_changeinterp () {
@@ -127,4 +128,21 @@ python uninative_changeinterp () {
             except subprocess.CalledProcessError as e:
                 bb.fatal("'%s' failed with exit code %d and the following output:\n%s" %
                          (e.cmd, e.returncode, e.output))
+}
+
+# In morty we have a problem since files can come from sstate or be built locally. Mixing interpreters
+# for local vs. sstate objects can result in hard to debug futex hangs in shared memory regions (e.g.
+# from smart/rpm/libdb).
+# To resolve this, relocate natively build binaries too. This fix isn't needed post morty since RSS
+# always uses uninative interpreter manipulations for code path simplicity.
+EXTRAINSTALLFUNCS = ""
+do_install[vardepsexclude] = "uninative_relocate"
+do_install[postfuncs] += "${EXTRAINSTALLFUNCS}"
+
+python uninative_relocate () {
+    # (re)Use uninative_changeinterp() to change the interpreter in files in ${D}
+    orig = d.getVar('SSTATE_INSTDIR', False)
+    d.setVar('SSTATE_INSTDIR', "${D}")
+    bb.build.exec_func("uninative_changeinterp", d)
+    d.setVar('SSTATE_INSTDIR', orig)
 }
