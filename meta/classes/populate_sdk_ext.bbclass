@@ -276,11 +276,12 @@ python copy_buildsystem () {
 
     # Copy uninative tarball
     # For now this is where uninative.bbclass expects the tarball
-    uninative_file = d.expand('${SDK_DEPLOY}/${BUILD_ARCH}-nativesdk-libc.tar.bz2')
-    uninative_checksum = bb.utils.sha256_file(uninative_file)
-    uninative_outdir = '%s/downloads/uninative/%s' % (baseoutpath, uninative_checksum)
-    bb.utils.mkdirhier(uninative_outdir)
-    shutil.copy(uninative_file, uninative_outdir)
+    if bb.data.inherits_class('uninative', d):
+        uninative_file = d.expand('${UNINATIVE_DLDIR}/' + d.getVarFlag("UNINATIVE_CHECKSUM", d.getVar("BUILD_ARCH")) + '/${UNINATIVE_TARBALL}')
+        uninative_checksum = bb.utils.sha256_file(uninative_file)
+        uninative_outdir = '%s/downloads/uninative/%s' % (baseoutpath, uninative_checksum)
+        bb.utils.mkdirhier(uninative_outdir)
+        shutil.copy(uninative_file, uninative_outdir)
 
     env_whitelist = (d.getVar('BB_ENV_EXTRAWHITE') or '').split()
     env_whitelist_values = {}
@@ -695,7 +696,7 @@ def get_sdk_ext_rdepends(d):
 do_populate_sdk_ext[dirs] = "${@d.getVarFlag('do_populate_sdk', 'dirs', False)}"
 
 do_populate_sdk_ext[depends] = "${@d.getVarFlag('do_populate_sdk', 'depends', False)} \
-                                buildtools-tarball:do_populate_sdk uninative-tarball:do_populate_sdk \
+                                buildtools-tarball:do_populate_sdk \
                                 ${@'meta-world-pkgdata:do_collect_packagedata' if d.getVar('SDK_INCLUDE_PKGDATA') == '1' else ''} \
                                 ${@'meta-extsdk-toolchain:do_locked_sigs' if d.getVar('SDK_INCLUDE_TOOLCHAIN') == '1' else ''}"
 
