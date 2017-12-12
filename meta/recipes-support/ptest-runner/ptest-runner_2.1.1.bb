@@ -7,8 +7,8 @@ HOMEPAGE = "http://git.yoctoproject.org/cgit/cgit.cgi/ptest-runner2/about/"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=751419260aa954499f7abaabaa882bbe"
 
-SRCREV = "8a93832dad621535e90aa8e1fb74ae5ba743fc3e"
-PV = "2.1+git${SRCPV}"
+SRCREV = "16413d71cc06b02a6d859c35a017cc49b88283f7"
+PV = "2.1.1+git${SRCPV}"
 
 SRC_URI = "git://git.yoctoproject.org/ptest-runner2"
 S = "${WORKDIR}/git"
