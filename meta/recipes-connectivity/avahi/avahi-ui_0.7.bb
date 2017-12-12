@@ -9,9 +9,8 @@ require avahi.inc
 inherit distro_features_check
 ANY_OF_DISTRO_FEATURES = "${GTK3DISTROFEATURES}"
 
-SRC_URI += "file://0001-configure.ac-install-GtkBuilder-interface-files-for-.patch"
-SRC_URI[md5sum] = "22b5e705d3eabb31d26f2e1e7b074013"
-SRC_URI[sha256sum] = "d54991185d514a0aba54ebeb408d7575b60f5818a772e28fa0e18b98bc1db454"
+SRC_URI[md5sum] = "d76c59d0882ac6c256d70a2a585362a6"
+SRC_URI[sha256sum] = "57a99b5dfe7fdae794e3d1ee7a62973a368e91e414bd0dfa5d84434de5b14804"
 
 DEPENDS += "avahi"
 
@@ -52,7 +51,6 @@ do_install_append () {
 	rm ${D}${libdir}/pkgconfig/avahi-g*
 	rm ${D}${sbindir} -rf
 	rm ${D}${datadir}/avahi/a*
-	rm ${D}${datadir}/avahi/s*
 	rm ${D}${datadir}/locale/ -rf
 	rm ${D}${datadir}/dbus* -rf
 	rm ${D}${mandir}/man1/a*
