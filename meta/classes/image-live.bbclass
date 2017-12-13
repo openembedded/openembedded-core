@@ -92,7 +92,7 @@ build_iso() {
 	for fs in ${INITRD}
 	do
 		if [ ! -s "$fs" ]; then
-			bbnote "ISO image will not be created. $fs is invalid."
+			bbwarn "ISO image will not be created. $fs is invalid."
 			return
 		fi
 	done
