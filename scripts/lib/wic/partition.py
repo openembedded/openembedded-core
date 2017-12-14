@@ -26,6 +26,7 @@
 
 import logging
 import os
+import uuid
 
 from wic import WicError
 from wic.misc import exec_cmd, exec_native_cmd, get_bitbake_var
@@ -61,6 +62,7 @@ class Partition():
         self.system_id = args.system_id
         self.use_uuid = args.use_uuid
         self.uuid = args.uuid
+        self.fsuuid = args.fsuuid
 
         self.lineno = lineno
         self.source_file = ""
@@ -264,8 +266,8 @@ class Partition():
         if self.label:
             label_str = "-L %s" % self.label
 
-        mkfs_cmd = "mkfs.%s %s %s %s -d %s" % \
-            (self.fstype, extraopts, rootfs, label_str, rootfs_dir)
+        mkfs_cmd = "mkfs.%s %s %s %s -U %s -d %s" % \
+            (self.fstype, extraopts, rootfs, label_str, self.fsuuid, rootfs_dir)
         exec_native_cmd(mkfs_cmd, native_sysroot, pseudo=pseudo)
 
         mkfs_cmd = "fsck.%s -pvfD %s" % (self.fstype, rootfs)
@@ -289,9 +291,9 @@ class Partition():
         if self.label:
             label_str = "-L %s" % self.label
 
-        mkfs_cmd = "mkfs.%s -b %d -r %s %s %s %s" % \
+        mkfs_cmd = "mkfs.%s -b %d -r %s %s %s -U %s %s" % \
             (self.fstype, rootfs_size * 1024, rootfs_dir, label_str,
-             self.mkfs_extraopts, rootfs)
+             self.mkfs_extraopts, self.fsuuid, rootfs)
         exec_native_cmd(mkfs_cmd, native_sysroot, pseudo=pseudo)
 
     def prepare_rootfs_msdos(self, rootfs, oe_builddir, rootfs_dir,
@@ -315,8 +317,9 @@ class Partition():
 
         extraopts = self.mkfs_extraopts or '-S 512'
 
-        dosfs_cmd = "mkdosfs %s %s %s -C %s %d" % \
-                    (label_str, size_str, extraopts, rootfs, rootfs_size)
+        dosfs_cmd = "mkdosfs %s -i %s %s %s -C %s %d" % \
+                    (label_str, self.fsuuid, size_str, extraopts, rootfs,
+                     rootfs_size)
         exec_native_cmd(dosfs_cmd, native_sysroot)
 
         mcopy_cmd = "mcopy -i %s -s %s/* ::/" % (rootfs, rootfs_dir)
@@ -352,8 +355,8 @@ class Partition():
         if self.label:
             label_str = "-L %s" % self.label
 
-        mkfs_cmd = "mkfs.%s -F %s %s %s" % \
-            (self.fstype, extraopts, label_str, rootfs)
+        mkfs_cmd = "mkfs.%s -F %s %s -U %s %s" % \
+            (self.fstype, extraopts, label_str, self.fsuuid, rootfs)
         exec_native_cmd(mkfs_cmd, native_sysroot)
 
     def prepare_empty_partition_btrfs(self, rootfs, oe_builddir,
@@ -369,8 +372,8 @@ class Partition():
         if self.label:
             label_str = "-L %s" % self.label
 
-        mkfs_cmd = "mkfs.%s -b %d %s %s %s" % \
-                   (self.fstype, self.size * 1024, label_str,
+        mkfs_cmd = "mkfs.%s -b %d %s -U %s %s %s" % \
+                   (self.fstype, self.size * 1024, label_str, self.fsuuid,
                     self.mkfs_extraopts, rootfs)
         exec_native_cmd(mkfs_cmd, native_sysroot)
 
@@ -391,8 +394,9 @@ class Partition():
 
         extraopts = self.mkfs_extraopts or '-S 512'
 
-        dosfs_cmd = "mkdosfs %s %s %s -C %s %d" % \
-                    (label_str, extraopts, size_str, rootfs, blocks)
+        dosfs_cmd = "mkdosfs %s -i %s %s %s -C %s %d" % \
+                    (label_str, self.fsuuid, extraopts, size_str, rootfs,
+                     blocks)
 
         exec_native_cmd(dosfs_cmd, native_sysroot)
 
@@ -410,9 +414,9 @@ class Partition():
         with open(path, 'w') as sparse:
             os.ftruncate(sparse.fileno(), self.size * 1024)
 
-        import uuid
         label_str = ""
         if self.label:
             label_str = "-L %s" % self.label
-        mkswap_cmd = "mkswap %s -U %s %s" % (label_str, str(uuid.uuid1()), path)
+
+        mkswap_cmd = "mkswap %s -U %s %s" % (label_str, self.fsuuid, path)
         exec_native_cmd(mkswap_cmd, native_sysroot)

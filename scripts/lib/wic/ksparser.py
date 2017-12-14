@@ -161,6 +161,7 @@ class KickStart():
         part.add_argument('--system-id', type=systemidtype)
         part.add_argument('--use-uuid', action='store_true')
         part.add_argument('--uuid')
+        part.add_argument('--fsuuid')
 
         bootloader = subparsers.add_parser('bootloader')
         bootloader.add_argument('--append')
