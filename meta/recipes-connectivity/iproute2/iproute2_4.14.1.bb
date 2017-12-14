@@ -7,8 +7,8 @@ SRC_URI = "${KERNELORG_MIRROR}/linux/utils/net/${BPN}/${BP}.tar.xz \
            file://0001-ip-Remove-unneed-header.patch \
           "
 
-SRC_URI[md5sum] = "69dc9e3ece3296890278f0de478330c8"
-SRC_URI[sha256sum] = "9cfb81edf8c8509e03daa77cf62aead01c4a827132f6c506578f94cc19415c50"
+SRC_URI[md5sum] = "1075423d7029e02a8f23ed4f42b7e372"
+SRC_URI[sha256sum] = "d43ac068afcc350a448f4581b6e292331ef7e4e7aa746e34981582d5fdb10067"
 
 # CFLAGS are computed in Makefile and reference CCOPTS
 #
