@@ -19,9 +19,11 @@ PACKAGES =+ "wiper"
 
 FILES_wiper = "${bindir}/wiper.sh"
 
-RDEPENDS_wiper = "bash gawk stat"
+RDEPENDS_wiper = "bash gawk coreutils"
 
-SRC_URI = "${SOURCEFORGE_MIRROR}/hdparm/${BP}.tar.gz"
+SRC_URI = "${SOURCEFORGE_MIRROR}/hdparm/${BP}.tar.gz \
+           file://wiper.sh-fix-stat-path.patch \
+          "
 
 SRC_URI[md5sum] = "410539d0bf3cc247181594581edbfb53"
 SRC_URI[sha256sum] = "c3429cd423e271fa565bf584598fd751dd2e773bb7199a592b06b5a61cec4fb6"
