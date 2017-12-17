@@ -18,5 +18,5 @@ PE = "1"
 
 XORG_PN = "libXcursor"
 
-SRC_URI[md5sum] = "1e7c17afbbce83e2215917047c57d1b3"
-SRC_URI[sha256sum] = "9bc6acb21ca14da51bda5bc912c8955bc6e5e433f0ab00c5e8bef842596c33df"
+SRC_URI[md5sum] = "58fe3514e1e7135cf364101e714d1a14"
+SRC_URI[sha256sum] = "294e670dd37cd23995e69aae626629d4a2dfe5708851bbc13d032401b7a3df6b"
