@@ -24,19 +24,16 @@ HOMEPAGE = "http://www.rpm.org"
 LICENSE = "GPL-2.0"
 LIC_FILES_CHKSUM = "file://COPYING;md5=f5259151d26ff18e78023450a5ac8d96"
 
-SRC_URI = "git://github.com/rpm-software-management/rpm \
+SRC_URI = "git://github.com/rpm-software-management/rpm;branch=rpm-4.14.x \
            file://0001-Do-not-add-an-unsatisfiable-dependency-when-building.patch \
            file://0001-Do-not-read-config-files-from-HOME.patch \
            file://0001-When-cross-installing-execute-package-scriptlets-wit.patch \
            file://0001-Do-not-reset-the-PATH-environment-variable-before-ru.patch \
            file://0002-Add-support-for-prefixing-etc-from-RPM_ETCCONFIGDIR-.patch \
-           file://0001-When-nice-value-cannot-be-reset-issue-a-notice-inste.patch \
            file://0001-Do-not-hardcode-lib-rpm-as-the-installation-path-for.patch \
            file://0001-Fix-build-with-musl-C-library.patch \
            file://0001-Add-a-color-setting-for-mips64_n32-binaries.patch \
-           file://0001-Add-PYTHON_ABI-when-searching-for-python-libraries.patch \
            file://0011-Do-not-require-that-ELF-binaries-are-executable-to-b.patch \
-           file://0012-Use-conditional-to-access-_docdir-in-macros.in.patch \
            file://0013-Add-a-new-option-alldeps-to-rpmdeps.patch \
            file://0001-Split-binary-package-building-into-a-separate-functi.patch \
            file://0002-Run-binary-package-creation-via-thread-pools.patch \
@@ -45,9 +42,8 @@ SRC_URI = "git://github.com/rpm-software-management/rpm \
            file://0001-perl-disable-auto-reqs.patch \
            "
 
-PV = "4.13.90+git${SRCPV}"
 PE = "1"
-SRCREV = "a8e51b3bb05c6acb1d9b2e3d34f859ddda1677be"
+SRCREV = "da3720f62e57648fb1dc2a632744d38866139971"
 
 S = "${WORKDIR}/git"
 

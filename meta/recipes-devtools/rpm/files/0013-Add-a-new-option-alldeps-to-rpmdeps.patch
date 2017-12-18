@@ -1,7 +1,7 @@
-From 3bf20a6116ae3e1a5a3a6907bee7e881b17efb2f Mon Sep 17 00:00:00 2001
+From ef9f8c17c3e5c35d3b55db9ca76b0fa0d6336421 Mon Sep 17 00:00:00 2001
 From: Peter Kjellerstedt <pkj@axis.com>
 Date: Mon, 15 May 2017 11:23:26 +0200
-Subject: [PATCH 13/13] Add a new option --alldeps to rpmdeps
+Subject: [PATCH 10/15] Add a new option --alldeps to rpmdeps
 
 This will send the output from rpmfcPrint() to stdout. This is an
 alternative to using the --rpmfcdebug option, which will send the same
@@ -12,6 +12,7 @@ output options, e.g., --requires, without affecting their output.
 
 Upstream-Status: Submitted [https://github.com/rpm-software-management/rpm/pull/220]
 Signed-off-by: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
+
 ---
  build/rpmfc.c   | 27 ++++++++++++++-------------
  build/rpmfc.h   |  1 -
@@ -19,10 +20,10 @@ Signed-off-by: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
  3 files changed, 39 insertions(+), 33 deletions(-)
 
 diff --git a/build/rpmfc.c b/build/rpmfc.c
-index c8e2f876a..44f1cdc9a 100644
+index b8aea76d0..d04ffb297 100644
 --- a/build/rpmfc.c
 +++ b/build/rpmfc.c
-@@ -732,7 +732,6 @@ static rpm_color_t rpmfcColor(const char * fmstr)
+@@ -692,7 +692,6 @@ static rpm_color_t rpmfcColor(const char * fmstr)
  
  void rpmfcPrint(const char * msg, rpmfc fc, FILE * fp)
  {
@@ -30,7 +31,7 @@ index c8e2f876a..44f1cdc9a 100644
      int ndx;
      int dx;
      int fx;
-@@ -744,21 +743,23 @@ void rpmfcPrint(const char * msg, rpmfc fc, FILE * fp)
+@@ -704,21 +703,23 @@ void rpmfcPrint(const char * msg, rpmfc fc, FILE * fp)
  
      if (fc)
      for (fx = 0; fx < fc->nfiles; fx++) {
@@ -79,7 +80,7 @@ index dae8ea5b1..3d87b31cf 100644
   * @param fc		file classifier
   * @param fp		output file handle (NULL for stderr)
 diff --git a/tools/rpmdeps.c b/tools/rpmdeps.c
-index a414b6343..f260a38c4 100644
+index 419befce1..f260a38c4 100644
 --- a/tools/rpmdeps.c
 +++ b/tools/rpmdeps.c
 @@ -23,6 +23,8 @@ static int print_conflicts;
@@ -105,7 +106,7 @@ index a414b6343..f260a38c4 100644
  	goto exit;
  
 -    if (_rpmfc_debug)
--	rpmfcPrint(buf, fc, NULL);
+-	rpmfcPrint(NULL, fc, NULL);
 -
 -    if (print_provides)
 -	rpmdsPrint(NULL, rpmfcProvides(fc), stdout);
@@ -148,5 +149,5 @@ index a414b6343..f260a38c4 100644
      ec = 0;
  
 -- 
-2.12.0
+2.14.2
 
