@@ -16,6 +16,8 @@ SRC_URI[sha256sum] = "d7837121dd5652a05fef807c361909d255d173280c4e1a4ded94d73d80
 # also, exclude pre-releases for both python 2.x and 3.x
 UPSTREAM_CHECK_REGEX = "[Pp]ython-(?P<pver>2(\.\d+)+).tar"
 
+CVE_PRODUCT = "python"
+
 PYTHON_MAJMIN = "2.7"
 
 inherit autotools
