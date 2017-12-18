@@ -27,6 +27,8 @@ SRC_URI = "\
 "
 S = "${WORKDIR}/bluez-${PV}"
 
+CVE_PRODUCT = "bluez"
+
 inherit autotools pkgconfig systemd update-rc.d distro_features_check ptest
 
 EXTRA_OECONF = "\
