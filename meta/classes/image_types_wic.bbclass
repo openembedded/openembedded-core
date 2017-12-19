@@ -43,6 +43,9 @@ do_image_wic[depends] += "wic-tools:do_populate_sysroot"
 WKS_FILE_DEPENDS ??= ''
 DEPENDS += "${@ '${WKS_FILE_DEPENDS}' if d.getVar('USING_WIC') else '' }"
 
+# We ensure all artfacts are deployed (e.g virtual/bootloader)
+do_image_wic[recrdeptask] += "do_deploy"
+
 python do_write_wks_template () {
     """Write out expanded template contents to WKS_FULL_PATH."""
     import re
