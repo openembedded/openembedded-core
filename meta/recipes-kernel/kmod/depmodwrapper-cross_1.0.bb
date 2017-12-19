@@ -45,4 +45,5 @@ EOF
 
 SYSROOT_DIRS += "${bindir_crossscripts}"
 
+PACKAGES = ""
 inherit nopackages
