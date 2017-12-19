@@ -1,0 +1,100 @@
+From d1d6c69b6fd25e71dbae67fad17b2c7737f6b2dc Mon Sep 17 00:00:00 2001
+From: Andy Polyakov <appro@openssl.org>
+Date: Sun, 5 Nov 2017 17:08:16 +0100
+Subject: [PATCH] {aes-armv4|bsaes-armv7|sha256-armv4}.pl: make it work with
+ binutils-2.29
+
+It's not clear if it's a feature or bug, but binutils-2.29[.1]
+interprets 'adr' instruction with Thumb2 code reference differently,
+in a way that affects calculation of addresses of constants' tables.
+
+Upstream-Status: Backport
+
+Reviewed-by: Bernd Edlinger <bernd.edlinger@hotmail.de>
+Reviewed-by: Kurt Roeckx <kurt@roeckx.be>
+Signed-off-by: Stefan Agner <stefan.agner@toradex.com>
+(Merged from https://github.com/openssl/openssl/pull/4673)
+---
+ crypto/aes/asm/aes-armv4.pl    | 6 +++---
+ crypto/aes/asm/bsaes-armv7.pl  | 6 +++---
+ crypto/sha/asm/sha256-armv4.pl | 2 +-
+ 3 files changed, 7 insertions(+), 7 deletions(-)
+
+diff --git a/crypto/aes/asm/aes-armv4.pl b/crypto/aes/asm/aes-armv4.pl
+index 4f8917089f..c1b5e352d7 100644
+--- a/crypto/aes/asm/aes-armv4.pl
++++ b/crypto/aes/asm/aes-armv4.pl
+@@ -184,7 +184,7 @@ AES_encrypt:
+ #if __ARM_ARCH__<7
+ 	sub	r3,pc,#8		@ AES_encrypt
+ #else
+-	adr	r3,AES_encrypt
++	adr	r3,.
+ #endif
+ 	stmdb   sp!,{r1,r4-r12,lr}
+ 	mov	$rounds,r0		@ inp
+@@ -430,7 +430,7 @@ _armv4_AES_set_encrypt_key:
+ #if __ARM_ARCH__<7
+ 	sub	r3,pc,#8		@ AES_set_encrypt_key
+ #else
+-	adr	r3,private_AES_set_encrypt_key
++	adr	r3,.
+ #endif
+ 	teq	r0,#0
+ #if __ARM_ARCH__>=7
+@@ -952,7 +952,7 @@ AES_decrypt:
+ #if __ARM_ARCH__<7
+ 	sub	r3,pc,#8		@ AES_decrypt
+ #else
+-	adr	r3,AES_decrypt
++	adr	r3,.
+ #endif
+ 	stmdb   sp!,{r1,r4-r12,lr}
+ 	mov	$rounds,r0		@ inp
+diff --git a/crypto/aes/asm/bsaes-armv7.pl b/crypto/aes/asm/bsaes-armv7.pl
+index 70b3f9656f..ec66b0502a 100644
+--- a/crypto/aes/asm/bsaes-armv7.pl
++++ b/crypto/aes/asm/bsaes-armv7.pl
+@@ -724,7 +724,7 @@ $code.=<<___;
+ .type	_bsaes_decrypt8,%function
+ .align	4
+ _bsaes_decrypt8:
+-	adr	$const,_bsaes_decrypt8
++	adr	$const,.
+ 	vldmia	$key!, {@XMM[9]}		@ round 0 key
+ 	add	$const,$const,#.LM0ISR-_bsaes_decrypt8
+ 
+@@ -819,7 +819,7 @@ _bsaes_const:
+ .type	_bsaes_encrypt8,%function
+ .align	4
+ _bsaes_encrypt8:
+-	adr	$const,_bsaes_encrypt8
++	adr	$const,.
+ 	vldmia	$key!, {@XMM[9]}		@ round 0 key
+ 	sub	$const,$const,#_bsaes_encrypt8-.LM0SR
+ 
+@@ -923,7 +923,7 @@ $code.=<<___;
+ .type	_bsaes_key_convert,%function
+ .align	4
+ _bsaes_key_convert:
+-	adr	$const,_bsaes_key_convert
++	adr	$const,.
+ 	vld1.8	{@XMM[7]},  [$inp]!		@ load round 0 key
+ 	sub	$const,$const,#_bsaes_key_convert-.LM0
+ 	vld1.8	{@XMM[15]}, [$inp]!		@ load round 1 key
+diff --git a/crypto/sha/asm/sha256-armv4.pl b/crypto/sha/asm/sha256-armv4.pl
+index 4fee74d832..750216eb42 100644
+--- a/crypto/sha/asm/sha256-armv4.pl
++++ b/crypto/sha/asm/sha256-armv4.pl
+@@ -205,7 +205,7 @@ sha256_block_data_order:
+ #if __ARM_ARCH__<7
+ 	sub	r3,pc,#8		@ sha256_block_data_order
+ #else
+-	adr	r3,sha256_block_data_order
++	adr	r3,.
+ #endif
+ #if __ARM_MAX_ARCH__>=7 && !defined(__KERNEL__)
+ 	ldr	r12,.LOPENSSL_armcap
+-- 
+2.15.0
+
