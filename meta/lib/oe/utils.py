@@ -281,6 +281,14 @@ def host_gcc_version(d):
     version = match.group(1)
     return "-%s" % version if version in ("4.8", "4.9") else ""
 
+
+def get_multilib_datastore(variant, d):
+    localdata = bb.data.createCopy(d)
+    overrides = localdata.getVar("OVERRIDES", False) + ":virtclass-multilib-" + variant
+    localdata.setVar("OVERRIDES", overrides)
+    localdata.setVar("MLPREFIX", variant + "-")
+    return localdata
+
 #
 # Python 2.7 doesn't have threaded pools (just multiprocessing)
 # so implement a version here

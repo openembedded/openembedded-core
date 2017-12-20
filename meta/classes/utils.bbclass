@@ -364,12 +364,7 @@ def multilib_pkg_extend(d, pkg):
     return pkgs
 
 def get_multilib_datastore(variant, d):
-    localdata = bb.data.createCopy(d)
-    overrides = localdata.getVar("OVERRIDES", False) + ":virtclass-multilib-" + variant
-    localdata.setVar("OVERRIDES", overrides)
-    localdata.setVar("MLPREFIX", variant + "-")
-    return localdata
-get_multilib_datastore[vardepsexclude] = "OVERRIDES"
+    return oe.utils.get_multilib_datastore(variant, d)
 
 def all_multilib_tune_values(d, var, unique = True, need_split = True, delim = ' '):
     """Return a string of all ${var} in all multilib tune configuration"""
