@@ -1,0 +1,25 @@
+Patch the gtk-doc makefiles so that the qemu wrapper is used to run transient
+binaries instead of libtool wrapper or running them directly.
+
+Also substitute a bogus plugin scanner, as trying to run the real one is causing
+issues during build on x86_64.
+
+Upstream-Status: Inappropriate
+Signed-off-by: Ross Burton <ross.burton@intel.com>
+
+--- a/common/gtk-doc.mak.orig	2017-12-20 12:43:20.586474397 +0000
++++ b/common/gtk-doc.mak	2017-12-20 12:45:20.758874995 +0000
+@@ -8,3 +8,3 @@
+ GTKDOC_LD = $(LIBTOOL) --tag=CC --mode=link $(CC) $(GTKDOC_DEPS_LIBS) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS)
+-GTKDOC_RUN = $(LIBTOOL) --mode=execute
++GTKDOC_RUN = $(top_builddir)/gtkdoc-qemuwrapper
+ else
+@@ -12,3 +12,3 @@
+ GTKDOC_LD = $(CC) $(GTKDOC_DEPS_LIBS) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS)
+-GTKDOC_RUN =
++GTKDOC_RUN = $(top_builddir)/gtkdoc-qemuwrapper
+ endif
+@@ -99,2 +99,3 @@
+ 	    fi; \
++	    GST_PLUGIN_SCANNER_1_0="$(top_builddir)/libs/gst/helpers/gst-plugin-scanner-dummy" \
+ 	    GST_PLUGIN_SYSTEM_PATH_1_0=`cd $(top_builddir) && pwd`	\
