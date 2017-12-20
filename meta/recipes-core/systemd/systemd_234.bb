@@ -8,7 +8,11 @@ DEPENDS = "kmod intltool-native gperf-native acl readline libcap libcgroup util-
 
 SECTION = "base/shell"
 
-inherit useradd pkgconfig autotools perlnative update-rc.d update-alternatives qemu systemd ptest gettext bash-completion manpages
+inherit useradd pkgconfig autotools perlnative update-rc.d update-alternatives qemu systemd ptest gettext bash-completion manpages distro_features_check
+
+# As this recipe builds udev, respect systemd being in DISTRO_FEATURES so
+# that we don't build both udev and systemd in world builds.
+REQUIRED_DISTRO_FEATURES = "systemd"
 
 SRC_URI = "git://github.com/systemd/systemd.git;protocol=git \
            file://touchscreen.rules \
@@ -629,11 +633,4 @@ pkg_postinst_udev-hwdb () {
 
 pkg_prerm_udev-hwdb () {
 	rm -f $D${sysconfdir}/udev/hwdb.bin
-}
-
-# As this recipe builds udev, respect systemd being in DISTRO_FEATURES so
-# that we don't build both udev and systemd in world builds.
-python () {
-    if not bb.utils.contains ('DISTRO_FEATURES', 'systemd', True, False, d):
-        raise bb.parse.SkipPackage("'systemd' not in DISTRO_FEATURES")
 }
