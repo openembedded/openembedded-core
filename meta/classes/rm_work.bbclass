@@ -183,8 +183,6 @@ python inject_rm_work() {
         # work in the recipe itself.
         # In practice, addtask() here merely updates the dependencies.
         bb.build.addtask('do_rm_work', 'do_build', ' '.join(deps), d)
-        if "initial" in pn:
-            bb.warn(pn + "2: " + " ".join(deps))
 
     # Always update do_build_without_rm_work dependencies.
     bb.build.addtask('do_build_without_rm_work', '', ' '.join(deps), d)
