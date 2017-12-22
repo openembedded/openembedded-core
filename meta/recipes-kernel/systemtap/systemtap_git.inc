@@ -16,7 +16,7 @@ SRC_URI = "git://sourceware.org/git/systemtap.git \
            "
 
 # systemtap doesn't support mips
-COMPATIBLE_HOST = '(x86_64|i.86|powerpc|arm|aarch64).*-linux'
+COMPATIBLE_HOST = '(x86_64|i.86|powerpc|arm|aarch64|microblazeel).*-linux'
 
 S = "${WORKDIR}/git"
 
