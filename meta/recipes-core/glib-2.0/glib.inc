@@ -121,6 +121,12 @@ do_install_append_class-target () {
 	fi
 }
 
+RDEPENDS_${PN}-codegen += "\
+            python3 \
+            python3-distutils \
+            python3-xml \
+           "
+
 RDEPENDS_${PN}-ptest += "\
             dbus \
             gnome-desktop-testing \
