@@ -12,8 +12,8 @@ SRC_URI = " \
     http://ftp.gnome.org/pub/GNOME/sources/${SRCNAME}/${@gnome_verdir("${PV}")}/${SRCNAME}-${PV}.tar.xz \
 "
 
-SRC_URI[md5sum] = "1c1719b1798cc8bf1cb97777c41c83d1"
-SRC_URI[sha256sum] = "7411acd600c8cb6f00d2125afa23303f2104e59b83e0a4963288dbecc3b029fa"
+SRC_URI[md5sum] = "d898fc768ebec7a9ed4e4270c6fabfde"
+SRC_URI[sha256sum] = "f5577b9b9c70cabb9a60d81b855d488b767c66f867432e7fb64aa7269b04d1a9"
 
 S = "${WORKDIR}/${SRCNAME}-${PV}"
 
