@@ -13,8 +13,8 @@ DEPENDS = "cairo"
 SRC_URI = "https://github.com/pygobject/pycairo/releases/download/v${PV}/pycairo-${PV}.tar.gz"
 UPSTREAM_CHECK_URI = "https://github.com/pygobject/pycairo/releases/"
 
-SRC_URI[md5sum] = "7390cd413271fe5569f6eef73d72bf7a"
-SRC_URI[sha256sum] = "8642e36cef66acbfc02760d2b40c716f5f183d073fb063ba28fd29a14044719d"
+SRC_URI[md5sum] = "89f04740078fb5f4e4dd92a0c4d3b537"
+SRC_URI[sha256sum] = "ee4c3068c048230e5ce74bb8994a024711129bde1af1d76e3276c7acd81c4357"
 
 S = "${WORKDIR}/pycairo-${PV}"
 
