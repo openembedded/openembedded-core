@@ -9,8 +9,8 @@ PYPI_PACKAGE_EXT = "zip"
 
 inherit pypi
 
-SRC_URI[md5sum] = "e8e05d4f8162c9341e1089c80f742f64"
-SRC_URI[sha256sum] = "9c671a6291a5b1171fb9da81665eb4f9625c7dbddc613d82abdc6002a4bce896"
+SRC_URI[md5sum] = "abfd02fba07b381c3a9682a32d765cc6"
+SRC_URI[sha256sum] = "b080f276cc868670540b2c03cee06cc14d2faf9da7bec0f15058d1b402c94507"
 
 DEPENDS += "${PYTHON_PN}"
 DEPENDS_class-native += "${PYTHON_PN}-native"
