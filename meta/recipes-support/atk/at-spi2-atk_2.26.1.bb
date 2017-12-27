@@ -6,8 +6,8 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=e9f288ba982d60518f375b5898283886"
 MAJ_VER = "${@oe.utils.trim_version("${PV}", 2)}"
 
 SRC_URI = "${GNOME_MIRROR}/${BPN}/${MAJ_VER}/${BPN}-${PV}.tar.xz"
-SRC_URI[md5sum] = "555d4ca06a1b75c14db67bffac5f4d1f"
-SRC_URI[sha256sum] = "d25e528e1406a10c7d9b675aa15e638bcbf0a122ca3681f655a30cce83272fb9"
+SRC_URI[md5sum] = "eeec6cead3350dca48a235271c105b3e"
+SRC_URI[sha256sum] = "b4f0c27b61dbffba7a5b5ba2ff88c8cee10ff8dac774fa5b79ce906853623b75"
 
 DEPENDS = "dbus glib-2.0 glib-2.0-native atk at-spi2-core"
 
