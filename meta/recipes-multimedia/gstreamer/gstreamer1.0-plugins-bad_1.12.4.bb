@@ -16,8 +16,8 @@ SRC_URI = " \
     file://0001-vkdisplay-Use-ifdef-for-platform-specific-defines.patch \
     file://0002-vulkan-Use-the-generated-version-of-vkconfig.h.patch \
 "
-SRC_URI[md5sum] = "594a818b13fa89960b6e7c414340db38"
-SRC_URI[sha256sum] = "36d059761852bed0f1a7fcd3ef64a8aeecab95d2bca53cd6aa0f08054b1cbfec"
+SRC_URI[md5sum] = "64bf16cf15edaab1c0e02c8dee7170d0"
+SRC_URI[sha256sum] = "0c7857be16686d5c1ba6e34bd338664d3d4599d32714a8eca5c8a41a101e2d08"
 
 S = "${WORKDIR}/gst-plugins-bad-${PV}"
 
