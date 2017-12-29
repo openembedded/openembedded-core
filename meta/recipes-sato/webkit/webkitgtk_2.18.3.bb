@@ -66,6 +66,7 @@ EXTRA_OECMAKE = " \
 
 # GL/GLES header clash: both define the same thing, differently, on 32 bit x86
 EXTRA_OECMAKE_append_x86 = " -DUSE_GSTREAMER_GL=OFF "
+EXTRA_OECMAKE_append_x86-x32 = " -DUSE_GSTREAMER_GL=OFF "
 
 # Javascript JIT is not supported on powerpc
 EXTRA_OECMAKE_append_powerpc = " -DENABLE_JIT=OFF "
@@ -92,7 +93,7 @@ EXTRA_OECMAKE_append_mipsarch = " -DENABLE_JIT=OFF "
 # An attempt was made to upstream JIT support for x32 in
 # https://bugs.webkit.org/show_bug.cgi?id=100450, but this was closed as
 # unresolved due to limited X32 adoption.
-EXTRA_OECMAKE_append_linux-gnux32 = " -DENABLE_JIT=OFF"
+EXTRA_OECMAKE_append_x86-x32 = " -DENABLE_JIT=OFF "
 
 SECURITY_CFLAGS_remove_aarch64 = "-fpie"
 SECURITY_CFLAGS_append_aarch64 = " -fPIE"
