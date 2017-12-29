@@ -5,8 +5,8 @@ SRC_URI += "file://musl-arm-inb-outb.patch \
             file://0003-modesetting-Fix-16-bit-depth-bpp-mode.patch \
             file://0003-Remove-check-for-useSIGIO-option.patch \
             "
-SRC_URI[md5sum] = "4ac6feeae6790436ce9de879ca9a3bf8"
-SRC_URI[sha256sum] = "18fffa8eb93d06d2800d06321fc0df4d357684d8d714315a66d8dfa7df251447"
+SRC_URI[md5sum] = "3e47777ff034a331aed2322b078694a8"
+SRC_URI[sha256sum] = "a732502f1db000cf36a376cd0c010ffdbf32ecdd7f1fa08ba7f5bdf9601cc197"
 
 # These extensions are now integrated into the server, so declare the migration
 # path for in-place upgrades.
