@@ -9,8 +9,8 @@ DEPENDS = "util-macros flex-native bison-native"
 
 SRC_URI = "http://xkbcommon.org/download/${BPN}-${PV}.tar.xz"
 
-SRC_URI[md5sum] = "f53fa65beb5ae4b6a6b7f08f9dedabc4"
-SRC_URI[sha256sum] = "28a4dc2735863bec2dba238de07fcdff28c5dd2300ae9dfdb47282206cd9b9d8"
+SRC_URI[md5sum] = "7d0e4c4a137d0ac45bf6b328c84c3a81"
+SRC_URI[sha256sum] = "e829265db04e0aebfb0591b6dc3377b64599558167846c3f5ee5c5e53641fe6d"
 
 UPSTREAM_CHECK_URI = "http://xkbcommon.org/"
 
