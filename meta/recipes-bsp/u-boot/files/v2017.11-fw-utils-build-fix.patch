@@ -15,6 +15,10 @@ Fixes: 84d46e7e8948 ("tools: env: allow to print U-Boot version")
 Signed-off-by: Stefan Agner <stefan.agner@toradex.com>
 Tested-by: Peter Robinson <pbrobinson@gmail.com>
 Reviewed-by: Simon Glass <sjg@chromium.org>
+
+Upstream-Status: Backport [http://git.denx.de/?p=u-boot.git;a=commit;h=ded84f90a1066eef5f34daa4539273de64f7b811]
+
+Signed-off-by: Kristian Amlie <kristian.amlie@northern.tech>
 ---
  Makefile | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
