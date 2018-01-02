@@ -169,7 +169,7 @@ BJAM_OPTS    = '${BOOST_PARALLEL_MAKE} -d+2 -q \
 BJAM_OPTS_append_class-native = ' -sNO_BZIP2=1'
 
 # Adjust the build for x32
-BJAM_OPTS_append_linux-gnux32 = " abi=x32 address-model=64"
+BJAM_OPTS_append_x86-x32 = " abi=x32 address-model=64"
 
 do_configure() {
 	cp -f ${S}/boost/config/platform/linux.hpp ${S}/boost/config/platform/linux-gnueabi.hpp
