@@ -115,11 +115,10 @@ do_install_append_class-target () {
 	fi
 }
 
-RDEPENDS_${PN}-codegen += "\
-            python3 \
-            python3-distutils \
-            python3-xml \
-           "
+CODEGEN_PYTHON_RDEPENDS = "python3 python3-distutils python3-xml"
+CODEGEN_PYTHON_RDEPENDS_mingw32 = ""
+
+RDEPENDS_${PN}-codegen += "${CODEGEN_PYTHON_RDEPENDS}"
 
 RDEPENDS_${PN}-ptest += "\
             dbus \
