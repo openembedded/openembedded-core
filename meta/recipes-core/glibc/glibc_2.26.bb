@@ -45,6 +45,7 @@ SRC_URI = "${GLIBC_GIT_URI};branch=${SRCBRANCH};name=glibc \
            file://0028-Bug-4578-add-ld.so-lock-while-fork.patch \
            file://CVE-2017-15670.patch \
            file://CVE-2017-15671.patch \
+           file://0029-assert-Support-types-without-operator-int-BZ-21972.patch \
 "
 
 NATIVESDKFIXES ?= ""
