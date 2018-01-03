@@ -21,7 +21,7 @@ EXTRA_OECONF = " --enable-gnuefi \
 # Imported from the old gummiboot recipe
 TUNE_CCARGS_remove = "-mfpmath=sse"
 COMPATIBLE_HOST = "(x86_64.*|i.86.*)-linux"
-COMPATIBLE_HOST_linux-gnux32 = "null"
+COMPATIBLE_HOST_x86-x32 = "null"
 
 do_compile() {
 	SYSTEMD_BOOT_EFI_ARCH="ia32"
