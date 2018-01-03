@@ -14,6 +14,8 @@ python __anonymous () {
             replacementtype = "vmlinuz.bin"
         elif uarch == "x86":
             replacementtype = "bzImage"
+        elif uarch == "microblaze":
+            replacementtype = "linux.bin"
         else:
             replacementtype = "zImage"
 
