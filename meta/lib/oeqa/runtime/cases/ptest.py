@@ -48,9 +48,12 @@ class PtestRunnerTest(OERuntimeTestCase):
 
     @OETestID(1600)
     @skipIfNotFeature('ptest', 'Test requires ptest to be in DISTRO_FEATURES')
-    @skipIfNotFeature('ptest-pkgs', 'Test requires ptest-pkgs to be in IMAGE_FEATURES')
     @OETestDepends(['ssh.SSHTest.test_ssh'])
     def test_ptestrunner(self):
+        status, output = self.target.run('which ptest-runner', 0)
+        if status != 0:
+            self.skipTest("No -ptest packages are installed in the image")
+
         import datetime
 
         test_log_dir = self.td.get('TEST_LOG_DIR', '')
