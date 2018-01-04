@@ -5,9 +5,7 @@ PROVIDES = "python-distribute"
 DEPENDS += "python"
 DEPENDS_class-native += "python-native"
 
-inherit distutils
-
-DISTUTILS_INSTALL_ARGS += "--install-lib=${D}${PYTHON_SITEPACKAGES_DIR}"
+inherit setuptools
 
 RDEPENDS_${PN} = "\
   python-stringold \
