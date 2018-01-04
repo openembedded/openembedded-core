@@ -1,4 +1,4 @@
-From a02076fe916ade6c3f78f6d35072ec53482e9446 Mon Sep 17 00:00:00 2001
+From e48f1e18f5ea41656f0ba10fe61d69d2604b0064 Mon Sep 17 00:00:00 2001
 From: Alexander Kanavin <alex.kanavin@gmail.com>
 Date: Wed, 3 Jan 2018 17:02:01 +0200
 Subject: [PATCH] giscanner: add a --lib-dirs-envvar option
@@ -11,17 +11,18 @@ which can be picked up and used by the wrapper.
 
 Upstream-Status: Pending
 Signed-off-by: Alexander Kanavin <alex.kanavin@gmail.com>
+
 ---
- giscanner/ccompiler.py   | 6 ++++--
+ giscanner/ccompiler.py   | 4 ++--
  giscanner/dumper.py      | 3 ++-
  giscanner/scannermain.py | 3 +++
- 3 files changed, 9 insertions(+), 3 deletions(-)
+ 3 files changed, 7 insertions(+), 3 deletions(-)
 
 diff --git a/giscanner/ccompiler.py b/giscanner/ccompiler.py
-index 29de0ee..e969337 100644
+index 29de0ee..928eae8 100644
 --- a/giscanner/ccompiler.py
 +++ b/giscanner/ccompiler.py
-@@ -109,14 +109,16 @@ class CCompiler(object):
+@@ -109,7 +109,7 @@ class CCompiler(object):
  
              self._cflags_no_deprecation_warnings = "-Wno-deprecated-declarations"
  
@@ -30,16 +31,15 @@ index 29de0ee..e969337 100644
          # An "internal" link is where the library to be introspected
          # is being built in the current directory.
  
-         runtime_path_envvar = []
-         runtime_paths = []
- 
--        if self.check_is_msvc():
-+        if lib_dirs_envvar:
-+            runtime_path_envvar = [lib_dirs_envvar]
-+        elif self.check_is_msvc():
+@@ -119,7 +119,7 @@ class CCompiler(object):
+         if self.check_is_msvc():
              runtime_path_envvar = ['LIB', 'PATH']
          else:
-             runtime_path_envvar = ['LD_LIBRARY_PATH']
+-            runtime_path_envvar = ['LD_LIBRARY_PATH']
++            runtime_path_envvar = ['LD_LIBRARY_PATH'] if not lib_dirs_envvar else [lib_dirs_envvar]
+             # Search the current directory first
+             # (This flag is not supported nor needed for Visual C++)
+             args.append('-L.')
 diff --git a/giscanner/dumper.py b/giscanner/dumper.py
 index 7f77bd2..db96df6 100644
 --- a/giscanner/dumper.py
