@@ -26,7 +26,7 @@ X11GLTOOLS = "\
 
 X11TOOLS = "\
     fstests \
-    gst-player \
+    gst-examples \
     x11perf \
     xrestop \
     xwininfo \
