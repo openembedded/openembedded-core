@@ -9,13 +9,6 @@ do_configure[cleandirs] = "${B}"
 # Where the meson.build build configuration is
 MESON_SOURCEPATH = "${S}"
 
-# These variables in the environment override meson's *native* tools settings.
-# We have to unset them, so that meson doesn't pick up the cross tools and
-# use them for native builds.
-unset CC
-unset CXX
-unset AR
-
 def noprefix(var, d):
     return d.getVar(var).replace(d.getVar('prefix') + '/', '', 1)
 
@@ -90,6 +83,18 @@ meson_do_configure() {
         cat ${B}/meson-logs/meson-log.txt
         bbfatal_log meson failed
     fi
+}
+
+meson_do_configure_prepend_class-target() {
+    # Set these so that meson uses the native tools for its build sanity tests,
+    # which require executables to be runnable. The cross file will still
+    # override these for the target build. Note that we do *not* set CFLAGS,
+    # LDFLAGS, etc. as they will be slurped in by meson and applied to the
+    # target build, causing errors.
+    export CC="${BUILD_CC}"
+    export CXX="${BUILD_CXX}"
+    export LD="${BUILD_LD}"
+    export AR="${BUILD_AR}"
 }
 
 meson_do_configure_prepend_class-native() {
