@@ -1,0 +1,55 @@
+From 7bcefd311cd696955376fe2c5298ec85e8f954ce Mon Sep 17 00:00:00 2001
+From: Alexander Kanavin <alex.kanavin@gmail.com>
+Date: Wed, 15 Nov 2017 12:48:27 +0200
+Subject: [PATCH] Make it possible to disable the use of dlvsym() (needed for
+ musl)
+
+Upstream-Status: Pending
+Signed-off-by: Alexander Kanavin <alex.kanavin@gmail.com>
+
+---
+ meson_options.txt | 3 +++
+ test/meson.build  | 6 +++---
+ 2 files changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/meson_options.txt b/meson_options.txt
+index 244476a..071f0b6 100644
+--- a/meson_options.txt
++++ b/meson_options.txt
+@@ -1,6 +1,9 @@
+ option('enable-docs',
+        type: 'boolean', value: false,
+        description: 'Enable generating the Epoxy API reference (depends on Doxygen)')
++option('has-dlvsym',
++       type: 'boolean', value: true,
++       description: 'Whether dlvsym() is available (it is not when using musl C library)')
+ option('enable-glx',
+        type: 'combo',
+        choices: [ 'auto', 'yes', 'no' ],
+diff --git a/test/meson.build b/test/meson.build
+index 2340fc6..bc4330b 100644
+--- a/test/meson.build
++++ b/test/meson.build
+@@ -86,8 +86,8 @@ if build_glx
+     [ 'glx_has_extension_nocontext', [ 'glx_has_extension_nocontext.c' ], [], [], true ],
+     [ 'glx_static', [ 'glx_static.c' ], [ '-DNEEDS_TO_BE_STATIC'], [ '-static' ], libtype == 'static' ],
+     [ 'glx_shared_znow', [ 'glx_static.c', ], [], [ '-Wl,-z,now' ], has_znow ],
+-    [ 'glx_alias_prefer_same_name', [ 'glx_alias_prefer_same_name.c', 'dlwrap.c', 'dlwrap.h' ], [], [ '-rdynamic' ], not build_apple ],
+-    [ 'glx_gles2', [ 'glx_gles2.c', 'dlwrap.c', 'dlwrap.h' ], [], [ '-rdynamic' ], not build_apple ],
++    [ 'glx_alias_prefer_same_name', [ 'glx_alias_prefer_same_name.c', 'dlwrap.c', 'dlwrap.h' ], [], [ '-rdynamic' ], not build_apple and get_option('has-dlvsym') == true ],
++    [ 'glx_gles2', [ 'glx_gles2.c', 'dlwrap.c', 'dlwrap.h' ], [], [ '-rdynamic' ], not build_apple and get_option('has-dlvsym') == true ],
+   ]
+ 
+   foreach test: glx_tests
+@@ -108,7 +108,7 @@ if build_glx
+     endif
+   endforeach
+ 
+-  if not build_apple
++  if not build_apple and get_option('has-dlvsym') == true
+     # GLX/EGL tests
+     if build_egl
+       glx_egl_sources = [
+-- 
+2.15.0
+
