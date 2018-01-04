@@ -11,7 +11,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=c453e94fae672800f83bc1bd7a38b53f"
 
 DEPENDS += "perl"
 
-SRC_URI = "http://www.cpan.org/authors/id/E/ET/ETHER/URI-${PV}.tar.gz"
+SRC_URI = "https://downloads.yoctoproject.org/mirror/sources/URI-${PV}.tar.gz"
 
 SRC_URI[md5sum] = "247c3da29a794f72730e01aa5a715daf"
 SRC_URI[sha256sum] = "9c8eca0d7f39e74bbc14706293e653b699238eeb1a7690cc9c136fb8c2644115"
