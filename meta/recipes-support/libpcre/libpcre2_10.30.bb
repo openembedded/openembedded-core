@@ -33,8 +33,9 @@ EXTRA_OECONF = "\
     --enable-rebuild-chartables \
     --with-link-size=2 \
     --with-match-limit=10000000 \
+    --enable-pcre2-16 \
+    --enable-pcre2-32 \
 "
-
 # Set LINK_SIZE in BUILD_CFLAGS given that the autotools bbclass use it to
 # set CFLAGS_FOR_BUILD, required for the libpcre build.
 BUILD_CFLAGS =+ "-DLINK_SIZE=2 -I${B}/src"
@@ -43,13 +44,15 @@ CXXFLAGS_append_powerpc = " -lstdc++"
 
 export CCLD_FOR_BUILD ="${BUILD_CCLD}"
 
-PACKAGES =+ "pcre2grep pcre2grep-doc pcre2test pcre2test-doc"
+PACKAGES =+ "libpcre2-16 libpcre2-32 pcre2grep pcre2grep-doc pcre2test pcre2test-doc"
 
 SUMMARY_pcre2grep = "grep utility that uses perl 5 compatible regexes"
 SUMMARY_pcre2grep-doc = "grep utility that uses perl 5 compatible regexes - docs"
 SUMMARY_pcre2test = "program for testing Perl-comatible regular expressions"
 SUMMARY_pcre2test-doc = "program for testing Perl-comatible regular expressions - docs"
 
+FILES_libpcre2-16 = "${libdir}/libpcre2-16.so.*"
+FILES_libpcre2-32 = "${libdir}/libpcre2-32.so.*"
 FILES_pcre2grep = "${bindir}/pcre2grep"
 FILES_pcre2grep-doc = "${mandir}/man1/pcre2grep.1"
 FILES_pcre2test = "${bindir}/pcre2test"
