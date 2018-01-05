@@ -120,6 +120,7 @@ python debian_package_name_hook () {
                         if not newpkg.find(mlpre) == 0:
                             newpkg = mlpre + newpkg
                     if newpkg != pkg:
+                        bb.note("debian: renaming %s to %s" % (pkg, newpkg))
                         d.setVar('PKG_' + pkg, newpkg)
                         add_rprovides(pkg, d)
         else:
@@ -138,4 +139,3 @@ python debian_package_name_hook () {
 EXPORT_FUNCTIONS package_name_hook
 
 DEBIAN_NAMES = "1"
-
