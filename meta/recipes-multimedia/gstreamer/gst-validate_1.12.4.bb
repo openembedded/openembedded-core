@@ -16,3 +16,8 @@ RRECOMMENDS_${PN} = "git"
 FILES_${PN} += "${datadir}/gstreamer-1.0/* ${libdir}/gst-validate-launcher/* ${libdir}/gstreamer-1.0/*"
 
 inherit pkgconfig gettext autotools gobject-introspection gtk-doc
+
+# With gtk-doc enabled this recipe fails to build, so forcibly disable it:
+# WORKDIR/build/docs/validate/gst-validate-scan: line 117:
+# WORKDIR/build/docs/validate/.libs/lt-gst-validate-scan: No such file or directory
+GTKDOC_ENABLED = "False"
