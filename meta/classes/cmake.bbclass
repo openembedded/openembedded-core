@@ -7,6 +7,23 @@ B = "${WORKDIR}/build"
 # We need to unset CCACHE otherwise cmake gets too confused
 CCACHE = ""
 
+# What CMake generator to use.
+# The supported options are "Unix Makefiles" or "Ninja".
+OECMAKE_GENERATOR ?= "Unix Makefiles"
+
+python() {
+    generator = d.getVar("OECMAKE_GENERATOR")
+    if generator == "Unix Makefiles":
+        args = "-G 'Unix Makefiles' -DCMAKE_MAKE_PROGRAM=" + d.getVar("MAKE")
+        d.setVar("OECMAKE_GENERATOR_ARGS", args)
+        d.setVarFlag("do_compile", "progress", "percent")
+    elif generator == "Ninja":
+        d.appendVar("DEPENDS", " ninja-native")
+        d.setVar("OECMAKE_GENERATOR_ARGS", "-G Ninja -DCMAKE_MAKE_PROGRAM=ninja")
+        d.setVarFlag("do_compile", "progress", "outof:^\[(\d+)/(\d+)\]\s+")
+    else:
+        bb.fatal("Unknown CMake Generator %s" % generator)
+}
 # C/C++ Compiler (without cpu arch/tune arguments)
 OECMAKE_C_COMPILER ?= "`echo ${CC} | sed 's/^\([^ ]*\).*/\1/'`"
 OECMAKE_CXX_COMPILER ?= "`echo ${CXX} | sed 's/^\([^ ]*\).*/\1/'`"
@@ -121,9 +138,9 @@ cmake_do_configure() {
 	fi
 
 	cmake \
+	  ${OECMAKE_GENERATOR_ARGS} \
 	  $oecmake_sitefile \
 	  ${OECMAKE_SOURCEPATH} \
-	  -DCMAKE_MAKE_PROGRAM=${MAKE} \
 	  -DCMAKE_INSTALL_PREFIX:PATH=${prefix} \
 	  -DCMAKE_INSTALL_BINDIR:PATH=${@os.path.relpath(d.getVar('bindir'), d.getVar('prefix'))} \
 	  -DCMAKE_INSTALL_SBINDIR:PATH=${@os.path.relpath(d.getVar('sbindir'), d.getVar('prefix'))} \
@@ -142,7 +159,6 @@ cmake_do_configure() {
 	  -Wno-dev
 }
 
-do_compile[progress] = "percent"
 cmake_do_compile()  {
 	bbnote VERBOSE=1 cmake --build '${B}' --target ${OECMAKE_TARGET_COMPILE} -- ${EXTRA_OECMAKE_BUILD}
 	VERBOSE=1 cmake --build '${B}' --target ${OECMAKE_TARGET_COMPILE} -- ${EXTRA_OECMAKE_BUILD}
