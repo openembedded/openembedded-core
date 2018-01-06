@@ -34,6 +34,8 @@ EXTRA_OECMAKE_append = " ${PACKAGECONFIG_CONFARGS}"
 EXTRA_OECMAKE_BUILD_prepend_task-compile = "${PARALLEL_MAKE} "
 EXTRA_OECMAKE_BUILD_prepend_task-install = "${PARALLEL_MAKEINST} "
 
+FILES_${PN}-dev += "${libdir}/cmake ${datadir}/cmake"
+
 # CMake expects target architectures in the format of uname(2),
 # which do not always match TARGET_ARCH, so all the necessary
 # conversions should happen here.
