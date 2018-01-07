@@ -188,6 +188,19 @@ do_compile() {
         oe_runmake perl LD="${CCLD}"
 }
 
+do_compile_append_class-target() {
+        # Remove build host references from numerous comments...
+        find "${S}/cpan/Encode" -type f \
+            \( -name '*.exh' -o -name '*.c' -o -name '*.h' \)\
+            -exec sed -i -e 's:${RECIPE_SYSROOT_NATIVE}::g' {} +
+        sed -i -e 's:${RECIPE_SYSROOT}::g' ${S}/perl.h ${S}/pp.h
+        sed -i -e 's:${RECIPE_SYSROOT_NATIVE}/usr/bin/perl-native/perl${PV}.real:/usr/bin/perl${PV}:g'  \
+            ${S}/cpan/Compress-Raw-Bzip2/constants.h \
+            ${S}/cpan/Compress-Raw-Zlib/constants.h \
+            ${S}/cpan/IPC-SysV/const-c.inc \
+            ${S}/dist/Time-HiRes/const-c.inc
+}
+
 do_install() {
 	#export hostperl="${STAGING_BINDIR_NATIVE}/perl-native/perl${PV}"
 	oe_runmake install DESTDIR=${D}
