@@ -244,6 +244,7 @@ perl_package_preprocess () {
                -e "s,${STAGING_BINDIR_NATIVE}/perl-native/,${bindir}/,g" \
                -e "s,${STAGING_BINDIR_NATIVE}/,,g" \
                -e "s,${STAGING_BINDIR_TOOLCHAIN}/${TARGET_PREFIX},${bindir},g" \
+               -e 's:${RECIPE_SYSROOT}::g' \
             ${PKGD}${bindir}/h2xs \
             ${PKGD}${bindir}/h2ph \
             ${PKGD}${bindir}/pod2man \
