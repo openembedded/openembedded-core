@@ -38,6 +38,15 @@ do_configure_prepend_libc-musl () {
     sed -i -e 's,DU_HAVE_STRTOD_L=1,DU_HAVE_STRTOD_L=0,' ${S}/configure.ac
 }
 
+do_compile_prepend_class-target () {
+	# Make sure certain build host references do not end up being compiled
+	# in the image. This only affects libicutu and icu-dbg
+	sed  \
+	    -e 's,DU_BUILD=,DU_BUILD_unused=,g' \
+	    -e '/^CPPFLAGS.*/ s,--sysroot=${STAGING_DIR_TARGET},,g' \
+	    -i ${B}/tools/toolutil/Makefile
+}
+
 PREPROCESS_RELOCATE_DIRS = "${datadir}/${BPN}/${PV}"
 do_install_append_class-native() {
 	mkdir -p ${D}/${STAGING_ICU_DIR_NATIVE}/config
