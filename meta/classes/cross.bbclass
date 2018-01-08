@@ -41,8 +41,6 @@ LDFLAGS_build-darwin = "-L${STAGING_LIBDIR_NATIVE}"
 
 TOOLCHAIN_OPTIONS = ""
 
-DEPENDS_GETTEXT = "gettext-native"
-
 # This class encodes staging paths into its scripts data so can only be
 # reused if we manipulate the paths.
 SSTATE_SCAN_CMD ?= "${SSTATE_SCAN_CMD_NATIVE}"
