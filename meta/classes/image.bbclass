@@ -439,6 +439,8 @@ python () {
         # This means the task's hash can be stable rather than having hardcoded
         # date/time values. It will get expanded at execution time.
         # Similarly TMPDIR since otherwise we see QA stamp comparision problems
+        # Expand PV else it can trigger get_srcrev which can fail due to these variables being unset
+        localdata.setVar('PV', d.getVar('PV'))
         localdata.delVar('DATETIME')
         localdata.delVar('TMPDIR')
 
