@@ -9,7 +9,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=55ca817ccb7d5b5b66355690e9abc605 \
 
 SECTION = "x11/utils"
 DEPENDS = "glib-2.0 libxml2 zlib"
-BBCLASSEXTEND = "native"
+BBCLASSEXTEND = "native nativesdk"
 EXTRA_OECONF += "--enable-Bsymbolic=auto"
 
 BINCONFIG = "${bindir}/croco-0.6-config"
