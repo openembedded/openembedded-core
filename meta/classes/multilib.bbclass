@@ -99,6 +99,8 @@ python __anonymous () {
         d.setVar("LINGUAS_INSTALL", "")
         # FIXME, we need to map this to something, not delete it!
         d.setVar("PACKAGE_INSTALL_ATTEMPTONLY", "")
+        bb.build.deltask('do_populate_sdk', d)
+        bb.build.deltask('do_populate_sdk_ext', d)
         return
 
     clsextend.map_depends_variable("DEPENDS")
