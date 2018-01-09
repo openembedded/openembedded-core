@@ -93,34 +93,16 @@ class RpmSdk(Sdk):
         self.host_manifest = RpmManifest(d, self.manifest_dir,
                                          Manifest.MANIFEST_TYPE_SDK_HOST)
 
-        target_providename = ['/bin/sh',
-                              '/bin/bash',
-                              '/usr/bin/env',
-                              '/usr/bin/perl',
-                              'pkgconfig'
-                              ]
-
         self.target_pm = RpmPM(d,
                                self.sdk_target_sysroot,
                                self.d.getVar('TARGET_VENDOR'),
                                'target',
-                               target_providename
                                )
-
-        sdk_providename = ['/bin/sh',
-                           '/bin/bash',
-                           '/usr/bin/env',
-                           '/usr/bin/perl',
-                           'pkgconfig',
-                           'libGL.so()(64bit)',
-                           'libGL.so'
-                           ]
 
         self.host_pm = RpmPM(d,
                              self.sdk_host_sysroot,
                              self.d.getVar('SDK_VENDOR'),
                              'host',
-                             sdk_providename,
                              "SDK_PACKAGE_ARCHS",
                              "SDK_OS"
                              )

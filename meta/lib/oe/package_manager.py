@@ -460,7 +460,6 @@ class RpmPM(PackageManager):
                  target_rootfs,
                  target_vendor,
                  task_name='target',
-                 providename=None,
                  arch_var=None,
                  os_var=None):
         super(RpmPM, self).__init__(d)
