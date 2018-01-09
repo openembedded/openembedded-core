@@ -20,7 +20,6 @@ CVE_PRODUCT = "glib"
 BBCLASSEXTEND = "native nativesdk"
 
 DEPENDS = "glib-2.0-native \
-           gettext-native \
            virtual/libintl \
            virtual/libiconv \
            libffi \
@@ -86,7 +85,7 @@ ARM_INSTRUCTION_SET_armv5 = "arm"
 # doesn't support mips16e
 CPPFLAGS_append_class-target_mips16e = " -DNVALGRIND=1"
 
-USE_NLS = "yes"
+CACHED_CONFIGUREVARS_append_class-native = " ac_cv_path_MSGFMT=/bin/false"
 
 do_install_append () {
 	if [ -f ${D}${bindir}/gtester-report ]; then
