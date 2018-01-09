@@ -2,8 +2,8 @@ require bluez5.inc
 
 REQUIRED_DISTRO_FEATURES = "bluez5"
 
-SRC_URI[md5sum] = "783e15f65e70cdb8f721c659e140dd56"
-SRC_URI[sha256sum] = "cf75bf7cd5d564f21cc4a2bd01d5c39ce425397335fd47d9bbe43af0a58342c8"
+SRC_URI[md5sum] = "c9c853f3c90564cabec75ab35106c355"
+SRC_URI[sha256sum] = "b9a8723072ef66bae7ec301c774902ebcb444c9c5b149b5a199e60a1ba970e90"
 
 # noinst programs in Makefile.tools that are conditional on READLINE
 # support
