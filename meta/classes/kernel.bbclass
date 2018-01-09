@@ -363,7 +363,7 @@ kernel_do_install() {
 	install -d ${D}/boot
 	for type in ${KERNEL_IMAGETYPES} ; do
 		install -m 0644 ${KERNEL_OUTPUT_DIR}/${type} ${D}/${KERNEL_IMAGEDEST}/${type}-${KERNEL_VERSION}
-		if [ "${KERNEL_PACKAGE_NAME}" == "kernel" ]; then
+		if [ "${KERNEL_PACKAGE_NAME}" = "kernel" ]; then
 			ln -sf ${type}-${KERNEL_VERSION} ${D}/${KERNEL_IMAGEDEST}/${type}
 		fi
 	done
