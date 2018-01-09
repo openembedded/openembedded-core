@@ -7,8 +7,8 @@ SRC_URI = "http://cairographics.org/releases/cairo-${PV}.tar.xz \
            file://0001-cairo-Fix-CVE-2017-9814.patch \
           "
 
-SRC_URI[md5sum] = "146f5f4d0b4439fc3792fd3452b7b12a"
-SRC_URI[sha256sum] = "7e87878658f2c9951a14fc64114d4958c0e65ac47530b8ac3078b2ce41b66a09"
+SRC_URI[md5sum] = "9f0db9dbfca0966be8acd682e636d165"
+SRC_URI[sha256sum] = "8c90f00c500b2299c0a323dd9beead2a00353752b2092ead558139bd67f7bf16"
 
 PACKAGES =+ "cairo-gobject cairo-script-interpreter cairo-perf-utils"
 
