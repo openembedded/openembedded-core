@@ -366,7 +366,8 @@
     "db": {
         "cached": [],
         "files": [
-            "${libdir}/python3.5/dbm"
+            "${libdir}/python3.5/dbm",
+            "${libdir}/python3.5/lib-dynload/_dbm.*.so"
         ],
         "rdepends": [
             "core"
@@ -492,6 +493,16 @@
             "core"
         ],
         "summary": "Python's fcntl interface"
+    },
+    "gdbm": {
+        "cached": [],
+        "files": [
+            "${libdir}/python3.5/lib-dynload/_gdbm.*.so"
+        ],
+        "rdepends": [
+            "core"
+        ],
+        "summary": "Python GNU database support"
     },
     "html": {
         "cached": [
