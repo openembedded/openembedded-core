@@ -26,7 +26,7 @@ DEPENDS = " \
     virtual/${MLPREFIX}libc \
     ${MLPREFIX}elfutils \
     ${MLPREFIX}binutils \
-    bison flex xz \
+    bison-native flex-native xz \
     xmlto-native \
     asciidoc-native \
 "
