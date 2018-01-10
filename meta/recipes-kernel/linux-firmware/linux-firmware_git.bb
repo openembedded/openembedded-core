@@ -90,7 +90,7 @@ LIC_FILES_CHKSUM = "\
     file://LICENCE.Marvell;md5=9ddea1734a4baf3c78d845151f42a37a \
     file://LICENCE.moxa;md5=1086614767d8ccf744a923289d3d4261 \
     file://LICENCE.myri10ge_firmware;md5=42e32fb89f6b959ca222e25ac8df8fed \
-    file://LICENCE.Netronome;md5=cd2a3e6effe3cdf42731575b8e9477ed \
+    file://LICENCE.Netronome;md5=4add08f2577086d44447996503cddf5f \
     file://LICENCE.nvidia;md5=4428a922ed3ba2ceec95f076a488ce07 \
     file://LICENCE.OLPC;md5=5b917f9d8c061991be4f6f5f108719cd \
     file://LICENCE.open-ath9k-htc-firmware;md5=1b33c9f4d17bc4d457bdb23727046837 \
@@ -116,7 +116,7 @@ LIC_FILES_CHKSUM = "\
     file://LICENCE.xc4000;md5=0ff51d2dc49fce04814c9155081092f0 \
     file://LICENCE.xc5000;md5=1e170c13175323c32c7f4d0998d53f66 \
     file://LICENCE.xc5000c;md5=12b02efa3049db65d524aeb418dd87ca \
-    file://WHENCE;md5=038edbc9e744171d8b6235e0224028ba \
+    file://WHENCE;md5=99d352987a7e29460bcf9b26d146a95a \
 "
 
 # These are not common licenses, set NO_GENERIC_LICENSE for them
@@ -178,7 +178,7 @@ NO_GENERIC_LICENSE[Firmware-xc5000] = "LICENCE.xc5000"
 NO_GENERIC_LICENSE[Firmware-xc5000c] = "LICENCE.xc5000c"
 NO_GENERIC_LICENSE[WHENCE] = "WHENCE"
 
-SRCREV = "bf04291309d3169c0ad3b8db52564235bbd08e30"
+SRCREV = "65b1c68c63f974d72610db38dfae49861117cae2"
 PE = "1"
 PV = "0.0+git${SRCPV}"
 
