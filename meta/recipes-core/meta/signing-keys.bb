@@ -41,6 +41,7 @@ python do_get_public_keys () {
 }
 do_get_public_keys[cleandirs] = "${B}"
 addtask get_public_keys before do_install
+do_get_public_keys[depends] += "gnupg-native:do_populate_sysroot"
 
 do_install () {
     if [ -f "${B}/rpm-key" ]; then
