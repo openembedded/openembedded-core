@@ -170,12 +170,6 @@ python base_do_unpack() {
         bb.fatal(str(e))
 }
 
-def pkgarch_mapping(d):
-    # Compatibility mappings of TUNE_PKGARCH (opt in)
-    if d.getVar("PKGARCHCOMPAT_ARMV7A"):
-        if d.getVar("TUNE_PKGARCH") == "armv7a-vfp-neon":
-            d.setVar("TUNE_PKGARCH", "armv7a")
-
 def get_layers_branch_rev(d):
     layers = (d.getVar("BBLAYERS") or "").split()
     layers_branch_rev = ["%-20s = \"%s:%s\"" % (os.path.basename(i), \
@@ -228,7 +222,6 @@ python base_eventhandler() {
         if not d.getVar("NATIVELSBSTRING", False):
             d.setVar("NATIVELSBSTRING", lsb_distro_identifier(d))
         d.setVar('BB_VERSION', bb.__version__)
-        pkgarch_mapping(d)
         oe.utils.features_backfill("DISTRO_FEATURES", d)
         oe.utils.features_backfill("MACHINE_FEATURES", d)
         # Works with the line in layer.conf which changes PATH to point here
