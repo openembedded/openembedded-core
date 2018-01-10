@@ -3,7 +3,7 @@ DESCRIPTION = "GLib is a general-purpose utility library, which provides many us
 HOMEPAGE = "https://developer.gnome.org/glib/"
 
 # pcre is under BSD;
-# docs/reference/COPYING is with a 'public domai'-like license!
+# docs/reference/COPYING is with a 'public domain'-like license!
 LICENSE = "LGPLv2.1+ & BSD & PD"
 LIC_FILES_CHKSUM = "file://COPYING;md5=4fbd65380cdd255951079008b364516c \
                     file://glib/glib.h;beginline=4;endline=17;md5=b88abb7f3ad09607e71cb9d530155906 \
@@ -19,10 +19,13 @@ CVE_PRODUCT = "glib"
 
 BBCLASSEXTEND = "native nativesdk"
 
-DEPENDS = "virtual/libiconv libffi zlib glib-2.0-native"
-DEPENDS_append = " ${@bb.utils.contains('PTEST_ENABLED', '1', ' dbus', '', d)}"
-DEPENDS_class-native = "pkgconfig-native gettext-native libffi-native zlib-native"
-DEPENDS_class-nativesdk = "nativesdk-libtool nativesdk-gettext nativesdk-libffi nativesdk-zlib glib-2.0-native"
+DEPENDS = "glib-2.0-native \
+           gettext-native \
+           virtual/libintl \
+           virtual/libiconv \
+           libffi \
+           zlib \
+           ${@bb.utils.contains('PTEST_ENABLED', '1', 'dbus', '', d)}"
 
 PACKAGES += "${PN}-codegen ${PN}-utils"
 
