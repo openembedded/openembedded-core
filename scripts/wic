@@ -40,7 +40,7 @@ from collections import namedtuple
 from distutils import spawn
 
 # External modules
-scripts_path = os.path.abspath(os.path.dirname(__file__))
+scripts_path = os.path.dirname(os.path.realpath(__file__))
 lib_path = scripts_path + '/lib'
 sys.path.insert(0, lib_path)
 import scriptpath
