@@ -1,7 +1,7 @@
-From 3cc0e5900515cbcedd0447e0bdf487cc8d9a0f8c Mon Sep 17 00:00:00 2001
+From 9b09974003097c9a408bbeea568996768efe705b Mon Sep 17 00:00:00 2001
 From: Alexander Kanavin <alex.kanavin@gmail.com>
 Date: Thu, 11 Aug 2016 17:13:51 +0300
-Subject: [PATCH 5/9] Tweak gtkdoc settings so that gtkdoc generation works
+Subject: [PATCH 05/10] Tweak gtkdoc settings so that gtkdoc generation works
  under OpenEmbedded build system
 
 This requires setting a few environment variables so that the transient
@@ -17,7 +17,7 @@ Signed-off-by: Alexander Kanavin <alex.kanavin@gmail.com>
  2 files changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/Source/PlatformGTK.cmake b/Source/PlatformGTK.cmake
-index 50b5393f..7a31db51 100644
+index 50b5393..7a31db5 100644
 --- a/Source/PlatformGTK.cmake
 +++ b/Source/PlatformGTK.cmake
 @@ -24,7 +24,7 @@ macro(ADD_GTKDOC_GENERATOR _stamp_name _extra_args)
@@ -30,7 +30,7 @@ index 50b5393f..7a31db51 100644
          WORKING_DIRECTORY "${CMAKE_BINARY_DIR}"
          VERBATIM
 diff --git a/Tools/gtk/gtkdoc.py b/Tools/gtk/gtkdoc.py
-index 48f862a3..18240e42 100644
+index 03c8e8e..34fbaff 100644
 --- a/Tools/gtk/gtkdoc.py
 +++ b/Tools/gtk/gtkdoc.py
 @@ -318,9 +318,9 @@ class GTKDoc(object):
@@ -39,12 +39,12 @@ index 48f862a3..18240e42 100644
              current_ld_library_path = env.get('LD_LIBRARY_PATH')
 -            if current_ld_library_path:
 +            if current_ld_library_path and 'RUN' not in env:
-                 env['RUN'] = 'LD_LIBRARY_PATH="%s:%s" ' % (self.library_path, current_ld_library_path)
+                 env['LD_LIBRARY_PATH'] = '%s:%s' % (self.library_path, current_ld_library_path)
 -            else:
 +            elif 'RUN' not in env:
-                 env['RUN'] = 'LD_LIBRARY_PATH="%s" ' % self.library_path
+                 env['LD_LIBRARY_PATH'] = self.library_path
  
          if ldflags:
 -- 
-2.14.1
+2.15.1
 
