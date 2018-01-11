@@ -51,6 +51,8 @@ sdkroot = scripts_path
 if os.environ.get('SDKTARGETSYSROOT'):
     while sdkroot != '' and sdkroot != os.sep:
         if os.path.exists(os.path.join(sdkroot, '.devtoolbase')):
+            # Set BUILDDIR for wic to work within eSDK
+            os.environ['BUILDDIR'] = sdkroot
             # .devtoolbase only exists within eSDK
             # If found, initialize bitbake path for eSDK environment and append to PATH
             sdkroot = os.path.join(os.path.dirname(scripts_path), 'bitbake', 'bin')
