@@ -7,13 +7,9 @@ HOMEPAGE = "http://www.gentoo.org/proj/en/hardened/pax-utils.xml"
 LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=eb723b61539feef013de476e68b5c50a"
 
-SRC_URI = "http://gentoo.osuosl.org/distfiles/pax-utils-${PV}.tar.xz \
-"
-
+SRC_URI = "https://dev.gentoo.org/~vapier/dist/pax-utils-${PV}.tar.xz"
 SRC_URI[md5sum] = "a580468318f0ff42edf4a8cd314cc942"
 SRC_URI[sha256sum] = "7f4a7f8db6b4743adde7582fa48992ad01776796fcde030683732f56221337d9"
-UPSTREAM_CHECK_URI = "${DEBIAN_MIRROR}/main/p/pax-utils/"
-UPSTREAM_CHECK_REGEX = "pax-utils_(?P<pver>\d+(\.\d+)+)\.orig\.tar"
 
 RDEPENDS_${PN} += "bash"
 
