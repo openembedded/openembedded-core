@@ -1669,6 +1669,10 @@ python package_do_shlibs() {
         if not pkgver:
             pkgver = ver
 
+        pkgpe = d.getVar('PE')
+        if pkgpe:
+            pkgver = pkgpe + '#' + pkgver
+
         needed[pkg] = []
         sonames = list()
         renames = list()
@@ -1760,7 +1764,7 @@ python package_do_shlibs() {
                         continue
 
                     if ver_needed:
-                        dep = "%s (>= %s)" % (dep_pkg, ver_needed)
+                        dep = "%s (>= %s)" % (dep_pkg, ver_needed.replace('#', ':', 1))
                     else:
                         dep = dep_pkg
                     if not dep in deps:
