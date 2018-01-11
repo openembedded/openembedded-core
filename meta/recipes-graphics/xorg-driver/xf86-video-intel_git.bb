@@ -16,6 +16,7 @@ S = "${WORKDIR}/git"
 SRC_URI = "git://anongit.freedesktop.org/xorg/driver/xf86-video-intel \
            file://disable-x11-dri3.patch \
            file://always_include_xorg_server.h.patch \
+           file://0001-Add-Coffeelake-PCI-IDs-for-S-Skus.patch \
            "
 
 SRC_URI[md5sum] = "fa196a66e52c0c624fe5d350af7a5e7b"
