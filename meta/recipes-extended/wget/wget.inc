@@ -10,6 +10,9 @@ inherit autotools gettext texinfo update-alternatives pkgconfig
 EXTRA_OECONF = "--with-ssl=gnutls --disable-rpath --disable-iri \
                 --without-libgnutls-prefix ac_cv_header_uuid_uuid_h=no"
 
+EXTRA_OEMAKE += 'TOOLCHAIN_OPTIONS="${TOOLCHAIN_OPTIONS}" \
+                 DEBUG_PREFIX_MAP="${DEBUG_PREFIX_MAP}"'
+
 ALTERNATIVE_${PN} = "wget"
 ALTERNATIVE_${PN}_class-nativesdk = ""
 ALTERNATIVE_PRIORITY = "100"
