@@ -1,17 +1,16 @@
 require ruby.inc
 
-SRC_URI[md5sum] = "bd8e349d4fb2c75d90817649674f94be"
-SRC_URI[sha256sum] = "30c4b31697a4ca4ea0c8db8ad30cf45e6690a0f09687e5d483c933c03ca335e3"
+SRC_URI += " \
+           file://ruby-CVE-2017-9224.patch \
+           file://ruby-CVE-2017-9226.patch \
+           file://ruby-CVE-2017-9227.patch \
+           file://ruby-CVE-2017-9228.patch \
+           file://ruby-CVE-2017-9229.patch \
+           file://CVE-2017-14064.patch \
+           "
 
-SRC_URI += "file://prevent-gc.patch \
-            file://CVE-2016-7798.patch \
-            file://CVE-2017-9227.patch \
-            file://CVE-2017-9228.patch \
-            file://CVE-2017-9226.patch \
-            file://CVE-2017-9229.patch \
-            file://CVE-2017-14033.patch \
-            file://CVE-2017-14064.patch \
-"
+SRC_URI[md5sum] = "7e9485dcdb86ff52662728de2003e625"
+SRC_URI[sha256sum] = "152fd0bd15a90b4a18213448f485d4b53e9f7662e1508190aa5b702446b29e3d"
 
 # it's unknown to configure script, but then passed to extconf.rb
 # maybe it's not really needed as we're hardcoding the result with
@@ -24,6 +23,8 @@ PACKAGECONFIG += "${@bb.utils.contains('DISTRO_FEATURES', 'ipv6', 'ipv6', '', d)
 PACKAGECONFIG[valgrind] = "--with-valgrind=yes, --with-valgrind=no, valgrind"
 PACKAGECONFIG[gpm] = "--with-gmp=yes, --with-gmp=no, gmp"
 PACKAGECONFIG[ipv6] = ",--enable-wide-getaddrinfo,"
+
+EXTRA_AUTORECONF += "--exclude=aclocal"
 
 EXTRA_OECONF = "\
     --disable-versioned-paths \
