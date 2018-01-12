@@ -1669,10 +1669,6 @@ python package_do_shlibs() {
         if not pkgver:
             pkgver = ver
 
-        pkgpe = d.getVar('PE')
-        if pkgpe:
-            pkgver = pkgpe + ':' + pkgver
-
         needed[pkg] = []
         sonames = list()
         renames = list()
@@ -1701,7 +1697,7 @@ python package_do_shlibs() {
                     if old_pkg != pkg:
                         bb.warn('%s-%s was registered as shlib provider for %s, changing it to %s-%s because it was built later' % (old_pkg, old_pkgver, s[0], pkg, pkgver))
                 bb.debug(1, 'registering %s-%s as shlib provider for %s' % (pkg, pkgver, s[0]))
-                fd.write(s[0] + ':' + s[1] + ':' + s[2].replace(':', '#', 1) + '\n')
+                fd.write(s[0] + ':' + s[1] + ':' + s[2] + '\n')
                 if s[0] not in shlib_provider:
                     shlib_provider[s[0]] = {}
                 shlib_provider[s[0]][s[1]] = (pkg, pkgver)
