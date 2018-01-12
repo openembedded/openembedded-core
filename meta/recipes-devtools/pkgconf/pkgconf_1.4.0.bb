@@ -13,18 +13,16 @@ DEFAULT_PREFERENCE = "-1"
 # The pkgconf license seems to be functionally equivalent to BSD-2-Clause or
 # ISC, but has different wording, so needs its own name.
 LICENSE = "pkgconf"
-LIC_FILES_CHKSUM = "file://COPYING;md5=548a9d1db10cc0a84810c313a0e9266f"
+LIC_FILES_CHKSUM = "file://COPYING;md5=2214222ec1a820bd6cc75167a56925e0"
 
 SRC_URI = "\
     https://distfiles.dereferenced.org/pkgconf/pkgconf-${PV}.tar.xz \
-    file://0001-Minimal-tweaks-to-compile-with-Visual-C-2015.patch \
-    file://0001-stdinc.h-fix-build-with-mingw.patch \
     file://pkg-config-wrapper \
     file://pkg-config-native.in \
     file://pkg-config-esdk.in \
 "
-SRC_URI[md5sum] = "ac35c34d84eeb6a03d4d61b8555d6197"
-SRC_URI[sha256sum] = "1be7e40900c7467893c65f810211b1e68da3f8d5e70fddb883fc24839cad0339"
+SRC_URI[md5sum] = "c509c0dad5a70aa4bc3210557b7eafce"
+SRC_URI[sha256sum] = "1d112ff35dad516ffbfbdb013df3a035140618fe7632ec44ffa894a9c713301b"
 
 inherit autotools update-alternatives
 
