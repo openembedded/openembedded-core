@@ -1,26 +1,31 @@
-Sourced from https://bugs.webkit.org/show_bug.cgi?id=161900
+From 0b3811771ae6385503f2d949f9433d8f810d2ff9 Mon Sep 17 00:00:00 2001
+From: Khem Raj <raj.khem@gmail.com>
+Date: Wed, 17 May 2017 22:34:24 -0700
+Subject: [PATCH 8/9] webkitgtk: Fix build for armv5
 
-on arm fixes
+Taken from
+https://bugs.webkit.org/show_bug.cgi?id=161900
 
-| /usr/src/debug/libgcc/6.2.0-r0/gcc-6.2.0/build.arm-oe-linux-gnueabi.arm-oe-linux-gnueabi/libgcc/../../../../../../../work-shared/gcc-6.2.0-r0/gcc-6.2.0/libgcc/config/arm/linux-atomic-64bit.c:117: multiple definition of `__sync_sub_and_fetch_8'
-
+Upstream-Status: Pending
 Signed-off-by: Khem Raj <raj.khem@gmail.com>
 
-Upstream-Status: Backport
+---
+ Source/WTF/wtf/CMakeLists.txt | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
 diff --git a/Source/WTF/wtf/CMakeLists.txt b/Source/WTF/wtf/CMakeLists.txt
-index 867999e..ea69322 100644
+index 6b5e45b9..46ee3c22 100644
 --- a/Source/WTF/wtf/CMakeLists.txt
 +++ b/Source/WTF/wtf/CMakeLists.txt
-@@ -171,7 +171,6 @@ set(WTF_HEADERS
+@@ -205,7 +205,6 @@ set(WTF_HEADERS
  
  set(WTF_SOURCES
      Assertions.cpp
 -    Atomics.cpp
+     AutomaticThread.cpp
      BitVector.cpp
-     CompilationThread.cpp
-     CrossThreadCopier.cpp
-@@ -276,6 +275,15 @@ if (NOT USE_SYSTEM_MALLOC)
+     CPUTime.cpp
+@@ -336,6 +335,15 @@ if (NOT USE_SYSTEM_MALLOC)
      list(APPEND WTF_LIBRARIES bmalloc)
  endif ()
  
@@ -36,3 +41,6 @@ index 867999e..ea69322 100644
  list(APPEND WTF_SOURCES
      unicode/icu/CollatorICU.cpp
  )
+-- 
+2.14.1
+
