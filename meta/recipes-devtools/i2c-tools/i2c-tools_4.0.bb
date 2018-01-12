@@ -4,20 +4,20 @@ SECTION = "base"
 LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=751419260aa954499f7abaabaa882bbe"
 
-SRC_URI = "http://downloads.yoctoproject.org/mirror/sources/${BP}.tar.bz2 \
-           file://Module.mk \
+SRC_URI = "${KERNELORG_MIRROR}/software/utils/i2c-tools/${BP}.tar.gz \
+           file://0001-lib-Module.mk-Add-missing-dependencies.patch \
+           file://0001-tools-Module.mk-Add-missing-dependencies.patch \
+           file://0001-i2c-tools-eeprog-Module.mk-Add-missing-dependency.patch \
 "
-UPSTREAM_CHECK_URI = "${DEBIAN_MIRROR}/main/i/i2c-tools/"
-UPSTREAM_CHECK_REGEX = "i2c-tools_(?P<pver>.+)\.orig"
-SRC_URI[md5sum] = "7104a1043d11a5e2c7b131614eb1b962"
-SRC_URI[sha256sum] = "db5e69f2e2a6e3aa2ecdfe6a5f490b149c504468770f58921c8c5b8a7860a441"
+
+SRC_URI[md5sum] = "d92a288d70f306d3895e3a7e9c14c9aa"
+SRC_URI[sha256sum] = "5b60daf6f011de0acb61de57dba62f2054bb39f19961d67e0c91610f071ca403"
 
 inherit autotools-brokensep
 
 do_compile_prepend() {
-    cp ${WORKDIR}/Module.mk ${S}/eepromer/
     sed -i 's#/usr/local#/usr#' ${S}/Makefile
-    echo "include eepromer/Module.mk" >> ${S}/Makefile
+    echo "include eeprog/Module.mk" >> ${S}/Makefile
 }
 
 do_install_append() {
@@ -33,4 +33,7 @@ FILES_${PN}-misc = "${sbindir}/i2c-stub-from-dump \
                         ${bindir}/decode-dimms \
                         ${bindir}/decode-vaio \
                        "
-RDEPENDS_${PN}-misc = "${PN} perl"
+RDEPENDS_${PN}-misc = "${PN} perl perl-module-posix \
+                       perl-module-constant perl-module-file-basename \
+                       perl-module-fcntl perl-module-strict perl-module-vars \
+                      "
