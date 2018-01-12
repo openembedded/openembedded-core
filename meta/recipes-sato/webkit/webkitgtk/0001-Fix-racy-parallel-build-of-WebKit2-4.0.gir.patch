@@ -1,19 +1,20 @@
-From 5760d346b42807b596f479c81f7a6b42eb36065e Mon Sep 17 00:00:00 2001
+From b7f40eceef0f23bf88090789d4c5845c35f048ae Mon Sep 17 00:00:00 2001
 From: Alexander Kanavin <alex.kanavin@gmail.com>
 Date: Mon, 29 Aug 2016 16:38:11 +0300
-Subject: [PATCH] Fix racy parallel build of WebKit2-4.0.gir
+Subject: [PATCH 4/9] Fix racy parallel build of WebKit2-4.0.gir
 
 Upstream-Status: Pending
 Signed-off-by: Alexander Kanavin <alex.kanavin@gmail.com>
+
 ---
- Source/WebKit2/PlatformGTK.cmake | 9 +++++----
+ Source/WebKit/PlatformGTK.cmake | 9 +++++----
  1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/Source/WebKit2/PlatformGTK.cmake b/Source/WebKit2/PlatformGTK.cmake
-index adaa010..f18cf8a 100644
---- a/Source/WebKit2/PlatformGTK.cmake
-+++ b/Source/WebKit2/PlatformGTK.cmake
-@@ -906,8 +906,9 @@ endif ()
+diff --git a/Source/WebKit/PlatformGTK.cmake b/Source/WebKit/PlatformGTK.cmake
+index a33c6a86..d83a2e77 100644
+--- a/Source/WebKit/PlatformGTK.cmake
++++ b/Source/WebKit/PlatformGTK.cmake
+@@ -1122,8 +1122,9 @@ endif ()
  string(REGEX MATCHALL "-L[^ ]*"
      INTROSPECTION_ADDITIONAL_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS}")
  
@@ -25,7 +26,7 @@ index adaa010..f18cf8a 100644
      DEPENDS WebKit2
      DEPENDS ${CMAKE_BINARY_DIR}/JavaScriptCore-${WEBKITGTK_API_VERSION}.gir
      COMMAND CC=${CMAKE_C_COMPILER} CFLAGS=-Wno-deprecated-declarations\ ${CMAKE_C_FLAGS} LDFLAGS=
-@@ -950,7 +951,7 @@ add_custom_command(
+@@ -1168,7 +1169,7 @@ add_custom_command(
  add_custom_command(
      OUTPUT ${CMAKE_BINARY_DIR}/WebKit2WebExtension-${WEBKITGTK_API_VERSION}.gir
      DEPENDS ${CMAKE_BINARY_DIR}/JavaScriptCore-${WEBKITGTK_API_VERSION}.gir
@@ -34,7 +35,7 @@ index adaa010..f18cf8a 100644
      COMMAND CC=${CMAKE_C_COMPILER} CFLAGS=-Wno-deprecated-declarations\ ${CMAKE_C_FLAGS}
          LDFLAGS="${INTROSPECTION_ADDITIONAL_LDFLAGS}"
          ${LOADER_LIBRARY_PATH_VAR}="${INTROSPECTION_ADDITIONAL_LIBRARY_PATH}"
-@@ -1004,7 +1005,7 @@ add_custom_command(
+@@ -1225,7 +1226,7 @@ add_custom_command(
  
  add_custom_command(
      OUTPUT ${CMAKE_BINARY_DIR}/WebKit2-${WEBKITGTK_API_VERSION}.typelib
@@ -44,5 +45,5 @@ index adaa010..f18cf8a 100644
  )
  
 -- 
-2.9.3
+2.14.1
 
