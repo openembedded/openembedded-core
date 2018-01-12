@@ -1543,7 +1543,7 @@ python package_do_shlibs() {
     # Take shared lock since we're only reading, not writing
     lf = bb.utils.lockfile(d.expand("${PACKAGELOCK}"))
 
-    def linux_so(file, needed, sonames, renames, pkgver):
+    def linux_so(file, needed, sonames, renames, pkgver, pkgpr):
         needs_ldconfig = False
         ldir = os.path.dirname(file).replace(pkgdest + "/" + pkg, '')
         cmd = d.getVar('OBJDUMP') + " -p " + pipes.quote(file) + " 2>/dev/null"
@@ -1565,7 +1565,7 @@ python package_do_shlibs() {
             m = re.match("\s+SONAME\s+([^\s]*)", l)
             if m:
                 this_soname = m.group(1)
-                prov = (this_soname, ldir, pkgver)
+                prov = (this_soname, ldir, pkgver, pkgpr)
                 if not prov in sonames:
                     # if library is private (only used by package) then do not build shlib for it
                     if not private_libs or this_soname not in private_libs:
@@ -1576,7 +1576,7 @@ python package_do_shlibs() {
                     renames.append((file, os.path.join(os.path.dirname(file), this_soname)))
         return needs_ldconfig
 
-    def darwin_so(file, needed, sonames, renames, pkgver):
+    def darwin_so(file, needed, sonames, renames, pkgver, pkgpr):
         if not os.path.exists(file):
             return
         ldir = os.path.dirname(file).replace(pkgdest + "/" + pkg, '')
@@ -1601,7 +1601,7 @@ python package_do_shlibs() {
             combos = get_combinations(name)
             for combo in combos:
                 if not combo in sonames:
-                    prov = (combo, ldir, pkgver)
+                    prov = (combo, ldir, pkgver, pkgpr)
                     sonames.append(prov)
         if file.endswith('.dylib') or file.endswith('.so'):
             rpath = []
@@ -1628,13 +1628,13 @@ python package_do_shlibs() {
                 if name and name not in needed[pkg]:
                      needed[pkg].append((name, file, []))
 
-    def mingw_dll(file, needed, sonames, renames, pkgver):
+    def mingw_dll(file, needed, sonames, renames, pkgver, pkgpr):
         if not os.path.exists(file):
             return
 
         if file.endswith(".dll"):
             # assume all dlls are shared objects provided by the package
-            sonames.append((os.path.basename(file), os.path.dirname(file).replace(pkgdest + "/" + pkg, ''), pkgver))
+            sonames.append((os.path.basename(file), os.path.dirname(file).replace(pkgdest + "/" + pkg, ''), pkgver, pkgpr))
 
         if (file.endswith(".dll") or file.endswith(".exe")):
             # use objdump to search for "DLL Name: .*\.dll"
@@ -1673,6 +1673,8 @@ python package_do_shlibs() {
         if pkgpe:
             pkgver = pkgpe + ':' + pkgver
 
+        pkgpr = d.getVar('PR')
+
         needed[pkg] = []
         sonames = list()
         renames = list()
@@ -1681,11 +1683,11 @@ python package_do_shlibs() {
                 if cpath.islink(file):
                     continue
                 if targetos == "darwin" or targetos == "darwin8":
-                    darwin_so(file, needed, sonames, renames, pkgver)
+                    darwin_so(file, needed, sonames, renames, pkgver, pkgpr)
                 elif targetos.startswith("mingw"):
-                    mingw_dll(file, needed, sonames, renames, pkgver)
+                    mingw_dll(file, needed, sonames, renames, pkgver, pkgpr)
                 elif os.access(file, os.X_OK) or lib_re.match(file):
-                    ldconfig = linux_so(file, needed, sonames, renames, pkgver)
+                    ldconfig = linux_so(file, needed, sonames, renames, pkgver, pkgpr)
                     needs_ldconfig = needs_ldconfig or ldconfig
         for (old, new) in renames:
             bb.note("Renaming %s to %s" % (old, new))
@@ -1697,14 +1699,14 @@ python package_do_shlibs() {
             fd = open(shlibs_file, 'w')
             for s in sonames:
                 if s[0] in shlib_provider and s[1] in shlib_provider[s[0]]:
-                    (old_pkg, old_pkgver) = shlib_provider[s[0]][s[1]]
+                    (old_pkg, old_pkgver, old_pkgpr) = shlib_provider[s[0]][s[1]]
                     if old_pkg != pkg:
-                        bb.warn('%s-%s was registered as shlib provider for %s, changing it to %s-%s because it was built later' % (old_pkg, old_pkgver, s[0], pkg, pkgver))
+                        bb.warn('%s-%s-%s was registered as shlib provider for %s, changing it to %s-%s because it was built later' % (old_pkg, old_pkgver, old_pkgpr, s[0], pkg, pkgver, pkgpr))
                 bb.debug(1, 'registering %s-%s as shlib provider for %s' % (pkg, pkgver, s[0]))
-                fd.write(s[0] + ':' + s[1] + ':' + s[2].replace(':', '#', 1) + '\n')
+                fd.write(s[0] + ':' + s[1] + ':' + s[2].replace(':', '#', 1) + ':' + s[3] + '\n')
                 if s[0] not in shlib_provider:
                     shlib_provider[s[0]] = {}
-                shlib_provider[s[0]][s[1]] = (pkg, pkgver)
+                shlib_provider[s[0]][s[1]] = (pkg, pkgver, pkgpr)
             fd.close()
         if needs_ldconfig and use_ldconfig:
             bb.debug(1, 'adding ldconfig call to postinst for %s' % pkg)
@@ -1756,15 +1758,20 @@ python package_do_shlibs() {
                         match = p
                         break
                 if match:
-                    (dep_pkg, ver_needed) = shlib_provider[n[0]][match]
+                    (dep_pkg, ver_needed, pr_needed) = shlib_provider[n[0]][match]
 
                     bb.debug(2, '%s: Dependency %s requires package %s (used by files: %s)' % (pkg, n[0], dep_pkg, n[1]))
 
                     if dep_pkg == pkg:
                         continue
 
+                    if pr_needed and pr_needed != 'r0':
+                        pr_needed = '-' + pr_needed
+                    else:
+                        pr_needed = ''
+
                     if ver_needed:
-                        dep = "%s (>= %s)" % (dep_pkg, ver_needed)
+                        dep = "%s (>= %s%s)" % (dep_pkg, ver_needed, pr_needed)
                     else:
                         dep = dep_pkg
                     if not dep in deps:
