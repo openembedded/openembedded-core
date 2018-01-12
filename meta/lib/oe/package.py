@@ -258,7 +258,7 @@ def read_shlib_providers(d):
                     s = l.strip().split(":")
                     if s[0] not in shlib_provider:
                         shlib_provider[s[0]] = {}
-                    shlib_provider[s[0]][s[1]] = (dep_pkg, s[2].replace('#', ':', 1), s[3])
+                    shlib_provider[s[0]][s[1]] = (dep_pkg, s[2].replace('#', ':', 1))
     return shlib_provider
 
 
