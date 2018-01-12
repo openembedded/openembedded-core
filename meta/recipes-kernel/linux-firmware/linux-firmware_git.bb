@@ -37,6 +37,7 @@ LICENSE = "\
     & Firmware-ath9k-htc \
     & Firmware-phanfw \
     & Firmware-qat \
+    & Firmware-qcom \
     & Firmware-qla1280 \
     & Firmware-qla2xxx \
     & Firmware-qualcommAthos_ar3k \
@@ -96,6 +97,7 @@ LIC_FILES_CHKSUM = "\
     file://LICENCE.open-ath9k-htc-firmware;md5=1b33c9f4d17bc4d457bdb23727046837 \
     file://LICENCE.phanfw;md5=954dcec0e051f9409812b561ea743bfa \
     file://LICENCE.qat_firmware;md5=9e7d8bea77612d7cc7d9e9b54b623062 \
+    file://LICENSE.qcom;md5=164e3362a538eb11d3ac51e8e134294b \
     file://LICENCE.qla1280;md5=d6895732e622d950609093223a2c4f5d \
     file://LICENCE.qla2xxx;md5=505855e921b75f1be4a437ad9b79dff0 \
     file://LICENSE.QualcommAtheros_ar3k;md5=b5fe244fb2b532311de1472a3bc06da5 \
@@ -156,6 +158,7 @@ NO_GENERIC_LICENSE[Firmware-OLPC] = "LICENCE.OLPC"
 NO_GENERIC_LICENSE[Firmware-ath9k-htc] = "LICENCE.open-ath9k-htc-firmware"
 NO_GENERIC_LICENSE[Firmware-phanfw] = "LICENCE.phanfw"
 NO_GENERIC_LICENSE[Firmware-qat] = "LICENCE.qat_firmware"
+NO_GENERIC_LICENSE[Firmware-qcom] = "LICENSE.qcom"
 NO_GENERIC_LICENSE[Firmware-qla1280] = "LICENCE.qla1280"
 NO_GENERIC_LICENSE[Firmware-qla2xxx] = "LICENCE.qla2xxx"
 NO_GENERIC_LICENSE[Firmware-qualcommAthos_ar3k] = "LICENSE.QualcommAtheros_ar3k"
@@ -257,6 +260,9 @@ PACKAGES =+ "${PN}-ralink-license ${PN}-ralink \
              ${PN}-bnx2-mips \
              ${PN}-netronome-license ${PN}-netronome \
              ${PN}-qat ${PN}-qat-license \
+             ${PN}-qcom-license \
+             ${PN}-qcom-venus-1.8 ${PN}-qcom-venus-4.2 \
+             ${PN}-qcom-adreno-a3xx ${PN}-qcom-adreno-a530 \
              ${PN}-whence-license \
              ${PN}-license \
              "
@@ -707,6 +713,18 @@ FILES_${PN}-qat-license   = "${nonarch_base_libdir}/firmware/LICENCE.qat_firmwar
 FILES_${PN}-qat           = "${nonarch_base_libdir}/firmware/qat*.bin"
 RDEPENDS_${PN}-qat        = "${PN}-qat-license"
 
+# For QCOM VPU/GPU
+LICENSE_${PN}-qcom-license = "Firmware-qcom"
+FILES_${PN}-qcom-license   = "${nonarch_base_libdir}/firmware/LICENSE.qcom ${nonarch_base_libdir}/firmware/qcom/NOTICE.txt"
+FILES_${PN}-qcom-venus-1.8 = "${nonarch_base_libdir}/firmware/qcom/venus-1.8/*"
+FILES_${PN}-qcom-venus-4.2 = "${nonarch_base_libdir}/firmware/qcom/venus-4.2/*"
+FILES_${PN}-qcom-adreno-a3xx = "${nonarch_base_libdir}/firmware/qcom/a300_*.fw ${nonarch_base_libdir}/firmware/a300_*.fw"
+FILES_${PN}-qcom-adreno-a530 = "${nonarch_base_libdir}/firmware/qcom/a530*.*"
+RDEPENDS_${PN}-qcom-venus-1.8 = "${PN}-qcom-license"
+RDEPENDS_${PN}-qcom-venus-1.8 = "${PN}-qcom-license"
+RDEPENDS_${PN}-qcom-adreno-a3xx = "${PN}-qcom-license"
+RDEPENDS_${PN}-qcom-adreno-a530 = "${PN}-qcom-license"
+
 # For other firmwares
 # Maybe split out to separate packages when needed.
 LICENSE_${PN} = "\
@@ -737,6 +755,7 @@ LICENSE_${PN} = "\
     & Firmware-ath9k-htc \
     & Firmware-phanfw \
     & Firmware-qat \
+    & Firmware-qcom \
     & Firmware-qla1280 \
     & Firmware-qla2xxx \
     & Firmware-r8a779x_usb3 \
