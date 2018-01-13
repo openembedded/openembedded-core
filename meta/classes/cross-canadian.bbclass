@@ -123,8 +123,6 @@ LDFLAGS = "${BUILDSDK_LDFLAGS} \
            -Wl,-rpath-link,${STAGING_LIBDIR}/.. \
            -Wl,-rpath,${libdir}/.. "
 
-DEPENDS_GETTEXT = "gettext-native nativesdk-gettext"
-
 #
 # We need chrpath >= 0.14 to ensure we can deal with 32 and 64 bit
 # binaries
