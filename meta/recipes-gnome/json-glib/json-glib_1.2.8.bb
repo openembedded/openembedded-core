@@ -17,7 +17,7 @@ SRC_URI[archive.md5sum] = "ff31e7d0594df44318e12facda3d086e"
 SRC_URI[archive.sha256sum] = "fd55a9037d39e7a10f0db64309f5f0265fa32ec962bf85066087b83a2807f40a"
 
 GNOMEBASEBUILDCLASS = "meson"
-inherit gnomebase lib_package gobject-introspection gtk-doc manpages
+inherit gnomebase lib_package gobject-introspection gtk-doc manpages gettext
 
 GTKDOC_ENABLE_FLAG = "-Denable-gtk-doc=true"
 GTKDOC_DISABLE_FLAG = "-Denable-gtk-doc=false"
