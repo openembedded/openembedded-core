@@ -1,0 +1,43 @@
+Upstream-Status: Backport [https://github.com/rpm-software-management/rpm/commit/a3652af66fa2a1f272d771323fee019f23d350f5]
+
+From 68a7b60f89419e53a4bd3c412f816f0576ffd8c4 Mon Sep 17 00:00:00 2001
+From: Mike Crowe <mac@mcrowe.com>
+Date: Thu, 4 Jan 2018 14:39:51 +0000
+Subject: [PATCH] Make configure cope with multiple users/groups with ID 0
+
+If /etc/passwd contains multiple users with UID 0 then user_with_uid0 will
+contain a line feed which results in config.h containing:
+
+ #define UID_0_USER "root
+
+(i.e. without a closing quote.)
+
+The same problem occurs with /etc/group.
+
+Let's only emit the first match in each case so that there is only ever a
+single result.
+
+Signed-off-by: Mike Crowe <mac@mcrowe.com>
+
+---
+ configure.ac | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/configure.ac b/configure.ac
+index ab8ca4f54..5259ad243 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -996,8 +996,8 @@ if test "$with_dmalloc" = yes ; then
+   LIBS="$LIBS -ldmalloc"
+ fi
+ 
+-user_with_uid0=$(awk -F: '$3==0 {print $1}' /etc/passwd)
+-group_with_gid0=$(awk -F: '$3==0 {print $1}' /etc/group)
++user_with_uid0=$(awk -F: '$3==0 {print $1;exit}' /etc/passwd)
++group_with_gid0=$(awk -F: '$3==0 {print $1;exit}' /etc/group)
+ AC_DEFINE_UNQUOTED([UID_0_USER],["$user_with_uid0"],[Get the user name having userid 0])
+ AC_DEFINE_UNQUOTED([GID_0_GROUP],["$group_with_gid0"],[Get the group name having groupid 0])
+ 
+-- 
+2.11.0
+
