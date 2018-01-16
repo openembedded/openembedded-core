@@ -41,9 +41,7 @@ do_configure_prepend() {
    fi
 }
 
-do_install() {
-	oe_runmake -C ${B} 'DESTDIR=${D}' install/strip
-}
+OECMAKE_TARGET_INSTALL = "install/strip"
 
 RDEPENDS_${PN} = "waffle python3 python3-mako python3-json \
 	python3-subprocess python3-misc python3-importlib \
