@@ -34,6 +34,9 @@ EXTRA_OECMAKE_append = " ${PACKAGECONFIG_CONFARGS}"
 EXTRA_OECMAKE_BUILD_prepend_task-compile = "${PARALLEL_MAKE} "
 EXTRA_OECMAKE_BUILD_prepend_task-install = "${PARALLEL_MAKEINST} "
 
+OECMAKE_TARGET_COMPILE ?= "all"
+OECMAKE_TARGET_INSTALL ?= "install"
+
 FILES_${PN}-dev += "${libdir}/cmake ${datadir}/cmake"
 
 # CMake expects target architectures in the format of uname(2),
@@ -140,13 +143,13 @@ cmake_do_configure() {
 
 do_compile[progress] = "percent"
 cmake_do_compile()  {
-	bbnote VERBOSE=1 cmake --build '${B}' -- ${EXTRA_OECMAKE_BUILD}
-	VERBOSE=1 cmake --build '${B}' -- ${EXTRA_OECMAKE_BUILD}
+	bbnote VERBOSE=1 cmake --build '${B}' --target ${OECMAKE_TARGET_COMPILE} -- ${EXTRA_OECMAKE_BUILD}
+	VERBOSE=1 cmake --build '${B}' --target ${OECMAKE_TARGET_COMPILE} -- ${EXTRA_OECMAKE_BUILD}
 }
 
 cmake_do_install() {
-	bbnote DESTDIR='${D}' cmake --build '${B}' --target install -- ${EXTRA_OECMAKE_BUILD}
-	DESTDIR='${D}' cmake --build '${B}' --target install -- ${EXTRA_OECMAKE_BUILD}
+	bbnote DESTDIR='${D}' cmake --build '${B}' --target ${OECMAKE_TARGET_INSTALL} -- ${EXTRA_OECMAKE_BUILD}
+	DESTDIR='${D}' cmake --build '${B}' --target ${OECMAKE_TARGET_INSTALL} -- ${EXTRA_OECMAKE_BUILD}
 }
 
 EXPORT_FUNCTIONS do_configure do_compile do_install do_generate_toolchain_file
