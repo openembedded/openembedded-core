@@ -25,7 +25,7 @@ python () {
 }
 
 python debian_package_name_hook () {
-    import glob, copy, stat, errno, re, pathlib
+    import glob, copy, stat, errno, re, pathlib, subprocess
 
     pkgdest = d.getVar("PKGDEST")
     packages = d.getVar('PACKAGES')
@@ -76,15 +76,14 @@ python debian_package_name_hook () {
             if path in libdirs:
                 has_libs = 1
                 if so_re.match(os.path.basename(f)):
-                    cmd = (d.getVar('TARGET_PREFIX') or "") + "objdump -p " + f + " 2>/dev/null"
-                    fd = os.popen(cmd)
-                    lines = fd.readlines()
-                    fd.close()
-                    for l in lines:
-                        m = re.match("\s+SONAME\s+([^\s]*)", l)
-                        if m and not m.group(1) in sonames:
-                            sonames.append(m.group(1))
-
+                    try:
+                        cmd = [d.expand("${TARGET_PREFIX}objdump"), "-p", f]
+                        output = subprocess.check_output(cmd).decode("utf-8")
+                        for m in re.finditer("\s+SONAME\s+([^\s]+)", output):
+                            if m.group(1) not in sonames:
+                                sonames.append(m.group(1))
+                    except subprocess.CalledProcessError:
+                        pass
         bb.debug(1, 'LIBNAMES: pkg %s libs %d bins %d sonames %s' % (orig_pkg, has_libs, has_bins, sonames))
         soname = None
         if len(sonames) == 1:
