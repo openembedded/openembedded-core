@@ -10,11 +10,8 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=7fbc338309ac38fefcd64b04bb903e34"
 
 DEPENDS = "glib-2.0"
 
-SRC_URI_append = " \
-           file://0001-Do-not-disable-gobject-introspection-when-cross-comp.patch \
-           "
-SRC_URI[archive.md5sum] = "ff31e7d0594df44318e12facda3d086e"
-SRC_URI[archive.sha256sum] = "fd55a9037d39e7a10f0db64309f5f0265fa32ec962bf85066087b83a2807f40a"
+SRC_URI[archive.md5sum] = "35107e23a7bbbc70f31c34f7b9adf1c3"
+SRC_URI[archive.sha256sum] = "2d7709a44749c7318599a6829322e081915bdc73f5be5045882ed120bb686dc8"
 
 GNOMEBASEBUILDCLASS = "meson"
 inherit gnomebase lib_package gobject-introspection gtk-doc manpages gettext
