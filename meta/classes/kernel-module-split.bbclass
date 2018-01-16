@@ -30,7 +30,7 @@ do_install_append() {
 
 PACKAGESPLITFUNCS_prepend = "split_kernel_module_packages "
 
-KERNEL_MODULES_META_PACKAGE ?= "${@ d.getVar("KERNEL_PACKAGE_NAME", True) or "kernel" }-modules"
+KERNEL_MODULES_META_PACKAGE ?= "${@ d.getVar("KERNEL_PACKAGE_NAME") or "kernel" }-modules"
 
 KERNEL_MODULE_PACKAGE_PREFIX ?= ""
 KERNEL_MODULE_PACKAGE_SUFFIX ?= "-${KERNEL_VERSION}"
@@ -129,8 +129,8 @@ python split_kernel_module_packages () {
            postfix = format.split('%s')[1]
            d.setVar('RPROVIDES_' + pkg, pkg.replace(postfix, ''))
 
-    kernel_package_name = d.getVar("KERNEL_PACKAGE_NAME", True) or "kernel"
-    kernel_version = d.getVar("KERNEL_VERSION", True)
+    kernel_package_name = d.getVar("KERNEL_PACKAGE_NAME") or "kernel"
+    kernel_version = d.getVar("KERNEL_VERSION")
 
     module_regex = '^(.*)\.k?o$'
 

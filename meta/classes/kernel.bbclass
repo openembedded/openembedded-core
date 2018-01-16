@@ -1,9 +1,9 @@
 inherit linux-kernel-base kernel-module-split
 
 KERNEL_PACKAGE_NAME ??= "kernel"
-KERNEL_DEPLOYSUBDIR ??= "${@ "" if (d.getVar("KERNEL_PACKAGE_NAME", True) == "kernel") else d.getVar("KERNEL_PACKAGE_NAME", True) }"
+KERNEL_DEPLOYSUBDIR ??= "${@ "" if (d.getVar("KERNEL_PACKAGE_NAME") == "kernel") else d.getVar("KERNEL_PACKAGE_NAME") }"
 
-PROVIDES += "${@ "virtual/kernel" if (d.getVar("KERNEL_PACKAGE_NAME", True) == "kernel") else "" }"
+PROVIDES += "${@ "virtual/kernel" if (d.getVar("KERNEL_PACKAGE_NAME") == "kernel") else "" }"
 DEPENDS += "virtual/${TARGET_PREFIX}binutils virtual/${TARGET_PREFIX}gcc kmod-native bc-native lzop-native"
 PACKAGE_WRITE_DEPS += "depmodwrapper-cross"
 
@@ -37,8 +37,8 @@ KERNEL_VERSION_PKG_NAME = "${@legitimize_package_name(d.getVar('KERNEL_VERSION')
 KERNEL_VERSION_PKG_NAME[vardepvalue] = "${LINUX_VERSION}"
 
 python __anonymous () {
-    pn = d.getVar("PN", True)
-    kpn = d.getVar("KERNEL_PACKAGE_NAME", True)
+    pn = d.getVar("PN")
+    kpn = d.getVar("KERNEL_PACKAGE_NAME")
 
     # XXX Remove this after bug 11905 is resolved
     #  FILES_${KERNEL_PACKAGE_NAME}-dev doesn't expand correctly
@@ -52,7 +52,7 @@ python __anonymous () {
     # kernel recipes (I.e. where KERNEL_PACKAGE_NAME != kernel) so that they
     # may build in parallel with the default kernel without clobbering.
     if kpn != "kernel":
-        workdir = d.getVar("WORKDIR", True)
+        workdir = d.getVar("WORKDIR")
         sourceDir = os.path.join(workdir, 'kernel-source')
         artifactsDir = os.path.join(workdir, 'kernel-build-artifacts')
         d.setVar("STAGING_KERNEL_DIR", sourceDir)
@@ -62,7 +62,7 @@ python __anonymous () {
     type = d.getVar('KERNEL_IMAGETYPE') or ""
     alttype = d.getVar('KERNEL_ALT_IMAGETYPE') or ""
     types = d.getVar('KERNEL_IMAGETYPES') or ""
-    kname = d.getVar('KERNEL_PACKAGE_NAME', True) or "kernel"
+    kname = d.getVar('KERNEL_PACKAGE_NAME') or "kernel"
     if type not in types.split():
         types = (type + ' ' + types).strip()
     if alttype not in types.split():
