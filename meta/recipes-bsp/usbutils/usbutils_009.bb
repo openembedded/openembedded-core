@@ -13,8 +13,8 @@ SRC_URI = "${KERNELORG_MIRROR}/linux/utils/usb/usbutils/usbutils-${PV}.tar.gz \
            file://Fix-NULL-pointer-crash.patch \
           "
 
-SRC_URI[md5sum] = "cb20148c2e784577e924a7b4c560c8fb"
-SRC_URI[sha256sum] = "6d5f16c2961df37e22e492c736a3e162a8fde24480f23a40d85f79af80d3fe95"
+SRC_URI[md5sum] = "b5dbc498b2eb5058f7a57fc6532d0aad"
+SRC_URI[sha256sum] = "e73543293a17c7803994eac97a49e58b377e08e6299ba11aad09794b91340e8b"
 
 inherit autotools pkgconfig distro_features_check
 
