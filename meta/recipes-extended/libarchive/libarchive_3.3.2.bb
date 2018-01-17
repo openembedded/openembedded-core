@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=ed99aca006bc346974bb745a35336425"
 
 DEPENDS = "e2fsprogs-native"
 
-PACKAGECONFIG ?= "zlib bz2"
+PACKAGECONFIG ?= "zlib bz2 xz lzo"
 
 PACKAGECONFIG_append_class-target = "\
 	libxml2 \
