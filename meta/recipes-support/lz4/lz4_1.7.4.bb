@@ -14,6 +14,7 @@ SRC_URI = "git://github.com/lz4/lz4.git \
            file://0001-tests-Makefile-don-t-use-LIBDIR-as-variable.patch \
            file://run-ptest \
 "
+UPSTREAM_CHECK_GITTAGREGEX = "v(?P<pver>.*)"
 
 S = "${WORKDIR}/git"
 inherit ptest
