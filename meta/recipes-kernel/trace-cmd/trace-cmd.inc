@@ -1,5 +1,5 @@
-SRCREV = "021710e1073fe203341b427cd1a4bac577ec899c"
-PV = "2.6.1"
+SRCREV = "57371aaa2f469d0ba15fd85276deca7bfdd7ce36"
+PV = "2.6.2"
 
 inherit pkgconfig
 
