@@ -1,0 +1,27 @@
+From b474abdd91158a52821c34865277d7de38880529 Mon Sep 17 00:00:00 2001
+From: "Maxin B. John" <maxin.john@intel.com>
+Date: Wed, 17 Jan 2018 15:53:29 +0200
+Subject: [PATCH] anv_icd.py: improve reproducible builds
+
+Sort the output to ensure reproducibility
+
+Upstream-Status: Pending
+
+Signed-off-by: Maxin B. John <maxin.john@intel.com>
+---
+ src/intel/vulkan/anv_icd.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/intel/vulkan/anv_icd.py b/src/intel/vulkan/anv_icd.py
+index 4ed01fa..31bb068 100644
+--- a/src/intel/vulkan/anv_icd.py
++++ b/src/intel/vulkan/anv_icd.py
+@@ -44,4 +44,4 @@ if __name__ == '__main__':
+     }
+ 
+     with open(args.out, 'w') as f:
+-        json.dump(json_data, f, indent = 4)
++        json.dump(json_data, f, indent = 4, sort_keys=True)
+-- 
+2.4.0
+
