@@ -17,19 +17,11 @@ SRC_URI = "git://github.com/lz4/lz4.git \
 UPSTREAM_CHECK_GITTAGREGEX = "v(?P<pver>.*)"
 
 S = "${WORKDIR}/git"
-inherit ptest
 
-EXTRA_OEMAKE = "PREFIX=${prefix} CC='${CC}' DESTDIR=${D} LIBDIR=${libdir} INCLUDEDIR=${includedir}" 
+EXTRA_OEMAKE = "PREFIX=${prefix} CC='${CC}' DESTDIR=${D} LIBDIR=${libdir} INCLUDEDIR=${includedir}"
 
 do_install() {
 	oe_runmake install
 }
-
-do_install_ptest () {
-	install -d ${D}${PTEST_PATH}/testsuite
-	cp -rf ${S}/* ${D}${PTEST_PATH}/testsuite
-}
-
-RDEPENDS_${PN}-ptest += "make python3"
 
 BBCLASSEXTEND = "native nativesdk"
