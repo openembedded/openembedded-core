@@ -8,7 +8,7 @@ SRC_URI = "git://anongit.freedesktop.org/gstreamer/gst-examples \
            file://0001-Make-player-examples-installable.patch \
            file://gst-player.desktop"
 
-SRCREV = "e88c04ff34cf56984e62a524a0bcc16ab51b282d"
+SRCREV = "48247c6ab6807d6ae179cf653cbdc64714d3313c"
 PV = "0.0.1+git${SRCPV}"
 UPSTREAM_CHECK_COMMITS = "1"
 
