@@ -3,7 +3,7 @@ require grub2.inc
 GRUBPLATFORM = "efi"
 
 DEPENDS_append_class-target = " grub-efi-native"
-RDEPENDS_${PN}_class-target = "diffutils freetype"
+RDEPENDS_${PN}_class-target = "diffutils freetype grub-common"
 
 SRC_URI += " \
            file://cfg \
@@ -41,7 +41,9 @@ do_install_class-native() {
 	install -m 755 grub-mkimage ${D}${bindir}
 }
 
-do_install_append_class-target() {
+do_install_class-target() {
+    oe_runmake 'DESTDIR=${D}' -C grub-core install
+
     # Remove build host references...
     find "${D}" -name modinfo.sh -type f -exec \
         sed -i \
@@ -69,8 +71,7 @@ do_deploy_class-native() {
 
 addtask deploy after do_install before do_build
 
-FILES_${PN} += "${libdir}/grub/${GRUB_TARGET}-efi \
-                ${datadir}/grub \
+FILES_${PN} = "${libdir}/grub/${GRUB_TARGET}-efi \
                 "
 
 # 64-bit binaries are expected for the bootloader with an x32 userland
