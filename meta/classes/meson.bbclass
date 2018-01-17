@@ -26,8 +26,10 @@ MESONOPTS = " --prefix ${prefix} \
               --localstatedir ${localstatedir} \
               --sharedstatedir ${sharedstatedir}"
 
-MESON_C_ARGS = "${HOST_CC_ARCH}${TOOLCHAIN_OPTIONS}"
-MESON_LINK_ARGS = "${MESON_C_ARGS} ${LDFLAGS}"
+MESON_TOOLCHAIN_ARGS = "${HOST_CC_ARCH}${TOOLCHAIN_OPTIONS}"
+MESON_C_ARGS = "${MESON_TOOLCHAIN_ARGS} ${CFLAGS}"
+MESON_CPP_ARGS = "${MESON_TOOLCHAIN_ARGS} ${CXXFLAGS}"
+MESON_LINK_ARGS = "${MESON_TOOLCHAIN_ARGS} ${LDFLAGS}"
 
 # both are required but not used by meson
 MESON_HOST_ENDIAN = "bogus-endian"
@@ -42,7 +44,7 @@ def meson_array(var, d):
     return "', '".join(d.getVar(var).split()).join(("'", "'"))
 
 addtask write_config before do_configure
-do_write_config[vardeps] += "MESON_C_ARGS TOOLCHAIN_OPTIONS"
+do_write_config[vardeps] += "MESON_C_ARGS MESON_CPP_ARGS TOOLCHAIN_OPTIONS"
 do_write_config() {
     # This needs to be Py to split the args into single-element lists
     cat >${WORKDIR}/meson.cross <<EOF
@@ -59,7 +61,7 @@ pkgconfig = 'pkg-config'
 needs_exe_wrapper = true
 c_args = [${@meson_array('MESON_C_ARGS', d)}]
 c_link_args = [${@meson_array('MESON_LINK_ARGS', d)}]
-cpp_args = [${@meson_array('MESON_C_ARGS', d)}]
+cpp_args = [${@meson_array('MESON_CPP_ARGS', d)}]
 cpp_link_args = [${@meson_array('MESON_LINK_ARGS', d)}]
 gtkdoc_exe_wrapper = '${B}/gtkdoc-qemuwrapper'
 
