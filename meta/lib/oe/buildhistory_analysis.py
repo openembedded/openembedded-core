@@ -40,6 +40,26 @@ related_fields['PKGSIZE'] = ['FILELIST']
 related_fields['files-in-image.txt'] = ['installed-package-names.txt', 'USER_CLASSES', 'IMAGE_CLASSES', 'ROOTFS_POSTPROCESS_COMMAND', 'IMAGE_POSTPROCESS_COMMAND']
 related_fields['installed-package-names.txt'] = ['IMAGE_FEATURES', 'IMAGE_LINGUAS', 'IMAGE_INSTALL', 'BAD_RECOMMENDATIONS', 'NO_RECOMMENDATIONS', 'PACKAGE_EXCLUDE']
 
+colours = {
+    'colour_default': '',
+    'colour_add':     '',
+    'colour_remove':  '',
+}
+
+def init_colours(use_colours):
+    global colours
+    if use_colours:
+        colours = {
+            'colour_default': '\033[0m',
+            'colour_add':     '\033[1;32m',
+            'colour_remove':  '\033[1;31m',
+        }
+    else:
+        colours = {
+            'colour_default': '',
+            'colour_add':     '',
+            'colour_remove':  '',
+        }
 
 class ChangeRecord:
     def __init__(self, path, fieldname, oldvalue, newvalue, monitored):
@@ -110,9 +130,9 @@ class ChangeRecord:
                     lines.append('removed all items "%s"' % ' '.join(removed))
                 else:
                     if removed:
-                        lines.append('removed "%s"' % ' '.join(removed))
+                        lines.append('removed "{colour_remove}{value}{colour_default}"'.format(value=' '.join(removed), **colours))
                     if added:
-                        lines.append('added "%s"' % ' '.join(added))
+                        lines.append('added "{colour_add}{value}{colour_default}"'.format(value=' '.join(added), **colours))
             else:
                 lines.append('changed order')
 
@@ -125,9 +145,9 @@ class ChangeRecord:
                 percentchg = ((bval - aval) / float(aval)) * 100
             else:
                 percentchg = 100
-            out = '%s changed from %s to %s (%s%d%%)' % (self.fieldname, self.oldvalue or "''", self.newvalue or "''", '+' if percentchg > 0 else '', percentchg)
+            out = '{} changed from {colour_remove}{}{colour_default} to {colour_add}{}{colour_default} ({}{:.0f}%)'.format(self.fieldname, self.oldvalue or "''", self.newvalue or "''", '+' if percentchg > 0 else '', percentchg, **colours)
         elif self.fieldname in defaultval_map:
-            out = '%s changed from %s to %s' % (self.fieldname, self.oldvalue, self.newvalue)
+            out = '{} changed from {colour_remove}{}{colour_default} to {colour_add}{}{colour_default}'.format(self.fieldname, self.oldvalue, self.newvalue, **colours)
             if self.fieldname == 'PKG' and '[default]' in self.newvalue:
                 out += ' - may indicate debian renaming failure'
         elif self.fieldname in ['pkg_preinst', 'pkg_postinst', 'pkg_prerm', 'pkg_postrm']:
@@ -163,7 +183,7 @@ class ChangeRecord:
             else:
                 out = ''
         else:
-            out = '%s changed from "%s" to "%s"' % (self.fieldname, self.oldvalue, self.newvalue)
+            out = '{} changed from "{colour_remove}{}{colour_default}" to "{colour_add}{}{colour_default}"'.format(self.fieldname, self.oldvalue, self.newvalue, **colours)
 
         if self.related:
             for chg in self.related:
