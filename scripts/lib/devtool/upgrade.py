@@ -295,8 +295,8 @@ def _add_license_diff_to_recipe(path, diff):
     notice_text = """# FIXME: the LIC_FILES_CHKSUM values have been updated by 'devtool upgrade'.
 # The following is the difference between the old and the new license text.
 # Please update the LICENSE value if needed, and summarize the changes in
-# the commit message via 'License-checksum-change:' tag.
-# (example: 'License-checksum-change: copyright years updated.')
+# the commit message via 'License-Update:' tag.
+# (example: 'License-Update: copyright years updated.')
 #
 # The changes:
 #
