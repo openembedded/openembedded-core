@@ -1,7 +1,7 @@
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263"
-SRCREV = "45d0e7a09a15a21078d0ebf2db5175ed9e87014e"
-PV = "3.1"
+SRCREV = "4051c70c9318c837981384cbb23f3e9eb1bd0892"
+PV = "3.2"
 
 SRC_URI = "git://sourceware.org/git/systemtap.git \
            file://system_map_location.patch \
