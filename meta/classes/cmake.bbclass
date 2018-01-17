@@ -123,6 +123,7 @@ cmake_do_configure() {
 	cmake \
 	  $oecmake_sitefile \
 	  ${OECMAKE_SOURCEPATH} \
+	  -DCMAKE_MAKE_PROGRAM=${MAKE} \
 	  -DCMAKE_INSTALL_PREFIX:PATH=${prefix} \
 	  -DCMAKE_INSTALL_BINDIR:PATH=${@os.path.relpath(d.getVar('bindir'), d.getVar('prefix'))} \
 	  -DCMAKE_INSTALL_SBINDIR:PATH=${@os.path.relpath(d.getVar('sbindir'), d.getVar('prefix'))} \
