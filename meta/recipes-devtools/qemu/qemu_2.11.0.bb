@@ -10,7 +10,6 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=441c28d2cf86e15a37fa47e15a72fbac \
 SRC_URI = "http://wiki.qemu-project.org/download/${BP}.tar.bz2 \
            file://powerpc_rom.bin \
            file://disable-grabs.patch \
-           file://exclude-some-arm-EABI-obsolete-syscalls.patch \
            file://wacom.patch \
            file://add-ptest-in-makefile-v10.patch \
            file://run-ptest \
@@ -19,22 +18,9 @@ SRC_URI = "http://wiki.qemu-project.org/download/${BP}.tar.bz2 \
            file://pathlimit.patch \
            file://qemu-2.5.0-cflags.patch \
            file://glibc-2.25.patch \
-           file://0001-tpm-Clean-up-driver-registration-lookup.patch \
-           file://0002-tpm-Clean-up-model-registration-lookup.patch \
-           file://0003-tpm-backend-Remove-unneeded-member-variable-from-bac.patch \
-           file://0004-tpm-backend-Move-thread-handling-inside-TPMBackend.patch \
-           file://0005-tpm-backend-Initialize-and-free-data-members-in-it-s.patch \
-           file://0006-tpm-backend-Made-few-interface-methods-optional.patch \
-           file://0007-tpm-backend-Add-new-api-to-read-backend-TpmInfo.patch \
-           file://0008-tpm-backend-Move-realloc_buffer-implementation-to-tp.patch \
-           file://0009-tpm-passthrough-move-reusable-code-to-utils.patch \
-           file://0010-tpm-Added-support-for-TPM-emulator.patch \
-           file://0011-tpm-Move-tpm_cleanup-to-right-place.patch \
-           file://0012-tpm-Use-EMSGSIZE-instead-of-EBADMSG-to-compile-on-Op.patch \
            file://chardev-connect-socket-to-a-spawned-command.patch \
            file://apic-fixup-fallthrough-to-PIC.patch \
-           file://ppc_locking.patch \
-           file://CVE-2017-17381.patch \
+           file://linux-user-Fix-webkitgtk-hangs-on-32-bit-x86-target.patch \
            "
 UPSTREAM_CHECK_REGEX = "qemu-(?P<pver>\d+\..*)\.tar"
 
@@ -44,8 +30,8 @@ SRC_URI_append_class-native = " \
             file://cpus.c-qemu_cpu_kick_thread_debugging.patch \
             "
 
-SRC_URI[md5sum] = "b375373f688bea0cd8865b966dad15e3"
-SRC_URI[sha256sum] = "8e040bc7556401ebb3a347a8f7878e9d4028cf71b2744b1a1699f4e741966ba8"
+SRC_URI[md5sum] = "335994a755bc655e88a87aeb36bfc0b9"
+SRC_URI[sha256sum] = "c4f034c7665a84a1c3be72c8da37f3c31ec063475699df062ab646d8b2e17fcb"
 
 COMPATIBLE_HOST_mipsarchn32 = "null"
 COMPATIBLE_HOST_mipsarchn64 = "null"

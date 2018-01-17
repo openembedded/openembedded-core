@@ -1,6 +1,6 @@
-From aa3aef4cf5f4dd98f9133df085e825ff5da7dcbd Mon Sep 17 00:00:00 2001
-From: Patrick Ohly <patrick.ohly@intel.com>
-Date: Fri, 27 Oct 2017 15:23:35 +0200
+From 3bb3100c22eb30146a69656480bdffeef8663575 Mon Sep 17 00:00:00 2001
+From: Alistair Francis <alistair.francis@xilinx.com>
+Date: Thu, 21 Dec 2017 11:35:16 -0800
 Subject: [PATCH] chardev: connect socket to a spawned command
 
 The command is started in a shell (sh -c) with stdin connect to QEMU
@@ -44,22 +44,20 @@ as simple as possible.
 Upstream-Status: Inappropriate [embedded specific]
 
 Signed-off-by: Patrick Ohly <patrick.ohly@intel.com>
-
 ---
  chardev/char-socket.c | 86 ++++++++++++++++++++++++++++++++++++++++++++++++---
  chardev/char.c        |  3 ++
- qapi-schema.json      |  5 +++
+ qapi/char.json        |  5 +++
  3 files changed, 90 insertions(+), 4 deletions(-)
 
 diff --git a/chardev/char-socket.c b/chardev/char-socket.c
-index 1ae730a4..c366a02a 100644
+index 53eda8ef00..f566107c35 100644
 --- a/chardev/char-socket.c
 +++ b/chardev/char-socket.c
-@@ -854,6 +854,68 @@ static gboolean socket_reconnect_timeout(gpointer opaque)
+@@ -852,6 +852,66 @@ static gboolean socket_reconnect_timeout(gpointer opaque)
      return false;
  }
  
-+#ifndef _WIN32  
 +static void chardev_open_socket_cmd(Chardev *chr,
 +                                    const char *cmd,
 +                                    Error **errp)
@@ -119,51 +117,42 @@ index 1ae730a4..c366a02a 100644
 +        object_unref(OBJECT(sioc));
 +    }
 +}
-+#endif
 +
  static void qmp_chardev_open_socket(Chardev *chr,
                                      ChardevBackend *backend,
                                      bool *be_opened,
-@@ -861,6 +923,9 @@ static void qmp_chardev_open_socket(Chardev *chr,
+@@ -859,6 +919,7 @@ static void qmp_chardev_open_socket(Chardev *chr,
  {
      SocketChardev *s = SOCKET_CHARDEV(chr);
      ChardevSocket *sock = backend->u.socket.data;
-+#ifndef _WIN32
 +    const char *cmd     = sock->cmd;
-+#endif
      bool do_nodelay     = sock->has_nodelay ? sock->nodelay : false;
      bool is_listen      = sock->has_server  ? sock->server  : true;
      bool is_telnet      = sock->has_telnet  ? sock->telnet  : false;
-@@ -928,7 +993,15 @@ static void qmp_chardev_open_socket(Chardev *chr,
+@@ -926,7 +987,12 @@ static void qmp_chardev_open_socket(Chardev *chr,
          s->reconnect_time = reconnect;
      }
  
 -    if (s->reconnect_time) {
-+#ifndef _WIN32
 +    if (cmd) {
 +        chardev_open_socket_cmd(chr, cmd, errp);
 +
 +        /* everything ready (or failed permanently) before we return */
 +        *be_opened = true;
-+    } else
-+#endif
-+	if (s->reconnect_time) {
++    } else if (s->reconnect_time) {
          sioc = qio_channel_socket_new();
          tcp_chr_set_client_ioc_name(chr, sioc);
          qio_channel_socket_connect_async(sioc, s->addr,
-@@ -987,11 +1060,27 @@ static void qemu_chr_parse_socket(QemuOpts *opts, ChardevBackend *backend,
+@@ -985,11 +1051,22 @@ static void qemu_chr_parse_socket(QemuOpts *opts, ChardevBackend *backend,
      const char *host = qemu_opt_get(opts, "host");
      const char *port = qemu_opt_get(opts, "port");
      const char *tls_creds = qemu_opt_get(opts, "tls-creds");
-+#ifndef _WIN32
 +    const char *cmd = qemu_opt_get(opts, "cmd");
-+#endif
      SocketAddressLegacy *addr;
      ChardevSocket *sock;
  
      backend->type = CHARDEV_BACKEND_KIND_SOCKET;
 -    if (!path) {
-+#ifndef _WIN32
 +    if (cmd) {
 +        /*
 +         * Here we have to ensure that no options are set which are incompatible with
@@ -174,57 +163,46 @@ index 1ae730a4..c366a02a 100644
 +            error_setg(errp, "chardev: socket: cmd does not support any additional options");
 +            return;
 +        }
-+    } else
-+#endif
-+	if (!path) {
++    } else if (!path) {
          if (!host) {
              error_setg(errp, "chardev: socket: no host given");
              return;
-@@ -1023,13 +1112,24 @@ static void qemu_chr_parse_socket(QemuOpts *opts, ChardevBackend *backend,
+@@ -1021,13 +1098,14 @@ static void qemu_chr_parse_socket(QemuOpts *opts, ChardevBackend *backend,
      sock->has_reconnect = true;
      sock->reconnect = reconnect;
      sock->tls_creds = g_strdup(tls_creds);
-+#ifndef _WIN32
 +    sock->cmd = g_strdup(cmd);
-+#endif
  
      addr = g_new0(SocketAddressLegacy, 1);
-+#ifndef _WIN32
+-    if (path) {
 +    if (path || cmd) {
-+#else
-     if (path) {
-+#endif
          UnixSocketAddress *q_unix;
          addr->type = SOCKET_ADDRESS_LEGACY_KIND_UNIX;
          q_unix = addr->u.q_unix.data = g_new0(UnixSocketAddress, 1);
 -        q_unix->path = g_strdup(path);
-+#ifndef _WIN32
 +        q_unix->path = cmd ? g_strdup_printf("cmd:%s", cmd) : g_strdup(path);
-+#else
-+	q_unix->path = g_strdup(path);
-+#endif
      } else {
          addr->type = SOCKET_ADDRESS_LEGACY_KIND_INET;
          addr->u.inet.data = g_new(InetSocketAddress, 1);
 diff --git a/chardev/char.c b/chardev/char.c
-index 5d283b90..ccb329d4 100644
+index 2ae4f465ec..5d52cd5de5 100644
 --- a/chardev/char.c
 +++ b/chardev/char.c
-@@ -782,6 +782,9 @@ QemuOptsList qemu_chardev_opts = {
+@@ -792,6 +792,9 @@ QemuOptsList qemu_chardev_opts = {
+         },{
              .name = "path",
              .type = QEMU_OPT_STRING,
-         },{
++        },{
 +            .name = "cmd",
 +            .type = QEMU_OPT_STRING,
-+        },{
+         },{
              .name = "host",
              .type = QEMU_OPT_STRING,
-         },{
-diff --git a/qapi-schema.json b/qapi-schema.json
-index 78a00bc8..790b026d 100644
---- a/qapi-schema.json
-+++ b/qapi-schema.json
-@@ -5004,6 +5004,10 @@
+diff --git a/qapi/char.json b/qapi/char.json
+index ae19dcd1ed..6de0f29bcd 100644
+--- a/qapi/char.json
++++ b/qapi/char.json
+@@ -241,6 +241,10 @@
  #
  # @addr: socket address to listen on (server=true)
  #        or connect to (server=false)
@@ -235,7 +213,7 @@ index 78a00bc8..790b026d 100644
  # @tls-creds: the ID of the TLS credentials object (since 2.6)
  # @server: create server socket (default: true)
  # @wait: wait for incoming connection on server
-@@ -5021,6 +5025,7 @@
+@@ -258,6 +262,7 @@
  # Since: 1.4
  ##
  { 'struct': 'ChardevSocket', 'data': { 'addr'       : 'SocketAddressLegacy',
@@ -244,5 +222,5 @@ index 78a00bc8..790b026d 100644
                                       '*server'    : 'bool',
                                       '*wait'      : 'bool',
 -- 
-2.11.0
+2.14.1
 
