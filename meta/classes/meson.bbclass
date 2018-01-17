@@ -13,6 +13,7 @@ def noprefix(var, d):
     return d.getVar(var).replace(d.getVar('prefix') + '/', '', 1)
 
 MESONOPTS = " --prefix ${prefix} \
+              --buildtype plain \
               --bindir ${@noprefix('bindir', d)} \
               --sbindir ${@noprefix('sbindir', d)} \
               --datadir ${@noprefix('datadir', d)} \
