@@ -9,7 +9,7 @@ CCACHE = ""
 
 # What CMake generator to use.
 # The supported options are "Unix Makefiles" or "Ninja".
-OECMAKE_GENERATOR ?= "Unix Makefiles"
+OECMAKE_GENERATOR ?= "Ninja"
 
 python() {
     generator = d.getVar("OECMAKE_GENERATOR")
