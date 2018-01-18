@@ -252,29 +252,72 @@ def lookup_pkg(args):
     print('\n'.join(items))
 
 def lookup_recipe(args):
+    def parse_pkgdatafile(pkgdatafile):
+        with open(pkgdatafile, 'r') as f:
+            found = False
+            for line in f:
+                if line.startswith('PN'):
+                    print("%s" % line.split(':', 1)[1].strip())
+                    found = True
+                    break
+            if not found:
+                logger.error("Unable to find PN entry in %s" % pkgdatafile)
+                sys.exit(1)
+
     # Handle both multiple arguments and multiple values within an arg (old syntax)
     pkgs = []
     for pkgitem in args.pkg:
         pkgs.extend(pkgitem.split())
 
     for pkg in pkgs:
+        providepkgpath = os.path.join(args.pkgdata_dir, "runtime-rprovides", pkg)
+        if os.path.exists(providepkgpath):
+            for f in os.listdir(providepkgpath):
+                if f != pkg:
+                    print("%s is in the RPROVIDES of %s:" % (pkg, f))
+                pkgdatafile = os.path.join(args.pkgdata_dir, "runtime", f)
+                parse_pkgdatafile(pkgdatafile)
+            break
         pkgdatafile = os.path.join(args.pkgdata_dir, 'runtime-reverse', pkg)
-        if os.path.exists(pkgdatafile):
-            with open(pkgdatafile, 'r') as f:
-                found = False
-                for line in f:
-                    if line.startswith('PN'):
-                        print("\t%s" % line.split(':', 1)[1].strip())
-                        found = True
-                        break
-                if not found:
-                    logger.error("Unable to find PN entry in %s" % pkgdatafile)
-                    sys.exit(1)
-        else:
-            logger.error("Unable to find any built runtime package named %s" % pkg)
+        if not os.path.exists(pkgdatafile):
+            logger.error("The following packages could not be found: %s" % pkg)
             sys.exit(1)
+        parse_pkgdatafile(pkgdatafile)
 
 def package_info(args):
+    def parse_pkgdatafile(pkgdatafile):
+        with open(pkgdatafile, 'r') as f:
+            pkge = ''
+            pkgr = ''
+            pe = ''
+            pr = ''
+            for line in f:
+                if line.startswith('PKGV'):
+                    pkg_version = line.split(':', 1)[1].strip()
+                elif line.startswith('PKGE'):
+                    pkge = line.split(':', 1)[1].strip()
+                elif line.startswith('PKGR'):
+                    pkgr = line.split(':', 1)[1].strip()
+                elif line.startswith('PN'):
+                    recipe = line.split(':', 1)[1].strip()
+                elif line.startswith('PV'):
+                    recipe_version = line.split(':', 1)[1].strip()
+                elif line.startswith('PE'):
+                    pe = line.split(':', 1)[1].strip()
+                elif line.startswith('PR'):
+                    pr = line.split(':', 1)[1].strip()
+                elif line.startswith('PKGSIZE'):
+                    pkg_size = line.split(':', 1)[1].strip()
+            if pkge:
+                pkg_version = pkge + ":" + pkg_version
+            if pkgr:
+                pkg_version = pkg_version + "-" + pkgr
+            if pe:
+                recipe_version = pe + ":" + recipe_version
+            if pr:
+                recipe_version = recipe_version + "-" + pr
+            print("%s %s %s %s %s" % (pkg, pkg_version, recipe, recipe_version, pkg_size))
+
     # Handle both multiple arguments and multiple values within an arg (old syntax)
     packages = []
     if args.file:
@@ -291,42 +334,19 @@ def package_info(args):
             sys.exit(1)
 
     for pkg in packages:
-        pkgdatafile = os.path.join(args.pkgdata_dir, 'runtime-reverse', pkg)
-        if os.path.exists(pkgdatafile):
-            with open(pkgdatafile, 'r') as f:
-                pkge = ''
-                pkgr = ''
-                pe = ''
-                pr = ''
-                for line in f:
-                    if line.startswith('PKGV'):
-                        pkg_version = line.split(':', 1)[1].strip()
-                    elif line.startswith('PKGE'):
-                        pkge = line.split(':', 1)[1].strip()
-                    elif line.startswith('PKGR'):
-                        pkgr = line.split(':', 1)[1].strip()
-                    elif line.startswith('PN'):
-                        recipe = line.split(':', 1)[1].strip()
-                    elif line.startswith('PV'):
-                        recipe_version = line.split(':', 1)[1].strip()
-                    elif line.startswith('PE'):
-                        pe = line.split(':', 1)[1].strip()
-                    elif line.startswith('PR'):
-                        pr = line.split(':', 1)[1].strip()
-                    elif line.startswith('PKGSIZE'):
-                        pkg_size = line.split(':', 1)[1].strip()
-                if pkge:
-                    pkg_version = pkge + ":" + pkg_version
-                if pkgr:
-                    pkg_version = pkg_version + "-" + pkgr
-                if pe:
-                    recipe_version = pe + ":" + recipe_version
-                if pr:
-                    recipe_version = recipe_version + "-" + pr
-                print("%s %s %s %s %s" % (pkg, pkg_version, recipe, recipe_version, pkg_size))
-        else:
+        providepkgpath = os.path.join(args.pkgdata_dir, "runtime-rprovides", pkg)
+        if os.path.exists(providepkgpath):
+            for f in os.listdir(providepkgpath):
+                if f != pkg:
+                    print("%s is in the RPROVIDES of %s:" % (pkg, f))
+                pkgdatafile = os.path.join(args.pkgdata_dir, "runtime", f)
+                parse_pkgdatafile(pkgdatafile)
+            break
+        pkgdatafile = os.path.join(args.pkgdata_dir, "runtime-reverse", pkg)
+        if not os.path.exists(pkgdatafile):
             logger.error("Unable to find any built runtime package named %s" % pkg)
             sys.exit(1)
+        parse_pkgdatafile(pkgdatafile)
 
 def get_recipe_pkgs(pkgdata_dir, recipe, unpackaged):
     recipedatafile = os.path.join(pkgdata_dir, recipe)
@@ -415,6 +435,21 @@ def list_pkgs(args):
 
 def list_pkg_files(args):
     import json
+    def parse_pkgdatafile(pkgdatafile):
+        with open(pkgdatafile, 'r') as f:
+            found = False
+            for line in f:
+                if line.startswith('FILES_INFO:'):
+                    found = True
+                    val = line.split(':', 1)[1].strip()
+                    dictval = json.loads(val)
+                    for fullpth in sorted(dictval):
+                        print("\t%s" % fullpth)
+                    break
+            if not found:
+                logger.error("Unable to find FILES_INFO entry in %s" % pkgdatafile)
+                sys.exit(1)
+
 
     if args.recipe:
         if args.pkg:
@@ -444,25 +479,22 @@ def list_pkg_files(args):
                     continue
                 logger.error("Unable to find any built runtime package named %s" % pkg)
                 sys.exit(1)
+            parse_pkgdatafile(pkgdatafile)
+
         else:
+            providepkgpath = os.path.join(args.pkgdata_dir, "runtime-rprovides", pkg)
+            if os.path.exists(providepkgpath):
+                for f in os.listdir(providepkgpath):
+                    if f != pkg:
+                        print("%s is in the RPROVIDES of %s:" % (pkg, f))
+                    pkgdatafile = os.path.join(args.pkgdata_dir, "runtime", f)
+                    parse_pkgdatafile(pkgdatafile)
+                continue
             pkgdatafile = os.path.join(args.pkgdata_dir, "runtime", pkg)
             if not os.path.exists(pkgdatafile):
                 logger.error("Unable to find any built recipe-space package named %s" % pkg)
                 sys.exit(1)
-
-        with open(pkgdatafile, 'r') as f:
-            found = False
-            for line in f:
-                if line.startswith('FILES_INFO:'):
-                    found = True
-                    val = line.split(':', 1)[1].strip()
-                    dictval = json.loads(val)
-                    for fullpth in sorted(dictval):
-                        print("\t%s" % fullpth)
-                    break
-            if not found:
-                logger.error("Unable to find FILES_INFO entry in %s" % pkgdatafile)
-                sys.exit(1)
+            parse_pkgdatafile(pkgdatafile)
 
 def find_path(args):
     import json
