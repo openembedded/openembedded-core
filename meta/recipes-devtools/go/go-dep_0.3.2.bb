@@ -17,3 +17,5 @@ inherit go
 GO_INSTALL = "${GO_IMPORT}/cmd/dep"
 
 RDEPENDS_${PN}-dev += "bash"
+
+BBCLASSEXTEND = "native nativesdk"
