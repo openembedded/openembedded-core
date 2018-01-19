@@ -79,3 +79,5 @@ do_install() {
 	# Tests are large and we don't need them in the native sysroot
 	rm ${D}${libdir}/python${PYTHON_MAJMIN}/test -rf
 }
+
+RPROVIDES += "python3-misc-native"
