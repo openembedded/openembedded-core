@@ -7,6 +7,7 @@ SRC_URI  = "${KERNELORG_MIRROR}/linux/network/${BPN}/${BP}.tar.xz \
             file://no-version-scripts.patch \
             file://includes.patch \
             file://0001-session-Keep-track-of-addr-in-fw_snat-session.patch \
+            file://0001-giognutls-Fix-a-crash-using-wispr-over-TLS.patch \
             "
 SRC_URI_append_libc-musl = " file://0002-resolve-musl-does-not-implement-res_ninit.patch \
                              "
