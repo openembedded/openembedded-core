@@ -152,12 +152,8 @@ python base_do_fetch() {
 addtask unpack after do_fetch
 do_unpack[dirs] = "${WORKDIR}"
 
-python () {
-    if d.getVar('S') != d.getVar('WORKDIR'):
-        d.setVarFlag('do_unpack', 'cleandirs', '${S}')
-    else:
-        d.setVarFlag('do_unpack', 'cleandirs', os.path.join('${S}', 'patches'))
-}
+do_unpack[cleandirs] = "${@d.getVar('S') if d.getVar('S') != d.getVar('WORKDIR') else os.path.join('${S}', 'patches')}"
+
 python base_do_unpack() {
     src_uri = (d.getVar('SRC_URI') or "").split()
     if len(src_uri) == 0:
