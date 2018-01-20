@@ -44,6 +44,7 @@ SRC_URI = "${GLIBC_GIT_URI};branch=${SRCBRANCH};name=glibc \
            file://0027-glibc-reset-dl-load-write-lock-after-forking.patch \
            file://0028-Bug-4578-add-ld.so-lock-while-fork.patch \
            file://CVE-2017-15670.patch \
+           file://CVE-2017-15671.patch \
 "
 
 NATIVESDKFIXES ?= ""
