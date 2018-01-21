@@ -720,7 +720,7 @@ SDKEXTDEPLOYDIR = "${WORKDIR}/deploy-${PN}-populate-sdk-ext"
 
 SSTATETASKS += "do_populate_sdk_ext"
 SSTATE_SKIP_CREATION_task-populate-sdk-ext = '1'
-do_populate_sdk_ext[cleandirs] = "${SDKDEPLOYDIR}"
+do_populate_sdk_ext[cleandirs] = "${SDKEXTDEPLOYDIR}"
 do_populate_sdk_ext[sstate-inputdirs] = "${SDKEXTDEPLOYDIR}"
 do_populate_sdk_ext[sstate-outputdirs] = "${SDK_DEPLOY}"
 do_populate_sdk_ext[stamp-extra-info] = "${MACHINE}"
