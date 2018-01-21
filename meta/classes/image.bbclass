@@ -440,7 +440,7 @@ python () {
         # date/time values. It will get expanded at execution time.
         # Similarly TMPDIR since otherwise we see QA stamp comparision problems
         # Expand PV else it can trigger get_srcrev which can fail due to these variables being unset
-        localdata.setVar('PV', d.getVar('PV'))
+        localdata.setVar('PV', d.getVar('PV', True))
         localdata.delVar('DATETIME')
         localdata.delVar('TMPDIR')
 
