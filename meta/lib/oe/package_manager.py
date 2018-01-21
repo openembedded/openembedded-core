@@ -656,7 +656,8 @@ class RpmPM(PackageManager):
                  task_name='target',
                  providename=None,
                  arch_var=None,
-                 os_var=None):
+                 os_var=None,
+                 rpm_repo_workdir="oe-rootfs-repo"):
         super(RpmPM, self).__init__(d)
         self.target_rootfs = target_rootfs
         self.target_vendor = target_vendor
