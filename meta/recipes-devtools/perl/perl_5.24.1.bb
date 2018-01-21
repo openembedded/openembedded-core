@@ -280,6 +280,7 @@ FILES_${PN}-dev = "${libdir}/perl/${PV}/CORE"
 FILES_${PN}-lib = "${libdir}/libperl.so* \
                    ${libdir}/perl5 \
                    ${libdir}/perl/config.sh \
+		   ${libdir}/perl/${PV}/Config_git.pl \
                    ${libdir}/perl/${PV}/Config_heavy.pl \
                    ${libdir}/perl/${PV}/Config_heavy-target.pl"
 FILES_${PN}-pod = "${libdir}/perl/${PV}/pod \
