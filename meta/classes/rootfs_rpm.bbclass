@@ -24,6 +24,10 @@ do_populate_sdk[depends] += "${RPMROOTFSDEPENDS}"
 do_rootfs[recrdeptask] += "do_package_write_rpm"
 do_rootfs[vardeps] += "PACKAGE_FEED_URIS"
 
+do_rootfs[lockfiles] += "${WORKDIR}/rpm.lock"
+do_populate_sdk[lockfiles] += "${WORKDIR}/rpm.lock"
+do_populate_sdk_ext[lockfiles] += "${WORKDIR}/rpm.lock"
+
 python () {
     if d.getVar('BUILD_IMAGES_FROM_FEEDS', True):
         flags = d.getVarFlag('do_rootfs', 'recrdeptask', True)
