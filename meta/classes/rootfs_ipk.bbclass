@@ -15,6 +15,7 @@ do_rootfs[vardeps] += "PACKAGE_FEED_URIS"
 
 do_rootfs[lockfiles] += "${WORKDIR}/ipk.lock"
 do_populate_sdk[lockfiles] += "${WORKDIR}/ipk.lock"
+do_populate_sdk_ext[lockfiles] += "${WORKDIR}/ipk.lock"
 
 OPKG_PREPROCESS_COMMANDS = ""
 
