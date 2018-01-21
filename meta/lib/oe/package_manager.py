@@ -462,7 +462,8 @@ class RpmPM(PackageManager):
                  task_name='target',
                  providename=None,
                  arch_var=None,
-                 os_var=None):
+                 os_var=None,
+                 rpm_repo_workdir="oe-rootfs-repo"):
         super(RpmPM, self).__init__(d)
         self.target_rootfs = target_rootfs
         self.target_vendor = target_vendor
@@ -476,7 +477,7 @@ class RpmPM(PackageManager):
         else:
             self.primary_arch = self.d.getVar('MACHINE_ARCH')
 
-        self.rpm_repo_dir = oe.path.join(self.d.getVar('WORKDIR'), "oe-rootfs-repo")
+        self.rpm_repo_dir = oe.path.join(self.d.getVar('WORKDIR'), rpm_repo_workdir)
         bb.utils.mkdirhier(self.rpm_repo_dir)
         oe.path.symlink(self.d.getVar('DEPLOY_DIR_RPM'), oe.path.join(self.rpm_repo_dir, "rpm"), True)
 

@@ -85,7 +85,7 @@ class Sdk(object, metaclass=ABCMeta):
             bb.warn("cannot remove SDK dir: %s" % path)
 
 class RpmSdk(Sdk):
-    def __init__(self, d, manifest_dir=None):
+    def __init__(self, d, manifest_dir=None, rpm_workdir="oe-sdk-repo"):
         super(RpmSdk, self).__init__(d, manifest_dir)
 
         self.target_manifest = RpmManifest(d, self.manifest_dir,
@@ -100,11 +100,17 @@ class RpmSdk(Sdk):
                               'pkgconfig'
                               ]
 
+        rpm_repo_workdir = "oe-sdk-repo"
+        if "sdk_ext" in d.getVar("BB_RUNTASK"):
+            rpm_repo_workdir = "oe-sdk-ext-repo"
+
+
         self.target_pm = RpmPM(d,
                                self.sdk_target_sysroot,
                                self.d.getVar('TARGET_VENDOR'),
                                'target',
-                               target_providename
+                               target_providename,
+                               rpm_repo_workdir=rpm_repo_workdir
                                )
 
         sdk_providename = ['/bin/sh',
@@ -122,7 +128,8 @@ class RpmSdk(Sdk):
                              'host',
                              sdk_providename,
                              "SDK_PACKAGE_ARCHS",
-                             "SDK_OS"
+                             "SDK_OS",
+                             rpm_repo_workdir=rpm_repo_workdir
                              )
 
     def _populate_sysroot(self, pm, manifest):
