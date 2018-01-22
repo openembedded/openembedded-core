@@ -20,7 +20,7 @@ PACKAGECONFIG ??= ""
 PACKAGECONFIG += "${@bb.utils.contains('DISTRO_FEATURES', 'ipv6', 'ipv6', '', d)}"
 
 PACKAGECONFIG[valgrind] = "--with-valgrind=yes, --with-valgrind=no, valgrind"
-PACKAGECONFIG[gpm] = "--with-gmp=yes, --with-gmp=no, gmp"
+PACKAGECONFIG[gmp] = "--with-gmp=yes, --with-gmp=no, gmp"
 PACKAGECONFIG[ipv6] = ",--enable-wide-getaddrinfo,"
 
 EXTRA_AUTORECONF += "--exclude=aclocal"
