@@ -3,12 +3,18 @@ LIC_FILES_CHKSUM = "file://LICENSE.LGPL2.1;md5=4fbd65380cdd255951079008b364516c 
                     file://LICENSE.GPL2;md5=751419260aa954499f7abaabaa882bbe"
 
 SRC_URI = "git://github.com/systemd/systemd-bootchart.git;protocol=https \
-           file://0001-parse-util-Don-t-use-xlocale.h.patch \
 "
 
+SRC_URI_append_libc-musl = " \
+    file://0001-comparison_fn_t-is-glibc-specific-use-raw-signature-.patch \
+    file://0002-musl-does-not-provide-printf-h.patch \
+    file://0003-musl-does-not-provide-canonicalize_file_name.patch \
+    "
+
+
 # Modify these as desired
-PV = "231+git${SRCPV}"
-SRCREV = "9ee2ffc1dc6c8209725e625954bbd89f96cb7139"
+PV = "233+git${SRCPV}"
+SRCREV = "fe1c5e41e6bdb78043dad8fa863fc2df66d1dadf"
 
 S = "${WORKDIR}/git"
 
