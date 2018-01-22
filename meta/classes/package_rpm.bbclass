@@ -382,6 +382,12 @@ python write_specfile () {
 
         # Gather special src/first package data
         if srcname == splitname:
+            archiving = d.getVarFlag('ARCHIVER_MODE', 'srpm') == '1' and \
+                        bb.data.inherits_class('archiver', d)
+            if archiving and srclicense != splitlicense:
+                bb.warn("The SRPM produced may not have the correct overall source license in the License tag. This is due to the LICENSE for the primary package and SRPM conflicting.")
+
+            srclicense     = splitlicense
             srcrdepends    = splitrdepends
             srcrrecommends = splitrrecommends
             srcrsuggests   = splitrsuggests
@@ -421,8 +427,7 @@ python write_specfile () {
             spec_preamble_bottom.append('Release: %s' % splitrelease)
         if srcepoch != splitepoch:
             spec_preamble_bottom.append('Epoch: %s' % splitepoch)
-        if srclicense != splitlicense:
-            spec_preamble_bottom.append('License: %s' % splitlicense)
+        spec_preamble_bottom.append('License: %s' % splitlicense)
         spec_preamble_bottom.append('Group: %s' % splitsection)
 
         if srccustomtagschunk != splitcustomtagschunk:
