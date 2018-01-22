@@ -208,6 +208,23 @@ IMAGE_CMD_ubi () {
 
 IMAGE_CMD_ubifs = "mkfs.ubifs -r ${IMAGE_ROOTFS} -o ${IMGDEPLOYDIR}/${IMAGE_NAME}${IMAGE_NAME_SUFFIX}.ubifs ${MKUBIFS_ARGS}"
 
+MIN_F2FS_SIZE ?= "524288"
+IMAGE_CMD_f2fs () {
+        # We need to add additional smarts here form devices smaller than 1.5G
+        # Need to scale appropriately between 40M -> 1.5G as the "overprovision
+        # ratio" goes down as the device gets bigger (70% -> 4.5%), below about
+        # 500M the standard IMAGE_OVERHEAD_FACTOR does not work, so add additional
+        # space here when under 500M
+	size=${ROOTFS_SIZE}
+	if [ ${size} -lt ${MIN_F2FS_SIZE} ] ; then
+		size=${MIN_F2FS_SIZE}
+		bbwarn "Rootfs size is too small for F2FS. Filesystem will be extended to ${size}K"
+	fi
+	dd if=/dev/zero of=${IMGDEPLOYDIR}/${IMAGE_NAME}${IMAGE_NAME_SUFFIX}.f2fs seek=${size} count=0 bs=1024
+	mkfs.f2fs ${EXTRA_IMAGECMD} ${IMGDEPLOYDIR}/${IMAGE_NAME}${IMAGE_NAME_SUFFIX}.f2fs
+	sload.f2fs -f ${IMAGE_ROOTFS} ${IMGDEPLOYDIR}/${IMAGE_NAME}${IMAGE_NAME_SUFFIX}.f2fs
+}
+
 EXTRA_IMAGECMD = ""
 
 inherit siteinfo kernel-arch
@@ -220,6 +237,7 @@ EXTRA_IMAGECMD_ext2 ?= "-i 4096"
 EXTRA_IMAGECMD_ext3 ?= "-i 4096"
 EXTRA_IMAGECMD_ext4 ?= "-i 4096"
 EXTRA_IMAGECMD_btrfs ?= "-n 4096"
+EXTRA_IMAGECMD_f2fs ?= ""
 
 do_image_jffs2[depends] += "mtd-utils-native:do_populate_sysroot"
 do_image_cramfs[depends] += "util-linux-native:do_populate_sysroot"
@@ -234,6 +252,7 @@ do_image_squashfs_lz4[depends] += "squashfs-tools-native:do_populate_sysroot"
 do_image_ubi[depends] += "mtd-utils-native:do_populate_sysroot"
 do_image_ubifs[depends] += "mtd-utils-native:do_populate_sysroot"
 do_image_multiubi[depends] += "mtd-utils-native:do_populate_sysroot"
+do_image_f2fs[depends] += "f2fs-tools-native:do_populate_sysroot"
 
 # This variable is available to request which values are suitable for IMAGE_FSTYPES
 IMAGE_TYPES = " \
@@ -251,6 +270,7 @@ IMAGE_TYPES = " \
     cpio cpio.gz cpio.xz cpio.lzma cpio.lz4 \
     wic wic.gz wic.bz2 wic.lzma \
     container \
+    f2fs \
 "
 
 # Compression is a special case of conversion. The old variable
