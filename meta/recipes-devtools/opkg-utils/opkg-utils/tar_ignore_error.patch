@@ -31,7 +31,7 @@ Index: git/opkg-build
 +
 +# Ignore error code 1, caused by modifying the number of hard links while creating the tar file
 +rc=0
-+( cd $pkg_dir && tar $ogargs -X $tmp_dir/tarX -cz $tarformat -f $tmp_dir/data.tar.gz . ) || rc=$?
++( cd $pkg_dir && tar $ogargs -X $tmp_dir/tarX -c --$compressor $tarformat -f $tmp_dir/data.tar.$cext . ) || rc=$?
 +if [ $rc -ne 1 ] && [ $rc -ne 0 ]; then
 +        exit $rc 
 +fi
