@@ -124,10 +124,10 @@ class ChangeRecord:
             lines = []
             if renamed_dirs:
                 for dfrom, dto in renamed_dirs:
-                    lines.append('directory renamed %s -> %s' % (dfrom, dto))
+                    lines.append('directory renamed {colour_remove}{}{colour_default} -> {colour_add}{}{colour_default}'.format(dfrom, dto, **colours))
             if removed or added:
                 if removed and not bitems:
-                    lines.append('removed all items "%s"' % ' '.join(removed))
+                    lines.append('removed all items "{colour_remove}{}{colour_default}"'.format(' '.join(removed), **colours))
                 else:
                     if removed:
                         lines.append('removed "{colour_remove}{value}{colour_default}"'.format(value=' '.join(removed), **colours))
