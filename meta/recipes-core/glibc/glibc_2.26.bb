@@ -45,6 +45,7 @@ SRC_URI = "${GLIBC_GIT_URI};branch=${SRCBRANCH};name=glibc \
            file://0029-malloc-add-missing-arena-lock-in-malloc-info.patch \
            file://CVE-2017-15671.patch \
            file://CVE-2017-16997.patch \
+           file://CVE-2017-17426.patch \
 "
 
 NATIVESDKFIXES ?= ""
