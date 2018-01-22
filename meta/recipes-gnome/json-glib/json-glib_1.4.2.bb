@@ -14,20 +14,19 @@ SRC_URI[archive.md5sum] = "35107e23a7bbbc70f31c34f7b9adf1c3"
 SRC_URI[archive.sha256sum] = "2d7709a44749c7318599a6829322e081915bdc73f5be5045882ed120bb686dc8"
 
 GNOMEBASEBUILDCLASS = "meson"
-inherit gnomebase lib_package gobject-introspection gtk-doc manpages gettext
+inherit gnomebase lib_package gobject-introspection gtk-doc gettext
 
-GTKDOC_ENABLE_FLAG = "-Denable-gtk-doc=true"
-GTKDOC_DISABLE_FLAG = "-Denable-gtk-doc=false"
+# This builds both API docs (via gtk-doc) and manpages
+GTKDOC_ENABLE_FLAG = "-Ddocs=true"
+GTKDOC_DISABLE_FLAG = "-Ddocs=false"
 
-GI_ENABLE_FLAG = "-Ddisable_introspection=false"
-GI_DISABLE_FLAG = "-Ddisable_introspection=true"
+GI_ENABLE_FLAG = "-Dintrospection=true"
+GI_DISABLE_FLAG = "-Dintrospection=false"
 
 EXTRA_OEMESON_append_class-target = " ${@bb.utils.contains('GTKDOC_ENABLED', 'True', '${GTKDOC_ENABLE_FLAG}', \
                                                                                     '${GTKDOC_DISABLE_FLAG}', d)} "
 EXTRA_OEMESON_append_class-target = " ${@bb.utils.contains('GI_DATA_ENABLED', 'True', '${GI_ENABLE_FLAG}', \
                                                                                     '${GI_DISABLE_FLAG}', d)} "
-
-PACKAGECONFIG[manpages] = "-Denable-man=true, -Denable-man=false, libxslt-native xmlto-native"
 
 do_install_append() {
     # FIXME: these need to be provided via ptest
