@@ -5,7 +5,7 @@ LIC_FILES_CHKSUM = "file://LICENSES;md5=e9a558e243b36d3209f380deb394b213 \
       file://posix/rxspencer/COPYRIGHT;md5=dc5485bb394a13b2332ec1c785f5d83a \
       file://COPYING.LIB;md5=4fbd65380cdd255951079008b364516c"
 
-DEPENDS += "gperf-native"
+DEPENDS += "gperf-native bison-native"
 
 SRCREV ?= "1c9a5c270d8b66f30dcfaf1cb2d6cf39d3e18369"
 
@@ -108,6 +108,10 @@ do_configure () {
 # version check and doesn't really help with anything
         (cd ${S} && gnu-configize) || die "failure in running gnu-configize"
         find ${S} -name "configure" | xargs touch
+        # "plural.c" may or may not get regenerated from "plural.y" so we
+        # touch "plural.y" to make sure it does. (This should not be needed
+        # for glibc version 2.26+)
+        find ${S}/intl -name "plural.y" | xargs touch
         CPPFLAGS="" oe_runconf
 }
 
