@@ -1,0 +1,54 @@
+Upstream-Status: Backport
+Signed-off-by: Randy MacLeod <randy.macleod@windriver.com>
+
+From 23ce168048698eeea3df6bb8c9de5be3ca4784cd Mon Sep 17 00:00:00 2001
+From: Igor Gnatenko <ignatenko@redhat.com>
+Date: Mon, 1 Jan 2018 22:49:00 +0100
+Subject: [PATCH] link mesautil with pthreads
+
+../../src/util/.libs/libmesautil.a(libmesautil_la-u_queue.o): In function `u_thread_setname':
+/builddir/build/BUILD/mesa-17.3.1/src/util/../../src/util/u_thread.h:66: undefined reference to `pthread_setname_np'
+../../src/util/.libs/libmesautil.a(libmesautil_la-u_queue.o): In function `thrd_join':
+/builddir/build/BUILD/mesa-17.3.1/src/util/../../include/c11/threads_posix.h:336: undefined reference to `pthread_join'
+../../src/util/.libs/libmesautil.a(libmesautil_la-u_queue.o): In function `u_thread_create':
+/builddir/build/BUILD/mesa-17.3.1/src/util/../../src/util/u_thread.h:48: undefined reference to `pthread_sigmask'
+../../src/util/.libs/libmesautil.a(libmesautil_la-u_queue.o): In function `thrd_create':
+/builddir/build/BUILD/mesa-17.3.1/src/util/../../include/c11/threads_posix.h:296: undefined reference to `pthread_create'
+../../src/util/.libs/libmesautil.a(libmesautil_la-u_queue.o): In function `u_thread_create':
+/builddir/build/BUILD/mesa-17.3.1/src/util/../../src/util/u_thread.h:50: undefined reference to `pthread_sigmask'
+/builddir/build/BUILD/mesa-17.3.1/src/util/../../src/util/u_thread.h:50: undefined reference to `pthread_sigmask'
+../../src/util/.libs/libmesautil.a(libmesautil_la-u_queue.o): In function `call_once':
+/builddir/build/BUILD/mesa-17.3.1/src/util/../../include/c11/threads_posix.h:96: undefined reference to `pthread_once'
+../../src/util/.libs/libmesautil.a(libmesautil_la-u_queue.o): In function `u_thread_get_time_nano':
+/builddir/build/BUILD/mesa-17.3.1/src/util/../../src/util/u_thread.h:84: undefined reference to `pthread_getcpuclockid'
+collect2: error: ld returned 1 exit status
+
+Reviewed-by: Adam Jackson <ajax@redhat.com>
+Signed-off-by: Igor Gnatenko <ignatenko@redhat.com>
+---
+ src/util/Makefile.am | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/src/util/Makefile.am b/src/util/Makefile.am
+index a5241ad27b..633907b9fd 100644
+--- a/src/util/Makefile.am
++++ b/src/util/Makefile.am
+@@ -31,6 +31,7 @@ noinst_LTLIBRARIES = \
+ 	libxmlconfig.la
+ 
+ AM_CPPFLAGS = \
++	$(PTHREAD_CFLAGS) \
+ 	-I$(top_srcdir)/include
+ 
+ libmesautil_la_CPPFLAGS = \
+@@ -50,6 +51,7 @@ libmesautil_la_SOURCES = \
+ 	$(MESA_UTIL_GENERATED_FILES)
+ 
+ libmesautil_la_LIBADD = \
++	$(PTHREAD_LIBS) \
+ 	$(CLOCK_LIB) \
+ 	$(ZLIB_LIBS) \
+ 	$(LIBATOMIC_LIBS)
+-- 
+2.14.3
+
