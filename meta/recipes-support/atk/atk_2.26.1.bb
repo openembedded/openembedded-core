@@ -12,8 +12,8 @@ DEPENDS = "glib-2.0"
 
 inherit gnomebase gtk-doc gettext upstream-version-is-even gobject-introspection
 
-SRC_URI[archive.md5sum] = "ee9c329784dead6e386e8b2e0d4d8d6f"
-SRC_URI[archive.sha256sum] = "eafe49d5c4546cb723ec98053290d7e0b8d85b3fdb123938213acb7bb4178827"
+SRC_URI[archive.md5sum] = "7cddcc313b9a3efd19b2ddf079ba68f5"
+SRC_URI[archive.sha256sum] = "ef00ff6b83851dddc8db38b4d9faeffb99572ba150b0664ee02e46f015ea97cb"
 
 BBCLASSEXTEND = "native"
 
