@@ -52,7 +52,7 @@ do_install_append_class-target() {
 }
 
 GRUB_BUILDIN ?= "boot linux ext2 fat serial part_msdos part_gpt normal \
-                 efi_gop iso9660 search"
+                 efi_gop iso9660 search loadenv test"
 
 do_deploy() {
 	# Search for the grub.cfg on the local boot media by using the
