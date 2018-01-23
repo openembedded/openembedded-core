@@ -9,7 +9,7 @@ SECTION = "libs"
 
 LICENSE = "FreeType | GPLv2+"
 LIC_FILES_CHKSUM = "file://docs/LICENSE.TXT;md5=4af6221506f202774ef74f64932878a1 \
-                    file://docs/FTL.TXT;md5=13b25413274c9b3b09b63e4028216ff4 \
+                    file://docs/FTL.TXT;md5=9f37b4e6afa3fef9dba8932b16bd3f97 \
                     file://docs/GPLv2.TXT;md5=8ef380476f642c20ebf40fecb0add2ec"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/freetype/freetype-${PV}.tar.bz2 \
@@ -18,8 +18,8 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/freetype/freetype-${PV}.tar.bz2 \
 UPSTREAM_CHECK_URI = "http://sourceforge.net/projects/freetype/files/freetype2/"
 UPSTREAM_CHECK_REGEX = "freetype-(?P<pver>\d+(\.\d+)+)"
 
-SRC_URI[md5sum] = "bf0a210b6fe781228fa0e4a80691a521"
-SRC_URI[sha256sum] = "e5435f02e02d2b87bb8e4efdcaa14b1f78c9cf3ab1ed80f94b6382fb6acc7d78"
+SRC_URI[md5sum] = "513c403c110016fdc7e537216a642b1d"
+SRC_URI[sha256sum] = "e6ffba3c8cef93f557d1f767d7bc3dee860ac7a3aaff588a521e081bc36f4c8a"
 
 inherit autotools pkgconfig binconfig-disabled multilib_header
 
