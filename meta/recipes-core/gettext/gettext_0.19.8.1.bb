@@ -17,12 +17,13 @@ SRC_URI = "${GNU_MIRROR}/gettext/gettext-${PV}.tar.gz \
 	   file://parallel.patch \
 	   file://add-with-bisonlocaledir.patch \
 	   file://cr-statement.c-timsort.h-fix-formatting-issues.patch \
+	   file://use-pkgconfig.patch \
 "
 
 SRC_URI[md5sum] = "97e034cf8ce5ba73a28ff6c3c0638092"
 SRC_URI[sha256sum] = "ff942af0e438ced4a8b0ea4b0b6e0d6d657157c5e2364de57baa279c1c125c43"
 
-inherit autotools texinfo
+inherit autotools texinfo pkgconfig
 
 EXTRA_OECONF += "--without-lispdir \
                  --disable-csharp \
@@ -39,14 +40,16 @@ EXTRA_OECONF_append_class-target = " \
                  --with-bisonlocaledir=${datadir}/locale \
 "
 
-PACKAGECONFIG ??= "croco glib libxml libunistring"
+PACKAGECONFIG ??= "croco glib libxml"
 PACKAGECONFIG_class-native = ""
 PACKAGECONFIG_class-nativesdk = ""
 
 PACKAGECONFIG[croco] = "--without-included-libcroco,--with-included-libcroco,libcroco"
 PACKAGECONFIG[glib] = "--without-included-glib,--with-included-glib,glib-2.0"
 PACKAGECONFIG[libxml] = "--without-included-libxml,--with-included-libxml,libxml2"
-PACKAGECONFIG[libunistring] = "--without-included-libunistring,--with-included-libunistring,libunistring"
+# Need paths here to avoid host contamination but this can cause RPATH warnings
+# or problems if $libdir isn't $prefix/lib.
+PACKAGECONFIG[libunistring] = "--with-libunistring-prefix=${STAGING_LIBDIR}/..,--with-included-libunistring,libunistring"
 PACKAGECONFIG[msgcat-curses] = "--with-libncurses-prefix=${STAGING_LIBDIR}/..,--disable-curses,ncurses,"
 
 acpaths = '-I ${S}/gettext-runtime/m4 \
