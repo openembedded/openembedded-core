@@ -128,7 +128,7 @@ do_kernel_metadata() {
 	# the KBUILD_DEFCONFIG processing above ?
 	if [ -n "$sccs" ]; then
 	    # we did have a defconfig from above. remove any that might be in the src_uri
-	    sccs_from_src_uri=$(echo $sccs_from_src_uri | sed 's/defconfig//g')
+	    sccs_from_src_uri=$(echo $sccs_from_src_uri | awk '{ if ($0!="defconfig") { print $0 } }' RS=' ')
 	fi
 	sccs="$sccs $sccs_from_src_uri"
 
