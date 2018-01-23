@@ -12,8 +12,8 @@ SRC_URI = "http://ftp.gnome.org/pub/gnome/sources/gtk+/2.24/gtk+-${PV}.tar.xz \
            file://strict-prototypes.patch \
 	  "
 
-SRC_URI[md5sum] = "526a1008586094a2cbb4592fd3f9ee10"
-SRC_URI[sha256sum] = "68c1922732c7efc08df4656a5366dcc3afdc8791513400dac276009b40954658"
+SRC_URI[md5sum] = "d5742aa42275203a499b59b4c382a784"
+SRC_URI[sha256sum] = "b6c8a93ddda5eabe3bfee1eb39636c9a03d2a56c7b62828b359bf197943c582e"
 
 EXTRA_OECONF = "--enable-xkb --disable-glibtest --disable-cups --disable-xinerama"
 
