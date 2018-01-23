@@ -1,10 +1,6 @@
 require grub2.inc
 
-RDEPENDS_${PN} = "diffutils freetype grub-editenv"
-
-PACKAGES =+ "grub-editenv"
-
-FILES_grub-editenv = "${bindir}/grub-editenv"
+RDEPENDS_${PN} += "diffutils freetype"
 
 do_install_append () {
     install -d ${D}${sysconfdir}/grub.d
