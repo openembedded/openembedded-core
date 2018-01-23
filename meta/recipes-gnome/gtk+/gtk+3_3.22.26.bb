@@ -7,8 +7,8 @@ SRC_URI = "http://ftp.gnome.org/pub/gnome/sources/gtk+/${MAJ_VER}/gtk+-${PV}.tar
            file://0002-Do-not-try-to-initialize-GL-without-libGL.patch \
            file://0003-Add-disable-opengl-configure-option.patch \
           "
-SRC_URI[md5sum] = "b782a15b7b5b2005a1ce4647fb002a49"
-SRC_URI[sha256sum] = "cbb16e4cfc928ab8f5f22f7290616f95f6ebc8c97cc724a2007b07ced833592b"
+SRC_URI[md5sum] = "eeeb8038fe0d386c7516fa46cd4fff6b"
+SRC_URI[sha256sum] = "61eef0d320e541976e2dfe445729f12b5ade53050ee9de6184235cb60cd4b967"
 
 S = "${WORKDIR}/gtk+-${PV}"
 
