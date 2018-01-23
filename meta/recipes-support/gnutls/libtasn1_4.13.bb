@@ -11,13 +11,12 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504 \
 SRC_URI = "${GNU_MIRROR}/libtasn1/libtasn1-${PV}.tar.gz \
            file://dont-depend-on-help2man.patch \
            file://0001-stdint.m4-reintroduce-GNULIB_OVERRIDES_WINT_T-check.patch \
-           file://CVE-2017-10790.patch \
            "
 
 DEPENDS = "bison-native"
 
-SRC_URI[md5sum] = "5c724bd1f73aaf4a311833e1cd297b21"
-SRC_URI[sha256sum] = "6753da2e621257f33f5b051cc114d417e5206a0818fe0b1ecfd6153f70934753"
+SRC_URI[md5sum] = "ce2ba4d3088119b48e7531a703669c52"
+SRC_URI[sha256sum] = "7e528e8c317ddd156230c4e31d082cd13e7ddeb7a54824be82632209550c8cca"
 
 inherit autotools texinfo binconfig lib_package gtk-doc
 
