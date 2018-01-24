@@ -40,5 +40,6 @@ FILES_rsvg = "${bindir}/rsvg* \
 	      ${datadir}/themes"
 FILES_librsvg-gtk = "${libdir}/gdk-pixbuf-2.0/*/*/*.so \
                      ${datadir}/thumbnailers/librsvg.thumbnailer"
+RRECOMMENDS_librsvg-gtk = "gdk-pixbuf-bin"
 
 PIXBUF_PACKAGES = "librsvg-gtk"
