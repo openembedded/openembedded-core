@@ -183,6 +183,12 @@ do_compile() {
 			oe_runmake busybox.links
 			mv busybox.links busybox.links.$s
 		done
+
+		# hard fail if sh is being linked to the suid busybox (detects bug 10346)
+		if grep -q -x "/bin/sh" busybox.links.suid; then
+			bbfatal "busybox suid binary incorrectly provides /bin/sh"
+		fi
+
 		# copy .config.orig back to .config, because the install process may check this file
 		cp .config.orig .config
 		# cleanup
