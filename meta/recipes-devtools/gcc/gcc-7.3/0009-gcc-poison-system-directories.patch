@@ -138,16 +138,16 @@ index 68a558e9992..060cd7169c6 100644
  @opindex Wfloat-equal
  @opindex Wno-float-equal
 diff --git a/gcc/gcc.c b/gcc/gcc.c
-index 120c5c0792a..6315aa0dd16 100644
+index c48178f..f63d53d 100644
 --- a/gcc/gcc.c
 +++ b/gcc/gcc.c
-@@ -1035,6 +1035,8 @@ proper position among the other output files.  */
+@@ -1029,6 +1029,8 @@ proper position among the other output files.  */
     "%{fuse-ld=*:-fuse-ld=%*} " LINK_COMPRESS_DEBUG_SPEC \
     "%X %{o*} %{e*} %{N} %{n} %{r}\
      %{s} %{t} %{u*} %{z} %{Z} %{!nostdlib:%{!nostartfiles:%S}} \
 +    %{Wno-poison-system-directories:--no-poison-system-directories} \
 +    %{Werror=poison-system-directories:--error-poison-system-directories} \
-     %{static:} %{L*} %(mfwrap) %(link_libgcc) " \
+     %{static|no-pie:} %{L*} %(mfwrap) %(link_libgcc) " \
      VTABLE_VERIFICATION_SPEC " " SANITIZER_EARLY_SPEC " %o " CHKP_SPEC " \
      %{fopenacc|fopenmp|%:gt(%{ftree-parallelize-loops=*:%*} 1):\
 diff --git a/gcc/incpath.c b/gcc/incpath.c
