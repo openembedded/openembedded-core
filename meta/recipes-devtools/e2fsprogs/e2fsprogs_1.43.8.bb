@@ -7,11 +7,12 @@ SRC_URI += "file://remove.ldconfig.call.patch \
             file://Revert-mke2fs-enable-the-metadata_csum-and-64bit-fea.patch \
             file://mkdir_p.patch \
             file://0001-misc-create_inode.c-set-dir-s-mode-correctly.patch \
-"
+            file://0001-libext2fs-fix-build-failure-in-swapfs.c-on-big-endia.patch \
+            "
 
 SRC_URI_append_class-native = " file://e2fsprogs-fix-missing-check-for-permission-denied.patch"
 
-SRCREV = "4c5e6cd6defb83f1b35a5ef6fccd68c86874ee06"
+SRCREV = "af2eac481cf426c05ae12b946396980e16c8ab19"
 UPSTREAM_CHECK_GITTAGREGEX = "v(?P<pver>\d+\.\d+(\.\d+)*)$"
 
 EXTRA_OECONF += "--libdir=${base_libdir} --sbindir=${base_sbindir} \
