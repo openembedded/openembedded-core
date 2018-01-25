@@ -22,7 +22,7 @@ python __anonymous () {
         grubtarget = 'i386'
         grubimage = "grub-efi-bootia32.efi"
     else:
-        raise bb.parse.SkipPackage("grub-efi is incompatible with target %s" % target)
+        raise bb.parse.SkipRecipe("grub-efi is incompatible with target %s" % target)
     d.setVar("GRUB_TARGET", grubtarget)
     d.setVar("GRUB_IMAGE", grubimage)
 }

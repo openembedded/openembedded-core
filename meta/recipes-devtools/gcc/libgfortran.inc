@@ -73,5 +73,5 @@ do_package_write_rpm[depends] += "virtual/${MLPREFIX}libc:do_packagedata"
 python __anonymous () {
     f = d.getVar("FORTRAN")
     if "fortran" not in f:
-        raise bb.parse.SkipPackage("libgfortran needs fortran support to be enabled in the compiler")
+        raise bb.parse.SkipRecipe("libgfortran needs fortran support to be enabled in the compiler")
 }

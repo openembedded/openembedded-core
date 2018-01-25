@@ -8,7 +8,7 @@ require recipes-kernel/linux/linux-yocto.inc
 # core-image-rt-sdk, core-image-rt.
 python () {
     if d.getVar("KERNEL_PACKAGE_NAME") == "kernel" and d.getVar("PREFERRED_PROVIDER_virtual/kernel") != "linux-yocto-rt":
-        raise bb.parse.SkipPackage("Set PREFERRED_PROVIDER_virtual/kernel to linux-yocto-rt to enable it")
+        raise bb.parse.SkipRecipe("Set PREFERRED_PROVIDER_virtual/kernel to linux-yocto-rt to enable it")
 }
 
 SRCREV_machine ?= "fef0184c3c1bcac27fe579bf2643c50bf861e40d"

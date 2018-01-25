@@ -293,7 +293,7 @@ python base_eventhandler() {
                 if p.startswith("virtual/") and p not in multiwhitelist:
                     profprov = d.getVar("PREFERRED_PROVIDER_" + p)
                     if profprov and pn != profprov:
-                        raise bb.parse.SkipPackage("PREFERRED_PROVIDER_%s set to %s, not %s" % (p, profprov, pn))
+                        raise bb.parse.SkipRecipe("PREFERRED_PROVIDER_%s set to %s, not %s" % (p, profprov, pn))
 }
 
 CONFIGURESTAMPFILE = "${WORKDIR}/configure.sstate"
@@ -465,7 +465,7 @@ python () {
         if unmatched_license_flag:
             bb.debug(1, "Skipping %s because it has a restricted license not"
                  " whitelisted in LICENSE_FLAGS_WHITELIST" % pn)
-            raise bb.parse.SkipPackage("because it has a restricted license not"
+            raise bb.parse.SkipRecipe("because it has a restricted license not"
                  " whitelisted in LICENSE_FLAGS_WHITELIST")
 
     # If we're building a target package we need to use fakeroot (pseudo)
@@ -493,7 +493,7 @@ python () {
             if re.match(need_machine, m):
                 break
         else:
-            raise bb.parse.SkipPackage("incompatible with machine %s (not in COMPATIBLE_MACHINE)" % d.getVar('MACHINE'))
+            raise bb.parse.SkipRecipe("incompatible with machine %s (not in COMPATIBLE_MACHINE)" % d.getVar('MACHINE'))
 
     source_mirror_fetch = d.getVar('SOURCE_MIRROR_FETCH', False)
     if not source_mirror_fetch:
@@ -502,7 +502,7 @@ python () {
             import re
             this_host = d.getVar('HOST_SYS')
             if not re.match(need_host, this_host):
-                raise bb.parse.SkipPackage("incompatible with host %s (not in COMPATIBLE_HOST)" % this_host)
+                raise bb.parse.SkipRecipe("incompatible with host %s (not in COMPATIBLE_HOST)" % this_host)
 
         bad_licenses = (d.getVar('INCOMPATIBLE_LICENSE') or "").split()
 
@@ -555,7 +555,7 @@ python () {
                         bb.debug(1, "INCLUDING the package " + pkg)
                 elif all_skipped or incompatible_license(d, bad_licenses):
                     bb.debug(1, "SKIPPING recipe %s because it's %s" % (pn, license))
-                    raise bb.parse.SkipPackage("it has an incompatible license: %s" % license)
+                    raise bb.parse.SkipRecipe("it has an incompatible license: %s" % license)
             elif pn in whitelist:
                 if pn in incompatwl:
                     bb.note("INCLUDING " + pn + " as buildable despite INCOMPATIBLE_LICENSE because it has been whitelisted")

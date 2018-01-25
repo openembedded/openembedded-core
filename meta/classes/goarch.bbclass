@@ -56,7 +56,7 @@ def go_map_arch(a, d):
     elif re.match('p(pc|owerpc)(64el)', a):
         return 'ppc64le'
     else:
-        raise bb.parse.SkipPackage("Unsupported CPU architecture: %s" % a)
+        raise bb.parse.SkipRecipe("Unsupported CPU architecture: %s" % a)
 
 def go_map_arm(a, f, d):
     import re

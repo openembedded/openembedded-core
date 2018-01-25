@@ -12,7 +12,7 @@ python multilib_virtclass_handler () {
     # We also skip multilib setup for module packages.
     provides = (e.data.getVar("PROVIDES") or "").split()
     if "virtual/kernel" in provides or bb.data.inherits_class('module-base', e.data):
-        raise bb.parse.SkipPackage("We shouldn't have multilib variants for the kernel")
+        raise bb.parse.SkipRecipe("We shouldn't have multilib variants for the kernel")
 
     save_var_name=e.data.getVar("MULTILIB_SAVE_VARNAME") or ""
     for name in save_var_name.split():
@@ -41,13 +41,13 @@ python multilib_virtclass_handler () {
         return
 
     if bb.data.inherits_class('native', e.data):
-        raise bb.parse.SkipPackage("We can't extend native recipes")
+        raise bb.parse.SkipRecipe("We can't extend native recipes")
 
     if bb.data.inherits_class('nativesdk', e.data) or bb.data.inherits_class('crosssdk', e.data):
-        raise bb.parse.SkipPackage("We can't extend nativesdk recipes")
+        raise bb.parse.SkipRecipe("We can't extend nativesdk recipes")
 
     if bb.data.inherits_class('allarch', e.data) and not bb.data.inherits_class('packagegroup', e.data):
-        raise bb.parse.SkipPackage("Don't extend allarch recipes which are not packagegroups")
+        raise bb.parse.SkipRecipe("Don't extend allarch recipes which are not packagegroups")
 
 
     # Expand this since this won't work correctly once we set a multilib into place
