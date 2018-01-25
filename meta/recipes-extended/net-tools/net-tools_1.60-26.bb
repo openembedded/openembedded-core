@@ -37,7 +37,7 @@ UPSTREAM_CHECK_URI = "${DEBIAN_MIRROR}/main/n/net-tools/"
 
 inherit gettext
 
-do_patch[depends] = "quilt-native:do_populate_sysroot"
+do_patch[depends] += "quilt-native:do_populate_sysroot"
 
 # The Makefile is lame, no parallel build
 PARALLEL_MAKE = ""
