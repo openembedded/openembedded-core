@@ -2,7 +2,6 @@ SUMMARY = "LSB support for OpenEmbedded"
 SECTION = "console/utils"
 HOMEPAGE = "http://prdownloads.sourceforge.net/lsb"
 LICENSE = "GPLv2+"
-PR = "r2"
 
 LSB_CORE = "lsb-core-${TARGET_ARCH}"
 LSB_CORE_x86 = "lsb-core-ia32"
@@ -43,12 +42,12 @@ do_install() {
 
 	mkdir -p ${D}${base_libdir}
 	mkdir -p ${D}${sysconfdir}/lsb-release.d
-	printf "LSB_VERSION=\"core-4.1-noarch:" > ${D}${sysconfdir}/lsb-release
+	printf "LSB_VERSION=\"core-5.0-noarch:" > ${D}${sysconfdir}/lsb-release
 
 	if [ "${TARGET_ARCH}" = "i586" ] || [ "${TARGET_ARCH}" = "i686" ]; then
-		printf "core-4.1-ia32" >>  ${D}${sysconfdir}/lsb-release
+		printf "core-5.0-ia32" >>  ${D}${sysconfdir}/lsb-release
 	else
-		printf "core-4.1-${TARGET_ARCH}" >>  ${D}${sysconfdir}/lsb-release
+		printf "core-5.0-${TARGET_ARCH}" >>  ${D}${sysconfdir}/lsb-release
 	fi
 	echo "\"" >> ${D}${sysconfdir}/lsb-release
 	echo "DISTRIB_ID=${DISTRO}" >> ${D}${sysconfdir}/lsb-release
