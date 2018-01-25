@@ -25,8 +25,8 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/hdparm/${BP}.tar.gz \
            file://wiper.sh-fix-stat-path.patch \
           "
 
-SRC_URI[md5sum] = "410539d0bf3cc247181594581edbfb53"
-SRC_URI[sha256sum] = "c3429cd423e271fa565bf584598fd751dd2e773bb7199a592b06b5a61cec4fb6"
+SRC_URI[md5sum] = "1e54b52e0c8cb79389d4d47eacba411d"
+SRC_URI[sha256sum] = "2673f591df6916c6a1faec07069a7eb1cb8ee307615a615d808192fb0c0265e5"
 
 EXTRA_OEMAKE = 'STRIP="echo" LDFLAGS="${LDFLAGS}"'
 
