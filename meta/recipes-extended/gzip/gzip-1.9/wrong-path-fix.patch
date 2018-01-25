@@ -13,17 +13,24 @@ Signed-off-by: Ming Liu <ming.liu@windriver.com>
 
 Upstream-Status: Pending
 
-Index: gzip-1.8/Makefile.am
-===================================================================
---- gzip-1.8.orig/Makefile.am
-+++ gzip-1.8/Makefile.am
-@@ -81,8 +81,7 @@ gzip.doc.gz: gzip.doc $(bin_PROGRAMS)
- SUFFIXES = .in
+---
+ Makefile.am | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/Makefile.am b/Makefile.am
+index d4ecc3f..e4657d2 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -82,8 +82,7 @@ SUFFIXES = .in
  .in:
- 	$(AM_V_GEN)sed \
+ 	$(AM_V_GEN)rm -f $@-t $@ \
+           && sed \
 -		-e 's|/bin/sh|$(SHELL)|g' \
 -		-e 's|[@]GREP@|$(GREP)|g' \
 +		-e 's|[@]GREP@|$(base_bindir)/grep|g' \
  		-e 's|[@]VERSION@|$(VERSION)|g' \
  		$(srcdir)/$@.in >$@-t \
- 	  && chmod a+x $@-t \
+ 	  && chmod a=rx $@-t \
+-- 
+2.7.4
+

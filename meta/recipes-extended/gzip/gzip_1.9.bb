@@ -3,7 +3,6 @@ require gzip.inc
 LICENSE = "GPLv3+"
 
 SRC_URI = "${GNU_MIRROR}/gzip/${BP}.tar.gz \
-            file://0001-gzip-port-zdiff-zless-to-Busybox.patch \
             file://run-ptest"
 SRC_URI_append_class-target = " file://wrong-path-fix.patch"
 
@@ -34,6 +33,6 @@ do_install_ptest() {
             ${B}/tests/Makefile > ${D}${PTEST_PATH}/src/tests/Makefile
 }
 
-SRC_URI[md5sum] = "732553152814b22dc35aa0267df5286c"
-SRC_URI[sha256sum] = "1ff7aedb3d66a0d73f442f6261e4b3860df6fd6c94025c2cb31a202c9c60fe0e"
+SRC_URI[md5sum] = "929d6a6b832f75b28e3eeeafb30c1d9b"
+SRC_URI[sha256sum] = "5d2d3a3432ef32f24cdb060d278834507b481a75adeca18850c73592f778f6ad"
 
