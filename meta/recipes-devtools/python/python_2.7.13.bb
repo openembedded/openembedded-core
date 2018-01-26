@@ -202,19 +202,20 @@ RPROVIDES_${PN} += "${PN}-modules"
 INCLUDE_PYCS ?= "1"
 
 python(){
-
-    pythondir = d.getVar('THISDIR',True)
-
-    # Read JSON manifest
     import json
-    with open(pythondir+'/python/python2-manifest.json') as manifest_file:
+
+    filename = os.path.join(d.getVar('THISDIR'), 'python', 'python2-manifest.json')
+    # This python changes the datastore based on the contents of a file, so mark
+    # that dependency.
+    bb.parse.mark_dependency(d, filename)
+
+    with open(filename) as manifest_file:
         python_manifest=json.load(manifest_file)
 
     include_pycs = d.getVar('INCLUDE_PYCS')
 
     packages = d.getVar('PACKAGES').split()
     pn = d.getVar('PN')
-
 
     newpackages=[]
 
@@ -250,25 +251,22 @@ python(){
     d.setVar('ALLOW_EMPTY_${PN}-modules', '1')
 }
 
-do_split_packages[file-checksums] += "${THISDIR}/python/python2-manifest.json:True"
-
 # Files needed to create a new manifest
 SRC_URI += "file://create_manifest2.py file://get_module_deps2.py file://python2-manifest.json"
 
 do_create_manifest() {
+    # This task should be run with every new release of Python.
+    # We must ensure that PACKAGECONFIG enables everything when creating
+    # a new manifest, this is to base our new manifest on a complete
+    # native python build, containing all dependencies, otherwise the task
+    # wont be able to find the required files.
+    # e.g. BerkeleyDB is an optional build dependency so it may or may not
+    # be present, we must ensure it is.
 
-# This task should be run with every new release of Python.
-# We must ensure that PACKAGECONFIG enables everything when creating 
-# a new manifest, this is to base our new manifest on a complete
-# native python build, containing all dependencies, otherwise the task
-# wont be able to find the required files.
-# e.g. BerkeleyDB is an optional build dependency so it may or may not
-# be present, we must ensure it is. 
-
-cd ${WORKDIR}
-# This needs to be executed by python-native and NOT by HOST's python
-nativepython create_manifest2.py
-cp python2-manifest.json.new ${THISDIR}/python/python2-manifest.json
+    cd ${WORKDIR}
+    # This needs to be executed by python-native and NOT by HOST's python
+    nativepython create_manifest2.py
+    cp python2-manifest.json.new ${THISDIR}/python/python2-manifest.json
 }
 
 # bitbake python -c create_manifest
