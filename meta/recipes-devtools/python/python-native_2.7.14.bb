@@ -36,6 +36,12 @@ do_configure_append() {
 	autoreconf --verbose --install --force --exclude=autopoint ../Python-${PV}/Modules/_ctypes/libffi
 }
 
+# Regenerate all of the generated files
+# This ensures that pgen and friends get created during the compile phase
+do_compile_prepend() {
+    oe_runmake regen-all
+}
+
 do_install() {
 	oe_runmake 'DESTDIR=${D}' install
 	install -d ${D}${bindir}/${PN}
