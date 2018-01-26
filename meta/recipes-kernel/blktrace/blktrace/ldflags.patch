@@ -90,7 +90,7 @@ Signed-off-by: Fahad Usman <fahad_usman@mentor.com>
 +++ git/iowatcher/Makefile
 @@ -1,5 +1,6 @@
  C      = gcc
- CFLAGS  = -Wall -O0 -g -W
+ CFLAGS  = -Wall -O2 -g -W -Wunused-result
 +LDFLAGS =
  ALL_CFLAGS = $(CFLAGS) -D_GNU_SOURCE -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64
  
@@ -99,8 +99,8 @@ Signed-off-by: Fahad Usman <fahad_usman@mentor.com>
  	$(CC) -o $*.o -c $(ALL_CFLAGS) $<
  
  iowatcher: blkparse.o plot.o main.o tracers.o mpstat.o fio.o
--	$(CC) $(ALL_CFLAGS) -o $@ $(filter %.o,$^) -lm
-+	$(CC) $(ALL_CFLAGS) -o $@ $(filter %.o,$^) -lm $(LDFLAGS)
+-	$(CC) $(ALL_CFLAGS) -o $@ $(filter %.o,$^) -lm -lrt
++	$(CC) $(ALL_CFLAGS) -o $@ $(filter %.o,$^) -lm $(LDFLAGS) -lrt
  
  depend:
  	@$(CC) -MM $(ALL_CFLAGS) *.c 1> .depend
