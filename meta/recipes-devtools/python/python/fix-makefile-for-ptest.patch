@@ -15,7 +15,7 @@ diff -ruN a/Makefile.pre.in b/Makefile.pre.in
 +TESTOPTS=	-l -v $(EXTRATESTOPTS)
  TESTPROG=	$(srcdir)/Lib/test/regrtest.py
 -TESTPYTHON=	$(RUNSHARED) ./$(BUILDPYTHON) -Wd -3 -E -tt $(TESTPYTHONOPTS)
--test:		all platform
+-test:		@DEF_MAKE_RULE@ platform
 -		-find $(srcdir)/Lib -name '*.py[co]' -print | xargs rm -f
 +TESTPYTHON=	$(RUNSHARED) $(BUILDPYTHON) -Wd -3 -E -tt $(TESTPYTHONOPTS)
 +test:		build-test
@@ -26,8 +26,8 @@ diff -ruN a/Makefile.pre.in b/Makefile.pre.in
  		-$(TESTPYTHON) $(TESTPROG) $(TESTOPTS)
  		$(TESTPYTHON) $(TESTPROG) $(TESTOPTS)
  
-+build-test:	all platform
++build-test:	@DEF_MAKE_RULE@ platform
 +
- testall:	all platform
+ testall:	@DEF_MAKE_RULE@ platform
  		-find $(srcdir)/Lib -name '*.py[co]' -print | xargs rm -f
  		$(TESTPYTHON) $(srcdir)/Lib/compileall.py
