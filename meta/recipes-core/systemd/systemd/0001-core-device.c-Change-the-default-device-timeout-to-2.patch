@@ -1,8 +1,7 @@
-From f1b5a6f717bda6f80a6b5e3e4d50b450f6cc7b09 Mon Sep 17 00:00:00 2001
+From 9820c165a9e559cf851e3beb60fad2571de4ded2 Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Mon, 14 Dec 2015 04:09:19 +0000
-Subject: [PATCH 14/14] core/device.c: Change the default device timeout to 240
- sec.
+Subject: [PATCH] core/device.c: Change the default device timeout to 240 sec.
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -30,5 +29,5 @@ index 77601c552..98bf49ba2 100644
          u->ignore_on_isolate = true;
  }
 -- 
-2.13.2
+2.16.1
 

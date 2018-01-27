@@ -1,0 +1,27 @@
+From 025408c87869962f511de044dd41a1f4b1d80165 Mon Sep 17 00:00:00 2001
+From: Khem Raj <raj.khem@gmail.com>
+Date: Sat, 27 Jan 2018 11:53:38 -0800
+Subject: [PATCH 2/3] configure.ac: Check if memfd_create is already defined
+
+Upstream-Status: Inappropriate [upstream systemd uses meson]
+
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+---
+ configure.ac | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/configure.ac b/configure.ac
+index 3674190fb..c7a184d72 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -340,6 +340,7 @@ AC_CHECK_DECLS([
+         [], [], [[
+ #include <sys/types.h>
+ #include <unistd.h>
++#include <sys/mman.h>
+ #include <sys/mount.h>
+ #include <fcntl.h>
+ #include <sched.h>
+-- 
+2.16.1
+
