@@ -24,7 +24,19 @@ EXTRA_OECONF = "--with-gtk=3"
 
 do_configure[dirs] =+ "${S}/m4"
 
+PACKAGES =+ "libfm-gtk"
 PACKAGES += "${PN}-mime"
+FILES_libfm-gtk = " \
+    ${libdir}/libfm-gtk*so.* \
+    ${libdir}/libfm/modules/gtk* \
+    ${bindir}/libfm-pref-apps \
+    ${bindir}/lxshortcut \
+    ${datadir}/applications/libfm-pref-apps.desktop \
+    ${datadir}/applications/lxshortcut.desktop \
+    ${datadir}/libfm/images/folder.png \
+    ${datadir}/libfm/images/unknown.png \
+    ${datadir}/libfm/ui/*.ui \
+"
 FILES_${PN}-mime = "${datadir}/mime/"
 
 do_install_append () {
