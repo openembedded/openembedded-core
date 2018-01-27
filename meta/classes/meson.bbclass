@@ -40,6 +40,11 @@ EXTRA_OEMESON += "${PACKAGECONFIG_CONFARGS}"
 MESON_CROSS_FILE = ""
 MESON_CROSS_FILE_class-target = "--cross-file ${WORKDIR}/meson.cross"
 
+CCOMPILER ?= "gcc"
+CXXCOMPILER ?= "g++"
+CCOMPILER_toolchain-clang = "clang"
+CXXCOMPILER_toolchain-clang = "clang++"
+
 def meson_array(var, d):
     return "', '".join(d.getVar(var).split()).join(("'", "'"))
 
@@ -49,8 +54,8 @@ do_write_config() {
     # This needs to be Py to split the args into single-element lists
     cat >${WORKDIR}/meson.cross <<EOF
 [binaries]
-c = '${HOST_PREFIX}gcc'
-cpp = '${HOST_PREFIX}g++'
+c = '${HOST_PREFIX}${CCOMPILER}'
+cpp = '${HOST_PREFIX}${CXXCOMPILER}'
 ar = '${HOST_PREFIX}ar'
 ld = '${HOST_PREFIX}ld'
 strip = '${HOST_PREFIX}strip'
