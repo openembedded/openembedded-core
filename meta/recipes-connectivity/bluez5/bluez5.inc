@@ -55,7 +55,7 @@ S = "${WORKDIR}/bluez-${PV}"
 
 CVE_PRODUCT = "bluez"
 
-inherit autotools pkgconfig systemd update-rc.d distro_features_check ptest
+inherit autotools pkgconfig systemd update-rc.d distro_features_check ptest gobject-introspection-data
 
 EXTRA_OECONF = "\
   --enable-test \
@@ -129,7 +129,8 @@ def get_noinst_tools_paths (d, bb, tools):
 
 FILES_${PN}-noinst-tools = "${@get_noinst_tools_paths(d, bb, d.getVar('NOINST_TOOLS'))}"
 
-RDEPENDS_${PN}-testtools += "python3 python3-dbus python3-pygobject"
+RDEPENDS_${PN}-testtools += "python3 python3-dbus"
+RDEPENDS_${PN}-testtools += "${@bb.utils.contains('GI_DATA_ENABLED', 'True', 'python3-pygobject', '', d)}"
 
 SYSTEMD_SERVICE_${PN} = "${@bb.utils.contains('PACKAGECONFIG', 'systemd', 'bluetooth.service', '', d)}"
 INITSCRIPT_PACKAGES = "${PN}"
