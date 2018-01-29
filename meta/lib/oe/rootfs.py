@@ -293,6 +293,24 @@ class Rootfs(object, metaclass=ABCMeta):
             # Remove the package manager data files
             self.pm.remove_packaging_data()
 
+    def _postpone_to_first_boot(self, postinst_intercept_hook):
+        with open(postinst_intercept_hook) as intercept:
+            registered_pkgs = None
+            for line in intercept.read().split("\n"):
+                m = re.match("^##PKGS:(.*)", line)
+                if m is not None:
+                    registered_pkgs = m.group(1).strip()
+                    break
+
+            if registered_pkgs is not None:
+                bb.warn("The postinstalls for the following packages "
+                        "will be postponed for first boot: %s" %
+                        registered_pkgs)
+
+                # call the backend dependent handler
+                self._handle_intercept_failure(registered_pkgs)
+
+
     def _run_intercepts(self):
         intercepts_dir = os.path.join(self.d.getVar('WORKDIR'),
                                       "intercept_scripts")
@@ -314,22 +332,7 @@ class Rootfs(object, metaclass=ABCMeta):
             except subprocess.CalledProcessError as e:
                 bb.warn("The postinstall intercept hook '%s' failed, details in log.do_rootfs" % script)
                 bb.note("Exit code %d. Output:\n%s" % (e.returncode, e.output.decode("utf-8")))
-
-                with open(script_full) as intercept:
-                    registered_pkgs = None
-                    for line in intercept.read().split("\n"):
-                        m = re.match("^##PKGS:(.*)", line)
-                        if m is not None:
-                            registered_pkgs = m.group(1).strip()
-                            break
-
-                    if registered_pkgs is not None:
-                        bb.warn("The postinstalls for the following packages "
-                                "will be postponed for first boot: %s" %
-                                registered_pkgs)
-
-                        # call the backend dependent handler
-                        self._handle_intercept_failure(registered_pkgs)
+                self._postpone_to_first_boot(script_full)
 
     def _run_ldconfig(self):
         if self.d.getVar('LDCONFIGDEPEND'):
