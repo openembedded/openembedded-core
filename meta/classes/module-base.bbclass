@@ -12,7 +12,7 @@ export CROSS_COMPILE = "${TARGET_PREFIX}"
 # we didn't pick the name.
 export KBUILD_OUTPUT = "${STAGING_KERNEL_BUILDDIR}"
 
-export KERNEL_VERSION = "${@base_read_file('${STAGING_KERNEL_BUILDDIR}/kernel-abiversion')}"
+export KERNEL_VERSION = "${@oe.utils.read_file('${STAGING_KERNEL_BUILDDIR}/kernel-abiversion')}"
 KERNEL_OBJECT_SUFFIX = ".ko"
 
 # kernel modules are generally machine specific

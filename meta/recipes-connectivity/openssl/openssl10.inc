@@ -25,7 +25,7 @@ TERMIO_libc-musl = "-DTERMIOS"
 TERMIO ?= "-DTERMIO"
 # Avoid binaries being marked as requiring an executable stack since it 
 # doesn't(which causes and this causes issues with SELinux
-CFLAG = "${@base_conditional('SITEINFO_ENDIANNESS', 'le', '-DL_ENDIAN', '-DB_ENDIAN', d)} \
+CFLAG = "${@oe.utils.conditional('SITEINFO_ENDIANNESS', 'le', '-DL_ENDIAN', '-DB_ENDIAN', d)} \
 	 ${TERMIO} ${CFLAGS} -Wall -Wa,--noexecstack"
 
 export DIRS = "crypto ssl apps"
