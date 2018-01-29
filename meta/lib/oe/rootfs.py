@@ -324,6 +324,10 @@ class Rootfs(object, metaclass=ABCMeta):
             if script == "postinst_intercept" or not os.access(script_full, os.X_OK):
                 continue
 
+            if script == "delay_to_first_boot":
+                self._postpone_to_first_boot(script_full)
+                continue
+
             bb.note("> Executing %s intercept ..." % script)
 
             try:
