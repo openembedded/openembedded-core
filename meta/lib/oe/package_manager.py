@@ -604,6 +604,9 @@ class RpmPM(PackageManager):
             if line.startswith("Non-fatal POSTIN scriptlet failure in rpm package"):
                 failed_scriptlets_pkgnames[line.split()[-1]] = True
 
+        if len(failed_scriptlets_pkgnames) > 0:
+            bb.warn("Intentionally failing postinstall scriptlets of %s to defer them to first boot is deprecated. Please place them into pkg_postinst_ontarget_${PN} ()." %(list(failed_scriptlets_pkgnames.keys())))
+            bb.warn("If deferring to first boot wasn't the intent, then scriptlet failure may mean an issue in the recipe, or a regression elsewhere.")
         for pkg in failed_scriptlets_pkgnames.keys():
             self.save_rpmpostinst(pkg)
 
