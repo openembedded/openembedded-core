@@ -21,7 +21,7 @@ DEPENDS_append_libc-musl = " fts "
 EXTRA_OEMAKE_append_libc-musl = " LIBC=musl "
 CFLAGS_append_powerpc64 = " -D__SANE_USERSPACE_TYPES__"
 CFLAGS_append_mipsarchn64 = " -D__SANE_USERSPACE_TYPES__"
-SRCREV = "bac930f71b1e6786ebb8a894463503d07681ef6a"
+SRCREV = "731cd34e682d297b207668be8b1d15320a9ac1b1"
 
 SRC_URI = "git://github.com/linux-test-project/ltp.git \
            file://0001-add-_GNU_SOURCE-to-pec_listener.c.patch \
@@ -43,13 +43,10 @@ SRC_URI = "git://github.com/linux-test-project/ltp.git \
            file://0026-crash01-Define-_GNU_SOURCE.patch \
            file://0027-sysconf01-Use-_SC_2_C_VERSION-conditionally.patch \
            file://0028-rt_sigaction.h-Use-sighandler_t-instead-of-__sighand.patch \
-           file://0030-lib-Use-PTHREAD_MUTEX_RECURSIVE-in-place-of-PTHREAD_.patch \
            file://0033-shmat1-Cover-GNU-specific-code-under-__USE_GNU.patch \
            file://0034-periodic_output.patch \
            file://0035-fix-test_proc_kill-hang.patch \
            file://0036-testcases-network-nfsv4-acl-acl1.c-Security-fix-on-s.patch \
-           file://0037-ltp-fix-format-security-error.patch \
-           file://0038-generate-reproducible-gzip.patch \
            file://0039-commands-ar01-Fix-for-test-in-deterministic-mode.patch \
            "
 
