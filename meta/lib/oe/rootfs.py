@@ -303,7 +303,7 @@ class Rootfs(object, metaclass=ABCMeta):
                     break
 
             if registered_pkgs is not None:
-                bb.warn("The postinstalls for the following packages "
+                bb.note("The postinstalls for the following packages "
                         "will be postponed for first boot: %s" %
                         registered_pkgs)
 
