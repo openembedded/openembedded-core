@@ -26,9 +26,6 @@ SYSTEMD_SERVICE_${PN} = "ofono.service"
 do_install_append() {
   install -d ${D}${sysconfdir}/init.d/
   install -m 0755 ${WORKDIR}/ofono ${D}${sysconfdir}/init.d/ofono
-
-  # Ofono still has one test tool that refers to Python 2 in the shebang
-  sed -i -e '1s,#!.*python.*,#!${bindir}/python3,' ${D}${libdir}/ofono/test/set-ddr
 }
 
 PACKAGES =+ "${PN}-tests"
