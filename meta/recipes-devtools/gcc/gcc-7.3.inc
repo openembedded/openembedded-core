@@ -70,7 +70,6 @@ SRC_URI = "\
            file://0043-gcc-final.c-fdebug-prefix-map-support-to-remap-sourc.patch \
            file://0044-libgcc-Add-knob-to-use-ldbl-128-on-ppc.patch \
            file://0045-Link-libgcc-using-LDFLAGS-not-just-SHLIB_LDFLAGS.patch \
-           file://0046-libgcc_s-Use-alias-for-__cpu_indicator_init-instead-.patch \
            file://0047-sync-gcc-stddef.h-with-musl.patch \
            file://0048-gcc-Enable-static-PIE.patch \
            file://fix-segmentation-fault-precompiled-hdr.patch \
