@@ -256,9 +256,11 @@ def read_shlib_providers(d):
                 fd.close()
                 for l in lines:
                     s = l.strip().split(":")
+                    while len(s) < 4:
+                        s.append('')
                     if s[0] not in shlib_provider:
                         shlib_provider[s[0]] = {}
-                    shlib_provider[s[0]][s[1]] = (dep_pkg, s[2])
+                    shlib_provider[s[0]][s[1]] = (dep_pkg, s[2].replace('#', ':', 1), s[3])
     return shlib_provider
 
 
