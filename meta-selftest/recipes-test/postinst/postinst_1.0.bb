@@ -35,13 +35,8 @@ pkg_postinst_${PN}-rootfs () {
 
 # Depends on rootfs, delays until first boot, verifies that the rootfs file was
 # written.
-pkg_postinst_${PN}-delayed-a () {
+pkg_postinst_ontarget_${PN}-delayed-a () {
     set -e
-
-    if [ -n "$D" ]; then
-        echo "Delaying ${PN}-delayed-a until first boot"
-        exit 1
-    fi
 
     if [ ! -e ${TESTDIR}/rootfs ]; then
         echo "${PN}-delayed-a: ${TESTDIR}/rootfs not found"
@@ -53,13 +48,8 @@ pkg_postinst_${PN}-delayed-a () {
 
 # Depends on delayed-a, delays until first boot, verifies that the delayed-a file was
 # written. This verifies the ordering between delayed postinsts.
-pkg_postinst_${PN}-delayed-b () {
+pkg_postinst_ontarget_${PN}-delayed-b () {
     set -e
-
-    if [ -n "$D" ]; then
-        echo "Delaying ${PN}-delayed-b until first boot"
-        exit 1
-    fi
 
     if [ ! -e ${TESTDIR}/delayed-a ]; then
         echo "${PN}-delayed-b: ${TESTDIR}/delayed-a not found"

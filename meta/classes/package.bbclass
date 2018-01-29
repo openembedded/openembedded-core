@@ -1320,6 +1320,25 @@ python emit_pkgdata() {
     from glob import glob
     import json
 
+    def process_postinst_on_target(pkg, mlprefix):
+        defer_fragment = """
+if [ -n "$D" ]; then
+    $INTERCEPT_DIR/postinst_intercept delay_to_first_boot %s mlprefix=%s
+    exit 0
+fi
+""" % (pkg, mlprefix)
+
+        postinst = d.getVar('pkg_postinst_%s' % pkg)
+        postinst_ontarget = d.getVar('pkg_postinst_ontarget_%s' % pkg)
+
+        if postinst_ontarget:
+            bb.debug(1, 'adding deferred pkg_postinst_ontarget() to pkg_postinst() for %s' % pkg)
+            if not postinst:
+                postinst = '#!/bin/sh\n'
+            postinst += defer_fragment
+            postinst += postinst_ontarget
+            d.setVar('pkg_postinst_%s' % pkg, postinst)
+
     def write_if_exists(f, pkg, var):
         def encode(str):
             import codecs
@@ -1415,6 +1434,7 @@ python emit_pkgdata() {
         write_if_exists(sf, pkg, 'ALLOW_EMPTY')
         write_if_exists(sf, pkg, 'FILES')
         write_if_exists(sf, pkg, 'CONFFILES')
+        process_postinst_on_target(pkg, d.getVar("MLPREFIX"))
         write_if_exists(sf, pkg, 'pkg_postinst')
         write_if_exists(sf, pkg, 'pkg_postrm')
         write_if_exists(sf, pkg, 'pkg_preinst')
