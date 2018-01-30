@@ -680,6 +680,7 @@
             "${libdir}/python2.7/cgi.py"
         ],
         "rdepends": [
+            "compression",
             "contextlib",
             "core",
             "crypt",
@@ -692,7 +693,8 @@
             "shell",
             "textutils",
             "threading",
-            "unixadmin"
+            "unixadmin",
+            "zlib"
         ],
         "summary": "Python Internet Protocol servers"
     },
@@ -838,9 +840,11 @@
             "${libdir}/python2.7/shutil.py"
         ],
         "rdepends": [
+            "compression",
             "core",
             "io",
-            "unixadmin"
+            "unixadmin",
+            "zlib"
         ],
         "summary": "Python shell-like functionality"
     },
