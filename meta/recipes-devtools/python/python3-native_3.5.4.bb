@@ -27,10 +27,10 @@ file://0001-Do-not-use-the-shell-version-of-python-config-that-w.patch \
 file://support_SOURCE_DATE_EPOCH_in_py_compile.patch \
 "
 
-SRC_URI[md5sum] = "57d1f8bfbabf4f2500273fb0706e6f21"
-SRC_URI[sha256sum] = "eefe2ad6575855423ab630f5b51a8ef6e5556f774584c06beab4926f930ddbb0"
+SRC_URI[md5sum] = "fb2780baa260b4e51cbea814f111f303"
+SRC_URI[sha256sum] = "94d93bfabb3b109f8a10365a325f920f9ec98c6e2380bf228f9700a14054c84c"
 
-LIC_FILES_CHKSUM = "file://LICENSE;md5=b680ed99aa60d350c65a65914494207e"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=f741e51de91d4eeea5930b9c3c7fa69d"
 
 # exclude pre-releases for both python 2.x and 3.x
 UPSTREAM_CHECK_REGEX = "[Pp]ython-(?P<pver>\d+(\.\d+)+).tar"
@@ -59,6 +59,12 @@ PYTHONLSBOPTS = ""
 do_configure_append() {
 	autoreconf --verbose --install --force --exclude=autopoint ../Python-${PV}/Modules/_ctypes/libffi
 	sed -i -e 's,#define HAVE_GETRANDOM 1,/\* #undef HAVE_GETRANDOM \*/,' ${B}/pyconfig.h
+}
+
+# Regenerate all of the generated files
+# This ensures that pgen and friends get created during the compile phase
+do_compile_prepend() {
+    oe_runmake regen-all
 }
 
 do_install() {
