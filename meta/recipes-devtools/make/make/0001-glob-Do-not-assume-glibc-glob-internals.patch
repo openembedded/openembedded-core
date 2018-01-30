@@ -13,6 +13,7 @@ https://sourceware.org/ml/libc-alpha/2017-09/msg00409.html
 requires.
 ---
 Upstream-Status: Backport
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
 
  dir.c | 29 +++++++++++++++++++++++++++--
  1 file changed, 27 insertions(+), 2 deletions(-)
