@@ -373,6 +373,46 @@ kernel_do_install() {
 	[ -e Module.symvers ] && install -m 0644 Module.symvers ${D}/boot/Module.symvers-${KERNEL_VERSION}
 	install -d ${D}${sysconfdir}/modules-load.d
 	install -d ${D}${sysconfdir}/modprobe.d
+
+	# install kernel source files in /usr/src/kernel
+        kerneldir=${D}${KERNEL_SRC_PATH}
+        install -d ${kerneldir}
+
+	install -m 0644 .config ${kerneldir}/
+        #
+        # Copy the staging dir source (and module build support) into the devsrc structure.
+        # We can keep this copy simple and take everything, since a we'll clean up any build
+        # artifacts afterwards, and the extra i/o is not significant
+        #
+        cp -r ${STAGING_KERNEL_DIR}/* ${kerneldir}/
+        cp -r ${STAGING_KERNEL_BUILDDIR}/* ${kerneldir}/
+
+        rm -rf ${kerneldir}/.git*
+        rm -rf ${kerneldir}/.kernel-meta
+        rm -rf ${kerneldir}/.debug
+
+        # Explicitly set KBUILD_OUTPUT to ensure that the image directory is cleaned and not
+        # The main build artifacts. We clean the directory to avoid QA errors on mismatched
+        # architecture (since scripts and helpers are native format).
+        KBUILD_OUTPUT="$kerneldir"
+        oe_runmake -C $kerneldir CC="${KERNEL_CC}" LD="${KERNEL_LD}" clean _mrproper_scripts
+        # make clean generates an absolute path symlink called "source"
+        # in $kerneldir points to $kerneldir, which doesn't make any
+        # sense, so remove it.
+        if [ -L $kerneldir/source ]; then
+            bbnote "Removing $kerneldir/source symlink"
+            rm -f $kerneldir/source
+        fi
+
+        # As of Linux kernel version 3.0.1, the clean target removes
+        # arch/powerpc/lib/crtsavres.o which is present in
+        # KBUILD_LDFLAGS_MODULE, making it required to build external modules.
+        if [ ${ARCH} = "powerpc" ]; then
+                mkdir -p $kerneldir/arch/powerpc/lib/
+                cp ${B}/arch/powerpc/lib/crtsavres.o $kerneldir/arch/powerpc/lib/crtsavres.o
+        fi
+
+        chown -R root:root ${kerneldir}
 }
 do_install[prefuncs] += "package_get_auto_pr"
 
