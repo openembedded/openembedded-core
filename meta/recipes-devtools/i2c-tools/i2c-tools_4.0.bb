@@ -8,22 +8,19 @@ SRC_URI = "${KERNELORG_MIRROR}/software/utils/i2c-tools/${BP}.tar.gz \
            file://0001-lib-Module.mk-Add-missing-dependencies.patch \
            file://0001-tools-Module.mk-Add-missing-dependencies.patch \
            file://0001-i2c-tools-eeprog-Module.mk-Add-missing-dependency.patch \
+           file://remove-i2c-dev.patch \
 "
 
 SRC_URI[md5sum] = "d92a288d70f306d3895e3a7e9c14c9aa"
 SRC_URI[sha256sum] = "5b60daf6f011de0acb61de57dba62f2054bb39f19961d67e0c91610f071ca403"
 
-inherit autotools-brokensep
+EXTRA_OEMAKE = "bindir=${bindir} sbindir=${sbindir} \
+                incdir=${includedir} libdir=${libdir} \
+                mandir=${mandir} \
+                EXTRA=eeprog"
 
-do_compile_prepend() {
-    sed -i 's#/usr/local#/usr#' ${S}/Makefile
-    echo "include eeprog/Module.mk" >> ${S}/Makefile
-}
-
-do_install_append() {
-    install -d ${D}${includedir}/linux
-    install -m 0644 include/linux/i2c-dev.h ${D}${includedir}/linux/i2c-dev-user.h
-    rm -f ${D}${includedir}/linux/i2c-dev.h
+do_install() {
+    oe_runmake 'DESTDIR=${D}' install
 }
 
 PACKAGES =+ "${PN}-misc"
