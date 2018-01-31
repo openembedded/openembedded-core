@@ -26,16 +26,17 @@ def get_waf_parallel_make(d):
     return ""
 
 python waf_preconfigure() {
+    import subprocess
     from distutils.version import StrictVersion
-    srcsubdir = d.getVar('S')
-    wafbin = os.path.join(srcsubdir, 'waf')
-    status, result = oe.utils.getstatusoutput(wafbin + " --version")
-    if status != 0:
-        bb.warn("Unable to execute waf --version, exit code %d. Assuming waf version without bindir/libdir support." % status)
-        return
-    version = result.split()[1]
-    if StrictVersion(version) >= StrictVersion("1.8.7"):
-        d.setVar("WAF_EXTRA_CONF", "--bindir=${bindir} --libdir=${libdir}")
+    subsrcdir = d.getVar('S')
+    wafbin = os.path.join(subsrcdir, 'waf')
+    try:
+        result = subprocess.check_output([wafbin, '--version'], cwd=subsrcdir, stderr=subprocess.STDOUT)
+        version = result.decode('utf-8').split()[1]
+        if StrictVersion(version) >= StrictVersion("1.8.7"):
+            d.setVar("WAF_EXTRA_CONF", "--bindir=${bindir} --libdir=${libdir}")
+    except subprocess.CalledProcessError as e:
+        bb.warn("Unable to execute waf --version, exit code %d. Assuming waf version without bindir/libdir support." % e.returncode)
 }
 
 do_configure[prefuncs] += "waf_preconfigure"
