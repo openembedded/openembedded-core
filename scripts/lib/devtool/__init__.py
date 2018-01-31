@@ -220,6 +220,20 @@ def setup_git_repo(repodir, version, devbranch, basetag='devtool-base', d=None):
         commit_cmd += ['-m', commitmsg]
         bb.process.run(commit_cmd, cwd=repodir)
 
+    # Ensure singletask.lock (as used by externalsrc.bbclass) is ignored by git
+    excludes = []
+    excludefile = os.path.join(repodir, '.git', 'info', 'exclude')
+    try:
+        with open(excludefile, 'r') as f:
+            excludes = f.readlines()
+    except FileNotFoundError:
+        pass
+    if 'singletask.lock\n' not in excludes:
+        excludes.append('singletask.lock\n')
+    with open(excludefile, 'w') as f:
+        for line in excludes:
+            f.write(line)
+
     bb.process.run('git checkout -b %s' % devbranch, cwd=repodir)
     bb.process.run('git tag -f %s' % basetag, cwd=repodir)
 
