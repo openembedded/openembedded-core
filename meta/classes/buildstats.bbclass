@@ -31,6 +31,11 @@ def get_process_cputime(pid):
                 i = f.readline().strip()
                 if not i:
                     break
+                if not ":" in i:
+                    # one more extra line is appended (empty or containing "0")
+                    # most probably due to race condition in kernel while
+                    # updating IO stats
+                    break
                 i = i.split(": ")
                 iostats[i[0]] = i[1]
     resources = resource.getrusage(resource.RUSAGE_SELF)
