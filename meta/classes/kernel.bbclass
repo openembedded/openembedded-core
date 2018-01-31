@@ -575,11 +575,12 @@ EXPORT_FUNCTIONS do_compile do_install do_configure
 
 # kernel-base becomes kernel-${KERNEL_VERSION}
 # kernel-image becomes kernel-image-${KERNEL_VERSION}
-PACKAGES = "${KERNEL_PACKAGE_NAME} ${KERNEL_PACKAGE_NAME}-base ${KERNEL_PACKAGE_NAME}-vmlinux ${KERNEL_PACKAGE_NAME}-image ${KERNEL_PACKAGE_NAME}-dev ${KERNEL_PACKAGE_NAME}-modules"
+PACKAGES = "${KERNEL_PACKAGE_NAME} ${KERNEL_PACKAGE_NAME}-base ${KERNEL_PACKAGE_NAME}-vmlinux ${KERNEL_PACKAGE_NAME}-image ${KERNEL_PACKAGE_NAME}-dev ${KERNEL_PACKAGE_NAME}-devsrc ${KERNEL_PACKAGE_NAME}-modules"
 FILES_${PN} = ""
 FILES_${KERNEL_PACKAGE_NAME}-base = "${nonarch_base_libdir}/modules/${KERNEL_VERSION}/modules.order ${nonarch_base_libdir}/modules/${KERNEL_VERSION}/modules.builtin"
 FILES_${KERNEL_PACKAGE_NAME}-image = ""
-FILES_${KERNEL_PACKAGE_NAME}-dev = "/boot/System.map* /boot/Module.symvers* /boot/config* ${KERNEL_SRC_PATH} ${nonarch_base_libdir}/modules/${KERNEL_VERSION}/build"
+FILES_${KERNEL_PACKAGE_NAME}-dev = "/boot/System.map* /boot/Module.symvers* /boot/config* ${nonarch_base_libdir}/modules/${KERNEL_VERSION}/build"
+FILES_${KERNEL_PACKAGE_NAME}-devsrc = "${KERNEL_SRC_PATH}"
 FILES_${KERNEL_PACKAGE_NAME}-vmlinux = "/boot/vmlinux-${KERNEL_VERSION_NAME}"
 FILES_${KERNEL_PACKAGE_NAME}-modules = ""
 RDEPENDS_${KERNEL_PACKAGE_NAME} = "${KERNEL_PACKAGE_NAME}-base"
@@ -595,6 +596,9 @@ ALLOW_EMPTY_${KERNEL_PACKAGE_NAME}-base = "1"
 ALLOW_EMPTY_${KERNEL_PACKAGE_NAME}-image = "1"
 ALLOW_EMPTY_${KERNEL_PACKAGE_NAME}-modules = "1"
 DESCRIPTION_${KERNEL_PACKAGE_NAME}-modules = "Kernel modules meta package"
+DESCRIPTION_${KERNEL_PACKAGE_NAME}-devsrc = "Development source linux kernel. When built, this recipe packages the \
+source of the preferred virtual/kernel provider and makes it available for full kernel \
+development or external module builds"
 
 pkg_postinst_${KERNEL_PACKAGE_NAME}-base () {
 	if [ ! -e "$D/lib/modules/${KERNEL_VERSION}" ]; then
