@@ -1,7 +1,7 @@
-From 2b1a3f900f15034943fc41661eaab41bcc0d4d84 Mon Sep 17 00:00:00 2001
+From c82c19dc583843b1a975f2e3f2e151656a6f377c Mon Sep 17 00:00:00 2001
 From: Alexander Kanavin <alex.kanavin@gmail.com>
 Date: Mon, 27 Feb 2017 09:43:30 +0200
-Subject: [PATCH 06/15] Do not hardcode "lib/rpm" as the installation path for
+Subject: [PATCH 06/14] Do not hardcode "lib/rpm" as the installation path for
  default configuration and macros.
 
 Upstream-Status: Denied [https://github.com/rpm-software-management/rpm/pull/263]
@@ -14,10 +14,10 @@ Signed-off-by: Alexander Kanavin <alex.kanavin@gmail.com>
  3 files changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/configure.ac b/configure.ac
-index 373d69484..c04a2e8d1 100644
+index 7155d9f00..21b95ae5f 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -1038,7 +1038,7 @@ else
+@@ -1047,7 +1047,7 @@ else
      usrprefix=$prefix
  fi
  
@@ -27,7 +27,7 @@ index 373d69484..c04a2e8d1 100644
  
  AC_SUBST(OBJDUMP)
 diff --git a/macros.in b/macros.in
-index 3f8dbba61..da4812540 100644
+index d08624856..68a972f1e 100644
 --- a/macros.in
 +++ b/macros.in
 @@ -954,7 +954,7 @@ package or when debugging this package.\
@@ -40,7 +40,7 @@ index 3f8dbba61..da4812540 100644
  %_infodir		%{_datadir}/info
  %_mandir		%{_datadir}/man
 diff --git a/rpm.am b/rpm.am
-index f0df0202f..37205a5eb 100644
+index 51225892d..e0c834d37 100644
 --- a/rpm.am
 +++ b/rpm.am
 @@ -1,10 +1,10 @@
@@ -55,7 +55,7 @@ index f0df0202f..37205a5eb 100644
 +rpmconfigdir = $(libdir)/rpm
  
  # Libtool version (current-revision-age) for all our libraries
- rpm_version_info = 8:0:0
+ rpm_version_info = 8:1:0
 -- 
-2.14.2
+2.15.1
 

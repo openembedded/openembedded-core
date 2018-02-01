@@ -22,7 +22,7 @@ HOMEPAGE = "http://www.rpm.org"
 
 # libraries are also LGPL - how to express this?
 LICENSE = "GPL-2.0"
-LIC_FILES_CHKSUM = "file://COPYING;md5=f5259151d26ff18e78023450a5ac8d96"
+LIC_FILES_CHKSUM = "file://COPYING;md5=c0bf017c0fd1920e6158a333acabfd4a"
 
 SRC_URI = "git://github.com/rpm-software-management/rpm;branch=rpm-4.14.x \
            file://0001-Do-not-add-an-unsatisfiable-dependency-when-building.patch \
@@ -34,17 +34,15 @@ SRC_URI = "git://github.com/rpm-software-management/rpm;branch=rpm-4.14.x \
            file://0001-Fix-build-with-musl-C-library.patch \
            file://0001-Add-a-color-setting-for-mips64_n32-binaries.patch \
            file://0011-Do-not-require-that-ELF-binaries-are-executable-to-b.patch \
-           file://0013-Add-a-new-option-alldeps-to-rpmdeps.patch \
            file://0001-Split-binary-package-building-into-a-separate-functi.patch \
            file://0002-Run-binary-package-creation-via-thread-pools.patch \
            file://0003-rpmstrpool.c-make-operations-over-string-pools-threa.patch \
            file://0004-build-pack.c-remove-static-local-variables-from-buil.patch \
            file://0001-perl-disable-auto-reqs.patch \
-           file://0001-Make-configure-cope-with-multiple-users-groups-with-.patch \
            "
 
 PE = "1"
-SRCREV = "da3720f62e57648fb1dc2a632744d38866139971"
+SRCREV = "bfee1410af51c1cc9724791fb8d985260a62102b"
 
 S = "${WORKDIR}/git"
 
@@ -107,7 +105,8 @@ do_install_append () {
 	    ${D}/${libdir}/rpm/macros
 
 	sed -i -e 's|/usr/bin/python|${USRBINPATH}/env ${PYTHON_PN}|' \
-	    ${D}${libdir}/rpm/pythondistdeps.py
+	    ${D}${libdir}/rpm/pythondistdeps.py \
+	    ${D}${libdir}/rpm/python-macro-helper
 }
 
 FILES_${PN} += "${libdir}/rpm-plugins/*.so \
