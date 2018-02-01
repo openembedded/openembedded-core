@@ -31,7 +31,7 @@ npm_do_compile() {
 	fi
 	npm set cache ${WORKDIR}/npm_cache
 	# clear cache before every build
-	npm cache clear
+	npm cache clear --force
 	# Install pkg into ${S} without going to the registry
 	if [  "${NPM_INSTALL_DEV}" = "1" ]; then
 		npm --arch=${NPM_ARCH} --target_arch=${NPM_ARCH} --no-registry install
@@ -45,7 +45,8 @@ npm_do_install() {
 	# be created in this directory
 	export HOME=${WORKDIR}
 	mkdir -p ${NPM_INSTALLDIR}/
-	npm install --prefix ${D}${prefix} -g --arch=${NPM_ARCH} --target_arch=${NPM_ARCH} --production --no-registry
+	npm pack .
+	npm install --prefix ${D}${prefix} -g --arch=${NPM_ARCH} --target_arch=${NPM_ARCH} --production --no-registry ${PN}-${PV}.tgz
 	if [ -d ${D}${prefix}/etc ] ; then
 		# This will be empty
 		rmdir ${D}${prefix}/etc
