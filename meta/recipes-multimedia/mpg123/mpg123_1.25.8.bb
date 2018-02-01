@@ -11,8 +11,8 @@ LICENSE_FLAGS = "commercial"
 LIC_FILES_CHKSUM = "file://COPYING;md5=1e86753638d3cf2512528b99079bc4f3"
 
 SRC_URI = "https://www.mpg123.de/download/${BP}.tar.bz2"
-SRC_URI[md5sum] = "710f2d8689b24e86376bd64a05d7888b"
-SRC_URI[sha256sum] = "31b15ebcf26111b874732e07c8e60de5053ee555eea15fb70c657a4f9f0344f3"
+SRC_URI[md5sum] = "62ef1e417eb50f82bf241866d9e6e19b"
+SRC_URI[sha256sum] = "79da51efae011814491f07c95cb5e46de0476aca7a0bf240ba61cfc27af8499b"
 
 inherit autotools pkgconfig
 
