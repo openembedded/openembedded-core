@@ -16,10 +16,12 @@ SRC_URI = "${GNUPG_MIRROR}/gpgme/${BP}.tar.bz2 \
            file://0003-Correctly-install-python-modules.patch \
            file://0004-python-import.patch \
            file://0005-gpgme-config-skip-all-lib-or-usr-lib-directories-in-.patch \
+           file://0006-fix-build-path-issue.patch \
+           file://0007-qt-python-Add-variables-to-tests.patch \
           "
 
-SRC_URI[md5sum] = "1e00bb8ef04d1d05d5a0f19e143854c3"
-SRC_URI[sha256sum] = "1b29fedb8bfad775e70eafac5b0590621683b2d9869db994568e6401f4034ceb"
+SRC_URI[md5sum] = "78b1533c593478982ee2fc548260c563"
+SRC_URI[sha256sum] = "1a8fed1197c3b99c35f403066bb344a26224d292afc048cfdfc4ccd5690a0693"
 
 DEPENDS = "libgpg-error libassuan"
 RDEPENDS_${PN}-cpp += "libstdc++"
@@ -49,7 +51,14 @@ LANGUAGES .= "${@bb.utils.contains('PACKAGECONFIG', 'python3', ' python3', '', d
 PYTHON_INHERIT = "${@bb.utils.contains('PACKAGECONFIG', 'python2', 'pythonnative', '', d)}"
 PYTHON_INHERIT .= "${@bb.utils.contains('PACKAGECONFIG', 'python3', 'python3native', '', d)}"
 
-EXTRA_OECONF += '--enable-languages="${LANGUAGES}"'
+EXTRA_OECONF += '--enable-languages="${LANGUAGES}" \
+                 --disable-gpgconf-test \
+                 --disable-gpg-test \
+                 --disable-gpgsm-test \
+                 --disable-g13-test \
+                 --disable-lang-qt-test \
+                 --disable-lang-python-test \
+'
 
 inherit autotools texinfo binconfig-disabled pkgconfig ${PYTHON_INHERIT}
 
