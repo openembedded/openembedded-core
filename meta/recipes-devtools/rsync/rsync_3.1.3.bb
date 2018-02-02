@@ -2,8 +2,8 @@ require rsync.inc
 
 SRC_URI += "file://makefile-no-rebuild.patch"
 
-SRC_URI[md5sum] = "0f758d7e000c0f7f7d3792610fad70cb"
-SRC_URI[sha256sum] = "ecfa62a7fa3c4c18b9eccd8c16eaddee4bd308a76ea50b5c02a5840f09c0a1c2"
+SRC_URI[md5sum] = "1581a588fde9d89f6bc6201e8129afaf"
+SRC_URI[sha256sum] = "55cc554efec5fdaad70de921cd5a5eeb6c29a95524c715f3bbf849235b0800c0"
 
 # GPLv2+ (<< 3.0.0), GPLv3+ (>= 3.0.0)
 LICENSE = "GPLv3+"
