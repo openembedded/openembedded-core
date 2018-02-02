@@ -15,21 +15,16 @@ PACKAGECONFIG ??= "${@bb.utils.contains("DISTRO_FEATURES", "api-documentation", 
 # into its scripts. This means that target gtk-doc package is broken;
 # hopefully no one minds because its scripts are not used for anything during build
 # and shouldn't be used on targets.
-PACKAGECONFIG[working-scripts] = "--with-highlight=source-highlight,--with-highlight=no,libxslt-native xmlto-native source-highlight-native perl-native"
+PACKAGECONFIG[working-scripts] = "--with-highlight=source-highlight,--with-highlight=no,libxslt-native xmlto-native source-highlight-native python3-six"
 PACKAGECONFIG[tests] = "--enable-tests,--disable-tests,glib-2.0"
 
-# We cannot use host perl, because it may be too old for gtk-doc
-EXTRANATIVEPATH += "perl-native"
-
+SRC_URI[archive.md5sum] = "b29949e0964762e474b706ce22171602"
+SRC_URI[archive.sha256sum] = "e26bd3f7080c749b1cb66c46c6bf8239e2f320a949964fb9c6d56e1b0c6d9a6f"
 SRC_URI += "file://0001-Do-not-hardocode-paths-to-perl-python-in-scripts.patch \
-            file://0001-Do-not-error-out-if-xsltproc-is-not-found.patch \
-            file://0001-Do-not-error-out-if-perl-is-not-found-or-its-version.patch \
-            file://conditionaltests.patch \
+           file://0001-Do-not-error-out-if-xsltproc-is-not-found.patch \
+           file://conditionaltests.patch \
            "
 SRC_URI_append_class-native = " file://pkg-config-native.patch"
-
-SRC_URI[archive.md5sum] = "0dc6570953112a464a409fb99258ccbc"
-SRC_URI[archive.sha256sum] = "1ea46ed400e6501f975acaafea31479cea8f32f911dca4dff036f59e6464fd42"
 
 BBCLASSEXTEND = "native nativesdk"
 
