@@ -1,7 +1,6 @@
 require e2fsprogs.inc
 
 SRC_URI += "file://remove.ldconfig.call.patch \
-            file://quiet-debugfs.patch \
             file://run-ptest \
             file://ptest.patch \
             file://Revert-mke2fs-enable-the-metadata_csum-and-64bit-fea.patch \
@@ -10,7 +9,9 @@ SRC_URI += "file://remove.ldconfig.call.patch \
             file://0001-libext2fs-fix-build-failure-in-swapfs.c-on-big-endia.patch \
             "
 
-SRC_URI_append_class-native = " file://e2fsprogs-fix-missing-check-for-permission-denied.patch"
+SRC_URI_append_class-native = " file://e2fsprogs-fix-missing-check-for-permission-denied.patch \
+                                file://quiet-debugfs.patch \
+"
 
 SRCREV = "af2eac481cf426c05ae12b946396980e16c8ab19"
 UPSTREAM_CHECK_GITTAGREGEX = "v(?P<pver>\d+\.\d+(\.\d+)*)$"
