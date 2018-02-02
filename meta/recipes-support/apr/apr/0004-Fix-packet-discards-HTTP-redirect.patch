@@ -1,4 +1,7 @@
-Fix packet discards HTTP redirect.
+From 7925eb1766a00ccee05c6e80b1d34f163a04b7b1 Mon Sep 17 00:00:00 2001
+From: Hongxu Jia <hongxu.jia@windriver.com>
+Date: Tue, 30 Jan 2018 09:43:34 +0800
+Subject: [PATCH 4/7] Fix packet discards HTTP redirect.
 
 Disconnect the connection by poll() timeout.
 If timeout=0 and apr_wait_for_io_or_timeout()=APR_TIMEUP then
@@ -8,12 +11,16 @@ Upstream-Status: Pending
 
 Signed-off-by: Noriaki Yoshitane <yoshitane.nrs@cnt.ncos.nec.co.jp>
 Signed-off-by: Li Wang <li.wang@windriver.com>
+
+Rebase to 1.6.3
+
+Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
 ---
- network_io/unix/sendrecv.c |    4 ++++
+ network_io/unix/sendrecv.c | 4 ++++
  1 file changed, 4 insertions(+)
 
 diff --git a/network_io/unix/sendrecv.c b/network_io/unix/sendrecv.c
-index c133a26..e8faf15 100644
+index 4c0e0a6..1bdafba 100644
 --- a/network_io/unix/sendrecv.c
 +++ b/network_io/unix/sendrecv.c
 @@ -85,6 +85,10 @@ apr_status_t apr_socket_recv(apr_socket_t *sock, char *buf, apr_size_t *len)
@@ -28,5 +35,5 @@ index c133a26..e8faf15 100644
              *len = 0;
              return arv;
 -- 
-1.7.9.5
+1.8.3.1
 

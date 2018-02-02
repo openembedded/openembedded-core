@@ -10,19 +10,18 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=4dfd4cd216828c8cae5de5a12f3844c8 \
 BBCLASSEXTEND = "native nativesdk"
 
 SRC_URI = "${APACHE_MIRROR}/apr/${BPN}-${PV}.tar.bz2 \
-           file://configure_fixes.patch \
-           file://cleanup.patch \
-           file://configfix.patch \
            file://run-ptest \
-           file://upgrade-and-fix-1.5.1.patch \
-           file://Fix-packet-discards-HTTP-redirect.patch \
-           file://configure.in-fix-LTFLAGS-to-make-it-work-with-ccache.patch \
-           file://0001-apr-fix-off_t-size-doesn-t-match-in-glibc-when-cross.patch \
-           file://0002-explicitly-link-libapr-against-phtread-to-make-gold-.patch \
+           file://0001-build-buildcheck.sh-improve-libtool-detection.patch \
+           file://0002-apr-Remove-workdir-path-references-from-installed-ap.patch \
+           file://0003-Makefile.in-configure.in-support-cross-compiling.patch \
+           file://0004-Fix-packet-discards-HTTP-redirect.patch \
+           file://0005-configure.in-fix-LTFLAGS-to-make-it-work-with-ccache.patch \
+           file://0006-apr-fix-off_t-size-doesn-t-match-in-glibc-when-cross.patch \
+           file://0007-explicitly-link-libapr-against-phtread-to-make-gold-.patch \
 "
 
-SRC_URI[md5sum] = "e81a851967c79b5ce9bfbc909e4bf735"
-SRC_URI[sha256sum] = "09109cea377bab0028bba19a92b5b0e89603df9eab05c0f7dbd4dd83d48dcebd"
+SRC_URI[md5sum] = "12f2a349483ad6f12db49ba01fbfdbfa"
+SRC_URI[sha256sum] = "131f06d16d7aabd097fa992a33eec2b6af3962f93e6d570a9bd4d85e95993172"
 
 inherit autotools-brokensep lib_package binconfig multilib_header ptest
 
@@ -34,6 +33,9 @@ CACHED_CONFIGUREVARS += "apr_cv_mutex_recursive=yes"
 # Also suppress trying to use sctp.
 #
 CACHED_CONFIGUREVARS += "ac_cv_header_netinet_sctp_h=no ac_cv_header_netinet_sctp_uio_h=no"
+
+CACHED_CONFIGUREVARS += "ac_cv_sizeof_struct_iovec=yes"
+CACHED_CONFIGUREVARS += "ac_cv_file__dev_zero=yes"
 
 # Otherwise libtool fails to compile apr-utils
 # x86_64-linux-libtool: compile: unable to infer tagged configuration
@@ -50,7 +52,7 @@ do_configure_prepend() {
 	export GREP="grep"
 
 	cd ${S}
-	./buildconf
+	libtool='${HOST_SYS}-libtool' ./buildconf
 }
 
 FILES_${PN}-dev += "${libdir}/apr.exp ${datadir}/build-1/*"
@@ -69,7 +71,8 @@ do_install_append() {
 }
 
 do_install_append_class-target() {
-	sed -i -e 's,${STAGING_DIR_HOST},,g' ${D}${datadir}/build-1/apr_rules.mk
+	sed -i -e 's,${DEBUG_PREFIX_MAP},,g' \
+	       -e 's,${STAGING_DIR_HOST},,g' ${D}${datadir}/build-1/apr_rules.mk
 	sed -i -e 's,${STAGING_DIR_HOST},,g' \
 	       -e 's,APR_SOURCE_DIR=.*,APR_SOURCE_DIR=,g' \
 	       -e 's,APR_BUILD_DIR=.*,APR_BUILD_DIR=,g' ${D}${bindir}/apr-1-config

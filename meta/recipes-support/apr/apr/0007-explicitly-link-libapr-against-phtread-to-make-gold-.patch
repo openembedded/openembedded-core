@@ -1,8 +1,8 @@
-From 94d1ca0266a0f9c0446f1299b54f752e87b8a695 Mon Sep 17 00:00:00 2001
+From c6afc4a4a766478cb6aa6b43a50051881b6318d7 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Andreas=20M=C3=BCller?= <schnitzeltony@googlemail.com>
 Date: Fri, 3 Mar 2017 22:24:17 +0100
-Subject: [PATCH] explicitly link libapr against phtread to make gold happy on
- test
+Subject: [PATCH 7/7] explicitly link libapr against phtread to make gold happy
+ on test
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -34,10 +34,10 @@ Signed-off-by: Andreas Müller <schnitzeltony@googlemail.com>
  1 file changed, 1 insertion(+)
 
 diff --git a/configure.in b/configure.in
-index 5b19940..cdf4d58 100644
+index a227e72..cbc0f90 100644
 --- a/configure.in
 +++ b/configure.in
-@@ -766,6 +766,7 @@ else
+@@ -784,6 +784,7 @@ else
            APR_PTHREADS_CHECK_RESTORE ] )
      fi
      if test "$pthreadh" = "1"; then
@@ -46,5 +46,5 @@ index 5b19940..cdf4d58 100644
          APR_CHECK_PTHREAD_ATTR_GETDETACHSTATE_ONE_ARG
          APR_CHECK_PTHREAD_RECURSIVE_MUTEX
 -- 
-2.9.3
+1.8.3.1
 
