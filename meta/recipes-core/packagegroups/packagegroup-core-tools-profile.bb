@@ -58,6 +58,7 @@ VALGRIND_nios2 = ""
 VALGRIND_armv4 = ""
 VALGRIND_armv5 = ""
 VALGRIND_armv6 = ""
+VALGRIND_armeb = ""
 VALGRIND_aarch64 = ""
 VALGRIND_linux-gnux32 = ""
 
