@@ -5,18 +5,17 @@ LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://COPYING;md5=de54b60fbbc35123ba193fea8ee216f2"
 
 SRC_URI = "https://s3.amazonaws.com/json-c_releases/releases/${BP}.tar.gz \
-           file://0001-Add-FALLTHRU-comment-to-handle-GCC7-warnings.patch \
            "
-SRC_URI[md5sum] = "55f7853f7d8cf664554ce3fa71bf1c7d"
-SRC_URI[sha256sum] = "2a136451a7932d80b7d197b10441e26e39428d67b1443ec43bbba824705e1123"
+SRC_URI[md5sum] = "11fc5d90c77375e5fc8401e8b9efbf21"
+SRC_URI[sha256sum] = "0316780be9ad16c42d7c26b015a784fd5df4b0909fef0aba51cfb13e492ac24d"
 
 UPSTREAM_CHECK_REGEX = "json-c-(?P<pver>\d+(\.\d+)+).tar"
 # json-c releases page is fetching the list of releases in some weird XML format
 # from https://s3.amazonaws.com/json-c_releases and processes it with javascript :-/
 #UPSTREAM_CHECK_URI = "https://s3.amazonaws.com/json-c_releases/releases/index.html"
-RECIPE_UPSTREAM_VERSION = "0.12.1"
-RECIPE_UPSTREAM_DATE = "Jun 07, 2016"
-CHECK_DATE = "Apr 19, 2017"
+RECIPE_UPSTREAM_VERSION = "0.13"
+RECIPE_UPSTREAM_DATE = "Dec 07, 2017"
+CHECK_DATE = "Jan 31, 2018"
 
 RPROVIDES_${PN} = "libjson"
 
