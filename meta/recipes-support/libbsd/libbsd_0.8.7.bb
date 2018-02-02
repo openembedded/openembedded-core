@@ -36,15 +36,14 @@ SECTION = "libs"
 SRC_URI = " \
     http://libbsd.freedesktop.org/releases/${BPN}-${PV}.tar.xz \
     file://0001-src-libbsd-overlay.pc.in-Set-Cflags-to-use-I-instead.patch \
-    file://0001-Fix-for-older-GCCs-not-supporting-__has_include.patch \
 "
 SRC_URI_append_libc-musl  = " \
     file://0001-Replace-__BEGIN_DECLS-and-__END_DECLS.patch \
     file://0002-Remove-funopen.patch \
 "
 
-SRC_URI[md5sum] = "4ab7bec639af17d0aacb50222b479110"
-SRC_URI[sha256sum] = "467fbf9df1f49af11f7f686691057c8c0a7613ae5a870577bef9155de39f9687"
+SRC_URI[md5sum] = "d9e6980fbfe44f94fd92b89a33cce67d"
+SRC_URI[sha256sum] = "f548f10e5af5a08b1e22889ce84315b1ebe41505b015c9596bad03fd13a12b31"
 
 inherit autotools pkgconfig
 
