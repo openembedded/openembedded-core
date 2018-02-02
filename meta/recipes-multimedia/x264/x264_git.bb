@@ -6,7 +6,7 @@ LICENSE = "GPLv2"
 LICENSE_FLAGS = "commercial"
 LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f"
 
-DEPENDS = "yasm-native"
+DEPENDS = "nasm-native"
 
 SRC_URI = "git://github.com/mirror/x264;branch=stable \
            file://don-t-default-to-cortex-a9-with-neon.patch \
@@ -14,9 +14,9 @@ SRC_URI = "git://github.com/mirror/x264;branch=stable \
            "
 UPSTREAM_CHECK_COMMITS = "1"
 
-SRCREV = "2b741f81e51f92d053d87a49f59ff1026553a0f6"
+SRCREV = "e9a5903edf8ca59ef20e6f4894c196f135af735e"
 
-PV = "r2731+git${SRCPV}"
+PV = "r2854+git${SRCPV}"
 
 S = "${WORKDIR}/git"
 
