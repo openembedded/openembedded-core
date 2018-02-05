@@ -18,11 +18,6 @@ SRC_URI[sha256sum] = "d9dc32efba7e74f788fcc4f212a43216fc37cf5f23f4c2339664d47335
 
 inherit autotools lib_package
 
-# This package uses an archive format known to have issue with some
-# versions of gzip
-DEPENDS += "pigz-native"
-do_unpack[depends] += "pigz-native:do_populate_sysroot"
-
 do_configure_prepend () {
 	rm -f ${S}/conftools/libtool.m4
 }
