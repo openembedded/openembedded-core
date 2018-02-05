@@ -22,3 +22,11 @@ FILES_${PN}-dev += "${datadir}/pkgconfig"
 
 RRECOMMENDS_${PN} = "udev-hwdb"
 RDEPENDS_${PN}-ptest = "libboost-system libboost-thread"
+
+PACKAGE_BEFORE_PN =+ "${PN}-python"
+FILES_${PN}-python += "${bindir}/lsusb.py"
+RDEPENDS_${PN}-python = "python3-core"
+
+do_install_append() {
+    sed -i -E '1s,#!.+python,#!${bindir}/python3,' ${D}${bindir}/lsusb.py
+}
