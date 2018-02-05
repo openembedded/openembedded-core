@@ -29,6 +29,13 @@ do_compile_ptest() {
 do_install_ptest() {
     install -D ${B}/tests/Makefile ${D}${PTEST_PATH}/tests/Makefile
     sed -i -e '/Makefile:/,/^$/d' -e '/%: %.in/,/^$/d' \
+	-e 's:--sysroot=${STAGING_DIR_TARGET}::g' \
+	-e 's:${DEBUG_PREFIX_MAP}::g' \
+	-e 's:${HOSTTOOLS_DIR}/::g' \
+	-e 's:${RECIPE_SYSROOT_NATIVE}::g' \
+	-e 's:${RECIPE_SYSROOT}::g' \
+	-e 's:${S}/config/missing::g' \
+	-e 's:${WORKDIR}::g' \
 	-e '/libkeymap_.*_SOURCES =/d' -e '/$(EXEEXT):/,/^$/d' ${D}${PTEST_PATH}/tests/Makefile
 
     find ${B}/tests -executable -exec install {} ${D}${PTEST_PATH}/tests \;
