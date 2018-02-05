@@ -36,5 +36,5 @@ do_install_append() {
     # Makefile's do_install creates .pyc files for python3, now also create
     # them for python2 so that they will be recorded by manifest, and can be
     # cleaned correctly.
-    python -m py_compile ${D}${libdir}/xcb-proto/xcbgen/*.py
+    (cd ${D}; python -m py_compile ./${libdir}/xcb-proto/xcbgen/*.py)
 }
