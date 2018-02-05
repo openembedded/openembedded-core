@@ -435,7 +435,7 @@ def list_pkgs(args):
 
 def list_pkg_files(args):
     import json
-    def parse_pkgdatafile(pkgdatafile):
+    def parse_pkgdatafile(pkgdatafile, long=False):
         with open(pkgdatafile, 'r') as f:
             found = False
             for line in f:
@@ -443,8 +443,13 @@ def list_pkg_files(args):
                     found = True
                     val = line.split(':', 1)[1].strip()
                     dictval = json.loads(val)
-                    for fullpth in sorted(dictval):
-                        print("\t%s" % fullpth)
+                    if long:
+                        width = max(map(len, dictval), default=0)
+                        for fullpth in sorted(dictval):
+                            print("\t{:{width}}\t{}".format(fullpth, dictval[fullpth], width=width))
+                    else:
+                        for fullpth in sorted(dictval):
+                            print("\t%s" % fullpth)
                     break
             if not found:
                 logger.error("Unable to find FILES_INFO entry in %s" % pkgdatafile)
@@ -479,7 +484,7 @@ def list_pkg_files(args):
                     continue
                 logger.error("Unable to find any built runtime package named %s" % pkg)
                 sys.exit(1)
-            parse_pkgdatafile(pkgdatafile)
+            parse_pkgdatafile(pkgdatafile, args.long)
 
         else:
             providepkgpath = os.path.join(args.pkgdata_dir, "runtime-rprovides", pkg)
@@ -488,13 +493,13 @@ def list_pkg_files(args):
                     if f != pkg:
                         print("%s is in the RPROVIDES of %s:" % (pkg, f))
                     pkgdatafile = os.path.join(args.pkgdata_dir, "runtime", f)
-                    parse_pkgdatafile(pkgdatafile)
+                    parse_pkgdatafile(pkgdatafile, args.long)
                 continue
             pkgdatafile = os.path.join(args.pkgdata_dir, "runtime", pkg)
             if not os.path.exists(pkgdatafile):
                 logger.error("Unable to find any built recipe-space package named %s" % pkg)
                 sys.exit(1)
-            parse_pkgdatafile(pkgdatafile)
+            parse_pkgdatafile(pkgdatafile, args.long)
 
 def find_path(args):
     import json
@@ -548,6 +553,7 @@ def main():
     parser_list_pkg_files.add_argument('-r', '--runtime', help='Specified package(s) are runtime package names instead of recipe-space package names', action='store_true')
     parser_list_pkg_files.add_argument('-p', '--recipe', help='Report on all packages produced by the specified recipe')
     parser_list_pkg_files.add_argument('-u', '--unpackaged', help='Include unpackaged (i.e. empty) packages (only useful with -p/--recipe)', action='store_true')
+    parser_list_pkg_files.add_argument('-l', '--long', help='Show more information per file', action='store_true')
     parser_list_pkg_files.set_defaults(func=list_pkg_files)
 
     parser_lookup_recipe = subparsers.add_parser('lookup-recipe',
