@@ -6,6 +6,8 @@ Subject: [PATCH] Fix build on MUSL
 Add missing AI_IDN and NI_IDN declarations.
 
 Bug: https://bugs.gentoo.org/503914
+
+Upstream-Status: Pending
 Signed-off-by: Alexander Kanavin <alex.kanavin@gmail.com>
 ---
  arping.c      |  7 +++++++
