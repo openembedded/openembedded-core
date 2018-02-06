@@ -8,18 +8,17 @@ for video processing. It consists of a main library and driver-specific \
 acceleration backends for each supported hardware vendor"
 
 HOMEPAGE = "https://01.org/linuxmedia/vaapi"
-BUGTRACKER = "https://github.com/01org/libva-utils/issues"
+BUGTRACKER = "https://github.com/intel/libva-utils/issues"
 
 SECTION = "x11"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://COPYING;md5=b148fc8adf19dc9aec17cf9cd29a9a5e"
 
-SRC_URI = "git://github.com/01org/libva-utils.git;branch=v1.8-branch"
-SRCREV = "011c709b98b52db3b10aeb361dfea9da43930364"
-UPSTREAM_CHECK_URI = "https://github.com/01org/libva-utils/releases"
-UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>(\d+(\.\d+)+))"
+SRC_URI = "https://github.com/intel/${BPN}/releases/download/${PV}/${BP}.tar.bz2"
+SRC_URI[md5sum] = "60fd49a60ef96ebfb559374d412e1fc4"
+SRC_URI[sha256sum] = "a921df31311d8f49d2e392a5fc2a068d79f89aeb588309fbff24365310dbc5f6"
 
-S = "${WORKDIR}/git"
+UPSTREAM_CHECK_URI = "https://github.com/intel/libva-utils/releases"
 
 DEPENDS = "libva"
 
