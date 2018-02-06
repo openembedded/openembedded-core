@@ -11,19 +11,20 @@ manufacturers can also freely use this API for hardware accelerated \
 video decoding."
 
 HOMEPAGE = "https://01.org/linuxmedia/vaapi"
-BUGTRACKER = "https://github.com/01org/libva/issues"
+BUGTRACKER = "https://github.com/intel/libva/issues"
 
 SECTION = "x11"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://COPYING;md5=2e48940f94acb0af582e5ef03537800f"
 
-SRC_URI = "git://github.com/01org/libva.git;protocol=http;branch=v1.8-branch "
-SRCREV = "457470987cc9df5976ce8c72ffd4bfbd9baaf0f9"
-UPSTREAM_CHECK_GITTAGREGEX = "^(?P<pver>(\d+(\.\d+)+))$"
+SRC_URI = "https://github.com/intel/${BPN}/releases/download/${PV}/${BP}.tar.bz2"
 
-S = "${WORKDIR}/git"
+SRC_URI[md5sum] = "b863f99b7ae41960a0e2e7a4cc959b46"
+SRC_URI[sha256sum] = "bb0601f9a209e60d8d0b867067323661a7816ff429021441b775452b8589e533"
 
-DEPENDS = "libdrm virtual/mesa virtual/libgles1 virtual/libgles2 virtual/egl"
+UPSTREAM_CHECK_URI = "https://github.com/intel/libva/releases"
+
+DEPENDS = "libdrm virtual/mesa"
 
 inherit autotools pkgconfig distro_features_check
 
@@ -35,17 +36,11 @@ PACKAGECONFIG ??= "${@bb.utils.filter('DISTRO_FEATURES', 'wayland x11', d)}"
 PACKAGECONFIG[x11] = "--enable-x11,--disable-x11,virtual/libx11 libxext libxfixes"
 PACKAGECONFIG[wayland] = "--enable-wayland,--disable-wayland,wayland-native wayland"
 
-PACKAGES =+ "${PN}-x11 ${PN}-tpi ${PN}-glx ${PN}-egl ${PN}-wayland"
+PACKAGES =+ "${PN}-x11 ${PN}-glx ${PN}-wayland"
 
-RDEPENDS_${PN}-tpi =+ "${PN}"
 RDEPENDS_${PN}-x11 =+ "${PN}"
 RDEPENDS_${PN}-glx =+ "${PN}-x11"
-RDEPENDS_${PN}-egl =+ "${PN}-x11"
-
-FILES_${PN}-dbg += "${libdir}/dri/.debug"
 
 FILES_${PN}-x11 =+ "${libdir}/libva-x11*${SOLIBS}"
-FILES_${PN}-tpi =+ "${libdir}/libva-tpi*${SOLIBS}"
 FILES_${PN}-glx =+ "${libdir}/libva-glx*${SOLIBS}"
-FILES_${PN}-egl =+ "${libdir}/libva-egl*${SOLIBS}"
 FILES_${PN}-wayland =+ "${libdir}/libva-wayland*${SOLIBS}"
