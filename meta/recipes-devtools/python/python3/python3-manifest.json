@@ -591,7 +591,8 @@
         ],
         "rdepends": [
             "core",
-            "stringold"
+            "stringold",
+            "netserver"
         ],
         "summary": "Python logging support"
     },
