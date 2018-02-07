@@ -53,7 +53,7 @@ inherit autotools gettext texinfo
 
 PACKAGECONFIG ??= ""
 PACKAGECONFIG[grub-mount] = "--enable-grub-mount,--disable-grub-mount,fuse"
-PACKAGECONFIG[device-mapper] = "--enable-device-mapper,--disable-device-mapper,lvm2"
+PACKAGECONFIG[device-mapper] = "--enable-device-mapper,--disable-device-mapper,libdevmapper"
 
 # grub2 creates its own set of -nostdinc / -isystem / -ffreestanding CFLAGS and
 # OE's default BUILD_CFLAGS (assigned to CFLAGS for native builds) etc, conflict
