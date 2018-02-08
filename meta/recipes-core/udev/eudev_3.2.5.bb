@@ -20,8 +20,8 @@ SRC_URI = "http://dev.gentoo.org/~blueness/${BPN}/${BP}.tar.gz \
            file://udev.rules \
 "
 
-SRC_URI[md5sum] = "41e19b70462692fefd072a3f38818b6e"
-SRC_URI[sha256sum] = "3e4c56ec2fc1854afd0a31f3affa48f922c62d40ee12a0c1a4b4f152ef5b0f63"
+SRC_URI[md5sum] = "6ca08c0e14380f87df8e8aceac123671"
+SRC_URI[sha256sum] = "49c2d04105cad2526302627e040fa24b1916a9a3e059539bc8bb919b973890af"
 
 inherit autotools update-rc.d qemu pkgconfig distro_features_check
 
