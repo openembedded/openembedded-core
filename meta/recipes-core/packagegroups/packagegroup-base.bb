@@ -54,7 +54,6 @@ RDEPENDS_packagegroup-base = "\
     packagegroup-distro-base \
     packagegroup-machine-base \
     \
-    sysfsutils \
     module-init-tools \
     ${@bb.utils.contains('MACHINE_FEATURES', 'apm', 'packagegroup-base-apm', '',d)} \
     ${@bb.utils.contains('MACHINE_FEATURES', 'acpi', 'packagegroup-base-acpi', '',d)} \

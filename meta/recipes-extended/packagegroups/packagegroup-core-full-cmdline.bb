@@ -151,8 +151,6 @@ RDEPENDS_packagegroup-core-full-cmdline-sys-services = "\
     pciutils \
     libpcre \
     rpcbind \
-    sysfsutils \
     tcp-wrappers \
     tzdata \
     "
-
