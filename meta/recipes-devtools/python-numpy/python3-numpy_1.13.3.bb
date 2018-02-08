@@ -15,6 +15,7 @@ SRC_URI[md5sum] = "c1d433e5973e548809e80c9118474b73"
 SRC_URI[sha256sum] = "4c6b4eef790528bebb7ec9590d74cc193868940fe68e4109a91c196df72d8094"
 
 UPSTREAM_CHECK_URI = "https://github.com/numpy/numpy/releases"
+UPSTREAM_CHECK_REGEX = "(?P<pver>\d+(\.\d+)+)\.tar"
 
 CONFIGFILESURI ?= ""
 
