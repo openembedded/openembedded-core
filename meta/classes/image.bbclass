@@ -674,3 +674,5 @@ reproducible_final_image_task () {
     fi
 }
 IMAGE_PREPROCESS_COMMAND_append = " reproducible_final_image_task; "
+
+CVE_PRODUCT = ""
