@@ -151,8 +151,7 @@ RDEPENDS_packagegroup-base-pci = "\
 
 SUMMARY_packagegroup-base-acpi = "ACPI support"
 RDEPENDS_packagegroup-base-acpi = "\
-    acpid \
-    libacpi "
+    acpid"
 
 SUMMARY_packagegroup-base-apm = "APM support"
 RDEPENDS_packagegroup-base-apm = "\
