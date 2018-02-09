@@ -52,7 +52,7 @@ bindir_progs = "arch basename chcon cksum comm csplit cut dir dircolors dirname 
                 tr truncate tsort tty unexpand uniq unlink uptime users vdir wc who whoami yes"
 
 # hostname gets a special treatment and is not included in this
-base_bindir_progs = "cat chgrp chmod chown cp date dd echo false kill ln ls mkdir \
+base_bindir_progs = "cat chgrp chmod chown cp date dd echo false hostname kill ln ls mkdir \
                      mknod mv pwd rm rmdir sleep stty sync touch true uname stat"
 
 sbindir_progs= "chroot"
@@ -95,6 +95,8 @@ do_install_append() {
 inherit update-alternatives
 
 ALTERNATIVE_PRIORITY = "100"
+# Make hostname's priority higher than busybox but lower than net-tools
+ALTERNATIVE_PRIORITY[hostname] = "90"
 ALTERNATIVE_${PN} = "lbracket ${bindir_progs} ${base_bindir_progs} ${sbindir_progs} base64 mktemp df"
 ALTERNATIVE_${PN}-doc = "base64.1 mktemp.1 df.1 groups.1 kill.1 uptime.1 stat.1  hostname.1"
 
