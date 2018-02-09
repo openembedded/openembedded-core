@@ -46,7 +46,6 @@ do_dumpdata[dirs] = "${ARCHIVER_OUTDIR}"
 do_ar_recipe[dirs] = "${ARCHIVER_OUTDIR}"
 do_ar_original[dirs] = "${ARCHIVER_OUTDIR} ${ARCHIVER_WORKDIR}"
 do_deploy_archives[dirs] = "${WORKDIR}"
-do_deploy_all_archives[dirs] = "${WORKDIR}"
 
 # This is a convenience for the shell script to use it
 
@@ -455,13 +454,6 @@ addtask do_ar_configured after do_unpack_and_patch
 addtask do_dumpdata
 addtask do_ar_recipe
 addtask do_deploy_archives before do_build
-
-addtask do_deploy_all_archives after do_deploy_archives
-do_deploy_all_archives[recrdeptask] = "do_deploy_archives"
-do_deploy_all_archives[recideptask] = "do_${BB_DEFAULT_TASK}"
-do_deploy_all_archives() {
-        :
-}
 
 python () {
     # Add tasks in the correct order, specifically for linux-yocto to avoid race condition.
