@@ -10,3 +10,5 @@ SRC_URI[md5sum] = "9d268f2e891cce1ac0832f1cc467d4ea"
 SRC_URI[sha256sum] = "5a8704aa4c2eeb04da192c4a9942f94f860ac1a585de90d9f914bac26a970674"
 
 S = "${WORKDIR}/gstreamer-${PV}"
+
+CVE_PRODUCT = "gstreamer"
