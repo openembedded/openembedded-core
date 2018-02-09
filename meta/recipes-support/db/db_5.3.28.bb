@@ -14,6 +14,9 @@ HOMEPAGE = "http://www.oracle.com/technetwork/database/database-technologies/ber
 LICENSE = "Sleepycat"
 RCONFLICTS_${PN} = "db3"
 
+CVE_PRODUCT = "oracle_berkeley_db"
+CVE_VERSION = "11.2.${PV}"
+
 PR = "r1"
 PE = "1"
 
