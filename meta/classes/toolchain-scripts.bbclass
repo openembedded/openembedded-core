@@ -116,6 +116,21 @@ fi
 EOF
 }
 
+toolchain_create_post_relocate_script() {
+	script=$1
+	rm -f $script
+	touch $script
+
+    cat >> $script <<EOF
+if [ -d "${SDKPATHNATIVE}/post-relocate-setup.d/" ]; then
+    for s in ${SDKPATHNATIVE}/post-relocate-setup.d/*.sh; do
+        \$s "\$1"
+    done
+    rm -rf "${SDKPATHNATIVE}/post-relocate-setup.d"
+fi
+EOF
+}
+
 #we get the cached site config in the runtime
 TOOLCHAIN_CONFIGSITE_NOCACHE = "${@siteinfo_get_files(d)}"
 TOOLCHAIN_CONFIGSITE_SYSROOTCACHE = "${STAGING_DIR}/${MLPREFIX}${MACHINE}/${target_datadir}/${TARGET_SYS}_config_site.d"
