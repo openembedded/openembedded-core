@@ -28,9 +28,22 @@
 #Error checking is kept to minimum so double check any parameters you pass to the class
 ###########################################################################################
 
-BB_HASHBASE_WHITELIST += "ICECC_PARALLEL_MAKE ICECC_DISABLED ICECC_USER_PACKAGE_BL ICECC_USER_CLASS_BL ICECC_USER_PACKAGE_WL ICECC_PATH ICECC_ENV_EXEC"
+BB_HASHBASE_WHITELIST += "ICECC_PARALLEL_MAKE ICECC_DISABLED ICECC_USER_PACKAGE_BL \
+    ICECC_USER_CLASS_BL ICECC_USER_PACKAGE_WL ICECC_PATH ICECC_ENV_EXEC \
+    ICECC_CARET_WORKAROUND ICECC_CFLAGS"
 
 ICECC_ENV_EXEC ?= "${STAGING_BINDIR_NATIVE}/icecc-create-env"
+
+# Default to disabling the caret workaround, If set to "1" in local.conf, icecc
+# will locally recompile any files that have warnings, which can adversely
+# affect performance.
+#
+# See: https://github.com/icecc/icecream/issues/190
+export ICECC_CARET_WORKAROUND ??= "0"
+
+ICECC_CFLAGS = ""
+CFLAGS += "${ICECC_CFLAGS}"
+CXXFLAGS += "${ICECC_CFLAGS}"
 
 def icecc_dep_prepend(d):
     # INHIBIT_DEFAULT_DEPS doesn't apply to the patch command.  Whether or  not
@@ -169,6 +182,11 @@ def icecc_version(bb, d):
     parallel = d.getVar('ICECC_PARALLEL_MAKE', False) or ""
     if not d.getVar('PARALLEL_MAKE', False) == "" and parallel:
         d.setVar("PARALLEL_MAKE", parallel)
+
+    # Disable showing the caret in the GCC compiler output if the workaround is
+    # disabled
+    if d.getVar('ICECC_CARET_WORKAROUND', True) == '0':
+        d.setVar('ICECC_CFLAGS', '-fno-diagnostics-show-caret')
 
     if icecc_is_native(bb, d):
         archive_name = "local-host-env"
