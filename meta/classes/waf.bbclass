@@ -3,28 +3,6 @@ DISABLE_STATIC = ""
 
 EXTRA_OECONF_append = " ${PACKAGECONFIG_CONFARGS}"
 
-def get_waf_parallel_make(d):
-    pm = d.getVar('PARALLEL_MAKE')
-    if pm:
-        # look for '-j' and throw other options (e.g. '-l') away
-        # because they might have different meaning in bjam
-        pm = pm.split()
-        while pm:
-            v = None
-            opt = pm.pop(0)
-            if opt == '-j':
-                v = pm.pop(0)
-            elif opt.startswith('-j'):
-                v = opt[2:].strip()
-            else:
-                v = None
-
-            if v:
-                v = min(64, int(v))
-                return '-j' + str(v)
-
-    return ""
-
 python waf_preconfigure() {
     import subprocess
     from distutils.version import StrictVersion
@@ -47,7 +25,7 @@ waf_do_configure() {
 
 do_compile[progress] = "outof:^\[\s*(\d+)/\s*(\d+)\]\s+"
 waf_do_compile()  {
-	${S}/waf build ${@get_waf_parallel_make(d)}
+	${S}/waf build ${@oe.utils.parallel_make_argument(d, '-j%d', limit=64)}
 }
 
 waf_do_install() {
