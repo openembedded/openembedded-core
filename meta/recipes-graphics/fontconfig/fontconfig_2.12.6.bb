@@ -28,6 +28,7 @@ SRC_URI = "http://fontconfig.org/release/fontconfig-${PV}.tar.gz \
 SRC_URI[md5sum] = "00e748c67fad11e7057a71ed385e8bdb"
 SRC_URI[sha256sum] = "064b9ebf060c9e77011733ac9dc0e2ce92870b574cca2405e11f5353a683c334"
 
+UPSTREAM_CHECK_REGEX = "fontconfig-(?P<pver>\d+\.\d+\.(?!9\d+)\d+)"
 
 do_configure_prepend() {
     # work around https://bugs.freedesktop.org/show_bug.cgi?id=101280
