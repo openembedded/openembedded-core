@@ -151,6 +151,9 @@ def icecc_is_native(bb, d):
         bb.data.inherits_class("cross", d) or \
         bb.data.inherits_class("native", d);
 
+def icecc_dir(bb, d):
+    return d.expand('${TMPDIR}/work-shared/ice')
+
 # Don't pollute allarch signatures with TARGET_FPU
 icecc_version[vardepsexclude] += "TARGET_FPU"
 def icecc_version(bb, d):
@@ -175,8 +178,8 @@ def icecc_version(bb, d):
             archive_name += "-kernel"
 
     import socket
-    ice_dir = d.expand('${STAGING_DIR_NATIVE}${prefix_native}')
-    tar_file = os.path.join(ice_dir, 'ice', archive_name + "-@VERSION@-" + socket.gethostname() + '.tar.gz')
+    ice_dir = icecc_dir(bb, d)
+    tar_file = os.path.join(ice_dir, archive_name + "-@VERSION@-" + socket.gethostname() + '.tar.gz')
 
     return tar_file
 
