@@ -12,6 +12,26 @@ is_dynamic_elf ()
     (file -L "$1" | grep 'ELF' > /dev/null 2>&1) && (! file -L "$1" | grep 'static' > /dev/null 2>&1)
 }
 
+fix_rpath ()
+{
+    # Patches the RPATH for a file. When the program is executed in the chroot
+    # be iceccd, /proc is not mounted. As such, $ORIGIN can't be resolved. To
+    # work around this, replace all instances of $ORIGIN in RPATH with the
+    # known chroot path to the executables directory
+    local path="$1"
+    local origin="$2"
+    if ! is_dynamic_elf "$path"; then
+        return
+    fi
+    local new_rpath="`readelf -w -d "$path" | grep RPATH | \
+        sed 's/.*\[\(.*\)\]/\1/g' | \
+        sed "s,\\\$ORIGIN,/$origin,g"`"
+
+    if test -n "$new_rpath"; then
+        $PATCHELF --set-rpath "$new_rpath" "$path"
+    fi
+}
+
 is_contained ()
 {
     case " $target_files " in
@@ -47,9 +67,8 @@ add_file ()
         name="$2"
     fi
     test -z "$name" && return
-    # ls -H isn't really the same as readlink, but
-    # readlink is not portable enough.
-    path=`ls -H $path`
+    # readlink is required for Yocto, so we can use it
+    path=`readlink -f "$path"`
     toadd="$name=$path"
     is_contained "$toadd" && return
     if test -z "$silent"; then
@@ -107,6 +126,17 @@ shift
 added_as=$1
 shift
 archive_name=$1
+
+if test -z "$PATCHELF"; then
+    PATCHELF=`which patchelf 2> /dev/null`
+fi
+if test -z "$PATCHELF"; then
+    PATCHELF=`which patchelf-uninative 2> /dev/null`
+fi
+if test -z "$PATCHELF"; then
+    echo "patchelf is required"
+    exit 1
+fi
 
 if test -z "$added_gcc" || test -z "$added_gxx" ; then
     echo "usage: $0 <gcc_path> <g++_path>"
@@ -197,6 +227,8 @@ for i in $target_files; do
         if test -f $tempdir/$target -a -x $tempdir/$target; then
             strip -s $tempdir/$target 2>/dev/null
         fi
+
+        fix_rpath $tempdir/$target `dirname $target`
     else
         mkdir -p $tempdir/`dirname $path`
         cp -pH $path $tempdir/$path
@@ -209,6 +241,8 @@ for i in $target_files; do
         if test -f $tempdir/$path -a -x $tempdir/$path; then
             strip -s $tempdir/$path 2>/dev/null
         fi
+
+        fix_rpath $tempdir/$path `dirname $path`
 
         path=`echo $path | cut -b2-`
         new_target_files="$new_target_files $path"
