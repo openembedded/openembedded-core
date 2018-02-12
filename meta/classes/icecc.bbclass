@@ -210,15 +210,14 @@ def icecc_get_tool(bb, d, tool):
     else:
         ice_dir = d.expand('${STAGING_BINDIR_TOOLCHAIN}')
         target_sys = d.expand('${TARGET_SYS}')
-        tool_bin = os.path.join(ice_dir, "%s-%s" % (target_sys, tool))
-        if os.path.isfile(tool_bin):
-            return tool_bin
-        else:
-            external_tool_bin = icecc_get_external_tool(bb, d, tool)
-            if os.path.isfile(external_tool_bin):
-                return external_tool_bin
-            else:
-                return ""
+        for p in ice_dir.split(':'):
+            tool_bin = os.path.join(p, "%s-%s" % (target_sys, tool))
+            if os.path.isfile(tool_bin):
+                return tool_bin
+        external_tool_bin = icecc_get_external_tool(bb, d, tool)
+        if os.path.isfile(external_tool_bin):
+            return external_tool_bin
+        return ""
 
 def icecc_get_and_check_tool(bb, d, tool):
     # Check that g++ or gcc is not a symbolic link to icecc binary in
