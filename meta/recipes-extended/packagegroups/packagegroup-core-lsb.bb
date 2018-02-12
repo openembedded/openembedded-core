@@ -158,7 +158,6 @@ RDEPENDS_packagegroup-core-lsb-core = "\
     mktemp \
     msmtp \
     patch \
-    pax \
     procps \
     psmisc \
     sed \

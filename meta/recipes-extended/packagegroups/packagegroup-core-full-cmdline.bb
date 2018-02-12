@@ -89,7 +89,6 @@ RDEPENDS_packagegroup-core-full-cmdline-utils = "\
     mktemp \
     ncurses \
     net-tools \
-    pax \
     popt \
     procps \
     psmisc \
