@@ -101,6 +101,9 @@ def use_icecc(bb,d):
     if icecc_is_allarch(bb, d):
         return "no"
 
+    if icecc_is_cross_canadian(bb, d):
+        return "no"
+
     pn = d.getVar('PN')
 
     system_class_blacklist = []
@@ -150,6 +153,9 @@ def icecc_is_native(bb, d):
     return \
         bb.data.inherits_class("cross", d) or \
         bb.data.inherits_class("native", d);
+
+def icecc_is_cross_canadian(bb, d):
+    return bb.data.inherits_class("cross-canadian", d)
 
 def icecc_dir(bb, d):
     return d.expand('${TMPDIR}/work-shared/ice')
