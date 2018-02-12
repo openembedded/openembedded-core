@@ -25,7 +25,19 @@ if [ -z "$ICECC_PATH" ]; then
 fi
 
 if [ -n "$ICECC_PATH" ]; then
-    export ICECC_PATH
+    # Default to disabling the caret workaround. If set to "1", icecc will
+    # locally recompile any files that have warnings, which can adversely
+    # affect performance.
+    #
+    # See: https://github.com/icecc/icecream/issues/190
+    if [ -z "$ICECC_CARET_WORKAROUND" ]; then
+        ICECC_CARET_WORKAROUND="0"
+    fi
+    if [ "$ICECC_CARET_WORKAROUND" != "1" ]; then
+        CFLAGS="$CFLAGS -fno-diagnostics-show-caret"
+        CXXFLAGS="$CXXFLAGS -fno-diagnostics-show-caret"
+    fi
+    export ICECC_PATH ICECC_CARET_WORKAROUND
     export ICECC_VERSION="$OECORE_NATIVE_SYSROOT/usr/share/icecream/@TOOLCHAIN_ENV@"
     export ICECC="$(which ${CROSS_COMPILE}gcc)"
     export ICECXX="$(which ${CROSS_COMPILE}g++)"
