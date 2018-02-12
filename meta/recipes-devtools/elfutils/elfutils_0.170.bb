@@ -32,8 +32,8 @@ SRC_URI += "\
         file://debian/0002-Add-support-for-mips64-abis-in-mips_retval.c.patch \
         file://debian/0003-Add-mips-n64-relocation-format-hack.patch \
 "
-# Fix the patches from Debian with GCC7
-SRC_URI += "file://debian/fallthrough.patch"
+# Fix fallthrough with GCC7
+SRC_URI += "file://0001-Use-fallthrough-attribute.patch"
 
 # The buildsystem wants to generate 2 .h files from source using a binary it just built,
 # which can not pass the cross compiling, so let's work around it by adding 2 .h files
