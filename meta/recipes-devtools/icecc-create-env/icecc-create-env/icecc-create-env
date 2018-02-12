@@ -122,6 +122,16 @@ then
     add_file $pluginfile  /usr${pluginfile#*usr}
 fi
 
+# for testing the environment is usable at all
+if test -x /bin/true; then
+    add_file /bin/true
+elif test -x /usr/bin/true; then
+    add_file /usr/bin/true /bin/true
+else
+    echo "'true' not found"
+    exit 1
+fi
+
 tempdir=`mktemp -d /tmp/iceccenvXXXXXX`
 new_target_files=
 for i in $target_files; do
