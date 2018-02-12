@@ -256,7 +256,11 @@ if test -z "$silent"; then
 fi
 
 cd $tempdir
-tar -czhf "$mydir/$archive_name" $target_files || {
+# Add everything in the temp directory. Tar doesn't like to be given files with
+# ".." in them, which frequently happens in $target_files, and will strip off
+# the path prefix past the offending "..". This makes the archive generate
+# incorrectly
+tar -czf "$mydir/$archive_name" . || {
     if test -z "$silent"; then
         echo "Couldn't create archive"
     fi
