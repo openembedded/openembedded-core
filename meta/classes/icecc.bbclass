@@ -346,3 +346,10 @@ do_compile_kernelmodules_prepend() {
 do_install_prepend() {
     set_icecc_env
 }
+
+# IceCream is not (currently) supported in the extensible SDK
+ICECC_SDK_HOST_TASK = "nativesdk-icecc-toolchain"
+ICECC_SDK_HOST_TASK_task-populate-sdk-ext = ""
+
+# Add the toolchain scripts to the SDK
+TOOLCHAIN_HOST_TASK_append = " ${ICECC_SDK_HOST_TASK}"
