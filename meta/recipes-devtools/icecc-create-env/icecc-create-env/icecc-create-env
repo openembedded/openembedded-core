@@ -6,6 +6,12 @@
 
 target_files=
 
+is_dynamic_elf ()
+{
+    # Is the file an dynamically linked ELF executable?
+    (file -L "$1" | grep 'ELF' > /dev/null 2>&1) && (! file -L "$1" | grep 'static' > /dev/null 2>&1)
+}
+
 is_contained ()
 {
     case " $target_files " in
@@ -34,8 +40,16 @@ add_file ()
     target_files="$target_files $toadd"
     if test -x "$path"; then
         # Only call ldd when it makes sense
-        if file -L "$path" | grep 'ELF' > /dev/null 2>&1; then
-            if ! file -L "$path" | grep 'static' > /dev/null 2>&1; then
+        if is_dynamic_elf "$path"; then
+            # Request the program interpeter (dynamic loader)
+            interp=`readelf -w -l "$path" | grep "Requesting program interpreter:" | sed "s/\s*\[Requesting program interpreter:\s*\(.*\)\]/\1/g"`
+
+            if test -n "$interp" && test -x "$interp"; then
+                # Use the dynamic loaders --list argument to list the
+                # depenencies. The program may have a a different program
+                # interpeter (typical when using uninative tarballs), which is
+                # why we can't just call ldd.
+                #
                 # ldd now outputs ld as /lib/ld-linux.so.xx on current nptl based glibc
                 # this regexp parse the outputs like:
                 # ldd /usr/bin/gcc
@@ -43,7 +57,7 @@ add_file ()
                 #         libc.so.6 => /lib/tls/libc.so.6 (0xb7e81000)
                 #         /lib/ld-linux.so.2 (0xb7fe8000)
                 # covering both situations ( with => and without )
-                for lib in `ldd "$path" | sed -n 's,^[^/]*\(/[^ ]*\).*,\1,p'`; do
+                for lib in `$interp --list "$path" | sed -n 's,^[^/]*\(/[^ ]*\).*,\1,p'`; do
                     test -f "$lib" || continue
                     # Check wether the same library also exists in the parent directory,
                     # and prefer that on the assumption that it is a more generic one.
