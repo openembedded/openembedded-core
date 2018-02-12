@@ -21,10 +21,28 @@ is_contained ()
     esac
 }
 
+normalize_path ()
+{
+    # Normalizes the path to a file or directory, removing all "." and ".."
+    # entries. Use pwd -L to explicitly prevent symlink expansion
+    local path=$1
+    if test -f "$path"; then
+        pushd $(dirname $path) > /dev/null 2>&1
+        dir_path=$(pwd -L)
+        path=$dir_path/$(basename $path)
+        popd > /dev/null 2>&1
+    elif test -d "$path"; then
+        pushd $path > /dev/null 2>&1
+        path=$(pwd -L)
+        popd > /dev/null 2>&1
+    fi
+    echo $path
+}
+
 add_file ()
 {
-    local name="$1"
-    local path="$1";
+    local path=`normalize_path $1`
+    local name="$path"
     if test -n "$2"; then
         name="$2"
     fi
@@ -129,7 +147,7 @@ if test -n "$specfile" && test -e "$specfile"; then
 fi
 
 ltofile=`$added_gcc -print-prog-name=lto1`
-pluginfile="${ltofile%lto1}liblto_plugin.so"
+pluginfile=`normalize_path "${ltofile%lto1}liblto_plugin.so"`
 if test -r "$pluginfile"
 then
     add_file $pluginfile  ${pluginfile#*usr}
@@ -146,6 +164,19 @@ else
     exit 1
 fi
 
+link_rel ()
+{
+    local target="$1"
+    local name="$2"
+    local base="$3"
+
+    local prefix=`dirname $name`
+
+    prefix=`echo $prefix | sed 's,[^/]\+,..,g' | sed 's,^/*,,g'`
+
+    ln -s $prefix/$target $base/$name
+}
+
 tempdir=`mktemp -d /tmp/iceccenvXXXXXX`
 new_target_files=
 for i in $target_files; do
@@ -159,11 +190,30 @@ for i in $target_files; do
             target=$i
             ;;
     esac
-    mkdir -p $tempdir/`dirname $target`
-    cp -p $path $tempdir/$target
-    if test -f $tempdir/$target -a -x $tempdir/$target; then
-        strip -s $tempdir/$target 2>/dev/null
+    if test "$target" == "$path"; then
+        mkdir -p $tempdir/`dirname $target`
+        cp -pH $target $tempdir/$target
+
+        if test -f $tempdir/$target -a -x $tempdir/$target; then
+            strip -s $tempdir/$target 2>/dev/null
+        fi
+    else
+        mkdir -p $tempdir/`dirname $path`
+        cp -pH $path $tempdir/$path
+
+        mkdir -p $tempdir/`dirname $target`
+        # Relative links are used because the files are checked for being
+        # executable outside the chroot
+        link_rel $path $target $tempdir
+
+        if test -f $tempdir/$path -a -x $tempdir/$path; then
+            strip -s $tempdir/$path 2>/dev/null
+        fi
+
+        path=`echo $path | cut -b2-`
+        new_target_files="$new_target_files $path"
     fi
+
     target=`echo $target | cut -b2-`
     new_target_files="$new_target_files $target"
 done
