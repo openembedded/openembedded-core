@@ -12,8 +12,6 @@ PR = "r2"
 DEPENDS = ""
 INHIBIT_DEFAULT_DEPS = "1"
 
-inherit native
-
 # This is needed, because otherwise there is dependency loop from quilt-native
 # Dependency loop #1 found:
 #  Task 10907 (meta/recipes-devtools/quilt/quilt-native_0.60.bb, do_install) (dependent Tasks ['quilt-native, do_compile'])
@@ -34,3 +32,5 @@ do_install() {
     install -d ${D}/${bindir}
     install -m 0755 ${WORKDIR}/icecc-create-env ${D}/${bindir}
 }
+
+BBCLASSEXTEND = "native nativesdk"
