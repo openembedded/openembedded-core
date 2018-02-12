@@ -16,8 +16,8 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/strace/strace-${PV}.tar.xz \
            file://0001-tests-sigaction-Check-for-mips-and-alpha-before-usin.patch \
            "
 
-SRC_URI[md5sum] = "846a9a26e74e797f42d77a0348104072"
-SRC_URI[sha256sum] = "7c93ebc6c29280f47c24a0eb86873a99ccb2cac6512c60a60ba4ef99ab807281"
+SRC_URI[md5sum] = "f2271ab0fac49ebee9cbd7f3469227cb"
+SRC_URI[sha256sum] = "5bf3148dd17306a42566f7da17368fdd781afa147db05ea63a4ca2b50f58c523"
 
 inherit autotools ptest bluetooth
 
