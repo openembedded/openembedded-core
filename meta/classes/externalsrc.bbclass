@@ -189,7 +189,7 @@ def srctree_hash_files(d, srcdir=None):
 
     try:
         git_dir = os.path.join(s_dir,
-            subprocess.check_output(['git', '-C', s_dir, 'rev-parse', '--git-dir']).decode("utf-8").rstrip())
+            subprocess.check_output(['git', '-C', s_dir, 'rev-parse', '--git-dir'], stderr=subprocess.DEVNULL).decode("utf-8").rstrip())
     except subprocess.CalledProcessError:
         pass
 
