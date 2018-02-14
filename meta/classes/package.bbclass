@@ -26,7 +26,7 @@
 #    a list of affected files in FILER{PROVIDES,DEPENDS}FLIST_pkg
 #
 # h) package_do_shlibs - Look at the shared libraries generated and autotmatically add any
-#    depenedencies found. Also stores the package name so anyone else using this library
+#    dependencies found. Also stores the package name so anyone else using this library
 #    knows which package to depend on.
 #
 # i) package_do_pkgconfig - Keep track of which packages need and provide which .pc files
@@ -401,7 +401,7 @@ def splitdebuginfo(file, debugfile, debugsrcdir, sourcefile, d):
     return 0
 
 def copydebugsources(debugsrcdir, d):
-    # The debug src information written out to sourcefile is further procecessed
+    # The debug src information written out to sourcefile is further processed
     # and copied to the destination here.
 
     import stat
@@ -650,7 +650,7 @@ python fixup_perms () {
     # __str__ can be used to print out an entry in the input format
     #
     # if fs_perms_entry.path is None:
-    #    an error occured
+    #    an error occurred
     # if fs_perms_entry.link, you can retrieve:
     #    fs_perms_entry.path = path
     #    fs_perms_entry.link = target of link
@@ -976,7 +976,7 @@ python split_and_strip_files () {
                     continue
                 if not s:
                     continue
-                # Check its an excutable
+                # Check its an executable
                 if (s[stat.ST_MODE] & stat.S_IXUSR) or (s[stat.ST_MODE] & stat.S_IXGRP) or (s[stat.ST_MODE] & stat.S_IXOTH) \
                         or ((file.startswith(libdir) or file.startswith(baselibdir)) and (".so" in f or ".node" in f)):
                     # If it's a symlink, and points to an ELF file, we capture the readlink target
@@ -1004,7 +1004,7 @@ python split_and_strip_files () {
                         #  b) Only strip any hardlinked file once (no races)
                         #  c) Track any hardlinks between files so that we can reconstruct matching debug file hardlinks
 
-                        # Use a reference of device ID and inode number to indentify files
+                        # Use a reference of device ID and inode number to identify files
                         file_reference = "%d_%d" % (s.st_dev, s.st_ino)
                         if file_reference in inodes:
                             os.unlink(file)
@@ -1126,7 +1126,7 @@ python populate_packages () {
         d.setVar('FILES_%s' % src_package_name, '/usr/src/debug')
 
     # Sanity check PACKAGES for duplicates
-    # Sanity should be moved to sanity.bbclass once we have the infrastucture
+    # Sanity should be moved to sanity.bbclass once we have the infrastructure
     package_list = []
 
     for pkg in packages.split():
