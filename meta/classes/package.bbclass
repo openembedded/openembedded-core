@@ -946,6 +946,7 @@ python split_and_strip_files () {
     inodes = {}
     libdir = os.path.abspath(dvar + os.sep + d.getVar("libdir"))
     baselibdir = os.path.abspath(dvar + os.sep + d.getVar("base_libdir"))
+    skipfiles = (d.getVar("INHIBIT_PACKAGE_STRIP_FILES") or "").split()
     if (d.getVar('INHIBIT_PACKAGE_STRIP') != '1' or \
             d.getVar('INHIBIT_PACKAGE_DEBUG_SPLIT') != '1'):
         for root, dirs, files in cpath.walk(dvar):
@@ -959,6 +960,9 @@ python split_and_strip_files () {
                 if debugappend and file.endswith(debugappend):
                     continue
                 if debugdir and debugdir in os.path.dirname(file[len(dvar):]):
+                    continue
+
+                if file in skipfiles:
                     continue
 
                 try:
