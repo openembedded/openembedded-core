@@ -22,7 +22,7 @@ PYTHON_OPTION = "am_cv_python_pyexecdir='${PYTHON_SITEPACKAGES_DIR}' \
 PACKAGECONFIG ??= "lttng-ust"
 PACKAGECONFIG[python] = "--enable-python-bindings ${PYTHON_OPTION},,python3 swig-native"
 PACKAGECONFIG[lttng-ust] = "--with-lttng-ust, --without-lttng-ust, lttng-ust"
-PACKAGECONFIG[kmod] = "--enable-kmod, --disable-kmod, kmod"
+PACKAGECONFIG[kmod] = "--with-kmod, --without-kmod, kmod"
 PACKAGECONFIG[manpages] = "--enable-man-pages, --disable-man-pages, asciidoc-native xmlto-native libxslt-native"
 PACKAGECONFIG_remove_libc-musl = "lttng-ust"
 
@@ -31,8 +31,8 @@ SRC_URI = "https://lttng.org/files/lttng-tools/lttng-tools-${PV}.tar.bz2 \
            file://run-ptest \
            "
 
-SRC_URI[md5sum] = "051224eb991aee07f8721ff1877d0b96"
-SRC_URI[sha256sum] = "77839eb6fc6c652125f08acfd9369701c2516eb05cc2084160e7efc7a3fb731c"
+SRC_URI[md5sum] = "f4037d20c0a905cfb89770bccb2dc3c0"
+SRC_URI[sha256sum] = "b3038ff9ba46c3e4d3d228def733c15952d15d23fcb1151a580f31c4276c9a9f"
 
 inherit autotools ptest pkgconfig useradd python3-dir manpages
 
