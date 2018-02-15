@@ -34,3 +34,7 @@ do_install_append() {
 }
 
 BBCLASSEXTEND = "native nativesdk"
+
+# Currently it's not possible to disable gettext in Meson, so we need to force
+# this back on.
+USE_NLS_class-native = "yes"
