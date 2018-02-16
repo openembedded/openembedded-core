@@ -195,7 +195,7 @@ def parallel_make_argument(d, fmt, limit=None):
     v = parallel_make(d)
     if v:
         if limit:
-            v = max(limit, v)
+            v = min(limit, v)
         return fmt % v
     return ''
 
