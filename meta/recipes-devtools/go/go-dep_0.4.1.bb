@@ -5,12 +5,11 @@ LIC_FILES_CHKSUM = "file://src/${GO_IMPORT}/LICENSE;md5=1bad315647751fab0007812f
 
 GO_IMPORT = "github.com/golang/dep"
 SRC_URI = "git://${GO_IMPORT} \
-           file://0001-use-a-smaller-constant-that-hopefully-works-the-same.patch;patchdir=src/github.com/golang/dep \
            file://0001-Add-support-for-mips-mips64.patch;patchdir=src/github.com/golang/dep \
           "
 
-# Points to 0.3.2 tag
-SRCREV = "8ddfc8afb2d520d41997ebddd921b52152706c01"
+# Points to 0.4.1 tag
+SRCREV = "37d9ea0ac16f0e0a05afc3b60e1ac8c364b6c329"
 
 inherit go
 
