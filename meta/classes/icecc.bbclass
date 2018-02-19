@@ -34,6 +34,15 @@ BB_HASHBASE_WHITELIST += "ICECC_PARALLEL_MAKE ICECC_DISABLED ICECC_USER_PACKAGE_
 
 ICECC_ENV_EXEC ?= "${STAGING_BINDIR_NATIVE}/icecc-create-env"
 
+# This version can be incremented when changes are made to the environment that
+# invalidate the version on the compile nodes. Changing it will cause a new
+# environment to be created.
+#
+# A useful thing to do for testing Icecream changes locally is to add a
+# subversion in local.conf:
+#  ICECC_ENV_VERSION_append = "-my-ver-1"
+ICECC_ENV_VERSION = "1"
+
 # Default to disabling the caret workaround, If set to "1" in local.conf, icecc
 # will locally recompile any files that have warnings, which can adversely
 # affect performance.
@@ -203,7 +212,11 @@ def icecc_version(bb, d):
 
     import socket
     ice_dir = icecc_dir(bb, d)
-    tar_file = os.path.join(ice_dir, archive_name + "-@VERSION@-" + socket.gethostname() + '.tar.gz')
+    tar_file = os.path.join(ice_dir, "{archive}-{version}-@VERSION@-{hostname}.tar.gz".format(
+        archive=archive_name,
+        version=d.getVar('ICECC_ENV_VERSION', True),
+        hostname=socket.gethostname()
+        ))
 
     return tar_file
 
