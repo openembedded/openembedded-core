@@ -403,5 +403,8 @@ do_install_prepend() {
 ICECC_SDK_HOST_TASK = "nativesdk-icecc-toolchain"
 ICECC_SDK_HOST_TASK_task-populate-sdk-ext = ""
 
+# Don't include IceCream in uninative tarball
+ICECC_SDK_HOST_TASK_pn-uninative-tarball = ""
+
 # Add the toolchain scripts to the SDK
 TOOLCHAIN_HOST_TASK_append = " ${ICECC_SDK_HOST_TASK}"
