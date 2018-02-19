@@ -6,11 +6,10 @@ SRC_URI += " \
            file://ruby-CVE-2017-9227.patch \
            file://ruby-CVE-2017-9228.patch \
            file://ruby-CVE-2017-9229.patch \
-           file://CVE-2017-14064.patch \
            "
 
-SRC_URI[md5sum] = "7e9485dcdb86ff52662728de2003e625"
-SRC_URI[sha256sum] = "152fd0bd15a90b4a18213448f485d4b53e9f7662e1508190aa5b702446b29e3d"
+SRC_URI[md5sum] = "a00e0d49b454f4c0e528e7852d642925"
+SRC_URI[sha256sum] = "fd0375582c92045aa7d31854e724471fb469e11a4b08ff334d39052ccaaa3a98"
 
 # it's unknown to configure script, but then passed to extconf.rb
 # maybe it's not really needed as we're hardcoding the result with
