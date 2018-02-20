@@ -16,10 +16,9 @@ SRC_URI = "${GNOME_MIRROR}/glib/${SHRT_VER}/glib-${PV}.tar.xz \
            file://0001-Do-not-ignore-return-value-of-write.patch \
            file://0001-Test-for-pthread_getname_np-before-using-it.patch \
            file://0010-Do-not-hardcode-python-path-into-various-tools.patch \
-           file://glib-mkenums-replace-and-warn-decoding.patch \
            "
 
 SRC_URI_append_class-native = " file://relocate-modules.patch"
 
-SRC_URI[md5sum] = "50f83e08f080f99b1e2f0ad2b760fb81"
-SRC_URI[sha256sum] = "bb89e5c5aad33169a8c7f28b45671c7899c12f74caf707737f784d7102758e6c"
+SRC_URI[md5sum] = "16e886ad677bf07b7d48eb8188bcf759"
+SRC_URI[sha256sum] = "963fdc6685dc3da8e5381dfb9f15ca4b5709b28be84d9d05a9bb8e446abac0a8"
