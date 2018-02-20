@@ -39,6 +39,7 @@ EXTRA_OEMESON += "${PACKAGECONFIG_CONFARGS}"
 
 MESON_CROSS_FILE = ""
 MESON_CROSS_FILE_class-target = "--cross-file ${WORKDIR}/meson.cross"
+MESON_CROSS_FILE_class-nativesdk = "--cross-file ${WORKDIR}/meson.cross"
 
 CCOMPILER ?= "gcc"
 CXXCOMPILER ?= "g++"
@@ -99,6 +100,18 @@ meson_do_configure_prepend_class-target() {
     # override these for the target build. Note that we do *not* set CFLAGS,
     # LDFLAGS, etc. as they will be slurped in by meson and applied to the
     # target build, causing errors.
+    export CC="${BUILD_CC}"
+    export CXX="${BUILD_CXX}"
+    export LD="${BUILD_LD}"
+    export AR="${BUILD_AR}"
+}
+
+meson_do_configure_prepend_class-nativesdk() {
+    # Set these so that meson uses the native tools for its build sanity tests,
+    # which require executables to be runnable. The cross file will still
+    # override these for the nativesdk build. Note that we do *not* set CFLAGS,
+    # LDFLAGS, etc. as they will be slurped in by meson and applied to the
+    # nativesdk build, causing errors.
     export CC="${BUILD_CC}"
     export CXX="${BUILD_CXX}"
     export LD="${BUILD_LD}"
