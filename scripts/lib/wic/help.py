@@ -576,6 +576,10 @@ DESCRIPTION
           partition. In other words, it 'prepares' the final partition
           image which will be incorporated into the disk image.
 
+      do_post_partition()
+          Called after the partition is created. It is useful to add post
+          operations e.g. signing the partition.
+
       do_configure_partition()
           Called before do_prepare_partition(), typically used to
           create custom configuration files for a partition, for

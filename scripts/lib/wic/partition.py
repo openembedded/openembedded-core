@@ -185,6 +185,9 @@ class Partition():
         plugin.do_prepare_partition(self, srcparams_dict, creator,
                                     cr_workdir, oe_builddir, bootimg_dir,
                                     kernel_dir, rootfs_dir, native_sysroot)
+        plugin.do_post_partition(self, srcparams_dict, creator,
+                                    cr_workdir, oe_builddir, bootimg_dir,
+                                    kernel_dir, rootfs_dir, native_sysroot)
 
         # further processing required Partition.size to be an integer, make
         # sure that it is one
