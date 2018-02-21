@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://LICENSES;md5=e9a558e243b36d3209f380deb394b213 \
 
 DEPENDS += "gperf-native bison-native"
 
-SRCREV ?= "77f921dac17c5fa99bd9e926d926c327982895f7"
+SRCREV ?= "d300041c533a3d837c9f37a099bcc95466860e98"
 
 SRCBRANCH ?= "release/${PV}/master"
 
@@ -42,10 +42,6 @@ SRC_URI = "${GLIBC_GIT_URI};branch=${SRCBRANCH};name=glibc \
            file://0025-locale-fix-hard-coded-reference-to-gcc-E.patch \
            file://0027-glibc-reset-dl-load-write-lock-after-forking.patch \
            file://0028-Bug-4578-add-ld.so-lock-while-fork.patch \
-           file://0029-malloc-add-missing-arena-lock-in-malloc-info.patch \
-           file://CVE-2017-15671.patch \
-           file://CVE-2017-16997.patch \
-           file://CVE-2017-17426.patch \
 "
 
 NATIVESDKFIXES ?= ""
