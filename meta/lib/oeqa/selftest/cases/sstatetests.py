@@ -526,7 +526,7 @@ http_proxy = "http://example.com/"
         # this is an expensive computation, thus just compare the first 'max_sigfiles_to_compare' k files
         max_sigfiles_to_compare = 20
         first, rest = files[:max_sigfiles_to_compare], files[max_sigfiles_to_compare:]
-        compare_sigfiles(first, files1.keys(), files2.keys(), compare=True)
-        compare_sigfiles(rest, files1.keys(), files2.keys(), compare=False)
+        compare_sigfiles(first, files1, files2, compare=True)
+        compare_sigfiles(rest, files1, files2, compare=False)
 
         self.fail("sstate hashes not identical.")
