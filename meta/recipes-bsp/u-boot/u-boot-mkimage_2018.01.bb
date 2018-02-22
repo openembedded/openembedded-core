@@ -24,4 +24,6 @@ do_install () {
 	ln -sf uboot-mkimage ${D}${bindir}/mkimage
 }
 
+RDEPENDS_${PN} += "dtc"
+
 BBCLASSEXTEND = "native nativesdk"
