@@ -38,7 +38,7 @@ def get_args_parser():
     parser.add_argument('-a', '--report-all',
                         action='store_true',
                         dest='report_all',
-                        default='False',
+                        default=False,
                         help="Report all changes, not just the default significant ones")
     parser.add_argument('-s', '---signatures',
                         action='store_true',
