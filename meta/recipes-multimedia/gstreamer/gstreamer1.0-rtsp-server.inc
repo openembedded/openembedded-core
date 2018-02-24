@@ -3,7 +3,7 @@ HOMEPAGE = "http://cgit.freedesktop.org/gstreamer/gst-rtsp-server/"
 SECTION = "multimedia"
 LICENSE = "LGPLv2"
 
-DEPENDS = "gstreamer1.0 libcgroup gstreamer1.0-plugins-base libcheck"
+DEPENDS = "gstreamer1.0 gstreamer1.0-plugins-base"
 
 PNREAL = "gst-rtsp-server"
 
@@ -15,6 +15,8 @@ SRC_URI = "http://gstreamer.freedesktop.org/src/${PNREAL}/${PNREAL}-${PV}.tar.xz
 S = "${WORKDIR}/${PNREAL}-${PV}"
 
 inherit autotools pkgconfig upstream-version-is-even gobject-introspection gtk-doc
+
+EXTRA_OECONF = "--disable-examples --disable-tests"
 
 # Starting with 1.8.0 gst-rtsp-server includes dependency-less plugins as well
 LIBV = "1.0"
