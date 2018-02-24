@@ -1,0 +1,32 @@
+From d37fa01fbbe2cf0cd8b49069a71706a33cb4a53e Mon Sep 17 00:00:00 2001
+From: Paolo Bonzini <pbonzini@redhat.com>
+Date: Mon, 13 Feb 2017 20:54:00 +0800
+Subject: [PATCH] VfrCompile: fix invalid comparison between pointer and
+ integer
+
+This would be valid C but is not valid C++, so change the comparison to do what it has always been doing.
+
+Contributed-under: TianoCore Contribution Agreement 1.0
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Reviewed-by: Yonghong Zhu <yonghong.zhu@intel.com>
+
+Upstream-Status: Backport
+Signed-off-by: Armin Kuster <akuster808@gmail.com>
+
+---
+ BaseTools/Source/C/VfrCompile/VfrUtilityLib.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+Index: git/BaseTools/Source/C/VfrCompile/VfrUtilityLib.cpp
+===================================================================
+--- git.orig/BaseTools/Source/C/VfrCompile/VfrUtilityLib.cpp
++++ git/BaseTools/Source/C/VfrCompile/VfrUtilityLib.cpp
+@@ -3372,7 +3372,7 @@ CVfrStringDB::GetVarStoreNameFormStringI
+   UINT8       BlockType;
+   EFI_HII_STRING_PACKAGE_HDR *PkgHeader;
+   
+-  if (mStringFileName == '\0' ) {
++  if (mStringFileName == NULL) {
+     return NULL;
+   }
+ 

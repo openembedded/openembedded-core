@@ -15,6 +15,7 @@ SRC_URI = "git://github.com/tianocore/edk2.git;branch=master \
 	file://0003-BaseTools-makefile-adjust-to-build-in-under-bitbake.patch \
 	file://VfrCompile-increase-path-length-limit.patch \
         file://0001-MdeModulePkg-UefiHiiLib-Fix-incorrect-comparison-exp.patch \
+        file://0001-VfrCompile-fix-invalid-comparison-between-pointer-an.patch \
         "
 
 SRC_URI_append_class-target = " \
