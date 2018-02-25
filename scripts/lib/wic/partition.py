@@ -202,7 +202,7 @@ class Partition():
                            (self.mountpoint, self.size, self.fixed_size))
 
     def prepare_rootfs(self, cr_workdir, oe_builddir, rootfs_dir,
-                       native_sysroot):
+                       native_sysroot, real_rootfs = True):
         """
         Prepare content for a rootfs partition i.e. create a partition
         and fill it from a /rootfs dir.
@@ -226,7 +226,7 @@ class Partition():
             os.remove(rootfs)
 
         # Get rootfs size from bitbake variable if it's not set in .ks file
-        if not self.size:
+        if not self.size and real_rootfs:
             # Bitbake variable ROOTFS_SIZE is calculated in
             # Image._get_rootfs_size method from meta/lib/oe/image.py
             # using IMAGE_ROOTFS_SIZE, IMAGE_ROOTFS_ALIGNMENT,
