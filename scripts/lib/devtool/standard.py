@@ -1861,9 +1861,7 @@ def _get_layer(layername, d):
         layerdir = layers.get('meta', None)
     else:
         layerdir = layers.get(layername, None)
-    if layerdir:
-        layerdir = os.path.abspath(layerdir)
-    return layerdir or layername
+    return os.path.abspath(layerdir or layername)
 
 def finish(args, config, basepath, workspace):
     """Entry point for the devtool 'finish' subcommand"""
