@@ -1744,6 +1744,7 @@ def status(args, config, basepath, workspace):
 
 def _reset(recipes, no_clean, config, basepath, workspace):
     """Reset one or more recipes"""
+    import oe.path
 
     def clean_preferred_provider(pn, layerconf_path):
         """Remove PREFERRED_PROVIDER from layer.conf'"""
@@ -1802,7 +1803,10 @@ def _reset(recipes, no_clean, config, basepath, workspace):
                         preservedir(os.path.join(root, dn))
                 os.rmdir(origdir)
 
-        preservedir(os.path.join(config.workspace_path, 'recipes', pn))
+        recipefile = workspace[pn]['recipefile']
+        if recipefile and oe.path.is_path_parent(config.workspace_path, recipefile):
+            # This should always be true if recipefile is set, but just in case
+            preservedir(os.path.dirname(recipefile))
         # We don't automatically create this dir next to appends, but the user can
         preservedir(os.path.join(config.workspace_path, 'appends', pn))
 
