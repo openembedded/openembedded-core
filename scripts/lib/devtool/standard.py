@@ -1791,6 +1791,13 @@ def _reset(recipes, no_clean, config, basepath, workspace):
     for pn in recipes:
         _check_preserve(config, pn)
 
+        appendfile = workspace[pn]['bbappend']
+        if os.path.exists(appendfile):
+            # This shouldn't happen, but is possible if devtool errored out prior to
+            # writing the md5 file. We need to delete this here or the recipe won't
+            # actually be reset
+            os.remove(appendfile)
+
         preservepath = os.path.join(config.workspace_path, 'attic', pn, pn)
         def preservedir(origdir):
             if os.path.exists(origdir):
