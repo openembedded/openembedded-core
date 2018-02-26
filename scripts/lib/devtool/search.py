@@ -112,7 +112,7 @@ def search(args, config, basepath, workspace):
 def register_commands(subparsers, context):
     """Register devtool subcommands from this plugin"""
     parser_search = subparsers.add_parser('search', help='Search available recipes',
-                                            description='Searches for available target recipes. Matches on recipe name, package name, description and installed files, and prints the recipe name on match.',
+                                            description='Searches for available recipes. Matches on recipe name, package name, description and installed files, and prints the recipe name and summary on match.',
                                             group='info')
-    parser_search.add_argument('keyword', help='Keyword to search for (regular expression syntax allowed)')
+    parser_search.add_argument('keyword', help='Keyword to search for (regular expression syntax allowed, use quotes to avoid shell expansion)')
     parser_search.set_defaults(func=search, no_workspace=True, fixed_setup=context.fixed_setup)
