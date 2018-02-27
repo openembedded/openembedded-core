@@ -29,11 +29,6 @@ def sstate_rundepfilter(siggen, fn, recipename, task, dep, depname, dataCache):
             return False
         return True
 
-    # Quilt (patch application) changing isn't likely to affect anything
-    excludelist = ['quilt-native', 'subversion-native', 'git-native', 'ccache-native', 'icecc-create-env-native']
-    if depname in excludelist and recipename != depname:
-        return False
-
     # Exclude well defined recipe->dependency
     if "%s->%s" % (recipename, depname) in siggen.saferecipedeps:
         return False
