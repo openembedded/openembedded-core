@@ -34,13 +34,22 @@ EXTRA_OECONF = "--enable-tests \
                 --enable-checks \
                 --enable-asserts \
                 --enable-verbose-mode \
+                --enable-largefile \
                 --disable-xml-docs \
                 --disable-doxygen-docs \
                 --disable-libaudit \
-                --disable-systemd \
-                --without-systemdsystemunitdir \
                 --with-dbus-test-dir=${PTEST_PATH} \
                 ${EXTRA_OECONF_X}"
+
+EXTRA_OECONF_append_class-target = " SYSTEMCTL=${base_bindir}/systemctl"
+
+PACKAGECONFIG ??= "${@bb.utils.filter('DISTRO_FEATURES', 'systemd x11', d)}"
+PACKAGECONFIG_class-native = ""
+PACKAGECONFIG_class-nativesdk = ""
+
+PACKAGECONFIG[systemd] = "--enable-systemd --with-systemdsystemunitdir=${systemd_system_unitdir},--disable-systemd --without-systemdsystemunitdir,systemd"
+PACKAGECONFIG[x11] = "--with-x --enable-x11-autolaunch,--without-x --disable-x11-autolaunch, virtual/libx11 libsm"
+PACKAGECONFIG[user-session] = "--enable-user-session --with-systemduserunitdir=${systemd_user_unitdir},--disable-user-session"
 
 do_install() {
     :
@@ -48,11 +57,26 @@ do_install() {
 
 do_install_ptest() {
 	install -d ${D}${PTEST_PATH}/test
-	l="shell printf refs syslog marshal syntax corrupt dbus-daemon dbus-daemon-eavesdrop loopback relay"
+	l="shell printf refs syslog marshal syntax corrupt dbus-daemon dbus-daemon-eavesdrop loopback relay \
+	   variant uid-permissions syntax spawn sd-activation names monitor message fdpass "
 	for i in $l; do install ${B}/test/.libs/test-$i ${D}${PTEST_PATH}/test; done
+
 	l="bus bus-system bus-launch-helper"
 	for i in $l; do install ${B}/bus/.libs/test-$i ${D}${PTEST_PATH}/test; done
-	install ${B}/dbus/.libs/test-dbus ${D}${PTEST_PATH}/test
+
 	cp -r ${B}/test/data ${D}${PTEST_PATH}/test
+	install ${B}/dbus/.libs/test-dbus ${D}${PTEST_PATH}/test
+
+	install -d ${D}${PTEST_PATH}/test/.libs
+	cp -a ${B}/dbus/.libs/*.so* ${D}${PTEST_PATH}/test/.libs
+
+	# Remove build host references...
+	find "${D}${PTEST_PATH}/test/data" \( -name *.service -o -name *.conf \) -type f -exec \
+		sed -i \
+		 -e 's:${B}:${PTEST_PATH}:g' \
+		 {} +
 }
+
 RDEPENDS_${PN}-ptest += "bash"
+
+PRIVATE_LIBS_${PN}-ptest = "libdbus-1.so.3"
