@@ -5,12 +5,11 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=b2beded7103a3d8a442a2a0391d607b0"
 SRC_URI = "git://anongit.freedesktop.org/piglit \
            file://0001-cmake-install-bash-completions-in-the-right-place.patch \
            file://0001-tests-Use-FE_UPWARD-only-if-its-defined-in-fenv.h.patch \
-           file://0001-tests-egl-egl-context-priority.c-Use-piglit_egl_get_.patch \
            "
 UPSTREAM_CHECK_COMMITS = "1"
 
-# From 2017-07-03
-SRCREV = "c8f4fd9eeb298a2ef0855927f22634f794ef3eff"
+# From 2018-02-26
+SRCREV = "4ce0887e2f7f848d2be2e435a2d0f3c80e44ea3b"
 # (when PV goes above 1.0 remove the trailing r)
 PV = "1.0+gitr${SRCPV}"
 
