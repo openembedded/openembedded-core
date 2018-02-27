@@ -470,40 +470,14 @@ python extend_recipe_sysroot() {
 
         os.symlink(c + "." + taskhash, depdir + "/" + c)
 
-        d2 = d
-        destsysroot = recipesysroot
-        variant = ''
-        if setscenedeps[dep][2].startswith("virtual:multilib"):
-            variant = setscenedeps[dep][2].split(":")[2]
-            if variant != current_variant:
-                if variant not in multilibs:
-                    multilibs[variant] = get_multilib_datastore(variant, d)
-                d2 = multilibs[variant]
-                destsysroot = d2.getVar("RECIPE_SYSROOT")
+        manifest, d2 = oe.sstatesig.find_sstate_manifest(c, setscenedeps[dep][2], "populate_sysroot", d, multilibs)
+        destsysroot = d2.getVar("RECIPE_SYSROOT")
 
         native = False
-        if c.endswith("-native"):
-            manifest = d2.expand("${SSTATE_MANIFESTS}/manifest-${BUILD_ARCH}-%s.populate_sysroot" % c)
+        if c.endswith("-native") or "-cross-" in c or "-crosssdk" in c:
             native = True
-        elif c.startswith("nativesdk-"):
-            manifest = d2.expand("${SSTATE_MANIFESTS}/manifest-${SDK_ARCH}_${SDK_OS}-%s.populate_sysroot" % c)
-        elif "-cross-" in c:
-            manifest = d2.expand("${SSTATE_MANIFESTS}/manifest-${BUILD_ARCH}_${TARGET_ARCH}-%s.populate_sysroot" % c)
-            native = True
-        elif "-crosssdk" in c:
-            manifest = d2.expand("${SSTATE_MANIFESTS}/manifest-${BUILD_ARCH}_${SDK_ARCH}_${SDK_OS}-%s.populate_sysroot" % c)
-            native = True
-        else:
-            pkgarchs = ['${MACHINE_ARCH}']
-            pkgarchs = pkgarchs + list(reversed(d2.getVar("PACKAGE_EXTRA_ARCHS").split()))
-            pkgarchs.append('allarch')
-            for pkgarch in pkgarchs:
-                manifest = d2.expand("${SSTATE_MANIFESTS}/manifest-%s-%s.populate_sysroot" % (pkgarch, c))
-                if os.path.exists(manifest):
-                    break
-        if not os.path.exists(manifest):
-            bb.warn("Manifest %s not found?" % manifest)
-        else:
+
+        if manifest:
             newmanifest = collections.OrderedDict()
             if native:
                 fm = fixme['native']

@@ -507,37 +507,8 @@ def create_packages_dir(d, rpm_repo_dir, deploydir, taskname, filterbydependenci
 
     for dep in rpmdeps:
         c = taskdepdata[dep][0]
-
-        d2 = d
-        variant = ''
-        if taskdepdata[dep][2].startswith("virtual:multilib"):
-            variant = taskdepdata[dep][2].split(":")[2]
-            if variant not in multilibs:
-                multilibs[variant] = oe.utils.get_multilib_datastore(variant, d)
-            d2 = multilibs[variant]
-
-        if c.endswith("-native"):
-            pkgarchs = ["${BUILD_ARCH}"]
-        elif c.startswith("nativesdk-"):
-            pkgarchs = ["${SDK_ARCH}_${SDK_OS}", "allarch"]
-        elif "-cross-canadian" in c:
-            pkgarchs = ["${SDK_ARCH}_${SDK_ARCH}-${SDKPKGSUFFIX}"]
-        elif "-cross-" in c:
-            pkgarchs = ["${BUILD_ARCH}_${TARGET_ARCH}"]
-        elif "-crosssdk" in c:
-            pkgarchs = ["${BUILD_ARCH}_${SDK_ARCH}_${SDK_OS}"]
-        else:
-            pkgarchs = ['${MACHINE_ARCH}']
-            pkgarchs = pkgarchs + list(reversed(d2.getVar("PACKAGE_EXTRA_ARCHS").split()))
-            pkgarchs.append('allarch')
-            pkgarchs.append('${SDK_ARCH}_${SDK_ARCH}-${SDKPKGSUFFIX}')
-
-        for pkgarch in pkgarchs:
-            manifest = d2.expand("${SSTATE_MANIFESTS}/manifest-%s-%s.%s" % (pkgarch, c, taskname))
-            if os.path.exists(manifest):
-                break
+        manifest, d2 = oe.sstatesig.find_sstate_manifest(c, taskdepdata[dep][2], taskname, d, multilibs)
         if not os.path.exists(manifest):
-            bb.warn("Manifest %s not found in %s (variant '%s')?" % (manifest, d2.expand(" ".join(pkgarchs)), variant))
             continue
         with open(manifest, "r") as f:
             for l in f:
