@@ -38,6 +38,10 @@ def sstate_rundepfilter(siggen, fn, recipename, task, dep, depname, dataCache):
     if "%s->%s" % (recipename, depname) in siggen.saferecipedeps:
         return False
 
+    # Check for special wildcard
+    if "*->%s" % depname in siggen.saferecipedeps and recipename != depname:
+        return False
+
     # Don't change native/cross/nativesdk recipe dependencies any further
     if isNative(recipename) or isCross(recipename) or isNativeSDK(recipename):
         return True
