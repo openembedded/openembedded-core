@@ -11,8 +11,8 @@ SRC_URI = "https://mesa.freedesktop.org/archive/mesa-${PV}.tar.xz \
            file://0001-Makefile.vulkan.am-explictly-add-lib-expat-to-intel-.patch \
            "
 
-SRC_URI[md5sum] = "bf73288c33cf12abe62045c25e2196b4"
-SRC_URI[sha256sum] = "eb9228fc8aaa71e0205c1481c5b157752ebaec9b646b030d27478e25a6d7936a"
+SRC_URI[md5sum] = "ba66ae0f09b9b84482268608557cd175"
+SRC_URI[sha256sum] = "e5915680d44ac9d05defdec529db7459ac9edd441c9845266eff2e2d3e57fbf8"
 
 #because we cannot rely on the fact that all apps will use pkgconfig,
 #make eglplatform.h independent of MESA_EGL_NO_X11_HEADER
