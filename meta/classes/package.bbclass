@@ -1773,6 +1773,9 @@ python package_do_shlibs() {
     for pkg in packages.split():
         bb.debug(2, "calculating shlib requirements for %s" % pkg)
 
+        private_libs = d.getVar('PRIVATE_LIBS_' + pkg) or d.getVar('PRIVATE_LIBS') or ""
+        private_libs = private_libs.split()
+
         deps = list()
         for n in needed[pkg]:
             # if n is in private libraries, don't try to search provider for it
