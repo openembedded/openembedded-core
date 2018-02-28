@@ -1173,7 +1173,7 @@ class OpkgPM(OpkgDpkgPM):
             output = subprocess.check_output(cmd.split(), stderr=subprocess.STDOUT).decode("utf-8")
             bb.note(output)
         except subprocess.CalledProcessError as e:
-            (bb.fatal, bb.note)[attempt_only]("Unable to install packages. "
+            (bb.fatal, bb.warn)[attempt_only]("Unable to install packages. "
                                               "Command '%s' returned %d:\n%s" %
                                               (cmd, e.returncode, e.output.decode("utf-8")))
 
@@ -1472,7 +1472,7 @@ class DpkgPM(OpkgDpkgPM):
             bb.note("Installing the following packages: %s" % ' '.join(pkgs))
             subprocess.check_output(cmd.split(), stderr=subprocess.STDOUT)
         except subprocess.CalledProcessError as e:
-            (bb.fatal, bb.note)[attempt_only]("Unable to install packages. "
+            (bb.fatal, bb.warn)[attempt_only]("Unable to install packages. "
                                               "Command '%s' returned %d:\n%s" %
                                               (cmd, e.returncode, e.output.decode("utf-8")))
 
