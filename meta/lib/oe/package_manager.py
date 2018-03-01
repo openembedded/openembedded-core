@@ -402,7 +402,7 @@ class PackageManager(object, metaclass=ABCMeta):
             installed_pkgs.write(output)
             installed_pkgs.flush()
 
-            cmd = [bb.utils.which(os.getenv('PATH'), "oe-pkgdata-util"),
+            cmd = ["oe-pkgdata-util",
                    "-p", self.d.getVar('PKGDATA_DIR'), "glob", installed_pkgs.name,
                    globs]
             exclude = self.d.getVar('PACKAGE_EXCLUDE_COMPLEMENTARY')
@@ -412,11 +412,11 @@ class PackageManager(object, metaclass=ABCMeta):
                 bb.note("Installing complementary packages ...")
                 bb.note('Running %s' % cmd)
                 complementary_pkgs = subprocess.check_output(cmd, stderr=subprocess.STDOUT).decode("utf-8")
+                self.install(complementary_pkgs.split(), attempt_only=True)
             except subprocess.CalledProcessError as e:
                 bb.fatal("Could not compute complementary packages list. Command "
                          "'%s' returned %d:\n%s" %
                          (' '.join(cmd), e.returncode, e.output.decode("utf-8")))
-            self.install(complementary_pkgs.split(), attempt_only=True)
 
     def deploy_dir_lock(self):
         if self.deploy_dir is None:
