@@ -371,6 +371,29 @@ class PackageManager(object, metaclass=ABCMeta):
         pass
 
     """
+    Install all packages that match a glob.
+    """
+    def install_glob(self, globs, sdk=False):
+        # TODO don't have sdk here but have a property on the superclass
+        # (and respect in install_complementary)
+        if sdk:
+            pkgdatadir = self.d.expand("${TMPDIR}/pkgdata/${SDK_SYS}")
+        else:
+            pkgdatadir = self.d.getVar("PKGDATA_DIR")
+
+        try:
+            bb.note("Installing globbed packages...")
+            cmd = ["oe-pkgdata-util", "-p", pkgdatadir, "list-pkgs", globs]
+            pkgs = subprocess.check_output(cmd, stderr=subprocess.STDOUT).decode("utf-8")
+            self.install(pkgs.split(), attempt_only=True)
+        except subprocess.CalledProcessError as e:
+            # Return code 1 means no packages matched
+            if e.returncode != 1:
+                bb.fatal("Could not compute globbed packages list. Command "
+                         "'%s' returned %d:\n%s" %
+                         (' '.join(cmd), e.returncode, e.output.decode("utf-8")))
+
+    """
     Install complementary packages based upon the list of currently installed
     packages e.g. locales, *-dev, *-dbg, etc. This will only attempt to install
     these packages, if they don't exist then no error will occur.  Note: every
