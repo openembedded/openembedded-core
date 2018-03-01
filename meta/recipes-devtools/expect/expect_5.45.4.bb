@@ -26,8 +26,8 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/expect/Expect/${PV}/${BPN}${PV}.tar.gz \
            file://0001-Resolve-string-formatting-issues.patch \
            file://0001-expect-Fix-segfaults-if-Tcl-is-built-with-stubs-and-.patch \
           "
-SRC_URI[md5sum] = "a8855cd41c1ef004b9794db9e2a57a9d"
-SRC_URI[sha256sum] = "c520717b7195944a69ce1492ec82ca0ac3f3baf060804e6c5ee6d505ea512be9"
+SRC_URI[md5sum] = "00fce8de158422f5ccd2666512329bd2"
+SRC_URI[sha256sum] = "49a7da83b0bdd9f46d04a04deec19c7767bb9a323e40c4781f89caf760b92c34"
 
 UPSTREAM_CHECK_URI = "http://sourceforge.net/projects/expect/files/Expect/"
 UPSTREAM_CHECK_REGEX = "/Expect/(?P<pver>(\d+[\.\-_]*)+)/"
