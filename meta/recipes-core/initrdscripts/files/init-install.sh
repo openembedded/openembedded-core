@@ -256,9 +256,34 @@ fi
 umount /tgt_root
 umount /src_root
 
+echo "Looking for kernels to use as boot target.."
+# Find kernel to boot to
+# Give user options if multiple are found
+kernels="$(find /run/media/$1/ -type f  \
+           -name bzImage* -o -name zImage* \
+           -o -name vmlinux* -o -name vmlinuz* \
+           -o -name fitImage* \
+           | sed s:.*/::)"
+if [ -n "$(echo $kernels)" ]; then
+    # only one kernel entry if no space
+    if [ -z "$(echo $kernels | grep " ")" ]; then
+        kernel=$kernels
+        echo "$kernel will be used as the boot target"
+    else
+        echo "Which kernel do we want to boot by default? The following kernels were found:"
+        echo $kernels
+        read answer
+        kernel=$answer
+    fi
+else
+    echo "No kernels found, exiting..."
+    exit 1
+fi
+
 # Handling of the target boot partition
 mount $bootfs /boot
 echo "Preparing boot partition..."
+
 if [ -f /etc/grub.d/00_header -a $grub_version -ne 0 ] ; then
     echo "Preparing custom grub2 menu..."
     root_part_uuid=$(blkid -o value -s PARTUUID ${rootfs})
@@ -268,7 +293,7 @@ if [ -f /etc/grub.d/00_header -a $grub_version -ne 0 ] ; then
     cat >$GRUBCFG <<_EOF
 menuentry "Linux" {
     search --no-floppy --fs-uuid $boot_uuid --set root
-    linux /vmlinuz root=PARTUUID=$root_part_uuid $rootwait rw $5 $3 $4 quiet
+    linux /$kernel root=PARTUUID=$root_part_uuid $rootwait rw $5 $3 $4 quiet
 }
 _EOF
     chmod 0444 $GRUBCFG
@@ -282,10 +307,16 @@ if [ $grub_version -eq 0 ] ; then
     echo "timeout 30" >> /boot/grub/menu.lst
     echo "title Live Boot/Install-Image" >> /boot/grub/menu.lst
     echo "root  (hd0,0)" >> /boot/grub/menu.lst
-    echo "kernel /vmlinuz root=$rootfs rw $3 $4 quiet" >> /boot/grub/menu.lst
+    echo "kernel /$kernel root=$rootfs rw $3 $4 quiet" >> /boot/grub/menu.lst
 fi
 
-cp /run/media/$1/vmlinuz /boot/
+# Copy kernel artifacts. To add more artifacts just add to types
+# For now just support kernel types already being used by something in OE-core
+for types in bzImage zImage vmlinux vmlinuz fitImage; do
+    for kernel in `find /run/media/$1/ -name $types*`; do
+        cp $kernel /boot
+    done
+done
 
 umount /boot
 
