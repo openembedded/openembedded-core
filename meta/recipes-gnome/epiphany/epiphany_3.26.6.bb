@@ -13,8 +13,8 @@ REQUIRED_DISTRO_FEATURES = "x11"
 SRC_URI = "${GNOME_MIRROR}/${GNOMEBN}/${@gnome_verdir("${PV}")}/${GNOMEBN}-${PV}.tar.${GNOME_COMPRESS_TYPE};name=archive \
            file://0002-help-meson.build-disable-the-use-of-yelp.patch \
            "
-SRC_URI[archive.md5sum] = "8c2062debde6377320596e2685bb1732"
-SRC_URI[archive.sha256sum] = "4b2f1c48e6f50793ff205d9215add5596ab5c7ebf4cef76907868fcd5a029221"
+SRC_URI[archive.md5sum] = "8449968366a6f9aaff3ac228ddfc7c66"
+SRC_URI[archive.sha256sum] = "01b16aa55d312ae0f17d3136f90d8c68ac748715f119412fb1917023c6f630a8"
 
 EXTRA_OEMESON += " -Ddistributor_name=${DISTRO}"
 
