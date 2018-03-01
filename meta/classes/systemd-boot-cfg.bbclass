@@ -39,10 +39,6 @@ python build_efi_cfg() {
     for label in labels.split():
         localdata = d.createCopy()
 
-        overrides = localdata.getVar('OVERRIDES')
-        if not overrides:
-            bb.fatal('OVERRIDES not defined')
-
         entryfile = "%s/%s.conf" % (s, label)
         if not os.path.exists(s):
             os.makedirs(s)
@@ -51,7 +47,6 @@ python build_efi_cfg() {
             entrycfg = open(entryfile, "w")
         except OSError:
             bb.fatal('Unable to open %s' % entryfile)
-        localdata.setVar('OVERRIDES', label + ':' + overrides)
 
         entrycfg.write('title %s\n' % label)
 
