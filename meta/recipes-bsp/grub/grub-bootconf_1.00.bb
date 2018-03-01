@@ -23,7 +23,7 @@ do_install() {
 	install -d ${D}/boot
 	install -d ${D}/boot/EFI
 	install -d ${D}/boot/EFI/BOOT
-	install -m 0744 grub-bootconf ${D}/boot/EFI/BOOT/grub.cfg
+	install grub-bootconf ${D}/boot/EFI/BOOT/grub.cfg
 }
 
 FILES_${PN} = "/boot/EFI/BOOT/grub.cfg"

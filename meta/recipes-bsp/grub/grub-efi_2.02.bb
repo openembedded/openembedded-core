@@ -3,7 +3,7 @@ require grub2.inc
 GRUBPLATFORM = "efi"
 
 DEPENDS_append_class-target = " grub-efi-native"
-RDEPENDS_${PN}_class-target = "diffutils freetype grub-common"
+RDEPENDS_${PN}_class-target = "diffutils freetype grub-common virtual/grub-bootconf"
 
 SRC_URI += " \
            file://cfg \
@@ -36,6 +36,28 @@ EXTRA_OECONF += "--enable-efiemu=no"
 # and many other places in the grub code when compiled with some native gcc compilers (specifically, gentoo)
 CFLAGS_append_class-native = " -Wno-error=trampolines"
 
+do_mkimage() {
+	cd ${B}
+	# Search for the grub.cfg on the local boot media by using the
+	# built in cfg file provided via this recipe
+	grub-mkimage -c ../cfg -p /EFI/BOOT -d ./grub-core/ \
+	               -O ${GRUB_TARGET}-efi -o ./${GRUB_IMAGE} \
+	               ${GRUB_BUILDIN}
+}
+
+addtask mkimage before do_install after do_compile
+
+do_mkimage_class-native() {
+	:
+}
+
+do_install_append_class-target() {
+	install -d ${D}/boot
+	install -d ${D}/boot/EFI
+	install -d ${D}/boot/EFI/BOOT
+	install -m 644 ${B}/${GRUB_IMAGE} ${D}/boot/EFI/BOOT/
+}
+
 do_install_class-native() {
 	install -d ${D}${bindir}
 	install -m 755 grub-mkimage ${D}${bindir}
@@ -57,11 +79,6 @@ GRUB_BUILDIN ?= "boot linux ext2 fat serial part_msdos part_gpt normal \
                  efi_gop iso9660 configfile search loadenv test"
 
 do_deploy() {
-	# Search for the grub.cfg on the local boot media by using the
-	# built in cfg file provided via this recipe
-	grub-mkimage -c ../cfg -p /EFI/BOOT -d ./grub-core/ \
-	               -O ${GRUB_TARGET}-efi -o ./${GRUB_IMAGE} \
-	               ${GRUB_BUILDIN}
 	install -m 644 ${B}/${GRUB_IMAGE} ${DEPLOYDIR}
 }
 
@@ -72,7 +89,10 @@ do_deploy_class-native() {
 addtask deploy after do_install before do_build
 
 FILES_${PN} = "${libdir}/grub/${GRUB_TARGET}-efi \
-                "
+               ${datadir}/grub \
+               /boot/EFI/BOOT/${GRUB_IMAGE} \
+               "
+
 
 # 64-bit binaries are expected for the bootloader with an x32 userland
 INSANE_SKIP_${PN}_append_linux-gnux32 = " arch"
