@@ -14,6 +14,9 @@ REQUIRED_DISTRO_FEATURES = "x11"
 # libglu needs virtual/libgl, which requires opengl in DISTRO_FEATURES
 REQUIRED_DISTRO_FEATURES += "opengl"
 
+# libpam, pam-plugin-wheel requires pam in DISTRO_FEATURES
+REQUIRED_DISTRO_FEATURES += "pam"
+
 #
 # We will skip parsing this packagegeoup for non-glibc systems
 #
