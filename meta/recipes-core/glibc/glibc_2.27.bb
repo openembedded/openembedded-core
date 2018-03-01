@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://LICENSES;md5=e9a558e243b36d3209f380deb394b213 \
 
 DEPENDS += "gperf-native bison-native"
 
-SRCREV ?= "d300041c533a3d837c9f37a099bcc95466860e98"
+SRCREV ?= "23158b08a0908f381459f273a984c6fd328363cb"
 
 SRCBRANCH ?= "release/${PV}/master"
 
@@ -40,8 +40,8 @@ SRC_URI = "${GLIBC_GIT_URI};branch=${SRCBRANCH};name=glibc \
            file://0023-Define-DUMMY_LOCALE_T-if-not-defined.patch \
            file://0024-elf-dl-deps.c-Make-_dl_build_local_scope-breadth-fir.patch \
            file://0025-locale-fix-hard-coded-reference-to-gcc-E.patch \
-           file://0027-glibc-reset-dl-load-write-lock-after-forking.patch \
-           file://0028-Bug-4578-add-ld.so-lock-while-fork.patch \
+           file://0026-reset-dl_load_write_lock-after-forking.patch \
+           file://0027-Acquire-ld.so-lock-before-switching-to-malloc_atfork.patch \
 "
 
 NATIVESDKFIXES ?= ""
@@ -102,10 +102,6 @@ do_configure () {
 # version check and doesn't really help with anything
         (cd ${S} && gnu-configize) || die "failure in running gnu-configize"
         find ${S} -name "configure" | xargs touch
-        # "plural.c" may or may not get regenerated from "plural.y" so we
-        # touch "plural.y" to make sure it does. (This should not be needed
-        # for glibc version 2.26+)
-        find ${S}/intl -name "plural.y" | xargs touch
         CPPFLAGS="" oe_runconf
 }
 

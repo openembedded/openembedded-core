@@ -21,8 +21,8 @@ SRCBRANCH ?= "release/${PV}/master"
 GLIBC_GIT_URI ?= "git://sourceware.org/git/glibc.git"
 UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>\d+\.\d+(\.\d+)*)"
 
-SRCREV_glibc ?= "d300041c533a3d837c9f37a099bcc95466860e98"
-SRCREV_localedef ?= "dfb4afe551c6c6e94f9cc85417bd1f582168c843"
+SRCREV_glibc ?= "23158b08a0908f381459f273a984c6fd328363cb"
+SRCREV_localedef ?= "de5bdbd5e76b5403a4151b9b9f958b6cca36b3e7"
 
 SRC_URI = "${GLIBC_GIT_URI};branch=${SRCBRANCH};name=glibc \
            git://github.com/kraj/localedef;branch=master;name=localedef;destsuffix=git/localedef \

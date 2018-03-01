@@ -1,7 +1,7 @@
-From a6bb73d1cfd20a73fbbe6076008376fb87879d1b Mon Sep 17 00:00:00 2001
-From: Yuanjie Huang <yuanjie.huang@windriver.com>
-Date: Thu, 18 Aug 2016 17:59:13 +0800
-Subject: [PATCH] reset dl_load_write_lock after forking
+From 847d37d5a34e4bf294de4ba98de3668950e28bc7 Mon Sep 17 00:00:00 2001
+From: Khem Raj <raj.khem@gmail.com>
+Date: Sat, 27 Jan 2018 10:05:07 -0800
+Subject: [PATCH 26/27] reset dl_load_write_lock after forking
 
 The patch in this Bugzilla entry was requested by a customer:
 
@@ -10,28 +10,31 @@ The patch in this Bugzilla entry was requested by a customer:
 The __libc_fork() code reset dl_load_lock, but it also needed to reset
 dl_load_write_lock.  The patch has not yet been integrated upstream.
 
-Upstream-Status: Pending [ Not Author See bugzilla]
+Upstream-Status: Pending [ No Author See bugzilla]
 
 Signed-off-by: Damodar Sonone <damodar.sonone@kpit.com>
 Signed-off-by: Yuanjie Huang <yuanjie.huang@windriver.com>
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
 ---
- sysdeps/nptl/fork.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ sysdeps/nptl/fork.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/sysdeps/nptl/fork.c b/sysdeps/nptl/fork.c
-index 2b9ae4b..3d0b8da 100644
+index 846fa49ef2..f87506f398 100644
 --- a/sysdeps/nptl/fork.c
 +++ b/sysdeps/nptl/fork.c
-@@ -174,8 +174,9 @@ __libc_fork (void)
-       /* Reset locks in the I/O code.  */
-       _IO_list_resetlock ();
+@@ -194,9 +194,9 @@ __libc_fork (void)
+ 	  _IO_list_resetlock ();
+ 	}
  
 -      /* Reset the lock the dynamic loader uses to protect its data.  */
 +      /* Reset the locks the dynamic loader uses to protect its data.  */
        __rtld_lock_initialize (GL(dl_load_lock));
+-
 +      __rtld_lock_initialize (GL(dl_load_write_lock));
- 
        /* Run the handlers registered for the child.  */
        while (allp != NULL)
+ 	{
 -- 
-1.9.1
+2.16.1
+
