@@ -18,6 +18,26 @@ EXTRA_OECONF = " --enable-gnuefi \
                  EFI_CC='${EFI_CC}' \
                "
 
+# install to the image as boot*.efi if its the EFI_PROVIDER,
+# otherwise install as the full name.
+# This allows multiple bootloaders to coexist in a single image.
+python __anonymous () {
+    import re
+    target = d.getVar('TARGET_ARCH')
+    prefix = "" if d.getVar('EFI_PROVIDER', True) == "systemd-boot" else "systemd-"
+    if target == "x86_64":
+        systemdimage = prefix + "bootx64.efi"
+    else:
+        systemdimage = prefix + "bootia32.efi"
+    d.setVar("SYSTEMD_BOOT_IMAGE", systemdimage)
+    prefix = "systemd-" if prefix == "" else ""
+    d.setVar("SYSTEMD_BOOT_IMAGE_PREFIX", prefix)
+}
+
+FILES_${PN} = "/boot/EFI/BOOT/${SYSTEMD_BOOT_IMAGE}"
+
+RDEPENDS_${PN} += "virtual/systemd-bootconf"
+
 # Imported from the old gummiboot recipe
 TUNE_CCARGS_remove = "-mfpmath=sse"
 COMPATIBLE_HOST = "(x86_64.*|i.86.*)-linux"
@@ -29,12 +49,14 @@ do_compile() {
 		SYSTEMD_BOOT_EFI_ARCH="x64"
 	fi
 
-	oe_runmake systemd-boot${SYSTEMD_BOOT_EFI_ARCH}.efi
+	oe_runmake ${SYSTEMD_BOOT_IMAGE_PREFIX}${SYSTEMD_BOOT_IMAGE}
 }
 
 do_install() {
-	# Bypass systemd installation with a NOP
-	:
+	install -d ${D}/boot
+	install -d ${D}/boot/EFI
+	install -d ${D}/boot/EFI/BOOT
+	install ${B}/systemd-boot*.efi ${D}/boot/EFI/BOOT/${SYSTEMD_BOOT_IMAGE}
 }
 
 do_deploy () {
