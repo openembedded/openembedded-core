@@ -26,7 +26,6 @@ RRECOMMENDS_${PN} = "\
 
 PROFILETOOLS = "\
     powertop \
-    latencytop \
     "
 PERF = "perf"
 PERF_libc-musl = ""
