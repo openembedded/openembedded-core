@@ -144,12 +144,6 @@ do_compile () {
 
 }
 
-# Use the host locale archive when built for nativesdk so that we don't need to
-# ship a complete (100MB) locale set.
-do_compile_prepend_class-nativesdk() {
-    echo "complocaledir=/usr/lib/locale" >> ${S}/configparms
-}
-
 require glibc-package.inc
 
 BBCLASSEXTEND = "nativesdk"
