@@ -1,3 +1,5 @@
+KERNEL_IMAGETYPE ??= "bzImage"
+
 SYSTEMD_BOOT_CFG ?= "${S}/loader.conf"
 SYSTEMD_BOOT_ENTRIES ?= ""
 SYSTEMD_BOOT_TIMEOUT ?= "10"
@@ -52,7 +54,9 @@ python build_efi_cfg() {
         localdata.setVar('OVERRIDES', label + ':' + overrides)
 
         entrycfg.write('title %s\n' % label)
-        entrycfg.write('linux /vmlinuz\n')
+
+        kernel = localdata.getVar("KERNEL_IMAGETYPE")
+        entrycfg.write('linux /%s\n' % kernel)
 
         append = localdata.getVar('APPEND')
         initrd = localdata.getVar('INITRD')
