@@ -84,6 +84,19 @@ class Sdk(object, metaclass=ABCMeta):
             bb.debug(1, "printing the stack trace\n %s" %traceback.format_exc())
             bb.warn("cannot remove SDK dir: %s" % path)
 
+    def install_locales(self, pm):
+        linguas = self.d.getVar("SDKIMAGE_LINGUAS")
+        if linguas:
+            if linguas == "all":
+                pm.install_glob("nativesdk-locale-base-*.utf-8", sdk=True)
+            else:
+                for lang in linguas.split():
+                    pm.install("nativesdk-locale-base-%s.utf-8" % lang)
+        else:
+            # No linguas so do nothing
+            pass
+
+
 class RpmSdk(Sdk):
     def __init__(self, d, manifest_dir=None, rpm_workdir="oe-sdk-repo"):
         super(RpmSdk, self).__init__(d, manifest_dir)
@@ -166,6 +179,7 @@ class RpmSdk(Sdk):
 
         bb.note("Installing NATIVESDK packages")
         self._populate_sysroot(self.host_pm, self.host_manifest)
+        self.install_locales(self.host_pm)
 
         execute_pre_post_process(self.d, self.d.getVar("POPULATE_SDK_POST_HOST_COMMAND"))
 
@@ -249,6 +263,7 @@ class OpkgSdk(Sdk):
 
         bb.note("Installing NATIVESDK packages")
         self._populate_sysroot(self.host_pm, self.host_manifest)
+        self.install_locales(self.host_pm)
 
         execute_pre_post_process(self.d, self.d.getVar("POPULATE_SDK_POST_HOST_COMMAND"))
 
@@ -335,6 +350,7 @@ class DpkgSdk(Sdk):
 
         bb.note("Installing NATIVESDK packages")
         self._populate_sysroot(self.host_pm, self.host_manifest)
+        self.install_locales(self.host_pm)
 
         execute_pre_post_process(self.d, self.d.getVar("POPULATE_SDK_POST_HOST_COMMAND"))
 
