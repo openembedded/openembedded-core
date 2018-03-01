@@ -69,6 +69,8 @@ GLIBC_BROKEN_LOCALES = ""
 #
 COMPATIBLE_HOST_libc-musl_class-target = "null"
 
+GLIBCPIE ??= ""
+
 EXTRA_OECONF = "--enable-kernel=${OLDEST_KERNEL} \
                 --without-cvs --disable-profile \
                 --disable-debug --without-gd \
@@ -82,6 +84,7 @@ EXTRA_OECONF = "--enable-kernel=${OLDEST_KERNEL} \
                 --enable-bind-now \
                 --enable-stack-protector=strong \
                 --enable-stackguard-randomization \
+                ${GLIBCPIE} \
                 ${GLIBC_EXTRA_OECONF}"
 
 EXTRA_OECONF += "${@get_libc_fpu_setting(bb, d)}"

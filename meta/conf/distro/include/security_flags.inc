@@ -6,6 +6,7 @@
 # in the DISTRO="poky-lsb" configuration.
 
 GCCPIE ?= "--enable-default-pie"
+GLIBCPIE ?= "--enable-static-pie"
 
 # _FORTIFY_SOURCE requires -O1 or higher, so disable in debug builds as they use
 # -O0 which then results in a compiler warning.
@@ -30,6 +31,7 @@ SECURITY_X_LDFLAGS ?= "-fstack-protector-strong -Wl,-z,relro"
 SECURITY_CFLAGS_powerpc = "-fstack-protector-strong ${lcl_maybe_fortify} ${SECURITY_NOPIE_CFLAGS}"
 SECURITY_CFLAGS_pn-libgcc_powerpc = ""
 GCCPIE_powerpc = ""
+GLIBCPIE_powerpc = ""
 
 # arm specific security flag issues
 SECURITY_CFLAGS_pn-glibc = ""
