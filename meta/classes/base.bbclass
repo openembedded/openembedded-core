@@ -222,8 +222,6 @@ python base_eventhandler() {
         if not d.getVar("NATIVELSBSTRING", False):
             d.setVar("NATIVELSBSTRING", lsb_distro_identifier(d))
         d.setVar('BB_VERSION', bb.__version__)
-        oe.utils.features_backfill("DISTRO_FEATURES", d)
-        oe.utils.features_backfill("MACHINE_FEATURES", d)
         # Works with the line in layer.conf which changes PATH to point here
         setup_hosttools_dir(d.getVar('HOSTTOOLS_DIR'), 'HOSTTOOLS', d)
         setup_hosttools_dir(d.getVar('HOSTTOOLS_DIR'), 'HOSTTOOLS_NONFATAL', d, fatal=False)
@@ -381,6 +379,10 @@ def set_packagetriplet(d):
 
 python () {
     import string, re
+
+    # Handle backfilling
+    oe.utils.features_backfill("DISTRO_FEATURES", d)
+    oe.utils.features_backfill("MACHINE_FEATURES", d)
 
     # Handle PACKAGECONFIG
     #
