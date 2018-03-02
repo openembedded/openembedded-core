@@ -34,3 +34,20 @@ RDEPENDS_${PN}-dev = ""
 RRECOMMENDS_${PN}-dbg = "${PN}-dev (= ${EXTENDPKGV})"
 
 BBCLASSEXTEND = "native nativesdk"
+
+# Need to do this dance because we're forcing the use of host Python above and
+# if xcb-proto is built with Py3.5 and then re-used from sstate on a host with
+# Py3.6 the second build will write new cache files into the sysroot which won't
+# be listed in the manifest so won't be deleted, resulting in an error on
+# rebuilds.  Solve this by deleting the entire cache directory when this package
+# is removed from the sysroot.
+SSTATEPOSTINSTFUNCS += "xcb_sstate_postinst"
+xcb_sstate_postinst() {
+	if [ "${BB_CURRENTTASK}" = "populate_sysroot" -o "${BB_CURRENTTASK}" = "populate_sysroot_setscene" ]
+	then
+		cat <<EOF >${SSTATE_INST_POSTRM}
+#!/bin/sh
+rm -rf ${libdir}/xcb-proto/xcbgen/__pycache__
+EOF
+	fi
+}
