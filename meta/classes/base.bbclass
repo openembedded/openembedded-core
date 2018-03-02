@@ -456,7 +456,7 @@ python () {
 
     pn = d.getVar('PN')
     license = d.getVar('LICENSE')
-    if license == "INVALID":
+    if license == "INVALID" and pn != "defaultpkgname":
         bb.fatal('This recipe does not have the LICENSE field set (%s)' % pn)
 
     if bb.data.inherits_class('license', d):
