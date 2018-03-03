@@ -25,6 +25,9 @@ EXTRA_OECONF_darwin = "--libdir=${base_libdir} --sbindir=${base_sbindir} --enabl
 PACKAGECONFIG ??= ""
 PACKAGECONFIG[fuse] = '--enable-fuse2fs,--disable-fuse2fs,fuse'
 
+do_compile_prepend (){
+	find ${S}/po -type f -name "*.po" -exec touch {} +
+}
 
 do_install () {
 	oe_runmake 'DESTDIR=${D}' install
