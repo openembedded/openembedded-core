@@ -51,6 +51,7 @@ SRC_URI = "git://github.com/systemd/systemd.git;protocol=git \
            file://0001-meson-update-header-file-to-detect-memfd_create.patch \
            file://0002-configure.ac-Check-if-memfd_create-is-already-define.patch \
            file://0003-fileio-include-sys-mman.h.patch \
+           file://0001-Hide-__start_BUS_ERROR_MAP-and-__stop_BUS_ERROR_MAP.patch \
            "
 SRC_URI_append_qemuall = " file://0001-core-device.c-Change-the-default-device-timeout-to-2.patch"
 
