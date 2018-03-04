@@ -89,7 +89,6 @@ do_configure[dirs] =+ "${GOTMPDIR}"
 
 go_do_compile() {
 	export TMPDIR="${GOTMPDIR}"
-	${GO} env
 	if [ -n "${GO_INSTALL}" ]; then
 		if [ -n "${GO_LINKSHARED}" ]; then
 			${GO} install ${GOBUILDFLAGS} `go_list_packages`
@@ -126,7 +125,6 @@ go_do_install() {
 }
 
 do_install_ptest_base() {
-set -x
     test -f "${B}/.go_compiled_tests.list" || exit 0
     tests=""
     while read test; do
@@ -160,7 +158,6 @@ EOF
     else
         rm -rf ${D}${PTEST_PATH}
     fi
-set +x
 }
 
 EXPORT_FUNCTIONS do_unpack do_configure do_compile do_install
