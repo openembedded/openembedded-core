@@ -18,11 +18,16 @@ SRC_URI[sha256sum] = "6c9f474ad3d4fe0cabff6b6be532cb1dd348245986d4a6b600ad921d5c
 
 S = "${WORKDIR}/Error-${PV}"
 
-inherit cpan
+inherit cpan ptest-perl
 
 do_compile() {
 	export LIBC="$(find ${STAGING_DIR_TARGET}/${base_libdir}/ -name 'libc-*.so')"
 	cpan_do_compile
+}
+
+do_install_prepend() {
+	# test requires "-T" (taint) command line option
+	rm -rf ${B}/t/pod-coverage.t
 }
 
 BBCLASSEXTEND = "native"
