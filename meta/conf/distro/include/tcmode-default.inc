@@ -67,3 +67,13 @@ PREFERRED_VERSION_cross-localedef-native   ?= "${GLIBCVERSION}"
 # Setup suitable toolchain flags
 require conf/distro/include/as-needed.inc
 
+GOVERSION ?= "1.10%"
+PREFERRED_VERSION_virtual/${TARGET_PREFIX}go ?= "${GOVERSION}"
+PREFERRED_VERSION_go-cross-${TARGET_ARCH} ?= "${GOVERSION}"
+PREFERRED_VERSION_go-crosssdk-${SDK_ARCH} ?= "${GOVERSION}"
+PREFERRED_VERSION_go-cross-canadian-${TRANSLATED_TARGET_ARCH} ?= "${GOVERSION}"
+PREFERRED_VERSION_go ?= "${GOVERSION}"
+PREFERRED_VERSION_go-native ?= "${GOVERSION}"
+PREFERRED_VERSION_go-runtime ?= "${GOVERSION}"
+PREFERRED_VERSION_nativesdk-go ?= "${GOVERSION}"
+PREFERRED_VERSION_nativesdk-go-runtime ?= "${GOVERSION}"
