@@ -24,6 +24,7 @@ GO_LINKMODE ?= ""
 GO_LINKMODE_class-nativesdk = "--linkmode=external"
 GO_LDFLAGS ?= '-ldflags="${GO_RPATH} ${GO_LINKMODE} -extldflags '${GO_EXTLDFLAGS}'"'
 export GOBUILDFLAGS ?= "-v ${GO_LDFLAGS}"
+export GOPATH_OMIT_IN_ACTIONID ?= "1"
 export GOPTESTBUILDFLAGS ?= "${GOBUILDFLAGS} -c"
 export GOPTESTFLAGS ?= "-test.v"
 GOBUILDFLAGS_prepend_task-compile = "${GO_PARALLEL_BUILD} "
@@ -47,6 +48,7 @@ GO_INSTALL_FILTEROUT ?= "${GO_IMPORT}/vendor/"
 
 B = "${WORKDIR}/build"
 export GOPATH = "${B}"
+export GOCACHE = "off"
 GO_TMPDIR ?= "${WORKDIR}/go-tmp"
 GO_TMPDIR[vardepvalue] = ""
 
@@ -88,6 +90,10 @@ go_do_compile() {
 	export TMPDIR="${GO_TMPDIR}"
 	${GO} env
 	if [ -n "${GO_INSTALL}" ]; then
+		if [ -n "${GO_LINKSHARED}" ]; then
+			${GO} install ${GOBUILDFLAGS} `go_list_packages`
+			rm -rf ${B}/bin
+		fi
 		${GO} install ${GO_LINKSHARED} ${GOBUILDFLAGS} `go_list_packages`
 	fi
 }

@@ -22,6 +22,8 @@ UPSTREAM_CHECK_REGEX = "(?P<pver>\d+(\.\d+)+)\.src\.tar"
 INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
 SSTATE_SCAN_CMD = "true"
 
+export GOROOT_OVERRIDE = "1"
+
 do_compile_prepend() {
 	BUILD_CC=${BUILD_CC}
 }

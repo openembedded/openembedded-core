@@ -11,10 +11,9 @@ export GO386 = "${TARGET_GO386}"
 export GOROOT_BOOTSTRAP = "${STAGING_LIBDIR_NATIVE}/go"
 export GOROOT_FINAL = "${libdir}/go"
 export CGO_ENABLED = "1"
-export CC_FOR_TARGET = "${CC}"
-export CXX_FOR_TARGET = "${CXX}"
-export GO_TARGET_INSTALL = "cmd"
-export GO_FLAGS = "-a"
+export GOCACHE = "off"
+export GOTMPDIR ?= "${WORKDIR}/go-tmp"
+GOTMPDIR[vardepvalue] = ""
 GO_LDFLAGS = ""
 GO_LDFLAGS_class-nativesdk = "-linkmode external"
 export GO_LDFLAGS
@@ -25,24 +24,22 @@ SECURITY_LDFLAGS = ""
 do_configure[noexec] = "1"
 
 do_compile() {
-	export GOBIN="${B}/bin"
-	export CC="${@d.getVar('BUILD_CC').strip()}"
-	rm -rf ${GOBIN} ${B}/pkg
-	mkdir ${GOBIN}
-
-	export TMPDIR=${WORKDIR}/build-tmp
-	mkdir -p ${WORKDIR}/build-tmp
+	export CC_FOR_${TARGET_GOOS}_${TARGET_GOARCH}="${CC}"
+	export CXX_FOR_${TARGET_GOOS}_${TARGET_GOARCH}="${CXX}"
 
 	cd src
-	./make.bash
+	./make.bash --target-only --no-banner
 	cd ${B}
 }
+do_compile[dirs] =+ "${GOTMPDIR} ${B}/bin ${B}/pkg"
+do_compile[cleandirs] += "${GOTMPDIR} ${B}/bin ${B}/pkg"
 
 do_install() {
 	install -d ${D}${libdir}/go/pkg/tool
 	cp --preserve=mode,timestamps -R ${B}/pkg/tool/${TARGET_GOTUPLE} ${D}${libdir}/go/pkg/tool/
 	install -d ${D}${libdir}/go/src
 	cp --preserve=mode,timestamps -R ${S}/src/cmd ${D}${libdir}/go/src/
+	find ${D}${libdir}/go/src -depth -type d -name testdata -exec rm -rf {} \;
 	install -d ${D}${libdir}/go/bin
 	install -d ${D}${bindir}
 	for f in ${B}/${GO_BUILD_BINDIR}/*; do
