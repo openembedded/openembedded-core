@@ -22,4 +22,4 @@ do_install () {
 PACKAGES =+ "${PN}-misc"
 FILES_${PN}-misc = "${bindir}/convert-dtsv0 ${bindir}/ftdump ${bindir}/dtdiff"
 
-RDEPENDS_${PN}-misc += "bash"
+RDEPENDS_${PN}-misc += "bash diffutils"
