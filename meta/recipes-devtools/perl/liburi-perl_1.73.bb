@@ -20,11 +20,19 @@ S = "${WORKDIR}/URI-${PV}"
 
 EXTRA_CPANFLAGS = "EXPATLIBPATH=${STAGING_LIBDIR} EXPATINCPATH=${STAGING_INCDIR}"
 
-inherit cpan
+inherit cpan ptest-perl
 
 do_compile() {
 	export LIBC="$(find ${STAGING_DIR_TARGET}/${base_libdir}/ -name 'libc-*.so')"
 	cpan_do_compile
 }
+
+do_install_prepend() {
+	# these tests require "-T" (taint) command line option
+	rm -rf ${B}/t/cwd.t
+	rm -rf ${B}/t/file.t
+}
+
+RDEPENDS_${PN}-ptest += "libtest-needs-perl"
 
 BBCLASSEXTEND = "native"
