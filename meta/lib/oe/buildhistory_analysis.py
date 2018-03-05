@@ -36,7 +36,6 @@ related_fields = {}
 related_fields['RDEPENDS'] = ['DEPENDS']
 related_fields['RRECOMMENDS'] = ['DEPENDS']
 related_fields['FILELIST'] = ['FILES']
-related_fields['PKGSIZE'] = ['FILELIST']
 related_fields['files-in-image.txt'] = ['installed-package-names.txt', 'USER_CLASSES', 'IMAGE_CLASSES', 'ROOTFS_POSTPROCESS_COMMAND', 'IMAGE_POSTPROCESS_COMMAND']
 related_fields['installed-package-names.txt'] = ['IMAGE_FEATURES', 'IMAGE_LINGUAS', 'IMAGE_INSTALL', 'BAD_RECOMMENDATIONS', 'NO_RECOMMENDATIONS', 'PACKAGE_EXCLUDE']
 
@@ -99,7 +98,17 @@ class ChangeRecord:
                                 for name in adirs - bdirs]
             files_ba = [(name, sorted(os.path.basename(item) for item in bitems if os.path.dirname(item) == name)) \
                                 for name in bdirs - adirs]
-            renamed_dirs = [(dir1, dir2) for dir1, files1 in files_ab for dir2, files2 in files_ba if files1 == files2]
+            renamed_dirs = []
+            for dir1, files1 in files_ab:
+                rename = False
+                for dir2, files2 in files_ba:
+                    if files1 == files2 and not rename:
+                        renamed_dirs.append((dir1,dir2))
+                        # Make sure that we don't use this (dir, files) pair again.
+                        files_ba.remove((dir2,files2))
+                        # If a dir has already been found to have a rename, stop and go no further.
+                        rename = True
+
             # remove files that belong to renamed dirs from aitems and bitems
             for dir1, dir2 in renamed_dirs:
                 aitems = [item for item in aitems if os.path.dirname(item) not in (dir1, dir2)]
