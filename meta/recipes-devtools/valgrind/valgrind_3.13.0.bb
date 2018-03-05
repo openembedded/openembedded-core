@@ -37,6 +37,7 @@ SRC_URI = "ftp://sourceware.org/pub/valgrind/valgrind-${PV}.tar.bz2 \
            file://0003-tests-seg_override-Replace-__modify_ldt-with-syscall.patch \
            file://link-gz-tests.patch \
            file://ppc-headers.patch \
+           file://mask-CPUID-support-in-HWCAP-on-aarch64.patch \
            "
 SRC_URI[md5sum] = "817dd08f1e8a66336b9ff206400a5369"
 SRC_URI[sha256sum] = "d76680ef03f00cd5e970bbdcd4e57fb1f6df7d2e2c071635ef2be74790190c3b"
