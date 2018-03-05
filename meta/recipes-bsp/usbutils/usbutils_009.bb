@@ -10,7 +10,6 @@ DEPENDS = "libusb zlib virtual/libiconv udev"
 
 SRC_URI = "${KERNELORG_MIRROR}/linux/utils/usb/usbutils/usbutils-${PV}.tar.gz \
            file://usb-devices-avoid-dependency-on-bash.patch \
-           file://Fix-NULL-pointer-crash.patch \
           "
 
 SRC_URI[md5sum] = "b5dbc498b2eb5058f7a57fc6532d0aad"
