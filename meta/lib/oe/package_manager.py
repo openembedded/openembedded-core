@@ -531,6 +531,8 @@ def create_packages_dir(d, rpm_repo_dir, deploydir, taskname, filterbydependenci
     for dep in rpmdeps:
         c = taskdepdata[dep][0]
         manifest, d2 = oe.sstatesig.find_sstate_manifest(c, taskdepdata[dep][2], taskname, d, multilibs)
+        if not manifest:
+            bb.fatal("No manifest generated from: %s in %s" % (c, taskdepdata[dep][2]))
         if not os.path.exists(manifest):
             continue
         with open(manifest, "r") as f:
