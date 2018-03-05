@@ -15,8 +15,7 @@ SRC_URI = "git://sourceware.org/git/systemtap.git \
            file://0001-staprun-stapbpf-don-t-support-installing-a-non-root.patch \
            "
 
-# systemtap doesn't support mips
-COMPATIBLE_HOST = '(x86_64|i.86|powerpc|arm|aarch64|microblazeel).*-linux'
+COMPATIBLE_HOST = '(x86_64|i.86|powerpc|arm|aarch64|microblazeel|mips).*-linux'
 
 S = "${WORKDIR}/git"
 
