@@ -18,27 +18,27 @@ EXTRA_OECONF_prepend_class-target = "${@bb.utils.contains('GTKDOC_ENABLED', 'Tru
 EXTRA_OECONF_prepend_class-native = "--disable-gtk-doc "
 EXTRA_OECONF_prepend_class-nativesdk = "--disable-gtk-doc "
 
-DEPENDS_append_class-target = " gtk-doc-native qemu-native"
-
 # Even though gtkdoc is disabled on -native, gtk-doc package is still
 # needed for m4 macros.
-DEPENDS_append_class-native = " gtk-doc-native"
-DEPENDS_append_class-nativesdk = " gtk-doc-native"
+DEPENDS_append = " gtk-doc-native"
 
 # The documentation directory, where the infrastructure will be copied.
 # gtkdocize has a default of "." so to handle out-of-tree builds set this to $S.
 GTKDOC_DOCDIR ?= "${S}"
 
+export STAGING_DIR_HOST
+
+inherit ${@oe.utils.ifelse(d.getVar('GTKDOC_ENABLED') == 'True', 'python3native', '')}
+
+inherit pkgconfig qemu
+DEPENDS_append = "${@oe.utils.ifelse(d.getVar('GTKDOC_ENABLED') == 'True', ' qemu-native', '')}"
+
 do_configure_prepend () {
 	( cd ${S}; gtkdocize --docdir ${GTKDOC_DOCDIR} || true )
 }
 
-inherit qemu
-
-export STAGING_DIR_HOST
-
 do_compile_prepend_class-target () {
-
+    if [ ${GTKDOC_ENABLED} = True ]; then
         # Write out a qemu wrapper that will be given to gtkdoc-scangobj so that it
         # can run target helper binaries through that.
         qemu_binary="${@qemu_wrapper_cmdline(d, '$STAGING_DIR_HOST', ['\$GIR_EXTRA_LIBS_PATH','$STAGING_DIR_HOST/${libdir}','$STAGING_DIR_HOST/${base_libdir}'])}"
@@ -64,7 +64,5 @@ if [ \$? -ne 0 ]; then
 fi
 EOF
         chmod +x ${B}/gtkdoc-qemuwrapper
+    fi
 }
-
-
-inherit pkgconfig
