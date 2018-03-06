@@ -3,6 +3,9 @@ From: James Clarke <jrtc27@jrtc27.com>
 Date: Fri, 19 Jan 2018 17:22:49 +0000
 Subject: [PATCH] gdb: Fix ia64 defining TRAP_HWBKPT before including
  gdb_wait.h
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
 On ia64, gdb_wait.h eventually includes siginfo-consts-arch.h, which
 contains an enum with TRAP_HWBKPT, along with a #define. Thus we cannot
@@ -16,6 +19,8 @@ gdb/ChangeLog:
 	* nat/linux-ptrace.h: ... to here.
 
 Upstream-Status: Accepted [https://sourceware.org/git/gitweb.cgi?p=binutils-gdb.git;a=commit;h=5a6c3296a7a90694ad4042f6256f3da6d4fa4ee8]
+
+Signed-off-by: Daniel Díaz <daniel.diaz@linaro.org>
 ---
  gdb/nat/linux-ptrace.c | 2 --
  gdb/nat/linux-ptrace.h | 1 +
