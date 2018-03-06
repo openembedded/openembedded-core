@@ -466,8 +466,10 @@ do_shared_workdir () {
 	# arch/powerpc/lib/crtsavres.o which is present in
 	# KBUILD_LDFLAGS_MODULE, making it required to build external modules.
 	if [ ${ARCH} = "powerpc" ]; then
-		mkdir -p $kerneldir/arch/powerpc/lib/
-		cp arch/powerpc/lib/crtsavres.o $kerneldir/arch/powerpc/lib/crtsavres.o
+		if [ -e arch/powerpc/lib/crtsavres.o ]; then
+			mkdir -p $kerneldir/arch/powerpc/lib/
+			cp arch/powerpc/lib/crtsavres.o $kerneldir/arch/powerpc/lib/crtsavres.o
+		fi
 	fi
 
 	if [ -d include/generated ]; then
