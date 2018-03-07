@@ -25,8 +25,8 @@ SRC_URI = "http://netfilter.org/projects/iptables/files/iptables-${PV}.tar.bz2 \
            file://0001-fix-build-with-musl.patch \
 "
 
-SRC_URI[md5sum] = "ab38a33806b6182c6f53d6afb4619add"
-SRC_URI[sha256sum] = "0fc2d7bd5d7be11311726466789d4c65fb4c8e096c9182b56ce97440864f0cf5"
+SRC_URI[md5sum] = "7d2b7847e4aa8832a18437b8a4c1873d"
+SRC_URI[sha256sum] = "55d02dfa46263343a401f297d44190f2a3e5113c8933946f094ed40237053733"
 
 inherit autotools pkgconfig
 
