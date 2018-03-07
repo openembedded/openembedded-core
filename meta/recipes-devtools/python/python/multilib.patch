@@ -41,11 +41,13 @@ Index: Python-2.7.13/Lib/distutils/command/install.py
  if sys.version < "2.2":
      WINDOWS_SCHEME = {
          'purelib': '$base',
-@@ -42,7 +44,7 @@ else:
+@@ -41,8 +43,8 @@ else:
+ 
  INSTALL_SCHEMES = {
      'unix_prefix': {
-         'purelib': '$base/lib/python$py_version_short/site-packages',
+-        'purelib': '$base/lib/python$py_version_short/site-packages',
 -        'platlib': '$platbase/lib/python$py_version_short/site-packages',
++        'purelib': '$platbase/'+libname+'/python$py_version_short/site-packages',
 +        'platlib': '$platbase/'+libname+'/python$py_version_short/site-packages',
          'headers': '$base/include/python$py_version_short/$dist_name',
          'scripts': '$base/bin',
