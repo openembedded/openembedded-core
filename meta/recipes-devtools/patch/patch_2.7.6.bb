@@ -3,8 +3,8 @@ LICENSE = "GPLv3"
 
 SRC_URI += "file://0001-Unset-need_charset_alias-when-building-for-musl.patch"
 
-SRC_URI[md5sum] = "ed4d5674ef4543b4eb463db168886dc7"
-SRC_URI[sha256sum] = "7436f5a19f93c3ca83153ce9c5cbe4847e97c5d956e57a220121e741f6e7968f"
+SRC_URI[md5sum] = "4c68cee989d83c87b00a3860bcd05600"
+SRC_URI[sha256sum] = "8cf86e00ad3aaa6d26aca30640e86b0e3e1f395ed99f189b06d4c9f74bc58a4e"
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 
