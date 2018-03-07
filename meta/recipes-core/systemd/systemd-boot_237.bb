@@ -3,20 +3,25 @@ FILESEXTRAPATHS =. "${FILE_DIRNAME}/systemd:"
 
 DEPENDS = "intltool-native libcap util-linux gnu-efi gperf-native"
 
-SRC_URI += "file://0007-use-lnr-wrapper-instead-of-looking-for-relative-opti.patch"
+SRC_URI += "file://0003-use-lnr-wrapper-instead-of-looking-for-relative-opti.patch \
+            file://0027-remove-nobody-user-group-checking.patch \
+            file://0001-Also-check-i386-i586-and-i686-for-ia32.patch \
+            file://0001-Fix-to-run-efi_cc-and-efi_ld-correctly-when-cross-co.patch \
+            "
 
-inherit autotools pkgconfig gettext
+inherit meson pkgconfig gettext
 inherit deploy
 
 EFI_CC ?= "${CC}"
-# Man pages are packaged through the main systemd recipe
-EXTRA_OECONF = " --enable-gnuefi \
-                 --with-efi-includedir=${STAGING_INCDIR} \
-                 --with-efi-ldsdir=${STAGING_LIBDIR} \
-                 --with-efi-libdir=${STAGING_LIBDIR} \
-                 --disable-manpages \
-                 EFI_CC='${EFI_CC}' \
-               "
+EXTRA_OEMESON += "-Defi=true \
+                  -Dgnu-efi=true \
+                  -Defi-includedir=${STAGING_INCDIR}/efi \
+                  -Defi-ldsdir=${STAGING_LIBDIR} \
+                  -Defi-libdir=${STAGING_LIBDIR} \
+                  -Dman=false \
+                  -Defi-cc='${EFI_CC}' \
+                  -Defi-ld='${LD}' \
+                  "
 
 # install to the image as boot*.efi if its the EFI_PROVIDER,
 # otherwise install as the full name.
@@ -49,17 +54,17 @@ do_compile() {
 		SYSTEMD_BOOT_EFI_ARCH="x64"
 	fi
 
-	oe_runmake ${SYSTEMD_BOOT_IMAGE_PREFIX}${SYSTEMD_BOOT_IMAGE}
+	ninja src/boot/efi/${SYSTEMD_BOOT_IMAGE_PREFIX}${SYSTEMD_BOOT_IMAGE}
 }
 
 do_install() {
 	install -d ${D}/boot
 	install -d ${D}/boot/EFI
 	install -d ${D}/boot/EFI/BOOT
-	install ${B}/systemd-boot*.efi ${D}/boot/EFI/BOOT/${SYSTEMD_BOOT_IMAGE}
+	install ${B}/src/boot/efi/systemd-boot*.efi ${D}/boot/EFI/BOOT/${SYSTEMD_BOOT_IMAGE}
 }
 
 do_deploy () {
-	install ${B}/systemd-boot*.efi ${DEPLOYDIR}
+	install ${B}/src/boot/efi/systemd-boot*.efi ${DEPLOYDIR}
 }
 addtask deploy before do_build after do_compile
