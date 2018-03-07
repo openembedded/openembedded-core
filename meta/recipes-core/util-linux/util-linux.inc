@@ -196,8 +196,10 @@ do_install () {
 }
 
 # nologin causes a conflict with shadow-native
+# kill causes a conflict with coreutils-native (if ${bindir}==${base_bindir})
 do_install_append_class-native () {
 	rm -f ${D}${base_sbindir}/nologin
+	rm -f ${D}${base_bindir}/kill
 }
 
 ALTERNATIVE_PRIORITY = "80"
