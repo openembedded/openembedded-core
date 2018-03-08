@@ -58,7 +58,7 @@ RDEPENDS_${PN}-ptest = "make"
 
 inherit update-alternatives
 
-ALTERNATIVE_${PN} = "chvt deallocvt fgconsole openvt"
+ALTERNATIVE_${PN} = "chvt deallocvt fgconsole openvt showkey"
 ALTERNATIVE_PRIORITY = "100"
 
 BBCLASSEXTEND = "native"
