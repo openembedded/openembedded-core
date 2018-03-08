@@ -45,7 +45,6 @@ SRC_URI += " \
         file://letgcc-find-errno.patch \
         file://generate-sh.patch \
         file://native-perlinc.patch \
-        file://perl-enable-gdbm.patch \
         file://cross-generate_uudmap.patch \
         file://fix_bad_rpath.patch \
         file://dynaloaderhack.patch \
