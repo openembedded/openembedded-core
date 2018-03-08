@@ -1,19 +1,17 @@
 SUMMARY = "A sophisticated Numeric Processing Package for Python"
 SECTION = "devel/python"
-LICENSE = "BSD-3-Clause"
-LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=1002b09cd654fcaa2dcc87535acd9a96"
+LICENSE = "BSD-3-Clause & BSD-2-Clause & PSF & Apache-2.0 & BSD"
+LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=fc53b33304171d132128ebe82ea4a645"
 
 SRCNAME = "numpy"
 
 SRC_URI = "https://github.com/${SRCNAME}/${SRCNAME}/releases/download/v${PV}/${SRCNAME}-${PV}.tar.gz \
            file://0001-Don-t-search-usr-and-so-on-for-libraries-by-default-.patch \
-           file://remove-build-path-in-comments.patch \
            file://fix_shebang_f2py.patch \
-           file://0001-BUG-fix-infinite-loop-when-creating-np.pad-on-an-emp.patch \
-           ${CONFIGFILESURI} "
-
-SRC_URI[md5sum] = "6d459e4a24f5035f720dda3c57716a92"
-SRC_URI[sha256sum] = "de020ec06f1e9ce1115a50161a38bf8d4c2525379900f9cb478cc613a1e7cd93"
+           ${CONFIGFILESURI} \
+           "
+SRC_URI[md5sum] = "0e09f20f62ab9f8a02cb7bd3fd023482"
+SRC_URI[sha256sum] = "8708a775be9a9a457b80a49193c57bd9d51a8a195ed1f1c4b8e89eaf3aa646ee"
 
 UPSTREAM_CHECK_URI = "https://github.com/numpy/numpy/releases"
 UPSTREAM_CHECK_REGEX = "(?P<pver>\d+(\.\d+)+)\.tar"
@@ -75,12 +73,12 @@ CONFIGFILESURI_mipsarchn32el = " \
 
 S = "${WORKDIR}/numpy-${PV}"
 
-inherit setuptools
+inherit setuptools3
 
 # Make the build fail and replace *config.h with proper one
 # This is a ugly, ugly hack - Koen
 do_compile_prepend_class-target() {
-    ${STAGING_BINDIR_NATIVE}/python-native/python setup.py build ${DISTUTILS_BUILD_ARGS} || \
+    ${STAGING_BINDIR_NATIVE}/python3-native/python3 setup.py build ${DISTUTILS_BUILD_ARGS} || \
     true
     cp ${WORKDIR}/*config.h ${S}/build/$(ls ${S}/build | grep src)/numpy/core/include/numpy/
 }
@@ -88,26 +86,25 @@ do_compile_prepend_class-target() {
 FILES_${PN}-staticdev += "${PYTHON_SITEPACKAGES_DIR}/numpy/core/lib/*.a"
 
 # install what is needed for numpy.test()
-RDEPENDS_${PN} = "python-unittest \
-                  python-difflib \
-                  python-pprint \
-                  python-pickle \
-                  python-shell \
-                  python-nose \
-                  python-doctest \
-                  python-datetime \
-                  python-distutils \
-                  python-misc \
-                  python-mmap \
-                  python-netclient \
-                  python-numbers \
-                  python-pydoc \
-                  python-pkgutil \
-                  python-email \
-                  python-subprocess \
-                  python-compression \
-                  python-ctypes \
-                  python-threading \
+RDEPENDS_${PN} = "python3-unittest \
+                  python3-difflib \
+                  python3-pprint \
+                  python3-pickle \
+                  python3-shell \
+                  python3-nose \
+                  python3-doctest \
+                  python3-datetime \
+                  python3-distutils \
+                  python3-misc \
+                  python3-mmap \
+                  python3-netclient \
+                  python3-numbers \
+                  python3-pydoc \
+                  python3-pkgutil \
+                  python3-email \
+                  python3-compression \
+                  python3-ctypes \
+                  python3-threading \
 "
 
 RDEPENDS_${PN}_class-native = ""
