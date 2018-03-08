@@ -19,10 +19,8 @@ RRECOMMENDS_${PN} = "kernel-module-x-tables \
 FILES_${PN} =+ "${libdir}/xtables/ ${datadir}/xtables"
 
 SRC_URI = "http://netfilter.org/projects/iptables/files/iptables-${PV}.tar.bz2 \
-           file://types.h-add-defines-that-are-required-for-if_packet.patch \
            file://0001-configure-Add-option-to-enable-disable-libnfnetlink.patch \
            file://0002-configure.ac-only-check-conntrack-when-libnfnetlink-enabled.patch \
-           file://0001-fix-build-with-musl.patch \
 "
 
 SRC_URI[md5sum] = "7d2b7847e4aa8832a18437b8a4c1873d"
