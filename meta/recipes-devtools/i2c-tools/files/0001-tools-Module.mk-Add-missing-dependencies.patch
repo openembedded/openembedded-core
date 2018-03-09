@@ -17,12 +17,12 @@ Signed-off-by: Maxin B. John <maxin.john@intel.com>
  tools/Module.mk | 10 +++++-----
  2 files changed, 12 insertions(+), 5 deletions(-)
 
-diff --git a/lib/Module.mk b/lib/Module.mk
-index 8a58f5b..67afe91 100644
---- a/lib/Module.mk
-+++ b/lib/Module.mk
-@@ -37,6 +37,13 @@ ifeq ($(BUILD_STATIC_LIB),1)
- LIB_TARGETS	+= $(LIB_STLIBNAME)
+Index: i2c-tools-4.0/lib/Module.mk
+===================================================================
+--- i2c-tools-4.0.orig/lib/Module.mk
++++ i2c-tools-4.0/lib/Module.mk
+@@ -35,6 +35,13 @@ LIB_TARGETS	+= $(LIB_STLIBNAME)
+ LIB_OBJECTS	+= smbus.ao
  endif
  
 +# Library file to link against (static or dynamic)
@@ -35,11 +35,11 @@ index 8a58f5b..67afe91 100644
  #
  # Libraries
  #
-diff --git a/tools/Module.mk b/tools/Module.mk
-index 6421a23..609de7a 100644
---- a/tools/Module.mk
-+++ b/tools/Module.mk
-@@ -24,19 +24,19 @@ TOOLS_TARGETS	:= i2cdetect i2cdump i2cset i2cget i2ctransfer
+Index: i2c-tools-4.0/tools/Module.mk
+===================================================================
+--- i2c-tools-4.0.orig/tools/Module.mk
++++ i2c-tools-4.0/tools/Module.mk
+@@ -24,19 +24,19 @@ TOOLS_TARGETS	:= i2cdetect i2cdump i2cse
  # Programs
  #
  
@@ -64,6 +64,3 @@ index 6421a23..609de7a 100644
  	$(CC) $(LDFLAGS) -o $@ $^ $(TOOLS_LDFLAGS)
  
  #
--- 
-2.4.0
-
