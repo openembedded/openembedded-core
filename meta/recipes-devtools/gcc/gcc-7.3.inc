@@ -73,7 +73,6 @@ SRC_URI = "\
            file://0047-sync-gcc-stddef.h-with-musl.patch \
            file://0048-gcc-Enable-static-PIE.patch \
            file://fix-segmentation-fault-precompiled-hdr.patch \
-           file://0050-RISC-V-Handle-non-legitimate-address-in-riscv_legiti.patch \
            file://no-sse-fix-test-case-failures.patch \
            ${BACKPORTS} \
 "
