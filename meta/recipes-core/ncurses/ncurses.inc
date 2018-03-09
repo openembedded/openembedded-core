@@ -227,7 +227,7 @@ do_install() {
         if [ ! -d "${D}${base_libdir}" ]; then
             # Setting base_libdir to libdir as is done in the -native
             # case will skip this code
-            mkdir ${D}${base_libdir}
+            mkdir -p ${D}${base_libdir}
             mv ${D}${libdir}/libncurses.so.* ${D}${base_libdir}
             ! ${ENABLE_WIDEC} || \
                 mv ${D}${libdir}/libncursesw.so.* ${D}${base_libdir}
