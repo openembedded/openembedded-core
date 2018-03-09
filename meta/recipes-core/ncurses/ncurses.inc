@@ -201,7 +201,10 @@ do_install() {
                 ln -sf xterm-color ${D}${sysconfdir}/terminfo/x/xterm
         fi
 
-        rm -f ${D}${libdir}/terminfo
+        # When changing ${libdir} to e.g. /usr/lib/myawesomelib/ ncurses 
+        # still installs '/usr/lib/terminfo', so try to rm both 
+        # the proper path and a slightly hardcoded one
+        rm -f ${D}${libdir}/terminfo ${D}${prefix}/lib/terminfo
 
         # create linker scripts for libcurses.so and libncurses to
         # link against -ltinfo when needed. Some builds might break
