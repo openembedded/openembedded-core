@@ -5,10 +5,10 @@ Subject: [PATCH] also create old hash for compatibility
 
 Upstream-Status: Backport [debian]
 
-diff --git a/tools/c_rehash.in b/tools/c_rehash.in
-index b086ff9..b777d79 100644
---- a/tools/c_rehash.in
-+++ b/tools/c_rehash.in
+Index: openssl-1.0.2n/tools/c_rehash.in
+===================================================================
+--- openssl-1.0.2n.orig/tools/c_rehash.in
++++ openssl-1.0.2n/tools/c_rehash.in
 @@ -8,8 +8,6 @@ my $prefix;
  
  my $openssl = $ENV{OPENSSL} || "openssl";
@@ -48,7 +48,7 @@ index b086ff9..b777d79 100644
  		$fname =~ s/'/'\\''/g;
  		my ($hash, $fprint) = `"$openssl" x509 $x509hash -fingerprint -noout -in "$fname"`;
  		chomp $hash;
-@@ -176,11 +174,21 @@ sub link_hash_cert {
+@@ -177,10 +175,20 @@ sub link_hash_cert {
  		$hashlist{$hash} = $fprint;
  }
  
