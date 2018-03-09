@@ -25,6 +25,8 @@ EXTRA_OECONF_darwin = "--libdir=${base_libdir} --sbindir=${base_sbindir} --enabl
 PACKAGECONFIG ??= ""
 PACKAGECONFIG[fuse] = '--enable-fuse2fs,--disable-fuse2fs,fuse'
 
+# make locale rules sometimes fire, sometimes don't as git doesn't preserve
+# file mktime. Touch the files introducing non-determinism to the build
 do_compile_prepend (){
 	find ${S}/po -type f -name "*.po" -exec touch {} +
 }
