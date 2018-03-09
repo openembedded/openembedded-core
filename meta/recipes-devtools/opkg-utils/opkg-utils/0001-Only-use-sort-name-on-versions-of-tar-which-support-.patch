@@ -11,10 +11,10 @@ Signed-off-by: Alejandro del Castillo <alejandro.delcastillo@ni.com>
  opkg-build | 11 ++++++++---
  1 file changed, 8 insertions(+), 3 deletions(-)
 
-diff --git a/opkg-build b/opkg-build
-index 265906f..094d69f 100755
---- a/opkg-build
-+++ b/opkg-build
+Index: opkg-utils-0.3.6/opkg-build
+===================================================================
+--- opkg-utils-0.3.6.orig/opkg-build
++++ opkg-utils-0.3.6/opkg-build
 @@ -232,6 +232,11 @@ if [ $compressor = "gzip" ] ; then
  	compressorargs=$zipargs
  fi
@@ -40,13 +40,10 @@ index 265906f..094d69f 100755
  echo "2.0" > $tmp_dir/debian-binary
 @@ -296,7 +301,7 @@ rm -f $pkg_file
  if [ "$outer" = "ar" ] ; then
-   ( cd $tmp_dir && ar -crfD $pkg_file ./debian-binary ./control.tar.gz ./data.tar.$cext )
+   ( cd $tmp_dir && ar -crf $pkg_file ./debian-binary ./control.tar.gz ./data.tar.$cext )
  else
 -  ( cd $tmp_dir && tar -c --sort=name --mtime=$build_date $tarformat ./debian-binary ./control.tar.gz ./data.tar.$cext | gzip $zipargs > $pkg_file )
 +  ( cd $tmp_dir && tar -c $tsortargs --mtime=$build_date $tarformat ./debian-binary ./control.tar.gz ./data.tar.$cext | gzip $zipargs > $pkg_file )
  fi
  
  rm $tmp_dir/debian-binary $tmp_dir/data.tar.$cext $tmp_dir/control.tar.gz
--- 
-2.16.1
-
