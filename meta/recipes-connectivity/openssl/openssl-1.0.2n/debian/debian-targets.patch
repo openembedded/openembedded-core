@@ -1,12 +1,12 @@
 Upstream-Status: Backport [debian]
 
-Index: openssl-1.0.2/Configure
+Index: openssl-1.0.2n/Configure
 ===================================================================
---- openssl-1.0.2.orig/Configure
-+++ openssl-1.0.2/Configure
-@@ -107,6 +107,10 @@ my $gcc_devteam_warn = "-Wall -pedantic
- 
- my $clang_disabled_warnings = "-Wno-language-extension-token -Wno-extended-offsetof -Wno-padded -Wno-shorten-64-to-32 -Wno-format-nonliteral -Wno-missing-noreturn -Wno-unused-parameter -Wno-sign-conversion -Wno-unreachable-code -Wno-conversion -Wno-documentation -Wno-missing-variable-declarations -Wno-cast-align -Wno-incompatible-pointer-types-discards-qualifiers -Wno-missing-variable-declarations -Wno-missing-field-initializers -Wno-unused-macros -Wno-disabled-macro-expansion -Wno-conditional-uninitialized -Wno-switch-enum";
+--- openssl-1.0.2n.orig/Configure
++++ openssl-1.0.2n/Configure
+@@ -133,6 +133,10 @@ my $clang_devteam_warn = "-Wno-unused-pa
+ # Warn that "make depend" should be run?
+ my $warn_make_depend = 0;
  
 +# There are no separate CFLAGS/CPPFLAGS/LDFLAGS, set everything in CFLAGS
 +my $debian_cflags = `dpkg-buildflags --get CFLAGS` . `dpkg-buildflags --get CPPFLAGS` . `dpkg-buildflags --get LDFLAGS` . "-Wa,--noexecstack -Wall";
@@ -15,7 +15,7 @@ Index: openssl-1.0.2/Configure
  my $strict_warnings = 0;
  
  my $x86_gcc_des="DES_PTR DES_RISC1 DES_UNROLL";
-@@ -343,6 +347,55 @@ my %table=(
+@@ -369,6 +373,55 @@ my %table=(
  "osf1-alpha-cc",  "cc:-std1 -tune host -O4 -readonly_strings::(unknown):::SIXTY_FOUR_BIT_LONG RC4_CHUNK:${alpha_asm}:dlfcn:alpha-osf1-shared:::.so",
  "tru64-alpha-cc", "cc:-std1 -tune host -fast -readonly_strings::-pthread:::SIXTY_FOUR_BIT_LONG RC4_CHUNK:${alpha_asm}:dlfcn:alpha-osf1-shared::-msym:.so",
  
