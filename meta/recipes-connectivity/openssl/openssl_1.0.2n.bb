@@ -34,7 +34,6 @@ SRC_URI += "file://find.pl;subdir=openssl-${PV}/util/ \
            file://openssl-fix-des.pod-error.patch \
            file://Makefiles-ptest.patch \
            file://ptest-deps.patch \
-           file://openssl-1.0.2a-x32-asm.patch \
            file://ptest_makefile_deps.patch \
            file://configure-musl-target.patch \
            file://parallel.patch \
