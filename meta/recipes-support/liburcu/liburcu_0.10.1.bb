@@ -15,3 +15,5 @@ SRC_URI[sha256sum] = "9c09220be4435dc27fcd22d291707b94b97f159e0c442fbcd60c168f8f
 
 S = "${WORKDIR}/userspace-rcu-${PV}"
 inherit autotools
+
+CPPFLAGS_append_riscv64  = " -pthread -D_REENTRANT"
