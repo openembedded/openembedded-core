@@ -13,18 +13,15 @@ Signed-off-by: Jussi Kukkonen <jussi.kukkonen@intel.com>
  configure.ac | 1 -
  1 file changed, 1 deletion(-)
 
-diff --git a/configure.ac b/configure.ac
-index b20eb1a..50c5fd6 100644
---- a/configure.ac
-+++ b/configure.ac
+Index: adwaita-icon-theme-3.26.1/configure.ac
+===================================================================
+--- adwaita-icon-theme-3.26.1.orig/configure.ac
++++ adwaita-icon-theme-3.26.1/configure.ac
 @@ -3,7 +3,6 @@ AC_PREREQ(2.53)
  
- AC_INIT([adwaita-icon-theme], [3.26.0],
+ AC_INIT([adwaita-icon-theme], [3.26.1],
          [http://bugzilla.gnome.org/enter_bug.cgi?product=adwaita-icon-theme])
 -AC_CANONICAL_HOST
  AC_CONFIG_MACRO_DIR([m4])
  AC_CONFIG_SRCDIR([index.theme.in])
  
--- 
-2.14.1
-
