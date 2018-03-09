@@ -10,19 +10,20 @@ Signed-off-by: Ross Burton <ross.burton@intel.com>
  gtk-doc.m4 | 7 ++++++-
  1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/gtk-doc.m4 b/gtk-doc.m4
-index 3675543..2590e2a 100644
---- a/gtk-doc.m4
-+++ b/gtk-doc.m4
-@@ -1,6 +1,6 @@
- dnl -*- mode: autoconf -*-
+Index: gtk-doc-1.27/gtk-doc.m4
+===================================================================
+--- gtk-doc-1.27.orig/gtk-doc.m4
++++ gtk-doc-1.27/gtk-doc.m4
+@@ -25,7 +25,7 @@
+ # Macro appear in them. The GNU General Public License (GPL) does govern
+ # all other use of the material that constitutes the Autoconf Macro.
  
 -# serial 2
 +# serial 2.1
  
  dnl Usage:
  dnl   GTK_DOC_CHECK([minimum-gtk-doc-version])
-@@ -10,11 +10,16 @@ AC_DEFUN([GTK_DOC_CHECK],
+@@ -35,11 +35,16 @@ AC_DEFUN([GTK_DOC_CHECK],
    AC_BEFORE([AC_PROG_LIBTOOL],[$0])dnl setup libtool first
    AC_BEFORE([AM_PROG_LIBTOOL],[$0])dnl setup libtool first
  
@@ -39,6 +40,3 @@ index 3675543..2590e2a 100644
    if test "$have_gtk_doc" = "no"; then
        AC_MSG_WARN([
    You will not be able to create source packages with 'make dist'
--- 
-2.15.1
-
