@@ -71,7 +71,7 @@ do_install_ptest() {
 	cp -a ${B}/dbus/.libs/*.so* ${D}${PTEST_PATH}/test/.libs
 
 	# Remove build host references...
-	find "${D}${PTEST_PATH}/test/data" \( -name *.service -o -name *.conf \) -type f -exec \
+	find "${D}${PTEST_PATH}/test/data" \( -name *.service -o -name *.conf -o -name "*.aaprofile" \) -type f -exec \
 		sed -i \
 		 -e 's:${B}:${PTEST_PATH}:g' \
 		 {} +
