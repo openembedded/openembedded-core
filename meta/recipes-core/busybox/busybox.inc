@@ -106,7 +106,7 @@ python () {
 }
 
 do_prepare_config () {
-	if [ "$BUILD_REPRODUCIBLE_BINARIES" = "1" ]; then
+	if [ "${BUILD_REPRODUCIBLE_BINARIES}" = "1" ]; then
 		export KCONFIG_NOTIMESTAMP=1
 	fi
 	sed -e '/CONFIG_STATIC/d' \
@@ -146,7 +146,7 @@ do_configure () {
 
 do_compile() {
 	unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS
-	if [ "$BUILD_REPRODUCIBLE_BINARIES" = "1" ]; then
+	if [ "${BUILD_REPRODUCIBLE_BINARIES}" = "1" ]; then
 		export KCONFIG_NOTIMESTAMP=1
 	fi
 	if [ "${BUSYBOX_SPLIT_SUID}" = "1" -a x`grep "CONFIG_FEATURE_INDIVIDUAL=y" .config` = x ]; then

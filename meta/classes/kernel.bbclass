@@ -279,7 +279,7 @@ get_cc_option () {
 
 kernel_do_compile() {
 	unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS MACHINE
-	if [ "$BUILD_REPRODUCIBLE_BINARIES" = "1" ]; then
+	if [ "${BUILD_REPRODUCIBLE_BINARIES}" = "1" ]; then
 		# kernel sources do not use do_unpack, so SOURCE_DATE_EPOCH may not
 		# be set....
 		if [ "$SOURCE_DATE_EPOCH" = "0" ]; then
