@@ -2,3 +2,5 @@
 glib_cv_stack_grows=${glib_cv_stack_grows=no}
 glib_cv_uscore=${glib_cv_uscore=no}
 
+# startup-notification
+lf_cv_sane_realloc=${lf_cv_sane_realloc=yes}
