@@ -45,7 +45,7 @@ def generate_recipe_list():
 
     # doing bitbake distrodata
     for machine in machine_list:
-        os.system('MACHINE='+ machine + ' bitbake world -c distrodata')
+        os.system('MACHINE='+ machine + ' bitbake -k universe -c distrodata')
         shutil.copy('tmp/log/distrodata.csv', 'distrodata/' + fnformat % machine)
 
     for machine in machine_list:
