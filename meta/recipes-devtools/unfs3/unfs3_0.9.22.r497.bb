@@ -9,8 +9,10 @@ RECIPE_UPSTREAM_DATE = "Oct 08, 2015"
 CHECK_DATE = "Dec 10, 2015"
 
 DEPENDS = "flex-native bison-native flex"
-DEPENDS_append_libc-musl = " libtirpc"
+DEPENDS += "libtirpc"
 DEPENDS_append_class-nativesdk = " flex-nativesdk"
+
+ASNEEDED = ""
 
 MOD_PV = "497"
 S = "${WORKDIR}/trunk"
@@ -22,7 +24,8 @@ SRC_URI = "svn://svn.code.sf.net/p/unfs3/code;module=trunk;rev=${MOD_PV};protoco
            file://rename_fh_cache.patch \
            file://relative_max_socket_path_len.patch \
            file://tcp_no_delay.patch \
-          "
+           file://0001-daemon.c-Libtirpc-porting-fixes.patch \
+           "
 SRC_URI[md5sum] = "3687acc4ee992e536472365dd99712a7"
 SRC_URI[sha256sum] = "274b43ada9c6eea1da26eb7010d72889c5278984ba0b50dff4e093057d4d64f8"
 
@@ -30,7 +33,8 @@ BBCLASSEXTEND = "native nativesdk"
 
 inherit autotools
 EXTRA_OECONF_append_class-native = " --sbindir=${bindir}"
-CFLAGS_append_libc-musl = " -I${STAGING_INCDIR}/tirpc"
+CFLAGS += " -I${STAGING_INCDIR}/tirpc"
+LDFLAGS += " -ltirpc"
 
 # Turn off these header detects else the inode search
 # will walk entire file systems and this is a real problem
