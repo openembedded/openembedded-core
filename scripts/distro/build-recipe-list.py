@@ -20,15 +20,27 @@ import argparse
 
 __version__ = "0.1.0"
 
-recipenames = []
-allrecipes = []
- 
+# set of BPNs
+recipenames = set()
+# map of recipe -> data
+allrecipes = {}
+
+def make_bpn(recipe):
+    prefixes = ("nativesdk-",)
+    suffixes = ("-native", "-cross", "-initial", "-intermediate", "-crosssdk", "-cross-canadian")
+    for ix in prefixes + suffixes:
+        if ix in recipe:
+            recipe = recipe.replace(ix, "")
+    return recipe
+
 def gather_recipes(rows):
-    # store the data into the array
     for row in rows:
-        if row[0] not in recipenames:
-            recipenames.append(row[0])
-            allrecipes.append(row)
+        recipe = row[0]
+        bpn = make_bpn(recipe)
+        if bpn not in recipenames:
+            recipenames.add(bpn)
+        if recipe not in allrecipes:
+            allrecipes[recipe] = row
 
 def generate_recipe_list():
     # machine list
@@ -60,8 +72,8 @@ def generate_recipe_list():
     print("file : recipe-list.txt is created with %d entries." % len(recipenames))
 
     with open('all-recipe-list.txt', 'w') as f:
-        for recipe in sorted(allrecipes):
-            f.write("%s\n" % ','.join([str(data) for data in recipe]))
+        for recipe, row in sorted(allrecipes.items()):
+            f.write("%s\n" % ','.join(row))
 
 
 def diff_for_new_recipes(recipe1, recipe2):
