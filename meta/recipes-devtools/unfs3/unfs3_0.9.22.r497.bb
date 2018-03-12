@@ -33,8 +33,8 @@ BBCLASSEXTEND = "native nativesdk"
 
 inherit autotools
 EXTRA_OECONF_append_class-native = " --sbindir=${bindir}"
-CFLAGS += " -I${STAGING_INCDIR}/tirpc"
-LDFLAGS += " -ltirpc"
+CFLAGS_append = " -I${STAGING_INCDIR}/tirpc"
+LDFLAGS_append = " -ltirpc"
 
 # Turn off these header detects else the inode search
 # will walk entire file systems and this is a real problem
