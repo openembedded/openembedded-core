@@ -83,6 +83,11 @@ def opkg_query(cmd_output):
 
     return output
 
+# Note: this should be bb.fatal in the future.
+def failed_postinsts_warn(pkgs, log_path):
+    bb.warn("""Intentionally failing postinstall scriptlets of %s to defer them to first boot is deprecated. Please place them into pkg_postinst_ontarget_${PN} ().
+If deferring to first boot wasn't the intent, then scriptlet failure may mean an issue in the recipe, or a regression elsewhere.
+Details of the failure are in %s.""" %(pkgs, log_path))
 
 class Indexer(object, metaclass=ABCMeta):
     def __init__(self, d, deploy_dir):
@@ -709,8 +714,7 @@ class RpmPM(PackageManager):
                 failed_scriptlets_pkgnames[line.split()[-1]] = True
 
         if len(failed_scriptlets_pkgnames) > 0:
-            bb.warn("Intentionally failing postinstall scriptlets of %s to defer them to first boot is deprecated. Please place them into pkg_postinst_ontarget_${PN} ()." %(list(failed_scriptlets_pkgnames.keys())))
-            bb.warn("If deferring to first boot wasn't the intent, then scriptlet failure may mean an issue in the recipe, or a regression elsewhere.")
+            failed_postinsts_warn(list(failed_scriptlets_pkgnames.keys()), self.d.expand("${T}/log.do_rootfs"))
         for pkg in failed_scriptlets_pkgnames.keys():
             self.save_rpmpostinst(pkg)
 
@@ -1172,6 +1176,13 @@ class OpkgPM(OpkgDpkgPM):
             bb.note(cmd)
             output = subprocess.check_output(cmd.split(), stderr=subprocess.STDOUT).decode("utf-8")
             bb.note(output)
+            failed_pkgs = []
+            for line in output.split('\n'):
+                if line.endswith("configuration required on target."):
+                    bb.warn(line)
+                    failed_pkgs.append(line.split(".")[0])
+            if failed_pkgs:
+                failed_postinsts_warn(failed_pkgs, self.d.expand("${T}/log.do_rootfs"))
         except subprocess.CalledProcessError as e:
             (bb.fatal, bb.warn)[attempt_only]("Unable to install packages. "
                                               "Command '%s' returned %d:\n%s" %
@@ -1435,9 +1446,10 @@ class DpkgPM(OpkgDpkgPM):
                                 stderr=subprocess.STDOUT).decode("utf-8")
                         bb.note(output)
                     except subprocess.CalledProcessError as e:
-                        bb.note("%s for package %s failed with %d:\n%s" %
+                        bb.warn("%s for package %s failed with %d:\n%s" %
                                 (control_script.name, pkg_name, e.returncode,
                                     e.output.decode("utf-8")))
+                        failed_postinsts_warn([pkg_name], self.d.expand("${T}/log.do_rootfs"))
                         failed_pkgs.append(pkg_name)
                         break
 
