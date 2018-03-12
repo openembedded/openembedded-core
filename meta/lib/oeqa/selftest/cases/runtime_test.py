@@ -221,3 +221,40 @@ class Postinst(OESelftestTestCase):
                         for filename in ("rootfs", "delayed-a", "delayed-b"):
                             status, output = qemu.run_serial("test -f %s && echo found" % os.path.join(targettestdir, filename))
                             self.assertEqual(output, "found", "%s was not present on boot" % filename)
+
+
+
+    def test_failing_postinst(self):
+        """
+        Summary:        The purpose of this test case is to verify that post-installation
+                        scripts that contain errors are properly reported.
+        Expected:       The scriptlet failure is properly reported.
+                        The file that is created after the error in the scriptlet is not present.
+        Product: oe-core
+        Author: Alexander Kanavin <alexander.kanavin@intel.com>
+        """
+
+        import oe.path
+
+        vars = get_bb_vars(("IMAGE_ROOTFS", "sysconfdir"), "core-image-minimal")
+        rootfs = vars["IMAGE_ROOTFS"]
+        self.assertIsNotNone(rootfs)
+        sysconfdir = vars["sysconfdir"]
+        self.assertIsNotNone(sysconfdir)
+        # Need to use oe.path here as sysconfdir starts with /
+        hosttestdir = oe.path.join(rootfs, sysconfdir, "postinst-test")
+
+        for classes in ("package_rpm", "package_deb", "package_ipk"):
+            with self.subTest(package_class=classes):
+                features = 'CORE_IMAGE_EXTRA_INSTALL = "postinst-rootfs-failing"\n'
+                features += 'PACKAGE_CLASSES = "%s"\n' % classes
+                self.write_config(features)
+                bb_result = bitbake('core-image-minimal')
+                self.assertGreaterEqual(bb_result.output.find("Intentionally failing postinstall scriptlets of ['postinst-rootfs-failing'] to defer them to first boot is deprecated."), 0,
+                    "Warning about a failed scriptlet not found in bitbake output: %s" %(bb_result.output))
+
+                self.assertTrue(os.path.isfile(os.path.join(hosttestdir, "rootfs-before-failure")),
+                                    "rootfs-before-failure file was not created")
+                self.assertFalse(os.path.isfile(os.path.join(hosttestdir, "rootfs-after-failure")),
+                                    "rootfs-after-failure file was created")
+

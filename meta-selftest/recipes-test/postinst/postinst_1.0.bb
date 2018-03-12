@@ -3,11 +3,12 @@ LICENSE = "MIT"
 
 inherit allarch
 
-PACKAGES = "${PN}-rootfs ${PN}-delayed-a ${PN}-delayed-b"
+PACKAGES = "${PN}-rootfs ${PN}-delayed-a ${PN}-delayed-b ${PN}-rootfs-failing"
 
 ALLOW_EMPTY_${PN}-rootfs = "1"
 ALLOW_EMPTY_${PN}-delayed-a = "1"
 ALLOW_EMPTY_${PN}-delayed-b = "1"
+ALLOW_EMPTY_${PN}-rootfs-failing = "1"
 
 RDEPENDS_${PN}-delayed-a = "${PN}-rootfs"
 RDEPENDS_${PN}-delayed-b = "${PN}-delayed-a"
@@ -57,4 +58,15 @@ pkg_postinst_ontarget_${PN}-delayed-b () {
     fi
 
     touch ${TESTDIR}/delayed-b
+}
+
+# This scriptlet intentionally includes a bogus command in the middle to test 
+# that we catch and report such errors properly.
+pkg_postinst_${PN}-rootfs-failing () {
+    mkdir -p $D${TESTDIR}
+    touch $D${TESTDIR}/rootfs-before-failure
+    run_a_really_broken_command
+    # Scriptlet execution should stop here; the following commands are NOT supposed to run.
+    # (oe-selftest checks for it).
+    touch $D${TESTDIR}/rootfs-after-failure
 }
