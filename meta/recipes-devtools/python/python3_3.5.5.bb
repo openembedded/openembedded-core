@@ -4,7 +4,7 @@ DEPENDS = "python3-native libffi bzip2 gdbm openssl sqlite3 zlib virtual/libintl
 
 PR = "${INC_PR}.0"
 PYTHON_MAJMIN = "3.5"
-PYTHON_BINABI= "${PYTHON_MAJMIN}m"
+PYTHON_BINABI = "${PYTHON_MAJMIN}m"
 DISTRO_SRC_URI ?= "file://sitecustomize.py"
 DISTRO_SRC_URI_linuxstdbase = ""
 SRC_URI = "http://www.python.org/ftp/python/${PV}/Python-${PV}.tar.xz \
@@ -48,7 +48,13 @@ UPSTREAM_CHECK_REGEX = "[Pp]ython-(?P<pver>\d+(\.\d+)+).tar"
 
 S = "${WORKDIR}/Python-${PV}"
 
-inherit autotools multilib_header python3native pkgconfig
+inherit autotools multilib_header python3native pkgconfig update-alternatives
+
+MULTILIB_SUFFIX = "${@d.getVar('base_libdir',1).split('/')[-1]}"
+
+ALTERNATIVE_${PN}-dev = "python-config"
+ALTERNATIVE_LINK_NAME[python-config] = "${bindir}/python${PYTHON_BINABI}-config"
+ALTERNATIVE_TARGET[python-config] = "${bindir}/python${PYTHON_BINABI}-config-${MULTILIB_SUFFIX}"
 
 CONFIGUREOPTS += " --with-system-ffi "
 
@@ -207,6 +213,8 @@ py_package_preprocess () {
 	${STAGING_BINDIR_NATIVE}/${PYTHON_PN}-native/${PYTHON_PN} \
 	     -c "from py_compile import compile; compile('./${libdir}/python${PYTHON_MAJMIN}/_sysconfigdata.py', optimize=2)"
 	cd -
+
+	mv ${PKGD}/${bindir}/python3.5m-config ${PKGD}/${bindir}/python3.5m-config-${MULTILIB_SUFFIX}
 }
 
 # manual dependency additions
