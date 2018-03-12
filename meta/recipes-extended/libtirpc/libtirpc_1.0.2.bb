@@ -29,3 +29,5 @@ EXTRA_OECONF = "--disable-gssapi"
 do_install_append() {
         chown root:root ${D}${sysconfdir}/netconfig
 }
+
+BBCLASSEXTEND = "native nativesdk"
