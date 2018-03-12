@@ -24,9 +24,3 @@ do_configure() {
 	oe_runmake CC="${KERNEL_CC}" LD="${KERNEL_LD}" AR="${KERNEL_AR}" \
 	           -C ${STAGING_KERNEL_DIR} O=${STAGING_KERNEL_BUILDDIR} scripts
 }
-
-
-# There is no reason to build this on its own.
-#
-EXCLUDE_FROM_WORLD = "1"
-

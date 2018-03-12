@@ -136,8 +136,6 @@ SYSTEMD_SERVICE_${PN} = "${@bb.utils.contains('PACKAGECONFIG', 'systemd', 'bluet
 INITSCRIPT_PACKAGES = "${PN}"
 INITSCRIPT_NAME_${PN} = "bluetooth"
 
-EXCLUDE_FROM_WORLD = "1"
-
 do_compile_ptest() {
 	oe_runmake buildtests
 }

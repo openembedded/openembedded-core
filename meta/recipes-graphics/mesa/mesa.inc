@@ -99,9 +99,6 @@ FULL_OPTIMIZATION_append = " -fno-omit-frame-pointer"
 
 CFLAGS_append_armv5 = " -DMISSING_64BIT_ATOMICS"
 
-# Multiple virtual/gl providers being built breaks staging
-EXCLUDE_FROM_WORLD = "1"
-
 # Remove the mesa dependency on mesa-dev, as mesa is empty
 RDEPENDS_${PN}-dev = ""
 
