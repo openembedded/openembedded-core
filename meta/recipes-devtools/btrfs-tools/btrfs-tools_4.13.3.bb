@@ -20,6 +20,7 @@ SRC_URI = "git://git.kernel.org/pub/scm/linux/kernel/git/kdave/btrfs-progs.git \
            file://0001-Fix-build-with-musl-missing-header-include-for-dev_t.patch \
            "
 
+RECIPE_NO_UPDATE_REASON = "Waiting for resolution of https://github.com/kdave/btrfs-progs/issues/109"
 inherit autotools-brokensep pkgconfig manpages
 
 CLEANBROKEN = "1"
