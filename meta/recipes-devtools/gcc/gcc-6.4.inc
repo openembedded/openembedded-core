@@ -93,6 +93,7 @@ BACKPORTS = "\
            file://0010-i386-Pass-INVALID_REGNUM-as-invalid-register-number.patch \
            file://0011-i386-Update-mfunction-return-for-return-with-pop.patch \
            file://0012-i386-Add-TARGET_INDIRECT_BRANCH_REGISTER.patch \
+           file://0013-gcc-sanitizers.patch \
 "
 
 SRC_URI[md5sum] = "11ba51a0cfb8471927f387c8895fe232"
