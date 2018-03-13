@@ -28,10 +28,8 @@ GTKDOC_DOCDIR ?= "${S}"
 
 export STAGING_DIR_HOST
 
-inherit ${@oe.utils.ifelse(d.getVar('GTKDOC_ENABLED') == 'True', 'python3native', '')}
-
-inherit pkgconfig qemu
-DEPENDS_append = "${@oe.utils.ifelse(d.getVar('GTKDOC_ENABLED') == 'True', ' qemu-native', '')}"
+inherit python3native pkgconfig qemu
+DEPENDS_append = "${@' qemu-native' if d.getVar('GTKDOC_ENABLED') == 'True' else ''}"
 
 do_configure_prepend () {
 	( cd ${S}; gtkdocize --docdir ${GTKDOC_DOCDIR} || true )
