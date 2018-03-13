@@ -35,9 +35,7 @@ PACKAGECONFIG[debug] = "--enable-debug,--disable-debug"
 PACKAGECONFIG[logging] = " --enable-logging,--disable-logging"
 PACKAGECONFIG[manpages] = "--enable-manpages, --disable-manpages, libxslt-native xmlto-native"
 
-do_configure_prepend () {
-        gtkdocize --docdir ${S}/libkmod/docs --srcdir ${S}
-}
+GTKDOC_DOCDIR = "${S}/libkmod/docs"
 
 do_configure_append () {
 	sed -i 's#}libtool#}${TARGET_SYS}-libtool#' ${B}/doltlibtool
