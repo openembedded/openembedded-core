@@ -52,11 +52,13 @@ Index: Python-3.5.4/Lib/distutils/command/install.py
  WINDOWS_SCHEME = {
      'purelib': '$base/Lib/site-packages',
      'platlib': '$base/Lib/site-packages',
-@@ -30,7 +32,7 @@ WINDOWS_SCHEME = {
+@@ -29,8 +31,8 @@ WINDOWS_SCHEME = {
+ 
  INSTALL_SCHEMES = {
      'unix_prefix': {
-         'purelib': '$base/lib/python$py_version_short/site-packages',
+-        'purelib': '$base/lib/python$py_version_short/site-packages',
 -        'platlib': '$platbase/lib/python$py_version_short/site-packages',
++        'purelib': '$platbase/'+libname+'/python$py_version_short/site-packages',
 +        'platlib': '$platbase/'+libname+'/python$py_version_short/site-packages',
          'headers': '$base/include/python$py_version_short$abiflags/$dist_name',
          'scripts': '$base/bin',
@@ -103,10 +105,11 @@ Index: Python-3.5.4/Lib/sysconfig.py
      'posix_prefix': {
 -        'stdlib': '{installed_base}/lib/python{py_version_short}',
 -        'platstdlib': '{platbase}/lib/python{py_version_short}',
+-        'purelib': '{base}/lib/python{py_version_short}/site-packages',
+-        'platlib': '{platbase}/lib/python{py_version_short}/site-packages',
 +        'stdlib': '{installed_base}/'+sys.lib+'/python{py_version_short}',
 +        'platstdlib': '{platbase}/'+sys.lib+'/python{py_version_short}',
-         'purelib': '{base}/lib/python{py_version_short}/site-packages',
--        'platlib': '{platbase}/lib/python{py_version_short}/site-packages',
++        'purelib': '{platbase}/'+sys.lib+'/python{py_version_short}/site-packages',
 +        'platlib': '{platbase}/'+sys.lib+'/python{py_version_short}/site-packages',
          'include':
              '{installed_base}/include/python{py_version_short}{abiflags}',
@@ -117,10 +120,11 @@ Index: Python-3.5.4/Lib/sysconfig.py
      'posix_home': {
 -        'stdlib': '{installed_base}/lib/python',
 -        'platstdlib': '{base}/lib/python',
+-        'purelib': '{base}/lib/python',
+-        'platlib': '{base}/lib/python',
 +        'stdlib': '{installed_base}/'+sys.lib+'/python',
 +        'platstdlib': '{base}/'+sys.lib+'/python',
-         'purelib': '{base}/lib/python',
--        'platlib': '{base}/lib/python',
++        'purelib': '{base}/'+sys.lib+'/python',
 +        'platlib': '{base}/'+sys.lib+'/python',
          'include': '{installed_base}/include/python',
          'platinclude': '{installed_base}/include/python',
@@ -131,10 +135,11 @@ Index: Python-3.5.4/Lib/sysconfig.py
      'posix_user': {
 -        'stdlib': '{userbase}/lib/python{py_version_short}',
 -        'platstdlib': '{userbase}/lib/python{py_version_short}',
+-        'purelib': '{userbase}/lib/python{py_version_short}/site-packages',
+-        'platlib': '{userbase}/lib/python{py_version_short}/site-packages',
 +        'stdlib': '{userbase}/'+sys.lib+'/python{py_version_short}',
 +        'platstdlib': '{userbase}/'+sys.lib+'/python{py_version_short}',
-         'purelib': '{userbase}/lib/python{py_version_short}/site-packages',
--        'platlib': '{userbase}/lib/python{py_version_short}/site-packages',
++        'purelib': '{userbase}/'+sys.lib+'/python{py_version_short}/site-packages',
 +        'platlib': '{userbase}/'+sys.lib+'/python{py_version_short}/site-packages',
          'include': '{userbase}/include/python{py_version_short}',
          'scripts': '{userbase}/bin',
