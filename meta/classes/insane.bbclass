@@ -71,6 +71,8 @@ def package_qa_get_machine_dict(d):
                         "microblaze":  (189,   0,    0,          False,         32),
                         "microblazeeb":(189,   0,    0,          False,         32),
                         "microblazeel":(189,   0,    0,          True,          32),
+                        "riscv":      (243,    0,    0,          True,          32),
+                        "riscv64":    (243,    0,    0,          True,          64),
                       },
             "linux" : { 
                         "aarch64" :   (183,    0,    0,          True,          64),
