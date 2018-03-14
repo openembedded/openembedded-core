@@ -32,7 +32,9 @@ inherit python3native pkgconfig qemu
 DEPENDS_append = "${@' qemu-native' if d.getVar('GTKDOC_ENABLED') == 'True' else ''}"
 
 do_configure_prepend () {
-	( cd ${S}; gtkdocize --docdir ${GTKDOC_DOCDIR} || true )
+	# Need to use ||true as this is only needed if configure.ac both exists
+	# and uses GTK_DOC_CHECK.
+	gtkdocize --srcdir ${S} --docdir ${GTKDOC_DOCDIR} || true
 }
 
 do_compile_prepend_class-target () {
