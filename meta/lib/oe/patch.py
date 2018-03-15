@@ -448,7 +448,7 @@ class GitApplyTree(PatchTree):
         import re
         tempdir = tempfile.mkdtemp(prefix='oepatch')
         try:
-            shellcmd = ["git", "format-patch", startcommit, "-o", tempdir]
+            shellcmd = ["git", "format-patch", "--no-signature", "--no-numbered", startcommit, "-o", tempdir]
             if paths:
                 shellcmd.append('--')
                 shellcmd.extend(paths)
