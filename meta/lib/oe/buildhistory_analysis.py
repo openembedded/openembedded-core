@@ -117,6 +117,7 @@ class ChangeRecord:
 
         if self.fieldname in list_fields or self.fieldname in list_order_fields:
             renamed_dirs = []
+            changed_order = False
             if self.fieldname in ['RPROVIDES', 'RDEPENDS', 'RRECOMMENDS', 'RSUGGESTS', 'RREPLACES', 'RCONFLICTS']:
                 (depvera, depverb) = compare_pkg_lists(self.oldvalue, self.newvalue)
                 aitems = pkglist_combine(depvera)
@@ -129,6 +130,14 @@ class ChangeRecord:
 
             removed = list(set(aitems) - set(bitems))
             added = list(set(bitems) - set(aitems))
+
+            if not removed and not added:
+                depvera = bb.utils.explode_dep_versions2(self.oldvalue, sort=False)
+                depverb = bb.utils.explode_dep_versions2(self.newvalue, sort=False)
+                for i, j in zip(depvera.items(), depverb.items()):
+                    if i[0] != j[0]:
+                        changed_order = True
+                        break
 
             lines = []
             if renamed_dirs:
@@ -145,7 +154,10 @@ class ChangeRecord:
             else:
                 lines.append('changed order')
 
-            out = '%s: %s' % (self.fieldname, ', '.join(lines))
+            if not (removed or added or changed_order):
+                out = ''
+            else:
+                out = '%s: %s' % (self.fieldname, ', '.join(lines))
 
         elif self.fieldname in numeric_fields:
             aval = int(self.oldvalue or 0)
