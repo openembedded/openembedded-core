@@ -28,6 +28,10 @@ EXCLUDE_FROM_WORLD_pn-lttng-tools_libc-musl = "1"
 EXCLUDE_FROM_WORLD_pn-systemtap_libc-musl = "1"
 EXCLUDE_FROM_WORLD_pn-systemtap-uprobes_libc-musl = "1"
 
+# portmap.c:488:32: error: 'struct sockaddr_in6' has no member named 'sin_port'; did you mean 'sin6_port'?
+# We removed portmap in rocko onwards and it doesn't work with libtirpc
+EXCLUDE_FROM_WORLD_pn-portmap_libc-musl = "1"
+
 # error: a parameter list without types is only allowed in a function definition
 #            void (*_function)(sigval_t);
 EXCLUDE_FROM_WORLD_pn-qemu_libc-musl = "1"
