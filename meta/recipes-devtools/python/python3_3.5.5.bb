@@ -1,6 +1,6 @@
 require recipes-devtools/python/python.inc
 
-DEPENDS = "python3-native libffi bzip2 gdbm openssl readline sqlite3 zlib virtual/libintl xz"
+DEPENDS = "python3-native libffi bzip2 gdbm openssl sqlite3 zlib virtual/libintl xz"
 
 PR = "${INC_PR}.0"
 PYTHON_MAJMIN = "3.5"
@@ -75,6 +75,9 @@ export CROSSPYTHONPATH = "${STAGING_LIBDIR_NATIVE}/python${PYTHON_MAJMIN}/lib-dy
 
 # No ctypes option for python 3
 PYTHONLSBOPTS = ""
+
+PACKAGECONFIG ??= "readline"
+PACKAGECONFIG[readline] = ",,readline"
 
 do_configure_append() {
 	rm -f ${S}/Makefile.orig
