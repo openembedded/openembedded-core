@@ -64,6 +64,8 @@ do_configure_append() {
 # Regenerate all of the generated files
 # This ensures that pgen and friends get created during the compile phase
 do_compile_prepend() {
+    # Has to be done ahead of other regen- targets due to https://bugs.python.org/issue33080
+    oe_runmake regen-importlib
     oe_runmake regen-all
 }
 
