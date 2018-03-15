@@ -14,6 +14,8 @@ SRC_URI[sha256sum] = "2f1e960d92ce3b3abd03d06dfec9637dfbd22febf107a536b44f7a47c6
 
 MIRRORS += "${SOURCEFORGE_MIRROR}/project/${BPN}/${BPN}${LIBV}/${PV}/ ${SOURCEFORGE_MIRROR}/project/${BPN}/${BPN}${LIBV}/older-releases/${PV}/"
 
+UPSTREAM_CHECK_URI = "http://libpng.org/pub/png/libpng.html"
+
 BINCONFIG = "${bindir}/libpng-config ${bindir}/libpng16-config"
 
 inherit autotools binconfig-disabled pkgconfig
