@@ -9,6 +9,15 @@ build for X32, where long's size doesn't match that of time_t.
 Upstream-Status: Pending
 Signed-off-by: Christopher Larson <chris_larson@mentor.com>
 
+
+Modify patch described above to eliminate replacement of
+
+g_snprintf (mtime_str, 21, "%" G_GINT64_FORMAT, (gint64) mtime)
+
+which is not necessary.  Retain replacement of atol().
+
+Signed-off-by: Joe Slater <joe.slater@windriver.com>
+
 ---
  libgnome-desktop/gnome-desktop-thumbnail.c | 16 ++++++++++++++--
  1 file changed, 14 insertions(+), 2 deletions(-)
@@ -26,27 +35,6 @@ index e56c3d7..5d96bf3 100644
  #include <config.h>
  
  #include <glib.h>
-@@ -1105,6 +1107,7 @@ save_thumbnail (GdkPixbuf  *pixbuf,
-   char *tmp_path = NULL;
-   int tmp_fd;
-   char mtime_str[21];
-+  struct tm *tmp_mtime = NULL;
-   gboolean ret = FALSE;
-   GError *error = NULL;
-   const char *width, *height;
-@@ -1124,7 +1127,11 @@ save_thumbnail (GdkPixbuf  *pixbuf,
-     goto out;
-   close (tmp_fd);
- 
--  g_snprintf (mtime_str, 21, "%" G_GINT64_FORMAT, (gint64) mtime);
-+  tmp_mtime = localtime (&mtime);
-+  if (!tmp_mtime)
-+    goto out;
-+  strftime (mtime_str, 21, "%s", tmp_mtime);
-+  free (tmp_mtime);
-   width = gdk_pixbuf_get_option (pixbuf, "tEXt::Thumb::Image::Width");
-   height = gdk_pixbuf_get_option (pixbuf, "tEXt::Thumb::Image::Height");
- 
 @@ -1319,6 +1326,7 @@ gnome_desktop_thumbnail_is_valid (GdkPixbuf          *pixbuf,
  {
    const char *thumb_uri, *thumb_mtime_str;
