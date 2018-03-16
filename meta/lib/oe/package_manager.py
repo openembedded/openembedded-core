@@ -22,12 +22,12 @@ def create_index(arg):
     if result:
         bb.note(result)
 
-"""
-This method parse the output from the package managerand return
-a dictionary with the information of the packages. This is used
-when the packages are in deb or ipk format.
-"""
 def opkg_query(cmd_output):
+    """
+    This method parse the output from the package managerand return
+    a dictionary with the information of the packages. This is used
+    when the packages are in deb or ipk format.
+    """
     verregex = re.compile(' \([=<>]* [^ )]*\)')
     output = dict()
     pkg = ""
@@ -317,34 +317,34 @@ class PackageManager(object, metaclass=ABCMeta):
         self.deploy_dir = None
         self.deploy_lock = None
 
-    """
-    Update the package manager package database.
-    """
     @abstractmethod
     def update(self):
+        """
+        Update the package manager package database.
+        """
         pass
 
-    """
-    Install a list of packages. 'pkgs' is a list object. If 'attempt_only' is
-    True, installation failures are ignored.
-    """
     @abstractmethod
     def install(self, pkgs, attempt_only=False):
+        """
+        Install a list of packages. 'pkgs' is a list object. If 'attempt_only' is
+        True, installation failures are ignored.
+        """
         pass
 
-    """
-    Remove a list of packages. 'pkgs' is a list object. If 'with_dependencies'
-    is False, the any dependencies are left in place.
-    """
     @abstractmethod
     def remove(self, pkgs, with_dependencies=True):
+        """
+        Remove a list of packages. 'pkgs' is a list object. If 'with_dependencies'
+        is False, then any dependencies are left in place.
+        """
         pass
 
-    """
-    This function creates the index files
-    """
     @abstractmethod
     def write_index(self):
+        """
+        This function creates the index files
+        """
         pass
 
     @abstractmethod
@@ -355,30 +355,28 @@ class PackageManager(object, metaclass=ABCMeta):
     def list_installed(self):
         pass
 
-    """
-    Returns the path to a tmpdir where resides the contents of a package.
-
-    Deleting the tmpdir is responsability of the caller.
-
-    """
     @abstractmethod
     def extract(self, pkg):
+        """
+        Returns the path to a tmpdir where resides the contents of a package.
+        Deleting the tmpdir is responsability of the caller.
+        """
         pass
 
-    """
-    Add remote package feeds into repository manager configuration. The parameters
-    for the feeds are set by feed_uris, feed_base_paths and feed_archs.
-    See http://www.yoctoproject.org/docs/current/ref-manual/ref-manual.html#var-PACKAGE_FEED_URIS
-    for their description.
-    """
     @abstractmethod
     def insert_feeds_uris(self, feed_uris, feed_base_paths, feed_archs):
+        """
+        Add remote package feeds into repository manager configuration. The parameters
+        for the feeds are set by feed_uris, feed_base_paths and feed_archs.
+        See http://www.yoctoproject.org/docs/current/ref-manual/ref-manual.html#var-PACKAGE_FEED_URIS
+        for their description.
+        """
         pass
 
-    """
-    Install all packages that match a glob.
-    """
     def install_glob(self, globs, sdk=False):
+        """
+        Install all packages that match a glob.
+        """
         # TODO don't have sdk here but have a property on the superclass
         # (and respect in install_complementary)
         if sdk:
@@ -398,14 +396,14 @@ class PackageManager(object, metaclass=ABCMeta):
                          "'%s' returned %d:\n%s" %
                          (' '.join(cmd), e.returncode, e.output.decode("utf-8")))
 
-    """
-    Install complementary packages based upon the list of currently installed
-    packages e.g. locales, *-dev, *-dbg, etc. This will only attempt to install
-    these packages, if they don't exist then no error will occur.  Note: every
-    backend needs to call this function explicitly after the normal package
-    installation
-    """
     def install_complementary(self, globs=None):
+        """
+        Install complementary packages based upon the list of currently installed
+        packages e.g. locales, *-dev, *-dbg, etc. This will only attempt to install
+        these packages, if they don't exist then no error will occur.  Note: every
+        backend needs to call this function explicitly after the normal package
+        installation
+        """
         if globs is None:
             globs = self.d.getVar('IMAGE_INSTALL_COMPLEMENTARY')
             split_linguas = set()
@@ -462,13 +460,13 @@ class PackageManager(object, metaclass=ABCMeta):
 
         self.deploy_lock = None
 
-    """
-    Construct URIs based on the following pattern: uri/base_path where 'uri'
-    and 'base_path' correspond to each element of the corresponding array
-    argument leading to len(uris) x len(base_paths) elements on the returned
-    array
-    """
     def construct_uris(self, uris, base_paths):
+        """
+        Construct URIs based on the following pattern: uri/base_path where 'uri'
+        and 'base_path' correspond to each element of the corresponding array
+        argument leading to len(uris) x len(base_paths) elements on the returned
+        array
+        """
         def _append(arr1, arr2, sep='/'):
             res = []
             narr1 = [a.rstrip(sep) for a in arr1]
@@ -907,18 +905,18 @@ class RpmPM(PackageManager):
 
 
 class OpkgDpkgPM(PackageManager):
-    """
-    This is an abstract class. Do not instantiate this directly.
-    """
     def __init__(self, d):
+        """
+        This is an abstract class. Do not instantiate this directly.
+        """
         super(OpkgDpkgPM, self).__init__(d)
 
-    """
-    Returns a dictionary with the package info.
-
-    This method extracts the common parts for Opkg and Dpkg
-    """
     def package_info(self, pkg, cmd):
+        """
+        Returns a dictionary with the package info.
+
+        This method extracts the common parts for Opkg and Dpkg
+        """
 
         try:
             output = subprocess.check_output(cmd, stderr=subprocess.STDOUT, shell=True).decode("utf-8")
@@ -927,14 +925,14 @@ class OpkgDpkgPM(PackageManager):
                      "returned %d:\n%s" % (cmd, e.returncode, e.output.decode("utf-8")))
         return opkg_query(output)
 
-    """
-    Returns the path to a tmpdir where resides the contents of a package.
-
-    Deleting the tmpdir is responsability of the caller.
-
-    This method extracts the common parts for Opkg and Dpkg
-    """
     def extract(self, pkg, pkg_info):
+        """
+        Returns the path to a tmpdir where resides the contents of a package.
+
+        Deleting the tmpdir is responsability of the caller.
+
+        This method extracts the common parts for Opkg and Dpkg
+        """
 
         ar_cmd = bb.utils.which(os.getenv("PATH"), "ar")
         tar_cmd = bb.utils.which(os.getenv("PATH"), "tar")
@@ -1009,12 +1007,12 @@ class OpkgPM(OpkgDpkgPM):
 
         self.indexer = OpkgIndexer(self.d, self.deploy_dir)
 
-    """
-    This function will change a package's status in /var/lib/opkg/status file.
-    If 'packages' is None then the new_status will be applied to all
-    packages
-    """
     def mark_packages(self, status_tag, packages=None):
+        """
+        This function will change a package's status in /var/lib/opkg/status file.
+        If 'packages' is None then the new_status will be applied to all
+        packages
+        """
         status_file = os.path.join(self.opkg_dir, "status")
 
         with open(status_file, "r") as sf:
@@ -1265,10 +1263,10 @@ class OpkgPM(OpkgDpkgPM):
                 # is separated from the following entry
                 status.write("\n")
 
-    '''
-    The following function dummy installs pkgs and returns the log of output.
-    '''
     def dummy_install(self, pkgs):
+        """
+        The following function dummy installs pkgs and returns the log of output.
+        """
         if len(pkgs) == 0:
             return
 
@@ -1323,10 +1321,10 @@ class OpkgPM(OpkgDpkgPM):
                             self.opkg_dir,
                             symlinks=True)
 
-    """
-    Returns a dictionary with the package info.
-    """
     def package_info(self, pkg):
+        """
+        Returns a dictionary with the package info.
+        """
         cmd = "%s %s info %s" % (self.opkg_cmd, self.opkg_args, pkg)
         pkg_info = super(OpkgPM, self).package_info(pkg, cmd)
 
@@ -1337,12 +1335,12 @@ class OpkgPM(OpkgDpkgPM):
 
         return pkg_info
 
-    """
-    Returns the path to a tmpdir where resides the contents of a package.
-
-    Deleting the tmpdir is responsability of the caller.
-    """
     def extract(self, pkg):
+        """
+        Returns the path to a tmpdir where resides the contents of a package.
+
+        Deleting the tmpdir is responsability of the caller.
+        """
         pkg_info = self.package_info(pkg)
         if not pkg_info:
             bb.fatal("Unable to get information for package '%s' while "
@@ -1376,12 +1374,12 @@ class DpkgPM(OpkgDpkgPM):
 
         self.indexer = DpkgIndexer(self.d, self.deploy_dir)
 
-    """
-    This function will change a package's status in /var/lib/dpkg/status file.
-    If 'packages' is None then the new_status will be applied to all
-    packages
-    """
     def mark_packages(self, status_tag, packages=None):
+        """
+        This function will change a package's status in /var/lib/dpkg/status file.
+        If 'packages' is None then the new_status will be applied to all
+        packages
+        """
         status_file = self.target_rootfs + "/var/lib/dpkg/status"
 
         with open(status_file, "r") as sf:
@@ -1404,11 +1402,11 @@ class DpkgPM(OpkgDpkgPM):
 
         os.rename(status_file + ".tmp", status_file)
 
-    """
-    Run the pre/post installs for package "package_name". If package_name is
-    None, then run all pre/post install scriptlets.
-    """
     def run_pre_post_installs(self, package_name=None):
+        """
+        Run the pre/post installs for package "package_name". If package_name is
+        None, then run all pre/post install scriptlets.
+        """
         info_dir = self.target_rootfs + "/var/lib/dpkg/info"
         ControlScript = collections.namedtuple("ControlScript", ["suffix", "name", "argument"])
         control_scripts = [
@@ -1654,10 +1652,10 @@ class DpkgPM(OpkgDpkgPM):
     def list_installed(self):
         return DpkgPkgsList(self.d, self.target_rootfs).list_pkgs()
 
-    """
-    Returns a dictionary with the package info.
-    """
     def package_info(self, pkg):
+        """
+        Returns a dictionary with the package info.
+        """
         cmd = "%s show %s" % (self.apt_cache_cmd, pkg)
         pkg_info = super(DpkgPM, self).package_info(pkg, cmd)
 
@@ -1668,12 +1666,12 @@ class DpkgPM(OpkgDpkgPM):
 
         return pkg_info
 
-    """
-    Returns the path to a tmpdir where resides the contents of a package.
-
-    Deleting the tmpdir is responsability of the caller.
-    """
     def extract(self, pkg):
+        """
+        Returns the path to a tmpdir where resides the contents of a package.
+
+        Deleting the tmpdir is responsability of the caller.
+        """
         pkg_info = self.package_info(pkg)
         if not pkg_info:
             bb.fatal("Unable to get information for package '%s' while "
@@ -1704,12 +1702,3 @@ def generate_index_files(d):
 
             if result is not None:
                 bb.fatal(result)
-
-if __name__ == "__main__":
-    """
-    We should be able to run this as a standalone script, from outside bitbake
-    environment.
-    """
-    """
-    TBD
-    """
