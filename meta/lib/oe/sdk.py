@@ -147,7 +147,7 @@ class Sdk(object, metaclass=ABCMeta):
             generate_locale_archive(self.d, oe.path.join(self.sdk_host_sysroot, self.sdk_native_path))
             # And now delete the binary locales
             pkgs = fnmatch.filter(pm.list_installed(), "nativesdk-glibc-binary-localedata-*.utf-8")
-            pm.remove(pkgs)
+            pm.remove(pkgs, with_dependencies=False)
         else:
             # No linguas so do nothing
             pass
