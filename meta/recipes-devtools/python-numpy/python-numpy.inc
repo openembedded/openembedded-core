@@ -8,6 +8,7 @@ SRCNAME = "numpy"
 SRC_URI = "https://github.com/${SRCNAME}/${SRCNAME}/releases/download/v${PV}/${SRCNAME}-${PV}.tar.gz \
            file://0001-Don-t-search-usr-and-so-on-for-libraries-by-default-.patch \
            file://fix_shebang_f2py.patch \
+           file://0001-npy_cpu-Add-riscv-support.patch \
            ${CONFIGFILESURI} "
 SRC_URI[md5sum] = "0e09f20f62ab9f8a02cb7bd3fd023482"
 SRC_URI[sha256sum] = "8708a775be9a9a457b80a49193c57bd9d51a8a195ed1f1c4b8e89eaf3aa646ee"
@@ -66,6 +67,10 @@ CONFIGFILESURI_mipsarchn32eb = " \
     file://_numpyconfig.h \
 "
 CONFIGFILESURI_mipsarchn32el = " \
+    file://config.h \
+    file://_numpyconfig.h \
+"
+CONFIGFILESURI_riscv64 = " \
     file://config.h \
     file://_numpyconfig.h \
 "
