@@ -24,6 +24,8 @@ S = "${WORKDIR}/git/"
 PACKAGECONFIG ?= "${@bb.utils.filter('DISTRO_FEATURES', 'xattr', d)}"
 PACKAGECONFIG[xattr] = ",,acl,"
 
+CPPFLAGS_append_riscv64  = " -pthread -D_REENTRANT"
+
 EXTRA_OEMAKE = "'CC=${CC}' 'RANLIB=${RANLIB}' 'AR=${AR}' 'CFLAGS=${CFLAGS} ${@bb.utils.contains('PACKAGECONFIG', 'xattr', '', '-DWITHOUT_XATTR', d)} -I${S}/include' 'BUILDDIR=${S}'"
 
 ALTERNATIVE_${PN} = "flash_eraseall"
