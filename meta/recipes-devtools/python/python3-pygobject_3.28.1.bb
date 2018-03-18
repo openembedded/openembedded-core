@@ -12,11 +12,10 @@ SRC_URI = " \
     http://ftp.gnome.org/pub/GNOME/sources/${SRCNAME}/${@gnome_verdir("${PV}")}/${SRCNAME}-${PV}.tar.xz \
 "
 
-SRC_URI[md5sum] = "d898fc768ebec7a9ed4e4270c6fabfde"
-SRC_URI[sha256sum] = "f5577b9b9c70cabb9a60d81b855d488b767c66f867432e7fb64aa7269b04d1a9"
+SRC_URI[md5sum] = "612e9e2863d117d810e78672f7bc3ad6"
+SRC_URI[sha256sum] = "42312b4a5015571fa0a4f2d201005da46b71c251ea2625bc95702d071c4ff895"
 
 S = "${WORKDIR}/${SRCNAME}-${PV}"
-
 
 PACKAGECONFIG ??= "${@bb.utils.contains_any('DISTRO_FEATURES', [ 'directfb', 'wayland', 'x11' ], 'cairo', '', d)}"
 
