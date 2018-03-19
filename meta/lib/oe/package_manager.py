@@ -101,13 +101,16 @@ class Indexer(object, metaclass=ABCMeta):
 
 class RpmIndexer(Indexer):
     def write_index(self):
+        self.do_write_index(self.deploy_dir)
+
+    def do_write_index(self, deploy_dir):
         if self.d.getVar('PACKAGE_FEED_SIGN') == '1':
             signer = get_signer(self.d, self.d.getVar('PACKAGE_FEED_GPG_BACKEND'))
         else:
             signer = None
 
         createrepo_c = bb.utils.which(os.environ['PATH'], "createrepo_c")
-        result = create_index("%s --update -q %s" % (createrepo_c, self.deploy_dir))
+        result = create_index("%s --update -q %s" % (createrepo_c, deploy_dir))
         if result:
             bb.fatal(result)
 
@@ -115,11 +118,22 @@ class RpmIndexer(Indexer):
         if signer:
             sig_type = self.d.getVar('PACKAGE_FEED_GPG_SIGNATURE_TYPE')
             is_ascii_sig = (sig_type.upper() != "BIN")
-            signer.detach_sign(os.path.join(self.deploy_dir, 'repodata', 'repomd.xml'),
+            signer.detach_sign(os.path.join(deploy_dir, 'repodata', 'repomd.xml'),
                                self.d.getVar('PACKAGE_FEED_GPG_NAME'),
                                self.d.getVar('PACKAGE_FEED_GPG_PASSPHRASE_FILE'),
                                armor=is_ascii_sig)
 
+class RpmSubdirIndexer(RpmIndexer):
+    def write_index(self):
+        bb.note("Generating package index for %s" %(self.deploy_dir))
+        self.do_write_index(self.deploy_dir)
+        for entry in os.walk(self.deploy_dir):
+            if os.path.samefile(self.deploy_dir, entry[0]):
+                for dir in entry[1]:
+                    if dir != 'repodata':
+                        dir_path = oe.path.join(self.deploy_dir, dir)
+                        bb.note("Generating package index for %s" %(dir_path))
+                        self.do_write_index(dir_path)
 
 class OpkgIndexer(Indexer):
     def write_index(self):
@@ -1686,7 +1700,7 @@ def generate_index_files(d):
     classes = d.getVar('PACKAGE_CLASSES').replace("package_", "").split()
 
     indexer_map = {
-        "rpm": (RpmIndexer, d.getVar('DEPLOY_DIR_RPM')),
+        "rpm": (RpmSubdirIndexer, d.getVar('DEPLOY_DIR_RPM')),
         "ipk": (OpkgIndexer, d.getVar('DEPLOY_DIR_IPK')),
         "deb": (DpkgIndexer, d.getVar('DEPLOY_DIR_DEB'))
     }
