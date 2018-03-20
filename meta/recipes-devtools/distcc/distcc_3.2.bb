@@ -40,7 +40,9 @@ INITSCRIPT_NAME = "distcc"
 SYSTEMD_PACKAGES = "${PN}"
 SYSTEMD_SERVICE_${PN} = "distcc.service"
 
-do_install_append() {
+do_install() {
+    # Improve reproducibility: compress w/o timestamps
+    oe_runmake 'DESTDIR=${D}'  "GZIP_BIN=gzip -n" install
     install -d ${D}${sysconfdir}/init.d/
     install -d ${D}${sysconfdir}/default
     install -m 0755 ${WORKDIR}/distcc ${D}${sysconfdir}/init.d/
