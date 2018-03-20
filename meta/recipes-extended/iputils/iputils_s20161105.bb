@@ -23,7 +23,7 @@ UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>s\d+)"
 
 EXTRA_OEMAKE = "-e MAKEFLAGS="
 
-PACKAGECONFIG ?= "libidn"
+PACKAGECONFIG ?= ""
 PACKAGECONFIG[libidn] = "USE_IDN=yes,USE_IDN=no,libidn"
 
 do_compile () {
