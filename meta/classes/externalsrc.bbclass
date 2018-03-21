@@ -173,7 +173,9 @@ do_buildclean[doc] = "Call 'make clean' or equivalent in ${B}"
 externalsrc_do_buildclean() {
 	if [ -e Makefile -o -e makefile -o -e GNUmakefile ]; then
 		rm -f ${@' '.join([x.split(':')[0] for x in (d.getVar('EXTERNALSRC_SYMLINKS') or '').split()])}
-		oe_runmake clean || die "make failed"
+		if [ "${CLEANBROKEN}" != "1" ]; then
+			oe_runmake clean || die "make failed"
+		fi
 	else
 		bbnote "nothing to do - no makefile found"
 	fi
