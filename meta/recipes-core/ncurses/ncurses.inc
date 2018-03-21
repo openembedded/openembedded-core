@@ -59,6 +59,7 @@ EX_TERMCAP_class-nativesdk = ":/etc/termcap:/usr/share/misc/termcap"
 EX_TERMINFO = ""
 EX_TERMINFO_class-native = ":/etc/terminfo:/usr/share/terminfo:/usr/share/misc/terminfo:/lib/terminfo"
 EX_TERMINFO_class-nativesdk = ":/etc/terminfo:/usr/share/terminfo:/usr/share/misc/terminfo:/lib/terminfo"
+EX_TERMLIB ?= "tinfo"
 
 # Helper function for do_configure to allow multiple configurations
 # $1 the directory to run configure in
@@ -80,7 +81,7 @@ ncurses_configure() {
 	        --disable-big-core \
 	        --program-prefix= \
 	        --with-ticlib \
-	        --with-termlib=tinfo \
+	        --with-termlib=${EX_TERMLIB} \
 	        --enable-sigwinch \
 	        --enable-pc-files \
 	        --disable-rpath-hack \
