@@ -11,11 +11,11 @@ SRCREV = "7b9b7bf388f3f059529c6f50c40b30919fef30f9"
 
 S = "${WORKDIR}/git"
 
-DEPENDS = "curl expat glib-2.0 openssl attr libcheck gpgme"
+DEPENDS = "curl expat glib-2.0 openssl attr gpgme"
 
 inherit cmake distutils3-base pkgconfig
 
-EXTRA_OECMAKE = " -DPYTHON_INSTALL_DIR=${PYTHON_SITEPACKAGES_DIR} -DPYTHON_DESIRED=3"
+EXTRA_OECMAKE = " -DPYTHON_INSTALL_DIR=${PYTHON_SITEPACKAGES_DIR} -DPYTHON_DESIRED=3 -DENABLE_TESTS=OFF -DENABLE_DOCS=OFF"
 
 BBCLASSEXTEND = "native nativesdk"
 
