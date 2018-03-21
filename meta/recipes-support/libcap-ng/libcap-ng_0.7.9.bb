@@ -12,8 +12,8 @@ SRC_URI = "http://people.redhat.com/sgrubb/libcap-ng/libcap-ng-${PV}.tar.gz \
 
 inherit lib_package autotools python3native
 
-SRC_URI[md5sum] = "0dece96644bd798020e170fbf7663802"
-SRC_URI[sha256sum] = "c21af997445cd4107a55d386f955c5ea6f6e96ead693e9151277c0ab5f97d05f"
+SRC_URI[md5sum] = "2398d695508fab9ce33668c53a89b0e9"
+SRC_URI[sha256sum] = "4a1532bcf3731aade40936f6d6a586ed5a66ca4c7455e1338d1f6c3e09221328"
 
 DEPENDS += "swig-native python3"
 
