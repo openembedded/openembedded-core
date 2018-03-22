@@ -168,6 +168,11 @@ rootprefix ?= "${root_prefix}"
 rootlibdir ?= "${base_libdir}"
 rootlibexecdir = "${rootprefix}/lib"
 
+# This links udev statically with systemd helper library.
+# Otherwise udev package would depend on systemd package (which has the needed shared library),
+# and always pull it into images.
+EXTRA_OEMESON += "-Dlink-udev-shared=false"
+
 EXTRA_OEMESON += "-Dnobody-user=nobody \
                   -Dnobody-group=nobody \
                   -Droothomedir=${ROOTHOME} \
