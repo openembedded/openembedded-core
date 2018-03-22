@@ -15,6 +15,8 @@ python waf_preconfigure() {
             d.setVar("WAF_EXTRA_CONF", "--bindir=${bindir} --libdir=${libdir}")
     except subprocess.CalledProcessError as e:
         bb.warn("Unable to execute waf --version, exit code %d. Assuming waf version without bindir/libdir support." % e.returncode)
+    except FileNotFoundError:
+        bb.fatal("waf does not exist in %s" % subsrcdir)
 }
 
 do_configure[prefuncs] += "waf_preconfigure"
