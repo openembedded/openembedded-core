@@ -6,6 +6,7 @@ PR = "r3"
 
 SRC_URI += " \
            file://cfg \
+           file://0001-configure-fix-check-for-sys-sysmacros.h-under-glibc-.patch \
           "
 
 S = "${WORKDIR}/grub-${PV}"
