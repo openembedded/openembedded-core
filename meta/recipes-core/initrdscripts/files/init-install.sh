@@ -203,7 +203,7 @@ fi
 
 echo "Creating rootfs partition on $rootfs"
 [ $grub_version -eq 0 ] && pname='primary' || pname='root'
-parted ${device} mkpart $pname ext3 $rootfs_start $rootfs_end
+parted ${device} mkpart $pname ext4 $rootfs_start $rootfs_end
 
 echo "Creating swap partition on $swap"
 [ $grub_version -eq 0 ] && pname='primary' || pname='swap'
@@ -221,8 +221,8 @@ done
 echo "Formatting $bootfs to ext3..."
 mkfs.ext3 $bootfs
 
-echo "Formatting $rootfs to ext3..."
-mkfs.ext3 $rootfs
+echo "Formatting $rootfs to ext4..."
+mkfs.ext4 $rootfs
 
 echo "Formatting swap partition...($swap)"
 mkswap $swap

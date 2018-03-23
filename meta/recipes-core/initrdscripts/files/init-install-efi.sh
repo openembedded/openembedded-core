@@ -179,7 +179,7 @@ parted ${device} mkpart boot fat32 0% $boot_size
 parted ${device} set 1 boot on
 
 echo "Creating rootfs partition on $rootfs"
-parted ${device} mkpart root ext3 $rootfs_start $rootfs_end
+parted ${device} mkpart root ext4 $rootfs_start $rootfs_end
 
 echo "Creating swap partition on $swap"
 parted ${device} mkpart swap linux-swap $swap_start 100%
@@ -196,8 +196,8 @@ done
 echo "Formatting $bootfs to vfat..."
 mkfs.vfat $bootfs
 
-echo "Formatting $rootfs to ext3..."
-mkfs.ext3 $rootfs
+echo "Formatting $rootfs to ext4..."
+mkfs.ext4 $rootfs
 
 echo "Formatting swap partition...($swap)"
 mkswap $swap
