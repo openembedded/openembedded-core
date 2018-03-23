@@ -27,6 +27,7 @@ SRC_URI = "http://ftp.mozilla.org/pub/mozilla.org/security/nss/releases/${VERSIO
            file://pqg.c-ULL_addend.patch \
            file://Fix-compilation-for-X32.patch \
            file://nss-build-hacl-poly1305-aarch64.patch \
+           file://0001-Bug-1437734-Use-snprintf-in-sign.c-r-ttaubert.patch \
            "
 
 SRC_URI[md5sum] = "9467ec9e65c5aeb3254a50250490f5f7"
