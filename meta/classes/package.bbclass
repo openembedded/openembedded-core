@@ -918,7 +918,7 @@ python split_and_strip_files () {
     # 16 - kernel module
     def isELF(path):
         type = 0
-        ret, result = oe.utils.getstatusoutput("file \"%s\"" % path.replace("\"", "\\\""))
+        ret, result = oe.utils.getstatusoutput("file '%s'" % path)
 
         if ret:
             msg = "split_and_strip_files: 'file %s' failed" % path
