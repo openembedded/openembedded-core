@@ -67,7 +67,7 @@ class Gnome(XTerminal):
         import tempfile
         pidfile = tempfile.NamedTemporaryFile(delete = False).name
         try:
-            sh_cmd = "oe-gnome-terminal-phonehome " + pidfile + " " + sh_cmd
+            sh_cmd = bb.utils.which(os.getenv('PATH'), "oe-gnome-terminal-phonehome") + " " + pidfile + " " + sh_cmd
             XTerminal.__init__(self, sh_cmd, title, env, d)
             while os.stat(pidfile).st_size <= 0:
                 continue
