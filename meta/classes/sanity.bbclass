@@ -336,7 +336,7 @@ def check_path_length(filepath, pathname, limit):
     return ""
 
 def get_filesystem_id(path):
-    status, result = oe.utils.getstatusoutput("stat -f -c '%s' %s" % ("%t", path))
+    status, result = oe.utils.getstatusoutput("stat -f -c '%s' '%s'" % ("%t", path))
     if status == 0:
         return result
     else:
