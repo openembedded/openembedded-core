@@ -1,7 +1,7 @@
 From: Otavio Salvador <otavio@ossystems.com.br>
 Subject: [PATCH] endianness check is OS wide and not specific to libc
 
-Upstream-Status: Pending
+Upstream-Status: Accepted [https://cgit.freedesktop.org/mesa/mesa/commit/?id=cbee1bfb34274668a05995b9d4c78ddec9e5ea4c]
 
 Signed-off-by: Khem Raj <raj.khem@gmail.com>
 Signed-off-by: Jussi Kukkonen <jussi.kukkonen@intel.com>
