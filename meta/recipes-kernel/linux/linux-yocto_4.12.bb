@@ -24,6 +24,8 @@ SRCREV_meta ?= "2feb169ba66721f3794bacd97c8360ad594ce133"
 SRC_URI = "git://git.yoctoproject.org/linux-yocto-4.12.git;name=machine;branch=${KBRANCH}; \
            git://git.yoctoproject.org/yocto-kernel-cache;type=kmeta;name=meta;branch=yocto-4.12;destsuffix=${KMETA}"
 
+DEPENDS += "openssl-native util-linux-native"
+
 LINUX_VERSION ?= "4.12.21"
 
 PV = "${LINUX_VERSION}+git${SRCPV}"
