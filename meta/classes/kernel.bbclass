@@ -373,6 +373,46 @@ kernel_do_install() {
 	[ -e Module.symvers ] && install -m 0644 Module.symvers ${D}/boot/Module.symvers-${KERNEL_VERSION}
 	install -d ${D}${sysconfdir}/modules-load.d
 	install -d ${D}${sysconfdir}/modprobe.d
+
+	# install kernel source files in /usr/src/kernel
+        kerneldir=${D}${KERNEL_SRC_PATH}
+        install -d ${kerneldir}
+
+	install -m 0644 .config ${kerneldir}/
+        #
+        # Copy the staging dir source (and module build support) into the devsrc structure.
+        # We can keep this copy simple and take everything, since a we'll clean up any build
+        # artifacts afterwards, and the extra i/o is not significant
+        #
+        cp -r ${STAGING_KERNEL_DIR}/* ${kerneldir}/
+        cp -r ${STAGING_KERNEL_BUILDDIR}/* ${kerneldir}/
+
+        rm -rf ${kerneldir}/.git*
+        rm -rf ${kerneldir}/.kernel-meta
+        rm -rf ${kerneldir}/.debug
+
+        # Explicitly set KBUILD_OUTPUT to ensure that the image directory is cleaned and not
+        # The main build artifacts. We clean the directory to avoid QA errors on mismatched
+        # architecture (since scripts and helpers are native format).
+        KBUILD_OUTPUT="$kerneldir"
+        oe_runmake -C $kerneldir CC="${KERNEL_CC}" LD="${KERNEL_LD}" clean _mrproper_scripts
+        # make clean generates an absolute path symlink called "source"
+        # in $kerneldir points to $kerneldir, which doesn't make any
+        # sense, so remove it.
+        if [ -L $kerneldir/source ]; then
+            bbnote "Removing $kerneldir/source symlink"
+            rm -f $kerneldir/source
+        fi
+
+        # As of Linux kernel version 3.0.1, the clean target removes
+        # arch/powerpc/lib/crtsavres.o which is present in
+        # KBUILD_LDFLAGS_MODULE, making it required to build external modules.
+        if [ ${ARCH} = "powerpc" ]; then
+                mkdir -p $kerneldir/arch/powerpc/lib/
+                cp ${B}/arch/powerpc/lib/crtsavres.o $kerneldir/arch/powerpc/lib/crtsavres.o
+        fi
+
+        chown -R root:root ${kerneldir}
 }
 do_install[prefuncs] += "package_get_auto_pr"
 
@@ -539,11 +579,12 @@ EXPORT_FUNCTIONS do_compile do_install do_configure
 
 # kernel-base becomes kernel-${KERNEL_VERSION}
 # kernel-image becomes kernel-image-${KERNEL_VERSION}
-PACKAGES = "${KERNEL_PACKAGE_NAME} ${KERNEL_PACKAGE_NAME}-base ${KERNEL_PACKAGE_NAME}-vmlinux ${KERNEL_PACKAGE_NAME}-image ${KERNEL_PACKAGE_NAME}-dev ${KERNEL_PACKAGE_NAME}-modules"
+PACKAGES = "${KERNEL_PACKAGE_NAME} ${KERNEL_PACKAGE_NAME}-base ${KERNEL_PACKAGE_NAME}-vmlinux ${KERNEL_PACKAGE_NAME}-image ${KERNEL_PACKAGE_NAME}-dev ${KERNEL_PACKAGE_NAME}-devsrc ${KERNEL_PACKAGE_NAME}-modules"
 FILES_${PN} = ""
 FILES_${KERNEL_PACKAGE_NAME}-base = "${nonarch_base_libdir}/modules/${KERNEL_VERSION}/modules.order ${nonarch_base_libdir}/modules/${KERNEL_VERSION}/modules.builtin"
 FILES_${KERNEL_PACKAGE_NAME}-image = ""
-FILES_${KERNEL_PACKAGE_NAME}-dev = "/boot/System.map* /boot/Module.symvers* /boot/config* ${KERNEL_SRC_PATH} ${nonarch_base_libdir}/modules/${KERNEL_VERSION}/build"
+FILES_${KERNEL_PACKAGE_NAME}-dev = "/boot/System.map* /boot/Module.symvers* /boot/config* ${nonarch_base_libdir}/modules/${KERNEL_VERSION}/build"
+FILES_${KERNEL_PACKAGE_NAME}-devsrc = "${KERNEL_SRC_PATH}"
 FILES_${KERNEL_PACKAGE_NAME}-vmlinux = "/boot/vmlinux-${KERNEL_VERSION_NAME}"
 FILES_${KERNEL_PACKAGE_NAME}-modules = ""
 RDEPENDS_${KERNEL_PACKAGE_NAME} = "${KERNEL_PACKAGE_NAME}-base"
@@ -552,6 +593,7 @@ RDEPENDS_${KERNEL_PACKAGE_NAME} = "${KERNEL_PACKAGE_NAME}-base"
 RDEPENDS_${KERNEL_PACKAGE_NAME}-base ?= "${KERNEL_PACKAGE_NAME}-image"
 PKG_${KERNEL_PACKAGE_NAME}-image = "${KERNEL_PACKAGE_NAME}-image-${@legitimize_package_name('${KERNEL_VERSION}')}"
 RDEPENDS_${KERNEL_PACKAGE_NAME}-image += "${@oe.utils.conditional('KERNEL_IMAGETYPE', 'vmlinux', '${KERNEL_PACKAGE_NAME}-vmlinux', '', d)}"
+RDEPENDS_${KERNEL_PACKAGE_NAME}-devsrc = "gawk perl python"
 PKG_${KERNEL_PACKAGE_NAME}-base = "${KERNEL_PACKAGE_NAME}-${@legitimize_package_name('${KERNEL_VERSION}')}"
 RPROVIDES_${KERNEL_PACKAGE_NAME}-base += "${KERNEL_PACKAGE_NAME}-${KERNEL_VERSION}"
 ALLOW_EMPTY_${KERNEL_PACKAGE_NAME} = "1"
@@ -559,6 +601,9 @@ ALLOW_EMPTY_${KERNEL_PACKAGE_NAME}-base = "1"
 ALLOW_EMPTY_${KERNEL_PACKAGE_NAME}-image = "1"
 ALLOW_EMPTY_${KERNEL_PACKAGE_NAME}-modules = "1"
 DESCRIPTION_${KERNEL_PACKAGE_NAME}-modules = "Kernel modules meta package"
+DESCRIPTION_${KERNEL_PACKAGE_NAME}-devsrc = "Development source linux kernel. When built, this recipe packages the \
+source of the preferred virtual/kernel provider and makes it available for full kernel \
+development or external module builds"
 
 pkg_postinst_${KERNEL_PACKAGE_NAME}-base () {
 	if [ ! -e "$D/lib/modules/${KERNEL_VERSION}" ]; then
