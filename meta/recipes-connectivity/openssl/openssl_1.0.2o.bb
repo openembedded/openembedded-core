@@ -6,7 +6,7 @@ require openssl10.inc
 CFLAG += "-DHAVE_CRYPTODEV -DUSE_CRYPTODEV_DIGESTS"
 CFLAG_append_class-native = " -fPIC"
 
-LIC_FILES_CHKSUM = "file://LICENSE;md5=057d9218c6180e1d9ee407572b2dd225"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=f475368924827d06d4b416111c8bdb77"
 
 export DIRS = "crypto ssl apps engines"
 export OE_LDFLAGS="${LDFLAGS}"
@@ -47,8 +47,8 @@ SRC_URI_append_class-target = "\
            file://reproducible-cflags.patch \
            file://reproducible-mkbuildinf.patch \
            "
-SRC_URI[md5sum] = "13bdc1b1d1ff39b6fd42a255e74676a4"
-SRC_URI[sha256sum] = "370babb75f278c39e0c50e8c4e7493bc0f18db6867478341a832a982fd15a8fe"
+SRC_URI[md5sum] = "44279b8557c3247cbe324e2322ecd114"
+SRC_URI[sha256sum] = "ec3f5c9714ba0fd45cb4e087301eb1336c317e0d20b575a125050470e8089e4d"
 
 PACKAGES =+ "${PN}-engines"
 FILES_${PN}-engines = "${libdir}/ssl/engines/*.so ${libdir}/engines"
