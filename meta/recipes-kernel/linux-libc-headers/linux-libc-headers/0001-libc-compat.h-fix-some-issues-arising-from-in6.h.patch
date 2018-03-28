@@ -80,12 +80,11 @@ Index: linux-4.15/include/uapi/linux/libc-compat.h
  
  /* Definitions for if.h */
  #ifndef __UAPI_DEF_IF_IFCONF
-@@ -262,7 +253,7 @@
+@@ -262,6 +253,6 @@
  #define __UAPI_DEF_XATTR		1
  #endif
  
 -#endif /* __GLIBC__ */
 +#endif /* __KERNEL__ */
  
- /* Definitions for if_ether.h */
- /* allow libcs like musl to deactivate this, glibc does not implement this. */
+ #endif /* _UAPI_LIBC_COMPAT_H */
