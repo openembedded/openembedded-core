@@ -977,9 +977,12 @@
         "summary": "Python Simple Mail Transport Daemon"
     },
     "sqlite3": {
-        "cached": [],
+        "cached": [
+            "${libdir}/python3.5/sqlite3/__pycache__/*.pyc"
+        ],
         "files": [
-            "${libdir}/python3.5/lib-dynload/_sqlite3.*.so"
+            "${libdir}/python3.5/lib-dynload/_sqlite3.*.so",
+            "${libdir}/python3.5/sqlite3/*.py"
         ],
         "rdepends": [
             "core"
