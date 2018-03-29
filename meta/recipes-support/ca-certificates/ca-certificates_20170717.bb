@@ -21,10 +21,12 @@ SRC_URI = "git://salsa.debian.org/debian/ca-certificates.git;protocol=https \
            file://0001-update-ca-certificates-don-t-use-Debianisms-in-run-p.patch \
            file://update-ca-certificates-support-Toybox.patch \
            file://default-sysroot.patch \
-           file://sbindir.patch"
+           file://sbindir.patch \
+           file://0003-update-ca-certificates-use-relative-symlinks-from-ET.patch \
+           "
 
 S = "${WORKDIR}/git"
-SYSROOT_DIRS_class-native += "${sysconfdir}"
+SYSROOT_DIRS_class-native += "${sysconfdir} ${datadir}/ca-certificates"
 
 inherit allarch
 
