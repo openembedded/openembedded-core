@@ -737,21 +737,21 @@
             "${libdir}/python3.5/__pycache__/poplib.*.pyc",
             "${libdir}/python3.5/__pycache__/smtplib.*.pyc",
             "${libdir}/python3.5/__pycache__/telnetlib.*.pyc",
-            "${libdir}/python3.5/__pycache__/uuid.*.pyc"
+            "${libdir}/python3.5/__pycache__/uuid.*.pyc",
+            "${libdir}/python3.5/http/__pycache__",
+            "${libdir}/python3.5/urllib/__pycache__"
         ],
         "files": [
             "${libdir}/python3.5/base64.py",
             "${libdir}/python3.5/ftplib.py",
             "${libdir}/python3.5/hmac.py",
             "${libdir}/python3.5/http",
-            "${libdir}/python3.5/http/__pycache__",
             "${libdir}/python3.5/mimetypes.py",
             "${libdir}/python3.5/nntplib.py",
             "${libdir}/python3.5/poplib.py",
             "${libdir}/python3.5/smtplib.py",
             "${libdir}/python3.5/telnetlib.py",
             "${libdir}/python3.5/urllib",
-            "${libdir}/python3.5/urllib/__pycache__",
             "${libdir}/python3.5/uuid.py"
         ],
         "rdepends": [
@@ -1088,11 +1088,12 @@
         "summary": "Python typing support"
     },
     "unittest": {
-        "cached": [],
+        "cached": [
+            "${libdir}/python3.5/unittest/__pycache__"
+        ],
         "files": [
             "${libdir}/python3.5/unittest",
-            "${libdir}/python3.5/unittest/",
-            "${libdir}/python3.5/unittest/__pycache__"
+            "${libdir}/python3.5/unittest/"
         ],
         "rdepends": [
             "core",
@@ -1132,10 +1133,11 @@
         "summary": "Python basic XML support"
     },
     "xmlrpc": {
-        "cached": [],
-        "files": [
-            "${libdir}/python3.5/xmlrpc",
+        "cached": [
             "${libdir}/python3.5/xmlrpc/__pycache__"
+        ],
+        "files": [
+            "${libdir}/python3.5/xmlrpc"
         ],
         "rdepends": [
             "core",
