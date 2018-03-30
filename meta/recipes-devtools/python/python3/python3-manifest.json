@@ -591,8 +591,7 @@
         ],
         "rdepends": [
             "core",
-            "stringold",
-            "netserver"
+            "stringold"
         ],
         "summary": "Python logging support"
     },
@@ -978,14 +977,18 @@
     },
     "sqlite3": {
         "cached": [
-            "${libdir}/python3.5/sqlite3/__pycache__/*.pyc"
+            "${libdir}/python3.5/sqlite3/__pycache__",
+            "${libdir}/python3.5/sqlite3/__pycache__/dbapi2.*.pyc",
+            "${libdir}/python3.5/sqlite3/__pycache__/dump.*.pyc"
         ],
         "files": [
             "${libdir}/python3.5/lib-dynload/_sqlite3.*.so",
-            "${libdir}/python3.5/sqlite3/*.py"
+            "${libdir}/python3.5/sqlite3/dbapi2.py",
+            "${libdir}/python3.5/sqlite3/dump.py"
         ],
         "rdepends": [
-            "core"
+            "core",
+            "datetime"
         ],
         "summary": "Python Sqlite3 database support"
     },

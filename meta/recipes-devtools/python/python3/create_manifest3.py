@@ -124,7 +124,6 @@ for value in old_manifest['core']['files']:
   # Get module name , shouldnt be affected by libdir/bindir
   value = os.path.splitext(os.path.basename(os.path.normpath(value)))[0]
 
-
   # Launch separate task for each module for deterministic behavior
   # Each module will only import what is necessary for it to work in specific
   print ('Getting dependencies for module: %s' % value)
@@ -203,8 +202,20 @@ for key in old_manifest:
             if value not in new_manifest[key]['files']:
                 new_manifest[key]['files'].append(value)
             continue
+
         # Get module name , shouldnt be affected by libdir/bindir
-        value = os.path.splitext(os.path.basename(os.path.normpath(value)))[0]
+        # We need to check if the imported module comes from another (e.g. sqlite3.dump)
+        path,value = os.path.split(value)
+        path = os.path.basename(path)
+        value = os.path.splitext(os.path.basename(value))[0]
+
+        # If this condition is met, it means we need to import it from another module
+        # or its the folder itself (e.g. unittest)
+        if path == key:
+          if value:
+            value = path + '.' + value
+          else:
+            value = path
 
         # Launch separate task for each module for deterministic behavior
         # Each module will only import what is necessary for it to work in specific
@@ -292,19 +303,20 @@ for key in old_manifest:
                                        new_manifest[key]['rdepends'].append(newkey)
                                     break
                     else:
-                      # Debug
-                      print('Adding %s to %s FILES' % (item, key))
-                      # Since it wasnt found on another package, its not an RDEP, so add it to FILES for this package
-                      if isCached(item):
-                          new_manifest[key]['cached'].append(item)
-                      else:
-                          new_manifest[key]['files'].append(item)
-                      if item.endswith('*'):
-                          wildcards.append(item)
-                      if item not in allfiles:
-                          allfiles.append(item)
-                      else:
-                          repeated.append(item)
+                      # A module shouldn't contain itself (${libdir}/python3/sqlite3 shouldnt be on sqlite3 files)
+                      if os.path.basename(item) != key:
+                        print('Adding %s to %s FILES' % (item, key))
+                        # Since it wasnt found on another package, its not an RDEP, so add it to FILES for this package
+                        if isCached(item):
+                            new_manifest[key]['cached'].append(item)
+                        else:
+                            new_manifest[key]['files'].append(item)
+                        if item.endswith('*'):
+                            wildcards.append(item)
+                        if item not in allfiles:
+                            allfiles.append(item)
+                        else:
+                            repeated.append(item)
 
 print ('The following files are repeated (contained in more than one package), please check which package should get it:')
 print (repeated)
@@ -322,3 +334,4 @@ for key in new_manifest:
 # Create the manifest from the data structure that was built
 with open('python3-manifest.json.new','w') as outfile:
     json.dump(new_manifest,outfile,sort_keys=True, indent=4)
+    outfile.write("\n")
