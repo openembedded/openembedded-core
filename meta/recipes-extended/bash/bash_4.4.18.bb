@@ -13,12 +13,10 @@ SRC_URI = "${GNU_MIRROR}/bash/${BP}.tar.gz;name=tarball \
            file://run-ptest \
            file://fix-run-builtins.patch \
            file://0001-help-fix-printf-format-security-warning.patch \
-           file://bash-memleak-bug-fix-for-builtin-command-read.patch \
            file://pathexp-dep.patch \
            "
 
-SRC_URI[tarball.md5sum] = "7c112970cbdcadfc331e10eeb5f6aa41"
-SRC_URI[tarball.sha256sum] = "57d8432be54541531a496fd4904fdc08c12542f43605a9202594fa5d5f9f2331"
-
+SRC_URI[tarball.md5sum] = "518e2c187cc11a17040f0915dddce54e"
+SRC_URI[tarball.sha256sum] = "604d9eec5e4ed5fd2180ee44dd756ddca92e0b6aa4217bbab2b6227380317f23"
 
 BBCLASSEXTEND = "nativesdk"
