@@ -32,8 +32,6 @@ PCBIOS_CLASS = "${@['','syslinux'][d.getVar('PCBIOS') == '1']}"
 inherit ${EFI_CLASS}
 inherit ${PCBIOS_CLASS}
 
-KERNEL_IMAGETYPE ??= "bzImage"
-
 populate_kernel() {
 	dest=$1
 	install -d $dest

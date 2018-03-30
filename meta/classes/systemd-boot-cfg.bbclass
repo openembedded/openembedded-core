@@ -1,5 +1,3 @@
-KERNEL_IMAGETYPE ??= "bzImage"
-
 SYSTEMD_BOOT_CFG ?= "${S}/loader.conf"
 SYSTEMD_BOOT_ENTRIES ?= ""
 SYSTEMD_BOOT_TIMEOUT ?= "10"

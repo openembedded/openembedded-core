@@ -22,7 +22,6 @@ GRUB_CFG_LIVE = "${S}/grub_live.cfg"
 GRUB_TIMEOUT ?= "10"
 #FIXME: build this from the machine config
 GRUB_OPTS ?= "serial --unit=0 --speed=115200 --word=8 --parity=no --stop=1"
-KERNEL_IMAGETYPE ??= "bzImage"
 
 EFIDIR = "/EFI/BOOT"
 GRUB_ROOT ?= "${ROOT}"
