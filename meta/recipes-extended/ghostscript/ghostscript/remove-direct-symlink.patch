@@ -1,0 +1,40 @@
+From 2ce79942ca509663ddf8171f45d1d324bb71bad6 Mon Sep 17 00:00:00 2001
+From: Hongxu Jia <hongxu.jia@windriver.com>
+Date: Thu, 29 Mar 2018 17:22:35 +0800
+Subject: [PATCH] remove direct symlink
+
+The upstream create a direct symlink to stay backward
+compatible, a symlink is automatically created to point
+from the old location (/usr/share/ghostscript/<version>/doc)
+to the new location.
+
+It caused do_populate_sysroot failure
+...
+|ERROR: ghostscript-9.23-r0 do_populate_sysroot: sstate found an absolute
+path symlink
+...
+
+Without the symlink is no harm for OE
+
+Upstream-Status: Inappropriate [OE specific]
+
+Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
+---
+ base/unixinst.mak | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/base/unixinst.mak b/base/unixinst.mak
+index 7fec86c..0cf2361 100644
+--- a/base/unixinst.mak
++++ b/base/unixinst.mak
+@@ -165,7 +165,6 @@ install-doc: $(PSDOCDIR)/News.htm
+ 	$(SH) -c 'for f in $(DOC_PAGES) ;\
+ 	do if ( test -f $(PSDOCDIR)/$$f ); then $(INSTALL_DATA) $(PSDOCDIR)/$$f $(DESTDIR)$(docdir); fi;\
+ 	done'
+-	ln -s $(DESTDIR)$(docdir) $(DESTDIR)$(gsdatadir)/doc
+ 
+ # install the man pages for each locale
+ MAN_LCDIRS=. de
+-- 
+1.8.3.1
+

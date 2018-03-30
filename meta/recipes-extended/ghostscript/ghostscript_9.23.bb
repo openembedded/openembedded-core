@@ -19,12 +19,13 @@ DEPENDS_class-native = "libpng-native"
 UPSTREAM_CHECK_URI = "https://github.com/ArtifexSoftware/ghostpdl-downloads/releases"
 UPSTREAM_CHECK_REGEX = "(?P<pver>\d+(\.\d+)+)\.tar"
 
-SRC_URI_BASE = "https://github.com/ArtifexSoftware/ghostpdl-downloads/releases/download/gs921/${BPN}-${PV}.tar.gz \
+SRC_URI_BASE = "https://github.com/ArtifexSoftware/ghostpdl-downloads/releases/download/gs923/${BPN}-${PV}.tar.gz \
                 file://ghostscript-9.15-parallel-make.patch \
                 file://ghostscript-9.16-Werror-return-type.patch \
                 file://do-not-check-local-libpng-source.patch \
                 file://avoid-host-contamination.patch \
                 file://mkdir-p.patch \
+                file://remove-direct-symlink.patch \
 "
 
 SRC_URI = "${SRC_URI_BASE} \
@@ -32,17 +33,6 @@ SRC_URI = "${SRC_URI_BASE} \
            file://ghostscript-9.02-genarch.patch \
            file://objarch.h \
            file://cups-no-gcrypt.patch \
-           file://CVE-2017-7207.patch \
-           file://CVE-2017-5951.patch \
-           file://CVE-2017-7975.patch \
-           file://CVE-2017-9216.patch \
-           file://CVE-2017-9611.patch \
-           file://CVE-2017-9612.patch \
-           file://CVE-2017-9739.patch \
-           file://CVE-2017-9726.patch \
-           file://CVE-2017-9727.patch \
-           file://CVE-2017-9835.patch \
-           file://CVE-2017-11714.patch \
            "
 
 SRC_URI_class-native = "${SRC_URI_BASE} \
@@ -50,8 +40,8 @@ SRC_URI_class-native = "${SRC_URI_BASE} \
                         file://base-genht.c-add-a-preprocessor-define-to-allow-fope.patch \
                         "
 
-SRC_URI[md5sum] = "5f213281761d2750fcf27476c404d17f"
-SRC_URI[sha256sum] = "02bceadbc4dddeb6f2eec9c8b1623d945d355ca11b8b4df035332b217d58ce85"
+SRC_URI[md5sum] = "5a47ab47cd22dec1eb5f51c06f1c9d9c"
+SRC_URI[sha256sum] = "f65964807a3c97a2c0810d4b9806585367e73129e57ae33378cea18e07a1ed9b"
 
 # Put something like
 #
@@ -104,7 +94,7 @@ do_configure_append () {
 	# copy tools from the native ghostscript build
 	if [ "${PN}" != "ghostscript-native" ]; then
 		mkdir -p obj/aux soobj
-		for i in genarch genconf mkromfs echogs gendev genht; do
+		for i in genarch genconf mkromfs echogs gendev genht packps; do
 			cp ${STAGING_BINDIR_NATIVE}/ghostscript-${PV}/$i obj/aux/$i
 		done
 	fi
@@ -118,14 +108,14 @@ do_install_append () {
 
 do_compile_class-native () {
     mkdir -p obj
-    for i in genarch genconf mkromfs echogs gendev genht; do
+    for i in genarch genconf mkromfs echogs gendev genht packps; do
         oe_runmake obj/aux/$i
     done
 }
 
 do_install_class-native () {
     install -d ${D}${bindir}/ghostscript-${PV}
-    for i in genarch genconf mkromfs echogs gendev genht; do
+    for i in genarch genconf mkromfs echogs gendev genht packps; do
         install -m 755 obj/aux/$i ${D}${bindir}/ghostscript-${PV}/$i
     done
 }
