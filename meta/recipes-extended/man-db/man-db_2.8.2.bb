@@ -5,8 +5,8 @@ LIC_FILES_CHKSUM = "file://docs/COPYING.LIB;md5=a6f89e2100d9b6cdffcea4f398e37343
                     file://docs/COPYING;md5=eb723b61539feef013de476e68b5c50a"
 
 SRC_URI = "${SAVANNAH_NONGNU_MIRROR}/man-db/man-db-${PV}.tar.xz"
-SRC_URI[md5sum] = "51842978e06686286421f9498d1009b7"
-SRC_URI[sha256sum] = "a6aec641ca3d9942b054cc0e9c3f05cb46a3a992bc0006795755e2fed1357f3e"
+SRC_URI[md5sum] = "300788c0939a3b41d50302b04f730fa3"
+SRC_URI[sha256sum] = "45bdff87df888ddd93dc2a68abca91a2012d6e08333a8fc7c0dfefe9cbde0c5c"
 
 DEPENDS = "libpipeline gdbm groff-native"
 
