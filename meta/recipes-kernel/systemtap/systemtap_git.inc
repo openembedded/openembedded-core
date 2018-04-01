@@ -14,6 +14,7 @@ SRC_URI = "git://sourceware.org/git/systemtap.git \
            file://0001-buildrun-remove-quotes-around-I-include-line.patch \
            file://0001-staprun-stapbpf-don-t-support-installing-a-non-root.patch \
            file://0001-Fix-PR22551-by-updating-the-use-of-timers-for-the-4..patch \
+           file://0001-Fixes-for-gcc-8.patch \
            "
 
 COMPATIBLE_HOST = '(x86_64|i.86|powerpc|arm|aarch64|microblazeel|mips).*-linux'
