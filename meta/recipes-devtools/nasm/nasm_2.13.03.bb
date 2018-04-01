@@ -3,7 +3,9 @@ SECTION = "devel"
 LICENSE = "BSD-2-Clause"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=90904486f8fbf1861cf42752e1a39efe"
 
-SRC_URI = "http://www.nasm.us/pub/nasm/releasebuilds/${PV}/nasm-${PV}.tar.bz2 "
+SRC_URI = "http://www.nasm.us/pub/nasm/releasebuilds/${PV}/nasm-${PV}.tar.bz2 \
+           file://0001-asmlib-Drop-pure-function-attribute-from-seg_init.patch \
+           "
 
 SRC_URI[md5sum] = "0c581d482f39d5111879ca9601938f74"
 SRC_URI[sha256sum] = "63ec86477ad3f0f6292325fd89e1d93aea2e2fd490070863f17d48f7cd387011"
