@@ -383,8 +383,10 @@ def reformat_git_uri(uri):
         # which causes decodeurl to fail getting the right host and path
         if len(host.split(':')) > 1:
             splitslash = host.split(':')
-            host = splitslash[0]
-            path = '/' + splitslash[1] + path
+            # Port number should not be split from host
+            if not re.match('^[0-9]+$', splitslash[1]):
+                host = splitslash[0]
+                path = '/' + splitslash[1] + path
         #Algorithm:
         # if user is defined, append protocol=ssh or if a protocol is defined, then honor the user-defined protocol
         # if no user & password is defined, check for scheme type and append the protocol with the scheme type
