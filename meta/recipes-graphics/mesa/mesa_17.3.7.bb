@@ -9,6 +9,7 @@ SRC_URI = "https://mesa.freedesktop.org/archive/mesa-${PV}.tar.xz \
            file://llvm-config-version.patch \
            file://0001-winsys-svga-drm-Include-sys-types.h.patch \
            file://0001-Makefile.vulkan.am-explictly-add-lib-expat-to-intel-.patch \
+           file://0001-st-dri-Initialise-modifier-to-INVALID-for-DRI2.patch \
            "
 
 SRC_URI[md5sum] = "769137f2538562c300c4b76bcb097377"
