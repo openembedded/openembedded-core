@@ -25,8 +25,8 @@ SRC_URI = "https://github.com/${BPN}/${BPN}/releases/download/${PV}/${BP}.tar.xz
             file://disable-check-different-filesystems.patch \
             "
 
-SRC_URI[md5sum] = "78ef24d6fddcc4df8e412dd75c551b4c"
-SRC_URI[sha256sum] = "3222ca032f99be8d7a4a8c6ad69f3dcc49b9511bfe384bd5a271ebcd9bd3e52c"
+SRC_URI[md5sum] = "1c0f6e6e490c4bcac0a1e77ad1310683"
+SRC_URI[sha256sum] = "4703bdc0e2df3b322f9dff0aafc99aa9172c9e4acae28b7c924cc7d4e5b29d55"
 
 PACKAGECONFIG ?= "${@bb.utils.filter('DISTRO_FEATURES', 'acl selinux', d)}"
 
@@ -34,7 +34,9 @@ PACKAGECONFIG[acl] = ",,acl"
 PACKAGECONFIG[selinux] = ",,libselinux"
 
 CONFFILES_${PN} += "${localstatedir}/lib/logrotate.status \
-		    ${sysconfdir}/logrotate.conf"
+		    ${sysconfdir}/logrotate.conf \
+		    ${sysconfdir}/logrotate.d/btmp \
+		    ${sysconfdir}/logrotate.d/wtmp"
 
 # If RPM_OPT_FLAGS is unset, it adds -g itself rather than obeying our
 # optimization variables, so use it rather than EXTRA_CFLAGS.
@@ -68,6 +70,8 @@ do_install(){
     mkdir -p ${D}${sysconfdir}/logrotate.d
     mkdir -p ${D}${localstatedir}/lib
     install -p -m 644 ${S}/examples/logrotate-default ${D}${sysconfdir}/logrotate.conf
+    install -p -m 644 ${S}/examples/btmp ${D}${sysconfdir}/logrotate.d/btmp
+    install -p -m 644 ${S}/examples/wtmp ${D}${sysconfdir}/logrotate.d/wtmp
     touch ${D}${localstatedir}/lib/logrotate.status
 
     if ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'true', 'false', d)}; then
