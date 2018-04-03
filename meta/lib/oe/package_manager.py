@@ -349,6 +349,54 @@ class PackageManager(object, metaclass=ABCMeta):
         shutil.copytree(postinst_intercepts_dir, self.intercepts_dir)
 
     @abstractmethod
+    def _handle_intercept_failure(self, failed_script):
+        pass
+
+    def _postpone_to_first_boot(self, postinst_intercept_hook):
+        with open(postinst_intercept_hook) as intercept:
+            registered_pkgs = None
+            for line in intercept.read().split("\n"):
+                m = re.match("^##PKGS:(.*)", line)
+                if m is not None:
+                    registered_pkgs = m.group(1).strip()
+                    break
+
+            if registered_pkgs is not None:
+                bb.note("If an image is being built, the postinstalls for the following packages "
+                        "will be postponed for first boot: %s" %
+                        registered_pkgs)
+
+                # call the backend dependent handler
+                self._handle_intercept_failure(registered_pkgs)
+
+
+    def run_intercepts(self):
+        intercepts_dir = self.intercepts_dir
+
+        bb.note("Running intercept scripts:")
+        os.environ['D'] = self.target_rootfs
+        os.environ['STAGING_DIR_NATIVE'] = self.d.getVar('STAGING_DIR_NATIVE')
+        for script in os.listdir(intercepts_dir):
+            script_full = os.path.join(intercepts_dir, script)
+
+            if script == "postinst_intercept" or not os.access(script_full, os.X_OK):
+                continue
+
+            if script == "delay_to_first_boot":
+                self._postpone_to_first_boot(script_full)
+                continue
+
+            bb.note("> Executing %s intercept ..." % script)
+
+            try:
+                output = subprocess.check_output(script_full, stderr=subprocess.STDOUT)
+                if output: bb.note(output.decode("utf-8"))
+            except subprocess.CalledProcessError as e:
+                bb.warn("The postinstall intercept hook '%s' failed, details in log.do_rootfs" % script)
+                bb.note("Exit code %d. Output:\n%s" % (e.returncode, e.output.decode("utf-8")))
+                self._postpone_to_first_boot(script_full)
+
+    @abstractmethod
     def update(self):
         """
         Update the package manager package database.
@@ -897,6 +945,14 @@ class RpmPM(PackageManager):
         open(saved_script_name, 'w').write(output)
         os.chmod(saved_script_name, 0o755)
 
+    def _handle_intercept_failure(self, registered_pkgs):
+        rpm_postinsts_dir = self.target_rootfs + self.d.expand('${sysconfdir}/rpm-postinsts/')
+        bb.utils.mkdirhier(rpm_postinsts_dir)
+
+        # Save the package postinstalls in /etc/rpm-postinsts
+        for pkg in registered_pkgs.split():
+            self.save_rpmpostinst(pkg)
+
     def extract(self, pkg):
         output = self._invoke_dnf(["repoquery", "--queryformat", "%{location}", pkg])
         pkg_name = output.splitlines()[-1]
@@ -1000,6 +1056,8 @@ class OpkgDpkgPM(PackageManager):
 
         return tmp_dir
 
+    def _handle_intercept_failure(self, registered_pkgs):
+        self.mark_packages("unpacked", registered_pkgs.split())
 
 class OpkgPM(OpkgDpkgPM):
     def __init__(self, d, target_rootfs, config_file, archs, task_name='target'):

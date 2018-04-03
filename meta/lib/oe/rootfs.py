@@ -92,10 +92,6 @@ class Rootfs(object, metaclass=ABCMeta):
                 self.d.getVar('PACKAGE_FEED_ARCHS'))
 
 
-    @abstractmethod
-    def _handle_intercept_failure(self, failed_script):
-        pass
-
     """
     The _cleanup() method should be used to clean-up stuff that we don't really
     want to end up on target. For example, in the case of RPM, the DB locks.
@@ -197,7 +193,7 @@ class Rootfs(object, metaclass=ABCMeta):
 
         execute_pre_post_process(self.d, rootfs_post_install_cmds)
 
-        self._run_intercepts()
+        self.pm.run_intercepts()
 
         execute_pre_post_process(self.d, post_process_cmds)
 
@@ -282,50 +278,6 @@ class Rootfs(object, metaclass=ABCMeta):
         if not runtime_pkgmanage:
             # Remove the package manager data files
             self.pm.remove_packaging_data()
-
-    def _postpone_to_first_boot(self, postinst_intercept_hook):
-        with open(postinst_intercept_hook) as intercept:
-            registered_pkgs = None
-            for line in intercept.read().split("\n"):
-                m = re.match("^##PKGS:(.*)", line)
-                if m is not None:
-                    registered_pkgs = m.group(1).strip()
-                    break
-
-            if registered_pkgs is not None:
-                bb.note("The postinstalls for the following packages "
-                        "will be postponed for first boot: %s" %
-                        registered_pkgs)
-
-                # call the backend dependent handler
-                self._handle_intercept_failure(registered_pkgs)
-
-
-    def _run_intercepts(self):
-        intercepts_dir = self.pm.intercepts_dir
-
-        bb.note("Running intercept scripts:")
-        os.environ['D'] = self.image_rootfs
-        os.environ['STAGING_DIR_NATIVE'] = self.d.getVar('STAGING_DIR_NATIVE')
-        for script in os.listdir(intercepts_dir):
-            script_full = os.path.join(intercepts_dir, script)
-
-            if script == "postinst_intercept" or not os.access(script_full, os.X_OK):
-                continue
-
-            if script == "delay_to_first_boot":
-                self._postpone_to_first_boot(script_full)
-                continue
-
-            bb.note("> Executing %s intercept ..." % script)
-
-            try:
-                output = subprocess.check_output(script_full, stderr=subprocess.STDOUT)
-                if output: bb.note(output.decode("utf-8"))
-            except subprocess.CalledProcessError as e:
-                bb.warn("The postinstall intercept hook '%s' failed, details in log.do_rootfs" % script)
-                bb.note("Exit code %d. Output:\n%s" % (e.returncode, e.output.decode("utf-8")))
-                self._postpone_to_first_boot(script_full)
 
     def _run_ldconfig(self):
         if self.d.getVar('LDCONFIGDEPEND'):
@@ -519,14 +471,6 @@ class RpmRootfs(Rootfs):
         self._log_check_warn()
         self._log_check_error()
 
-    def _handle_intercept_failure(self, registered_pkgs):
-        rpm_postinsts_dir = self.image_rootfs + self.d.expand('${sysconfdir}/rpm-postinsts/')
-        bb.utils.mkdirhier(rpm_postinsts_dir)
-
-        # Save the package postinstalls in /etc/rpm-postinsts
-        for pkg in registered_pkgs.split():
-            self.pm.save_rpmpostinst(pkg)
-
     def _cleanup(self):
         self.pm._invoke_dnf(["clean", "all"])
 
@@ -706,9 +650,6 @@ class DpkgRootfs(DpkgOpkgRootfs):
         dst_postinst_dir = self.d.expand("${IMAGE_ROOTFS}${sysconfdir}/deb-postinsts")
         src_postinst_dir = self.d.expand("${IMAGE_ROOTFS}/var/lib/dpkg/info")
         return self._save_postinsts_common(dst_postinst_dir, src_postinst_dir)
-
-    def _handle_intercept_failure(self, registered_pkgs):
-        self.pm.mark_packages("unpacked", registered_pkgs.split())
 
     def _log_check(self):
         self._log_check_warn()
@@ -977,9 +918,6 @@ class OpkgRootfs(DpkgOpkgRootfs):
         dst_postinst_dir = self.d.expand("${IMAGE_ROOTFS}${sysconfdir}/ipk-postinsts")
         src_postinst_dir = self.d.expand("${IMAGE_ROOTFS}${OPKGLIBDIR}/opkg/info")
         return self._save_postinsts_common(dst_postinst_dir, src_postinst_dir)
-
-    def _handle_intercept_failure(self, registered_pkgs):
-        self.pm.mark_packages("unpacked", registered_pkgs.split())
 
     def _log_check(self):
         self._log_check_warn()
