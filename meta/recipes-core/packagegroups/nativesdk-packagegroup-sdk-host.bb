@@ -23,7 +23,6 @@ RDEPENDS_${PN} = "\
     nativesdk-makedevs \
     nativesdk-dnf \
     nativesdk-cmake \
-    nativesdk-postinst-intercept \
     ${@bb.utils.contains('DISTRO_FEATURES', 'wayland', 'nativesdk-wayland', '', d)} \
     nativesdk-sdk-provides-dummy \
     "
