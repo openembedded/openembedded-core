@@ -319,6 +319,10 @@ def create_diff_gz(d, src_orig, src, ar_outdir):
     finally:
         os.chdir(cwd)
 
+def is_work_shared(d):
+    pn = d.getVar('PN')
+    return bb.data.inherits_class('kernel', d) or pn.startswith('gcc-source')
+
 # Run do_unpack and do_patch
 python do_unpack_and_patch() {
     if d.getVarFlag('ARCHIVER_MODE', 'src') not in \
@@ -331,7 +335,7 @@ python do_unpack_and_patch() {
     pn = d.getVar('PN')
 
     # The kernel class functions require it to be on work-shared, so we dont change WORKDIR
-    if not (bb.data.inherits_class('kernel-yocto', d) or pn.startswith('gcc-source')):
+    if not is_work_shared(d):
         # Change the WORKDIR to make do_unpack do_patch run in another dir.
         d.setVar('WORKDIR', ar_workdir)
         # Restore the original path to recipe's native sysroot (it's relative to WORKDIR).
@@ -351,7 +355,7 @@ python do_unpack_and_patch() {
         oe.path.copytree(src, src_orig)
 
     # Make sure gcc and kernel sources are patched only once
-    if not (d.getVar('SRC_URI') == "" or (bb.data.inherits_class('kernel-yocto', d) or pn.startswith('gcc-source'))):
+    if not (d.getVar('SRC_URI') == "" or is_work_shared(d)):
         bb.build.exec_func('do_patch', d)
 
     # Create the patches
