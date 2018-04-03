@@ -392,7 +392,7 @@ class PackageManager(object, metaclass=ABCMeta):
                 output = subprocess.check_output(script_full, stderr=subprocess.STDOUT)
                 if output: bb.note(output.decode("utf-8"))
             except subprocess.CalledProcessError as e:
-                bb.warn("The postinstall intercept hook '%s' failed, details in log.do_rootfs" % script)
+                bb.warn("The postinstall intercept hook '%s' failed, details in %s/log.do_%s" % (script, self.d.getVar('T'), self.d.getVar('BB_CURRENTTASK')))
                 bb.note("Exit code %d. Output:\n%s" % (e.returncode, e.output.decode("utf-8")))
                 self._postpone_to_first_boot(script_full)
 
@@ -789,7 +789,7 @@ class RpmPM(PackageManager):
                 failed_scriptlets_pkgnames[line.split()[-1]] = True
 
         if len(failed_scriptlets_pkgnames) > 0:
-            failed_postinsts_warn(list(failed_scriptlets_pkgnames.keys()), self.d.expand("${T}/log.do_rootfs"))
+            failed_postinsts_warn(list(failed_scriptlets_pkgnames.keys()), self.d.expand("${T}/log.do_${BB_CURRENTTASK}"))
         for pkg in failed_scriptlets_pkgnames.keys():
             self.save_rpmpostinst(pkg)
 
@@ -1265,7 +1265,7 @@ class OpkgPM(OpkgDpkgPM):
                     bb.warn(line)
                     failed_pkgs.append(line.split(".")[0])
             if failed_pkgs:
-                failed_postinsts_warn(failed_pkgs, self.d.expand("${T}/log.do_rootfs"))
+                failed_postinsts_warn(failed_pkgs, self.d.expand("${T}/log.do_${BB_CURRENTTASK}"))
         except subprocess.CalledProcessError as e:
             (bb.fatal, bb.warn)[attempt_only]("Unable to install packages. "
                                               "Command '%s' returned %d:\n%s" %
@@ -1530,7 +1530,7 @@ class DpkgPM(OpkgDpkgPM):
                         bb.warn("%s for package %s failed with %d:\n%s" %
                                 (control_script.name, pkg_name, e.returncode,
                                     e.output.decode("utf-8")))
-                        failed_postinsts_warn([pkg_name], self.d.expand("${T}/log.do_rootfs"))
+                        failed_postinsts_warn([pkg_name], self.d.expand("${T}/log.do_${BB_CURRENTTASK}"))
                         failed_pkgs.append(pkg_name)
                         break
 
