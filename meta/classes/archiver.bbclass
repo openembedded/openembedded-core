@@ -277,6 +277,11 @@ def create_tarball(d, srcdir, suffix, ar_outdir):
     if (d.getVar('SRC_URI') == ""):
         return
 
+    # For the kernel archive, srcdir may just be a link to the
+    # work-shared location. Use os.path.realpath to make sure
+    # that we archive the actual directory and not just the link.
+    srcdir = os.path.realpath(srcdir)
+
     bb.utils.mkdirhier(ar_outdir)
     if suffix:
         filename = '%s-%s.tar.gz' % (d.getVar('PF'), suffix)
