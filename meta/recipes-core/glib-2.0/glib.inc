@@ -104,6 +104,11 @@ do_install_append () {
 	if [ -e ${D}${libdir}/charset.alias ]; then
 		rm -f ${D}${libdir}/charset.alias
 	fi
+
+        # Make sure gio-querymodules is unique among multilibs
+        if test "x${MLPREFIX}" != "x"; then
+                mv ${D}${libexecdir}/gio-querymodules ${D}${libexecdir}/${MLPREFIX}gio-querymodules
+        fi
 }
 
 do_install_append_class-target () {
@@ -113,11 +118,6 @@ do_install_append_class-target () {
 		if ${@bb.utils.contains("DISTRO_FEATURES", "x11", "false", "true", d)}; then
 			rm ${D}${datadir}/installed-tests/glib/gdbus-serialization.test
 		fi
-	fi
-
-	# Make sure gio-querymodules is unique among multilibs
-	if test "x${MLPREFIX}" != "x"; then
-		mv ${D}${libexecdir}/gio-querymodules ${D}${libexecdir}/${MLPREFIX}gio-querymodules
 	fi
 }
 
