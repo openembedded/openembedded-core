@@ -326,8 +326,9 @@ class PackageManager(object, metaclass=ABCMeta):
     This is an abstract class. Do not instantiate this directly.
     """
 
-    def __init__(self, d):
+    def __init__(self, d, target_rootfs):
         self.d = d
+        self.target_rootfs = target_rootfs
         self.deploy_dir = None
         self.deploy_lock = None
 
@@ -585,8 +586,7 @@ class RpmPM(PackageManager):
                  os_var=None,
                  rpm_repo_workdir="oe-rootfs-repo",
                  filterbydependencies=True):
-        super(RpmPM, self).__init__(d)
-        self.target_rootfs = target_rootfs
+        super(RpmPM, self).__init__(d, target_rootfs)
         self.target_vendor = target_vendor
         self.task_name = task_name
         if arch_var == None:
@@ -919,11 +919,11 @@ class RpmPM(PackageManager):
 
 
 class OpkgDpkgPM(PackageManager):
-    def __init__(self, d):
+    def __init__(self, d, target_rootfs):
         """
         This is an abstract class. Do not instantiate this directly.
         """
-        super(OpkgDpkgPM, self).__init__(d)
+        super(OpkgDpkgPM, self).__init__(d, target_rootfs)
 
     def package_info(self, pkg, cmd):
         """
@@ -988,9 +988,8 @@ class OpkgDpkgPM(PackageManager):
 
 class OpkgPM(OpkgDpkgPM):
     def __init__(self, d, target_rootfs, config_file, archs, task_name='target'):
-        super(OpkgPM, self).__init__(d)
+        super(OpkgPM, self).__init__(d, target_rootfs)
 
-        self.target_rootfs = target_rootfs
         self.config_file = config_file
         self.pkg_archs = archs
         self.task_name = task_name
@@ -1367,8 +1366,7 @@ class OpkgPM(OpkgDpkgPM):
 
 class DpkgPM(OpkgDpkgPM):
     def __init__(self, d, target_rootfs, archs, base_archs, apt_conf_dir=None):
-        super(DpkgPM, self).__init__(d)
-        self.target_rootfs = target_rootfs
+        super(DpkgPM, self).__init__(d, target_rootfs)
         self.deploy_dir = self.d.getVar('DEPLOY_DIR_DEB')
         if apt_conf_dir is None:
             self.apt_conf_dir = self.d.expand("${APTCONF_TARGET}/apt")
