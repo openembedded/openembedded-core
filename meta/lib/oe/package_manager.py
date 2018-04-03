@@ -12,6 +12,7 @@ import oe.utils
 import oe.path
 import string
 from oe.gpg_sign import get_signer
+import hashlib
 
 # this can be used by all PM backends to create the index files in parallel
 def create_index(arg):
@@ -331,6 +332,21 @@ class PackageManager(object, metaclass=ABCMeta):
         self.target_rootfs = target_rootfs
         self.deploy_dir = None
         self.deploy_lock = None
+        self._initialize_intercepts()
+
+    def _initialize_intercepts(self):
+        bb.note("Initializing intercept dir for %s" % self.target_rootfs)
+        postinst_intercepts_dir = self.d.getVar("POSTINST_INTERCEPTS_DIR")
+        if not postinst_intercepts_dir:
+            postinst_intercepts_dir = self.d.expand("${COREBASE}/scripts/postinst-intercepts")
+        # As there might be more than one instance of PackageManager operating at the same time
+        # we need to isolate the intercept_scripts directories from each other,
+        # hence the ugly hash digest in dir name.
+        self.intercepts_dir = os.path.join(self.d.getVar('WORKDIR'),
+                                      "intercept_scripts-%s" %(hashlib.sha256(self.target_rootfs.encode()).hexdigest()) )
+
+        bb.utils.remove(self.intercepts_dir, True)
+        shutil.copytree(postinst_intercepts_dir, self.intercepts_dir)
 
     @abstractmethod
     def update(self):
@@ -699,8 +715,7 @@ class RpmPM(PackageManager):
         os.environ['OFFLINE_ROOT'] = self.target_rootfs
         os.environ['IPKG_OFFLINE_ROOT'] = self.target_rootfs
         os.environ['OPKG_OFFLINE_ROOT'] = self.target_rootfs
-        os.environ['INTERCEPT_DIR'] = oe.path.join(self.d.getVar('WORKDIR'),
-                                                   "intercept_scripts")
+        os.environ['INTERCEPT_DIR'] = self.intercepts_dir
         os.environ['NATIVE_ROOT'] = self.d.getVar('STAGING_DIR_NATIVE')
 
 
@@ -1178,8 +1193,7 @@ class OpkgPM(OpkgDpkgPM):
         os.environ['OFFLINE_ROOT'] = self.target_rootfs
         os.environ['IPKG_OFFLINE_ROOT'] = self.target_rootfs
         os.environ['OPKG_OFFLINE_ROOT'] = self.target_rootfs
-        os.environ['INTERCEPT_DIR'] = os.path.join(self.d.getVar('WORKDIR'),
-                                                   "intercept_scripts")
+        os.environ['INTERCEPT_DIR'] = self.intercepts_dir
         os.environ['NATIVE_ROOT'] = self.d.getVar('STAGING_DIR_NATIVE')
 
         try:
@@ -1440,8 +1454,7 @@ class DpkgPM(OpkgDpkgPM):
         os.environ['OFFLINE_ROOT'] = self.target_rootfs
         os.environ['IPKG_OFFLINE_ROOT'] = self.target_rootfs
         os.environ['OPKG_OFFLINE_ROOT'] = self.target_rootfs
-        os.environ['INTERCEPT_DIR'] = os.path.join(self.d.getVar('WORKDIR'),
-                                                   "intercept_scripts")
+        os.environ['INTERCEPT_DIR'] = self.intercepts_dir
         os.environ['NATIVE_ROOT'] = self.d.getVar('STAGING_DIR_NATIVE')
 
         failed_pkgs = []

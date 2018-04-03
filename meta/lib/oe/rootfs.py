@@ -178,19 +178,9 @@ class Rootfs(object, metaclass=ABCMeta):
         post_process_cmds = self.d.getVar("ROOTFS_POSTPROCESS_COMMAND")
         rootfs_post_install_cmds = self.d.getVar('ROOTFS_POSTINSTALL_COMMAND')
 
-        postinst_intercepts_dir = self.d.getVar("POSTINST_INTERCEPTS_DIR")
-        if not postinst_intercepts_dir:
-            postinst_intercepts_dir = self.d.expand("${COREBASE}/scripts/postinst-intercepts")
-        intercepts_dir = os.path.join(self.d.getVar('WORKDIR'),
-                                      "intercept_scripts")
-
-        bb.utils.remove(intercepts_dir, True)
-
         bb.utils.mkdirhier(self.image_rootfs)
 
         bb.utils.mkdirhier(self.deploydir)
-
-        shutil.copytree(postinst_intercepts_dir, intercepts_dir)
 
         execute_pre_post_process(self.d, pre_process_cmds)
 
@@ -312,8 +302,7 @@ class Rootfs(object, metaclass=ABCMeta):
 
 
     def _run_intercepts(self):
-        intercepts_dir = os.path.join(self.d.getVar('WORKDIR'),
-                                      "intercept_scripts")
+        intercepts_dir = self.pm.intercepts_dir
 
         bb.note("Running intercept scripts:")
         os.environ['D'] = self.image_rootfs
