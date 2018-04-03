@@ -1,7 +1,6 @@
 require ${BPN}.inc
 
 SRC_URI = "https://mesa.freedesktop.org/archive/mesa-${PV}.tar.xz \
-           file://replace_glibc_check_with_linux.patch \
            file://disable-asm-on-non-gcc.patch \
 	   file://Use-Python-3-to-execute-the-scripts.patch \
            file://0001-Use-wayland-scanner-in-the-path.patch \
@@ -12,8 +11,8 @@ SRC_URI = "https://mesa.freedesktop.org/archive/mesa-${PV}.tar.xz \
            file://0001-st-dri-Initialise-modifier-to-INVALID-for-DRI2.patch \
            "
 
-SRC_URI[md5sum] = "769137f2538562c300c4b76bcb097377"
-SRC_URI[sha256sum] = "0595904a8fba65a8fe853a84ad3c940205503b94af41e8ceed245fada777ac1e"
+SRC_URI[md5sum] = "203d1a79156ab6926f2d253b377e9d9d"
+SRC_URI[sha256sum] = "8f9d9bf281c48e4a8f5228816577263b4c655248dc7666e75034ab422951a6b1"
 
 #because we cannot rely on the fact that all apps will use pkgconfig,
 #make eglplatform.h independent of MESA_EGL_NO_X11_HEADER
