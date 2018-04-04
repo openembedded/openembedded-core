@@ -20,16 +20,16 @@ class PythonTest(OERuntimeTestCase):
 
     @OETestID(1145)
     @OETestDepends(['ssh.SSHTest.test_ssh'])
-    @OEHasPackage(['python-core'])
+    @OEHasPackage(['python3-core'])
     def test_python_exists(self):
-        status, output = self.target.run('which python')
+        status, output = self.target.run('which python3')
         msg = 'Python binary not in PATH or not on target.'
         self.assertEqual(status, 0, msg=msg)
 
     @OETestID(965)
     @OETestDepends(['python.PythonTest.test_python_exists'])
     def test_python_stdout(self):
-        status, output = self.target.run('python /tmp/test.py')
+        status, output = self.target.run('python3 /tmp/test.py')
         msg = 'Exit status was not 0. Output: %s' % output
         self.assertEqual(status, 0, msg=msg)
 
