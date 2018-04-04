@@ -11,8 +11,8 @@ inherit gnomebase gtk-doc distro_features_check upstream-version-is-even gobject
 SRC_URI += "file://0001-Don-t-enable-stack-protection-by-default.patch \
             ${@bb.utils.contains('PACKAGECONFIG', 'vala', '', 'file://0001-Add-m4-vapigen.m4.patch', d) } \
             "
-SRC_URI[archive.md5sum] = "1912cfd1d9cdd30cebeb908507acadc5"
-SRC_URI[archive.sha256sum] = "79dd316bfaff48f2fb74d066baae0d830e1f44436796fe410a57297e5c5f09cf"
+SRC_URI[archive.md5sum] = "95b0d12864f7374128da33998e756e75"
+SRC_URI[archive.sha256sum] = "d5ae72dddd57af493afa10ca2a290f284e588021b0bd8aaaa63dbb75de7c0567"
 
 ANY_OF_DISTRO_FEATURES = "${GTK3DISTROFEATURES}"
 
@@ -37,8 +37,6 @@ PACKAGECONFIG[vala] = "--enable-vala,--disable-vala,vala-native vala"
 PACKAGECONFIG[gnutls] = "--with-gnutls,--without-gnutls,gnutls"
 
 CFLAGS += "-D_GNU_SOURCE"
-
-EXTRA_OECONF = "--disable-test-application"
 
 # libtool adds "-nostdlib" when g++ is used. This breaks PIE builds.
 # Use libtool-cross (which has a hack to prevent that) instead.
