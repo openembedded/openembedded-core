@@ -54,6 +54,7 @@ python () {
 
     if externalsrc:
         import oe.recipeutils
+        import oe.path
 
         d.setVar('S', externalsrc)
         if externalsrcbuild:
@@ -90,7 +91,7 @@ python () {
             cleandirs = oe.recipeutils.split_var_value(d.getVarFlag(task, 'cleandirs', False) or '')
             setvalue = False
             for cleandir in cleandirs[:]:
-                if d.expand(cleandir) == externalsrc:
+                if oe.path.is_path_parent(externalsrc, d.expand(cleandir)):
                     cleandirs.remove(cleandir)
                     setvalue = True
             if setvalue:
