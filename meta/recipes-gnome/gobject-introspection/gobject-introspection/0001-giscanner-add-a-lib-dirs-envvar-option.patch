@@ -1,4 +1,4 @@
-From e48f1e18f5ea41656f0ba10fe61d69d2604b0064 Mon Sep 17 00:00:00 2001
+From 06ebdaa5c8f9721acf93cc3e75a877a3c963867f Mon Sep 17 00:00:00 2001
 From: Alexander Kanavin <alex.kanavin@gmail.com>
 Date: Wed, 3 Jan 2018 17:02:01 +0200
 Subject: [PATCH] giscanner: add a --lib-dirs-envvar option
@@ -19,7 +19,7 @@ Signed-off-by: Alexander Kanavin <alex.kanavin@gmail.com>
  3 files changed, 7 insertions(+), 3 deletions(-)
 
 diff --git a/giscanner/ccompiler.py b/giscanner/ccompiler.py
-index 29de0ee..928eae8 100644
+index a8bd5b1..6cf25d5 100644
 --- a/giscanner/ccompiler.py
 +++ b/giscanner/ccompiler.py
 @@ -109,7 +109,7 @@ class CCompiler(object):
@@ -32,7 +32,7 @@ index 29de0ee..928eae8 100644
          # is being built in the current directory.
  
 @@ -119,7 +119,7 @@ class CCompiler(object):
-         if self.check_is_msvc():
+         if os.name == 'nt':
              runtime_path_envvar = ['LIB', 'PATH']
          else:
 -            runtime_path_envvar = ['LD_LIBRARY_PATH']
@@ -41,7 +41,7 @@ index 29de0ee..928eae8 100644
              # (This flag is not supported nor needed for Visual C++)
              args.append('-L.')
 diff --git a/giscanner/dumper.py b/giscanner/dumper.py
-index 7f77bd2..db96df6 100644
+index 3c7220b..0abd565 100644
 --- a/giscanner/dumper.py
 +++ b/giscanner/dumper.py
 @@ -259,7 +259,8 @@ class DumpCompiler(object):
@@ -55,7 +55,7 @@ index 7f77bd2..db96df6 100644
  
          else:
 diff --git a/giscanner/scannermain.py b/giscanner/scannermain.py
-index 38a45c1..b603850 100755
+index d262785..51c9570 100755
 --- a/giscanner/scannermain.py
 +++ b/giscanner/scannermain.py
 @@ -130,6 +130,9 @@ def _get_option_parser():
@@ -68,6 +68,3 @@ index 38a45c1..b603850 100755
      parser.add_option("", "--program-arg",
                        action="append", dest="program_args", default=[],
                        help="extra arguments to program")
--- 
-2.15.1
-
