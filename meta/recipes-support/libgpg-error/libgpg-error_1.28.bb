@@ -5,7 +5,7 @@ BUGTRACKER = "https://bugs.g10code.com/gnupg/index"
 LICENSE = "GPLv2+ & LGPLv2.1+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=59530bdf33659b29e73d4adb9f9f6552 \
                     file://COPYING.LIB;md5=2d5025d4aa3495befef8f17206a5b0a1 \
-                    file://src/gpg-error.h.in;endline=23;md5=beae1e44d8d5c265d194760276033a7c \
+                    file://src/gpg-error.h.in;endline=23;md5=fc7423b56d5f7163a9a2acf9fe2f8d6b \
                     file://src/init.c;endline=20;md5=872b2389fe9bae7ffb80d2b91225afbc"
 
 
@@ -14,10 +14,11 @@ SECTION = "libs"
 UPSTREAM_CHECK_URI = "https://gnupg.org/download/index.html"
 SRC_URI = "${GNUPG_MIRROR}/libgpg-error/libgpg-error-${PV}.tar.bz2 \
            file://pkgconfig.patch \
+           file://0001-core-Fix-regression-on-arm64-due-to-invalid-use-of-v.patch \
 	  "
 
-SRC_URI[md5sum] = "5217ef3e76a7275a2a3b569a12ddc989"
-SRC_URI[sha256sum] = "4f93aac6fecb7da2b92871bb9ee33032be6a87b174f54abf8ddf0911a22d29d2"
+SRC_URI[md5sum] = "2b072f6194eb22d48cd4c7c77e59b5af"
+SRC_URI[sha256sum] = "3edb957744905412f30de3e25da18682cbe509541e18cd3b8f9df695a075da49"
 
 BINCONFIG = "${bindir}/gpg-error-config"
 
