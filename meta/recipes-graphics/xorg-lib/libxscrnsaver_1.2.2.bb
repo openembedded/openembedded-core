@@ -12,7 +12,7 @@ image is to be displayed and to provide the graphics."
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://COPYING;md5=21fd154ee757813632ada871a34113fb"
 
-DEPENDS += "libxext scrnsaverproto"
+DEPENDS += "libxext xorgproto"
 PROVIDES = "libxss"
 RREPLACES_${PN} = "libxss"
 PE = "1"

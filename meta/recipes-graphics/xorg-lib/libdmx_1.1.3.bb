@@ -11,7 +11,7 @@ LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://COPYING;md5=a3c3499231a8035efd0e004cfbd3b72a \
                     file://src/dmx.c;endline=33;md5=c43f19af03c7c8619cadc9724ed9afe1"
 
-DEPENDS += "libxext dmxproto"
+DEPENDS += "libxext xorgproto"
 
 PE = "1"
 

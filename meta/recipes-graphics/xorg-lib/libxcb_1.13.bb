@@ -20,7 +20,7 @@ SRC_URI[sha256sum] = "188c8752193c50ff2dbe89db4554c63df2e26a2e47b0fa415a70918b5b
 
 BBCLASSEXTEND = "native nativesdk"
 
-DEPENDS = "xcb-proto xproto libxau libpthread-stubs libxdmcp"
+DEPENDS = "xcb-proto xorgproto libxau libpthread-stubs libxdmcp"
 
 PACKAGES_DYNAMIC = "^libxcb-.*"
 

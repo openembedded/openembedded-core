@@ -9,7 +9,7 @@ can drive most VESA-compatible video cards, but only makes use of the \
 basic standard VESA core that is common to these cards. The driver \
 supports depths 8, 15 16 and 24."
 
-DEPENDS += "virtual/libx11 randrproto libpciaccess"
+DEPENDS += "virtual/libx11 xorgproto libpciaccess"
 
 COMPATIBLE_HOST = '(i.86|x86_64).*-linux'
 

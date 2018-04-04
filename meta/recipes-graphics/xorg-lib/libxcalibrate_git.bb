@@ -9,7 +9,7 @@ LICENSE = "MIT-style"
 LIC_FILES_CHKSUM = "file://xcalibrate.h;endline=21;md5=fa572df6439f0f235f2612f370f153d7 \
                     file://xcalibrate.c;endline=21;md5=fa572df6439f0f235f2612f370f153d7"
 
-DEPENDS = "virtual/libx11 calibrateproto libxext"
+DEPENDS = "virtual/libx11 xorgproto libxext"
 
 SRCREV = "209d83af61ed38a002c8096377deac292b3e396c"
 PV = "0.0+git${SRCPV}"

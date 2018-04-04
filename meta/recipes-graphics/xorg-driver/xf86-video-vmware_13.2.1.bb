@@ -6,7 +6,7 @@ DESCRIPTION = "vmware is an Xorg driver for VMware virtual video cards."
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=5fcd7d437a959a15fbee8707747c6b53"
 
-DEPENDS += "virtual/libx11 xineramaproto videoproto libpciaccess"
+DEPENDS += "virtual/libx11 xorgproto libpciaccess"
 
 SRC_URI += "file://0002-add-option-for-vmwgfx.patch"
 

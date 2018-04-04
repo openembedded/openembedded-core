@@ -8,7 +8,7 @@ require xorg-lib-common.inc
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://COPYING;md5=27c91ecc435bd3d2bfad868914c94b45"
 
-DEPENDS += "libxext xf86miscproto"
+DEPENDS += "libxext"
 PROVIDES = "xxf86misc"
 
 PE = "1"

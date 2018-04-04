@@ -22,7 +22,7 @@ omapdrm kernel driver w/ GEM support. \
 
 LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=10ce5de3b111315ea652a5f74ec0c602"
-DEPENDS += "virtual/libx11 libdrm xf86driproto"
+DEPENDS += "virtual/libx11 libdrm xorgproto"
 
 SRC_URI[md5sum] = "3b8ea5e8fba63355c0dc6681c49d5fe5"
 SRC_URI[sha256sum] = "93e7d42107521e61f61980eaea64fb452e87b7b94272e48938ac8d904ccfab5a"

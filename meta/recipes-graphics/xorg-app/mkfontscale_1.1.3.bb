@@ -8,7 +8,7 @@ font name (XLFD) is generated, and is written together with the file \
 name to a file fonts.scale in the directory.  The resulting fonts.scale \
 is used by the mkfontdir program."
 
-DEPENDS = "util-macros-native zlib libfontenc freetype xproto"
+DEPENDS = "util-macros-native zlib libfontenc freetype xorgproto"
 
 BBCLASSEXTEND = "native"
 
