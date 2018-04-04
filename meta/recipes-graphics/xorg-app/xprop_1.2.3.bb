@@ -14,5 +14,5 @@ DEPENDS += "libxmu"
 
 PE = "1"
 
-SRC_URI[md5sum] = "fae3d2fda07684027a643ca783d595cc"
-SRC_URI[sha256sum] = "9bee88b1025865ad121f72d32576dd3027af1446774aa8300cce3c261d869bc6"
+SRC_URI[md5sum] = "4becb3ddc4674d741487189e4ce3d0b6"
+SRC_URI[sha256sum] = "d22afb28c86d85fff10a50156a7d0fa930c80ae865d70b26d805fd28a17a521b"
