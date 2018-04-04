@@ -53,6 +53,8 @@ python () {
             d.setVar('BB_DONT_CACHE', '1')
 
     if externalsrc:
+        import oe.recipeutils
+
         d.setVar('S', externalsrc)
         if externalsrcbuild:
             d.setVar('B', externalsrcbuild)
@@ -85,7 +87,7 @@ python () {
                 d.appendVarFlag(task, "lockfiles", " ${S}/singletask.lock")
 
             # We do not want our source to be wiped out, ever (kernel.bbclass does this for do_clean)
-            cleandirs = (d.getVarFlag(task, 'cleandirs', False) or '').split()
+            cleandirs = oe.recipeutils.split_var_value(d.getVarFlag(task, 'cleandirs', False) or '')
             setvalue = False
             for cleandir in cleandirs[:]:
                 if d.expand(cleandir) == externalsrc:
