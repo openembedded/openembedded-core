@@ -12,10 +12,8 @@ inherit gnomebase gtk-icon-cache gtk-doc distro_features_check upstream-version-
 # depends on gtk+3, but also x11 through gtk+-x11
 REQUIRED_DISTRO_FEATURES = "x11"
 
-SRC_URI += "file://gcr-add-missing-dependencies-for-vapi.patch"
-
-SRC_URI[archive.md5sum] = "4314bf89eac293dd0a9d806593ff1b35"
-SRC_URI[archive.sha256sum] = "90572c626d8a708225560c42b4421f7941315247fa1679d4ef569bde7f4bb379"
+SRC_URI[archive.md5sum] = "5321319307dad34dca2fd52e7c9c01ab"
+SRC_URI[archive.sha256sum] = "15e175d1da7ec486d59749ba34906241c442898118ce224a7b70bf2e849faf0b"
 
 FILES_${PN} += " \
     ${datadir}/dbus-1 \
@@ -24,3 +22,9 @@ FILES_${PN} += " \
 
 # http://errors.yoctoproject.org/Errors/Details/20229/
 ARM_INSTRUCTION_SET = "arm"
+
+# These files may be out of date or missing our fixes
+# libgcrypt.m4 in particular is calling into libgcrypt-config
+do_configure_prepend() {
+    rm -f ${S}/build/m4/*
+}
