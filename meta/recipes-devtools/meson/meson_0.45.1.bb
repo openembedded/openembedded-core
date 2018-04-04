@@ -10,8 +10,8 @@ SRC_URI = "https://github.com/mesonbuild/meson/releases/download/${PV}/${BP}.tar
            file://0001-Linker-rules-move-cross_args-in-front-of-output_args.patch \
            file://0003-native_bindir.patch \
            "
-SRC_URI[md5sum] = "82b1198bf714b5a4da84bfe8376c79cc"
-SRC_URI[sha256sum] = "2ea1a721574adb23160b6481191bcc1173f374e02b0ff3bb0ae85d988d97e4fa"
+SRC_URI[md5sum] = "4d9c7b3a7365b7b472f00af14e034949"
+SRC_URI[sha256sum] = "4d0bb0dbb1bb556cb7a4092fdfea3d6e76606bd739a4bc97481c2d7bc6200afb"
 UPSTREAM_CHECK_URI = "https://github.com/mesonbuild/meson/releases"
 
 inherit setuptools3
