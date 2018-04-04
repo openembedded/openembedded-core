@@ -14,18 +14,18 @@ DEPENDS = "util-linux attr e2fsprogs lzo acl"
 DEPENDS_append_class-target = " udev"
 RDEPENDS_${PN} = "libgcc"
 
-SRCREV = "a7a1ea0f4f2a1d6eeeb3d106e062c7f1034f16d4"
+SRCREV = "3097f02c948f69f520c565ff8f8ba476aa6edb88"
 SRC_URI = "git://git.kernel.org/pub/scm/linux/kernel/git/kdave/btrfs-progs.git \
            file://0001-Makefile-build-mktables-using-native-gcc.patch \
-           file://0001-Fix-build-with-musl-missing-header-include-for-dev_t.patch \
+           file://ftw-subdir-walk.patch \
            "
 
-RECIPE_NO_UPDATE_REASON = "Waiting for resolution of https://github.com/kdave/btrfs-progs/issues/109"
 inherit autotools-brokensep pkgconfig manpages
 
 CLEANBROKEN = "1"
 
 PACKAGECONFIG[manpages] = "--enable-documentation, --disable-documentation, asciidoc-native xmlto-native"
+EXTRA_OECONF = " --disable-zstd"
 EXTRA_OECONF_append_libc-musl = " --disable-backtrace "
 
 do_configure_prepend() {

@@ -765,7 +765,7 @@ part /etc --source rootfs --ondisk mmcblk0 --fstype=ext4 --exclude-path bin/ --r
                             'part emptyvfat   --fstype vfat   --size 1M\n',
                             'part emptymsdos  --fstype msdos  --size 1M\n',
                             'part emptyext2   --fstype ext2   --size 1M\n',
-                            'part emptybtrfs  --fstype btrfs  --size 100M\n'])
+                            'part emptybtrfs  --fstype btrfs  --size 150M\n'])
             wks.flush()
             cmd = "wic create %s -e %s -o %s" % (wks.name, img, self.resultdir)
             self.assertEqual(0, runCmd(cmd).status)
