@@ -7,12 +7,11 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
 BPN = "gnome-desktop"
 
 inherit gnome pkgconfig upstream-version-is-even gobject-introspection
-SRC_URI[archive.md5sum] = "6cee2ecd677d87eaa0eb5ebfa7b45fb3"
-SRC_URI[archive.sha256sum] = "f7561a7a313fc474b2c390cd9696df1f5c1e1556080e43f4afe042b1060e5f2a"
+SRC_URI[archive.md5sum] = "3e7b67578307220a21688f28307b6789"
+SRC_URI[archive.sha256sum] = "f1df71c39e32147f6d58f53a9c05b964b00b7c98fbca090419355437c72fd59d"
 
 SRC_URI += " \
            file://gnome-desktop-thumbnail-don-t-assume-time_t-is-long.patch \
-           file://0001-configure.ac-Remove-gnome-common-macro-calls.patch \
            file://0001-Disable-libseccomp-sycall-filtering-mechanism.patch \
            "
 
