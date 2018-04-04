@@ -13,10 +13,10 @@ REQUIRED_DISTRO_FEATURES = "x11"
 SRC_URI = "${GNOME_MIRROR}/${GNOMEBN}/${@gnome_verdir("${PV}")}/${GNOMEBN}-${PV}.tar.${GNOME_COMPRESS_TYPE};name=archive \
            file://0002-help-meson.build-disable-the-use-of-yelp.patch \
            "
-SRC_URI[archive.md5sum] = "8449968366a6f9aaff3ac228ddfc7c66"
-SRC_URI[archive.sha256sum] = "01b16aa55d312ae0f17d3136f90d8c68ac748715f119412fb1917023c6f630a8"
+SRC_URI[archive.md5sum] = "3e127d843d3f255f426ab34804f29163"
+SRC_URI[archive.sha256sum] = "7154b06837655771f2240bf378fb8ba2315ae07dbc6f45d160ca29cd6d377808"
 
 EXTRA_OEMESON += " -Ddistributor_name=${DISTRO}"
 
-FILES_${PN} += "${datadir}/dbus-1 ${datadir}/gnome-shell/search-providers"
+FILES_${PN} += "${datadir}/dbus-1 ${datadir}/gnome-shell/search-providers ${datadir}/metainfo"
 RDEPENDS_${PN} = "iso-codes adwaita-icon-theme"
