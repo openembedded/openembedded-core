@@ -18,13 +18,11 @@ SRC_URI = "${GNU_MIRROR}/libidn/${BPN}-${PV}.tar.gz \
            file://libidn_fix_for_automake-1.12.patch \
            file://avoid_AM_PROG_MKDIR_P_warning_error_with_automake_1.12.patch \
            file://dont-depend-on-help2man.patch \
-           file://0001-idn-fix-printf-format-security-warnings.patch \
-           file://gcc7-compatibility.patch \
            file://0001-idn-format-security-warnings.patch \
-"
+           "
 
-SRC_URI[md5sum] = "a9aa7e003665de9c82bd3f9fc6ccf308"
-SRC_URI[sha256sum] = "44a7aab635bb721ceef6beecc4d49dfd19478325e1b47f3196f7d2acc4930e19"
+SRC_URI[md5sum] = "a829db6cd0b85733017c20a50bf10798"
+SRC_URI[sha256sum] = "3719e2975f2fb28605df3479c380af2cf4ab4e919e1506527e4c7670afff6e3c"
 
 # command tool is under GPLv3+, while libidn itself is under LGPLv2.1+ or LGPLv3
 # so package command into a separate package
