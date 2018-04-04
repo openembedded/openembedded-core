@@ -1,7 +1,7 @@
-From 0b3811771ae6385503f2d949f9433d8f810d2ff9 Mon Sep 17 00:00:00 2001
+From d907ac649ff5514826af9ad7e97e15dfcf79909c Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Wed, 17 May 2017 22:34:24 -0700
-Subject: [PATCH 8/9] webkitgtk: Fix build for armv5
+Subject: [PATCH] webkitgtk: Fix build for armv5
 
 Taken from
 https://bugs.webkit.org/show_bug.cgi?id=161900
@@ -14,10 +14,10 @@ Signed-off-by: Khem Raj <raj.khem@gmail.com>
  1 file changed, 9 insertions(+), 1 deletion(-)
 
 diff --git a/Source/WTF/wtf/CMakeLists.txt b/Source/WTF/wtf/CMakeLists.txt
-index 6b5e45b9..46ee3c22 100644
+index 220bafd..4e1e9f8 100644
 --- a/Source/WTF/wtf/CMakeLists.txt
 +++ b/Source/WTF/wtf/CMakeLists.txt
-@@ -205,7 +205,6 @@ set(WTF_HEADERS
+@@ -315,7 +315,6 @@ set(WTF_HEADERS
  
  set(WTF_SOURCES
      Assertions.cpp
@@ -25,7 +25,7 @@ index 6b5e45b9..46ee3c22 100644
      AutomaticThread.cpp
      BitVector.cpp
      CPUTime.cpp
-@@ -336,6 +335,15 @@ if (NOT USE_SYSTEM_MALLOC)
+@@ -458,6 +457,15 @@ if (NOT USE_SYSTEM_MALLOC)
      list(APPEND WTF_LIBRARIES bmalloc)
  endif ()
  
@@ -39,8 +39,5 @@ index 6b5e45b9..46ee3c22 100644
 +file(REMOVE ${CMAKE_BINARY_DIR}/test_atomics.cpp)
 +
  list(APPEND WTF_SOURCES
-     unicode/icu/CollatorICU.cpp
- )
--- 
-2.14.1
-
+     unicode/CollatorDefault.cpp
+ 
