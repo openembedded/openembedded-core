@@ -12,7 +12,7 @@ SECTION = "x11/utils"
 DEPENDS = "cairo gdk-pixbuf glib-2.0 libcroco libxml2 pango"
 BBCLASSEXTEND = "native"
 
-inherit autotools pkgconfig gnomebase gtk-doc pixbufcache upstream-version-is-even gobject-introspection
+inherit gnomebase gtk-doc pixbufcache upstream-version-is-even gobject-introspection
 
 SRC_URI += "file://gtk-option.patch"
 
