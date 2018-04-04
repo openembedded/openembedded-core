@@ -9,8 +9,8 @@ SECTION = "console/utils"
 
 SRC_URI = "https://github.com/scop/bash-completion/releases/download/${PV}/${BPN}-${PV}.tar.xz"
 
-SRC_URI[md5sum] = "28117492bdc9408438e6041683a423ce"
-SRC_URI[sha256sum] = "41ba892d3f427d4a686de32673f35401bc947a7801f684127120cdb13641441e"
+SRC_URI[md5sum] = "201b6ae62f7d5fb5b1b25e34427db919"
+SRC_URI[sha256sum] = "c01f5570f5698a0dda8dc9cfb2a83744daa1ec54758373a6e349bd903375f54d"
 UPSTREAM_CHECK_REGEX = "bash-completion-(?P<pver>(?!2008).+)\.tar"
 UPSTREAM_CHECK_URI = "https://github.com/scop/bash-completion/releases"
 
@@ -25,7 +25,7 @@ do_install_append() {
 
 	# Delete files already provided by util-linux
 	local i
-	for i in mount umount rfkill; do
+	for i in mount umount; do
 		rm ${D}${datadir}/${BPN}/completions/$i
 	done
 }
