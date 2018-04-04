@@ -13,10 +13,10 @@ SRC_URI = "http://xcb.freedesktop.org/dist/libxcb-${PV}.tar.bz2 \
            file://xcbincludedir.patch \
            file://disable-check.patch \
            file://gcc-mips-pr68302-mips-workaround.patch \
-           file://Fix-inconsistent-use-of-tabs-vs.-space.patch \
           "
-SRC_URI[md5sum] = "28e552bd78bc1050b6b26ca1db0e5bb6"
-SRC_URI[sha256sum] = "4adfb1b7c67e99bc9c2ccb110b2f175686576d2f792c8a71b9c8b19014057b5b"
+
+SRC_URI[md5sum] = "c2b6cf928afa16b0047c974e7aaa783f"
+SRC_URI[sha256sum] = "188c8752193c50ff2dbe89db4554c63df2e26a2e47b0fa415a70918b5b851daa"
 
 BBCLASSEXTEND = "native nativesdk"
 
