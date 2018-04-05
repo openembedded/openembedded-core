@@ -14,6 +14,15 @@ SRC_URI = "git://sourceware.org/git/systemtap.git \
            file://0001-staprun-stapbpf-don-t-support-installing-a-non-root.patch \
            file://0001-Fix-PR22551-by-updating-the-use-of-timers-for-the-4..patch \
            file://0001-Fixes-for-gcc-8.patch \
+           file://0001-Use-sysroot-when-looking-for-the-System.map-file.patch \
+           file://0001-debuginfo-lookup-with-sysroot-case-do-not-remove-sys.patch \
+           file://0001-Make-sure-sysroot-paths-don-t-end-with-a-slash.patch \
+           file://0001-sysroot-fix-short-release-r-option-handling.patch \
+           file://0001-Delay-adding-sysroot-path-to-module-name-in-case-of-.patch \
+           file://0001-Added-a-couple-of-small-sysroot-fixes.patch \
+           file://0001-_stp_umodule_relocate-needs-target-file-path-not-hos.patch \
+           file://0001-sysroot-handle-symbolic-links-with-absolute-name-rel.patch \
+           file://0001-sysroot-fix-short-release-r-option-handling-follow-u.patch \
            "
 
 COMPATIBLE_HOST = '(x86_64|i.86|powerpc|arm|aarch64|microblazeel|mips).*-linux'
