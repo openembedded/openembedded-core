@@ -816,7 +816,7 @@ def check_sanity_everybuild(status, d):
     machinevalid = True
     if d.getVar('MACHINE', True):
         if not check_conf_exists("conf/machine/${MACHINE}.conf", d):
-            status.addresult('Please set a valid MACHINE in your local.conf or environment\n')
+            status.addresult('MACHINE=%s is invalid. Please set a valid MACHINE in your local.conf, environment or other configuration file.\n' % (d.getVar('MACHINE', True)))
             machinevalid = False
         else:
             status.addresult(check_sanity_validmachine(d))
