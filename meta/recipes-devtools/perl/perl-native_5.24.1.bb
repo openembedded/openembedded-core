@@ -15,6 +15,7 @@ SRC_URI += "\
            file://dynaloaderhack.patch \
            file://perl-PathTools-don-t-filter-out-blib-from-INC.patch \
            file://0001-Configure-Remove-fstack-protector-strong-for-native-.patch \
+           file://perl-5.26.1-guard_old_libcrypt_fix.patch \
           "
 
 SRC_URI[md5sum] = "af6a84c7c3e2b8b269c105a5db2f6d53"
