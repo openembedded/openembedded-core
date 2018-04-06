@@ -189,10 +189,7 @@ for key in old_manifest:
         # Ignore folders, since we don't import those, difficult to handle multilib
         if isFolder(value):
             # Pass folders directly
-            if isCached(value):
-                new_manifest[key]['cached'].append(value)
-            else:
-                new_manifest[key]['files'].append(value)
+            new_manifest[key]['files'].append(value)
         # Ignore binaries, since we don't import those
         if '${bindir}' in value:
             # Pass it directly to the new manifest data structure
