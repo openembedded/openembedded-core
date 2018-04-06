@@ -226,9 +226,7 @@ def get_deployed_dependencies(d):
     # The manifest file name contains the arch. Because we are not running
     # in the recipe context it is necessary to check every arch used.
     sstate_manifest_dir = d.getVar("SSTATE_MANIFESTS")
-    sstate_archs = d.getVar("SSTATE_ARCHS")
-    extra_archs = d.getVar("PACKAGE_EXTRA_ARCHS")
-    archs = list(set(("%s %s" % (sstate_archs, extra_archs)).split()))
+    archs = list(set(d.getVar("SSTATE_ARCHS").split()))
     for dep in depends:
         # Some recipes have an arch on their own, so we try that first.
         special_arch = d.getVar("PACKAGE_ARCH_pn-%s" % dep)
