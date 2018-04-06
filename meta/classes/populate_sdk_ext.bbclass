@@ -722,6 +722,6 @@ SSTATE_SKIP_CREATION_task-populate-sdk-ext = '1'
 do_populate_sdk_ext[cleandirs] = "${SDKEXTDEPLOYDIR}"
 do_populate_sdk_ext[sstate-inputdirs] = "${SDKEXTDEPLOYDIR}"
 do_populate_sdk_ext[sstate-outputdirs] = "${SDK_DEPLOY}"
-do_populate_sdk_ext[stamp-extra-info] = "${MACHINE}"
+do_populate_sdk_ext[stamp-extra-info] = "${MACHINE_ARCH}"
 
 addtask populate_sdk_ext after do_sdk_depends

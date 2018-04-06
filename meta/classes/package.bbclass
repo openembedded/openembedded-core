@@ -2234,7 +2234,7 @@ SSTATETASKS += "do_packagedata"
 do_packagedata[sstate-inputdirs] = "${PKGDESTWORK}"
 do_packagedata[sstate-outputdirs] = "${PKGDATA_DIR}"
 do_packagedata[sstate-lockfile-shared] = "${PACKAGELOCK}"
-do_packagedata[stamp-extra-info] = "${MACHINE}"
+do_packagedata[stamp-extra-info] = "${MACHINE_ARCH}"
 
 python do_packagedata_setscene () {
     sstate_setscene(d)
