@@ -35,7 +35,10 @@ siteconfig_do_siteconfig_gencache_prepend = " \
 DEPENDS = "virtual/${TARGET_PREFIX}gcc-initial libgcc-initial linux-libc-headers virtual/${TARGET_PREFIX}libc-initial"
 # nptl needs libgcc but dlopens it, so our shlibs code doesn't detect this
 #RDEPENDS_${PN} += "${@['','libgcc']['nptl' in '${GLIBC_ADDONS}']}"
-PROVIDES = "virtual/libc virtual/${TARGET_PREFIX}libc-for-gcc"
+
+CRYPTPROVIDES = "virtual/crypt"
+CRYPTPROVIDES_class-nativesdk = ""
+PROVIDES = "virtual/libc virtual/${TARGET_PREFIX}libc-for-gcc ${CRYPTPROVIDES}"
 PROVIDES += "virtual/libintl virtual/libiconv"
 inherit autotools texinfo distro_features_check systemd
 

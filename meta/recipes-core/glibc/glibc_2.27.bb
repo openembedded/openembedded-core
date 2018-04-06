@@ -54,6 +54,7 @@ NATIVESDKFIXES_class-nativesdk = "\
            file://0003-nativesdk-glibc-Raise-the-size-of-arrays-containing-.patch \
            file://0004-nativesdk-glibc-Allow-64-bit-atomics-for-x86.patch \
            file://relocate-locales.patch \
+           file://0031-nativesdk-deprecate-libcrypt.patch \
 "
 
 S = "${WORKDIR}/git"
