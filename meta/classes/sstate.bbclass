@@ -48,7 +48,8 @@ SSTATE_ARCHS = " \
     ${SDK_ARCH}_${PACKAGE_ARCH} \
     allarch \
     ${PACKAGE_ARCH} \
-    ${MACHINE}"
+    ${PACKAGE_EXTRA_ARCHS} \
+    ${MACHINE_ARCH}"
 
 SSTATE_MANMACH ?= "${SSTATE_PKGARCH}"
 
@@ -1026,7 +1027,7 @@ python sstate_eventhandler2() {
         with open(preservestampfile, 'r') as f:
             preservestamps = f.readlines()
     seen = []
-    for a in d.getVar("SSTATE_ARCHS").split():
+    for a in sorted(list(set(d.getVar("SSTATE_ARCHS").split()))):
         toremove = []
         i = d.expand("${SSTATE_MANIFESTS}/index-" + a)
         if not os.path.exists(i):
