@@ -65,6 +65,7 @@ SRC_URI += " \
         file://perl-errno-generation-gcc5.patch \
         file://perl-fix-conflict-between-skip_all-and-END.patch \
         file://perl-test-customized.patch \
+        file://perl-5.26.1-guard_old_libcrypt_fix.patch \
 "
 
 # Fix test case issues
