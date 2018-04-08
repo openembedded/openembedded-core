@@ -7,10 +7,8 @@ PE = "1"
 
 # We use the revision in order to avoid having to fetch it from the
 # repo during parse
-SRCREV = "f3dd87e0b98999a78e500e8c6d2b063ebadf535a"
+SRCREV = "f95ab1fb6e37f0601f397091bb011edf7a98b890"
 
-SRC_URI = "git://git.denx.de/u-boot.git \
-    file://MPC8315ERDB-enable-DHCP.patch \
-"
+SRC_URI = "git://git.denx.de/u-boot.git"
 
 S = "${WORKDIR}/git"
