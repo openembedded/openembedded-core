@@ -40,6 +40,7 @@ SRC_URI = "git://github.com/rpm-software-management/rpm;branch=rpm-4.14.x \
            file://0004-build-pack.c-remove-static-local-variables-from-buil.patch \
            file://0001-perl-disable-auto-reqs.patch \
            file://0001-Revert-Set-FD_CLOEXEC-on-opened-files-before-exec-fr.patch \
+           file://0001-configure.ac-add-option-for-dbus.patch \
            "
 
 PE = "1"
@@ -63,8 +64,9 @@ EXTRA_OECONF_append_libc-musl = " --disable-nls"
 #
 # --localstatedir prevents rpm from writing its database to native sysroot when building images
 #
-# Also disable plugins, so that rpm doesn't attempt to inhibit shutdown via session dbus
-EXTRA_OECONF_append_class-native = " --sysconfdir=/etc --localstatedir=/var --disable-plugins"
+# Disable dbus for native, so that rpm doesn't attempt to inhibit shutdown via session dbus even when plugins support is enabled.
+# Also disable plugins by default for native.
+EXTRA_OECONF_append_class-native = " --sysconfdir=/etc --localstatedir=/var --without-dbus --disable-plugins"
 
 BBCLASSEXTEND = "native nativesdk"
 
