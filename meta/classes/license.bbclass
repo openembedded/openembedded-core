@@ -334,7 +334,7 @@ def add_package_and_files(d):
     files = d.getVar('LICENSE_FILES_DIRECTORY')
     pn = d.getVar('PN')
     pn_lic = "%s%s" % (pn, d.getVar('LICENSE_PACKAGE_SUFFIX', False))
-    if pn_lic in packages:
+    if pn_lic in packages.split():
         bb.warn("%s package already existed in %s." % (pn_lic, pn))
     else:
         # first in PACKAGES to be sure that nothing else gets LICENSE_FILES_DIRECTORY
