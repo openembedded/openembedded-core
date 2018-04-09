@@ -2,8 +2,8 @@ require bluez5.inc
 
 REQUIRED_DISTRO_FEATURES = "bluez5"
 
-SRC_URI[md5sum] = "c9c853f3c90564cabec75ab35106c355"
-SRC_URI[sha256sum] = "b9a8723072ef66bae7ec301c774902ebcb444c9c5b149b5a199e60a1ba970e90"
+SRC_URI[md5sum] = "f210e84db707d66af3b889084a6f8bef"
+SRC_URI[sha256sum] = "33301d7a514c73d535ee1f91c2aed1af1f2e53efe11d3ac06bcf0d7abed2ce95"
 
 # noinst programs in Makefile.tools that are conditional on READLINE
 # support
@@ -66,4 +66,5 @@ NOINST_TOOLS_BT ?= " \
     tools/check-selftest \
     tools/gatt-service \
     profiles/iap/iapd \
+    ${@bb.utils.contains('PACKAGECONFIG', 'btpclient', 'tools/btpclient', '', d)} \
 "
