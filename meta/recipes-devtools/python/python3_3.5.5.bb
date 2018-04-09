@@ -211,6 +211,7 @@ py_package_preprocess () {
 
 # manual dependency additions
 RPROVIDES_${PN}-modules = "${PN}"
+RRECOMMENDS_${PN}-core_append_class-nativesdk = " nativesdk-python3-modules"
 RRECOMMENDS_${PN}-crypt = "openssl"
 RRECOMMENDS_${PN}-crypt_class-nativesdk = "nativesdk-openssl"
 
