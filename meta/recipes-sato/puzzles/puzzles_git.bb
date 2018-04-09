@@ -16,7 +16,7 @@ SRC_URI = "git://git.tartarus.org/simon/puzzles.git \
            file://0001-Use-Wno-error-format-overflow-if-the-compiler-suppor.patch \
            "
 UPSTREAM_CHECK_COMMITS = "1"
-SRCREV = "2adf0052d66eae88c7a5e55e67fe16e13f7018b5"
+SRCREV = "c6e0161dd475415316ed66dc82794d68e52f0025"
 PE = "2"
 PV = "0.0+git${SRCPV}"
 
