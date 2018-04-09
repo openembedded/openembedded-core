@@ -9,7 +9,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f \
 PV .= "+git${SRCPV}"
 SRCBRANCH ?= "release-7_6"
 
-SRCREV = "5ae4b4aeea2baf13752d07e3038c47f70f06dcac"
+SRCREV = "8d98e2811c2f6df99cc65e5cc6964047d8554ace"
 SRC_URI = "git://github.com/ivmai/libatomic_ops;branch=${SRCBRANCH}"
 
 S = "${WORKDIR}/git"
