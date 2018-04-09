@@ -35,7 +35,7 @@ EXTRA_OECONF = " ${ENABLE_IPV6} --with-libtool --enable-threads \
                  --disable-devpoll --enable-epoll --with-gost=no \
                  --with-gssapi=no --with-ecdsa=yes \
                  --sysconfdir=${sysconfdir}/bind \
-                 --with-openssl=${STAGING_LIBDIR}/.. \
+                 --with-openssl=${STAGING_DIR_HOST}${prefix} \
                "
 
 inherit autotools update-rc.d systemd useradd pkgconfig python3-dir
