@@ -20,7 +20,7 @@ FILES_${PN} = "${libdir}/libcrypt*.so.* ${libdir}/libcrypt-*.so ${libdir}/libowc
 
 S = "${WORKDIR}/git"
 
-BUILD_CPPFLAGS = "-I${STAGING_INCDIR_NATIVE}"
+BUILD_CPPFLAGS = "-I${STAGING_INCDIR_NATIVE} -std=gnu99"
 TARGET_CPPFLAGS = "-I${STAGING_DIR_TARGET}${includedir}"
 
 python () {
