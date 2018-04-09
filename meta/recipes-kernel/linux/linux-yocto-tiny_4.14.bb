@@ -6,6 +6,9 @@ require recipes-kernel/linux/linux-yocto.inc
 
 LINUX_VERSION ?= "4.14.30"
 
+DEPENDS += "${@bb.utils.contains('ARCH', 'x86', 'elfutils-native', '', d)}"
+DEPENDS += "openssl-native util-linux-native"
+
 KMETA = "kernel-meta"
 KCONF_BSP_AUDIT_LEVEL = "2"
 
