@@ -7,6 +7,8 @@ Subject: [PATCH 1/2] Only use --sort=name on versions of tar which support it.
 
 Signed-off-by: Michael Hansen <michael.j.hansen@hp.com>
 Signed-off-by: Alejandro del Castillo <alejandro.delcastillo@ni.com>
+Upstream-Status: Backport
+
 ---
  opkg-build | 11 ++++++++---
  1 file changed, 8 insertions(+), 3 deletions(-)

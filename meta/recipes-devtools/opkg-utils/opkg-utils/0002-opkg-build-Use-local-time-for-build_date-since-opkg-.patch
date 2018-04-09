@@ -8,6 +8,8 @@ Subject: [PATCH 2/2] opkg-build: Use local time for build_date, since opkg
 
 Signed-off-by: Michael Hansen <michael.j.hansen@hp.com>
 Signed-off-by: Alejandro del Castillo <alejandro.delcastillo@ni.com>
+Upstream-Status: Backport
+
 ---
  opkg-build | 8 ++++----
  1 file changed, 4 insertions(+), 4 deletions(-)

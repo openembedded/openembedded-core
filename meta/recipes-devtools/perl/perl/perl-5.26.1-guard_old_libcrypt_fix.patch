@@ -5,7 +5,7 @@ Date:   Sat Jan 20 20:22:53 2018 +0100
     pp: Guard fix for really old bug in glibc libcrypt
 
 Upstream-Status: Pending
-Signed-off-by Richard Purdie <richard.purdie@linuxfoundation.org>
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 
 diff --git a/pp.c b/pp.c
 index d50ad7ddbf..6510c7b15c 100644
