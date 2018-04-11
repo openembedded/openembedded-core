@@ -7,6 +7,24 @@
 target_paths=
 target_aliases=
 
+# Always prints, optionally to a log file
+print_output ()
+{
+    if test -n "$log_path"; then
+        echo "$@" | tee -a "$log_path"
+    else
+        echo "$@"
+    fi
+}
+
+# Only prints if the debug flag is specified
+print_debug ()
+{
+    if test -n "$debug"; then
+        print_output "$@"
+    fi
+}
+
 is_dynamic_elf ()
 {
     # Is the file an dynamically linked ELF executable?
@@ -54,6 +72,7 @@ add_alias ()
             *" $alias "*)
                 ;;
             *)
+                print_debug "Adding alias '$2' -> '$1'"
                 target_aliases="$target_aliases $alias"
                 ;;
         esac
@@ -123,17 +142,23 @@ add_file ()
     fi
 }
 
-# backward compat
-if test "$1" = "--respect-path"; then
+while test -n "$1"; do
+    case "$1" in
+        --respect-path)
+            # Ignore for backward compatability
+            ;;
+        --debug)
+            debug=1
+            ;;
+        --log)
+            do_log=1
+            ;;
+        *)
+            break
+            ;;
+    esac
     shift
-fi
-
-#add a --silent switch to avoid "broken pipe" errors when calling this scipt from within OE
-if test "$1" = "--silent"; then
-    silent=1
-    shift
-fi
-
+done
 
 added_gcc=$1
 shift
@@ -143,6 +168,11 @@ added_as=$1
 shift
 archive_name=$1
 
+if test -n "$do_log"; then
+    log_path="$archive_name.log"
+    rm -f "$log_path"
+fi
+
 if test -z "$PATCHELF"; then
     PATCHELF=`which patchelf 2> /dev/null`
 fi
@@ -150,22 +180,22 @@ if test -z "$PATCHELF"; then
     PATCHELF=`which patchelf-uninative 2> /dev/null`
 fi
 if test -z "$PATCHELF"; then
-    echo "patchelf is required"
+    print_output "patchelf is required"
     exit 1
 fi
 
 if test -z "$added_gcc" || test -z "$added_gxx" ; then
-    echo "usage: $0 <gcc_path> <g++_path>"
+    print_output "usage: $0 <gcc_path> <g++_path>"
     exit 1
 fi
 
 if ! test -x "$added_gcc" ; then
-    echo "'$added_gcc' is no executable."
+    print_output "'$added_gcc' is not executable."
     exit 1
 fi
 
 if ! test -x "$added_gxx" ; then
-    echo "'$added_gcc' is no executable."
+    print_output "'$added_gcc' is not executable."
     exit 1
 fi
 
@@ -178,7 +208,7 @@ if test -z "$added_as" ; then
     add_file /usr/bin/as /usr/bin/as
 else
     if ! test -x "$added_as" ; then
-        echo "'$added_as' is no executable."
+        print_output "'$added_as' is not executable."
         exit 1
     fi
 
@@ -206,7 +236,7 @@ if test -x /bin/true; then
 elif test -x /usr/bin/true; then
     add_file /usr/bin/true /bin/true
 else
-    echo "'true' not found"
+    print_output "'true' not found"
     exit 1
 fi
 
@@ -266,9 +296,7 @@ if test -z "$archive_name"; then
 
     #calculate md5 and use it as the archive name
     archive_name=`for i in $target_files; do test -f $tempdir/$i && $md5sum $tempdir/$i; done | sed -e 's/ .*$//' | $md5sum | sed -e 's/ .*$//'`.tar.gz || {
-        if test -z "$silent"; then
-            echo "Couldn't compute MD5 sum."
-        fi
+        print_output "Couldn't compute MD5 sum."
         exit 2
     }
     mydir=`pwd`
@@ -283,9 +311,7 @@ else
     fi
 fi
 
-if test -z "$silent"; then
-    echo "creating $archive_name"
-fi
+print_output "creating $archive_name"
 
 cd $tempdir
 # Add everything in the temp directory. Tar doesn't like to be given files with
@@ -293,9 +319,7 @@ cd $tempdir
 # the path prefix past the offending "..". This makes the archive generate
 # incorrectly
 tar -czf "$mydir/$archive_name" . || {
-    if test -z "$silent"; then
-        echo "Couldn't create archive"
-    fi
+    print_output "Couldn't create archive"
     exit 3
 }
 cd ..
