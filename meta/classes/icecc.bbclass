@@ -33,6 +33,7 @@ BB_HASHBASE_WHITELIST += "ICECC_PARALLEL_MAKE ICECC_DISABLED ICECC_USER_PACKAGE_
     ICECC_CARET_WORKAROUND ICECC_CFLAGS ICECC_ENV_VERSION \
     ICECC_DEBUG ICECC_LOGFILE ICECC_REPEAT_RATE ICECC_PREFERRED_HOST \
     ICECC_CLANG_REMOTE_CPP ICECC_IGNORE_UNVERIFIED ICECC_TEST_SOCKET \
+    ICECC_ENV_DEBUG \
     "
 
 ICECC_ENV_EXEC ?= "${STAGING_BINDIR_NATIVE}/icecc-create-env"
@@ -56,6 +57,9 @@ export ICECC_CARET_WORKAROUND ??= "0"
 ICECC_CFLAGS = ""
 CFLAGS += "${ICECC_CFLAGS}"
 CXXFLAGS += "${ICECC_CFLAGS}"
+
+# Debug flags when generating environments
+ICECC_ENV_DEBUG ??= ""
 
 def icecc_dep_prepend(d):
     # INHIBIT_DEFAULT_DEPS doesn't apply to the patch command.  Whether or  not
@@ -363,7 +367,7 @@ set_icecc_env() {
         # the ICECC_VERSION generation step must be locked by a mutex
         # in order to prevent race conditions
         if flock -n "${ICECC_VERSION}.lock" \
-            ${ICECC_ENV_EXEC} "${ICECC_CC}" "${ICECC_CXX}" "${ICECC_AS}" "${ICECC_VERSION}"
+            ${ICECC_ENV_EXEC} ${ICECC_ENV_DEBUG} "${ICECC_CC}" "${ICECC_CXX}" "${ICECC_AS}" "${ICECC_VERSION}"
         then
             touch "${ICECC_VERSION}.done"
         elif [ ! wait_for_file "${ICECC_VERSION}.done" 30 ]
